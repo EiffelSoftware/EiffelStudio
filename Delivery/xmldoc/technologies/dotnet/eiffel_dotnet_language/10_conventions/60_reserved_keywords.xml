@@ -3,15 +3,12 @@
 		<help>
 			<toc>
 				<envision_pseudo_name>60</envision_pseudo_name>
-				<envision_location>Eiffel, The Language\The Eiffel for .NET Language\Conventions</envision_location>
+				<envision_location>Eiffel\Eiffel for .NET\Conventions</envision_location>
 				<envision_title>Reserved Keywords</envision_title>
 			</toc>
 		</help>
 	</meta_data>
 	<paragraph>
-		<heading>
-			<size>1</size>Eiffel Reserved Keywords
-		</heading>
 		<paragraph>There are 56 language keywords in Eiffel which cannot be used as developer defined identifiers in Eiffel class code.</paragraph>
 		<heading>
 			<size>2</size>Eiffel Reserved Keywords
@@ -202,5 +199,4 @@
 				</cell>
 			</row>
 		</table>
-	</paragraph>
-</document>
+	</paragraph></document>

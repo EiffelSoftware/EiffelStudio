@@ -2,10 +2,6 @@
 	<meta_data/>
 	<paragraph>
 		<heading>
-			<size>1</size>
-			<content>EiffelStudio: A Guided Tour</content>
-		</heading>
-		<heading>
 			<size>2</size>Interactive Software Engineering
 		</heading>
 		<heading>
@@ -190,5 +186,4 @@
 				</content>
 			</heading>
 		</div>
-	</paragraph>
-</document>
+	</paragraph></document>

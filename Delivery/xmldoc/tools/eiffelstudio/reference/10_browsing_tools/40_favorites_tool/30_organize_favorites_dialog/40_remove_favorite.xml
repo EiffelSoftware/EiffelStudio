@@ -1,9 +1,6 @@
 <document title="Remove favorite command" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Remove favorite command
-		</heading>
 		<paragraph>The Remove favorite command 
 			<image>
 				<url>/images/eiffelstudio/browsing_tools/favorites_dialog_remove.png</url>
@@ -14,5 +11,4 @@
 			</link>.
 		</paragraph>
 		<paragraph>Pressing it removes the selected item from the favorites.</paragraph>
-	</paragraph>
-</document>
+	</paragraph></document>

@@ -8,9 +8,6 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<heading>
-			<size>1</size>Dotnet samples
-		</heading>
 		<paragraph>In this chapter you will find a series of examples that will permit to you to understand the bases of programming with Dotnet.</paragraph>
 		<paragraph>However, you should be familiar with Object-Oriented programming model.</paragraph>
 		<heading>
@@ -112,5 +109,4 @@
 				</link>
 			</item>
 		</list>
-	</paragraph>
-</document>
+	</paragraph></document>

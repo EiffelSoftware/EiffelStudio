@@ -1,9 +1,6 @@
 <document title="Class Hierarchy" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Class Hierarchy
-		</heading>
 		<paragraph> The generated Eiffel code reflects the architecture of the component described in the definition file. Each interface corresponds to a deferred Eiffel class that includes one deferred feature per interface function. The deferred features are implemented in the heir inheriting from all interfaces. This central class will be referred to as Eiffel coclass in the rest of this document.</paragraph>
 		<heading>
 			<size>2</size>EiffelCOM System Basic Architecture
@@ -86,8 +83,8 @@
 		<image>
 			<url>../images/com_image27.gif</url>
 		</image>
-		<line_break></line_break>
-		<line_break></line_break> 
+		<line_break/>
+		<line_break/> 
 		<paragraph> For both Eiffel coclass and Implemented interfaces, the 
 			<code>
 				<class_name>INTERFACE</class_name>
@@ -167,5 +164,4 @@
 				<label>Building a Component</label>
 			</link>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

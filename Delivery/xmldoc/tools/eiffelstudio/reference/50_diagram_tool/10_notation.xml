@@ -1,9 +1,6 @@
 <document title="Notation" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Notation
-		</heading>
 		<paragraph>The diagram tool uses the 
 			<link>
 				<url>http://www.eiffel.com/products/bon.xml</url>
@@ -108,7 +105,7 @@
 				<url>../../../../images/eiffelstudio/diagram/bon-cluster.png</url>
 			</image>
 		</div>
-		<line_break></line_break>
+		<line_break/>
 		<seealso>
 			<bold>See also</bold>
 			<line_break/>
@@ -126,8 +123,8 @@
 				<url>../../../../images/eiffelstudio/diagram/bon-inheritance.png</url>
 			</image>
 		</div>
-		<line_break></line_break>
-		<line_break></line_break> 
+		<line_break/>
+		<line_break/> 
 		<seealso>
 			<bold>See also</bold>
 			<line_break/>
@@ -152,8 +149,8 @@
 				<url>../../../../images/eiffelstudio/diagram/bon-agg-client.png</url>
 			</image>
 		</div>
-		<line_break></line_break>
-		<line_break></line_break> 
+		<line_break/>
+		<line_break/> 
 		<seealso>
 			<bold>See also</bold>
 			<line_break/>
@@ -162,5 +159,4 @@
 				<label>Creating client/supplier links</label>
 			</link>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

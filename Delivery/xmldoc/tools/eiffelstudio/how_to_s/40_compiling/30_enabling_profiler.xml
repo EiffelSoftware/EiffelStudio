@@ -1,54 +1,53 @@
 <document title="Enabling the profiler" output="studio">
-	<meta_data >
-		<help >
-			<meta >
-				<meta_content >profiler, enabling</meta_content>
-				<name >MS-HKWD</name>
+	<meta_data>
+		<help>
+			<meta>
+				<meta_content>profiler, enabling</meta_content>
+				<name>MS-HKWD</name>
 			</meta>
-			<meta >
-				<meta_content >enabling the profiler</meta_content>
-				<name >MS-HKWD</name>
+			<meta>
+				<meta_content>enabling the profiler</meta_content>
+				<name>MS-HKWD</name>
 			</meta>
-			<meta >
-				<meta_content >profiling</meta_content>
-				<name >MS-HKWD</name>
+			<meta>
+				<meta_content>profiling</meta_content>
+				<name>MS-HKWD</name>
 			</meta>
 		</help>
 	</meta_data>
-	<paragraph >
-		<heading >
-			<size >1</size>Enabling the profiler
+	<paragraph>
+		<heading>
+			<size>1</size>Enabling the profiler
 		</heading>
-		<paragraph >To profile an executable, the profiler must first be enabled. To enable the profiler:</paragraph>
+		<paragraph>To profile an executable, the profiler must first be enabled. To enable the profiler:</paragraph>
 		<list ordered="false">
-			<item >Open the 
-				<link >
-					<url >/tools/eiffelstudio/reference/25_project_settings/20_debug.xml</url>
-					<label >System Settings</label>
+			<item>Open the 
+				<link>
+					<url>/tools/eiffelstudio/reference/25_project_settings/20_debug.xml</url>
+					<label>System Settings</label>
 				</link> dialog.
 			</item>
-			<item >In the 
-				<bold >debug/profile</bold> tab, check the 
-				<bold >Profiling</bold> checkbox.
+			<item>In the 
+				<bold>debug/profile</bold> tab, check the 
+				<bold>Profiling</bold> checkbox.
 			</item>
-			<item >Click 
-				<bold >Apply</bold> or 
-				<bold >OK</bold>.
+			<item>Click 
+				<bold>Apply</bold> or 
+				<bold>OK</bold>.
 			</item>
-			<item >You must 
-				<link >
-					<url >10_generating_executables.xml</url>
-					<label >recompile</label>
+			<item>You must 
+				<link>
+					<url>10_generating_executables.xml</url>
+					<label>recompile</label>
 				</link> your project for the changes to take effect.
 			</item>
 		</list>
-		<seealso >
-			<bold >See Also</bold>
-			<line_break />
-			<link >
-				<url >/tools/eiffelstudio/reference/70_wizards_and_dialogs/10_profiler_wizard/00_introduction.xml</url>
-				<label >Profiler reference</label>
+		<seealso>
+			<bold>See Also</bold>
+			<line_break/>
+			<link>
+				<url>/tools/eiffelstudio/reference/70_wizards_and_dialogs/10_profiler_wizard/00_introduction.xml</url>
+				<label>Profiler reference</label>
 			</link>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

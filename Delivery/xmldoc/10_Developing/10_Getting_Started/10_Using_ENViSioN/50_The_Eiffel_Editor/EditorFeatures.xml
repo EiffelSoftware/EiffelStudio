@@ -1,4 +1,4 @@
-<document title="Editor Features" output="envision">
+<document output="envision" title="Editor Features">
 	<meta_data>
 		<help>
 			<toc>
@@ -7,217 +7,187 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<heading>
-			<size>1</size>Editor Features
-		</heading>
-		<paragraph>The editor window pane is used to edit the source code of the 
-			<help_link>
-				<tab_index>0</tab_index>
-				<index_moniker>!DefaultAssociativeIndex</index_moniker>
-				<keywords>Eiffel class</keywords>&gt;classes
-			</help_link> in your Eiffel project. To load a 
-			<help_link>
-				<tab_index>0</tab_index>
-				<index_moniker>!DefaultAssociativeIndex</index_moniker>
-				<keywords>Eiffel class</keywords>&gt;class
-			</help_link> into the editor you must double-click on the particular 
-			<help_link>
-				<tab_index>0</tab_index>
-				<index_moniker>!DefaultAssociativeIndex</index_moniker>
-				<keywords>Eiffel class</keywords>&gt;class
-			</help_link> you wish to edit in either the 
-			<link>
-				<url>../30_Class_View/index.xml</url>
-				<label>Class View</label>
-			</link> or 
-			<link>
-				<url>../20_Solution_Explorer/index.xml</url>
-				<label>Solution Explorer</label>
-			</link>. To edit more than one 
-			<help_link>
-				<tab_index>0</tab_index>
-				<index_moniker>!DefaultAssociativeIndex</index_moniker>
-				<keywords>Eiffel class</keywords>&gt;class
-			</help_link> simultaneously just double-click another 
-			<help_link>
-				<tab_index>0</tab_index>
-				<index_moniker>!DefaultAssociativeIndex</index_moniker>
-				<keywords>Eiffel class</keywords>&gt;class
-			</help_link> and this will appear in a separate tab in the editor pane. The screenshot below illustrates a project with 3 
-			<help_link>
-				<tab_index>0</tab_index>
-				<index_moniker>!DefaultAssociativeIndex</index_moniker>
-				<keywords>Eiffel class</keywords>&gt;classes
-			</help_link> opened for editing in the editor window pane.
-		</paragraph>
-		<paragraph>
-			<image>
-				<alt_text>General Property Page</alt_text>
-				<url>General_editor.png</url>
-			</image>
-		</paragraph>
-		<paragraph>Once inside the editor you can edit the source code as you would any Eiffel 
-			<help_link>
-				<tab_index>0</tab_index>
-				<index_moniker>!DefaultAssociativeIndex</index_moniker>
-				<keywords>Eiffel class</keywords>&gt;class
-			</help_link>; add or remove class 
-			<help_link>
-				<tab_index>0</tab_index>
-				<index_moniker>!DefaultAssociativeIndex</index_moniker>
-				<keywords>attributes</keywords>&gt;attributes
-			</help_link>, 
-			<help_link>
-				<tab_index>0</tab_index>
-				<index_moniker>!DefaultAssociativeIndex</index_moniker>
-				<keywords>Eiffel feature</keywords>&gt;features
-			</help_link>, 
-			<help_link>
-				<tab_index>0</tab_index>
-				<index_moniker>!DefaultAssociativeIndex</index_moniker>
-				<keywords>Eiffel inheritance</keywords>&gt;inheritance
-			</help_link> clauses, 
-			<help_link>
-				<tab_index>0</tab_index>
-				<index_moniker>!DefaultAssociativeIndex</index_moniker>
-				<keywords>Eiffel precondition</keywords>&gt;preconditions
-			</help_link> and 
-			<help_link>
-				<tab_index>0</tab_index>
-				<index_moniker>!DefaultAssociativeIndex</index_moniker>
-				<keywords>Eiffel postcondition</keywords>&gt;postconditions
-			</help_link> or any other feature provided by the Eiffel Language. 
-		</paragraph>
-		<paragraph>The editor provides a number of useful features for the developer: </paragraph>
-		<list ordered="false">
-			<item>  Syntax coloring: Eiffel syntax keywords (such as 
-				<italic>create, is, do, end) </italic> are automatically colored in the text to make it easier to read and find different parts of the textmore quickly. Also, syntax elements such brackets and curly braces are colored, making it much easier to spot syntax errors and correct them quickly. 
-			</item>
-			<item>  Member completion: provides a context-sensitive list of  
-				<help_link>
-					<tab_index>0</tab_index>
-					<index_moniker>!DefaultAssociativeIndex</index_moniker>
-					<keywords>Eiffel feature</keywords>&gt;features
-				</help_link>  available to the  
-				<help_link>
-					<tab_index>0</tab_index>
-					<index_moniker>!DefaultAssociativeIndex</index_moniker>
-					<keywords>Eiffel class</keywords>&gt;class
-				</help_link>  being edited. For example, if you are have a   STRING variable 'a_string' and wish to clear the contents of theSTRING at a certain point in your code, when you type 'a_string' in the  editor and then press the '.' to denote a  
-				<help_link>
-					<tab_index>0</tab_index>
-					<index_moniker>!DefaultAssociativeIndex</index_moniker>
-					<keywords>Eiffel feature</keywords>&gt;feature
-				</help_link>  call on 'a_string' the list will appear displaying all available  
-				<help_link>
-					<tab_index>0</tab_index>
-					<index_moniker>!DefaultAssociativeIndex</index_moniker>
-					<keywords>Eiffel feature</keywords>&gt;features
-				</help_link>  from 'a_string' to the current class. This is extremely useful as it  gives a quick overview of the available
-				<help_link>
-					<tab_index>0</tab_index>
-					<index_moniker>!DefaultAssociativeIndex</index_moniker>
-					<keywords>Eiffel feature</keywords>&gt;features
-				</help_link>  and automatically completes the  
-				<help_link>
-					<tab_index>0</tab_index>
-					<index_moniker>!DefaultAssociativeIndex</index_moniker>
-					<keywords>Eiffel feature</keywords>&gt;feature
-				</help_link>  name in the text once selected. This feature only works if the  
-				<help_link>
-					<tab_index>0</tab_index>
-					<index_moniker>!DefaultAssociativeIndex</index_moniker>
-					<keywords>Eiffel feature</keywords>&gt;feature
-				</help_link>  of the  
-				<help_link>
-					<tab_index>0</tab_index>
-					<index_moniker>!DefaultAssociativeIndex</index_moniker>
-					<keywords>Eiffel class</keywords>&gt;class
-				</help_link>  being edited is complied into the system, so to take full advantage it is best  to compile your system as soon asyou add new  
-				<help_link>
-					<tab_index>0</tab_index>
-					<index_moniker>!DefaultAssociativeIndex</index_moniker>
-					<keywords>Eiffel feature</keywords>&gt;features
-				</help_link>.
-			</item>
-		</list>
-		<paragraph>
-			<image>
-				<border>0</border>
-				<url>editor_member_completion.png</url>
-			</image>
-		</paragraph>
-		<list ordered="false">
-			<item>  Parameter information: when using a  
-				<help_link>
-					<tab_index>0</tab_index>
-					<index_moniker>!DefaultAssociativeIndex</index_moniker>
-					<keywords>Eiffel feature</keywords>&gt;feature
-				</help_link>  from a  
-				<help_link>
-					<tab_index>0</tab_index>
-					<index_moniker>!DefaultAssociativeIndex</index_moniker>
-					<keywords>Eiffel class</keywords>&gt;class
-				</help_link>  which takes  
-				<help_link>
-					<tab_index>0</tab_index>
-					<index_moniker>!DefaultAssociativeIndex</index_moniker>
-					<keywords>Eiffel argument</keywords>&gt;argument
-				</help_link>  parameters the parameter information is displayed automatically when the  opening bracket is enteredinto the text. This is similar to member  completion and gives quick and immediate details about the argument parameters  a  
-				<help_link>
-					<tab_index>0</tab_index>
-					<index_moniker>!DefaultAssociativeIndex</index_moniker>
-					<keywords>Eiffel feature</keywords>&gt;feature
-				</help_link>  requires and the return type of the, if any.
-			</item>
-		</list>
-		<paragraph>
-			<image>
-				<border>0</border>
-				<url>editor_parameter_completion.png</url>
-			</image>
-		</paragraph>
-		<list ordered="false">
-			<item>
-				<paragraph>
-					<help_link>
-						<tab_index>0</tab_index>
-						<index_moniker>!DefaultAssociativeIndex</index_moniker>
-						<keywords>Eiffel break points</keywords>&gt;Break Points
-					</help_link>:  Using the left margin of the editor  
-					<help_link>
-						<tab_index>0</tab_index>
-						<index_moniker>!DefaultAssociativeIndex</index_moniker>
-						<keywords>Eiffel break points</keywords>&gt;Break Points
-					</help_link>  may be set by simply clicking the margin at the line of code you wish a  
-					<help_link>
-						<tab_index>0</tab_index>
-						<index_moniker>!DefaultAssociativeIndex</index_moniker>
-						<keywords>Eiffel break points</keywords>&gt;Break Points
-					</help_link>  to be inserted.
-				</paragraph>
-			</item>
-		</list>
-		<paragraph>
-			<seealso>
-				<bold>See Also</bold>
-				<line_break></line_break>
-				<link>
-					<url>./index.xml</url>
-					<label>The Eiffel Editor</label>
-				</link>
-				<line_break></line_break>
-				<link>
-					<url>./EditorQuickInfo.xml</url>
-					<label>Editor Quick Info</label>
-				</link>
-				<line_break></line_break>
-				<link>
-					<url>./EditorFeatures.xml</url>
-					<label>Editor Advanced Settings</label>
-				</link>
-				<line_break></line_break>
-			</seealso>
-		</paragraph>
-	</paragraph>
-</document>
+		<table>
+			<row>
+				<cell>
+					<paragraph>  The editor window pane is used to edit the source code of the
+						<link>
+							<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#class</url>
+							<label>classes</label>
+						</link>  in your Eiffel project. Toload a
+						<link>
+							<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#class</url>
+							<label>class</label>
+						</link>  into the editoryoumustdouble-click on the particular
+						<link>
+							<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#class</url>
+							<label>class</label>
+						</link>  you wish to edit in either the
+						<link>
+							<url>../30_Class_View/index.html</url>
+							<label>ClassView</label>
+						</link>  or
+						<link>
+							<url>../20_Solution_Explorer/index.htm</url>
+							<label>SolutionExplorer</label>
+						</link>. To  edit more than one
+						<link>
+							<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#class</url>
+							<label>class</label>
+						</link>  simultaneously just double-click another
+						<link>
+							<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#class</url>
+							<label>class</label>
+						</link>  and this will appear in a separate tab in the editor pane. The screenshot  below illustrates a project with 3
+						<link>
+							<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#class</url>
+							<label>classes</label>
+						</link>  opened for editing in the editor window pane.
+					</paragraph>
+					<paragraph>
+						<image>
+							<alt_text>General Property Page</alt_text>
+							<url>General_editor.PNG</url>
+						</image>
+					</paragraph>
+					<paragraph>  Once inside the editor you can edit the source code as you would any Eiffel
+						<link>
+							<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#class</url>
+							<label>class</label>
+						</link>;  add or remove class
+						<link>
+							<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#attribute</url>
+							<label>attributes</label>
+						</link>,
+						<link>
+							<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#feature</url>
+							<label>features</label>
+						</link>,
+						<link>
+							<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#inheritance</url>
+							<label>inheritance</label>
+						</link>  clauses,
+						<link>
+							<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#precondition</url>
+							<label>preconditions</label>
+						</link>  and
+						<link>
+							<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#postcondition</url>
+							<label>postconditions</label>
+						</link>  or any other feature provided by the Eiffel Language.
+					</paragraph>
+					<paragraph>  The editor provides a number of useful features for the developer: </paragraph>
+					<list ordered="false">
+						<item>  Syntax coloring: Eiffel syntax keywords (such as
+							<italic>create, is, do, end) </italic>  are automatically colored in the text to make it easier to read and find  different parts of the text more quickly. Also, syntax elements such  brackets and curly braces are colored, making it much easier to spot syntax  errors and correct them quickly.
+						</item>
+						<item>  Member completion: provides a context-sensitive list of
+							<link>
+								<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#feature</url>
+								<label>features</label>
+							</link>  available to the
+							<link>
+								<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#class</url>
+								<label>class</label>
+							</link>  being edited. For example, if you are have a  STRING variable 'a_string' and wish to clear the contents of the  STRING at a certain point in your code, when you type 'a_string' in the  editor and then press the '.' to denote a
+							<link>
+								<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#feature</url>
+								<label>feature</label>
+							</link>  call on 'a_string' the list will appear displaying all available
+							<link>
+								<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#feature</url>
+								<label>features</label>
+							</link>  from 'a_string' to the current class. This is extremely useful as it  gives a quick overview of the available
+							<link>
+								<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#feature</url>
+								<label>features</label>
+							</link>  and automatically completes the
+							<link>
+								<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#feature</url>
+								<label>feature</label>
+							</link>  name in the text once selected. This feature only works if the
+							<link>
+								<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#feature</url>
+								<label>feature</label>
+							</link>  of the
+							<link>
+								<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#class</url>
+								<label>class</label>
+							</link>  being edited is complied into the system, so to take full advantage it is best  to compile your system as soon as you add new
+							<link>
+								<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#feature</url>
+								<label>features</label>
+							</link>.
+						</item>
+					</list>
+					<paragraph>
+						<image>
+							<url>editor_member_completion.png</url>
+						</image>
+					</paragraph>
+					<list ordered="false">
+						<item>  Parameter information: when using a
+							<link>
+								<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#feature</url>
+								<label>feature</label>
+							</link>  from a
+							<link>
+								<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#class</url>
+								<label>class</label>
+							</link>  which takes
+							<link>
+								<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#argument</url>
+								<label>argument</label>
+							</link>  parameters the parameter information is displayed automatically when the  opening bracket is entered into the text. This is similar to member  completion and gives quick and immediate details about the argument parameters  a
+							<link>
+								<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#feature</url>
+								<label>feature</label>
+							</link>  requires and the return type of the, if any.
+						</item>
+					</list>
+					<paragraph>
+						<image>
+							<url>editor_parameter_completion.png</url>
+						</image>
+					</paragraph>
+					<list ordered="false">
+						<item>
+							<paragraph>
+								<link>
+									<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/70_Debugging_Projects/breakpoints.htm</url>
+									<label>Break Points</label>
+								</link>:  Using the left margin of the editor
+								<link>
+									<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/70_Debugging_Projects/breakpoints.htm</url>
+									<label>Break Points</label>
+								</link>  may be set by simply clicking the margin at the line of code you wish a
+								<link>
+									<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/70_Debugging_Projects/breakpoints.htm</url>
+									<label>Break Points</label>
+								</link>  to be inserted.
+							</paragraph>
+						</item>
+					</list>
+					<seealso>
+						<bold>See also</bold>
+						<line_break/>
+						<link>
+							<url>./index.htm</url>
+							<label>The Eiffel Editor</label>
+						</link>
+						<line_break/>
+						<link>
+							<url>./EditorQuickInfo.htm</url>
+							<label>Editor Quick Info</label>
+						</link>
+						<line_break/>
+						<link>
+							<url>./EditorFeatures.htm</url>
+							<label>Editor Advanced Settings</label>
+						</link>
+						<line_break/>
+					</seealso>
+				</cell>
+			</row>
+		</table>
+	</paragraph></document>

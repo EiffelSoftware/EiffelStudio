@@ -1,9 +1,6 @@
 <document title="Definition File Dialog" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Definition File Dialog
-		</heading>
 		<paragraph> This dialog asks for the location of a COM definition file for the project. A COM definition file is either an IDL file or a Type Library. An IDL file is usually provided when building a new component since all the sources are available. However, when it comes to accessing an existing component, the sources might not be available. A Type Library is often embedded into the component and includes enough information for the wizard to generate the code.</paragraph>
 		<heading>
 			<size>2</size>Definition File Dialog
@@ -101,5 +98,4 @@
 				<label>Building a Component</label>
 			</link>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

@@ -1,9 +1,6 @@
 <document title="Final Dialog" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Final Dialog
-		</heading>
 		<paragraph>The last dialog offers a choice of different output levels. By default, the wizard will display errors, warnings and generic information. You can choose not to see warnings and/or extra information.</paragraph>
 		<heading>
 			<size>2</size>Final Dialog
@@ -86,5 +83,4 @@
 				<label>Building a Component</label>
 			</link>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

@@ -2,15 +2,12 @@
 	<meta_data>
 		<help>
 			<toc>
-				<envision_location>Samples\Windows Forms</envision_location>
+				<envision_location>Samples\.NET Framework Samples\Windows Forms</envision_location>
 				<envision_pseudo_name>70</envision_pseudo_name>
 			</toc>
 		</help>
 	</meta_data>
 	<paragraph>
-		<heading>
-			<size>1</size>Tree view
-		</heading>
 		<div>
 			<paragraph>
 				<image>
@@ -22,8 +19,8 @@
 			</paragraph>
 		</div>
 		<paragraph>
-			<line_break></line_break>
-			<line_break></line_break>
+			<line_break/>
+			<line_break/>
 		</paragraph>
 		<heading>
 			<size>2</size>Compiling
@@ -31,16 +28,16 @@
 		<heading>
 			<size>2</size>Running
 		</heading>
-		<paragraph>After launching the application, you will see a window displayed with a similar appearance to the one above. On the left of the form you have the 
-			<span>TREE_VIEW</span> control, and on the right you have some controls to configure the 
-			<span>TREE_VIEW</span>. 
+		<paragraph>After launching the application, you will see a window displayed with a similar appearance to the one above. On the left of the form you have the
+			<span>TREE_VIEW</span> control, and on the right you have some controls to configure the
+			<span>TREE_VIEW</span>.
 		</paragraph>
-		<paragraph></paragraph>
+		<paragraph/>
 		<heading>
 			<size>2</size>Under the Hood
 		</heading>
-		<paragraph>The application shows how to use a 
-			<span>TREE_VIEW</span> and what are all its different configurations. 
+		<paragraph>The application shows how to use a
+			<span>TREE_VIEW</span> and what are all its different configurations.
 		</paragraph>
 		<paragraph>This sample contains the following class:</paragraph>
 		<list ordered="false">
@@ -64,7 +61,6 @@
 			<size>2</size>Notes
 		</heading>
 		<paragraph>This sample is translated from the example located in the QuickStart\winforms\samples\ControlReference\TreeView subdirectory of the .NET Framework SDK samples directory of Microsoft Visual Studio .NET. </paragraph>
-		<paragraph></paragraph>
-		<paragraph></paragraph>
-	</paragraph>
-</document>
+		<paragraph/>
+		<paragraph/>
+	</paragraph></document>

@@ -1,11 +1,8 @@
 <document title="EiffelBuild Notation">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>EiffelBuild Notation
-		</heading>
 		<paragraph>This page contains descriptions of terms found within the EiffelBuild documentation. 
-			<link></link>
+			<link/>
 		</paragraph>
 		<heading>
 			<size>2</size>Object
@@ -74,7 +71,7 @@
 				<url>/tools/eiffelbuild/reference/63_component_selector/index.html#delete_component</url>
 				<label> delete</label>
 			</link> it. 
-			<link></link>
+			<link/>
 		</paragraph>
 		<heading>
 			<size>2</size>Pick and Drop
@@ -100,5 +97,4 @@
 			</item>
 			<item>If, for any reason, you change your mind, you can cancel the pick-and-drop by left-clicking anywhere or by pressing the Escape key.</item>
 		</list>
-	</paragraph>
-</document>
+	</paragraph></document>

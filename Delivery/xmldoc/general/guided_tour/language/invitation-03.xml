@@ -9,10 +9,6 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<heading>
-			<size>1</size>
-			<content>2 Design Principles</content>
-		</heading>
 		<paragraph>The aim of Eiffel is to help specify, design, implement and modify quality software.  This goal of quality in software is a combination of many factors; the language design concentrated on the three factors which, in the current state of the industry, are in direct need of improvements: 
 			<span>reusability</span>, 
 			<span> extendibility</span>and 
@@ -45,5 +41,4 @@
 				<bold>portability</bold> by a platform-independent language definition, so that the same semantics may be supported on many different platforms.  
 			</item>
 		</list>
-	</paragraph>
-</document>
+	</paragraph></document>

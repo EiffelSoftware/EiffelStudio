@@ -1,13 +1,13 @@
 <document title="Reference for `eif_adopt'" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading></heading>
+		<heading/>
 		<heading>
 			<size>2</size>SYNOPSYS
 		</heading>
 		<code>
 			<bold>#include "eif_hector. h"</bold>
-			<bold></bold>
+			<bold/>
 			<bold>EIF_OBJECT eif_adopt (EIF_OBJECT</bold> 
 			<italic>obj</italic>
 			<bold>);</bold>

@@ -1,9 +1,6 @@
 <document title="Wizards" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Wizards
-		</heading>
 		<list ordered="false">
 			<item>
 				<link>
@@ -12,5 +9,4 @@
 				</link>
 			</item>
 		</list>
-	</paragraph>
-</document>
+	</paragraph></document>

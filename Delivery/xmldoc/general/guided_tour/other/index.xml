@@ -1,9 +1,6 @@
 <document title="Eiffel overview documents" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Eiffel Overview Documents
-		</heading>
 		<paragraph>The following two documents present a general overview of the arguments for Eiffel:</paragraph>
 		<list ordered="false">
 			<item>
@@ -29,5 +26,4 @@
 				<label>list of introductory documents</label>
 			</link> covering not only the language but also the environment and general presentations of Eiffel.  
 		</paragraph>
-	</paragraph>
-</document>
+	</paragraph></document>

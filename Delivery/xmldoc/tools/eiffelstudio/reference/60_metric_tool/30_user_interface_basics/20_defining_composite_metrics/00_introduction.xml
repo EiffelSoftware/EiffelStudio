@@ -1,9 +1,6 @@
 <document title="Defining, loading, managing new metrics" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Defining, loading, managing new metrics
-		</heading>
 		<paragraph>Users should have the ability to define a new derived or composite metric by applying some of the selection criteria or composition operators to one or more existing metrics.</paragraph>
 		<paragraph>They should also have the ability to save all current metric definitions to a file, producing a 
 			<bold>metric definition record</bold>. This should not be confused with a measurement archive, which records the results of measures resulting from applying certain metrics to certain projects.
@@ -36,5 +33,4 @@
 				</link>
 			</item>
 		</list>
-	</paragraph>
-</document>
+	</paragraph></document>

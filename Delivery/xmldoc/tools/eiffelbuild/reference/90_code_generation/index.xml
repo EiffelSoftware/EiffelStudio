@@ -1,9 +1,6 @@
 <document title="Code Generation" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Code Generation
-		</heading>
 		<paragraph>To generate Eiffel code representing your system, select 
 			<bold>Generate code</bold> from the 
 			<bold>Project</bold> menu or click 
@@ -147,11 +144,10 @@
 		</paragraph>
 		<seealso>
 			<bold>See also</bold>
-			<line_break></line_break>
+			<line_break/>
 			<link>
 				<url>/tools/eiffelbuild/reference/80_project_settings/index.xml</url>
 				<label>Project settings</label>
 			</link>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

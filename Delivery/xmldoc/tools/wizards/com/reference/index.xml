@@ -1,9 +1,6 @@
 <document title="EiffelCOM Wizard Reference" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>EiffelCOM Wizard Reference
-		</heading>
 		<paragraph>Version: 5.0</paragraph>
 		<paragraph>Availability: Basic Package.</paragraph>
 		<paragraph> This chapter details the wizard and code generation. The wizard has seven different dialogs. The third dialog is different depending on whether the wizard have started from an Eiffel system, an IDL file, or a Type Library. Once the dialogs have been completed, the wizard generates a Type Library if needed, then analyzes the Type Library, and generates the code.</paragraph>
@@ -106,5 +103,4 @@
 				<label>Guided Tour</label>
 			</link>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

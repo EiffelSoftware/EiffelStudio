@@ -1,51 +1,47 @@
 <document title="Opening a compiled project" output="studio">
-	<meta_data >
-		<help >
-			<meta >
-				<meta_content >Opening a compiled project</meta_content>
-				<name >MS-HKWD</name>
+	<meta_data>
+		<help>
+			<meta>
+				<meta_content>Opening a compiled project</meta_content>
+				<name>MS-HKWD</name>
 			</meta>
-			<meta >
-				<meta_content >Retrieving a compiled project</meta_content>
-				<name >MS-HKWD</name>
+			<meta>
+				<meta_content>Retrieving a compiled project</meta_content>
+				<name>MS-HKWD</name>
 			</meta>
 		</help>
 	</meta_data>
-	<paragraph >
-		<heading >
-			<size >1</size>Opening a compiled project
-		</heading>
-		<paragraph >Whenever a project has been compiled successfully, files are created in the project directory. These files include the .epr file and the EIFGEN directory. They contain all the information produced by the compiler. After exiting EiffelStudio, it is possible to open again a project that has been compiled by indicating the location of the .epr file to the system.</paragraph>
-		<paragraph >To do this:</paragraph>
+	<paragraph>
+		<paragraph>Whenever a project has been compiled successfully, files are created in the project directory. These files include the .epr file and the EIFGEN directory. They contain all the information produced by the compiler. After exiting EiffelStudio, it is possible to open again a project that has been compiled by indicating the location of the .epr file to the system.</paragraph>
+		<paragraph>To do this:</paragraph>
 		<list ordered="false">
-			<item >In the startup dialog, select 
-				<bold >Open compiled project</bold>. If the .epr file you want to open is not in the list, click 
-				<bold >Browse</bold> and indicate the location of the .epr file.
+			<item>In the startup dialog, select
+				<bold>Open compiled project</bold>. If the .epr file you want to open is not in the list, click
+				<bold>Browse</bold> and indicate the location of the .epr file.
 			</item>
 		</list>
-		<paragraph >
-			<image >
-				<url >/images/eiffelstudio/dialogs_and_wizards/startup_dialog.png</url>
+		<paragraph>
+			<image>
+				<url>/images/eiffelstudio/dialogs_and_wizards/startup_dialog.png</url>
 			</image>
 		</paragraph>
 		<list ordered="false">
-			<item >Or, click the 
-				<bold >File</bold>/
-				<bold >Open Project...</bold> menu and indicate the location of the .epr file.
+			<item>Or, click the
+				<bold>File</bold>/
+				<bold>Open Project...</bold> menu and indicate the location of the .epr file.
 			</item>
 		</list>
-		<seealso >
-			<bold >See Also</bold>
-			<line_break />
-			<link >
-				<url >10_creating_a_new_project.xml</url>
-				<label >Creating a new project</label>
+		<seealso>
+			<bold>See Also</bold>
+			<line_break/>
+			<link>
+				<url>10_creating_a_new_project.xml</url>
+				<label>Creating a new project</label>
 			</link>
-			<line_break />
-			<link >
-				<url >20_retrieving_a_project_from_an_ace_file.xml</url>
-				<label >Retrieving a project from an Ace file</label>
+			<line_break/>
+			<link>
+				<url>20_retrieving_a_project_from_an_ace_file.xml</url>
+				<label>Retrieving a project from an Ace file</label>
 			</link>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

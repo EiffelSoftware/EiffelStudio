@@ -1,19 +1,15 @@
 <document title="Editor customization" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Editor customization
-		</heading>
 		<paragraph>Many of the editor features, the 
 			<link>
 				<url>60_autocomplete/00_introduction.xml</url>
 				<label>automatic completion</label>
 			</link> in particular, can be customized in the preferences.
-			<line_break></line_break> Please refer to the 
+			<line_break/> Please refer to the 
 			<link>
 				<url>../85_preferences/20_preferences_reference/20_tools/30_editor/00_introduction.xml</url>
 				<label>editor section</label>
 			</link> of the preferences help for more details.
 		</paragraph>
-	</paragraph>
-</document>
+	</paragraph></document>

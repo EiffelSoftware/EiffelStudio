@@ -1,10 +1,8 @@
 <document title="Documentation menu" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Documentation menu
-		</heading>
-		<paragraph>The Documentation Menu enables you to generate documentation about the classes of your system:</paragraph><code_block>
+		<paragraph>The Documentation Menu enables you to generate documentation about the classes of your system:</paragraph>
+		<code_block>
 	(I) Documentation (Flat/Short): Generate flat/short form of all classes in system.
 	(S) Documentation (Short): Generate short form of all classes in system.
 	(F) Documentation (Flat): Generate flat form of all classes in system.

@@ -9,10 +9,6 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<heading>
-			<size>1</size>
-			<content>3 Object-Oriented Design</content>
-		</heading>
 		<paragraph>To achieve reusability, extendibility and reliability, the principles of object-oriented design provide the best known technical answer.  </paragraph>
 		<paragraph>An in-depth discussion of these principles fall beyond the scope of this introduction but here is a short definition:</paragraph>
 		<info>Object-oriented design is the construction of software systems as structured collections of abstract data type implementations, or "classes".  </info>
@@ -32,5 +28,4 @@
 		<paragraph>As a language, Eiffel includes more than presented in this introduction, but not 
 			<span>much</span> more; it is a small language, not much bigger (by such a measure as the number of keywords) than Pascal.  It was meant to be a member of the class of languages which programmers can master entirely -- as opposed to languages of which most programmers know only a subset.  Yet it is appropriate for the development of industrial software systems, as has by now been shown by many full-scale projects, some in the thousands of classes and hundreds of thousands of lines, in companies around the world.  
 		</paragraph>
-	</paragraph>
-</document>
+	</paragraph></document>

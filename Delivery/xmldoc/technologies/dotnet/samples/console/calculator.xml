@@ -2,7 +2,7 @@
 	<meta_data>
 		<help>
 			<toc>
-				<envision_location>Samples\Console Applications</envision_location>
+				<envision_location>Samples\Eiffel Class Libraries Samples</envision_location>
 			</toc>
 		</help>
 	</meta_data>
@@ -24,7 +24,8 @@
 					<heading>
 						<size>2</size>Running
 					</heading>
-					<paragraph>After you launch the sample, the following text appears in a console:</paragraph><code_block>
+					<paragraph>After you launch the sample, the following text appears in a console:</paragraph>
+					<code_block>
 *********************************
 Calculator in reverse Polish form
 *********************************
@@ -51,7 +52,8 @@ Enter a number, followed by :
 						<code>
 							<symbol>a</symbol>
 						</code>:
-					</paragraph><code_block>
+					</paragraph>
+					<code_block>
 *********************************
 Calculator in reverse Polish form
 *********************************
@@ -75,7 +77,8 @@ Enter a number, followed by :
 						<code>
 							<symbol>2</symbol>
 						</code>. You can then apply any operation to the two operands such as minus:
-					</paragraph><code_block>
+					</paragraph>
+					<code_block>
 ...
 Next operation? a
 Enter a number, followed by : 2

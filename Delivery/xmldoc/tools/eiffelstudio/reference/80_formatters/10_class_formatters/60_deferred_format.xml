@@ -1,19 +1,15 @@
 <document title="Deferred features" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Deferred features
-		</heading>
 		<paragraph>The deferred view 
 			<image>
 				<url>/images/eiffelstudio/icons/icon_format_deferreds_color.gif</url>
 			</image>displays all the deferred features of the current class.
-			<line_break></line_break>It is available through the 
+			<line_break/>It is available through the 
 			<bold>Class</bold> tab of the 
 			<link>
 				<url>/tools/eiffelstudio/reference/05_general_interface_description/20_eiffelstudio_window_overview.xml</url>
 				<label>context tool</label>
 			</link>.
 		</paragraph>
-	</paragraph>
-</document>
+	</paragraph></document>

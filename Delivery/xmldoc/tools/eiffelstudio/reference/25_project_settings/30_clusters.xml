@@ -1,9 +1,6 @@
 <document title="Clusters Tab" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Clusters Tab
-		</heading>
 		<paragraph> </paragraph>
 		<paragraph>This is where you specify the directories where to look for classes when compiling your system. A cluster has a name and a path associated with it. Each cluster name in the system must be unique and only one cluster can reference a path, i.e. two clusters with different names cannot refer to the same path.</paragraph>
 		<paragraph>Here is how the clusters tab looks like for the calculator example:</paragraph>
@@ -82,5 +79,4 @@
 		<paragraph>The exclude part is there to exclude certain directories or filenames during the class lookup performed by the compiler. This option is especially useful in conjunction with the 'all' or 'library' options on clusters. For example, if you are using CVS as a source control, you will notice that a CVS directory is created in each one of your directories. So adding CVS in the exclude list will speed up the compiler since it won't have to look inside the CVS directories.</paragraph>
 		<paragraph> </paragraph>
 		<paragraph>The include part is useful when you have some Eiffel classes that do not follow the standard Eiffel file name pattern, i.e. "class_name.e". To make sure the compiler finds those classes, you have to include the file name of every Eiffel class that does not follow the standard naming pattern for Eiffel file names.</paragraph>
-	</paragraph>
-</document>
+	</paragraph></document>

@@ -1,6 +1,6 @@
 <document title="MANUAL IDENTIFICATION AND COPYRIGHT" output="studio">
 	<meta_data>
-		<help></help>
+		<help/>
 	</meta_data>
 	<paragraph>
 		<heading>
@@ -36,5 +36,4 @@
 				</link>
 			</span> may be permitted under certain conditions to copy specific parts of this book.  Contact ISE for details.  
 		</paragraph>
-	</paragraph>
-</document>
+	</paragraph></document>

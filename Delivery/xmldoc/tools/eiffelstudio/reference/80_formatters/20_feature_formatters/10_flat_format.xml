@@ -1,9 +1,6 @@
 <document title="Flat view" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Flat view
-		</heading>
 		<paragraph>The flat view 
 			<image>
 				<url>/images/eiffelstudio/icons/icon_format_flat_color.gif</url>
@@ -15,11 +12,10 @@
 		</paragraph>
 		<seealso>
 			<bold>See Also</bold>
-			<line_break></line_break> 
+			<line_break/> 
 			<link>
 				<url>/tools/eiffelstudio/reference/80_formatters/10_class_formatters/15_flat_format.xml</url>
 				<label>Class flat view</label>
 			</link>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

@@ -1,184 +1,181 @@
-<document output="studio" title="Eiffel Documentation">
-	<meta_data />
-	<paragraph >
+<document output="studio" title="Online Documentation">
+	<meta_data/>
+	<paragraph>
 		<output output="studio">
-			<heading >
-				<size >1</size>Online Eiffel documentation
-			</heading>
-			<paragraph >Congratulations for installing ISE Eiffel 5, featuring 
-				<link >
-					<url >tools/eiffelstudio/index.html</url>
-					<label >EiffelStudio</label>
-				</link>,the full-lifecycle environmentfor quality software development, based on themost advanced version of object technology andthe concepts of Design by Contract.
+			<paragraph>Congratulations for installing ISE Eiffel 5, featuring 
+				<link>
+					<url>tools/eiffelstudio/index.html</url>
+					<label>EiffelStudio</label>
+				</link>, the full-lifecycle environmentfor quality software development, based on the most advanced version of object technology and the concepts of Design by Contract.
 			</paragraph>
-			<paragraph >ISE Eiffel 5 is available on many platforms and is one of thefirst development environments to take advantage of the Microsoft.NET framework.</paragraph>
-			<paragraph >ISE Eiffel 5 comes with extensive online documentation. Please takethe time to read up on Eiffel and the 
-				<link >
-					<url >tools/eiffelstudio/index.html</url>
-					<label >EiffelStudio</label>
-				</link> environment to makethe best possible use of the environment.
-				<paragraph >Here is your roadmap to Eiffel documentation.</paragraph>
-				<paragraph >
-					<heading >
-						<size >2</size>Release notes
+			<paragraph>ISE Eiffel 5 is available on many platforms and is one of the first development environments to take advantage of the Microsoft.NET framework.</paragraph>
+			<paragraph>ISE Eiffel 5 comes with extensive online documentation. Please take the time to read up on Eiffel and the 
+				<link>
+					<url>tools/eiffelstudio/index.html</url>
+					<label>EiffelStudio</label>
+				</link> environment to make the best possible use of the environment.
+				<paragraph>Here is your road map to Eiffel documentation.</paragraph>
+				<paragraph>
+					<heading>
+						<size>2</size>Release notes
 					</heading>
 				</paragraph>
-				<paragraph >You will find out 
-					<link >
-						<url >tools/eiffelstudio/reference/02_what_s_new/Eiffel54.html</url>
-						<label >here</label>
+				<paragraph>You will find out 
+					<link>
+						<url>tools/eiffelstudio/reference/02_what_s_new/Eiffel54.html</url>
+						<label>here</label>
 					</link> what's new in this release.
-					<heading >
-						<size >2</size>General documentation
-					</heading>Make sure to read the introductory documentation,which includes:
+					<heading>
+						<size>2</size>General documentation
+					</heading>Make sure to read the introductory documentation, which includes:
 					<list ordered="false">
-						<item >Two presentations of the Eiffel method and language, one short(
-							<link >
-								<url >general/guided_tour/language/invitation-00.html</url>
-								<label >"an invitation to Eiffel"</label>
-							</link>)and the other a 
-							<link >
-								<url >general/guided_tour/language/tutorial-00.html</url>
-								<label >detailedtutorial</label>
+						<item>Two presentations of the Eiffel method and language, one short (
+							<link>
+								<url>general/guided_tour/language/invitation-00.html</url>
+								<label>"an invitation to Eiffel"</label>
+							</link>) and the other a 
+							<link>
+								<url>general/guided_tour/language/tutorial-00.html</url>
+								<label>detailed tutorial</label>
 							</link>.  
 						</item>
-						<item >An in-depth, step-by-step 
-							<link >
-								<url >general/guided_tour/environment/index.html</url>
-								<label >Guided Tour of EiffelStudio</label>
-							</link>.Highly recommended to master the environment's powerful toolsfor analysis, design, implementation, browsing, incremental compilation(the Melting Ice technology), debugging, documentation, HTMLgeneration, metrics, cross-generation of C packages etc.  
+						<item>An in-depth, step-by-step 
+							<link>
+								<url>general/guided_tour/environment/index.html</url>
+								<label>Guided Tour of EiffelStudio</label>
+							</link>.Highly recommended to master the environment's powerful tools for analysis, design, implementation, browsing, incremental compilation (the Melting Ice technology), debugging, documentation, HTML generation, metrics, cross-generation of C packages etc.  
 						</item>
-						<item >Complementary documents: 
-							<link >
-								<url >general/guided_tour/other/why_eiffel.html</url>
-								<label >"Why your next project should use Eiffel"</label>
+						<item>Complementary documents: 
+							<link>
+								<url>general/guided_tour/other/why_eiffel.html</url>
+								<label>"Why your next project should use Eiffel"</label>
 							</link>and the 
-							<link >
-								<url >general/guided_tour/other/one_minute.html</url>
-								<label >"1-minute summary"</label>
+							<link>
+								<url>general/guided_tour/other/one_minute.html</url>
+								<label>"1-minute summary"</label>
 							</link> (to show your boss!).  
 						</item>
 					</list>
 				</paragraph>
-				<paragraph >You will find the introductory documentation 
-					<link >
-						<url >general/guided_tour/index.html</url>
-						<label >here</label>
+				<paragraph>You will find the introductory documentation 
+					<link>
+						<url>general/guided_tour/index.html</url>
+						<label>here</label>
 					</link>.
-					<heading >
-						<size >2</size>Environment documentation
+					<heading>
+						<size>2</size>Environment documentation
 					</heading>
 				</paragraph>
-				<paragraph >
-					<link >
-						<url >tools/eiffelstudio/index.html</url>
-						<label >EiffelStudio</label>
-					</link> is the centerpiece of ISE Eiffel 5, your friendlyenvironment for conceptualizing, analyzing, designing, producing,documenting, debugging, exploring, measuring and maintaining systems.You will find 
-					<link >
-						<url >tools/eiffelstudio/index.html</url>
-						<label >EiffelStudio</label>
+				<paragraph>
+					<link>
+						<url>tools/eiffelstudio/index.html</url>
+						<label>EiffelStudio</label>
+					</link> is the centerpiece of ISE Eiffel 5, your friendly environment for conceptualizing, analyzing, designing, producing,documenting, debugging, exploring, measuring and maintaining systems.You will find 
+					<link>
+						<url>tools/eiffelstudio/index.html</url>
+						<label>EiffelStudio</label>
 					</link> documentation 
-					<link >
-						<url >tools/eiffelstudio/index.html</url>
-						<label >here</label>
+					<link>
+						<url>tools/eiffelstudio/index.html</url>
+						<label>here</label>
 					</link>.
-					<heading >
-						<size >2</size>Library documentation
+					<heading>
+						<size>2</size>Library documentation
 					</heading>
 				</paragraph>
-				<paragraph >ISE Eiffel is all about reuse. Thousands of reusable componentshelp you develop your applications by standing on the shouldersof previous developers. Here is the documentation on the principallibraries:
+				<paragraph>ISE Eiffel is all about reuse. Thousands of reusable components help you develop your applications by standing on the shoulders of previous developers. Here is the documentation on the principal libraries:
 					<list ordered="false">
-						<item >
-							<link >
-								<url >libraries/base/index.html</url>
-								<label >EiffelBase</label>
-							</link>: ISE's acclaimed open-source librarycovering the fundamental algorithms and data structures ofcomputing science.  
+						<item>
+							<link>
+								<url>libraries/base/index.html</url>
+								<label>EiffelBase</label>
+							</link>: ISE's acclaimed open-source library covering the fundamental algorithms and data structures of computing science.  
 						</item>
-						<item >
-							<link >
-								<url >libraries/vision2/index.html</url>
-								<label >EiffelVision 2</label>
-							</link>: the extensive multi-platform graphicallibrary for producing modern GUI applications that will run onWindows as well as Unix, Linux, VMS and other X-based platforms.  
+						<item>
+							<link>
+								<url>libraries/vision2/index.html</url>
+								<label>EiffelVision 2</label>
+							</link>: the extensive multi-platform graphical library for producing modern GUI applications that will run on Windows as well as Unix, Linux, VMS and other X-based platforms.  
 						</item>
-						<item >
-							<link >
-								<url >libraries/wel/index.html</url>
-								<label >WEL (Windows Eiffel Library)</label>
-							</link>: powerful graphicallibrary for Windows platforms.  
+						<item>
+							<link>
+								<url>libraries/wel/index.html</url>
+								<label>WEL (Windows Eiffel Library)</label>
+							</link>: powerful graphical library for Windows platforms.  
 						</item>
-						<item >
-							<link >
-								<url >libraries/com/index.html</url>
-								<label >EiffelCOM</label>
-							</link>: your tool of choicefor building and using Microsoft COM components.See also 
-							<link >
-								<url >tools/wizards/com/index.html</url>
-								<label >EiffelCOM Wizard</label>
+						<item>
+							<link>
+								<url>libraries/com/index.html</url>
+								<label>EiffelCOM</label>
+							</link>: your tool of choice for building and using Microsoft COM components.See also 
+							<link>
+								<url>tools/wizards/com/index.html</url>
+								<label>EiffelCOM Wizard</label>
 							</link>.  
 						</item>
-						<item >
-							<link >
-								<url >libraries/net/index.html</url>
-								<label >EiffelNet</label>
-							</link>: the client-server library for exchangingobject structures across the network, between identical or differentmachine architectures.  
+						<item>
+							<link>
+								<url>libraries/net/index.html</url>
+								<label>EiffelNet</label>
+							</link>: the client-server library for exchanging object structures across the network, between identical or different machine architectures.  
 						</item>
-						<item >
-							<link >
-								<url >libraries/time/index.html</url>
-								<label >EiffelTime</label>
+						<item>
+							<link>
+								<url>libraries/time/index.html</url>
+								<label>EiffelTime</label>
 							</link>: time and date library.  
 						</item>
-						<item >
-							<link >
-								<url >libraries/store/index.html</url>
-								<label >EiffelStore</label>
+						<item>
+							<link>
+								<url>libraries/store/index.html</url>
+								<label>EiffelStore</label>
 							</link>: object-relational database interface library.  
 						</item>
-						<item >
-							<link >
-								<url >libraries/thread/index.html</url>
-								<label >EiffelThreads</label>
+						<item>
+							<link>
+								<url>libraries/thread/index.html</url>
+								<label>EiffelThreads</label>
 							</link>: multi-threading library.  
 						</item>
-						<item >
-							<link >
-								<url >libraries/eiffel2java/index.html</url>
-								<label >Eiffel2Java</label>
+						<item>
+							<link>
+								<url>libraries/eiffel2java/index.html</url>
+								<label>Eiffel2Java</label>
 							</link>: Java interface library.  
 						</item>
-						<item >
-							<link >
-								<url >libraries/web/index.html</url>
-								<label >EiffelWeb</label>
-							</link>: Web interface library with support foreasy development of CGI scripts in Eiffel.  
+						<item>
+							<link>
+								<url>libraries/web/index.html</url>
+								<label>EiffelWeb</label>
+							</link>: Web interface library with support for easy development of CGI scripts in Eiffel.  
 						</item>
-						<item >
-							<link >
-								<url >libraries/lex/index.html</url>
-								<label >EiffelLex and EiffelParse</label>
+						<item>
+							<link>
+								<url>libraries/lex/index.html</url>
+								<label>EiffelLex and EiffelParse</label>
 							</link>: lexical analysis and parsing libraries.  
 						</item>
 					</list>
-					<heading >
-						<size >2</size>Documentation on other tools
+					<heading>
+						<size>2</size>Documentation on other tools
 					</heading>
 				</paragraph>
-				<paragraph >See also the documentation on the following tools of ISE Eiffel 5:  
+				<paragraph>See also the documentation on the following tools of ISE Eiffel 5:  
 					<list ordered="false">
-						<item >
-							<link >
-								<url >tools/wizards/com/index.html</url>
-								<label >EiffelCOM Wizard</label>
-							</link>: generates a COM clientor server application, taking care of all the details.    
+						<item>
+							<link>
+								<url>tools/wizards/com/index.html</url>
+								<label>EiffelCOM Wizard</label>
+							</link>: generates a COM client or server application, taking care of all the details.    
 						</item>
-						<item >
-							<link >
-								<url >tools/eiffelbuild/index.html</url>
-								<label >EiffelBuild</label>
+						<item>
+							<link>
+								<url>tools/eiffelbuild/index.html</url>
+								<label>EiffelBuild</label>
 							</link>: a GUI builder for the 
-							<link >
-								<url >libraries/vision2/index.html</url>
-								<label >EiffelVision 2</label>
+							<link>
+								<url>libraries/vision2/index.html</url>
+								<label>EiffelVision 2</label>
 							</link> library.
 						</item>
 					</list>
@@ -186,70 +183,67 @@
 			</paragraph>
 		</output>
 		<output output="envision">
-			<heading >
-				<size >1</size>Online ENViSioN! Documentation
-			</heading>
-			<paragraph >Congratulations for installing Eiffel ENViSioN!</paragraph>
-			<paragraph >ENViSioN! is a product of Eiffel Software Inc.</paragraph>
-			<paragraph >ENViSioN! is
-				<bold >E</bold>iffel for .
-				<bold >N</bold>ET for
-				<bold >V</bold>isual
-				<bold >S</bold>tudio .
-				<bold >N</bold>ET.
+			<paragraph>Congratulations for installing Eiffel ENViSioN!</paragraph>
+			<paragraph>ENViSioN! is a product of Eiffel Software Inc.</paragraph>
+			<paragraph>ENViSioN! is 
+				<bold>E</bold>iffel for .
+				<bold>N</bold>ET for 
+				<bold>V</bold>isual 
+				<bold>S</bold>tudio .
+				<bold>N</bold>ET.
 			</paragraph>
-			<paragraph >ENViSioN! gives software developers the ability to create software using the Eiffel method and language in combination with the with Microsoft Visual Studio .NET IDE.</paragraph>
-			<paragraph >As you read this documentation, you will find that Eiffel provides capabilities that make it unique among the many .NET compatible languages.</paragraph>
-			<paragraph >Eiffel is a full-lifecycle methodology and language for quality software development, based on the most advanced version of object technology and the concepts of Design by Contract.</paragraph>
-			<paragraph >Eiffel Software's Eiffel is available on many platforms and is one of the first development environments to take advantage of the Microsoft .NET framework.</paragraph>
-			<paragraph > ENViSioN! comes with extensive online documentation. Please take the time to read the documentation included with ENViSioN! so that you can make the best possible use of the language, methodology, and environment.</paragraph>
-			<paragraph >Here is your roadmap to Eiffel documentation.</paragraph>
-			<heading >
-				<size >2</size>General documentation
-			</heading>Make sure to read the introductory documentation, which includes:
+			<paragraph>ENViSioN! gives software developers the ability to create software using the Eiffel method and language in combination with the with Microsoft Visual Studio .NET IDE.</paragraph>
+			<paragraph>As you read this documentation, you will find that Eiffel provides capabilities that make it unique among the many .NET compatible languages.</paragraph>
+			<paragraph>Eiffel is a full-lifecycle methodology and language for quality software development, based on the most advanced version of object technology and the concepts of Design by Contract.</paragraph>
+			<paragraph>Eiffel Software's Eiffel is available on many platforms and is one of the first development environments to take advantage of the Microsoft .NET framework.</paragraph>
+			<paragraph> ENViSioN! comes with extensive online documentation. Please take the time to read the documentation included with ENViSioN! so that you can make the best possible use of the language, methodology, and environment.</paragraph>
+			<paragraph>Here is your roadmap to Eiffel documentation.</paragraph>
+			<heading>
+				<size>2</size>General documentation
+			</heading>Make sure to read the introductory documentation, which includes: 
 			<list ordered="false">
-				<item >Two presentations of the Eiffel method and language, one short (
-					<link >
-						<url >general/guided_tour/language/invitation-00.html</url>
-						<label >an invitation to Eiffel</label>
-					</link>) and the other a
-					<link >
-						<url >general/guided_tour/language/tutorial-00.html</url>
-						<label >detailed tutorial</label>
+				<item>Two presentations of the Eiffel method and language, one short (
+					<link>
+						<url>general/guided_tour/language/invitation-00.html</url>
+						<label>an invitation to Eiffel</label>
+					</link>) and the other a 
+					<link>
+						<url>general/guided_tour/language/tutorial-00.html</url>
+						<label>detailed tutorial</label>
 					</link>.
 				</item>
-				<item >Complementary documents:
-					<link >
-						<url >general/guided_tour/other/why_eiffel.html</url>
-						<label >"Why your next project should use Eiffel"</label>
-					</link> and the
-					<link >
-						<url >general/guided_tour/other/one_minute.html</url>
-						<label >"1-minute summary"</label>
+				<item>Complementary documents: 
+					<link>
+						<url>general/guided_tour/other/why_eiffel.html</url>
+						<label>"Why your next project should use Eiffel"</label>
+					</link> and the 
+					<link>
+						<url>general/guided_tour/other/one_minute.html</url>
+						<label>"1-minute summary"</label>
 					</link> (to show your boss!).
 				</item>
 			</list>
-			<heading >
-				<size >2</size>Library documentation
+			<heading>
+				<size>2</size>Library documentation
 			</heading>
-			<paragraph >Eiffel is all about reuse. Thousands of reusable components help you develop your applications by standing on the shoulders of previous developers. Here is the documentation on the principal libraries:</paragraph>
+			<paragraph>Eiffel is all about reuse. Thousands of reusable components help you develop your applications by standing on the shoulders of previous developers. Here is the documentation on the principal libraries:</paragraph>
 			<list ordered="false">
-				<item >
-					<link >
-						<url >libraries/base/index.html</url>
-						<label >EiffelBase</label>
+				<item>
+					<link>
+						<url>libraries/base/index.html</url>
+						<label>EiffelBase</label>
 					</link>: Eiffel Software's acclaimed open-source library covering the fundamental algorithms and data structures of computing science.
 				</item>
-				<item >
-					<link >
-						<url >libraries/vision2/index.html</url>
-						<label >EiffelVision 2</label>
+				<item>
+					<link>
+						<url>libraries/vision2/index.html</url>
+						<label>EiffelVision 2</label>
 					</link>: the extensive multi-platform graphical library for producing modern GUI applications that will run on Windows as well as Unix, Linux, VMS and other X-based platforms.
 				</item>
-				<item >
-					<link >
-						<url >libraries/wel/index.html</url>
-						<label >WEL (Windows Eiffel Library)</label>
+				<item>
+					<link>
+						<url>libraries/wel/index.html</url>
+						<label>WEL (Windows Eiffel Library)</label>
 					</link>: powerful graphical library for Windows platforms.
 				</item>
 			</list>

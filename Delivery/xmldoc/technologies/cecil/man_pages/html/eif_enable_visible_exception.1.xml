@@ -2,9 +2,6 @@
 	<meta_data/>
 	<paragraph>
 		<heading>
-			<size>1</size>Reference for `eif_enable_visible_exception'
-		</heading>
-		<heading>
 			<size>2</size>SYNOPSYS
 		</heading>
 		<code>
@@ -30,5 +27,4 @@
 		<bold>eif_attribute</bold>(1) , 
 		<bold>eif_procedure</bold>(1),
 		<bold>eif_reference_function</bold>(1).  Markup created by  1. 0, November 15, 1999. 
-	</paragraph>
-</document>
+	</paragraph></document>

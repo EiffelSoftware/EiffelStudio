@@ -1,10 +1,6 @@
 <document title="MANUAL IDENTIFICATION AND COPYRIGHT" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>
-			<content>Manual Identification and Copyright</content>
-		</heading>
 		<paragraph>Title: 
 			<span>Invitation to Eiffel</span>, ISE Technical Report TR-EI-67/IV.  
 		</paragraph>
@@ -13,7 +9,7 @@
 			<content>Publication history</content>
 		</heading>First published 1987.  Some revisions (in particular Web versions) have used the title "
 		<span>Eiffel in a Nutshell</span> "
-		<line_break></line_break>This version: July 2001.  Introduces coverage of agents; several other improvements.  Corresponds to release 5.  0 of the ISE Eiffel environment.  
+		<line_break/>This version: July 2001.  Introduces coverage of agents; several other improvements.  Corresponds to release 5.  0 of the ISE Eiffel environment.  
 		<heading>
 			<size>2</size>
 			<content>Author</content>
@@ -84,5 +80,4 @@
 				<label>http://support.eiffel.com</label>
 			</link> for details.  
 		</info>
-	</paragraph>
-</document>
+	</paragraph></document>

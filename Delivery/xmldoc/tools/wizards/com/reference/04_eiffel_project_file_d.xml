@@ -1,9 +1,6 @@
 <document title="Eiffel Project File Dialog" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Eiffel Project File Dialog
-		</heading>
 		<paragraph> The Eiffel project file Dialog asks for the location of an Eiffel project file (*.
 			<italic>epr</italic>), the Ace file of the project, the name of the Eiffel class that will be converted into an IDL file, and the cluster name to which the Eiffel class belongs.
 		</paragraph>
@@ -86,5 +83,4 @@
 				<label>Building a Component</label>
 			</link>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

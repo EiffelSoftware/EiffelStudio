@@ -6,7 +6,7 @@
 		</heading>
 		<code>
 			<bold>#include "eif_hector. h"</bold>
-			<bold></bold>
+			<bold/>
 			<bold>EIF_OBJECT eif_protect (EIF_REFERENCE</bold>
 			<italic>ref</italic>
 			<bold>);</bold>
@@ -35,5 +35,4 @@
 		<bold>eif_access</bold>(1),
 		<bold>eif_protect</bold>(1) ,
 		<bold>eif_wean</bold>(1). Markup created by  1. 0, November 15, 1999.
-	</paragraph>
-</document>
+	</paragraph></document>

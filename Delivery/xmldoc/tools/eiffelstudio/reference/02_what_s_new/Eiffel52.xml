@@ -1,11 +1,8 @@
 <document title="Release notes of EiffelStudio 5.2" output="studio">
 	<meta_data>
-		<help></help>
+		<help/>
 	</meta_data>
 	<paragraph>
-		<heading>
-			<size>1</size>Release notes of EiffelStudio 5.2
-		</heading>
 		<heading>
 			<size>2</size>Graphical environment
 		</heading>
@@ -13,14 +10,14 @@
 			<item>Added a status bar, which gives a lot of information, such as the state of the compilation or the name of the current project.</item>
 			<item>Clicking feature clauses in the feature tree now centers the editor on the selected feature clause.</item>
 			<item>More specific icons in the feature and cluster trees, so that identifying deferred classes and the nature of features is now straightforward.</item>
-			<item>Up to 10 
+			<item>Up to 10
 				<link>
 					<url>../70_wizards_and_dialogs/30_dialogs/30_external_commands/00_introduction.xml</url>
 					<label>external commands</label>
 				</link> can now be defined and called from the
 				<bold>Tools</bold> menu.
 			</item>
-			<item>The new 
+			<item>The new
 				<bold>Quick compile</bold> command lets you recompile only the classes that have been edited in EiffelStudio, skipping the sometimes tedious degree 6, that looks for modified classes.
 			</item>
 			<item>Control picking now has a configurable effect.</item>
@@ -30,7 +27,7 @@
 			<size>2</size>Compiler
 		</heading>
 		<list ordered="false">
-			<item>Click 
+			<item>Click
 				<link>
 					<url>../30_compiler/60_version_history/02_52_release/00_51_to_52_changes.xml</url>
 					<label>here</label>
@@ -54,10 +51,10 @@
 					<label>info</label>
 				</link>)
 			</item>
-			<item>Classes can now define 
+			<item>Classes can now define
 				<code>
 					<feature_name>debug_output</feature_name>
-				</code> a feature inherited from 
+				</code> a feature inherited from
 				<code>
 					<class_name>DEBUG_OUTPUT</class_name>
 				</code>, whose string result is automatically displayed in the debugger for all objects of that type. (
@@ -80,26 +77,26 @@
 			<size>3</size>EiffelBase
 		</heading>
 		<list ordered="false">
-			<item>Improved speed of search operations in 
+			<item>Improved speed of search operations in
 				<code>
 					<class_name>ARRAYED_LIST</class_name>
-				</code> and 
+				</code> and
 				<code>
 					<class_name>HASH_TABLE</class_name>
 				</code>.
 			</item>
-			<item>Reduced number of exported features in 
+			<item>Reduced number of exported features in
 				<code>
 					<class_name>TUPLE</class_name>
 				</code>.
 			</item>
-			<item>Updated 
+			<item>Updated
 				<code>
 					<class_name>INTERNAL</class_name>
-				</code> and 
+				</code> and
 				<code>
 					<class_name>TUPLE</class_name>
-				</code> to accept 
+				</code> to accept
 				<code>
 					<class_name>INTEGER_XX</class_name>
 				</code> based queries/commands.
@@ -111,12 +108,12 @@
 			</item>
 			<item>
 				<list ordered="false">
-					<item>Fixed 
+					<item>Fixed
 						<code>
 							<feature_name>is_integer</feature_name>
 						</code> to return False for strings of the form "(-|+)[a-zA-Z]+[0-9]*)"
 					</item>
-					<item>Improved speed of 
+					<item>Improved speed of
 						<code>
 							<feature_name>to_lower</feature_name>
 						</code> and
@@ -124,77 +121,77 @@
 							<feature_name>to_upper</feature_name>
 						</code>.
 					</item>
-					<item>Updated for ELKS 2001 conformance: 
+					<item>Updated for ELKS 2001 conformance:
 						<list ordered="false">
-							<item>Changed signature of 
+							<item>Changed signature of
 								<code>
 									<feature_name>out</feature_name>
 								</code> and
 								<code>
 									<feature_name>replace_substring</feature_name>
-								</code> to use 
+								</code> to use
 								<code>
 									<class_name>STRING</class_name>
 								</code> instead of `like Current'.
 							</item>
-							<item>Added 
+							<item>Added
 								<code>
 									<feature_name>keep_tail</feature_name>
-								</code>, 
+								</code>,
 								<code>
 									<feature_name>keep_head</feature_name>
-								</code>, 
+								</code>,
 								<code>
 									<feature_name>remove_tail</feature_name>
-								</code>, 
+								</code>,
 								<code>
 									<feature_name>remove_head</feature_name>
-								</code> and make 
+								</code> and make
 								<code>
 									<feature_name>head</feature_name>
-								</code> and 
+								</code> and
 								<code>
 									<feature_name>tail</feature_name>
 								</code>obsolete.
 							</item>
-							<item>Added 
+							<item>Added
 								<code>
 									<feature_name>string</feature_name>
-								</code>, 
+								</code>,
 								<code>
 									<feature_name>same_string</feature_name>
-								</code>, 
+								</code>,
 								<code>
 									<feature_name>has_substring</feature_name>
-								</code>, 
+								</code>,
 								<code>
 									<feature_name>fill_with</feature_name>
-								</code>, 
+								</code>,
 								<code>
 									<feature_name>insert_string</feature_name>
-								</code>, 
+								</code>,
 								<code>
 									<feature_name>insert_character</feature_name>
-								</code>, 
+								</code>,
 								<code>
 									<feature_name>as_lower</feature_name>
-								</code>, 
+								</code>,
 								<code>
 									<feature_name>as_upper.</feature_name>
 								</code>
 							</item>
-							<item>Modified 
+							<item>Modified
 								<code>
 									<feature_name>make_from_string</feature_name>
 								</code> so that no sharing of internal string is done.
 							</item>
-							<item>Made 
+							<item>Made
 								<code>
 									<feature_name>remake</feature_name>
-								</code>, 
+								</code>,
 								<code>
 									<feature_name>replace_character</feature_name>
-								</code> and 
+								</code> and
 								<code>
 									<feature_name>insert</feature_name>
 								</code> obsolete.
@@ -208,13 +205,13 @@
 			<size>3</size>EiffelThread
 		</heading>
 		<list ordered="false">
-			<item>Fixed crashes when using 
+			<item>Fixed crashes when using
 				<code>
 					<feature_name>join</feature_name>
 				</code> or
 				<code>
 					<feature_name>terminated</feature_name>
-				</code> from 
+				</code> from
 				<code>
 					<class_name>THREAD_CONTROL</class_name>
 				</code>.
@@ -241,21 +238,21 @@
 			<size>3</size>WEL
 		</heading>
 		<list ordered="false">
-			<item>Changed type of non-exported feature 
+			<item>Changed type of non-exported feature
 				<code>
 					<feature_name>internal_data</feature_name>
-				</code> of 
+				</code> of
 				<code>
 					<class_name>WEL_WINDOW</class_name>
-				</code> from 
+				</code> from
 				<code>
 					<class_name>INTEGER</class_name>
-				</code> to 
+				</code> to
 				<code>
 					<class_name>POINTER</class_name>
 				</code>.
 			</item>
-			<item>Fixed a GDI memory leak when creating/releasing instances of descendant of 
+			<item>Fixed a GDI memory leak when creating/releasing instances of descendant of
 				<code>
 					<class_name>WEL_CONTROL</class_name>
 				</code>.
@@ -280,13 +277,13 @@
 		</heading>
 		<list ordered="false">
 			<item>Fixed resource leak on Windows 98 and Windows Me.</item>
-			<item>Fixed incorrect implementation of 
+			<item>Fixed incorrect implementation of
 				<code>
 					<feature_name>area</feature_name>
-				</code> and 
+				</code> and
 				<code>
 					<feature_name>substring</feature_name>
-				</code> for 
+				</code> for
 				<code>
 					<class_name>STRING</class_name>
 				</code> in dotnet mode.
@@ -294,37 +291,37 @@
 			<item>Fixed issue with setting of arguments. After restarting EiffelStudio the command line argument contains an extra `]'character.</item>
 			<item>Fixed issue with working directories where only the first one ever set was used even if new ones have been set afterwards.</item>
 			<item>Fixed issue in IL code generation where having a class that inherits from a non-Eiffel .NET class. And the class has the following features:
-				<line_break></line_break> 
-				<code> 
-					<feature_name>a</feature_name>: 
+				<line_break/>
+				<code>
+					<feature_name>a</feature_name>:
 					<class_name>ARRAY</class_name> [
-					<keyword>like</keyword> 
-					<feature_name>f</feature_name>]          
-					<feature_name>f</feature_name>: 
-					<class_name>STRING</class_name>  
-					<keyword>is</keyword>        
-					<keyword>do</keyword>        
+					<keyword>like</keyword>
+					<feature_name>f</feature_name>]
+					<feature_name>f</feature_name>:
+					<class_name>STRING</class_name>
+					<keyword>is</keyword>
+					<keyword>do</keyword>
 					<keyword>end</keyword>
 				</code>
 				<paragraph>Then you could neither load nor execute the generated code.</paragraph>
 			</item>
 			<item>Fixed issue with incorrect C code generation of inspect instruction based on character values above 128.</item>
-			<item>Fixed bug in 
+			<item>Fixed bug in
 				<code>
 					<feature_name>copy</feature_name>
-				</code> from 
+				</code> from
 				<code>
 					<class_name>STRING</class_name>
-				</code> where following code was violating `valid_count' invariant from 
+				</code> where following code was violating `valid_count' invariant from
 				<code>
 					<class_name>STRING</class_name>
-				</code>: 
+				</code>:
 				<code>
-					<keyword>local</keyword>    s, t: 
+					<keyword>local</keyword>    s, t:
 					<class_name>STRING</class_name>
-					<keyword>do</keyword>    
+					<keyword>do</keyword>
 					<keyword>create</keyword> s.
-					<feature_name>make</feature_name> (9)    
+					<feature_name>make</feature_name> (9)
 					<keyword>create</keyword> t.
 					<feature_name>make</feature_name> (10)    t.
 					<feature_name>append</feature_name> ("1234567890")    s.
@@ -368,5 +365,4 @@
 				<label>Click here to check out what was new in Eiffel 5.0</label>
 			</link>
 		</paragraph>
-	</paragraph>
-</document>
+	</paragraph></document>

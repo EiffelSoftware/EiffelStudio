@@ -1,10 +1,6 @@
 <document title="Getting started with the Eiffel method and language" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>
-			<content>Getting started with the Eiffel method and language</content>
-		</heading>
 		<paragraph>Two introductory documents are available, one short and one longer:</paragraph>
 		<div>
 			<list ordered="false">
@@ -62,5 +58,4 @@
 				<label>list of introductory documents</label>
 			</link> covering not only the language but also the environment and general presentations of Eiffel.  
 		</paragraph>
-	</paragraph>
-</document>
+	</paragraph></document>

@@ -1,9 +1,6 @@
 <document title="5 A LOOK AT THE PROJECT DIRECTORY" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>5 A Look at the Project Directory
-		</heading>
 		<paragraph>
 			<link>
 				<url>tour-help.xml</url>
@@ -200,5 +197,4 @@
 			</code> for "Workbench" -- we'll see the reason later).  Feel free to browse through it if you like, but don't change anything.  
 		</paragraph>
 		<paragraph>By the way, we are now done with any platform-specific instructions.  Everything in the rest of this Tour, other than the graphical look-and-feel, will work the same across all EiffelStudio platforms.  </paragraph>
-	</paragraph>
-</document>
+	</paragraph></document>

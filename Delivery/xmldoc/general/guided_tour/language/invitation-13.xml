@@ -9,30 +9,27 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<heading>
-			<size>1</size>
-			<content>12 Combining Genericity and Inheritance</content>
-		</heading>
 		<paragraph>Genericity and inheritance, the two fundamental mechanisms for generalizing classes, may be combined in two fruitful ways.  </paragraph>
-		<paragraph>The first technique yields 
-			<bold>polymorphic data structures</bold> .  Assume that in the generic class 
+		<paragraph>The first technique yields
+			<bold>polymorphic data structures</bold> .  Assume that in the generic class
 			<code>
 				<string>LIST</string>
 			</code> [
 			<code>
 				<string>G</string>
-			</code>] the insertion procedure 
+			</code>] the insertion procedure
 			<code>
 				<string>put</string>
-			</code> has a formal argument of type 
+			</code> has a formal argument of type
 			<code>
 				<string>G</string>
 			</code>, representing the element to be inserted.  Then with a declaration such as
-		</paragraph><code_block>	pl: 
+		</paragraph>
+		<code_block>	pl:
 			<class_name>LIST</class_name> [
 			<class_name>POLYGON</class_name>]
 		</code_block>
-		<paragraph>the type rules imply that in a call 
+		<paragraph>the type rules imply that in a call
 			<code>
 				<string>pl</string>
 			</code>.
@@ -47,132 +44,135 @@
 			</code>
 			<code>
 				<comment>")</comment>
-			</code>the permitted types for the argument 
+			</code>the permitted types for the argument
 			<code>
 				<string>p</string>
-			</code> include not just 
+			</code> include not just
 			<code>
 				<string>POLYGON</string>
-			</code>, but also 
+			</code>, but also
 			<code>
 				<string>RECTANGLE</string>
-			</code> (an heir of 
+			</code> (an heir of
 			<code>
 				<string>POLYGON</string>
-			</code> ) or any other type conforming to 
+			</code> ) or any other type conforming to
 			<code>
 				<string>POLYGON</string>
-			</code> through inheritance.  
+			</code> through inheritance.
 		</paragraph>
-		<paragraph>The basic conformance requirement used here is the inheritance-based type compatibility rule: 
+		<paragraph>The basic conformance requirement used here is the inheritance-based type compatibility rule:
 			<code>
 				<string>V</string>
-			</code> conforms to 
+			</code> conforms to
 			<code>
 				<string>T </string>
 			</code>if
 			<code>
 				<string> V</string>
-			</code> is a descendant of 
+			</code> is a descendant of
 			<code>
 				<string>T</string>
 			</code>.
 		</paragraph>
-		<paragraph>Structures such as 
+		<paragraph>Structures such as
 			<code>
 				<string>pl</string>
 			</code> may contain objects of different types, hence the name "polymorphic data structure".  Such polymorphism is, again, made safe by the type rules: by choosing an actual generic parameter (
 			<code>
 				<string>POLYGON</string>
-			</code> in the example) based higher or lower in the inheritance graph, you extend or restrict the permissible types of objects in 
+			</code> in the example) based higher or lower in the inheritance graph, you extend or restrict the permissible types of objects in
 			<code>
 				<string>pl</string>
 			</code> .  A fully general list would be declared as
-		</paragraph><code_block>	
+		</paragraph>
+		<code_block>
 			<class_name>LIST</class_name> [
 			<class_name>ANY</class_name>]
 		</code_block>
-		<paragraph>where 
+		<paragraph>where
 			<code>
 				<string>ANY</string>
-			</code>, a Kernel Library class, is automatically an ancestor of any class that you may write.  
+			</code>, a Kernel Library class, is automatically an ancestor of any class that you may write.
 		</paragraph>
-		<paragraph>The other mechanism for combining genericity and inheritance is 
+		<paragraph>The other mechanism for combining genericity and inheritance is
 			<bold>constrained genericity</bold>.  By indicating a class name after a formal generic parameter, as in
-		</paragraph><code_block>	
-			<class_name>VECTOR</class_name> [ 
-			<generics>T</generics> -&gt; 
+		</paragraph>
+		<code_block>
+			<class_name>VECTOR</class_name> [
+			<generics>T</generics> -&gt;
 			<class_name>NUMERIC</class_name> ]
 		</code_block>
-		<paragraph>you express that only descendants of that class (here 
+		<paragraph>you express that only descendants of that class (here
 			<code>
 				<string>NUMERIC</string>
-			</code> ) may be used as the corresponding actual generic parameters.  This makes it possible to use the corresponding operations.  Here, for example, class 
+			</code> ) may be used as the corresponding actual generic parameters.  This makes it possible to use the corresponding operations.  Here, for example, class
 			<code>
 				<string>VECTOR</string>
-			</code> may define a routine 
+			</code> may define a routine
 			<code>
 				<keyword>infix</keyword>
-			</code>  "+" for adding vectors, based on the corresponding routine from 
+			</code>  "+" for adding vectors, based on the corresponding routine from
 			<code>
 				<string>NUMERIC</string>
-			</code> for adding vector elements.  Then by making 
+			</code> for adding vector elements.  Then by making
 			<code>
 				<string>VECTOR</string>
-			</code> itself inherit from 
+			</code> itself inherit from
 			<code>
 				<string>NUMERIC</string>
-			</code>, you ensure that it satisfies itsown generic constraint and enable the definition of types such as 
+			</code>, you ensure that it satisfies itsown generic constraint and enable the definition of types such as
 			<code>
 				<string>VECTOR</string>
-			</code> 
+			</code>
 			<code>
 				<comment> [</comment>
-			</code> 
+			</code>
 			<code>
 				<string> VECTOR </string>
 			</code>
 			<code>
 				<comment>[</comment>
-			</code> 
+			</code>
 			<code>
 				<string> T </string>
-			</code> 
+			</code>
 			<code>
 				<comment>]]</comment>
-			</code>.   
+			</code>.
 		</paragraph>
-		<paragraph>As you have perhaps guessed, unconstrained genericity, as in 
+		<paragraph>As you have perhaps guessed, unconstrained genericity, as in
 			<code>
 				<string>LIST </string>
-			</code> 
+			</code>
 			<code>
 				<comment>[</comment>
-			</code> 
+			</code>
 			<code>
 				<string>G</string>
-			</code>], may be viewed as an abbreviation for genericity constrained by 
+			</code>], may be viewed as an abbreviation for genericity constrained by
 			<code>
 				<string>ANY</string>
 			</code>, as in
-		</paragraph><code_block>	
-			<class_name>LIST</class_name> [ 
-			<generics>G</generics> -&gt; 
+		</paragraph>
+		<code_block>
+			<class_name>LIST</class_name> [
+			<generics>G</generics> -&gt;
 			<class_name>ANY</class_name> ]
 		</code_block>
-		<paragraph>Something else you may have guessed: if 
+		<paragraph>Something else you may have guessed: if
 			<code>
 				<string>ANY</string>
-			</code>, introduced in this session, is the top of the inheritance structure -- providing all classes with universal features such as 
+			</code>, introduced in this session, is the top of the inheritance structure -- providing all classes with universal features such as
 			<code>
 				<string>equal</string>
-			</code> to compare arbitrary objects and 
+			</code> to compare arbitrary objects and
 			<code>
 				<string>clone</string>
-			</code> to duplicate objects -- then 
+			</code> to duplicate objects -- then
 			<code>
 				<string>NONE</string>
-			</code>, seen earlier in the notation 
+			</code>, seen earlier in the notation
 			<code>
 				<keyword>feature</keyword>
 			</code>
@@ -181,18 +181,18 @@
 			</code>
 			<code>
 				<string>NONE</string>
-			</code> 
+			</code>
 			<code>
 				<comment>}</comment>
-			</code>, is its bottom.  
+			</code>, is its bottom.
 			<code>
 				<string>NONE</string>
-			</code> indeed conceptually inherits from all other classes.  
+			</code> indeed conceptually inherits from all other classes.
 			<code>
 				<string>NONE</string>
-			</code> is, among other things, the type of 
+			</code> is, among other things, the type of
 			<code>
 				<string>Void</string>
-			</code>, the void reference.  
+			</code>, the void reference.
 		</paragraph>
 	</paragraph></document>

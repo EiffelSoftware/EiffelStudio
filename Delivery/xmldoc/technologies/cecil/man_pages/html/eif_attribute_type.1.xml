@@ -2,14 +2,11 @@
 	<meta_data/>
 	<paragraph>
 		<heading>
-			<size>1</size>Reference for `eif_attribute_type'
-		</heading>
-		<heading>
 			<size>2</size>SYNOPSYS
 		</heading>
 		<code>
 			<bold>#include "eif_cecil. h"</bold>
-			<bold></bold>
+			<bold/>
 			<bold>int eif_attribute_type (char *</bold> 
 			<italic>attr</italic>
 			<bold>, EIF_TYPE_ID</bold> 
@@ -44,5 +41,4 @@
 		<bold>attribute_exists</bold>(1) ,
 		<bold>eif_procedure</bold>(1) , 
 		<bold>eif_reference_function</bold>(1). Markup created by  1. 0, November 15, 1999. 
-	</paragraph>
-</document>
+	</paragraph></document>

@@ -1,18 +1,15 @@
-<document title="GUI Project Wizard" output="envision">
+<document title="Blank Eiffel Graphical Application Project Wizard" output="envision">
 	<meta_data>
 		<help>
 			<toc>
-				<envision_pseudo_name>30</envision_pseudo_name>
+				<envision_pseudo_name>40</envision_pseudo_name>
 			</toc>
 		</help>
 	</meta_data>
 	<paragraph>
-		<heading>
-			<size>1</size>GUI Project Wizard
-		</heading>
 		<paragraph>Availability: Enterprise and Free versions.</paragraph>
 		<paragraph>
-			<line_break></line_break>This wizard enables you to create a simple 
+			<line_break/>This wizard enables you to create a simple 
 			<help_link>
 				<tab_index>0</tab_index>
 				<index_moniker>!DefaultAssociativeIndex</index_moniker>
@@ -67,17 +64,16 @@
 		</list>
 		<seealso>
 			<bold>See Also</bold>
-			<line_break></line_break>
+			<line_break/>
 			<link>
 				<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/10_Adding_A_New_Project/index.xml</url>
 				<label>  Adding a New Project</label>
 			</link>
-			<line_break></line_break>
+			<line_break/>
 			<link>
 				<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/10_Adding_A_New_Project/interactive_gui_project/index.xml</url>
 				<label>  Advanced GUI Project Wizard</label>
 			</link>
-			<line_break></line_break>
+			<line_break/>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

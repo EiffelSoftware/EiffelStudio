@@ -1,9 +1,6 @@
 <document title="Supported exceptions" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Supported exceptions
-		</heading>
 		<paragraph>Here is a list of exceptions that may appear in the 
 			<link>
 				<url>10_call_stack_tool.xml</url>
@@ -70,5 +67,4 @@
 		<paragraph>
 			<bold>COM error</bold>: Raised when EiffelCOM encounters an error.
 		</paragraph>
-	</paragraph>
-</document>
+	</paragraph></document>

@@ -1,9 +1,6 @@
 <document title="Object view" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Object view
-		</heading>
 		<paragraph>
 			<image>
 				<url>../../../../../images/eiffelstudio/debugger/object_tree.png</url>
@@ -37,5 +34,4 @@
 				<label>set slice size command</label>
 			</link> with SPECIAL objects.
 		</paragraph>
-	</paragraph>
-</document>
+	</paragraph></document>

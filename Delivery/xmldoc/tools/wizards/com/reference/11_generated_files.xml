@@ -1,9 +1,6 @@
 <document title="Generated Files" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Generated Files
-		</heading>
 		<paragraph>The wizard generates code into the specified destination folder. The file hierarchy is the following:</paragraph>
 		<heading>
 			<size>2</size>Generated Files Hierarchy
@@ -113,5 +110,4 @@
 				<label>Building a Component</label>
 			</link>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

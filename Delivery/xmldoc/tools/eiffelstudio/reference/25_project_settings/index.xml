@@ -1,9 +1,6 @@
 <document title="Project settings window" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Project settings window
-		</heading>
 		<paragraph> </paragraph>
 		<paragraph>This is where global settings regarding your project are going to be made. In here you can specify:</paragraph>
 		<list ordered="false">
@@ -65,5 +62,4 @@
 		<paragraph> </paragraph>
 		<paragraph>Most of the changes that can be made here are taken into account when you next recompile your project. Instead of automatically performing the compilation each time you click Ok or Apply we decided to save the modifications and let the user decide when to recompile. At the moment, only the specification of the command line arguments and of the current working directory for debugging do not require a recompilation of your system.</paragraph>
 		<paragraph> </paragraph>
-	</paragraph>
-</document>
+	</paragraph></document>

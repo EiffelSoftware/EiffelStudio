@@ -1,7 +1,7 @@
 <document title="Reference for `eif_string'" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading></heading>
+		<heading/>
 		<heading>
 			<size>2</size>SYNOPSYS
 		</heading>
@@ -36,5 +36,4 @@
 		</heading>
 		<bold>eif_protect</bold>(1) ,
 		<bold>eif_create</bold>(1).  Markup created by  1. 0, November 15, 1999.
-	</paragraph>
-</document>
+	</paragraph></document>

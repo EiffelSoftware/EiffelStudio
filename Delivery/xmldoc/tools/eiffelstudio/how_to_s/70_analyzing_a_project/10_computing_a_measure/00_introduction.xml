@@ -1,75 +1,71 @@
 <document title="Computing a measure" output="studio">
-	<meta_data >
-		<help >
-			<meta >
-				<meta_content >Measure,compute</meta_content>
-				<name >MS-HKWD</name>
+	<meta_data>
+		<help>
+			<meta>
+				<meta_content>Measure,compute</meta_content>
+				<name>MS-HKWD</name>
 			</meta>
 		</help>
 	</meta_data>
-	<paragraph >
-		<heading >
-			<size >1</size>Computing a measure
-		</heading>
-		<paragraph >The metric interface allows users to analyze their projects. It provides a set of metrics that could be evaluated over various scopes 
-			<span >to obtain quantitative information about systems.</span>
+	<paragraph>
+		<paragraph>The metric interface allows users to analyze their projects. It provides a set of metrics that could be evaluated over various scopes
+			<span>to obtain quantitative information about systems.</span>
 		</paragraph>
-		<paragraph >Thanks to the metric interface, users can evaluate metrics over different scopes, get some detailed information when possible, save the pertinent measures, delete the useless ones, and update the values of previously recorded metrics.</paragraph>
-		<paragraph >To achieve any kind of operation on measures, you need at least one of the following fields or buttons:</paragraph>
-		<paragraph >
-			<image >
-				<height >58</height>
-				<width >536</width>
-				<url >/images/eiffelstudio/metrics_png/fields.png</url>
-				<border >0</border>
+		<paragraph>Thanks to the metric interface, users can evaluate metrics over different scopes, get some detailed information when possible, save the pertinent measures, delete the useless ones, and update the values of previously recorded metrics.</paragraph>
+		<paragraph>To achieve any kind of operation on measures, you need at least one of the following fields or buttons:</paragraph>
+		<paragraph>
+			<image>
+				<height>58</height>
+				<width>536</width>
+				<url>/images/eiffelstudio/metrics_png/fields.png</url>
+				<border>0</border>
 			</image>
 		</paragraph>
 		<list ordered="false">
-			<item >
-				<link >
-					<url >10_calculating_a_measure.xml</url>
-					<label >Calculating a measure</label>
-				</link> 
-				<link >
-					<url >10_calculating_a_measure.xml</url>
+			<item>
+				<link>
+					<url>10_calculating_a_measure.xml</url>
+					<label>Calculating a measure</label>
+				</link>
+				<link>
+					<url>10_calculating_a_measure.xml</url>
 				</link>
 			</item>
-			<item >
-				<link >
-					<url >20_saving_a_measure.xml</url>
-					<label >Saving a measure</label>
-				</link> 
-				<link >
-					<url >20_saving_a_measure.xml</url>
+			<item>
+				<link>
+					<url>20_saving_a_measure.xml</url>
+					<label>Saving a measure</label>
+				</link>
+				<link>
+					<url>20_saving_a_measure.xml</url>
 				</link>
 			</item>
-			<item >
-				<link >
-					<url >30_deleting_measures.xml</url>
-					<label >Deleting measures</label>
+			<item>
+				<link>
+					<url>30_deleting_measures.xml</url>
+					<label>Deleting measures</label>
 				</link>
-				<link >
-					<url >30_deleting_measures.xml</url>
-				</link>
-			</item>
-			<item >
-				<link >
-					<url >40_viewing_measure_details.xml</url>
-					<label >Detailing a measure</label>
-				</link> 
-				<link >
-					<url >40_viewing_measure_details.xml</url>
-				</link>  
-				<link >
-					<url >40_viewing_measure_details.xml</url>
+				<link>
+					<url>30_deleting_measures.xml</url>
 				</link>
 			</item>
-			<item >
-				<link >
-					<url >50_updating_recorded_measures.xml</url>
-					<label >Updating measures</label>
+			<item>
+				<link>
+					<url>40_viewing_measure_details.xml</url>
+					<label>Detailing a measure</label>
+				</link>
+				<link>
+					<url>40_viewing_measure_details.xml</url>
+				</link>
+				<link>
+					<url>40_viewing_measure_details.xml</url>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>50_updating_recorded_measures.xml</url>
+					<label>Updating measures</label>
 				</link>
 			</item>
 		</list>
-	</paragraph>
-</document>
+	</paragraph></document>

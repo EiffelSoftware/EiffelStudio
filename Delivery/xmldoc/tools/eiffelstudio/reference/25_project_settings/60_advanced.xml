@@ -1,9 +1,6 @@
 <document title="Advanced Tab" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Advanced Tab
-		</heading>
 		<paragraph> </paragraph>
 		<paragraph>Here you can select the most advanced options of your project. Here is how it looks like for the calculator example:</paragraph>
 		<paragraph> </paragraph>
@@ -93,5 +90,4 @@
 			<item>inlining: enables inlining on Eiffel features that can be inlined, i.e. whose size is less or equal to the specified size in the combo box. The size value given in parameter corresponds to the number of instructions as the Eiffel compiler sees them (for example a := b.f corresponds to 2 instructions for the Eiffel compiler). The ISE Eiffel inlining is very powerful since it can inline a function in all your Eiffel code, without scope limitation as in C or C++ compilers.</item>
 		</list>
 		<paragraph> </paragraph>
-	</paragraph>
-</document>
+	</paragraph></document>

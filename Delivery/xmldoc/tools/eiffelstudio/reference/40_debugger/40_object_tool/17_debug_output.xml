@@ -1,9 +1,6 @@
 <document title="Debug output" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Debug output
-		</heading>
 		<paragraph>In both trees of the 
 			<link>
 				<url>00_introduction.xml</url>
@@ -34,5 +31,4 @@
 				<url>../../../../../images/eiffelstudio/icons/icon_expand_string_color.gif</url>
 			</image> in the object tool.
 		</tip>
-	</paragraph>
-</document>
+	</paragraph></document>

@@ -9,10 +9,6 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<heading>
-			<size>1</size>
-			<content>7 Exceptions</content>
-		</heading>
 		<paragraph>Whenever there is a contract, the risk exists that someone will break it.  This is where exceptions come in.  </paragraph>
 		<paragraph>Exceptions -- contract violations -- may arise from several causes.  One is an assertion violation, if you've selected run-time assertion monitoring.  Another is a signal triggered by the hardware or operating system to indicate an abnormal condition such as arithmetic overflow, or an attempt to create a new object when there's not enough memory available.  </paragraph>
 		<paragraph>Unless a routine has made specific provision to handle exceptions, it will 
@@ -89,21 +85,8 @@
 			<code>
 				<string>False</string>
 			</code>depending on the outcome.  Here is the text of the routine:
-		</paragraph><code_block>attempt_transmission (message: STRING) is
-		-- Try to transmit message , at most 50 times.
-		-- Set successful accordingly.
-	local
-		failures: INTEGER
-	do
-		if failures &lt; 50 then
-			transmit (message); successful := True
-		else
-			successful := False
-		end
-	rescue
-		failures := failures + 1; retry
-	end
-</code_block>
+		</paragraph>
+		<code_block>attempt_transmission (message: STRING) is-- Try to transmit message , at most 50 times.-- Set successful accordingly.localfailures: INTEGERdoif failures &lt; 50 thentransmit (message); successful := Trueelsesuccessful := Falseendrescuefailures := failures + 1; retryend</code_block>
 		<paragraph>Initialization rules ensure that 
 			<code>
 				<string>failures</string>

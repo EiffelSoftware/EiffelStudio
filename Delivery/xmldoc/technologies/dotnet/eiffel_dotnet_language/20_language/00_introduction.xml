@@ -1,9 +1,6 @@
 <document title="The Eiffel for.NET Language" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>The Eiffel for.NET Language
-		</heading>
 		<paragraph>These pages contain documentation that describes the Eiffel programming language.</paragraph>
 		<paragraph>Eiffel is considered both a development methodology and a programming language.</paragraph>
 		<paragraph>Eiffel the methodology is a recipe for constructing quality software which is based on a small number of powerful concepts. Eiffel the programming language is a notation which is designed to support the methodology.</paragraph>
@@ -69,5 +66,4 @@
 				</link>
 			</item>
 		</list>
-	</paragraph>
-</document>
+	</paragraph></document>

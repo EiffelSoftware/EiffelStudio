@@ -1,9 +1,6 @@
 <document title="Introduction" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Introduction
-		</heading>
 		<paragraph>The browsing tools are the address bars as well as all the tools that are in the left panel of development windows in normal mode. They help find an item in the system, such as a class, a cluster, a feature, some text, ... They include the 
 			<link>
 				<url>10_address_bars/00_introduction.xml</url>
@@ -32,11 +29,10 @@
 		</paragraph>
 		<seealso>
 			<bold>See Also</bold>
-			<line_break></line_break>
+			<line_break/>
 			<link>
 				<url>/tools/eiffelstudio/reference/05_general_interface_description/20_eiffelstudio_window_overview.xml</url>
 				<label>General window overview</label>
 			</link>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

@@ -1,9 +1,6 @@
 <document title="Generated Code Type Dialog" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Generated Code Type Dialog
-		</heading>
 		<paragraph> The first dialog asks whether you want to access or to build a component. If you want to access an existing component then the generated code will be for a client. If you choose to build a new one, the generated code will be for a COM server. Choose the server or client checkbox to specify which kind of project you want to work on. You may specify both in the case where both the component and its client(s)will be written in Eiffel.</paragraph>
 		<heading>
 			<size>2</size>Generated Code Type Dialog
@@ -11,7 +8,7 @@
 		<image>
 			<url>../images/com_image5.jpg</url>
 		</image>
-		<paragraph></paragraph>
+		<paragraph/>
 		<paragraph>EiffelCOM supports the following component executable types:</paragraph>
 		<paragraph>In-Process: These components are Dynamic Link Libraries (DLLs) that will be loaded into the client process. The server runs in the same process as the client.</paragraph>
 		<paragraph>Out-of-process: These components are executable files that can be accessed through the network. Clients and servers run in different processes and may even run on different machines.</paragraph>
@@ -90,5 +87,4 @@
 				<label>Building a Component</label>
 			</link>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

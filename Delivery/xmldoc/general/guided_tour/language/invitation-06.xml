@@ -9,10 +9,6 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<heading>
-			<size>1</size>
-			<content>5 Types</content>
-		</heading>
 		<paragraph>Eiffel is strongly typed for readability and reliability.  Every entity is declared of a certain type, which may be either a reference type or an expanded type.  </paragraph>
 		<paragraph>Any type 
 			<code>
@@ -96,5 +92,4 @@
 		</paragraph>
 		<paragraph>As a result of these conventions, the type system is uniform and consistent: all types, including the basic types, are defined from classes, either as reference types or as expanded types.  </paragraph>
 		<paragraph>In the case of basic types, for obvious reasons of efficiency, the ISE Eiffel compilation mechanism implements the standard arithmetic and boolean operations directly through the corresponding machine operations, not through routine calls.  But this is only a compiler optimization, which does not hamper the conceptual homogeneity of the type edifice.  </paragraph>
-	</paragraph>
-</document>
+	</paragraph></document>

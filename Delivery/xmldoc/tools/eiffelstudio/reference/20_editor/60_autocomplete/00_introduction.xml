@@ -1,40 +1,36 @@
 <document title="Introduction" output="studio">
-	<meta_data >
-		<help >
-			<meta >
-				<meta_content >Editor, Automatic completion</meta_content>
-				<name >MS-HKWD</name>
+	<meta_data>
+		<help>
+			<meta>
+				<meta_content>Editor, Automatic completion</meta_content>
+				<name>MS-HKWD</name>
 			</meta>
 		</help>
 	</meta_data>
-	<paragraph >
-		<heading >
-			<size >1</size>Introduction
-		</heading>
-		<paragraph >EiffelStudio editor includes new features which were designed to help write Eiffel code. Automatic completion is one of those. This feature is available in two contexts:</paragraph>
+	<paragraph>
+		<paragraph>EiffelStudio editor includes new features which were designed to help write Eiffel code. Automatic completion is one of those. This feature is available in two contexts:</paragraph>
 		<list ordered="false">
-			<item >
-				<link >
-					<url >10_syntax_autocomplete.xml</url>
-					<label >when the user types some expression defined in the Eiffel language</label>
+			<item>
+				<link>
+					<url>10_syntax_autocomplete.xml</url>
+					<label>when the user types some expression defined in the Eiffel language</label>
 				</link>.
 			</item>
-			<item >
-				<link >
-					<url >20_feature_call_autocomplete.xml</url>
-					<label >when the user enters a feature call.</label>
+			<item>
+				<link>
+					<url>20_feature_call_autocomplete.xml</url>
+					<label>when the user enters a feature call.</label>
 				</link>
 			</item>
 		</list>
-		<paragraph >As, regarding automatic completion, expectations vary from one individual to another, this 
-			<link >
-				<url >../../85_preferences/20_preferences_reference/20_tools/30_editor/30_automatic_completion_preferences/00_introduction.xml</url>
-				<label >feature is highly customizable</label>
-			</link> and 
-			<link >
-				<url >../../85_preferences/20_preferences_reference/20_tools/30_editor/30_automatic_completion_preferences/10_general_automatic_completion_preferences.xml</url>
-				<label >can be disabled</label>
+		<paragraph>As, regarding automatic completion, expectations vary from one individual to another, this
+			<link>
+				<url>../../85_preferences/20_preferences_reference/20_tools/30_editor/30_automatic_completion_preferences/00_introduction.xml</url>
+				<label>feature is highly customizable</label>
+			</link> and
+			<link>
+				<url>../../85_preferences/20_preferences_reference/20_tools/30_editor/30_automatic_completion_preferences/10_general_automatic_completion_preferences.xml</url>
+				<label>can be disabled</label>
 			</link>.
 		</paragraph>
-	</paragraph>
-</document>
+	</paragraph></document>

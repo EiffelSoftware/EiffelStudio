@@ -1,9 +1,6 @@
 <document title="Local view" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Local view
-		</heading>
 		<paragraph>
 			<image>
 				<url>../../../../../images/eiffelstudio/debugger/locals_tree.png</url>
@@ -29,5 +26,4 @@
 				<label>set slice size command</label>
 			</link> with SPECIAL objects.
 		</paragraph>
-	</paragraph>
-</document>
+	</paragraph></document>

@@ -1,9 +1,6 @@
 <document title="Introduction" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Introduction
-		</heading>
 		<paragraph>The favorites tool ( 
 			<image>
 				<url>/images/eiffelstudio/icons/icon_favorites_color.gif</url>
@@ -24,5 +21,4 @@
 				<label>favorites menu</label>
 			</link>.
 		</paragraph>
-	</paragraph>
-</document>
+	</paragraph></document>

@@ -1,9 +1,6 @@
 <document title="Introduction" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Introduction
-		</heading>
 		<paragraph>All development windows are composed of two major components, each of which can be centered on a given "address" (either a cluster, a class or a feature). One is the editor, with which go all the peripheral tools (including the 
 			<link>
 				<url>../20_cluster_tool/00_introduction.xml</url>
@@ -45,11 +42,10 @@
 		</paragraph>
 		<seealso>
 			<bold>See Also</bold>
-			<line_break></line_break>
+			<line_break/>
 			<link>
 				<url>/tools/eiffelstudio/reference/85_preferences/20_preferences_reference/20_tools/20_context_tools.xml</url>
 				<label>Change the default data sharing</label>
 			</link>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

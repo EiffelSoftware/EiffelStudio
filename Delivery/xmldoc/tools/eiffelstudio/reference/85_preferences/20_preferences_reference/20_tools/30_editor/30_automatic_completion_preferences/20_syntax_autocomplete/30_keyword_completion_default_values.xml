@@ -1,17 +1,14 @@
 <document title="Default values for keyword completion preferences" output="studio">
 	<meta_data>
-		<help></help>
+		<help/>
 	</meta_data>
 	<paragraph>
-		<heading>
-			<size>1</size>Default values for keyword completion preferences
-		</heading>
-		<paragraph>This document contains the description of default completion for recognized keywords. The 
+		<paragraph>This document contains the description of default completion for recognized keywords. The
 			<link>
 				<url>./20_keyword_completion_customization.xml</url>
 				<label>syntax</label>
 			</link> used is the one used to redefine keyword completion in the preferences.
-			<line_break></line_break> Four tables list default values for each of the 
+			<line_break/> Four tables list default values for each of the
 			<link>
 				<url>10_automatic_keyword_completion.xml</url>
 				<label>four preferences</label>
@@ -19,12 +16,12 @@
 		</paragraph>
 		<list ordered="true">
 			<item>
-				<paragraph>Default value for 
+				<paragraph>Default value for
 					<link>
 						<url>10_automatic_keyword_completion.xml</url>
 						<label>"Customizedautocomplete (Space after keyword was typed)"</label>
 					</link>
-					<line_break></line_break>
+					<line_break/>
 				</paragraph>
 				<table>
 					<row>
@@ -184,15 +181,15 @@
 						<cell>"$cursor$"</cell>
 					</row>
 				</table>
-				<line_break></line_break>
+				<line_break/>
 			</item>
 			<item>
-				<paragraph>Default value for 
+				<paragraph>Default value for
 					<link>
 						<url>10_automatic_keyword_completion.xml</url>
 						<label>"Customizedautocomplete (Return after keyword was typed)"</label>
 					</link>
-					<line_break></line_break>
+					<line_break/>
 				</paragraph>
 				<table>
 					<row>
@@ -352,15 +349,15 @@
 						<cell>"%N$indent$$cursor$"</cell>
 					</row>
 				</table>
-				<line_break></line_break>
+				<line_break/>
 			</item>
 			<item>
-				<paragraph>Default value for 
+				<paragraph>Default value for
 					<link>
 						<url>10_automatic_keyword_completion.xml</url>
 						<label>"Customizedautocomplete (Space, other cases)"</label>
 					</link>
-					<line_break></line_break>
+					<line_break/>
 				</paragraph>
 				<table>
 					<row>
@@ -520,15 +517,15 @@
 						<cell>"$cursor$"</cell>
 					</row>
 				</table>
-				<line_break></line_break>
+				<line_break/>
 			</item>
 			<item>
-				<paragraph>Default value for 
+				<paragraph>Default value for
 					<link>
 						<url>10_automatic_keyword_completion.xml</url>
 						<label>"Customizedautocomplete (Return, other cases)"</label>
 					</link>
-					<line_break></line_break>
+					<line_break/>
 				</paragraph>
 				<table>
 					<row>
@@ -688,22 +685,21 @@
 						<cell>"%N$indent$$cursor$"</cell>
 					</row>
 				</table>
-				<line_break></line_break>
+				<line_break/>
 			</item>
 		</list>
 		<seealso>
 			<bold>See Also</bold>
-			<line_break></line_break> 
+			<line_break/>
 			<link>
 				<url>./10_automatic_keyword_completion.xml</url>
 				<label>Keywords automatic completion preferences</label>
 			</link>
-			<line_break></line_break> 
+			<line_break/>
 			<link>
 				<url>./20_keyword_completion_customization.xml</url>
 				<label>Keyword completion customization</label>
 			</link>
-			<line_break></line_break>
+			<line_break/>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

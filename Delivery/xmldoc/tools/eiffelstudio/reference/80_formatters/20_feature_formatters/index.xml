@@ -1,9 +1,6 @@
 <document title="Feature views" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Feature views
-		</heading>
 		<list ordered="false">
 			<item>
 				<link>
@@ -54,5 +51,4 @@
 				</link>
 			</item>
 		</list>
-	</paragraph>
-</document>
+	</paragraph></document>

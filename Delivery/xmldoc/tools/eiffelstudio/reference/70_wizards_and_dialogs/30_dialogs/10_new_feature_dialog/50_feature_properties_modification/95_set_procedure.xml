@@ -1,19 +1,16 @@
 <document title="Set-procedure" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Set-procedure
-		</heading>
-		<paragraph>When creating an attribute, it is common that you will also need a set-procedure for it. For example, for attribute 
+		<paragraph>When creating an attribute, it is common that you will also need a set-procedure for it. For example, for attribute
 			<code>
 				<feature_name>property</feature_name>
-			</code> you need a procedure 
+			</code> you need a procedure
 			<code>
 				<feature_name>set_property</feature_name>
-			</code> to set it. This feature takes one argument of the same type as 
+			</code> to set it. This feature takes one argument of the same type as
 			<code>
 				<feature_name>property</feature_name>
-			</code> or is anchored to it. The only thing you have to do with the feature wizard is check the button 
+			</code> or is anchored to it. The only thing you have to do with the feature wizard is check the button
 			<bold>Generate set procedure</bold>.
 		</paragraph>
 		<div>
@@ -21,7 +18,7 @@
 				<url>/images/eiffelstudio/dialogs_and_wizards/feature-wizard-setprocedure.png</url>
 			</image>
 		</div>
-		<paragraph>The feature that is generated in addition to the attribute itself is placed in feature clause 
+		<paragraph>The feature that is generated in addition to the attribute itself is placed in feature clause
 			<code>
 				<comment>Element change</comment>
 			</code> and is exported to all classes. If you have selected or entered an invariant, the precondition will protect this invariant. Example of a generated set-procedure:
@@ -31,7 +28,7 @@
 				<url>/images/eiffelstudio/dialogs_and_wizards/feature-wizard-setprocedure-example.png</url>
 			</image>
 		</div>
-<code_block>
+		<code_block>
 feature -- Element change
 
 	set_button (a_button: EV_BUTTON) is
@@ -44,5 +41,4 @@ feature -- Element change
 			button_assigned: button = a_button
 		end
 </code_block>
-	</paragraph>
-</document>
+	</paragraph></document>

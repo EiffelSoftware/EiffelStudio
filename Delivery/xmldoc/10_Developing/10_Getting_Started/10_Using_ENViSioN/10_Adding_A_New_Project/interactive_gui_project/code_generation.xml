@@ -31,5 +31,4 @@
 			<size>3</size>Client of window
 		</heading>
 		<paragraph>If selected, then the generated window will be a client of EV_TITLED_WINDOW,  otherwise it will be a direct descendent.</paragraph>
-	</paragraph>
-</document>
+	</paragraph></document>

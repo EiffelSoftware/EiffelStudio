@@ -3,37 +3,34 @@
 		<help>
 			<toc>
 				<envision_pseudo_name>70</envision_pseudo_name>
-				<envision_location>Developing With ENViSioN!\Using ENViSioN! within Visual Studio.Net\Adding a New Project\Advanced GUI Project Wizard\Interface Construction Page\Reference</envision_location>
+				<envision_location>Eiffel ENViSioN!\Developing with Eiffel ENViSioN!\Adding a New Project\Advanced GUI Project Wizard\Interface Construction Page\Reference</envision_location>
 			</toc>
 		</help>
 	</meta_data>
 	<paragraph>
-		<heading>
-			<size>1</size>Component viewer
-		</heading>
-		<paragraph>The Component viewer allows you to view the structure of a 
+		<paragraph>The Component viewer allows you to view the structure of a
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#component</url>
 				<label>component</label>
-			</link> without having to create new 
+			</link> without having to create new
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 				<label>objects</label>
-			</link> from the 
+			</link> from the
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#component</url>
 				<label>component</label>
 			</link>.
 		</paragraph>
-		<paragraph>This tool is displayed in a separate window, and may either be shown or hidden (default). To change between these two states, click 
+		<paragraph>This tool is displayed in a separate window, and may either be shown or hidden (default). To change between these two states, click
 			<image>
 				<url>/images/eiffelbuild/icons/icon_component_viewer_color.png</url>
-			</image> on the 
+			</image> on the
 			<link>
 				<url>/tools/eiffelbuild/reference/10_general_interface_description/20_main_toolbars.xml</url>
 				<label> main toolbar</label>
-			</link>, or select 
-			<bold>Show/Hide component viewer</bold> from the 
+			</link>, or select
+			<bold>Show/Hide component viewer</bold> from the
 			<bold>View</bold> menu.
 		</paragraph>
 		<paragraph>
@@ -44,44 +41,44 @@
 		<heading>
 			<size>2</size>Targeting a component
 		</heading>
-		<paragraph>To target a 
+		<paragraph>To target a
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#component</url>
 				<label>component</label>
-			</link> into the tool, 
+			</link> into the tool,
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#pick_and_drop</url>
 				<label>pick</label>
-			</link> the 
+			</link> the
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#component</url>
 				<label>component</label>
-			</link> from the 
+			</link> from the
 			<link>
 				<url>/tools/eiffelbuild/reference/65_component_viewer/index.xml</url>
 				<label>component_viewer</label>
-			</link>, and 
+			</link>, and
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#pick_and_drop</url>
 				<label>drop</label>
-			</link> on the 
+			</link> on the
 			<image>
 				<url>/images/eiffelbuild/icons/icon_component_viewer_color.png</url>
 			</image> displayed in the tool bar of the component viewer (See screenshot above). Any existing component displayed will simply be removed.
 		</paragraph>
-		<paragraph>Alternatively, you can hold down the Ctrl key while starting a 
+		<paragraph>Alternatively, you can hold down the Ctrl key while starting a
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#pick_and_drop</url>
 				<label>pick</label>
-			</link> on a 
+			</link> on a
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#component</url>
 				<label>component</label>
-			</link> in the 
+			</link> in the
 			<link>
 				<url>/tools/eiffelbuild/reference/63_component_selector/index.xml</url>
 				<label> component_selector</label>
-			</link>. This will automatically target the 
+			</link>. This will automatically target the
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#component</url>
 				<label>component</label>
@@ -90,40 +87,40 @@
 		<heading>
 			<size>2</size>View types
 		</heading>
-		<paragraph>Looking at the screenshot above, you can see that the 
+		<paragraph>Looking at the screenshot above, you can see that the
 			<image>
 				<url>/images/eiffelbuild/icons/icon_component_display_view_color.png</url>
-			</image>  button is depressed, meaning the component viewer is in display view mode. Clicking on 
+			</image>  button is depressed, meaning the component viewer is in display view mode. Clicking on
 			<image>
 				<url>/images/eiffelbuild/icons/icon_component_build_view_color.png</url>
 			</image> will put the component viewer into build mode view. These modes are mutually exclusive and are described below:
 		</paragraph>
 		<list ordered="false">
 			<item>
-				<bold>Builder view</bold> - This view is similar to the view used by the 
+				<bold>Builder view</bold> - This view is similar to the view used by the
 				<link>
 					<url>/tools/eiffelbuild/reference/50_layout_window/index.xml</url>
 					<label>display window</label>
-				</link>. i.e. the 
+				</link>. i.e. the
 				<link>
 					<url>/libraries/vision2/00_introduction.xml</url>
 					<label>EiffelVision2</label>
-				</link> controls are displayed exactly as is defined in the 
+				</link> controls are displayed exactly as is defined in the
 				<link>
 					<url>/tools/eiffelbuild/reference/02_notation.html#component</url>
 					<label>component</label>
 				</link>.
 			</item>
 			<item>
-				<bold>Display view</bold> - This view is similar to the view used by the 
+				<bold>Display view</bold> - This view is similar to the view used by the
 				<link>
 					<url>/tools/eiffelbuild/reference/60_builder_window/index.xml</url>
 					<label>builder window</label>
-				</link>. i.e. all 
+				</link>. i.e. all
 				<link>
 					<url>/libraries/vision2/00_introduction.xml</url>
 					<label>EiffelVision2</label>
-				</link> containers are represented by frames so they are immediately visible. This makes the actual structure represented by the 
+				</link> containers are represented by frames so they are immediately visible. This makes the actual structure represented by the
 				<link>
 					<url>/tools/eiffelbuild/reference/02_notation.html#component</url>
 					<label>component</label>
@@ -135,16 +132,15 @@
 		</note>
 		<seealso>
 			<bold>See also</bold>
-			<line_break></line_break>
+			<line_break/>
 			<link>
 				<url>../60_builder_window/index.xml</url>
 				<label>Builder window</label>
 			</link>
-			<line_break></line_break>
+			<line_break/>
 			<link>
 				<url>/tools/eiffelbuild/reference/20_layout_constructor/index.xml</url>
 				<label> Layout constructor</label>
 			</link>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

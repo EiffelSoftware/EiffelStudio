@@ -1,9 +1,6 @@
 <document title="Favorites tree" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Favorites tree
-		</heading>
 		<paragraph>The favorites tree gives a graphical representation of the favorite classes of the system, as opposed to the favoritesmenu.</paragraph>
 		<paragraph>
 			<image>
@@ -22,5 +19,4 @@
 				<label>pickable</label>
 			</link> too, so that it is possible to send them to all interface components that accept classes.
 		</paragraph>
-	</paragraph>
-</document>
+	</paragraph></document>

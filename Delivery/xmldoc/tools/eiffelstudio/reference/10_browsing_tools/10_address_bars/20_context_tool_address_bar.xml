@@ -1,9 +1,6 @@
 <document title="Context tool address bar" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Context tool address bar
-		</heading>
 		<paragraph>The address bar of the context tool has a different look from the 
 			<link>
 				<url>10_main_address_bar.xml</url>
@@ -34,11 +31,10 @@
 		</note>
 		<seealso>
 			<bold>See Also</bold>
-			<line_break></line_break>
+			<line_break/>
 			<link>
 				<url>30_switch_data_share_mode.xml</url>
 				<label>Unlinking the context tool</label>
 			</link>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

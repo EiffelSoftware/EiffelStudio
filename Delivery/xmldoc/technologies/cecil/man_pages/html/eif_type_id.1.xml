@@ -1,7 +1,7 @@
 <document title="Reference for `eif_type_id'" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading></heading>
+		<heading/>
 		<heading>
 			<size>2</size>SYNOPSYS
 		</heading>
@@ -23,7 +23,7 @@
 		<heading>
 			<size>2</size>NOTES
 		</heading>An error cannot be caught by a visible exception.
-		<line_break></line_break>The type is not necessary visible.
+		<line_break/>The type is not necessary visible.
 		<heading>
 			<size>2</size>CONFORMANCE
 		</heading>ISE Eiffel 4. 3 and later.
@@ -40,5 +40,4 @@
 		<bold>eif_procedure</bold>(1) ,
 		<bold>eif_type</bold>(1),
 		<bold>eif_name</bold>(1).  Markup created by  1. 0, November 15, 1999.
-	</paragraph>
-</document>
+	</paragraph></document>

@@ -1,9 +1,6 @@
 <document title="Cluster tool" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Cluster tool
-		</heading>
 		<list ordered="false">
 			<item>
 				<link>
@@ -36,5 +33,4 @@
 				</link>
 			</item>
 		</list>
-	</paragraph>
-</document>
+	</paragraph></document>

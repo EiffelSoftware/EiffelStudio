@@ -1,11 +1,8 @@
 <document title="General automatic completion preferences" output="studio">
 	<meta_data>
-		<help></help>
+		<help/>
 	</meta_data>
 	<paragraph>
-		<heading>
-			<size>1</size>General automatic completion preferences
-		</heading>
 		<paragraph>You will find the following preferences in the "Automatic completion" subfolder of the "Editor" preferences folder :</paragraph>
 		<list ordered="false">
 			<item>
@@ -21,5 +18,4 @@
 				<paragraph>Any features appear in the feature call complete window: If this is set to True, the features of class ANY will appear in the list of the feature call completion window. Otherwise, they will be hidden. The default value is False.</paragraph>
 			</item>
 		</list>
-	</paragraph>
-</document>
+	</paragraph></document>

@@ -1,9 +1,6 @@
 <document title="Window list" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Window list
-		</heading>
 		<paragraph>The window list is the main part of the 
 			<link>
 				<url>00_introduction.xml</url>
@@ -28,5 +25,4 @@
 			<bold>Raise</bold>, are relative to the clicked development window. The last command, 
 			<bold>New window</bold>, creates anew development window.
 		</paragraph>
-	</paragraph>
-</document>
+	</paragraph></document>

@@ -1,4 +1,4 @@
-<document title="ADO .NET Samples">
+<document output="studio" title="ADO .NET Samples">
 	<meta_data>
 		<help>
 			<toc>
@@ -8,10 +8,7 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<heading>
-			<size>1</size>ADO .NET Samples
-		</heading>
-		<list ordered="false">          
+		<list ordered="false">
 			<item>
 				<link>
 					<url>ado.xml</url>
@@ -19,5 +16,4 @@
 				</link>
 			</item>
 		</list>
-	</paragraph>
-</document>
+	</paragraph></document>

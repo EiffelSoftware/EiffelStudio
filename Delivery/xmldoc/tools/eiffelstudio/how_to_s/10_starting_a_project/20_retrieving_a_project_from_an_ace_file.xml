@@ -1,30 +1,26 @@
 <document title="Retrieving a project from an Ace file" output="studio">
-	<meta_data/>  
+	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Retrieving a project from an Ace file
-		</heading> 
-		<paragraph>If you have already designed a project and want to retrieve it, or if you want to open a project created by someone else (such as the examples of the libraries which are shipped with EiffelStudio), you should select 
+		<paragraph>If you have already designed a project and want to retrieve it, or if you want to open a project created by someone else (such as the examples of the libraries which are shipped with EiffelStudio), you should select
 			<bold>Open existing Ace (control file)</bold>. It is located in the startup dialog:
-		</paragraph> 
+		</paragraph>
 		<tip>
-			<bold>Tip</bold>: If the project you want to retrieve is already compiled, you should select 
+			<bold>Tip</bold>: If the project you want to retrieve is already compiled, you should select
 			<bold>Open compiled project</bold> instead. This will avoid having to recompile the project.
-		</tip> 
-		<paragraph>A dialog is then popped up that prompts for the ace file and the project location:</paragraph> 
+		</tip>
+		<paragraph>A dialog is then popped up that prompts for the ace file and the project location:</paragraph>
 		<paragraph>Indicate the Ace file (*.ace) that contains information concerning the project you want to retrieve, and choose the directory where this project should be compiled.</paragraph>
 		<seealso>
 			<bold>See Also</bold>
-			<line_break></line_break>
+			<line_break/>
 			<link>
 				<url>10_creating_a_new_project.xml</url>
 				<label>Creating a new project</label>
 			</link>
-			<line_break></line_break>
+			<line_break/>
 			<link>
 				<url>30_opening_an_existing_project.xml</url>
 				<label>Opening a compiled project</label>
 			</link>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

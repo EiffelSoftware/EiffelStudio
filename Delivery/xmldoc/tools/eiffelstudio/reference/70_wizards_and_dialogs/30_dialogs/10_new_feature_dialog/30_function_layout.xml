@@ -1,106 +1,85 @@
 <document title="New function layout" output="studio">
-	<meta_data >
-		<help >
-			<meta >
-				<meta_content >new feature dialog, new function layout</meta_content>
-				<name >MS-HKWD</name>
+	<meta_data>
+		<help>
+			<meta>
+				<meta_content>new feature dialog, new function layout</meta_content>
+				<name>MS-HKWD</name>
 			</meta>
 		</help>
 	</meta_data>
-	<paragraph >
-		<heading >
-			<size >1</size>New function layout
-		</heading>
-		<div >
-			<image >
-				<border >0</border>
-				<url >/images/eiffelstudio/dialogs_and_wizards/feature-wizard-function.png</url>
+	<paragraph>
+		<div>
+			<image>
+				<border>0</border>
+				<url>/images/eiffelstudio/dialogs_and_wizards/feature-wizard-function.png</url>
 			</image>
 		</div>
-		<paragraph >When clicking 
-			<bold >Function</bold>, the dialog changes to the function layout. It has the following components:
+		<paragraph>When clicking
+			<bold>Function</bold>, the dialog changes to the function layout. It has the following components:
 		</paragraph>
 		<list ordered="false">
-			<item >
-				<link >
-					<url >50_feature_properties_modification/00_feature_clauses.xml</url>
-					<label >Feature clause selection</label>
+			<item>
+				<link>
+					<url>50_feature_properties_modification/00_feature_clauses.xml</url>
+					<label>Feature clause selection</label>
 				</link>
 			</item>
-			<item >
-				<link >
-					<url >50_feature_properties_modification/10_name_field.xml</url>
-					<label >Feature name field</label>
+			<item>
+				<link>
+					<url>50_feature_properties_modification/10_name_field.xml</url>
+					<label>Feature name field</label>
 				</link>
 			</item>
-			<item >
-				<link >
-					<url >50_feature_properties_modification/20_argument_list.xml</url>
-					<label >Argument list</label>
+			<item>
+				<link>
+					<url>50_feature_properties_modification/20_argument_list.xml</url>
+					<label>Argument list</label>
 				</link>
 			</item>
-			<item >
-				<link >
-					<url >50_feature_properties_modification/80_type_selection.xml</url>
-					<label >Type selection</label>
+			<item>
+				<link>
+					<url>50_feature_properties_modification/80_type_selection.xml</url>
+					<label>Type selection</label>
 				</link>
 			</item>
-			<item >
-				<link >
-					<url >50_feature_properties_modification/30_comment_field.xml</url>
-					<label >Header comment field</label>
+			<item>
+				<link>
+					<url>50_feature_properties_modification/30_comment_field.xml</url>
+					<label>Header comment field</label>
 				</link>
 			</item>
-			<item >
-				<link >
-					<url >50_feature_properties_modification/40_precondition.xml</url>
-					<label >Precondition field</label>
+			<item>
+				<link>
+					<url>50_feature_properties_modification/40_precondition.xml</url>
+					<label>Precondition field</label>
 				</link>
 			</item>
-			<item >
-				<link >
-					<url >50_feature_properties_modification/50_local_field.xml</url>
-					<label >Local variable field</label>
+			<item>
+				<link>
+					<url>50_feature_properties_modification/50_local_field.xml</url>
+					<label>Local variable field</label>
 				</link>
 			</item>
-			<item >
-				<link >
-					<url >50_feature_properties_modification/60_feature_body.xml</url>
-					<label >Selection for: normal, once, deferred or external routine</label>
+			<item>
+				<link>
+					<url>50_feature_properties_modification/60_feature_body.xml</url>
+					<label>Selection for: normal, once, deferred or external routine</label>
 				</link>
 			</item>
-			<item >
-				<link >
-					<url >50_feature_properties_modification/70_postcondition.xml</url>
-					<label >Postcondition field</label>
+			<item>
+				<link>
+					<url>50_feature_properties_modification/70_postcondition.xml</url>
+					<label>Postcondition field</label>
 				</link>
 			</item>
 		</list>
-		<heading >
-			<size >2</size>Example
+		<heading>
+			<size>2</size>Example
 		</heading>
-		<div >
-			<image >
-				<url >/images/eiffelstudio/dialogs_and_wizards/feature-wizard-function-example.png</url>
+		<div>
+			<image>
+				<url>/images/eiffelstudio/dialogs_and_wizards/feature-wizard-function-example.png</url>
 			</image>
 		</div>
-		<code_block >
-class
-    PRODUCT
-
-feature -- Status report
-
-    order_price (quantity: INTEGER): DOUBLE is
-            -- Total price when ordering `quantity'.
-        require
-            quantity_non_negative: quantity &amp;gt;= 0
-        do
-            Result := quantity * price
-        ensure
-            correct: Result = quantity * price
-        end
-
-end -- class PRODUCT
-		</code_block>
-	</paragraph>
-</document>
+		<code_block>class    PRODUCTfeature -- Status report    order_price (quantity: INTEGER): DOUBLE is            -- Total price when ordering `quantity'.        require            quantity_non_negative: quantity &amp;gt;= 0        do            Result := quantity * price        ensure            correct: Result = quantity * price        endend -- class PRODUCT</code_block>
+	</paragraph></document>

@@ -1,9 +1,6 @@
 <document title="Profiler wizard guided tour" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Profiler wizard guided tour
-		</heading>
 		<list ordered="true">
 			<item>
 				<link>
@@ -32,16 +29,15 @@
 		</list>
 		<seealso>
 			<bold>See Also</bold>
-			<line_break></line_break>
+			<line_break/>
 			<link>
 				<url>00_introduction.xml</url>
 				<label>How the Profiler wizard works</label>
 			</link>
-			<line_break></line_break>
+			<line_break/>
 			<link>
 				<url>../../../how_to_s/50_running_and_debugging/70_profiling.xml</url>
 				<label>How to profile a system</label>
 			</link>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

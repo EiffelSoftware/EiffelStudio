@@ -1,9 +1,6 @@
 <document title="Creating a new project" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Creating a new project
-		</heading>
 		<paragraph>The first thing to do to start Eiffeling is to create a project. Most commands are disabled when no project is created.</paragraph>
 		<paragraph>When opening EiffelStudio, by default a dialog is popped up that proposes to create or open a project:</paragraph>
 		<image>
@@ -52,16 +49,15 @@
 		</tip>
 		<seealso>
 			<bold>See Also</bold>
-			<line_break></line_break> 
+			<line_break/> 
 			<link>
 				<url>20_retrieving_a_project_from_an_ace_file.xml</url>
 				<label>Retrieving a project from an Ace file</label>
 			</link>
-			<line_break></line_break> 
+			<line_break/> 
 			<link>
 				<url>30_opening_an_existing_project.xml</url>
 				<label>Opening a compiled project</label>
 			</link>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

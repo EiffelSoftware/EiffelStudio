@@ -1,9 +1,6 @@
 <document title="Change data share mode" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Change data share mode
-		</heading>
 		<paragraph>Located in the 
 			<bold>View</bold> menu, named either 
 			<bold>Link context tool</bold> or 
@@ -21,12 +18,11 @@
 		</note>
 		<seealso>
 			<bold>See Also</bold>
-			<line_break></line_break> 
+			<line_break/> 
 			<link>
 				<url>../../85_preferences/20_preferences_reference/20_tools/20_context_tools.xml</url>
 				<label>Change the default data sharing</label>
 			</link>
-			<line_break></line_break>
+			<line_break/>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

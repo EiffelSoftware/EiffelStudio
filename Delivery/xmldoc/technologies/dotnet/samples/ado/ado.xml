@@ -1,47 +1,45 @@
-<document title="Dotnet Examples">
+<document title="ADO.NET Sample">
 	<meta_data>
 		<help>
 			<toc>
-				<envision_location>Samples\ADO.NET</envision_location>
-				<envision_title>ADO Sample</envision_title>
+				<envision_location>Samples\.NET Framework Samples</envision_location>
+				<envision_title>ADO.NET</envision_title>
 			</toc>
 		</help>
 	</meta_data>
 	<paragraph>
-		<heading>
-			<size>1</size>ADO.NET example
-		</heading>
-		<paragraph>This sample consist in a command line showing how to interact with a database.</paragraph>
+		<paragraph>This sample consist of a command line showing how to interact with a database.</paragraph>
 		<paragraph>The DataReader object is somewhat synonymous with a read-only/forward-only cursor over data. The DataReader API supports flat as well as hierarchical data. A DataReader object is returned after executing a command against a database. The format of the returned DataReader object is different from a recordset. For example, you might use the DataReader to show the results of a search list in a web page.</paragraph>
 		<heading>
 			<size>2</size>Compiling
 		</heading>
 		<paragraph>To compile the example:
-		<output output="studio">
-			<list ordered="false">
-				<item>Launch EiffelStudio.</item>
-				<item>Select 
-					<bold>Use existing Ace (control file)</bold> and click 
-					<bold>OK</bold>
-				</item>
-				<item>Browse to 
-					<italic></italic>
-				</item>
-				<item>Choose 
-					<italic></italic>.ace
-				</item>
-				<item>Choose the directory where the project will be compiled, by default the same directory containing the Ace file.</item>
-				<item>Click 
-					<bold>OK</bold>.
-				</item>
-			</list>		
-		</output>
-		<output output="envision">Envision compile instructions go here</output>
+			<output output="studio">
+				<list ordered="false">
+					<item>Launch EiffelStudio.</item>
+					<item>Select
+						<bold>Use existing Ace (control file)</bold> and click
+						<bold>OK</bold>
+					</item>
+					<item>Browse to
+						<italic/>
+					</item>
+					<item>Choose
+						<italic/>.ace
+					</item>
+					<item>Choose the directory where the project will be compiled, by default the same directory containing the Ace file.</item>
+					<item>Click
+						<bold>OK</bold>.
+					</item>
+				</list>
+			</output>
+			<output output="envision">Envision compile instructions go here</output>
 		</paragraph>
 		<heading>
 			<size>2</size>Running
 		</heading>
-		<paragraph>After you launch the sample, the following output appears:</paragraph><code_block>
+		<paragraph>After you launch the sample, the following output appears:</paragraph>
+		<code_block>
 Customer ID    Company Name
 ALFKI    Alfreds Futterkiste
 ANATR    Ana Trujillo Emparedados y helados
@@ -73,7 +71,7 @@ WOLZA    Wolski  Zajazd
 		<paragraph>This application shows how to interact with a database. First the connection to the database is open (
 			<code>
 				<keyword>create</keyword>
-			</code> 
+			</code>
 			<code>
 				<local_variable>my_sql_connection</local_variable>
 			</code>.
@@ -90,17 +88,17 @@ WOLZA    Wolski  Zajazd
 			</code>)). Finally,  the result of the request is displayed.
 		</paragraph>
 		<paragraph>This sample contains the following class: </paragraph>
-		<list ordered="false">  
+		<list ordered="false">
 			<item>
 				<code>
 					<class_name>SQL_DATA_READER</class_name>
 				</code>
-			</item>  
+			</item>
 			<item>
 				<code>
 					<class_name>SQL_CONNECTION</class_name>
 				</code>
-			</item>  
+			</item>
 			<item>
 				<code>
 					<class_name>SQL_COMMAND</class_name>

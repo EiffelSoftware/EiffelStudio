@@ -1,9 +1,6 @@
 <document title="Metric management" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Metric management
-		</heading>
 		<paragraph>The user interface provides tools for handling metrics, that is reordering, editing, deleting or importing a set of metrics just by clicking on button 
 			<image>
 				<url>/images/eiffelstudio/icons/icon_select_metrics_color.gif</url>
@@ -16,11 +13,10 @@
 		</paragraph>
 		<seealso>
 			<bold>See Also</bold>
-			<line_break></line_break> 
+			<line_break/> 
 			<link>
 				<url>/tools/eiffelstudio/how_to_s/70_analyzing_a_project/20_handling_new_metrics/20_managing_new_metrics/00_introduction.xml</url>
 				<label>Managing metrics</label>
 			</link>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

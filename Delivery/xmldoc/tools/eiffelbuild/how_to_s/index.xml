@@ -4,22 +4,12 @@
 			<toc>
 				<studio_title>EiffelBuild How To's</studio_title>
 				<envision_title>How To's</envision_title>
-				<envision_location>Developing With ENViSioN!\Using ENViSioN! within Visual Studio.Net\Adding a New Project\Advanced GUI Project Wizard\Interface Construction Page</envision_location>
+				<envision_location>Eiffel ENViSioN!\Developing with Eiffel ENViSioN!\Adding a New Project\Advanced GUI Project Wizard\Interface Construction Page</envision_location>
 				<envision_pseudo_name>20</envision_pseudo_name>
 			</toc>
 		</help>
 	</meta_data>
 	<paragraph>
-		<output output="studio">
-			<heading>
-				<size>1</size>EiffelBuild How To's
-			</heading>
-		</output>
-		<output output="envision">
-			<heading>
-				<size>1</size>How To's
-			</heading>
-		</output>
 		<list ordered="false">
 			<item>
 				<output output="studio">
@@ -56,5 +46,4 @@
 				</link>
 			</item>
 		</list>
-	</paragraph>
-</document>
+	</paragraph></document>

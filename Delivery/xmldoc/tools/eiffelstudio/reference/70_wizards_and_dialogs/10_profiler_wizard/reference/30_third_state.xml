@@ -1,9 +1,6 @@
 <document title="Select a Run-time information record to generate the Execution Profile" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Select a Run-time information record to generate the ExecutionProfile
-		</heading>
 		<paragraph>The third screen of the wizard lets you generate an 
 			<italic>Execution Profile</italic> from a 
 			<italic>Run-time information record</italic>. You should provide the 
@@ -25,12 +22,12 @@
 			<italic>EIFGEN\W_code</italic> directory of your project.
 		</note>
 		<paragraph>
-			<line_break></line_break>
+			<line_break/>
 			<image>
 				<url>/images/eiffelstudio/dialogs_and_wizards/profiler_wizard_third_state.png</url>
 			</image>
-			<line_break></line_break>
-			<line_break></line_break>
+			<line_break/>
+			<line_break/>
 		</paragraph>
 		<paragraph>Clicking 
 			<bold>Next</bold> will lead you to the 
@@ -43,29 +40,28 @@
 			<italic>EIFGEN\W_code</italic> directory of the project, you will go to the 
 			<bold>Run-time Information Record Error state</bold> as shown below.
 		</paragraph>
-		<line_break></line_break>
+		<line_break/>
 		<image>
 			<url>/images/eiffelstudio/dialogs_and_wizards/profiler_wizard_rtir_error_state.png</url>
 		</image> 
-		<line_break></line_break>
-		<line_break></line_break>
+		<line_break/>
+		<line_break/>
 		<seealso>
 			<bold>See Also</bold>
-			<line_break></line_break>
+			<line_break/>
 			<link>
 				<url>../00_introduction.xml</url>
 				<label>How the Profiler wizard works</label>
 			</link>
-			<line_break></line_break>
+			<line_break/>
 			<link>
 				<url>../../../../how_to_s/50_running_and_debugging/70_profiling.xml</url>
 				<label>How to profile a system</label>
 			</link>
-			<line_break></line_break>
+			<line_break/>
 			<link>
 				<url>../how_to_s/10_setup_profiler_configuration_file.xml</url>
 				<label>How to set up a Profiler Configuration File</label>
 			</link>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

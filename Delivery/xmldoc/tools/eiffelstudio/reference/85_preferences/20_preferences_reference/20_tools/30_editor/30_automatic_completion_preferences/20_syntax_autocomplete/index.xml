@@ -1,11 +1,8 @@
 <document title="Syntax automatic completion preferences" output="studio">
 	<meta_data>
-		<help></help>
+		<help/>
 	</meta_data>
 	<paragraph>
-		<heading>
-			<size>1</size>Syntax automatic completion preferences
-		</heading>
 		<list ordered="false">
 			<item>
 				<link>
@@ -29,8 +26,7 @@
 				<link>
 					<url>./30_keyword_completion_default_values.xml</url>
 					<label>Default values for keyword completion preferences</label>
-				</link>  
+				</link>
 			</item>
 		</list>
-	</paragraph>
-</document>
+	</paragraph></document>

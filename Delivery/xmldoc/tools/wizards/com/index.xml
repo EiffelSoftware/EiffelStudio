@@ -1,58 +1,54 @@
 <document title="EiffelCOM Wizard" output="studio">
-	<meta_data >
-		<help >
-			<meta >
-				<meta_content >EiffelCOM</meta_content>
-				<name >MS-HKWD</name>
+	<meta_data>
+		<help>
+			<meta>
+				<meta_content>EiffelCOM</meta_content>
+				<name>MS-HKWD</name>
 			</meta>
-			<meta >
-				<meta_content >EiffelCOM Wizard</meta_content>
-				<name >MS-HKWD</name>
+			<meta>
+				<meta_content>EiffelCOM Wizard</meta_content>
+				<name>MS-HKWD</name>
 			</meta>
 		</help>
 	</meta_data>
-	<paragraph >
-		<heading >
-			<size >1</size>EiffelCOM Wizard
-		</heading>
-		<paragraph >Type: Wizard
-			<line_break /> Platform: Windows
-			<line_break /> Version: 5.0
-			<line_break /> Availability: Full Package
+	<paragraph>
+		<paragraph>Type: Wizard
+			<line_break/> Platform: Windows
+			<line_break/> Version: 5.0
+			<line_break/> Availability: Full Package
 		</paragraph>
-		<paragraph >See:</paragraph>
+		<paragraph>See:</paragraph>
 		<list ordered="false">
-			<item >
-				<link >
-					<url >01_introduction.xml</url>
-					<label >Introduction</label>
+			<item>
+				<link>
+					<url>01_introduction.xml</url>
+					<label>Introduction</label>
 				</link>
 			</item>
-			<item >
-				<link >
-					<url >guided_tour/index.xml</url>
-					<label >Guided Tour</label>
+			<item>
+				<link>
+					<url>guided_tour/index.xml</url>
+					<label>Guided Tour</label>
 				</link>
 			</item>
-			<item >
-				<link >
-					<url >reference/index.xml</url>
-					<label >Reference</label>
+			<item>
+				<link>
+					<url>reference/index.xml</url>
+					<label>Reference</label>
 				</link>
 			</item>
 		</list>
-		<seealso >
-			<bold >See Also</bold>
-			<line_break />
-			<link >
-				<url >../../../technologies/com/index.xml</url>
-				<label >The Component Object Model</label>
+		<seealso>
+			<bold>See Also</bold>
+			<line_break/>
+			<link>
+				<url>../../../technologies/com/index.xml</url>
+				<label>The Component Object Model</label>
 			</link>
-			<line_break />
-			<link >
-				<url >../../../libraries/com/index.xml</url>
-				<label >EiffelCOM library</label>
+			<line_break/>
+			<link>
+				<url>../../../libraries/com/index.xml</url>
+				<label>EiffelCOM library</label>
 			</link>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

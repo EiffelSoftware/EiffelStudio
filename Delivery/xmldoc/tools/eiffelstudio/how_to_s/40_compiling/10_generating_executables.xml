@@ -1,9 +1,6 @@
 <document title="Generating executables" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Generating executables
-		</heading>
 		<paragraph>There are several ways to compile an executable with EiffelStudio.</paragraph>
 		<paragraph>Compilation modes include the following: melting, freezing and finalizing. To learn more about the compilation semantics in EiffelStudio, see the 
 			<link>
@@ -41,16 +38,15 @@
 		</paragraph>
 		<seealso>
 			<bold>See Also</bold>
-			<line_break></line_break> 
+			<line_break/> 
 			<link>
 				<url>/tools/eiffelstudio/reference/30_compiler/20_command_line/00_introduction.xml</url>
 				<label>Command line options</label>
 			</link>
-			<line_break></line_break> 
+			<line_break/> 
 			<link>
 				<url>/tools/eiffelstudio/reference/30_compiler/00_introduction.xml</url>
 				<label>Compiler reference</label>
 			</link>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

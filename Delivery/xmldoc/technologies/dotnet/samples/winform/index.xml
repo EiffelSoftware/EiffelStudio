@@ -3,14 +3,11 @@
 		<help>
 			<toc>
 				<envision_title>Windows Forms</envision_title>
-				<envision_location>Samples</envision_location>
+				<envision_location>Samples\.NET Framework Samples\</envision_location>
 			</toc>
 		</help>
 	</meta_data>
-	<paragraph>
-		<heading>
-			<size>1</size>Winform Samples
-		</heading>The following examples are classified from the easiest to the most complex one. So, some notions are introduced in the few first examples and will not be explained again in the complex examples!
+	<paragraph>The following examples are classified from the easiest to the most complex one. So, some notions are introduced in the few first examples and will not be explained again in the complex examples!
 		<heading>
 			<size>2</size>Getting started
 		</heading>
@@ -57,5 +54,4 @@
 				</link>
 			</item>
 		</list>
-	</paragraph>
-</document>
+	</paragraph></document>

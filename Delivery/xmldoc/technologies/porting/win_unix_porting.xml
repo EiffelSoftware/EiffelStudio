@@ -2,9 +2,6 @@
 	<meta_data/>
 	<paragraph>
 		<heading>
-			<size>1</size>Porting an Eiffel application from UNIX to Windows or vice-versa
-		</heading>
-		<heading>
 			<size>2</size>Requirements
 		</heading>
 		<paragraph>Before starting your project, you must first decide if you want your program to run either single or multi-platform. If you decide to go multi-platform make sure you use platform independent Eiffel libraries or C/C++ code. ISE Eiffel provides the following multi-platform libraries:</paragraph>
@@ -25,7 +22,8 @@
 			<size>2</size>Configuring your project
 		</heading>
 		<paragraph>For porting between different UNIX systems, you simply need one configuration file as the C/C++ externals should be the same. If this is not the case, as with UNIX and Windows, you will need a different configuration file for each platform where there is a difference. </paragraph>
-		<paragraph>The usual scenario is to port from UNIX to Windows or vice versa. In this case, the only difference in the configuration file is that of the external clause. An example of this is demonstrated with the following external specification of a Vision2 project first for UNIX:</paragraph><code_block>
+		<paragraph>The usual scenario is to port from UNIX to Windows or vice versa. In this case, the only difference in the configuration file is that of the external clause. An example of this is demonstrated with the following external specification of a Vision2 project first for UNIX:</paragraph>
+		<code_block>
 external
 	include_path:
 		"\$(ISE_EIFFEL)/library/vision2/implementation/gtk/Clib `gtk-config --cflags`",
@@ -39,7 +37,8 @@ external
 		"$(ISE_EIFFEL)/library/vision2/spec/$(ISE_PLATFORM)/lib/libpng.a",
 		"$(ISE_EIFFEL)/library/vision2/spec/$(ISE_PLATFORM)/lib/libz.a",
 		"-L/usr/X11R6/lib/ -lXtst"
-</code_block>and then for Windows:<code_block>
+</code_block>and then for Windows:
+		<code_block>
 external
 
 	include_path:

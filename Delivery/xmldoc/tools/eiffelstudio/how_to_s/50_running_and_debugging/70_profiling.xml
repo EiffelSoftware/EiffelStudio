@@ -1,160 +1,134 @@
 <document title="Profiling" output="studio">
-	<meta_data >
-		<help >
-			<meta >
-				<meta_content >profiling</meta_content>
-				<name >MS-HKWD</name>
+	<meta_data>
+		<help>
+			<meta>
+				<meta_content>profiling</meta_content>
+				<name>MS-HKWD</name>
 			</meta>
-			<meta >
-				<meta_content >using the profiler</meta_content>
-				<name >MS-HKWD</name>
+			<meta>
+				<meta_content>using the profiler</meta_content>
+				<name>MS-HKWD</name>
 			</meta>
 		</help>
 	</meta_data>
-	<paragraph >
-		<heading >
-			<size >1</size>Profiling
-		</heading>
-		<paragraph >The profiler is a tool that gives dynamic execution time information. It is very useful to detect which parts of a programmed to be optimized most.</paragraph>
-		<paragraph >To use the profiler, the first thing to do is to enable it.</paragraph>
-		<paragraph >To enable the profiler:</paragraph>
+	<paragraph>
+		<paragraph>The profiler is a tool that gives dynamic execution time information. It is very useful to detect which parts of a programmed to be optimized most.</paragraph>
+		<paragraph>To use the profiler, the first thing to do is to enable it.</paragraph>
+		<paragraph>To enable the profiler:</paragraph>
 		<list ordered="false">
-			<item >Open the 
-				<link >
-					<url >/tools/eiffelstudio/reference/25_project_settings/20_debug.xml</url>
-					<label >System Settings</label>
+			<item>Open the
+				<link>
+					<url>/tools/eiffelstudio/reference/25_project_settings/20_debug.xml</url>
+					<label>System Settings</label>
 				</link> dialog.
 			</item>
-			<item >In the 
-				<bold >Debug/Profile</bold> tab, check the 
-				<bold >Profiling</bold> check box.
+			<item>In the
+				<bold>Debug/Profile</bold> tab, check the
+				<bold>Profiling</bold> check box.
 			</item>
-			<item >Click 
-				<bold >Apply</bold> or 
-				<bold >OK</bold>.
+			<item>Click
+				<bold>Apply</bold> or
+				<bold>OK</bold>.
 			</item>
-			<item >You must 
-				<link >
-					<url >../40_compiling/10_generating_executables.xml</url>
-					<label >recompile</label>
+			<item>You must
+				<link>
+					<url>../40_compiling/10_generating_executables.xml</url>
+					<label>recompile</label>
 				</link> your project for the changes to take effect.
 			</item>
 		</list>
-		<paragraph >By default the profiler will profile the entire program. However it is possible to enable or disable the profiler on certain clusters only. To do this:</paragraph>
+		<paragraph>By default the profiler will profile the entire program. However it is possible to enable or disable the profiler on certain clusters only. To do this:</paragraph>
 		<list ordered="false">
-			<item >Open the 
-				<link >
-					<url >/tools/eiffelstudio/reference/25_project_settings/30_clusters.xml</url>
-					<label >System Settings</label>
+			<item>Open the
+				<link>
+					<url>/tools/eiffelstudio/reference/25_project_settings/30_clusters.xml</url>
+					<label>System Settings</label>
 				</link> dialog.
 			</item>
-			<item >In the 
-				<bold >Clusters</bold> tab, check the 
-				<bold >Profile</bold> check box in the clusters where you want the profiler to be enabled.
+			<item>In the
+				<bold>Clusters</bold> tab, check the
+				<bold>Profile</bold> check box in the clusters where you want the profiler to be enabled.
 			</item>
-			<item >Click 
-				<bold >Apply</bold> or 
-				<bold >OK</bold>.
+			<item>Click
+				<bold>Apply</bold> or
+				<bold>OK</bold>.
 			</item>
-			<item >You must 
-				<link >
-					<url >../40_compiling/10_generating_executables.xml</url>
-					<label >recompile</label>
+			<item>You must
+				<link>
+					<url>../40_compiling/10_generating_executables.xml</url>
+					<label>recompile</label>
 				</link> your project for the changes to take effect.
 			</item>
 		</list>
-		<paragraph >It is also possible to dynamically start and stop the profiler in a program. To do this:</paragraph>
+		<paragraph>It is also possible to dynamically start and stop the profiler in a program. To do this:</paragraph>
 		<list ordered="false">
-			<item >Create an object of type 
-				<link >
-					<url >/libraries/base/reference/support/profiling_setting.xml</url>
-					<label >PROFILING_SETTING</label>
+			<item>Create an object of type
+				<link>
+					<url>/libraries/base/reference/support/profiling_setting.xml</url>
+					<label>PROFILING_SETTING</label>
 				</link>.
 			</item>
-			<item >Call `
-				<link >
-					<url >/libraries/base/reference/support/profiling_setting.html#f_start_profiling</url>
-					<label />
+			<item>Call `
+				<link>
+					<url>/libraries/base/reference/support/profiling_setting.html#f_start_profiling</url>
+					<label/>
 				</link>' on this object to start the profiler.
 			</item>
-			<item >Call `
-				<link >
-					<url >/libraries/base/reference/support/profiling_setting.html#f_stop_profiling</url>
-					<label />
+			<item>Call `
+				<link>
+					<url>/libraries/base/reference/support/profiling_setting.html#f_stop_profiling</url>
+					<label/>
 				</link>' on this object to stop the profiler.
 			</item>
 		</list>
-		<tip >
-			<bold >Tip</bold>: To profile only part of a program, turnoff the profiler at the very beginning of the program, turn it on just before the part of the code that should be profiled, and turn it back off after this section. Typically, it results in the following code:
+		<tip>
+			<bold>Tip</bold>: To profile only part of a program, turnoff the profiler at the very beginning of the program, turn it on just before the part of the code that should be profiled, and turn it back off after this section. Typically, it results in the following code:
 		</tip>
-		<paragraph >In the root feature:</paragraph> 
-		<paragraph >
-<code_block >
-<keyword >local</keyword>
-	ps: PROFILER_SETTING
-		<comment >-- Other local variables if necessary.</comment>
-<keyword >do</keyword>  
-	<keyword >create</keyword> ps
-	ps.stop_profiling
-		<comment >-- Real program execution.</comment>
-	ps.start_profiling
-<keyword >end</keyword>	
-		
-</code_block>
+		<paragraph>In the root feature:</paragraph>
+		<paragraph>
+			<code_block><keyword>local</keyword>ps: PROFILER_SETTING<comment>-- Other local variables if necessary.</comment><keyword>do</keyword>  <keyword>create</keyword> psps.stop_profiling<comment>-- Real program execution.</comment>ps.start_profiling<keyword>end</keyword></code_block>
 		</paragraph>
-		<paragraph >And in the feature(s) that needs to be profiled:</paragraph> 
-		<code />
-		<paragraph >
-			<code_block >
-<keyword >local</keyword>
-	ps: PROFILER_SETTING
-		<comment >-- Other local variables if necessary.</comment>
-<keyword >do</keyword>  
-	<keyword >create</keyword> ps
-	ps.start_profiling
-		<comment >-- What needs to be profiled.</comment>
-	ps.stop_profiling
-<keyword >end</keyword>
-</code_block>
+		<paragraph>And in the feature(s) that needs to be profiled:</paragraph>
+		<code/>
+		<paragraph>
+			<code_block><keyword>local</keyword>ps: PROFILER_SETTING<comment>-- Other local variables if necessary.</comment><keyword>do</keyword>  <keyword>create</keyword> psps.start_profiling<comment>-- What needs to be profiled.</comment>ps.stop_profiling<keyword>end</keyword></code_block>
 		</paragraph>
-		
-		<note >
-			<bold >Note</bold>: Even if the profiler should only work in certain sections of code, the 
-			<bold >Profiling</bold> check box of the 
-			<link >
-				<url >/tools/eiffelstudio/reference/25_project_settings/20_debug.xml</url>
-				<label >System Settings</label>
-			</link> dialog must be checked or the 
-			<bold >profile</bold> option must be set in certain clusters.
+		<note>
+			<bold>Note</bold>: Even if the profiler should only work in certain sections of code, the
+			<bold>Profiling</bold> check box of the
+			<link>
+				<url>/tools/eiffelstudio/reference/25_project_settings/20_debug.xml</url>
+				<label>System Settings</label>
+			</link> dialog must be checked or the
+			<bold>profile</bold> option must be set in certain clusters.
 		</note>
-		<paragraph >Once the profiler has been enabled and the program has been recompiled, it is necessary to launch the program.</paragraph>
-		<tip >
-			<bold >Tip</bold>: It is possible to profile debuggable(frozen/melted) executables as well as finalized ones. It is more interesting to profile finalized executables, though, since the execution speed is more representative of what will be obtained by your end users. 
+		<paragraph>Once the profiler has been enabled and the program has been recompiled, it is necessary to launch the program.</paragraph>
+		<tip>
+			<bold>Tip</bold>: It is possible to profile debuggable(frozen/melted) executables as well as finalized ones. It is more interesting to profile finalized executables, though, since the execution speed is more representative of what will be obtained by your end users.
 		</tip>
-		<paragraph >When the program exits, a file named 'profinfo' should be generated next to it.</paragraph>
-		<paragraph >All that's left to do is launch the 
-			<link >
-				<url >/tools/eiffelstudio/reference/70_wizards_and_dialogs/10_profiler_wizard/00_introduction.xml</url>
-				<label >Profiler wizard</label>
+		<paragraph>When the program exits, a file named 'profinfo' should be generated next to it.</paragraph>
+		<paragraph>All that's left to do is launch the
+			<link>
+				<url>/tools/eiffelstudio/reference/70_wizards_and_dialogs/10_profiler_wizard/00_introduction.xml</url>
+				<label>Profiler wizard</label>
 			</link> and follow the instructions.
 		</paragraph>
-		<seealso >
-			<bold >See Also</bold>
-			<line_break />
-			<link >
-				<url >../40_compiling/10_generating_executables.xml</url>
-				<label >Generating executables</label>
+		<seealso>
+			<bold>See Also</bold>
+			<line_break/>
+			<link>
+				<url>../40_compiling/10_generating_executables.xml</url>
+				<label>Generating executables</label>
 			</link>
-			<line_break />
-			<link >
-				<url >10_running_an_application.xml</url>
-				<label >Running a program</label>
+			<line_break/>
+			<link>
+				<url>10_running_an_application.xml</url>
+				<label>Running a program</label>
 			</link>
-			<line_break />
-			<link >
-				<url >../40_compiling/50_tuning_a_program.xml</url>
-				<label >Tuning a program</label>
+			<line_break/>
+			<link>
+				<url>../40_compiling/50_tuning_a_program.xml</url>
+				<label>Tuning a program</label>
 			</link>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

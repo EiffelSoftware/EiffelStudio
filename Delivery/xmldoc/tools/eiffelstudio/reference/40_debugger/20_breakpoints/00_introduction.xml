@@ -1,9 +1,6 @@
 <document title="Introduction" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Introduction
-		</heading>
 		<paragraph>Breakpoints are entities that stop a debugged application. Breakpoints can be put at the beginning of each execution line, so that it is possible to see the context in which the line is executed before executing it.</paragraph>
 		<paragraph>In EiffelStudio, breakpoints are represented as circles in the left margin of flat views (both 
 			<link>
@@ -51,10 +48,9 @@
 		</paragraph>
 		<note>
 			<bold>Note</bold>: Breakpoints cannot be set in all features. In particular, breakpoints cannot be set in external features or attributes.
-			<line_break></line_break>However, breakpoints can now be set in assertions (require and ensure).
+			<line_break/>However, breakpoints can now be set in assertions (require and ensure).
 		</note>
 		<tip>
 			<bold>Tip</bold>: Under Windows, breakpoints can be set on-the-fly while the application is running.
 		</tip>
-	</paragraph>
-</document>
+	</paragraph></document>

@@ -1,9 +1,6 @@
 <document title="Breakpoint information command" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Breakpoint information command
-		</heading>
 		<paragraph>The breakpoint information command, located in the 
 			<bold>debug</bold> menu and in the 
 			<bold>project</bold> toolbar ( 
@@ -13,17 +10,16 @@
 		</paragraph>
 		<seealso>
 			<bold>See Also</bold>
-			<line_break></line_break> 
+			<line_break/> 
 			<link>
 				<url>20_breakpoint_commands.xml</url>
 				<label>Breakpoints commands</label>
 			</link>
-			<line_break></line_break> 
+			<line_break/> 
 			<link>
 				<url>30_breakpoint_information.xml</url>
 				<label>Breakpoint information command</label>
 			</link>
-			<line_break></line_break>
+			<line_break/>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

@@ -3,37 +3,34 @@
 		<help>
 			<toc>
 				<envision_pseudo_name>40</envision_pseudo_name>
-				<envision_location>Developing With ENViSioN!\Using ENViSioN! within Visual Studio.Net\Adding a New Project\Advanced GUI Project Wizard\Interface Construction Page\Reference</envision_location>
+				<envision_location>Eiffel ENViSioN!\Developing with Eiffel ENViSioN!\Adding a New Project\Advanced GUI Project Wizard\Interface Construction Page\Reference</envision_location>
 			</toc>
 		</help>
 	</meta_data>
 	<paragraph>
-		<heading>
-			<size>1</size>Display Window
-		</heading>
-		<paragraph>The Display window provides a view of the 
+		<paragraph>The Display window provides a view of the
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 				<label>objects</label>
-			</link> in your system, but unlike the 
+			</link> in your system, but unlike the
 			<link>
 				<url>/tools/eiffelbuild/reference/20_layout_constructor/index</url>
 				<label>layout constructor</label>
-			</link> and 
+			</link> and
 			<link>
 				<url>/tools/eiffelbuild/reference/60_builder_window/index</url>
 				<label>builder window</label>
 			</link>, the objects cannot be manipulated.
 		</paragraph>
-		<paragraph>This window may either be shown or hidden (default). To change between these two states, click 
+		<paragraph>This window may either be shown or hidden (default). To change between these two states, click
 			<image>
 				<url>/images/eiffelbuild/icons/icon_display_window_color.png</url>
-			</image>on the 
+			</image>on the
 			<link>
 				<url>/tools/eiffelbuild/reference/10_general_interface_description/20_main_toolbars</url>
 				<label>main toolbar</label>
-			</link>, or select 
-			<bold>Show/Hide display window</bold> from the 
+			</link>, or select
+			<bold>Show/Hide display window</bold> from the
 			<bold>View</bold> menu.
 		</paragraph>
 		<paragraph>
@@ -41,17 +38,17 @@
 				<url>/images/eiffelbuild/screenshots/display_window.png</url>
 			</image>
 		</paragraph>
-		<paragraph>This view is provided so that you can really see what your project will look like when it has been generated and is running as a stand alone 
+		<paragraph>This view is provided so that you can really see what your project will look like when it has been generated and is running as a stand alone
 			<link>
 				<url>/libraries/vision2/00_introduction</url>
 				<label>EiffelVision2</label>
 			</link> system.
 		</paragraph>
-		<paragraph>All properties that have been set on the 
+		<paragraph>All properties that have been set on the
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 				<label>objects</label>
-			</link> in your project are set in the 
+			</link> in your project are set in the
 			<link>
 				<url>/libraries/vision2/00_introduction</url>
 				<label>EiffelVision2</label>
@@ -59,16 +56,15 @@
 		</paragraph>
 		<seealso>
 			<bold>See Also</bold>
-			<line_break></line_break>
+			<line_break/>
 			<link>
 				<url>../60_builder_window/index</url>
 				<label>Builder window</label>
 			</link>
-			<line_break></line_break>
+			<line_break/>
 			<link>
 				<url>/tools/eiffelbuild/reference/20_layout_constructor/index</url>
 				<label>Layout constructor</label>
 			</link>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

@@ -1,9 +1,6 @@
 <document title="History functionality" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>History functionality
-		</heading>
 		<paragraph>EiffelStudio editor provides an history functionality, i.e. Undo and Redo commands.</paragraph>
 		<list ordered="false">
 			<item>
@@ -25,5 +22,4 @@
 				</paragraph>
 			</item>
 		</list>
-	</paragraph>
-</document>
+	</paragraph></document>

@@ -3,28 +3,25 @@
 		<help>
 			<toc>
 				<envision_pseudo_name>20</envision_pseudo_name>
-				<envision_location>Developing With ENViSioN!\Using ENViSioN! within Visual Studio.Net\Adding a New Project\Advanced GUI Project Wizard\Interface Construction Page\Reference</envision_location>
+				<envision_location>Eiffel ENViSioN!\Developing with Eiffel ENViSioN!\Adding a New Project\Advanced GUI Project Wizard\Interface Construction Page\Reference</envision_location>
 			</toc>
 		</help>
 	</meta_data>
 	<paragraph>
-		<heading>
-			<size>1</size>Type Selector
-		</heading>
 		<paragraph>The type selector contains all the available Vision2 types supported by EiffelBuild. These are the basic building blocks for your system.</paragraph>
 		<paragraph>
 			<image>
 				<url>/images/eiffelbuild/screenshots/type_selector.png</url>
 			</image>
 		</paragraph>
-		<paragraph>The types are organized into three groups - Primitives, Containers and Items. All types that may be used in EiffelBuild have a text in uppercase, corresponding to their type in 
+		<paragraph>The types are organized into three groups - Primitives, Containers and Items. All types that may be used in EiffelBuild have a text in uppercase, corresponding to their type in
 			<link>
 				<url>/libraries/vision2/00_introduction.xml</url>
 				<label>EiffelVision2</label>
 			</link>. For example, looking at the screenshot above, the BUTTON item represents an EV_BUTTON, and the COMBO_BOX item represents EV_COMBO_BOX.
 		</paragraph>
 		<note>
-			<bold>Note</bold>: The types available in the type selector are fixed, and cannot be modified. Almost all 
+			<bold>Note</bold>: The types available in the type selector are fixed, and cannot be modified. Almost all
 			<link>
 				<url>/libraries/vision2/00_introduction.xml</url>
 				<label>EiffelVision2</label>
@@ -36,79 +33,79 @@
 		<link>
 			<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 			<label>Objects</label>
-		</link> are the building blocks used in EiffelBuild to construct your interface. To create a new 
+		</link> are the building blocks used in EiffelBuild to construct your interface. To create a new
 		<link>
 			<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 			<label>object</label>
-		</link> for use in your system, 
+		</link> for use in your system,
 		<link>
 			<url>/tools/eiffelbuild/reference/02_notation.html#pick_and_drop</url>
 			<label>pick</label>
-		</link> the type corresponding to the type of object you wish to create,and 
+		</link> the type corresponding to the type of object you wish to create,and
 		<link>
 			<url>/tools/eiffelbuild/reference/02_notation.html#pick_and_drop</url>
 			<label>drop</label>
-		</link> onto an 
+		</link> onto an
 		<link>
 			<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 			<label>object</label>
-		</link> representation. If an object is full, or does not allow other objects of the new type to be contained, then you will not be able to 
+		</link> representation. If an object is full, or does not allow other objects of the new type to be contained, then you will not be able to
 		<link>
 			<url>/tools/eiffelbuild/reference/02_notation.html#pick_and_drop</url>
 			<label>drop</label>
 		</link> on it.
-		<line_break></line_break>
-		<line_break></line_break>
-		<paragraph>For example, if you have just started a new project, 
+		<line_break/>
+		<line_break/>
+		<paragraph>For example, if you have just started a new project,
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#pick_and_drop</url>
 				<label>pick</label>
-			</link> HORIZONTAL_BOX from the type selector, and drop it on the EV_TITLED_WINDOW 
+			</link> HORIZONTAL_BOX from the type selector, and drop it on the EV_TITLED_WINDOW
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 				<label>object</label>
-			</link> displayed in the 
+			</link> displayed in the
 			<link>
 				<url>/tools/eiffelbuild/reference/20_layout_constructor/index.xml</url>
 				<label> layout constructor</label>
-			</link>. This will build you a new 
+			</link>. This will build you a new
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 				<label>object</label>
-			</link> of type EV_HORIZONTAL_BOX, parented in the window. If you then 
+			</link> of type EV_HORIZONTAL_BOX, parented in the window. If you then
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#pick_and_drop</url>
 				<label>pick</label>
-			</link> a BUTTON from the type selector, you will not be able to 
+			</link> a BUTTON from the type selector, you will not be able to
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#pick_and_drop</url>
 				<label>drop</label>
-			</link> it on the EV_TITLED_WINDOW, as a window may only contain one child and is therefore currently full. You may however, 
+			</link> it on the EV_TITLED_WINDOW, as a window may only contain one child and is therefore currently full. You may however,
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#pick_and_drop</url>
 				<label>drop</label>
-			</link> on the EV_HORIZONTAL_BOX object you had just created, as the box is empty, and has space for multiple children. Doing so, will create a new 
+			</link> on the EV_HORIZONTAL_BOX object you had just created, as the box is empty, and has space for multiple children. Doing so, will create a new
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 				<label>object</label>
 			</link>of type EV_BUTTON, parented in the box.
 		</paragraph>
-		<paragraph>This shows how simple it is to Build new 
+		<paragraph>This shows how simple it is to Build new
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 				<label>objects</label>
-			</link> in EiffelBuild, you just need access to the parent 
+			</link> in EiffelBuild, you just need access to the parent
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 				<label>object</label>
-			</link> to 
+			</link> to
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#pick_and_drop</url>
 				<label>drop</label>
 			</link> the selected type into.
 		</paragraph>
 		<note>
-			<bold>Note</bold>: To understand the types accepted, and the capacity of objects, you should consult the 
+			<bold>Note</bold>: To understand the types accepted, and the capacity of objects, you should consult the
 			<link>
 				<url>/libraries/vision2/00_introduction.xml</url>
 				<label>EiffelVision2</label>
@@ -117,30 +114,30 @@
 		<heading>
 			<size>2</size>Changing the type of an existing object
 		</heading>
-		<paragraph>Why would you want to change the type of an existing 
+		<paragraph>Why would you want to change the type of an existing
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 				<label>object</label>
-			</link>, when you could just delete it and create a new 
+			</link>, when you could just delete it and create a new
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 				<label>object</label>
 			</link>?
 		</paragraph>
 		<paragraph>Imagine you have spent some time constructing a complicated interface. You have an EV_VERTICAL_BOX with children many levels deep. You realize that you wanted the EV_VERTICAL_BOX to be of type EV_HORIZONTAL_BOX. If you delete the object, all children contained will also be deleted, which in this case, is not what you want. Changing the type of the object does actually delete the object internally, but will automatically re-parent all of its children into the new object.</paragraph>
-		<paragraph>To perform a type change, 
+		<paragraph>To perform a type change,
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#pick_and_drop</url>
 				<label>pick</label>
-			</link> the 
+			</link> the
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 				<label>object</label>
-			</link> that you wish to change, and 
+			</link> that you wish to change, and
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#pick_and_drop</url>
 				<label>drop</label>
-			</link> it on an item in the type selector representing the desired new type. All existing children of the old 
+			</link> it on an item in the type selector representing the desired new type. All existing children of the old
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 				<label>object</label>
@@ -148,13 +145,13 @@
 		</paragraph>
 		<paragraph>The following rules govern if the type of an existing object may be changed to a new type:</paragraph>
 		<list ordered="false">
-			<item>The parent of the existing 
+			<item>The parent of the existing
 				<link>
 					<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 					<label>object</label>
 				</link> must accept children of type corresponding to the new type.
 			</item>
-			<item>The new type must be able to accept all of the existing 
+			<item>The new type must be able to accept all of the existing
 				<link>
 					<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 					<label>objects</label>
@@ -163,12 +160,11 @@
 		</list>
 		<seealso>
 			<bold>See Also</bold>
-			<line_break></line_break>
+			<line_break/>
 			<link>
 				<url>/tools/eiffelbuild/reference/20_layout_constructor/index.xml</url>
 				<label>Layout constructor</label>
 			</link>
-			<line_break></line_break>
+			<line_break/>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

@@ -1,9 +1,6 @@
 <document title="Eiffel for .NET Conventions" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Eiffel for .NET Conventions
-		</heading>
 		<paragraph>In this section, you'll find information about how the conventions that are normally used in Eiffel programming are affected by working in the presence of .NET. </paragraph>
 		<paragraph>Also, you'll find out how .NET types sometimes look a little different in the presence of Eiffel. </paragraph>
 		<paragraph>Because there are differences in the underlying object models upon which .NET and Eiffel have been designed, before .NET types can be made available to Eiffel developers, the assemblies in which they reside must be processed by a utility called the Eiffel Metadata Consumer. Fortunately, this all happens behind the scenes for you. You need only be aware that when you are looking at .NET types from within ENViSioN, you're seeing them through Eiffel-tinted lenses. </paragraph>
@@ -65,5 +62,4 @@
 				</link>
 			</item>
 		</list>
-	</paragraph>
-</document>
+	</paragraph></document>

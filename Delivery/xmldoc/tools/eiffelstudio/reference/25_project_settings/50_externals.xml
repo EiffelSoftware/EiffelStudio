@@ -1,9 +1,6 @@
 <document title="Externals Tab" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Externals Tab
-		</heading>
 		<paragraph> </paragraph>
 		<paragraph>This tab is only active when standard C generation is selected in the 
 			<link>
@@ -79,5 +76,4 @@
 				<border>0</border>
 			</image>
 		</paragraph>
-	</paragraph>
-</document>
+	</paragraph></document>

@@ -1,9 +1,6 @@
 <document title="Window menu" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Window menu
-		</heading>
 		<paragraph>The 
 			<bold>window</bold> menu is divided into two parts. The first one is composed of the 
 			<link>
@@ -11,5 +8,4 @@
 				<label>window-related commands</label>
 			</link>. The second one is the list of all opened development windows. Clicking any of these raises the selected development window, so that it becomes the top-level window.
 		</paragraph>
-	</paragraph>
-</document>
+	</paragraph></document>

@@ -1,9 +1,6 @@
 <document title="Texts display preferences" output="studio">
 	<meta_data/>
-	<paragraph>
-		<heading>
-			<size>1</size>Texts display preferences
-		</heading>You may customize texts display in EiffelStudio by modifying preferences in the "Graphical elements" category and in its "Colors" sub-category. 
+	<paragraph>You may customize texts display in EiffelStudio by modifying preferences in the "Graphical elements" category and in its "Colors" sub-category. 
 		<paragraph>"Graphical elements" contains the following properties in relation with texts:</paragraph>
 		<list ordered="false">
 			<item>The font used in EiffelStudio editors ("All-purpose editor font"). You can change this by using a font selection window.</item>
@@ -13,6 +10,5 @@
 		<note>
 			<bold>Note</bold>: The last property ("Use animated icons") decides whether animated icons should be used in status bars when they are available.
 		</note>The "Color" sub-category gathers color preferences. By modifying them, you will be able to choose in which color the different elements detected by the syntactical analyzer (such as keywords, numbers, comments,...) will be displayed. Changes will be made via a color selection window. 
-		<line_break></line_break>
-	</paragraph>
-</document>
+		<line_break/>
+	</paragraph></document>

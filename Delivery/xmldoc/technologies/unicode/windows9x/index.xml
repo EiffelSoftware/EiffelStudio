@@ -1,9 +1,6 @@
 <document title="Compiling WEL for Unicode - Windows 95/98/Me" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Compiling WEL for Unicode - Windows 95/98/Me
-		</heading>
 		<paragraph>This documentation is provided for those wishing to compile their application for Windows 95/98/Me with full Unicode support. Windows 95/98/Me uses code pages (ANSI) while Windows NT/2000/XP uses Unicode. To provide Unicode support for your Windows 95/98/Me Microsoft have developed a translation layer, the Microsoft Layer for Unicode (MSLU), which provides a complete set of unicode APIs. </paragraph>
 		<paragraph>The following step-by-step tutorial details how to get Unicode support for WEL application using Windows 95/98/Me. </paragraph>
 		<heading>
@@ -33,12 +30,12 @@
 				<italic>'SystemName'</italic> is the name of your system as specified in the .ace file, in your favourite text editor. 
 			</item>
 			<item> Add the following at the  of the file:
-				<line_break></line_break>
+				<line_break/>
 				<paragraph>/nodefaultlib:kernel32. lib/nodefaultlib:advapi32. lib /nodefaultlib:user32. lib
-					<line_break></line_break> /nodefaultlib:gdi32. lib /nodefaultlib:shell32. lib/nodefaultlib:comdlg32. lib
-					<line_break></line_break> /nodefaultlib:version. lib /nodefaultlib:mpr. lib/nodefaultlib:winmm. lib
-					<line_break></line_break> /nodefaultlib:winspool. lib /nodefaultlib:vfw32. lib/nodefaultlib:secur32. lib
-					<line_break></line_break> /nodefaultlib:oleacc. lib /nodefaultlib:oledlg. lib
+					<line_break/> /nodefaultlib:gdi32. lib /nodefaultlib:shell32. lib/nodefaultlib:comdlg32. lib
+					<line_break/> /nodefaultlib:version. lib /nodefaultlib:mpr. lib/nodefaultlib:winmm. lib
+					<line_break/> /nodefaultlib:winspool. lib /nodefaultlib:vfw32. lib/nodefaultlib:secur32. lib
+					<line_break/> /nodefaultlib:oleacc. lib /nodefaultlib:oledlg. lib
 				</paragraph>
 			</item>
 			<item> Then add:
@@ -46,15 +43,15 @@
 			</item>
 			<item> Now, replace the line that looks like this:
 				<paragraph>USER32. lib WSOCK32. lib ADVAPI32. lib GDI32. lib SHELL32. lib
-					<line_break></line_break>COMDLG32. lib UUID. lib OLE32. lib OLEAUT32. lib COMCTL32. lib
-					<line_break></line_break>MPR. LIB IMM32. LIB
+					<line_break/>COMDLG32. lib UUID. lib OLE32. lib OLEAUT32. lib COMCTL32. lib
+					<line_break/>MPR. LIB IMM32. LIB
 				</paragraph>
 			</item>
 			<item> With this:
 				<paragraph>KERNEL32. lib ADVAPI32. lib USER32. lib GDI32. lib SHELL32. lib
-					<line_break></line_break>COMDLG32. lib VERSION. lib MPR. LIB WINMM. lib WINSPOOL. lib
-					<line_break></line_break>VFW32. lib OLEACC. lib OLEDLG. lib WSOCK32. lib UUID. lib OLE32. lib
-					<line_break></line_break>OLEAUT32. lib COMCTL32. lib
+					<line_break/>COMDLG32. lib VERSION. lib MPR. LIB WINMM. lib WINSPOOL. lib
+					<line_break/>VFW32. lib OLEACC. lib OLEDLG. lib WSOCK32. lib UUID. lib OLE32. lib
+					<line_break/>OLEAUT32. lib COMCTL32. lib
 				</paragraph>
 			</item>
 		</list>
@@ -71,5 +68,4 @@
 			<italic>SystemName</italic>. lnk', where 
 			<italic>'SystemName'</italic> is the name of your system as specified in the .ace file, from your 'EIFGEN\W_code' directory. Note that if you recompile the application C code a new linker file will be generated and the modified version will be overwritten. 
 		</paragraph>
-	</paragraph>
-</document>
+	</paragraph></document>

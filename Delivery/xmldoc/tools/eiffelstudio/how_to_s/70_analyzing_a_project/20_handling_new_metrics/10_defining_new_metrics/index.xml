@@ -1,9 +1,6 @@
 <document title="Defining new metrics" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Defining new metrics
-		</heading>
 		<list ordered="false">
 			<item>
 				<link>
@@ -36,5 +33,4 @@
 				</link>
 			</item>
 		</list>
-	</paragraph>
-</document>
+	</paragraph></document>

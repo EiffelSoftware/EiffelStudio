@@ -1,4 +1,4 @@
-<document title="Console Samples">
+<document title="Console Samples" output="studio">
 	<meta_data>
 		<help>
 			<toc>
@@ -8,10 +8,7 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<heading>
-			<size>1</size>Console Samples
-		</heading>
-		<list ordered="false">          
+		<list ordered="false">
 			<item>
 				<link>
 					<url>calculator.html </url>
@@ -19,5 +16,4 @@
 				</link>
 			</item>
 		</list>
-	</paragraph>
-</document>
+	</paragraph></document>

@@ -1,41 +1,37 @@
 <document title="Creating inheritance links" output="studio">
-	<meta_data >
-		<help >
-			<meta >
-				<meta_content >Link,Inheritance</meta_content>
-				<name >MS-HKWD</name>
+	<meta_data>
+		<help>
+			<meta>
+				<meta_content>Link,Inheritance</meta_content>
+				<name>MS-HKWD</name>
 			</meta>
-			<meta >
-				<meta_content >Inheritance link,New</meta_content>
-				<name >MS-HKWD</name>
+			<meta>
+				<meta_content>Inheritance link,New</meta_content>
+				<name>MS-HKWD</name>
 			</meta>
 		</help>
 	</meta_data>
-	<paragraph >
-		<heading >
-			<size >1</size>Creating inheritance links
-		</heading>
+	<paragraph>
 		<list ordered="true">
-			<item >Select the button 
-				<bold >Create new inheritance links</bold>. 
-				<image >
-					<url >/images/eiffelstudio/icons/icon_new_inherit_color.gif</url>
+			<item>Select the button
+				<bold>Create new inheritance links</bold>.
+				<image>
+					<url>/images/eiffelstudio/icons/icon_new_inherit_color.gif</url>
 				</image>
 			</item>
-			<item >Start pick-and-drop on the class where the parent should be added.</item>
-			<item >Drop on the desired parent class.</item>
+			<item>Start pick-and-drop on the class where the parent should be added.</item>
+			<item>Drop on the desired parent class.</item>
 		</list>
-		<note >
-			<bold >Note</bold>: This action will automatically add the parent in the class text, but no inheritance clause is added.
+		<note>
+			<bold>Note</bold>: This action will automatically add the parent in the class text, but no inheritance clause is added.
 		</note>
-		<seealso >
-			<bold >See Also</bold>
-			<line_break />
-			<link >
-				<url >20_new_client_link.xml</url>
-				<label >Creating client/supplier links</label>
+		<seealso>
+			<bold>See Also</bold>
+			<line_break/>
+			<link>
+				<url>20_new_client_link.xml</url>
+				<label>Creating client/supplier links</label>
 			</link>
-			<line_break />
+			<line_break/>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

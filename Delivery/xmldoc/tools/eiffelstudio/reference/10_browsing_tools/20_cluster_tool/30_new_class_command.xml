@@ -1,9 +1,6 @@
 <document title="New class command" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>New class command
-		</heading>
 		<paragraph>The new class command ( 
 			<image>
 				<url>/images/eiffelstudio/icons/icon_new_class_small_color.gif</url>
@@ -19,5 +16,4 @@
 				<url>/images/eiffelstudio/dialogs_and_wizards/new_class_dialog.png</url>
 			</image>
 		</paragraph>
-	</paragraph>
-</document>
+	</paragraph></document>

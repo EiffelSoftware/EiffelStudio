@@ -1,9 +1,6 @@
 <document title="MANUAL IDENTIFICATION AND COPYRIGHT" output="studio">
-	<meta_data></meta_data>
+	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Manual Identification and Copyright
-		</heading>
 		<paragraph>Title: 
 			<span>EiffelStudio: A Guided Tour</span>, ISE Technical Report TR-EI-68/GT.  (Replaces TR-EI-38/EB.  )
 		</paragraph>
@@ -21,7 +18,7 @@
 		<paragraph>Version 4.  1, 1997</paragraph>
 		<paragraph>This version: July 2001.  Corresponds to release 5.  0 of the ISE Eiffel environment.  </paragraph>
 		<paragraph>Author</paragraph>
-		<paragraph></paragraph>
+		<paragraph/>
 		<paragraph>Software credits</paragraph>
 		<paragraph>Emmanuel Stapf, Arnaud Pichery, Xavier Rousselot, Raphael Simon; Etienne Amodeo, Jrome Bou Aziz, Vincent Brendel, Gauthier Brillaud, Paul Colin de Verdiere, Jocelyn Fiat, Pascal Freund, Savrak Sar, Patrick Schonbach, Zoran Simic, Jacques Sireude, Tanit Talbi, Emmanuel Texier, Guillaume Wong-So; EiffelVision 2: Leila Ait-Kaci, Sylvain Baron, Sami Kallio, Ian King, Sam O'Connor, Julian Rogers.  See also acknowledgments for earlier versions in 
 			<span>Eiffel: The Environment</span>(TR-EI-39/IE)

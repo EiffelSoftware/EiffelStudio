@@ -1,4 +1,4 @@
-<document title="Call Stack Window" output="envision">
+<document output="envision" title="Call Stack Window">
 	<meta_data>
 		<help>
 			<toc>
@@ -7,56 +7,55 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<heading>
-			<size>1</size>  Call Stack Window
-		</heading>
-		<paragraph>During debugging, the Call Stack Window will be available, from which you may view the current call stack of the system. Below is a screenshot of the Call Stack Window:
-			<paragraph>
-				<image>
-					<alt_text>Call Stack Debugging Window</alt_text>
-					<url>CallStackDebuggingWindow.png</url>
-				</image>
-			</paragraph>
-			<paragraph>This screenshot corresponds to system that has stopped in the creation  
-				<help_link>
-					<tab_index>0</tab_index>
-					<index_moniker>!DefaultAssociativeIndex</index_moniker>
-					<keywords>Eiffel feature</keywords>&gt;feature
-				</help_link>  of the  
-				<help_link>
-					<tab_index>0</tab_index>
-					<index_moniker>!DefaultAssociativeIndex</index_moniker>
-					<keywords>Eiffel root class</keywords>&gt;Root Class
-				</help_link>  as the Result of a  
-				<help_link>
-					<tab_index>0</tab_index>
-					<index_moniker>!DefaultAssociativeIndex</index_moniker>
-					<keywords>Eiffel break points</keywords>&gt;Break point
-				</help_link>  being reached. This is why there is only one entry in the list.
-			</paragraph>
-			<seealso>
-				<bold>See Also</bold>
-				<line_break></line_break>
-				<link>
-					<url>./index.xml</url>
-					<label>Debugging</label>
-				</link>
-				<line_break></line_break>
-				<link>
-					<url>./LocalsWindow.xml</url>
-					<label>Locals Window</label>
-				</link>
-				<line_break></line_break>
-				<link>
-					<url>./BreakPointWindow.xml</url>
-					<label>Break Point Window</label>
-				</link>
-				<line_break></line_break>
-				<link>
-					<url>./WatchWindow.xml</url>
-					<label>Watch Window</label>
-				</link>
-			</seealso>
-		</paragraph>
-	</paragraph>
-</document>
+		<table>
+			<row>
+				<cell>
+					<paragraph>  During debugging, the Call Stack Window will be available, from which you may view the current call stack of the system. Below is a screenshot of the Call Stack Window: </paragraph>
+					<paragraph>
+						<image>
+							<alt_text>CallStackDebuggingWindow</alt_text>
+							<url>CallStackDebuggingWindow.png</url>
+						</image>
+					</paragraph>
+					<paragraph>  This screenshot corresponds to system that has stopped in the creation
+						<link>
+							<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#feature</url>
+							<label>feature</label>
+						</link> of the
+						<link>
+							<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#root class</url>
+							<label>Root Class</label>
+						</link>  as the Result of a
+						<link>
+							<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/70_Debugging_Projects/breakpoints.htm</url>
+							<label>Break point</label>
+						</link>  being reached. This is why there is only one entry in the list.
+					</paragraph>
+					<seealso>
+						<bold>See also</bold>
+						<line_break/>
+						<link>
+							<url>./index.htm</url>
+							<label>Debugging</label>
+						</link>
+						<line_break/>
+						<link>
+							<url>./LocalsWindow.htm</url>
+							<label>Locals Window</label>
+						</link>
+						<line_break/>
+						<link>
+							<url>./BreakPointWindow.htm</url>
+							<label>Break Point Window</label>
+						</link>
+						<line_break/>
+						<link>
+							<url>./WatchWindow.htm</url>
+							<label>Watch Window</label>
+						</link>
+						<line_break/>
+					</seealso>
+				</cell>
+			</row>
+		</table>
+	</paragraph></document>

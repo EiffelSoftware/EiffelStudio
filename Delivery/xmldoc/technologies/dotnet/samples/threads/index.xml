@@ -3,21 +3,18 @@
 		<help>
 			<toc>
 				<envision_title>Threading</envision_title>
-				<envision_location>Samples</envision_location>
+				<envision_location>Samples\.NET Framework Samples</envision_location>
 			</toc>
 		</help>
 	</meta_data>
 	<paragraph>
-		<heading>
-			<size>1</size>Threads Samples
-		</heading>
-		<list ordered="false">          
+		<list ordered="false">
 			<item>
 				<link>
 					<url>pools.xml</url>
 					<label>Pools</label>
 				</link>
-			</item>          
+			</item>
 			<item>
 				<link>
 					<url>timers.xml</url>
@@ -25,5 +22,4 @@
 				</link>
 			</item>
 		</list>
-	</paragraph>
-</document>
+	</paragraph></document>

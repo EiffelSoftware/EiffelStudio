@@ -1,11 +1,8 @@
 <document title="C++ Externals" output="studio">
 	<meta_data>
-		<help></help>
+		<help/>
 	</meta_data>
 	<paragraph>
-		<heading>
-			<size>1</size>C++ Externals
-		</heading>
 		<heading>
 			<size>2</size>Introduction
 		</heading>
@@ -29,7 +26,7 @@
 		<paragraph>The discussion concentrates on using C++ software from Eiffel. In the other direction, you can use the Cecil library (C-EiffelCall-In Library) described in chapter 24 of
 			<link>
 				<url>http://vig.pearsoned.com/store/product/1,3498,store-3841_isbn-0132479257,00.xml</url>
-				<label></label>
+				<label/>
 			</link> with important complements in the
 			<link>
 				<url>/technologies/cecil/index.xml</url>
@@ -45,7 +42,7 @@
 			<italic>Eiffel: The Language</italic>, where
 			<span>Language_name</span> is defined simply as
 			<span>Manifest_string</span>; the rest covers the additional facilities.
-<code_block>
+			<code_block>
     External == external Language_name [External_name]
 
     Language_name ==
@@ -162,28 +159,24 @@
 		</heading>
 		<paragraph>For a non-static C++ member function or destructor, the corresponding Eiffel feature should include an extra argument of type POINTER, at the first position. This argument represents the C++ object to which the function will be applied.</paragraph>
 		<paragraph>For example, a C++ function</paragraph>
-<code_block>
+		<code_block>
 	void add(int new_int);
 </code_block>
 		<paragraph>should have the Eiffel counterpart</paragraph>
-<code_block>
+		<code_block>
 	cpp_add (obj: POINTER; new_int: INTEGER) is
 		-- Encapsulation of member function add.
 	external
 		"C++ [IntArray %"intarray.h%"] (IntArray *, int)"
 	end
-</code_block>
-
-This scheme, however, is often inconvenient because it forces the Eiffel side to work on objects in a non-object-oriented way. (The object-oriented way treats the current object, within a class, as implicit.) A better approach, used by Legacy++, is to make a feature such as cpp_add secret, and to export a feature whose signature corresponds to that of the original C++ function, with noextra object argument; that feature will use a secret attribute object_ptr to access the object. In the example this will give the feature
-
-<code_block>
+</code_block>This scheme, however, is often inconvenient because it forces the Eiffel side to work on objects in a non-object-oriented way. (The object-oriented way treats the current object, within a class, as implicit.) A better approach, used by Legacy++, is to make a feature such as cpp_add secret, and to export a feature whose signature corresponds to that of the original C++ function, with noextra object argument; that feature will use a secret attribute object_ptr to access the object. In the example this will give the feature
+		<code_block>
 	add (new_int: INTEGER) is
 		-- Encapsulation of member function add.
 	do
 		cpp_add (object_ptr, new_int)
 	end
 </code_block>
-
 		<paragraph>where
 			<italic>object_ptr</italic> is a secret attribute of type
 			<link>
@@ -215,12 +208,12 @@ This scheme, however, is often inconvenient because it forces the Eiffel side to
 				<bold>-NE</bold>: do not apply the C preprocessor to the file.
 			</item>
 			<item>
-				<bold>-p</bold> 
+				<bold>-p</bold>
 				<italic>directories</italic>: use
 				<italic>directories</italic> as includepath.
 			</item>
 			<item>
-				<bold>-c</bold> 
+				<bold>-c</bold>
 				<italic>compiler</italic>: use
 				<italic>compiler</italic> as the C++ compiler.
 			</item>
@@ -264,7 +257,7 @@ This scheme, however, is often inconvenient because it forces the Eiffel side to
 			<size>2</size>Example
 		</heading>
 		<paragraph>Consider the following C++ class, which has an example of every kind of facility that one may wish to access from the Eiffel side:</paragraph>
-<code_block>
+		<code_block>
     class IntArray
             {
             public:
@@ -279,7 +272,7 @@ This scheme, however, is often inconvenient because it forces the Eiffel side to
             };
 </code_block>
 		<paragraph>Here is the result of applying Legacy++ to that class, which will serve as an illustration of both the C++ interface mechanisms and Legacy++:</paragraph>
-<code_block>
+		<code_block>
 indexing
     description: "Eiffel encapsulation of C++ class IntArray";
 
@@ -374,5 +367,4 @@ feature {NONE} -- Implementation
 
 end -- class INTARRAY
 </code_block>
-	</paragraph>
-</document>
+	</paragraph></document>

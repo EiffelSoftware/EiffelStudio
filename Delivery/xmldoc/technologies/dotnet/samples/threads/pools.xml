@@ -3,15 +3,12 @@
 		<help>
 			<toc>
 				<envision_pseudo_name>20</envision_pseudo_name>
-				<envision_location>Samples\Threading</envision_location>
+				<envision_location>Samples\.NET Framework Samples\Threading</envision_location>
 			</toc>
 		</help>
 	</meta_data>
 	<paragraph>
-		<heading>
-			<size>1</size>Pools example
-		</heading>
-		<paragraph>This sample demonstrates use of the 
+		<paragraph>This sample demonstrates use of the
 			<code>
 				<class_name>THREAD_POOL</class_name>
 			</code> (ThreadPool) class. The sample queues up an asynchronous method call that is executed by a thread from the thread pool managed by the Common Language Runtime. The method "does some work" and then sets an event indicating that the work has finished. The main thread waits on the event and then exits.
@@ -23,7 +20,8 @@
 		<heading>
 			<size>2</size>Running
 		</heading>
-		<paragraph>After you launch the sample, the following output appears: </paragraph><code_block>
+		<paragraph>After you launch the sample, the following output appears: </paragraph>
+		<code_block>
 Main thread: Queuing an asynchronous operation.
 Main thread: Performing other operations.
 WorkItem thread: Performing asynchronous operation
@@ -33,7 +31,7 @@ Main thread: Waiting for asynchronous operation to complete.
 		<heading>
 			<size>2</size>Under the Hood
 		</heading>
-		<paragraph>This application shows how to use the thread 
+		<paragraph>This application shows how to use the thread
 			<code>
 				<class_name>THREAD_POOL</class_name>
 			</code>. An asynchronous thread is launched (
@@ -60,10 +58,10 @@ Main thread: Waiting for asynchronous operation to complete.
 			</code>, $
 			<code>
 				<feature_name>my_async_operation</feature_name>
-			</code>), 
+			</code>),
 			<code>
 				<local_variable>l_async_operation_done</local_variable>
-			</code>)) and is associated to the local variable 
+			</code>)) and is associated to the local variable
 			<code>
 				<local_variable>l_async_operation_done</local_variable>.
 			</code>Both threads perform simultaneously some operations. The main thread wait for the asynchronous thread to complete his own operations (
@@ -75,17 +73,17 @@ Main thread: Waiting for asynchronous operation to complete.
 			</code>) to close the application.
 		</paragraph>
 		<paragraph>This sample contains the following class: </paragraph>
-		<list ordered="false">  
+		<list ordered="false">
 			<item>
 				<code>
 					<class_name>THREAD_POOL</class_name>
 				</code>
-			</item>  
+			</item>
 			<item>
 				<code>
 					<class_name>WAIT_CALLBACK</class_name>
 				</code>
-			</item>  
+			</item>
 			<item>
 				<code>
 					<class_name>AUTO_RESET_EVENT</class_name>

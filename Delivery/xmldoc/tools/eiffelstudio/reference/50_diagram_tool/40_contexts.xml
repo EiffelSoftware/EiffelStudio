@@ -1,9 +1,6 @@
 <document title="Contexts" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Contexts
-		</heading>
 		<paragraph>A diagram in the diagram tool is always the context of a certain class or cluster. Context means the direct relations up to a certain depth.</paragraph>
 		<paragraph>For clusters, the relations are:</paragraph>
 		<list ordered="false">
@@ -35,5 +32,4 @@
 			</image>
 		</div>
 		<line_break/>
-	</paragraph>
-</document>
+	</paragraph></document>

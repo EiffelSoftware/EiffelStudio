@@ -1,11 +1,8 @@
 <document title="Release notes of EiffelStudio 5.1" output="studio">
 	<meta_data>
-		<help></help>
+		<help/>
 	</meta_data>
 	<paragraph>
-		<heading>
-			<size>1</size>Release notes of EiffelStudio 5.1
-		</heading>
 		<heading>
 			<size>2</size>Graphical environment
 		</heading>
@@ -26,7 +23,7 @@
 			<size>2</size>Compiler and .NET
 		</heading>
 		<list ordered="false">
-			<item>Click 
+			<item>Click
 				<link>
 					<url>../30_compiler/60_version_history/01_51_release/00_50_to_51_changes.xml</url>
 					<label>here</label>
@@ -40,15 +37,15 @@
 			<size>3</size>EiffelBase
 		</heading>
 		<list ordered="false">
-			<item>It is now forbidden to create a 
+			<item>It is now forbidden to create a
 				<code>
 					<class_name>BIT_REF</class_name>
-				</code> or a 
+				</code> or a
 				<code>
 					<class_name>XBIT</class_name>
 				</code> object using its creation procedure (before it was accepted but did not work)
 			</item>
-			<item>Added 
+			<item>Added
 				<code>
 					<feature_name>make_temporary_name</feature_name>
 				</code> in
@@ -56,7 +53,7 @@
 					<class_name>FILE_NAME</class_name>
 				</code>
 			</item>
-			<item>Made 
+			<item>Made
 				<code>
 					<feature_name>to_c</feature_name>
 				</code> obsolete from class
@@ -64,15 +61,15 @@
 					<class_name>INTEGER_INTERVAL</class_name>
 				</code>
 			</item>
-			<item>Changed semantic of 
+			<item>Changed semantic of
 				<code>
 					<feature_name>split</feature_name>
-				</code> from class 
+				</code> from class
 				<code>
 					<class_name>STRING</class_name>
 				</code>
 			</item>
-			<item>Fixed a bug in 
+			<item>Fixed a bug in
 				<code>
 					<feature_name>clear_all</feature_name>
 				</code> from
@@ -89,7 +86,7 @@
 		</heading>
 		<list ordered="false">
 			<item>Support for Vision2 applications on GTK platforms.</item>
-			<item>Some changes in the Vision2 library have been made, 
+			<item>Some changes in the Vision2 library have been made,
 				<link>
 					<url>../../../../libraries/vision2/content/0-_revisions/index.xml</url>
 					<label>check here on how to update your code</label>
@@ -103,5 +100,4 @@
 				<label>Click here to check out what was new in Eiffel 5.0</label>
 			</link>
 		</paragraph>
-	</paragraph>
-</document>
+	</paragraph></document>

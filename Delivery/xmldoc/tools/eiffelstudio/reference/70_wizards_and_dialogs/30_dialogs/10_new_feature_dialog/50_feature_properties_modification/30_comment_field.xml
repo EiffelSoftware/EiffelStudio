@@ -1,16 +1,13 @@
 <document title="Header comment" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Header comment
-		</heading>
-		<paragraph>In the header comment field you can type a description of the feature. For style guidelines in writing a header comment, see: 
+		<paragraph>In the header comment field you can type a description of the feature. For style guidelines in writing a header comment, see:
 			<link>
 				<url>http://www.eiffel.com/doc/oosc/</url>
 				<label>Object-Oriented Software Construction, Second Edition</label>
 			</link>, paragraph 26.4. The description should be informative, clear and terse.
 		</paragraph>
-		<paragraph>For example, suppose you have an attribute 
+		<paragraph>For example, suppose you have an attribute
 			<code>
 				<feature_name>count</feature_name>
 			</code>. You can enter the following header comment:
@@ -20,12 +17,11 @@
 				<url>/images/eiffelstudio/dialogs_and_wizards/feature-wizard-comment.png</url>
 			</image>
 		</div>
-		<line_break></line_break> When clicking 
-		<bold>OK</bold> this code is generated: 
-		<line_break></line_break>
-<code_block>
+		<line_break/> When clicking
+		<bold>OK</bold> this code is generated:
+		<line_break/>
+		<code_block>
 	count: INTEGER
 		-- Number of students in course
 </code_block>
-	</paragraph>
-</document>
+	</paragraph></document>

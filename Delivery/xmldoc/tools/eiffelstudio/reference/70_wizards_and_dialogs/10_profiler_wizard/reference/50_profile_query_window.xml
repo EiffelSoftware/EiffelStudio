@@ -1,9 +1,6 @@
 <document title="Profile query window" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Profile query window
-		</heading>
 		<paragraph>The profile query window displays the results of the query you have formulated in the 
 			<link>
 				<url>40_final_state.xml</url>
@@ -37,23 +34,22 @@
 		<tip>
 			<bold>Tip</bold>: To visualize the result in Microsoft Excel or any other spreadsheet, select the entire text (except the first three lines where the Execution Profile file is specified),copy it and then paste it into Excel.
 		</tip>
-		<line_break></line_break>
+		<line_break/>
 		<image>
 			<url>/images/eiffelstudio/dialogs_and_wizards/profiler_query_window.png</url>
 		</image> 
-		<line_break></line_break>
+		<line_break/>
 		<seealso>
 			<bold>See Also</bold>
-			<line_break></line_break>
+			<line_break/>
 			<link>
 				<url>../00_introduction.xml</url>
 				<label>How the Profiler wizard works</label>
 			</link>
-			<line_break></line_break>
+			<line_break/>
 			<link>
 				<url>../../../../how_to_s/50_running_and_debugging/70_profiling.xml</url>
 				<label>How to profile a system</label>
 			</link>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

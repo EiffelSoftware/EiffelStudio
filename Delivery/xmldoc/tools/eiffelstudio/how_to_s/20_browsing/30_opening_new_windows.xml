@@ -1,41 +1,37 @@
 <document title="Opening new windows" output="studio">
-	<meta_data >
-		<help >
-			<meta >
-				<meta_content >opening new windows</meta_content>
-				<name >MS-HKWD</name>
+	<meta_data>
+		<help>
+			<meta>
+				<meta_content>opening new windows</meta_content>
+				<name>MS-HKWD</name>
 			</meta>
 		</help>
 	</meta_data>
-	<paragraph >
-		<heading >
-			<size >1</size>Opening new windows
-		</heading>There are several ways to open a new window. First, you can use the pick and drop shortcut. Then, you can use new window menu items and the corresponding icons. There are three such commands: 
+	<paragraph>There are several ways to open a new window. First, you can use the pick and drop shortcut. Then, you can use new window menu items and the corresponding icons. There are three such commands:
 		<list ordered="false">
-			<item >Clicking on 
-				<bold >New window</bold> in the 
-				<bold >File</bold> menu or on 
-				<image >
-					<url >/images/eiffelstudio/icons/icon_new_development_tool_color.gif</url>
+			<item>Clicking on
+				<bold>New window</bold> in the
+				<bold>File</bold> menu or on
+				<image>
+					<url>/images/eiffelstudio/icons/icon_new_development_tool_color.gif</url>
 				</image> make an new window appear. In this window, the editor and the context tool will be visible.
 			</item>
-			<item >Clicking on 
-				<bold >New editor window</bold> in the 
-				<bold >File</bold> menu or on 
-				<image >
-					<url >/images/eiffelstudio/icons/icon_new_editor_color.gif</url>
+			<item>Clicking on
+				<bold>New editor window</bold> in the
+				<bold>File</bold> menu or on
+				<image>
+					<url>/images/eiffelstudio/icons/icon_new_editor_color.gif</url>
 				</image> does the same as the previous command but the context tool is minimized in the new window.
 			</item>
-			<item >Clicking on 
-				<bold >New context window</bold> in the 
-				<bold >File</bold> menu or on 
-				<image >
-					<url >/images/eiffelstudio/icons/icon_new_context_window_color.gif</url>
+			<item>Clicking on
+				<bold>New context window</bold> in the
+				<bold>File</bold> menu or on
+				<image>
+					<url>/images/eiffelstudio/icons/icon_new_context_window_color.gif</url>
 				</image> make this time a new window with a minimized editor appear.
 			</item>
 		</list>
-		<div >
-			<bold >Note</bold>: Icons mentioned above are droppable: instead of simply clicking on them, you can drop a stone on them. The tools in the new window will then be centered on the corresponding component.
+		<div>
+			<bold>Note</bold>: Icons mentioned above are droppable: instead of simply clicking on them, you can drop a stone on them. The tools in the new window will then be centered on the corresponding component.
 		</div>
-	</paragraph>
-</document>
+	</paragraph></document>

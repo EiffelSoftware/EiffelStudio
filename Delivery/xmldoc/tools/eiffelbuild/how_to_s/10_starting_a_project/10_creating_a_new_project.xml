@@ -1,9 +1,6 @@
 <document title="Creating a new project" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Creating a new project
-		</heading>
 		<paragraph>When a project is not open in Build, there are only two menu options available. 'File' and 'Help'. To create a new project, select 'file', 'New project' as illustrated below:</paragraph>   
 		<paragraph>
 			<image>
@@ -21,12 +18,11 @@
 		<paragraph>Selecting 'Cancel' will return you to the directory selection dialog, from which you can select the directory in which you wish to create the new Build project.</paragraph>
 		<seealso>
 			<bold>See Also</bold>
-			<line_break></line_break> 
+			<line_break/> 
 			<link>
 				<url>20_retrieving_a_project_from_a_build_project_file</url>
 				<label>Retrieving a project from a Build project file</label>
 			</link>
-			<line_break></line_break>
+			<line_break/>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

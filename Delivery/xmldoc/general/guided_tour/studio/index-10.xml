@@ -1,9 +1,6 @@
 <document title="9 BROWSING FEATURES" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>9 Browsing Features
-		</heading>
 		<paragraph>Let us get back to EiffelStudio.  We won't need a browser any more for this Tour, so you may close any browser window (other than the 
 			<span>current</span> window if you are reading this in HTML!) opened to look up the generated documentation in the previous section.  
 		</paragraph>
@@ -361,5 +358,4 @@
 			</paragraph>
 			<paragraph>In any system or library that takes advantage of inheritance and its associated mechanisms -- renaming, redefinition, effecting, undefinition, multiple and repeated inheritance, polymorphism, dynamic binding -- the feature browsing facilities that we have just explored are invaluable to track what happens to features.  What makes them even more precious is their connection with the rest of the browsing and documentation capabilities, especially the pick-and-drop which we will now study.  </paragraph>
 		</div>
-	</paragraph>
-</document>
+	</paragraph></document>

@@ -1,9 +1,6 @@
 <document title="Run a finalized executable" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Run a finalized executable
-		</heading>
 		<paragraph>As opposed to other execution commands, this command launches an application compiled in finalized mode. This has the same effect as running the application in the EIFGEN/F_code directory from a console prompt.</paragraph>
 		<paragraph>No debugging is possible with this command, but it lets you test the real speed of your program without any overhead.</paragraph>
 		<paragraph>It is accessible through the 
@@ -15,16 +12,15 @@
 		</paragraph>
 		<seealso>
 			<bold>See Also</bold>
-			<line_break></line_break> 
+			<line_break/> 
 			<link>
 				<url>00_introduction.xml</url>
 				<label>Execution commands</label>
 			</link>
-			<line_break></line_break>
+			<line_break/>
 			<link>
 				<url>../../../../../tools/eiffelstudio/how_to_s/40_compiling/10_generating_executables.xml</url>
 				<label>Compiling in finalized mode</label>
 			</link>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

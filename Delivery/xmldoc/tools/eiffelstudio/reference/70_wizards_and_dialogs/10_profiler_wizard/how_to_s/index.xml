@@ -1,9 +1,6 @@
 <document title="Profiler how to's" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Profiler how to's
-		</heading>
 		<list ordered="false">
 			<item>
 				<link>
@@ -12,5 +9,4 @@
 				</link>
 			</item>
 		</list>
-	</paragraph>
-</document>
+	</paragraph></document>

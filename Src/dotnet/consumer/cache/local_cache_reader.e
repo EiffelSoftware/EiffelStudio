@@ -22,6 +22,7 @@ feature {NONE}
 			-- Initialize cache reader to read from `a_path'.
 		require
 			a_path_not_void: a_path /= Void
+			not_empty_path: not a_path.is_empty
 		local
 			a_op_env: OPERATING_ENVIRONMENT
 		do

@@ -28,7 +28,7 @@ feature
 		do
 			command_tool := tool
 			box_create (a_name, a_parent)
-			set_column_layout
+			set_row_layout
 			set_preferred_count (5)
 			parent_scrolled_w ?= a_parent
 			if parent_scrolled_w /= Void then

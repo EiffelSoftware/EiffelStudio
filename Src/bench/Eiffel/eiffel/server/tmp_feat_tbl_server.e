@@ -1,6 +1,6 @@
 -- Server feature table on temporary file. This server is
 -- used during the compilation. The goal is to merge the file Tmp_feat_tbl_file
--- and Feat_tbl_file if the compilation is successfull.
+-- and Feat_tbl_file if the compilation is successful.
 
 class TMP_FEAT_TBL_SERVER 
 

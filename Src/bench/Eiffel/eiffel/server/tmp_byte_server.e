@@ -1,6 +1,6 @@
 -- Server for byte code on temporary file. This server is
 -- used during the compilation. The goal is to merge the file Tmp_byte_file
--- and Byte_file if the compilation is successfull.
+-- and Byte_file if the compilation is successful.
 
 class TMP_BYTE_SERVER 
 

@@ -1,6 +1,6 @@
 -- Server for invariant byte code on temporary file. This server is
 -- used during the compilation. The goal is to merge the file Tmp_inv_byte_file
--- and Inv_byte_file if the compilation is successfull.
+-- and Inv_byte_file if the compilation is successful.
 
 class TMP_INV_BYTE_SERVER 
 

@@ -109,20 +109,10 @@ feature {NONE} -- Initialization
 			accelerator.actions.extend (agent random_test)
 			
 				-- Initialize a test that checks the contents of each line.
-		--	create timer.make_with_interval (2000)
-		--	timer.actions.extend (agent check_line_positions)
+			create timer.make_with_interval (2000)
+			timer.actions.extend (agent check_line_positions)
 			show_actions.extend (agent window_shown)
-			
-			rich_text.vertical_scroll_actions.force_extend (agent show_position)
-			rich_text.horizontal_scroll_actions.force_extend (agent show_position)
 		end
-		
-	show_position is
-			--
-		do
-			general_label.set_text (rich_text.x_offset.out + " " + rich_text.y_offset.out)
-		end
-		
 		
 	window_shown is
 			-- `Current' has been shown. Perform necessary processing.
@@ -1163,12 +1153,7 @@ feature {NONE} -- To be removed
 	random_test is
 			-- A feature connected to an accelerator for testing purposes.
 		do
-			rich_text.perform_something
-			create timeout.make_with_interval (10)
-			timeout.actions.extend (agent scroll_area)
 --			--| FIXME remove this.
---			--rich_text.select_region (5, 8)
---			--char := rich_text.character_format (1)
 ----			from
 ----				counter := 1
 ----			until
@@ -1186,21 +1171,10 @@ feature {NONE} -- To be removed
 ----			end
 --		--	format := rich_text.paragraph_format (10)
 		end
-		
-	scroll_area is
-			--
-		do
-			rich_text.set_y_offset (offset)
-			offset := offset + 5
-			if offset > 500 then
-				offset := 0
-				timeout.destroy
-			end
-		end
 	
 	offset: INTEGER
 	
-			timeout: EV_TIMEOUT
+	timeout: EV_TIMEOUT
 		
 	accelerator: EV_ACCELERATOR
 

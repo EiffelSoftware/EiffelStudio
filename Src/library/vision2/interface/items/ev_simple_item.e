@@ -69,7 +69,7 @@ feature -- Status settings
 
 feature -- Event : command association
 
-	add_activate_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+	add_activate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Make `cmd' the executed command when the item is 
 			-- activated.
 		require
@@ -79,7 +79,7 @@ feature -- Event : command association
 			implementation.add_activate_command (cmd, arg)
 		end	
 
-	add_deactivate_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+	add_deactivate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Make `cmd' the executed command when the item is
 			-- unactivated.
 		require

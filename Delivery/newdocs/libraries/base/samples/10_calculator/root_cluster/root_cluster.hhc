@@ -1,88 +1,88 @@
-	<LI><OBJECT type="text/sitemap"><param name="Name" value="root_cluster"><param name="Local" value="libraries\base\samples\calculator\root_cluster\index.html"></OBJECT>
+	<LI><OBJECT type="text/sitemap"><param name="Name" value="root_cluster"><param name="Local" value="libraries\base\samples\10_calculator\root_cluster\index.html"></OBJECT>
 	<UL>
-<LI><OBJECT type="text/sitemap"><param name="Name" value="CALCULATOR"><param name="Local" value="libraries\base\samples\calculator\root_cluster\calculator_chart.html"></OBJECT>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="CALCULATOR"><param name="Local" value="libraries\base\samples\10_calculator\root_cluster\calculator_chart.html"></OBJECT>
 		<UL>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="associated_operator"><param name="Local" value="libraries\base\samples\calculator\root_cluster\calculator.html#f_associated_operator"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="enter_operator"><param name="Local" value="libraries\base\samples\calculator\root_cluster\calculator.html#f_enter_operator"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="make"><param name="Local" value="libraries\base\samples\calculator\root_cluster\calculator.html#f_make"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="associated_operator"><param name="Local" value="libraries\base\samples\10_calculator\root_cluster\calculator.html#f_associated_operator"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="enter_operator"><param name="Local" value="libraries\base\samples\10_calculator\root_cluster\calculator.html#f_enter_operator"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="make"><param name="Local" value="libraries\base\samples\10_calculator\root_cluster\calculator.html#f_make"></OBJECT>
 		</UL>
-<LI><OBJECT type="text/sitemap"><param name="Name" value="DIVIDE"><param name="Local" value="libraries\base\samples\calculator\root_cluster\divide_chart.html"></OBJECT>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="DIVIDE"><param name="Local" value="libraries\base\samples\10_calculator\root_cluster\divide_chart.html"></OBJECT>
 		<UL>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="do_one_state"><param name="Local" value="libraries\base\samples\calculator\root_cluster\divide.html#f_do_one_state"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="next_choice"><param name="Local" value="libraries\base\samples\calculator\root_cluster\divide.html#f_next_choice"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="operation"><param name="Local" value="libraries\base\samples\calculator\root_cluster\divide.html#f_operation"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="read"><param name="Local" value="libraries\base\samples\calculator\root_cluster\divide.html#f_read"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="do_one_state"><param name="Local" value="libraries\base\samples\10_calculator\root_cluster\divide.html#f_do_one_state"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="next_choice"><param name="Local" value="libraries\base\samples\10_calculator\root_cluster\divide.html#f_next_choice"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="operation"><param name="Local" value="libraries\base\samples\10_calculator\root_cluster\divide.html#f_operation"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="read"><param name="Local" value="libraries\base\samples\10_calculator\root_cluster\divide.html#f_read"></OBJECT>
 		</UL>
-<LI><OBJECT type="text/sitemap"><param name="Name" value="EMPTY"><param name="Local" value="libraries\base\samples\calculator\root_cluster\empty_chart.html"></OBJECT>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="EMPTY"><param name="Local" value="libraries\base\samples\10_calculator\root_cluster\empty_chart.html"></OBJECT>
 		<UL>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="do_one_state"><param name="Local" value="libraries\base\samples\calculator\root_cluster\empty.html#f_do_one_state"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="next_choice"><param name="Local" value="libraries\base\samples\calculator\root_cluster\empty.html#f_next_choice"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="operation"><param name="Local" value="libraries\base\samples\calculator\root_cluster\empty.html#f_operation"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="read"><param name="Local" value="libraries\base\samples\calculator\root_cluster\empty.html#f_read"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="do_one_state"><param name="Local" value="libraries\base\samples\10_calculator\root_cluster\empty.html#f_do_one_state"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="next_choice"><param name="Local" value="libraries\base\samples\10_calculator\root_cluster\empty.html#f_next_choice"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="operation"><param name="Local" value="libraries\base\samples\10_calculator\root_cluster\empty.html#f_operation"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="read"><param name="Local" value="libraries\base\samples\10_calculator\root_cluster\empty.html#f_read"></OBJECT>
 		</UL>
-<LI><OBJECT type="text/sitemap"><param name="Name" value="HELP"><param name="Local" value="libraries\base\samples\calculator\root_cluster\help_chart.html"></OBJECT>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="HELP"><param name="Local" value="libraries\base\samples\10_calculator\root_cluster\help_chart.html"></OBJECT>
 		<UL>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="associated_operator"><param name="Local" value="libraries\base\samples\calculator\root_cluster\help.html#f_associated_operator"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="do_one_state"><param name="Local" value="libraries\base\samples\calculator\root_cluster\help.html#f_do_one_state"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="enter_operator"><param name="Local" value="libraries\base\samples\calculator\root_cluster\help.html#f_enter_operator"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="next_choice"><param name="Local" value="libraries\base\samples\calculator\root_cluster\help.html#f_next_choice"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="operation"><param name="Local" value="libraries\base\samples\calculator\root_cluster\help.html#f_operation"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="read"><param name="Local" value="libraries\base\samples\calculator\root_cluster\help.html#f_read"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="associated_operator"><param name="Local" value="libraries\base\samples\10_calculator\root_cluster\help.html#f_associated_operator"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="do_one_state"><param name="Local" value="libraries\base\samples\10_calculator\root_cluster\help.html#f_do_one_state"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="enter_operator"><param name="Local" value="libraries\base\samples\10_calculator\root_cluster\help.html#f_enter_operator"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="next_choice"><param name="Local" value="libraries\base\samples\10_calculator\root_cluster\help.html#f_next_choice"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="operation"><param name="Local" value="libraries\base\samples\10_calculator\root_cluster\help.html#f_operation"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="read"><param name="Local" value="libraries\base\samples\10_calculator\root_cluster\help.html#f_read"></OBJECT>
 		</UL>
-<LI><OBJECT type="text/sitemap"><param name="Name" value="INTERFACE"><param name="Local" value="libraries\base\samples\calculator\root_cluster\interface_chart.html"></OBJECT>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="INTERFACE"><param name="Local" value="libraries\base\samples\10_calculator\root_cluster\interface_chart.html"></OBJECT>
 		<UL>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="associated_command"><param name="Local" value="libraries\base\samples\calculator\root_cluster\interface.html#f_associated_command"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="help_message"><param name="Local" value="libraries\base\samples\calculator\root_cluster\interface.html#f_help_message"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="operator_key"><param name="Local" value="libraries\base\samples\calculator\root_cluster\interface.html#f_operator_key"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_interface"><param name="Local" value="libraries\base\samples\calculator\root_cluster\interface.html#f_set_interface"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="associated_command"><param name="Local" value="libraries\base\samples\10_calculator\root_cluster\interface.html#f_associated_command"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="help_message"><param name="Local" value="libraries\base\samples\10_calculator\root_cluster\interface.html#f_help_message"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="operator_key"><param name="Local" value="libraries\base\samples\10_calculator\root_cluster\interface.html#f_operator_key"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_interface"><param name="Local" value="libraries\base\samples\10_calculator\root_cluster\interface.html#f_set_interface"></OBJECT>
 		</UL>
-<LI><OBJECT type="text/sitemap"><param name="Name" value="MINUS"><param name="Local" value="libraries\base\samples\calculator\root_cluster\minus_chart.html"></OBJECT>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="MINUS"><param name="Local" value="libraries\base\samples\10_calculator\root_cluster\minus_chart.html"></OBJECT>
 		<UL>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="do_one_state"><param name="Local" value="libraries\base\samples\calculator\root_cluster\minus.html#f_do_one_state"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="next_choice"><param name="Local" value="libraries\base\samples\calculator\root_cluster\minus.html#f_next_choice"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="operation"><param name="Local" value="libraries\base\samples\calculator\root_cluster\minus.html#f_operation"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="read"><param name="Local" value="libraries\base\samples\calculator\root_cluster\minus.html#f_read"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="do_one_state"><param name="Local" value="libraries\base\samples\10_calculator\root_cluster\minus.html#f_do_one_state"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="next_choice"><param name="Local" value="libraries\base\samples\10_calculator\root_cluster\minus.html#f_next_choice"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="operation"><param name="Local" value="libraries\base\samples\10_calculator\root_cluster\minus.html#f_operation"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="read"><param name="Local" value="libraries\base\samples\10_calculator\root_cluster\minus.html#f_read"></OBJECT>
 		</UL>
-<LI><OBJECT type="text/sitemap"><param name="Name" value="MULTIPLY"><param name="Local" value="libraries\base\samples\calculator\root_cluster\multiply_chart.html"></OBJECT>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="MULTIPLY"><param name="Local" value="libraries\base\samples\10_calculator\root_cluster\multiply_chart.html"></OBJECT>
 		<UL>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="do_one_state"><param name="Local" value="libraries\base\samples\calculator\root_cluster\multiply.html#f_do_one_state"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="next_choice"><param name="Local" value="libraries\base\samples\calculator\root_cluster\multiply.html#f_next_choice"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="operation"><param name="Local" value="libraries\base\samples\calculator\root_cluster\multiply.html#f_operation"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="read"><param name="Local" value="libraries\base\samples\calculator\root_cluster\multiply.html#f_read"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="do_one_state"><param name="Local" value="libraries\base\samples\10_calculator\root_cluster\multiply.html#f_do_one_state"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="next_choice"><param name="Local" value="libraries\base\samples\10_calculator\root_cluster\multiply.html#f_next_choice"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="operation"><param name="Local" value="libraries\base\samples\10_calculator\root_cluster\multiply.html#f_operation"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="read"><param name="Local" value="libraries\base\samples\10_calculator\root_cluster\multiply.html#f_read"></OBJECT>
 		</UL>
-<LI><OBJECT type="text/sitemap"><param name="Name" value="PLUS"><param name="Local" value="libraries\base\samples\calculator\root_cluster\plus_chart.html"></OBJECT>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="PLUS"><param name="Local" value="libraries\base\samples\10_calculator\root_cluster\plus_chart.html"></OBJECT>
 		<UL>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="do_one_state"><param name="Local" value="libraries\base\samples\calculator\root_cluster\plus.html#f_do_one_state"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="next_choice"><param name="Local" value="libraries\base\samples\calculator\root_cluster\plus.html#f_next_choice"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="operation"><param name="Local" value="libraries\base\samples\calculator\root_cluster\plus.html#f_operation"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="read"><param name="Local" value="libraries\base\samples\calculator\root_cluster\plus.html#f_read"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="do_one_state"><param name="Local" value="libraries\base\samples\10_calculator\root_cluster\plus.html#f_do_one_state"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="next_choice"><param name="Local" value="libraries\base\samples\10_calculator\root_cluster\plus.html#f_next_choice"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="operation"><param name="Local" value="libraries\base\samples\10_calculator\root_cluster\plus.html#f_operation"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="read"><param name="Local" value="libraries\base\samples\10_calculator\root_cluster\plus.html#f_read"></OBJECT>
 		</UL>
-<LI><OBJECT type="text/sitemap"><param name="Name" value="QUESTION"><param name="Local" value="libraries\base\samples\calculator\root_cluster\question_chart.html"></OBJECT>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="QUESTION"><param name="Local" value="libraries\base\samples\10_calculator\root_cluster\question_chart.html"></OBJECT>
 		<UL>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="do_one_state"><param name="Local" value="libraries\base\samples\calculator\root_cluster\question.html#f_do_one_state"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="next_choice"><param name="Local" value="libraries\base\samples\calculator\root_cluster\question.html#f_next_choice"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="operation"><param name="Local" value="libraries\base\samples\calculator\root_cluster\question.html#f_operation"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="process"><param name="Local" value="libraries\base\samples\calculator\root_cluster\question.html#f_process"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="read"><param name="Local" value="libraries\base\samples\calculator\root_cluster\question.html#f_read"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="do_one_state"><param name="Local" value="libraries\base\samples\10_calculator\root_cluster\question.html#f_do_one_state"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="next_choice"><param name="Local" value="libraries\base\samples\10_calculator\root_cluster\question.html#f_next_choice"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="operation"><param name="Local" value="libraries\base\samples\10_calculator\root_cluster\question.html#f_operation"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="process"><param name="Local" value="libraries\base\samples\10_calculator\root_cluster\question.html#f_process"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="read"><param name="Local" value="libraries\base\samples\10_calculator\root_cluster\question.html#f_read"></OBJECT>
 		</UL>
-<LI><OBJECT type="text/sitemap"><param name="Name" value="QUIT"><param name="Local" value="libraries\base\samples\calculator\root_cluster\quit_chart.html"></OBJECT>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="QUIT"><param name="Local" value="libraries\base\samples\10_calculator\root_cluster\quit_chart.html"></OBJECT>
 		<UL>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="do_one_state"><param name="Local" value="libraries\base\samples\calculator\root_cluster\quit.html#f_do_one_state"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="next_choice"><param name="Local" value="libraries\base\samples\calculator\root_cluster\quit.html#f_next_choice"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="operation"><param name="Local" value="libraries\base\samples\calculator\root_cluster\quit.html#f_operation"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="process"><param name="Local" value="libraries\base\samples\calculator\root_cluster\quit.html#f_process"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="read"><param name="Local" value="libraries\base\samples\calculator\root_cluster\quit.html#f_read"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="do_one_state"><param name="Local" value="libraries\base\samples\10_calculator\root_cluster\quit.html#f_do_one_state"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="next_choice"><param name="Local" value="libraries\base\samples\10_calculator\root_cluster\quit.html#f_next_choice"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="operation"><param name="Local" value="libraries\base\samples\10_calculator\root_cluster\quit.html#f_operation"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="process"><param name="Local" value="libraries\base\samples\10_calculator\root_cluster\quit.html#f_process"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="read"><param name="Local" value="libraries\base\samples\10_calculator\root_cluster\quit.html#f_read"></OBJECT>
 		</UL>
-<LI><OBJECT type="text/sitemap"><param name="Name" value="SET_UP"><param name="Local" value="libraries\base\samples\calculator\root_cluster\set_up_chart.html"></OBJECT>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="SET_UP"><param name="Local" value="libraries\base\samples\10_calculator\root_cluster\set_up_chart.html"></OBJECT>
 		<UL>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="associated_operator"><param name="Local" value="libraries\base\samples\calculator\root_cluster\set_up.html#f_associated_operator"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="enter_operator"><param name="Local" value="libraries\base\samples\calculator\root_cluster\set_up.html#f_enter_operator"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="associated_operator"><param name="Local" value="libraries\base\samples\10_calculator\root_cluster\set_up.html#f_associated_operator"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="enter_operator"><param name="Local" value="libraries\base\samples\10_calculator\root_cluster\set_up.html#f_enter_operator"></OBJECT>
 		</UL>
-<LI><OBJECT type="text/sitemap"><param name="Name" value="STATE"><param name="Local" value="libraries\base\samples\calculator\root_cluster\state_chart.html"></OBJECT>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="STATE"><param name="Local" value="libraries\base\samples\10_calculator\root_cluster\state_chart.html"></OBJECT>
 		<UL>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="do_one_state"><param name="Local" value="libraries\base\samples\calculator\root_cluster\state.html#f_do_one_state"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="next_choice"><param name="Local" value="libraries\base\samples\calculator\root_cluster\state.html#f_next_choice"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="operation"><param name="Local" value="libraries\base\samples\calculator\root_cluster\state.html#f_operation"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="read"><param name="Local" value="libraries\base\samples\calculator\root_cluster\state.html#f_read"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="do_one_state"><param name="Local" value="libraries\base\samples\10_calculator\root_cluster\state.html#f_do_one_state"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="next_choice"><param name="Local" value="libraries\base\samples\10_calculator\root_cluster\state.html#f_next_choice"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="operation"><param name="Local" value="libraries\base\samples\10_calculator\root_cluster\state.html#f_operation"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="read"><param name="Local" value="libraries\base\samples\10_calculator\root_cluster\state.html#f_read"></OBJECT>
 		</UL>
 	</UL>

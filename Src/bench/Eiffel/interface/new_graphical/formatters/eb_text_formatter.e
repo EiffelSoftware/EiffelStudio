@@ -51,8 +51,8 @@ feature {EB_FEATURE_TOOL_LIST} -- Displaying
 
 feature -- Formatting
 
-	format (stone: STONE) is
-			-- Show text of `stone' in `text_area'
+	format is
+			-- Show text of the tool stone in `text_area'
 		local
 			stone_text, class_name: STRING
 			filed_stone: FILED_STONE
@@ -69,7 +69,7 @@ feature -- Formatting
 			wd: EV_WARNING_DIALOG
 		do
 			if not retried then
-				classc_stone ?= stone
+				classc_stone ?= tool.stone
 				if classc_stone /= Void and then classc_stone.is_valid then
 					e_class := classc_stone.e_class
 					modified_class := not e_class.is_precompiled and then
@@ -77,17 +77,20 @@ feature -- Formatting
 				end
 				if
 					do_format or filtered or modified_class or else
-					(tool.last_format /= Current or
-					stone /= Void and then not stone.same_as (tool.stone))
+					(tool.last_format /= Current)
+--|					or stone /= Void and then not stone.same_as (tool.stone))
+--| FIXME
+--| Christophe, 5 nov 1999
+--| How do we know that `tool.stone' has just changed?
 				then
-					if stone /= Void and then stone.is_valid then
-						same_stone := stone.same_as (tool.stone)
-						display_temp_header (stone)
---						create mp.set_watch_cursor
-						stone_text := stone.origin_text
+					if tool.stone /= Void and then tool.stone.is_valid then
+--|						same_stone := stone.same_as (tool.stone)
+						display_temp_header (tool.stone)
+--|						create mp.set_watch_cursor
+						stone_text := tool.stone.origin_text
 						if stone_text = Void then
 							stone_text := ""
-							filed_stone ?= stone
+							filed_stone ?= tool.stone
 							if filed_stone /= Void then
 								if filed_stone.file_name /= Void then
 									error := true
@@ -103,14 +106,14 @@ feature -- Formatting
 						class_tool ?= tool
 --						if 
 --							class_tool /= Void and then (
---							(same_stone and tool.last_format = class_tool.showclick_frmt_holder) or
+--							(tool.last_format = class_tool.showclick_frmt_holder) or
 --							(do_format and tool.last_format = Current))
 --						then
 --							cur := tool.text_area.cursor
 --						end
 						tool.text_area.clear_window
 --						tool.set_editable_text
-						tool.set_stone (stone)
+--						tool.set_stone (stone)
 		--| FIXME
 		--| Christophe, 18 oct 1999
 		--| Watch for last saving date.
@@ -128,7 +131,7 @@ feature -- Formatting
 --						tool.update_save_symbol
 						tool.set_mode_for_editing
 --						tool.show_editable_text
-						if stone.clickable then
+						if tool.stone.clickable then
 							if modified_class then
 								if not error and not do_format then
 										-- Do not display the warning message
@@ -140,14 +143,14 @@ feature -- Formatting
 										Warning_messages.w_Class_modified (class_name))
 								end
 							elseif st = Void then
-								tool.text_area.update_clickable_from_stone (stone)
+								tool.text_area.update_clickable_from_stone (tool.stone)
 							end
 						end
 --						if cur /= Void then
 --							tool.text_area.go_to (cur)
 --						end
 						tool.set_last_format (Current)
-						display_header (stone)
+						display_header (tool.stone)
 --						mp.restore
 					end
 					filtered := false
@@ -166,6 +169,9 @@ feature -- Formatting
 				retry
 --			end
 		end
+--| FIXME
+--| Christophe, 5 nov 1999
+--| This feature is to be remade.
 
 feature {NONE} -- Implementation
 

@@ -33,6 +33,13 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 		
+	background_color: EV_COLOR is
+			-- Background color of the current format.
+		deferred
+		ensure
+			Result_not_void: Result /= Void
+		end
+		
 	effects: EV_CHARACTER_FORMAT_EFFECTS is
 			-- Character format effects applicable to `font'.
 		deferred
@@ -58,6 +65,15 @@ feature -- Status setting
 		deferred
 		ensure
 			color_set: color.is_equal (a_color)
+		end
+		
+	set_background_color (a_color: EV_COLOR) is
+			-- Make `value' the new background color.
+		require
+			color_not_void: a_color /= Void
+		deferred
+		ensure
+			color_set: background_color.is_equal (a_color)
 		end
 		
 	set_effects (an_effect: EV_CHARACTER_FORMAT_EFFECTS) is

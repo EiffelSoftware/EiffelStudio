@@ -17,7 +17,8 @@ inherit
 			compiler_version,
 			Freeze_command_name,
 			freeze_command_arguments,
-			remove_file_locks
+			remove_file_locks,
+			has_signable_generation
 		end
 
 	SHARED_EIFFEL_PROJECT
@@ -64,6 +65,13 @@ feature -- Access
 		do
 			Result := Version_number
 		end
+
+	has_signable_generation: BOOLEAN is
+			-- Does the compiler allow for assemblies to be signed
+		do
+			Result := feature {EIFFEL_ENV}.has_signable_generation
+		end
+		
 
 feature -- Basic Operations
 

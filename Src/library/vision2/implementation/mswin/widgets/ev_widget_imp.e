@@ -151,6 +151,16 @@ feature -- Access
 			result_exists: Result /= Void
 		end
 
+	notebook_parent: ARRAYED_LIST[EV_NOTEBOOK_IMP] is
+			-- Search recursively for the ancestors of type notebook.
+			-- Result = list of notebook ancestors.
+			-- Result can be empty.
+		do
+			if parent_imp /=Void then
+				Result := parent_imp.notebook_parent
+			end
+		end
+
 feature -- Status report
 
 	destroyed: BOOLEAN is
@@ -783,15 +793,47 @@ feature {NONE} -- Implementation, focus event
 
 	on_set_focus is
 			-- Wm_setfocus message
+		local
+			notebooks: ARRAY[EV_NOTEBOOK_IMP]
+			counter: INTEGER
 		do
 			focus_on_widget.put (Current)
 			execute_command (Cmd_get_focus, Void)
+			notebooks := notebook_parent
+			if notebooks /= Void then
+				from
+					counter := 1
+				until
+					counter = notebooks.count + 1
+				loop
+					--if notebooks.item (counter) /= Void then
+						notebooks.item (counter).set_ex_style (Ws_ex_controlparent)
+					--end
+					counter := counter + 1
+				end
+			end
 		end
 
 	on_kill_focus is
 			-- Wm_killfocus message
+		local
+			notebooks: ARRAY[EV_NOTEBOOK_IMP]
+			counter: INTEGER
 		do
 			execute_command (Cmd_lose_focus, Void)
+			notebooks := notebook_parent
+			if notebooks /= Void then
+				from
+					counter :=1
+				until
+					counter = notebooks.count + 1
+				loop
+					if notebooks.item (counter) /= Void then
+						notebooks.item (counter).set_ex_style (0)
+					end
+					counter := counter + 1
+				end
+			end
 		end
 
 feature {NONE} -- Implementation, cursor of the widget

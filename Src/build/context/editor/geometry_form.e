@@ -87,6 +87,7 @@ feature
 			!! text_field_height.make (Widget_names.textfield, 
 					Current, Set_size_cmd, editor)
 
+			set_size (200, 200)
 			text_field_x.set_width (50)
 			text_field_y.set_width (50)
 			text_field_width.set_width (50)

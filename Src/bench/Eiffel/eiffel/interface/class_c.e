@@ -3572,6 +3572,12 @@ feature -- Properties
 	is_external: BOOLEAN
 			-- Is class an external one?
 			-- If yes, we do not generate it.
+			
+	is_true_external: BOOLEAN is
+			-- Is class an instance of EXTERNAL_CLASS_C?
+			-- If yes, we do not generate it.
+		do
+		end
 
 	obsolete_message: STRING
 			-- Obsolete message

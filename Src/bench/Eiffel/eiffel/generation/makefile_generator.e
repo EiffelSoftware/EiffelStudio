@@ -748,7 +748,7 @@ feature -- Generation (Linking rules)
 			-- (dependencies for final executable).
 		do
 				-- System object files.
-			generate_basket_objects (System_baskets, C_prefix)
+			generate_basket_objects (System_baskets, System_object_prefix)
 		end
 
 	generate_objects_macros is

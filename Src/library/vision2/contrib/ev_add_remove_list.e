@@ -72,6 +72,32 @@ feature -- Status
 			Result := list.count
 		end
 
+feature -- Setting
+
+	set_is_entry_valid (f: like is_entry_valid) is
+			-- Set `is_entry_valid' with `f'.
+		do
+			is_entry_valid := f
+		ensure
+			is_entry_valid_set: is_entry_valid = f
+		end
+			
+	set_display_error_message (p: like display_error_message) is
+			-- Set `display_error_message' with `p'.
+		do
+			display_error_message := p
+		ensure
+			display_error_message_set: display_error_message = p
+		end
+		
+feature {NONE} -- Implementation: access
+
+	is_entry_valid: FUNCTION [ANY, TUPLE [STRING], BOOLEAN]
+			-- Check if new entry is valid before adding it.
+			
+	display_error_message: PROCEDURE [ANY, TUPLE [STRING]]
+			-- Display error message when entry is not valid.
+
 feature -- Cleaning
 
 	reset is
@@ -156,14 +182,18 @@ feature {NONE} -- Action
 			txt: STRING
 		do
 			txt := text.text
-			if not txt.is_empty then
+			if not txt.is_empty and (is_entry_valid = Void or else is_entry_valid.item ([txt])) then
 				create list_item.make_with_text (txt)
 				list_item.select_actions.extend (agent text.set_text (txt))
 				l.extend (list_item)
 				l.i_th (l.count).enable_select
 				text.remove_text
+				add_actions.call ([])
+			else
+				if display_error_message /= Void then
+					display_error_message.call ([txt])
+				end
 			end
-			add_actions.call ([])
 		end
 
 	disable_non_applicable_buttons (text: EV_TEXT_FIELD; a_button: EV_BUTTON) is

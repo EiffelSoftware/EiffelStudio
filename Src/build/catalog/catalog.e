@@ -112,8 +112,8 @@ feature
 				current_page.go_i_th (1);
 				current_page.update_display
 			end
-			current_page.manage;
 			page_sw.set_working_area (current_page);
+			current_page.manage;
 		end; -- update_interface 
 
 	set_initial_page (page: CAT_PAGE [T]) is
@@ -140,7 +140,9 @@ feature {NONE}
 			current_page.set_symbol;
 			page.set_selected_symbol
 			current_page := page;
+			page.unmanage;
 			page_sw.set_working_area (page);
+			page.manage;
 		end;
 
 feature

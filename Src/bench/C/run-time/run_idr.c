@@ -643,7 +643,7 @@ rt_public void ridr_multi_double (double *obj, int num)
 		bcopy (idrf.i_decode.i_ptr, idr_temp_buf, (int)temp_len);
 		idrf.i_decode.i_ptr += (int)temp_len;
 		*(idr_temp_buf + temp_len) = '\0';
-		sscanf (idr_temp_buf, "%G", obj++);
+		sscanf (idr_temp_buf, "%lf", obj++);
 	}
 }
 
@@ -653,7 +653,7 @@ rt_public void widr_multi_double (double *obj, int num)
 	char temp_len;
 
 	while (num > i++) {
-		sprintf (idr_temp_buf, "%G", *(obj++));
+		sprintf (idr_temp_buf, "%lf", *(obj++));
 		temp_len = (char) strlen (idr_temp_buf);
 		check_capacity (&idrf.i_encode, sizeof (char));
 		bcopy (&temp_len, idrf.i_encode.i_ptr, sizeof(char));

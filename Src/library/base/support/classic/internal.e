@@ -103,6 +103,24 @@ feature -- Status report
 			Result := c_eif_is_special_type (type_id)
 		end
 
+	is_special (object: ANY): BOOLEAN is
+			-- Is `object' a special object?
+			-- It only recognized a special object 
+			-- initialized within a TO_SPECIAL object.
+		require
+			object_not_void: object /= Void
+		do
+			Result := c_is_special ($object)
+		end
+
+	is_marked (obj: ANY): BOOLEAN is
+			-- Is `obj' marked?
+		require
+			object_exists: obj /= Void
+		do
+			Result := c_is_marked ($obj)
+		end
+
 feature -- Access
 
 	Pointer_type: INTEGER is 0
@@ -364,18 +382,6 @@ feature -- Access
 			Result := c_double_field (i - 1, $object)
 		end
 
-feature -- Status report
-
-	is_special (object: ANY): BOOLEAN is
-			-- Is `object' a special object?
-			-- It only recognized a special object 
-			-- initialized within a TO_SPECIAL object.
-		require
-			object_not_void: object /= Void
-		do
-			Result := c_is_special ($object)
-		end
-
 feature -- Version
 
 	compiler_version: INTEGER is
@@ -525,6 +531,24 @@ feature -- Measurement
 			object_not_void: object /= Void
 		do
 			Result := c_size ($object)
+		end
+
+feature -- Marking
+
+	mark (obj: ANY) is
+			-- Mark object `obj'
+		require
+			object_not_void: obj /= Void
+		do
+			c_mark ($obj)
+		end
+
+	unmark (obj: ANY) is
+			-- Unmark object `obj'
+		require
+			object_not_void: obj /= Void
+		do
+			c_unmark ($obj)
 		end
 
 feature {NONE} -- Implementation
@@ -804,6 +828,27 @@ feature {NONE} -- Implementation
 			"eif_gen_conf"
 		end
 		
+	c_is_marked (obj: POINTER): BOOLEAN is
+		external
+			"C macro signature (EIF_REFERENCE): EIF_BOOLEAN use %"eif_internal.h%""
+		alias
+			"ei_is_marked"
+		end
+
+	c_unmark (obj: POINTER) is
+		external
+			"C macro signature (EIF_REFERENCE) use %"eif_internal.h%""
+		alias
+			"ei_unmark"
+		end
+
+	c_mark (obj: POINTER) is
+		external
+			"C macro signature (EIF_REFERENCE) use %"eif_internal.h%""
+		alias
+			"ei_mark"
+		end
+
 indexing
 
 	library: "[

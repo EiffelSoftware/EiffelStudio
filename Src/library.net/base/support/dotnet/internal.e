@@ -122,6 +122,27 @@ feature -- Status report
 			end
 		end
 
+	is_special (object: ANY): BOOLEAN is
+			-- Is `object' a special object?
+			-- It only recognized a special object 
+			-- initialized within a TO_SPECIAL object.
+		require
+			object_not_void: object /= Void
+		local
+			cvs: SPECIAL [ANY]
+		do
+			cvs ?= object
+			Result := cvs /= Void
+		end
+
+	is_marked (obj: ANY): BOOLEAN is
+			-- Is `obj' marked?
+		require
+			object_not_void: obj /= Void
+		do
+			Result := Marked_objects.contains (obj)
+		end
+		
 feature -- Access
 
 	Pointer_type: INTEGER is 0
@@ -387,21 +408,6 @@ feature -- Access
 			Result ?= field (i, object)
 		end
 
-feature -- Status report
-
-	is_special (object: ANY): BOOLEAN is
-			-- Is `object' a special object?
-			-- It only recognized a special object 
-			-- initialized within a TO_SPECIAL object.
-		require
-			object_not_void: object /= Void
-		local
-			cvs: SPECIAL [ANY]
-		do
-			cvs ?= object
-			Result := cvs /= Void
-		end
-
 feature -- Version
 
 	compiler_version: INTEGER is
@@ -549,6 +555,29 @@ feature -- Measurement
 			Result := 4
 		end
 
+feature -- Marking
+
+	mark (obj: ANY) is
+			-- Mark `obj'.
+		require
+			object_not_void: obj /= Void
+		do
+			Marked_objects.add (obj, obj)
+		ensure
+			marked: is_marked (obj)
+		end
+		
+	unmark (obj: ANY) is
+			-- Unmark `obj'.
+		require
+			object_not_void: obj /= Void
+			object_marked: is_marked (obj)
+		do
+			Marked_objects.remove (obj)
+		ensure
+			not_marked: not is_marked (obj)
+		end
+		
 feature {NONE} -- Implementation
 
 	Object_type: INTEGER is 13
@@ -813,6 +842,12 @@ feature {NONE} -- Implementation
 			create Result.make (50)
 		end
 
+	marked_objects: HASHTABLE is
+			-- Contains all objects marked.
+		once
+			create Result.make_from_capacity (50)
+		end
+		
 indexing
 
 	library: "[

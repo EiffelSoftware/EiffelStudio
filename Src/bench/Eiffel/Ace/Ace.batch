@@ -21,55 +21,53 @@ cluster
 		traversing:			"$EIFFEL3/library/base/structures/traversing";
 		tree:				"$EIFFEL3/library/base/structures/tree";
 
+	-- EiffelNet
+
+		abstract_socket:	"$EIFFEL3/library/net/abstract/socket";
+		net_socket:			"$EIFFEL3/library/net/network/socket";
+		local_socket:		"$EIFFEL3/library/net/local/socket";
+
+		polling:			"$EIFFEL3/library/net/polling";
+
+		abstract_client_server:	"$EIFFEL3/library/net/abstract/client_server";
+		net_client_server:		"$EIFFEL3/library/net/network/client_server";
+		local_client_server:	"$EIFFEL3/library/net/local/client_server";
+
 -- ES3 SPECIFIC CLUSTERS
 
-		liman_common:		"$BENCH/Eiffel/limand/common";
 		liman_bench:		"$BENCH/Eiffel/limand/bench";
+		liman_client:		"$BENCH/Eiffel/limand/client";
+		liman_shared:		"$BENCH/Eiffel/limand/shared";
 		beurk:				"$BENCH/Eiffel/beurk";
+
 		compiler_support:	"$BENCH/Eiffel/support";
 		replication:		"$BENCH/Eiffel/eiffel/replication";
-		debugclas:			"$BENCH/Eiffel/debug";
 
 	-- General compilation:
 
 		flat_short:			"$BENCH/Eiffel/flat_short/abstract";
 		flat_short_b:		"$BENCH/Eiffel/flat_short/bench";
 
-		special_ast:		"$BENCH/Eiffel/special_ast";
 		yacc:				"$BENCH/Eiffel/yacc";
 		const:				"$BENCH/Eiffel/const";
-		error:				"$BENCH/Eiffel/error";
-		struct_text:		"$BENCH/Eiffel/structured_text";
 
 	-- Lace compilation:
 
-		lace_AST:			"$BENCH/Eiffel/lace/AST";
 		env:				"$BENCH/Eiffel/lace/env";
-		lace_error:			"$BENCH/Eiffel/lace/error";
 		lace_compile:		"$BENCH/Eiffel/lace/lace_compile";
 		lace_shared:		"$BENCH/Eiffel/lace/shared";
 
 	-- Eiffel compilation:
 
-		instructions:		"$BENCH/Eiffel/eiffel/AST/abstract/instructions";
-		expressions:		"$BENCH/Eiffel/eiffel/AST/abstract/expressions";
-		ast_skeleton:		"$BENCH/Eiffel/eiffel/AST/abstract/skeleton";
-		ast_stonables:		"$BENCH/Eiffel/eiffel/AST/abstract/stonables";
+		instructions_b:		"$BENCH/Eiffel/eiffel/AST/instructions";
+		expressions_b:		"$BENCH/Eiffel/eiffel/AST/expressions";
+		ast_skeleton_b:		"$BENCH/Eiffel/eiffel/AST/skeleton";
+		ast_clickable_b:	"$BENCH/Eiffel/eiffel/AST/clickable";
 
-		instructions_b:		"$BENCH/Eiffel/eiffel/AST/bench/instructions";
-		expressions_b:		"$BENCH/Eiffel/eiffel/AST/bench/expressions";
-		ast_skeleton_b:		"$BENCH/Eiffel/eiffel/AST/bench/skeleton";
-		ast_stonables_b:	"$BENCH/Eiffel/eiffel/AST/bench/stonables";
-
-		actual_type:		"$BENCH/Eiffel/eiffel/actual_type";
 		byte_code:			"$BENCH/Eiffel/eiffel/byte_code";
 		cecil:				"$BENCH/Eiffel/eiffel/cecil";
 		compiler:			"$BENCH/Eiffel/eiffel/compiler";
 		eiffel_const:		"$BENCH/Eiffel/eiffel/const";
-		eiffel_error_feature:			"$BENCH/Eiffel/eiffel/error/feature";
-		eiffel_error_parents:			"$BENCH/Eiffel/eiffel/error/parents";
-		eiffel_error_redefined:			"$BENCH/Eiffel/eiffel/error/redefined";
-		eiffel_error_unredefined:		"$BENCH/Eiffel/eiffel/error/unredefined";
 		generation:			"$BENCH/Eiffel/eiffel/generation";
 		genericity:			"$BENCH/Eiffel/eiffel/genericity";
 		compiler_ids:		"$BENCH/Eiffel/eiffel/ids/compiler";
@@ -78,51 +76,76 @@ cluster
 		type_ids:			"$BENCH/Eiffel/eiffel/ids/type";
 		body_ids:			"$BENCH/Eiffel/eiffel/ids/body_id";
 		body_indexes:		"$BENCH/Eiffel/eiffel/ids/body_index";
+		f_as_indexes:		"$BENCH/Eiffel/eiffel/ids/feature_as";
+		file_indexes:		"$BENCH/Eiffel/eiffel/ids/file";
 		real_body_ids:		"$BENCH/Eiffel/eiffel/ids/real_body_id";
 		real_body_indexes:	"$BENCH/Eiffel/eiffel/ids/real_body_index";
-		file_ids:			"$BENCH/Eiffel/eiffel/ids/file";
-		feature_as_ids:		"$BENCH/Eiffel/eiffel/ids/feature_as";
 		inheritance:		"$BENCH/Eiffel/eiffel/inheritance";
 		interface:			"$BENCH/Eiffel/eiffel/interface";
 		polymorphism:		"$BENCH/Eiffel/eiffel/polymorphism";
 		server:				"$BENCH/Eiffel/eiffel/server";
---		temp:				"$BENCH/Eiffel/eiffel/temp";
 		eiffel_shared:		"$BENCH/Eiffel/eiffel/shared";
 		skeleton:			"$BENCH/Eiffel/eiffel/skeleton";
 		structures:			"$BENCH/Eiffel/eiffel/structures";
 		tables:				"$BENCH/Eiffel/eiffel/tables";
 		descriptor:			"$BENCH/Eiffel/eiffel/descriptor";
 
--- SHARED BETWEEN COMPILER AND INTERFACE:
+-- API cluster
 
-		clicking:			"$BENCH/Eiffel/shared/clicking";
-		stones:				"$BENCH/Eiffel/shared/stones";
-		tops:				"$BENCH/Eiffel/shared/tops";
+		api_constants:		"$BENCH/Eiffel/API/constants";
+		api_shared:			"$BENCH/Eiffel/API/shared";
+		api_queries:		"$BENCH/Eiffel/API/queries";
+		api_interface:		"$BENCH/Eiffel/API/interface";
+		api_ids:			"$BENCH/Eiffel/API/ids";
+		api_common:			"$BENCH/Eiffel/API/common";
+		communication:		"$BENCH/Eiffel/API/no_communication";
+		output:				"$BENCH/Eiffel/API/output";
+		evaluated_type:		"$BENCH/Eiffel/API/evaluated_type";
+			-- Error processing
+		error_common:		"$BENCH/Eiffel/API/error/common";
+		lace_error:			"$BENCH/Eiffel/API/error/lace";
+		feature_error:		"$BENCH/Eiffel/API/error/eiffel/feature";
+		parents_error:		"$BENCH/Eiffel/API/error/eiffel/parents";
+		redefined_error:	"$BENCH/Eiffel/API/error/eiffel/redefined";
+		unredefined_error:	"$BENCH/Eiffel/API/error/eiffel/unredefined";
+			-- Resources
+		resources:			"$BENCH/Eiffel/API/resources/common";
+		resources_bench:	"$BENCH/Eiffel/API/resources/bench";
+			-- Profiling
+		converter:			"$BENCH/Eiffel/API/profiler/converter";
+		profiling:			"$BENCH/Eiffel/API/profiler/profiling";
+		querying:			"$BENCH/Eiffel/API/profiler/querying";
+		filters:			"$BENCH/Eiffel/API/profiler/filters";
+		matching:			"$BENCH/Eiffel/API/profiler/matching";
+		struct_text:		"$BENCH/Eiffel/API/structured_text";
+			-- AST structures
+		lace_AST:			"$BENCH/Eiffel/API/AST/lace";
+		instructions:		"$BENCH/Eiffel/API/AST/eiffel/instructions";
+		expressions:		"$BENCH/Eiffel/API/AST/eiffel/expressions";
+		ast_skeleton:		"$BENCH/Eiffel/API/AST/eiffel/skeleton";
+		ast_stonables:		"$BENCH/Eiffel/API/AST/eiffel/clickable";
+
+-- SWITCH clusters (chose one cluster per directory in switch directory)
+
+		dle_switch:			"$BENCH/Eiffel/switch/dle/dle";
+		generation_switch:	"$BENCH/Eiffel/switch/generation/professional";
+		interface_switch:	"$BENCH/Eiffel/switch/interface/batch_only";
 
 -- INTERFACE CLUSTERS
 
-	-- Root
-		root_cluster:		"$BENCH/Eiffel/root";
+		interface_shared:	"$BENCH/Eiffel/interface/shared";
 
-	-- Switch
-		switch:				"$BENCH/Eiffel/batch_bench/batch";
-		melt_only_switch:	"$BENCH/Eiffel/batch_bench/professional";
-		dle:				"$BENCH/Eiffel/dle/dle";
+	-- tty interface
+
+		tty:				"$BENCH/Eiffel/interface/tty";
+
+	-- Communications
+
+		debugclas:			"$BENCH/Eiffel/debug";
 
 	-- Case
 		case_common:		"$BENCH/Eiffel/case_storage/common";
 		case_bench:			"$BENCH/Eiffel/case_storage/bench";
-
-	-- Resources
-		resources_common:	"$BENCH/Eiffel/resources/common";
-		resources_bench:	"$BENCH/Eiffel/resources/bench";
-
-	-- Profiling
-		converter:			"$BENCH/Eiffel/profiler/converter";
-		profiling:			"$BENCH/Eiffel/profiler/profiling";
-		querying:			"$BENCH/Eiffel/profiler/querying";
-		filters:			"$BENCH/Eiffel/profiler/querying/filters";
-		matching:			"$BENCH/Eiffel/profiler/matching";
 
 external
 

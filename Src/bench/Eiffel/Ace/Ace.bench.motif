@@ -24,9 +24,9 @@ cluster
 -- ES3 SPECIFIC CLUSTERS
 
 
-		liman_bench:		"$BENCH/Eiffel/limand/bench";
-		liman_client:		"$BENCH/Eiffel/limand/client";
 		liman_shared:		"$BENCH/Eiffel/limand/shared";
+		liman_client:		"$BENCH/Eiffel/limand/client";
+		liman_bench:		"$BENCH/Eiffel/limand/bench";
 		beurk:				"$BENCH/Eiffel/beurk";
 		compiler_support:	"$BENCH/Eiffel/support";
 		replication:		"$BENCH/Eiffel/eiffel/replication";
@@ -83,7 +83,7 @@ cluster
 
 		api_constants:	  	"$BENCH/Eiffel/API/constants";
 		api_shared:		 	"$BENCH/Eiffel/API/shared";
-		api_ids:			"$BENCH/Eiffel/API/ids";
+		api_ids:		  	"$BENCH/Eiffel/API/ids";
 		api_queries:		"$BENCH/Eiffel/API/queries";
 		api_interface:	  	"$BENCH/Eiffel/API/interface";
 		api_common:			"$BENCH/Eiffel/API/common";
@@ -116,7 +116,7 @@ cluster
 
 -- SWITCH clusters (chose one cluster per directory in switch directory)
 	
-		dle_switch:			"$BENCH/Eiffel/switch/dle/no_dle";
+		dle_switch:			"$BENCH/Eiffel/switch/dle/dle";
 		generation_switch:	"$BENCH/Eiffel/switch/generation/professional";
 		interface_switch:	"$BENCH/Eiffel/switch/interface/graphical";
 		tty_switch: 		"$BENCH/Eiffel/switch/tty/professional";
@@ -142,8 +142,8 @@ cluster
 		stones:				"$BENCH/Eiffel/interface/graphical/stones";
 		text_window:		"$BENCH/Eiffel/interface/graphical/text_window";
 		windows:			"$BENCH/Eiffel/interface/graphical/windows";
-		wizard_common:			"$BENCH/Eiffel/interface/graphical/wizard/common";
-		wizard_bench:			"$BENCH/Eiffel/interface/graphical/wizard/bench";
+		wizard_common:		"$BENCH/Eiffel/interface/graphical/wizard/common";
+		wizard_bench:		"$BENCH/Eiffel/interface/graphical/wizard/bench";
 
 		platform_common:	"$BENCH/Eiffel/interface/graphical/spec/common";
 		platform_motif:		"$BENCH/Eiffel/interface/graphical/spec/motif";
@@ -166,6 +166,15 @@ cluster
 		graph_kernel:		"$EIFFEL3/library/vision/oui/kernel";
 		graph_oui_widgets:	"$EIFFEL3/library/vision/oui/widgets";
 		graph_tools:		"$EIFFEL3/library/vision/tools";
+
+	-- Net
+		abstract_socket:        "$EIFFEL3/library/net/abstract/socket";
+		net_socket:             "$EIFFEL3/library/net/network/socket";
+		local_socket:           "$EIFFEL3/library/net/local/socket";
+		polling:                "$EIFFEL3/library/net/polling";
+		abstract_client_server: "$EIFFEL3/library/net/abstract/client_server";
+		net_client_server:      "$EIFFEL3/library/net/network/client_server";
+		local_client_server:    "$EIFFEL3/library/net/local/client_server";
 
 external
 

@@ -18,7 +18,7 @@ feature -- Access
 --	the tool attribute is not used cause
 --	the manager can have several tools.
 
-	tool_parent: EV_CONTAINER is
+	tool_parent (t: EB_TOOL): EV_CONTAINER is
 			-- parent of `tool'
 		deferred
 		end

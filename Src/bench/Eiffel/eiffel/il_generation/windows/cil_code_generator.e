@@ -3485,7 +3485,7 @@ feature -- Once management
 			uni_string.set_string (name + "_done")
 			done_token := md_emit.define_field (uni_string,
 				current_class_token,
-				feature {MD_FIELD_ATTRIBUTES}.Public | feature {MD_FIELD_ATTRIBUTES}.Static,
+				feature {MD_FIELD_ATTRIBUTES}.Family | feature {MD_FIELD_ATTRIBUTES}.Static,
 				done_sig)
 		end
 
@@ -3506,7 +3506,7 @@ feature -- Once management
 			uni_string.set_string (name + "_result")
 			result_token := md_emit.define_field (uni_string,
 				current_class_token,
-				feature {MD_FIELD_ATTRIBUTES}.Public | feature {MD_FIELD_ATTRIBUTES}.Static, l_sig)
+				feature {MD_FIELD_ATTRIBUTES}.Family | feature {MD_FIELD_ATTRIBUTES}.Static, l_sig)
 		end
 
 	generate_once_computed is

@@ -368,36 +368,29 @@ feature -- Implementation
 	pointed_target: EV_PICK_AND_DROPABLE is
 			-- Hole at mouse position
 		local
-			pnd: EV_PICK_AND_DROPABLE
-			widget_imp: EV_WIDGET_IMP
-			gdkwin, gdkpar, currentwin: POINTER
+			env: EV_ENVIRONMENT
+			app_imp: EV_APPLICATION_IMP
+			gdkwin: POINTER
 			x, y: INTEGER
 		do
 			gdkwin := C.gdk_window_at_pointer ($x, $y)
-			if gdkwin /= Default_pointer then
-				gdkpar := C.gdk_window_get_parent (gdkwin)
+			
+			create env
+			app_imp ?= env.application.implementation
+			check
+				app_imp_not_void: app_imp /= Void
 			end
 			if gdkwin /= Default_pointer then
-				from
-					global_pnd_targets.start
-				until
-					global_pnd_targets.off or Result /= Void
-				loop
-					pnd ?= id_object (global_pnd_targets.item)
-					if pnd /= Void then
-						widget_imp ?= pnd.implementation
-						currentwin := C.gtk_widget_struct_window (	
-							widget_imp.c_object)
-						if
-							currentwin = gdkwin or else
-							currentwin = gdkpar
-						then
-							Result := pnd
-						end
-					end
-					global_pnd_targets.forth
-				end
+				Result := app_imp.pnd_target_from_gdk_window (gdkwin)
 			end
+		end
+
+feature {EV_APPLICATION_IMP} -- Implementation
+
+	pebble_over_widget (a_gdkwin: POINTER): BOOLEAN is
+			-- Correct gdk window for pnd target.
+		do
+			Result := a_gdkwin = C.gtk_widget_struct_window (c_object)
 		end
 
 feature {NONE} -- Implementation
@@ -467,6 +460,9 @@ end -- class EV_PICK_AND_DROPABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/03/22 22:00:21  king
+--| Revised pointed_target, added pebble_over_widget
+--|
 --| Revision 1.15  2000/03/17 23:22:28  king
 --| Corrected pointed_target to assign attempt to PND
 --|

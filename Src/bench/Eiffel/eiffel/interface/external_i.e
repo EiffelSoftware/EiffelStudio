@@ -9,11 +9,20 @@ inherit
 	PROCEDURE_I
 		redefine
 			transfer_to, equiv, update_api,
-			melt, generate,
+			melt, generate, duplicate,
 			access_for_feature, is_external, new_rout_entry, valid_body_id,
 			set_renamed_name, set_renamed_name_id, external_name_id, undefinable
 		end;
-	
+
+feature -- Duplication
+
+	duplicate: like Current is
+			-- Duplicate current external feature.
+		do
+			Result := Precursor {PROCEDURE_I}
+			Result.set_extension (clone (extension))
+		end
+
 feature -- Attributes for externals
 
 	extension: EXTERNAL_EXT_I

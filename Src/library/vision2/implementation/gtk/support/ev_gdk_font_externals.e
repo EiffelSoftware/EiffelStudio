@@ -35,7 +35,7 @@ feature {NONE} -- Gtk externals for the fonts
 
 	gtk_font_selection_new: POINTER is
 		external
-			"C | <gtk/gtk.h>"
+			"C (): EIF_POINTER | <gtk/gtk.h>"
 		end
 
 	gtk_font_selection_get_font_name (fontsel: POINTER): POINTER is

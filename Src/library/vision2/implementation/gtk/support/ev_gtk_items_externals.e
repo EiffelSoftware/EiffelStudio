@@ -15,7 +15,7 @@ feature {NONE} -- GTK C functions for menu items
 
 	gtk_menu_item_new: POINTER is
 		external
-			"C | <gtk/gtk.h>"
+			"C (): EIF_POINTER | <gtk/gtk.h>"
 		end
 	
 	gtk_menu_item_new_with_label (label_text: POINTER): POINTER is
@@ -35,7 +35,7 @@ feature {NONE} -- GTK C functions for menu items
 
 	gtk_check_menu_item_new: POINTER is
 		external
-			"C | <gtk/gtk.h>"
+			"C (): EIF_POINTER | <gtk/gtk.h>"
 		end
 
 	gtk_check_menu_item_new_with_label (label_text: POINTER): POINTER is
@@ -87,7 +87,7 @@ feature {NONE} -- GTK C functions for list items
 
 	gtk_list_item_new: POINTER is
 		external
-			"C | <gtk/gtk.h>"
+			"C (): EIF_POINTER | <gtk/gtk.h>"
 		end
 
 	gtk_list_item_new_with_label (label_text: POINTER): POINTER is

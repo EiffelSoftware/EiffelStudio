@@ -17,7 +17,7 @@ feature {NONE} -- GTK C functions for buttons
 
 	gtk_button_new: POINTER is
 		external
-			"C | <gtk/gtk.h>"
+			"C (): EIF_POINTER | <gtk/gtk.h>"
 		end
 
 feature {NONE} -- GTK C functions for toggle buttons
@@ -40,7 +40,7 @@ feature {NONE} -- GTK C functions for toggle buttons
 
 	gtk_toggle_button_new: POINTER is
 		external
-			"C | <gtk/gtk.h>"
+			"C (): EIF_POINTER | <gtk/gtk.h>"
 		end
 
 feature {NONE} -- GTK C functions for check buttons
@@ -52,7 +52,7 @@ feature {NONE} -- GTK C functions for check buttons
 
 	gtk_check_button_new: POINTER is
 		external
-			"C | <gtk/gtk.h>"
+			"C (): EIF_POINTER | <gtk/gtk.h>"
 		end
 
 feature {NONE} -- GTK C functions for radio buttons

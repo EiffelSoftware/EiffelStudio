@@ -1,8 +1,15 @@
+indexing
+
+	description: 
+		"Stone representing an object address.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class OBJECT_STONE 
 
 inherit
 
-	UNFILED_STONE
+	STONE
 		redefine
 			is_valid, synchronized_stone, is_equal
 		end;
@@ -21,7 +28,7 @@ creation
 
 	make
 	
-feature -- making
+feature {NONE} -- Initialization
 
 	make (addr: STRING; dclass: E_CLASS) is
 		require
@@ -32,7 +39,7 @@ feature -- making
 			dynamic_class := dclass
 		end;
  
-feature -- Access
+feature -- Properties
 
 	object_address: STRING;
 			-- Hector address (with an indirection)
@@ -40,11 +47,18 @@ feature -- Access
 	dynamic_class: E_CLASS;
 			-- Class associated with dynamic type of `Current'
 
-feature -- dragging
+feature -- Access
 
 	origin_text: STRING is "";
 
 	stone_type: INTEGER is do Result := Object_type end;
+
+	stone_cursor: SCREEN_CURSOR is
+			-- Cursor associated with
+			-- Current stone during transport.
+		do
+			Result := cur_Object
+		end;
  
 	stone_name: STRING is do Result := l_Object end;
 
@@ -59,8 +73,6 @@ feature -- dragging
 			Result := signature
 		end;
  
-feature -- Clickable
-	
 	clickable: BOOLEAN is True;
 			-- Is Current an element with recorded structures information?
 
@@ -89,6 +101,14 @@ feature -- Status report
 			if is_valid then
 				Result := clone (Current)
 			end
+		end;
+
+feature -- Update
+
+	process (hole: HOLE) is
+			-- Process Current stone dropped in hole `hole'.
+		do
+			hole.process_object (Current)
 		end;
 
 invariant

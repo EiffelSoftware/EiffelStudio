@@ -177,6 +177,7 @@ feature -- Output
 			if capacity > 0 then
 				set_sp_bounds (a_slice_min, (capacity - 1).min (a_slice_max))
 				if sp_lower <= sp_upper then
+					items.resize (sp_upper - sp_lower + 1)
 					get_array_value
 					from
 						i := sp_lower

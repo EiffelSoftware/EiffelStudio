@@ -455,11 +455,12 @@ void ecom_variant::ccom_set_unknown_interface (IUnknown *a_value)
 	V_UNKNOWN(variant) = a_value;
 }
 
-void ecom_variant::ccom_set_unknown_interface_reference (IUnknown *a_value)
+void ecom_variant::ccom_set_unknown_interface_reference (EIF_OBJECT a_value)
 {
 	VariantClear (variant);
 	V_VT(variant) = VT_UNKNOWN|VT_BYREF;
-	V_UNKNOWNREF(variant) = (IUnknown **)rt_ec.ccom_ec_pointed_c_pointer((void *)a_value);
+	V_UNKNOWNREF(variant) = (IUnknown **)rt_ec.ccom_ec_pointed_c_pointer(
+				(void *)rt_ec.ccom_ec_unknown (eif_access (a_value)));
 }
 
 EIF_POINTER ecom_variant::ccom_dispatch_interface ()
@@ -483,11 +484,12 @@ void ecom_variant::ccom_set_dispatch_interface (IDispatch * a_value)
 	V_DISPATCH(variant) = a_value;
 }
 
-void ecom_variant::ccom_set_dispatch_interface_reference (IDispatch *a_value)
+void ecom_variant::ccom_set_dispatch_interface_reference (EIF_OBJECT a_value)
 {
 	VariantClear (variant);
 	V_VT(variant) = VT_DISPATCH|VT_BYREF;
-	V_DISPATCHREF(variant) = (IDispatch **)rt_ec.ccom_ec_pointed_c_pointer((void *)a_value);
+	V_DISPATCHREF(variant) = (IDispatch **)rt_ec.ccom_ec_pointed_c_pointer(
+			(void *)rt_ec.ccom_ec_dispatch (eif_access (a_value)));
 }
 
 EIF_REFERENCE ecom_variant::ccom_safearray_unsigned_integer ()

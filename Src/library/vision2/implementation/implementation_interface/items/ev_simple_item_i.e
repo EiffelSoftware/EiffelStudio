@@ -67,7 +67,7 @@ feature -- Element change
 			text_set: text.is_equal (txt)
 		end
 
-	set_data (a: ANY) is
+	set_data (a: like data) is
 			-- Make `a' the new data of the item.
 		require
 			exists: not destroyed

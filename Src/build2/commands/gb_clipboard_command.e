@@ -94,9 +94,18 @@ feature -- Basic operations
 				formater: XM_FORMATTER
 				last_string: KL_STRING_OUTPUT_STREAM
 				string: STRING
+				window_object: GB_TITLED_WINDOW_OBJECT
+				widget: EV_WIDGET
 			do
 				new_clipboard_object := clipboard.internal_object
-				insert_into_window (new_clipboard_object.object, clipboard_dialog)
+				window_object ?= new_clipboard_object
+				if window_object /= Void then
+					widget ?= window_object.object.item
+					window_object.object.wipe_out
+					insert_into_window (widget, clipboard_dialog)	
+				else
+					insert_into_window (new_clipboard_object.object, clipboard_dialog)
+				end
 				clipboard_dialog.show_modal_to_window (main_window)
 				
 				if system_status.is_in_debug_mode then

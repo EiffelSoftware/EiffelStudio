@@ -19,6 +19,14 @@ inherit
 		end
 		
 	SCROLLABLE_LIST_I
+		rename
+			resize as array_resize,
+			copy as array_copy,
+			setup as array_setup
+		select
+			array_setup,
+			array_copy
+		end
 
 	FONTABLE_I
 
@@ -87,7 +95,7 @@ feature -- Initialization
 	make (a_scrollable_list: SCROLLABLE_LIST; is_managed, is_fixed: BOOLEAN;
 			oui_parent: COMPOSITE) is
 		do
-			ll_make
+			ll_make (10)
 			!! private_attributes
 			parent ?= oui_parent.implementation
 			managed := is_managed
@@ -134,7 +142,24 @@ feature -- Initialization
 
 feature  -- Access
 
+	deselect_i_th (a_index: INTEGER) is
+			-- Deselect item at position `a_index' if selected.
+		do
+			if is_selected (a_index - 1) then
+				private_deselect (a_index)
+			end
+		end
+
+	deselect_item is
+			-- Deselect current item if selected.
+		do
+			if is_selected (index - 1) then
+				private_deselect (index)
+			end
+		end
+			
 	selected: BOOLEAN is
+			-- Is there at least one item selected?
 		do
 			if multiple_selection then
 				Result := count_selected_items > 0
@@ -158,6 +183,7 @@ feature  -- Access
 		end
 
 	select_item_at (a_index: INTEGER) is
+			-- Select item at position `a_index'.
 		do
 			if multiple_selection then
 				cwin_send_message (wel_item, Lb_setsel, 1, a_index)
@@ -447,13 +473,6 @@ feature -- Element change
 			end
 		end
 
-	put (an_item: SCROLLABLE_LIST_ELEMENT) is
-			-- Replace current item by `v'.
-			-- (Synonym for `replace')
-		do
-			replace (an_item)				
-		end
-
 	remove_right is
 			-- Remove item to the right of cursor position.
 			-- Do not move cursor.
@@ -635,6 +654,23 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	private_deselect (a_index: INTEGER) is
+			-- Deselect item at position `a_index' and
+			-- update private attributes.
+		require
+			item_selected: is_selected (a_index - 1)
+		do
+			if multiple_selection then
+				cwin_send_message (wel_item, Lb_setsel, 0, a_index - 1)
+				private_selected_positions.prune (a_index)
+			else
+				cwin_send_message (wel_item, Lb_setcursel, -1, 0)
+				private_selected_position := 0
+			end
+		ensure
+			not_item_selected: not is_selected (a_index - 1)
+		end
+
 	private_add (s: STRING; pos: INTEGER) is
 			-- Add a string and resize if necessary.
 		local
@@ -734,6 +770,7 @@ feature {NONE} -- Implementation
 		do
 			cwin_send_message (wel_item, Lb_selitemrange, 0,
 				cwin_make_long (start_index, end_index))
+			private_selected_positions.wipe_out
 		ensure
 			no_selection: count_selected_items = 0
 		end
@@ -745,6 +782,7 @@ feature {NONE} -- Implementation
 			single_selection: not multiple_selection
 		do
 			cwin_send_message (wel_item, Lb_setcursel, -1, 0)
+			private_selected_position := 0
 		ensure
 			unselected: not selected
 		end

@@ -1439,6 +1439,18 @@ feature -- Access
 			parameters_set: Result.parameters = p
 		end
 
+	new_static_access_as (c: TYPE; f: ID_AS; p: EIFFEL_LIST [EXPR_AS]): STATIC_ACCESS_AS is
+			-- New STATIC_ACCESS AST node
+		do
+			create Result.initialize (c, f, p)
+		ensure
+			static_access_as_not_void: Result /= Void
+			class_type_set: Result.class_type = c
+			feature_name_set: Result.feature_name = f
+			parameters_set: Result.parameters = p
+		end
+
+
 	new_prefix_as (op: STRING_AS; b: BOOLEAN): PREFIX_AS is
 			-- New PREFIX AST node
 		require

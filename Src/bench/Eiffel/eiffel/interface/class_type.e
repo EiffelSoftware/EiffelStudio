@@ -639,7 +639,7 @@ feature -- Generation
 						header_buffer.putstring ("%N#endif%N")
 
 						create extern_decl_file.make_open_write (extern_declaration_filename)
-						extern_decl_file.put_string (header_buffer)
+						header_buffer.put_in_file (extern_decl_file)
 						extern_decl_file.close
 					else
 						Extern_declarations.generate (header_buffer)
@@ -659,9 +659,9 @@ feature -- Generation
 					end
 					
 					if not final_mode then
-						file.put_string (header_generation_buffer)
+						Header_generation_buffer.put_in_file (file)
 					end
-					file.put_string (buffer)
+					buffer.put_in_file (file)
 					file.close
 
 				else
@@ -897,10 +897,13 @@ feature -- Generation
 				<<"Current", "parent">>, <<"EIF_REFERENCE", "EIF_REFERENCE">>)
 
 			buffer.indent
+			buffer.putstring ("uint32 offset_position = 0;")
+			buffer.new_line
 			buffer.putstring ("RTLD;")
 			buffer.new_line
 			buffer.new_line
-			buffer.putstring ("RTLI(2);%N")
+			buffer.putstring ("RTLI(2);")
+			buffer.new_line
 			buffer.put_current_registration (0)
 			buffer.new_line
 			buffer.put_local_registration (1, "parent")
@@ -909,19 +912,20 @@ feature -- Generation
 			until
 				skeleton.after or else not skeleton.item.is_bits
 			loop
-					-- Initialize dynamic type of the bit attribute
-				buffer.putstring ("HEADER(Current")
-
 					--| In this instruction and in the followings, we put `False' as second
 					--| arguments. This means we won't generate anything if there is nothing
 					--| to generate. Remember that `True' is used in the generation of attributes
 					--| table in Final mode.
+				buffer.putstring ("offset_position = ");
 				skeleton.generate(buffer, False)
+				buffer.putchar (';')
+				buffer.new_line
+					-- Initialize dynamic type of the bit attribute
+				buffer.putstring ("HEADER(Current + offset_position")
 				buffer.putstring(")->ov_flags = egc_bit_dtype | EO_EXP;")
 				buffer.new_line
-				buffer.putstring ("*(uint32 *) (Current")
 				bits_desc ?= skeleton.item; 	-- Cannot fail
-				skeleton.generate(buffer, False)
+				buffer.putstring ("*(uint32 *) (Current + offset_position")
 				buffer.putstring(") = ")
 				buffer.putint (bits_desc.value)
 				buffer.putchar (';')
@@ -936,25 +940,23 @@ feature -- Generation
 			until
 				skeleton.after
 			loop
-				buffer.putstring ("*(char **) (Current ")
+				buffer.putstring ("offset_position = ");
+				position := skeleton.position
+				skeleton.generate(buffer, False)
+					-- There is a side effect with generation
+				skeleton.go_to (position)
+				buffer.putchar (';')
+				buffer.new_line
+
+				buffer.putstring ("*(EIF_REFERENCE *) (Current ")
 				value := nb_ref + i
 				if value /= 0 then
 					buffer.putstring (" + @REFACS(")
 					buffer.putint (value)
-					buffer.putstring (")) =")
-				else
-					buffer.putstring (") =")
+					buffer.putstring (")")
 				end
+				buffer.putstring(") = Current + offset_position;")
 				buffer.new_line
-				buffer.indent
-				buffer.putstring("Current")
-					-- There is a side effect with generation
-				position := skeleton.position
-				skeleton.generate(buffer, False)
-				skeleton.go_to (position)
-				buffer.putchar (';')
-				buffer.new_line
-				buffer.exdent
 
 				exp_desc ?= skeleton.item;		-- Cannot fail
 					-- Initialize dynaminc type of the expanded object
@@ -962,37 +964,23 @@ feature -- Generation
 
 				if gen_type = Void then
 					-- Not an expanded generic
-					buffer.putstring ("HEADER(Current")
-					skeleton.generate(buffer, False)
-					skeleton.go_to (position)
-					buffer.putstring(")->ov_flags = ")
+					buffer.putstring ("HEADER(Current + offset_position)->ov_flags = ")
 					buffer.putint(exp_desc.type_id - 1)
 					buffer.putchar (';')
 					buffer.new_line
 				else
 					-- Expanded generic
 					generate_ov_flags_start (buffer, gen_type)
-					buffer.putstring ("HEADER(Current")
-					skeleton.generate(buffer, False)
-					skeleton.go_to (position)
-					buffer.putstring(")->ov_flags = typres")
+					buffer.putstring ("HEADER(Current + offset_position)->ov_flags = typres")
 					generate_ov_flags_finish (buffer)
 					buffer.new_line
 				end
 
 					-- Mark expanded object
-				buffer.putstring ("HEADER(Current")
-				skeleton.generate(buffer, False)
-				skeleton.go_to (position)
-				buffer.putstring(")->ov_flags |= EO_EXP;")
+				buffer.putstring ("HEADER(Current + offset_position)->ov_flags |= EO_EXP;")
 				buffer.new_line
-				buffer.putstring ("HEADER(Current")
-				skeleton.generate(buffer, False)
-				skeleton.go_to (position)
-				buffer.putstring(")->ov_size = ")
-				skeleton.generate(buffer, False)
-				skeleton.go_to (position)
-				buffer.putstring (" + (Current - parent);")
+				buffer.putstring ("HEADER(Current + offset_position)->ov_size = ")
+				buffer.putstring ("offset_position + (Current - parent);")
 				buffer.new_line
 
 					-- Call creation of expanded if there is one
@@ -1009,10 +997,7 @@ feature -- Generation
 					creat_name := Encoder.feature_name (written_ctype.static_type_id,
 						creation_feature.body_index)
 					buffer.putstring (creat_name)
-					buffer.putstring ("(Current")
-					skeleton.generate(buffer, False)
-					skeleton.go_to (position)
-					buffer.putstring (");");	
+					buffer.putstring ("(Current + offset_position);")
 					buffer.new_line
 						-- Generate in the header file, the declaration of the creation
 						-- routine.
@@ -1028,9 +1013,7 @@ feature -- Generation
 					creat_name := Encoder.feature_name (sub_class_type.static_type_id,
 						Initialization_body_index)
 					buffer.putstring (creat_name)
-					buffer.putstring("(Current")
-					skeleton.generate(buffer, False)
-					buffer.putstring(", parent);")
+					buffer.putstring("(Current + offset_position, parent);")
 					buffer.new_line
 					Extern_declarations.add_routine_with_signature (Void_c_type,
 						creat_name, <<"EIF_REFERENCE, EIF_REFERENCE">>)

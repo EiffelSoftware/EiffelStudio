@@ -253,8 +253,8 @@ feature -- Setting
 			check_non_basic: tool.metrics.count - tool.nb_basic_metrics = tool.user_metrics_xml_list.count
 		local
 			metric_list: LINKED_LIST [EB_METRIC]
-			metric_xml_list: LINKED_LIST [XML_ELEMENT]
-			list_item_data: CELL2 [EB_METRIC, XML_ELEMENT]
+			metric_xml_list: LINKED_LIST [XM_ELEMENT]
+			list_item_data: CELL2 [EB_METRIC, XM_ELEMENT]
 			list_item: EV_LIST_ITEM
 			i: INTEGER
 		do
@@ -287,7 +287,7 @@ feature -- Setting
 			list_not_void: list /= Void
 		local
 			cursor: CURSOR
-			cell: CELL2 [EB_METRIC, XML_ELEMENT]
+			cell: CELL2 [EB_METRIC, XM_ELEMENT]
 		do
 			cursor := list.cursor
 			from
@@ -386,7 +386,7 @@ feature -- Action
 			item_selected: ev_list.selected_item /= Void
 		local
 			a_formula: STRING
-			cell: CELL2 [EB_METRIC, XML_ELEMENT]
+			cell: CELL2 [EB_METRIC, XM_ELEMENT]
 		do
 			if ev_list.first = ev_list.selected_item then
 				up_button.disable_sensitive
@@ -510,7 +510,7 @@ feature -- Action
 			x_pos, y_pos: INTEGER
 			selected_item: EV_LIST_ITEM
 			type: STRING 
-			cell: CELL2 [EB_METRIC, XML_ELEMENT]
+			cell: CELL2 [EB_METRIC, XM_ELEMENT]
 		do
 			selected_item := ev_list.selected_item
 			if selected_item /= Void then
@@ -529,7 +529,7 @@ feature -- Action
 				tool.new_metric.ratio_scope_tab.preset
 				tool.new_metric.set_edition (True)
 
-				type := cell.item2.attributes.item ("Type").value
+				type := cell.item2.attribute_by_name ("Type").value
 				if equal (type, "Derived") then
 					fill_derived (tool.new_metric.derived_tab, cell)
 					tool.new_metric.notebook.select_item (tool.new_metric.derived_tab)
@@ -556,8 +556,8 @@ feature -- Action
 			check_non_basic: tool.metrics.count - tool.nb_basic_metrics = tool.user_metrics_xml_list.count
 		local
 			metric_list: LINKED_LIST [EB_METRIC]
-			metric_xml_list: LINKED_LIST [XML_ELEMENT]
-			cell: CELL2 [EB_METRIC, XML_ELEMENT]
+			metric_xml_list: LINKED_LIST [XM_ELEMENT]
+			cell: CELL2 [EB_METRIC, XM_ELEMENT]
 			i: INTEGER
 		do
 			metric_list := clone (tool.metrics)
@@ -640,7 +640,7 @@ feature -- Measures and metrics deletion.
 		require
 			deleted_items: deleted_metrics.count > 0
 		local
-			cell: CELL2 [EB_METRIC, XML_ELEMENT]
+			cell: CELL2 [EB_METRIC, XM_ELEMENT]
 		do
 			from
 				deleted_metrics.start
@@ -660,7 +660,7 @@ feature -- Measures and metrics deletion.
 			existing_tool: tool /= Void
 			deleted_items: deleted_metrics.count > 0
 		local
-			cell: CELL2 [EB_METRIC, XML_ELEMENT]
+			cell: CELL2 [EB_METRIC, XM_ELEMENT]
 		do
 			from
 				ev_list.start
@@ -677,14 +677,14 @@ feature -- Measures and metrics deletion.
 			end
 		end
 		
-	has_deleted_metric (xml_def: XML_ELEMENT): BOOLEAN is
+	has_deleted_metric (xml_def: XM_ELEMENT): BOOLEAN is
 			-- Has `xml_element' been defined with a removed metric?
 		require
 			existing_tool: tool /= Void
 			valid_definition: xml_def /= Void
 		local
 			i: INTEGER
-			metric_el: XML_ELEMENT
+			metric_el: XM_ELEMENT
 		do
 			from
 				xml_def.start
@@ -694,8 +694,8 @@ feature -- Measures and metrics deletion.
 			loop
 				metric_el ?= xml_def.item (i)
 				check metric_el /= Void end
-				if equal (metric_el.name, "METRIC") then
-					Result := metric_is_deleted (tool.file_handler.content_of_node (metric_el))
+				if metric_el.name.is_equal ("METRIC") then
+					Result := metric_is_deleted (metric_el.text)
 				end				
 				xml_def.forth
 				i := i + 1
@@ -715,12 +715,12 @@ feature -- Edit
 			end
 		end
 
-	refresh (edited_metric: EB_METRIC; edited_xml_element: XML_ELEMENT) is
+	refresh (edited_metric: EB_METRIC; edited_xml_element: XM_ELEMENT) is
 			-- Update metric_definition of `ev_list.selected_item' after edition.
 		require
 			item_selected: ev_list.selected_item /= Void
 		local
-			cell: CELL2 [EB_METRIC, XML_ELEMENT]
+			cell: CELL2 [EB_METRIC, XM_ELEMENT]
 			list_item: EV_LIST_ITEM
 		do
 			create cell.make (edited_metric, edited_xml_element)
@@ -736,14 +736,14 @@ feature -- Edit
 			end
 		end
 
-	fill_linear (linear_tab: EB_METRIC_LINEAR_TAB; cell: CELL2 [EB_METRIC, XML_ELEMENT]) is
+	fill_linear (linear_tab: EB_METRIC_LINEAR_TAB; cell: CELL2 [EB_METRIC, XM_ELEMENT]) is
 			-- Fill `tool.new_metric.new_metric_definition_dialog' for linear metric.
 		require
 			effective_linear_tab: linear_tab /= Void
 			effective_cell: cell /= Void and then (cell.item1 /= Void and cell.item2 /= Void)
 		local
 			selected_metric: EB_METRIC_COMPOSITE
-			definition, element: XML_ELEMENT
+			definition, element: XM_ELEMENT
 			i: INTEGER
 		do
 			selected_metric ?= cell.item1
@@ -751,24 +751,24 @@ feature -- Edit
 			linear_tab.unit_field.set_text (selected_metric.unit)
 			definition := element_by_name (cell.item2, "DEFINITION")
 			element ?= definition.item (1)
-			linear_tab.formula.extend (tool.file_handler.content_of_node (element))
+			linear_tab.formula.extend (element.text)
 			element ?= definition.item (3)
-			linear_tab.formula.extend (tool.file_handler.content_of_node (element))
+			linear_tab.formula.extend (element.text)
 			element ?= definition.item (2)
-			linear_tab.formula.extend (tool.file_handler.content_of_node (element))
+			linear_tab.formula.extend (element.text)
 			from
 				i := 4
 			until
 				i > definition.count
 			loop
 				element ?= definition.item (i + 3)
-				linear_tab.formula.extend (tool.file_handler.content_of_node (element))
+				linear_tab.formula.extend (element.text)
 				element ?= definition.item (i)
-				linear_tab.formula.extend (tool.file_handler.content_of_node (element))
+				linear_tab.formula.extend (element.text)
 				element ?= definition.item (i + 2)
-				linear_tab.formula.extend (tool.file_handler.content_of_node (element))
+				linear_tab.formula.extend (element.text)
 				element ?= definition.item (i + 1)
-				linear_tab.formula.extend (tool.file_handler.content_of_node (element))
+				linear_tab.formula.extend (element.text)
 				i := i + 4
 			end
 			linear_tab.set_displayed_metric (xml_string (cell.item2, "FORMULA"))
@@ -779,14 +779,14 @@ feature -- Edit
 
 	divide: STRING is " / "
 
-	fill_mratio (mratio_tab: EB_METRIC_RATIO_TAB; cell: CELL2 [EB_METRIC, XML_ELEMENT]) is
+	fill_mratio (mratio_tab: EB_METRIC_RATIO_TAB; cell: CELL2 [EB_METRIC, XM_ELEMENT]) is
 			-- Fill `tool.new_metric.new_metric_definition_dialog' for ratio of two metrics over one scope.
 		require
 			effective_mratio_tab: mratio_tab /= Void
 			effective_cell: cell /= Void and then (cell.item1 /= Void and cell.item2 /= Void)
 		local
 			selected_metric: EB_METRIC_COMPOSITE
-			definition, num_element, den_element: XML_ELEMENT
+			definition, num_element, den_element: XM_ELEMENT
 			num, den: STRING
 		do
 			selected_metric ?= cell.item1
@@ -795,8 +795,8 @@ feature -- Edit
 			definition := element_by_name (cell.item2, "DEFINITION")
 			num_element ?= definition.item (1)
 			den_element ?= definition.item (2)
-			num := tool.file_handler.content_of_node (num_element)
-			den := tool.file_handler.content_of_node (den_element)
+			num := num_element.text
+			den := den_element.text
 			mratio_tab.formula.put_i_th (num, 1)
 			mratio_tab.formula.put_i_th (divide, 2)
 			mratio_tab.formula.put_i_th (den, 3)
@@ -812,14 +812,14 @@ feature -- Edit
 			mratio_tab.disable_save
 		end
 
-	fill_sratio (sratio_tab: EB_METRIC_RATIO_SCOPE_TAB; cell: CELL2 [EB_METRIC, XML_ELEMENT]) is
+	fill_sratio (sratio_tab: EB_METRIC_RATIO_SCOPE_TAB; cell: CELL2 [EB_METRIC, XM_ELEMENT]) is
 			-- Fill `tool.new_metric.new_metric_definition_dialog' for ratio of one metric over two scopes.
 		require
 			effective_sratio_tab: sratio_tab /= Void
 			effective_cell: cell /= Void and then (cell.item1 /= Void and cell.item2 /= Void)
 		local
 			selected_metric: EB_METRIC_COMPOSITE
-			definition, metric_el, num_el, den_el: XML_ELEMENT
+			definition, metric_el, num_el, den_el: XM_ELEMENT
 			a_metric, num, den: STRING
 		do
 			selected_metric ?= cell.item1
@@ -829,9 +829,9 @@ feature -- Edit
 			metric_el ?= definition.item (1)
 			num_el ?= definition.item (2)
 			den_el ?= definition.item (3)
-			a_metric := tool.file_handler.content_of_node (metric_el)
-			num := tool.file_handler.content_of_node (num_el)
-			den := tool.file_handler.content_of_node (den_el)
+			a_metric := metric_el.text
+			num := num_el.text
+			den := den_el.text
 			sratio_tab.formula.put_i_th (a_metric, 1)
 			sratio_tab.formula.put_i_th (num, 2)
 			sratio_tab.formula.put_i_th (divide, 3)
@@ -850,14 +850,14 @@ feature -- Edit
 			sratio_tab.disable_save
 		end
 
-	fill_derived (derived_tab: EB_METRIC_DERIVED_TAB; cell: CELL2 [EB_METRIC, XML_ELEMENT]) is
+	fill_derived (derived_tab: EB_METRIC_DERIVED_TAB; cell: CELL2 [EB_METRIC, XM_ELEMENT]) is
 			-- Fill `tool.new_metric.new_metric_definition_dialog' for ratio of derived metric.
 		require
 			effective_derived_tab: derived_tab /= Void
 			effective_cell: cell /= Void and then (cell.item1 /= Void and cell.item2 /= Void)
 		local
 			selected_metric: EB_METRIC_DERIVED
-			definition: XML_ELEMENT
+			definition: XM_ELEMENT
 			and_op: BOOLEAN
 		do
 			selected_metric ?= cell.item1
@@ -883,7 +883,7 @@ feature -- Edit
 			derived_tab.disable_save
 		end
 
-	enable_classes_buttons (derived_tab: EB_METRIC_DERIVED_TAB; definition: XML_ELEMENT) is
+	enable_classes_buttons (derived_tab: EB_METRIC_DERIVED_TAB; definition: XM_ELEMENT) is
 			-- Select crietria on "classes" panel of `derived_tab'.
 		require
 			effective_derived_tab: derived_tab /= Void
@@ -918,7 +918,7 @@ feature -- Edit
 			end
 		end
 
-	enable_dependents_buttons (derived_tab: EB_METRIC_DERIVED_TAB; definition: XML_ELEMENT) is
+	enable_dependents_buttons (derived_tab: EB_METRIC_DERIVED_TAB; definition: XM_ELEMENT) is
 			-- Select crietria on "dependents" panel of `derived_tab'.
 		require
 			effective_derived_tab: derived_tab /= Void
@@ -969,7 +969,7 @@ feature -- Edit
 			end
 		end
 
-	enable_features_buttons (derived_tab: EB_METRIC_DERIVED_TAB; definition: XML_ELEMENT) is
+	enable_features_buttons (derived_tab: EB_METRIC_DERIVED_TAB; definition: XM_ELEMENT) is
 			-- Select crietria on "features" panel of `derived_tab'.
 		require
 			effective_derived_tab: derived_tab /= Void

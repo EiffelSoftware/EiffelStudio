@@ -61,10 +61,10 @@ feature -- Displayed messages in text form.
 		local
 			defined_metric: EB_METRIC
 			archived_metrics: LINKED_LIST [EB_METRIC]
-			archived_xml: LINKED_LIST [XML_ELEMENT]
+			archived_xml: LINKED_LIST [XM_ELEMENT]
 			index_current_metric: INTEGER
 			current_formula: STRING
-			current_xml: XML_ELEMENT
+			current_xml: XM_ELEMENT
 			defined_formula: STRING
 		do
 			create archived_metrics.make
@@ -94,36 +94,42 @@ feature -- Displayed messages in text form.
 			f_not_void: f /= Void
 			metric_not_void: current_metric /= Void
 		local
-			s, final_result, archive_name: STRING
-			parser: XML_TREE_PARSER
-			measure_element, node: XML_ELEMENT
-			a_cursor: DS_BILINKED_LIST_CURSOR [XML_NODE]
+			final_result, archive_name: STRING
+			l_parser: XM_EIFFEL_PARSER
+			l_tree_pipe: XM_TREE_CALLBACKS_PIPE
+			l_file: KL_BINARY_INPUT_FILE
+			l_xm_concatenator: XM_CONTENT_CONCATENATOR
+			measure_element, node: XM_ELEMENT
+			a_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
 			retried, same_metric: BOOLEAN
 			error_dialog:EB_INFORMATION_DIALOG
 			basic_metric: EB_METRIC_BASIC
 		do
 			if not retried then
-				f.open_read
-				create parser.make
-				f.start
-				f.read_stream (f.count)
-				s := f.last_string
-				parser.parse_string (s)
-				parser.set_end_of_file
-				if parser.is_correct  then
-					if tool.archive.archive_syntax (parser.root_element) then
+				create l_file.make (f.name)
+				l_file.open_read
+				if l_file.is_open_read then
+					create l_parser.make
+					create l_tree_pipe.make
+					create l_xm_concatenator.make_null
+					l_parser.set_callbacks (standard_callbacks_pipe (<<l_xm_concatenator, l_tree_pipe.start>>))
+					l_parser.parse_from_stream (l_file)
+					l_file.close
+					check
+						ok_parsing: l_parser.is_correct
+					end
+					if tool.archive.archive_syntax (l_tree_pipe.document.root_element) then
 						basic_metric ?= current_metric
 						if basic_metric = Void then
 							same_metric := has_metric (current_metric, f)
 						end
 						if (basic_metric /= Void or same_metric) then
-							if parser.root_element.attributes.has ("System") then
-								archive_name := parser.root_element.attributes.item ("System").value						
+							if l_tree_pipe.document.root_element.has_attribute_by_name ("System") then
+								archive_name := l_tree_pipe.document.root_element.attribute_by_name ("System").value						
 							end
-							measure_element := element_by_name (parser.root_element, "RECORDED_MEASURES")
+							measure_element := element_by_name (l_tree_pipe.document.root_element, "RECORDED_MEASURES")
 							a_cursor := measure_element.new_cursor
-							Result := "Metric: " + current_metric.name + "      "
-								+ "Scope: Archive"
+							Result := "Metric: " + current_metric.name + "      " + "Scope: Archive"
 							from
 								a_cursor.start
 							until
@@ -131,8 +137,8 @@ feature -- Displayed messages in text form.
 							loop
 								node ?= a_cursor.item
 								if node /= Void then
-									if equal (node.attributes.item ("Metric").value, current_metric.name) then
-										final_result := tool.fix_decimals_and_percentage (node.attributes.item ("Result").value.to_double, current_metric.percentage)
+									if node.attribute_by_name ("Metric").value.is_equal (current_metric.name) then
+										final_result := tool.fix_decimals_and_percentage (node.attribute_by_name ("Result").value.to_double, current_metric.percentage)
 										Result.append (" " + archive_name + ":")
 										Result.append (final_result)
 									end

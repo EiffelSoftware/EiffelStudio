@@ -33,10 +33,8 @@ To do:
 - Fix radio grouping in menus on GTK.
 - Splitter cursor in EV_SPLIT_AREA.
 - Redo windows dialog implementation.
-- Right click interface to pick and drop.
 - The event `expose_actions' is triggered twice on a container when a window
   is resized. !! This makes resizing take twice as long!!
-- Color is inefficent on GTK+. 
 - Load different file formats in GTK EV_PIXMAP_IMP.
 - Fix key release events on GTK.
 - Fix key as string action sequence.
@@ -50,7 +48,8 @@ To do:
 - Check places that have is_equal in postcondition, mabey add "and /=".
 - Check that dialogs close when clicked.
 - Check that set_focus works everywhere.
-- Check contracts for colors with respect to the fact that the colour requested   is not always the color returned. (ir on 8 bit displays)
+- Check contracts for colors with respect to the fact that the colour requested
+  is not always the color returned. (ie on 8 bit displays)
 - Test combo box on windows.
 - Check PND for all items on GTK.
 - Look into recursive radio events problem.

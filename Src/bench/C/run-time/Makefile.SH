@@ -101,6 +101,7 @@ LSRC = math.c malloc.c garcol.c local.c store.c retrieve.c \
 	hector.c cecil.c bits.c file.c dir.c string.c misc.c \
 	pattern.c error.c umain.c memory.c argv.c boolstr.c search.c \
 	run_idr.c path_name.c dle.c object_id.c eif_threads.c eif_project.c\
+	eif_rw_lock.c \
 	gen_conf.c rout_obj.c
 
 OTHER = main.c except.c
@@ -154,6 +155,7 @@ WSRC = \
 	wmain.c \
 	wexcept.c \
 	weif_project.c \
+	eif_rw_lock.c \
 	wgen_conf.c \
 	wrout_obj.c
 
@@ -201,6 +203,7 @@ ESRC = \
 	bmain.c \
 	bexcept.c \
 	weif_project.c \
+	eif_rw_lock.c \
 	wgen_conf.c \
 	wrout_obj.c
 
@@ -251,6 +254,7 @@ LOBJ = \
 	main.o \
 	except.o \
 	eif_project.o \
+	eif_rw_lock.o \
 	gen_conf.o \
 	rout_obj.o
 
@@ -305,6 +309,7 @@ WOBJ = \
 	update.o \
 	wbench.o \
 	weif_project.o \
+	eif_rw_lock.o \
 	wgen_conf.o \
 	wrout_obj.o
 
@@ -358,6 +363,7 @@ EOBJ = \
 	update.o \
 	wbench.o  \
 	weif_project.o \
+	eif_rw_lock.o \
 	wgen_conf.o \
 	wrout_obj.o
 

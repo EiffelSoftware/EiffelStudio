@@ -19,11 +19,18 @@ inherit
 		end
 		
 	EV_LAYOUT_CONSTANTS
+		export
+			{NONE} all
 		undefine
 			default_create, copy
 		end
 		
 	GB_CONSTANTS
+		export
+			{NONE} all
+		undefine
+			default_create, copy
+		end
 
 creation
 	make

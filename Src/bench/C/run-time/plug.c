@@ -472,6 +472,7 @@ void wstdinit(char *obj, char *parent)
 	uint32 type;
 	int32 *cn_attr;
 	uint32 *cn_types;
+	int16 **cn_gtypes;
 	long nb_attr;
 	struct cnode *desc;
 	RTLD;
@@ -485,12 +486,14 @@ void wstdinit(char *obj, char *parent)
 	l[1] = parent;
 	zone->ov_flags |= EO_COMP;				/* Set the composite flag of `obj' */
 
-	dtype = Dtype(obj);
+	dtype = Dtype(l[0]);
 	desc = &System(dtype);
 	cn_attr = desc->cn_attr;
 	nb_attr = desc->cn_nbattr;
 	nb_ref = desc->nb_ref;				/* Reference number */
 	cn_types = desc->cn_types;
+	cn_gtypes = desc->cn_gtypes;
+
 	for (i = 0; i < nb_attr; i++) {	/* Iteration on attributes descriptions */
 		type = cn_types[i];
 		switch (type & SK_HEAD) {
@@ -499,14 +502,25 @@ void wstdinit(char *obj, char *parent)
 			struct cnode *exp_desc;			/* Expanded object description */
 			/* char *OLD_IC; */ /* %%ss removed */
 			long offset;					/* Attribute offset */
-			int exp_dtype;					/* Expanded dynamic type */
+			int orig_exp_dtype, exp_dtype;	/* Expanded dynamic type */
+			int16 *cid, dftype;
 
 			CAttrOffs(offset,cn_attr[i],dtype);
-			exp_dtype = (int) (type & SK_DTYPE);
+			orig_exp_dtype = exp_dtype = (int) (type & SK_DTYPE);
 			exp_desc = &System(exp_dtype);
 			/* Set the expanded reference */
 			*(char **) (l[0] + REFACS(nb_ref - ++nb_exp)) = l[0] + offset;
-			
+
+			cid = cn_gtypes [i];
+
+			if (cid != (int16 *) 0)
+			{
+				dftype = eif_compound_id ((int16 *)0, l[1], 
+										   exp_dtype & EO_TYPE, cid);
+
+				exp_dtype = (exp_dtype & EO_UPPER) | dftype;
+			}
+
 			/* Set the flags of the expanded object */
 			zone = HEADER(l[0] + offset);
 			zone->ov_flags = exp_dtype;
@@ -514,7 +528,7 @@ void wstdinit(char *obj, char *parent)
 			zone->ov_size = offset + (l[0] - l[1]);
 
 			/* If expanded object is composite also, initialize it. */
-			if (System(exp_dtype).cn_composite)
+			if (System(orig_exp_dtype).cn_composite)
 				wstdinit(l[0] + offset, l[1]);
 
 			if (exp_desc->cn_routids) {
@@ -524,7 +538,7 @@ void wstdinit(char *obj, char *parent)
 				feature_id = exp_desc->cn_creation_id;
 				static_id = exp_desc->static_id;	
 				if (feature_id)				/* Call creation routine */
-					wexp(static_id, feature_id, exp_dtype, l[0] + offset);
+					wexp(static_id, feature_id, orig_exp_dtype, l[0] + offset);
 			} else {						/* precompiled creation routine */
 				int32 origin;				/* Origin class id */       
 				int32 offset;				/* Offset in origin class */
@@ -532,7 +546,7 @@ void wstdinit(char *obj, char *parent)
 				origin = exp_desc->cn_creation_id;
 				offset = exp_desc->static_id;
 				if (origin)					/* Call creation routine */
-					wpexp(origin, offset, exp_dtype, l[0] + offset);
+					wpexp(origin, offset, orig_exp_dtype, l[0] + offset);
 			}
 			}
 			break;

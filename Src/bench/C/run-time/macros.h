@@ -13,10 +13,6 @@
 #ifndef _macros_h_
 #define _macros_h_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include "config.h"
 #include "malloc.h"
 #include "garcol.h"
@@ -27,6 +23,10 @@ extern "C" {
 #include "hector.h"
 #include "size.h"
 #include "option.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 extern int in_assertion;
 
@@ -53,8 +53,10 @@ extern int in_assertion;
 
 #if defined(__STDC__) || defined(__cplusplus__)
 #define EXTERN_DECL(r_type, name, args) extern r_type name args
+#define STATIC_DECL(r_type, name, args) static r_type name args
 #else  /* K&R */
 #define EXTERN_DECL(r_type, name, args) extern r_type name()
+#define STATIC_DECL(r_type, name, args) static r_type name()
 #endif
 
 #ifdef __cplusplus

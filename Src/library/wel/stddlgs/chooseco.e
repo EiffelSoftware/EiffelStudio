@@ -110,6 +110,7 @@ feature -- Element change
 			color_not_void: color /= Void
 			color_exitst: color.exists
 		do
+			add_flag (Cc_rgbinit)
 			cwel_choose_color_set_rgbresult (item, color.item)
 		ensure
 			color_set: rgb_result.is_equal (color)

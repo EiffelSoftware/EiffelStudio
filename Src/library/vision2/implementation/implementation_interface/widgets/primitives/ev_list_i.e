@@ -32,11 +32,10 @@ feature {EV_WIDGET} -- Initialization
 
 feature -- Access
 
-	rows: INTEGER is
+	count: INTEGER is
 			-- Number of lines
-		require
-			exists: not destroyed
-		deferred
+		do
+			Result := ev_children.count
 		end
 
 	get_item (index: INTEGER): EV_LIST_ITEM is
@@ -44,7 +43,7 @@ feature -- Access
 			-- `index'.
 		require
 			exists: not destroyed
-			item_exists: index <= rows
+			item_exists: index <= count
 		do
 			Result ?= (ev_children.i_th (index)).interface
 		end
@@ -112,7 +111,7 @@ feature -- Status setting
 		require
 			exists: not destroyed
 			index_large_enough: index > 0
-			index_small_enough: index <= rows
+			index_small_enough: index <= count
 		deferred
 		end
 

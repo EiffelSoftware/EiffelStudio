@@ -47,8 +47,11 @@ feature {NONE} -- Access
 	current_select_tbl: SELECT_TABLE
 			-- Current feature table associated with `current_class_type'.
 
-	main_class_type: CLASS_TYPE
-			-- Class type from which `current_class_type' simply inherits.
+	main_parent: CLASS_C
+			-- Shortcut to `current_class.main_parent'.
+
+	is_processing_main_parent: BOOLEAN
+			-- Are we currently processing the main branch?
 
 feature -- IL Generation
 
@@ -60,16 +63,13 @@ feature -- IL Generation
 				-- Reset data
 			rout_ids_tbl.wipe_out
 			processed_tbl.wipe_out
-			
-				-- We never analyze System.Object.
-			processed_tbl.force (System.system_object_class.compiled_class.types.first.static_type_id)
-			
+		
 				-- Initialization of context.
 			class_interface := class_type.class_interface
 			current_class_type := class_type
 			current_select_tbl := class_c.feature_table.origin_table
 			Inst_context.set_cluster (class_c.cluster)
-			is_frozen_class := class_c.is_frozen
+			is_single_class := class_c.is_frozen or class_c.is_single
 
 				-- Initialize implementation.
 			set_current_class (class_c)
@@ -77,17 +77,22 @@ feature -- IL Generation
 			set_current_type_id (class_type.implementation_id)
 			current_class_token := class_type_token (current_type_id)
 
+				-- Define all features used by ISE runtime.
+			if class_c.simple_conform_to (System.any_class.compiled_class) then
+				define_runtime_features (class_type)
+			end
+
 				-- Generate current features implement locally in `current_class_type'
 				-- and traverse parents to define inherited features.
-			mark_first_parent (class_c, class_type)
-			generate_il_implementation_local (class_interface, class_c, class_type)
-			generate_il_main_parent (class_interface)
-			generate_il_implementation_parents (class_interface)
+			main_parent := class_c.main_parent
 			generate_il_type_features (class_c, class_type, class_c.generic_features)
 			generate_il_type_features (class_c, class_type, class_c.anchored_features)
+			generate_il_implementation_local (class_interface, class_c, class_type)
+			generate_il_main_parent (class_type)
+			generate_il_implementation_parents (class_interface)
 
-				-- Define all features used by ISE runtime.
-			define_runtime_features (class_type)
+				-- Generate invariant routine.
+			generate_invariant_feature (class_c.invariant_feature)
 
 				-- Reset global variable for collection.
 			current_class_type := Void
@@ -120,56 +125,36 @@ feature -- IL Generation
 			end
 		end
 
-	mark_first_parent (a_class: CLASS_C; a_class_type: CLASS_TYPE) is
-			-- Make first parent of `a_class' as if it was already processed.
+	generate_il_main_parent (class_type: CLASS_TYPE) is
+			-- Generate IL code for feature in `class_type'.
 		require
-			a_class_not_void: a_class /= Void
-			a_class_type_not_void: a_class_type /= Void
-		local
-			l_parents: FIXED_LIST [CL_TYPE_A]
-			l_parent_type: CL_TYPE_I
-			l_cl_type: CLASS_TYPE
-		do
-			l_parents := a_class.parents
-			l_parent_type ?= byte_context.real_type (l_parents.first.type_i)
-			l_cl_type := l_parent_type.associated_class_type
-
-			main_class_type := l_cl_type
-		end
-
-	internal_mark_parent (a_class_interface: CLASS_INTERFACE) is
-			-- Insert all parents of current `a_class_interface' and
-			-- `a_class_interface' itself in `processed_tbl'.
-		require
-			a_class_interface_not_void: a_class_interface /= Void
+			class_type_not_void: class_type /= Void
 		local
 			parents: SEARCH_TABLE [CLASS_INTERFACE]
 			l_interface: CLASS_INTERFACE
-			l_type_id: INTEGER
+			l_cl_type: CLASS_TYPE
 		do
-			l_type_id := a_class_interface.class_type.static_type_id
-			if not processed_tbl.has (l_type_id) then
-				processed_tbl.put (l_type_id)
-			end
-
 			from
-				parents := a_class_interface.parents
+				parents := class_type.class_interface.parents
 				parents.start
 			until
 				parents.after
 			loop
 				l_interface := parents.item_for_iteration
-
-				l_type_id := l_interface.class_type.static_type_id
-				if not processed_tbl.has (l_type_id) then
-					processed_tbl.put (l_type_id)
-					internal_mark_parent (l_interface)
+				l_cl_type := l_interface.class_type
+				if l_cl_type.associated_class = class_type.associated_class.main_parent then
+					processed_tbl.put (l_cl_type.static_type_id)
+					is_processing_main_parent := True
+					generate_il_first_parent_implementation (l_interface,
+						l_interface.associated_class, l_cl_type)
+					is_processing_main_parent := False
+					internal_generate_il_main_parent (l_interface)
 				end
 				parents.forth
 			end
 		end
 
-	generate_il_main_parent (class_interface: CLASS_INTERFACE) is
+	internal_generate_il_main_parent (class_interface: CLASS_INTERFACE) is
 			-- Generate IL code for feature in `class_c'.
 		require
 			class_interface_not_void: class_interface /= Void
@@ -189,15 +174,24 @@ feature -- IL Generation
 
 				if not processed_tbl.has (l_cl_type.static_type_id) then
 					processed_tbl.put (l_cl_type.static_type_id)
-					generate_il_first_parent_implementation (l_interface,
-						l_interface.associated_class, l_cl_type)
-					generate_il_main_parent (l_interface)
+					if
+						l_cl_type.associated_class =
+							class_interface.class_type.associated_class.main_parent
+					then
+						is_processing_main_parent := True
+						generate_il_first_parent_implementation (l_interface,
+							l_interface.associated_class, l_cl_type)
+						is_processing_main_parent := False
+					else
+						generate_il_first_parent_implementation (l_interface,
+							l_interface.associated_class, l_cl_type)
+					end
+					internal_generate_il_main_parent (l_interface)
 				end
 				parents.forth
 			end
 		end
 
-	
 	generate_il_implementation_parents (class_interface: CLASS_INTERFACE) is
 			-- Generate IL code for feature in `class_c'.
 		require
@@ -252,48 +246,34 @@ feature -- IL Generation
 			loop
 				feat := select_tbl.item (features.item_for_iteration)
 
-				if
-					feat.feature_name_id /= feature {PREDEFINED_NAMES}.Void_name_id
-					and then (not feat.is_external or else feat.is_c_external)
-				then
-						-- Generate code for current class only.
-					if not feat.is_deferred then
-						if feat.written_in = l_class_id or feat.is_attribute then
-							generate_local_feature (feat, Void, class_type, False)
+					-- Generate code for current class only.
+				if not feat.is_deferred then
+					if feat.written_in = l_class_id or feat.is_attribute then
+						generate_local_feature (feat, Void, class_type, False)
+						mark_as_treated (feat)
+					else
+						if feat.is_replicated and feat.is_unselected then
+							generate_local_feature (feat, Void, class_type, True)
 							mark_as_treated (feat)
 						else
-							if feat.is_replicated and feat.is_unselected then
-								generate_local_feature (feat, Void, class_type, True)
-								mark_as_treated (feat)
-							else
-									-- Case of local renaming or implicit
-									-- covariant redefinition.
-								generate_inherited_feature (feat, feat, class_type)
-								mark_as_treated (feat)
-							end
+								-- Case of local renaming or implicit
+								-- covariant redefinition.
+							generate_inherited_feature (feat, feat, class_type)
+							mark_as_treated (feat)
 						end
-					else
---						generate_local_feature (feat, Void, class_type, False)
---						mark_as_treated (feat)
-							-- Nothing to be done here. Parent was deferred and we
-							-- are still deferred. It should only happen when
-							-- generating a deferred class.
-						check
-							deferred_class:
-								current_class_type.associated_class.is_deferred
-						end
+					end
+				else
+						generate_local_feature (feat, Void, class_type, False)
+						mark_as_treated (feat)
+						-- Nothing to be done here. Parent was deferred and we
+						-- are still deferred. It should only happen when
+						-- generating a deferred class.
+					check
+						deferred_class:
+							current_class_type.associated_class.is_deferred
 					end
 				end
 				features.forth
-			end
-
-
-			if class_c = System.any_class.compiled_class then
-					-- FIXME: Should be removed as this should automatically
-					-- done.
-					-- Generate `Finalize' from System.Object.			
-				feat := select_tbl.item (internal_finalize_rout_id)
-				generate_finalize_feature (feat)
 			end
 		end
 
@@ -304,7 +284,6 @@ feature -- IL Generation
 			-- Generate IL code for inherited features of `current_class_type'.
 		require
 			class_c_not_void: class_c /= Void
-			eiffel_class: not class_c.is_external
 			class_type_not_void: class_type /= Void
 		local
 			select_tbl: SELECT_TABLE
@@ -323,43 +302,44 @@ feature -- IL Generation
 			loop
 				inh_feat := select_tbl.item (features.item_for_iteration)
 
-				if
-					inh_feat.feature_name_id /= feature {PREDEFINED_NAMES}.Void_name_id
-					and then (not inh_feat.is_external or else inh_feat.is_c_external)
-				then
-						-- Generate local definition of `inh_feat' which
-						-- calls static definition.
-					rout_id := inh_feat.rout_id_set.first
-					if rout_ids_tbl.has (rout_id) then
-						feat := rout_ids_tbl.found_item
-						if not feat.is_deferred then
-							generate_method_impl (feat, class_type, inh_feat)
+					-- Generate local definition of `inh_feat' which
+					-- calls static definition.
+				rout_id := inh_feat.rout_id_set.first
+				if rout_ids_tbl.has (rout_id) then
+					feat := rout_ids_tbl.found_item
+					if not feat.is_deferred and not feat.is_il_external then
+						generate_method_impl (feat, class_type, inh_feat,
+							is_processing_main_parent)
+					end
+				else
+					feat := current_select_tbl.item (rout_id)
+						-- Generate code for current class only.
+					if
+						feat /= Void and then
+						not feat.is_deferred and then not feat.is_il_external
+					then
+						if feat.written_in = l_class_id or feat.is_attribute then
+							generate_local_feature (feat, inh_feat, class_type, False)
+							mark_as_treated (feat)
+						else
+								-- Case of local renaming or implicit
+								-- covariant redefinition.
+							generate_inherited_feature (feat, inh_feat, class_type)
+							mark_as_treated (feat)
 						end
 					else
-						feat := current_select_tbl.item (rout_id)
-							-- Generate code for current class only.
-						if not feat.is_deferred then
-							if feat.written_in = l_class_id or feat.is_attribute then
-								generate_local_feature (feat, inh_feat, class_type, False)
-								mark_as_treated (feat)
-							else
-									-- Case of local renaming or implicit
-									-- covariant redefinition.
-								generate_inherited_feature (feat, inh_feat, class_type)
-								mark_as_treated (feat)
-							end
-						else
 --							generate_local_feature (feat, inh_feat, class_type, False)
 --							mark_as_treated (feat)
-								-- Nothing to be done here. Parent was deferred and we
-								-- are still deferred. It should only happen when
-								-- generating a deferred class.
-							check
-								deferred_class:
-									current_class_type.associated_class.is_deferred
-							end
-						end						
-					end
+							-- Nothing to be done here. Parent was deferred and we
+							-- are still deferred. It should only happen when
+							-- generating a deferred class.
+						check
+							deferred_class:
+								current_class_type.associated_class.is_deferred or else
+								inh_feat.is_il_external or else
+								(feat = Void or else feat.is_il_external)
+						end
+					end						
 				end
 				features.forth
 			end
@@ -372,7 +352,6 @@ feature -- IL Generation
 			-- Generate IL code for inherited features of `current_class_type'.
 		require
 			class_c_not_void: class_c /= Void
-			eiffel_class: not class_c.is_external
 			class_type_not_void: class_type /= Void
 		local
 			select_tbl: SELECT_TABLE
@@ -391,50 +370,55 @@ feature -- IL Generation
 			loop
 				inh_feat := select_tbl.item (features.item_for_iteration)
 
-				if
-					inh_feat.feature_name_id /= feature {PREDEFINED_NAMES}.Void_name_id
-					and then (not inh_feat.is_external or else inh_feat.is_c_external)
-				then
-						-- Generate local definition of `inh_feat' which
-						-- calls static definition.
-					rout_id := inh_feat.rout_id_set.first
-					if rout_ids_tbl.has (rout_id) then
-							-- This is where we should do a MethodImpl on the inherited
-							-- implementation and not on the interface.
-						feat := rout_ids_tbl.found_item
-						if not feat.is_deferred then
-							generate_method_impl (feat, class_type, inh_feat)
+					-- Generate local definition of `inh_feat' which
+					-- calls static definition.
+				rout_id := inh_feat.rout_id_set.first
+				if rout_ids_tbl.has (rout_id) then
+						-- This is where we should do a MethodImpl on the inherited
+						-- implementation and not on the interface.
+					feat := rout_ids_tbl.found_item
+					if not feat.is_deferred and not feat.is_il_external then
+ 						if is_method_impl_needed (feat, inh_feat) then
+							generate_method_impl (feat, class_type, inh_feat,
+								is_processing_main_parent)
+ 						end
+					end
+				else
+					feat := current_select_tbl.item (rout_id)
+						-- Generate code for current class only.
+					if
+						feat /= Void and then
+						not feat.is_deferred and then not feat.is_il_external
+					then
+						if feat.written_in = l_class_id or feat.is_attribute then
+							generate_local_feature (feat, inh_feat, class_type, False)
+							mark_as_treated (feat)
+						else
+							if not is_processing_main_parent then
+									-- Case of local renaming or implicit
+									-- covariant redefinition.
+								generate_inherited_feature (feat, inh_feat, class_type)
+								mark_as_treated (feat)
+							end
 						end
 					else
-						feat := current_select_tbl.item (rout_id)
-							-- Generate code for current class only.
-						if not feat.is_deferred then
-							if feat.written_in = l_class_id or feat.is_attribute then
-								generate_local_feature (feat, inh_feat, class_type, False)
-								mark_as_treated (feat)
-							else
-								if
-									not main_class_type.associated_class.simple_conform_to
-										(System.class_of_id (feat.written_in))
-								then
-										-- Case of local renaming or implicit
-										-- covariant redefinition.
-									generate_inherited_feature (feat, inh_feat, class_type)
-									mark_as_treated (feat)
-								end
-							end
-						else
---							generate_local_feature (feat, inh_feat, class_type, False)
---							mark_as_treated (feat)
-								-- Nothing to be done here. Parent was deferred and we
-								-- are still deferred. It should only happen when
-								-- generating a deferred class.
-							check
-								deferred_class:
-									current_class_type.associated_class.is_deferred
-							end
-						end						
-					end
+						if
+							feat /= Void and then feat.is_deferred and then
+							feat.is_origin
+						then
+							generate_local_feature (feat, inh_feat, class_type, False)
+							mark_as_treated (feat)
+						end
+							-- Nothing to be done here. Parent was deferred and we
+							-- are still deferred. It should only happen when
+							-- generating a deferred class.
+						check
+							deferred_class:
+								current_class_type.associated_class.is_deferred or else
+								inh_feat.is_il_external or else
+								(feat = Void or else feat.is_il_external)
+						end
+					end						
 				end
 				features.forth
 			end
@@ -455,7 +439,7 @@ feature -- IL Generation
 				generate_feature (feat, False, False, False)
 				generate_feature_standard_twin (feat)
 			else
-				if not is_frozen_class then
+				if not is_single_class then
 						-- Generate static definition of `feat'.
 					if not feat.is_deferred then
 						if not is_replicated then
@@ -467,8 +451,7 @@ feature -- IL Generation
 						-- Generate local definition of `feat' which
 						-- calls static definition.
 					if inh_feat /= Void then
-						l_is_method_impl_generated :=
-							feat.feature_name_id /= inh_feat.feature_name_id
+						l_is_method_impl_generated := is_method_impl_needed (feat, inh_feat)
 						if not l_is_method_impl_generated then
 							Byte_context.set_class_type (class_type)
 							dup_feat := feat.duplicate
@@ -503,14 +486,21 @@ feature -- IL Generation
 						end
 					end
 				else
+					if inh_feat /= Void then
+						generate_feature (feat, False, False, False)
+						if is_method_impl_needed (feat, inh_feat) then
+ 							generate_method_impl (feat, class_type, inh_feat,
+								is_processing_main_parent)
+						end
+ 					end
 					generate_feature_code (feat)
 				end
 
-			end
-			if not feat.is_deferred and then l_is_method_impl_generated then
-					-- We need a MethodImpl here for mapping
-					-- inherited method to current defined one.
-				generate_method_impl (feat, class_type, inh_feat)
+				if not feat.is_deferred and then l_is_method_impl_generated then
+						-- We need a MethodImpl here for mapping
+						-- inherited method to current defined one.
+					generate_method_impl (feat, class_type, inh_feat, is_processing_main_parent)
+				end
 			end
 		end
 
@@ -527,28 +517,22 @@ feature -- IL Generation
 			dup_feat: FEATURE_I
 			proc: PROCEDURE_I
 		do
-			if not is_frozen_class then 
-				if inh_feat /= Void then
-					l_is_method_impl_generated := feat.feature_name_id /= inh_feat.feature_name_id
-					if not l_is_method_impl_generated then
-						Byte_context.set_class_type (class_type)
-						dup_feat := feat.duplicate
-						if dup_feat.is_procedure then
-							proc ?= dup_feat
-							proc.set_arguments (inh_feat.arguments)
-						end
-						dup_feat.set_type (inh_feat.type)
-						generate_feature (dup_feat, False, False, False)
-						Byte_context.set_class_type (current_class_type)
-					else
-						generate_feature (feat, False, False, False)
-					end
-				else
-					generate_feature (feat, False, False, False)
+			l_is_method_impl_generated := is_method_impl_needed (feat, inh_feat)
+			if not l_is_method_impl_generated then
+				Byte_context.set_class_type (class_type)
+				dup_feat := feat.duplicate
+				if dup_feat.is_procedure then
+					proc ?= dup_feat
+					proc.set_arguments (inh_feat.arguments)
 				end
+				dup_feat.set_type (inh_feat.type)
+				generate_feature (dup_feat, False, False, False)
+				Byte_context.set_class_type (current_class_type)
+			else
+				generate_feature (feat, False, False, False)
 			end
 
-			if feat.feature_name_id = feature {PREDEFINED_NAMES}.Standard_twin_name_id then
+			if feat.rout_id_set.has (standard_twin_rout_id) then
 				generate_feature_standard_twin (feat)
 			else
 				generate_feature_il (feat, dup_feat,
@@ -560,7 +544,7 @@ feature -- IL Generation
 				-- We need a MethodImpl here for mapping
 				-- inherited method to current defined one.
 			if l_is_method_impl_generated then
-				generate_method_impl (feat, class_type, inh_feat)
+				generate_method_impl (feat, class_type, inh_feat, is_processing_main_parent)
 			end
 		end
 
@@ -583,6 +567,34 @@ feature -- IL Generation
 				rout_ids_tbl.put (feat, rout_id_set.item (i))
 				i := i + 1
 			end
+		end
+
+	is_method_impl_needed (feat, inh_feat: FEATURE_I): BOOLEAN is
+			-- Is a MethodImpl needed between `inh_feat' and `feat'?
+		require
+			feat_not_void: feat /= Void
+			inh_feat_not_void: inh_feat /= Void
+		local
+			l_ext: IL_EXTENSION_I
+		do
+			Result := feat.feature_name_id /= inh_feat.feature_name_id
+ 			if not Result then
+ 				l_ext ?= inh_feat.extension
+ 				if l_ext /= Void then
+ 					Result := not il_casing.pascal_casing (feat.feature_name,
+ 						feature {IL_CASING_CONVERSION}.lower_case).is_equal (l_ext.alias_name)
+ 				end
+ 			end
+		end
+
+	same_main_parent_branch (a_class, a_parent_class: CLASS_C): BOOLEAN is
+			-- Does `a_parent_class' belong to main inheritance branch of `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_parent_class_not_void: a_parent_class /= Void
+		do
+			Result := a_class = a_parent_class or else
+				a_class.main_parent.simple_conform_to (a_parent_class)
 		end
 
 end -- class SINGLE_IL_CODE_GENERATOR

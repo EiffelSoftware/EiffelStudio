@@ -403,12 +403,9 @@ feature -- Status setting
 					minimized_states.put_left (False)
 				end
 			end
-			print (height.out + " ")
 			rebuild	
-			
-			print (height.out + " ")
+
 			restore_heights_post_insertion (holder, desired_height)
-			print (height.out + " ")
 			if locked_in_here and parent_window (Current) /= Void then
 				parent_window (Current).unlock_update
 			end
@@ -1100,7 +1097,6 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			end
 			height_to_share := height_to_share - splitter_width
 			space_to_share := height_to_share - height
-			print ("space to share : " + space_to_share.out + "%N")
 			if top_widget_resizing then
 					from
 						linear_representation.start

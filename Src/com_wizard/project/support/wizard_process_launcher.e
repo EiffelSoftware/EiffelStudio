@@ -101,6 +101,7 @@ feature -- Basic Operations
 					message_output.add_continuous_message (Current, output_pipe.last_string)
 				else
 					a_output.append (output_pipe.last_string)
+					message_output.refresh
 				end
 				output_pipe.read_stream (Block_size)
 			end

@@ -174,8 +174,8 @@ keyword.c: lace.gperf
 	@if test -s keyword.c; then \
 		touch $@; \
 	else \
-		echo "	gperf -p -t -l -k 1,'$$',4 lace.gperf > $@"; \
-		gperf -p -t -l -k 1,'$$',4 lace.gperf > $@ ; \
+		echo "	gperf -D -p -t -l -k 1,'$$',4 -N in_word_set2 lace.gperf > $@"; \
+		gperf -D -p -t -l -k 1,'$$',4 -N in_word_set2 lace.gperf > $@ ; \
 	fi
 
 keyword.o: lace_y.h

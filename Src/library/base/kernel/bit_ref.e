@@ -52,7 +52,6 @@ feature -- Access
 
 feature -- Measurement
 
-
 	count: INTEGER is
 			-- Size of the current bit object
 		do
@@ -73,7 +72,6 @@ feature -- Element change
 		end;
 
 feature -- Basic operations
-
 
 	infix "^" (s: INTEGER): like Current is
 			-- Result of shifting bit sequence by `s' positions
@@ -131,7 +129,6 @@ feature -- Basic operations
 		do
 			Result := b_not ($Current)
 		end;
-
 
 feature -- Output
 

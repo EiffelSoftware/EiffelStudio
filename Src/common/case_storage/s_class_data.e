@@ -265,10 +265,10 @@ feature -- Storing
 			f_name.extend (temp);
 			!!temp.make (0);
 			temp.append_integer (i);
-			if tmp then
-				temp.append (Tmp_file_name_ext)
-			end;
 			f_name.set_file_name (temp);
+			if tmp then
+				f_name.add_extension (Tmp_file_name_ext)
+			end;
 			Result := f_name
 		end
 

@@ -823,16 +823,18 @@ rt_public void reclaim(void)
 
 	full_sweep();				/* Reclaim ALL the objects in the system */
 
-#if defined EIF_THREADS 
-	if (eif_thr_is_root ()) {
-#ifndef VXWORKS
-		eif_destroy_once_per_process (); /* remove the tables and mutex for once per process */
-#endif /* !VXWORKS */
+#ifdef EIF_THREADS 
+	if (eif_thr_is_root ())
+#endif
+	{
 #ifdef EIF_WIN32
 		eif_cleanup(); 
 #endif /* EIF_WIN32 */
-	} 
-#endif /* EIF_THREADS */
+
+#if defined EIF_THREAD && !defined VXWORKS
+		eif_destroy_once_per_process (); /* remove the tables and mutex for once per process */
+#endif /* EIF_THREAD && !VXWORKS */
+	}
 
 	for (c = cklst.ck_head; c != (struct chunk *) 0; c = cn)
 		{

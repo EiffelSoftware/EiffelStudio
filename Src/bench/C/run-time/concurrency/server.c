@@ -73,7 +73,7 @@ void make_server()
 */
 
 	_concur_paras_size = constant_max_para_num;
-	_concur_paras = (PARAMETER *)(eiffel_malloc(_concur_paras_size * sizeof(PARAMETER))); 
+	_concur_paras = (PARAMETER *)(eif_malloc(_concur_paras_size * sizeof(PARAMETER))); 
 	valid_memory(_concur_paras);
 	for(tmp_int=0; tmp_int<_concur_paras_size; tmp_int++) 
 		_concur_paras[tmp_int].str_len = 0;
@@ -182,7 +182,7 @@ EIF_INTEGER port;
 	if (port < 0) 
 		return NULL;
 	else {
-		ret = (CONNECTION *)eiffel_malloc(sizeof(CONNECTION));
+		ret = (CONNECTION *)eif_malloc(sizeof(CONNECTION));
 		valid_memory(ret);
 		ret->hostaddr = haddr;
 		ret->pid = port;
@@ -288,7 +288,7 @@ printf("******** The object(%s, %d, %d) has been imported before.!\n", c_get_nam
 			 * REFERENCE TABLE and EXPORTED OBJECT LIST.
 			*/
 			return eif_wean(ret); 
-			/* return direct address and eiffel_free the object from hector */
+			/* return direct address and eif_free the object from hector */
 		}
 		else {
 		/* the object resides on another processor */
@@ -338,7 +338,7 @@ printf("******** The object(%s, %d, %d) has been imported before.!\n", c_get_nam
 				c_raise_concur_exception(exception_unexpected_request); 
 			}
 
-			/* Now, eiffel_free the new allocated parameter array and restore
+			/* Now, eif_free the new allocated parameter array and restore
 			 * the environment of the original PARAMETER ARRAY.
 			*/
 			free_parameter_array(_concur_paras, _concur_paras_size);
@@ -349,7 +349,7 @@ printf("******** The object(%s, %d, %d) has been imported before.!\n", c_get_nam
 			_concur_para_num = para_num_bak;
 			
 			return eif_wean(ret);
-			/* return direct address and eiffel_free the object from hector */
+			/* return direct address and eif_free the object from hector */
 		}
 	}
 		
@@ -416,7 +416,7 @@ void free_sep_obj(sep_obj)
 EIF_OBJ sep_obj;
 {
 /* to release the exclusive access from a separate object. 
- * after the function, the separate object is eiffel_free to be accessed by other
+ * after the function, the separate object is eif_free to be accessed by other
  * separate object.
 */
 	EIF_INTEGER sock;
@@ -784,7 +784,7 @@ EIF_INTEGER s;
 						_concur_paras[idx].str_len = - abs(_concur_paras[idx].str_len);
 					else {
 						_concur_paras[idx].str_len = - constant_min_str_len;
-						_concur_paras[idx].str_val = (char *)eiffel_malloc(constant_min_str_len);
+						_concur_paras[idx].str_val = (char *)eif_malloc(constant_min_str_len);
 						valid_memory(_concur_paras[idx].str_val);
 					}
 					_concur_paras[idx].str_val[0] = '\0';
@@ -1093,7 +1093,7 @@ EIF_INTEGER s;
 					fill_buf_with_int(s, send_buf, send_data_len, tmp_len);
 
 					tmp_str = eif_wean(_concur_paras[tmp].uval.s_obj);
-					/* eiffel_free the object from hector so that it can be collected */
+					/* eif_free the object from hector so that it can be collected */
 				}
 				else {
 				/* we use <-1, -1, -1> stands for a NULL separate object */
@@ -1358,13 +1358,13 @@ printf("\n\n\n * %d(%s) We have no client to server again, so to release %d serv
 		CURPI(_concur_pid, 1);
 		send_command(_concur_parent->sock);
 		c_concur_close_socket(_concur_parent->sock);
-		eiffel_free(_concur_parent);
+		eif_free(_concur_parent);
 	}
 
 	/* Close current processor's server socket. */
 	c_concur_close_socket(_concur_sock);
 	_concur_sock = -1;
-	/* eiffel_free the memory resource used by the parameter array. */
+	/* eif_free the memory resource used by the parameter array. */
 	free_parameter_array(_concur_paras, _concur_paras_size);
 	cur_clear_configure_table();
 	
@@ -1477,7 +1477,7 @@ print_ref_table_and_exported_object();
         _concur_para_num = para_num_bak;
 
         return eif_wean(ret);
-        /* return direct address and eiffel_free the object from hector */
+        /* return direct address and eif_free the object from hector */
     }
 }
 
@@ -1545,7 +1545,7 @@ EIF_INTEGER id;
 				unset_mask(_concur_current_client->sock);
 				c_concur_close_socket(_concur_current_client->sock);
 				_concur_current_client->sock = -2;
-				eiffel_free(_concur_current_client);
+				eif_free(_concur_current_client);
 				_concur_current_client = NULL;
 			}
 			else {
@@ -1565,7 +1565,7 @@ EIF_INTEGER id;
 		unset_mask(_concur_current_client->sock);
 		c_concur_close_socket(_concur_current_client->sock);
 		_concur_current_client->sock = -2;
-		eiffel_free(_concur_current_client);
+		eif_free(_concur_current_client);
 		_concur_current_client = NULL;
 	}
 
@@ -1703,7 +1703,7 @@ EIF_OBJ direct_sep;
 						bak_child->next = cur_child->next;
 					if (!(cur_child->next))
 						_concur_end_of_child_list = bak_child;
-					eiffel_free(cur_child);
+					eif_free(cur_child);
 					(_concur_child_list_count)--;
 	
 					add_nl;
@@ -1727,7 +1727,7 @@ EIF_OBJ direct_sep;
 						bak_child->next = cur_child->next;
 					if (!(cur_child->next))
 						_concur_end_of_child_list = bak_child;
-					eiffel_free(cur_child);
+					eif_free(cur_child);
 					(_concur_child_list_count)--;
 				}
 				break;
@@ -1737,7 +1737,7 @@ EIF_OBJ direct_sep;
 		            printf("%d Before %s(on %s from <%s, %d, %d>):\n", _concur_pid,command_text(_concur_command), _concur_class_name_of_root_obj, CURGS(0), CURGI(1), CURGI(2));
 		            print_ref_table_and_exported_object();
 #endif
-				recv = (CLIENT *)(eiffel_malloc(sizeof(CLIENT)));
+				recv = (CLIENT *)(eif_malloc(sizeof(CLIENT)));
 				valid_memory(recv);
 				recv->type = constant_normal_client;
 				recv->count = 1;
@@ -1767,7 +1767,7 @@ EIF_OBJ direct_sep;
 				recv = NULL;
 				break;
 			case constant_sep_child:
-				child = (CHILD *)(eiffel_malloc(sizeof(CHILD)));
+				child = (CHILD *)(eif_malloc(sizeof(CHILD)));
 				valid_memory(child);
 				child->type = constant_normal_client;
 				child->count = 1;
@@ -1819,7 +1819,7 @@ EIF_OBJ direct_sep;
 	add_to_server_list(CURGI(0), CURGI(1), new_sock);	
 	to_register(constant_register_first_from_parent, new_sock, _concur_hostaddr, _concur_pid, CURGI(2));
 
-	sep = eif_wean(sep);/* eiffel_free the separate object from hector */
+	sep = eif_wean(sep);/* eif_free the separate object from hector */
 
 	return;
 }
@@ -1965,10 +1965,10 @@ printf(" Para#=%d\n", _concur_para_num);
 				if (_concur_current_client->type == constant_normal_client) {
 				/* error happened to the normal client, raise an exception */
 					c_concur_close_socket(_concur_current_client->sock);
-					eiffel_free(_concur_current_client);
+					eif_free(_concur_current_client);
 					add_nl;
 					strcat(_concur_crash_info, CURAPPERR8);
-					eiffel_free(_concur_current_client);
+					eif_free(_concur_current_client);
 					_concur_current_client = NULL;
 					c_raise_concur_exception(exception_network_connection_crash);
 					break;
@@ -1976,7 +1976,7 @@ printf(" Para#=%d\n", _concur_para_num);
 				else {
 				/* error happened to the REMOTE client, so just release it */
 					unregister(constant_release_all, constant_not_defined);
-					eiffel_free(_concur_current_client);
+					eif_free(_concur_current_client);
 					_concur_current_client = NULL;
 					sockid = -1;
 					break;
@@ -2018,7 +2018,7 @@ EIF_INTEGER sock;
 /* add to the end of the list */
 	SERVER *ser;
 
-	ser = (SERVER *)(eiffel_malloc(sizeof(SERVER)));
+	ser = (SERVER *)(eif_malloc(sizeof(SERVER)));
 	valid_memory(ser);
 	ser->hostaddr = haddr;
 	ser->pid = port;
@@ -2066,9 +2066,9 @@ void release_server_list() {
 		printf("<host=[%s], port=%d, count=%d, sock=%d>\n", c_get_name_from_addr(_concur_ser_list->hostaddr), _concur_ser_list->pid, _concur_ser_list->count, _concur_ser_list->sock);	
 #endif
 		/* first, cleanup all proxiies of the objects imported from 
-		 * the server. But we don't eiffel_free imported-objects one
+		 * the server. But we don't eif_free imported-objects one
 		 * server by one server, we will call "releae_imported_object" 
-		 * after the calling of this procedure to eiffel_free them all once.
+		 * after the calling of this procedure to eif_free them all once.
 		*/
 		
 		
@@ -2095,7 +2095,7 @@ void release_server_list() {
 		*/
 		c_concur_close_socket(_concur_ser_list->sock);
 		tmp = take_head_from_server_list();
-		eiffel_free(tmp);
+		eif_free(tmp);
 	}
 	_concur_server_list_released = 1;
 
@@ -2115,17 +2115,17 @@ void release_imported_objects() {
 
 	for(tmp_tab_ptr=NULL; _concur_imported_obj_tab; tmp_tab_ptr=_concur_imported_obj_tab, _concur_imported_obj_tab=_concur_imported_obj_tab->next) {
 		if (tmp_tab_ptr)
-			eiffel_free(tmp_tab_ptr);
+			eif_free(tmp_tab_ptr);
 		for (tmp_list_ptr1=NULL, tmp_list_ptr=_concur_imported_obj_tab->list_root; tmp_list_ptr; tmp_list_ptr1=tmp_list_ptr,tmp_list_ptr=tmp_list_ptr->next) {
 			if (tmp_list_ptr1)
-				eiffel_free(tmp_list_ptr1);
+				eif_free(tmp_list_ptr1);
 			eif_object_id_free(tmp_list_ptr->proxy_id);
 		}
 		if (tmp_list_ptr1)
-			eiffel_free(tmp_list_ptr1);
+			eif_free(tmp_list_ptr1);
 	}
 	if (tmp_tab_ptr)
-		eiffel_free(tmp_tab_ptr);
+		eif_free(tmp_tab_ptr);
 }
 
 void release_exported_objects() {
@@ -2138,31 +2138,31 @@ void release_exported_objects() {
 	REF_LIST_NODE  *tmp_list_ptr, *tmp_list_ptr1;
 	EXPORTED_OBJ_LIST_NODE *tmp_exp_obj;
 
-	/* first, we eiffel_free the reference table */
+	/* first, we eif_free the reference table */
 	for (tmp_tab_ptr = NULL; _concur_ref_table;
 tmp_tab_ptr=_concur_ref_table, _concur_ref_table=_concur_ref_table->next) {
 		if (tmp_tab_ptr)
-			eiffel_free(tmp_tab_ptr);
+			eif_free(tmp_tab_ptr);
 		for (tmp_list_ptr1=NULL, tmp_list_ptr=_concur_ref_table->ref_list; tmp_list_ptr; tmp_list_ptr1=tmp_list_ptr,tmp_list_ptr=tmp_list_ptr->next) {
             if (tmp_list_ptr1)
-                eiffel_free(tmp_list_ptr1);
+                eif_free(tmp_list_ptr1);
         }
         if (tmp_list_ptr1)
-            eiffel_free(tmp_list_ptr1);
+            eif_free(tmp_list_ptr1);
 	}
 	if (tmp_tab_ptr)
-		eiffel_free(tmp_tab_ptr);
+		eif_free(tmp_tab_ptr);
 
-	/* Now, we eiffel_free exported object list, in the same time, we eiffel_free the
+	/* Now, we eif_free exported object list, in the same time, we eif_free the
 	 * exported object from "separate_object_id_set"
 	*/
 	for (tmp_exp_obj = NULL; _concur_exported_obj_list; tmp_exp_obj=_concur_exported_obj_list, _concur_exported_obj_list=_concur_exported_obj_list->next) {
 		if (tmp_exp_obj)
-			eiffel_free(tmp_exp_obj);
+			eif_free(tmp_exp_obj);
 		eif_separate_object_id_free(_concur_exported_obj_list->oid);
 	}
 	if (tmp_exp_obj)
-		eiffel_free(tmp_exp_obj);
+		eif_free(tmp_exp_obj);
 	return;
 }
 
@@ -2213,7 +2213,7 @@ void wait_scoop_daemon() {
 	get_cmd_data(_concur_scoop_dog->sock);
 	c_close_socket(_concur_scoop_dog->sock);
 	_concur_scoop_dog->sock = -2;
-	eiffel_free(_concur_scoop_dog);
+	eif_free(_concur_scoop_dog);
 	_concur_scoop_dog = NULL;
 
 	if (_concur_command != constant_start_sep_obj_ok) {
@@ -2271,7 +2271,7 @@ failure();
 	if (!_concur_paras_size) {
 		int tmp_int;
 	    _concur_paras_size = constant_max_para_num;
-	    _concur_paras = (PARAMETER *)(eiffel_malloc(_concur_paras_size * sizeof(PARAMETER)));
+	    _concur_paras = (PARAMETER *)(eif_malloc(_concur_paras_size * sizeof(PARAMETER)));
 	    valid_memory(_concur_paras);
 		for(tmp_int=0; tmp_int<_concur_paras_size; tmp_int++) 
 			_concur_paras[tmp_int].str_len = 0;
@@ -2339,10 +2339,10 @@ failure();
 			send_command(_concur_parent->sock);
 			c_close_socket(_concur_parent->sock);
 			_concur_parent->sock = -2;
-			eiffel_free(_concur_parent);
+			eif_free(_concur_parent);
 		}
 		else {
-			eiffel_free(_concur_parent);
+			eif_free(_concur_parent);
 		}
 	}
 	else {
@@ -2359,7 +2359,7 @@ failure();
 	free_parameter_array(_concur_paras, _concur_paras_size);
 	cur_clear_configure_table();
 	if (_concur_call_stack.info)
-		eiffel_free(_concur_call_stack.info);
+		eif_free(_concur_call_stack.info);
 	exit(1); 
 #ifdef SIGNAL
 #else
@@ -2441,9 +2441,9 @@ printf("%d Enter SYSTEM_LIST with ser#=%d, cli#=%d\n", _concur_pid, _concur_ser_
     for(; _concur_ser_list != NULL; ) {
         tmp = take_head_from_server_list();
 		sock = tmp->sock;
-        eiffel_free(tmp);
+        eif_free(tmp);
 #ifdef nDISP_MSG
-printf("%d eiffel_free %d \n", _concur_pid, sock);
+printf("%d eif_free %d \n", _concur_pid, sock);
 #endif
 		if (sock>=0) {
 		/* if sock < 0, then the server is the local processor itself. */
@@ -2463,7 +2463,7 @@ printf("%d eiffel_free %d \n", _concur_pid, sock);
     _concur_server_list_released = 1;
 
 #ifdef nDISP_MSG
-printf("%d Now to eiffel_free clients \n", _concur_pid);
+printf("%d Now to eif_free clients \n", _concur_pid);
 #endif
 
 	if (_concur_current_client)  {
@@ -2473,7 +2473,7 @@ printf("%d Now to eiffel_free clients \n", _concur_pid);
     for(; _concur_cli_list; ) {
         tmp = take_head_from_client_list();
 		sock = tmp->sock;
-        eiffel_free(tmp);
+        eif_free(tmp);
 
 		send_command(sock);
 		/* the request sent out by the command is prepared by `default_rescue'.
@@ -2546,7 +2546,7 @@ void release_child_list() {
 			send_command(current_child->sock);
 			c_close_socket(current_child->sock);
 		}
-		eiffel_free(current_child);
+		eif_free(current_child);
 	}
 	
 	_concur_command = tmp_cmd;
@@ -2796,7 +2796,7 @@ fd_set *except_mask;
 				add_nl;
 				sprintf(crash_info, CURAPPERR8);
 				_concur_current_client->sock = -2;
-				eiffel_free(_concur_current_client);
+				eif_free(_concur_current_client);
 				_concur_current_client = NULL;
 				c_raise_concur_exception(exception_network_connection_crash);	
 			}
@@ -2822,7 +2822,7 @@ cli1=cli1->next) {
 					*/
 						change_ref_table_and_exported_obj_list(cli1->hostaddr, cli1->pid, constant_not_defined, constant_release_all);
 						cli1->sock = -2;
-						eiffel_free(cli1);
+						eif_free(cli1);
 						cli1 = NULL;
 						marked = 0;
 						ret++;
@@ -2835,7 +2835,7 @@ cli1=cli1->next) {
 						add_nl;
 						sprintf(crash_info, CURAPPERR8);
 						cli1->sock = -2;
-						eiffel_free(cli1);
+						eif_free(cli1);
 						cli1 = NULL;
 						c_raise_concur_exception(exception_network_connection_crash);	
 					}
@@ -2941,7 +2941,7 @@ void process_connection() {
 					bak_child->next = cur_child->next;
 				if (!(cur_child->next))
 					_concur_end_of_child_list = bak_child;
-				eiffel_free(cur_child);
+				eif_free(cur_child);
 				(_concur_child_list_count)--;
 
 				if (!_concur_exception_has_happened) {
@@ -2971,7 +2971,7 @@ void process_connection() {
 					bak_child->next = cur_child->next;
 				if (!(cur_child->next))
 					_concur_end_of_child_list = bak_child;
-				eiffel_free(cur_child);
+				eif_free(cur_child);
 				(_concur_child_list_count)--;
 			}
 			break;
@@ -2980,7 +2980,7 @@ void process_connection() {
 		/* we add the new client into the client list, and send
 		 * back the acknowledgement for the REGISTR request
 	    */
-			recv = (CLIENT *)(eiffel_malloc(sizeof(CLIENT)));
+			recv = (CLIENT *)(eif_malloc(sizeof(CLIENT)));
 			valid_memory(recv);
 			recv->type = constant_normal_client;
 			recv->count = 1;

@@ -189,7 +189,7 @@ printf("=======================================================================\
 			continue;
 		}
 		*/
-		/* Get a eiffel_free descriptor to store parameters */
+		/* Get a eif_free descriptor to store parameters */
 		for(index=0; index<MAX_DESCRIPTOR && descriptor[index] != NULL; index=(index+1) % MAX_DESCRIPTOR);
 
 		if (dog_get_command(csock, &code, &para_num)) {
@@ -229,7 +229,7 @@ printf("Got CODE = %d, PARA_NUMBER = %d\n", (int)code, (int)para_num);
 			goto next_step;
 		}
 
-		descriptor[index] = (char **)eiffel_malloc(sizeof(char *)*(para_num+1));
+		descriptor[index] = (char **)eif_malloc(sizeof(char *)*(para_num+1));
 		if (descriptor[index] == NULL) {
 			printf("Run out of memory!\n");
 			exit(1);
@@ -241,8 +241,8 @@ printf("Got CODE = %d, PARA_NUMBER = %d\n", (int)code, (int)para_num);
 			if (dog_get_data_info(csock, &p_type, &p_len)) {
 				csock = -4;
 				for (j=2; j<i; j++) 
-					eiffel_free(descriptor[index][j]);
-				eiffel_free(descriptor[index]);
+					eif_free(descriptor[index][j]);
+				eif_free(descriptor[index]);
 				descriptor[index] = NULL;
 				goto next_step;
 			}
@@ -254,15 +254,15 @@ printf("%d parameter's type: %d length: %d\n", i, (int)p_type, (int)p_len);
 					if (dog_get_data(csock, (char *)&int_val, &p_len)) {
 						csock = -4;
 						for (j=2; j<i; j++) 
-							eiffel_free(descriptor[index][j]);
-						eiffel_free(descriptor[index]);
+							eif_free(descriptor[index][j]);
+						eif_free(descriptor[index]);
 						descriptor[index] = NULL;
 						goto next_step;
 					}
 					int_val = ntohl (int_val);
-					int_str = (char *)eiffel_malloc(MAX_INT_STR_LEN+1);
+					int_str = (char *)eif_malloc(MAX_INT_STR_LEN+1);
 					if (int_str == NULL) {
-						printf("OUT of memory for int_str.eiffel_malloc\n");
+						printf("OUT of memory for int_str.eif_malloc\n");
 						exit(1);
 					}
 					p_len = longtoa(int_val, int_str, MAX_INT_STR_LEN);     
@@ -273,14 +273,14 @@ printf("%d parameter's type: %d length: %d\n", i, (int)p_type, (int)p_len);
 					if (dog_get_data(csock, (char *)&real_val, &p_len)) {
 						csock = -4;
 						for (j=2; j<i; j++) 
-							eiffel_free(descriptor[index][j]);
-						eiffel_free(descriptor[index]);
+							eif_free(descriptor[index][j]);
+						eif_free(descriptor[index]);
 						descriptor[index] = NULL;
 						goto next_step;
 					}
-					real_str = (char *)eiffel_malloc(MAX_REAL_STR_LEN+1);
+					real_str = (char *)eif_malloc(MAX_REAL_STR_LEN+1);
 					if (real_str == 0L) {
-						printf("OUT of memory for real_str.eiffel_malloc\n");
+						printf("OUT of memory for real_str.eif_malloc\n");
 						exit(1);
 					}
 					p_len = rtoa(real_val, real_str, MAX_REAL_STR_LEN);     
@@ -291,14 +291,14 @@ printf("%d parameter's type: %d length: %d\n", i, (int)p_type, (int)p_len);
 					if (dog_get_data(csock, (char *)&dou_val, &p_len)) {
 						csock = -4;
 						for (j=2; j<i; j++) 
-							eiffel_free(descriptor[index][j]);
-						eiffel_free(descriptor[index]);
+							eif_free(descriptor[index][j]);
+						eif_free(descriptor[index]);
 						descriptor[index] = NULL;
 						goto next_step;
 					}
-					dou_str = (char *)eiffel_malloc(MAX_DOU_STR_LEN+1);
+					dou_str = (char *)eif_malloc(MAX_DOU_STR_LEN+1);
 					if (dou_str == 0L) {
-						printf("OUT of memory for dou_str.eiffel_malloc\n");
+						printf("OUT of memory for dou_str.eif_malloc\n");
 						exit(1);
 					}
 					p_len = dtoa(real_val, dou_str, MAX_DOU_STR_LEN);       
@@ -306,16 +306,16 @@ printf("%d parameter's type: %d length: %d\n", i, (int)p_type, (int)p_len);
 					descriptor[index][i] = dou_str; 
 					break;
 				case STRING_TYPE:
-					str_str = (char *)eiffel_malloc(p_len+1);
+					str_str = (char *)eif_malloc(p_len+1);
 					if (str_str == NULL) {
-						printf("OUT of memory for int_str.eiffel_malloc\n");
+						printf("OUT of memory for int_str.eif_malloc\n");
 						exit(1);
 					}
 					if (dog_get_data(csock, str_str, &p_len)) {
 						csock = -4;
 						for (j=2; j<=i; j++) 
-							eiffel_free(descriptor[index][j]);
-						eiffel_free(descriptor[index]);
+							eif_free(descriptor[index][j]);
+						eif_free(descriptor[index]);
 						descriptor[index] = NULL;
 						goto next_step;
 					}
@@ -339,9 +339,9 @@ printf("   value: %s \n",descriptor[index][i]);
 		descriptor[index][para_num-1] = NULL;
 #else
 		descriptor[index][1] = CREATION_FLAG;
-		int_str = (char *)eiffel_malloc(MAX_INT_STR_LEN+1);
+		int_str = (char *)eif_malloc(MAX_INT_STR_LEN+1);
 		if (int_str == NULL) {
-			printf("OUT of memory for int_str.eiffel_malloc\n");
+			printf("OUT of memory for int_str.eif_malloc\n");
 			exit(1);
 		}
 		p_len = longtoa(current_pid, int_str, MAX_INT_STR_LEN); 
@@ -354,16 +354,16 @@ printf("   value: %s \n",descriptor[index][i]);
 		if (dog_get_data_info(csock, &p_type, &p_len)) {
 			csock = -4;
 			for (j=2; j<=para_num-1; j++) 
-				eiffel_free(descriptor[index][j]);
-			eiffel_free(descriptor[index]);
+				eif_free(descriptor[index][j]);
+			eif_free(descriptor[index]);
 			descriptor[index] = NULL;
 			goto next_step;
 		}
 		if (dog_get_data(csock, execdir, &p_len)) {
 			csock = -4;
 			for (j=2; j<=para_num-1; j++) 
-				eiffel_free(descriptor[index][j]);
-			eiffel_free(descriptor[index]);
+				eif_free(descriptor[index][j]);
+			eif_free(descriptor[index]);
 			descriptor[index] = NULL;
 			goto next_step;
 		}
@@ -376,16 +376,16 @@ strcpy(execdir, "\\users\\terryt\\example2\\seq\\eifgen\\w_code");
 		if (dog_get_data_info(csock, &p_type, &p_len)) {
 			csock = -4;
 			for (j=2; j<=para_num-1; j++) 
-				eiffel_free(descriptor[index][j]);
-			eiffel_free(descriptor[index]);
+				eif_free(descriptor[index][j]);
+			eif_free(descriptor[index]);
 			descriptor[index] = NULL;
 			goto next_step;
 		}
 		if (dog_get_data(csock, execfile, &p_len)) {
 			csock = -4;
 			for (j=2; j<=para_num-1; j++) 
-				eiffel_free(descriptor[index][j]);
-			eiffel_free(descriptor[index]);
+				eif_free(descriptor[index][j]);
+			eif_free(descriptor[index]);
 			descriptor[index] = NULL;
 			goto next_step;
 		}
@@ -399,16 +399,16 @@ strcpy(execdir, "\\users\\terryt\\example2\\seq\\eifgen\\w_code");
 		if (dog_get_data_info(csock, &p_type, &p_len)) {
 			csock = -4;
 			for (j=2; j<=para_num-1; j++) 
-				eiffel_free(descriptor[index][j]);
-			eiffel_free(descriptor[index]);
+				eif_free(descriptor[index][j]);
+			eif_free(descriptor[index]);
 			descriptor[index] = NULL;
 			goto next_step;
 		}
 		if (dog_get_data(csock, usrname, &p_len)) {
 			csock = -4;
 			for (j=2; j<=para_num-1; j++) 
-				eiffel_free(descriptor[index][j]);
-			eiffel_free(descriptor[index]);
+				eif_free(descriptor[index][j]);
+			eif_free(descriptor[index]);
 			descriptor[index] = NULL;
 			goto next_step;
 		}
@@ -422,9 +422,9 @@ strcpy(execdir, "\\users\\terryt\\example2\\seq\\eifgen\\w_code");
 */
 
 #ifdef EIF_WIN32
-		cmdLine = (char *)eiffel_malloc(cmdLineLen);
+		cmdLine = (char *)eif_malloc(cmdLineLen);
 		if (cmdLine == 0L) {
-			printf("OUT of memory for cmdLine.eiffel_malloc\n");
+			printf("OUT of memory for cmdLine.eif_malloc\n");
 			exit(1);
 		}       
 		strcpy(cmdLine, execfile);
@@ -436,9 +436,9 @@ strcpy(execdir, "\\users\\terryt\\example2\\seq\\eifgen\\w_code");
 		strcat(cmdLine, cur_pid_str);
 		cmdLine[cmdLineLen-1] = '\0';
 #else
-		descriptor[index][0] = (char *)eiffel_malloc(MAX_EXEC_FILE_LEN+1);
+		descriptor[index][0] = (char *)eif_malloc(MAX_EXEC_FILE_LEN+1);
 		if (descriptor[index][0] == 0L) {
-			printf("OUT of memory for dou_str.eiffel_malloc\n");
+			printf("OUT of memory for dou_str.eif_malloc\n");
 			exit(1);
 		}
 		strcpy(descriptor[index][0], execfile);
@@ -477,8 +477,8 @@ printf("user=<%s>, Dir=<%s>, cmdline=<%s> cmdlinelen=%d\n", usrname, execdir, cm
 			closesocket(csock);
 			csock = -3;
 			for (j=2;  descriptor[index][j] != NULL; j++)
-				eiffel_free(descriptor[index][j]);
-			eiffel_free(descriptor[index]);
+				eif_free(descriptor[index][j]);
+			eif_free(descriptor[index]);
 			descriptor[index] = (char **)NULL;                
 		}
 		else  {
@@ -487,8 +487,8 @@ printf("user=<%s>, Dir=<%s>, cmdline=<%s> cmdlinelen=%d\n", usrname, execdir, cm
 				closesocket(csock);
 				csock = -3;
 				for (j=2;  descriptor[index][j] != NULL; j++)
-					eiffel_free(descriptor[index][j]);
-				eiffel_free(descriptor[index]);
+					eif_free(descriptor[index][j]);
+				eif_free(descriptor[index]);
 				descriptor[index] = (char **)NULL;                
 				goto next_step;
 			}
@@ -501,8 +501,8 @@ printf("user=<%s>, Dir=<%s>, cmdline=<%s> cmdlinelen=%d\n", usrname, execdir, cm
 				closesocket(csock);
 				csock = -3;
 				for (j=2;  descriptor[index][j] != NULL; j++)
-					eiffel_free(descriptor[index][j]);
-				eiffel_free(descriptor[index]);
+					eif_free(descriptor[index][j]);
+				eif_free(descriptor[index]);
 				descriptor[index] = (char **)NULL;                
 				goto next_step;
 			}
@@ -522,8 +522,8 @@ printf("user=<%s>, Dir=<%s>, cmdline=<%s> cmdlinelen=%d\n", usrname, execdir, cm
 			if (dog_send_command(csock, REPORT_ERROR, 1)) {
 				csock = -4;
 				for (j=2; descriptor[index][j] != NULL; j++) 
-					eiffel_free(descriptor[index][j]);
-				eiffel_free(descriptor[index]);
+					eif_free(descriptor[index][j]);
+				eif_free(descriptor[index]);
 				descriptor[index] = NULL;
 				goto next_step;
 			}
@@ -535,8 +535,8 @@ printf("user=<%s>, Dir=<%s>, cmdline=<%s> cmdlinelen=%d\n", usrname, execdir, cm
 			if (dog_send_data(csock, &p_type, message, &p_len)) {
 				csock = -4;
 				for (j=2; descriptor[index][j] != NULL; j++) 
-					eiffel_free(descriptor[index][j]);
-				eiffel_free(descriptor[index]);
+					eif_free(descriptor[index][j]);
+				eif_free(descriptor[index]);
 				descriptor[index] = NULL;
 				goto next_step;
 			}
@@ -641,8 +641,8 @@ errno = 0;
 			close(csock);
 			csock = -3;
 			for (j=2;  descriptor[index][j] != NULL; j++)
-				eiffel_free(descriptor[index][j]);
-			eiffel_free(descriptor[index]);
+				eif_free(descriptor[index][j]);
+			eif_free(descriptor[index]);
 			descriptor[index] = (char **)NULL;                
 #endif
 		signal(SIGUSR1, sig_proc);
@@ -703,8 +703,8 @@ void sig_chld(int sig) {
 		printf("Now clear DESCRIPTOR at %d with pid %d\n", j, ret);
 		status = j;
 		for (j=0;  descriptor[status][j] != NULL; j++)
-			eiffel_free(descriptor[status][j]);
-		eiffel_free(descriptor[status]);
+			eif_free(descriptor[status][j]);
+		eif_free(descriptor[status]);
 		descriptor[status] = (char **)NULL;               
 		owner[status] = -1;
 #endif

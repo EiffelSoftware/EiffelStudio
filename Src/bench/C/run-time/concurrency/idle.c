@@ -11,7 +11,7 @@ void idle_usage(check_nb, read_mask, assign_current)
  * UNREGISTER/RELEASE/RESERVE_SEP_OBJ requests to non-current Clients, so  
  * that the concurrent level can be improved.
  * The precondition of calling the function is:
- *    The current processor has been reserved, i.e, it's not eiffel_free now.
+ *    The current processor has been reserved, i.e, it's not eif_free now.
  * CAUTION: the function will destroy the REQUEST environment, i.e., 
  * it may modify the values stored in:
  *    _concur_command
@@ -89,14 +89,14 @@ printf("%d/%d[%s,%d] Got Command(in idle_usage) %s  para#: %d\n", _concur_pid, c
 						cur_client_bak->next = cur_client->next;
 						if (_concur_end_of_cli_list == cur_client)
 							_concur_end_of_cli_list = cur_client_bak; 
-						eiffel_free(cur_client);
+						eif_free(cur_client);
 						cur_client = cur_client_bak;
 					}
 					else {
 						_concur_cli_list = cur_client->next;	
 						if (_concur_end_of_cli_list == cur_client)
 							_concur_end_of_cli_list = _concur_cli_list; 
-						eiffel_free(cur_client);
+						eif_free(cur_client);
 						cur_client = _concur_cli_list;
 					}
 					i++;
@@ -127,14 +127,14 @@ printf("%d/%d[%s,%d] Got Command(in idle_usage) %s  para#: %d\n", _concur_pid, c
 					cur_client_bak->next = cur_client->next;
 					if (_concur_end_of_cli_list == cur_client)
 						_concur_end_of_cli_list = cur_client_bak; 
-					eiffel_free(cur_client);
+					eif_free(cur_client);
 					cur_client = cur_client_bak->next;
 				}
 				else {
 					_concur_cli_list = cur_client->next;	
 					if (_concur_end_of_cli_list == cur_client)
 						_concur_end_of_cli_list = _concur_cli_list; 
-					eiffel_free(cur_client);
+					eif_free(cur_client);
 					cur_client = _concur_cli_list;
 				}
 				(_concur_cli_list_count)--;

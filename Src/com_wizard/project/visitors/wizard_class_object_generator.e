@@ -78,6 +78,12 @@ feature -- Basic operations
 			-- Constructor
 			cpp_class_writer.add_constructor (constructor)
 
+			-- Initialize
+			cpp_class_writer.add_function (initialize_feature, Public)
+
+			-- IsInitialized
+			cpp_class_writer.add_member (is_initialized_member, Public)
+
 			-- Extern functions
 			cpp_class_writer.add_other (Extern_lock_module)
 			cpp_class_writer.add_other (Extern_unlock_module)
@@ -111,6 +117,37 @@ feature {NONE} -- Implementations
 			create Result.make
 			create tmp_body.make (0)
 			tmp_body.append (Tab)
+			tmp_body.append ("IsInitialized")
+			tmp_body.append (Space_equal_space)
+			tmp_body.append (Zero)
+			tmp_body.append (Semicolon)
+
+			Result.set_body(tmp_body)
+		end
+
+	is_initialized_member: WIZARD_WRITER_C_MEMBER is
+			-- is_initialized member.
+		do
+			create Result.make
+
+			Result.set_name ("IsInitialized")
+			Result.set_result_type ("BOOL")
+			Result.set_comment ("Is initialized?")
+		end
+
+	initialize_feature: WIZARD_WRITER_C_FUNCTION is
+			-- Initialize feature.
+		local
+			tmp_body: STRING 
+		do
+			create Result.make
+
+			Result.set_name ("Initialize")
+			Result.set_comment ("Initialize")
+			Result.set_result_type (Void_c_keyword)
+
+			create tmp_body.make (0)
+			tmp_body.append (Tab)
 			tmp_body.append (Type_id)
 			tmp_body.append (Space_equal_space)
 			tmp_body.append (Eif_type_id_function_name)
@@ -121,6 +158,19 @@ feature {NONE} -- Implementations
 			tmp_body.append (Underscore)
 			tmp_body.append ("IMP")
 			tmp_body.append (Double_quote)
+			tmp_body.append (Close_parenthesis)
+			tmp_body.append (Semicolon)
+			tmp_body.append (New_line_tab)
+
+			tmp_body.append ("IsInitialized")
+			tmp_body.append (Space_equal_space)
+			tmp_body.append (Open_parenthesis)
+			tmp_body.append (Type_id)
+			tmp_body.append (Space)
+			tmp_body.append (More)
+			tmp_body.append (Equal_sign)
+			tmp_body.append (Space)
+			tmp_body.append (Zero)
 			tmp_body.append (Close_parenthesis)
 			tmp_body.append (Semicolon)
 

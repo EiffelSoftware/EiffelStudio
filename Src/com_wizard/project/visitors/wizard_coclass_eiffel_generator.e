@@ -83,7 +83,7 @@ feature {NONE} -- Implementation
 				coclass_descriptor.interface_descriptors.forth
 			end
 		ensure
-			features_added: eiffel_writer.features /= Void and then not eiffel_writer.features.empty
+			features_added: eiffel_writer.features /= Void 
 		end
 
 

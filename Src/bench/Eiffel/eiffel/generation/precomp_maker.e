@@ -47,10 +47,10 @@ feature
 				%%N.SUFFIXES: .cpp%N%N%
 				%.c.o:%N%
 				%%T$(CC) $(CFLAGS) -c $<%N%
-				%%T$(RM) $*.c%N%N%
+				%%T$(RM) $<%N%N%
 				%.cpp.o:%N%
 				%%T$(CPP) $(CPPFLAGS) -c $<%N%
-				%%T$(RM) $*.cpp%N%N");
+				%%T$(RM) $<%N%N");
 		end;
 
 	system_name: STRING is

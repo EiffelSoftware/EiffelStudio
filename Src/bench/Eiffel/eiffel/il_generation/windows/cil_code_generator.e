@@ -855,6 +855,10 @@ feature -- Class info
 					if not class_type.is_precompiled then
 						define_default_constructor (class_type)
 					end
+
+					if not class_type.is_precompiled then
+						class_type.set_il_type_name
+					end
 				end
 			end
 		end
@@ -1343,14 +1347,17 @@ feature -- Features info
 								l_feat.body_index)
 						else
 							if l_is_attribute then
-								l_name := "$$" + il_casing.camel_casing (l_feat.feature_name)
+								l_name := "$$" + il_casing.camel_casing (
+									l_class_type.is_dotnet_name, l_feat.feature_name)
 							else
-								l_name := "$$" + il_casing.pascal_casing (l_feat.feature_name,
+								l_name := "$$" + il_casing.pascal_casing (
+									l_class_type.is_dotnet_name, l_feat.feature_name,
 									feature {IL_CASING_CONVERSION}.lower_case)
 							end
 						end
 					else
-						l_name := il_casing.pascal_casing (l_feat.feature_name, 
+						l_name := il_casing.pascal_casing (
+							l_class_type.is_dotnet_name, l_feat.feature_name, 
 							feature {IL_CASING_CONVERSION}.lower_case)
 					end
 				end
@@ -1466,6 +1473,7 @@ feature -- Features info
 			l_signature: ARRAY [INTEGER]
 			l_is_c_external: BOOLEAN
 			l_ca_factory: CUSTOM_ATTRIBUTE_FACTORY
+			l_naming_convention: BOOLEAN
 		do
 			if feat.feature_name_id /= Names_heap.void_name_id then
 				l_is_attribute := feat.is_attribute
@@ -1529,20 +1537,26 @@ feature -- Features info
 					end
 				end
 
+				if not feat.is_type_feature then
+					l_naming_convention := System.dotnet_naming_convention
+				end
 				if is_static then
 					if l_is_c_external then
 						l_name := encoder.feature_name (current_class_type.static_type_id,
 							feat.body_index)
 					else
 						if l_is_attribute then
-							l_name := "$$" + il_casing.camel_casing (feat.feature_name)
+							l_name := "$$" + il_casing.camel_casing (
+								l_naming_convention, feat.feature_name)
 						else
-							l_name := "$$" + il_casing.pascal_casing (feat.feature_name,
+							l_name := "$$" + il_casing.pascal_casing (
+								l_naming_convention, feat.feature_name,
 								feature {IL_CASING_CONVERSION}.lower_case)
 						end
 					end
 				else
-					l_name := il_casing.pascal_casing (feat.feature_name, 
+					l_name := il_casing.pascal_casing (
+						l_naming_convention, feat.feature_name, 
 						feature {IL_CASING_CONVERSION}.lower_case)
 				end
 
@@ -1978,8 +1992,8 @@ feature -- IL Generation
 						ise_eiffel_derivation_type_token)
 				end
 
-				l_name := il_casing.pascal_casing (feat.feature_name,
-					feature {IL_CASING_CONVERSION}.lower_case)
+				l_name := il_casing.pascal_casing (System.dotnet_naming_convention,
+					feat.feature_name, feature {IL_CASING_CONVERSION}.lower_case)
 
 				uni_string.set_string (l_name)
 
@@ -2143,7 +2157,7 @@ feature -- IL Generation
 						i > nb
 					loop
 						generate_argument (i)
-						if l_cur_sig.item (i) /= l_impl_sig.item (i) then
+						if is_verifiable and l_cur_sig.item (i) /= l_impl_sig.item (i) then
 							method_body.put_opcode_mdtoken (feature {MD_OPCODES}.castclass,
 								class_type_token (l_impl_sig.item (i)))
 						end
@@ -2152,7 +2166,7 @@ feature -- IL Generation
 					method_body.put_call (feature {MD_OPCODES}.Call, l_token,
 						nb, feat.has_return_value)
 					if feat.has_return_value then
-						if l_cur_sig.item (0) /= l_impl_sig.item (0) then
+						if is_verifiable and l_cur_sig.item (0) /= l_impl_sig.item (0) then
 							method_body.put_opcode_mdtoken (feature {MD_OPCODES}.castclass,
 								class_type_token (l_cur_sig.item (0)))
 						end
@@ -2292,6 +2306,42 @@ feature -- IL Generation
 	override_counter: COUNTER
 			-- Number of generated override methods.
 
+	is_method_impl_needed (feat, inh_feat: FEATURE_I; class_type: CLASS_TYPE): BOOLEAN is
+			-- Is a MethodImpl needed between `inh_feat' and `feat'?
+		require
+			feat_not_void: feat /= Void
+			inh_feat_not_void: inh_feat /= Void
+			class_type_not_void: class_type /= Void
+		local
+			l_ext: IL_EXTENSION_I
+			l_naming_convention: BOOLEAN
+		do
+			l_naming_convention := System.dotnet_naming_convention
+			if l_naming_convention /= class_type.is_dotnet_name then
+				l_ext ?= inh_feat.extension
+				if l_ext /= Void then
+ 					Result := not il_casing.pascal_casing (l_naming_convention,
+						feat.feature_name,
+ 						feature {IL_CASING_CONVERSION}.lower_case).is_equal (l_ext.alias_name)
+				else
+					Result := not il_casing.pascal_casing (l_naming_convention,
+							feat.feature_name, feature {IL_CASING_CONVERSION}.lower_case).is_equal (
+						il_casing.pascal_casing (class_type.is_dotnet_name,
+							inh_feat.feature_name, feature {IL_CASING_CONVERSION}.lower_case))
+				end
+			else
+				Result := feat.feature_name_id /= inh_feat.feature_name_id
+	 			if not Result then
+	 				l_ext ?= inh_feat.extension
+	 				if l_ext /= Void then
+	 					Result := not il_casing.pascal_casing (System.dotnet_naming_convention,
+							feat.feature_name,
+	 						feature {IL_CASING_CONVERSION}.lower_case).is_equal (l_ext.alias_name)
+	 				end
+	 			end
+			end
+		end
+
 	generate_method_impl (cur_feat: FEATURE_I; parent_type: CLASS_TYPE; inh_feat: FEATURE_I) is
 			-- Generate a MethodImpl from `parent_type' and `inh_feat'
 			-- to `current_class_type' and `cur_feat'.
@@ -2349,7 +2399,7 @@ feature -- IL Generation
 					i > nb
 				loop
 					generate_argument (i)
-					if l_cur_sig.item (i) /= l_inh_sig.item (i) then
+					if is_verifiable and l_cur_sig.item (i) /= l_inh_sig.item (i) then
 						method_body.put_opcode_mdtoken (feature {MD_OPCODES}.castclass,
 							class_type_token (l_cur_sig.item (i)))
 					end
@@ -2359,7 +2409,7 @@ feature -- IL Generation
 					cur_feat.feature_id), nb, cur_feat.has_return_value)
 
 				if cur_feat.has_return_value then
-					if l_cur_sig.item (0) /= l_inh_sig.item (0) then
+					if is_verifiable and l_cur_sig.item (0) /= l_inh_sig.item (0) then
 						method_body.put_opcode_mdtoken (feature {MD_OPCODES}.castclass,
 							class_type_token (l_inh_sig.item (0)))
 					end
@@ -2393,7 +2443,7 @@ feature -- IL Generation
 					start_new_body (l_setter_token)
 					generate_current
 					generate_argument (1)
-					if l_cur_sig.item (0) /= l_inh_sig.item (0) then
+					if is_verifiable and l_cur_sig.item (0) /= l_inh_sig.item (0) then
 						method_body.put_opcode_mdtoken (feature {MD_OPCODES}.castclass,
 							class_type_token (l_cur_sig.item (0)))
 					end

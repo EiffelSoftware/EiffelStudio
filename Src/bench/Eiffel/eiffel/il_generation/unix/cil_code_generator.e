@@ -668,6 +668,15 @@ feature -- IL Generation
 	override_counter: COUNTER
 			-- Number of generated override methods.
 
+	is_method_impl_needed (feat, inh_feat: FEATURE_I; class_type: CLASS_TYPE): BOOLEAN is
+			-- Is a MethodImpl needed between `inh_feat' and `feat'?
+		require
+			feat_not_void: feat /= Void
+			inh_feat_not_void: inh_feat /= Void
+			class_type_not_void: class_type /= Void
+		do
+		end
+
 	generate_method_impl (cur_feat: FEATURE_I; parent_type: CLASS_TYPE; inh_feat: FEATURE_I) is
 			-- Generate a MethodImpl from `parent_type' and `inh_feat'
 			-- to `current_class_type' and `cur_feat'.

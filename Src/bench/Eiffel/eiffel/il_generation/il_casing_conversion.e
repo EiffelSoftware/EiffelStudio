@@ -20,7 +20,7 @@ feature -- Naming convention
 	upper_case: INTEGER is 2
 			-- Conversion type for `pascal_casing'.
 			
-	pascal_casing (name: STRING; type: INTEGER): STRING is
+	pascal_casing (is_dotnet_name: BOOLEAN; name: STRING; type: INTEGER): STRING is
 			-- Convert `name' using PascalCasing convention.
 			-- If `type' is `upper_case' and if default is to use
 			-- Eiffel convention, result is upper case.
@@ -35,7 +35,7 @@ feature -- Naming convention
 			l_c: CHARACTER
 		do
 			Result := name
-			if System.dotnet_naming_convention then
+			if is_dotnet_name then
 				Result := clone (Result)
 				from
 					i := 2
@@ -67,7 +67,7 @@ feature -- Naming convention
 			result_not_void: Result /= Void
 		end
 
-	camel_casing (name: STRING): STRING is
+	camel_casing (is_dotnet_name: BOOLEAN; name: STRING): STRING is
 			-- Convert `name' using camelCasing convention.
 			--| Used only for attributes in implementation classes.
 		require
@@ -78,7 +78,7 @@ feature -- Naming convention
 			l_c: CHARACTER
 		do
 			Result := name
-			if System.dotnet_naming_convention then
+			if is_dotnet_name then
 				Result := clone (Result)
 				from
 					i := 2
@@ -110,7 +110,7 @@ feature -- Naming convention
 			result_not_void: Result /= Void
 		end
 
-	namespace_casing (name: STRING): STRING is
+	namespace_casing (is_dotnet_name: BOOLEAN; name: STRING): STRING is
 			-- Convert `name' using PascalCasing convention
 			-- on namesapce. Different from `pascal_casing'
 			-- as we convert a character in upper after a
@@ -123,7 +123,7 @@ feature -- Naming convention
 			i, nb: INTEGER
 		do
 			Result := name
-			if System.dotnet_naming_convention then
+			if is_dotnet_name then
 				Result := clone (Result)
 				from
 					i := 2

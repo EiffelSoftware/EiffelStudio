@@ -411,7 +411,8 @@ feature {NONE} -- Implementation
 						-- Generate local definition of `feat' which
 						-- calls static definition.
 					if inh_feat /= Void then
-						l_is_method_impl_generated := is_method_impl_needed (feat, inh_feat)
+						l_is_method_impl_generated := is_method_impl_needed (feat, inh_feat,
+							class_type)
 						if not l_is_method_impl_generated then
 								-- Generate local definition signature using the parent
 								-- signature. We do not do it on the parent itself because
@@ -449,7 +450,7 @@ feature {NONE} -- Implementation
 				else
 					if inh_feat /= Void then
 						generate_feature (feat, False, False, False)
-						if is_method_impl_needed (feat, inh_feat) then
+						if is_method_impl_needed (feat, inh_feat, class_type) then
 							generate_method_impl (feat, class_type, inh_feat)
 						else
 							if
@@ -483,7 +484,7 @@ feature {NONE} -- Implementation
 			generate_empty_body (feat)
 
 			if inh_feat /= Void then
-				if is_method_impl_needed (feat, inh_feat) then
+				if is_method_impl_needed (feat, inh_feat, class_type) then
 					generate_method_impl (feat, class_type, inh_feat)
 				end
 			end
@@ -503,7 +504,7 @@ feature {NONE} -- Implementation
 		do
 			if not is_single_class or inh_feat /= Void then
 				if inh_feat /= Void then
-					l_is_method_impl_generated := is_method_impl_needed (feat, inh_feat)
+					l_is_method_impl_generated := is_method_impl_needed (feat, inh_feat, class_type)
 					if not l_is_method_impl_generated then
 							-- Generate local definition signature using the parent
 							-- signature. We do not do it on the parent itself because
@@ -568,24 +569,6 @@ feature {NONE} -- Implementation
 				rout_ids_tbl.put (feat, rout_id_set.item (i))
 				i := i + 1
 			end
-		end
-
-	is_method_impl_needed (feat, inh_feat: FEATURE_I): BOOLEAN is
-			-- Is a MethodImpl needed between `inh_feat' and `feat'?
-		require
-			feat_not_void: feat /= Void
-			inh_feat_not_void: inh_feat /= Void
-		local
-			l_ext: IL_EXTENSION_I
-		do
-			Result := feat.feature_name_id /= inh_feat.feature_name_id
- 			if not Result then
- 				l_ext ?= inh_feat.extension
- 				if l_ext /= Void then
- 					Result := not il_casing.pascal_casing (feat.feature_name,
- 						feature {IL_CASING_CONVERSION}.lower_case).is_equal (l_ext.alias_name)
- 				end
- 			end
 		end
 
 end -- class SINGLE_IL_CODE_GENERATOR

@@ -573,6 +573,11 @@ feature -- JIT info
 			l_module_stored: ICOR_DEBUG_MODULE
 		do
 			l_module_key_name := module_key (a_module.get_name)
+			if loaded_modules.is_empty then
+				-- We have to deal with the MSCORLIB.DLL module 
+				--| FIXME: JFIAT : 2003/12/23 : to check
+				mscorlid_module := a_module
+			end
 			loaded_modules.put (a_module, l_module_key_name)
 			if not loaded_modules.inserted then
 				l_module_stored := loaded_modules.item (l_module_key_name)
@@ -641,7 +646,22 @@ feature {NONE} -- JIT info implementation
 
 	loaded_modules: HASH_TABLE [ICOR_DEBUG_MODULE, STRING]
 
+	mscorlid_module: ICOR_DEBUG_MODULE
+	
 --	loaded_classes: HASH_TABLE [ICOR_DEBUG_CLASS, TUPLE[STRING,INTEGER]]
+
+feature -- JIT Info access
+
+	icor_debug_module (a_mod_name: STRING): ICOR_DEBUG_MODULE is
+			-- 
+		do
+			Result := loaded_modules.item (module_key (a_mod_name))
+		end
+		
+	icor_debug_module_for_mscorlib: ICOR_DEBUG_MODULE is
+		do
+			Result := mscorlid_module
+		end
 
 feature -- Stepping
 

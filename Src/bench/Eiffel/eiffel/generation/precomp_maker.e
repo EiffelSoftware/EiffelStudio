@@ -60,7 +60,14 @@ feature
 	generate_additional_rules is
 		do
 			Make_file.putstring ("%Tld -r -o preobj.o ");
-			generate_objects_macros;
+			generate_C_object_macros;
+			Make_file.new_line;
+			Make_file.putstring ("%Tld -r -o descobj.o ");
+			if System.uses_precompiled then
+				Make_file.putstring (Precompilation_descobj);
+				Make_file.putchar (' ')
+			end;
+			generate_D_object_macros;
 			Make_file.new_line;
 			Make_file.putstring ("%T$(RM) ");
 			generate_objects_macros;

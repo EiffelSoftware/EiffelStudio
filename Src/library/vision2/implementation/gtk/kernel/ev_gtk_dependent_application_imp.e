@@ -46,6 +46,7 @@ feature -- Initialize
 			bitmap_data: ARRAY [CHARACTER]
 			cur_pix, a_cursor_ptr, fg, bg: POINTER
 			a_cur_data: ANY
+			a_mask, a_gc: POINTER
 		do
 			fg := fg_color
 			bg := bg_color
@@ -56,9 +57,21 @@ feature -- Initialize
 			bitmap_data := a_cursor_imp.bitmap_array
 			a_cur_data := bitmap_data.to_c
 			cur_pix := feature {EV_GTK_EXTERNALS}.gdk_pixmap_create_from_data (default_pointer, $a_cur_data,  a_cursor_imp.width, a_cursor_imp.height, 1, fg, bg)
+			
+			if a_cursor_imp.mask = Default_pointer then
+					-- If mask isn't available then we create one
+				a_mask := feature {EV_GTK_EXTERNALS}.gdk_pixmap_new (default_pointer, a_cursor_imp.width, a_cursor_imp.height, 1)
+				a_gc := feature {EV_GTK_EXTERNALS}.gdk_gc_new (a_mask)
+				feature {EV_GTK_EXTERNALS}.gdk_gc_set_function (a_gc, feature {EV_GTK_EXTERNALS}.Gdk_copy_enum)
+				feature {EV_GTK_EXTERNALS}.gdk_gc_set_foreground (a_gc, fg_color)
+				feature {EV_GTK_EXTERNALS}.gdk_gc_set_background (a_gc, bg_color)
+				feature {EV_GTK_EXTERNALS}.gdk_draw_rectangle (a_mask, a_gc, 1, 0, 0, a_cursor_imp.width, a_cursor_imp.height)
+				feature {EV_GTK_EXTERNALS}.gdk_gc_unref (a_gc)
+			else
+				a_mask := a_cursor_imp.mask
+			end
 
-			--| FIXME IEK If a_cursor_imp has no mask then routine seg faults.
-			a_cursor_ptr := feature {EV_GTK_EXTERNALS}.gdk_cursor_new_from_pixmap (cur_pix, a_cursor_imp.mask, fg, bg, a_cursor.x_hotspot, a_cursor.y_hotspot)
+			a_cursor_ptr := feature {EV_GTK_EXTERNALS}.gdk_cursor_new_from_pixmap (cur_pix, a_mask, fg, bg, a_cursor.x_hotspot, a_cursor.y_hotspot)
 			Result := a_cursor_ptr
 		end
 		
@@ -69,6 +82,12 @@ feature -- Initialize
 
 	bg_color: POINTER is
 			-- 
+		deferred
+		end
+
+	default_gdk_window: POINTER is
+			-- Pointer to a default GdkWindow that may be used to
+			-- access default visual information (color depth).
 		deferred
 		end
 		

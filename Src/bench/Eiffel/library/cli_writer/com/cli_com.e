@@ -25,7 +25,7 @@ feature -- Disposal
 	release (a_pointer: POINTER) is
 			-- Release COM objects represented by `a_pointer'.
 		external
-			"C++ [IUnknown <unknwn.h>]"
+			"C++ IUnknown use %"unknwn.h%""
 		alias
 			"Release"
 		end
@@ -46,19 +46,19 @@ feature {NONE} -- Initialization
 			"CoInitialize(NULL)"
 		end
 
-	com_initialize_apartment_threaded: INTEGER is
-		external
-			"C++ inline use %"objbase.h%""
-		alias
-			"CoInitializeEx(NULL, COINIT_APARTMENTTHREADED)"
-		end
-
-	com_initialize_multithreaded: INTEGER is
-		external
-			"C++ inline use %"objbase.h%""
-		alias
-			"CoInitializeEx(NULL, COINIT_MULTITHREADED)"
-		end
+--	com_initialize_apartment_threaded: INTEGER is
+--		external
+--			"C++ inline use %"objbase.h%""
+--		alias
+--			"CoInitializeEx(NULL, COINIT_APARTMENTTHREADED)"
+--		end
+--
+--	com_initialize_multithreaded: INTEGER is
+--		external
+--			"C++ inline use %"objbase.h%""
+--		alias
+--			"CoInitializeEx(NULL, COINIT_MULTITHREADED)"
+--		end
 
 	com_S_OK: INTEGER is
 		external

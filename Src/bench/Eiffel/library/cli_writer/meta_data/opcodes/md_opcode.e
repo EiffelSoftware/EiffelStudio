@@ -11,7 +11,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make (an_opcode_value: INTEGER_16; a_stack_depth_transition: INTEGER_8; a_format: INTEGER) is
+	make (an_opcode_value: INTEGER_16; a_stack_depth_transition: INTEGER; a_format: INTEGER) is
 			-- Initialize current opcode with `an_opcode_value'
 			-- and `a_format'.
 		do
@@ -34,7 +34,7 @@ feature -- Access
 			-- Format of arguments.
 			-- See MD_OPCODE_FORMATS for possible values.
 
-	stack_depth_transition: INTEGER_8
+	stack_depth_transition: INTEGER
 			-- Stack depth transition.
 
 end -- class MD_OPCODE

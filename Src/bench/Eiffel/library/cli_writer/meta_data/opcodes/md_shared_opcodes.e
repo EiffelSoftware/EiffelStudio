@@ -179,11 +179,11 @@ feature -- Access
 					feature {MD_OPCODE_FORMAT}.method_arg),
 				feature {MD_OPCODES}.jmp)
 			Result.put (
-				create {MD_OPCODE}.make (feature {MD_OPCODES}.call, 0xFF,
+				create {MD_OPCODE}.make (feature {MD_OPCODES}.call, 0xFF000000,
 					feature {MD_OPCODE_FORMAT}.method_arg),
 				feature {MD_OPCODES}.call)
 			Result.put (
-				create {MD_OPCODE}.make (feature {MD_OPCODES}.calli, 0xFF,
+				create {MD_OPCODE}.make (feature {MD_OPCODES}.calli, 0xFF000000,
 					feature {MD_OPCODE_FORMAT}.signature_arg),
 				feature {MD_OPCODES}.calli)
 			Result.put (
@@ -463,7 +463,7 @@ feature -- Access
 					feature {MD_OPCODE_FORMAT}.no_arg),
 				feature {MD_OPCODES}.conv_u8)
 			Result.put (
-				create {MD_OPCODE}.make (feature {MD_OPCODES}.callvirt, 1,
+				create {MD_OPCODE}.make (feature {MD_OPCODES}.callvirt, 0xFF000000,
 					feature {MD_OPCODE_FORMAT}.method_arg),
 				feature {MD_OPCODES}.callvirt)
 			Result.put (
@@ -479,7 +479,7 @@ feature -- Access
 					feature {MD_OPCODE_FORMAT}.string_arg),
 				feature {MD_OPCODES}.ldstr)
 			Result.put (
-				create {MD_OPCODE}.make (feature {MD_OPCODES}.newobj, 0xFF,
+				create {MD_OPCODE}.make (feature {MD_OPCODES}.newobj, 0xFF000000,
 					feature {MD_OPCODE_FORMAT}.method_arg),
 				feature {MD_OPCODES}.newobj)
 			Result.put (

@@ -31,6 +31,13 @@ inherit
 			default_create, copy, is_equal
 		end
 		
+	GB_CONSTANTS
+		export
+			{NONE} all
+		undefine
+			default_create, copy, is_equal
+		end
+		
 	GB_DEFAULT_STATE
 	
 create
@@ -46,6 +53,7 @@ feature {NONE} -- Initialization
 			shared_pixmaps: GB_SHARED_PIXMAPS
 		do
 			Precursor {EV_TREE}
+			set_minimum_height (tool_minimum_height)
 			create shared_pixmaps
 			create tree_item1.make_with_text ("Widgets")
 			tree_item1.set_pixmap (shared_pixmaps.pixmap_by_name ("widgets"))

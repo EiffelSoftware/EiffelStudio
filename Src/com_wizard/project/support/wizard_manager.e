@@ -305,34 +305,46 @@ feature {NONE} -- Implementation
 						end
 
 						-- Compiling generated C code
-						parent.add_title (Compilation_title)
-						change_working_directory (shared_wizard_environment.destination_folder)
-						if shared_wizard_environment.client then
-							Clib_folder_name := clone (Client)
-							Clib_folder_name.append_character (Directory_separator)
-							Clib_folder_name.append (Clib)
-							set_title (C_client_compilation_title)
-							compiler.compile_folder (Clib_folder_name, Current)
-							compiler.link_all (Clib_folder_name, CLib_name)
-						end
-						if shared_wizard_environment.server and not shared_wizard_environment.abort then
-							Clib_folder_name := clone (Server)
-							Clib_folder_name.append_character (Directory_separator)
-							Clib_folder_name.append (Clib)
-							set_title (C_server_compilation_title)
-							compiler.compile_folder (Clib_folder_name, Current)
-							compiler.link_all (Clib_folder_name, CLib_name)
-						end
-						if not shared_wizard_environment.abort then
-							Clib_folder_name := clone (Common)
-							Clib_folder_name.append_character (Directory_separator)
-							Clib_folder_name.append (Clib)
-							set_title (C_common_compilation_title)
-							compiler.compile_folder (Clib_folder_name, Current)
-							compiler.link_all (Clib_folder_name, CLib_name)
-						end
-						if not shared_wizard_environment.abort then		
-							parent.add_warning (Compilation_Successful)
+						if Shared_wizard_environment.compile_c then
+							parent.add_title (Compilation_title)
+							change_working_directory (shared_wizard_environment.destination_folder)
+							if shared_wizard_environment.client and not shared_wizard_environment.abort then
+								Clib_folder_name := clone (Client)
+								Clib_folder_name.append_character (Directory_separator)
+								Clib_folder_name.append (Clib)
+								set_title (C_client_compilation_title)
+								compiler.compile_folder (Clib_folder_name, Current)
+								compiler.link_all (Clib_folder_name, CLib_name)
+							end
+							if shared_wizard_environment.server and not shared_wizard_environment.abort then
+								Clib_folder_name := clone (Server)
+								Clib_folder_name.append_character (Directory_separator)
+								Clib_folder_name.append (Clib)
+								set_title (C_server_compilation_title)
+								compiler.compile_folder (Clib_folder_name, Current)
+								compiler.link_all (Clib_folder_name, CLib_name)
+							end
+							if not shared_wizard_environment.abort then
+								Clib_folder_name := clone (Common)
+								Clib_folder_name.append_character (Directory_separator)
+								Clib_folder_name.append (Clib)
+								set_title (C_common_compilation_title)
+								compiler.compile_folder (Clib_folder_name, Current)
+								compiler.link_all (Clib_folder_name, CLib_name)
+							end
+							if Shared_wizard_environment.compile_eiffel then
+								if not Shared_wizard_environment.abort and Shared_wizard_environment.client then
+									set_title (Eiffel_compilation_title)
+									compiler.compile_eiffel (Client)
+								end
+								if not Shared_wizard_environment.abort and Shared_wizard_environment.server then
+									set_title (Eiffel_compilation_title)
+									compiler.compile_eiffel (Server)
+								end
+							end
+							if not shared_wizard_environment.abort then		
+								parent.add_warning (Compilation_Successful)
+							end
 						end
 					end
 				end
@@ -500,6 +512,9 @@ feature {NONE} -- Implementation
 
 	Compilation_successful: STRING is "Compilation completed."
 			-- Compilation successful message
+
+	Eiffel_compilation_title: STRING is "Compiling Eiffel code"
+			-- Eiffel compilation message
 
 end -- class WIZARD_MANAGER
 

@@ -26,37 +26,6 @@ char * fn;
 	return (s);
 }
 
-/*
- *      Execute `command' with `input_string' as input.
- *      Create a pipe between the current process and the `command',
- *      send the `message' to the `command' through the pipe,
- *      and then close the pipe.
- *      Return 0 if `command' has been executed successfully.
- */
- 
-void send_to_command (input_string, command)
-char *input_string;
-char *command;
-{
-    FILE *ptr;
- 
-    if ((ptr = popen (command, "w")) != NULL){
-        fputs (input_string, ptr);
-        pclose (ptr);
-	}
-}
- 
- 
-/*
- *      Name of the user
- */
- 
-char* username ()
-{
-    return (getpwuid (getuid ())->pw_name);
-}
-
-
 EIF_POINTER c_efb_get_background (w)
 EIF_POINTER w;
 {

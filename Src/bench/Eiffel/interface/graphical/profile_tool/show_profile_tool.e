@@ -20,13 +20,13 @@ feature {NONE} -- Execution
 			mp: MOUSE_PTR;
 			p_tool: like profile_tool
 		do
+			!! mp.set_watch_cursor;
 			if profile_tool = Void then
-				!! mp.set_watch_cursor;
 				!! p_tool.make (Current);
 				profile_tool_cell.put (p_tool);
-				mp.restore
 			end;	
 			profile_tool.display;
+			mp.restore
 		end
 
 feature -- Properties

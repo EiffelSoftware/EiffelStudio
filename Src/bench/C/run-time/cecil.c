@@ -11,6 +11,7 @@
 	C-Eiffel Call-In Library.
 */
 
+#include "eif_project.h"
 #include "eif_config.h"
 
 #ifdef I_STRING
@@ -72,7 +73,7 @@ rt_public EIF_TYPE_ID eifcid(char *class)
 		return EIF_NO_TYPE;
 
 	/* Look-up in hash table, error if item not found */
-	value = (EIF_TYPE_ID *) ct_value(&ce_type, class);
+	value = (EIF_TYPE_ID *) ct_value(&egc_ce_type, class);
 	if ((EIF_TYPE_ID *) 0 == value)
 		return EIF_NO_TYPE;		/* Not found (maybe type is generic?) */
 	
@@ -131,17 +132,17 @@ rt_public EIF_TYPE_ID eifgid(va_alist)
 	printf ("eifgid: computing EIF_TYPE_ID of %s\n", class);
 #endif
 
-	/* Now do a first search in the ce_gtype H-table to know how many generic
+	/* Now do a first search in the egc_ce_gtype H-table to know how many generic
 	 * parameters we have to get from the stack. If the class is not found,
 	 * then either it is not a generic type or it was not declared as visible.
 	 * Anyway, return the EIF_NO_TYPE error code.
 	 */
 
-	type = (struct gt_info *) ct_value(&ce_gtype, class);
+	type = (struct gt_info *) ct_value(&egc_ce_gtype, class);
 	if ((struct gt_info *) 0 == type) {	/* Not found in H-table */
 		va_end(ap);						/* End processing of argument list */
 #ifdef DEBUG
-	printf ("eifgid: class not found in the ce_gtype table\n");
+	printf ("eifgid: class not found in the egc_ce_gtype table\n");
 #endif
 		return EIF_NO_TYPE;				/* Error condition */
 	}
@@ -332,7 +333,7 @@ rt_public EIF_FN_REF eifref(char *routine, EIF_TYPE_ID cid)
 
 	if (body_id < zeroc)
 		/* Frozen feature */
-		return frozen[body_id];
+		return egc_frozen[body_id];
 	else
 #ifndef DLE
 		xraise(MTC EN_DOL);

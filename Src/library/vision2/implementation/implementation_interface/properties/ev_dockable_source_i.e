@@ -508,13 +508,8 @@ feature -- Inapplicable
 
 	drag_cursor: EV_CURSOR is
 			-- Cursor used when `Current' is being transported.
-		local
-			--pixmap: EV_PIXMAP
 		once
 			Result := (create {EV_STOCK_PIXMAPS}).sizeall_cursor
-			--create pixmap
-			--pixmap.set_with_named_file ("C:test_cursor.ico")
-			--create Result.make_with_pixmap (pixmap, 1, 1)
 		end
 		
 
@@ -529,9 +524,11 @@ feature {NONE} -- Implementation
 				-- On Gtk items, also inherit EV_WIDGET_IMP so
 				-- we protect against this by using the _I as an intermediary
 				-- step.
-			widget_i ?= source_being_docked.interface
-			if widget_i /= Void then
-				Result ?= source_being_docked	
+			if source_being_docked /= Void then
+				widget_i ?= source_being_docked.interface
+				if widget_i /= Void then
+					Result ?= source_being_docked	
+				end
 			end
 		end
 		

@@ -32,31 +32,37 @@ feature -- Query
 			-- a corresponding Eiffel object.
 		require
 			a_file_name_not_void: a_file_name /= Void
-		local			
+		local
+			retried: BOOLEAN
 			l_xml_tree_parser: XML_TREE_PARSER
 			l_file_name: STRING
 			l_file: RAW_FILE
 		do
-			create l_file.make (a_file_name)
-			
-			if l_file.exists and l_file.is_readable then
-				create l_file_name.make_from_string (a_file_name)
-				l_file.open_read
-				l_file.readstream (l_file.count)
-				l_file.close
-
-				create l_xml_tree_parser.make
-				l_xml_tree_parser.parse_string (l_file.last_string)
-				l_xml_tree_parser.set_end_of_file
+			if not retried then
+				create l_file.make (a_file_name)
 				
-				if l_xml_tree_parser.is_correct then
-					Result := reference_from_xml (l_xml_tree_parser.root_element)
-				else
-					print ("Error ")
-					print (l_xml_tree_parser.last_error_extended_description)
-					print ("%N")
+				if l_file.exists and l_file.is_readable then
+					create l_file_name.make_from_string (a_file_name)
+					l_file.open_read
+					l_file.readstream (l_file.count)
+					l_file.close
+	
+					create l_xml_tree_parser.make
+					l_xml_tree_parser.parse_string (l_file.last_string)
+					l_xml_tree_parser.set_end_of_file
+					
+					if l_xml_tree_parser.is_correct then
+						Result := reference_from_xml (l_xml_tree_parser.root_element)
+					end
+				end
+			else
+				if l_file /= Void and then not l_file.is_closed then
+					l_file.close
 				end
 			end
+		rescue
+			retried := True
+			retry
 		end
 		
 feature {NONE} -- Object retrieval from node.

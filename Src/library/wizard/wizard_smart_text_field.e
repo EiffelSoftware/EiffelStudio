@@ -95,8 +95,6 @@ feature -- Access
 			else
 				Result := textfield_string
 			end
-		ensure
-			not_void: Result /= Void
 		end
 
 	widget: EV_WIDGET is

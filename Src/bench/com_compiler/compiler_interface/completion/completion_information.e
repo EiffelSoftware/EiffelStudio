@@ -240,8 +240,8 @@ feature -- Access
             non_void_feat: feat /= Void
             feat_is_empty: feat.item.is_empty
             non_void_is_class_expr: is_class_expr /= Void
-        local
-            def_parser: DEFINITION_PARSER
+--        local
+--            def_parser: DEFINITION_PARSER
         do
 --            create def_parser.make
 --            def_parser.parse (source_text, source_row, source_col)

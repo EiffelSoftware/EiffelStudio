@@ -167,7 +167,7 @@ feature {NONE} -- Implementation
 		end
 
 	c_free (p: POINTER) is
-			-- C malloc
+			-- C free
 		external
 			"C (void *) | <stdlib.h>"
 		alias

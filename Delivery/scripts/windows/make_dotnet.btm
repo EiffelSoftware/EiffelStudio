@@ -2,10 +2,12 @@ remtrace Compiling .NET components
 REM Should be called by `make_exes.btm'
 cdd %EIFFEL_SRC
 
+mkdir %INSTALL_DIR\dotnet_binaries
+
 remtrace Compiling .NET runtime
 cd %EIFFEL_SRC\Eiffel\eiffel\com_il_generation\core\run-time
 call nmake
-copy ISE.Runtime.dll %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
+copy ISE.Runtime.dll %INSTALL_DIR\dotnet_binaries
 
 remtrace Compiling Eiffel Assembly Cache
 cdd %EIFFEL_SRC\dotnet\consumer\ace
@@ -15,7 +17,8 @@ iff not exist EIFGEN\W_code\emitter.exe then
 	remtrace Could not compile emitter.exe
 	CANCEL
 endiff
-move EIFGEN\W_code\emitter.exe %INSTALL_DIR\dotnet\assemblies
+copy EIFGEN\W_code\emitter.exe %INSTALL_DIR\dotnet_binaries
+copy EIFGEN\W_code\emitter.exe %INSTALL_DIR\dotnet\assemblies
 cdd %INSTALL_DIR\dotnet\assemblies
 set TMP_EIFFEL=%ISE_EIFFEL
 set ISE_EIFFEL=%INSTALL_DIR
@@ -24,11 +27,22 @@ set ISE_EIFFEL=%TMP_EIFFEL
 fullrf build.bat
 fullrf System.Object.xml
 fullrf types.xml
+fullrf emitter.exe
 unset TMP_EIFFEL
 
 remtrace Compiling Fusion Support
 cdd %EIFFEL_SRC\dotnet\VisualStudio\EnvSDK\EiffelPkgs\EifPrj\FusionSupport
 call nmake
-copy ISE.VS.FusionSupport.dll %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
+copy ISE.VS.FusionSupport.dll %INSTALL_DIR\dotnet_binaries
+
+remtrace Compiling CodeDom
+cdd %EIFFEL_SRC\dotnet\CodeDom\src\ace_file
+compile_dotnet ace.ace
+wff
+iff not exist EIFGEN\W_code\ISE.CodeDomProvider.dll then
+	remtrace Could not compile Codedom
+	CANCEL
+endiff
+copy EIFGEN\W_code\ISE.CodeDomProvider.dll %INSTALL_DIR\dotnet_libraries
 
 cdd %EIFFEL_SRC

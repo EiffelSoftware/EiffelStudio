@@ -833,6 +833,10 @@ end
 					-- the processor cache.
 				buf.putstring ("static volatile EIF_BOOLEAN done = 0;")
 				buf.new_line
+				buf.putstring ("static volatile EIF_BOOLEAN finished = 0;")
+				buf.new_line
+				buf.putstring ("static volatile EIF_POINTER thread_id = NULL;")
+				buf.new_line
 			end
 
 				-- Declare the 'dtype' variable which holds the pre-computed

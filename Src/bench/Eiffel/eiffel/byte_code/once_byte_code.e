@@ -165,16 +165,44 @@ feature -- C code generation
 			-- Generate end of global once block.
 		local
 			l_buf: like buffer
+			l_mutex_name: STRING
 		do
+			l_mutex_name := mutex_name (a_name)
 			l_buf := context.buffer
 			l_buf.exdent
 			l_buf.putchar ('}')
 			l_buf.new_line
+			l_buf.putstring ("finished = EIF_TRUE;")
+			l_buf.new_line
 			l_buf.putstring ("eif_thr_mutex_unlock (")
-			l_buf.putstring (mutex_name (a_name))
+			l_buf.putstring (l_mutex_name)
 			l_buf.putstring (");")
 			l_buf.new_line
 			l_buf.exdent
+			l_buf.putstring ("} else {")
+			l_buf.new_line
+			l_buf.indent
+			l_buf.putstring ("if (!finished) {")
+			l_buf.new_line
+			l_buf.indent
+			l_buf.putstring ("if (thread_id != eif_thr_thread_id()) {")
+			l_buf.new_line
+			l_buf.indent
+			l_buf.putstring ("eif_thr_mutex_lock (")
+			l_buf.putstring (l_mutex_name)
+			l_buf.putstring (");")
+			l_buf.new_line
+			l_buf.putstring ("eif_thr_mutex_unlock (")
+			l_buf.putstring (l_mutex_name)
+			l_buf.putstring (");")
+			l_buf.exdent
+			l_buf.new_line
+			l_buf.putchar ('}')
+			l_buf.exdent
+			l_buf.new_line
+			l_buf.putchar ('}')
+			l_buf.exdent
+			l_buf.new_line
 			l_buf.putchar ('}')
 			l_buf.new_line
 		end
@@ -227,6 +255,8 @@ feature {NONE} -- Implementation
 			buf.putstring ("if (!done) {")
 			buf.new_line
 			buf.indent
+			buf.putstring ("thread_id = eif_thr_thread_id();")
+			buf.new_line
 			buf.putstring ("done = EIF_TRUE;")
 
 			if context.result_used then

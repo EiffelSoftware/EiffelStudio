@@ -108,7 +108,7 @@ feature {NONE} -- Implementation
 		do
 			!!new_title.make (50);
 			new_title.append ("Clickable form ");
-			new_title.append (stone.signature);
+			new_title.append (stone.stone_signature);
 			tool.set_title (new_title)
 		end
 

@@ -204,7 +204,7 @@ feature {NONE} -- Implementation
 		do
 			!!new_title.make (50);
 			new_title.append (title_part);
-			new_title.append (stone.signature);
+			new_title.append (stone.stone_signature);
 			new_title.append (" (");
 			new_title.append (filtername);
 			new_title.append (" format)");

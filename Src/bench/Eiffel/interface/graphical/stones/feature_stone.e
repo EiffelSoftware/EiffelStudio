@@ -90,7 +90,7 @@ feature -- Access
 			Result.append ("Feature: ");
 			Result.append (e_feature.name);
 			Result.append (" Class: ");
-			Result.append (e_class.signature);
+			Result.append (e_class.class_signature);
 		end;
 
 	history_name: STRING is
@@ -176,10 +176,10 @@ feature -- dragging
  
 	set_file_name (s: STRING) is do end;
 
-	signature: STRING is
+	stone_signature: STRING is
 			-- Signature of Current feature
 		do
-			Result := e_feature.signature
+			Result := e_feature.feature_signature
 		end;
 
 	stone_type: INTEGER is 

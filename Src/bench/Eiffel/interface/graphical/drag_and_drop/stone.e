@@ -79,23 +79,23 @@ feature  -- Access
 		deferred
 		end;
 
-	signature: STRING is 
+	stone_signature: STRING is 
 			-- Short string to explain Current
 		deferred 
 		end;
 
 	header: STRING is 
 			-- Short string to explain Current
-			-- (By default, it is the signature)
+			-- (By default, it is the stone_signature)
 		do 
-			Result := signature 
+			Result := stone_signature 
 		end;
 
 	history_name: STRING is 
 			-- Name used in the history list
-			-- (By default, it is the signature)
+			-- (By default, it is the stone_signature)
 		do 
-			Result := signature 
+			Result := stone_signature 
 		end;
 
 	is_valid: BOOLEAN is

@@ -24,12 +24,12 @@ feature -- Access
 			!! Result.make (Eiffel_ace.click_list, Void)
 		end
  
-	signature: STRING is
+	stone_signature: STRING is
 		do
 			if Eiffel_project.initialized and then Eiffel_project.system_defined then
 				Result := Eiffel_system.name
 			else
-				-- FIXME: `signature' is asked only when system 
+				-- FIXME: `stone_signature' is asked only when system 
 				-- is compiled, and therefore `system_name' exists.
 				Result := "Uncompiled"
 			end

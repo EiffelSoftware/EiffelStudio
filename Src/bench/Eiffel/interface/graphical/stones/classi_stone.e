@@ -62,7 +62,7 @@ feature -- Access
 			Result := Cursors.cur_X_Class
 		end;
 
-	signature: STRING is
+	stone_signature: STRING is
 			-- Name and indication that the class is not compiled
 		do
 			Result := clone (class_i.name)
@@ -79,7 +79,7 @@ feature -- Access
 		do
 			!!Result.make (20);
 			Result.append ("Class: ");
-			Result.append (signature);
+			Result.append (stone_signature);
 			Result.append ("  ");
 			Result.append ("Cluster: ");
 			Result.append (class_i.cluster.cluster_name);

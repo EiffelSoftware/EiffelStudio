@@ -392,12 +392,15 @@ rt_public char *emalloc(uint32 ftype)
 
 	eraise("object allocation", EN_MEM);	/* Signals no more memory */
 
-	return (char *) 0;				/* They chose to ignore EN_MEN */
+	/* NOTREACHED */
 
 	EIF_END_GET_CONTEXT
+
+	return (char *) 0;				/* They chose to ignore EN_MEN */
+
 }
 
-rt_public char *strmalloc(unsigned int nbytes)
+rt_public EIF_REFERENCE strmalloc(unsigned int nbytes)
 
 {
 	/* String optimization: When allocating a special string, intead
@@ -405,9 +408,11 @@ rt_public char *strmalloc(unsigned int nbytes)
 	 * GSZ. 
 	 */
 
-	char *object;		/* Pointer to the freshly created special object */
-	char *ret;			/* Return value: allocated object. */
+	EIF_REFERENCE object;		/* Pointer to the freshly created special object */
+	EIF_REFERENCE ret;			/* Return value: allocated object. */
+
 	EIF_GET_CONTEXT
+
 #ifdef STRMALLOC_DEBUG
 	printf ("STRMALLOC_DEBUG: Allocation of string of size %d\n", nbytes);
 #endif 	/* STRMALLOC_DEBUG */
@@ -415,28 +420,46 @@ rt_public char *strmalloc(unsigned int nbytes)
 	if (nbytes > GS_LIMIT)		/* Is string too big to be 
 								 * generational scavenge zone. */
 	{
+
 #ifdef STRMALLOC_DEBUG
 	printf ("STRMALLOC_DEBUG: string will be allocated in free-list \n");
 #endif 	/* STRMALLOC_DEBUG */
+
 		ret = spmalloc (nbytes);
 		EIF_END_GET_CONTEXT
 		return ret;	/* Allocate it in Free-list. */
 	}
 
 	 object = malloc_from_zone(nbytes);	/* allocate it in scavenge zone. */
+
 #ifdef STRMALLOC_DEBUG
 	printf ("STRMALLOC_DEBUG: string allocated in GSZ : new string = 0x%x=%s\n", object, object);
 #endif 	/* STRMALLOC_DEBUG */
 
-	 if (object != (char *) 0)
-		return eif_strset(object, nbytes);			/* Special Eiffel object */
+	if (object != (char *) 0)
+	{		
+		ret = eif_strset(object, nbytes);			/* Special Eiffel object */
+		EIF_END_GET_CONTEXT
+		return ret;
+	}
 	
-	eraise("String object allocation", EN_MEM);	/* No more memory */
+	object = spmalloc (nbytes);
+	if (object != (EIF_REFERENCE) 0)	
+								/* Allocating in free-list was successfull? */
+	{
+		EIF_END_GET_CONTEXT
+		return object;			/* No need to set it. It has been done in
+								 * `spmalloc' */
+	}
 
-	return (char *) 0;				/* They chose to ignore EN_MEN */
+	eraise("String special allocation", EN_MEM);	/* No more memory */
+	/* NOTREACHED */	
+	EIF_END_GET_CONTEXT
+
+	return (EIF_REFERENCE) 0;				/* They chose to ignore EN_MEN */
 }
 
-rt_public char *spmalloc(unsigned int nbytes)
+rt_public EIF_REFERENCE spmalloc(unsigned int nbytes)
 
 {
 	/* Memory allocation for an Eiffel special object. It either succeeds or

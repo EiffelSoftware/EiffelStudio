@@ -128,7 +128,7 @@ RT_LNK int fcount;
 		if (RTAG(z)) RTAM(z); \
 	} else if (RTAG(y)) RTAM(y); \
 	}
-#if (!defined NDEBUG && defined EIF_REM_SET_OPTIMIZATION)
+#if !defined NDEBUG && defined EIF_REM_SET_OPTIMIZATION
 #define RTAS(x,y) if ((x) != (char *) 0 && RTAN(x)) { \
 	if (RTAE(y)) eif_panic ("Must call RTAS_OPT instead");\
 	if (HEADER(y)->ov_flags & EO_EXP) { \

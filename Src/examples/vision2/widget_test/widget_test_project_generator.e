@@ -15,7 +15,7 @@ inherit
 
 feature -- Access
 
-	generate_project (test_class_name: STRING; widget_type: STRING) is
+	generate_project (directory: DIRECTORY; test_class_name: STRING; widget_type: STRING) is
 			-- Generate project based on `test_class_name'.
 		local
 			project_name, project_location, test_name: STRING

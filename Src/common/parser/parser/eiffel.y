@@ -163,7 +163,7 @@ create
 
 %type <TOKEN_LOCATION>		Position
 
-%expect 198
+%expect 196
 
 %%
 
@@ -179,12 +179,12 @@ Eiffel_parser:
 					raise_error
 				end
 			}
-	|	Type
+	|	Identifier Type
 			{
 				if not type_parser then
 					raise_error
 				end
-				type_node := $1
+				type_node := $2
 			}
 	;
 

@@ -1,4 +1,7 @@
 @ECHO OFF
+IF '%1' == '' GOTO USAGE
+IF '%2' == '' GOTO USAGE
+
 REM *********************************************
 ECHO Eiffel Codedom Provider delivery build script
 REM *********************************************
@@ -6,13 +9,9 @@ REM *********************************************
 ECHO ***********************************
 ECHO Building with following settings:
 
-IF "%ISE_EIFFEL%"=="" ECHO ISE_EIFFEL not defined!!
-IF "%ISE_EIFFEL%"=="" GOTO END
-ECHO ISE_EIFFEL=%ISE_EIFFEL%
-
-REM Change this to match your path:
-SET C_COMPILER_PATH=d:\dev\micros~1.net\vc7
-ECHO C_COMPILER_PATH=%C_COMPILER_PATH%
+SET ISE_PLATFORM=windows
+SET ISE_C_COMPILER=msc
+SET INIT_PATH=%PATH%;
 
 REM Change these between releases:
 SET RELEASE=Eiffel_55
@@ -22,14 +21,12 @@ ECHO COMPILER_RELEASE=%COMPILER_RELEASE%
 SET CODEDOM_RELEASE=HEAD
 ECHO CODEDOM_RELEASE=%CODEDOM_RELEASE%
 
-SET EIFFEL_SRC=%CD%\checkout
+SET EIFFEL_SRC=%CD%\checkout\compiler
 ECHO EIFFEL_SRC=%EIFFEL_SRC%
 SET GOBO=%CD%\checkout\library\gobo
 ECHO GOBO=%GOBO%
 SET ECLOP=%CD%\checkout\eclop
 ECHO ECLOP=%ECLOP%
-SET PATH=%PATH%;%ISE_EIFFEL%\studio\spec\windows\bin
-ECHO PATH=%PATH%
 ECHO ***********************************
 
 ECHO Setting up folders
@@ -51,15 +48,26 @@ CALL build_codedom.bat
 IF "%CODEDOM_BUILT%"=="" GOTO END
 
 ECHO Building installer
-CD checkout\tools\silent_launcher
+CD checkout\head\tools\silent_launcher
 IF EXIST EIFGEN rd /q /s EIFGEN
 IF EXIST installer.epr del installer.epr
 SET ISE_CFLAGS=-D WINVER=0x500
-ec -finalize -c_compile -ace ace.codedom.ace
+"%2\studio\spec\windows\bin\ec" -finalize -c_compile -ace ace.codedom.ace
 IF NOT EXIST EIFGEN\F_Code\installer.exe ECHO Build failed, could not find EIFGEN\F_Code\installer.exe!!
 IF NOT EXIST EIFGEN\F_Code\installer.exe GOTO END
-COPY EIFGEN\F_Code\installer.exe ..\..\..\delivery
+COPY EIFGEN\F_Code\installer.exe ..\..\..\..\delivery
 
-CD ..\..\..
+CD ..\..\..\..
 :END
 ECHO Done.
+EXIT 0
+
+:USAGE
+ECHO                                                    .
+ECHO Usage: build.bat $ISE_EIFFEL55 $ISE_EIFFEL56       .
+ECHO --------------------------------------------       .
+ECHO                                                    .
+ECHO $ISE_EIFFEL55 is path to EiffelStudio 5.5 delivery .
+ECHO $ISE_EIFFEL56 is path to EiffelStudio 5.6 delivery .
+ECHO                                                    .
+

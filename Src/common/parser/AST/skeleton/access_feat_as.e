@@ -87,7 +87,7 @@ feature -- Comparison
 --			ctxt.put_current_feature;
 --		end
 
-feature {CREATION_EXPR_AS, CREATION_AS, ROUTINE_AS} -- Replication
+feature {CREATION_EXPR_AS, CREATION_AS, ROUTINE_AS, ROUTINE_CREATION_AS} -- Replication
 
 	set_feature_name (name: like feature_name) is
 		require

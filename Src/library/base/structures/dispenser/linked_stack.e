@@ -48,7 +48,7 @@ feature -- Access
 	item: G is
 			-- Item at the first position
 		require else
-			not empty
+			not_empty: not empty
 		do
 			check
 				before and not empty implies (active = first_element)

@@ -147,7 +147,7 @@ feature -- Recording Operation
 				list_class_type_id.put (l_class_static_type_id , a_class_token)
 			else
 				debug ("il_info_trace")
-					print (">> CONFLICT record_class_token : "+a_class_type.associated.name_in_upper+" <<%N")
+					print (">> CONFLICT record_class_token : "+a_class_type.associated_class.name_in_upper+" <<%N")
 					print ("  - key : class_token =" + a_class_token.to_hex_string + "%N")
 					print ("  - already           = " + list_class_type_id.item (a_class_token).out + "%N")
 					print ("  - replace           = " + l_class_static_type_id.out + "%N")
@@ -177,7 +177,9 @@ feature -- Recording Operation
 				list_feature_info.put (l_entry , a_feature_token)
 			else
 				debug ("il_info_trace")
-					print (">> CONFLICT record_feature_i <<%N")
+					print (">> CONFLICT record_feature_i : "+a_class_type.associated_class.name_in_upper
+							+"."+a_feature_i.feature_name
+							+" <<%N")
 					print ("  - key : feature_token =" + a_feature_token.to_hex_string + "%N")
 					print ("  - already             = " + list_feature_info.item (a_feature_token).out + "%N")
 					print ("  - replace             = " + l_entry.out + "%N")

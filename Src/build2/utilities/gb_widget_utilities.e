@@ -25,6 +25,22 @@ feature -- Basic operations
 			end	
 		end
 		
+	parent_dialog (widget: EV_WIDGET): EV_DIALOG is
+			-- `Result' is dialog parent of `widget'.
+			-- `Void' if none.
+		local
+			dialog: EV_DIALOG
+		do
+			dialog ?= widget.parent
+			if dialog = Void then
+				if widget.parent /= Void then
+					Result := parent_dialog (widget.parent)
+				end	
+			else
+				Result := dialog
+			end	
+		end
+		
 	x_position_relative_to_window (widget: EV_WIDGET): INTEGER is
 			-- `Result' is the x position of `widget' relative to
 			-- the EV_WINDOW containing `widget'.

@@ -21,6 +21,8 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	COMPILER_EXPORTER
 
 feature -- Access
 
@@ -56,7 +58,7 @@ feature -- Basic operations
 			l_index: INTEGER
 		do
 			create l_extracted_description.make (256)
-			if a_feature_i.is_il_external then
+			if a_feature_i.written_class.is_true_external then
 				l_extracted_description.append (external_signature (a_feature_i, a_feature_name))
 				l_external_class ?= a_feature_i.written_class.lace_class
 				check
@@ -157,6 +159,8 @@ feature -- Basic operations
 							create descriptor.make_with_class_i_and_feature_i (ci, fi)
 							descriptor.set_name (feature_name)
 							descriptors.put (descriptor, feature_name)
+						else
+							descriptors.found_item.increment_overload_count
 						end
 					end
 					table.forth
@@ -179,7 +183,7 @@ feature -- Basic operations
 			end
 		end
 
-	recursive_lookup (target_type: TYPE; targets: LIST [STRING]; feature_table: FEATURE_TABLE; exact_match: BOOLEAN): FEATURE_TABLE is
+	recursive_lookup (current_class: CLASS_I; target_type: TYPE; targets: LIST [STRING]; feature_table: FEATURE_TABLE; exact_match: BOOLEAN): FEATURE_TABLE is
 			-- Available features after resolution of `targets' in `target_type'
 		require
 			non_void_target_type : target_type /= Void
@@ -207,7 +211,7 @@ feature -- Basic operations
 					if l_type /= Void and then not l_type.is_void then 
 						targets.start
 						targets.remove
-						Result := recursive_lookup (l_type, targets, l_feature_table, exact_match)
+						Result := recursive_lookup (current_class, instantiated_type (current_class, l_cl_type, l_type), targets, l_feature_table, exact_match)
 					end					
 				end
 			end
@@ -354,6 +358,38 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
+	instantiated_type (a_class: CLASS_I; a_parent_type: CL_TYPE_A; a_type: TYPE): TYPE_A is
+			-- Instantiation of `a_type' in `a_parent_type' in the context of `a_class' assuming
+			-- `a_parent_type' is not void; otherwise only in the context of `a_class'.
+			--| FIXME: Should be replaced by factored code in compiler when it exists
+		require
+			a_class_not_void: a_class /= Void
+			a_class_compiled: a_class.is_compiled
+			a_type_not_void: a_type /= Void
+		local
+			a_formal: FORMAL_A
+			l_type: TYPE_A
+			l_gen_type: GEN_TYPE_A
+		do
+			l_type := a_type.actual_type
+			if a_parent_type = Void then
+				if l_type.is_formal then
+					a_formal ?= l_type
+					Result := a_class.compiled_class.constraint (a_formal.position)
+				else
+					Result := l_type.actual_type
+				end
+			else
+				Result := l_type.instantiated_in (a_parent_type)
+				if Result.is_formal then
+					a_formal ?= Result
+					Result := a_class.compiled_class.constraint (a_formal.position)
+				end
+			end
+		ensure
+			not_void: Result /= Void
+		end
+
 	wrapped (a_text: STRING; a_wrap_count: INTEGER): STRING is
 			-- Wrapped string based on `a_text' wrapped to `a_wrap_count' characters.
 		require
@@ -480,6 +516,7 @@ feature {NONE} -- Implementation
 	dotnet_arguments (a_feature: FEATURE_I): STRING is
 			-- List of .NET argument types or empty if no arguments
 			-- Format: (System.String,System.Int32)
+			-- Doesn't work for an argument of type NATIVE_ARRAY (Gives NATIVE_ARRAY instead of e.g. System.Char[])
 		require
 			non_void_feature: a_feature /= Void
 			external_feature: a_feature.is_il_external
@@ -493,13 +530,13 @@ feature {NONE} -- Implementation
 				l_args := a_feature.arguments
 				from
 					l_args.start
-					Result.append (l_args.item.actual_type.associated_class.external_class_name)
+					Result.append (l_args.item.actual_type.type_i.il_type_name (Void))
 					l_args.forth
 				until
 					l_args.after
 				loop
 					Result.append_character (',')
-					Result.append (l_args.item.actual_type.associated_class.external_class_name)
+					Result.append (l_args.item.actual_type.type_i.il_type_name (Void))
 					l_args.forth
 				end
 				Result.append (")")

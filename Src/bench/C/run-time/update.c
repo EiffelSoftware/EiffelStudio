@@ -11,6 +11,9 @@
 	Interpretor datas update primitives
 */
 
+/*
+doc:<file name="update.c" header="eif_update.h" version="$Id$" summary="Update runtime data with melted information.">
+*/
 
 #include "eif_portable.h"
 #include "eif_project.h"
@@ -28,7 +31,7 @@
 #endif
 
 #include "eif_macros.h"
-#include "eif_struct.h"
+#include "rt_struct.h"
 #include "eif_hashin.h"
 #include "eif_except.h"
 #include "eif_update.h"
@@ -51,9 +54,8 @@ rt_private void cecil_updt(void);			/* Cecil update */
 rt_private void parents_updt(void);			/* Partent table update */
 rt_private char **names_updt(short int count);		/* String array */
 rt_private void root_class_updt(void);		/* Update the root class info */
-rt_public long melt_count;				/* Size of melting table */
 
-/* Read information from byte code file `fil'. */
+/* Read information from byte code file `melted_file'. */
 rt_private void wread(char *buffer, size_t nbytes);
 rt_private EIF_INTEGER_16 wshort(void);
 rt_private int32 wint32(void);
@@ -68,8 +70,15 @@ rt_private void write_long(char *where, EIF_INTEGER value);				/* Write long con
 #define dprintf(n)	  if (DEBUG & (n)) printf
 /*#define DEBUG 3 */		/**/
 
-/* TEMPORARY */
-static FILE *fil;
+/*
+doc:	<attribute name="melted_file" return_type="FILE *" export="private">
+doc:		<summary>Access to melted file.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None since initialized only once in `update'.</synchronization>
+doc:	</attribute>
+*/
+rt_private FILE *melted_file;
 
 /* Perform safe allocation which raises an exception when not
  * possible 
@@ -93,6 +102,7 @@ rt_public void update(char ignore_updt)
 	char *filename;							/* .UPDT complet path */
 	long pattern_id;
 	long bonce_idx;
+	long melt_count;						/* Size of melting table */
 	fnptr *tmp_frozen;						/* Update of `egc_frozen' */
 /* %%ss bloc moved below*/
 
@@ -157,7 +167,7 @@ rt_public void update(char ignore_updt)
 	dprintf(1)("Reading .UPDT in: %s\n", filename);
 #endif
 
-	if ((fil = fopen(filename, "r")) == (FILE *) 0) {
+	if ((melted_file = fopen(filename, "r")) == (FILE *) 0) {
 		int err = errno;
 #ifdef EIF_VMS
 		if (err == EVMSERR) err = vaxc$errno;
@@ -174,7 +184,7 @@ rt_public void update(char ignore_updt)
 	wread(&c, 1);				/* Is there something to update ? */
 	if (c == '\0') {
 		init_desc();
-		fclose(fil);
+		fclose(melted_file);
 		eif_gen_conf_init (eif_par_table_size);
 		return;
 	}
@@ -304,7 +314,7 @@ rt_public void update(char ignore_updt)
 	desc_updt();
 
 /* TEMPORARY */
-fclose(fil);
+	fclose(melted_file);
 }
 
 rt_private void root_class_updt (void)
@@ -823,9 +833,9 @@ rt_public void desc_updt(void)
 rt_private void wread(char *buffer, size_t nbytes)
 {
 #ifdef DEBUG
-	dprintf(8)("Reading %d bytes at %d%\n", nbytes, ftell(fil));
+	dprintf(8)("Reading %d bytes at %d%\n", nbytes, ftell(melted_file));
 #endif
-	if (nbytes != fread(buffer, sizeof(char), nbytes, fil)) {
+	if (nbytes != fread(buffer, sizeof(char), nbytes, melted_file)) {
 		print_err_msg(stderr, "Error: could not read Eiffel update file\n");
 		exit(1);
 	}
@@ -939,3 +949,6 @@ rt_private void write_long(char *where, EIF_INTEGER value)
 	memcpy (where, &value, sizeof(EIF_INTEGER));
 }
 
+/*
+doc:</file>
+*/

@@ -71,6 +71,8 @@ cluster
 				end
 			ieiffel_exception_impl_stub
 				end
+			ieiffel_support_impl_stub
+				end
 			descriptions_enumerator
 				end
 			class_descriptor
@@ -140,6 +142,8 @@ cluster
 			definition_search_result
 				end
 			definition_search_result_feature
+				end
+			com_compiler_support
 				end
 		end
 

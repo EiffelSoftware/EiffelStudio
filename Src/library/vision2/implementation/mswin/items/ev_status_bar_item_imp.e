@@ -116,6 +116,22 @@ feature -- Status setting
 			parent_imp.set_child_owner_draw (Current, False)
 		end
 
+	--|FIXME implement as now pick and dropable
+
+	set_capture is
+		do
+			check
+				to_be_implemented: FALSE
+			end
+		end
+
+	release_capture is
+		do
+			check
+				to_be_implemented: FALSE
+			end
+		end
+
 feature {NONE}
 
 	interface: EV_STATUS_BAR_ITEM
@@ -143,6 +159,9 @@ end -- class EV_STATUS_BAR_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/03/10 00:31:20  rogers
+--| Added set_capture and release_Capture with a fixme and a check False so they compile. They ened to be fixed.
+--|
 --| Revision 1.15  2000/02/23 02:18:26  brendel
 --| Removed redefine of `set_text'. Added feature `text'.
 --|

@@ -72,6 +72,8 @@ inherit
 			on_mouse_move,
 			on_set_cursor,
 			on_size,
+			on_hide,
+			on_show,
 			on_move,
 			on_menu_command,
 			on_key_up,
@@ -192,7 +194,9 @@ feature -- Status setting
 		do
 			if width /= new_width or else height /= new_height then
 				manager_set_size (new_width, new_height)
-				map_widgets
+				if not mapping then
+					map_widgets
+				end
 			end
 		end
 
@@ -284,8 +288,8 @@ feature -- Element change
 			else
 				set_children_in_columns (c, largest_w)
 			end
-			mapping := False
 			set_enclosing_size
+			mapping := False
 		end
 
 feature {NONE} -- Implementation

@@ -1,5 +1,5 @@
 indexing
-	description: "Used internally in `create_process' from WEL_WINDOWS_ROUTINES."
+	description: "Information about a process."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"

@@ -51,7 +51,7 @@ void eif_beep (void)
 #ifdef EIF_WIN32
 	MessageBeep (MB_ICONEXCLAMATION);
 #else
-	printf ("\07");
+	fprintf (stderr, "\07");
 #endif
 }
 

@@ -9,13 +9,16 @@ class
 
 inherit
 	EV_PRINT_DIALOG_I
+		undefine
+			copy, is_equal
 		redefine
 			print_context
 		end
 
 	EV_STANDARD_DIALOG_IMP
 		undefine
-			internal_accept
+			internal_accept,
+			copy, is_equal
 		end
 
 	WEL_PRINT_DIALOG
@@ -29,6 +32,11 @@ inherit
 		end
 		
 	WEL_CAPABILITIES_CONSTANTS
+		export
+			{NONE} all
+		undefine
+			copy, is_equal
+		end
 
 create
 	make

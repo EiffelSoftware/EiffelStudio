@@ -10,10 +10,14 @@ class
 
 inherit
 	EV_FILE_SAVE_DIALOG_I
+		undefine
+			copy, is_equal
+		end
 
 	EV_FILE_DIALOG_IMP
 		undefine
-			internal_accept
+			internal_accept,
+			copy, is_equal
 		end
 
 	WEL_SAVE_FILE_DIALOG

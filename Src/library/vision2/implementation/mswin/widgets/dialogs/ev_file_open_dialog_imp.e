@@ -10,13 +10,16 @@ class
 
 inherit
 	EV_FILE_OPEN_DIALOG_I
+		undefine
+			copy, is_equal
 		redefine
 			interface
 		end
 
 	EV_FILE_DIALOG_IMP
 		undefine
-			internal_accept
+			internal_accept,
+			copy, is_equal
 		redefine
 			interface
 		end

@@ -8,7 +8,8 @@ inherit
 			execute as tab_execute,
 			count as size,
 			make as text_create,
-			lower as lower_window
+			lower as lower_window,
+			set_cursor_position as tab_text_set_cursor_position
 		undefine
 			copy, setup, consistent, is_equal
 		end;
@@ -357,11 +358,26 @@ feature {NONE}
 
 	highlight_selected (a, b: INTEGER) is
 			-- Highlight between `a' and `b' using reverse video.
+		require
+			first_fewer_than_last: a <= b
 		do
-			set_selection (a,b)
+			if b <= size then
+					-- Does not highlight if `b' is beyond the
+					-- bounds of the text.
+				set_selection (a,b)
+			end
 		end;
 
 feature 
+
+	set_cursor_position (a_position: INTEGER) is
+			-- Set `cursor_position' to `a_position' if the new position
+			-- is not out of bounds.
+		do
+			if a_position <= size then
+				tab_text_set_cursor_position (a_position)
+			end
+		end;
 
 	change_focus is
 			-- Change and highlight focus according to screen pointer position.

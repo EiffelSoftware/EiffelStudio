@@ -98,9 +98,8 @@ feature -- Basic operations
 			else
 				enable_modal
 			end
-
-			set_blocking_window (a_window)			
-			show
+				
+			show_relative_to_window (a_window)
 			block
 			set_blocking_window (Void)
 			
@@ -116,8 +115,8 @@ feature -- Basic operations
 	show_relative_to_window (a_window: EV_WINDOW) is
 			-- Show `Current' with respect to `a_window'.
 		do
-			set_blocking_window (a_window)			
 			show
+			set_blocking_window (a_window)
 		end
 
 feature {NONE} -- Implementation
@@ -136,7 +135,7 @@ feature {NONE} -- Implementation
 					if default_cancel_button.is_sensitive then
 							-- Escape key pressed and `default_cancel_button' is
 							-- sensitive so simulate a press.
-						default_cancel_button.select_actions.call ([])
+						default_cancel_button.select_actions.call (Void)
 					end
 	
 				elseif a_key_code = Key_constants.Key_enter and then
@@ -144,7 +143,7 @@ feature {NONE} -- Implementation
 					if current_push_button.is_sensitive and not current_push_button.has_focus then
 							-- Enter key pressed and `current_push_button' is
 							-- sensitive so simulate a press.
-						current_push_button.select_actions.call ([])
+						current_push_button.select_actions.call (Void)
 					end
 				end
 			end
@@ -175,7 +174,7 @@ feature {NONE} -- Implementation
 					--internal_default_cancel_button.is_displayed 
 					then
 						if internal_default_cancel_button.select_actions /= Void then
-							internal_default_cancel_button.select_actions.call ([])
+							internal_default_cancel_button.select_actions.call (Void)
 						end
 				end
 			end

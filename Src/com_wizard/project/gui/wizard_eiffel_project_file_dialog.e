@@ -182,16 +182,20 @@ feature {NONE} -- Implementation
 	Wizard_error: STRING is "Wizard error"
 			-- Wizard error message.
 
-	Invalid_destination_folder: STRING is "Invalid destination folder%NPlease enter a valid destination folder"
+	Invalid_destination_folder: STRING is "Invalid destination folder%N%
+					%Please enter a valid destination folder"
 			-- Invalid destination folder message.
 
-	Invalid_project_file: STRING is "Invalid project file%NPlease enter a valid definition file"
+	Invalid_project_file: STRING is "Invalid project file%N%
+					%Please enter a valid definition file"
 			-- Invalid destination folder message.
 
-	Empty_destination_folder: STRING is "Empty destination folder%NPlease enter a valid destination folder"
+	Empty_destination_folder: STRING is "Empty destination folder%N%
+					%Please enter a valid destination folder"
 			-- Invalid destination folder message
 
-	Empty_project_file: STRING is "Empty project file%NPlease enter a valid project file"
+	Empty_project_file: STRING is "Empty project file%N%
+					%Please enter a valid project file"
 			-- Invalid destination folder message.
 
 	Empty_ace_file: STRING is "Empty Ace file%NPlease enter a valid Ace file"
@@ -200,7 +204,8 @@ feature {NONE} -- Implementation
 	Empty_class_name: STRING is "Empty class name%NPlease enter a valid class name"
 			-- Invalid class name message.
 
-	Empty_cluster_name: STRING is "Empty cluster name%NPlease enter a valid cluster name"
+	Empty_cluster_name: STRING is "Empty cluster name%N%
+					%Please enter a valid cluster name"
 			-- Invalid cluster name message.
 
 	File_filters_descriptions: ARRAY [STRING] is

@@ -18,48 +18,48 @@
 		<paragraph>Convention dictates that Eiffel class names are always all upper case characters with words separated by the underscore ("_") character. Eiffel classes are not qualified by "namespace" as in some other languages. This means that Eiffel class names must be unique with in a system. It also means that any types from existing .NET assemblies will have their names mapped to conventional Eiffel class names in order to be used by Eiffel classes in ENViSioN!</paragraph>
 		<paragraph>Here are some class names and their descriptions from the Eiffel Base Library. These class names comply with the Eiffel class naming convention. </paragraph>
 		<code_block>
-STRING
+<class_name>STRING</class_name>
 
-Sequences of characters, accessible through integer indices in a contiguous range.
+	<comment>Sequences of characters, accessible through integer indices in a contiguous range.
+</comment>
+<class_name>RANDOM</class_name>
 
-RANDOM
+	<comment>Pseudo-random number sequence, linear congruential method.</comment>
 
-Pseudo-random number sequence, linear congruential method.
+<class_name>ARRAYED_LIST</class_name>
 
-ARRAYED_LIST
+	<comment>Lists implemented by resizable arrays.</comment>
 
-Lists implemented by resizable arrays.
+<class_name>LINKED_QUEUE</class_name>
 
-LINKED_QUEUE
-
-Unbounded queues implemented as linked lists.
-
+	<comment>Unbounded queues implemented as linked lists.
+</comment>
 </code_block>
 		<paragraph>Now here are some type names from the .NET mscorlib as they appear as conventional Eiffel class names (i.e. , in the form in which they become available to Eiffel for .NET programmers), followed by their full .NET type and their Summary from the .NET library. names. </paragraph>
 		<code_block>
-SYSTEM_STRING
+<class_name>SYSTEM_STRING</class_name>
 
-System.String
+<class_name>System.String</class_name>
 
-Represents an immutable series of characters.
+	<comment>Represents an immutable series of characters.</comment>
 
-SYSTEM_RANDOM
+<class_name>SYSTEM_RANDOM</class_name>
 
-System.Random
+<class_name>System.Random</class_name>
 
-Represents a pseudo-random number generator, a device that produces a sequence of numbers that meet certain statistical requirements for randomness.
+	<comment>Represents a pseudo-random number generator, a device that produces a sequence of numbers that meet certain statistical requirements for randomness.</comment>
 
-ARRAY_LIST
+<class_name>ARRAY_LIST</class_name>
 
-System.Collections.ArrayList
+<class_name>System.Collections.ArrayList</class_name>
 
-Implements the System.Collections.IListinterface using an array whose size is dynamically increased as required.
+	<comment>Implements the System.Collections.IListinterface using an array whose size is dynamically increased as required.</comment>
+<class_name>
+SYSTEM_QUEUE</class_name>
 
-SYSTEM_QUEUE
+<class_name>System.Collections.Queue</class_name>
 
-System.Collections.Queue
-
-Represents a first-in, first-out collection of objects.
+	<comment>Represents a first-in, first-out collection of objects.</comment>
 
 </code_block>
 		<paragraph>In summary, Eiffel class names and type names from .NET assemblies made available to Eiffel programmers will be all upper case, with words separated by the underscore character. </paragraph>
@@ -137,28 +137,28 @@ Represents a first-in, first-out collection of objects.
 		</paragraph>
 		<paragraph>Let's look at some simple examples. First some feature names from the Eiffel Base Library. </paragraph>
 		<code_block>
-to_upper
+<feature_name>to_upper</feature_name>
 
-From class STRING: Converts to upper case.
+	<comment>From class </comment><class_name>STRING</class_name><comment>: Converts to upper case.</comment>
 
-item_double
+<feature_name>item_double</feature_name>
 
-From class RANDOM: The current random number as a double between 0 and 1
+	<comment>From class</comment><class_name> RANDOM</class_name><comment>: The current random number as a double between 0 </comment>and 1
 
 </code_block>
 		<paragraph>Now check out these member names from the .NET "mscorlib" type library. These have been made available to Eiffel for .NET programmers in the Eiffel convention. Following the Eiffel name, you see their .NET member name and type name. </paragraph>
 		<code_block>
-to_upper
+<feature_name>to_upper</feature_name>
 
-Member ToUpper from type System.String
+	<comment>Member </comment><feature_name>ToUpper</feature_name><comment> from type</comment><class_name>System.String</class_name>
 
-Returns a new System.String with the same content as the target, except all upper case.
+	<comment>Returns a new <class_name>System.String</class_name> with the same content as the target, except all upper case.</comment>
 
-next_double
+<feature_name>next_double</feature_name>
 
-Member NextDouble from type System.Random
+	<comment>Member </comment><feature_name>NextDouble</feature_name><comment> from type</comment> <class_name>System.Random</class_name>
 
-A double-precision floating point number greater than or equal to 0.0, and less than 1.0.
+	<comment>A double-precision floating point number greater than or equal to 0.0, and less than 1.0.</comment>
 
 </code_block>
 		<paragraph>So, Eiffel feature names, and the names of .NET members made available to Eiffel for .NET programmers, are all lower case with words separated by underscores. </paragraph>
@@ -167,18 +167,18 @@ A double-precision floating point number greater than or equal to 0.0, and less 
 		</heading>
 		<paragraph>The .NET object model allows overloading of function names. This means that a .NET type can support multiple functions with the same name, that vary only by the types of the arguments they accept. For example, the .NET type System. Text. StringBuilder supports nineteen overloaded versions of the Append function. Here are a couple of examples, in their .NET forms: </paragraph>
 		<code_block>
-.NET function signature: Append(System.String)
+.NET function signature: <feature_name>Append</feature_name>(<class_name>System.String</class_name>)
 
-Member of type System.Text.StringBuilder
+Member of type <class_name>System.Text.StringBuilder</class_name>
 
-Appends a copy of the specified string to the end of this instance.
+	<comment>Appends a copy of the specified string to the end of this instance.</comment>
 
-.NET function signature: Append(System.Char)
+.NET function signature: <feature_name>Append</feature_name>(<class_name>System.Char</class_name>)
 
-Member of type System.Text.StringBuilder
+Member of type <class_name>System.Text.StringBuilder</class_name>
 
-Appends the string representation of a specified Unicode character to the end of this instance.
-
+	<comment>Appends the string representation of a specified Unicode character to the end of this instance.
+</comment>
 </code_block>
 		<paragraph>The Eiffel language does not allow 
 			<link>
@@ -195,21 +195,21 @@ Appends the string representation of a specified Unicode character to the end of
 			</code>.
 		</paragraph>
 		<code_block>
-.NET function signature: Append(System.String)
+.NET function signature: <feature_name>Append</feature_name>(<class_name>System.String</class_name>)
 
-Known to Eiffel as: append_string (value: SYSTEM_STRING)
+<comment>Known to Eiffel as: </comment><feature_name>append_string</feature_name> (value: <class_name>SYSTEM_STRING</class_name>)
 
-Member of type System.Text.StringBuilder, known to Eiffel as STRING_BUILDER
+<comment>Member of type</comment> <class_name>System.Text.StringBuilder</class_name>, known to Eiffel as <class_name>STRING_BUILDER</class_name>
 
-Appends a copy of the specified string to the end of this instance.
+	<comment>Appends a copy of the specified string to the end of this instance.</comment>
 
-.NET function signature: Append(System.Char)
+<comment>.NET function signature: </comment><feature_name>Append</feature_name>(<class_name>System.Char</class_name>)
 
-Known to Eiffel as: append_character (value: CHARACTER)
+<comment>Known to Eiffel as:</comment> <feature_name>append_character</feature_name> (value: <class_name>CHARACTER</class_name>)
 
-Member of type System.Text.StringBuilder, known to Eiffel as STRING_BUILDER
+<comment>Member of type</comment> <class_name>System.Text.StringBuilder</class_name><comment>, known to Eiffel as</comment> <class_name>STRING_BUILDER</class_name>
 
-Appends the string representation of a specified Unicode character to the end of this instance.
+	<comment>Appends the string representation of a specified Unicode character to the end of this instance.</comment>
 
 </code_block>
 		<paragraph>The overloading story does not end quite yet. The .NET object model allows the overloading of constructors. This issue will be discussed in the section 
@@ -355,16 +355,16 @@ Appends the string representation of a specified Unicode character to the end of
 			</code>.
 		</paragraph>
 		<code_block>
-local
-    my_window: WINFORMS_FORM
-    my_string: SYSTEM_STRING
-do
-    create my_window.make
-    my_window.set_text (my_window_title)      -- Set Text property
-    my_string := my_window.text               -- Query Text property
-        .
-        .
-end
+	<keyword>local</keyword>
+		<feature_name>my_window</feature_name><symbol>:</symbol> <class_name>WINFORMS_FORM</class_name>
+		<feature_name>my_string</feature_name><symbol>:</symbol> <class_name>SYSTEM_STRING</class_name>
+	<keyword>do</keyword>
+		<keyword>create</keyword> <feature_name>my_window</feature_name>.<feature_name>make</feature_name>
+		<feature_name>my_window</feature_name>.<feature_name>set_text</feature_name> <symbol>(</symbol><feature_name>my_window_title</feature_name><symbol>)</symbol>      -- Set Text property
+		<feature_name>my_string</feature_name> <symbol>:</symbol><symbol>=</symbol> <feature_name>my_window</feature_name>.<feature_name>text</feature_name>               -- Query Text property
+			.
+			.
+	<keyword>end</keyword>
 </code_block>
 		<heading>
 			<size>2</size>Static Features in .NET
@@ -379,16 +379,16 @@ end
 		</paragraph>
 		<paragraph>In order to use .NET types that include static members, a special syntax has been added into Eiffel for .NET. The following example uses this syntax to call a static function:</paragraph>
 		<code_block>
-local
-    my_window: WINFORMS_FORM
-do
-    create my_window.make
-    my_window.set_text (my_window_title)
-        .
-        .
-    feature {WINFORMS_APPLICATION}.run_form (my_window)
-end
-
+	<keyword>local</keyword>
+		<feature_name>my_window</feature_name><symbol>:</symbol> <class_name>WINFORMS_FORM</class_name>
+	<keyword>do</keyword>
+		<keyword>create</keyword> <feature_name>my_window</feature_name>.<feature_name>make</feature_name>
+		<feature_name>my_window</feature_name>.<feature_name>set_text</feature_name> <symbol>(</symbol><feature_name>my_window_title</feature_name><symbol>)</symbol>
+			.
+			.
+		<keyword>feature</keyword> <symbol>{</symbol><class_name>WINFORMS_APPLICATION</class_name><symbol>}</symbol><feature_name></feature_name>.<feature_name>run_form</feature_name> <symbol>(</symbol><feature_name>my_window</feature_name><symbol>)</symbol>
+	<keyword>end</keyword>
+	
 </code_block>
 		<paragraph>The type 
 			<code>
@@ -417,12 +417,12 @@ end
 		</paragraph>
 		<code_block>
 {
-    Form my_window;
-    my_window = new Form();
-    my_window.Text = "Hello World!";
-       .
-       .
-    Application.Run(my_window);           // This is C#
+	<class_name>Form</class_name> <feature_name>my_window</feature_name>;
+	<class_name>my_window</class_name> = <keyword>new</keyword> <feature_name>Form</feature_name>();
+	<feature_name>my_window.Text</feature_name> = "<string>Hello World!</string>";
+		.
+		.
+	<feature_name>Application.Run</feature_name>(<feature_name>my_window</feature_name>);          <comment> // This is C#</comment>
 }
 </code_block>
 	</paragraph></document>

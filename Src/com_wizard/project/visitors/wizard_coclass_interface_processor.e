@@ -39,6 +39,9 @@ feature -- Basic operations
 					coclass.source_interface_descriptors.forth
 				end
 			end
+
+			finished := True
+			clean_up
 		end
 
 	generate_interface_features (an_interface: WIZARD_INTERFACE_DESCRIPTOR) is
@@ -52,6 +55,18 @@ feature -- Basic operations
 			-- Generate source interface features.
 		require
 			non_void_interface: an_interface /= Void
+		deferred
+		end
+
+feature {NONE} -- Implementation
+
+	finished: BOOLEAN
+			-- Is processing finished?
+
+	clean_up is
+			-- Clean up.
+		require
+			finished: finished
 		deferred
 		end
 

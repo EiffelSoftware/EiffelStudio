@@ -73,6 +73,8 @@ feature -- Basic operations
 					not an_interface.inherited_interface.c_type_name.is_equal (Idispatch_type) then
 				generate_functions_and_properties (an_interface.inherited_interface)
 			end		
+			finished := True
+			clean_up
 		end
 
 	process_property (a_property: WIZARD_PROPERTY_DESCRIPTOR) is
@@ -90,9 +92,21 @@ feature -- Basic operations
 		deferred
 		end
 
+feature {NONE} -- Implementation
+
+	finished: BOOLEAN
+			-- Is processing finished?
+
+	clean_up is
+			-- Clean up.
+		require
+			finished: finished
+		deferred
+		end
+
 invariant
-	non_void_interface: interface /= Void
-	non_void_component: component /= Void
+	non_void_interface: not finished implies interface /= Void
+	non_void_component: not finished implies component /= Void
 
 end -- class WIZARD_COMPONENT_INTERFACE_GENERATOR
 

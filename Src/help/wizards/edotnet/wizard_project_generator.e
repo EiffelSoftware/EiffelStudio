@@ -41,11 +41,25 @@ feature -- Basic Operations
 			tuple.put (Root_class_name_template, 1)
 			tuple.put (wizard_information.root_class_name, 2)
 			map_list.extend (tuple)
+
+				-- Add the root class external name
+			create tuple.make
+			tuple.put (Root_class_external_name_template, 1)
+			tuple.put (wizard_information.root_class_external_name, 2)
+			map_list.extend (tuple)
+			
 				-- Add the creation routine name
 			create tuple.make
 			tuple.put (Creation_routine_name_template, 1)
 			tuple.put (wizard_information.creation_routine_name, 2)
 			map_list.extend (tuple)
+
+				-- Add the creation routine external name
+			create tuple.make
+			tuple.put (Creation_routine_external_name_template, 1)
+			tuple.put (wizard_information.creation_routine_external_name, 2)
+			map_list.extend (tuple)
+			
 				-- Add the external classes paths
 			create tuple.make
 			tuple.put (External_classes_template, 1)
@@ -375,13 +389,19 @@ feature {NONE} -- Constants
 
 	Application_type_template: STRING is "<FL_APPLICATION_TYPE>"
 			-- String to be replaced by the chosen application type
-	
+
+	Root_class_external_name_template: STRING is "<FL_ROOT_CLASS_EXTERNAL_NAME>"
+			-- String to be replaced by the chosen root class external name
+			
 	Root_class_name_template: STRING is "<FL_ROOT_CLASS_NAME>"
 			-- String to be replaced by the chosen root class name
 
 	Creation_routine_name_template: STRING is "<FL_CREATION_ROUTINE_NAME>"
 			-- String to be replaced by the chosen creation routine name
-	
+
+	Creation_routine_external_name_template: STRING is "<FL_CREATION_ROUTINE_EXTERNAL_NAME>"
+			-- String to be replaced by the chosen creation routine external name
+			
 	External_classes_template: STRING is "<FL_EXTERNAL_CLASSES>"	
 			-- String to be replaced by the paths to folders containing the Eiffel classes corresponding to the selected .NET assemblies
 	

@@ -81,6 +81,14 @@ feature -- Access
 			Result := cwel_tv_item_get_cchildren (item)
 		end
 
+	lparam: INTEGER is
+			-- Information about the lparam of the item
+		require
+			valid_member: lparam_is_valid
+		do
+			Result := cwel_tv_item_get_lparam (item)
+		end
+
 feature -- Status report
 
 	text_is_valid: BOOLEAN is
@@ -93,6 +101,12 @@ feature -- Status report
 			-- Is the structure member `state' valid?
 		do
 			Result := flag_set (mask, Tvif_state)
+		end
+
+	lparam_is_valid: BOOLEAN is
+			-- Is the structure member `lParam' valid?
+		do
+			Result := flag_set (mask, Tvif_param)
 		end
 
 	children_is_valid: BOOLEAN is
@@ -141,6 +155,14 @@ feature -- Element change
 			cwel_tv_item_set_state (item, a_state)
 		ensure
 			state_set: state = a_state
+		end
+
+	set_lparam (a_lparam: INTEGER) is
+			-- Set `a_lparam' as current `lparam'.
+		do
+			cwel_tv_item_set_lparam (item, a_lparam)
+		ensure
+			lparam_set: lparam = a_lparam
 		end
 
 	set_image (image_normal: INTEGER; image_selected: INTEGER) is

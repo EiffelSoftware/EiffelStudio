@@ -107,6 +107,9 @@ feature {NONE} -- Widgets
 	delete_button: EV_BUTTON
 			-- Button that lets the user delete an external command.
 
+	close_button: EV_BUTTON
+			-- Button to close dialog.
+
 	list: EV_LIST
 			-- List that represents the available external commands.
 
@@ -118,7 +121,6 @@ feature {NONE} -- Implementation
 			hb: EV_HORIZONTAL_BOX
 			vb: EV_VERTICAL_BOX
 			f: EV_FRAME
-			close_button: EV_BUTTON
 		do
 				-- Create widgets.
 			create dialog
@@ -181,6 +183,11 @@ feature {NONE} -- Implementation
 			add_button.select_actions.extend (agent add_command)
 			edit_button.select_actions.extend (agent edit_command)
 			delete_button.select_actions.extend (agent delete_command)
+			
+			if commands.has (Void) then
+					-- It is not full
+				dialog.show_actions.extend (agent add_button.set_focus)
+			end
 		end
 
 	destroy_dialog is
@@ -266,6 +273,7 @@ feature {NONE} -- Implementation
 			refresh_list
 			if not commands.has (Void) then
 				add_button.disable_sensitive
+				close_button.set_focus
 			end
 			update_edit_buttons
 		end
@@ -297,6 +305,7 @@ feature {NONE} -- Implementation
 			refresh_list
 			update_edit_buttons
 			add_button.enable_sensitive
+			add_button.set_focus
 		end
 
 	on_key (k: EV_KEY) is

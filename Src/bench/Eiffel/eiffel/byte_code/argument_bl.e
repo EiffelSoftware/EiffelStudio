@@ -45,7 +45,6 @@ feature
 			position := l.position;
 		end;
 
-	
 	analyze is
 			-- Compute an index in the local variable array if type is pointer
 		do

@@ -24,7 +24,7 @@ VGCC, chapter 18 (Creating objects), page 286
 
         3 If the Type part is present, the  type  that  it
           contains  (which is `T') conforms to the type of
-          `x', and is a reference type.
+          `x'.
 
         4 If `C' does not have a Creators part,  there  is
           no Creation_call part.

@@ -344,7 +344,7 @@ feature -- Duplication
 
 			// Add `obj' and associates it with `target' to
 			// resolve future references to `obj' into `target'.
-		traversed_objects.Add (obj, target);
+		traversed_objects.Add (target, obj);
 
 			// Performs deep traversal.
 		internal_deep_clone (target, obj, traversed_objects);

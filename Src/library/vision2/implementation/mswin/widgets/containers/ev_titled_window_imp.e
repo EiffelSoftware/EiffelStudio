@@ -90,6 +90,21 @@ feature -- Status report
 
 feature -- Status setting
 
+	raise is
+			-- Raise a window. ie: put the window on the front
+			-- of the screen.
+		do
+			set_z_order (hwnd_top)
+			set_focus
+		end
+
+	lower is
+			-- Lower a window. ie: put the window on the back
+			-- of the screen.
+		do
+			set_z_order (hwnd_bottom)
+		end
+
 	set_iconic_state is
 			-- Set start state of the application to be iconic.
 		do

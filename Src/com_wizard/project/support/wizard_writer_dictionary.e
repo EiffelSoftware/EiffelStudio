@@ -789,6 +789,8 @@ feature -- Generator constants -- 8
 	
 	Eif_eiffel_h: STRING is "eif_eiffel.h"
 
+	Eif_com_h: STRING is "eif_com.h"
+
 	Windows_h: STRING is "windows.h"
 
 	Objbase_h: STRING is "objbase.h"

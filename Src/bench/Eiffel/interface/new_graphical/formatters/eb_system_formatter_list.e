@@ -1,5 +1,7 @@
 indexing
-	description: "Objects that ..."
+	description:
+		"Implementation of EB_FORMAT_LIST for %
+			%the EiffelBench System Tool"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -116,12 +116,18 @@ feature -- Element change
 			-- If add `v' to end.
 			-- Do not move cursor.
 		do
+			if v.parent /= Void then
+				v.parent.prune (v)
+			end
 			add_to_container (v)
 		end
 
 	replace (v: like item) is
 			-- Replace current item by `v'.
 		do
+			if v.parent /= Void then
+				v.parent.prune (v)
+			end
 			remove
 			add_to_container (v)
 			reorder_child (v, index)
@@ -131,6 +137,9 @@ feature -- Element change
 			-- Add `v' to beginning.
 			-- Do not move cursor.
 		do
+			if v.parent /= Void then
+				v.parent.prune (v)
+			end
 			add_to_container (v)
 			reorder_child (v, 1)
 			index := index + 1
@@ -140,10 +149,12 @@ feature -- Element change
 			-- Add `v' to the right of cursor position.
 			-- Do not move cursor.
 		do
+			if v.parent /= Void then
+				v.parent.prune (v)
+			end
 			add_to_container (v)
 			reorder_child (v, index + 1)
 		end
-
 
 feature -- Removal
 
@@ -268,6 +279,10 @@ end -- class EV_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.18  2000/03/15 17:07:50  brendel
+--| Before every put/extend/replace, removes item from its old parent, if
+--| not Void.
+--|
 --| Revision 1.17  2000/03/15 00:54:48  king
 --| Indenting
 --|

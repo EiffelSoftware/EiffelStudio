@@ -37,8 +37,8 @@
 #include "eif_misc.h"
 #include "eif_file.h"
 #include "eif_err_msg.h"
-#include "eif_dle.h"
 #include "eif_main.h"
+#include "eif_dle.h"
 
 #ifdef DEBUG
 #include "eif_interp.h"					/* For idump() */
@@ -161,9 +161,6 @@ rt_public void update(char ignore_updt)
 		/* Get the Eiffel profiler status */
 	egc_prof_enabled = wlong();
 
-	dle_level = wlong();		/* DLE: Read the new value of DLE level */
-	dle_zeroc = dle_level;		/* DLE: New value of DLE frozen level */
-
 	/* Allocation of variable `esystem' */
 #if CONCURRENT_EIFFEL
 	esystem = (struct cnode *) cmalloc((count+1) * sizeof(struct cnode));
@@ -192,7 +189,7 @@ rt_public void update(char ignore_updt)
 	 * types to dynamic types. This table should be updated when melting the
 	 * system. Now it assumes that the number of static and dynamic types are
 	 * equal and that static and dynamic types for melted types are equal.
-	 * See also the FIXMEs in class SYSTEM_I and dle.c
+	 * See also the FIXMEs in class SYSTEM_I
 	 */
 
 	scount = count;

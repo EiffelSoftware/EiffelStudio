@@ -32,13 +32,6 @@
 #include <stdio.h>
 
 
-#if defined EIF_VMS && defined WORKBENCH
-    /* force VMS linker to pull in DLE module */
-#include "eif_dle.h"
-static void dunsel()	/* this will never be called */
-{   dle_reclaim();  }
-#endif  /* EIF_VMS && WORKBENCH  */
-
 /*
  * Various casts.
  */

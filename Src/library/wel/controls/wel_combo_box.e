@@ -77,6 +77,13 @@ feature -- Access
 			positive_result: Result >= 0
 		end
 
+feature -- Status report
+
+	get_text_limit: INTEGER is
+			-- Return the maximum text length.
+		do
+		end
+
 feature -- Basic operations
 
 	find_string (index: INTEGER; a_string: STRING): INTEGER is

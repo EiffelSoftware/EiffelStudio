@@ -29,11 +29,11 @@ creation
 
 feature -- Initialization
 
-	make (a_screen: SCREEN; i: INTEGER) is
+	make (a_screen: SCREEN) is
 			-- Initialize Current.
 		do
-			mgr_make (a_screen, i);
-			Object_tool_resources.add_user (Current)
+			mgr_make (a_screen);
+			Object_resources.add_user (Current)
 		end
 
 

@@ -14,6 +14,12 @@ inherit
 creation
 
 	make
+
+feature
+
+	gogogo: BUILD_LIC;
+	gagaga: ISE_LICENCE;
+	gigigi: LIMAN_R;
 	
 feature 
 

@@ -170,7 +170,6 @@ feature {NONE} -- Windows message handling
 			exists: exists
 		local
 			paint_dc: WEL_PAINT_DC
-			wel_rect: WEL_RECT
 		do
 			create paint_dc.make_by_pointer (Current, cwel_integer_to_pointer(wparam))
 			paint_dc.get
@@ -312,6 +311,7 @@ feature {NONE} -- Constants
 		end
 
 invariant
-	valid_splitter_position: splitter_position >= 0 and splitter_position <= width
+	valid_splitter_position: exists implies 
+		(splitter_position >= 0 and splitter_position <= width)
 
 end -- class WEL_SPLIT_AREA

@@ -54,10 +54,12 @@ feature
 
 	file_name: STRING is
 			-- File where the help is
+		local
+			fn: FILE_NAME
 		do
-			!!Result.make (50);
-			Result.append (help_path);
-			Result.append (code)
+			!! fn.make_from_string (help_path);
+			fn.set_file_name (code);
+			Result := fn
 		end;
 
 	set_file_name (s: STRING) is do end;

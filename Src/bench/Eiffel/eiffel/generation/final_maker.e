@@ -115,7 +115,6 @@ feature
 				cecil_basket.extend ("gen_conf.o"); cecil_basket.finish
 				cecil_basket.extend ("eif_type_id.o"); cecil_basket.finish
 				cecil_basket.extend ("rout_obj.o"); cecil_basket.finish
-				cecil_basket.extend ("eif_once.o"); cecil_basket.finish
 				cecil_basket.extend ("eif_project.o"); cecil_basket.finish
 				cecil_basket.extend ("eif_special_table.o"); cecil_basket.finish
 			else
@@ -165,7 +164,6 @@ feature
 				cecil_basket.extend ("MTgen_conf.o"); cecil_basket.finish
 				cecil_basket.extend ("MTeif_type_id.o"); cecil_basket.finish
 				cecil_basket.extend ("MTrout_obj.o"); cecil_basket.finish
-				cecil_basket.extend ("MTeif_once.o"); cecil_basket.finish
 				cecil_basket.extend ("MTeif_project.o"); cecil_basket.finish
 				cecil_basket.extend ("MTeif_special_table.o"); cecil_basket.finish
 			end

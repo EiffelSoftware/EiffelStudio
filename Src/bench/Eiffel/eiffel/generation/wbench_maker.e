@@ -97,7 +97,6 @@ feature
 				cecil_basket.extend ("wgen_conf.o"); cecil_basket.finish
 				cecil_basket.extend ("weif_type_id.o"); cecil_basket.finish
 				cecil_basket.extend ("wrout_obj.o"); cecil_basket.finish
-				cecil_basket.extend ("eif_once.o"); cecil_basket.finish
 				cecil_basket.extend ("weif_project.o"); cecil_basket.finish
 				cecil_basket.extend ("eif_special_table.o"); cecil_basket.finish
 			else
@@ -152,7 +151,6 @@ feature
 				cecil_basket.extend ("MTwgen_conf.o"); cecil_basket.finish
 				cecil_basket.extend ("MTweif_type_id.o"); cecil_basket.finish
 				cecil_basket.extend ("MTwrout_obj.o"); cecil_basket.finish
-				cecil_basket.extend ("MTeif_once.o"); cecil_basket.finish
 				cecil_basket.extend ("MTweif_project.o"); cecil_basket.finish
 				cecil_basket.extend ("MTeif_special_table.o"); cecil_basket.finish
 			end

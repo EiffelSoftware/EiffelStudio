@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"List of text items as a result of formatting ast structures.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class STRUCTURED_TEXT
 
 inherit
@@ -7,8 +14,8 @@ inherit
 			{NONE}
 				all;
 			{ANY}
-				cursor, start, forth, after, item, last, empty,
-				finish, off, go_i_th, index, extend, wipe_out
+				cursor, start, forth, after, item, empty,
+				finish, wipe_out, islast, first_element, last
 		end;
 	SHARED_RESCUE_STATUS
 
@@ -16,28 +23,39 @@ creation
 
 	make
 
-feature
+feature -- Element change
 
 	add (v: like item) is
+			-- Add item `v' to end.
+		require
+			at_end: not empty implies islast
 		do
-			finish;
 			put_right (v);
-			forth;
+			finish;
+		ensure
+			at_end: islast
 		end;
 
-	insert (pos: CURSOR; v: like item) is
+	insert_two (cur: CURSOR; v1, v2: like item) is
+			-- Insert at cursor position `cur' item `v1'
+			-- and `v2'.
 		do
-			go_to (pos);
-			put_right (v);
+			go_to (cur);
+			put_right (v2);
+			put_right (v1);
 			finish;
+		ensure
+			at_end: islast
 		end; 
 
 	cursor_out: BOOLEAN;	
 
 	head (pos: CURSOR) is
+			-- List until `pos'.
 		do
-			if not cursor_out then -- cursor no more in list
-								-- no easy way to test. use the exception	
+			if not cursor_out then 
+					-- cursor no more in list
+					-- no easy way to test. Use the exception.
 				go_to (pos);
 				if before then
 					wipe_out
@@ -47,10 +65,11 @@ feature
 				if not after then
 					split (count);
 					remove_sublist
-				end
+				end;
 			else
 				cursor_out := False
 			end;
+			finish;
 		rescue
 			if Rescue_status.is_unexpected_exception then
 				if not cursor_out then
@@ -61,26 +80,19 @@ feature
 		end;
 
 	image: STRING is
-			-- raw text. Result is created for each call
+			-- Raw text. Result is created for each call
 		local
-			s: STRING
+			linkable: LINKABLE [TEXT_ITEM]
 		do
-			!!Result.make (0);
+			!! Result.make (0);
 			from
-				start
+				linkable := first_element
 			until
-				after	
+				linkable = Void
 			loop
-				s := item.image;
-				if s /= void then
-					Result.append (s);
-				end;
-				forth
+				Result.append (linkable.item.image);
+				linkable := linkable.right;
 			end;
 		end;
 
-end
-
-
-
-			
+end -- class STRUCTURED_TEXT

@@ -89,7 +89,7 @@ feature
 			Result := context_editors_list.editor
 		end;
 
-	display (ed: TOP_SHELL) is
+	display (ed: EB_TOP_SHELL) is
 			-- Display `ed' (or raise `ed' if already
 			-- displayed).
 		do
@@ -104,7 +104,7 @@ feature
 			end		
 		end;
 
-	close (ed: TOP_SHELL) is
+	close (ed: EB_TOP_SHELL) is
 			-- Close `ed'. 
 		local
 		 	s_ed: STATE_EDITOR;

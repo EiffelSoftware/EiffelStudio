@@ -445,7 +445,7 @@ feature -- Duplication
 		do
 			if other /= Current then
 				standard_copy (other)
-				set_area (standard_clone (other.area))
+				set_area (other.area.standard_twin)
 			end
 		ensure then
 			equal_areas: area.is_equal (other.area)

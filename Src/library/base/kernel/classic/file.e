@@ -178,7 +178,7 @@ feature -- Access
 			-- Collected information about the file.
 		do
 			set_buffer
-			Result := clone (buffered_file_info)
+			Result := buffered_file_info.twin
 		end
 
 	inode: INTEGER is

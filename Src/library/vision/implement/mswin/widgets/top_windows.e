@@ -29,18 +29,9 @@ inherit
 			make as main_window_manager_make
 		end
 
-feature -- Initialization			
-
-	make (a_top: TOP) is
-			-- Create a top window			
-		do
-			!! private_attributes
-			private_title := a_top.identifier
-		end
-
 feature -- Status setting
 
-    	destroy (wid_list: LINKED_LIST [WIDGET]) is
+   	destroy (wid_list: LINKED_LIST [WIDGET]) is
     			-- Destroy screen widget implementation and all
     			-- screen widget implementations of its children
     			-- contained in wid_list
@@ -213,6 +204,9 @@ feature {NONE} -- Implementation
 	private_iconic_state: BOOLEAN
 			-- Implementation of iconic state
 
+	class_icon: WEL_ICON;
+			-- Icon for top window
+
 	default_style: INTEGER is
 			-- Default style used to create the window
 		do
@@ -222,7 +216,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	class_icon: WEL_NULL_ICON is
+	null_class_icon: WEL_NULL_ICON is
 			-- Icon for drawing icon
 		once
 			!! Result

@@ -37,6 +37,8 @@ feature -- Basic operations
 			has_selection: has_selection
 		do
 			cwin_send_message (item, Wm_cut, 0, 0)
+		ensure
+			has_no_selection: not has_selection
 		end
 
 	clip_copy is
@@ -47,13 +49,12 @@ feature -- Basic operations
 		do
 			cwin_send_message (item, Wm_copy, 0, 0)
 		end
-	
+
 	clip_paste is
 			-- Paste at the current caret position the
 			-- content of the clipboard.
 		require
 			exists: exists
-			has_selection: has_selection
 		do
 			cwin_send_message (item, Wm_paste, 0, 0)
 		end
@@ -69,13 +70,53 @@ feature -- Basic operations
 			cwin_send_message (item, Em_undo, 0, 0)
 		end
 
-	clear_selection is
+	delete_selection is
 			-- Delete the current selection.
 		require
 			exists: exists
 			has_selection: has_selection
 		do
 			cwin_send_message (item, Wm_clear, 0, 0)
+		ensure
+			has_no_selection: not has_selection
+		end
+
+	select_all is
+			-- Select all the text.
+		require
+			exists: exists
+		do
+			cwin_send_message (item, Em_setsel, 0, -1)
+		ensure
+			has_selection: has_selection
+			selection_start_set: selection_start = 0
+			selection_end_set: selection_end = text_length
+		end
+
+	unselect is
+			-- Unselect the current selection.
+		require
+			exists: exists
+			has_selection: has_selection
+		do
+			cwin_send_message (item, Em_setsel, -1, 0)
+		ensure
+			has_no_selection: not has_selection
+		end
+
+	replace_selection (new_text: STRING) is
+			-- Replace the current selection with `new_text'.
+			-- If there is no selection, `new_text' is inserted
+			-- at the current `caret_position'.
+		require
+			exists: exists
+			new_text_not_void: new_text /= Void
+		local
+			a: ANY
+		do
+			a := new_text.to_c
+			cwin_send_message (item, Em_replacesel, 0,
+				cwel_pointer_to_integer ($a))
 		end
 
 feature -- Status setting
@@ -126,30 +167,40 @@ feature -- Status setting
 		require
 			exists: exists
 			start_large_enough: start_position >= 0
-			consistent_selection: start_position <= end_position
+			consistent_selection: start_position < end_position
 			end_small_enough: end_position <= text_length
 		do
 			cwel_set_selection_edit (item, start_position,
-				end_position)
+				end_position, False)
 		ensure
 			has_selection: has_selection
 			selection_start_set: selection_start = start_position
 			selection_end_set: selection_end = end_position
 		end
 
-	select_all is
-			-- Select all the text.
+	set_caret_position (position: INTEGER) is
+			-- Set the caret position with `position'.
 		require
 			exists: exists
+			position_large_enough: position >= 0
+			position_small_enough: position <= text_length
 		do
-			cwin_send_message (item, Em_setsel, 0, -1)
+			cwel_set_selection_edit (item, position, position, False)
 		ensure
-			has_selection: has_selection
-			selection_start_set: selection_start = 0
-			selection_end_set: selection_end = text_length
+			has_no_selection: not has_selection
+			caret_position_set: caret_position = position
 		end
 
 feature -- Status report
+
+	caret_position: INTEGER is
+			-- Caret position
+		require
+			exists: exists
+		do
+			Result := cwin_hi_word (cwin_send_message_result (item,
+				Em_getsel, 0, 0))
+		end
 
 	has_selection: BOOLEAN is
 			-- Has a current selection?
@@ -157,7 +208,9 @@ feature -- Status report
 			exists: exists
 		do
 			Result := cwin_lo_word (cwin_send_message_result (item,
-				Em_getsel, 0, 0)) >= 0
+				Em_getsel, 0, 0)) /=
+				cwin_hi_word (cwin_send_message_result (item,
+				Em_getsel, 0, 0))
 		end
 
 	selection_start: INTEGER is
@@ -170,7 +223,7 @@ feature -- Status report
 				Em_getsel, 0, 0))
 		ensure
 			result_large_enough: Result >= 0
-			result_small_enough: Result <= text.count
+			result_small_enough: Result <= text_length
 		end
 
 	selection_end: INTEGER is
@@ -183,7 +236,7 @@ feature -- Status report
 				Em_getsel, 0, 0))
 		ensure
 			result_large_enough: Result >= 0
-			result_small_enough: Result <= text.count
+			result_small_enough: Result <= text_length
 		end
 
 	can_undo: BOOLEAN is
@@ -279,6 +332,19 @@ feature {NONE} -- Notifications
 		do
 		end
 
+feature -- Obsolete
+
+	clear_selection is obsolete "Use `delete_selection''"
+			-- Delete the current selection.
+		require
+			exists: exists
+			has_selection: has_selection
+		do
+			delete_selection
+		ensure
+			has_no_selection: not has_selection
+		end
+
 feature {NONE} -- Implementation
 
 	process_notification (notification_code: INTEGER) is
@@ -315,10 +381,20 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	cwel_set_selection_edit (hwnd: POINTER; start_pos, end_pos: INTEGER) is
+	cwel_set_selection_edit (hwnd: POINTER; start_pos, end_pos: INTEGER;
+			scroll_caret: BOOLEAN) is
 		external
 			"C [macro <wel.h>]"
 		end
+
+invariant
+	consistent_selection: exists and then has_selection implies
+		selection_start >= 0 and then selection_start <= text_length and then
+		selection_end >= 0 and then selection_end <= text_length and then
+		selection_start < selection_end
+
+	valid_caret_position: exists implies caret_position >= 0 and then
+		caret_position <= text_length
 
 end -- class WEL_EDIT
 

@@ -126,7 +126,7 @@ feature -- Element change
 		require
 			exists: not destroyed	
 			valid_text: txt /= Void
-			is_editable: is_editable
+--			is_editable: is_editable
 		do
 			implementation.set_text (txt)
 		ensure

@@ -654,8 +654,8 @@ feature -- Element change
 		end;
 
 	infix "+" (s: STRING): STRING is
-		-- Append a copy of 's' at the end of a copy of Current,
-		-- Then return the Result.
+			-- Append a copy of 's' at the end of a copy of Current,
+			-- Then return the Result.
 		require
 			argument_not_void: s /= Void	
 		do

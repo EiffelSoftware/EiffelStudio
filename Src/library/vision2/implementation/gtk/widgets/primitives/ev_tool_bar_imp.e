@@ -16,25 +16,44 @@ inherit
 		end
 
 	EV_ITEM_HOLDER_IMP
+	
 
 create
 	make,
-	make_with_size
+	make_with_size,
+	make_with_height
 
 feature {NONE} -- Implementation
 
 	make is
 			-- Create the tool-bar.
 		do
-			widget := c_gtk_toolbar_new_horizontal
-			gtk_object_ref (widget)
-			gtk_toolbar_set_tooltips (widget, FALSE)
-			-- Create the child list
-			create ev_children.make (0)
+			tool_bar_make
+			button_width := -1
+			button_height := -1
 		end
 
 	make_with_size (w, h: INTEGER) is
 			-- Create the tool-bar with `par' as parent.
+		do
+			tool_bar_make
+			-- Set the width and height
+			button_width := w
+			button_height := h
+			gtk_toolbar_set_space_size (widget, 10)
+		end
+
+	make_with_height (h: INTEGER) is
+			-- Create the tool-bar with all items set to height h
+		do
+			tool_bar_make
+			button_width := -1
+			button_height := h
+			gtk_container_set_border_width (widget, 2)
+		end
+
+	tool_bar_make is
+			-- Abstraction from all three make routines
 		do
 			widget := c_gtk_toolbar_new_horizontal
 			gtk_object_ref (widget)
@@ -42,11 +61,8 @@ feature {NONE} -- Implementation
 
 			-- Create the child list
 			create ev_children.make (0)
-
-			-- Set the width and height
-			button_width := w
-			button_height := h
 		end
+
 
 feature -- Element change
 
@@ -60,16 +76,33 @@ feature -- Element change
 			clear_ev_children		
 		end
 
+	append_space is
+		do
+			gtk_toolbar_append_space(widget)
+		end
+
 feature -- Implementation
 
 	button_width, button_height: INTEGER
 		-- User set default button dimensions.
 
+	toolbar_size: INTEGER
+
 	resize_button (item_imp: EV_TOOL_BAR_BUTTON_IMP) is
 		-- Set the button dimensions to that set by user.
 		do
-			if button_width > 0 then
+			
+			if item_imp.height > toolbar_size then
+				toolbar_size := item_imp.height
+				set_height (toolbar_size)
+			end
+				
+			if button_width >= 0 then
 				item_imp.set_minimum_width(button_width)
+				item_imp.set_minimum_height(button_height)
+			end
+
+			if button_width = -1 and button_height >= 0 then
 				item_imp.set_minimum_height(button_height)
 			end
 		end

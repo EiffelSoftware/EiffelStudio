@@ -75,10 +75,10 @@ feature -- Access
 			end
 		end
 		
-	item_by_data (data: ANY): G is
+	retrieve_item_by_data (data: ANY; should_compare_objects: BOOLEAN): G is
 			-- `Result' is first item in `Current' with data
-			-- matching `some_data'. Comparison is based on
-			-- `object_comparison'.
+			-- matching `some_data'. Compare objects if
+			-- `should_compare_objects' otherwise compare references.
 		local
 			c: CURSOR
 		do
@@ -87,10 +87,10 @@ feature -- Access
 				interface.start
 			until
 				interface.after or Result /= Void
-			loop
-				if (interface.object_comparison and then (data = Void and then item.data = Void) or
+			loop		
+				if (should_compare_objects and then (data = Void and then item.data = Void) or
 				data /= void and item.data /= Void and then data.same_type (item.data) and then data.is_equal (item.data))
-				or (not interface.object_comparison and data = item.data) then
+				or (not should_compare_objects and data = item.data) then
 					Result := item
 				end
 				interface.forth
@@ -98,10 +98,10 @@ feature -- Access
 			go_to (c)
 		end
 		
-	items_by_data (data: ANY): ARRAYED_LIST [G] is
+	retrieve_items_by_data (data: ANY; should_compare_objects: BOOLEAN): ARRAYED_LIST [G] is
 			-- `Result' is all items in `Current' with data
-			-- matching `some_data'. Comparison is based on
-			-- `object_comparison'.
+			-- matching `some_data'. Compare objects if
+			-- `should_compare_objects' otherwise compare references.
 		local
 			c: CURSOR
 		do
@@ -112,9 +112,9 @@ feature -- Access
 			until
 				interface.after
 			loop
-				if (interface.object_comparison and then (data = Void and then item.data = Void) or
+				if (should_compare_objects and then (data = Void and then item.data = Void) or
 					data /= void and item.data /= Void and then data.same_type (item.data) and then data.is_equal (item.data))
-					or (not interface.object_comparison and data = item.data) then
+					or (not should_compare_objects and data = item.data) then
 					Result.extend (item)
 				end
 				interface.forth

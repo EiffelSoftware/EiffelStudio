@@ -139,7 +139,11 @@ rt_public void run_idr_init (long idrf_size, int type)
 
 	run_idr_read_func = run_idr_read;
 
-	if (-1 == run_idrf_create (idrf_size))
+		/* Because we might mark the first `n' bytes of the buffer (see above
+		 * instruction), we need to make sure that we have enough allocated memory
+		 * to read or store `idrf_buffer_size' bytes.
+		 */
+	if (-1 == run_idrf_create (idrf_size + sizeof(int32)))
 		eraise ("cannot allocate idrf", EN_MEM);
 
 		/* Reset amount_read */
@@ -151,12 +155,6 @@ rt_public void run_idr_init (long idrf_size, int type)
 	if (type) {
 		run_idr_setpos (&idrf.i_encode, sizeof(int32));
 	}
-
-		/* Because we might mark the first `n' bytes of the buffer (see above
-		 * instruction), we need to make sure that both storable and retrieval
-		 * will use the same buffer size, so we substract `n' to original
-		 * value of `idrf_buffer_size'. */
-	idrf_buffer_size = idrf_buffer_size - sizeof(int32);
 }
 
 rt_public void run_idr_destroy (void)

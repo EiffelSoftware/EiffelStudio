@@ -21,12 +21,7 @@ feature
 			Result := error_window
 		end
 
-    Generate_window: DEGREE_OUTPUT is
-		once
-			!! Result
-		end
-
-    Reverse_engineering_window: DEGREE_OUTPUT is
+	Progress_dialog: DEGREE_OUTPUT is
 		once
 			!! Result
 		end

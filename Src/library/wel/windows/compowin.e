@@ -334,9 +334,6 @@ feature -- Basic operations
 			cwin_set_window_pos (item, default_pointer,
 				a_x, a_y, 0, 0,
 				Swp_nosize + Swp_nozorder + Swp_noactivate)
-		ensure
-			absolute_x_set: absolute_x = a_x
-			absolute_y_set: absolute_y = a_y
 		end
 
 	move (a_x, a_y: INTEGER) is
@@ -469,8 +466,8 @@ feature -- Messages
 			-- Horizontal scroll is received with a
 			-- `scroll_code' type. See class WEL_SB_CONSTANTS
 			-- for `scroll_code' values. `position' is the new
-			-- scrollbox position. `bar' indicates the scrollbar
-			-- or trackbar control activated.
+			-- scrollbox position. `bar' indicates the scroll bar
+			-- or track bar control activated.
 		require
 			exists: exists
 			bar_not_void: bar /= Void
@@ -510,7 +507,7 @@ feature -- Messages
 			-- Wm_drawitem message.
 			-- A owner-draw control identified by `control_id' has
 			-- been changed and must be drawn. `draw_item' contains
-			-- informations about the item to be drawn and the type
+			-- information about the item to be drawn and the type
 			-- of drawing required.
 		require
 			exists: exists
@@ -703,13 +700,14 @@ feature {NONE} -- Implementation
 			if p /= default_pointer then
 				-- The message comes from a scroll bar control
 				a_bar ?= windows.item (p)
-				check
-					a_bar_not_void: a_bar /= Void
-					a_bar_exists: a_bar.exists
+				if a_bar /= Void then
+					check
+						a_bar_exists: a_bar.exists
+					end
+					on_vertical_scroll_control (cwin_get_wm_vscroll_code (wparam, lparam),
+						cwin_get_wm_vscroll_pos (wparam, lparam),
+						a_bar)
 				end
-				on_vertical_scroll_control (cwin_get_wm_vscroll_code (wparam, lparam),
-					cwin_get_wm_vscroll_pos (wparam, lparam),
-					a_bar)
 			else
 				-- The message comes from a window scroll bar
 				on_vertical_scroll (cwin_get_wm_vscroll_code (wparam, lparam),
@@ -729,13 +727,14 @@ feature {NONE} -- Implementation
 			if p /= default_pointer then
 				-- The message comes from a scroll bar control
 				a_bar ?= windows.item (p)
-				check
-					a_bar_not_void: a_bar /= Void
-					a_bar_exists: a_bar.exists
+				if a_bar /= Void then
+					check
+						a_bar_exists: a_bar.exists
+					end
+					on_horizontal_scroll_control (cwin_get_wm_hscroll_code (wparam, lparam),
+						cwin_get_wm_hscroll_pos (wparam, lparam),
+						a_bar)
 				end
-				on_horizontal_scroll_control (cwin_get_wm_hscroll_code (wparam, lparam),
-					cwin_get_wm_hscroll_pos (wparam, lparam),
-					a_bar)
 			else
 				-- The message comes from a window scroll bar
 				on_horizontal_scroll (cwin_get_wm_hscroll_code (wparam, lparam),

@@ -224,7 +224,11 @@ feature {NONE} -- Implementation
 			else
 				tmp := process_list_selection (directory_list.selected_string)
 			end
-			if tmp.item (tmp.count) = '\' and tmp.count /= 3 then
+			if
+				tmp.item (tmp.count) = '\' or 
+				tmp.item (tmp.count) = '/'and
+				tmp.count /= 3
+			then
 				tmp.remove (tmp.count)
 			end
 			directory := tmp

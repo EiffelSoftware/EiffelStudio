@@ -303,7 +303,7 @@ feature {NONE} -- Implementation
 				if a_visitor.need_generate_ce then
 					Result.append (Generated_ce_mapper)
 				else
-					Result.append (Ce_mapper)
+					Result.append ("rt_ce")
 				end
 				Result.append (Dot)
 				Result.append (a_visitor.ce_function_name)
@@ -392,7 +392,7 @@ feature {NONE} -- Implementation
 				Result.append (Open_parenthesis)
 				Result.append (visitor.c_type)
 				Result.append (Close_parenthesis)
-				Result.append (Ec_mapper)
+				Result.append ("rt_ec")
 				Result.append (Dot)
 				Result.append (visitor.ec_function_name)
 				Result.append (Space_open_parenthesis)
@@ -419,7 +419,7 @@ feature {NONE} -- Implementation
 				if visitor.need_generate_ec then
 					Result.append (Generated_ec_mapper)
 				else
-					Result.append (Ec_mapper)
+					Result.append ("rt_ec")
 				end
 				Result.append (Dot)
 				Result.append (visitor.ec_function_name)
@@ -462,7 +462,7 @@ feature {NONE} -- Implementation
 				if visitor.need_generate_ce then
 					Result.append (Generated_ce_mapper)
 				else
-					Result.append (Ce_mapper)
+					Result.append ("rt_ce")
 				end
 				Result.append (Dot)
 				Result.append (visitor.ce_function_name)

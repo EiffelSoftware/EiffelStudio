@@ -290,9 +290,7 @@ feature {NONE} -- Implementation
 			elseif visitor.vt_type = Vt_bool then
 				Result.append ("EIF_BOOLEAN tmp_")
 				Result.append (arg_name)
-				Result.append (" = ")
-				Result.append (Ce_mapper)
-				Result.append (".")
+				Result.append (" = rt_ce.")
 				Result.append (visitor.ce_function_name)
 				Result.append (" (")
 				Result.append (arg_name)
@@ -312,7 +310,7 @@ feature {NONE} -- Implementation
 				if visitor.need_generate_ce then
 					Result.append (Generated_ce_mapper)
 				else
-					Result.append (Ce_mapper)
+					Result.append ("rt_ce")
 				end
 
 				Result.append (".")
@@ -390,7 +388,7 @@ feature {NONE} -- Implementation
 					if visitor.need_generate_ec then
 						Result.append (Generated_ec_mapper)
 					else
-						Result.append (Ec_mapper)
+						Result.append ("rt_ec")
 					end
 					Result.append (".")
 					Result.append (visitor.ec_function_name)
@@ -467,7 +465,7 @@ feature {NONE} -- Implementation
 					if visitor.need_generate_ec then
 						Result.append (Generated_ec_mapper)
 					else
-						Result.append (Ec_mapper)
+						Result.append ("rt_ec")
 					end
 					Result.append (Dot)
 					Result.append (visitor.ec_function_name)

@@ -44,17 +44,16 @@ feature -- Access
 			object_comparison_set: Result.object_comparison
 		end
 		
-	fonts: LINEAR [EV_FONT] is
-			-- All fonts available on current platform.
+	font_families: LINEAR [STRING] is
+			-- All fonts families available on current platform.
 		require
 			not_destroyed: not is_destroyed
 		do
-			Result := implementation.fonts
+			Result := implementation.font_families
 		ensure
 			Result_not_void: Result /= Void
 		end
-		
-		
+
 	mouse_wheel_scroll_lines: INTEGER is
 			-- Default number of lines to scroll in response to
 			-- a mouse wheel scroll event.

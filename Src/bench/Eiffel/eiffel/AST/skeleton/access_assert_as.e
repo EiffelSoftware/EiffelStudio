@@ -47,12 +47,12 @@ feature -- Access
 				Result := Result.actual_type.instantiation_in
 												(last_type, last_id)
 				if parameters /= Void then
-					!! vuar1
+					create vuar1
 					context.init_error (vuar1)
 					vuar1.set_arg_name (feature_name)
 					Error_handler.insert_error (vuar1)
 				end
-				!! argument_b
+				create argument_b
 				argument_b.set_position (argument_position)
 				context.access_line.insert (argument_b)
 			else
@@ -60,13 +60,13 @@ feature -- Access
 				local_info := context.locals.item (feature_name)
 				if local_info /= Void then
 						-- Local found
-					!! veen2b
+					create veen2b
 					context.init_error (veen2b)
 					veen2b.set_identifier (feature_name)
 					Error_handler.insert_error (veen2b)
 				else
 						-- Look for a feature
-					Result := {ACCESS_INV_AS} Precursor
+					Result := Precursor {ACCESS_INV_AS}
 				end
 			end
 		end

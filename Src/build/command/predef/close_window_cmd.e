@@ -16,7 +16,7 @@ creation
 
 feature 
 
-	eiffel_type: STRING is "Build_close_cmd";
+	eiffel_type: STRING is "BUILD_CLOSE_CMD";
 
 	label: STRING is "Close window";
 

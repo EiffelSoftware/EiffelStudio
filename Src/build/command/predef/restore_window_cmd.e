@@ -17,7 +17,7 @@ creation
 
 feature 
 
-	eiffel_type: STRING is "Build_restore_cmd";
+	eiffel_type: STRING is "BUILD_RESTORE_CMD";
 
 	label: STRING is "Restore";
 

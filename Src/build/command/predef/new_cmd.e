@@ -15,7 +15,7 @@ creation
 
 feature 
 
-	eiffel_type: STRING is "Build_new"
+	eiffel_type: STRING is "BUILD_NEW"
 
 	label: STRING is
 		do

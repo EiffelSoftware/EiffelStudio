@@ -12,7 +12,7 @@ creation
 
 feature 
 
-	eiffel_type: STRING is "Build_open";
+	eiffel_type: STRING is "BUILD_OPEN";
 
 	label: STRING is
 		do

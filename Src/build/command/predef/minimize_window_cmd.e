@@ -16,7 +16,7 @@ creation
 
 feature 
 
-	eiffel_type: STRING is "Build_minimize_cmd";
+	eiffel_type: STRING is "BUILD_MINIMIZE_CMD";
 
 	label: STRING is "Minimize";
 

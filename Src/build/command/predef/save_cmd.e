@@ -13,7 +13,7 @@ creation
 	
 feature 
 
-	eiffel_type: STRING is "Build_save";
+	eiffel_type: STRING is "BUILD_SAVE";
 
 	label: STRING is "Save";
 

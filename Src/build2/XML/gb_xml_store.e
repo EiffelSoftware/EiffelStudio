@@ -74,6 +74,11 @@ feature -- Basic operation
 			generation_settings: GB_GENERATION_SETTINGS
 			output_file: KL_TEXT_OUTPUT_FILE
 			last_string: KL_STRING_OUTPUT_STREAM
+			invalid_chars: HASH_TABLE [CHARACTER, CHARACTER]
+			dialog: EV_MESSAGE_DIALOG
+			warning_text: STRING
+			abort_saving: BOOLEAN
+			is_vs: BOOLEAN
 		do
 			create generation_settings
 			generation_settings.enable_is_saving
@@ -86,16 +91,60 @@ feature -- Basic operation
 			formater.set_output (last_string)
 			formater.process_document (document)
 			
-				-- Nicely format `last_string.string' to have indentation.
-			process_xml_string (last_string.string)
-					
-				-- Save nicely formatted XML ouput to disk in `filename'.
-			create output_file.make (filename)
-			output_file.open_write
-			output_file.put_string (xml_format)
-			output_file.put_string (last_string.string)
-			output_file.close
-			set_timed_status_text ("Saved.")
+
+				-- Check for invalid characters.
+				-- It is only possible to perform this at this stage, as the save file must have been generated
+				-- so that we have access to the text so we may search for invalid characters.
+			is_vs := visual_studio_information.is_visual_studio_wizard
+			invalid_chars := invalid_characters (last_string.string)
+			if not invalid_chars.is_empty then
+				clear_status_bar
+				if is_vs then
+					warning_text := vs_invalid_characters1.twin
+				else
+					warning_text := invalid_characters1.twin
+				end
+				from
+					invalid_chars.start
+				until
+					invalid_chars.off
+				loop
+					warning_text.append_character ('%'')
+					warning_text.append_character (invalid_chars.item_for_iteration)
+					warning_text.append_character ('%'')
+					invalid_chars.forth
+					if not invalid_chars.off then
+						warning_text.append (", ")
+					end
+				end
+				if is_vs then
+					warning_text.append (vs_invalid_characters2)
+					create {EV_INFORMATION_DIALOG} dialog.make_with_text (warning_text)
+				else
+					warning_text.append (invalid_characters2)
+					create {EV_CONFIRMATION_DIALOG} dialog.make_with_text (warning_text)
+				end
+				dialog.show_modal_to_window (main_window)
+				if dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
+					replace_invalid_characters (last_string.string)
+				else
+					abort_saving := True
+					set_timed_status_text ("Project save cancelled")
+				end
+			end
+			
+			if not abort_saving then
+					-- Nicely format `last_string.string' to have indentation.
+				process_xml_string (last_string.string)
+						
+					-- Save nicely formatted XML ouput to disk in `filename'.
+				create output_file.make (filename)
+				output_file.open_write
+				output_file.put_string (xml_format)
+				output_file.put_string (last_string.string)
+				output_file.close
+				set_timed_status_text ("Saved.")
+			end
 		end
 		
 	register_object_written_agent (an_agent: PROCEDURE [ANY, TUPLE [INTEGER, INTEGER]]) is

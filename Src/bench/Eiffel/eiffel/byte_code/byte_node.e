@@ -68,7 +68,7 @@ feature -- Eiffel source line information
 	generate_il_line_info is
 			-- Generate source line information in IL code.
 		do
-			if System.line_generation and then line_number > 0 then
+			if (System.line_generation or context.workbench_mode) and then line_number > 0 then
 				il_generator.put_line_info (line_number)
 			end
 		end

@@ -12,7 +12,7 @@ RM = del
 LINK32 = $link32
 DLLFLAGS = $dllflags
 OUTPUT_CMD = $output_cmd
-CFLAGS = -I. -I$(TOP) -I$(TOP)\run-time -I$(TOP)\run-time\include -I$(EIFFEL_SRC)\C\minilzo
+CFLAGS = -I. -I$(TOP) -I$(TOP)\run-time -I$(TOP)\run-time\include -I$(EIFFEL_SRC)\C\minilzo -I$(TOP)\idrs
 JCFLAGS = $(CFLAGS) $ccflags $optimize
 JMTCFLAGS = $(CFLAGS) $mtccflags $optimize
 

@@ -21,7 +21,7 @@ $spitshell >Makefile <<!GROK!THIS!
 
 AR = $ar rc
 CC = $cc
-INCLUDE_PATH = -I. -I../run-time -I../run-time/include -I../minilzo
+INCLUDE_PATH = -I. -I../run-time -I../run-time/include -I../minilzo -I../idrs
 CFLAGS = \$(INCLUDE_PATH)
 JCFLAGS = \$(CFLAGS) $optimize $warning_level $ccflags $large
 RM = $rm -f

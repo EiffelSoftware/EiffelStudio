@@ -50,6 +50,7 @@ feature {NONE} -- Initialization
 				agent (App_implementation.gtk_marshal).on_gauge_value_changed_intermediary (c_object),
 				Void
 			)
+			set_range
 		end
 
 feature -- Access
@@ -139,7 +140,7 @@ feature -- Element change
 			-- Set `leap' to `a_leap'.
 		do
 			if leap /= a_leap then
-				feature {EV_GTK_EXTERNALS}.set_gtk_adjustment_struct_upper (adjustment, value_range.upper + a_leap)
+				feature {EV_GTK_EXTERNALS}.set_gtk_adjustment_struct_upper (adjustment, value_range.upper)
 				feature {EV_GTK_EXTERNALS}.set_gtk_adjustment_struct_page_increment (adjustment, a_leap)
 				feature {EV_GTK_EXTERNALS}.gtk_adjustment_changed (adjustment)
 			end
@@ -160,7 +161,7 @@ feature -- Element change
 			feature {EV_GTK_EXTERNALS}.set_gtk_adjustment_struct_lower (adjustment, value_range.lower)
 			feature {EV_GTK_EXTERNALS}.set_gtk_adjustment_struct_upper (
 				adjustment,
-				value_range.upper + page_size
+				value_range.upper
 			)
 			feature {EV_GTK_EXTERNALS}.gtk_adjustment_changed (adjustment)
 			internal_set_value (temp_value)

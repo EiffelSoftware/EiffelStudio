@@ -1,5 +1,5 @@
 indexing
-	description : "Objects that ..."
+	description : "Objects that help doing update/real_update mecanism"
 	author      : "$Author$"
 	date        : "$Date$"
 	revision    : "$Revision$"
@@ -65,8 +65,6 @@ feature {NONE} -- Implementation
 			-- Call `real_update' on idle action
 		do
 			real_update_on_idle_called_on_stopped := a_dbg_stopped
-			print (generator + ".update : " + a_dbg_stopped.out + "%N")
---			update_on_idle_agent.set_operands ([a_dbg_stopped])
 			ev_application.idle_actions.extend (update_on_idle_agent)			
 		end
 	

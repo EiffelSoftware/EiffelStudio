@@ -26,6 +26,8 @@ extern char *rtclone();			/* The Eiffel clone operation (run-time) */
 extern void ecopy();			/* Standard copy of a normal Eiffel object */
 extern void xcopy();			/* Expanded copy with possible exception */
 extern void spcopy();			/* Standard copy of a special object */
+extern void spsubcopy();		/* Copy special objects' slices */
+extern void spclearall();		/* Reset special object's items to default */
 
 #ifdef HAS_SAFE_BCOPY
 #define safe_bcopy(s,d,l) bcopy((s),(d),(l))

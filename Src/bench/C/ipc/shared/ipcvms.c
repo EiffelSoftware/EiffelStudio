@@ -323,35 +323,32 @@ static char *strncpyz(char *out, CONST char *inp, size_t maxsiz)
 /* name of program image executing. Used for messages, etc.  == argv[0] */
 static long int ipcvms_pid = 0;
 static char ipcvms_imagename[FILENAME_MAX];	/* full image file name */
-static char ipcvms_progname[FILENAME_MAX];	/* like argv[0] */
+static char ipcvms_progname[FILENAME_MAX];	/* like argv[0] - image file basename */
 
 /* This ones fills in the name of the currently executing program - 	*/
 /* basename(argv[0]) in unix terms.					*/
 char* ipcvms_get_progname(char* buf)
 {
-    VMS_STS st; 
-    char *p, *q;
-    static char imag[FILENAME_MAX]; 
-    DX_BUF(imag_d, ipcvms_progname);
+    char *p;
 
-#ifdef moose
-    if (argv && *argv)		/* if argv[0] supplied */
-	p = argv;
-    else 
-    {
-#endif
-    st = lib$getjpi(&JPI$_IMAGNAME, NULL,NULL, NULL, &imag_d, &DXLEN(imag_d));
-    DXPTR(imag_d)[DXLEN(imag_d)] = '\0';
-    /* make it lowercase, in true c/unix fasion */    
-    for (p = q = ipcvms_progname; *q; ++q)
-	if (isupper(*q))
-	    *q = _tolower(*q);
-    /* remove the device and directory prefix */
-    while (q = strpbrk(p, "]>"))	/* while there's a directory delim, */
-	p = ++q;			/*  skip past it */
-    q = strstr(p, ".");
-    if (q) *q = '\0';
-    p = strcpy(ipcvms_progname, p);
+    if (*ipcvms_progname == '\0') { /* have we not done this yet? */
+	VMS_STS st; 
+	char *p, *q;
+	DX_BUF(imag_d, ipcvms_imagename);
+	st = lib$getjpi(&JPI$_IMAGNAME, NULL,NULL, NULL, &imag_d, &DXLEN(imag_d));
+	DXPTR(imag_d)[DXLEN(imag_d)] = '\0';
+	/* make it lowercase, in true c/unix fasion */    
+	for (p = q = ipcvms_imagename; *q; ++q)
+	    if (isupper(*q))
+		*q = _tolower(*q);
+	/* remove the device and directory prefix */
+	while (q = strpbrk(p, "]>"))	/* while there's a directory delim, */
+	    p = ++q;			/*  skip past it */
+	p = strcpy(ipcvms_progname, p);
+	q = strstr(p, ".");		/* is there a ext delim? */
+	if (q) *q = '\0';		/* if so, clobber it */
+	p = strcpy(ipcvms_progname, p);
+    } else p = ipcvms_progname;
     if (buf) p = strcpy(buf, p);
     return (p);
 } /* end ipcvms_get_progname() */
@@ -489,8 +486,9 @@ static char* get_fdname(FD fd, char *buf)
     char *p;
     static char localbuf[FILENAME_MAX];
     if (!buf) buf = localbuf;
-    getname(fd, buf);			/* get file descriptor name */
-    if ((p=strstr(buf, ":[].;"))	/* if device name with null dir */
+    if ( !(p = getname(fd, buf)) )	/* get file descriptor name */
+	sprintf (buf, "*** invalid FD #%d ***", fd);
+    else if ((p=strstr(buf, ":[].;"))	/* if device name with null dir */
 	    || (p=strstr(buf, ":.;")))	/*  or a device name with no dir */
 	*++p = '\0';			/*  trash delimiters after : */
     return (buf);

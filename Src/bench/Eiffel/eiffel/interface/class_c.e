@@ -2529,10 +2529,12 @@ feature -- Parent checking
 			i, nb: INTEGER
 			l_parent_class: CLASS_C
 			l_single_classes: LINKED_LIST [CLASS_C]
+			l_old_is_single: BOOLEAN
 		do
 			from
 				l_area := parents.area
 				nb := parents.count
+				l_old_is_single := is_single
 			until
 				i = nb
 			loop
@@ -2595,9 +2597,17 @@ feature -- Parent checking
 			end
 
 				-- Only classes that explicitely inherit from an external class only once
-				-- are marked `single. ANY is not.
+				-- are marked `single. ANY is not even though it inherits directly from
+				-- SYSTEM_OBJECT.
 			set_is_single (l_single_classes /= Void and then l_single_classes.count = 1
 				and then not is_class_any)
+			if System.il_generation and then l_old_is_single /= is_single then
+					-- Class has its `is_single' status changed. We have to
+					-- reset its `types' so that they are recomputed.
+				if has_types then
+					types.wipe_out
+				end
+			end
 		end
 
 feature -- Supplier checking
@@ -3607,6 +3617,12 @@ feature -- Properties
 	lace_class: CLASS_I
 			-- Lace class 
 
+	main_parent: CLASS_C
+			-- Parent of current class which has most features.
+
+	number_of_features: INTEGER
+			-- Number of features in current class including inherited one.
+
 	parents: FIXED_LIST [CL_TYPE_A]
 			-- Parent classes
 
@@ -4264,6 +4280,24 @@ feature -- Output
 		end
 
 feature {COMPILER_EXPORTER} -- Setting
+
+	set_main_parent (cl: like main_parent) is
+			-- Assign `cl' to `main_parent'.
+		require
+			cl_not_void: cl /= Void
+		do
+			main_parent := cl
+		ensure
+			main_parent_set: main_parent = cl
+		end
+
+	set_number_of_features (n: like number_of_features) is
+			-- Assign `n' to `number_of_features'.
+		do
+			number_of_features := n
+		ensure
+			number_of_features_set: number_of_features = n
+		end
 
 	set_topological_id (i: INTEGER) is
 			-- Assign `i' to `topological_id'.

@@ -820,7 +820,9 @@ rt_private void start_app(int s)
 #endif
 
 #ifdef EIF_WIN32
-	cp = spawn_child(cmd, current_directory, 1, &process_handle, &process_id);	/* Start up children */
+		/* First argument is 0 because we are not launching the compiler, but
+		 * an application being debugged by the Eiffel debugger. */
+	cp = spawn_child(0, cmd, current_directory, 1, &process_handle, &process_id);	/* Start up children */
 #else
 	cp = spawn_child(cmd, current_directory, 1, &pid);	/* Start up children */
 #endif

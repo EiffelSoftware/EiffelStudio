@@ -70,7 +70,7 @@ rt_private void create_dummy_window (void);
 #endif
 
 #ifdef EIF_WIN32
-rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, HANDLE *child_process_handle, DWORD *child_process_id)
+rt_public STREAM *spawn_child(int is_ec, char *cmd, char *cwd, int handle_meltpath, HANDLE *child_process_handle, DWORD *child_process_id)
 #else
 rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, Pid_t *child_pid)
 #endif
@@ -96,11 +96,12 @@ rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, Pid_t *
 	PROCESS_INFORMATION	piProcInfo;
 	STARTUPINFO		siStartInfo;
 	SECURITY_ATTRIBUTES	saAttr;
+	DWORD l_startup_flags;
 
 	HANDLE uu_str [2];		/* Field to UUEncode  */
 	char *t_uu;				/* Result of UUEncode */
 
-	char *startpath, *dotplace, *cmdline, *cmd2;	/* Paths for directory to start in */
+	char *startpath = NULL, *dotplace, *cmdline, *cmd2;	/* Paths for directory to start in */
 	char error_msg[128] = "";								/* Error message displayed when we cannot lauch the program */
 #else
 	int pdn[2];					/* The opened downwards file descriptors */
@@ -301,20 +302,25 @@ rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, Pid_t *
 	siStartInfo.lpReserved2 = NULL;
 	siStartInfo.cbReserved2 = 0;
 	siStartInfo.lpDesktop = NULL;
-	siStartInfo.dwFlags = STARTF_USESTDHANDLES | STARTF_FORCEONFEEDBACK;
-	siStartInfo.hStdOutput = pup[PIPE_WRITE];
-	siStartInfo.hStdInput =  pdn[PIPE_READ];
-	siStartInfo.hStdError = GetStdHandle (STD_ERROR_HANDLE);
+	siStartInfo.dwFlags = STARTF_FORCEONFEEDBACK;
 
 		/* FIXME or HACK: To enable the launched application to be in foreground */
 	create_dummy_window();
 
+		/* If we are launching the graphical version of the Eiffel compiler,
+		 * we use DETACHED_PROCESS since we do not want its DOS console
+		 * to appear. */
+	if (is_ec == 1) {
+		l_startup_flags = DETACHED_PROCESS;
+	} else {
+		l_startup_flags = CREATE_NEW_CONSOLE;
+	}
 	fSuccess = CreateProcess (cmd2,	/* Command 	*/
 		cmdline,			/* Command line */
 		NULL,				/* Process security attribute */
 		NULL,				/* Primary thread security attributes */
 		TRUE,				/* Handles are inherited */
-		DETACHED_PROCESS ,	/* Creation flags */
+		l_startup_flags,	/* Creation flags */
 		NULL,				/* Use parent's environment */
 		startpath,			/* Use cmd's current directory */
 		&siStartInfo,		/* STARTUPINFO pointer */

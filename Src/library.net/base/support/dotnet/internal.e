@@ -388,11 +388,25 @@ feature -- Access
 			index_large_enough: i >= 1
 			index_small_enought: i <= field_count_of_type (type_id)
 		local
-			m: ARRAYED_LIST [CLI_CELL [MEMBER_INFO]]
+			m: like get_members
+			l_field: FIELD_INFO
+			l_name: EIFFEL_NAME_ATTRIBUTE
+			l_attributes: NATIVE_ARRAY [SYSTEM_OBJECT]
 		do
 			m := get_members (type_id)
 			if m /= Void and then m.valid_index (i) then
-				create Result.make_from_cil (m.i_th (i).item.name.remove (0, 2))
+				l_field := m.i_th (i).item
+				l_attributes := l_field.get_custom_attributes_type (eiffel_name_attribute_type, False)
+				if l_attributes.count > 0 then
+						-- This is an eiffel defined attribute
+					check
+						valid_number_of_custom_attributes: l_attributes.count = 1
+					end
+					l_name ?= l_attributes.item (0)
+					Result := l_name.name
+				else
+					Result := l_field.name
+				end
 			end
 		end
 
@@ -426,16 +440,13 @@ feature -- Access
 			index_large_enough: i >= 1
 			index_small_enough: i <= field_count_of_type (type_id)
 		local
-			l_m: ARRAYED_LIST [CLI_CELL [MEMBER_INFO]]
+			l_m: like get_members
 			l_field: FIELD_INFO
 			l_type: TYPE
 		do
 			l_m := get_members (type_id)
 			if l_m /= Void and then l_m.valid_index (i) then
-				l_field ?= l_m.i_th (i).item
-				check
-					l_field_not_void: l_field /= Void
-				end
+				l_field := l_m.i_th (i).item
 				l_type := l_field.field_type
 				if abstract_types.contains (l_type) then
 					Result ?= abstract_types.item (l_type)
@@ -779,21 +790,11 @@ feature {NONE} -- Implementation
 			type_id_nonnegative: type_id >= 0
 			valid_type: dynamic_type (object) = type_id
 		local
-			m: ARRAYED_LIST [CLI_CELL [MEMBER_INFO]]
-			a: MEMBER_INFO
-			cv_f: FIELD_INFO
-			cv_p: PROPERTY_INFO
+			m: like get_members
 		do
 			m := get_members (type_id)
 			if m /= Void and then m.valid_index (i) then
-				a := m.i_th (i).item
-				cv_f ?= a
-				cv_p ?= a
-				if cv_f /= Void then
-					Result := cv_f.get_value (object)
-				elseif cv_p /= Void then
-					Result := cv_p.get_value (object, Void)
-				end
+				Result := m.i_th (i).item.get_value (object)
 			end
 		end
 
@@ -804,7 +805,7 @@ feature {NONE} -- Implementation
 			index_large_enough: i >= 1
 			index_small_enough: i <= field_count_of_type (type_id)
 		local
-			m: ARRAYED_LIST [CLI_CELL [MEMBER_INFO]]
+			m: like get_members
 		do
 			m := get_members (type_id)
 			if m /= Void and then m.valid_index (i) then
@@ -877,30 +878,25 @@ feature {NONE} -- Implementation
 			an_assembly_not_void: an_assembly /= Void
 		local
 			l_types: NATIVE_ARRAY [TYPE]
-			l_name: EIFFEL_CLASS_NAME_ATTRIBUTE
-			l_ca_type: TYPE
+			l_name: EIFFEL_NAME_ATTRIBUTE
 			l_cas: NATIVE_ARRAY [SYSTEM_OBJECT]
 			i, nb: INTEGER
 		do
 			l_types := an_assembly.get_types
-				-- Get actual type of EIFFEL_CLASS_NAME_ATTRIBUTE while
-				-- waiting for `typeof' operator.
-			create l_name.make ("Test")
-			l_ca_type := l_name.get_type
 			from
 				i := 0
 				nb := l_types.count - 1
 			until
 				i > nb
 			loop
-				l_cas := l_types.item (i).get_custom_attributes_type (l_ca_type, False)
+				l_cas := l_types.item (i).get_custom_attributes_type (eiffel_name_attribute_type, False)
 				if l_cas /= Void and then l_cas.count > 0 then
 					l_name ?= l_cas.item (0)
 					check
 						l_name_not_void: l_name /= Void
 					end
 					eiffel_type_mapping.force (create {CLI_CELL [TYPE]}.put (l_types.item (i)),
-						l_name.class_name)
+						l_name.name)
 				end
 				i := i + 1
 			end
@@ -966,14 +962,13 @@ feature {NONE} -- Implementation
 			Result.add (feature {TYPE}.get_type_string (("System.Int64").to_cil), Integer_64_type)
 		end
 		
-	get_members (type_id: INTEGER): ARRAYED_LIST [CLI_CELL [MEMBER_INFO]] is
+	get_members (type_id: INTEGER): ARRAYED_LIST [CLI_CELL [FIELD_INFO]] is
 			-- Retrieve all members of type `type_id'.
 			-- We need permission to retrieve non-public members.
 			-- Only fields and properties are returned.
 		local
 			fa: BINDING_FLAGS
-			cv_f: FIELD_INFO
-			cv_p: PROPERTY_INFO
+			l_field_info: FIELD_INFO
 			allm: NATIVE_ARRAY [MEMBER_INFO]
 			c, i: INTEGER
 			l_members: like known_members
@@ -999,15 +994,12 @@ feature {NONE} -- Implementation
 					until
 						i = c
 					loop
-						cv_f ?= allm.item (i)
-						cv_p ?= allm.item (i)
-						if cv_f /= Void then
-							create l_cv_f_name.make_from_cil (cv_f.name)
+						l_field_info ?= allm.item (i)
+						if l_field_info /= Void then
+							l_cv_f_name := l_field_info.name
 							if not l_cv_f_name.is_equal ("$$____type") then
-								Result.extend (create {CLI_CELL [MEMBER_INFO]}.put (allm.item(i)))
+								Result.extend (create {CLI_CELL [FIELD_INFO]}.put (l_field_info))
 							end
-						elseif cv_p /= Void then
-							Result.extend (create {CLI_CELL [MEMBER_INFO]}.put (allm.item(i)))
 						end
 						i := i + 1
 					end
@@ -1022,25 +1014,15 @@ feature {NONE} -- Implementation
 			index_large_enough: i >= 1
 			index_small_enough: i <= field_count (object)
 		local
-			m: ARRAYED_LIST [CLI_CELL [MEMBER_INFO]]
-			a: MEMBER_INFO
-			cv_f: FIELD_INFO
-			cv_p: PROPERTY_INFO
+			m: like get_members
 		do
 			m := get_members (dynamic_type (object))
 			if m /= Void and then m.valid_index (i) then
-				a := m.i_th (i).item
-				cv_f ?= a
-				cv_p ?= a
-				if cv_f /= Void then
-					cv_f.set_value (object, value)
-				elseif cv_p /= Void then
-					cv_p.set_value (object, value, Void)
-				end
+				m.i_th (i).item.set_value (object, value)
 			end
 		end
 
-	known_members: HASH_TABLE [ARRAYED_LIST [CLI_CELL [MEMBER_INFO]], INTEGER] is
+	known_members: HASH_TABLE [ARRAYED_LIST [CLI_CELL [FIELD_INFO]], INTEGER] is
 			-- Buffer for `get_members' lookups
 		once
 			create Result.make (50)
@@ -1051,7 +1033,17 @@ feature {NONE} -- Implementation
 		once
 			create Result.make_from_capacity (50)
 		end
-		
+
+	eiffel_name_attribute_type: TYPE is
+			-- Get actual type of EIFFEL_NAME_ATTRIBUTE while
+			-- waiting for `typeof' operator.
+		local
+			l_name: EIFFEL_NAME_ATTRIBUTE
+		once
+			create l_name.make ("Test")
+			Result := l_name.get_type
+		end
+	
 indexing
 
 	library: "[

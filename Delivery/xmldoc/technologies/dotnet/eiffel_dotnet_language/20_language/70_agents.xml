@@ -65,9 +65,9 @@
 		</heading>
 		<paragraph>Below is an instruction which passes an agent as an argument to a procedure. </paragraph>
 		<code_block>
-	button.select_actions.extend (agent gauge.step_forward)
+	<feature_name>button</feature_name>.<feature_name>select_actions</feature_name>.<feature_name>extend</feature_name> <symbol>(</symbol><keyword>agent</keyword> <feature_name>gauge</feature_name>.<feature_name>step_forward</feature_name><symbol>)</symbol>
 </code_block>
-		<paragraph>In this example, the producer wants to add the action of stepping the gauge forward in the event that a button is clicked. The keyword " 
+		<paragraph>In this example, the producer wants to add the action of stepping the gauge forward in the event that a button is clicked. The keyword "
 			<code>
 				<keyword>agent</keyword>
 			</code>" is used to indicate that at runtime an object of type 
@@ -104,7 +104,7 @@
 		<heading>
 			<size>3</size>Agents with Arguments
 		</heading>
-		<paragraph>In this example, the routine " 
+		<paragraph>In this example, the routine "
 			<code>
 				<feature_name>step_forward</feature_name>
 			</code>" on which the agent is based takes no arguments. If you drilled down into the workings of this example you would find that class that implements the feature 
@@ -116,12 +116,12 @@
 			</code>. You would also see that the signature for the feature 
 			<code>
 				<feature_name>extend</feature_name>
-			</code>is as essentially as follows.
+			</code> is as essentially as follows.
 		</paragraph>
 		<code_block>
-	extend (v: PROCEDURE [ANY, TUPLE])
+	<feature_name>extend</feature_name> <symbol>(</symbol>v<symbol>:</symbol> <class_name>PROCEDURE</class_name> <symbol>[</symbol><class_name>ANY</class_name>, <class_name>TUPLE</class_name><symbol>])</symbol>
 </code_block>
-		<paragraph>We don't have to know too much about the workings of agents to see that " 
+		<paragraph>We don't have to know too much about the workings of agents to see that "
 			<code>
 				<feature_name>extend</feature_name>
 			</code>" takes an argument 
@@ -141,7 +141,7 @@
 		<paragraph>It is this business of open and closed arguments which really makes agents remarkable. To get a feel for it, let's simplify the example some. Instead of considering an agent passed as an argument let's look at it as a simple assignment within a class.</paragraph>
 		<paragraph>Suppose a class has a feature declared as shown below.</paragraph>
 		<code_block>
-	my_procedure: PROCEDURE [ANY, TUPLE]
+	<feature_name>my_procedure</feature_name><symbol>:</symbol> <class_name>PROCEDURE</class_name> <symbol>[</symbol><class_name>ANY</class_name>, <class_name>TUPLE</class_name><symbol>]</symbol>
 </code_block>
 		<paragraph>Then what can be assigned to 
 			<code>
@@ -149,21 +149,21 @@
 			</code>?. An agent, of course. Say the class has procedures as follows.
 		</paragraph>
 		<code_block>
-	no_argument_procedure is
-            -- A procedure with no arguments
-        do
-            print ("No argument here!%N%N")
-        end
+	<feature_name>no_argument_procedure</feature_name> <keyword>is</keyword>
+			<comment>-- A procedure with no arguments</comment>
+		<keyword>do</keyword>
+			<feature_name>print</feature_name> <symbol>(</symbol>"<string>No argument here!%N</string>"<symbol>)</symbol>
+		<keyword>end</keyword>
 
-    two_argument_procedure (an_int: INTEGER; another_int: INTEGER) is
-            -- A procedure with two arguments
-        do
-            print ("My arguments are: " + an_int.out + " and " + another_int.out + "%N")
-        end
+	<feature_name>two_argument_procedure</feature_name> <symbol>(</symbol>an_int<symbol>:</symbol> <class_name>INTEGER</class_name>; another_int<symbol>:</symbol> <class_name>INTEGER</class_name><symbol>)</symbol> <keyword>is</keyword>
+			<comment>-- A procedure with two arguments</comment>
+		<keyword>do</keyword>
+			<feature_name>print</feature_name> <symbol>(</symbol>"<string>My arguments are</string><symbol>:</symbol> " <symbol>+</symbol> an_int.<feature_name>out</feature_name> <symbol>+</symbol> "<string> and</string> " <symbol>+</symbol> another_int.<feature_name>out</feature_name> <symbol>+</symbol> "<string>%N</string>"<symbol>)</symbol>
+		<keyword>end</keyword>
 </code_block>
 		<paragraph>Then the following assignment is valid.</paragraph>
 		<code_block>
-	my_procedure := agent no_argument_procedure
+	<feature_name>my_procedure</feature_name> <symbol>:</symbol><symbol>=</symbol> <keyword>agent</keyword> <feature_name>no_argument_procedure</feature_name>
 </code_block>
 		<paragraph>What this means is that the agent created and associated with the procedure 
 			<code>
@@ -197,7 +197,7 @@
 			</code>. But you can do it by closing the two arguments at the time that the agent is created, as in the following.
 		</paragraph>
 		<code_block>
-	my_procedure := agent two_argument_procedure (1, 2)    -- Is Valid
+	<feature_name>my_procedure</feature_name> <symbol>:</symbol><symbol>=</symbol> <keyword>agent</keyword> <feature_name>two_argument_procedure</feature_name> <symbol>(</symbol>1, 2<symbol>)</symbol>	<comment>-- Is Valid</comment>
 </code_block>
 		<paragraph>What happens here is that  values are fixed for those arguments at the time that the agent, an object of type 
 			<code>
@@ -214,9 +214,9 @@
 		<paragraph>The advantange of this is that you can sometimes avoid building specialized routines for the sole purpose of having a routine which conforms to the agent signature.</paragraph>
 		<paragraph>To leave an argument open, you hold its place with a question mark. If you intend for all arguments to be open, then you may make them all question marks, or leave off the arguments entirely.</paragraph>
 		<code_block>
-        my_procedure := agent two_argument_procedure (?, 2)    -- Argument 1 left open
-        my_procedure := agent two_argument_procedure (?, ?)    -- Both arguments left open
-        my_procedure := agent two_argument_procedure           -- Both arguments left open
+	<feature_name>my_procedure</feature_name> <symbol>:</symbol><symbol>=</symbol> <keyword>agent</keyword> <feature_name>two_argument_procedure</feature_name> <symbol>(</symbol>?, 2<symbol>)</symbol>	<comment>-- Argument 1 left open</comment>
+	<feature_name>my_procedure</feature_name> <symbol>:</symbol><symbol>=</symbol> <keyword>agent</keyword> <feature_name>two_argument_procedure</feature_name> <symbol>(</symbol>?, ?<symbol>)</symbol>	<comment>-- Both arguments left open</comment>
+	<feature_name>my_procedure</feature_name> <symbol>:</symbol><symbol>=</symbol> <keyword>agent</keyword> <feature_name>two_argument_procedure</feature_name>		<comment>-- Both arguments left open</comment>
 </code_block>
 		<paragraph>If an argument is open, then it means that a value is not provided for that argument at the time that the agent is created. The implication is that the value must be provided at some time prior to the time that the agent's associated routine gets executed. A precondition to executing a routine associated with an agent is that the agent has a valid set of arguments (called operands within the 
 			<code>
@@ -234,7 +234,7 @@
 		</paragraph>
 		<paragraph>Let's see an example in which we leave a target open. Suppose we have a class that has a feature coded as below</paragraph>
 		<code_block>
-	my_strings: LINKED_LIST [STRING]
+	<feature_name>my_strings</feature_name><symbol>:</symbol> <class_name>LINKED_LIST</class_name> <symbol>[</symbol><class_name>STRING</class_name><symbol>]</symbol>
 </code_block>
 		<paragraph>and some code to put some strings in 
 			<code>
@@ -242,9 +242,9 @@
 			</code>:
 		</paragraph>
 		<code_block>
-	create my_things.make
-	my_strings.extend ("Hello")
-	my_strings.extend ("World!")
+	<keyword>create</keyword> <feature_name>my_things</feature_name>.<feature_name>make</feature_name>
+	<feature_name>my_strings</feature_name>.<feature_name>extend</feature_name> <symbol>(</symbol>"<string>Hello</string>"<symbol>)</symbol>
+	<feature_name>my_strings</feature_name>.<feature_name>extend</feature_name> <symbol>(</symbol>"<string>World!</string>"<symbol>)</symbol>
 </code_block>
 		<paragraph>Our class also has a feature called 
 			<code>
@@ -252,11 +252,11 @@
 			</code> which we created to print a string preceded by a new line character.
 		</paragraph>
 		<code_block>
-        print_on_new_line (s: STRING) is
-            -- Print `s' preceded by a new line
-        do
-            print ("%N" + s)
-        end
+	<feature_name>print_on_new_line</feature_name> <symbol>(</symbol>s<symbol>:</symbol> <class_name>STRING</class_name><symbol>)</symbol> <keyword>is</keyword>
+			<comment>-- Print `s' preceded by a new line</comment>
+		<keyword>do</keyword>
+			<feature_name>print</feature_name> <symbol>(</symbol>"<string>%N</string>" <symbol>+</symbol> s<symbol>)</symbol>
+		<keyword>end</keyword>
 </code_block>
 		<paragraph>Now suppose we want to print the values of all the strings in 
 			<code>
@@ -270,14 +270,14 @@
 			</code> and printing each item. Like this:
 		</paragraph>
 		<code_block>
-            from
-                my_list.start
-            until
-                my_list.exhausted
-            loop
-                print_on_new_line (my_list.item)
-                my_list.forth
-            end
+	<keyword>from</keyword>
+		<feature_name>my_list</feature_name>.<feature_name>start</feature_name>
+	<keyword>until</keyword>
+		<feature_name>my_list</feature_name>.<feature_name>exhausted</feature_name>
+	<keyword>loop</keyword>
+		<feature_name>print_on_new_line </feature_name><symbol>(</symbol><feature_name>my_list</feature_name>.<feature_name>item</feature_name><symbol>)</symbol>
+		<feature_name>my_list</feature_name>.<feature_name>forth</feature_name>
+	<keyword>end</keyword>
 </code_block>
 		<paragraph>The availability of agents gives us new options. 
 			<code>
@@ -294,19 +294,19 @@
 			</code> feature's signature looks like this:
 		</paragraph>
 		<code_block>
-	do_all (action: PROCEDURE [ANY, TUPLE [G]])
+	<feature_name>do_all</feature_name> <symbol>(</symbol>action<symbol>:</symbol> <class_name>PROCEDURE</class_name> <symbol>[</symbol><class_name>ANY</class_name>, <class_name>TUPLE</class_name> <symbol>[</symbol><generics>G</generics><symbol>]</symbol><symbol>]</symbol><symbol>)</symbol>
 </code_block>
 		<paragraph>As an argument 
 			<code>
 				<feature_name>do_all</feature_name>
 			</code> takes an agent based on a procedure with one open argument which is the same type as the list items (in this class, 
 			<code>
-				<generics>G</generics>
+				<class_name>G</class_name>
 			</code> is the formal generic parameter representing the type of the items being stored). Then it traverses the list executing the routine associated with that agent and roviding the current list item to satisfy the open argument.
 		</paragraph>
 		<paragraph>Instead of coding the loop shown above, we can code this instruction:</paragraph>
 		<code_block>
-	my_list.do_all (agent print_on_new_line (?))
+	<feature_name>my_list</feature_name>.<feature_name>do_all</feature_name> <symbol>(</symbol><keyword>agent</keyword> <feature_name>print_on_new_line</feature_name> <symbol>(</symbol>?<symbol>)</symbol><symbol>)</symbol>
 </code_block>
 		<paragraph>we leave the argument to 
 			<code>
@@ -338,7 +338,7 @@
 		</paragraph>
 		<paragraph>Let's identify the targets in the examples shown. First:</paragraph>
 		<code_block>
-	button.select_actions.extend (agent gauge.step_forward)
+	<feature_name>button</feature_name>.<feature_name>select_actions</feature_name>.<feature_name>extend</feature_name> <symbol>(</symbol><keyword>agent</keyword> <feature_name>gauge</feature_name>.<feature_name>step_forward</feature_name><symbol>)</symbol>
 </code_block>
 		<paragraph>Here the target is the object attached to the entity "gauge" which is (although you cannot determine it from this line taken out of context) an object of type 
 			<code>
@@ -347,19 +347,19 @@
 		</paragraph>
 		<paragraph>How about this:</paragraph>
 		<code_block>
-	my_procedure := agent two_argument_procedure (1, 2)
+	<feature_name>my_procedure</feature_name> <symbol>:</symbol><symbol>=</symbol> <keyword>agent</keyword> <feature_name>two_argument_procedure</feature_name> <symbol>(</symbol>1, 2<symbol>)</symbol>
 </code_block>
 		<paragraph>Here, since there was no qualification, then the target is the current instance. Same with this:</paragraph>
 		<code_block>
-	my_list.do_all (agent print_on_new_line (?))
+	<feature_name>my_list</feature_name>.<feature_name>do_all</feature_name> <symbol>(</symbol><keyword>agent</keyword> <feature_name>print_on_new_line</feature_name> <symbol>(</symbol>?<symbol>)</symbol><symbol>)</symbol>
 </code_block>
 		<paragraph>Again, consider the fact that the agent must account for objects for each of the arguments to a routine, and an object for the target. So, in the examples we've seen so far, the target is close, that is provided at the time of the creation of the agent.</paragraph>
 		<paragraph>But we can actually leave the target open as well. Now we cannot use the question mark notation to do that, because if we did, there would be no way to know of which class the routine is a feature. So instead, we mark an open target with the class name in braces.</paragraph>
 		<paragraph>Suppose in our list of strings example, we wanted to print the strings, then convert them to lower case, then print them again. Remember that "do_all" has one open argument, which will be provided as the current list item during the traversal.</paragraph>
 		<code_block>
-            my_list.do_all (agent print_on_new_line (?))
-            my_list.do_all (agent {STRING}.to_lower)
-            my_list.do_all (agent print_on_new_line (?))
+	<feature_name>my_list</feature_name>.<feature_name>do_all</feature_name> <symbol>(</symbol><keyword>agent</keyword> <feature_name>print_on_new_line</feature_name> <symbol>(</symbol>?<symbol>)</symbol><symbol>)</symbol>
+	<feature_name>my_list</feature_name>.<feature_name>do_all</feature_name> <symbol>(</symbol><keyword>agent</keyword> <symbol>{</symbol><class_name>STRING</class_name><symbol>}</symbol><feature_name></feature_name>.<feature_name>to_lower</feature_name><symbol>)</symbol>
+	<feature_name>my_list</feature_name>.<feature_name>do_all</feature_name> <symbol>(</symbol><keyword>agent</keyword> <feature_name>print_on_new_line</feature_name> <symbol>(</symbol>?<symbol>)</symbol><symbol>)</symbol>
 </code_block>
 		<paragraph>In between printing the list two times, we provide 
 			<code>
@@ -406,7 +406,7 @@
 			</code> takes, and the other is a function which returns a boolean and used as a test. As each list item is current, the test is applied first. If the result is true, then the action is applied with the current item.
 		</paragraph>
 		<code_block>
-	my_list.do_if (agent print_on_new_line(?), agent {STRING}.has('!'))
+	<feature_name>my_list</feature_name>.<feature_name>do_if</feature_name> <symbol>(</symbol><keyword>agent</keyword> <feature_name>print_on_new_line</feature_name><symbol>(</symbol>?<symbol>)</symbol>, <keyword>agent</keyword> <symbol>{</symbol><class_name>STRING</class_name><symbol>}</symbol><feature_name></feature_name>.<feature_name>has</feature_name><symbol>(</symbol><symbol>'</symbol>!<symbol>'</symbol><symbol>)</symbol><symbol>)</symbol>
 </code_block>
 		<paragraph>The agent for the action is the same as we used earlier. We've added an agent for the test. It represents applying the 
 			<code>

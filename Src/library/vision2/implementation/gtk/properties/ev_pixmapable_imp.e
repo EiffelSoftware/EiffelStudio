@@ -26,7 +26,7 @@ feature -- Initialization
 			-- Create a GtkHBox to hold a GtkPixmap.
 		do
 			pixmap_box := C.gtk_hbox_new (False, 0)
-			C.gtk_widget_show (pixmap_box)
+			--C.gtk_widget_show (pixmap_box)
 		end
 
 feature -- Access

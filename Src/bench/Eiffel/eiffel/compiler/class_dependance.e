@@ -73,7 +73,7 @@ feature
 	updated_id (i: BODY_ID): BODY_ID is
 			-- give the newest id corresponding to body id 'i'
 		do
-			Result := System.ontable.item (i)
+			Result := System.onbidt.item (i)
 		end;
 
 	change_ids (new_id, old_id: BODY_ID) is

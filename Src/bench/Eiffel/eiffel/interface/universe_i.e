@@ -315,23 +315,29 @@ feature
 			-- Find first class stone with class name `class_name'.
 			-- (Void if none are found).	
 		local
-			class_i: CLASS_I
+			a_class_i: CLASS_I
+		do
+			a_class_i := class_i (class_name);
+			if a_class_i /= Void then
+				if a_class_i.compiled then
+					Result := a_class_i.compiled_class.stone;
+				else
+					!CLASSI_STONE! Result.make (a_class_i)
+				end
+			end
+		end;
+
+	class_i (class_name: STRING): CLASS_I is
+			-- Find first class interface with class name `class_name'.
+			-- (Void if none are found).	
 		do
 			from
 				clusters.start
 			until
 				clusters.after or else (Result /= Void)
 			loop
-				class_i :=  class_named (class_name, clusters.item);
-				if class_i /= Void then
-					if class_i.compiled then
-						Result := class_i.compiled_class.stone;
-					else
-						!CLASSI_STONE!Result.make (class_i)
-					end;
-				else
-					clusters.forth
-				end;	
+				Result :=  class_named (class_name, clusters.item);
+				clusters.forth
 			end
 		end;
 

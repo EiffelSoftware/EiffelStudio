@@ -5,9 +5,10 @@ inherit
 
 	SHARED_STORAGE_INFO;
 	SHARED_CONTEXT;
-	EB_UNDOABLE;
+	COMMAND;
 	ERROR_POPUPER;
-	CONSTANTS
+	CONSTANTS;
+	WINDOWS
 
 feature {NONE}
 
@@ -16,33 +17,14 @@ feature {NONE}
 	retrieved_groups: LINKED_LIST [GROUP];
 	retrieved_translations: LINKED_LIST [TRANSLATION];
 
-	work (argument: IMPORT_WINDOW) is
+	execute (argument: IMPORT_WINDOW) is
 		do
 			for_import.set_item (True);
 			argument.popdown;
 			import_application (argument);
+				-- Do no record
 		end;
 
-feature 
-
-	name: STRING is 
-		do
-			Result := Command_names.import_cmd_name
-		end;
-
-	undo is
-		do
-		end;
-
-	redo is
-		do
-		end;
-
-	
-feature {NONE}
-
-	failed: BOOLEAN is do end;
-	
 feature {NONE}
 
 	rescued: BOOLEAN;
@@ -54,12 +36,12 @@ feature {NONE}
 			mp: MOUSE_PTR;
 		do
 			if not rescued then
-				clear_uneeded;
+				clear_shared_storage_info;
 				import_directory := clone (import_window.file_selec.selected_file);
 				if import_directory /= Void and then not 
 					import_directory.empty 
 				then
-					!!import_path.make (import_directory);
+					!! import_path.make (import_directory);
 					if import_path.exists then
 						import_from_file (import_window)
 					else
@@ -72,12 +54,11 @@ feature {NONE}
 				end;
 			else
 				rescued := False;
-				!!mp;
-				mp.restore;
 				error_box.popup (Current, Messages.cannot_ret_dir_er,
 							import_directory);
 			end
 		rescue
+			!! mp;
 			mp.restore;
 			rescued := True;
 			retry
@@ -86,7 +67,7 @@ feature {NONE}
 	import_from_file (import_window: IMPORT_WINDOW) is
 		local
 			mp: MOUSE_PTR;
-			fn: FILE_NAME;
+			dir_name: DIRECTORY_NAME;
 			new_id: INTEGER;
 			old_id: INTEGER;
 			a_context: CONTEXT;
@@ -103,11 +84,10 @@ feature {NONE}
 			mp.set_watch_shape;
 			!! import_directory.make_from_string (import_window.file_selec.selected_file);
 			import_directory.extend (Environment.storage_name);
+			!! dir_name.make_from_string (import_directory);
 			if import_window.groups.state then
-				!! fn.make_from_string (import_directory);
-				fn.set_file_name (Environment.groups_file_name);
 				!! group_storer;
-				group_storer.retrieve (fn);
+				group_storer.retrieve (dir_name);
 				retrieved_groups := group_storer.retrieved_data;
 				!!group_table.make (retrieved_groups.count);
 				from
@@ -133,10 +113,8 @@ feature {NONE}
 				context_catalog.update_groups;
 			end;
 			if import_window.interface.state then
-				!! fn.make_from_string (import_directory);
-				fn.set_file_name (Environment.interface_file_name);
 				!!context_storer;
-				context_storer.retrieve (fn);
+				context_storer.retrieve (dir_name);
 				retrieved_contexts := context_storer.retrieved_data;
 				from
 					retrieved_contexts.start;
@@ -156,18 +134,14 @@ feature {NONE}
 				end;
 			end;
 			if import_window.commands.state then
-				!! fn.make_from_string (import_directory);
-				fn.set_file_name (Environment.commands_file_name);
 				!! command_storer;
-				command_storer.retrieve (fn);
+				command_storer.retrieve (dir_name);
 				retrieved_commands := command_storer.retrieved_data;
 				command_catalog.merge (retrieved_commands);
 			end;
 			if import_window.translations.state then
-				!! fn.make_from_string (import_directory);
-				fn.set_file_name (Environment.translations_file_name);
 				!!translation_storer;
-				translation_storer.retrieve (fn);
+				translation_storer.retrieve (dir_name);
 				retrieved_translations := translation_storer.retrieved_data;
 				from
 					retrieved_translations.start
@@ -179,14 +153,10 @@ feature {NONE}
 				end;
 			end;
 			if import_window.entire_application.state then
-				!! fn.make_from_string (import_directory);
-				fn.set_file_name (Environment.states_file_name);
 				!!state_storer;
-				state_storer.retrieve (fn);
-				!! fn.make_from_string (import_directory);
-				fn.set_file_name (Environment.application_file_name);
+				state_storer.retrieve (dir_name);
 				!!application_storer;
-				application_storer.retrieve (fn);
+				application_storer.retrieve (dir_name);
 
 				application_storer.rebuild_graph;
 				app_editor.update_display;
@@ -195,7 +165,7 @@ feature {NONE}
 			retrieved_commands := Void;
 			retrieved_groups := Void;
 			retrieved_translations := Void;
-			clear_uneeded;
+			clear_shared_storage_info;
 			mp.restore
 		end;
 

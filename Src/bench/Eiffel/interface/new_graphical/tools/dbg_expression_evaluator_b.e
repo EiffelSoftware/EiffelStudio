@@ -110,7 +110,7 @@ feature -- Evaluation
 			if error_message = Void then
 					--| prepare target's context
 				if on_context then
-					context_address := application.status.current_stack_element.object_address
+					context_address := application.status.current_call_stack_element.object_address
 				end
 
 					--| Initializing
@@ -609,8 +609,10 @@ feature -- EXPR_B evaluation
 					params := parameter_values_from_parameters_b (a_external_b.parameters)
 					if tmp_target /= Void then
 						evaluate_function (tmp_target.value_address, tmp_target, ef, params)
+					elseif context_address /= Void then
+						evaluate_function (context_address, Void, ef, params)
 					else
-						evaluate_function (context_address, tmp_target, ef, params)
+						evaluate_static_function (ef, params)
 					end
 				else
 					error_message := a_external_b.generator +  " => ERROR during evaluation of external call " + a_external_b.feature_name
@@ -696,11 +698,11 @@ feature -- EXPR_B evaluation
 
 	evaluate_local_b (l_local_b: LOCAL_B) is
 		local
-			cse: CALL_STACK_ELEMENT
+			cse: EIFFEL_CALL_STACK_ELEMENT
 			dv: ABSTRACT_DEBUG_VALUE
 			cf: E_FEATURE
 		do
-			cse := Application.status.current_stack_element
+			cse ?= Application.status.current_call_stack_element
 			if cse = Void then
 				check
 					False -- Shouldn't occur.
@@ -722,11 +724,11 @@ feature -- EXPR_B evaluation
 		
 	evaluate_argument_b (l_argument_b: ARGUMENT_B) is
 		local
-			cse: CALL_STACK_ELEMENT
+			cse: EIFFEL_CALL_STACK_ELEMENT
 			dv: ABSTRACT_DEBUG_VALUE
 			cf: E_FEATURE
 		do
-			cse := Application.status.current_stack_element
+			cse ?= Application.status.current_call_stack_element
 			if cse = Void then
 				check
 					False -- Shouldn't occur.
@@ -748,11 +750,11 @@ feature -- EXPR_B evaluation
 
 	evaluate_result_b (l_result_b: RESULT_B) is
 		local
-			cse: CALL_STACK_ELEMENT
+			cse: EIFFEL_CALL_STACK_ELEMENT
 			dv: ABSTRACT_DEBUG_VALUE
 			cf: E_FEATURE
 		do
-			cse := Application.status.current_stack_element
+			cse ?= Application.status.current_call_stack_element
 			if cse = Void then
 				check
 					False -- Shouldn't occur.
@@ -777,11 +779,11 @@ feature -- EXPR_B evaluation
 		
 	evaluate_current_b (l_current_b: CURRENT_B) is
 		local
-			cse: CALL_STACK_ELEMENT
+			cse: EIFFEL_CALL_STACK_ELEMENT
 			cse_dotnet: CALL_STACK_ELEMENT_DOTNET
 			l_addr: STRING
 		do
-			cse := Application.status.current_stack_element
+			cse ?= Application.status.current_call_stack_element
 			if cse = Void then
 				check
 					False -- Shouldn't occur.
@@ -798,6 +800,29 @@ feature -- EXPR_B evaluation
 		end		
 		
 feature -- Concrete evaluation
+
+	evaluate_static_function (f: E_FEATURE; params: LIST [DUMP_VALUE]) is
+		require
+			f /= Void
+			f_is_not_attribute: not f.is_attribute
+		local
+			l_dyntype: CLASS_TYPE
+			l_params: ARRAY [DUMP_VALUE]
+		do
+			l_dyntype := f.associated_class.types.first
+			if Application.is_dotnet then
+					--| FIXME jfiat: we deal only non generic types
+				if params /= Void and then not params.is_empty then
+					l_params := prepare_parameters_for_dotnet (l_dyntype, f, params)					
+				end
+				tmp_result_value := dbg_evaluator.dotnet_evaluate_static_function (f.associated_feature_i, l_dyntype, l_params)
+				tmp_result_static_type := f.type.associated_class
+			else
+			end
+			if tmp_result_value = Void then
+				error_message := "Unable to evaluate {" + l_dyntype.associated_class.name_in_upper + "}." + f.name
+			end
+		end
 
 	evaluate_once (f: E_FEATURE) is
 			-- 
@@ -912,7 +937,88 @@ feature -- Concrete evaluation
 				error_message := "Cannot evaluate an attribute ["+ f.name+"] of a manifest value"
 			end
 		end
-		
+
+	prepare_parameters_for_dotnet (dt: CLASS_TYPE; f: E_FEATURE; params: LIST [DUMP_VALUE]): ARRAY [DUMP_VALUE] is
+			-- Prepare parameters for function evaluation
+			-- For dotnet system
+		require
+			f /= Void
+			f_is_not_attribute: not f.is_attribute
+			params /= Void and then not params.is_empty
+		local
+			l_params_index: INTEGER
+			dmp: DUMP_VALUE
+		do
+				--| Prepare parameters ...
+			create Result.make (1, params.count)
+			from
+				l_params_index := 0
+				params.start
+				byte_context.set_class_type (dt)
+			until
+				params.after or error_occurred
+			loop
+				dmp := params.item
+				l_params_index := l_params_index + 1
+				if
+					dmp.is_basic and
+					(not byte_context.real_type (
+						f.arguments.i_th (params.index).type_i).is_basic)
+				then
+					dmp := dbg_evaluator.dotnet_metamorphose_basic_to_reference_value (dmp)
+					debug ("debugger_trace_eval_data")
+						print (generating_type + ".evaluate_function :: Metamorphose ... %N")
+					end
+				end
+					
+				Result.put (dmp, l_params_index)
+				params.forth
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	prepare_parameters_for_classic (dt: CLASS_TYPE; f: E_FEATURE; params: LIST [DUMP_VALUE]) is
+			-- Prepare parameters for function evaluation
+			-- For classic system
+			--| Warning: for classic system be sure `Init_recv_c' had been done before
+		require
+			f /= Void
+			f_is_not_attribute: not f.is_attribute
+			params /= Void and then not params.is_empty
+		local
+			dmp: DUMP_VALUE
+		do
+				--| Prepare parameters ...
+			from
+				params.start
+				byte_context.set_class_type (dt)
+			until
+				params.after or error_occurred
+			loop
+				dmp := params.item
+				dmp.send_value
+					-- We need to evaluate feature argument using BYTE_CONTEXT because
+					-- it might have some formal and the metamorphose should only appear
+					-- when there is indeed a type difference and not because the expected
+					-- argument is a formal parameter and the actual argument value is
+					-- a basic type.
+					-- This happen when evaluation `my_hash_table.item (1)' where
+					-- `my_hash_table' is of type `HASH_TABLE [STRING, INTEGER]'.
+				if
+					dmp.is_basic and
+					(not byte_context.real_type (
+						f.arguments.i_th (params.index).type_i).is_basic)
+				then
+					debug ("debugger_trace_eval_data")
+						print (generating_type + ".evaluate_function :: Send Metamorphose request ... %N")
+					end
+					send_rqst_0 (Rqst_metamorphose)
+				end
+				params.forth
+			end -- metamorphosme on dotnet or classic
+		end
+
 	evaluate_function (a_addr: STRING; a_target: DUMP_VALUE; f: E_FEATURE; params: LIST [DUMP_VALUE]) is
 		require
 			f /= Void
@@ -923,7 +1029,6 @@ feature -- Concrete evaluation
 			dobj: DEBUGGED_OBJECT
 			realf: E_FEATURE
 			l_params: ARRAY [DUMP_VALUE]
-			l_params_index: INTEGER
 			dmp: DUMP_VALUE
 			at: TYPE_A
 			par: INTEGER
@@ -989,65 +1094,10 @@ feature -- Concrete evaluation
 					valid_dyn_type: l_dyntype /= Void
 				end
 
-				if params /= Void and then not params.is_empty then
-						--| Prepare parameters ...
-					if Application.is_dotnet then
-						from
-							create l_params.make (1, params.count)
-							l_params_index := 0
-							params.start
-							byte_context.set_class_type (l_dyntype)
-						until
-							params.after or error_occurred
-						loop
-							dmp := params.item
-							l_params_index := l_params_index + 1
-							if
-								dmp.is_basic and
-								(not byte_context.real_type (
-									realf.arguments.i_th (params.index).type_i).is_basic)
-							then
-								dmp := dbg_evaluator.dotnet_metamorphose_basic_to_reference_value (dmp)
-								debug ("debugger_trace_eval_data")
-									print (generating_type + ".evaluate_function :: Metamorphose ... %N")
-								end
-							end
-							
-							l_params.put (dmp, l_params_index)
-							params.forth
-						end
-					else --| Classic case
-						from
-							params.start
-							byte_context.set_class_type (l_dyntype)
-						until
-							params.after or error_occurred
-						loop
-							dmp := params.item
-							dmp.send_value
-								-- We need to evaluate feature argument using BYTE_CONTEXT because
-								-- it might have some formal and the metamorphose should only appear
-								-- when there is indeed a type difference and not because the expected
-								-- argument is a formal parameter and the actual argument value is
-								-- a basic type.
-								-- This happen when evaluation `my_hash_table.item (1)' where
-								-- `my_hash_table' is of type `HASH_TABLE [STRING, INTEGER]'.
-							if
-								dmp.is_basic and
-								(not byte_context.real_type (
-									realf.arguments.i_th (params.index).type_i).is_basic)
-							then
-								debug ("debugger_trace_eval_data")
-									print (generating_type + ".evaluate_function :: Send Metamorphose request ... %N")
-								end
-								send_rqst_0 (Rqst_metamorphose)
-							end
-							params.forth
-						end
-					end -- metamorphosme on dotnet or classic
-				end -- preparing parameters 
-					--| Function's Evaluation
 				if Application.is_dotnet then
+					if params /= Void and then not params.is_empty then
+						l_params := prepare_parameters_for_dotnet (l_dyntype, realf, params)
+					end
 					tmp_result_value := dbg_evaluator.dotnet_evaluate_function (a_addr, a_target, realf.associated_feature_i, l_dyntype, l_params)
 					if tmp_result_value = Void then
 						error_message := "Unable to evaluate {" + l_dyntype.associated_class.name_in_upper + "}." + f.name
@@ -1061,6 +1111,9 @@ feature -- Concrete evaluation
 --						end
 					end
 				else -- Classic case
+					if params /= Void and then not params.is_empty then
+						prepare_parameters_for_classic (l_dyntype, realf, params)
+					end
 						-- Send the target object. 
 					if a_addr /= Void then
 						create dmp.make_object (a_addr, l_dynclass)
@@ -1132,10 +1185,10 @@ feature -- Change Context
 
 	init_context_with_current_callstack is
 		local
-			cse: CALL_STACK_ELEMENT
+			cse: EIFFEL_CALL_STACK_ELEMENT
 			cf: E_FEATURE
 		do
-			cse := Application.status.current_stack_element
+			cse ?= Application.status.current_call_stack_element
 			if cse = Void then
 				check
 					False -- Shouldn't occur.

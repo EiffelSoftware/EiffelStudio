@@ -120,15 +120,61 @@ feature -- Access
 				--| this is related to dialog and issue to provide derivation selection
 				
 			l_class_type := l_class_c.types.first
-			--| FIXME jfiat [2004/03/15] : do we really need to use adapted_class_type (..) ?
+				--| FIXME jfiat [2004/03/15] : do we really need to use adapted_class_type (..) ?
 			l_class_type := adapted_class_type (l_class_type, f.associated_feature_i)
-			l_icd_value := eifnet_debugger.once_function_value (Void, l_class_type, f)			
+			l_icd_value := eifnet_debugger.once_function_value (Void, l_class_type, f)
 			if l_icd_value /= Void then
 				l_adv := debug_value_from_icdv (l_icd_value)
 				Result := l_adv.dump_value
 			end
 		end
 
+	dotnet_evaluate_static_function (f: FEATURE_I; ctype: CLASS_TYPE; a_params: ARRAY [DUMP_VALUE]): DUMP_VALUE is
+		require
+			is_dotnet: application.is_dotnet
+			not_f_is_attribute: not f.is_attribute
+		local
+			l_ctype: CLASS_TYPE
+			l_icdv_args: ARRAY [ICOR_DEBUG_VALUE]
+			l_icdm: ICOR_DEBUG_MODULE
+			l_cl_tok, l_f_tok: INTEGER
+			l_icd_fun: ICOR_DEBUG_FUNCTION
+			l_result: ICOR_DEBUG_VALUE
+			l_adv: ABSTRACT_DEBUG_VALUE
+			l_icd_frame: ICOR_DEBUG_FRAME
+		do
+			debug ("debugger_trace_eval")
+				print (generating_type + ".dotnet_evaluate_static_function : ")
+				print (ctype.associated_class.name_in_upper + "." + f.feature_name)
+				print ("%N")
+			end
+			error_occurred := False
+				--| Get the real adapted class_type
+			l_ctype := adapted_class_type (ctype, f)
+			l_icdv_args := prepared_parameters (a_params, False)
+
+			l_icdm := eifnet_debugger.eifnet_debugger_info.runtime_module
+				--| FIXME jfiat: here we are only dealing with EiffelSoftware runtime ... classes
+			
+			l_cl_tok := l_icdm.md_class_token_by_type_name (l_ctype.full_il_type_name)
+			l_f_tok := l_icdm.md_feature_token (l_cl_tok, f.external_name)
+			l_icd_fun := l_icdm.get_function_from_token (l_f_tok)
+			if l_icd_fun /= Void then
+				l_icd_frame := eifnet_debugger.current_stack_icor_debug_frame
+				if l_icd_frame = Void then
+						-- In case `associated_frame' is not set
+					l_icd_frame := new_active_icd_frame
+				end
+				
+				l_result := eifnet_evaluator.function_evaluation (l_icd_frame, l_icd_fun, l_icdv_args)
+				error_occurred := (eifnet_evaluator.last_call_success /= 0) or (eifnet_evaluator.last_eval_is_exception)
+				if not error_occurred then
+					l_adv := debug_value_from_icdv (l_result)
+					Result := l_adv.dump_value
+				end
+			end
+		end
+		
 	dotnet_evaluate_function (addr: STRING; dvalue: DUMP_VALUE; f: FEATURE_I; ctype: CLASS_TYPE; a_params: ARRAY [DUMP_VALUE]): DUMP_VALUE is
 			-- Evaluate dotnet function
 		require
@@ -141,10 +187,6 @@ feature -- Access
 			l_adv: ABSTRACT_DEBUG_VALUE
 			l_icd_frame: ICOR_DEBUG_FRAME
 			l_icdv_args: ARRAY [ICOR_DEBUG_VALUE]
-
-			l_dumpvalue_param: DUMP_VALUE
-			l_icdv_param: ICOR_DEBUG_VALUE
-			l_param_i: INTEGER
 			l_ctype: CLASS_TYPE
 		do
 			debug ("debugger_trace_eval")
@@ -187,35 +229,7 @@ feature -- Access
 					end
 
 						--| Build the arguments for dotnet
-					if a_params /= Void then
-						create l_icdv_args.make (1, a_params.count + 1)
-						from
-							l_param_i := a_params.lower
-						until
-							l_param_i > a_params.upper or error_occurred
-						loop
-							l_dumpvalue_param := a_params @ l_param_i
-							l_icdv_param := l_dumpvalue_param.value_dotnet
-							if l_icdv_param = Void then
-									--| This means this value has been created by eStudioDbg
-									--| We need to build the corresponding ICorDebugValue object.
-								debug ("debugger_trace_eval_data")
-									print (generating_type + ".dotnet_evaluate_function: creating dotnet value from DUMP_VALUE %N")
-								end
-								l_icdv_param := dump_value_to_icdv (l_dumpvalue_param)
-								error_occurred := (eifnet_evaluator.last_call_success /= 0)
-							end
-							debug ("debugger_trace_eval_data")
-								print (generating_type + ".dotnet_evaluate_function: param ... %N")
-								display_info_on_object (l_icdv_param)
-							end
-							l_icdv_args.put (l_icdv_param, l_param_i + 1)
-								-- we'll set the first arg later
-							l_param_i := l_param_i + 1
-						end
-					else
-						create l_icdv_args.make (1, 1)
-					end
+					l_icdv_args := prepared_parameters (a_params, True)
 					if not error_occurred then
 						debug ("debugger_trace_eval_data")
 							print (generating_type + ".dotnet_evaluate_function: target ... %N")
@@ -235,7 +249,7 @@ feature -- Access
 						
 						if not error_occurred then
 							l_adv := debug_value_from_icdv (l_result)
-							Result := l_adv.dump_value	
+							Result := l_adv.dump_value
 						end
 					end
 					l_icd_function.clean_on_dispose
@@ -251,6 +265,54 @@ feature -- Access
 		end
 		
 feature {NONE} -- Implementation
+
+	prepared_parameters (a_params: ARRAY [DUMP_VALUE]; with_first_empty_element: BOOLEAN): ARRAY [ICOR_DEBUG_VALUE] is
+			-- Prepared param for dotnet evaluation.
+		local
+			l_param_i: INTEGER
+			l_dumpvalue_param: DUMP_VALUE
+			l_icdv_param: ICOR_DEBUG_VALUE
+		do
+			if a_params /= Void then
+				if with_first_empty_element then
+					create Result.make (1, a_params.count + 1)
+				else
+					create Result.make (2, a_params.count + 1)
+				end
+				from
+					l_param_i := a_params.lower
+				until
+					l_param_i > a_params.upper or error_occurred
+				loop
+					l_dumpvalue_param := a_params @ l_param_i
+					l_icdv_param := l_dumpvalue_param.value_dotnet
+					if l_icdv_param = Void then
+							--| This means this value has been created by eStudioDbg
+							--| We need to build the corresponding ICorDebugValue object.
+						debug ("debugger_trace_eval_data")
+							print (generating_type + ".prepared_parameters: creating dotnet value from DUMP_VALUE %N")
+						end
+						l_icdv_param := dump_value_to_icdv (l_dumpvalue_param)
+						error_occurred := (eifnet_evaluator.last_call_success /= 0)
+					end
+					debug ("debugger_trace_eval_data")
+						print (generating_type + ".prepared_parameters: param ... %N")
+						display_info_on_object (l_icdv_param)
+					end
+					Result.put (l_icdv_param, l_param_i + 1)
+						-- we'll set the first arg later
+					l_param_i := l_param_i + 1
+				end
+			else
+				if with_first_empty_element then
+					create Result.make (1, 1)
+				else
+					Result := << >>					
+				end
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
 
 	dump_value_to_icdv (dmv: DUMP_VALUE): ICOR_DEBUG_VALUE is
 			-- DUMP_VALUE converted into ICOR_DEBUG_VALUE.

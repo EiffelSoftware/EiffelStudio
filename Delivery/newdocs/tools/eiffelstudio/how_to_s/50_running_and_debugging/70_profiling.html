@@ -43,10 +43,9 @@
         program. To do this:</p>
 
 		<UL>
-			<LI>Create an object of type PROFILING_SETTING HYPERLINK(base
-              reference support PROFILING_SETTING).
-			<LI>Call `start_profiling' on this object to start the profiler.
-			<LI>Call `stop_profiling' on this object to stop the profiler.
+			<LI>Create an object of type <A HREF="/libraries/base/reference/support/profiling_setting.html">PROFILING_SETTING</A>.
+			<LI>Call `<A HREF="/libraries/base/reference/support/profiling_setting.html#start_profiling"><SPAN CLASS="efeature">start_profiling</SPAN></A>' on this object to start the profiler.
+			<LI>Call `<A HREF="/libraries/base/reference/support/profiling_setting.html#stop_profiling"><SPAN CLASS="efeature">stop_profiling</SPAN></A>' on this object to stop the profiler.
 		</UL>
 
         <P CLASS="tip"><B>Tip</B>: To profile only part of a program, turn off
@@ -58,14 +57,14 @@
 
 		<CODE>
         <p><SPAN CLASS="ekeyword">local</span><br>
-        &nbsp;&nbsp;&nbsp; ps: <SPAN CLASS="eclass">PROFILING_SETTING</span><br>
+        &nbsp;&nbsp;&nbsp; ps: <A HREF="/libraries/base/reference/support/profiling_setting.html"><SPAN CLASS="eclass">PROFILING_SETTING</span></A><br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ecomment">-- Other local variables if
         necessary.</span><br>
         <SPAN CLASS="ekeyword">do</span><br>
         &nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">create</span> ps<br>
-        &nbsp;&nbsp;&nbsp; ps.<SPAN CLASS="efeature">stop_profiling</span><br>
+        &nbsp;&nbsp;&nbsp; ps.<A HREF="/libraries/base/reference/support/profiling_setting.html#stop_profiling"><SPAN CLASS="efeature">stop_profiling</span></A><br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ecomment">-- Real program execution.</span><br>
-        &nbsp;&nbsp;&nbsp; ps.<SPAN CLASS="efeature">start_profiling</span><br>
+        &nbsp;&nbsp;&nbsp; ps.<A HREF="/libraries/base/reference/support/profiling_setting.html#start_profiling"><SPAN CLASS="efeature">start_profiling</span></A><br>
         <SPAN CLASS="ekeyword">end</span></p>
 		</CODE>
 
@@ -73,15 +72,15 @@
 
 		<CODE>
         <p><SPAN CLASS="ekeyword">local</span><br>
-        &nbsp;&nbsp;&nbsp; ps: <SPAN CLASS="eclass">PROFILING_SETTING</span><br>
+        &nbsp;&nbsp;&nbsp; ps: <A HREF="/libraries/base/reference/support/profiling_setting.html"><SPAN CLASS="eclass">PROFILING_SETTING</span></A><br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ecomment">-- Other local variables if
         necessary.</span><br>
         <SPAN CLASS="ekeyword">do</span><br>
         &nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">create</span> ps<br>
-        &nbsp;&nbsp;&nbsp; ps.<SPAN CLASS="efeature">start_profiling</span><br>
+        &nbsp;&nbsp;&nbsp; ps.<A HREF="/libraries/base/reference/support/profiling_setting.html#start_profiling"><SPAN CLASS="efeature">start_profiling</span></A><br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ecomment">--
         What needs to be profiled.</span><br>
-        &nbsp;&nbsp;&nbsp; ps.<SPAN CLASS="efeature">stop_profiling</span><br>
+        &nbsp;&nbsp;&nbsp; ps.<A HREF="/libraries/base/reference/support/profiling_setting.html#stop_profiling"><SPAN CLASS="efeature">stop_profiling</span></A><br>
         <SPAN CLASS="ekeyword">end</span></p>
 		</CODE>
 
@@ -103,8 +102,9 @@
         <P>When the program exits, a file named 'profinfo' should be generated
         next to it.</P>
 
-        <P>All that's left to do is launch the Profiler wizard
-        HYPERLINK(Profiler wizard reference) and follow the instructions.</P>
+        <P>All that's left to do is launch the
+        <A HREF="/tools/eiffelstudio/reference/70_wizards_and_dialogs/10_profiler_wizard/00_introduction.html">Profiler wizard</A>
+        and follow the instructions.</P>
 
         <P CLASS="seealso">
 		<B>See Also</B><BR>

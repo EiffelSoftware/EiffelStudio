@@ -30,7 +30,7 @@ feature
 		deferred
 		end; -- is_call_back_set
 
-	set_error_call_back (a_file: UNIX_FILE; a_command: COMMAND; an_argument: ANY) is
+	set_error_call_back (a_file: IO_MEDIUM; a_command: COMMAND; an_argument: ANY) is
 			-- Set `a_command' with `argument' to execute when an operation
 			-- on `a_file' had raised an I/O error.
 			--| the behave of this routine should be examined when other
@@ -52,7 +52,7 @@ feature
 			not is_call_back_set
 		end; -- set_no_call_back
 
-	set_read_call_back (a_file: UNIX_FILE; a_command: COMMAND; an_argument: ANY) is
+	set_read_call_back (a_file: IO_MEDIUM; a_command: COMMAND; an_argument: ANY) is
 			-- Set `a_command' with `argument' to execute when `a_file' has
 			-- data available.
 		require
@@ -63,7 +63,7 @@ feature
 			is_call_back_set
 		end; -- set_read_call_back
 
-	set_write_call_back (a_file: UNIX_FILE; a_command: COMMAND; an_argument: ANY) is
+	set_write_call_back (a_file: IO_MEDIUM; a_command: COMMAND; an_argument: ANY) is
 			-- Set `a_command' with `argument' to execute when `a_file' is
 			-- available for writing.
 		require

@@ -17,7 +17,6 @@ ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::IEiffelClassDescriptor_i
 	eiffel_object = eif_adopt (eif_obj);
 	type_id = eif_type (eiffel_object);
 	
-	LockModule ();
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -28,7 +27,6 @@ ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::~IEiffelClassDescriptor_
 
 	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_POINTER))eiffel_procedure) (eif_access (eiffel_object), NULL);
 	eif_wean (eiffel_object);
-	UnlockModule ();
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -575,6 +573,7 @@ STDMETHODIMP_(ULONG) ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::Rel
 	Decrement reference count
 -----------------------------------------------------------*/
 {
+	UnlockModule ();
 	LONG res = InterlockedDecrement (&ref_count);
 	if (res  ==  0)
 	{
@@ -590,6 +589,7 @@ STDMETHODIMP_(ULONG) ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::Add
 	Increment reference count
 -----------------------------------------------------------*/
 {
+	LockModule ();
 	return InterlockedIncrement (&ref_count);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/

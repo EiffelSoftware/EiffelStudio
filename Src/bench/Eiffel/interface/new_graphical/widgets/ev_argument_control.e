@@ -422,16 +422,16 @@ feature {NONE} -- GUI
 			notebook.selection_actions.extend (agent on_tab_changed)
 			
 				-- List actions.
-			ace_arguments_list.focus_in_actions.force_extend (agent refresh)
-			user_arguments_list.focus_in_actions.force_extend (agent refresh)
+			ace_arguments_list.focus_in_actions.extend (agent refresh)
+			user_arguments_list.focus_in_actions.extend (agent refresh)
 			ace_arguments_list.select_actions.force_extend (agent argument_selected (ace_arguments_list))
 			user_arguments_list.select_actions.force_extend (agent argument_selected (user_arguments_list))
 			ace_arguments_list.end_edit_actions.extend (agent on_list_edited)
 			user_arguments_list.end_edit_actions.extend (agent on_list_edited)
 			
 				-- Combo actions.
-			ace_combo.select_actions.force_extend (agent argument_selected (ace_combo))
-			user_combo.select_actions.force_extend (agent argument_selected (user_combo))
+			ace_combo.select_actions.extend (agent argument_selected (ace_combo))
+			user_combo.select_actions.extend (agent argument_selected (user_combo))
 			
 				-- Argument text actions.
 			ace_current_arg_text.key_release_actions.extend (agent arg_text_changed)

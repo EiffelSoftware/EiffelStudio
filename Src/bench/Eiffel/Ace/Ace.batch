@@ -4,10 +4,6 @@ root
 
 	es (root_cluster): "make"
 
-default
-
-	assertion (no)
-
 cluster
 
 -- STANDARD STRUCTURES:

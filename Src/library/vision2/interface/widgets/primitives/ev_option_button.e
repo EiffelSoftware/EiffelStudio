@@ -64,7 +64,7 @@ feature -- Status report
 			Result := implementation.selected_item
 		end
 
-	menu: EV_MENU is
+	child_menu: EV_MENU is
 			-- The menu which is affected to the
 			-- option button.
 		do

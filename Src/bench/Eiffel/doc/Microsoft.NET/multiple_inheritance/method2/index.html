@@ -154,7 +154,7 @@ have a look at what we should generate as an inheritance hierarchy:<p align="cen
 .class B_IMP: B {
 	h {} {
 		.override A::f
-		call s_h (Current);
+		call A_IMP::s_f (Current);
 	};
 
 	g (Y y) { call s_g (Current, y); };
@@ -164,18 +164,14 @@ have a look at what we should generate as an inheritance hierarchy:<p align="cen
 		call s_g ((Y) x))
 	}
 
-	static s_h (B b) { call A_IMP::s_f (b); }
 	static s_g (B b, Y y) { ... }
 }</pre>
 
 <pre>.interface C: A
 
 .class C_IMP: C {
-	f () { call s_f (Current); };
-	g (X x) { call s_g (Current, x); };
-
-	static s_f (C a) { call A_IMP::s_f (Current); };
-	static s_g (C a, X x) { call A_IMP::s_g (Current, x); };
+	f () { call A_IMP::s_f (Current); };
+	g (X x) { call A_IMP::s_g (Current, x); };
 }</pre>
 
 <pre>.interface D: B, C {
@@ -183,8 +179,10 @@ have a look at what we should generate as an inheritance hierarchy:<p align="cen
 }
 
 .class D_IMP: D {
-	f() {};		
-	C_g (X x) {};
+	f() { call A_IMP::s_f (Current); };
+	h () { call A_IMP::s_f (Current); };
+	g (Y y) { call B_IMP::s_g (Current, y); };		
+	C_g (X x) { call A_IMP::s_g (Current, x); };
 }</pre>
 
 <pre>.interface F {
@@ -202,13 +200,33 @@ have a look at what we should generate as an inheritance hierarchy:<p align="cen
 .class E_IMP: E {
 	f() {
 		.override C::f
-		call s_f (Current);
+		call F_IMP::s_f (Current);
 	};
-	g(X x) { call s_g (Current, x); };
-
-	static s_f (E e) { call F_IMP::s_f (e); };
-	static s_g (E e, X x) { call C_IMP::s_g (e, x); };
+	g(X x) { call A_IMP::s_g (Current, x); };
 }</pre>
+
+<h2>An explanation</h2>
+<p>Let's explain the previous example and let's determine what gets generated in 
+the interfaces and what gets implemented in the implementation classes.</p>
+<h3>Interface</h3>
+<p>In the interface, will be generated the signature of:</p>
+<ul>
+  <li>renamed features of the origin class</li>
+  <li>explicitly redefined features where covariance is done</li>
+  <li>implicitly redefined features where parameter, return type or one of the 
+  local variables is an anchored type whose type has been changed in Current 
+  (typically a like Current or a like something, where something has been 
+  redefined in a covariant manner).</li>
+</ul>
+<p class="note"><b>Note</b>:<br>
+We do not yet take into account local variables for inserting a feature in the 
+interface.</p>
+<h3>Implementation</h3>
+<p>In the implementation class, we will generate all inherited features (defined 
+in the parent interfaces) as stub to a call to their static definition. The 
+static definition of a feature is generated in the implementation class 
+corresponding to the origin class where the feature is actually written. This 
+avoids to have too many static definitions everywhere that almost look a like.</p>
 
 </body>
 

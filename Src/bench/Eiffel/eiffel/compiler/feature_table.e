@@ -271,11 +271,15 @@ debug ("ACTIVITY")
 	io.error.putstring (old_feature_i.feature_name);
 	io.error.new_line;
 end;
-							-- If the external is encapsulated then it was not added to
-							-- the list of new externals in inherit_table. Same thing
-							-- if it has to be removed
 						if not external_i.encapsulated then
+								-- If the external is encapsulated then it was not added to
+								-- the list of new externals in inherit_table. Same thing
+								-- if it has to be removed
 							pass_control.remove_external (external_i.external_name);
+						else
+								-- If it was encapsulated, we need to regenerate the C code
+								-- of the class where it was defined
+							external_i.written_in.associated_class.set_must_be_recompiled (True)
 						end;
 					end;
 					if 	new_feature_i = Void

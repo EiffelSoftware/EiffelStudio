@@ -161,9 +161,10 @@ feature {NONE} -- Implementation
 			--| Use the localy gtk_object_destroy defined below to avoid making
 			--| a dot call to C.gtk_object_destroy which is not allowed here.
 		do
-			debug ("EV_GTK_DEBUG")
-				safe_print (generator + ".dispose")
-			end
+			-- FIXME this may not be safe!
+			--debug ("EV_GTK_DEBUG")
+			--	safe_print (generator + ".dispose")
+			--end
 			if c_object /= Default_pointer then
 				gtk_object_unref (c_object)
 			end
@@ -349,6 +350,9 @@ end -- class EV_ANY_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2000/03/11 00:43:59  oconnor
+--| Commented out possibly unsafe dispose action.
+--|
 --| Revision 1.4  2000/02/22 18:39:34  oconnor
 --| updated copyright date and formatting
 --|

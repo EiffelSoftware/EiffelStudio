@@ -1,4 +1,4 @@
-ebench ICON ebench.ico
+ebench ICON estudio.ico
 
 #define splash_id 1024
 splash_id BITMAP "splash.bmp"

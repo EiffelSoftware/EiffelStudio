@@ -135,6 +135,10 @@ feature -- Status setting
 			
 			object := an_object
 			
+				-- Set title of parent window to
+				-- reflect the name.
+			set_title_from_name
+			
 			--| FIXME need to actually check the types that `Current' conforms to
 			--| and then build the object_editors dynamically.
 			construct_editor	
@@ -189,6 +193,20 @@ feature -- Status setting
 		
 
 feature {NONE} -- Implementation
+
+
+	set_title_from_name is
+			-- Update title of top level window to reflect the
+			-- name of the object in `Current'.
+		do	
+			if not (current = docked_object_editor) then
+				if object.name.is_empty then
+					window_parent.set_title (object.short_type)
+				else
+					window_parent.set_title (object.name + ": " + object.short_type)
+				end
+			end
+		end
 
 	construct_editor is
 			-- Build `Current'. Build all attribute editors and populate,
@@ -277,6 +295,8 @@ feature {NONE} -- Implementation
 					object.layout_item.set_text (name_field.text + ": " + object.type.substring (4, object.type.count))			
 				end
 				object.set_name (name_field.text)
+					-- Update title of window.
+				set_title_from_name
 					-- Must be performed after we have actually changed the name of the object.
 				update_editors_for_name_change (object.object, Current)
 					-- We now inform the system that the user has modified something
@@ -289,7 +309,7 @@ feature {NONE} -- Implementation
 					-- invalid character was received.
 				if current_caret_position = name_field.text.count + 1 then
 					name_field.set_text (name_field.text.substring (1, name_field.text.count - 1))
-					name_field.set_caret_position (current_caret_position)
+					name_field.set_caret_position (current_caret_position - 1)
 				elseif current_caret_position = 2 then
 					name_field.set_text (name_field.text.substring (2, name_field.text.count))	
 					name_field.set_caret_position (1)
@@ -317,6 +337,7 @@ feature {GB_ACCESSIBLE_OBJECT_EDITOR} -- Implementation
 			-- Used when a name changes from another
 			-- object editor. All must be updated.
 		do
+			set_title_from_name
 			name_field.change_actions.block
 			name_field.set_text (object.name)
 			name_field.change_actions.resume

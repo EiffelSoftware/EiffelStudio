@@ -83,7 +83,8 @@ feature -- Graphical Interface
 			else
 				!TABBED_TEXT_WINDOW! text_window.make (new_name, Current)
 			end;
-			set_mode_for_editing
+			set_mode_for_editing;
+			set_tab_length_to_default
 		end
 
 feature -- Window Properties

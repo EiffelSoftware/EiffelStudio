@@ -15,7 +15,7 @@ inherit
 
 	ECOM_EXCEPTION
 	
-creation
+create
 	make,
 	make_from_pointer
 

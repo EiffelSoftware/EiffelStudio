@@ -4,7 +4,7 @@ indexing
 class
 	STRING_MANIPULATOR
 
-creation
+create
 	make
 
 feature {NONE}  -- Initialization

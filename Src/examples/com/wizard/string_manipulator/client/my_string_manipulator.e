@@ -10,7 +10,7 @@ inherit
 			replace_substring_user_precondition
 		end
 
-creation
+create
 	make,
 	make_from_other,
 	make_from_pointer

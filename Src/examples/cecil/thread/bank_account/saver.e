@@ -14,7 +14,7 @@ inherit
 		redefine
 			deposit
 		end
-creation
+create
 	make
 
 feature -- Execution

@@ -8,7 +8,7 @@ class
 inherit
 	ECOM_EXCEPTION
 
-creation
+create
 
 	make
 

@@ -871,24 +871,24 @@ feature {G_ANY, G_ANY_I, WIDGET_I} -- Implementation
 		end
 
 invariant
-	before_definition: before = (index = 0)
-	after_definition: after = (index = count + 1)
-	non_negative_index: index >= 0
-	index_small_enough: index <= count + 1
-	off_definition: off = ((index = 0) or (index = count + 1))
-	isfirst_definition: isfirst = ((not empty) and (index = 1))
-	islast_definition: islast = ((not empty) and (index = count))
-	item_corresponds_to_index: (not off) implies (item = i_th (index))
-	writable_constraint: writable implies readable
-	empty_constraint: empty implies (not readable) and (not writable)
-	not_both: not (after and before)
-	empty_property: empty implies (after or before)
-	before_constraint: before implies off
-	after_constraint: after implies off
-	empty_constraint: empty implies off
-	empty_definition: empty = (count = 0)
-	non_negative_count: count >= 0
-	extendible: extendible
+	before_definition: not destroyed implies (before = (index = 0))
+	after_definition: not destroyed implies (after = (index = count + 1))
+	non_negative_index: not destroyed implies (index >= 0)
+	index_small_enough: not destroyed implies (index <= count + 1)
+	off_definition: not destroyed implies (off = ((index = 0) or (index = count + 1)))
+	isfirst_definition: not destroyed implies (isfirst = ((not empty) and (index = 1)))
+	islast_definition: not destroyed implies (islast = ((not empty) and (index = count)))
+	item_corresponds_to_index: not destroyed implies ((not off) implies (item = i_th (index)))
+	writable_constraint: not destroyed implies (writable implies readable)
+	empty_constraint: not destroyed implies (empty implies (not readable) and (not writable))
+	not_both: not destroyed implies (not (after and before))
+	empty_property: not destroyed implies (empty implies (after or before))
+	before_constraint: not destroyed implies (before implies off)
+	after_constraint: not destroyed implies (after implies off)
+	empty_constraint: not destroyed implies (empty implies off)
+	empty_definition: not destroyed implies (empty = (count = 0))
+	non_negative_count: not destroyed implies (count >= 0)
+	extendible: not destroyed implies extendible
 
 end -- class SCROLLABLE_LIST
 

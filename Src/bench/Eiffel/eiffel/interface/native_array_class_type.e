@@ -115,13 +115,13 @@ feature -- IL code generation
 		local
 			gen_param: TYPE_I
 			cl_type: CL_TYPE_I
-			is_expanded: BOOLEAN
+			l_param_is_expanded: BOOLEAN
 			type_c: TYPE_C
 			type_kind: INTEGER
 			generic_type_id: INTEGER
 		do
 			gen_param := first_generic
-			is_expanded := gen_param.is_true_expanded
+			l_param_is_expanded := gen_param.is_true_expanded
 			type_c := gen_param.c_type
 
 				-- Find real type of ARRAY.
@@ -136,7 +136,7 @@ feature -- IL code generation
 					types.first.static_type_id	
 			end
 
-			if not is_expanded then
+			if not l_param_is_expanded then
 				inspect
 					type_c.level
 				when C_char then

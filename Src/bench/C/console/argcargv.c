@@ -1,4 +1,13 @@
-#define WIN32_LEAN_AND_MEAN
+/*
+	ARGCAGRV.C - processing for the startup of the application
+		allows for an application started under the debugger
+		and adjusts the command line and argument count appropriately.
+
+	An application under the debugger has 2 extra arguments the in and out pipes
+	in uuencoded form for passing as strings.
+
+	Also the cleanup processing is held in this file.
+*/
 #include <windows.h>
 #include <dos.h>
 
@@ -61,6 +70,9 @@ EIF_CLEANUP eif_fn_table [EIF_CLEANUP_TABLE_SIZE];
 int eif_fn_count = 0;
 
 void eif_cleanup()
+/*
+	Call each cleanup function that has been registered
+*/
 {
 	int i;
 
@@ -78,6 +90,9 @@ void eif_cleanup()
 }
 
 void eif_register_cleanup(EIF_CLEANUP f)
+/*
+	Register a cleanup function
+*/
 {
 	if (eif_fn_count == EIF_CLEANUP_TABLE_SIZE)
 		eraise ("Cleanup table overflow");

@@ -57,6 +57,7 @@ To do:
 - Look into destroyed tree item problem.
 - Test all state variables in non-parented widgets.
 - Rename titled_window_imp.e <-> window_imp.e
+- Moving a splitter causes two redraws on WEL.
 
 
 Feature/Bug requests:

@@ -24,7 +24,7 @@ feature {AST_FACTORY} -- Initialization
 			l_not_void: l /= Void
 		do
 			call := c
-			location := clone (l)
+			location := l.twin
 		ensure
 			call_set: call = c
 			location_set: location.is_equal (l)

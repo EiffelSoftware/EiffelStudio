@@ -30,8 +30,8 @@ feature {AST_FACTORY} -- Initialization
 			variant_part := v
 			stop := s
 			compound := c
-			location := clone (l)
-			end_location := clone (e)
+			location := l.twin
+			end_location := e.twin
 		ensure
 			from_part_set: from_part = f
 			invariant_part_set: invariant_part = i

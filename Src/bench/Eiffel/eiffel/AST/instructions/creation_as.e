@@ -34,7 +34,7 @@ feature {AST_FACTORY} -- Initialization
 			type := tp
 			target := tg
 			call := c
-			location := clone (l)
+			location := l.twin
 
 				-- If there is no call we create `default_call'
 			if call = Void then

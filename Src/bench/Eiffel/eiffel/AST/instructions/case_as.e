@@ -23,7 +23,7 @@ feature {AST_FACTORY} -- Initialization
 		do
 			interval := i
 			compound := c
-			location := clone (l)
+			location := l.twin
 		ensure
 			interval_set: interval = i
 			compound_set: compound = c

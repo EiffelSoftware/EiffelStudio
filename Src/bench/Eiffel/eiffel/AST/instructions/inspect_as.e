@@ -26,8 +26,8 @@ feature {AST_FACTORY} -- Initialization
 			switch := s
 			case_list := c
 			else_part := e
-			location := clone (l)
-			end_location := clone (el)
+			location := l.twin
+			end_location := el.twin
 		ensure
 			switch_set: switch = s
 			case_list_set: case_list = c

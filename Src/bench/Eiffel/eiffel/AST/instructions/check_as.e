@@ -21,8 +21,8 @@ feature {AST_FACTORY} -- Initialization
 			e_not_void: e /= Void
 		do
 			check_list := c
-			location := clone (l)
-			end_location := clone (e)
+			location := l.twin
+			end_location := e.twin
 		ensure
 			check_list_set: check_list = c
 			location_set: location.is_equal (l)

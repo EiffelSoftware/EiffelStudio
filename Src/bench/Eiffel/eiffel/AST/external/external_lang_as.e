@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			s_not_void: s /= Void
 		do
 			language_name := l
-			location := clone (s)
+			location := s.twin
 			parse
 		ensure
 			language_name_set: language_name = l
@@ -129,7 +129,7 @@ feature {NONE} -- Implementation
 				io.error.new_line
 			end
 				-- getting rid of extra blanks
-			image := clone (source)
+			image := source.twin
 			image.left_adjust
 			image.right_adjust
 

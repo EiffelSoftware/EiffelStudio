@@ -241,42 +241,48 @@ feature -- rest
 		do
 			!!open_command.make (text_window);
 			!!classic_bar.make (new_name, form_manager);
-				!!quit_command.make (classic_bar, text_window);
-				!!change_font_command.make (classic_bar, text_window);
-				!!type_teller.make (new_name, classic_bar);
-					type_teller.set_center_alignment;
-				!!explain_hole.make (classic_bar, Current);
-				!!system_hole.make (classic_bar, Current);
-				!!class_hole.make (classic_bar, Current);
-				!!routine_hole.make (classic_bar, Current);
-				!!object_hole.make (classic_bar, Current);
-				!!stop_points_hole.make (classic_bar, Current);
-				--!!shell_hole.make (classic_bar, Current);
-					classic_bar.attach_top (quit_command, 0);
-					classic_bar.attach_top (change_font_command, 0);
-					classic_bar.attach_top (type_teller, 0);
-					classic_bar.attach_top (explain_hole, 0);
-					classic_bar.attach_top (system_hole, 0);
-					classic_bar.attach_top (class_hole, 0);
-					classic_bar.attach_top (routine_hole, 0);
-					classic_bar.attach_top (object_hole, 0);
-					classic_bar.attach_top (stop_points_hole, 0);
-					classic_bar.attach_left (explain_hole, 0);
-					classic_bar.attach_left_widget (explain_hole, system_hole,0);
-					classic_bar.attach_left_widget (system_hole, class_hole,0);
-					classic_bar.attach_left_widget (class_hole, routine_hole, 0);
-					classic_bar.attach_left_widget (routine_hole, object_hole, 0);
-					classic_bar.attach_left_widget (object_hole, stop_points_hole, 0);
-					classic_bar.attach_left_widget (stop_points_hole, type_teller,
-0);
-					classic_bar.attach_right_widget (change_font_command, type_teller, 0);
-					classic_bar.attach_right_widget (quit_command, change_font_command, 0);
-					classic_bar.attach_right (quit_command, 23);
-					classic_bar.attach_bottom (type_teller, 0);
-					--classic_bar.attach_right_widget (shell_hole, object_hole, 0);
-					--classic_bar.attach_top (shell_hole, 0);
-					--classic_bar.attach_right (shell_hole, 23);
-					clean_type;
+
+			!!quit_command.make (classic_bar, text_window);
+			!!change_font_command.make (classic_bar, text_window);
+			!!type_teller.make (new_name, classic_bar);
+				type_teller.set_center_alignment;
+			!!explain_hole.make (classic_bar, Current);
+			!!system_hole.make (classic_bar, Current);
+			!!class_hole.make (classic_bar, Current);
+			!!routine_hole.make (classic_bar, Current);
+			!!object_hole.make (classic_bar, Current);
+			!!stop_points_hole.make (classic_bar, Current);
+
+			classic_bar.attach_left (explain_hole, 0);
+			classic_bar.attach_top (explain_hole, 0);
+			classic_bar.attach_bottom (explain_hole, 0);
+			classic_bar.attach_left_widget (explain_hole, system_hole,0);
+			classic_bar.attach_top (system_hole, 0);
+			classic_bar.attach_bottom (system_hole, 0);
+			classic_bar.attach_left_widget (system_hole, class_hole,0);
+			classic_bar.attach_top (class_hole, 0);
+			classic_bar.attach_bottom (class_hole, 0);
+			classic_bar.attach_left_widget (class_hole, routine_hole, 0);
+			classic_bar.attach_top (routine_hole, 0);
+			classic_bar.attach_bottom (routine_hole, 0);
+			classic_bar.attach_left_widget (routine_hole, object_hole, 0);
+			classic_bar.attach_top (object_hole, 0);
+			classic_bar.attach_bottom (object_hole, 0);
+			classic_bar.attach_left_widget (object_hole, stop_points_hole, 0);
+			classic_bar.attach_top (stop_points_hole, 0);
+			classic_bar.attach_bottom (stop_points_hole, 0);
+			classic_bar.attach_left_widget (stop_points_hole, type_teller, 0);
+			classic_bar.attach_top (type_teller, 0);
+			classic_bar.attach_bottom (type_teller, 0);
+			classic_bar.attach_right_widget (change_font_command, type_teller, 0);
+			classic_bar.attach_top (change_font_command, 0);
+			classic_bar.attach_bottom (change_font_command, 0);
+			classic_bar.attach_right_widget (quit_command, change_font_command, 0);
+			classic_bar.attach_top (quit_command, 0);
+			classic_bar.attach_bottom (quit_command, 0);
+			classic_bar.attach_right (quit_command, 23);
+
+			clean_type;
 		end;
 
 	build_text is
@@ -289,17 +295,23 @@ feature -- rest
 	build_format_bar is
 			-- Build formatting buttons in `format_bar'.
 		do
-			!! format_bar.make (new_name, form_manager);
-			!! exec_stop.make (format_bar, text_window);
+			!!format_bar.make (new_name, form_manager);
+
+			!!exec_stop.make (format_bar, text_window);
+			format_bar.attach_left (exec_stop, 0);
 			format_bar.attach_top (exec_stop, 0);
-			!! exec_step.make (format_bar, text_window);
+			format_bar.attach_bottom (exec_stop, 0);
+			!!exec_step.make (format_bar, text_window);
 			format_bar.attach_top (exec_step, 0);
+			format_bar.attach_bottom (exec_step, 0);
 			format_bar.attach_left_widget (exec_stop, exec_step, 0);
-			!! exec_last.make (format_bar, text_window);
+			!!exec_last.make (format_bar, text_window);
 			format_bar.attach_top (exec_last, 0);
+			format_bar.attach_bottom (exec_last, 0);
 			format_bar.attach_left_widget (exec_step, exec_last, 0);
-			!! exec_nostop.make (format_bar, text_window);
+			!!exec_nostop.make (format_bar, text_window);
 			format_bar.attach_top (exec_nostop, 0);
+			format_bar.attach_bottom (exec_nostop, 0);
 			format_bar.attach_left_widget (exec_last, exec_nostop, 0);
 		end;
 
@@ -343,20 +355,27 @@ feature -- rest
 				!!freeze_command.make (icing, text_window);
 				!!finalize_command.make (icing, text_window);
 			icing.attach_top (update_command, 0);
---			icing.attach_top_widget (update_command, run_command, 0);
-			icing.attach_top_widget (update_command, debug_run_command, 0);
-			icing.attach_top_widget (debug_run_command, debug_status_command, 0);
-			icing.attach_top_widget (debug_status_command, debug_quit_command, 0);
-			icing.attach_top_widget (debug_quit_command, special_command, 0);
-			icing.attach_bottom_widget (freeze_command, special_command, 0);
-			icing.attach_bottom_widget (finalize_command, freeze_command, 0);
-			icing.attach_bottom (finalize_command, 0);
 			icing.attach_left (update_command, 0);
 			icing.attach_right (update_command, 0);
+			icing.attach_top_widget (update_command, debug_run_command, 0);
+			icing.attach_left (debug_run_command, 0);
+			icing.attach_right (debug_run_command, 0);
+			icing.attach_top_widget (debug_run_command, debug_status_command, 0);
+			icing.attach_left (debug_status_command, 0);
+			icing.attach_right (debug_status_command, 0);
+			icing.attach_top_widget (debug_status_command, debug_quit_command, 0);
+			icing.attach_left (debug_quit_command, 0);
+			icing.attach_right (debug_quit_command, 0);
+			icing.attach_top_widget (debug_quit_command, special_command, 0);
 			icing.attach_left (special_command, 0);
 			icing.attach_right (special_command, 0);
+			icing.attach_bottom_widget (freeze_command, special_command, 0);
 			icing.attach_left (freeze_command, 0);
+			icing.attach_right (freeze_command, 0);
+			icing.attach_bottom_widget (finalize_command, freeze_command, 0);
+			icing.attach_bottom (finalize_command, 0);
 			icing.attach_left (finalize_command, 0);
+			icing.attach_right (finalize_command, 0);
 		end;
 
 	attach_all is

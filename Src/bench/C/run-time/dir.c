@@ -123,9 +123,8 @@ rt_public void dir_rewind(EIF_POINTER d)
 		FindClose(dirp->handle);
 	dirp->handle = NULL;
 #else
-	DIR *dirp = (DIR *) d;
 #ifdef HAS_REWINDDIR
-	rewinddir(dirp);
+	rewinddir((DIR *) d);
 #endif
 #endif
 }

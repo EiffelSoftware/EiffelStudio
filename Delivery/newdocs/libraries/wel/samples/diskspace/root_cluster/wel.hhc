@@ -1,0 +1,8 @@
+	<LI><OBJECT type="text/sitemap"><param name="Name" value="root_cluster"><param name="Local" value="libraries\wel\samples\diskspace\root_cluster\index.html"></OBJECT>
+	<UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="DISKSPACE_DEMO"><param name="Local" value="libraries\wel\samples\diskspace\root_cluster\diskspace_demo.html"></OBJECT>
+		<UL>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="disk_space"><param name="Local" value="libraries\wel\samples\diskspace\root_cluster\diskspace_demo.html#f_disk_space"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="make"><param name="Local" value="libraries\wel\samples\diskspace\root_cluster\diskspace_demo.html#f_make"></OBJECT>
+		</UL>
+	</UL>

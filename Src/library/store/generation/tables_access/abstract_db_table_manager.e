@@ -23,12 +23,16 @@ feature -- Access
 
 feature -- Status report
 
-	has_error: BOOLEAN
+	has_error: BOOLEAN is
 			-- Has an error occured during last database operation?
+		deferred
+		end
 
-	error_message: STRING
+	error_message: STRING is
 			-- Error message if an error occured during last
 			-- database operation.
+		deferred
+		end
 
 	select_query_prepared: BOOLEAN is
 			-- Is a select query prepared?

@@ -23,6 +23,8 @@ inherit
 			background_color
 		end
 
+	EV_ITEM_HOLDER_IMP
+
 creation
 	make_with_size,
 	make_with_text
@@ -210,6 +212,19 @@ feature -- Status setting
 			gtk_clist_unselect_all (widget)
 		end
 
+	count: INTEGER is
+			-- Number of direct children of the holder.
+		do
+			Result := ev_children.count
+		end
+
+	get_item (index: INTEGER): EV_ITEM is
+			-- Give the item of the list at the zero-base
+			-- `index'.
+		do
+			Result ?= (ev_children.i_th (index)).interface
+		end
+
 feature -- Element change
 
 	set_column_title (txt: STRING; column: INTEGER) is
@@ -299,6 +314,13 @@ feature -- Element change
 			else
 				{EV_PRIMITIVE_IMP} Precursor (color)
 			end
+		end
+
+feature -- Basic operations
+
+	find_item_by_data (data: ANY): EV_ITEM is
+			-- Find a child with data equal to `data'.
+		do
 		end
 
 feature -- Event : command association

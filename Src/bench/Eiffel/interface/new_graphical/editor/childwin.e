@@ -221,7 +221,7 @@ feature -- Basic operations
 				if not has_selection then
 					if shifted_key then
 						has_selection := True
-						selection_start := cursor
+						selection_start := clone (cursor)
 					end
 					invalidate_cursor_rect (False)
 					cursor.go_left_char
@@ -238,14 +238,23 @@ feature -- Basic operations
 				end
 
 			elseif  virtual_key = Vk_right then
-				invalidate_cursor_rect (False)
-				cursor.go_right_char
-				if has_selection and then not (shifted_key) then
+				if not has_selection then
+					if shifted_key then
+						has_selection := True
+						selection_start := clone (cursor)
+					end
+					invalidate_cursor_rect (False)
+					cursor.go_right_char
+					invalidate_cursor_rect (True)
+				elseif shifted_key then
+					invalidate_cursor_rect (False)
+					cursor.go_right_char
+					invalidate_cursor_rect (True)
+				else
+					cursor.go_right_char
 					has_selection := False
 					invalidate
 					update
-				else
-					invalidate_cursor_rect (True)
 				end
 
 			elseif  virtual_key = Vk_up then

@@ -11,20 +11,20 @@ class
 
 inherit
 
-	MEL_TOP_LEVEL_SHELL
-		redefine
-			make
-		end;
-
 	MEL_APPLICATION_SHELL_RESOURCES
 		export
 			{NONE} all
+		end;
+
+	MEL_TOP_LEVEL_SHELL
+		redefine
+			make
 		end
 
 creation
 	make
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
 	make (app_name, app_class: STRING; a_screen: MEL_SCREEN) is
 			-- Create an application shell.
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			screen_object := xt_create_app_shell ($application, $application_class,
 							a_screen.display.handle, 
 							a_screen.handle);
-			Mel_widgets.put (Current, screen_object);
+			Mel_widgets.add_without_parent (Current);
 			set_default
 		end;
 

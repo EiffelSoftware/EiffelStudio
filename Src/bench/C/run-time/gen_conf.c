@@ -1075,7 +1075,7 @@ rt_public int eif_gen_conf (int16 source_type, int16 target_type)
 					}
 					else
 					{
-						if (stype < first_gen_id)
+						if ((stype >= 0) && (stype < first_gen_id))
 							stype = RTUD(stype);
 					}
 				

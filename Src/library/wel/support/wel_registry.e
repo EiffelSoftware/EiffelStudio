@@ -228,28 +228,32 @@ feature -- Access
 			end
 		end
 
-	default_key_value (key: POINTER; path: STRING): WEL_REGISTRY_KEY_VALUE is
-			-- Retrieve value of `value_name' associated with open
+	default_key_value (key: POINTER; subkey: STRING): WEL_REGISTRY_KEY_VALUE is
+			-- Retrieve value of `subkey' associated with open
 			-- `key'.
+		obsolete
+			"Use `key_value' with an empty string instead, if `subkey' is Void or empty. %
+			%Otherwise open manually the subkey represented by `subkey' and then call `key_value' %
+			%with an empty string."
 		require
-			key_possible:valid_value_for_hkey(key)
+			key_possible: valid_value_for_hkey(key)
 		local
-			a: WEL_STRING
-			res, size: INTEGER
-			ext: WEL_STRING
+			l_subkey: WEL_STRING
+			l_ext: MANAGED_POINTER
+			l_size: INTEGER
 		do
-			size := 512
-			create ext.make_empty (size)
-			if path /= Void then
-				create a.make (path)
-				res := cwin_reg_query_value (key, a.item, ext.item, $size)
+			if subkey /= Void then
+				last_call_successful := False
+				create l_subkey.make (subkey)
+				if cwin_reg_query_value (key, l_subkey.item, default_pointer, $l_size) = error_success then
+					create l_ext.make (l_size)
+					if cwin_reg_query_value (key, l_subkey.item, l_ext.item, $l_size) = error_success then
+						last_call_successful := True
+						create Result.make_with_data (feature {WEL_REGISTRY_KEY_VALUE_TYPE}.reg_sz, l_ext)
+					end
+				end
 			else
-				res := cwin_reg_query_value (key, default_pointer, ext.item, $size)
-			end
-			last_call_successful := res = Error_success
-			if last_call_successful then
-				ext.set_count (size)
-				create Result.make_with_value (0, ext)
+				Result := key_value (key, "")
 			end
 		end
 
@@ -270,10 +274,10 @@ feature -- Settings
 			if value_name /= Void then
 				create a.make (value_name)
 				res := cwin_reg_set_key_value (key, a.item, 0, value.type,
-					value.internal_value.item, value.internal_value.capacity)
+					value.data.item, value.data.count)
 			else
 				res := cwin_reg_set_key_value (key, default_pointer, 0, value.type,
-					value.internal_value.item, value.internal_value.capacity)
+					value.data.item, value.data.count)
 			end
 			last_call_successful := res = Error_success
 		end
@@ -448,29 +452,31 @@ feature -- Access
 			-- have been opened with the KEY_QUERY_VALUE access.
 		require
         	value_name_possible: value_name /= Void
-			key_valid:valid_value_for_hkey(key)
+			key_valid: valid_value_for_hkey (key)
 		local
-			a: WEL_STRING
-			res, type, size: INTEGER
-			ext: WEL_STRING
+			l_name: WEL_STRING
+			l_type, l_size, l_res: INTEGER
+			l_ext: MANAGED_POINTER
+			l_null: POINTER
 		do
-			create a.make (value_name)
-			size := 512
-			create ext.make_empty (size)
-			res := cwin_reg_query_value_ex (key, a.item, default_pointer, $type, ext.item, $size)
-			if res = Error_success then
-				ext.set_count (size)
-				create Result.make_with_value (type, ext)
-			else
-				if res = Error_more_data then
-						-- Size was given by first call to RegQueryValueEx, we create
-						-- a string that can hold that much.
-					create ext.make_empty (size)
-					res := cwin_reg_query_value_ex (key, a.item, default_pointer, $type, ext.item, $size)
-					if res = Error_success then
-						ext.set_count (size)
-						create Result.make_with_value (type, ext)
-					end
+			create l_name.make (value_name)
+			last_call_successful := False
+			if cwin_reg_query_value_ex (key, l_name.item, l_null, l_null, l_null, $l_size) = Error_success then
+					-- Repeat until it works and that no more data has to be read. See MSDN
+					-- comments about why this needs to be done when the root key is HKEY_PERFORMANCE_DATA.
+				from
+					create l_ext.make (l_size)
+					l_res := cwin_reg_query_value_ex (key, l_name.item, l_null, l_null, l_ext.item, $l_size)
+				until
+					l_res = error_success or l_res /= error_more_data
+				loop
+					create l_ext.make (l_size)
+					l_res := cwin_reg_query_value_ex (key, l_name.item, l_null, l_null, l_ext.item, $l_size)
+				end
+					
+				if l_res = error_success then
+					create Result.make_with_data (l_type, l_ext)
+					last_call_successful := True
 				end
 			end
 		end	

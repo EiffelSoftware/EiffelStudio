@@ -315,11 +315,11 @@ feature -- Basic operation
 				--| FIXME when we support replacing types of primitives with items, ie
 				--| combo box to list and back, we need to modify this.
 			if (is_instance_of (an_object, dynamic_type_from_string (gb_cell_object_class_name)) or
-				(is_instance_of (an_object, dynamic_type_from_string (gb_container_object_class_name))) and
+				is_instance_of (an_object, dynamic_type_from_string (gb_container_object_class_name))) and
 				(is_instance_of (new_object, dynamic_type_from_string (gb_cell_object_class_name)) or
-				is_instance_of (new_object, dynamic_type_from_string (gb_container_object_class_name)))) then
+				is_instance_of (new_object, dynamic_type_from_string (gb_container_object_class_name))) then
 					
-				move_object_contents (new_object, an_object, True)	
+				move_object_contents (new_object, an_object, True)
 			end
 			
 				-- Now we must update all the object editors.

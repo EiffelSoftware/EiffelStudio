@@ -34,7 +34,7 @@ feature -- Status report
 			Result := handle.execution_type.trace_output
 		end
 
-feature {NONE} -- Status setting
+feature -- Status setting
 
 	set_immediate is
 			-- Set queries to be executed with a

@@ -28,6 +28,7 @@ EIF_PROC set_ref;
 EIF_PROC set_pointer;
 EIF_PROC set_bits;
 EIF_PROC set_error;
+EIF_PROC set_void;
 
 
 public c_recv_rout_info (target)
@@ -100,9 +101,9 @@ public c_recv_rout_info (target)
 public c_recv_value (target)
 	EIF_OBJ	target;
 /*
- *	wait for a request. If it is a dumped item, send it to the RECV_VALUE instance
- *	target. Else, report an error to target. If the request is not a DUMPED, treat
- *	it as a normal asynchronous request (and report the error too)
+ *	wait for a request. If it is a dumped item, send it to the RECV_VALUE 
+ *	instance target. Else, report an error to target. If the request is not a 
+ *	DUMPED, treat it as a normal asynchronous request (and report the error too)
  */
 {
 	Request pack;
@@ -152,9 +153,12 @@ public c_recv_value (target)
 					default:	
 						break;
 				}
+			} else if (pack.rq_dump.dmp_type == DMP_VOID){
+				/* No more values to be received */
+				(set_void) (eif_access (target));
+				return;
 			}
-		}
-		else{
+		} else{
 			request_dispatch (pack);
 		}
 	}
@@ -163,8 +167,9 @@ public c_recv_value (target)
 
 
 public c_pass_recv_routines (d_int, d_bool, d_char, d_real,
-			d_double, d_ref, d_point, d_bits, d_error)
-EIF_PROC d_int, d_bool, d_char, d_real, d_double, d_ref, d_point, d_bits, d_error;
+			d_double, d_ref, d_point, d_bits, d_error, d_void)
+EIF_PROC d_int, d_bool, d_char, d_real, d_double, d_ref;
+EIF_PROC d_point, d_bits, d_error, d_void;
 /*
  *	Register the routines to communicate with a RECV_VALUE
  */
@@ -178,6 +183,7 @@ EIF_PROC d_int, d_bool, d_char, d_real, d_double, d_ref, d_point, d_bits, d_erro
 	set_pointer = d_point;
 	set_bits = d_bits;
 	set_error = d_error;
+	set_void = d_void;
 }
 		
 public c_pass_set_rout (d_rout)

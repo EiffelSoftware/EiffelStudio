@@ -81,12 +81,16 @@ feature
 		do
 			make_box (a_name, a_parent);
 			make_box_visible
+			set_same_size
+			set_spacing (3)
 		end; -- Create
 
 	make_unmanaged (a_name: STRING; a_parent: COMPOSITE) is
 		do
 			make_box_unmanaged (a_name, a_parent);
 			make_box_visible
+			set_same_size
+			set_spacing (3)
 		end;
 
 feature {CATALOG, CMD_CAT_BUTTON}

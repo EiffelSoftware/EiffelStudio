@@ -18,7 +18,6 @@ feature
 
 	make (argv: ARRAY [STRING]) is
 		local
-			x, y: INTEGER
 			soc: NETWORK_DATAGRAM_SOCKET
 			ps: MEDIUM_POLLER
 			readcomm: DATAGRAM_READER

@@ -176,7 +176,6 @@ feature -- Resource Update
 --			display_object_cmd: DISPLAY_OBJECT_PORTION
 --			stop_cmd: SHOW_BREAKPOINTS
 --			pr: like resources
---			progress_output: DEGREE_OUTPUT
 		do
 --			pr := resources
 --			if old_res = pr.command_bar then

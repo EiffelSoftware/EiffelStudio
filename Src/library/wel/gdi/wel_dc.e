@@ -1120,6 +1120,31 @@ feature -- Basic operations
 			end
 			bitmap_dc.delete
 		end
+		
+	draw_bitmap_with_raster_operation (a_bitmap: WEL_BITMAP; x, y, a_width, a_height, raster_operation: INTEGER) is
+			-- Draw `bitmap' using `raster_operation' at position `x', `y'
+			-- using `a_width' and `a_height'.
+			-- See class WEL_RASTER_OPERATIONS_CONSTANTS for `raster_operation' values.
+		require
+			exists: exists
+			a_bitmap_not_void: a_bitmap /= Void
+			a_bitmap_exists: a_bitmap.exists
+		local
+			bitmap_dc: WEL_MEMORY_DC
+		do
+			create bitmap_dc.make_by_dc (Current)
+			if palette_selected then
+				bitmap_dc.select_palette (palette)
+				bitmap_dc.realize_palette
+			end
+			bitmap_dc.select_bitmap (a_bitmap)
+			bit_blt (x, y, a_width, a_height, bitmap_dc, 0, 0, raster_operation)
+			bitmap_dc.unselect_bitmap
+			if bitmap_dc.palette_selected then
+				bitmap_dc.unselect_palette
+			end
+			bitmap_dc.delete
+		end
 
 	draw_icon (icon: WEL_ICON; x, y: INTEGER) is
 			-- Draw `icon' at the `x', `y' position.

@@ -626,7 +626,6 @@ feature {NONE} -- Implementation
 					l_item := unevaluated_expression_to_row (expr, l_item)
 				end
 			end
-			ev_list.replace (l_item)
 		end
 
 	refresh_context_expressions is

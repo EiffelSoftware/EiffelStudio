@@ -64,6 +64,25 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	pointed_tab_index: INTEGER is
+			-- index of tab currently under mouse pointer, or 0 if none.
+		do
+			--| FIXME IEK Implement this
+		end
+
+	pixmaps_size_changed is
+			-- The size of the displayed pixmaps has just
+			-- changed.
+		do
+			--| FIXME IEK Implement this
+		end
+
+	item_tab (an_item: EV_WIDGET): EV_NOTEBOOK_TAB is
+			-- Tab associated with `an_item'.
+		do
+			--| FIXME IEK Implement this
+		end
+
 	item_text (an_item: like item): STRING is
 			-- Label of `an_item'.
 		local

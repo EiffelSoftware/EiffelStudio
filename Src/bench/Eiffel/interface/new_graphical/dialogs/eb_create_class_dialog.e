@@ -98,7 +98,9 @@ feature {NONE} -- Initialization
 			deferred_check.select_actions.extend (~on_deferred)
 			create expanded_check.make_with_text (Interface_names.L_expanded)
 			expanded_check.select_actions.extend (~on_expanded)
-			create empty_check.make_with_text (Interface_names.L_empty)
+			create empty_check.make_with_text (Interface_names.L_not_empty)
+			empty_check.enable_select
+			create creation_check.make_with_text (Interface_names.l_generate_Creation)
 			create parents_list.make
 			parents_list.text_field.focus_in_actions.extend (~on_focus_in)
 			parents_list.text_field.focus_out_actions.extend (~on_focus_out)
@@ -126,6 +128,7 @@ feature {NONE} -- Initialization
 			extend_no_expand (vb, bbox)
 			extend_no_expand (vb, cluster_label)
 			vb.extend (cluster_list)
+			vb.set_border_width (Layout_constants.Small_border_size)
 			identification_frame.extend (vb)
 			
 			create vb
@@ -133,7 +136,6 @@ feature {NONE} -- Initialization
 			bbox.enable_homogeneous
 			bbox.extend (deferred_check)
 			bbox.extend (expanded_check)
-			bbox.extend (empty_check)
 			extend_no_expand (vb, bbox)
 			create creation_label.make_with_text (Interface_names.l_Creation)
 			creation_label.align_text_left
@@ -141,10 +143,13 @@ feature {NONE} -- Initialization
 			extend_no_expand (bbox, creation_label)
 			bbox.extend (creation_entry)
 			extend_no_expand (vb, bbox)
+			extend_no_expand (vb, creation_check)
+			extend_no_expand (vb, empty_check)
 			create parents_label.make_with_text (Interface_names.l_Parent_classes)
 			parents_label.align_text_left
 			extend_no_expand (vb, parents_label)
 			vb.extend (parents_list)
+			vb.set_border_width (Layout_constants.Small_border_size)
 			properties_frame.extend (vb)
 
 				-- Build the buttons
@@ -453,10 +458,11 @@ feature {NONE} -- Implementation
 			par: STRING
 			pcnt: INTEGER
 			last: BOOLEAN
+			tmp: STRING
 		do
 			if not retried then
 				clf := clone (Templates_path)
-				if empty_check.is_selected then
+				if not empty_check.is_selected then
 					clf.set_file_name ("empty")
 				else
 					clf.set_file_name ("full")
@@ -479,26 +485,23 @@ feature {NONE} -- Implementation
 					end
 					pcnt := parents_list.count
 					if pcnt > 0 then
-							--| Ten characters for "%Ninherit%N",
+							--| Ten characters for "inherit%N",
 							--| 15 for each line for each parent.
 						create inheritance.make (10 + 15 * pcnt)
 						from
-							inheritance.append ("%Ninherit%N")
+							inheritance.append ("inherit%N")
 							parents_list.list.start
 							last := parents_list.list.after
 						until
-							last
+							parents_list.list.after
 						loop
 							par := parents_list.list.item.text
 							par.to_upper
 							inheritance.append_character ('%T')
 							inheritance.append (par)
 							inheritance.append_character ('%N')
+							inheritance.append_character ('%N')
 							parents_list.list.forth
-							last := parents_list.list.after
-							if not last then
-								inheritance.append_character ('%N')
-							end
 						end
 						in_buf.replace_substring_all ("$inheritance_clause", inheritance)
 					else
@@ -506,9 +509,21 @@ feature {NONE} -- Implementation
 					end
 					cr := creation_entry.text
 					if not deferred_check.is_selected and then not cr.is_empty then
-						in_buf.replace_substring_all ("$creation_clause", "%Ncreate%N%T" + cr + "%N")
+						in_buf.replace_substring_all ("$creation_clause", "create%N%T" + cr + "%N%N")
 					else
 						in_buf.replace_substring_all ("$creation_clause", "")
+					end
+					if not deferred_check.is_selected and then creation_check.is_selected then
+						tmp := "feature {NONE} -- Initialization%N%N%T$cr_name is%N%T%T%T-- Initialize `Current'.%N%
+								%%T%Tdo%N%T%T%T%N%T%Tend%N%N"
+						if cr.is_empty then
+							tmp.replace_substring_all ("$cr_name", "default_create")
+						else
+							tmp.replace_substring_all ("$cr_name", cr)
+						end
+						in_buf.replace_substring_all ("$initialization_clause", tmp)
+					else
+						in_buf.replace_substring_all ("$initialization_clause", "")
 					end
 						--| In case we crash later, to know where we were.
 					writing := True
@@ -647,8 +662,10 @@ feature {NONE} -- Implementation
 			if deferred_check.is_selected then
 				expanded_check.disable_select
 				creation_entry.disable_sensitive
+				creation_check.disable_sensitive
 			else
 				creation_entry.enable_sensitive
+				creation_check.enable_sensitive
 			end
 		end
 
@@ -700,6 +717,9 @@ feature {NONE} -- Vision2 widgets
 
 	empty_check: EV_CHECK_BUTTON
 			-- Check box which defines whether the class is a dummy class (few features).
+
+	creation_check: EV_CHECK_BUTTON
+			-- Check box which defines whether we should define a creation feature.
 
 feature {NONE} -- Constants
 

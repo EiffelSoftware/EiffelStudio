@@ -180,21 +180,23 @@ feature {NONE} -- Implementation
 				coclass_descriptor.interface_descriptors.forth
 			end
 
-			constructor_body.append (New_line_tab)
-			constructor_body.append (Excepinfo_variable_name)
-			constructor_body.append (Space_equal_space)
-			constructor_body.append (Open_parenthesis)
-			constructor_body.append (Excepinfo)
-			constructor_body.append (Asterisk)
-			constructor_body.append (Close_parenthesis)
-			constructor_body.append (Co_task_mem_alloc)
-			constructor_body.append (Space_open_parenthesis)
-			constructor_body.append (Sizeof)
-			constructor_body.append (Space_open_parenthesis)
-			constructor_body.append (Excepinfo)
-			constructor_body.append (Close_parenthesis)
-			constructor_body.append (Close_parenthesis)
-			constructor_body.append (Semicolon)
+			if dispatch_interface then
+				constructor_body.append (New_line_tab)
+				constructor_body.append (Excepinfo_variable_name)
+				constructor_body.append (Space_equal_space)
+				constructor_body.append (Open_parenthesis)
+				constructor_body.append (Excepinfo)
+				constructor_body.append (Asterisk)
+				constructor_body.append (Close_parenthesis)
+				constructor_body.append (Co_task_mem_alloc)
+				constructor_body.append (Space_open_parenthesis)
+				constructor_body.append (Sizeof)
+				constructor_body.append (Space_open_parenthesis)
+				constructor_body.append (Excepinfo)
+				constructor_body.append (Close_parenthesis)
+				constructor_body.append (Close_parenthesis)
+				constructor_body.append (Semicolon)
+			end
 
 			Result.set_body (constructor_body)
 		ensure
@@ -283,21 +285,23 @@ feature {NONE} -- Implementation
 				coclass_descriptor.interface_descriptors.forth
 			end
 
-			constructor_body.append (New_line_tab)
-			constructor_body.append (Excepinfo_variable_name)
-			constructor_body.append (Space_equal_space)
-			constructor_body.append (Open_parenthesis)
-			constructor_body.append (Excepinfo)
-			constructor_body.append (Asterisk)
-			constructor_body.append (Close_parenthesis)
-			constructor_body.append (Co_task_mem_alloc)
-			constructor_body.append (Space_open_parenthesis)
-			constructor_body.append (Sizeof)
-			constructor_body.append (Space_open_parenthesis)
-			constructor_body.append (Excepinfo)
-			constructor_body.append (Close_parenthesis)
-			constructor_body.append (Close_parenthesis)
-			constructor_body.append (Semicolon)
+			if dispatch_interface then
+				constructor_body.append (New_line_tab)
+				constructor_body.append (Excepinfo_variable_name)
+				constructor_body.append (Space_equal_space)
+				constructor_body.append (Open_parenthesis)
+				constructor_body.append (Excepinfo)
+				constructor_body.append (Asterisk)
+				constructor_body.append (Close_parenthesis)
+				constructor_body.append (Co_task_mem_alloc)
+				constructor_body.append (Space_open_parenthesis)
+				constructor_body.append (Sizeof)
+				constructor_body.append (Space_open_parenthesis)
+				constructor_body.append (Excepinfo)
+				constructor_body.append (Close_parenthesis)
+				constructor_body.append (Close_parenthesis)
+				constructor_body.append (Semicolon)
+			end
 
 			Result.set_body (constructor_body)
 		ensure

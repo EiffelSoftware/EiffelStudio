@@ -253,7 +253,7 @@ doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
-rt_private char ** non_generic_type_names;
+rt_private char ** non_generic_type_names = NULL;
 #endif
 
 /*------------------------------------------------------------------*/
@@ -277,7 +277,6 @@ rt_public int16 eifthd_compound_id (int16 *, int16, int16, int16 *);
 rt_public int16 eifthd_final_id (int16, int16 *, int16 **, int16, int );
 rt_shared int eifthd_gen_count_with_dftype (int16 );
 rt_shared char eifthd_gen_typecode_with_dftype (int16 , int);
-rt_public EIF_REFERENCE eifthd_gen_typecode_str (EIF_REFERENCE );
 rt_public int16 eifthd_gen_param_id (int16, int16 , int);
 rt_public EIF_REFERENCE eifthd_gen_create (EIF_REFERENCE , int);
 rt_shared int16 eifthd_register_bit_type (long);
@@ -617,21 +616,25 @@ rt_shared void eif_gen_conf_init (int max_dtype)
 	cid_array [1] = 0;  /* id */
 	cid_array [2] = TERMINATOR; /* Terminator */
 
-#ifndef EIF_THREADS
+		// Initialize `non_generic_type_names' for root thread now that `first_gen_id' is
+		// properly computed. Indeed the first call to `eif_gen_conf_thread_init' is done
+		// before `first_gen_id' is initialized and therefore does not allocate anything
+		// since `first_gen_id' is zero. The second call will do things properly.
 	eif_gen_conf_thread_init();
-#endif
 }
 
 /*
 doc:	<routine name="eif_gen_conf_thread_init" return_type="void" export="shared">
-doc:		<summary>Initialize per thread data used for generic conformance.</summary>
+doc:		<summary>Initialize per thread data used for generic conformance. Root thread initialization is done in `eif_gen_conf_init' as when we are called by the `eif_thr_register' routine, the value `first_gen_id' is still zero.</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None</synchronization>
 doc:	</routine>
 */
 rt_shared void eif_gen_conf_thread_init (void) {
 	RT_GET_CONTEXT
-	non_generic_type_names = (char **) eif_calloc (first_gen_id, sizeof (char *));
+	if (first_gen_id > 0) {
+		non_generic_type_names = (char **) eif_calloc (first_gen_id, sizeof (char *));
+	}
 }
 
 /*
@@ -653,6 +656,7 @@ rt_shared void eif_gen_conf_thread_cleanup (void) {
 		}
 	}
 	eif_free (non_generic_type_names);
+	non_generic_type_names = NULL;
 }
 
 /*------------------------------------------------------------------*/

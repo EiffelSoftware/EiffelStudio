@@ -41,7 +41,11 @@ feature {NONE} -- Implementation
 			-- The actual compilation process.
 		do
 			license_display
-			workbench.recompile_no_degree_6
+			if Workbench.is_already_compiled and Workbench.lace.successful then
+				workbench.recompile_no_degree_6
+			else
+				Workbench.recompile
+			end
 		end
 
 feature {NONE} -- Attributes

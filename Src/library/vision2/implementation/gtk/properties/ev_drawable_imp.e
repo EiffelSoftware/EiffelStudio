@@ -16,10 +16,6 @@ inherit
 
 	EV_DRAWABLE_CONSTANTS
 
-	EV_C_UTIL
-
-	PLATFORM
-	
 	MEMORY
 		undefine
 			copy,
@@ -169,7 +165,7 @@ feature -- Status report
 	is_drawable: BOOLEAN is
 			-- Is the device drawable?
 		do
-			Result := drawable /= NULL
+			Result := drawable /= default_pointer
 		end
 
 feature -- Element change
@@ -255,7 +251,7 @@ feature -- Element change
 			-- Do not apply any clipping.
 		do
 			gc_clip_area := Void
-			feature {EV_GTK_EXTERNALS}.gdk_gc_set_clip_rectangle (gc, NULL)
+			feature {EV_GTK_EXTERNALS}.gdk_gc_set_clip_rectangle (gc, default_pointer)
 		end
 
 	set_tile (a_pixmap: EV_PIXMAP) is
@@ -305,7 +301,7 @@ feature -- Clearing operations
 		local
 			tmp_fg_color: EV_COLOR
 		do
-			if drawable /= NULL then
+			if drawable /= default_pointer then
 				create tmp_fg_color
 				tmp_fg_color.copy (foreground_color)
 				set_foreground_color (background_color)
@@ -324,7 +320,7 @@ feature -- Drawing operations
 	draw_point (x, y: INTEGER) is
 			-- Draw point at (`x', `y').
 		do
-			if drawable /= NULL then
+			if drawable /= default_pointer then
 	 			feature {EV_GTK_EXTERNALS}.gdk_draw_point (drawable, gc, x, y)
 	 			flush
 			end
@@ -335,7 +331,7 @@ feature -- Drawing operations
 		local
 			a_cs: C_STRING
 		do
-			if drawable /= NULL then
+			if drawable /= default_pointer then
 				create a_cs.make (a_text)
 				feature {EV_GTK_EXTERNALS}.gdk_draw_string (
 					drawable,
@@ -354,7 +350,7 @@ feature -- Drawing operations
 		local
 			a_cs: C_STRING
 		do
-			if drawable /= NULL then
+			if drawable /= default_pointer then
 				create a_cs.make (a_text)
 				feature {EV_GTK_EXTERNALS}.gdk_draw_string (
 					drawable,
@@ -371,7 +367,7 @@ feature -- Drawing operations
 	draw_segment (x1, y1, x2, y2: INTEGER) is
 			-- Draw line segment from (`x1', 'y1') to (`x2', 'y2').
 		do
-			if drawable /= NULL then
+			if drawable /= default_pointer then
 				feature {EV_GTK_EXTERNALS}.gdk_draw_line (drawable, gc, x1, y1, x2, y2)
 				flush
 			end
@@ -386,7 +382,7 @@ feature -- Drawing operations
 			corrected_start, corrected_aperture: REAL
 			pi_nb: INTEGER
 		do
-			if drawable /= NULL then
+			if drawable /= default_pointer then
 				if a_height /= 0 then
 					pi_nb := ((a_start_angle + Pi / 2) / Pi).floor
 					corrected_start := a_start_angle - pi_nb * Pi
@@ -421,9 +417,9 @@ feature -- Drawing operations
 		local
 			pixmap_imp: EV_PIXMAP_IMP
 		do
-			if drawable /= NULL then
+			if drawable /= default_pointer then
 				pixmap_imp ?= a_pixmap.implementation
-				if pixmap_imp.mask /= NULL then
+				if pixmap_imp.mask /= default_pointer then
 					feature {EV_GTK_EXTERNALS}.gdk_gc_set_clip_mask (gc, pixmap_imp.mask)
 					feature {EV_GTK_EXTERNALS}.gdk_gc_set_clip_origin (gc, x, y)
 				end
@@ -431,8 +427,8 @@ feature -- Drawing operations
 					pixmap_imp.drawable,
 					x_src, y_src, x, y, src_width, src_height)
 				flush
-				if pixmap_imp.mask /= NULL then
-					feature {EV_GTK_EXTERNALS}.gdk_gc_set_clip_mask (gc, NULL)
+				if pixmap_imp.mask /= default_pointer then
+					feature {EV_GTK_EXTERNALS}.gdk_gc_set_clip_mask (gc, default_pointer)
 					feature {EV_GTK_EXTERNALS}.gdk_gc_set_clip_origin (gc, 0, 0)
 				end
 			end
@@ -448,7 +444,7 @@ feature -- Drawing operations
 			-- Draw rectangle with upper-left corner on (`x', `y')
 			-- with size `a_width' and `a_height'.
 		do
-			if drawable /= NULL then
+			if drawable /= default_pointer then
 				feature {EV_GTK_EXTERNALS}.gdk_draw_rectangle (drawable, gc, 0, x, y, a_width - 1, a_height - 1)
 				flush
 			end
@@ -458,7 +454,7 @@ feature -- Drawing operations
 			-- Draw an ellipse bounded by top left (`x', `y') with
 			-- size `a_width' and `a_height'.
 		do
-			if drawable /= NULL then 
+			if drawable /= default_pointer then 
 				if (a_width > 0 and a_height > 0 ) then
 					feature {EV_GTK_EXTERNALS}.gdk_draw_arc (drawable, gc, 0, x,
 						y, (a_width - 1),
@@ -475,7 +471,7 @@ feature -- Drawing operations
 		local
 			tmp: SPECIAL [INTEGER_16]
 		do
-			if drawable /= NULL then
+			if drawable /= default_pointer then
 				tmp := coord_array_to_gdkpoint_array (points).area
 				if is_closed then
 					feature {EV_GTK_EXTERNALS}.gdk_draw_polygon (drawable, gc, 0, $tmp, points.count)
@@ -543,7 +539,7 @@ feature -- filling operations
 			-- Draw rectangle with upper-left corner on (`x', `y')
 			-- with size `a_width' and `a_height'. Fill with `background_color'.
 		do
-			if drawable /= NULL then
+			if drawable /= default_pointer then
 				if tile /= Void then
 					feature {EV_GTK_EXTERNALS}.gdk_gc_set_fill (gc, feature {EV_GTK_EXTERNALS}.Gdk_tiled_enum)
 				end
@@ -558,7 +554,7 @@ feature -- filling operations
 			-- size `a_width' and `a_height'.
 			-- Fill with `background_color'.
 		do
-			if drawable /= NULL then
+			if drawable /= default_pointer then
 				if tile /= Void then
 					feature {EV_GTK_EXTERNALS}.gdk_gc_set_fill (gc, feature {EV_GTK_EXTERNALS}.Gdk_tiled_enum)
 				end
@@ -576,7 +572,7 @@ feature -- filling operations
 		local
 			tmp: SPECIAL [INTEGER_16]
 		do
-			if drawable /= NULL then
+			if drawable /= default_pointer then
 				tmp := coord_array_to_gdkpoint_array (points).area
 				if tile /= Void then
 					feature {EV_GTK_EXTERNALS}.gdk_gc_set_fill (gc, feature {EV_GTK_EXTERNALS}.Gdk_tiled_enum)
@@ -597,7 +593,7 @@ feature -- filling operations
 			corrected_start, corrected_aperture: REAL
 			pi_nb: INTEGER
 		do
-			if drawable /= NULL then
+			if drawable /= default_pointer then
 				if height /= 0 then
 					pi_nb := ((a_start_angle + Pi / 2) / Pi).floor
 					corrected_start := a_start_angle - pi_nb * Pi
@@ -631,7 +627,6 @@ feature {NONE} -- Implemention
 			-- Low-level conversion.
 		require
 			pts_exists: pts /= Void
-			equal_size: feature {EV_GTK_EXTERNALS}.c_gdk_point_struct_size = integer_bits // 8
 		local
 			i, array_count: INTEGER
 			a_pts: ARRAY [EV_COORDINATE]
@@ -698,7 +693,7 @@ feature {NONE} -- Implementation
 		end
 
 invariant
-	gc_not_void: is_usable implies gc /= NULL
+	gc_not_void: is_usable implies gc /= default_pointer
 
 end -- class EV_DRAWABLE_IMP
 

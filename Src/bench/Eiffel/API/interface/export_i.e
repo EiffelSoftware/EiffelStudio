@@ -31,6 +31,13 @@ feature -- Queries
 			-- Do nothing
 		end;
 
+	is_subset (other: EXPORT_I): BOOLEAN is
+			-- Is Current a subset or equal to other?
+		require
+			valid_other: other /= Void
+		deferred
+		end;
+
 feature -- Concatanation of export statuses
 
 	concatenation (other: EXPORT_I): EXPORT_I is

@@ -15,6 +15,13 @@ feature
 			-- Do nothing
 		end;
 
+	is_subset (other: EXPORT_I): BOOLEAN is
+			-- Is Current clients a subset or equal with
+			-- `other' clients?
+		do
+			Result := True;
+		end;
+
 	is_none: BOOLEAN is
 			-- Is the current object an instance of EXPORT_NONE_I ?
 		do

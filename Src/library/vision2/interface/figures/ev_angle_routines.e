@@ -9,6 +9,9 @@ indexing
 class
 	EV_ANGLE_ROUTINES
 
+obsolete
+	"Will be removed. Do not use anymore."
+
 inherit
 	BASIC_ROUTINES
 		export
@@ -74,6 +77,9 @@ end -- class EV_ANGLE_ROUTINES
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/02/18 23:16:50  brendel
+--| Added obsolete clause.
+--|
 --| Revision 1.7  2000/02/18 17:28:12  brendel
 --| Unreleased.
 --| May still be in system. Use REAL anywhere you find this class.

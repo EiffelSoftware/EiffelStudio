@@ -171,6 +171,30 @@ feature {NONE} -- Implementation
 			end
 		end
 		
+	update_buttons (a_parent: EV_TOOL_BAR; start_index, end_index: INTEGER) is
+			-- Ensure that buttons from `start_index' to `end_index' in `a_parent' are
+			-- refreshed. This is called at the end of  a dockable transport from a tool bar button
+			-- as on some platforms, they end up in an invalid state, and need refreshing.
+		local
+			tool_bar: EV_TOOL_BAR_IMP
+			button: EV_TOOL_BAR_ITEM_IMP
+			counter: INTEGER
+		do
+			from
+				counter := start_index
+			until
+				counter > end_index
+			loop
+				tool_bar ?= a_parent.implementation
+				check
+					tool_bar_not_void: tool_bar /= Void
+				end
+				button ?= a_parent.i_th (counter).implementation
+				tool_bar.internal_reset_button (button)
+				counter := counter + 1
+			end
+		end
+		
 	orig_cursor: EV_CURSOR
 		-- Cursor originally used on `Current'.
 

@@ -199,13 +199,12 @@ feature {NONE} -- Implementation
 		require
 			bool_array_not_void: bool_array /= Void
 			valid_index: index >= 0
-			valid_bounds: bool_array.upper >= (2 * index + 1)
 		local
 			i: INTEGER
 		do
 			i := 2 * index
-			bool_array.put (True, i)
-			bool_array.put (status, i + 1)
+			bool_array.force (True, i)
+			bool_array.force (status, i + 1)
 		ensure
 			status_implies: status implies
 				get_value (bool_array, index) = is_feature_polymorphic
@@ -219,16 +218,26 @@ feature {NONE} -- Implementation
 		require
 			bool_array_not_void: bool_array /= Void
 			valid_index: index >= 0
-			valid_bounds: bool_array.upper >= (2 * index + 1)
 		local
 			i: INTEGER
 		do
 			i := 2 * index
-			if bool_array.item (i) then
-				if bool_array.item (i + 1) then
-					Result := is_feature_polymorphic
+				-- We already know that `index' is positive. If `index' has
+				-- a greater value than the expected one, it means that we
+				-- are either in an incremental finalization or that we are
+				-- using a precompiled library. And that it means that we
+				-- are currently on a deferred routine that is not part
+				-- of the POLY_TABLE, thus we need to do some computation
+				-- about the polymorphism status.
+			if bool_array.valid_index (i + 1) then
+				if bool_array.item (i) then
+					if bool_array.item (i + 1) then
+						Result := is_feature_polymorphic
+					else
+						Result := is_feature_not_polymorphic
+					end
 				else
-					Result := is_feature_not_polymorphic
+					Result := is_feature_not_yet_computed
 				end
 			else
 				Result := is_feature_not_yet_computed

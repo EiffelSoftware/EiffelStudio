@@ -5,7 +5,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	EB_FEATURE_NAME_FOR_COMPLETION
+	EB_NAME_FOR_COMPLETION
 
 inherit
 	STRING
@@ -91,4 +91,4 @@ feature -- Comparison
 		end	
 
 
-end -- class EB_FEATURE_NAME_FOR_COMPLETION
+end -- class EB_NAME_FOR_COMPLETION

@@ -1,5 +1,5 @@
 system
-	STORE_WIZARD
+	STORE_WIZARD_ORACLE
 
 root
 	WIZARD_PROJECT_MANAGER(wizard_tool): "make_and_launch"

@@ -13,21 +13,21 @@ inherit
 	INTERNAL
 	
 create
-	make_with_list
+	make_with_list_and_handler
 	
 feature {NONE} -- Initialization
 
-	make_with_list (a_list: EV_CHECKABLE_LIST; an_output: EV_TEXT) is
+	make_with_list_and_handler (a_list: EV_CHECKABLE_LIST; a_string_handler: ORDERED_STRING_HANDLER) is
 			-- Create `Current' with `a_list' into which all action sequence items
 			-- will be inserted, and `an_output', into which all output will be displayed.
 		require
 			a_list_not_void: a_list /= Void
-			an_output_not_void: an_output /= Void
+			an_output_not_void: a_string_handler /= Void
 		do
 			list := a_list
 			list.check_actions.extend (agent item_checked)
 			list.uncheck_actions.extend (agent item_unchecked)
-			create string_handler.make_with_textable (an_output)
+			string_handler := a_string_handler
 		ensure
 			list_set: list = a_list
 		end
@@ -39,7 +39,6 @@ feature -- Status setting
 			require
 				widget_not_void: widget /= Void
 			local
-				widget_action_sequences: GB_EV_WIDGET_ACTION_SEQUENCES
 				list_item: EVENT_LIST_ITEM
 				names: ARRAYED_LIST [STRING]
 				action_sequences: GB_EV_ACTION_SEQUENCES

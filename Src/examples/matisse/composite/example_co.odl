@@ -5,7 +5,7 @@
  *	
  */
 
-#include "../../odl_include/mt_eif.odl"
+#include "../odl_include/mt_eif.odl"
 
 interface DOCUMENT : persistent {
 	relationship List<DOC_AUTHOR> authors

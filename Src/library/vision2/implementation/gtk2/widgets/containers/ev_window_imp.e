@@ -119,13 +119,8 @@ feature -- Status setting
 			-- Wait until window is closed by the user.
 		local
 			dummy: INTEGER
-			l_had_exception: BOOLEAN
-			l_message: STRING
 		do
 			from
-				app_implementation.gtk_marshal.enable_exception_handling
-					-- Proxy exception handling is needed for dialogs when rescue clause is located in a ancestor client of `Current'
-					-- When exception bypasses gtk default signal marshalling then sometimes strange behavior occurs leading to potential crashes
 			until
 				is_destroyed or else not is_show_requested
 			loop
@@ -133,18 +128,7 @@ feature -- Status setting
 					App_implementation.call_idle_actions
 				end
 				dummy := {EV_GTK_EXTERNALS}.gtk_main_iteration_do (True)
-				l_had_exception := app_implementation.gtk_marshal.last_callback_had_exception
-				if l_had_exception then
-					l_message := app_implementation.gtk_marshal.last_exception_message
-					app_implementation.gtk_marshal.disable_exception_handling
-					if l_message = Void then
-						(create {EXCEPTIONS}).raise ("Vision2 caught an exception")
-					else
-						(create {EXCEPTIONS}).raise ("Vision2 Exception: " + l_message)
-					end
-				end
 			end
-			app_implementation.gtk_marshal.disable_exception_handling
 		end
 
 	allow_resize is

@@ -101,12 +101,6 @@ feature -- Processing
 			is_structure := a_type_visitor.is_structure 
 			is_structure_pointer := a_type_visitor.is_structure_pointer
 
-			if is_interface_pointer or is_coclass_pointer then
-				vt_type := vt_unknown
-			elseif is_coclass_pointer_pointer or is_interface_pointer_pointer then
-				vt_type := binary_or (vt_unknown, vt_byref)
-			end
-
 			if a_type_visitor.is_basic_type  then
 				need_generate_ce := False
 				cecil_type := clone (a_type_visitor.cecil_type)
@@ -148,7 +142,9 @@ feature -- Processing
 				ce_function_name := clone (a_type_visitor.ce_function_name)
 			end
 			can_free := a_type_visitor.can_free
-
+			if vt_type = Vt_userdefined or Vt_type = binary_or (Vt_userdefined, Vt_byref) then
+				vt_type := a_type_visitor.vt_type
+			end
 		end
 
 	process_coclass (coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR ) is
@@ -394,12 +390,12 @@ feature {NONE} -- Implementation
 	enum_processing is
 			-- Enumeration processing.
 		do
-			c_type := clone (Int)
+			c_type := clone (Long)
 			cecil_type := clone (Eif_integer)
 			create c_post_type.make (100)
 			create c_header_file.make (100)
 			eiffel_type := clone (Integer_type)
-			vt_type := Vt_int
+			vt_type := Vt_i4
 
 			is_enumeration := True
 		end
@@ -614,9 +610,6 @@ feature {NONE} -- Implementation
 			Result.append (Zero)
 			Result.append (Semicolon)
 			Result.append (New_line)
-
-
-			--
 
 			Result.append (New_line_tab)
 

@@ -1025,6 +1025,13 @@ feature -- Externals
 			"gtk_tree_view_set_headers_visible ((GtkTreeView*) $a_tree_view, (gboolean) $a_visible)"
 		end
 
+	frozen gtk_tree_view_set_enable_search (a_tree_view: POINTER; enable_search: BOOLEAN) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"gtk_tree_view_set_enable_search ((GtkTreeView*) $a_tree_view, (gboolean) $enable_search)"
+		end
+
 	frozen gtk_tree_path_get_depth (a_tree_path: POINTER): INTEGER is
 		external
 			"C inline use <gtk/gtk.h>"

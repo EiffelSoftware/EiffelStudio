@@ -130,17 +130,21 @@ feature {EV_PND_TRANSPORTER_I} -- Access
 		end
 
 	get_pnd_data (data_type: EV_PND_TYPE; data: ANY; button_data: EV_BUTTON_EVENT_DATA): EV_PND_EVENT_DATA is
+			-- Return Pick and drop event data from the given `button_data'.
 		local
-			widg: EV_WIDGET
+			targ: EV_PND_TARGET
 		do
-			widg ?= current.interface
+
+			targ ?= current.interface
 			check
-				widget_exists: widg /= Void
+				target_exists: targ /= Void
 			end
+
 			create Result.make
 			Result.implementation.set_data_type (data_type)
 			Result.implementation.set_data (data)
-			Result.implementation.set_target (widg)
+			Result.implementation.set_target (targ)
+
 			Result.implementation.set_all (button_data.widget, button_data.x,
 				button_data.y, button_data.button, button_data.shift_key_pressed,
 				button_data.control_key_pressed, button_data.first_button_pressed,

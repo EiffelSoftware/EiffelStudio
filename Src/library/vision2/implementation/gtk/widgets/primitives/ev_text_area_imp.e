@@ -5,7 +5,7 @@ indexing
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
-
+	
 class
 	EV_TEXT_IMP
 	

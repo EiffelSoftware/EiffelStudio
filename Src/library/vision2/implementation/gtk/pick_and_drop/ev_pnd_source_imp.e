@@ -33,11 +33,15 @@ feature -- Implementation
 				end
 				if transportable then
 					create transporter
+
+					-- FIXME IEK  We need to somehow suspend all of the previous motion commands
+
+					--widget_source.add_motion_notify_command (transporter, arg1)
+
 					if initial_point /= Void then
 						transporter.start_from (Current, initial_point.x, initial_point.y)
 					else
-						--transporter.start_from (Current, ev_data.absolute_x, ev_data.absolute_y)
-						transporter.start_from (Current, 10, 10)
+						transporter.start_from (Current, ev_data.absolute_x, ev_data.absolute_y)
 					end
 						-- We add the commands
 
@@ -124,8 +128,9 @@ feature {NONE} -- Implementation
 			end
 			if transporter /= Void then
 				--remove_motion_notify_commands (widget_source.widget, Cmd_motion_notify, transporter)
-				widget_source.remove_motion_notify_commands
+				--widget_source.remove_motion_notify_commands
 				--| FIXME IEK We only need to remove the transporter from the motion events queue
+
 				transporter := Void
 			end
 		end

@@ -501,13 +501,12 @@ gint c_gtk_signal_connect_general (GtkObject *widget,
 
     /* Make sure the widget has motion event enabled */
 	if (strcmp(name, "motion_notify_event") == 0) {
+
+		// Check if the widget has motion notify enabled, if not enable it
 		event_flags = gtk_widget_get_events(GTK_WIDGET(widget));
-		printf("event_flags = %d\n", event_flags);
-		event_flags |= GDK_POINTER_MOTION_MASK;
-		printf("event_flags = %d\n", event_flags);
-		gtk_widget_set_events(GTK_WIDGET(widget), event_flags);
-		event_flags = gtk_widget_get_events(GTK_WIDGET(widget));
-		printf("event_flags = %d\n", event_flags);
+		event_flags &= GDK_POINTER_MOTION_MASK;
+		if (event_flags != GDK_POINTER_MOTION_MASK)
+			gtk_widget_add_events (GTK_WIDGET(widget), GDK_POINTER_MOTION_MASK);
 	}
 	
 

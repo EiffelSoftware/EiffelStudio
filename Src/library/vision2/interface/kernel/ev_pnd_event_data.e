@@ -11,8 +11,6 @@ class
 
 inherit
 	EV_BUTTON_EVENT_DATA
-		rename
-			widget as source
 		redefine
 			make,
 			implementation
@@ -29,8 +27,14 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+	
+	source: EV_PND_SOURCE is
+			-- Widget where the PND was activated.
+		do
+			Result := implementation.source
+		end
 
-	target: EV_WIDGET is
+	target: EV_PND_TARGET is
 			-- Target of the Pick and Drop.
 		do
 			Result := implementation.target

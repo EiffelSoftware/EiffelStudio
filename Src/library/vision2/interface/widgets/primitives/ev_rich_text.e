@@ -13,11 +13,15 @@ inherit
 	EV_SCROLLABLE_TEXT
 		rename
 			make as scrollable_make,
-			make_with_text as scrollable_make_with_text
+			make_with_text as scrollable_make_with_text,
+			make_horizontally_scrollable as scrollable_make_horizontally_scrollable,
+			make_horizontally_scrollable_with_text as scrollable_make_horizontally_scrollable_with_text
 		export
 			{NONE} 
 				scrollable_make,
 				scrollable_make_with_text,
+				scrollable_make_horizontally_scrollable,
+				scrollable_make_horizontally_scrollable_with_text,
 				show_vertical_scroll_bar,
 				hide_vertical_scroll_bar,
 				show_horizontal_scroll_bar,
@@ -26,24 +30,44 @@ inherit
 			implementation
 		end
 
+
 creation
 	make,
-	make_with_text
+	make_with_text,
+	make_horizontally_scrollable,
+	make_horizontally_scrollable_with_text
+
 
 feature {NONE} -- Initialization
 
-	make (par: EV_CONTAINER; hscroll: BOOLEAN) is
-			-- Create an empty rich text area with `par' as
-			-- parent. If `hscroll' then horizontally scrollable.
+
+	make (par: EV_CONTAINER) is
+			-- Create an empty rich text area with `par' as parent.
+			-- Only vertically scrollable. 
 		do
-			make_with_text (par, "", hscroll)
+			make_with_text (par, "")
 		end
 
-	make_with_text (par: EV_CONTAINER; txt: STRING; hscroll: BOOLEAN) is
+	make_with_text (par: EV_CONTAINER; txt: STRING) is
 			-- Create a rich text area with `par' as parent and
-			-- `txt' as text. If `hscroll' then horizontally scrollable.
+			-- `txt' as text. Only vertically scrollable.
 		do
-			create {EV_RICH_TEXT_IMP} implementation.make_with_text (txt, hscroll)
+			create {EV_RICH_TEXT_IMP} implementation.make_with_properties (txt, False)
+			widget_make (par)
+		end
+
+	make_horizontally_scrollable (par: EV_CONTAINER) is
+			-- Create a rich text area with `par' as parent which
+			-- is scrollable in both directions.
+		do
+			make_horizontally_scrollable_with_text (par, "")
+		end
+
+	make_horizontally_scrollable_with_text (par: EV_CONTAINER; txt: STRING) is
+			-- Create a rich text area with `par' as parent, `txt'
+			-- as text and is scrollable in both directions.
+		do
+			create {EV_RICH_TEXT_IMP} implementation.make_with_properties (txt, True)
 			widget_make (par)
 		end
 

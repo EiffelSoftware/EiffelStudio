@@ -16,26 +16,23 @@ inherit
 	EV_CONTAINER
 		redefine
 			implementation,
-			add_child
+			add_child_ok
 		end
 	
 
-feature {EV_WIDGET}
+feature -- Status report
 	
-	add_child (c: EV_WIDGET) is
-			-- Add child into composite. Several children
-			-- possible.
-		require else 
-			-- Don't use the parent's precondition,
-			-- because several children are allowed
-			exists: not destroyed
-			valid_child: c /= Void and then not c.destroyed
+	add_child_ok: BOOLEAN is
+			-- True, if it is ok to add a child to
+			-- container. With invisible container, it is 
+			-- always ok.
 		do
-			implementation.add_child (c.implementation)
-			child := c
+			Result := True
 		end
+
 	
-	-- feature child in this class means the last child
+	-- feature 'child' in this class means the last child added
+
 feature {NONE} -- Implementation
 	
 	implementation: EV_INVISIBLE_CONTAINER_I

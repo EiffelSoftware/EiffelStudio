@@ -16,20 +16,28 @@ inherit
 	EV_CONTAINER
 		redefine
 			implementation,
-			add_child
+			add_child,
+			add_child_ok
 		end
 	
+
+feature -- Status report
+	
+	add_child_ok: BOOLEAN is
+			-- True, if it is ok to add a child to
+			-- container. With menu item container, it is
+			-- always ok.
+		do
+			Result := True
+		end
+
 
 feature {EV_WIDGET}
 	
 	add_child (c: EV_WIDGET) is
 			-- If c is menu item, add it as a menu item, 
 			-- otherwise use normal add_child of container
-		require else 
-			-- Don't use the parent's precondition,
-			-- because several children are allowed
-			exists: not destroyed
-			valid_child: c /= Void and then not c.destroyed
+
 		local
 			i: EV_MENU_ITEM
 		do

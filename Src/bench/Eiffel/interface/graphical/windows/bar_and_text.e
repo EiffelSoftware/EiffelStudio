@@ -31,7 +31,8 @@ inherit
 			realize
 		select
 			realize
-		end
+		end;
+	SET_WINDOW_ATTRIBUTES
 
 creation
 
@@ -53,7 +54,9 @@ feature
 			set_action ("<Configure>", Current, remapped);
 			set_action ("<Visible>", Current, remapped);
 			set_delete_command (quit_command);
-			transporter_init
+			transporter_init;
+			set_composite_attributes (Current);
+			text_window.set_font_to_default
 		end;
 
 	realize is

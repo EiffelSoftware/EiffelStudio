@@ -190,5 +190,26 @@ feature -- Basic operations
 			a_dialog.set_default_cancel_button (button)
 			a_dialog.prune_all (button)
 		end
+		
+	restore_titled_window (window: EV_TITLED_WINDOW; title: STRING) is
+			-- Restore `window' to a default state except title will
+			-- be set to `title'.
+		require
+			window_not_void: window /= Void
+			title_not_void: title /= Void
+		local
+			temp_window: EV_TITLED_WINDOW
+		do
+			create temp_window
+			window.set_maximum_size (temp_window.maximum_width, temp_window.maximum_height)
+			window.remove_background_pixmap
+			window.set_title (title)
+			window.set_background_color (temp_window.background_color)
+			window.set_foreground_color (temp_window.foreground_color)
+			window.enable_user_resize
+			window.set_minimum_width (temp_window.minimum_width)
+			window.set_minimum_height (temp_window.minimum_height)
+			temp_window.destroy
+		end
 
 end -- class GB_UTILITIES

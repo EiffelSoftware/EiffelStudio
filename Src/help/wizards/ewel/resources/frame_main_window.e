@@ -2,11 +2,10 @@ class
 	MAIN_WINDOW
 
 inherit
-	WEL_FRAME_WINDOW
+	<FL_APPLICATION_TYPE>
 		redefine
 			class_icon,
-			class_background,
-			on_paint
+			class_background
 		end
 
 	APPLICATION_IDS
@@ -24,28 +23,21 @@ feature -- Initialization
 	make is
 			-- Make the main window
 		do
-			make_top ("WEL Hello")
+			<FL_CREATION>
 		end
 
 feature {NONE} -- Implementation
 
-	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
-			-- Draw a centered text
-		do
-			paint_dc.draw_centered_text ("Hello, World!",
-				client_rect)
-		end
-
 	class_background: WEL_BRUSH is
 			-- White background
 		once
-			create Result.make_by_sys_color (Color_btnface)
+			create Result.make_by_sys_color (Color_btnface + 1)
 		end
 
 	class_icon: WEL_ICON is
 			-- Window's icon
 		once
-			create Result.make_by_id (Id_ico_application)
+			create Result.make_by_id (Idr_mainframe)
 		end
 
 end -- class MAIN_WINDOW

@@ -2,10 +2,9 @@ class
 	MAIN_WINDOW
 
 inherit
-	<FL_APPLICATION_TYPE>
+	WEL_MAIN_DIALOG
 		redefine
-			class_icon,
-			class_background
+			setup_dialog
 		end
 
 	APPLICATION_IDS
@@ -26,6 +25,11 @@ feature -- Initialization
 			<FL_CREATION>
 		end
 
+	setup_dialog is
+		do
+			set_icon (class_icon, class_icon)
+		end
+
 feature {NONE} -- Implementation
 
 	class_background: WEL_BRUSH is
@@ -37,7 +41,7 @@ feature {NONE} -- Implementation
 	class_icon: WEL_ICON is
 			-- Window's icon
 		once
-			create Result.make_by_id (Id_ico_application)
+			create Result.make_by_id (Idi_application)
 		end
 
 end -- class MAIN_WINDOW

@@ -310,7 +310,18 @@ feature {NONE} -- WEL Implementation
 
 	on_key_down (virtual_key, key_data: INTEGER) is
 			-- A key has been pressed.
+		local
+			a_dialog_imp: EV_DIALOG_IMP
 		do
+				-- Process Enter and Escape Key to process Default
+				-- push button and default cancel button
+			if virtual_key = Vk_escape or virtual_key = Vk_return then
+				a_dialog_imp ?= top_level_window_imp
+				if a_dialog_imp /= Void then
+					a_dialog_imp.on_dialog_key_down (virtual_key)
+				end
+			end
+				
 			process_tab_key (virtual_key)
 			Precursor {EV_PRIMITIVE_IMP} (virtual_key, key_data)
 		end
@@ -383,6 +394,11 @@ end -- class EV_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.55  2001/06/11 22:11:19  pichery
+--| Process Enter and Escape Key for EV_DIALOG_IMP (contrary to
+--| EV_DIALOG_IMP_MODAL/MODELESS we cannot use on_wm_command
+--| since EV_DIALOG_IMP is nothing more than a simple titled window)
+--|
 --| Revision 1.54  2001/06/07 23:08:16  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

@@ -6,11 +6,32 @@ deferred class LONG_FORMATTER
 inherit
 
 	FORMATTER
+		rename
+			init as formatter_init
 		redefine
 			execute
 		end
 
+	FORMATTER
+		redefine
+			execute, init
+		select
+			init
+		end;
+
 feature
+
+	init (a_composite: COMPOSITE; a_text_window: TEXT_WINDOW) is
+			-- Initialize the format button  with its bitmap.
+			-- Set up the mouse click and control-click actions
+			-- (click requires a confirmation, control-click doesn't).
+		do
+			formatter_init (a_composite, a_text_window);
+			set_action ("!c<Btn1Down>", Current, control_click)
+		end;
+
+	control_click: ANY is once !!Result end;
+			-- No confirmation required
 
 	execute (argument: ANY) is
 			-- Ask for a confirmation before executing the format.
@@ -53,6 +74,16 @@ feature
 				do_format := old_do_format;
 				text_window.history.extend (text_window.root_stone);
 				restore_cursors
+			elseif argument = control_click then
+					-- No confirmation required.
+				formatted ?= text_window.root_stone;
+				if not text_window.changed then
+					set_global_cursor (watch_cursor);
+					execute_licenced (formatted);
+					restore_cursors
+				else
+					warner (text_window).call (Current, l_File_changed)
+				end
 			else
 				if argument = text_window then
 					formatted ?= text_window.root_stone
@@ -61,8 +92,7 @@ feature
 				end;
 				confirmer (text_window).call (Current, 
 						"This format requires exploring the entire%N%
-						%system and may take a long time...",
-						"Continue")
+						%system and may take a long time...", "Continue")
 			end
 		end;
 

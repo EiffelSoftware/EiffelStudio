@@ -5,23 +5,12 @@ root
 	ROOT_CLASS: "make"
 
 default
-	assertion (require)
-	multithreaded (no)
-	console_application (no)
-	dynamic_runtime (no)
-	dead_code_removal (yes)
-	profile (no)
-	line_generation (no)
-	debug  (no)
-	array_optimization (no)
-	inlining (no)
-	inlining_size ("4")
+	assertion (all)
 	address_expression (yes)
 
-
 cluster
-	
-	root_cluster: "e:\work\java";
+
+	root_cluster: "$EIFFEL4\examples\Eiffel2Java";
 
 		-- EiffelBase
 	all base:						"$EIFFEL4\library\base"

@@ -102,12 +102,14 @@ feature
 
 	set_background_color (a_color: COLOR) is
 			-- Set background_color to `a_color'.
+			--| This will automatically update the
+			--| the top_shadow, bottom_shadow
+			--| and select color of Current widget.
 		require
 			a_color_exists: a_color /= Void
 		local
 			pixmap_implementation: PIXMAP_X;
 			color_implementation: COLOR_X;
-			ext_name: ANY
 		do
 			if bg_pixmap /= Void then
 				pixmap_implementation ?= bg_pixmap.implementation;
@@ -121,9 +123,7 @@ feature
 			bg_color := a_color;
 			color_implementation ?= background_color.implementation;
 			color_implementation.put_object (Current);
-			ext_name := Mbackground.to_c;
-			c_set_color (screen_object, color_implementation.pixel (screen), 
-						$ext_name)
+			xm_change_bg_color (screen_object, color_implementation.pixel (screen))
 		ensure
 			background_set: background_color = a_color;
 		end;
@@ -269,12 +269,10 @@ feature {COLOR_X}
 	update_background_color is
 			-- Update the X color after a change inside the Eiffel color.
 		local
-			ext_name: ANY;
 			color_implementation: COLOR_X;
 		do
-			ext_name := Mbackground.to_c;
 			color_implementation ?= background_color.implementation;
-			c_set_color (screen_object, color_implementation.pixel (screen), $ext_name) 
+			xm_change_bg_color (screen_object, color_implementation.pixel (screen))
 		end;
 
 feature {PIXMAP_X}
@@ -322,6 +320,11 @@ feature
 		end
 
 feature {NONE} -- External features
+
+	xm_change_bg_color (scr_obj: POINTER; pixel: POINTER) is
+		external
+			"C"
+		end;
 
 	set_xm_string (scr_obj: POINTER; value: POINTER; name: POINTER) is
 		external

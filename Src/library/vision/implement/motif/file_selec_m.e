@@ -8,33 +8,22 @@ class FILE_SELEC_M
 
 inherit
 
-	FILE_SELEC_I
-		export
-			{NONE} all
-		end;
+	FILE_SELEC_I;
 
-	PROMPT_R_M
-		export
-			{NONE} all
-		end;
+	PROMPT_R_M;
 
-	FILE_SELEC_R_M
-		export
-			{NONE} all
-		end;
+	FILE_SELEC_R_M;
 
 	TERMINAL_M
 		rename
 			clean_up as terminal_clean_up
-		undefine
+		redefine
 			make
 		end
 
 	TERMINAL_M
-		undefine
-			make
 		redefine
-			clean_up
+			clean_up, make
 		select
 			clean_up
 		end;
@@ -55,6 +44,71 @@ feature {NONE} -- Creation
 			screen_object := create_file_selection ($ext_name,
 				parent_screen_object (a_file_selection, widget_index),
 				man);
+		end;
+
+feature {NONE} -- Color
+
+	update_other_bg_color (pixel: POINTER) is
+		do
+			xm_set_children_bg_color (pixel, screen_object);
+		end;
+
+	update_other_fg_color (pixel: POINTER) is
+		do
+			xm_set_children_fg_color (pixel, screen_object);
+		end;
+
+feature {NONE} -- Font
+
+	update_text_font (f_ptr: POINTER) is
+		do
+			set_primitive_font (xm_file_selection_box_get_child 
+						(screen_object, MDIALOG_TEXT),
+						f_ptr);
+			set_primitive_font (xm_file_selection_box_get_child 
+						(screen_object, MDIALOG_LIST),
+						f_ptr);
+			set_primitive_font (xm_file_selection_box_get_child 
+						(screen_object, MDIALOG_FILTER_TEXT),
+						f_ptr);
+			set_primitive_font (xm_file_selection_box_get_child 
+						(screen_object, MDIALOG_DIR_LIST),
+						f_ptr);
+		end;
+
+	update_label_font (f_ptr: POINTER) is
+		do
+			set_primitive_font (xm_file_selection_box_get_child 
+						(screen_object, MDIALOG_DIR_LIST_LABEL),
+						f_ptr);
+			set_primitive_font (xm_file_selection_box_get_child 
+						(screen_object, MDIALOG_LIST_LABEL),
+						f_ptr);
+			set_primitive_font (xm_file_selection_box_get_child 
+						(screen_object, MDIALOG_FILTER_LABEL),
+						f_ptr);
+			set_primitive_font (xm_file_selection_box_get_child 
+						(screen_object, MDIALOG_SELECTION_LABEL),
+						f_ptr);
+		end;
+
+	update_button_font (f_ptr: POINTER) is
+		do
+			set_primitive_font (xm_file_selection_box_get_child 
+						(screen_object, MDIALOG_APPLY_BUTTON),
+						f_ptr);
+			set_primitive_font (xm_file_selection_box_get_child 
+						(screen_object, MDIALOG_CANCEL_BUTTON),
+						f_ptr);
+			set_primitive_font (xm_file_selection_box_get_child 
+						(screen_object, MDIALOG_DEFAULT_BUTTON),
+						f_ptr);
+			set_primitive_font (xm_file_selection_box_get_child 
+						(screen_object, MDIALOG_HELP_BUTTON),
+						f_ptr);
+			set_primitive_font (xm_file_selection_box_get_child 
+						(screen_object, MDIALOG_OK_BUTTON),
+						f_ptr);
 		end;
 
 feature {NONE}
@@ -465,7 +519,7 @@ feature
 		
 
 	set_directory_selection is
-            -- Sets selection to directories only.
+			-- Sets selection to directories only.
 		do
 			set_xt_unsigned_char (screen_object, 1, MfileTypeMask)
 		end;

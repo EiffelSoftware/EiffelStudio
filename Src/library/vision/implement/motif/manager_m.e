@@ -8,12 +8,20 @@ class MANAGER_M
 
 inherit
 
-	COMPOSITE_M;
+	MANAGER_R_M;
 
-	MANAGER_R_M
-		export
-			{NONE} all
-		end
+	COMPOSITE_M
+		rename
+			set_background_color as widget_set_background_color,
+			update_background_color as widget_update_background_color
+		end;
+
+	COMPOSITE_M
+		redefine
+			set_background_color, update_background_color
+		select
+			set_background_color, update_background_color
+		end;
 
 feature 
 
@@ -38,7 +46,8 @@ feature
 			a_color_exists: not (a_color = Void)
 		local
 			color_implementation: COLOR_X;	
-			ext_name: ANY
+			ext_name: ANY;
+			pixel: POINTER
 		do
 			if fg_color /= Void then
 				color_implementation ?= foreground_color.implementation;
@@ -48,9 +57,41 @@ feature
 			color_implementation ?= a_color.implementation;
 			color_implementation.put_object (Current);
 			ext_name := Mforeground_color.to_c;
-			c_set_color (screen_object, color_implementation.pixel (screen), $ext_name)
+			pixel := color_implementation.pixel (screen);
+			c_set_color (screen_object, pixel, $ext_name)
+			update_other_fg_color (pixel)
 		ensure
 			foreground_color = a_color
+		end;
+
+	set_background_color (a_color: COLOR) is
+			-- Set background_color to `a_color'.
+			--| Make sure to reset the foreground color
+			--| if it has been set.
+		local
+			color_implementation: COLOR_X;
+			ext_name: ANY;
+			pixel: POINTER;
+		do
+			widget_set_background_color (a_color);
+			color_implementation ?= bg_color.implementation;
+			pixel := color_implementation.pixel (screen);
+			update_other_bg_color (pixel);
+			if fg_color /= Void then
+				update_foreground_color
+			end;
+		end;
+
+	update_other_bg_color (pixel: POINTER) is
+		require
+			valid_a_color: pixel /= default_pointer
+		do
+		end;
+
+	update_other_fg_color (pixel: POINTER) is
+		require
+			valid_a_color: pixel /= default_pointer
+		do
 		end;
 
 feature {NONE}
@@ -65,12 +106,28 @@ feature {COLOR_X}
 		local
 			ext_name: ANY;
 			color_implementation: COLOR_X;	
+			pixel: POINTER;
 		do
 			ext_name := Mforeground_color.to_c;
 			color_implementation ?= foreground_color.implementation;
-			c_set_color (screen_object, color_implementation.pixel (screen), $ext_name)
+			pixel := color_implementation.pixel (screen);
+			c_set_color (screen_object, pixel, $ext_name)
+			update_other_fg_color (pixel);
 		end
 
+	update_background_color is
+		local
+			pixel: POINTER;
+			color_implementation: COLOR_X
+		do
+			widget_update_background_color;
+			color_implementation ?= bg_color.implementation;
+			pixel := color_implementation.pixel (screen);
+			update_other_bg_color (pixel);
+			if fg_color /= Void then
+				update_background_color
+			end
+		end;
 
 feature
 

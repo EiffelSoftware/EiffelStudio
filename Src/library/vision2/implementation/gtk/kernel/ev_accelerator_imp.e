@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 			connect_signal_to_actions (
 				"pressed",
 				interface.actions,
-				default_translate
+				Void
 			)
 			is_initialized := True
 		end
@@ -196,6 +196,9 @@ end -- class EV_ACCELERATOR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/04/20 18:07:38  oconnor
+--| Removed default_translate where not needed in sognal connect calls.
+--|
 --| Revision 1.8  2000/04/04 21:01:07  oconnor
 --| updated signal connection for new marshaling scheme
 --|

@@ -78,13 +78,13 @@ feature {NONE} -- Initialization
 				entry_widget,
 				"activate",
 				interface.return_actions,
-				default_translate
+				Void
 			)
 			real_connect_signal_to_actions (
 				entry_widget,
 				"changed",
 				interface.change_actions,
-				default_translate
+				Void
 			)
 		end
 
@@ -219,6 +219,9 @@ end -- class EV_COMBO_BOX_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.35  2000/04/20 18:07:41  oconnor
+--| Removed default_translate where not needed in sognal connect calls.
+--|
 --| Revision 1.34  2000/04/20 16:32:18  king
 --| Removed reference to redundant ev_children LL
 --|

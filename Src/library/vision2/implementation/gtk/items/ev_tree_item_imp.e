@@ -59,12 +59,12 @@ feature {NONE} -- Initialization
 			connect_signal_to_actions (
 				"collapse",
 				interface.collapse_actions,
-				default_translate
+				Void
 			)
 			connect_signal_to_actions (
 				"expand",
 				interface.expand_actions,
-				default_translate
+				Void
 			)
 			is_initialized := True
 			align_text_left
@@ -310,6 +310,9 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.54  2000/04/20 18:07:37  oconnor
+--| Removed default_translate where not needed in sognal connect calls.
+--|
 --| Revision 1.53  2000/04/12 18:49:55  brendel
 --| Removed inheritance of EV_PICK_AND_DROPABLE_IMP (from EV_ITEM_IMP).
 --| Removed inheritance of EV_C_UTIL (from EV_ANY_IMP).

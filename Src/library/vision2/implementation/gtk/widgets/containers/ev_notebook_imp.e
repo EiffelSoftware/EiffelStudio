@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 			connect_signal_to_actions (
 				"switch-page",
 				interface.selection_actions,
-				default_translate
+				Void
 			)
 			new_item_actions.extend (~set_item_text (?, ""))
 		end
@@ -248,6 +248,9 @@ end -- class EV_NOTEBOOK_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.21  2000/04/20 18:07:40  oconnor
+--| Removed default_translate where not needed in sognal connect calls.
+--|
 --| Revision 1.20  2000/04/04 20:51:57  oconnor
 --| updated signal connection for new marshaling scheme
 --|

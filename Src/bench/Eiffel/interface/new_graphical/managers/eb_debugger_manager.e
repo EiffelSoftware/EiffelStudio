@@ -914,12 +914,6 @@ feature {NONE} -- Implementation
 			bkpt_info_cmd.enable_sensitive
 			toolbarable_commands.extend (bkpt_info_cmd)
 
-			if preferences.debugger_data.display_dotnet_cmd then
-				create eac_browser_cmd
-				eac_browser_cmd.disable_sensitive
-				toolbarable_commands.extend (eac_browser_cmd)
-			end
-
 			create system_info_cmd.make
 			system_info_cmd.set_pixmaps (Pixmaps.Icon_system_info)
 			system_info_cmd.set_tooltip (Interface_names.e_Display_system_info)
@@ -1002,13 +996,6 @@ feature {NONE} -- Implementation
 			else
 				debug_cmd.enable_sensitive
 				no_stop_cmd.enable_sensitive
-				if
-					preferences.debugger_data.display_dotnet_cmd
-					and then Eiffel_project.system_defined
-					and then Eiffel_system.System.il_generation
-				then
-					eac_browser_cmd.enable_sensitive
-				end
 				clear_bkpt.enable_sensitive
 				enable_bkpt.enable_sensitive
 				disable_bkpt.enable_sensitive
@@ -1032,10 +1019,7 @@ feature {NONE} -- Implementation
 			step_cmd.disable_sensitive
 			into_cmd.disable_sensitive
 			out_cmd.disable_sensitive
-			display_error_help_cmd.disable_sensitive
-			if preferences.debugger_data.display_dotnet_cmd then
-				eac_browser_cmd.disable_sensitive
-			end
+			display_error_help_cmd.disable_sensitive			
 		end
 		
 	disable_debugging_commands (full: BOOLEAN) is

@@ -106,30 +106,28 @@ feature -- Access
 			bridge_ok: Result = implementation.index_of (v, i)
 		end
 		
-	item_by_data (some_data: ANY): G is
+	retrieve_item_by_data (some_data: ANY; should_compare_objects: BOOLEAN): G is
 			-- `Result' is first item in `Current' with data
-			-- matching `some_data'. Comparison is based on
-			-- `object_comparison'.
+			-- matching `some_data'. Compare objects if
+			-- `should_compare_objects' otherwise compare references.
 		do
-			Result := implementation.item_by_data (some_data)
+			Result := implementation.retrieve_item_by_data (some_data, should_compare_objects)
 		ensure
 			not_found_in_empty: Result /= Void implies not is_empty
 			index_not_changed: old index = index
 		end
 		
-	items_by_data (some_data: ANY): ARRAYED_LIST [G] is
+	retrieve_items_by_data (some_data: ANY; should_compare_objects: BOOLEAN): ARRAYED_LIST [G] is
 			-- `Result' is all items in `Current' with data
-			-- matching `some_data'. Comparison is based on
-			-- `object_comparison'.
+			-- matching `some_data'. Compare objects if
+			-- `should_compare_objects' otherwise compare references.
 		do
-			Result := implementation.items_by_data (some_data)
+			Result := implementation.retrieve_items_by_data (some_data, should_compare_objects)
 		ensure
 			Result_not_void: Result /= Void
 			not_found_in_empty: not Result.is_empty implies not is_empty
 			index_not_changed: old index = index
 		end
-		
-		
 
 feature -- Measurement
 

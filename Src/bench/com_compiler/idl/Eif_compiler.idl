@@ -257,7 +257,7 @@ interface IEnumImportedAssemblies : IUnknown
     HRESULT Reset();
 
     HRESULT Clone(
-        [out] IEnumClusterExcludes ** ppenum);
+        [out] IEnumImportedAssemblies ** ppenum);
 
     HRESULT ith_item ([in] ULONG an_index, [out] BSTR *rgelt);
 

@@ -20,6 +20,9 @@ feature -- Access
 			-- Main Window ( i.e. the wizard window frame )
 		once
 			create Result.make
+			if not is_modify_wizard then
+				Result.load_first_state	
+			end
 		ensure	
 			exists: Result /= Void
 		end

@@ -229,6 +229,7 @@ feature -- Inherited precondition
 				end
 				il_generator.branch_to (success_block)
 				il_generator.mark_label (failure_block)
+				Il_generator.flush_sequence_points (context.class_type)
 
 				precondition_forth
 			end
@@ -491,6 +492,7 @@ feature -- inherited postcondition
 			loop
 				postcondition_context_init
 				postcondition_list.item.generate_il
+				Il_generator.flush_sequence_points (context.class_type)
 				postcondition_forth
 			end
 			restore_current_context

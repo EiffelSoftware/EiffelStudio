@@ -3,7 +3,7 @@ class WARNER_W
 
 inherit
 
-	CLICK_WINDOW
+	OUTPUT_WINDOW
 		redefine
 			display, clear_window
 		end;
@@ -195,11 +195,6 @@ feature {NONE} -- Clickable features
 	put_string (s: STRING) is
 		do
 			error_message.append (s);
-		end;
-
-	put_clickable_string (a: STONE; s: STRING) is
-		do
-			put_string (s)
 		end;
 
 	new_line is

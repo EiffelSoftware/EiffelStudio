@@ -221,7 +221,6 @@ feature {GB_XML_HANDLER, GB_OBJECT_HANDLER, GB_OBJECT} -- Implementation
 					loop
 						current_object := children.item
 						new_widget_element := create_widget_instance (element, current_object.type)
-						element.force_last (new_widget_element)
 						add_new_object_to_output (current_object, new_widget_element, generation_settings)
 						children.forth
 					end
@@ -250,7 +249,6 @@ feature {GB_XML_HANDLER, GB_OBJECT_HANDLER, GB_OBJECT} -- Implementation
 				-- which are used internally. These are not in the
 				-- interface of Vision2
 			new_type_element := new_child_element (element, Internal_properties_string, "")
-			element.force_last (new_type_element)
 			an_object.generate_xml (new_type_element)
 			
 				-- Now store all attributes from interface of Vision2.
@@ -272,7 +270,6 @@ feature {GB_XML_HANDLER, GB_OBJECT_HANDLER, GB_OBJECT} -- Implementation
 					gb_ev_any.set_object (an_object)
 					gb_ev_any.add_object (an_object.object)
 					new_type_element := new_child_element (element, vision2_type, "")
-					element.force_last (new_type_element)	
 					gb_ev_any.generate_xml (new_type_element)
 				end
 				supported_types.forth
@@ -281,8 +278,7 @@ feature {GB_XML_HANDLER, GB_OBJECT_HANDLER, GB_OBJECT} -- Implementation
 				-- We must now store the selected action sequences.
 				events := an_object.events
 				if events.count > 0 then
-					new_type_element := new_child_element (element, Events_string, "")
-					element.force_last (new_type_element)	
+					new_type_element := new_child_element (element, Events_string, "")	
 					from
 						events.start
 					until
@@ -333,14 +329,12 @@ feature {GB_CODE_GENERATOR} -- Implementation
 			 constants_list := constants.all_constants
 			 
 			 window_element := create_widget_instance (application_element, Constants_string)
-					application_element.force_last (window_element)
 			from
 				constants_list.start
 			until
 				constants_list.off
 			loop
 				new_type_element := new_child_element (window_element, constant_string, "")
-				window_element.force_last (new_type_element)
 				constants_list.item (constants_list.key_for_iteration).generate_xml (new_type_element)
 				constants_list.forth
 			end
@@ -350,7 +344,7 @@ feature {GB_CODE_GENERATOR} -- Implementation
 		end
 		
 	store_windows (children_holder: GB_WINDOW_SELECTOR_COMMON_ITEM; xml_element: XM_ELEMENT; generation_settings: GB_GENERATION_SETTINGS) is
-			-- Store all windows and directoris contained within `children_list' into `xml_settings', using generation
+			-- Store all windows and directories contained within `children_list' into `xml_settings', using generation
 			-- settings `generation_settings'.
 		require
 			children_list_not_void: children_holder /= Void
@@ -372,15 +366,12 @@ feature {GB_CODE_GENERATOR} -- Implementation
 				 if window_selector_item /= Void then
 				 		-- We ignore directories, although we should add them soon.
 					new_element := create_widget_instance (xml_element, window_selector_item.object.type)
-					xml_element.force_last (new_element)
 					add_new_object_to_output (window_selector_item.object, new_element, generation_settings)		
 				else
 					window_selector_directory_item ?= children_list.item
 					if window_selector_directory_item /= Void then
-						new_element := create_widget_instance (xml_element, directory_string)	
-						xml_element.force_last (new_element)
+						new_element := create_widget_instance (xml_element, directory_string)
 						new_type_element := new_child_element (new_element, Internal_properties_string, "")
-						new_element.force_last (new_type_element)
 						window_selector_directory_item.generate_xml (new_type_element)
 						store_windows (children_list.item, new_element, generation_settings)
 					else

@@ -20,40 +20,40 @@ inherit
 
 feature 
 
-	foreground: COLOR;
-			-- Color used for the foreground
+	foreground_color: COLOR;
+			-- Color used for the foreground_color
 
-	set_foreground (a_color: COLOR) is
-			-- Set `foreground' to `a_color'.
+	set_foreground_color (a_color: COLOR) is
+			-- Set `foreground_color' to `a_color'.
 		require
 			a_color_exists: not (a_color = Void)
 		local
 			color_implementation: COLOR_X;	
 			ext_name: ANY
 		do
-			if not (foreground = Void) then
-				color_implementation ?= foreground.implementation;
+			if not (foreground_color = Void) then
+				color_implementation ?= foreground_color.implementation;
 				color_implementation.remove_object (Current)
 			end;
-			foreground := a_color;
+			foreground_color := a_color;
 			color_implementation ?= a_color.implementation;
 			color_implementation.put_object (Current);
-			ext_name := Mforeground.to_c;
+			ext_name := Mforeground_color.to_c;
 			c_set_color (screen_object, color_implementation.pixel (screen), $ext_name)
 		ensure
-			foreground = a_color
+			foreground_color = a_color
 		end;
 
 feature {COLOR_X}
 
-	update_foreground is
+	update_foreground_color is
 			-- Update the X color after a change inside the Eiffel color.
 		local
 			ext_name: ANY;
 			color_implementation: COLOR_X;	
 		do
-			ext_name := Mforeground.to_c;
-			color_implementation ?= foreground.implementation;
+			ext_name := Mforeground_color.to_c;
+			color_implementation ?= foreground_color.implementation;
 			c_set_color (screen_object, color_implementation.pixel (screen), $ext_name)
 		end
 

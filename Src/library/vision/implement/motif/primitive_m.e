@@ -20,42 +20,59 @@ inherit
 
 feature 
 
-	foreground: COLOR;
-			-- Color used for the foreground
+	foreground_color: COLOR is
+			-- Color used for the foreground_color
+		local
+			fg_color_x: COLOR_X
+		do
+			if fg_color = Void then
+				!! fg_color.make;
+				fg_color_x ?= fg_color.implementation;
+				fg_color_x.set_pixel (xt_pixel (screen_object, Mforeground_color));
+			end;
+			Result := fg_color;
+		ensure
+			color_exists: Result /= Void
+		end;
 
-	set_foreground (a_color: COLOR) is
-			-- Set `foreground' to `a_color'.
+	set_foreground_color (a_color: COLOR) is
+			-- Set `foreground_color' to `a_color'.
 		require
-			a_color_exists: not (a_color = Void)
-		
+			a_color_exists: a_color /= Void
 		local
 			color_implementation: COLOR_X;
 			ext_name: ANY
 		do
-			if not (foreground = Void) then
-				color_implementation ?= foreground.implementation;
+			if fg_color /= Void then
+				color_implementation ?= fg_color.implementation;
 				color_implementation.remove_object (Current)
 			end;
-			foreground := a_color;
+			fg_color := a_color;
 			color_implementation ?= a_color.implementation;
 			color_implementation.put_object (Current);
-			ext_name := Mforeground.to_c;
+			ext_name := Mforeground_color.to_c;
 			c_set_color (screen_object, color_implementation.pixel (screen), $ext_name)
 		ensure
-			foreground = a_color
+			foreground_color_set: foreground_color = a_color
 		end;
+
+feature {NONE} 
+
+	fg_color: COLOR;
+			-- foreground_color colour
 
 feature {COLOR_X}
 
-	update_foreground is
+	update_foreground_color is
 			-- Update the X color after a change inside the Eiffel color.
 		local
 			ext_name: ANY;
 			color_implementation: COLOR_X
 		do
-			ext_name := Mforeground.to_c;
-			color_implementation ?= foreground.implementation;
-			c_set_color (screen_object, color_implementation.pixel (screen), $ext_name)
+			ext_name := Mforeground_color.to_c;
+			color_implementation ?= foreground_color.implementation;
+			c_set_color (screen_object, 
+				color_implementation.pixel (screen), $ext_name)
 		end;
 
 feature

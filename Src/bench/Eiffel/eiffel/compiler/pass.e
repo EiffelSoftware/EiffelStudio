@@ -73,7 +73,7 @@ end;
 				check
 					changed_classes.after
 				end;
-				changed_classes.add_left (Result);
+				changed_classes.add_front (Result);
 			end;
 			changed_classes.go (position);
 		end;

@@ -761,7 +761,7 @@ feature -- Signature checking
 						-- Two arguments with the same name
 					!!vreg;
 					vreg.set_class_id (written_in);
-					vreg.set_body_id (body_id);
+					vreg.set_feature_name (feature_name);
 					vreg.set_argument_name (arg_id);
 					Error_handler.insert_error (vreg);
 				end;
@@ -827,22 +827,6 @@ debug ("ACTIVITY")
 end;
 
 			if feat_table.associated_class = written_class then
-					-- Check validity of an expanded result type
-				if	solved_type.has_expanded then
-					if 	solved_type.expanded_deferred then
-						!!vtec1;
-						vtec1.set_class_id (written_in);	
-						vtec1.set_body_id (body_id);
-						vtec1.set_type (solved_type);
-						Error_handler.insert_error (vtec1);
-					elseif not solved_type.valid_expanded_creation then
-						!!vtec2;
-						vtec2.set_class_id (written_in);	
-						vtec2.set_body_id (body_id);
-						vtec2.set_type (solved_type);
-						Error_handler.insert_error (vtec2);
-					end
-				end;
 					-- Check valididty of a generic class type
 				if not solved_type.good_generics then
 					!!vtug1;
@@ -894,6 +878,47 @@ end;
 				end;
 					-- Check types of arguments
 				arguments.check_types (feat_table, Current);
+			end;
+		end;
+
+	check_expanded (class_c: CLASS_C) is
+			-- Check the expanded validity rules
+		require
+			type /= Void;
+		local
+			solved_type: TYPE_A;
+			vtec1: VTEC1;
+			vtec2: VTEC2;
+		do
+debug ("CHECK_EXPANDED")
+	io.error.putstring ("Check expanded of ");
+	io.error.putstring (feature_name);
+	io.error.new_line;
+end;
+			if class_c.id = written_in then
+					-- Check validity of an expanded result type
+
+					-- `set_type' has been called in `check_types' so
+					-- the reverse assignment is valid.
+				solved_type ?= type;
+				if	solved_type.has_expanded then
+					if 	solved_type.expanded_deferred then
+						!!vtec1;
+						vtec1.set_class_id (written_in);	
+						vtec1.set_body_id (body_id);
+						vtec1.set_type (solved_type);
+						Error_handler.insert_error (vtec1);
+					elseif not solved_type.valid_expanded_creation then
+						!!vtec2;
+						vtec2.set_class_id (written_in);	
+						vtec2.set_body_id (body_id);
+						vtec2.set_type (solved_type);
+						Error_handler.insert_error (vtec2);
+					end
+				end;
+				if arguments /= Void then
+					arguments.check_expanded (class_c, Current);
+				end;
 			end;
 		end;
 
@@ -1519,7 +1544,7 @@ feature -- PS
 						a_clickable.put_string (", ")
 					end
 				end;
-				a_clickable.put_string (")")
+				a_clickable.put_char (')')
 			end;
 			if not type.is_void then
 				a_clickable.put_string (": ");

@@ -77,17 +77,15 @@ feature
 			argument_name: ID_AS;
 			vtug2: VTUG2;
 			vtgg2: VTGG2;
-			vtec1: VTEC1;
-			vtec2: VTEC2;
 		do
 			from
 				start;
 				associated_class := feat_table.associated_class;
 			until
-				offright
+				after
 			loop
 					-- Process anchored type for argument types
-				argument_name := argument_names.i_th (position);
+				argument_name := argument_names.i_th (index);
 				Arg_evaluator.set_argument_name (argument_name);
 				solved_type := Arg_evaluator.evaluated_type
 														(item, feat_table, f);
@@ -98,24 +96,6 @@ feature
 					solved_type /= Void;
 				end;
 				if associated_class = f.written_class then
-						-- Check validity of an expanded type
-					if 	solved_type.has_expanded then
-						if 	solved_type.expanded_deferred then
-							!!vtec1;
-							vtec1.set_class_id (associated_class.id);
-							vtec1.set_body_id (f.body_id);
-							vtec1.set_type (solved_type);
-							vtec1.set_entity_name (argument_name);
-							Error_handler.insert_error (vtec1);
-						elseif not solved_type.valid_expanded_creation then
-							!!vtec2;
-							vtec2.set_class_id (associated_class.id);
-							vtec2.set_body_id (f.body_id);
-							vtec2.set_type (solved_type);
-							vtec2.set_entity_name (argument_name);
-							Error_handler.insert_error (vtec2);
-						end
-					end;
 						-- Check validity of a generic type
 					if 	not solved_type.good_generics then
 						!!vtug2;
@@ -148,6 +128,49 @@ feature
 
 				solved_type.check_for_obsolete_class (associated_class);
 
+				forth;
+			end;
+		end;
+
+	check_expanded (associated_class: CLASS_C; f: FEATURE_I) is
+			-- Check expanded validity rules
+		require
+			good_argument: not (associated_class = Void or f = Void);
+		local
+			solved_type: TYPE_A;
+			argument_name: ID_AS;
+			vtec1: VTEC1;
+			vtec2: VTEC2;
+		do
+			from
+				start;
+			until
+				after
+			loop
+					-- Process anchored type for argument types
+				argument_name := argument_names.i_th (index);
+				Arg_evaluator.set_argument_name (argument_name);
+				if associated_class = f.written_class then
+						-- Check validity of an expanded type
+					solved_type ?= item;
+					if 	solved_type.has_expanded then
+						if 	solved_type.expanded_deferred then
+							!!vtec1;
+							vtec1.set_class_id (associated_class.id);
+							vtec1.set_body_id (f.body_id);
+							vtec1.set_type (solved_type);
+							vtec1.set_entity_name (argument_name);
+							Error_handler.insert_error (vtec1);
+						elseif not solved_type.valid_expanded_creation then
+							!!vtec2;
+							vtec2.set_class_id (associated_class.id);
+							vtec2.set_body_id (f.body_id);
+							vtec2.set_type (solved_type);
+							vtec2.set_entity_name (argument_name);
+							Error_handler.insert_error (vtec2);
+						end
+					end;
+				end;
 				forth;
 			end;
 		end;

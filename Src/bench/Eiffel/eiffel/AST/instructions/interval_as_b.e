@@ -38,7 +38,18 @@ feature -- Type check and byte code
 			vomb2: VOMB2;
 			error_found: BOOLEAN;
 			error_type: TYPE_A;
+			id_as: ID_AS;
 		do
+			if lower.is_id then
+				id_as ?= lower;
+				context.supplier_ids.add (id_as.depend_unit);
+			end;
+			if upper /= Void then
+				if upper.is_id then
+					id_as ?= upper;
+					context.supplier_ids.add (id_as.depend_unit);
+				end;
+			end;
 			Inspect_control.set_interval (Current);
 			if Inspect_control.integer_type then
 				if not good_integer_interval then

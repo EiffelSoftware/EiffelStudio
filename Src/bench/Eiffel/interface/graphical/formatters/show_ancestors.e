@@ -74,7 +74,7 @@ feature {NONE}
 						if displayed.has (parents.item) then
 							text_window.put_string ("...%N")
 						else	
-							text_window.put_string ("%N");
+							text_window.new_line;
 							displayed.add (parents.item);
 							rec_display (i+1, p);
 						end;			

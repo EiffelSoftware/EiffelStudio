@@ -332,26 +332,8 @@ feature -- Generation
 		end;
 
 	dispose_feature: FEATURE_I is
-			-- Feature for dispose routine; 
-			-- Void if dispose routine does not exist.
-		local
-			feature_table: FEATURE_TABLE;
-			item: FEATURE_I
 		do
-			feature_table := associated_class.feature_table; 
-			if (System.memory_class /= Void) then
-				from
-					feature_table.start
-				until
-					feature_table.offright or (Result /= Void) 
-				loop
-					item := feature_table.item_for_iteration;
-					if (item.rout_id_set.first = System.memory_dispose_id) then
-						Result := item
-					end;
-					feature_table.forth
-				end
-			end
+			Result := associated_class.dispose_feature
 		end;
 
 	generate_creation_routine (file: INDENT_FILE) is

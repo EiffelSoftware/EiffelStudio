@@ -376,14 +376,15 @@ feature
 		local
 			new_id, id_array_count: INTEGER;
 		do
-debug ("ACTIVITY")
-io.error.putstring ("%TInserting class ");
-io.error.putstring (c.class_name);
-io.error.new_line;
-end;
 			new_id := class_counter.next;
 				-- Give a compiled class a frozen id
 			c.set_id (new_id);
+debug ("ACTIVITY")
+io.error.putstring ("%TInserting class ");
+io.error.putstring (c.class_name);
+io.error.putint (new_id);
+io.error.new_line;
+end;
 
 				-- Give a class id to class `c' which maybe changed 
 				-- during the topological sort of a recompilation.
@@ -951,7 +952,7 @@ end;
 				local_cursor = Void
 			loop
 				a_class := local_cursor.item.associated_class;
-debug
+debug ("CHECK_EXPANDED")
 	io.error.putstring ("Check expanded on ");
 	io.error.putstring (a_class.class_name);
 	io.error.new_line;
@@ -964,7 +965,7 @@ end;
 				loop
 					class_type := type_cursor.item;
 					if class_type.is_changed then
-debug
+debug ("CHECK_EXPANDED")
 	io.error.putstring ("Check expanded on type of ");
 	io.error.putstring (a_class.class_name);
 	io.error.new_line;
@@ -1757,11 +1758,12 @@ feature -- Dead code removal
 				i > nb
 			loop
 				a_class := id_array.item (i);
-				if  a_class /= Void -- Classes could be removed
-					and then
-					a_class.visible_level.has_visible
-				then
-					a_class.mark_visible (remover)
+				if  a_class /= Void then
+						-- Classes could be removed	then
+					a_class.mark_dispose (remover);
+					if a_class.visible_level.has_visible then
+						a_class.mark_visible (remover)
+					end;
 				end;
 				i := i + 1
 			end;

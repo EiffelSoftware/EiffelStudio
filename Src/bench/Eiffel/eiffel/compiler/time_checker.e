@@ -54,18 +54,20 @@ feature
 				check_basic_class (System.pointer_class);
 				check_suppliers_of_unchanged_classes;
 
-				if changed_name then
-					-- The name of the class in a file has changed
-					-- which means that a class has been removed
+			end;
 
-						-- Reprocess the options
-					Lace.root_ast.process_options;
+			if changed_name then
+				-- The name of the class in a file has changed
+				-- which means that a class has been removed
+io.error.putstring ("Changed_name: TRUE%N");
+					-- Reprocess the options
+				Lace.root_ast.process_options;
 
-						-- Check the universe
-					Universe.check_universe;
+					-- Check the universe
+				Universe.check_universe;
 
-					changed_name := False;
-				end;
+io.error.putstring ("After check universe%N");
+				changed_name := False;
 			end;
 		end;
 
@@ -121,16 +123,14 @@ feature {NONE}
 						file_name := a_class.file_name;
 						cluster := lace_class.cluster;
 
-						Workbench.change_class (lace_class);
-
 							-- Check class name: if changed then recompile clients
 					  		-- also.
 
 						new_class_name := cluster.read_class_name_in_file (file_name);
 
-						if
-							new_class_name /= Void
-						and then
+						if new_class_name = Void then
+							error := True;
+						elseif
 			  				not new_class_name.is_equal (a_class.class_name)
 						then
 								-- Check if the new name is valid
@@ -142,6 +142,7 @@ feature {NONE}
 								vd11.set_cluster (cluster);
 								vd11.set_file_name (file_name);
 								Error_handler.insert_error (vd11);
+								error := True;
 							else
 									-- Remove the old class
 								lace_class.cluster.remove_class (lace_class);
@@ -158,6 +159,12 @@ feature {NONE}
 								changed_name := True;
 							end;
 						end;
+
+						if not error then
+								-- `change_class' has a side effect: it resets the date
+							Workbench.change_class (lace_class);
+						end;
+
 					end;
 				end;
 				Error_handler.checksum;

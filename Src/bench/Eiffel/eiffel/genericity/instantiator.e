@@ -91,6 +91,11 @@ end;
 		local
 			data: GEN_TYPE_I;
 			local_cursor: LINKABLE [GEN_TYPE_I];
+			i, nb: INTEGER;
+			a_class: CLASS_C;
+			types: TYPE_LIST;
+			class_type: CLASS_TYPE;
+			class_array: ARRAY [CLASS_C];
 		do
 				-- Check array class
 			check_array_class;
@@ -113,6 +118,39 @@ end;
 				local_cursor := local_cursor.right;
 			end;
 			derivations.clear_all;
+
+				-- Remove the obsolete class types
+			from
+				class_array := System.id_array;
+				i := 1;
+				nb := class_array.count;
+			until
+				i > nb
+			loop
+				a_class := class_array.item (i);
+				if a_class /= Void then
+					from
+						types := a_class.types;
+						types.start
+					until
+						types.after
+					loop
+						class_type := types.item;
+						if not class_type.type.is_valid then
+debug
+	io.error.putstring ("Removing a type of ");
+	io.error.putstring (a_class.class_name);
+	io.error.new_line;
+end;
+							System.class_types.put (Void, class_type.type_id);
+							types.remove;
+						else
+							types.forth
+						end;
+					end;
+				end;
+				i := i + 1
+			end;
 		end;
 
 	derivations: DERIVATIONS is

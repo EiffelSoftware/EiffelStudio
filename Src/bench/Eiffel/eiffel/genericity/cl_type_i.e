@@ -75,6 +75,8 @@ feature
 
 	instantiation_in (other: GEN_TYPE_I): CL_TYPE_I is
 			-- Instantiation of Current in context of `other'
+		require else
+			True
 		do
 			Result := Current;
 		end;

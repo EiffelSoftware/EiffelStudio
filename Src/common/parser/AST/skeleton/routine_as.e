@@ -215,7 +215,8 @@ feature -- Type check, byte code and dead code removal
 								-- current analyzed class.
 							!!vrle1;
 							context.init_error (vrle1);
-							vrle1.set_local_name (local_name);
+							vrle1.set_feature_name (context.a_feature.feature_name);
+							vrle1.set_feature (f_table.item (local_name));
 							Error_handler.insert_error (vrle1);
 						end;
 						id_list.forth;
@@ -287,6 +288,7 @@ feature -- Type check, byte code and dead code removal
 							-- current analyzed feature
 						!!vrle2;
 						context.init_error (vrle2);
+						vrle2.set_feature_name (context.a_feature.feature_name);
 						vrle2.set_local_name (local_name);
 						Error_handler.insert_error (vrle2);
 					elseif
@@ -296,7 +298,8 @@ feature -- Type check, byte code and dead code removal
 							-- current analyzed class.
 						!!vrle1;
 						context.init_error (vrle1);
-						vrle1.set_local_name (local_name);
+						vrle1.set_feature_name (context.a_feature.feature_name);
+						vrle1.set_feature (context.feature_table.item (local_name));
 						Error_handler.insert_error (vrle1);
 					end;
 						-- Build the local table in the context

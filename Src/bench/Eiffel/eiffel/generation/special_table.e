@@ -65,6 +65,8 @@ feature
 
 	generable: BOOLEAN is
 			-- Is the current table generable ?
+		require else
+			True
 		do
 			Result := True;
 		end;

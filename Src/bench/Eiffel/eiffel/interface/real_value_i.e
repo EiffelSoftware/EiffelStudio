@@ -33,6 +33,10 @@ feature
 	generate (file: INDENT_FILE) is
 			-- Generate value in `file'.
 		do
+-- FIXME
+-- The cast is not always a double
+-- a_real: REAL is 3.4 should generate (float) 3.4 and not (double) 3.4
+--
 			file.putstring ("(double) ");
 			file.putstring (real_val);
 		end;

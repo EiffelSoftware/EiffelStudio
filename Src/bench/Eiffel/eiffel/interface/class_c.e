@@ -373,6 +373,16 @@ feature -- Building conformance table
 			end;
 		end;
 
+feature -- Expanded rues validity
+
+	check_expanded is
+			-- Check the expanded validity rule.
+			-- Pass 2 must be done on all the classes
+			-- (the creators must be up to date)
+		do
+			feature_table.check_expanded;
+		end;
+
 feature -- Third pass: byte code production and type check
 
 	pass3 is
@@ -434,7 +444,6 @@ feature -- Third pass: byte code production and type check
 			loop
 				feature_i := feat_table.item_for_iteration;
 				feature_name := feature_i.feature_name;
-
 				if feature_i.to_melt_in (Current) then
 
 						-- For a feature written in the class
@@ -499,13 +508,6 @@ debug ("ACTIVITY")
 	io.error.putstring (feature_name);
 	io.error.new_line;
 end;
-							if feature_changed and then f_suppliers /= Void
-							then
-									-- Dependances update: remove old
-									-- dependances for `feature_name'.
-								new_suppliers.remove_occurence (f_suppliers);
-								dependances.remove (feature_name);
-							end;
 
 							Error_handler.mark;
 debug ("ACTIVITY");
@@ -522,6 +524,13 @@ end;
 								and then
 								not type_check_error
 							then
+								if f_suppliers /= Void then
+										-- Dependances update: remove old
+										-- dependances for `feature_name'.
+									new_suppliers.remove_occurence (f_suppliers);
+									dependances.remove (feature_name);
+								end;
+										
 									-- Dependances update: add new
 									-- dependances for `feature_name'.
 								f_suppliers := ast_context.supplier_ids.twin;
@@ -552,12 +561,7 @@ end;
 						end;
 					else
 							-- in_pass3 = False
-						if dependances.has (feature_name) then
-							dependances.remove (feature_name);
-						end;
-						!!f_suppliers.make;
-						feature_i.record_suppliers (f_suppliers);
-						dependances.put (f_suppliers, feature_name);
+						record_suppliers (feature_i, dependances);
 					end;
 
 					ast_context.clear2;
@@ -573,13 +577,10 @@ end;
 					end;
 					type_check_error := False;
 
-				elseif not feature_i.in_pass3 then
-					if dependances.has (feature_name) then
-						dependances.remove (feature_name);
-					end;
-					!!f_suppliers.make;
-					feature_i.record_suppliers (f_suppliers);
-					dependances.put (f_suppliers, feature_name);
+				elseif ((not feature_i.in_pass3) or else
+							-- The feature is deferred and written in the current class
+						(feature_i.is_deferred and then id = feature_i.written_in)) then
+					record_suppliers (feature_i, dependances);
 				end;
 
 				feat_table.forth;
@@ -655,6 +656,20 @@ end;
 					-- Clean context if error
 				ast_context.clear2;
 			end;
+		end;
+
+	record_suppliers (feature_i: FEATURE_I; dependances: CLASS_DEPENDANCE) is
+		local
+			feature_name: STRING;
+			f_suppliers: FEATURE_DEPENDANCE;
+		do
+			feature_name := feature_i.feature_name;
+			if dependances.has (feature_name) then
+				dependances.remove (feature_name);
+			end;
+			!!f_suppliers.make;
+			feature_i.record_suppliers (f_suppliers);
+			dependances.put (f_suppliers, feature_name);
 		end;
 
 	print_clients is
@@ -737,11 +752,6 @@ end;
 							)
 					)
 				then
-					if invariant_changed and then f_suppliers /= Void then
-						new_suppliers.remove_occurence (f_suppliers);
-						dependances.remove ("_inv_");
-					end;
-
 					invar_clause := Tmp_inv_ast_server.item (id);
 					Error_handler.mark;
 					invar_clause.type_check;
@@ -750,6 +760,10 @@ end;
 						and then
 						not Error_handler.new_error
 					then
+						if f_suppliers /= Void then
+							new_suppliers.remove_occurence (f_suppliers);
+							dependances.remove ("_inv_");
+						end;
 						f_suppliers := ast_context.supplier_ids.twin;
 						dependances.put (f_suppliers, "_inv_");
 						new_suppliers.add_occurence (f_suppliers);
@@ -1246,8 +1260,9 @@ feature -- Class initialization
 				until
 					syntactical_clients.offright
 				loop
-					Workbench.add_class_to_recompile (syntactical_clients.item.lace_class);
-					syntactical_clients.item.set_changed (True);
+					a_client := syntactical_clients.item;
+					Workbench.add_class_to_recompile (a_client.lace_class);
+					a_client.set_changed (True);
 					syntactical_clients.forth
 				end;
 					-- The syntactical client/supplier relation must be consistent before
@@ -1263,6 +1278,22 @@ feature -- Class initialization
 						-- Conformance tables incrementality
 					set_changed (True);
 					System.set_update_sort (True);
+
+						-- Take care of signature conformance for redefinion of
+						-- f(p:PARENT) in f(c: CHILD). If CHILD does not inherit
+						-- from PARENT anymore, the redefinition of f is not valid
+					if removed_parent (old_parents) then
+						from
+							syntactical_clients.start
+						until
+							syntactical_clients.after
+						loop
+							a_client := syntactical_clients.item;
+							a_client.set_changed2 (True);
+							pass2_controler.insert_new_class (a_client);
+							syntactical_clients.forth
+						end;
+					end;
 				end;
 				if not changed then
 						-- If the class is not changed, it is marked `changed2'
@@ -1315,6 +1346,40 @@ feature -- Class initialization
 					old_parents.forth;
 				end;
 				parents.forth;
+			end;
+			if Result then
+				Result := removed_parent (old_parents)
+			end;
+			parents.go_i_th (pos);
+		end;
+
+	removed_parent (old_parents: like parents): BOOLEAN is
+			-- A parent has been removed from `parents' ?
+			-- [Incrementality for propagation of pass2.]
+		require
+			good_argument: old_parents /= Void;
+		local
+			pos: INTEGER;
+			parent_class: CLASS_C;
+		do
+			pos := parents.position;
+			from
+				Result := True;
+				old_parents.start
+			until
+				old_parents.offright or else not Result
+			loop
+				parent_class := old_parents.item.associated_class;
+				from
+					parents.start
+				until
+					parents.offright or else Result
+				loop
+					Result := parent_class =
+								parents.item.associated_class;
+					parents.forth;
+				end;
+				old_parents.forth
 			end;
 			parents.go_i_th (pos);
 		end;
@@ -1754,6 +1819,8 @@ feature -- Supplier checking
 				)
 			then
 				!!vd27;
+				vd27.set_creation_routine (system_creation);
+				vd27.set_root_class (Current);
 				Error_handler.insert_error (vd27);
 			end;
 			Error_handler.checksum;
@@ -2063,7 +2130,6 @@ feature -- Actual class type
 			filter: GEN_TYPE_I;
 			new_class_type: CLASS_TYPE;
 			base_c: CLASS_C;
-			base_id: INTEGER;
 			local_cursor: LINKABLE [GEN_TYPE_I]
 		do
 			if not derivations.has_derivation (id, data) then
@@ -2100,6 +2166,9 @@ end;
 				end;
 			end;
 					-- Propagation along the filters since we have a new type
+				-- Clean the filters. Some of the filters can be obsolete
+				-- if the base class has been remove from the system
+			filters.clean;
 			from
 				local_cursor := filters.first_element
 			until
@@ -2108,8 +2177,9 @@ end;
 					-- Instantiation of the filter with `data'
 				filter := local_cursor.item.instantiation_in (data);
 				base_c := filter.base_class;
-				base_id := base_c.id;
 debug ("GENERICITY")
+	io.error.putstring ("Propagation of ");
+	filter.dump (io.error);
 	io.error.putstring ("propagation to ");
 	io.error.putstring (base_c.class_name);
 	io.error.new_line;
@@ -2176,8 +2246,46 @@ feature -- Validity class
 			-- Do nothing
 		end;
 
+feature -- Dispose routine
+
+	dispose_feature: FEATURE_I is
+			-- Feature for dispose routine;
+			-- Void if dispose routine does not exist.
+		local
+			ftab: FEATURE_TABLE;
+			item: FEATURE_I
+		do
+			if (System.memory_class /= Void) then
+				ftab := feature_table;
+				from
+					ftab.start
+				until
+					ftab.offright or (Result /= Void)
+				loop
+					item := ftab.item_for_iteration;
+					if (item.rout_id_set.first = System.memory_dispose_id) then
+						Result := item
+					end;
+					ftab.forth
+				end
+			end
+		end;
+
 feature -- Dead code removal
-		
+
+	mark_dispose (remover: REMOVER) is
+			-- Mark the dispose routine as used
+		local
+			disp_feat: FEATURE_I;
+		do
+			disp_feat := dispose_feature;
+			if disp_feat /= Void then
+				if disp_feat.written_class = Current then
+					remover.record (disp_feat, Current);
+				end;
+			end;
+		end;
+
 	mark_visible (remover: REMOVER) is
 			-- Dead code removal from the visible features
 		require
@@ -2418,6 +2526,9 @@ feature -- PS
 			end;
 		rescue
 			-- FIX ME ?
+			io.error.putstring ("%NError when building the signature of ");
+			io.error.putstring (class_name.duplicate);
+			io.error.new_line;
 			!!Result.make (50);
 			Result.append (class_name);
 			if generics /= Void then
@@ -2446,7 +2557,7 @@ feature -- PS
 					generics.after
 				loop
 					formal_dec := generics.item;
-					c_name := formal_dec.formal_name;
+					c_name := formal_dec.formal_name.duplicate;
 					c_name.to_upper;
 					a_clickable.put_string (c_name);
 					if formal_dec.constraint /= Void then
@@ -2459,10 +2570,13 @@ feature -- PS
 						a_clickable.put_string (", ");
 					end;
 				end;
-				a_clickable.put_string ("]");
+				a_clickable.put_char (']');
 			end;
 			end;
 		rescue
+			io.error.putstring ("%NError when building the signature of ");
+			io.error.putstring (class_name.duplicate);
+			io.error.new_line;
 			-- FIX ME ?
 			error := True;
 			retry;

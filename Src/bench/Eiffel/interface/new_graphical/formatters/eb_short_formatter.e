@@ -82,8 +82,10 @@ feature {NONE} -- Implementation
 		do
 			if not retried then
 				set_is_with_breakable
-				if not is_dotnet_mode then			
-					formatted_text := short_context_text (associated_class)
+				if not is_dotnet_mode then
+					if associated_class /= Void then
+						formatted_text := short_context_text (associated_class)
+					end
 				else
 					set_is_without_breakable
 					if class_i /= Void then
@@ -121,7 +123,10 @@ feature -- Status setting
 			if new_stone /= Void and new_stone.class_i.is_external_class then
 				set_dotnet_mode (True)
 				a_stone ?= new_stone
-				if a_stone /= Void then
+				if
+					a_stone /= Void and then a_stone.e_class /= Void and then
+					a_stone.e_class.has_feature_table
+				then
 					-- Is compiled .NET type.
 					if consumed_types.has (a_stone.class_i.name) then
 						consumed_type := consumed_types.item (a_stone.class_i.name)

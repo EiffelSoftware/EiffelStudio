@@ -83,7 +83,9 @@ feature {NONE} -- Implementation
 			if not retried then
 				set_is_without_breakable
 				if not is_dotnet_mode then
-					formatted_text := flatshort_context_text (associated_class)
+					if associated_class /= Void then
+						formatted_text := flatshort_context_text (associated_class)
+					end
 				else
 					if class_i /= Void then
 						formatted_text := flatshort_dotnet_text (consumed_type, class_i)

@@ -13,10 +13,4 @@ feature
 			Result := "_infix_and_then";
 		end;
 
-	byte_anchor: B_AND_THEN_B is
-            -- Byte code type
-        do
-            !!Result
-        end;
-
-end
+end -- class BIN_AND_THEN_AS

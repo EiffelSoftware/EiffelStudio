@@ -23,10 +23,4 @@ feature
 			Result := True;
 		end;
 
-	byte_anchor: B_IMPLIES_B is
-			-- Byte code type
-		do
-			!!Result
-		end;
-
-end
+end -- class BIN_IMPLIES_AS

@@ -13,10 +13,4 @@ feature
 			Result := "_infix_le";
 		end;
 
-	byte_anchor: BIN_LE_B is
-			-- Byte code type
-		do
-			!!Result
-		end;
-
-end
+end -- class BIN_LE_AS

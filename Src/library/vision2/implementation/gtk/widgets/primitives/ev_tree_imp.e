@@ -87,30 +87,10 @@ feature {EV_TREE_ITEM_IMP} -- Implementation
 			end		
 		end
 
-feature -- Status setting
-
-	enable_multiple_selection is
-			-- Allow the user to do a multiple selection simply
-			-- by clicking on several choices.
-			-- For constants, see EV_GTK_CONSTANTS
-		do
-			C.gtk_tree_set_selection_mode (list_widget, C.GTK_SELECTION_MULTIPLE_ENUM)
-		end
-
-	disable_multiple_selection is
-			-- Allow the user to do only one selection. It is the
-			-- default status of the list.
-			-- For constants, see EV_GTK_CONSTANTS
-		do
-			C.gtk_tree_set_selection_mode (list_widget, C.GTK_SELECTION_SINGLE_ENUM)
-		end
-
-
 feature -- Status report
 
 	selected_item: EV_TREE_ITEM is
-			-- Item which is currently selected, for a multiple
-			-- selection, it gives the first item in the list.
+			-- Item which is currently selected
 		local
 			p: POINTER
 			o: EV_ANY_IMP
@@ -123,41 +103,6 @@ feature -- Status report
 					Result ?= o.interface
 				end
 			end
-		end
-
-	selected_items: LINKED_LIST [EV_TREE_ITEM] is
-				-- Items which are currently selected.
-		local
-			list_pointer, item_pointer: POINTER
-			o: EV_ANY_IMP
-			a_counter: INTEGER
-			current_item: EV_TREE_ITEM
-		do
-			create Result.make
-			list_pointer := GTK_TREE_SELECTION (list_widget)
-			if list_pointer /= Default_pointer then
-				from
-					a_counter := 0
-				until
-					a_counter = C.g_list_length (list_pointer)
-				loop
-					item_pointer := C.g_list_nth_data (
-						list_pointer,
-						a_counter
-					)
-					o := eif_object_from_c (item_pointer)
-					current_item ?= o.interface
-					Result.extend (current_item)
-					a_counter := a_counter + 1
-				end
-			end
-		end
-
-	multiple_selection_enabled: BOOLEAN is
-			-- Can multiple items be selected ?
-		do
-			Result := C.gtk_tree_struct_selection_mode (list_widget) 
-					= C.GTK_SELECTION_MULTIPLE_ENUM
 		end
 
 	selected: BOOLEAN is
@@ -257,6 +202,9 @@ end -- class EV_TREE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.34  2000/03/09 19:56:46  king
+--| Removed multiple-selection features as they are not available on win32
+--|
 --| Revision 1.33  2000/03/07 01:28:18  king
 --| Optimized loop by adding and then
 --|

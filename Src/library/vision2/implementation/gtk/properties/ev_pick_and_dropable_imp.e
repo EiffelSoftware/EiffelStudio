@@ -517,7 +517,7 @@ feature -- Implementation
 			interface.init_drop_actions (Result)
 		end
 
-feature {EV_APPLICATION_IMP, EV_PICK_AND_DROPABLE_IMP} -- Implementation
+feature {EV_APPLICATION_IMP, EV_PICK_AND_DROPABLE_IMP, EV_DOCKABLE_SOURCE_IMP} -- Implementation
 
 	pointer_over_widget (a_gdkwin: POINTER; a_x, a_y: INTEGER): BOOLEAN is
 			-- Comparison of gdk window and widget position to determine

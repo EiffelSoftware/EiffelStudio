@@ -112,7 +112,7 @@ feature {NONE} -- Implementation
 									else
 										s ?= obj
 										if s /= Void then
-											write (parent_field, s, open_string_field, close_string_field, tab_count, f)
+											write (parent_field, escaped_string (s), open_string_field, close_string_field, tab_count, f)
 										else
 											ar ?= obj
 											if ar /= Void then
@@ -290,6 +290,53 @@ feature {NONE} -- Implementation
 			f.write_string (new_line)
 		end
 
+	escaped_string (s: STRING): STRING is
+			-- Escaped `s' for XML writting
+		require
+			non_void_string: s /= Void
+		local
+			i, nb: INTEGER
+		do
+			create Result.make (s.count + s.count // 10)
+			from
+				i := 1
+				nb := s.count
+			variant
+				i
+			until
+				i > nb
+			loop
+				escape_char (Result, s.item (i))
+				i := i + 1
+			end
+		end
+
+	escape_char (buffer: STRING; c: CHARACTER) is
+			-- Write char `c' with XML escape sequences
+		require
+			valid_buffer: buffer /= Void
+		do
+			inspect
+				c
+		 	when '<' then
+				buffer.append_string ("&lt;")
+		 	when '>' then
+				buffer.append_string ("&gt;")
+			when '"' then
+				buffer.append_string ("&quot;")
+			when ''' then
+				buffer.append_string ("&apos;")
+			else
+				if c < ' ' or c > '%/127/' then
+					buffer.append_string ("&#")
+					buffer.append_integer (c.code)
+				else
+					buffer.append_character (c)
+				end
+			end
+		end
+
+		
 invariant
 	error_message_if_failed: not successful implies last_error_context /= Void
 	no_message_if_successful: successful implies last_error_context = Void

@@ -19,6 +19,21 @@ inherit
 		end
 		
 	GB_CONSTANTS
+		export
+			{NONE} all
+		end
+		
+	GB_SHARED_PIXMAPS
+		export
+			{NONE} all
+		undefine
+			Visual_studio_information
+		end
+		
+	GB_SHARED_CONSTANTS
+		export
+			{NONE} all
+		end
 		
 feature -- Access
 
@@ -46,11 +61,20 @@ feature -- Access
 			horizontal_box.extend (modify_button)
 			create filler_label
 			horizontal_box.extend (filler_label)
+			create constants_combo_box
+			horizontal_box.extend (constants_combo_box)
+			constants_combo_box.hide
+			create constants_button
+			constants_button.set_pixmap (Icon_format_onces @ 1)
+			constants_button.select_actions.extend (agent switch_constants_mode)
+			horizontal_box.extend (constants_button)
 			horizontal_box.disable_item_expand (modify_button)
+			horizontal_box.disable_item_expand (constants_button)
+			populate_constants
 			frame_box.extend (horizontal_box)
 			create pixmap_container
 			frame_box.extend (pixmap_container)
-			create frame.make_with_text (gb_ev_pixmap_pixmap)
+			create frame.make_with_text (gb_ev_pixmapable_pixmap)
 			frame.extend (frame_box)
 			Result.extend (frame)
 			update_attribute_editor
@@ -146,6 +170,115 @@ feature {NONE} -- Implementation
 			pixmap_container.extend (pixmap)
 			pixmap.set_minimum_size (pixmap.width, pixmap.height)
 		end
+		
+	switch_constants_mode is
+			-- Switch interface between constants selection
+			-- and standard selection modes.
+		do
+			if constants_button.is_selected then
+				filler_label.hide
+				modify_button.hide
+				constants_combo_box.show
+			else
+				filler_label.show
+				modify_button.show
+				constants_combo_box.hide
+				remove_selected_constant
+			end
+		end
+		
+	populate_constants is
+			-- Fill `constants_combo_box' with representations
+			-- of all all pixmap constants for selection.
+		local
+			pixmap_constants: ARRAYED_LIST [GB_CONSTANT]
+			pixmap_constant: GB_PIXMAP_CONSTANT
+			list_item: EV_LIST_ITEM
+			lookup_string: STRING
+		do
+			constants_combo_box.wipe_out
+			pixmap_constants := constants.pixmap_constants
+			from
+				pixmap_constants.start
+			until
+				pixmap_constants.off
+			loop
+				pixmap_constant ?= pixmap_constants.item
+				create list_item.make_with_text (pixmap_constant.name)
+				list_item.set_data (pixmap_constant)
+				list_item.set_pixmap (pixmap_constant.small_pixmap)
+				constants_combo_box.extend (list_item)
+				lookup_string := type + Pixmap_path_string
+				if object.constants.has (lookup_string) and
+					pixmap_constant = object.constants.item (lookup_string).constant then
+					constants_button.enable_select
+					list_item.enable_select
+					last_selected_constant ?= list_item.data
+				end
+				list_item.select_actions.extend (agent list_item_selected (list_item))
+				pixmap_constants.forth
+			end
+		end
+		
+	last_selected_constant: GB_CONSTANT
+		-- Last constant selected in `Current'.
+
+	list_item_selected (list_item: EV_LIST_ITEM) is
+			-- `list_item' has been selected from `constants_combo_box'.
+		require
+			list_item_not_void: list_item /= Void
+			list_item_has_data: list_item.data /= Void
+		local
+			constant: GB_PIXMAP_CONSTANT
+			constant_context: GB_CONSTANT_CONTEXT
+			pixmap: EV_PIXMAP
+		do
+			if list_item.data /= Void then
+				constant ?= list_item.data
+				check
+					data_was_constant: constant /= Void
+				end
+				pixmap := objects.first
+				pixmap.hide
+				pixmap.copy (constant.pixmap)
+				pixmap.show
+				pixmap := objects @ 2
+				pixmap.hide
+				pixmap.copy (constant.pixmap)
+				pixmap.show
+				create constant_context.make_with_context (constant, object, type, Pixmap_path_string)
+				constant.add_referer (constant_context)
+				object.add_constant_context (constant_context)
+				internal_remove_selected_constant
+				last_selected_constant := constant
+				enable_project_modified
+			end
+		end
+	remove_selected_constant is
+				-- Remove constant, and clear pixmaps from current.
+			do
+				if last_selected_constant /= Void then
+					internal_remove_selected_constant
+					for_all_objects (agent {EV_PIXMAP}.clear)
+				end
+			end
+
+	internal_remove_selected_constant is
+			-- Update `object' and `last_selected_constant' to reflect the
+			-- fact that a user is no longer referencing `last_selected_constant'.
+			-- Does not remove the pixmap from the pixmapable control.
+		local
+			constant: GB_INTEGER_CONSTANT
+			constant_context: GB_CONSTANT_CONTEXT
+		do
+			if last_selected_constant /= Void then
+				constant_context := object.constants.item (type + Pixmap_path_string)
+				constant ?= constant_context.constant
+				last_selected_constant.remove_referer (constant_context)
+				object.constants.remove (type + Pixmap_path_string)
+				last_selected_constant := Void
+			end
+		end		
 
 	pixmap_container: EV_CELL
 		-- Holds a representation of the loaded pixmap.
@@ -168,5 +301,11 @@ feature {NONE} -- Implementation
 		
 	Select_tooltip: STRING is "Select pixmap"
 		-- Tooltip on `modify_button' when able to remove pixmap.
+		
+	constants_button: EV_TOGGLE_BUTTON
+		-- Button to select pixmap constants.
+		
+	constants_combo_box: EV_COMBO_BOX
+		-- A combo box to hold all pixmap constants.
 
 end -- class GB_EV_PIXMAP_EDITOR_CONSTRUCTOR

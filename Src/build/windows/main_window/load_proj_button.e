@@ -1,91 +1,68 @@
-class LOAD_PROJ_BUTTON 
+indexing
+	description: "Button to load an existing project."
+	Id: "$Id$"
+	Date: "$Date$"
+	Revision: "$Revision$"
+
+class LOAD_PROJ_BUTTON
 
 inherit
-
 	EB_BUTTON_COM
 	
-	WINDOWS
-		select
-			init_toolkit
-		end
 	LICENCE_COMMAND
-	QUEST_POPUPER
+		redefine
+			question_ok_action,
+			question_cancel_action
+		end
 
 creation
+ 	make
 
-	make
-	
-feature {NONE}
-  
-	  make (a_parent: COMPOSITE) is
-        do
-            make_visible (a_parent)
-        end
+feature {NONE} -- Button
 
-	create_focus_label is 
-		do
-			set_focus_string (Focus_labels.load_project_label)
-		end;
+--	create_focus_label is 
+--		do
+--			set_focus_string (Focus_labels.load_project_label)
+--		end
 
-  
-	symbol: PIXMAP is
+	symbol: EV_PIXMAP is
 		do
 			Result := Pixmaps.load_project_pixmap
-		end;
-	
-feature {NONE}
+		end
 
-	work (argument: ANY) is
-		local
-			pw: OPEN_PROJ_WIN
+feature {NONE} -- Command
+
+	work (argument: EV_ARGUMENT; data: EV_EVENT_DATA) is
 		do
-			if not main_panel.project_initialized then
+			if not main_window.project_initialized then
 				popup_window
 			else
 				if history_window.saved_application then
 					popup_window
 				else
-					question_box.popup (Current, 
-						Messages.open_project_qu, Void)
+					question_dialog.popup (Current, Messages.open_project_qu,
+										Void, False)
 				end
 			end
 		end
 
-feature {NONE}
-
-	question_ok_action is
+	popup_window, question_ok_action is
+		local
+			dialog: EV_DIRECTORY_SELECTION_DIALOG
+			cmd: OPEN_PROJECT
+			arg: EV_ARGUMENT1 [EV_DIRECTORY_SELECTION_DIALOG]
 		do
-			popup_window
-		end;
+			create dialog.make_with_text (main_window,
+							Widget_names.load_project_window)
+			create cmd
+			create arg.make (dialog)
+			dialog.add_ok_command (cmd, arg)
+			dialog.show
+		end
 
 	question_cancel_action is
 		do
-		end;
-
-	open_new_application is
-		local
-			save_proj: SAVE_PROJECT;
-			pw: OPEN_PROJ_WIN
-		do
-			!!save_proj;
-			save_proj.execute (Void);
-			if save_proj.completed then
-				!!pw.make (main_panel.base) 
-				pw.popup
-			end;
 		end
 
-	popup_window is
-		local
-			pw: OPEN_PROJ_WIN;
-		do
-			!!pw.make (main_panel.base)
-			pw.popup
-		end;
+end -- class LOAD_PROJ_BUTTON
 
-	popuper_parent: COMPOSITE is
-		do
-			Result := main_panel.base
-		end
-
-end

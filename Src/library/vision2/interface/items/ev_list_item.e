@@ -74,6 +74,7 @@ feature -- Status report
 			-- Is the item selected ?
 		require
 			exists: not destroyed
+			has_parent: parent /= Void
 		do
 			Result := implementation.is_selected
 		end
@@ -108,6 +109,7 @@ feature -- Status setting
 			-- Select the item if `flag', unselect it otherwise.
 		require
 			exists: not destroyed
+			has_parent: parent /= Void
 		do
 			implementation.set_selected (flag)
 		end
@@ -116,6 +118,7 @@ feature -- Status setting
 			-- Change the state of selection of the item.
 		require
 			exists: not destroyed
+			has_parent: parent /= Void
 		do
 			implementation.toggle
 		end

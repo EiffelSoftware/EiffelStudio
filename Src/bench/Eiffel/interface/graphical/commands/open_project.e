@@ -1,22 +1,24 @@
 indexing
-
-	description:	
-		"Command to retrieve a stored project.";
+	description: "Command to retrieve a stored project.";
 	date: "$Date$";
 	revision: "$Revision$"
 
 class OPEN_PROJECT 
 
 inherit
+	SHARED_EIFFEL_PROJECT
 
-	SHARED_EIFFEL_PROJECT;
-	SHARED_APPLICATION_EXECUTION;
-	PROJECT_CONTEXT;
-	COMMAND_W;
+	SHARED_APPLICATION_EXECUTION
+
+	PROJECT_CONTEXT
+
+	COMMAND_W
+
 	BENCH_LICENSED_COMMAND
 		rename
 			parent_window as Project_tool
-		end;
+		end
+
 	WARNER_CALLBACKS
 		rename
 			execute_warner_help as exit_bench,
@@ -41,6 +43,8 @@ feature -- Callbacks
 				if choose_again then
 					last_name_chooser.set_window (Project_tool)
 					last_name_chooser.call (Current)
+				elseif redo_project then
+					create_project
 				else
 					retrieve_project
 				end
@@ -69,12 +73,14 @@ feature {NONE} -- Implementation
 						last_name_chooser.set_window (Project_tool);
 						last_name_chooser.call (Current)
 					else
+						choose_again := True
 						warner (Project_tool).custom_call (Current,
 							expiration_message, Interface_names.b_Ok, Void, Void);
 					end
 				else
 					dir_name := clone (last_name_chooser.selected_file);
 					if dir_name.empty then
+						choose_again := True
 						warner (Project_tool).custom_call (Current,
 							Warning_messages.w_Directory_not_exist (dir_name), 
 							Interface_names.b_Ok, Void, Void);
@@ -107,12 +113,9 @@ feature -- Project Initialization
 		require
 			project_directory_exist: project_dir /= Void
 		local
-			workb: WORKBENCH_I;
-			init_work: INIT_WORKBENCH;
 			project_eif_file: RAW_FILE;
 			ok: BOOLEAN;
 			msg: STRING;
-			fn: FILE_NAME;
 			read_only: BOOLEAN
 		do
 			ok := True;
@@ -127,13 +130,7 @@ feature -- Project Initialization
 					choose_again := True
 					ok := False
 				else
-					Eiffel_project.make (project_dir)
-					init_project
-					msg := clone (Interface_names.t_New_project)
-					msg.append (": ")
-					msg.append (project_dir.name)
-					project_tool.set_title (msg)
-					project_tool.set_initialized
+					create_project
 				end
 
 			elseif not project_dir.exists then
@@ -167,6 +164,35 @@ feature -- Project Initialization
 			end
 		end;
 
+
+	create_project is
+			-- Create a new project directory
+		local
+			msg: STRING
+			retried: BOOLEAN
+		do
+			if not retried then
+				if redo_project then
+					project_dir.forget_old_project
+				end
+
+				Eiffel_project.make (project_dir)
+				init_project
+				msg := clone (Interface_names.t_New_project)
+				msg.append (": ")
+				msg.append (project_dir.name)
+				project_tool.set_title (msg)
+				project_tool.set_initialized
+			else
+				msg := Warning_messages.w_cannot_backup_project (project_dir.name)
+				warner (Project_tool).custom_call (Current, 
+						msg, Void, Interface_names.b_Exit_now, Void)
+			end
+		rescue
+			retried := True
+			retry
+		end
+
 	retrieve_project is
 			-- Retrieve a project from the disk.
 		require
@@ -187,18 +213,23 @@ feature -- Project Initialization
 
 			Eiffel_project.retrieve (project_dir);
 			if Eiffel_project.retrieval_error then
-				if Eiffel_project.is_corrupted then
-					msg := Warning_messages.w_Project_corrupted (project_dir.name)
-				elseif Eiffel_project.retrieval_interrupted then
-					msg := Warning_messages.w_Project_interrupted (project_dir.name)
-				else
+				if Eiffel_project.is_incompatible then
 					msg := Warning_messages.w_Project_incompatible 
 						(project_dir.name, 
 						version_number, 
 						Eiffel_project.incompatible_version_number)
+					redo_project := True
+					warner (Project_tool).custom_call (Current, 
+							msg, Interface_names.b_ok, Interface_names.b_Exit_now, Void)
+				else
+					if Eiffel_project.is_corrupted then
+						msg := Warning_messages.w_Project_corrupted (project_dir.name)
+					elseif Eiffel_project.retrieval_interrupted then
+						msg := Warning_messages.w_Project_interrupted (project_dir.name)
+					end
+					warner (Project_tool).custom_call (Current, 
+							msg, Void, Interface_names.b_Exit_now, Void)
 				end
-				warner (Project_tool).custom_call (Current, 
-						msg, Void, Interface_names.b_Exit_now, Void)
 			elseif Eiffel_project.read_write_error then
 				msg := Warning_messages.w_Cannot_open_project
 				warner (Project_tool).custom_call (Current, msg, Void, Interface_names.b_Exit, Void)
@@ -230,8 +261,8 @@ feature -- Project Initialization
 			Eiffel_project.set_error_displayer (e_displayer);
 			Application.set_interrupt_number (Project_resources.interrupt_every_n_instructions.actual_value);
 			if not Project_resources.graphical_output_disabled.actual_value then
-				!! g_degree_output;
-				Eiffel_project.set_degree_output (g_degree_output)
+				!! g_degree_output
+				Project_tool.set_progress_dialog (g_degree_output)
 			end
 		end;
 
@@ -242,5 +273,9 @@ feature -- Project directory access
 
 	choose_again: BOOLEAN
 			-- Do we have to display the project directory dialog box again?
+
+	redo_project: BOOLEAN
+			-- The previous EIFGEN is not compatible with the current version,
+			-- we do need to rename the old EIFGEN and build a new one.
 
 end -- class OPEN_PROJECT

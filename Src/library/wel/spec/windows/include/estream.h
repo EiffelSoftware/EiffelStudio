@@ -20,11 +20,18 @@
 extern "C" {
 #endif
 
-typedef EIF_INTEGER (* EIF_EDITSTREAM_PROCEDURE)
-	(EIF_REFERENCE,     /* WEL_EDIT_STREAM Eiffel object */
+typedef EIF_INTEGER (* EIF_EDITSTREAM_IN_PROCEDURE)
+	(EIF_REFERENCE,     /* WEL_EDIT_STREAM_IN Eiffel object */
 	 EIF_POINTER, /* buffer * */
-	 EIF_INTEGER  /* length */
+	 EIF_INTEGER,  /* length of buffer */
+	 EIF_POINTER /* actual length of data written into the buffer */
 	 );
+
+typedef EIF_INTEGER (* EIF_EDITSTREAM_OUT_PROCEDURE)
+	(EIF_REFERENCE,     /* WEL_EDIT_STREAM_OUT Eiffel object */
+	 EIF_REFERENCE		  /* Eiffel STRING object containing the text */
+	 );
+
 
 
 #ifdef __cplusplus
@@ -40,63 +47,45 @@ typedef EIF_INTEGER (* EIF_EDITSTREAM_PROCEDURE)
 extern "C" {
 #endif
 
-/* Eiffel routine signature for `internal_callback' */
-extern DWORD CALLBACK cwel_editstream_callback (DWORD, LPBYTE, LONG, LONG FAR *);
+/* Eiffel routine signature for `internal_callback' (WEL_RICH_EDIT_STREAM_IN)*/
+extern DWORD CALLBACK cwel_editstream_in_callback (DWORD, LPBYTE, LONG, LONG FAR *);
 
-/* Address of the Eiffel routine `internal_callback' (class WEL_EDIT_STREAM) */
-extern EIF_EDITSTREAM_PROCEDURE wel_editstream_procedure;
+/* Eiffel routine signature for `internal_callback' (WEL_RICH_EDIT_STREAM_OUT)*/
+extern DWORD CALLBACK cwel_editstream_out_callback (DWORD, LPBYTE, LONG, LONG FAR *);
+
+/* Address of the Eiffel routine `internal_callback' (class WEL_EDIT_STREAM_IN) */
+extern EIF_EDITSTREAM_IN_PROCEDURE wel_editstream_in_procedure;
+
+/* Address of the Eiffel routine `internal_callback' (class WEL_EDIT_STREAM_OUT) */
+extern EIF_EDITSTREAM_OUT_PROCEDURE wel_editstream_out_procedure;
 
 #define cwel_editstream_set_dwcookie(_ptr_, _value_) (((EDITSTREAM *) _ptr_)->dwCookie = (DWORD) (_value_))
 #define cwel_editstream_set_dwerror(_ptr_, _value_) (((EDITSTREAM *) _ptr_)->dwError = (DWORD) (_value_))
-#define cwel_editstream_set_pfncallback(_ptr_) (((EDITSTREAM *) _ptr_)->pfnCallback = (EDITSTREAMCALLBACK) (cwel_editstream_callback))
+#define cwel_editstream_set_pfncallback_in(_ptr_) (((EDITSTREAM *) _ptr_)->pfnCallback = (EDITSTREAMCALLBACK) (cwel_editstream_in_callback))
+#define cwel_editstream_set_pfncallback_out(_ptr_) (((EDITSTREAM *) _ptr_)->pfnCallback = (EDITSTREAMCALLBACK) (cwel_editstream_out_callback))
+
 
 #define cwel_editstream_get_dwcookie(_ptr_) (((EDITSTREAM *) _ptr_)->dwCookie)
 #define cwel_editstream_get_dwerror(_ptr_) (((EDITSTREAM *) _ptr_)->dwError)
 
+#define cwel_set_integer_reference_value(_ref_, _value_) * _ref_ = _value_
+
 #ifdef EIF_THREADS
-	extern void wel_set_editstream_procedure_address(EIF_POINTER _value_) ;
-#	define cwel_set_editstream_procedure_address(_value_)  (wel_set_editstream_procedure_address(_value_) )
-		/* Set `wel_editstream_procedure' with `value' */
+	extern void wel_set_editstream_in_procedure_address(EIF_POINTER _value_) ;
+#	define cwel_set_editstream_in_procedure_address(_value_)  (wel_set_editstream_in_procedure_address(_value_) )
+		/* Set `wel_editstream_in_procedure' with `value' */
 
-	extern void wel_set_editstream_object(EIF_OBJ _value_) ;
-#	define cwel_set_editstream_object(_value_)  (wel_set_editstream_object(_value_) )
-		/* Set `wel_editstream_object' with `value' */
-
-	extern void wel_release_editstream_object() ;
-#	define cwel_release_editstream_object  (wel_release_editstream_object() )
-		/* Set `wel_editstream_object' with `value' */
-
-	extern void wel_set_editstream_buffer(EIF_POINTER _value_) ;
-#	define cwel_set_editstream_buffer(_value_)  (wel_set_editstream_buffer(_value_) )
-		/* Set `wel_editstream_buffer' with `value' */
-
-	extern void wel_set_editstream_buffer_size(EIF_INTEGER _value_) ;
-#	define cwel_set_editstream_buffer_size(_value_)  (wel_set_editstream_buffer_size(_value_) )
-		/* Set `wel_editstream_buffer_size' with `value' */
-
-	extern void wel_set_editstream_in(EIF_BOOLEAN _value_) ;
-#	define cwel_set_editstream_in(_value_)  (wel_set_editstream_in(_value_) )
-		/* Set `wel_editstream_in' with `value' */
+	extern void wel_set_editstream_out_procedure_address(EIF_POINTER _value_) ;
+#	define cwel_set_editstream_out_procedure_address(_value_)  (wel_set_editstream_out_procedure_address(_value_) )
+		/* Set `wel_editstream_out_procedure' with `value' */
 
 #else
 
-#	define cwel_set_editstream_procedure_address(_value_) (wel_editstream_procedure = (EIF_EDITSTREAM_PROCEDURE) _value_)
-		/* Set `wel_editstream_procedure' with `value' */
+#	define cwel_set_editstream_in_procedure_address(_value_) (wel_editstream_in_procedure = (EIF_EDITSTREAM_IN_PROCEDURE) _value_)
+		/* Set `wel_editstream_in_procedure' with `value' */
 
-#	define cwel_set_editstream_object(_value_) (wel_editstream_object = (EIF_OBJ) eif_adopt (_value_))
-		/* Set `wel_editstream_object' with `value' */
-
-#	define cwel_release_editstream_object (eif_wean (wel_editstream_object), wel_editstream_object = NULL)
-		/* Set `wel_editstream_object' with `value' */
-
-#	define cwel_set_editstream_buffer(_value_) (wel_editstream_buffer = (EIF_POINTER) _value_)
-		/* Set `wel_editstream_buffer' with `value' */
-
-#	define cwel_set_editstream_buffer_size(_value_) (wel_editstream_buffer_size = (EIF_INTEGER) _value_)
-		/* Set `wel_editstream_buffer_size' with `value' */
-
-#	define cwel_set_editstream_in(_value_) (wel_editstream_in = (EIF_BOOLEAN) _value_)
-		/* Set `wel_editstream_in' with `value' */
+#	define cwel_set_editstream_out_procedure_address(_value_) (wel_editstream_out_procedure = (EIF_EDITSTREAM_OUT_PROCEDURE) _value_)
+		/* Set `wel_editstream_out_procedure' with `value' */
 
 #endif
 

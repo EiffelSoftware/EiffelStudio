@@ -70,15 +70,15 @@ feature -- Code generation
 			end
 		end
 
-	generate_inline_body (buffer: GENERATION_BUFFER) is
+	generate_inline_body (buffer: GENERATION_BUFFER; a_ret_type: TYPE_C) is
 			-- Generate code for inline C feature in a body, i.e. encpasulation of inline.
 		require
 			buffer_not_void: buffer /= Void
 		do
-			internal_generate_inline (buffer, Void)
+			internal_generate_inline (buffer, Void, a_ret_type)
 		end
 
-	generate_inline_access (buffer: GENERATION_BUFFER; parameters: BYTE_LIST [EXPR_B]) is
+	generate_inline_access (buffer: GENERATION_BUFFER; parameters: BYTE_LIST [EXPR_B]; a_ret_type: TYPE_C) is
 			-- Generate code for access to inline C feature.
 		require
 			buffer_not_void: buffer /= Void
@@ -86,12 +86,12 @@ feature -- Code generation
 			parameters_count_valid: argument_names /= Void implies
 				(argument_names.count = parameters.count)
 		do
-			internal_generate_inline (buffer, parameters)
+			internal_generate_inline (buffer, parameters, a_ret_type)
 		end
 
 feature {NONE} -- Implementation
 
-	internal_generate_inline (buffer: GENERATION_BUFFER; parameters: BYTE_LIST [EXPR_B]) is
+	internal_generate_inline (buffer: GENERATION_BUFFER; parameters: BYTE_LIST [EXPR_B]; a_ret_type: TYPE_C) is
 			-- Generate code for inline C feature.
 		require
 			buffer_not_void: buffer /= Void
@@ -158,6 +158,9 @@ feature {NONE} -- Implementation
 					i := i + 1
 				end
 			end
+
+				-- Replace `$$_result_type' if used by return type of current inlined function
+			l_code.replace_substring_all ("$$_result_type", a_ret_type.c_string)
 
 				-- FIXME: Manu 03/26/2003:
 				-- When verbatim strings are used, on Windows we get a %R%N which

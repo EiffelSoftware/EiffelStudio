@@ -287,7 +287,6 @@ feature -- Once request
 
 			l_cl_type_a: CL_TYPE_A
 			l_adapted_class_type: CLASS_TYPE
-			l_class_type_list: LIST [CLASS_TYPE]
 		do
 			--| In case the once is attached to an ancestor
 			--| we need to access the static of the correct ICOR_DEBUG_CLASS

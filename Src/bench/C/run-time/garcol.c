@@ -840,11 +840,10 @@ rt_public void reclaim(void)
 #endif /* EIF_THREADS && !VXWORKS */
 	}
 
-	for (c = cklst.ck_head; c != (struct chunk *) 0; c = cn)
-		{
+	for (c = cklst.ck_head; c != (struct chunk *) 0; c = cn) {
 		cn = c->ck_next;
 		eif_free (c);
-		}
+	}
 	cklst.ck_head = (struct chunk *) 0;
 
 #ifdef EIF_WINDOWS 

@@ -1,5 +1,7 @@
 #include "cli_debugger.h"
 #include "cli_debugger_callback.h"
+#include "cli_debugger_callback_id.h"
+
 #include <objbase.h>
 #include <cor.h>
 
@@ -41,6 +43,7 @@ rt_public void trace_event_cb_hr (char* mesg,HRESULT hr)
 #endif
 
 //CorDebugManagedCallback------------------------------------------------------------------
+
 
 rt_public EIF_POINTER new_cordebug_managed_callback ()
 	/* Create new instance of ICorDebugManagedCallback */
@@ -171,18 +174,18 @@ HRESULT DebuggerManagedCallback::initialize_callback(
 HRESULT DebuggerManagedCallback::CreateProcess(ICorDebugProcess *pProcess)
 {
 //	DBGTRACE("[ManagedCallback] CreateProcess");
-	dbg_debugger_before_callback ("CreateProcess", false);
+	dbg_debugger_before_callback (CB_CREATE_PROCESS, false);
 	(FUNCTION_CAST (void, (EIF_REFERENCE, ICorDebugProcess*)) m_cb_create_process) (eif_access (m_callback_adopted_object), pProcess);
-	dbg_debugger_after_callback ("CreateProcess");
+	dbg_debugger_after_callback (CB_CREATE_PROCESS);
     return (S_OK);
 }
 
 HRESULT DebuggerManagedCallback::ExitProcess(ICorDebugProcess *pProcess)
 {
-//	DBGTRACE("[ManagedCallback] ExitProcess");
-	dbg_debugger_before_callback ("ExitProcess", false);
+//	DBGTRAC);
+	dbg_debugger_before_callback (CB_EXIT_PROCESS, false);
 	(FUNCTION_CAST (void, (EIF_REFERENCE, ICorDebugProcess*)) m_cb_exit_process) (eif_access (m_callback_adopted_object), pProcess);
-	dbg_debugger_after_callback ("ExitProcess");
+	dbg_debugger_after_callback (CB_EXIT_PROCESS);
     return (S_OK);
 }
 
@@ -193,9 +196,9 @@ HRESULT DebuggerManagedCallback::CreateAppDomain(ICorDebugProcess *pProcess,
                                           ICorDebugAppDomain *pAppDomain)
 {
 //	DBGTRACE("[ManagedCallback] CreateAppDomain ");
-	dbg_debugger_before_callback ("CreateAppDomain", false);
+	dbg_debugger_before_callback (CB_CREATE_APP_DOMAIN, false);
 	(FUNCTION_CAST (void, (EIF_REFERENCE, ICorDebugProcess*, ICorDebugAppDomain*)) m_cb_create_app_domain) (eif_access (m_callback_adopted_object), pProcess, pAppDomain);
-	dbg_debugger_after_callback ("CreateAppDomain");
+	dbg_debugger_after_callback (CB_CREATE_APP_DOMAIN);
     return S_OK;
 }
 
@@ -205,10 +208,10 @@ HRESULT DebuggerManagedCallback::CreateAppDomain(ICorDebugProcess *pProcess,
 HRESULT DebuggerManagedCallback::ExitAppDomain(ICorDebugProcess *pProcess,
                                         ICorDebugAppDomain *pAppDomain)
 {
-	dbg_debugger_before_callback ("ExitAppDomain", false);
+	dbg_debugger_before_callback (CB_EXIT_APP_DOMAIN, false);
 	(FUNCTION_CAST (void, (EIF_REFERENCE, ICorDebugProcess*, ICorDebugAppDomain*)) m_cb_exit_app_domain) (eif_access (m_callback_adopted_object), pProcess, pAppDomain);
 // 	DBGTRACE("[ManagedCallback] ExitAppDomain");
-	dbg_debugger_after_callback ("ExitAppDomain");
+	dbg_debugger_after_callback (CB_EXIT_APP_DOMAIN);
     return S_OK;
 }
 
@@ -220,10 +223,10 @@ HRESULT DebuggerManagedCallback::ExitAppDomain(ICorDebugProcess *pProcess,
 HRESULT DebuggerManagedCallback::LoadAssembly(ICorDebugAppDomain *pAppDomain,
                                        ICorDebugAssembly *pAssembly)
 {
-	dbg_debugger_before_callback ("LoadAssembly", false);
+	dbg_debugger_before_callback (CB_LOAD_ASSEMBLY, false);
 	(FUNCTION_CAST (void, (EIF_REFERENCE, ICorDebugAppDomain*, ICorDebugAssembly*)) m_cb_load_assembly) (eif_access (m_callback_adopted_object), pAppDomain, pAssembly);
 // 	DBGTRACE("[ManagedCallback] LoadAssembly");
-	dbg_debugger_after_callback ("LoadAssembly");
+	dbg_debugger_after_callback (CB_LOAD_ASSEMBLY);
     return S_OK;
 }
 
@@ -234,10 +237,10 @@ HRESULT DebuggerManagedCallback::LoadAssembly(ICorDebugAppDomain *pAppDomain,
 HRESULT DebuggerManagedCallback::UnloadAssembly(ICorDebugAppDomain *pAppDomain,
                                          ICorDebugAssembly *pAssembly)
 {
-	dbg_debugger_before_callback ("UnloadAssembly", false);
+	dbg_debugger_before_callback (CB_UNLOAD_ASSEMBLY, false);
 	(FUNCTION_CAST (void, (EIF_REFERENCE, ICorDebugAppDomain*, ICorDebugAssembly*)) m_cb_unload_assembly) (eif_access (m_callback_adopted_object), pAppDomain, pAssembly);
 // 	DBGTRACE("[ManagedCallback] UnloadAssembly");
-	dbg_debugger_after_callback ("UnloadAssembly");
+	dbg_debugger_after_callback (CB_UNLOAD_ASSEMBLY);
     return S_OK;
 }
 
@@ -246,10 +249,10 @@ HRESULT DebuggerManagedCallback::Breakpoint(ICorDebugAppDomain *pAppDomain,
                                      ICorDebugThread *pThread, 
                                      ICorDebugBreakpoint *pBreakpoint)
 {
-	dbg_debugger_before_callback ("Breakpoint", false);
+	dbg_debugger_before_callback (CB_BREAKPOINT, false);
 	(FUNCTION_CAST (void, (EIF_REFERENCE, ICorDebugAppDomain*, ICorDebugThread*, ICorDebugBreakpoint*)) m_cb_breakpoint) (eif_access (m_callback_adopted_object), pAppDomain, pThread, pBreakpoint);
 // 	DBGTRACE ("Breakpoint");
-	dbg_debugger_after_callback ("Breakpoint");
+	dbg_debugger_after_callback (CB_BREAKPOINT);
     return S_OK;
 }
 
@@ -259,22 +262,22 @@ HRESULT DebuggerManagedCallback::StepComplete(ICorDebugAppDomain *pAppDomain,
                                        ICorDebugStepper *pStepper,
                                        CorDebugStepReason reason)
 {
-	dbg_debugger_before_callback ("StepComplete", false);
+	dbg_debugger_before_callback (CB_STEP_COMPLETE, false);
 	(FUNCTION_CAST (void, (EIF_REFERENCE, ICorDebugAppDomain*, ICorDebugThread*, ICorDebugStepper*, CorDebugStepReason)) m_cb_step_complete) (eif_access (m_callback_adopted_object), pAppDomain, pThread, pStepper, reason);
 
 //	FIXME jfiat [21/03/2003]
 // 	DBGTRACE("[ManagedCallback] StepComplete");
-	dbg_debugger_after_callback ("StepComplete");
+	dbg_debugger_after_callback (CB_STEP_COMPLETE);
     return S_OK;
 }
 
 HRESULT DebuggerManagedCallback::Break(ICorDebugAppDomain *pAppDomain,
                                 ICorDebugThread *pThread)
 {
-	dbg_debugger_before_callback ("Break", true);
+	dbg_debugger_before_callback (CB_BREAK, true);
 	(FUNCTION_CAST (void, (EIF_REFERENCE, ICorDebugAppDomain*, ICorDebugThread*)) m_cb_break) (eif_access (m_callback_adopted_object), pAppDomain, pThread);
 // 	DBGTRACE("[ManagedCallback] Break");
-	dbg_debugger_after_callback ("Break");
+	dbg_debugger_after_callback (CB_BREAK);
     return S_OK;
 }
 
@@ -282,10 +285,10 @@ HRESULT DebuggerManagedCallback::Exception(ICorDebugAppDomain *pAppDomain,
                                     ICorDebugThread *pThread,
                                     BOOL unhandled)
 {
-	dbg_debugger_before_callback ("Exception", true);
+	dbg_debugger_before_callback (CB_EXCEPTION, true);
 	(FUNCTION_CAST (void, (EIF_REFERENCE, ICorDebugAppDomain*, ICorDebugThread*, BOOL)) m_cb_exception) (eif_access (m_callback_adopted_object), pAppDomain, pThread, unhandled);
 // 	DBGTRACE("[ManagedCallback] Exception");
-	dbg_debugger_after_callback ("Exception");
+	dbg_debugger_after_callback (CB_EXCEPTION);
     return S_OK;
 }
 
@@ -294,10 +297,10 @@ HRESULT DebuggerManagedCallback::EvalComplete(ICorDebugAppDomain *pAppDomain,
                                        ICorDebugThread *pThread,
                                        ICorDebugEval *pEval)
 {
-	dbg_debugger_before_callback ("EvalComplete", true);
+	dbg_debugger_before_callback (CB_EVAL_COMPLETE, true);
 	(FUNCTION_CAST (void, (EIF_REFERENCE, ICorDebugAppDomain*, ICorDebugThread*, ICorDebugEval*)) m_cb_eval_complete) (eif_access (m_callback_adopted_object), pAppDomain, pThread, pEval);
 // 	DBGTRACE("[ManagedCallback] EvalComplete");
-	dbg_debugger_after_callback ("EvalComplete");
+	dbg_debugger_after_callback (CB_EVAL_COMPLETE);
     return S_OK;
 }
 
@@ -305,10 +308,10 @@ HRESULT DebuggerManagedCallback::EvalException(ICorDebugAppDomain *pAppDomain,
                                         ICorDebugThread *pThread,
                                         ICorDebugEval *pEval)
 {
-	dbg_debugger_before_callback ("EvalException", true);
+	dbg_debugger_before_callback (CB_EVAL_EXCEPTION, true);
 	(FUNCTION_CAST (void, (EIF_REFERENCE, ICorDebugAppDomain*, ICorDebugThread*, ICorDebugEval*)) m_cb_eval_exception) (eif_access (m_callback_adopted_object), pAppDomain, pThread, pEval);
 // 	DBGTRACE("[ManagedCallback] EvalException");
-	dbg_debugger_after_callback ("EvalException");
+	dbg_debugger_after_callback (CB_EVAL_EXCEPTION);
     return S_OK;
 }
 
@@ -316,10 +319,10 @@ HRESULT DebuggerManagedCallback::EvalException(ICorDebugAppDomain *pAppDomain,
 HRESULT DebuggerManagedCallback::CreateThread(ICorDebugAppDomain *pAppDomain,
                                        ICorDebugThread *pThread)
 {
-	dbg_debugger_before_callback ("CreateThread", false);
+	dbg_debugger_before_callback (CB_CREATE_THREAD, false);
 	(FUNCTION_CAST (void, (EIF_REFERENCE, ICorDebugAppDomain*, ICorDebugThread*)) m_cb_create_thread) (eif_access (m_callback_adopted_object), pAppDomain, pThread);
 // 	DBGTRACE("[ManagedCallback] CreateThread");
-	dbg_debugger_after_callback ("CreateThread");
+	dbg_debugger_after_callback (CB_CREATE_THREAD);
     return S_OK;
 }
 
@@ -327,20 +330,20 @@ HRESULT DebuggerManagedCallback::CreateThread(ICorDebugAppDomain *pAppDomain,
 HRESULT DebuggerManagedCallback::ExitThread(ICorDebugAppDomain *pAppDomain,
                                      ICorDebugThread *pThread)
 {
-	dbg_debugger_before_callback ("ExitThread", false);
+	dbg_debugger_before_callback (CB_EXIT_THREAD, false);
 	(FUNCTION_CAST (void, (EIF_REFERENCE, ICorDebugAppDomain*, ICorDebugThread*)) m_cb_exit_thread) (eif_access (m_callback_adopted_object), pAppDomain, pThread);
 // 	DBGTRACE("[ManagedCallback] ExitThread");
-	dbg_debugger_after_callback ("ExitThread");
+	dbg_debugger_after_callback (CB_EXIT_THREAD);
     return S_OK;
 }
 
 HRESULT DebuggerManagedCallback::LoadModule( ICorDebugAppDomain *pAppDomain,
                                       ICorDebugModule *pModule)
 {
-	dbg_debugger_before_callback ("LoadModule", false);
+	dbg_debugger_before_callback (CB_LOAD_MODULE, false);
 	(FUNCTION_CAST (void, (EIF_REFERENCE, ICorDebugAppDomain*, ICorDebugModule*)) m_cb_load_module) (eif_access (m_callback_adopted_object), pAppDomain, pModule);
 // 	DBGTRACE("[ManagedCallback] LoadModule");
-	dbg_debugger_after_callback ("LoadModule");
+	dbg_debugger_after_callback (CB_LOAD_MODULE);
     return S_OK;
 }
 
@@ -348,10 +351,10 @@ HRESULT DebuggerManagedCallback::LoadModule( ICorDebugAppDomain *pAppDomain,
 HRESULT DebuggerManagedCallback::UnloadModule( ICorDebugAppDomain *pAppDomain,
                       ICorDebugModule *pModule)
 {
-	dbg_debugger_before_callback ("UnloadModule", false);
+	dbg_debugger_before_callback (CB_UNLOAD_MODULE, false);
 	(FUNCTION_CAST (void, (EIF_REFERENCE, ICorDebugAppDomain*, ICorDebugModule*)) m_cb_unload_module) (eif_access (m_callback_adopted_object), pAppDomain, pModule);
 // 	DBGTRACE("[ManagedCallback] UnloadModule");
-	dbg_debugger_after_callback ("UnloadModule");
+	dbg_debugger_after_callback (CB_UNLOAD_MODULE);
     return S_OK;
 }
 
@@ -359,10 +362,10 @@ HRESULT DebuggerManagedCallback::UnloadModule( ICorDebugAppDomain *pAppDomain,
 HRESULT DebuggerManagedCallback::LoadClass( ICorDebugAppDomain *pAppDomain,
                    ICorDebugClass *pClass)
 {
-	dbg_debugger_before_callback ("LoadClass", false);
+	dbg_debugger_before_callback (CB_LOAD_CLASS, false);
 	(FUNCTION_CAST (void, (EIF_REFERENCE, ICorDebugAppDomain*, ICorDebugClass*)) m_cb_load_class) (eif_access (m_callback_adopted_object), pAppDomain, pClass);
 // 	DBGTRACE("[ManagedCallback] LoadClass");
-	dbg_debugger_after_callback ("LoadClass");
+	dbg_debugger_after_callback (CB_LOAD_CLASS);
     return S_OK;
 }
 
@@ -370,10 +373,10 @@ HRESULT DebuggerManagedCallback::LoadClass( ICorDebugAppDomain *pAppDomain,
 HRESULT DebuggerManagedCallback::UnloadClass( ICorDebugAppDomain *pAppDomain,
                      ICorDebugClass *pClass)
 {
-	dbg_debugger_before_callback ("UnloadClass", false);
+	dbg_debugger_before_callback (CB_UNLOAD_CLASS, false);
 	(FUNCTION_CAST (void, (EIF_REFERENCE, ICorDebugAppDomain*, ICorDebugClass*)) m_cb_unload_class) (eif_access (m_callback_adopted_object), pAppDomain, pClass);
 // 	DBGTRACE("[ManagedCallback] UnloadClass");
-	dbg_debugger_after_callback ("UnloadClass");
+	dbg_debugger_after_callback (CB_UNLOAD_CLASS);
     return S_OK;
 }
 
@@ -383,10 +386,10 @@ HRESULT DebuggerManagedCallback::DebuggerError(ICorDebugProcess *pProcess,
                                         HRESULT errorHR,
                                         DWORD errorCode)
 {
-	dbg_debugger_before_callback ("DebuggerError", false);
+	dbg_debugger_before_callback (CB_DEBUGGER_ERROR, false);
 	(FUNCTION_CAST (void, (EIF_REFERENCE, ICorDebugProcess*, HRESULT, DWORD)) m_cb_debugger_error) (eif_access (m_callback_adopted_object), pProcess, errorHR, errorCode);
 // 	DBGTRACE("[ManagedCallback] DebuggerError");
-	dbg_debugger_after_callback ("DebuggerError");
+	dbg_debugger_after_callback (CB_DEBUGGER_ERROR);
     return (S_OK);
 }
 
@@ -397,10 +400,10 @@ HRESULT DebuggerManagedCallback::LogMessage(ICorDebugAppDomain *pAppDomain,
                   WCHAR *pLogSwitchName,
                   WCHAR *pMessage)
 {
-	dbg_debugger_before_callback ("LogMessage", false);
+	dbg_debugger_before_callback (CB_LOG_MESSAGE, false);
 	(FUNCTION_CAST (void, (EIF_REFERENCE, ICorDebugAppDomain*, ICorDebugThread*, LONG, WCHAR*, WCHAR*)) m_cb_log_message) (eif_access (m_callback_adopted_object), pAppDomain, pThread, lLevel, pLogSwitchName, pMessage);
 // 	DBGTRACE("[ManagedCallback] LogMessage");
-	dbg_debugger_after_callback ("LogMessage");
+	dbg_debugger_after_callback (CB_LOG_MESSAGE);
     return S_OK;
 }
 
@@ -412,29 +415,29 @@ HRESULT DebuggerManagedCallback::LogSwitch(ICorDebugAppDomain *pAppDomain,
                   WCHAR *pLogSwitchName,
                   WCHAR *pParentName)
 {
-	dbg_debugger_before_callback ("LogSwitch", false);
+	dbg_debugger_before_callback (CB_LOG_SWITCH, false);
 	(FUNCTION_CAST (void, (EIF_REFERENCE, ICorDebugAppDomain*, ICorDebugThread*, LONG, ULONG,  WCHAR*, WCHAR*)) m_cb_log_switch) (eif_access (m_callback_adopted_object), pAppDomain, pThread, lLevel, ulReason, pLogSwitchName, pParentName);
 // 	DBGTRACE("[ManagedCallback] LogSwitch");
-	dbg_debugger_after_callback ("LogSwitch");
+	dbg_debugger_after_callback (CB_LOG_SWITCH);
     return S_OK;
 }
 
 HRESULT DebuggerManagedCallback::ControlCTrap(ICorDebugProcess *pProcess)
 {
-	dbg_debugger_before_callback ("ControlCTrap", false);
+	dbg_debugger_before_callback (CB_CONTROL_CTRAP, false);
 	(FUNCTION_CAST (void, (EIF_REFERENCE, ICorDebugProcess*)) m_cb_control_ctrap) (eif_access (m_callback_adopted_object), pProcess);
 // 	DBGTRACE("[ManagedCallback] ControlCTrap");
-	dbg_debugger_after_callback ("ControlCTrap");
+	dbg_debugger_after_callback (CB_CONTROL_CTRAP);
     return S_OK;
 }
 
 HRESULT DebuggerManagedCallback::NameChange(ICorDebugAppDomain *pAppDomain, 
                                      ICorDebugThread *pThread)
 {
-	dbg_debugger_before_callback ("NameChange", false);
+	dbg_debugger_before_callback (CB_NAME_CHANGE, false);
 	(FUNCTION_CAST (void, (EIF_REFERENCE, ICorDebugAppDomain*, ICorDebugThread*)) m_cb_name_change) (eif_access (m_callback_adopted_object), pAppDomain, pThread);
 // 	DBGTRACE("[ManagedCallback] NameChange");
-	dbg_debugger_after_callback ("NameChange");
+	dbg_debugger_after_callback (CB_NAME_CHANGE);
     return S_OK;
 }
 
@@ -443,10 +446,10 @@ HRESULT DebuggerManagedCallback::UpdateModuleSymbols(ICorDebugAppDomain *pAppDom
                                               ICorDebugModule *pModule,
                                               IStream *pSymbolStream)
 {
-	dbg_debugger_before_callback ("UpdateModuleSymbols", false);
+	dbg_debugger_before_callback (CB_UPDATE_MODULE_SYMBOLS, false);
 	(FUNCTION_CAST (void, (EIF_REFERENCE, ICorDebugAppDomain*, ICorDebugModule*, IStream*)) m_cb_update_module_symbols) (eif_access (m_callback_adopted_object), pAppDomain, pModule, pSymbolStream);
 // 	DBGTRACE("[ManagedCallback] UpdateModuleSymbols");
-	dbg_debugger_after_callback ("UpdateModuleSymbols");
+	dbg_debugger_after_callback (CB_UPDATE_MODULE_SYMBOLS);
     return S_OK;
 }
 
@@ -455,10 +458,10 @@ HRESULT DebuggerManagedCallback::EditAndContinueRemap(ICorDebugAppDomain *pAppDo
                                                ICorDebugFunction *pFunction,
                                                BOOL fAccurate)
 {
-	dbg_debugger_before_callback ("EditAndContinueRemap", false);
+	dbg_debugger_before_callback (CB_EDIT_AND_CONTINUE_REMAP, false);
 	(FUNCTION_CAST (void, (EIF_REFERENCE, ICorDebugAppDomain*, ICorDebugThread*, ICorDebugFunction*, BOOL)) m_cb_edit_and_continue_remap) (eif_access (m_callback_adopted_object), pAppDomain, pThread, pFunction, fAccurate);
 // 	DBGTRACE("[ManagedCallback] EditAndContinueRemap");
-	dbg_debugger_after_callback ("EditAndContinueRemap");
+	dbg_debugger_after_callback (CB_EDIT_AND_CONTINUE_REMAP);
     return S_OK;
 }
 
@@ -467,10 +470,10 @@ HRESULT DebuggerManagedCallback::BreakpointSetError(ICorDebugAppDomain *pAppDoma
                                              ICorDebugBreakpoint *pBreakpoint,
                                              DWORD dwError)
 {
-	dbg_debugger_before_callback ("BreakpointSetError", false);
+	dbg_debugger_before_callback (CB_BREAKPOINT_SET_ERROR, false);
 	(FUNCTION_CAST (void, (EIF_REFERENCE, ICorDebugAppDomain*, ICorDebugThread*, ICorDebugBreakpoint*, DWORD)) m_cb_breakpoint_set_error) (eif_access (m_callback_adopted_object), pAppDomain, pThread, pBreakpoint, dwError);
 // 	DBGTRACE("[ManagedCallback] BreakpointSetError");
-	dbg_debugger_after_callback ("BreakpointSetError");
+	dbg_debugger_after_callback (CB_BREAKPOINT_SET_ERROR);
     return S_OK;
 }
 
@@ -491,10 +494,10 @@ HRESULT DebuggerUnmanagedCallback::initialize_callback(
 HRESULT DebuggerUnmanagedCallback::DebugEvent(LPDEBUG_EVENT event,
                                               BOOL fIsOutOfBand)
 {
-	dbg_debugger_before_callback ("DebugEvent", false);
+	dbg_debugger_before_callback (CB_DEBUG_EVENT, false);
 	(FUNCTION_CAST (void, (EIF_REFERENCE, LPDEBUG_EVENT, BOOL)) m_ucb_debug_event) (eif_access (m_callback_adopted_object), event, fIsOutOfBand);
  	DBGTRACE("[UnManagedCallback] DebugEvent");
-	dbg_debugger_after_callback ("DebugEvent");
+	dbg_debugger_after_callback (CB_DEBUG_EVENT);
     return (S_OK);
 }
 

@@ -14,10 +14,11 @@ inherit
 		undefine
 			set_pointer_style
 		redefine
-			pnd_press
+			pnd_press,
+			interface
 		end
 
-feature -- Basic operations
+feature {NONE} -- Implementation
 
 	pnd_press (a_x, a_y, a_button, a_screen_x, a_screen_y: INTEGER) is
 		do
@@ -40,6 +41,57 @@ feature -- Basic operations
 				end
 			end
 		end
+
+	on_left_button_down (keys, x_pos, y_pos: INTEGER) is
+			-- Wm_lbuttondown message
+		local
+			pt: WEL_POINT
+		do
+			internal_propagate_pointer_press (keys, x_pos, y_pos, 1)
+			pt := client_to_screen (x_pos, y_pos)
+			interface.pointer_button_press_actions.call ([x_pos, y_pos, 3, 0.0, 0.0, 0.0, pt.x, pt.y])
+		end
+
+	on_middle_button_down (keys, x_pos, y_pos: INTEGER) is
+			-- Wm_mbuttondown message
+			-- See class WEL_MK_CONSTANTS for `keys' value
+		local
+			pt: WEL_POINT
+		do
+			internal_propagate_pointer_press (keys, x_pos, y_pos, 2)
+			pt := client_to_screen (x_pos, y_pos)
+			interface.pointer_button_press_actions.call ([x_pos, y_pos, 3, 0.0, 0.0, 0.0, pt.x, pt.y])
+		end
+
+	on_right_button_down (keys, x_pos, y_pos: INTEGER) is
+			-- Wm_rbuttondown message
+			-- See class WEL_MK_CONSTANTS for `keys' value
+		local
+			pt: WEL_POINT
+			item_is_pnd_source_at_entry: BOOLEAN
+		do
+			item_is_pnd_source_at_entry := item_is_pnd_source
+			create pt.make (x_pos, y_pos)
+			pt := client_to_screen (x_pos, y_pos)
+			internal_propagate_pointer_press (keys, x_pos, y_pos, 3)
+			if item_is_pnd_source = item_is_pnd_source_at_entry then
+				pnd_press (x_pos, y_pos, 3, pt.x, pt.y)
+			end
+			interface.pointer_button_press_actions.call ([x_pos, y_pos, 3, 0.0, 0.0, 0.0, pt.x, pt.y])	
+		end
+
+
+	client_to_screen (x_pos, y_pos: INTEGER): WEL_POINT is
+		deferred
+		end
+
+	internal_propagate_pointer_press (keys, x_pos, y_pos, button: INTEGER) is
+		deferred
+		end
+
+	interface: EV_WIDGET
+
+feature {EV_ITEM_I} -- Status report
 
 	parent_is_pnd_source : BOOLEAN
 			-- PND started in the widget.
@@ -89,8 +141,6 @@ feature -- Initialization
 feature -- Access
 
 feature -- Measurement
-
-feature -- Status report
 
 feature -- Status setting
 

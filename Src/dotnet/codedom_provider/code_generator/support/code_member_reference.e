@@ -37,7 +37,7 @@ inherit
 create {CODE_TYPE_REFERENCE_FACTORY, CODE_STOCK_TYPE_REFERENCES}
 	make
 
-create {CODE_EIFFEL_METADATA_PROVIDER}
+create {CODE_EIFFEL_METADATA_PROVIDER, CODE_TYPE_REFERENCE}
 	make_external
 
 feature {NONE} -- Initialization

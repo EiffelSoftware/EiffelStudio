@@ -9,6 +9,11 @@ class
 
 inherit
 	SHARED_RESOURCES
+		rename
+			initialize as initialize_resources
+		export
+			{NONE} all
+		end
 
 feature -- Access
 
@@ -79,55 +84,55 @@ feature -- Element change
 	set_confirm_freeze (new_value: BOOLEAN) is
 			-- Set `confirm_freeze' to `new_value'.
 		do
-			set_boolean (confirm_freeze_string, new_value)
+			set_boolean_resource (confirm_freeze_string, new_value)
 		end
 
 	set_confirm_finalize (new_value: BOOLEAN) is
 			-- Set `confirm_finalize' to `new_value'.
 		do
-			set_boolean (confirm_finalize_string, new_value)
+			set_boolean_resource (confirm_finalize_string, new_value)
 		end
 
 	set_confirm_finalize_assertions (new_value: BOOLEAN) is
 			-- Set `confirm_finalize_assertions' to `new_value'.
 		do
-			set_boolean (confirm_finalize_assertions_string, new_value)
+			set_boolean_resource (confirm_finalize_assertions_string, new_value)
 		end
 
 	set_confirm_save_before_compile (new_value: BOOLEAN) is
 			-- Set `confirm_save_before_compile' to `new_value'.
 		do
-			set_boolean (confirm_save_before_compile_string, new_value)
+			set_boolean_resource (confirm_save_before_compile_string, new_value)
 		end
 
 	set_confirm_on_exit (new_value: BOOLEAN) is
 			-- Set `confirm_on_exit' to `new_value'.
 		do
-			set_boolean (confirm_on_exit_string, new_value)
+			set_boolean_resource (confirm_on_exit_string, new_value)
 		end
 		
 	set_confirm_clear_breakpoints (new_value: BOOLEAN) is
 			-- Set `confirm_clear_breakpoints' to `new_value'.
 		do
-			set_boolean (confirm_clear_breakpoints_string, new_value)
+			set_boolean_resource (confirm_clear_breakpoints_string, new_value)
 		end
 		
 	set_confirm_ignore_all_breakpoints (new_value: BOOLEAN) is
 			-- Set `confirm_ignore_all_breakpoints' to `new_value'.
 		do
-			set_boolean (confirm_ignore_all_breakpoints_string, new_value)
+			set_boolean_resource (confirm_ignore_all_breakpoints_string, new_value)
 		end
 
 	set_confirm_convert_project (new_value: BOOLEAN) is
 			-- Set `confirm_convert_project' to `new_value'.
 		do
-			set_boolean (confirm_convert_project_string, new_value)
+			set_boolean_resource (confirm_convert_project_string, new_value)
 		end
 
 	set_acknowledge_not_loaded (new_value: BOOLEAN) is
 			-- Set `acknowledge_not_loaded' to `new_value'.
 		do
-			set_boolean (acknowledge_not_loaded_string, new_value)
+			set_boolean_resource (acknowledge_not_loaded_string, new_value)
 		end
 		
 feature {NONE} -- Preference strings

@@ -8,6 +8,11 @@ class
 
 inherit
 	SHARED_RESOURCES
+		rename
+			initialize as initialize_resources
+		export
+			{NONE} all
+		end
 
 feature -- Access
 
@@ -56,7 +61,7 @@ feature -- Access
 		do
 			str := string_resource_value ("proportion", "0.5")
 			if not str.is_real then
-				set_string ("proportion", "0.5")
+				set_string_resource ("proportion", "0.5")
 				Result := 0.5
 			else
 				Result := str.to_real
@@ -68,13 +73,13 @@ feature -- Element change
 	set_last_saved_stack_path (new_path: STRING) is
 			-- Set `last_saved_stack_path' to `new_path'.
 		do
-			set_string ("last_saved_stack_path", new_path)
+			set_string_resource ("last_saved_stack_path", new_path)
 		end
 
 	set_max_stack_depth (new_depth: INTEGER) is
 			-- Set `max_stack_depth' to `new_depth'.
 		do
-			set_integer ("debugger__default_maximum_stack_depth", new_depth)
+			set_integer_resource ("debugger__default_maximum_stack_depth", new_depth)
 		end
 
 end -- class EB_DEBUG_TOOL_DATA

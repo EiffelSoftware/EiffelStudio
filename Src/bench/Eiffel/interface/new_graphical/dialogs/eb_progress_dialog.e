@@ -33,7 +33,7 @@ inherit
 		end
 
 	EB_GRAPHICAL_DATA
-		export 
+		export
 			{NONE} all
 		undefine
 			default_create, copy

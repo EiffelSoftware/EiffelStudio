@@ -422,9 +422,9 @@ feature -- Status setting
 			if split /= Void then
 				object_split_position := split.split_position
 			end
-			set_array ("left_debug_layout", debug_left_layout)
-			set_array ("right_debug_layout", debug_right_layout)
-			set_integer ("debug_main_splitter_position", debug_splitter_position)
+			set_array_resource ("left_debug_layout", debug_left_layout)
+			set_array_resource ("right_debug_layout", debug_right_layout)
+			set_integer_resource ("debug_main_splitter_position", debug_splitter_position)
 			debug ("DEBUGGER_INTERFACE")
 				io.putstring ("Right debug layout: %N")
 	 			from

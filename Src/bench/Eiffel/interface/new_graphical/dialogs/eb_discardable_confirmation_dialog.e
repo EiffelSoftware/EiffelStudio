@@ -16,14 +16,9 @@ inherit
 			is_in_default_state
 		end
 
-	EB_CONSTANTS
-		export
-			{NONE} all
-		undefine
-			default_create, copy
-		end
-		
-	EB_DIALOGS_DATA
+	SHARED_RESOURCES
+		rename
+			initialize as initialize_resources
 		export
 			{NONE} all
 		undefine
@@ -245,6 +240,18 @@ feature {NONE} -- Implementation
 	no_action: PROCEDURE [ANY, TUPLE]
 			-- Action performed when ok is selected.
 	
+	Layout_constants: EV_LAYOUT_CONSTANTS is
+			-- Constants that help design nice GUIs.
+		once
+			create Result
+		end
+	
+	Interface_names: RESOURCES_STRING_CONSTANTS is
+			-- Constants that help design nice GUIs.
+		once
+			create Result
+		end
+	
 	save_check_state is
 			-- Save the state of the check button to the preferences.
 		do
@@ -280,9 +287,9 @@ feature {NONE} -- Deferred Constants
 			-- Label for the Ok/Yes button.
 		do
 			if buttons_count >= 3 then
-				Result := Interface_names.b_Yes
+				Result := (create {EV_DIALOG_CONSTANTS}).ev_Yes
 			else
-				Result := Interface_names.b_Ok
+				Result := (create {EV_DIALOG_CONSTANTS}).ev_Ok
 			end
 		ensure
 			valid_label: Result /= Void and then not Result.is_empty
@@ -291,7 +298,7 @@ feature {NONE} -- Deferred Constants
 	no_button_label: STRING is
 			-- Label for the No button.
 		do
-			Result := Interface_names.b_No
+			Result := (create {EV_DIALOG_CONSTANTS}).ev_No
 		ensure
 			valid_label: Result /= Void and then not Result.is_empty
 		end
@@ -299,7 +306,7 @@ feature {NONE} -- Deferred Constants
 	cancel_button_label: STRING is
 			-- Label for the Cancel/No button.
 		do
-			Result := Interface_names.b_Cancel
+			Result := (create {EV_DIALOG_CONSTANTS}).ev_Cancel
 		ensure
 			valid_label: Result /= Void and then not Result.is_empty
 		end

@@ -9,6 +9,11 @@ class
 
 inherit
 	SHARED_RESOURCES
+		rename
+			initialize as initialize_resources
+		export
+			{NONE} all
+		end
 
 feature -- Access
 
@@ -38,7 +43,7 @@ feature -- Access
 	set_confirm_freeze (new_value: BOOLEAN) is
 			-- Set `confirm_freeze' to `new_value'
 		do
-			set_boolean ("confirm_freeze", new_value)
+			set_boolean_resource ("confirm_freeze", new_value)
 		end
 
 end -- class EB_PROJECT_TOOL_DATA

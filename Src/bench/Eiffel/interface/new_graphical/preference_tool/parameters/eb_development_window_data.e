@@ -111,9 +111,9 @@ feature -- Element change
 			-- Save the width and the height of the window.
 			-- Call `commit_save' to have the changes actually saved.
 		do
-			set_integer ("development_window__width", a_width)
-			set_integer ("development_window__height", a_height)
-			set_boolean ("development_window__is_maximized", a_maximized)
+			set_integer_resource ("development_window__width", a_width)
+			set_integer_resource ("development_window__height", a_height)
+			set_boolean_resource ("development_window__is_maximized", a_maximized)
 		ensure
 			width_set: a_width = width
 			height_set: a_height = height
@@ -123,8 +123,8 @@ feature -- Element change
 			-- Save the position of the window.
 			-- Call `commit_save' to have the changes actually saved.
 		do
-			set_integer ("development_window__x_position", a_x)
-			set_integer ("development_window__y_position", a_y)
+			set_integer_resource ("development_window__x_position", a_x)
+			set_integer_resource ("development_window__y_position", a_y)
 		ensure
 			x_set: a_x = x_position
 			y_set: a_y = y_position
@@ -134,7 +134,7 @@ feature -- Element change
 			-- Save the width of the left panel of the window.
 			-- Call `commit_save' to have the changes actually saved.
 		do
-			set_integer ("development_window__left_panel_width", a_width)
+			set_integer_resource ("development_window__left_panel_width", a_width)
 		ensure
 			width_set: a_width = left_panel_width
 		end
@@ -143,20 +143,20 @@ feature -- Element change
 			-- Save the layout of the left panel of the window.
 			-- Call `commit_save' to have the changes actually saved.
 		do
-			set_array ("development_window__left_panel_layout", a_layout)
+			set_array_resource ("development_window__left_panel_layout", a_layout)
 		end
 
 	save_right_panel_layout (a_layout: ARRAY [STRING]) is
 			-- Save the layout of the left panel of the window.
 			-- Call `commit_save' to have the changes actually saved.
 		do
-			set_array ("development_window__right_panel_layout", a_layout)
+			set_array_resource ("development_window__right_panel_layout", a_layout)
 		end
 
 	save_search_tool_options (search_tool: EB_SEARCH_TOOL) is
 			-- 
 		do
-			set_boolean ("search_tool__show_options", search_tool.options_shown)
+			set_boolean_resource ("search_tool__show_options", search_tool.options_shown)
 		end
 		
 feature -- Basic operations
@@ -165,15 +165,6 @@ feature -- Basic operations
 			-- Retreive the general toolbar using the available commands in `command_pool' 
 		do
 			Result := retrieve_toolbar (command_pool, general_toolbar_layout)
-		end
-
-	save_general_toolbar (general_toolbar: EB_TOOLBAR; is_visible: BOOLEAN) is
-			-- Save the general toolbar `general_toolbar' layout/status into the preferences.
-			-- Call `commit_save' to have the changes actually saved.
-		do
-			set_array ("development_window__general_toolbar_layout", save_toolbar (general_toolbar))
-			set_boolean ("development_window__show_general_toolbar", is_visible)
-			set_boolean ("development_window__show_text_in_general_toolbar", general_toolbar.is_text_displayed)
 		end
 
 feature {NONE} -- Implementation

@@ -9,6 +9,12 @@ class
 
 inherit
 	SHARED_RESOURCES
+		rename
+			initialize as initialize_resources,
+			initialized as resources_initialized
+		export
+			{NONE} all
+		end
 
 feature {NONE} -- Implementation
 

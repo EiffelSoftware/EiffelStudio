@@ -108,7 +108,7 @@ feature {NONE} -- Implementation
 	save_check_button_state (checked: BOOLEAN) is
 			-- Update the preferences state.
 		do
-			set_boolean (resource_name, not checked)
+			set_boolean_resource (resource_name, not checked)
 		end
 
 invariant

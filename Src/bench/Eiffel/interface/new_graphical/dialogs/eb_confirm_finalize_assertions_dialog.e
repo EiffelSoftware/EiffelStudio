@@ -9,6 +9,9 @@ class
 
 inherit
 	EB_DISCARDABLE_CONFIRMATION_DIALOG
+		rename
+			Interface_names as preferences_names,
+			Layout_constants as preferences_layout_constants
 		redefine
 			assume_cancel,
 			no_button_label,
@@ -16,6 +19,20 @@ inherit
 		end
 
 	EB_GENERAL_DATA
+		export
+			{NONE} all
+		undefine
+			default_create, copy
+		end
+
+	EB_DIALOGS_DATA
+		export
+			{NONE} all
+		undefine
+			default_create, copy
+		end
+
+	EB_CONSTANTS
 		export
 			{NONE} all
 		undefine

@@ -8,6 +8,11 @@ class
 
 inherit
 	SHARED_RESOURCES
+		rename
+			initialize as initialize_resources
+		export
+			{NONE} all
+		end
 
 	FEATURE_CLAUSE_NAMES
 

@@ -152,7 +152,7 @@ feature -- Status setting
 			original_radio_button_still_selected: old has_selected_radio_button implies
 				has_selected_radio_button
 			other_first_radio_button_now_selected: not old has_selected_radio_button and
-				old other.has_radio_button and old merged_radio_button_groups.count = 1 implies
+				old other.has_radio_button and old merged_radio_button_groups.count = 1 and has_radio_button implies
 				first_radio_button_selected
 			other_original_radio_button_still_selected: old other.has_selected_radio_button implies
 				other.has_selected_radio_button

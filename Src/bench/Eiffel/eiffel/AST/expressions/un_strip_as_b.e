@@ -8,10 +8,8 @@ inherit
 		end;
 
 	EXPR_AS_B
-		undefine
-			simple_format
 		redefine
-			type_check, byte_node, format
+			type_check, byte_node
 		end
 
 feature -- Attributes
@@ -104,37 +102,6 @@ feature -- Type check, byte code and dead code removal
 				end;
 				id_list.forth;
 			end;
-		end;
-
-	format (ctxt: FORMAT_CONTEXT_B) is
-			-- Reconstitute text.
-		local
-			print_comma: BOOLEAN;
-		do
-			ctxt.begin;
-			ctxt.put_text_item (ti_Strip_keyword);
-			ctxt.put_space;
-			ctxt.put_text_item (ti_L_parenthesis);
-			
-			from
-				id_list.start;
-			until
-				id_list.after
-			loop
-				ctxt.new_expression;
-				ctxt.prepare_for_feature(id_list.item, void);
-				if ctxt.is_feature_visible then	
-					if print_comma then
-						ctxt.put_text_item (ti_Comma);
-						ctxt.put_space
-					end;	
-					ctxt.put_current_feature;
-					print_comma := True;
-				end;
-				id_list.forth
-			end;
-			ctxt.put_text_item (ti_R_parenthesis);
-			ctxt.commit
 		end;
 
 feature -- Replication

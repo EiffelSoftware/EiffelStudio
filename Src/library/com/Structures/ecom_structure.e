@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 		deferred
 		end
 
-feature -- Basic operation
+feature -- Basic Operations
 
 	set_value (source: like Current) is
 			-- Set Current to 'source'.

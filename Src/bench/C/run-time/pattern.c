@@ -35,8 +35,7 @@ doc:	<attribute name="eif_delta" return_type="uint32 [ASIZE]" export="private">
 doc:		<summary>Records shifting deltas.</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>Per thread data.</synchronization>
-doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:		<synchronization>Private per thread data.</synchronization>
 doc:	</attribute>
 */
 rt_private uint32 eif_delta[ASIZE];
@@ -46,8 +45,7 @@ doc:	<attribute name="darray" return_type="uint32 **" export="private">
 doc:		<summary>Pointer to array recording shifting tables.</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>Per thread data.</synchronization>
-doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:		<synchronization>Private per thread data.</synchronization>
 doc:	</attribute>
 */
 rt_private uint32 **darray = (uint32 **) 0;

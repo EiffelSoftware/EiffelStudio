@@ -98,8 +98,7 @@ doc:<file name="debug.c" header="eif_debug.h" version="$Id$" summary="Routines u
 doc:	<attribute name="db_stack" return_type="struct dbstack" export="shared">
 doc:		<summary>Debugging stack. This stack records all the calls made to any melted feature (i.e. it records also standard melted feature calls). In case an exception occurs or a breakpoint is reached, this stack will be used to print arguments values. It can also be used to inspect local variables in any of the recorded routines, by simply shifting the context and resynchronizing the interpreter registers.</summary>
 doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>Per thread data.</synchronization>
-doc:		<fixme>We should protect access through use of a private per thread data.</fixme>
+doc:		<synchronization>Private per thread data.</synchronization>
 doc:	</attribute>
 */
 rt_shared struct dbstack db_stack = {
@@ -114,8 +113,7 @@ rt_shared struct dbstack db_stack = {
 doc:	<attribute name="once_list" return_type="struct id_list" export="shared">
 doc:		<summary>Once list. This list records the body_id of once routines that have already been called. This is usefull to prevent those routines to be supermelted losing in that case their memory (whether they have already been called and their result). This list is also needed to inspect result of once functions in order to know if that result has already been evaluated.</summary>
 doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>Per thread data.</synchronization>
-doc:		<fixme>We should protect access through use of a private per thread data.</fixme>
+doc:		<synchronization>Private per thread data.</synchronization>
 doc:	</attribute>
 */
 rt_shared struct id_list once_list = {
@@ -144,8 +142,7 @@ rt_public struct dbinfo d_data = {
 doc:	<attribute name="d_cxt" return_type="struct pgcontext" export="shared">
 doc:		<summary>The debugger, when in interactive mode, maintains the notion of run-time context. That is to say the main stacks are saved and their content will be restored undisturbed before resuming execution.</summary>
 doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>Per thread data.</synchronization>
-doc:		<fixme>We should protect access through use of a private per thread data.</fixme>
+doc:		<synchronization>Private per thread data.</synchronization>
 doc:	</attribute>
 */
 rt_shared struct pgcontext d_cxt;	/* Main program context */

@@ -46,8 +46,7 @@ doc:	<attribute name="buffero" return_type="char [TAG_SIZE]" export="private">
 doc:		<summary>Buffer for printing an object in a string.</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>Per thread data.</synchronization>
-doc:		<fixme>Should be put in a private per thread data.</fixme>
+doc:		<synchronization>Private per thread data.</synchronization>
 doc:	</attribute>
 */
 rt_private char buffero[TAG_SIZE];
@@ -57,8 +56,7 @@ doc:	<attribute name="tagged_out" return_type="char *" export="private">
 doc:		<summary>String where the tagged out is written.</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>Per thread data.</synchronization>
-doc:		<fixme>Should be put in a private per thread data.</fixme>
+doc:		<synchronization>Private per thread data.</synchronization>
 doc:	</attribute>
 */
 rt_private char *tagged_out = NULL;
@@ -68,8 +66,7 @@ doc:	<attribute name="tagged_max" return_type="int" export="private">
 doc:		<summary>Actual maximum size of `tagged_out'.</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>Per thread data.</synchronization>
-doc:		<fixme>Should be put in a private per thread data.</fixme>
+doc:		<synchronization>Private per thread data.</synchronization>
 doc:	</attribute>
 */
 rt_private int tagged_max = 0;
@@ -79,8 +76,7 @@ doc:	<attribute name="tagged_len" return_type="int" export="private">
 doc:		<summary>Actual length of `tagged_out'.</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>Per thread data.</synchronization>
-doc:		<fixme>Should be put in a private per thread data.</fixme>
+doc:		<synchronization>Private per thread data.</synchronization>
 doc:	</attribute>
 */
 rt_private int tagged_len = 0;

@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 			Precursor {EG_LAYOUT}
 			preset (3)
 			move_threshold := 10
-			theta := 25
+			theta :=  25
 			create stop_actions
 		end
 		
@@ -105,9 +105,9 @@ feature -- Element change
 				set_electrical_repulsion (50)
 			elseif a_level = 3 then
 				-- Loose
-				set_center_attraction (10)
-				set_stiffness (0)
-				set_electrical_repulsion (90)
+				set_center_attraction (15)
+				set_stiffness (2)
+				set_electrical_repulsion (100)
 			end
 		end
 		
@@ -217,12 +217,6 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	spring_particle: EG_SPRING_PARTICLE
-			-- Solver for spring force.
-	
-	spring_energy: EG_SPRING_ENERGY
-			-- Solver for spring energy.
-
 	max_move: INTEGER
 			-- Maximal move in x and y direction of a node.
 			
@@ -241,7 +235,8 @@ feature {NONE} -- Implementation
 			dx, dy: INTEGER
 			move: INTEGER
 			l_linkables: like linkables
-			l_center_attraction, l_stiffness, l_electrical_repulsion: DOUBLE
+			spring_particle: EG_SPRING_PARTICLE
+			spring_energy: EG_SPRING_ENERGY
 		do
 			if not is_stopped then
 				-- Filter out not visible nodes
@@ -260,24 +255,8 @@ feature {NONE} -- Implementation
 
 				if not l_linkables.is_empty then
 							-- Initialize particle solvers
-					l_center_attraction := (center_attraction / 50)
-					l_stiffness := ((0.01 + stiffness / 300) * 0.5) / (world.scale_factor)
-					l_electrical_repulsion := (1 + electrical_repulsion * 200) * (world.scale_factor ^ 1.5)
-		
-					create spring_particle.make_with_particles (l_linkables)
-					create spring_energy.make_with_particles (l_linkables)
-					
-					spring_particle.set_center (center_x, center_y)
-					spring_particle.set_center_attraction (l_center_attraction)
-					spring_particle.set_electrical_repulsion (l_electrical_repulsion)
-					spring_particle.set_stiffness (l_stiffness)
-					spring_particle.set_theta (theta / 100)
-					
-					spring_energy.set_center (center_x, center_y)
-					spring_energy.set_center_attraction (l_center_attraction)
-					spring_energy.set_electrical_repulsion (l_electrical_repulsion)
-					spring_energy.set_stiffness (l_stiffness)
-					spring_energy.set_theta (theta / 100)
+					spring_particle := new_spring_particle_solver (l_linkables)
+					spring_energy := new_spring_energy_solver (l_linkables)
 					
 						-- solve system
 					from
@@ -297,7 +276,7 @@ feature {NONE} -- Implementation
 							theta_count := theta_count + 1
 								
 								-- Calculate spring energy
-							recursive_energy (l_item)
+							recursive_energy (l_item, spring_energy)
 						
 								-- Move item
 							dx := (l_item.dt * l_item.dx).truncated_to_integer
@@ -317,7 +296,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	recursive_energy (a_node: EG_LINKABLE_FIGURE) is
+	recursive_energy (a_node: EG_LINKABLE_FIGURE; solver: EG_SPRING_ENERGY) is
 			-- Calculate spring energy for `a_node'
 		local
 			i: INTEGER
@@ -327,14 +306,14 @@ feature {NONE} -- Implementation
 			l_dt := a_node.dt
 			
 			a_node.set_dt (0)
-			l_initial_energy := spring_energy.force (a_node)
-			last_theta_average := last_theta_average + spring_energy.last_theta_average
+			l_initial_energy := solver.force (a_node)
+			last_theta_average := last_theta_average + solver.last_theta_average
 			theta_count := theta_count + 1
 			
 			l_dt := (l_dt * 2)
 			a_node.set_dt (l_dt)
-			l_energy := spring_energy.force (a_node)
-			last_theta_average := last_theta_average + spring_energy.last_theta_average
+			l_energy := solver.force (a_node)
+			last_theta_average := last_theta_average + solver.last_theta_average
 			theta_count := theta_count + 1
 
 			from
@@ -345,10 +324,56 @@ feature {NONE} -- Implementation
 				i := i + 1
 				l_dt := l_dt / 4
 				a_node.set_dt (l_dt)
-				l_energy := spring_energy.force (a_node)
-				last_theta_average := last_theta_average + spring_energy.last_theta_average
+				l_energy := solver.force (a_node)
+				last_theta_average := last_theta_average + solver.last_theta_average
 				theta_count := theta_count + 1
 			end
+		end
+		
+	new_spring_particle_solver (particles: LIST [EG_PARTICLE]): EG_SPRING_PARTICLE is
+			-- Create a new spring particle solver for `particles' and initialize it.
+		require
+			particles_exist: particles /= Void
+			particles_not_empty: not particles.is_empty
+		local
+			l_center_attraction, l_stiffness, l_electrical_repulsion: DOUBLE
+		do
+			l_center_attraction := center_attraction / 25
+			l_stiffness := ((stiffness / 300) * 0.5).max (0.0001) / world.scale_factor
+			l_electrical_repulsion := (1 + electrical_repulsion * 400) * (world.scale_factor ^ 1.5)
+			
+			create Result.make_with_particles (particles)
+			
+			Result.set_center (center_x, center_y)
+			Result.set_center_attraction (l_center_attraction)
+			Result.set_electrical_repulsion (l_electrical_repulsion)
+			Result.set_stiffness (l_stiffness)
+			Result.set_theta (theta / 100)
+		ensure
+			Result_exists: Result /= Void
+		end
+		
+	new_spring_energy_solver (particles: LIST [EG_PARTICLE]): EG_SPRING_ENERGY is
+			-- Create a new spring energy solver for `particles' and initialize it.
+		require
+			particles_exist: particles /= Void
+			particles_not_empty: not particles.is_empty
+		local
+			l_center_attraction, l_stiffness, l_electrical_repulsion: DOUBLE
+		do
+			l_center_attraction := center_attraction / 25
+			l_stiffness := ((stiffness / 300) * 0.5).max (0.0001) / world.scale_factor
+			l_electrical_repulsion := (1 + electrical_repulsion * 400) * (world.scale_factor ^ 1.5)
+			
+			create Result.make_with_particles (particles)
+			
+			Result.set_center (center_x, center_y)
+			Result.set_center_attraction (l_center_attraction)
+			Result.set_electrical_repulsion (l_electrical_repulsion)
+			Result.set_stiffness (l_stiffness)
+			Result.set_theta (theta / 100)
+		ensure
+			Result_exists: Result /= Void
 		end
 
 end -- class EG_FORCE_DIRECTED_LAYOUT

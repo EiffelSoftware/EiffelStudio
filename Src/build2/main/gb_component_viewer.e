@@ -44,11 +44,13 @@ feature {NONE} -- Implementation
 			create component_button
 			component_button.set_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_component_viewer @ 1)
 			component_button.drop_actions.extend (agent set_component (?))
+			component_button.set_tooltip ("Target component into tool")
 			tool_bar.extend (component_button)
 			create tool_bar_separator
 			tool_bar.extend (tool_bar_separator)
 			create display_button
 			display_button.set_pixmap ((create {GB_SHARED_PIXMAPS}).icon_component_display_view)
+			display_button.set_tooltip ("Display view")
 			tool_bar.extend (display_button)
 			display_button.enable_select
 			display_button.select_actions.extend (agent set_display_view)
@@ -56,6 +58,7 @@ feature {NONE} -- Implementation
 			create builder_button
 			builder_button.set_pixmap ((create {GB_SHARED_PIXMAPS}).icon_component_build_view)
 			builder_button.select_actions.extend (agent set_build_view)
+			builder_button.set_tooltip ("Builder view")
 			tool_bar.extend (builder_button)
 			create tool_bar_separator
 			tool_bar.extend (tool_bar_separator)

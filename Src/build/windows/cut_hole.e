@@ -8,27 +8,26 @@ class
 	CUT_HOLE 
 
 inherit
-
  	EB_BUTTON
 		redefine
 			make
 		end
 
+	EV_COMMAND
+
+	ERROR_POPUPER
+
 	WINDOWS
 
 creation
-
 	make
 
 feature {NONE} -- Initialization
 
 	make (par: EV_TOOL_BAR) is
-		local
-			rout_cmd: EV_ROUTINE_COMMAND
 		do
 			{EB_BUTTON} Precursor (par)
-			create rout_cmd.make (~process_cut)
-			add_default_pnd_command (rout_cmd, Void)
+			add_default_pnd_command (Current, Void)
 		end
 
 --	create_focus_label is 
@@ -41,20 +40,22 @@ feature {NONE} -- Initialization
 			Result := Pixmaps.wastebasket_pixmap
 		end
 	
-feature {CUT_HOLE}
+feature {NONE} -- Implementation
 
-	process_cut (arg: EV_ARGUMENT; ev_data: EV_PND_EVENT_DATA) is
+	execute (arg: EV_ARGUMENT; ev_data: EV_PND_EVENT_DATA) is
 		local
 			r: REMOVABLE
 			n: NAMABLE
 		do
 			r ?= ev_data.data
-			if (r /= Void) then
+			if r /= Void then
 				r.remove_yourself
 				n ?= r
 				if n /= Void and then namer_window.namable = n then
 					namer_window.popdown
 				end
+			else
+				error_dialog.popup (Current, Messages.cannot_remove_er, Void)
 			end
 		end
 

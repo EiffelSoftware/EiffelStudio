@@ -22,7 +22,7 @@ feature -- Status report
 feature -- Status setting
 
 	set_full is
-			-- Mark the data has full.
+			-- Mark the data as full.
 		do
 			is_full := True
 		end

@@ -46,7 +46,7 @@ feature {APPLICATION_EXECUTION} -- Properties
 
 feature -- Trigger eStudio done
 
-	callback_notification_processed: BOOLEAN		
+	callback_notification_processing: BOOLEAN		
 	
 feature -- Bridge to Debugger
 

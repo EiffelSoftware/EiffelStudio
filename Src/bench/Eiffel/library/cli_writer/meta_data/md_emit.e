@@ -354,7 +354,78 @@ feature -- Definition: creation
 		do
 			last_call_success := c_define_field (item, in_class_token,
 				field_name.item, field_flags, a_signature.item.item, a_signature.count,
-				0, default_pointer, 0, $Result)
+				feature {MD_SIGNATURE_CONSTANTS}.element_type_end, default_pointer, 0, $Result)
+		ensure
+			success: last_call_success = 0
+			result_valid: Result & Md_mask = Md_field_def
+		end
+
+	define_integer_constant (field_name: UNI_STRING; in_class_token: INTEGER;
+			field_flags: INTEGER; a_value: INTEGER_CONSTANT): INTEGER
+		is
+			-- Create a new field in class `in_class_token'.
+		require
+			field_name_not_void: field_name /= Void
+			field_name_not_empty: not field_name.is_empty
+			in_class_token_valid: in_class_token & Md_mask = Md_type_def
+			a_value_not_void: a_value /= Void
+		local
+			l_field_signature: MD_FIELD_SIGNATURE
+			l_constant_type: INTEGER_8
+			l_i1: INTEGER_8
+			l_i2: INTEGER_16
+			l_i4: INTEGER
+			l_i8: INTEGER_64
+			l_ptr: POINTER
+		do
+			inspect
+				a_value.size
+			when 8 then
+				l_constant_type := feature {MD_SIGNATURE_CONSTANTS}.element_type_i1
+				l_i1 := a_value.value.to_integer_8
+				l_ptr := $l_i1
+			when 16 then
+				l_constant_type := feature {MD_SIGNATURE_CONSTANTS}.element_type_i2
+				l_i2 := a_value.value.to_integer_16
+				l_ptr := $l_i2
+			when 32 then
+				l_constant_type := feature {MD_SIGNATURE_CONSTANTS}.element_type_i4
+				l_i4 := a_value.value
+				l_ptr := $l_i4
+			when 64 then
+				l_constant_type := feature {MD_SIGNATURE_CONSTANTS}.element_type_i8
+				l_i8 := a_value.to_integer_64
+				l_ptr := $l_i8
+			end
+			create l_field_signature.make
+			l_field_signature.set_type (l_constant_type, 0)
+			last_call_success := c_define_field (item, in_class_token,
+				field_name.item, field_flags, l_field_signature.item.item, l_field_signature.count,
+				l_constant_type, l_ptr, a_value.size // 8, $Result)
+		ensure
+			success: last_call_success = 0
+			result_valid: Result & Md_mask = Md_field_def
+		end
+
+	define_string_constant (field_name: UNI_STRING; in_class_token: INTEGER;
+			field_flags: INTEGER; a_string: STRING): INTEGER
+		is
+			-- Create a new field in class `in_class_token'.
+		require
+			field_name_not_void: field_name /= Void
+			field_name_not_empty: not field_name.is_empty
+			in_class_token_valid: in_class_token & Md_mask = Md_type_def
+			a_string_not_void: a_string /= Void
+		local
+			l_field_signature: MD_FIELD_SIGNATURE
+			l_uni_str: UNI_STRING
+		do
+			create l_field_signature.make
+			create l_uni_str.make (a_string)
+			l_field_signature.set_type (feature {MD_SIGNATURE_CONSTANTS}.element_type_string, 0)
+			last_call_success := c_define_field (item, in_class_token,
+				field_name.item, field_flags, l_field_signature.item.item, l_field_signature.count,
+				feature {MD_SIGNATURE_CONSTANTS}.element_type_string, l_uni_str.item, l_uni_str.count, $Result)
 		ensure
 			success: last_call_success = 0
 			result_valid: Result & Md_mask = Md_field_def

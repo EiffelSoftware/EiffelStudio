@@ -110,6 +110,30 @@ feature
 			end;
 		end;
 
+	disk_item (an_id: INTEGER): T is
+			-- Object of id `an_id'
+		require
+			an_id_in_table: has (an_id);
+		local
+			info: READ_INFO;
+			server_info: SERVER_INFO;
+			server_file: SERVER_FILE;
+			offset: INTEGER;
+			real_id: INTEGER
+		do
+			real_id := updated_id(an_id);
+			info := tbl_item (real_id);
+			server_info := offsets.item (info.class_id);
+			server_file := Server_controler.file_of_id (server_info.id);
+			if not server_file.is_open then
+				Server_controler.open_file (server_file);
+			end;
+			offset := info.offset + server_info.position;
+			Result := partial_retrieve
+				(server_file.descriptor, offset, info.object_count);
+			Result.set_id (real_id);
+		end;
+
 	remove (an_id: INTEGER) is
 			-- Simply remove element from server structures
 			-- This is as read server, nothing id removed from disk.

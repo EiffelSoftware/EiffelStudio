@@ -85,9 +85,9 @@ cluster
 --        vision_imp_x_widgets (vision_imp_x):    "$/widgets";
         vision_imp_x_support (vision_imp_x):    "$/support";
 
---        vision_obsolete_motif (vision): "$/obsolete/motif";
---        vision_obsolete_oui (vision):   "$/obsolete/oui";
---       vision_obsolete_toolkit (vision):"$/obsolete/toolkit";
+        vision_obsolete_motif (vision): "$/obsolete/motif";
+        vision_obsolete_oui (vision):   "$/obsolete/oui";
+        vision_obsolete_toolkit (vision):"$/obsolete/toolkit";
 
 external
 

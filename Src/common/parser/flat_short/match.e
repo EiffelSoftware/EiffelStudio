@@ -1,9 +1,5 @@
 class MATCH
 
-inherit
-
-	BASIC_ROUTINES
-
 creation
 
 	make 
@@ -199,9 +195,8 @@ feature {NONE}
 		end;
 			
 	match_forward is
-		-- increment position and index as long as corresponding
-		-- character in text and pattern match
-		
+			-- increment position and index as long as corresponding
+			-- character in text and pattern match
 		do
 			from
 			until
@@ -240,7 +235,7 @@ feature {NONE}
 			else
 				c1 := text @ i;
 				c2 := text @ (i - 1);
-		 		Result := Blanks.has(c1) or Blanks.has(c2);
+				Result := Blanks.has(c1) or Blanks.has(c2);
 				if not Result then
 					c1_is_special := Specials.has(c1);
 					c2_is_special := Specials.has(c2);
@@ -254,8 +249,8 @@ feature {NONE}
 	matching_chars: BOOLEAN is
 			-- Do c1 and c2 match each other
 		do
-			Result := to_lower(text @ position) 
-				= to_lower(pattern @ index);
+			Result := (text @ position).lower
+				= (pattern @ index).lower;
 		end;
 
 	Specials: ARRAY [CHARACTER] is 
@@ -270,17 +265,6 @@ feature {NONE}
 			Result := << ' ', '%T' >>
 		end;
 
-	to_lower (c: CHARACTER): CHARACTER is
-			-- if c is not a letter then c
-			-- else the lower form
-		do
-			if c >= 'A' and c <= 'Z' then
-				Result := charconv (c.code + ('a').code - ('A').code);
-			else
-				Result := c;
-			end;
-		end;
-
 invariant
 	text_exists: text /= void;
 	pattern_exists: pattern /= void;
@@ -290,7 +274,3 @@ invariant
 		or index >= 1 and index <= pattern.count
 
 end
-		
-
-	
-

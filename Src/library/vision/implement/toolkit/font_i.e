@@ -109,7 +109,7 @@ feature
 		end; -- is_specified
 
 	is_standard: BOOLEAN is
-			-- Is the font standard and informations available (except for n_ame) ?
+			-- Is the font standard and informations available (except for name) ?
 		require
 			font_specified: is_specified
 		deferred
@@ -122,13 +122,19 @@ feature
 		deferred
 		end; -- is_valid
 
-	n_ame: STRING is
+	name: STRING is
 			-- Name of the font
 		require
 			font_specified: is_specified
 		deferred
 		ensure
 			not (Result = Void)
+		end; -- n_ame
+
+	n_ame: STRING is  obsolete "Use ``name''"
+			-- Name of the font
+		do
+			Result := name
 		end; -- n_ame
 
 	pixel_size: INTEGER is

@@ -56,7 +56,7 @@ feature
 		do
 			Result := implementation.string_width (a_screen.implementation, a_text)
 		ensure
-			Result >= 0
+			valid_result: Result >= 0
 		end;
 
 	average_width: INTEGER is
@@ -100,14 +100,20 @@ feature
 			not (Result = Void)
 		end;
 
-	n_ame: STRING is
+	name: STRING is
 			-- Name of the font
 		require
 			font_specified: is_specified
 		do
-			Result := implementation.n_ame
+			Result := implementation.name
 		ensure
-			not (Result = Void)
+			valid_result: Result /= Void
+		end;
+
+	n_ame: STRING is obsolete "Use ``name''"
+			-- Name of the font
+		do
+			Result := name
 		end;
 
 	foundry: STRING is
@@ -145,7 +151,7 @@ feature
 		end;
 
 	is_standard: BOOLEAN is
-			-- Is the font standard and informations available (except for n_ame) ?
+			-- Is the font standard and informations available (except for name) ?
 		require
 			font_specified: is_specified
 		do
@@ -189,7 +195,7 @@ feature
 		end;
 
 	set_name (a_name: STRING) is
-			-- Set `n_ame' to `a_name'.
+			-- Set `name' to `a_name'.
 		require
 			a_name_exists: not (a_name = Void)
 		do

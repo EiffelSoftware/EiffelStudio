@@ -135,6 +135,7 @@ feature {NONE} -- Implementation
 			tool_bar_extendible_controls: TOOL_BAR_EXTENDIBLE_CONTROLS
 			container_extendible_controls: CONTAINER_EXTENDIBLE_CONTROLS
 			drawing_controls: DRAWABLE_CONTROLS
+			object: GB_OBJECT
 		do
 			current_window_parent := parent_window (Current)
 			if current_window_parent /= Void and ((create {EV_ENVIRONMENT}).application.locked_window = Void) then
@@ -143,7 +144,7 @@ feature {NONE} -- Implementation
 			end
 			attribute_editor_box.wipe_out
 			
-				from
+			from
 				supported_types.start
 			until
 				supported_types.off
@@ -153,7 +154,10 @@ feature {NONE} -- Implementation
 				if is_instance_of (widget, dynamic_type_from_string (current_type.substring (4, current_type.count))) then
 					common_editor ?= new_instance_of (dynamic_type_from_string (current_type))
 					common_editor.default_create
-					common_editor.set_object (widget)
+					common_editor.set_main_object (widget)
+					common_editor.set_object (object)
+					create object
+					object.set_object (widget)
 					common_editor.set_parent_editor (attribute_editor_box)
 					attribute_editor_box.extend (common_editor.attribute_editor)
 				end

@@ -18,7 +18,6 @@ inherit
 creation
 	make_motif, 
 	make_xt_event, 
-	make_translation,
 	make_wm_protocol
 
 feature {NONE} -- Initialization
@@ -49,14 +48,6 @@ feature {NONE} -- Initialization
 			hash_code := an_atom.hash_code
 		end;
 
-	make_translation (a_hash_code: like hash_code) is
-			-- Create a translation callback key with
-			-- hash code `a_hash_code'
-		do
-			type := translation_type;
-			hash_code := a_hash_code
-		end;
-
 feature -- Access
 
 	hash_code: INTEGER;
@@ -75,6 +66,12 @@ feature {MEL_CALLBACK_KEY} -- Implementation
 
 	type: INTEGER
 			-- Type of key
+
+	valid_type: BOOLEAN is
+			-- Is the type valid?
+		do
+			Result := type >= motif_type and then type <= wm_protocol_type
+		end
 
 feature {NONE} -- Implementation
 

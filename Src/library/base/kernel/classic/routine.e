@@ -413,9 +413,7 @@ feature {NONE} -- Implementation
 					l_pos := l_open_map.item (i)
 						-- We only need to clean up references so that GC
 						-- can collect them if necessary.
-					if l_internal.is_reference_item (l_pos) then
-						is_cleanup_needed := False
-					end
+					is_cleanup_needed := l_internal.is_reference_item (l_pos)
 					i := i + 1
 				end
 			end

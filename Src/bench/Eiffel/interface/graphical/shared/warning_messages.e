@@ -11,6 +11,8 @@ feature {NONE}
 
 	w_Beginning_of_history: STRING is "Beginning of history";
 
+	w_Cannot_compile: STRING is "Read-only project: cannot compile.";
+
 	w_Cannot_create_file (file_name: STRING): STRING is
 		require
 			file_name_not_void: file_name /= Void
@@ -19,6 +21,10 @@ feature {NONE}
 			Result.append ("Cannot create file:%N");
 			Result.append (file_name)
 		end;
+
+	w_Cannot_debug: STRING is 
+			"Current version of system has not been successfully compiled. %N%
+			%Cannot use debugging facilities.";
 
 	w_Cannot_find_class (class_name: STRING): STRING is
 		require
@@ -49,6 +55,9 @@ feature {NONE}
 			Result.append (upper_name)
 		end;
 
+	w_Cannot_open_project: STRING is 
+			"Project is not readable; check permissions.";
+
 	w_Cannot_read_file (file_name: STRING): STRING is
 		require
 			file_name_not_void: file_name /= Void
@@ -75,6 +84,9 @@ feature {NONE}
 			Result.append ("Cannot read filter ");
 			Result.append (file_name)
 		end;
+
+	w_Cannot_retrieve_info: STRING is "Cannot read class/feature information.%N%
+				%Check permissions in EIFGEN and subdirectories.";
 
 	w_Cannot_retrieve_project (dir_name: STRING): STRING is
 		require
@@ -263,6 +275,12 @@ feature {NONE}
 			Result.append ("%Nis corrupted. Cannot continue")
 		end;
 		
+	w_Project_may_be_corrupted: STRING is "Some files were made unwritable.%N%
+				%Cannot continue. Project may be corrupted.";
+
+	w_Read_only_project: STRING is "No write permissions on project.%N%
+				%Open in read-only mode?";
+
 	w_Specify_a_class: STRING is "Please specify a class";
 
 	w_Specify_a_feature: STRING is "Please specify a feature";

@@ -375,12 +375,10 @@ feature -- Conveniences
 		deferred
 		end
 
-	is_target: BOOLEAN is
-			-- Is the access a target ?
-		require
-			parent_exists: parent /= Void
+	is_assignable: BOOLEAN is
+			-- Can current be assigned to?
 		do
-			Result := parent.target = Current
+			Result := is_local or is_current or is_attribute
 		end
 
 	is_message: BOOLEAN is

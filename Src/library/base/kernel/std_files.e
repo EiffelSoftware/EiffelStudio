@@ -113,7 +113,7 @@ feature -- Element change
 	put_string, putstring (s: STRING) is
 			-- Write `s' at end of default output.
 		require
-			s /= Void
+			string_not_void: s /= Void
 		do
 			standard_default.put_string (s)
 		end;

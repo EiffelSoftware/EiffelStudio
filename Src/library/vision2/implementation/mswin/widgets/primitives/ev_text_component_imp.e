@@ -12,8 +12,6 @@ deferred class
 
 inherit
 	EV_TEXT_COMPONENT_I
-		--rename
-		--	caret_position as internal_caret_position
 		redefine
 			interface
 		end
@@ -43,9 +41,7 @@ feature {NONE} -- Initialization
 		do
 			log_font := wel_font.log_font
 			internal_set_minimum_size (
-				log_font.width.abs * 10, -- 10 characters wide
-				log_font.height.abs		 -- 1 character tall
-				)
+				log_font.width.abs * 10, internal_font_height + total_vertical_padding)
 		end
 
 	total_vertical_padding: INTEGER is 8
@@ -200,24 +196,6 @@ feature -- Basic operation
 		deferred
 		end
 
-feature -- Event - command association
-
---|FIXME	add_change_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
---|FIXME			-- Add 'cmd' to the list of commands to be executed 
---|FIXME			-- when the text of the widget have changed.
---|FIXME		do
---|FIXME			add_command (Cmd_change, cmd, arg)
---|FIXME		end
-
-feature -- Event -- removing command association
-
---|FIXME	remove_change_commands is
---|FIXME			-- Empty the list of commands to be executed
---|FIXME			-- when the text of the widget have changed.
---|FIXME		do
---|FIXME			remove_command (Cmd_change)
---|FIXME		end
-
 feature {NONE} -- Deferred features
 
 	internal_caret_position: INTEGER is
@@ -317,6 +295,9 @@ end -- class EV_TEXT_COMPONENT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.33  2000/06/09 01:45:41  manus
+--| Merged version 1.25.2.3 from DEVEL branch to trunc
+--|
 --| Revision 1.32  2000/06/07 17:28:01  oconnor
 --| merged from DEVEL tag MERGED_TO_TRUNK_20000607
 --|

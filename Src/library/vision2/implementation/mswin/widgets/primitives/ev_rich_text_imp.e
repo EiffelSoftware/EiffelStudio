@@ -366,6 +366,15 @@ feature -- Status report
 				safe_restore_caret
 				enable_redraw
 			end
+		end
+	
+	internal_paragraph_format (caret_index: INTEGER): EV_PARAGRAPH_FORMAT is
+			-- `Result' is paragraph_format at caret position `caret_index'.
+		local
+			already_set: BOOLEAN
+		do
+			set_selection (caret_index - 1, caret_index - 1)
+			Result := internal_selected_paragraph_format
 		end	
 		
 	selected_paragraph_format: EV_PARAGRAPH_FORMAT is
@@ -496,6 +505,21 @@ feature -- Status report
 				safe_restore_caret
 			end
 			enable_redraw
+		end
+		
+	internal_paragraph_format_contiguous (start_position, end_position: INTEGER): BOOLEAN is
+			-- Is paragraph formatting from caret_position `start_position' to `end_position' contiguous?
+		local
+			current_selection: WEL_CHARACTER_RANGE
+			range_already_selected: BOOLEAN
+			wel_paragraph_format: WEL_PARAGRAPH_FORMAT2
+			mask: INTEGER
+		do
+				set_selection (start_position - 1, end_position - 1)
+			create wel_paragraph_format.make
+			cwin_send_message (wel_item, em_getparaformat, 1, wel_paragraph_format.to_integer)
+			mask := wel_paragraph_format.mask
+			Result := flag_set (mask, Pfm_alignment | pfm_startindent| pfm_rightindent | pfm_spacebefore | pfm_spaceafter)
 		end
 		
 	character_format_range_information (start_index, end_index: INTEGER): EV_CHARACTER_FORMAT_RANGE_INFORMATION is

@@ -51,6 +51,7 @@ feature -- Status setting
 		do
 			is_selected := True
 			select_actions.call ([])
+			invalidate
 		ensure
 			is_selected = True
 		end
@@ -60,6 +61,7 @@ feature -- Status setting
 		do
 			is_selected := False
 			select_actions.call ([])
+			invalidate
 		ensure
 			is_selected = False
 		end

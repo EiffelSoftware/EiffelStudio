@@ -31,8 +31,8 @@ feature -- Initialization
 
 feature -- Formatting
 
-	format (stone: STONE) is
-			-- Show the "debug" format of `stone' if it is debuggable.
+	format is
+			-- Show the "debug" format of tool stone if it is debuggable.
 		local
 			edit_tool: EB_MULTIFORMAT_TOOL
 			e_feature: E_FEATURE
@@ -40,15 +40,15 @@ feature -- Formatting
 			f_stone: FEATURE_STONE
 			wd: EV_WARNING_DIALOG
 		do
-			f_stone ?= stone
+			f_stone ?= tool.stone
 			if f_stone /= Void then
 				e_feature := f_stone.e_feature
 				if e_feature.is_debuggable then
-					precursor (f_stone)
+					precursor
 				else
 					edit_tool ?= tool
 					if tool /= Void then
-						edit_tool.format_list.text_format.format (f_stone)
+						edit_tool.format_list.text_format.format
 					end
 					if e_feature.body_id = Void then
 						message := Warning_messages.w_Cannot_debug_feature

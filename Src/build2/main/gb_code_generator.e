@@ -93,7 +93,7 @@ feature {NONE} -- Implementation
 				create platform_ace_file_name.make_from_string (execution_environment.command_line.argument_array @ 1)
 				platform_ace_file_name.extend ("templates")
 				platform_ace_file_name.extend ("windows")
-				platform_ace_file_name.extend ("ace_template.ace")--+ "\templates\windows"
+				platform_ace_file_name.extend ("ace_template.ace")
 			else
 				if Eiffel_platform.is_equal ("windows") then
 					platform_ace_file_name := clone (windows_ace_file_name)
@@ -123,8 +123,11 @@ feature {NONE} -- Implementation
 				ace_text.insert_string (project_location, j - project_location_tag.count + temp_string.count)
 			end
 			
-				-- Now add the project_name
-			add_generated_string (ace_text, project_settings.project_name, project_name_tag)				
+				-- Now add the project_name. Note that we add double quotes around the name.
+				-- This allows use to use project names that clash with ace file settings,
+				-- for example, library is an invalid project name without double quotes
+				
+			add_generated_string (ace_text, "%"" + project_settings.project_name + "%"", project_name_tag)				
 			
 				-- Now add the application class name.
 			add_generated_string (ace_text, project_settings.application_class_name.as_upper, application_tag)

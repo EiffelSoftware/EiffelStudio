@@ -138,7 +138,7 @@ feature -- Duplication
 			implementation.save_to_named_file (a_format, a_filename)
 		end
 
-	copy (other: EV_PIXMAP) is 
+	copy (other: like Current) is 
 			-- Update `Current' to have same appearence as `other'.
 			-- (So as to satisfy `is_equal'.)
 		do

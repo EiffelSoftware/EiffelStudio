@@ -39,6 +39,7 @@ feature {NONE}
 				old_height := a_context.height
 			end
 			namable.set_visual_name (vname);
+			namer_window.update_name
 		end;
 	
 feature 
@@ -50,9 +51,7 @@ feature
 			new_name := namable.visual_name;
 			set_visual_name (old_visual_name);
 			old_visual_name := new_name;
-			if namer_window.namable = namable and then
-				namer_window.realized 
-			then
+			if namer_window.namable = namable then
 				namer_window.update_name
 			end;	
 		end;

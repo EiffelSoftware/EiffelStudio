@@ -46,6 +46,9 @@ feature -- Access
 	type_library_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR
 			-- Type library descriptor
 
+	default_dispinterface_name: STRING
+			-- Name of default interface.
+
 	creation_message: STRING is
 			-- Creation message for wizard output
 		do
@@ -84,13 +87,25 @@ feature -- Element Change
 		end
 
 	set_type_library (a_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR) is
-			-- Set `type_library_descriptor' with `a_descriptor'
+			-- Set `type_library_descriptor' with `a_descriptor'.
 		require
 			non_void_descriptor: a_descriptor /= Void
 		do
 			type_library_descriptor := a_descriptor
 		ensure
 			valid_type_library: type_library_descriptor = a_descriptor
+		end
+
+	set_default_dispinterface (a_name: STRING) is
+			-- Set `default_dispinterface_name' with `a_name'.
+		require
+			non_void_name: a_name /= Void
+			valid_name: not a_name.empty
+		do
+			default_dispinterface_name := a_name
+		ensure
+			non_void_default_dispinterface: default_dispinterface_name /= Void
+			valid_default_dispinterface: not default_dispinterface_name.empty and default_dispinterface_name.is_equal (a_name)
 		end
 
 feature -- Basic operations

@@ -19,6 +19,11 @@ inherit
 
 	ECOM_TYPE_KIND
 
+	ECOM_IMPL_TYPE_FLAGS
+		export
+			{NONE} all
+		end
+
 feature -- Basic operations
 
 	create_descriptor  (a_documentation: ECOM_DOCUMENTATION; a_type_info: ECOM_TYPE_INFO): WIZARD_COCLASS_DESCRIPTOR is
@@ -103,6 +108,7 @@ feature -- Basic operations
 			tmp_guid: ECOM_GUID;
 			tmp_library_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR
 			debugg: INTEGER
+			tmp_impl_flag: INTEGER
 		do
 			count := a_type_info.type_attr.count_implemented_types;
 			create {LINKED_LIST [WIZARD_INTERFACE_DESCRIPTOR]} interface_descriptors.make;
@@ -113,6 +119,8 @@ feature -- Basic operations
 			until
 				i = count
 			loop
+				tmp_impl_flag := a_type_info.impl_type_flag (i)
+				
 				a_handle := a_type_info.ref_type_of_impl_type (i)
 				tmp_type_info := a_type_info.type_info (a_handle)
 				debugg := tmp_type_info.type_attr.type_kind
@@ -144,6 +152,12 @@ feature -- Basic operations
 					end
 				end;
 				add_interface_descriptor (tmp_interface_descriptor);
+				if 
+					(tmp_type_info.type_attr.type_kind = Tkind_dispatch) and 
+					is_fdefault (tmp_impl_flag) 
+				then
+					default_dispinterface_name := clone (tmp_interface_descriptor.c_type_name)
+				end
 				i := i + 1
 				debugg := a_type_info.type_attr.count_implemented_types
 			end
@@ -160,6 +174,9 @@ feature -- Basic operations
 				a_descriptor.set_interface_descriptors (interface_descriptors)
 				a_descriptor.set_lcid (lcid)
 				a_descriptor.set_type_library (type_library_descriptor)
+				if default_dispinterface_name /= Void and then not default_dispinterface_name.empty then
+					a_descriptor.set_default_dispinterface (default_dispinterface_name)
+				end
 			end
 
 feature {NONE} -- Implementation
@@ -172,6 +189,9 @@ feature {NONE} -- Implementation
 
 	type_library_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR
 			-- Type library descriptor
+
+	default_dispinterface_name: STRING
+			-- Name of default interface.
 
 end -- class WIZARD_COCLASS_DESCRIPTOR_CREATOR
 

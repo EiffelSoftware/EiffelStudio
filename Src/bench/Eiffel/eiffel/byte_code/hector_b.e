@@ -7,8 +7,9 @@ inherit
 	UNARY_B
 		redefine
 			expr, enlarged, is_hector, type, make_byte_code,
-			is_unsafe, optimized_byte_node,
-			pre_inlined_code, inlined_byte_code
+			calls_special_features, is_unsafe, optimized_byte_node,
+			pre_inlined_code, inlined_byte_code,
+			generate
 		end
 
 creation
@@ -56,20 +57,39 @@ feature -- Byte code generation
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Generate byte code for an unprotected external call argument
 		do
-			expr.make_byte_code (ba);
+			if expr.type.is_basic then
+				ba.append (Bc_object_addr);
+				expr.make_byte_code (ba);
+			else
+				expr.make_byte_code (ba);
+			end
+		end;
+
+	generate is
+			-- Generate expression
+		do
+			if expr.type.is_basic and then expr.is_attribute then
+					-- We don't need to do anything now,
+					-- `generate_parameters_list' from EXTERNAL_B(L/W)
+					-- will generate the access on the attribute
+			else
+				expr.generate;
+			end
 		end;
 
 feature -- Array optimization
 
+	calls_special_features (array_desc: INTEGER): BOOLEAN is
+		do
+		end
+
 	is_unsafe: BOOLEAN is
 		do
-			Result := expr.is_unsafe
 		end
 
 	optimized_byte_node: like Current is
 		do
 			Result := Current
-			expr := expr.optimized_byte_node
 		end
 
 feature -- Inlining

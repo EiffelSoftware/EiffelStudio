@@ -28,6 +28,15 @@ feature -- Color Resources
 	drawing_area_color: COLOR;
 			-- Drawing area color
 
+	app_dr_area_color: COLOR
+			-- Application editor drawing area color
+
+	app_background_figure_color: COLOR
+			-- Application editor figures background color
+
+	app_foreground_figure_color: COLOR	
+			-- Application editor figures foreground color
+
 	selected_color: COLOR;
 			-- Selected color when control 
 			-- left clicked is done on a context
@@ -51,6 +60,12 @@ feature {NONE} -- Color initialization
 										"foreground_figure_color", "black");
 			drawing_area_color := get_color (resource, 
 										"drawing_area_color", "white");
+			app_dr_area_color := get_color (resource,
+										"app_dr_area_color", "LightYellow")
+			app_background_figure_color := get_color (resource,
+										"app_background_figure_color", "white")
+			app_foreground_figure_color := get_color (resource,
+										"app_foreground_figure_color", "DarkMagenta")
 			selected_color := get_color (resource, 
 										"selected_color", "grey");
 			second_selected_color := get_color (resource, 

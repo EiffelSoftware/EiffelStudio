@@ -450,14 +450,11 @@ feature -- Dialogs
 
 	Save_prompt: STRING is "Do you wish to save the current project?"
 	
-	application_class_name_prompt: STRING is "Application class name :"
-	
-	window_class_name_prompt: STRING is "Window class name :"
-	
-	project_name_prompt: STRING is "Project name :"
-	
 feature -- Miscellaneous
 
+	select_constant_string: STRING is "Select constant..."
+		-- Used in constant selection dialogs.
+		
 	Event_selection_text: STRING is "Select events..."
 		-- Displayed on button in object editor which pops
 		-- up event dialog.

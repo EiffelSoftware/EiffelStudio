@@ -286,12 +286,13 @@ feature {GB_DEFERRED_BUILDER} -- Status setting
 			temp_column_spans_string, temp_row_spans_string: STRING
 			extracted_column, extracted_row, extracted_column_span, extracted_row_span: STRING
 			extracted_string: STRING
-			item_list: ARRAYED_LIST [EV_WIDGET]
+			first_items, second_items, temp_item_list: ARRAYED_LIST [EV_WIDGET]
 			lower, upper: INTEGER
 			check_assert_result: BOOLEAN
 		do
+				
 			full_information := get_unique_full_info (element)
-			item_list ?= first.item_list
+
 			element_info := full_information @ (column_positions_string)
 			if element_info /= Void then
 				temp_column_positions_string := element_info.data				
@@ -320,14 +321,41 @@ feature {GB_DEFERRED_BUILDER} -- Status setting
 				strings_correct_length: temp_column_positions_string.count // 4 = first.widget_count
 			end
 			
+				-- We must now remove all the widgets contained in the tables.
+				-- We store them, so they can be replaced, in the correct positions.
+				-- It is not possible to move them, as any existing widgets that have not yet been
+				-- moved to their correct positions may block the desired positions of the current
+				-- widgets. It does not work, just to disable assertion checking here, as I already tried this.
+				-- Julian.
+			first_items := clone (first.item_list)
+			second_items := clone ((objects @ 2).item_list)
+			temp_item_list := first.item_list
 			from
-				item_list.start
+				temp_item_list.start
 			until
-				item_list.off
+				temp_item_list.off
+			loop
+				first.prune (temp_item_list.item)
+				temp_item_list.forth
+			end
+			temp_item_list := (objects @ 2).item_list
+			from
+				temp_item_list.start
+			until
+				temp_item_list.off
+			loop
+				(objects @ 2).prune (temp_item_list.item)
+				temp_item_list.forth
+			end
+			
+			from
+				first_items.start
+			until
+				first_items.off
 			loop
 					-- We now read all information from the strings retrieved form the XML.
-				lower := (item_list.index - 1) * 4 + 1
-				upper := (item_list.index - 1) * 4 + 4
+				lower := (first_items.index - 1) * 4 + 1
+				upper := (first_items.index - 1) * 4 + 4
 				extracted_column := temp_column_positions_string.substring (lower, upper)
 				check
 					value_is_integer: extracted_column.is_integer
@@ -344,14 +372,10 @@ feature {GB_DEFERRED_BUILDER} -- Status setting
 				check
 					value_is_integer: extracted_row_span.is_integer
 				end
-					-- Modify the current items position and size. We must remove the
-					-- assertion checking while we do this, as the items have already been
-					-- placed in the table, and are occupying a space.
-				check_assert_result := feature {ISE_RUNTIME}.check_assert (False)
-				set_item_position_and_span (item_list.item, extracted_column.to_integer, extracted_row.to_integer, extracted_column_span.to_integer, extracted_row_span.to_integer)
-				check_assert_result := feature {ISE_RUNTIME}.check_assert (True)
+				first.put (first_items.item, extracted_column.to_integer, extracted_row.to_integer, extracted_column_span.to_integer, extracted_row_span.to_integer)
+				(objects @ 2).put (second_items @ first_items.index, extracted_column.to_integer, extracted_row.to_integer, extracted_column_span.to_integer, extracted_row_span.to_integer)
 				
-				item_list.forth
+				first_items.forth
 			end	
 		end
 
@@ -517,9 +541,6 @@ feature {NONE} -- Implementation
 		do
 				-- Now we need to get the widget represented in objects at the
 				-- second place. We must do this before we move the first widget.
-			if a_column = 3 and a_row = 1 and columns = 1 and rows = 1 then
-				do_nothing
-			end
 			second_widget := (objects @ 2).item (first.item_column_position (v), first.item_row_position (v))
 
 			first.set_item_position_and_span (v, a_column, a_row, columns, rows)

@@ -195,7 +195,6 @@ feature -- Element change
 		do
 			cwel_wnd_class_set_instance (item, an_instance.item)
 		ensure
-			instance_set: instance_set
 			instance_equal: instance.item = an_instance.item
 		end
 
@@ -218,7 +217,6 @@ feature -- Element change
 			cwel_wnd_class_set_wnd_proc (item,
 				a_window_procedure)
 		ensure
-			window_procedure_set: window_procedure_set
 			window_procedure_equal: window_procedure =
 				a_window_procedure
 		end
@@ -236,7 +234,6 @@ feature -- Element change
 			--| Windows will destroy the icon by itself.
 			--| The garbage collector must not call `destroy_item'.
 		ensure
-			icon_set: icon_set
 			icon_equal: icon.item = an_icon.item
 		end
 
@@ -252,7 +249,6 @@ feature -- Element change
 			--| Windows will destroy the cursor by itself.
 			--| The garbage collector must not call `destroy_item'.
 		ensure
-			cursor_set: cursor_set
 			cursor_equal: cursor.item = a_cursor.item
 		end
 
@@ -265,7 +261,6 @@ feature -- Element change
 		do
 			cwel_wnd_class_set_background (item, a_background.item)
 		ensure
-			background_set: background_set
 			background_equal: background.item = a_background.item
 		end
 
@@ -301,7 +296,6 @@ feature -- Element change
 			cwel_wnd_class_set_menu_name (item,
 				str_menu_name.item)
 		ensure
-			menu_name_set: menu_name_set
 			menu_name_equal: menu_name.is_equal (a_menu_name)
 		end
 

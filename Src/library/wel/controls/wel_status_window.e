@@ -261,7 +261,7 @@ feature -- Element change
 			cwin_send_message (item, Sb_setparts,
 				a_edges.count, cwel_pointer_to_integer (a.item))
 		ensure
-			edges_set: edges.is_equal (a_edges)
+			edges_set: edges.same_items (a_edges)
 		end
 
 	set_text_part (index: INTEGER; a_text: STRING) is

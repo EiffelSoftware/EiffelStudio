@@ -100,19 +100,19 @@ feature -- Initialization
 				Compilation_modes.set_is_extendible (Comp_system.extendible);
 				Compilation_modes.set_is_extending (Comp_system.is_dynamic);
 				if Comp_system.is_precompiled then
-            		precomp_dirs := Workbench.precompiled_directories;
-            		from
-                		precomp_dirs.start
-            		until
-                		precomp_dirs.after
-            		loop
-                		precomp_dirs.item_for_iteration.update_path;
-                		precomp_dirs.forth
-            		end;
-            		Precompilation_directories.copy (precomp_dirs);
+					precomp_dirs := Workbench.precompiled_directories;
+					from
+						precomp_dirs.start
+					until
+						precomp_dirs.after
+					loop
+						precomp_dirs.item_for_iteration.update_path;
+						precomp_dirs.forth
+					end;
+					Precompilation_directories.copy (precomp_dirs);
 					!! remote_dir.make (project_dir.name);
 					Precompilation_directories.force
-                            (remote_dir, Comp_system.compilation_id);
+							(remote_dir, Comp_system.compilation_id);
 				else
 					if Comp_system.uses_precompiled then
 						!! precomp_r;
@@ -361,6 +361,48 @@ feature -- Status setting
 			set: compiler_mode = batch_mode
 		end;
 
+	set_filter_path (f_path: STRING) is
+			-- Set filter_path to `f_path'.
+		require
+			valid_arg: f_path /= Void 
+		local
+			dir: DIRECTORY_NAME
+		do
+			if not f_path.is_equal (filter_path) then
+				filter_path.wipe_out;
+				!! dir.make_from_string (interpreted_string (f_path));
+				filter_path.append (dir)
+			end
+		end
+
+	set_profile_path (p_path: STRING) is
+			-- Set profile_path to `p_path'.
+		require
+			valid_arg: p_path /= Void 
+		local
+			dir: DIRECTORY_NAME
+		do
+			if not p_path.is_equal (profile_path) then
+				profile_path.wipe_out;
+				!! dir.make_from_string (interpreted_string (p_path));
+				profile_path.append (dir)
+			end
+		end;
+
+	set_tmp_directory (t_path: STRING) is
+			-- Set tmp_directory to `t_path'.
+		require
+			valid_args: t_path /= Void 
+		local
+			dir: DIRECTORY_NAME
+		do
+			if not t_path.is_equal (tmp_directory) then
+				tmp_directory.wipe_out;
+				!! dir.make_from_string (interpreted_string (t_path));
+				tmp_directory.append (dir)
+			end
+		end;
+
 feature -- Element change
 
 	interrupt_compilation is
@@ -398,6 +440,22 @@ feature -- Update
 				end;
 			end;
 			is_compiling_ref.set_item (False);
+		ensure
+			was_saved: successful and then not
+				error_occurred implies was_saved
+			error_implies: error_occurred implies save_error;
+			freezing_occurred_if_successful: system /= Void and then
+					freezing_occurred implies successful 
+		end;
+
+	quick_melt is
+			-- Melt eiffel project and then freeze it (i.e generate
+			-- C code for workbench mode).
+		require
+			able_to_compile: able_to_compile
+		do
+			Compilation_modes.set_is_quick_melt (True);
+			melt;
 		ensure
 			was_saved: successful and then not
 				error_occurred implies was_saved

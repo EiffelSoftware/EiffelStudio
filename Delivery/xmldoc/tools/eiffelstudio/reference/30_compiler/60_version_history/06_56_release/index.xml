@@ -1,0 +1,51 @@
+<document output="studio" title="Major changes between ISE Eiffel 5.5 and ISE Eiffel 5.6">
+	<meta_data></meta_data>
+	<paragraph>
+		<heading>
+			<size>2</size>What's new
+		</heading>
+		<list ordered="false">
+			<item></item>
+		</list>
+		<heading><size>2</size>Improvements</heading>
+		<list ordered="false">
+			<item></item>
+		</list>
+		<heading>
+			<size>2</size>Changes
+		</heading>
+		<list ordered="false">
+			<item></item>
+		</list>
+		<heading>
+			<size>2</size>Bug fixes
+		</heading>
+		<heading>
+			<size>3</size>Language issues
+		</heading>
+		<list ordered="false">
+			<item></item>
+		</list>
+		<heading>
+			<size>3</size>Compiler issues
+		</heading>
+		<list ordered="false">
+			<item></item>
+		</list>
+		<heading>
+			<size>3</size>Runtime/code generation issues
+		</heading>
+		<list ordered="false">
+			<item></item>
+		</list>
+		<heading>
+			<size>3</size>.NET issues
+		</heading>
+		<list ordered="false">
+			<item></item>
+		</list>
+		<heading>	<size>3</size>Store/Retrieve issues</heading>
+		<list ordered="false">
+			<item></item>
+		</list>
+	</paragraph></document>

@@ -1,0 +1,71 @@
+<document title="Release notes of EiffelStudio 5.6" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading><size>2</size>Graphical environment</heading>
+			<heading><size>3</size>Improvements</heading>
+			<list ordered="false">
+				<item></item>
+			</list>
+			<heading><size>3</size>Changes</heading>
+			<list ordered="false">
+				<item></item>
+			</list>
+			<heading><size>3</size>Bug fixes</heading>
+			<list ordered="false">
+				<item></item>
+			</list>
+		<heading><size>2</size>Debugger</heading>
+			<list ordered="false">
+				<item></item>
+			</list>
+		<heading><size>2</size>EiffelBuild</heading>
+			<list ordered="false">
+				<item>Click <link><url>../../../eiffelbuild/version_history/index.xml</url><label>here</label></link> for the EiffelBuild release notes.</item>
+			</list>
+		<heading><size>2</size>Compiler</heading>
+		<list ordered="false">
+			<item>Click <link><url>../30_compiler/60_version_history/06_56_release/index.xml</url><label>here</label></link> for the compiler release notes.</item>
+		</list>
+		<heading><size>2</size>Libraries</heading>
+		<heading><size>3</size>CECIL</heading>
+		<list ordered="false">
+			<item></item>
+		</list>
+		<heading><size>3</size>EiffelBase</heading>
+		<list ordered="false">
+			<item>Changed signature of <code><feature_name>subarray</feature_name></code> in <code><class_name>ARRAY</class_name></code> to match ELKS specification. It now returns an <code><class_name>ARRAY [G]</class_name></code> instead of <code><keyword>like Current</keyword></code>.</item>
+			<item>Changed signature of <code><feature_name>infix "+"</feature_name></code> in <code><class_name>STRING</class_name></code> to match ELKS specification. It now returns <code><keyword>like Current</keyword></code> instead of <code><class_name>STRING</class_name></code>.</item>
+			<item>Made implementations of <code><feature_name>cursor</feature_name></code> in descendants of <code><class_name>CURSOR_STRUCTURE</class_name></code> return a precise <code><class_name>CURSOR</class_name></code> type.</item>
+			<item>Reduced feature exportation of routines also used as creation procedures of <code><class_name>CURSOR</class_name></code> descendants to <code><class_name>NONE</class_name></code>.</item>
+			<item>Removed <code><feature_name>array_valid_index</feature_name></code> from <code><class_name>ARRAYED_LIST</class_name></code>. As a consequence descendants of <code><class_name>ARRAYED_LIST</class_name></code> may need to update their inheritance clause. This fixes ability to use <code><feature_name>put_i_th</feature_name></code> with indexes that may violate the invariant of <code><class_name>ARRAYED_LIST</class_name></code>, for example the code below should trigger a precondition and not violate the invariant of <code><class_name>ARRAYED_LIST</class_name></code>:
+<code_block>list: <class_name>ARRAYED_LIST</class_name> [<class_name>INTEGER</class_name>]
+
+<keyword>create</keyword> list.<feature_name>make</feature_name> (5)
+list.<feature_name>put_i_th</feature_name> (3, 3)</code_block></item>
+			<item>Removed <code><feature_name>make_sublist</feature_name></code> from <code><class_name>TWO_WAY_LIST</class_name></code> public creation procedures.</item>
+			<item>Made <code><feature_name>file_prunable</feature_name></code> from <code><class_name>FILE</class_name></code> obsolete. Use <code><feature_name>prunable</feature_name></code> instead.</item>
+		</list>
+		<heading><size>3</size>EiffelNet</heading>
+		<list ordered="false">
+			<item></item>
+		</list>
+		<heading><size>3</size>EiffelTime</heading>
+		<list ordered="false">
+			<item></item>
+		</list>
+		<heading><size>3</size>EiffelThread</heading>
+		<list ordered="false">
+			<item></item>
+		</list>
+		<heading><size>3</size>EiffelVision2</heading>
+		<list ordered="false">
+			<item><link><label>Click here for EiffelVision2 release notes.</label><url>../../../../libraries/vision2/content/0-_revisions/index.xml</url></link></item>
+		</list>
+		<heading><size>3</size>WEL</heading>
+		<list ordered="false">
+			<item></item>
+		</list>
+	</paragraph>
+</document>

@@ -21,129 +21,6 @@ feature -- Initialization
 		do
 		end
 
-feature  -- Access
-
-	cursor: CURSOR is
-			-- Current cursor position
-		do
-		end;
-
-	first: like item is
-			-- Item at first position
-		do
-		end;
-
-	has (v: like item): BOOLEAN is
-			-- Does chain include v?
-			-- (Reference or object equality,
-			-- based on object_comparison.)
-		do
-		end;
-
-	i_th, infix "@" (i: INTEGER): like item is
-			-- Item at i-th position
-		do
-		end;
-
-	index: INTEGER is
-			-- Current cursor index
-		do
-		end;
-
-	index_of (v: like item; i: INTEGER): INTEGER is
-			-- Index of i-th occurrence of item identical to v.
-			-- (Reference or object equality,
-			-- based on object_comparison.)
-			-- 0 if none.
-		do
-		end;
-
-	item: SCROLLABLE_LIST_ELEMENT is
-			-- Item at current position
-		do
-		end;
-
-	last: like item is
-			-- Item at last position
-		do
-		end;
-
-	occurrences (v: like item): INTEGER is
-			-- Number of times v appears.
-			-- (Reference or object equality,
-			-- based on object_comparison.)
-		do
-		end;
-
-feature  -- Conversion
-
-	linear_representation: LINEAR [SCROLLABLE_LIST_ELEMENT] is
-			-- Representation as a linear structure
-		do
-		end;
-
-feature  -- Cursor movement
-
-	back is
-			-- Move to previous position.
-		do
-		end;
-
-	finish is
-			-- Move cursor to last position.
-			-- (No effect if empty)
-		do
-		end;
-
-	forth is
-			-- Move to next position; if no next position,
-			-- ensure that exhausted will be true.
-		do
-		end;
-
-	go_i_th (i: INTEGER) is
-			-- Move cursor to i-th position.
-		do
-		end;
-
-	go_to (p: CURSOR) is
-			-- Move cursor to position p.
-		do
-		end;
-
-	move (i: INTEGER) is
-			-- Move cursor i positions. The cursor
-			-- may end up off if the absolute value of i
-			-- is too big.
-		do
-		end;
-
-	search (v: like item) is
-			-- Move to first position (at or after current
-			-- position) where item and v are equal.
-			-- If structure does not include v ensure that
-			-- exhausted will be true.
-			-- (Reference or object equality,
-			-- based on object_comparison.)
-		do
-		end;
-
-	start is
-			-- Move cursor to first position.
-			-- (No effect if empty)
-		do
-		end;
-
-feature  -- Duplication
-
-	duplicate (n: INTEGER): like Current is
-			-- Copy of sub-chain beginning at current position
-			-- and having min (n, from_here) items,
-			-- where from_here is the number of items
-			-- at or to the right of current position.
-		do
-		end;
-
 feature  -- Element change
 
 	append (s: SEQUENCE [SCROLLABLE_LIST_ELEMENT]) is
@@ -214,13 +91,6 @@ feature  -- Element change
 		do
 		end;
 
-feature  -- Measurement
-
-	count: INTEGER is
-			-- Number of items
-		do
-		end;
-
 feature  -- Removal
 
 	prune (v: like item) is
@@ -265,73 +135,6 @@ feature  -- Removal
 
 feature  -- Status report
 
-	after: BOOLEAN is
-			-- Is there no valid cursor position to the right of cursor?
-		do
-		end;
-
-	before: BOOLEAN is
-			-- Is there no valid cursor position to the left of cursor?
-		do
-		end;
-
-	changeable_comparison_criterion: BOOLEAN is
-			-- May object_comparison be changed?
-			-- (Answer: yes by default.)
-		do
-		end;
-
-	empty: BOOLEAN is
-			-- Is structure empty?
-		do
-		end;
-
-	exhausted: BOOLEAN is
-			-- Has structure been completely explored?
-		do
-		end;
-
-	Extendible: BOOLEAN is 
-			-- May new items be added? (Answer: yes.)
-		do
-		end
-
-	full: BOOLEAN is
-			-- Is structure filled to capacity?
-		do
-		end;
-
-	isfirst: BOOLEAN is
-			-- Is cursor at first position?
-		do
-		end;
-
-	islast: BOOLEAN is
-			-- Is cursor at last position?
-		do
-		end;
-
-	object_comparison: BOOLEAN is
-			-- Must search operations use equal rather than =
-			-- for comparing references? (Default: no, use =.)
-		do
-		end
-
-	off: BOOLEAN is
-			-- Is there no current item?
-		do
-		end;
-
-	prunable: BOOLEAN is
-			-- May items be removed? (Answer: yes.)
-		do
-		end;
-
-	readable: BOOLEAN is
-			-- Is there a current item that may be read?
-		do
-		end;
-
     selected_count: INTEGER is
             -- Number of selected items in current list
         do
@@ -360,30 +163,10 @@ feature  -- Status report
         do
         end;
 
-	valid_cursor (p: CURSOR): BOOLEAN is
-			-- Can the cursor be moved to position p?
-		do
-		end;
-
-	valid_cursor_index (i: INTEGER): BOOLEAN is
-			-- Is i correctly bounded for cursor movement?
-		do
-		end;
-
-	valid_index (i: INTEGER): BOOLEAN is
-			-- Is i within allowable bounds?
-		do
-		end;
-
     visible_item_count: INTEGER is
             -- Number of visible item of list
         do
         end;
-
-	writable: BOOLEAN is
-			-- Is there a current item that may be modified?
-		do
-		end;
 
 feature  -- Status setting
 
@@ -392,18 +175,6 @@ feature  -- Status setting
             -- selected with click selection mode in current scroll list.
         do
         end;
-
-	compare_objects is
-			-- Ensure that future search operations will use equal
-			-- rather than = for comparing references.
-		do
-		end;
-
-	compare_references is
-			-- Ensure that future search operations will use =
-			-- rather than equal for comparing references.
-		do
-		end;
 
     deselect_all is
             -- Deselect all selected items.
@@ -440,13 +211,6 @@ feature  -- Status setting
             -- Set the number of visible items to `a_count'.
         do
         end
-feature  -- Transformation
-
-	swap (i: INTEGER) is
-			-- Exchange item at i-th position with item
-			-- at cursor position.
-		do
-		end;
 
 end -- class SCROLLABLE_LIST_M
 

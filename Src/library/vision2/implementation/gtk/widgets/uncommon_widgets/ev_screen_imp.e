@@ -71,6 +71,8 @@ feature -- Basic operation
 			-- Set `pointer_position' to (`x',`y`).		
 		do
 			--|FIXME
+			--| somthing like this should do the trick:
+			--| XTestFakeMotionEvent (display, -1, x, y, 0)
 			check fixme: false end
 		end
 
@@ -121,6 +123,9 @@ end -- class EV_SCREEN_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/04/06 23:26:59  oconnor
+--| added implementation comments and new fake event features
+--|
 --| Revision 1.7  2000/04/06 20:12:30  oconnor
 --| added pointer position features
 --|

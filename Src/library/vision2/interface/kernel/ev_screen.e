@@ -40,6 +40,46 @@ feature -- Basic operation
 				pointer_position.x = x and pointer_position.y = y
 		end
 
+	fake_pointer_button_press (a_button: INTEGER) is
+			-- Simulate the user pressing a `a_button' on the pointing device.
+		do
+			--| FIXME implementation.
+			--|	for X do somthing like
+			--| XTestFakeButtonEvent (display, a_button, True, 0)
+			--| For windows use SendInput
+			--| http://msdn.microsoft.com/library/psdk/winui/keybinpt_7id0.htm
+		end
+
+	fake_pointer_button_release (a_button: INTEGER) is
+			-- Simulate the user releasing a `a_button' on the pointing device.
+		do
+			--| FIXME implementation.
+			--|	for X do somthing like
+			--| XTestFakeButtonEvent (display, a_button, False, 0)
+			--| For windows use SendInput
+			--| http://msdn.microsoft.com/library/psdk/winui/keybinpt_7id0.htm
+		end
+
+	fake_key_press (a_key: EV_KEY) is
+			-- Simulate the user pressing a `key'.
+		do
+			--| FIXME implementation.
+			--|	for X do somthing like
+			--| XTestFakeKeyvent (display, gtk_code (key), True, 0)
+			--| For windows use SendInput
+			--| http://msdn.microsoft.com/library/psdk/winui/keybinpt_7id0.htm
+		end
+
+	fake_key_release (a_key: EV_KEY) is
+			-- Simulate the user releasing a `key'.
+		do
+			--| FIXME implementation.
+			--|	for X do somthing like
+			--| XTestFakeKeyvent (display, gtk_code (key), False, 0)
+			--| For windows use SendInput
+			--| http://msdn.microsoft.com/library/psdk/winui/keybinpt_7id0.htm
+		end
+
 feature -- Measurement
 
 	width: INTEGER is
@@ -101,6 +141,9 @@ end -- class EV_SCREEN
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/04/06 23:26:59  oconnor
+--| added implementation comments and new fake event features
+--|
 --| Revision 1.9  2000/04/06 20:12:30  oconnor
 --| added pointer position features
 --|

@@ -21,61 +21,63 @@ mkdir %INSTALL_DIR\releases\enterprise\lib\bcb
 mkdir %INSTALL_DIR\releases\enterprise\lib\msc
 
 
-remtrace Compile the non-commercial run-times
-remtrace Compile a run-time for Borland
-exprt -r %DEFAULT_CVS_TAG -d C runtime
-cd C\run-time
-sed -e "s/\/\*\#define\ NON_COMMERCIAL\*\/$/\#define\ NON_COMMERCIAL/g" main.c >> new_main.c
-move new_main.c main.c
-cd ..
-alias pause echo
-call configure win32 b >>& %INSTALL_LOG
-unalias pause
-cd %EIFFEL_SRC
-copy C\run-time\LIB\*.lib %INSTALL_DIR\releases\home\lib\bcb
-fullrf %INSTALL_DIR\releases\home\lib\bcb\ebench.lib
-remtrace Compile a dynamic run-time
-fullrd C
-exprt -r %DEFAULT_CVS_TAG -d C runtime
-cd C\run-time
-sed -e "s/\/\*\#define\ NON_COMMERCIAL\*\/$/\#define\ NON_COMMERCIAL/g" main.c >> new_main.c
-move new_main.c main.c
-cd ..
-sed -e "s/d:\\apps\\MSVC\\VC98/%C_COMPILER_PATH/g" config.msh >> new_config.msh
-move new_config.msh config.msh
-sed -e "s/\-W3/\-DEIF_MAKE_DLL\ \-DISE_GC\ \-W3/g" config.msh >> new_config.msh
-move new_config.msh config.msh
-sed -e "s/standard\ mtstandard/dll\ mtdll/g" config.msh >> new_config.msh
-move new_config.msh config.msh
-alias pause echo
-call configure win32 m >>& %INSTALL_LOG
-unalias pause
-cd %EIFFEL_SRC
-copy C\run-time\LIB\*dll* %INSTALL_DIR\releases\home\lib\msc
-fullrf %INSTALL_DIR\releases\home\lib\msc\*.exp
-fullrf %INSTALL_DIR\releases\home\lib\msc\ebench.lib
-cd %EIFFEL_SRC
-remtrace Compile a run-time for Microsoft
-fullrd C
-exprt -r %DEFAULT_CVS_TAG -d C runtime
-cd C\run-time
-sed -e "s/\/\*\#define\ NON_COMMERCIAL\*\/$/\#define\ NON_COMMERCIAL/g" main.c >> new_main.c
-move new_main.c main.c
-cd ..
-sed -e "s/d:\\apps\\MSVC\\VC98/%C_COMPILER_PATH/g" config.msh >> new_config.msh
-move new_config.msh config.msh
-alias pause echo
-call configure win32 m >>& %INSTALL_LOG
-unalias pause
-cd %EIFFEL_SRC
-copy C\run-time\LIB\*.lib %INSTALL_DIR\releases\home\lib\msc
-copy C\desc\ise_desc.dll %INSTALL_DIR\releases\home\lib\msc
-copy C\desc\ise_desc.lib %INSTALL_DIR\releases\home\lib\msc
-fullrf %INSTALL_DIR\releases\home\lib\msc\ebench.lib
-copy %EIFFEL_SRC\C\run-time\*.h %INSTALL_DIR\studio\spec\%ISE_PLATFORM\include
-copy %EIFFEL_SRC\C\eif_confmagic.h %INSTALL_DIR\studio\spec\%ISE_PLATFORM\include
-copy %EIFFEL_SRC\C\console\eif_econsole.h %INSTALL_DIR\studio\spec\%ISE_PLATFORM\include
-cd %EIFFEL_SRC
+iff not defined BUILD_ENTERPRISE_ONLY then
+	remtrace Compile the non-commercial run-times
+	remtrace Compile a run-time for Borland
+	exprt -r %DEFAULT_CVS_TAG -d C runtime
+	cd C\run-time
+	sed -e "s/\/\*\#define\ NON_COMMERCIAL\*\/$/\#define\ NON_COMMERCIAL/g" main.c >> new_main.c
+	move new_main.c main.c
+	cd ..
+	alias pause echo
+	call configure win32 b >>& %INSTALL_LOG
+	unalias pause
+	cd %EIFFEL_SRC
+	copy C\run-time\LIB\*.lib %INSTALL_DIR\releases\home\lib\bcb
+	fullrf %INSTALL_DIR\releases\home\lib\bcb\ebench.lib
+	remtrace Compile a dynamic run-time
+	fullrd C
+	exprt -r %DEFAULT_CVS_TAG -d C runtime
+	cd C\run-time
+	sed -e "s/\/\*\#define\ NON_COMMERCIAL\*\/$/\#define\ NON_COMMERCIAL/g" main.c >> new_main.c
+	move new_main.c main.c
+	cd ..
+	sed -e "s/d:\\apps\\MSVC\\VC98/%C_COMPILER_PATH/g" config.msh >> new_config.msh
+	move new_config.msh config.msh
+	sed -e "s/\-W3/\-DEIF_MAKE_DLL\ \-W3/g" config.msh >> new_config.msh
+	move new_config.msh config.msh
+	sed -e "s/standard\ mtstandard/dll\ mtdll/g" config.msh >> new_config.msh
+	move new_config.msh config.msh
+	alias pause echo
+	call configure win32 m >>& %INSTALL_LOG
+	unalias pause
+	cd %EIFFEL_SRC
+	copy C\run-time\LIB\*dll* %INSTALL_DIR\releases\home\lib\msc
+	fullrf %INSTALL_DIR\releases\home\lib\msc\*.exp
+	fullrf %INSTALL_DIR\releases\home\lib\msc\ebench.lib
+	cd %EIFFEL_SRC
+	remtrace Compile a run-time for Microsoft
+	fullrd C
+	exprt -r %DEFAULT_CVS_TAG -d C runtime
+	cd C\run-time
+	sed -e "s/\/\*\#define\ NON_COMMERCIAL\*\/$/\#define\ NON_COMMERCIAL/g" main.c >> new_main.c
+	move new_main.c main.c
+	cd ..
+	sed -e "s/d:\\apps\\MSVC\\VC98/%C_COMPILER_PATH/g" config.msh >> new_config.msh
+	move new_config.msh config.msh
+	alias pause echo
+	call configure win32 m >>& %INSTALL_LOG
+	unalias pause
+	cd %EIFFEL_SRC
+	copy C\run-time\LIB\*.lib %INSTALL_DIR\releases\home\lib\msc
+	copy C\desc\ise_desc.dll %INSTALL_DIR\releases\home\lib\msc
+	copy C\desc\ise_desc.lib %INSTALL_DIR\releases\home\lib\msc
+	fullrf %INSTALL_DIR\releases\home\lib\msc\ebench.lib
+	copy %EIFFEL_SRC\C\run-time\*.h %INSTALL_DIR\studio\spec\%ISE_PLATFORM\include
+	copy %EIFFEL_SRC\C\eif_confmagic.h %INSTALL_DIR\studio\spec\%ISE_PLATFORM\include
+	copy %EIFFEL_SRC\C\console\eif_econsole.h %INSTALL_DIR\studio\spec\%ISE_PLATFORM\include
+	cd %EIFFEL_SRC
+endiff
 
 remtrace Compile the commercial run-times
 remtrace Compile a run-time for Borland
@@ -94,7 +96,7 @@ exprt -r %DEFAULT_CVS_TAG -d C runtime
 cd C
 sed -e "s/d:\\apps\\MSVC\\VC98/%C_COMPILER_PATH/g" config.msh >> new_config.msh
 move new_config.msh config.msh
-sed -e "s/\-W3/\-DEIF_MAKE_DLL\ \-DISE_GC\ \-W3/g" config.msh >> new_config.msh
+sed -e "s/\-W3/\-DEIF_MAKE_DLL\ \-W3/g" config.msh >> new_config.msh
 move new_config.msh config.msh
 sed -e "s/standard\ mtstandard/dll\ mtdll/g" config.msh >> new_config.msh
 move new_config.msh config.msh
@@ -138,16 +140,20 @@ cd %EIFFEL_SRC\C_library
 fullrd .libs
 remtrace expat
 cd %EIFFEL_SRC\C_library\expat
-safe_md lib
+safe_md %EIFFEL_SRC\C_library\expat\lib
 msdev expat.dsw /make ALL - RELEASE >>& %INSTALL_LOG
-iff not exist bin\xmlparse.dll .or. not exist bin\xmltok.dll then
-	echo Couldn't recompile xmlparse.dll or xmltok.dll
+iff not exist %EIFFEL_SRC\C_library\expat\bin\xmlparse.dll then
+	echo Couldn't recompile xmlparse.dll
 	CANCEL
 endiff
-copy bin\xmlparse.dll %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
-copy bin\xmltok.dll %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
-copy xmlparse\Release\*.lib lib
-copy xmltok\Release\*.lib lib
+iff not exist %EIFFEL_SRC\C_library\expat\bin\xmltok.dll then
+	echo Couldn't recompile xmltok.dll
+	CANCEL
+endiff
+copy %EIFFEL_SRC\C_library\expat\bin\xmlparse.dll %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
+copy %EIFFEL_SRC\C_library\expat\bin\xmltok.dll %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
+copy %EIFFEL_SRC\C_library\expat\xmlparse\Release\xmlparse.lib %EIFFEL_SRC\C_library\expat\lib
+copy %EIFFEL_SRC\C_library\expat\xmltok\Release\xmltok.lib %EIFFEL_SRC\C_library\expat\lib
 
 remtrace libpng
 cd %EIFFEL_SRC\C_library\libpng
@@ -157,17 +163,26 @@ cd %EIFFEL_SRC\C_library\zlib
 default_make
 copy %ISE_EIFFEL\library\vision2\spec\msc\lib\*lib*.lib %EIFFEL_SRC\library\vision2\spec\msc\lib
 
+REM These directories should already have been created by make_delivery. Whatever...
+safe_md %INSTALL_DIR\studio\spec
+safe_md %INSTALL_DIR\studio\spec\%ISE_PLATFORM
+safe_md %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
+
 remtrace com_il_generation
+cd %EIFFEL_SRC\Eiffel\eiffel\com_il_generation\Core
+call nmake
+
+remtrace Copying .NET components
+copy EiffelCompiler.dll %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
+copy run-time\ise_runtime.dll %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
+
+remtrace Clib of com_il_generation
 cd %EIFFEL_SRC\Eiffel\eiffel\com_il_generation\Core\clib
 default_make
 cd %EIFFEL_SRC\Eiffel\eiffel\com_il_generation\eac\clib
 default_make
 
-REM These directories should already have been created by make_delivery. Whatever...
-safe_md %INSTALL_DIR\studio\spec
-safe_md %INSTALL_DIR\studio\spec\%ISE_PLATFORM
-safe_md %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
-iff not defined NO_NEW_EC then
+iff defined BUILD_ENTERPRISE_ONLY then
 	remtrace Recompile EiffelStudio
 	cdd %FINALIZATION_DIR
 	copy %EIFFEL_SRC\Eiffel\Ace\newbench.mswin.ace finalizedbench.ace
@@ -187,73 +202,96 @@ iff not defined NO_NEW_EC then
 		CANCEL
 	endiff
 	move ec.exe %INSTALL_DIR\releases\enterprise
+else
+	iff not defined NO_NEW_EC then
+		remtrace Recompile EiffelStudio
+		cdd %FINALIZATION_DIR
+		copy %EIFFEL_SRC\Eiffel\Ace\newbench.mswin.ace finalizedbench.ace
+		copy %EIFFEL_SRC\Eiffel\Ace\*.* .
+		iff not exist finalizedbench.ace then
+			echo Cannot find the finalization Ace for EiffelStudio
+			CANCEL
+		endiff
 
-	remtrace Student edition
-	cdd %EIFFEL_SRC\Eiffel\API\constants
-	sed -e "s/\	has_metrics:\ BOOLEAN\ is\ True/\	has_metrics:\ BOOLEAN\ is\ False/g" eiffel_env.e >> new_eiffel_env.e
-	move new_eiffel_env.e eiffel_env.e
-	sed -e "s/\	has_documentation_generation:\ BOOLEAN\ is\ True/\	has_documentation_generation:\ BOOLEAN\ is\ False/g" eiffel_env.e >> new_eiffel_env.e
-	move new_eiffel_env.e eiffel_env.e
-	sed -e "s/\	has_profiler:\ BOOLEAN\ is\ True/\	has_profiler:\ BOOLEAN\ is\ False/g" eiffel_env.e >> new_eiffel_env.e
-	move new_eiffel_env.e eiffel_env.e
-	sed -e "s/\	has_xmi_generation:\ BOOLEAN\ is\ True/\	has_xmi_generation:\ BOOLEAN\ is\ False/g" eiffel_env.e >> new_eiffel_env.e
-	move new_eiffel_env.e eiffel_env.e
-	sed -e "s/\	has_dll_generation:\ BOOLEAN\ is\ True/\	has_dll_generation:\ BOOLEAN\ is\ False/g" eiffel_env.e >> new_eiffel_env.e
-	move new_eiffel_env.e eiffel_env.e
-	cdd %EIFFEL_SRC\Eiffel\switch\license\time_lock
-	sed -e "s/studio_enterprise_key_51/studio_student_key_51/g" bench_licence.e >> new_bench_license.e
-	move new_bench_license.e bench_licence.e
-	cdd %FINALIZATION_DIR
-	clean_project
-	finalize finalizedbench.ace
-	fff
-	cleanup_eiffel ec.exe
-	iff not exist ec.exe then
-		echo Could not finalize a new "student" EiffelStudio
-		CANCEL
+		remtrace Enterprise edition
+		clean_project
+		finalize finalizedbench.ace
+		fff
+		cleanup_eiffel ec.exe
+		iff not exist ec.exe then
+			echo Could not finalize a new "enterprise" EiffelStudio
+			CANCEL
+		endiff
+		move ec.exe %INSTALL_DIR\releases\enterprise
+
+		remtrace Student edition
+		cdd %EIFFEL_SRC\Eiffel\API\constants
+		sed -e "s/\	has_metrics:\ BOOLEAN\ is\ True/\	has_metrics:\ BOOLEAN\ is\ False/g" eiffel_env.e >> new_eiffel_env.e
+		move new_eiffel_env.e eiffel_env.e
+		sed -e "s/\	has_documentation_generation:\ BOOLEAN\ is\ True/\	has_documentation_generation:\ BOOLEAN\ is\ False/g" eiffel_env.e >> new_eiffel_env.e
+		move new_eiffel_env.e eiffel_env.e
+		sed -e "s/\	has_profiler:\ BOOLEAN\ is\ True/\	has_profiler:\ BOOLEAN\ is\ False/g" eiffel_env.e >> new_eiffel_env.e
+		move new_eiffel_env.e eiffel_env.e
+		sed -e "s/\	has_xmi_generation:\ BOOLEAN\ is\ True/\	has_xmi_generation:\ BOOLEAN\ is\ False/g" eiffel_env.e >> new_eiffel_env.e
+		move new_eiffel_env.e eiffel_env.e
+		sed -e "s/\	has_dll_generation:\ BOOLEAN\ is\ True/\	has_dll_generation:\ BOOLEAN\ is\ False/g" eiffel_env.e >> new_eiffel_env.e
+		move new_eiffel_env.e eiffel_env.e
+		cdd %EIFFEL_SRC\Eiffel\switch\license\time_lock
+		sed -e "s/studio_enterprise_key_51/studio_student_key_51/g" bench_licence.e >> new_bench_license.e
+		move new_bench_license.e bench_licence.e
+		cdd %FINALIZATION_DIR
+		clean_project
+		finalize finalizedbench.ace
+		fff
+		cleanup_eiffel ec.exe
+		iff not exist ec.exe then
+			echo Could not finalize a new "student" EiffelStudio
+			CANCEL
+		endiff
+		move ec.exe %INSTALL_DIR\releases\student
+
+		remtrace Home edition
+		cdd %EIFFEL_SRC\Eiffel\API\constants
+		sed -e "s/\	has_case:\ BOOLEAN\ is\ True/\	has_case:\ BOOLEAN\ is\ False/g" eiffel_env.e >> new_eiffel_env.e
+		move new_eiffel_env.e eiffel_env.e
+		cdd %EIFFEL_SRC\Eiffel\switch\license\time_lock
+		sed -e "s/studio_student_key_51/studio_home_key_51/g" bench_licence.e >> new_bench_license.e
+		move new_bench_license.e bench_licence.e
+		cdd %FINALIZATION_DIR
+		clean_project
+		finalize finalizedbench.ace
+		fff
+		cleanup_eiffel ec.exe
+		iff not exist ec.exe then
+			echo Could not finalize a new "Home" EiffelStudio
+			CANCEL
+		endiff
+		move ec.exe %INSTALL_DIR\releases\home
+
+		remtrace Professional edition
+		cdd %EIFFEL_SRC\Eiffel\API\constants
+		sed -e "s/\	has_documentation_generation:\ BOOLEAN\ is\ False/\	has_documentation_generation:\ BOOLEAN\ is\ True/g" eiffel_env.e >> new_eiffel_env.e
+		move new_eiffel_env.e eiffel_env.e
+		sed -e "s/\	has_dll_generation:\ BOOLEAN\ is\ False/\	has_dll_generation:\ BOOLEAN\ is\ True/g" eiffel_env.e >> new_eiffel_env.e
+		move new_eiffel_env.e eiffel_env.e
+		cdd %EIFFEL_SRC\Eiffel\switch\license\time_lock
+		sed -e "s/studio_home_key_51/studio_professional_key_51/g" bench_licence.e >> new_bench_license.e
+		move new_bench_license.e bench_licence.e
+		cdd %FINALIZATION_DIR
+		clean_project
+		finalize finalizedbench.ace
+		fff
+		cleanup_eiffel ec.exe
+		iff not exist ec.exe then
+			echo Could not finalize a new "professional" EiffelStudio
+			CANCEL
+		endiff
+		move ec.exe %INSTALL_DIR\releases\professional
+
+		cdd %INSTALL_DIR\releases
+		copy enterprise\ec.exe evaluation
 	endiff
-	move ec.exe %INSTALL_DIR\releases\student
-
-	remtrace Home edition
-	cdd %EIFFEL_SRC\Eiffel\API\constants
-	sed -e "s/\	has_case:\ BOOLEAN\ is\ True/\	has_case:\ BOOLEAN\ is\ False/g" eiffel_env.e >> new_eiffel_env.e
-	move new_eiffel_env.e eiffel_env.e
-	cdd %EIFFEL_SRC\Eiffel\switch\license\time_lock
-	sed -e "s/studio_student_key_51/studio_home_key_51/g" bench_licence.e >> new_bench_license.e
-	move new_bench_license.e bench_licence.e
-	cdd %FINALIZATION_DIR
-	clean_project
-	finalize finalizedbench.ace
-	fff
-	cleanup_eiffel ec.exe
-	iff not exist ec.exe then
-		echo Could not finalize a new "Home" EiffelStudio
-		CANCEL
-	endiff
-	move ec.exe %INSTALL_DIR\releases\home
-
-	remtrace Professional edition
-	cdd %EIFFEL_SRC\Eiffel\API\constants
-	sed -e "s/\	has_documentation_generation:\ BOOLEAN\ is\ False/\	has_documentation_generation:\ BOOLEAN\ is\ True/g" eiffel_env.e >> new_eiffel_env.e
-	move new_eiffel_env.e eiffel_env.e
-	sed -e "s/\	has_dll_generation:\ BOOLEAN\ is\ False/\	has_dll_generation:\ BOOLEAN\ is\ True/g" eiffel_env.e >> new_eiffel_env.e
-	move new_eiffel_env.e eiffel_env.e
-	cdd %EIFFEL_SRC\Eiffel\switch\license\time_lock
-	sed -e "s/studio_home_key_51/studio_professional_key_51/g" bench_licence.e >> new_bench_license.e
-	move new_bench_license.e bench_licence.e
-	cdd %FINALIZATION_DIR
-	clean_project
-	finalize finalizedbench.ace
-	fff
-	cleanup_eiffel ec.exe
-	iff not exist ec.exe then
-		echo Could not finalize a new "professional" EiffelStudio
-		CANCEL
-	endiff
-	move ec.exe %INSTALL_DIR\releases\professional
-
-	cdd %INSTALL_DIR\releases
-	copy enterprise\ec.exe evaluation
+endiff
 
 remtrace Recompile finish_freezing
 cdd %EIFFEL_SRC\Eiffel\extra\finish_freezing

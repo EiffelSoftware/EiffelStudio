@@ -19,22 +19,52 @@ inherit
 	EV_CONTAINER_IMP
 		redefine
 			wel_window,
-			add_child
+			add_child,
+			set_insensitive
 		end
+
+feature {NONE} -- Initialization
+
+	initialize is
+			-- Initialize the container by creating children
+		do
+			!! children.make
+		end
+
+feature {NONE} -- Access
+	
+	children: LINKED_LIST [EV_WIDGET_IMP]
+			-- List of the children of the box
 
 feature -- Implementation
 
 	add_child (child_imp: EV_WIDGET_IMP) is
 		do
 			child_imp.set_parent_imp (Current)
+			children.extend (child_imp)
+		end
+
+	set_insensitive (flag: BOOLEAN) is
+			-- Set current widget in insensitive mode if
+   			-- `flag'.
+		do
+			if not children.empty then
+				from
+					children.start
+				until
+					children.after
+				loop
+					children.item.set_insensitive (flag)
+					children.forth
+				end
+			end
+			Precursor (flag)
 		end
 
 feature -- Implementation
 
 	wel_window: EV_WEL_CONTROL_WINDOW
 		-- Actual WEL component
-
-
 
 end
 

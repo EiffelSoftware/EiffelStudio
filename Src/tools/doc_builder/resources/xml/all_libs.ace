@@ -32,35 +32,43 @@ cluster
 		end
 		
 	all eiffel2java: "$EIFFEL_SRC\library\Eiffel2Java"
-			exclude
-				"CVS"; "EIFGEN"; "Documentation"; "libraries"; "Clib"
+		exclude
+			"CVS"; "EIFGEN"; "Documentation"; "libraries"; "Clib"
 		end
 		
 	all lex:		"$EIFFEL_SRC\library\lex"
-			exclude
-				"CVS"; "EIFGEN"; "Documentation"; "libraries"; "Clib"
-			end
+		exclude
+			"CVS"; "EIFGEN"; "Documentation"; "libraries"; "Clib"
+		end
 		
 	all parse:		"$EIFFEL_SRC\library\parse"
+		exclude
+			"CVS"; "EIFGEN"; "Documentation"; "libraries"; "Clib"
+		end
+	
+	all store:		"$EIFFEL_SRC\library\store"
+		exclude
+			"CVS"; "EIFGEN"; "Documentation"; "libraries"; "Clib"
+		end
 	
 	all net:		"$EIFFEL_SRC\library\net"
 		exclude
 			"Clib"; "Clib_kr"; "CVS"; "EIFGEN"; "Documentation"; "libraries"; "mel_socket_poller.e"; "vision_socket_poller.e"
 		end
 		
-	all thread: "$EIFFEL_SRC\library\thread"
-			exclude
-				"CVS"; "EIFGEN"; "Documentation"; "libraries"; "Clib"
+	all thread: 		"$EIFFEL_SRC\library\thread"
+		exclude
+			"CVS"; "EIFGEN"; "Documentation"; "libraries"; "Clib"
 		end
 		
-	all vision2:	"$EIFFEL_SRC\library\vision2"
-			exclude
-				"CVS"; "EIFGEN"; "Documentation"; "libraries"; "gtk"; "gtk2"; "Clib"; "obsolete"; "spec"
+	all vision2:		"$EIFFEL_SRC\library\vision2"
+		exclude
+			"CVS"; "EIFGEN"; "Documentation"; "libraries"; "gtk"; "gtk2"; "Clib"; "obsolete"; "spec"; 
 		end
 		
 	all web:		"$EIFFEL_SRC\library\web"
-			exclude
-				"CVS"; "EIFGEN"; "Documentation"; "libraries"
+		exclude
+			"CVS"; "EIFGEN"; "Documentation"; "libraries"
 		end
 
 		

@@ -5,6 +5,8 @@
 #ifndef __WEL_LIST_VIEW_SEARCH_INFO__
 #define __WEL_LIST_VIEW_SEARCH_INFO__
 
+#include <commctrl.h>
+
 #define cwel_list_view_search_info_flags(_ptr_) (((LV_FINDINFO*) _ptr_)->flags)
 #define cwel_list_view_search_info_target(_ptr_) (((LV_FINDINFO*) _ptr_)->psz)
 #define cwel_list_view_search_info_lparam(_ptr_) (((LV_FINDINFO*) _ptr_)->lParam)

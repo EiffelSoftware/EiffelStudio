@@ -10,8 +10,9 @@ inherit
 		rename
 			make as cl_make
 		redefine
-			is_bits, internal_conform_to, associated_class, dump,
-			heaviest, same_as, ext_append_to,
+			is_bits, conform_to, 
+			associated_class, dump,
+			same_as, ext_append_to,
 			check_conformance, format, is_equivalent
 		end
 
@@ -26,6 +27,7 @@ feature {NONE} -- Initialization
 			c_positive: c > 0
 		do
 			bit_count := c
+			cl_make (associated_class.class_id)
 		ensure
 			bit_count_set: bit_count = c
 		end
@@ -100,33 +102,16 @@ feature {COMPILER_EXPORTER}
 			end
 		end
 
-	internal_conform_to (other: TYPE_A; in_generics: BOOLEAN): BOOLEAN is
-			-- Does Current conform to `other' ?
+	conform_to (other: TYPE_A): BOOLEAN is
+			-- Does Current conform to `other'?
 		local
 			other_bits: BITS_A
 		do
 			other_bits ?= other.actual_type
 			if other_bits /= Void then
-				if in_generics then
-					Result := other_bits.bit_count = bit_count
-				else
-					Result := other_bits.bit_count >= bit_count
-				end
+				Result := other_bits.bit_count >= bit_count
 			else
-				Result := Precursor {BASIC_A} (other, False)
-			end
-		end
-
-	heaviest (t: TYPE_A): TYPE_A is
-			-- Heaviest numeric type for balancing rule.
-		local
-			l_bits: BITS_A
-		do
-			l_bits ?= t
-			if bit_count > l_bits.bit_count  then
-				Result := Current
-			else
-				Result := t
+				Result := Precursor {BASIC_A} (other)
 			end
 		end
 

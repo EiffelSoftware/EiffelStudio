@@ -42,7 +42,8 @@ extern "C" {
 #define INDEPENDENT_STORE_4_4	0x0A
 #define INDEPENDENT_STORE_5_0	0x0B
 #define RECOVERABLE_STORE_5_3	0x0C
-#define INDEPENDENT_STORE_5_5	0x0D
+#define INTERMEDIATE_STORE_5_5	0x0D
+#define INDEPENDENT_STORE_5_5	0x0E
 
 /* Setting of `eif_is_new_independent_format' */
 RT_LNK void eif_set_new_independent_format(EIF_BOOLEAN v);

@@ -566,7 +566,6 @@ feature -- IL code generation
 			class_c: CLASS_C
 			end_of_assertion: IL_LABEL
 			end_of_routine: IL_LABEL
-			exception_occurred: INTEGER
 		do
 			class_c := context.class_type.associated_class
 			local_list := context.local_list
@@ -605,9 +604,6 @@ feature -- IL code generation
 			Il_generator.flush_sequence_points (context.class_type)
 
 			if rescue_clause /= Void then
-				context.add_local (Boolean_c_type)
-				exception_occurred := context.local_list.count
-				il_generator.put_dummy_local_info (Boolean_c_type, exception_occurred)
 				il_label_factory.create_retry_label
 				il_generator.mark_label (il_label_factory.retry_label)
 				il_generator.generate_start_exception_block
@@ -672,15 +668,8 @@ feature -- IL code generation
 			
 			if rescue_clause /= Void then
 				il_generator.generate_start_rescue
-				il_generator.put_boolean_constant (True)
-				il_generator.generate_local_assignment (exception_occurred)
-				il_generator.generate_end_exception_block
-
-				il_generator.generate_local (exception_occurred)
-				il_generator.branch_on_false (end_of_routine)
-				il_generator.put_boolean_constant (False)
-				il_generator.generate_local_assignment (exception_occurred)
 				rescue_clause.generate_il
+				il_generator.generate_end_exception_block
 				il_generator.mark_label (end_of_routine)
 			end
 			inh_assert.wipe_out

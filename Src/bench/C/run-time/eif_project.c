@@ -143,6 +143,12 @@ rt_public int egc_bit_dtype;
 rt_public uint32 egc_sp_bool;
 rt_public uint32 egc_sp_char;
 rt_public uint32 egc_sp_wchar;
+/* Note remove initialization to -1 when compiler will generate
+ * their initialization. */
+rt_public uint32 egc_sp_uint8 = -1;
+rt_public uint32 egc_sp_uint16 = -1;
+rt_public uint32 egc_sp_uint32 = -1;
+rt_public uint32 egc_sp_uint64 = -1;
 rt_public uint32 egc_sp_int8;
 rt_public uint32 egc_sp_int16;
 rt_public uint32 egc_sp_int32;
@@ -152,6 +158,10 @@ rt_public uint32 egc_sp_real64;
 rt_public uint32 egc_sp_pointer;
 rt_public uint32 egc_sp_ref;
 
+rt_public int egc_uint8_ref_dtype = -1;	
+rt_public int egc_uint16_ref_dtype = -1;	
+rt_public int egc_uint32_ref_dtype = -1;	
+rt_public int egc_uint64_ref_dtype = -1;	
 rt_public int egc_int8_ref_dtype;	
 rt_public int egc_int16_ref_dtype;	
 rt_public int egc_int32_ref_dtype;	
@@ -163,6 +173,10 @@ rt_public int egc_char_ref_dtype;
 rt_public int egc_wchar_ref_dtype;	
 rt_public int egc_point_ref_dtype;	
 
+rt_public int egc_uint8_dtype = -1;
+rt_public int egc_uint16_dtype = -1;	
+rt_public int egc_uint32_dtype = -1;	
+rt_public int egc_uint64_dtype = -1;	
 rt_public int egc_int8_dtype;	
 rt_public int egc_int16_dtype;	
 rt_public int egc_int32_dtype;	

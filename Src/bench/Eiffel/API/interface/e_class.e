@@ -239,7 +239,8 @@ feature -- Access
 			-- (After a compilation Current may become 
 			-- invalid)
 		do
-			Result := Eiffel_system.class_of_id (id) = Current
+			Result := id.is_valid and then
+				id.associated_eclass = Current
 		end;
 
 	written_in_features: LIST [E_FEATURE] is

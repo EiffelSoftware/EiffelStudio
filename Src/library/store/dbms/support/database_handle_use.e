@@ -4,7 +4,7 @@ indexing
 	revision: "$Revision$"
 
 class 
-	DATABASE_HANDLE_USE [G -> DATABASE]
+	DATABASE_HANDLE_USE [G -> DATABASE create default_create end]
 
 inherit
 	
@@ -12,11 +12,10 @@ inherit
 
 feature {NONE} -- Status report
 
-	database_handle: DATABASE_HANDLE [DATABASE]  is
+	database_handle: DATABASE_HANDLE [G]  is
 			-- Shared handle reference
-		once
-			!! Result
-			Result := db_spec.database_handle
+		do
+			Result ?= db_spec.database_handle
 		end
 
 end -- class DATABASE_HANDLE_USE

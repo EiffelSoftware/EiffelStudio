@@ -103,7 +103,7 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 
 feature -- For DATABASE_STORE
 
-	put_column_name (repository: DATABASE_REPOSITORY [DATABASE]; map_table: ARRAY [INTEGER]): STRING is
+	put_column_name (repository: DATABASE_REPOSITORY [like Current]; map_table: ARRAY [INTEGER]): STRING is
 			-- Add the columns names to sql_string in the feature put
 			-- Redefined for ODBC
 		do
@@ -621,7 +621,7 @@ feature -- External features
 		deferred
 		end
 
-	database_handle: DATABASE_HANDLE [DATABASE] is
+	database_handle: DATABASE_HANDLE [like Current] is
 			-- Specific handle
 		deferred
 		end

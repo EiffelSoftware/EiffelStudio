@@ -4,7 +4,7 @@ indexing
 	revision: "$Revision$"
 
 class 
-	DATABASE_CONTROL [G -> DATABASE]
+	DATABASE_CONTROL [G -> DATABASE create default_create end]
 
 inherit
 

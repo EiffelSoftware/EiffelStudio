@@ -4,22 +4,14 @@ indexing
 	revision: "$Revision$"
 
 class
-	HANDLE_SPEC [G -> DATABASE create do_nothing end]
+	HANDLE_SPEC [G -> DATABASE create default_create end]
 
 feature -- Access
 	
 	Db_spec: G is
 			-- Handle to actual database
 		do
-			if db_handle = Void then
-				!! db_handle.do_nothing
-			end
-			Result := db_handle
+			!! Result
 		end
-
-feature {NONE} -- Implementation
-
-	db_handle: G
-			-- Actual database handle
 
 end -- class HANDLE_SPEC

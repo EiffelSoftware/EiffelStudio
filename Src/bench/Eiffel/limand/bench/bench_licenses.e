@@ -30,7 +30,7 @@ feature {NONE}
 			licenses.put (Result, Result.application_name)
 		end
 
-	init_license: BOOLEAN is
+	check_license, init_license: BOOLEAN is
 			-- Initialization of the EiffelBench license
 		do
 			license.get_license

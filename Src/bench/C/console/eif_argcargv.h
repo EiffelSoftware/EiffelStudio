@@ -5,8 +5,6 @@
 #ifndef _eif_argcargv_h
 #define _eif_argcargv_h
 
-#include "shword.h"
-
 	/* Clean up function */
 typedef void (* EIF_CLEANUP)();
 

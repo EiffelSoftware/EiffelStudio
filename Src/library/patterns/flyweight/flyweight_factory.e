@@ -12,84 +12,62 @@ feature -- Initialization
 	make is
 		-- Initialize
 		do
-			!! list.make
+			!! list.make(20)
 		end
 
 feature -- Operations
 
-	add (unshared: ANY; shared: ANY) is
+	add (unshared: ANY; shared: ANY;key: HASHABLE) is
 			-- Add a flyweight to the list.
 		require
-			not_void: unshared /= Void and then shared /= Void
+			not_void: unshared /= Void and then shared /= Void and key /= Void
 		local
 			flyweight: FLYWEIGHT[like unshared, like shared]
 		do
 			!! flyweight
 			flyweight.initialize(unshared, shared)
-			list.extend(flyweight)	
+			list.put(flyweight,key)	
 		ensure
 			increment_list: list.count = old list.count + 1
 		end
 	
-	remove(a_flyweight: FLYWEIGHT[ANY,ANY]) is
+	remove(key: HASHABLE) is
 			-- Remove a flyweight from the list.
 			-- Do nothing if it is not found.
 		require
-			not_void: a_flyweight /= Void
+			not_void: key /= Void
 		do
-			from
-				list.start
-			until
-				list.after
-			loop
-				if a_flyweight= list.item then
-					list.remove
-				else
-					list.forth
-				end
-			end
+			list.remove(key)
 		end
 
-	has(a_flyweight: FLYWEIGHT[ANY,ANY]): BOOLEAN is
+	has_item(a_flyweight: FLYWEIGHT[ANY,ANY]): BOOLEAN is
 		-- Return TRUE if the flyweight is managed by Current.
 		require
 			not_void: a_flyweight /= Void
 		do
-			from
-				list.start
-			until
-				list.after or Result
-			loop
-				if a_flyweight= list.item then
-					Result := TRUE
-				else
-					list.forth
-				end
-			end
+			Result := has_item(a_flyweight)
 		end
 
-	get_flyweight(key: ANY): FLYWEIGHT[ANY,ANY] is
+	has(key: HASHABLE): BOOLEAN is
+		-- Return TRUE if a flyweight is managed by Current.
+		require
+			not_void: key /= Void
+		do
+			Result := has(key)
+		end
+
+	get_flyweight(key: HASHABLE): FLYWEIGHT[ANY,ANY] is
 			-- Return flyweight corresponding to the key 'any'.
 			-- Return Void if not found.
 		require
 			key_exists: key /= Void
 		do
-			from
-				list.start
-			until
-				list.after or Result /= Void
-			loop
-				if key= list.item.unshared then
-					Result := list.item
-				else
-					list.forth
-				end
-			end
+			Result := list.item(key)
 		end
 
 feature {NONE} -- Implementation
 
-	list: LINKED_LIST [FLYWEIGHT[ANY,ANY]]
+	list: HASH_TABLE [FLYWEIGHT[ANY,ANY],HASHABLE]
 		-- List of flyweights.
 
 invariant

@@ -12,7 +12,12 @@ creation
 
 feature 
 
-	eiffel_type: STRING is "Open";
+	eiffel_type: STRING is "OPEN";
+
+	label: STRING is
+		do
+			Result := "Open"
+		end;
 
 	identifier: INTEGER is
 		do

@@ -12,7 +12,12 @@ creation
 
 feature 
 
-	eiffel_type: STRING is "Popdown_cmd";
+	eiffel_type: STRING is "POPDOWN_CMD";
+
+	label: STRING is
+		do
+			Result := "Popdown"
+		end;
 
 	identifier: INTEGER is
 		do

@@ -1036,7 +1036,7 @@ rt_private void full_mark(EIF_CONTEXT_NOARG)
 	 * the loc_set stack. Those variables are the local roots for the garbage
 	 * collection process.
 	 */
-	mark_simple_stack(&loc_set, MARK_SWITCH, moving);
+	mark_stack(&loc_set, MARK_SWITCH, moving);
 
 	/* The stack of local variables holds the addresses of variables
 	 * in the process's stack which refers to the objects, hence the
@@ -3937,7 +3937,7 @@ rt_private void mark_new_generation(EIF_CONTEXT_NOARG)
 	 * the loc_set stack. Those variables are the local roots for the garbage
 	 * collection process.
 	 */
-	mark_simple_stack(&loc_set, GEN_SWITCH, moving);
+	mark_stack(&loc_set, GEN_SWITCH, moving);
 
 	/* Then deal with remembered set, which records the addresses of all the
 	 * old objects pointing to new ones.

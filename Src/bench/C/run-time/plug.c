@@ -468,11 +468,11 @@ void wstdinit(EIF_REFERENCE obj, EIF_REFERENCE parent)
 	 */
 
 	RTLI(2);
-	l[0] = obj;
-	l[1] = parent;
+	l[0] = (EIF_REFERENCE) &obj;
+	l[1] = (EIF_REFERENCE) &parent;
 	zone->ov_flags |= EO_COMP;				/* Set the composite flag of `obj' */
 
-	dtype = Dtype(l[0]);
+	dtype = Dtype(obj);
 	desc = &System(dtype);
 	cn_attr = desc->cn_attr;
 	nb_attr = desc->cn_nbattr;
@@ -495,24 +495,24 @@ void wstdinit(EIF_REFERENCE obj, EIF_REFERENCE parent)
 			orig_exp_dtype = exp_dtype = (int) (type & SK_DTYPE);
 			exp_desc = &System(exp_dtype);
 			/* Set the expanded reference */
-			*(EIF_REFERENCE *) (l[0] + REFACS(nb_ref - ++nb_exp)) = l[0] + exp_offset;
+			*(EIF_REFERENCE *) (obj + REFACS(nb_ref - ++nb_exp)) = obj + exp_offset;
 
 			cid = cn_gtypes [i];
 
 			if ((cid != (int16 *) 0) && (cid [1] != -1)) {
-				dftype = eif_compound_id ((int16 *)0, l[1],(int16) (exp_dtype & EO_TYPE), cid);
+				dftype = eif_compound_id ((int16 *)0, parent,(int16) (exp_dtype & EO_TYPE), cid);
 				exp_dtype = (exp_dtype & EO_UPPER) | dftype;
 			}
 
 			/* Set the flags of the expanded object */
-			zone = HEADER(l[0] + exp_offset);
+			zone = HEADER(obj + exp_offset);
 			zone->ov_flags = exp_dtype;
 			zone->ov_flags |= EO_EXP;
-			zone->ov_size = exp_offset + (l[0] - l[1]);
+			zone->ov_size = exp_offset + (obj - parent);
 
 			/* If expanded object is composite also, initialize it. */
 			if (System(orig_exp_dtype).cn_composite)
-				wstdinit(l[0] + exp_offset, l[1]);
+				wstdinit(obj + exp_offset, parent);
 
 			if (exp_desc->cn_routids) {
 				int32 feature_id;			/* Creation procedure feature id */
@@ -521,7 +521,7 @@ void wstdinit(EIF_REFERENCE obj, EIF_REFERENCE parent)
 				feature_id = exp_desc->cn_creation_id;
 				static_id = exp_desc->static_id;	
 				if (feature_id)				/* Call creation routine */
-					wexp(static_id, feature_id, orig_exp_dtype, l[0] + exp_offset);
+					wexp(static_id, feature_id, orig_exp_dtype, obj + exp_offset);
 			} else {						/* precompiled creation routine */
 				int32 origin;				/* Origin class id */       
 				int32 offset;				/* Offset in origin class */
@@ -529,7 +529,7 @@ void wstdinit(EIF_REFERENCE obj, EIF_REFERENCE parent)
 				origin = exp_desc->cn_creation_id;
 				offset = exp_desc->static_id;
 				if (origin)					/* Call creation routine */
-					wpexp(origin, offset, orig_exp_dtype, l[0] + exp_offset);
+					wpexp(origin, offset, orig_exp_dtype, obj + exp_offset);
 			}
 			}
 			break;
@@ -539,12 +539,12 @@ void wstdinit(EIF_REFERENCE obj, EIF_REFERENCE parent)
 		
 			/* Set dynamic type for bit expanded object */	
 			CAttrOffs(offset,cn_attr[i],dtype);
-			zone = HEADER(l[0] + offset);
+			zone = HEADER(obj + offset);
 			zone->ov_flags = egc_bit_dtype;
 			zone->ov_flags |= EO_EXP;
-			zone->ov_size = offset + (l[0] - l[1]);
+			zone->ov_size = offset + (obj - parent);
 			
-			*(uint32 *)(l[0] + offset) = type & SK_BMASK; /* Write bit size */
+			*(uint32 *)(obj + offset) = type & SK_BMASK; /* Write bit size */
 
 			}
 			break;

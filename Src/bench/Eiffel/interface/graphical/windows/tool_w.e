@@ -619,13 +619,14 @@ feature -- Update
 			end
 		end;
 
-	parse_file is
+	parse_file: BOOLEAN is 
 			-- Parse the file if possible.
-			-- (By default, do nothing).
+			-- (By default, the result is True).
 		require
 			valid_stone: stone /= Void
 		do
-		end;
+			Result := True
+		end
 
 feature -- Pick and Throw Implementation
 

@@ -259,21 +259,13 @@ feature -- Stone process
  
 	process_classi (s: CLASSI_STONE) is
 		do
-			if text_window.changed then
-				showtext_frmt_holder.execute (s)
-			else
-				execute_last_format (s)
-			end
-		end;
+			execute_last_format (s)
+		end
  
 	process_class (s: CLASSC_STONE) is
 		do
-			if text_window.changed then
-				showtext_frmt_holder.execute (s)
-			else
-				execute_last_format (s)
-			end
-		end;
+			execute_last_format (s)
+		end
  
 	process_feature_error (s: FEATURE_ERROR_STONE) is
 			-- Proces feature stone.
@@ -283,33 +275,30 @@ feature -- Stone process
 			txt: STRING;
 			pos, end_pos: INTEGER
 		do
-			if text_window.changed then
-				showtext_frmt_holder.execute (s)
+			e_class := s.e_feature.written_class;
+			!! cl_stone.make (e_class);
+
+			if e_class.lace_class.hide_implementation then
+				set_default_format;
+				process_class (cl_stone);
+				text_window.search_stone (s)
 			else
-				e_class := s.e_feature.written_class;
-				!! cl_stone.make (e_class);
-				if e_class.lace_class.hide_implementation then
-					set_default_format;
-					process_class (cl_stone);
-					text_window.search_stone (s)
-				else
-					showtext_frmt_holder.execute (cl_stone);
-					add_to_history (stone)
-					text_window.deselect_all;
-					pos := s.error_position;
-					txt := text_window.text;
-					if txt.count > pos then
-						if txt.item (pos) = '%N' then	
-							end_pos := txt.index_of ('%N', pos + 1);
-						else
-							end_pos := txt.index_of ('%N', pos);
-						end;
-						if pos /= 0 then
-							text_window.highlight_selected (pos, end_pos)
-						end
+				showtext_frmt_holder.execute (cl_stone);
+				add_to_history (stone)
+				text_window.deselect_all;
+				pos := s.error_position;
+				txt := text_window.text;
+				if txt.count > pos then
+					if txt.item (pos) = '%N' then	
+						end_pos := txt.index_of ('%N', pos + 1);
+					else
+						end_pos := txt.index_of ('%N', pos);
 					end;
-					text_window.set_cursor_position (pos);
-				end
+					if pos /= 0 then
+						text_window.highlight_selected (pos, end_pos)
+					end
+				end;
+				text_window.set_cursor_position (pos);
 			end
 		end;
  
@@ -319,22 +308,19 @@ feature -- Stone process
 			cl_stone: CLASSC_STONE;
 			e_class: E_CLASS
 		do
-			if text_window.changed then
-				showtext_frmt_holder.execute (s)
+			e_class := s.e_feature.written_class;
+			!! cl_stone.make (e_class);
+
+			if e_class.lace_class.hide_implementation then
+				set_default_format;
+				process_class (cl_stone);
+				text_window.search_stone (s)
 			else
-				e_class := s.e_feature.written_class;
-				!! cl_stone.make (e_class);
-				if e_class.lace_class.hide_implementation then
-					set_default_format;
-					process_class (cl_stone);
-					text_window.search_stone (s)
-				else
-					showtext_frmt_holder.execute (cl_stone);
-					add_to_history (stone)
-					text_window.deselect_all;
-					text_window.set_cursor_position (s.start_position);
-					text_window.highlight_selected (s.start_position, s.end_position)
-				end
+				showtext_frmt_holder.execute (cl_stone);
+				add_to_history (stone)
+				text_window.deselect_all;
+				text_window.set_cursor_position (s.start_position);
+				text_window.highlight_selected (s.start_position, s.end_position)
 			end
 		end;
  
@@ -343,15 +329,11 @@ feature -- Stone process
 		local
 			cl_stone: CLASSC_STONE
 		do
-			if text_window.changed then
-				showtext_frmt_holder.execute (s)
-			else
-				!! cl_stone.make (s.associated_class);
-				showtext_frmt_holder.execute (cl_stone);
-				text_window.deselect_all;
-				text_window.set_cursor_position (s.start_position);
-				text_window.highlight_selected (s.start_position, s.end_position);
-			end
+			!! cl_stone.make (s.associated_class);
+			showtext_frmt_holder.execute (cl_stone);
+			text_window.deselect_all;
+			text_window.set_cursor_position (s.start_position);
+			text_window.highlight_selected (s.start_position, s.end_position);
 		end;
  
 	synchronize is
@@ -414,7 +396,7 @@ feature -- Update
 			class_text_field.set_text (s);
 		end;
 
-	parse_file is
+	parse_file: BOOLEAN is
 			-- Parse the file if possible.
 			-- (By default, do nothing).
 		local
@@ -448,6 +430,7 @@ feature -- Update
 						warner (popup_parent).gotcha_call (txt);
 					else
 						text_window.update_clickable_from_stone (stone)
+						Result := True
 					end
 				end
 			end

@@ -195,7 +195,7 @@ feature -- Status setting
 
 feature -- Parsing
 
-	parse_file is
+	parse_file: BOOLEAN is
 		local
 			retried: BOOLEAN
 			syntax_error: SYNTAX_ERROR
@@ -222,6 +222,7 @@ feature -- Parsing
 				warner (popup_parent).gotcha_call (error_msg);
 			else
 				text_window.update_clickable_from_stone (stone)
+				Result := True
 			end
 		end
 
@@ -246,46 +247,38 @@ feature -- Update
 	process_system (s: SYSTEM_STONE) is
 			-- Process system stone.
 		do
-			if changed then
-				showtext_frmt_holder.execute (s);
-			else
-				last_format.execute (s);
-				add_to_history (s)
-			end
-		end;
+			last_format.execute (s)
+			add_to_history (s)
+		end
 
 	process_ace_syntax (syn: ACE_SYNTAX_STONE) is
-			-- Process syntax error.
+			-- Display the syntax error in the System tool.
+			--| If the text has been modified, we are loosing the changes.
 		do
-			if text_window.changed then
-				showtext_frmt_holder.execute (syn);
-			else
-				showtext_frmt_holder.execute (syn);
-				text_window.deselect_all;
-				text_window.set_cursor_position (syn.start_position);
-				text_window.highlight_selected (syn.start_position,
-							syn.end_position);
-				update_save_symbol
-			end
-		end;
+			showtext_frmt_holder.execute (syn)
+			text_window.deselect_all
+			text_window.set_cursor_position (syn.start_position)
+			text_window.highlight_selected (syn.start_position, syn.end_position)
+			update_save_symbol
+		end
 
 	process_class (a_stone: CLASSC_STONE) is
+			-- Select the root class if `a_stone' is the root
+			-- class, otherwise do nothing.
+			--| If the text has been modified we do not do anything,
+			--| So the result can be messy
 		do
-			if text_window.changed then
-				showtext_frmt_holder.execute (a_stone);
-			else
-				text_window.search_stone (a_stone)
-			end
-		end;
+			text_window.search_stone (a_stone)
+		end
 
 	process_classi (a_stone: CLASSI_STONE) is
+			-- Select the root class if `a_stone' is the root
+			-- class, otherwise do nothing.
+			--| If the text has been modified we do not do anything,
+			--| So the result can be messy
 		do
-			if text_window.changed then
-				showtext_frmt_holder.execute (a_stone);
-			else
-				text_window.search_stone (a_stone)
-			end
-		end;
+			text_window.search_stone (a_stone)
+		end
 
 	synchronise_stone is
 			-- Synchronize the root stone of the window.

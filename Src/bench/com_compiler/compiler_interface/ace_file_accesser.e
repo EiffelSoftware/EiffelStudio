@@ -407,6 +407,13 @@ feature -- Access
 			Result := string_default(feature {FREE_OPTION_SD}.Msil_culture)
 		end
 		
+	msil_generation: BOOLEAN is
+			-- msil generation 
+		do
+			Result := boolean_default(feature {FREE_OPTION_SD}.Msil_generation)
+		end
+		
+		
 feature{NONE} -- Element change
 
 	set_string_default (def_opt:INTEGER; new_value: STRING) is

@@ -8,6 +8,8 @@ class
 	EIFNET_DEBUG_VALUE_INFO
 
 inherit
+	REFACTORING_HELPER
+	
 	ICOR_EXPORTER
 	
 	SHARED_IL_DEBUG_INFO_RECORDER
@@ -25,7 +27,7 @@ inherit
 			{NONE} all
 		end
 		
-	SHARED_EIFFEL_PROJECT		
+	SHARED_EIFFEL_PROJECT
 		export
 			{NONE} all
 		end
@@ -286,7 +288,7 @@ feature -- Queries
 					--| eiffel_universe.class_from_assembly_filename (...
 				ci := eiffel_universe.class_from_assembly (an, cn, True)
 				if ci = Void then
-						-- FIXME JFIAT: Ugly .. but for now .. far enought
+					fixme ("FIXME JFIAT: Ugly .. but for now .. far enought")
 					ci := Eiffel_system.System.system_object_class
 				end
 				Result := ci.compiled_class

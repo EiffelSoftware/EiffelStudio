@@ -103,6 +103,16 @@ feature {APPLICATION_EXECUTION_DOTNET, EIFNET_EXPORTER} -- Callback nature
 			Result := last_managed_callback = Cst_managed_cb_exit_process
 		end
 		
+	last_managed_callback_is_an_end_of_eval: BOOLEAN is
+		do
+			Result := (last_managed_callback = cst_managed_cb_eval_complete)
+				or (last_managed_callback = cst_managed_cb_eval_exception)
+				or (last_managed_callback = cst_managed_cb_exit_process)
+				or (last_managed_callback = cst_managed_cb_exception)
+				or (last_managed_callback = cst_managed_cb_break)
+				or (last_managed_callback = cst_managed_cb_debugger_error)
+		end
+		
 feature {ICOR_DEBUG_MANAGED_CALLBACK, ICOR_DEBUG_UNMANAGED_CALLBACK} -- Change Callbacks
 
 	set_last_managed_callback (cst: INTEGER) is

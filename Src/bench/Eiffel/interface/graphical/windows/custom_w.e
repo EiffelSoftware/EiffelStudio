@@ -11,7 +11,7 @@ inherit
 
 	INTERFACE_W;
 	COMMAND;
-	SET_WINDOW_ATTRIBUTES;
+	WINDOW_ATTRIBUTES;
 	FORM_D
 		rename
 			make as form_d_make
@@ -43,10 +43,10 @@ feature {NONE} -- Interface initialization
 			-- Buttons specifying the choice
 
 	create_interface (a_parent: COMPOSITE) is
-			-- Create interface with ok, cancel and apply button
+			-- Create interface with save, cancel and apply button
 			-- at bottom with `a_parent'
 		local
-			ok_b, apply_b, cancel_b: PUSH_B
+			save_b, apply_b, cancel_b: PUSH_B
 		do
 			form_d_make ("", a_parent);
 			set_exclusive_grab;
@@ -58,18 +58,18 @@ feature {NONE} -- Interface initialization
 			attach_left (buttons, 0);
 			attach_right (buttons, 0);
 			attach_bottom (buttons, 0);
-			!! ok_b.make (l_Ok, buttons);
+			!! save_b.make (l_Save, buttons);
 			!! cancel_b.make (l_Cancel, buttons);
 			!! apply_b.make (l_Apply, buttons);
-			ok_b.set_center_alignment;
+			save_b.set_center_alignment;
 			cancel_b.set_center_alignment;
 			apply_b.set_center_alignment;
-			ok_b.add_activate_action (Current, ok_action);
+			save_b.add_activate_action (Current, save_action);
 			cancel_b.add_activate_action (Current, Void);
 			apply_b.add_activate_action (Current, apply_action);
 		end;
 
-	ok_action, apply_action: ANY is
+	save_action, apply_action: ANY is
 			-- Action constants
 		once
 			!! Result;
@@ -80,10 +80,10 @@ feature -- Execution
 	execute (arg: ANY) is
 			-- Execute the action of the buttons
 		do
-			if arg = ok_action then
+			if arg = save_action then
 				unrealize;
 				popdown;
-				caller.execute_ok_action (Current)
+				caller.execute_save_action (Current)
 			elseif arg = apply_action then
 				caller.execute_apply_action (Current)
 			else

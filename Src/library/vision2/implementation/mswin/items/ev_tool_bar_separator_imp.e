@@ -12,14 +12,27 @@ inherit
 	EV_TOOL_BAR_SEPARATOR_I
 
 	EV_SEPARATOR_ITEM_IMP
+		undefine
+			top_parent_imp
+		redefine
+			parent_imp
+		end
 
 	EV_TOOL_BAR_BUTTON_IMP
+		undefine
+			top_parent_imp
 		redefine
-			type
+			type,
+			parent_imp
 		end
 
 creation
 	make
+
+feature -- Access
+
+	parent_imp: EV_TOOL_BAR_IMP
+			-- Parent implementation
 
 feature -- Status report
 

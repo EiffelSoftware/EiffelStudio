@@ -44,10 +44,10 @@ feature -- Access
 			Result := internal_text.count
 		end
 
-	cell_text (index: INTEGER): STRING is
-			-- Return the text of the cell number `index' 
+	cell_text (value: INTEGER): STRING is
+			-- Return the text of the cell number `value' 
 		do
-			Result := internal_text @ index
+			Result := internal_text @ value
 		end
 
 	text: LINKED_LIST [STRING] is
@@ -67,12 +67,12 @@ feature -- Access
 			end
 		end
 
-	cell_pixmap (index: INTEGER): EV_PIXMAP is
+	cell_pixmap (value: INTEGER): EV_PIXMAP is
 			-- Return the pixmap of the cell number
-			-- `index'. On windows platform, 
-			-- if index > 1, the result is void.
+			-- `value'. On windows platform, 
+			-- if value > 1, the result is void.
 		do
-			Result := internal_pixmap @ index
+			Result := internal_pixmap @ value
 		end
 
 	pixmap: LINKED_LIST [EV_PIXMAP] is
@@ -125,26 +125,26 @@ feature -- Element change
 			end
 		end
 
-	set_cell_text (index: INTEGER; txt: STRING) is
-			-- Make `txt' the new label of the `index'-th
+	set_cell_text (value: INTEGER; txt: STRING) is
+			-- Make `txt' the new label of the `value'-th
 			-- cell of the item.
 		do
-			internal_text.put_i_th (txt, index)
+			internal_text.put_i_th (txt, value)
 		end
 
-	set_cell_pixmap (index: INTEGER; pix: EV_PIXMAP) is
+	set_cell_pixmap (value: INTEGER; pix: EV_PIXMAP) is
 			-- Make `pix' the new pixmap of the 
-			-- `index'-th cell of the item.
+			-- `value'-th cell of the item.
 		do
-			internal_pixmap.put_i_th (pix, index)
+			internal_pixmap.put_i_th (pix, value)
 		end
 
-	unset_cell_pixmap (index: INTEGER) is
-			-- Remove the pixmap of the 
-			-- `index'-th cell of the item.
-		do
-			-- To implement.
-		end
+--	unset_cell_pixmap (value: INTEGER) is
+--			-- Remove the pixmap of the 
+--			-- `value'-th cell of the item.
+--		do
+--			-- To implement.
+--		end
 
 feature {EV_ITEM_HOLDER_IMP} -- Implementation
 
@@ -157,12 +157,6 @@ feature {EV_ITEM_HOLDER_IMP} -- Implementation
 			-- List of pixmaps of the item.
 			-- We use an internal array for these pixmaps to avoid
 			-- the user to have access to it.
-
-	parent_imp: EV_ITEM_HOLDER_IMP is
-			-- The parent of the Current widget
-			-- Can be void.
-		deferred
-		end
 
 end -- class EV_COMPOSED_ITEM_I
 

@@ -17,22 +17,64 @@ inherit
 
 feature -- Access
 
-	parent_imp: EV_ITEM_HOLDER_IMP is
+	parent_imp: EV_ITEM_HOLDER_IMP
 			-- The parent of the Current widget
 			-- Can be void.
-		deferred
+
+feature -- Status setting
+
+	destroy is
+			-- Destroy the current item.
+		do
+			if parent_imp /= Void then
+				parent_imp.remove_item (Current)
+				parent_imp := Void
+			end
+			interface.remove_implementation
+			interface := Void
 		end
 
-	parent_widget: EV_WIDGET is
-			-- Parent widget of the current item
+feature -- Element change
+
+	set_parent (par: like parent) is
+			-- Make `par' the new parent of the widget.
+			-- `par' can be Void then the parent is the screen.
 		do
-			Result := parent_imp.current_widget
+			if parent_imp /= Void then
+				parent_imp.remove_item (Current)
+				parent_imp := Void
+			end
+			if par /= Void then
+				parent_imp ?= par.implementation
+				parent_imp.add_item (Current)
+			end
+		end
+
+	set_parent_with_index (par: like parent; pos: INTEGER) is
+			-- Make `par' the new parent of the widget and set
+			-- the current button at `pos'.
+		do
+			if parent_imp /= Void then
+				parent_imp.remove_item (Current)
+				parent_imp := Void
+			end
+			if par /= Void then
+				parent_imp ?= par.implementation
+				parent_imp.insert_item (Current, pos)
+			end
+		end
+
+	set_index (pos: INTEGER) is
+			-- Make `pos' the new index of the item in the
+			-- list.
+		do
+			parent_imp.move_item (Current, pos)
 		end
 
 end -- class EV_ITEM_IMP
 
 --|----------------------------------------------------------------
---| Windows Eiffel Library: library of reusable components for ISE Eiffel.
+--| EiffelVision: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 

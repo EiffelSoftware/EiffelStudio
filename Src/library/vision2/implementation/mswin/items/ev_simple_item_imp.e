@@ -32,14 +32,6 @@ feature -- Element change
 			text := txt
 		end
 
-feature {NONE} -- Implementation
-
-	parent_imp: EV_ITEM_HOLDER_IMP is
-			-- The parent of the Current widget
-			-- Can be void.
-		deferred
-		end
-
 end -- class EV_SIMPLE_ITEM_IMP
 
 --|----------------------------------------------------------------

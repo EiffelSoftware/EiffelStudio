@@ -48,15 +48,11 @@ inherit
 			on_right_button_double_click,
 			on_char,
 			on_key_up,
-			on_draw_item
+			on_draw_item,
+			on_menu_command
 		redefine
 			on_paint
 		end
-
---	WEL_PS_CONSTANTS
---		export
---			{NONE} all
---		end
 
 	WEL_WINDOWS_ROUTINES
 		export

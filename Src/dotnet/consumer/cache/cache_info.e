@@ -6,27 +6,31 @@ indexing
 class
 	CACHE_INFO
 
+inherit
+	SHARED_CLR_VERSION
+		export
+			{NONE} all
+			{ANY} clr_version
+		end
+
 create
 	make
+	
 feature {NONE} -- Initalization
 
-	make (a_clr_version: STRING) is
+	make is
 			-- Initialize `assemblies'.
-		require
-			a_clr_version_not_void: a_clr_version /= Void
 		local
 			di: DIRECTORY_INFO
 			info_path: STRING
 		do
-			info_path := (create {CACHE_READER}.make (a_clr_version)).Absolute_info_path
+			info_path := (create {CACHE_READER}).Absolute_info_path
 			create di.make (info_path.substring (1, info_path.last_index_of ('\', info_path.count)).to_cil)
 			di.create_
 			create internal_assemblies.make (1, 0)
 			internal_assemblies.compare_objects
-			clr_version := a_clr_version
 		ensure
 			non_void_assemblies: assemblies /= Void
-			clr_version_set: clr_version = a_clr_version
 		end
 		
 feature -- Access
@@ -42,10 +46,7 @@ feature -- Access
 		ensure
 			assemblies_not_void: Result /= Void
 		end
-			
-	clr_version: STRING
-			-- Runtime version.
-
+		
 feature -- Status report
 
 	is_dirty: BOOLEAN

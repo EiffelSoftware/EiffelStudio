@@ -193,7 +193,7 @@ feature
 						generated_file.putstring (");");
 						generated_file.new_line;
 					end;
-						-- We had to get a regiser because RTAR evaluates its
+						-- We had to get a register because RTAR evaluates its
 						-- arguments more than once.
 					if not target.is_predefined then
 							-- Target is an attribute then

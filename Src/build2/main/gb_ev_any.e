@@ -43,6 +43,11 @@ inherit
 		end
 		
 	GB_SHARED_COMMAND_HANDLER
+	
+	GB_XML_UTILITIES
+		undefine
+			default_create
+		end
 
 feature -- Initialization
 		
@@ -72,6 +77,15 @@ feature -- Access
 			Result := objects.first
 		ensure
 			Result_not_void: Result /= Void
+		end
+		
+	initialize_attribute_editor (editor: GB_OBJECT_EDITOR_ITEM) is
+			-- Perform necessary initialization on `editor'.
+		require
+			editor_not_void: editor /= Void
+		do
+			editor.set_type_represented (type)
+			editor.set_creating_class (Current)
 		end
 		
 	attribute_editor: GB_OBJECT_EDITOR_ITEM is
@@ -203,10 +217,13 @@ feature {GB_OBJECT} -- Status setting
 
 feature {NONE} -- Implementation
 
-	ev_type: EV_ANY
+	ev_type: EV_ANY is
+		
 		-- Vision2 type represented by `Current'.
 		-- Only used with `like' in descendents.
 		-- Always `Void'.
+		deferred
+		end
 
 	for_all_objects (p: Procedure [EV_ANY, TUPLE]) is
 			-- Call `p' on every item in `objects'.
@@ -223,7 +240,7 @@ feature {NONE} -- Implementation
 		end
 		
 	for_first_object (p: Procedure [EV_ANY, TUPLE]) is
-			-- Call `p' on the first_item in `objects'
+			-- Call `p' on the first_item in `objects'.
 		do
 			objects.start
 			p.call ([objects.item])

@@ -14,11 +14,11 @@
 			<link>
 				<url>http://cvs.ise/cgi-bin/viewcvs.cgi/Delivery/xmldoc/</url>
 				<label>http://cvs.ise/cgi-bin/viewcvs.cgi/Delivery/xmldoc/</label>
-			</link>.  To begin editing or writing documents checkout these files and create a new project in this directory.  Then attach the schema using the project settings, and attach this HTML stylesheet file also: 
+			</link>.  To begin editing or writing documents checkout these files and open  the project file found in the root of the documentation directory.  You may then be prompted to attch the schema mentioned above, and/or to attach this 
 			<link>
-				<label>stylesheet</label>
+				<label>HTML stylesheet</label>
 				<url>http://cvs.ise/cgi-bin/viewcvs.cgi/Src/tools/doc_builder/resources/xml/styles/</url>
-			</link>.
+			</link>.  Failure to correctly attach the Eiffel schema and stylesheet means you will not recieve an accurate represention of how the document will look in  the various Eiffel documentation formats whilst using the editor.  Additionally you should be sure to validate any edited or new documents against the the schema before commiting back to CVS.  Files in CVS which are not valid to the schema may not appear in the generated documentation.
 		</paragraph>
 		<heading>
 			<size>3</size>Schema Structure
@@ -75,4 +75,10 @@
 			<bold>Note:</bold> It is 
 			<bold>much</bold> faster to sort the tocs using a finalized non .NET system.
 		</note>
-	</paragraph></document>
+		<heading>
+			<size>3</size>Conventions
+		</heading>
+		<paragraph>For hyperlink urls use relative links.  For image hyperlinks you can use relative from the document, or you can use relative from the root (e.g '/images/my_image.png')</paragraph><heading>
+			<size>3</size>Shortcuts
+		</heading>
+		<paragraph>The <link><url>http://cvs.ise/cgi-bin/viewcvs.cgi/Delivery/xmldoc/documentation.dpr</url><label>default project file</label></link> for the Eiffel documentation project contains a number of eiffel specific shortcuts for inserting eiffel code text, lists, tables and so on more easily.  To see the available shortcuts go to <bold>Tools</bold> -> <bold>Shortcuts..</bold> and you will see what is defined.  Feel free to edit or add you own shortcuts for tagging and inserting text that you use more frequently, but please do not commit the project file back to CVS since your shortcuts will then override the default ones.</paragraph>	</paragraph></document>

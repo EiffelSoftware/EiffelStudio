@@ -20,6 +20,8 @@ class HASH_TABLE [G, H -> HASHABLE] inherit
 		rename
 			has as has_item,
 			wipe_out as clear_all
+		export
+			{NONE} prune_all
 		redefine
 			copy, is_equal, clear_all, has_item
 		end

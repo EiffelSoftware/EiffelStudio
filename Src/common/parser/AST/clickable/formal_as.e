@@ -19,6 +19,10 @@ inherit
 			{NONE}
 				all
 		end;
+	CLICKABLE_AST
+		redefine
+			is_class
+		end
 
 feature
 
@@ -30,6 +34,12 @@ feature
 			-- Assign `i' to `position'.
 		do
 			position := i;
+		end;
+
+	is_class: BOOLEAN is
+			-- Does the Current AST represent a class?
+		do
+			Result := True
 		end;
 
 feature -- Initialization

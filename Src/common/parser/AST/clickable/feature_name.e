@@ -14,6 +14,10 @@ inherit
 	COMPARABLE
 		undefine
 			is_equal
+		end;
+	CLICKABLE_AST
+		redefine
+			is_feature
 		end
 
 feature -- Conveniences
@@ -37,6 +41,12 @@ feature -- Conveniences
 			Result := True;
 		end;
 
+	is_feature: BOOLEAN is
+			-- Does the Current AST represent a feature?
+		do
+			Result := True
+		end;
+
 feature -- Internal name computing
 
 	infix "<" (other: FEATURE_NAME): BOOLEAN is
@@ -46,6 +56,12 @@ feature -- Internal name computing
 	internal_name: ID_AS is
 			-- Internal name used by the compiler
 		deferred
+		end;
+
+	clickable_name: STRING is
+			-- Feature name representing AST 
+		do
+			Result := internal_name
 		end;
 
 	temp_name: ID_AS is

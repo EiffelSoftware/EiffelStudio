@@ -46,39 +46,17 @@ feature
 	left_adjust is
 			-- Remove leading blanks or tabs update position accordingly
 		local
-			i: INTEGER;
+			old_count: INTEGER;
 		do
-			from
-				i := 1
-			until
-				(i > text.count) or else ((text @ i) /= ' ') 
-				and then ((text @ i) /= '%T')	
-			loop
-				i := i + 1
-			end;
-			i := i - 1;
-			text.tail (text.count - i);
-			position := position + i;
+			old_count := text.count;
+			text.left_adjust;
+			position := position + (old_count - text.count);
 		end;
 
 	right_adjust is
 			-- Remove trailing blanks or tabs.
-		local
-			i : INTEGER;
 		do
-			from 
-				i := text.count
-			until
-				(i < 1) or else ((text @ i) /= ' ') 
-				and then ((text @ i) /= '%T')
-			loop
-	 			i := i - 1
-			end;
-			if i > 0 then
-				text.head (i);
-			else
-				text.wipe_out;
-			end;
+			text.right_adjust
 		end;
 	
 	comment: like Current is

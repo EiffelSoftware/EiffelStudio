@@ -74,6 +74,7 @@ default
 	line_generation (no)
 	profile (no)
 	trace (no)
+	override_cluster ("override")
 	check_vape (yes)
 	console_application (no)
 	array_optimization (no)
@@ -84,6 +85,8 @@ default
 
 
 cluster
+	override:		"$EIFFEL_SRC\Eiffel\override"
+
 	all base:		"$EIFFEL_SRC/library/base"
 		exclude
 			"table"; "CVS"; 

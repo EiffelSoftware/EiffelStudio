@@ -8,6 +8,95 @@ class
 
 feature -- Externals
 
+	frozen gtk_color_selection_dialog_struct_color_selection (a_color_selection_dialog: POINTER): POINTER is
+		external
+			"C struct GtkColorSelectionDialog access colorsel use <gtk/gtk.h>"
+		end
+
+	frozen gtk_color_selection_get_current_color (a_color_selection, a_color: POINTER) is
+		external
+			"C signature (GtkColorSelection*, GdkColor*) use <gtk/gtk.h>"
+		end
+
+	frozen gtk_color_selection_set_current_color (a_color_selection, a_color: POINTER) is
+		external
+			"C signature (GtkColorSelection*, GdkColor*) use <gtk/gtk.h>"
+		end
+
+	frozen gdk_colormap_query_color (a_color_map: POINTER; a_pixel: INTEGER; a_color: POINTER) is
+		external
+			"C signature (GdkColormap*, gulong, GdkColor*) use <gtk/gtk.h>"
+		end
+
+	frozen gdk_pixbuf_scale_simple (a_gdkpixbuf: POINTER; a_width, a_height, a_interp_mode: INTEGER): POINTER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"gdk_pixbuf_scale_simple ((GdkPixbuf*) $a_gdkpixbuf, (int) $a_width, (int) $a_width, (int) $a_interp_mode)"
+		end
+
+	frozen gdk_interp_bilinear: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_INTERP_BILINEAR"
+		end
+
+	frozen gdk_pixbuf_composite (src, dest: POINTER; dest_x, dest_y, dest_width, dest_height: INTEGER; offset_x, offset_y, scale_x, scale_y: DOUBLE; interp_type, overall_alpha: INTEGER) is
+		external
+			"C signature (GdkPixbuf*, GdkPixbuf*, int, int, int, int, double, double, double, double, GdkInterpType, int) use <gtk/gtk.h>"
+		end
+
+	frozen gtk_widget_render_icon (a_widget, a_stock_id: POINTER; a_icon_size: INTEGER; a_detail: POINTER): POINTER is
+		external
+			"C signature (GtkWidget*, gchar*, GtkIconSize, gchar*): GdkPixbuf* use <gtk/gtk.h>"
+		end
+
+	frozen gtk_image_set_from_stock (a_image, a_stock_id: POINTER; a_icon_size: INTEGER) is
+		external
+			"C signature (GtkImage*, gchar*, GtkIconSize) use <gtk/gtk.h>"
+		end
+
+	frozen gtk_widget_modify_text (a_widget: POINTER; a_state_type: INTEGER; a_color: POINTER) is
+		external
+			"C signature (GtkWidget*, GtkStateType, GdkColor*) use <gtk/gtk.h>"
+		end
+
+	frozen gtk_widget_modify_base (a_widget: POINTER; a_state_type: INTEGER; a_color: POINTER) is
+		external
+			"C signature (GtkWidget*, GtkStateType, GdkColor*) use <gtk/gtk.h>"
+		end
+
+	frozen gtk_image_menu_item_new: POINTER is
+		external
+			"C signature (): GtkWidget* use <gtk/gtk.h>"
+		end
+
+	frozen gtk_accel_label_new (a_string: POINTER): POINTER is
+		external
+			"C signature (gchar*): GtkWidget* use <gtk/gtk.h>"
+		end
+
+	frozen gtk_tearoff_menu_item_new: POINTER is
+		external
+			"C signature (): GtkWidget* use <gtk/gtk.h>"
+		end
+
+	frozen gtk_image_menu_item_set_image (a_menu_item, a_image: POINTER) is
+		external
+			"C signature (GtkImageMenuItem*, GtkWidget*) use <gtk/gtk.h>"
+		end
+
+	frozen gtk_menu_item_new_with_mnemonic (a_label: POINTER): POINTER is
+		external
+			"C signature (gchar*): GtkWidget* use <gtk/gtk.h>"
+		end
+		
+	frozen gtk_label_set_text_with_mnemonic (a_label, a_text: POINTER) is
+		external
+			"C signature (GtkLabel*, gchar*) use <gtk/gtk.h>"
+		end
+
 	frozen gtk_accel_groups_activate (a_object: POINTER; a_key, a_modifier_type: INTEGER): BOOLEAN is
 		external
 			"C signature (GObject*, guint, GdkModifierType): gboolean use <gtk/gtk.h>"
@@ -411,7 +500,7 @@ feature -- Externals
 	
 	frozen gtk_text_buffer_delete_mark (a_text_buffer: POINTER; a_text_mark: POINTER) is
 		external
-			"C signature (GtkTextBuffer*, GtkTextMark*)"
+			"C signature (GtkTextBuffer*, GtkTextMark*) use <gtk/gtk.h>"
 		end
 
 	frozen gtk_text_buffer_begin_user_action (a_text_buffer: POINTER) is

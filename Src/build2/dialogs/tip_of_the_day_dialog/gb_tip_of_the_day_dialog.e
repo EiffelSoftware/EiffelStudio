@@ -41,6 +41,7 @@ feature {NONE} -- Initialization
 			-- can be added here.
 		do
 			set_default_cancel_button (close_button)
+			set_default_push_button (close_button)
 			tip_counter := Preferences.integer_resource_value (preferences.tip_of_day_index, 1)
 			if Preferences.boolean_resource_value (Preferences.Show_tip_of_the_day, True) then
 				show_tips_button.enable_select

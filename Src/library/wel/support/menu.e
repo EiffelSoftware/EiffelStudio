@@ -319,13 +319,12 @@ feature -- Status setting
 feature -- Status report
 
 	item_exists (an_id: INTEGER): BOOLEAN is
-			-- Does `an_id' exists in the menu?
+			-- Does `an_id' exist in the menu?
 		require
 			exists: exists
 		do
 			Result := cwin_get_menu_state (item, an_id,
-				Mf_bycommand) /= 4_294_967_295
-			--| 0xFFFFFFFF
+				Mf_bycommand) /= cwel_menu_item_not_found
 		end
 
 	item_checked (item_id: INTEGER): BOOLEAN is
@@ -535,6 +534,13 @@ feature {NONE} -- Externals
 			"C [macro <wel.h>] (HWND, HMENU, UINT, UINT)"
 		alias
 			"HiliteMenuItem"
+		end
+
+	cwel_menu_item_not_found: INTEGER is
+			-- Value returned by GetMenuState when an item does
+			-- not exist.
+		external
+			"C [macro <wel.h>]"
 		end
 
 end -- class WEL_MENU

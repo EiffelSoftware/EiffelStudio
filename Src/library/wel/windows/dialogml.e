@@ -72,7 +72,7 @@ feature {NONE} -- Externals
 			dlgproc: POINTER): POINTER is
 			-- SDK CreateDialog
 		external
-			"C [macro <wel.h>] (HINSTANCE, LPCTSTR, HWND, %
+			"C [macro <wel.h>] (HINSTANCE, LPCSTR, HWND, %
 				%DLGPROC): EIF_POINTER"
 		alias
 			"CreateDialog"

@@ -5,12 +5,18 @@
 #ifndef __WEL_COMMONDIALOGS__
 #define __WEL_COMMONDIALOGS__
 
+#ifndef _WIN32
+#	define INCLUDE_COMMDLG_H
+#endif
+
 #ifndef __WEL__
 #	include <wel.h>
 #endif
 
-#ifndef _INC_COMMDLG
-#	include <commdlg.h>
+#ifdef _WIN32
+#	ifndef _INC_COMMDLG
+#		include <commdlg.h>
+#	endif
 #endif
 
 #endif /* __WEL_COMMONDIALOGS__ */

@@ -75,8 +75,12 @@ void eif_cleanup()
 
 	if (argv != NULL)
 		shfree ();	/* %%manu removed `argv' as argument, shfree needs no argument */
-	if (t != NULL)
-		free (t);
+	if (t != NULL){
+#ifdef EIF_THREADS
+		if (eif_thr_is_root ())
+#endif
+			free (t);
+	}
 
 	for (i = 0; i < eif_fn_count; i ++)
 		if (eif_fn_table[i] != NULL)

@@ -148,36 +148,63 @@ call make
 goto end
 :clean
 del cleanup.bat
-echo @echo off > cleanup.bat
-echo rem created by Make clean in $Eiffel4\c
-echo del %%1\*.err >> cleanup.bat
-echo del %%1\make.bat >> cleanup.bat
-echo del %%1\*.tr2 >> cleanup.bat
-echo del %%1\*.ob? >> cleanup.bat
-echo del %%1\*.l?b >> cleanup.bat
-echo del %%1\*.l?k >> cleanup.bat
-echo del %%1\*.ex? >> cleanup.bat
-echo del %%1\*.res >> cleanup.bat
-echo del %%1\*.map >> cleanup.bat
-echo del %%1\*.$$$ >> cleanup.bat
-echo del %%1\*.bak >> cleanup.bat
-echo del %%1\*.zip >> cleanup.bat
-echo del %%1\*.pdb >> cleanup.bat
-echo del %%1\*.pch >> cleanup.bat
-echo del %%1\config.sh >> cleanup.bat
-echo del %%1\makefile >> cleanup.bat
-call cleanup console
-call cleanup desc
-call cleanup ipc\app
-call cleanup ipc\daemon
-call cleanup ipc\ewb
-call cleanup ipc\shared
-call cleanup parsing\eiffel
-call cleanup parsing\lace
-call cleanup parsing\shared
-call cleanup platform
-call cleanup idrs
-call cleanup run-time
+echo del *.err >> cleanup.bat
+echo del *.tr2 >> cleanup.bat
+echo del *.ob? >> cleanup.bat
+echo del *.l?b >> cleanup.bat
+echo del *.l?k >> cleanup.bat
+echo del *.ex? >> cleanup.bat
+echo del *.res >> cleanup.bat
+echo del *.map >> cleanup.bat
+echo del *.$$$ >> cleanup.bat
+echo del *.bak >> cleanup.bat
+echo del *.zip >> cleanup.bat
+echo del *.pdb >> cleanup.bat
+echo del *.pch >> cleanup.bat
+echo del config.sh >> cleanup.bat
+echo del makefile >> cleanup.bat
+echo del make.bat >> cleanup.bat
+echo del cleanup.bat >> cleanup.bat
+
+copy cleanup.bat console\
+copy cleanup.bat desc\
+copy cleanup.bat ipc\app\
+copy cleanup.bat ipc\daemon\
+copy cleanup.bat ipc\ewb\
+copy cleanup.bat ipc\shared\
+copy cleanup.bat parsing\eiffel\
+copy cleanup.bat parsing\lace\
+copy cleanup.bat parsing\shared\
+copy cleanup.bat platform\
+copy cleanup.bat idrs\
+copy cleanup.bat run-time\
+
+cd console
+call cleanup
+cd ..\desc
+call cleanup
+cd ..\ipc\app
+call cleanup
+cd ..\daemon
+call cleanup
+cd ..\ewb
+call cleanup
+cd .\shared
+call cleanup
+cd ..\..\parsing\eiffel
+call cleanup
+cd ..\lace
+call cleanup
+cd ..\shared
+call cleanup
+cd ..\..\platform
+call cleanup
+cd ..\idrs
+call cleanup
+cd ..\runtime
+call cleanup
+cd ..
+
 del parsing\lace\lace_y.c
 del parsing\lace\lace_y.h
 del parsing\eiffel\y_tab.*
@@ -185,7 +212,6 @@ del parsing\eiffel\parser.c
 del parsing\eiffel\parser.h
 del run-time\eif_config.h
 del run-time\eif_size.h
-del run-time\makefile
 del run-time\eif_portable.h
 del confmagc.h
 del eif_config.h
@@ -193,5 +219,51 @@ del make.w32
 del make.bat
 del eif_size.h
 del *.$$$
+
+del run-time\bexcept.c
+del run-time\bmain.c
+
+del run-time\wargv.c
+del run-time\wbits.c
+del run-time\wboolstr.c
+del run-time\wcecil.c
+del run-time\wconsole.c
+del run-time\wcopy.c
+del run-time\wdir.c
+del run-time\wdle.c
+del run-time\weif_threads.c
+del run-time\wequal.c
+del run-time\werror.c
+del run-time\wexcept.c
+del run-time\wfile.c
+del run-time\wgarcol.c
+del run-time\whash.c
+del run-time\whashin.c
+del run-time\whector.c
+del run-time\winterna.c
+del run-time\wlocal.c
+del run-time\wmain.c
+del run-time\wmalloc.c
+del run-time\wmath.c
+del run-time\wmemory.c
+del run-time\wmisc.c
+del run-time\wobject_id.c
+del run-time\woption.c
+del run-time\wout.c
+del run-time\wpath_name.c
+del run-time\wpattern.c
+del run-time\wplug.c
+del run-time\wretrieve.c
+del run-time\wrun_idr.c
+del run-time\wsearch.c
+del run-time\wsig.c
+del run-time\wstore.c
+del run-time\wstring.c
+del run-time\wtimer.c
+del run-time\wtools.c
+del run-time\wtravers.c
+del run-time\wumain.c
+del run-time\wurgent.c
+
 :end
 echo Make completed

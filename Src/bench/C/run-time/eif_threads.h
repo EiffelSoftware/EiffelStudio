@@ -68,7 +68,8 @@ extern void eif_thr_join_all(void);
 
 #define EIF_THR_TYPE				pthread_t
 #define EIF_THR_CREATE(entry,arg,tid,msg)	\
-	EIF_THR_CREATION_FLAGS,&(tid)))		\
+	if (pthread_create(&(tid),NULL,(void (*)(void *))(entry), \
+	(EIF_THR_ENTRY_ARG_TYPE)(arg)))			\
 	eif_thr_panic(msg)
 #define EIF_THR_EXIT(arg)			pthread_exit(NULL)
 #define EIF_THR_JOIN(which)			pthread_join(*(which),NULL)
@@ -78,6 +79,7 @@ extern void eif_thr_join_all(void);
 #define EIF_MUTEX_TYPE				pthread_mutex_t *
 #define EIF_MUTEX_CREATE(m,msg)		\
 	m = (EIF_MUTEX_TYPE) malloc(sizeof(pthread_mutex_t)); \
+	if (!(m)) eif_thr_panic("cannot allocate memory for mutex creation\n"##msg); \
 	if (pthread_mutex_init((m),NULL)) eif_thr_panic(msg)
 #define EIF_MUTEX_LOCK(m,msg)       if (pthread_mutex_lock(m)) eif_thr_panic(msg)
 #define EIF_MUTEX_TRYLOCK(m,r,msg)	\
@@ -213,17 +215,76 @@ extern void eif_thr_join_all(void);
 #define EIF_TSD_DESTROY(key,msg)
 
 
-#endif	/* end of POSIX, WIN32, SOLARIS... */
+#elif defined VXWORKS
+
+/*-------------------------*/
+/*---  VXWORKS Threads  ---*/
+/*-------------------------*/
+
+#include <taskLib.h>		/* 'thread' operations */
+#include <taskVarLib.h>		/* 'thread' 'specific data' */
+#include <semLib.h>			/* 'mutexes' and semaphores */
 
 
-#define MTOG(result_type,item,result)	result = result_type item
-#define MTOS(item,val)					item = (char *) val
+#define EIF_THR_ENTRY_TYPE		void
+#define EIF_THR_ENTRY_ARG_TYPE	int
+
+#define EIF_THR_CREATION_FLAGS	0
+#define EIF_THR_DFLT_PRIORITY	10
+
+#define EIF_THR_TYPE				int
+#define EIF_THR_CREATE(entry,arg,tid,msg)		\
+	if ( ERROR != (tid = taskSpawn(				\
+/* name */		NULL,							\
+				EIF_THR_DFLT_PRIORITY,			\
+				EIF_THR_CREATION_FLAGS,			\
+/*stack size*/	0,								\
+				(entry),						\
+				(EIF_THR_ENTRY_ARG_TYPE)(arg),	\
+				0,0,0,0,0,0,0,0,0				\
+				))								\
+		)										\
+		eif_thr_panic(msg)
+#define EIF_THR_EXIT(arg)			exit(arg)
+#define EIF_THR_JOIN(which)
+#define EIF_THR_JOIN_ALL
+#define EIF_THR_YIELD				taskDelay(1000)
+
+#define EIF_MUTEX_TYPE				SEM_ID
+#define EIF_MUTEX_CREATE(m,msg)		\
+	if ((m=semMCreate(SEM_Q_FIFO|SEM_DELETE_SAFE))==NULL) eif_thr_panic(msg)
+#define EIF_MUTEX_LOCK(m,msg)		\
+	if (semTake(m,WAIT_FOREVER)!=OK) eif_thr_panic(msg)
+#define EIF_MUTEX_TRYLOCK(m,r,msg)	\
+	r = (semTake(m,NO_WAIT)==OK)
+#define EIF_MUTEX_UNLOCK(m,msg)		\
+	if (semGive(m)!=OK) eif_thr_panic(msg)
+#define EIF_MUTEX_DESTROY(m,msg)	\
+	if (semDelete(m)!=OK) eif_thr_panic(msg)
+
+#define EIF_TSD_TYPE				int *
+#define EIF_TSD_VAL_TYPE			int *
+#define EIF_TSD_CREATE(key,msg)		\
+	if (taskVarAdd(0,(int *)&(key))!=OK) eif_thr_panic(msg)
+#define EIF_TSD_SET(key,val,msg)	\
+	key = (EIF_TSD_TYPE)(val)
+#define EIF_TSD_GET0(val_type,key,val)		\
+	val = val_type (key)
+#define EIF_TSD_GET(val_type,key,val,msg)	\
+	EIF_TSD_GET0(val_type,key,val)
+
+#define EIF_TSD_DESTROY(key,msg)	\
+	if (taskVarDelete(0,key)) eif_thr_panic(msg)
+
+
+
+#endif	/* end of POSIX, WIN32, SOLARIS_THREADS, VXWORKS... */
 
 
 /* --------------------------------------- */
 
 /*--------------------------*/
-/*---  Mutex operations  ---*/ 
+/*---  Mutex operations  ---*/
 /*--------------------------*/
 
 extern EIF_MUTEX_TYPE eif_rmark_mutex;
@@ -240,11 +301,16 @@ extern EIF_BOOLEAN eif_thr_mutex_trylock(EIF_MUTEX_TYPE a_mutex_pointer);
 /*---  No multi-threaded environment  ---*/
 /*---------------------------------------*/
 
-#define MTOG(result_type,item,result)	result = result_type item
-#define MTOS(item,val)					item = (char *) val
 
 
 #endif	/* EIF_THREADS */
+
+/* Once per thread management */
+/* MTOG = MT Once Get */
+/* MTOG = MT Once Set */
+
+#define MTOG(result_type,item,result)	result = result_type item
+#define MTOS(item,val)					item = (char *) val
 
 /* --------------------------------------- */
 

@@ -1,0 +1,97 @@
+<HTML>
+	<HEAD>
+		
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.32">
+		
+<TITLE>TEST_DATA_READER Chart</TITLE>
+		
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<SPAN CLASS="ekeyword">class</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../test/reference/reader/test_data_reader_chart.html">TEST_DATA_READER</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN> <SPAN CLASS="esymbol">-&gt;</SPAN> <A CLASS="eclass" HREF="../../../test/reference/testing/test_case_chart.html">TEST_CASE</A> <SPAN CLASS="ekeyword">create</SPAN> make <SPAN CLASS="ekeyword">end</SPAN><SPAN CLASS="esymbol">]</SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">General</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../../test/reference/reader/index.html">test.reader</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Reader for injecting test input data from a file into a test case"</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">create</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../test/reference/reader/test_data_reader.html#f_make_with_result_column">make_with_result_column</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../../../test/reference/reader/test_data_reader.html#f_make">make</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Ancestors</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../base/reference/kernel/any_chart.html">ANY</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Queries</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`all_values_valid' is declared in `Current'"><A CLASS="efeature" HREF="../../../test/reference/reader/test_data_reader.html#f_all_values_valid">all_values_valid</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`columns' is declared in `Current'"><A CLASS="efeature" HREF="../../../test/reference/reader/test_data_reader.html#f_columns">columns</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`data_values' is declared in `Current'"><A CLASS="efeature" HREF="../../../test/reference/reader/test_data_reader.html#f_data_values">data_values</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/array_chart.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">]</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`end_of_file' is declared in `Current'"><A CLASS="efeature" HREF="../../../test/reference/reader/test_data_reader.html#f_end_of_file">end_of_file</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`has_data_values' is declared in `Current'"><A CLASS="efeature" HREF="../../../test/reference/reader/test_data_reader.html#f_has_data_values">has_data_values</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`has_last_string' is declared in `Current'"><A CLASS="efeature" HREF="../../../test/reference/reader/test_data_reader.html#f_has_last_string">has_last_string</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`has_result_column' is declared in `Current'"><A CLASS="efeature" HREF="../../../test/reference/reader/test_data_reader.html#f_has_result_column">has_result_column</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_comment' is declared in `Current'"><A CLASS="efeature" HREF="../../../test/reference/reader/test_data_reader.html#f_is_comment">is_comment</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_complete' is declared in `Current'"><A CLASS="efeature" HREF="../../../test/reference/reader/test_data_reader.html#f_is_complete">is_complete</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_line_valid' is declared in `Current'"><A CLASS="efeature" HREF="../../../test/reference/reader/test_data_reader.html#f_is_line_valid">is_line_valid</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_log_set' is declared in `Current'"><A CLASS="efeature" HREF="../../../test/reference/reader/test_data_reader.html#f_is_log_set">is_log_set</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_open' is declared in `Current'"><A CLASS="efeature" HREF="../../../test/reference/reader/test_data_reader.html#f_is_open">is_open</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_suite_generated' is declared in `Current'"><A CLASS="efeature" HREF="../../../test/reference/reader/test_data_reader.html#f_is_suite_generated">is_suite_generated</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`last_string' is declared in `Current'"><A CLASS="efeature" HREF="../../../test/reference/reader/test_data_reader.html#f_last_string">last_string</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`suite' is declared in `Current'"><A CLASS="efeature" HREF="../../../test/reference/reader/test_data_reader.html#f_suite">suite</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../test/reference/testing/test_suite_chart.html">TEST_SUITE</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`valid_column_index' is declared in `Current'"><A CLASS="efeature" HREF="../../../test/reference/reader/test_data_reader.html#f_valid_column_index">valid_column_index</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Commands</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`build_suite' is declared in `Current'"><A CLASS="efeature" HREF="../../../test/reference/reader/test_data_reader.html#f_build_suite">build_suite</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_column' is declared in `Current'"><A CLASS="efeature" HREF="../../../test/reference/reader/test_data_reader.html#f_set_column">set_column</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">c</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../test/reference/reader/test_data_column_chart.html">TEST_DATA_COLUMN</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">pos</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_log' is declared in `Current'"><A CLASS="efeature" HREF="../../../test/reference/reader/test_data_reader.html#f_set_log">set_log</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">l</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../test/reference/logging/log_facility_chart.html">LOG_FACILITY</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Constraints</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">table exists</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">file exists</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">valid line constraint</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">data values consistent</SPAN><BR>
+
+<BR>
+
+<BR>
+
+</BODY>
+
+</HTML>

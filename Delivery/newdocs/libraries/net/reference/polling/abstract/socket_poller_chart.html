@@ -1,0 +1,77 @@
+<HTML>
+	<HEAD>
+		
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.32">
+		
+<TITLE>SOCKET_POLLER Chart</TITLE>
+		
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<SPAN CLASS="ekeyword">deferred</SPAN> <SPAN CLASS="ekeyword">class</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../../net/reference/polling/abstract/socket_poller_chart.html">SOCKET_POLLER</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">General</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../../../net/reference/polling/abstract/index.html">net.polling.abstract</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Asynchronous socket polling, timer-based."</SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Ancestors</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../../base/reference/kernel/any_chart.html">ANY</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Queries</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_auto_discard' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/socket_poller.html#f_is_auto_discard">is_auto_discard</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_poll_all' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/socket_poller.html#f_is_poll_all">is_poll_all</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_poller_active' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/socket_poller.html#f_is_poller_active">is_poller_active</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Commands</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`add_accept_call_back' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/socket_poller.html#f_add_accept_call_back">add_accept_call_back</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_stream_socket</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/stream_socket_chart.html">STREAM_SOCKET</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">a_command</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/polling/abstract/poll_command_chart.html">POLL_COMMAND</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">an_argument</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`add_readable_call_back' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/socket_poller.html#f_add_readable_call_back">add_readable_call_back</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_socket</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_chart.html">SOCKET</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">a_command</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/polling/abstract/poll_command_chart.html">POLL_COMMAND</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">an_argument</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`make' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/socket_poller.html#f_make">make</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`make_active' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/socket_poller.html#f_make_active">make_active</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_poll_delay</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`remove_accept_call_back' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/socket_poller.html#f_remove_accept_call_back">remove_accept_call_back</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_stream_socket</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/stream_socket_chart.html">STREAM_SOCKET</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`remove_readable_call_back' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/socket_poller.html#f_remove_readable_call_back">remove_readable_call_back</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_socket</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_chart.html">SOCKET</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_active' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/socket_poller.html#f_set_active">set_active</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_poll_delay</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_auto_discard' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/socket_poller.html#f_set_auto_discard">set_auto_discard</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_inactive' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/socket_poller.html#f_set_inactive">set_inactive</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_no_discard' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/socket_poller.html#f_set_no_discard">set_no_discard</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_poll_all' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/socket_poller.html#f_set_poll_all">set_poll_all</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_poll_one' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/socket_poller.html#f_set_poll_one">set_poll_one</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wipe_out_all_call_backs' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/socket_poller.html#f_wipe_out_all_call_backs">wipe_out_all_call_backs</A></SPAN><BR>
+
+<BR>
+
+<BR>
+
+</BODY>
+
+</HTML>

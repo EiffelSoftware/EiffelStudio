@@ -1,0 +1,918 @@
+	<LI><OBJECT type="text/sitemap"><param name="Name" value="reference"><param name="Local" value="libraries\time\reference\index.html"></OBJECT>
+	<UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="ABSOLUTE"><param name="Local" value="libraries\time\reference\absolute_chart.html"></OBJECT>
+		<UL>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="origin"><param name="Local" value="libraries\time\reference\absolute.html#f_origin"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="duration"><param name="Local" value="libraries\time\reference\absolute.html#f_duration"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="is_equal"><param name="Local" value="libraries\time\reference\absolute.html#f_is_equal"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="max"><param name="Local" value="libraries\time\reference\absolute.html#f_max"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="min"><param name="Local" value="libraries\time\reference\absolute.html#f_min"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="three_way_comparison"><param name="Local" value="libraries\time\reference\absolute.html#f_three_way_comparison"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_lt"><param name="Local" value="libraries\time\reference\absolute.html#f__infix_lt"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_le"><param name="Local" value="libraries\time\reference\absolute.html#f__infix_le"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_gt"><param name="Local" value="libraries\time\reference\absolute.html#f__infix_gt"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_ge"><param name="Local" value="libraries\time\reference\absolute.html#f__infix_ge"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="relative_duration"><param name="Local" value="libraries\time\reference\absolute.html#f_relative_duration"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_minus"><param name="Local" value="libraries\time\reference\absolute.html#f__infix_minus"></OBJECT>
+		</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="DATE_CONSTANTS"><param name="Local" value="libraries\time\reference\date_constants_chart.html"></OBJECT>
+		<UL>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="date_default_format_string"><param name="Local" value="libraries\time\reference\date_constants.html#f_date_default_format_string"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="date_time_tools"><param name="Local" value="libraries\time\reference\date_constants.html#f_date_time_tools"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="days_in_i_th_month"><param name="Local" value="libraries\time\reference\date_constants.html#f_days_in_i_th_month"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="days_in_leap_year"><param name="Local" value="libraries\time\reference\date_constants.html#f_days_in_leap_year"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="days_in_non_leap_year"><param name="Local" value="libraries\time\reference\date_constants.html#f_days_in_non_leap_year"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="days_in_week"><param name="Local" value="libraries\time\reference\date_constants.html#f_days_in_week"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="days_text"><param name="Local" value="libraries\time\reference\date_constants.html#f_days_text"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="default_format_string"><param name="Local" value="libraries\time\reference\date_constants.html#f_default_format_string"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="is_leap_year"><param name="Local" value="libraries\time\reference\date_constants.html#f_is_leap_year"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="long_days_text"><param name="Local" value="libraries\time\reference\date_constants.html#f_long_days_text"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="long_months_text"><param name="Local" value="libraries\time\reference\date_constants.html#f_long_months_text"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="max_weeks_in_year"><param name="Local" value="libraries\time\reference\date_constants.html#f_max_weeks_in_year"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="months_in_year"><param name="Local" value="libraries\time\reference\date_constants.html#f_months_in_year"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="months_text"><param name="Local" value="libraries\time\reference\date_constants.html#f_months_text"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="div"><param name="Local" value="libraries\time\reference\date_constants.html#f_div"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="mod"><param name="Local" value="libraries\time\reference\date_constants.html#f_mod"></OBJECT>
+		</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="DATE_DURATION"><param name="Local" value="libraries\time\reference\date_duration_chart.html"></OBJECT>
+		<UL>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="make"><param name="Local" value="libraries\time\reference\date_duration.html#f_make"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="make_by_days"><param name="Local" value="libraries\time\reference\date_duration.html#f_make_by_days"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="date_default_format_string"><param name="Local" value="libraries\time\reference\date_duration.html#f_date_default_format_string"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="date_time_tools"><param name="Local" value="libraries\time\reference\date_duration.html#f_date_time_tools"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="days_in_i_th_month"><param name="Local" value="libraries\time\reference\date_duration.html#f_days_in_i_th_month"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="days_in_leap_year"><param name="Local" value="libraries\time\reference\date_duration.html#f_days_in_leap_year"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="days_in_non_leap_year"><param name="Local" value="libraries\time\reference\date_duration.html#f_days_in_non_leap_year"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="days_in_week"><param name="Local" value="libraries\time\reference\date_duration.html#f_days_in_week"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="days_text"><param name="Local" value="libraries\time\reference\date_duration.html#f_days_text"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="default_format_string"><param name="Local" value="libraries\time\reference\date_duration.html#f_default_format_string"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="is_leap_year"><param name="Local" value="libraries\time\reference\date_duration.html#f_is_leap_year"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="long_days_text"><param name="Local" value="libraries\time\reference\date_duration.html#f_long_days_text"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="long_months_text"><param name="Local" value="libraries\time\reference\date_duration.html#f_long_months_text"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="max_weeks_in_year"><param name="Local" value="libraries\time\reference\date_duration.html#f_max_weeks_in_year"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="months_in_year"><param name="Local" value="libraries\time\reference\date_duration.html#f_months_in_year"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="months_text"><param name="Local" value="libraries\time\reference\date_duration.html#f_months_text"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="zero"><param name="Local" value="libraries\time\reference\date_duration.html#f_zero"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="is_equal"><param name="Local" value="libraries\time\reference\date_duration.html#f_is_equal"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_lt"><param name="Local" value="libraries\time\reference\date_duration.html#f__infix_lt"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_le"><param name="Local" value="libraries\time\reference\date_duration.html#f__infix_le"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_gt"><param name="Local" value="libraries\time\reference\date_duration.html#f__infix_gt"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_ge"><param name="Local" value="libraries\time\reference\date_duration.html#f__infix_ge"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="canonical"><param name="Local" value="libraries\time\reference\date_duration.html#f_canonical"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="definite"><param name="Local" value="libraries\time\reference\date_duration.html#f_definite"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="to_canonical"><param name="Local" value="libraries\time\reference\date_duration.html#f_to_canonical"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="to_date_time"><param name="Local" value="libraries\time\reference\date_duration.html#f_to_date_time"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="to_definite"><param name="Local" value="libraries\time\reference\date_duration.html#f_to_definite"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="div"><param name="Local" value="libraries\time\reference\date_duration.html#f_div"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="mod"><param name="Local" value="libraries\time\reference\date_duration.html#f_mod"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="day"><param name="Local" value="libraries\time\reference\date_duration.html#f_day"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="month"><param name="Local" value="libraries\time\reference\date_duration.html#f_month"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="year"><param name="Local" value="libraries\time\reference\date_duration.html#f_year"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="day_add"><param name="Local" value="libraries\time\reference\date_duration.html#f_day_add"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="month_add"><param name="Local" value="libraries\time\reference\date_duration.html#f_month_add"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_day"><param name="Local" value="libraries\time\reference\date_duration.html#f_set_day"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_month"><param name="Local" value="libraries\time\reference\date_duration.html#f_set_month"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_year"><param name="Local" value="libraries\time\reference\date_duration.html#f_set_year"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="year_add"><param name="Local" value="libraries\time\reference\date_duration.html#f_year_add"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="days_in_month"><param name="Local" value="libraries\time\reference\date_duration.html#f_days_in_month"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_plus"><param name="Local" value="libraries\time\reference\date_duration.html#f__infix_plus"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_prefix_plus"><param name="Local" value="libraries\time\reference\date_duration.html#f__prefix_plus"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_minus"><param name="Local" value="libraries\time\reference\date_duration.html#f__infix_minus"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_prefix_minus"><param name="Local" value="libraries\time\reference\date_duration.html#f__prefix_minus"></OBJECT>
+		</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="DATE"><param name="Local" value="libraries\time\reference\date_chart.html"></OBJECT>
+		<UL>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="compact_date"><param name="Local" value="libraries\time\reference\date.html#f_compact_date"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="date_default_format_string"><param name="Local" value="libraries\time\reference\date.html#f_date_default_format_string"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="date_time_tools"><param name="Local" value="libraries\time\reference\date.html#f_date_time_tools"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="day"><param name="Local" value="libraries\time\reference\date.html#f_day"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="days_in_i_th_month"><param name="Local" value="libraries\time\reference\date.html#f_days_in_i_th_month"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="days_in_leap_year"><param name="Local" value="libraries\time\reference\date.html#f_days_in_leap_year"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="days_in_non_leap_year"><param name="Local" value="libraries\time\reference\date.html#f_days_in_non_leap_year"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="days_in_week"><param name="Local" value="libraries\time\reference\date.html#f_days_in_week"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="days_text"><param name="Local" value="libraries\time\reference\date.html#f_days_text"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="default_format_string"><param name="Local" value="libraries\time\reference\date.html#f_default_format_string"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="is_leap_year"><param name="Local" value="libraries\time\reference\date.html#f_is_leap_year"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="long_days_text"><param name="Local" value="libraries\time\reference\date.html#f_long_days_text"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="long_months_text"><param name="Local" value="libraries\time\reference\date.html#f_long_months_text"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="max_weeks_in_year"><param name="Local" value="libraries\time\reference\date.html#f_max_weeks_in_year"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="month"><param name="Local" value="libraries\time\reference\date.html#f_month"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="months_in_year"><param name="Local" value="libraries\time\reference\date.html#f_months_in_year"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="months_text"><param name="Local" value="libraries\time\reference\date.html#f_months_text"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="origin"><param name="Local" value="libraries\time\reference\date.html#f_origin"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="year"><param name="Local" value="libraries\time\reference\date.html#f_year"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="days"><param name="Local" value="libraries\time\reference\date.html#f_days"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="duration"><param name="Local" value="libraries\time\reference\date.html#f_duration"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="is_equal"><param name="Local" value="libraries\time\reference\date.html#f_is_equal"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="max"><param name="Local" value="libraries\time\reference\date.html#f_max"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="min"><param name="Local" value="libraries\time\reference\date.html#f_min"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="three_way_comparison"><param name="Local" value="libraries\time\reference\date.html#f_three_way_comparison"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_lt"><param name="Local" value="libraries\time\reference\date.html#f__infix_lt"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_le"><param name="Local" value="libraries\time\reference\date.html#f__infix_le"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_gt"><param name="Local" value="libraries\time\reference\date.html#f__infix_gt"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_ge"><param name="Local" value="libraries\time\reference\date.html#f__infix_ge"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="day_of_january_1st"><param name="Local" value="libraries\time\reference\date.html#f_day_of_january_1st"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="day_of_the_week"><param name="Local" value="libraries\time\reference\date.html#f_day_of_the_week"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="days_at_month"><param name="Local" value="libraries\time\reference\date.html#f_days_at_month"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="days_from"><param name="Local" value="libraries\time\reference\date.html#f_days_from"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="days_in_year"><param name="Local" value="libraries\time\reference\date.html#f_days_in_year"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="leap_year"><param name="Local" value="libraries\time\reference\date.html#f_leap_year"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="week_of_year"><param name="Local" value="libraries\time\reference\date.html#f_week_of_year"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="year_day"><param name="Local" value="libraries\time\reference\date.html#f_year_day"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_day"><param name="Local" value="libraries\time\reference\date.html#f_set_day"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_month"><param name="Local" value="libraries\time\reference\date.html#f_set_month"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_year"><param name="Local" value="libraries\time\reference\date.html#f_set_year"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="to_date_time"><param name="Local" value="libraries\time\reference\date.html#f_to_date_time"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="add"><param name="Local" value="libraries\time\reference\date.html#f_add"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="day_add"><param name="Local" value="libraries\time\reference\date.html#f_day_add"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="day_back"><param name="Local" value="libraries\time\reference\date.html#f_day_back"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="day_forth"><param name="Local" value="libraries\time\reference\date.html#f_day_forth"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="div"><param name="Local" value="libraries\time\reference\date.html#f_div"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="mod"><param name="Local" value="libraries\time\reference\date.html#f_mod"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="month_add"><param name="Local" value="libraries\time\reference\date.html#f_month_add"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="month_back"><param name="Local" value="libraries\time\reference\date.html#f_month_back"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="month_forth"><param name="Local" value="libraries\time\reference\date.html#f_month_forth"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="relative_duration"><param name="Local" value="libraries\time\reference\date.html#f_relative_duration"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="year_add"><param name="Local" value="libraries\time\reference\date.html#f_year_add"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="year_back"><param name="Local" value="libraries\time\reference\date.html#f_year_back"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="year_forth"><param name="Local" value="libraries\time\reference\date.html#f_year_forth"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="year_month_add"><param name="Local" value="libraries\time\reference\date.html#f_year_month_add"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_plus"><param name="Local" value="libraries\time\reference\date.html#f__infix_plus"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_minus"><param name="Local" value="libraries\time\reference\date.html#f__infix_minus"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="formatted_out"><param name="Local" value="libraries\time\reference\date.html#f_formatted_out"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="out"><param name="Local" value="libraries\time\reference\date.html#f_out"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="compact_date_valid"><param name="Local" value="libraries\time\reference\date.html#f_compact_date_valid"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="date_valid"><param name="Local" value="libraries\time\reference\date.html#f_date_valid"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="date_valid_default"><param name="Local" value="libraries\time\reference\date.html#f_date_valid_default"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="date_valid_default_with_base"><param name="Local" value="libraries\time\reference\date.html#f_date_valid_default_with_base"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="date_valid_with_base"><param name="Local" value="libraries\time\reference\date.html#f_date_valid_with_base"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="is_correct_date"><param name="Local" value="libraries\time\reference\date.html#f_is_correct_date"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="days_in_month"><param name="Local" value="libraries\time\reference\date.html#f_days_in_month"></OBJECT>
+		</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="DATE_MEASUREMENT"><param name="Local" value="libraries\time\reference\date_measurement_chart.html"></OBJECT>
+		<UL>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="date_default_format_string"><param name="Local" value="libraries\time\reference\date_measurement.html#f_date_default_format_string"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="date_time_tools"><param name="Local" value="libraries\time\reference\date_measurement.html#f_date_time_tools"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="day"><param name="Local" value="libraries\time\reference\date_measurement.html#f_day"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="days_in_i_th_month"><param name="Local" value="libraries\time\reference\date_measurement.html#f_days_in_i_th_month"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="days_in_leap_year"><param name="Local" value="libraries\time\reference\date_measurement.html#f_days_in_leap_year"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="days_in_non_leap_year"><param name="Local" value="libraries\time\reference\date_measurement.html#f_days_in_non_leap_year"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="days_in_week"><param name="Local" value="libraries\time\reference\date_measurement.html#f_days_in_week"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="days_text"><param name="Local" value="libraries\time\reference\date_measurement.html#f_days_text"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="default_format_string"><param name="Local" value="libraries\time\reference\date_measurement.html#f_default_format_string"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="is_leap_year"><param name="Local" value="libraries\time\reference\date_measurement.html#f_is_leap_year"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="long_days_text"><param name="Local" value="libraries\time\reference\date_measurement.html#f_long_days_text"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="long_months_text"><param name="Local" value="libraries\time\reference\date_measurement.html#f_long_months_text"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="max_weeks_in_year"><param name="Local" value="libraries\time\reference\date_measurement.html#f_max_weeks_in_year"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="month"><param name="Local" value="libraries\time\reference\date_measurement.html#f_month"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="months_in_year"><param name="Local" value="libraries\time\reference\date_measurement.html#f_months_in_year"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="months_text"><param name="Local" value="libraries\time\reference\date_measurement.html#f_months_text"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="year"><param name="Local" value="libraries\time\reference\date_measurement.html#f_year"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_day"><param name="Local" value="libraries\time\reference\date_measurement.html#f_set_day"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_month"><param name="Local" value="libraries\time\reference\date_measurement.html#f_set_month"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_year"><param name="Local" value="libraries\time\reference\date_measurement.html#f_set_year"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="div"><param name="Local" value="libraries\time\reference\date_measurement.html#f_div"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="mod"><param name="Local" value="libraries\time\reference\date_measurement.html#f_mod"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="days_in_month"><param name="Local" value="libraries\time\reference\date_measurement.html#f_days_in_month"></OBJECT>
+		</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="DATE_SET"><param name="Local" value="libraries\time\reference\date_set_chart.html"></OBJECT>
+		<UL>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="make"><param name="Local" value="libraries\time\reference\date_set.html#f_make"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="make_from_array"><param name="Local" value="libraries\time\reference\date_set.html#f_make_from_array"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="area"><param name="Local" value="libraries\time\reference\date_set.html#f_area"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="entry"><param name="Local" value="libraries\time\reference\date_set.html#f_entry"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="has"><param name="Local" value="libraries\time\reference\date_set.html#f_has"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="item"><param name="Local" value="libraries\time\reference\date_set.html#f_item"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="item"><param name="Local" value="libraries\time\reference\date_set.html#f_item"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="last"><param name="Local" value="libraries\time\reference\date_set.html#f_last"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_@"><param name="Local" value="libraries\time\reference\date_set.html#f__infix_@"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="additional_space"><param name="Local" value="libraries\time\reference\date_set.html#f_additional_space"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="capacity"><param name="Local" value="libraries\time\reference\date_set.html#f_capacity"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="count"><param name="Local" value="libraries\time\reference\date_set.html#f_count"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="growth_percentage"><param name="Local" value="libraries\time\reference\date_set.html#f_growth_percentage"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="index_set"><param name="Local" value="libraries\time\reference\date_set.html#f_index_set"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="lower"><param name="Local" value="libraries\time\reference\date_set.html#f_lower"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="minimal_increase"><param name="Local" value="libraries\time\reference\date_set.html#f_minimal_increase"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="occurrences"><param name="Local" value="libraries\time\reference\date_set.html#f_occurrences"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="upper"><param name="Local" value="libraries\time\reference\date_set.html#f_upper"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="is_equal"><param name="Local" value="libraries\time\reference\date_set.html#f_is_equal"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="all_default"><param name="Local" value="libraries\time\reference\date_set.html#f_all_default"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="changeable_comparison_criterion"><param name="Local" value="libraries\time\reference\date_set.html#f_changeable_comparison_criterion"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="extendible"><param name="Local" value="libraries\time\reference\date_set.html#f_extendible"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="full"><param name="Local" value="libraries\time\reference\date_set.html#f_full"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="is_empty"><param name="Local" value="libraries\time\reference\date_set.html#f_is_empty"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="is_inserted"><param name="Local" value="libraries\time\reference\date_set.html#f_is_inserted"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="object_comparison"><param name="Local" value="libraries\time\reference\date_set.html#f_object_comparison"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="prunable"><param name="Local" value="libraries\time\reference\date_set.html#f_prunable"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="resizable"><param name="Local" value="libraries\time\reference\date_set.html#f_resizable"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="same_items"><param name="Local" value="libraries\time\reference\date_set.html#f_same_items"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="valid_index"><param name="Local" value="libraries\time\reference\date_set.html#f_valid_index"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="valid_index_set"><param name="Local" value="libraries\time\reference\date_set.html#f_valid_index_set"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="compare_objects"><param name="Local" value="libraries\time\reference\date_set.html#f_compare_objects"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="compare_references"><param name="Local" value="libraries\time\reference\date_set.html#f_compare_references"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="enter"><param name="Local" value="libraries\time\reference\date_set.html#f_enter"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="fill"><param name="Local" value="libraries\time\reference\date_set.html#f_fill"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="force"><param name="Local" value="libraries\time\reference\date_set.html#f_force"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="put"><param name="Local" value="libraries\time\reference\date_set.html#f_put"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="put"><param name="Local" value="libraries\time\reference\date_set.html#f_put"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="subcopy"><param name="Local" value="libraries\time\reference\date_set.html#f_subcopy"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="clear_all"><param name="Local" value="libraries\time\reference\date_set.html#f_clear_all"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="discard_items"><param name="Local" value="libraries\time\reference\date_set.html#f_discard_items"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="prune_all"><param name="Local" value="libraries\time\reference\date_set.html#f_prune_all"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="automatic_grow"><param name="Local" value="libraries\time\reference\date_set.html#f_automatic_grow"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="grow"><param name="Local" value="libraries\time\reference\date_set.html#f_grow"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="resize"><param name="Local" value="libraries\time\reference\date_set.html#f_resize"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="linear_representation"><param name="Local" value="libraries\time\reference\date_set.html#f_linear_representation"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="to_c"><param name="Local" value="libraries\time\reference\date_set.html#f_to_c"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="copy"><param name="Local" value="libraries\time\reference\date_set.html#f_copy"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="subarray"><param name="Local" value="libraries\time\reference\date_set.html#f_subarray"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="make"><param name="Local" value="libraries\time\reference\date_set.html#f_make"></OBJECT>
+		</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="DATE_TIME_DURATION"><param name="Local" value="libraries\time\reference\date_time_duration_chart.html"></OBJECT>
+		<UL>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="make"><param name="Local" value="libraries\time\reference\date_time_duration.html#f_make"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="make_by_date"><param name="Local" value="libraries\time\reference\date_time_duration.html#f_make_by_date"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="make_by_date_time"><param name="Local" value="libraries\time\reference\date_time_duration.html#f_make_by_date_time"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="make_definite"><param name="Local" value="libraries\time\reference\date_time_duration.html#f_make_definite"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="make_fine"><param name="Local" value="libraries\time\reference\date_time_duration.html#f_make_fine"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="date"><param name="Local" value="libraries\time\reference\date_time_duration.html#f_date"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="date_default_format_string"><param name="Local" value="libraries\time\reference\date_time_duration.html#f_date_default_format_string"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="date_time_tools"><param name="Local" value="libraries\time\reference\date_time_duration.html#f_date_time_tools"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="day"><param name="Local" value="libraries\time\reference\date_time_duration.html#f_day"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="days_in_i_th_month"><param name="Local" value="libraries\time\reference\date_time_duration.html#f_days_in_i_th_month"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="days_in_leap_year"><param name="Local" value="libraries\time\reference\date_time_duration.html#f_days_in_leap_year"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="days_in_non_leap_year"><param name="Local" value="libraries\time\reference\date_time_duration.html#f_days_in_non_leap_year"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="days_in_week"><param name="Local" value="libraries\time\reference\date_time_duration.html#f_days_in_week"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="days_text"><param name="Local" value="libraries\time\reference\date_time_duration.html#f_days_text"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="default_format_string"><param name="Local" value="libraries\time\reference\date_time_duration.html#f_default_format_string"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="fine_second"><param name="Local" value="libraries\time\reference\date_time_duration.html#f_fine_second"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="hour"><param name="Local" value="libraries\time\reference\date_time_duration.html#f_hour"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="hours_in_day"><param name="Local" value="libraries\time\reference\date_time_duration.html#f_hours_in_day"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="is_leap_year"><param name="Local" value="libraries\time\reference\date_time_duration.html#f_is_leap_year"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="long_days_text"><param name="Local" value="libraries\time\reference\date_time_duration.html#f_long_days_text"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="long_months_text"><param name="Local" value="libraries\time\reference\date_time_duration.html#f_long_months_text"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="max_weeks_in_year"><param name="Local" value="libraries\time\reference\date_time_duration.html#f_max_weeks_in_year"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="minute"><param name="Local" value="libraries\time\reference\date_time_duration.html#f_minute"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="minutes_in_hour"><param name="Local" value="libraries\time\reference\date_time_duration.html#f_minutes_in_hour"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="month"><param name="Local" value="libraries\time\reference\date_time_duration.html#f_month"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="months_in_year"><param name="Local" value="libraries\time\reference\date_time_duration.html#f_months_in_year"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="months_text"><param name="Local" value="libraries\time\reference\date_time_duration.html#f_months_text"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="second"><param name="Local" value="libraries\time\reference\date_time_duration.html#f_second"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="seconds_count"><param name="Local" value="libraries\time\reference\date_time_duration.html#f_seconds_count"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="seconds_in_day"><param name="Local" value="libraries\time\reference\date_time_duration.html#f_seconds_in_day"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="seconds_in_hour"><param name="Local" value="libraries\time\reference\date_time_duration.html#f_seconds_in_hour"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="seconds_in_minute"><param name="Local" value="libraries\time\reference\date_time_duration.html#f_seconds_in_minute"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="time"><param name="Local" value="libraries\time\reference\date_time_duration.html#f_time"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="time_default_format_string"><param name="Local" value="libraries\time\reference\date_time_duration.html#f_time_default_format_string"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="year"><param name="Local" value="libraries\time\reference\date_time_duration.html#f_year"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="zero"><param name="Local" value="libraries\time\reference\date_time_duration.html#f_zero"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="is_equal"><param name="Local" value="libraries\time\reference\date_time_duration.html#f_is_equal"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_lt"><param name="Local" value="libraries\time\reference\date_time_duration.html#f__infix_lt"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_le"><param name="Local" value="libraries\time\reference\date_time_duration.html#f__infix_le"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_gt"><param name="Local" value="libraries\time\reference\date_time_duration.html#f__infix_gt"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_ge"><param name="Local" value="libraries\time\reference\date_time_duration.html#f__infix_ge"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="canonical"><param name="Local" value="libraries\time\reference\date_time_duration.html#f_canonical"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="definite"><param name="Local" value="libraries\time\reference\date_time_duration.html#f_definite"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="time_to_canonical"><param name="Local" value="libraries\time\reference\date_time_duration.html#f_time_to_canonical"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="to_canonical"><param name="Local" value="libraries\time\reference\date_time_duration.html#f_to_canonical"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="day_add"><param name="Local" value="libraries\time\reference\date_time_duration.html#f_day_add"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="div"><param name="Local" value="libraries\time\reference\date_time_duration.html#f_div"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="mod"><param name="Local" value="libraries\time\reference\date_time_duration.html#f_mod"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_plus"><param name="Local" value="libraries\time\reference\date_time_duration.html#f__infix_plus"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_prefix_plus"><param name="Local" value="libraries\time\reference\date_time_duration.html#f__prefix_plus"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_prefix_minus"><param name="Local" value="libraries\time\reference\date_time_duration.html#f__prefix_minus"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_minus"><param name="Local" value="libraries\time\reference\date_time_duration.html#f__infix_minus"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_date"><param name="Local" value="libraries\time\reference\date_time_duration.html#f_set_date"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_time"><param name="Local" value="libraries\time\reference\date_time_duration.html#f_set_time"></OBJECT>
+		</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="DATE_TIME"><param name="Local" value="libraries\time\reference\date_time_chart.html"></OBJECT>
+		<UL>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="make"><param name="Local" value="libraries\time\reference\date_time.html#f_make"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="make_by_date"><param name="Local" value="libraries\time\reference\date_time.html#f_make_by_date"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="make_by_date_time"><param name="Local" value="libraries\time\reference\date_time.html#f_make_by_date_time"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="make_fine"><param name="Local" value="libraries\time\reference\date_time.html#f_make_fine"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="make_from_string"><param name="Local" value="libraries\time\reference\date_time.html#f_make_from_string"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="make_from_string_default"><param name="Local" value="libraries\time\reference\date_time.html#f_make_from_string_default"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="make_from_string_default_with_base"><param name="Local" value="libraries\time\reference\date_time.html#f_make_from_string_default_with_base"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="make_from_string_with_base"><param name="Local" value="libraries\time\reference\date_time.html#f_make_from_string_with_base"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="make_now"><param name="Local" value="libraries\time\reference\date_time.html#f_make_now"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="date"><param name="Local" value="libraries\time\reference\date_time.html#f_date"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="date_default_format_string"><param name="Local" value="libraries\time\reference\date_time.html#f_date_default_format_string"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="date_duration"><param name="Local" value="libraries\time\reference\date_time.html#f_date_duration"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="date_time_tools"><param name="Local" value="libraries\time\reference\date_time.html#f_date_time_tools"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="day"><param name="Local" value="libraries\time\reference\date_time.html#f_day"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="days"><param name="Local" value="libraries\time\reference\date_time.html#f_days"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="days_in_i_th_month"><param name="Local" value="libraries\time\reference\date_time.html#f_days_in_i_th_month"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="days_in_leap_year"><param name="Local" value="libraries\time\reference\date_time.html#f_days_in_leap_year"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="days_in_non_leap_year"><param name="Local" value="libraries\time\reference\date_time.html#f_days_in_non_leap_year"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="days_in_week"><param name="Local" value="libraries\time\reference\date_time.html#f_days_in_week"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="days_text"><param name="Local" value="libraries\time\reference\date_time.html#f_days_text"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="default_format_string"><param name="Local" value="libraries\time\reference\date_time.html#f_default_format_string"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="fine_second"><param name="Local" value="libraries\time\reference\date_time.html#f_fine_second"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="fractional_second"><param name="Local" value="libraries\time\reference\date_time.html#f_fractional_second"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="hour"><param name="Local" value="libraries\time\reference\date_time.html#f_hour"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="hours_in_day"><param name="Local" value="libraries\time\reference\date_time.html#f_hours_in_day"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="is_leap_year"><param name="Local" value="libraries\time\reference\date_time.html#f_is_leap_year"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="long_days_text"><param name="Local" value="libraries\time\reference\date_time.html#f_long_days_text"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="long_months_text"><param name="Local" value="libraries\time\reference\date_time.html#f_long_months_text"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="max_weeks_in_year"><param name="Local" value="libraries\time\reference\date_time.html#f_max_weeks_in_year"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="minute"><param name="Local" value="libraries\time\reference\date_time.html#f_minute"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="minutes_in_hour"><param name="Local" value="libraries\time\reference\date_time.html#f_minutes_in_hour"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="month"><param name="Local" value="libraries\time\reference\date_time.html#f_month"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="months_in_year"><param name="Local" value="libraries\time\reference\date_time.html#f_months_in_year"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="months_text"><param name="Local" value="libraries\time\reference\date_time.html#f_months_text"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="origin"><param name="Local" value="libraries\time\reference\date_time.html#f_origin"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="second"><param name="Local" value="libraries\time\reference\date_time.html#f_second"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="seconds"><param name="Local" value="libraries\time\reference\date_time.html#f_seconds"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="seconds_in_day"><param name="Local" value="libraries\time\reference\date_time.html#f_seconds_in_day"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="seconds_in_hour"><param name="Local" value="libraries\time\reference\date_time.html#f_seconds_in_hour"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="seconds_in_minute"><param name="Local" value="libraries\time\reference\date_time.html#f_seconds_in_minute"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="time"><param name="Local" value="libraries\time\reference\date_time.html#f_time"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="time_default_format_string"><param name="Local" value="libraries\time\reference\date_time.html#f_time_default_format_string"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="time_duration"><param name="Local" value="libraries\time\reference\date_time.html#f_time_duration"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="year"><param name="Local" value="libraries\time\reference\date_time.html#f_year"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="duration"><param name="Local" value="libraries\time\reference\date_time.html#f_duration"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="is_equal"><param name="Local" value="libraries\time\reference\date_time.html#f_is_equal"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="max"><param name="Local" value="libraries\time\reference\date_time.html#f_max"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="min"><param name="Local" value="libraries\time\reference\date_time.html#f_min"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="three_way_comparison"><param name="Local" value="libraries\time\reference\date_time.html#f_three_way_comparison"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_lt"><param name="Local" value="libraries\time\reference\date_time.html#f__infix_lt"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_le"><param name="Local" value="libraries\time\reference\date_time.html#f__infix_le"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_gt"><param name="Local" value="libraries\time\reference\date_time.html#f__infix_gt"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_ge"><param name="Local" value="libraries\time\reference\date_time.html#f__infix_ge"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="add"><param name="Local" value="libraries\time\reference\date_time.html#f_add"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="day_add"><param name="Local" value="libraries\time\reference\date_time.html#f_day_add"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="definite_duration"><param name="Local" value="libraries\time\reference\date_time.html#f_definite_duration"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="div"><param name="Local" value="libraries\time\reference\date_time.html#f_div"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="fine_second_add"><param name="Local" value="libraries\time\reference\date_time.html#f_fine_second_add"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="hour_add"><param name="Local" value="libraries\time\reference\date_time.html#f_hour_add"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="minute_add"><param name="Local" value="libraries\time\reference\date_time.html#f_minute_add"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="mod"><param name="Local" value="libraries\time\reference\date_time.html#f_mod"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="relative_duration"><param name="Local" value="libraries\time\reference\date_time.html#f_relative_duration"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="second_add"><param name="Local" value="libraries\time\reference\date_time.html#f_second_add"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_plus"><param name="Local" value="libraries\time\reference\date_time.html#f__infix_plus"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_minus"><param name="Local" value="libraries\time\reference\date_time.html#f__infix_minus"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="copy"><param name="Local" value="libraries\time\reference\date_time.html#f_copy"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_date"><param name="Local" value="libraries\time\reference\date_time.html#f_set_date"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_time"><param name="Local" value="libraries\time\reference\date_time.html#f_set_time"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="formatted_out"><param name="Local" value="libraries\time\reference\date_time.html#f_formatted_out"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="out"><param name="Local" value="libraries\time\reference\date_time.html#f_out"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="date_time_valid"><param name="Local" value="libraries\time\reference\date_time.html#f_date_time_valid"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="date_time_valid_with_base"><param name="Local" value="libraries\time\reference\date_time.html#f_date_time_valid_with_base"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="is_correct_date_time"><param name="Local" value="libraries\time\reference\date_time.html#f_is_correct_date_time"></OBJECT>
+		</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="DATE_TIME_MEASUREMENT"><param name="Local" value="libraries\time\reference\date_time_measurement_chart.html"></OBJECT>
+		<UL>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="date"><param name="Local" value="libraries\time\reference\date_time_measurement.html#f_date"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="date_default_format_string"><param name="Local" value="libraries\time\reference\date_time_measurement.html#f_date_default_format_string"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="date_time_tools"><param name="Local" value="libraries\time\reference\date_time_measurement.html#f_date_time_tools"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="day"><param name="Local" value="libraries\time\reference\date_time_measurement.html#f_day"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="days_in_i_th_month"><param name="Local" value="libraries\time\reference\date_time_measurement.html#f_days_in_i_th_month"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="days_in_leap_year"><param name="Local" value="libraries\time\reference\date_time_measurement.html#f_days_in_leap_year"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="days_in_non_leap_year"><param name="Local" value="libraries\time\reference\date_time_measurement.html#f_days_in_non_leap_year"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="days_in_week"><param name="Local" value="libraries\time\reference\date_time_measurement.html#f_days_in_week"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="days_text"><param name="Local" value="libraries\time\reference\date_time_measurement.html#f_days_text"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="default_format_string"><param name="Local" value="libraries\time\reference\date_time_measurement.html#f_default_format_string"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="fine_second"><param name="Local" value="libraries\time\reference\date_time_measurement.html#f_fine_second"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="hour"><param name="Local" value="libraries\time\reference\date_time_measurement.html#f_hour"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="hours_in_day"><param name="Local" value="libraries\time\reference\date_time_measurement.html#f_hours_in_day"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="is_leap_year"><param name="Local" value="libraries\time\reference\date_time_measurement.html#f_is_leap_year"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="long_days_text"><param name="Local" value="libraries\time\reference\date_time_measurement.html#f_long_days_text"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="long_months_text"><param name="Local" value="libraries\time\reference\date_time_measurement.html#f_long_months_text"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="max_weeks_in_year"><param name="Local" value="libraries\time\reference\date_time_measurement.html#f_max_weeks_in_year"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="minute"><param name="Local" value="libraries\time\reference\date_time_measurement.html#f_minute"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="minutes_in_hour"><param name="Local" value="libraries\time\reference\date_time_measurement.html#f_minutes_in_hour"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="month"><param name="Local" value="libraries\time\reference\date_time_measurement.html#f_month"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="months_in_year"><param name="Local" value="libraries\time\reference\date_time_measurement.html#f_months_in_year"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="months_text"><param name="Local" value="libraries\time\reference\date_time_measurement.html#f_months_text"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="second"><param name="Local" value="libraries\time\reference\date_time_measurement.html#f_second"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="seconds_in_day"><param name="Local" value="libraries\time\reference\date_time_measurement.html#f_seconds_in_day"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="seconds_in_hour"><param name="Local" value="libraries\time\reference\date_time_measurement.html#f_seconds_in_hour"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="seconds_in_minute"><param name="Local" value="libraries\time\reference\date_time_measurement.html#f_seconds_in_minute"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="time"><param name="Local" value="libraries\time\reference\date_time_measurement.html#f_time"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="time_default_format_string"><param name="Local" value="libraries\time\reference\date_time_measurement.html#f_time_default_format_string"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="year"><param name="Local" value="libraries\time\reference\date_time_measurement.html#f_year"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="div"><param name="Local" value="libraries\time\reference\date_time_measurement.html#f_div"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="mod"><param name="Local" value="libraries\time\reference\date_time_measurement.html#f_mod"></OBJECT>
+		</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="DATE_TIME_SET"><param name="Local" value="libraries\time\reference\date_time_set_chart.html"></OBJECT>
+		<UL>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="item"><param name="Local" value="libraries\time\reference\date_time_set.html#f_item"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="last"><param name="Local" value="libraries\time\reference\date_time_set.html#f_last"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="put"><param name="Local" value="libraries\time\reference\date_time_set.html#f_put"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="make"><param name="Local" value="libraries\time\reference\date_time_set.html#f_make"></OBJECT>
+		</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="DATE_TIME_VALIDITY_CHECKER"><param name="Local" value="libraries\time\reference\date_time_validity_checker_chart.html"></OBJECT>
+		<UL>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="date_time_valid"><param name="Local" value="libraries\time\reference\date_time_validity_checker.html#f_date_time_valid"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="date_time_valid_with_base"><param name="Local" value="libraries\time\reference\date_time_validity_checker.html#f_date_time_valid_with_base"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="is_correct_date_time"><param name="Local" value="libraries\time\reference\date_time_validity_checker.html#f_is_correct_date_time"></OBJECT>
+		</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="DATE_TIME_VALUE"><param name="Local" value="libraries\time\reference\date_time_value_chart.html"></OBJECT>
+		<UL>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="date"><param name="Local" value="libraries\time\reference\date_time_value.html#f_date"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="date_default_format_string"><param name="Local" value="libraries\time\reference\date_time_value.html#f_date_default_format_string"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="date_time_tools"><param name="Local" value="libraries\time\reference\date_time_value.html#f_date_time_tools"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="day"><param name="Local" value="libraries\time\reference\date_time_value.html#f_day"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="days_in_i_th_month"><param name="Local" value="libraries\time\reference\date_time_value.html#f_days_in_i_th_month"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="days_in_leap_year"><param name="Local" value="libraries\time\reference\date_time_value.html#f_days_in_leap_year"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="days_in_non_leap_year"><param name="Local" value="libraries\time\reference\date_time_value.html#f_days_in_non_leap_year"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="days_in_week"><param name="Local" value="libraries\time\reference\date_time_value.html#f_days_in_week"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="days_text"><param name="Local" value="libraries\time\reference\date_time_value.html#f_days_text"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="default_format_string"><param name="Local" value="libraries\time\reference\date_time_value.html#f_default_format_string"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="fine_second"><param name="Local" value="libraries\time\reference\date_time_value.html#f_fine_second"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="fractional_second"><param name="Local" value="libraries\time\reference\date_time_value.html#f_fractional_second"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="hour"><param name="Local" value="libraries\time\reference\date_time_value.html#f_hour"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="hours_in_day"><param name="Local" value="libraries\time\reference\date_time_value.html#f_hours_in_day"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="is_leap_year"><param name="Local" value="libraries\time\reference\date_time_value.html#f_is_leap_year"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="long_days_text"><param name="Local" value="libraries\time\reference\date_time_value.html#f_long_days_text"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="long_months_text"><param name="Local" value="libraries\time\reference\date_time_value.html#f_long_months_text"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="max_weeks_in_year"><param name="Local" value="libraries\time\reference\date_time_value.html#f_max_weeks_in_year"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="minute"><param name="Local" value="libraries\time\reference\date_time_value.html#f_minute"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="minutes_in_hour"><param name="Local" value="libraries\time\reference\date_time_value.html#f_minutes_in_hour"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="month"><param name="Local" value="libraries\time\reference\date_time_value.html#f_month"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="months_in_year"><param name="Local" value="libraries\time\reference\date_time_value.html#f_months_in_year"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="months_text"><param name="Local" value="libraries\time\reference\date_time_value.html#f_months_text"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="second"><param name="Local" value="libraries\time\reference\date_time_value.html#f_second"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="seconds_in_day"><param name="Local" value="libraries\time\reference\date_time_value.html#f_seconds_in_day"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="seconds_in_hour"><param name="Local" value="libraries\time\reference\date_time_value.html#f_seconds_in_hour"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="seconds_in_minute"><param name="Local" value="libraries\time\reference\date_time_value.html#f_seconds_in_minute"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="time"><param name="Local" value="libraries\time\reference\date_time_value.html#f_time"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="time_default_format_string"><param name="Local" value="libraries\time\reference\date_time_value.html#f_time_default_format_string"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="year"><param name="Local" value="libraries\time\reference\date_time_value.html#f_year"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="div"><param name="Local" value="libraries\time\reference\date_time_value.html#f_div"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="mod"><param name="Local" value="libraries\time\reference\date_time_value.html#f_mod"></OBJECT>
+		</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="DATE_VALIDITY_CHECKER"><param name="Local" value="libraries\time\reference\date_validity_checker_chart.html"></OBJECT>
+		<UL>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="compact_date_valid"><param name="Local" value="libraries\time\reference\date_validity_checker.html#f_compact_date_valid"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="date_valid"><param name="Local" value="libraries\time\reference\date_validity_checker.html#f_date_valid"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="date_valid_default"><param name="Local" value="libraries\time\reference\date_validity_checker.html#f_date_valid_default"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="date_valid_default_with_base"><param name="Local" value="libraries\time\reference\date_validity_checker.html#f_date_valid_default_with_base"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="date_valid_with_base"><param name="Local" value="libraries\time\reference\date_validity_checker.html#f_date_valid_with_base"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="is_correct_date"><param name="Local" value="libraries\time\reference\date_validity_checker.html#f_is_correct_date"></OBJECT>
+		</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="DATE_VALUE"><param name="Local" value="libraries\time\reference\date_value_chart.html"></OBJECT>
+		<UL>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="compact_date"><param name="Local" value="libraries\time\reference\date_value.html#f_compact_date"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="date_default_format_string"><param name="Local" value="libraries\time\reference\date_value.html#f_date_default_format_string"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="date_time_tools"><param name="Local" value="libraries\time\reference\date_value.html#f_date_time_tools"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="day"><param name="Local" value="libraries\time\reference\date_value.html#f_day"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="days_in_i_th_month"><param name="Local" value="libraries\time\reference\date_value.html#f_days_in_i_th_month"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="days_in_leap_year"><param name="Local" value="libraries\time\reference\date_value.html#f_days_in_leap_year"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="days_in_non_leap_year"><param name="Local" value="libraries\time\reference\date_value.html#f_days_in_non_leap_year"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="days_in_week"><param name="Local" value="libraries\time\reference\date_value.html#f_days_in_week"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="days_text"><param name="Local" value="libraries\time\reference\date_value.html#f_days_text"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="default_format_string"><param name="Local" value="libraries\time\reference\date_value.html#f_default_format_string"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="is_leap_year"><param name="Local" value="libraries\time\reference\date_value.html#f_is_leap_year"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="long_days_text"><param name="Local" value="libraries\time\reference\date_value.html#f_long_days_text"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="long_months_text"><param name="Local" value="libraries\time\reference\date_value.html#f_long_months_text"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="max_weeks_in_year"><param name="Local" value="libraries\time\reference\date_value.html#f_max_weeks_in_year"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="month"><param name="Local" value="libraries\time\reference\date_value.html#f_month"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="months_in_year"><param name="Local" value="libraries\time\reference\date_value.html#f_months_in_year"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="months_text"><param name="Local" value="libraries\time\reference\date_value.html#f_months_text"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="year"><param name="Local" value="libraries\time\reference\date_value.html#f_year"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_day"><param name="Local" value="libraries\time\reference\date_value.html#f_set_day"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_month"><param name="Local" value="libraries\time\reference\date_value.html#f_set_month"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_year"><param name="Local" value="libraries\time\reference\date_value.html#f_set_year"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="div"><param name="Local" value="libraries\time\reference\date_value.html#f_div"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="mod"><param name="Local" value="libraries\time\reference\date_value.html#f_mod"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="days_in_month"><param name="Local" value="libraries\time\reference\date_value.html#f_days_in_month"></OBJECT>
+		</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="DURATION"><param name="Local" value="libraries\time\reference\duration_chart.html"></OBJECT>
+		<UL>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="zero"><param name="Local" value="libraries\time\reference\duration.html#f_zero"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_lt"><param name="Local" value="libraries\time\reference\duration.html#f__infix_lt"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_le"><param name="Local" value="libraries\time\reference\duration.html#f__infix_le"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_gt"><param name="Local" value="libraries\time\reference\duration.html#f__infix_gt"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_ge"><param name="Local" value="libraries\time\reference\duration.html#f__infix_ge"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_plus"><param name="Local" value="libraries\time\reference\duration.html#f__infix_plus"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_prefix_plus"><param name="Local" value="libraries\time\reference\duration.html#f__prefix_plus"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_minus"><param name="Local" value="libraries\time\reference\duration.html#f__infix_minus"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_prefix_minus"><param name="Local" value="libraries\time\reference\duration.html#f__prefix_minus"></OBJECT>
+		</UL>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="format"><param name="Local" value="libraries\time\reference\format\index.html"></OBJECT>
+		<UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="CODE_VALIDITY_CHECKER"><param name="Local" value="libraries\time\reference\format\code_validity_checker_chart.html"></OBJECT>
+			<UL>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_code"><param name="Local" value="libraries\time\reference\format\code_validity_checker.html#f_is_code"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_colon"><param name="Local" value="libraries\time\reference\format\code_validity_checker.html#f_is_colon"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_comma"><param name="Local" value="libraries\time\reference\format\code_validity_checker.html#f_is_comma"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_day"><param name="Local" value="libraries\time\reference\format\code_validity_checker.html#f_is_day"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_day0"><param name="Local" value="libraries\time\reference\format\code_validity_checker.html#f_is_day0"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_day_text"><param name="Local" value="libraries\time\reference\format\code_validity_checker.html#f_is_day_text"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_dot"><param name="Local" value="libraries\time\reference\format\code_validity_checker.html#f_is_dot"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_fractional_second"><param name="Local" value="libraries\time\reference\format\code_validity_checker.html#f_is_fractional_second"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_hour"><param name="Local" value="libraries\time\reference\format\code_validity_checker.html#f_is_hour"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_hour0"><param name="Local" value="libraries\time\reference\format\code_validity_checker.html#f_is_hour0"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_hour12"><param name="Local" value="libraries\time\reference\format\code_validity_checker.html#f_is_hour12"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_meridiem"><param name="Local" value="libraries\time\reference\format\code_validity_checker.html#f_is_meridiem"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_minus"><param name="Local" value="libraries\time\reference\format\code_validity_checker.html#f_is_minus"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_minute"><param name="Local" value="libraries\time\reference\format\code_validity_checker.html#f_is_minute"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_minute0"><param name="Local" value="libraries\time\reference\format\code_validity_checker.html#f_is_minute0"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_month"><param name="Local" value="libraries\time\reference\format\code_validity_checker.html#f_is_month"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_month0"><param name="Local" value="libraries\time\reference\format\code_validity_checker.html#f_is_month0"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_month_text"><param name="Local" value="libraries\time\reference\format\code_validity_checker.html#f_is_month_text"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_second"><param name="Local" value="libraries\time\reference\format\code_validity_checker.html#f_is_second"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_second0"><param name="Local" value="libraries\time\reference\format\code_validity_checker.html#f_is_second0"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_separator"><param name="Local" value="libraries\time\reference\format\code_validity_checker.html#f_is_separator"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_slash"><param name="Local" value="libraries\time\reference\format\code_validity_checker.html#f_is_slash"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_space"><param name="Local" value="libraries\time\reference\format\code_validity_checker.html#f_is_space"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_year2"><param name="Local" value="libraries\time\reference\format\code_validity_checker.html#f_is_year2"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_year4"><param name="Local" value="libraries\time\reference\format\code_validity_checker.html#f_is_year4"></OBJECT>
+			</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="DATE_TIME_CODE"><param name="Local" value="libraries\time\reference\format\date_time_code_chart.html"></OBJECT>
+			<UL>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_numeric"><param name="Local" value="libraries\time\reference\format\date_time_code.html#f_is_numeric"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_text"><param name="Local" value="libraries\time\reference\format\date_time_code.html#f_is_text"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="count_max"><param name="Local" value="libraries\time\reference\format\date_time_code.html#f_count_max"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="count_min"><param name="Local" value="libraries\time\reference\format\date_time_code.html#f_count_min"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="name"><param name="Local" value="libraries\time\reference\format\date_time_code.html#f_name"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="type"><param name="Local" value="libraries\time\reference\format\date_time_code.html#f_type"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="value"><param name="Local" value="libraries\time\reference\format\date_time_code.html#f_value"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="value_max"><param name="Local" value="libraries\time\reference\format\date_time_code.html#f_value_max"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="value_min"><param name="Local" value="libraries\time\reference\format\date_time_code.html#f_value_min"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="set_value"><param name="Local" value="libraries\time\reference\format\date_time_code.html#f_set_value"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="make"><param name="Local" value="libraries\time\reference\format\date_time_code.html#f_make"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_code"><param name="Local" value="libraries\time\reference\format\date_time_code.html#f_is_code"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_colon"><param name="Local" value="libraries\time\reference\format\date_time_code.html#f_is_colon"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_comma"><param name="Local" value="libraries\time\reference\format\date_time_code.html#f_is_comma"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_day"><param name="Local" value="libraries\time\reference\format\date_time_code.html#f_is_day"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_day0"><param name="Local" value="libraries\time\reference\format\date_time_code.html#f_is_day0"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_day_text"><param name="Local" value="libraries\time\reference\format\date_time_code.html#f_is_day_text"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_dot"><param name="Local" value="libraries\time\reference\format\date_time_code.html#f_is_dot"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_fractional_second"><param name="Local" value="libraries\time\reference\format\date_time_code.html#f_is_fractional_second"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_hour"><param name="Local" value="libraries\time\reference\format\date_time_code.html#f_is_hour"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_hour0"><param name="Local" value="libraries\time\reference\format\date_time_code.html#f_is_hour0"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_hour12"><param name="Local" value="libraries\time\reference\format\date_time_code.html#f_is_hour12"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_meridiem"><param name="Local" value="libraries\time\reference\format\date_time_code.html#f_is_meridiem"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_minus"><param name="Local" value="libraries\time\reference\format\date_time_code.html#f_is_minus"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_minute"><param name="Local" value="libraries\time\reference\format\date_time_code.html#f_is_minute"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_minute0"><param name="Local" value="libraries\time\reference\format\date_time_code.html#f_is_minute0"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_month"><param name="Local" value="libraries\time\reference\format\date_time_code.html#f_is_month"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_month0"><param name="Local" value="libraries\time\reference\format\date_time_code.html#f_is_month0"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_month_text"><param name="Local" value="libraries\time\reference\format\date_time_code.html#f_is_month_text"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_second"><param name="Local" value="libraries\time\reference\format\date_time_code.html#f_is_second"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_second0"><param name="Local" value="libraries\time\reference\format\date_time_code.html#f_is_second0"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_separator"><param name="Local" value="libraries\time\reference\format\date_time_code.html#f_is_separator"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_slash"><param name="Local" value="libraries\time\reference\format\date_time_code.html#f_is_slash"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_space"><param name="Local" value="libraries\time\reference\format\date_time_code.html#f_is_space"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_year2"><param name="Local" value="libraries\time\reference\format\date_time_code.html#f_is_year2"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_year4"><param name="Local" value="libraries\time\reference\format\date_time_code.html#f_is_year4"></OBJECT>
+			</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="DATE_TIME_CODE_STRING"><param name="Local" value="libraries\time\reference\format\date_time_code_string_chart.html"></OBJECT>
+			<UL>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_date"><param name="Local" value="libraries\time\reference\format\date_time_code_string.html#f_is_date"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_date_time"><param name="Local" value="libraries\time\reference\format\date_time_code_string.html#f_is_date_time"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_time"><param name="Local" value="libraries\time\reference\format\date_time_code_string.html#f_is_time"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_value_valid"><param name="Local" value="libraries\time\reference\format\date_time_code_string.html#f_is_value_valid"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="separators_used"><param name="Local" value="libraries\time\reference\format\date_time_code_string.html#f_separators_used"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="set_base_century"><param name="Local" value="libraries\time\reference\format\date_time_code_string.html#f_set_base_century"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="base_century"><param name="Local" value="libraries\time\reference\format\date_time_code_string.html#f_base_century"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="name"><param name="Local" value="libraries\time\reference\format\date_time_code_string.html#f_name"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="value"><param name="Local" value="libraries\time\reference\format\date_time_code_string.html#f_value"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="make"><param name="Local" value="libraries\time\reference\format\date_time_code_string.html#f_make"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="correspond"><param name="Local" value="libraries\time\reference\format\date_time_code_string.html#f_correspond"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="create_date"><param name="Local" value="libraries\time\reference\format\date_time_code_string.html#f_create_date"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="create_date_string"><param name="Local" value="libraries\time\reference\format\date_time_code_string.html#f_create_date_string"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="create_date_time"><param name="Local" value="libraries\time\reference\format\date_time_code_string.html#f_create_date_time"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="create_string"><param name="Local" value="libraries\time\reference\format\date_time_code_string.html#f_create_string"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="create_time"><param name="Local" value="libraries\time\reference\format\date_time_code_string.html#f_create_time"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="create_time_string"><param name="Local" value="libraries\time\reference\format\date_time_code_string.html#f_create_time_string"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="precise"><param name="Local" value="libraries\time\reference\format\date_time_code_string.html#f_precise"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="precise_date"><param name="Local" value="libraries\time\reference\format\date_time_code_string.html#f_precise_date"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="precise_time"><param name="Local" value="libraries\time\reference\format\date_time_code_string.html#f_precise_time"></OBJECT>
+			</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="DATE_TIME_LANGUAGE_CONSTANTS"><param name="Local" value="libraries\time\reference\format\date_time_language_constants_chart.html"></OBJECT>
+			<UL>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="date_default_format_string"><param name="Local" value="libraries\time\reference\format\date_time_language_constants.html#f_date_default_format_string"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="days_text"><param name="Local" value="libraries\time\reference\format\date_time_language_constants.html#f_days_text"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="default_format_string"><param name="Local" value="libraries\time\reference\format\date_time_language_constants.html#f_default_format_string"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="long_days_text"><param name="Local" value="libraries\time\reference\format\date_time_language_constants.html#f_long_days_text"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="long_months_text"><param name="Local" value="libraries\time\reference\format\date_time_language_constants.html#f_long_months_text"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="months_text"><param name="Local" value="libraries\time\reference\format\date_time_language_constants.html#f_months_text"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="name"><param name="Local" value="libraries\time\reference\format\date_time_language_constants.html#f_name"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="time_default_format_string"><param name="Local" value="libraries\time\reference\format\date_time_language_constants.html#f_time_default_format_string"></OBJECT>
+			</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="DATE_TIME_PARSER"><param name="Local" value="libraries\time\reference\format\date_time_parser_chart.html"></OBJECT>
+			<UL>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="day"><param name="Local" value="libraries\time\reference\format\date_time_parser.html#f_day"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="day_text"><param name="Local" value="libraries\time\reference\format\date_time_parser.html#f_day_text"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="fine_second"><param name="Local" value="libraries\time\reference\format\date_time_parser.html#f_fine_second"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="hour"><param name="Local" value="libraries\time\reference\format\date_time_parser.html#f_hour"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="minute"><param name="Local" value="libraries\time\reference\format\date_time_parser.html#f_minute"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="month"><param name="Local" value="libraries\time\reference\format\date_time_parser.html#f_month"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="source_string"><param name="Local" value="libraries\time\reference\format\date_time_parser.html#f_source_string"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="year"><param name="Local" value="libraries\time\reference\format\date_time_parser.html#f_year"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_date"><param name="Local" value="libraries\time\reference\format\date_time_parser.html#f_is_date"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_date_time"><param name="Local" value="libraries\time\reference\format\date_time_parser.html#f_is_date_time"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_set_up"><param name="Local" value="libraries\time\reference\format\date_time_parser.html#f_is_set_up"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_time"><param name="Local" value="libraries\time\reference\format\date_time_parser.html#f_is_time"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_value_valid"><param name="Local" value="libraries\time\reference\format\date_time_parser.html#f_is_value_valid"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="parsed"><param name="Local" value="libraries\time\reference\format\date_time_parser.html#f_parsed"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="set_base_century"><param name="Local" value="libraries\time\reference\format\date_time_parser.html#f_set_base_century"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="set_day_array"><param name="Local" value="libraries\time\reference\format\date_time_parser.html#f_set_day_array"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="set_month_array"><param name="Local" value="libraries\time\reference\format\date_time_parser.html#f_set_month_array"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="set_source_string"><param name="Local" value="libraries\time\reference\format\date_time_parser.html#f_set_source_string"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="parse"><param name="Local" value="libraries\time\reference\format\date_time_parser.html#f_parse"></OBJECT>
+			</UL>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="english"><param name="Local" value="libraries\time\reference\format\english\index.html"></OBJECT>
+			<UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="DATE_TIME_TOOLS"><param name="Local" value="libraries\time\reference\format\english\date_time_tools_chart.html"></OBJECT>
+				<UL>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="date_default_format_string"><param name="Local" value="libraries\time\reference\format\english\date_time_tools.html#f_date_default_format_string"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="days_text"><param name="Local" value="libraries\time\reference\format\english\date_time_tools.html#f_days_text"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="default_format_string"><param name="Local" value="libraries\time\reference\format\english\date_time_tools.html#f_default_format_string"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="long_days_text"><param name="Local" value="libraries\time\reference\format\english\date_time_tools.html#f_long_days_text"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="long_months_text"><param name="Local" value="libraries\time\reference\format\english\date_time_tools.html#f_long_months_text"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="months_text"><param name="Local" value="libraries\time\reference\format\english\date_time_tools.html#f_months_text"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="name"><param name="Local" value="libraries\time\reference\format\english\date_time_tools.html#f_name"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="time_default_format_string"><param name="Local" value="libraries\time\reference\format\english\date_time_tools.html#f_time_default_format_string"></OBJECT>
+				</UL>
+			</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="FIND_SEPARATOR_FACILITY"><param name="Local" value="libraries\time\reference\format\find_separator_facility_chart.html"></OBJECT>
+			<UL>
+			</UL>
+		</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="GROUP_ELEMENT"><param name="Local" value="libraries\time\reference\group_element_chart.html"></OBJECT>
+		<UL>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="zero"><param name="Local" value="libraries\time\reference\group_element.html#f_zero"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_plus"><param name="Local" value="libraries\time\reference\group_element.html#f__infix_plus"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_prefix_plus"><param name="Local" value="libraries\time\reference\group_element.html#f__prefix_plus"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_minus"><param name="Local" value="libraries\time\reference\group_element.html#f__infix_minus"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_prefix_minus"><param name="Local" value="libraries\time\reference\group_element.html#f__prefix_minus"></OBJECT>
+		</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="INTERVAL"><param name="Local" value="libraries\time\reference\interval_chart.html"></OBJECT>
+		<UL>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="make"><param name="Local" value="libraries\time\reference\interval.html#f_make"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="end_bound"><param name="Local" value="libraries\time\reference\interval.html#f_end_bound"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="start_bound"><param name="Local" value="libraries\time\reference\interval.html#f_start_bound"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="duration"><param name="Local" value="libraries\time\reference\interval.html#f_duration"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="includes"><param name="Local" value="libraries\time\reference\interval.html#f_includes"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="intersects"><param name="Local" value="libraries\time\reference\interval.html#f_intersects"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="is_equal"><param name="Local" value="libraries\time\reference\interval.html#f_is_equal"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="is_included_by"><param name="Local" value="libraries\time\reference\interval.html#f_is_included_by"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="is_met_by"><param name="Local" value="libraries\time\reference\interval.html#f_is_met_by"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="is_overlapped_by"><param name="Local" value="libraries\time\reference\interval.html#f_is_overlapped_by"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="is_strict_included_by"><param name="Local" value="libraries\time\reference\interval.html#f_is_strict_included_by"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="meets"><param name="Local" value="libraries\time\reference\interval.html#f_meets"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="overlaps"><param name="Local" value="libraries\time\reference\interval.html#f_overlaps"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="strict_includes"><param name="Local" value="libraries\time\reference\interval.html#f_strict_includes"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_lt"><param name="Local" value="libraries\time\reference\interval.html#f__infix_lt"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_le"><param name="Local" value="libraries\time\reference\interval.html#f__infix_le"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_gt"><param name="Local" value="libraries\time\reference\interval.html#f__infix_gt"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_ge"><param name="Local" value="libraries\time\reference\interval.html#f__infix_ge"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="after"><param name="Local" value="libraries\time\reference\interval.html#f_after"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="before"><param name="Local" value="libraries\time\reference\interval.html#f_before"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="empty"><param name="Local" value="libraries\time\reference\interval.html#f_empty"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="has"><param name="Local" value="libraries\time\reference\interval.html#f_has"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="strict_after"><param name="Local" value="libraries\time\reference\interval.html#f_strict_after"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="strict_before"><param name="Local" value="libraries\time\reference\interval.html#f_strict_before"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_end_bound"><param name="Local" value="libraries\time\reference\interval.html#f_set_end_bound"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_start_bound"><param name="Local" value="libraries\time\reference\interval.html#f_set_start_bound"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="out"><param name="Local" value="libraries\time\reference\interval.html#f_out"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="gather"><param name="Local" value="libraries\time\reference\interval.html#f_gather"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="intersection"><param name="Local" value="libraries\time\reference\interval.html#f_intersection"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="union"><param name="Local" value="libraries\time\reference\interval.html#f_union"></OBJECT>
+		</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="TIME_CONSTANTS"><param name="Local" value="libraries\time\reference\time_constants_chart.html"></OBJECT>
+		<UL>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="date_time_tools"><param name="Local" value="libraries\time\reference\time_constants.html#f_date_time_tools"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="default_format_string"><param name="Local" value="libraries\time\reference\time_constants.html#f_default_format_string"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="hours_in_day"><param name="Local" value="libraries\time\reference\time_constants.html#f_hours_in_day"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="minutes_in_hour"><param name="Local" value="libraries\time\reference\time_constants.html#f_minutes_in_hour"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="seconds_in_day"><param name="Local" value="libraries\time\reference\time_constants.html#f_seconds_in_day"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="seconds_in_hour"><param name="Local" value="libraries\time\reference\time_constants.html#f_seconds_in_hour"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="seconds_in_minute"><param name="Local" value="libraries\time\reference\time_constants.html#f_seconds_in_minute"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="time_default_format_string"><param name="Local" value="libraries\time\reference\time_constants.html#f_time_default_format_string"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="div"><param name="Local" value="libraries\time\reference\time_constants.html#f_div"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="mod"><param name="Local" value="libraries\time\reference\time_constants.html#f_mod"></OBJECT>
+		</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="TIME_DURATION"><param name="Local" value="libraries\time\reference\time_duration_chart.html"></OBJECT>
+		<UL>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="make"><param name="Local" value="libraries\time\reference\time_duration.html#f_make"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="make_by_fine_seconds"><param name="Local" value="libraries\time\reference\time_duration.html#f_make_by_fine_seconds"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="make_by_seconds"><param name="Local" value="libraries\time\reference\time_duration.html#f_make_by_seconds"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="make_fine"><param name="Local" value="libraries\time\reference\time_duration.html#f_make_fine"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="date_time_tools"><param name="Local" value="libraries\time\reference\time_duration.html#f_date_time_tools"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="default_format_string"><param name="Local" value="libraries\time\reference\time_duration.html#f_default_format_string"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="fine_seconds_count"><param name="Local" value="libraries\time\reference\time_duration.html#f_fine_seconds_count"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="hours_in_day"><param name="Local" value="libraries\time\reference\time_duration.html#f_hours_in_day"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="minutes_in_hour"><param name="Local" value="libraries\time\reference\time_duration.html#f_minutes_in_hour"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="seconds_count"><param name="Local" value="libraries\time\reference\time_duration.html#f_seconds_count"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="seconds_in_day"><param name="Local" value="libraries\time\reference\time_duration.html#f_seconds_in_day"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="seconds_in_hour"><param name="Local" value="libraries\time\reference\time_duration.html#f_seconds_in_hour"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="seconds_in_minute"><param name="Local" value="libraries\time\reference\time_duration.html#f_seconds_in_minute"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="time_default_format_string"><param name="Local" value="libraries\time\reference\time_duration.html#f_time_default_format_string"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="zero"><param name="Local" value="libraries\time\reference\time_duration.html#f_zero"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_le"><param name="Local" value="libraries\time\reference\time_duration.html#f__infix_le"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_gt"><param name="Local" value="libraries\time\reference\time_duration.html#f__infix_gt"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_ge"><param name="Local" value="libraries\time\reference\time_duration.html#f__infix_ge"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="canonical"><param name="Local" value="libraries\time\reference\time_duration.html#f_canonical"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="time_modulo_day"><param name="Local" value="libraries\time\reference\time_duration.html#f_time_modulo_day"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="to_canonical"><param name="Local" value="libraries\time\reference\time_duration.html#f_to_canonical"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="to_days"><param name="Local" value="libraries\time\reference\time_duration.html#f_to_days"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="div"><param name="Local" value="libraries\time\reference\time_duration.html#f_div"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="fine_second_add"><param name="Local" value="libraries\time\reference\time_duration.html#f_fine_second_add"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="hour_add"><param name="Local" value="libraries\time\reference\time_duration.html#f_hour_add"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="minute_add"><param name="Local" value="libraries\time\reference\time_duration.html#f_minute_add"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="mod"><param name="Local" value="libraries\time\reference\time_duration.html#f_mod"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="second_add"><param name="Local" value="libraries\time\reference\time_duration.html#f_second_add"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_plus"><param name="Local" value="libraries\time\reference\time_duration.html#f__infix_plus"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_prefix_plus"><param name="Local" value="libraries\time\reference\time_duration.html#f__prefix_plus"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_minus"><param name="Local" value="libraries\time\reference\time_duration.html#f__infix_minus"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_prefix_minus"><param name="Local" value="libraries\time\reference\time_duration.html#f__prefix_minus"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="fine_second"><param name="Local" value="libraries\time\reference\time_duration.html#f_fine_second"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="fractional_second"><param name="Local" value="libraries\time\reference\time_duration.html#f_fractional_second"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="hour"><param name="Local" value="libraries\time\reference\time_duration.html#f_hour"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="minute"><param name="Local" value="libraries\time\reference\time_duration.html#f_minute"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="second"><param name="Local" value="libraries\time\reference\time_duration.html#f_second"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="is_equal"><param name="Local" value="libraries\time\reference\time_duration.html#f_is_equal"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_lt"><param name="Local" value="libraries\time\reference\time_duration.html#f__infix_lt"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_fine_second"><param name="Local" value="libraries\time\reference\time_duration.html#f_set_fine_second"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_fractionals"><param name="Local" value="libraries\time\reference\time_duration.html#f_set_fractionals"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_hour"><param name="Local" value="libraries\time\reference\time_duration.html#f_set_hour"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_minute"><param name="Local" value="libraries\time\reference\time_duration.html#f_set_minute"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_second"><param name="Local" value="libraries\time\reference\time_duration.html#f_set_second"></OBJECT>
+		</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="TIME"><param name="Local" value="libraries\time\reference\time_chart.html"></OBJECT>
+		<UL>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="make"><param name="Local" value="libraries\time\reference\time.html#f_make"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="make_by_compact_time"><param name="Local" value="libraries\time\reference\time.html#f_make_by_compact_time"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="make_by_fine_seconds"><param name="Local" value="libraries\time\reference\time.html#f_make_by_fine_seconds"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="make_by_seconds"><param name="Local" value="libraries\time\reference\time.html#f_make_by_seconds"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="make_fine"><param name="Local" value="libraries\time\reference\time.html#f_make_fine"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="make_from_string"><param name="Local" value="libraries\time\reference\time.html#f_make_from_string"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="make_from_string_default"><param name="Local" value="libraries\time\reference\time.html#f_make_from_string_default"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="make_now"><param name="Local" value="libraries\time\reference\time.html#f_make_now"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="compact_time"><param name="Local" value="libraries\time\reference\time.html#f_compact_time"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="date_time_tools"><param name="Local" value="libraries\time\reference\time.html#f_date_time_tools"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="default_format_string"><param name="Local" value="libraries\time\reference\time.html#f_default_format_string"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="fine_second"><param name="Local" value="libraries\time\reference\time.html#f_fine_second"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="fractional_second"><param name="Local" value="libraries\time\reference\time.html#f_fractional_second"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="hour"><param name="Local" value="libraries\time\reference\time.html#f_hour"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="hours_in_day"><param name="Local" value="libraries\time\reference\time.html#f_hours_in_day"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="micro_second"><param name="Local" value="libraries\time\reference\time.html#f_micro_second"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="milli_second"><param name="Local" value="libraries\time\reference\time.html#f_milli_second"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="minute"><param name="Local" value="libraries\time\reference\time.html#f_minute"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="minutes_in_hour"><param name="Local" value="libraries\time\reference\time.html#f_minutes_in_hour"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="nano_second"><param name="Local" value="libraries\time\reference\time.html#f_nano_second"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="origin"><param name="Local" value="libraries\time\reference\time.html#f_origin"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="second"><param name="Local" value="libraries\time\reference\time.html#f_second"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="seconds_in_day"><param name="Local" value="libraries\time\reference\time.html#f_seconds_in_day"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="seconds_in_hour"><param name="Local" value="libraries\time\reference\time.html#f_seconds_in_hour"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="seconds_in_minute"><param name="Local" value="libraries\time\reference\time.html#f_seconds_in_minute"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="time_default_format_string"><param name="Local" value="libraries\time\reference\time.html#f_time_default_format_string"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="duration"><param name="Local" value="libraries\time\reference\time.html#f_duration"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="fine_seconds"><param name="Local" value="libraries\time\reference\time.html#f_fine_seconds"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="seconds"><param name="Local" value="libraries\time\reference\time.html#f_seconds"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="is_equal"><param name="Local" value="libraries\time\reference\time.html#f_is_equal"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="max"><param name="Local" value="libraries\time\reference\time.html#f_max"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="min"><param name="Local" value="libraries\time\reference\time.html#f_min"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="three_way_comparison"><param name="Local" value="libraries\time\reference\time.html#f_three_way_comparison"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_lt"><param name="Local" value="libraries\time\reference\time.html#f__infix_lt"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_le"><param name="Local" value="libraries\time\reference\time.html#f__infix_le"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_gt"><param name="Local" value="libraries\time\reference\time.html#f__infix_gt"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_ge"><param name="Local" value="libraries\time\reference\time.html#f__infix_ge"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_fine_second"><param name="Local" value="libraries\time\reference\time.html#f_set_fine_second"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_fractionals"><param name="Local" value="libraries\time\reference\time.html#f_set_fractionals"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_hour"><param name="Local" value="libraries\time\reference\time.html#f_set_hour"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_minute"><param name="Local" value="libraries\time\reference\time.html#f_set_minute"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_second"><param name="Local" value="libraries\time\reference\time.html#f_set_second"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="div"><param name="Local" value="libraries\time\reference\time.html#f_div"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="fine_second_add"><param name="Local" value="libraries\time\reference\time.html#f_fine_second_add"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="hour_add"><param name="Local" value="libraries\time\reference\time.html#f_hour_add"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="hour_back"><param name="Local" value="libraries\time\reference\time.html#f_hour_back"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="hour_forth"><param name="Local" value="libraries\time\reference\time.html#f_hour_forth"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="minute_add"><param name="Local" value="libraries\time\reference\time.html#f_minute_add"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="minute_back"><param name="Local" value="libraries\time\reference\time.html#f_minute_back"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="minute_forth"><param name="Local" value="libraries\time\reference\time.html#f_minute_forth"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="mod"><param name="Local" value="libraries\time\reference\time.html#f_mod"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="relative_duration"><param name="Local" value="libraries\time\reference\time.html#f_relative_duration"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="second_add"><param name="Local" value="libraries\time\reference\time.html#f_second_add"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="second_back"><param name="Local" value="libraries\time\reference\time.html#f_second_back"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="second_forth"><param name="Local" value="libraries\time\reference\time.html#f_second_forth"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_plus"><param name="Local" value="libraries\time\reference\time.html#f__infix_plus"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_minus"><param name="Local" value="libraries\time\reference\time.html#f__infix_minus"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="formatted_out"><param name="Local" value="libraries\time\reference\time.html#f_formatted_out"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="out"><param name="Local" value="libraries\time\reference\time.html#f_out"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="compact_time_valid"><param name="Local" value="libraries\time\reference\time.html#f_compact_time_valid"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="is_correct_time"><param name="Local" value="libraries\time\reference\time.html#f_is_correct_time"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="time_valid"><param name="Local" value="libraries\time\reference\time.html#f_time_valid"></OBJECT>
+		</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="TIME_MEASUREMENT"><param name="Local" value="libraries\time\reference\time_measurement_chart.html"></OBJECT>
+		<UL>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="date_time_tools"><param name="Local" value="libraries\time\reference\time_measurement.html#f_date_time_tools"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="default_format_string"><param name="Local" value="libraries\time\reference\time_measurement.html#f_default_format_string"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="fine_second"><param name="Local" value="libraries\time\reference\time_measurement.html#f_fine_second"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="hour"><param name="Local" value="libraries\time\reference\time_measurement.html#f_hour"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="hours_in_day"><param name="Local" value="libraries\time\reference\time_measurement.html#f_hours_in_day"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="minute"><param name="Local" value="libraries\time\reference\time_measurement.html#f_minute"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="minutes_in_hour"><param name="Local" value="libraries\time\reference\time_measurement.html#f_minutes_in_hour"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="second"><param name="Local" value="libraries\time\reference\time_measurement.html#f_second"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="seconds_in_day"><param name="Local" value="libraries\time\reference\time_measurement.html#f_seconds_in_day"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="seconds_in_hour"><param name="Local" value="libraries\time\reference\time_measurement.html#f_seconds_in_hour"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="seconds_in_minute"><param name="Local" value="libraries\time\reference\time_measurement.html#f_seconds_in_minute"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="time_default_format_string"><param name="Local" value="libraries\time\reference\time_measurement.html#f_time_default_format_string"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="div"><param name="Local" value="libraries\time\reference\time_measurement.html#f_div"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="mod"><param name="Local" value="libraries\time\reference\time_measurement.html#f_mod"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_fine_second"><param name="Local" value="libraries\time\reference\time_measurement.html#f_set_fine_second"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_fractionals"><param name="Local" value="libraries\time\reference\time_measurement.html#f_set_fractionals"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_hour"><param name="Local" value="libraries\time\reference\time_measurement.html#f_set_hour"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_minute"><param name="Local" value="libraries\time\reference\time_measurement.html#f_set_minute"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_second"><param name="Local" value="libraries\time\reference\time_measurement.html#f_set_second"></OBJECT>
+		</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="TIME_SET"><param name="Local" value="libraries\time\reference\time_set_chart.html"></OBJECT>
+		<UL>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="make"><param name="Local" value="libraries\time\reference\time_set.html#f_make"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="make_from_array"><param name="Local" value="libraries\time\reference\time_set.html#f_make_from_array"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="area"><param name="Local" value="libraries\time\reference\time_set.html#f_area"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="entry"><param name="Local" value="libraries\time\reference\time_set.html#f_entry"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="has"><param name="Local" value="libraries\time\reference\time_set.html#f_has"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="item"><param name="Local" value="libraries\time\reference\time_set.html#f_item"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="item"><param name="Local" value="libraries\time\reference\time_set.html#f_item"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="last"><param name="Local" value="libraries\time\reference\time_set.html#f_last"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_@"><param name="Local" value="libraries\time\reference\time_set.html#f__infix_@"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="additional_space"><param name="Local" value="libraries\time\reference\time_set.html#f_additional_space"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="capacity"><param name="Local" value="libraries\time\reference\time_set.html#f_capacity"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="count"><param name="Local" value="libraries\time\reference\time_set.html#f_count"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="growth_percentage"><param name="Local" value="libraries\time\reference\time_set.html#f_growth_percentage"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="index_set"><param name="Local" value="libraries\time\reference\time_set.html#f_index_set"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="lower"><param name="Local" value="libraries\time\reference\time_set.html#f_lower"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="minimal_increase"><param name="Local" value="libraries\time\reference\time_set.html#f_minimal_increase"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="occurrences"><param name="Local" value="libraries\time\reference\time_set.html#f_occurrences"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="upper"><param name="Local" value="libraries\time\reference\time_set.html#f_upper"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="is_equal"><param name="Local" value="libraries\time\reference\time_set.html#f_is_equal"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="all_default"><param name="Local" value="libraries\time\reference\time_set.html#f_all_default"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="changeable_comparison_criterion"><param name="Local" value="libraries\time\reference\time_set.html#f_changeable_comparison_criterion"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="extendible"><param name="Local" value="libraries\time\reference\time_set.html#f_extendible"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="full"><param name="Local" value="libraries\time\reference\time_set.html#f_full"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="is_empty"><param name="Local" value="libraries\time\reference\time_set.html#f_is_empty"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="is_inserted"><param name="Local" value="libraries\time\reference\time_set.html#f_is_inserted"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="object_comparison"><param name="Local" value="libraries\time\reference\time_set.html#f_object_comparison"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="prunable"><param name="Local" value="libraries\time\reference\time_set.html#f_prunable"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="resizable"><param name="Local" value="libraries\time\reference\time_set.html#f_resizable"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="same_items"><param name="Local" value="libraries\time\reference\time_set.html#f_same_items"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="valid_index"><param name="Local" value="libraries\time\reference\time_set.html#f_valid_index"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="valid_index_set"><param name="Local" value="libraries\time\reference\time_set.html#f_valid_index_set"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="compare_objects"><param name="Local" value="libraries\time\reference\time_set.html#f_compare_objects"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="compare_references"><param name="Local" value="libraries\time\reference\time_set.html#f_compare_references"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="enter"><param name="Local" value="libraries\time\reference\time_set.html#f_enter"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="fill"><param name="Local" value="libraries\time\reference\time_set.html#f_fill"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="force"><param name="Local" value="libraries\time\reference\time_set.html#f_force"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="put"><param name="Local" value="libraries\time\reference\time_set.html#f_put"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="put"><param name="Local" value="libraries\time\reference\time_set.html#f_put"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="subcopy"><param name="Local" value="libraries\time\reference\time_set.html#f_subcopy"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="clear_all"><param name="Local" value="libraries\time\reference\time_set.html#f_clear_all"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="discard_items"><param name="Local" value="libraries\time\reference\time_set.html#f_discard_items"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="prune_all"><param name="Local" value="libraries\time\reference\time_set.html#f_prune_all"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="automatic_grow"><param name="Local" value="libraries\time\reference\time_set.html#f_automatic_grow"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="grow"><param name="Local" value="libraries\time\reference\time_set.html#f_grow"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="resize"><param name="Local" value="libraries\time\reference\time_set.html#f_resize"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="linear_representation"><param name="Local" value="libraries\time\reference\time_set.html#f_linear_representation"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="to_c"><param name="Local" value="libraries\time\reference\time_set.html#f_to_c"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="copy"><param name="Local" value="libraries\time\reference\time_set.html#f_copy"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="subarray"><param name="Local" value="libraries\time\reference\time_set.html#f_subarray"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="make"><param name="Local" value="libraries\time\reference\time_set.html#f_make"></OBJECT>
+		</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="TIME_UTILITY"><param name="Local" value="libraries\time\reference\time_utility_chart.html"></OBJECT>
+		<UL>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="date_time_tools"><param name="Local" value="libraries\time\reference\time_utility.html#f_date_time_tools"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="default_format_string"><param name="Local" value="libraries\time\reference\time_utility.html#f_default_format_string"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="div"><param name="Local" value="libraries\time\reference\time_utility.html#f_div"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="mod"><param name="Local" value="libraries\time\reference\time_utility.html#f_mod"></OBJECT>
+		</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="TIME_VALIDITY_CHECKER"><param name="Local" value="libraries\time\reference\time_validity_checker_chart.html"></OBJECT>
+		<UL>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="compact_time_valid"><param name="Local" value="libraries\time\reference\time_validity_checker.html#f_compact_time_valid"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="is_correct_time"><param name="Local" value="libraries\time\reference\time_validity_checker.html#f_is_correct_time"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="time_valid"><param name="Local" value="libraries\time\reference\time_validity_checker.html#f_time_valid"></OBJECT>
+		</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="TIME_VALUE"><param name="Local" value="libraries\time\reference\time_value_chart.html"></OBJECT>
+		<UL>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="compact_time"><param name="Local" value="libraries\time\reference\time_value.html#f_compact_time"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="date_time_tools"><param name="Local" value="libraries\time\reference\time_value.html#f_date_time_tools"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="default_format_string"><param name="Local" value="libraries\time\reference\time_value.html#f_default_format_string"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="fine_second"><param name="Local" value="libraries\time\reference\time_value.html#f_fine_second"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="fractional_second"><param name="Local" value="libraries\time\reference\time_value.html#f_fractional_second"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="hour"><param name="Local" value="libraries\time\reference\time_value.html#f_hour"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="hours_in_day"><param name="Local" value="libraries\time\reference\time_value.html#f_hours_in_day"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="micro_second"><param name="Local" value="libraries\time\reference\time_value.html#f_micro_second"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="milli_second"><param name="Local" value="libraries\time\reference\time_value.html#f_milli_second"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="minute"><param name="Local" value="libraries\time\reference\time_value.html#f_minute"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="minutes_in_hour"><param name="Local" value="libraries\time\reference\time_value.html#f_minutes_in_hour"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="nano_second"><param name="Local" value="libraries\time\reference\time_value.html#f_nano_second"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="second"><param name="Local" value="libraries\time\reference\time_value.html#f_second"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="seconds_in_day"><param name="Local" value="libraries\time\reference\time_value.html#f_seconds_in_day"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="seconds_in_hour"><param name="Local" value="libraries\time\reference\time_value.html#f_seconds_in_hour"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="seconds_in_minute"><param name="Local" value="libraries\time\reference\time_value.html#f_seconds_in_minute"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="time_default_format_string"><param name="Local" value="libraries\time\reference\time_value.html#f_time_default_format_string"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_fine_second"><param name="Local" value="libraries\time\reference\time_value.html#f_set_fine_second"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_fractionals"><param name="Local" value="libraries\time\reference\time_value.html#f_set_fractionals"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_hour"><param name="Local" value="libraries\time\reference\time_value.html#f_set_hour"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_minute"><param name="Local" value="libraries\time\reference\time_value.html#f_set_minute"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_second"><param name="Local" value="libraries\time\reference\time_value.html#f_set_second"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="div"><param name="Local" value="libraries\time\reference\time_value.html#f_div"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="mod"><param name="Local" value="libraries\time\reference\time_value.html#f_mod"></OBJECT>
+		</UL>
+	</UL>

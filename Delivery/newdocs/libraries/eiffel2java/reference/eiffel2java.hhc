@@ -1,0 +1,329 @@
+	<LI><OBJECT type="text/sitemap"><param name="Name" value="reference"><param name="Local" value="libraries\eiffel2java\reference\index.html"></OBJECT>
+	<UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="JAVA_ARGS"><param name="Local" value="libraries\eiffel2java\reference\java_args_chart.html"></OBJECT>
+		<UL>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="c_memory"><param name="Local" value="libraries\eiffel2java\reference\java_args.html#f_c_memory"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="eiffel_memory"><param name="Local" value="libraries\eiffel2java\reference\java_args.html#f_eiffel_memory"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="full_collector"><param name="Local" value="libraries\eiffel2java\reference\java_args.html#f_full_collector"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="incremental_collector"><param name="Local" value="libraries\eiffel2java\reference\java_args.html#f_incremental_collector"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="total_memory"><param name="Local" value="libraries\eiffel2java\reference\java_args.html#f_total_memory"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="gc_statistics"><param name="Local" value="libraries\eiffel2java\reference\java_args.html#f_gc_statistics"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="memory_statistics"><param name="Local" value="libraries\eiffel2java\reference\java_args.html#f_memory_statistics"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="chunk_size"><param name="Local" value="libraries\eiffel2java\reference\java_args.html#f_chunk_size"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="coalesce_period"><param name="Local" value="libraries\eiffel2java\reference\java_args.html#f_coalesce_period"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="collecting"><param name="Local" value="libraries\eiffel2java\reference\java_args.html#f_collecting"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="collection_period"><param name="Local" value="libraries\eiffel2java\reference\java_args.html#f_collection_period"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="generation_object_limit"><param name="Local" value="libraries\eiffel2java\reference\java_args.html#f_generation_object_limit"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="largest_coalesced_block"><param name="Local" value="libraries\eiffel2java\reference\java_args.html#f_largest_coalesced_block"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="max_mem"><param name="Local" value="libraries\eiffel2java\reference\java_args.html#f_max_mem"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="memory_threshold"><param name="Local" value="libraries\eiffel2java\reference\java_args.html#f_memory_threshold"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="referers"><param name="Local" value="libraries\eiffel2java\reference\java_args.html#f_referers"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="scavenge_zone_size"><param name="Local" value="libraries\eiffel2java\reference\java_args.html#f_scavenge_zone_size"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="tenure"><param name="Local" value="libraries\eiffel2java\reference\java_args.html#f_tenure"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="allocate_compact"><param name="Local" value="libraries\eiffel2java\reference\java_args.html#f_allocate_compact"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="allocate_fast"><param name="Local" value="libraries\eiffel2java\reference\java_args.html#f_allocate_fast"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="allocate_tiny"><param name="Local" value="libraries\eiffel2java\reference\java_args.html#f_allocate_tiny"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="collection_off"><param name="Local" value="libraries\eiffel2java\reference\java_args.html#f_collection_off"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="collection_on"><param name="Local" value="libraries\eiffel2java\reference\java_args.html#f_collection_on"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="disable_time_accounting"><param name="Local" value="libraries\eiffel2java\reference\java_args.html#f_disable_time_accounting"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="enable_time_accounting"><param name="Local" value="libraries\eiffel2java\reference\java_args.html#f_enable_time_accounting"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_coalesce_period"><param name="Local" value="libraries\eiffel2java\reference\java_args.html#f_set_coalesce_period"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_collection_period"><param name="Local" value="libraries\eiffel2java\reference\java_args.html#f_set_collection_period"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_max_mem"><param name="Local" value="libraries\eiffel2java\reference\java_args.html#f_set_max_mem"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_memory_threshold"><param name="Local" value="libraries\eiffel2java\reference\java_args.html#f_set_memory_threshold"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="collect"><param name="Local" value="libraries\eiffel2java\reference\java_args.html#f_collect"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="free"><param name="Local" value="libraries\eiffel2java\reference\java_args.html#f_free"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="full_coalesce"><param name="Local" value="libraries\eiffel2java\reference\java_args.html#f_full_coalesce"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="full_collect"><param name="Local" value="libraries\eiffel2java\reference\java_args.html#f_full_collect"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="mem_free"><param name="Local" value="libraries\eiffel2java\reference\java_args.html#f_mem_free"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="count"><param name="Local" value="libraries\eiffel2java\reference\java_args.html#f_count"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="full"><param name="Local" value="libraries\eiffel2java\reference\java_args.html#f_full"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="jni"><param name="Local" value="libraries\eiffel2java\reference\java_args.html#f_jni"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="make"><param name="Local" value="libraries\eiffel2java\reference\java_args.html#f_make"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="push_array"><param name="Local" value="libraries\eiffel2java\reference\java_args.html#f_push_array"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="push_boolean"><param name="Local" value="libraries\eiffel2java\reference\java_args.html#f_push_boolean"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="push_char"><param name="Local" value="libraries\eiffel2java\reference\java_args.html#f_push_char"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="push_double"><param name="Local" value="libraries\eiffel2java\reference\java_args.html#f_push_double"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="push_float"><param name="Local" value="libraries\eiffel2java\reference\java_args.html#f_push_float"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="push_int"><param name="Local" value="libraries\eiffel2java\reference\java_args.html#f_push_int"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="push_object"><param name="Local" value="libraries\eiffel2java\reference\java_args.html#f_push_object"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="push_short"><param name="Local" value="libraries\eiffel2java\reference\java_args.html#f_push_short"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="push_string"><param name="Local" value="libraries\eiffel2java\reference\java_args.html#f_push_string"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="reset"><param name="Local" value="libraries\eiffel2java\reference\java_args.html#f_reset"></OBJECT>
+		</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="JAVA_ARRAY"><param name="Local" value="libraries\eiffel2java\reference\java_array_chart.html"></OBJECT>
+		<UL>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="count"><param name="Local" value="libraries\eiffel2java\reference\java_array.html#f_count"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="jni"><param name="Local" value="libraries\eiffel2java\reference\java_array.html#f_jni"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="make_from_pointer"><param name="Local" value="libraries\eiffel2java\reference\java_array.html#f_make_from_pointer"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="valid_index"><param name="Local" value="libraries\eiffel2java\reference\java_array.html#f_valid_index"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="c_check_for_exceptions"><param name="Local" value="libraries\eiffel2java\reference\java_array.html#f_c_check_for_exceptions"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="c_throw_custom_exception"><param name="Local" value="libraries\eiffel2java\reference\java_array.html#f_c_throw_custom_exception"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="c_throw_java_exception"><param name="Local" value="libraries\eiffel2java\reference\java_array.html#f_c_throw_java_exception"></OBJECT>
+		</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="JAVA_BOOLEAN_ARRAY"><param name="Local" value="libraries\eiffel2java\reference\java_boolean_array_chart.html"></OBJECT>
+		<UL>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="count"><param name="Local" value="libraries\eiffel2java\reference\java_boolean_array.html#f_count"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="item"><param name="Local" value="libraries\eiffel2java\reference\java_boolean_array.html#f_item"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="jni"><param name="Local" value="libraries\eiffel2java\reference\java_boolean_array.html#f_jni"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="make"><param name="Local" value="libraries\eiffel2java\reference\java_boolean_array.html#f_make"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="make_from_pointer"><param name="Local" value="libraries\eiffel2java\reference\java_boolean_array.html#f_make_from_pointer"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="put"><param name="Local" value="libraries\eiffel2java\reference\java_boolean_array.html#f_put"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="valid_index"><param name="Local" value="libraries\eiffel2java\reference\java_boolean_array.html#f_valid_index"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="c_check_for_exceptions"><param name="Local" value="libraries\eiffel2java\reference\java_boolean_array.html#f_c_check_for_exceptions"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="c_throw_custom_exception"><param name="Local" value="libraries\eiffel2java\reference\java_boolean_array.html#f_c_throw_custom_exception"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="c_throw_java_exception"><param name="Local" value="libraries\eiffel2java\reference\java_boolean_array.html#f_c_throw_java_exception"></OBJECT>
+		</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="JAVA_BYTE_ARRAY"><param name="Local" value="libraries\eiffel2java\reference\java_byte_array_chart.html"></OBJECT>
+		<UL>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="count"><param name="Local" value="libraries\eiffel2java\reference\java_byte_array.html#f_count"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="item"><param name="Local" value="libraries\eiffel2java\reference\java_byte_array.html#f_item"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="jni"><param name="Local" value="libraries\eiffel2java\reference\java_byte_array.html#f_jni"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="make"><param name="Local" value="libraries\eiffel2java\reference\java_byte_array.html#f_make"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="make_from_pointer"><param name="Local" value="libraries\eiffel2java\reference\java_byte_array.html#f_make_from_pointer"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="put"><param name="Local" value="libraries\eiffel2java\reference\java_byte_array.html#f_put"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="valid_index"><param name="Local" value="libraries\eiffel2java\reference\java_byte_array.html#f_valid_index"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="c_check_for_exceptions"><param name="Local" value="libraries\eiffel2java\reference\java_byte_array.html#f_c_check_for_exceptions"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="c_throw_custom_exception"><param name="Local" value="libraries\eiffel2java\reference\java_byte_array.html#f_c_throw_custom_exception"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="c_throw_java_exception"><param name="Local" value="libraries\eiffel2java\reference\java_byte_array.html#f_c_throw_java_exception"></OBJECT>
+		</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="JAVA_CHAR_ARRAY"><param name="Local" value="libraries\eiffel2java\reference\java_char_array_chart.html"></OBJECT>
+		<UL>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="count"><param name="Local" value="libraries\eiffel2java\reference\java_char_array.html#f_count"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="item"><param name="Local" value="libraries\eiffel2java\reference\java_char_array.html#f_item"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="jni"><param name="Local" value="libraries\eiffel2java\reference\java_char_array.html#f_jni"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="make"><param name="Local" value="libraries\eiffel2java\reference\java_char_array.html#f_make"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="make_from_pointer"><param name="Local" value="libraries\eiffel2java\reference\java_char_array.html#f_make_from_pointer"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="put"><param name="Local" value="libraries\eiffel2java\reference\java_char_array.html#f_put"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="valid_index"><param name="Local" value="libraries\eiffel2java\reference\java_char_array.html#f_valid_index"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="c_check_for_exceptions"><param name="Local" value="libraries\eiffel2java\reference\java_char_array.html#f_c_check_for_exceptions"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="c_throw_custom_exception"><param name="Local" value="libraries\eiffel2java\reference\java_char_array.html#f_c_throw_custom_exception"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="c_throw_java_exception"><param name="Local" value="libraries\eiffel2java\reference\java_char_array.html#f_c_throw_java_exception"></OBJECT>
+		</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="JAVA_CLASS"><param name="Local" value="libraries\eiffel2java\reference\java_class_chart.html"></OBJECT>
+		<UL>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="jni"><param name="Local" value="libraries\eiffel2java\reference\java_class.html#f_jni"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="name"><param name="Local" value="libraries\eiffel2java\reference\java_class.html#f_name"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="c_check_for_exceptions"><param name="Local" value="libraries\eiffel2java\reference\java_class.html#f_c_check_for_exceptions"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="c_throw_custom_exception"><param name="Local" value="libraries\eiffel2java\reference\java_class.html#f_c_throw_custom_exception"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="c_throw_java_exception"><param name="Local" value="libraries\eiffel2java\reference\java_class.html#f_c_throw_java_exception"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_boolean_attribute"><param name="Local" value="libraries\eiffel2java\reference\java_class.html#f_set_boolean_attribute"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_byte_attribute"><param name="Local" value="libraries\eiffel2java\reference\java_class.html#f_set_byte_attribute"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_char_attribute"><param name="Local" value="libraries\eiffel2java\reference\java_class.html#f_set_char_attribute"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_double_attribute"><param name="Local" value="libraries\eiffel2java\reference\java_class.html#f_set_double_attribute"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_float_attribute"><param name="Local" value="libraries\eiffel2java\reference\java_class.html#f_set_float_attribute"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_integer_attribute"><param name="Local" value="libraries\eiffel2java\reference\java_class.html#f_set_integer_attribute"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_object_attribute"><param name="Local" value="libraries\eiffel2java\reference\java_class.html#f_set_object_attribute"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_short_attribute"><param name="Local" value="libraries\eiffel2java\reference\java_class.html#f_set_short_attribute"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_string_attribute"><param name="Local" value="libraries\eiffel2java\reference\java_class.html#f_set_string_attribute"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="boolean_attribute"><param name="Local" value="libraries\eiffel2java\reference\java_class.html#f_boolean_attribute"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="byte_attribute"><param name="Local" value="libraries\eiffel2java\reference\java_class.html#f_byte_attribute"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="char_attribute"><param name="Local" value="libraries\eiffel2java\reference\java_class.html#f_char_attribute"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="double_attribute"><param name="Local" value="libraries\eiffel2java\reference\java_class.html#f_double_attribute"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="float_attribute"><param name="Local" value="libraries\eiffel2java\reference\java_class.html#f_float_attribute"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="integer_attribute"><param name="Local" value="libraries\eiffel2java\reference\java_class.html#f_integer_attribute"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="object_attribute"><param name="Local" value="libraries\eiffel2java\reference\java_class.html#f_object_attribute"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="short_attribute"><param name="Local" value="libraries\eiffel2java\reference\java_class.html#f_short_attribute"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="string_attribute"><param name="Local" value="libraries\eiffel2java\reference\java_class.html#f_string_attribute"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="field_id"><param name="Local" value="libraries\eiffel2java\reference\java_class.html#f_field_id"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="long_method"><param name="Local" value="libraries\eiffel2java\reference\java_class.html#f_long_method"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="boolean_method"><param name="Local" value="libraries\eiffel2java\reference\java_class.html#f_boolean_method"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="byte_method"><param name="Local" value="libraries\eiffel2java\reference\java_class.html#f_byte_method"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="char_method"><param name="Local" value="libraries\eiffel2java\reference\java_class.html#f_char_method"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="double_method"><param name="Local" value="libraries\eiffel2java\reference\java_class.html#f_double_method"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="float_method"><param name="Local" value="libraries\eiffel2java\reference\java_class.html#f_float_method"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="integer_method"><param name="Local" value="libraries\eiffel2java\reference\java_class.html#f_integer_method"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="object_method"><param name="Local" value="libraries\eiffel2java\reference\java_class.html#f_object_method"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="short_method"><param name="Local" value="libraries\eiffel2java\reference\java_class.html#f_short_method"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="string_method"><param name="Local" value="libraries\eiffel2java\reference\java_class.html#f_string_method"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="void_method"><param name="Local" value="libraries\eiffel2java\reference\java_class.html#f_void_method"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="make_from_pointer"><param name="Local" value="libraries\eiffel2java\reference\java_class.html#f_make_from_pointer"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="method_id"><param name="Local" value="libraries\eiffel2java\reference\java_class.html#f_method_id"></OBJECT>
+		</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="JAVA_DOUBLE_ARRAY"><param name="Local" value="libraries\eiffel2java\reference\java_double_array_chart.html"></OBJECT>
+		<UL>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="count"><param name="Local" value="libraries\eiffel2java\reference\java_double_array.html#f_count"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="item"><param name="Local" value="libraries\eiffel2java\reference\java_double_array.html#f_item"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="jni"><param name="Local" value="libraries\eiffel2java\reference\java_double_array.html#f_jni"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="make"><param name="Local" value="libraries\eiffel2java\reference\java_double_array.html#f_make"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="make_from_pointer"><param name="Local" value="libraries\eiffel2java\reference\java_double_array.html#f_make_from_pointer"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="put"><param name="Local" value="libraries\eiffel2java\reference\java_double_array.html#f_put"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="valid_index"><param name="Local" value="libraries\eiffel2java\reference\java_double_array.html#f_valid_index"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="c_check_for_exceptions"><param name="Local" value="libraries\eiffel2java\reference\java_double_array.html#f_c_check_for_exceptions"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="c_throw_custom_exception"><param name="Local" value="libraries\eiffel2java\reference\java_double_array.html#f_c_throw_custom_exception"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="c_throw_java_exception"><param name="Local" value="libraries\eiffel2java\reference\java_double_array.html#f_c_throw_java_exception"></OBJECT>
+		</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="JAVA_EXTERNALS"><param name="Local" value="libraries\eiffel2java\reference\java_externals_chart.html"></OBJECT>
+		<UL>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="c_check_for_exceptions"><param name="Local" value="libraries\eiffel2java\reference\java_externals.html#f_c_check_for_exceptions"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="c_throw_custom_exception"><param name="Local" value="libraries\eiffel2java\reference\java_externals.html#f_c_throw_custom_exception"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="c_throw_java_exception"><param name="Local" value="libraries\eiffel2java\reference\java_externals.html#f_c_throw_java_exception"></OBJECT>
+		</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="JAVA_FLOAT_ARRAY"><param name="Local" value="libraries\eiffel2java\reference\java_float_array_chart.html"></OBJECT>
+		<UL>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="count"><param name="Local" value="libraries\eiffel2java\reference\java_float_array.html#f_count"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="item"><param name="Local" value="libraries\eiffel2java\reference\java_float_array.html#f_item"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="jni"><param name="Local" value="libraries\eiffel2java\reference\java_float_array.html#f_jni"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="make"><param name="Local" value="libraries\eiffel2java\reference\java_float_array.html#f_make"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="make_from_pointer"><param name="Local" value="libraries\eiffel2java\reference\java_float_array.html#f_make_from_pointer"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="put"><param name="Local" value="libraries\eiffel2java\reference\java_float_array.html#f_put"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="valid_index"><param name="Local" value="libraries\eiffel2java\reference\java_float_array.html#f_valid_index"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="c_check_for_exceptions"><param name="Local" value="libraries\eiffel2java\reference\java_float_array.html#f_c_check_for_exceptions"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="c_throw_custom_exception"><param name="Local" value="libraries\eiffel2java\reference\java_float_array.html#f_c_throw_custom_exception"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="c_throw_java_exception"><param name="Local" value="libraries\eiffel2java\reference\java_float_array.html#f_c_throw_java_exception"></OBJECT>
+		</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="JAVA_INT_ARRAY"><param name="Local" value="libraries\eiffel2java\reference\java_int_array_chart.html"></OBJECT>
+		<UL>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="count"><param name="Local" value="libraries\eiffel2java\reference\java_int_array.html#f_count"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="item"><param name="Local" value="libraries\eiffel2java\reference\java_int_array.html#f_item"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="jni"><param name="Local" value="libraries\eiffel2java\reference\java_int_array.html#f_jni"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="make"><param name="Local" value="libraries\eiffel2java\reference\java_int_array.html#f_make"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="make_from_pointer"><param name="Local" value="libraries\eiffel2java\reference\java_int_array.html#f_make_from_pointer"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="put"><param name="Local" value="libraries\eiffel2java\reference\java_int_array.html#f_put"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="valid_index"><param name="Local" value="libraries\eiffel2java\reference\java_int_array.html#f_valid_index"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="c_check_for_exceptions"><param name="Local" value="libraries\eiffel2java\reference\java_int_array.html#f_c_check_for_exceptions"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="c_throw_custom_exception"><param name="Local" value="libraries\eiffel2java\reference\java_int_array.html#f_c_throw_custom_exception"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="c_throw_java_exception"><param name="Local" value="libraries\eiffel2java\reference\java_int_array.html#f_c_throw_java_exception"></OBJECT>
+		</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="JAVA_OBJECT_ARRAY"><param name="Local" value="libraries\eiffel2java\reference\java_object_array_chart.html"></OBJECT>
+		<UL>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="count"><param name="Local" value="libraries\eiffel2java\reference\java_object_array.html#f_count"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="item"><param name="Local" value="libraries\eiffel2java\reference\java_object_array.html#f_item"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="jni"><param name="Local" value="libraries\eiffel2java\reference\java_object_array.html#f_jni"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="make"><param name="Local" value="libraries\eiffel2java\reference\java_object_array.html#f_make"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="make_from_pointer"><param name="Local" value="libraries\eiffel2java\reference\java_object_array.html#f_make_from_pointer"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="put"><param name="Local" value="libraries\eiffel2java\reference\java_object_array.html#f_put"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="valid_index"><param name="Local" value="libraries\eiffel2java\reference\java_object_array.html#f_valid_index"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="c_check_for_exceptions"><param name="Local" value="libraries\eiffel2java\reference\java_object_array.html#f_c_check_for_exceptions"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="c_throw_custom_exception"><param name="Local" value="libraries\eiffel2java\reference\java_object_array.html#f_c_throw_custom_exception"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="c_throw_java_exception"><param name="Local" value="libraries\eiffel2java\reference\java_object_array.html#f_c_throw_java_exception"></OBJECT>
+		</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="JAVA_OBJECT"><param name="Local" value="libraries\eiffel2java\reference\java_object_chart.html"></OBJECT>
+		<UL>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="jni"><param name="Local" value="libraries\eiffel2java\reference\java_object.html#f_jni"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="c_check_for_exceptions"><param name="Local" value="libraries\eiffel2java\reference\java_object.html#f_c_check_for_exceptions"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="c_throw_custom_exception"><param name="Local" value="libraries\eiffel2java\reference\java_object.html#f_c_throw_custom_exception"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="c_throw_java_exception"><param name="Local" value="libraries\eiffel2java\reference\java_object.html#f_c_throw_java_exception"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="boolean_attribute"><param name="Local" value="libraries\eiffel2java\reference\java_object.html#f_boolean_attribute"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="byte_attribute"><param name="Local" value="libraries\eiffel2java\reference\java_object.html#f_byte_attribute"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="char_attribute"><param name="Local" value="libraries\eiffel2java\reference\java_object.html#f_char_attribute"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="double_attribute"><param name="Local" value="libraries\eiffel2java\reference\java_object.html#f_double_attribute"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="float_attribute"><param name="Local" value="libraries\eiffel2java\reference\java_object.html#f_float_attribute"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="integer_attribute"><param name="Local" value="libraries\eiffel2java\reference\java_object.html#f_integer_attribute"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="object_attribute"><param name="Local" value="libraries\eiffel2java\reference\java_object.html#f_object_attribute"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="short_attribute"><param name="Local" value="libraries\eiffel2java\reference\java_object.html#f_short_attribute"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="string_attribute"><param name="Local" value="libraries\eiffel2java\reference\java_object.html#f_string_attribute"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="field_id"><param name="Local" value="libraries\eiffel2java\reference\java_object.html#f_field_id"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="boolean_method"><param name="Local" value="libraries\eiffel2java\reference\java_object.html#f_boolean_method"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="byte_method"><param name="Local" value="libraries\eiffel2java\reference\java_object.html#f_byte_method"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="char_method"><param name="Local" value="libraries\eiffel2java\reference\java_object.html#f_char_method"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="double_method"><param name="Local" value="libraries\eiffel2java\reference\java_object.html#f_double_method"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="float_method"><param name="Local" value="libraries\eiffel2java\reference\java_object.html#f_float_method"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="integer_method"><param name="Local" value="libraries\eiffel2java\reference\java_object.html#f_integer_method"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="long_method"><param name="Local" value="libraries\eiffel2java\reference\java_object.html#f_long_method"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="object_method"><param name="Local" value="libraries\eiffel2java\reference\java_object.html#f_object_method"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="short_method"><param name="Local" value="libraries\eiffel2java\reference\java_object.html#f_short_method"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="string_method"><param name="Local" value="libraries\eiffel2java\reference\java_object.html#f_string_method"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="void_method"><param name="Local" value="libraries\eiffel2java\reference\java_object.html#f_void_method"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="create_instance"><param name="Local" value="libraries\eiffel2java\reference\java_object.html#f_create_instance"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="make_from_pointer"><param name="Local" value="libraries\eiffel2java\reference\java_object.html#f_make_from_pointer"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="method_id"><param name="Local" value="libraries\eiffel2java\reference\java_object.html#f_method_id"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_boolean_attribute"><param name="Local" value="libraries\eiffel2java\reference\java_object.html#f_set_boolean_attribute"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_byte_attribute"><param name="Local" value="libraries\eiffel2java\reference\java_object.html#f_set_byte_attribute"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_char_attribute"><param name="Local" value="libraries\eiffel2java\reference\java_object.html#f_set_char_attribute"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_double_attribute"><param name="Local" value="libraries\eiffel2java\reference\java_object.html#f_set_double_attribute"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_float_attribute"><param name="Local" value="libraries\eiffel2java\reference\java_object.html#f_set_float_attribute"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_integer_attribute"><param name="Local" value="libraries\eiffel2java\reference\java_object.html#f_set_integer_attribute"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_object_attribute"><param name="Local" value="libraries\eiffel2java\reference\java_object.html#f_set_object_attribute"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_short_attribute"><param name="Local" value="libraries\eiffel2java\reference\java_object.html#f_set_short_attribute"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_string_attribute"><param name="Local" value="libraries\eiffel2java\reference\java_object.html#f_set_string_attribute"></OBJECT>
+		</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="JAVA_OBJECT_TABLE"><param name="Local" value="libraries\eiffel2java\reference\java_object_table_chart.html"></OBJECT>
+		<UL>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="item"><param name="Local" value="libraries\eiffel2java\reference\java_object_table.html#f_item"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="put"><param name="Local" value="libraries\eiffel2java\reference\java_object_table.html#f_put"></OBJECT>
+		</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="JAVA_SHORT_ARRAY"><param name="Local" value="libraries\eiffel2java\reference\java_short_array_chart.html"></OBJECT>
+		<UL>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="count"><param name="Local" value="libraries\eiffel2java\reference\java_short_array.html#f_count"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="item"><param name="Local" value="libraries\eiffel2java\reference\java_short_array.html#f_item"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="jni"><param name="Local" value="libraries\eiffel2java\reference\java_short_array.html#f_jni"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="make"><param name="Local" value="libraries\eiffel2java\reference\java_short_array.html#f_make"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="make_from_pointer"><param name="Local" value="libraries\eiffel2java\reference\java_short_array.html#f_make_from_pointer"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="put"><param name="Local" value="libraries\eiffel2java\reference\java_short_array.html#f_put"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="valid_index"><param name="Local" value="libraries\eiffel2java\reference\java_short_array.html#f_valid_index"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="c_check_for_exceptions"><param name="Local" value="libraries\eiffel2java\reference\java_short_array.html#f_c_check_for_exceptions"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="c_throw_custom_exception"><param name="Local" value="libraries\eiffel2java\reference\java_short_array.html#f_c_throw_custom_exception"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="c_throw_java_exception"><param name="Local" value="libraries\eiffel2java\reference\java_short_array.html#f_c_throw_java_exception"></OBJECT>
+		</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="JAVA_VM"><param name="Local" value="libraries\eiffel2java\reference\java_vm_chart.html"></OBJECT>
+		<UL>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="check_instruction"><param name="Local" value="libraries\eiffel2java\reference\java_vm.html#f_check_instruction"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="class_invariant"><param name="Local" value="libraries\eiffel2java\reference\java_vm.html#f_class_invariant"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="com_exception"><param name="Local" value="libraries\eiffel2java\reference\java_vm.html#f_com_exception"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="developer_exception"><param name="Local" value="libraries\eiffel2java\reference\java_vm.html#f_developer_exception"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="external_exception"><param name="Local" value="libraries\eiffel2java\reference\java_vm.html#f_external_exception"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="floating_point_exception"><param name="Local" value="libraries\eiffel2java\reference\java_vm.html#f_floating_point_exception"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="incorrect_inspect_value"><param name="Local" value="libraries\eiffel2java\reference\java_vm.html#f_incorrect_inspect_value"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="io_exception"><param name="Local" value="libraries\eiffel2java\reference\java_vm.html#f_io_exception"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="loop_invariant"><param name="Local" value="libraries\eiffel2java\reference\java_vm.html#f_loop_invariant"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="loop_variant"><param name="Local" value="libraries\eiffel2java\reference\java_vm.html#f_loop_variant"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="no_more_memory"><param name="Local" value="libraries\eiffel2java\reference\java_vm.html#f_no_more_memory"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="operating_system_exception"><param name="Local" value="libraries\eiffel2java\reference\java_vm.html#f_operating_system_exception"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="postcondition"><param name="Local" value="libraries\eiffel2java\reference\java_vm.html#f_postcondition"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="precondition"><param name="Local" value="libraries\eiffel2java\reference\java_vm.html#f_precondition"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="rescue_exception"><param name="Local" value="libraries\eiffel2java\reference\java_vm.html#f_rescue_exception"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="retrieve_exception"><param name="Local" value="libraries\eiffel2java\reference\java_vm.html#f_retrieve_exception"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="routine_failure"><param name="Local" value="libraries\eiffel2java\reference\java_vm.html#f_routine_failure"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="runtime_io_exception"><param name="Local" value="libraries\eiffel2java\reference\java_vm.html#f_runtime_io_exception"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="signal_exception"><param name="Local" value="libraries\eiffel2java\reference\java_vm.html#f_signal_exception"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="void_assigned_to_expanded"><param name="Local" value="libraries\eiffel2java\reference\java_vm.html#f_void_assigned_to_expanded"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="void_call_target"><param name="Local" value="libraries\eiffel2java\reference\java_vm.html#f_void_call_target"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="assertion_violation"><param name="Local" value="libraries\eiffel2java\reference\java_vm.html#f_assertion_violation"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="class_name"><param name="Local" value="libraries\eiffel2java\reference\java_vm.html#f_class_name"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="developer_exception_name"><param name="Local" value="libraries\eiffel2java\reference\java_vm.html#f_developer_exception_name"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="exception"><param name="Local" value="libraries\eiffel2java\reference\java_vm.html#f_exception"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="exception_trace"><param name="Local" value="libraries\eiffel2java\reference\java_vm.html#f_exception_trace"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="is_developer_exception"><param name="Local" value="libraries\eiffel2java\reference\java_vm.html#f_is_developer_exception"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="is_developer_exception_of_name"><param name="Local" value="libraries\eiffel2java\reference\java_vm.html#f_is_developer_exception_of_name"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="is_signal"><param name="Local" value="libraries\eiffel2java\reference\java_vm.html#f_is_signal"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="is_system_exception"><param name="Local" value="libraries\eiffel2java\reference\java_vm.html#f_is_system_exception"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="meaning"><param name="Local" value="libraries\eiffel2java\reference\java_vm.html#f_meaning"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="original_class_name"><param name="Local" value="libraries\eiffel2java\reference\java_vm.html#f_original_class_name"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="original_exception"><param name="Local" value="libraries\eiffel2java\reference\java_vm.html#f_original_exception"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="original_recipient_name"><param name="Local" value="libraries\eiffel2java\reference\java_vm.html#f_original_recipient_name"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="original_tag_name"><param name="Local" value="libraries\eiffel2java\reference\java_vm.html#f_original_tag_name"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="recipient_name"><param name="Local" value="libraries\eiffel2java\reference\java_vm.html#f_recipient_name"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="tag_name"><param name="Local" value="libraries\eiffel2java\reference\java_vm.html#f_tag_name"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="catch"><param name="Local" value="libraries\eiffel2java\reference\java_vm.html#f_catch"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="die"><param name="Local" value="libraries\eiffel2java\reference\java_vm.html#f_die"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="ignore"><param name="Local" value="libraries\eiffel2java\reference\java_vm.html#f_ignore"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="message_on_failure"><param name="Local" value="libraries\eiffel2java\reference\java_vm.html#f_message_on_failure"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="no_message_on_failure"><param name="Local" value="libraries\eiffel2java\reference\java_vm.html#f_no_message_on_failure"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="raise"><param name="Local" value="libraries\eiffel2java\reference\java_vm.html#f_raise"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="attach_current_thread"><param name="Local" value="libraries\eiffel2java\reference\java_vm.html#f_attach_current_thread"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="create_vm"><param name="Local" value="libraries\eiffel2java\reference\java_vm.html#f_create_vm"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="destroy_vm"><param name="Local" value="libraries\eiffel2java\reference\java_vm.html#f_destroy_vm"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="detach_current_thread"><param name="Local" value="libraries\eiffel2java\reference\java_vm.html#f_detach_current_thread"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="make"><param name="Local" value="libraries\eiffel2java\reference\java_vm.html#f_make"></OBJECT>
+		</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="JNI_ENVIRONMENT"><param name="Local" value="libraries\eiffel2java\reference\jni_environment_chart.html"></OBJECT>
+		<UL>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="destroy_vm"><param name="Local" value="libraries\eiffel2java\reference\jni_environment.html#f_destroy_vm"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="find_class"><param name="Local" value="libraries\eiffel2java\reference\jni_environment.html#f_find_class"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="find_class_by_pointer"><param name="Local" value="libraries\eiffel2java\reference\jni_environment.html#f_find_class_by_pointer"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="find_class_pointer"><param name="Local" value="libraries\eiffel2java\reference\jni_environment.html#f_find_class_pointer"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="check_for_exceptions"><param name="Local" value="libraries\eiffel2java\reference\jni_environment.html#f_check_for_exceptions"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="throw_custom_exception"><param name="Local" value="libraries\eiffel2java\reference\jni_environment.html#f_throw_custom_exception"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="throw_java_exception"><param name="Local" value="libraries\eiffel2java\reference\jni_environment.html#f_throw_java_exception"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="c_check_for_exceptions"><param name="Local" value="libraries\eiffel2java\reference\jni_environment.html#f_c_check_for_exceptions"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="c_throw_custom_exception"><param name="Local" value="libraries\eiffel2java\reference\jni_environment.html#f_c_throw_custom_exception"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="c_throw_java_exception"><param name="Local" value="libraries\eiffel2java\reference\jni_environment.html#f_c_throw_java_exception"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="attach_current_thread"><param name="Local" value="libraries\eiffel2java\reference\jni_environment.html#f_attach_current_thread"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="detach_current_thread"><param name="Local" value="libraries\eiffel2java\reference\jni_environment.html#f_detach_current_thread"></OBJECT>
+		</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="SHARED_JNI_ENVIRONMENT"><param name="Local" value="libraries\eiffel2java\reference\shared_jni_environment_chart.html"></OBJECT>
+		<UL>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="jni"><param name="Local" value="libraries\eiffel2java\reference\shared_jni_environment.html#f_jni"></OBJECT>
+		</UL>
+	</UL>

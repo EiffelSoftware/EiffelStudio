@@ -1,0 +1,397 @@
+<HTML>
+	<HEAD>
+		
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.32">
+		
+<TITLE>WEL_SOCKET_POLLER Chart</TITLE>
+		
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<SPAN CLASS="ekeyword">class</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../../net/reference/polling/implementation/wel_socket_poller_chart.html">WEL_SOCKET_POLLER</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">General</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../../../net/reference/polling/implementation/index.html">net.polling.implementation</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">create</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../net/reference/polling/implementation/wel_socket_poller.html#f_make_active">make_active</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../../../../net/reference/polling/implementation/wel_socket_poller.html#f_make">make</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Ancestors</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../../net/reference/polling/abstract/socket_poller_chart.html">SOCKET_POLLER</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../../wel/reference/support/wel_command_chart.html">WEL_COMMAND</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../../wel/reference/consts/wel_wm_constants_chart.html">WEL_WM_CONSTANTS</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Queries</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_auto_discard' was declared in SOCKET_POLLER"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/socket_poller.html#f_is_auto_discard">is_auto_discard</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_poll_all' was declared in SOCKET_POLLER"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/socket_poller.html#f_is_poll_all">is_poll_all</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_poller_active' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/implementation/wel_socket_poller.html#f_is_poller_active">is_poller_active</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`message_information' was declared in WEL_COMMAND"><A CLASS="efeature" HREF="../../../../wel/reference/support/wel_command.html#f_message_information">message_information</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../wel/reference/messages/wel_message_information_chart.html">WEL_MESSAGE_INFORMATION</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_activate' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_activate">Wm_activate</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_activateapp' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_activateapp">Wm_activateapp</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_askcbformatname' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_askcbformatname">Wm_askcbformatname</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_cancelmode' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_cancelmode">Wm_cancelmode</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_changecbchain' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_changecbchain">Wm_changecbchain</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_char' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_char">Wm_char</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_chartoitem' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_chartoitem">Wm_chartoitem</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_childactivate' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_childactivate">Wm_childactivate</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_clear' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_clear">Wm_clear</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_close' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_close">Wm_close</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_command' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_command">Wm_command</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_commnotify' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_commnotify">Wm_commnotify</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_compacting' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_compacting">Wm_compacting</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_compareitem' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_compareitem">Wm_compareitem</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_copy' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_copy">Wm_copy</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_create' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_create">Wm_create</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_cut' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_cut">Wm_cut</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_deadchar' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_deadchar">Wm_deadchar</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_deleteitem' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_deleteitem">Wm_deleteitem</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_destroy' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_destroy">Wm_destroy</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_destroyclipboard' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_destroyclipboard">Wm_destroyclipboard</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_devmodechange' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_devmodechange">Wm_devmodechange</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_displaychange' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_displaychange">Wm_displaychange</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_drawclipboard' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_drawclipboard">Wm_drawclipboard</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_drawitem' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_drawitem">Wm_drawitem</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_dropfiles' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_dropfiles">Wm_dropfiles</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_enable' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_enable">Wm_enable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_endsession' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_endsession">Wm_endsession</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_enteridle' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_enteridle">Wm_enteridle</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_entersizemove' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_entersizemove">Wm_entersizemove</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_erasebkgnd' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_erasebkgnd">Wm_erasebkgnd</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_exitsizemove' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_exitsizemove">Wm_exitsizemove</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_fontchange' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_fontchange">Wm_fontchange</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_getdlgcode' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_getdlgcode">Wm_getdlgcode</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_getfont' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_getfont">Wm_getfont</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_geticon' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_geticon">Wm_geticon</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_getminmaxinfo' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_getminmaxinfo">Wm_getminmaxinfo</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_gettext' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_gettext">Wm_gettext</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_gettextlength' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_gettextlength">Wm_gettextlength</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_hscroll' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_hscroll">Wm_hscroll</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_hscrollclipboard' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_hscrollclipboard">Wm_hscrollclipboard</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_iconerasebkgnd' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_iconerasebkgnd">Wm_iconerasebkgnd</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_ime_char' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_ime_char">Wm_ime_char</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_ime_compositionfull' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_ime_compositionfull">Wm_ime_compositionfull</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_ime_control' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_ime_control">Wm_ime_control</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_ime_keydown' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_ime_keydown">Wm_ime_keydown</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_ime_keyup' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_ime_keyup">Wm_ime_keyup</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_ime_notify' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_ime_notify">Wm_ime_notify</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_ime_select' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_ime_select">Wm_ime_select</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_ime_setcontext' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_ime_setcontext">Wm_ime_setcontext</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_initdialog' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_initdialog">Wm_initdialog</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_initmenu' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_initmenu">Wm_initmenu</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_initmenupopup' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_initmenupopup">Wm_initmenupopup</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_keydown' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_keydown">Wm_keydown</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_keyfirst' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_keyfirst">Wm_keyfirst</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_keylast' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_keylast">Wm_keylast</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_keyup' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_keyup">Wm_keyup</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_killfocus' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_killfocus">Wm_killfocus</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_lbuttondblclk' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_lbuttondblclk">Wm_lbuttondblclk</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_lbuttondown' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_lbuttondown">Wm_lbuttondown</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_lbuttonup' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_lbuttonup">Wm_lbuttonup</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_mbuttondblclk' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_mbuttondblclk">Wm_mbuttondblclk</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_mbuttondown' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_mbuttondown">Wm_mbuttondown</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_mbuttonup' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_mbuttonup">Wm_mbuttonup</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_mdiactivate' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_mdiactivate">Wm_mdiactivate</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_mdicascade' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_mdicascade">Wm_mdicascade</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_mdicreate' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_mdicreate">Wm_mdicreate</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_mdidestroy' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_mdidestroy">Wm_mdidestroy</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_mdigetactive' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_mdigetactive">Wm_mdigetactive</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_mdiiconarrange' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_mdiiconarrange">Wm_mdiiconarrange</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_mdimaximize' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_mdimaximize">Wm_mdimaximize</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_mdinext' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_mdinext">Wm_mdinext</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_mdirefreshmenu' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_mdirefreshmenu">Wm_mdirefreshmenu</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_mdirestore' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_mdirestore">Wm_mdirestore</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_mdisetmenu' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_mdisetmenu">Wm_mdisetmenu</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_mditile' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_mditile">Wm_mditile</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_measureitem' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_measureitem">Wm_measureitem</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_menuchar' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_menuchar">Wm_menuchar</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_menuselect' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_menuselect">Wm_menuselect</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_mouseactivate' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_mouseactivate">Wm_mouseactivate</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_mousefirst' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_mousefirst">Wm_mousefirst</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_mousehover' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_mousehover">Wm_mousehover</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_mouselast' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_mouselast">Wm_mouselast</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_mouseleave' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_mouseleave">Wm_mouseleave</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_mousemove' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_mousemove">Wm_mousemove</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_move' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_move">Wm_move</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_ncactivate' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_ncactivate">Wm_ncactivate</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_nccalcsize' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_nccalcsize">Wm_nccalcsize</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_nccreate' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_nccreate">Wm_nccreate</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_ncdestroy' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_ncdestroy">Wm_ncdestroy</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_nchittest' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_nchittest">Wm_nchittest</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_nclbuttondblclk' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_nclbuttondblclk">Wm_nclbuttondblclk</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_nclbuttondown' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_nclbuttondown">Wm_nclbuttondown</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_nclbuttonup' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_nclbuttonup">Wm_nclbuttonup</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_ncmbuttondblclk' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_ncmbuttondblclk">Wm_ncmbuttondblclk</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_ncmbuttondown' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_ncmbuttondown">Wm_ncmbuttondown</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_ncmbuttonup' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_ncmbuttonup">Wm_ncmbuttonup</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_ncmousemove' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_ncmousemove">Wm_ncmousemove</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_ncpaint' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_ncpaint">Wm_ncpaint</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_ncrbuttondblclk' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_ncrbuttondblclk">Wm_ncrbuttondblclk</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_ncrbuttondown' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_ncrbuttondown">Wm_ncrbuttondown</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_ncrbuttonup' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_ncrbuttonup">Wm_ncrbuttonup</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_nextdlgctl' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_nextdlgctl">Wm_nextdlgctl</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_notify' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_notify">Wm_notify</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_null' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_null">Wm_null</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_paint' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_paint">Wm_paint</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_paintclipboard' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_paintclipboard">Wm_paintclipboard</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_palettechanged' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_palettechanged">Wm_palettechanged</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_paletteischanging' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_paletteischanging">Wm_paletteischanging</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_parentnotify' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_parentnotify">Wm_parentnotify</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_paste' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_paste">Wm_paste</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_penwinfirst' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_penwinfirst">Wm_penwinfirst</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_penwinlast' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_penwinlast">Wm_penwinlast</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_power' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_power">Wm_power</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_querydragicon' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_querydragicon">Wm_querydragicon</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_queryendsession' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_queryendsession">Wm_queryendsession</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_querynewpalette' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_querynewpalette">Wm_querynewpalette</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_queryopen' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_queryopen">Wm_queryopen</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_queuesync' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_queuesync">Wm_queuesync</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_quit' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_quit">Wm_quit</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_rbuttondblclk' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_rbuttondblclk">Wm_rbuttondblclk</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_rbuttondown' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_rbuttondown">Wm_rbuttondown</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_rbuttonup' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_rbuttonup">Wm_rbuttonup</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_renderallformats' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_renderallformats">Wm_renderallformats</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_renderformat' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_renderformat">Wm_renderformat</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_setcursor' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_setcursor">Wm_setcursor</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_setfocus' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_setfocus">Wm_setfocus</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_setfont' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_setfont">Wm_setfont</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_seticon' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_seticon">Wm_seticon</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_setredraw' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_setredraw">Wm_setredraw</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_settext' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_settext">Wm_settext</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_showwindow' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_showwindow">Wm_showwindow</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_size' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_size">Wm_size</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_sizeclipboard' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_sizeclipboard">Wm_sizeclipboard</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_sizing' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_sizing">Wm_sizing</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_spoolerstatus' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_spoolerstatus">Wm_spoolerstatus</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_syncpaint' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_syncpaint">Wm_syncpaint</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_syschar' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_syschar">Wm_syschar</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_syscolorchange' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_syscolorchange">Wm_syscolorchange</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_syscommand' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_syscommand">Wm_syscommand</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_sysdeadchar' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_sysdeadchar">Wm_sysdeadchar</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_syskeydown' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_syskeydown">Wm_syskeydown</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_syskeyup' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_syskeyup">Wm_syskeyup</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_timechange' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_timechange">Wm_timechange</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_timer' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_timer">Wm_timer</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_undo' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_undo">Wm_undo</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_user' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_user">Wm_user</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_vkeytoitem' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_vkeytoitem">Wm_vkeytoitem</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_vscroll' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_vscroll">Wm_vscroll</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_vscrollclipboard' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_vscrollclipboard">Wm_vscrollclipboard</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_windowposchanged' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_windowposchanged">Wm_windowposchanged</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_windowposchanging' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_windowposchanging">Wm_windowposchanging</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wm_wininichange' was declared in WEL_WM_CONSTANTS"><A CLASS="efeature" HREF="../../../../wel/reference/consts/wel_wm_constants.html#f_wm_wininichange">Wm_wininichange</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Commands</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`add_accept_call_back' was declared in SOCKET_POLLER"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/socket_poller.html#f_add_accept_call_back">add_accept_call_back</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_stream_socket</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/stream_socket_chart.html">STREAM_SOCKET</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">a_command</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/polling/abstract/poll_command_chart.html">POLL_COMMAND</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">an_argument</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`add_readable_call_back' was declared in SOCKET_POLLER"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/socket_poller.html#f_add_readable_call_back">add_readable_call_back</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_socket</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_chart.html">SOCKET</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">a_command</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/polling/abstract/poll_command_chart.html">POLL_COMMAND</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">an_argument</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`execute' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/implementation/wel_socket_poller.html#f_execute">execute</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">arg</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`make' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/implementation/wel_socket_poller.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_window</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../wel/reference/windows/wel_window_chart.html">WEL_WINDOW</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">a_timer_id</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`make_active' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/implementation/wel_socket_poller.html#f_make_active">make_active</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_window</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../wel/reference/windows/wel_window_chart.html">WEL_WINDOW</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">a_timer_id</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_delay</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`poller_make' was declared in SOCKET_POLLER as `make'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/socket_poller.html#f_make">poller_make</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`poller_make_active' was declared in SOCKET_POLLER as `make_active'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/socket_poller.html#f_make_active">poller_make_active</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_poll_delay</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`remove_accept_call_back' was declared in SOCKET_POLLER"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/socket_poller.html#f_remove_accept_call_back">remove_accept_call_back</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_stream_socket</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/stream_socket_chart.html">STREAM_SOCKET</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`remove_readable_call_back' was declared in SOCKET_POLLER"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/socket_poller.html#f_remove_readable_call_back">remove_readable_call_back</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_socket</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_chart.html">SOCKET</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_active' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/implementation/wel_socket_poller.html#f_set_active">set_active</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_delay</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_auto_discard' was declared in SOCKET_POLLER"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/socket_poller.html#f_set_auto_discard">set_auto_discard</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_inactive' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/implementation/wel_socket_poller.html#f_set_inactive">set_inactive</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_message_information' was declared in WEL_COMMAND"><A CLASS="efeature" HREF="../../../../wel/reference/support/wel_command.html#f_set_message_information">set_message_information</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">mi</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../wel/reference/messages/wel_message_information_chart.html">WEL_MESSAGE_INFORMATION</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_no_discard' was declared in SOCKET_POLLER"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/socket_poller.html#f_set_no_discard">set_no_discard</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_poll_all' was declared in SOCKET_POLLER"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/socket_poller.html#f_set_poll_all">set_poll_all</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_poll_one' was declared in SOCKET_POLLER"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/socket_poller.html#f_set_poll_one">set_poll_one</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wipe_out_all_call_backs' was declared in SOCKET_POLLER"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/socket_poller.html#f_wipe_out_all_call_backs">wipe_out_all_call_backs</A></SPAN><BR>
+
+<BR>
+
+<BR>
+
+</BODY>
+
+</HTML>

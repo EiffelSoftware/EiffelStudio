@@ -1,0 +1,91 @@
+<HTML>
+	<HEAD>
+		
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.32">
+		
+<TITLE>SCREEN_LOG Chart</TITLE>
+		
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<SPAN CLASS="ekeyword">class</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../test/reference/logging/screen_log_chart.html">SCREEN_LOG</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">General</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../../test/reference/logging/index.html">test.logging</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Screen log facilities for test results"</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">create</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../test/reference/logging/screen_log.html#f_make_with_stderr">make_with_stderr</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../../../test/reference/logging/screen_log.html#f_make_with_stdout">make_with_stdout</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../../../test/reference/logging/screen_log.html#f_make">make</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Ancestors</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../test/reference/logging/log_facility_chart.html">LOG_FACILITY</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Queries</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`has_execution_time' was declared in CHECK_UTILITY"><A CLASS="efeature" HREF="../../../test/reference/logging/check_utility.html#f_has_execution_time">has_execution_time</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">t</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../test/reference/testing/single_test_chart.html">SINGLE_TEST</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">run</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`has_passed' was declared in CHECK_UTILITY"><A CLASS="efeature" HREF="../../../test/reference/logging/check_utility.html#f_has_passed">has_passed</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">t</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../test/reference/testing/testable_chart.html">TESTABLE</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">run</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_device_set' was declared in LOG_FACILITY"><A CLASS="efeature" HREF="../../../test/reference/logging/log_facility.html#f_is_device_set">is_device_set</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_format_set' was declared in LOG_FACILITY"><A CLASS="efeature" HREF="../../../test/reference/logging/log_facility.html#f_is_format_set">is_format_set</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_format_supported' was declared in LOG_FACILITY"><A CLASS="efeature" HREF="../../../test/reference/logging/log_facility.html#f_is_format_supported">is_format_supported</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">f</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_log_writable' was declared in LOG_FACILITY"><A CLASS="efeature" HREF="../../../test/reference/logging/log_facility.html#f_is_log_writable">is_log_writable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_stderr' is declared in `Current'"><A CLASS="efeature" HREF="../../../test/reference/logging/screen_log.html#f_is_stderr">is_stderr</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_stdout' is declared in `Current'"><A CLASS="efeature" HREF="../../../test/reference/logging/screen_log.html#f_is_stdout">is_stdout</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`supported_formats' was declared in LOG_FACILITY"><A CLASS="efeature" HREF="../../../test/reference/logging/log_facility.html#f_supported_formats">supported_formats</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/array_chart.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">]</SPAN></SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Commands</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`put_container_results' was declared in LOG_FACILITY"><A CLASS="efeature" HREF="../../../test/reference/logging/log_facility.html#f_put_container_results">put_container_results</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">t</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../test/reference/testing/test_container_chart.html">TEST_CONTAINER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`put_evaluation' was declared in LOG_FACILITY"><A CLASS="efeature" HREF="../../../test/reference/logging/log_facility.html#f_put_evaluation">put_evaluation</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">d</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../test/reference/testing/test_driver_chart.html">TEST_DRIVER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`put_failure_information' was declared in LOG_FACILITY"><A CLASS="efeature" HREF="../../../test/reference/logging/log_facility.html#f_put_failure_information">put_failure_information</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">t</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../test/reference/testing/single_test_chart.html">SINGLE_TEST</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">run</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`put_new_line' was declared in LOG_FACILITY"><A CLASS="efeature" HREF="../../../test/reference/logging/log_facility.html#f_put_new_line">put_new_line</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`put_string' was declared in LOG_FACILITY"><A CLASS="efeature" HREF="../../../test/reference/logging/log_facility.html#f_put_string">put_string</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`put_summary' was declared in LOG_FACILITY"><A CLASS="efeature" HREF="../../../test/reference/logging/log_facility.html#f_put_summary">put_summary</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">t</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../test/reference/testing/testable_chart.html">TESTABLE</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`put_timing_information' was declared in LOG_FACILITY"><A CLASS="efeature" HREF="../../../test/reference/logging/log_facility.html#f_put_timing_information">put_timing_information</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">t</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../test/reference/testing/single_test_chart.html">SINGLE_TEST</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">run</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_format' was declared in LOG_FACILITY"><A CLASS="efeature" HREF="../../../test/reference/logging/log_facility.html#f_set_format">set_format</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">f</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_stderr' is declared in `Current'"><A CLASS="efeature" HREF="../../../test/reference/logging/screen_log.html#f_set_stderr">set_stderr</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_stdout' is declared in `Current'"><A CLASS="efeature" HREF="../../../test/reference/logging/screen_log.html#f_set_stdout">set_stdout</A></SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Constraints</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">well defined state</SPAN><BR>
+
+<BR>
+
+<BR>
+
+</BODY>
+
+</HTML>

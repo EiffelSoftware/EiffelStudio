@@ -1,0 +1,97 @@
+<HTML>
+	<HEAD>
+		
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.32">
+		
+<TITLE>EXTERNAL_ADAPTIVE_INTEGRATOR Chart</TITLE>
+		
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<SPAN CLASS="ekeyword">deferred</SPAN> <SPAN CLASS="ekeyword">class</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../math/reference/integrat/external_adaptive_integrator_chart.html">EXTERNAL_ADAPTIVE_INTEGRATOR</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">General</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../../math/reference/integrat/index.html">math.integrat</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Adaptive integration, using features as integrands passed to non-Eiffel routines."</SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Ancestors</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../math/reference/integrat/adaptive_integrator_chart.html">ADAPTIVE_INTEGRATOR</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../math/reference/integrat/external_integrator_chart.html">EXTERNAL_INTEGRATOR</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Queries</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`absolute_tolerance' was declared in ADAPTIVE_INTEGRATOR"><A CLASS="efeature" HREF="../../../math/reference/integrat/adaptive_integrator.html#f_absolute_tolerance">absolute_tolerance</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`function_table' was declared in FUNCTION_TABLE"><A CLASS="efeature" HREF="../../../math/reference/eifmath/function_table.html#f_function_table">Function_table</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/structures/table/hash_table_chart.html">HASH_TABLE</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../math/reference/eifmath/eiffel_function_chart.html">EIFFEL_FUNCTION</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">]</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`integral' was declared in INTEGRATOR"><A CLASS="efeature" HREF="../../../math/reference/integrat/integrator.html#f_integral">integral</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`integrand' is declared in `Current'"><A CLASS="efeature" HREF="../../../math/reference/integrat/external_adaptive_integrator.html#f_integrand">integrand</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../math/reference/eifmath/eiffel_function_chart.html">EIFFEL_FUNCTION</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`integrand_ready' was declared in INTEGRATOR"><A CLASS="efeature" HREF="../../../math/reference/integrat/integrator.html#f_integrand_ready">integrand_ready</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`lower_limit' was declared in INTEGRATOR"><A CLASS="efeature" HREF="../../../math/reference/integrat/integrator.html#f_lower_limit">lower_limit</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`maximum_subintervals' was declared in ADAPTIVE_INTEGRATOR"><A CLASS="efeature" HREF="../../../math/reference/integrat/adaptive_integrator.html#f_maximum_subintervals">maximum_subintervals</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`method_ready' was declared in INTEGRATOR"><A CLASS="efeature" HREF="../../../math/reference/integrat/integrator.html#f_method_ready">method_ready</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`relative_tolerance' was declared in ADAPTIVE_INTEGRATOR"><A CLASS="efeature" HREF="../../../math/reference/integrat/adaptive_integrator.html#f_relative_tolerance">relative_tolerance</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`upper_limit' was declared in INTEGRATOR"><A CLASS="efeature" HREF="../../../math/reference/integrat/integrator.html#f_upper_limit">upper_limit</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A></SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Commands</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`force_function' was declared in FEATURE_TABLE as `force_feature'"><A CLASS="efeature" HREF="../../../math/reference/eifmath/feature_table.html#f_force_feature">force_function</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">p</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`integrate' was declared in INTEGRATOR"><A CLASS="efeature" HREF="../../../math/reference/integrat/integrator.html#f_integrate">integrate</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`make_integrand' was declared in EXTERNAL_INTEGRATOR"><A CLASS="efeature" HREF="../../../math/reference/integrat/external_integrator.html#f_make_integrand">make_integrand</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">t</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">f_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`make_integrand_by_key' was declared in EXTERNAL_INTEGRATOR"><A CLASS="efeature" HREF="../../../math/reference/integrat/external_integrator.html#f_make_integrand_by_key">make_integrand_by_key</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`make_integrand_by_name' was declared in EXTERNAL_INTEGRATOR"><A CLASS="efeature" HREF="../../../math/reference/integrat/external_integrator.html#f_make_integrand_by_name">make_integrand_by_name</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">c_name</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">f_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`put_function' was declared in FEATURE_TABLE as `put_feature'"><A CLASS="efeature" HREF="../../../math/reference/eifmath/feature_table.html#f_put_feature">put_function</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">p</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`register_function' was declared in FEATURE_TABLE as `register_feature'"><A CLASS="efeature" HREF="../../../math/reference/eifmath/feature_table.html#f_register_feature">register_function</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">p</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`remove_function' was declared in FEATURE_TABLE as `remove_feature'"><A CLASS="efeature" HREF="../../../math/reference/eifmath/feature_table.html#f_remove_feature">remove_function</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`replace_function' was declared in FEATURE_TABLE as `replace_feature'"><A CLASS="efeature" HREF="../../../math/reference/eifmath/feature_table.html#f_replace_feature">replace_function</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">p</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_absolute_tolerance' was declared in ADAPTIVE_INTEGRATOR"><A CLASS="efeature" HREF="../../../math/reference/integrat/adaptive_integrator.html#f_set_absolute_tolerance">set_absolute_tolerance</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">x</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_defaults' was declared in ADAPTIVE_INTEGRATOR"><A CLASS="efeature" HREF="../../../math/reference/integrat/adaptive_integrator.html#f_set_defaults">set_defaults</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_integrand' was declared in INTEGRATOR"><A CLASS="efeature" HREF="../../../math/reference/integrat/integrator.html#f_set_integrand">set_integrand</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">ff</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../math/reference/integrat/integrator.html#f_integrand">integrand</A><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../../math/reference/eifmath/eiffel_function_chart.html">EIFFEL_FUNCTION</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_maximum_subintervals' was declared in ADAPTIVE_INTEGRATOR"><A CLASS="efeature" HREF="../../../math/reference/integrat/adaptive_integrator.html#f_set_maximum_subintervals">set_maximum_subintervals</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">x</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_relative_tolerance' was declared in ADAPTIVE_INTEGRATOR"><A CLASS="efeature" HREF="../../../math/reference/integrat/adaptive_integrator.html#f_set_relative_tolerance">set_relative_tolerance</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">x</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_target' was declared in EXTERNAL_INTEGRATOR"><A CLASS="efeature" HREF="../../../math/reference/integrat/external_integrator.html#f_set_target">set_target</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">t</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+<BR>
+
+<BR>
+
+</BODY>
+
+</HTML>

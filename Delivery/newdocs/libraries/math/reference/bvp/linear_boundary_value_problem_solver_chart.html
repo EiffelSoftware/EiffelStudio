@@ -1,0 +1,105 @@
+<HTML>
+	<HEAD>
+		
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.32">
+		
+<TITLE>LINEAR_BOUNDARY_VALUE_PROBLEM_SOLVER Chart</TITLE>
+		
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<SPAN CLASS="ekeyword">deferred</SPAN> <SPAN CLASS="ekeyword">class</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver_chart.html">LINEAR_BOUNDARY_VALUE_PROBLEM_SOLVER</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">General</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../../math/reference/bvp/index.html">math.bvp</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Solution of the boundary value problem for a system with linear coefficients and boundary value equation."</SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Ancestors</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver_chart.html">NAG_BOUNDARY_VALUE_PROBLEM_SOLVER</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Queries</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`a' was declared in NAG_BOUNDARY_VALUE_PROBLEM_SOLVER"><A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_a">a</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`acceptable_tolerance' was declared in NAG_BOUNDARY_VALUE_PROBLEM_SOLVER"><A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_acceptable_tolerance">acceptable_tolerance</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">t</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`b' was declared in NAG_BOUNDARY_VALUE_PROBLEM_SOLVER"><A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_b">b</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`boundary_condition_value' is declared in `Current'"><A CLASS="efeature" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html#f_boundary_condition_value">boundary_condition_value</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../math/reference/eifmath/basic_vector_chart.html">BASIC_VECTOR</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`c' is declared in `Current'"><A CLASS="efeature" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html#f_c">c</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../math/reference/eifmath/basic_matrix_chart.html">BASIC_MATRIX</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`d' is declared in `Current'"><A CLASS="efeature" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html#f_d">d</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../math/reference/eifmath/basic_matrix_chart.html">BASIC_MATRIX</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`default_initial_mesh_size' was declared in NAG_BOUNDARY_VALUE_PROBLEM_SOLVER"><A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_default_initial_mesh_size">Default_initial_mesh_size</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`default_maximum_mesh_size' was declared in NAG_BOUNDARY_VALUE_PROBLEM_SOLVER"><A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_default_maximum_mesh_size">Default_maximum_mesh_size</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`default_tolerance' was declared in NAG_BOUNDARY_VALUE_PROBLEM_SOLVER"><A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_default_tolerance">Default_tolerance</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`f' is declared in `Current'"><A CLASS="efeature" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html#f_f">f</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">xx</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../math/reference/eifmath/basic_matrix_chart.html">BASIC_MATRIX</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`g' is declared in `Current'"><A CLASS="efeature" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html#f_g">g</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">xx</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../math/reference/eifmath/basic_vector_chart.html">BASIC_VECTOR</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`gamma' is declared in `Current'"><A CLASS="efeature" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html#f_gamma">gamma</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../math/reference/eifmath/basic_vector_chart.html">BASIC_VECTOR</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`initial_mesh' was declared in NAG_BOUNDARY_VALUE_PROBLEM_SOLVER"><A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_initial_mesh">initial_mesh</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../math/reference/eifmath/basic_vector_chart.html">BASIC_VECTOR</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`maximum_mesh_size' was declared in NAG_BOUNDARY_VALUE_PROBLEM_SOLVER"><A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_maximum_mesh_size">maximum_mesh_size</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`method_ready' is declared in `Current'"><A CLASS="efeature" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html#f_method_ready">method_ready</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`number_of_equations' was declared in NAG_BOUNDARY_VALUE_PROBLEM_SOLVER"><A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_number_of_equations">number_of_equations</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`rhs' is declared in `Current'"><A CLASS="efeature" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html#f_rhs">rhs</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">xx</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">yy</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../math/reference/eifmath/basic_vector_chart.html">BASIC_VECTOR</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../math/reference/eifmath/basic_vector_chart.html">BASIC_VECTOR</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`tolerance' was declared in NAG_BOUNDARY_VALUE_PROBLEM_SOLVER"><A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_tolerance">tolerance</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`x' was declared in NAG_BOUNDARY_VALUE_PROBLEM_SOLVER"><A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_x">x</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../math/reference/eifmath/basic_vector_chart.html">BASIC_VECTOR</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`y' was declared in NAG_BOUNDARY_VALUE_PROBLEM_SOLVER"><A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_y">y</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../math/reference/eifmath/basic_matrix_chart.html">BASIC_MATRIX</A></SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Commands</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`f_driver' is declared in `Current'"><A CLASS="efeature" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html#f_f_driver">f_driver</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">xx</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">zz</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`g_driver' is declared in `Current'"><A CLASS="efeature" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html#f_g_driver">g_driver</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">xx</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">zz</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_c' is declared in `Current'"><A CLASS="efeature" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html#f_set_c">set_c</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">yy</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../math/reference/eifmath/basic_matrix_chart.html">BASIC_MATRIX</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_d' is declared in `Current'"><A CLASS="efeature" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html#f_set_d">set_d</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">yy</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../math/reference/eifmath/basic_matrix_chart.html">BASIC_MATRIX</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_gamma' is declared in `Current'"><A CLASS="efeature" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html#f_set_gamma">set_gamma</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">yy</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../math/reference/eifmath/basic_vector_chart.html">BASIC_VECTOR</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_initial_mesh' was declared in NAG_BOUNDARY_VALUE_PROBLEM_SOLVER"><A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_set_initial_mesh">set_initial_mesh</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">g</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../math/reference/eifmath/basic_vector_chart.html">BASIC_VECTOR</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_maximum_mesh_size' was declared in NAG_BOUNDARY_VALUE_PROBLEM_SOLVER"><A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_set_maximum_mesh_size">set_maximum_mesh_size</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">size</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_tolerance' was declared in NAG_BOUNDARY_VALUE_PROBLEM_SOLVER"><A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_set_tolerance">set_tolerance</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`solve' is declared in `Current'"><A CLASS="efeature" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html#f_solve">solve</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`uniform_initial_mesh' was declared in NAG_BOUNDARY_VALUE_PROBLEM_SOLVER"><A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_uniform_initial_mesh">uniform_initial_mesh</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">n</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+<BR>
+
+<BR>
+
+</BODY>
+
+</HTML>

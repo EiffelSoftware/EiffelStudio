@@ -293,7 +293,7 @@ feature {NONE} -- Implementation
 				cf ?= class_figures.item
 				if cf.class_i.compiled and documentation.doc_universe.is_class_generated (cf.class_i) then
 					item_file := clone (base_path)
-					path := documentation.relative_path (cf.cluster_figure.cluster_i)
+					path := documentation.relative_path (cf.class_i.cluster)
 					if path /= Void then
 						item_file.append_character ('/')
 						item_file.append (path)

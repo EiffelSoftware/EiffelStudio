@@ -121,6 +121,7 @@ feature -- Access
 						radio_group_link.set_object (other_object)
 						radio_group_link.set_gb_ev_container (Current)
 						radio_group_link.set_pebble (radio_group_link)
+						merged_list.extend (radio_group_link)
 						counter := counter + 1
 					end
 				end

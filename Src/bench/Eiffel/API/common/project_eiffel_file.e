@@ -23,11 +23,6 @@ inherit
 
 	SYSTEM_CONSTANTS
 
-	MEMORY
-		undefine
-			dispose
-		end
-
 create
 	make
 
@@ -139,6 +134,7 @@ feature {NONE} -- Implementation
 		local
 			retried: BOOLEAN
 			l_pos: like position
+			mem: MEMORY
 		do
 			if not retried then
 				open_read
@@ -148,13 +144,14 @@ feature {NONE} -- Implementation
 						--| we need to set the position in the file
 						--| otherwise the retrieving won't work correctly
 					l_pos := position
-					full_collect
-					full_coalesce
-					collection_off
+					create mem
+					mem.full_collect
+					mem.full_coalesce
+					mem.collection_off
 					Result := ise_compiler_retrieved (descriptor, position);
-					collection_on
-					full_collect
-					full_coalesce
+					mem.collection_on
+					mem.full_collect
+					mem.full_coalesce
 					if Result = Void then
 						error_value := corrupt_value
 					end

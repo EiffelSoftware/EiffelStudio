@@ -562,100 +562,6 @@ feature -- Features info
 		do
 		end
 
-feature -- Custom attribute
-
-	add_ca (target_type_id: INTEGER; attribute_type_id: INTEGER; arg_count: INTEGER) is
-			-- No description available.
-			-- `target_type_id' [in].  
-			-- `attribute_type_id' [in].  
-			-- `arg_count' [in].  
-		do
-		end
-
-	generate_class_ca is
-			-- No description available.
-		do
-		end
-
-	generate_feature_ca (a_feature_id: INTEGER) is
-			-- No description available.
-			-- `a_feature_id' [in].  
-		do
-		end
-
-	add_cainteger_arg (a_value: INTEGER) is
-			-- No description available.
-			-- `a_value' [in].  
-		do
-		end
-
-	add_castring_arg (a_value: STRING) is
-			-- No description available.
-			-- `a_value' [in].  
-		do
-		end
-
-	add_careal_arg (a_value: REAL) is
-			-- No description available.
-			-- `a_value' [in].  
-		do
-		end
-
-	add_cadouble_arg (a_value: DOUBLE) is
-			-- No description available.
-			-- `a_value' [in].  
-		do
-		end
-
-	add_cacharacter_arg (a_value: CHARACTER) is
-			-- No description available.
-			-- `a_value' [in].  
-		do
-		end
-
-	add_caboolean_arg (a_value: BOOLEAN) is
-			-- No description available.
-			-- `a_value' [in].  
-		do
-		end
-
-	add_caarray_integer_arg (a_value: ARRAY [INTEGER]) is
-			-- Add custom attribute constructor integer array argument `a_value'.
-		do
-		end
-
-	add_caarray_string_arg (a_value: ARRAY [STRING]) is
-			-- Add custom attribute constructor string array argument `a_value'.
-		do
-		end
-
-	add_caarray_real_arg (a_value: ARRAY [REAL]) is
-			-- Add custom attribute constructor real array argument `a_value'.
-		do
-		end
-
-	add_caarray_double_arg (a_value: ARRAY [DOUBLE]) is
-			-- Add custom attribute constructor double array argument `a_value'.
-		do
-		end
-
-	add_caarray_character_arg (a_value: ARRAY [CHARACTER]) is
-			-- Add custom attribute constructor character array argument `a_value'.
-		do
-		end
-
-	add_caarray_boolean_arg (a_value: ARRAY [BOOLEAN]) is
-			-- Add custom attribute constructor boolean array argument `a_value'.
-		do
-		end
-
-	add_catyped_arg (a_value: INTEGER; a_type_id: INTEGER) is
-			-- No description available.
-			-- `a_value' [in].  
-			-- `a_type_id' [in].  
-		do
-		end
-		
 feature -- IL Generation
 
 	generate_il_implementation (class_c: CLASS_C; class_type: CLASS_TYPE) is
@@ -1112,12 +1018,12 @@ feature -- Conversion
 		do
 		end
 		
-	convert_to_double is
+	convert_to_real_64 is
 			-- Convert top of stack into appropriate type.
 		do
 		end
 		
-	convert_to_real is
+	convert_to_real_32 is
 			-- Convert top of stack into appropriate type.
 		do
 		end
@@ -1386,11 +1292,11 @@ feature -- Constants generation
 		do
 		end
 
-	put_integer_constant (type: TYPE_I; i: INTEGER) is
-			-- Put `i' as integer constant of type `type'.
+	put_numeric_integer_constant (type: TYPE_I; i: INTEGER) is
+			-- Put `i' as a constant of type `type'.
 		require
 			type_not_void: type /= Void 
-			type_is_integer: type.is_integer
+			type_is_valid: type.is_integer or type.is_natural or type.is_real_32 or type.is_real_64
 		do
 		end
 
@@ -1429,7 +1335,12 @@ feature -- Constants generation
 			fixme ("Use NATURAL_XX types")
 		end
 
-	put_double_constant (d: DOUBLE) is
+	put_real_32_constant (r: REAL) is
+			-- Put `d' on IL stack.
+		do
+		end
+
+	put_real_64_constant (d: DOUBLE) is
 			-- Put `d' on IL stack.
 		do
 		end

@@ -27,7 +27,8 @@ inherit
 			on_key_up,
 			on_set_focus,
 			on_kill_focus,
-			on_set_cursor
+			on_set_cursor,
+			on_char
 		end
 
 create
@@ -140,6 +141,16 @@ feature {NONE} -- Implementation
 			-- the creation of an object for nothing.
 		do
 			parent.on_key_down (virtual_key, key_data)
+		end
+
+	on_char (character_code, key_data: INTEGER) is
+			-- Wm_char message
+			-- Avoid an unconvenient `bip' when the user
+			-- tab to another control.
+		do
+			if not has_focus then
+				disable_default_processing
+			end
 		end
 
 	on_key_up (virtual_key, key_data: INTEGER) is

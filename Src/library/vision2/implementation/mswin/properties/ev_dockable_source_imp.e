@@ -1,6 +1,5 @@
 indexing
-	description: "Objects that ..."
-	author: ""
+	description: "Windows implementation of dockable source."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -15,17 +14,17 @@ inherit
 feature -- Status setting
 
 	release_capture is
-			--
+			-- Release a capture on `Current'.
 		deferred
 		end
 		
 	set_capture is
-			--
+			-- Start a capture on `Current'.
 		deferred
 		end
 		
 	wel_has_capture: BOOLEAN is
-			--
+			-- Is a WEL capture currently set on `Current'?
 		deferred
 		end
 
@@ -45,12 +44,12 @@ feature -- Status setting
 			--| `Current' while pick/drag and drop is in process.
 		do
 			if awaiting_movement then
-				if (doriginal_x - a_x).abs > drag_and_drop_starting_movement or
-					(doriginal_y - a_y).abs > drag_and_drop_starting_movement
-					then real_start_dragging (doriginal_x, doriginal_y, 1,
-						doriginal_x_tilt, doriginal_y_tilt, doriginal_pressure,
-						a_screen_x + (doriginal_x - a_x), a_screen_y +
-						(doriginal_y - a_y))
+				if (original_x - a_x).abs > drag_and_drop_starting_movement or
+					(original_y - a_y).abs > drag_and_drop_starting_movement
+					then real_start_dragging (original_x, original_y, 1,
+						original_x_tilt, original_y_tilt, original_pressure,
+						a_screen_x + (original_x - a_x), a_screen_y +
+						(original_y - a_y))
 					awaiting_movement := False
 				end
 			else
@@ -67,16 +66,9 @@ feature -- Status setting
 		do
 			if is_dock_executing then
 				application_imp.end_awaiting_movement
-	--			if press_action = Ev_pnd_end_transport then
-					end_dragable (a_x, a_y, 1, 0, 0, 0, 0, 0)
-					-- If Current has drag and drop, but we are waiting for the
-					-- mouse movement then we raise the window containing `Current'
-					-- to the foreground.
-	--			elseif awaiting_movement then
-	--					top_level_window_imp.move_to_foreground
-	--			end
-				doriginal_x := -1
-				doriginal_y := -1
+				end_dragable (a_x, a_y, 1, 0, 0, 0, 0, 0)
+				original_x := -1
+				original_y := -1
 				awaiting_movement := False
 			elseif awaiting_movement then
 				awaiting_movement := False
@@ -107,7 +99,6 @@ feature {EV_ANY_I} -- Implementation
 						internal_set_pointer_style (Default_pixmaps.Standard_cursor)
 					end
 				end
-				--set_pointer_style (orig_cursor)
 				
 				if wel_has_capture then
 					disable_capture
@@ -116,25 +107,19 @@ feature {EV_ANY_I} -- Implementation
 					--| normal capture only works on the current windows thread.
 				set_capture_type (Capture_normal)
 	
-	
 				complete_dock
 			end
-			
-		ensure then
-		--	original_window_void: original_top_level_window_imp = Void
-		--	press_action_Reset: press_action = Ev_pnd_start_transport
-		--	not_has_capture: internal_capture_status = False
 		end
-
 
 feature {NONE} -- Implementation
 
 	internal_enable_dockable, internal_disable_dockable is
-			--
+			-- Enable or disable dockable.
+			-- This has no implementation on Windows, as we do not need it.
+			-- On Gtk, this is necessary, so that the necessary signal
+			-- connections may be performed.
 		do
-			
 		end
-		
 
 	start_docking (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt,
 		a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER; source: EV_DOCKABLE_SOURCE) is
@@ -143,13 +128,13 @@ feature {NONE} -- Implementation
 			if not awaiting_movement then
 					-- Store arguments so they can be passed to
 					-- real_start_transport.
-				doriginal_x := a_x
-				doriginal_y := a_y
+				original_x := a_x
+				original_y := a_y
 				original_x_offset := a_x
 				original_y_offset := a_y
-				doriginal_x_tilt := a_x_tilt
-				doriginal_y_tilt := a_y_tilt
-				doriginal_pressure := a_pressure
+				original_x_tilt := a_x_tilt
+				original_y_tilt := a_y_tilt
+				original_pressure := a_pressure
 				awaiting_movement := True
 				application_imp.start_awaiting_movement
 				actual_source := source
@@ -157,15 +142,12 @@ feature {NONE} -- Implementation
 		end
 		
 	actual_source: EV_DOCKABLE_SOURCE
+		-- The actual source which started the transport. We need
+		-- this, as the current source may not be 
 		
 	real_start_dragging (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt,
 		a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 			-- Actually start the pick/drag and drop mechanism.
-		require
-	--		not_already_transporting: not is_pnd_in_transport and
-	--			not is_dnd_in_transport and
-	--			application_imp.pick_and_drop_source = Void
-	--		original_window_void: original_top_level_window_imp = Void
 		do
 			if not is_dock_executing then
 					-- We now create the screen at the start of every pick.
@@ -174,7 +156,7 @@ feature {NONE} -- Implementation
 					create pnd_screen
 				end
 
---				interface.pointer_motion_actions.block
+				--interface.pointer_motion_actions.block
 						-- Block `pointer_motion_actions'.
 				initialize_transport (a_screen_x, a_screen_y, actual_source)
 
@@ -189,69 +171,37 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	orig_cursor: EV_CURSOR		
-		
-	doriginal_x: INTEGER
-			--
-		
-	doriginal_y: INTEGER
-			--
-		
-	doriginal_x_tilt: DOUBLE
-			--
-		
-	doriginal_y_tilt: DOUBLE
-			--
-
-	doriginal_pressure: DOUBLE
-			--
+	orig_cursor: EV_CURSOR
+		-- Cursor originally used on `Current'.
 
 	application_imp: EV_APPLICATION_IMP is
-			--
+			-- Access to current EV_APPLICATION.
 		deferred
 		end
 	
 	set_pointer_style (a_cursor: EV_CURSOR) is
-			--
+			-- Assign `a_cursor' to `pointer_style'.
 		deferred
-			
 		end
 		
 	pointer_style: EV_CURSOR is
-			--
+			-- Cursor used on `Current'.
 		deferred
 		end
 		
 	set_capture_type (a_capture_type: INTEGER) is
-			--
+			-- Set capture type to `a_capture_type'.
 		deferred
 		end
 		
 	internal_enable_capture is
-			--
+			-- Internal enable capture.
 		deferred
 		end
-	
-	capture_heavy: INTEGER is
-			--
-		deferred
-		end
-		
-	capture_normal: INTEGER is
-			--
-		deferred
-		end
-		
 		
 	disable_capture is
-			--
+			-- Remove any capture from `Current'.
 		deferred
 		end
-		
-		
-		
-
-invariant
-	invariant_clause: True -- Your invariant here
 
 end -- class EV_DOCKABLE_SOUR

@@ -92,50 +92,19 @@ feature {EV_ANY_I}
 
 end -- class EV_CLIPBOARD_IMP
 
---!-----------------------------------------------------------------------------
---! EiffelVision2: library of reusable components for ISE Eiffel.
---! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
---! All rights reserved. Duplication and distribution prohibited.
---! May be used only with ISE Eiffel, under terms of user license. 
---! Contact ISE for any other use.
---!
---! Interactive Software Engineering Inc.
---! ISE Building, 2nd floor
---! 270 Storke Road, Goleta, CA 93117 USA
---! Telephone 805-685-1006, Fax 805-685-6869
---! Electronic mail <info@eiffel.com>
---! Customer support e-mail <support@eiffel.com>
---! For latest info see award-winning pages: http://www.eiffel.com
---!-----------------------------------------------------------------------------
+--|----------------------------------------------------------------
+--| EiffelVision2: library of reusable components for ISE Eiffel.
+--| Copyright (C) 1986-2001 Interactive Software Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--| May be used only with ISE Eiffel, under terms of user license. 
+--| Contact ISE for any other use.
+--|
+--| Interactive Software Engineering Inc.
+--| ISE Building
+--| 360 Storke Road, Goleta, CA 93117 USA
+--| Telephone 805-685-1006, Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support: http://support.eiffel.com>
+--| For latest info see award-winning pages: http://www.eiffel.com
+--|----------------------------------------------------------------
 
---|-----------------------------------------------------------------------------
---| CVS log
---|-----------------------------------------------------------------------------
---|
---| $Log$
---| Revision 1.2  2001/06/07 23:08:03  rogers
---| Merged DEVEL branch into Main trunc.
---|
---| Revision 1.1.2.6  2001/05/22 21:27:54  etienne
---| Replaced entry widget with text widget to remove clipboard size limitation (2 kb with entry widget).
---|
---| Revision 1.1.2.5  2000/11/30 19:22:42  king
---| Corrected indexing clause
---|
---| Revision 1.1.2.4  2000/10/30 19:08:27  king
---| Implemented void text handling
---|
---| Revision 1.1.2.3  2000/10/30 18:30:25  king
---| Now using c_object for clipboard_widget
---|
---| Revision 1.1.2.2  2000/10/30 17:33:23  king
---| Now using persistent entry widget in default_gtk_window
---|
---| Revision 1.1.2.1  2000/10/27 01:05:24  king
---| Initial -- Needs implementing
---|
---|
---|
---|-----------------------------------------------------------------------------
---| End of CVS log
---|-----------------------------------------------------------------------------

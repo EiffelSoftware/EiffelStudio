@@ -40,7 +40,7 @@ XtPointer call_data;
 	(e_handle_event) (
 				(EIF_OBJ) eif_access (dispatcher),
 				(EIF_POINTER) scr_obj,			/* Widget which invoked callback */
-				(EIF_POINTER) mask, 			/* Passed as a argument */
+				(EIF_INTEGER) mask, 			/* Passed as a argument */
 				(EIF_POINTER) call_data			/* XEvent structure */
 				);
 }
@@ -165,7 +165,7 @@ EIF_POINTER resource_name;
 
 void c_add_event_handler (scr_obj, mask)
 EIF_POINTER scr_obj;
-EIF_POINTER mask;
+EIF_INTEGER mask;
 {
 	XtAddEventHandler ((Widget) scr_obj, 
 				(EventMask) mask, 
@@ -176,7 +176,7 @@ EIF_POINTER mask;
 
 void c_remove_event_handler (scr_obj, mask)
 EIF_POINTER scr_obj;
-EIF_POINTER mask;
+EIF_INTEGER mask;
 {
 	XtRemoveEventHandler ((Widget) scr_obj, 
 				(EventMask) mask, 

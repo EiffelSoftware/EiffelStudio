@@ -581,6 +581,10 @@ feature -- Generation
 				tmp.put_string ("%N */%N%N")
 					-- Includes wanted
 				tmp.put_string ("#include %"eif_eiffel.h%"%N")
+				tmp.put_string ("#include %"../E1/")
+				tmp.put_string (estructure)
+				tmp.put_string (".h%"%N%N")
+
 				if final_mode then
 					headers.put_string ("%N#include %"")
 					headers.put_string (base_file_name)
@@ -893,17 +897,12 @@ feature -- Generation
 		require
 			has_creation_routine
 		local
-			sub_skel: SKELETON
 			i, nb_ref, position: INTEGER
 			exp_desc: EXPANDED_DESC
-			class_type, sub_class_type: CLASS_TYPE
-			c_name, creat_name: STRING
+			c_name: STRING
 			bits_desc: BITS_DESC
-			creation_feature: FEATURE_I
 			value: INTEGER
 			gen_type: GEN_TYPE_I
-			written_class: CLASS_C
-			written_ctype: CLASS_TYPE
 		do
 			c_name := Encoder.feature_name (static_type_id, Initialization_body_index)
 			nb_ref := skeleton.nb_reference
@@ -985,59 +984,26 @@ feature -- Generation
 					-- Not an expanded generic
 					buffer.put_string ("HEADER(Current + offset_position)->ov_flags = ")
 					buffer.put_type_id (exp_desc.type_id)
-					buffer.put_character (';')
+					buffer.put_string (" | EO_EXP;")
 					buffer.put_new_line
 				else
 					-- Expanded generic
 					generate_ov_flags_start (buffer, gen_type)
-					buffer.put_string ("HEADER(Current + offset_position)->ov_flags = typres")
+					buffer.put_string ("HEADER(Current + offset_position)->ov_flags = typres | EO_EXP")
 					generate_ov_flags_finish (buffer)
 					buffer.put_new_line
 				end
 
 					-- Mark expanded object
-				buffer.put_string ("HEADER(Current + offset_position)->ov_flags |= EO_EXP;")
-				buffer.put_new_line
 				buffer.put_string ("HEADER(Current + offset_position)->ov_size = ")
 				buffer.put_string ("offset_position + (Current - parent);")
 				buffer.put_new_line
 
-					-- Call creation of expanded if there is one
-				class_type := exp_desc.class_type
-				creation_feature := class_type.associated_class.creation_feature
-				if creation_feature /= Void then
-					written_class := System.class_of_id (creation_feature.written_in)
-					if written_class.generics = Void then
-						written_ctype := written_class.types.first
-					else
-						written_ctype := written_class.meta_type
-							(class_type.type).associated_class_type
-					end
-					creat_name := Encoder.feature_name (written_ctype.static_type_id,
-						creation_feature.body_index)
-					buffer.put_string (creat_name)
-					buffer.put_string ("(Current + offset_position);")
-					buffer.put_new_line
-						-- Generate in the header file, the declaration of the creation
-						-- routine.
-					Extern_declarations.add_routine_with_signature (Void_c_type,
-						creat_name, <<"EIF_REFERENCE">>)
-				end
+					-- Initializes expanded attribute if needed and then call creation procedure
+					-- if needed.
+				exp_desc.class_type.generate_expanded_initialization (buffer,
+					"Current + offset_position", "parent", True)
 
-					-- If the expanded object also has expandeds, we need
-					-- to call the initialization routine too.
-				sub_class_type := exp_desc.class_type
-				sub_skel := sub_class_type.skeleton
-				sub_skel.go_expanded
-				if not sub_skel.after then
-					creat_name := Encoder.feature_name (sub_class_type.static_type_id,
-						Initialization_body_index)
-					buffer.put_string (creat_name)
-					buffer.put_string("(Current + offset_position, parent);")
-					buffer.put_new_line
-					Extern_declarations.add_routine_with_signature (Void_c_type,
-						creat_name, <<"EIF_REFERENCE, EIF_REFERENCE">>)
-				end
 				skeleton.forth
 				i := i + 1
 			end
@@ -1506,6 +1472,215 @@ feature -- Skeleton generation
 			buffer.put_character ('}')
 		end
 
+feature -- Structure generation
+		
+	generate_expanded_structure_declaration (buffer: GENERATION_BUFFER; a_name: STRING) is
+			-- Declaration of variable `a_name' for current expanded type in `buffer'.
+		require
+			is_expanded: is_expanded
+			buffer_not_void: buffer /= Void
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: not a_name.is_empty
+		do
+			buffer.put_string (expanded_structure_name)
+			buffer.put_character (' ')
+			buffer.put_string (a_name)
+			buffer.put_string (";")
+		end
+		
+	generate_expanded_structure_definition (buffer: GENERATION_BUFFER) is
+			-- Define associated expanded structure if current is expanded.
+		require
+			buffer_not_void: buffer /= Void
+		do
+			if is_expanded then
+				buffer.put_string (expanded_structure_name)
+				buffer.put_string (" {")
+				buffer.put_new_line
+				buffer.indent
+				buffer.put_string ("char data [")
+				if byte_context.final_mode then
+					skeleton.generate_size (buffer)
+				else
+					buffer.put_integer (skeleton.workbench_size)
+				end
+				generate_expanded_overhead_size (buffer)
+				buffer.put_string ("];")
+				buffer.put_new_line
+				buffer.exdent
+				buffer.put_string ("};")
+				buffer.put_new_line
+			end
+		end
+
+	generate_expanded_overhead_size (buffer: GENERATION_BUFFER) is
+			-- Generate size of overhead if any.
+		require
+			is_expanded: is_expanded
+			buffer_not_void: buffer /= Void
+		do
+--			if byte_context.workbench_mode or else skeleton.has_references then
+				buffer.put_string (" + OVERHEAD")
+--			end
+		end
+
+	generate_expanded_type_initialization (buffer: GENERATION_BUFFER; a_name: STRING) is
+			-- Generate initialization of expanded variable `a_name'.
+		require
+			is_expanded: is_expanded
+			buffer_not_void: buffer /= Void
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: not a_name.is_empty
+		local
+			l_gen_type: GEN_TYPE_I
+			l_workbench_mode: BOOLEAN
+		do
+			l_gen_type ?= type
+			l_workbench_mode := byte_context.workbench_mode
+--			if l_workbench_mode or else (skeleton.has_references or l_gen_type /= Void) then
+				if l_gen_type = Void then
+						-- Not a generic type.
+					buffer.put_string ("((union overhead *) ")
+					buffer.put_string (a_name)
+					buffer.put_string (".data)->ov_flags = EO_EXP | ")
+					if l_workbench_mode then
+						buffer.put_string ("RTUD(")
+						buffer.put_integer (type.generated_id (False))
+						buffer.put_string (");")
+					else
+						buffer.put_integer (type.generated_id (True))
+						buffer.put_character (';')
+					end
+				else
+					generate_ov_flags_start (buffer, l_gen_type)
+					buffer.put_string ("((union overhead *) ")
+					buffer.put_string (a_name)
+					buffer.put_string (".data)->ov_flags = EO_EXP | typres;")
+					generate_ov_flags_finish (buffer)
+				end
+--			end
+			buffer.put_new_line
+		end
+
+	generate_expanded_creation (buffer: GENERATION_BUFFER; a_target_name: STRING) is
+			-- Allocate memory and call to `default_create' if needed on `a_target_name'.
+		require
+			is_expanded: is_expanded
+			buffer_not_void: buffer /= Void
+			a_target_name_not_void: a_target_name /= Void
+			a_target_name_not_empty: not a_target_name.is_empty
+		local
+			l_gen_type: GEN_TYPE_I
+			l_workbench_mode: BOOLEAN
+		do
+			l_gen_type ?= type
+			l_workbench_mode := byte_context.workbench_mode
+			if l_gen_type = Void then
+					-- Not a generic type.
+				buffer.put_string (a_target_name)
+				buffer.put_string ("= RTLN(")
+				if l_workbench_mode then
+					buffer.put_string ("RTUD(")
+					buffer.put_integer (type.generated_id (False))
+					buffer.put_string (")")
+				else
+					buffer.put_integer (type.generated_id (True))
+				end
+				buffer.put_string (");")
+			else
+				generate_ov_flags_start (buffer, l_gen_type)
+				buffer.put_string (a_target_name)
+				buffer.put_string ("= RTLN(typres);")
+				generate_ov_flags_finish (buffer)
+			end
+			buffer.put_new_line
+		end
+	
+	generate_expanded_initialization (buffer: GENERATION_BUFFER; a_target_name, a_parent_name: STRING; needs_initialization: BOOLEAN) is
+			-- If `needs_initialization', initialize expanded attributes of `a_target_name'
+			-- which is located in `a_parent_name' object.
+			-- Then generate call to `default_create' if needed on `a_target_name'.
+		require
+			is_expanded: is_expanded
+			buffer_not_void: buffer /= Void
+			a_target_name_not_void: a_target_name /= Void
+			a_target_name_not_empty: not a_target_name.is_empty
+			a_parent_name_not_void: needs_initialization implies a_parent_name /= Void
+			a_parent_name_not_empty: needs_initialization implies not a_parent_name.is_empty
+		local
+			creation_feature: FEATURE_I
+			c_name: STRING
+			l_written_class: CLASS_C
+			l_written_type: CLASS_TYPE
+		do
+			if needs_initialization then
+				if byte_context.workbench_mode then
+					buffer.put_string ("wstdinit(")
+					buffer.put_string (a_target_name)
+					buffer.put_character (',')
+					buffer.put_string (a_parent_name)
+					buffer.put_string (");")
+					buffer.put_new_line
+				else
+					if has_creation_routine then
+						c_name := encoder.feature_name (static_type_id, initialization_body_index)
+						Extern_declarations.add_routine_with_signature (Void_c_type,
+							c_name, <<"EIF_REFERENCE, EIF_REFERENCE">>)
+						buffer.put_string (c_name)
+						buffer.put_character ('(')
+						buffer.put_string (a_target_name)
+						buffer.put_character (',')
+						buffer.put_string (a_parent_name)
+						buffer.put_string (");")
+						buffer.put_new_line						
+					end
+				end
+			end
+			if byte_context.workbench_mode then
+					-- RTLEI is a macro used to initialize expanded types
+				buffer.put_string ("RTLXI(")
+				buffer.put_string (a_target_name)
+				buffer.put_string (");")
+				buffer.put_new_line
+			else
+					-- Manually call creation procedure on `a_target_name' only if 
+					-- it is not the version of ANY or if it is not empty.
+				creation_feature := associated_class.creation_feature
+				if 
+					creation_feature /= Void and then
+					(creation_feature.is_external or not creation_feature.is_empty)
+				then
+					l_written_class := System.class_of_id (creation_feature.written_in)
+					if l_written_class.generics = Void then
+						l_written_type := l_written_class.types.first
+					else
+						l_written_type := l_written_class.meta_type
+							(type).associated_class_type
+					end
+					c_name := Encoder.feature_name (l_written_type.static_type_id,
+						creation_feature.body_index)					
+					buffer.put_string (c_name)
+					buffer.put_character ('(')
+					buffer.put_string (a_target_name)
+					Extern_declarations.add_routine_with_signature (Void_c_type,
+						c_name, <<"EIF_REFERENCE">>)
+					buffer.put_string (");")
+					buffer.put_new_line
+				end
+			end
+		end
+		
+	expanded_structure_name: STRING is
+			-- Name of associated structure.
+		require
+			is_expanded: is_expanded
+		do
+			Result := "struct eif_ex_"
+			Result.append_integer (static_type_id - 1)
+		ensure
+			expanded_structure_name_not_void: Result /= Void
+		end
+		
 feature -- Cecil generation
 
 	generate_cecil (buffer: GENERATION_BUFFER) is

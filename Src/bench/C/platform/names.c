@@ -10,7 +10,7 @@
 
 rt_public EIF_REFERENCE eif_dot_e (void)
 {
-#if defined EIF_WIN32 || __VMS || defined EIF_OS2
+#if defined EIF_WIN32 || defined EIF_VMS || defined EIF_OS2
 	return RTMS (".E");
 #else
 	return RTMS (".e");
@@ -19,7 +19,7 @@ rt_public EIF_REFERENCE eif_dot_e (void)
 
 rt_public EIF_REFERENCE eif_dot_o (void)
 {
-#if defined EIF_WIN32 || __VMS || defined EIF_OS2
+#if defined EIF_WIN32 || defined EIF_VMS || defined EIF_OS2
 	return RTMS (".obj");
 #else
 	return RTMS (".o");
@@ -36,7 +36,7 @@ rt_public EIF_REFERENCE eif_driver (void)
 
 	return RTMS (driver);
 
-#elif defined __VMS
+#elif defined EIF_VMS
 	return RTMS ("driver.exe");
 #else
 	return RTMS ("driver");
@@ -45,7 +45,7 @@ rt_public EIF_REFERENCE eif_driver (void)
 
 rt_public EIF_REFERENCE eif_exec_suffix (void)
 {
-#if defined EIF_WIN32 || __VMS || defined EIF_OS2
+#if defined EIF_WIN32 || defined EIF_VMS || defined EIF_OS2
 	return RTMS (".exe");
 #else
 	return RTMS ("");
@@ -61,7 +61,7 @@ rt_public EIF_REFERENCE eif_preobj (void)
 {
 #if defined EIF_WIN32 || defined EIF_OS2
 	return RTMS ("preobj.obj");
-#elif defined __VMS
+#elif defined EIF_VMS
 	return RTMS ("preobj.olb");
 #else
 	return RTMS ("preobj.o");
@@ -74,7 +74,7 @@ rt_public EIF_REFERENCE eif_copy_cmd (void)
 	return RTMS ("\\command.com /c copy");
 #elif defined EIF_OS2
     return RTMS ("copy");
-#elif defined __VMS
+#elif defined EIF_VMS
 	return RTMS ("copy");
 #else
 	return RTMS ("cp");
@@ -85,7 +85,7 @@ rt_public EIF_BOOLEAN eif_valid_class_file_extension (EIF_CHARACTER c)
 {
 #if defined EIF_WIN32 || defined EIF_OS2
 	return (EIF_TEST(tolower(c)=='e'));
-#elif defined __VMS
+#elif defined EIF_VMS
 	return (EIF_TEST(c=='E'));
 #else
 	return (EIF_TEST(c=='e'));
@@ -105,7 +105,7 @@ rt_public EIF_REFERENCE eif_timeout_msg (void)
 
 	strcpy(s, "Could not launch system in allotted time.\n");
 	strcat(s, "Try restarting ebench after setting ");
-#ifdef __VMS
+#ifdef EIF_VMS
 	strcat(s, "the logical name \n");
 #else
 	strcat(s, "environment\nvariable ");

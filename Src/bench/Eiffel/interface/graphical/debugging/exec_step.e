@@ -32,7 +32,7 @@ feature {NONE}
 
 	execution_mode: INTEGER is
 		once
-			Result := Routine_breakables
+			Result := All_breakable_points
 		end;
 
 	command_name: STRING is

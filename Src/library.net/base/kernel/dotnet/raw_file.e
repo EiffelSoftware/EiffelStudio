@@ -131,7 +131,7 @@ feature -- Input
 			str_area_index: INTEGER
 		do
 			if last_string = Void then
-				create last_string.make (default_last_string_size)
+				create_last_string
 			else
 				last_string.clear_all
 			end

@@ -1353,12 +1353,12 @@ feature -- Input
 		do
 			l_str := reader.read_line
 			if last_string = Void then
-				create last_string.make_from_cil (l_str)
+				create_last_string
 			else
 				last_string.clear_all
-				if l_str /= Void then
-					last_string.append (l_str)
-				end
+			end
+			if l_str /= Void then
+				last_string.append (l_str)
 			end
 			internal_end_of_file := reader.peek = -1
 		end
@@ -1374,7 +1374,7 @@ feature -- Input
 			str_area: NATIVE_ARRAY [CHARACTER]
 		do
 			if last_string = Void then
-				create last_string.make (default_last_string_size)
+				create_last_string
 			else
 				last_string.clear_all
 			end
@@ -1404,7 +1404,7 @@ feature -- Input
 
 				-- Clean previous stored string.
 			if last_string = Void then
-				create last_string.make (default_last_string_size)
+				create_last_string
 			else
 				last_string.clear_all
 			end
@@ -1512,6 +1512,16 @@ feature {FILE} -- Implementation
 		end
 
 feature {NONE} -- Implementation
+
+	create_last_string is
+			-- Create new instance of `last_string'.
+		require
+			last_string_void: last_string = Void
+		do
+			create last_string.make (default_last_string_size)
+		ensure
+			last_string_not_void: last_string /= Void
+		end
 
 	default_last_string_size: INTEGER is 256
 			-- Default size for creating `last_string'

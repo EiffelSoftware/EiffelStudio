@@ -93,13 +93,13 @@ public:
 	/*-----------------------------------------------------------
 	Search classes with names matching `a_string'.
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_substring_search_classes(  /* [in] */ EIF_OBJECT a_string );
+	EIF_REFERENCE ccom_search_classes(  /* [in] */ EIF_OBJECT a_string,  /* [in] */ EIF_BOOLEAN is_substring );
 
 
 	/*-----------------------------------------------------------
 	Search feature with names matching `a_string'.
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_substring_search_features(  /* [in] */ EIF_OBJECT a_string );
+	EIF_REFERENCE ccom_search_features(  /* [in] */ EIF_OBJECT a_string,  /* [in] */ EIF_BOOLEAN is_substring );
 
 
 	/*-----------------------------------------------------------

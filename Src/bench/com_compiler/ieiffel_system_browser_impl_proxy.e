@@ -73,18 +73,20 @@ feature -- Basic Operations
 			Result := ccom_feature_descriptor (initializer, class_name1, feature_name)
 		end
 
-	substring_search_classes (a_string: STRING): IENUM_CLASS_INTERFACE is
+	search_classes (a_string: STRING; is_substring: BOOLEAN): IENUM_CLASS_INTERFACE is
 			-- Search classes with names matching `a_string'.
 			-- `a_string' [in].  
+			-- `is_substring' [in].  
 		do
-			Result := ccom_substring_search_classes (initializer, a_string)
+			Result := ccom_search_classes (initializer, a_string, is_substring)
 		end
 
-	substring_search_features (a_string: STRING): IENUM_FEATURE_INTERFACE is
+	search_features (a_string: STRING; is_substring: BOOLEAN): IENUM_FEATURE_INTERFACE is
 			-- Search feature with names matching `a_string'.
 			-- `a_string' [in].  
+			-- `is_substring' [in].  
 		do
-			Result := ccom_substring_search_features (initializer, a_string)
+			Result := ccom_search_features (initializer, a_string, is_substring)
 		end
 
 feature {NONE}  -- Implementation
@@ -139,16 +141,16 @@ feature {NONE}  -- Externals
 			"C++ [ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemBrowser_impl_proxy_s.h%"](EIF_OBJECT,EIF_OBJECT): EIF_REFERENCE"
 		end
 
-	ccom_substring_search_classes (cpp_obj: POINTER; a_string: STRING): IENUM_CLASS_INTERFACE is
+	ccom_search_classes (cpp_obj: POINTER; a_string: STRING; is_substring: BOOLEAN): IENUM_CLASS_INTERFACE is
 			-- Search classes with names matching `a_string'.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemBrowser_impl_proxy_s.h%"](EIF_OBJECT): EIF_REFERENCE"
+			"C++ [ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemBrowser_impl_proxy_s.h%"](EIF_OBJECT,EIF_BOOLEAN): EIF_REFERENCE"
 		end
 
-	ccom_substring_search_features (cpp_obj: POINTER; a_string: STRING): IENUM_FEATURE_INTERFACE is
+	ccom_search_features (cpp_obj: POINTER; a_string: STRING; is_substring: BOOLEAN): IENUM_FEATURE_INTERFACE is
 			-- Search feature with names matching `a_string'.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemBrowser_impl_proxy_s.h%"](EIF_OBJECT): EIF_REFERENCE"
+			"C++ [ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemBrowser_impl_proxy_s.h%"](EIF_OBJECT,EIF_BOOLEAN): EIF_REFERENCE"
 		end
 
 	ccom_delete_ieiffel_system_browser_impl_proxy (a_pointer: POINTER) is

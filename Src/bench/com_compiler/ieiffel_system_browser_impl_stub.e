@@ -60,16 +60,18 @@ feature -- Basic Operations
 			-- Put Implementation here.
 		end
 
-	substring_search_classes (a_string: STRING): IENUM_CLASS_INTERFACE is
+	search_classes (a_string: STRING; is_substring: BOOLEAN): IENUM_CLASS_INTERFACE is
 			-- Search classes with names matching `a_string'.
 			-- `a_string' [in].  
+			-- `is_substring' [in].  
 		do
 			-- Put Implementation here.
 		end
 
-	substring_search_features (a_string: STRING): IENUM_FEATURE_INTERFACE is
+	search_features (a_string: STRING; is_substring: BOOLEAN): IENUM_FEATURE_INTERFACE is
 			-- Search feature with names matching `a_string'.
 			-- `a_string' [in].  
+			-- `is_substring' [in].  
 		do
 			-- Put Implementation here.
 		end

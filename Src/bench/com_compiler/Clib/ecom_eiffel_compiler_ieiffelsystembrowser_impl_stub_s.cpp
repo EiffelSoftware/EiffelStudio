@@ -254,7 +254,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemBrowser_impl_stub::feature_descr
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemBrowser_impl_stub::substring_search_classes(  /* [in] */ BSTR a_string, /* [out, retval] */ ecom_eiffel_compiler::IEnumClass * * some_classes )
+STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemBrowser_impl_stub::search_classes(  /* [in] */ BSTR a_string, /* [in] */ VARIANT_BOOL is_substring, /* [out, retval] */ ecom_eiffel_compiler::IEnumClass * * some_classes )
 
 /*-----------------------------------------------------------
 	Search classes with names matching `a_string'.
@@ -267,14 +267,15 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemBrowser_impl_stub::substring_sea
 	{
 		tmp_a_string = eif_protect (rt_ce.ccom_ce_bstr (a_string));
 	}
+	EIF_BOOLEAN tmp_is_substring = rt_ce.ccom_ce_boolean (is_substring);
 	
 	EIF_REFERENCE_FUNCTION eiffel_function = 0;
-	eiffel_function = eif_reference_function ("substring_search_classes", type_id);
+	eiffel_function = eif_reference_function ("search_classes", type_id);
 	EIF_REFERENCE tmp_value = 0;
 	if (eiffel_function != NULL)
-		tmp_value = (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object), ((tmp_a_string != NULL) ? eif_access (tmp_a_string) : NULL));
+		tmp_value = (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_REFERENCE, EIF_BOOLEAN))eiffel_function) (eif_access (eiffel_object), ((tmp_a_string != NULL) ? eif_access (tmp_a_string) : NULL), (EIF_BOOLEAN)tmp_is_substring);
 	else
-		tmp_value = eif_field (eif_access (eiffel_object), "substring_search_classes", EIF_REFERENCE);
+		tmp_value = eif_field (eif_access (eiffel_object), "search_classes", EIF_REFERENCE);
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
@@ -291,7 +292,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemBrowser_impl_stub::substring_sea
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemBrowser_impl_stub::substring_search_features(  /* [in] */ BSTR a_string, /* [out, retval] */ ecom_eiffel_compiler::IEnumFeature * * some_features )
+STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemBrowser_impl_stub::search_features(  /* [in] */ BSTR a_string, /* [in] */ VARIANT_BOOL is_substring, /* [out, retval] */ ecom_eiffel_compiler::IEnumFeature * * some_features )
 
 /*-----------------------------------------------------------
 	Search feature with names matching `a_string'.
@@ -304,14 +305,15 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemBrowser_impl_stub::substring_sea
 	{
 		tmp_a_string = eif_protect (rt_ce.ccom_ce_bstr (a_string));
 	}
+	EIF_BOOLEAN tmp_is_substring = rt_ce.ccom_ce_boolean (is_substring);
 	
 	EIF_REFERENCE_FUNCTION eiffel_function = 0;
-	eiffel_function = eif_reference_function ("substring_search_features", type_id);
+	eiffel_function = eif_reference_function ("search_features", type_id);
 	EIF_REFERENCE tmp_value = 0;
 	if (eiffel_function != NULL)
-		tmp_value = (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object), ((tmp_a_string != NULL) ? eif_access (tmp_a_string) : NULL));
+		tmp_value = (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_REFERENCE, EIF_BOOLEAN))eiffel_function) (eif_access (eiffel_object), ((tmp_a_string != NULL) ? eif_access (tmp_a_string) : NULL), (EIF_BOOLEAN)tmp_is_substring);
 	else
-		tmp_value = eif_field (eif_access (eiffel_object), "substring_search_features", EIF_REFERENCE);
+		tmp_value = eif_field (eif_access (eiffel_object), "search_features", EIF_REFERENCE);
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);

@@ -290,7 +290,7 @@ rt_ce.free_memory_bstr (tmp_feature_name);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy::ccom_substring_search_classes(  /* [in] */ EIF_OBJECT a_string )
+EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy::ccom_search_classes(  /* [in] */ EIF_OBJECT a_string,  /* [in] */ EIF_BOOLEAN is_substring )
 
 /*-----------------------------------------------------------
 	Search classes with names matching `a_string'.
@@ -309,9 +309,11 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy::ccom_substr
 	};
 	BSTR tmp_a_string = 0;
 	tmp_a_string = (BSTR)rt_ec.ccom_ec_bstr (eif_access (a_string));
+	VARIANT_BOOL tmp_is_substring = 0;
+	tmp_is_substring = (VARIANT_BOOL)rt_ec.ccom_ec_boolean (is_substring);
 	ecom_eiffel_compiler::IEnumClass * ret_value = 0;
 	
-	hr = p_IEiffelSystemBrowser->substring_search_classes(tmp_a_string, &ret_value);
+	hr = p_IEiffelSystemBrowser->search_classes(tmp_a_string,tmp_is_substring, &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -326,7 +328,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy::ccom_substr
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy::ccom_substring_search_features(  /* [in] */ EIF_OBJECT a_string )
+EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy::ccom_search_features(  /* [in] */ EIF_OBJECT a_string,  /* [in] */ EIF_BOOLEAN is_substring )
 
 /*-----------------------------------------------------------
 	Search feature with names matching `a_string'.
@@ -345,9 +347,11 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy::ccom_substr
 	};
 	BSTR tmp_a_string = 0;
 	tmp_a_string = (BSTR)rt_ec.ccom_ec_bstr (eif_access (a_string));
+	VARIANT_BOOL tmp_is_substring = 0;
+	tmp_is_substring = (VARIANT_BOOL)rt_ec.ccom_ec_boolean (is_substring);
 	ecom_eiffel_compiler::IEnumFeature * ret_value = 0;
 	
-	hr = p_IEiffelSystemBrowser->substring_search_features(tmp_a_string, &ret_value);
+	hr = p_IEiffelSystemBrowser->search_features(tmp_a_string,tmp_is_substring, &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))

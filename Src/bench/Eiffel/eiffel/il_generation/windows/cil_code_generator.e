@@ -109,6 +109,12 @@ feature {IL_MODULE} -- Access
 	local_start_offset, local_end_offset, local_count: INTEGER
 			-- Number of locals for current feature.
 
+feature {IL_CODE_GENERATOR, IL_MODULE} -- Access
+
+	is_single_module: BOOLEAN
+			-- Is current module generated as just a single module?
+			-- Case of precompiled libraries or finalized systems.
+
 feature {NONE} -- Access
 
 	main_module: IL_MODULE
@@ -516,7 +522,8 @@ feature -- Generation Structure
 			
 			main_module.prepare (md_dispenser, type_count)
 
-			if System.in_final_mode then
+			is_single_module := System.in_final_mode or else Compilation_modes.is_precompiling
+			if is_single_module then
 				internal_il_modules.put (main_module, 1)
 			end
 		ensure
@@ -568,7 +575,7 @@ feature -- Generation Structure
 			-- Do nothing
 			current_module := main_module
 
-			if not System.in_final_mode then
+			if not is_single_module then
 				from
 					l_types := System.class_types
 					i := l_types.lower
@@ -660,7 +667,7 @@ feature -- Generation Structure
 			l_decl_type: CL_TYPE_I
 		do
 			if
-				not System.in_final_mode and then
+				not is_single_module and then
 				(current_module /= Void and then current_module.is_generated)
 			then
 					-- Mark now entry point for debug information
@@ -1659,7 +1666,7 @@ feature -- IL Generation
 				l_type_token := md_emit.define_type (uni_string, l_attributes,
 					current_module.object_type_token, Void)
 
-				if not System.in_final_mode then
+				if not is_single_module then
 					class_type.set_last_create_type_token (l_type_token)
 				end
 
@@ -4442,7 +4449,7 @@ feature -- Mapping between Eiffel compiler and generated tokens
 			l_output: FILE_NAME
 			l_module_name: STRING
 		do
-			if System.in_final_mode then
+			if is_single_module then
 				l_type_id := 1
 			else
 				l_type_id := a_class_type.associated_class.class_id

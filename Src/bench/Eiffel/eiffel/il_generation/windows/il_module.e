@@ -651,7 +651,7 @@ feature -- Metadata description
 									last_parents)
 							end
 							
-							if not System.in_final_mode then
+							if not il_code_generator.is_single_module then
 								class_type.set_last_type_token (l_type_token)
 							end
 						end
@@ -693,7 +693,7 @@ feature -- Metadata description
 						l_type_token := md_emit.define_type (uni_string, l_attributes,
 							single_inheritance_token, last_parents)
 
-						if not System.in_final_mode then
+						if not il_code_generator.is_single_module then
 							if not (class_c.is_frozen or class_c.is_single) then
 								class_type.set_last_implementation_type_token (l_type_token)
 							else

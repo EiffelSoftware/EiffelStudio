@@ -11,20 +11,28 @@ inherit
 			eiffel_color as old_eiffel_color,
 			set_modified_flags as button_set_modified_flags
 		redefine
-			stored_node, widget, set_bg_pixmap_name, add_to_option_list
+			stored_node, widget, set_bg_pixmap_name, add_to_option_list,
+			is_fontable
 		end;
 
 	BUTTON_C
 		redefine
 			stored_node, reset_modified_flags, copy_attributes, 
 			eiffel_color, widget, set_modified_flags,
-			set_bg_pixmap_name, add_to_option_list
+			set_bg_pixmap_name, add_to_option_list,
+			is_fontable
 		select
 			copy_attributes, reset_modified_flags, eiffel_color,
 			set_modified_flags
 		end
 	
 feature 
+
+	is_fontable: BOOLEAN is
+			-- Is current context fontable
+		do
+			Result := false
+		end;
 
 	symbol: PIXMAP is
 		do

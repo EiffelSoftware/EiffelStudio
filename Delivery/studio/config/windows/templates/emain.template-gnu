@@ -9,7 +9,7 @@ extern "C" {
 #include <string.h>
 #include "eif_macros.h"
 #include "eif_sig.h"
-#include "eif_econsole.h"
+#include "eif_main.h"
 
 extern void emain(int, char **);
 extern int main(int, char **, char **);

@@ -90,20 +90,26 @@ feature {NONE} -- Implementation
 			a_file_name.to_lower
 			if not retried then
 				create a_file.make (a_file_name)
-				if a_file.exists and is_overwritable (a_file_name) then
-					a_string := clone (message_output.File_already_exists)
-					a_string.append (Colon)
-					a_string.append (Space)
-					a_string.append (a_file_name)
-					a_string.append (New_line)
-					a_string.append (message_output.File_backed_up)
-					message_output.add_warning (Current, a_string)
-					file_delete (backup_file_name (a_file_name))
-					file_copy (a_file_name, backup_file_name (a_file_name))
+				if a_file.exists then
+					if is_overwritable (a_file_name) then
+						a_string := clone (message_output.File_already_exists)
+						a_string.append (Colon)
+						a_string.append (Space)
+						a_string.append (a_file_name)
+						a_string.append (New_line)
+						a_string.append (message_output.File_backed_up)
+						message_output.add_warning (Current, a_string)
+						file_delete (backup_file_name (a_file_name))
+						file_copy (a_file_name, backup_file_name (a_file_name))
+						a_file.make_open_write (a_file_name)
+						a_file.put_string (a_content)
+						a_file.close
+					end
+				else
+					a_file.make_open_write (a_file_name)
+					a_file.put_string (a_content)
+					a_file.close
 				end
-				a_file.make_open_write (a_file_name)
-				a_file.put_string (a_content)
-				a_file.close
 			else
 				a_string := clone (message_output.Could_not_write_file)
 				a_string.append (Colon)
@@ -138,7 +144,7 @@ feature {NONE} -- Implementation
 		do
 			lower_case_implemented_coclass_extension := clone (implemented_coclass_extension)
 			lower_case_implemented_coclass_extension.to_lower
-			Result := not a_file_name.substring (a_file_name.count - implemented_coclass_extension.count - 1, a_file_name.count - 2).is_equal (lower_case_implemented_coclass_extension)
+			Result := not a_file_name.substring (a_file_name.count -implemented_coclass_extension.count - 1, a_file_name.count -2).is_equal (lower_case_implemented_coclass_extension)
 		end
 
 end -- class WIZARD_WRITER

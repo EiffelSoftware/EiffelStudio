@@ -13,6 +13,11 @@ inherit
 		redefine
 			initialize
 		end
+		
+	GB_ACCESSIBLE_XML_HANDLER
+		undefine
+			default_create, copy, is_equal
+		end
 
 create
 	execute
@@ -22,6 +27,7 @@ feature {NONE} -- Initialization
 	execute is
 		do
 			default_create
+			xml_handler.load_components
 			main_window.show
 			launch	
 		end

@@ -1,5 +1,4 @@
 indexing
-
 	description:
 		"Parse a query text"
 	date: "$Date$"
@@ -11,8 +10,8 @@ class
 feature -- Parsing
 
 	parse (str: STRING; sqv: SHARED_QUERY_VALUES): BOOLEAN is
-			-- Parse `str', put results in 'sqv' and 
-			-- return 'true' if the query has a good syntax
+			-- Parse `str', put results in `sqv' and 
+			-- return true if the query has a good syntax.
 		require
 			string_not_void: str /= Void
 			string_not_empty: not str.empty
@@ -58,7 +57,7 @@ feature {NONE} -- Implementation
 					else
 						index := index + operator.count
 						index := index + white_space_length (str, index)
-						--!! index_ref
+						--create index_ref
 						--index_ref.set_item (index)
 						if index <= str.count then
 							end_index := stricly_positive_min (str.substring_index (" and ", index), str.substring_index (" or ", index), str.count) 
@@ -71,7 +70,7 @@ feature {NONE} -- Implementation
 						if value = Void then
 							error := True
 						else
-							!! subquery.make (col_name, operator, value)
+							create subquery.make (col_name, operator, value)
 							sqv.subqueries.extend (subquery)
 							if index < str.count then
 								index := index + white_space_length (str, index)
@@ -83,7 +82,7 @@ feature {NONE} -- Implementation
 								else
 									index := index + boolean_op.count
 									index := index + white_space_length (str, index)
-									!! sub_operator.make (boolean_op)
+									create sub_operator.make (boolean_op)
 									sqv.subquery_operators.extend (sub_operator)
 									index := index + white_space_length (str, index)
 								end
@@ -95,44 +94,44 @@ feature {NONE} -- Implementation
 				end
 			end
 			if error then
-				Result := false
+				Result := False
 			else
-				Result := true
+				Result := True
 			end
 		end
 
 	init_expected_values is
 		do
-			expects_int := true
-			expects_real := true
-			expects_string := true
-			expects_bounded := true
+			expects_int := True
+			expects_real := True
+			expects_string := True
+			expects_bounded := True
 		end --| Guillaume 09/18/97
 
 	column_name (str: STRING; idx: INTEGER): STRING is
 			-- Get the column name in `str' at position `idx'
 		do
 			if idx < str.count then
-				if str.substring(idx, idx + ("featurename").count - 1).is_equal("featurename") then
+				if str.substring (idx, idx + ("featurename").count - 1).is_equal ("featurename") then
 					Result := "featurename"
-					expects_real := false
-					expects_int := false
-					expects_bounded := false --| Guillaume - 09/18/97
-				elseif str.substring(idx, idx + ("calls").count - 1).is_equal("calls") then
+					expects_real := False
+					expects_int := False
+					expects_bounded := False --| Guillaume - 09/18/97
+				elseif str.substring (idx, idx + ("calls").count - 1).is_equal ("calls") then
 					Result := "calls"
-					expects_string := false --| Guillaume - 09/18/97
-				elseif str.substring(idx, idx + ("total").count - 1).is_equal("total") then
+					expects_string := False --| Guillaume - 09/18/97
+				elseif str.substring (idx, idx + ("total").count - 1).is_equal ("total") then
 					Result := "total"
-					expects_string := false --| Guillaume - 09/18/97
-				elseif str.substring(idx, idx + ("self").count - 1).is_equal("self") then
+					expects_string := False --| Guillaume - 09/18/97
+				elseif str.substring (idx, idx + ("self").count - 1).is_equal ("self") then
 					Result := "self"
-					expects_string := false --| Guillaume - 09/18/97
-				elseif str.substring(idx, idx + ("percentage").count - 1).is_equal("percentage") then
+					expects_string := False --| Guillaume - 09/18/97
+				elseif str.substring (idx, idx + ("percentage").count - 1).is_equal ("percentage") then
 					Result := "percentage"
-					expects_string := false --| Guillaume - 09/18/97
-				elseif str.substring(idx, idx + ("descendants").count - 1).is_equal("descendants") then
+					expects_string := False --| Guillaume - 09/18/97
+				elseif str.substring (idx, idx + ("descendants").count - 1).is_equal ("descendants") then
 					Result := "descendants"
-					expects_string := false --| Guillaume - 09/18/97
+					expects_string := False --| Guillaume - 09/18/97
 				else
 					Result := Void
 				end
@@ -146,24 +145,24 @@ feature {NONE} -- Implementation
 		local
 			operator: STRING
 		do
-			!! operator.make(0)
-			!! Result.make(0)
+			create operator.make (0)
+			create Result.make (0)
 			operator := str.substring (idx, idx + 1)
 			
-			if operator.is_equal("<=") 
-			   or else operator.is_equal(">=") 
-			   or else operator.is_equal("/=") 
+			if operator.is_equal ("<=") 
+			   or else operator.is_equal (">=") 
+			   or else operator.is_equal ("/=") 
 			then
 				Result := operator
 				expects_bounded := false
 				
-			elseif operator.item (1).is_equal('>') 
-					or else operator.item (1).is_equal('<') 
-					or else operator.item (1).is_equal('=') then
-				Result.extend ( operator.item(1) )
+			elseif operator.item (1).is_equal ('>') 
+					or else operator.item (1).is_equal ('<') 
+					or else operator.item (1).is_equal ('=') then
+				Result.extend (operator.item (1))
 				expects_bounded := false
 
-			elseif operator.is_equal("in") then
+			elseif operator.is_equal ("in") then
 				Result := operator
 				expects_real := false
 				expects_int := false
@@ -176,35 +175,35 @@ feature {NONE} -- Implementation
 	value_str (str: STRING; index, end_index: INTEGER): STRING is
 			-- Get value str from `str' beetween position 'index' and 'end_index'
 		do
-			!! Result.make (0)
+			create Result.make (0)
 			Result := str.substring (index, end_index)
 			Result.left_adjust
 			Result.right_adjust
 			if is_expected_value (Result) then
-				Result.prune_all(' ')
+				Result.prune_all (' ')
 			else
 				Result := void
 			end
 		end
 
-	is_expected_value ( value: STRING ) : BOOLEAN is
+	is_expected_value (value: STRING) : BOOLEAN is
 			-- Is the 'value' string an expected value
 		do
-			Result := (expects_int and value.is_integer) or else (expects_int and is_computed_value(value))
-					or else (expects_real and value.is_real) or else (expects_real and is_computed_value(value))
-					or else (expects_string and not value.has (' ')) or else (expects_bounded and is_bounded(value))
+			Result := (expects_int and value.is_integer) or else (expects_int and is_computed_value (value))
+					or else (expects_real and value.is_real) or else (expects_real and is_computed_value (value))
+					or else (expects_string and not value.has (' ')) or else (expects_bounded and is_bounded (value))
 		end
 			
-	is_computed_value ( value: STRING ) : BOOLEAN is
+	is_computed_value (value: STRING) : BOOLEAN is
 		do
-			if value.is_equal("max") or else value.is_equal("min") or else value.is_equal("avg") then
+			if value.is_equal ("max") or else value.is_equal ("min") or else value.is_equal ("avg") then
 				Result := true
 			else
 				Result := false
 			end
 		end
 		
-	is_bounded ( value: STRING ) : BOOLEAN is
+	is_bounded (value: STRING) : BOOLEAN is
 		local
 			range_position : INTEGER
 			lower_value, upper_value: STRING
@@ -213,8 +212,8 @@ feature {NONE} -- Implementation
 			if range_position = 0 then
 				Result := false
 			else
-				lower_value := value.substring ( 1, range_position-1 )
-				upper_value := value.substring (range_position+1, value.count)
+				lower_value := value.substring (1, range_position - 1)
+				upper_value := value.substring (range_position + 1, value.count)
 				lower_value.right_adjust
 				lower_value.left_adjust
 				upper_value.right_adjust

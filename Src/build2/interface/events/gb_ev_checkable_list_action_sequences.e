@@ -54,14 +54,14 @@ feature -- Access
 					create item_check_sequence
 					checkable_list.check_actions.extend (item_check_sequence.display_agent (action_sequence, string_handler))
 				else
-					checkable_list.select_actions.wipe_out
+					checkable_list.check_actions.wipe_out
 				end
 			elseif action_sequence.is_equal (names @ 2) then
 				if adding then
 					create item_check_sequence
-					checkable_list.select_actions.extend (item_check_sequence.display_agent (action_sequence, string_handler))
+					checkable_list.uncheck_actions.extend (item_check_sequence.display_agent (action_sequence, string_handler))
 				else
-					checkable_list.select_actions.wipe_out
+					checkable_list.uncheck_actions.wipe_out
 				end
 			end	
 		end

@@ -15,6 +15,11 @@ inherit
 		undefine
 			default_create, copy
 		end
+		
+	GB_TIPS
+		undefine
+			default_create, copy
+		end
 
 feature {NONE} -- Initialization
 
@@ -26,9 +31,19 @@ feature {NONE} -- Initialization
 			-- can be added here.
 		do
 			set_default_cancel_button (close_button)
+			tip_counter := Preferences.integer_resource_value (preferences.tip_of_day_index, 1)
+			if Preferences.boolean_resource_value (Preferences.Show_tip_of_the_day, True) then
+				show_tips_button.enable_select
+			else
+				show_tips_button.disable_select
+			end
+			tip_label.set_text (all_tips @ tip_counter)
 		end
 
 feature {NONE} -- Implementation
+
+	tip_counter: INTEGER
+		-- Current tip to be displayed.
 
 	window_shown is
 			-- Called by `show_actions' of `gb_tip_of_the_day_dialog'.
@@ -38,15 +53,27 @@ feature {NONE} -- Implementation
 	next_tip_selected is
 			-- Called by `select_actions' of `next_tip_button'.
 		do
+			tip_counter := get_next_tip_index (tip_counter)
+			tip_label.set_text (all_tips @ tip_counter)
+		end
+		
+	get_next_tip_index (current_index: INTEGER): INTEGER is
+			-- `Result' is next valid tip index based on `current_index'.
+		do
+			Result := current_index + 1
+			if result > tip_count then
+				Result := 1
+			end
+		ensure
+			Result_valid: Result >= 1 and Result <= tip_count
 		end
 
 	close_button_selected is
 			-- Called by `select_actions' of `close_button'.
 		do
-			if not show_tips_button.is_selected then
-				Preferences.set_boolean_resource (preferences.Show_tip_of_the_day, False)
-				Preferences.save_resources
-			end
+			Preferences.set_boolean_resource (preferences.Show_tip_of_the_day, show_tips_button.is_selected)
+			Preferences.set_integer_resource (preferences.tip_of_day_index, get_next_tip_index (tip_counter))
+			Preferences.save_resources
 			destroy
 		end
 

@@ -15,7 +15,7 @@ feature -- Access
 			-- Lock synchronizing creation and destruction
 			-- of EiffelThreads.
 		once
-			create Result.make
+			create Result
 		end
 
 	demos_list: LINKED_LIST [DEMO_WIN] is

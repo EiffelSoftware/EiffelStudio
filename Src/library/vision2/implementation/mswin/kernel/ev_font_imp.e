@@ -41,7 +41,7 @@ feature {EV_FONTABLE_IMP, EV_FONT_DIALOG_IMP} -- Initialization
 			base_make (an_interface)
 			create {WEL_SYSTEM_FONT} wel_font.make
 			create wel_log_font.make_by_font (wel_font)
-			create wel_font.make_indirect (wel_log_font)
+			wel_font.set_indirect (wel_log_font)
 			wel_log_font.set_width (0)
 			set_family (Ev_font_family_sans)
 			set_weight (Ev_font_weight_regular)
@@ -513,6 +513,10 @@ end -- class EV_FONT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.18  2000/02/15 17:36:18  brendel
+--| Changed re-creation of wel_font object to resetting using newly improved
+--| WEL_FONT.set_indirect.
+--|
 --| Revision 1.17  2000/02/14 11:40:40  oconnor
 --| merged changes from prerelease_20000214
 --|

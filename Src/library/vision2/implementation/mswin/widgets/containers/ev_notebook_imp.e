@@ -8,7 +8,7 @@ indexing
 	
 class
 	EV_NOTEBOOK_IMP
-	
+
 inherit
 	EV_NOTEBOOK_I
 
@@ -20,8 +20,8 @@ inherit
 			add_child,
 			child_minheight_changed,
 			child_minwidth_changed,
-			on_first_display,
-			set_insensitive
+			set_insensitive,
+			on_first_display
 		end
 
 	EV_FONTABLE_IMP
@@ -193,7 +193,7 @@ feature -- Implementation
 			child_imp.hide
 		end
 
-feature {EV_WIDGET_IMP} -- Implementation
+feature {NONE} -- Implementation for automatic size compute
 
 	child_minwidth_changed (value: INTEGER; the_child: EV_WIDGET_IMP) is
 			-- Change the minimum width of the container because
@@ -227,7 +227,7 @@ feature {EV_WIDGET_IMP} -- Implementation
 			end
 		end
 
-feature {NONE} -- Implementation
+feature {NONE} -- WEL Implementation
 
 	on_first_display is
 			-- Called by the top_level window.

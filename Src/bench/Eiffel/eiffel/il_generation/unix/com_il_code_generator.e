@@ -103,7 +103,7 @@ feature -- Class info
 	generate_generic_type_class_mapping,
 	generate_basic_type_class_mapping,
 	generate_formal_type_class_mapping,
-	generate_anchored_type_class_mapping (type_id: INTEGER) is
+	generate_none_type_class_mapping (type_id: INTEGER) is
 		do
 		end
 
@@ -142,7 +142,7 @@ feature -- Class info
 		do
 		end
 
-	add_eiffel_interface (type_id: INTEGER) is
+	set_implementation_class is
 			-- Add interface of `type_id' into list of parents of current type.
 		do
 		end
@@ -437,7 +437,7 @@ feature -- Variables access
 		do
 		end
 
-	generate_formal_feature (feature_id: INTEGER) is
+	generate_type_feature (feature_id: INTEGER) is
 		do
 		end
 

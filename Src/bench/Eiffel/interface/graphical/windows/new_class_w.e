@@ -162,10 +162,9 @@ feature -- Access
 			file_name := clone (class_name);
 			file_name.append (".e");
 			file_entry.set_text (file_name);
-			clus := Eiffel_universe.clusters;
+			clus := Eiffel_universe.clusters_sorted_by_tag
 			if not clus.empty then
 				from
-					clus := Eiffel_universe.clusters;
 					clus.start
 				until
 					clus.after

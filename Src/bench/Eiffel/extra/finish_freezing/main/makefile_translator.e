@@ -1481,7 +1481,13 @@ feature {NONE} -- Implementation
 				replacement := get_replacement (word)
 				
 				if replacement /= Void then
-					if wordstart > 2 and then line.item (wordstart-1) = '\' and then (line.item (wordstart-2) = '/' or line.item(wordstart-2) = '\' or line.item(wordstart-2) = ' ' or (line.item (wordstart-2) = 'I' and then line.item (wordstart-3) = '-')) then
+					if
+						wordstart > 2 and then line.item (wordstart-1) = '\' and then
+						(line.item (wordstart-2) = '/' or
+						line.item(wordstart-2) = '\' or
+						line.item(wordstart-2) = ' ' or
+						(line.item (wordstart-2) = 'I' and then line.item (wordstart-3) = '-'))
+					then
 						line.replace_substring (replacement, wordstart-1, wordstart+wordlength)
 					else
 						line.replace_substring (replacement, wordstart, wordstart+wordlength)

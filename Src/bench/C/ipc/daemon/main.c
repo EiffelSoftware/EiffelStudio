@@ -36,17 +36,18 @@
 
 #ifdef EIF_WIN32
 #include <windows.h>
-#define EWB			"\\bin\\es4.exe -bench"	/* Ewb process within Eiffel dir */
+#define EWB		"\\bin\\es4.exe -bench"	/* Ewb process within Eiffel dir */
 #else
-#define EIFFEL4		"/usr/lib/Eiffel4"	/* Default installation directory */
-#define EWB			"/bin/es4 -bench"	/* Ewb process within Eiffel dir */
+#define EIFFEL4	"/usr/lib/Eiffel4"	/* Default installation directory */
+#define EWB		"/bin/es4 -bench"	/* Ewb process within Eiffel dir */
 #endif
 
 /* Function declaration */
-rt_public void dexit(int code);			/* Daemon's exit */
-rt_private void die(void);				/* A termination signal was trapped */
-rt_private Signal_t handler(int sig);		/* Signal handler */
-rt_private void set_signal(void);		/* Set up the signal handler */
+rt_public void dexit(int code);		/* Daemon's exit */
+rt_private void die(void);		/* A termination signal was trapped */
+rt_private Signal_t handler(int sig);	/* Signal handler */
+rt_private void set_signal(void);	/* Set up the signal handler */
+rt_private void process_name (char *);	/* Compute the name of Eiffel Compiler */
 
 #ifdef EIF_WIN32
 extern  STREAM *spawn_child(char *cmd, HANDLE *child_pid);	/* Start up child with ipc link */
@@ -203,8 +204,9 @@ rt_public void init_bench(int argc, char **argv)
 	}
 #endif
 
+
 	strcat(ewb_path, platform);
-	strcat(ewb_path, EWB);				/* Append process name */
+	process_name (ewb_path);
 
 /* FIXME: check that es4 exists */
 
@@ -305,6 +307,32 @@ rt_public void dexit(int code)
 	prt_destroy();
 #endif
 	exit(code);
+}
+
+/* Create the name of the executable from the macro EWB (always on Windows) */
+/* or from the environment variable ES4_NAME (only on Unix) */
+
+rt_private void process_name (char *ewb_path)
+{
+#ifdef EIF_WIN32
+	strcat (ewb_path, EWB);
+#else
+	char *es4_name;
+	char *local;
+
+	es4_name = getenv("ES4_NAME");		/* Installation directory */
+
+	if (es4_name == (char *) 0)			/* Environment variable set */
+		strcat (ewb_path, EWB);
+	else
+		{
+			local = (char *) malloc (50 * sizeof (char));
+			strcat (local, "/bin/");
+			strcat (local, es4_name);
+			strcat (local, " -bench");
+			strcat (ewb_path, local);
+		}
+#endif
 }
 
 #ifndef HAS_STRDUP

@@ -132,7 +132,11 @@ feature -- Initialization
 					has_height := false
 				end
 				private_scroll_width := wel_width
-				show
+				if not managed then
+					wel_hide
+				elseif parent.shown then
+					shown := true
+				end
 			end
 		end
 

@@ -1,10 +1,10 @@
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
-		"EiffelVision multi-column list row. These rows are used in %
+		"Eiffel Vision multi column list row. These rows are used in%N%
 		%the multi-column lists."
 	status: "See notice at end of class"
-	note: "It is not an item because it doesn't have the same options."
+	keywords: "multi column list, row, item, select"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -12,14 +12,26 @@ class
 	EV_MULTI_COLUMN_LIST_ROW
 
 inherit
-
-	EV_COMPOSED_ITEM
-		rename
-			count as columns,
-			set_count as set_columns
+	EV_ITEM
 		redefine
-			implementation,
-			create_action_sequences
+				implementation,
+				create_action_sequences
+		end
+
+	EV_PICK_AND_DROPABLE
+		redefine
+				implementation,
+				create_action_sequences
+		end
+
+	INTERACTIVE_LIST [STRING]
+		redefine
+				extendible
+		end
+
+	EV_PIXMAPABLE
+		redefine
+				implementation
 		end
 
 create
@@ -27,7 +39,7 @@ create
 	make_with_text
 
 feature -- Status report
-	
+
 	is_selected: BOOLEAN is
 			-- Is the item selected
 		require
@@ -38,9 +50,9 @@ feature -- Status report
 
 feature -- Status setting
 
-
 	enable_select is
 			-- Select Current.
+			-- Must be in a multi column list.
 		require
 			has_parent: parent /= Void
 		do
@@ -51,6 +63,7 @@ feature -- Status setting
 
 	disable_select is
 			-- Deselect Current.
+			-- Must be in a multi column list.
 		require
 			has_parent: parent /= Void
 		do
@@ -61,6 +74,7 @@ feature -- Status setting
 		
 	toggle is
 			-- Change the state of selection of the item.
+			-- Must be in a multi column list.
 		require
 			has_parent: parent /= Void
 		do
@@ -74,6 +88,28 @@ feature -- Event handling
 
 	deselect_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions performed when item is deselected.
+
+feature -- Contract support
+
+	extendible: BOOLEAN is
+			-- Can a cell be added?
+		do
+			Result := parent /= Void
+		end
+
+feature {NONE} -- Implementation
+
+	on_item_added (an_item: STRING) is
+			-- `an_item' has just been added.
+		do
+			implementation.update
+		end
+
+	on_item_removed (an_item: STRING) is
+			-- `an_item' has just been removed.
+		do
+			implementation.update
+		end
 
 feature {NONE} -- Implementation
 
@@ -118,6 +154,9 @@ end -- class EV_MULTI_COLUMN_LIST_ROW
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.31  2000/03/23 17:48:29  brendel
+--| Revised interface.
+--|
 --| Revision 1.30  2000/03/10 01:28:03  king
 --| Removed inheritence from PND
 --|

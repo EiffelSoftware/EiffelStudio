@@ -8,7 +8,7 @@ class
 	EV_STATUS_BAR_ITEM
 
 inherit
-	EV_ITEM
+	EV_SIMPLE_ITEM
 		redefine
 			implementation,
 			parent
@@ -42,7 +42,7 @@ feature -- Access
 	parent: EV_STATUS_BAR is
 			-- Parent of the current item.
 		do
-			Result ?= {EV_ITEM} Precursor
+			Result ?= {EV_SIMPLE_ITEM} Precursor
 		end
 
 feature -- Measurement
@@ -72,16 +72,16 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_parent (par: EV_STATUS_BAR) is
-			-- Make `par' the new parent of the widget.
-			-- `par' can be Void then the parent is the screen.
-		require
-			exists: not destroyed
-		do
-			implementation.set_parent (par)
-		ensure
-			parent_set: parent = par
-		end
+--	set_parent (par: EV_STATUS_BAR) is
+--			-- Make `par' the new parent of the widget.
+--			-- `par' can be Void then the parent is the screen.
+--		require
+--			exists: not destroyed
+--		do
+--			implementation.set_parent (par)
+--		ensure
+--			parent_set: parent = par
+--		end
 
 feature {NONE} -- Implementation
 

@@ -10,10 +10,16 @@ class
 
 inherit
 	EV_LIST_ITEM_I
+		select
+			parent_imp
+		end
 
 	EV_SIMPLE_ITEM_IMP
+		rename
+			parent_imp as old_parent_imp
+		undefine
+			parent
 		redefine
-			parent_imp,
 			set_text
 		end
 
@@ -41,9 +47,6 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-
-	parent_imp: EV_LIST_ITEM_HOLDER_IMP
-			-- Parent of the current item
 
 	index: INTEGER is
 			-- Index of the current item.
@@ -79,6 +82,20 @@ feature -- Status report
 		end
 	
 feature -- Status setting
+
+	set_parent (par: like parent) is
+			-- Make `par' the new parent of the widget.
+			-- `par' can be Void then the parent is the screen.
+		do
+			if parent_imp /= Void then
+				parent_imp.remove_item (Current)
+				parent_imp := Void
+			end
+			if par /= Void then
+				parent_imp ?= par.implementation
+				parent_imp.add_item (Current)
+			end
+		end
 
 	set_selected (flag: BOOLEAN) is
 			-- Select the item if `flag', unselect it otherwise.

@@ -29,6 +29,7 @@
 /* 
  * Functions declarations
  */
+public int b_equal();	/* needed in interp.c */
 
 extern void b_put();
 extern char b_item();

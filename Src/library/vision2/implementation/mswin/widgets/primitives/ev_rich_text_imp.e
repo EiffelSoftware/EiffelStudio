@@ -361,8 +361,6 @@ feature -- Status report
 
 	last_position_from_line_number (a_line: INTEGER): INTEGER is
 			-- Position of the last character on the `i'-th line.
-		local
-			new_lines_to_first_position: INTEGER
 		do
 			if
 				valid_line_index (a_line + 1)
@@ -863,9 +861,26 @@ feature -- Status setting
 		
 	set_tab_width (a_width: INTEGER) is
 			-- Assign `a_width' to `tab_width'.
+		local
+			screen_dc: WEL_SCREEN_DC
+			logical_pixels: INTEGER
 		do
+			safe_store_caret
 			tab_width := a_width
-			update_tab_positions (1)
+			if tab_positions.is_empty then
+				create screen_dc
+				screen_dc.get
+				logical_pixels := get_device_caps (screen_dc.item, logical_pixels_x)
+				screen_dc.release
+				
+				set_selection (0, text_length)
+				set_tab_stops (mul_div (1440, tab_width, logical_pixels))
+					-- Ensure change is reflected immediately.
+				invalidate
+			else
+				update_tab_positions (1)
+			end
+			safe_restore_caret
 		end
 		
 	update_tab_positions (value: INTEGER) is

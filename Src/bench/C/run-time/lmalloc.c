@@ -14,7 +14,7 @@
   eif_free but only for the Unix/Linux platforms in NON-multithreaded 
   mode. The other platforms call the features provided in the C library
  (malloc, realloc ...). For VXWORKS, we are not supposed to link this file
- to the run-time but we can do this to performing test for us ( but don't
+ to the run-time but we can do this to perform test for us ( but don't
  forget to remove it in the delivery to HP (the HP's engineers have their
   own malloc, ... we do not have, so we call our malloc in the C library).
   Manuelt.

@@ -42,7 +42,7 @@
 #include <fcntl.h>
 #endif
 
-#if ! defined CUSTOM || defined NEED_UMAIN_H
+#if !defined CUSTOM || defined NEED_UMAIN_H
 #include "umain.h"
 #endif
 
@@ -59,7 +59,7 @@
 #if defined EIF_WIN32 || defined EIF_OS2 || defined VXWORKS
 	/* when malloc() fails, the system dies otherwise !!! */
 	/* FIXME?? */
-rt_public int cc_for_speed = 0;			/* Fast memory allocation */
+rt_public int cc_for_speed = 0;			/* Save memory */
 #else
 rt_public int cc_for_speed = 1;			/* Fast memory allocation */
 #endif

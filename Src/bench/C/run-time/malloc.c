@@ -2240,6 +2240,13 @@ unsigned int nbytes;
 			return (char *) 0;		/* No scavenge zone available */
 		}
 	
+	/* Pad to correct size -- see xmalloc() for a detailed explaination of
+	 * why this is desirable.
+	 */
+	mod = nbytes % ALIGNMAX;
+	if (mod != 0)
+		nbytes += ALIGNMAX - mod;
+
 	/* Allocating from a scavenging zone is easy and fast. It's basically a
 	 * pointer update... However, if the level in the 'from' zone reaches
 	 * the watermark GS_WATERMARK, the generation scavenging is ran. The
@@ -2247,7 +2254,7 @@ unsigned int nbytes;
 	 * of occupation go below the watermark at the next collection. There is
 	 * enough room after the watermark to safely allocate the object, anyway.
 	 */
-	if (sc_from.sc_top >= sc_from.sc_mark)
+	if (sc_from.sc_top >= sc_from.sc_mark) {
 		if (eiffel_usage > th_alloc) {	/* Above threshold */
 			if (0 == acollect())		/* Perform automatic collection */
 				eiffel_usage = 0;		/* Reset amount of allocated data */
@@ -2256,12 +2263,23 @@ unsigned int nbytes;
 		} else if (0 != collect())		/* Simple generation scavenging */
 			return (char *) 0;			/* Collection failed */
 
-	/* Pad to correct size -- see xmalloc() for a detailed explaination of
-	 * why this is desirable.
-	 */
-	mod = nbytes % ALIGNMAX;
-	if (mod != 0)
-		nbytes += ALIGNMAX - mod;
+		/* When we're back from any of the GC call above, we're not sure
+		 * the scavenge zone has been freed from as much memory as we thought.
+		 * In case the kernel can't allocate more memory to the process, the
+		 * scavenge zone is still full of objects after the collection because
+		 * these objects couldn't be moved anywhere else.
+		 * We have to test whether there is enough room in the scavenge zone
+		 * (sc_from) to put our object. If we do not so, we can erase some
+		 * relevant information located just after the scavenge space in the
+		 * memory. We have to raise a 'no more memory' exception if we
+		 * can't allocate the object in the scavenge space.
+		 * This bug was revealed by the unixware port.
+		 * -- Fabrice.
+		 */
+
+		if ((OVERHEAD+nbytes+sc_from.sc_top) > sc_from.sc_end)
+			 enomem();
+	}
 
 	SIGBLOCK;								/* Block signals */
 	object = sc_from.sc_top;				/* First free location */

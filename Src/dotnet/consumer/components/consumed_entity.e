@@ -82,7 +82,7 @@ feature -- ConsumerWrapper functions
 	is_method: BOOLEAN is
 			-- Is entity a .Net method?
 		do
-			Result := not is_property and then not is_event and then not is_constant
+			Result := not is_property and then not is_field and then not is_event and then not is_constant
 		end
 		
 	is_field: BOOLEAN is

@@ -293,7 +293,8 @@ feature -- Initialization
 						l_class_name.prepend (prefix_name)
 					end
 					l_external_name := l_types.dotnet_names.item (i)
-					l_path := l_external_name.twin
+					create l_path.make (10)
+					l_path.append_integer (i)
 					l_path.append (xml_extension)
 					create l_class.make (Current, l_class_name, l_external_name, l_path)
 					if not l_class.exists then

@@ -48,14 +48,14 @@ feature -- Access
 		external
 			"C [macro <wel.h>]"
 		alias
-			"IDC_SIZE"
+			"cwel_idc_size"
 		end
 
 	Idc_icon: INTEGER is
 		external
 			"C [macro <wel.h>]"
 		alias
-			"IDC_ICON"
+			"cwel_idc_icon"
 		end
 
 	Idc_sizenwse: INTEGER is

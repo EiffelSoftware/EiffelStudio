@@ -21,7 +21,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_drawing: EV_DRAWING_AREA) is
+	make (a_drawing: APP_DR_AREA) is
 			-- Initialize world, drawing_area and mode is select_mode
 			-- by default. Set current_drawing_area to 'a_drawing1'.
 		require
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	drawing_area: EV_DRAWING_AREA
+	drawing_area: APP_DR_AREA
 			-- Area where figures are drawn
 
 	found: BOOLEAN

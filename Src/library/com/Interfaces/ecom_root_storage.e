@@ -1,5 +1,6 @@
 indexing
-	description: ""
+	description: "Implementation of IRootStorage interface"
+	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
 

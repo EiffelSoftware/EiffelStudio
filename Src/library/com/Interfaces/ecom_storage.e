@@ -1,5 +1,6 @@
 indexing
 	description: "implementation of IStorage interface"
+	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -476,7 +477,7 @@ feature {NONE} -- Externals
 			"C++ [new E_IStorage %"E_IStorage.h%"](IStorage *)"
 		end
 
-	ccom_delete_C_storage (cpp_obj: POINTER) is
+	ccom_delete_c_storage (cpp_obj: POINTER) is
 		external
 			"C++ [delete E_IStorage %"E_IStorage.h%"]()"
 		end

@@ -3,6 +3,7 @@ indexing
 		% through an array of STATSTG structures, which contain%
 		% statistical information about an open storage, stream,%
 		% or byte array object. "
+	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
 

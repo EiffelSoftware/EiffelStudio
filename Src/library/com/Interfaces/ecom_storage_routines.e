@@ -1,5 +1,6 @@
 indexing
-	description: ""
+	description: "Storage Routines"
+	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
 

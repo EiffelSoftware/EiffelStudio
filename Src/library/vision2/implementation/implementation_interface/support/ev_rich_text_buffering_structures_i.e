@@ -175,7 +175,7 @@ feature -- Status Setting
 				elseif character = '}' then
 					internal_text.append (rtf_close_brace)
 				else
-					internal_text.append_character (a_text.item (counter))
+					internal_text.append_character (character)
 				end
 				counter := counter + 1
 			end

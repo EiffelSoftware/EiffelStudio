@@ -2,6 +2,7 @@ REM Clean up the files
 remtrace Update all source files.
 cdd %EIFFEL_SRC
 exprt -r %DEFAULT_CVS_TAG -d Eiffel Eiffel
+exprt -r %DEFAULT_CVS_TAG -d dotnet "Src/dotnet"
 exprt -r %DEFAULT_CVS_TAG -d C_library "Src/C_library"
 
 remtrace Compile C code of the libraries
@@ -35,6 +36,7 @@ iff not defined BUILD_ENTERPRISE_ONLY then
 	cd %EIFFEL_SRC
 	copy C\run-time\LIB\*.lib %INSTALL_DIR\releases\home\lib\bcb
 	fullrf %INSTALL_DIR\releases\home\lib\bcb\ebench.lib
+
 	remtrace Compile a dynamic run-time
 	fullrd C
 	exprt -r %DEFAULT_CVS_TAG -d C runtime
@@ -56,6 +58,7 @@ iff not defined BUILD_ENTERPRISE_ONLY then
 	fullrf %INSTALL_DIR\releases\home\lib\msc\*.exp
 	fullrf %INSTALL_DIR\releases\home\lib\msc\ebench.lib
 	cd %EIFFEL_SRC
+
 	remtrace Compile a run-time for Microsoft
 	fullrd C
 	exprt -r %DEFAULT_CVS_TAG -d C runtime
@@ -73,6 +76,8 @@ iff not defined BUILD_ENTERPRISE_ONLY then
 	copy C\desc\ise_desc.dll %INSTALL_DIR\releases\home\lib\msc
 	copy C\desc\ise_desc.lib %INSTALL_DIR\releases\home\lib\msc
 	fullrf %INSTALL_DIR\releases\home\lib\msc\ebench.lib
+
+	remtrace Copying header to new delivery
 	copy %EIFFEL_SRC\C\run-time\*.h %INSTALL_DIR\studio\spec\%ISE_PLATFORM\include
 	copy %EIFFEL_SRC\C\eif_confmagic.h %INSTALL_DIR\studio\spec\%ISE_PLATFORM\include
 	copy %EIFFEL_SRC\C\console\eif_econsole.h %INSTALL_DIR\studio\spec\%ISE_PLATFORM\include

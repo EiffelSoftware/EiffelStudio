@@ -1,5 +1,5 @@
 <document title="End user License Agreement" output="studio">
-	<meta_data></meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>End user Licence Agreement for the ISE Eiffel Programming System
@@ -7,7 +7,7 @@
 		<paragraph> Carefully read all of the terms and conditions of this agreement prior to opening or downloading the software package, or starting its installation procedure. Opening or downloading the software package, or starting its installation procedure, indicates your acceptance of these terms and conditions. 
 			<line_break></line_break> This software agreement governs your use of THE ISE EIFFEL PROGRAMMING SYSTEM (hereinafter referred to as ISE EIFFEL) from Interactive Software Engineering, Inc., a California Corporation with offices in Goleta, California 93117 (hereinafter Interactive). 
 			<line_break></line_break> By using the enclosed ISE EIFFEL software package, you agree to the following terms and conditions:
-			<list ordred="true">
+			<list ordered="true">
 				<item>GRANT OF LICENSE Interactive grants to you a nonexclusive, nontransferable temporary license to use ISE EIFFEL solely on the computer system(s) designated in your purchase order.</item>
 				<item>PERMITTED USES You may use the ISE EIFFEL software solely on the single computer system for which it is purchased. In addition, if the license is for a company of which you are an employee, you may use the ISE EIFFEL software on one personal (home or laptop) computer for each designated company computer system, provided that personal computer is used by the same user as the company computer, and not concurrently with it. </item>
 				<item>PROPERTY RIGHTS

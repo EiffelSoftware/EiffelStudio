@@ -42,7 +42,7 @@
 		<code>			
 			<link>
 				<url>../../../../libraries/base/reference/kernel/string.xml</url>
-				<label><class_name>STRING</class_name></label>
+				<label><code><class_name>STRING</class_name></code></label>
 			</link>
 		</code> and the property 
 		<italic>String</italic> that represents the manipulated string. The property can be set or read. Other languages will be able to access these features. 
@@ -77,7 +77,7 @@
 			</item>
 			<item>
 				<link></link>Click the bottom 
-				<italic>Browse</italic> button and select the directory where you want to create the project (later referenced as destination folder). Choose
+				<italic>Browse</italic> button and select the directory where you want to create the project (later referenced as destination folder). Choose 
 				<italic>$ISE_EIFFEL\examples\com\wizard\string_manipulator\generated</italic> where 
 				<italic>$ISE_EIFFEL</italic> represents the path to your EIFFEL50 directory. If you work on a Windows9x machine, please choose a directory with a shorter path, for example c:\string_manipulator because Windows9x are unable to handle long path names.
 			</item>

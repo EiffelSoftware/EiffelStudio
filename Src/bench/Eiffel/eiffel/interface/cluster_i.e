@@ -75,6 +75,7 @@ feature {COMPILER_EXPORTER} -- Initialization
 			copy_old_cluster (old_cluster_i)
 
 			cluster_name := old_cluster_i.cluster_name
+			parent_cluster := Void
 		end
 
 feature {CLUSTER_I} -- Internal initialization

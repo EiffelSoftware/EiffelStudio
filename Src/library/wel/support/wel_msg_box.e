@@ -19,6 +19,8 @@ inherit
  			{NONE} all
 		end
 
+	WEL_BIT_OPERATIONS
+
 creation
 	make
 
@@ -146,7 +148,7 @@ feature -- Implementation
 	basic_msg_box (a_style: INTEGER): BOOLEAN is
 			-- does `a_style' contain the flag `Mb_usericon'?
 		do
-			Result := ((((a_style // Mb_usericon ) - 1) \\ 2) = 1)
+			Result := ((a_style // Mb_usericon) = ((a_style // (Mb_usericon*2))*2))
 		end
 
 feature {NONE} -- Externals

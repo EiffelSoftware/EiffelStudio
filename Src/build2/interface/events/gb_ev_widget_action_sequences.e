@@ -74,26 +74,40 @@ feature -- Access
 			gb_ev_action_sequence: GB_EV_ACTION_SEQUENCE
 			notify_sequence: GB_EV_NOTIFY_ACTION_SEQUENCE
 			key_sequence: GB_EV_KEY_ACTION_SEQUENCE
-			key_string_sequence: GB_EV_KEY_ACTION_SEQUENCE
+			key_string_sequence: GB_EV_KEY_STRING_ACTION_SEQUENCE
 			motion_sequence: GB_EV_POINTER_MOTION_ACTION_SEQUENCE
+			geometry_sequence: GB_EV_GEOMETRY_ACTION_SEQUENCE
+			pointer_press_sequence: GB_EV_POINTER_BUTTON_ACTION_SEQUENCE
+			
 		do
 			if action_sequence.is_equal ("pointer_motion_actions") then
 				if adding then
-					widget.pointer_motion_actions.extend (agent display_pointer_motion_actions (?, ?, ?, ?, ?, ?, ?, action_sequence, textable))
+					motion_sequence ?= new_instance_of (dynamic_type_from_string ("GB_EV_POINTER_MOTION_ACTION_SEQUENCE"))
+					widget.pointer_motion_actions.extend (motion_sequence.display_agent (action_sequence, textable))
 				else
 					widget.pointer_motion_actions.wipe_out
 				end
 			elseif action_sequence.is_equal ("pointer_button_press_actions") then
 				if adding then
-					widget.pointer_button_press_actions.extend (agent display_pointer_button_press_actions (?, ?, ?, ?, ?, ?, ?, ?, action_sequence, textable))
+					pointer_press_sequence ?= new_instance_of (dynamic_type_from_string ("GB_EV_NOTIFY_ACTION_SEQUENCE"))
+					widget.pointer_button_press_actions.extend (pointer_press_sequence.display_agent (action_sequence, textable))
 				else
 					widget.pointer_button_press_actions.wipe_out
 				end
 			elseif action_sequence.is_equal ("pointer_double_press_actions") then
 				if adding then
-					widget.pointer_double_press_actions.extend (agent display_pointer_button_press_actions (?, ?, ?, ?, ?, ?, ?, ?, action_sequence, textable))
+					pointer_press_sequence ?= new_instance_of (dynamic_type_from_string ("GB_EV_NOTIFY_ACTION_SEQUENCE"))
+					widget.pointer_double_press_actions.extend (pointer_press_sequence.display_agent (action_sequence, textable))
 				else
 					widget.pointer_double_press_actions.wipe_out
+				end
+			elseif action_sequence.is_equal ("pointer_button_release_actions") then
+				if adding then
+					pointer_press_sequence ?= new_instance_of (dynamic_type_from_string ("GB_EV_NOTIFY_ACTION_SEQUENCE"))
+					widget.pointer_button_release_actions.extend (pointer_press_sequence.display_agent (action_sequence, textable))
+					--widget.pointer_double_press_actions.extend (agent display_pointer_button_press_actions (?, ?, ?, ?, ?, ?, ?, ?, action_sequence, textable))
+				else
+					widget.pointer_button_release_actions.wipe_out
 				end
 			elseif action_sequence.is_equal ("pointer_enter_actions") then
 				if adding then
@@ -118,7 +132,8 @@ feature -- Access
 				end
 			elseif action_sequence.is_equal ("key_press_string_actions") then
 				if adding then
-					widget.key_press_string_actions.extend (agent display_key_string_actions (?, action_sequence, textable))
+					key_string_sequence ?= new_instance_of (dynamic_type_from_string ("GB_EV_KEY_STRING_ACTION_SEQUENCE"))
+					widget.key_press_string_actions.extend (key_string_sequence.display_agent (action_sequence, textable))
 				else
 					widget.key_press_string_actions.wipe_out
 				end
@@ -145,56 +160,13 @@ feature -- Access
 				end
 			elseif action_sequence.is_equal ("resize_actions") then
 				if adding then
-					widget.resize_actions.extend (agent display_geometry_actions (?, ?, ?, ?, action_sequence, textable))
+					geometry_sequence ?= new_instance_of (dynamic_type_from_string ("GB_EV_GEOMETRY_ACTION_SEQUENCE"))
+					widget.resize_actions.extend (geometry_sequence.display_agent (action_sequence, textable))
 				else
 					widget.resize_actions.wipe_out
 				end
 			end	
 		end
 		
-	display_pointer_motion_actions (a_x, a_y: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER; name: STRING; textable: EV_TEXTABLE) is
-			--
-		do
-			textable.set_text (name + " fired.%Nx : " + a_x.out + " y : " + a_y.out + " screen x : " + a_screen_x.out +
-				" screen y : " + a_screen_y.out + "%Nx tilt : " + a_x_tilt.out + " y tilt : " + a_y_tilt.out + " pressure : " + a_pressure.out)
-		end
-		
-	display_pointer_button_press_actions (a_x, a_y, button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER; name: STRING; textable: EV_TEXTABLE) is
-			--
-		do
-			textable.set_text (name + " fired.%Nx : " + a_x.out + " y : " + a_y.out + " button : " + button.out + " screen x : " + a_screen_x.out +
-				" screen y : " + a_screen_y.out + "%Nx tilt : " + a_x_tilt.out + " y tilt : " + a_y_tilt.out + " pressure : " + a_pressure.out)
-		end
-		
-	display_key_string_actions (a_key_string: STRING; name: STRING; textable: EV_TEXTABLE) is
-		do
-			textable.set_text (name + "fired.%NKey : " + a_key_string)
-		end
-		
-	display_geometry_actions (an_x, a_y, a_width, a_height: INTEGER; name: STRING; textable: EV_TEXTABLE) is
-			--
-		do
-			textable.set_text (name + "fired.%Nx : " + an_x.out + " y : " + a_y.out + " width : " + a_width.out + " height : " + a_height.out)
-		end
-		
-		
-	
-		
-		
-		
-		
---	display_agents: HASH_TABLE [PROCEDURE [EV_ANY, TUPLE], STRING] is
---			-- 
---		do
---			create Result.make (12)
---			from
---				names.start
---			until
---				names.off
---			loop
---				names.forth
---			end
---		end
-
 end -- class GB_EV_WIDGET_ACTION_SEQUENCES
 

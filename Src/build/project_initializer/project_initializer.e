@@ -160,7 +160,7 @@ feature {NONE} -- Implementation
 	proceed_copy is
 			-- Copy the files as specified in the config file.
 		local
-			template_file, project_file: PLAIN_TEXT_FILE
+			template_file, project_file: RAW_FILE
 			file_name: FILE_NAME
 		do
 			!! file_name.make
@@ -175,7 +175,7 @@ feature {NONE} -- Implementation
 				file_name.extend (source_list.item)
 				!! template_file.make_open_read (file_name)
 				file_name.wipe_out
-				file_name.extend (Environment.Classes_directory)
+				file_name.extend (Environment.Project_directory)
 				file_name.extend (target_list.item)
 				!! project_file.make_open_write (file_name)
 				file_copy (template_file, project_file)
@@ -184,75 +184,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
--- 	copy_cmd_instantiator is
--- 			-- Copy the template command_instantiator.
--- 		local
--- 			template, cmd_inst: PLAIN_TEXT_FILE
--- 			file_name: FILE_NAME
--- 		do
--- 			!! file_name.make 
--- 			file_name.extend (Environment.Template_files_directory)
--- 			file_name.extend (Environment.Command_instantiator_template)
--- 			!! template.make_open_read (file_name)
--- 			file_name.wipe_out
--- 			file_name.extend (Environment.Commands_directory)
--- 			file_name.extend (Environment.Command_instantiator_name)
--- 			!! cmd_inst.make_open_write (file_name)
--- 			file_copy (template, cmd_inst)
--- 		end
--- 
--- 	copy_app is
--- 			-- Copy the APPLICATION file.
--- 		local
--- 			template, app_file: PLAIN_TEXT_FILE
--- 			file_name: FILE_NAME
--- 		do
--- 			!! file_name.make
--- 			file_name.extend (Environment.Template_files_directory)
--- 			file_name.extend (Environment.App_template)
--- 			!! template.make_open_read (file_name)
--- 			file_name.wipe_out
--- 			file_name.extend (Environment.Application_directory)
--- 			file_name.extend (Environment.App_name)
--- 			!! app_file.make_open_write (file_name)
--- 			file_copy (template, app_file)
--- 		end
--- 
--- 	copy_shared_control is
--- 			-- Copy the SHARED_CONTROL file.
--- 		local
--- 			template, shared_ctrl: PLAIN_TEXT_FILE
--- 			file_name: FILE_NAME
--- 		do
--- 			!! file_name.make
--- 			file_name.extend (Environment.Template_files_directory)	
--- 			file_name.extend (Environment.Shared_control_template)
--- 			!! template.make_open_read (file_name)
--- 			file_name.wipe_out
--- 			file_name.extend (Environment.Application_directory)
--- 			file_name.extend (Environment.Shared_control_name)
--- 			!! shared_ctrl.make_open_write (file_name)
--- 			file_copy (template, shared_ctrl)
--- 		end
--- 
--- 	copy_states is
--- 			-- Copy the STATES file.
--- 		local
--- 			template, states_file: PLAIN_TEXT_FILE
--- 			file_name: FILE_NAME
--- 		do
--- 			!! file_name.make
--- 			file_name.extend (Environment.Template_files_directory)
--- 			file_name.extend (Environment.States_template)
--- 			!! template.make_open_read (file_name)
--- 			file_name.wipe_out
--- 			file_name.extend (Environment.State_directory)
--- 			file_name.extend (Environment.States_name)
--- 			!! states_file.make_open_write (file_name)
--- 			file_copy (template, states_file)
--- 		end
-
-	file_copy (source_file, target_file: FILE) is
+	file_copy (source_file, target_file: RAW_FILE) is
 			-- Copy `source_file' to `target_file'.
 		require
 			source_is_open_read: source_file.is_open_read
@@ -260,6 +192,9 @@ feature {NONE} -- Implementation
 		local
 			buffer: STRING
 		do
+-- 			source_file.read_stream (source_file.count)
+-- 			buffer := source_file.last_string
+-- 			target_file.put_string (buffer)
 			!! buffer.make (0)
 			from
 			until

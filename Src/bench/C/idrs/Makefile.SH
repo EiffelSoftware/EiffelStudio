@@ -1,5 +1,5 @@
 : Makefile.SH generated from Jmake.tmpl and Jmakefile [jmake 3.0 PL70]
-: $X-Id: Jmake.tmpl,v 3.0.1.3 1997/02/28 14:56:16 ram Exp $
+: $X-Id: Jmake.tmpl,v 1.2 2004/11/30 00:21:14 manus Exp $
 
 case $CONFIG in
 '')
@@ -36,7 +36,6 @@ DIR = $DIR
 ########################################################################
 # Parameters set by Configure -- edit config.sh if changes are needed
 
-AR = ar rc
 CC = $cc
 CTAGS = ctags
 JCFLAGS = \$(CFLAGS) $optimize $warning_level $ccflags $large
@@ -45,7 +44,6 @@ LINT = lint
 MAKE = make
 MKDEP = $mkdep \$(DPFLAGS) --
 MV = $mv
-RANLIB = $ranlib
 RM = $rm -f
 SED = $sed
 
@@ -53,7 +51,7 @@ SED = $sed
 # Automatically generated parameters -- do not edit
 
 USRINC = $usrinc
-OBJECTS =  \$(LOBJ) \$(MT_LOBJ)
+OBJECTS =  idrs.o MTidrs.o
 SOURCES =  \$(LSRC)
 
 ########################################################################
@@ -66,7 +64,7 @@ SOURCES =  \$(LSRC)
 $spitshell >>Makefile <<'!NO!SUBS!'
 ########################################################################
 # Jmake rules for building libraries, programs, scripts, and data files
-# $X-Id: Jmake.rules,v 3.0.1.6 1997/02/28 14:56:01 ram Exp $
+# $X-Id: Jmake.rules,v 1.2 2004/11/30 00:21:14 manus Exp $
 ########################################################################
 # Force 'make depend' to be performed first -- do not edit
 
@@ -80,175 +78,17 @@ all:: .FORCE_DEPEND
 DPFLAGS = -I$(TOP) -I$(TOP)/run-time
 CFLAGS = $(DPFLAGS)
 
-LSRC = idr_double.c idr_float.c idr_array.c idr_char.c idr_getpos.c idr_int.c idr_long.c \
-	       idr_opaque.c idr_poly.c idr_read.c idr_setpos.c idr_short.c idr_size.c idr_stack.c \
-	       idr_string.c idr_uchar.c idr_uint.c idr_ulong.c idr_union.c idr_ushort.c idr_vector.c \
-	       idr_void.c idr_write.c idrf_creat.c idrf_dstry.c idrf_pos.c idrm_creat.c idrm_dstry.c
+LSRC = idrs.c
 
 LOBJ = \
-	       idr_double.o \
-	       idr_float.o \
-	       idr_array.o \
-	       idr_char.o \
-	       idr_getpos.o \
-	       idr_int.o \
-	       idr_long.o \
-	       idr_opaque.o \
-	       idr_poly.o \
-	       idr_read.o \
-	       idr_setpos.o \
-	       idr_short.o \
-	       idr_size.o \
-	       idr_stack.o \
-	       idr_string.o \
-	       idr_uchar.o \
-	       idr_uint.o \
-	       idr_ulong.o \
-	       idr_union.o \
-	       idr_ushort.o \
-	       idr_vector.o \
-	       idr_void.o \
-	       idr_write.o \
-	       idrf_creat.o \
-	       idrf_dstry.o \
-	       idrf_pos.o \
-	       idrm_creat.o \
-	       idrm_dstry.o 
+	       idrs.o 
 
 MT_LOBJ = \
-	       MTidr_double.o \
-	       MTidr_float.o \
-	       MTidr_array.o \
-	       MTidr_char.o \
-	       MTidr_getpos.o \
-	       MTidr_int.o \
-	       MTidr_long.o \
-	       MTidr_opaque.o \
-	       MTidr_poly.o \
-	       MTidr_read.o \
-	       MTidr_setpos.o \
-	       MTidr_short.o \
-	       MTidr_size.o \
-	       MTidr_stack.o \
-	       MTidr_string.o \
-	       MTidr_uchar.o \
-	       MTidr_uint.o \
-	       MTidr_ulong.o \
-	       MTidr_union.o \
-	       MTidr_ushort.o \
-	       MTidr_vector.o \
-	       MTidr_void.o \
-	       MTidr_write.o \
-	       MTidrf_creat.o \
-	       MTidrf_dstry.o \
-	       MTidrf_pos.o \
-	       MTidrm_creat.o \
-	       MTidrm_dstry.o 
+	       MTidrs.o 
 
-MTidr_double.o: idr_double.c
+MTidrs.o: idrs.c
 	       $(CC) -c $(JMTCFLAGS) $? -o $@
 
-MTidr_float.o: idr_float.c
-	       $(CC) -c $(JMTCFLAGS) $? -o $@
-
-MTidr_array.o: idr_array.c
-	       $(CC) -c $(JMTCFLAGS) $? -o $@
-
-MTidr_char.o: idr_char.c
-	       $(CC) -c $(JMTCFLAGS) $? -o $@
-
-MTidr_getpos.o: idr_getpos.c
-	       $(CC) -c $(JMTCFLAGS) $? -o $@
-
-MTidr_int.o: idr_int.c
-	       $(CC) -c $(JMTCFLAGS) $? -o $@
-
-MTidr_long.o: idr_long.c
-	       $(CC) -c $(JMTCFLAGS) $? -o $@
-
-MTidr_opaque.o: idr_opaque.c
-	       $(CC) -c $(JMTCFLAGS) $? -o $@
-
-MTidr_poly.o: idr_poly.c
-	       $(CC) -c $(JMTCFLAGS) $? -o $@
-
-MTidr_read.o: idr_read.c
-	       $(CC) -c $(JMTCFLAGS) $? -o $@
-
-MTidr_setpos.o: idr_setpos.c
-	       $(CC) -c $(JMTCFLAGS) $? -o $@
-
-MTidr_short.o: idr_short.c
-	       $(CC) -c $(JMTCFLAGS) $? -o $@
-
-MTidr_size.o: idr_size.c
-	       $(CC) -c $(JMTCFLAGS) $? -o $@
-
-MTidr_stack.o: idr_stack.c
-	       $(CC) -c $(JMTCFLAGS) $? -o $@
-
-MTidr_string.o: idr_string.c
-	       $(CC) -c $(JMTCFLAGS) $? -o $@
-
-MTidr_uchar.o: idr_uchar.c
-	       $(CC) -c $(JMTCFLAGS) $? -o $@
-
-MTidr_uint.o: idr_uint.c
-	       $(CC) -c $(JMTCFLAGS) $? -o $@
-
-MTidr_ulong.o: idr_ulong.c
-	       $(CC) -c $(JMTCFLAGS) $? -o $@
-
-MTidr_union.o: idr_union.c
-	       $(CC) -c $(JMTCFLAGS) $? -o $@
-
-MTidr_ushort.o: idr_ushort.c
-	       $(CC) -c $(JMTCFLAGS) $? -o $@
-
-MTidr_vector.o: idr_vector.c
-	       $(CC) -c $(JMTCFLAGS) $? -o $@
-
-MTidr_void.o: idr_void.c
-	       $(CC) -c $(JMTCFLAGS) $? -o $@
-
-MTidr_write.o: idr_write.c
-	       $(CC) -c $(JMTCFLAGS) $? -o $@
-
-MTidrf_creat.o: idrf_creat.c
-	       $(CC) -c $(JMTCFLAGS) $? -o $@
-
-MTidrf_dstry.o: idrf_dstry.c
-	       $(CC) -c $(JMTCFLAGS) $? -o $@
-
-MTidrf_pos.o: idrf_pos.c
-	       $(CC) -c $(JMTCFLAGS) $? -o $@
-
-MTidrm_creat.o: idrm_creat.c
-	       $(CC) -c $(JMTCFLAGS) $? -o $@
-
-MTidrm_dstry.o: idrm_dstry.c
-	       $(CC) -c $(JMTCFLAGS) $? -o $@
-
-
-all:: libidr.a
-
-local_realclean::
-	$(RM) libidr.a
-
-libidr.a: $(LOBJ)
-	$(RM) $@
-	$(AR) $@ $(LOBJ)
-	$(RANLIB) $@
-
-all:: libmtidr.a
-
-local_realclean::
-	$(RM) libmtidr.a
-
-libmtidr.a: $(MT_LOBJ)
-	$(RM) $@
-	$(AR) $@ $(MT_LOBJ)
-	$(RANLIB) $@
 
 depend:: ../mkdep
 
@@ -265,6 +105,16 @@ depend::
 	cp Makefile Makefile.bak
 	cp Makefile.new Makefile
 	$(RM) Makefile.new
+
+all:: idrs.o
+
+local_realclean::
+	$(RM) idrs.o
+
+all:: MTidrs.o
+
+local_realclean::
+	$(RM) MTidrs.o
 
 lint:
 	$(LINT) $(LINTFLAGS) $(SOURCES) $(LINTLIBS)

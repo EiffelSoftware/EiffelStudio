@@ -9,7 +9,7 @@ class
 
 feature -- Access
 
-	Name_formatter: NAME_FORMATTER is
+	Name_formatter: CODE_NAME_FORMATTER is
 			-- Name formatter
 		once
 			create Result

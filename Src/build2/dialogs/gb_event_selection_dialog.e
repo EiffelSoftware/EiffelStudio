@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that provide action sequence selection for an obejct"
+	description: "Objects that provide action sequence selection for an object"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
@@ -65,8 +65,13 @@ feature {NONE} -- Initialization
 		local
 			action_sequence: GB_EV_ACTION_SEQUENCES
 			cell: EV_CELL
+			header_label: EV_LABEL
+			temp_box: EV_VERTICAL_BOX
+			h_box: EV_HORIZONTAL_BOX
+			separator: EV_HORIZONTAL_SEPARATOR
 		do
 			default_create
+			set_title ("Event selection")
 			object := an_object
 			
 				-- Reset building counter.
@@ -80,11 +85,28 @@ feature {NONE} -- Initialization
 			create all_types.make (0)
 			create all_class_names.make (0)
 			
+			
+			create temp_box
+			extend (temp_box)
+			create header_label.make_with_text ("Actions to be performed when:")
+			header_label.align_text_left
+			header_label.set_minimum_height (20)
+			temp_box.extend (header_label)
+			temp_box.disable_item_expand (header_label)
+			create separator
+			temp_box.extend (separator)
+			temp_box.disable_item_expand (separator)
+			create viewport
+			create h_box
+			create scroll_bar
+			h_box.extend (viewport)
+			h_box.extend (scroll_bar)
+			h_box.disable_item_expand (scroll_bar)
+			temp_box.extend (h_box)
+			
 				-- Build and add a box which will hold all the action sequences.
-			create main_vertical_box
-			main_vertical_box.set_padding_width (2)
-			main_vertical_box.set_border_width (20)
-			extend (main_vertical_box)
+			create_main_box
+			viewport.extend (main_vertical_box)
 			
 				-- Now build the interface which will display the
 				-- applicable action sequences.
@@ -109,19 +131,37 @@ feature {NONE} -- Initialization
 				-- the current info from `Current'.
 			object.events.wipe_out
 			
-				-- Now add a cell which will expand.
-			create cell
-			main_vertical_box.extend (cell)
-			cell.set_minimum_height (20)
 			
+			create separator
+			temp_box.extend (separator)
+			temp_box.disable_item_expand (separator)
 				-- Now create and setup `close_button'.	
 			create close_button.make_with_text ("Close")
-			main_vertical_box.extend (close_button)
-			main_vertical_box.disable_item_expand (close_button)
+			create h_box
+			create cell
+			h_box.extend (cell)
+			h_box.extend (close_button)
+			create cell
+			h_box.extend (cell)
+			h_box.disable_item_expand (close_button)
+			temp_box.extend (h_box)
+			temp_box.disable_item_expand (h_box)
 			set_default_push_button (close_button)
 			close_button.select_actions.extend (agent update_object_and_destroy)
+			update_scroll_bar
+				-- We must automatically update `scroll_bar' and
+				-- the controls.
+			scroll_bar.change_actions.extend (agent scroll_bar_moved (?))
+			resize_actions.force_extend (agent update_scroll_bar)
+			
+				-- We attempt to set the height relative to the number
+				-- of items displayed, but with a maximum of 400.
+				-- We add 50 as a rough estimate for the items above and below
+				-- the window, and the windows client area to coordinate difference.
+			set_size (600, (main_vertical_box.minimum_height + 50).min (400))
+			set_minimum_size (200, 200)
 		end
-		
+
 feature -- Access
 
 	object: GB_OBJECT
@@ -132,6 +172,13 @@ feature {NONE} -- Implementation
 	main_vertical_box: EV_VERTICAL_BOX
 		-- Vertical box placed directly in `Current' to hold event 
 		-- structure.
+		
+	viewport: EV_VIEWPORT
+		-- Scrollable area to hold `main_vertical_box'.
+		
+	scroll_bar: EV_VERTICAL_SCROLL_BAR
+		-- A scroll bar to be connected to the viewport
+		-- when required.
 		
 	close_button: EV_BUTTON
 		-- Clicking will close `Current'.
@@ -175,7 +222,7 @@ feature {NONE} -- Implementation
 			counter: INTEGER
 			label: EV_LABEL
 			frame: EV_FRAME
-			vertical_box, vertical_box1: EV_VERTICAL_BOX
+			vertical_box: EV_VERTICAL_BOX
 			horizontal_box, horizontal_box2: EV_HORIZONTAL_BOX
 			check_button: EV_CHECK_BUTTON
 			text_field: EV_TEXT_FIELD
@@ -199,19 +246,15 @@ feature {NONE} -- Implementation
 				
 					-- We must check to see whether `object' has an event linked to
 					-- the current action sequence.
-				horizontal_box.extend (check_button)
-				horizontal_box.disable_item_expand (check_button)
+				create vertical_box
+				create cell
+				vertical_box.extend (check_button)
+				vertical_box.disable_item_expand (check_button)
+				vertical_box.extend (cell)
 				
-					-- This box is used to provide extra vertical
-					-- spacing around an item after the button has been checked.
-				create vertical_box1
-				create cell
-				vertical_box1.extend (cell)
-				vertical_box1.extend (horizontal_box)
-				create cell
-				vertical_box1.extend (cell)
-				main_vertical_box.extend (vertical_box1)
-				main_vertical_box.disable_item_expand (vertical_box1)
+				horizontal_box.extend (vertical_box)
+				horizontal_box.disable_item_expand (vertical_box)
+				main_vertical_box.extend (horizontal_box)
 				
 				
 				create info.make_with_details (an_action_sequence.names @ counter, action_sequences_list.item, an_action_sequence.types @ counter, temp_event_string)
@@ -226,7 +269,7 @@ feature {NONE} -- Implementation
 				else
 						-- Build interface with feature name included and displayed.
 					check_button.enable_select
-					vertical_box1.set_padding_width (10)
+					--vertical_box1.set_padding_width (10)
 					create frame.make_with_text (renamed_action_sequence_name + " " + an_action_sequence.comments @ counter)
 					horizontal_box.extend (frame)
 					create label.make_with_text ("Generated feature name : ")
@@ -234,9 +277,8 @@ feature {NONE} -- Implementation
 					horizontal_box2.extend (label)
 					horizontal_box2.extend (text_field)
 					text_field.set_text (feature_name)
-					horizontal_box2.disable_item_expand (label)
-					horizontal_box2.disable_item_expand (text_field)
 					frame.extend (horizontal_box2)
+					disable_all_items (horizontal_box2)
 				end
 				
 					
@@ -323,10 +365,9 @@ feature {NONE} -- Implementation
 			current_check_button := all_check_buttons @ index
 			current_text_field := all_text_fields @ index	
 			if (current_check_button).is_selected then
-				horizontal_box ?= current_check_button.parent
-				vertical_box ?= horizontal_box.parent
+				vertical_box ?= current_check_button.parent
+				horizontal_box ?= vertical_box.parent
 				horizontal_box.prune (horizontal_box @ 2)
-				vertical_box.set_padding_width (10)
 				create frame.make_with_text (all_names @ index + " " + all_comments @ index)
 				horizontal_box.extend (frame)
 				create label.make_with_text ("Generated feature name : ")
@@ -337,11 +378,9 @@ feature {NONE} -- Implementation
 				disable_all_items (horizontal_box)
 				frame.extend (horizontal_box)
 			else
-				horizontal_box ?= current_check_button.parent
+				vertical_box ?= current_check_button.parent
+				horizontal_box ?= vertical_box.parent
 				horizontal_box.prune (horizontal_box @ 2)
-				vertical_box ?= horizontal_box.parent
-				vertical_box.set_padding_width (0)
-				
 				
 				create label.make_with_text (all_names @ index + " " + all_comments @ index)
 				label.align_text_left
@@ -354,7 +393,9 @@ feature {NONE} -- Implementation
 					parent_was_a_horizontal_box: horizontal_box /= Void
 				end
 				horizontal_box.prune (current_text_field)
+				rebuild_controls_minimally
 			end
+			update_scroll_bar
 			unlock_update
 			
 				-- We update the system settings to reflect
@@ -363,6 +404,64 @@ feature {NONE} -- Implementation
 				-- options.
 			system_status.enable_project_modified
 			command_handler.update
+		end
+		
+	create_main_box is
+			-- Create `main_vertical_box' and initialize.
+		do
+			create main_vertical_box
+			main_vertical_box.set_padding_width (10)
+			main_vertical_box.set_border_width (20)
+		end
+		
+	update_scroll_bar is
+			-- Update scroll bar to reflect
+			-- current size of the controls.
+		do
+			if viewport.height >= main_vertical_box.minimum_height then
+				scroll_bar.hide
+			else
+				if not scroll_bar.is_show_requested then
+					scroll_bar.show		
+				end
+				scroll_bar.value_range.adapt ((create {INTEGER_INTERVAL}.make (0, main_vertical_box.minimum_height - viewport.height)))
+				if viewport.height > 0 then
+					scroll_bar.set_leap (viewport.height)
+				end
+				scroll_bar_moved (scroll_bar.value)
+			end
+		end
+		
+	scroll_bar_moved (new_scroll_bar_value: INTEGER) is
+			-- `scroll_bar' value has changed, so updated
+			-- the position of the controls within `viewport'.
+		do
+			viewport.set_y_offset (new_scroll_bar_value)
+		end
+
+	rebuild_controls_minimally is
+			-- Rebuild all controls representing action sequences
+			-- into `main_vertical_box' which must be re-created
+			-- during this process. We do this so that the box
+			-- is minimal. There is no way to shrink an EV_BOX's
+			-- size once it has been expanded by its children.
+		local
+			a_box: EV_VERTICAL_BOX
+			temp_widget: EV_WIDGET
+		do
+			a_box := main_vertical_box
+			create_main_box
+			from
+				a_box.start
+			until
+				a_box.off
+			loop
+				temp_widget ?= a_box.item
+				a_box.remove
+				main_vertical_box.extend (temp_widget)
+			end
+			viewport.wipe_out
+			viewport.extend (main_vertical_box)
 		end
 		
 	update_object_and_destroy is
@@ -384,7 +483,8 @@ feature {NONE} -- Implementation
 				if (all_check_buttons @ counter).is_selected then
 					if (all_text_fields @ counter).text.is_empty then
 						invalid_state := True
-						create warning_dialog.make_with_text ("Please enter a feature name for `" + all_names @ (counter) + "'.")
+						--create warning_dialog.make_with_text ("Please enter a feature name for `" + all_names @ (counter) + "'.%NOr deselect " + all_names @ (counter))
+						create warning_dialog.make_with_text ("You have not entered a feature name for `" + all_names @ (counter) + "'.%NPlease enter a feature name, or uncheck this action sequence.")
 						warning_dialog.show_modal_to_window (Current)
 					elseif (all_text_fields @ counter).foreground_color.is_equal (red) then
 						invalid_state := True

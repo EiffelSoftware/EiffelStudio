@@ -207,7 +207,7 @@ feature -- Basic operation
 				-- Set flag for 'process_events_until_stopped' to exit.
 			stop_processing_requested := True
 				-- Send a message to our hidden window to fire up 'process_events_until_stopped' loop.
-			create temp_str.make ("hide")
+			temp_str := "hide"
 			feature {EV_GTK_EXTERNALS}.gtk_signal_emit_by_name (default_gtk_window, temp_str.item)
 		end
 

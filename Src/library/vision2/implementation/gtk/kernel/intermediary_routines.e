@@ -303,7 +303,7 @@ feature {EV_ANY_IMP} -- Pick and Drop intermediary agent routines
 			a_cs: EV_GTK_C_STRING
 			a_pick_and_dropable_imp: EV_PICK_AND_DROPABLE_IMP
 		do
-			create a_cs.make (signal)
+			a_cs := signal
 			a_pick_and_dropable_imp ?= eif_id_object (a_object_id)
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_emit_stop_by_name (a_c_object, a_cs.item)
 		end

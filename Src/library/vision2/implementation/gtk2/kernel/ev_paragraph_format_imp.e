@@ -134,7 +134,7 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_new (default_pointer)
 			
 			if applicable_attributes.alignment then
-				create propname.make ("justification")
+				propname := "justification"
 				inspect
 					alignment
 				when feature {EV_PARAGRAPH_CONSTANTS}.alignment_left then
@@ -149,22 +149,22 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 			end
 			
 			if applicable_attributes.left_margin then
-				create propname.make ("left-margin")
+				propname := "left-margin"
 				feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, propname.item, left_margin)				
 			end
 			
 			if applicable_attributes.right_margin then
-				create propname.make ("right-margin")
+				propname := "right-margin"
 				feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, propname.item, right_margin)				
 			end
 
 			if applicable_attributes.top_spacing then
-				create propname.make ("pixels-above-lines")
+				propname := "pixels-above-lines"
 				feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, propname.item, top_spacing)				
 			end
 			
 			if applicable_attributes.bottom_spacing then
-				create propname.make ("pixels-below-lines")
+				propname := "pixels-below-lines"
 				feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, propname.item, bottom_spacing)				
 			end
 		end

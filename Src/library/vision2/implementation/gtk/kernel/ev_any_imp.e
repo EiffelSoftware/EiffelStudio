@@ -109,7 +109,7 @@ feature {EV_ANY_I} -- Event handling
 			a_connection_id: INTEGER
 			a_cs: EV_GTK_C_STRING
 		do
-			create a_cs.make (a_signal_name)
+			a_cs := a_signal_name
 			a_connection_id := feature {EV_GTK_CALLBACK_MARSHAL}.c_signal_connect_true (
 				c_object,
 				a_cs.item,
@@ -159,7 +159,7 @@ feature {EV_ANY_I} -- Event handling
 		local
 			a_cs: EV_GTK_C_STRING
 		do
-			create a_cs.make (a_signal_name)
+			a_cs := a_signal_name
 			if translate /= Void then
 				last_signal_connection_id := feature {EV_GTK_CALLBACK_MARSHAL}.c_signal_connect (
 					a_c_object,

@@ -32,9 +32,9 @@ feature
 			finish;
 		end; 
 
+	cursor_out: BOOLEAN;	
+
 	head (pos: CURSOR) is
-		local
-			cursor_out: BOOLEAN;	
 		do
 			if not cursor_out then -- cursor no more in list
 								-- no easy way to test. use the exception	
@@ -48,6 +48,8 @@ feature
 					split (count);
 					remove_sublist
 				end
+			else
+				cursor_out := False
 			end;
 		rescue
 			if Rescue_status.is_unexpected_exception then

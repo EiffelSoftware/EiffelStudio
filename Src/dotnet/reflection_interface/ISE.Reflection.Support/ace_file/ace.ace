@@ -10,20 +10,39 @@ default
 	il_generation ("dll")
 
 cluster	
-	root_cluster: "F:\Src\dotnet\reflection_interface\ISE.Reflection.Support"
-
-	eiffel_components_generated: "F:\Src\dotnet\reflection_interface\generated\eiffel_components_generated"
-		
-	emitter_generated: "F:\Src\dotnet\reflection_interface\generated\emitter_generated"
-	
-	all dot_net_base: "F:\Src\dotnet\library.net"
+	root_cluster: "$EIFFEL_SRC\dotnet\reflection_interface\ISE.Reflection.Support"
 		exclude
-			"accessibility"; "system.data"; "system.drawing"; "system.windows.forms";
+			"CVS";
+		end
+
+	eiffel_components_generated: "$EIFFEL_SRC\dotnet\reflection_interface\generated\eiffel_components_generated"
+		exclude
+			"CVS";
+		end
+		
+	formatter_generated: "$EIFFEL_SRC\dotnet\reflection_interface\generated\formatter_generated"
+		exclude
+			"CVS";
+		end
+	
+	all dot_net_base: "$ISE_EIFFEL\library.net\base.net"
+		exclude
+			"CVS";
+		end
+
+	system_generated: "$ISE_EIFFEL\library.net\System"
+		exclude
+			"CVS";
+		end
+		
+	system_xml_generated: "$ISE_EIFFEL\library.net\System.Xml"
+		exclude
+			"CVS";
 		end
 		
 external
-	assembly: 	"F:\Src\dotnet\reflection_interface\generated\eiffel_components_generated\ISE.Reflection.EiffelComponents.dll",
-			"F:\Src\dotnet\reflection_interface\generated\emitter_generated\emitter.exe",
+	assembly: 	"..\..\bin\ISE.Reflection.EiffelComponents.dll",
+			"..\..\bin\ISE.Reflection.Formatter.dll",
 			"C:\WINNT\Microsoft.NET\Framework\v1.0.2728\System.XML.dll",
 			"C:\WINNT\Microsoft.NET\Framework\v1.0.2728\System.dll"
 end

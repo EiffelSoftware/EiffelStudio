@@ -10,24 +10,45 @@ default
 	il_generation ("dll")
 
 cluster
-	root_cluster: "F:\Src\dotnet\reflection_interface\ISE.Reflection.EiffelAssemblyCacheHandler"
-	
-	eiffel_components_generated: "F:\Src\dotnet\reflection_interface\generated\eiffel_components_generated"
-	
-	support_generated: "F:\Src\dotnet\reflection_interface\generated\support_generated"
-	
-	notifier_generated: "F:\Src\dotnet\reflection_interface\generated\notifier_generated"
-	
-	all dot_net_base: "F:\Src\dotnet\library.net"
+	root_cluster: "$EIFFEL_SRC\dotnet\reflection_interface\ISE.Reflection.EiffelAssemblyCacheHandler"
 		exclude
-			"accessibility"; "system.data"; "system.drawing"; "system.windows.forms";
+			"CVS";
+		end
+		
+	eiffel_components_generated: "$EIFFEL_SRC\dotnet\reflection_interface\generated\eiffel_components_generated"
+		exclude
+			"CVS";
+		end
+		
+	support_generated: "$EIFFEL_SRC\dotnet\reflection_interface\generated\support_generated"
+		exclude
+			"CVS";
+		end
+		
+	notifier_generated: "$EIFFEL_SRC\dotnet\reflection_interface\generated\notifier_generated"
+		exclude
+			"CVS";
+		end
+		
+	all dot_net_base: "$ISE_EIFFEL\library.net\base.net"
+		exclude
+			"CVS";
 		end
 
+	system_xml_generated: "$ISE_EIFFEL\library.net\System.Xml"
+		exclude
+			"CVS";
+		end
+
+	system_generated: "$ISE_EIFFEL\library.net\System"
+		exclude
+			"CVS";
+		end
+		
 external
 	assembly: 	"C:\WINNT\Microsoft.NET\Framework\v1.0.2728\System.XML.dll",
 			"C:\WINNT\Microsoft.NET\Framework\v1.0.2728\System.dll",
-			"F:\Src\dotnet\reflection_interface\generated\eiffel_components_generated\ISE.Reflection.EiffelComponents.dll",
-			"F:\Src\dotnet\reflection_interface\generated\notifier_generated\ISE.Reflection.EiffelAssemblyCacheNotifier.dll",	
-			"F:\Src\dotnet\Reflection_interface\generated\support_generated\ISE.Reflection.Support.dll"		
-	
+			"..\..\bin\ISE.Reflection.EiffelComponents.dll",
+			"..\..\bin\ISE.Reflection.EiffelAssemblyCacheNotifier.dll",	
+			"..\..\bin\ISE.Reflection.Support.dll"
 end

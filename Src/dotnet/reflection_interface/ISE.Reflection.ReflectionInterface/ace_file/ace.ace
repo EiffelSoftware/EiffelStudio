@@ -10,27 +10,52 @@ default
 	il_generation ("dll")
 
 cluster
-	root_cluster: "F:\Src\dotnet\reflection_interface\ISE.Reflection.ReflectionInterface"
-	
-	eiffel_components: "F:\Src\dotnet\reflection_interface\generated\eiffel_components_generated"
-	
-	eiffel_cache_generated: "F:\Src\dotnet\reflection_interface\generated\eiffel_assembly_cache_generated"
-		
-	emitter_generated: "F:\Src\dotnet\reflection_interface\generated\emitter_generated"
-	
-	support_generated: "F:\Src\dotnet\reflection_interface\generated\support_generated"
-	
-	all dot_net_base: "F:\Src\dotnet\library.net"
+	root_cluster: "$EIFFEL_SRC\dotnet\reflection_interface\ISE.Reflection.ReflectionInterface"
 		exclude
-			"accessibility"; "system.data"; "system.drawing"; "system.windows.forms";
+			"CVS";
+		end
+		
+	eiffel_components: "$EIFFEL_SRC\dotnet\reflection_interface\generated\eiffel_components_generated"
+		exclude
+			"CVS";
+		end
+		
+	eiffel_cache_generated: "$EIFFEL_SRC\dotnet\reflection_interface\generated\eiffel_assembly_cache_generated"
+		exclude
+			"CVS";
 		end
 
+	formatter_generated: "$EIFFEL_SRC\dotnet\reflection_interface\generated\formatter_generated"
+		exclude
+			"CVS";
+		end
+		
+	support_generated: "$EIFFEL_SRC\dotnet\reflection_interface\generated\support_generated"
+		exclude
+			"CVS";
+		end
+		
+	all dot_net_base: "$ISE_EIFFEL\library.net\base.net"
+		exclude
+			"CVS";
+		end
+
+	system_xml_generated: "$ISE_EIFFEL\library.net\System.Xml"
+		exclude
+			"CVS";
+		end
+
+	system_generated: "$ISE_EIFFEL\library.net\System"
+		exclude
+			"CVS";
+		end
+		
 external
 	assembly: 	"C:\WINNT\Microsoft.NET\Framework\v1.0.2728\System.XML.dll",
 			"C:\WINNT\Microsoft.NET\Framework\v1.0.2728\System.dll",
-	 		"F:\Src\dotnet\reflection_interface\generated\emitter_generated\emitter.exe",
-	 		"F:\Src\dotnet\reflection_interface\generated\eiffel_components_generated\ISE.Reflection.EiffelComponents.dll",
-	 		"F:\Src\dotnet\reflection_interface\generated\eiffel_assembly_cache_generated\ISE.Reflection.EiffelAssemblyCacheHandler.dll",
-	 		"F:\Src\dotnet\reflection_interface\generated\support_generated\ISE.Reflection.Support.dll"
+	 		"..\..\bin\ISE.Reflection.Formatter.dll",
+	 		"..\..\bin\ISE.Reflection.EiffelComponents.dll",
+	 		"..\..\bin\ISE.Reflection.EiffelAssemblyCacheHandler.dll",
+	 		"..\..\bin\ISE.Reflection.Support.dll"
 	
 end

@@ -348,10 +348,9 @@ feature -- Drawing operations
 	draw_text_internal (x, y: INTEGER; a_text: STRING; draw_from_baseline: BOOLEAN) is
 			-- Draw `a_text' at (`x', `y') using `font'.
 		local
-			--a_cs: EV_GTK_C_STRING
+			a_cs: EV_GTK_C_STRING
 			a_pango_layout: POINTER
 			a_y, a_text_count: INTEGER
-			temp_any: ANY
 		do
 			if drawable /= default_pointer then
 				if draw_from_baseline then
@@ -363,13 +362,11 @@ feature -- Drawing operations
 				else
 					a_y := y
 				end
-				--create a_cs.make (a_text)
-				--a_cs := a_text				
+				a_cs := a_text
 					-- Replace when we have UTF16 support
 				a_pango_layout := App_implementation.pango_layout
 				a_text_count := a_text.count
-				temp_any ?= a_text.to_c
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_text (a_pango_layout, $temp_any, a_text_count)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_text (a_pango_layout, a_cs.item, a_cs.string_length)
 				if internal_font_imp /= Void then
 					feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_font_description (a_pango_layout, internal_font_imp.font_description)
 				end

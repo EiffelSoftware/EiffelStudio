@@ -156,7 +156,7 @@ feature -- Update
 	mark_melted (t: EXECUTION_UNIT) is
 			-- Insert `t' in `melted_list'.
 		do
-			melted_list.put (t)
+			melted_list.force (t)
 		end
 
 	freeze is

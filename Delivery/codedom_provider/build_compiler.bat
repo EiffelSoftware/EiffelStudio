@@ -44,7 +44,11 @@ REM in "delivery\compiler"
 MKDIR library\base
 MKDIR library.net\base
 MKDIR studio
-CD studio
+MKDIR precomp
+CD precomp
+REM in "delivery\compiler\precomp"
+COPY ..\..\..\checkout\precomp_delivery\spec\dotnet\base\ace.ace .
+CD ..\studio
 REM in "delivery\compiler\studio"
 MKDIR "help\errors"
 MKDIR spec\windows\bin

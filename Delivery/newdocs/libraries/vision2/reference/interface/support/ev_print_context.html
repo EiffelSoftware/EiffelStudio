@@ -1,0 +1,58 @@
+<HTML>
+	<HEAD>
+		
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.33">
+		
+<TITLE>EV_PRINT_CONTEXT Flat contracts</TITLE>
+		
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<PRE><SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"EiffelVision 2 Printer Context, see </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/widgets/dialogs/ev_print_dialog.html">EV_PRINT_DIALOG</A><SPAN CLASS="estring">"</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class"</SPAN>
+	<SPAN CLASS="eitag">keywords</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"print, printer, context"</SPAN>
+
+<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN>
+	<A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/support/ev_print_context.html">EV_PRINT_CONTEXT</A>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN>
+
+	<A NAME="f_copies"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_print_context.html#f_copies">copies</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Number of copies of print job.</SPAN>
+
+	<A NAME="f_file_name"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_print_context.html#f_file_name">file_name</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/string.html">STRING</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Name of output file.</SPAN>
+
+	<A NAME="f_from_page"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_print_context.html#f_from_page">from_page</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Page print job starts from.</SPAN>
+
+	<A NAME="f_output_to_file"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_print_context.html#f_output_to_file">output_to_file</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/boolean.html">BOOLEAN</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Will output be to file.</SPAN>
+
+	<A NAME="f_portrait"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_print_context.html#f_portrait">portrait</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/boolean.html">BOOLEAN</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Will print output be portrait.</SPAN>
+
+	<A NAME="f_printer_name"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_print_context.html#f_printer_name">printer_name</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/string.html">STRING</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Name of printer.</SPAN>
+
+	<A NAME="f_selection_type"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_print_context.html#f_selection_type">selection_type</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Type code of chosen selection.</SPAN>
+
+	<A NAME="f_to_page"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_print_context.html#f_to_page">to_page</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Page print job prints to.</SPAN>
+	
+<SPAN CLASS="ekeyword">invariant</SPAN>
+
+		<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/any.html">ANY</A>
+	<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+	<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>EV_PRINT_CONTEXT</PRE>
+
+</BODY>
+
+</HTML>
+

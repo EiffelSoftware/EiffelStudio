@@ -1,0 +1,210 @@
+<HTML>
+	<HEAD>
+		
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.33">
+		
+<TITLE>EV_RELATIVE_POINT Flat contracts</TITLE>
+		
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<PRE><SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Positions relative to other positions.Takes another relative point as origin and then defines ahor. &#38; vert. scaling factor, x, y and angle.You can then access absolute scale_x, scale_y, x, y and anglewhich are recomputed only if invalidate_absolute_position hasbeen called.You may also choose to specify a positioner. This is an agentthat gets called everytime a recomputation is requested.When a positioner is installed, the other attributes are ignored.The x and y are transformed by the angle and scaling of the origin.This implies that the scale_x, scale_y and angle features of thisobject are only for propagation to referring points."</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class"</SPAN>
+	<SPAN CLASS="eitag">keywords</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"point, position, location, origin"</SPAN>
+	<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN>
+	<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN>
+
+<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN>
+	<A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html">EV_RELATIVE_POINT</A>
+
+<SPAN CLASS="ekeyword">create</SPAN> 
+
+	<A NAME="f_default_create"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html#f_default_create">default_create</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Base origin.</SPAN>
+</A>
+	<A NAME="f_make_with_origin"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html#f_make_with_origin">make_with_origin</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_origin</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html">EV_RELATIVE_POINT</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Create with </SPAN><SPAN CLASS="equoted">an_origin</SPAN><SPAN CLASS="ecomment"> on position (0, 0).</SPAN>
+</A>
+	<A NAME="f_make_with_origin_and_position"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html#f_make_with_origin_and_position">make_with_origin_and_position</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_origin</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html">EV_RELATIVE_POINT</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">new_x</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">new_y</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Create with </SPAN><SPAN CLASS="equoted">an_origin</SPAN><SPAN CLASS="ecomment"> on position (</SPAN><SPAN CLASS="equoted">new_x</SPAN><SPAN CLASS="ecomment">, </SPAN><SPAN CLASS="equoted">new_y</SPAN><SPAN CLASS="ecomment">).</SPAN>
+</A>
+	<A NAME="f_make_with_position"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html#f_make_with_position">make_with_position</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">new_x</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">new_y</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Create on position (</SPAN><SPAN CLASS="equoted">new_x</SPAN><SPAN CLASS="ecomment">, </SPAN><SPAN CLASS="equoted">new_y</SPAN><SPAN CLASS="ecomment">).</SPAN>
+</A>
+	<A NAME="f_make_with_positioner"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html#f_make_with_positioner">make_with_positioner</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">pos_agent</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html#f_positioner">positioner</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Create with </SPAN><SPAN CLASS="equoted">pos_agent</SPAN><SPAN CLASS="ecomment">.</SPAN>
+</A>
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN>
+
+	<A NAME="f_absolute_coordinates"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html#f_absolute_coordinates">absolute_coordinates</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_coordinate.html">EV_COORDINATE</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Coordinates relative to (0, 0). Updates if necessary.</SPAN>
+</A>
+	<A NAME="f_angle"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html#f_angle">angle</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/double.html">DOUBLE</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Angle in radians relative to origin.</SPAN>
+
+	<A NAME="f_angle_abs"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html#f_angle_abs">angle_abs</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/double.html">DOUBLE</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Angle relative to 0. Updates if necessary.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">result_assigned</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html#f_last_angle_abs">last_angle_abs</A>
+</A>
+	<A NAME="f_id_object"><SPAN CLASS="ekeyword">frozen</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/support/identified.html#f_id_object">id_object</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_id</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/support/identified.html">IDENTIFIED</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Object associated with </SPAN><SPAN CLASS="equoted">an_id</SPAN><SPAN CLASS="ecomment"> (void if no such object)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/base/reference/support/identified.html">IDENTIFIED</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/base/reference/support/identified.html">IDENTIFIED</A>
+			<SPAN CLASS="etag">consistent</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A> <SPAN CLASS="ekeyword">or else</SPAN> <SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../../libraries/base/reference/support/identified.html#f_object_id">object_id</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">an_id</SPAN>
+</A>
+	<A NAME="f_object_id"><SPAN CLASS="ekeyword">frozen</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/support/identified.html#f_object_id">object_id</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Unique for current object in any given session</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/base/reference/support/identified.html">IDENTIFIED</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/base/reference/support/identified.html">IDENTIFIED</A>
+			<SPAN CLASS="etag">valid_id</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/support/identified.html#f_id_object">id_object</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="ereserved">Current</SPAN>
+</A>
+	<A NAME="f_origin"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html#f_origin">origin</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html">EV_RELATIVE_POINT</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Origin the position is relative to.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> If this is Void, x and y are relative to (0, 0).</SPAN>
+
+	<A NAME="f_positioner"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html#f_positioner">positioner</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/procedure.html">PROCEDURE</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/any.html">ANY</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/tuple.html">TUPLE</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">]</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Take special absolute positioning action.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> A positioner is expected to use the routines:</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> set_x_abs, set_y_abs.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> set_angle_abs, set_scale_x_abs, set_scale_y_abs can be used too</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> to propagate angle and scaling factor to referring points.</SPAN>
+
+	<A NAME="f_scale_x"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html#f_scale_x">scale_x</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/double.html">DOUBLE</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Relative horizontal scaling factor.</SPAN>
+
+	<A NAME="f_scale_x_abs"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html#f_scale_x_abs">scale_x_abs</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/double.html">DOUBLE</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Final horizontal scaling factor. Updates if necessary.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">result_assigned</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html#f_last_scale_x_abs">last_scale_x_abs</A>
+</A>
+	<A NAME="f_scale_y"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html#f_scale_y">scale_y</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/double.html">DOUBLE</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Relative vertical scaling factor.</SPAN>
+
+	<A NAME="f_scale_y_abs"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html#f_scale_y_abs">scale_y_abs</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/double.html">DOUBLE</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Final vertical scaling factor. Updates if necessary.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">result_assigned</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html#f_last_scale_y_abs">last_scale_y_abs</A>
+</A>
+	<A NAME="f_x"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html#f_x">x</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> X-coordinate relative to origin.</SPAN>
+
+	<A NAME="f_x_abs"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html#f_x_abs">x_abs</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> X relative to (0, 0). Updates if necessary.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">result_assigned</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html#f_last_x_abs">last_x_abs</A>
+</A>
+	<A NAME="f_y"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html#f_y">y</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Y-coordinate relative to origin.</SPAN>
+
+	<A NAME="f_y_abs"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html#f_y_abs">y_abs</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Y relative to (0, 0). Updates if necessary.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">result_assigned</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html#f_last_y_abs">last_y_abs</A>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status report</SPAN>
+
+	<A NAME="f_being_positioned"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html#f_being_positioned">being_positioned</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/boolean.html">BOOLEAN</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Used for cycle detection of positioning agents.</SPAN>
+
+	<A NAME="f_has_positioner"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html#f_has_positioner">has_positioner</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is this point controlled by an agent?</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">result_assigned</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html#f_positioner">positioner</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A><SPAN CLASS="esymbol">)</SPAN>
+</A>
+	<A NAME="f_relative_to"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html#f_relative_to">relative_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">org</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html">EV_RELATIVE_POINT</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Does this point have </SPAN><SPAN CLASS="equoted">org</SPAN><SPAN CLASS="ecomment"> as origin somehow?</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> This is not the case when it is being positioned.</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Element change</SPAN>
+
+	<A NAME="f_change_origin"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html#f_change_origin">change_origin</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">new_origin</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html">EV_RELATIVE_POINT</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set point this point is relative to.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Do not change absolute coordinates if</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> scaling factors and angle do not change.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">new_origin_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">new_origin</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A>
+			<SPAN CLASS="etag">no_dependance_circle</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../../../libraries/base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <SPAN CLASS="elocal">new_origin</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html#f_relative_to">relative_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+</A>
+	<A NAME="f_set_angle"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html#f_set_angle">set_angle</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">new_angle</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/double.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set angle of this point (in radians).</SPAN>
+</A>
+	<A NAME="f_set_angle_abs"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html#f_set_angle_abs">set_angle_abs</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">new_angle_abs</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/double.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Change absolute angle.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">last_angle_abs_assigned</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html#f_last_angle_abs">last_angle_abs</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">new_angle_abs</SPAN>
+</A>
+	<A NAME="f_set_origin"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html#f_set_origin">set_origin</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">new_origin</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html">EV_RELATIVE_POINT</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set point this point is relative to.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">new_origin_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">new_origin</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A>
+			<SPAN CLASS="etag">no_dependance_circle</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../../../libraries/base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <SPAN CLASS="elocal">new_origin</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html#f_relative_to">relative_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN> <A CLASS="ekeyword" HREF="../../../../../libraries/base/reference/kernel/boolean_ref.html#f__infix_and">and</A> <SPAN CLASS="elocal">new_origin</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <SPAN CLASS="ereserved">Current</SPAN>
+</A>
+	<A NAME="f_set_position"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html#f_set_position">set_position</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">new_x</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">new_y</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set both </SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html#f_x">x</A><SPAN CLASS="ecomment"> and </SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html#f_y">y</A><SPAN CLASS="ecomment">.</SPAN>
+</A>
+	<A NAME="f_set_positioner"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html#f_set_positioner">set_positioner</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">pos_agent</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html#f_positioner">positioner</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set a customized positioning routine.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">positioner_assigned</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html#f_positioner">positioner</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">pos_agent</SPAN>
+</A>
+	<A NAME="f_set_scale"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html#f_set_scale">set_scale</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">new_scale</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/double.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set relative scaling factor.</SPAN>
+</A>
+	<A NAME="f_set_scale_x"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html#f_set_scale_x">set_scale_x</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">new_scale_x</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/double.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set relative horizontal scaling factor.</SPAN>
+</A>
+	<A NAME="f_set_scale_x_abs"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html#f_set_scale_x_abs">set_scale_x_abs</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">new_scale_x_abs</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/double.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Change absolute horizontal scaling factor.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">last_scale_x_abs_assigned</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html#f_last_scale_x_abs">last_scale_x_abs</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">new_scale_x_abs</SPAN>
+</A>
+	<A NAME="f_set_scale_y"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html#f_set_scale_y">set_scale_y</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">new_scale_y</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/double.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set relative vertical scaling factor.</SPAN>
+</A>
+	<A NAME="f_set_scale_y_abs"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html#f_set_scale_y_abs">set_scale_y_abs</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">new_scale_y_abs</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/double.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Change absolute vertical scaling factor.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">last_scale_y_abs_assigned</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html#f_last_scale_y_abs">last_scale_y_abs</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">new_scale_y_abs</SPAN>
+</A>
+	<A NAME="f_set_x"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html#f_set_x">set_x</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">new_x</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Change relative horizontal position.</SPAN>
+</A>
+	<A NAME="f_set_x_abs"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html#f_set_x_abs">set_x_abs</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">new_x_abs</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Change absolute position.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">last_x_abs_assigned</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html#f_last_x_abs">last_x_abs</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">new_x_abs</SPAN>
+</A>
+	<A NAME="f_set_y"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html#f_set_y">set_y</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">new_y</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Change relative vertical position.</SPAN>
+</A>
+	<A NAME="f_set_y_abs"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html#f_set_y_abs">set_y_abs</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">new_y_abs</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Change absolute position.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">last_y_abs_assigned</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html#f_last_y_abs">last_y_abs</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">new_y_abs</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Representation</SPAN>
+
+	<A NAME="f_out_abs"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html#f_out_abs">out_abs</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/string.html">STRING</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> A string with absolute coordinates.</SPAN>
+</A>
+	<A NAME="f_out_rel"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html#f_out_rel">out_rel</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/string.html">STRING</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> A string with all relative coordinates of origins.</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">invariant</SPAN>
+
+	<SPAN CLASS="etag">notify_list_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html#f_notify_list_ids">notify_list_ids</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A>
+	<SPAN CLASS="etag">has_origin_implies_origin_notifies</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html#f_origin">origin</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A> <SPAN CLASS="ekeyword">implies</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html#f_origin">origin</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html#f_notify_list_ids">notify_list_ids</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/array.html#f_has">has</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../../../libraries/base/reference/support/identified.html#f_object_id">object_id</A><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/any.html">ANY</A>
+	<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+	<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>EV_RELATIVE_POINT</PRE>
+
+</BODY>
+
+</HTML>
+

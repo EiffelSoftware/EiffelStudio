@@ -1,0 +1,81 @@
+<HTML>
+	<HEAD>
+		
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.33">
+		
+<TITLE>EV_FONT Chart</TITLE>
+		
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<PRE><SPAN CLASS="ekeyword">class</SPAN>
+	<A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_font_chart.html">EV_FONT</A>
+
+<SPAN CLASS="ekeyword">General</SPAN>
+	<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../../../../libraries/vision2/reference/interface/kernel/index.html">vision2.interface.kernel</A>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> 
+		<SPAN CLASS="estring">"Representation of a typeface.</SPAN>
+		<SPAN CLASS="estring">Appearance is specified in terms of font family, height, shape and</SPAN>
+		<SPAN CLASS="estring">weight. The local system font closest to the specification will be</SPAN>
+		<SPAN CLASS="estring">displayed. A specific font name may optionally be specified. See `</SPAN><SPAN CLASS="equoted">set_preferred_face</SPAN><SPAN CLASS="estring">'"</SPAN>
+	<SPAN CLASS="eitag">keywords</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"character, face, height, family, weight, shape, bold, italic"</SPAN>
+	<SPAN CLASS="eitag">create</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_font.html#f_make_with_values">make_with_values</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html#f_default_create">default_create</A>
+
+<SPAN CLASS="ekeyword">Ancestors</SPAN>
+	<A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any_chart.html">EV_ANY</A>
+	<A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/support/ev_font_constants_chart.html">EV_FONT_CONSTANTS</A>
+
+<SPAN CLASS="ekeyword">Queries</SPAN>
+	<SPAN TITLE="`ascent' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_font.html#f_ascent">ascent</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`data' was declared in EV_ANY"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html#f_data">data</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/any_chart.html">ANY</A></SPAN>
+	<SPAN TITLE="`descent' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_font.html#f_descent">descent</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`family' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_font.html#f_family">family</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`height' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_font.html#f_height">height</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`horizontal_resolution' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_font.html#f_horizontal_resolution">horizontal_resolution</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`is_destroyed' was declared in EV_ANY"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html#f_is_destroyed">is_destroyed</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`is_equal' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_font.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_font_chart.html">EV_FONT</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`is_proportional' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_font.html#f_is_proportional">is_proportional</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`maximum_width' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_font.html#f_maximum_width">maximum_width</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`minimum_width' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_font.html#f_minimum_width">minimum_width</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`name' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_font.html#f_name">name</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/string_chart.html">STRING</A></SPAN>
+	<SPAN TITLE="`preferred_families' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_font.html#f_preferred_families">preferred_families</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/event/active_list_chart.html">ACTIVE_LIST</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">]</SPAN></SPAN>
+	<SPAN TITLE="`shape' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_font.html#f_shape">shape</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`string_size' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_font.html#f_string_size">string_size</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_string</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/tuple_chart.html">TUPLE</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">]</SPAN></SPAN>
+	<SPAN TITLE="`string_width' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_font.html#f_string_width">string_width</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_string</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`valid_family' was declared in EV_FONT_CONSTANTS"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_font_constants.html#f_valid_family">valid_family</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_family</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`valid_shape' was declared in EV_FONT_CONSTANTS"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_font_constants.html#f_valid_shape">valid_shape</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_shape</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`valid_weight' was declared in EV_FONT_CONSTANTS"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_font_constants.html#f_valid_weight">valid_weight</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_weight</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`vertical_resolution' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_font.html#f_vertical_resolution">vertical_resolution</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`weight' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_font.html#f_weight">weight</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`width' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_font.html#f_width">width</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+
+<SPAN CLASS="ekeyword">Commands</SPAN>
+	<SPAN TITLE="`copy' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_font.html#f_copy">copy</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_font_chart.html">EV_FONT</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`destroy' was declared in EV_ANY"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html#f_destroy">destroy</A></SPAN>
+	<SPAN TITLE="`set_data' was declared in EV_ANY"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html#f_set_data">set_data</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">some_data</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html#f_data">data</A><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_family' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_font.html#f_set_family">set_family</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_family</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_height' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_font.html#f_set_height">set_height</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_height</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_shape' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_font.html#f_set_shape">set_shape</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_shape</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_weight' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_font.html#f_set_weight">set_weight</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_weight</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+
+<SPAN CLASS="ekeyword">Constraints</SPAN>
+	<SPAN CLASS="etag">family valid</SPAN>
+	<SPAN CLASS="etag">weight valid</SPAN>
+	<SPAN CLASS="etag">shape valid</SPAN>
+	<SPAN CLASS="etag">height bigger than zero</SPAN>
+	<SPAN CLASS="etag">ascent bigger than zero</SPAN>
+	<SPAN CLASS="etag">descent bigger than zero</SPAN>
+	<SPAN CLASS="etag">height positive</SPAN>
+	<SPAN CLASS="etag">ascent positive</SPAN>
+	<SPAN CLASS="etag">descent positive</SPAN>
+	<SPAN CLASS="etag">width of empty string equals zero</SPAN>
+	<SPAN CLASS="etag">horizontal resolution non negative</SPAN>
+	<SPAN CLASS="etag">vertical resolution non negative</SPAN>
+
+</PRE>
+
+</BODY>
+
+</HTML>

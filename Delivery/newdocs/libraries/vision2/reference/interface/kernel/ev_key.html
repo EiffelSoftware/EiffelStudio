@@ -1,0 +1,86 @@
+<HTML>
+	<HEAD>
+		
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.33">
+		
+<TITLE>EV_KEY Flat contracts</TITLE>
+		
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<PRE><SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Eiffel Vision key. Represents a virtual key code. `</SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_key.html#f_code">code</A><SPAN CLASS="estring">' can be anyof the constant values defined in </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/support/ev_key_constants.html">EV_KEY_CONSTANTS</A><SPAN CLASS="estring">."</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class"</SPAN>
+	<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN>
+	<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN>
+
+<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN>
+	<A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_key.html">EV_KEY</A>
+
+<SPAN CLASS="ekeyword">create</SPAN> 
+
+	<A NAME="f_default_create"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_key.html#f_default_create">default_create</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Initialize with </SPAN><SPAN CLASS="equoted">Key_enter</SPAN><SPAN CLASS="ecomment">.</SPAN>
+</A>
+	<A NAME="f_make_with_code"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_key.html#f_make_with_code">make_with_code</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_code</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Initialize with </SPAN><SPAN CLASS="equoted">a_code</SPAN><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">a_code_valid</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_key_constants.html#f_valid_key_code">valid_key_code</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_code</SPAN><SPAN CLASS="esymbol">)</SPAN>
+</A>
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN>
+
+	<A NAME="f_code"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_key.html#f_code">code</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Code representing some key.</SPAN>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status report</SPAN>
+
+	<A NAME="f_is_alpha"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_key.html#f_is_alpha">is_alpha</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is </SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_key.html#f_code">code</A><SPAN CLASS="ecomment"> in ["a"-"z"]?</SPAN>
+</A>
+	<A NAME="f_is_arrow"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_key.html#f_is_arrow">is_arrow</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is </SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_key.html#f_code">code</A><SPAN CLASS="ecomment"> an arrow key?</SPAN>
+</A>
+	<A NAME="f_is_function"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_key.html#f_is_function">is_function</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is </SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_key.html#f_code">code</A><SPAN CLASS="ecomment"> a function key?</SPAN>
+</A>
+	<A NAME="f_is_number"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_key.html#f_is_number">is_number</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is </SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_key.html#f_code">code</A><SPAN CLASS="ecomment"> in ["0"-"9"]?</SPAN>
+</A>
+	<A NAME="f_is_numpad"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_key.html#f_is_numpad">is_numpad</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is </SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_key.html#f_code">code</A><SPAN CLASS="ecomment"> a key on the numpad?</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Element change</SPAN>
+
+	<A NAME="f_set_code"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_key.html#f_set_code">set_code</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_code</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Assign </SPAN><SPAN CLASS="equoted">a_code</SPAN><SPAN CLASS="ecomment"> to </SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_key.html#f_code">code</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">a_code_valid</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_key_constants.html#f_valid_key_code">valid_key_code</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_code</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">code_assigned</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_key.html#f_code">code</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">a_code</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN>  <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Contract support</SPAN>
+
+	<A NAME="f_valid_key_code"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_key_constants.html#f_valid_key_code">valid_key_code</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_code</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is `</SPAN><SPAN CLASS="equoted">a_code</SPAN><SPAN CLASS="ecomment">' a valid key code?</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/support/ev_key_constants.html">EV_KEY_CONSTANTS</A><SPAN CLASS="ecomment">)</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Standard output</SPAN>
+
+	<A NAME="f_out"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_key.html#f_out">out</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/string.html">STRING</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Readable representation of </SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_key.html#f_code">code</A><SPAN CLASS="ecomment">.</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">invariant</SPAN>
+
+	<SPAN CLASS="etag">code_valid</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_key_constants.html#f_valid_key_code">valid_key_code</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_key.html#f_code">code</A><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/any.html">ANY</A>
+	<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+	<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>EV_KEY</PRE>
+
+</BODY>
+
+</HTML>
+

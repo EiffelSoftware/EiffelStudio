@@ -1,0 +1,41 @@
+<HTML>
+	<HEAD>
+		
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.33">
+		
+<TITLE>EV_PIXMAP_ACTION_SEQUENCES Flat contracts</TITLE>
+		
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<PRE><SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Action sequences for </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/widgets/primitives/ev_pixmap.html">EV_PIXMAP</A><SPAN CLASS="estring">."</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Generated!"</SPAN>
+	<SPAN CLASS="eitag">keywords</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"event, action, sequence"</SPAN>
+	<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Generated!"</SPAN>
+	<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Generated!"</SPAN>
+
+<SPAN CLASS="ekeyword">deferred</SPAN> <SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN>
+	<A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/events/ev_pixmap_action_sequences.html">EV_PIXMAP_ACTION_SEQUENCES</A>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Event handling</SPAN>
+
+	<A NAME="f_expose_actions"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/events/ev_pixmap_action_sequences.html#f_expose_actions">expose_actions</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/events/ev_geometry_action_sequence.html">EV_GEOMETRY_ACTION_SEQUENCE</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Actions to be performed when an area needs to be redrawn.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A>
+</A>	
+<SPAN CLASS="ekeyword">invariant</SPAN>
+
+		<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/any.html">ANY</A>
+	<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+	<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>EV_PIXMAP_ACTION_SEQUENCES</PRE>
+
+</BODY>
+
+</HTML>
+

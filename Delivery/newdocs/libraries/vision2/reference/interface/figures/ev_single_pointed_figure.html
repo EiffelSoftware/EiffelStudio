@@ -1,0 +1,51 @@
+<HTML>
+	<HEAD>
+		
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.33">
+		
+<TITLE>EV_SINGLE_POINTED_FIGURE Flat contracts</TITLE>
+		
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<PRE><SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Figures consisting of one point."</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notive at end of class"</SPAN>
+	<SPAN CLASS="eitag">keywords</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"figure, point"</SPAN>
+	<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN>
+	<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN>
+
+<SPAN CLASS="ekeyword">deferred</SPAN> <SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN>
+	<A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_single_pointed_figure.html">EV_SINGLE_POINTED_FIGURE</A>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN>
+
+	<A NAME="f_point"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_single_pointed_figure.html#f_point">point</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html">EV_RELATIVE_POINT</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> First point of </SPAN><SPAN CLASS="equoted">Current</SPAN><SPAN CLASS="ecomment">.</SPAN>
+</A>
+	<A NAME="f_point_count"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_single_pointed_figure.html#f_point_count">point_count</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><SPAN CLASS="equoted">Current</SPAN><SPAN CLASS="ecomment"> has one point.</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status setting</SPAN>
+
+	<A NAME="f_set_point"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_single_pointed_figure.html#f_set_point">set_point</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_point</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html">EV_RELATIVE_POINT</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Assign </SPAN><SPAN CLASS="equoted">a_point</SPAN><SPAN CLASS="ecomment"> to </SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_single_pointed_figure.html#f_point">point</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">a_point_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_point</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">point_assigned</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_single_pointed_figure.html#f_point">point</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">a_point</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">invariant</SPAN>
+
+		<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/any.html">ANY</A>
+	<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+	<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>EV_SINGLE_POINTED_FIGURE</PRE>
+
+</BODY>
+
+</HTML>
+

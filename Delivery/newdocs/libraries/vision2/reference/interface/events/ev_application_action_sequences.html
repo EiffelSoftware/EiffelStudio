@@ -1,0 +1,56 @@
+<HTML>
+	<HEAD>
+		
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.33">
+		
+<TITLE>EV_APPLICATION_ACTION_SEQUENCES Flat contracts</TITLE>
+		
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<PRE><SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Action sequences for </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_application.html">EV_APPLICATION</A><SPAN CLASS="estring">."</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Generated!"</SPAN>
+	<SPAN CLASS="eitag">keywords</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"event, action, sequence"</SPAN>
+	<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Generated!"</SPAN>
+	<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Generated!"</SPAN>
+
+<SPAN CLASS="ekeyword">deferred</SPAN> <SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN>
+	<A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/events/ev_application_action_sequences.html">EV_APPLICATION_ACTION_SEQUENCES</A>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Event handling</SPAN>
+
+	<A NAME="f_drop_actions"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/events/ev_application_action_sequences.html#f_drop_actions">drop_actions</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/events/ev_pnd_action_sequence.html">EV_PND_ACTION_SEQUENCE</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Actions to be performed when any "drop" occurs.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A>
+</A>
+	<A NAME="f_idle_actions"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/events/ev_application_action_sequences.html#f_idle_actions">idle_actions</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/events/ev_notify_action_sequence.html">EV_NOTIFY_ACTION_SEQUENCE</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Actions to be performed when the application is otherwise idle.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A>
+</A>
+	<A NAME="f_pick_actions"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/events/ev_application_action_sequences.html#f_pick_actions">pick_actions</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/events/ev_pnd_action_sequence.html">EV_PND_ACTION_SEQUENCE</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Actions to be performed when any "pick" occurs.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A>
+</A>
+	<A NAME="f_post_launch_actions"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/events/ev_application_action_sequences.html#f_post_launch_actions">post_launch_actions</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/events/ev_notify_action_sequence.html">EV_NOTIFY_ACTION_SEQUENCE</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Actions to be performed just after application </SPAN><SPAN CLASS="equoted">launch</SPAN><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A>
+</A>	
+<SPAN CLASS="ekeyword">invariant</SPAN>
+
+		<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/any.html">ANY</A>
+	<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+	<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>EV_APPLICATION_ACTION_SEQUENCES</PRE>
+
+</BODY>
+
+</HTML>
+

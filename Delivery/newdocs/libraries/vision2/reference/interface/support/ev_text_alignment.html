@@ -1,0 +1,68 @@
+<HTML>
+	<HEAD>
+		
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.33">
+		
+<TITLE>EV_TEXT_ALIGNMENT Flat contracts</TITLE>
+		
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<PRE><SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Enumeration class for text alignment. Default is left."</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class"</SPAN>
+	<SPAN CLASS="eitag">keywords</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"text, aligment"</SPAN>
+	<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN>
+	<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN>
+
+<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN>
+	<A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/support/ev_text_alignment.html">EV_TEXT_ALIGNMENT</A>
+
+<SPAN CLASS="ekeyword">create</SPAN> 
+
+	<A NAME="f_make_with_left_alignment"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_text_alignment.html#f_make_with_left_alignment">make_with_left_alignment</A>
+</A>
+	<A NAME="f_make_with_center_alignment"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_text_alignment.html#f_make_with_center_alignment">make_with_center_alignment</A>
+</A>
+	<A NAME="f_make_with_right_alignment"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_text_alignment.html#f_make_with_right_alignment">make_with_right_alignment</A>
+</A>
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status report</SPAN>
+
+	<A NAME="f_is_center_aligned"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_text_alignment.html#f_is_center_aligned">is_center_aligned</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/boolean.html">BOOLEAN</A>
+</A>
+	<A NAME="f_is_left_aligned"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_text_alignment.html#f_is_left_aligned">is_left_aligned</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/boolean.html">BOOLEAN</A>
+</A>
+	<A NAME="f_is_right_aligned"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_text_alignment.html#f_is_right_aligned">is_right_aligned</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/boolean.html">BOOLEAN</A>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status setting</SPAN>
+
+	<A NAME="f_set_center_alignment"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_text_alignment.html#f_set_center_alignment">set_center_alignment</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set the horizontal alignment to "center"</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">is_center_aligned</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_text_alignment.html#f_is_center_aligned">is_center_aligned</A>
+</A>
+	<A NAME="f_set_left_alignment"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_text_alignment.html#f_set_left_alignment">set_left_alignment</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set the horizontal alignment to "left"</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">is_left_aligned</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_text_alignment.html#f_is_left_aligned">is_left_aligned</A>
+</A>
+	<A NAME="f_set_right_alignment"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_text_alignment.html#f_set_right_alignment">set_right_alignment</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set the horizontal alignment to "right"</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">is_right_aligned</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_text_alignment.html#f_is_right_aligned">is_right_aligned</A>
+</A>	
+<SPAN CLASS="ekeyword">invariant</SPAN>
+
+	<SPAN CLASS="etag">alignment_code_within_range</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_text_alignment.html#f_alignment_code">alignment_code</A> <A CLASS="esymbol" HREF="../../../../../libraries/base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_text_alignment.html#f_left_alignment">left_alignment</A> <A CLASS="ekeyword" HREF="../../../../../libraries/base/reference/kernel/boolean_ref.html#f__infix_and">and</A> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_text_alignment.html#f_alignment_code">alignment_code</A> <A CLASS="esymbol" HREF="../../../../../libraries/base/reference/kernel/comparable.html#f__infix_le">&lt;=</A> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_text_alignment.html#f_right_alignment">right_alignment</A>
+		<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/any.html">ANY</A>
+	<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+	<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>EV_TEXT_ALIGNMENT</PRE>
+
+</BODY>
+
+</HTML>
+

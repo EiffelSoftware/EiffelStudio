@@ -1,0 +1,155 @@
+<HTML>
+	<HEAD>
+		
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.33">
+		
+<TITLE>EV_ABSTRACT_PICK_AND_DROPABLE Flat contracts</TITLE>
+		
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<PRE><SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Abstract interface for all pick and dropable classes.Descendants include: widgets, items and figures."</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class"</SPAN>
+	<SPAN CLASS="eitag">keywords</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"pick and drop, figure, widget, item"</SPAN>
+	<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN>
+	<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN>
+
+<SPAN CLASS="ekeyword">deferred</SPAN> <SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN>
+	<A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/properties/ev_abstract_pick_and_dropable.html">EV_ABSTRACT_PICK_AND_DROPABLE</A>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN>
+
+	<A NAME="f_accept_cursor"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/properties/ev_abstract_pick_and_dropable.html#f_accept_cursor">accept_cursor</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_cursor.html">EV_CURSOR</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><SPAN CLASS="equoted">Result</SPAN><SPAN CLASS="ecomment"> is cursor displayed when the screen pointer is over a</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> target that accepts </SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/properties/ev_abstract_pick_and_dropable.html#f_pebble">pebble</A><SPAN CLASS="ecomment"> during pick and drop.</SPAN>
+</A>
+	<A NAME="f_deny_cursor"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/properties/ev_abstract_pick_and_dropable.html#f_deny_cursor">deny_cursor</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_cursor.html">EV_CURSOR</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><SPAN CLASS="equoted">Result</SPAN><SPAN CLASS="ecomment"> is cursor displayed when the screen pointer is over a</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> target that does not accept </SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/properties/ev_abstract_pick_and_dropable.html#f_pebble">pebble</A><SPAN CLASS="ecomment"> during pick and drop.</SPAN>
+</A>
+	<A NAME="f_id_object"><SPAN CLASS="ekeyword">frozen</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/support/identified.html#f_id_object">id_object</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_id</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/support/identified.html">IDENTIFIED</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Object associated with </SPAN><SPAN CLASS="equoted">an_id</SPAN><SPAN CLASS="ecomment"> (void if no such object)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/base/reference/support/identified.html">IDENTIFIED</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/base/reference/support/identified.html">IDENTIFIED</A>
+			<SPAN CLASS="etag">consistent</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A> <SPAN CLASS="ekeyword">or else</SPAN> <SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../../libraries/base/reference/support/identified.html#f_object_id">object_id</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">an_id</SPAN>
+</A>
+	<A NAME="f_object_id"><SPAN CLASS="ekeyword">frozen</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/support/identified.html#f_object_id">object_id</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Unique for current object in any given session</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/base/reference/support/identified.html">IDENTIFIED</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/base/reference/support/identified.html">IDENTIFIED</A>
+			<SPAN CLASS="etag">valid_id</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/support/identified.html#f_id_object">id_object</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="ereserved">Current</SPAN>
+</A>
+	<A NAME="f_pebble"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/properties/ev_abstract_pick_and_dropable.html#f_pebble">pebble</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/any.html">ANY</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Data to be transported by pick and drop mechanism.</SPAN>
+</A>
+	<A NAME="f_pebble_function"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/properties/ev_abstract_pick_and_dropable.html#f_pebble_function">pebble_function</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/function.html">FUNCTION</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/any.html">ANY</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/tuple.html">TUPLE</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/any.html">ANY</A><SPAN CLASS="esymbol">]</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Returns data to be transported by pick and drop mechanism.</SPAN>
+</A>
+	<A NAME="f_target_name"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/properties/ev_abstract_pick_and_dropable.html#f_target_name">target_name</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/string.html">STRING</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Optional textual name describing </SPAN><SPAN CLASS="equoted">Current</SPAN><SPAN CLASS="ecomment"> pick and drop hole.</SPAN>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Comparison</SPAN>
+
+	<A NAME="f_is_equal"><A CLASS="efeature" HREF="../../../../../libraries/base/reference/support/identified.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is </SPAN><SPAN CLASS="equoted">other</SPAN><SPAN CLASS="ecomment"> attached to an object considered</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> equal to current object?</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/base/reference/support/identified.html">IDENTIFIED</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/any.html">ANY</A>
+			<SPAN CLASS="etag">other_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">other</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/any.html">ANY</A>
+			<SPAN CLASS="etag">symmetric</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <A CLASS="ekeyword" HREF="../../../../../libraries/base/reference/kernel/boolean_ref.html#f__infix_implies">implies</A> <SPAN CLASS="elocal">other</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../../libraries/base/reference/support/identified.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="etag">consistent</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">)</SPAN> <A CLASS="ekeyword" HREF="../../../../../libraries/base/reference/kernel/boolean_ref.html#f__infix_implies">implies</A> <SPAN CLASS="ereserved">Result</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status setting</SPAN>
+
+	<A NAME="f_remove_pebble"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/properties/ev_abstract_pick_and_dropable.html#f_remove_pebble">remove_pebble</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Make </SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/properties/ev_abstract_pick_and_dropable.html#f_pebble">pebble</A><SPAN CLASS="ecomment"> </SPAN><SPAN CLASS="equoted">Void</SPAN><SPAN CLASS="ecomment"> and </SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/properties/ev_abstract_pick_and_dropable.html#f_pebble_function">pebble_function</A><SPAN CLASS="ecomment"> `Void,</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Removing transport.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">pebble_removed</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/properties/ev_abstract_pick_and_dropable.html#f_pebble">pebble</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A> <SPAN CLASS="ekeyword">and</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/properties/ev_abstract_pick_and_dropable.html#f_pebble_function">pebble_function</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A>
+</A>
+	<A NAME="f_set_accept_cursor"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/properties/ev_abstract_pick_and_dropable.html#f_set_accept_cursor">set_accept_cursor</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_cursor</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_cursor.html">EV_CURSOR</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><SPAN CLASS="equoted">a_cursor</SPAN><SPAN CLASS="ecomment"> to be displayed when the screen pointer is over a</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> target that accepts </SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/properties/ev_abstract_pick_and_dropable.html#f_pebble">pebble</A><SPAN CLASS="ecomment"> during pick and drop.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">accept_cursor_assigned</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/properties/ev_abstract_pick_and_dropable.html#f_accept_cursor">accept_cursor</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/widgets/primitives/ev_pixmap.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_cursor</SPAN><SPAN CLASS="esymbol">)</SPAN>
+</A>
+	<A NAME="f_set_deny_cursor"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/properties/ev_abstract_pick_and_dropable.html#f_set_deny_cursor">set_deny_cursor</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_cursor</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_cursor.html">EV_CURSOR</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><SPAN CLASS="equoted">a_cursor</SPAN><SPAN CLASS="ecomment"> to be displayed when the screen pointer is not</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> over a valid target.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">deny_cursor_assigned</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/properties/ev_abstract_pick_and_dropable.html#f_deny_cursor">deny_cursor</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/widgets/primitives/ev_pixmap.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_cursor</SPAN><SPAN CLASS="esymbol">)</SPAN>
+</A>
+	<A NAME="f_set_pebble"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/properties/ev_abstract_pick_and_dropable.html#f_set_pebble">set_pebble</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_pebble</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/properties/ev_abstract_pick_and_dropable.html#f_pebble">pebble</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Assign </SPAN><SPAN CLASS="equoted">a_pebble</SPAN><SPAN CLASS="ecomment"> to </SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/properties/ev_abstract_pick_and_dropable.html#f_pebble">pebble</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">a_pebble_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_pebble</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">pebble_assigned</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/properties/ev_abstract_pick_and_dropable.html#f_pebble">pebble</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">a_pebble</SPAN>
+</A>
+	<A NAME="f_set_pebble_function"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/properties/ev_abstract_pick_and_dropable.html#f_set_pebble_function">set_pebble_function</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_function</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/function.html">FUNCTION</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/any.html">ANY</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/tuple.html">TUPLE</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/any.html">ANY</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><SPAN CLASS="equoted">a_function</SPAN><SPAN CLASS="ecomment"> to compute </SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/properties/ev_abstract_pick_and_dropable.html#f_pebble">pebble</A><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> It will be called once each time a pick occurs, the result</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> will be assigned to </SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/properties/ev_abstract_pick_and_dropable.html#f_pebble">pebble</A><SPAN CLASS="ecomment"> for the duration of transport.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> When a pick occurs, the pick position in widget coordinates,</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> &lt;&lt;x, y&gt;&gt; in pixels, is passed.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> To handle this data use </SPAN><SPAN CLASS="equoted">a_function</SPAN><SPAN CLASS="ecomment"> of type</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/function.html">FUNCTION</A><SPAN CLASS="ecomment"> [</SPAN><A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/any.html">ANY</A><SPAN CLASS="ecomment">, </SPAN><A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/tuple.html">TUPLE</A><SPAN CLASS="ecomment"> [</SPAN><A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="ecomment">, </SPAN><A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="ecomment">], </SPAN><A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/any.html">ANY</A><SPAN CLASS="ecomment">] and return the</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> pebble as a function of x and y.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Overrides </SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/properties/ev_abstract_pick_and_dropable.html#f_set_pebble">set_pebble</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">a_function_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_function</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A>
+			<SPAN CLASS="etag">a_function_takes_two_integer_open_operands</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_function</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/routine.html#f_valid_operands">valid_operands</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">pebble_function_assigned</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/properties/ev_abstract_pick_and_dropable.html#f_pebble_function">pebble_function</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">a_function</SPAN>
+</A>
+	<A NAME="f_set_target_name"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/properties/ev_abstract_pick_and_dropable.html#f_set_target_name">set_target_name</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Assign </SPAN><SPAN CLASS="equoted">a_name</SPAN><SPAN CLASS="ecomment"> to </SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/properties/ev_abstract_pick_and_dropable.html#f_target_name">target_name</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">a_name_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_name</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">target_name_assigned</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_name</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/properties/ev_abstract_pick_and_dropable.html#f_target_name">target_name</A> <SPAN CLASS="ekeyword">and</SPAN> <SPAN CLASS="elocal">a_name</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/string.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/properties/ev_abstract_pick_and_dropable.html#f_target_name">target_name</A><SPAN CLASS="esymbol">)</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Duplication</SPAN>
+
+	<A NAME="f_copy"><A CLASS="efeature" HREF="../../../../../libraries/base/reference/support/identified.html#f_copy">copy</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Update current object using fields of object attached</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">other</SPAN><SPAN CLASS="ecomment">, so as to yield equal objects.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/base/reference/support/identified.html">IDENTIFIED</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/any.html">ANY</A>
+			<SPAN CLASS="etag">other_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">other</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A>
+			<SPAN CLASS="etag">type_identity</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_same_type">same_type</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/any.html">ANY</A>
+			<SPAN CLASS="etag">is_equal</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/support/identified.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">)</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> User input events</SPAN>
+
+	<A NAME="f_conforming_pick_actions"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/properties/ev_abstract_pick_and_dropable.html#f_conforming_pick_actions">conforming_pick_actions</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/events/ev_notify_action_sequence.html">EV_NOTIFY_ACTION_SEQUENCE</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Actions to be performed when a pebble that fits this hole is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> picked up from another source.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> (when drop_actions.accepts_pebble (pebble))</SPAN>
+</A>
+	<A NAME="f_drop_actions"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/properties/ev_abstract_pick_and_dropable.html#f_drop_actions">drop_actions</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/events/ev_pnd_action_sequence.html">EV_PND_ACTION_SEQUENCE</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Actions to take when pick and drop transport drops on </SPAN><SPAN CLASS="equoted">Current</SPAN><SPAN CLASS="ecomment">.</SPAN>
+</A>
+	<A NAME="f_pick_actions"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/properties/ev_abstract_pick_and_dropable.html#f_pick_actions">pick_actions</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/events/ev_pnd_start_action_sequence.html">EV_PND_START_ACTION_SEQUENCE</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Actions to be performed when </SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/properties/ev_abstract_pick_and_dropable.html#f_pebble">pebble</A><SPAN CLASS="ecomment"> is picked up.</SPAN>
+</A>
+	<A NAME="f_pointer_motion_actions"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/properties/ev_abstract_pick_and_dropable.html#f_pointer_motion_actions">pointer_motion_actions</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/events/ev_pointer_motion_action_sequence.html">EV_POINTER_MOTION_ACTION_SEQUENCE</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Actions to be performed when screen pointer moves.</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">invariant</SPAN>
+
+		<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/any.html">ANY</A>
+	<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+	<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>EV_ABSTRACT_PICK_AND_DROPABLE</PRE>
+
+</BODY>
+
+</HTML>
+

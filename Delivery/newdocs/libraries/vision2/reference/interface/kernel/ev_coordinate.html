@@ -1,0 +1,72 @@
+<HTML>
+	<HEAD>
+		
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.33">
+		
+<TITLE>EV_COORDINATE Flat contracts</TITLE>
+		
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<PRE><SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"A position in a 2 dimensional space as </SPAN><A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="estring">s (x, y)"</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class"</SPAN>
+	<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN>
+	<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN>
+
+<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN>
+	<A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_coordinate.html">EV_COORDINATE</A>
+
+<SPAN CLASS="ekeyword">create</SPAN> 
+
+	<A NAME="f_set"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_coordinate.html#f_set">set</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_x</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_y</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Assign </SPAN><SPAN CLASS="equoted">a_x</SPAN><SPAN CLASS="ecomment"> to </SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_coordinate.html#f_x">x</A><SPAN CLASS="ecomment"> and </SPAN><SPAN CLASS="equoted">a_y</SPAN><SPAN CLASS="ecomment"> to </SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_coordinate.html#f_y">y</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">x_assigned</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_coordinate.html#f_x">x</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">a_x</SPAN>
+			<SPAN CLASS="etag">y_assigned</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_coordinate.html#f_y">y</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">a_y</SPAN>
+</A>
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN>
+
+	<A NAME="f_x"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_coordinate.html#f_x">x</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Horizontal position.</SPAN>
+
+	<A NAME="f_y"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_coordinate.html#f_y">y</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Vertical position.</SPAN>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Element change</SPAN>
+
+	<A NAME="f_set"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_coordinate.html#f_set">set</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_x</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_y</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Assign </SPAN><SPAN CLASS="equoted">a_x</SPAN><SPAN CLASS="ecomment"> to </SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_coordinate.html#f_x">x</A><SPAN CLASS="ecomment"> and </SPAN><SPAN CLASS="equoted">a_y</SPAN><SPAN CLASS="ecomment"> to </SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_coordinate.html#f_y">y</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">x_assigned</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_coordinate.html#f_x">x</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">a_x</SPAN>
+			<SPAN CLASS="etag">y_assigned</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_coordinate.html#f_y">y</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">a_y</SPAN>
+</A>
+	<A NAME="f_set_x"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_coordinate.html#f_set_x">set_x</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_x</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Assign </SPAN><SPAN CLASS="equoted">a_x</SPAN><SPAN CLASS="ecomment"> to </SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_coordinate.html#f_x">x</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">x_assigned</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_coordinate.html#f_x">x</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">a_x</SPAN>
+</A>
+	<A NAME="f_set_y"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_coordinate.html#f_set_y">set_y</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_y</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Assign </SPAN><SPAN CLASS="equoted">a_y</SPAN><SPAN CLASS="ecomment"> to </SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_coordinate.html#f_y">y</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">y_assigned</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_coordinate.html#f_y">y</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">a_y</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Output</SPAN>
+
+	<A NAME="f_out"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_coordinate.html#f_out">out</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/string.html">STRING</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Textual representation.</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">invariant</SPAN>
+
+		<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/any.html">ANY</A>
+	<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+	<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>EV_COORDINATE</PRE>
+
+</BODY>
+
+</HTML>
+

@@ -642,10 +642,45 @@ feature -- Status setting
 
 	set_ex_style (an_ex_style: INTEGER) is
 			-- Set `an_ex_style' with `ex_style'.
+			--
 		require
 			exists: exists
+		local
+			Hwnd_const: POINTER
+			Swp_const: INTEGER
+			old_ex_style: INTEGER
 		do
+				-- Remember the current Extended style
+			old_ex_style := ex_style
+
+				-- Change the Extended style
 			cwin_set_window_long (item, Gwl_exstyle, an_ex_style)
+				
+				-- Update Window cache buffer
+				--|
+				--| Certain window data is cached, so changes you make using 
+				--| SetWindowLong will not take effect until you call the 
+				--| SetWindowPos function. Specifically, if you change any 
+				--| of the frame styles, you must call SetWindowPos with 
+				--| the SWP_FRAMECHANGED flag for the cache to be updated 
+				--| properly. 
+			if flag_set (an_ex_style, Ws_ex_topmost) then
+				Hwnd_const := Hwnd_topmost
+			else
+				if flag_set (old_ex_style, Ws_ex_topmost) then
+					-- The old style specify "Top most", not the
+					-- new one so we change the current Z order.
+					Hwnd_const := Hwnd_notopmost
+				else
+					-- The old style does not specify "Top most", like the
+					-- new one so ignore Z order changes.
+					Swp_const := set_flag (Swp_const, Swp_nozorder)
+				end
+			end
+			Swp_const := set_flag (Swp_const, Swp_nomove)
+			Swp_const := set_flag (Swp_const, Swp_nosize)
+			Swp_const := set_flag (Swp_const, Swp_framechanged)
+			cwin_set_window_pos (item, Hwnd_const, 0, 0, 0, 0, Swp_const)
 		ensure
 			ex_style_set: ex_style = an_ex_style
 		end

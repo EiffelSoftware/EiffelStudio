@@ -24,34 +24,34 @@ feature
 	ascent (a_screen: WIDGET): INTEGER is
 			-- Ascent value in pixel of the font loaded for `a_screen'.
 		require
-			a_screen_exists: not (a_screen = Void);
+			a_screen_exists: a_screen /= Void;
 			font_specified: is_specified;
 			font_valid_for_a_screen: is_valid (a_screen)
 		do
 			Result := implementation.ascent (a_screen.implementation)
 		ensure
-			Result >= 0
+			non_negative_result: Result >= 0
 		end;
 
 	descent (a_screen: WIDGET): INTEGER is
-            -- Descent value in pixel of the font loaded for `a_screen'.
+			-- Descent value in pixel of the font loaded for `a_screen'.
 		require
-			a_screen_exists: not (a_screen = Void);
-            font_specified: is_specified;
-            font_valid_for_a_screen: is_valid (a_screen)
-        do
-            Result := implementation.descent (a_screen.implementation)
+			a_screen_exists: a_screen /= Void;
+			font_specified: is_specified;
+			font_valid_for_a_screen: is_valid (a_screen)
+		do
+			Result := implementation.descent (a_screen.implementation)
 		ensure
-			Result >= 0
-        end;
+			non_negative_result: Result >= 0
+		end;
 
 	string_width (a_screen: WIDGET; a_text: STRING): INTEGER is
 			-- Width in pixel of `a_text' in the current font loaded for `a_screen'.
 		require
-			a_screen_exists: not (a_screen = Void);
-			a_text_exists: not (a_text = Void);
-            font_specified: is_specified;
-            font_valid_for_a_screen: is_valid (a_screen)
+			a_screen_exists: a_screen /= Void;
+			a_text_exists: a_text /= Void;
+			font_specified: is_specified;
+			font_valid_for_a_screen: is_valid (a_screen)
 		do
 			Result := implementation.string_width (a_screen.implementation, a_text)
 		ensure
@@ -66,7 +66,7 @@ feature
 		do
 			Result := implementation.average_width
 		ensure
-			average_width >= 0
+			non_negative_result: average_width >= 0
 		end;
 
 	character_set: STRING is
@@ -77,7 +77,7 @@ feature
 		do
 			Result := implementation.character_set
 		ensure
-			not (Result = Void)
+			result_exists: Result /= Void
 		end;
 
 	make is
@@ -85,7 +85,7 @@ feature
 		do
 			implementation := toolkit.font (Current)
 		ensure
-			not (implementation = Void)
+			implementation_exists: implementation /= Void
 		end;
 
 	family: STRING is
@@ -96,7 +96,7 @@ feature
 		do
 			Result := implementation.family
 		ensure
-			not (Result = Void)
+			result_exists: Result /= Void
 		end;
 
 	name: STRING is
@@ -109,12 +109,6 @@ feature
 			valid_result: Result /= Void
 		end;
 
-	n_ame: STRING is obsolete "Use ``name''"
-			-- Name of the font
-		do
-			Result := name
-		end;
-
 	foundry: STRING is
 			-- Foundry name (Adobe...)
 		require
@@ -123,7 +117,7 @@ feature
 		do
 			Result := implementation.foundry
 		ensure
-			not (Result = Void)
+			result_exists: Result /= Void
 		end;
 
 	horizontal_resolution: INTEGER is
@@ -134,7 +128,7 @@ feature
 		do
 			Result := implementation.horizontal_resolution
 		ensure
-			Result > 0
+			positive_result: Result > 0
 		end;
 
 	implementation: FONT_I;
@@ -179,7 +173,7 @@ feature
 		do
 			Result := implementation.pixel_size
 		ensure
-			Result > 0
+			positive_result: Result > 0
 		end;
 
 	point: INTEGER is
@@ -190,17 +184,17 @@ feature
 		do
 			Result := implementation.point
 		ensure
-			Result > 0
+			positive_result: Result > 0
 		end;
 
 	set_name (a_name: STRING) is
 			-- Set `name' to `a_name'.
 		require
-			a_name_exists: not (a_name = Void)
+			a_name_exists: a_name /= Void
 		do
 			implementation.set_name (a_name)
 		ensure
-			is_specified implies a_name.is_equal (a_name)
+			name_set: is_specified implies a_name.is_equal (a_name)
 		end;
 
 	slant: CHARACTER is
@@ -220,7 +214,7 @@ feature
 		do
 			Result := implementation.vertical_resolution
 		ensure
-			Result > 0
+			positive_result: Result > 0
 		end;
 
 	weight: STRING is
@@ -231,7 +225,7 @@ feature
 		do
 			Result := implementation.weight
 		ensure
-			not (Result = Void)
+			result_exists: Result /= Void
 		end;
 
 	width: STRING is
@@ -242,7 +236,7 @@ feature
 		do
 			Result := implementation.width
 		ensure
-			not (Result = Void)
+			result_exists: Result /= Void
 		end
 
 invariant

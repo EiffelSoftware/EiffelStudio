@@ -30,7 +30,7 @@ feature
 	allocated_blue (a_widget: WIDGET): INTEGER is
 			-- Allocated blue saturation level for `a_widget'
 		require
-			a_widget_exists: not (a_widget = Void);
+			a_widget_exists: a_widget /= Void;
 			a_widget_realized: a_widget.realized
 		do
 			Result := implementation.allocated_blue (a_widget.implementation)
@@ -39,7 +39,7 @@ feature
 	allocated_green (a_widget: WIDGET): INTEGER is
 			-- Allocated green saturation level for `a_widget'
 		require
-			a_widget_exists: not (a_widget = Void);
+			a_widget_exists: a_widget /= Void;
 			a_widget_realized: a_widget.realized
 		do
 			Result := implementation.allocated_green (a_widget.implementation)
@@ -48,7 +48,7 @@ feature
 	allocated_red (a_widget: WIDGET): INTEGER is
 			-- Allocated red saturation level for `a_widget'
 		require
-			a_widget_exists: not (a_widget = Void);
+			a_widget_exists: a_widget /= Void;
 			a_widget_realized: a_widget.realized
 		do
 			Result := implementation.allocated_red (a_widget.implementation)
@@ -57,7 +57,7 @@ feature
 	blue: INTEGER is
 			-- Blue saturation level
 		require
-			color_not_specified_by_name: (name = Void)
+			color_not_specified_by_name: name = Void
 		do
 			Result := implementation.blue
 		end;
@@ -71,7 +71,7 @@ feature
 	green: INTEGER is
 			-- Green saturation level
 		require
-			color_not_specified_by_name: (name = Void)
+			color_not_specified_by_name: name = Void
 		do
 			Result := implementation.green
 		end;
@@ -92,16 +92,10 @@ feature
 			Result := implementation.name
 		end;
 
-	n_ame: STRING is obsolete "Use ``name''"
-			-- name of desired color for current
-		do
-			Result := name
-		end;
-
 	red: INTEGER is
 			-- Red saturation level
 		require
-			color_not_specified_by_name: (name = Void)
+			color_not_specified_by_name: name = Void
 		do
 			Result := implementation.red
 		end;
@@ -112,73 +106,73 @@ feature
 		do
 			implementation.set_black_default
 		ensure
-			not is_white_by_default
+			black_default: not is_white_by_default
 		end;
 
 	set_blue (blue_value: INTEGER) is
 			-- Set blue saturation level to `blue_value'.
 		require
-			blue_value_small_enough: blue_value  <= 65535;
+			blue_value_small_enough: blue_value <= 65535;
 			blue_value_not_negative: blue_value >= 0
 		do
 			implementation.set_blue (blue_value)
 		ensure
-			(name = Void);
-			blue = blue_value
+			no_name: name = Void;
+			blue_set: blue = blue_value
 		end;
 
 	set_green (green_value: INTEGER) is
 			-- Set green saturation level to `green_value'.
 		require
-			green_value_small_enough: green_value  <= 65535;
+			green_value_small_enough: green_value <= 65535;
 			green_value_not_negative: green_value >= 0
 		do
 			implementation.set_green (green_value)
 		ensure
-			(name = Void);
-			green = green_value
+			no_name: name = Void;
+			green_set: green = green_value
 		end;
 
 	set_name (a_name: STRING) is
 			-- Set color name to `a_name'.
 		require
-			a_name_not_void: not (a_name = Void)
+			a_name_not_void: a_name /= Void
 		do
 			implementation.set_name (a_name)
 		ensure
-			not (name = Void);
-			name.is_equal (a_name)
+			name_exists: name /= Void;
+			name_set: name.is_equal (a_name)
 		end;
 
 	set_red (red_value: INTEGER) is
 			-- Set red saturation level to `red_value'.
 		require
-			red_value_small_enough: red_value  <= 65535;
+			red_value_small_enough: red_value <= 65535;
 			red_value_not_negative: red_value >= 0
 		do
 			implementation.set_red (red_value)
 		ensure
-			(name = Void);
-			red = red_value
+			no_name: name = Void;
+			red_set: red = red_value
 		end;
 
 	set_rgb (red_value, green_value, blue_value: INTEGER) is
 			-- Set red, green and blue saturation level respectivly to
 			-- `red_value', `green_value' and `blue_value'.
 		require
-			red_value_small_enough: red_value  <= 65535;
+			red_value_small_enough: red_value <= 65535;
 			red_value_not_negative: red_value >= 0;
-			green_value_small_enough: green_value  <= 65535;
+			green_value_small_enough: green_value <= 65535;
 			green_value_not_negative: green_value >= 0;
-			blue_value_small_enough: blue_value  <= 65535;
+			blue_value_small_enough: blue_value <= 65535;
 			blue_value_not_negative: blue_value >= 0
 		do
 			implementation.set_rgb (red_value, green_value, blue_value)
 		ensure
-			(name = Void);
-			red = red_value;
-			green = green_value;
-			blue = blue_value
+			no_name: name = Void;
+			red_set: red = red_value;
+			green_set: green = green_value;
+			blue_set: blue = blue_value
 		end;
 
 	set_white_default is
@@ -187,14 +181,14 @@ feature
 		do
 			implementation.set_white_default
 		ensure
-			is_white_by_default
+			white_default: is_white_by_default
 		end
 
 invariant
 
 	valid_implementation: implementation /= Void
 
-end
+end -- class COLOR
 
 
 --|----------------------------------------------------------------

@@ -15,26 +15,26 @@
 <p>The final screen of the wizard enables you to select the information you want
 to be displayed in the profile query window.&nbsp;</p>
 <h2>Select the information you need</h2>
-<p>Check or uncheck any of the check button in <b>Output switches</b> to select
-the columns you want to be displayed. Each switch turns off or on the
-corresponding column output. You have to toggle&nbsp;off or on depending upon
-what you would like to see in the result of the computation. Here is the
+<p>Check or uncheck any of the check buttons in <b>Output switches</b> to select
+the columns you want to be displayed. Each switch turns on or off the
+corresponding column output. You should toggle&nbsp;columns on or off depending
+on what you would like to see in the result of the computation. Here are the
 explanations of each switch:</p>
 <ul>
   <li><b>Feature name</b>: Display name of the current feature.</li>
   <li><b>Number of calls</b>: Display the number of times the current feature has been
     called during the instrumented execution.</li>
   <li><b>Function time</b>: Display the time spent in the current feature (not counting the
-    time spent in features called in the current feature).</li>
+    time spent in features called by the current feature).</li>
   <li><b>Descendant time</b>: Display the time spent in the features called in the current
     feature.</li>
   <li><b>Total time</b>: Display the total time spent in the feature. This value is equal to
     <i>Function time + Descendant time</i>.</li>
   <li><b>Percentage</b>: Display the percentage of time spent in the current feature. This
-    value is the equal to <i>Total time / Execution time</i>.</li>
+    value is equal to <i>Total time / Execution time</i>.</li>
 </ul>
-<p>Check or uncheck any of the check button in the <b>Language type</b> to
-select the kind of features you want to be displayed. If you select only one
+<p>Check or uncheck any of the check buttons in the <b>Language type</b> to
+select the type of features you want to be displayed. If you select only one
 language, the query result will not contain any&nbsp;information about routines
 written in the other language. The default is Eiffel only.</p>
 <ul>
@@ -45,11 +45,11 @@ written in the other language. The default is Eiffel only.</p>
 <h2>Formulate your query</h2>
 <p>When running a query, you are able to type a complete query. After pressing
 the <b>Next</b>&nbsp;button, a new window will be displayed to show the result
-of the query.&nbsp;The total query can be either a single one or a set of sub queries
+of the query.&nbsp;The total query can be either a single one or a set of sub-queries
 separated by&nbsp;one of the two operators 'or' or 'and'.<br>
 <br>
-Each sub query must have the following syntax attribute operator value where
-attribute is one of:
+Each sub-query must have the following syntax 'attribute operator value' where:
+<ul><LI>'attribute' is one of:
 <ul>
   <li>featurename
   <li>calls
@@ -58,19 +58,19 @@ attribute is one of:
   <li>descendants
   <li>percentage</li>
 </ul>
-<p>operator is one of: &lt;, &gt;, &lt;=, &gt;=, =, /=. in
-<p>and value is one of:</p>
+  <LI>'operator' is one of: &lt;, &gt;, &lt;=, &gt;=, =, /=, in<LI>'value' is one of:
 <ul>
   <li>An integer (for calls)
   <li>A string (for featurename). The string may contain wild card characters:
-    ?,&nbsp;standing for arbitrary characters, and *, standing for arbitrary&nbsp;sub strings.
+    ?,&nbsp;standing for arbitrary characters, and *, standing for arbitrary&nbsp;sub-strings.
   <li>A real value (for other attributes)
   <li>An interval, of the form a-b for two values a and b.
   <li>max
   <li>min
   <li>avg</li>
 </ul>
-<p>&nbsp;</p>
+</ul>
+
 <p>
 <br>
 <img src="/images/eiffelstudio/profiler_wizard_fourth_state.png">

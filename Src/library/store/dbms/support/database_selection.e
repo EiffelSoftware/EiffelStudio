@@ -57,11 +57,11 @@ feature -- Basic operations
 			end
 			if not parsed then
 				parsed_s := parse (s)
-				handle.status.set (db_spec.init_order (descriptor, parsed_s))
+				db_spec.init_order (descriptor, parsed_s)
 			end
 			last_parsed_query := parsed_s
 			if is_ok then
-				handle.status.set (db_spec.start_order (descriptor))
+				db_spec.start_order (descriptor)
 			end
 			if is_ok then
 				handle.status.set (db_spec.result_order (descriptor))
@@ -78,10 +78,10 @@ feature -- Basic operations
 			id_row: INTEGER
 		do
 			if is_ok then
-				handle.status.set_found (db_spec.next_row (descriptor))
-				if not handle.status.found then
-					reset
-				end
+				db_spec.next_row (descriptor)
+				--if not handle.status.found then
+				--	reset
+				--end
 			end
 		end
 
@@ -92,7 +92,7 @@ feature -- Basic operations
 			connected: is_connected
 			is_ok: is_ok
 		do
-			handle.status.set (db_spec.terminate_order (descriptor))
+			db_spec.terminate_order (descriptor)
 		ensure
 			descriptor_is_available: descriptor_available
 		end

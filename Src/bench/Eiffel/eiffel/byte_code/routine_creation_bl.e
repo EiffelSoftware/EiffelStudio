@@ -116,9 +116,9 @@ feature
 			-- Generate routine address
 		local
 			cl_type		: CL_TYPE_I
-			entry		: POLY_TABLE [ENTRY]
 			table_name	: STRING
 			buf			: GENERATION_BUFFER
+			array_index: INTEGER
 		do
 			buf := buffer
 			if context.workbench_mode then
@@ -129,15 +129,13 @@ feature
 				buf.putint (feature_id)
 				buf.putchar (')')
 			else
-				entry := Eiffel_table.poly_table (rout_id)
-				if entry = Void then
-						-- Function pointer associated to a deferred feature
-						-- without any implementation
-					buf.putstring ("(EIF_POINTER) ((char *(*)()) 0)")
+				cl_type ?= context.real_type (class_type)
+				array_index := Eiffel_table.is_polymorphic (rout_id, cl_type.type_id, True)
+				if array_index = -2 then
+						-- Function pointer associated to a deferred feature without
+						-- any implementation
+					buf.putstring ("NULL")
 				else
-						-- Mark table used
-					Eiffel_table.mark_used (rout_id)
-
 					table_name := "_f"
 					cl_type ?= context.real_type (class_type)
 					table_name.append (Encoder.address_table_name (feature_id,
@@ -148,6 +146,11 @@ feature
 
 						-- Remember extern declarations
 					Extern_declarations.add_routine (type.c_type, table_name)
+
+					if array_index >= 0 then
+							-- Mark table used
+						Eiffel_table.mark_used (rout_id)
+					end
 				end
 			end
 		end
@@ -179,7 +182,7 @@ feature
 				if array_index = -2 then
 						-- Function pointer associated to a deferred feature
 						-- without any implementation
-					buf.putstring ("(EIF_POINTER) ((char *(*)()) 0)")
+					buf.putstring ("NULL")
 				elseif array_index >= 0 then
 						-- Mark table used
 					Eiffel_table.mark_used (rout_id)
@@ -201,10 +204,12 @@ feature
 						buf.putstring ("(EIF_POINTER) ")
 						buf.putstring (internal_name)
 
-						shared_include_queue.put (System.class_type_of_id (rout_table.item.written_type_id).header_filename)
+						shared_include_queue.put (
+							System.class_type_of_id (
+								rout_table.item.written_type_id).header_filename)
 					else
 							-- Call to a deferred feature without implementation
-						buf.putstring ("(EIF_POINTER) (char *(*)()) 0)")
+						buf.putstring ("NULL")
 					end
 				end
 			end

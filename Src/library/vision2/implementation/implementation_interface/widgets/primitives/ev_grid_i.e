@@ -133,8 +133,7 @@ feature -- Access
 			i: INTEGER
 			sel_rows: like selected_rows
 		do
-			to_implement ("EV_GRID_I.selected_items")
-			if single_row_selection_enabled or else multiple_row_selection_enabled then
+			if is_single_row_selection_enabled or else is_multiple_row_selection_enabled then
 				create Result.make (0)
 				from
 					sel_rows := selected_rows
@@ -158,9 +157,7 @@ feature -- Access
 			sel_rows: like selected_rows
 			sel_items: like selected_items
 		do
-			fixme ("Implement EV_GRID_I.clear_selection")
-
-			if single_item_selection_enabled or else multiple_item_selection_enabled then
+			if is_single_item_selection_enabled or else is_multiple_item_selection_enabled then
 					sel_items := internal_selected_items
 					from
 						sel_items.start
@@ -238,6 +235,22 @@ feature -- Access
 
 feature -- Status setting
 
+	enable_selection_on_click is
+			-- Enable selection handling of items when clicked upon
+		do
+			is_selection_on_click_enabled := True
+		ensure
+			selection_on_click_enabled: is_selection_on_click_enabled
+		end
+
+	disable_selection_on_click is
+			-- Disable selection handling when items are clicked upon
+		do
+			is_selection_on_click_enabled := False
+		ensure
+			selection_on_click_disabled: not is_selection_on_click_enabled
+		end
+
 	enable_tree is
 			-- Enable tree functionality for `Current'.
 		do
@@ -310,7 +323,7 @@ feature -- Status setting
 		do
 			column_internal (a_column).enable_select
 		ensure
-			-- column_selected: column (a_column).forall (item (j).is_selected
+			column_selected: column (a_column).is_selected
 		end
 		
 	select_row (a_row: INTEGER) is
@@ -321,7 +334,7 @@ feature -- Status setting
 		do
 			row_internal (a_row).enable_select
 		ensure
-			-- column_selected: column (a_row).forall (item (i).is_selected
+			row_selected: row (a_row).is_selected
 		end
 		
 	enable_single_row_selection is
@@ -333,7 +346,7 @@ feature -- Status setting
 			a_item: EV_GRID_ITEM
 			sel_items: like selected_items
 		do
-			if multiple_row_selection_enabled or single_row_selection_enabled then
+			if is_multiple_row_selection_enabled or is_single_row_selection_enabled then
 				sel_rows := selected_rows
 				if not sel_rows.is_empty then
 					a_row := selected_rows.first.implementation
@@ -345,10 +358,10 @@ feature -- Status setting
 				end
 			end
 			remove_selection
-			single_item_selection_enabled := False
-			multiple_item_selection_enabled := False
-			multiple_row_selection_enabled := False
-			single_row_selection_enabled := True
+			is_single_item_selection_enabled := False
+			is_multiple_item_selection_enabled := False
+			is_multiple_row_selection_enabled := False
+			is_single_row_selection_enabled := True
 			
 			if a_row /= Void then
 				a_row.enable_select
@@ -356,7 +369,7 @@ feature -- Status setting
 				a_item.enable_select
 			end
 		ensure
-			single_row_selection_enabled: single_row_selection_enabled
+			single_row_selection_enabled: is_single_row_selection_enabled
 		end
 		
 	enable_multiple_row_selection is
@@ -367,10 +380,10 @@ feature -- Status setting
 		do
 			sel_items := selected_items
 			remove_selection
-			single_item_selection_enabled := False
-			multiple_item_selection_enabled := False
-			multiple_row_selection_enabled := True
-			single_row_selection_enabled := False
+			is_single_item_selection_enabled := False
+			is_multiple_item_selection_enabled := False
+			is_multiple_row_selection_enabled := True
+			is_single_row_selection_enabled := False
 			from
 				sel_items.start
 			until
@@ -382,7 +395,7 @@ feature -- Status setting
 				sel_items.forth
 			end
 		ensure
-			multiple_row_selection_enabled: multiple_row_selection_enabled
+			multiple_row_selection_enabled: is_multiple_row_selection_enabled
 		end
 		
 	enable_single_item_selection is
@@ -394,16 +407,16 @@ feature -- Status setting
 				-- Store the existing selected items if any so that the selection state may be partially restored
 			sel_items := selected_items
 			remove_selection
-			single_item_selection_enabled := True
-			multiple_item_selection_enabled := False
-			multiple_row_selection_enabled := False
-			single_row_selection_enabled := False
+			is_single_item_selection_enabled := True
+			is_multiple_item_selection_enabled := False
+			is_multiple_row_selection_enabled := False
+			is_single_row_selection_enabled := False
 			
 			if not sel_items.is_empty then
 				sel_items.first.enable_select
 			end
 		ensure
-			single_item_selection_enabled: single_item_selection_enabled
+			single_item_selection_enabled: is_single_item_selection_enabled
 		end
 		
 	enable_multiple_item_selection is
@@ -414,10 +427,10 @@ feature -- Status setting
 		do
 			sel_items := selected_items
 			remove_selection
-			single_item_selection_enabled := False
-			multiple_item_selection_enabled := True
-			multiple_row_selection_enabled := False
-			single_row_selection_enabled := False
+			is_single_item_selection_enabled := False
+			is_multiple_item_selection_enabled := True
+			is_multiple_row_selection_enabled := False
+			is_single_row_selection_enabled := False
 			from
 				sel_items.start
 			until
@@ -427,7 +440,7 @@ feature -- Status setting
 				sel_items.forth
 			end
 		ensure
-			multiple_item_selection_enabled: multiple_item_selection_enabled
+			multiple_item_selection_enabled: is_multiple_item_selection_enabled
 		end
 		
 	show_header is
@@ -713,6 +726,9 @@ feature -- Status setting
 
 feature -- Status report
 
+	is_selection_on_click_enabled: BOOLEAN
+			-- Will an item be selected if clicked upon by the user?
+
 	is_tree_enabled: BOOLEAN
 			-- Is tree functionality enabled?
 		
@@ -727,19 +743,19 @@ feature -- Status report
 			Result := a_col_i.is_visible
 		end
 		
-	single_row_selection_enabled: BOOLEAN
+	is_single_row_selection_enabled: BOOLEAN
 			-- Does clicking an item select the whole row, unselecting
 			-- any previous rows?
 
-	multiple_row_selection_enabled: BOOLEAN
+	is_multiple_row_selection_enabled: BOOLEAN
 			-- Does clicking an item select the whole row, with multiple
 			-- row selection permitted?
 		
-	single_item_selection_enabled: BOOLEAN
+	is_single_item_selection_enabled: BOOLEAN
 			-- Does clicking an item select the item, unselecting
 			-- any previous items?
 
-	multiple_item_selection_enabled: BOOLEAN
+	is_multiple_item_selection_enabled: BOOLEAN
 			-- Does clicking an item select the item, with multiple
 			-- item selection permitted?
 		
@@ -1470,6 +1486,7 @@ feature {NONE} -- Drawing implementation
 			drawable.expose_actions.force_extend (agent drawer.partial_redraw)
 			update_scroll_bar_spacer
 			
+			enable_selection_on_click
 			enable_single_item_selection
 		end
 		
@@ -1749,7 +1766,7 @@ feature {NONE} -- Event handling
 						else
 							pointed_item_row.expand
 						end
-					else
+					elseif is_selection_on_click_enabled then
 						if not (create {EV_ENVIRONMENT}).application.ctrl_pressed then
 								-- If the ctrl key is not pressed then we remove selection
 							remove_selection
@@ -1964,7 +1981,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- I
 	update_row_selection_status (a_row_i: EV_GRID_ROW_I) is
 			-- Update the selection status for `a_row' in `Current'
 		do
-			if single_row_selection_enabled then
+			if is_single_row_selection_enabled then
 					-- Deselect existing rows and then remove from list
 				remove_selection			
 			end
@@ -1984,7 +2001,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- I
 	update_item_selection_status (a_item_i: EV_GRID_ITEM_I) is
 			-- Update the selection status for `a_item_i' in `Current'
 		do
-			if single_item_selection_enabled then
+			if is_single_item_selection_enabled then
 					-- Deselect existing items and then remove from list
 				remove_selection			
 			end
@@ -2090,9 +2107,9 @@ invariant
 	row_heights_fixed_implies_row_offsets_void: is_row_height_fixed and not is_tree_enabled implies row_offsets = Void
 	row_lists_count_equal: is_initialized implies internal_row_data.count = rows.count
 	dynamic_modes_mutually_exclusive: not (is_content_completely_dynamic and is_content_partially_dynamic)
-	single_item_selection_enabled_implies_only_single_item_selected: single_item_selection_enabled implies selected_items.count <= 1
-	single_item_selected_enabled_implies_no_rows_selected: single_item_selection_enabled implies selected_rows.count = 0
-	single_row_selection_enabled_implies_only_single_row_selected: single_row_selection_enabled implies selected_rows.count <= 1
+	single_item_selection_enabled_implies_only_single_item_selected: is_single_item_selection_enabled implies selected_items.count <= 1
+	single_item_selected_enabled_implies_no_rows_selected: is_single_item_selection_enabled implies selected_rows.count = 0
+	single_row_selection_enabled_implies_only_single_row_selected: is_single_row_selection_enabled implies selected_rows.count <= 1
 	visible_column_count_not_greater_than_column_count: visible_column_count <= column_count
 	hidden_node_count_zero_when_tree_disabled: not is_tree_enabled implies hidden_node_count = 0
 	hidden_node_count_positive_when_tree_enabled: is_tree_enabled implies hidden_node_count >= 0

@@ -715,7 +715,7 @@ feature {NONE} -- External features
 			"C"
 		end
 
-	odbc_conv_type (index: ANY): INTEGER is
+	odbc_conv_type (index: INTEGER): INTEGER is
 		external
 			"C"	
 		end

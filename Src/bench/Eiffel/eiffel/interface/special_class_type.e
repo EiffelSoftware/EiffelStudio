@@ -136,6 +136,9 @@ feature
 						--! Could be bit or ref
 					buffer.putstring ("%TRTAS(arg1, Current);%N");
 					buffer.putstring ("%T*((EIF_REFERENCE *) Current + arg2) = arg1;");
+				else
+						-- Type is NONE
+					buffer.putstring ("%T*((EIF_REFERENCE *) Current + arg2) = arg1;");
 				end;
 			end;
 
@@ -236,6 +239,9 @@ feature
 					buffer.putstring ("%Treturn *((EIF_POINTER *) Current + arg1);");
 				when C_ref then
 						--! Could be bit or ref
+					buffer.putstring ("%Treturn *((EIF_REFERENCE *) Current + arg1);");
+				else
+						-- Type is NONE
 					buffer.putstring ("%Treturn *((EIF_REFERENCE *) Current + arg1);");
 				end;
 			end;

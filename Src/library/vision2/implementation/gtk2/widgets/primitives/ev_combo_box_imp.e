@@ -44,7 +44,8 @@ inherit
 			initialize,
 			needs_event_box,
 			make,
-			interface
+			interface,
+			insert_i_th
 		end
 
 	EV_KEY_CONSTANTS
@@ -111,7 +112,7 @@ feature {NONE} -- Initialization
 			a_attribute: EV_GTK_C_STRING
 		do
 			Precursor {EV_LIST_ITEM_LIST_IMP}
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_combo_box_set_model (container_widget, tree_store)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_combo_box_set_model (container_widget, list_store)
 			
 		--	feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_layout_clear (container_widget)
 			
@@ -131,6 +132,15 @@ feature {NONE} -- Initialization
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_combo_box_entry_set_text_column (container_widget, 1)
 			
 			real_signal_connect (container_widget, "changed", agent (app_implementation.gtk_marshal).on_pnd_deferred_item_parent_selection_change (internal_id), Void)
+		end
+
+	insert_i_th (v: like item; i: INTEGER) is
+			-- Insert `v' at position `i'.
+		do
+			Precursor {EV_LIST_ITEM_LIST_IMP} (v, i)
+			if count = 1 then
+				v.enable_select
+			end
 		end
 		
 feature -- Status report

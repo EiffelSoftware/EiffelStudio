@@ -139,7 +139,13 @@ extern struct ctable ce_gtype;			/* Generic class name -> gt_info */
 
 extern EIF_TYPE_ID eifcid();			/* Get a class ID */
 extern EIF_TYPE_ID eifexp();			/* Force expansion */
-extern EIF_TYPE_ID eifgid();			/* Get a generic class ID */
+
+#ifdef I_STDARG
+extern EIF_TYPE_ID eifgid(char *class_name, ...);	/* Get a generic class ID */
+#else
+extern EIF_TYPE_ID eifgid();					/* Get a generic class ID */
+#endif
+
 extern EIF_OBJ eifcreate();				/* Object creation */
 
 extern EIF_PROC eifproc();				/* Pointer to Eiffel procedure */

@@ -20,7 +20,7 @@ int file;
 #endif
 }            
 
-public char console_feof(fp)
+public char console_eof(fp)
 FILE *fp;      
 {
 #ifdef __WATCOMC__
@@ -93,7 +93,7 @@ double val;
 public void console_tnwl(f)
 FILE *f;
 {
-		console_pc('\n');
+		console_pc(f,'\n');
 }
 
 /*

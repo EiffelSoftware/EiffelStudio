@@ -17,15 +17,15 @@
 #include "retrieve.h"
 #include "store.h"
 
-char *partial_retrieve(file_ptr, position, nb_obj)
-FILE *file_ptr;
+char *partial_retrieve(f_desc, position, nb_obj)
+EIF_INTEGER f_desc;
 long position, nb_obj;
 {
 	/* Return `nb_obj' retrieved in file `file_ptr' read at `position'. */
 	char *result;
 
 	rt_kind = '\0';
-	r_fides = fileno(file_ptr);
+	r_fides = (int)f_desc;
 	lseek(r_fides, position, SEEK_SET);
 	allocate_gen_buffer();
 	result = rt_nmake(nb_obj);			/* Retrieve `nb_obj' objects */
@@ -35,8 +35,8 @@ long position, nb_obj;
 	return result;
 }
 
-char *retrieve_all(file_ptr, position)
-FILE *file_ptr;
+char *retrieve_all(f_desc, position)
+EIF_INTEGER f_desc;
 long position;
 {
 	/* Return object graph retrieved in file `file_ptr' read at
@@ -44,7 +44,7 @@ long position;
 	char *result;
 
 	rt_kind = '\0';
-	r_fides = fileno(file_ptr);
+	r_fides = (int)f_desc;
 	lseek(r_fides, position, SEEK_SET);
 	allocate_gen_buffer();
 	result = rt_make();

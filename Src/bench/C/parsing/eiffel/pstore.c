@@ -27,12 +27,12 @@ private long pst_store();	/* Recursive store */
 
 long st_counter = 0;
 
-void c_sv_init(f)
-FILE *f;
+void c_sv_init(f_desc)
+EIF_INTEGER f_desc;
 {
 	/* Position file `f' at the end. */
 
-    lseek(fileno(f),0,SEEK_END);
+    lseek((int)f_desc,0,SEEK_END);
 }
 
 long nb_object(obj)
@@ -46,8 +46,8 @@ char *obj;
 	return obj_nb;
 }
 
-long store_append(f, o, mid, s)
-FILE *f;
+long store_append(f_desc, o, mid, s)
+EIF_INTEGER f_desc;
 char *o;
 fnptr mid;
 char *s;
@@ -65,7 +65,7 @@ char *s;
 	char gc_stopped;
 
 	/* Initialization */
-	fides = fileno (f);				/* For use of `st_write' */
+	fides = (int)f_desc;				/* For use of `st_write' */
 	result = lseek (fides, 0, SEEK_CUR);
 
 	make_index = mid;
@@ -190,8 +190,8 @@ long fpos1()
 	return (long) lseek(fides, 0, SEEK_CUR);
 }
 
-long fpos2(file_ptr)
-FILE *file_ptr;
+long fpos2(file_desc)
+EIF_INTEGER file_desc;
 {
-	return (long) lseek(fileno(file_ptr), 0, SEEK_CUR);
+	return (long) lseek((int)file_desc, 0, SEEK_CUR);
 }

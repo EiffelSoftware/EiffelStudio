@@ -112,8 +112,9 @@ liblace.a: lace_l.c
 
 lace_l.c: lace_l.l
 	$(LEX) $(JLFLAGS) lace_l.l
-	$(SED) -e 's/yy\(.\)/xx\1/g' < lex.yy.c > lace_l.c
-	$(RM) lex.yy.c
+	$(SED) -e 's/^# define YYLMAX [0-9][0-9]*/# define YYLMAX BUFSIZ/g' < lex.yy.c > lex.xx.c
+	$(SED) -e 's/yy\(.\)/xx\1/g' < lex.xx.c > lace_l.c
+	$(RM) lex.yy.c lex.xx.c
 
 local_realclean::
 	$(RM) lace_l.c
@@ -153,8 +154,9 @@ liblace.a: eif_l.c
 
 eif_l.c: eif_l.l
 	$(LEX) $(JLFLAGS) eif_l.l
-	$(SED) -e 's/yy\(.\)/zz\1/g' < lex.yy.c > eif_l.c
-	$(RM) lex.yy.c
+	$(SED) -e 's/^# define YYLMAX [0-9][0-9]*/# define YYLMAX BUFSIZ/g' < lex.yy.c > lex.zz.c
+	$(SED) -e 's/yy\(.\)/zz\1/g' < lex.zz.c > eif_l.c
+	$(RM) lex.yy.c lex.zz.c
 
 local_realclean::
 	$(RM) eif_l.c

@@ -15,7 +15,8 @@
 #include "config.h"
 #include <errno.h>			/* For system calls error report */
 #include <sys/types.h>		/* For caddr_t */
-#ifdef HAS_MMAP
+
+#ifdef HAS_SMART_MMAP
 #include <sys/mman.h>
 #endif
 #include "eiffel.h"			/* For bcopy/memcpy */
@@ -43,14 +44,14 @@
 #define mempanic	fflush(stdout);
 #endif
 
-/* ALIGNMAX is the maximum between ALIGNBYTES and OVERHEAD. This is important
- * because malloc always allocates a multiple of ALIGNBYTES but we are sure
+/* ALIGNMAX is the maximum between MEM_ALIGNBYTES and OVERHEAD. This is important
+ * because malloc always allocates a multiple of MEM_ALIGNBYTES but we are sure
  * there will always be room to split a block, even if we have to create a
  * null size one (i.e. only an header). Although malloc used to work without
  * this feature, it appears to be essential for the scavenging process. The
  * reason is too long to be explained here, though--RAM.
  */
-#define ALIGNMAX	((ALIGNBYTES < OVERHEAD) ? OVERHEAD : ALIGNBYTES)
+#define ALIGNMAX	((MEM_ALIGNBYTES < OVERHEAD) ? OVERHEAD : MEM_ALIGNBYTES)
 
 /* Give the type of an hlist, by doing pointer comparaison (classic).
  * Also give the address of the hlist of a given type and the address of
@@ -137,7 +138,7 @@ shared uint32 gen_scavenge = GS_SET;	/* Generation scavenging to be set */
 public long eiffel_usage = 0;			/* Monitor Eiffel memory usage */
 extern long th_alloc;					/* Allocation threshold (in bytes) */
 
-#if defined (HAS_MMAP) && PTRSIZ > 4
+#if defined (HAS_SMART_MMAP) && PTRSIZ > 4
 extern char *root_obj;
 #endif
 
@@ -174,7 +175,7 @@ shared int split_block();				/* Split a block (return length) */
 shared void lxtract();					/* Extract a block from free list */
 shared char *gmalloc();					/* Wrapper to xmalloc */
 
-#ifdef HAS_MMAP
+#ifdef HAS_SMART_MMAP
 extern Caddr_t mmap();
 extern int munmap ();
 #else
@@ -880,7 +881,7 @@ int type;
 		 * as the last option. Every failure is handled as a "no more memory"
 		 * condition.
 		 */
-#ifdef HAS_MMAP
+#ifdef HAS_SMART_MMAP
 #if PTRSIZ > 4
 		oldbrk = (union overhead *) mmap (root_obj, asked, PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_VARIABLE | MAP_PRIVATE, -1, 0);
 #else
@@ -915,7 +916,7 @@ int type;
 
 	}
 
-#if defined HAS_MMAP || defined HAS_SBRK
+#if defined HAS_SMART_MMAP || defined HAS_SBRK
 
 	if ((union overhead *) -1 == oldbrk)
 		return (union overhead *) 0;		/* We never succeeded */
@@ -1026,7 +1027,7 @@ private int free_last_chunk()
 	uint32 i;				/* Index in hash table where block is stored */
 	uint32 r;				/* To compute hashing index for released block */
 
-#if (!defined (HAS_MMAP)) && defined (HAS_SBRK) && (!defined (HAS_SMART_SBRK))
+#if (!defined (HAS_SMART_MMAP)) && defined (HAS_SBRK) && (!defined (HAS_SMART_SBRK))
 	return -5;
 #else
 	last_chk = cklst.ck_tail;			/* Last chunk in memory */
@@ -1076,7 +1077,7 @@ private int free_last_chunk()
 	}
 
 #ifdef DEBUG
-#if (!defined HAS_MMAP) && defined HAS_SBRK
+#if (!defined HAS_SMART_MMAP) && defined HAS_SBRK
 	dprintf(1)("free_last_chunk: %d bytes to be removed before 0x%lx\n",
 		nbytes, sbrk(0));
 	flush;
@@ -1091,7 +1092,7 @@ private int free_last_chunk()
 	 * was not correctly determined by Configure--RAM.
 	 */
 
-#if (!defined HAS_MMAP) && defined HAS_SBRK
+#if (!defined HAS_SMART_MMAP) && defined HAS_SBRK
 	brk = sbrk(0);						/* Fetch current break value */
 	if (brk != last_addr) {				/* There *is* something */
 		SIGRESUME;						/* End of critical section */
@@ -1132,7 +1133,7 @@ private int free_last_chunk()
 	 * negative value or free, bringing the memory used by the chunk back to the kernel.
 	 */
 
-#ifdef HAS_MMAP
+#ifdef HAS_SMART_MMAP
 	if (munmap (last_chk, nbytes) == -1) {
 		if (i != -1)
 			connect_free_list (arena, 1);
@@ -1154,7 +1155,7 @@ private int free_last_chunk()
 #endif
 
 #ifdef DEBUG
-#if (!defined HAS_MMAP) && defined HAS_SBRK
+#if (!defined HAS_SMART_MMAP) && defined HAS_SBRK
 	dprintf(1+2)("free_last_chunk: shrinking succeeded, new break at 0x%lx\n",
 		sbrk(0));
 	flush;
@@ -2609,7 +2610,7 @@ char *from;
 	if (flags & EO_C)						/* Not an Eiffel object */
 		return;;
 
-	if ((uint32) object % ALIGNBYTES) {
+	if ((uint32) object % MEM_ALIGNBYTES) {
 		num++;
 		printf("memck: object 0x%lx is mis-aligned.\n", object);
 	}
@@ -2772,7 +2773,7 @@ int type;					/* Type is either CHUNK_T or ZONE_T */
 	) {
 		size = zone->ov_size;			/* Size and flags */
 
-		if (size % ALIGNBYTES) {
+		if (size % MEM_ALIGNBYTES) {
 			printf("memck: block 0x%lx has size %d\n", zone, size);
 			mempanic;
 		}

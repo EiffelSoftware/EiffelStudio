@@ -1,7 +1,6 @@
 
 !>P
 >ABORTSIG
->ALIGNBYTES
 >BSD
 >BYTEORDER
 >Caddr_t
@@ -36,6 +35,7 @@
 >HAS_SIGSETMASK
 >HAS_SIGVEC
 >HAS_SIGVECTOR
+>HAS_SMART_MMAP
 >HAS_SMART_SBRK
 >HAS_SOCKET
 >HAS_STRDUP
@@ -54,6 +54,7 @@
 >I_GRP
 >I_LIMITS
 >I_NETINET_IN
+>I_NETNS_NS
 >I_PWD
 >I_STDARG
 >I_STRING
@@ -71,8 +72,10 @@
 >I_TIME
 >I_TMVAL_SYS_SELECT
 >I_VARARGS
+>I_XM_PROTOCOLS
 >KEEPALIVE
 >MAY_PANIC
+>MEM_ALIGNBYTES
 >Malloc_t
 >O_APPEND
 >O_CREAT
@@ -108,9 +111,7 @@
 >register6
 >register7
 >rindex
->strerror
 >timezone
->va_dcl
 >void
 Id
 Log
@@ -169,11 +170,11 @@ d_siglist
 d_sigsetmk
 d_sigvec
 d_sigvectr
+d_smartmmap
 d_socket
 d_strchr
 d_strctcpy
 d_strdup
-d_strerrm
 d_strerror
 d_sysernlst
 d_syserrlst
@@ -192,6 +193,7 @@ i_dirent
 i_fcntl
 i_grp
 i_limits
+i_netns_ns
 i_niin
 i_pwd
 i_stdarg
@@ -210,7 +212,7 @@ i_sysun
 i_time
 i_tmvlsyss
 i_varargs
-i_varhdr
+i_xm_protocols
 intsize
 large
 ldflags

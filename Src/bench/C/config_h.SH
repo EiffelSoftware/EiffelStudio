@@ -48,11 +48,11 @@ sed <<!GROK!THIS! >config.h -e 's!^#undef!/\*#define!' -e 's!^#un-def!#undef!'
  */
 #define ABORTSIG $abortsig		/**/
 
-/* ALIGNBYTES:
+/* MEM_ALIGNBYTES:
  *	This symbol contains the number of bytes required to align a
  *	double. Usual values are 2, 4 and 8.
  */
-#define ALIGNBYTES $alignbytes	/**/
+#define MEM_ALIGNBYTES $alignbytes	/**/
 
 /* BYTEORDER:
  *	This symbol hold the hexadecimal constant defined in byteorder,
@@ -211,6 +211,12 @@ sed <<!GROK!THIS! >config.h -e 's!^#undef!/\*#define!' -e 's!^#un-def!#undef!'
  */
 #$d_readdir HAS_READDIR		/**/
 
+/* HAS_REWINDDIR:
+ *	This symbol, if defined, indicates that the rewinddir routine is
+ *	available. You may have to include <dirent.h>. See I_DIRENT.
+ */
+#$d_rewinddir HAS_REWINDDIR		/**/
+
 /* HAS_RENAME:
  *	This symbol, if defined, indicates that the rename routine is available
  *	to rename files.  Otherwise you should do the unlink(), link(), unlink()
@@ -299,7 +305,7 @@ sed <<!GROK!THIS! >config.h -e 's!^#undef!/\*#define!' -e 's!^#un-def!#undef!'
 /* HAS_STRERROR:
  *	This symbol, if defined, indicates that the strerror routine is
  *	available to translate error numbers to strings. See the writeup
- *	of strerror() in this file before you try to define your own.
+ *	of Strerror() in this file before you try to define your own.
  */
 /* HAS_SYS_ERRLIST:
  *	This symbol, if defined, indicates that the sys_errlist array is
@@ -311,15 +317,9 @@ sed <<!GROK!THIS! >config.h -e 's!^#undef!/\*#define!' -e 's!^#un-def!#undef!'
  *	available to translate an errno code into its symbolic name (e.g.
  * ENOENT). The extern int sys_nerrno gives the size of that table.
  */
-/* strerror:
- *	This preprocessor symbol is defined as a macro if strerror() is
- *	not available to translate error numbers to strings but sys_errlist[]
- *	array is there.
- */
 #$d_strerror HAS_STRERROR		/**/
 #$d_syserrlst HAS_SYS_ERRLIST	/**/
 #$d_sysernlst HAS_SYS_ERRNOLIST	/**/
-#$d_strerrm strerror(e) ((e)<0||(e)>=sys_nerr?"unknown":sys_errlist[e]) /**/
 
 /* HAS_TIME:
  *	This symbol, if defined, indicates that the time() routine exists.
@@ -372,11 +372,6 @@ sed <<!GROK!THIS! >config.h -e 's!^#undef!/\*#define!' -e 's!^#un-def!#undef!'
  */
 #$i_dirent I_DIRENT		/**/
 #$d_dirnamlen DIRNAMLEN	/**/
-#ifdef I_DIRENT
-#define Direntry_t struct dirent
-#else
-#define Direntry_t struct direct
-#endif
 
 /* I_FCNTL:
  *	This manifest constant tells the C program to include <fcntl.h>.
@@ -412,12 +407,6 @@ sed <<!GROK!THIS! >config.h -e 's!^#undef!/\*#define!' -e 's!^#un-def!#undef!'
  *	include <pwd.h>.
  */
 #$i_pwd I_PWD		/**/
-
-/* I_STDARG:
- *	This symbol, if defined, indicates that <stdarg.h> exists and should
- *	be included.
- */
-#$i_stdarg I_STDARG		/**/
 
 /* I_STRING:
  *	This symbol, if defined, indicates to the C program that it should
@@ -484,6 +473,10 @@ sed <<!GROK!THIS! >config.h -e 's!^#undef!/\*#define!' -e 's!^#un-def!#undef!'
  */
 #$i_sysun I_SYS_UN		/**/
 
+#$i_termio I_TERMIO		/**/
+#$i_termios I_TERMIOS		/**/
+#$i_sgtty I_SGTTY		/**/
+
 /* I_TIME:
  *	This symbol, if defined, indicates to the C program that it should
  *	include <time.h>.
@@ -500,11 +493,16 @@ sed <<!GROK!THIS! >config.h -e 's!^#undef!/\*#define!' -e 's!^#un-def!#undef!'
 #$i_systime I_SYS_TIME		/**/
 #$i_systimek I_SYS_TIME_KERNEL		/**/
 
+/* I_STDARG:
+ *	This symbol, if defined, indicates that <stdarg.h> exists and should
+ *	be included.
+ */
 /* I_VARARGS:
  *	This symbol, if defined, indicates to the C program that it should
  *	include <varargs.h>.
  */
-#$i_varargs I_VARARGS		/**/
+#$i_stdarg I_STDARG		/**/
+#$i_varargs I_VARARGS	/**/
 
 /* INTSIZE:
  *	This symbol contains the size of an int, so that the C preprocessor
@@ -620,10 +618,12 @@ sed <<!GROK!THIS! >config.h -e 's!^#undef!/\*#define!' -e 's!^#un-def!#undef!'
 #$add_log USE_ADD_LOG		/* Allow logging */
 #define LOGGING_LEVEL	9	/* Logging level */
 
-/* HAS_REWINDDIR:
- *	This symbol, if defined, indicates that the rewinddir system call is
- *	available
+/* HAS_SMART_MMAP:
+ *	This symbol, if defined, indicates to the C program that it can
+ *	use mmap and munmap for shared memory.
  */
+#$d_smartmmap HAS_SMART_MMAP	/**/
+
 /* HAS_CHOWN:
  *	This symbol, if defined, indicates that the chown system call is
  *	available
@@ -640,8 +640,6 @@ sed <<!GROK!THIS! >config.h -e 's!^#undef!/\*#define!' -e 's!^#un-def!#undef!'
  *	This symbol, if defined, indicates that the geteuid system call is
  *	available
  */
-#$d_rewinddir HAS_REWINDDIR	/**/
-
 #$d_chown HAS_CHOWN	/**/
 
 #$d_getpwuid HAS_GETPWUID	/**/
@@ -657,6 +655,12 @@ sed <<!GROK!THIS! >config.h -e 's!^#undef!/\*#define!' -e 's!^#un-def!#undef!'
  */
 #$i_direct I_DIRECT		/**/
 
+/* I_NETNS_NS:
+ *	This symbol, if defined, indicates to the C program that it should
+ *	include <netns/ns.h>.
+ */
+#$i_netns_ns I_NETNS_NS		/**/
+
 /* I_TMVAL_SYS_SELECT:
  *	This symbol, if defined, indicates to the C program that it should
  *	include <sys/select.h> in order to get definition of struct timeval.
@@ -665,6 +669,12 @@ sed <<!GROK!THIS! >config.h -e 's!^#undef!/\*#define!' -e 's!^#un-def!#undef!'
  * the include file <sys/select.h> to find the definition of timeval
  */
 #$i_tmvlsyss I_TMVAL_SYS_SELECT	/**/
+
+/* I_XM_PROTOCOLS:
+ *	This symbol, if defined, indicates to the C program that it should
+ *	include <Xm/Protocols.h>.
+ */
+#$i_xm_protocols I_XM_PROTOCOLS		/**/
 
 /* MAY_PANIC:
  *	This symbol is defined if the run-time is to be compiled with extra

@@ -128,9 +128,13 @@ register2 int nb_items;				/* Number of items to be popped */
 #endif
 }
 
+
 /* VARARGS2 */
+#ifdef I_STDARG
+public void evpush(int count, ...)
+#else
 public void evpush(va_alist)
-va_dcl		/* Variable number of arguments (no ; needed) */
+#endif
 {
 	/* Push on the local variable stack the number of values indicated
 	 * by the first (int) argument. If all the values cannot successively
@@ -145,8 +149,13 @@ va_dcl		/* Variable number of arguments (no ; needed) */
 	register4 int i;				/* Number of slots until end of chunk */
 	register5 struct stack *stk;	/* The local stack pointer */
 
-	va_start(ap);				/* Start processing of argument list */
-	n = va_arg(ap, int);		/* First argument is the number of items */
+#ifndef I_STDARG
+	va_start(ap);
+	n = va_arg(ap, int);
+#else
+	va_start (ap, count);
+	n = count;		/* First argument is the number of items */
+#endif
 
 	/* This function is going to be called many many times, so it has to be
 	 * as mostly efficient as possible. Hence, the call to epush() which should

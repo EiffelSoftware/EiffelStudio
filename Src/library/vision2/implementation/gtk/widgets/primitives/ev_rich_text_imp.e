@@ -20,6 +20,23 @@ inherit
 
 create
 	make
+
+feature -- Status Report
+
+	index_from_position (an_x_position, a_y_position: INTEGER): INTEGER is
+			-- Index of character closest to position `x_position', `y_position'.
+		do
+		end
+		
+	position_from_index (an_index: INTEGER): EV_COORDINATE is
+			-- Position of character at index `an_index'.
+		do
+		end
+		
+	character_displayed (an_index: INTEGER): BOOLEAN is
+			-- Is character `an_index' currently visible in `Current'?
+		do
+		end
 	
 feature -- Status report
 

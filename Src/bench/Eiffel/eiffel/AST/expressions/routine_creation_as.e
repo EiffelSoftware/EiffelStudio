@@ -18,12 +18,11 @@ inherit
 
 feature {AST_FACTORY} -- Initialization
 
-	initialize (t: like target; f: like feature_name; o: like operands) is
+	initialize (t: like target; f: like feature_name; o: like operands; has_target: BOOLEAN) is
 			-- Create a new ROUTINE_CREATION AST node.
 		require
 			f_not_void: f /= Void
 		local
-			access_feat_as: DELAYED_ACCESS_FEAT_AS
 			access_id_as: ACCESS_ID_AS
 		do
 			target := t
@@ -53,8 +52,7 @@ feature {AST_FACTORY} -- Initialization
 				end
 			end
 
-			!! access_feat_as.make (feature_name, operands)
-			call_ast := access_feat_as
+			create call_ast.make (feature_name, operands, has_target)
 		ensure
 			target_set: target = t
 			feature_name_set: feature_name = f
@@ -100,7 +98,8 @@ feature -- Comparison
 		do
 			Result := equivalent (feature_name, other.feature_name) and then
 					  equivalent (operands, other.operands) and then
-					  equivalent (target, other.target)
+					  equivalent (target, other.target) and then
+					  equivalent (call_ast, other.call_ast)
 		end
 
 feature -- Type check, byte code and dead code removal
@@ -157,12 +156,13 @@ feature -- Type check, byte code and dead code removal
 								context.replace (target_type)
 							end
 						else
-								-- Target is Current
 							target_ast.type_check
 							if target.is_result then
+									-- Target is Result
 								target_type ?= context.feature_type
 								a_class := target_type.associated_class
 							else
+									-- Target is Current
 								target_type := context.actual_class_type
 								a_class := context.current_class
 							end
@@ -242,7 +242,7 @@ feature -- Type check, byte code and dead code removal
 			!!Result
 
 			if target_ast /= Void then
-				-- Closed target
+					-- Closed target
 				target_b ?= target_ast.byte_node
 			end
 
@@ -467,10 +467,10 @@ feature {NONE} -- Type
 				-- the Agent is defined.
 				-- E.g.: a: A [like x]
 				--       x: INTEGER
-				--       my_proc (a~f)	<- The compiler will complain because it won't
+				--       my_proc (agent a.f)	<- The compiler will complain because it won't
 				--                         find in A the type of `like x'.
 				-- In the previous example, we should look the feature table of the
-				-- `actual_class_type', but if we have `my_proc ((a.y)~f)', we need
+				-- `actual_class_type', but if we have `my_proc (agent (a.y).f)', we need
 				-- to take the feature table of the real type of `a'.
 				--
 				-- Note: Emmanuel STAPF 10/04/2000
@@ -478,15 +478,18 @@ feature {NONE} -- Type
 				-- of the context of the class corresponding to `target_type'. Doing that it makes
 				-- it possible to do what is described in the previous readme but it also enables to
 				-- use a generic class with a formal parameter of the current class (previously it
-				-- was crashing during the instantiation since the position of the formal was the one
-				-- from the current class and if the target class has less generic parameter than the
-				-- given position we were crashing, eg:
+				-- was crashing during the instantiation since the position of the formal was the
+				-- one from the current class and if the target class has less generic parameter
+				-- than the given position we were crashing, eg:
 				--  class A [G, H] and B [G]
 				--  f: B [H]
-				--  f~g
-				-- The creation of `f~g' crashed because we were looking for the second formal in B.
-			solved_type := Creation_evaluator.evaluated_type (target_type, context.current_class.feature_table, a_feature)
-			solved_type := solved_type.instantiation_in (context.actual_class_type, context.current_class.class_id)
+				--  agent f.g
+				-- The creation of `agent f.g' crashed because we were looking for the second
+				-- formal in B.
+			solved_type := Creation_evaluator.evaluated_type (target_type,
+				context.current_class.feature_table, a_feature)
+			solved_type := solved_type.instantiation_in (context.actual_class_type,
+				context.current_class.class_id)
 			tgt_type := solved_type.deep_actual_type
 			generics.put (tgt_type, 1)
 

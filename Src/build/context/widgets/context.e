@@ -55,7 +55,12 @@ inherit
 	DRAG_SOURCE
 
 	TYPE_DATA
-	
+
+	PAINTER
+		undefine
+			init_toolkit
+		end	
+
 feature -- Editable
 
 	create_editor is
@@ -558,9 +563,12 @@ feature {NONE}
 	add_common_callbacks (a_widget: WIDGET) is
 			-- General callbacks forall types of contexts
 		do
+				-- Cursor motion
+			a_widget.add_pointer_motion_action (Eb_selection_mgr, first_arg)
 				-- Move and resize action
-			a_widget.set_action ("<Btn1Down>", Eb_selection_mgr, third)
 			a_widget.set_action ("<Btn1Up>", Eb_selection_mgr, second_arg)
+			    -- Select action
+			a_widget.add_button_press_action (1, Eb_selection_mgr, third)
 				-- Shift actions
 			a_widget.set_action ("Shift<Btn1Down>", Eb_selection_mgr, fourth)
 			a_widget.set_action ("Shift<Btn1Up>", Eb_selection_mgr, second_arg)
@@ -568,12 +576,10 @@ feature {NONE}
 			a_widget.set_action ("Ctrl<Btn1Down>", Eb_selection_mgr, fifth)
 			a_widget.set_action ("Ctrl<Btn1Up>", Eb_selection_mgr, second_arg)
 				-- Callbacks for arrow keys
-			a_widget.set_action ("<Key>osfLeft", Eb_selection_mgr, Sixth)
-			a_widget.set_action ("<Key>osfRight", Eb_selection_mgr, Seventh)
-			a_widget.set_action ("<Key>osfUp", Eb_selection_mgr, Eighth)
-			a_widget.set_action ("<Key>osfDown", Eb_selection_mgr, Nineth)
-				-- Cursor shape
-			a_widget.add_pointer_motion_action (Eb_selection_mgr, first_arg)
+			a_widget.set_action ("<Key>LEFT", Eb_selection_mgr, sixth)
+			a_widget.set_action ("<Key>RIGHT", Eb_selection_mgr, seventh)
+			a_widget.set_action ("<Key>UP", Eb_selection_mgr, eighth)
+			a_widget.set_action ("<Key>DOWN", Eb_selection_mgr, nineth)
 		end
 
 	reset_widget_callbacks is
@@ -734,15 +740,15 @@ feature
 		do
 			new_x := x_pos
 			new_y := y_pos
-			if new_x < 0 or else 
-				new_x > parent.width 
-			then
+			if new_x < 0 then
 				new_x := 0
+			elseif new_x + width > parent.width then
+				new_x := parent.width - width
 			end
-			if new_y < 0 or else 
-				new_y > parent.height 
-			then
+			if new_y < 0 then
 				new_y := 0
+			elseif new_y + height > parent.height then
+				new_y := parent.height - height
 			end
 			set_x_y (new_x, new_y)
 		end
@@ -1152,17 +1158,71 @@ feature
 feature {SELECTION_MANAGER}
 
 	is_selectionable: BOOLEAN is
-			-- Is current context selectionnable
+			-- Is current context selectionnable?
 		do
 			Result := True
 		end
 
+	is_selected: BOOLEAN
+			-- Is current context selected?
+	
+	set_selected (value: BOOLEAN) is
+			-- Select current context.
+		do
+			is_selected := value
+		end
+
+	display_resize_squares (logical_mode: INTEGER) is
+			-- Draw squares in the corners of the context, used to resize it.
+		local
+			x_position, y_position, corner_side: INTEGER
+			previous_logical_mode: INTEGER
+		do
+			if not is_window then
+				set_drawing (eb_screen)
+				previous_logical_mode := drawing_i.logical_mode
+				set_logical_mode (logical_mode)
+				set_subwindow_mode (1)
+				corner_side := Eb_selection_mgr.corner_side // 2
+				x_position := real_x + corner_side // 2
+				y_position := real_y + corner_side // 2
+				draw_squares (x_position, y_position)
+				x_position := x_position + width - corner_side
+				draw_squares (x_position, y_position)
+					y_position := y_position + height - corner_side
+				draw_squares (x_position, y_position)
+				x_position := real_x + corner_side // 2
+				draw_squares (x_position, y_position)
+				set_logical_mode (previous_logical_mode)
+			end
+		end
+
 feature {NONE}
+
+	draw_squares (x_position, y_position: INTEGER) is
+		local
+			context: CONTEXT
+			corner_side: INTEGER
+		do
+			corner_side := Eb_selection_mgr.corner_side // 2
+			from
+				context := parent
+			until
+				context.is_window
+			loop
+				context := context.parent
+			end
+			if x_position < context.real_x + context.width and then
+				y_position < context.real_y + context.height
+			then
+				fill_rectangle (x_position, y_position, corner_side, corner_side, 0.0)
+			end
+		end
 
  	Eb_selection_mgr: SELECTION_MANAGER is
  			-- Selection manager
  		once
- 			!!Result.make
+ 			!! Result.make
  		end
 
 feature {GROUP_CMD}
@@ -1181,18 +1241,23 @@ feature
 			-- Previous background color
 
 	set_selected_color is
+		local
+			parent_background_color_name: STRING
 		do
 			if bg_color_name = Void then
 				save_default_background_color
 			end
+			set_drawing (eb_screen)
 			previous_bg_color := widget.background_color
-			if equal (previous_bg_color.name, 
-				Resources.selected_color.name) 
+			parent_background_color_name := widget.parent.background_color.name
+			if equal (previous_bg_color.name, Resources.selected_color.name) or
+			   equal (parent_background_color_name, Resources.selected_color.name)	
 			then
-				widget.set_background_color (Resources.second_selected_color)
+				set_foreground (Resources.second_selected_color)
 			else	
-				widget.set_background_color (Resources.selected_color)
+				set_foreground (Resources.selected_color)
 			end
+			display_resize_squares (3)
 		ensure
 			valid_previouse_color: previous_bg_color /= Void
 		end
@@ -1668,7 +1733,7 @@ feature {CONTEXT}
 			--if not Result.empty then
 				--Result.prepend (comment_text)
 			--end
-			result.append (children_color)
+			Result.append (children_color)
 		end
 
 	

@@ -714,6 +714,7 @@ feature {NONE} -- Implementation
 			p1, p2, node: like Current
 			other_stack, tmp_stack: LINKED_STACK [like Current]
 			idx_stack, orgidx_stack: LINKED_STACK [INTEGER]
+			l_fixed_tree: FIXED_TREE [G]
 		do
 			create other_stack.make
 			create tmp_stack.make
@@ -752,7 +753,12 @@ feature {NONE} -- Implementation
 							equal_but_not_the_same: standard_equal (node, p1.child) and node /= p1.child
 								-- Because `node' has been cloned.
 						end
-					p2.put_child (node)
+					l_fixed_tree ?= p1
+					if l_fixed_tree /= Void then
+						p2.replace_child (node)
+					else
+						p2.put_child (node)
+					end
 						check
 							node_is_child: node = p2.child
 								-- Because we inserted `node' as child.

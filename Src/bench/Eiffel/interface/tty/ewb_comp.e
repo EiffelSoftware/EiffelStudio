@@ -49,6 +49,9 @@ feature -- Properties
 			Result := melt_abb
 		end;
 
+	is_finish_freezing_called: BOOLEAN
+			-- Should `finish_freezing' be called if needed after Eiffel compilation?
+
 feature -- Actions
 
 	execute is
@@ -64,13 +67,23 @@ feature -- Actions
 					if Eiffel_project.successful then
 						print_tail;
 						if Eiffel_project.freezing_occurred then
-							prompt_finish_freezing (False)
+							process_finish_freezing (False)
 						end
 					end;
 				end;
 			end
 		end;
 
+feature -- Setting
+
+	set_is_finish_freezing_called (v: like is_finish_freezing_called) is
+			-- Set `is_finish_freezing_called' with `v'.
+		do
+			is_finish_freezing_called := v
+		ensure
+			is_finish_freezing_called_set: is_finish_freezing_called = v
+		end
+		
 feature {NONE} -- Update
 
 	select_ace_file is
@@ -183,18 +196,22 @@ feature {NONE} -- Update
 
 feature {NONE} -- Output
 
-	prompt_finish_freezing (finalized_dir: BOOLEAN) is
-			-- Display message for finish_freezing script.
+	process_finish_freezing (finalized_dir: BOOLEAN) is
+			-- Perform finish_freezing step if needed or display message.
 		do
-			io.error.putstring ("You must now run %"");
-			io.error.putstring (Platform_constants.Finish_freezing_script);
-			io.error.putstring ("%" in:%N%T");
-			if finalized_dir then
-				io.error.putstring (Final_generation_path)
+			if is_finish_freezing_called then
+				Eiffel_project.call_finish_freezing_and_wait (not finalized_dir)
 			else
-				io.error.putstring (Workbench_generation_path)
-			end;
-			io.error.new_line;
+				io.error.putstring ("You must now run %"");
+				io.error.putstring (Platform_constants.Finish_freezing_script);
+				io.error.putstring ("%" in:%N%T");
+				if finalized_dir then
+					io.error.putstring (Final_generation_path)
+				else
+					io.error.putstring (Workbench_generation_path)
+				end;
+				io.error.new_line;
+			end
 		end;
 
 	print_header is

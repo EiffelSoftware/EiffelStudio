@@ -222,6 +222,9 @@ feature -- Status Setting
 					parent.customizeable_area_of_widget (widget).disable_item_expand (mini_toolbar)
 				end
 				if header_addon /= Void then
+					if header_addon.parent /= Void then
+						header_addon.parent.prune_all (header_addon)
+					end
 					parent.customizeable_area_of_widget (widget).extend (header_addon)
 			end
 			

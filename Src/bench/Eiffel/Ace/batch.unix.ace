@@ -34,6 +34,8 @@ cluster
 
 	common_parser (common):		"$/parser"
 
+	ast_visitor(common_parser):	"$/AST/visitor"
+
 	common_eiffel_parser (common_parser):		"$/parser"
 
 	old_resources (common):		"$/resources"

@@ -7,6 +7,14 @@ indexing
 deferred class
 	WIZARD_COCLASS_INTERFACE_PROCESSOR
 
+inherit
+	WIZARD_SHARED_GENERATION_ENVIRONMENT
+		rename
+			coclass as dictionary_coclass
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	coclass: WIZARD_COCLASS_DESCRIPTOR
@@ -55,6 +63,12 @@ feature -- Basic operations
 		require
 			non_void_interface: an_interface /= Void
 		deferred
+		end
+
+	need_source_generation (an_implemented_interface: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR): BOOLEAN is
+			-- Does `an_implemented_interface' need to be generated as source interface?
+		do
+			Result := not system_descriptor.interfaces.has (an_implemented_interface)
 		end
 
 feature {NONE} -- Implementation

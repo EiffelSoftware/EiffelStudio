@@ -29,7 +29,6 @@ feature -- Initialization
 			create inv_ast_server.make
 			create inv_byte_server.make
 			create depend_server.make
-			create rep_depend_server.make
 			create m_feat_tbl_server.make
 			create m_feature_server.make
 			create m_rout_id_server.make
@@ -49,7 +48,6 @@ feature -- Clean up of the temporary server file
 			Tmp_inv_byte_server.clear
 			Tmp_inv_ast_server.clear
 			Tmp_depend_server.clear
-			Tmp_rep_depend_server.clear
 		end
 
 	tmp_purge is
@@ -61,7 +59,6 @@ feature -- Clean up of the temporary server file
 			Tmp_byte_server.files_purge
 			Tmp_inv_byte_server.files_purge
 			Tmp_depend_server.files_purge
-			Tmp_rep_depend_server.files_purge
 
 			server_controler.remove_useless_files
 		end
@@ -74,7 +71,6 @@ feature -- Purge of compilation files
 				-- Removed unused files from EIFGEN
 			feat_tbl_server.files_purge
 			depend_server.files_purge
-			rep_depend_server.files_purge
 			class_info_server.files_purge
 			inv_byte_server.files_purge
 			byte_server.files_purge
@@ -96,7 +92,6 @@ feature -- Purge of compilation files
 
 			feat_tbl_server.cache.wipe_out
 			depend_server.cache.wipe_out
-			rep_depend_server.cache.wipe_out
 			class_info_server.cache.wipe_out
 			inv_byte_server.cache.wipe_out
 			byte_server.cache.wipe_out
@@ -140,9 +135,6 @@ feature -- Access
 	depend_server: DEPEND_SERVER;
 			-- Server for dependances for incremental type check
 
-	rep_depend_server: REP_DEPEND_SERVER;
-			-- Server for dependances for replicated features 
-
 	m_feat_tbl_server: M_FEAT_TBL_SERVER;
 			-- Server of byte code description of melted feature tables
 
@@ -178,7 +170,6 @@ invariant
 	inv_ast_server_not_void: inv_ast_server /= Void
 	inv_byte_server_not_void: inv_byte_server /= Void
 	depend_server_not_void: depend_server /= Void
-	rep_depend_server_not_void: rep_depend_server /= Void
 	m_feat_tbl_server_not_void: m_feat_tbl_server /= Void
 	m_feature_server_not_void: m_feature_server /= Void
 	m_rout_id_server_not_void: m_rout_id_server /= Void

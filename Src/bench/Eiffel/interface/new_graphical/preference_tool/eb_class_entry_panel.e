@@ -8,16 +8,17 @@ class
 	EB_CLASS_ENTRY_PANEL
 
 inherit
-	NEW_EB_CONSTANTS
+	EB_ENTRY_PANEL
+		redefine
+			make
+		end
+	EB_CLASS_TOOL_DATA
 		rename
 			Class_resources as parameters
 		export
 			{NONE} all
 		end
-	EB_ENTRY_PANEL
-		redefine
-			make
-		end
+	NEW_EB_CONSTANTS
 
 creation
 	make 
@@ -28,13 +29,13 @@ feature {NONE} -- Initialization
 		do
 			Precursor (par, a_tool)
 
-			Create tool_width.make_with_resource (Current, parameters.tool_width)
-			Create tool_height.make_with_resource (Current, parameters.tool_height)
-			Create command_bar.make_with_resource (Current, parameters.command_bar)
-			Create format_bar.make_with_resource (Current, parameters.format_bar)
-			Create parse_class_after_saving.make_with_resource
+			create tool_width.make_with_resource (Current, parameters.tool_width)
+			create tool_height.make_with_resource (Current, parameters.tool_height)
+			create command_bar.make_with_resource (Current, parameters.command_bar)
+			create format_bar.make_with_resource (Current, parameters.format_bar)
+			create parse_class_after_saving.make_with_resource
 				(Current, parameters.parse_class_after_saving)
-			Create feature_clause_order.make_with_resource
+			create feature_clause_order.make_with_resource
 				(Current, parameters.feature_clause_order)
 
 			resources.extend (tool_width)
@@ -50,8 +51,8 @@ feature -- Access
 	name: STRING is "Class tool preferences"
 			-- Current's name
 
-	symbol: PIXMAP is
-		once
+	symbol: EV_PIXMAP is
+		do
 			Result := Pixmaps.bm_Class
 		end
 

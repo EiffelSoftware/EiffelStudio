@@ -157,5 +157,11 @@ feature -- XML constants
 		-- String constant representing "item".
 		
 	Name_string: STRING is "name"
+	
+feature -- Warnings
+
+	Component_name_warning: STRING is "is not a valid Component name.%NComponent names should only include%N%
+		%alphanumeric characters or underscores,%Nand start with an alphabetic character.%N%
+		%please select a different class name."
 
 end -- class GB_CONSTANTS

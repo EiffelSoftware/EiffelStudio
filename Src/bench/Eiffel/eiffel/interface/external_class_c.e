@@ -319,6 +319,7 @@ feature {NONE} -- Initialization
 		local
 			parent_type: CL_TYPE_A
 			parent_class: CLASS_C
+			l_ext_class: CONSUMED_REFERENCED_TYPE
 			i, nb: INTEGER
 		do
 			nb := 1
@@ -358,13 +359,15 @@ feature {NONE} -- Initialization
 				until
 					i > nb
 				loop
-					parent_type := internal_type_from_consumed_type (True,
-						external_class.interfaces.item (i))
-					parent_class := parent_type.associated_class
-					parents.extend (parent_type)
-					parents_classes.extend (parent_class)
-					parent_class.add_descendant (Current)
-					add_syntactical_supplier (parent_type)
+					l_ext_class := external_class.interfaces.item (i)
+					if l_ext_class /= Void then
+						parent_type := internal_type_from_consumed_type (True, l_ext_class)
+						parent_class := parent_type.associated_class
+						parents.extend (parent_type)
+						parents_classes.extend (parent_class)
+						parent_class.add_descendant (Current)
+						add_syntactical_supplier (parent_type)
+					end
 					i := i + 1
 				end
 			end

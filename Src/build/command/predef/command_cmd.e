@@ -18,7 +18,12 @@ creation
 	
 feature 
 
-	eiffel_type: STRING is "Cmd";
+	eiffel_type: STRING is "CMD";
+
+	label: STRING is
+		do
+			Result := "Cmd"
+		end;
 
 	identifier: INTEGER is
 		do

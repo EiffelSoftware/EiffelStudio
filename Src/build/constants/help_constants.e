@@ -14,7 +14,7 @@ feature -- Message
 feature 
 
 	attribute_help_fn: STRING is "ATTRIBUTE";
-        behavior_help_fn: STRING is "BEHAVIOR";
+	behavior_help_fn: STRING is "BEHAVIOR";
 	color_help_fn: STRING is "COMMAND";
 	event_help_fn: STRING is "EVENT";
 	group_help_fn: STRING is "GROUP";

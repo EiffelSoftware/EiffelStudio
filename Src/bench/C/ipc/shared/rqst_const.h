@@ -52,6 +52,7 @@
 #define DYNAMIC_EVAL	36		/* `ec' asks the application to execute a given feature on a given object */
 #define DUMP_VARIABLES	37		/* Send the locals and the arguments of a feature on the call stack */
 #define APPLICATION_CWD	38		/* Send current directory to launch application */
+#define OVERFLOW_DETECT	39		/* Specify the stack overflow management: set a depth at which the application raises an exception */
 
 /* Acknowledgments codes */
 #define AK_OK			0       /* Everything is ok */

@@ -75,7 +75,6 @@ feature {NONE} -- Initialization
 			box := C.gtk_hbox_new (False, 0)
 			C.gtk_container_add (c_object, box)
 			C.gtk_widget_show (box)
-
 			C.gtk_box_pack_start (box, pixmap_box, False, True, 0)
 			C.gtk_widget_hide (pixmap_box)
 			C.gtk_box_pack_start (box, text_label, True, True, 0)
@@ -99,10 +98,13 @@ feature -- Element change
 
 	set_text (a_text: STRING) is
 			-- Assign `a_text' to `text'.
+		local
+			temp_string: ANY
 		do
 			real_text := clone (a_text)
+			temp_string := u_lined_filter (a_text).to_c
 			key := C.gtk_label_parse_uline (text_label,
-				eiffel_to_c (u_lined_filter (a_text)))
+				$temp_string)
 		end
 
 	remove_text is

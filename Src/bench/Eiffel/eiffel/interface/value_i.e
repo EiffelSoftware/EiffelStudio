@@ -138,6 +138,21 @@ feature -- Settings
 		do
 		end
 
+feature -- Multi-branch instruction processing
+
+	inspect_constant (context_class: CLASS_C; constant_i: CONSTANT_I; value_type: TYPE_A): INTERVAL_VAL_B is
+			-- Inspect value for `constant_i' from `context_class' of the given type `t'
+		require
+			context_class_not_void: context_class /= Void
+			constant_i_not_void: constant_i /= Void
+			is_valid_inspect_value: constant_i.value.valid_type (value_type)
+			value_type_not_void: value_type /= Void
+		do
+			-- Do nothing here.
+		ensure
+			result_not_void: Result /= Void
+		end
+
 feature -- Code generation
 
 	generate (buffer: GENERATION_BUFFER) is

@@ -55,7 +55,8 @@ feature -- Access
 		require
 			name_set: name /= Void
 		do
-			create Result.make (name, arguments, is_public)
+			create Result.make (name, arguments, is_public,
+				referenced_type_from_type (internal_constructor.get_declaring_type))
 		ensure
 			non_void_constructor: Result /= Void
 		end
@@ -65,7 +66,7 @@ feature -- Comparison
 	infix "<" (other: like Current): BOOLEAN is
 			-- Compare argument count.
 		do
-			Result := internal_constructor.get_parameters.get_length < other.internal_constructor.get_parameters.get_length
+			Result := arguments.count < other.arguments.count
 		end
 		
 feature {TYPE_CONSUMER} -- Element settings

@@ -51,6 +51,13 @@ feature -- Basic operations
 			data_member.set_name (a_name)
 
 			create a_result_type.make (100)
+			if 
+				a_descriptor.interface_descriptor.namespace /= Void and then
+				not a_descriptor.interface_descriptor.namespace.empty 
+			then
+				a_result_type.append (a_descriptor.interface_descriptor.namespace)
+				a_result_type.append ("::")
+			end
 			a_result_type.append (a_descriptor.interface_descriptor.c_type_name)
 			a_result_type.append (Space)
 			a_result_type.append (Asterisk)
@@ -60,7 +67,7 @@ feature -- Basic operations
 			create data_member.make
 			data_member.set_comment (Default_iunknown_variable_comment)
 			data_member.set_name (Iunknown_variable_name)
-			data_member.set_result_type (Iunknown_pointer)
+			data_member.set_result_type (Iunknown)
 			cpp_class_writer.add_member (data_member, Private)
 
 			if 
@@ -125,7 +132,7 @@ feature {NONE} -- Implementation
 			create Result.make
 
 			create a_signature.make (100)
-			a_signature.append (Iunknown_pointer)
+			a_signature.append (Iunknown)
 			a_signature.append (Space)
 			a_signature.append (A_pointer)
 			Result.set_signature (a_signature)

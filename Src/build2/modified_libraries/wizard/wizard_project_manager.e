@@ -64,6 +64,7 @@ feature {NONE} -- Initialization
 			pnd_motion_actions.extend (agent clear_status_during_transport)
 			cancel_actions.extend (agent clear_status_after_transport)
 			first_window.set_title (Wizard_title)
+				-- Why not add `show' to `post_launch_actions' also?
 			first_window.show
 			
 				-- We only do this if we are a modify wizard, as
@@ -93,7 +94,7 @@ feature {NONE} -- Initialization
 	Wizard_title: STRING is 
 			-- Window title for this wizard.
 		once
-			Result := Build_wizard_title
+			Result := Envision_build_wizard_title
 		ensure
 			Valid_result: Result /= Void and then not Result.is_empty
 		end

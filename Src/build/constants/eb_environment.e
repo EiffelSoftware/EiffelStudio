@@ -11,26 +11,38 @@ inherit
 feature -- Directory name constants
 
 	Ace_name: STRING is "Ace";
-	Application_name: STRING is "Application";
+	Application_name: STRING is "app";
+	-- Old Application_name: STRING is "Application";
 	Bitmaps_name: STRING is "bitmaps";
 	Bin_name: STRING is "bin";
 	Build_name: STRING is "build";
-	Classes_name: STRING is "Classes";
-	Commands_name: STRING is "Commands";
+	Classes_name: STRING is "classes";
+	--old Classes_name: STRING is "Classes";
+	Command_name: STRING is "command";
+	-- old Command_name: STRING is "Command";
+	Commands_name: STRING is "commands";
+	--old Commands_name: STRING is "Commands";
 	Eiffel3_variable_name: STRING is "EIFFEL3";
-	Groups_name: STRING is "Groups";
+	Groups_name: STRING is "groups";
+	--old Groups_name: STRING is "Groups";
 	Help_name: STRING is "help";
-	Library_name: STRING is "Library";
+	Library_name: STRING is "library";
 	Platform_variable_name: STRING is "PLATFORM";
 	Resources_name: STRING is "resources";
 	Restore_name: STRING is "restore";
 	Spec_name: STRING is "spec";
-	State_name: STRING is "State";
-	Storage_name: STRING is "Storage";
-	Templates_name: STRING is "templates";
-	temporary_postfix: STRING is "TMP";
-	Widgets_name: STRING is "Widgets";
-	Windows_name: STRING is "Windows";
+	State_name: STRING is "state";
+	-- old State_name: STRING is "State";
+	Storage_name: STRING is "storage";
+	-- old Storage_name: STRING is "Storage";
+	Templates_name: STRING is "temp";
+	--old Templates_name: STRING is "templates";
+	Translate_name: STRING is "TRANSLAT";
+	Temporary_postfix: STRING is "TMP";
+	Widgets_name: STRING is "widgets";
+	-- old Widgets_name: STRING is "Widgets";
+	Windows_name: STRING is "windows";
+	-- Windows_name: STRING is "Windows";
 
 feature -- Project directory name
 
@@ -44,20 +56,27 @@ feature -- Project directory name
 
 feature -- File name constants 
 
-	Application_file_name: STRING is "application";
-	Color_names_file_name: STRING is "color_names";
+	Ace_name_in_lower_case: STRING is "ace";
+	Application_file_name: STRING is "app";
+	-- old Application_file_name: STRING is "application";
+	Color_names_file_name: STRING is "clr_name";
+	--Color_names_file_name: STRING is "color_names";
 	Commands_file_name: STRING is "commands";
 	Command_doc_file_name: STRING is "cmd.doc";
 	Command_temp_old_file_name: STRING is "cmd_tmp.old";
 	Command_temp_new_file_name: STRING is "cmd_tmp.new";
 	Groups_file_name: STRING is "groups";
-	Interface_file_name: STRING is "interface";
+	Interface_file_name: STRING is "contexts";
+	-- old Interface_file_name: STRING is "interface";
 	Merge1_file_name: STRING is "merge1";
 	Merge2_file_name: STRING is "merge2";
 	Namer_file_name: STRING is "namer";
-	Shared_control_file_name: STRING is "shared_control";
+	Shared_control_file_name: STRING is "sh_contl";
+	Select_toolkit_file_name: STRING is "toolkits";
+	--old Shared_control_file_name: STRING is "shared_control";
 	States_file_name: STRING is "states";
-	Translations_file_name: STRING is "translations";
+	Translations_file_name: STRING is "trans";
+	-- old Translations_file_name: STRING is "translations";
 	Windows_file_name: STRING is "windows"
 
 feature -- File names for EiffelBuild
@@ -67,12 +86,19 @@ feature -- File names for EiffelBuild
 			!! Result.make_from_string (EiffelBuild_directory);
 			Result.extend (Ace_name);
 			Result.set_file_name (Ace_name);
+			Result.add_extension (Ace_name_in_lower_case)
 		end;
 
 	Color_names_file: FILE_NAME is
 		once
 			!! Result.make_from_string (Resources_directory);
 			Result.set_file_name (Color_names_file_name)
+		end;
+
+	Toolkits_file: FILE_NAME is
+		once
+			!! Result.make_from_string (Resources_directory);
+			Result.set_file_name (select_toolkit_file_name)
 		end;
 
 	Merge1_file: FILE_NAME is
@@ -131,7 +157,7 @@ feature -- Directory names for EiffelBuild
 			-- text of predefined commands
 		once
 			!! Result.make_from_string (EiffelBuild_directory);
-			Result.extend_from_array (<< Library_name, Commands_name >>);
+			Result.extend_from_array (<< Library_name, Command_name >>);
 		end;
 
 	Resources_directory: DIRECTORY_NAME is
@@ -220,6 +246,7 @@ feature -- File names for Project
 		once
 			!! Result.make_from_string (Project_directory);
 			Result.set_file_name (Ace_name);
+			Result.add_extension (Ace_name_in_lower_case)
 		end;
 
 feature -- Directory creation

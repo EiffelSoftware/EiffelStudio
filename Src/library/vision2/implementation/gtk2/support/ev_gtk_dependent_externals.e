@@ -89,6 +89,11 @@ feature -- Externals
 			"C (GtkEditable*): EIF_BOOLEAN | <gtk/gtk.h>"
 		end
 		
+	gtk_widget_set_default_visual (a_visual: POINTER) is
+		external
+			"C [macro <gtk/gtk.h>]"
+		end
+	
 	object_destroy (a_c_object: POINTER) is
 		external
 			"C (GtkObject*) | <gtk/gtk.h>"

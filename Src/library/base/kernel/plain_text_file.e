@@ -14,7 +14,7 @@ inherit
 		rename
 			index as position
 		redefine
-			is_plain_text, file_ps
+			is_plain_text
 		end
 
 creation
@@ -127,14 +127,6 @@ feature {NONE} -- Implementation
 			-- Put `d' to end of `file'.
 		external
 			"C | <file.h>"
-		end;
-
-	file_ps (file : POINTER; s : POINTER; length : INTEGER) is
-			-- Print `a_string' to `file'.
-		external
-			"C | <file.h>"
-		alias
-			"file_pt_ps"
 		end;
 
 invariant

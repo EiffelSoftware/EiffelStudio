@@ -1,7 +1,7 @@
 indexing
 	description: "Objects that contains all the information relative to any header.%
-				  % Headers can only have email adresses informations."
-	author: ""
+				  % Headers can only have email addresses informations."
+	author: "David s"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -14,26 +14,20 @@ create
 feature -- Initialization
 
 	make_with_entry (item: STRING) is
-			-- Initialize the header with one entry.
+			-- Initialize the header with one 'item'.
 		do
 			create entries.make (1, 1)
 			entries.put (item, 1)
 		end
 
 	make_with_entries (list: ARRAY [STRING]) is
-			-- Initialize the header with multiple entries.
+			-- Initialize the header with a 'list' of entries.
 		do
 			create entries.make_from_array (list)
 			enable_multiple_entries
 		end
 
 feature -- Access
-
-	first_entry: STRING is
-		do
-			Result:= entries.item (1)
-		end
-		-- Entry.
 
 	entries: ARRAY [STRING]
 		-- Multiple entries.
@@ -42,6 +36,13 @@ feature -- Status report
 
 	multiple_entries: BOOLEAN
 		-- Has the header multiple entries.
+
+	first_entry: STRING is
+			-- Entry,
+			-- Useful if not multiple entries.
+		do
+			Result:= entries.item (1)
+		end
 
 feature -- Status setting
 
@@ -52,17 +53,15 @@ feature -- Status setting
 		end
 
 	set_entries (list: ARRAY [STRING]) is
-			-- Set entries.
+			-- Set entries with 'list'.
 		do
 			entries:= list
 		end
 
-feature -- Miscellaneous
-
 feature -- Basic operations
 
 	add_entry (s: STRING) is
-			-- Add a new entry to the header.
+			-- Add a new entry 's' to the header.
 		do
 			if not multiple_entries then
 				enable_multiple_entries
@@ -74,7 +73,7 @@ feature -- Basic operations
 		end
 
 	is_valid: BOOLEAN is
-		-- Check if the header is valid.
+			-- Check if the header is valid.
 		do
 
 		end

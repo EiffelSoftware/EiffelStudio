@@ -11,13 +11,6 @@
 */
 #include "eiffel.h"
 
-#ifndef TRUE
-#define TRUE 1
-#endif
-#ifndef FALSE
-#define FALSE 0
-#endif
-
 private char *ei_oref();		/* Offset in object */
 
 public long ei_dtype (object)

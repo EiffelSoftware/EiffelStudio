@@ -192,7 +192,7 @@ end
 					temp.append_integer (unit.real_pattern_id)
 					temp.append (",%N")
 				else
-					file.putstring ("(fnptr) 0,%N")
+					file.putstring ("(char *(*)()) 0,%N")
 					temp.append ("-1,%N")
 				end
 				i := i + 1
@@ -372,7 +372,7 @@ end
 					temp.append_integer (unit.real_pattern_id)
 					temp.append (",%N")
 				else
-					file.putstring ("(fnptr) 0,%N")
+					file.putstring ("(char *(*)()) 0,%N")
 					temp.append ("-1,%N")
 				end
 				i := i + 1

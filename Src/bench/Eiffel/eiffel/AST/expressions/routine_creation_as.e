@@ -153,7 +153,7 @@ feature -- Type check, byte code and dead code removal
 					else
 						if target.class_type /= Void then
 								-- Target is {TYPE}
-							target_type := target.type_a
+							target_type ?= target.type_a
 								-- A void target_type means that it is `NONE'
 								-- and we do not accept this.
 							if target_type /= Void then

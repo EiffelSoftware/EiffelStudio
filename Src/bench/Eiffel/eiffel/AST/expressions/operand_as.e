@@ -146,7 +146,7 @@ feature {AST_EIFFEL} -- Output
 
 feature {OPERAND_AS, ROUTINE_CREATION_AS} -- Type
 
-	type_a : CL_TYPE_A is
+	type_a : TYPE_A is
 			-- Type of operand
 		do
 			if computed_type = Void then
@@ -158,7 +158,7 @@ feature {OPERAND_AS, ROUTINE_CREATION_AS} -- Type
 
 feature {NONE}  -- Type
 
-	computed_type : CL_TYPE_A
+	computed_type : TYPE_A
 			-- Type of operand
 
 	compute_type is
@@ -257,7 +257,7 @@ feature {NONE}  -- Type
 			end
 
 			-- Assignment attempt cannot fail
-			computed_type ?= ttype
+			computed_type := ttype
 			Error_handler.checksum
 		end
 

@@ -154,26 +154,26 @@
 			<UL>
 				<LI> <OBJECT type="text/sitemap"><param name="Name" value="Base"><param name="Local" value="Libraries\Base\index.html"></OBJECT>
 				<UL>
-					<LI> <OBJECT type="text/sitemap"><param name="Name" value="Introduction"><param name="Local" value="Libraries\Base\introduction.html"></OBJECT>
+					<LI> <OBJECT type="text/sitemap"><param name="Name" value="Introduction"><param name="Local" value="Libraries\Base\00_introduction.html"></OBJECT>
 					<LI> <OBJECT type="text/sitemap"><param name="Name" value="Content"><param name="Local" value="Libraries\Base\Content\index.html"></OBJECT>
 					<UL>
-						<LI> <OBJECT type="text/sitemap"><param name="Name" value="DESC"><param name="Local" value="Libraries\Base\Content\desc\index.html"></OBJECT>
+						<LI> <OBJECT type="text/sitemap"><param name="Name" value="DESC"><param name="Local" value="Libraries\Base\Content\40_desc\index.html"></OBJECT>
 						<UL>
-							<LI> <OBJECT type="text/sitemap"><param name="Name" value="Creating a Library Object"><param name="Local" value="Libraries\Base\Content\desc\library.html"></OBJECT>
-							<LI> <OBJECT type="text/sitemap"><param name="Name" value="Creating a Routine Object"><param name="Local" value="Libraries\Base\Content\desc\routine.html"></OBJECT>
-							<LI> <OBJECT type="text/sitemap"><param name="Name" value="Calling a Routine"><param name="Local" value="Libraries\Base\Content\desc\routine_call.html"></OBJECT>
+							<LI> <OBJECT type="text/sitemap"><param name="Name" value="Creating a Library Object"><param name="Local" value="Libraries\Base\Content\40_desc\library.html"></OBJECT>
+							<LI> <OBJECT type="text/sitemap"><param name="Name" value="Creating a Routine Object"><param name="Local" value="Libraries\Base\Content\40_desc\routine.html"></OBJECT>
+							<LI> <OBJECT type="text/sitemap"><param name="Name" value="Calling a Routine"><param name="Local" value="Libraries\Base\Content\40_desc\routine_call.html"></OBJECT>
 						</UL>
-						<LI> <OBJECT type="text/sitemap"><param name="Name" value="Kernel"><param name="Local" value="Libraries\Base\Content\kernel\index.html"></OBJECT>
-						<LI> <OBJECT type="text/sitemap"><param name="Name" value="Support"><param name="Local" value="Libraries\Base\Content\support\index.html"></OBJECT>
-						<LI> <OBJECT type="text/sitemap"><param name="Name" value="Structures"><param name="Local" value="Libraries\Base\Content\Structures\index.html"></OBJECT>
+						<LI> <OBJECT type="text/sitemap"><param name="Name" value="Kernel"><param name="Local" value="Libraries\Base\Content\10_kernel\index.html"></OBJECT>
+						<LI> <OBJECT type="text/sitemap"><param name="Name" value="Support"><param name="Local" value="Libraries\Base\Content\30_support\index.html"></OBJECT>
+						<LI> <OBJECT type="text/sitemap"><param name="Name" value="Structures"><param name="Local" value="Libraries\Base\Content\20_structures\index.html"></OBJECT>
 						<UL>
-							<LI> <OBJECT type="text/sitemap"><param name="Name" value="Taxonomy"><param name="Local" value="Libraries\Base\Content\Structures\taxonomy.html"></OBJECT>
-							<LI> <OBJECT type="text/sitemap"><param name="Name" value="Dispensers"><param name="Local" value="Libraries\Base\Content\Structures\dispenser.html"></OBJECT>
-							<LI> <OBJECT type="text/sitemap"><param name="Name" value="Iteration"><param name="Local" value="Libraries\Base\Content\Structures\iteration.html"></OBJECT>
-							<LI> <OBJECT type="text/sitemap"><param name="Name" value="Trees"><param name="Local" value="Libraries\Base\Content\Structures\tree.html"></OBJECT>
-							<LI> <OBJECT type="text/sitemap"><param name="Name" value="Lists"><param name="Local" value="Libraries\Base\Content\Structures\list.html"></OBJECT>
-							<LI> <OBJECT type="text/sitemap"><param name="Name" value="Sets"><param name="Local" value="Libraries\Base\Content\Structures\set.html"></OBJECT>
-							<LI> <OBJECT type="text/sitemap"><param name="Name" value="Tables"><param name="Local" value="Libraries\Base\Content\Structures\table.html"></OBJECT>
+							<LI> <OBJECT type="text/sitemap"><param name="Name" value="Taxonomy"><param name="Local" value="Libraries\Base\Content\20_structures\10_taxonomy.html"></OBJECT>
+							<LI> <OBJECT type="text/sitemap"><param name="Name" value="Dispensers"><param name="Local" value="Libraries\Base\Content\20_structures\30_dispenser.html"></OBJECT>
+							<LI> <OBJECT type="text/sitemap"><param name="Name" value="Iteration"><param name="Local" value="Libraries\Base\Content\20_structures\70_iteration.html"></OBJECT>
+							<LI> <OBJECT type="text/sitemap"><param name="Name" value="Trees"><param name="Local" value="Libraries\Base\Content\20_structures\40_tree.html"></OBJECT>
+							<LI> <OBJECT type="text/sitemap"><param name="Name" value="Lists"><param name="Local" value="Libraries\Base\Content\20_structures\20_list.html"></OBJECT>
+							<LI> <OBJECT type="text/sitemap"><param name="Name" value="Sets"><param name="Local" value="Libraries\Base\Content\20_structures\50_set.html"></OBJECT>
+							<LI> <OBJECT type="text/sitemap"><param name="Name" value="Tables"><param name="Local" value="Libraries\Base\Content\20_structures\60_table.html"></OBJECT>
 						</UL>
 					</UL>
 	<LI><OBJECT type="text/sitemap"><param name="Name" value="reference"><param name="Local" value="libraries\base\reference\index.html"></OBJECT>

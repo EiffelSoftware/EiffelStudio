@@ -3,8 +3,8 @@
 // typelib filename: <could not determine filename>
 
 [
-  uuid(4482624D-80A1-3333-A12B-DE408B206FCA),
-  version(1.0)
+  uuid(FD07FADA-05CB-305B-8CE8-CE081D6A98A5),
+  version(5.0)
 ]
 library AssemblyManagerInterface
 {
@@ -20,8 +20,7 @@ library AssemblyManagerInterface
       odl,
       uuid(232A7E85-2357-386E-A37D-1D957E41AFFD),
       version(1.0),
-      oleautomation   
-
+      oleautomation  
     ]
     interface IAssemblyManagerInterface : IUnknown {
         HRESULT _stdcall ImportedAssemblies([out, retval] SAFEARRAY(BSTR)* pRetVal);
@@ -42,7 +41,7 @@ library AssemblyManagerInterface
     };
 
     [
-      uuid(B2B0DDA2-F183-3631-9F85-7BC837A1B418),
+      uuid(4116A1B8-4260-3D6F-BE70-19982B1BB9D7),
       version(1.0)
     ]
     coclass AssemblyManagerInterface {

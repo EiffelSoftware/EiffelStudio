@@ -575,12 +575,13 @@ feature {NONE} -- Implementation
 			-- All suppliers of `Current'.
 		
 	add_suppliers (a_type: TYPE_AS) is
-			-- 
+			-- Add suppliers of `a_type' to `suppliers'.
 		local
 			ct: CLASS_TYPE_AS
 			bt: BASIC_TYPE
 			g: EIFFEL_LIST [TYPE_AS]
 			l_class_i: CLASS_I
+			cc: CLASS_C
 		do
 			ct ?= a_type
 			if ct /= Void then
@@ -602,9 +603,14 @@ feature {NONE} -- Implementation
 			else
 				bt ?= a_type
 				if bt /= Void then
-					l_class_i := bt.actual_type.associated_class.lace_class
-					if not suppliers.has (l_class_i.name) then
-						suppliers.put (l_class_i, l_class_i.name)
+					cc := bt.actual_type.associated_class
+					if cc /= Void then
+						l_class_i := cc.lace_class
+						if l_class_i /= Void then
+							if not suppliers.has (l_class_i.name) then
+								suppliers.put (l_class_i, l_class_i.name)
+							end
+						end
 					end
 				end
 			end

@@ -3407,15 +3407,20 @@ rt_private EIF_REFERENCE malloc_from_zone(unsigned int nbytes)
 	 * The tenuring threshold for the next scavenge is computed to make the level
 	 * of occupation go below the watermark at the next collection so that
 	 * the next call to `malloc_from_zone' is most likely to succeed.
+	 * 
+	 * Aslo, if there is not enough space in the scavenge zone, we need to return
+	 * immediately.
 	 */
 	GC_THREAD_PROTECT(EIF_GC_GSZ_LOCK);
-	if (sc_from.sc_top >= sc_from.sc_mark) {
+
+	object = sc_from.sc_top;				/* First eif_free location */
+
+	if ((object >= sc_from.sc_mark) || ((ALIGNMAX + nbytes + object) > sc_from.sc_end)) {
 		GC_THREAD_PROTECT(EIF_GC_GSZ_UNLOCK);
 		return NULL;
 	}
 
 	SIGBLOCK;								/* Block signals */
-	object = sc_from.sc_top;				/* First eif_free location */
 	sc_from.sc_top += nbytes + ALIGNMAX;	/* Update free-location pointer */
 	((union overhead *) object)->ov_size = nbytes;	/* All flags cleared */
 

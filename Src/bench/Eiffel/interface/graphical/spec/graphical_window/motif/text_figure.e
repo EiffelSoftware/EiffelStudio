@@ -109,15 +109,15 @@ feature -- Setting
 
 feature -- Output
 
-	draw (d: DRAWING_X; is_in_debug_line: BOOLEAN;
+	draw (d: DRAWING_X; is_in_highlighted_line: BOOLEAN;
 			x_offset, y_offset: INTEGER) is
 			-- Draw the current text.
 		require
 			drawable: d /= Void and then d.is_drawable
 		do
 			d.set_drawing_font (font);
-			if is_in_debug_line then
-				d.set_foreground_gc_color (g_Selected_breakpoint_line_fg_color);
+			if is_in_highlighted_line then
+				d.set_foreground_gc_color (g_Highlighted_line_fg_color);
 			else
 				d.set_foreground_gc_color (foreground_color);
 			end;

@@ -58,7 +58,7 @@ feature -- Initialize
 			)
 			
 			feature {EV_GTK_EXTERNALS}.gtk_widget_show (tree_view)
-			feature {EV_GTK_EXTERNALS}.gtk_tree_view_set_rules_hint (tree_view, True)
+			--feature {EV_GTK_EXTERNALS}.gtk_tree_view_set_rules_hint (tree_view, True)
 			
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_set_headers_visible (tree_view, False)
 			

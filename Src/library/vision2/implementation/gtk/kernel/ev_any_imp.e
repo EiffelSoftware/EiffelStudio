@@ -104,12 +104,12 @@ feature {EV_ANY, EV_ANY_IMP} -- Command
 			disconnect_all_signals
 			if C.gtk_is_window (c_object) then
 				C.gtk_object_destroy (c_object)
---			elseif C.gtk_object_struct_ref_count (c_object) > 1 then
---				if C.gtk_widget_struct_parent (c_object) /= NULL then
---					C.gtk_container_remove (C.gtk_widget_struct_parent (c_object), c_object)
---				else
---					--print ("Object has ref count of more than 1 but with no parent%N")
---				end
+			elseif C.gtk_object_struct_ref_count (c_object) > 1 then
+				if C.gtk_widget_struct_parent (c_object) /= NULL then
+					C.gtk_container_remove (C.gtk_widget_struct_parent (c_object), c_object)
+				else
+					--print ("Object has ref count of more than 1 but with no parent%N")
+				end
 			else
 				C.gtk_object_unref (c_object)
 			end

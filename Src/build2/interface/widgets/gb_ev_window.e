@@ -25,14 +25,22 @@ inherit
 		undefine
 			default_create
 		end
+		
+	GB_CONSTANTS
+		undefine
+			default_create
+		end
 
 feature -- Access
 
 	ev_type: EV_WINDOW
 		-- Vision2 type represented by `Current'.
 		
-	type: STRING is "EV_WINDOW"
-		-- String representation of object_type modifyable by `Current'.
+	type: STRING is
+			-- String representation of object_type modifyable by `Current'.
+		once
+			Result := Ev_window_string
+		end
 		
 	attribute_editor: GB_OBJECT_EDITOR_ITEM is
 			-- A vision2 component to enable modification

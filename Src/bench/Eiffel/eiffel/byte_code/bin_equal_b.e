@@ -215,6 +215,8 @@ feature -- IL code generation
 		local
 			left_type: TYPE_I
 			right_type: TYPE_I
+			cl_type: CL_TYPE_I
+			feat: FEATURE_I
 		do
 			left_type := context.real_type (left.type)
 			right_type := context.real_type (right.type)
@@ -226,13 +228,44 @@ feature -- IL code generation
 					-- Simple type can never be Void
 				generate_il_boolean_constant
 			else
-				generate_converted_standard_il
+				if
+					(left_type.is_basic and right_type.is_reference) or else
+					(left_type.is_reference and right_type.is_basic)
+				then
+					left.generate_il	
+					if left_type.is_reference and right_type.is_basic then
+							-- Dereference `item' for left hand side.
+						cl_type ?= left_type
+						feat := cl_type.base_class.feature_table.
+							item_id (feature {PREDEFINED_NAMES}.item_name_id)
+						
+						il_generator.generate_feature_access (cl_type.associated_class_type.type,
+							feat.feature_id, feat.argument_count, feat.has_return_value, False)
+					end
+
+					right.generate_il
+					if left_type.is_basic and right_type.is_reference then
+							-- Dereference `item' for right hand side.
+						cl_type ?= right_type
+						feat := cl_type.base_class.feature_table.
+							item_id (feature {PREDEFINED_NAMES}.item_name_id)
+						
+						il_generator.generate_feature_access (cl_type.associated_class_type.type,
+							feat.feature_id, feat.argument_count, feat.has_return_value, False)
+					end
+
+					il_generator.generate_binary_operator (il_operator_constant)
+				else
+					generate_converted_standard_il
+				end
 			end
 		end
 
 	generate_il_boolean_constant is
+			-- Put `True' or `False' on stack depending if we generate
+			-- an equality or an inequality operator.
 		deferred
-		end;
+		end
 
 feature -- Byte code generation
 

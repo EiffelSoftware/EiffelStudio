@@ -3,11 +3,11 @@ indexing
 
 deferred class
 	EV_PND_DEFERRED_ITEM
-	
+
 inherit
-	EV_ABSTRACT_PICK_AND_DROPABLE
-		undefine
-			default_pixmaps
+	EV_ANY_I
+		redefine
+			interface
 		end
 
 feature
@@ -26,9 +26,7 @@ feature
 			interface.init_drop_actions (Result)
 		end
 		
-	interface: EV_PICK_AND_DROPABLE is
-		deferred
-		end
+	interface: EV_PICK_AND_DROPABLE
 
 end
 

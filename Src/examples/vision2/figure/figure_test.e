@@ -225,30 +225,71 @@ feature -- Initialization
 			my_device.set_minimum_size (300, 300)
 			first_window.extend (my_device)
 			my_device.expose_actions.extend (~on_repaint_test)
-			my_device.set_background_color (create {EV_COLOR}.make_with_rgb (0, 0, 1))
-			my_device.set_tile (pixmap)
-			--my_device.set_clip_area (create {EV_CLIP}.make (30, 30, 150, 190))
-			my_device.clear
+			my_device.pointer_button_press_actions.extend (~rotate_tests)
+			cur_test := 1
+			cur_text := "Pre-init"
+			my_device.redraw
+		end
+
+	cur_test: INTEGER
+	cur_text: STRING
+
+	rotate_tests (x, y, z: INTEGER; s,w,e:DOUBLE; sx,sy:INTEGER) is
+		do
+			if cur_test = 1 then
+				my_device.remove_tile
+				my_device.remove_clip_area
+				my_device.set_line_width (1)
+				my_device.disable_dashed_line_style
+				my_device.set_foreground_color (create {EV_COLOR}.make_with_rgb (0, 0, 0))
+				my_device.set_background_color (create {EV_COLOR}.make_with_rgb (1, 1, 1))
+				my_device.set_font (create {EV_FONT})
+				cur_text := "Default values"
+			elseif cur_test = 2 then
+				my_device.set_foreground_color (create {EV_COLOR}.make_with_rgb (0, 0, 1))
+				my_device.set_background_color (create {EV_COLOR}.make_with_rgb (1, 1, 0.5))
+				my_device.set_tile (pixmap)
+				cur_text := "Different colors"
+			elseif cur_test = 3 then
+				my_device.set_tile (pixmap)
+				cur_text := "Tile test"
+			elseif cur_test = 4 then
+				my_device.set_clip_area (create {EV_CLIP}.make (10, 30, 150, 190))
+				cur_text := "Tile test"
+			elseif cur_test = 5 then
+				my_device.enable_dashed_line_style
+				cur_text := "Dashed lines"
+			elseif cur_test = 6 then
+				my_device.set_line_width (5)
+				cur_text := "line width = 5"
+			elseif cur_test = 7 then
+				my_device.set_font (create {EV_FONT}.make_with_values (
+					Ev_font_family_modern,
+					Ev_font_weight_bold,
+					Ev_font_shape_italic,
+					19))
+				cur_text := "Different font...@#$"
+			end
+			cur_test := cur_test + 1
+			if cur_test = 7 then
+				cur_test := 1
+			end
+			my_device.redraw
 		end
 
 	on_repaint_test (x, y, w, h: INTEGER) is
 			-- Do the projection
 		do
-			my_device.enable_dashed_line_style
-
-			--my_device.set_foreground_color (create {EV_COLOR}.make_with_rgb (0, 1, 0))
-
-			--my_device.fill_rectangle (110, 210, 110, 115)
+			my_device.fill_rectangle (110, 210, 110, 115)
 			my_device.fill_ellipse (150, 210, 50, 50)
 			my_device.fill_polygon (<<create {EV_COORDINATES}.set (180, 210),
 				create {EV_COORDINATES}.set (190, 220),
 				create {EV_COORDINATES}.set (190, 230)>>)
-			--my_device.fill_pie_slice (200, 200, 120, 120,  0.1, 0.25 * 3.14)
-
+			my_device.fill_pie_slice (200, 200, 120, 120,  0.1, 0.25 * 3.14)
 			my_device.draw_point (10, 10)
-			my_device.draw_text (10, 200, "Text-primitive")
+			my_device.draw_text (10, 200, cur_text)
 			my_device.draw_segment (5, 5, 100, 50)
-			--my_device.draw_straight_line (100, 30, 120, 35)
+			my_device.draw_straight_line (100, 30, 120, 35)
 			my_device.draw_pixmap (80, 16, pixmap)
 			my_device.draw_arc (90, 25, 20, 30, 0, 0.75 * 3.14)
 			my_device.draw_rectangle (10, 110, 10, 15)
@@ -257,7 +298,6 @@ feature -- Initialization
 				create {EV_COORDINATES}.set (90, 120),
 				create {EV_COORDINATES}.set (90, 130)>>, True)
 			my_device.draw_pie_slice (100, 100, 20, 20, 0.1, 0.25 * 3.14)
-			--my_device.draw_text (10, 200, "Text-primitive")
 		end
 
 	make_world is

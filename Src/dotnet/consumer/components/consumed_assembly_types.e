@@ -46,7 +46,6 @@ feature -- Access
 			from
 				i := 1
 				count := dotnet_names.count
-				namespace_count := 1
 			until
 				i > count
 			loop

@@ -29,13 +29,13 @@ feature {NONE}
 	reset_debugger is
 		do
 			debug_info.wipe_out;
+			quit_cmd.exit_now;
 			if Run_info.is_running then
 				debug_window.clear_window;   
 				debug_window.put_string ("System terminated%N");
 				debug_window.display;
 				run_info.set_is_running (false)
-			end;
-			quit_cmd.exit_now;
+			end
 		end;
 
 	compile (argument: ANY) is
@@ -134,6 +134,7 @@ feature {NONE}
 				if Lace.file_name /= Void then
 					confirm_and_compile (argument);
 					error_window.display;
+					project_tool.raise
 				elseif argument = warner then
 					name_chooser.set_window (text_window);
 					name_chooser.call (Current)
@@ -152,7 +153,7 @@ feature {NONE}
 						warner.set_window (text_window);
 						warner.custom_call 
 							(Current, w_Cannot_read_file_retry (fn), 
-							" Ok ", Void, "Cancel");
+							" OK ", Void, "Cancel");
 					end
 				elseif argument = text_window then
 					warner.set_window (text_window);

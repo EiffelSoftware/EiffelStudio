@@ -95,13 +95,13 @@ feature -- Basic operations
 					until
 						j > switches.count or found
 					loop
-						switch := argument.substring (2, argument.count)
+						switch := argument.substring (2, upper_bound)
 						found := switch.is_equal (switches.item (j))
 						j := j + 1
 					end
 					if found then
 						if argument.count > switch.count + 2 then
-							process_switch (switch, argument.substring (switch.count + 3, argument.count))
+							process_switch (switch, argument.substring (upper_bound + 2, argument.count))
 						else
 							process_switch (switch, Void)
 						end
@@ -128,7 +128,7 @@ feature {NONE} -- Implementation
 			message: STRING
 		do
 			create message.make (4096)
-			message.append ("Error: ")
+			message.append ("%NError: ")
 			message.append (error_message)
 			message.append ("%N%NType ")
 			message.append (System_name)

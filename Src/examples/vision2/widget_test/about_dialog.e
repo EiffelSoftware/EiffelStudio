@@ -24,6 +24,13 @@ inherit
 		end
 		
 	GB_CONSTANTS
+	
+	EXECUTION_ENVIRONMENT
+		rename
+			put as execution_environment_put
+		undefine
+			default_create, copy, is_equal
+		end
 
 creation
 	make
@@ -44,15 +51,22 @@ feature -- Initialization
 			hsep: EV_HORIZONTAL_SEPARATOR
 			ok_button: EV_BUTTON
 			white_cell: EV_CELL
+			file_name: FILE_NAME
 		do
 			default_create
-			set_title (Product_name)
+			set_title ("EiffelVision2 Tour")
 			disable_user_resize
 
 				-- Create controls.
-		--	eiffel_image := --clone ((create {GB_SHARED_PIXMAPS}).Help_about_pixmap)
-		--	eiffel_image.set_minimum_size (eiffel_image.width, dialog_unit_to_pixels(200))
-		--	eiffel_image.set_background_color (White)
+				--| FIXME check for other locations/missing.
+			create file_name.make_from_string (get ("ISE_VISION2_TOUR"))
+			file_name.extend ("bitmaps")
+			file_name.extend ("png")
+			file_name.extend ("bm_about.png")
+			create eiffel_image
+			eiffel_image.set_with_named_file (file_name.out)
+			eiffel_image.set_minimum_size (eiffel_image.width, eiffel_image.height)
+			eiffel_image.set_background_color (White)
 			create info_label.make_with_text (t_info)
 			info_label.align_text_left
 			info_label.set_background_color (White)
@@ -83,15 +97,15 @@ feature -- Initialization
 			texts_box.disable_item_expand (eiffel_text_box)
 			create white_cell
 			white_cell.set_background_color (White)
-			texts_box.extend (white_cell) -- expandable item
+			texts_box.extend (white_cell)
 
 				-- Box with left image + text
 			create hbox
 			hbox.set_padding (Default_padding_size)
 			hbox.set_border_width (Default_border_size)
 			hbox.set_background_color (White)
---			hbox.extend (eiffel_image)
---			hbox.disable_item_expand (eiffel_image)
+			hbox.extend (eiffel_image)
+			hbox.disable_item_expand (eiffel_image)
 			hbox.extend (texts_box)
 
 				-- Box where the Ok button is
@@ -113,21 +127,20 @@ feature -- Initialization
 			extend (vbox)
 			set_default_push_button (ok_button)
 			set_default_cancel_button (ok_button)
-		--	set_icon_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_build_window @ 1)
 		end
 
 feature -- Constant strings
 
 	t_version_info: STRING is
 		once
-			Result := "EiffelBuild (5.3.0204)"
+			Result := "EiffelVision2 Tour"
 		end
 		
 
 	t_Copyright_info: STRING is
 		once
 			Result := 
-				"Copyright (C) 1985-2002 Eiffel Software Inc.%N%
+				"Copyright (C) 1985-2003 Eiffel Software Inc.%N%
 				%All rights reserved"
 		end
 

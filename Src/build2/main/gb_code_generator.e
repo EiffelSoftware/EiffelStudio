@@ -13,25 +13,44 @@ class
 inherit
 	
 	GB_XML_UTILITIES
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_OBJECT_HANDLER
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_SYSTEM_STATUS
+		export
+			{NONE} all
+		end
 	
 	GB_EVENT_UTILITIES
+		export
+			{NONE} all
+		end
 	
 	INTERNAL
+		export
+			{NONE} all
+		end
 	
 	EIFFEL_ENV
+		export
+			{NONE} all
+		end
 	
 	GB_FILE_CONSTANTS
+		export
+			{NONE} all
+		end
 
 feature -- Basic operation
 
 	generate is
-			-- Generate a new Eiffel class in `a_file_name',
-			-- named `a_class_name'. The rest is built from the
-			-- current state of the display_window.
+			-- Generate the project as per settings in `project_settings'.
 		local	
 			directory: DIRECTORY
 			directory_file_name: FILE_NAME
@@ -41,11 +60,15 @@ feature -- Basic operation
 			current_type: STRING
 			window_element: XML_ELEMENT
 			name_counter: INTEGER
-			window_file_name: FILE_NAME
+			window_file_name, directory_name: FILE_NAME
 			current_directory: STRING
 			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			element_info: ELEMENT_INFORMATION
 		do
+				-- We must build an XML file representing the project, and
+				-- then for every window found in that file, generate a new window.
+			generate_xml_for_project
+		
 				-- Note that the generation of the XML file used internally,
 				-- is not performed until `build_main_window_implementation' is called.
 			create directory_file_name.make_from_string (project_settings.project_location)
@@ -65,10 +88,6 @@ feature -- Basic operation
 					-- Generate an EV_APPLICATION for the project
 				build_application_file
 			end
-			
-				-- We must build an XML file representing the project, and
-				-- then for every window found in that file, generate a new window.
-			generate_xml_for_project
 			
 			root_element := current_document.root_element
 			from
@@ -94,30 +113,35 @@ feature -- Basic operation
 									if current_name.is_equal (Internal_properties_string)  then
 										full_information := get_unique_full_info (window_element)
 										element_info := full_information @ (name_string)
-										window_file_name := clone (generated_path)
-										window_file_name.extend (element_info.data)
-										create directory.make (window_file_name)
+										directory_name := clone (generated_path)
+										directory_name.extend (element_info.data)
+										create directory.make (directory_name)
 										if not directory.exists then
 											directory.create_dir
 										end
-										current_directory := element_info.data
 									else
+											-- We must now parse the generated file, and build a representation
+											-- that is contained within. This is then used by the generator,
+											-- to find paticular information regarding the structure.
+										reset_generation_constants	
+									
 										prepass_xml (window_element, document_info, 1)
 											-- Generate the window implementation for the project.
 										name_counter := name_counter + 1
-										window_file_name := clone (generated_path)
-										window_file_name.extend (current_directory)
-										window_file_name.extend ("main_window" + name_counter.out + ".e")
-										build_main_window_implementation (window_file_name)
+										build_main_window_implementation (directory_name)
+										
+										build_main_window (directory_name)
 									end
 								end
 								current_element.forth
 							end
 						else
+							reset_generation_constants
+							directory_name := clone (generated_path)
 							prepass_xml (current_element, document_info, 1)
 							window_file_name := clone (generated_path)
-							window_file_name.extend ("main_window" + name_counter.out + ".e")
-							build_main_window_implementation (window_file_name)							
+							build_main_window_implementation (directory_name)
+							build_main_window (directory_name)
 						end
 					end
 				
@@ -125,10 +149,21 @@ feature -- Basic operation
 				
 				root_element.forth
 			end
-			
-				-- Generate the window for the project.
-			build_main_window
 		end
+		
+feature {WIZARD_FOURTH_STATE, WIZARD_FINAL_STATE, GB_CODE_GENERATION_DIALOG} -- Implementation
+
+	set_progress_bar (bar: EV_PROGRESS_BAR) is
+			-- Assign `bar' to `progress_bar'
+		require
+			progress_bar_not_void: bar /= Void
+		do
+			progress_bar := bar
+		ensure
+			progress_bar_set: progress_bar = bar
+		end
+		
+feature {NONE} -- Implementation
 		
 	generate_xml_for_project is
 			-- Generate XML for the current project into `current_document'.
@@ -137,38 +172,42 @@ feature -- Basic operation
 			store: GB_XML_STORE
 			generation_settings: GB_GENERATION_SETTINGS
 		do
-				set_progress (0.3)
-				create store
-					-- Generate an XML representation of the current project.
-					-- We will build our class text directly from this XML.
-				create generation_settings
-				generation_settings.enable_generate_names
-				store.generate_document (generation_settings)
-				current_document := store.document
-				check
-					current_document_not_void: current_document/= Void
-				end
-				
-					-- We must now parse the generated file, and build a representation
-					-- that is contained within. This is then used by the generator,
-					-- to find paticular information regarding the structure.
-				create document_info.make_root
-				create all_ids.make (50)
+			set_progress (0.3)
+			create store
+				-- Generate an XML representation of the current project.
+				-- We will build our class text directly from this XML.
+			create generation_settings
+			generation_settings.enable_generate_names
+			store.generate_document (generation_settings)
+			current_document := store.document
+			check
+				current_document_not_void: current_document/= Void
+			end
 		end
-	
-	set_progress_bar (bar: EV_PROGRESS_BAR) is
-			-- Assign `bar' to `progress_bar'
+
+	reset_generation_constants is
+			-- Reset all constants and attributes required before a generation.
+			-- This will be called multiple times, once for each set of classes
+			-- that is generated.
 		do
-			progress_bar := bar
+			create document_info.make_root
+			create all_ids.make (50)
+			event_connection_string := ""
+			create_string := ""
+			local_string := ""
+			build_string := ""
+			set_string := ""
+			event_implementation_string := ""
+			event_declaration_string := ""
 		end
 		
-		
-feature {NONE} -- Implementation
 
 	generated_path: FILE_NAME is
 			-- `Result' is generated directory for current project.
 		do
 			create Result.make_from_string (system_status.current_project_settings.project_location)
+		ensure
+			result_not_void: Result /= Void
 		end
 		
 	build_ace_file is
@@ -292,17 +331,27 @@ feature {NONE} -- Implementation
 				application_output_file.putstring (application_text)
 				application_output_file.close
 			end
-			
-		
-		build_main_window_implementation (file_name: FILE_NAME) is
+
+		build_main_window_implementation (directory_name: FILE_NAME) is
 				-- Generate a main window for the project.
 			local
 				window_template_file, window_output_file: PLAIN_TEXT_FILE
 				window_file_name, window_template: FILE_NAME
 				store: GB_XML_STORE
 				generation_settings: GB_GENERATION_SETTINGS
+				file_name: FILE_NAME
+				a_class_name: STRING
 			do
 				set_progress (0.6)
+					-- Build the file name for generation
+				check
+					document_info_not_void: document_info /= Void
+					name_not_void: document_info.name /= Void
+				end
+				a_class_name := document_info.name.as_upper + Class_implementation_extension 
+				file_name := clone (directory_name)
+				file_name.extend (a_class_name.as_lower + ".e")
+				
 					-- Retrieve the template for a class file to generate.
 				if system_status.is_wizard_system then
 					create window_template.make_from_string (visual_studio_information.wizard_installation_path + "\wizards\build")
@@ -321,7 +370,7 @@ feature {NONE} -- Implementation
 			
 					-- We must now perform the generation into `class_text'.
 					-- First replace the name of the class
-				set_class_name (system_status.current_project_settings.main_window_class_name + class_implementation_extension)
+				set_class_name (a_class_name)
 
 				-- Add code which implements `show' if necessary, when using EV_WINDOW
 				-- as client. Also export `initialize' as necessary. If client, then it
@@ -372,6 +421,7 @@ feature {NONE} -- Implementation
 				not project_settings.attributes_local then
 					remove_line_containing (local_tag, class_text)
 				end
+			
 				if not project_settings.attributes_local and (not document_info.fonts_set.is_empty
 					or not document_info.pixmaps_set.is_empty) then
 					add_generated_string (class_text, "local", local_tag)
@@ -382,7 +432,7 @@ feature {NONE} -- Implementation
 				add_generated_string (class_text, set_string, set_tag)
 
 				if project_settings.attributes_local then
-					add_generated_string (class_text, local_string, local_tag)
+					add_generated_string (class_text, "local" + local_string, local_tag)
 					class_text.replace_substring_all (attribute_tag + "%N", "")
 				else
 					add_generated_string (class_text, local_string, attribute_tag)
@@ -419,21 +469,29 @@ feature {NONE} -- Implementation
 				document_info.reset_after_generation
 
 					-- Store `class_text'.				
-				window_file_name := clone (generated_path)
-				window_file_name.extend (system_status.current_project_settings.main_window_class_name.as_lower + class_implementation_extension.as_lower + eiffel_class_extension)
 				create window_output_file.make_open_write (file_name)
 				window_output_file.start
 				window_output_file.putstring (class_text)
 				window_output_file.close
 			end
 			
-	build_main_window is
+	build_main_window (directory_name: FILE_NAME) is
 			-- Generate interface of our window.
 		local
 			window_template_file, window_output_file: PLAIN_TEXT_FILE
 			window_file_name, window_template: FILE_NAME
 			temp_string: STRING
+			file_name: FILE_NAME
+			a_class_name: STRING
 		do
+			check
+				document_info_not_void: document_info /= Void
+				name_not_void: document_info.name /= Void
+			end
+			file_name := clone (directory_name)
+			a_class_name := document_info.name.as_upper
+			file_name.extend (a_class_name.as_lower + ".e")
+			
 				-- Retrieve the template for a class file to generate.
 			if system_status.is_wizard_system then
 				create window_template.make_from_string (visual_studio_information.wizard_installation_path + "\wizards\build")
@@ -451,9 +509,9 @@ feature {NONE} -- Implementation
 		
 				-- We must now perform the generation into `class_text'.
 				-- First replace the name of the class
-			set_class_name (system_status.current_project_settings.main_window_class_name)
+			set_class_name (a_class_name)
 			
-			temp_string := system_status.current_project_settings.main_window_class_name.as_upper + class_implementation_extension
+			temp_string := a_class_name + Class_implementation_extension
 			if project_settings.client_of_window then
 					-- Add redefinition of `default_create' if we are client.
 				temp_string := temp_string + default_create_redefinition
@@ -470,9 +528,7 @@ feature {NONE} -- Implementation
 			add_generated_string (class_text, event_implementation_string, event_declaration_tag)
 			
 				-- Store `class_text'.				
-			window_file_name := clone (generated_path)
-			window_file_name.extend (system_status.current_project_settings.main_window_class_name.as_lower + eiffel_class_extension)
-			create window_output_file.make (window_file_name)
+			create window_output_file.make (file_name)
 			if not window_output_file.exists then
 				window_output_file.open_write
 				window_output_file.start
@@ -532,6 +588,7 @@ feature {NONE} -- Implementation
 				current_type := element.attribute_by_name (type_string).value.to_utf8
 				info.set_type (current_type)
 			end
+	
 			from
 				element.start
 			until
@@ -543,24 +600,15 @@ feature {NONE} -- Implementation
 					if current_name.is_equal (Item_string) then
 						prepass_xml (current_element, info.new_child, depth + 1)
 					else
-						if current_name.is_equal (Internal_properties_string) and depth > 1 then
+						if current_name.is_equal (Internal_properties_string) then
 							full_information := get_unique_full_info (current_element)
 							element_info := full_information @ (name_string)
 							check
 								name_exists: element_info /= Void
 							end
-								-- We must assign an empty string if we are a window,
-								-- as the name is not required, as any settings are
-								-- applied to the window without requiring the window to
-								-- be named. Look at a generated code example.
+							info.set_name (element_info.data)
 							if current_type.is_equal (Ev_titled_window_string) then
-								if System_status.current_project_settings.client_of_window then
-									info.set_name (Client_window_string)
-								else
-									info.set_name ("")
-								end
-							else
-								info.set_name (element_info.data)
+								info.set_as_root_object	
 							end
 							element_info := full_information @ (id_string)
 							info.set_id (element_info.data.to_integer)
@@ -593,7 +641,6 @@ feature {NONE} -- Implementation
 				element.forth
 			end
 		end
-		
 
 	generate_declarations is
 			-- With information in `element', generate code which includes the
@@ -613,11 +660,11 @@ feature {NONE} -- Implementation
 					-- in a client based system. This has a special attribute clauses added in the
 					-- file, so we do not add it in the same fashion as other attributes.
 					if system_status.current_project_settings.grouped_locals then
-						add_local_on_grouped_line (generated_info.type, generated_info.name)
+						add_local_on_grouped_line (generated_info)--generated_info.type, generated_info.name)
 					else
-						add_local_on_single_line (generated_info.type, generated_info.name)
+						add_local_on_single_line (generated_info)--generated_info.type, generated_info.name)
 					end
-					create_local (generated_info.name)
+					create_local (generated_info)--generated_info.name)
 				end
 				all_ids.forth
 			end
@@ -675,6 +722,7 @@ feature {NONE} -- Implementation
 			gb_ev_any: GB_EV_ANY
 			generated_info: GB_GENERATED_INFO
 			supported_types: ARRAYED_LIST [STRING]
+			temp_set: STRING
 		do
 			from
 				all_ids.start
@@ -695,8 +743,18 @@ feature {NONE} -- Implementation
 						check
 							new_instance_exists: gb_ev_any /= Void
 						end
-						
-						add_set (gb_ev_any.generate_code (generated_info.supported_type_elements @ (supported_types.index), generated_info))
+					temp_set := gb_ev_any.generate_code (generated_info.supported_type_elements @ (supported_types.index), generated_info)
+						-- We must handle a root object as a special case, as there
+						-- is no need for a dot call, unless we are using the window as a client.
+					if generated_info.is_root_object then
+						temp_set := temp_set.substring (temp_set.index_of ('.', 1) + 1, temp_set.count)
+						if project_settings.client_of_window and not temp_set.is_empty then
+							temp_set := Client_window_string + "." + temp_set
+						end
+					end
+					if not temp_set.is_empty then
+						add_set (temp_set)	
+					end
 					supported_types.forth
 				end
 
@@ -735,14 +793,17 @@ feature {NONE} -- Implementation
 					check
 						action_sequence_not_void: action_sequence /= Void
 					end
-						-- If we are generating an event for an window, then there is no attribute name
-						-- generated.
-					if generated_info.name.is_empty then --type.is_equal (Ev_titled_window_string) then
+							-- We must handle a root object as a special case, as there
+						-- is no need for a dot call, unless we are using the window as a client.
+					if generated_info.is_root_object then
 						local_name := ""
+						if project_settings.client_of_window then
+							local_name := Client_window_string + "."
+						end
 					else
 						local_name := generated_info.name + "."
 					end
-						
+
 						-- Adjust event names that have been renamed in Vision2 interface
 					renamed_action_sequence_name := modified_action_sequence_name (generated_info.type, action_sequence_info)
 									
@@ -810,7 +871,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_local_on_single_line (local_type, name: STRING) is
+	add_local_on_single_line (generated_info: GB_GENERATED_INFO) is
 			-- Add code representation of new local named `name' of type
 			-- `local_type' to `local_string'.
 			-- Each new local is placed on an individual line. e.g.
@@ -818,28 +879,33 @@ feature {NONE} -- Implementation
 			-- button2: EV_BUTTON
 		local	
 			temp_string,local_string_start, indent_string: STRING
+			local_type, name: STRING
 		do
-				-- Need to generate slightly different code dependent
-				-- on whether the atrributes are local or not.
-			if project_settings.attributes_local then
-				indent_string := indent
-				local_string_start := "local " + indent
-			else
-				indent_string := indent_less_two
-				local_string_start := "" + indent_less_two
+			if not generated_info.is_root_object then
+				local_type := generated_info.type
+				name := generated_info.name
+					-- Need to generate slightly different code dependent
+					-- on whether the atrributes are local or not.
+				if project_settings.attributes_local then
+					indent_string := indent
+					local_string_start := "local " + indent
+				else
+					indent_string := indent_less_two
+					local_string_start := "" + indent_less_two
+				end
+				
+				if local_string = Void then
+					local_string := local_string_start
+					temp_string := name + ": " + local_type
+				else
+					temp_string := indent_string + name + ": " + local_type
+				end
+				
+				local_string := local_string + temp_string
 			end
-			
-			if local_string = Void then
-				local_string := local_string_start
-				temp_string := name + ": " + local_type
-			else
-				temp_string := indent_string + name + ": " + local_type
-			end
-			
-			local_string := local_string + temp_string
 		end
 		
-	add_local_on_grouped_line (local_type, name: STRING) is
+	add_local_on_grouped_line (generated_info: GB_GENERATED_INFO) is--local_type, name: STRING) is
 			-- Add code representation of new local named `name' of type
 			-- `local_type' to `local_string'.
 			-- Each new local will be grouped with other locals of same type. e.g.
@@ -848,66 +914,71 @@ feature {NONE} -- Implementation
 			temp_string, local_string_start, indent_string: STRING
 			index_of_type, search_counter: INTEGER
 			found_correctly: BOOLEAN
+			local_type, name: STRING
 		do
-				-- Need to generate slightly different code dependent
-				-- on whether the atrributes are local or not.
-			if project_settings.attributes_local then
-				indent_string := indent
-				local_string_start := "local " + indent
-			else
-				indent_string := indent_less_two
-				local_string_start := "" + indent_less_two
-			end
-			
-			if local_string = Void then
-				local_string := local_string_start + name + ": " + local_type
-			else
-				from
-					search_counter := 1
-				until
-					found_correctly or search_counter > local_string.count or search_counter = 0
-				loop
-					index_of_type := local_string.substring_index (local_type, search_counter)
-					
-						-- Notes on the first `if'.
-						-- The first check checks that we have found the index, and that the folowing character is a new line character.
-						-- This handles the case where the string contains EV_MENU_ITEM and we are searching for EV_MENU, as this will fail on
-						-- the new line character check.
-						-- The second check ignores the new line character if we are at the last position in `local_string'.
-					if (index_of_type + local_type.count <= local_string.count and then local_string @ (index_of_type + local_type.count) = '%N') or
-						(index_of_type + local_type.count - 1  = local_string.count) then
-						found_correctly := True
-						-- Otherwise, continue searching.
-					elseif index_of_type /= 0 then
-						search_counter := index_of_type + 1
-						-- The string was not found, so we set a condition to exit the loop.
-					elseif index_of_type = 0 then
-						search_counter := 0
-					end
-				end
-				if index_of_type > 0 then
-					local_string.insert_string (", " + name, index_of_type - 2)
-					from
-						search_counter := index_of_type
-						found_correctly := False
-					until
-						search_counter = index_of_type - 80 or found_correctly or
-						search_counter = 0
-					loop
-						if (local_string @ search_counter) = '%N' then
-							found_correctly := True
-						end
-						search_counter := search_counter - 1
-					end
-					if not found_correctly then
-						local_string.insert_string (indent_string, index_of_type)
-					end
+			if not generated_info.is_root_object then
+				local_type := generated_info.type
+				name := generated_info.name
+				
+					-- Need to generate slightly different code dependent
+					-- on whether the atrributes are local or not.
+				if project_settings.attributes_local then
+					indent_string := indent
+					local_string_start := "local " + indent
 				else
-					temp_string := indent_string + name + ": " + local_type
-					local_string := local_string + temp_string
+					indent_string := indent_less_two
+					local_string_start := "" + indent_less_two
 				end
-			end
-			
+				
+				if local_string = Void then
+					local_string := local_string_start + name + ": " + local_type
+				else
+					from
+						search_counter := 1
+					until
+						found_correctly or search_counter > local_string.count or search_counter = 0
+					loop
+						index_of_type := local_string.substring_index (local_type, search_counter)
+						
+							-- Notes on the first `if'.
+							-- The first check checks that we have found the index, and that the folowing character is a new line character.
+							-- This handles the case where the string contains EV_MENU_ITEM and we are searching for EV_MENU, as this will fail on
+							-- the new line character check.
+							-- The second check ignores the new line character if we are at the last position in `local_string'.
+						if (index_of_type + local_type.count <= local_string.count and then local_string @ (index_of_type + local_type.count) = '%N') or
+							(index_of_type + local_type.count - 1  = local_string.count) then
+							found_correctly := True
+							-- Otherwise, continue searching.
+						elseif index_of_type /= 0 then
+							search_counter := index_of_type + 1
+							-- The string was not found, so we set a condition to exit the loop.
+						elseif index_of_type = 0 then
+							search_counter := 0
+						end
+					end
+					if index_of_type > 0 then
+						local_string.insert_string (", " + name, index_of_type - 2)
+						from
+							search_counter := index_of_type
+							found_correctly := False
+						until
+							search_counter = index_of_type - 80 or found_correctly or
+							search_counter = 0
+						loop
+							if (local_string @ search_counter) = '%N' then
+								found_correctly := True
+							end
+							search_counter := search_counter - 1
+						end
+						if not found_correctly then
+							local_string.insert_string (indent_string, index_of_type)
+						end
+					else
+						temp_string := indent_string + name + ": " + local_type
+						local_string := local_string + temp_string
+					end
+				end
+			end			
 		end
 		
 	remove_line_containing (string: STRING; body: STRING) is
@@ -926,20 +997,20 @@ feature {NONE} -- Implementation
 			tab_index := temp_string.last_index_of ('%N', temp_string.count)
 			body.remove_substring (tab_index + 1, next_index)--index, next_index)
 		end
-		
-		
-		
-	create_local (name: STRING) is
-			-- Add code representation of the creation of local `name'
+
+	create_local (generated_info: GB_GENERATED_INFO) is
+			-- Add code representation of the creation of local based on `generated_info'
 			-- to `create_string'.
 		local
 			temp_string: STRING
 		do
-			temp_string := indent + "create " + name
-			if create_string = Void then
-				create_string := create_widgets_comment + temp_string
-			else
-				create_string := create_string + temp_string
+			if not generated_info.is_root_object then
+				temp_string := indent + Create_command_string + generated_info.name
+				if create_string = Void then
+					create_string := create_widgets_comment + temp_string
+				else
+					create_string := create_string + temp_string
+				end
 			end
 		end
 		

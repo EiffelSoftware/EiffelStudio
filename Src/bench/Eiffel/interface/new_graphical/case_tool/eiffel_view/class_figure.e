@@ -50,6 +50,11 @@ feature {NONE} -- Initialization
 			pebble_function := agent on_pebble_request
 			model.needed_on_diagram_changed_actions.extend (agent on_needed_on_diagram_changed)
 		end
+		
+feature -- Status report
+
+	is_faded: BOOLEAN
+			-- Is `Current' faded out?
 
 feature -- Access
 
@@ -98,10 +103,38 @@ feature -- Element change
 			end
 		end
 		
+	fade_out is
+			-- Fade out `Current'.
+		deferred
+		ensure
+			is_faded: is_faded
+		end
+		
+	fade_in is
+			-- Fade in `Current'.
+		deferred	
+		ensure
+			not_is_faded: not is_faded
+		end
+		
+	update_fade is
+			-- Fade out if `is_cluster_above'.
+		do
+			if is_cluster_above then
+				if not is_faded then
+					fade_out
+				end
+			else
+				if is_faded then
+					fade_in
+				end
+			end
+		end
+
 feature {EG_FIGURE_WORLD} -- Element change
 
 	add_link (a_link: EG_LINK_FIGURE) is
-			-- add `a_link' to `links'.
+			-- Add `a_link' to `links'.
 		local
 			l_cluster: EG_CLUSTER_FIGURE
 			cs_link: EIFFEL_CLIENT_SUPPLIER_FIGURE
@@ -492,24 +525,14 @@ feature {NONE} -- Implementation (move)
 		local
 			offset_x, offset_y: INTEGER
 			l_selected_figures: LIST [EG_FIGURE]
-			ce: EB_CONTEXT_EDITOR
 		do
-			ce := world.context_editor
-			if world.selected_figures.is_empty then
-				world.context_editor.history.register_named_undoable (
-						Interface_names.t_Diagram_move_class_cmd (model.name),
-						[<<agent set_port_position (port_x, port_y), agent ce.restart_force_directed, agent apply_right_angles_if_needed>>],
-						[<<agent set_port_position (saved_x, saved_y), agent ce.restart_force_directed, agent apply_right_angles_if_needed>>])
-			else
-				l_selected_figures := world.selected_figures.twin
-				l_selected_figures.prune_all (Current)
-				offset_x := port_x - saved_x
-				offset_y := port_y - saved_y
-				world.context_editor.history.register_named_undoable (
-					interface_names.t_diagram_move_class_cmd (model.name),
-					[<<agent set_port_position (port_x, port_y), agent move_figures_for (l_selected_figures, offset_x, offset_y), agent ce.restart_force_directed>>],                       
-					[<<agent set_port_position (saved_x, saved_y), agent move_figures_for (l_selected_figures, -offset_x, -offset_y), agent ce.restart_force_directed>>])
-			end
+			l_selected_figures := world.selected_figures.twin
+			offset_x := port_x - saved_x
+			offset_y := port_y - saved_y
+			world.context_editor.history.register_named_undoable (
+				interface_names.t_diagram_move_class_cmd (model.name),
+				agent move_figures_for (l_selected_figures, offset_x, offset_y),                       
+				agent move_figures_for (l_selected_figures, -offset_x, -offset_y))
 			if world.context_editor.is_force_directed_used then
 				set_is_fixed (True)
 			end
@@ -522,6 +545,7 @@ feature {NONE} -- Implementation (move)
 		local
 			l_item: EG_FIGURE
 			l_linkable: EG_LINKABLE_FIGURE
+			l_class: EIFFEL_CLASS_FIGURE
 		do
 			from
 				figures.start
@@ -534,11 +558,13 @@ feature {NONE} -- Implementation (move)
 				if l_linkable /= Void then
 					l_linkable.set_is_fixed (True)
 				end
+				l_class ?= l_item
 				figures.forth
 			end
 			if world.is_right_angles then
 				world.apply_right_angles
 			end
+			world.context_editor.restart_force_directed
 		end
 		
 	on_move (ax, ay: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
@@ -555,7 +581,7 @@ feature {NONE} -- Implementation (move)
 				world.context_editor.force_directed_layout.set_center (port_x, port_y)
 			end
 		end
-		
+
 	on_handle_start is
 			-- User started to move `Current'.
 		do
@@ -571,12 +597,16 @@ feature {NONE} -- Implementation (move)
 			set_is_fixed (was_fixed)
 		end
 		
-	apply_right_angles_if_needed is
-			-- Apply right angles to world if `is_right_angles'.
+	faded_color (a_color: EV_COLOR): EV_COLOR is
+			-- Return brighter color then `a_color'
+		require
+			a_color_exists: a_color /= Void
 		do
-			if world.is_right_angles then
-				world.apply_right_angles
-			end
+			create Result.make_with_rgb ((a_color.red - (a_color.red / 2)).max (0.0), 
+										 (a_color.green - (a_color.green / 2)).max (0.0),
+										 (a_color.blue - (a_color.blue / 2)).max (0.0))
+		ensure
+			Result_exists: Result /= Void
 		end
 
 end -- class EIFFEL_CLASS_FIGURE

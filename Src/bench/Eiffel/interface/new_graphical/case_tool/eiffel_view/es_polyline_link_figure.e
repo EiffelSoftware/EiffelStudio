@@ -242,10 +242,10 @@ feature -- Element change
 					source_y = target_y then
 						reset
 				else
-					sbbox := source.bounding_box
+					sbbox := source.size
 					source_top := sbbox.top
 					source_bottom := sbbox.bottom
-					tbbox := target.bounding_box
+					tbbox := target.size
 					target_top := tbbox.top
 					target_bottom := tbbox.bottom
 					min_dist := line.arrow_size * 3

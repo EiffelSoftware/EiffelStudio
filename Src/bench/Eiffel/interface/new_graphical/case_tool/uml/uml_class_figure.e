@@ -117,7 +117,7 @@ feature -- Access
 	size: EV_RECTANGLE is
 			-- Size of `Current'.
 		do
-			Result := rectangle.bounding_box
+			create Result.make (rectangle.point_a_x, rectangle.point_a_y, rectangle.width, rectangle.width)
 		end
 		
 	height: INTEGER is
@@ -220,6 +220,24 @@ feature -- Element change
 				end
 			end
 			p.set_precise (new_x, new_y)
+		end
+		
+	fade_in is
+			-- Fade out `Current'.
+		do
+			if uml_class_fill_color /= Void then
+				rectangle.set_background_color (uml_class_fill_color)
+			end
+			is_faded := False
+		end
+		
+	fade_out is
+			-- Fade in `Current'.
+		do
+			if uml_class_fill_color /= Void then
+				rectangle.set_background_color (faded_color (uml_class_fill_color))
+			end
+			is_faded := True
 		end
 		
 feature -- Store/Retrive
@@ -444,6 +462,7 @@ feature {FEATURE_SECTION_VIEW} -- Expand/Collapse section
 			if world.is_right_angles then
 				world.apply_right_angles
 			end
+--			update_fade
 		end
 		
 	has_section (fsv: FEATURE_SECTION_VIEW): BOOLEAN is

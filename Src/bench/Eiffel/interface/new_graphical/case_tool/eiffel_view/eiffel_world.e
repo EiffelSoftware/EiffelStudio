@@ -194,6 +194,9 @@ feature -- Element change.
 				update_statistic
 			end
 			Precursor {EG_FIGURE_WORLD}
+			if is_cluster_shown then
+				update_fade
+			end
 		end
 
 	scale (a_scale: DOUBLE) is
@@ -321,15 +324,33 @@ feature -- Element change.
 		do
 			is_cluster_shown := True
 			set_is_cluster_shown (True)
+			update_fade
 		ensure
 			is_cluster_shown: is_cluster_shown
 		end
 	
 	hide_clusters is
 			-- Hide cluster figures.
+		local
+			l_c_fig: EIFFEL_CLASS_FIGURE
+			l_linkables: like classes
+			i, nb: INTEGER
 		do
 			is_cluster_shown := False
 			set_is_cluster_shown (False)
+			from
+				l_linkables := classes
+				i := 1
+				nb := l_linkables.count
+			until
+				i > nb
+			loop
+				l_c_fig ?= l_linkables.i_th (i)
+				if l_c_fig /= Void then
+					l_c_fig.fade_in
+				end
+				i := i + 1
+			end
 		ensure
 			not_is_cluster_shown: not is_cluster_shown
 		end
@@ -1356,9 +1377,9 @@ feature {NONE} -- Implementation
 							l_linkable.set_is_fixed (True)
 						end
 					end
-					if is_right_angles and not context_editor.is_force_directed_used then				
-						e_c_fig ?= l_item
-						if e_c_fig /= Void then
+					e_c_fig ?= l_item
+					if e_c_fig /= Void then	
+						if is_right_angles and not context_editor.is_force_directed_used then
 							e_c_fig.apply_right_angles
 						end
 					end
@@ -1384,6 +1405,28 @@ feature {NONE} -- Implementation
 				if lpd.value < lpd.range.upper then
 					lpd.set_value (lpd.value + 1)
 				end
+			end
+		end
+		
+	update_fade is
+			-- Fade out classes with cluster on top fade in otherwise.
+		local
+			l_c_fig: EIFFEL_CLASS_FIGURE
+			l_linkables: like classes
+			i, nb: INTEGER
+		do
+			from
+				l_linkables := classes
+				i := 1
+				nb := l_linkables.count
+			until
+				i > nb
+			loop
+				l_c_fig ?= l_linkables.i_th (i)
+				if l_c_fig /= Void then
+					l_c_fig.update_fade
+				end
+				i := i + 1
 			end
 		end
 

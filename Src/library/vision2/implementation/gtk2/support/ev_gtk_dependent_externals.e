@@ -8,6 +8,32 @@ class
 
 feature -- Externals
 
+	frozen g_object_set (a_object: POINTER; a_property: POINTER; arg1: POINTER; arg2: POINTER) is
+		external
+			"C signature (gpointer, gchar*, gpointer, gpointer) use <gtk/gtk.h>"
+		end
+		
+	frozen g_object_set_string (a_object: POINTER; a_property: POINTER; string_arg: POINTER) is
+		external
+			"C signature (gpointer, gchar*, gchar*) use <gtk/gtk.h>"
+		alias
+			"g_object_set"
+		end
+
+	frozen g_object_set_integer (a_object: POINTER; a_property: POINTER; int_arg: INTEGER) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"g_object_set((gpointer) $a_object, (gchar*) $a_property, $int_arg)"
+		end
+		
+	frozen g_object_set_boolean (a_object: POINTER; a_property: POINTER; bool_arg: BOOLEAN) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"g_object_set((gpointer) $a_object, (gchar*) $a_property, $bool_arg)"
+		end
+
 	frozen signal_disconnect (a_object: POINTER; a_handler_id: INTEGER) is
 		external
 			"C signature (gpointer, gulong) use <gtk/gtk.h>"
@@ -209,6 +235,31 @@ feature -- Externals
 	Gtk_wrap_char_enum: INTEGER is 1
 	Gtk_wrap_word_enum: INTEGER is 2
 	
+	frozen gtk_text_tag_new (a_name: POINTER): POINTER is
+		external
+			"C signature (gchar*): GtkTextTag* use <gtk/gtk.h>"
+		end
+
+	frozen gtk_text_buffer_apply_tag (a_buffer: POINTER; a_tag: POINTER; a_start: POINTER; a_end: POINTER) is
+		external
+			"C signature (GtkTextBuffer*, GtkTextTag*, GtkTextIter*, GtkTextIter*) use <gtk/gtk.h>"
+		end
+
+	frozen gtk_text_buffer_get_tag_table (a_buffer: POINTER): POINTER is
+		external
+			"C signature (GtkTextBuffer*): GtkTextTagTable* use <gtk/gtk.h>"
+		end
+		
+	frozen gtk_text_tag_table_add (a_table: POINTER; a_tag: POINTER) is
+		external
+			"C signature (GtkTextTagTable*, GtkTextTag*)"
+		end
+
+	frozen gtk_text_buffer_remove_all_tags (a_buffer: POINTER; a_start: POINTER; a_end: POINTER) is
+		external
+			"C signature (GtkTextBuffer*, GtkTextIter*, GtkTextIter*) use <gtk/gtk.h>"
+		end
+
 	frozen gtk_text_buffer_get_iter_at_line (a_text_buffer: POINTER; a_text_iter: POINTER; a_line_number: INTEGER) is
 		external
 			"C signature (GtkTextBuffer*, GtkTextIter*, gint) use <gtk/gtk.h>"

@@ -53,7 +53,7 @@ feature -- C code generation
 					else
 						written_class := System.class_of_id (feat.written_in);
 					end
-					written_type := written_class.meta_type (a_class_type.type).associated_class_type
+					written_type := written_class.meta_type (a_class_type)
 					routine_name := Encoder.feature_name (written_type.static_type_id, feat.body_index);
 debug ("CECIL")
     io.put_string ("Generating entry for feature: ");

@@ -232,7 +232,7 @@ feature -- Retrieval
 
 				if file.exists (index_path) then
 					create xml_reader.make_xmltextreader_10 (index_path)
-					xml_reader.set_Whitespace_Handling (white_space_handling.none)
+					xml_reader.set_Whitespace_Handling (white_space_handling.auto_dual)
 					xml_reader.Read_Start_Element_String (Assemblies_Element)
 					last_read_successful := True
 					from					

@@ -456,7 +456,7 @@ feature -- Element change
 			new_name_exists: new_name /= Void
 			new_name_not_empty: not new_name.is_empty
 		do
-			root_ast.set_system_name (new_id_sd (new_name, False))
+			root_ast.set_system_name (new_id_sd (new_name, true))
 		end
 		
 	set_root_class_name (new_name: STRING) is

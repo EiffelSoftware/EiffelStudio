@@ -99,8 +99,7 @@ feature
 			ext_name: ANY
 		do
 			ext_name := MdialogTitle.to_c;
-			Result := m_wm_shell_get_string (d_xt_parent (screen_object), 
-						$ext_name)
+			Result := d_from_xm_string (screen_object, $ext_name)
 		end;
 
 	set_title (a_title: STRING) is
@@ -112,9 +111,7 @@ feature
 		do
 			ext_name_title := a_title.to_c;
 			ext_name := MdialogTitle.to_c;
-			m_wm_shell_set_string (d_xt_parent(screen_object), 
-					$ext_name_title,
-					$ext_name)
+			d_to_left_xm_string (screen_object, ext_name_title, ext_name)
 		end;
 
 feature {NONE}
@@ -192,7 +189,7 @@ feature
 	raise is
 			-- Raise the shell to the top of the stacking order.
 		local
-            window, display_pointer, void_pointer: POINTER
+			window, display_pointer, void_pointer: POINTER
 		do
 			window := d_xt_window (d_xt_parent (screen_object));
 			if window /= void_pointer then
@@ -248,6 +245,19 @@ feature
 	action_target: POINTER;
 
 feature {NONE} -- External features
+
+	d_to_left_xm_string (scr_obj: POINTER; name1, name2: ANY) is
+		external
+			"C"
+		alias
+			"to_left_xm_string"
+		end;
+	d_from_xm_string (scr_obj: POINTER; name1: ANY): STRING is
+		external
+			"C"
+		alias
+			"from_xm_string"
+		end;
 
 	d_set_boolean (value1: POINTER; value2: BOOLEAN; s_name: ANY) is
 		external

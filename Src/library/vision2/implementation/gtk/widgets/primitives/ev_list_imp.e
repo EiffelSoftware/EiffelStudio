@@ -81,11 +81,13 @@ feature -- Status setting
 			-- Ensure item `an_index' is visible in `Current'.
 		local
 			an_item_index: INTEGER
+			item_imp: EV_LIST_ITEM_IMP
 		do
 			an_item_index := index_of (an_item, 1)
+			item_imp ?= an_item.implementation
 			
 				-- Show the item at position `item_index'
-		--	C.gtk_clist_moveto (list_widget, an_item_index, 0, 0.0, 1.0)
+			C.gtk_adjustment_set_value (vertical_adjustment_struct, (an_item_index - 1) * (App_implementation.default_font_ascent + App_implementation.default_font_descent + 2))
 			--| FIXME IEK This needs to be properly implement
 		end
 
@@ -194,6 +196,12 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 		end
 	
 feature {NONE} -- Implementation
+
+	vertical_adjustment_struct: POINTER is
+			-- Pointer to vertical adjustment struct use in the scrollbar.
+		do
+			Result := C.gtk_range_struct_adjustment (C.gtk_scrolled_window_struct_vscrollbar (c_object))
+		end
 
 	select_callback (n_args: INTEGER; args: POINTER) is
 			-- Called when a list item is selected.

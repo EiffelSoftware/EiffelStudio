@@ -100,8 +100,12 @@ feature
 		do
 			!! a_command1.make ( scroll_list1,scroll_list2,TRUE)
 			arrow_b1.add_activate_action (a_command1, Void )
+			scroll_list1.add_default_action (a_command1, Void )
+
 			!! a_command1.make ( scroll_list2,scroll_list1, FALSE)
 			arrow_b2.add_activate_action  (a_command1, Void )
+			scroll_list2.add_default_action (a_command1, Void )
+
 			! EXIT_REVERSE ! a_command2.make ( Current)
 			exit_b.add_activate_action (a_command2, Void )
 			! GENERATE_ALL_REVERSE ! a_command2.make ( Current )

@@ -20,7 +20,7 @@ feature -- Access
 			ct: CONSUMED_TYPE
 			crt: CONSUMED_REFERENCED_TYPE
 			fields: ARRAY [CONSUMED_FIELD] 
-			methods: ARRAY [CONSUMED_METHOD]
+			procedures: ARRAY [CONSUMED_PROCEDURE]
 			functions: ARRAY [CONSUMED_FUNCTION]
 			constructors: ARRAY [CONSUMED_CONSTRUCTOR]
 			found: BOOLEAN
@@ -102,15 +102,15 @@ feature -- Access
 						end
 					end
 					if not found then
-						methods := ct.methods
-						if methods /= Void then
+						procedures := ct.procedures
+						if procedures /= Void then
 							from
 								i := 1
 							until
-								i > methods.count or found
+								i > procedures.count or found
 							loop
-								if methods.item (i).dotnet_name.is_equal (dotnet_name) then
-									cargs := methods.item (i).arguments
+								if procedures.item (i).dotnet_name.is_equal (dotnet_name) then
+									cargs := procedures.item (i).arguments
 									if cargs.count = args.count then
 										from
 											j := 1
@@ -126,7 +126,7 @@ feature -- Access
 									end
 								end
 								if found then
-									Result := methods.item (i).eiffel_name
+									Result := procedures.item (i).eiffel_name
 								end
 								i := i + 1
 							end
@@ -165,16 +165,16 @@ feature -- Access
 						end
 					end
 					if not found then
-						methods := ct.methods
-						if methods /= Void then
+						procedures := ct.procedures
+						if procedures /= Void then
 							from
 								i := 1
 							until
-								i > methods.count or found
+								i > procedures.count or found
 							loop
-								found := methods.item (i).dotnet_name.is_equal (dotnet_name)
+								found := procedures.item (i).dotnet_name.is_equal (dotnet_name)
 								if found then
-									Result := methods.item (i).eiffel_name
+									Result := procedures.item (i).eiffel_name
 								end
 								i := i + 1
 							end

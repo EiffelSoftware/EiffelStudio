@@ -66,7 +66,7 @@ feature -- Initialization
 			horizontal_scrollbar.set_height (size);
 			add_expose_action (Current, Expose_action);
 			add_resize_action (Current, Resize_action);
-			--add_input_action (Current, Input_action);
+			set_action ("<GraphicsExpose>", Current, Graphic_expose_action);
 			add_key_press_action (Current, Key_action);
 			add_button_motion_action (1, Current, Press_action);
 			add_button_release_action (1, Current, Release_action);
@@ -197,6 +197,7 @@ feature -- Execution
 			-- Execute callbacks for drawing area.
 		local
 			expose_data: EXPOSE_DATA;
+			g_expose_data: MEL_GRAPHICS_EXPOSE_EVENT;
 			w, h: INTEGER;
 			generate_expose: BOOLEAN;
 			keysym: INTEGER;
@@ -205,6 +206,8 @@ feature -- Execution
 			button_data: MOTNOT_DATA;
 			x_incr, y_incr, value: INTEGER;
 			rel_x, rel_y: INTEGER;
+			coord: COORD_XY;
+			clip: CLIP;
 			app_context: MEL_APPLICATION_CONTEXT
 		do
 			if arg = Expose_action then
@@ -216,6 +219,17 @@ debug ("DRAWING")
 end
 				to_refresh.merge_clip (expose_data.clip);
 				if expose_data.exposes_to_come = 0 then
+					draw_text
+				end
+			elseif arg = Graphic_expose_action then
+					-- Expose action when area was obscured by another window
+				g_expose_data ?= last_callback_struct.event;
+				!! coord;
+				coord.set (g_expose_data.x - 15, g_expose_data.y - 15);
+				!! clip;
+				clip.set (coord, g_expose_data.width + 30, g_expose_data.height + 30);
+				to_refresh.merge_clip (clip);
+				if g_expose_data.count = 0 then
 					draw_text
 				end
 			elseif arg = Resize_action then
@@ -379,7 +393,7 @@ feature {NONE} -- Implementation
 	shown_called: BOOLEAN
 			-- Is shown called?
 
-	Key_action, Resize_action, Expose_action: ANY is
+	Key_action, Resize_action, Expose_action, Graphic_expose_action: ANY is
 			-- Actions constants
 		once
 			!! Result

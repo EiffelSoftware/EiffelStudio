@@ -187,6 +187,12 @@ feature {NONE} -- Type description
 					degree_output.put_degree_1 (class_c, j)
 					System.set_current_class (class_c)
 					j := j - 1
+
+					if (j \\ 500) = 0 then
+						feature {MEMORY}.full_collect
+						feature {MEMORY}.full_coalesce
+					end
+
 					from
 						not_is_external := not class_c.is_external
 						if not_is_external then
@@ -240,6 +246,12 @@ feature {NONE} -- Type description
 				if class_c /= Void and then not class_c.is_external then
 					degree_output.put_degree_minus_1 (class_c, j)
 					System.set_current_class (class_c)
+
+					if (j \\ 500) = 0 then
+						feature {MEMORY}.full_collect
+						feature {MEMORY}.full_coalesce
+					end
+
 					j := j - 1
 					from
 						types := class_c.types
@@ -290,6 +302,12 @@ feature {NONE} -- Type description
 				if class_c /= Void and then not class_c.is_external then
 					degree_output.put_degree_minus_2 (class_c, j)
 					System.set_current_class (class_c)
+
+					if (j \\ 500) = 0 then
+						feature {MEMORY}.full_collect
+						feature {MEMORY}.full_coalesce
+					end
+
 					j := j - 1
 					from
 						types := class_c.types

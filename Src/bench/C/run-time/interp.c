@@ -156,6 +156,7 @@ rt_private void irecursive_chkinv(int dtype, char *obj, struct stochunk *scur, s
 rt_private uint32 get_uint32(void);			/* Get an unsigned int32 */
 rt_private EIF_DOUBLE get_double(void);			/* Get a EIF_DOUBLE constant */
 rt_private long get_long(void);				/* Get a long constant */
+rt_private EIF_INTEGER_64 get_int64(void);		/* Get an INTEGER_64 constant */
 rt_private short get_short(void);				/* Get a short constant */
 rt_private short get_compound_id(char *obj, short dtype);			/* Get a compound type id */
 
@@ -2126,7 +2127,7 @@ rt_private void interpret(int flag, int where)
 #endif
 		last = iget();
 		last->type = SK_INT64;
-		last->it_int64 = (EIF_INTEGER_64) get_long();
+		last->it_int64 = get_int64();
 		break;
 
 	/*
@@ -5180,6 +5181,26 @@ rt_private long get_long(void)
 		*p++ = *IC++;
 	
 	return *(long *) &xlong;		/* Correctly aligned by union */
+}
+
+rt_private EIF_INTEGER_64 get_int64(void)
+{
+	/* Get long int stored at IC in byte code array. The value has been stored
+	 * correctly by the exchange driver between the workbench and the process.
+	 * The following should be highly portable--RAM.
+	 */
+	EIF_GET_CONTEXT
+	union {
+		char xtract[sizeof(EIF_INTEGER_64)];
+		EIF_INTEGER_64 value;
+	} xint64;
+	register1 char *p = (char *) &xint64;
+	register2 int i;
+
+	for (i = 0; i < sizeof(EIF_INTEGER_64); i++)
+		*p++ = *IC++;
+	
+	return *(EIF_INTEGER_64 *) &xint64;		/* Correctly aligned by union */
 }
 
 rt_private short get_short(void)

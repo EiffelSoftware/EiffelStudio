@@ -39,7 +39,8 @@ feature -- Miscellaneous
 
 	on_item_added (an_item: G) is
 			-- `an_item' has just been added.
-		obsolete "Use `on_item_added_at_instead'."
+		obsolete
+			"Use `on_item_added_at' instead."
 		require
 			an_item_not_void: an_item /= Void
 		do
@@ -47,7 +48,8 @@ feature -- Miscellaneous
 
 	on_item_removed (an_item: G) is
 			-- `an_item' has been removed.
-		obsolete "Use `on_item_remove_at_instead'."
+		obsolete
+			"Use `on_item_remove_at' instead'."
 		require
 			an_item_not_void: an_item /= Void
 		do
@@ -193,7 +195,6 @@ feature -- Element Change
 			
 			update_for_added (original_index + 1)
 			go_i_th (original_index)
-
 		end
 		
 	update_for_added (start_index: INTEGER) is

@@ -124,8 +124,8 @@ feature -- Basic operations
 		require
 			windows_not_void: new_window /= Void and existing_window /= Void
 		do
-			new_window.set_position (existing_window.x_position + existing_window.width - new_window.width,
-				existing_window.y_position + existing_window.height - new_window.height)
+			new_window.set_position ((existing_window.x_position + existing_window.width - new_window.width).max (0),
+				(existing_window.y_position + existing_window.height - new_window.height).max (0))
 			new_window.show
 			existing_window.hide
 		ensure

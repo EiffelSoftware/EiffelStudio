@@ -33,27 +33,27 @@ extern "C" {
 /* 
  * Functions declarations
  */
-RT_LNK EIF_BOOLEAN b_equal(char *a, char *b);	/* needed in interp.c */
-RT_LNK char *b_eout(char *bit);					/* Eiffel string for out representation of a bit */
-RT_LNK char *b_clone(char *bit);				/* Clones bit */
-RT_LNK void b_copy(char *a, char *b);			/* Copies bit */
-RT_LNK char *bmalloc(long int size);			/* Bit object creation */
-RT_LNK void b_put(char *bit, char value, int at);
-RT_LNK EIF_BOOLEAN b_item(char *bit, long int at);
-RT_LNK char *b_shift(char *bit, long int s);
-RT_LNK char *b_rotate(char *bit, long int s);
-RT_LNK char *b_and(char *a, char *b);
-RT_LNK char *b_implies(char *a, char *b);
-RT_LNK char *b_or(char *a, char *b);
-RT_LNK char *b_xor(char *a, char *b);
-RT_LNK char *b_not(char *a);
-RT_LNK char *b_out(char *bit);
-RT_LNK char *b_mirror(char *a);
+RT_LNK EIF_BOOLEAN b_equal(EIF_REFERENCE a, EIF_REFERENCE b);	/* needed in interp.c */
+RT_LNK EIF_REFERENCE b_eout(EIF_REFERENCE bit);					/* Eiffel string for out representation of a bit */
+RT_LNK EIF_REFERENCE b_clone(EIF_REFERENCE bit);				/* Clones bit */
+RT_LNK void b_copy(EIF_REFERENCE a, EIF_REFERENCE b);			/* Copies bit */
+RT_LNK EIF_REFERENCE bmalloc(long int size);			/* Bit object creation */
+RT_LNK void b_put(EIF_REFERENCE bit, char value, int at);
+RT_LNK EIF_BOOLEAN b_item(EIF_REFERENCE bit, long int at);
+RT_LNK EIF_REFERENCE b_shift(EIF_REFERENCE bit, long int s);
+RT_LNK EIF_REFERENCE b_rotate(EIF_REFERENCE bit, long int s);
+RT_LNK EIF_REFERENCE b_and(EIF_REFERENCE a, EIF_REFERENCE b);
+RT_LNK EIF_REFERENCE b_implies(EIF_REFERENCE a, EIF_REFERENCE b);
+RT_LNK EIF_REFERENCE b_or(EIF_REFERENCE a, EIF_REFERENCE b);
+RT_LNK EIF_REFERENCE b_xor(EIF_REFERENCE a, EIF_REFERENCE b);
+RT_LNK EIF_REFERENCE b_not(EIF_REFERENCE a);
+RT_LNK EIF_REFERENCE b_out(EIF_REFERENCE bit);
+RT_LNK EIF_REFERENCE b_mirror(EIF_REFERENCE a);
+RT_LNK long b_count(EIF_REFERENCE bit);
 
 #ifdef __cplusplus
 }
 #endif
 
-RT_LNK long b_count(char *bit);
 
 #endif

@@ -41,9 +41,10 @@ feature -- Access
 			Result.drop_actions.extend (~drop_breakable (?))
 			Result.drop_actions.extend (~drop_feature (?))
 			Result.drop_actions.extend (~drop_class (?))
-			Result.drop_actions.extend (~quick_refresh_on_class_drop)
-			Result.drop_actions.extend (~quick_refresh_on_brk_drop)
-			Result.select_actions.extend (window_manager~quick_refresh_all)
+--			Result.drop_actions.extend (~quick_refresh_on_class_drop)
+--			Result.drop_actions.extend (~quick_refresh_on_brk_drop)
+			Result.drop_actions.set_veto_pebble_function (~can_drop)
+--			Result.select_actions.extend (window_manager~quick_refresh_all)
 		end
 
 	menu_name: STRING is
@@ -142,6 +143,7 @@ feature -- Execution
 		do
 			Application.enable_all_breakpoints
 			output_manager.display_stop_points
+			Window_manager.quick_refresh_all
 		end
 
 feature {NONE} -- Implementation
@@ -163,7 +165,7 @@ feature {NONE} -- Implementation
 --| END FIXME
 		end
 
-	quick_refresh_on_class_drop (unused: CLASSI_STONE) is
+	quick_refresh_on_class_drop (unused: CLASSC_STONE) is
 			-- Quick refresh all windows.
 		do
 			window_manager.quick_refresh_all
@@ -173,6 +175,23 @@ feature {NONE} -- Implementation
 			-- Quick refresh all windows.
 		do
 			window_manager.quick_refresh_all
+		end
+
+	can_drop (st: ANY): BOOLEAN is
+			-- Can `st' be dropped onto `Current's toolbar buttons?
+		local
+			fst: FEATURE_STONE
+			cst: CLASSC_STONE
+		do
+			fst ?= st
+			if fst /= Void then
+				Result := fst.e_feature.is_debuggable
+			else
+				cst ?= st
+				if cst /= Void then
+					Result := cst.e_class.is_debuggable
+				end
+			end
 		end
 
 	is_fst_debuggable (fst: FEATURE_STONE): BOOLEAN is

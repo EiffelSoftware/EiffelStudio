@@ -42,6 +42,7 @@ feature -- Access
 			Result.drop_actions.extend (~drop_breakable (?))
 			Result.drop_actions.extend (~drop_feature (?))
 			Result.drop_actions.extend (~drop_class (?))
+			Result.drop_actions.set_veto_pebble_function (~can_drop)
 --			Result.drop_actions.extend (~quick_refresh_on_class_drop)
 --			Result.drop_actions.extend (~quick_refresh_on_brk_drop)
 --			Result.select_actions.extend (window_manager~quick_refresh_all)
@@ -75,11 +76,10 @@ feature -- Execution
 				if Application.error_in_bkpts then
 					create wd.make_with_text (Warning_messages.w_Feature_is_not_compiled)
 					wd.show_modal_to_window (window_manager.last_focused_development_window.window)
-				else
-						-- Update output tools
-					output_manager.display_stop_points
-					Window_manager.quick_refresh_all
 				end
+					-- Update output tools
+				output_manager.display_stop_points
+				Window_manager.quick_refresh_all
 			end
 		end
 
@@ -102,11 +102,10 @@ feature -- Update
 				if Application.error_in_bkpts then
 					create wd.make_with_text (Warning_messages.w_Feature_is_not_compiled)
 					wd.show_modal_to_window (window_manager.last_focused_development_window.window)
-				else
-						-- Update output tools
-					output_manager.display_stop_points
-					Window_manager.quick_refresh_all
 				end
+					-- Update output tools
+				output_manager.display_stop_points
+				Window_manager.quick_refresh_all
 			end
 		end
 
@@ -123,15 +122,14 @@ feature -- Update
 				if Application.error_in_bkpts then
 					create wd.make_with_text (Warning_messages.w_Feature_is_not_compiled)
 					wd.show_modal_to_window (window_manager.last_focused_development_window.window)
-				else
-						-- Update output tools
-					output_manager.display_stop_points
-					Window_manager.quick_refresh_all
 				end
+					-- Update output tools
+				output_manager.display_stop_points
+				Window_manager.quick_refresh_all
 			end
 		end
 
-	quick_refresh_on_class_drop (unused: CLASSI_STONE) is
+	quick_refresh_on_class_drop (unused: CLASSC_STONE) is
 			-- Quick refresh all windows.
 		do
 			window_manager.quick_refresh_all
@@ -156,10 +154,26 @@ feature -- Update
 				if Application.error_in_bkpts then
 					create wd.make_with_text (Warning_messages.w_Feature_is_not_compiled)
 					wd.show_modal_to_window (window_manager.last_focused_development_window.window)
-				else
-						-- Update output tools
-					output_manager.display_stop_points
-					Window_manager.quick_refresh_all
+				end
+					-- Update output tools
+				output_manager.display_stop_points
+				Window_manager.quick_refresh_all
+			end
+		end
+
+	can_drop (st: ANY): BOOLEAN is
+			-- Can `st' be dropped onto `Current's toolbar buttons?
+		local
+			fst: FEATURE_STONE
+			cst: CLASSC_STONE
+		do
+			fst ?= st
+			if fst /= Void then
+				Result := fst.e_feature.is_debuggable
+			else
+				cst ?= st
+				if cst /= Void then
+					Result := cst.e_class.is_debuggable
 				end
 			end
 		end

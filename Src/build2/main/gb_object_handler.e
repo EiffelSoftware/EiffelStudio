@@ -284,15 +284,60 @@ feature -- Basic operation
 		
 	object_contained_in_object_result: Boolean
 		-- Result of last call to `object_contained_in_object'.
-
-	add_root_object (an_object: GB_CELL_OBJECT) is
-			-- Add `an_object' to `objects'.
+		
+	add_initial_window is
+			-- Add a new window when there are no other contained.
+		require
+			window_selector_empty: window_selector.is_empty
+		local
+			window_object: GB_TITLED_WINDOW_OBJECT
 		do
-			objects.extend (an_object)
-		ensure
-			added_to_objects: objects.has (an_object)
+			window_object ?= build_object_from_string_and_assign_id ("EV_TITLED_WINDOW")
+			check
+				object_was_window: window_object /= Void
+			end
+			add_new_window (window_object)
+			window_selector.set_item_for_prebuilt_window (window_object)
 		end
 		
+	add_root_window: GB_TITLED_WINDOW_OBJECT is
+			-- Add a new root window and return the newly created object.
+			--| FIXME, this is a function with a side effect.
+		do
+			Result ?= build_object_from_string_and_assign_id ("EV_TITLED_WINDOW")
+			add_new_window (Result)
+			window_selector.set_item_for_prebuilt_window (Result)
+		ensure
+			result_not_void: Result /= Void
+		end
+		
+		
+	add_new_window (window_object: GB_TITLED_WINDOW_OBJECT) is
+			-- Perform necessary initialzation for new window,
+			-- `window_object'.
+		local
+			layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
+			titled_window: EV_TITLED_WINDOW
+			display_win: GB_DISPLAY_WINDOW
+			builder_win: GB_BUILDER_WINDOW
+		do
+			create layout_item.make (window_object)
+				-- We must only add the layout item if there is
+				-- no window currently displayed.
+			if layout_constructor.is_empty then
+				layout_constructor.add_root_item (layout_item)	
+			end
+			window_object.set_layout_item (layout_item)
+			window_object.build_drop_actions_for_layout_item
+			create display_win
+			titled_window ?= display_win
+			window_object.set_object (titled_window)
+			set_display_window (display_win)
+			create builder_win
+			set_builder_window (builder_win)
+			window_object.set_display_object (builder_win)
+		end
+
 	remove_object (an_object: GB_OBJECT) is
 			-- Remove `an_object' from `objects'.
 		do
@@ -309,7 +354,6 @@ feature -- Basic operation
 				-- As `Result' has just been built, we add it to `objects'.
 			add_object_to_objects (Result)
 		end
-		
 
 	build_object_from_string (a_text: STRING): GB_OBJECT is
 			-- Generate `Result' from `text'.
@@ -455,10 +499,10 @@ feature -- Basic operation
 				-- Wipe `deleted_objects'.
 			deleted_objects.wipe_out
 				-- Wipe out `objects' but restore the
-				-- first item, as it is the Window object,
-				-- and will not be re-built.
+			
 			objects.wipe_out
-			objects.extend (window_object)
+			
+			window_selector.wipe_out
 		end
 		
 	string_is_object_name (object_name: STRING; an_object: GB_OBJECT): BOOLEAN is
@@ -908,7 +952,7 @@ feature {GB_EV_WIDGET_EDITOR_CONSTRUCTOR} -- Implementation
 				
 				titled_window_object.update_objects
 				--load.rebuild_window (element)
-				load.build_window (element)
+				load.build_window (element, "")
 				
 				new_window := titled_window_object.object
 				new_builder_window ?= titled_window_object.display_object.child

@@ -34,7 +34,7 @@ OBJECTS =  \$(OBJS) \$(WOBJS)
 ########################################################################
 # New suffixes and associated building rules -- edit with care
 
-all:: libnet.a libwnet.a
+all:: libnet.a
 
 .c.o:
 	\$(CC) -c \$(CFLAGS) \$<
@@ -51,45 +51,7 @@ OBJS = \
 	network.o \
 	network_r.o
 
-WOBJS = \
-	wlocal.o \
-	wnetwork.o \
-	wnetwork_r.o
-
-wlocal.c: local.c
-	$(RM) wlocal.c
-	$(LN) local.c wlocal.c
-remove::
-	$(RM) wlocal.c
-
-wlocal.o: wlocal.c bitmask.h
-	$(CC) -c $(CFLAGS) -DWORKBENCH $*.c
-	$(RM) $*.c
-
-wnetwork.c: network.c
-	$(RM) wnetwork.c
-	$(LN) network.c wnetwork.c
-remove::
-	$(RM) wnetwork.c
-
-wnetwork.o: wnetwork.c bitmask.h
-	$(CC) -c $(CFLAGS) -DWORKBENCH $*.c
-	$(RM) $*.c
-
-wnetwork_r.c: network_r.c
-	$(RM) wnetwork_r.c
-	$(LN) network_r.c wnetwork_r.c
-remove::
-	$(RM) wnetwork_r.c
-
-wnetwork_r.o: wnetwork_r.c
-	$(CC) -c $(CFLAGS) -DWORKBENCH $*.c
-	$(RM) $*.c
-
-
 local_clean:: remove
-
-all:: libnet.a
 
 local_realclean::
 	$(RM) libnet.a
@@ -97,16 +59,6 @@ local_realclean::
 libnet.a: $(OBJS)
 	$(RM) $@
 	$(AR) $@ $(OBJS)
-	$(RANLIB) $@
-
-all:: libwnet.a
-
-local_realclean::
-	$(RM) libwnet.a
-
-libwnet.a: $(WOBJS)
-	$(RM) $@
-	$(AR) $@ $(WOBJS)
 	$(RANLIB) $@
 
 ########################################################################

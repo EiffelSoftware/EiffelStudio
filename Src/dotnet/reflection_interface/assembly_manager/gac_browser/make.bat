@@ -1,0 +1,1 @@
+csc /t:library /out:ISE.AssemblyManager.WindowsDirectoryExtractor.dll WindowsDirectoryExtractor.cs

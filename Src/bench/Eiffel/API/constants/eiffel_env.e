@@ -133,6 +133,7 @@ feature {NONE}
 		end;
 
 	tmp_directory: STRING is
+			-- Locate of the temporary directory
 		local
 			dir_name: DIRECTORY_NAME
 		once
@@ -147,4 +148,12 @@ feature {NONE}
 			end
 		end;
 
+	date_string (a_date: INTEGER): STRING is
+			-- String representation of `a_date'
+		external
+			"C"
+		alias
+			"eif_date_string"
+		end;
+			
 end -- class EIFFEL_ENV

@@ -325,7 +325,7 @@ feature -- Status report
 		require
 			opened: not is_closed
 		do
-			Result := internal_stream.get_length = internal_stream.get_position
+			Result := internal_end_of_file
 		end
 
 	exists: BOOLEAN is
@@ -1284,6 +1284,7 @@ feature -- Input
 			is_readable: file_readable
 		do
 			last_character := reader.read.to_character
+			internal_end_of_file := reader.peek = -1
 		end
 
 	read_integer, readint is
@@ -1302,6 +1303,7 @@ feature -- Input
 			is_readable: file_readable
 		do
 			create last_string.make_from_cil (reader.read_line)
+			internal_end_of_file := reader.peek = -1
 		end
 
 	read_stream, readstream (nb_char: INTEGER) is
@@ -1318,6 +1320,7 @@ feature -- Input
 			str_area := last_string.area.native_array
 			new_count := reader.read_character_array (str_area, 0, nb_char)
 			last_string.make_from_special (str_area)
+			internal_end_of_file := reader.peek = -1
 		end
 
 	read_word, readword is
@@ -1377,6 +1380,7 @@ feature -- Input
 			if ri /= -1 then
 				back
 			end
+			internal_end_of_file := reader.peek = -1
 		end
 
 feature -- Convenience
@@ -1402,6 +1406,9 @@ feature {FILE} -- Implementation
 
 	internal_stream: FILE_STREAM
 			-- File stream relative to `Current'
+
+	internal_end_of_file: BOOLEAN
+			-- Did last call to `reader.read' reach end of file?
 
 	reader: TEXT_READER is
 			-- Stream reader used to read in `Current' (if possible).

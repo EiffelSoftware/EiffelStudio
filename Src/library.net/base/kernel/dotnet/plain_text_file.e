@@ -252,6 +252,7 @@ feature -- Input
 			if sign then
 				last_double := - last_double
 			end
+			internal_end_of_file := reader.peek = -1
 		end
 
 feature {NONE} -- Implementation

@@ -67,7 +67,7 @@ feature -- Access
         	do
             		xr := other.x - x;
             		yr := other.y - y;
-            		Result := real_to_integer (sqrt(integer_to_real (xr * xr + yr	* yr)));
+            		Result := real_to_integer(sqrt(xr * xr + yr	* yr));
         	end;
 
 feature -- Comparison

@@ -20,13 +20,13 @@ feature
 		do
 			classc_stone ?= stone;
 			if classc_stone /= Void then
-				Result := classc_stone.file_name
+				Result := clone (classc_stone.file_name)
 			else
 				classi_stone ?= stone;
 				if classi_stone /= Void then
-					Result := classi_stone.file_name
+					Result := clone (classi_stone.file_name)
 				else
-					Result := ""
+					!!Result.make (0)
 				end
 			end;
 			count := Result.count;

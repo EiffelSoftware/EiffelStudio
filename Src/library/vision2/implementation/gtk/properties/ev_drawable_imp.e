@@ -326,6 +326,7 @@ feature -- Drawing operations
 		do
 			if drawable /= NULL then
 	 			C.gdk_draw_point (drawable, gc, x, y)
+	 			flush
 			end
 		end
 
@@ -344,6 +345,7 @@ feature -- Drawing operations
 					y,
 					a_gs.item
 				)
+				flush
 			end
 		end
 
@@ -362,6 +364,7 @@ feature -- Drawing operations
 					y + internal_font_ascent,
 					a_gs.item
 				)
+				flush
 			end
 		end
 
@@ -370,6 +373,7 @@ feature -- Drawing operations
 		do
 			if drawable /= NULL then
 				C.gdk_draw_line (drawable, gc, x1, y1, x2, y2)
+				flush
 			end
 		end
 
@@ -403,6 +407,7 @@ feature -- Drawing operations
 					y, a_width,
 					a_height, (radians_to_gdk_angle * corrected_start).truncated_to_integer,
 					(radians_to_gdk_angle * corrected_aperture).truncated_to_integer)
+				flush
 			end
 		end
 
@@ -425,6 +430,7 @@ feature -- Drawing operations
 				C.gdk_draw_pixmap (drawable, gc,
 					pixmap_imp.drawable,
 					x_src, y_src, x, y, src_width, src_height)
+				flush
 				if pixmap_imp.mask /= NULL then
 					C.gdk_gc_set_clip_mask (gc, NULL)
 					C.gdk_gc_set_clip_origin (gc, 0, 0)
@@ -457,6 +463,7 @@ feature -- Drawing operations
 					C.gdk_draw_arc (drawable, gc, 0, x,
 						y, (a_width - 1),
 						(a_height - 1), 0, whole_circle)
+					flush
 				end
 			end
 		end
@@ -472,8 +479,10 @@ feature -- Drawing operations
 				tmp := coord_array_to_gdkpoint_array (points).area
 				if is_closed then
 					C.gdk_draw_polygon (drawable, gc, 0, $tmp, points.count)
+					flush
 				else
 					C.gdk_draw_lines (drawable, gc, $tmp, points.count)
+					flush
 				end
 			end
 		end
@@ -540,6 +549,7 @@ feature -- filling operations
 				end
 				C.gdk_draw_rectangle (drawable, gc, 1, x, y, a_width, a_height)
 				C.gdk_gc_set_fill (gc, C.Gdk_solid_enum)
+				flush
 			end
 		end
 
@@ -555,6 +565,7 @@ feature -- filling operations
 				C.gdk_draw_arc (drawable, gc, 1, x,
 					y, a_width,
 					a_height, 0, whole_circle)
+				flush
 				C.gdk_gc_set_fill (gc, C.Gdk_solid_enum)
 			end
 		end
@@ -572,6 +583,7 @@ feature -- filling operations
 				end
 				C.gdk_draw_polygon (drawable, gc, 1, $tmp, points.count)
 				C.gdk_gc_set_fill (gc, C.Gdk_solid_enum)
+				flush
 			end
 		end
 
@@ -609,6 +621,7 @@ feature -- filling operations
 					a_height, (corrected_start * radians_to_gdk_angle).rounded,
 					(corrected_aperture * radians_to_gdk_angle).rounded)
 				C.gdk_gc_set_fill (gc, C.Gdk_solid_enum)
+				flush
 			end
 		end
 

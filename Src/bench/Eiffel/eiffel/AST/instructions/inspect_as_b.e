@@ -105,6 +105,7 @@ feature -- Type check, byte code and dead code removal
 			if else_part /= Void then
 				Result.set_else_part (else_part.byte_node);
 			end;
+			Result.set_line_number (line_number)
 		end;
 
 feature -- Debugger

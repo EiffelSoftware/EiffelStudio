@@ -16,6 +16,8 @@ inherit
 		end;
 
 	AST_EIFFEL_B
+		undefine
+			line_number
 		redefine
 			type_check, byte_node,
 			find_breakable, 
@@ -68,6 +70,7 @@ feature -- Type check, byte code and dead code removal
 			if compound /= Void then
 				Result.set_compound (compound.byte_node)
 			end
+			Result.set_line_number (line_number)
 		end;
 
 feature -- Debugging

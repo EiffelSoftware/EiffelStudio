@@ -117,6 +117,7 @@ end;
 			if compound /= Void then
 				Result.set_compound (compound.byte_node);
 			end;
+			Result.set_line_number (line_number)
 		end;
 
 feature -- Debugger

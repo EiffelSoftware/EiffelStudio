@@ -51,6 +51,7 @@ feature -- Type check, byte code and dead code removal
 		do
 			!!Result;
 			Result.set_call (call.byte_node);
+			Result.set_line_number (line_number)
 		end;
 
 feature	-- Replication

@@ -32,9 +32,6 @@ internal class CLASS
 	// Type ID
 	public int TypeID, InterfaceID;
 
-	// ExportedTypeID for generic conformance.
-	public int ExportedTypeID;
-	
 	// Base type
 	public int BaseType;
 	
@@ -310,9 +307,9 @@ internal class CLASS
 		}
 	}
 
-	// Add EIFFEL_TYPE_INFO interface to implementation class
-	public void AddEiffelInterface (int ID) {
-		ExportedTypeID = ID;
+	public void set_implementation_class ()
+		// Set current to be an implementation class.
+	{
 		IsImplementation = true;
 	}
 	

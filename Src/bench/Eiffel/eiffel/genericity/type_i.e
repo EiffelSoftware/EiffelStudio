@@ -61,7 +61,7 @@ feature -- Access
 				check
 					is_reference_at_least: is_reference
 				end
-				Result := System.any_class.compiled_class.types.first.implementation_id
+				Result := System.system_object_class.compiled_class.types.first.implementation_id
 			end
 		ensure
 			valid_result: Result > 0

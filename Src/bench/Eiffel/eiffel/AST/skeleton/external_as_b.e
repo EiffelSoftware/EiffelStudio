@@ -7,6 +7,7 @@ inherit
 			is_external, byte_node, format, type_check
 		end;
 	SHARED_STATUS;
+	SHARED_MELT_ONLY;
 	EXTERNAL_CONSTANTS
 
 feature -- Attributes

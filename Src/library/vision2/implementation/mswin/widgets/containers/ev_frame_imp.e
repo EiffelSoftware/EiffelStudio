@@ -41,7 +41,6 @@ inherit
 		redefine
 			interface,
 			set_text,
-			remove_text,
 			align_text_center,
 			align_text_right,
 			align_text_left
@@ -132,20 +131,17 @@ feature -- Element change
 		local
 			t: TUPLE [INTEGER, INTEGER]
 		do
-			t := wel_font.string_size (" " + a_text + " ")
-			text_width := t.integer_item (1)
-			text_height := t.integer_item (2)
-			Precursor {EV_TEXTABLE_IMP} (a_text)
+			if a_text.is_empty then
+				text_width := 0
+				text_height := 0
+				Precursor {EV_TEXTABLE_IMP} (a_text)
+			else		
+				t := wel_font.string_size (" " + a_text + " ")
+				text_width := t.integer_item (1)
+				text_height := t.integer_item (2)
+				Precursor {EV_TEXTABLE_IMP} (a_text)
+			end
 			notify_change (2 + 1, Current)
-			invalidate
-		end
-
-	remove_text is
-			-- Make `text' `Void'.
-		do
-			text_width := 0
-			text_height := 0
-			Precursor {EV_TEXTABLE_IMP}
 			invalidate
 		end
 
@@ -306,7 +302,7 @@ feature {NONE} -- WEL Implementation
 			bk_brush := background_brush
 
 				-- Fill empty space
-			if text /= Void then
+			if not text.is_empty then
 				if alignment.is_left_aligned then
 					text_pos := Text_padding
 				elseif alignment.is_center_aligned then
@@ -362,7 +358,7 @@ feature {NONE} -- WEL Implementation
 				Bf_rect
 				)
 
-			if text /= Void and then not is_sensitive then
+			if not text.is_empty and then not is_sensitive then
 				r.set_rect (text_pos, 0, text_pos + text_width, text_height)
 				paint_dc.fill_rect (r, bk_brush)
 			end
@@ -385,7 +381,7 @@ feature {NONE} -- WEL Implementation
 				pen.delete
 			end
 
-			if text /= Void then
+			if not text.is_empty then
 				paint_dc.select_font (wel_font)
 				paint_dc.set_text_color (wel_foreground_color)
 				paint_dc.set_background_color (wel_background_color)

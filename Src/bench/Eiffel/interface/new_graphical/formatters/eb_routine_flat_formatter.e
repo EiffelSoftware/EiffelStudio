@@ -46,8 +46,15 @@ feature -- Status setting
 		do
 			if new_stone /= Void and new_stone.class_i.is_external_class then
 				set_dotnet_mode (True)
-				create l_reader
-				consumed_type ?= l_reader.new_object_from_file (new_stone.class_i.file_name)
+				if consumed_types.has (new_stone.class_i.name) then
+					consumed_type := consumed_types.item (new_stone.class_i.name)
+				else
+					create l_reader				
+					consumed_type ?= l_reader.new_object_from_file (new_stone.class_i.file_name)
+					if consumed_type /= Void then
+						consumed_types.put (consumed_type, new_stone.class_i.name)	
+					end
+				end
 				set_feature (new_stone.e_feature)
 			else
 				set_dotnet_mode (False)

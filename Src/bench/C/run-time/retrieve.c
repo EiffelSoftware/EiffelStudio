@@ -174,11 +174,12 @@ rt_public char *eretrieve(EIF_INTEGER file_desc)
 	EIF_END_GET_CONTEXT
 }
 
-rt_public EIF_REFERENCE stream_eretrieve(char **buffer, long size, EIF_INTEGER *real_size)
+rt_public EIF_REFERENCE stream_eretrieve(char **buffer, long size, long start_pos, EIF_INTEGER *real_size)
 {
 	EIF_REFERENCE new_object;
 	stream_buffer = *buffer;
 	stream_buffer_size = size;
+	stream_buffer_position = start_pos;
 
 	new_object = portable_retrieve(stream_read);
 	*real_size = stream_buffer_position;

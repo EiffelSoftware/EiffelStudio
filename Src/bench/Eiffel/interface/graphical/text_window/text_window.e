@@ -1,3 +1,9 @@
+indexing
+
+	description:	
+		"Notion of a text of some tool.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class TEXT_WINDOW 
 
@@ -41,9 +47,11 @@ creation
 
 	make
 
-feature 
+feature -- Initialization
 
 	make (a_name: STRING; a_parent: COMPOSITE; a_tool: TOOL_W) is
+			-- Initialize text window with name `a_name', parent `a_parent',
+			-- and tool window `a_tool'.
 		do
 			text_create (a_name, a_parent);
 			!! history.make;
@@ -77,11 +85,13 @@ feature -- Fonts
 			end
 		end;
 
-feature
+feature -- Formats
 
 	last_format: FORMATTER;
+			-- Last format used.
 
 	history: STONE_HISTORY;
+			-- History list for Current.
 
 	set_mode_for_editing is
 			-- Set edit mode for text modification (set to read only)
@@ -108,8 +118,10 @@ feature
 			last_format = f
 		end;
 
+feature -- Properties
+
 	tool: TOOL_W;
-			-- Tool to which Current belongs
+			-- Tool window to which Current belongs.
 
 	clickable: BOOLEAN is
 			-- Is current text clickable?
@@ -118,6 +130,11 @@ feature
 		ensure
 			Result implies (clickable_count /= 0) and then (not changed)
 		end;
+
+	found: BOOLEAN;
+			-- Has last search been successful?
+
+feature -- Changing
 
 	changed: BOOLEAN;
 			-- Has the text been edited since last display?
@@ -137,6 +154,7 @@ feature
 		end;
 
 	display_header (s: STRING) is
+			-- Set the heder of tool to `s'.
 		do
 			tool.set_title (s);
 		end;
@@ -150,8 +168,10 @@ feature
 			file_name := f;
 		end;
 
+feature -- Stones
+
 	root_stone: like focus;
-			-- Root of the clickable ast node being displayed
+			-- Root of the clickable ast node being displayed.
 
 	set_root_stone (r: like root_stone) is
 				-- Assign `r' to `root_stone'.
@@ -170,6 +190,15 @@ feature
 			end;
 		ensure
 			root_stone = r
+		end;
+
+feature -- Displaying
+
+	display is
+			-- Display the text.
+		do
+			show_image;
+			set_changed (False);	
 		end;
 
 	show_image is
@@ -210,6 +239,8 @@ feature
 			up_to_date: not changed;
 			no_stone: root_stone = Void
 		end;
+
+feature -- Pick and Throw
 
 	receive (a_stone: STONE) is
 			-- Change `root_stone' if compatible, refresh screen.
@@ -289,6 +320,8 @@ feature
 			end
 		end;
 
+feature -- Text selection
+
 	highlight_focus is
 			-- Highlight focus (using reverse video) on the screen 
 			-- from `focus_start' to `focus_end'.
@@ -304,6 +337,8 @@ feature
 				clear_selection
 			end
 		end;
+
+feature -- Text manipulation
 
 	clean is
 			-- Erase internal structures of current
@@ -329,6 +364,7 @@ feature
 		end;
 
 	clear_text is
+			-- Clear the text of Current.
 		do
 			image.wipe_out;
 			clear_clickable;
@@ -340,6 +376,7 @@ feature
 		end;
 
 	clear_window is
+			-- Clear the window. Including history.
 		do
 			history.wipe_out;
 			set_cursor_position (0);
@@ -349,15 +386,34 @@ feature
 			set_changed (False);
 		end;
 
-	display is
+feature -- Tabulations
+
+	tab_length: INTEGER;
+			-- Number of blank characters in a tabulation
+
+	set_tab_length (new_length: INTEGER) is
+			-- Assign `new_length' to `tab_length'.
+		require
+			valid_length: valid_tab_step (new_length)
 		do
-			show_image;
-			set_changed (False);	
+			tab_length := new_length
+		ensure
+			assigned: tab_length = new_length;
+			cursor_not_moved: cursor_position = old cursor_position
 		end;
-	
-feature {NONE}
+
+	set_tab_length_to_default is
+			-- Set `tab_length' to the default tab length.
+		do
+			if tab_length /= default_tab_length.item then
+				set_tab_length (default_tab_length.item)
+			end
+		end;
+
+feature {NONE} -- Implementation
 
 	add_callbacks is
+			-- Adds some default callbacks.
 		do
 			set_action ("<Btn3Down>", Current, grabber);
 			set_action ("!c<Btn3Down>", Current, new_tooler)
@@ -457,11 +513,7 @@ feature
 			end;
 		end;
 
-	found: BOOLEAN;
-			-- Has last search been successful?
-
-	
-feature {NONE}
+feature {NONE} -- Attributes
 
 	compatible (dropped: STONE): BOOLEAN is
 			-- Can current accept `dropped'?  
@@ -471,9 +523,15 @@ feature {NONE}
 			Result implies (dropped /= Void and then (stone_type = dropped.stone_type))
 		end;
 
-	stone_type: INTEGER is do end;
+	stone_type: INTEGER is
+			-- Type of compatible stones.
+		do
+		end;
+
+feature {NONE} -- Execution
 
 	execute (argument: ANY) is
+			-- Execute the command for Current.
 		local
 			clicked_type: INTEGER;
 			cursor_x, cursor_y: INTEGER;
@@ -506,41 +564,35 @@ feature {NONE}
 			end
 		end;
 
-	work (argument: ANY) is do end;
+	work (argument: ANY) is
+			-- Do some work.
+		do
+		end;
 
 feature {NONE} -- Callback values
 
-	grabber: ANY is once !! Result end;
-	new_tooler: ANY is once !! Result end;
-	modify_event: ANY is once !!Result end;
+	grabber: ANY is
+			-- Callback value to indicate that input focus is grabbed.
+		once
+			!! Result
+		end;
+
+	new_tooler: ANY is
+			-- Callback value to indicate that a new tool should come up.
+		once
+			!! Result
+		end;
+
+	modify_event: ANY is
+			-- Callback value to indicate that the text has modified.
+		once
+			!! Result
+		end;
 
 	set_default_callbacks is
+			-- Set some default callbacks.
 		do
 			add_modify_action (Current, modify_event)
-		end;
-
-feature -- Tabulations
-
-	tab_length: INTEGER;
-			-- Number of blank characters in a tabulation
-
-	set_tab_length (new_length: INTEGER) is
-			-- Assign `new_length' to `tab_length'.
-		require
-			valid_length: valid_tab_step (new_length)
-		do
-			tab_length := new_length
-		ensure
-			assigned: tab_length = new_length;
-			cursor_not_moved: cursor_position = old cursor_position
-		end;
-
-	set_tab_length_to_default is
-			-- Set `tab_length' to the default tab length.
-		do
-			if tab_length /= default_tab_length.item then
-				set_tab_length (default_tab_length.item)
-			end
 		end;
 	
 invariant
@@ -548,4 +600,4 @@ invariant
 	history_exists: history /= Void;
 	valid_tab_length: valid_tab_step (tab_length)
 
-end
+end -- class TEXT_WINDOW

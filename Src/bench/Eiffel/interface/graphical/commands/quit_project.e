@@ -1,5 +1,9 @@
+indexing
 
--- Command to quit the Eiffel workbench
+	description:	
+		"Command to quit the Eiffel workbench.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class QUIT_PROJECT 
 
@@ -17,14 +21,28 @@ creation
 
 	make
 	
-feature 
+feature -- Initialization
 
 	make (c: COMPOSITE; a_text_window: TEXT_WINDOW) is
+			-- Initialize the command.
 		do
 			init (c, a_text_window)
 		end;
+
+feature -- Licence managment
 	
-feature {NONE}
+	licence_checked: BOOLEAN is True;
+			-- Is the license checked.
+
+feature -- Properties
+
+	symbol: PIXMAP is 
+			-- Pixmap for the button.
+		once 
+			Result := bm_Quit 
+		end;
+	
+feature {NONE} -- Implementation
 
 	work (argument: ANY) is
 			-- Quit project after saving.
@@ -63,23 +81,16 @@ feature {NONE}
 			end;
 		end;
 
+feature {NONE} -- Attributes
+
 	do_exit: BOOLEAN;
+			-- Should be called: `must_exit' OR comment has to change
 			-- Do we really have to exit?
 
-feature -- Licence managment
-	
-	licence_checked: BOOLEAN is True;
-
-feature 
-
-	symbol: PIXMAP is 
-		once 
-			Result := bm_Quit 
+	command_name: STRING is
+			-- Name of the command.
+		do
+			Result := l_Exit_project
 		end;
  
-	
-feature {NONE}
-
-	command_name: STRING is do Result := l_Exit_project end
-
-end
+end -- class QUIT_PROJECT

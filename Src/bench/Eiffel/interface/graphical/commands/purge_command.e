@@ -1,4 +1,9 @@
--- Temporary ice command
+indexing
+
+	description:	
+		"Temporary ice command.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class PURGE_COMMAND 
 
@@ -18,18 +23,27 @@ creation
 	make
  
 	
-feature 
+feature -- Initialization
 
 	make (c: COMPOSITE) is
+			-- Initialize the command.
 		do 
 			push_b_make ("Compress", c);
 			add_activate_action (Current, Void)
 		end; 
  
-	
-feature {NONE}
+feature -- Properties
+
+	symbol: PIXMAP is
+			-- Empty symbol
+		do
+			Result := bm_default
+		end;
+
+feature {NONE} -- Execution
 
 	execute (argument: ANY) is
+			-- Execute the command.
 		do
 			work (argument)
 		end;
@@ -52,18 +66,13 @@ feature {NONE}
 						%successfully before compressing", Void, Void, "OK");
 			end;
 		end;
- 
-feature 
 
-	symbol: PIXMAP is
-			-- Empty symbol
+feature {NONE} -- Attributes
+
+	command_name: STRING is
+			-- Name of the command.
 		do
-			Result := bm_default
-		end;
+			Result := "Compress"
+		end
 
-	
-feature {NONE}
-
-	command_name: STRING is do Result := "Compress" end
-  
-end
+end -- class PURGE_COMMAND

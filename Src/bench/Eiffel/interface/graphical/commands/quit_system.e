@@ -1,3 +1,10 @@
+indexing
+
+	description:	
+		"Command to quit the system tool.";
+	date: "$Date$";
+	revision: "$Revision$"
+
 class QUIT_SYSTEM 
 
 inherit
@@ -11,16 +18,20 @@ creation
 
 	make
 	
-feature 
+feature -- Initialization
 
 	make (c: COMPOSITE; a_text_window: like text_window) is
+			-- Initialize the command.
 		do
 			init (c, a_text_window)
 		end;
 
-	text_window: SYSTEM_TEXT;
+feature -- Properties
 
-feature {NONE}
+	text_window: SYSTEM_TEXT;
+			-- Window with the text of the Ace file.
+
+feature {NONE} -- Implementation
 
 	work (argument: ANY) is
 			-- Quit cautiously an ace file. Don't actually destroy the window.
@@ -43,4 +54,4 @@ feature {NONE}
 			end
 		end;
 
-end
+end -- class QUIT_SYSTEM

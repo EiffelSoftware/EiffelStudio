@@ -1,3 +1,10 @@
+indexing
+
+	description:	
+		"Command for Case Storage";
+	date: "$Date$";
+	revision: "$Revision$"
+
 class CASE_STORAGE 
 
 inherit
@@ -11,9 +18,7 @@ creation
 
 	make
 	
-feature 
-
-	text_window: SYSTEM_TEXT;
+feature -- Initialization
 
 	make (c: COMPOSITE; a_text_window: SYSTEM_TEXT) is
 			-- Initialize the format button  with its bitmap.
@@ -24,12 +29,35 @@ feature
 			set_action ("!c<Btn1Down>", Current, control_click)
 		end;
 
-feature {NONE}
+feature -- Properties
 
-	control_click: ANY is once !!Result end;
-			-- No confirmation required
+	text_window: SYSTEM_TEXT;
+			-- Text window associated with Current.
+
+feature {NONE} -- Attributes
+
+	control_click: ANY is
+			-- No confirmation required, used in work
+		once
+			!!Result
+		end;
+
+	symbol: PIXMAP is 
+			-- Symbol on the button.
+		once 
+			Result := bm_Case_storage 
+		end;
+ 
+	command_name: STRING is
+			-- Internal command name.
+		do
+			Result := l_Case_storage
+		end;
+
+feature {NONE} -- Implementation
 
 	work (argument: ANY) is
+			-- Execute the command.
 		local
 			format_storage: E_STORE_CASE_INFO
 		do
@@ -49,13 +77,4 @@ feature {NONE}
 			end
 		end;
 	
-feature {NONE}
-
-	symbol: PIXMAP is 
-		once 
-			Result := bm_Case_storage 
-		end;
- 
-	command_name: STRING is do Result := l_Case_storage end;
-
 end -- class CASE_STORAGE

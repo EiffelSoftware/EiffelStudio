@@ -1,8 +1,14 @@
+indexing
+
+	description:	
+		"Command to savethe save the ace file.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class SAVE_SYSTEM
 
 inherit
-	
+
 	SHARED_EIFFEL_PROJECT;	
 	PROJECT_CONTEXT;
 	SAVE_FILE
@@ -13,8 +19,8 @@ inherit
 creation
 
 	make
-	
-feature {NONE}
+
+feature {NONE} -- Implementation
 
 	work (argument: ANY) is
 			-- Save a file with the chosen name.
@@ -76,5 +82,4 @@ feature {NONE}
 			end
 		end;
 
-	
-end
+end -- class SAVE_SYSTEM

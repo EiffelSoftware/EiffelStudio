@@ -1,5 +1,9 @@
+indexing
 
--- Command to open a new ace file
+	description:	
+		"Command to open a new ace file.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class OPEN_SYSTEM 
 
@@ -15,14 +19,15 @@ creation
 
 	make
 	
-feature 
+feature -- Implementation
 
 	make (c: COMPOSITE; a_text_window: SYSTEM_TEXT) is
+			-- Initialize the command.
 		do
 			init (c, a_text_window)
 		end;
 
-feature {NONE}
+feature {NONE} -- Implementation
 
 	work (argument: ANY) is
 			-- Open a file.
@@ -67,4 +72,4 @@ feature {NONE}
 			end
 		end;
 
-end
+end -- class OPEN_SYSTEM

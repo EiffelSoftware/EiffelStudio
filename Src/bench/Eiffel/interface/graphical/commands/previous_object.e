@@ -1,4 +1,9 @@
--- Retarget the object tool with the previous object in history
+indexing
+
+	description:	
+		"Retarget the object tool with the previous object in history.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class
 
@@ -24,7 +29,7 @@ creation
 
 	make
 
-feature
+feature {NONE} -- Implementation
 
 	work (argument: ANY) is
 			-- Retarget the object tool with the previous object in history.

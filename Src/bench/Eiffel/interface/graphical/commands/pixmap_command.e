@@ -1,3 +1,10 @@
+indexing
+
+	description:	
+		"Command with an icon associated.";
+	date: "$Date$";
+	revision: "$Revision$"
+
 deferred class ICONED_COMMAND 
 
 inherit
@@ -18,7 +25,7 @@ inherit
 		end;
 	SHARED_ACCELERATOR
 
-feature {NONE}
+feature {NONE} -- Implementation
 
 	init (a_composite: COMPOSITE; a_text_window: TEXT_WINDOW) is
 			-- Initialize a command with the `symbol' icon,
@@ -36,16 +43,38 @@ feature {NONE}
 		ensure
 			parent = a_composite
 		end;
+	
+feature -- Status Setting
 
-	get_in: ANY is once !!Result end;
-	get_out: ANY is once !!Result end;
-			-- To be used as arguments for callbacks on enter and leave actions
+	darken (b: BOOLEAN) is
+			-- Darken the symbol of current button if `b', lighten it otherwize
+		do
+			if b then
+				set_symbol (dark_symbol)
+			else
+				set_symbol (symbol)
+			end
+		end;
 
-feature 
+feature -- Properties
 
 	text_window: TEXT_WINDOW;
-			-- Text window which staus tells if we want to execute or not, 
-			-- and usually the target of the command
+			-- Text window which staus tells if we want to execute 
+			-- or not, and usually the target of the command
+
+	symbol: PIXMAP is
+			 -- Icon for current command
+		deferred
+		end;
+
+feature {TEXT_WINDOW} -- Restricted Properties
+
+	command_name: STRING is
+			-- Name of the command.
+		deferred
+		end;
+
+feature -- Execute
 
 	execute (argument: ANY) is
 			-- Execute current command but don't change the cursor into
@@ -62,21 +91,8 @@ feature
 				execute_licenced (argument)
 			end
 		end;
-
-feature {TEXT_WINDOW}
-
-	command_name: STRING is deferred end;
-
 	
-feature 
-
-	symbol: PIXMAP is
-			 -- Icon for current command
-		deferred
-		end;
-
-	
-feature {NONE}
+feature {NONE} -- Implementation
 
 	set_symbol (p: PIXMAP) is
 			-- Set the pixmap if it it valid
@@ -95,17 +111,20 @@ feature {NONE}
 			Result := symbol
 		end;
 
-	
-feature 
+feature {NONE} -- Attributes
 
-	darken (b: BOOLEAN) is
-			-- Darken the symbol of current button if `b', lighten it otherwize
-		do
-			if b then
-				set_symbol (dark_symbol)
-			else
-				set_symbol (symbol)
-			end
+	get_in: ANY is
+			-- To be used as argument for callbacks on enter
+			-- and leave actions
+		once
+			!!Result
+		end;
+
+	get_out: ANY is
+			-- To be used as argument for callbacks on enter
+			-- and leave actions
+		once
+			!!Result
 		end;
 
 invariant

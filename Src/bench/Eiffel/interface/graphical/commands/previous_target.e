@@ -1,4 +1,9 @@
--- Retarget the tool with the previous target in history
+indexing
+
+	description:	
+		"Retarget the tool with the previous target in history.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class PREVIOUS_TARGET
 
@@ -16,11 +21,15 @@ creation
 feature -- Initialization
 
 	make (c: COMPOSITE; a_text_window: TEXT_WINDOW) is
+			-- Initialize the command.
 		do 
 			init (c, a_text_window)
 		end;
 
+feature -- execution
+
 	execute (argument: ANY) is
+			-- Execute the command.
 		do
 			if argument = get_in then
 				text_window.tool.tell_type (command_name)
@@ -43,7 +52,21 @@ feature -- Initialization
 			end
 		end;
 
-feature {NONE}
+feature -- Properties
+
+	symbol: PIXMAP is
+			-- Pixmap for the button.
+		once
+			Result := bm_Previous_target
+		end;
+
+	command_name: STRING is
+			-- Name of the command.
+		do
+			Result := l_Previous_target
+		end;
+
+feature {NONE} -- Implementation
 
 	work (argument: ANY) is
 			-- Retarget the tool with the previous target in history.
@@ -57,18 +80,6 @@ feature {NONE}
 				history.back;
 				text_window.last_format.execute (history.item)
 			end
-		end;
-
-feature
-
-	symbol: PIXMAP is
-		once
-			Result := bm_Previous_target
-		end;
-
-	command_name: STRING is
-		do
-			Result := l_Previous_target
 		end;
 
 end -- class PREVIOUS_TARGET

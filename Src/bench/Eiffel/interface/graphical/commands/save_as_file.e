@@ -1,3 +1,9 @@
+indexing
+
+	description:	
+		"Command to save a file under a different name.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class SAVE_AS_FILE 
 
@@ -12,16 +18,23 @@ creation
 
 	make
 	
-feature 
+feature -- Initialization
 
 	make (c: COMPOSITE; a_text_window: TEXT_WINDOW) is
+			-- Initialize the command.
 		do
 			init (c, a_text_window)
 		end;
-	
-feature {NONE}
 
-	licence_checked: BOOLEAN is True;
+feature -- Properties
+
+	symbol: PIXMAP is 
+			-- Pixmap for the button.
+		once 
+			Result := bm_Save_as 
+		end;
+
+feature {NONE} -- Implementation
 
 	work (argument: ANY) is
 			-- Save a file with the chosen name.
@@ -102,18 +115,21 @@ feature {NONE}
 			end
 		end;
 
-	update_more is do end;
-	
-feature 
-
-	symbol: PIXMAP is 
-		once 
-			Result := bm_Save_as 
+	update_more is
+			-- Useless here.
+		do
+			-- Do nothing.
 		end;
 
-	
 feature {NONE}
 
-	command_name: STRING is do Result := l_Save_as end
+	licence_checked: BOOLEAN is True;
+			-- Is the licence checked?
 
-end
+	command_name: STRING is
+			-- Name of the command.
+		do
+			Result := l_Save_as
+		end
+
+end -- class SAVE_AS_FILE

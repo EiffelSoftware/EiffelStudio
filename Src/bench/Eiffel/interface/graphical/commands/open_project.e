@@ -1,5 +1,9 @@
+indexing
 
--- Command to retrieve a stored project
+	description:	
+		"Command to retrieve a stored project.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class OPEN_PROJECT 
 
@@ -14,14 +18,15 @@ creation
 
 	make
 	
-feature 
+feature -- Initialization
 
 	make (a_text_window: TEXT_WINDOW) is
+			-- Initialize the command.
 		do
 			text_window := a_text_window
 		end;
 
-feature {NONE}
+feature {NONE} -- Implementation
 
 	work (argument: ANY) is
 			-- Popup and let the user choose what he wants.
@@ -68,12 +73,19 @@ feature {NONE}
 			end
 		end;
 
-	
-feature 
+feature -- Properties
+
+	symbol: PIXMAP is
+			-- Pixmap for the button.
+		once
+			Result := bm_Open
+		end;
+
+feature -- Project Initialization
 
 	make_project (project_dir: PROJECT_DIRECTORY) is
-			-- Initialize project as a new one or retrieving existing data in the
-			-- valid directory `project_dir'.
+			-- Initialize project as a new one or retrieving
+			-- existing data in the valid directory `project_dir'.
 		local
 			workb: WORKBENCH_I;
 			init_work: INIT_WORKBENCH;
@@ -143,12 +155,8 @@ feature
 			end
 		end;
 
-	symbol: PIXMAP is
-		once
-			Result := bm_Open
-		end;
-
 	retrieve_project (project_dir: PROJECT_DIRECTORY) is
+			-- Retrieve a project from the disk.
 		do	
 			Eiffel_project.retrieve (project_dir);
 			if Eiffel_project.retrieval_error then
@@ -164,8 +172,12 @@ feature
 			end;
 		end;
 
-feature {NONE}
+feature {NONE} -- Attributes
 
-	command_name: STRING is do Result := l_Open_project end
+	command_name: STRING is
+			-- Name fo the command.
+		do
+			Result := l_Open_project
+		end
 
-end
+end -- class OPEN_PROJECT

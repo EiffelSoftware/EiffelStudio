@@ -24,8 +24,6 @@ feature -- Access
 			-- | Result := "feature -- Set Property
 			-- |				set_`name' (value: `type') is do `statements' end"
 			-- Eiffel code of property
-		local
-			type_name: STRING
 		do
 			check
 				not_empty_type: not property_type_name.is_empty

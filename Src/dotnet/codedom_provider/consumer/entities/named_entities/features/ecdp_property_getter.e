@@ -20,8 +20,6 @@ feature -- Access
 			-- | Result := "feature -- Get Property
 			-- |				get_`name': `returned_type' is do `statements' end"
 			-- Eiffel code of property
-		local
-			parent_type_name: STRING
 		do
 			check
 				not_empty_type: not returned_type.is_empty

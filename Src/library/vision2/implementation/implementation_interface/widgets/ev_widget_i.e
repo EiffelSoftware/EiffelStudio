@@ -70,6 +70,13 @@ feature {EV_WIDGET} -- Initialization
 		deferred
 		end
 
+	application: CELL [EV_APPLICATION_IMP] is
+			-- The current application. Needed for the
+			-- accelerators
+		once
+			create Result.put (Void)
+		end
+
 feature -- Status Report
 
 	insensitive: BOOLEAN is

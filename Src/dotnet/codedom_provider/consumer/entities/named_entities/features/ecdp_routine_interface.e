@@ -12,6 +12,20 @@ inherit
 			make,
 			ready
 		end
+	
+	ECDP_SHARED_CONSUMER_CONTEXT
+		undefine
+			default_create,
+			is_equal
+		end
+
+	ECDP_SHARED_DATA
+		export
+			{NONE} all
+		undefine
+			default_create,
+			is_equal
+		end
 
 feature {NONE} -- Initialization
 
@@ -68,8 +82,6 @@ feature -- Access
 			
 			if comments /= Void and then not comments.is_empty then
 				Result.append (comments_code)
-			else
-				Result.append (default_comment)
 			end
 
 			add_tab_to_indent_string
@@ -87,10 +99,8 @@ feature -- Status Report
 
 	is_inherited: BOOLEAN is
 			-- Is inherited ?
-		local
-			a_type_name: STRING
 		do
-			Result := not Eiffel_types.where_is_declared_feature (implemented_type_name, name, arguments).is_equal (implemented_type_name)
+			Result := not Feature_finder.declaring_type (implemented_type_name, name, arguments).is_equal (implemented_type_name)
 		end
 
 	is_deferred: BOOLEAN
@@ -169,51 +179,47 @@ feature {NONE} -- Implementation
 		require
 			ready: ready
 		local
-			parent_type_name: STRING
-			arguments_str: STRING
+			l_parent_type_name: STRING
+			l_arguments_str: STRING
 		do
 			create Result.make (160)
 			Result.append (Indent_string)
 			if is_deferred then
-				Result.append (dictionary.Deferred_keyword)
-				Result.append (dictionary.Space)
+				Result.append ("deferred ")
 			end
 			if is_frozen then 
-				Result.append (dictionary.Frozen_keyword)
-				Result.append (dictionary.Space)
+				Result.append ("frozen ")
 			end
 			
-			create arguments_str.make (150)
+			if is_inherited and not name.is_equal (".ctor") then
+				l_parent_type_name := Feature_finder.declaring_type (implemented_type_name, name, arguments)
+				Result.append (Feature_finder.eiffel_feature_name_from_dynamic_args (Dotnet_types.dotnet_type (l_parent_type_name), name, arguments))
+			else
+					-- watch out!!!
+					-- maybe the feature is inherited, but the `name' has already been replaced by the corresponding eiffel_name (case if redefinition).
+				Result.append (Resolver.eiffel_entity_name (name))
+			end
+			
+			create l_arguments_str.make (150)
 			from
 				arguments.start
 				if not arguments.after then
-					arguments_str.append (dictionary.Space)
-					arguments_str.append (dictionary.Opening_round_bracket)
-					arguments_str.append (arguments.item.code)
+					l_arguments_str.append (" (")
+					l_arguments_str.append (arguments.item.code)
 					arguments.forth
 				end
 			until
 				arguments.after
 			loop
-				arguments_str.append (dictionary.Semi_colon)
-				arguments_str.append (dictionary.Space)
-				arguments_str.append (arguments.item.code)
+				l_arguments_str.append ("; ")
+				l_arguments_str.append (arguments.item.code)
 				arguments.forth
 			end
 			if arguments.count > 0 then
-				arguments_str.append (dictionary.Closing_round_bracket)
+				l_arguments_str.append_character (')')
 			end
 
-			if is_inherited and not name.is_equal (".ctor") then
-				parent_type_name := Eiffel_types.where_is_declared_feature (implemented_type_name, name, arguments)
-				Result.append (Eiffel_types.eiffel_feature_name_from_dynamic_args (Eiffel_types.dotnet_type (parent_type_name), name, arguments))
-			else
-					-- watch out!!!
-					-- maybe the feature is inherited, but the `name' has already been replaced by the corresponding eiffel_name (case if redefinition).
-				Result.append (Eiffel_types.find_variable_name (name))
-			end
-			
-			Result.append (arguments_str)
+			Result.append (l_arguments_str)
 		ensure
 			signature_generated: Result /= Void and not Result.is_empty
 		end
@@ -308,22 +314,6 @@ feature {NONE} -- Specific implementation
 			non_void_add_constructor: Result /= Void
 		end
 		
-	default_comment: STRING is
-			-- Default comment for 'Current'.
-		do
---			add_tab_to_indent_string
---			add_tab_to_indent_string
---			Result := Indent_string.twin
---			Result.append (dictionary.Dashes)
---			Result.append (dictionary.Space)
---			if name.is_equal (Initialize_component_eiffel_name) then
---				Result.append (Initialize_component_comment)
---			end
---			Result.append (Dictionary.New_line)
---			sub_tab_to_indent_string
---			sub_tab_to_indent_string
-		end
-		
 	Initialize_component_comment: STRING is "Required for Windows Forms Designer support, do not modify with Text Editor"
 		-- Generated comment for 'initialize_component' routine.
 
@@ -333,3 +323,14 @@ invariant
 	non_void_statements: statements /= Void
 
 end -- class ECDP_ROUTINE_INTEFACE
+
+--+--------------------------------------------------------------------
+--| Eiffel CodeDOM Provider
+--| Copyright (C) 2001-2004 Eiffel Software
+--| Eiffel Software Confidential
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| Eiffel Software
+--| 356 Storke Road, Goleta, CA 93117 USA
+--| http://www.eiffel.com
+--+--------------------------------------------------------------------

@@ -69,7 +69,9 @@ feature -- Type check, byte code and dead code removal
 			-- Type check on check clause
 		do
 			if check_list /= Void then
+				context.set_is_checking_check (True)
 				check_list.type_check
+				context.set_is_checking_check (False)
 			end
 		end
 
@@ -98,7 +100,7 @@ feature {AST_EIFFEL} -- Output
 				ctxt.exdent
 			end
 			ctxt.new_line
-			ctxt.put_text_item (ti_End_keyword)
+			ctxt.put_text_item (ti_end_keyword)
 		end
 			
 feature {CHECK_AS} -- Replication

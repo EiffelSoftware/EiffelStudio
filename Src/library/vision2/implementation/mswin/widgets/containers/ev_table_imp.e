@@ -198,6 +198,7 @@ feature -- Status settings
 			-- We show the child and resize the container
 			child_imp.show
 			if already_displayed then
+				child_imp.on_first_display
 				child_minwidth_changed (child_imp.minimum_width, child_imp)
 				child_minheight_changed (child_imp.minimum_height, child_imp)
 				initialize_at_minimum
@@ -807,7 +808,7 @@ feature {NONE} -- EiffelVision implementation
  				until
   					i = ev_children.count + 1
    				loop
- 					(ev_children @ i).widget.on_first_display;
+ 					(ev_children @ i).widget.on_first_display
  					i := i + 1
  				end
  			end

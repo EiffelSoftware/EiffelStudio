@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	line (i: INTEGER): STRING is		
-			-- `Result' is content of the `i'th line.
+			-- `Result' is content of `i'th line.
 		require
 			not_destroyed: not is_destroyed
 			valid_line_index: valid_line_index (i) and then
@@ -46,7 +46,7 @@ feature -- Access
 feature -- Status report
 	
 	current_line_number: INTEGER is
-			-- Returns the number of the line containing the cursor.
+			-- Line currently containing cursor.
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -66,7 +66,7 @@ feature -- Status report
 		end 
 
 	first_position_from_line_number (i: INTEGER): INTEGER is
-			-- Position of the first character on the `i'-th line.
+			-- Position of first character on `i'-th line.
 		require
 			not_destroyed: not is_destroyed
 			valid_line: valid_line_index (i) and then
@@ -78,13 +78,14 @@ feature -- Status report
 		end
 
 	last_position_from_line_number (i: INTEGER): INTEGER is
-			-- Position of the last character on the `i'-th line.
+			-- Position of last character on `i'-th line.
 		require
 			not_destroyed: not is_destroyed
 			valid_line: valid_line_index (i) and then
 				(i = line_count implies last_line_not_empty)
 		do
 			Result := implementation.last_position_from_line_number (i)
+			io.putstring ("d")
 		ensure
 			valid_caret_position: valid_caret_position (i)
 		end
@@ -102,7 +103,7 @@ feature -- Basic operation
 		end
 
 	put_new_line is
-			-- Go to the beginning of the following line of position.
+			-- Insert return character at `caret_position'.
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -140,7 +141,7 @@ feature -- Contract support
 		end
 
 	last_line_not_empty: BOOLEAN is
-			-- Has the last line at least one character?
+			-- Has last line at least one character?
 		do
 			Result := implementation.last_line_not_empty
 		end

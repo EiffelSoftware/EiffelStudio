@@ -1,0 +1,94 @@
+<script src="../instal.js"></script>
+
+<html>
+
+<head>
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Timers</title>
+<LINK REL=StyleSheet HREF="../../../../default.css">
+<style>
+<!--
+    .FixedText{MARGIN-LEFT: 3ex;FONT-FAMILY: Lucida Console;FONT-SIZE: x-small;FONT-WEIGHT: Bold}
+-->
+</style>
+</head>
+
+<body>
+
+<h1>
+Timers example</h1>
+
+<p>This sample consist in a command line demonstrating the use of the <span class="eClass">TIMER</span> 
+(Timer) class to generate a periodic callback to a method. The sample creates a 
+<span class="eClass">TIMER</span> object and passes to it a delegate object. When the <span class="eClass">TIMER</span> fires, the 
+delegate is invoked, and a static method is called asynchronously by a worker 
+thread in the thread pool.</p>
+
+<p>&nbsp;</p>
+
+<H2>Compiling</H2>
+<script language="JavaScript">
+<!--
+var path_to_ace_file = Eiffel_version + "\\examples\\dotnet\\winforms\\menu\\";
+var ace_file_name = "Ace";
+var path_eifp_file = "..\\..\\examples\\threading\\timers\\"
+var eifp_name = "Eiffel project.eifp";
+
+if (eiffel_studio) {
+	write_eiffel_studio_compiling_instruction (path_to_ace_file, ace_file_name)
+}
+else {
+	write_envision_compiling_instruction (path_eifp_file, eifp_name)
+}
+-->
+</script>
+<noscript>
+<p>To see compiling instructions, you have to enable javascript.</p></noscript>
+
+<h2>Running</h2>
+		<P>
+			After you launch the sample, the following output appears:
+		</P>
+<pre>Checking for status updates every two seconds
+     &lt;Hit Enter to terminate the sample&gt;
+Checking Status.
+Checking Status.
+Checking Status.
+Checking Status.
+Checking Status.
+...</PRE>
+		<P>
+			When the display is finished, the application wait for you to 
+            pressed the return key to finished the application.</P>
+		<P>
+			&nbsp;</P>
+<h2>Under the Hood</h2>
+<p>This application shows how to use the thread
+  <a href="mk:/libraries/vision2/reference/interface/kernel/ev_accelerator_chart.html">
+  TIMER</a>. The timer is launched (<span class="eKeyword">create</span> <span class="eLocal">my_timer</span>.<span class="eFeature">make_with_callback</span> (<span class="eKeyword">create</span> {<span class="eClass">TIMER_CALLBACK</span>}.<span class="eFeature">make</span> 
+(Current, $<span class="eFeature">check_status</span>), Void, 0, 2000)) and call the feature <span class="eFeature">check_status</span> that 
+displays the message <span class="eString">&quot;Checking Status.&quot;</span> every two seconds.</p>
+<p>This sample contains the following class: </p>
+<ul>
+  <li>
+  <span class="eClass">
+  TIMER</span></li>
+  <li>
+  <span class="eClass">
+  TIMER_CALLBACK</span></li>
+</ul>
+
+<p>&nbsp;</p>
+
+<h2>Notes</h2></a>
+<p class="Text">This sample is translated from the example located in the 
+Samples\Technologies\Threading\Timers subdirectory of the .NET Framework SDK 
+samples directory of Microsoft Visual Studio .NET. </p>
+<p class="FixedHeading">For Example:</p>
+<p class="FixedText">C:\Program Files\Microsoft.NET\FrameworkSDK\Samples\Technologies\Threading\Timers</p>
+
+</body>
+
+</html>

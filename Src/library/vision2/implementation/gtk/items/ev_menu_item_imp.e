@@ -12,6 +12,9 @@ class
 	
 inherit
 	EV_MENU_ITEM_I
+		redefine
+			parent_imp
+		end
 
 	EV_SIMPLE_ITEM_IMP
 		undefine
@@ -52,6 +55,9 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+
+	parent_imp: EV_MENU_ITEM_HOLDER_IMP
+			-- Parent of the current widget.
 
 	count: INTEGER is
 			-- Number of direct children of the holder.

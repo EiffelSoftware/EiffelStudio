@@ -91,8 +91,16 @@ feature {NONE} -- Initialization
 			--| already and the default sequences can only be connected
 			--| once.
 
-			real_connect_signal_to_actions (entry_widget, "activate", interface.return_actions)
-			real_connect_signal_to_actions (entry_widget, "changed", interface.change_actions)
+			real_connect_signal_to_actions (
+				entry_widget,
+				"activate",
+				interface.return_actions
+			)
+			real_connect_signal_to_actions (
+				entry_widget,
+				"changed",
+				interface.change_actions
+			)
 		end
 
 feature -- Access
@@ -214,7 +222,11 @@ feature -- Status setting
 	
 	select_region (start_pos, end_pos: INTEGER) is
 		do
-			C.gtk_entry_select_region (entry_widget, start_pos - 1, end_pos)
+			C.gtk_entry_select_region (
+				entry_widget,
+				start_pos - 1,
+				end_pos
+			)
 		end	
 
 	set_extended_height (value: INTEGER) is
@@ -229,7 +241,11 @@ feature -- Basic operation
 	select_all is
 			-- Select all the text.
 		do
-			C.gtk_editable_select_region (entry_widget, 0, text_length)
+			C.gtk_editable_select_region (
+				entry_widget,
+				0,
+				text_length
+			)
 		end
 
 	deselect_all is
@@ -287,7 +303,10 @@ feature {NONE} -- Implementation
 		do	
 			imp ?= v.implementation
 			s := imp.text.to_c
-			C.gtk_combo_set_item_string (c_object, imp.c_object, $S)
+			C.gtk_combo_set_item_string (c_object,
+				imp.c_object,
+				$S
+			)
 			C.gtk_container_add (list_widget, imp.c_object)
 		end
 
@@ -295,7 +314,10 @@ feature {NONE} -- Implementation
 			-- Reorder `a_child' to `an_index' in `c_object'.
 			-- `a_container' is ignored.
 		do
-			C.gtk_box_reorder_child (c_object, a_child, an_index - 1)
+			C.gtk_box_reorder_child (c_object,
+				a_child,
+				an_index - 1
+			)
 		end
 
 
@@ -326,6 +348,9 @@ end -- class EV_COMBO_BOX_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.24  2000/03/02 23:58:05  king
+--| Indented external function calls
+--|
 --| Revision 1.23  2000/03/01 18:05:52  king
 --| Changed XX to FIXME
 --|

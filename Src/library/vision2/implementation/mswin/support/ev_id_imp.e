@@ -30,6 +30,9 @@ feature {NONE} -- Implementation
 			Result.set_item (1)
 		end
 
+invariant
+	make_called: id > 0
+
 end -- class EV_ID_IMP
 
 --|----------------------------------------------------------------
@@ -53,6 +56,9 @@ end -- class EV_ID_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2000/02/23 02:19:34  brendel
+--| Added invariant.
+--|
 --| Revision 1.4  2000/02/19 05:45:00  oconnor
 --| released
 --|

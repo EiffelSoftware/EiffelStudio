@@ -21,7 +21,12 @@ inherit
 	SHARED_DEBUG
 		export
 			{NONE} all
-		end	
+		end
+		
+	EB_DEBUG_TOOL_DATA
+		export
+			{NONE} all
+		end
 
 feature {NONE} -- Initialization
 

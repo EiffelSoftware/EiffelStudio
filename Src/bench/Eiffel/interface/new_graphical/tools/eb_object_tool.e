@@ -389,7 +389,7 @@ feature -- Status setting
 
 						obj.build_and_attach_to_parent (objects_tree)
 						item := obj.object_tree_item
-						item.set_text (Interface_names.l_Current_object + item.text)
+						item.set_text (Interface_names.l_Current_object + ": " + item.text)
 
 						current_object := obj
 					end
@@ -818,7 +818,7 @@ feature {NONE} -- Implementation
 				current_object.set_display_special (display_first_special)
 				current_object.build_and_attach_to_parent (objects_tree)
 				item := current_object.object_tree_item
-				item.set_text (Interface_names.l_Current_object + item.text)
+				item.set_text (Interface_names.l_Current_object + ": " + item.text)
 			end
 				--| Added objects
 			add_displayed_objects_to_tree (objects_tree)

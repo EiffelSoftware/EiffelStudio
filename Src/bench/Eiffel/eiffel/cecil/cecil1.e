@@ -12,10 +12,8 @@ inherit
 	
 feature 
 
-	generate_final (file: INDENT_FILE; type_id: INTEGER) is
+	generate_final (buffer: GENERATION_BUFFER; type_id: INTEGER) is
 			-- Generation of the hash table
-		require
-			file.is_open_write;
 		local
 			i: INTEGER;
 			routine_name: STRING;
@@ -27,9 +25,9 @@ feature
 			formal_type: FORMAL_A
 			local_values: like values
 		do
-			file.putstring ("static char *(*cr");
-			file.putint (type_id);
-			file.putstring ("[])() = {%N");
+			buffer.putstring ("static char *(*cr");
+			buffer.putint (type_id);
+			buffer.putstring ("[])() = {%N");
 			from
 				i := 0;
 				local_values := values
@@ -42,7 +40,7 @@ feature
 					feat.is_external or else
 					feat.is_deferred
 				then
-					file.putstring ("(char *(*)()) 0");
+					buffer.putstring ("(char *(*)()) 0");
 				else
 					written_class := System.class_of_id (feat.written_in);
 					class_type := System.class_type_of_id (type_id);
@@ -64,8 +62,8 @@ debug ("CECIL")
 end;
 
 
-					file.putstring ("(char *(*)()) ");
-					file.putstring (routine_name);
+					buffer.putstring ("(char *(*)()) ");
+					buffer.putstring (routine_name);
 
 					actual_type := feat.type.actual_type;
 						-- Remember extern declarations
@@ -78,22 +76,22 @@ end;
 					c_type := actual_type.type_i.c_type;
 					Extern_declarations.add_routine (c_type, clone (routine_name));
 				end;
-				file.putstring (",%N");
+				buffer.putstring (",%N");
 				i := i + 1;
 			end;
-			file.putstring ("};%N%N");
+			buffer.putstring ("};%N%N");
 		end;
 
-	generate_workbench (file: INDENT_FILE; class_id: CLASS_ID) is
+	generate_workbench (buffer: GENERATION_BUFFER; class_id: CLASS_ID) is
 			-- Generate workbench feature id array
 		local
 			i: INTEGER;
 			feat: FEATURE_I;
 			local_values: like values
 		do
-			file.putstring ("uint32 cr");
-			file.putint (class_id.id);
-			file.putstring ("[] = {%N");
+			buffer.putstring ("uint32 cr");
+			buffer.putint (class_id.id);
+			buffer.putstring ("[] = {%N");
 			from
 				local_values := values
 				i := 0
@@ -101,19 +99,19 @@ end;
 				i > upper
 			loop
 				feat := local_values.item (i);
-				file.putstring ("(uint32) ");
+				buffer.putstring ("(uint32) ");
 				if feat = Void then
-					file.putchar ('0');
+					buffer.putchar ('0');
 				else
-					file.putint (feat.feature_id);
+					buffer.putint (feat.feature_id);
 				end;
-				file.putstring (",%N");
+				buffer.putstring (",%N");
 				i := i + 1
 			end;
-			file.putstring ("};%N%N");
+			buffer.putstring ("};%N%N");
 		end;
 
-	generate_precomp_workbench (file: INDENT_FILE; class_id: CLASS_ID) is
+	generate_precomp_workbench (buffer: GENERATION_BUFFER; class_id: CLASS_ID) is
 			-- Generate workbench routine id array.
 			-- (Used when the class is precompiled.)
 		local
@@ -121,9 +119,9 @@ end;
 			feat: FEATURE_I;
 			local_values: like values
 		do
-			file.putstring ("uint32 cr");
-			file.putint (class_id.id);
-			file.putstring ("[] = {%N");
+			buffer.putstring ("uint32 cr");
+			buffer.putint (class_id.id);
+			buffer.putstring ("[] = {%N");
 			from
 				local_values := values
 				i := 0
@@ -131,31 +129,31 @@ end;
 				i > upper
 			loop
 				feat := local_values.item (i);
-				file.putstring ("(uint32) ");
+				buffer.putstring ("(uint32) ");
 				if feat = Void then
-					file.putchar ('0');
+					buffer.putchar ('0');
 				else
-					file.putint (feat.rout_id_set.first.id);
+					buffer.putint (feat.rout_id_set.first.id);
 				end;
-				file.putstring (",%N");
+				buffer.putstring (",%N");
 				i := i + 1
 			end;
-			file.putstring ("};%N%N");
+			buffer.putstring ("};%N%N");
 		end;
 
-	generate_name_table (file: INDENT_FILE; id: CLASS_ID) is
-			-- Generate name table in file `file'.
+	generate_name_table (buffer: GENERATION_BUFFER; id: CLASS_ID) is
+			-- Generate name table in `buffer'.
 		require
-			good_argument: file /= Void;
+			good_argument: buffer /= Void;
 		local
 			i: INTEGER;
 			str: STRING;
 			feat: FEATURE_I;
 			local_copy: like Current
 		do
-			file.putstring ("char *cl");
-			file.putint (id.id);
-			file.putstring (" [] = {%N");
+			buffer.putstring ("char *cl");
+			buffer.putint (id.id);
+			buffer.putstring (" [] = {%N");
 			from
 				local_copy := Current
 				i := 0;
@@ -164,16 +162,16 @@ end;
 			loop
 				str := local_copy.array_item (i);
 				if str = Void then
-					file.putstring ("(char *) 0");
+					buffer.putstring ("(char *) 0");
 				else
-					file.putchar ('"');
-					file.putstring (str);
-					file.putstring ("%"");
+					buffer.putchar ('"');
+					buffer.putstring (str);
+					buffer.putstring ("%"");
 				end;
-				file.putstring (",%N");
+				buffer.putstring (",%N");
 				i := i + 1;
 			end;
-			file.putstring ("};%N%N");
+			buffer.putstring ("};%N%N");
 		end;
 
 	make_byte_code (ba: BYTE_ARRAY) is
@@ -220,10 +218,8 @@ end;
 
 feature -- Concurrent Eiffel
 
-	generate_separate_pattern_id_table (file: INDENT_FILE; type_id: INTEGER) is
+	generate_separate_pattern_id_table (buffer: GENERATION_BUFFER; type_id: INTEGER) is
 			-- Generation of the hash table
-		require
-			file.is_open_write;
 		local
 			i: INTEGER;
 			feat: FEATURE_I;
@@ -231,9 +227,9 @@ feature -- Concurrent Eiffel
 			class_type, written_type: CLASS_TYPE;
 			local_values: like values
 		do
-			file.putstring ("static EIF_INTEGER cpatid");
-			file.putint (type_id);
-			file.putstring ("[] = {%N");
+			buffer.putstring ("static EIF_INTEGER cpatid");
+			buffer.putint (type_id);
+			buffer.putstring ("[] = {%N");
 			from
 				local_values := values
 				i := 0;
@@ -246,7 +242,7 @@ feature -- Concurrent Eiffel
 					feat.is_external or else
 					feat.is_deferred
 				then
-					file.putstring ("-1");
+					buffer.putstring ("-1");
 				else
 					written_class := System.class_of_id (feat.written_in);
 					class_type := System.class_type_of_id (type_id);
@@ -256,12 +252,12 @@ feature -- Concurrent Eiffel
 						written_type := written_class.meta_type 
 											(class_type.type).associated_class_type;
 					end;
-					file.putint (system.pattern_table.c_pattern_id(feat.pattern_id, written_type.type));
+					buffer.putint (system.pattern_table.c_pattern_id(feat.pattern_id, written_type.type));
 				end;
-				file.putstring (",%N");
+				buffer.putstring (",%N");
 				i := i + 1;
 			end;
-			file.putstring ("};%N%N");
+			buffer.putstring ("};%N%N");
 		end;
 
 end

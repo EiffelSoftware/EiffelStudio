@@ -101,16 +101,18 @@ feature -- Generation
 			last_generated_file.close
 			
 					-- Finally copy the images referenced in `a_doc' so they are still visible from new file. FIXME: Do copy actual images.
-			create l_link_manager.make_with_documents (shared_project.documents)
-			l_images := l_link_manager.document_images (a_doc)
-			from
-				l_images.start
-			until
-				l_images.after
-			loop
-				l_link := l_images.item
-				create l_target_dir.make (temporary_html_location (l_link.url, False))
-				l_images.forth
+			if a_doc.is_valid_xml then				
+				create l_link_manager.make_with_documents (shared_project.documents)
+				l_images := l_link_manager.document_images (a_doc)
+				from
+					l_images.start
+				until
+					l_images.after
+				loop
+					l_link := l_images.item
+					create l_target_dir.make (temporary_html_location (l_link.url, False))
+					l_images.forth
+				end	
 			end
 		ensure
 			has_last_generated_file: last_generated_file /= Void

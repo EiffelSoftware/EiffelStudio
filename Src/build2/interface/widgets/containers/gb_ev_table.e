@@ -322,30 +322,32 @@ feature {GB_CODE_GENERATOR} -- Output
 					--strings_correct_length: temp_x_position_string.count // 4 = first.count			
 				end
 			end
-			Result := Result + indent + "%T-- Insert and position all children of `" + info.name + "'."
-			children_names := info.child_names 
-			from
-				counter := 1
-			until
-				counter = temp_column_positions_string.count // 4 + 1
-			loop
-				lower := (counter - 1) * 4 + 1
-				upper := (counter - 1) * 4 + 4
-				current_child_name := children_names @ counter
-				column_position := temp_column_positions_string.substring (lower, upper)
-				row_position := temp_row_positions_string.substring (lower, upper)
-				column_span := temp_column_spans_string.substring (lower, upper)
-				row_span := temp_row_spans_string.substring (lower, upper)
-					-- Now remove all leading 0's from strings.
-					-- 0's were added for storage in XML.
-				column_position.prune_all_leading ('0')
-				row_position.prune_all_leading ('0')
-				column_span.prune_all_leading ('0')
-				row_span.prune_all_leading ('0')
-				Result := Result + indent + info.name + ".put (" + current_child_name + ", " + column_position + ", " +
-					row_position + ", " + column_span + ", " + row_span + ")"			
-				counter := counter + 1
-			end			
+			children_names := info.child_names
+			if not children_names.is_empty then
+				Result := Result + indent + "%T-- Insert and position all children of `" + info.name + "'."
+				from
+					counter := 1
+				until
+					counter = temp_column_positions_string.count // 4 + 1
+				loop
+					lower := (counter - 1) * 4 + 1
+					upper := (counter - 1) * 4 + 4
+					current_child_name := children_names @ counter
+					column_position := temp_column_positions_string.substring (lower, upper)
+					row_position := temp_row_positions_string.substring (lower, upper)
+					column_span := temp_column_spans_string.substring (lower, upper)
+					row_span := temp_row_spans_string.substring (lower, upper)
+						-- Now remove all leading 0's from strings.
+						-- 0's were added for storage in XML.
+					column_position.prune_all_leading ('0')
+					row_position.prune_all_leading ('0')
+					column_span.prune_all_leading ('0')
+					row_span.prune_all_leading ('0')
+					Result := Result + indent + info.name + ".put (" + current_child_name + ", " + column_position + ", " +
+						row_position + ", " + column_span + ", " + row_span + ")"			
+					counter := counter + 1
+				end			
+			end
 			Result := strip_leading_indent (Result)
 		end
 		

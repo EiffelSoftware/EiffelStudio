@@ -4,6 +4,7 @@
 #include <objbase.h>
 #include <cor.h>
 #include <CorSym.h>
+#include <mscoree.h>
 
 #ifdef _cplusplus
 extern "C" {
@@ -12,10 +13,8 @@ extern "C" {
 rt_private char message [1024];
 	/* Error message for exceptions */
 
-rt_private void raise_error (HRESULT hr, char *msg);
-	/* Raise error */
-
 #ifdef ASSERTIONS
+rt_private void raise_error (HRESULT hr, char *msg); /* Raise error */
 #define CHECK(hr,msg) if (hr) raise_error (hr, msg);
 #else
 #define CHECK(hr,msg)
@@ -25,12 +24,14 @@ rt_private void raise_error (HRESULT hr, char *msg);
 feature -- COM specific
 */
 
+#ifdef ASSERTIONS
 rt_private void raise_error (HRESULT hr, char *msg)
 	/* Raise an Eiffel exception */
 {
 	sprintf (message, "0x%x: %s", hr, msg);
 	eraise (message, EN_PROG);
 }
+#endif
 
 rt_public void com_initialize ()
 	/* Initialize COM runtime */
@@ -55,6 +56,32 @@ rt_public EIF_POINTER new_ise_cache_manager ()
 	CHECK (hr, "Could not instansiate COM Object ISE_Cache_ISE_COM_CACHE_MANAGER")
 
 	return pICM;
+}
+
+/*
+feature -- CorBindToRuntimeEx interface
+*/
+
+rt_public EIF_POINTER new_cor_runtime_host (LPWSTR version, DWORD flags)
+	/* Create new instance of `ICorRuntimeHost'. */
+{
+	HRESULT hr = NULL;
+	HMODULE mscoree = NULL;
+	FARPROC cor_bind_to_runtime_ex = NULL;
+	ICorRuntimeHost *pHost = NULL;
+	
+	mscoree = LoadLibrary ("mscoree.dll");
+	if (mscoree != NULL) {
+		cor_bind_to_runtime_ex = GetProcAddress (mscoree, "CorBindToRuntimeEx");
+		if (cor_bind_to_runtime_ex != NULL) {
+			hr = (FUNCTION_CAST_TYPE(HRESULT, STDAPICALLTYPE, (LPWSTR, LPWSTR, DWORD, REFCLSID, REFIID, LPVOID *)) cor_bind_to_runtime_ex)
+				(version, NULL, flags, CLSID_CorRuntimeHost, IID_ICorRuntimeHost, (void **)&pHost);
+		}
+	}
+
+	CHECK (hr, "Could not create ICorRuntimeHost");
+
+	return pHost;
 }
 
 /*
@@ -100,7 +127,7 @@ rt_public void c_define_option_for_md_emit (EIF_POINTER md_dispenser, EIF_INTEGE
 {
 	IMetaDataDispenser *dispenser = (IMetaDataDispenser *) md_dispenser;
 	IMetaDataDispenserEx * iex;
-	HRESULT hr;
+	HRESULT hr = 0;
 
 	if (!dispenser->QueryInterface(IID_IMetaDataDispenserEx, (void **)&iex)) {
 		VARIANT value;

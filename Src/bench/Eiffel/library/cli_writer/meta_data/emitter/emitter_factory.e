@@ -8,15 +8,25 @@ class
 
 inherit
 	CLI_COM
+	
+	CLR_HOST_FACTORY
+		export
+			{NONE} all
+		end
 
 feature -- Initialization
 
-	new_emitter: COM_ISE_CACHE_MANAGER is
+	new_emitter (runtime_version: STRING): COM_ISE_CACHE_MANAGER is
 			-- Create a new instance of FUSION_SUPPORT.
 		local
 			p: POINTER
+			l_host: CLR_HOST
 		do
 			initialize_com
+			l_host := runtime_host (runtime_version, 0)
+			check
+				l_host_not_void: l_host /= Void
+			end
 			p := c_new_ise_cache_manager
 			if p /= default_pointer then
 				create Result.make_by_pointer (p)

@@ -14,6 +14,8 @@ extern "C" {
 #endif
 
 #define cwel_lv_column_set_mask(_ptr_, _value_) 		(((LV_COLUMN *) _ptr_)->mask = (UINT) (_value_))
+#define cwel_lv_column_add_mask(_ptr_, _value_)			(((LV_COLUMN *) _ptr_)->mask = (UINT) (((LV_COLUMN *) _ptr_)->mask)|(_value_))
+#define cwel_lv_column_remove_mask(_ptr_, _value_)		(((LV_COLUMN *) _ptr_)->mask = (UINT) (((LV_COLUMN *) _ptr_)->mask)&(~(_value_)))
 #define cwel_lv_column_set_fmt(_ptr_, _value_)			(((LV_COLUMN *) _ptr_)->fmt = (int) (_value_))
 #define cwel_lv_column_set_cx(_ptr_, _value_)			(((LV_COLUMN *) _ptr_)->cx = (int) (_value_))
 #define cwel_lv_column_set_psztext(_ptr_, _value_)		(((LV_COLUMN *) _ptr_)->pszText = (LPTSTR) (_value_))

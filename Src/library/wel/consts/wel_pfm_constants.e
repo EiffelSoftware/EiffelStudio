@@ -29,7 +29,7 @@ feature -- Access
 	Pfm_numbering: INTEGER is 32
 			-- The wNumbering member is valid.
 
-	Pfm_offsetindent: INTEGER is 2147483648
+	Pfm_offsetindent: INTEGER is -2147483648
 			-- The dxOffset member is valid.
 
 end -- class WEL_PFM_CONSTANTS

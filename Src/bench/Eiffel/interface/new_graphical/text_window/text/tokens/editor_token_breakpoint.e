@@ -102,15 +102,15 @@ feature -- Miscellaneous
 
 	pixmap: EV_PIXMAP is 
 			-- Graphical representation of the breakable mark.
-			-- Six different representations whether the breakpoint
-			-- is enabled, disabled or not set and whether the application
-			-- is stopped at this point or not.
+			-- 10 different representations whether the breakpoint
+			-- is enabled, disabled or not set , whether it has a condition or not,
+			-- and whether the application is stopped at this point or not.
 		local
 			pixmaps: ARRAY [EV_PIXMAP]
 			status: APPLICATION_STATUS
 			pebble_routine: E_FEATURE
 			pebble_index: INTEGER
-			index: INTEGER 	-- index if the pixmap array. 
+			index: INTEGER 	-- index in the pixmap array. 
 							--  1 = not stopped version
 							--  2 = stopped version.
 		do
@@ -137,6 +137,10 @@ feature -- Miscellaneous
 				pixmaps := Shared_pixmaps.Icon_bpenabled
 			when -1 then
 				pixmaps := Shared_pixmaps.Icon_bpdisabled
+			when 2 then
+				pixmaps := Shared_pixmaps.Icon_bpenabled_condition
+			when -2 then
+				pixmaps := Shared_pixmaps.Icon_bpdisabled_condition
 			end
 
 			Result := pixmaps @ index

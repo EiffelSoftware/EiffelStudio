@@ -46,7 +46,7 @@ feature {NONE}-- Initialization
 			Precursor {TEXT_OBSERVER_MANAGER}
 			Precursor {B_345_TREE}
 			set_tabulation_size (editor_preferences.tabulation_spaces)
-			finish_reading_agent := agent finish_reading_string
+			finish_reading_string_agent := agent finish_reading_string
 		end
 
 feature -- Content Change
@@ -76,7 +76,8 @@ feature -- Reinitialization
 			reading_text_finished := False
 			current_string := Void
 			current_pos := 0
-			on_text_reset			
+			on_text_reset		
+--			finish_reading_agent := Void
 		end
 
 feature -- Access
@@ -329,13 +330,13 @@ feature {NONE} -- Text Loading
 				reading_text_finished := True
 				on_text_loaded
 			end
-			ev_application.idle_actions.extend(Finish_reading_agent)
+			ev_application.idle_actions.extend (finish_reading_string_agent)
 		end
 
 	finish_reading_string is
 			-- Read the file named `a_name' and perform a lexical analysis
-		require
-			current_string_not_void: current_string /= Void
+--		require
+--			current_string_not_void: current_string /= Void
 		local
 			curr_string	: STRING
 			j			: INTEGER
@@ -409,20 +410,20 @@ feature {NONE} -- Text Loading
 		do
 			text_being_processed := False
 			print ("abort_idle_processing: FALSE%N")
-			ev_application.idle_actions.prune_all (Finish_reading_agent)
+			ev_application.idle_actions.prune_all (finish_reading_string_agent)
 		end
 
 	after_reading_idle_action is
 			-- action performed on idle when text reading is finished.
 		do
-			ev_application.idle_actions.prune_all (Finish_reading_agent)
+			ev_application.idle_actions.prune_all (finish_reading_string_agent)
 			text_being_processed := False
 			print ("after_reading_idle_action: FALSE%N")
 			on_text_fully_loaded
 		end
 
-	finish_reading_agent: PROCEDURE [like Current, TUPLE]
-			-- Agent for function `finish_reading_file'
+	finish_reading_string_agent: PROCEDURE [like Current, TUPLE]
+			-- Agent for function `finish_reading_string'
 
 feature {NONE} -- Implementation
 
@@ -460,7 +461,7 @@ feature -- Memory management
 	recycle is
 		do
 			reset_text
-			finish_reading_agent := Void
+			finish_reading_string_agent := Void
 		end
 
 end -- class TEXT

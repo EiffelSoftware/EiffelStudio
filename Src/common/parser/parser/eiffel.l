@@ -770,7 +770,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 \"(@|#|\||&)[@#0-9a-zA-Z_!\"\$&\'\(\)\*\+\,\-\./:;<>=\?\[\\\]\^\`\{\}\|\~]*\"	{
 				token_buffer.clear_all
 				append_text_substring_to_string (2, text_count - 1, token_buffer)
-				current_position.go_to (token_buffer.count)
+				current_position.go_to (text_count)
 				last_token := TE_STR_FREE
 			}
 

@@ -12,7 +12,7 @@ input_cmd=''
 resource_compiler='windres'
 #
 obj='o'
-lib='o'
+lib='a'
 #
 #-- Standard runtime
 #-------------------
@@ -35,7 +35,7 @@ dllflags=''
 #
 cc='gcc'
 link32='$compiler_path\bin\ld'
-compiler_path='d:\apps\Cygnus\cygwin-b20\H-i586-cygwin32'
+compiler_path='d:\apps\cygwin'
 ms_compiler_path='d:\apps\MSVC\VC98'
 all_dependency='*.o: eif_config.h eif_portable.h eif_globals.h eif_eiffel.h eif_macros.h'
 #

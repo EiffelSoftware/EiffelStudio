@@ -40,10 +40,18 @@ inherit
 		end
 		
 	WEL_WORD_OPERATIONS
+		export
+			{NONE} all
+		end
 	
 	EV_APPLICATION_ACTION_SEQUENCES_IMP
 
 	WEL_VK_CONSTANTS
+	
+	WEL_WINDOWS_VERSION
+		export
+			{NONE} all
+		end
 
 create
 	make
@@ -63,6 +71,9 @@ feature {NONE} -- Initialization
 			tooltip_delay := no_tooltip_delay_assigned
 			stop_processing_requested_msg := cwin_register_window_message (ev_stop_processing_requested.item)
 			cwin_disable_xp_ghosting
+				-- Initialize the theme drawer to the correct version for
+				-- the current platform.
+			update_theme_drawer
 		end
 
 	launch  is
@@ -176,6 +187,10 @@ feature -- Element change
 	add_root_window (w: WEL_FRAME_WINDOW) is
 			-- Add `w' to the list of root windows.
 		do
+				-- Initialize the theme drawer to the correct version for
+				-- the current platform. This needs to be performed after a window
+				-- is added to the system as otherwise a call to `themes_active' is False.
+			update_theme_drawer
 			Application_windows_id.extend (w.item)
 		end
 
@@ -270,7 +285,48 @@ feature {EV_ANY_I, EV_INTERNAL_TOOLBAR_IMP}-- Status report
 				end
 			end
 		end
+		
+feature {EV_BUTTON_IMP, EV_WEL_CONTROL_CONTAINER_IMP, EV_PRIMITIVE_IMP, EV_CONTAINER_IMP} -- Theme drawing
 
+	theme_drawer: EV_THEME_DRAWER_IMP
+			-- `Result' is object suitable for drawing using the
+			-- currently selected themes.
+			
+	update_theme_drawer is
+			-- Updated `theme_drawer' to use current Windows settings.
+		do
+			if themes_active then
+				create {EV_XP_THEME_DRAWER_IMP} theme_drawer
+			else
+				create {EV_CLASSIC_THEME_DRAWER_IMP} theme_drawer
+			end
+		end
+
+	set_theme_drawer (drawer: EV_THEME_DRAWER_IMP) is
+			-- Assign `drawer' to `theme_drawer'.
+		require
+			drawer_not_void: drawer /= Void
+		do
+			theme_drawer := drawer
+		ensure
+			drawer_set: theme_drawer = drawer
+		end
+		
+	themes_active: BOOLEAN is
+			-- Are themes currently active?
+		do
+			Result := uxtheme_dll_available and then cwin_is_theme_active and then cwin_is_app_themed and then comctl32_version >= version_600
+		end
+		
+	uxtheme_dll_available: BOOLEAN is
+			-- Is the "uxtheme.dll" required for theme support available on the current platform?
+		local
+			dll: WEL_DLL
+		once
+			create dll.make ("uxtheme.dll")
+			Result := dll.exists
+		end
+		
 feature {EV_ANY_I, EV_PICK_AND_DROPABLE_IMP, EV_INTERNAL_COMBO_FIELD_IMP} -- Status Report
 
 	pick_and_drop_source: EV_PICK_AND_DROPABLE_IMP
@@ -589,7 +645,7 @@ feature {NONE} -- Implementation
 		once
 			create Result.make ("ev_stop_processing_requested")
 		end
-
+		
 feature {NONE} -- Blocking Dispatcher
 
 	create_dispatcher is
@@ -675,6 +731,22 @@ feature {NONE} -- Externals
 			-- Converts an integer `i' to a pointer
 		external
 			"C [macro <wel.h>] (EIF_INTEGER): EIF_POINTER"
+		end
+		
+	cwin_is_theme_active: BOOLEAN is
+			-- SDK's Open
+		external
+			"dllwin %"uxtheme.dll%" signature (): EIF_BOOLEAN use <windows.h>"
+		alias
+			"IsThemeActive"
+		end
+		
+	cwin_is_app_themed: BOOLEAN is
+			-- SDK's Open
+		external
+			"dllwin %"uxtheme.dll%" signature (): EIF_BOOLEAN use <windows.h>"
+		alias
+			"IsAppThemed"
 		end
 
 end -- class EV_APPLICATION_IMP

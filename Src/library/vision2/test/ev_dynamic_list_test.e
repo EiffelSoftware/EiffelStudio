@@ -36,7 +36,14 @@ feature -- Initialization
 			create tb_test.make ("EV_TOOL_BAR", ~tb_list_generator, ~tb_item_generator)
 			create sb_test.make ("EV_STATUS_BAR", ~sb_list_generator, ~sb_item_generator)
 			create mcl_test.make ("EV_MULTI_COLUMN_LIST", ~mcl_list_generator, ~mcl_item_generator)
+
+			create mcl_test.make ("EV_TREE", ~tree_generator, ~tree_item_generator)
+			create mcl_test.make ("EV_TREE_ITEM", ~tree_item_generator, ~tree_item_generator)
+			create mcl_test.make ("EV_MENU", ~menu_generator, ~menu_item_generator)
+			create mcl_test.make ("EV_MENU_BAR", ~menu_bar_generator, ~menu_generator)
+
 			hbox_test.execute
+
 			print (hbox_test.description + "%N")
 			vbox_test.execute
 			print (vbox_test.description + "%N")
@@ -128,6 +135,31 @@ feature -- Initialization
 		end
 
 	mcl_list_generator: EV_MULTI_COLUMN_LIST is
+		do
+			create Result
+		end
+
+	tree_generator: EV_TREE is
+		do
+			create Result
+		end
+
+	tree_item_generator: EV_TREE_ITEM is
+		do
+			create Result
+		end
+
+	menu_generator: EV_MENU is
+		do
+			create Result
+		end
+
+	menu_bar_generator: EV_MENU_BAR is
+		do
+			create Result
+		end
+
+	menu_item_generator: EV_MENU_ITEM is
 		do
 			create Result
 		end

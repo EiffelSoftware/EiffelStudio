@@ -101,27 +101,3 @@ char *str;
 	return;
 }
 
-/* get the C-string format of an Eiffel object's STRING field. */
-/*
-EIF_POINTER get_c_format_of_eif_string(obj, field_name)
-EIF_OBJ obj;
-char *field_name;
-{
-	EIF_OBJ tmp_str;
-	
-	tmp_str = eif_field((obj), field_name, EIF_REFERENCE);
-	return (eif_strtoc)((tmp_str));
-}
-*/
-
-/*
-char *eif_str_to_c_str(eif_str)
-EIF_OBJ eif_str;
-{
---  get the C-string format of an Eiffel STRING object 
-	EIF_FN_POINTER c_to_c;
-	
-	c_to_c = eif_fn_ref("to_c", str_dtype);
-	return (c_to_c)((eif_str));
-}
-*/

@@ -29,7 +29,7 @@ feature
 					page.extend (element)
 				else
 					page.go_i_th (position -1);
-					page.add_right (element)
+					page.put_right (element)
 				end
 			end
 		end; -- undo

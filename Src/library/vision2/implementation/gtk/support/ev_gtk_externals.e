@@ -159,7 +159,6 @@ feature {NONE} -- GTK C functions for gtkeditable
 		external "C [macro %"gtk_eiffel.h%"]"
 		end
 
-
 feature {NONE} -- GTK C functions for text_component
 
 	gtk_entry_new: POINTER is
@@ -373,6 +372,12 @@ feature {NONE} -- GTK C functions for list
 		external
 			"C | %"gtk_eiffel.h%""
 		end
+
+	gtk_list_child_position (list: POINTER; child: POINTER): INTEGER is
+		external
+			"C | %"gtk_eiffel.h%""
+		end
+
 
 feature {NONE} -- GTK C functions for multi-column list
 

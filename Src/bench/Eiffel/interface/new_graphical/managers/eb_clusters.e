@@ -69,7 +69,7 @@ feature -- Initialization
 			clusters.wipe_out
 			if
 				Eiffel_project.initialized and then
-				Workbench.is_already_compiled
+				Eiffel_project.system_defined
 			 then
 				sub_clusters := Eiffel_system.sub_clusters
 					-- First retrieve all clusters without a parent and put them into an array

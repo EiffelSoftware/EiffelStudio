@@ -79,8 +79,8 @@ public:
 	EIF_REFERENCE ccom_ce_pointed_currency (CURRENCY * a_currency);
 	EIF_REFERENCE ccom_ce_pointed_decimal (DECIMAL * a_decimal);
 	EIF_REFERENCE ccom_ce_pointed_variant (VARIANT * a_variant);
-	EIF_REFERENCE ccom_ce_pointed_long_long (LARGE_INTEGER * a_large_int);
-	EIF_REFERENCE ccom_ce_pointed_ulong_long (ULARGE_INTEGER * a_ularge_int);
+	EIF_REFERENCE ccom_ce_pointed_long_long (LONGLONG * a_large_int, EIF_OBJECT an_object);
+	EIF_REFERENCE ccom_ce_pointed_ulong_long (ULONGLONG * a_ularge_int, EIF_OBJECT an_object);
 
 	EIF_REFERENCE ccom_ce_pointed_record (void * a_record_pointer, char * a_class_name);
 	EIF_REFERENCE ccom_ce_pointed_interface (void * a_interface_pointer, char * a_class_name);
@@ -92,6 +92,7 @@ public:
 
 	EIF_REFERENCE ccom_ce_safearray_short (SAFEARRAY * a_safearray);
 	EIF_REFERENCE ccom_ce_safearray_long (SAFEARRAY * a_safearray);
+	EIF_REFERENCE ccom_ce_safearray_int64 (SAFEARRAY * a_safearray);
 	EIF_REFERENCE ccom_ce_safearray_float (SAFEARRAY * a_safearray);
 	EIF_REFERENCE ccom_ce_safearray_double (SAFEARRAY * a_safearray);
 	EIF_REFERENCE ccom_ce_safearray_currency (SAFEARRAY * a_safearray);

@@ -58,7 +58,7 @@ feature -- Access
 			gts: like generic_type_selectors
 			generic_type_name: STRING
 			type_as_class_c: CLASS_C
-			l: LINKED_LIST [CLASS_I]
+			l: LIST [CLASS_I]
 		do
 			Result := clone (selector.text)
 			if Result.is_empty then

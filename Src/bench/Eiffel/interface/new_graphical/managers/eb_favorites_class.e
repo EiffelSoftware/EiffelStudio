@@ -110,7 +110,7 @@ feature {NONE} -- Implementation
 	get_class_i is
 			-- Find the corresponding class_i, depending on the name.
 		local
-			loc_list: LINKED_LIST [CLASS_I]
+			loc_list: LIST [CLASS_I]
 		do
 			loc_list := Eiffel_universe.classes_with_name (name)
 		

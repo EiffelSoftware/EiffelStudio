@@ -54,6 +54,16 @@ feature
 			put (t, cursor);
 		end;
 
+	remove is
+			-- Remove current item
+		require
+			valid_cursor: cursor >0
+			not_after: not after
+		do
+			put (Void, cursor)
+			cursor := cursor - 1
+		end
+		
 	start is
 			-- Start the iteration
 		do

@@ -715,7 +715,7 @@ feature -- Conveniences
 				end
 				Result := extension /= Void and then not extension.need_current (extension.type)
 			else
-				Result := is_external
+				Result := is_external or (is_constant and then not is_once)
 			end			
 		end
 		

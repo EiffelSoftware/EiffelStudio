@@ -45,7 +45,8 @@ feature {AST_FACTORY, EXTERNAL_CLASS_C} -- Initialization
 			inv: like invariant_part;
 			s: like suppliers;
 			o: like obsolete_message;
-			cl: like click_list)
+			cl: like click_list;
+			he: like has_externals)
 		is
 			-- Create a new CLASS AST node.
 		require
@@ -69,6 +70,7 @@ feature {AST_FACTORY, EXTERNAL_CLASS_C} -- Initialization
 			convertors := co
 			features := f
 			invariant_part := inv
+			has_externals := he
 			if
 				invariant_part /= Void and then
 				invariant_part.assertion_list = Void
@@ -108,6 +110,7 @@ feature {AST_FACTORY, EXTERNAL_CLASS_C} -- Initialization
 			suppliers_set: suppliers = s
 			obsolete_message_set: obsolete_message = o
 			click_list_set: click_list = cl
+			has_externals_set: has_externals = he
 		end
 
 feature -- Visitor
@@ -195,6 +198,9 @@ feature -- Attributes
 
 	has_empty_invariant: BOOLEAN
 			-- Does class have an empty invariant clause?
+			
+	has_externals: BOOLEAN
+			-- Does current class have an external declaration?
 
 feature -- Status report
 

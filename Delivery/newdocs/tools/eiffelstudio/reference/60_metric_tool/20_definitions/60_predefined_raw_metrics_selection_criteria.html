@@ -1,0 +1,446 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+<HTML>
+	<HEAD>
+		<TITLE>Example overview topic</TITLE>
+		<META NAME="MS-HKWD" CONTENT="Metric,predefined raw metrics">
+		<META NAME="MS-HKWD" CONTENT="Metric,predefined selection criteria">
+		<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+	</HEAD>
+
+	<BODY>
+        <h1>Predefined raw metrics</h1>
+        <p>The
+        environment should make it possible, for any project, to apply the
+        elementary metrics in the following table, each with an associated unit
+        and a one-identifier name. Each of the table’s major divisions starts
+        with a raw metric, for example Classes, and, when appropriate, continues
+        with selection criteria that yield derived metrics based on that raw
+        metric, for example Deferred_classes.
+
+        </p>
+        <p>The
+        last column specifies the “<a href="70_scopes_scope_types.html#scope_type">basic scope types</a>” of the metric; this
+        notion, discussed in more detail in a later section, denotes the set of
+        scope types on which the metric will need to get its information
+        directly from the software product (rather than being simply computed by
+        adding the corresponding values on a scope’s constituents).</p>
+        <table>
+          <col width="116" style="mso-width-source:userset;mso-width-alt:4242;width:87pt">
+          <col width="75" style="mso-width-source:userset;mso-width-alt:2742;width:56pt">
+          <col width="53" style="mso-width-source:userset;mso-width-alt:1938;width:40pt">
+          <col width="64" span="2" style="width:48pt">
+          <tr height="17" style="height:12.75pt">
+            <td height="17" class="xl24" width="116" style="height:12.75pt;width:87pt">Basic
+              Count</td>
+            <td class="xl24" width="75" style="border-left:none;width:56pt">Criterion</td>
+            <td class="xl24" width="53" style="border-left:none;width:40pt">What
+              to count</td>
+            <td class="xl24" width="64" style="border-left:none;width:48pt">Unit</td>
+            <td class="xl24" width="64" style="border-left:none;width:48pt">Basic
+              scope types</td>
+          </tr>
+          <tr height="17" style="height:12.75pt">
+            <td rowspan="4" height="68" class="xl25" style="height:51.0pt;border-top:none">Classes</td>
+            <td class="xl24" style="border-top:none;border-left:none">&nbsp;</td>
+            <td class="xl24" style="border-top:none;border-left:none">Classes of
+              a cluster or system</td>
+            <td rowspan="4" class="xl26" style="border-top:none">CLASS</td>
+            <td rowspan="4" class="xl26" style="border-top:none">Cluster</td>
+          </tr>
+          <tr height="17" style="height:12.75pt">
+            <td height="17" class="xl24" style="height:12.75pt;border-top:none;border-left:
+  none">Deferred</td>
+            <td class="xl25" style="border-top:none;border-left:none">Deferred
+              classes (not completely implemented, as opposed to
+              &quot;effective&quot;, completely implemented).</td>
+          </tr>
+          <tr height="17" style="height:12.75pt">
+            <td height="17" class="xl24" style="height:12.75pt;border-top:none;border-left:
+  none">Invariant equipped</td>
+            <td class="xl24" style="border-top:none;border-left:none">Classes
+              having an invariant</td>
+          </tr>
+          <tr height="17" style="height:12.75pt">
+            <td height="17" class="xl24" style="height:12.75pt;border-top:none;border-left:
+  none">Obsolete</td>
+            <td class="xl24" style="border-top:none;border-left:none">Classes
+              marked as superseded by newer alternatives</td>
+          </tr>
+          <tr height="17" style="height:12.75pt">
+            <td height="17" class="xl24" style="height:12.75pt;border-top:none">Clusters</td>
+            <td class="xl24" style="border-top:none;border-left:none">&nbsp;</td>
+            <td class="xl24" style="border-top:none;border-left:none">Clusters
+              of a system or sub clusters of a cluster</td>
+            <td class="xl24" style="border-top:none;border-left:none">CLUSTER
+              Cluster</td>
+            <td class="xl24" style="border-top:none;border-left:none">&nbsp;</td>
+          </tr>
+          <tr height="17" style="height:12.75pt">
+            <td height="17" class="xl24" style="height:12.75pt;border-top:none">Compilations</td>
+            <td class="xl24" style="border-top:none;border-left:none">&nbsp;</td>
+            <td class="xl24" style="border-top:none;border-left:none">Compilations
+              since start of project</td>
+            <td class="xl24" style="border-top:none;border-left:none">COMPILATION</td>
+            <td class="xl24" style="border-top:none;border-left:none">System</td>
+          </tr>
+          <tr height="17" style="height:12.75pt">
+            <td rowspan="10" height="170" class="xl25" style="height:127.5pt;border-top:none">Dependents</td>
+            <td class="xl24" style="border-top:none;border-left:none">&nbsp;</td>
+            <td class="xl24" style="border-top:none;border-left:none">Classes on
+              which a class depends on it, directly or indirectly</td>
+            <td rowspan="10" class="xl26" style="border-top:none">CLASS</td>
+            <td rowspan="10" class="xl26" style="border-top:none">Class</td>
+          </tr>
+          <tr height="17" style="height:12.75pt">
+            <td height="17" class="xl24" style="height:12.75pt;border-top:none;border-left:
+  none">Clients</td>
+            <td class="xl24" style="border-top:none;border-left:none">Direct
+              clients</td>
+          </tr>
+          <tr height="17" style="height:12.75pt">
+            <td height="17" class="xl24" style="height:12.75pt;border-top:none;border-left:
+  none">Heirs</td>
+            <td class="xl24" style="border-top:none;border-left:none">Direct
+              heirs in inheritance structure</td>
+          </tr>
+          <tr height="17" style="height:12.75pt">
+            <td height="17" class="xl24" style="height:12.75pt;border-top:none;border-left:
+  none">Parents</td>
+            <td class="xl24" style="border-top:none;border-left:none">Direct
+              parents in inheritance structure</td>
+          </tr>
+          <tr height="17" style="height:12.75pt">
+            <td height="17" class="xl24" style="height:12.75pt;border-top:none;border-left:
+  none">Suppliers</td>
+            <td class="xl24" style="border-top:none;border-left:none">Direct
+              suppliers</td>
+          </tr>
+          <tr height="17" style="height:12.75pt">
+            <td height="17" class="xl24" style="height:12.75pt;border-top:none;border-left:
+  none">Indirect clients</td>
+            <td class="xl24" style="border-top:none;border-left:none">Indirect
+              clients</td>
+          </tr>
+          <tr height="17" style="height:12.75pt">
+            <td height="17" class="xl24" style="height:12.75pt;border-top:none;border-left:
+  none">Indirect heirs</td>
+            <td class="xl24" style="border-top:none;border-left:none">Indirect<span style="mso-spacerun: yes">&nbsp;
+              </span>heirs in inheritance structure</td>
+          </tr>
+          <tr height="17" style="height:12.75pt">
+            <td height="17" class="xl24" style="height:12.75pt;border-top:none;border-left:
+  none">Indirect parents</td>
+            <td class="xl24" style="border-top:none;border-left:none">Indirect<span style="mso-spacerun: yes">&nbsp;
+              </span>parents in inheritance structure</td>
+          </tr>
+          <tr height="17" style="height:12.75pt">
+            <td height="17" class="xl24" style="height:12.75pt;border-top:none;border-left:
+  none">Indirect suppliers</td>
+            <td class="xl24" style="border-top:none;border-left:none">Indirect<span style="mso-spacerun: yes">&nbsp;
+              </span>suppliers</td>
+          </tr>
+          <tr height="17" style="height:12.75pt">
+            <td height="17" class="xl24" style="height:12.75pt;border-top:none;border-left:
+  none">Self</td>
+            <td class="xl24" style="border-top:none;border-left:none">The class
+              it self (value always 1)</td>
+          </tr>
+          <tr height="17" style="height:12.75pt">
+            <td rowspan="9" height="153" class="xl25" style="height:114.75pt;border-top:none">All
+              features</td>
+            <td class="xl24" style="border-top:none;border-left:none">&nbsp;</td>
+            <td class="xl24" style="border-top:none;border-left:none">Inherited
+              and immediate features of a class</td>
+            <td rowspan="9" class="xl26" style="border-top:none">FEATURE</td>
+            <td rowspan="9" class="xl26" style="border-top:none">Class</td>
+          </tr>
+          <tr height="17" style="height:12.75pt">
+            <td height="17" class="xl24" style="height:12.75pt;border-top:none;border-left:
+  none">Attributes</td>
+            <td class="xl24" style="border-top:none;border-left:none">Attributes
+              (features represented by fields in instances of the class, as
+              opposed to routines, represented by algorithms)</td>
+          </tr>
+          <tr height="17" style="height:12.75pt">
+            <td height="17" class="xl24" style="height:12.75pt;border-top:none;border-left:
+  none">Deferred</td>
+            <td class="xl24" style="border-top:none;border-left:none">Deferred
+              routines (not completely implemented, as opposed to effective,
+              completely implemented)</td>
+          </tr>
+          <tr height="17" style="height:12.75pt">
+            <td height="17" class="xl24" style="height:12.75pt;border-top:none;border-left:
+  none">Exported</td>
+            <td class="xl24" style="border-top:none;border-left:none">Features
+              available to all clients</td>
+          </tr>
+          <tr height="17" style="height:12.75pt">
+            <td height="17" class="xl24" style="height:12.75pt;border-top:none;border-left:
+  none">Functions</td>
+            <td class="xl24" style="border-top:none;border-left:none">Value-returning
+              routines</td>
+          </tr>
+          <tr height="17" style="height:12.75pt">
+            <td height="17" class="xl24" style="height:12.75pt;border-top:none;border-left:
+  none">Postcondition equipped</td>
+            <td class="xl24" style="border-top:none;border-left:none">Routines
+              having a postcondition</td>
+          </tr>
+          <tr height="17" style="height:12.75pt">
+            <td height="17" class="xl24" style="height:12.75pt;border-top:none;border-left:
+  none">Precondition equipped</td>
+            <td class="xl24" style="border-top:none;border-left:none">Routines
+              having a precondition</td>
+          </tr>
+          <tr height="17" style="height:12.75pt">
+            <td height="17" class="xl24" style="height:12.75pt;border-top:none;border-left:
+  none">Queries</td>
+            <td class="xl24" style="border-top:none;border-left:none">Value-returning
+              features, including both attributes and functions as opposed to
+              commands, the same thing as procedures, returning a result)</td>
+          </tr>
+          <tr height="17" style="height:12.75pt">
+            <td height="17" class="xl24" style="height:12.75pt;border-top:none;border-left:
+  none">Inherited</td>
+            <td class="xl24" style="border-top:none;border-left:none">Features
+              obtains from a parent (possibly in a different form)</td>
+          </tr>
+          <tr height="17" style="height:12.75pt">
+            <td rowspan="8" height="136" class="xl25" style="height:102.0pt;border-top:none">Immediate
+              features</td>
+            <td class="xl24" style="border-top:none;border-left:none">&nbsp;</td>
+            <td class="xl24" style="border-top:none;border-left:none">Immediate
+              features of a class</td>
+            <td rowspan="8" class="xl26" style="border-top:none">FEATURE</td>
+            <td rowspan="8" class="xl26" style="border-top:none">Class</td>
+          </tr>
+          <tr height="17" style="height:12.75pt">
+            <td height="17" class="xl24" style="height:12.75pt;border-top:none;border-left:
+  none">Attributes</td>
+            <td class="xl24" style="border-top:none;border-left:none">Attributes
+              (features represented by fields in instances of the class, as
+              opposed to routines, represented by algorithms)</td>
+          </tr>
+          <tr height="17" style="height:12.75pt">
+            <td height="17" class="xl24" style="height:12.75pt;border-top:none;border-left:
+  none">Deferred</td>
+            <td class="xl24" style="border-top:none;border-left:none">Deferred
+              routines (not completely implemented, as opposed to effective,
+              completely implemented)</td>
+          </tr>
+          <tr height="17" style="height:12.75pt">
+            <td height="17" class="xl24" style="height:12.75pt;border-top:none;border-left:
+  none">Exported</td>
+            <td class="xl24" style="border-top:none;border-left:none">Features
+              available to all clients</td>
+          </tr>
+          <tr height="17" style="height:12.75pt">
+            <td height="17" class="xl24" style="height:12.75pt;border-top:none;border-left:
+  none">Functions</td>
+            <td class="xl24" style="border-top:none;border-left:none">Value-returning
+              routines</td>
+          </tr>
+          <tr height="17" style="height:12.75pt">
+            <td height="17" class="xl24" style="height:12.75pt;border-top:none;border-left:
+  none">Postcondition equipped</td>
+            <td class="xl24" style="border-top:none;border-left:none">Routines
+              having a postcondition</td>
+          </tr>
+          <tr height="17" style="height:12.75pt">
+            <td height="17" class="xl24" style="height:12.75pt;border-top:none;border-left:
+  none">Precondition equipped</td>
+            <td class="xl24" style="border-top:none;border-left:none">Routines
+              having a precondition</td>
+          </tr>
+          <tr height="17" style="height:12.75pt">
+            <td height="17" class="xl24" style="height:12.75pt;border-top:none;border-left:
+  none">Queries</td>
+            <td class="xl24" style="border-top:none;border-left:none">Value-returning
+              features, including both attributes and functions as opposed to
+              commands, the same thing as procedures, returning a result)</td>
+          </tr>
+          <tr height="17" style="height:12.75pt">
+            <td rowspan="3" height="51" class="xl25" style="height:38.25pt;border-top:none">All
+              feature assertions</td>
+            <td class="xl24" style="border-top:none;border-left:none">&nbsp;</td>
+            <td class="xl24" style="border-top:none;border-left:none">Clauses in
+              routine's assertion, whether inherited or not</td>
+            <td rowspan="3" class="xl26" style="border-top:none">CONTRACT
+              CLAUSES</td>
+            <td rowspan="3" class="xl26" style="border-top:none">Feature</td>
+          </tr>
+          <tr height="17" style="height:12.75pt">
+            <td height="17" class="xl24" style="height:12.75pt;border-top:none;border-left:
+  none">Postcondition clauses</td>
+            <td class="xl24" style="border-top:none;border-left:none">Clauses in
+              postcondition</td>
+          </tr>
+          <tr height="17" style="height:12.75pt">
+            <td height="17" class="xl24" style="height:12.75pt;border-top:none;border-left:
+  none">Precondition clauses</td>
+            <td class="xl24" style="border-top:none;border-left:none">Clauses in
+              precondition</td>
+          </tr>
+          <tr height="17" style="height:12.75pt">
+            <td rowspan="3" height="51" class="xl25" style="height:38.25pt;border-top:none">Immediate
+              feature assertions</td>
+            <td class="xl24" style="border-top:none;border-left:none">&nbsp;</td>
+            <td class="xl24" style="border-top:none;border-left:none">Clauses in
+              routine's assertion</td>
+            <td rowspan="3" class="xl26" style="border-top:none">CONTRACT
+              CLAUSES</td>
+            <td rowspan="3" class="xl26" style="border-top:none">Feature</td>
+          </tr>
+          <tr height="17" style="height:12.75pt">
+            <td height="17" class="xl24" style="height:12.75pt;border-top:none;border-left:
+  none">Postcondition clauses</td>
+            <td class="xl24" style="border-top:none;border-left:none">Clauses in
+              postcondition</td>
+          </tr>
+          <tr height="17" style="height:12.75pt">
+            <td height="17" class="xl24" style="height:12.75pt;border-top:none;border-left:
+  none">Precondition clauses</td>
+            <td class="xl24" style="border-top:none;border-left:none">Clauses in
+              precondition</td>
+          </tr>
+          <tr height="17" style="height:12.75pt">
+            <td rowspan="2" height="34" class="xl25" style="height:25.5pt;border-top:none">Formal
+              generics</td>
+            <td class="xl24" style="border-top:none;border-left:none">&nbsp;</td>
+            <td class="xl24" style="border-top:none;border-left:none">Formal
+              generic parameters of a class</td>
+            <td rowspan="2" class="xl26" style="border-top:none">CLASS</td>
+            <td rowspan="2" class="xl26" style="border-top:none">Class</td>
+          </tr>
+          <tr height="17" style="height:12.75pt">
+            <td height="17" class="xl24" style="height:12.75pt;border-top:none;border-left:
+  none">Constrained</td>
+            <td class="xl24" style="border-top:none;border-left:none">Formal
+              parameters constrained by a type other than ANY</td>
+          </tr>
+          <tr height="17" style="height:12.75pt">
+            <td height="17" class="xl24" style="height:12.75pt;border-top:none">All
+              formals</td>
+            <td class="xl24" style="border-top:none;border-left:none"><span style="mso-spacerun: yes">&nbsp;</span></td>
+            <td class="xl24" style="border-top:none;border-left:none">Formal
+              argument of a routine whether inherited or not</td>
+            <td class="xl24" style="border-top:none;border-left:none">LOCAL</td>
+            <td class="xl24" style="border-top:none;border-left:none">Feature</td>
+          </tr>
+          <tr height="17" style="height:12.75pt">
+            <td height="17" class="xl24" style="height:12.75pt;border-top:none">Immediate
+              formals</td>
+            <td class="xl24" style="border-top:none;border-left:none"><span style="mso-spacerun: yes">&nbsp;</span></td>
+            <td class="xl24" style="border-top:none;border-left:none">Formal
+              argument of a routine.</td>
+            <td class="xl24" style="border-top:none;border-left:none">LOCAL</td>
+            <td class="xl24" style="border-top:none;border-left:none">Feature</td>
+          </tr>
+          <tr height="17" style="height:12.75pt">
+            <td height="17" class="xl24" style="height:12.75pt;border-top:none">Invariant
+              clauses</td>
+            <td class="xl24" style="border-top:none;border-left:none"><span style="mso-spacerun: yes">&nbsp;</span></td>
+            <td class="xl24" style="border-top:none;border-left:none">Clauses in
+              invariant</td>
+            <td class="xl24" style="border-top:none;border-left:none">CONTRACT
+              CLAUSE</td>
+            <td class="xl24" style="border-top:none;border-left:none">Class</td>
+          </tr>
+          <tr height="17" style="height:12.75pt">
+            <td height="17" class="xl24" style="height:12.75pt;border-top:none">Lines</td>
+            <td class="xl24" style="border-top:none;border-left:none">&nbsp;</td>
+            <td class="xl24" style="border-top:none;border-left:none">Source
+              lines</td>
+            <td class="xl24" style="border-top:none;border-left:none">LINE</td>
+            <td class="xl24" style="border-top:none;border-left:none">Feature,
+              Class</td>
+          </tr>
+          <tr height="17" style="height:12.75pt">
+            <td height="17" class="xl24" style="height:12.75pt;border-top:none">All
+              locals</td>
+            <td class="xl24" style="border-top:none;border-left:none"><span style="mso-spacerun: yes">&nbsp;</span></td>
+            <td class="xl24" style="border-top:none;border-left:none">Local
+              entities of feature whether inherited or not (excluding Result)</td>
+            <td class="xl24" style="border-top:none;border-left:none" x:str="LOCAL ">LOCAL</td>
+            <td class="xl24" style="border-top:none;border-left:none">Feature</td>
+          </tr>
+          <tr height="17" style="height:12.75pt">
+            <td height="17" class="xl24" style="height:12.75pt;border-top:none">Immediate
+              locals</td>
+            <td class="xl24" style="border-top:none;border-left:none"><span style="mso-spacerun: yes">&nbsp;</span></td>
+            <td class="xl24" style="border-top:none;border-left:none">Local
+              entities of feature (excluding Result)</td>
+            <td class="xl24" style="border-top:none;border-left:none" x:str="LOCAL ">LOCAL</td>
+            <td class="xl24" style="border-top:none;border-left:none">Feature</td>
+          </tr>
+        </table>
+        <p>&nbsp;</p>
+        <p>A
+        few comments on specific entries:
+
+        </p>
+        <ul>
+          <li>
+            <p>The
+            list of criteria for Features does not include Routines because
+            a routine is a feature that is not an attribute; to obtain the
+            number of routines, just count features that do not satisfy the Attributes
+            criterion.
+
+            </li>
+          <li>
+            <p>The
+            selection criteria Attributes and Deferred for Features
+            are, a noted earlier, not independent, since attributes may not
+            be deferred.
+
+            </li>
+          <li>
+            <p>Another
+            case of dependency: a procedure is never part of Queries but
+            always a “command”. Queries, however, include both Attributes
+            and Functions.
+
+            </li>
+          <li>
+            <p>Two
+            more cases of dependency: Redeclared and Renamed can
+            only be satisfied for features that are inherited. A feature
+            that is not inherited, but introduced fresh in the enclosing class,
+            is called immediate.
+
+            </li>
+          <li>
+            <p>The
+            Redeclared attribute has three values: a feature is redefined
+            it was effective in the parent, or it was deferred in the parent
+            and the new class keeps it deferred with a different signature or
+            contract; it is effected if it was deferred and the class
+            makes it effective; or it may be neither of these.
+
+            </li>
+        </ul>
+        <p>All
+        metrics listed are product metrics with one exception: Compilations,
+        the only process metric, counting the number of compilations of
+        the project (in ISE Eiffel 5, this is based on ISE’s Melting Ice
+        technology). There is room for more process metrics, such as cost
+        estimates; this requires standard formats letting project managers enter
+        the appropriate information, a point that future versions of the metrics
+        policy described here may develop further.
+
+        </p>
+        <p>There
+        is also room for elementary product metrics other than those in the
+        preceding table. In fact, every syntactic construct is a candidate for
+        an elementary metric that simply counts the number of its occurrences;
+        but we should limit ourselves to those that we judge interesting. The
+        metrics literature also suggests elementary metrics assessing complexity
+        of the control structure through properties of the control graph
+        (McCabe), or routine coherence through such properties as the number of
+        attributes accessed by a routine; we should only add them if we can find
+        convincing arguments for their theoretical soundness.
+
+        </p>
+	</BODY>
+</HTML>

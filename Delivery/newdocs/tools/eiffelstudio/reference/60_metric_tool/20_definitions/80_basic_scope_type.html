@@ -1,0 +1,195 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+<HTML>
+	<HEAD>
+		<TITLE>Example overview topic</TITLE>
+		<META NAME="MS-HKWD" CONTENT="Metric,basic scope type">
+		<LINK REL="stylesheet" HREF="default.css" TYPE="text/css">
+	</HEAD>
+
+	<BODY>
+        <h1>Basic scope type</h1>
+        <p>We
+        need a clarification regarding the connection between metrics and
+        scopes. This is a technical point and you can start using the tools
+        without understanding it.
+
+        </p>
+        <p>The
+        reason for this notion, “basic scope types of a metric”, is that
+        some metrics are additive in a simple way across the constituents of a
+        scope, but others are not. “Constituents” of a scope are the sub
+        scopes according to the order relation defined earlier between scopes:
+        systems for an archive, clusters for a system, classes for a clusters,
+        and features for a class.
+
+        </p>
+        <p>To
+        see the need for defining basic scope types, take as an example the
+        elementary metric Lines, denoting the number of source lines in a
+        certain scope. Then:
+
+        </p>
+        <p>•
+        The metric is additive at the cluster level, in the sense that the
+        number of source lines of a cluster is the sum of the corresponding
+        numbers for its constituent classes.
+
+        </p>
+        <p>•
+        The metric is similarly additive at the level of systems (add Lines over
+        constituent clusters) and archives (add Lines over constituent systems).
+
+        </p>
+        <p>•
+        The metric is, however, <b>not additive </b>at the class level, since
+        the number of source lines of a class isn’t just the sum of numbers of
+        source lines of its features; we must also count the lines of Indexing
+        clauses, Invariant clauses and other elements of a class that are not in
+        a feature.
+
+        </p>
+        <p>We
+        will say that the scope types Feature and Class are the basic scope
+        types of the metric Lines. This means the definition of the metric must,
+        in specifying how to compute a measure for that metric over a particular
+        scope, include three different algorithms, as follows.</p>
+
+		<P CLASS="note"><b>How to compute a measure</b>:&nbsp;<br>
+        The following algorithm determines how to obtain a measure by applying a
+        metric to a scope:<br>
+        1 • If the scope’s type is one of the metric’s basic scope types, Feature
+        or Class in the example, the metric’s specification must
+        include a predefined mechanism to compute the measure.<br>
+        That mechanism will directly access properties of the software
+        —through the development environment (as in ISE Eiffel), or by
+        directly analyzing the source code.<br>
+        2 • If the scope’s type is <b>smaller </b>than all of the metric’s
+        basic scope types —referring to the order relation between scopes: Feature
+        less than Class, Class less than Cluster and so
+        on — the measure will always be zero. This cannot happen with the Lines
+        metric, since the smallest of all scope types, Feature, is
+        one of its basic scope types. But if requested to apply the metric Parents
+        (number of parents) to a feature, we should return zero, since the Class
+        is the only basic scope type for this metric and Feature is
+        smaller than Class. The reason for this is obvious: we are asked
+        to compute the “number of parents” for a feature, but the smallest
+        unit for which this metric is defined is Class, so the only
+        appropriate answer is zero. (This rule is important in connection with
+        the next case.)<br>
+        3 • Otherwise (scope’s type not one of the metric’s basic scope
+        types, but <b>bigger </b>than the smallest one), the measure is the sum
+        of the measures obtained, recursively, by applying the metric to all of
+        the scope’s constituents. For example to compute Lines — the
+        number of lines — over a cluster is simply to compute it for each of
+        its constituent classes and add the results. This rule is recursive: to
+        compute Lines over a system, we add the results of applying the
+        rule to each one of its constituent clusters. </P>
+
+		<P>To apply this definition,
+        we need to know how to determine the basic scope types of any metric.
+        Here is the rule: </P>
+
+		<P CLASS="note"><b>Basic scope types of a
+        metric
+
+        </b>:&nbsp;<br>
+        Every metric has a set of basic scope
+        types, defined as follows:<br>
+        1 •The basic scope types of an elementary metric are part of
+        the metric’s definition; they appear in the table of elementary
+        metrics.<br>
+        2 •The basic scope types of a composite metric include (recursively)
+        the basic scope types of all its constituent metrics. </P>
+
+		<P>To understand case B,
+        which defines the set of basic scope types of a composite metric as the
+        union of those of its constituents, we need to refer to all clauses 2
+        and 3 of the preceding rules. Assume that you want to define a composite
+        metric “Number of contracts” as
+
+        : </P>
+
+		<P>Precondition_clauses
+        + Postcondition_clauses + Invariant_clauses </P>
+
+		<P>This is a
+        legitimate combination since all the constituent metrics have the same
+        unit, CONTRACT_CLAUSE, and indeed represent quantities (numbers
+        of contract clauses) that it is meaningful to compare or add.
+
+         </P>
+        <p>Case
+        B of the definition of “Basic scopes of a metric” tells us that the
+        basic scopes of the metric include both Feature, the basic scope type of
+        the metrics Precondition_clauses and Postcondition_clauses, and Class,
+        the basic scope type of the metric Invariant_clauses. This is what we
+        want since the metric is meaningful for a feature (where it will only
+        count precondition and postcondition clauses) and a class (where it will
+        count all three kinds).
+
+        </p>
+        <p>Assume
+        we want to compute this quantity for a certain <b>featur</b>e:
+
+        </p>
+        <ul>
+          <li>
+            <p>The
+            definition of the metric tells us that we must compute the numbers
+            of precondition, postcondition and assertion clauses for the class,
+            and add the results.
+
+            </li>
+          <li>
+            <p>For
+            the Precondition_clauses and Postcondition_clauses, the only basic
+            scope type is Feature, which is our scope of interest, so clause 1
+            of the rule on “How to compute a measure” tells us to that we
+            must count the precondition and postcondition clauses for all the
+            features of the class.
+
+            </li>
+          <li>
+            <p>For
+            the Invariant_clauses metric, our scope of interest, Feature,is
+            smaller than the metric’s only basic type scope, Class, so clause
+            2 of the rule tells us to ignore this metric by returning a zero.
+            Without this clause, we would be faced with a logical contradiction.
+
+            </li>
+        </ul>
+        <p>If,
+        however, we want to apply the metric to a certain <b>class</b>:
+
+        </p>
+        <ul>
+          <li>
+            <p>For
+            the Precondition_clauses and Postcondition_clauses, since the only
+            basic scope type of these metrics is Feature and our scope is
+            bigger, clause 3 of the rule tells us to count precondition and
+            postcondition clauses for all of the features of the class, and add
+            the results.
+
+            </li>
+          <li>
+            <p>For
+            Invariant_clauses, clause 1 applies: we count the number of
+            invariant clauses for the class, and add it to the previous result.
+
+            </li>
+        </ul>
+        <p>As
+        this example indicates, we need the rules to make the definition and
+        application of metrics consistent. This enables the environment to
+        provide users with a set of metrics which they can trust —even if they
+        are not aware of the detail of the rules.
+
+        </p>
+
+		<P CLASS="note" align="left"><span style="font-size:9.0pt">
+
+
+         </P>
+	</BODY>
+</HTML>

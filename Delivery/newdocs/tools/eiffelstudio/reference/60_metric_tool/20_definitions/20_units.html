@@ -1,0 +1,302 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+<HTML>
+	<HEAD>
+		<TITLE>Example overview topic</TITLE>
+		<META NAME="MS-HKWD" CONTENT="Metric,units">
+		<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+	</HEAD>
+
+	<BODY>
+        <h1>Units</h1>
+        <p><a href="10_attributes_metrics_measures.html#Metric">Metrics</a>
+        will be expressed in units, such as LINE (numbers of source lines) or FEATURE (number of
+        features). Metrics units appear in a provided text field in the metric
+        tool:</p>
+
+        <p align="center"><img border="0" src="/images/eiffelbench/Metrics_png/unit.png"></p>
+
+		<P CLASS="note"><b>Unit rule</b>:
+        The definition of any metric
+        must specify an associated unit.&nbsp;</P>
+
+        <p>Different
+        metrics may be marked with the same unit; for example metrics such as
+        number of non-comment lines and number of comment lines may both be
+        marked with the unit LINE.</p>
+        Whenever we need to express ratios of one
+        measurement to another, as in computing the average number of features
+        per class by dividing the number of features by the number of classes,
+        we will use a specific unit, RATIO:
+
+		<P CLASS="note"><b>“Ratio”
+        unit</b>: The name RATIO denotes a predefined unit,
+        whose values are arbitrary real numbers, expressed either as numbers or
+        in percentage style (as in 35.3%).</P>
+        <p>As
+        a result of this choice, we will consider every division to yield a
+        result of unit, RATIO.
+        </p>
+		<P>The following predefined units are available in the metric tool: </P>
+
+        <div align="center">
+          <table border="1" cellspacing="0" cellpadding="0" style="margin-left:.4pt;border-collapse:
+ collapse;mso-table-layout-alt:fixed;border:none;mso-border-alt:double black 2.25pt;
+ mso-padding-alt:0in 0in 0in 0in">
+            <tr style="height:.3in">
+              <td width="142" nowrap style="width:106.7pt;border-top:double 2.25pt;
+  border-left:double 2.25pt;border-bottom:solid .75pt;border-right:solid .75pt;
+  border-color:black;padding:.75pt .75pt 0in .75pt;height:.3in">
+                <p class="MsoNormal"><span style="font-size:10.0pt;font-family:Arial;
+  text-transform:uppercase">&nbsp;Unit<o:p>
+                </o:p>
+                </span></p>
+              </td>
+              <td width="194" nowrap style="width:145.7pt;border-top:double black 2.25pt;
+  border-left:none;border-bottom:solid black .75pt;border-right:solid black .75pt;
+  mso-border-left-alt:solid black .75pt;padding:.75pt .75pt 0in .75pt;
+  height:.3in">
+                <p class="MsoNormal"><span style="font-size:10.0pt;font-family:Arial;
+  text-transform:uppercase">&nbsp;Quantities measured<o:p>
+                </o:p>
+                </span></p>
+              </td>
+              <td width="120" nowrap style="width:90.35pt;border-top:double black 2.25pt;
+  border-left:none;border-bottom:solid black .75pt;border-right:double black 2.25pt;
+  mso-border-left-alt:solid black .75pt;padding:.75pt .75pt 0in .75pt;
+  height:.3in">
+                <p class="MsoNormal"><span style="font-size:10.0pt;font-family:Arial;
+  text-transform:uppercase">&nbsp;Kind<o:p>
+                </o:p>
+                </span></p>
+              </td>
+            </tr>
+            <tr style="height:.3in">
+              <td width="142" nowrap style="width:106.7pt;border-top:none;border-left:double black 2.25pt;
+  border-bottom:solid black .75pt;border-right:solid black .75pt;mso-border-top-alt:
+  solid black .75pt;padding:.75pt .75pt 0in .75pt;height:.3in">
+                <p class="MsoNormal"><span style="font-size:10.0pt;font-family:Arial">&nbsp;CLASS<o:p>
+                </o:p>
+                </span></p>
+              </td>
+              <td width="194" nowrap style="width:145.7pt;border-top:none;border-left:none;
+  border-bottom:solid black .75pt;border-right:solid black .75pt;mso-border-top-alt:
+  solid black .75pt;mso-border-left-alt:solid black .75pt;padding:.75pt .75pt 0in .75pt;
+  height:.3in">
+                <p class="MsoNormal"><span style="font-size:10.0pt;font-family:Arial">&nbsp;Number
+                of classes or types<o:p>
+                </o:p>
+                </span></p>
+              </td>
+              <td width="120" nowrap style="width:90.35pt;border-top:none;border-left:none;
+  border-bottom:solid black .75pt;border-right:double black 2.25pt;mso-border-top-alt:
+  solid black .75pt;mso-border-left-alt:solid black .75pt;padding:.75pt .75pt 0in .75pt;
+  height:.3in">
+                <p class="MsoNormal"><span style="font-size:10.0pt;font-family:Arial">&nbsp;Product<o:p>
+                </o:p>
+                </span></p>
+              </td>
+            </tr>
+            <tr style="height:.3in">
+              <td width="142" nowrap style="width:106.7pt;border-top:none;border-left:double black 2.25pt;
+  border-bottom:solid black .75pt;border-right:solid black .75pt;mso-border-top-alt:
+  solid black .75pt;padding:.75pt .75pt 0in .75pt;height:.3in">
+                <p class="MsoNormal"><span style="font-size:10.0pt;font-family:Arial">&nbsp;CLUSTER<o:p>
+                </o:p>
+                </span></p>
+              </td>
+              <td width="194" nowrap style="width:145.7pt;border-top:none;border-left:none;
+  border-bottom:solid black .75pt;border-right:solid black .75pt;mso-border-top-alt:
+  solid black .75pt;mso-border-left-alt:solid black .75pt;padding:.75pt .75pt 0in .75pt;
+  height:.3in">
+                <p class="MsoNormal"><span style="font-size:10.0pt;font-family:Arial">&nbsp;Number
+                of clusters (groups of&nbsp;&nbsp; classes)<o:p>
+                </o:p>
+                </span></p>
+              </td>
+              <td width="120" nowrap style="width:90.35pt;border-top:none;border-left:none;
+  border-bottom:solid black .75pt;border-right:double black 2.25pt;mso-border-top-alt:
+  solid black .75pt;mso-border-left-alt:solid black .75pt;padding:.75pt .75pt 0in .75pt;
+  height:.3in">
+                <p class="MsoNormal"><span style="font-size:10.0pt;font-family:Arial">&nbsp;Product<o:p>
+                </o:p>
+                </span></p>
+              </td>
+            </tr>
+            <tr style="height:.3in">
+              <td width="142" nowrap style="width:106.7pt;border-top:none;border-left:double black 2.25pt;
+  border-bottom:solid black .75pt;border-right:solid black .75pt;mso-border-top-alt:
+  solid black .75pt;padding:.75pt .75pt 0in .75pt;height:.3in">
+                <p class="MsoNormal"><span style="font-size:10.0pt;font-family:Arial">&nbsp;COMPILATION<o:p>
+                </o:p>
+                </span></p>
+              </td>
+              <td width="194" nowrap style="width:145.7pt;border-top:none;border-left:none;
+  border-bottom:solid black .75pt;border-right:solid black .75pt;mso-border-top-alt:
+  solid black .75pt;mso-border-left-alt:solid black .75pt;padding:.75pt .75pt 0in .75pt;
+  height:.3in">
+                <p class="MsoNormal"><span style="font-size:10.0pt;font-family:Arial">&nbsp;Number
+                of compilations<o:p>
+                </o:p>
+                </span></p>
+              </td>
+              <td width="120" nowrap style="width:90.35pt;border-top:none;border-left:none;
+  border-bottom:solid black .75pt;border-right:double black 2.25pt;mso-border-top-alt:
+  solid black .75pt;mso-border-left-alt:solid black .75pt;padding:.75pt .75pt 0in .75pt;
+  height:.3in">
+                <p class="MsoNormal"><span style="font-size:10.0pt;font-family:Arial">&nbsp;Process<o:p>
+                </o:p>
+                </span></p>
+              </td>
+            </tr>
+            <tr style="height:.3in">
+              <td width="142" nowrap style="width:106.7pt;border-top:none;border-left:double black 2.25pt;
+  border-bottom:solid black .75pt;border-right:solid black .75pt;mso-border-top-alt:
+  solid black .75pt;padding:.75pt .75pt 0in .75pt;height:.3in">
+                <p class="MsoNormal"><span style="font-size:10.0pt;font-family:Arial">&nbsp;CONTRACT_CLAUSE<o:p>
+                </o:p>
+                </span></p>
+              </td>
+              <td width="194" nowrap style="width:145.7pt;border-top:none;border-left:none;
+  border-bottom:solid black .75pt;border-right:solid black .75pt;mso-border-top-alt:
+  solid black .75pt;mso-border-left-alt:solid black .75pt;padding:.75pt .75pt 0in .75pt;
+  height:.3in">
+                <p class="MsoNormal"><span style="font-size:10.0pt;font-family:Arial">&nbsp;Number
+                of assertion clauses<o:p>
+                </o:p>
+                </span></p>
+              </td>
+              <td width="120" nowrap style="width:90.35pt;border-top:none;border-left:none;
+  border-bottom:solid black .75pt;border-right:double black 2.25pt;mso-border-top-alt:
+  solid black .75pt;mso-border-left-alt:solid black .75pt;padding:.75pt .75pt 0in .75pt;
+  height:.3in">
+                <p class="MsoNormal"><span style="font-size:10.0pt;font-family:Arial">&nbsp;Product<o:p>
+                </o:p>
+                </span></p>
+              </td>
+            </tr>
+            <tr style="height:.3in">
+              <td width="142" nowrap style="width:106.7pt;border-top:none;border-left:double black 2.25pt;
+  border-bottom:solid black .75pt;border-right:solid black .75pt;mso-border-top-alt:
+  solid black .75pt;padding:.75pt .75pt 0in .75pt;height:.3in">
+                <p class="MsoNormal"><span style="font-size:10.0pt;font-family:Arial">&nbsp;LOCAL<o:p>
+                </o:p>
+                </span></p>
+              </td>
+              <td width="194" nowrap style="width:145.7pt;border-top:none;border-left:none;
+  border-bottom:solid black .75pt;border-right:solid black .75pt;mso-border-top-alt:
+  solid black .75pt;mso-border-left-alt:solid black .75pt;padding:.75pt .75pt 0in .75pt;
+  height:.3in">
+                <p class="MsoNormal"><span style="font-size:10.0pt;font-family:Arial">&nbsp;Number
+                of entities local to a&nbsp; routine (local variables, formal
+                arguments)<o:p>
+                </o:p>
+                </span></p>
+              </td>
+              <td width="120" nowrap style="width:90.35pt;border-top:none;border-left:none;
+  border-bottom:solid black .75pt;border-right:double black 2.25pt;mso-border-top-alt:
+  solid black .75pt;mso-border-left-alt:solid black .75pt;padding:.75pt .75pt 0in .75pt;
+  height:.3in">
+                <p class="MsoNormal"><span style="font-size:10.0pt;font-family:Arial">&nbsp;Product<o:p>
+                </o:p>
+                </span></p>
+              </td>
+            </tr>
+            <tr style="height:.3in">
+              <td width="142" nowrap style="width:106.7pt;border-top:none;border-left:double black 2.25pt;
+  border-bottom:solid black .75pt;border-right:solid black .75pt;mso-border-top-alt:
+  solid black .75pt;padding:.75pt .75pt 0in .75pt;height:.3in">
+                <p class="MsoNormal"><span style="font-size:10.0pt;font-family:Arial">&nbsp;FEATURE<o:p>
+                </o:p>
+                </span></p>
+              </td>
+              <td width="194" nowrap style="width:145.7pt;border-top:none;border-left:none;
+  border-bottom:solid black .75pt;border-right:solid black .75pt;mso-border-top-alt:
+  solid black .75pt;mso-border-left-alt:solid black .75pt;padding:.75pt .75pt 0in .75pt;
+  height:.3in">
+                <p class="MsoNormal"><span style="font-size:10.0pt;font-family:Arial">&nbsp;Number
+                of features<o:p>
+                </o:p>
+                </span></p>
+              </td>
+              <td width="120" nowrap style="width:90.35pt;border-top:none;border-left:none;
+  border-bottom:solid black .75pt;border-right:double black 2.25pt;mso-border-top-alt:
+  solid black .75pt;mso-border-left-alt:solid black .75pt;padding:.75pt .75pt 0in .75pt;
+  height:.3in">
+                <p class="MsoNormal"><span style="font-size:10.0pt;font-family:Arial">&nbsp;Product<o:p>
+                </o:p>
+                </span></p>
+              </td>
+            </tr>
+            <tr style="height:.3in">
+              <td width="142" nowrap style="width:106.7pt;border-top:none;border-left:double black 2.25pt;
+  border-bottom:solid black .75pt;border-right:solid black .75pt;mso-border-top-alt:
+  solid black .75pt;padding:.75pt .75pt 0in .75pt;height:.3in">
+                <p class="MsoNormal"><span style="font-size:10.0pt;font-family:Arial">&nbsp;LINE<o:p>
+                </o:p>
+                </span></p>
+              </td>
+              <td width="194" nowrap style="width:145.7pt;border-top:none;border-left:none;
+  border-bottom:solid black .75pt;border-right:solid black .75pt;mso-border-top-alt:
+  solid black .75pt;mso-border-left-alt:solid black .75pt;padding:.75pt .75pt 0in .75pt;
+  height:.3in">
+                <p class="MsoNormal"><span style="font-size:10.0pt;font-family:Arial">&nbsp;Number
+                of source lines<o:p>
+                </o:p>
+                </span></p>
+              </td>
+              <td width="120" nowrap style="width:90.35pt;border-top:none;border-left:none;
+  border-bottom:solid black .75pt;border-right:double black 2.25pt;mso-border-top-alt:
+  solid black .75pt;mso-border-left-alt:solid black .75pt;padding:.75pt .75pt 0in .75pt;
+  height:.3in">
+                <p class="MsoNormal"><span style="font-size:10.0pt;font-family:Arial">&nbsp;Product<o:p>
+                </o:p>
+                </span></p>
+              </td>
+            </tr>
+            <tr style="height:.3in">
+              <td width="142" nowrap style="width:106.7pt;border-top:none;border-left:double black 2.25pt;
+  border-bottom:double black 2.25pt;border-right:solid black .75pt;mso-border-top-alt:
+  solid black .75pt;padding:.75pt .75pt 0in .75pt;height:.3in">
+                <p class="MsoNormal"><span style="font-size:10.0pt;font-family:Arial">&nbsp;RATIO<o:p>
+                </o:p>
+                </span></p>
+              </td>
+              <td width="194" nowrap style="width:145.7pt;border-top:none;border-left:none;
+  border-bottom:double black 2.25pt;border-right:solid black .75pt;mso-border-top-alt:
+  solid black .75pt;mso-border-left-alt:solid black .75pt;padding:.75pt .75pt 0in .75pt;
+  height:.3in">
+                <p class="MsoNormal"><span style="font-size:10.0pt;font-family:Arial">&nbsp;Results
+                of divisions</o:p>
+                </span></p>
+              </td>
+              <td width="120" nowrap style="width:90.35pt;border-top:none;border-left:none;
+  border-bottom:double black 2.25pt;border-right:double black 2.25pt;
+  mso-border-top-alt:solid black .75pt;mso-border-left-alt:solid black .75pt;
+  padding:.75pt .75pt 0in .75pt;height:.3in">
+                <p class="MsoNormal"><span style="font-size:10.0pt;font-family:Arial">&nbsp;Product<o:p>
+                </o:p>
+                </span></p>
+              </td>
+            </tr>
+          </table>
+        </div>
+        <p>The units listed here are <b>minimal </b>in the
+        sense that it is not possible to add the properties measured by any two
+        of them; for example it makes no sense to add a number of features to a
+        number of classes.</p>
+        <p>In
+        the future, it might be desirable to include more specific units, such
+        as “features per class”, and an associated calculus of units (as in
+        the physical sciences, where multiplying a quantity expressed in g
+        /cm by
+        one in cm /g yields a result in cm). This has not appeared
+        necessary for the typical uses of division envisioned in this note,
+        answering such questions as “What percentage of routines have a header
+        comment?” and all expressed as simply as
+        RATIO.</p>
+
+		<P CLASS="note">
+
+        </P>
+	</BODY>
+</HTML>

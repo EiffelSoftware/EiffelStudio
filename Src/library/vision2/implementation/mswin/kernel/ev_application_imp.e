@@ -48,6 +48,7 @@ feature {NONE} -- Initialization
 	launch  is
 			-- Start the event loop.
 		do
+			interface.post_launch_actions.call ([])
 			set_application_main_window (main_window)
 			run
 		end
@@ -307,6 +308,9 @@ end -- class EV_APPLICATION_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.35  2000/04/26 16:28:42  brendel
+--| Added call to post_launch_actions.
+--|
 --| Revision 1.34  2000/04/24 17:43:19  rogers
 --| Comments, formatting.
 --|

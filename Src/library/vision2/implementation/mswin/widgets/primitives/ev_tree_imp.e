@@ -34,7 +34,8 @@ inherit
 			initialize,
 			set_background_color,
 			set_foreground_color,
-			background_color
+			background_color,
+			destroy
 		end
 
 	EV_ITEM_LIST_IMP [EV_TREE_NODE, EV_TREE_NODE_IMP]
@@ -702,6 +703,13 @@ feature {EV_ANY_I} -- WEL Implementation
 				-- If the widget is not hidden then invalidate.
 				invalidate
 			end
+		end
+		
+	destroy is
+			-- Destroy `Current'.
+		do
+			wipe_out
+			Precursor {EV_PRIMITIVE_IMP}
 		end
 
 feature {NONE} -- Feature that should be directly implemented by externals

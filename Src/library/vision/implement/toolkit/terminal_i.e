@@ -19,49 +19,42 @@ feature {TERMINAL_OUI}
 	
 feature 
 
-	is_font_defined (font_name: STRING): BOOLEAN is
-			-- Is `font_name' defined for current terminal?
-		require
-			font_name_not_void: not (font_name = Void)
-		deferred
-		end; -- is_font_defined
-
-	set_label_font (a_font_name: STRING) is
+	set_label_font (a_font: FONT) is
 			-- Set font of every labels to `a_font_name'.
 		require
-			font_name_not_void: not (a_font_name = Void);
-			font_name_defined: is_font_defined (a_font_name)
+			font_name_not_void: a_font /= Void;
+			a_font_specified: a_font.is_specified
 		deferred
 		end; -- set_label_font
 
-	set_button_font (a_font_name: STRING) is
-			-- Set font of every buttons to `a_font_name'.
+	set_button_font (a_font: FONT) is
+			-- Set font of every buttons to `a_font'.
 		require
-			font_name_not_void: not (a_font_name = Void);
-			font_name_defined: is_font_defined (a_font_name)
+			font_name_not_void: a_font /= Void;
+			a_font_specified: a_font.is_specified
 		deferred
 		end; -- set_button_font
 
-	set_text_font (a_font_name: STRING) is
-			-- Set font of every text to `a_font_name'.
+	set_text_font (a_font: FONT) is
+			-- Set font of every text to `a_font'.
 		require
-			font_name_not_void: not (a_font_name = Void);
-			font_name_defined: is_font_defined (a_font_name)
+			font_name_not_void: a_font /= Void;
+			a_font_specified: a_font.is_specified
 		deferred
 		end; -- set_text_font
 
-	label_font: STRING is
-			-- Font name specified for labels
+	label_font: FONT is
+			-- Font specified for labels
 		deferred
 		end; -- label_font
 
-	button_font: STRING is
-			-- Font name specified for buttons
+	button_font: FONT is
+			-- Font specified for buttons
 		deferred
 		end; -- button_font
 
-	text_font: STRING is
-			-- Font name specified for text
+	text_font: FONT is
+			-- Font specified for text
 		deferred
 		end -- text_font
 

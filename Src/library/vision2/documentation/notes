@@ -15,6 +15,7 @@ To look at:
 To delete: 
     ev_composed_item.e
     ev_separator_item.e
+    ev_gtk_callback_marshal.e
 
 To be revised:
     ev_multi_column_list_row.e

@@ -38,13 +38,27 @@ feature {NONE}
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
 			identifier:= clone (a_name);
-			implementation:= toolkit.file_sel_d (Current);
+			implementation:= toolkit.file_sel_d (Current, a_parent);
 			set_default
 		ensure
 			parent_set: parent = a_parent;
 			identifier_set: identifier.is_equal (a_name)
 		end;
 
+
+feature -- Status setting
+
+	set_open_file is
+			-- Set the dialog to be a file open dialog
+		do
+			implementation.set_open_file
+		end
+
+	set_save_file is
+			-- Set the dialog to be a file save dialog
+		do
+			implementation.set_save_file
+		end
 
 feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
 

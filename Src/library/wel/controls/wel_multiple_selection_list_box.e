@@ -74,6 +74,7 @@ feature -- Status setting
 			cwin_send_message (item, Lb_selitemrange, 0,
 				cwin_make_long (start_index, end_index))
 		ensure
+			no_item_selected: not selected
 			-- For every `i' in `start_index'..`end_index',
 			-- `is_selected' (`i') = False
 		end
@@ -142,25 +143,29 @@ feature -- Status report
 
 	selected_items: ARRAY [INTEGER] is
 			-- Contains all the selected index
+			-- The Result is an array beginning at index 0.
 		require
 			exits: exists
 		local
-			a: ANY
-			i: INTEGER
-			result_count: INTEGER
+			items_buffer:  SPECIAL [INTEGER]
+			items_in_buffer: INTEGER
+			local_count_selected_items: INTEGER
 		do
-			!! Result.make (0, count_selected_items - 1)
-				--| LB_GETSELITEMS cannot be used as it is
-				--| not available under Win 3.1
-			from
-			until
-				i = count
-			loop
-				if is_selected (i) then
-					Result.put (i, result_count)
-					result_count := result_count + 1
-				end
-				i := i + 1
+			local_count_selected_items := count_selected_items
+			create Result.make (0, local_count_selected_items - 1)
+			items_buffer := Result.area
+
+				-- Retrieve the selected items.
+			items_in_buffer := cwin_send_message_result (
+				item, 
+				Lb_getselitems, 
+				local_count_selected_items,
+				cwel_pointer_to_integer($items_buffer)
+				)
+
+				-- Check that Windows has filled the given buffer.
+			check
+				buffer_filled: items_in_buffer = local_count_selected_items
 			end
 		ensure
 			result_not_void: Result /= Void

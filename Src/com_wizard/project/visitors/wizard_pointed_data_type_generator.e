@@ -30,6 +30,9 @@ feature -- Basic operations
 			is_pointed := True
 			pointed_visitor := a_descriptor.pointed_data_type_descriptor.visitor 
 
+			need_free_memory := True
+			need_generate_free_memory := True
+
 			if 
 				(pointed_visitor.is_interface or
 				pointed_visitor.is_coclass) and 
@@ -52,6 +55,7 @@ feature -- Basic operations
 
 			create ce_function_name.make (100)
 			create ec_function_name.make (100)
+			create free_memory_function_name.make (100)
 			local_counter := counter (a_descriptor)
 
 			if pointed_visitor.is_structure then
@@ -60,13 +64,16 @@ feature -- Basic operations
 
 				need_generate_ce := True
 				need_generate_ec := True
-
+				
 				ce_function_name.append ("ccom_ce_pointed_record_")
 				ce_function_name.append_integer (local_counter)
 
 				ec_function_name.append ("ccom_ec_pointed_record_")
 				ec_function_name.append_integer (local_counter)
 
+				need_free_memory := False
+				need_generate_free_memory := False
+				
 				create ce_function_signature.make (100)
 				ce_function_signature.append (c_type)
 				ce_function_signature.append (Space)
@@ -96,6 +103,9 @@ feature -- Basic operations
 
 				ec_function_name.append ("ccom_ec_pointed_interface_")
 				ec_function_name.append_integer (local_counter)
+
+				need_free_memory := False
+				need_generate_free_memory := False
 
 
 				need_generate_ce := True
@@ -132,6 +142,8 @@ feature -- Basic operations
 				ec_function_name.append ("ccom_ec_pointed_coclass_")
 				ec_function_name.append_integer (local_counter)
 
+				need_free_memory := False
+				need_generate_free_memory := False
 
 				need_generate_ce := True
 				need_generate_ec := True
@@ -183,7 +195,6 @@ feature -- Basic operations
 					eiffel_type.append (Integer_ref_type)
 					ec_function_name.append ("ccom_ec_pointed_long")
 					ce_function_name.append ("ccom_ce_pointed_long")
-
 
 				elseif is_unsigned_long (a_type) then
 					eiffel_type.append (Integer_ref_type)
@@ -241,12 +252,29 @@ feature -- Basic operations
 						writable := False
 					end
 				end
+				free_memory_function_name.append ("ccom_free_memory_pointed_")
+				free_memory_function_name.append_integer (local_counter)
+				create free_memory_function_signature.make (100)
+				free_memory_function_signature.append (c_type)
+				free_memory_function_signature.append (Space)
+				free_memory_function_signature.append ("a_pointer")
+				free_memory_function_body := "%Tif (a_pointer != NULL)%N%T%T%
+												%CoTaskMemFree (a_pointer);"
 
 			elseif is_hresult (pointed_visitor.vt_type) or is_error (pointed_visitor.vt_type) then
 				eiffel_type := clone (Ecom_hresult)
 				writable := True
 				ec_function_name := "ccom_ec_pointed_hresult"
 				ce_function_name := "ccom_ce_pointed_hresult"
+				free_memory_function_name.append ("ccom_free_memory_pointed_")
+				free_memory_function_name.append_integer (local_counter)
+				create free_memory_function_signature.make (100)
+				free_memory_function_signature.append (c_type)
+				free_memory_function_signature.append (Space)
+				free_memory_function_signature.append ("a_pointer")
+				free_memory_function_body := "%Tif (a_pointer != NULL)%N%T%T%
+												%CoTaskMemFree (a_pointer);"
+
 			else
 				if pointed_visitor.is_interface_pointer then
 					is_interface_pointer_pointer := True
@@ -255,6 +283,24 @@ feature -- Basic operations
 				if pointed_visitor.is_coclass_pointer then
 					is_coclass_pointer_pointer := True
 				end
+
+				free_memory_function_name.append ("ccom_free_memory_pointed_")
+				free_memory_function_name.append_integer (local_counter)
+				create free_memory_function_signature.make (100)
+				free_memory_function_signature.append (c_type)
+				free_memory_function_signature.append (Space)
+				free_memory_function_signature.append ("a_pointer")
+				free_memory_function_body := "%Tif (a_pointer != NULL)%N%T{%N%T%T"
+				if pointed_visitor.need_free_memory then
+					if pointed_visitor.need_generate_free_memory then
+						free_memory_function_body.append (Generated_ce_mapper)
+						free_memory_function_body.append (".")
+					end
+					free_memory_function_body.append (pointed_visitor.free_memory_function_name)
+					free_memory_function_body.append (" (*a_pointer);%N%T%T")
+					free_memory_function_body.append ("*a_pointer = NULL;%N%T%T")
+				end
+				free_memory_function_body.append ("CoTaskMemFree (a_pointer);%N%T};")
 
 				create eiffel_type.make (100)
 				eiffel_type.append ("CELL")
@@ -300,8 +346,12 @@ feature -- Basic operations
 
 				ec_function_return_type := clone (c_type)
 
-				ec_function_body := ec_function_body_cell (pointed_visitor.eiffel_type, pointed_visitor.c_type, 
-					pointed_visitor.ec_function_name, pointed_visitor.need_generate_ec, pointed_visitor.writable)
+				ec_function_body := ec_function_body_cell (pointed_visitor.eiffel_type, 
+														pointed_visitor.c_type, 
+														pointed_visitor.ec_function_name, 
+														pointed_visitor.need_generate_ec, 
+														pointed_visitor.writable, 
+														pointed_visitor)
 
 			end
 			set_visitor_atributes (a_visitor)
@@ -312,7 +362,7 @@ feature {NONE} -- Implementation
 	ce_function_body_record (a_class_name: STRING): STRING is
 			-- C to Eiffel function body, if type is pointer to record.
 		require
-			valid_name: a_class_name /= Void and then not a_class_name.empty
+			valid_name: a_class_name /= Void and then not a_class_name.is_empty
 		do
 			create Result.make (10000)
 
@@ -335,13 +385,13 @@ feature {NONE} -- Implementation
 			Result.append ("%N%Telse%N%T%T")
 			Result.append ("return NULL;")
 		ensure
-			valid_result: Result /= Void and then not Result.empty
+			valid_result: Result /= Void and then not Result.is_empty
 		end
  
 	ce_function_body_interface (a_class_name: STRING): STRING is
 			-- C to Eiffel function body, if type is pointer to interface.
 		require
-			valid_name: a_class_name /= Void and then not a_class_name.empty
+			valid_name: a_class_name /= Void and then not a_class_name.is_empty
 		do
 			create Result.make (10000)
 
@@ -364,7 +414,7 @@ feature {NONE} -- Implementation
 			Result.append ("%N%Telse%N%T%T")
 			Result.append ("return NULL;")
 		ensure
-			valid_result: Result /= Void and then not Result.empty
+			valid_result: Result /= Void and then not Result.is_empty
 		end
 
 	ce_function_body_cell (a_c_type, element_ce_function, element_eiffel_name: STRING;
@@ -379,11 +429,11 @@ feature {NONE} -- Implementation
 			-- `a_writable' - Is pointed type writable?
 		require
 			non_void_a_c_type: a_c_type /= Void
-			valid_a_c_type: not a_c_type.empty
+			valid_a_c_type: not a_c_type.is_empty
 			non_void_element_ce_function: element_ce_function /= Void
-			valid_element_ce_function: not element_ce_function.empty
+			valid_element_ce_function: not element_ce_function.is_empty
 			non_void_element_eiffel_name: element_eiffel_name /= Void
-			valid_element_eiffel_name: not element_eiffel_name.empty
+			valid_element_eiffel_name: not element_eiffel_name.is_empty
 		do
 			create Result.make (10000)
 			Result.append (Tab)
@@ -598,20 +648,6 @@ feature {NONE} -- Implementation
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
 
-			-- CoTaskMemFree (a_pointer);
-			--   ^   Only called if can_free_element is True
-
-			if can_free_pointer then
-				Result.append (Co_task_mem_free)
-				Result.append (Space)
-				Result.append (Open_parenthesis)
-				Result.append ("a_pointer")
-				Result.append (Close_parenthesis)
-				Result.append (Semicolon)
-				Result.append (New_line_tab)
-			end
-
-
 			-- if ((an_object == NULL) || (eif_access (an_object) == NULL))
 
 			Result.append (If_keyword)
@@ -666,22 +702,21 @@ feature {NONE} -- Implementation
 			Result.append (Semicolon)
 		ensure
 			non_void_result: Result /= Void
-			valid_result: not Result.empty
+			valid_result: not Result.is_empty
 		end
 
 	ec_function_body_cell (element_eiffel_type, element_c_type, element_ec_function: STRING;
 					need_generate_element_ec_function: BOOLEAN;
-					element_writable: BOOLEAN): STRING is
+					element_writable: BOOLEAN; element_visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
 			-- Eiffel to C function body for CELL type
-			-- 
 		require
 			non_void_element_eiffel_type: element_eiffel_type /= Void
 			non_void_element_c_type: element_c_type /= Void
 			non_void_element_ec_function: element_ec_function /= Void
 
-			valid_element_eiffel_type: not element_eiffel_type.empty
-			valid_element_c_type: not element_c_type.empty
-			valid_element_ec_function: not element_ec_function.empty
+			valid_element_eiffel_type: not element_eiffel_type.is_empty
+			valid_element_c_type: not element_c_type.is_empty
+			valid_element_ec_function: not element_ec_function.is_empty
 		do
 			create Result.make (10000)
 			Result.append (Tab)
@@ -803,19 +838,28 @@ feature {NONE} -- Implementation
 			Result.append (Close_parenthesis)
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
-			-- if (cell_item == NULL)
+			
+			-- if (*result != NULL)
+			-- {
+			--		free_memory (*result);
+			-- 		*result = NULL;
+			-- }
+			
+			if element_visitor.need_free_memory then
+				Result.append ("if (*result != NULL)%N%T%
+							%{%N%T%T")
+				if element_visitor.need_generate_free_memory then
+					Result.append (Generated_ce_mapper)
+					Result.append (".")
+				end
+				Result.append (element_visitor.free_memory_function_name) 
+				Result.append ("(*result);%N%T%T%
+								%*result = NULL;%N%T%
+							%}%N%T")
+			end
+			-- if (cell_item != NULL)
 
-			Result.append ("if (cell_item == NULL)")
-			Result.append (New_line_tab_tab)
-
-			--	*result = NULL;
-
-			Result.append ("*result = NULL;")
-			Result.append (New_line_tab)
-
-			-- else
-
-			Result.append ("else")
+			Result.append ("if (cell_item != NULL)")
 			Result.append (New_line_tab_tab)
 
 			-- 	*result = cpp_object.element_ec_function (cell_item);
@@ -861,7 +905,7 @@ feature {NONE} -- Implementation
 
 		ensure
 			non_void_result: Result /= Void
-			valid_result: not Result.empty
+			valid_result: not Result.is_empty
 		end
 
 	ec_function_wrapper (eiffel_type_name, c_type_name: STRING; is_interface_wrapper: BOOLEAN): STRING is
@@ -869,8 +913,8 @@ feature {NONE} -- Implementation
 		require
 			non_void_eiffel_name: eiffel_type_name /= Void
 			non_void_c_name: c_type_name /= Void
-			valid_eiffel_name: not eiffel_type_name.empty
-			valid_c_name: not c_type_name.empty
+			valid_eiffel_name: not eiffel_type_name.is_empty
+			valid_c_name: not c_type_name.is_empty
 		do
 			create Result.make (10000)
 			Result.append (Tab)
@@ -965,14 +1009,14 @@ feature {NONE} -- Implementation
 			Result.append (Semicolon)
 		ensure
 			non_void_result: Result /= Void
-			valid_result: not Result.empty
+			valid_result: not Result.is_empty
 		end
 
 	addition_for_structure (eiffel_type_name: STRING): STRING is
 			-- Addition for structure in EC function wrapper.
 		require
 			non_void_eiffel_type: eiffel_type_name /= Void
-			valid_eiffel_type: not eiffel_type_name.empty
+			valid_eiffel_type: not eiffel_type_name.is_empty
 		do
 			create Result.make (1000)
 			Result.append (New_line_tab)
@@ -989,14 +1033,14 @@ feature {NONE} -- Implementation
 			Result.append (New_line_tab)
 		ensure
 			non_void_addition: Result /= Void
-			valid_addition: not Result.empty
+			valid_addition: not Result.is_empty
 		end
 
 	addition_for_interface (c_type_name: STRING): STRING is
 			-- Addition for interface in EC function wrapper.
 		require
 			non_void_c_type: c_type_name /= Void
-			valid_c_type: not c_type_name.empty
+			valid_c_type: not c_type_name.is_empty
 		do
 			create Result.make (1000)
 			
@@ -1101,7 +1145,7 @@ feature {NONE} -- Implementation
 			Result.append (New_line_tab)
 		ensure
 			non_void_addition: Result /= Void
-			valid_addition: not Result.empty
+			valid_addition: not Result.is_empty
 		end
 		
 end -- class WIZARD_POINTED_DATA_TYPE_GENERATOR

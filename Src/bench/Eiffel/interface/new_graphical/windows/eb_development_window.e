@@ -1814,25 +1814,14 @@ process_feature_error (s: FEATURE_ERROR_STONE) is
 	local
 		cl_stone: CLASSC_STONE
 		e_class: CLASS_C
-		txt: STRING
-		pos, end_pos: INTEGER
 	do
 		set_default_format
 		e_class := s.e_feature.written_class
 		create cl_stone.make (e_class)
 		set_stone (cl_stone)
 		editor_tool.text_area.deselect_all
-		pos := s.error_position
-		txt := text
-		if txt.count > pos then
-			if txt.item (pos) = '%N' then	
-				end_pos := txt.index_of ('%N', pos + 1)
-			else
-				end_pos := txt.index_of ('%N', pos)
-			end
-			if pos /= 0 then
-				editor_tool.text_area.highlight_selected (pos, end_pos)
-			end
+		if s.line_number > 0 then
+			editor_tool.text_area.highlight_selected (s.line_number, s.line_number)
 		end
 	end
 
@@ -1846,7 +1835,7 @@ process_class_syntax (s: CL_SYNTAX_STONE) is
 		create cl_stone.make (s.e_class)
 		set_stone (cl_stone)
 		editor_tool.text_area.deselect_all
-		editor_tool.text_area.highlight_when_ready (s.start_position + 1, s.end_position + 1)
+		editor_tool.text_area.highlight_when_ready (s.line, s.line)
 	end
  
 refresh is

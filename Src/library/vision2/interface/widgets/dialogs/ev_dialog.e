@@ -68,15 +68,31 @@ feature -- Access
 			-- Is `Current' shown modally to another window?
 			-- If `True' then `Current' must be closed before
 			-- application can receive user events again?
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.is_modal
 		end
 		
 	is_relative: BOOLEAN is
 			-- Is `Current' shown relative to another window?
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.is_relative
 		end
+		
+	blocking_window: EV_WINDOW is
+			-- `Result' is window `Current' is shown to if
+			-- `is_modal' or `is_relative'.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.blocking_window
+		ensure
+			bridge_ok: Result = implementation.blocking_window
+		end
+		
 
 feature -- Status Setting
 
@@ -150,6 +166,7 @@ feature -- Basic operations
 			implementation.show_relative_to_window (a_window)
 		ensure
 			is_relative_to_window: is_relative
+			blocking_window_set: blocking_window = a_window
 		end
 		
 	dialog_key_press_action (a_key: EV_KEY) is
@@ -186,6 +203,10 @@ feature {NONE} -- Implementation
 invariant
 	
 	modal_or_relative: is_modal implies not is_relative and is_relative implies not is_modal
+	blocking_window_correct: (is_modal or is_relative implies blocking_window /= Void)
+	no_blocking_window_correct: not is_modal and not is_relative implies blocking_window = Void
+	no_blocking_window_when_hidden: not is_show_requested implies blocking_window = Void
+	
 
 end -- class EV_DIALOG
 

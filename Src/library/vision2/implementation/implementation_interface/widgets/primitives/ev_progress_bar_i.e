@@ -8,7 +8,7 @@ deferred class
 	EV_PROGRESS_BAR_I
 
 inherit
-	EV_PRIMITIVE_I
+	EV_GAUGE_I
 
 feature -- Status report
 
@@ -21,20 +21,20 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_percentage (value: INTEGER) is
-			-- Make `value' the new percentage filled by the
-			-- progress bar.
-		require
-			exists: not destroyed
-			valid_value: value >= 0 and value <= 100
-		deferred
-		end
-
 	set_segmented (flag: BOOLEAN) is
 			-- Set the bar in segmented mode if True and in
 			-- continuous mode otherwise.
 		require
 			exist: not destroyed
+		deferred
+		end
+
+	set_percentage (val: INTEGER) is
+			-- Make `val' the new percentage filled by the
+			-- progress bar.
+		require
+			exists: not destroyed
+			valid_val: val >= 0 and val <= 100
 		deferred
 		end
 

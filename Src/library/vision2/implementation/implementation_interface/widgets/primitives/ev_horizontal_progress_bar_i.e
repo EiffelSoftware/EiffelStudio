@@ -9,6 +9,19 @@ deferred class
 
 inherit
 	EV_PROGRESS_BAR_I
+		redefine
+			set_default_options
+		end
+
+feature -- Status setting
+
+	set_default_options is
+			-- Initialize the options of the widget.
+		do
+			set_expand (True)
+			set_vertical_resize (False)
+			set_horizontal_resize (True)
+		end
 
 end -- class EV_HORIZONTAL_PROGRESS_BAR_I
 

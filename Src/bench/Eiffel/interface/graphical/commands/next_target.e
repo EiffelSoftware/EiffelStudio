@@ -34,7 +34,7 @@ feature -- Callbacks
 			-- The changes will be lost.
 		do
 			text_window.disable_clicking;
-			execute_licenced (Void)
+			execute_licensed (Void)
 		end;
 
 feature -- Properties
@@ -71,7 +71,7 @@ feature -- Execution
 				last_warner.popdown
 			end;
 			if not text_window.changed then
-				execute_licenced (argument)
+				execute_licensed (argument)
 			else
 				warner (popup_parent).call (Current, Warning_messages.w_File_changed)
 			end

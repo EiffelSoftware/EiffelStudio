@@ -154,7 +154,7 @@ rt_public void send_byte_code (EIF_INTEGER real_body_index, EIF_INTEGER real_bod
 */
 }
 
-rt_public int send_breakpoint (long int real_body_id, long int offset, EIF_BOOLEAN opcode)
+rt_public void send_breakpoint (long int real_body_id, long int offset, EIF_BOOLEAN opcode)
 {
 /*
 	STREAM *sp;

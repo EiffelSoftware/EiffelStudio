@@ -228,3 +228,4 @@ end -- class FORMAT_TIME
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
 
+

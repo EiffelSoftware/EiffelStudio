@@ -301,3 +301,4 @@ end -- class TIME_DURATION
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
 
+

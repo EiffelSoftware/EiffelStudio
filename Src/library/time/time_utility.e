@@ -35,6 +35,10 @@ feature -- Basic operations
 			Result_definition: i = j * Result + mod (i,j)
 		end;
 
+feature -- access
+	Std_date_time_delim: CHARACTER is ' '
+		-- appears between "dd/mm/yyyy" and "hh:mm:ss.sss"
+
 end -- class TIME_UTILITY
 
 
@@ -53,4 +57,5 @@ end -- class TIME_UTILITY
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+
 

@@ -46,6 +46,10 @@ feature -- Access
 			end 
 		end; 
 
+	Std_date_delim: CHARACTER is '/'
+		-- standard form is "dd/mm/yyyy"
+
+
 feature {NONE} -- Implementation
 
 	Days_in_months: ARRAY [INTEGER] is 

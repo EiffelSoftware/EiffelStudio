@@ -20,6 +20,8 @@ inherit
 end -- class DURATION
 
 
+
+
 --|----------------------------------------------------------------
 --| EiffelTime: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
@@ -35,4 +37,5 @@ end -- class DURATION
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+
 

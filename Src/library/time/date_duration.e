@@ -294,3 +294,4 @@ end -- class DATE_DURATION
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
 
+

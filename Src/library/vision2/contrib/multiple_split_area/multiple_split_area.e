@@ -335,6 +335,8 @@ feature -- Status setting
 			if locked_in_here then
 				parent_window (Current).unlock_update
 			end
+		ensure
+			is_maximized: is_item_maximized (a_widget)
 		end
 		
 	minimize_item (a_widget: EV_WIDGET) is
@@ -361,6 +363,8 @@ feature -- Status setting
 			if locked_in_here then
 				parent_window (Current).unlock_update
 			end
+		ensure
+			is_minimized: is_item_minimized (a_widget)
 		end
 		
 	set_item_restore_height (a_widget: EV_WIDGET; a_height: INTEGER) is

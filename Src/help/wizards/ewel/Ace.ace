@@ -1,0 +1,72 @@
+system
+	 Wel_Wizard
+
+root
+	WIZARD_PROJECT_MANAGER(wizard_tool): "make_and_launch"
+
+default
+	assertion (no)
+	multithreaded (no)
+	console_application (no)
+	dynamic_runtime (no)
+	dead_code_removal (yes)
+	profile (no)
+	line_generation (no)
+	debug  (no)
+	array_optimization (no)
+	inlining (no)
+	inlining_size ("4")
+	exception_trace (yes)
+
+cluster
+
+		-- Wel Wizard
+
+	root_class: 					"D:\Src\help\wizards\ewel"
+	src (root_class):				"$\src"
+	
+		-- EiffelBase
+	all base:						"$EIFFEL4\library\base"
+		exclude
+			"desc";"table_eiffel3"
+		end
+
+	all vision2: 			"$EIFFEL4\library\vision2_devel"
+		exclude
+			"gtk"
+			"test"
+		end
+
+	all Events:				"$EIFFEL4\library\event"
+
+	all wel: 				"$EIFFEL4\library\wel_devel"
+
+	all wizard_tool:				"$EIFFEL4\tools\wizard"
+
+		-- Lex and Parse
+	lex:			"$EIFFEL4\library\lex"
+	parse:		"$EIFFEL4\library\parse"
+
+
+		-- Resource Bench
+	interface (src):			"$\rb\interface"
+	lexical (interface):			"$\..\lexical"
+	Sem_expression (interface): 		"$\..\semantic\expression"
+	Sem_resource (interface):		"$\..\semantic\resource"
+	Synt_resource (interface):		"$\..\syntactic\resource"
+	Synt_expression (interface):		"$\..\syntactic\expression"
+	table_of_symbols (interface):	"$\..\tos"
+
+
+
+external
+	include_path:	
+			"$EIFFEL4\library\wel_devel\spec\windows\include",
+			"$EIFFEL4\library\vision2_devel\spec\include"
+
+	object:
+			"$EIFFEL4\library\wel_devel\spec\msc\lib\wel.lib",
+			"$EIFFEL4\library\vision2_devel\spec\$(COMPILER)\lib\vision2.lib",
+			"$EIFFEL4\library\vision2_devel\spec\$(COMPILER)\lib\libpng.lib",
+			"$EIFFEL4\library\vision2_devel\spec\$(COMPILER)\lib\zlib.lib"
+end

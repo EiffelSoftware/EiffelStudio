@@ -34,7 +34,8 @@ feature -- Access
 		end;
 
 	arc_cosine (v: DOUBLE): DOUBLE is
-			-- Trigonometric arccosine of `v'
+			-- Trigonometric arccosine of radian `v'
+			-- in the range [0, pi]
 		external
 			"C"
 		alias
@@ -51,7 +52,8 @@ feature -- Access
 		end;
 
 	arc_sine (v: DOUBLE): DOUBLE is
-			-- Trigonometric arcsine of `v'
+			-- Trigonometric arcsine of radian `v'
+			-- in the range [-pi/2, +pi/2]
 		external
 			"C"
 		alias
@@ -68,7 +70,8 @@ feature -- Access
 		end;
 
 	arc_tangent (v: DOUBLE): DOUBLE is
-			-- Trigonometric arctangent of `v'
+			-- Trigonometric arctangent of radian `v'
+			-- in the range [-pi/2, +pi/2]
 		external
 			"C"
 		alias

@@ -129,6 +129,7 @@ rt_shared struct gacinfo g_data = {			/* Global status */
 };
 rt_shared struct gacstat g_stat[GST_NBR] = {	/* Run-time statistics */
 	{
+		0L,		/* mem_used */
 		0L,		/* mem_collect */		 0L,		/* mem_avg */
 		0L,		/* real_avg */			 0L,		/* real_time */
 		0L,		/* real_iavg */			 0L,		/* real_itime */
@@ -138,6 +139,7 @@ rt_shared struct gacstat g_stat[GST_NBR] = {	/* Run-time statistics */
 		0.,		/* cpu_itime */			 0.,		/* sys_itime */
 	},
 	{
+		0L,		/* mem_used */
 		0L,		/* mem_collect */		 0L,		/* mem_avg */
 		0L,		/* real_avg */			 0L,		/* real_time */
 		0L,		/* real_iavg */			 0L,		/* real_itime */

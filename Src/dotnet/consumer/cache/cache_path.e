@@ -13,6 +13,11 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	CACHE_SETTINGS
+		export
+			{NONE} all
+		end
 	
 feature {NONE}
 
@@ -214,8 +219,13 @@ feature {EMITTER} -- Access
 			l_name: STRING
 			l_dir_sep: CHARACTER
 		once
-			l_name := to_dotnet.get_type.assembly.get_name.name
 			l_dir_sep := (create {OPERATING_ENVIRONMENT}).Directory_separator
+			
+			if concervative_mode then
+				l_name := short_cache_name
+			else
+				l_name := cache_name
+			end
 			
 			create Result.make (l_name.count + clr_version.count + 3)
 			Result.append (l_name)

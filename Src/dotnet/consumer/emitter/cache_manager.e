@@ -19,6 +19,11 @@ inherit
 		undefine
 			start
 		end
+	
+	SAFE_ASSEMBLY_LOADER
+		export
+			{NONE} all
+		end
 
 	CACHE_MANAGER_ERRORS
 		export
@@ -152,11 +157,15 @@ feature -- Basic Oprtations
 			valid_path: not a_path.is_empty
 		local
 			l_ca: CONSUMED_ASSEMBLY
+			l_assembly: ASSEMBLY
 		do		
-			l_ca := cache_writer.consumed_assembly_from_path (a_path)
-			if l_ca /= Void then
-				Result := relative_assembly_path_from_consumed_assembly (l_ca)
-				Result.prune_all_trailing ('\')
+			l_assembly := load_from_gac_or_path (a_path)
+			if l_assembly /= Void then
+				l_ca := cache_writer.consumed_assembly_from_path (l_assembly.location)
+				if l_ca /= Void then
+					Result := relative_assembly_path_from_consumed_assembly (l_ca)
+					Result.prune_all_trailing ('\')
+				end
 			end
 		end
 

@@ -170,7 +170,7 @@ BEGIN
     CONTROL         "Progress1",IDC_PROGRESS,"msctls_progress32",0x0,25,155,
                     129,12
     LTEXT           "Beta Version User",IDC_USERNAME,231,153,140,8
-    RTEXT           "Registred to:",IDC_STATIC,175,153,54,8
+    RTEXT           "Registered to:",IDC_STATIC,175,153,54,8
     LTEXT           "0",IDC_MIN_DAYS,23,143,8,8
     LTEXT           "30",IDC_MAX_DAYS,150,143,8,8
     LTEXT           "Beta days used",IDC_STATIC,65,143,48,8

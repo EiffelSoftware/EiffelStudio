@@ -11,6 +11,11 @@ inherit
 
 	DV_MESSAGES
 
+	TIME_UTILITY
+		export
+			{NONE} all
+		end
+
 create
 	make_with_code
 
@@ -344,7 +349,7 @@ feature {DV_COMPONENT} -- Basic operations
 							end
 						else
 							create dt.make_now
-							if dt.date_time_valid (text, dt.default_format_string) then
+							if dt.date_time_valid (text, default_format_string) then
 								create dt.make_from_string_default (text)
 								default_tablerow.set_attribute (attribute_code, dt)
 							else

@@ -424,6 +424,7 @@ feature {NONE} -- Type description
 
 								-- Generate entity to represent current Eiffel implementation class
 							il_generator.generate_il_implementation (class_c, cl_type)
+							il_generator.generate_creation_procedures (class_c, cl_type)
 						end
 
 						types.forth

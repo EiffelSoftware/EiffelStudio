@@ -30,6 +30,13 @@ feature -- Access
 			Create Result
 		end
 		
+	component_selector: GB_COMPONENT_SELECTOR is
+			-- Tool for working with user defined components.
+		once
+			Create Result
+		end
+		
+		
 	layout_constructor: GB_LAYOUT_CONSTRUCTOR is
 			-- Tool for laying out widgets.
 		once

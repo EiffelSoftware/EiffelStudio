@@ -554,7 +554,6 @@ feature {NONE} -- Implementation
 					-- if they are not necessary
 				if document_info.fonts_set.is_empty then
 					remove_line_containing ("internal_font", class_text)
-					remove_line_containing ("internal_font", class_text)
 				end
 				if document_info.pixmaps_set.is_empty then
 					remove_line_containing ("internal_pixmap", class_text)

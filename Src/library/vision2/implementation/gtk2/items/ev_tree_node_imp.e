@@ -340,7 +340,7 @@ feature {EV_TREE_IMP} -- Implementation
 			-- Text displayed.
 		do
 			if internal_text = Void then
-				Result := ""
+				create Result.make (0)
 			else
 				Result := internal_text.twin
 			end

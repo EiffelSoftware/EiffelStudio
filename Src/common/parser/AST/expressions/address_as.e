@@ -6,7 +6,7 @@ inherit
 
 	EXPR_AS
 		redefine
-			type_check, byte_node
+			type_check, byte_node, format
 		end
 
 feature -- Attribute
@@ -83,6 +83,21 @@ feature -- Type check, byte code and dead code removal
 			else
 				!!hector.make (access);
 				Result := hector;
+			end;
+		end;
+
+
+	format (ctxt: FORMAT_CONTEXT) is
+			-- Reconstitute text.
+		do
+			ctxt.begin;
+			ctxt.prepare_for_feature (feature_name.internal_name, void);
+			if ctxt.is_feature_visible then
+				ctxt.put_special("$");
+				ctxt.put_current_feature; 	-- traiter infix et prefix
+				ctxt.commit;
+			else
+				ctxt.rollback;
 			end;
 		end;
 

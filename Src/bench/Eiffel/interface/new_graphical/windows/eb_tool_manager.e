@@ -32,6 +32,8 @@ feature -- Tool management
 
 	show_tool (t: EB_TOOL) is
 			-- shows the tool.
+		require
+			t_valid: t /= void and not t.destroyed
 		deferred
 		ensure
 			shown: t.shown
@@ -39,6 +41,8 @@ feature -- Tool management
 
 	raise_tool (t: EB_TOOL) is
 			-- destroys the tool.
+		require
+			t_valid: t /= void and not t.destroyed
 		deferred
 		ensure
 			shown: t.shown
@@ -46,6 +50,8 @@ feature -- Tool management
 
 	hide_tool (t: EB_TOOL) is
 			-- destroys the tool.
+		require
+			t_valid: t /= void and not t.destroyed
 		deferred
 		ensure
 			hidden: not t.shown
@@ -53,6 +59,8 @@ feature -- Tool management
 
 	destroy_tool (t: EB_TOOL) is
 			-- destroys the tool.
+		require
+			t_valid: t /= void and not t.destroyed
 		deferred
 		ensure
 			destroyed: t.destroyed
@@ -61,34 +69,48 @@ feature -- Tool management
 feature -- Resize
 
 	set_tool_size (t: EB_TOOL; new_width, new_height: INTEGER) is
+		require
+			t_valid: t /= void and not t.destroyed
 		deferred
 		end
 
 	set_tool_width (t: EB_TOOL; new_width: INTEGER) is
+		require
+			t_valid: t /= void and not t.destroyed
 		deferred
 		end
 
 	set_tool_height (t: EB_TOOL; new_height: INTEGER) is
+		require
+			t_valid: t /= void and not t.destroyed
 		deferred
 		end
 
 feature -- Tool status report
 
-	tool_title : STRING is
+	tool_title (t: EB_TOOL) : STRING is
+		require
+			t_valid: t /= void and not t.destroyed
 		deferred
 		end
 
-	tool_icon_name : STRING is
+	tool_icon_name (t: EB_TOOL) : STRING is
+		require
+			t_valid: t /= void and not t.destroyed
 		deferred
 		end
 
 feature -- Tool status setting
 
 	set_tool_title (t: EB_TOOL; s: STRING) is
+		require
+			t_valid: t /= void and not t.destroyed
 		deferred
 		end
 
 	set_tool_icon_name (t: EB_TOOL; s: STRING) is
+		require
+			t_valid: t /= void and not t.destroyed
 		deferred
 		end
 

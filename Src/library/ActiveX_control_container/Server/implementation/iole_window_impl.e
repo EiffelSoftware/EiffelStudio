@@ -13,16 +13,9 @@ inherit
 		rename
 			class_name as wel_class_name,
 			exists as wel_exists,
---			has_capture as wel_has_capture,
---			has_heavy_capture as wel_has_heavy_capture,
---			invalidate_rect as wel_invalidate_rect,
 			item as wel_item,
---			release_capture as wel_release_capture,
---			set_capture as wel_set_capture,
---			set_focus as wel_set_focus,
 			set_item as wel_set_item,
 			set_menu as wel_set_menu
---			scroll as wel_scroll
 		end
 		
 feature -- Basic Operations

@@ -14,8 +14,14 @@ inherit
 	EXTERNAL_CONTROLERS
 	
 	DOC_HOST_UI_FLAG_ENUM
+		export
+			{NONE} all
+		end
 	
 	DOC_HOST_UI_DBL_CLK_ENUM
+		export
+			{NONE} all
+		end
 	
 	ECOM_EXCEPTION
 	

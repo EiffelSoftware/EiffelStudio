@@ -405,13 +405,13 @@ rt_private void eif_show_console(void)
 
 		if (bSuccess) {
 			eif_conoutfile = CreateFile ("CONOUT$", GENERIC_WRITE | GENERIC_READ,
-				FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_ALWAYS, 0, 0);
+				FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, 0);
 
 			if (eif_conoutfile == INVALID_HANDLE_VALUE)
 				eio();
 
 			eif_coninfile = CreateFile ("CONIN$", GENERIC_READ | GENERIC_WRITE,
-				FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_ALWAYS, 0, 0);
+				FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, 0);
 
 			if (eif_coninfile == INVALID_HANDLE_VALUE)
 				eio();

@@ -132,7 +132,11 @@ BEGIN
     PUSHBUTTON      "Cancel",IDCANCEL,235,160,50,14
     LTEXT           "Output",Introduction_Static,110,5,230,10
     LTEXT           "The wizard will display information on the generation process in real time. Minimum output will only display errors messages. Standard output will display both errors and warnings messages. Maximum output will display information messages as well.",
-                    Output_Static,110,20,230,40
+                    Output_Static,110,20,230,36
+    GROUPBOX        "Eiffel Compilation",Compile_Eiffel_Static,193,60,65,
+                    31
+    CONTROL         "Compile",Compile_Eiffel_Check,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,199,75,53,12
 END
 
 Wizard_Introduction_Dialog DIALOG DISCARDABLE  0, 0, 347, 181

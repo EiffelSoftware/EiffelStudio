@@ -55,6 +55,8 @@
 #define Progress_Bar                    1045
 #define Progress_Static                 1046
 #define Type_Static                     1047
+#define Compile_Eiffel_Check            1048
+#define Compile_Eiffel_Static           1049
 #define Location_Static                 -1
 
 // Next default values for new objects

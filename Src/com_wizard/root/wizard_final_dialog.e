@@ -30,6 +30,7 @@ feature {NONE} -- Initialization
 			create id_back.make_by_id (Current, Idback_constant)
 			create help_button.make_by_id (Current, Help_button_constant)
 			create id_cancel.make_by_id (Current, Idcancel)
+			create compile_check.make_by_id (Current, Compile_check_constant)
 		end
 
 feature -- Behavior
@@ -40,12 +41,16 @@ feature -- Behavior
 			minimum_radio.set_unchecked
 			maximum_radio.set_unchecked
 			standard_radio.set_unchecked
+			compile_check.set_checked
 			if Shared_wizard_environment.output_level = Shared_wizard_environment.Output_none then
 				minimum_radio.set_checked
 			elseif Shared_wizard_environment.output_level = Shared_wizard_environment.Output_all then
 				maximum_radio.set_checked
 			else
 				standard_radio.set_checked
+			end
+			if not Shared_wizard_environment.compile_eiffel then
+				compile_check.set_unchecked
 			end
 		end
 
@@ -59,6 +64,7 @@ feature -- Behavior
 			else
 				Shared_wizard_environment.set_warning_output
 			end
+			Shared_wizard_environment.set_compile_eiffel (Compile_check.checked)
 			Precursor {WIZARD_DIALOG}
 		end
 	
@@ -72,6 +78,9 @@ feature -- Access
 
 	maximum_radio: WEL_RADIO_BUTTON
 			-- Maximum output radio button
+
+	Compile_check: WEL_CHECK_BOX
+			-- Comile Eiffel check box
 
 end -- class WIZARD_FINAL_DIALOG
 

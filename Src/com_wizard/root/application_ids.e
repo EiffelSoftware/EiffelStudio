@@ -61,5 +61,6 @@ feature -- Access
 	Progress_static_constant: INTEGER is 1046
 	Type_static_constant: INTEGER is 1047
 	Location_static_constant: INTEGER is -1
+	Compile_check_constant: INTEGER is 1048
 
 end -- class APPLICATION_IDS

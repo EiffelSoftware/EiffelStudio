@@ -42,7 +42,7 @@ feature
 				l.forth
 			end
 			if not l.empty then
-				string_list.extend (" Edit all ")
+				string_list.extend (" Edit all")
 			end
 			popup (string_list)
 		end
@@ -50,25 +50,21 @@ feature
 	continue_after_popdown is
 		local
 			editable: EDITABLE 
-			pos: INTEGER
 		do
-			pos := position
-			if pos /= 1 then
-				if pos = data_list.count + 2 then
+			if position = data_list.count + 1 then
 						--| Selected edit all
-					from
-						data_list.start
-					until
-						data_list.after
-					loop
-						editable := data_list.item
-						editable.create_editor
-						data_list.forth
-					end
-				else	
-					editable := data_list.i_th (pos - 1)
+				from
+					data_list.start
+				until
+					data_list.after
+				loop
+					editable := data_list.item
 					editable.create_editor
+					data_list.forth
 				end
+			else	
+				editable := data_list.i_th (position - 1)
+				editable.create_editor
 			end
 			data_list := Void
 		end

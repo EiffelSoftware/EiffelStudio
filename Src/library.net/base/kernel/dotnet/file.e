@@ -34,10 +34,9 @@ feature -- Initialization
 		do
 			create internal_file.make (fn.to_cil)
 			mode := Closed_file
-			create last_string.make (256)
 			name := fn
 		ensure
-			file_named: name.is_equal (fn)
+			file_named: name = fn
 			file_closed: is_closed
 		end
 
@@ -52,6 +51,7 @@ feature -- Initialization
 			open_read
 			name := fn
 		ensure
+			file_named: name = fn
 			exists: exists
 			open_read: is_open_read
 		end
@@ -68,6 +68,7 @@ feature -- Initialization
 			open_write
 			name := fn
 		ensure
+			file_named: name = fn
 			exists: exists
 			open_write: is_open_write
 		end
@@ -83,6 +84,7 @@ feature -- Initialization
 			open_append
 			name := fn
 		ensure
+			file_named: name = fn
 			exists: exists
 			open_append: is_open_append
 		end
@@ -98,6 +100,7 @@ feature -- Initialization
 			open_read_write
 			name := fn
 		ensure
+			file_named: name = fn
 			exists: exists
 			open_read: is_open_read
 			open_write: is_open_write
@@ -115,6 +118,7 @@ feature -- Initialization
 			create_read_write
 			name := fn
 		ensure
+			file_named: name = fn
 			exists: exists
 			open_read: is_open_read
 			open_write: is_open_write
@@ -133,6 +137,7 @@ feature -- Initialization
 			open_read_append
 			name := fn
 		ensure
+			file_named: name = fn
 			exists: exists
 			open_read: is_open_read
 			open_append: is_open_append
@@ -880,6 +885,7 @@ feature -- Status setting
 			descriptor_available := False
 			internal_sread := Void
 			internal_swrite := Void
+			internal_end_of_file := False
 		ensure then
 			is_closed: is_closed
 		end
@@ -1281,6 +1287,7 @@ feature -- Removal
 			if mode /= Closed_file then
 				close
 			end
+			make (fn)
 			last_integer := 0
 			if last_string /= Void then
 				last_string.wipe_out
@@ -1288,7 +1295,6 @@ feature -- Removal
 			last_real := 0.0
 			last_character := '%U'
 			last_double := 0.0
-			make (fn)
 		ensure
 			file_renamed: name = fn
 			file_closed: is_closed
@@ -1342,8 +1348,18 @@ feature -- Input
 			-- New line will be consumed but not part of `last_string'.
 		require else
 			is_readable: file_readable
+		local
+			l_str: SYSTEM_STRING
 		do
-			create last_string.make_from_cil (reader.read_line)
+			l_str := reader.read_line
+			if last_string = Void then
+				create last_string.make_from_cil (l_str)
+			else
+				last_string.clear_all
+				if l_str /= Void then
+					last_string.append (l_str)
+				end
+			end
 			internal_end_of_file := reader.peek = -1
 		end
 
@@ -1357,6 +1373,11 @@ feature -- Input
 			new_count: INTEGER
 			str_area: NATIVE_ARRAY [CHARACTER]
 		do
+			if last_string = Void then
+				create last_string.make (default_last_string_size)
+			else
+				last_string.clear_all
+			end
 			last_string.grow (nb_char)
 			str_area := last_string.area.native_array
 			new_count := reader.read_character_array (str_area, 0, nb_char)
@@ -1382,7 +1403,11 @@ feature -- Input
 			old_c := last_character
 
 				-- Clean previous stored string.
-			last_string.wipe_out
+			if last_string = Void then
+				create last_string.make (default_last_string_size)
+			else
+				last_string.clear_all
+			end
 
 				-- Initialize list of blanks character
 			blanks := internal_separators
@@ -1438,10 +1463,21 @@ feature -- Convenience
 			file_not_void: file /= Void
 			file_is_open_write: file.is_open_write
 			current_is_open_read: is_open_read
+		local
+			l_modulo, l_read, nb: INTEGER
 		do
-			read_stream (count)
-			file.put_string (last_string)
-			create last_string.make (256)
+			from
+				l_read := 0
+				nb := count
+				l_modulo := 51200
+			until
+				l_read >= nb
+			loop
+				read_stream (l_modulo)
+				file.put_string (last_string)
+				l_read := l_read + l_modulo
+			end
+			last_string := Void
 		end
 
 feature {FILE} -- Implementation
@@ -1476,6 +1512,9 @@ feature {FILE} -- Implementation
 		end
 
 feature {NONE} -- Implementation
+
+	default_last_string_size: INTEGER is 256
+			-- Default size for creating `last_string'
 
 	read_to_string (a_string: STRING; pos, nb: INTEGER): INTEGER is
 			-- Fill `a_string', starting at position `pos' with at

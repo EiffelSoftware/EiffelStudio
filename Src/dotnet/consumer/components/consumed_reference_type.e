@@ -25,22 +25,17 @@ feature {NONE} -- Initialization
 			valid_name: not n.is_empty
 			valid_id: id > 0
 		do
-			internal_name := n
+			name := n
 			assembly_id := id
 		ensure
-			name_set: internal_name = n
+			name_set: name = n
 			id_set: assembly_id = id
 		end
 
 feature -- Access
 
-	name: STRING is
+	name: STRING
 			-- .NET type name
-		do
-			Result := internal_name
-		ensure
-			name_not_void: Result /= Void
-		end
 	
 	assembly_id: INTEGER
 			-- Assembly containing type
@@ -52,11 +47,6 @@ feature {CONSUMED_ARGUMENT, OVERLOAD_SOLVER, CONSUMED_REFERENCED_TYPE} -- Compar
 		do
 			Result := other.name.is_equal (name) and other.assembly_id.is_equal (assembly_id)
 		end
-
-feature {NONE} -- Data storage
-
-	internal_name: STRING
-			-- Storage for type name.
 
 invariant
 	non_void_name: name /= Void

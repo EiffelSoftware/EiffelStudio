@@ -122,7 +122,7 @@ feature -- Access
 		do
 			now := time_msec
 			check
-				linear_time: now > last_subtree_function_call_time
+				linear_time: now >= last_subtree_function_call_time
 			end
 			if
 				now - last_subtree_function_call_time

@@ -379,13 +379,15 @@ feature {NONE} -- Implementation
 		local
 			dmp: DUMP_VALUE
 			ost: OBJECT_STONE
+			res: STRING
 		do
 			create Result
 			Result.extend (expr.context)
 			Result.extend (expr.expression)
 			if expr.error_message = Void then
 				dmp := expr.final_result_value
-				Result.extend (dmp.output_value)
+				res := dmp.full_output
+				Result.extend (res)
 				if dmp.address /= Void then
 					create ost.make (dmp.address, " ", dmp.dynamic_type)
 					Result.set_pebble (ost)

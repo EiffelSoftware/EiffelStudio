@@ -74,7 +74,7 @@ feature {NONE} -- Initialization
 			create local_tree
 			local_tree.drop_actions.extend (~drop_stack_element)
 			local_tree.key_press_actions.extend (~debug_value_key_action (local_tree, ?))
-			local_tree.set_minimum_size (300, 200)
+			local_tree.set_minimum_size (100, 100)
 			split.set_first (local_tree)
 			create object_tree
 			object_tree.drop_actions.extend (~add_object)
@@ -83,7 +83,7 @@ feature {NONE} -- Initialization
 			split.set_second (object_tree)
 			split.enable_flat_separator
 				--| FIXME XR: Use preferences to set the initial width.
-			saved_width := 200
+			saved_width := 300
 			expand_result := True
 			expand_args := True
 			expand_locals := True
@@ -106,7 +106,7 @@ feature {NONE} -- Initialization
 			mini_toolbar.extend (cmd.new_mini_toolbar_item)
 			create pretty_print_cmd.make (Current)
 			pretty_print_cmd.enable_sensitive
---			mini_toolbar.extend (pretty_print_cmd.new_mini_toolbar_item)
+			mini_toolbar.extend (pretty_print_cmd.new_mini_toolbar_item)
 
 			create explorer_bar_item.make_with_mini_toolbar (
 				explorer_bar, widget, title, False, mini_toolbar
@@ -406,7 +406,7 @@ feature {EB_SET_SLICE_SIZE_CMD}
 		local
 			ost: OBJECT_STONE
 		do
-			create Result.make_with_text (dv.name + ": " + dv.type_and_value)
+			create Result.make_with_text (dv.name + ": " + dv.dump_value.type_and_value)
 			Result.set_pixmap (icons @ (dv.kind))
 			Result.set_data (dv)
 			if dv.expandable then
@@ -752,7 +752,7 @@ feature {NONE} -- Implementation
 					dv ?= it.data
 				end
 				if dv /= Void then
-					ev_application.clipboard.set_text (dv.output_value)
+					ev_application.clipboard.set_text (dv.dump_value.full_output)
 				end
 			end
 		end

@@ -200,7 +200,7 @@ feature -- Status setting
 
 	format_region (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT) is
 			-- Apply `format' to all characters between the caret positions `start_position' and `end_position'.
-			-- Formatting is applied immediately. May or may not change the cursor position.
+			-- Formatting is applied immediately.
 		require
 			valid_positions: start_position < end_position and start_position >= 1 and end_position <= text_length + 1
 			format_not_void: format /= Void

@@ -98,11 +98,18 @@ extern "C" {
     if (pthread_cond_init (pcond, NULL)) eraise (msg, EN_EXT)
 #define EIF_COND_WAIT(pcond, pmutex, msg) \
     if (pthread_cond_wait (pcond, pmutex)) eraise (msg, EN_EXT)
+
+#ifdef EIF_WIN32 
+#define EIF_COND_WAIT_WITH_TIMEOUT(pcond, pmutex, timeout, msg) \
+    if (pthread_cond_timedwait (pcond, pmutex, timeout)) eraise (msg, EN_EXT)
+#else \
 #define EIF_COND_WAIT_WITH_TIMEOUT(pcond, pmutex, timeout, msg) \
 	struct timespec tspec; \
 	tspec.tv_sec = time(NULL) + a_timeout; \
 	tspec.tv_nsec = 0; \
     if (pthread_cond_timedwait (pcond, pmutex, &tspec)) eraise (msg, EN_EXT)
+#endif
+
 #define EIF_COND_BROADCAST(pcond, msg) \
     if (pthread_cond_broadcast (pcond)) eraise (msg, EN_EXT)
 #define EIF_COND_SIGNAL(pcond, msg) \

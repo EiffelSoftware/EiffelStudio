@@ -105,12 +105,16 @@ int pthread_cond_wait (pthread_cond_t *cv, pthread_mutex_t external_mutex)
 
 int pthread_cond_timedwait (pthread_cond_t *cv, pthread_mutex_t external_mutex, int timeout)
 {
+  int result;
+  int bTimedOut;
+
+  result = 0;
+  bTimedOut = 0;
+
   /* It's ok to increment the number   */
   /* of waiters since <external_mutex> */
   /* must be locked by the caller.     */
   cv->waiters_++;
-  int result = 0;
-  int bTimedOut = 0;
 
 #if defined (SIGNAL_OBJECT_AND_WAIT) /* NT 4.0 only */
   /* This call will automatically release     */

@@ -40,6 +40,7 @@ typedef void pthread_condattr_t ; /* unused */
 
 extern int pthread_cond_init (pthread_cond_t *,const pthread_condattr_t * ) ;
 extern int pthread_cond_wait (pthread_cond_t *, pthread_mutex_t );
+extern int pthread_cond_timedwait (pthread_cond_t *, pthread_mutex_t, int);
 extern int pthread_cond_broadcast (pthread_cond_t *);
 extern int pthread_cond_signal (pthread_cond_t *cv);
 extern int pthread_cond_destroy (pthread_cond_t *cv) ;

@@ -40,6 +40,7 @@ feature {NONE} -- Initialization
 			create children.make (50)
 			create supported_types.make (10)
 			create supported_type_elements.make (10)
+			create events.make (3)
 		end
 		
 
@@ -57,6 +58,9 @@ feature -- Access
  	supported_types: ARRAYED_LIST [STRING]
  		-- All supported GB_EV_ types that `Current'
  		-- requires for re-building.
+ 		
+ 	events: ARRAYED_LIST [GB_ACTION_SEQUENCE_INFO]
+ 		-- All events of `Current'.
  		
  	supported_type_elements: ARRAYED_LIST [XML_ELEMENT]
  		-- All xml elements matching `supported_types'.
@@ -152,6 +156,13 @@ feature -- Status setting
 		do
 			supported_type_elements.extend (an_element)
 		end
+		
+	add_new_event (event: GB_ACTION_SEQUENCE_INFO) is
+			-- Add `event' to `events'.
+		do
+			events.extend (event)
+		end
+		
 		
 	enable_fonts_set is
 			-- Make `fonts_set' not `is_empty'.

@@ -105,7 +105,7 @@ feature {NONE} -- External
 			"inet_address_size"
 		end
 
-	set_sock_family (address: ANY; a_family: INTEGER) is
+	set_sock_family (address: POINTER; a_family: INTEGER) is
 			-- Set the family in the address structure
 		external
 			"C"
@@ -113,7 +113,7 @@ feature {NONE} -- External
 			"set_inet_sock_family"
 		end
 
-	get_sock_family (address: ANY): INTEGER is
+	get_sock_family (address: POINTER): INTEGER is
 			-- Get the family from the address structure
 		external
 			"C"
@@ -121,43 +121,43 @@ feature {NONE} -- External
 			"get_inet_sock_family"
 		end
 
-	set_sock_port (address: ANY; a_port: INTEGER) is
+	set_sock_port (address: POINTER; a_port: INTEGER) is
 			-- Set the port in the address structure
 		external
 			"C"
 		end
 
-	get_sock_port (address: ANY): INTEGER is
+	get_sock_port (address: POINTER): INTEGER is
 			-- Get the port from the address structure
 		external
 			"C"
 		end
 
-	set_sock_addr_in (address: ANY; a_addr_in: ANY) is
+	set_sock_addr_in (address: POINTER; a_addr_in: POINTER) is
 			-- Set the host address in the address structure
 		external
 			"C"
 		end
 
-	get_sock_addr_in (address: ANY): POINTER is
+	get_sock_addr_in (address: POINTER): POINTER is
 			-- Get the host address from the address structure
 		external
 			"C"
 		end
 
-	set_sock_zero (address: ANY; a_zero: POINTER) is
+	set_sock_zero (address: POINTER; a_zero: POINTER) is
 			-- Set zero attribute in address structure
 		external
 			"C"
 		end
 
-	get_sock_zero (address: ANY): POINTER is
+	get_sock_zero (address: POINTER): POINTER is
 			-- Get zero attribute from address structure
 		external
 			"C"
 		end
 
-	get_servent_port (name, proto: ANY): INTEGER is
+	get_servent_port (name, proto: POINTER): INTEGER is
 			-- Get the services entry using 'name' and 'proto'
 		external
 			"C"

@@ -98,25 +98,25 @@ feature {NONE} -- External
 			"C"
 		end
 
-	set_sock_family (address: ANY; a_family: INTEGER) is
+	set_sock_family (address: POINTER; a_family: INTEGER) is
 			-- sets the family in the socket address
 		external
 			"C"
 		end
 
-	get_sock_family (address: ANY): INTEGER is
+	get_sock_family (address: POINTER): INTEGER is
 			-- gets the socket family from the socket address
 		external
 			"C"
 		end
 
-	set_sock_data (address: ANY; dat: ANY) is
+	set_sock_data (address: POINTER; dat: POINTER) is
 			-- sets the data area of the socket address 
 		external
 			"C"
 		end
 
-	get_sock_data (address: ANY): ANY is
+	get_sock_data (address: POINTER): POINTER is
 			-- gets the data portion of the socket address
 		external
 			"C"

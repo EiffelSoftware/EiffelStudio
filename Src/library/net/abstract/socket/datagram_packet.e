@@ -112,25 +112,25 @@ feature {NONE} -- Externals
 			"C"
 		end
 
-	c_get_number (pd: ANY): INTEGER is
+	c_get_number (pd: POINTER): INTEGER is
 			-- get the packet number from the data area
 		external
 			"C"
 		end
 
-	c_set_number (pd: ANY; num: INTEGER) is
+	c_set_number (pd: POINTER; num: INTEGER) is
 			-- set the packet number in the data area
 		external
 			"C"
 		end
 
-	c_set_data (pd, sd: ANY; sd_count: INTEGER) is
+	c_set_data (pd, sd: POINTER; sd_count: INTEGER) is
 			-- set the data into the data area
 		external
 			"C"
 		end
 
-	c_get_data (rd, pd: ANY; pd_count: INTEGER) is
+	c_get_data (rd, pd: POINTER; pd_count: INTEGER) is
 			-- get the data from the data area
 		external
 			"C"

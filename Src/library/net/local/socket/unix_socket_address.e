@@ -74,7 +74,7 @@ feature {NONE} -- External
 			"unix_address_size"
 		end
 
-	set_sock_family (addr: ANY; a_family: INTEGER) is
+	set_sock_family (addr: POINTER; a_family: INTEGER) is
 			-- Set the family name in the socket address
 		external
 			"C"
@@ -82,7 +82,7 @@ feature {NONE} -- External
 			"set_unix_family"
 		end
 
-	get_sock_family (addr: ANY): INTEGER is
+	get_sock_family (addr: POINTER): INTEGER is
 			-- Get the family name from the socket address
 		external
 			"C"
@@ -90,13 +90,13 @@ feature {NONE} -- External
 			"get_unix_family"
 		end
 
-	set_unix_sock_path (addr: ANY; a_path: ANY) is
+	set_unix_sock_path (addr: POINTER; a_path: POINTER) is
 			-- Set the path in the socket address
 		external
 			"C"
 		end
 
-	get_unix_sock_path (addr: ANY): POINTER is
+	get_unix_sock_path (addr: POINTER): POINTER is
 			-- Get the path from the socket address
 		external
 			"C"

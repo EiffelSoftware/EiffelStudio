@@ -58,9 +58,12 @@ feature {NONE} -- Initialization
 		do
 			make
 			par_imp ?= par.implementation
-
+			check
+				parent_imp_exists: par_imp /= Void
+			end
 			-- Attach the window to `par'.
 			gtk_window_set_transient_for (widget, par_imp.widget)
+			parent_imp := par_imp
 		end
 
 feature -- Element change

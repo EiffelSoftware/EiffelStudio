@@ -8,10 +8,6 @@ to indicate indirect(also called Eiffel or protected) address.
 #ifndef _CONCURRENT_CONSTANT_
 #define _CONCURRENT_CONSTANT_
 
-/*
-#define WORKBENCH
-*/
-
 #define tDISP_LIST
 /* if you want to display some run time information, such as
  * the contents in server list, 
@@ -135,6 +131,7 @@ typedef unsigned char   EIF_BOOLEAN;
 #define constant_sizeofint				sizeof(EIF_INTEGER)
 #define constant_sizeofreal				sizeof(EIF_REAL)
 #define constant_sizeofdouble			sizeof(EIF_DOUBLE)
+#define constant_sizeofpointer			sizeof(EIF_POINTER)
 
 
 #define constant_max_number_of_sep_paras	10 /* the constant is used by the
@@ -158,16 +155,18 @@ typedef unsigned char   EIF_BOOLEAN;
 #define	constant_query_result					-305
 #define	constant_ack_for_procedure				-306
 #define	constant_middle_result_of_importation	-307 /* Not used */
-#define	constant_release_sep_obj				-400 /* Not used any more */
-#define	constant_release_processor				-401 /* Not used any more */
 #define	constant_create_sep_obj					-601
 #define	constant_end_of_request					-1
 #define	constant_not_defined					-500
-#define	constant_sep_child						-501
+#define	constant_sep_child						-501 
+/* the request should be removed, only `constant_sep_child_info' is enough! */
 #define	constant_sep_child_info					-502
 #define	constant_creation_feature_parameter     -503
 #define	constant_message_ack					-700
 #define	constant_query_result_ack				-701
+/* Only Application command can have non-negative request code;
+ * all system command must have negative request code.
+ */
 #define	constant_execute_procedure				100
 #define	constant_execute_query					101
 
@@ -180,6 +179,18 @@ typedef unsigned char   EIF_BOOLEAN;
 #define	constant_stop_execution					-1002
 #define	constant_exit_ok						-1003
 #define	constant_start_sep_obj_ok				-1004
+
+/*----------------------------------------------------------*/
+/*    The following define flags for Application Commands.  */
+/*  In fact, they can be combined with the existing 2       */
+/*  application commands. They are here only because that   */
+/*  we don't want the hassels of modifying the existing     */
+/*  run-time and Eiffel classes.                            */
+/*----------------------------------------------------------*/
+#define	constant_procedure_without_ack			0
+#define	constant_procedure_with_ack				1
+#define	constant_query							2
+#define	constant_attribute						3
 
 /*----------------------------------------------------------*/
 /*    The following define exception constants              */
@@ -222,23 +233,22 @@ typedef unsigned char   EIF_BOOLEAN;
 #define	constant_root_oid						0 /* any object's OID can't be 0 */ 		
 #define	constant_scoop_dog_data_type			-1
 #define	constant_scoop_dog_oid					-1
-#define	constant_procedure_without_ack			0
-#define	constant_procedure_with_ack				1
 #define	constant_import_separate_object			10
-#define	constant_query							2
 #define	constant_cpu_period						1000		
 #define	constant_absolute_period				10000		
 /* the period to call "full_collect" to collect discarded SEP_OBJ
  * proxies.
 */
 /* if the period is calculated in the application's cpu time, don't set 
- * it too big. The unit of the constant: Macro-Second.
+ * it too big. The unit of the constant: Macro-Second(0.001 second).
 */
 #ifdef GC_ON_CPU_TIME 
 #define	constant_period							10*constant_cpu_period		
 #else
 #define	constant_period							constant_absolute_period		
 #endif
+#define constant_waiting_time_in_precondition	80000
+/* unit: Micro second (0.000001 second) */
 #define	constant_client							0 /* Not Used anymore */
 #define	constant_parent							1 /* Not Used anymore */
 #define	constant_child							2 /* Not Used anymore */
@@ -255,6 +265,11 @@ typedef unsigned char   EIF_BOOLEAN;
 
 #define constant_memory_increment 				1024	
 /* the increment amount of memory allocated to MY_STRING */
+
+#define constant_alive_socket					-100
+/* The socket is logically openned but physically closed in order 
+ * to reduce the number of sockets consumed by the application.
+ */
 
 /*----------------------------------------------------------*/
 /*    The following define STRUCTUREs used by the C-library */
@@ -279,6 +294,7 @@ EIF_POINTER str_val;
 /* NULL string value is represented in the following way: */
 /*         type = String_type and str_len < 0             */
 union {
+EIF_POINTER	pointer_val;
 EIF_INTEGER int_val;
 EIF_REAL	real_val;
 EIF_DOUBLE	double_val;
@@ -289,20 +305,21 @@ EIF_REFERENCE obj_ref;
 } PARAMETER; /* the node's structure for the parameter array */
 
 typedef struct _p {
-char hostname[constant_max_host_name_len+1];
+/* char hostname[constant_max_host_name_len+1];*/
+EIF_INTEGER hostaddr;
 int pid;
 int sock;  /* it can be -2 if the node is a SERVER and represents the 
 			* local processor itself.
 		 	*/
 int count; /* For CLIENT: 
 			* it represents the number of objects in the local processor which 
-			* are referred by the processor identified by <hostname, pid>,
+			* are referred by the processor identified by <hostaddr, pid>,
 			* i.e, the number of PROXIES in the processor identified by
-			* <hostname, pid> referring to the current processor.
+			* <hostaddr, pid> referring to the current processor.
 			* For SERVER:
 			* it represents the number of objects imported to the 
 			* local processor from the processor identified by 
-			* <hostname, pid>.
+			* <hostaddr, pid>.
 			* For other structure:
 			* it does not make sense.
 		 	*/
@@ -323,7 +340,7 @@ struct _p *next;
 
 typedef struct _rln {
 int count; /* the number of proxies on the corresponding processor
-			* (identified by <hostname, pid> in the corresponding
+			* (identified by <hostaddr, pid> in the corresponding
 			* REF_TABLE_NODE). In fact, in our implementation, there
 			* is only one proxy for each imported object(to keep the
 			* semantics of `equal'), so the value should always be 1,
@@ -336,10 +353,11 @@ struct _rln *next;
 } REF_LIST_NODE;
 
 typedef struct _rtn {
-char hostname[constant_max_host_name_len+1];
+/*char hostname[constant_max_host_name_len+1];*/
+EIF_INTEGER hostaddr;
 int pid;
 REF_LIST_NODE *ref_list; 	/* the list of local objects exported to 
-						 	 * the processor identified by <hostname, pid>
+						 	 * the processor identified by <hostaddr, pid>
 							*/
 struct _rtn *next;
 } REF_TABLE_NODE;
@@ -379,7 +397,8 @@ struct _pln *next;
 } PROXY_LIST_NODE;
 
 typedef struct _ioln {
-char hostname[constant_max_host_name_len+1];
+/*char hostname[constant_max_host_name_len+1];*/
+EIF_INTEGER hostaddr;
 EIF_INTEGER pid;
 PROXY_LIST_NODE *list_root; /* list of imported objects from the indicated 
 							 * processor 
@@ -431,7 +450,7 @@ int up;  /* the biggest socket identifier in the corresponding `fd_set' */
 	if ((x) == NULL) {\
 		if (strlen(_concur_crash_info))\
 			strcat(_concur_crash_info, "\n");\
-		strcat(_concur_crash_info, CURIMPERR15); \
+		sprintf(_concur_crash_info, CURIMPERR15, error_info()); \
 		c_raise_concur_exception(exception_out_of_memory); \
 	}
 
@@ -455,10 +474,12 @@ int up;  /* the biggest socket identifier in the corresponding `fd_set' */
 #define eif_str_to_c_str(eif_str) (eif_strtoc)(eif_str)
 #define adjust_parameter_array(size) _concur_paras_size = adjust_array(&_concur_paras, _concur_paras_size, size)
 
-#define hostname_of_sep_obj(x) get_c_format_of_eif_string(x, "hostname")
+#define hostaddr_of_sep_obj(x) eif_field(x, "hostaddr", EIF_INTEGER)
 #define pid_of_sep_obj(x) eif_field(x, "pid", EIF_INTEGER)
 #define sock_of_sep_obj(x) eif_field(x, "sock", EIF_INTEGER)
 #define oid_of_sep_obj(x) eif_field(x, "oid", EIF_INTEGER)
+#define on_same_processor(s1, s2) \
+	hostaddr_of_sep_obj(s1) == hostaddr_of_sep_obj(s2) && pid_of_sep_obj(s1) == pid_of_sep_obj(s2)
 
 #define CONCUR_RESC_DECLARE jmp_buf _concur_exenv1, _concur_exenv2, _concur_exenv3, _concur_exenv4
 #define CONCUR_RESC_START1 start: if (setjmp(_concur_exenv1)) goto rescue
@@ -530,6 +551,7 @@ int up;  /* the biggest socket identifier in the corresponding `fd_set' */
  *       array indexed by "start".
  * CURPO(exp_obj, start) put a Complex EXPANDED object "exp_obj" into the 
  *       cell of the  parameter array indexed by "start".
+ * CURPP(ptr, start) put a POINTER into the cell of the parameter array indexed by "start".
  * CURPSOA(sep_obj, start) put a separate object "sep_obj" into the 
  *        cell of the ALTERNATIVE parameter array indexed by "start".
  * CURPIA(i_val, start) put an integer "i_val" into the cell of the  
@@ -554,6 +576,8 @@ int up;  /* the biggest socket identifier in the corresponding `fd_set' */
  * CURGC(x) get the CHARACTER stored in cell "x" of the parameter array.
  * CURGS(x) get the STRING stored in cell "x" of the parameter array.
  * CURGO(x) get a reference to an object stored in cell "x" of the parameter array.
+ * CURGP(x) get a POINTER stored in cell "x" of the parameter array.
+ * CURSQRP(val) send back POINTER query result.
  * CURSQRI(val) send back INTEGER query result.
  * CURSQRR(val) send back REAL    query result.
  * CURSQRD(val) send back DOUBLE  query result.
@@ -572,19 +596,22 @@ int up;  /* the biggest socket identifier in the corresponding `fd_set' */
  * CURSG(s_obj)	send command to "s_obj" and try to get a command from "s_obj".
  * CURSSRI(cmd, para_nb) initialization for sending a system request.
  * CURSPA(sock)  send procedure acknowledgement.
+ * CURRSFW	whenever the Reservation Separate object Failed(rejected), Wait some time.
+ *			Try again when wake up. 
  */ 
 
 #define CURIS(config, cur) \
 	strcpy(_concur_executable, argv[0]); \
-	if (_concur_root_of_the_application) \
+	if (_concur_root_of_the_application) { \
 		make_server(config); \
+		strcpy(_concur_class_name_of_root_obj, eifname(rcdt)); \
+	} \
 	else { \
 /* #ifdef COMBINE_CREATION_WITH_INIT \
 		PARAMETER *tmp_paras; \
         EIF_INTEGER tmp_paras_size, tmp_para_num; \
 #endif  */\
  \
-        _concur_ptr_to_root_obj = &(cur);  \
         _concur_command = 0; \
         strcpy(_concur_class_name_of_root_obj, argv[4]); \
         send_signal_to_scoop_dog(atoi(argv[6])); \
@@ -628,11 +655,11 @@ int up;  /* the biggest socket identifier in the corresponding `fd_set' */
         _concur_para_num = 7; \
         adjust_parameter_array(_concur_para_num); \
 \
-        _concur_paras[0].type = String_type; \
-		set_str_val_into_parameter(_concur_paras, _concur_hostname); \
+        _concur_paras[0].type = Integer_type; \
+        _concur_paras[0].uval.int_val = _concur_hostaddr; \
 \
         _concur_paras[1].type = Integer_type; \
-       _concur_paras[1].uval.int_val = _concur_pid; \
+        _concur_paras[1].uval.int_val = _concur_pid; \
 \
         _concur_paras[2].type = String_type; \
 		set_str_val_into_parameter(_concur_paras+2, class); \
@@ -728,6 +755,10 @@ int up;  /* the biggest socket identifier in the corresponding `fd_set' */
         _concur_paras[start].type = Expanded_object; \
         set_str_val_into_parameter(_concur_paras+start, "Storable_Format_of_the_EXPANDED_Object(transferred as STRING), and Restore on the Client side ")
 
+#define CURPP(ptr, start) \
+        _concur_paras[start].type = Pointer_type; \
+        _concur_paras[start].uval.pointer_val = ptr 
+
 #define CURPIA(i_val, start) \
         _concur_alt_paras[start].type = Integer_type; \
         _concur_alt_paras[start].uval.int_val = i_val
@@ -776,6 +807,12 @@ int up;  /* the biggest socket identifier in the corresponding `fd_set' */
 		strcpy(_concur_command_feature, fet); \
 		_concur_para_num = para_nb; \
 		adjust_parameter_array(_concur_para_num)
+		
+#define CURSQRP(p_val) \
+		_concur_command = constant_query_result; \
+		_concur_para_num = 1; \
+		CURPP(p_val, 0); \
+		send_command(_concur_current_client->sock)
 		
 #define CURSQRI(i_val) \
 		_concur_command = constant_query_result; \
@@ -831,10 +868,10 @@ int up;  /* the biggest socket identifier in the corresponding `fd_set' */
 #define CURRTLO(obj, ret) \
 	{ \
 		EIF_INTEGER locoid = get_oid_from_address(obj); \
-		ret = create_sep_obj(_concur_hostname, _concur_pid, locoid); \
+		ret = create_sep_obj(_concur_hostaddr, _concur_pid, locoid); \
 	}
 
-#define CURLTS(loc_obj)  create_sep_obj(_concur_hostname, _concur_pid,  get_oid_from_address(loc_obj))
+#define CURLTS(loc_obj)  create_sep_obj(_concur_hostaddr, _concur_pid,  get_oid_from_address(loc_obj))
 
 #define CURGI(x) _concur_paras[x].uval.int_val
 #define CURGR(x) _concur_paras[x].uval.real_val
@@ -846,12 +883,24 @@ int up;  /* the biggest socket identifier in the corresponding `fd_set' */
 #define CURGS(x) _concur_paras[x].str_val
 #define CURGO(x) eif_wean(_concur_paras[x].uval.obj_ref)
 /* because the object reference has been protected by "henter" in "get_data()". */
+#define CURGP(x) _concur_paras[x].uval.pointer_val
 
 #define CUROBJ	eif_separate_id_object(_concur_command_oid)
 
 #define CURPROXY_OBJ(x)	eif_separate_id_object(oid_of_sep_obj(x))
 
-#define CURCSPF	goto check_sep_pre
+#define CURCSPF	\
+		if (constant_waiting_time_in_precondition) \
+			cur_usleep(constant_waiting_time_in_precondition); \
+		goto check_sep_pre
+/* Sleep some time when the precondition involving separate object(s) is evaluated 
+ * to be False if user defined so.
+ */
+
+#define CURRSFW \
+		 c_concur_select(_concur_para_num, 1, NULL, NULL, NULL, 0, (_concur_pid % 2) * 10000 + (_concur_pid % 10) * 4000);
+
+		
 
 #define CURSG(s_obj)	\
 	send_command(sock_of_sep_obj(s_obj));\
@@ -884,16 +933,8 @@ int up;  /* the biggest socket identifier in the corresponding `fd_set' */
 
 /* CURRSO(x)	try to reserve separate object `x'.
  * CURFSO(x)	free separate object `x'.
- * CURSLEEP  sleep some time when the precondition involving separate object(s)
- *      is evaluated to be False.
 */
 #define CURRSO(x) reserve_sep_obj(x)
 #define CURFSO(x) free_sep_obj(x)
-
-#ifdef EIF_WIN32
-#define CURSLEEP    Sleep((_concur_pid % 2) * 10 + (_concur_pid % 10) * 5)
-#else
-#define CURSLEEP    usleep((_concur_pid % 2) * 10000 + (_concur_pid % 10) * 5000)
-#endif
 
 #endif

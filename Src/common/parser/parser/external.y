@@ -19,14 +19,15 @@ creation
 
 %start		External_declaration
 
-%token		TE_COLON, TE_LPARAN, TE_RPARAN, TE_COMMA
-%token		TE_ADDRESS, TE_STAR, TE_LT, TE_GT, TE_DQUOTE
-%token		TE_ACCESS, TE_C_LANGUAGE, TE_CPP_LANGUAGE, TE_INLINE
-%token		TE_DELETE, TE_DLL_LANGUAGE, TE_DLLWIN_LANGUAGE, TE_ENUM
-%token		TE_GET_PROPERTY, TE_IL_LANGUAGE, TE_MACRO, TE_FIELD
-%token		TE_JAVA_LANGUAGE, TE_DEFERRED, TE_OPERATOR
-%token		TE_SET_FIELD, TE_SET_PROPERTY, TE_SIGNATURE, TE_STATIC, TE_CREATOR
-%token		TE_STATIC_FIELD, TE_SET_STATIC_FIELD, TE_STRUCT, TE_TYPE, TE_USE, TE_ID
+%token	TE_COLON, TE_LPARAN, TE_RPARAN, TE_COMMA
+%token	TE_ADDRESS, TE_STAR, TE_LT, TE_GT, TE_DQUOTE
+%token	TE_ACCESS, TE_C_LANGUAGE, TE_CPP_LANGUAGE, TE_INLINE
+%token	TE_DELETE, TE_DLL_LANGUAGE, TE_DLLWIN_LANGUAGE, TE_ENUM
+%token	TE_GET_PROPERTY, TE_IL_LANGUAGE, TE_MACRO, TE_FIELD
+%token	TE_JAVA_LANGUAGE, TE_DEFERRED, TE_OPERATOR
+%token	TE_SET_FIELD, TE_SET_PROPERTY, TE_SIGNATURE, TE_STATIC, TE_CREATOR
+%token	TE_STATIC_FIELD, TE_SET_STATIC_FIELD,  TE_STRUCT, TE_TYPE
+%token	TE_SIGNED, TE_UNSIGNED, TE_USE, TE_ID
 
 %type <EXTERNAL_EXTENSION_AS>	External_declaration C_specification CPP_specification
 								DLL_specification IL_specification CPP_specific
@@ -244,12 +245,24 @@ Type_identifier:
 		Identifier Pointer_opt Address_opt
 			{
 					-- False because no `struct' keyword.
-				$$ := new_external_type_as ($1, False, $2, $3, False)
+					-- Void because no `signed', `unsigned' keyword.
+				$$ := new_external_type_as ($1, Void, False, $2, $3)
 			}
 	|	TE_STRUCT Identifier Pointer_opt Address_opt
 			{
 					-- True because `struct' keyword.
-				$$ := new_external_type_as ($2, True, $3, $4, False)
+					-- Void because no `signed', `unsigned' keyword.
+				$$ := new_external_type_as ($2, Void, True, $3, $4)
+			}
+	|	TE_SIGNED Identifier Pointer_opt Address_opt
+			{
+					-- False because no `struct' keyword.
+				$$ := new_external_type_as ($2, signed_prefix, False, $3, $4)
+			}
+	|	TE_UNSIGNED Identifier Pointer_opt Address_opt
+			{
+					-- False because no `struct' keyword.
+				$$ := new_external_type_as ($2, unsigned_prefix, False, $3, $4)
 			}
 	;
 
@@ -315,6 +328,12 @@ Identifier:	TE_ID
 	;
 
 %%
+
+feature {NONE} -- Constants
+
+	signed_prefix: STRING is "signed "
+	unsigned_prefix: STRING is "unsigned "
+			-- Available prefix to C/C++ basic types.
 
 end -- class EIFFEL_PARSER
 

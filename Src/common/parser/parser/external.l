@@ -163,6 +163,10 @@ X		([a-z]|[A-Z]|[0-9]|_|\+|\.|]|[|%,\ |=|&)
 				current_position.go_to (9)
 				last_token := TE_SIGNATURE
 			}
+"signed" {
+				current_position.go_to (8)
+				last_token := TE_SIGNED
+			}
 [sS][tT][aA][tT][iI][cC]	{
 				current_position.go_to (6)
 				last_token := TE_STATIC
@@ -178,6 +182,10 @@ X		([a-z]|[A-Z]|[0-9]|_|\+|\.|]|[|%,\ |=|&)
 [tT][yY][pP][eE]	{
 				current_position.go_to (4)
 				last_token := TE_TYPE
+			}
+"unsigned" {
+				current_position.go_to (8)
+				last_token := TE_UNSIGNED
 			}
 [uU][sS][eE]	{
 				current_position.go_to (3)

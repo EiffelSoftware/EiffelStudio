@@ -234,7 +234,7 @@ feature {NONE} -- Implementation
 	clear_device is
 			-- Do smart erasing of the canvas.
 		do
-			device.drawable.set_background_color (create {EV_COLOR}.make_with_rgb (1, 1, 0))
+			device.drawable.set_background_color (create {EV_COLOR}.make_with_rgb (0, 0, 0))
 			device.drawable.clear
 		end
 

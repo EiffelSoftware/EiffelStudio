@@ -44,7 +44,6 @@ feature -- Initialization
 			make (fn)
 			file_pointer := console_def (0)
 			set_read_mode
-			create last_string.make (256)
 		end
 
 	make_open_stdout (fn: STRING) is

@@ -39,7 +39,7 @@ feature -- Basic operations
 			valid_folder: a_folder.is_equal (Client) or a_folder.is_equal (Server)
 		local
 			a_string: STRING
-			a_file: RAW_FILE
+			a_file: PLAIN_TEXT_FILE
 		do
 			create a_string.make (500)
 			a_string.append (environment.destination_folder)

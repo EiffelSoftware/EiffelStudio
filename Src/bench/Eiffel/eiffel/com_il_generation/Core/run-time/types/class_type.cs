@@ -45,7 +45,13 @@ feature -- Status Report
 			l_class_name = (EIFFEL_NAME_ATTRIBUTE) l_ca [0];
 			Result = l_class_name.name;
 		} else {
-			Result = l_type.Name;
+			if (l_type.IsArray) {
+					// This is not the perfect solution as it could be an instance
+					// of System.Array and not a vector array. But that will do for now.
+				Result = "NATIVE_ARRAY";
+			} else {
+				Result = l_type.Name;
+			}
 		}
 
 		return Result;

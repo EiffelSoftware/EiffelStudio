@@ -230,7 +230,7 @@ feature -- Element change
 			else
 				from	
 				until
-					a_column = column_widths.count + 1
+					a_column > column_widths.count
 				loop
 					column_widths.extend (Default_column_width) 
 				end
@@ -265,7 +265,7 @@ feature -- Element change
 			until
 				old_count <= 0
 			loop
-				column_title_changed ("", i)
+				column_width_changed (Default_column_width, i)
 				i := i + 1
 				old_count := old_count - 1
 			end
@@ -436,6 +436,9 @@ end -- class EV_MULTI_COLUMN_LIST_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.43  2000/03/28 21:30:22  king
+--| Corrected set_column_widths
+--|
 --| Revision 1.42  2000/03/28 18:27:22  brendel
 --| Fixed bug in set_column_titles and set_column_widths where it took the
 --| count from the recently wiped out list instead of the parameter.

@@ -15,7 +15,7 @@ inherit
 
 	BASIC_ROUTINES
 
-	DB_DEFAULT_NULL_VALUE_SPEC
+	DEFAULT_NULL_VALUE
 
 feature -- Basic operations
 
@@ -134,30 +134,19 @@ feature -- Basic operations
 		require
 			object_exists: object /= Void
 		local
-			ftype, local_int: INTEGER
+			ftype: INTEGER
 			fname: STRING
-			int_ref: INTEGER_REF
-			local_real: REAL
-			real_ref: REAL_REF
-			double_ref: DOUBLE_REF
-			local_double: DOUBLE
-			local_boolean: BOOLEAN
-			boolean_ref: BOOLEAN_REF
-			local_string1: STRING
-			local_char: CHARACTER
-			char_ref: CHARACTER_REF
-			adr_tmp: ANY
 		do
 			ftype := field_type (i, object)
 			fname := field_name (i, object)
 			Result := True
 
 			if ftype = Integer_type then
-				set_integer_field (i, object, db_default_null_value.value.truncated_to_integer)
+				set_integer_field (i, object, default_null_value.truncated_to_integer)
 			elseif ftype = Real_type then
-				set_real_field (i, object, db_default_null_value.value.truncated_to_real)
+				set_real_field (i, object, default_null_value.truncated_to_real)
 			elseif ftype = Double_type then
-				set_double_field (i, object, db_default_null_value.value)
+				set_double_field (i, object, default_null_value)
 			elseif ftype = Character_type then
 				set_character_field (i, object, ' ')
 			elseif ftype = Boolean_type then
@@ -167,7 +156,6 @@ feature -- Basic operations
 			else
 				Result := false
 			end
-
 		end
 
 	mark (obj: ANY) is

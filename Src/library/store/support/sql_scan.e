@@ -85,21 +85,21 @@ feature -- Basic operations
 			else
 				if is_integer (obj) then
 					r_int ?= obj
-					if r_int.item = db_default_null_value.value.truncated_to_integer then
+					if r_int.item = default_null_value.truncated_to_integer then
 						str.append (Null_string)
 					else
 						str.append (r_int.out)
 					end
 				elseif is_double (obj) then
 					r_double ?= obj
-					if r_double.item = db_default_null_value.value then
+					if r_double.item = default_null_value then
 						str.append (Null_string)
 					else
 						str.append (r_double.out)
 					end
 				elseif is_real (obj) then
 					r_real ?= obj
-					if r_real.item = db_default_null_value.value.truncated_to_real then
+					if r_real.item = default_null_value.truncated_to_real then
 						str.append (Null_string)
 					else
 						str.append (r_real.out)
@@ -111,7 +111,7 @@ feature -- Basic operations
 					str.extend ('%'')
 				elseif is_string (obj) then
 					r_string ?= obj
-					if not r_string.empty then
+					if not r_string.is_empty then
 						buffer.copy (r_string)
 						buffer.replace_substring_all ("'", "''")
 						str.append (string_format (buffer))
@@ -123,11 +123,11 @@ feature -- Basic operations
 					str.append (boolean_format (r_bool.item))
 				elseif is_date (obj) then
 					r_date ?= obj
-					if r_date = db_default_null_value.datetime_value then
-						str.append (Null_string)
-					else
+				--	if r_date = db_default_null_value.datetime_value then
+				--		str.append (Null_string)
+				--	else
 						str.append (date_format (r_date))
-					end
+				--	end
 				else
 					get_complex_value (obj, str)
 				end
@@ -205,7 +205,7 @@ feature -- Basic operations
 					c := item (index)
 					if c = ':' then
 						if new_string = Void then
-							!! new_string.make (2 * count)
+							create new_string.make (2 * count)
 						end
 						if old_index < index then
 							new_string.append_substring (Current, 
@@ -266,7 +266,7 @@ feature {NONE} -- Status report
 	buffer: STRING is
 			-- Constant temporary string
 		once
-			!! Result.make (200)
+			create Result.make (200)
 		ensure
 			Result /= Void
 		end

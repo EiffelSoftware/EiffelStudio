@@ -53,8 +53,6 @@ feature
 									(workb.precompiled_directories);
 						Workbench.set_precompiled_driver
 									(workb.precompiled_driver);
-						Workbench.set_precompiled_descobj
-									(workb.precompiled_descobj);
 						Workbench.set_extendible_directory (project_dir);
 						set_extendible_dir;
 						Universe.copy (workb.universe);

@@ -446,7 +446,7 @@ rt_shared void initsig(void)
 			break;
 #endif /* EIF_DFLT_SIGRTMAX */
 
-#ifdef EIF_DFTL_SIGWAITING 
+#ifdef EIF_DFLT_SIGWAITING 
 		/* So far, used in solaris threads (SunOS 5.5+ and Unixware 2.0)
 		 * On solaris 2.4, it is not used, which is a bug of the thread lib 
 		 */

@@ -125,7 +125,13 @@ feature -- Element change
 			exists: exists
 			valid_bitmap: a_bitmap /= Void
 		do
+			if internal_bitmap /= Void and then internal_bitmap.reference_tracked then
+				internal_bitmap.decrement_reference
+			end
 			internal_bitmap := a_bitmap
+			if internal_bitmap.reference_tracked then
+				internal_bitmap.increment_reference
+			end
 			show_bitmap
 			cwin_send_message (item, Bm_setimage, Image_bitmap, a_bitmap.to_integer)
 		end
@@ -137,7 +143,13 @@ feature -- Element change
 			exists: exists
 			valid_icon: an_icon /= Void
 		do
+			if internal_icon /= Void and then internal_icon.reference_tracked then
+				internal_icon.decrement_reference
+			end
 			internal_icon := an_icon
+			if internal_icon.reference_tracked then
+				internal_icon.increment_reference
+			end
 			show_icon
 			cwin_send_message (item, Bm_setimage, Image_icon, an_icon.to_integer)
 		end
@@ -149,8 +161,18 @@ feature -- Element change
 			valid_bitmap: bitmap /= Void or icon /= Void
 		do
 			show_text
-			internal_bitmap := Void
-			internal_icon := Void
+			if internal_bitmap /= Void then 
+				if internal_bitmap.reference_tracked then
+					internal_bitmap.decrement_reference
+				end
+				internal_bitmap := Void
+			end
+			if internal_icon /= Void then
+				if internal_icon.reference_tracked then
+					internal_icon.decrement_reference
+				end
+				internal_icon := Void
+			end
 			current_pixmap := -1
 		ensure
 			pixmap_not_set: current_pixmap /= Image_icon and current_pixmap /= Image_bitmap
@@ -166,10 +188,10 @@ feature {NONE} -- Implementation
 		end
 
 	internal_bitmap: WEL_BITMAP
-			-- Bitmap currently selected in the button.
+			-- Bitmap currently selected in the button. Void if none
 	
 	internal_icon: WEL_ICON
-			-- Bitmap currently selected in the button.
+			-- Bitmap currently selected in the button. Void if none
 
 end -- class WEL_BITMAP_BUTTON
 

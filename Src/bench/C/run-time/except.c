@@ -1856,7 +1856,7 @@ rt_private void exception(int how)
 	if (!debug_mode)
 		return;
 
-	if (echval == EN_FAIL || echval == EN_OSTK)
+	if ((echval == EN_FAIL || echval == EN_OSTK) || (echval == EN_RES))
 		return;
 	dbreak(how);			/* Stop execution */
 }

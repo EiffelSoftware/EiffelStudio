@@ -5,6 +5,12 @@ indexing
 external class
 	ISE_REFLECTION_ASSEMBLYDESCRIPTOR
 
+inherit
+	ANY
+		redefine
+			GetHashCode
+		end
+
 create
 	make1
 
@@ -52,6 +58,13 @@ feature -- Basic Operations
 			"IL signature (System.String, System.String, System.String, System.String): System.Void use ISE.Reflection.AssemblyDescriptor"
 		alias
 			"Make"
+		end
+
+	GetHashCode: INTEGER is
+		external
+			"IL signature (): System.Int32 use ISE.Reflection.AssemblyDescriptor"
+		alias
+			"GetHashCode"
 		end
 
 	a_invariant is

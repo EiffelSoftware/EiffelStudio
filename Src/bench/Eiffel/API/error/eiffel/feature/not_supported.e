@@ -2,6 +2,8 @@
 
 class NOT_SUPPORTED 
 
+obsolete "The language (as defined in ETL) should be fully supported"
+
 inherit
 
 	FEATURE_ERROR

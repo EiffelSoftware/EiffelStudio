@@ -11,6 +11,8 @@ inherit
 			make
 		end
 
+	TYMED_ENUM
+
 creation
 	make,
 	make_from_pointer
@@ -32,12 +34,12 @@ feature {NONE}  -- Initialization
 feature -- Access
 
 	tymed: INTEGER is
-			-- No description available.
+			-- See TYMED_ENUM for possible values.
 		do
 			Result := ccom_x_stgmedium_union_tymed (item)
 		end
 
-	u: X__MIDL_IADVISE_SINK_0003_UNION is
+	u: X_STGMEDIUM_UNION is
 			-- No description available.
 		do
 			Result := ccom_x_stgmedium_union_u (item)
@@ -61,7 +63,7 @@ feature -- Basic Operations
 			ccom_x_stgmedium_union_set_tymed (item, a_tymed)
 		end
 
-	set_u (a_u: X__MIDL_IADVISE_SINK_0003_UNION) is
+	set_u (a_u: X_STGMEDIUM_UNION) is
 			-- Set `u' with `a_u'.
 		require
 			non_void_a_u: a_u /= Void
@@ -92,7 +94,7 @@ feature {NONE}  -- Externals
 			"C++ [macro %"ecom_control_library__STGMEDIUM_UNION_s_impl.h%"](ecom_control_library::_STGMEDIUM_UNION *, ULONG)"
 		end
 
-	ccom_x_stgmedium_union_u (a_pointer: POINTER): X__MIDL_IADVISE_SINK_0003_UNION is
+	ccom_x_stgmedium_union_u (a_pointer: POINTER): X_STGMEDIUM_UNION is
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__STGMEDIUM_UNION_s_impl.h%"](ecom_control_library::_STGMEDIUM_UNION *):EIF_REFERENCE"

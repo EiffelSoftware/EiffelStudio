@@ -37,7 +37,7 @@ feature -- Access
 			Result := ccom_x_gdi_object_object_type (item)
 		end
 
-	u: X__MIDL_IADVISE_SINK_0002_UNION is
+	u: X_GDI_OBJECT_UNION is
 			-- No description available.
 		do
 			Result := ccom_x_gdi_object_u (item)
@@ -61,7 +61,7 @@ feature -- Basic Operations
 			ccom_x_gdi_object_set_object_type (item, a_object_type)
 		end
 
-	set_u (a_u: X__MIDL_IADVISE_SINK_0002_UNION) is
+	set_u (a_u: X_GDI_OBJECT_UNION) is
 			-- Set `u' with `a_u'.
 		require
 			non_void_a_u: a_u /= Void
@@ -92,7 +92,7 @@ feature {NONE}  -- Externals
 			"C++ [macro %"ecom_control_library__GDI_OBJECT_s_impl.h%"](ecom_control_library::_GDI_OBJECT *, ULONG)"
 		end
 
-	ccom_x_gdi_object_u (a_pointer: POINTER): X__MIDL_IADVISE_SINK_0002_UNION is
+	ccom_x_gdi_object_u (a_pointer: POINTER): X_GDI_OBJECT_UNION is
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__GDI_OBJECT_s_impl.h%"](ecom_control_library::_GDI_OBJECT *):EIF_REFERENCE"

@@ -37,7 +37,7 @@ feature -- Access
 			Result := ccom_x_user_clipformat_f_context (item)
 		end
 
-	u: X__MIDL_IWIN_TYPES_0001_UNION is
+	u: X_USER_CLIPFORMAT_UNION is
 			-- No description available.
 		do
 			Result := ccom_x_user_clipformat_u (item)
@@ -61,7 +61,7 @@ feature -- Basic Operations
 			ccom_x_user_clipformat_set_f_context (item, a_f_context)
 		end
 
-	set_u (a_u: X__MIDL_IWIN_TYPES_0001_UNION) is
+	set_u (a_u: X_USER_CLIPFORMAT_UNION) is
 			-- Set `u' with `a_u'.
 		require
 			non_void_a_u: a_u /= Void
@@ -92,7 +92,7 @@ feature {NONE}  -- Externals
 			"C++ [macro %"ecom_control_library__userCLIPFORMAT_s_impl.h%"](ecom_control_library::_userCLIPFORMAT *, LONG)"
 		end
 
-	ccom_x_user_clipformat_u (a_pointer: POINTER): X__MIDL_IWIN_TYPES_0001_UNION is
+	ccom_x_user_clipformat_u (a_pointer: POINTER): X_USER_CLIPFORMAT_UNION is
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__userCLIPFORMAT_s_impl.h%"](ecom_control_library::_userCLIPFORMAT *):EIF_REFERENCE"

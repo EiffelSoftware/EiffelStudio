@@ -2,18 +2,25 @@
 arg=none
 
 case `uname` in
-    Linux)
-	if [ -f /proc/cpuinfo ] ; then
-		ncpus=`grep -c '^processor[[:space:]]*:' /proc/cpuinfo`
-	fi
-	;;
+	Linux)
+		if [ -f /proc/cpuinfo ] ; then
+			ncpus=`grep -c '^processor[[:space:]]*:' /proc/cpuinfo`
+		fi
+		;;
 	SunOS)
-	ncpus=`/usr/sbin/psrinfo | wc -l`
-	;;
-    IRIX*)
-	ncpus=`hinv | awk '/^[0-9]+ [0-9]+ MHZ/ {print $1}'`
-	;;
+		ncpus=`/usr/sbin/psrinfo | wc -l`
+		;;
+	IRIX*)
+		ncpus=`hinv | awk '/^[0-9]+ [0-9]+ MHZ/ {print $1}'`
+		;;
 esac
+
+case $ISE_PLATFORM in
+	macosx)
+		ncpus=`sysctl -n hw.activecpu`
+		;;
+esac
+
 if [ -z "$ncpus" ]; then ncpus=1; fi
 if [ "$ncpus" -eq "0" ]; then ncpus=1; fi
 

@@ -52,30 +52,29 @@ feature -- Basic Operations
 			l_string, l_comspec: STRING
 			l_process_launcher: WEL_PROCESS_LAUNCHER
 		do
+			(create {EXECUTION_ENVIRONMENT}).put (Eiffel_installation_dir_name, "ISE_EIFFEL")
 			create l_directory.make_open_read (a_folder_name)
 			if l_directory.has_entry ("Makefile." + Ise_c_compiler_value) then
 				l_comspec := Env.get ("ComSpec")
 				check
 					has_comspec: l_comspec /= Void
 				end
-				create l_string.make (l_comspec.count + 16)
-				l_string.append (l_comspec)
-				l_string.append (" /c ")
+				create l_string.make (21)
+				l_string.append ("nmake /f ")
 				if Ise_c_compiler_value.is_equal ("msc") then
-					l_string.append ("make_msc.bat")
+					l_string.append ("makefile.msc")
 				else
-					l_string.append ("make_bcb.bat")
+					l_string.append ("makefile.bcb")
 				end
 				create l_process_launcher
 				l_process_launcher.run_hidden
-				environment.abort_request_actions.extend (agent l_process_launcher.terminate_process)
+				environment.add_abort_request_action (agent l_process_launcher.terminate_process)
 				l_process_launcher.launch (l_string, a_folder_name, agent message_output.add_text)
 				if not l_process_launcher.last_launch_successful then
 					environment.set_abort (C_compilation_failed)
 					environment.set_error_data ("in folder " + (create {EXECUTION_ENVIRONMENT}).current_working_directory + "\" + a_folder_name)
 				end
-				environment.abort_request_actions.finish
-				environment.abort_request_actions.remove
+				environment.remove_abort_request_action
 			end
 		end
 	
@@ -163,3 +162,4 @@ end -- class WIZARD_C_COMPILER
 --| 356 Storke Road, Goleta, CA 93117 USA
 --| http://www.eiffel.com
 --+----------------------------------------------------------------
+

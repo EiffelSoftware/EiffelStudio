@@ -3044,15 +3044,15 @@ feature {NONE} -- External features
 feature -- PS
 
 	signature: STRING is
-		obsolete "Use `append_clickable_signature'"
+		obsolete "Use `append_signature'"
 		do
 			Result := e_class.signature
 		end;
 
-	append_clickable_name (a_clickable: CLICK_WINDOW) is
+	append_name (a_clickable: OUTPUT_WINDOW) is
 			-- Append the name ot the current class in `a_clickable'
 		do
-			e_class.append_clickable_name (a_clickable)
+			e_class.append_name (a_clickable)
 		end;
 
 	feature_named (n: STRING): FEATURE_I is

@@ -37,12 +37,8 @@ feature -- Access
 		require
 			valid_document: a_doc.is_valid_xml
 		do
-			if filtered_documents.has (a_doc.name) then
-				Result := filtered_documents.item (a_doc.name)
-			else
-				create Result.make (a_doc, filter)
-				add_filtered_document (Result)			
-			end
+			create Result.make (a_doc, filter)
+			add_filtered_document (Result)			
 		end		
 
 feature -- Status setting	
@@ -127,6 +123,7 @@ feature -- Conversion
 				l_string := a_doc.text
 				if not l_string.is_empty then					
 					create l_html_filter.make (next_unique_id)
+					l_html_filter.set_filename (a_doc.name)
 					l_html_filter.clear
 					create l_parser.make
 					l_parser.set_callbacks (l_html_filter)

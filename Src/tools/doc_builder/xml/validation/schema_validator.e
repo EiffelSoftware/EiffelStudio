@@ -109,7 +109,7 @@ feature -- Schema and file validation
 	            loop            		
 	            end
            	else
-           		exception ?= feature {EXCEPTION_MANAGER}.last_exception
+           		exception ?= feature {ISE_RUNTIME}.last_exception
            		if exception /= Void then
            			create error_report.make ("Invalid Schema Definition", exception.message,
 						exception.line_number, exception.line_position)

@@ -18,6 +18,8 @@ inherit
 			on_attribute,
 			on_content		
 		end
+		
+	OUTPUT_CONSTANTS
 
 create
 	make	
@@ -38,8 +40,8 @@ feature -- Access
 	description: STRING is
 			-- Textual description of filter
 		do
-			Result := "Unfiltered"
-		end	
+			Result := unfiltered
+		end
 
 	output_flag: STRING
 			-- Output determinant
@@ -86,7 +88,8 @@ feature -- Processing
 			end
 		
 			if filterable_elements.has (e) then
-					-- This is a filterable element
+					-- This is a output tag.  Output is disabled because we don't want
+					-- to actually output the output tag in the document
 				can_output := False
 				if is_start then
 					filter_depth := filter_depth + 1				
@@ -118,11 +121,11 @@ feature -- Processing
 			if in_filterable_element then
 				if a_name.is_equal ("output") and then (a_value.is_equal (output_flag) or output_flag.is_empty) then
 					can_output := True
-				elseif can_output then				
-					l_string := " " + a_name + "=%"" + a_value + "%""
-					output_string.insert_string (l_string, attribute_write_position)
-				end				
-				attribute_write_position := output_string.count - 1	
+				end
+			elseif can_output then							
+				l_string := " " + a_name + "=%"" + a_value + "%""
+				output_string.insert_string (l_string, attribute_write_position)
+				attribute_write_position := output_string.count
 			end		
 		end	
 

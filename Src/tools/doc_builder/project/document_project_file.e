@@ -78,17 +78,10 @@ feature -- Basic operations
 				l_root.put_last (l_element)
 			end
 			
-					-- XSL
-			if Shared_document_manager.has_xsl then
-				create l_element.make_child (l_root, "xsl", Void)
-				l_element.put_first (create {XM_CHARACTER_DATA}.make (l_element, Shared_document_manager.xsl.name))
-				l_root.put_last (l_element)
-			end
-			
 					-- HTML Stylesheet
-			if has_stylesheet_file then
+			if Shared_document_manager.has_stylesheet then
 				create l_element.make_child (l_root, "html_css", Void)
-				l_element.put_first (create {XM_CHARACTER_DATA}.make (l_element, stylesheet_file))
+				l_element.put_first (create {XM_CHARACTER_DATA}.make (l_element, Shared_document_manager.stylesheet.name))
 				l_root.put_last (l_element)
 			end
 			
@@ -97,13 +90,8 @@ feature -- Basic operations
 				create file.make_create_read_write (l_name.string)
 				file.close
 			end
-			save_xml_document (document, create {FILE_NAME}.make_from_string (file.name))
+			save_xml_document (document, file.name)
 		end
-
-feature -- Project Data
-	
-	stylesheet_file: STRING
-			-- HTML Stylesheet file used in project
 
 feature -- Query
 
@@ -111,39 +99,6 @@ feature -- Query
 			-- Is Current representative of a valid project?
 		do
 			Result := Shared_project.name /= Void and then Shared_project.root_directory /= Void
-		end
-	
-	has_stylesheet_file: BOOLEAN is
-				-- Is there a HTML stylesheet associated with the open project
-		do
-			Result := stylesheet_file /= Void
-		end
-
-feature -- Status Setting
-		
-	set_css_file (a_css: STRING) is
-			-- Set `stylesheet_file'
-		require
-			css_not_void: a_css /= Void
-			css_exists: (create {PLAIN_TEXT_FILE}.make (a_css)).exists
-		local
-			l_src, l_target: PLAIN_TEXT_FILE
-		do
-			stylesheet_file := a_css
-			create l_target.make_create_read_write (temporary_html_location (stylesheet_file, True))
-			l_target.close
-			create l_src.make (stylesheet_file)
-			copy_file (l_src, l_target)
-		ensure
-			style_set: stylesheet_file /= Void
-		end
-		
-	remove_css_file is
-			-- Remove reference to HTML CSS file
-		do
-			stylesheet_file := Void
-		ensure
-			not has_stylesheet_file
 		end
 	
 feature {NONE} -- Implementation
@@ -165,13 +120,10 @@ feature {NONE} -- Implementation
 				if (create {PLAIN_TEXT_FILE}.make (e.text)).exists then
 					Shared_document_manager.initialize_schema (e.text)	
 				end				
-			end
-			if e.name.is_equal ("xsl") then
-				Shared_document_manager.initialize_xslt (e.text)
-			end
+			end			
 			if e.name.is_equal ("html_css") then
 				if (create {PLAIN_TEXT_FILE}.make (e.text)).exists then
-					set_css_file (e.text)
+					Shared_document_manager.initialize_stylesheet (e.text)
 				end			
 			end
 			

@@ -20,7 +20,7 @@ feature -- Access
 	description: STRING is
 			-- Textual description of filter
 		do
-			Result := "EiffelStudio"
+			Result := studio_desc
 		end	
 
 end -- class STUDIO_OUTPUT_FILTER

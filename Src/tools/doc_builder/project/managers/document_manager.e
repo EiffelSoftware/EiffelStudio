@@ -9,8 +9,6 @@ class
 inherit
 	SHARED_OBJECTS
 	
---	OBSERVER
-	
 create
 	make
 
@@ -66,54 +64,41 @@ feature -- Schema
 			schema := Void	
 		end		
 
-feature -- XSL
+feature -- HTML Stylesheet
+
+	stylesheet: PLAIN_TEXT_FILE
+			-- The currently assigned stylesheet	
 		
-	xsl: XSL_TRANSFORM
-			-- The currently assigned xsl transform	
-		
-	initialize_xslt (xsl_filename: STRING) is
-			-- Initialize `xsl' with `a_filename'
-		require
-			xsl_file_not_void: xsl_filename /= Void
-			xsl_is_file: (create {PLAIN_TEXT_FILE}.make (xsl_filename)).exists
-		local
-			error_message: STRING
+	has_stylesheet: BOOLEAN is
+			-- Is a stylesheet loaded?
 		do
-			create xsl.make_from_xsl_file (xsl_filename)
-			if xsl.is_valid_xml then
-				if not xsl.is_valid_xsl then
-					if xsl.load_error_message /= Void then
-						error_message := xsl.load_error_message
-					else
-						error_message := "Unknown error."
-					end
-					set_xsl (Void)
-				end
-			else
-				set_xsl (Void)
-			end
+			Result := stylesheet /= Void	
 		end	
 		
-	set_xsl (a_xsl: XSL_TRANSFORM) is
-			-- Set `xsl' to 'a_name'
+	initialize_stylesheet (stylesheet_filename: STRING) is
+			-- Initialize `stylesheet' with `a_filename'
 		require
-			xsl_not_void: a_xsl /= Void
+			stylesheet_file_not_void: stylesheet_filename /= Void
+			stylesheet_is_file: (create {PLAIN_TEXT_FILE}.make (stylesheet_filename)).exists
 		do
-			xsl := a_xsl
-		ensure
-			xsl_set: xsl = a_xsl
+			create stylesheet.make (stylesheet_filename)
+		end	
+	
+	copy_stylesheet is
+			-- Copy the loaded stylesheet to the temporary directory
+		local
+			l_stylesheet_name: FILE_NAME
+		do
+			if stylesheet /= Void then
+				create l_stylesheet_name.make_from_string (Shared_constants.Application_constants.Temporary_directory)
+				l_stylesheet_name.extend ((create {UTILITY_FUNCTIONS}).short_name (stylesheet.name))
+			end
 		end		
 		
-	has_xsl: BOOLEAN is
-			-- Is a valid xsl loaded?
+	remove_stylesheet is
+			-- Remove stylesheet
 		do
-			Result := xsl /= Void	
-		end		
-		
-	remove_xsl is
-			-- Remove xsl
-		do
-			xsl := Void	
+			stylesheet := Void	
 		end		
 		
 feature -- Document Manipulation

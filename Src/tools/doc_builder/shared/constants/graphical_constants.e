@@ -19,7 +19,7 @@ feature -- Access
 			create Result
 			create l_file.make_from_string (Icon_resources_directory)
 			l_file.extend ("icon_close_folder.ico")
-			Result.set_with_named_file (l_file)
+			Result.set_with_named_file (l_file.string)
 		end
 		
 	folder_open_icon: EV_PIXMAP is
@@ -30,7 +30,7 @@ feature -- Access
 			create Result
 			create l_file.make_from_string (Icon_resources_directory)
 			l_file.extend ("icon_open_file.ico")
-			Result.set_with_named_file (l_file)
+			Result.set_with_named_file (l_file.string)
 		end
 		
 	file_icon: EV_PIXMAP is
@@ -41,7 +41,7 @@ feature -- Access
 			create Result
 			create l_file.make_from_string (Icon_resources_directory)
 			l_file.extend ("icon_format_text_color.ico")
-			Result.set_with_named_file (l_file)
+			Result.set_with_named_file (l_file.string)
 		end
 
 end -- class GRAPHICAL_CONSTANTS

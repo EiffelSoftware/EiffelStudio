@@ -45,6 +45,12 @@ feature -- Once objects
 		once
 			create Result.make
 		end		
+		
+	Shared_xml_browser: DOCUMENT_BROWSER is
+			-- Object used for XML document browsing
+		once
+			create Result.make
+		end	
 
 	Wizard_data: WIZARD_INFORMATION is
 			-- Wizard data

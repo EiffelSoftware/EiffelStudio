@@ -11,7 +11,8 @@ inherit
 
 create
 	make,
-	make_empty
+	make_empty,
+	make_from_gobo_error
 
 feature -- Creation
 
@@ -36,6 +37,19 @@ feature -- Creation
 			create messages.make (5)
 			title := a_title
 			append_error (a_message, line_no, line_pos)
+		ensure
+			has_message_list: messages /= Void
+			has_error: messages.count > 0
+		end		
+
+	make_from_gobo_error (a_gobo_error: STRING) is
+			-- Make from Gobo extended error description
+		require
+			error_not_void: a_gobo_error /= Void
+		do
+			-- TODO: Extract line number and position from string
+			create messages.make (1)
+			append_error (a_gobo_error, 0 ,0)
 		ensure
 			has_message_list: messages /= Void
 			has_error: messages.count > 0

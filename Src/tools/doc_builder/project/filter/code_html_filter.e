@@ -1,5 +1,6 @@
 indexing
-	description: "Eiffel code HTML filter."
+	description: "Eiffel code HTML filter.  Takes Eiffel generated XML library code file%
+		%and produces HTML."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -89,7 +90,10 @@ feature {NONE} -- Commands
 			l_dir_name: FILE_NAME
 			l_cnt: INTEGER
 			l_path, l_dir, 
-			l_text, l_html: STRING
+			l_text, 
+			l_html,
+			l_stylesheet,
+			l_title: STRING
 			l_file, l_target_file: PLAIN_TEXT_FILE
 		do
 			from			
@@ -100,35 +104,42 @@ feature {NONE} -- Commands
 			until
 				l_dir = Void
 			loop
-				l_path := a_src.name
+				l_path := a_src.name.string
 				a_src.readentry
 				l_dir := a_src.lastentry
 				if l_dir /= Void and then not l_dir.is_equal (".") and not l_dir.is_equal ("..") then
 					create l_dir_name.make_from_string (l_path)
 					l_dir_name.extend (l_dir)
-					create l_sub_dir.make (l_dir_name)
+					create l_sub_dir.make (l_dir_name.string)
 					if l_sub_dir.exists then
-						print ("%NIn " + l_sub_dir.name)
 						create l_dir_name.make_from_string (a_target.name)
 						l_dir_name.extend (l_dir)
-						create l_target.make (l_dir_name)
+						create l_target.make (l_dir_name.string)
 						if not l_target.exists then
 							l_target.create_dir							
 						end
 						build_code (l_target, l_sub_dir)
 					else
-						create l_file.make (l_dir_name)
+						create l_file.make (l_dir_name.string)
 						if l_file.exists then
 							if file_type (l_file.name).is_equal ("xml") then
 								create l_dir_name.make_from_string (a_target.name)
-								l_dir_name.extend (file_no_extension (short_name (l_file.name)))
+								l_title := file_no_extension (short_name (l_file.name))
+								l_dir_name.extend (l_title)
 								l_dir_name.add_extension ("html")
-								print ("%NCreating file: " + l_dir_name)
-								create l_target_file.make_create_read_write (l_dir_name)
+								create l_target_file.make_create_read_write (l_dir_name.string)
 								l_text := clone (Template_text)
 								l_html := generated_html (l_file)
-								print ("%NCreating HTML from: " + l_file.name)
 								replace_token (l_text, Html_content_token, l_html)
+								l_stylesheet := stylesheet_path (l_file.name, True)	
+								
+									-- Workaround as result if including extra reference directory									
+								l_stylesheet.prepend ("../")
+								l_title.replace_substring_all (Chart_suffix, "")
+								l_title.replace_substring_all (Contract_suffix, "")
+								l_title.to_upper								
+								replace_token (l_text, Html_title_token, l_title)
+								replace_token (l_text, Html_stylesheet_token, l_stylesheet)
 								l_target_file.putstring (l_text)
 								l_target_file.close
 							end

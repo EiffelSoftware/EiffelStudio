@@ -124,9 +124,9 @@ feature -- Directory
 				if not (a_dir.lastentry.is_equal (".") or a_dir.lastentry.is_equal ("..")) then
 					create l_filename.make_from_string (path)
 					l_filename.extend (a_dir.lastentry)
-					create sub_dir.make (l_filename)
+					create sub_dir.make (l_filename.string)
 					if sub_dir.exists then
-						Result := Result + directory_recursive_count (sub_dir, l_filename)			
+						Result := Result + directory_recursive_count (sub_dir, l_filename.string)			
 					else
 						Result := Result + 1
 					end
@@ -169,14 +169,6 @@ feature -- Directory
 					end
 					cnt := cnt + 1
 				end
-				
---				if 
---					l_dir_string /= Void and then 
---					not l_dir_string.is_empty and then 
---					(l_dir_string.occurrences ('.') > 0) 
---				then
---					Result.put ("", l_arr_index)
---				end
 			end
 		ensure
 			array_not_empty_if_has_separators: (a_dir.occurrences ('\') + a_dir.occurrences ('/') > 0) implies not Result.is_empty
@@ -328,6 +320,34 @@ feature -- Document
 			end
 		end	
 
+	temporary_help_location (a_name: STRING; with_name: BOOLEAN): STRING is
+			-- Temporary directory for location of `document' in Help project
+		require
+			document_not_void: a_name /= Void
+		local
+			l_root_dir: STRING
+			l_index: INTEGER
+		do			
+			create l_root_dir.make_from_string ((create {SHARED_CONSTANTS}).Application_constants.Temporary_help_directory.string)
+			Result := temporary_location (a_name, l_root_dir)
+			
+			if with_name then
+				if 
+					not (file_type (Result).is_equal ("html") or 
+					file_type (Result).is_equal ("css") or 
+					file_type (Result).is_equal ("gif"))
+				then
+					l_index := Result.last_index_of ('.', Result.count)
+					if l_index > 0 then					
+						Result := Result.substring (1, l_index - 1)
+					end
+					Result.append (".html")
+				end
+			else
+				Result := directory_no_file_name (Result)
+			end			
+		end	
+
 	toc_friendly_url (a_url: STRING): STRING is
 			-- TOC friendly url of `a_url'
 		require
@@ -337,6 +357,7 @@ feature -- Document
 		do
 			Result := clone (a_url)
 			Result.replace_substring_all ((create {SHARED_OBJECTS}).Shared_project.root_directory, "")
+			Result.replace_substring_all ((create {APPLICATION_CONSTANTS}).Temporary_help_directory, "")
 			Result.prune_all_leading ('/')
 			Result.prune_all_leading ('\')			
 			create l_name.make_from_string (Result)				
@@ -353,6 +374,47 @@ feature -- Document
 			if a_doc.name.has_substring (l_code_dir.string) then
 				Result := a_doc.name.has_substring ("reference")
 			end
+		end
+
+	stylesheet_path (a_file: STRING; rel: BOOLEAN): STRING is
+			-- Path to stylesheet from `a_file'
+		local
+			l_name: STRING
+			l_link: DOCUMENT_LINK
+			l_consts: SHARED_OBJECTS
+		do
+			create l_consts		
+			if l_consts.Shared_document_manager.has_stylesheet then
+				l_name := l_consts.Shared_document_manager.stylesheet.name
+						-- Create a project relative link to the stylesheet file
+				create l_link.make (a_file, l_name)
+				if rel then
+					Result := l_link.relative_url
+				else
+					Result := l_link.absolute_url
+				end
+								
+			end				
+		end	
+
+	copy_stylesheet (a_loc: STRING) is
+			-- Copy stylesheet to `a_loc'
+		require
+			a_loc_not_void: a_loc /= Void
+		local
+			l_objs: SHARED_OBJECTS
+			l_target, l_src: PLAIN_TEXT_FILE
+			l_filename: FILE_NAME
+		do
+			create l_objs
+			if l_objs.Shared_document_manager.has_stylesheet then				
+				create l_filename.make_from_string (a_loc)
+				l_filename.extend (short_name (l_objs.Shared_document_manager.stylesheet.name))
+				create l_target.make_create_read_write (l_filename.string)
+				l_target.close
+				create l_src.make (l_objs.Shared_document_manager.stylesheet.name)
+				copy_file (l_src, l_target)
+			end			
 		end
 
 feature {NONE} -- Implementation
@@ -399,7 +461,7 @@ feature {NONE} -- Implementation
 					l_cnt > l_dir_arr.count
 				loop
 					l_sub_dir_name.extend (l_dir_arr.item (l_cnt))
-					create l_sub_dir.make (l_sub_dir_name)
+					create l_sub_dir.make (l_sub_dir_name.string)
 					if not l_sub_dir.exists then
 						l_sub_dir.create_dir
 					end

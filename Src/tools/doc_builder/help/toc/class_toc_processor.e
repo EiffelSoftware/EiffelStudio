@@ -67,10 +67,8 @@ feature -- Process
 			l_anchor_href: STRING
 			l_filename: FILE_NAME
 			l_node: like chart_node
-			l_mem: MEMORY
 			l_consts: SHARED_OBJECTS
 		do
-			create l_mem
 			create l_consts
 			l_filename_string := code_file.name			
 			create chart_node.make (next_id, parent, l_filename_string, class_name)
@@ -102,7 +100,6 @@ feature -- Process
 					end				
 				end				
 			end
-			l_mem.full_collect
 		end
 
 feature -- File

@@ -57,7 +57,7 @@ feature -- Implementation
 	gtk_reorder_child (a_container, a_child: POINTER; a_position: INTEGER) is
 			-- Move `a_child' to `a_position' in `a_container'.
 		do
-			check to_be_implemented: False end
+			C.gtk_box_reorder_child (a_container, a_child, a_position)
 		end
 
 	list_widget: POINTER
@@ -73,6 +73,9 @@ end -- class EV_STATUS_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/03/13 19:08:09  king
+--| Implemented reorder_child
+--|
 --| Revision 1.13  2000/02/14 11:40:33  oconnor
 --| merged changes from prerelease_20000214
 --|

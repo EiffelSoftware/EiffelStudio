@@ -116,22 +116,20 @@ feature
 			-- Generate header files in `buffer'.
 		require
 			buffer_exists: buffer /= Void;
+			shared_include_queue_not_void: shared_include_queue /= Void
+			shared_include_queue_not_empty: not shared_include_queue.empty
 		local
 			queue: like shared_include_queue
 		do
 			queue := shared_include_queue
-			if queue /= Void then
-				from
-					buffer.end_c_specific_code
-				until
-					queue.empty
-				loop
-					buffer.putstring ("#include ");
-					buffer.putstring (queue.item);
-					buffer.new_line;
-					queue.remove;
-				end;
-				buffer.start_c_specific_code
+			from
+			until
+				queue.empty
+			loop
+				buffer.putstring ("#include ");
+				buffer.putstring (queue.item);
+				buffer.new_line;
+				queue.remove;
 			end;
 		end;
 
@@ -155,8 +153,12 @@ feature
 			local_attribute_tables: SEARCH_TABLE [STRING]
 			local_type_tables: SEARCH_TABLE [STRING]
 		do
-				-- generate the include files required by externals
-			generate_header_files (buffer);
+			if not shared_include_queue.empty then
+				buffer.end_c_specific_code
+					-- generate the include files required by externals
+				generate_header_files (buffer);
+				buffer.start_c_specific_code
+			end
 
 			from
 				local_routines := routines

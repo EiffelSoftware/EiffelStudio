@@ -6,7 +6,7 @@ inherit
 
 	BINARY_AS
 		redefine
-			balanced
+			balanced, operator_is_special, operator_is_keyword
 		end
 
 feature
@@ -17,5 +17,9 @@ feature
 		do
 			Result := True;
 		end;
+
+	operator_is_special: BOOLEAN is true;
+	
+	operator_is_keyword: BOOLEAN is false;
 
 end

@@ -387,47 +387,40 @@ feature {NONE} -- Implementation
 			non_void_class_name: eiffel_class.get_eiffel_name /= Void
 			not_empty_class_name: eiffel_class.get_eiffel_name.get_length > 0
 		local	
-			creation_routines: SYSTEM_COLLECTIONS_ARRAYLIST
 			i: INTEGER
-			a_routine: STRING
+			a_feature_name: STRING
 			a_feature: ISE_REFLECTION_EIFFELFEATURE
 			initialization_features: SYSTEM_COLLECTIONS_ARRAYLIST
 			value: STRING
 		do
-			creation_routines := eiffel_class.get_Creation_Routines
+			initialization_features := eiffel_class.get_Initialization_Features
 			
-			if eiffel_class.get_Creation_Routines.get_count > 0 and not eiffel_class.get_Is_Deferred and not is_special_class then	
+			if initialization_features.get_count > 0 and not eiffel_class.get_Is_Deferred and not is_special_class then	
 					-- Do not generate creation clause for expanded classes
-				if not eiffel_class.get_Is_Expanded then
+				if not eiffel_class.get_is_expanded then
 					generated_code := generated_code.Concat_String_String (generated_code, Create_keyword) 
 					from
 						i := 0
 					until
-						i = creation_routines.get_count
+						i = initialization_features.get_count
 					loop
-						a_routine ?= creation_routines.get_Item (i)
-						if a_routine /= Void and then a_routine.get_length > 0 then
-							generated_code := generated_code.Concat_String_String_String_String (generated_code, Windows_new_line, Tab, a_routine)
-							if i < (creation_routines.get_count - 1) then
-								generated_code := generated_code.Concat_String_String (generated_code, Comma)
+						a_feature ?= initialization_features.get_Item (i)
+						if a_feature /= Void then
+							a_feature_name := a_feature.get_eiffel_name
+							if a_feature_name /= Void and then a_feature_name.get_length > 0 then
+								generated_code := generated_code.Concat_String_String_String_String (generated_code, Windows_new_line, Tab, a_feature_name)
+								if i < (initialization_features.get_count - 1) then
+									generated_code := generated_code.Concat_String_String (generated_code, Comma)
+								end
 							end
 						end
 						i := i + 1
 					end
-				end				
-			elseif eiffel_class.get_Creation_Routines.get_count = 0 and not eiffel_class.get_Is_Deferred and not eiffel_class.get_Is_Expanded then
-				generated_code := generated_code.Concat_String_String_String_String (generated_code, Create_none, Windows_new_line, Windows_new_line)
-			end
-			
-			if eiffel_class.get_Initialization_Features.get_count > 0 and not eiffel_class.get_Is_Deferred and not is_special_class then
-					-- Generate initialization feature clause.
-				if not eiffel_class.get_is_expanded then
 					generated_code := generated_code.Concat_String_String_String_String (generated_code, Windows_new_line, Windows_new_line, Initialization_feature_clause_exported_to_none)
 				else
 					generated_code := generated_code.Concat_String_String_String_String (generated_code, Windows_new_line, Windows_new_line, Initialization_feature_clause)
-				end
+				end	
 				generated_code := generated_code.Concat_String_String_String (generated_code, Windows_new_line, Windows_new_line)
-				initialization_features := eiffel_class.get_Initialization_Features
 				from
 					i := 0
 				until
@@ -446,6 +439,8 @@ feature {NONE} -- Implementation
 					end
 					i := i + 1
 				end			
+			elseif initialization_features.get_count = 0 and not eiffel_class.get_Is_Deferred and not eiffel_class.get_Is_Expanded then
+				generated_code := generated_code.Concat_String_String_String_String (generated_code, Create_none, Windows_new_line, Windows_new_line)
 			end
 		end		
 

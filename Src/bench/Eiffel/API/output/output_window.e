@@ -61,7 +61,7 @@ feature {TEXT_ITEM} -- Text processing
 	process_feature_text (text: FEATURE_TEXT) is
 			-- Process feature text `text'.
 		do
-			put_feature (text.e_feature, text.e_class, text.image)
+			put_feature (text.e_feature, text.image)
 		end;
 
 	process_breakpoint (a_bp: BREAKPOINT_ITEM) is
@@ -119,7 +119,7 @@ feature {TEXT_ITEM} -- Text processing
 	process_operator_text (text: OPERATOR_TEXT) is
 			-- Process operator text.
 		do
-			put_operator (text.image, text.e_feature, text.e_class, text.is_keyword)
+			put_operator (text.image, text.e_feature, text.is_keyword)
 		end;
 
 	process_address_text (text: ADDRESS_TEXT) is
@@ -218,8 +218,8 @@ feature -- Ouput
 			put_string (str)
 		end;
 
-	put_feature (feat: E_FEATURE; e_class: E_CLASS; str: STRING) is
-			-- Put feature `feat' defined in `e_class' with string 
+	put_feature (feat: E_FEATURE; str: STRING) is
+			-- Put feature `feat' with string 
 			-- representation `str' at current position.
 		require
 			valid_str: str /= Void
@@ -329,12 +329,11 @@ feature -- Ouput
 			put_string (str)
 		end;
 
-	put_operator (str: STRING; e_feature: E_FEATURE; e_class: E_CLASS; is_keyword: BOOLEAN) is
+	put_operator (str: STRING; e_feature: E_FEATURE; is_keyword: BOOLEAN) is
 			-- Put `str' as representation of quoted text.
 		require
 			valid_str: str /= Void;
-			valid_e_feature: e_feature /= Void;
-			valid_e_class: e_class /= Void;
+			valid_e_feature: e_feature /= Void
 		do
 			put_string (str)
 		end;

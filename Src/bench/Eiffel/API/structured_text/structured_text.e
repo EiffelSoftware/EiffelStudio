@@ -225,15 +225,15 @@ feature -- Element change
 			add (l_item)
 		end;
 
-	add_feature (feat: E_FEATURE; e_class: E_CLASS; str: STRING) is
-			-- Put feature `feat' defined in `e_class' with string 
+	add_feature (feat: E_FEATURE; str: STRING) is
+			-- Put feature `feat' with string 
 			-- representation `str' at current position.
 		require
 			valid_str: str /= Void
 		local
 			l_item: like item
 		do
-			!FEATURE_TEXT! l_item.make (str, feat, e_class);
+			!FEATURE_TEXT! l_item.make (str, feat);
 			add (l_item)
 		end;
 

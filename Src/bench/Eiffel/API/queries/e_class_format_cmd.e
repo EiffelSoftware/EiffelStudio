@@ -35,11 +35,11 @@ feature -- Access
 					current_class <= Any_class
 		end;
 
-	display_feature (f: E_FEATURE; c: E_CLASS; st: STRUCTURED_TEXT) is
+	display_feature (f: E_FEATURE; st: STRUCTURED_TEXT) is
 			-- Display feature `f' defined in class `c'
 			-- to `st'.
 		do
-			f.append_signature (st, c);
+			f.append_signature (st);
 		end;
 
 feature -- Execution
@@ -107,7 +107,7 @@ feature -- Execution
 				loop
 					e_feature := list.item;
 					structured_text.add_indent;
-					display_feature (e_feature, c, structured_text);
+					display_feature (e_feature, structured_text);
 					structured_text.add_new_line;
 					list.forth
 				end;

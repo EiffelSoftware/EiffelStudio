@@ -29,13 +29,13 @@ feature -- Access
 
 feature -- Output
 
-	display_feature (f: E_FEATURE; c: E_CLASS; st: STRUCTURED_TEXT) is
+	display_feature (f: E_FEATURE; st: STRUCTURED_TEXT) is
 		local
 			const: E_CONSTANT;
 			ec: E_CLASS;
 			str: STRING
 		do
-			f.append_signature (st, c);
+			f.append_signature (st);
 			if f.is_constant then
 				st.add_string (" is ");
 				const ?= f;	--| Cannot fail

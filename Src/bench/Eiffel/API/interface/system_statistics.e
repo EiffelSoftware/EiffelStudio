@@ -19,7 +19,8 @@ inherit
 		end
 
 creation
-	make
+	make,
+	make_compilation_stat
 
 feature {NONE} -- Initialization
 
@@ -33,6 +34,12 @@ feature {NONE} -- Initialization
 			number_of_compilations := Workbench.compilation_counter;
 			number_of_clusters := Eiffel_universe.clusters.count;
 		end;
+
+	make_compilation_stat is
+			-- Initailize `number_of_compilations'
+		do	
+			number_of_compilations := Workbench.compilation_counter
+		end
 
 feature -- Access
 

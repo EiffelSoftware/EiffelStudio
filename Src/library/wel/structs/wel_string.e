@@ -28,30 +28,31 @@ feature {NONE} -- Initialization
 			a_string_not_void: a_string /= Void
 		local
 			a: ANY
+			nb: INTEGER
 		do
-			item := c_calloc (1, a_string.count + 1)
-			if item = default_pointer then
-				-- Memory allocation problem
-				c_enomem
-			end
-			capacity := a_string.count + 1
+			nb := a_string.count
+			make_empty (nb)
 			a := a_string.to_c
-			memory_copy ($a, a_string.count + 1)
-			shared := False
+			memory_copy ($a, nb + 1)
 		ensure
 			not_shared: not shared
 		end
 
 	make_empty (a_length: INTEGER) is
 			-- Make an empty C string of `a_length' characters.
+			-- C memory area is not initialized.
 		require
 			positive_length: a_length >= 0
 		local
 			s: STRING
 		do
-			!! s.make (a_length)
-			s.fill_blank
-			make (s)
+			item := c_calloc (1, a_length + 1)
+			if item = default_pointer then
+					-- Memory allocation problem
+				c_enomem
+			end
+			capacity := a_length + 1
+			shared := False
 		end
 
 feature -- Access
@@ -59,7 +60,7 @@ feature -- Access
 	string: STRING is
 			-- Eiffel string
 		do
-			!! Result.make (0)
+			create Result.make (capacity)
 			Result.from_c (item)
 		ensure
 			result_not_void: Result /= Void
@@ -89,6 +90,7 @@ feature -- Element change
 
 	set_null_character (offset: INTEGER) is
 			-- Set `%U' at `offset' position of `Current'.
+			-- First position being  at `0' index.
 		require
 			valid_offset: offset >= 0 and offset < capacity
 		local

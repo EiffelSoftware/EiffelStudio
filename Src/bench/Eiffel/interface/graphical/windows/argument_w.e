@@ -30,8 +30,6 @@ feature -- Initialization
 			set_selection_label (Interface_names.l_Specify_arguments);
 			hide_help_button;
 			show_apply_button;
-			!!apply_it;
-			!!cancel_it;
 			set_ok_label (Interface_names.b_Run);
 			set_apply_label (Interface_names.b_Ok);
 			add_ok_action (Current, Void);
@@ -57,8 +55,6 @@ feature -- Initialization
 			set_selection_label (Interface_names.l_Specify_arguments);
 			hide_help_button;
 			show_apply_button;
-			!! apply_it;
-			!! cancel_it;
 			set_ok_label (Interface_names.b_Run);
 			set_apply_label (Interface_names.b_Ok);
 			add_ok_action (Current, Void);
@@ -95,8 +91,11 @@ feature -- Access
 
 feature {NONE} -- Properties
 
-	apply_it, cancel_it, run_it: ANY;
+	apply_it, cancel_it: ANY is
 			-- Arguments for the command
+		once
+			!! Result
+		end
 
 	run: COMMAND;
 

@@ -37,7 +37,7 @@ lex.a: $(OBJECTS)
 clean:
 	$(RM) lex.a $(OBJECTS)
 
-clobber:
+clobber: clean
 	$(RM) Makefile config.sh
 !NO!SUBS!
 chmod 644 Makefile

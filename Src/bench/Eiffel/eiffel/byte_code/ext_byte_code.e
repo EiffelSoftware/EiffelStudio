@@ -11,7 +11,7 @@ inherit
 			argument_names as std_argument_names,
 			argument_types as std_argument_types
 		redefine
-			generate, generate_compound, generate_expanded_cloning,
+			generate, generate_compound,
 			is_external, pre_inlined_code, inlined_byte_code
 		end
 
@@ -46,18 +46,33 @@ feature -- Access
 	argument_types: like std_argument_types is
 			-- Type of arguments, not including Current.
 		local
-			l_lower, l_upper: INTEGER
+			arg: TYPE_I
+			i, j, count: INTEGER
 		do
-			Result := std_argument_types
-			if Result.count > 1 then
-				l_lower := Result.lower
-				l_upper := Result.upper
-				create Result.make (1, l_upper - l_lower)
-				Result.subcopy (std_argument_types, l_lower + 1, l_upper, 1)
+			if arguments /= Void then
+				from
+					count := arguments.count
+					create Result.make (1, count)
+					j := 1
+					i := 1
+				until
+					i > count
+				loop
+					arg := real_type (arguments.item (i))
+					if arg.is_reference then
+						Result.put ("EIF_OBJECT", j)
+					else
+						Result.put (arg.c_type.c_string, j)
+					end
+					i := i + 1
+					j := j + 1
+				end
 			else
 				create Result.make (1, 0)
 			end
-		end
+		ensure
+			argument_types_not_void: Result /= Void
+		end			
 
 	argument_names: like std_argument_names is
 			-- Type of arguments, not including Current.
@@ -95,6 +110,9 @@ feature -- C code generation
 			if not result_type.is_void then
 				Context.mark_result_used
 			end
+			
+				-- Initialize protection if needed.
+			compute_hector_variables
 
 				-- Actual code generation.
 			if system.il_generation then
@@ -145,6 +163,7 @@ feature -- C code generation
 			buf: GENERATION_BUFFER
 			l_result: RESULT_BL
 			l_ext: EXTERNAL_EXT_I
+			l_need_protection: BOOLEAN
 		do
 			buf := buffer
 			l_ext := Context.current_feature.extension
@@ -155,17 +174,23 @@ feature -- C code generation
 				l_ext_not_void: l_ext /= Void
 			end
 
+			if not result_type.is_void then
+					-- Only creates a result when needed.
+				create l_result.make (result_type)
+			end
+
+			l_need_protection := has_hector_variables
+			if l_need_protection then
+				context.set_is_argument_protected (True)
+				generate_hector_variables
+			end
+
 				-- Now we want the body
 			if l_ext.is_blocking_call then
 				buf.putstring ("EIF_ENTER_C;")
 				buf.new_line
 			end
 			
-			if not result_type.is_void then
-					-- Only creates a result when needed.
-				create l_result.make (result_type)
-			end
-
 				-- Generate call to external.
 			l_ext.generate_body (Current, l_result)
 			
@@ -175,19 +200,13 @@ feature -- C code generation
 				buf.putstring ("RTGC;")
 				buf.new_line
 			end
+			
+			if l_need_protection then
+				release_hector_variables
+				context.set_is_argument_protected (False)
+			end
 		end
 		
-	generate_expanded_cloning is
-			-- Clone expanded parameters.
-		do
-			-- FIXME: Manu 07/28/2003.
-			-- When object is automatically promoted to an EIF_OBJECT for a C externals, cloning
-			-- does not work as it is necessary to perform `eif_access' all the time. Because we 
-			-- don't know how to do this yet, we have disabled cloning for expanded objects arguments
-			-- when calling an external routine.
-		end
-		
-
 feature -- Inlining
 
 	pre_inlined_code: like Current is
@@ -199,6 +218,110 @@ feature -- Inlining
 	inlined_byte_code: like Current is
 		do
 			Result := Current
+		end
+
+feature {NONE} -- Implementation
+
+	has_hector_variables: BOOLEAN
+			-- Does current external calls needs to protect some of its arguments?
+			
+	compute_hector_variables is
+			-- Set `has_hector_variables' to True if some arguments are references?
+		local
+			i, nb: INTEGER
+			l_arg: ARGUMENT_BL
+		do
+			has_hector_variables := False
+			if arguments /= Void then
+				from
+					i := arguments.lower
+					nb := arguments.upper
+				until
+					i > nb
+				loop
+					if arguments.item (i).c_type.is_pointer then
+						has_hector_variables := True
+						create l_arg
+						l_arg.set_position (i)
+						context.set_local_index (l_arg.register_name, l_arg)
+					end
+					i := i + 1
+				end
+			end
+		end
+		
+	generate_hector_variables is
+			-- Generate protection of arguments that needs one.
+		require
+			has_hector_variables: has_hector_variables
+			has_arguments: arguments /= Void
+		local
+			l_buf: GENERATION_BUFFER
+			i, nb: INTEGER
+		do
+			l_buf := context.buffer
+			l_buf.putchar ('{')
+			l_buf.new_line
+			l_buf.indent
+
+			from
+				i := arguments.lower
+				nb := arguments.upper
+			until
+				i > nb
+			loop
+				if arguments.item (i).c_type.is_pointer then
+					l_buf.putstring ("EIF_OBJECT larg")
+					l_buf.putint (i)
+					l_buf.putstring (" = RTHP(")
+					l_buf.putstring ("arg")
+					l_buf.putint (i)
+					l_buf.putstring (");")
+				else
+					l_buf.putstring (argument_types.item (i))
+					l_buf.putstring (" larg")
+					l_buf.putint (i)
+					l_buf.putstring (" = arg")
+					l_buf.putint (i)
+					l_buf.putchar (';')
+				end
+				l_buf.new_line
+				i := i + 1
+			end
+			
+		end
+		
+	release_hector_variables is
+			-- Release protection of arguments.
+		local
+			l_buf: GENERATION_BUFFER
+		do
+			l_buf := context.buffer
+			l_buf.putstring ("RTHF(")
+			l_buf.putint (number_of_hector_variables)
+			l_buf.putstring (");")
+			l_buf.new_line
+			l_buf.exdent
+			l_buf.putchar ('}')
+			l_buf.new_line
+		end
+		
+	number_of_hector_variables: INTEGER is
+			-- Number of arguments to protect?
+		local
+			i, nb: INTEGER
+		do
+			from
+				i := arguments.lower
+				nb := arguments.upper
+			until
+				i > nb
+			loop
+				if arguments.item (i).c_type.is_pointer then
+					Result := Result + 1
+				end
+				i := i + 1
+			end
 		end
 
 invariant

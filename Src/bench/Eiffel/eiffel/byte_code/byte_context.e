@@ -144,6 +144,9 @@ feature -- Access
 
 	is_new_precondition_block: BOOLEAN
 			-- Is this the start of a new precondition block?
+			
+	is_argument_protected: BOOLEAN
+			-- Does current call need to protect some of its arguments?
 
 feature -- Concurrent Eiffel
 
@@ -179,6 +182,14 @@ feature -- Setting
 			il_external_creation := v
 		ensure
 			il_external_creation_set: il_external_creation = v
+		end
+		
+	set_is_argument_protected (v: BOOLEAN) is
+			-- Set `is_argument_protected' with `v'.
+		do
+			is_argument_protected := v
+		ensure
+			is_argument_protected_set: is_argument_protected = v
 		end
 
 	set_once_index (idx : INTEGER) is

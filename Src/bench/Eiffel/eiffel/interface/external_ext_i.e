@@ -286,6 +286,9 @@ feature -- Code generation
 				parameters.i_th (i).print_register
 			else
 				l_buffer := Context.buffer
+				if context.is_argument_protected then
+					l_buffer.putchar ('l')
+				end
 				l_buffer.putstring ("arg")
 				l_buffer.putint (i)
 			end

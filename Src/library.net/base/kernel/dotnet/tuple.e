@@ -49,8 +49,8 @@ feature -- Access
 			inspect arg_item_code (index)
 			when boolean_code then Result := boolean_item (index)
 			when character_code then Result := character_item (index)
-			when double_code then Result := double_item (index)
-			when real_code then Result := real_item (index)
+			when real_64_code then Result := double_item (index)
+			when real_32_code then Result := real_item (index)
 			when pointer_code then Result := pointer_item (index)
 			when natural_32_code then Result := natural_32_item (index)
 			when natural_8_code then Result := natural_8_item (index)
@@ -492,7 +492,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (generic_typecode (index - 1) = double_code)
+			Result := (generic_typecode (index - 1) = real_64_code)
 		end
 
 	is_natural_8_item (index: INTEGER): BOOLEAN is
@@ -572,7 +572,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (generic_typecode (index - 1) = real_code)
+			Result := (generic_typecode (index - 1) = real_32_code)
 		end
 
 	is_reference_item (index: INTEGER): BOOLEAN is
@@ -596,7 +596,7 @@ feature -- Type queries
 			inspect tcode
 			when
 				integer_8_code, integer_16_code, integer_32_code,
-				integer_64_code, real_code, double_code
+				integer_64_code, real_32_code, real_64_code
 			then
 				Result := True
 			else
@@ -631,7 +631,7 @@ feature -- Type queries
 	is_uniform_double: BOOLEAN is
 			-- Are all items of type DOUBLE?
 		do
-			Result := is_tuple_uniform (double_code)
+			Result := is_tuple_uniform (real_64_code)
 		ensure
 			yes_if_empty: (count = 0) implies Result
 		end
@@ -711,7 +711,7 @@ feature -- Type queries
 	is_uniform_real: BOOLEAN is
 			-- Are all items of type REAL?
 		do
-			Result := is_tuple_uniform (real_code)
+			Result := is_tuple_uniform (real_32_code)
 		ensure
 			yes_if_empty: (count = 0) implies Result
 		end
@@ -745,7 +745,7 @@ feature -- Type conversion queries
 				inspect tcode
 				when
 					integer_8_code, integer_16_code, integer_32_code,
-					integer_64_code, real_code, double_code
+					integer_64_code, real_32_code, real_64_code
 				then
 					Result := True
 				else
@@ -776,7 +776,7 @@ feature -- Type conversion queries
 				inspect tcode
 				when
 					integer_8_code, integer_16_code, integer_32_code,
-					integer_64_code, real_code
+					integer_64_code, real_32_code
 				then
 					Result := True
 				else
@@ -1023,8 +1023,8 @@ feature {ROUTINE, TUPLE}
 	reference_code: INTEGER_8 is 0x00
 	boolean_code: INTEGER_8 is 0x01
 	character_code: INTEGER_8 is 0x02
-	double_code: INTEGER_8 is 0x03
-	real_code: INTEGER_8 is 0x04
+	real_64_code: INTEGER_8 is 0x03
+	real_32_code: INTEGER_8 is 0x04
 	pointer_code: INTEGER_8 is 0x05
 	integer_8_code: INTEGER_8 is 0x06
 	integer_16_code: INTEGER_8 is 0x07
@@ -1113,8 +1113,8 @@ feature {NONE} -- Implementation
 			create Result.make_from_capacity (10)
 			Result.set_item (feature {TYPE}.get_type_string (("System.Boolean").to_cil), boolean_code)
 			Result.set_item (feature {TYPE}.get_type_string (("System.Char").to_cil), character_code)
-			Result.set_item (feature {TYPE}.get_type_string (("System.Double").to_cil), double_code)
-			Result.set_item (feature {TYPE}.get_type_string (("System.Single").to_cil), real_code)
+			Result.set_item (feature {TYPE}.get_type_string (("System.Double").to_cil), real_64_code)
+			Result.set_item (feature {TYPE}.get_type_string (("System.Single").to_cil), real_32_code)
 			Result.set_item (feature {TYPE}.get_type_string (("System.IntPtr").to_cil), pointer_code)
 			Result.set_item (feature {TYPE}.get_type_string (("System.Object").to_cil), reference_code)
 			Result.set_item (feature {TYPE}.get_type_string (("System.Byte").to_cil), natural_8_code)
@@ -1133,8 +1133,8 @@ feature {NONE} -- Implementation
 			create Result.make (128)
 			Result.put (boolean_code, feature {TYPE}.get_type_string (("System.Boolean").to_cil))
 			Result.put (character_code, feature {TYPE}.get_type_string (("System.Char").to_cil))
-			Result.put (double_code, feature {TYPE}.get_type_string (("System.Double").to_cil))
-			Result.put (real_code, feature {TYPE}.get_type_string (("System.Single").to_cil))
+			Result.put (real_64_code, feature {TYPE}.get_type_string (("System.Double").to_cil))
+			Result.put (real_32_code, feature {TYPE}.get_type_string (("System.Single").to_cil))
 			Result.put (pointer_code, feature {TYPE}.get_type_string (("System.IntPtr").to_cil))
 			Result.put (reference_code, feature {TYPE}.get_type_string (("System.Object").to_cil))
 			Result.put (natural_8_code, feature {TYPE}.get_type_string (("System.Byte").to_cil))

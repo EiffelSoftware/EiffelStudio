@@ -4,9 +4,18 @@ class CMD_LABEL
 
 inherit
 
-	DATA;
+	DATA 
+		redefine
+			is_equal
+		end
 	EB_HASHABLE
-	LABEL_STONE;
+		redefine
+			is_equal
+		end
+	LABEL_STONE
+		redefine
+			is_equal
+		end;
 
 creation
 
@@ -51,9 +60,12 @@ feature
 
 	label: STRING;
 
-feature
+	is_equal (other: like Current): BOOLEAN is
+		do
+			Result := label.is_equal (other.label)
+		end
 
-	inh_renamed: BOOLEAN;
+feature
 
 	parent_type: CMD;
 		-- Command which defines
@@ -67,14 +79,7 @@ feature
 
 	inherited: BOOLEAN is
 		do
-			Result := not (parent_type = Void)
+			Result := parent_type /= Void
 		end;
 
-	set_renamed  is
-		require
-			must_be_inherited: inherited;
-		do
-			inh_renamed := True;
-		end;
- 
 end

@@ -749,7 +749,7 @@ feature {NONE} -- Mouse copy cut
 
 	process_left_click (x_pos, y_pos: INTEGER; a_screen_x, a_screen_y: INTEGER) is
 		do
-			if is_editable and then position_is_in_selection (x_pos, y_pos) and then click_count = 0 then
+			if is_editable and then position_is_in_selection (x_pos, y_pos, False) and then click_count = 0 then
 				if not editor_area.has_capture then
 					editor_area.enable_capture
 				end			
@@ -775,25 +775,35 @@ feature {NONE} -- Mouse copy cut
 			x_cur, y_cur: INTEGER
 		do
 			if mouse_copy_cut then
-				mouse_copy_cut := False
-				x_cur := x_pos + offset - left_margin_width
-				perform_changes := is_in_editor_panel (a_screen_x, a_screen_y) and then not position_is_in_selection (x_cur, y_pos)
-				editor_area.set_pointer_style (basic_pointer)
-				if perform_changes then
-					create cur.make_from_integer (1, text_displayed)
-					position_cursor (cur, x_cur, y_pos)
-					if ctrled_key then
-						text_displayed.copy_selection_to_pos (cur.pos_in_text)
+				if button = 1 then
+					mouse_copy_cut := False
+					editor_area.set_pointer_style (basic_pointer)
+					x_cur := x_pos + offset - left_margin_width
+					perform_changes := 
+						is_in_editor_panel (a_screen_x, a_screen_y)
+							and then
+						not position_is_in_selection (x_cur, y_pos, True)
+					if perform_changes then
+						create cur.make_from_integer (1, text_displayed)
+						position_cursor (cur, x_cur, y_pos)
+						if ctrled_key then
+							text_displayed.copy_selection_to_pos (cur.pos_in_text)
+						else
+							text_displayed.move_selection_to_pos (cur.pos_in_text)
+						end
+						refresh_now
 					else
-						text_displayed.move_selection_to_pos (cur.pos_in_text)
+						disable_selection
+						y_cur := text_displayed.current_line_number
+						position_cursor (text_displayed.cursor, x_cur, y_pos)
+						invalidate_line (y_cur, True)
 					end
-					refresh_now
-				else
-					disable_selection
-					y_cur := text_displayed.current_line_number
-					position_cursor (text_displayed.cursor, x_cur, y_pos)
-					invalidate_line (y_cur, True)					
+				elseif button = 3 then
+					cancel_mouse_copy_cut
 				end
+			end
+			if button = 1 then
+				forget_mouse_moves := False
 			end
 			Precursor (x_pos, y_pos, button, unused1,unused2,unused3, a_screen_x, a_screen_y)
 		end
@@ -835,15 +845,26 @@ feature {NONE} -- Mouse copy cut
 					prev_x_cur := 0
 					prev_y_cur := 0				
 				end
-			else
+			elseif not forget_mouse_moves then
 				Precursor (abs_x_pos, abs_y_pos, unused1,unused2,unused3, a_screen_x, a_screen_y)
 			end
 		end
 	
-	basic_pointer: EV_CURSOR
-			-- Normal shape of the mouse pointer.
+	cancel_mouse_copy_cut is
+			-- stop mouse copy/cut.
+		do
+			mouse_copy_cut := False
+			editor_area.set_pointer_style (basic_pointer)
+			forget_mouse_moves := True
+			if autoscroll.interval /= 0 then
+				autoscroll.set_interval (0)
+			end
+			check_cursor_position
+			wipe_cursor_out
+		end
 
 	lose_focus is
+			-- Update when focus is lost.
 		do
 			Precursor
 			if mouse_copy_cut then
@@ -853,6 +874,7 @@ feature {NONE} -- Mouse copy cut
 		end		
 		
 	ignore_keyboard_input: BOOLEAN is
+			-- Should key event be ignored?
 		do
 			Result := Precursor or else mouse_copy_cut
 		end
@@ -871,6 +893,9 @@ feature {NONE} -- Mouse copy cut
 						a_screen_y < editor_y + editor_area.height
 		end
 
+	basic_pointer: EV_CURSOR
+			-- Normal shape of the mouse pointer.
+
 	mouse_copy_cut: BOOLEAN
 			-- Is the user trying to copy/paste with the mouse?
 
@@ -879,6 +904,9 @@ feature {NONE} -- Mouse copy cut
 
 	prev_y_cur: INTEGER
 			-- Coordinate where the copy/paste cursor was last drawn.
+
+	forget_mouse_moves: BOOLEAN
+			-- Should mouse pointer moves be ignored?
 
 	set_first_line_displayed (fld: INTEGER; refresh_if_necessary: BOOLEAN) is
 		do
@@ -911,17 +939,24 @@ feature {NONE} -- Mouse copy cut
 			zone: EV_RECTANGLE
 			x_p, y_p: INTEGER
 		do
-			x_p := prev_x_cur - offset
 			y_p := (prev_y_cur - first_line_displayed) * line_height
-			create zone.make (x_p - left_margin_width, y_p, cursor_width, line_height) --x_p + cursor_width - left_margin_width, y_p + line_height)
-			editor_area.draw_sub_pixmap (x_p, y_p, buffered_screen, zone)
-			editor_area.flush
+			if y_p >= 0 and then y_p < editor_area.height then
+					-- wipe the cursor out if it is at a position that is still on screen.
+				x_p := prev_x_cur - offset
+				create zone.make (x_p - left_margin_width, y_p, cursor_width, line_height) --x_p + cursor_width - left_margin_width, y_p + line_height)
+				editor_area.draw_sub_pixmap (x_p, y_p, buffered_screen, zone)
+				editor_area.flush
+			end
 		end
 		
 	on_key_down (ev_key: EV_KEY)is
 		do
-			if mouse_copy_cut and then ev_key /= Void and then ev_key.code = Key_Ctrl then
+			if mouse_copy_cut and then ev_key /= Void then
+				if ev_key.code = Key_Ctrl then
 					editor_area.set_pointer_style (Cursors.Cur_copy_selection)
+				elseif ev_key.code = Key_escape then
+					cancel_mouse_copy_cut
+				end
 			end
 			Precursor (ev_key)
 		end
@@ -951,7 +986,7 @@ feature {NONE} -- Mouse copy cut
 					y_pos <= first_line_displayed + number_of_lines_displayed
 		end
 
-	position_is_in_selection (x_pos, y_pos: INTEGER): BOOLEAN is
+	position_is_in_selection (x_pos, y_pos: INTEGER; include_selection_end: BOOLEAN): BOOLEAN is
 			-- Is point with coordinates `x_pos', `y_pos' in the selection?
 		local
 			cur: TEXT_CURSOR
@@ -959,6 +994,9 @@ feature {NONE} -- Mouse copy cut
 			create cur.make_from_integer (1, text_displayed)
 			position_cursor (cur, x_pos, y_pos)
 			Result := cursor_is_in_selection (cur)
+			if include_selection_end then
+				Result := Result or else cur.is_equal (text_displayed.selection_end)
+			end
 		end
 
 	cursor_is_in_selection (cur: TEXT_CURSOR): BOOLEAN is
@@ -966,7 +1004,7 @@ feature {NONE} -- Mouse copy cut
 		require
 			cursor_is_not_void: cur /= Void
 		do
-			Result := has_selection and then (cur > text_displayed.selection_start and then cur < text_displayed.selection_end)
+			Result := has_selection and then (cur >= text_displayed.selection_start and then cur < text_displayed.selection_end)
 		end
 		
 feature {NONE} -- Text Loading

@@ -558,7 +558,7 @@ feature {NONE} -- Pick and drop
 			bkst		: BREAKABLE_STONE
 			old_offset	: INTEGER
 		do
-			if not ctrled_key then
+			if not (ctrled_key or else mouse_copy_cut) then
 				if not text_displayed.is_empty then
 					x_pos := x_pos_with_margin - left_margin_width + offset
 						-- Compute the line number pointed by the mouse cursor

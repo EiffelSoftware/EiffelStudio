@@ -304,7 +304,8 @@ feature {NONE} -- External
 feature {
 		EV_PIXMAP_IMP, 
 		EV_PIXMAP_IMP_DRAWABLE,
-		EV_PIXMAP_IMP_WIDGET
+		EV_PIXMAP_IMP_WIDGET,
+		EV_HEADER_IMP
 		} -- Implementation
 
 	interface: EV_PIXMAP

@@ -26,7 +26,10 @@ cd newdocs
 copy default.css ..
 fullrf internal\eiffel.hhc
 copy internal\eiffel.hhp .
+REM Just to make sure there is a stop words.stp file.
 copy "internal\stop words.stp" .
+copy "internal\stop_words.stp" .
+copy stop_words.stp "stop words.stp"
 copy ..\document.exe .
 if exist general\guided_tour\studio\index-09A\goto.html fullrf general\guided_tour\studio\index-09A\goto.html
 remtrace Call document.exe

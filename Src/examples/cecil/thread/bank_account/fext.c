@@ -53,8 +53,6 @@ void record_transaction (struct bank_account *acc, EIF_INTEGER m)
 		post (eif_access (post_office));
 		top = 0;
 	}
-		
-	EIF_END_GET_CONTEXT
 	
 }
 /*-------------------------------------------*/
@@ -73,6 +71,5 @@ void c_make_transaction (EIF_INTEGER m, EIF_POINTER ptr)
 #endif
 	acc->balance += m;
 	record_transaction (acc, m);
-	EIF_END_GET_CONTEXT
 }	
 

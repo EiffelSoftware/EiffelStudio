@@ -29,7 +29,6 @@ feature --{NONE} -- Initialization
 		local
 			a: ANY
 			nb: INTEGER
-			l_string: UNI_STRING
 		do
 			nb := a_string.count
 			make_empty (nb)

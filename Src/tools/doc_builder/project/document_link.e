@@ -99,20 +99,25 @@ feature -- Access
 							
 								-- Build result based on position of first non-match
 							from
-								create l_filename.make
+								if not l_parent then
+									create l_filename.make
+								end
 							until
 								cnt > l_big_arr.count
 							loop
 								if l_parent then
-									l_filename.extend ("..")
-								else
-									l_filename.extend (l_big_arr.item (cnt))									
-								end
+									if l_filename = Void then
+										create l_filename.make_from_string ("..")
+									else
+										l_filename.extend ("..")
+									end									
+								else									
+									l_filename.extend (l_big_arr.item (cnt))	
+								end														
 								cnt := cnt + 1
 							end
 							if not l_filename.is_empty then
 								l_filename.extend (l_url_name)
-								create l_filename.make_from_string (l_filename.string.substring (2, l_filename.string.count))
 							else
 								create l_filename.make_from_string (Result)
 							end

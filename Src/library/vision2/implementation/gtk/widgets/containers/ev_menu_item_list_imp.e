@@ -108,6 +108,8 @@ feature {NONE} -- implementation
 								-- First item inserted in group is selected.
 								radio_group := radio_imp.radio_group
 								radio_imp.enable_select
+							else
+								radio_imp.set_radio_group (radio_group)
 							end
 						end
 					end
@@ -133,8 +135,8 @@ feature {NONE} -- implementation
 			-- Generic menu item insertion.
 		do
 			an_item_imp.set_parent_imp (Current)
-			C.gtk_menu_append (c_object, an_item_imp.c_object)
-			C.gtk_menu_reorder_child (c_object, an_item_imp.c_object, pos)
+			C.gtk_menu_append (list_widget, an_item_imp.c_object)
+			C.gtk_menu_reorder_child (list_widget, an_item_imp.c_object, pos)
 		end
 
 	separator_imp_by_index (an_index: INTEGER): EV_MENU_SEPARATOR_IMP is
@@ -220,6 +222,9 @@ end -- class EV_MENU_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/04/25 21:36:08  king
+--| Changed references from c_object to list_widget
+--|
 --| Revision 1.10  2000/04/25 18:48:59  king
 --| Initial implementation of new radio grouping structure
 --|

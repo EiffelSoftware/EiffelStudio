@@ -58,6 +58,7 @@ feature -- Basic operation
 			-- Maximize `tool_holder'.
 		do
 			if tool_holder.minimized then
+				resize_actions.wipe_out
 				tool_holder.disable_minimized
 				tool_holder.reset_minimize_button
 			end

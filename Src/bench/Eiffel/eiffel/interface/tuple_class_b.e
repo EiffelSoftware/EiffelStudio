@@ -32,9 +32,7 @@ feature -- types
 			class_type: CLASS_TYPE
 			type_i: TUPLE_TYPE_I
 		do
-			create type_i.make (class_id)
-			type_i.set_true_generics (Void)
-			type_i.set_meta_generic (Void)
+			create type_i.make (class_id, create {META_GENERIC}.make (0), create {ARRAY [TYPE_I]}.make (1, 0))
 			class_type := new_type (type_i)
 			types.extend (class_type)
 			System.insert_class_type (class_type)
@@ -47,6 +45,7 @@ feature -- types
 		local
 			filter: CL_TYPE_I
 			l_gen_type: GEN_TYPE_I
+			l_class_type: CLASS_TYPE
 		do
 			if not derivations.has_derivation (class_id, data) then
 					-- The recursive update is done only once
@@ -74,6 +73,7 @@ feature -- types
 					-- Clean the filters. Some of the filters can be obsolete
 					-- if the base class has been removed from the system
 				filters.clean
+				l_class_type := types.first
 				l_gen_type ?= data
 				from
 					filters.start
@@ -82,7 +82,7 @@ feature -- types
 				loop
 						-- Instantiation of the filter with `data'
 					if l_gen_type /= Void then
-						filter := filters.item.instantiation_in (l_gen_type)
+						filter := filters.item.instantiation_in (l_class_type)
 					else
 						filter := filters.item
 					end
@@ -137,6 +137,9 @@ feature {CLASS_TYPE_AS} -- Actual class type
 				-- Note that TUPLE is not expanded by default.
 			Result.set_is_expanded (is_exp)
 		end
+
+invariant
+	types_has_only_one_element: types /= Void implies types.count = 1
 
 end -- class TUPLE_CLASS_B
 

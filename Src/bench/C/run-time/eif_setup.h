@@ -45,17 +45,14 @@
  * EIF_THREAD_DISPOSE
  *    'Unregisters' a thread for Eiffel use.
  *    Macro to use when a thread does not need Eiffel facilities anymore.
- *    This should release ANY resources the thread allocated. If this is
- *    not what actually happens, contact ISE right-away.
- *    Note that the 'root' thread may call this macro too (if another
- *    thread decides it wants to call EIF_DISPOSE_ALL).
+ *    This should release ANY resources the thread allocated.
  *
  * EIF_DISPOSE_ALL
  *    Removes Eiffel ressources for the whole process.
  *    This macro releases all Eiffel ressources.
  *    When called, a new call to EIF_INITIALIZE needs to be
  *    done in order to be able to use Eiffel possibilities again.
- *    Don't spawn any thread that needs to use Aiffel stuff after
+ *    Don't spawn any thread that needs to use Eiffel stuff after
  *    calling this (unless you call EIF_INITIALIZE again).
  *    Note that this macro might be called by any thread.
  *    Usually the 'root' one does it, you may call it from
@@ -72,7 +69,7 @@
 /*
  * Very basic stuff...
  * Skip this section if you don't want to know what
- * is called to intialize Eiffel run-time.
+ * is called to initialize Eiffel run-time.
  */
 #define EIF_RT_BASIC_SETUP(fail_func) \
 	GTCX \
@@ -129,8 +126,6 @@
 	EIF_RT_BASIC_CLEANUP \
 	EIF_TSD_DESTROY(eif_global_key,"Couldn't destroy context key"); \
 }
-
-
 
 
 #else

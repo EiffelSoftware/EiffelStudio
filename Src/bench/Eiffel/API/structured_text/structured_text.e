@@ -89,6 +89,7 @@ feature -- Element change
 		do
 			twl_put_front (v)
 			position := position + v.image.count
+			finish
 		end
 
 	put_left (v: like item) is

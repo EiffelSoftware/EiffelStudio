@@ -575,7 +575,7 @@ rt_public EIF_INTEGER dle_search(EIF_REFERENCE obj, EIF_REFERENCE class_name)
 
 	for (i = old_scount; i < scount; i++)
 		if (strcmp(System(i).cn_generator, eif_access(class_name)) == 0)
-			if (econfm(dynamic_dtype, i)) {
+			if (RTRC(dynamic_dtype, i)) {
 				(eif_set_dtype) (eif_access(obj), (EIF_INTEGER) i);
 				return (EIF_INTEGER) DLE_NO_ERROR;
 			} else

@@ -93,6 +93,24 @@ feature -- Generic conformance
 			Result   := (gen_type /= Void)
 		end;
 
+feature -- Assignment attempt
+
+	generate_reverse (buffer: GENERATION_BUFFER; final_mode : BOOLEAN) is
+			-- Additional info for assignment
+			-- attempts with anchored types.
+		require
+			valid_buffer : buffer /= Void
+		do
+			-- Do nothing
+		end
+
+	make_reverse_byte_code (ba : BYTE_ARRAY) is
+			-- Additional info for assignment
+			-- attempts with anchored types.
+		do
+			make_gen_type_byte_code (ba)
+		end
+
 feature -- Debug
 
 	trace is

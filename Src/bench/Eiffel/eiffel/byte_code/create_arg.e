@@ -6,7 +6,8 @@ inherit
 
 	CREATE_INFO
 		redefine
-			generate_cid, make_gen_type_byte_code
+			generate_cid, make_gen_type_byte_code,
+			generate_reverse, make_reverse_byte_code
 		end
 	SHARED_GENERATION
 
@@ -116,6 +117,34 @@ feature -- Generic conformance
 			Result ?= context.instantiation_of (type_i);
 		end;
 
+feature -- Assignment attempt
+
+	generate_reverse (buffer: GENERATION_BUFFER; final_mode : BOOLEAN) is
+
+		local
+			cl_type_i : CL_TYPE_I
+		do
+			cl_type_i := type_to_create
+			buffer.putstring ("RTCA(arg")
+			buffer.putint (position)
+			buffer.putstring (gc_comma)
+			buffer.putint (cl_type_i.generated_id (final_mode))
+			buffer.putchar (')')
+		end
+
+	make_reverse_byte_code (ba: BYTE_ARRAY) is
+
+		local
+			cl_type_i : CL_TYPE_I
+		do
+			cl_type_i := type_to_create
+
+			ba.append_short_integer (-11)
+			ba.append_short_integer (position)
+				-- Default creation type
+			ba.append_short_integer (cl_type_i.generated_id (False))
+		end
+
 feature -- Debug
 
 	trace is
@@ -125,6 +154,5 @@ feature -- Debug
 			io.error.putint (position);
 			io.error.new_line;
 		end
-
-
 end
+

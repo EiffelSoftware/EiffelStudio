@@ -209,7 +209,9 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 				if applicable_attributes.font_shape then
 					if shape = feature {EV_FONT_CONSTANTS}.shape_italic then
 						feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, style_string, 2)
-					end		
+					else
+						feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, style_string, 0)
+					end
 				end
 				if applicable_attributes.font_weight then
 					inspect
@@ -254,8 +256,12 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 				if applicable_attributes.effects_striked_out then
 					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_boolean (Result, strikethrough_string, is_striked_out)
 				end
-				if applicable_attributes.effects_underlined and then is_underlined then
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, underline_string, feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_underline_single_enum)
+				if applicable_attributes.effects_underlined then 
+					if is_underlined then
+						feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, underline_string, feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_underline_single_enum)
+					else
+						feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, underline_string, feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_underline_none_enum)
+					end
 				end
 				if applicable_attributes.effects_vertical_offset then
 					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, rise_string, vertical_offset)
@@ -267,7 +273,7 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 			-- String optimization
 		local
 			a_str: EV_GTK_C_STRING
-		once
+		do
 			create a_str.make ("family")
 			Result := a_str.item	
 		end
@@ -276,7 +282,7 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 			-- String optimization
 		local
 			a_str: EV_GTK_C_STRING
-		once
+		do
 			create a_str.make ("size")
 			Result := a_str.item	
 		end
@@ -285,7 +291,7 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 			-- String optimization
 		local
 			a_str: EV_GTK_C_STRING
-		once
+		do
 			create a_str.make ("style")
 			Result := a_str.item	
 		end
@@ -294,7 +300,7 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 			-- String optimization
 		local
 			a_str: EV_GTK_C_STRING
-		once
+		do
 			create a_str.make ("weight")
 			Result := a_str.item	
 		end
@@ -303,7 +309,7 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 			-- String optimization
 		local
 			a_str: EV_GTK_C_STRING
-		once
+		do
 			create a_str.make ("foreground-gdk")
 			Result := a_str.item	
 		end
@@ -312,7 +318,7 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 			-- String optimization
 		local
 			a_str: EV_GTK_C_STRING
-		once
+		do
 			create a_str.make ("background-gdk")
 			Result := a_str.item	
 		end
@@ -321,7 +327,7 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 			-- String optimization
 		local
 			a_str: EV_GTK_C_STRING
-		once
+		do
 			create a_str.make ("underline")
 			Result := a_str.item	
 		end
@@ -330,7 +336,7 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 			-- String optimization
 		local
 			a_str: EV_GTK_C_STRING
-		once
+		do
 			create a_str.make ("strikethrough")
 			Result := a_str.item	
 		end
@@ -339,7 +345,7 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 			-- String optimization
 		local
 			a_str: EV_GTK_C_STRING
-		once
+		do
 			create a_str.make ("rise")
 			Result := a_str.item	
 		end

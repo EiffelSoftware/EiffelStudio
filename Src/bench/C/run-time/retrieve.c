@@ -338,7 +338,7 @@ rt_public EIF_REFERENCE rt_nmake(long int objectCount)
 	jmp_buf exenv;
 	RTXD;
 
-	assert (objectCount != 0);
+	assert (objectCount /= 0);
 
 	excatch((char *) exenv);	/* Record pseudo execution vector */
 	if (setjmp(exenv)) {

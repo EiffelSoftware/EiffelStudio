@@ -950,6 +950,8 @@ void esigresall()
 #ifdef SIGPROF
 		if (sig != SIGPROF)
 			sig_ign[sig] = osig_ign[sig];
+#else
+		sig_ign[sig] = osig_ign[sig];
 #endif
 	
 #ifdef SIGTTIN

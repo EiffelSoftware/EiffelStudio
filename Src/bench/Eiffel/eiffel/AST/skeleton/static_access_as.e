@@ -16,7 +16,7 @@ inherit
 		redefine
 			type_check, is_equivalent, simple_format,
 			valid_feature, report_error_for_feature,
-			associated_class, byte_node
+			associated_class, byte_node, context_last_type
 		end
 
 create
@@ -62,6 +62,12 @@ feature -- Query
 			-- Associated CLASS_C object to `class_type'.
 		require else
 			a_constraint_can_be_void: True
+		do
+			Result := context_last_type.associated_class
+		end
+
+	context_last_type: TYPE_A is
+			-- Type of static access.
 		local
 			class_type_as: CLASS_TYPE_AS
 		do
@@ -69,7 +75,7 @@ feature -- Query
 			check
 				class_type_as_not_void: class_type_as /= Void
 			end
-			Result := class_type_as.actual_type.associated_class
+			Result := class_type_as.actual_type
 		end
 
 feature -- Type check, byte code and dead code removal
@@ -136,16 +142,19 @@ feature -- Type check, byte code and dead code removal
 			att: ATTRIBUTE_I
 			extension: IL_EXTENSION_I
 		do
-			Result := a_feature /= Void and then a_feature.is_external
-			if Result and then System.il_generation then
-				ext ?= a_feature
-				if ext /= Void then
-					extension ?= ext.extension
+			if a_feature /= Void then
+				if System.il_generation then
+					ext ?= a_feature
+					if ext /= Void then
+						extension ?= ext.extension
+					else
+						att ?= a_feature
+						extension ?= att.extension
+					end
+					Result := extension /= Void and then not extension.need_current (extension.type)
 				else
-					att ?= a_feature
-					extension ?= att.extension
+					Result := a_feature.is_external
 				end
-				Result := extension /= Void and then not extension.need_current (extension.type)
 			end
 		end
 

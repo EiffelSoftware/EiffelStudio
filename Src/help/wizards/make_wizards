@@ -1,0 +1,65 @@
+#!/bin/sh
+
+# Script to generate the wizard executables for Linux.
+# It generates the Vision2, Wizard and Precompilation wizards and puts them in the delivery.
+
+echo Make the Vision2 wizard [y]? 
+read rep
+if [ $rep = y ]; then
+	echo Building the Vision2 wizard
+	cd evision2
+	# Clean up the existing hierarchy.
+	if [ -f wizard.epr ]; then
+		rm -rf EIFGEN
+		rm -f wizard.epr
+	fi
+	# Launch the finalization.
+	ec -finalize -ace ../vision2_wizard_linux.ace
+	cd EIFGEN/F_code
+	finish_freezing
+	# Copy the file.
+	cp -d wizard $ISE_EIFFEL/bench/wizards/new_projects/vision2/spec/$ISE_PLATFORM/
+	cd ../../..
+	echo Vision2 wizard Built!
+fi
+echo Make the Wizard wizard [y]? 
+read rep
+if [ $rep = y ]; then
+	echo Building the Wizard wizard
+	cd ewizard
+	# Clean up the existing hierarchy.
+	if [ -f wizard.epr ]; then
+		rm -rf EIFGEN
+		rm -f wizard.epr
+	fi
+	# Launch the finalization.
+	ec -finalize -ace ../wizard_wizard_linux.ace
+	cd EIFGEN/F_code
+	finish_freezing
+	# Copy the file.
+	cp -d wizard $ISE_EIFFEL/bench/wizards/new_projects/wizard/spec/$ISE_PLATFORM/
+	cd ../../..
+	echo Wizard wizard Built!
+fi
+echo Make the Precompilation wizard [y]? 
+read rep
+if [ $rep = y ]; then
+	echo Building the Precompilation wizard
+	cd eprecompile
+	# Clean up the existing hierarchy.
+	if [ -f wizard.epr ]; then
+		rm -rf EIFGEN
+		rm -f wizard.epr
+	fi
+	# Launch the finalization.
+	ec -finalize -ace ../precompile_wizard_linux.ace
+	cd EIFGEN/F_code
+	finish_freezing
+	# Copy the file.
+	cp -d wizard $ISE_EIFFEL/bench/wizards/precompile/spec/$ISE_PLATFORM/bin/
+	cd ../../..
+	echo Precompilation wizard Built!
+fi
+
+
+

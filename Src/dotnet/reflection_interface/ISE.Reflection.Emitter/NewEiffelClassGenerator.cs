@@ -808,7 +808,7 @@ public class EiffelClassGenerator: Globals
 					} 
 					else if( value is string ) 
 					{
-						GeneratedEiffelFeature.SetLiteralValue( " \"" + value + "\"" );
+						GeneratedEiffelFeature.SetLiteralValue( "" );
 					}
 					else
 						GeneratedEiffelFeature.SetLiteralValue( " " + value );

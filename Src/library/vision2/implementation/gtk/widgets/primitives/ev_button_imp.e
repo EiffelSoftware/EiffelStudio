@@ -20,7 +20,6 @@ inherit
 			interface,
 			initialize,
 			make,
-			pointer_over_widget,
 			set_foreground_color,
 			foreground_color_pointer,
 			on_focus_changed
@@ -225,26 +224,6 @@ feature -- Status Setting
 	set_foreground_color (a_color: EV_COLOR) is
 		do
 			real_set_foreground_color (text_label, a_color)
-		end
-
-feature {EV_APPLICATION_IMP} -- Implementation
-
-	pointer_over_widget (a_gdkwin: POINTER; a_x, a_y: INTEGER): BOOLEAN is
-			-- Comparison of gdk window and widget position to determine
-			-- if mouse pointer is over widget.
-		local
-			a_gtk_pix: POINTER
-		do
-			if is_displayed then
-				Result := Precursor (a_gdkwin, a_x, a_y)
-				if not Result then
-					a_gtk_pix := gtk_pixmap
-					if a_gtk_pix /= NULL then
-						-- No struct member call if gtk_pix is a NULL pointer.
-						Result := a_gdkwin = feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (a_gtk_pix)
-					end
-				end
-			end
 		end
 	
 feature {NONE} -- implementation

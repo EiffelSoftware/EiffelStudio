@@ -82,7 +82,7 @@ feature -- Element change
 	set_text (a_text: STRING) is
 			-- Set `text' with `a_text'.
 		require
-			text_not_void: text /= Void
+			text_not_void: a_text /= Void
 		do
 			!! str_text.make (a_text)
 			cwel_tooltiptext_set_lpsztext (item, str_text.item)

@@ -184,7 +184,9 @@ feature {NONE} -- Implementation
 					set_title (title_before_iconise)
 					title_before_iconise := Void
 				end
-				resize_shell_children (a_width, a_height)
+				if fixed_size_flag then
+					resize_shell_children (a_width, a_height)
+				end
 			end
 			if size_type = Size_minimized then
 				shown := False

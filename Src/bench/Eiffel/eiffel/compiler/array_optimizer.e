@@ -466,7 +466,7 @@ feature -- Detection of safe/unsafe features
 					loop
 						unit := table.item
 						descendant_class := System.class_of_id (unit.id)
-						if descendant_class.conform_to (written_class) then
+						if descendant_class.simple_conform_to (written_class) then
 							other_body_id := body_table.item (unit.body_index)
 							Result := not unsafe_body_ids.has (other_body_id)
 						end

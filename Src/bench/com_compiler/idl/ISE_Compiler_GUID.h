@@ -160,6 +160,8 @@ enum
 
     DISPID_EiffelComCompiler_AddLocal,
     DISPID_EiffelComCompiler_AddArgument,
+    DISPID_EiffelComCompiler_FlushLocals,
+    DISPID_EiffelComCompiler_FlushArguments,
     DISPID_EiffelComCompiler_TargetFeatures,
     DISPID_EiffelComCompiler_TargetFeature,
     DISPID_EiffelComCompiler_ParseSourceForExpr,

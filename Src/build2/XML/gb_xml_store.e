@@ -112,8 +112,7 @@ feature {GB_XML_HANDLER} -- Implementation
 			if generation_settings.is_saving then
 				objects_written := objects_written + 1
 				set_status_text ("Saving : " + (((objects_written / object_count) * 95).truncated_to_integer.out) + "%%")
-				environment.application.process_events	
-				io.putstring (status_bar_label.text)
+				environment.application.process_events
 			end
 			create handler
 				-- We must store the name and other attributes

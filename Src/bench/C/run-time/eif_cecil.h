@@ -38,9 +38,7 @@ extern "C" {
 #define EIF_POINTER_TYPE    0
 
 #define eif_create			eifcreate		/* Object creation */
-#define eif_type_id			eifcid			/* Get class ID */
 #define eif_expand			eifexp			/* Force expanded class ID */
-#define eif_generic_id		eifgid			/* Get class ID for generic types */
 #define eif_proc			eifproc			/* Get an Eiffel procedure */
 #define eif_fn_int			eiflong			/* Get an Eiffel function */
 #define eif_fn_char			eifchar
@@ -151,8 +149,6 @@ RT_LNK int eifreturntype (char *class_name, EIF_TYPE_ID cid);
 										/* Return type of `cid' from `class_name' */
 RT_LNK EIF_TYPE_ID eifcid(char *class_name);		     /* Get a class ID */
 RT_LNK EIF_TYPE_ID eifexp(EIF_TYPE_ID id);			/* Force expansion */
-
-RT_LNK EIF_TYPE_ID eifgid(char *class_name, ...);	/* Get a generic class ID */
 
 RT_LNK EIF_OBJ eifcreate(EIF_TYPE_ID cid);				/* Object creation */
 

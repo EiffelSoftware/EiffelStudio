@@ -427,6 +427,7 @@ rt_shared void initsig(void)
 #endif
 #ifdef SIGWINCH
 	sig_ign[SIGWINCH] = 1;			/* Ignore window size change */
+	(void) signal(SIGWINCH, SIG_IGN);
 #endif
 #ifdef SIGTTIN
 	sig_ign[SIGTTIN] = 1;			/* Ignore background input signal */

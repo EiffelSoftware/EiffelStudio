@@ -18,7 +18,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (par: EV_WINDOW) is
+	make (par: EV_CONTAINER) is
 			-- Create a window with a parent.
 		do
 			!EV_FILE_OPEN_DIALOG_IMP! implementation.make (par)

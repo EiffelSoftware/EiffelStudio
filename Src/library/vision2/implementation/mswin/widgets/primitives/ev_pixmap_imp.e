@@ -41,6 +41,7 @@ feature {NONE} -- Initialization
 			!! bmp.make_compatible (screen, 1, 1)
 			internal_dc.select_bitmap (bmp)
 			screen.release
+			is_free := True
 		end
 
 	make_with_size (w, h: INTEGER) is
@@ -63,6 +64,7 @@ feature {NONE} -- Initialization
 			!! color.make_rgb (0, 0, 0)
 			set_foreground_color (color)
 			clear
+			is_free := True
 		end
 
 feature -- Access
@@ -77,11 +79,8 @@ feature -- Access
 			end
 		end
 
-	mask: EV_PIXMAP is
-			-- Mask used when the pixmap is diplayed.
-		do
-			-- ToDo
-		end
+	transparent_color: EV_COLOR
+			-- Color used as transparent (Void by default).
 
 feature -- Status report
 
@@ -91,6 +90,10 @@ feature -- Status report
 			Result := (bitmap = Void)
 		end
 
+	is_free: BOOLEAN
+			-- Is the pixmap free and then can be added in a
+			-- control?
+
 feature -- Status setting
 
 	destroy is
@@ -99,6 +102,12 @@ feature -- Status setting
 			internal_dc.delete
 			internal_dc := Void
 			internal_bitmap := Void
+		end
+
+	set_free_status (flag: BOOLEAN) is
+			-- Make the pixmap free.
+		do
+			is_free := flag
 		end
 
 feature -- Measurement
@@ -115,26 +124,15 @@ feature -- Measurement
 			Result := bitmap.height
 		end
 
-feature -- Status report
-
-	is_monochrome: BOOLEAN is
-			-- Is the current pixmap monochrome?
-		local
-			info: WEL_LOG_BITMAP
-			int: INTEGER
-		do
-			info := bitmap.log_bitmap
-			int := info.planes
-			int := info.bits_pixel
-			Result := (info.planes = 1) and (info.bits_pixel = 1)
-		end
-
 feature -- Element change
 
-	set_mask (pix: EV_PIXMAP) is
-			-- Make `pix' the new mask of the pixmap.
+	set_transparent_color (value: EV_COLOR) is
+			-- Make `value' the new transparent color.
 		do
-			-- To Do
+			transparent_color := value
+			check
+				not_yet_implemented: False
+			end
 		end
 
 feature -- Basic operation
@@ -155,18 +153,18 @@ feature -- Basic operation
 			internal_dc.select_bitmap (bmp)
 		end
 
-	character_representation: ARRAY [CHARACTER] is
-			-- Return a representation of the pixmap in
-			-- an array of character.
-		local
-			info: WEL_BITMAP_INFO
-			bmp: WEL_BITMAP
-			int: INTEGER
-		do
-			bmp := deep_clone (bitmap)
-			create info.make_by_dc (internal_dc, bmp, Dib_rgb_colors)
-			Result := internal_dc.di_bits (bmp, 0, height, info, Dib_rgb_colors)
-		end
+--	character_representation: ARRAY [CHARACTER] is
+--			-- Return a representation of the pixmap in
+--			-- an array of character.
+--		local
+--			info: WEL_BITMAP_INFO
+--			bmp: WEL_BITMAP
+--			int: INTEGER
+--		do
+--			bmp := deep_clone (bitmap)
+--			create info.make_by_dc (internal_dc, bmp, Dib_rgb_colors)
+--			Result := internal_dc.di_bits (bmp, 0, height, info, Dib_rgb_colors)
+--		end
 
 feature -- Implementation
 
@@ -180,6 +178,7 @@ feature -- Implementation
 			-- Create the `internal_dc' that allow to draw on the
 			-- pixmap.
 		require
+			exists: not destroyed
 			valid_internal_bitmap: internal_bitmap /= Void
 			valid_internal_dc: internal_dc = Void
 		local
@@ -200,6 +199,7 @@ feature -- Implementation
 			-- store the bitmap in `internal_bitmap' and 
 			-- delete the `internal_dc'.
 		require
+			exists: not destroyed
 			valid_internal_dc: internal_dc /= Void and internal_dc.exists
 			valid_internal_bitmap: internal_bitmap = Void
 		do
@@ -211,8 +211,19 @@ feature -- Implementation
 			valid_internal_dc: internal_dc = Void
 		end
 
-invariant
+	internal_mask: WEL_BITMAP is
+			-- The mask corresponding to the transparent color.
+		require
+			exists: not destroyed
+		local
+			monochrome_dc: WEL_MEMORY_DC
+		do
+			create monochrome_dc.make
+			create Result.make_compatible (monochrome_dc, width, height)
+			monochrome_dc.select_bitmap (Result)
+		end
 
+invariant
 	not_double_data: not (internal_bitmap /= Void and internal_dc /= Void)
 	dc_void_or_valid: (internal_dc /= Void) implies (internal_dc.exists)
 

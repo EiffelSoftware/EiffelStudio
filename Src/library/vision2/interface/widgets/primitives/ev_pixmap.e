@@ -43,19 +43,41 @@ feature {NONE} -- Initialization
 			read_from_file (file_name)
 		end
 
+feature -- Status report
+
+	is_free: BOOLEAN is
+			-- Is the pixmap free and then can be added in a
+			-- control?
+		require
+			exists: not destroyed
+		do
+			Result := implementation.is_free
+		end
+
 feature -- Measurement
 
 	width: INTEGER is
+			-- Width of the pixmap in pixels.
+		require
+			exists: not destroyed
 		do
 			Result := implementation.width
+		ensure
+			positive_result: Result > 0
 		end
 
 	height: INTEGER is
+			-- Height of the pixmap in pixels.
+		require
+			exists: not destroyed
 		do
 			Result := implementation.height
+		ensure
+			positive_result: Result > 0
 		end
 
 feature -- Basic operation	
+
 	read_from_file (file_name: STRING) is
 			-- Load the pixmap described in 'file_name'.
 			-- If the file does not exist, an exception is

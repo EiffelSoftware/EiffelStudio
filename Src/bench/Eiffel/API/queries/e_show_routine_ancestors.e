@@ -53,7 +53,7 @@ feature -- Execution
 					if other_feature /= Void then
 						classes.item.append_name (structured_text);
 						structured_text.add_string (" ");
-						other_feature.append_signature (structured_text, classes.item);
+						other_feature.append_signature (structured_text);
 						structured_text.add_new_line;
 						structured_text.add_indent;
 						structured_text.add_string ("Version from class ");

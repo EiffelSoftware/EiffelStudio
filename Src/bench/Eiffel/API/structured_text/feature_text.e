@@ -22,16 +22,14 @@ creation
 
 feature -- Initialization
 
-    make (t: like image; f: like e_feature; c: like e_class) is
+    make (t: like image; f: like e_feature) is
             -- Initialize Current with class_i `e'
             -- and image `t'.
         do
             image := t;
-            e_class := c;
 			e_feature := f
         ensure
             set: image = t and then
-                    e_class = c and then
 					e_feature = f
         end;
 
@@ -39,9 +37,6 @@ feature -- Properties
 
 	e_feature: E_FEATURE;
 			-- Eiffel feature associated with image
-
-	e_class: E_CLASS;
-			-- Eiffel class with e_feature is defined
 
 feature {TEXT_FORMATTER} -- Implementation
 

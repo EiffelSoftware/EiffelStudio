@@ -63,16 +63,12 @@ feature -- Behavior
 		end
 
 	on_wm_destroy is
-			-- Should launch next dialog after this on has been totally destroyed.
+			-- Open project if needed
 		do
-			Precursor {WEL_MODAL_DIALOG}
-			if ok_pushed then
-				if new_project then
-					parent.on_menu_command (Launch_string_constant)
-				else
-					parent.on_menu_command (Open_string_constant)
-				end
+			if not new_project then
+				parent.on_menu_command (Open_string_constant)
 			end
+			Precursor {WEL_MODAL_DIALOG}
 		end
 
 feature -- Access

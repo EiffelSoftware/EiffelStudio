@@ -59,6 +59,11 @@ inherit
 			{NONE} all
 		end
 
+	WEL_TB_STATE_CONSTANTS
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -92,13 +97,23 @@ feature -- GUI Elements
 	rebar: WEL_REBAR is
 			-- Create and initialise toolbar.
 		local
-			open_button, new_button, save_button, launch_button,
-			clear_button, separator_button: WEL_TOOL_BAR_BUTTON
 			rebar_info: WEL_REBARBANDINFO
-			tool_bar: WEL_TOOL_BAR
-			tool_bar_bitmap: WEL_TOOL_BAR_BITMAP
 		once
+			initialize_toolbar
 			create Result.make (Current, -1)
+			create rebar_info.make
+			rebar_info.set_unpositionable_child (tool_bar)
+			rebar_info.set_child_minimum_width (100)
+			rebar_info.set_child_minimum_height (28)
+			Result.prepend_band (rebar_info)
+			Result.reposition
+		end
+
+	initialize_toolbar is
+				-- Create toolbar and toolbar buttons.
+		local
+			tool_bar_bitmap: WEL_TOOL_BAR_BITMAP
+		do
 			create tool_bar.make (Current, -1)
 			tool_bar.set_style (tool_bar.style + Tbstyle_flat)
 			create tool_bar_bitmap.make_by_predefined_id (Idb_std_small_color)
@@ -110,15 +125,13 @@ feature -- GUI Elements
 			create tool_bar_bitmap.make (Toolbar_bitmap_constant)
 			tool_bar.add_bitmaps (tool_bar_bitmap, 1)
 			create launch_button.make_button (tool_bar.last_bitmap_index + 1, Launch_string_constant)
-			tool_bar.add_buttons (<<new_button, open_button, save_button, separator_button, launch_button>>)
-			create rebar_info.make
-			rebar_info.set_unpositionable_child (tool_bar)
-			rebar_info.set_child_minimum_width (100)
-			rebar_info.set_child_minimum_height (28)
-			Result.prepend_band (rebar_info)
-			Result.reposition
+			create generate_button.make_button (tool_bar.last_bitmap_index, Generate_string_constant)
+			tool_bar.add_buttons (<<new_button, open_button, save_button, separator_button, launch_button, generate_button>>)
+			tool_bar.set_width (2000)
+			tool_bar.disable_button (Save_string_constant)
+			tool_bar.disable_button (Generate_string_constant)
 		end
-	
+
 	generated_code_type_dialog: WIZARD_GENERATED_CODE_TYPE_DIALOG
 			-- Wizard introduction dialog
 
@@ -168,8 +181,9 @@ feature -- GUI Elements
 		once
 			create Result.make
 			Result.append_string ("&Launch Wizard", Launch_string_constant)
+			Result.append_string ("&Generate (no wizard)", Generate_string_constant)
 		ensure
-			buil_menu_not_void: Result /= Void
+			build_menu_not_void: Result /= Void
 		end
 
 	open_file_dialog: WEL_OPEN_FILE_DIALOG is
@@ -190,6 +204,13 @@ feature -- GUI Elements
 
 	output_edit: WIZARD_OUTPUT_EDIT
 			-- Output edit used to display messages
+
+	open_button, new_button, save_button, launch_button,
+			generate_button, separator_button: WEL_TOOL_BAR_BUTTON
+			-- Toolbar buttons
+
+	tool_bar: WEL_TOOL_BAR
+			-- Toolbar
 
 feature -- Output
 
@@ -279,6 +300,8 @@ feature {NONE} -- State management
 				create wizard_manager.make (Current)
 				wizard_manager.run
 			end
+			tool_bar.enable_button (Save_string_constant)
+			tool_bar.enable_button (Generate_string_constant)
 		end
 
 	change_state (move_to_next: BOOLEAN) is
@@ -389,16 +412,20 @@ feature {WIZARD_FIRST_CHOICE_DIALOG} -- Behavior
 				menu_id
 			when Launch_string_constant then
 				start
+			when Generate_string_constant then
+				clear
+				shared_wizard_environment.set_no_abort
+				create wizard_manager.make (Current)
+				wizard_manager.run
 			when Exit_string_constant then
 				destroy			
 			when Open_string_constant then
 				open_file_dialog.activate (Current)
 				if open_file_dialog.selected then
 					open_project (open_file_dialog.file_name)
-					if project_retrieved then
-						start
-					end
 				end
+				tool_bar.enable_button (Save_string_constant)
+				tool_bar.enable_button (Generate_string_constant)
 			when Save_string_constant then
 				save_file_dialog.activate (Current)
 				if save_file_dialog.selected then
@@ -406,6 +433,8 @@ feature {WIZARD_FIRST_CHOICE_DIALOG} -- Behavior
 				end
 			When New_string_constant then
 				set_shared_wizard_environment (create {WIZARD_ENVIRONMENT}.make)
+				tool_bar.disable_button (Save_string_constant)
+				tool_bar.disable_button (Generate_string_constant)
 			else
 			end
 		end

@@ -5,6 +5,10 @@ inherit
 	LINKED_LIST [LINE]
 
 	STORABLE
+                undefine
+                        is_equal,
+                        copy
+                end
 
 creation
 	make

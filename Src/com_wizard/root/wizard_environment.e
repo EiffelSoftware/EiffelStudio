@@ -78,7 +78,7 @@ feature -- Access
 	return_code: INTEGER
 			-- Last return code
 
-	Output_level: INTEGER
+	output_level: INTEGER
 			-- Output level
 
 feature -- Element Change

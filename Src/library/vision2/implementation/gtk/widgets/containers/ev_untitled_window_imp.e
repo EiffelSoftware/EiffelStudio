@@ -271,10 +271,7 @@ feature -- Assertion test
 			-- 'add_child'. True, if it is ok to add a
 			-- child to the window by testing if its hbox has
 			-- not child
-		local
-			le_result : INTEGER			
 		do
-			le_result:= c_gtk_container_nb_children (hbox)
 			Result := c_gtk_container_nb_children (hbox)= 0
 		end
 

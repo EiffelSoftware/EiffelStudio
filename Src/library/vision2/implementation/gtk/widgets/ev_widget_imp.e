@@ -646,6 +646,15 @@ feature {EV_CONTAINER_IMP} -- Implementation
 			end
 		end
 		
+		
+feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
+
+	on_widget_mapped is
+			-- `Current' has been mapped on to the screen.
+		do
+			-- By default do nothing as this is redefined by descendants such as window and split area that need it.
+		end
+
 feature {NONE} -- Implementation
 
 	internal_set_minimum_size (a_minimum_width, a_minimum_height: INTEGER) is

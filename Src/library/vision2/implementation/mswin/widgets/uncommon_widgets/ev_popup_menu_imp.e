@@ -104,24 +104,6 @@ feature -- Basic operations
 			end
 		end
 
-feature {NONE} -- Implementation
-
-	draw_menu is
-			-- Draw the menu bar associated with the window.
-		do
-			if parent_imp /= Void then
-				parent_imp.draw_menu
-			end
-		end
-
-	has_menu: BOOLEAN is
-			-- Does the window have a menu?
-		do
-			if parent_imp /= Void then
-				parent_imp.draw_menu
-			end
-		end
-
 feature {NONE} -- Inapplicable
 
 	on_selection_changed (sitem: EV_MENU_ITEM_IMP) is

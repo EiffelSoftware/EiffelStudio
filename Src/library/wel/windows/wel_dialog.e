@@ -292,14 +292,6 @@ feature {NONE} -- Externals
 			"DialogBoxIndirect"
 		end
 
-	cwin_get_dlg_item (hwnd: POINTER; an_id: INTEGER): POINTER is
-			-- SDK GetDlgItem
-		external
-			"C [macro <wel.h>] (HWND, int): EIF_POINTER"
-		alias
-			"GetDlgItem"
-		end
-
 	cwel_dialog_procedure_address: POINTER is
 		external
 			"C [macro <disptchr.h>]"

@@ -240,7 +240,7 @@ feature
 			base.realize
 		end
 	
-feature {TRANSPORTER}
+feature {TRANSPORTER, TRANSPORTER_I}
 
 	work (arg: ANY) is
 		do

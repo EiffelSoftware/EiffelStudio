@@ -1,12 +1,28 @@
-class FORMAT_CONTEXT
+class FORMAT_CONTEXT_B
 
 inherit
 
-	SPECIAL_AST;
+	FORMAT_CONTEXT
+		redefine 
+			make, execute, ast,
+			format, new_expression, arguments,
+			put_name_of_class, prepare_for_main_infix,
+			prepare_for_main_feature, 
+			prepare_for_main_prefix, prepare_for_current,
+			prepare_for_result, prepare_for_infix,
+			prepare_for_prefix, put_current_feature,
+			put_normal_feature, put_infix, put_prefix,
+			put_main_fix, begin, previous, commit,
+			prepare_for_feature
+		end
+
 	SHARED_SERVER;
+
 	SHARED_INST_CONTEXT;
+
 	SHARED_RESCUE_STATUS;
-	SHARED_ERROR_HANDLER;
+
+	SPECIAL_AST_B
 
 creation
 
@@ -41,7 +57,7 @@ feature -- Flat and flat/short modes
 
 feature
 
-	rescued: BOOLEAN;
+	ast: CLASS_AS_B;
 
 	make (c: CLASS_C) is
 		do
@@ -52,7 +68,7 @@ feature
 			order_same_as_text_bool.set_value (False);
 			in_assertion_bool.set_value (False);
 			troff_format := False;
-		ensure
+		ensure then
 			class_c_set: class_c = c;
 			batch_mode:	not in_bench_mode;
 			analyze_ancestors: not current_class_only;
@@ -62,7 +78,7 @@ feature
 
 	make_for_case (c: CLASS_C) is
 		local
-			first_format: LOCAL_FORMAT;
+			first_format: LOCAL_FORMAT_B;
 		do
 			class_c := c;
 			current_class_only := False;
@@ -86,10 +102,10 @@ feature
 
 	execute is
 				-- Execute the flat or flat_short.
-		require
+		require else
 			class_set: class_c /= Void
 		local
-			first_format: LOCAL_FORMAT;
+			first_format: LOCAL_FORMAT_B;
 			name: STRING;
 		do
 			if not rescued then
@@ -129,9 +145,6 @@ feature
 			end;
 		end;
 
-	execution_error: BOOLEAN;
-			-- Did an error occur during `execute'?
-
 	flat_struct: FLAT_STRUCT;
 
 	current_class_only: BOOLEAN;
@@ -151,12 +164,10 @@ feature
 	class_c: CLASS_C;
 			-- Current class being processed
 	
-	upper_name: STRING; 
-
-	previous: LINKED_STACK[LOCAL_FORMAT];
+	previous: LINKED_STACK [LOCAL_FORMAT_B];
 			-- previous  format (push at begin, pop at commit and rollback)
 
- 	format: LOCAL_FORMAT is
+	format: LOCAL_FORMAT_B is
 			-- Current internal formatting directives
 		do
 			Result := previous.item;
@@ -165,7 +176,7 @@ feature
 	begin is
 		-- Save format before a change
 		local
-			new_format: LOCAL_FORMAT;
+			new_format: LOCAL_FORMAT_B;
 			i: INTEGER
 		do
 			new_format := clone (format);
@@ -182,18 +193,18 @@ end
 		end;
 
 	commit is
-		-- go back to previous format. keep text modifications
+			-- Go back to previous format. Keep text modifications.
 		local
 			i: INTEGER
 		do
 			previous.remove;
-			last_was_printed := true;
+			last_was_printed := True;
 debug ("FS_RBRF")
-			io.error.putstring ("committin..%N");
-			i := text.index;
-			io.error.putstring (text.image);
-			text.go_i_th (i);
-			io.error.new_line;
+		io.error.putstring ("Comimitting...%N");
+		i := text.index;
+		io.error.putstring (text.image);
+		text.go_i_th (i);
+		io.error.new_line;
 end
 		end;
 
@@ -205,7 +216,6 @@ end
 		do
 			text.head(format.position_in_text);
 		end;
-
 
 	rollback is
 		-- go back to previous format.Discard text modifications 
@@ -219,7 +229,6 @@ debug ("FS_RBRF")
 			io.error.new_line;
 end
 		end;
-
 
 	always_succeed is
 		-- do as if begin and commit had been done. quicker, but can't rollback
@@ -256,40 +265,6 @@ feature -- text construction
 			first_assertion := b;
 		end;
 
-	text: STRUCTURED_TEXT;
-		-- formatted text
-
-	put_string, put_identifier (s : STRING) is
-			-- append s to 'text'
-		local
-			item: BASIC_TEXT;	
-		do
-			if s /= void then
-				!!item.make (s);
-				text.add (item);
-			end
-		end;
-
-	put_keyword(k : STRING) is
-			-- append k to 'text', known as a keyword
-		local
-			item: BASIC_TEXT;
-		do
-			!!item.make (k);
-			item.set_is_keyword;
-			text.add (item);	
-		end;
-
-	put_special(s : STRING) is
-		-- append s to 'text', known as a special character.
-		local
-			item: BASIC_TEXT;
-		do
-			!!item.make (s);
-			item.set_is_special;
-			text.add (item);	
-		end;
-
 	put_class_name (c: CLASS_C) is
 			-- append class name to 'text', treated as a stone.
 		local
@@ -318,45 +293,6 @@ feature -- text construction
 			text.add (item);
 		end;
 
-	put_separator is
-			-- append the separator
-		do
-			if format.new_line_before_separator then
-				next_line;
-			end;
-			if format.separator /= Void then
-				put_text_item (format.separator)
-			end;
-			if format.space_between_tokens then
-				put_space
-			elseif format.indent_between_tokens then
-				next_line
-			end;
-		end;
-
-	next_line is
-			--	 go to next line, indent as necessary
-		local
-			item: NEW_LINE_TEXT;
-		do
-			!!item.make (format.indent_depth);
-			text.add (item)
-		end;
-
-	put_space is
-			-- Append a space character.
-		do
-			text.add (ti_Space)
-		end;
-
-	put_text_item (t: TEXT_ITEM) is
-			-- Append the text of `t'.
-		require
-			t_not_void: t /= Void
-		do
-			text.add (t)
-		end;
-
 	prepare_class_text is
 			-- append standard text before class 
 		local
@@ -375,7 +311,7 @@ feature -- text construction
 			text.add (item);
 		end;
 
-	prepare_feature (feature_name: STRING; is_prefix, is_infix: BOOLEAN) is
+	prepare_feature (feature_name: STRING; is_pref, is_inf: BOOLEAN) is
 			-- append standard text before feature declaration 
 		local
 			item: BEFORE_FEATURE;
@@ -384,7 +320,7 @@ feature -- text construction
 			if troff_format then
 				old_types := format.local_types;
 				temp := clone (feature_name)
-				if is_infix then
+				if is_inf then
 					if temp.substring (1, 7).is_equal ("_infix_") then
 						temp.tail (feature_name.count - 7);
 						temp := old_types.operator_name (temp);
@@ -393,7 +329,7 @@ feature -- text construction
 						!!item.make (upper_name, feature_name);
 					end;
 					item.set_is_infix
-				elseif is_prefix then
+				elseif is_pref then
 					if feature_name.substring (1, 8).is_equal ("_prefix_") then
 						temp.tail (feature_name.count - 8);
 						temp := old_types.operator_name (temp);
@@ -420,17 +356,7 @@ feature -- text construction
 			end
 		end;
 
-	put_breakable is
-		do
-		end;
-			
-
 feature -- local_control
-
-	set_separator (s: TEXT_ITEM) is
-		do
-			format.set_separator (s);
-		end;
 
 	abort_on_failure is
 		do
@@ -442,47 +368,9 @@ feature -- local_control
 			format.set_must_abort( false);
 		end;
 
-
-	new_line_between_tokens is
-		do
-			format.set_must_indent (true);
-			format.set_space_between_tokens (false)
-		end;
-
-	space_between_tokens is
-			-- Add a space character after the separator.
-		do
-			format.set_must_indent (false);
-			format.set_space_between_tokens (true)
-		end;
-
-	no_new_line_between_tokens is
-			-- Neither new_line nor space between token.
-		do
-			format.set_must_indent (false);
-			format.set_space_between_tokens (false)
-		end;
-
-	indent_one_more is
-		do
-			format.indent_one_more;
-		end;
-
-	indent_one_less is
-		do
-			format.indent_one_less;
-		end;
-
 	must_abort_on_failure: BOOLEAN is
 		do
 			Result := format.must_abort_on_failure
-		end;
-
-	
-	set_illegal_operator is
-			-- set illegal operator to true
-		do
-			format.set_illegal_operator;
 		end;
 
 feature -- type control
@@ -504,23 +392,14 @@ feature -- type control
 			Result := format.local_types.may_need_adaptation;
 		end;
 	
-	arguments: AST_EIFFEL;
-
-
-	illegal_operator: BOOLEAN is
-			-- are operator illegal, while other feature name are
-			-- ie after $ and like
-		do
-			Result := format.illegal_operator;
-		end;
+	arguments: AST_EIFFEL_B;
 
 	put_name_of_class is
 		do
 			put_class_name (class_c);
 		end;
 			
-
-	prepare_for_feature (name: STRING; arg: EIFFEL_LIST [EXPR_AS]) is
+	prepare_for_feature (name: STRING; arg: EIFFEL_LIST_B [EXPR_AS_B]) is
 			-- Prepare for features within main features
 		do
 			old_types := format.local_types;
@@ -582,7 +461,7 @@ end;
 			arguments := Void;
 		end;
 
-	prepare_for_infix (internal_name: STRING; right: EXPR_AS) is
+	prepare_for_infix (internal_name: STRING; right: EXPR_AS_B) is
 		do
 			old_types := format.local_types;
 			new_types := format.local_types.new_adapt_infix (internal_name);
@@ -624,7 +503,7 @@ end;
 		local
 			feature_i: FEATURE_I;
 			stone: FEATURE_STONE;
-			arg: EIFFEL_LIST [EXPR_AS];
+			arg: EIFFEL_LIST_B [EXPR_AS_B];
 			item: BASIC_TEXT;
 			i, nb: INTEGER;
 			f_name: STRING;
@@ -747,7 +626,7 @@ end;
 
 	put_infix is
 		local
-			arg: EXPR_AS;
+			arg: EXPR_AS_B;
 			old_priority : INTEGER;
 			feature_i: FEATURE_I;
 			stone: FEATURE_STONE;
@@ -802,7 +681,6 @@ end;
 				item.set_is_special
 			end
 		end;	
-	
 				
 	is_feature_visible: BOOLEAN  is
 			-- should the feature be visible
@@ -853,69 +731,10 @@ end;
 
 feature -- infix and prefix control
 
-	put_fix_name (f_name: STRING) is
-			-- Append `f_name' (a infix or prefix operator) to the text.
-		require
-			f_name_not_void: f_name /= Void
-		local
-			item: BASIC_TEXT
-		do
-			!!item.make (f_name);
-			if f_name.item (1) >= 'a' and f_name.item (1) <= 'z' then
-				item.set_is_keyword
-			else
-				item.set_is_special
-			end;
-			text.add (item)
-		end;
-
 	set_insertion_point is
 			-- Remember text position for parantheses and prefix operator
 		do
 			format.set_insertion_point(text.cursor);
-		end;
-
-	insert (s: STRING) is
-		local
-			item: BASIC_TEXT;	
-		do
-			if 
-				s /= void 
-			then
-				!!item.make (s);
-				text.insert (format.insertion_point, item)
-			end;	
-		end;
-
-	insert_special (s: STRING) is
-		local
-			item: BASIC_TEXT;
-		do
-			!!item.make (s);
-			item.set_is_special;
-		 	text.insert (format.insertion_point, item);	
-		end;
-	
-	insert_text_item (t: TEXT_ITEM) is
-		require
-			t_not_void: t /= Void
-		do
-		 	text.insert (format.insertion_point, t);
-		end;
-
-	need_dot is
-		do
-			format.set_dot_needed (true);
-		end;
-
-	dot_needed: BOOLEAN is
-		do
-			Result := format.dot_needed;
-		end;
-
-	put_dot is
-		do
-			put_text_item (ti_Dot)
 		end;
 
 	priority: INTEGER is
@@ -923,47 +742,8 @@ feature -- infix and prefix control
 			Result := format.priority;
 		end;
 
+feature -- Comments
 
-feature -- comments
-
-	put_comment (comment: EIFFEL_COMMENTS) is
-		local
-			i: INTEGER;
-		do
-			begin;
-			if comment /= void then
-				from
-					from
-						i := 1
-					until
-						i > comment.count or else
-						comment.text.item (i).empty or else
-						comment.text.item (i).item (1) /= '|'
-					loop
-						i := i + 1
-					end;
-					if i <= comment.count then
-						put_text_item (ti_Dashdash);
-						put_comment_text (comment.text.item (i))
-					end;
-					i := i + 1
-				until
-					i > comment.count
-				loop
-					if 
-						comment.text.item (i).empty or else
-						comment.text.item (i).item (1) /= '|' 
-					then
-						next_line;
-						put_text_item (ti_Dashdash);
-						put_comment_text (comment.text.item (i))
-					end;
-					i := i + 1
-				end
-			end;
-			commit;
-		end;
-			
 	put_origin_comment is
 		local
 			s: STRING;
@@ -986,53 +766,7 @@ feature -- comments
 			end;
 		end;
 
-	put_comment_text (c: STRING) is
-			-- Interprete the ` and ' signs of the comment
-			-- and append it to the text.
-		require
-			c_not_void: c /= Void
-		local
-			item: BASIC_TEXT;
-			i, c_count: INTEGER;
-			c_area: SPECIAL [CHARACTER];
-			between_quotes: BOOLEAN;
-			s: STRING
-		do
-			from
-				!!s.make (0);
-				c_count := c.count;
-				c_area := c.area
-			until
-				i >= c_count
-			loop
-				if between_quotes and c_area.item (i) = '%'' then
-					if not s.empty then
-						!!item.make (s);
-						put_text_item (item);
-						!!s.make (0)
-					end;
-					between_quotes := false
-				elseif not between_quotes and c_area.item (i) = '`' then
-					if not s.empty then
-						!!item.make (s);
-						item.set_is_comment;
-						put_text_item (item);
-						!!s.make (0)
-					end;
-					between_quotes := true
-				else
-					s.extend (c_area.item (i))
-				end;
-				i := i + 1
-			end;
-			if not s.empty then
-				!!item.make (s);
-				item.set_is_comment;
-				put_text_item (item)
-			end
-		end;
-
-	formal_name (pos: INTEGER): ID_AS is
+	formal_name (pos: INTEGER): ID_AS_B is
 		require
 			pos > 0;
 			pos <= class_c.generics.count
@@ -1041,11 +775,11 @@ feature -- comments
 			Result.to_upper;
 		end;
 
-feature {ASSERT_LIST_AS} -- For case
+feature {ASSERT_LIST_AS_B} -- For case
 
 	clear_text is
 		do
 			text.wipe_out
 		end;
 
-end	
+end	 -- class FORMAT_CONTEXT_B

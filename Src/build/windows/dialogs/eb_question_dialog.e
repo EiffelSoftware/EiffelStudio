@@ -30,7 +30,7 @@ feature -- Access
 			valid_help: help /= Void
 		local
 			tmp: STRING
-			top: TOP
+--			top: TOP
 		do
 			make (par, help)
 			quest_d.show_ok_cancel_buttons
@@ -61,7 +61,7 @@ feature -- Access
 			valid_help: help /= Void
 		local
 			tmp: STRING
-			top: TOP
+--			top: TOP
 		do
 			make (par, help)
 			quest_d.show_yes_no_buttons

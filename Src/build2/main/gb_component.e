@@ -10,6 +10,12 @@ class
 inherit
 	
 	GB_XML_OBJECT_BUILDER
+	
+	GB_SHARED_ID
+	
+	GB_GENERAL_UTILITIES
+	
+	GB_XML_UTILITIES
 
 create
 	
@@ -32,12 +38,82 @@ feature -- Access
 	object: GB_OBJECT is
 			-- `Result' is representation of `Current'
 			-- unique each time.
+		local
+			elements: ARRAYED_LIST [XML_ELEMENT]
+			gb_ev: ARRAYED_LIST [GB_EV_ANY]
+			values: ARRAYED_LIST [INTEGER]
+			new_value: STRING
+			full_information1: HASH_TABLE [ELEMENT_INFORMATION, STRING]
+			current_element: XML_ELEMENT
+			ucstring: UCSTRING
 		do
 			Result := (new_object ((create {GB_SHARED_XML_HANDLER}).xml_handler.xml_element_representing_named_component (name), True))
+				-- We must now update all ids in the new object, as they may not
+				-- be the values that were originally stored, as this would duplicate ids.
+				-- All these ids must stay relative, or the radio button grouping would not work correctly.
+				-- We must also compress all these ids so that they ARE contiguous, but have no spacing in.
+				-- If we did not do this, then we may skip large chunks of ids.
+				
+				
+			id_compressor.compress_object_id (Result, current_id_counter)
+			
+				-- We must now update all id values stored in xml elements in deferred
+				-- builder. We use id_compressor.lookup for values to adjust by.
+			gb_ev := deferred_builder.all_gb_ev
+			elements := deferred_builder.all_element
+			from
+				gb_ev.start
+			until
+				gb_ev.off
+			loop
+					-- GB_EV_CONTAINER is currently, the only type that will contain
+					-- id references in the XML. If more are added, then they need to be
+					-- handled here also.
+				if gb_ev.item.generating_type.is_equal (gb_ev_container) then
+					current_element := elements @ (gb_ev.index)
+					full_information1 := get_unique_full_info (current_element)
+					if full_information1 @ merged_groups_string /= Void then
+						values := list_from_single_spaced_values ((full_information1 @ merged_groups_string).data)
+						-- Now, we update values to reflect the new ids that values should point to,
+						-- calculated during `compress_object_id'.
+						from
+							values.start
+						until
+							values.off
+						loop
+								-- This if statement cheks for invalid ids in
+								-- the component.
+							if Id_compressor.lookup.has (values.item) then
+								values.replace (Id_compressor.lookup.item (values.item))	
+							else
+								values.remove
+							end
+						end
+						new_value := single_spaced_values_from_list (values)
+							-- We must now replace the current string value in the xml element, with `new_value'.
+						create ucstring.make_from_string (merged_groups_string)
+							-- We can just do a wipe_out as containers only have this
+							-- one attribute.
+						current_element.wipe_out
+							-- The component may have only held invalid
+							-- radio groupings, and if so, then there should not
+							-- be an element replaced.
+						if not new_value.is_empty then
+							add_element_containing_string (current_element, merged_groups_string, new_value)						
+						end
+					end
+				end
+				gb_ev.forth
+			end
+			
+			
+				
+				-- Now execute the deferred building.	
+			deferred_builder.build
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	root_element_type: STRING is
 			-- `Result' is type of root element.
 		do
@@ -57,5 +133,13 @@ feature -- Status Setting
 			name_set: name = a_name
 		end
 		
+feature {NONE} -- Implementation
+
+	id_compressor: GB_ID_COMPRESSOR is
+			-- Once instance of GB_ID_COMPRESSOR
+			-- for compressing saved Ids.
+		once
+			create Result
+		end
 
 end -- class GB_COMPONENT

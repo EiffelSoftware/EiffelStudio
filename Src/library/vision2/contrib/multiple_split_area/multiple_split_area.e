@@ -472,7 +472,7 @@ feature -- Status setting
 			end
 		ensure
 			remove: not linear_representation.has (a_widget)
-			count_decreased: linear_representation.count = old linear_representation.count - 1
+			count_decreased: old linear_representation.has (a_widget) implies linear_representation.count = old linear_representation.count - 1
 		end
 		
 	wipe_out is
@@ -730,7 +730,24 @@ feature -- Status setting
 				parent_window (Current).unlock_update
 			end
 		end
-		
+
+	place_holder_inside_insert_structure (a_holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER): EV_VERTICAL_BOX is
+			-- `Result' is a vertical box containing a vertical box representing `upper_box' of `a_holder',
+			-- `a_holder' itself and a vertical box representing `lower_box' of `a_holder'.
+		require
+			holder_not_void: a_holder /= Void
+		do
+			create Result
+			Result.extend (create {EV_VERTICAL_BOX})
+			Result.extend (a_holder)
+			Result.extend (create {EV_VERTICAL_BOX})
+			Result.disable_item_expand (Result.i_th (1))
+			Result.disable_item_expand (Result.i_th (3))
+		ensure
+			Result_not_void: result /= Void
+			result_filled_correctly: Result.count = 3 and result.i_th (2) = a_holder
+		end
+
 feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 
 	rebuilding_locked: BOOLEAN
@@ -751,10 +768,10 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 				unparent_all_holders
 				all_split_areas.extend (Current)
 				if count = 1 then
-					cell_extend (holder_of_widget (linear_representation.i_th (1)))
+					cell_extend (place_holder_inside_insert_structure (holder_of_widget (linear_representation.i_th (1))))
 				elseif count = 2 then
-					cell_extend (holder_of_widget (linear_representation.i_th (1)))
-					cell_extend (holder_of_widget (linear_representation.i_th (2)))
+					cell_extend (place_holder_inside_insert_structure (holder_of_widget (linear_representation.i_th (1))))
+					cell_extend (place_holder_inside_insert_structure (holder_of_widget (linear_representation.i_th (2))))
 					if top_widget_resizing then
 						enable_item_expand (first)
 						disable_item_expand (second)				
@@ -768,10 +785,10 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 					loop
 						if top_widget_resizing then
 							current_holder := holder_of_widget (linear_representation.i_th (linear_representation.count - linear_representation.index + 1))
-							current_split_area.set_second (current_holder)
+							current_split_area.set_second (place_holder_inside_insert_structure (current_holder))
 						else
 							current_holder := holder_of_widget (linear_representation.item)
-							current_split_area.set_first (current_holder)
+							current_split_area.set_first (place_holder_inside_insert_structure (current_holder))
 						end
 						
 						if linear_representation.index = linear_representation.count - 1 then
@@ -781,10 +798,10 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 							end
 							if top_widget_resizing then
 								current_holder := holder_of_widget (linear_representation.i_th (1))
-								current_split_area.set_first (current_holder)
+								current_split_area.set_first (place_holder_inside_insert_structure (current_holder))
 							else
 								current_holder := holder_of_widget (linear_representation.item)
-								current_split_area.set_second (current_holder)
+								current_split_area.set_second (place_holder_inside_insert_structure (current_holder))
 							end
 						else
 							create split_area
@@ -938,36 +955,38 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 				holder.remove_real_target
 				holder.tool.remove_real_target
 				holder.label_box.remove_real_target
-				box := holder.upper_box
-				from
-					box.start
-				until
-					box.off						
-				loop
-						-- We do not wish to remove any minimized items contained in `upper_box',
-						-- only the cells added during call to `initialize_docking_areas'.
-						-- Therefore, we check that they are cells with data to qualify this.
-					cell ?= box.item
-					if cell /= Void and then cell.data /= Void then
-						box.remove
-					else
-						box.forth
-					end					
-				end
-				box := holder.lower_box
-				from
-					box.start
-				until
-					box.off						
-				loop
-						-- We do not wish to remove any minimized items contained in `upper_box',
-						-- only the cells added during call to `initialize_docking_areas'.
-						-- Therefore, we check that they are cells with data to qualify this.
-					cell ?= box.item
-					if cell /= Void and then cell.data /= Void then
-						box.remove
-					else
-						box.forth
+				if not holder.is_external then
+					box := holder.upper_box
+					from
+						box.start
+					until
+						box.off						
+					loop
+							-- We do not wish to remove any minimized items contained in `upper_box',
+							-- only the cells added during call to `initialize_docking_areas'.
+							-- Therefore, we check that they are cells with data to qualify this.
+						cell ?= box.item
+						if cell /= Void and then cell.data /= Void then
+							box.remove
+						else
+							box.forth
+						end					
+					end
+					box := holder.lower_box
+					from
+						box.start
+					until
+						box.off						
+					loop
+							-- We do not wish to remove any minimized items contained in `upper_box',
+							-- only the cells added during call to `initialize_docking_areas'.
+							-- Therefore, we check that they are cells with data to qualify this.
+						cell ?= box.item
+						if cell /= Void and then cell.data /= Void then
+							box.remove
+						else
+							box.forth
+						end
 					end
 				end
 				all_holders.forth
@@ -1240,7 +1259,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 				remove_tool_from_parent (a_tool)
 				lower_holder := all_holders.i_th (next_non_minimized_down (position_of_tool))
 				transfer_box_contents (a_tool.upper_box, lower_holder.upper_box)
-				lower_holder.upper_box.extend (a_tool)
+				lower_holder.upper_box.extend (a_tool.parent)
 					-- Now transfer all contents of `a_tool' upper bar?
 					-- This would keep all the minimized widgets together in the same box????
 					-- Not sure if it needs to be done.
@@ -1251,7 +1270,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			else
 				remove_tool_from_parent (a_tool)
 				lower_holder := i_th_holder (position_of_tool - 1)
-				lower_holder.lower_box.extend (a_tool)
+				lower_holder.lower_box.extend (a_tool.parent)
 				update_all_minimize_buttons
 			end
 			all_holders.go_to (cursor)
@@ -1462,7 +1481,24 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 		ensure
 			count_increased: new_box.count = old new_box.count + old original_box.count
 		end
-	
+		
+	remove_tool_structure (a_tool: MULTIPLE_SPLIT_AREA_TOOL_HOLDER) is
+			-- `Remove' box containing `a_tool' and its upper and lower bars from
+			-- the boxes parent.
+		require
+			immediate_tool_parent_not_void: a_tool.parent /= Void
+		local
+			l_parent: EV_CONTAINER
+		do
+			l_parent := a_tool.parent
+			check
+				l_parent_not_void: l_parent /= Void
+			end
+			l_parent.parent.prune_all (l_parent)
+		ensure
+			tool_unparented: a_tool.parent.parent = Void
+		end
+
 	remove_tool_from_parent (a_tool: MULTIPLE_SPLIT_AREA_TOOL_HOLDER) is
 			-- Remove `a_tool' from its `parent', and if the parent is a 
 			-- split area, remove empty split areas.
@@ -1471,16 +1507,15 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 		local
 			split_area: EV_SPLIT_AREA
 		do
-			split_area ?= a_tool.parent			
-			a_tool.parent.prune_all (a_tool)
+			split_area ?= a_tool.parent.parent			
+			remove_tool_structure (a_tool)
 				-- We must now unparent the split area if it is empty and
 				-- is the last split area in the control.
 			if split_area /= Void then
 				remove_parent_split_areas_bottom (split_area)	
 			end
-
 		ensure
-			tool_not_parented: a_tool.parent = Void
+			tool_not_parented: a_tool.parent.parent = Void
 		end
 	
 	remove_parent_split_areas_bottom (split_area: EV_SPLIT_AREA) is
@@ -1537,8 +1572,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 				counter := counter + 1
 			end
 		end
-		
-		
+	
 	restore_parent_split_areas (split_area: EV_SPLIT_AREA) is
 			-- Restore all unparented split areas from `split_area',
 			-- until the parent split area is not Void.
@@ -1562,8 +1596,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 				parent_split_area := new_parent_split_area
 			end
 		end
-		
-		
+
 	next_non_minimized_down (current_position: INTEGER): INTEGER is
 			-- `Result' is next index of tool in `Current' from index `current_position'
 			-- that is not minimized or not external.
@@ -1789,10 +1822,23 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			end
 			linear_representation.go_i_th (real_new_position)
 			linear_representation.put_left (widget)
-			if original_position /= 0 then
-				all_holders.go_i_th (original_position)
-				all_holders.remove
+
+				-- Note that we cannot use the same original position for both
+				-- `linear_representation' and `all_holders', as `all_holders' includes
+				-- tools that may be docked externally whereas `linear_representation' does not.
+				-- This was leading to problems where we ended up with the same holder
+				-- container in `all_holders' twice, causing `Current' to crash. Julian.
+			original_position := all_holders.index_of (a_holder, 1)
+			check
+				original_position_not_zero: original_position /= 0
 			end
+			if original_position < new_position then
+				real_new_position := new_position - 1
+			else
+				real_new_position := new_position
+			end
+			all_holders.go_i_th (original_position)
+			all_holders.remove
 			all_holders.go_i_th (real_new_position)
 			all_holders.put_left (a_holder)
 		end
@@ -1965,7 +2011,7 @@ feature {NONE} -- Implementation
 			holder.destroy
 		ensure
 			remove: not linear_representation.has (a_widget)
-			count_decreased: linear_representation.count = old linear_representation.count - 1
+			count_decreased: old linear_representation.has (a_widget) implies linear_representation.count = old linear_representation.count - 1
 		end
 		
 	store_heights_pre_insertion is

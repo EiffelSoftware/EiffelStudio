@@ -353,7 +353,7 @@ feature {NONE} -- Implementation
 						if ef = Void then
 							tree_item.set_text (f_item_name)
 							tree_item.pointer_button_press_actions.force_extend (
-								agent features_tool.go_to_line (fa.line_number))
+								agent features_tool.go_to_line (fa.start_location.line))
 							tree_item.set_pixmap (pixmaps.Icon_feature.item (1))
 						else
 							if is_clickable then

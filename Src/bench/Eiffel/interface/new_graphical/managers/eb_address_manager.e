@@ -96,7 +96,7 @@ feature {NONE} -- Initialization
 
 				-- Class selector.
 			create class_address
-			class_address.set_minimum_width (Layout_constants.Dialog_unit_to_pixels(65))
+			class_address.set_minimum_width (Layout_constants.Dialog_unit_to_pixels(130))
 			hbox.extend (class_address)
 
 				-- Feature label.
@@ -2088,7 +2088,8 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 				not class_address.has_focus and then
 				not feature_address.has_focus and then
 				not cluster_address.has_focus and then
-				not address_dialog.has_focus
+				not address_dialog.has_focus and then
+				not choice.is_show_requested
 			then
 				address_dialog.hide
 			end

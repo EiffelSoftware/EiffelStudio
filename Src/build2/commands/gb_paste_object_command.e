@@ -84,29 +84,32 @@ feature -- Access
 				if selected_window /= Void then
 					parent_object ?= selected_window.object
 				end
-			end	
-			Result := Result and parent_object.accepts_child (clipboard.object_type) and not parent_object.is_full and not parent_object.is_instance_of_top_level_object
-			
-				-- Now ensure that we do not nest an instance of a top level widget in a structure
-				-- that does not permit such nesting, thereby preventing nested inheritance cycles.
+			end
+			Result := Result and parent_object /= Void
 			if Result then
-				if parent_object /= Void then	
-					contents ?= clipboard.contents_cell.item.first
-					contents ?= child_element_by_name (contents, internal_properties_string)
-					full_information := get_unique_full_info (contents)
-					element_info := full_information @ (reference_id_string)
-					if element_info /= Void then
-						top_level_id := element_info.data.to_integer
-					
-						create all_dependents.make (4)
-						actual_object := object_handler.deep_object_from_id (top_level_id)
-						if actual_object /= Void then
-							actual_object.all_dependents_recursive (actual_object, all_dependents)
-							all_dependents.extend (actual_object, actual_object.id)
-							Result := Result and not all_dependents.has (parent_object.id)
-						end
+				Result := Result and parent_object.accepts_child (clipboard.object_type) and not parent_object.is_full and not parent_object.is_instance_of_top_level_object
+				
+					-- Now ensure that we do not nest an instance of a top level widget in a structure
+					-- that does not permit such nesting, thereby preventing nested inheritance cycles.
+				if Result then
+					if parent_object /= Void then	
+						contents ?= clipboard.contents_cell.item.first
+						contents ?= child_element_by_name (contents, internal_properties_string)
+						full_information := get_unique_full_info (contents)
+						element_info := full_information @ (reference_id_string)
+						if element_info /= Void then
+							top_level_id := element_info.data.to_integer
 						
-						Result := Result and parent_object.override_drop_on_child (actual_object)
+							create all_dependents.make (4)
+							actual_object := object_handler.deep_object_from_id (top_level_id)
+							if actual_object /= Void then
+								actual_object.all_dependents_recursive (actual_object, all_dependents)
+								all_dependents.extend (actual_object, actual_object.id)
+								Result := Result and not all_dependents.has (parent_object.id)
+							end
+							
+							Result := Result and parent_object.override_drop_on_child (actual_object)
+						end
 					end
 				end
 			end

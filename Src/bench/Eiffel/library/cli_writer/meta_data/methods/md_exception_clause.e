@@ -3,28 +3,41 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	MD_EXCEPTION_CLAUSE
 
-create
-	make
-	
+inherit
+	REFACTORING_HELPER
+
+feature {NONE} -- Creation
+
+	frozen make is
+			-- Set all fields to "undefined" state.
+		do
+			reset
+		ensure then
+			trye_offste_set: try_offset = -1
+			try_length_set: try_length = -1
+			handler_offset_set: handler_offset = -1
+			handler_length_set: handler_length = -1
+			not_is_defined: not is_defined
+		end
+
 feature -- Reset
 
-	make, reset is
+	reset is
 			-- Restore default values.
 		do
-			start_position := -1
-			catch_position := -1
-			type_token := -1
-			end_position := -1
-			state := Start_state
+			try_offset := -1
+			try_length := -1
+			handler_offset := -1
+			handler_length := -1
 		ensure
-			start_position_set: start_position = -1
-			catch_position_set: catch_position = -1
-			type_token_set: type_token = -1
-			end_position_set: end_position = -1
-			state_set: not is_defined
+			trye_offste_set: try_offset = -1
+			try_length_set: try_length = -1
+			handler_offset_set: handler_offset = -1
+			handler_length_set: handler_length = -1
+			not_is_defined: not is_defined
 		end
 
 feature -- Status report
@@ -32,88 +45,163 @@ feature -- Status report
 	is_defined: BOOLEAN is
 			-- Is current a fully described exception clause?
 		do
-			Result := state = Frozen_state	
+			Result :=
+				try_offset >= 0 and then try_length >= 0 and then
+				handler_offset >= 0 and then handler_length >= 0
+		ensure
+			valid_try_offset: Result implies try_offset >= 0
+			valid_try_length: Result implies try_length >= 0
+			valid_handler_offset: Result implies handler_offset >= 0
+			valid_handler_length: Result implies handler_length >= 0
+		end
+	
+	is_fat: BOOLEAN is
+			-- Has this exception clause to be stored using fat form?
+		require
+			is_defined: is_defined
+		do
+			Result :=
+				try_offset > 65535 or else try_length >= 256 or else
+				handler_offset > 65535 or else handler_length >= 256
+		end
+	
+	flags: INTEGER_16 is
+			-- Flags of exception clause
+		deferred
 		end
 		
 feature -- Access
 
-	start_position: INTEGER
-			-- Starting index of `try-catch' clause in associated MD_METHOD_BODY.
+	try_offset: INTEGER
+			-- Offset in bytes of "try" block from start of associated MD_METHOD_BODY
+
+	try_length: INTEGER
+			-- Length in bytes of "try" block
+
+	handler_offset: INTEGER
+			-- Location of handler for "try" block
 	
-	catch_position: INTEGER
-			-- Index of where `catch' starts.
+	handler_length: INTEGER
+			-- Length of handler code in bytes
 
-	type_token: INTEGER
-			-- Token type on which catch clause will stop.
-			-- Usually token for System.Exception.
-		
-	end_position: INTEGER
-			-- Ending index of `try-catch' clause in associated MD_METHOD_BODY.
-		
-feature -- Settings
+feature {NONE} -- Implementation
 
-	set_start_position (p: INTEGER) is
-			-- Set `start_position' to `p'.
-		require
-			valid_p: p >= 0
-			valid_state: state = Start_state
+	class_token_or_filter_offset: INTEGER is
+			-- Value of `class_token' or `filter_offset' fields depending on type of exception clause
+			-- (0 by default)
 		do
-			start_position := p
-			state := Catch_state
-		ensure
-			start_position_set: start_position = p
-			state_set: state = Catch_state
 		end
 
-	set_catch_position (p: INTEGER) is
-			-- Set `catch_position' to `p'.
+feature -- Modification
+
+	set_try_offset (offset: like try_offset) is
+			-- Set `try_offset' to `offset'.
 		require
-			valid_p: p >= 0
-			valid_state: state = Catch_state
+			valid_offset: offset >= 0
 		do
-			catch_position := p
-			state := Type_state
+			try_offset := offset
 		ensure
-			catch_position_set: catch_position = p
-			state_set: state = Type_state
-		end
-		
-	set_type_token (p: INTEGER) is
-			-- Set `type_token' to `p'.
-		require
-			valid_p: p >= 0
-			valid_state: state = Type_state
-		do
-			type_token := p
-			state := End_state
-		ensure
-			type_token_set: type_token = p
-			state_set: state = End_state
+			try_offset_set: try_offset = offset
 		end
 
-	set_end_position (p: INTEGER) is
-			-- Set `end_position' to `p'.
+	set_try_length (length: like try_length) is
+			-- Set `try_length' to `length'.
 		require
-			valid_p: p >= 0
-			valid_state: state = End_state
+			valid_length: length >= 0
 		do
-			end_position := p
-			state := Frozen_state
+			try_length := length
 		ensure
-			end_position_set: end_position = p
-			state_set: state = Frozen_state
+			try_length_set: try_length = length
 		end
 
-feature -- Implementation
+	set_try_end (offset: like try_offset) is
+			-- Set `try_length' to `offset - try_offset'.
+			-- Convenience routine that can be used instead of `set_try_length'.
+		require
+			try_offset_set: try_offset >= 0
+			valid_offset: offset >= try_offset
+		do
+			try_length := offset - try_offset
+		ensure
+			try_length_set: try_length = offset - try_offset
+		end
 
-	state: INTEGER
-			-- Is current exception block ready for new settings?
+	set_handler_offset (offset: like handler_offset) is
+			-- Set `handler_offset' to `offset'.
+		require
+			valid_offset: offset >= 0
+		do
+			handler_offset := offset
+		ensure
+			handler_offset_set: handler_offset = offset
+		end
 
-	start_state: INTEGER is 1
-	catch_state: INTEGER is 2
-	type_state: INTEGER is 3
-	end_state: INTEGER is 4
-	frozen_state: INTEGER is 5
-			-- Possible state of current object.
+	set_handler_length (length: like handler_length) is
+			-- Set `handler_length' to `length'.
+		require
+			valid_length: length >= 0
+		do
+			handler_length := length
+		ensure
+			handler_length_set: handler_length = length
+		end
 
-end -- class MD_EXCEPTION_CLAUSE
+	set_handler_end (offset: like handler_offset) is
+			-- Set `handler_length' to `offset - handler_offset'.
+			-- Convenience routine that can be used instead of `set_handler_length'.
+		require
+			handler_offset_set: handler_offset >= 0
+			valid_offset: offset >= handler_offset
+		do
+			handler_length := offset - handler_offset
+		ensure
+			handler_length_set: handler_length = offset - handler_offset
+		end
+
+feature -- Measurement
+
+	count (is_fat_form: BOOLEAN): INTEGER is
+			-- Number of bytes when stored in PE file in fat form or small form depending on `is_fat_form'
+		require
+			is_defined: is_defined
+			is_fat_form_enforced: is_fat implies is_fat_form
+		do
+			if is_fat_form then
+				Result := 24
+			else
+				Result := 12
+			end
+		ensure
+			definition: is_fat_form and then Result = 24 or else not is_fat_form and then Result = 12
+		end
+
+feature -- Saving
+
+	write_to_stream (is_fat_form: BOOLEAN; m: MANAGED_POINTER; pos: INTEGER) is
+			-- Write to stream `m' at position `pos' using fat form or small form depending on `is_fat_form'.
+		require
+			is_defined: is_defined
+			is_fat_form_enforced: is_fat implies is_fat_form
+			m_not_void: m /= Void
+			positive_pos: pos > 0
+			valid_pos: pos + count (is_fat_form) <= m.count
+		do
+			fixme ("To be on the safe side (e.g., to avoid sign extension in fat form), `flags' should be declared as NATURAL_16.")
+			if is_fat_form then
+				m.put_integer_32 (flags, pos)
+				m.put_integer_32 (try_offset, pos + 4)
+				m.put_integer_32 (try_length, pos + 8)
+				m.put_integer_32 (handler_offset, pos + 12)
+				m.put_integer_32 (handler_length, pos + 16)
+				m.put_integer_32 (class_token_or_filter_offset, pos + 20)
+			else
+				m.put_integer_16 (flags, pos)
+				m.put_integer_16 (try_offset.to_integer_16, pos + 2)
+				m.put_integer_8 (try_length.to_integer_8, pos + 4)
+				m.put_integer_16 (handler_offset.to_integer_16, pos + 5)
+				m.put_integer_8 (handler_length.to_integer_8, pos + 7)
+				m.put_integer_32 (class_token_or_filter_offset, pos + 8)
+			end
+		end
+
+end

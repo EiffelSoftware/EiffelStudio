@@ -1382,9 +1382,20 @@ feature -- Convenience
 			file_not_void: file /= Void
 			file_is_open_write: file.is_open_write
 			current_is_open_read: is_open_read
+		local
+			l_modulo, l_read, nb: INTEGER
 		do
-			read_stream (count)
-			file.put_string (last_string)
+			from
+				l_read := 0
+				nb := count
+				l_modulo := 51200
+			until
+				l_read >= nb
+			loop
+				read_stream (l_modulo)
+				file.put_string (last_string)
+				l_read := l_read + l_modulo
+			end
 			create last_string.make (256)
 		end
 

@@ -141,12 +141,15 @@ feature -- Status settings
 			-- As the window is modal, nothing can be done
 			-- until the user closed the window.
 		local
-			wel_imp: WEL_WINDOW
+			ww: WEL_WINDOW
+			wid: EV_WIDGET_IMP
 			a_msgboxparams: WEL_MSGBOXPARAMS
 		do
-			wel_imp ?= parent_imp
-			!! a_msgboxparams.make_basic (wel_imp, message, title, dialog_style, LANG_ENGLISH, SUBLANG_ENGLISH_US)
+			ww ?= parent_imp
+			wid := parent_imp.focus_on_widget.item
+			!! a_msgboxparams.make_basic (ww, message, title, dialog_style, LANG_ENGLISH, SUBLANG_ENGLISH_US)
 			message_box_result := cwin_message_box_indirect (a_msgboxparams.item)
+			wid.set_focus
 			dispatch_events (message_box_result)
 		end
 

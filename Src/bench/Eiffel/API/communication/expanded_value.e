@@ -24,13 +24,12 @@ creation {ATTR_REQUEST}
 feature {ATTR_REQUEST}
 
 	make_attribute (attr_name: like name; a_class: like e_class; 
-			type: like dynamic_type_name) is
+			type: like dynamic_type_id) is
 		require
-			not_attr_name_void: attr_name /= Void;
-			not_type_void: type /= Void
+			not_attr_name_void: attr_name /= Void
 		do
 			name := attr_name;
-			dynamic_type_name := type;
+			dynamic_type_id := type;
 			if a_class /= Void then
 				e_class := a_class;
 				is_attribute := True;
@@ -47,16 +46,12 @@ feature -- Access
 
 	dynamic_class: E_CLASS is
 		local
-			class_i: CLASS_I;
-			type_name: STRING
+			class_type: CLASS_TYPE
 		do
 			Result := private_dynamic_class;
 			if Result = Void then
-				type_name := clone (dynamic_type_name);
-				type_name.to_lower;
-				class_i := Eiffel_universe.class_with_name (type_name);
-				if class_i /= Void then
-					Result := class_i.compiled_eclass;
+				if Eiffel_system.valid_dynamic_id (dynamic_type_id) then
+					Result := Eiffel_system.class_of_dynamic_id (dynamic_type_id)
 					private_dynamic_class := Result
 				end
 			end	
@@ -119,7 +114,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	dynamic_type_name: STRING;
+	dynamic_type_id: INTEGER;
 			-- Dynamic type of expanded object
 
 	private_dynamic_class: E_CLASS
@@ -128,7 +123,6 @@ feature {NONE} -- Implementation
 invariant
 
 	is_attribute: is_attribute;
-	attributes_exists: attributes /= Void;
-	dynamic_type_not_void: dynamic_type_name /= Void
+	attributes_exists: attributes /= Void
 
 end -- class EXPANDED_VALUE

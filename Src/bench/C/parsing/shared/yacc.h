@@ -72,7 +72,6 @@ extern int click_size;				/* Current object stack size */
 extern int click_list_push();
 extern char *click_list_new();
 extern void click_list_init();
-extern void click_list_replace();	/* replace reference at given index in c_lick_stack */
 extern int start_position, end_position;
 extern void click_list_set();		/* click_set routine for CLICK_INDIR */
 extern int click_list_start();		/* start_position function of CLICK_INDIR */

@@ -89,14 +89,6 @@ int remembered_index;
 	return (int) ((long (*)()) click_get_start) (click_stack[remembered_index]);
 }
 
-void click_list_replace (object, index)
-char *object;
-int index;
-{
-	/* Replace reference at `index' by `object' */
-	click_stack[index] = object;
-}
-	
 void click_list_set(an_ast, index)
 char *an_ast;
 int index;

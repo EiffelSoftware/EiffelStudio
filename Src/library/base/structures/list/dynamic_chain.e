@@ -175,6 +175,9 @@ feature -- Duplication
 		do
 			from
 				Result := new_chain;
+				if object_comparison then
+					Result.compare_objects
+				end
 				pos := cursor
 			until
 				(counter = n) or else exhausted

@@ -47,10 +47,8 @@ feature {NONE} -- Initialization
 			version := v
 			culture := c
 			key := k
-			location := loc.as_lower
-			location.replace_substring_all ("\\", "\")
-			gac_path := gp.as_lower
-			gac_path.replace_substring_all ("\\", "\")
+			location := format_path (loc)
+			gac_path := format_path (gp)
 			unique_id := id
 			is_in_gac := a_in_gac
 			
@@ -61,8 +59,8 @@ feature {NONE} -- Initialization
 			version_set: version = v
 			culture_set: culture = c
 			key_set: key = k
-			location_set: location = loc.as_lower
-			gac_path_set: gac_path = gp.as_lower
+			location_set: format_path (loc).is_equal (location)
+			gac_path_set: format_path (gp).is_equal (gac_path)
 			unique_id_set: unique_id = id
 			is_in_gac_set: is_in_gac = a_in_gac
 		end
@@ -183,18 +181,48 @@ feature -- Comparison
 		local
 			l_path: STRING
 		do
-			l_path := a_path.as_lower
-			l_path.replace_substring_all ("\\", "\")
+			l_path := format_path (a_path)
 			Result := l_path.is_equal (location) or l_path.is_equal (gac_path)
 		end
+		
+	has_same_ready_formatted_path (a_path: STRING): BOOLEAN is
+			-- does current instance have a path that equals `a_path'.
+			-- This is an optimized version of `has_same_path' that assumes `a_path' has already
+			-- been converted to lower case
+		require
+			not_a_path_is_empty: a_path /= Void
+			a_path_not_void: not a_path.is_empty
+			a_path_is_formatted: a_path.is_equal (format_path (a_path))
+		do
+			Result := a_path.is_equal (location) or a_path.is_equal (gac_path)
+		end
+		
+feature -- Formatting
+
+	format_path (a_path: STRING): STRING is
+			-- Formats `a_path' to produce a comparable path.
+		require
+			a_path_not_void: a_path /= Void
+			not_path_is_empty: not a_path.is_empty
+		do
+			Result := a_path.as_lower
+			Result.replace_substring_all ("\\", "\")
+		ensure
+			result_not_void: Result /= Void
+			not_result_is_empty: not Result.is_empty
+		end		
 
 invariant
 	non_void_assembly_name: name /= Void
+	not_name_is_empty: not name.is_empty
 	non_void_assembly_version: version /= Void
+	not_version_is_empty: not version.is_empty
 	non_void_culture: culture /= Void
 	non_void_key: key /= Void
 	non_void_location: location /= Void
+	not_location_is_empty: not location.is_empty
 	non_void_gac_path: gac_path /= Void
+	not_gac_path_is_empty: not gac_path.is_empty
 	non_void_folder_name: folder_name /= Void
 	valid_folder_name: not folder_name.is_empty
 

@@ -19,21 +19,21 @@ cluster
 				-- that directory on the above line.
 
 		-- EiffelBase:
-	base:				"$EIFFEL4\library\base"
-	structures(base):		"$\structures"
+	base:				"$EIFFEL4/library/base"
+	structures(base):		"$/structures"
 
-	kernel(base):		"$\kernel"
-	support(base):		"$\support"
-	access(structures):	"$\access"
-	cursors(structures):	"$\cursors"
-	dispenser(structures):	"$\dispenser"
-	list(structures):		"$\list"
-	set(structures):		"$\set"
-	sort(structures):		"$\sort"
-	storage(structures):	"$\storage"
-	table(structures):		"$\table"
-	traversing(structures):	"$\traversing"
-	tree(structures):		"$\tree"
+	kernel(base):		"$/kernel"
+	support(base):		"$/support"
+	access(structures):	"$/access"
+	cursors(structures):	"$/cursors"
+	dispenser(structures):	"$/dispenser"
+	list(structures):		"$/list"
+	set(structures):		"$/set"
+	sort(structures):		"$/sort"
+	storage(structures):	"$/storage"
+	table(structures):		"$/table"
+	traversing(structures):	"$/traversing"
+	tree(structures):		"$/tree"
 
 
 end

@@ -17,6 +17,13 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_SHARED_GENERATION_ENVIRONMENT
+		rename
+			free as env_free
+		export
+			{NONE} all
+		end
+
 creation
 	make
 
@@ -38,7 +45,8 @@ feature {NONE} -- Initialization
 			create ace_file_browse_button.make_by_id (Current, Ace_file_browse_button_constant)
 			create project_file_browse_button.make_by_id (Current, Project_file_browse_button_constant)
 			create destination_folder_browse_button.make_by_id (Current, Destination_folder_browse_button_constant)
-			-- create help_button.make_by_id (Current, Help_button_constant)
+			create help_button.make_by_id (Current, Help_button_constant)
+			help_topic_id := 734
 			create id_back.make_by_id (Current, Id_back_constant)
 			create msg_box.make
 		end
@@ -85,6 +93,7 @@ feature -- Behavior
 			elseif ace_file_name = Void or ace_file_name.empty then
 				msg_box.error_message_box (Current, Empty_ace_file, Initialization_error)
 			else
+				shared_wizard_environment.set_project_name (project_name)
 				shared_wizard_environment.set_ace_file_name (ace_file_name)
 
 				if folder_name.item (folder_name.count) = Directory_separator then
@@ -143,22 +152,23 @@ feature -- Basic Operations
 	browse_for_ace_file is
 			-- Browse for Ace file
 		do
-			ace_file_selection_dialog.set_initial_directory ("c:\")
+			ace_file_selection_dialog.set_initial_directory (browse_directory)
 			ace_file_selection_dialog.activate (Current)
 			if ace_file_selection_dialog.selected then
 				ace_file_name_edit.set_text (ace_file_selection_dialog.file_name)
 			end
+			safe_browse_directory_from_dialog (ace_file_selection_dialog)
 		end
 
 	browse_for_project_file is
 			-- Browse for Eiffel file.
 		do
-			File_selection_dialog.set_initial_directory ("c:\")
+			File_selection_dialog.set_initial_directory (browse_directory)
 			File_selection_dialog.activate (Current)
 			if File_selection_dialog.selected then
 				project_file_edit.set_text (file_selection_dialog.file_name)
-				shared_wizard_environment.set_project_name (file_selection_dialog.file_title)
 			end
+			safe_browse_directory_from_dialog (file_selection_dialog)
 		end
 	
 	browse_for_destination_folder is
@@ -168,6 +178,7 @@ feature -- Basic Operations
 			if folder_selection_dialog.selected then
 				destination_folder_edit.set_text (folder_selection_dialog.folder_name)
 			end
+			set_browse_directory (folder_selection_dialog.folder_name)
 		end
 
 	File_selection_dialog: WEL_OPEN_FILE_DIALOG is
@@ -267,6 +278,16 @@ feature {NONE} -- Implementation
 			if shared_wizard_environment.ace_file_name /= Void then
 				ace_file_name_edit.set_text (shared_wizard_environment.ace_file_name)
 			end
+		end
+
+	project_name: STRING is
+			-- Project name
+		local
+			separator_index: INTEGER
+		do
+			Result := project_file_edit.text
+			separator_index := Result.last_index_of (Directory_separator, Result.count)
+			Result.tail (Result.count - separator_index)
 		end
 
 end -- class WIZARD_EIFFEL_PROJECT_FILE_DIALOG

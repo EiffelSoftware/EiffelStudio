@@ -10,6 +10,11 @@ class
 
 inherit
 	EV_COMBO_BOX_I
+		undefine
+			build
+		end
+
+	EV_ITEM_EVENTS_CONSTANTS_IMP
 
 	EV_ITEM_CONTAINER_IMP
 		redefine
@@ -120,8 +125,10 @@ feature -- Access
 
 	selected_item: EV_COMBO_BOX_ITEM is
 			-- Give the item which is currently selected
+			-- It start with a zero index in wel and with a
+			-- one index for the array.
 		do
-			Result ?= (ev_children.i_th (wel_selected_item)).interface
+			Result ?= (ev_children.i_th (wel_selected_item + 1)).interface
 		end
 
 	is_editable: BOOLEAN
@@ -328,6 +335,7 @@ feature {NONE} -- Wel implementation
 			-- The selection is about to be changed.
 		do
 			execute_command (Cmd_activate, Void)
+			(ev_children.i_th (wel_selected_item + 1)).execute_command (Cmd_item_activate, Void)
 		end
 
 	on_cbn_editupdate is

@@ -44,15 +44,6 @@ feature -- Access
 			Result := implementation.selected_text
 		end
 
-	line (i: INTEGER): STRING is
-			-- Returns the content of the `i'th line.
-		require
-			valid_line_index: valid_line_index (i)
-		do
-			Result := implementation.line (i)
-		ensure
-			result_not_void: Result /= Void
-		end
 
 feature -- Status report
 
@@ -104,46 +95,6 @@ feature -- Status report
 			result_small_enough: Result <= text_length
 		end
 
-	line_count: INTEGER is
-			-- Number of lines in widget
-		require
-			exist: not destroyed
-		do
-			Result := implementation.line_count
-		ensure
-			result_greater_zero: Result > 0
-		end 
-
-	first_character_from_line_number (i: INTEGER): INTEGER is
-			-- Position of the first character on the `i'-th line.
-		require
-			exist: not destroyed
-			valid_line: valid_line_index (i)
-		do
-			Result := implementation.first_character_from_line_number (i)
-		ensure
-			valid_character_position: valid_character_position (i)
-		end
-
-	last_character_from_line_number (i: INTEGER): INTEGER is
-			-- Position of the last character on the `i'-th line.
-		require
-			exist: not destroyed
-			valid_line: valid_line_index (i)
-		do
-			Result := implementation.last_character_from_line_number (i)
-		ensure
-			valid_character_position: valid_character_position (i)
-		end
-
-
-	valid_line_index (i: INTEGER): BOOLEAN is
-			-- Is `i' a valid line index?
-		require
-			exist: not destroyed
-		do
-			Result := i > 0 and i < line_count
-		end
 
 	valid_character_position (pos: INTEGER): BOOLEAN is
 		require
@@ -263,18 +214,6 @@ feature -- Basic operation
 			has_selection: has_selection
 			selection_start_set: selection_start = 1
 			selection_end_set: selection_end <= text_length + 2
-		end
-
-	select_lines (first_line, last_line: INTEGER) is
-			-- Select all lines from `first_line' to `last_line'.
-		require
-			exist: not destroyed
-			valid_line_index: valid_line_index (first_line) and valid_line_index (last_line)
-		do
-			select_region (first_character_from_line_number (first_line), 
-								last_character_from_line_number (last_line))
-		ensure
-			has_selection: has_selection
 		end
 
 	deselect_all is

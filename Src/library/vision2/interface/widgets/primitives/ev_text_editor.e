@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			!! color.make_rgb (0, 0, 255)
 			Result.set_color (color)
 			!! font.make_by_name ("Courier New")
-			font.set_height (10)
+			font.set_height (0)
 			Result.set_font (font)
 			Result.set_bold (False)
 		end
@@ -49,6 +49,7 @@ feature {NONE} -- Initialization
 			{EV_RICH_TEXT} Precursor (par)
 			
 			add_text_editor_commands
+			set_text ("Ln1%R%NLn2")
 			select_all
 			set_character_format (test_font)
 			deselect_all
@@ -361,7 +362,7 @@ feature {NONE} -- Implementation
 				key_data.keycode = Key_o
 			then
 				if
-					key_data.control_key_pressed
+					key_data.control_key_pressed and has_selection
 				then
 						-- Trigger comment lines event
 					if 
@@ -375,7 +376,7 @@ feature {NONE} -- Implementation
 				key_data.keycode = Key_p
 			then
 				if
-					key_data.control_key_pressed
+					key_data.control_key_pressed and has_selection
 				then
 						-- Trigger decomment lines event
 					if 

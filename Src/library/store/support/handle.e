@@ -26,7 +26,7 @@ feature -- Status report
 	all_types: DB_ALL_TYPES is
 			-- All data types available in active database
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_not_void: Result /= Void
 		end

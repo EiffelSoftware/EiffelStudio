@@ -74,21 +74,21 @@ feature {NONE} -- Status report
 	name_table_size_ref: INTEGER_REF is
 			-- Shared integer object holding a value
 		once
-			!! Result
+			create Result
 			Result.set_item (Default_name_table_size)
 		end
 
 	selection_string_size_ref: INTEGER_REF is
 			-- Shared integer reference object holding a value
 		once
-			!! Result
+			create Result
 			Result.set_item (Default_selection_string_size)
 		end
 
 	parsed_string_size_ref: INTEGER_REF is
 			-- Shared integer object holding a value
 		once
-			!! Result
+			create Result
 			Result.set_item (Default_parsed_string_size)
 		end
 

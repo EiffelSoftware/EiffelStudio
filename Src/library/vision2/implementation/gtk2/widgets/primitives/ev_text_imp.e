@@ -25,7 +25,9 @@ inherit
 			create_change_actions,
 			dispose,
 			text_length,
-			remove_selection_on_lose_focus
+			remove_selection_on_lose_focus,
+			default_key_processing_blocked,
+			visual_widget
 		end
 		
 	EV_FONTABLE_IMP
@@ -406,6 +408,7 @@ feature -- Status setting
 		end
 	
 	set_text (a_text: STRING) is
+			-- Set `text' to `a_text'
 		local
 			a_cs: EV_GTK_C_STRING
 		do
@@ -448,6 +451,7 @@ feature -- Status setting
 feature -- Basic operation
 
 	scroll_to_line (i: INTEGER) is
+			-- Scroll `Current' to line number `i'
 		local
 			a_iter: EV_GTK_TEXT_ITER_STRUCT
 		do
@@ -457,7 +461,7 @@ feature -- Basic operation
 		end
 		
 	enable_word_wrapping is
-			-- 
+			-- Enable word wrapping for `Current'
 		do
 			-- Make sure only vertical scrollbar is showing
 			feature {EV_GTK_EXTERNALS}.gtk_scrolled_window_set_policy (
@@ -470,7 +474,7 @@ feature -- Basic operation
 		end
 		
 	disable_word_wrapping is
-			--
+			-- Disable word wrapping for `Current'
 		do
 			-- Make sure both scrollbars are showing
 			feature {EV_GTK_EXTERNALS}.gtk_scrolled_window_set_policy (
@@ -483,6 +487,18 @@ feature -- Basic operation
 		end
 		
 feature {NONE} -- Implementation
+
+	default_key_processing_blocked (a_key: EV_KEY): BOOLEAN is
+			--	Does `a_key' require gtk default key processing to be blocked?
+		do
+			-- Do nothing
+		end
+
+	visual_widget: POINTER is
+			-- Pointer to the GtkWidget representing `Current'
+		do
+			Result := text_view
+		end
 
 	remove_selection_on_lose_focus: BOOLEAN is
 			-- Should `Current' lose selection when focus is lost?

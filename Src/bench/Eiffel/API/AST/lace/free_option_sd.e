@@ -16,7 +16,8 @@ inherit
 		end;
 	SHARED_RESCUE_STATUS;
 	SHARED_DYNAMIC_CALLS;
-	EIFFEL_ENV
+	EIFFEL_ENV;
+	SHARED_BENCH_LICENSES
 
 feature {NONE} -- Initialization
 
@@ -41,14 +42,11 @@ feature -- Properties
 feature {COMPILER_EXPORTER}
 
 	is_valid: BOOLEAN is
-		local
-			dle_license: DLE_LICENSE
 		do
 			if valid_options.has (option_name) then
 				inspect valid_options.item (option_name)
 				when extending, extendible then
-					!! dle_license.make;
-					Result := dle_license.licensed
+					Result := dle_licensed
 -- FIXME: more explicit message
 -- FIXME: more explicit message
 -- FIXME: more explicit message

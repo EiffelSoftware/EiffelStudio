@@ -49,7 +49,6 @@ feature {NONE} -- Initialization
 		local
 			temp: STRING
 			new_resources: TTY_RESOURCES
-			expiration: INTEGER
 		do
 			if not retried then
 					-- Check that environment variables
@@ -69,13 +68,8 @@ feature {NONE} -- Initialization
 
 					-- Call `init_license' only if `licensed' is `True'
 				if not licensed or else init_license then
-					if not license.is_unlimited then
-					expiration := license.time_left
-						if expiration <= 30 then
-							io.error.putstring ("Your license will expire in ")
-							io.error.putint (expiration)
-							io.error.putstring (" days.%N")
-						end
+					if has_limited_license then
+						io.error.putstring (expiration_message)
 					end
 						-- Read the resource files
 					!! new_resources.initialize;

@@ -15,12 +15,11 @@ inherit
 		rename
 			extendible_directory as shared_extendible_directory
 		end;
-	SHARED_WORKBENCH
+	COMPILER_EXPORTER;
+	SHARED_BENCH_LICENSES
 		redefine
 			lace, system, universe
 		end;
-	COMPILER_EXPORTER;
-	SHARED_BENCH_LICENSES;
 	SHARED_EIFFEL_PROJECT
 		rename
 			system_defined as eiffel_system_defined
@@ -491,55 +490,6 @@ feature {NONE} -- Automatic Backup
 
 	new_session: BOOLEAN
 		-- Is it the first compilation in the session?
-
-feature {NONE} -- Licensing
-
-	check_precompiled_licenses is
-			-- Check the precompiled licenses
-		local
-			precomp_dirs: like precompiled_directories
-			r: REMOTE_PROJECT_DIRECTORY
-			l: LIBRARY_LICENSE
-			precomp_name: STRING
-		do
-			precomp_dirs := precompiled_directories
-			from
-				precomp_dirs.start
-			until
-				precomp_dirs.after
-			loop
-				r := precomp_dirs.item_for_iteration
-
-				debug ("LIMAN")
-					io.error.putstring ("Precompilation ");
-					if r.system_name /= Void then
-						io.error.putstring (r.system_name)
-					else
-						io.error.putstring ("Void system name!!!!")
-					end
-					if r.licensed then
-						io.error.putstring (" is licensed%N")
-					else
-						io.error.putstring (" is not licensed%N")
-					end
-				end
-
-				if r.licensed then
-					precomp_name := r.system_name
-					l ?= licenses.item (precomp_name)
-					if l = Void then
-						!! l.make
-						l.set_library_name (precomp_name)
-						l.get_license
-						licenses.put (l, precomp_name)
-					end
-					if not l.licensed then
-						io.error.putstring ("No license!!!%N")
-					end
-				end
-				precomp_dirs.forth
-			end
-		end
 
 feature {NONE} -- Externals
 

@@ -411,21 +411,6 @@ feature {COMPILER_EXPORTER} -- Setting
 			suppliers := s
 		end;
   
-	set_comments (c: EIFFEL_FILE) is
-		do
-                        if features /= Void and then c /= Void then
-                                from
-                                        features.start
-                                until
-                                        features.after
-                                loop
-                                        features.item.set_comments (c)
-                                        features.forth
-                                end
-                        end
-                end;
-	
-
 feature {NONE} -- Implementation
 
 	features_simple_format (ctxt :FORMAT_CONTEXT) is

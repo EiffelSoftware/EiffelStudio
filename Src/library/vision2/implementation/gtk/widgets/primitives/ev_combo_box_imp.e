@@ -221,7 +221,7 @@ feature -- Status setting
 	
 	select_region (start_pos, end_pos: INTEGER) is
 		do
-			C.gtk_entry_select_region (entry_widget, start_pos-1, end_pos)
+			C.gtk_entry_select_region (entry_widget, start_pos - 1, end_pos)
 		end	
 
 	set_extended_height (value: INTEGER) is
@@ -332,6 +332,9 @@ end -- class EV_COMBO_BOX_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/02/15 19:23:51  king
+--| Tidied up code in select_region
+--|
 --| Revision 1.18  2000/02/14 20:38:35  oconnor
 --| mergerd from HACK-O-RAMA
 --|

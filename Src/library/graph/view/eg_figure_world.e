@@ -1017,12 +1017,16 @@ feature {NONE} -- Implementation
 			-- | Used for starting multiple selection.
 		do
 			if button = 1 and then not figure_was_selected and then ev_application.ctrl_pressed and then is_multiple_selection_enabled then
+				if is_multiselection_mode then
+					prune_all (multi_select_rectangle)
+				end
 				create multi_select_rectangle.make_with_positions (ax, ay, ax, ay)
 				multi_select_rectangle.enable_dashed_line_style
 				extend (multi_select_rectangle)
 				is_multiselection_mode := True
 				selected_figure := multi_select_rectangle
 				deselect_all
+				enable_capture
 			elseif button = 1 and then selected_figure /= Void then
 				is_figure_moved := True
 				figure_change_start_actions.call (Void)
@@ -1060,6 +1064,7 @@ feature {NONE} -- Implementation
 				prune_all (multi_select_rectangle)
 				full_redraw
 				is_multiselection_mode := False
+				disable_capture
 			end
 			if is_figure_moved then
 				figure_change_end_actions.call (Void)

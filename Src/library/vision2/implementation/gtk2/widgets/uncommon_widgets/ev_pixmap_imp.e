@@ -131,10 +131,9 @@ feature -- Element change
 	read_from_named_file (file_name: STRING) is
 			-- Attempt to load pixmap data from a file specified by `file_name'.
 		local
-			a_cs: EV_GTK_C_UTF8_STRING
+			a_cs: EV_GTK_C_STRING
 			g_error: POINTER
 			pixbuf: POINTER
-			a_gdkpix, a_gdkmask: POINTER
 		do
 			create a_cs.make (file_name)
 			pixbuf := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_new_from_file (a_cs.item, $g_error)
@@ -142,8 +141,7 @@ feature -- Element change
 				-- We could not load the image so raise an exception
 				(create {EXCEPTIONS}).raise ("Could not load image file.")
 			else
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_render_pixmap_and_mask (pixbuf, $a_gdkpix, $a_gdkmask, 0)
-				set_pixmap (a_gdkpix, a_gdkmask)
+				set_pixmap_from_pixbuf (pixbuf)
 				feature {EV_GTK_DEPENDENT_EXTERNALS}.object_unref (pixbuf)
 			end
 		end
@@ -163,8 +161,8 @@ feature -- Element change
 			a_gdkpix, a_gdkmask, a_gdkpixbuf: POINTER
 		do
 			a_gdkpixbuf := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_get_from_drawable (default_pointer, drawable, default_pointer, 0, 0, 0, 0, -1, -1)
-			a_gdkpixbuf := gdk_pixbuf_scale_simple (a_gdkpixbuf, a_x, a_y)
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_render_pixmap_and_mask (a_gdkpixbuf, $a_gdkpix, $a_gdkmask, 0)
+			a_gdkpixbuf := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_scale_simple (a_gdkpixbuf, a_x, a_y, feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_interp_bilinear)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_render_pixmap_and_mask (a_gdkpixbuf, $a_gdkpix, $a_gdkmask, 255)
 			set_pixmap (a_gdkpix, a_gdkmask)
 			feature {EV_GTK_EXTERNALS}.object_unref (a_gdkpixbuf)
 		end
@@ -240,7 +238,7 @@ feature -- Access
 					(array_offset \\ (a_width)), -- Zero based X coord
 					((array_offset) // a_width) -- Zero based Y coord
 				)
-				feature {EV_GTK_EXTERNALS}.c_gdk_colormap_query_color (a_color_map, a_pixel, a_color)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_colormap_query_color (a_color_map, a_pixel, a_color)
 				-- RGB values of a_color are 16 bit.
 				if n_character = 8 then
 					n_character := 0
@@ -301,7 +299,7 @@ feature -- Access
 					(array_offset \\ (a_width) // 4), -- Zero based X coord
 					((array_offset) // a_width) -- Zero based Y coord
 				)
-				feature {EV_GTK_EXTERNALS}.c_gdk_colormap_query_color (a_color_map, a_pixel, a_color)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_colormap_query_color (a_color_map, a_pixel, a_color)
 				-- RGB values of a_color are 16 bit.
 				array_area.put ((feature {EV_GTK_EXTERNALS}.gdk_color_struct_red (a_color) // 256).to_character, array_offset)
 				array_area.put ((feature {EV_GTK_EXTERNALS}.gdk_color_struct_green (a_color) // 256).to_character, array_offset + 1)
@@ -386,14 +384,45 @@ feature {EV_STOCK_PIXMAPS_IMP, EV_PIXMAPABLE_IMP} -- Implementation
 			set_pixmap (gdkpix, gdkmask)
 		end
 
+	set_from_stock_id (a_stock_id: POINTER) is
+			-- Pixmap symbolizing a piece of information
+		require
+			a_stock_id_not_null: a_stock_id /= NULL
+		local
+			a_drawable_pixbuf, a_pixbuf: POINTER
+		do
+			set_size (48, 48)
+			a_pixbuf := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_render_icon (gtk_image, a_stock_id, gtk_icon_size_dialog, NULL)
+			a_pixbuf := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_scale_simple (a_pixbuf, 48, 48, feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_interp_bilinear)		
+			a_drawable_pixbuf := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_get_from_drawable (default_pointer, drawable, default_pointer, 0, 0, 0, 0, -1, -1)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_composite (a_pixbuf, a_drawable_pixbuf, 0, 0, -1, -1, 1, 1, 1, 1, feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_interp_bilinear, 0)
+			set_pixmap_from_pixbuf (a_pixbuf)
+		end
+
+	gtk_icon_size_dialog: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GTK_ICON_SIZE_DIALOG"
+		end		
+
 feature {NONE} -- Implementation
+
+	set_pixmap_from_pixbuf (a_pixbuf: POINTER) is
+			-- 
+		local
+			a_gdkpix, a_gdkmask: POINTER
+		do
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_render_pixmap_and_mask (a_pixbuf, $a_gdkpix, $a_gdkmask, 255)
+			set_pixmap (a_gdkpix, a_gdkmask)			
+		end
 
 	save_to_named_file (a_format: EV_GRAPHICAL_FORMAT; a_filename: FILE_NAME) is
 			-- 
 		local
 			a_gdkpixbuf: POINTER
 			a_gerror: POINTER
-			a_handle, a_filetype: EV_GTK_C_UTF8_STRING
+			a_handle, a_filetype: EV_GTK_C_STRING
 		do			
 			if app_implementation.writeable_pixbuf_formats.has (a_format.file_extension.as_upper) then
 				-- Perform custom saving with GdkPixbuf
@@ -401,7 +430,7 @@ feature {NONE} -- Implementation
 				create a_handle.make (a_filename)
 				create a_filetype.make (a_format.file_extension)
 				if a_format.scale_width > 0 and then a_format.scale_height > 0 then
-					a_gdkpixbuf := gdk_pixbuf_scale_simple (a_gdkpixbuf, a_format.scale_width, a_format.scale_height)
+					a_gdkpixbuf := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_scale_simple (a_gdkpixbuf, a_format.scale_width, a_format.scale_height, feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_interp_bilinear)
 				end
 				feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_save (a_gdkpixbuf, a_handle.item, a_filetype.item, $a_gerror)
 				if a_gerror /= default_pointer then
@@ -462,13 +491,6 @@ feature {NONE} -- Externals
 			"C | %"ev_c_util.h%""
 		alias
 			"default_pixmap_xpm"
-		end
-
-	gdk_pixbuf_scale_simple (a_gdkpixbuf: POINTER; a_width, a_height: INTEGER): POINTER is
-		external
-			"C inline use <gtk/gtk.h>"
-		alias
-			"gdk_pixbuf_scale_simple ((GdkPixbuf*) $a_gdkpixbuf, (int) $a_width, (int) $a_width, GDK_INTERP_BILINEAR)"
 		end
 
 feature {NONE} -- Constants

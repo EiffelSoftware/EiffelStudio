@@ -9,13 +9,10 @@ class
 
 inherit
 	SCALE_I
-		rename
-			value as position,
-			set_value as set_position
-		end						
 
 	PRIMITIVE_WINDOWS
 		redefine
+			set_width,
 			on_size
 		end
 
@@ -98,8 +95,23 @@ feature -- Access
 			-- Value of the amount to move the slider and modifie 
 			-- the slide position value when a move action occurs
 
-	position: INTEGER
+	value: INTEGER
 			-- Return current position of the slider
+
+	set_width (new_width: INTEGER) is
+			-- Set width to `new_width'.
+		do
+			if private_attributes.width /= new_width then
+				private_attributes.set_width (new_width)
+				if exists then
+					wel_set_width (new_width)
+					scroll_bar.set_width (new_width)
+				end;
+				if parent /= Void then
+					parent.child_has_resized
+				end
+			end
+		end
 
 feature -- Status report
 
@@ -182,6 +194,8 @@ feature -- Status setting
 					if width = 0 then set_width (20) end
 					!! text_static.make (Current, text, scroll_width + value_width, 0,(width  - value_width - scroll_width).max (0), 0, id_default)
 					!! value_static.make (Current, "", 0, 0, 0, 0, id_default)
+					value_static.set_style (Ws_visible + Ws_child + Ws_group +
+						Ws_tabstop + Ss_right)
 					!! scroll_bar.make_vertical (Current, value_width, 0, scroll_width, height, scroll_bar_id)
 				end
 				if not is_value_shown then 
@@ -240,8 +254,6 @@ feature -- Element change
 			if exists then
 				scroll_bar.set_range (minimum, maximum)
 			end
-		ensure then
-			minimum = a_min
 		end
 
 	set_maximum_right_bottom (flag: BOOLEAN) is
@@ -252,15 +264,17 @@ feature -- Element change
 			is_maximum_right_bottom := flag
 		end
 
-	set_position (a_value: INTEGER) is
+	set_value (a_value: INTEGER) is
 			-- Set the position of the scroll bar to `a_value'.
 		do
-			position := a_value
+			value := a_value
 			if exists then
-				scroll_bar.set_position (a_value)
+				if is_maximum_right_bottom then
+					scroll_bar.set_position (a_value)
+				else
+					scroll_bar.set_position (maximum - a_value + minimum)
+				end
 			end
-		ensure then
-			position = a_value
 		end
 
 	set_default is
@@ -366,46 +380,46 @@ feature {NONE} -- Implementation
 			if not is_output_only then
 				if is_maximum_right_bottom then
 					if scroll_code = Sb_linedown or else scroll_code = Sb_lineright then
-						position := (position + granularity).min (maximum)
+						value := (value + granularity).min (maximum)
 					elseif  scroll_code = Sb_pagedown or else scroll_code = Sb_pageright then
-						position := (position + granularity * 10).min (maximum)
+						value := (value + granularity * 10).min (maximum)
 					elseif  scroll_code = Sb_lineup or else scroll_code = Sb_lineleft then
-						position := (position - granularity).max (minimum)
+						value := (value - granularity).max (minimum)
 					elseif  scroll_code = Sb_pageup or else scroll_code = Sb_pageleft then
-						position := (position - granularity * 10).max (minimum)
+						value := (value - granularity * 10).max (minimum)
 					elseif scroll_code = Sb_bottom or else scroll_code = Sb_right then
-						position := maximum
+						value := maximum
 					elseif scroll_code = Sb_top or else scroll_code = Sb_left then
-						position := minimum
+						value := minimum
 					elseif scroll_code = Sb_thumbposition then
-						position := a_position
+						value := a_position
 					elseif scroll_code = Sb_thumbtrack then
-						position := a_position
+						value := a_position
 						!! scale_data.make (widget_oui)
 						move_actions.execute (Current, scale_data)
 					end
-					bar.set_position (position)
+					set_value (value)
 				else
 					if scroll_code = Sb_linedown or else scroll_code = Sb_lineright then
-						position := (position - granularity).max (minimum)
+						value := (value - granularity).max (minimum)
 					elseif  scroll_code = Sb_pagedown or else scroll_code = Sb_pageright then
-						position := (position - granularity * 10).max (minimum)
+						value := (value - granularity * 10).max (minimum)
 					elseif  scroll_code = Sb_lineup or else scroll_code = Sb_lineleft then
-						position := (position + granularity).min (maximum)
+						value := (value + granularity).min (maximum)
 					elseif  scroll_code = Sb_pageup or else scroll_code = Sb_pageleft then
-						position := (position + granularity * 10).min (maximum)
+						value := (value + granularity * 10).min (maximum)
 					elseif scroll_code = Sb_bottom or else scroll_code = Sb_right then
-						position := minimum
+						value := minimum
 					elseif scroll_code = Sb_top or else scroll_code = Sb_left then
-						position := maximum
+						value := maximum
 					elseif scroll_code = Sb_thumbposition then
-						position := maximum - a_position
+						value := maximum - a_position
 					elseif scroll_code = Sb_thumbtrack then
-						position := maximum - a_position
+						value := maximum - a_position
 						!! scale_data.make (widget_oui)
 						move_actions.execute (Current, scale_data)
 					end
-					bar.set_position (maximum - position)
+					set_value (maximum - value)
 				end
 				update_value_static
 				!! scale_data.make (widget_oui)
@@ -418,22 +432,22 @@ feature {NONE} -- Implementation
 		require
 			exists: exists
 		do
-			value_static.set_text (position.out)
+			value_static.set_text (value.out)
 			if is_horizontal then
 				if not is_maximum_right_bottom then
 					value_static.resize (value_width, text_height)
-					value_static.move (((width - value_width) * (maximum - position)) // (maximum - minimum), 0)
+					value_static.move (((width - value_width) * (maximum - value)) // (maximum - minimum), 0)
 				else
 					value_static.resize (value_width, text_height)
-					value_static.move (((width - value_width) * (position - minimum)) // (maximum - minimum), 0)
+					value_static.move (((width - value_width) * (value - minimum)) // (maximum - minimum), 0)
 				end
 			else
 				if not is_maximum_right_bottom then
 					value_static.resize (value_width, text_height)
-					value_static.move (0, ((height - text_height) * (maximum - position)) // (maximum - minimum))
+					value_static.move (0, ((height - text_height) * (maximum - value)) // (maximum - minimum))
 				else
 					value_static.resize (value_width, text_height)
-					value_static.move (0, ((height - text_height) * (position - minimum)) // (maximum - minimum))
+					value_static.move (0, ((height - text_height) * (value - minimum)) // (maximum - minimum))
 				end
 			end
 		end	
@@ -459,11 +473,17 @@ feature {NONE} -- Implementation
 	value_width: INTEGER is 40
 			-- default value of the value static
 
-	scroll_width: INTEGER is 12
+	scroll_width: INTEGER is
 			-- default width of a vertical scroll bar
+		do
+			Result := (width - 40).max (15)
+		end
 
-	scroll_height: INTEGER is 12
+	scroll_height: INTEGER is
 			-- default width of a vertical scroll bar
+		do
+			Result := (height - 40).max (15)
+		end
 
 	wel_font: WEL_FONT
 

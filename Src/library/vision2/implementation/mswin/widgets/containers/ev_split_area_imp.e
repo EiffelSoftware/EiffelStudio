@@ -425,11 +425,11 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	splitter_brush: WEL_BRUSH is
-			-- Create the brush used to draw the invert splitter.
+	splitter_string_bitmap: STRING is
+			-- `Result' is a STRING used to generate the splitter
+			-- brush used in the redrawing of the splitter while
+			-- movement is underway.
 		local
-			bitmap: WEL_BITMAP
-			string_bitmap: STRING
 			i: INTEGER
 		once
 				-- We create a bitmap 8x8 which follows the pattern:
@@ -440,22 +440,25 @@ feature {NONE} -- Implementation
 				-- value aligned on DWORD, we have gap in our strings.
 
 				-- Creating data of bitmaps
-			create string_bitmap.make (16)
-			string_bitmap.fill_blank
+			create Result.make (16)
+			Result.fill_blank
 			from
 				i := 1
 			until
 				i > 16
 			loop	
-				string_bitmap.put ((0x000000AA).to_character, i)
-				string_bitmap.put ((0x00000055).to_character, i + 2)
+				Result.put ((0x000000AA).to_character, i)
+				Result.put ((0x00000055).to_character, i + 2)
 				i := i + 4
 			end
-
-				-- Then, we create the brush
-			create bitmap.make_direct (8, 8, 1, 1, string_bitmap)
-			create Result.make_by_pattern (bitmap)
+		ensure
+			result_not_void: Result /= Void
 		end
+		
+	splitter_brush: WEL_BRUSH
+		-- Brush used to redraw the splitter while it is moving.
+		-- Created and destroyed at the start and end of splitter resizing.
+		-- Prevents keeping a reference to GDI objects when not required.
 
 feature {EV_ANY_I}
 

@@ -105,6 +105,13 @@ feature -- Access
 		alias
 			"UDM_SETRANGE"
 		end
+		
+	Udm_setrange32: INTEGER is 1135
+			-- Sets the minimum and maximum positions (range) for
+			-- an up-down control.
+		
+	Udm_getpos32: INTEGER is 1138
+			-- Retrieves the current position of an up-down control.
 
 end -- class WEL_UDM_CONSTANTS
 

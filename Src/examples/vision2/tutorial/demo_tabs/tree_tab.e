@@ -24,6 +24,7 @@ feature -- Initialization
 		local
 			cmd1,cmd2: EV_ROUTINE_COMMAND
 				-- Commands used by the tab.
+			h1: EV_HORIZONTAL_SEPARATOR
 			
 		do
 			{ANY_TAB} Precursor (Void)
@@ -34,9 +35,12 @@ feature -- Initialization
 			create cmd2.make (~selected_item)
 			create f3.make (Current, 2, 0, "Selected Item", Void, cmd2)
 			create cmd1.make (~remove_tree)
+			create h1.make (Current)
+			set_child_position (h1, 3, 0, 4, 3)
 			create b1.make_with_text (Current, "Remove All Children")
 			b1.set_vertical_resize (False)
 			b1.add_click_command (cmd1, Void)
+			set_child_position (b1, 4, 1, 5, 2)
 
 			set_parent (par)			
 			end

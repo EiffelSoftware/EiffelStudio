@@ -1232,6 +1232,17 @@ end;
 					-- New feature id since the old feature table
 					-- doesn't have an entry `feature_name'
 				give_new_feature_id (f);
+
+					-- We reactivate `body_index' in case `old_feature' is Void because
+					-- it was removed in `compute_feature_table' as it was not valid
+					-- anymore (Most likely because its signature had some classes
+					-- which have been moved to a different location and those
+					-- classes have now a different `class_id' which makes it not a
+					-- valid feature anymore).
+					--| The only issue when performing this call is that in a compilation
+					--| from scratch it is useless, but we do not have much choice in
+					--| case of incremental compilation.
+				Tmp_body_server.reactivate (f.body_index)
 			else
 					-- Take the old feature id
 				f.set_feature_id (old_feature.feature_id);

@@ -35,7 +35,7 @@ feature -- Status report
 	is_editable: BOOLEAN is
 			-- Is the text editable.
 		do
-			Result := C.gtk_editable_struct_editable (entry_widget) /= 0
+			Result := C.gtk_editable_get_editable (entry_widget)
 		end
 
 	position: INTEGER is
@@ -47,8 +47,8 @@ feature -- Status report
 	has_selection: BOOLEAN is
 			-- Is something selected?
 		do
-			Result := C.gtk_editable_struct_selection_start_pos (entry_widget) /= 
-				C.gtk_editable_struct_selection_end_pos (entry_widget)
+			Result := C.gtk_editable_struct_selection_start (entry_widget) /= 
+				C.gtk_editable_struct_selection_end (entry_widget)
 		end
 
 	selection_start: INTEGER is
@@ -56,8 +56,8 @@ feature -- Status report
 		local
 			a_start: INTEGER
 		do
-			a_start := C.gtk_editable_struct_selection_start_pos (entry_widget)
-			Result := a_start.min (C.gtk_editable_struct_selection_end_pos (entry_widget)) + 1
+			a_start := C.gtk_editable_struct_selection_start (entry_widget)
+			Result := a_start.min (C.gtk_editable_struct_selection_end (entry_widget)) + 1
 		end
 
 	selection_end: INTEGER is
@@ -65,8 +65,8 @@ feature -- Status report
 		local
 			a_start: INTEGER
 		do
-			a_start := C.gtk_editable_struct_selection_start_pos (entry_widget)
-			Result := a_start.max (C.gtk_editable_struct_selection_end_pos (entry_widget))
+			a_start := C.gtk_editable_struct_selection_start (entry_widget)
+			Result := a_start.max (C.gtk_editable_struct_selection_end (entry_widget))
 		end
 
 	maximum_character_width: INTEGER is

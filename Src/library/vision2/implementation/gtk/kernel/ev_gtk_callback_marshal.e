@@ -95,7 +95,7 @@ feature {EV_ANY_IMP} -- Access
 				gdk_event := gtk_value_pointer (args)
 				if 
 					gdk_event = NULL or else
-					C.gdk_event_any_struct_type (gdk_event) /= C.GDK_3BUTTON_PRESS_ENUM
+					feature {EV_GTK_EXTERNALS}.gdk_event_any_struct_type (gdk_event) /= feature {EV_GTK_EXTERNALS}.GDK_3BUTTON_PRESS_ENUM
 				then
 					print ("FIXME " + an_agent.generating_type + " in " + generating_type + " not called%N")
 				end
@@ -143,25 +143,23 @@ feature {EV_ANY_IMP} -- Access
 			p: POINTER
 			keyval: INTEGER
 			key: EV_KEY
-			local_c: EV_GTK_EXTERNALS
 		do
-			local_c := C
 			gdk_event := gtk_value_pointer (args)
 			
-			if local_C.gdk_event_any_struct_type (gdk_event) < 100000 then
+			if feature {EV_GTK_EXTERNALS}.gdk_event_any_struct_type (gdk_event) < 100000 then
 			inspect
-				local_C.gdk_event_any_struct_type (gdk_event)
+				feature {EV_GTK_EXTERNALS}.gdk_event_any_struct_type (gdk_event)
 			when
 				Gdk_motion_notify_enum
 			then
 				set_motion_tuple (
-					local_C.gdk_event_motion_struct_x (gdk_event).truncated_to_integer,
-					local_C.gdk_event_motion_struct_y (gdk_event).truncated_to_integer,
-					0.5,--local_C.gdk_event_motion_struct_xtilt (gdk_event),
-					0.5,--local_C.gdk_event_motion_struct_ytilt (gdk_event),
-					0.5,--local_C.gdk_event_motion_struct_pressure (gdk_event),
-					local_C.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer,
-					local_C.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer
+					feature {EV_GTK_EXTERNALS}.gdk_event_motion_struct_x (gdk_event).truncated_to_integer,
+					feature {EV_GTK_EXTERNALS}.gdk_event_motion_struct_y (gdk_event).truncated_to_integer,
+					0.5,--feature {EV_GTK_EXTERNALS}.gdk_event_motion_struct_xtilt (gdk_event),
+					0.5,--feature {EV_GTK_EXTERNALS}.gdk_event_motion_struct_ytilt (gdk_event),
+					0.5,--feature {EV_GTK_EXTERNALS}.gdk_event_motion_struct_pressure (gdk_event),
+					feature {EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer,
+					feature {EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer
 				)
 				Result := motion_tuple
 			when
@@ -181,12 +179,12 @@ feature {EV_ANY_IMP} -- Access
 			when
 				Gdk_expose_enum
 			then
-				p := local_C.gdk_event_expose_struct_area (gdk_event)
+				p := feature {EV_GTK_EXTERNALS}.gdk_event_expose_struct_area (gdk_event)
 				set_dimension_tuple (
-					local_C.gdk_rectangle_struct_x (p),
-					local_C.gdk_rectangle_struct_y (p),
-					local_C.gdk_rectangle_struct_width (p),
-					local_C.gdk_rectangle_struct_height (p)
+					feature {EV_GTK_EXTERNALS}.gdk_rectangle_struct_x (p),
+					feature {EV_GTK_EXTERNALS}.gdk_rectangle_struct_y (p),
+					feature {EV_GTK_EXTERNALS}.gdk_rectangle_struct_width (p),
+					feature {EV_GTK_EXTERNALS}.gdk_rectangle_struct_height (p)
 				)
 				Result := dimension_tuple
 			when
@@ -194,15 +192,15 @@ feature {EV_ANY_IMP} -- Access
 				Gdk_2button_press_enum
 			then
 				Result := [
-					local_C.gdk_event_button_struct_type (gdk_event),
-					local_C.gdk_event_button_struct_x (gdk_event).truncated_to_integer,
-					local_C.gdk_event_button_struct_y (gdk_event).truncated_to_integer,
-					local_C.gdk_event_button_struct_button (gdk_event),
-					0.5,--local_C.gdk_event_button_struct_xtilt (gdk_event),
-					0.5,--local_C.gdk_event_button_struct_ytilt (gdk_event),
-					0.5,--local_C.gdk_event_button_struct_pressure (gdk_event),
-					local_C.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer,
-					local_C.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer
+					feature {EV_GTK_EXTERNALS}.gdk_event_button_struct_type (gdk_event),
+					feature {EV_GTK_EXTERNALS}.gdk_event_button_struct_x (gdk_event).truncated_to_integer,
+					feature {EV_GTK_EXTERNALS}.gdk_event_button_struct_y (gdk_event).truncated_to_integer,
+					feature {EV_GTK_EXTERNALS}.gdk_event_button_struct_button (gdk_event),
+					0.5,--feature {EV_GTK_EXTERNALS}.gdk_event_button_struct_xtilt (gdk_event),
+					0.5,--feature {EV_GTK_EXTERNALS}.gdk_event_button_struct_ytilt (gdk_event),
+					0.5,--feature {EV_GTK_EXTERNALS}.gdk_event_button_struct_pressure (gdk_event),
+					feature {EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer,
+					feature {EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer
 				]
 
 			when
@@ -210,14 +208,14 @@ feature {EV_ANY_IMP} -- Access
 			then
 					-- gdk_event type GdkEventButton
 				Result := [
-					local_C.gdk_event_button_struct_x (gdk_event).truncated_to_integer,
-					local_C.gdk_event_button_struct_y (gdk_event).truncated_to_integer,
-					local_C.gdk_event_button_struct_button (gdk_event),
-					0.5,--local_C.gdk_event_button_struct_xtilt (gdk_event),
-					0.5,--local_C.gdk_event_button_struct_ytilt (gdk_event),
-					0.5,--local_C.gdk_event_button_struct_pressure (gdk_event),
-					local_C.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer,
-					local_C.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer
+					feature {EV_GTK_EXTERNALS}.gdk_event_button_struct_x (gdk_event).truncated_to_integer,
+					feature {EV_GTK_EXTERNALS}.gdk_event_button_struct_y (gdk_event).truncated_to_integer,
+					feature {EV_GTK_EXTERNALS}.gdk_event_button_struct_button (gdk_event),
+					0.5,--feature {EV_GTK_EXTERNALS}.gdk_event_button_struct_xtilt (gdk_event),
+					0.5,--feature {EV_GTK_EXTERNALS}.gdk_event_button_struct_ytilt (gdk_event),
+					0.5,--feature {EV_GTK_EXTERNALS}.gdk_event_button_struct_pressure (gdk_event),
+					feature {EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer,
+					feature {EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer
 				]
 
 			when
@@ -229,7 +227,7 @@ feature {EV_ANY_IMP} -- Access
 				Gdk_key_press_enum,
 				Gdk_key_release_enum
 			then
-				keyval := local_C.gdk_event_key_struct_keyval (gdk_event)
+				keyval := feature {EV_GTK_EXTERNALS}.gdk_event_key_struct_keyval (gdk_event)
 				if valid_gtk_code (keyval) then
 					create key.make_with_code (key_code_from_gtk (keyval))
 				end
@@ -238,10 +236,10 @@ feature {EV_ANY_IMP} -- Access
 				Gdk_configure_enum
 			then
 				set_dimension_tuple (
-					local_C.gdk_event_configure_struct_x (gdk_event),
-					local_C.gdk_event_configure_struct_y (gdk_event),
-					local_C.gdk_event_configure_struct_width (gdk_event),
-					local_C.gdk_event_configure_struct_height (gdk_event)
+					feature {EV_GTK_EXTERNALS}.gdk_event_configure_struct_x (gdk_event),
+					feature {EV_GTK_EXTERNALS}.gdk_event_configure_struct_y (gdk_event),
+					feature {EV_GTK_EXTERNALS}.gdk_event_configure_struct_width (gdk_event),
+					feature {EV_GTK_EXTERNALS}.gdk_event_configure_struct_height (gdk_event)
 				)
 				Result := dimension_tuple
 			end
@@ -258,12 +256,12 @@ feature {EV_ANY_IMP} -- Access
 			a_key_press: BOOLEAN
 		do
 			gdkeventkey := gtk_value_pointer (p)
-			if C.gdk_event_key_struct_type (gdkeventkey) = C.gdk_key_press_enum then
+			if feature {EV_GTK_EXTERNALS}.gdk_event_key_struct_type (gdkeventkey) = feature {EV_GTK_EXTERNALS}.gdk_key_press_enum then
 				a_key_press := True
 				create a_key_string.make (0)
-				a_key_string.from_c (C.gdk_event_key_struct_string (gdkeventkey))
+				a_key_string.from_c (feature {EV_GTK_EXTERNALS}.gdk_event_key_struct_string (gdkeventkey))
 			end
-			keyval := C.gdk_event_key_struct_keyval (gdkeventkey)
+			keyval := feature {EV_GTK_EXTERNALS}.gdk_event_key_struct_keyval (gdkeventkey)
 			if valid_gtk_code (keyval) then
 				create key.make_with_code (key_code_from_gtk (keyval))
 			end
@@ -280,10 +278,10 @@ feature {EV_ANY_IMP} -- Access
 			gtk_alloc := gtk_value_pointer (p)
 			local_C := C
 			set_dimension_tuple (
-				local_C.gtk_allocation_struct_x (gtk_alloc),
-				local_C.gtk_allocation_struct_y (gtk_alloc),
-				local_C.gtk_allocation_struct_width (gtk_alloc),
-				local_C.gtk_allocation_struct_height (gtk_alloc)
+				feature {EV_GTK_EXTERNALS}.gtk_allocation_struct_x (gtk_alloc),
+				feature {EV_GTK_EXTERNALS}.gtk_allocation_struct_y (gtk_alloc),
+				feature {EV_GTK_EXTERNALS}.gtk_allocation_struct_width (gtk_alloc),
+				feature {EV_GTK_EXTERNALS}.gtk_allocation_struct_height (gtk_alloc)
 			)
 			Result := dimension_tuple
 		end
@@ -352,10 +350,13 @@ feature {NONE} -- Implementation
 	
 feature {EV_ANY_IMP} -- Tuple optimizations.
 
-	page_switch_translate (n: INTEGER; p: POINTER): TUPLE is
+	page_switch_translate (n: INTEGER; args: POINTER): TUPLE is
 			-- Retrieve index of switched page.
+		local
+			gtkarg2: POINTER
 		do
-			Result := [gtk_value_pointer (p)]
+			gtkarg2 := gtk_args_array_i_th (args, 1)
+			Result := [gtk_value_int (gtkarg2)]
 		end
 		
 	empty_tuple_tuple: TUPLE is

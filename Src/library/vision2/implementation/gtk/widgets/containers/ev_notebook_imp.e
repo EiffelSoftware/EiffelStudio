@@ -208,19 +208,15 @@ feature -- Element change
 
 feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 
-	page_switch (a_page: TUPLE [POINTER]) is
+	page_switch (a_page: TUPLE [INTEGER]) is
 			-- Called when the page is switched.
 		local
-			temp_ptr_ref: POINTER_REF
-			temp_ptr: POINTER
+			temp_int_ref: INTEGER_REF
+			temp_int: INTEGER
 		do
 			if not is_destroyed then
-				temp_ptr_ref ?= a_page.item (1)
-				temp_ptr := temp_ptr_ref.item
-				selected_item_index_internal := C.gtk_notebook_page_num (
-					c_object,
-					C.gtk_notebook_page_struct_child (temp_ptr)
-				) + 1
+				temp_int_ref ?= a_page.item (1)
+				selected_item_index_internal := temp_int_ref.item + 1
 				if selection_actions_internal /= Void and count > 0 then
 					selection_actions_internal.call ((App_implementation.gtk_marshal).empty_tuple)
 				end

@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			Precursor
 			update_splitter
 			second_expandable := True
-			C.gtk_container_set_border_width (c_object, 0)
+			feature {EV_GTK_EXTERNALS}.gtk_container_set_border_width (c_object, 0)
 		end
 
 feature
@@ -104,11 +104,11 @@ feature
 			item_imp ?= an_item.implementation
 			item_imp.set_parent_imp (Current)
 			check item_imp_not_void: item_imp /= Void end
-			C.gtk_paned_pack1 (c_object, item_imp.c_object, False, False)
+			feature {EV_GTK_EXTERNALS}.gtk_paned_pack1 (c_object, item_imp.c_object, False, False)
 			first := an_item
 			set_item_resize (first, False)
 			update_splitter
-			C.gtk_widget_queue_resize (container_widget)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_queue_resize (container_widget)
 		end
 
 	set_second (an_item: like item) is
@@ -119,11 +119,11 @@ feature
 			item_imp ?= an_item.implementation
 			item_imp.set_parent_imp (Current)
 			check item_imp_not_void: item_imp /= Void end
-			C.gtk_paned_pack2 (c_object, item_imp.c_object, True, False)
+			feature {EV_GTK_EXTERNALS}.gtk_paned_pack2 (c_object, item_imp.c_object, True, False)
 			second := an_item
 			set_item_resize (second, True)
 			update_splitter
-			C.gtk_widget_queue_resize (container_widget)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_queue_resize (container_widget)
 		end
 
 	prune (an_item: like item) is
@@ -135,8 +135,8 @@ feature
 				item_imp ?= an_item.implementation
 				item_imp.set_parent_imp (Void)
 				check item_imp_not_void: item_imp /= Void end
-				C.gtk_object_ref (item_imp.c_object)
-				C.gtk_container_remove (c_object, item_imp.c_object)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.object_ref (item_imp.c_object)
+				feature {EV_GTK_EXTERNALS}.gtk_container_remove (c_object, item_imp.c_object)
 				if an_item = first then
 					first_expandable := False
 					first := Void
@@ -153,7 +153,7 @@ feature
 				end
 				update_splitter
 			end
-			C.gtk_widget_queue_resize (container_widget)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_queue_resize (container_widget)
 		end
 
 	enable_item_expand (an_item: like item) is
@@ -171,7 +171,7 @@ feature
 	set_split_position (a_split_position: INTEGER) is
 			-- Set the position of the splitter.
 		do
-			C.gtk_paned_set_position (c_object, a_split_position)
+			feature {EV_GTK_EXTERNALS}.gtk_paned_set_position (c_object, a_split_position)
 		end
 
 	enable_flat_separator is
@@ -218,8 +218,8 @@ feature {NONE} -- Implementation
 				second_expandable := a_resizable
 			end
 			item_imp ?= an_item.implementation
-			C.gtk_widget_queue_resize (c_object)
-			C.gtk_widget_queue_draw (c_object)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_queue_resize (c_object)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_queue_draw (c_object)
 		end
 
 	update_splitter is

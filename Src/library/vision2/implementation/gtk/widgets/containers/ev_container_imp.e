@@ -70,12 +70,12 @@ feature -- Element change
 			if not interface.is_empty then
 				on_removed_item (interface.item)
 				w ?= interface.item.implementation
-				C.gtk_object_ref (w.c_object)
-				C.gtk_container_remove (container_widget, w.c_object)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.object_ref (w.c_object)
+				feature {EV_GTK_EXTERNALS}.gtk_container_remove (container_widget, w.c_object)
 			end
 			if v /= Void then
 				w ?= v.implementation
-				C.gtk_container_add (container_widget, w.c_object)
+				feature {EV_GTK_EXTERNALS}.gtk_container_add (container_widget, w.c_object)
 				on_new_item (w)
 			end
 		end		
@@ -129,9 +129,9 @@ feature -- Status setting
 					until
 						l.off
 					loop
-						C.gtk_radio_button_set_group (l.item, radio_group)
-						set_radio_group (C.gtk_radio_button_group (l.item))
-						C.gtk_toggle_button_set_active (l.item, False)
+						feature {EV_GTK_EXTERNALS}.gtk_radio_button_set_group (l.item, radio_group)
+						set_radio_group (feature {EV_GTK_EXTERNALS}.gtk_radio_button_group (l.item))
+						feature {EV_GTK_EXTERNALS}.gtk_toggle_button_set_active (l.item, False)
 						l.forth
 					end
 					peer.set_shared_pointer (shared_pointer)
@@ -158,7 +158,7 @@ feature -- Status setting
 			else
 				if shared_pointer = peer.shared_pointer then
 						-- They share the same radio grouping.
-					a_child_list := C.gtk_container_children (peer.container_widget)
+					a_child_list := feature {EV_GTK_EXTERNALS}.gtk_container_children (peer.container_widget)
 					l := glist_to_eiffel (a_child_list)
 							-- Wipe out peers radio grouping
 					if l /= Void then
@@ -176,7 +176,7 @@ feature -- Status setting
 								rad_but_imp ?= eif_object_from_c (l.item)
 									-- The c_object of the radio button is its parent (event box)
 								if rad_but_imp /= Void then
-									C.gtk_radio_button_set_group (rad_but_imp.visual_widget, peer.radio_group)
+									feature {EV_GTK_EXTERNALS}.gtk_radio_button_set_group (rad_but_imp.visual_widget, peer.radio_group)
 									peer.set_radio_group (rad_but_imp.radio_group)
 								end
 							end
@@ -184,9 +184,9 @@ feature -- Status setting
 						end
 					end
 					if a_child_list /= NULL then
-						C.g_list_free (a_child_list)
+						feature {EV_GTK_EXTERNALS}.g_list_free (a_child_list)
 					end
-					a_child_list := C.gtk_container_children (container_widget)
+					a_child_list := feature {EV_GTK_EXTERNALS}.gtk_container_children (container_widget)
 					l := glist_to_eiffel (a_child_list)
 					from
 						l.start
@@ -211,7 +211,7 @@ feature -- Status setting
 						rad_but_imp.enable_select
 					end
 					if a_child_list /= NULL then
-						C.g_list_free (a_child_list)
+						feature {EV_GTK_EXTERNALS}.g_list_free (a_child_list)
 					end
 				end
 			end
@@ -227,11 +227,11 @@ feature -- Status setting
 			r ?= w.implementation
 			if r /= Void then
 				if radio_group /= NULL then
-					C.gtk_radio_button_set_group (r.visual_widget, radio_group)
+					feature {EV_GTK_EXTERNALS}.gtk_radio_button_set_group (r.visual_widget, radio_group)
 				else
-					C.gtk_toggle_button_set_active (r.visual_widget, False)
+					feature {EV_GTK_EXTERNALS}.gtk_toggle_button_set_active (r.visual_widget, False)
 				end
-				set_radio_group (C.gtk_radio_button_group (r.visual_widget))
+				set_radio_group (feature {EV_GTK_EXTERNALS}.gtk_radio_button_group (r.visual_widget))
 			end
 		end
 
@@ -248,26 +248,26 @@ feature -- Status setting
 		do
 			r ?= w.implementation
 			if r /= Void then
-				a_max_index := C.g_slist_length (radio_group) - 1
-				a_item_index := C.g_slist_index (radio_group, r.visual_widget)
+				a_max_index := feature {EV_GTK_EXTERNALS}.g_slist_length (radio_group) - 1
+				a_item_index := feature {EV_GTK_EXTERNALS}.g_slist_index (radio_group, r.visual_widget)
 				
 				if a_max_index - a_item_index > 0 then
-					a_item_pointer := C.g_slist_nth_data (
+					a_item_pointer := feature {EV_GTK_EXTERNALS}.g_slist_nth_data (
 								radio_group,
 								a_max_index
 							)
 				elseif a_max_index > 0 then
-					a_item_pointer := C.g_slist_nth_data (
+					a_item_pointer := feature {EV_GTK_EXTERNALS}.g_slist_nth_data (
 								radio_group,
 								a_max_index - 1
 							)
 				end				
 				
-				C.gtk_radio_button_set_group (r.visual_widget, NULL)
+				feature {EV_GTK_EXTERNALS}.gtk_radio_button_set_group (r.visual_widget, NULL)
 
 				if a_item_pointer /= NULL then
 					an_item_imp ?= eif_object_from_c (
-						C.gtk_widget_struct_parent (a_item_pointer)
+						feature {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (a_item_pointer)
 					)
 					check an_item_imp_not_void: an_item_imp /= Void end
 					set_radio_group (an_item_imp.radio_group)
@@ -277,13 +277,13 @@ feature -- Status setting
 
 				if r.is_selected then
 					if radio_group /= NULL then
-						C.gtk_toggle_button_set_active (
-							C.gslist_struct_data (radio_group),
+						feature {EV_GTK_EXTERNALS}.gtk_toggle_button_set_active (
+							feature {EV_GTK_EXTERNALS}.gslist_struct_data (radio_group),
 							True
 						)
 					end
 				else
-					C.gtk_toggle_button_set_active (r.visual_widget, True)
+					feature {EV_GTK_EXTERNALS}.gtk_toggle_button_set_active (r.visual_widget, True)
 				end
 			end
 		end
@@ -297,15 +297,15 @@ feature -- Status setting
 			i: INTEGER
 		do	
 			pix_imp ?= background_pixmap.implementation
-			a_style := C.gtk_style_copy (C.gtk_widget_struct_style (visual_widget))
-			pix_ptr := C.gdk_pixmap_ref (C.gtk_pixmap_struct_pixmap (pix_imp.gtk_pixmap))
+			a_style := feature {EV_GTK_EXTERNALS}.gtk_style_copy (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_style (visual_widget))
+			pix_ptr := feature {EV_GTK_EXTERNALS}.gdk_pixmap_ref (feature {EV_GTK_EXTERNALS}.gtk_pixmap_struct_pixmap (pix_imp.gtk_pixmap))
 			from
 				i := 0
 			until
 				i = 12
 			loop
 				-- We need to ref the pixmap twice for each state to prevent GdkPixmap deletion.
-				pix_ptr := C.gdk_pixmap_ref (C.gtk_pixmap_struct_pixmap (pix_imp.gtk_pixmap))
+				pix_ptr := feature {EV_GTK_EXTERNALS}.gdk_pixmap_ref (feature {EV_GTK_EXTERNALS}.gtk_pixmap_struct_pixmap (pix_imp.gtk_pixmap))
 				i := i + 1
 			end
 			from
@@ -318,8 +318,8 @@ feature -- Status setting
 				mem_ptr.memory_copy ($pix_ptr, 4)
 				i := i + 1
 			end
-			C.gtk_widget_set_style (visual_widget, a_style)
-			C.gtk_style_unref (a_style)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_set_style (visual_widget, a_style)
+			feature {EV_GTK_EXTERNALS}.gtk_style_unref (a_style)
 		end
 		
 	set_background_pixmap (a_pixmap: EV_PIXMAP) is
@@ -342,7 +342,7 @@ feature -- Status setting
 			a_style, mem_ptr: POINTER
 			i: INTEGER
 		do
-			a_style := C.gtk_style_copy (C.gtk_widget_struct_style (visual_widget))
+			a_style := feature {EV_GTK_EXTERNALS}.gtk_style_copy (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_style (visual_widget))
 			from
 				i := 0
 			until
@@ -353,7 +353,7 @@ feature -- Status setting
 				mem_ptr.memory_set (0, 4)
 				i := i + 1
 			end
-			C.gtk_widget_set_style (visual_widget, a_style)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_set_style (visual_widget, a_style)
 			background_pixmap := Void
 		end
 
@@ -445,8 +445,8 @@ feature {NONE} -- Externals
 			until
 				cur = NULL
 			loop
-				Result.extend (C.gslist_struct_data (cur))
-				cur := C.gslist_struct_next (cur)
+				Result.extend (feature {EV_GTK_EXTERNALS}.gslist_struct_data (cur))
+				cur := feature {EV_GTK_EXTERNALS}.gslist_struct_next (cur)
 			end
 		ensure
 		--	same_size: Result.count = g_slist_length (gslist)
@@ -463,8 +463,8 @@ feature {NONE} -- Externals
 			until
 				cur = NULL
 			loop
-				Result.extend (C.glist_struct_data (cur))
-				cur := C.glist_struct_next (cur)
+				Result.extend (feature {EV_GTK_EXTERNALS}.glist_struct_data (cur))
+				cur := feature {EV_GTK_EXTERNALS}.glist_struct_next (cur)
 			end
 		ensure
 		--	same_size: Result.count = g_slist_length (gslist)

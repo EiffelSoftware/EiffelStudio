@@ -48,7 +48,7 @@ feature {EV_ANY_I} -- Access
 			debug ("EV_GTK_CREATION")
 				print (generator + " created%N")
 			end
-			App_implementation.gtk_marshal.set_eif_oid_in_c_object (c_object, object_id, $c_object_dispose)
+			feature {EV_GTK_CALLBACK_MARSHAL}.set_eif_oid_in_c_object (c_object, object_id, $c_object_dispose)
 		ensure
 			c_object_assigned: c_object = a_c_object
 		end
@@ -58,7 +58,7 @@ feature {EV_ANY_I} -- Access
 		require
 			a_c_object_not_null: a_c_object /= NULL
 		do
-			Result := App_implementation.gtk_marshal.c_get_eif_reference_from_object_id (a_c_object)
+			Result := feature {EV_GTK_CALLBACK_MARSHAL}.c_get_eif_reference_from_object_id (a_c_object)
 		end
 
 feature {EV_ANY, EV_ANY_IMP} -- Command
@@ -84,10 +84,10 @@ feature {EV_ANY, EV_ANY_IMP} -- Command
 					end
 				end
 				is_destroyed := True
-				if C.gtk_is_window (c_object) then
-					C.gtk_object_unref (c_object)
+				if feature {EV_GTK_EXTERNALS}.gtk_is_window (c_object) then
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.object_unref (c_object)
 				end
-				C.gtk_object_destroy (c_object)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.object_destroy (c_object)
 				c_object := NULL
 			end
 		ensure then
@@ -128,7 +128,7 @@ feature {EV_ANY_I} -- Event handling
 			a_gs: GEL_STRING
 		do
 			create a_gs.make (a_signal_name)
-			a_connection_id := App_implementation.gtk_marshal.c_signal_connect_true (
+			a_connection_id := feature {EV_GTK_CALLBACK_MARSHAL}.c_signal_connect_true (
 				c_object,
 				a_gs.item,
 				an_agent
@@ -153,13 +153,13 @@ feature {EV_ANY_I} -- Event handling
 		do
 			create a_gs.make (a_signal_name)
 			if translate /= Void then
-				last_signal_connection_id := App_implementation.gtk_marshal.c_signal_connect (
+				last_signal_connection_id := feature {EV_GTK_CALLBACK_MARSHAL}.c_signal_connect (
 					a_c_object,
 					a_gs.item,
 					agent (App_implementation.gtk_marshal).translate_and_call (an_agent, translate, ?, ?)
 				)
 			else
-				last_signal_connection_id := App_implementation.gtk_marshal.c_signal_connect (
+				last_signal_connection_id := feature {EV_GTK_CALLBACK_MARSHAL}.c_signal_connect (
 					a_c_object,
 					a_gs.item,
 					an_agent
@@ -177,7 +177,7 @@ feature {EV_ANY_I} -- Event handling
 		require
 			a_connection_id_positive: a_connection_id > 0
 		do
-			C.signal_disconnect (c_object, a_connection_id)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (c_object, a_connection_id)
 		end
 		
 feature {NONE} -- Implementation
@@ -196,12 +196,12 @@ feature {NONE} -- Implementation
 			if c_object /= NULL and then not is_in_final_collect and then not App_implementation.gtk_marshal.is_destroyed then
 				-- Destroy has been explicitly called.
 				if internal_id /= 0 then
-					gtk_signal_disconnect_by_data (c_object, internal_id)
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect_by_data (c_object, internal_id)
 				end			
 				--| This is the signal attached in ev_any_imp.c
 				--| used for GC/Ref-Counting interaction.
-				gtk_object_destroy (c_object)
-				gtk_object_unref (c_object)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.object_destroy (c_object)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.object_unref (c_object)
 				c_object := NULL
 			end
 			Precursor {IDENTIFIED}
@@ -240,29 +240,6 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			check
 				Result_not_void: Result /= Void
 			end
-		end
-		
-feature {NONE} -- External implementation
-
-	gtk_object_destroy (a_c_object: POINTER) is
-			-- Only for use in dispose.
-			-- (Dispose cannot call C.gtk_object_destroy)
-		external
-			"C (GtkObject*) | <gtk/gtk.h>"
-		end
-
-	gtk_object_unref (a_c_object: POINTER) is
-			-- Only for use in dispose.
-			-- (Dispose cannot call C.gtk_object_destroy)
-		external
-			"C (GtkObject*) | <gtk/gtk.h>"
-		end
-
-	gtk_signal_disconnect_by_data (a_c_object: POINTER; data: INTEGER) is
-			-- Only for use in dispose.
-			-- (Dispose cannot call C.gtk_signal_disconnect_by_data)
-		external
-			"C (GtkObject*, gpointer) | <gtk/gtk.h>"
 		end
 
 invariant

@@ -51,13 +51,13 @@ feature -- Initialization
 			-- Create the window.
 		do
 			base_make (an_interface)
-			set_c_object (C.gtk_window_new (C.Gtk_window_toplevel_enum))
+			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_window_new (feature {EV_GTK_EXTERNALS}.Gtk_window_toplevel_enum))
 			set_title ("")
 				-- set title also realizes the window.
-			C.gdk_window_set_decorations (C.gtk_widget_struct_window (c_object), 0)
-			C.gdk_window_set_functions (C.gtk_widget_struct_window (c_object), 0)
+			feature {EV_GTK_EXTERNALS}.gdk_window_set_decorations (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), 0)
+			feature {EV_GTK_EXTERNALS}.gdk_window_set_functions (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), 0)
 			
-			C.gtk_window_set_policy (c_object, 0, 1, 0) -- allow_shrink = False, allow_grow = True, auto_shrink = False
+			feature {EV_GTK_EXTERNALS}.gtk_window_set_policy (c_object, 0, 1, 0) -- allow_shrink = False, allow_grow = True, auto_shrink = False
 		end
 
 feature  -- Access
@@ -122,7 +122,7 @@ feature  -- Access
 		local
 			p : POINTER
 		do
-			p := C.gtk_window_struct_title (c_object)
+			p := feature {EV_GTK_EXTERNALS}.gtk_window_struct_title (c_object)
 			if p /= NULL then
 				create Result.make_from_c (p)
 				if Result.is_equal ("%T") then
@@ -140,7 +140,7 @@ feature  -- Access
 			-- Must the window be closed before application continues?
 		do
 			if not is_destroyed then
-				Result := C.gtk_window_struct_modal (c_object) = 1
+				Result := feature {EV_GTK_EXTERNALS}.gtk_window_struct_modal (c_object) = 1
 			end
 		end
 		
@@ -161,20 +161,20 @@ feature -- Status setting
 			until
 				is_destroyed or else not is_show_requested
 			loop
-				dummy := C.gtk_main_iteration_do (False)
+				dummy := feature {EV_GTK_EXTERNALS}.gtk_main_iteration_do (False)
 			end
 		end
 
 	enable_modal is
 			-- Set `is_modal' to `True'.
 		do
-			C.gtk_window_set_modal (c_object, True)
+			feature {EV_GTK_EXTERNALS}.gtk_window_set_modal (c_object, True)
 		end
 
 	disable_modal is
 			-- Set `is_modal' to `False'.
 		do
-			C.gtk_window_set_modal (c_object, False)
+			feature {EV_GTK_EXTERNALS}.gtk_window_set_modal (c_object, False)
 		end
 
 	set_x_position (a_x: INTEGER) is
@@ -195,7 +195,7 @@ feature -- Status setting
 		do
 			user_x_position := a_x
 			user_y_position := a_y
-			C.gtk_widget_set_uposition (c_object, a_x, a_y)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_set_uposition (c_object, a_x, a_y)
 			positioned_by_user := True
 		end
 
@@ -220,19 +220,19 @@ feature -- Status setting
 			update_request_size
 			default_width := a_width
 			default_height := a_height
-			C.gtk_window_set_default_size (c_object, default_width.max (minimum_width), default_height.max (minimum_height))
+			feature {EV_GTK_EXTERNALS}.gtk_window_set_default_size (c_object, default_width.max (minimum_width), default_height.max (minimum_height))
 		end
 
 	forbid_resize is
 			-- Forbid the resize of the window.
 		do
-			C.gtk_window_set_policy (c_object, 0, 0, 0)
+			feature {EV_GTK_EXTERNALS}.gtk_window_set_policy (c_object, 0, 0, 0)
 		end
 
 	allow_resize is
 			-- Allow the resize of the window.
 		do
-			C.gtk_window_set_policy (c_object, 0, 1, 0)
+			feature {EV_GTK_EXTERNALS}.gtk_window_set_policy (c_object, 0, 1, 0)
 		end
 
 	destroy is
@@ -249,12 +249,12 @@ feature -- Status setting
 		do
 			if not is_show_requested then
 				if is_positioned or positioned_by_user then
-					C.gtk_window_set_position (c_object, C.Gtk_win_pos_none_enum)
+					feature {EV_GTK_EXTERNALS}.gtk_window_set_position (c_object, feature {EV_GTK_EXTERNALS}.Gtk_win_pos_none_enum)
 					app_implementation.process_events
 					{EV_CONTAINER_IMP} Precursor
 					set_position (user_x_position, user_y_position)
 				else
-					C.gtk_window_set_position (c_object, C.Gtk_win_pos_center_enum)
+					feature {EV_GTK_EXTERNALS}.gtk_window_set_position (c_object, feature {EV_GTK_EXTERNALS}.Gtk_win_pos_center_enum)
 					{EV_CONTAINER_IMP} Precursor
 				end
 				is_positioned := True
@@ -287,12 +287,12 @@ feature -- Element change
 				check
 					item_has_implementation: w /= Void
 				end
-				C.gtk_object_ref (w.c_object)
-				C.gtk_container_remove (hbox, w.c_object)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.object_ref (w.c_object)
+				feature {EV_GTK_EXTERNALS}.gtk_container_remove (hbox, w.c_object)
 			end
 			if v /= Void then
 				w ?= v.implementation
-				C.gtk_box_pack_end (hbox, w.c_object, True, True, 0)
+				feature {EV_GTK_EXTERNALS}.gtk_box_pack_end (hbox, w.c_object, True, True, 0)
 				on_new_item (w)
 			end
 			item := v
@@ -303,11 +303,11 @@ feature -- Element change
 		local
 			a_geometry: POINTER
 		do
-			a_geometry := C.c_gdk_geometry_struct_allocate
-			C.set_gdk_geometry_struct_max_width (a_geometry, max_width)
-			C.set_gdk_geometry_struct_max_height (a_geometry, maximum_height)
-			C.gtk_window_set_geometry_hints (c_object, NULL, a_geometry, C.Gdk_hint_max_size_enum)
-			C.c_gdk_geometry_struct_free (a_geometry)
+			a_geometry := feature {EV_GTK_EXTERNALS}.c_gdk_geometry_struct_allocate
+			feature {EV_GTK_EXTERNALS}.set_gdk_geometry_struct_max_width (a_geometry, max_width)
+			feature {EV_GTK_EXTERNALS}.set_gdk_geometry_struct_max_height (a_geometry, maximum_height)
+			feature {EV_GTK_EXTERNALS}.gtk_window_set_geometry_hints (c_object, NULL, a_geometry, feature {EV_GTK_EXTERNALS}.Gdk_hint_max_size_enum)
+			feature {EV_GTK_EXTERNALS}.c_gdk_geometry_struct_free (a_geometry)
 			maximum_width := max_width
 		end 
 
@@ -316,11 +316,11 @@ feature -- Element change
 		local
 			a_geometry: POINTER
 		do
-			a_geometry := C.c_gdk_geometry_struct_allocate
-			C.set_gdk_geometry_struct_max_width (a_geometry, maximum_width)
-			C.set_gdk_geometry_struct_max_height (a_geometry, max_height)
-			C.gtk_window_set_geometry_hints (c_object, NULL, a_geometry, C.Gdk_hint_max_size_enum)
-			C.c_gdk_geometry_struct_free (a_geometry)
+			a_geometry := feature {EV_GTK_EXTERNALS}.c_gdk_geometry_struct_allocate
+			feature {EV_GTK_EXTERNALS}.set_gdk_geometry_struct_max_width (a_geometry, maximum_width)
+			feature {EV_GTK_EXTERNALS}.set_gdk_geometry_struct_max_height (a_geometry, max_height)
+			feature {EV_GTK_EXTERNALS}.gtk_window_set_geometry_hints (c_object, NULL, a_geometry, feature {EV_GTK_EXTERNALS}.Gdk_hint_max_size_enum)
+			feature {EV_GTK_EXTERNALS}.c_gdk_geometry_struct_free (a_geometry)
 			maximum_height := max_height
 		end 
 
@@ -336,11 +336,11 @@ feature -- Element change
 				a_title := "%T"
 			end
 			create a_gs.make (a_title)
-			C.gtk_window_set_title (c_object, a_gs.item)
+			feature {EV_GTK_EXTERNALS}.gtk_window_set_title (c_object, a_gs.item)
 
 			-- Make sure the gtk window has a corresponding gdk window
-			if not has_struct_flag (c_object, C.GTK_REALIZED_ENUM) then
-				C.gtk_widget_realize (c_object)
+			if not has_struct_flag (c_object, feature {EV_GTK_EXTERNALS}.GTK_REALIZED_ENUM) then
+				feature {EV_GTK_EXTERNALS}.gtk_widget_realize (c_object)
 			end
 		end
 
@@ -354,8 +354,8 @@ feature -- Element change
 			menu_bar := a_menu_bar
 			mb_imp ?= menu_bar.implementation
 			mb_imp.set_parent_window_imp (Current)
-			C.gtk_box_pack_start (vbox, mb_imp.list_widget, False, True, 0)
-			C.gtk_box_reorder_child (vbox, mb_imp.list_widget, 0)
+			feature {EV_GTK_EXTERNALS}.gtk_box_pack_start (vbox, mb_imp.list_widget, False, True, 0)
+			feature {EV_GTK_EXTERNALS}.gtk_box_reorder_child (vbox, mb_imp.list_widget, 0)
 			create a_gs.make ("activate_item")
 			from
 				menu_bar.start
@@ -364,11 +364,11 @@ feature -- Element change
 			loop
 				menu_imp ?= menu_bar.item.implementation
 				if menu_imp /= Void and then menu_imp.key /= 0 then
-					C.gtk_widget_add_accelerator (menu_imp.c_object,
+					feature {EV_GTK_EXTERNALS}.gtk_widget_add_accelerator (menu_imp.c_object,
 						a_gs.item,
 						accel_group,
 						menu_imp.key,
-						C.gdk_mod1_mask_enum,
+						feature {EV_GTK_EXTERNALS}.gdk_mod1_mask_enum,
 						0)
 				end
 				menu_bar.forth
@@ -389,17 +389,17 @@ feature -- Element change
 				loop
 					menu_imp ?= menu_bar.item.implementation
 					if menu_imp /= Void and then menu_imp.key /= 0 then
-						C.gtk_widget_remove_accelerator (menu_imp.c_object,
+						feature {EV_GTK_EXTERNALS}.gtk_widget_remove_accelerator (menu_imp.c_object,
 							accel_group,
 							menu_imp.key,
-							C.gdk_mod1_mask_enum)
+							feature {EV_GTK_EXTERNALS}.gdk_mod1_mask_enum)
 					end
 					menu_bar.forth
 				end
 				mb_imp ?= menu_bar.implementation
 				mb_imp.remove_parent_window
-				C.gtk_object_ref (mb_imp.list_widget)
-				C.gtk_container_remove (vbox, mb_imp.list_widget)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.object_ref (mb_imp.list_widget)
+				feature {EV_GTK_EXTERNALS}.gtk_container_remove (vbox, mb_imp.list_widget)
 			end
 			menu_bar := Void
 		end
@@ -412,10 +412,10 @@ feature -- Element change
 			internal_blocking_window := a_window
 			if a_window /= Void then
 				win_imp ?= a_window.implementation
-				C.gtk_window_set_transient_for (c_object, win_imp.c_object)
+				feature {EV_GTK_EXTERNALS}.gtk_window_set_transient_for (c_object, win_imp.c_object)
 			else
 				if not is_destroyed then
-					C.gtk_window_set_transient_for (c_object, NULL)
+					feature {EV_GTK_EXTERNALS}.gtk_window_set_transient_for (c_object, NULL)
 				end		
 			end
 		end
@@ -430,14 +430,14 @@ feature {EV_WIDGET_IMP} -- Position retrieval
 			i: INTEGER
 		do
 			if is_displayed then		
-				i := C.gdk_window_get_origin (
-					C.gtk_widget_struct_window (c_object),
+				i := feature {EV_GTK_EXTERNALS}.gdk_window_get_origin (
+					feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object),
 					$a_x, NULL)
 					Result := a_x
 			else
 				a_aux_info := aux_info_struct
 				if a_aux_info /= NULL then
-					Result := C.gtk_widget_aux_info_struct_x (a_aux_info)
+					Result := feature {EV_GTK_EXTERNALS}.gtk_widget_aux_info_struct_x (a_aux_info)
 				end
 			end
 		end
@@ -450,14 +450,14 @@ feature {EV_WIDGET_IMP} -- Position retrieval
 			i: INTEGER
 		do
 			if is_displayed then		
-				i := C.gdk_window_get_origin (
-					C.gtk_widget_struct_window (c_object),
+				i := feature {EV_GTK_EXTERNALS}.gdk_window_get_origin (
+					feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object),
 				    NULL, $a_y)
 				Result := a_y
 			else
 				a_aux_info := aux_info_struct
 				if a_aux_info /= NULL then
-					Result := C.gtk_widget_aux_info_struct_y (a_aux_info)
+					Result := feature {EV_GTK_EXTERNALS}.gtk_widget_aux_info_struct_y (a_aux_info)
 				end
 			end
 		end
@@ -484,9 +484,9 @@ feature {NONE} -- Implementation
 			-- Set the minimum horizontal size to `a_minimum_width'.
 			-- Set the minimum vertical size to `a_minimum_height'.
 		do
-			C.gtk_widget_set_usize (c_object, -1, -1)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_set_usize (c_object, -1, -1)
 			Precursor {EV_CONTAINER_IMP} (a_minimum_width, a_minimum_height)
-			C.gtk_window_set_default_size (c_object, a_minimum_width, a_minimum_height)
+			feature {EV_GTK_EXTERNALS}.gtk_window_set_default_size (c_object, a_minimum_width, a_minimum_height)
 		end
 
 	default_width: INTEGER
@@ -529,13 +529,13 @@ feature {NONE} -- Implementation
 				if a_key_press then
 					if focus_widget.default_key_processing_blocked (a_key) then
 						create a_gs.make ("key-press-event")
-						C.signal_emit_stop_by_name (c_object, a_gs.item)
+						feature {EV_GTK_EXTERNALS}.signal_emit_stop_by_name (c_object, a_gs.item)
 						focus_widget.on_key_event (a_key, a_key_string, a_key_press)
 					end
 				else
 					if focus_widget.default_key_processing_blocked (a_key) then
 						create a_gs.make ("key-release-event")
-						C.signal_emit_stop_by_name (c_object, a_gs.item)
+						feature {EV_GTK_EXTERNALS}.signal_emit_stop_by_name (c_object, a_gs.item)
 						focus_widget.on_key_event (a_key, a_key_string, a_key_press)
 					end
 				end	
@@ -552,8 +552,8 @@ feature {NONE} -- Implementation
 			Precursor
 			is_initialized := False
 			set_title("")
-			accel_group := C.gtk_accel_group_new
-			C.gtk_window_add_accel_group (c_object, accel_group)
+			accel_group := feature {EV_GTK_EXTERNALS}.gtk_accel_group_new
+			feature {EV_GTK_EXTERNALS}.gtk_window_add_accel_group (c_object, accel_group)
 			create upper_bar
 			create lower_bar
 
@@ -573,25 +573,25 @@ feature {NONE} -- Implementation
 		local
 			bar_imp: EV_VERTICAL_BOX_IMP
 		do
-			vbox := C.gtk_vbox_new (False, 0)
-			C.gtk_widget_show (vbox)
-			C.gtk_container_add (c_object, vbox)
-			hbox := C.gtk_hbox_new (False, 0)
-			C.gtk_widget_show (hbox)
+			vbox := feature {EV_GTK_EXTERNALS}.gtk_vbox_new (False, 0)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_show (vbox)
+			feature {EV_GTK_EXTERNALS}.gtk_container_add (c_object, vbox)
+			hbox := feature {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_show (hbox)
 
 			bar_imp ?= upper_bar.implementation
 			check
 				bar_imp_not_void: bar_imp /= Void
 			end
 
-			C.gtk_box_pack_start (vbox, bar_imp.c_object, False, True, 0)
-			C.gtk_box_pack_start (vbox, hbox, True, True, 0)
+			feature {EV_GTK_EXTERNALS}.gtk_box_pack_start (vbox, bar_imp.c_object, False, True, 0)
+			feature {EV_GTK_EXTERNALS}.gtk_box_pack_start (vbox, hbox, True, True, 0)
 
 			bar_imp ?= lower_bar.implementation
 			check
 				bar_imp_not_void: bar_imp /= Void
 			end
-			C.gtk_box_pack_start (vbox, bar_imp.c_object, False, True, 0)
+			feature {EV_GTK_EXTERNALS}.gtk_box_pack_start (vbox, bar_imp.c_object, False, True, 0)
 
 			app_implementation.window_oids.extend (object_id)
 		end

@@ -95,7 +95,7 @@ feature {EV_MENU_ITEM_LIST_IMP} -- Implementation
 	dispose is
 			-- Unreference unwanted gtk widgets.
 		do
-			gtk_object_unref (box)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.object_unref (box)
 			Precursor
 		end
 		

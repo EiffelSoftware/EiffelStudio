@@ -37,7 +37,7 @@ feature -- Interface
 			attach_left (behavior_editor.form, 0);
 			attach_right (behavior_editor.form, 0);
 			attach_bottom (behavior_editor.form, 0);
-			attach_bottom_position (event_catalog, 2);
+			attach_bottom_widget (behavior_editor.form, event_catalog, 2);
 			attach_top_position (behavior_editor.form, 2);
 			show_current
 		end;

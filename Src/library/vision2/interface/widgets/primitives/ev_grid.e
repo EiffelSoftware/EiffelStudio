@@ -115,6 +115,15 @@ feature -- Access
 		do
 			Result := implementation.is_resizing_divider_enabled
 		end
+		
+	is_resizing_divider_solid: BOOLEAN is
+			-- Is resizing divider displayed during column resizing drawn as a solid line?
+			-- If `False', a dashed line style is used.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.is_resizing_divider_solid
+		end
 
 feature -- Status setting
 
@@ -278,6 +287,28 @@ feature -- Status setting
 			implementation.disable_resizing_divider
 		ensure
 			resizing_divider_disabled: not is_resizing_divider_enabled
+		end
+		
+	enable_solid_resizing_divider is
+			-- Ensure resizing divider displayed during column resizing
+			-- is displayed as a solid line.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.enable_solid_resizing_divider
+		ensure
+			solid_resizing_divider: is_resizing_divider_solid
+		end
+		
+	disable_solid_resizing_divider is
+			-- Ensure resizing divider displayed during column resizing
+			-- is displayed as a dashed line.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.disable_solid_resizing_divider
+		ensure
+			dashed_resizing_divider: not is_resizing_divider_solid
 		end
 
 feature -- Status report

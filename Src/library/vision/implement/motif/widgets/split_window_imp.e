@@ -151,7 +151,7 @@ feature --Status setting
 
 	set_size (new_width:INTEGER; new_height: INTEGER) is
 		do
-			Precursor (new_width,new_height)
+			{MEL_PANED_WINDOW} Precursor (new_width,new_height)
 			if managed then
 				if is_vertical then
 					split_size := new_width

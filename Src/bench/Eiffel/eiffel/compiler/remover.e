@@ -120,7 +120,7 @@ end
 	features: INTEGER
 		-- Number of features for the current dot
 
-	features_per_message: INTEGER is 30
+	features_per_message: INTEGER is 50
 	
 	mark_alive (feat: FEATURE_I; rout_id_val: ROUTINE_ID) is
 			-- Record feature `feat'

@@ -7,30 +7,13 @@ root
 default
 	assertion (require)
 	msil_generation (yes)
-	disabled_debug (yes)
-	debug (no)
-	line_generation (no)
-	profile (no)
-	trace (no)
 	il_verifiable (yes)
 	cls_compliant (yes)
-	dotnet_naming_convention (no)
 	use_cluster_name_as_namespace (yes)
 	use_all_cluster_name_as_namespace (yes)
 	msil_generation_type ("exe")
-	msil_clr_version ("v1.1.4322")
-	msil_assembly_compatibility ("None")
 	check_vape (yes)
-	console_application (yes)
-	syntax_warning (no)
-	address_expression (no)
-	array_optimization (no)
-	dead_code_removal (yes)
-	dynamic_runtime (no)
-	exception_trace (no)
-	inlining (no)
-	multithreaded (no)
-
+	console_application (no)
 
 cluster
 	root_cluster:		"$ISE_EIFFEL\examples\wel\diskspace"

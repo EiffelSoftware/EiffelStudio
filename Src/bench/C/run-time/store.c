@@ -1428,23 +1428,26 @@ rt_public void imake_header(EIF_CONTEXT_NOARG)
 }
 
 rt_public void free_sorted_attributes(void)
+	/* Free the memory allocated for `sorted_attributes'. */
 {
 	int i;
 	unsigned int *s_attr;
 
-	if (sorted_attributes != (unsigned int **)0){
+	if (sorted_attributes != (unsigned int **)0) {
 #ifdef DEBUG_GENERAL_STORE
 printf ("free_sorted_attributes %lx\n", sorted_attributes);
 #endif
-		for (i=0; i < scount; i++)
-			if ((s_attr = sorted_attributes[i])!= (unsigned int *)0){
-				xfree((char *)s_attr);
+		xfree((char *) sorted_attributes);
+			/* Note: even if `sorted_attributes' is an pointer to
+			 * a pointer, there is no need to recursively free it,
+			 * As it has been allocated with `cmalloc', simply free
+			 * it with `xfree (sorted_attributes)'. -- ET */
+
 #ifdef DEBUG_GENERAL_STORE
 printf ("Free s_attr (%d) %lx\n", i, s_attr);
 #endif
-				}
-		sorted_attributes = (unsigned int **)0;
 	}
+		sorted_attributes = (unsigned int **)0;
 }
 
 rt_public void buffer_write(register char *data, int size)

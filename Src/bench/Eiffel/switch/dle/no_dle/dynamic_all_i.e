@@ -1,5 +1,7 @@
-class DYNAMIC_ALL_I inherit
+class
+	DYNAMIC_ALL_I
 
+inherit
 	DYNAMIC_I
 		redefine
 			is_all
@@ -7,10 +9,7 @@ class DYNAMIC_ALL_I inherit
 
 feature -- Status report
 
-	is_all: BOOLEAN is
-		do
-			Result := true
-		end;
+	is_all: BOOLEAN is True
 
 	is_dynamic (feat_name: STRING): BOOLEAN is
 		do

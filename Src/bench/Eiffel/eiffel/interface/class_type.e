@@ -611,16 +611,16 @@ feature -- Generation
 			buffer.new_line
 			buffer.new_line
 			buffer.putstring ("RTLI(2);%N")
-			buffer.putstring ("l[0] = Current;")
+			buffer.putstring ("l[0] = (EIF_REFERENCE) &Current;")
 			buffer.new_line
-			buffer.putstring ("l[1] = parent;")
+			buffer.putstring ("l[1] = (EIF_REFERENCE) &parent;")
 			buffer.new_line
 			from
 			until
 				skeleton.after or else not skeleton.item.is_bits
 			loop
 					-- Initialize dynamic type of the bit attribute
-				buffer.putstring ("HEADER(l[0]")
+				buffer.putstring ("HEADER(Current")
 
 					--| In this instruction and in the followings, we put `False' as second
 					--| arguments. This means we won't generate anything if there is nothing
@@ -629,7 +629,7 @@ feature -- Generation
 				skeleton.generate(buffer, False)
 				buffer.putstring(")->ov_flags = egc_bit_dtype;")
 				buffer.new_line
-				buffer.putstring ("*(uint32 *) (l[0]")
+				buffer.putstring ("*(uint32 *) (Current")
 				bits_desc ?= skeleton.item; 	-- Cannot fail
 				skeleton.generate(buffer, False)
 				buffer.putstring(") = ")
@@ -639,14 +639,14 @@ feature -- Generation
 				skeleton.forth
 			end
 				-- Current class type is composite
-			buffer.putstring ("HEADER(l[0])->ov_flags |= EO_COMP;")
+			buffer.putstring ("HEADER(Current)->ov_flags |= EO_COMP;")
 			buffer.new_line
 			from
 				i := 0
 			until
 				skeleton.after
 			loop
-				buffer.putstring ("*(char **) (l[0] ")
+				buffer.putstring ("*(char **) (Current ")
 				value := nb_ref + i
 				if value /= 0 then
 					buffer.putstring (" + @REFACS(")
@@ -657,7 +657,7 @@ feature -- Generation
 				end
 				buffer.new_line
 				buffer.indent
-				buffer.putstring("l[0]")
+				buffer.putstring("Current")
 					-- There is a side effect with generation
 				position := skeleton.position
 				skeleton.generate(buffer, False)
@@ -672,7 +672,7 @@ feature -- Generation
 
 				if gen_type = Void then
 					-- Not an expanded generic
-					buffer.putstring ("HEADER(l[0]")
+					buffer.putstring ("HEADER(Current")
 					skeleton.generate(buffer, False)
 					skeleton.go_to (position)
 					buffer.putstring(")->ov_flags = ")
@@ -682,7 +682,7 @@ feature -- Generation
 				else
 					-- Expanded generic
 					generate_ov_flags_start (buffer, gen_type)
-					buffer.putstring ("HEADER(l[0]")
+					buffer.putstring ("HEADER(Current")
 					skeleton.generate(buffer, False)
 					skeleton.go_to (position)
 					buffer.putstring(")->ov_flags = typres")
@@ -691,18 +691,18 @@ feature -- Generation
 				end
 
 					-- Mark expanded object
-				buffer.putstring ("HEADER(l[0]")
+				buffer.putstring ("HEADER(Current")
 				skeleton.generate(buffer, False)
 				skeleton.go_to (position)
 				buffer.putstring(")->ov_flags |= EO_EXP;")
 				buffer.new_line
-				buffer.putstring ("HEADER(l[0]")
+				buffer.putstring ("HEADER(Current")
 				skeleton.generate(buffer, False)
 				skeleton.go_to (position)
 				buffer.putstring(")->ov_size = ")
 				skeleton.generate(buffer, False)
 				skeleton.go_to (position)
-				buffer.putstring (" + (l[0] - l[1]);")
+				buffer.putstring (" + (Current - parent);")
 				buffer.new_line
 
 					-- Call creation of expanded if there is one
@@ -717,7 +717,7 @@ feature -- Generation
 					end
 					creat_name := creation_feature.body_id.feature_name (written_ctype.id)
 					buffer.putstring (creat_name)
-					buffer.putstring ("(l[0]")
+					buffer.putstring ("(Current")
 					skeleton.generate(buffer, False)
 					skeleton.go_to (position)
 					buffer.putstring (");");	
@@ -733,9 +733,9 @@ feature -- Generation
 				sub_skel.go_expanded
 				if not sub_skel.after then
 					buffer.putstring (sub_class_type.init_procedure_name)
-					buffer.putstring("(l[0]")
+					buffer.putstring("(Current")
 					skeleton.generate(buffer, False)
-					buffer.putstring(", l[1]);")
+					buffer.putstring(", parent);")
 					buffer.new_line
 				end
 				skeleton.forth
@@ -792,7 +792,7 @@ feature -- Generation
 				gen_type.generate_cid_init (buffer, final_mode, False, idx_cnt)
 			end
 
-			buffer.putstring ("typres = RTCID(&typcache, l[0],")
+			buffer.putstring ("typres = RTCID(&typcache, Current,")
 			buffer.putint (gen_type.generated_id (final_mode))
 			buffer.putstring (", typarr);")
 			buffer.new_line

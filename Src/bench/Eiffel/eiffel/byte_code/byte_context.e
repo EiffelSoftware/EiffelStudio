@@ -504,11 +504,14 @@ feature
 			-- Generate label "body"
 			--|Note: the semi-colon is added, otherwise C compilers
 			--|complain when there are no instructions after the label.
+		local
+			buf: GENERATION_BUFFER
 		do
-			buffer.exdent
-			buffer.putstring ("body:;")
-			buffer.new_line
-			buffer.indent
+			buf := buffer
+			buf.exdent
+			buf.putstring ("body:;")
+			buf.new_line
+			buf.indent
 		end
 
 	print_body_label is
@@ -527,12 +530,15 @@ feature
 			-- Generate label number `l'
 		require
 			label_exists: l > 0
+		local
+			buf: GENERATION_BUFFER
 		do
-			buffer.exdent
+			buf := buffer
+			buf.exdent
 			print_label (l)
-			buffer.putchar (':')
-			buffer.new_line
-			buffer.indent
+			buf.putchar (':')
+			buf.new_line
+			buf.indent
 		end
 
 	print_current_label is
@@ -545,9 +551,12 @@ feature
 			-- Print label number `l'
 		require
 			label_exists: l > 0
+		local
+			buf: GENERATION_BUFFER
 		do
-			buffer.putstring ("label_")
-			buffer.putint (l)
+			buf := buffer
+			buf.putstring ("label_")
+			buf.putint (l)
 		end
 
 	set_local_index (s: STRING; r: REGISTRABLE) is
@@ -794,13 +803,7 @@ feature
 				until
 					j > nb_vars
 				loop
-					if i = C_ref then
-						if not need_gc_hooks then
-							generate_tmp_var (i, j)
-						end
-					else
-						generate_tmp_var (i, j)
-					end
+					generate_tmp_var (i, j)
 					j := j + 1
 				end
 				i := i + 1
@@ -812,18 +815,20 @@ feature
 			-- garbage collector.
 		local
 			i, j: INTEGER
+			buf: GENERATION_BUFFER
 		do
 			j := non_gc_tmp_vars
 			if j >= 1 then
 				from
 					i := 1
+					buf := buffer
 				until
 					i > j
 				loop
-					buffer.putstring ("char *xp")
-					buffer.putint (i)
-					buffer.putchar (';')
-					buffer.new_line
+					buf.putstring ("EIF_REFERENCE xp")
+					buf.putint (i)
+					buf.putchar (';')
+					buf.new_line
 					i := i + 1
 				end
 			end
@@ -832,25 +837,34 @@ feature
 	generate_tmp_var (ctype, num: INTEGER) is
 			-- Generate declaration for temporary variable `num'
 			-- whose C type is `ctype'.
+		local
+			buf: GENERATION_BUFFER
 		do
+			buf := buffer
 			inspect
 				ctype
 			when C_long then
-				buffer.putstring ("EIF_INTEGER ti")
+				buf.putstring ("EIF_INTEGER ti")
+				buf.putint (num)
 			when C_ref then
-				buffer.putstring ("EIF_REFERENCE tp")
+				buf.putstring ("EIF_REFERENCE tp")
+				buf.putint (num)
+				buf.putstring (" = NULL")
 			when C_float then
-				buffer.putstring ("EIF_REAL tf")
+				buf.putstring ("EIF_REAL tf")
+				buf.putint (num)
 			when C_char then
-				buffer.putstring ("EIF_CHARACTER tc")
+				buf.putstring ("EIF_CHARACTER tc")
+				buf.putint (num)
 			when C_double then
-				buffer.putstring ("EIF_DOUBLE td")
+				buf.putstring ("EIF_DOUBLE td")
+				buf.putint (num)
 			when C_pointer then
-				buffer.putstring ("EIF_POINTER ta")
+				buf.putstring ("EIF_POINTER ta")
+				buf.putint (num)
 			end
-			buffer.putint (num)
-			buffer.putchar (';')
-			buffer.new_line
+			buf.putchar (';')
+			buf.new_line
 		end
 
 	generate_gc_hooks (compound_or_post: BOOLEAN) is
@@ -870,7 +884,9 @@ feature
 			reg: REGISTRABLE
 			argument_b: ARGUMENT_B
 			bit_i: BIT_I
+			buf: GENERATION_BUFFER
 		do
+			buf := buffer
 			-- if more than, say, 20 local variables are to be initialized,
 			-- then it might be worthy to call bzero() instead of manually
 			-- setting the entries (beneficial both in code size and execution
@@ -884,13 +900,13 @@ feature
 				-- The hooks are only needed if there is at least one reference
 			if nb_refs > 0 then
 				if compound_or_post or else byte_code.rescue_clause = Void then
-					buffer.putstring ("RTLI(")
+					buf.putstring ("RTLI(")
 				else
-					buffer.putstring ("RTXI(")
+					buf.putstring ("RTXI(")
 				end
-				buffer.putint (nb_refs)
-				buffer.putstring (gc_rparan_comma)
-				buffer.new_line
+				buf.putint (nb_refs)
+				buf.putstring (gc_rparan_comma)
+				buf.new_line
 				if system.has_separate then
 					reset_added_gc_hooks
 				end
@@ -909,62 +925,62 @@ feature
 						real_type (argument_b.type).is_expanded and exp_args > 1
 					then
 						-- Expanded cloning protocol
-						buffer.putstring ("if (RTIE(")
-						buffer.putstring (rname)
-						buffer.putstring (")) {")
-						buffer.new_line
-						buffer.indent
+						buf.putstring ("if (RTIE(")
+						buf.putstring (rname)
+						buf.putstring (")) {")
+						buf.new_line
+						buf.indent
 						nb_exp := expanded_number (argument_b.position) - 1
-						buffer.putstring ("idx[")
-						buffer.putint (nb_exp)
-						buffer.putstring ("] = RTOF(arg")
-						buffer.putint (argument_b.position)
-						buffer.putstring (gc_rparan_comma)
-						buffer.new_line
-						buffer.put_protected_local (position)
-						buffer.putstring (" = RTEO(arg")
-						buffer.putint (argument_b.position)
-						buffer.putstring (gc_rparan_comma)
-						buffer.new_line
-						buffer.exdent
-						buffer.putstring (gc_lacc_else_r_acc)
-						buffer.new_line
-						buffer.indent
-						buffer.put_protected_local (position)
-						buffer.putstring (" = ")
-						buffer.putstring (rname)
-						buffer.putchar (';')
-						buffer.new_line
-						buffer.putstring ("idx[")
-						buffer.putint (nb_exp)
-						buffer.putstring ("] = -1;")
-						buffer.new_line
-						buffer.exdent
-						buffer.putchar ('}')
+						buf.putstring ("idx[")
+						buf.putint (nb_exp)
+						buf.putstring ("] = RTOF(arg")
+						buf.putint (argument_b.position)
+						buf.putstring (gc_rparan_comma)
+						buf.new_line
+						buf.put_protected_local_set (position)
+						buf.putstring (" = (EIF_REFERENCE) &RTEO(arg")
+						buf.putint (argument_b.position)
+						buf.putstring (gc_rparan_comma)
+						buf.new_line
+						buf.exdent
+						buf.putstring (gc_lacc_else_r_acc)
+						buf.new_line
+						buf.indent
+						buf.put_protected_local_set (position)
+						buf.putstring (" = (EIF_REFERENCE) &")
+						buf.putstring (rname)
+						buf.putchar (';')
+						buf.new_line
+						buf.putstring ("idx[")
+						buf.putint (nb_exp)
+						buf.putstring ("] = -1;")
+						buf.new_line
+						buf.exdent
+						buf.putchar ('}')
 					else
-						buffer.put_protected_local (position)
-						buffer.putstring (" = ")
+						buf.put_protected_local_set (position)
+						buf.putstring (" = (EIF_REFERENCE) &")
 						if 	((reg.is_predefined or reg.is_temporary)
 							and not (reg.is_current or reg.is_argument)
 							and not (reg.is_result and compound_or_post))
 						then
-							buffer.putstring ("(EIF_REFERENCE) 0")
+							buf.putstring (rname)
 						else
 							if (reg.c_type.is_bit) and (reg.is_argument) then
 								-- Clone argument if it is bit
-								buffer.putstring ("RTCB(")
-								buffer.putstring (rname)
-								buffer.putchar (')')
+								buf.putstring ("RTCB(")
+								buf.putstring (rname)
+								buf.putchar (')')
 							else
-								buffer.putstring (rname)
+								buf.putstring (rname)
 							end
 						end
-						buffer.putchar (';')
+						buf.putchar (';')
 					end
-					buffer.new_line
+					buf.new_line
 					hash_table.forth
 				end
-				buffer.new_line
+				buf.new_line
 			end
 		end
 
@@ -997,15 +1013,17 @@ feature
 			-- Pop off pushed addresses on local stack
 		local
 			vars: INTEGER
+			buf: GENERATION_BUFFER
 		do
 			vars := ref_var_used
 			if vars > 0 then
+				buf := buffer
 				if byte_code.rescue_clause /= Void then
-					buffer.putstring ("RTXE;")
-					buffer.new_line
+					buf.putstring ("RTXE;")
+					buf.new_line
 				else
-					buffer.putstring ("RTLE;")
-					buffer.new_line
+					buf.putstring ("RTLE;")
+					buf.new_line
 				end
 			end
 		end
@@ -1127,23 +1145,28 @@ feature -- Concurrent Eiffel
 	
 	print_concurrent_label is
 			-- Print label number `cur_label'.
+		local
+			buf: GENERATION_BUFFER
 		do
-			buffer.putstring ("cur_label_")
-			buffer.putint (label)
+			buf := buffer
+			buf.putstring ("cur_label_")
+			buf.putint (label)
 		end
 
 	reset_added_gc_hooks is 
 		local
 			i: INTEGER
+			buf: GENERATION_BUFFER
 		do
 			from 
 				i := ref_var_used - 1
+				buf := buffer
 			until
 				i < 0
 			loop
-				buffer.put_protected_local (ref_var_used + i)
-				buffer.putstring (" = (EIF_REFERENCE) 0;")
-				buffer.new_line
+				buf.put_protected_local_set (ref_var_used + i)
+				buf.putstring (" = (EIF_REFERENCE) 0;")
+				buf.new_line
 				i := i - 1
 			end
 		end
@@ -1156,9 +1179,12 @@ feature -- Concurrent Eiffel
 		end
 
 	print_reservation_label is
+		local
+			buf: GENERATION_BUFFER
 		do
-			buffer.putstring ("res_label_")
-			buffer.putint (reservation_label)
+			buf := buffer
+			buf.putstring ("res_label_")
+			buf.putint (reservation_label)
 		end
 
 end

@@ -294,7 +294,7 @@ end
 								loc_idx := context.local_index (para.stored_register.register_name)
 								para_type := real_type(para.attachment_type)
 								if para_type /= Void and then para_type.is_separate then
-									buf.put_protected_local (context.ref_var_used + loc_idx)
+									buf.put_protected_local_set (context.ref_var_used + loc_idx)
 								else
 									expr.print_register
 								end
@@ -437,7 +437,7 @@ feature -- Concurrent Eiffel
 							loc_idx := -1
 						end
 						if loc_idx /= -1 then
-							buf.put_protected_local (context.ref_var_used + loc_idx)
+							buf.put_protected_local_set (context.ref_var_used + loc_idx)
 						else
 							-- It'll be the case when the value is "Void"
 							expr.print_register

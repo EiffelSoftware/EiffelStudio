@@ -90,11 +90,7 @@ feature
 			str: STRING;
 			index: INTEGER;
 		do
-			if c_type.is_pointer then
-				print_register_by_name;
-			else
-				context.buffer.putstring (register_name);
-			end;
+			context.buffer.putstring (register_name);
 		end;
 
 	is_temporary: BOOLEAN is true;

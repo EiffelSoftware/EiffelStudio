@@ -218,28 +218,6 @@ feature -- Pattern generation
 			end;
 		end;
 
-	generate_arguments_in_call (buffer: GENERATION_BUFFER) is
-			-- Generate arguments in call
-		local
-			i, nb: INTEGER;
-		do
-			from
-				i := 1;
-				nb := argument_count;
-			until
-				i > nb
-			loop
-				if argument_types.item (i).is_pointer then
-					buffer.putchar (',');
-					buffer.put_protected_local (argument_hook_index (i));
-				else
-					buffer.putstring (", arg");
-					buffer.putint (i);
-				end;
-				i := i + 1;
-			end;
-		end;
-
 	generate_pattern (id: INTEGER; buffer: GENERATION_BUFFER) is
 			-- Generate pattern
 		local

@@ -50,10 +50,10 @@ feature {NONE} -- Implementation
 			Result := res
 		end
 		
-	fonts: LINEAR [EV_FONT] is
-			-- All fonts available on current platform.
+	font_families: LINEAR [STRING] is
+			-- All font families available on current platform.
 		local
-			res: ARRAYED_LIST [EV_FONT]
+			res: ARRAYED_LIST [STRING]
 			a_font: EV_FONT
 			all_fonts: ARRAYED_LIST [STRING]
 		do
@@ -64,9 +64,7 @@ feature {NONE} -- Implementation
 			until
 				all_fonts.off
 			loop
-				create a_font
-				a_font.preferred_families.extend (all_fonts.item)
-				res.extend (a_font)
+				res.extend (all_fonts.item)
 				all_fonts.forth
 			end
 			Result ?= res

@@ -51,6 +51,26 @@ feature {NONE} -- Initialization
 
 feature -- Basic Operation
 
+	create_new_directory is
+			-- Actually create directory
+		local
+			temp_file_name: FILE_NAME
+			directory: DIRECTORY
+			layout_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
+		do
+			create temp_file_name.make_from_string (generated_path.string)
+			temp_file_name.extend (directory_name)	
+			create directory.make (temp_file_name)
+			if not directory.exists then
+				-- Only create the directory if it is not already present on the disk.
+				create_directory (directory)
+				directory_added_succesfully := True
+			end
+		end
+		
+	directory_added_succesfully: BOOLEAN
+		-- Was last call to `create_directory' successful?
+
 	execute is
 			-- Execute `Current'.
 		local
@@ -60,15 +80,6 @@ feature -- Basic Operation
 		do
 			create layout_item.make_with_name (directory_name)
 			window_selector.extend (layout_item)
-			
-				-- Now actually remove the directory from the disk.
-			create temp_file_name.make_from_string (generated_path.string)
-			temp_file_name.extend (directory_name)	
-			create directory.make (temp_file_name)
-			if not directory.exists then
-					-- Only create the directory if it is not already present on the disk.
-				create_directory (directory)
-			end
 			if not history.command_list.has (Current) then
 				history.add_command (Current)
 			end

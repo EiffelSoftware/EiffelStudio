@@ -102,7 +102,7 @@ feature -- IL generation
 			real_ty ?= context.real_type (type)
 			base_class := real_ty.base_class
 			feat_tbl := base_class.feature_table
-			make_feat := feat_tbl.item_id (make_name_id)
+			make_feat := feat_tbl.item_id (Default_create_name_id)
 			l_decl_type := il_generator.implemented_type (make_feat.origin_class_id, real_ty)
 			
 				-- Creation of Array
@@ -158,18 +158,11 @@ feature -- Byte code generation
 		local
 			real_ty: TUPLE_TYPE_I;
 			actual_type: CL_TYPE_I;
-			f_table: FEATURE_TABLE;
-			feat_i: FEATURE_I;
-			feat_id: INTEGER;
 			expr: EXPR_B;
 			base_class: CLASS_C;
-			r_id: INTEGER;
-			rout_info: ROUT_INFO
 		do
 			real_ty ?= context.real_type (type);
 			base_class := real_ty.base_class;
-			f_table := base_class.feature_table;
-			feat_i := f_table.item_id (make_name_id);
 				-- Need to insert expression into
 				-- the stack back to front in order
 				-- to be inserted into the area correctly
@@ -189,24 +182,17 @@ feature -- Byte code generation
 			end;
 			if base_class.is_precompiled then
 				ba.append (Bc_ptuple);
-				r_id := feat_i.rout_id_set.first;
-				rout_info := System.rout_info_table.item (r_id);
-				ba.append_integer (rout_info.origin);
-				ba.append_integer (rout_info.offset);	
 				ba.append_short_integer (real_ty.associated_class_type.type_id - 1);
 				ba.append_short_integer (context.class_type.static_type_id-1)
 				real_ty.make_gen_type_byte_code (ba, True)
 				ba.append_short_integer (-1);
 			else
 				ba.append (Bc_tuple);
-				ba.append_short_integer (real_ty.associated_class_type.static_type_id - 1);
 				ba.append_short_integer (real_ty.associated_class_type.type_id - 1);
 				ba.append_short_integer
 					(context.current_type.associated_class_type.static_type_id - 1)
 				real_ty.make_gen_type_byte_code (ba, True)
 				ba.append_short_integer (-1);
-				feat_id := feat_i.feature_id;
-				ba.append_short_integer (feat_id);
 			end;
 			ba.append_integer (expressions.count + 1);
 			if real_ty.is_basic_uniform then

@@ -102,11 +102,6 @@ feature
 			real_ty ?= context.real_type (type)
 			workbench_mode := context.workbench_mode
 			generate_tuple_creation (real_ty, workbench_mode)
-			if workbench_mode then
-				generate_wk_tuple_make (real_ty)
-			else
-				generate_final_tuple_make (real_ty)
-			end
 			fill_tuple (real_ty.meta_generic)
 		end
 
@@ -206,89 +201,4 @@ feature {NONE} -- C code generation
 			end
 		end
 
-	generate_final_tuple_make (real_ty: TUPLE_TYPE_I)	is
-				-- Generate code to call the make routine 
-				-- of the manifest tuple in final mode.
-		local
-			rout_table: ROUT_TABLE
-			internal_name: STRING
-			rout_id: INTEGER
-			buf: GENERATION_BUFFER
-		do
-			buf := buffer
-			rout_id := real_ty.base_class.feature_table.item_id (make_name_id).rout_id_set.first
-			rout_table ?= Eiffel_table.poly_table (rout_id)
-
-				-- Generate the signature of the function
-			rout_table.goto_implemented (real_ty.type_id)
-			check
-				is_implemented: rout_table.is_implemented
-			end
-			internal_name := clone (rout_table.feature_name)
-			buf.putstring ("(FUNCTION_CAST(void, (EIF_REFERENCE))")
-			buf.putstring (internal_name);
-			buf.putstring (")")
-
-				-- Generate arguments
-			generate_tuple_make_arguments
-
-				-- Remember extern routine declaration
-				-- Since `make' from TUPLE is a procedure, the return type is `Void_c_type'
-				--| Note: it used to be `real_ty.c_type' but it was the C type of
-				--| the TUPLE itself and not of the `make' routine and thus was incorrect.
-			Extern_declarations.add_routine_with_signature (Void_c_type, internal_name, <<"EIF_REFERENCE">>)
-		end
-
-	generate_wk_tuple_make (real_ty: TUPLE_TYPE_I)	is
-				-- Generate code to call the make routine 
-				-- of the manifest tuple in workbench mode.
-		local
-			f_table: FEATURE_TABLE
-			feat_i: FEATURE_I
-			r_id: INTEGER
-			rout_info: ROUT_INFO
-			base_class: CLASS_C
-			buf: GENERATION_BUFFER
-		do
-			buf := buffer
-			base_class := real_ty.base_class
-			f_table := base_class.feature_table
-			feat_i := f_table.item_id (make_name_id)
-			buf.putstring ("(FUNCTION_CAST(void, (EIF_REFERENCE))")
-			if 
-				Compilation_modes.is_precompiling or else
-				base_class.is_precompiled
-			then
-				buf.putstring ("RTWPF(")
-				r_id := feat_i.rout_id_set.first
-				rout_info := System.rout_info_table.item (r_id)
-				buf.generate_class_id (rout_info.origin)
-				buf.putstring (gc_comma)
-				buf.putint (rout_info.offset)
-			else
-				buf.putstring (" RTWF(")
-				buf.putint (real_ty.associated_class_type.static_type_id - 1)
-				buf.putstring (gc_comma)
-				buf.putint (feat_i.feature_id)
-			end
-			buf.putstring (gc_comma)
-			buf.putstring (gc_upper_dtype_lparan)
-			print_register
-			buf.putstring (")))")
-			generate_tuple_make_arguments
-		end
-
-	generate_tuple_make_arguments is
-			-- Generate the arguments for the tuple creation.
-		local
-			buf: GENERATION_BUFFER
-		do
-			buf := buffer
-			buf.putchar ('(')
-			print_register
-			buf.putstring (");")
-			buf.new_line
-		end
-	
 end
-

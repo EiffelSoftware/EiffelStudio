@@ -76,7 +76,7 @@
 			another EiffelStudio to reuse the generated classes. The interesting classes are all related to the coclass proxy 
 		<class_name>STRING_MANIPULATOR_PROXY</class_name>. The proxy is the Eiffel class that gives access to the component. Each feature on 
 		the proxy calls the corresponding interface function on the component. You can use the EiffelStudio opened by the wizard to browse 
-		through the generated classes and study the class hierarchy.
+		through the generated classes and study the class hierarchy.</note>
 		<heading>
 			<size>2</size> Implementing a client
 		</heading>
@@ -111,7 +111,6 @@
 		the fields used to call this feature. After you click <bold>Replace</bold> you will see an error message box warning you that 
 		a precondition was violated on the server side. This demonstrates contracts `over the wire'. The preconditions was violated 
 		in the server, this exception was caught by the EiffelCOM runtime and sent back to the client.
-		</paragraph>
 		<seealso>
 			<bold>See Also</bold>
 			<line_break/>
@@ -125,5 +124,6 @@
 				<label>Creating a new component from an Eiffel Project</label>
 			</link>
 		</seealso>
+		</paragraph>
 	</paragraph>
 </document>

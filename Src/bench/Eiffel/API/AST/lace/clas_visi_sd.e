@@ -75,7 +75,6 @@ feature -- Initialization
 		local
 			cluster: CLUSTER_I;
 			a_class: CLASS_I;
-			level: VISIBLE_I;
 			vd25: VD25;
 			vd26: VD26;
 		do
@@ -98,7 +97,6 @@ feature -- Initialization
 					Error_handler.insert_error (vd26);
 				end;
 					
-				level := visible_level;
 				a_class.set_visible_level (visible_level);
 				a_class.set_visible_name (visible_name);
 			end;

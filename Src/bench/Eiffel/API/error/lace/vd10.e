@@ -33,10 +33,10 @@ feature
 		do
 			error_window.put_string ("Error ");
 			error_window.put_clickable_string (stone (dummy_reference), code);
-			error_window.put_string (":\n");
-			error_window.put_string ("\tfile: ");
+			error_window.put_string (":%N");
+			error_window.put_string ("%Tfile: ");
 			error_window.put_string (file_name);
-			error_window.put_string ("\n");
+			error_window.put_string ("%N");
 		end;
 
 end

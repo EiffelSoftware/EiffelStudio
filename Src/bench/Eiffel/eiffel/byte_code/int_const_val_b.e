@@ -14,6 +14,11 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_WORKBENCH
+		export
+			{NONE} all
+		end
+
 creation
 	make
 	
@@ -24,27 +29,31 @@ feature
 
 	feature_id: INTEGER;
 			-- Feature id of the constant
-	
+
+	written_in: INTEGER
+			-- Class id where constant is used.
+
 feature 
 
-	make (i: INTEGER; c: CONSTANT_I) is
+	make (context_class: CLASS_C; i: INTEGER; c: CONSTANT_I) is
 		do
 			value := i;
 			rout_id := c.rout_id_set.first;
 			feature_id := c.feature_id;
+			written_in := context_class.class_id
 		end;
 
 	generation_value: INTEGER is
 			-- Value to generate
 		local
 			constant_i: CONSTANT_I;
-			integer_value: INT_VALUE_I;
+			integer_value: INTEGER_CONSTANT;
 			current_feature_table: FEATURE_TABLE;
 		do
-			current_feature_table := context.current_type.base_class.feature_table;
+			current_feature_table := System.class_of_id (written_in).feature_table;
 			constant_i ?= current_feature_table.origin_table.item (rout_id);
 			integer_value ?= constant_i.value;
-			Result := integer_value.int_val;
+			Result := integer_value.value;
 		end;
 
 feature -- Byte code generation

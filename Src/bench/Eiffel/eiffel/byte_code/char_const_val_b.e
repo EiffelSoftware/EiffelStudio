@@ -8,16 +8,33 @@ inherit
 		redefine
 			generation_value, make_byte_code
 		end
+		
 	SHARED_BYTE_CONTEXT
 		export
 			{NONE} all
 		end
 
+	SHARED_WORKBENCH
+		export
+			{NONE} all
+		end
+	
 creation
-
 	make
 
-feature
+feature {NONE} -- Initialization
+
+	make (context_class: CLASS_C; i: CHARACTER; c: CONSTANT_I) is
+		require
+			good_argument: c /= Void
+		do
+			old_make (i)
+			rout_id := c.rout_id_set.first
+			feature_id := c.feature_id
+			written_in := context_class.class_id
+		end
+
+feature -- Access
 
 	rout_id: INTEGER
 			-- Routine id of the constant
@@ -25,14 +42,10 @@ feature
 	feature_id: INTEGER
 			-- Feature id of the constant
 
-	make (i: CHARACTER; c: CONSTANT_I) is
-		require
-			good_argument: c /= Void
-		do
-			old_make (i)
-			rout_id := c.rout_id_set.first
-			feature_id := c.feature_id
-		end
+	written_in: INTEGER
+			-- Class ID where constant is defined from.
+			
+feature -- Generation
 
 	generation_value: CHARACTER is
 			-- Value to generate
@@ -41,7 +54,7 @@ feature
 			char_value: CHAR_VALUE_I
 			current_feature_table: FEATURE_TABLE
 		do
-			current_feature_table := context.current_type.base_class.feature_table
+			current_feature_table := System.class_of_id (written_in).feature_table
 			constant_i ?= current_feature_table.origin_table.item (rout_id)
 			char_value ?= constant_i.value
 			Result := char_value.char_val

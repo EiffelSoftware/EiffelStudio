@@ -422,8 +422,7 @@ feature {NONE} -- Implementation
 				end
 				all_text_fields.forth
 			end
-		end
-		
+		end	
 		
 	validate_name_change (index: INTEGER) is
 			-- text field, `all_text_fields' @ `index' has been modified, 
@@ -433,8 +432,14 @@ feature {NONE} -- Implementation
 		do
 			current_text_field := all_text_fields @ index
 			if valid_class_name (current_text_field.text) or current_text_field.text.is_empty then
-				if object_handler.name_in_use (current_text_field.text, Void) or (reserved_words.has (current_text_field.text.as_lower)) then
+				if object_handler.string_is_object_name (current_text_field.text, Void) or (reserved_words.has (current_text_field.text.as_lower)) then
 					current_text_field.set_foreground_color (red)
+				elseif object_handler.string_is_feature_name (current_text_field.text, Void) then
+					if object_handler.existing_feature_matches (current_text_field.text, all_types @ index) then
+						current_text_field.set_foreground_color (black)
+					else
+						current_text_field.set_foreground_color (red)
+					end
 				else
 					current_text_field.set_foreground_color (black)
 				end
@@ -605,8 +610,13 @@ feature {NONE} -- Implementation
 		local
 			invalid_state: BOOLEAN
 			warning_dialog: EV_WARNING_DIALOG
-			counter: INTEGER
+			counter, counter1: INTEGER
 			action_info: GB_ACTION_SEQUENCE_INFO
+			current_text_field: EV_TEXT_FIELD
+			current_type, other_type: STRING
+			action_sequence1, action_sequence2: GB_EV_ACTION_SEQUENCE
+			first_types, second_types: STRING
+			first_name, second_name: STRING
 		do	
 				-- We must validate all the names contained in the boxes.
 				-- First, we need to find out all selected text fields.
@@ -616,24 +626,65 @@ feature {NONE} -- Implementation
 				counter > all_check_buttons.count or invalid_state
 			loop
 				if (all_check_buttons @ counter).is_selected then
-					if (all_text_fields @ counter).text.is_empty then
+					current_text_field := all_text_fields @ counter
+					if (current_text_field).text.is_empty then
 						invalid_state := True
-						--create warning_dialog.make_with_text ("Please enter a feature name for `" + all_names @ (counter) + "'.%NOr deselect " + all_names @ (counter))
 						create warning_dialog.make_with_text ("You have not entered a feature name for `" + all_names @ (counter) + "'.%NPlease enter a feature name, or uncheck this action sequence.")
 						warning_dialog.show_modal_to_window (Current)
-					elseif (all_text_fields @ counter).foreground_color.is_equal (red) then
+						-- Check for reserved words.
+					elseif (current_text_field).foreground_color.is_equal (red) then
 						invalid_state := True
-						create warning_dialog.make_with_text (Event_feature_name_warning)
-						warning_dialog.show_modal_to_window (Current)
-					elseif repeated_name ((all_text_fields @ counter).text.as_lower, counter) then
-						invalid_state := True
-						create warning_dialog.make_with_text (Duplicate_event_feature_name_warning)
-						warning_dialog.show_modal_to_window (Current)
+							-- First check to see whether it is a reserved word.
+						if reserved_words.has (current_text_field.text.as_lower) then
+							create warning_dialog.make_with_text ("You are using an Eiffel reserved word for `"+ all_names @ (counter) + "'.%NPlease enter a valid feature name that is not a reserved word or uncheck the action sequence.")
+							warning_dialog.show_modal_to_window (Current)						
+						elseif object_handler.string_is_object_name (current_text_field.text, Void) then
+							-- Name has already been used as an object name.
+							create warning_dialog.make_with_text ("The feature name you have specified for `"+ all_names @ (counter) + "'%N is already in use as the name of an object in the system.%NPlease specify a unique name or uncheck this action sequence.")
+							warning_dialog.show_modal_to_window (Current)
+						else
+							create warning_dialog.make_with_text ("The feature name you have specified for `"+ all_names @ (counter) + "'%N is already defined in another action sequence with incompatible event data.%NTherefore, it is not possible to add this feature to `"+ all_names @ (counter) + "'.%NPlease specify a new feature name or uncheck this action sequence.")
+							warning_dialog.show_modal_to_window (Current)
+						end
+					elseif repeated_name (current_text_field.text.as_lower, counter) then
+						current_type := all_types @ counter
+						
+						from
+							counter1 := 1
+						until
+							counter1 > all_text_fields.count or other_type /= Void
+						loop
+							if (all_text_fields @ counter1).text.as_lower.is_equal (current_text_field.text.as_lower) and
+								counter1 /= counter and
+								(all_check_buttons @ counter1).is_selected then
+								other_type := all_types @ counter1
+								second_name := all_names @ counter1
+							end
+							counter1 := counter1 + 1
+						end
+						check
+							other_type_found: other_type /= Void
+						end
+						action_sequence1 ?= new_instance_of (dynamic_type_from_string ("GB_" + current_type))
+						check
+							action_sequence_not_void: action_sequence1 /= Void
+						end
+						action_sequence2 ?= new_instance_of (dynamic_type_from_string ("GB_" + other_type))
+						check
+							action_sequence_not_void: action_sequence2 /= Void
+						end
+						first_types := action_sequence1.argument_types_as_string
+						second_types := action_sequence2.argument_types_as_string
+						if first_types /= second_types then
+							first_name := all_names @ counter
+							invalid_state := True
+							create warning_dialog.make_with_text ("`" + first_name +"' and `" + second_name +"' have different event data.%NTherefore, it is not possible to have the same feature connected to both of them.%NPlease resolve this discrepency.")
+							warning_dialog.show_modal_to_window (Current)	
+						end
 					end	
 				end
 				counter := counter + 1
 			end
-			
 
 			if not invalid_state then			
 					-- Then insert the new info.

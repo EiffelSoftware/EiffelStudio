@@ -68,6 +68,8 @@ feature -- Output
 				-- and have extra routine named `remove_stoppoint'
 				Window_manager.routine_win_mgr.show_stoppoint
 						(Application.status.e_feature, Application.status.break_index)
+				Project_tool.show_stoppoint
+						(Application.status.e_feature, Application.status.break_index)
 			end
 		end;
 

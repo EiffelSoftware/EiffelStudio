@@ -1,0 +1,67 @@
+/********************
+ *** EGC_DYNLIB.C ***
+ ********************/
+
+#include "egc_dynlib.h"
+
+static short is_rt_initialized = 0;
+
+RT_LNK HANDLE ghInstance;
+RT_LNK HINSTANCE eif_hInstance;
+RT_LNK HINSTANCE eif_hPrevInstance;
+
+BOOL WINAPI DllMain (HANDLE hInst, ULONG ul_reason_for_call, LPVOID lpvReserved)
+{
+	switch (ul_reason_for_call) {
+		case DLL_PROCESS_ATTACH:
+			ghInstance = hInst;
+			eif_hInstance = hInst;
+			eif_hPrevInstance = hInst;
+			init_rt();
+			break;
+		case DLL_PROCESS_DETACH:
+			reclaim_rt ();
+			break;
+		case DLL_THREAD_ATTACH:
+		case DLL_THREAD_DETACH:
+			break;
+	}
+	return TRUE;
+}
+
+void init_rt (void)
+{
+	struct ex_vect *exvect; 
+	jmp_buf exenv; 
+	int argc = 1; 
+	char *argv[] = {"",""}; 
+	
+	if (is_rt_initialized == 0) {
+		is_rt_initialized = 1;
+		eif_alloc_init();
+		{
+		GTCX;
+		egc_init_plug(); 
+		initsig(); 
+		initstk(); 
+		exvect = exset((char *) 0, 0, (char *) 0); 
+		exvect->ex_jbuf = &exenv; 
+		if (echval = setjmp(exenv)) 
+			failure(); 
+		eif_rtinit(argc, argv, (char **)0);  
+		if (root_obj == (char *)0)
+			root_obj = cmalloc(1);
+		}
+	}
+}
+
+void reclaim_rt (void)
+{
+	if (is_rt_initialized == 1) 
+	{
+		reclaim();
+		is_rt_initialized = 0; 
+	}
+}
+
+

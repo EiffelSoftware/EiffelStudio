@@ -1,0 +1,207 @@
+--
+-- Config.eif for Borland C++ Builder 4.0 or greater
+--
+
+-- Directory separator
+directory_separator: "\"
+subcommand_separator: "%N%T"
+quick_compilation: True
+
+-- include path
+include_path: "$(INCLUDE_PATH)"
+
+-- C-compiler
+cc: "$(ISE_EIFFEL)\BCC55\bin\bcc32"
+cpp: "$(ISE_EIFFEL)\BCC55\bin\bcc32"
+
+-- C-linker
+sharedlink: "$(ISE_EIFFEL)\BCC55\ilink32"
+
+-- optimization flags
+wkoptimize: ""
+optimize: "-O2"
+
+-- compiler flags
+ccflags: "-c -g0 -w- -DNONAMELESSUNION -I$(ISE_EIFFEL)\BCC55\include -L$(ISE_EIFFEL)\BCC55\lib -L$(ISE_EIFFEL)\BCC55\lib\PSDK"
+mtccflags: "-c -g0 -w- -DNONAMELESSUNION -tWM -DEIF_THREADS -I$(ISE_EIFFEL)\BCC55\include -L$(ISE_EIFFEL)\BCC55\lib -L$(ISE_EIFFEL)\BCC55\lib\PSDK"
+cppflags: "-c -g0 -w- -DNONAMELESSUNION -I$(ISE_EIFFEL)\BCC55\include -L$(ISE_EIFFEL)\BCC55\lib -L$(ISE_EIFFEL)\BCC55\lib\PSDK"
+mtcppflags: "-c -g0 -w- -DNONAMELESSUNION -tWM -DEIF_THREADS -I$(ISE_EIFFEL)\BCC55\include -L$(ISE_EIFFEL)\BCC55\lib -L$(ISE_EIFFEL)\BCC55\lib\PSDK"
+shared_flags: "-DEIF_USE_DLL"
+
+large: ""
+
+-- linker flags
+ar: ""
+ld: ""
+ldflags: "-c -Tpe -L$(ISE_EIFFEL)\BCC55\lib -L$(ISE_EIFFEL)\BCC55\lib\PSDK"
+mtldflags: "-c -Tpe -L$(ISE_EIFFEL)\BCC55\lib -L$(ISE_EIFFEL)\BCC55\lib\PSDK"
+console_flags: "-ap"
+windows_flags: "-aa"
+ldsharedflags: "-dll"
+mtldsharedflags: "-dll"
+
+-- eiffel run-time specification
+prefix: "$(ISE_C_COMPILER)\"
+shared_prefix: "$(ISE_C_COMPILER)\dll_"
+mt_prefix: "mt"
+eiflib: "finalized"
+wkeiflib: "wkbench"
+suffix: ".lib"
+shared_suffix: ".dll"
+shared_rt_suffix: ".lib"
+
+-- libraries
+libs: "CW32 IMPORT32 OLE2w32"
+mtlibs: "CW32MT IMPORT32 OLE2w32"
+sharedlibs: ""
+
+mkdep: ""
+
+-- platform copy command
+mv: "copy"
+cp: "copy"
+
+ranlib: "echo"
+
+-- platform remove command
+rm: "-del"
+rmdir: "rd"
+
+-- make program
+make: "$(ISE_EIFFEL)\BCC55\bin\make.exe"
+command_makefile: "%"for %%i in ($(EXTERNAL_MAKEFILES)) do $(MAKE) -e ISE_EIFFEL=$(ISE_EIFFEL) -f %%i%""
+
+dpflags: ""
+
+continuation: "\"
+
+appl_make: "$appl.exe: $appl.res e1\emain.obj Makefile $precompilelibs $(OBJECTS) $(EXTERNALS)%N%
+%%T$(MV) $(ISE_EIFFEL)\bench\spec\$(ISE_PLATFORM)\config\$(ISE_C_COMPILER)\version.eif .%N%
+%%T$(RM) $@%N%
+%%T$(ISE_EIFFEL)\bcc55\bin\ilink32 @&&|%N%
+%%T$(LDFLAGS) e1\emain.obj c0w32.obj, $appl.exe,,%
+%$(EIFLIB) $precompile_libs_command $(LIBS) %
+%$(OBJECTS) $(EXTERNALS)%
+%,,$appl.res%N|%
+%%N%N%
+%..\..\$appl.rc:%N%
+%%Tif not exist ..\..\$appl.rc $(MV) $(ISE_EIFFEL)\bench\spec\$(ISE_PLATFORM)\config\$(ISE_C_COMPILER)\eiffel.rc ..\..\$appl.rc%N%
+%%N%
+%%N%
+%$appl.res: ..\..\$appl.rc Makefile%N%
+%%T$(ISE_EIFFEL)\BCC55\bin\brc32 -I$(ISE_EIFFEL)\bcc55\include -r -fo$appl.res ..\..\$appl.rc%N%
+%%N"
+
+-- precompilation
+precompile: "driver.exe: driver.res e1\emain.obj $(OBJECTS) precomp.lib $precompilelibs%N%
+%%T$(RM) driver.exe%N%
+%%T$(ISE_EIFFEL)\bcc55\bin\ilink32 @&&|%N%
+%%T$(LDFLAGS) e1\emain.obj c0w32.obj, driver.exe,,%
+%$(EIFLIB) $precompile_libs_command $(LIBS) $(OBJECTS) $(EXTERNALS) %
+%,,driver.res%N|%N%
+%%T$(MV) $(ISE_EIFFEL)\bench\spec\$(ISE_PLATFORM)\config\$(ISE_C_COMPILER)\version.eif .%N%
+%%Tif not exist $(ISE_C_COMPILER) mkdir $(ISE_C_COMPILER)%N%
+%%T$(MV) driver.exe .\$(ISE_C_COMPILER)\driver.exe%N%
+%%T$(MV) precomp.lib .\$(ISE_C_COMPILER)\precomp.lib%N%
+%%T$(RM) driver.exe%N%
+%%T$(RM) precomp.lib%N%
+%%N%
+%driver.rc: $(ISE_EIFFEL)\bench\spec\$(ISE_PLATFORM)\config\$(ISE_C_COMPILER)\eiffel.rc%N%
+%%T$(MV) $(ISE_EIFFEL)\bench\spec\$(ISE_PLATFORM)\config\$(ISE_C_COMPILER)\eiffel.rc driver.rc%N%
+%%N%
+%driver.res: driver.rc%N%
+%%T$(ISE_EIFFEL)\BCC55\bin\brc32 -I$(ISE_EIFFEL)\bcc55\include -r driver.rc%N%
+%%N%
+%precomp.lib: $(C_OBJECTS) $(EXTERNALS)%N%
+%%T$(RM) $@%N%
+%%T&$(ISE_EIFFEL)\BCC55\bin\tlib /p512 $@ +$** %N%
+%%N"
+
+cecil_make: "cecil.lib: $(OBJECTS) $(EXTERNALS) $precompilelibs%N%
+%%T$(RM) $@%N%
+%%T&$(ISE_EIFFEL)\BCC55\bin\tlib /p512 $@ +$**"
+
+completed: "%Techo done > completed.eif"
+
+all: "all:: "
+
+intermediate_file_ext: "lib"
+
+make_intermediate: "%T$(RM) $@%N%
+%%T&$(ISE_EIFFEL)\BCC55\bin\tlib /p512 $@ +$**%N%T$(CREATE_TEST)%
+%%N%
+%.c.obj:%N%
+%%T$(CC) @&&|%N%T$(CFLAGS) $<%N|%
+%%N%N%
+%.x.obj:%N%
+%%T$(ISE_EIFFEL)\bench\spec\$(ISE_PLATFORM)\bin\x2c $< $*.c%N%
+%%T$(CC) @&&|%N%T$(CFLAGS) $*.c%N|"
+
+-- options below are for config internal use
+-- mind the spaces!
+
+no_subs: "!NO!SUBS!"
+
+-- platform change directory command
+cd: "cd"
+
+-- text for remove command
+rm_text: "RM ="
+
+-- text for make command
+make_text: "MAKE"
+
+-- text for C-compiler command
+cc_text: "$(CC) $(CFLAGS)"
+
+cobj_text: ".c.obj:"
+cppobj_text: ".cpp.obj:"
+xobj_text: ".x.obj:"
+xppobj_text: ".xpp.obj:"
+
+obj_text: ".obj "
+
+eobj_text: "$(OBJECTS"
+
+objects__text: "$(OBJECTS)"
+
+-- text for precompilation
+precompile_text: "precompile $appl"
+
+appl_text: "appl_make $appl"
+
+cecil_text: "cecil_make $appl"
+
+-- platform 'parent' directory
+updir: ".."
+
+emain_text: "emain"
+
+emain_obj_text: "emain.obj"
+
+objects_text: "OBJECTS = "
+c_objects_text: "C_OBJECTS = "
+d_objects_text: "D_OBJECTS = "
+f_objects_text: "F_OBJECTS = "
+
+eobjects_text: "EOBJECTS = "
+
+obj_file_ext: "obj"
+
+executable_file_ext: ".exe"
+
+driver_text: "\driver"
+
+driver_filename: "driver.exe"
+
+externals_text: "EXTERNALS"
+
+externals_continuation_text: "EXTERNALS =  \"
+
+precomp_lib_command_text: "$precompiled_library"
+
+start_test: "if not exist finished"
+
+end_test: ""
+
+create_test: "echo %"finished%" >> finished"

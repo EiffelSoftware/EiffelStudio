@@ -1,8 +1,6 @@
-
--- Motif error dialog implementation.
-
 indexing
 
+	description: "Motif error dialog implementation";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

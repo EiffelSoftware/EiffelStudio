@@ -1,9 +1,9 @@
-
--- Area which manages children relative to each other
--- according to defined constraints. 
-
 indexing
 
+	description:
+		"Area which manages children relative to each other %
+		%according to defined constraints"; 
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

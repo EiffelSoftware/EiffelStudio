@@ -1,6 +1,3 @@
-
--- DIALOG_O
-
 indexing
 
 	status: "See notice at end of class";

@@ -1,8 +1,6 @@
-
--- MENU_M: implementation of menu
-
 indexing
 
+	description: "Implementation of menu";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

@@ -1,9 +1,8 @@
-
--- Informations given by ArchiVision when a key is pressed.
--- X event associated: `KeyPress'.
-
 indexing
 
+	description:
+		"Information given by EiffelVision when a key is pressed. %
+		%X event associated: `KeyPress'";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

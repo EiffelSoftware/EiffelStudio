@@ -1,8 +1,6 @@
-
--- PRIMITIVE_M: implementation of primitive.
-
 indexing
 
+	description: "Implementation of primitive";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

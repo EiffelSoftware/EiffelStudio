@@ -1,8 +1,6 @@
-
--- OpenLook bulletin dialog implementation.
-
 indexing
 
+	description: "OpenLook bulletin dialog implementation";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

@@ -1,11 +1,10 @@
-
--- Information given by ArchiVision when a window's configuration is
--- asked to change.
--- The values in this class indicates the hints of the request.
--- X event associated: `ConfigureRequest'.
-
 indexing
 
+	description:
+		"Information given by EiffelVision when a window's configuration is %
+		%asked to change. %
+		%The values in this class indicates the hints of the request. %
+		%X event associated: `ConfigureRequest'";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

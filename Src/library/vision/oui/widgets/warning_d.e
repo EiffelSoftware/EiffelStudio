@@ -1,10 +1,10 @@
-
--- Message box with a specific warning symbol to warn
--- users of action consequences and give them a choice of resolutions.
--- A dialog shell is automatically created as its parent.
-
 indexing
 
+	description:
+		"Message box with a specific warning symbol to warn %
+		%users of action consequences and give them a choice of resolutions. %
+		%A dialog shell is automatically created as its parent";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

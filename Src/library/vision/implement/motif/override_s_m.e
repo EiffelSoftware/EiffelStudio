@@ -1,8 +1,6 @@
-
--- OVERRIDE_S_M: implementation of override shell
-
 indexing
 
+	description: "Implementation of override shell";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

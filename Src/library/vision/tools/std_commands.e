@@ -1,5 +1,9 @@
+indexing
 
--- Set of onces to create models of commands.
+	description: "Set of onces to create models of commands";
+	status: "See notice at end of class";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class STD_COMMANDS
 

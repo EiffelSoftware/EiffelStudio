@@ -1,8 +1,6 @@
-
--- LINE_WIDTH: Figure who degine a line width.
-
 indexing
 
+	description: "Figures which define a line width";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

@@ -1,10 +1,10 @@
-
--- Pulldown menu of an option button, it is attached to an option 
--- button which is automaticaly created. It can contain all 
--- kinds of button.
-
 indexing
 
+	description:
+		"Pulldown menu of an option button, it is attached to an option %
+		%button which is automatically created. It can contain all %
+		%kinds of buttons";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

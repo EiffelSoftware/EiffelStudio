@@ -1,8 +1,6 @@
-
--- OpenLook composite implementation.
-
 indexing
 
+	description: "OpenLook composite implementation";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

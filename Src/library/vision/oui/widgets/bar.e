@@ -1,8 +1,7 @@
-
--- Rectangle to build a menu bar with menu button as children.
-
 indexing
 
+	description: "Rectangle to build a menu bar with menu button as children";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

@@ -1,5 +1,9 @@
+indexing
 
--- Message dialog to ensure that the user really want to quit the application.
+	description: "Message dialog to ensure that the user really wants to quit the application";
+	status: "See notice at end of class";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class QUIT_APP_D 
 

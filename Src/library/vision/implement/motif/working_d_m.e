@@ -1,8 +1,6 @@
-
--- WORKING_D_M: implementation of working dialog.
-
 indexing
 
+	description: "Implementation of working dialog";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

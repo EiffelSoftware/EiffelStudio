@@ -1,11 +1,10 @@
-
--- Information given by ArchiVision when a window is asked to be placed
--- on top or on bottom of the stacking order.
--- The values in this class indicates the hints of the request.
--- X event associated: `CirculateRequest'.
-
 indexing
 
+	description: 
+		"Information given by EiffelVision when a window is asked to be placed %
+		%on top or on bottom of the stacking order. %
+		%The values in this class indicates the hints of the request. %
+		%X event associated: `CirculateRequest'";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

@@ -1,8 +1,7 @@
-
--- Special area to draw.
-
 indexing
 
+	description: "Special area to draw";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

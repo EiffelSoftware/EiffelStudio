@@ -1,8 +1,6 @@
-
--- DRAW_B_M: implementation of draw button.
-
 indexing
 
+	description: "Implementation of draw button";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

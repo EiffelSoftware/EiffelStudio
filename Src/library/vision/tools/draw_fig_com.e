@@ -1,5 +1,9 @@
+indexing
 
--- Command to refresh a figure or a world.
+	description: "Command to refresh a figure or a world";
+	status: "See notice at end of class";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class DRAW_FIG_COM 
 

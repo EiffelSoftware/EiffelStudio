@@ -1,9 +1,9 @@
-
--- A Dialog is a popup that is made up of widgets. These widgets 
--- are defined in the descendents.  
-
 indexing
 
+	description:
+		"A Dialog is a popup that is made up of widgets. These widgets %
+		%are defined in the descendants"; 
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

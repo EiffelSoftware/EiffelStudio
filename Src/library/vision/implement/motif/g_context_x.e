@@ -1,8 +1,6 @@
-
--- General class which manipulates X Graphic Context.
-
 indexing
 
+	description: "General class which manipulates X Graphic Context";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

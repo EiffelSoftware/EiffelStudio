@@ -1,8 +1,6 @@
-
--- Composite figure, ex: world, complex_fig ...
-
 indexing
 
+	description: "Composite figure, ex: world, complex_fig ...";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

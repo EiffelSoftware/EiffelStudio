@@ -1,8 +1,7 @@
-
--- Menu which can be poped up.
-
 indexing
 
+	description: "Menu which can be popped up";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

@@ -1,8 +1,6 @@
-
--- Motif composite implementation.
-
 indexing
 
+	description: "Motif composite implementation";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

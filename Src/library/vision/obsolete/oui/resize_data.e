@@ -1,9 +1,8 @@
-
--- Information given by ArchiVision when a window is asked to be resized.
--- X event associated: `ResizeRequest'.
-
 indexing
 
+	description:
+		"Information given by EiffelVision when a window is asked to be resized. %
+		%X event associated: `ResizeRequest'";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

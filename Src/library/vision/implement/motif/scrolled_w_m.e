@@ -1,8 +1,6 @@
-
--- SCROLLED_W_M: implementation of scrolled window.
-
 indexing
 
+	description: "Implementation of scrolled window";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

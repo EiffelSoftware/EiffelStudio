@@ -1,16 +1,11 @@
-
--- Toggle button defines
-
 indexing
 
+	description: "Toggle button defines";
 	status: "See notice at end of class";
-        date: "$Date$";
-        revision: "$Revision$"
+	date: "$Date$";
+	revision: "$Revision$"
 
 class  TOGGLE_R_O
-
-
-
         
 feature {NONE}
 

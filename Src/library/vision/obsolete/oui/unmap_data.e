@@ -1,9 +1,9 @@
-
--- Information given by ArchiVision when a window is unmapped.
--- X event associated: `UnmapNotify'.
-
 indexing
 
+	description:
+		"Information given by EiffelVision when a window is unmapped. %
+		%X event associated: `UnmapNotify'";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

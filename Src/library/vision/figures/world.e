@@ -1,8 +1,6 @@
-
--- WORLD: Manager of figures.
-
 indexing
 
+	description: "Manager of figures";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

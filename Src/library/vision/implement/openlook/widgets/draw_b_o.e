@@ -1,8 +1,6 @@
-
--- DRAW_B_O: not implemented in OpenLook version of EiffelVision
-
 indexing
 
+	description: "Not implemented in OpenLook version of EiffelVision";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

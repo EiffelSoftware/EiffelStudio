@@ -1,8 +1,7 @@
-
--- DASH: Description of a dash pattern.
-
 indexing
 
+	description: "Description of a dash pattern";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

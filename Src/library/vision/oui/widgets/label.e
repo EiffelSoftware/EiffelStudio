@@ -1,8 +1,7 @@
-
--- Simple label.
-
 indexing
 
+	description: "Simple label";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

@@ -1,8 +1,6 @@
-
--- Motif drawing area implementation.
-
 indexing
 
+	description: "Motif drawing area implementation";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

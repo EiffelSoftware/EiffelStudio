@@ -1,8 +1,6 @@
-
--- MENU_B_O: Implementation of menu button.
-
 indexing
 
+	description: "Implementation of menu button";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

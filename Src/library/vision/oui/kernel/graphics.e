@@ -1,9 +1,9 @@
-
--- Parent of any graphic application.
--- Contains some global operations such as `set_global_cursor' or `show_tree'.
-
 indexing
 
+	description: 
+		"Parent of any graphic application. %
+		%Contains some global operations such as `set_global_cursor' or `show_tree'";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

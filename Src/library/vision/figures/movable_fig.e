@@ -1,3 +1,9 @@
+indexing
+
+	status: "See notice at end of class";
+	date: "$Date$";
+	revision: "$Revision $"
+	
 deferred class MOVABLE_FIG
 	
 feature -- Access

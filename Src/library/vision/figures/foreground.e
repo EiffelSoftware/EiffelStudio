@@ -1,8 +1,6 @@
-
--- FOREGROUND: Figure who have a foreground color.
-
 indexing
 
+	description: "Figures which have a foreground color";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

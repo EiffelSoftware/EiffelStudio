@@ -1,9 +1,9 @@
-
--- General notion of primitive widget,
--- i.e. which cannot accept any children.
-
 indexing
 
+	description:
+		"General notion of primitive widget, %
+		%i.e. which cannot accept any children";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

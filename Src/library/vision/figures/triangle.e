@@ -1,8 +1,9 @@
-
--- Description of a triangle.
-
 indexing
-	status: "See notice at end of class"
+
+	description: "Description of a triangle";
+	status: "See notice at end of class";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class TRIANGLE
 

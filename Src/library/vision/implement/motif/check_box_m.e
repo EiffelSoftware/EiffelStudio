@@ -1,8 +1,6 @@
-
--- Motif check box implementation.
-
 indexing
 
+	description: "Motif check box implementation";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

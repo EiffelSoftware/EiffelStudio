@@ -1,8 +1,6 @@
-
--- SHELL_M: implementation of shell.
-
 indexing
 
+	description: "Implementation of shell";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

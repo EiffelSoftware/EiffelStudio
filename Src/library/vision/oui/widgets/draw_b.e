@@ -1,8 +1,7 @@
-
--- Drawable rectangle with a shadow border.
-
 indexing
 
+	description: "Drawable rectangle with a shadow border";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

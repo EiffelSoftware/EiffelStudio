@@ -1,8 +1,7 @@
-
--- Area which arranges children in rows or column.
-
 indexing
 
+	description: "Area which arranges children in rows or columns";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

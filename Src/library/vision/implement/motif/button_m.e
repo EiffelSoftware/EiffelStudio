@@ -1,8 +1,6 @@
-
--- Motif button implementation.
-
 indexing
 
+	description: "Motif button implementation";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

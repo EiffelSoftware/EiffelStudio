@@ -1,8 +1,7 @@
-
--- Type of predefined cursors.
-
 indexing
 
+	description: "Type of predefined cursors";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

@@ -1,9 +1,9 @@
-
--- Information given by ArchiVision when a toggle button's value has been
--- changed.
-
 indexing
 
+	description:
+		"Information given by EiffelVision when a toggle button's value has been %
+		%changed";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

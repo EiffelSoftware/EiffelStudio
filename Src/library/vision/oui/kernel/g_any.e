@@ -1,8 +1,7 @@
-
--- Parent of any oui graphic class.
-
 indexing
 
+	description: "Parent of any oui graphic class";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

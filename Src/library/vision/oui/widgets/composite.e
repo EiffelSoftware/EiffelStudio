@@ -1,9 +1,9 @@
-
--- General notion of composite widget 
--- i.e. which accepts children.
-
 indexing
 
+	description:
+		"General notion of composite widget %
+		%i.e. which accepts children";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

@@ -1,9 +1,9 @@
-
--- Information given by ArchiVision when an item is selected or unselected
--- a scroll_list with a single or browse selection activated.
-
 indexing
 
+	description:
+		"Information given by EiffelVision when an item is selected or unselected %
+		%a scroll_list with a single or browse selection activated";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

@@ -1,8 +1,6 @@
-
--- QUESTION_D_M: implementation of question dialog.
-
 indexing
 
+	description: "Implementation of question dialog";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

@@ -1,11 +1,9 @@
-
--- Sliders defines (Scale and Scrollbar)
-
 indexing
 
+	description: "Sliders defines (Scale and Scrollbar)";
 	status: "See notice at end of class";
-        date: "$Date$";
-        revision: "$Revision$"
+	date: "$Date$";
+	revision: "$Revision$"
 
 class  SLIDER_R
 

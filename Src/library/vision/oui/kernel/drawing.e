@@ -1,8 +1,7 @@
-
--- General definitions for drawable elments.
-
 indexing
 
+	description: "General definitions for drawable elments";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

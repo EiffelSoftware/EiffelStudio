@@ -1,8 +1,7 @@
-
--- Shell is the base class for all shell widgets. 
-
 indexing
 
+	description: "Shell is the base class for all shell widgets";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

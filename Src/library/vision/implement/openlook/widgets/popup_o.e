@@ -1,8 +1,6 @@
-
--- POPUP_O: implementation of popup menu.
-
 indexing
 
+	description: "Implementation of popup menu";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

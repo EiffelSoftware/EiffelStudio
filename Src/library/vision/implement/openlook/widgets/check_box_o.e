@@ -1,8 +1,6 @@
-
--- OpenLook check box implementation.
-
 indexing
 
+	description: "OpenLook check box implementation";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

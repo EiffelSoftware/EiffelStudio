@@ -1,8 +1,6 @@
-
--- General notion of undoable command.
-
 indexing
 
+	description: "General notion of undoable command";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

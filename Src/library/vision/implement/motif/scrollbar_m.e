@@ -1,8 +1,6 @@
-
--- Motif implementation of scrollbar.
-
 indexing
 
+	description: "Motif implementation of scrollbar";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

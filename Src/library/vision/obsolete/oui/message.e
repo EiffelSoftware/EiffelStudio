@@ -1,10 +1,10 @@
-
--- Box which enables several common interaction tasks such as
--- giving information, asking questions and reporting errors, it contains
--- an help, ok and cancel buttons and a message field.
-
 indexing
 
+	description:
+		"Box which enables several common interaction tasks such as %
+		%giving information, asking questions and reporting errors, it contains %
+		%an help, ok and cancel buttons and a message field";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

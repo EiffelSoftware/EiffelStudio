@@ -1,7 +1,7 @@
--- List manager
-
 indexing
 
+	description: "List manager";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

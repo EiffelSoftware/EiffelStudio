@@ -1,8 +1,6 @@
-
--- WARNING_D_M: implementation of warning dialog.
-
 indexing
 
+	description: "Implementation of warning dialog";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

@@ -1,8 +1,7 @@
-
--- Root shell of an application.
-
 indexing
 
+	description: "Root shell of an application";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

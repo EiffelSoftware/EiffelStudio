@@ -1,9 +1,8 @@
-
--- Information given by ArchiVision when a window's parent changes.
--- X event associated: `ReparentNotify'.
-
 indexing
 
+	description:
+		"Information given by EiffelVision when a window's parent changes. %
+		%X event associated: `ReparentNotify'";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

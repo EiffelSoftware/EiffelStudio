@@ -1,10 +1,10 @@
-
--- Area which manages children relative to each other
--- defining constraints on then. It is built on a dialog shell which
--- can be poped up and poped down at any time.
-
 indexing
 
+	description:
+		"Area which manages children relative to each other %
+		%defining constraints on then. It is built on a dialog shell which %
+		%can be popped up and popped down at any time";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

@@ -1,8 +1,6 @@
-
--- Motif bulletin implementation.
-
 indexing
 
+	description: "Motif bulletin implementation";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

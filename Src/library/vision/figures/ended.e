@@ -1,8 +1,6 @@
-
--- ENDED: Ended figures (segment, arc,...).
-
 indexing
 
+	description: "Ended figures (segment, arc,...)";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

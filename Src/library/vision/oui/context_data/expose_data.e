@@ -1,10 +1,9 @@
-
--- Information given by ArchiVision when a part of a window becomes
--- visible.
--- X event associated: `Expose'. Raised by `expose action' too.
-
 indexing
 
+	description:
+		"Information given by EiffelVision when a part of a window becomes %
+		%visible. %
+		%X event associated: `Expose'. Raised by `expose action' too";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

@@ -1,8 +1,6 @@
-
--- MESSAGE_D_M: implementation of message dialog
-
 indexing
 
+	description: "Implementation of message dialog";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

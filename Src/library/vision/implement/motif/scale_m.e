@@ -1,8 +1,6 @@
-
--- SCALE_M: implementation of scale.
-
 indexing
 
+	description: "Implementation of scale";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

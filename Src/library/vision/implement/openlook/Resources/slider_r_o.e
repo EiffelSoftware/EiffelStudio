@@ -1,18 +1,15 @@
-
--- Slider defines (Scrollbar and Scale)
-
 indexing
 
+	description: "Slider defines (Scrollbar and Scale)";
 	status: "See notice at end of class";
-        date: "$Date$";
-        revision: "$Revision$"
+	date: 91/10/14 12:38:52 $";
+	revision: "$Revision$"
 
 class  SLIDER_R_O
-
         
 feature {NONE}
 
-	Odrag: STRING is "sliderMoved";
+        Odrag: STRING is "sliderMoved";
                         -- Name of openlook resource
 
         Ominimum: STRING is "sliderMin";

@@ -1,8 +1,7 @@
-
--- Description of a font.
-
 indexing
 
+	description: "Description of a font";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

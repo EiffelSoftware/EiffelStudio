@@ -1,8 +1,7 @@
-
---  Push button Gadget.
-
 indexing
 
+	description: "Push button Gadget";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

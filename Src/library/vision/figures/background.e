@@ -1,8 +1,6 @@
-
--- BACKGROUND: Figure who have a background color.
-
 indexing
 
+	description: "Figures which have a background color";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

@@ -1,8 +1,6 @@
-
--- SLIDER_O: implementation superclass of a scale and a scrollbar
-
 indexing
 
+	description: "Implementation superclass of a scale and a scrollbar";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

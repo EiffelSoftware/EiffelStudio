@@ -1,10 +1,9 @@
-
--- Information given by ArchiVision just after a `EnterNotify' or
--- `FocusIn' events.
--- X event associated: `KeymapNotify'.
-
 indexing
 
+	description:
+		"Information given by EiffelVision just after a `EnterNotify' or %
+		%`FocusIn' events. %
+		%X event associated: `KeymapNotify'";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

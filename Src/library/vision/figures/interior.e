@@ -1,8 +1,9 @@
-
--- INTERIOR: Description of the interior of a figure.
-
 indexing
-	status: "See notice at end of class"
+
+	description: "Description of the interior of a figure";
+	status: "See notice at end of class";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class INTERIOR 
 

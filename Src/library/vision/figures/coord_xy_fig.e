@@ -1,11 +1,9 @@
-
--- COORD_XY_FIG: Description of geometric abstract coordinates.
-
 indexing
 
+	description: "Description of geometric abstract coordinates";
 	status: "See notice at end of class";
-    	date: "$Date$";
-    	revision: "$Revision$"
+	date: "$Date$";
+	revision: "$Revision$"
 
 class COORD_XY_FIG
 

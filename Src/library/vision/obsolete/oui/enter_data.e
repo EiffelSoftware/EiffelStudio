@@ -1,9 +1,8 @@
-
--- Information given by ArchiVision when the pointer enters a window.
--- X event associated: `EnterNotify'.
-
 indexing
 
+	description:
+		"Information given by EiffelVision when the pointer enters a window. %
+		%X event associated: `EnterNotify'";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

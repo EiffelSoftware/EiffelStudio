@@ -1,8 +1,6 @@
-
--- General widget implementation.
-
 indexing
 
+	description: "General widget implementation";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

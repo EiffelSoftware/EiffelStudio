@@ -1,8 +1,7 @@
-
--- Definition of a structure (x, y).
-
 indexing
 
+	description: "Definition of a structure (x, y)";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

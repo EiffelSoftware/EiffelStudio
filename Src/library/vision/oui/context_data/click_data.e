@@ -1,9 +1,8 @@
-
--- Information given by ArchiVision when an item is double-clicked in
--- a scroll list.
-
 indexing
 
+	description:
+		"Information given by EiffelVision when an item is double-clicked in %
+		%a scroll list";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

@@ -1,10 +1,9 @@
-
--- Information given by ArchiVision when a mouse's button is pressed or
--- released.
--- X events associated: `ButtonPress' or `ButtonRelease'.
-
 indexing
 
+	description:
+		"Information given by EiffelVision when a mouse's button is pressed or %
+		%released. %
+		%X events associated: `ButtonPress' or `ButtonRelease'";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

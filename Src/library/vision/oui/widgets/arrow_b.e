@@ -1,8 +1,7 @@
-
--- Button drawn on screen with an arrow.
-
 indexing
 
+	description: "Button drawn on screen with an arrow";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

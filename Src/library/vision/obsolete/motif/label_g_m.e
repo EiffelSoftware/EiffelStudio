@@ -1,8 +1,6 @@
-
--- Motif label gadget implementation
-
 indexing
 
+	description: "Motif label gadget implementation";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

@@ -1,8 +1,6 @@
-
--- Motif widget implementation.
-
 indexing
 
+	description: "Motif widget implementation";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

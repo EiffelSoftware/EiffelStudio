@@ -1,8 +1,6 @@
-
--- A tasking manager.
-
 indexing
 
+	description: "A tasking manager";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

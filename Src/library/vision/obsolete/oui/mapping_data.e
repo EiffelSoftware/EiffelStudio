@@ -1,9 +1,8 @@
-
--- Information given by ArchiVision when the keyboard mapping changes.
--- X event associated: `MappingNotify'
-
 indexing
 
+	description:
+		"Information given by EiffelVision when the keyboard mapping changes. %
+		%X event associated: `MappingNotify'";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

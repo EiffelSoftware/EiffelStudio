@@ -1,10 +1,9 @@
-
--- Information given by ArchiVision when a window is moved because of
--- a change in the size of its parent.
--- X event associated: `GravityNotify'.
-
 indexing
 
+	description:
+		"Information given by EiffelVision when a window is moved because of %
+		%a change in the size of its parent. %
+		%X event associated: `GravityNotify'";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

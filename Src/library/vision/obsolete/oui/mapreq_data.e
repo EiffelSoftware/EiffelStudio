@@ -1,9 +1,8 @@
-
--- Information given by ArchiVision when a window is asked to be mapped.
--- X event associated: `MapRequest'.
-
 indexing
 
+	description:
+		"Information given by EiffelVision when a window is asked to be mapped. %
+		%X event associated: `MapRequest'";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

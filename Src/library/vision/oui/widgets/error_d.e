@@ -1,10 +1,10 @@
-
--- Message box with a specific error symbol to warn the user
--- of an invalid or potentially dangerous condition, it appears like an error dialog.
--- A dialog shell is automatically created as its parent.
-
 indexing
 
+	description:
+		"Message box with a specific error symbol to warn the user %
+		%of an invalid or potentially dangerous condition, it appears like an error dialog. %
+		%A dialog shell is automatically created as its parent";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

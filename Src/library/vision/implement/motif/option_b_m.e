@@ -1,8 +1,6 @@
-
--- Rectangle which display an option menu when armed.
-
 indexing
 
+	description: "Rectangle which displays an option menu when armed";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

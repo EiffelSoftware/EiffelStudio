@@ -1,8 +1,6 @@
-
--- OpenLook button implementation.
-
 indexing
 
+	description: "OpenLook button implementation";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

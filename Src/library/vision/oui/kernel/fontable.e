@@ -1,8 +1,7 @@
-
--- Widget who can change its font.
-
 indexing
 
+	description: "Widget which can change its font";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

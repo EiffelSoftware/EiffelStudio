@@ -1,9 +1,8 @@
-
--- Informations given by ArchiVision when a key is released.
--- X event associated: `KeyRelease'.
-
 indexing
 
+	description:
+		"Information given by EiffelVision when a key is released. %
+		%X event associated: `KeyRelease'";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

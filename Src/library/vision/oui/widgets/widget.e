@@ -1,9 +1,9 @@
-
--- Most general notion of "widget"
--- (i.e. user interface object).
-
 indexing
 
+	description:
+		"Most general notion of widget %
+		%(i.e. user interface object)";
+	status: "See notice at end of class";
 	names: widget;
 	date: "$Date$";
 	revision: "$Revision$"

@@ -1,8 +1,6 @@
-
--- POINT: Description of point (implementation for X).
-
 indexing
 
+	description: "Description of point (implementation for X)";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

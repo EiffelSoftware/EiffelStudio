@@ -1,8 +1,9 @@
-
--- CIRCLE: Description of circle.
-
 indexing
-	status: "See notice at end of class"
+
+	description: "Description of circle";
+	status: "See notice at end of class";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class CIRCLE
 

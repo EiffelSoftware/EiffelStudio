@@ -1,8 +1,6 @@
-
--- OpenLook bulletin implementation.
-
 indexing
 
+	description: "OpenLook bulletin implementation";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

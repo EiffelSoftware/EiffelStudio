@@ -1,5 +1,9 @@
+indexing
 
--- Command to popdown a shell.
+	description: "Command to popdown a shell";
+	status: "See notice at end of class";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class POPDOWN_COM 
 

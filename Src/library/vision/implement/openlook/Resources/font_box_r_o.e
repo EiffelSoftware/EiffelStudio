@@ -1,8 +1,11 @@
-
 indexing
-	status: "See notice at end of class"
+
+	status: "See notice at end of class";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class  FONT_BOX_R_O
+
 feature {NONE}
 
         Oactivate: STRING is "activateCallback";

@@ -1,9 +1,8 @@
-
--- Figure made of a number of subfigures.
--- A COMPLEX_FIG is both a figure and a list of figures 
-
 indexing
 
+	description: 
+		"Figure made of a number of subfigures. %
+		%A COMPLEX_FIG is both a figure and a list of figures"; 
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

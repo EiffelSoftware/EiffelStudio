@@ -1,5 +1,9 @@
+indexing
 
--- LINE: Description of general lines (implementation for X).
+	description: "Description of general lines (implementation for X)";
+	status: "See notice at end of class";
+	date: "$Date$";
+	revision: "$Revision $"
 
 deferred class LINE 
 

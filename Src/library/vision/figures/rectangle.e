@@ -1,8 +1,9 @@
-
--- RECTANGLE: Description of a rectangle.
-
 indexing
-	status: "See notice at end of class"
+
+	description: "Description of a rectangle";
+	status: "See notice at end of class";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class RECTANGLE 
 

@@ -1,8 +1,7 @@
-
--- Generator of a widget manager.
-
 indexing
 
+	description: "Generator of a widget manager";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

@@ -1,8 +1,7 @@
-
--- Top is the abstract class for TOP_SHELL and BASE.
-
 indexing
 
+	description: "Top is the abstract class for TOP_SHELL and BASE";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

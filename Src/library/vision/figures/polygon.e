@@ -1,8 +1,9 @@
-
--- POLYGON: Description of a polygon.
-
 indexing
+
+	description: "Description of a polygon";
 	status: "See notice at end of class"
+	date: "$Date$";
+	revision: "$Revision $"
 
 class POLYGON 
 

@@ -1,8 +1,6 @@
-
--- LOGICAL: Logical functions.
-
 indexing
 
+	description: "Logical functions";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

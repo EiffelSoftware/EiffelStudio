@@ -1,9 +1,8 @@
-
--- Information given by ArchiVision when a mouse's button is pressed.
--- X event associated: `ButtonPress'.
-
 indexing
 
+	description: 
+		"Information given by EiffelVision when a mouse's button is pressed. %
+		%X event associated: `ButtonPress'";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

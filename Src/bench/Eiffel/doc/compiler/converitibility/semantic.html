@@ -1,0 +1,80 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Convertibility</title>
+<link rel="stylesheet" type="text/css" href="../../default.css">
+
+</head>
+
+<body>
+
+<h1>Convertibility semantic</h1>
+
+<h2>Validity rule</h2>
+<p>Conversion Procedure rule <span class="eerror">VNCP</span> as specified in 
+ETL3 draft:</p>
+<pre>It is valid for a creation procedure cp of a class C, with current
+type CT, to be a conversion procedure if and only if it satisfies the
+following four conditions for every type SOURCE listed in its
+Conversion_types:
+<ol>
+  <li>If CT is not generic, SOURCE does not conform to CT.</li>
+  <li>If CT is generic, SOURCE does not conform to the type obtained from CT 
+  by replacing every formal generic parameter by its generic constraint.</li>
+  <li>cp has exactly one formal argument, of a type ARG.</li>
+  <li>SOURCE conforms or converts to ARG.</li>
+  <li>SOURCE’s base type is different from the base type of any other 
+  conversion type listed in the Creation_clause of C.</li>
+</ol>
+</pre>
+<p>Note that the above rules is not complete. See Checking below for details on 
+what needs to be checked. Hopefully ETL3 will be updated accordingly.</p>
+<h2>Checking</h2>
+<p>We initialize conversion data at degree 4 using the AST, by creating two hash 
+tables in CLASS_C:</p>
+<ul>
+  <li><span class="efeature">convert_to</span>: <span class="eclass">HASH_TABLE [INTEGER, CL_TYPE_A]</span></li>
+  <li><span class="efeature">convert_from</span>: <span class="eclass">HASH_TABLE [INTEGER, CL_TYPE_A]</span></li>
+</ul>
+<p>Then we ensure that content of convert_to and convert_from is valid from two 
+points of view:</p>
+<ul>
+  <li>types are valid</li>
+  <li>features are valid for conversion, i.e. having the right arguments and 
+  return types</li>
+</ul>
+<p>We also check at this point the incrementality aspect (see below).</p>
+<p>Before starting degree 3, we check that there are no 2 classes which both 
+convert to or from each other. That is to say for two classes A and B, if in 
+class A class B appears in <span class="efeature">convert_to</span>, then in 
+class B class A should not appear in <span class="efeature">convert_from</span>. 
+Reciprocally, if in class A class B appears in <span class="efeature">convert_from</span>, 
+then in class B class A should not appear in <span class="efeature">convert_to</span>. </p>
+<p>During degree 3, each time that a type convert but does not conform, we add 
+the associated type information and byte code to perform the conversion call, 
+unless it is for the basic types where we introduce special new byte code for 
+conversions, that way it simplifies our interpreter for melted code (by not 
+having that many switch statements) and makes our C generated code completely 
+blind for basic type conversions (it does what it is told to do).</p>
+<p>Note that if during degree 3 the conversion routine does not have&nbsp; a 
+sufficient export status for the current processed class, we should raise an 
+error.</p>
+<p>&nbsp;</p>
+<h2>Incrementality</h2>
+<p>If a conversion routine is added or removed, what should we do? During degree 
+3, each time we record a conversion feature, we record a depend unit, so at 
+degree 4, we can perform the same&nbsp;process as for creation procedure to 
+propagate the type checking of code at degree 3 to ensure all the code is still 
+valid.</p>
+<p>&nbsp;</p>
+<h2>Generated code</h2>
+<p>Nothing special, at degree 3 during byte code generation we have inserted the 
+required byte code information for this. We do a blind generation.</p>
+
+</body>
+
+</html>

@@ -477,8 +477,8 @@ enum
 
     // IEiffelSupport dispatch ID's
     DISPID_EiffelComCompiler_ExpandPath,
-    DISPID_EiffelComCompiler_EiffelClassNameToDotnetName
-
+    DISPID_EiffelComCompiler_EiffelClassNameToDotnetName,
+	DISPID_EiffelComCompiler_GetProcessId
 };
 
 //|--------------------------------------------------------------------

@@ -628,15 +628,17 @@ feature -- Metadata description
 			l_external_class: EXTERNAL_CLASS_C
 			l_nested_parent_class_token: INTEGER
 			l_uni_string: UNI_STRING
+			l_sig: MD_TYPE_SIGNATURE
 		do
 			class_c := class_type.associated_class
 			l_native_array ?= class_type
 
 			if l_native_array /= Void then
 					-- Generate association with a NATIVE_ARRAY []
+				create l_sig.make
+				set_signature_type (l_sig, l_native_array.type)
+				l_type_token := md_emit.define_type_spec (l_sig)
 				name := l_native_array.il_type_name
-				create l_uni_string.make (name)
-				l_type_token := md_emit.define_type_ref (l_uni_string, assembly_token (class_type))
 				class_mapping.put (l_type_token, class_type.static_type_id)
 				il_code_generator.external_class_mapping.put (class_type.type, name)
 				internal_external_token_mapping.put (l_type_token, name)

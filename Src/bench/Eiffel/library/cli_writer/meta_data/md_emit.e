@@ -208,6 +208,22 @@ feature -- Definition: creation
 			result_valid: Result & Md_mask = Md_type_def
 		end
 
+	define_type_spec (a_signature: MD_TYPE_SIGNATURE): INTEGER is
+			-- Define a new token of TypeSpec for a type represented by `a_signature'.
+			-- To be used to define different type for .NET arrays.
+		require
+			signature_not_void: a_signature /= Void
+		do
+			last_call_success := c_define_type_spec (item, a_signature.item.item,
+				a_signature.count, $Result)
+			if last_call_success = feature {MD_ERRORS}.meta_s_duplicate then
+				last_call_success := 0
+			end
+		ensure
+			success: last_call_success = 0
+			result_valid: Result & Md_mask = Md_type_spec
+		end
+
 	define_exported_type (type_name: UNI_STRING; implementation_token: INTEGER;
 			type_def_token: INTEGER; type_flags: INTEGER): INTEGER
 		is
@@ -549,6 +565,20 @@ feature {NONE} -- Implementation
 			]"
 		alias
 			"DefinePinvokeMap"
+		end
+
+	c_define_type_spec (an_item: POINTER; a_signature: POINTER;
+			sig_length: INTEGER; sig_token: POINTER): INTEGER
+		is
+			-- Call `IMetaDataEmit->GetTokenFromTypeSpec'. See doc on unmanaged
+			-- Metadata API to see why we call it `c_define_type_spec'.
+		external
+			"[
+				C++ IMetaDataEmit signature (PCCOR_SIGNATURE, ULONG, mdTypeSpec *): EIF_INTEGER
+				use <cor.h>
+			]"
+		alias
+			"GetTokenFromTypeSpec"
 		end
 
 	c_define_signature (an_item: POINTER; a_signature: POINTER;

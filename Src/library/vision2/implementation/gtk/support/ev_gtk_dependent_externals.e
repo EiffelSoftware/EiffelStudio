@@ -8,6 +8,31 @@ class
 
 feature -- Externals
 
+	frozen c_gdk_colormap_query_color (a_colormap: POINTER; a_pixel: INTEGER; a_gdkcolor_result: POINTER) is
+			-- Retrieve `a_gdkcolor_result' values from `a_pixel' using `a_colormap'.
+			-- (from EV_C_GTK)
+		external
+			" C (GdkColormap *, gulong, GdkColor *)| %"gtk_eiffel.h%""
+		end
+
+	frozen c_gdk_window_deiconify (a_window: POINTER) is
+			-- (from EV_C_GTK)
+		external
+			"C (GdkWindow *) | %"ev_titled_window_imp.h%""
+		end
+
+	frozen c_gdk_window_iconify (a_window: POINTER) is
+			-- (from EV_C_GTK)
+		external
+			"C (GdkWindow *) | %"ev_titled_window_imp.h%""
+		end
+
+	frozen c_gdk_window_is_iconified (a_window: POINTER): BOOLEAN is
+			-- (from EV_C_GTK)
+		external
+			"C (GdkWindow *): gboolean | %"ev_titled_window_imp.h%""
+		end
+
 	frozen gtk_value_pointer (arg: POINTER): POINTER is
 			-- Pointer to the value of a GtkArg.
 		external

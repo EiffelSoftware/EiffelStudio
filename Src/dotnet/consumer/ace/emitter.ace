@@ -7,6 +7,7 @@ root
 default
 	assertion (no)
 	msil_generation (yes)
+	arguments ("/init")
 	arguments (" ")
 	disabled_debug (yes)
 	debug (no)
@@ -18,6 +19,8 @@ default
 	namespace ("ISE.Cache")
 	version ("5.2.812.0")
 	msil_key_file_name ("$EIFFEL_SRC\dotnet\helpers\isekey.snk")
+	msil_culture ("n/a")
+	msil_assembly_compatibility ("None")
 	check_vape (yes)
 	console_application (yes)
 

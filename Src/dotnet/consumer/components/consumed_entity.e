@@ -61,6 +61,11 @@ feature -- Access
 			-- Is .NET entity a static literal?
 		do
 		end
+	
+	is_init_only: BOOLEAN is
+			-- Is .NET field a constant?
+		do
+		end
 		
 	is_artificially_added: BOOLEAN is
 			-- Is Current artificially added?

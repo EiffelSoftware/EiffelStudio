@@ -11,7 +11,7 @@ inherit
 		rename
 			make as member_make
 		redefine
-			has_return_value, return_type, is_attribute
+			has_return_value, return_type, is_attribute, is_init_only
 		end
 
 create
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (en, dn: STRING; rt: CONSUMED_REFERENCED_TYPE; static, pub: BOOLEAN;
+	make (en, dn: STRING; rt: CONSUMED_REFERENCED_TYPE; static, pub, init_only: BOOLEAN;
 			a_type: CONSUMED_REFERENCED_TYPE)
 		is
 			-- Initialize field.
@@ -34,6 +34,9 @@ feature {NONE} -- Initialization
 			member_make (en, dn, pub, a_type)
 			if static then
 				internal_flags := internal_flags | feature {FEATURE_ATTRIBUTE}.Is_static
+			end
+			if init_only then
+				internal_flags := internal_flags | feature {FEATURE_ATTRIBUTE}.Is_init_only
 			end
 			return_type := rt
 		ensure
@@ -57,5 +60,12 @@ feature -- Status report
 
 	has_return_value: BOOLEAN is True
 			-- An attribute always return a value.
+
+	is_init_only: BOOLEAN is
+			-- Is field a constant?
+		do
+			Result := internal_flags & feature {FEATURE_ATTRIBUTE}.Is_init_only =
+				feature {FEATURE_ATTRIBUTE}.Is_init_only
+		end
 
 end -- class CONSUMED_FIELD

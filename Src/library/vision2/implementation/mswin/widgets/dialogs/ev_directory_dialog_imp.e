@@ -5,12 +5,12 @@ indexing
 	revision: "$Revision$"
 
 class
-	EV_DIRECTORY_SELECTION_DIALOG_IMP
+	EV_DIRECTORY_DIALOG_IMP
 
 inherit
-	EV_DIRECTORY_SELECTION_DIALOG_I
+	EV_DIRECTORY_DIALOG_I
 
-	EV_STANDARD_DIALOG_IMP
+	EV_SELECTION_DIALOG_IMP
 
 	WEL_CHOOSE_FOLDER_DIALOG
 		rename
@@ -52,40 +52,6 @@ feature -- Element change
 			end
 		end
 
-feature -- Event - command association
-
-	add_ok_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed when
-			-- the "OK" button is pressed.
-			-- If there is no "OK" button, the event never occurs.
-		do
-			add_command (Cmd_ok, cmd, arg)
-		end
-
-	add_cancel_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed when
-			-- the "Cancel" button is pressed.
-			-- If there is no "Cancel" button, the event never occurs.
-		do
-			add_command (Cmd_cancel, cmd, arg)
-		end
-
-feature -- Event -- removing command association
-
-	remove_ok_commands is
-			-- Empty the list of commands to be executed when
-			-- "OK" button is pressed.
-		do
-			remove_command (Cmd_ok)
-		end
-
-	remove_cancel_commands is
-			-- Empty the list of commands to be executed when
-			-- "Cancel" button is pressed.
-		do
-			remove_command (Cmd_cancel)
-		end
-
 feature {NONE} -- Implementation for events handling
 
 	dispatch_events is
@@ -100,7 +66,7 @@ feature {NONE} -- Implementation for events handling
 			end
 		end
 
-end -- class EV_DIRECTORY_SELECTION_DIALOG_IMP
+end -- class EV_DIRECTORY_DIALOG_IMP
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

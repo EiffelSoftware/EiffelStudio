@@ -6,6 +6,12 @@ indexing
 
 class
 	EV_DIRECTORY_DIALOG_IMP
+	
+	--| FIXME if you show the dialog, and click OK without
+	--| selecting something, the last selected button is
+	--| equal to "Cancel" as nothing was selected.
+	--| Not sure how to fix this nicely, as the `selected'
+	--| mechanism we are using seems to be limited in this case.
 
 inherit
 	EV_DIRECTORY_DIALOG_I

@@ -10,11 +10,13 @@ indexing
 
 using System;
 
+namespace ISE.Compiler {
+
 internal class FEATURE_INFO {
 	
 	public FEATURE_INFO (int arg_count) {
 		parameter_names = new string [arg_count];
-		feature_id = EiffelReflectionEmit.NoValue;
+		feature_id = COMPILER.NoValue;
 	}
 
 	public string real_name;
@@ -42,7 +44,7 @@ internal class FEATURE_INFO {
 	public bool is_static;
 
 	// Is feature an invariant?
-	public bool IsInvariant;
+	public bool is_invariant;
 
 	// Belongs to interface
 	public bool is_interface_routine;
@@ -80,9 +82,9 @@ internal class FEATURE_INFO {
 		is_static = val;
 	}
 
-	// Set `IsInvariant' with `val'.
-	public void SetIsInvariant (bool val) {
-		IsInvariant = val;
+	// Set `is_invariant' with `val'.
+	public void set_is_invariant (bool val) {
+		is_invariant = val;
 	}
 
 	// Set `is_interface_routine' with `ID'.
@@ -94,4 +96,6 @@ internal class FEATURE_INFO {
 	public void set_feature_id( int ID ) {
 		feature_id = ID;
 	}
-}
+} // end of FEATURE_INFO
+
+} // end of namespace

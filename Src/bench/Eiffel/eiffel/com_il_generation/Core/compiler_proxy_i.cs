@@ -11,8 +11,10 @@ indexing
 using System;
 using System.Runtime.InteropServices;
 
+namespace ISE.Compiler {
+
 [InterfaceTypeAttribute (ComInterfaceType.InterfaceIsIUnknown)]
-public interface ICore
+public interface COMPILER_PROXY_I
 {
 	// Set console application generation
 	void SetConsoleApplication();
@@ -519,4 +521,6 @@ public interface ICore
 	void SetForInterfaces ();
 	void SetForImplementations ();
 
-}
+} // end of COMPILER_PROXY_I
+
+} // end of namespace

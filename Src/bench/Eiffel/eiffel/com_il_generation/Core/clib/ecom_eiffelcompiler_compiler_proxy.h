@@ -2,15 +2,15 @@
  Help file: 
 -----------------------------------------------------------*/
 
-#ifndef __ECOM_EIFFELCOMPILER_CORE_H__
-#define __ECOM_EIFFELCOMPILER_CORE_H__
+#ifndef __ECOM_EIFFELCOMPILER_COMPILER_PROXY_H__
+#define __ECOM_EIFFELCOMPILER_COMPILER_PROXY_H__
 #ifdef __cplusplus
 extern "C" {
 
 
 namespace ecom_EiffelCompiler
 {
-class Core;
+class COMPILER_PROXY;
 }
 
 }
@@ -20,9 +20,9 @@ class Core;
 
 #include "eif_eiffel.h"
 
-#include "ecom_EiffelCompiler_ICore.h"
+#include "ecom_EiffelCompiler_COMPILER_PROXY_I.h"
 
-#include "ecom_grt_globals_core_c.h"
+#include "ecom_grt_globals_compiler_c.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -32,12 +32,12 @@ extern "C" {
 extern "C" {
 namespace ecom_EiffelCompiler
 {
-class Core
+class COMPILER_PROXY
 {
 public:
-	Core ();
-	Core (IUnknown * a_pointer);
-	virtual ~Core ();
+	COMPILER_PROXY ();
+	COMPILER_PROXY (IUnknown * a_pointer);
+	virtual ~COMPILER_PROXY ();
 
 	/*-----------------------------------------------------------
 	No description available.
@@ -983,7 +983,7 @@ private:
 	/*-----------------------------------------------------------
 	Interface pointer
 	-----------------------------------------------------------*/
-	ecom_EiffelCompiler::ICore * p_ICore;
+	ecom_EiffelCompiler::COMPILER_PROXY_I * p_COMPILER_PROXY_I;
 
 
 	/*-----------------------------------------------------------
@@ -1002,7 +1002,7 @@ private:
 #ifdef __cplusplus
 }
 #endif
-#include "ecom_grt_globals_core_c.h"
+#include "ecom_grt_globals_compiler_c.h"
 
 
 #endif

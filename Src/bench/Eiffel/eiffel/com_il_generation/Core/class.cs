@@ -13,12 +13,14 @@ using System.Reflection.Emit;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-internal class EiffelClass
+namespace ISE.Compiler {
+
+internal class CLASS
 {
-	public EiffelClass ()
+	public CLASS ()
 	{
 		Interfaces = new System.Collections.ArrayList();
-		BaseType = EiffelReflectionEmit.NoValue;
+		BaseType = COMPILER.NoValue;
 		#if ASSERTIONS
 			TypeBuilderCreated = false;
 		#endif
@@ -66,17 +68,17 @@ internal class EiffelClass
 	// Does current class have a parent?
 	public bool HasParent()
 	{
-		return( BaseType != EiffelReflectionEmit.NoValue );
+		return( BaseType != COMPILER.NoValue );
 	}
 	
 	// Type name of ARRAY Class
 	public String ArrayElementName;
 
 	// Invariant Routine
-	public EiffelMethod InvariantRoutine;
+	public FEATURE InvariantRoutine;
 
 	// Creation Routines
-	public EiffelMethod[] CreationRoutines;
+	public FEATURE[] CreationRoutines;
 
 	// SetTypeID routine
 	public MethodBuilder set_type_id;
@@ -88,20 +90,20 @@ internal class EiffelClass
 	// routine.
 	public void SetInvariant (int FeatureID)
 	{
-		InvariantRoutine = (EiffelMethod) FeatureIDTable [FeatureID];
-		InvariantRoutine.SetIsInvariant(true);
+		InvariantRoutine = (FEATURE) FeatureIDTable [FeatureID];
+		InvariantRoutine.set_is_invariant (true);
 	}
 
 	// Assign all routine with `FeatureIDs' to be creation routine
 	// of Current class.
 	public void SetCreationRoutines (int[] FeatureIDs)
 	{
-		CreationRoutines = new EiffelMethod [FeatureIDs.Length];
+		CreationRoutines = new FEATURE [FeatureIDs.Length];
 		int nb = FeatureIDs.Length;
 
 		for (int i = 0; i < nb; i++) {
-			CreationRoutines [i] = (EiffelMethod) FeatureIDTable [FeatureIDs [i]];
-			CreationRoutines [i].SetIsCreationRoutine(true);
+			CreationRoutines [i] = (FEATURE) FeatureIDTable [FeatureIDs [i]];
+			CreationRoutines [i].set_is_creation_routine (true);
 		}
 	}
 
@@ -120,12 +122,12 @@ internal class EiffelClass
 	
 	// Methods
 	// key: FeatureID
-	// value: EiffelMethod
+	// value: FEATURE
 	public System.Collections.Hashtable FeatureIDTable;
 
 	// Methods
 	// key: RoutineID
-	// value: EiffelMethod
+	// value: FEATURE
 	public System.Collections.Hashtable StaticFeatureIDTable;
 
 	// Default Constructor for Eiffel objects
@@ -134,11 +136,11 @@ internal class EiffelClass
 		get {
 			if
 				((InternalDefaultConstructor == null) &&
-				EiffelReflectionEmit.Classes [TypeID].IsExternal &&
-				!EiffelReflectionEmit.Classes [TypeID].IsArray)
+				COMPILER.Classes [TypeID].IsExternal &&
+				!COMPILER.Classes [TypeID].IsArray)
 			{
-				EiffelReflectionEmit.Classes [TypeID].SetDefaultConstructor (
-					EiffelReflectionEmit.Classes [TypeID].Builder.GetConstructor (
+				COMPILER.Classes [TypeID].SetDefaultConstructor (
+					COMPILER.Classes [TypeID].Builder.GetConstructor (
 						BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance,
 						null, Type.EmptyTypes, null));
 			}
@@ -284,13 +286,13 @@ internal class EiffelClass
 			if( TypeBuilderCreated )
 				throw new ApplicationException( "AddParent: Type Builder already created" );
 		#endif
-		if (EiffelReflectionEmit.Classes [ID].IsInterface) {
+		if (COMPILER.Classes [ID].IsInterface) {
 			Interfaces.Add (ID);
 		} else {
 			#if ASSERTIONS
-				if( BaseType != EiffelReflectionEmit.NoValue )
+				if( BaseType != COMPILER.NoValue )
 					throw new ApplicationException( "AddParent: Class " + Name +
-						" already has a base type (" + EiffelReflectionEmit.Classes [BaseType].Builder +")");
+						" already has a base type (" + COMPILER.Classes [BaseType].Builder +")");
 				if( IsInterface )
 					throw new ApplicationException( "AddParent: Class " + Name + " is an interface." );
 			#endif
@@ -350,16 +352,16 @@ internal class EiffelClass
 		int i;
 		if (IsImplementation) {
 			LocalInterfaces = new Type [Interfaces.Count + 1];
-			LocalInterfaces [Interfaces.Count] = EiffelReflectionEmit.ISE_EiffelInterface;
+			LocalInterfaces [Interfaces.Count] = COMPILER.ISE_EiffelInterface;
 		} else {
 			LocalInterfaces = new Type [Interfaces.Count];
 		}
 		for( i = 0; i < Interfaces.Count; i++ )
-			LocalInterfaces [i] = EiffelReflectionEmit.Classes [( int )Interfaces [i]].Builder;
-		if( BaseType != EiffelReflectionEmit.NoValue )
-			ParentType = EiffelReflectionEmit.Classes [BaseType].Builder;
+			LocalInterfaces [i] = COMPILER.Classes [( int )Interfaces [i]].Builder;
+		if( BaseType != COMPILER.NoValue )
+			ParentType = COMPILER.Classes [BaseType].Builder;
 		else
-			ParentType = EiffelReflectionEmit.ObjectType;
+			ParentType = COMPILER.ObjectType;
 		if( IsDeferred && !IsInterface )
 		{
 			Builder = module.DefineType( Name, TypeAttributes.Public | TypeAttributes.Abstract, ParentType, LocalInterfaces );
@@ -408,7 +410,7 @@ internal class EiffelClass
 				"____set_type_id",
 				MethodAttributes.Family | MethodAttributes.Virtual | MethodAttributes.Final |
 					MethodAttributes.Public,
-				EiffelReflectionEmit.VoidType,
+				COMPILER.VoidType,
 				new Type [1] {int32_type});
 
 			MethodIL = set_type_id.GetILGenerator();
@@ -428,15 +430,15 @@ internal class EiffelClass
 	{
 		ConstructorBuilder constructor;
 		ILGenerator generator;
-		EiffelClass parent_class;
+		CLASS parent_class;
 
-		if (BaseType != EiffelReflectionEmit.NoValue)
-			parent_class = EiffelReflectionEmit.Classes [BaseType];
+		if (BaseType != COMPILER.NoValue)
+			parent_class = COMPILER.Classes [BaseType];
 		else
 			parent_class = null;
 
 		if
-			((BaseType == EiffelReflectionEmit.NoValue) ||
+			((BaseType == COMPILER.NoValue) ||
 			((parent_class.IsExternal) && (parent_class.DefaultConstructor != null)))
 		{
 				// There is no parent, or there is an external parent that defines
@@ -465,4 +467,6 @@ internal class EiffelClass
 	protected bool TypeBuilderCreated;
 #endif
 
-}
+} // end of CLASS
+
+} // end of namespace

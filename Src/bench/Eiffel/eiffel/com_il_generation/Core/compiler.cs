@@ -16,8 +16,10 @@ using System.Reflection.Emit;
 //using System.Diagnostics;
 using System.Runtime.InteropServices;
 
+namespace ISE.Compiler {
+
 [ClassInterfaceAttribute (ClassInterfaceType.None)]
-internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
+internal class COMPILER : MarshalByRefObject, COMPILER_PROXY_I {
 
 	// Set console application generation
 	public void SetConsoleApplication() {
@@ -127,7 +129,7 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 			Log ("StartClassMappings" + " (" + nb + ")");
 		try {
 		#endif
-			Classes = new EiffelClass [nb + 1];
+			Classes = new CLASS [nb + 1];
 		#if DEBUG
 		}
 		catch (Exception error) {
@@ -146,7 +148,7 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 		try
 		{
 			bool is_array = ElementTypeName.Length > 0;
-			EiffelClass eiffel_class;
+			CLASS eiffel_class;
 
 			switch (ClassName)
 			{
@@ -164,7 +166,7 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 				default: break;
 			}
 
-			eiffel_class = new EiffelClass ();
+			eiffel_class = new CLASS ();
 			Classes [TypeID] = eiffel_class;
 			eiffel_class.SetName (ClassName);
 			eiffel_class.SetTypeID (TypeID);
@@ -194,7 +196,7 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 		#endif
 		
 		try {
-			EiffelClass eiffel_class = Classes [TypeID];
+			CLASS eiffel_class = Classes [TypeID];
 
 			if (IsExternal) {
 				ExternalType = TypeFromName (eiffel_class.Name);
@@ -256,7 +258,7 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 				Log ("Is public? : " +
 					((TypeBuilder)Classes [CurrentTypeID].Builder).IsPublic);
 			#endif
-			EiffelClass eiffel_class = Classes [CurrentTypeID];
+			CLASS eiffel_class = Classes [CurrentTypeID];
 			((TypeBuilder) eiffel_class.Builder).CreateType();
 			if (eiffel_class.StaticFeatureIDTable != eiffel_class.FeatureIDTable) {
 				// We are current generating an implementation class, we can get rid
@@ -352,37 +354,37 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 	
 	// Start enumeration of features written in current class.
 	public void StartFeatureDescription (int arg_count) {
-		CurrentMethod = new EiffelMethod (CurrentTypeID, arg_count);
+		CurrentMethod = new FEATURE (CurrentTypeID, arg_count);
 		arg_pos = 0;
 	}
 
 	// Generate info about current feature knowing that it is going 
 	// to be generated in interface only.
 	public void GenerateInterfaceFeatureIdentification
-		(string Name, int FeatureID, bool IsAttribute)
+		(string Name, int FeatureID, bool is_attribute)
 	{
-		CurrentMethod.SetEiffelName (Name);
-		CurrentMethod.SetFeatureID (FeatureID);
-		CurrentMethod.SetIsAttribute (IsAttribute);
-		CurrentMethod.SetIsDeferred (true);
-		CurrentMethod.SetIsInterfaceRoutine (true);
+		CurrentMethod.set_eiffel_name (Name);
+		CurrentMethod.set_feature_id (FeatureID);
+		CurrentMethod.set_is_attribute (is_attribute);
+		CurrentMethod.set_is_deferred (true);
+		CurrentMethod.set_is_interface_routine (true);
 		Classes [CurrentTypeID].FeatureIDTable.Add (FeatureID, CurrentMethod);
 	}
 
 	// Generate info about current feature.
 	public void GenerateFeatureIdentification
 		(string Name, int FeatureID, bool IsRedefined, bool IsDeferred, bool IsFrozen,
-		bool IsAttribute, bool Is_C_External, bool IsStatic)
+		bool is_attribute, bool is_c_external, bool is_static)
 	{
-		CurrentMethod.SetEiffelName (Name);
-		CurrentMethod.SetFeatureID (FeatureID);
-		CurrentMethod.SetIsRedefined (IsRedefined);
-		CurrentMethod.SetIsDeferred (IsDeferred);
-		CurrentMethod.SetIsFrozen (IsFrozen);
-		CurrentMethod.SetIsAttribute (IsAttribute);
-		CurrentMethod.SetIsStatic (IsStatic);
-		CurrentMethod.SetIs_C_External (Is_C_External);
-		if (IsStatic) {
+		CurrentMethod.set_eiffel_name (Name);
+		CurrentMethod.set_feature_id (FeatureID);
+		CurrentMethod.set_is_redefined (IsRedefined);
+		CurrentMethod.set_is_deferred (IsDeferred);
+		CurrentMethod.set_is_frozen (IsFrozen);
+		CurrentMethod.set_is_attribute (is_attribute);
+		CurrentMethod.set_is_static (is_static);
+		CurrentMethod.set_is_c_external (is_c_external);
+		if (is_static) {
 			Classes [CurrentTypeID].StaticFeatureIDTable.Add (FeatureID, CurrentMethod);
 		} else {
 			Classes [CurrentTypeID].FeatureIDTable.Add (FeatureID, CurrentMethod);
@@ -394,30 +396,30 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 		int ExternalKind, int FeatureID, int RoutineID, bool InCurrentClass,
 		int WrittenTypeID, string[] Parameters, string ReturnType)
 	{
-		CurrentMethod.SetFeatureID (FeatureID);
-		CurrentMethod.SetEiffelName (Name);
-		CurrentMethod.SetRealName (ComName);
+		CurrentMethod.set_feature_id (FeatureID);
+		CurrentMethod.set_eiffel_name (Name);
+		CurrentMethod.set_real_name (ComName);
 		Classes [CurrentTypeID].FeatureIDTable.Add (FeatureID, CurrentMethod);
 	}
 
 	// Generate info about current feature.
 	public void GenerateFeatureReturnType (int TypeID) {
-		CurrentMethod.SetReturnType (TypeID);
+		CurrentMethod.set_return_type_id (TypeID);
 	}
 	
 	// Generate info about current feature.
 	public void GenerateFeatureArgument (string Name, int TypeID) {
-		CurrentMethod.AddArgument (Name, TypeID, arg_pos);
+		CurrentMethod.add_argument (Name, TypeID, arg_pos);
 		arg_pos++;
 	}
 
 	// Freeze current Method.
 	public void CreateFeatureDescription() {
 		try {
-			CurrentMethod.CreateMethodBuilder();
+			CurrentMethod.create_method_builder ();
 		}
 		catch (Exception error) {
-			LogError (error, "In method " + CurrentMethod.Name() + " from " +
+			LogError (error, "In method " + CurrentMethod.name () + " from " +
 				Classes [CurrentTypeID].Name);
 		}
 	}
@@ -430,14 +432,14 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 			TypeBuilder EntryType;
 			MethodBuilder EntryPoint;
 			ILGenerator Generator;
-			EiffelMethod RealEntryPoint;
+			FEATURE RealEntryPoint;
 	
 			EntryType = main_module.DefineType (Classes [TypeID].Name + EntryTypeName);
 			EntryPoint = EntryType.DefineMethod (EntryPointName,
 				MethodAttributes.Public | MethodAttributes.Static,
 				Type.GetType ("void"), Type.EmptyTypes);
 			Generator = EntryPoint.GetILGenerator();
-			RealEntryPoint = ((EiffelMethod) (Classes [TypeID].
+			RealEntryPoint = ((FEATURE) (Classes [TypeID].
 				StaticFeatureIDTable [FeatureID]));
 			if (RealEntryPoint == null)
 				throw new ApplicationException ("DefineEntryPoint: Real entry point " + 
@@ -447,7 +449,7 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 			if (RealEntryPoint.argument_count > 1) {
 				Generator.Emit (OpCodes.Ldarg_0);
 			}
-			Generator.Emit (OpCodes.Call, (MethodInfo) RealEntryPoint.Builder);
+			Generator.Emit (OpCodes.Call, RealEntryPoint.method_builder);
 			Generator.Emit (OpCodes.Ret);
 			EntryType.CreateType();
 			assembly.SetEntryPoint (EntryPoint, ApplicationKind);
@@ -775,10 +777,10 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 	// Generate info about current feature.
 	public void GenerateImplementationFeatureIL (int FeatureID) {
 		try {
-			CurrentMethod = (EiffelMethod) Classes [CurrentTypeID].StaticFeatureIDTable [FeatureID];
-			if (!CurrentMethod.IsAttribute && !CurrentMethod.Is_C_External) {
+			CurrentMethod = (FEATURE) Classes [CurrentTypeID].StaticFeatureIDTable [FeatureID];
+			if (!CurrentMethod.is_attribute && !CurrentMethod.is_c_external) {
 				Labels = new System.Collections.ArrayList();
-				MethodIL = ((MethodBuilder)CurrentMethod.Builder).GetILGenerator();
+				MethodIL = ((MethodBuilder)CurrentMethod.method_builder).GetILGenerator();
 				Locals = new System.Collections.ArrayList();
 			}
 		}
@@ -792,42 +794,42 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 	// i.e. in class `TypeID' to feature `CodeFeatureID' in StaticFeatureIDTable
 	public void GenerateFeatureIL (int FeatureID, int TypeID, int CodeFeatureID) {
 		try {
-			EiffelMethod Method, DefinitionMethod;
+			FEATURE Method, DefinitionMethod;
 			int i, nb;
 
-			Method = (EiffelMethod) Classes [CurrentTypeID].
+			Method = (FEATURE) Classes [CurrentTypeID].
 				FeatureIDTable [FeatureID];
 
-			DefinitionMethod = (EiffelMethod) Classes [TypeID].
+			DefinitionMethod = (FEATURE) Classes [TypeID].
 				StaticFeatureIDTable [CodeFeatureID];
 
 			if (DefinitionMethod != null) {
-				if (DefinitionMethod.IsAttribute) {
+				if (DefinitionMethod.is_attribute) {
 						// Generate Getter of attribute
-					MethodIL = ((MethodBuilder) Method.Builder).GetILGenerator();
+					MethodIL = ((MethodBuilder) Method.method_builder).GetILGenerator();
 					GenerateCurrent ();
-					MethodIL.Emit (OpCodes.Ldfld, DefinitionMethod.AttributeBuilder);
+					MethodIL.Emit (OpCodes.Ldfld, DefinitionMethod.attribute_builder);
 					MethodIL.Emit (OpCodes.Ret);		
 
-					MethodBuilder Setter = Method.SetterBuilder;
+					MethodBuilder Setter = Method.setter_builder;
 					MethodIL = Setter.GetILGenerator();
 					GenerateCurrent ();
 					GenerateArgument (1);
-					MethodIL.Emit (OpCodes.Stfld, DefinitionMethod.AttributeBuilder);
+					MethodIL.Emit (OpCodes.Stfld, DefinitionMethod.attribute_builder);
 				} else {
-					MethodIL = ((MethodBuilder) Method.Builder).GetILGenerator();
+					MethodIL = ((MethodBuilder) Method.method_builder).GetILGenerator();
 					nb = DefinitionMethod.argument_count + 1;
-					if (DefinitionMethod.Is_C_External) {
+					if (DefinitionMethod.is_c_external) {
 						for (i = 1; i < nb; i++)
 							GenerateArgument (i);
 					} else {
 						for (i = 0; i < nb; i++)
 							GenerateArgument (i);
 					}
-					MethodIL.Emit (OpCodes.Call, (MethodInfo) DefinitionMethod.Builder);
+					MethodIL.Emit (OpCodes.Call, DefinitionMethod.method_builder);
 				}
 			} else {
-				MethodIL = ((MethodBuilder) Method.Builder).GetILGenerator();
+				MethodIL = ((MethodBuilder) Method.method_builder).GetILGenerator();
 				Console.WriteLine ("One more feature");
 			}
 			MethodIL.Emit (OpCodes.Ret);		
@@ -841,21 +843,21 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 	// `CurrentTypeID::FeatureID'.
 	public void GenerateMethodImpl (int FeatureID, int ParentTypeID, int ParentFeatureID) {
 		try {
-			EiffelMethod Method, ParentMethod;
+			FEATURE Method, ParentMethod;
 			int[] param_info = null, parent_param_info = null;
 			int i, nb;
 			bool same_type;
 
-			Method = (EiffelMethod) Classes [CurrentTypeID].
+			Method = (FEATURE) Classes [CurrentTypeID].
 				FeatureIDTable [FeatureID];
-			ParentMethod = (EiffelMethod) Classes [ParentTypeID].
+			ParentMethod = (FEATURE) Classes [ParentTypeID].
 				FeatureIDTable [ParentFeatureID];
 
 		if (ParentMethod != null) {
 			param_info = Method.parameter_type_ids;
 			parent_param_info = ParentMethod.parameter_type_ids;
 			nb = Method.argument_count;
-			same_type = Object.Equals (Method.Builder.ReturnType, ParentMethod.Builder.ReturnType);
+			same_type = Object.Equals (Method.method_builder.ReturnType, ParentMethod.method_builder.ReturnType);
 			i = 0;
 			while (same_type && i < nb) {
 				same_type = (param_info [i] == parent_param_info [i]);
@@ -865,12 +867,12 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 			if (same_type) {
 				((TypeBuilder) Classes [CurrentTypeID].Builder).
 					DefineMethodOverride (
-						(MethodInfo) Method.Builder,
-						(MethodInfo) ParentMethod.Builder);
-				if (Method.IsAttribute && ParentMethod.IsAttribute) {
+						Method.method_builder,
+						ParentMethod.method_builder);
+				if (Method.is_attribute && ParentMethod.is_attribute) {
 						// Generate MethodImp for Setter
 					((TypeBuilder) Classes [CurrentTypeID].Builder).
-						DefineMethodOverride (Method.SetterBuilder, ParentMethod.SetterBuilder);
+						DefineMethodOverride (Method.setter_builder, ParentMethod.setter_builder);
 				}
 			} else {
 				param_info = ParentMethod.parameter_type_ids;
@@ -879,10 +881,10 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 					ParameterTypes [i] = Classes [param_info [i]].Builder;
 
 				MethodBuilder Override = ((TypeBuilder) Classes [CurrentTypeID].Builder).
-					DefineMethod (OverridePrefix + ParentMethod.Name() + counter.ToString(),
+					DefineMethod (OverridePrefix + ParentMethod.name () + counter.ToString(),
 						MethodAttributes.Virtual | MethodAttributes.Final |
 							MethodAttributes.Private,
-						((MethodInfo)ParentMethod.Builder).ReturnType,
+						ParentMethod.method_builder.ReturnType,
 						ParameterTypes);
 
 				counter = counter + 1;
@@ -897,19 +899,19 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 //							Classes [Method.ParameterTypeIDs [i]].Builder);
 //					}
 				}
-				MethodIL.Emit (OpCodes.Callvirt, (MethodInfo)Method.Builder);
+				MethodIL.Emit (OpCodes.Callvirt, Method.method_builder);
 				MethodIL.Emit (OpCodes.Ret);
 
 				((TypeBuilder) Classes [CurrentTypeID].Builder).
-					DefineMethodOverride (Override, (MethodInfo) ParentMethod.Builder);
+					DefineMethodOverride (Override, ParentMethod.method_builder);
 
-				if (Method.IsAttribute && ParentMethod.IsAttribute) {
+				if (Method.is_attribute && ParentMethod.is_attribute) {
 						// Generate MethodImpl on Setter.
 					Override = ((TypeBuilder) Classes [CurrentTypeID].Builder).
-						DefineMethod (OverridePrefix + SetterPrefix + ParentMethod.Name() +
+						DefineMethod (OverridePrefix + SetterPrefix + ParentMethod.name () +
 							counter.ToString(), MethodAttributes.Virtual | MethodAttributes.Final |
 								MethodAttributes.Private, VoidType,
-							new Type [1] {((MethodInfo)ParentMethod.Builder).ReturnType});
+							new Type [1] {ParentMethod.method_builder.ReturnType});
 
 					counter = counter + 1;
 
@@ -921,11 +923,11 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 //						MethodIL.Emit (OpCodes.Castclass,
 //							Classes [Method.ParameterTypeIDs [i]].Builder);
 //					}
-					MethodIL.Emit (OpCodes.Callvirt, Method.SetterBuilder);
+					MethodIL.Emit (OpCodes.Callvirt, Method.setter_builder);
 					MethodIL.Emit (OpCodes.Ret);
 
 					((TypeBuilder) Classes [CurrentTypeID].Builder).
-						DefineMethodOverride (Override, ParentMethod.SetterBuilder);
+						DefineMethodOverride (Override, ParentMethod.setter_builder);
 				}
 			}
 		} else {
@@ -945,9 +947,9 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 					BindingFlags.NonPublic);
 		}
 
-		EiffelMethod Method = (EiffelMethod) Classes [CurrentTypeID].FeatureIDTable [FeatureID];
+		FEATURE Method = (FEATURE) Classes [CurrentTypeID].FeatureIDTable [FeatureID];
 
-		MethodIL = ((MethodBuilder) Method.Builder).GetILGenerator();
+		MethodIL = ((MethodBuilder) Method.method_builder).GetILGenerator();
 		GenerateCurrent ();
 		MethodIL.Emit (OpCodes.Call, MemberwiseCloneMethod);
 		GenerateCheckCast (0, CurrentTypeID);
@@ -958,7 +960,7 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 	public void GenerateCreationFeatureIL (int FeatureID) {
 		try {
 			Labels = new System.Collections.ArrayList();
-			CurrentMethod = (EiffelMethod) Classes [CurrentTypeID].
+			CurrentMethod = (FEATURE) Classes [CurrentTypeID].
 				FeatureIDTable [FeatureID];
 			Locals = new System.Collections.ArrayList();
 			// To implement: 
@@ -1071,7 +1073,7 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 	public void CreateLikeCurrentObject() {
 			// FIXME: Code is not correct, we should evaluate current type
 			// and create an instance of it.
-		EiffelClass eiffel_class = Classes [CurrentTypeID];
+		CLASS eiffel_class = Classes [CurrentTypeID];
 		MethodIL.Emit (OpCodes.Newobj, eiffel_class.DefaultConstructor);
 		LastCreatedClass = eiffel_class;
 	}
@@ -1082,7 +1084,7 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 			// Classes [TypeID + 1] corresponds to implementation class
 			// For external classes or Frozen classes, there is only one
 			// entry in Classes.
-		EiffelClass eiffel_class = Classes [TypeID];
+		CLASS eiffel_class = Classes [TypeID];
 
 		if (!eiffel_class.IsExternal && !eiffel_class.IsFrozen)
 			eiffel_class = Classes [TypeID + 1];
@@ -1092,16 +1094,16 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 	}
 
 	public void CreateAttributeObject (int TypeID, int FeatureID) {
-		EiffelClass eiffel_class = Classes [TypeID];
-		EiffelMethod f = (EiffelMethod) eiffel_class.FeatureIDTable [FeatureID];
+		CLASS eiffel_class = Classes [TypeID];
+		FEATURE f = (FEATURE) eiffel_class.FeatureIDTable [FeatureID];
 
 		try {
 			#if ASSERTIONS	
-				if (f == null || f.ReturnTypeID == NoValue)
+				if (f == null || f.return_type_id == NoValue)
 					throw new ApplicationException ("Not an attribute or like function");
 			#endif
 
-			int type_id = f.ReturnTypeID;
+			int type_id = f.return_type_id;
 			eiffel_class = Classes [type_id];
 			
 			if (!eiffel_class.IsExternal && !eiffel_class.IsFrozen)
@@ -1206,12 +1208,12 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 	// Generate attribute
 	public void GenerateAttribute (int TypeID, int FeatureID) {
 		try {
-			MethodIL.Emit (OpCodes.Ldfld, ((EiffelMethod)Classes [TypeID].
-				FeatureIDTable [FeatureID]).AttributeBuilder);
+			MethodIL.Emit (OpCodes.Ldfld, ((FEATURE)Classes [TypeID].
+				FeatureIDTable [FeatureID]).attribute_builder);
 		}
 		catch (Exception error) {
 			LogError (error, "In feature with ID " + FeatureID + " (" +
-				((EiffelMethod)Classes [TypeID].FeatureIDTable [FeatureID]).Name()+
+				((FEATURE)Classes [TypeID].FeatureIDTable [FeatureID]).name ()+
 				")of " + Classes [TypeID].Builder);
 		}
 	}
@@ -1220,39 +1222,38 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 	public void GenerateFeatureAccess (int TypeID, int FeatureID, bool IsVirtual) {
 		MethodInfo Feature = null;
 		try {
-			 Feature = (MethodInfo) ((EiffelMethod)Classes [TypeID].
-					FeatureIDTable [FeatureID]).Builder;
+			Feature = ((FEATURE)Classes [TypeID].FeatureIDTable [FeatureID]).method_builder;
 			if (IsVirtual)
 				MethodIL.Emit (OpCodes.Callvirt, Feature);
 			else
 				MethodIL.Emit (OpCodes.Call, Feature);
 		}
 		catch (Exception error) {
-			LogError (error, " in class " + ((EiffelClass)Classes [TypeID]).Name +
-				" (TypeID = " + TypeID + ")for method " + ((EiffelMethod)Classes [TypeID].
-				FeatureIDTable [FeatureID]).Name()+ " (FeatureID = " + FeatureID + "): " + Feature);
+			LogError (error, " in class " + ((CLASS)Classes [TypeID]).Name +
+				" (TypeID = " + TypeID + ")for method " + ((FEATURE)Classes [TypeID].
+				FeatureIDTable [FeatureID]).name ()+ " (FeatureID = " + FeatureID + "): " + Feature);
 		}
 	}
 
 	// Generate precursor feature access
 	public void GeneratePrecursorFeatureAccess (int TypeID, int FeatureID) {
 		MethodInfo Feature = null;
-		Feature = (MethodInfo) ((EiffelMethod)Classes [TypeID].
-				StaticFeatureIDTable [FeatureID]).Builder;
+		Feature = ((FEATURE)Classes [TypeID].
+				StaticFeatureIDTable [FeatureID]).method_builder;
 		MethodIL.Emit (OpCodes.Call, Feature);
 	}
 
 	// Put associated token of a feature
 	public void PutMethodToken (int TypeID, int FeatureID) {
 		try {
-			MethodBuilder Feature = (MethodBuilder) ((EiffelMethod)Classes [TypeID].
-						FeatureIDTable [FeatureID]).Builder;
+			MethodBuilder Feature = (MethodBuilder) ((FEATURE)Classes [TypeID].
+						FeatureIDTable [FeatureID]).method_builder;
 			MethodIL.Emit (OpCodes.Ldtoken, Feature);
 		}
 		catch (Exception error) {
-			LogError (error, " in method " + ((EiffelMethod)Classes [TypeID].
-				FeatureIDTable [FeatureID]).Name() + " from class " +
-				((EiffelClass)Classes [TypeID]).Name);
+			LogError (error, " in method " + ((FEATURE)Classes [TypeID].
+				FeatureIDTable [FeatureID]).name () + " from class " +
+				((CLASS)Classes [TypeID]).Name);
 		}
 	}
 	
@@ -1330,9 +1331,9 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 
 	// Generate call to invariant routine
 	public void GenerateInvariantChecking (int TypeID) {
-		EiffelClass c = Classes[TypeID];
+		CLASS c = Classes[TypeID];
 		if (c.InvariantRoutine != null) {
-			MethodIL.Emit (OpCodes.Call, (MethodInfo)Classes[TypeID].InvariantRoutine.Builder);
+			MethodIL.Emit (OpCodes.Call, (MethodInfo)Classes[TypeID].InvariantRoutine.method_builder);
 		}
 	}
 
@@ -1365,17 +1366,17 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 	// Generate assignment to attribute of `Name' in current class.
 	public void GenerateAttributeAssignment (int TypeID, int FeatureID)
 	{
-		EiffelClass written_class = Classes [TypeID];
+		CLASS written_class = Classes [TypeID];
 
 		if (written_class.IsFrozen) {
 				// Class is frozen, so we can directly and safely assign
 				// to its attribute.
-			MethodIL.Emit (OpCodes.Stfld, ((EiffelMethod) written_class.
-				FeatureIDTable [FeatureID]).AttributeBuilder);
+			MethodIL.Emit (OpCodes.Stfld, ((FEATURE) written_class.
+				FeatureIDTable [FeatureID]).attribute_builder);
 		} else {
 				// Assignment is done through a feature call.
-			MethodInfo Feature = ((EiffelMethod) written_class.
-					FeatureIDTable [FeatureID]).SetterBuilder;
+			MethodInfo Feature = ((FEATURE) written_class.
+					FeatureIDTable [FeatureID]).setter_builder;
 			MethodIL.Emit (OpCodes.Callvirt, Feature);
 		}
 	}
@@ -1399,8 +1400,8 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 
 	// Generate `ldftn f' or `ldvirtftn f' instruction
 	public void GenerateRoutineAddress (int TypeID, int FeatureID) {
-		MethodInfo Method = (MethodInfo) (((EiffelMethod)Classes [TypeID].
-										FeatureIDTable [FeatureID]).Builder);
+		MethodInfo Method = ((FEATURE)Classes [TypeID].
+										FeatureIDTable [FeatureID]).method_builder;
 		DuplicateTop();
 		MethodIL.Emit (OpCodes.Ldvirtftn, Method);
 	}
@@ -1417,8 +1418,8 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 
 	// Generate `ldflda attr' instruction
 	public void GenerateAttributeAddress (int TypeID, int FeatureID) {
-		MethodIL.Emit (OpCodes.Ldflda, ((EiffelMethod)Classes [TypeID].
-			FeatureIDTable [FeatureID]).AttributeBuilder);
+		MethodIL.Emit (OpCodes.Ldflda, ((FEATURE)Classes [TypeID].
+			FeatureIDTable [FeatureID]).attribute_builder);
 	}
 
 	// Generate `ldarga n' instruction
@@ -1885,7 +1886,7 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 	private System.Collections.ArrayList Labels;
 	
 	// Currently build method
-	private EiffelMethod CurrentMethod;
+	private FEATURE CurrentMethod;
 
 	// List of local variables builders
 	private System.Collections.ArrayList Locals;
@@ -1915,7 +1916,7 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 	// Current mapped class
 	internal static int CurrentTypeID;
 
-	// Position of argument declared through `AddArgument'.
+	// Position of argument declared through `add_argument'.
 	private static int arg_pos;
 
 	// Predefined class type ids
@@ -1929,7 +1930,7 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 	internal static int NoValue = -1;
 
 	// Eiffel classes to be generated
-	internal static EiffelClass[] Classes;
+	internal static CLASS[] Classes;
 
 	// System.Object Type
 	internal static Type ObjectType = Type.GetType( "System.Object" );
@@ -2067,7 +2068,7 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 	public static Type ISE_EiffelInterface = null;
 
 	// Last created Eiffel type
-	private static EiffelClass LastCreatedClass = null;
+	private static CLASS LastCreatedClass = null;
 
 	// Name of DLL containing C externals.
 	public static string dll_name;
@@ -2076,4 +2077,6 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 	// Status of code generation
 	internal static bool is_debugging_enabled = false;
 	internal static bool is_verifiable_enabled = false;
-}
+} // end of COMPILER
+
+} // end of namespace

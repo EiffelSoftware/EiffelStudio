@@ -2,20 +2,20 @@
 Writer for generated Eiffel to C mappers class
 -----------------------------------------------------------*/
 
-#include "ecom_gec_core_c.h"
-ecom_gec_core_c grt_ec_core_c;
+#include "ecom_gec_compiler_c.h"
+ecom_gec_compiler_c grt_ec_compiler_c;
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-ecom_gec_core_c::ecom_gec_core_c(  )
+ecom_gec_compiler_c::ecom_gec_compiler_c(  )
 {
 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-BSTR * ecom_gec_core_c::ccom_ec_pointed_cell_3( EIF_REFERENCE eif_ref, BSTR * old )
+BSTR * ecom_gec_compiler_c::ccom_ec_pointed_cell_3( EIF_REFERENCE eif_ref, BSTR * old )
 
 /*-----------------------------------------------------------
 	Convert CELL [STRING] to BSTR *.

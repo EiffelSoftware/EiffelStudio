@@ -3,17 +3,17 @@
 MV = copy
 CC = cl
 OUTPUT_CMD = -Fo
-CFLAGS = -Zi -D_WIN32_DCOM -c -I$(ISE_EIFFEL)\studio\spec\windows\include -I$(ISE_EIFFEL)\library\com\spec\windows\include 
-MTCFLAGS = -Zi -MT -DEIF_THREADS -D_WIN32_DCOM -c -I$(ISE_EIFFEL)\studio\spec\windows\include -I$(ISE_EIFFEL)\library\com\spec\windows\include 
+CFLAGS = -Ox -D_WIN32_DCOM -c -I$(ISE_EIFFEL)\studio\spec\windows\include -I$(EIFFEL_SRC)\library\com\spec\windows\include 
+MTCFLAGS = -Ox -MT -DEIF_THREADS -D_WIN32_DCOM -c -I$(ISE_EIFFEL)\studio\spec\windows\include -I$(EIFFEL_SRC)\library\com\spec\windows\include 
 
-OBJ = ecom_eiffelcompiler_core.obj \
-ecom_gce_core_c.obj \
-ecom_gec_core_c.obj \
+OBJ = ecom_eiffelcompiler_compiler_proxy.obj \
+ecom_gce_compiler_c.obj \
+ecom_gec_compiler_c.obj \
 
 
-WOBJ = wecom_eiffelcompiler_core.obj \
-wecom_gce_core_c.obj \
-wecom_gec_core_c.obj \
+WOBJ = wecom_eiffelcompiler_compiler_proxy.obj \
+wecom_gce_compiler_c.obj \
+wecom_gec_compiler_c.obj \
 
 all:: wecom.lib ecom.lib
 
@@ -30,12 +30,12 @@ ecom.lib: $(OBJ)
 .cpp.obj:
 	$(CC) $(CFLAGS) -nologo $<
 
-wecom_eiffelcompiler_core.obj: ecom_eiffelcompiler_core.cpp
+wecom_eiffelcompiler_compiler_proxy.obj: ecom_eiffelcompiler_compiler_proxy.cpp
 	$(CC) $(CFLAGS) -DWORKBENCH -nologo $(OUTPUT_CMD)$@ $?
 
-wecom_gce_core_c.obj: ecom_gce_core_c.cpp
+wecom_gce_compiler_c.obj: ecom_gce_compiler_c.cpp
 	$(CC) $(CFLAGS) -DWORKBENCH -nologo $(OUTPUT_CMD)$@ $?
 
-wecom_gec_core_c.obj: ecom_gec_core_c.cpp
+wecom_gec_compiler_c.obj: ecom_gec_compiler_c.cpp
 	$(CC) $(CFLAGS) -DWORKBENCH -nologo $(OUTPUT_CMD)$@ $?
 

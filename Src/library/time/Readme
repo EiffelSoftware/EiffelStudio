@@ -1,4 +1,4 @@
-ISE EiffelTime 5.0, 2001
+ISE EiffelTime 5.2, 2002
 
 Introduction
 ============
@@ -13,14 +13,7 @@ origin.
 Documentation
 =============
 
-A complete documentation can be found using the $EIFFEL4\docs\index.html file.
-
-Installation
-============
-
-  Go to the directory $EIFFEL4\library\time\Clib and run make_msc.bat if your
-C compiler is Microsoft or make_bcc if Borland. Under Unix, just launch 
-finish_freezing.
+A complete documentation can be found from help menu in EiffelStudio.
 
 --|----------------------------------------------------------------
 --| EiffelTime: library of reusable components for ISE Eiffel.

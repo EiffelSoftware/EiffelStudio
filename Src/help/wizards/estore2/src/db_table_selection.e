@@ -8,7 +8,7 @@ class
 	DB_TABLE_SELECTION
 
 inherit
-	INTERMEDIARY_STATE_WINDOW
+	WIZARD_INTERMEDIARY_STATE_WINDOW
 		redefine
 			update_state_information,
 			proceed_with_current_info,
@@ -140,15 +140,16 @@ feature -- basic Operations
 			from 
 				unselected_items.start
 			until
-				unselected_items.after
+				unselected_items.is_empty
 			loop
 				it := unselected_items.item
 				unselected_items.prune (it)
 				selected_items.extend (it)
+				unselected_items.start
 			end
 			add_b.disable_sensitive
 		ensure
-			unselected_items.empty
+			unselected_items.is_empty
 		end
 
 	add_items is
@@ -178,15 +179,16 @@ feature -- basic Operations
 			from 
 				selected_items.start
 			until
-				selected_items.after
+				selected_items.is_empty
 			loop
 				it:= selected_items.item
 				selected_items.prune (it)
 				unselected_items.extend (it)
+				selected_items.start
 			end
 			remove_b.disable_sensitive
 		ensure
-			selected_items.empty
+			selected_items.is_empty
 		end
 
 	remove_items is

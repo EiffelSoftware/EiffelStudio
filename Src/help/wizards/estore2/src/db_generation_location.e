@@ -9,7 +9,7 @@ class
 
 
 inherit
-	INTERMEDIARY_STATE_WINDOW
+	WIZARD_INTERMEDIARY_STATE_WINDOW
 		redefine
 			update_state_information,
 			proceed_with_current_info,
@@ -29,7 +29,11 @@ feature -- basic Operations
 			v1: EV_VERTICAL_BOX
 		do 
 			create h1
-			create location.make ("Project Directory",wizard_information.location,10,80,Current, False)
+			create location.make (Current)
+			location.set_label_string_and_size ("Project Directory", 10)
+			location.set_textfield_string_and_capacity (wizard_information.location, 80)
+			location.generate
+	--		create location.make ("Project Directory",wizard_information.location,10,80,Current, False)
 			create browse1_b.make_with_text ("Browse ...")
 			browse1_b.set_minimum_width (74)
 			browse1_b.set_minimum_height (23)
@@ -39,7 +43,7 @@ feature -- basic Operations
 			v1.extend (browse1_b)
 			v1.disable_item_expand (browse1_b)
 			h1.set_padding (11)
-			h1.extend(location)
+			h1.extend(location.widget)
 			h1.extend(v1)
 			h1.disable_item_expand(v1)
 			choice_box.extend (h1)

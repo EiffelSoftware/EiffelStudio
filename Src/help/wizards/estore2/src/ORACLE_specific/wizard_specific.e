@@ -41,6 +41,4 @@ feature -- access
 			create Result
 		end
 
-	
-
 end -- class WIZARD_SPECIFIC

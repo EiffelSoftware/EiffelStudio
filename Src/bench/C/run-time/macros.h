@@ -305,10 +305,6 @@ extern int fcount;
 #define RTEX struct ex_vect *exvect
 #define RTED jmp_buf exenv
 #define RTES if (setjmp(exenv)) goto rescue
-#define RTEJ current_call_level = trace_call_level; \
-	old_p_stk = prof_stack; \
-	prof_stack_init(); \
-	start: exvect->ex_jbuf = (char *) exenv; RTES
 #define RTEA(x,y,z) exvect = exset(x, y, z)
 #define RTEV exvect = exft()
 #define RTET(t,x) eraise(t,x)
@@ -316,13 +312,15 @@ extern int fcount;
 #define RTSO check_options_stop()
 #ifdef WORKBENCH
 #define RTEE RTSO; expop(&eif_stack)
+#define RTEJ current_call_level = trace_call_level; \
+	old_p_stk = prof_stack; \
+	prof_stack_init(); \
+	start: exvect->ex_jbuf = (char *) exenv; RTES
 #else
 #define RTEE expop(&eif_stack)
+#define RTEJ start: exvect->ex_jbuf = (char *) exenv; RTES
 #endif
-#define RTER trace_call_level = current_call_level; \
-	prof_stack_rewind(); \
-	prof_stack_free(); prof_stack = old_p_stk; \
-	in_assertion = 0; \
+#define RTER in_assertion = 0; \
 	exvect = exret(exvect); goto start
 #define RTEU exresc(exvect)
 #define RTEF exfail()
@@ -472,11 +470,22 @@ extern int fcount;
  * This is done by RTLT
  *
  */
-#define RTTR(x,y,z)	start_trace(x,y,z)		/* Print message "entering..." */
-#define RTXT(x,y,z)	stop_trace(x,y,z)		/* Print message "leaving..." */
-#define RTPR(x,y,z)	start_profile(x,y,z)	/* Start measurement of feature */
-#define RTXP		stop_profile()			/* Stop measurement of feature */
-#define RTLT		int current_call_level; struct profile_stack *old_p_stk		/* Declare C-local variable */
+#define RTTR(x,y,z)	start_trace(x,y,z)					/* Print message "entering..." */
+#define RTXT(x,y,z)	stop_trace(x,y,z)					/* Print message "leaving..." */
+#define RTPR(x,y,z)	start_profile(x,y,z)				/* Start measurement of feature */
+#define RTXP		stop_profile()						/* Stop measurement of feature */
+#define RTLT		int current_call_level				/* Declare local trave variable */
+#define RTLP		struct profile_stack *old_p_stk		/* Declare local profiler variable */
+#define RTPI		old_p_stk = prof_stack; prof_stack_init()		/* Create local profile stack
+																	 * during rescue clause
+																	 */
+#define RTTI		current_call_level = trace_call_level			/* Save the tracer call level */
 #endif
+
+/* Macros needed for profile stack and trace clean up */
+
+#define RTPS		prof_stack_rewind(); \
+					prof_stack_free(); prof_stack = old_p_stk		/* Clean up profiler stack */
+#define RTTS		trace_call_level = current_call_level			/* Clean up trace levels */
 
 #endif

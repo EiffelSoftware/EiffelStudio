@@ -59,12 +59,10 @@ feature -- Access
 		local
 			f: FILE_NAME
 		do
-			if valid_project then
-				create f.make_from_string (Eiffel_project.project_directory.name)
-				f.set_file_name (Eiffel_system.name)
-				f.add_extension ("epr")
-				Result := f
-			end
+			create f.make_from_string (Eiffel_project.project_directory.name)
+			f.set_file_name (project_properties.system_name)
+			f.add_extension ("epr")
+			Result := f
 		end
 
 	ace_file_name: STRING is
@@ -132,6 +130,7 @@ feature -- Basic Operations
 					if Eiffel_project.initialized then
 						Eiffel_ace.set_file_name (ace_name)
 						create {PROJECT_PROPERTIES} project_properties.make
+						valid_project := True
 						create enum
 						project_properties.set_compilation_type (enum.is_application)
 					else

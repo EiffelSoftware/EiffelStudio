@@ -38,12 +38,12 @@ inherit
 			background_brush,
 			on_menu_command,
 			on_accelerator_command,
-			on_color_control
+			on_color_control,
+ 			on_wm_vscroll,
+ 			on_wm_hscroll
 		redefine
 			default_style,
 			default_ex_style
--- 			on_wm_vscroll,
--- 			on_wm_hscroll
 		end
 
 feature {NONE} -- Initialization
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Create the box with the default options.
 		do
-			wel_make (default_parent.item, "")
+			wel_make (default_parent, "")
 		end
 
 feature {NONE} -- Implementation
@@ -72,58 +72,9 @@ feature {NONE} -- WEL Implementation
 			Result := Ws_ex_controlparent
 		end
 
--- 	on_wm_vscroll (wparam, lparam: INTEGER) is
--- 			-- Wm_vscroll message.
--- 			-- Should be implementated in EV_CONTAINER_IMP,
--- 			-- But as we can't implement a deferred feature
--- 			-- with an external, it is not possible.
--- 		local
--- 			gauge: EV_GAUGE_IMP
--- 			p: POINTER
--- 		do
--- 			p := cwin_get_wm_vscroll_hwnd (wparam, lparam)
--- 			if p /= default_pointer then
--- 				-- The message comes from a gauge
--- 				gauge ?= windows.item (p)
--- 				if gauge /= Void then
--- 					check
--- 						gauge_exists: gauge.exists
--- 					end
--- 					gauge.execute_command (Cmd_gauge, Void)
--- 				end
--- 			else
--- 				-- The message comes from a window scroll bar
--- 				on_vertical_scroll (cwin_get_wm_vscroll_code (wparam, lparam),
--- 					cwin_get_wm_vscroll_pos (wparam, lparam))
--- 			end
--- 		end
--- 
--- 	on_wm_hscroll (wparam, lparam: INTEGER) is
--- 			-- Wm_hscroll message.
--- 		local
--- 			gauge: EV_GAUGE_IMP
--- 			p: POINTER
--- 		do
--- 			p := cwin_get_wm_hscroll_hwnd (wparam, lparam)
--- 			if p /= default_pointer then
--- 				-- The message comes from a gauge
--- 				gauge ?= windows.item (p)
--- 				if gauge /= Void then
--- 					check
--- 						gauge_exists: gauge.exists
--- 					end
--- 					gauge.execute_command (Cmd_gauge, Void)
--- 				end
--- 			else
--- 				-- The message comes from a window scroll bar
--- 				on_horizontal_scroll (cwin_get_wm_hscroll_code (wparam, lparam),
--- 					cwin_get_wm_hscroll_pos (wparam, lparam))
--- 			end
--- 		end
-
 feature {NONE} -- Deferred features
 
-	default_parent: CELL [WEL_FRAME_WINDOW] is
+	default_parent: WEL_FRAME_WINDOW is
 		deferred
 		end
 
@@ -145,6 +96,42 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			-- it would be implemented by an external.
 		do
 			Result := c_mouse_message_y (lparam)
+		end
+
+	get_wm_hscroll_code (wparam, lparam: INTEGER): INTEGER is
+			-- Encapsulation of the external cwin_get_wm_hscroll_code.
+		do
+			Result := cwin_get_wm_hscroll_code (wparam, lparam)
+		end
+
+	get_wm_hscroll_hwnd (wparam, lparam: INTEGER): POINTER is
+			-- Encapsulation of the external cwin_get_wm_hscroll_hwnd
+		do
+			Result := cwin_get_wm_hscroll_hwnd (wparam, lparam)
+		end
+
+	get_wm_hscroll_pos (wparam, lparam: INTEGER): INTEGER is
+			-- Encapsulation of the external cwin_get_wm_hscroll_pos
+		do
+			Result := cwin_get_wm_hscroll_pos (wparam, lparam)
+		end
+
+	get_wm_vscroll_code (wparam, lparam: INTEGER): INTEGER is
+			-- Encapsulation of the external cwin_get_wm_vscroll_code.
+		do
+			Result := cwin_get_wm_vscroll_code (wparam, lparam)
+		end
+
+	get_wm_vscroll_hwnd (wparam, lparam: INTEGER): POINTER is
+			-- Encapsulation of the external cwin_get_wm_vscroll_hwnd
+		do
+			Result := cwin_get_wm_vscroll_hwnd (wparam, lparam)
+		end
+
+	get_wm_vscroll_pos (wparam, lparam: INTEGER): INTEGER is
+			-- Encapsulation of the external cwin_get_wm_vscroll_pos
+		do
+			Result := cwin_get_wm_vscroll_pos (wparam, lparam)
 		end
 
 end -- class EV_WEL_CONTROL_CONTAINER_IMP

@@ -9,7 +9,7 @@ class EWB_EDIT
 
 inherit
 
-	EB_CONSTANTS;
+	TTY_CONSTANTS;
 
 feature -- Element change
 

@@ -22,20 +22,65 @@ if [ ! -d $EXPORT_DIR ]; then
 	remtrace Couldnt find the directory with the tgzs.
 	CANCEL
 fi
-
+if [ -e echome.tar.gz ]; then
+	MULTIPLE_EDITIONS="True"
+else
+	MULTIPLE_EDITIONS=""
+fi
 remtrace Compile C code of the libraries
 remtrace \"A tout seigneur tout honneur\", let\'s start with the run-time
 if [ ! -e c.tar.gz ]; then
 	remtrace 'No.tar.gz for the C directory'
 	CANCEL
 fi
+fullrd C
 gunzip -c c.tar.gz | tar -xf -
 if [ ! -d C ]; then
 	remtrace No C directory
 	CANCEL
 fi
 cd C
-. quick_configure >> $COMPILE_LOG
+if [ -z "$MULTIPLE_EDITIONS" ]; then
+	. quick_configure >> $COMPILE_LOG
+else
+	remtrace Compile a non-commercial run-time
+	cd run-time
+	sed -e "s/\/\*\#define\ NON_COMMERCIAL\*\/$/\#define\ NON_COMMERCIAL/g" main.c >> new_main.c
+	move new_main.c main.c
+	cd ..
+	. quick_configure >> $COMPILE_LOG
+	safe_md $EXPORT_DIR/home_rt
+	move run-time/*.so $EXPORT_DIR/home_rt
+	move run-time/*.a $EXPORT_DIR/home_rt
+	if [ ! -e $EXPORT_DIR/home_rt/libwkbench.a ]; then
+		remtrace Couldnt generate the run-time
+		CANCEL
+	else
+		if [ ! -e $EXPORT_DIR/home_rt/libwkbench.so ]; then
+			remtrace Couldnt generate the run-time
+			CANCEL
+		fi
+	fi
+
+	remtrace Compile a commercial run-time
+	cd $EXPORT_DIR
+	fullrd C
+	gunzip -c c.tar.gz | tar -xf -
+	cd C
+	. quick_configure >> $COMPILE_LOG
+	safe_md $EXPORT_DIR/pro_rt
+	cp run-time/*.so $EXPORT_DIR/pro_rt
+	cp run-time/*.a $EXPORT_DIR/pro_rt
+	if [ ! -e $EXPORT_DIR/pro_rt/libwkbench.a ]; then
+		remtrace Couldnt generate the run-time
+		CANCEL
+	else
+		if [ ! -e $EXPORT_DIR/pro_rt/libwkbench.so ]; then
+			remtrace Couldnt generate the run-time
+			CANCEL
+		fi
+	fi
+fi
 
 cd $EXPORT_DIR
 remtrace Extract the delivery
@@ -57,27 +102,42 @@ else
 fi
 
 cd $EXPORT_DIR
-# These directories should already have been created by make_delivery. Whatever...
-safe_md $INSTALL_DIR/studio/spec
+
+#These directories should have been created by make_delivery.
+safe_md $INSTALL_DIR/studio/spec/unix/include
+safe_md $INSTALL_DIR/studio/spec/unix/bin
+mv $INSTALL_DIR/studio/spec/unix/*re* $INSTALL_DIR/studio/spec/unix/bin
+safe_md $INSTALL_DIR/studio/spec/unix/lib
+
+safe_md $INSTALL_DIR/studio/config/$ISE_PLATFORM
+fullrd $INSTALL_DIR/studio/spec/$ISE_PLATFORM
 safe_md $INSTALL_DIR/studio/spec/$ISE_PLATFORM
-safe_md $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin
-safe_md $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib
-safe_md $INSTALL_DIR/studio/spec/$ISE_PLATFORM/include
-copy studio/config/unix studio/config/$ISE_PLATFORM
-move $INSTALL_DIR/studio/spec/unix/* $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin
+safe_md $INSTALL_DIR/precomp/spec/$ISE_PLATFORM
+safe_md $INSTALL_DIR/eifinit/studio/spec/$ISE_PLATFORM
+safe_md $INSTALL_DIR/studio/help/defaults/$ISE_PLATFORM
+move $INSTALL_DIR/studio/config/unix/* $INSTALL_DIR/studio/config/$ISE_PLATFORM
+move $INSTALL_DIR/studio/spec/unix/* $INSTALL_DIR/studio/spec/$ISE_PLATFORM
+move $INSTALL_DIR/precomp/spec/unix/* $INSTALL_DIR/precomp/spec/$ISE_PLATFORM
+move $INSTALL_DIR/eifinit/studio/spec/unix/* $INSTALL_DIR/eifinit/studio/spec/$ISE_PLATFORM
+move $INSTALL_DIR/studio/help/defaults/unix/* $INSTALL_DIR/studio/help/defaults/$ISE_PLATFORM
+fullrd $INSTALL_DIR/studio/config/unix
 fullrd $INSTALL_DIR/studio/spec/unix
-move $INSTALL_DIR/precomp/spec/unix $INSTALL_DIR/precomp/spec/$ISE_PLATFORM
+fullrd $INSTALL_DIR/precomp/spec/unix
+fullrd $INSTALL_DIR/eifinit/studio/spec/unix
+fullrd $INSTALL_DIR/studio/help/defaults/unix
+
 
 cp C/run-time/lib*.a $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib 
 cp C/run-time/lib*.so $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib 
-fullrf $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib/libebench.a
+if [ -z "$MULTIPLE_EDITIONS" ]; then
+	fullrf $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib/libebench.a
+else
+	fullrf $EXPORT_DIR/home_rt/libebench.a
+	fullrf $EXPORT_DIR/pro_rt/libebench.a
+fi
 cp C/run-time/*.h $INSTALL_DIR/studio/spec/$ISE_PLATFORM/include
 cp C/run-time/config.sh $INSTALL_DIR/studio/spec/$ISE_PLATFORM/include
 	
-move $ISE_EIFFEL/studio/config/unix $ISE_EIFFEL/studio/config/$ISE_PLATFORM
-
-move $ISE_EIFFEL/eifinit/studio/spec/unix $ISE_EIFFEL/eifinit/studio/spec/$ISE_PLATFORM
-move $ISE_EIFFEL/studio/help/defaults/unix $ISE_EIFFEL/studio/help/defaults/$ISE_PLATFORM
 
 remtrace "Put x2c in the new delivery"
 # It should already have been compiled by the configure of the run-time.
@@ -134,10 +194,46 @@ cd $INSTALL_DIR
 
 remtrace Recompile EiffelStudio
 cd $EXPORT_DIR
-untgz_ccode ec
-move ec $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin
+if [ -z "$MULTIPLE_EDITIONS" ]; then
+	untgz_ccode ec
+	move ec $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin
+else
+	safe_md $EXPORT_DIR/ecs
+	remtrace Enterprise edition
+	untgz_ccode ec
+	gzip ec
+	cp ec.gz $EXPORT_DIR/ecs/ec_enterprise.gz
+	move ec.gz $EXPORT_DIR/ecs/ec_evaluation.gz
+	move ec.tar.gz ec.tar.gz.old
+
+	remtrace Home edition
+	cp echome.tar.gz echome.tar.gz.old
+	move echome.tar.gz ec.tar.gz
+	untgz_ccode ec
+	gzip ec
+	move ec.gz $EXPORT_DIR/ecs/ec_home.gz
+
+	remtrace Student edition
+	cp ecstudent.tar.gz ecstudent.tar.gz.old
+	move ecstudent.tar.gz ec.tar.gz
+	untgz_ccode ec
+	gzip ec
+	move ec.gz $EXPORT_DIR/ecs/ec_student.gz
+
+	remtrace Professional edition
+	cp ecpro.tar.gz ecpro.tar.gz.old
+	move ecpro.tar.gz ec.tar.gz
+	untgz_ccode ec
+	gzip ec
+	move ec.gz $EXPORT_DIR/ecs/ec_pro.gz
+fi
 
 cd $EXPORT_DIR
 . compile_wizards
+
+if [ ! -z "$MULTIPLE_EDITIONS" ]; then
+	fullrf $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib/*.a
+	fullrf $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib/*.so
+fi
 
 CANCEL

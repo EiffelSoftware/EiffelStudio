@@ -88,6 +88,7 @@ feature -- Access
 									until
 										j > cargs.count or not found									
 									loop
+										crt := cargs.item (j).type
 										found := crt.name.to_cil.equals (args.item (j - 1).get_full_name) and then
 											am.item (crt.assembly_id).is_equal (create {CONSUMED_ASSEMBLY}.make (args.item (j - 1).get_assembly))
 										j := j + 1

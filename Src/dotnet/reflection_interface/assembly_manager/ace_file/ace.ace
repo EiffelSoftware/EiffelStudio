@@ -1,102 +1,93 @@
 system
 	"ISE.AssemblyManager"
 
+
 root
 	IMPORTED_ASSEMBLY_VIEWER (root_cluster): "make"
 
 default
-	assertion (all)
-	line_generation (no)
+--	assertion (check)
+--	assertion (require)
+--	assertion (ensure)
+--	assertion (loop)
+--	assertion (invariant)
 	msil_generation (yes)
+	arguments (" ")
+	disabled_debug (no)
+	debug (no)
+	line_generation (yes)
+	il_verifiable (yes)
+	cls_compliant (yes)
+	dotnet_naming_convention (no)
 	msil_generation_type ("exe")
+	check_vape (yes)
+	console_application (no)
 
 cluster	
-	root_cluster: "$EIFFEL_SRC\dotnet\reflection_interface\assembly_manager\gui"
-		exclude
-			"CVS";
-		end
-		
-	dictionaries: "$EIFFEL_SRC\dotnet\reflection_interface\assembly_manager\dictionaries"
-		exclude
-			"CVS";
-		end
-		
-	gac_browser: "$EIFFEL_SRC\dotnet\reflection_interface\assembly_manager\gac_browser"
-		exclude
-			"CVS";
-		end
-		
-	support: "$EIFFEL_SRC\dotnet\reflection_interface\assembly_manager\support"
-		exclude
-			"CVS";
-		end
-		
-	folder_dialog: "$EIFFEL_SRC\dotnet\reflection_interface\assembly_manager\folder_dialog"
-		exclude
-			"CVS";
-		end
-		
-	modifications: "$EIFFEL_SRC\dotnet\reflection_interface\assembly_manager\modifications_interface"
-		exclude
-			"CVS";
-		end
-		
-	all generated: "$EIFFEL_SRC\dotnet\reflection_interface\generated"
-		exclude
-			"CVS";
-		end
-		
-	all dot_net_base: "$EIFFEL_SRC\library.net\base"
-		exclude
-			"CVS";
-		end
+	root_cluster:		"..\gui"
+
+--	eiffel_components:              "..\ISE.Reflection.EiffelComponents"
+--	eiffel_assembly_cache_notifier: "..\ISE.Reflection.EiffelAssemblyCacheNotifier"
+--	support:                        "..\ISE.Reflection.Support"
+--	eiffel_assembly_cache_handler:  "..\ISE.Reflection.EiffelAssemblyCacheHandler"
+--	code_generator:	                "..\ISE.Reflection.CodeGenerator"
+--	reflection_interface:           "..\ISE.Reflection.ReflectionInterface"
+--	formatter:                      "..\ISE.Reflection.Formatter"
 	
-	system_generated: "$EIFFEL_SRC\library.net\System"
+	all dot_net_base:               "$EIFFEL_SRC\library.net\base"
+	all base:                       "$EIFFEL_SRC\library\base"
 		exclude
-			"CVS";
-		end	
+			"CVS"; "classic"; "table_eiffel3"; 
+		end
 
-	system_drawing_generated: "$EIFFEL_SRC\library.net\System.Drawing"
+	all system_system:              "$EIFFEL_SRC\library.net\system\system"
+	all system_xml:                 "$EIFFEL_SRC\library.net\xml\System\xml"
+	all system_winforms:            "$EIFFEL_SRC\library.net\winforms\system\windows\forms"
+	all system_drawing:             "$EIFFEL_SRC\library.net\drawing"
+	all system_accessibility:       "$EIFFEL_SRC\library.net\accessibility"
+	all system_data:                "$EIFFEL_SRC\library.net\data\system\data"
+	
+	dictionaries:                   "..\dictionaries"
 		exclude
 			"CVS";
 		end
-
-	system_xml_generated: "$EIFFEL_SRC\library.net\System.Xml"
+		
+	gac_browser:                    "..\gac_browser"
 		exclude
 			"CVS";
 		end
-
-	system_windows_forms_generated: "$EIFFEL_SRC\library.net\System.Windows.Forms"
+	folder_dialog:                  "..\folder_dialog"
 		exclude
 			"CVS";
 		end
-
-	system_data_generated: "$EIFFEL_SRC\library.net\System.Data"
+	modifications:                  "..\modifications_interface"
 		exclude
 			"CVS";
 		end
-
-	accessibility_generated: "$EIFFEL_SRC\library.net\Accessibility"
+	support:                        "..\support"
 		exclude
 			"CVS";
+		end
+	all generated:                  "..\..\generated"
+		exclude
+			"CVS";"reflection_generated";
+		end
+		
+	all reflection:                 "..\..\New.ISE.Reflection.Emitter"
+		exclude
+			"CVS";"ace_file";
 		end
 		
 external
 	assembly: 	
-			"C:\Windows\Microsoft.NET\Framework\v1.0.2914\System.dll",
-			"C:\Windows\Microsoft.NET\Framework\v1.0.2914\System.Drawing.dll",
-			"C:\Windows\Microsoft.NET\Framework\v1.0.2914\System.XML.dll",
-			"C:\Windows\Microsoft.NET\Framework\v1.0.2914\SYSTEM.WINDOWS.FORMS.DLL",
-			"C:\Windows\Microsoft.NET\Framework\v1.0.2914\Accessibility.dll",
-			"C:\Windows\Microsoft.NET\Framework\v1.0.2914\System.Data.dll",
-			"..\..\bin\ISE.Reflection.ReflectionInterface.dll",
-			"..\..\bin\ISE.Reflection.EiffelComponents.dll",
-	 		"..\..\bin\ISE.Reflection.Formatter.dll",
-	 		"..\..\bin\ISE.Reflection.Emitter.exe",
-	 		"..\..\bin\ISE.Reflection.EiffelAssemblyCacheHandler.dll",
-	 		"..\..\bin\ISE.Reflection.EiffelAssemblyCacheNotifier.dll",
-	 		"..\..\bin\ISE.Reflection.Support.dll",
-	 		"..\..\bin\ISE.Reflection.CodeGenerator.dll",
-	 		"..\..\bin\ISE.AssemblyManager.WindowsDirectoryExtractor.dll",
-	 		"..\..\bin\FolderDialog.dll"
+			"C:\WINNT\Microsoft.NET\Framework\v1.0.3705\System.dll",
+			"C:\WINNT\Microsoft.NET\Framework\v1.0.3705\System.Drawing.dll",
+			"C:\WINNT\Microsoft.NET\Framework\v1.0.3705\System.XML.dll",
+			"C:\WINNT\Microsoft.NET\Framework\v1.0.3705\System.Windows.Forms.dll",
+			"C:\WINNT\Microsoft.NET\Framework\v1.0.3705\Accessibility.dll",
+			"C:\WINNT\Microsoft.NET\Framework\v1.0.3705\System.Data.dll",
+	 		"..\..\bin\ISE.Reflection.Formatter\ISE.Reflection.Formatter.dll",
+	 		"..\..\bin\Tools\ISE.Reflection.Emitter.exe",
+	 		"..\..\bin\ISE.AssemblyManager\ISE.AssemblyManager.WindowsDirectoryExtractor.dll",
+	 		"..\..\bin\ISE.AssemblyManager\FolderDialog.dll"
 end

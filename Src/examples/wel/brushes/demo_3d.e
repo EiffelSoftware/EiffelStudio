@@ -141,8 +141,8 @@ feature {NONE} -- Implementation
 				dec := dec + 1
 			end
 			ready := True
-			win_dc.release
 			win_dc.unselect_all
+			win_dc.release
 		end
 
 	initialize_demo is 

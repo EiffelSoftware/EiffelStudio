@@ -75,6 +75,20 @@ feature -- Status report
 					Result.last_index_of ('\', Result.count) - 1)
 			end
 		end
+		
+	selected_filter_index: INTEGER is
+			-- One based index of selected filter within `filters', or
+			-- zero if no filters set.
+		do
+			if selected then
+				Result := filter_index
+			elseif not filters.is_empty then
+					-- We return 1 when filters is not empty and the dialog is cancelled,
+					-- as the postcondition in the interface requires that the index is
+					-- between 1 and filters.count, however we cannot query the real index when cancelled.
+				Result := 1
+			end
+		end
 
 feature -- Element change
 
@@ -205,6 +219,10 @@ feature -- Deferred
 		end
 
 	wel_set_initial_directory (a_directory: STRING) is
+		deferred
+		end
+		
+	filter_index: INTEGER is
 		deferred
 		end
 

@@ -167,7 +167,7 @@ feature -- Transformation
 				ft.forth
 			end
 
-			if has_attributes or dtype.is_special or dtype.is_tuple or is_special then
+			if has_attributes or dtype.is_special or dtype.is_tuple or is_special or dtype.is_external then
 				create attr_item.make_with_text (Interface_names.l_Object_attributes)
 				attr_item.set_pixmap (Pixmaps.Icon_attributes)
 				ost.set_associated_tree_item (attr_item)

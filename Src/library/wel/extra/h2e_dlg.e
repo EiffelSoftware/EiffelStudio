@@ -86,10 +86,18 @@ feature {NONE} -- Behaviors
 		end
 
 	on_file_select_eiffel_file is
+		local
+			c: WEL_CURSOR
 		do
 			open_eiffel_file_dialog.activate (Current)
 			if open_eiffel_file_dialog.selected then
 				eiffel_file_edit.set_text (open_eiffel_file_dialog.file_name)
+				if file_exists (open_eiffel_file_dialog.file_name) then
+					!! c.make_by_predefined_id (Idc_wait)
+					c.set
+					scan_file_for_classname (open_eiffel_file_dialog.file_name)
+					c.restore_previous
+				end
 			end
 		end
 
@@ -132,6 +140,71 @@ feature {NONE} -- Behaviors
 		end
 
 feature {NONE} -- Implementation
+
+	scan_file_for_classname (a_file_name: STRING) is
+		require
+			file_exists: file_exists (a_file_name)
+		local
+			a_file: PLAIN_TEXT_FILE
+			break: BOOLEAN
+		do
+			!! a_file.make_open_read (a_file_name)
+			from
+				a_file.start
+			until
+				a_file.after or else break
+			loop
+				a_file.read_character
+				if a_file.last_character = '%"' then
+					break := scan_for_next_string_terminator (a_file)
+				elseif a_file.last_character = 'c' or
+					a_file.last_character = 'C' then
+					break := scan_for_class_name (a_file)
+				end
+			end
+		end
+
+	scan_for_class_name (a_file: PLAIN_TEXT_FILE): BOOLEAN is
+			-- Scan for the classname and set it if it's found.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_exists: a_file.exists
+			a_file_open: a_file.is_open_read
+		do
+			if not a_file.end_of_file then
+				a_file.read_word
+				if a_file.last_string.is_equal ("lass") then
+					if not a_file.end_of_file then
+						a_file.read_word
+						class_name_edit.set_text (a_file.last_string)
+						Result := True
+					end
+				end
+			end
+		end
+
+	scan_for_next_string_terminator (a_file: PLAIN_TEXT_FILE): BOOLEAN is
+			-- Scan `a_file' until string terminator detected
+		require
+			a_file_not_void: a_file /= Void
+			a_file_exists: a_file.exists
+			a_file_open: a_file.is_open_read
+		local
+			break: BOOLEAN
+		do
+			from
+			until
+				a_file.after or break
+			loop
+				a_file.read_character
+				if a_file.last_character.is_equal ('%"') then
+					break := True
+				elseif a_file.last_character.is_equal ('%%') then
+					a_file.read_character
+				end
+			end
+			Result := a_file.after
+		end
 
 	open_eiffel_file_dialog: WEL_OPEN_FILE_DIALOG is
 		once

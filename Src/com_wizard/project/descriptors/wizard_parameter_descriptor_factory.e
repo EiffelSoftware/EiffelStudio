@@ -48,6 +48,8 @@ feature -- Basic operations
 			valid_system_descriptor: a_system_descriptor /= Void
 		local
 			l_string: STRING
+			l_value: ECOM_PARAM_DESCEX
+			l_variant: ECOM_VARIANT
 		do
 			name := a_name.twin
 			if is_forbidden_c_word (name)  then
@@ -60,7 +62,13 @@ feature -- Basic operations
 			type := data_type_descriptor_factory.create_data_type_descriptor (a_type_info, an_elem_desc.type_desc, a_system_descriptor)
 			flags := an_elem_desc.param_desc.flags
 			if has_fopt_and_fhasdefault (flags) then
-				default_value := an_elem_desc.param_desc.default_value.default_value.out
+				l_value := an_elem_desc.param_desc.default_value
+				if l_value /= Void then
+					l_variant := l_value.default_value
+					if l_variant /= Void then
+						default_value := l_variant.out
+					end
+				end
 			end
 			create Result.make (Current)
 		ensure

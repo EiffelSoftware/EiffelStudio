@@ -31,6 +31,8 @@ feature {NONE} -- Initialization
 		require
 			a_command_not_void: a_command /= Void
 		do
+			Profiler_resources.add_user (Current);
+
 			!! open_tools.make 
 			command := a_command;
 			top_shell_make (Interface_names.n_X_resource_name, Project_tool.screen);
@@ -39,7 +41,6 @@ feature {NONE} -- Initialization
 			!! quit_cmd.make (Current);
 			!! run_prof_query_cmd.make (Current);
 			set_delete_command (quit_cmd);
-			Profiler_resources.add_user (Current);
 			build_widgets
 		end
 
@@ -108,45 +109,60 @@ feature {RUN_PROFILE_QUERY_CMD} -- Access
 			-- by the user.
 		local
 			parser: QUERY_PARSER
+			i: INTEGER
+			is_parsed: BOOLEAN
 		do
+			i := shared_values.language_names.lower
+
 				--| Copy the language names
 			if eiffel_switch.state then
-				shared_values.language_names.force ("eiffel", shared_values.language_names.count + 1)
-			end;
+				shared_values.language_names.force ("eiffel", i)
+				i := i + 1
+			end
 			if c_switch.state then
-				shared_values.language_names.force ("c", shared_values.language_names.count + 1)
-			end;
+				shared_values.language_names.force ("c", i)
+				i := i + 1
+			end
 			if recursive_switch.state then
-				shared_values.language_names.force ("cycle", shared_values.language_names.count + 1)
-			end;
+				shared_values.language_names.force ("cycle", i)
+				i := i + 1
+			end
+
+			i := shared_values.output_names.lower
 
 				--| Copy the output column switches
 			if number_of_calls_switch.state then
-				shared_values.output_names.force ("calls", shared_values.output_names.count + 1)
+				shared_values.output_names.force ("calls", i)
+				i := i + 1
 			end;
 			if time_switch.state then
-				shared_values.output_names.force ("self", shared_values.output_names.count + 1)
+				shared_values.output_names.force ("self", i)
+				i := i + 1
 			end;
-			if descendent_switch.state then
-				shared_values.output_names.force ("descendents", shared_values.output_names.count + 1)
+			if descendant_switch.state then
+				shared_values.output_names.force ("descendants", i)
+				i := i + 1
 			end;
 			if total_time_switch.state then
-				shared_values.output_names.force ("total", shared_values.output_names.count + 1)
+				shared_values.output_names.force ("total", i)
+				i := i + 1
 			end;
 			if percentage_switch.state then
-				shared_values.output_names.force ("percentage", shared_values.output_names.count + 1)
+				shared_values.output_names.force ("percentage", i)
+				i := i + 1
 			end;
 			if name_switch.state then
-				shared_values.output_names.force ("featurename", shared_values.output_names.count + 1)
+				shared_values.output_names.force ("featurename", i)
+				i := i + 1
 			end;
 
 				--| Copy the filename
-			shared_values.filenames.force (input_text.text, shared_values.filenames.count + 1);
+			shared_values.filenames.force (input_text.text, shared_values.filenames.lower);
 
 				--| Copy the subqueries
 			if not query_text.text.empty then
 				!! parser;
-				parser.parse (query_text.text, shared_values)
+				is_parsed := parser.parse (query_text.text, shared_values)
 			end
 		end
 
@@ -190,7 +206,7 @@ feature {NONE} -- Graphical User Interface
 			!! number_of_calls_switch.make (Interface_names.b_Number_of_calls, switch_form);
 			number_of_calls_switch.set_toggle_on;
 			!! time_switch.make (Interface_names.b_Function_time, switch_form);
-			!! descendent_switch.make (Interface_names.b_Descendent_time, switch_form);
+			!! descendant_switch.make (Interface_names.b_Descendant_time, switch_form);
 			!! total_time_switch.make (Interface_names.b_Total_time, switch_form);
 			!! percentage_switch.make (Interface_names.b_Percentage, switch_form);
 
@@ -353,7 +369,7 @@ feature {NONE} -- Attributes
 			-- Switch for the amount of time
 			-- spent in the function itself
 
-	descendent_switch,
+	descendant_switch,
 			-- Switch for the amount of time
 			-- spent in the called functions
 

@@ -43,7 +43,7 @@ feature
 			finished := finish
 			it := i
 			buffer_size := size - 1
-			create monitor.make
+			create monitor
 			create notfull.make
 			create notempty.make
 			create data.make (0,buffer_size)

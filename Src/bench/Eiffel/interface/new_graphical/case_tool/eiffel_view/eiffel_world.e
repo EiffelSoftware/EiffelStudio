@@ -112,7 +112,79 @@ feature -- Access
 		ensure
 			Result_not_Void: Result /= Void
 		end
+		
+	uml_views (file_name: STRING): LIST [STRING] is
+			-- All views in `file_name' which are uml views.
+		require
+			file_name_not_void: file_name /= Void
+		local
+			diagram_input: XM_DOCUMENT
+			node: XM_ELEMENT
+			a_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
+			view_name: STRING
+		do
+			create {ARRAYED_LIST [STRING]} Result.make (0)
+			diagram_input := Xml_routines.deserialize_document (file_name)
+			if diagram_input /= Void then
+				check
+					valid_xml: diagram_input.root_element.name.is_equal (xml_node_name)
+				end
+				a_cursor := diagram_input.root_element.new_cursor
+				from
+					a_cursor.start
+				until
+					a_cursor.after
+				loop
+					node ?= a_cursor.item
+					if node /= Void then
+						if node.name.is_equal ("VIEW") then
+							view_name := node.attribute_by_name ("NAME").value 
+							if node.attribute_by_name ("IS_UML").value.is_equal ("True") then
+								Result.extend (view_name)	
+							end
+						end
+					end
+					a_cursor.forth
+				end
+			end
+		end
 			
+	bon_views (file_name: STRING): LIST [STRING] is
+			-- All views in `file_name' which are bon views.
+		require
+			file_name_not_void: file_name /= Void
+		local
+			diagram_input: XM_DOCUMENT
+			node: XM_ELEMENT
+			a_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
+			view_name: STRING
+		do
+			create {ARRAYED_LIST [STRING]} Result.make (0)
+			diagram_input := Xml_routines.deserialize_document (file_name)
+			if diagram_input /= Void then
+				check
+					valid_xml: diagram_input.root_element.name.is_equal (xml_node_name)
+				end
+				a_cursor := diagram_input.root_element.new_cursor
+				from
+					a_cursor.start
+				until
+					a_cursor.after
+				loop
+					node ?= a_cursor.item
+					if node /= Void then
+						if node.name.is_equal ("VIEW") then
+							view_name := node.attribute_by_name ("NAME").value 
+							if node.attribute_by_name ("IS_UML").value.is_equal ("False") then
+								Result.extend (view_name)	
+							end
+						end
+					end
+					a_cursor.forth
+				end
+			end
+		end
+		
 feature -- Element change.
 
 	update is
@@ -420,8 +492,21 @@ feature -- Store/Retrive
 			default_view_restored: current_view.is_equal (default_view_name)
 		end
 		
-
 	set_current_view (name: STRING) is
+			-- Set `current_view' to `name'.
+		require
+			name_not_void: name /= Void
+		do
+			current_view := name
+			if not available_views.has (name) then
+				available_views.extend (name)
+			end
+		ensure
+			set: current_view = name
+			name_is_available: available_views.has (name)
+		end
+
+	retrieve_view (name: STRING) is
 			-- Assign `name' to `current_view' and retrieve corresponding settings.
 		require
 			name_not_void: name /= Void
@@ -442,9 +527,12 @@ feature -- Store/Retrive
 			create f.make (context_editor.diagram_file_name (Current.model))
 			if f.exists then
 				f.open_read
-				if f.readable then
+				if f.readable and then has_view_with_name (f, name) then
 					retrieve (f)
 				end
+			end
+			if not available_views.has (name) then
+				available_views.extend (name)
 			end
 		ensure
 			name_assigned: current_view.is_equal (name)
@@ -832,6 +920,37 @@ feature {NONE} -- Implementation
 					end
 				end
 				Xml_routines.save_xml_document (ptf.name, diagram_output)
+			end
+		end
+		
+	has_view_with_name (f: RAW_FILE; a_name: STRING): BOOLEAN is
+			-- Does `f' contain a view with name `a_name'?
+		local
+			diagram_input: XM_DOCUMENT
+			node: XM_ELEMENT
+			a_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
+			view_name: STRING
+		do
+			diagram_input := Xml_routines.deserialize_document (f.name)
+			if diagram_input /= Void then
+				check
+					valid_xml: diagram_input.root_element.name.is_equal (xml_node_name)
+				end
+				a_cursor := diagram_input.root_element.new_cursor
+				from
+					a_cursor.start
+				until
+					a_cursor.after or else Result
+				loop
+					node ?= a_cursor.item
+					if node /= Void then
+						if node.name.is_equal ("VIEW") then
+							view_name := node.attribute_by_name ("NAME").value
+							Result := view_name.is_equal (a_name)
+						end
+					end
+					a_cursor.forth
+				end
 			end
 		end
 

@@ -1,0 +1,140 @@
+indexing
+	description: "Pre processor of XML content.  Functions here are used to apply project-wide%
+		%settings into document content, e.g. process includes, headers, footers, external file references, etc."
+	date: "$Date$"
+	revision: "$Revision$"
+
+class
+	XML_PRE_PROCESSOR
+
+inherit
+	UTILITY_FUNCTIONS
+	
+	SHARED_OBJECTS
+	
+	TEMPLATE_CONSTANTS
+
+create {DOCUMENT_XML}
+	make
+	
+feature -- Creation
+	
+	make (a_xml: like internal_xml) is
+			-- Create
+		require
+			xml_not_void: a_xml /= Void
+		do
+			internal_xml := a_xml
+		ensure
+			has_content: internal_xml /= Void
+		end	
+		
+feature -- Commands
+
+	process is
+			-- Process
+		do
+			if preferences.process_html_stylesheet then
+				insert_html_stylesheet_link
+			end
+			if preferences.process_header then
+				insert_header
+			end
+			if preferences.process_footer then
+				insert_footer
+			end
+		end		
+
+feature {NONE} -- Processing
+
+	insert_html_stylesheet_link is
+			-- Insert reference to project or document HTML stylesheet file
+		local
+			l_name,
+			l_path: STRING
+			l_parent,
+			l_stylesheet_tag: XM_ELEMENT
+		do			
+			l_parent := internal_xml.element_by_name ("document")
+			if l_parent /= Void then
+				l_parent := l_parent.element_by_name ("meta_data")
+				if l_parent /= Void then
+					l_path := stylesheet_path (internal_xml.name, True)
+					if l_path /= Void then
+						create l_stylesheet_tag.make_child (l_parent, "stylesheet", Void)
+						l_stylesheet_tag.put_last (create {XM_CHARACTER_DATA}.make (l_stylesheet_tag, l_path))
+						l_parent.put_last (l_stylesheet_tag)
+					end
+				end
+			end	
+		end
+
+	insert_header is
+			-- Insert header
+		local
+			l_header: DOCUMENT_HEADER
+			l_parent: XM_ELEMENT
+		do
+				-- Build header
+			if preferences.use_header_file then
+				if preferences.override_file_header_declarations then
+					create l_header.make_from_file (shared_project.preferences.header_name)	
+				else
+				end
+			else
+				if internal_xml.document /= Void then
+					create l_header.make_from_document_data (internal_xml.document)
+				end
+			end			
+			
+				-- Insert header in document
+			l_parent := internal_xml.element_by_name ("document")
+			if l_parent /= Void then
+				l_parent := l_parent.element_by_name ("paragraph")
+				if l_parent /= Void then					
+					l_parent.put_first (l_header.root_element)		
+				end
+			end
+		end
+		
+	insert_footer is
+			-- Insert footer
+		local
+			l_footer: DOCUMENT_FOOTER
+			l_parent: XM_ELEMENT
+		do
+				-- Build footer
+			if preferences.use_footer_file then
+				if preferences.override_file_footer_declarations then
+					create l_footer.make_from_file (shared_project.preferences.footer_name)	
+				else
+				end
+			else
+				create l_footer.make_from_file (footer_xml_template_file_name)
+			end
+			
+				-- Insert footer in document
+			l_parent := internal_xml.element_by_name ("document")
+			if l_parent /= Void then
+				l_parent := l_parent.element_by_name ("paragraph")
+				if l_parent /= Void then					
+					l_parent.put_last (l_footer.root_element)		
+				end
+			end
+		end		
+	
+feature {NONE} -- Implementation
+
+	internal_xml: DOCUMENT_XML
+			-- XML
+
+	preferences: DOCUMENT_PROJECT_PREFERENCES is
+			-- Preferences
+		once
+			Result := shared_project.preferences	
+		end
+		
+invariant
+	has_content: internal_xml /= Void
+
+end -- class XML_PRE_PROCESSOR

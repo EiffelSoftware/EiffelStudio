@@ -5,7 +5,6 @@
 #define New_String                      1
 #define Open_String                     2
 #define Save_String                     3
-#define IDOK2                           3
 #define Clear_Output_String             4
 #define Launch_String                   5
 #define Wizard_Initial_Dialog           101
@@ -19,6 +18,7 @@
 #define Wizard3_Bitmap                  116
 #define Wizard4_Bitmap                  117
 #define Wizard_Icon                     119
+#define Progress_Dialog                 121
 #define Definition_File_Edit            1007
 #define IDL_Static                      1008
 #define Browse_Button                   1009
@@ -56,15 +56,17 @@
 #define Paths_Static2                   1044
 #define Marshalling_Static              1044
 #define Marshalling2_Static             1045
+#define Progress_Bar                    1045
+#define Progress_Static                 1046
 #define Location_Static                 -1
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        121
+#define _APS_NEXT_RESOURCE_VALUE        122
 #define _APS_NEXT_COMMAND_VALUE         40014
-#define _APS_NEXT_CONTROL_VALUE         1045
+#define _APS_NEXT_CONTROL_VALUE         1047
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

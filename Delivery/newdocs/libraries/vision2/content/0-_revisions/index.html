@@ -15,6 +15,24 @@
 <p>This document contains details of modifications and bug fixes to the vision2
 library listed by the release version of EiffelStudio. All bug fixes and
 modifications are relative to the previously released version.</p>
+<h2>Eiffel Studio 5.3</h2>
+<p><b>Interface modifications</b></p>
+<p><b>Bug fixes</b></p>
+<ul>
+  <li><b>Platform independent</b>
+	<ul>
+		<li><b>EV_WIDGET</b> - `pointer_style' now correctly returns the Ibeam cursor for textable widgets.</li>
+	</ul>
+	<li><b>Windows</b>
+	<ul>
+		<li><b>EV_PIXMAP</b> - Setting a tile with `set_tile' followed by a call to a fill routine would crash the implementation.</li>
+		<li><b>EV_COMBO_BOX</b> - Implemented pick and drop.</li>
+		<li><b>EV_TEXT_FIELD</b> - Implemented pick and drop.</li>
+		<li><b>EV_PASSWORD_FIELD</b> - Implemented pick and drop.</li>
+		<li><b>EV_TEXT</b> - Implemented pick and drop.</li>
+	</ul>
+	<li><b>Gtk</b>
+</ul>
 <h2>Eiffel Studio 5.2</h2>
 <p><b>Interface modifications</b></p>
 <ul class=circle>
@@ -45,7 +63,7 @@ modifications are relative to the previously released version.</p>
 	<li><b>EV_APPLICATION_ACTION_SEQUENCES</b> - Added `cancel_actions', fired when a pick and drop is cancelled, and `pnd_motion_actions' fired while the pointer moves during a pick and drop.</li>
 	<li><b>EV_TREE_NODE_LIST</b>
 		<ul class=square>
-			<li>`find_item_recursively_by_data', `has_recursively' and `recursive_do_all' are now implemented in this class, instead of both EV_TREE and EV_TREE_NODE which are descendents.<li>
+			<li>`find_item_recursively_by_data', `has_recursively' and `recursive_do_all' are now implemented in this class, instead of both EV_TREE and EV_TREE_NODE which are descendents.</li>
 			<li>Added `retrive_items_recursively_by_data' and `retrieve_item_recursively_by_data' which allow you to specify a comparison criterion, and due to this addition, `find_item_recursively_by_data' has now been made obsolete.</li>
 		</ul></li>
 	<li><b>EV_DYNAMIC_LIST</b> - Added `retrieve_item_by_data' and `retrieve_items_by_data'.</li>

@@ -107,6 +107,7 @@ feature -- Constants
 	native_array_name_id: INTEGER is 97
 	to_string_name_id: INTEGER is 98
 	to_cil_name_id: INTEGER is 99
+	is_digit_name_id: INTEGER is 100
 	
 			-- Predefined name IDs constants
 

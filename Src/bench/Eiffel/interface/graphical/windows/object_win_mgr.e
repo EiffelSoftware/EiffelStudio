@@ -55,20 +55,6 @@ feature -- Properties
 
 feature -- Synchronization
 
-	synchronize_objects is
-			-- Synchronize the object in the
-			-- object tools (after the application stopped).
-		do
-			from
-				active_editors.start
-			until
-				active_editors.after
-			loop
-				active_editors.item.synchronize;
-				active_editors.forth
-			end
-		end;
-
 	hang_on is
 			-- Make object addresses unclickable (during application execution).
 		do

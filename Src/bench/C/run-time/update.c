@@ -13,6 +13,11 @@
 /* TEMPORARY */
 #include <stdio.h>
 
+#include "config.h"
+#ifdef EIF_WINDOWS
+#include <windows.h>
+#endif
+
 #include "macros.h"
 #include "struct.h"
 #include "hashin.h"
@@ -22,10 +27,6 @@
 #include "misc.h"
 #include "file.h"
 #include "err_msg.h"
-
-#ifdef __WINDOWS_386__
-#include <windows.h>
-#endif
 
 private void cnode_updt();			/* Update a cnode structure */
 private void routid_updt();			/* Update routine id array */
@@ -64,10 +65,10 @@ char ignore_updt;
 	long bsize;								/* Last byte code size */
 	long new_count;							/* New system size */
 	char c;
-	char *meltpath;							/* directory of .UPDT */
+	char *meltpath = (char *) 0;			/* directory of .UPDT */
 	char *filename;							/* .UPDT complet path */
 	long pattern_id;
-#ifdef __WINDOWS_386__
+#ifdef EIF_WINDOWS
 	char *inipath;
 	char buf[128];
 #endif
@@ -75,32 +76,42 @@ char ignore_updt;
 
 	if (ignore_updt != (char) 0) {
 		init_desc();
-#ifdef __WINDOWS_386__
+#ifdef EIF_WINDOWS
 		chdir ("..\\..");
 #endif
 		return;
 	}
 
 /* TEMPORARY */
-#ifdef __WINDOWS_386__
-#define UPDTLEN 10		/* Note, changed indenting for readability TNH */
+#ifdef EIF_WIN_31
+#define UPDTLEN 10
 #define UPDT_NAME "\\melted.eif"
 
 	inipath = eif_getenv ("ES3INI");
 	GetPrivateProfileString   ("Environment", "MELT_PATH", "", buf, 128, inipath);
 	WritePrivateProfileString ("Environment", "MELT_PATH",NULL, inipath);
-	if (strlen(buf)){
+	if (strlen(buf))
 		meltpath = buf;
-#else	/* not windows */
+
+#elif defined EIF_WIN32
+
 #define UPDTLEN 10
-#ifdef __VMS
+#define UPDT_NAME "\\melted.eif"
+meltpath = win_eif_getenv ("MELT_PATH", "es3");
+
+#elif defined __VMS
+
+#define UPDTLEN 10
 #define UPDT_NAME "melted.eif"
-#else
-#define UPDT_NAME "/melted.eif"
-#endif
 	meltpath = eif_getenv ("MELT_PATH");
-	if (meltpath) {
+
+#else
+#define UPDTLEN 10
+#define UPDT_NAME "/melted.eif"
+	meltpath = eif_getenv ("MELT_PATH");
+
 #endif
+	if (meltpath) {
 		filename = (char *)cmalloc (strlen (meltpath) + UPDTLEN + 2);
 	}
 	else {
@@ -135,9 +146,10 @@ if ((fil = fopen(filename, "r")) == (FILE *) 0) {
 	wread(&c, 1);				/* Is there something to update ? */
 	if (c == '\0') {
 		init_desc();
-#ifdef __WINDOWS_386__
+#ifdef EIF_WINDOWS
 		chdir ("..\\..");
 #endif
+		fclose(fil);
 		return;
 	}
 
@@ -260,7 +272,7 @@ if (body_id >= 0)
 
 /* TEMPORARY */
 fclose(fil);
-#ifdef __WINDOWS_386__
+#ifdef EIF_WINDOWS
 chdir ("..\\..");
 #endif
 }

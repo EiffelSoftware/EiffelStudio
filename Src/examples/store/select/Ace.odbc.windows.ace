@@ -7,7 +7,6 @@ root
 default
 
 	assertion (all);
-	multithreaded(yes);
 	precompiled ("$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\base")
 
 cluster

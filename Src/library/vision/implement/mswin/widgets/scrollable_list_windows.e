@@ -16,31 +16,6 @@ inherit
 			realize, unrealize,
 			set_height, set_size, set_width
 		end
-
-	LINKED_LIST [SCROLLABLE_LIST_ELEMENT]
-		rename
-			make as ll_make,
-			append as ll_append,
-			extend as ll_extend,
-			fill as ll_fill,
-			force as ll_force,
-			merge_left as ll_merge_left,
-			merge_right as ll_merge_right,
-			put as ll_put,
-			put_front as ll_put_front,
-			put_i_th as ll_put_i_th,
-			put_left as ll_put_left,
-			put_right as ll_put_right,
-			replace as ll_replace,
-			prune as ll_prune,
-			prune_all as ll_prune_all,
-			remove as ll_remove,
-			remove_left as ll_remove_left,
-			remove_right as ll_remove_right,
-			wipe_out as ll_wipe_out
-		export
-			{NONE} all
-		end
 		
 	SCROLLABLE_LIST_I
 
@@ -471,7 +446,7 @@ feature -- Element change
 			-- Replace current item by `v'.
 			-- (Synonym for `replace')
 		do
-			replace (a_item)
+			replace (a_item)				
 		end
 
 	remove_right is

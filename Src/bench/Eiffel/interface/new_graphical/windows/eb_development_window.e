@@ -82,7 +82,24 @@ inherit
 		redefine
 			on_text_reset, on_text_edited, 
 			on_selection_begun, on_selection_finished,
-			on_text_back_to_its_last_saved_state
+			on_text_back_to_its_last_saved_state,
+			on_text_fully_loaded
+		end
+
+		--| FIXME XR: To warn editor commands to refresh their state when the current editor changes.
+	TEXT_OBSERVER_MANAGER
+		rename
+			changed as text_changed,
+			remove_observer as text_remove_observer,
+			make as text_make
+		undefine
+			on_block_removed,
+			on_line_inserted, on_line_modified, on_line_removed,
+			on_selection_begun, on_selection_finished,
+			on_text_back_to_its_last_saved_state,
+			on_text_block_loaded,
+			on_text_edited, on_text_fully_loaded, on_text_loaded, on_text_reset,
+			recycle
 		end
 
 	EB_FORMATTER_DATA
@@ -541,6 +558,7 @@ feature {NONE} -- Initialization
 			editor_tool.text_area.add_edition_observer(save_as_cmd)
 			editor_tool.text_area.add_edition_observer(print_cmd)
 			editor_tool.text_area.add_edition_observer(Current)
+			editor_tool.text_area.drop_actions.set_veto_pebble_function (~can_drop)
 			add_recyclable (editor_tool)
 
 				-- Build the context tool
@@ -1115,6 +1133,7 @@ feature -- Menu Building
 			editor: EB_SMART_EDITOR
 		do
 			editor := editor_tool.text_area
+			create editor_commands.make (10)
 
 			create edit_menu.make_with_text (Interface_names.m_Edit)
 
@@ -1152,7 +1171,7 @@ feature -- Menu Building
 				-- Select all
 			create cmd.make
 			cmd.set_menu_name (Interface_names.m_select_all)
-			cmd.add_agent (editor~select_all)
+			cmd.add_agent (~select_all)
 			command_menu_item := cmd.new_menu_item
 			editor_tool.text_area.add_edition_observer(cmd)
 			add_recyclable (command_menu_item)
@@ -1167,6 +1186,7 @@ feature -- Menu Building
 			cmd.add_agent (editor~search)
 			command_menu_item := cmd.new_menu_item
 			editor_tool.text_area.add_edition_observer(cmd)
+			editor_commands.extend (cmd)
 			add_recyclable (command_menu_item)
 			edit_menu.extend (command_menu_item)
 
@@ -1176,6 +1196,7 @@ feature -- Menu Building
 			cmd.add_agent (editor~replace)
 			command_menu_item := cmd.new_menu_item
 			editor_tool.text_area.add_edition_observer(cmd)
+			editor_commands.extend (cmd)
 			add_recyclable (command_menu_item)
 			edit_menu.extend (command_menu_item)
 
@@ -1189,6 +1210,7 @@ feature -- Menu Building
 			cmd.add_agent (editor~find_next)
 			command_menu_item := cmd.new_menu_item
 			editor_tool.text_area.add_edition_observer(cmd)
+			editor_commands.extend (cmd)
 			add_recyclable (command_menu_item)
 			sub_menu.extend (command_menu_item)
 
@@ -1198,6 +1220,7 @@ feature -- Menu Building
 			cmd.add_agent (editor~find_previous)
 			command_menu_item := cmd.new_menu_item
 			editor_tool.text_area.add_edition_observer(cmd)
+			editor_commands.extend (cmd)
 			add_recyclable (command_menu_item)
 			sub_menu.extend (command_menu_item)
 
@@ -1255,6 +1278,7 @@ feature -- Menu Building
 			cmd.add_agent (editor~comment_selection)
 			command_menu_item := cmd.new_menu_item
 			editor_tool.text_area.add_edition_observer(cmd)
+			editor_commands.extend (cmd)
 			add_recyclable (command_menu_item)
 			sub_menu.extend (command_menu_item)
 
@@ -1263,6 +1287,7 @@ feature -- Menu Building
 			cmd.add_agent (editor~uncomment_selection)
 			command_menu_item := cmd.new_menu_item
 			editor_tool.text_area.add_edition_observer(cmd)
+			editor_commands.extend (cmd)
 			add_recyclable (command_menu_item)
 			sub_menu.extend (command_menu_item)
 
@@ -1275,6 +1300,7 @@ feature -- Menu Building
 			cmd.add_agent (editor~embed_in_block("if  then", 3))
 			command_menu_item := cmd.new_menu_item
 			editor_tool.text_area.add_edition_observer(cmd)
+			editor_commands.extend (cmd)
 			add_recyclable (command_menu_item)
 			sub_menu.extend (command_menu_item)
 
@@ -1284,6 +1310,7 @@ feature -- Menu Building
 			cmd.add_agent (editor~embed_in_block("debug", 5))
 			command_menu_item := cmd.new_menu_item
 			editor_tool.text_area.add_edition_observer(cmd)
+			editor_commands.extend (cmd)
 			add_recyclable (command_menu_item)
 			sub_menu.extend (command_menu_item)
 
@@ -1296,6 +1323,7 @@ feature -- Menu Building
 			cmd.set_menu_name (Interface_names.m_Complete_word + "%T" + Editor_preferences.shorcut_name_for_action (1))
 			command_menu_item := cmd.new_menu_item
 			editor_tool.text_area.add_edition_observer(cmd)
+			editor_commands.extend (cmd)
 			cmd.add_agent (editor~complete_feature_name)
 
 			add_recyclable (command_menu_item)
@@ -1306,6 +1334,7 @@ feature -- Menu Building
 			cmd.set_menu_name (Interface_names.m_Complete_class_name + "%T" + Editor_preferences.shorcut_name_for_action (2))
 			command_menu_item := cmd.new_menu_item
 			editor_tool.text_area.add_edition_observer(cmd)
+			editor_commands.extend (cmd)
 			cmd.add_agent (editor~complete_feature_name)
 
 			add_recyclable (command_menu_item)
@@ -1322,6 +1351,7 @@ feature -- Menu Building
 			end
 			formatting_marks_command_menu_item := cmd.new_menu_item
 			editor_tool.text_area.add_edition_observer(cmd)
+			editor_commands.extend (cmd)
 			cmd.add_agent (~toggle_formatting_marks)
 
 			add_recyclable (formatting_marks_command_menu_item)
@@ -2028,6 +2058,25 @@ feature -- Multiple editor management
 				end
 			end
 			update_paste_cmd
+			if current_editor.is_empty then
+				from
+					editor_commands.start
+				until
+					editor_commands.after
+				loop
+					editor_commands.item.on_text_reset
+					editor_commands.forth
+				end
+			else
+				from
+					editor_commands.start
+				until
+					editor_commands.after
+				loop
+					editor_commands.item.on_text_loaded
+					editor_commands.forth
+				end
+			end
 		end
 
 	on_selection_begun is
@@ -2056,7 +2105,12 @@ feature -- Multiple editor management
 			txt: STRING
 		do
 			txt := current_editor.clipboard.text
-			if current_editor.is_editable and then txt /= Void and then not txt.is_empty then
+			if
+				not current_editor.is_empty and then
+				current_editor.is_editable and then
+				txt /= Void and then
+				not txt.is_empty
+			then
 				editor_paste_cmd.enable_sensitive
 			else
 				editor_paste_cmd.disable_sensitive
@@ -2141,6 +2195,7 @@ feature {NONE} -- Implementation
 			class_text_exists: BOOLEAN
 			same_class: BOOLEAN
 			test_stone: CLASSI_STONE
+			conv_ace: ACE_SYNTAX_STONE
 			str: STRING
 		do
 				-- the text does not change if the text was saved with syntax errors
@@ -2157,6 +2212,7 @@ feature {NONE} -- Implementation
 	
 			conv_brkstone ?= a_stone
 			conv_errst ?= a_stone
+			conv_ace ?= a_stone
 			if conv_brkstone /= Void then
 				if Application.is_breakpoint_enabled (conv_brkstone.routine, conv_brkstone.index) then
 					Application.remove_breakpoint (conv_brkstone.routine, conv_brkstone.index)
@@ -2167,6 +2223,8 @@ feature {NONE} -- Implementation
 				window_manager.quick_refresh_all
 			elseif conv_errst /= Void then
 				display_error_help_cmd.execute_with_stone (conv_errst)
+			elseif conv_ace /= Void then
+				--| FIXME XR: What should we do?!
 			else
 				
 					-- Remember previous stone.
@@ -2435,6 +2493,13 @@ feature {NONE} -- Implementation
 				set_title (str)
 			end
 			address_manager.enable_formatters
+			update_paste_cmd
+		end
+
+	on_text_fully_loaded is
+			-- The main editor has just been reloaded.
+		do
+			update_paste_cmd
 		end
 
 	on_text_back_to_its_last_saved_state is
@@ -2519,6 +2584,15 @@ feature {NONE} -- Implementation
 	saved_cursor: CURSOR
 			-- Saved cursor position for displaying the stack.
 
+	can_drop (st: ANY): BOOLEAN is
+			-- Can the user drop the stone `st'?
+		local
+			conv_ace: ACE_SYNTAX_STONE
+		do
+			conv_ace ?= st
+			Result := conv_ace = Void
+		end
+
 	quick_refresh_on_class_drop (unused: CLASSI_STONE) is
 			-- Quick refresh all windows.
 		do
@@ -2590,6 +2664,14 @@ feature {NONE} -- Implementation
 			else
 				formatting_marks_command_menu_item.set_text(Interface_names.m_Show_formatting_marks)
 			end
+		end
+
+feature -- Implementation: Editor commands
+
+	select_all is
+			-- Select the whole text in the focused editor.
+		do
+			current_editor.select_all
 		end
 
 feature {NONE} -- Implementation / Menus
@@ -2674,6 +2756,9 @@ feature {EB_TOOL} -- Implementation / Commands
 
 	toolbarable_commands: ARRAYED_LIST [EB_TOOLBARABLE_COMMAND]
 			-- All commands that can be put in a toolbar.
+	
+	editor_commands: ARRAYED_LIST [EB_EDITOR_COMMAND]
+			-- Commands relative to the main editor.
 	
 	save_as_cmd: EB_SAVE_FILE_AS_COMMAND
 			-- Command to save a class with a different file name.

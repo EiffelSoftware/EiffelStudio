@@ -9,10 +9,18 @@ deferred class OUTPUT_WINDOW
 
 inherit
 	TEXT_FORMATTER
+		redefine
+			process_string_text
+		end
 
 feature {TEXT_ITEM} -- Text processing
 
 	process_basic_text (text: BASIC_TEXT) is
+		do
+			put_string (text.image)
+		end;
+
+	process_string_text (text: STRING_TEXT) is
 		do
 			put_string (text.image)
 		end;

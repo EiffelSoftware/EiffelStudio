@@ -132,22 +132,16 @@ feature -- Access
             -- Project type
         local
             l_console: BOOLEAN
-            l_precompile: BOOLEAN
             l_dll: BOOLEAN
             l_root_class_name: STRING
         do
             l_console := ace.is_console_application
             l_root_class_name := clone (ace.root_class_name)
             l_root_class_name.to_upper
-            l_precompile := l_root_class_name.is_equal ("ANY") and (ace.creation_routine_name /= Void implies ace.creation_routine_name.is_empty)
             l_dll := ace.il_generation_type = ace.Il_generation_dll
             
             if l_dll then
-                if l_precompile then
-                    Result := feature {ECOM_EIF_PROJECT_TYPES_ENUM}.eif_project_types_precompiled_library                   
-                else
-                    Result := feature {ECOM_EIF_PROJECT_TYPES_ENUM}.eif_project_types_class_library
-                end
+                Result := feature {ECOM_EIF_PROJECT_TYPES_ENUM}.eif_project_types_class_library
             else
                 if l_console then
                     Result := feature {ECOM_EIF_PROJECT_TYPES_ENUM}.eif_project_types_console_application
@@ -158,7 +152,7 @@ feature -- Access
         ensure then
             valid_result:
                 Result >= feature {ECOM_EIF_PROJECT_TYPES_ENUM}.eif_project_types_console_application and then
-                Result <= feature {ECOM_EIF_PROJECT_TYPES_ENUM}.eif_project_types_precompiled_library
+                Result <= feature {ECOM_EIF_PROJECT_TYPES_ENUM}.eif_project_types_class_library
         end
         
     dot_net_naming_convention: BOOLEAN is
@@ -353,7 +347,7 @@ feature -- Element change
         require else
             valid_project_type:
                 a_project_type >= feature {ECOM_EIF_PROJECT_TYPES_ENUM}.eif_project_types_console_application and then
-                a_project_type <= feature {ECOM_EIF_PROJECT_TYPES_ENUM}.eif_project_types_precompiled_library
+                a_project_type <= feature {ECOM_EIF_PROJECT_TYPES_ENUM}.eif_project_types_class_library
         do
             if a_project_type = feature {ECOM_EIF_PROJECT_TYPES_ENUM}.eif_project_types_console_application then
                 ace.set_console_application (True)
@@ -363,12 +357,6 @@ feature -- Element change
                 ace.set_il_generation_type (ace.Il_generation_exe)
             elseif a_project_type = feature {ECOM_EIF_PROJECT_TYPES_ENUM}.eif_project_types_class_library then
                 ace.set_console_application (False)
-                ace.set_root_class_name ("NONE")
-                ace.set_creation_routine_name (Void)
-                ace.set_il_generation_type (ace.Il_generation_dll)
-            elseif a_project_type = feature {ECOM_EIF_PROJECT_TYPES_ENUM}.eif_project_types_precompiled_library then
-                ace.set_root_class_name ("ANY")
-                ace.set_creation_routine_name (Void)
                 ace.set_il_generation_type (ace.Il_generation_dll)
             end 
         end

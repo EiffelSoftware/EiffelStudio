@@ -95,20 +95,20 @@ feature -- Access bytes size
 			"sizeof(EIF_INTEGER_64)"
 		end
 
-	Real_bytes: INTEGER is
+	Real_32_bytes, Real_bytes: INTEGER is
 			-- Number of bytes in a value of type `REAL'
 		external
 			"C macro use %"eif_misc.h%""
 		alias
-			"sizeof(EIF_REAL)"
+			"sizeof(EIF_REAL_32)"
 		end
 
-	Double_bytes: INTEGER is
+	Real_64_bytes, Double_bytes: INTEGER is
 			-- Number of bytes in a value of type `DOUBLE'
 		external
 			"C macro use %"eif_misc.h%""
 		alias
-			"sizeof(EIF_DOUBLE)"
+			"sizeof(EIF_REAL_64)"
 		end
 
 	Pointer_bytes: INTEGER is
@@ -171,7 +171,7 @@ feature -- Access bits size
 		external
 			"C macro use %"eif_misc.h%""
 		alias
-			"esreal_size"
+			"esreal32_size"
 		end
 
 	Double_bits: INTEGER is
@@ -179,7 +179,7 @@ feature -- Access bits size
 		external
 			"C macro use %"eif_misc.h%""
 		alias
-			"esdouble_size"
+			"esreal64_size"
 		end
 
 	Pointer_bits: INTEGER is

@@ -99,6 +99,8 @@ feature
 
 	Profile_abb: CHARACTER is 'p';
 
+	Quick_melt_abb: CHARACTER is 'k';
+
 	Quit_abb: CHARACTER is 'q';
 
 	Queries_abb: character is 'u';

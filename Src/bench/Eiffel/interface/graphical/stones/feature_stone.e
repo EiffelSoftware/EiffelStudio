@@ -11,6 +11,7 @@ inherit
 
 	FILED_STONE
 		rename
+			origin_text as normal_origin_text,
 			is_valid as fs_valid
 		redefine
 			synchronized_stone, invalid_stone_message, same_as,
@@ -19,17 +20,17 @@ inherit
 	FILED_STONE
 		redefine
 			is_valid, synchronized_stone, invalid_stone_message,
-			history_name, same_as
+			history_name, same_as, origin_text
 		select
-			is_valid
+			is_valid, origin_text
 		end;
 	SHARED_EIFFEL_PROJECT;
 	HASHABLE_STONE
 		redefine
 			is_valid, synchronized_stone, header, 
-			invalid_stone_message, history_name, same_as
+			invalid_stone_message, history_name, same_as,
+			origin_text
 		end;
-	INTERFACE_W;
 	WINDOWS
 
 creation
@@ -117,10 +118,51 @@ feature -- Access
 
 feature -- dragging
 
-	click_list: CLICK_STONE_ARRAY is
-			-- Structure to make clickable the display of Current
+	origin_text: STRING is
+			-- Text of the feature
+		local
+			temp: STRING;
+			cn: STRING;
+		do
+			temp := normal_origin_text;
+			if temp /= Void then
+				Result := "-- Version from class: ";
+				cn := clone (e_feature.written_class.name)
+				cn.to_upper;
+				Result.append (cn);
+				Result.append ("%N%N%T");
+				if 
+					temp.count >= end_position and 
+					start_position < end_position 
+				then
+					temp := temp.substring (start_position + 1, end_position);
+					Result.append (temp)
+				end;
+				Result.append ("%N");
+			end
+		end;
+
+	click_list: ARRAY [CLICK_STONE] is
+			-- Structure to make clickable the display of Current, nothing yet
+			-- Now yeah
+		local
+			cs: CLICK_STONE;
+			sp, ep: INTEGER;
+			temp: STRING;
+			classc_stone: CLASSC_STONE
 		do 
-			!! Result.make (e_class.click_list, e_class)
+			!! Result.make (1, 2);
+				temp := "-- Version from class: ";
+				sp := temp.count;
+				ep := e_feature.written_class.name.count;
+				ep := ep + sp;
+			!! classc_stone.make (e_feature.written_class);
+			!! cs.make (classc_stone, sp, ep);
+			Result.put (cs, 1);
+				sp := ep + 3;
+				ep := sp + end_position - start_position;
+			!! cs.make (Current, sp, ep);
+			Result.put (cs, 2);
 		end;
  
 	file_name: STRING is

@@ -270,6 +270,9 @@ feature {NONE} -- Implementation
 				if project_settings.is_envision_project then
 					Environment.application.destroy
 				end
+			else
+					-- Update title of `main_window' to reflect new state.
+				main_window.update_title
 			end
 		end
 		

@@ -133,7 +133,7 @@ feature -- Status report
 			context: EV_PRINT_CONTEXT
 		do
 			create context
-			if selected_button /= Void and then selected_button.is_equal (ev_cancel) then
+			if selected_button /= Void and then not selected_button.is_equal (ev_cancel) then
 				context.set_range (from_page, to_page)
 				context.set_copies (copies)
 				if all_pages_selected then

@@ -12,7 +12,9 @@ class
 inherit
 	OBJECT_OWNER
 	MEMORY
-		redefine dispose end
+		redefine
+			dispose
+		end
 
 creation
 	make
@@ -75,7 +77,6 @@ feature -- Status setting
 			sem_pointer := default_pointer
 		end
 
-
 feature {NONE} -- Implementation
 
 	sem_pointer: POINTER
@@ -88,10 +89,9 @@ feature {NONE} -- Removal
 			-- is collected.
 		do
 			if thread_is_owner and is_set then
-				eif_thr_sem_destroy (sem_pointer)
+				destroy
 			end
 		end
-
 
 feature {NONE} -- Externals
 

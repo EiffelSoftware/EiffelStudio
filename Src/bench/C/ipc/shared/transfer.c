@@ -64,6 +64,8 @@ int *size;		/* Filled in with size of read string */
 #ifdef USE_ADD_LOG
 		add_log(1, "ERROR cannot receive transfer request");
 #endif
+		if (size != (int *) 0)
+			*size = 0;
 		return (char *) 0;
 	}
 
@@ -79,23 +81,27 @@ int *size;		/* Filled in with size of read string */
 		add_log(1, "ERROR cannot allocate %d bytes", rqst.rq_ack.ak_type);
 #endif
 		swallow(readfd(sp), rqst.rq_ack.ak_type);
+		if (size != (int *) 0)
+			*size = 0;
 		return (char *) 0;
 	}
-
-	if (size != (int *) 0)
-		*size = (int) rqst.rq_ack.ak_type;
 
 	if (-1 == net_recv(readfd(sp), buffer, rqst.rq_ack.ak_type)) {
 #ifdef USE_ADD_LOG
 		add_log(1, "ERROR net_recv: %m (%e)");
 #endif
 		free(buffer);
+		if (size != (int *) 0)
+			*size = 0;
 		return (char *) 0;
 	}
 	
+	if (size != (int *) 0)
+		*size = (int) rqst.rq_ack.ak_type;
+
 	return buffer;
 }
-	
+
 public int twrite(buffer, size)
 char *buffer;
 int size;

@@ -65,10 +65,10 @@ rem Copy the config
 rem
 copy config.h run-time
 copy portable.h run-time
-copy config.sh extra\win32\console
-copy make.w32 extra\win32\console\make.bat
-copy config.sh extra\win32\desc
-copy make.w32 extra\win32\desc\make.bat
+copy config.sh console
+copy make.w32 console\make.bat
+copy config.sh desc
+copy make.w32 desc\make.bat
 copy config.sh ipc\app
 copy make.w32 ipc\app\make.bat
 copy config.sh ipc\daemon
@@ -104,16 +104,13 @@ cd ..\eiffel
 ..\..\rt-converter.exe makefile-win.sh makefile
 cd ..\lace
 ..\..\rt-converter.exe makefile-win.sh makefile
-cd ..\..
-cd platform
+cd ..\..\platform
 ..\rt-converter.exe makefile-win.sh makefile
-cd ..
-cd idrs
+cd ..\idrs
 ..\rt-converter.exe makefile-win.sh makefile
-cd ..
-cd extra\win32\console
-..\..\..\rt-converter.exe makefile-win.sh makefile
-cd ..\..\..\ipc\daemon
+cd ..\console
+..\rt-converter.exe makefile-win.sh makefile
+cd ..\ipc\daemon
 ..\..\rt-converter.exe makefile-win.sh makefile
 cd ..\ewb
 ..\..\rt-converter.exe makefile-win.sh makefile
@@ -167,13 +164,8 @@ echo del %%1\*.pdb >> cleanup.bat
 echo del %%1\*.pch >> cleanup.bat
 echo del %%1\config.sh >> cleanup.bat
 echo del %%1\makefile >> cleanup.bat
-call cleanup extra\mswin\console
-call cleanup extra\mswin\desc
-call cleanup extra\mswin\ipc
-call cleanup extra\mswin\networku
-call cleanup extra\mswin\precompd
-call cleanup extra\win32\console
-call cleanup extra\win32\desc
+call cleanup console
+call cleanup desc
 call cleanup ipc\app
 call cleanup ipc\daemon
 call cleanup ipc\ewb
@@ -184,8 +176,8 @@ call cleanup parsing\shared
 call cleanup platform
 call cleanup idrs
 call cleanup run-time
-del extra\win32\desc\w32msc\ise_desc.*
-rmdir extra\win32\desc\w32msc
+del desc\w32msc\ise_desc.*
+rmdir desc\w32msc
 del parsing\lace\lace_y.c
 del parsing\lace\lace_y.h
 del parsing\eiffel\y_tab.*

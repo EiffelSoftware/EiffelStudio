@@ -33,7 +33,7 @@ inherit
 		redefine
 			make, on_key_down, on_mouse_move, set_default_minimum_size,
 			initialize, interface, on_size, enable_sensitive, disable_sensitive, background_color,
-			on_char
+			on_char, destroy
 		end
 
  	WEL_LIST_VIEW
@@ -867,6 +867,13 @@ feature {NONE} -- Implementation
 			if default_key_processing_disabled then
 				disable_default_processing
 			end
+		end
+		
+	destroy is
+			-- Destroy `Current'.
+		do
+			wipe_out
+			Precursor {EV_PRIMITIVE_IMP}
 		end
 
 feature {NONE} -- Feature that should be directly implemented by externals

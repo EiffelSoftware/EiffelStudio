@@ -1,6 +1,5 @@
 indexing
 	description: "Eiffel Vision checkable list. Implementation interface."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 

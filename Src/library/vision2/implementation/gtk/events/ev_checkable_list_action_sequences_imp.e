@@ -1,6 +1,5 @@
 indexing
 	description: "Action sequences for EV_CHECKABLE_LIST"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 

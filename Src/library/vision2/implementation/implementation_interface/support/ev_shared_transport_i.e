@@ -1,6 +1,5 @@
 indexing
 	description: "Objects that provide common attributes for transport mechanisms."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 

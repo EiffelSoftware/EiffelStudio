@@ -126,6 +126,7 @@ feature {NONE} -- Initialization
 			{EV_ITEM_LIST_IMP} Precursor	
 			create radio_group.make
 			new_item_actions.extend (~add_radio_button)
+			new_item_actions.extend (~add_toggle_button)
 			remove_item_actions.extend (~remove_radio_button)
 		end
 
@@ -189,22 +190,27 @@ feature -- Element change
 			pixmap: EV_PIXMAP_IMP
 			gray_pixmap: EV_PIXMAP_IMP
 			button_text: STRING
+			radio_button: EV_TOOL_BAR_RADIO_BUTTON_IMP
+			separator_button: EV_TOOL_BAR_SEPARATOR_IMP
+			toggle_button: EV_TOOL_BAR_TOGGLE_BUTTON_IMP
 		do
-			-- We create the button
-			inspect button.type
-			when 1 then -- Usual button
-				create but.make_button (-1, button.id)
-			when 2 then -- Check button
+			-- We need to check the type of tool bar button.
+			-- Dpending on the type, `but' is created differently.
+			radio_button ?= button
+			toggle_button ?= button
+			if radio_button /= Void or toggle_button /= Void then
 				create but.make_check (-1, button.id)
-			when 3 then -- Radio button
-				create but.make_check (-1, button.id)
-			when 4 then -- Option button
-				create but.make_button (-1, button.id)
-			when 5 then -- Separator
+			end
+			separator_button ?= button
+			if separator_button /= Void then
 				create but.make_separator
 				but.set_command_id (button.id)
 			end
-	
+			if radio_button = Void and toggle_button =Void and
+				separator_button = Void then
+				create but.make_button (-1, button.id)
+			end
+
 				-- First, we take care of the pixmap,
 			pixmap := button.pixmap_imp
 			if pixmap /= Void then
@@ -377,6 +383,7 @@ feature {NONE} -- Implementation
 		local
 			list: ARRAYED_LIST [EV_TOOL_BAR_BUTTON_IMP]
 			original_index: INTEGER
+			separator: EV_TOOL_BAR_SEPARATOR_IMP
 		do
 			from
 				original_index := index
@@ -385,7 +392,8 @@ feature {NONE} -- Implementation
 			until
 				list.after
 			loop
-				if list.item.type = 5 then
+				separator ?= list.item
+				if separator /= Void then
 					Result := Result + 1
 				end
 				list.forth
@@ -609,6 +617,21 @@ feature {EV_TOOL_BAR_IMP} -- Implementation
 			end
 		end
 
+	add_toggle_button (w: EV_TOOL_BAR_ITEM) is
+			-- Called when `w' has been added to `Current'.
+		require
+			item_not_void: w /= Void
+		local
+			t: EV_TOOL_BAR_TOGGLE_BUTTON_IMP
+		do
+			t ?= w.implementation
+			if t /= Void then
+				if t.is_selected then
+					check_button (t.id)
+				end
+			end
+		end
+
 feature {EV_PND_TRANSPORTER_IMP}
 
 	child_x (button: EV_TOOL_BAR_BUTTON): INTEGER is
@@ -712,10 +735,11 @@ end -- class EV_TOOL_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.62  2000/04/26 18:18:29  rogers
---| No longer inherits EV_HASH_TABLE_ITEM_HOLDER_IMP, inherits
---| EV_ITEM_LIST_IMP instead. Add_radio_button and
---| remove_radio_button now take EV_TOOL_BAR_ITEM's.
+--| Revision 1.63  2000/04/26 19:56:35  rogers
+--| All references to tool bar item types have been replaced with
+--| reverse assignments. Added add_toggle_button which which is
+--| called from the new_item_actions, and will select a toggle
+--| button if it is already selected before parenting.
 --|
 --| Revision 1.61  2000/04/26 17:38:40  brendel
 --| Removed inheritance of obsolete EV_HASH_TABLE_ITEM_HOLDER_IMP.

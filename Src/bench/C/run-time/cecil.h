@@ -133,7 +133,7 @@ extern struct ctable fce_rname[];		/* Routine names -> function pointer */
 extern struct ctable ce_type;			/* Class name -> type ID */
 extern struct ctable ce_gtype;			/* Generic class name -> gt_info */
 
-extern EIF_TYPE_ID eifcid(char *class);			/* Get a class ID */
+extern EIF_TYPE_ID eifcid(char *class_name);		     /* Get a class ID */
 extern EIF_TYPE_ID eifexp(EIF_TYPE_ID id);			/* Force expansion */
 
 extern EIF_TYPE_ID eifgid(char *class_name, ...);	/* Get a generic class ID */

@@ -13,6 +13,7 @@
 
 #ifndef _file_h_
 #define _file_h_
+#include "limits.h"							/* For PATH_MAX */
 #include "macros.h"
 
 /*

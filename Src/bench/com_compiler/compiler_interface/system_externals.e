@@ -136,13 +136,11 @@ feature -- Status report
 			valid_external: not extern.is_empty
 		do
 			Result := extern.clone(extern)
-			if Result.index_of(' ', 1) > 0 then
-				if not (Result.item (1) = '"') then
-					Result.prepend_character('"')
-				end
-				if not (Result.item (Result.count) = '"') then
-					Result.append_character('"')
-				end
+			if not (Result.item (1) = '"') then
+				Result.prepend_character('"')
+			end
+			if not (Result.item (Result.count) = '"') then
+				Result.append_character('"')
 			end
 			Result.replace_substring_all ("/", "\")
 		end
@@ -326,7 +324,6 @@ feature -- Basic operations
 			external_item: LANG_TRIB_SD
 			file_names: LACE_LIST [ID_SD]
 			file_name: ID_SD
-			string: STRING
 		do
 			create externals_list.make (0)
 			ace_accesser.root_ast.set_externals (externals_list)

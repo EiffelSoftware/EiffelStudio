@@ -92,7 +92,7 @@ feature -- Status setting
 				w := form_child_list.width (Current)
 				if h > height or else w > width then
 					set_size (w, h)
-				end	
+				end
 			end
 		end
 
@@ -108,7 +108,7 @@ feature -- Status setting
 				end
 			end
 		end 
-	
+
 	set_width (new_width : INTEGER) is
 			-- Set width to `new_width'.
 		do
@@ -152,14 +152,13 @@ feature -- Status setting
 				end
 				resize_for_shell
 				if not managed then
-					if wel_shown then
-						wel_hide
-					end
+					wel_hide
 				elseif parent.shown then
 					shown := true
 				end
 			end
 			update_all
+			set_enclosing_size
 		end
 
 	realize_current is

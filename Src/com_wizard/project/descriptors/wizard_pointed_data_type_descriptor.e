@@ -97,10 +97,10 @@ feature -- Access
 	interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR is
 			-- Interface descriptor.
 		require
-			interface_type: visitor.is_interface_pointer or visitor.is_interface_pointer_pointer or
-						visitor.is_coclass_pointer or visitor.is_coclass_pointer_pointer
-			non_unknown: visitor.c_type.substring_index (iunknown_type, 1) = 0
-			non_dispatch: visitor.c_type.substring_index (idispatch_type, 1) = 0
+--			interface_type: visitor.is_interface_pointer or visitor.is_interface_pointer_pointer or
+--						visitor.is_coclass_pointer or visitor.is_coclass_pointer_pointer
+--			non_unknown: visitor.c_type.substring_index (iunknown_type, 1) = 0
+--			non_dispatch: visitor.c_type.substring_index (idispatch_type, 1) = 0
 		local
 			pointed_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
 			user_defined: WIZARD_USER_DEFINED_DATA_TYPE_DESCRIPTOR

@@ -10,10 +10,6 @@ inherit
 	APPLICATION_EXECUTION_IMP
 		redefine
 			make
---			,status, is_valid_object_address
---			,process_termination
---			,run
---			,continue, interrupt, kill, notify_newbreakpoint
 		end
 
 	OBJECT_ADDR
@@ -116,9 +112,11 @@ feature -- Execution
 	kill is
 			-- Ask the application to terminate itself.
 		do
+			Application.process_termination
+			
 			quit_request.make (Rqst_kill)
 			quit_request.send;		
-			Application.process_termination
+
 				-- Don't wait until the next event loop to
 				-- to process the actual termination of the application.
 				-- `recv_dead' will wait until the application is dead.

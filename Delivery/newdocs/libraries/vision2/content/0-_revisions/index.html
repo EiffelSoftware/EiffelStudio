@@ -38,6 +38,7 @@ modifications are relative to the previously released version.</p>
     now obsolete.</li>
 	<li><b>EV_FONTABLE</b> - `set_font' now sets a copy of the font internally.</li>
 	<LI><b>EV_TREE</b> - `ensure_item_visible' and `has_recursively' now take an EV_TREE_NODE as arguments, instead of an EV_TREE_ITEM.</li>
+	<li><b>EV_TEXT</b> - `put_new_line' is now obsolete. Use `set_text ("%N") instead.</li>"
 </ul>
 <p><b>Bug fixes</b>
 <ul>
@@ -82,6 +83,7 @@ modifications are relative to the previously released version.</p>
         are now only fired when the selection changes.</li>
       <li><b>EV_TREE_ITEM</b> - calling `set_pixmap' twice successively with the same EV_PIXMAP caused a postcondition failure.</LI>
 	<li><b>EV_DIALOG</b> - If a dialog with a default cancel button was displayed using `show', then minimizing the dialog would cause the system to fail internally.</li>
+	<li><b>EV_TEXT</b> - Fixed `put_new_line', although it has been made obsolete, as you should just use `set_text ("%N") instead.</li>
     </ul>
   <li><b>Gtk</b>
     <ul>

@@ -205,7 +205,8 @@ feature -- Status setting
 				set_maximum (maximum)
 				set_minimum (minimum)
 				on_size (0, width, height)
-				update_value_static
+				set_value (value)
+				--update_value_static
 			end
 		end
 
@@ -275,6 +276,7 @@ feature -- Element change
 				else
 					scroll_bar.set_position (maximum - a_value + minimum)
 				end
+				update_value_static
 			end
 		end
 
@@ -422,7 +424,7 @@ feature {NONE} -- Implementation
 					end
 					set_value (maximum - value)
 				end
-				update_value_static
+				--update_value_static
 				!! scale_data.make (widget_oui)
 				value_changed_actions.execute (Current, scale_data)
 			end

@@ -29,7 +29,8 @@ inherit
 			y_offset,
 			set_x_offset,
 			set_y_offset,
-			child_has_resized
+			child_has_resized,
+			needs_event_box
 		end
 	
 create
@@ -37,17 +38,20 @@ create
 
 feature {NONE} -- Initialization
 
+	needs_event_box: BOOLEAN is False--True
+
 	make (an_interface: like interface) is
 				-- Initialize.
 		do
 			base_make (an_interface)
-			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_scrolled_window_new (NULL, NULL))
+			scrolled_window := feature {EV_GTK_EXTERNALS}.gtk_scrolled_window_new (NULL, NULL)
+			set_c_object (scrolled_window)
 			set_scrolling_policy (feature {EV_GTK_EXTERNALS}.gTK_POLICY_AUTOMATIC_ENUM, feature {EV_GTK_EXTERNALS}.gTK_POLICY_AUTOMATIC_ENUM)
 			set_horizontal_step (10)
 			set_vertical_step (10)
 			viewport := feature {EV_GTK_EXTERNALS}.gtk_viewport_new (NULL, NULL)
 			feature {EV_GTK_EXTERNALS}.gtk_widget_show (viewport)
-			feature {EV_GTK_EXTERNALS}.gtk_container_add (c_object, viewport)
+			feature {EV_GTK_EXTERNALS}.gtk_container_add (scrolled_window, viewport)
 		end
 
 feature -- Access
@@ -148,6 +152,8 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
+	scrolled_window: POINTER
+
 	on_size_allocate (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER) is
 			-- Set item in center of `Current' if smaller.
 		local
@@ -169,13 +175,13 @@ feature {NONE} -- Implementation
 	horizontal_adjustment: POINTER is
 			-- Pointer to the adjustment struct of the hscrollbar
 		do
-			Result := feature {EV_GTK_EXTERNALS}.gtk_scrolled_window_get_hadjustment (c_object)
+			Result := feature {EV_GTK_EXTERNALS}.gtk_scrolled_window_get_hadjustment (scrolled_window)
 		end
 
 	vertical_adjustment: POINTER is
 			-- Pointer to the adjustment struct of the vscrollbar
 		do
-			Result := feature {EV_GTK_EXTERNALS}.gtk_scrolled_window_get_vadjustment (c_object)
+			Result := feature {EV_GTK_EXTERNALS}.gtk_scrolled_window_get_vadjustment (scrolled_window)
 		end
 
 	horizontal_policy: INTEGER
@@ -188,7 +194,7 @@ feature {NONE} -- Implementation
 			-- Set the policy for both scrollbars.
 		do
 			feature {EV_GTK_EXTERNALS}.gtk_scrolled_window_set_policy (
-				c_object,
+				scrolled_window,
 				hscrollpol,
 				vscrollpol
 			)

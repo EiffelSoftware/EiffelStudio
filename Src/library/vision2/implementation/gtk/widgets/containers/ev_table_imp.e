@@ -25,23 +25,21 @@ inherit
 	EV_CONTAINER_IMP
 		redefine
 			interface,
-			container_widget
+			needs_event_box
 		end
 create
 	make
 
 feature {NONE} -- Implementation
 
+	needs_event_box: BOOLEAN is True
+
 	make (an_interface: like interface) is
                         -- Create a table widget with `par' as
                         -- parent.
 		do
 			base_make (an_interface)
-			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_event_box_new)
-			container_widget := feature {EV_GTK_EXTERNALS}.gtk_table_new (Default_row_spacing, Default_column_spacing, Default_homogeneous)
-				-- table created with 0 row and 0 column.
-			feature {EV_GTK_EXTERNALS}.gtk_widget_show (container_widget)
-			feature {EV_GTK_EXTERNALS}.gtk_container_add (c_object, container_widget)
+			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_table_new (Default_row_spacing, Default_column_spacing, Default_homogeneous))
 			
 			-- Initialize internal values
 			rows := 1
@@ -49,9 +47,6 @@ feature {NONE} -- Implementation
 			create internal_array.make (1, 1)
 			rebuild_internal_item_list
 		end
-
-	container_widget: POINTER
-			-- Pointer to the gtktable widget as c_object is event box.
 
 feature -- Status report
 

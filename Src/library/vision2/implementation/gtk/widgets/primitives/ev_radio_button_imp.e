@@ -24,8 +24,7 @@ inherit
 		redefine
 			interface,
 			make,
-			initialize,
-			visual_widget
+			initialize
 		end
 
 	EV_RADIO_PEER_IMP
@@ -42,10 +41,7 @@ feature {NONE} -- Initialization
 			-- Create radio button.
 		do
 			base_make (an_interface)
-			visual_widget := feature {EV_GTK_EXTERNALS}.gtk_radio_button_new (NULL)
-			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_event_box_new)
-			feature {EV_GTK_EXTERNALS}.gtk_widget_show (visual_widget)
-			feature {EV_GTK_EXTERNALS}.gtk_container_add (c_object, visual_widget)
+			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_radio_button_new (NULL))
 			enable_select
 		end
 
@@ -87,9 +83,6 @@ feature {EV_ANY_I} -- Implementation
 		do
 			Result := feature {EV_GTK_EXTERNALS}.gtk_radio_button_group (visual_widget)
 		end
-		
-	visual_widget: POINTER
-			-- Pointer to the gtk widget shown on screen.
 
 feature {EV_ANY_I} -- Implementation
 

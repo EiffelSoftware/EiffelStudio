@@ -17,7 +17,8 @@ inherit
 		redefine
 			interface,
 			visual_widget,
-			create_change_actions
+			create_change_actions,
+			needs_event_box
 		end
 		
 	EV_FONTABLE_IMP
@@ -39,16 +40,21 @@ create
 
 feature {NONE} -- Initialization
 
+	needs_event_box: BOOLEAN is True
+
 	make (an_interface: like interface) is
 			-- Create a gtk entry.
+		local
+			a_vbox: POINTER
 		do
 			base_make (an_interface)
-			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_vbox_new (False, 0))
+			a_vbox := feature {EV_GTK_EXTERNALS}.gtk_vbox_new (False, 0)
+			set_c_object (a_vbox)
 			entry_widget := feature {EV_GTK_EXTERNALS}.gtk_entry_new
 			feature {EV_GTK_EXTERNALS}.gtk_widget_show (entry_widget)
 			feature {EV_GTK_EXTERNALS}.gtk_widget_set_usize (entry_widget, 40, -1)
 			--| Minimum sizes need to be similar on both platforms
-			feature {EV_GTK_EXTERNALS}.gtk_box_pack_start (c_object, entry_widget, False, False, 0)
+			feature {EV_GTK_EXTERNALS}.gtk_box_pack_start (a_vbox, entry_widget, False, False, 0)
 			set_text ("")
 		end
 
@@ -252,8 +258,6 @@ feature -- Basic operation
 			-- Clipboard at the `index' position in the
 			-- text.
 			-- If the Clipboard is empty, it does nothing. 
-		local
-			pos: INTEGER
 		do
 			insert_text_at_position (clipboard_content, index)
 		end

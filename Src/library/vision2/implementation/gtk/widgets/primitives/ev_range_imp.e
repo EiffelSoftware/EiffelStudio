@@ -16,13 +16,19 @@ inherit
 	EV_GAUGE_IMP
 		redefine
 			interface,
-			visual_widget
+			initialize
+		end
+
+feature {NONE} -- Initialization
+
+	initialize is
+			-- Initialize `Current'
+		do
+			Precursor {EV_GAUGE_IMP}
+			feature {EV_GTK_EXTERNALS}.gtk_scale_set_digits (visual_widget, 0)
 		end
 
 feature {EV_ANY_I} -- Implementation
-
-	visual_widget: POINTER
-			-- Pointer to the GtkRange widget.
 
 	interface: EV_RANGE
 

@@ -19,7 +19,8 @@ inherit
 			set_composite_widget_pointer_style,
 			on_key_event,
 			default_key_processing_blocked,
-			on_focus_changed
+			on_focus_changed,
+			needs_event_box
 		redefine
 			interface,
 			initialize,
@@ -44,12 +45,15 @@ feature {NONE} -- Implementation
 
 	make (an_interface: like interface) is
 			-- Create the spin button.
+		local
+			a_vbox: POINTER
 		do
 			Precursor {EV_GAUGE_IMP} (an_interface)
-			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_vbox_new (False, 0))
+			a_vbox := feature {EV_GTK_EXTERNALS}.gtk_vbox_new (False, 0)
+			set_c_object (a_vbox)
 			entry_widget := feature {EV_GTK_EXTERNALS}.gtk_spin_button_new (adjustment, 0, 0)
 			feature {EV_GTK_EXTERNALS}.gtk_widget_show (entry_widget)
-			feature {EV_GTK_EXTERNALS}.gtk_box_pack_start (c_object, entry_widget, False, False, 0)
+			feature {EV_GTK_EXTERNALS}.gtk_box_pack_start (a_vbox, entry_widget, False, False, 0)
 		end
 
 	initialize is

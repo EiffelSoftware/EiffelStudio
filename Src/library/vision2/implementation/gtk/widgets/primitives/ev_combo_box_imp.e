@@ -38,7 +38,8 @@ inherit
 			default_key_processing_blocked,
 			on_focus_changed,
 			has_focus,
-			set_focus
+			set_focus,
+			needs_event_box
 		redefine
 			select_callback,
 			remove_i_th,
@@ -61,15 +62,17 @@ feature {NONE} -- Initialization
 			-- Create a combo-box.
 		local
 			activate_id: INTEGER
+			a_vbox: POINTER
 		do
 			base_make (an_interface)
 
 			-- create of the gtk object.
-			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_vbox_new (False, 0))
+			a_vbox := feature {EV_GTK_EXTERNALS}.gtk_vbox_new (False, 0)
+			set_c_object (a_vbox)
 			container_widget := feature {EV_GTK_EXTERNALS}.gtk_combo_new
 			feature {EV_GTK_EXTERNALS}.gtk_widget_show (container_widget)
 			dropdown_window := feature {EV_GTK_EXTERNALS}.gtk_combo_struct_popwin (container_widget)
-			feature {EV_GTK_EXTERNALS}.gtk_box_pack_start (c_object, container_widget, False, False, 0)
+			feature {EV_GTK_EXTERNALS}.gtk_box_pack_start (a_vbox, container_widget, False, False, 0)
 
 			-- Pointer to the text we see.
 			entry_widget := feature {EV_GTK_EXTERNALS}.gtk_combo_struct_entry (container_widget)

@@ -27,20 +27,13 @@ feature -- Properties
 
 feature -- Access
 
-	valid_reference_class (reference_class: CLASS_C): BOOLEAN is
-			-- Is `reference_class' valid?
-			-- (By default, yes it is if it is not void)
-		do
-			Result := reference_class /= Void
-		end
-
-	associated_eiffel_class (reference_class: CLASS_C): CLASS_C is
+	associated_eiffel_class (reference_class: CLASS_I): CLASS_I is
 			-- Associated eiffel class representating AST.
-			-- `ref_class' cluster is used to resolve name conflict 
+			-- `reference_class' cluster is used to resolve name conflict 
 			-- arising from class renaming.
 		require
 			is_class_or_precursor: is_class or is_precursor
-			valid_ref_class: valid_reference_class (reference_class)
+			reference_class_not_void: reference_class /= Void
 		do
 		end
 

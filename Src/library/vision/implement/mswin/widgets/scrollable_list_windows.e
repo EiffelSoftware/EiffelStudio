@@ -21,12 +21,10 @@ inherit
 		
 	SCROLLABLE_LIST_I
 		rename
-			is_equal as arrayed_list_is_equal,
 			resize as arrayed_list_resize,
 			copy as arrayed_list_copy,
 			setup as arrayed_list_setup
 		select
-			arrayed_list_is_equal,
 			arrayed_list_setup,
 			arrayed_list_copy
 		end

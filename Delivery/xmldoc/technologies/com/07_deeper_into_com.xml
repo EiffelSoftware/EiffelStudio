@@ -8,12 +8,8 @@
 		<paragraph>This superficial description only take into accounts processes. What happens if a component uses multithreading to achieve it tasks? In a case of a remote server, this scenario does not seem too esoteric. The problem is that a server does not (and should not) know in advance what its clients will be. It cannot assume that the client will be able to take advantage of its multithreading capabilities. Conversely a multithreaded client should not rely on the server ability to handle concurrent access. </paragraph>
 		<paragraph>The solution chosen in the COM specification is to define an additional execution context called an apartment. When COM loads a component it creates the apartment in which the component will run. Multiple instances of a multithreaded component will leave together in the same apartment since asynchronous calls will be handled correctly and there is no need to add any synchronization layer. On the other hand, single threaded component will be alone in their apartment and any concurrent calls coming from clients will be first synchronized before entering the apartment. These two behaviors define two different kinds of apartments: Multi Threaded Apartments (MTA) and Single Threaded Apartments (STA). </paragraph>
 		<div>
-			<paragraph>
-				<span>Apartments</span>
-			</paragraph>
-		</div>
-		<div>
 			<image>
+				<legend>Apartments</legend>
 				<height>190</height>
 				<width>512</width>
 				<url>images/com-2.gif</url>
@@ -25,12 +21,8 @@
 		<paragraph>The idea is to trick the client of an interface by providing an interface proxy in its apartment. The proxy include exactly the same function as the interface itself but their implementation will just forward the call to the actual interface. The client has no idea whether the entity it is dealing with is the actual interface or just a proxy. One of the main interest of that approach is that the client implementation is independent from the location of the component. </paragraph>
 		<paragraph>Last explanation is not totally accurate: the call will not be forwarded to the actual interface but to its stub. The stub is the counterpart of the proxy, it represents the client for the interface. The interface doesn't know either whether it is communicating with the actual client or a stub. Although it is not totally true that the component implementation is independent from the location of the client, the stub pattern still helps keeping code identical for the implementation of the interface themselves. The implementation of a component will still be different whether it is an in-process or out-of-process component since it will have to be a DLL in one case and a executable in the other. The design of the interfaces might also differ since out-of-process servers will tend to avoid too many round trips. </paragraph>
 		<div>
-			<span>
-				<link/> Cross Apartment Calls
-			</span>
-		</div>
-		<div>
 			<image>
+				<legend>Cross Apartment Calls</legend>
 				<height>153</height>
 				<width>475</width>
 				<url>images/com-3.gif</url>
@@ -55,8 +47,13 @@
 			</link>
 			<line_break/>
 			<link>
-				<url>01_introduction.xml</url>
-				<label> Introduction</label>
+				<url>02_generalities.xml</url>
+				<label> Generalities</label>
+			</link>
+			<line_break/>
+			<link>
+				<url>07_deeper_into_com.xml</url>
+				<label> Deeper into COM</label>
 			</link>
 			<line_break/>
 			<link>
@@ -77,11 +74,6 @@
 			<link>
 				<url>06_access_type.xml</url>
 				<label> Access Type</label>
-			</link>
-			<line_break/>
-			<link>
-				<url>07_deeper_into_com.xml</url>
-				<label> Deeper into COM</label>
 			</link>
 		</seealso>
 	</paragraph></document>

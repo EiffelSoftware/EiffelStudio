@@ -24,14 +24,14 @@ creation
 	
 feature -- Initialization
 
-	make (a_composite: COMPOSITE; cmd: FILTER_COMMAND) is
+	make (cmd: FILTER_COMMAND) is
 			-- Create a filter window.
 		local
 			button_form: FORM;
 			display_button, execute_button, cancel_button: PUSH_B;
 			filter_label, shell_label: LABEL
 		do
-			form_dialog_create (l_Filter_w, a_composite);
+			form_dialog_create (l_Filter_w, cmd.popup_parent);
 			set_title (l_Filter_w);
 
 			!!filter_label.make (new_name, Current);
@@ -108,7 +108,7 @@ feature -- Execution; Implementation
 			popup;
 			raise;
 			if warning_message /= Void then
-				warner (associated_command.text_window). gotcha_call (warning_message)
+				warner (associated_command.popup_parent). gotcha_call (warning_message)
 			end
 		end;
 	

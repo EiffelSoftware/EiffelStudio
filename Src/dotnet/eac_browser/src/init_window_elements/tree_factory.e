@@ -114,10 +114,10 @@ feature {NONE} -- Add element to tree
 					-- Add assemblies...
 				create des_dlg
 				des_dlg.show_relative_to_window (parent_window);
-				(create {EV_ENVIRONMENT}).application.process_events
+				(create {EV_ENVIRONMENT}).application.process_events;
 
 					-- Deserialize information of assembly.
-				deserialize_information_assembly (an_assembly)
+				(create {CACHE}).deserialize_information_assembly (an_assembly)
 				des_dlg.set_progress_bar (30)
 				
 				create eac
@@ -143,26 +143,6 @@ feature {NONE} -- Add element to tree
 			end
 --			edit.edit_info_assembly (an_assembly)
 		end		
-
-	deserialize_information_assembly (an_assembly: CONSUMED_ASSEMBLY) is
-			-- Deserialize informations of `an_assembly' and store it in `assemblies_informations'.
-			-- It would be interesting to launch this process in a Thread.
---		local
---			my_thread: ASSEMBLY_INFORMATION_THREAD
---		do
---			create my_thread.make (an_assembly)
---			my_thread.launch
---		end
-		local
-			l_assembly_info: ASSEMBLY_INFORMATION
-		do
-			create l_assembly_info.make
-			l_assembly_info.initialize ((create {EAC_COMMON_PATH}).dotnet_framework_path + an_assembly.name + ".xml")
-			if l_assembly_info /= Void then
-				(create {CACHE}).assemblies_informations.put (l_assembly_info, an_assembly.out)
-			end
-		end
-		
 
 	add_types_branches (an_assembly: CONSUMED_ASSEMBLY; a_tree_item_namespace: EV_TREE_ITEM; a_namespace_name: STRING; cat: CONSUMED_ASSEMBLY_TYPES) is
 			-- add type contained in `tree' to `tree_item_parent'.
@@ -422,7 +402,7 @@ feature {NONE} -- Add element to tree
 					tree_item_parent.append (classify_tree_nodes (l_functions_list))
 				end
 			end
-			edit.edit_type (an_assembly, full_dotnet_type_name)
+--			edit.edit_type (an_assembly, full_dotnet_type_name)
 		end
 
 
@@ -495,7 +475,6 @@ feature {NONE} -- Add element to tree
 			i: INTEGER
 			l_node: EV_TREE_ITEM
 
-
 			eac: EAC_BROWSER
 			found: BOOLEAN
 --			referenced_assemblies: CONSUMED_ASSEMBLY_MAPPING
@@ -507,35 +486,6 @@ feature {NONE} -- Add element to tree
 				tree_item_parent.first.destroy
 				
 					-- Add ancestors...
---				from
---					ancestors.start
---					create eac
---					referenced_assemblies := eac.referenced_assemblies (an_assembly)
---				until
---					ancestors.after
---				loop
---					if referenced_assemblies /= Void then
---						cat := eac.consumed_assembly (referenced_assemblies.assemblies.item (ancestors.item.assembly_id))
---					
---						from
---							i := 1
---							found := False
---						until
---							i > cat.dotnet_names.count or found
---						loop
---							if cat.dotnet_names.item (i).is_equal (ancestors.item.name) then
---								found := True
---							else
---								i := i + 1
---							end
---						end
---						l_node := initialize_tree_item_type (an_assembly, ancestors.item.name, cat.eiffel_names.item (i), cat.flags.item (i))
---						add_choise_type (an_assembly, l_node, ancestors.item.name)
---						tree_item_parent.extend (l_node)
---					end
---					
---					ancestors.forth
---				end
 				from
 					ancestors.start
 					create eac
@@ -804,8 +754,8 @@ feature {NONE} -- Initialization of tree elements
 			Result.set_data (full_dotnet_type_name)
 	
 				-- Add action to item.
-			Result.pointer_button_press_actions.force_extend (agent edit.color_edit_type (an_assembly, full_dotnet_type_name))
 			Result.pointer_button_press_actions.force_extend (agent edit.display_imediat_features (an_assembly, full_dotnet_type_name))
+			Result.pointer_button_press_actions.force_extend (agent edit.color_edit_type (an_assembly, full_dotnet_type_name))
 			--Result.pointer_button_press_actions.force_extend (agent display_type_information (an_assembly, full_dotnet_type_name))
 			Result.select_actions.extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_type_information (an_assembly, full_dotnet_type_name))
 			Result.expand_actions.extend (agent edit.color_edit_type (an_assembly, full_dotnet_type_name))

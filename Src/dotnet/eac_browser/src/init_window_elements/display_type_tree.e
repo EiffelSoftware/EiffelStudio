@@ -77,8 +77,13 @@ feature -- Basic Operations
 			
 			right_tree.wipe_out
 			create eac
-			ct := eac.consumed_type (assembly_of_dotnet_type, a_full_dotnet_type_name)
-			(create {SESSION}).set_current_type (ct)
+			ct := eac.consumed_type (assembly_of_dotnet_type, a_full_dotnet_type_name);
+
+				-- Set current type.
+			(create {SESSION}).set_current_type (ct);
+				-- Enable sensitive informations tag.
+			parent_window.notebook.i_th (4).enable_sensitive
+
 			l_entities := ct.entities
 			from
 				i := 1
@@ -517,8 +522,8 @@ feature {NONE} -- Implementation
 			l_icon_path := Path_icon_constructor
 			
 				-- Add action to node
-			Result.pointer_button_press_actions.force_extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_constructor_information (assembly_of_type, a_member, a_full_dotnet_type_name))
---			Result.select_actions.extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_constructor_information (assembly_of_type, a_member, a_full_dotnet_type_name))
+--			Result.pointer_button_press_actions.force_extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_constructor_information (assembly_of_type, a_member, a_full_dotnet_type_name))
+			Result.select_actions.extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_constructor_information (assembly_of_type, a_member, a_full_dotnet_type_name))
 
 				-- Add type icon.
 			l_ico := load_icon (l_icon_path)
@@ -539,6 +544,7 @@ feature {NONE} -- Implementation
 			l_icon_path: STRING
 			l_tree_node: EV_TREE_ITEM
 			l_ico: EV_PIXMAP
+			l_assembly_member: CONSUMED_ASSEMBLY
 		do
 			create Result.make_with_text (signature_member (a_member))
 
@@ -734,8 +740,8 @@ feature {NONE} -- Implementation
 			non_void_result: Result /= Void
 			same_number_nodes: nodes.count = Result.count
 		end
+		
 
-	
 invariant
 	non_void_parent_window: parent_window /= Void
 	non_void_right_tree: right_tree /= Void

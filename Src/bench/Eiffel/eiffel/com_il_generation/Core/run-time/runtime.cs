@@ -189,6 +189,23 @@ feature -- Status report
 	}
 
 /*
+feature -- Hash code
+*/
+	public static Int32 hash_code (Object o) 
+		// Result of call of `o.GetHashCode()'.
+	{
+		return o.GetHashCode();
+	}
+
+/*
+feature -- Output
+*/
+	public static String tagged_out (Object o) 
+		// Result of call of `o.ToString()'.
+	{
+		return o.ToString();
+	}
+/*
 feature -- Equality
 */
 	public static Boolean deep_equal (EIFFEL_TYPE_INFO o1, EIFFEL_TYPE_INFO o2) 

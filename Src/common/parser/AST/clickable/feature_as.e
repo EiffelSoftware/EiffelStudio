@@ -12,7 +12,8 @@ inherit
 		end;
 	IDABLE
 		rename
-			id as body_id
+			id as body_id,
+			set_id as set_body_id
 		end;
 	STONABLE;
 	COMPARABLE

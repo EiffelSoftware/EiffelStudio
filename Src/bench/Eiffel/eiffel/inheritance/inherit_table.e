@@ -933,6 +933,11 @@ end;
 							-- An error happended and modification was undone
 						new_body_id := old_body_id;
 					end;
+					if not feature_i.is_code_replicated then
+						Tmp_body_server.reactivate (old_body_id);
+					else
+						Tmp_rep_feat_server.reactivate (old_body_id);
+					end;
 				end;
 			else
 					-- New body id

@@ -9,7 +9,8 @@ inherit
 	CHARACTER_ARRAY;
 	IDABLE
 		rename
-			id as class_id
+			id as class_id,
+			set_id as set_class_id
 		end
 
 creation

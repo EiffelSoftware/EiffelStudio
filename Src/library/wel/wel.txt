@@ -50,7 +50,7 @@ o New H2E utility
 
 o New WEL tutorial
   A tutorial to learn WEL step by step.
-  See directory $EIFFEL4\examples\wel\tutorial.
+  See directory $ISE_EIFFEL\examples\wel\tutorial.
   This tutorial is also available on our WEB site at:
   http://www.eiffel.com/doc/manuals/technology/wel/tutorial/index.html
 
@@ -90,7 +90,7 @@ of running the make utility (`make' for Borland or `nmake' for Microsoft) in
 .\EIFGEN\W_CODE. But first, make sure to delete the .RES file.
 
 If you have created a resource file using Microsoft Developer Studio, you will
-probably need to change the file $EIFFEL4\bench\spec\w32msc\es3sh\config.eif.
+probably need to change the file $ISE_EIFFEL\bench\spec\windows\config\msc\config.eif.
 Retrieve the following portion of text:
 
 -------------
@@ -111,15 +111,15 @@ H2E utility
 -----------
 
 H2E is a convenient tool to generate an Eiffel class which contains resource
-identifiers. The program and the documentation are in $EIFFEL4\util. The source
-code is in $EIFFEL4\library\wel\extra.
+identifiers. The program and the documentation are in $ISE_EIFFEL\util. The source
+code is in $ISE_EIFFEL\library\wel\extra.
 
 
 The WEL C library
 -----------------
 
 `wel.lib' contains some C-functions needed by WEL. If you need to
-recompile this library read the file $EIFFEL4\library\wel\clib\readme.txt.
+recompile this library read the file $ISE_EIFFEL\library\wel\clib\readme.txt.
 
 
 Examples

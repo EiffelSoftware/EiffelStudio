@@ -83,9 +83,10 @@ feature {NONE} -- Implementation
 					new_file.close;
 					text_window.disable_clicking;
 					if tool.stone /= Void and then Class_resources.parse_class_after_saving.actual_value then
-						tool.parse_file
-					end;
-					tool.synchronise_stone
+						if tool.parse_file then
+							tool.synchronise_stone
+						end
+					end
 					tool.update_save_symbol
 				end
 			end

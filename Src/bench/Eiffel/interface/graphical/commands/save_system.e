@@ -81,9 +81,10 @@ feature {NONE} -- Implementation
 				end;
 				text_window.disable_clicking;
 				if tool.stone /= Void and then system_resources.parse_ace_after_saving.actual_value then
-					tool.parse_file
+					if tool.parse_file then
+						tool.synchronise_stone
+					end
 				end
-				tool.synchronise_stone
 				tool.update_save_symbol
 			end
 		end

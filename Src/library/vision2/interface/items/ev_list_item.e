@@ -12,8 +12,12 @@ class
 	EV_LIST_ITEM
 
 inherit
-
 	EV_ITEM
+		redefine
+			implementation
+		end
+
+	EV_PIXMAP_CONTAINER
 		redefine
 			implementation
 		end
@@ -89,7 +93,7 @@ feature -- Implementation
 end -- class EV_LIST_ITEM
 
 --|----------------------------------------------------------------
---| Windows Eiffel Library: library of reusable components for ISE Eiffel.
+--| EiffelVision: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 

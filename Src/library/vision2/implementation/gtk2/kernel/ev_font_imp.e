@@ -29,17 +29,30 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 		end
 		
-	initialize is 
-		do
+	initialize is
+			-- Set up `Current'
+		do	
 			font_description := feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_new
 			create preferred_families
-			set_family (Family_sans)
-			set_weight (Weight_regular)
-			set_shape (Shape_regular)
-			set_height (App_implementation.default_font_height)
+			family := Family_sans
+			set_face_name (app_implementation.default_font_name)
+			set_height (App_implementation.default_font_size_internal)
+			set_shape (App_implementation.default_font_style_internal)
+			set_weight (App_implementation.default_font_weight_internal)
 			preferred_families.add_actions.extend (agent update_preferred_faces)
 			preferred_families.remove_actions.extend (preferred_families.add_actions.first)
 			is_initialized := True
+		end
+
+	font_is_default: BOOLEAN is
+			-- Does `Current' have the characteristics of a default font?
+		do
+			Result := 
+					family = Family_sans and then
+					weight = app_implementation.default_font_weight_internal and then
+					shape = app_implementation.default_font_style_internal and then
+					name.is_equal (app_implementation.default_font_name_internal) and then
+					height = app_implementation.default_font_size_internal
 		end
 
 feature -- Access
@@ -60,13 +73,19 @@ feature -- Element change
 
 	set_family (a_family: INTEGER) is
 			-- Set `a_family' as preferred font category.
-		local
-			propvalue: C_STRING
 		do
 			family := a_family
-			name := pango_family_string
-			create propvalue.make (name)
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_set_family (font_description, propvalue.item)
+			update_font_face
+		end
+	
+	set_face_name (a_face: STRING) is
+			-- Set the face name for current.
+		local
+			propvalue: EV_GTK_C_UTF8_STRING
+		do
+			name := a_face
+			create propvalue.make (a_face)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_set_family (font_description, propvalue.item)			
 		end
 
 	set_weight (a_weight: INTEGER) is
@@ -140,9 +159,8 @@ feature -- Status report
 			-- Vertical distance from the origin of the drawing
 			-- operation to the top of the drawn character. 
 		local
-			a_cs: C_STRING
+			a_cs: EV_GTK_C_UTF8_STRING
 			pango_layout, pango_iter: POINTER
-			a_width, a_height: INTEGER
 		do
 			create a_cs.make ("A")
 			pango_layout := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_create_pango_layout (app_implementation.default_gtk_window, a_cs.item)
@@ -156,7 +174,7 @@ feature -- Status report
 			-- Vertical distance from the origin of the drawing
 			-- operation to the bottom of the drawn character. 
 		local
-			a_cs: C_STRING
+			a_cs: EV_GTK_C_UTF8_STRING
 			pango_layout, pango_iter: POINTER
 			a_width, a_height: INTEGER
 		do
@@ -191,7 +209,7 @@ feature -- Status report
 	string_width (a_string: STRING): INTEGER is
 			-- Width in pixels of `a_string' in the current font.
 		local
-			a_cs: C_STRING
+			a_cs: EV_GTK_C_UTF8_STRING
 			pango_layout: POINTER
 			a_width, a_height: INTEGER
 		do
@@ -225,15 +243,15 @@ feature {NONE} -- Implementation
 
 	update_preferred_faces (a_face: STRING) is
 		do
-			set_family (family)
+			update_font_face
 		end
 		
 	update_font_face is
 		do
-			set_family (family)
+			set_face_name (pango_family_string)
 		end
 
-feature {EV_FONT_IMP, EV_CHARACTER_FORMAT_IMP} -- Implementation
+feature {EV_FONT_IMP, EV_CHARACTER_FORMAT_IMP, EV_RICH_TEXT_IMP} -- Implementation
 		
 	font_description_from_values: POINTER is
 			-- PangoFontDescription from set values
@@ -255,23 +273,42 @@ feature {EV_FONT_IMP, EV_CHARACTER_FORMAT_IMP} -- Implementation
 				preferred_families.forth
 			end
 			if Result = Void then
-				-- We haven't found a preferred family so we resort to
-				create Result.make (0)
-				inspect family
-				when Family_screen then
-					Result.append ("monospace")
-				when Family_roman then
-					Result.append ("serif")
-				when Family_typewriter then
-					Result.append ("courier")
-				when Family_sans then
-					Result.append ("sans")
-				when Family_modern then
-					Result.append ("lucida")
-				end				
+				-- We have not found a preferred family
+				if font_is_default then
+					-- If the use has made no setting changes we use default gtk
+					Result := app_implementation.default_font_name
+				else
+					create Result.make (0)
+					inspect family
+					when Family_screen then
+						Result.append ("monospace")
+					when Family_roman then
+						Result.append ("serif")
+					when Family_typewriter then
+						Result.append ("courier")
+					when Family_sans then
+						Result.append ("sans")
+					when Family_modern then
+						Result.append ("lucida")
+					end
+				end
 			end
-
 		end
+
+	set_weight_from_pango_weight (a_pango_weight: INTEGER) is
+			-- Set `weight' from Pango weight value `a_pango_weight'.
+		do
+			if a_pango_weight <= pango_weight_ultra_light then
+				set_weight (feature {EV_FONT_CONSTANTS}.weight_thin)
+			elseif a_pango_weight <= pango_weight_normal then
+				set_weight (feature {EV_FONT_CONSTANTS}.weight_regular)
+			elseif a_pango_weight <= pango_weight_bold then
+				set_weight (feature {EV_FONT_CONSTANTS}.weight_bold)
+			else
+				set_weight (feature {EV_FONT_CONSTANTS}.weight_black)
+			end
+		end
+		
 
 feature {EV_ANY_IMP, EV_DRAWABLE_IMP, EV_APPLICATION_IMP} -- Implementation
 
@@ -286,7 +323,7 @@ feature {NONE} -- Implementation
 
 	pango_weight_ultra_light: INTEGER is 200
 	pango_weight_light: INTEGER is 300
-	pango_weight_normal: INTEGER is 200
+	pango_weight_normal: INTEGER is 400
 	pango_weight_bold: INTEGER is 700
 	pango_weight_ultrabold: INTEGER is 800
 	pango_weight_heavy: INTEGER is 900

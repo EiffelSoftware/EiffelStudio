@@ -195,13 +195,13 @@ feature -- Update
 			cf: CHANGE_FONT;
 			ss: SEARCH_STRING
 		do
-	   		ss ?= search_cmd_holder.associated_command;
+			ss ?= search_cmd_holder.associated_command;
 			ss.close;
 			cf ?= change_font_cmd_holder.associated_command;
 			cf.close;
 			routine_text_field.close_choice_window
 			class_text_field.close_choice_window
-	   	 end;
+		end;
 
 	highlight_breakable (index: INTEGER) is
 			-- Highlight the line containing the `index'-th breakable point.
@@ -608,7 +608,7 @@ feature {NONE} -- Implementation; Graphical Interface
 			edit_bar.detach_left (previous_target_button);
 			edit_bar.detach_left (next_target_button);
 			edit_bar.attach_right_widget (next_target_button, previous_target_button, 0);
-			edit_bar.attach_right_position (next_target_button, 11);
+			edit_bar.attach_right_position (next_target_button, 10);
 			next_target_button.manage;
 			previous_target_button.manage;
 		end;

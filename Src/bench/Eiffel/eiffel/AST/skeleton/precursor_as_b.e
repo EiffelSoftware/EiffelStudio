@@ -10,7 +10,7 @@ class PRECURSOR_AS_B
 inherit
 	PRECURSOR_AS
 		redefine
-			parent_name, parameters
+			parent_name, parameters, associated_eiffel_class
 		end
 
 	ACCESS_AS_B
@@ -28,6 +28,14 @@ feature -- Attributes
 
 	parameters: EIFFEL_LIST_B [EXPR_AS_B]
 			-- List of parameters
+
+feature -- Stoning
+
+	associated_eiffel_class (reference_class: E_CLASS): E_CLASS is
+		do
+			Result := Universe.class_named (parent_name, 
+						reference_class.cluster).compiled_eclass
+		end
 
 feature -- Type check, byte code and dead code removal
 
@@ -374,6 +382,7 @@ feature -- Type check, byte code and dead code removal
 				ctxt.put_text_item (ti_R_curly)
 			end
 
+			ctxt.put_text_item (ti_space)
 			ctxt.put_text_item (ti_Precursor_keyword)
 
 			-- We simply use an empty feature name.

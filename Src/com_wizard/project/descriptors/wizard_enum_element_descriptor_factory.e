@@ -33,7 +33,7 @@ feature -- Basic operations
 
 			create Result.make (Current)
 		ensure
-			valid_name: name = a_documentation.name
+			valid_name: not name.empty
 			valid_value: value = a_value
 		end
 

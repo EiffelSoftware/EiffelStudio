@@ -155,11 +155,20 @@ feature {NONE} -- Agent Handlers
 			-- reset failure count
 			test_failure_count := 0
 			-- call test(s)
-			call_test (agent test_system_properties, args, False, True)
-			call_test (agent test_root_properties, args, False, True)
-			call_test (agent test_defaults_properties, args, False, True)
+			call_test (agent test_system_assemblies, args, False, True)
 			-- display number of failures
 			display_failure_count
+		end
+		
+	test_system_assemblies (args: ARRAYED_LIST [STRING]) is
+			-- create assembly properties test menu
+		require
+			non_void_project_manager: project_manager /= Void
+			non_void_project_properties: project_manager.project_properties /= Void
+		local
+			l_tests: SYSTEM_ASSEMBLIES_TESTER
+		do
+			create l_tests.make (project_manager.project_properties.assemblies)
 		end
 		
 	on_external_properties (args: ARRAYED_LIST [STRING]) is

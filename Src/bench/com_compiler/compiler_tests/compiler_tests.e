@@ -62,6 +62,14 @@ feature -- Basic operations
 
 feature {NONE} -- Agents Routines
 
+	on_project_selected (args: ARRAYED_LIST [STRING]) is
+			-- go to project manager menu
+		local
+			l_tests: PROJECT_MANAGER_TESTER
+		do
+			create l_tests.make
+		end
+
 	on_project_properties_selected (args: ARRAYED_LIST [STRING]) is
 			-- go to project properties menu
 		local
@@ -98,6 +106,25 @@ feature {NONE} -- Agents Routines
 		end
 		
 
+	on_system_browser_selected (args: ARRAYED_LIST [STRING]) is
+			-- go to system brower menu
+		do
+			test_failure_count := 0
+			call_test (agent test_system_browser, args, True, True)
+			display_failure_count
+		end
+		
+	test_system_browser (args: ARRAYED_LIST [STRING]) is
+			-- test IEIFFEL_SYSTEM_BROWSER_INTERFACE
+		require
+			non_void_project_manager: project_manager /= Void
+		local
+			l_tests: SYSTEM_BROWSER_TESTER
+		do
+			create l_tests.make (project_manager.system_browser)
+		end
+		
+
 feature {NONE} -- Implementation
 
 	add_menu_items is
@@ -106,8 +133,11 @@ feature {NONE} -- Implementation
 			if not Eiffel_project.initialized then
 				main_menu.add_item (create {CONSOLE_MENU_ITEM}.make ("load", "Load Project [*.ace|*.epr filename]", agent on_load_project_selected))	
 			end
-			main_menu.add_item (create {CONSOLE_MENU_ITEM}.make ("1", "Completion Info Test", agent on_completion_info_selected))
-			main_menu.add_item (create {CONSOLE_MENU_ITEM}.make ("2", "Project Properties Test", agent on_project_properties_selected))
+			main_menu.add_item (create {CONSOLE_MENU_ITEM}.make ("1", "IEIFFEL_PROJECT_INTERFACE", agent on_project_selected))
+			main_menu.add_item (create {CONSOLE_MENU_ITEM}.make ("2", "Completion Info Test", agent on_completion_info_selected))
+			main_menu.add_item (create {CONSOLE_MENU_ITEM}.make ("3", "Project Properties Test", agent on_project_properties_selected))
+			main_menu.add_item (create {CONSOLE_MENU_ITEM}.make ("4", "IEIFFEL_SYSTEM_BROWSER_INTERFACE", agent on_system_browser_selected))
+			
 			main_menu.add_item (create {CONSOLE_MENU_ITEM}.make ("x", "Exit Tester", Void))
 			main_menu.set_return_item (main_menu.items.last)
 		end

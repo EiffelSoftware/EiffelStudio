@@ -108,6 +108,7 @@ feature -- Basic Operations
 			retried: BOOLEAN
 			l_able_to_run: BOOLEAN
 		do
+			l_able_to_run := True
 			if a_required_project then
 				if project_loaded and Eiffel_project.initialized then
 					l_able_to_run := True

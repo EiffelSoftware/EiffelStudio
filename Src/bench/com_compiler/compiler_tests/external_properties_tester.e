@@ -156,7 +156,6 @@ feature -- Agent Handlers
 			l_system_externals: IEIFFEL_SYSTEM_EXTERNALS_INTERFACE
 			l_enum_object_files: IENUM_OBJECT_FILES_INTERFACE
 			l_object_file_old: CELL[STRING]
-			l_object_file_new: CELL[STRING]
 		do
 			put_string ("%NTesting Removal of Object File%N")
 			l_system_externals := project_manager.project_properties.externals
@@ -370,7 +369,6 @@ feature -- Agent Handlers
 			l_system_externals: IEIFFEL_SYSTEM_EXTERNALS_INTERFACE
 			l_enum_include_paths: IENUM_INCLUDE_PATHS_INTERFACE
 			l_include_path_old: CELL[STRING]
-			l_include_path_new: CELL[STRING]
 		do
 			put_string ("%NTesting Removal of Include Path%N")
 			l_system_externals := project_manager.project_properties.externals

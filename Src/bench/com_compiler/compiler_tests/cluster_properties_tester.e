@@ -115,29 +115,6 @@ feature {NONE} -- Agent Handlers
 			cluster_properties_interface.set_cluster_path (last_string)
 		end
 		
-	on_parent_name_selected (args: ARRAYED_LIST [STRING]) is
-			-- safley test 'parent_name'
-		do
-			test_failure_count := 0
-			cache_current_properties
-			call_test (agent test_parent_name, args, False, True)
-			diff_cluster_properties
-			display_failure_count
-		end
-		
-	test_parent_name (args: ARRAYED_LIST [STRING]) is
-			-- test 'parent_name'
-		do
-			put_string ("%NTesting parent_name")
-			put_string ("%Nparent_name=")
-			put_string (cluster_properties_interface.parent_name)
-			put_string ("%NSet parent_name to: ")
-			read_line
-			put_string ("%NSetting parent_name to:")
-			put_string (last_string)
-			cluster_properties_interface.set_parent_name (last_string)
-		end
-	
 	on_override_selected (args: ARRAYED_LIST [STRING]) is
 			-- safley test 'override'
 		do
@@ -600,7 +577,6 @@ feature {NONE} -- Implementation
 			menu.add_item (create {CONSOLE_MENU_ITEM}.make ("1", "Test All Properties", agent on_all_properties_selected))
 			menu.add_item (create {CONSOLE_MENU_ITEM}.make ("3", "Test cluster_namespace", agent on_cluster_namespace_selected))
 			menu.add_item (create {CONSOLE_MENU_ITEM}.make ("4", "Test cluster_path", agent on_cluster_path_selected))
-			menu.add_item (create {CONSOLE_MENU_ITEM}.make ("5", "Test parent_name", agent on_parent_name_selected))
 			menu.add_item (create {CONSOLE_MENU_ITEM}.make ("6", "Test override", agent on_override_selected))
 			menu.add_item (create {CONSOLE_MENU_ITEM}.make ("7", "Test is_library", agent on_is_library_selected))
 			menu.add_item (create {CONSOLE_MENU_ITEM}.make ("8", "Test all", agent on_all1_selected))

@@ -37,6 +37,33 @@ feature -- Access
 		do
 		end
 
+
+	character_format: EV_CHARACTER_FORMAT is
+			-- Current selected character format.
+		do
+			check
+				to_be_implemented: False
+			end
+		end
+
+	font: EV_FONT is
+			-- Current selected font.
+		do
+			check
+				to_be_implemented: False
+			end
+		end
+
+feature -- Element change
+
+	select_font (a_font: EV_FONT) is
+			-- Select `a_font'.
+		do
+			check
+				not_yet_implemented: False
+			end
+		end
+
 feature -- Event - command association
 
 	add_ok_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is

@@ -58,6 +58,7 @@ feature -- Processing
 			new_externals_exists: new_externals /= Void
 		local
 			l_externals: EXTERNALS
+			l_external: EXTERNAL_I
 		do
 			l_externals := System.externals
 			from
@@ -65,7 +66,10 @@ feature -- Processing
 			until
 				old_externals.after
 			loop
-				l_externals.remove_external (old_externals.item)
+				l_external := old_externals.item
+				if l_externals.has (l_external.written_in) then
+					l_externals.remove_external (l_external)
+				end
 				old_externals.forth
 			end
 

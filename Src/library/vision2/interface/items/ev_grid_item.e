@@ -87,6 +87,20 @@ feature -- Access
 --			valid_result: Result >= 0 and Result <= virtual_height - viewable_height
 		end
 		
+	horizontal_indent: INTEGER is
+			-- Horizontal distance in pixels from left edge of `Current' to left edge of `column'.
+			-- This may not be set, but the value is determined by the current tree structure
+			-- of `parent' and `row'.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.horizontal_indent
+		ensure
+			not_parented_implies_result_zero: parent = Void implies Result = 0
+			not_parent_tree_enabled_implies_result_zero: not parent.is_tree_enabled implies Result = 0
+			parent_tree_enabled_implies_result_greater_or_equal_to_zero: parent.is_tree_enabled implies Result >= 0
+		end
+
 	activate is
             -- Setup `Current' for user interactive editing
         require

@@ -68,25 +68,10 @@ feature -- Element change
 		end
 
 feature {EV_WIDGET_IMP} -- Implementation
-	
-	child_width_changed (value: INTEGER; the_child: EV_WIDGET_IMP) is
-			-- Change the size of the container because of the child.
-		do
-			set_width (value.max (minimum_width))
-		end
-
-	child_height_changed (value: INTEGER; the_child: EV_WIDGET_IMP) is
-			-- Change the size of the container because of the child.
-		do
-			set_height (value.max (minimum_height))
-		end
 
 	child_minwidth_changed (value: INTEGER; the_child: EV_WIDGET_IMP) is
 			-- Change the minimum width of the container because
 			-- the child changed his own minimum width.
-			-- By default, the minimum width of a container is
-			-- the one of its child, to change this, just use
-			-- set_minimum_width
 		do
 			set_minimum_width (value)
 		end
@@ -94,9 +79,6 @@ feature {EV_WIDGET_IMP} -- Implementation
 	child_minheight_changed (value: INTEGER; the_child: EV_WIDGET_IMP) is
 			-- Change the minimum width of the container because
 			-- the child changed his own minimum width.
-			-- By default, the minimum width of a container is
-			-- the one of its child, to change this, just use
-			-- set_minimum_width
 		do
 			set_minimum_height (value)
 		end

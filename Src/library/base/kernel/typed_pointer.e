@@ -5,6 +5,7 @@ indexing
 		]"
 
 	status: "See notice at end of class"
+	assembly: "mscorlib"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -17,9 +18,6 @@ inherit
 		export
 			{TYPED_POINTER} pointer_item
 		end
-
-create
-	default_create
 
 convert
 	to_pointer: {POINTER},

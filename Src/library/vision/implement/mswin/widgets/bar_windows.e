@@ -109,6 +109,7 @@ feature -- Initialization
 			realized := true
 			realize_children
 			associated_shell.associate_bar (Current)
+			associated_root ?= current
 			parent.child_has_resized
 		end
 

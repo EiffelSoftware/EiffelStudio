@@ -72,6 +72,17 @@ internal class CA
 		}
 	}
 
+	internal static CustomAttributeBuilder eiffel_class_name_attr (String name)
+		// Predefined Custom attribute to store in metadata real
+		// eiffel class name.
+	{
+		Type type = RUNTIME.Ise_eiffel_class_name_attr;
+        ConstructorInfo constructor = RUNTIME.Ise_eiffel_class_name_attr.GetConstructor (
+				new Type [1] {Type.GetType ("System.String")});
+
+		return new CustomAttributeBuilder (constructor, new object [1] {name});
+	}
+
 /*
 feature {NONE} -- Implementation
 */

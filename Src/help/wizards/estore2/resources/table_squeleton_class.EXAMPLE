@@ -1,5 +1,6 @@
 indexing
 	description: "Use this squeleton to modify the generated class tables%
+				  %You should modify the class table_squeleton.e%
 				  %Set the anchor to True and the code between the tags will%
 				  %be inserted in the class tables%
 				  %You should write the tags with no space."

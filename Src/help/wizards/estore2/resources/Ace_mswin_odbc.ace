@@ -19,7 +19,7 @@ default
 	array_optimization (no)
 	inlining (no)
 	inlining_size ("4")
-	--precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base");
+	<FL_TAG_PRECOMPILED>precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base");
 
 
 cluster

@@ -1,5 +1,5 @@
 indexing
-	description: "All the usefull feature to manage your Database"
+	description: "All the useful feature to manage your Database"
 	author: "David Solal"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -10,13 +10,11 @@ class
 
 inherit
 	DATABASE_APPL [<FL_HANDLE>]
-
-	REPOSITORIES
  
 feature -- Connections
 
  	log_and_connect (a_name, a_psswd, data_source: STRING) is
- 			-- Try to connect the database using ORACLE
+ 			-- Try to connect the database using <FL_HANDLE>
  			-- with a username 'a_name',a password 'a_psswd'
  		require
  			not_void: a_name /= Void and a_psswd /= Void
@@ -34,7 +32,7 @@ feature -- Connections
  				-- connection to the Relational database
  			set_base
  	
- 				-- Create usefull classes
+ 				-- Create useful classes
  				-- 'session_control' provides informations control access and 
  				--  the status of the database.
  			create session_control.make
@@ -70,6 +68,8 @@ feature -- Connections
  			selection: DB_SELECTION
   		do
 			create selection.make
+				-- The following option helps debugging
+			-- selection.set_trace
 			selection.object_convert (an_obj)
 			selection.set_query (s)
 			create db_actions.make (selection, an_obj)

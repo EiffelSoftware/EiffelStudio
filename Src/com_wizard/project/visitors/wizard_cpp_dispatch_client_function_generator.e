@@ -39,17 +39,20 @@ feature -- Basic operations
 
 			create result_type_visitor
 			result_type_visitor.visit (a_descriptor.return_type)
-			if result_type_visitor.is_basic_type then
+
+			if result_type_visitor.is_basic_type or result_type_visitor.is_enumeration then
 				if result_type_visitor.cecil_type = Void or result_type_visitor.cecil_type.empty then
 					ccom_feature_writer.set_result_type (Void_c_keyword)
 				else
 					ccom_feature_writer.set_result_type (result_type_visitor.cecil_type)
 				end
+
 			elseif is_boolean (result_type_visitor.vt_type) then
 				ccom_feature_writer.set_result_type (Eif_boolean)
 			else
 				ccom_feature_writer.set_result_type (Eif_reference)
 			end
+
 			if  result_type_visitor.c_header_file /= Void and then not  result_type_visitor.c_header_file.empty then
 				c_header_files.extend (result_type_visitor.c_header_file)
 			end

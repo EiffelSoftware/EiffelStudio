@@ -1020,6 +1020,7 @@ rt_public EIF_REFERENCE portable_retrieve(int (*char_read_function)(char *, int)
 	}
 
 	ht_free(rt_table);					/* Free hash table descriptor */
+	rt_table = NULL;
 #ifdef ISE_GC
 	epop(&hec_stack, nb_recorded);		/* Pop hector records */
 #endif
@@ -1113,6 +1114,7 @@ rt_shared EIF_REFERENCE ise_compiler_retrieve (EIF_INTEGER f_desc, EIF_INTEGER a
 	retrieved = rt_make();
 
 	ht_free(rt_table);					/* Free hash table descriptor */
+	rt_table = NULL;
 #ifdef ISE_GC
 	epop(&hec_stack, nb_recorded);		/* Pop hector records */
 #endif
@@ -2118,6 +2120,7 @@ rt_private void rt_clean(void)
 			}
 		}
 		ht_free(rt_table);						/* Free hash table descriptor */
+		rt_table = NULL;
 	}
 	if (dtypes != (int *) 0) {
 		eif_rt_xfree((char *) dtypes);

@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that represent a Vision2 action sequence class"
+	description: "Objects that represent a Vision2 action sequence class."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
@@ -23,6 +23,41 @@ feature -- Access
 	argument_names: ARRAYED_LIST [STRING] is
 			-- All argument names of action sequence represented by `Current'.
 		deferred
+		end
+		
+	open_arguments: STRING is
+			--`Result' is string representing open arguments
+			-- of `Current'. i.e. ?, ?, ?
+			-- Void if `count' = 0 (No arguments).
+		do
+			if count > 0 then
+				create Result.make (0)
+				from
+					argument_types.start
+				until
+					argument_types.off
+				loop
+					Result := Result + "?"
+					if not (argument_types.index = count) then
+						Result := Result + ", "
+					end
+					argument_types.forth
+				end
+			end
+		ensure
+			result_void_implies_count_zero: Result = Void implies count = 0
+			result_not_void_implies_count_valid: Result /= Void implies count > 0
+		end
+		
+	parameter_list: STRING is
+			-- `Result' is string representatiion of paramters.
+			-- i.e. an_x, a_y: INTEGER; count: DOUBLE
+			-- Void if `count' = 0 (No arguments).
+		do
+			--| FIXME to be implemented.
+		ensure
+			result_void_implies_count_zero: Result = Void implies count = 0
+			result_not_void_implies_count_valid: Result /= Void implies count > 0
 		end
 
 end -- class GB_EV_ACTION_SEQUENCE

@@ -526,7 +526,6 @@ feature {NONE} -- Implementation
 		local
 			counter: INTEGER
 			figure_line: EV_FIGURE_LINE
-			figure_dot: EV_FIGURE_DOT
 			color: EV_COLOR
 			relative_point: EV_RELATIVE_POINT
 			rows_size, columns_size: INTEGER

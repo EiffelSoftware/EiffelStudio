@@ -41,6 +41,8 @@ feature -- Initialization
 			shell_height := title_bar_height + window_border_height + 2 * window_frame_height
 			private_attributes.set_width (minimal_width)
 			private_attributes.set_height (minimal_height)
+			max_width := maximal_width
+			max_height := maximal_height 
 			oui_top := a_base
 		end
 

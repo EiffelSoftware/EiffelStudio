@@ -98,7 +98,7 @@ feature
 			if is_expanded then
 				!! exp
 				is_expanded := False
-				exp.set_class_type (base_class.types.search_item (Current))
+				exp.set_class_type (base_class.types.conservative_search_item (Current))
 				is_expanded := True
 				Result := exp
 			elseif is_separate then
@@ -172,7 +172,7 @@ feature
 			elseif is_separate then
 				Result := associated_separate_class_type
 			else
-				Result := base_class.types.search_item (Current)
+				Result := base_class.types.conservative_search_item (Current)
 			end
 		end
 

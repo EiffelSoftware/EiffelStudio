@@ -16,6 +16,7 @@ feature -- Search
 	has_type (t: TYPE_I): BOOLEAN is
 			-- Is the type `t' present in instances of CLASS_TYPE in the
 			-- list ?
+			-- Does not change cursor position.
 		require
 			good_argument: t /= Void;
 		local
@@ -42,9 +43,10 @@ feature -- Search
 			go_to (old_cursor);
 		end;
 
-	search_item (t: TYPE_I): CLASS_TYPE is
+	conservative_search_item (t: TYPE_I): CLASS_TYPE is
 			-- Is the type `t' present in instances of CLASS_TYPE in the list?
 			-- If not, return the last item found in the list.
+			-- Does not change cursor position.
 		local
 			old_cursor: CURSOR
 		do
@@ -61,6 +63,22 @@ feature -- Search
 			Result := item
 			
 			go_to (old_cursor)
+		end
+
+	search_item (t: TYPE_I): CLASS_TYPE is
+			-- Is the type `t' present in instances of CLASS_TYPE in the list?
+			-- If not, return the last item found in the list.
+			-- Does change cursor position.
+		do
+			from
+				start
+			until
+				after or else item.type.same_as (t)
+			loop
+				forth
+			end
+
+			Result := item
 		end
 
 feature -- Access

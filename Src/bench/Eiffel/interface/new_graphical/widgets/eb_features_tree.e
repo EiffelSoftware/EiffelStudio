@@ -24,6 +24,13 @@ inherit
 			default_create, is_equal, copy
 		end
 
+	EXCEPTIONS
+		export
+			{NONE} all
+		undefine
+			default_create, is_equal, copy
+		end
+
 create
 	make
 
@@ -62,12 +69,19 @@ feature {EB_FEATURES_TOOL} -- Implementation
 			if not retried then
 				expand_tree := expand_feature_tree
 				class_text := features_tool.current_compiled_class.text
+				if not features_tool.current_compiled_class.has_feature_table then
+						--| We cannot rely on feature calls on Void targets: they corrupt memory.
+					raise ("No feature table")
+				end
 				if class_text /= Void then
 					from 
 						fcl.start
 					until
 						fcl.after
 					loop
+						if fcl.item = Void then
+							raise ("Void feature clause")
+						end
 						features := fcl.item.features
 						name := fcl.item.comment (class_text)
 						name.right_adjust
@@ -101,6 +115,9 @@ feature {EB_FEATURES_TOOL} -- Implementation
 					until
 						fcl.after
 					loop
+						if fcl.item = Void then
+							raise ("Void feature clause")
+						end
 						features := fcl.item.features
 						tree_item := build_tree_folder (" ", features)
 						if fcl.item.export_status.is_none then
@@ -165,12 +182,19 @@ feature {NONE} -- Implementation
 			until
 				fl.after
 			loop
+				if fl.item = Void then
+					raise ("Void feature")
+				end
 				create tree_item
 				tree_item.set_text (fl.item.feature_name)
 				if is_clickable then
 					tree_item.select_actions.extend (features_tool~go_to (fl.item))
 				end
 				ef := features_tool.current_compiled_class.feature_with_name (fl.item.feature_name)
+				if ef = Void then
+					raise ("Void feature")
+				end
+				
 				if ef.is_deferred then
 					tree_item.set_pixmap (Pixmaps.Icon_deferred_feature)
 				elseif ef.is_once or ef.is_constant then

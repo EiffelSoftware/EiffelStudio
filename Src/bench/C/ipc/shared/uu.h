@@ -5,8 +5,9 @@
 #ifndef uu_h_
 #define uu_h_
 
-char *uuencode_str (char *, int);
-char *uudecode_str (char*);
+extern int uuencode_buffer_size (int);
+extern char *uuencode_str (char *, int);
+extern char *uudecode_str (char*);
 
 void eraise (char*, long);
 

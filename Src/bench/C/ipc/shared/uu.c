@@ -9,6 +9,7 @@
 */
 
 #include "eif_eiffel.h"
+#include "rt_assert.h"
 #include "windows.h"
 #include "uu.h"
 
@@ -55,6 +56,30 @@ char *uudecode_str (char *s)
 	for (i = s, j = Result; i < s+strlen(s); i += 4, j += 3)
 		uudecode (i, j);
 	return Result;
+}
+
+/*
+doc:	<routine name="uuencode_buffer_size" return_type="int" export="shared">
+doc:		<summary>Given a number of pointers value to uuencode, gives the needed size to hold the uuencoded value.</summary>
+doc:		<param name="nb_pointers" type="int"></param>
+doc:		<return>0 if collection was done, -1 otherwise.</return>
+doc:		<thread_safety>Safe with synchronization</thread_safety>
+doc:		<synchronization>Through `trigger_gc_mutex'.</synchronization>
+doc:	</routine>
+*/
+
+rt_shared int uuencode_buffer_size (int nb_pointers) {
+	int sz;
+
+	REQUIRE("nb_pointers_positive", nb_pointers > 0);
+
+	sz = (4 * nb_pointers * sizeof(void *) + 2) / 3;
+	if (sz % 4) {
+		sz = sz + 4 - (sz % 4);
+	}
+
+	ENSURE("sz_positive", sz > 0);
+	return sz;
 }
 
 /*

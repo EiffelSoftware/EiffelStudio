@@ -1,0 +1,9 @@
+
+This example illustrates how RDBS tables can be
+translated into Eiffel class definitions where
+features are simply attributes matching the DB table fields.
+Class descriptions are printed on standard output.
+ 
+A specific repository is referred to by a name that should
+match a RDB table name for which an Eiffel class equivalent
+is requested.

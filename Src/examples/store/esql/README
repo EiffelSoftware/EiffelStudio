@@ -1,0 +1,7 @@
+
+
+Usage:
+	esql
+	
+This example illustrates how to access database information. 
+SQL statements are filtered through a monitor and sent to the RDBMS.

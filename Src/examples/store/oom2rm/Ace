@@ -1,0 +1,29 @@
+-- $Id$
+
+system 
+
+	sample 
+
+root
+
+	sample (root_cluster): "make"
+	
+default
+
+	assertion (all);
+	precompiled ("$EIFFEL3/precomp/spec/$PLATFORM/base")
+
+cluster
+	
+	root_cluster:	".";
+	model1:		"$EIFFEL3/library/store/examples/Utilities";
+	estore_support:	"$EIFFEL3/library/store/support";
+	date_and_time:	"$EIFFEL3/library/store/date_and_time";
+
+external
+
+	object: "-L$(EIFFEL3)/library/store/spec/$(PLATFORM)";
+		"-lsys_time";
+		"-lsupport"
+
+end -- system convert

@@ -1,0 +1,7 @@
+
+This example illustrates the way one can convert
+Unix flat files into class instances.
+
+Changing a field (it's type or format) in an 
+example.dat file, highlighs the parser error 
+detection mechanism.

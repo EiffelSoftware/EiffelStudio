@@ -1,0 +1,23 @@
+
+EiffelStore Examples
+--------------------
+
+Usage:
+	book_insert
+
+This example illustrates how Eiffel users may access their selected DB
+to insert or modify objects in existing tables.
+
+An Eiffel object, say ``a book'', described by class BOOK, is inserted
+into a repository (instance of class REPOSITORY) defined 
+with `db_book' access key for instance. The repository name
+should match an external RDB table named `db_book'.
+In example, session terminates on unexisting RDB table.
+
+Class DB_CHANGE encapsulates features supporting
+insertion statements.
+SQL insert statements insert new objects into existing repositories
+(i.e existing RDM tables).
+
+Class DB_CONTROL provides facilities to manage the session,
+control the DB status, and query the results.

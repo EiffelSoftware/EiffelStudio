@@ -429,6 +429,7 @@ feature -- Basic Operations
 			insertion.put ("", 1)
 			insertion.put ("", 2)
 			is_create := False
+			is_static := False
 			create completion_possibilities.make (1, 30)
 			cp_index := 1
 			initialize_context
@@ -1040,7 +1041,6 @@ feature {NONE} -- Completion implementation
 			feat_is_not_void: feat /= Void
 		local
 			name	: EB_NAME_FOR_COMPLETION
-			found	: BOOLEAN
 		do
 			if feat.is_infix then
 				create name.make_with_name (extract_symbol_from_infix (feat.name) + feat.feature_signature.substring(feat.name.count + 1, feat.feature_signature.count))

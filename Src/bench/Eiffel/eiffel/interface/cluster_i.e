@@ -13,7 +13,8 @@ inherit
 		undefine
 			is_equal
 		end
-	IDABLE
+	IDABLE;
+	COMPILER_EXPORTER
 
 creation
 
@@ -60,7 +61,40 @@ feature -- Attributes
 	include_list: ARRAYED_LIST [STRING];
 			-- List of files to include
 
-feature -- Conveniences
+feature -- Access
+
+	has_base_name (b_name: STRING): BOOLEAN is
+			-- Does cluster have a class with base name `b_name'?
+		require
+			non_void_base_name: b_name /= Void
+		do
+			from
+				classes.start
+			until
+				classes.after or else Result
+			loop
+				Result := b_name.is_equal (classes.item_for_iteration.base_name);
+				classes.forth
+			end
+		end;
+
+feature -- Element change
+
+	add_new_classs (class_i: CLASS_I) is
+		require
+			non_void_class_i: class_i /= Void;
+			name_set: class_i.class_name /= Void;
+			base_name_set: class_i.base_name /= Void;
+			not_in_cluster: not classes.has (class_i.class_name)
+		do
+			class_i.set_cluster (Current);
+			class_i.set_date;
+			classes.put (class_i, class_i.class_name);	
+		ensure
+			in_cluster: classes.has (class_i.class_name)
+		end;
+
+feature {COMPILER_EXPORTER} -- Conveniences
 
 	set_id (i: INTEGER) is
 			-- Assign `i` to `id'.
@@ -71,7 +105,7 @@ feature -- Conveniences
 	set_new_id is
 			-- Assign the next integer value available to `id'
 		do
-			id := System.cluster_counter.next
+			id := Universe.cluster_counter.next
 		end
 
 	set_date (i: INTEGER) is
@@ -112,7 +146,7 @@ feature -- Conveniences
 			end;
 		end;
 
-feature -- Creation feature
+feature {COMPILER_EXPORTER} -- Creation feature
 
 	make (p: STRING) is
 		do
@@ -137,7 +171,7 @@ feature -- Creation feature
 			cluster_name := old_cluster_i.cluster_name
 		end
 
-feature
+feature {COMPILER_EXPORTER}
 
 	clear is
 			-- Empty the structure
@@ -625,8 +659,6 @@ end;
 			-- Update the clusters: remove the classes removed
 			-- from the system, examine the differences in the
 			-- ignore and rename clauses
-		local
-			class_i: CLASS_I;
 		do
 			if old_cluster /= Void then
 				process_removed_classes;
@@ -939,7 +971,7 @@ end;
 			end;
 		end;
 
-feature 
+feature {COMPILER_EXPORTER}
 
 	has_assertions: BOOLEAN is
 			-- Has assertion checking explicitely been requested
@@ -961,7 +993,7 @@ feature
 			Result := path < other.path
 		end;
 
-feature -- Automatic backup
+feature {COMPILER_EXPORTER} -- Automatic backup
 
 	backup_directory: DIRECTORY_NAME is
 			-- Full directory path where the changes in Current will be stored
@@ -984,7 +1016,7 @@ feature -- Automatic backup
 			Result.append_integer (id)
 		end
 
-feature -- DLE
+feature {COMPILER_EXPORTER} -- DLE
 
 	is_static: BOOLEAN is
 			-- Is the current cluster part of a Dynamic Class Set's base system?

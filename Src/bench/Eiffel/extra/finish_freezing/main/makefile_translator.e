@@ -22,7 +22,7 @@ feature -- Initialization
 
 			if platform = Void or else platform.empty then
 				io.error.putstring ("ERROR: Key 'PLATFORM' was not found in registry!%N")
-		end
+			end
 		end
 
 feature -- Access
@@ -45,17 +45,11 @@ feature -- Access
 	externals: BOOLEAN		
 			-- Is the application using externals?
 
-	finalized: BOOLEAN		
-			-- Is this a finalized compilation?
-			
 	precompile: BOOLEAN		
 			-- Is this a precompilation?
 
 	concurrent: BOOLEAN
-			-- Is this a concurrent Eiffel program?
-
-	multithreaded: BOOLEAN
-			-- Is this a multithreaded Eiffel program?
+			-- Is this a concurrent application?
 
 	appl: STRING			
 			-- Application name
@@ -350,7 +344,6 @@ feature {NONE} -- Translation
 					lastline.replace_substring_all ("$ (CC) $ (CFLAGS) -c", options.get_string ("cc_text", "Void"))
 					lastline.replace_substring_all (".c.o:", options.get_string ("cobj_text", Void))
 					if lastline.count>4 and then lastline.substring (1,5).is_equal (".x.o:") then
-						finalized := true
 						lastline.replace_substring_all (".x.o:", options.get_string ("xobj_text", Void))
 					end
 				end
@@ -933,34 +926,6 @@ feature {NONE}	-- substitutions
 				io.putstring("%Tsubst_library%N")
 			end
 
-			library_name := clone (eiffel4)
-			library_name.append_character (operating_environment.directory_separator)
-			library_name.append ("bench")
-			library_name.append_character (operating_environment.directory_separator)
-			library_name.append ("spec")
-			library_name.append_character (operating_environment.directory_separator)
-			library_name.append (platform)
-			library_name.append_character (operating_environment.directory_separator)
-			library_name.append ("lib")
-			library_name.append_character (operating_environment.directory_separator)
-			library_name.append (options.get_string ("prefix", ""))
-
-			if multithreaded then
-				library_name.append (options.get_string ("mt_prefix", "mt"))
-			end
-
-			if concurrent then
-				library_name.append (options.get_string ("concurrent_prefix", "c"))
-			end
-
-			if finalized then
-				library_name.append (options.get_string ("eiflib", "finalized"))
-				else
-				library_name.append (options.get_string ("wkeiflib", "wkbench"))
-				end
-
-			library_name.append (options.get_string ("suffix", ".lib"))
-
 			if concurrent then
 				library_name.append_character (' ')
 				default_net_lib := clone (eiffel4)
@@ -979,7 +944,7 @@ feature {NONE}	-- substitutions
 				library_name.append (options.get_string ("eiffelnet_lib", default_net_lib))
 			end
 
-			line.replace_substring_all ("$library", library_name)
+			line.replace_substring_all ("$library", "$(EIFLIB)")
 		end
 
 	subst_dir_sep  (line: STRING) is
@@ -1170,7 +1135,13 @@ feature {NONE} -- Implementation
 				wordend := wordstart + 1
 				!!Result.make (10)
 			until
-				wordend > line.count or else line.item (wordend) = ' ' or line.item (wordend) = '/' or line.item (wordend) = '\' or else line.item (wordend) = '%N' or else line.item (wordend) = '%T'
+				wordend > line.count 
+				or else line.item (wordend) = ' '
+				or line.item (wordend) = '/'
+				or line.item (wordend) = '\'
+				or else line.item (wordend) = '%N'
+				or else line.item (wordend) = '%T'
+				or else line.item (wordend) = '$'
 			loop
 				Result.extend (line.item (wordend))
 				wordend := wordend + 1
@@ -1263,18 +1234,9 @@ feature {NONE} -- Implementation
 					end
 				end
 				
-				-- set multithreaded if application uses multithreading
-				if line.substring_index ("$mt_prefix", 1) > 0 then
-					multithreaded := true
-				end
-				
 				-- set concurrent if application uses concurrent Eiffel
 				if line.substring_index ("$concurrent_prefix", 1) > 0 then
 						concurrent := true
-					end
-
-				if line.substring_index ("$eiflib", 1) > 0 then
-					finalized := true
 					end
 
 				if not line.empty then

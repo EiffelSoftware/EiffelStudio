@@ -96,7 +96,6 @@ feature {NONE} -- Initialization
 			create s_dc
 			s_dc.get
 			create bitmap_dc.make_by_dc (s_dc)
-			create mask_bitmap_dc.make_by_dc (s_dc)
 			create bitmap.make_compatible (s_dc, 1, 1)
 			bitmap_dc.select_bitmap (bitmap)
 			s_dc.release
@@ -106,7 +105,8 @@ feature {NONE} -- Initialization
 
 	read_from_file (a_file: IO_MEDIUM) is
 			-- Load the pixmap described in 'file_name'. 
-			--| FIXME: If the file is in a wrong format, an exception is raised.
+			--| FIXME: If the file is in a wrong format, 
+			--|        an exception is raised.
 		local
 			file: RAW_FILE
 			dib: EV_WEL_DIB
@@ -122,7 +122,8 @@ feature {NONE} -- Initialization
 	read_from_named_file (file_name: STRING) is
 			-- Load the pixmap described in 'file_name'. 
 			--
-			-- Exceptions "Unable to retrieve icon information", "Unable to load the file"
+			-- Exceptions "Unable to retrieve icon information", 
+			--            "Unable to load the file"
 		local
 			filename_ptr: ANY
 		do
@@ -130,11 +131,19 @@ feature {NONE} -- Initialization
 			c_ev_load_pixmap($Current, $filename_ptr, $update_fields)
 		end
 
-	update_fields(error_code: INTEGER; data_type: INTEGER; pixmap_width, pixmap_height:INTEGER; rgb_data, alpha_data: POINTER) is
+	update_fields(
+		error_code		: INTEGER; -- Loadpixmap_error_xxxx 
+		data_type		: INTEGER; -- Loadpixmap_hicon, ...
+		pixmap_width	: INTEGER; -- Height of the loaded pixmap
+		pixmap_height	: INTEGER; -- Width of the loaded pixmap
+		rgb_data		: POINTER; -- Pointer on a C memory zone
+		alpha_data		: POINTER; -- Pointer on a C memory zone
+		) is
 			-- Callback function called from the C code by c_ev_load_pixmap.
 			-- 
 			-- See `read_from_named_file'
-			-- Exceptions "Unable to retrieve icon information", "Unable to load the file"
+			-- Exceptions "Unable to retrieve icon information",
+			--            "Unable to load the file"
 		require
 			valid_data_type: 
 				data_type = Loadpixmap_hicon or 
@@ -172,14 +181,23 @@ feature {NONE} -- Initialization
 
 				if data_type = Loadpixmap_rgb_data then
 					size_row := 4 * ((pixmap_width * 24 + 31) // 32)
-					create dib.make_by_content_pointer (rgb_data, size_row * pixmap_height + 40)
+					create dib.make_by_content_pointer (
+						rgb_data, 
+						size_row * pixmap_height + 40
+						)
 					create bitmap.make_by_dib (bitmap_dc, dib, Dib_rgb_colors)
 					palette := dib.palette
 
 					size_row := 4 * ((pixmap_width * 1 + 31) // 32)
-					create dib.make_by_content_pointer (alpha_data, size_row * pixmap_height + 40 + 8)
+					create dib.make_by_content_pointer (
+						alpha_data, 
+						size_row * pixmap_height + 40 + 8
+						)
 					create memory_dc.make
-					create mask_bitmap.make_by_dib (memory_dc, dib, Dib_rgb_colors)
+					create mask_bitmap.make_by_dib (
+						memory_dc, dib, 
+						Dib_rgb_colors
+						)
 				end
 			else
 					-- An error occurred while loading the file
@@ -240,16 +258,13 @@ feature -- Status setting
 			-- is smaller than the old one, the bitmap is
 			-- clipped.
 		local
-			bmp: WEL_BITMAP
-			s_dc: WEL_SCREEN_DC
-			old_bitmap_dc: like bitmap_dc
-			old_width, old_height: INTEGER
+			s_dc				: WEL_SCREEN_DC
+			mem_dc				: WEL_MEMORY_DC
+			old_bitmap_dc		: like bitmap_dc
+			old_mask_bitmap_dc	: like mask_bitmap_dc
+			old_width			: INTEGER
+			old_height			: INTEGER
 		do
-			--| FIXME ----------------------------------------------
-			check
-				mask_not_implemented: False
-			end
-			--|-----------------------------------------------------
 				-- Operation not possible on icons, so we convert..
 			convert_icon_to_bitmap
 
@@ -266,15 +281,22 @@ feature -- Status setting
 			create s_dc
 			s_dc.get
 			create bitmap_dc.make_by_dc (s_dc)
-			create bmp.make_compatible (s_dc, new_width, new_height)
-			bitmap_dc.select_bitmap (bmp)
+			create bitmap.make_compatible (s_dc, new_width, new_height)
+			bitmap_dc.select_bitmap (bitmap)
 			s_dc.release
 
 				-- Copy the content of the old bitmap into the
 				-- new one
-
-			bitmap_dc.bit_blt(0, 0, new_width.min(old_width), new_height.min(old_height),
-				old_bitmap_dc, 0, 0, Srccopy)
+			bitmap_dc.bit_blt(
+				0,							-- x source
+				0, 							-- y source
+				new_width.min(old_width),	-- width source
+				new_height.min(old_height),	-- height source
+				old_bitmap_dc, 				-- dc source
+				0, 							-- x dest.
+				0, 							-- y dest.
+				Srccopy						-- copy mode
+				)
 
 				-- Initialize the new device context
 			bitmap_dc.set_background_opaque
@@ -284,6 +306,41 @@ feature -- Status setting
 
 				-- Delete the old bitmap_dc.
 			old_bitmap_dc.delete
+
+			------------------------------
+			-- Resize the mask (if any) --
+			------------------------------
+			if mask_bitmap /= Void then
+				
+					-- Retrieve the current values
+				old_mask_bitmap_dc := mask_bitmap_dc
+
+					-- release the old bitmap
+				if mask_bitmap_dc.bitmap_selected then
+					mask_bitmap_dc.unselect_bitmap
+				end
+					-- create and assign a new bitmap & bitmap_dc
+				create mask_bitmap_dc.make
+				create mask_bitmap.make_compatible (
+					mask_bitmap_dc, 
+					new_width, 
+					new_height
+					)
+				mask_bitmap_dc.select_bitmap (mask_bitmap)
+
+					-- Copy the content of the old bitmap into the
+					-- new one
+				mask_bitmap_dc.bit_blt(
+					0,							-- x source
+					0,							-- y source
+					new_width.min(old_width),	-- width source
+					new_height.min(old_height),	-- height source
+					old_mask_bitmap_dc,			-- dc source
+					0,							-- x dest.
+					0,							-- y dest.
+					Srccopy						-- copy mode
+					)
+			end
 		
 				-- Finally, call the precursor.
 			Precursor (new_width, new_height)
@@ -336,10 +393,10 @@ feature -- Element change
 				end
 				bitmap_dc.select_bitmap (bitmap)
 
-				if mask_bitmap_dc.bitmap_selected then
-					mask_bitmap_dc.unselect_bitmap
-				end
 				if mask_bitmap /= Void then
+					if mask_bitmap_dc.bitmap_selected then
+						mask_bitmap_dc.unselect_bitmap
+					end
 					mask_bitmap_dc.select_bitmap(mask_bitmap)
 				end
 
@@ -432,9 +489,11 @@ feature {NONE} -- Implementation
 		local
 			wel_rect: WEL_RECT
 			bitmap_top, bitmap_left: INTEGER
-				-- coordinates of the top-left corner of the bitmap inside the drawn area
+				-- Coordinates of the top-left corner of the 
+				-- bitmap inside the drawn area
 			bitmap_right, bitmap_bottom: INTEGER
-				-- coordinates of the bottom-right corner of the bitmap inside the drawn area
+				-- Coordinates of the bottom-right corner of the
+				--- bitmap inside the drawn area
 			bitmap_width, bitmap_height: INTEGER
 			window_width, window_height: INTEGER
 		do
@@ -455,43 +514,112 @@ feature {NONE} -- Implementation
 					-- Draw the bitmap (If it is larger than the displayed
 					-- area, it will be clipped by Windows.
 				if icon /= Void then
-						-- Erase the background (otherwise we cannot apply the mask
-					create wel_rect.make (bitmap_left, bitmap_top, bitmap_right, bitmap_bottom)
-					display_dc.fill_rect(wel_rect, our_background_brush)
+						-- Erase the background (otherwise we cannot 
+						-- apply the mask
+					create wel_rect.make (
+						bitmap_left, 
+						bitmap_top, 
+						bitmap_right, 
+						bitmap_bottom
+						)
+					display_dc.fill_rect(
+						wel_rect, 
+						our_background_brush
+						)
 
-					display_dc.draw_icon(icon, bitmap_left, bitmap_top)
+					display_dc.draw_icon(
+						icon, 
+						bitmap_left, 
+						bitmap_top
+						)
 				elseif mask_bitmap /= Void then
 
-						-- Create the mask and image used for display. They are different
-						-- than the real image because we need to apply logical operation in
-						-- order to display the masked bitmap.
-					if display_bitmap = Void or display_mask_bitmap = Void or update_display_bitmap then
+						-- Create the mask and image used for display. 
+						-- They are different than the real image because 
+						-- we need to apply logical operation in order 
+						-- to display the masked bitmap.
+					if display_bitmap = Void or 
+					   display_mask_bitmap = Void or 
+					   update_display_bitmap then
 						create display_mask_bitmap.make_by_bitmap(mask_bitmap)
 						create display_mask_dc.make_by_dc(display_dc)
 						display_mask_dc.select_bitmap(display_mask_bitmap)
-						display_mask_dc.pat_blt(0, 0, bitmap_width, bitmap_height, Dstinvert)
+						display_mask_dc.pat_blt(
+							0, 
+							0, 
+							bitmap_width, 
+							bitmap_height, 
+							Dstinvert
+							)
 
 						create display_bitmap.make_by_bitmap(bitmap)
 						create display_bitmap_dc.make_by_dc(display_dc)
 						display_bitmap_dc.select_bitmap(display_bitmap)
-						display_bitmap_dc.bit_blt (0, 0, bitmap_width, bitmap_height, display_mask_dc, 0, 0, Srcand)
+						display_bitmap_dc.bit_blt (
+							0, 
+							0, 
+							bitmap_width, 
+							bitmap_height, 
+							display_mask_dc, 
+							0, 
+							0, 
+							Srcand
+							)
 
 						update_display_bitmap := False
 					end
 
-						-- Erase the background (otherwise we cannot apply the mask
-					create wel_rect.make (bitmap_left, bitmap_top, bitmap_right, bitmap_bottom)
-					display_dc.fill_rect(wel_rect, our_background_brush)
+						-- Erase the background (otherwise we cannot apply 
+						-- the mask
+					create wel_rect.make (
+						bitmap_left, 
+						bitmap_top, 
+						bitmap_right, 
+						bitmap_bottom
+						)
+					display_dc.fill_rect(
+						wel_rect, 
+						our_background_brush
+						)
 
-					display_dc.bit_blt (bitmap_left, bitmap_top, bitmap_width, bitmap_height, display_mask_dc, 0, 0, Maskpaint)
-					display_dc.bit_blt (bitmap_left, bitmap_top, bitmap_width, bitmap_height, display_bitmap_dc, 0, 0, Srcpaint)
+					display_dc.bit_blt (
+						bitmap_left, 
+						bitmap_top, 
+						bitmap_width, 
+						bitmap_height, 
+						display_mask_dc, 
+						0, 
+						0, 
+						Maskpaint
+						)
+
+					display_dc.bit_blt (
+						bitmap_left, 
+						bitmap_top,
+						bitmap_width, 
+						bitmap_height, 
+						display_bitmap_dc, 
+						0, 
+						0, 
+						Srcpaint
+						)
 				else
-					display_dc.bit_blt (bitmap_left, bitmap_top, bitmap_width, bitmap_height, bitmap_dc, 0, 0, Srccopy)
+					display_dc.bit_blt (
+						bitmap_left, 
+						bitmap_top, 
+						bitmap_width, 
+						bitmap_height, 
+						bitmap_dc, 
+						0, 
+						0, 
+						Srccopy
+						)
 				end
 				
 
-					--|  if the displayed area is larger than the bitmap, we erase the
-					--|  background that is outside the bitmap (i.e: AREA 1, 2, 3 & 4)
+					--|  If the displayed area is larger than the bitmap, 
+					--|  we erase the background that is outside the bitmap
+					--|  (i.e: AREA 1, 2, 3 & 4)
 					--|
 					--|  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 					--|  X                             X
@@ -510,25 +638,45 @@ feature {NONE} -- Implementation
 				create wel_rect.make (0, 0, 0, 0)
 					-- fill AREA 1
 				if bitmap_top > 0 then
-					wel_rect.set_rect (0, 0, window_width, bitmap_top)
+					wel_rect.set_rect (
+						0, 
+						0, 
+						window_width, 
+						bitmap_top
+						)
 					display_dc.fill_rect(wel_rect, our_background_brush)
 				end
 
 					-- fill AREA 2
 				if bitmap_bottom < window_height then
-					wel_rect.set_rect (0, bitmap_bottom, window_width, window_height)
+					wel_rect.set_rect (
+						0, 
+						bitmap_bottom, 
+						window_width, 
+						window_height
+						)
 					display_dc.fill_rect(wel_rect, our_background_brush)
 				end
 
 					-- fill AREA 3
 				if bitmap_left > 0 then
-					wel_rect.set_rect (0, bitmap_top, bitmap_left, bitmap_bottom)
+					wel_rect.set_rect (
+						0, 
+						bitmap_top, 
+						bitmap_left, 
+						bitmap_bottom
+						)
 					display_dc.fill_rect(wel_rect, our_background_brush)
 				end
 
 					-- fill AREA 4
 				if bitmap_right < window_width then
-					wel_rect.set_rect (bitmap_right, bitmap_top, window_width, bitmap_bottom)
+					wel_rect.set_rect (
+						bitmap_right, 
+						bitmap_top, 
+						window_width, 
+						bitmap_bottom
+						)
 					display_dc.fill_rect(wel_rect, our_background_brush)
 				end
 			else
@@ -594,12 +742,26 @@ feature -- Drawing primitives
 			update_display
 		end
 
-	draw_arc (a_x, a_y, a_vertical_radius, a_horizontal_radius: INTEGER; a_start_angle, an_aperture: REAL) is
+	draw_arc (
+		a_x					: INTEGER
+		a_y					: INTEGER
+		a_vertical_radius	: INTEGER
+		a_horizontal_radius	: INTEGER
+		a_start_angle		: INTEGER
+		an_aperture			: REAL
+		) is
 			-- Call precursor and apply bitmap.
 		do
 			convert_icon_to_bitmap
 			reset_dc(False)
-			Precursor (a_x, a_y, a_vertical_radius, a_horizontal_radius, a_start_angle, an_aperture)
+			Precursor (
+				a_x, 
+				a_y, 
+				a_vertical_radius, 
+				a_horizontal_radius, 
+				a_start_angle, 
+				an_aperture
+				)
 			update_display
 		end
 
@@ -621,7 +783,12 @@ feature -- Drawing primitives
 			update_display
 		end
 
-	draw_ellipse (a_x, a_y, a_vertical_radius, a_horizontal_radius: INTEGER) is
+	draw_ellipse (
+		a_x					: INTEGER
+		a_y					: INTEGER
+		a_vertical_radius	: INTEGER
+		a_horizontal_radius	: INTEGER
+		) is
 			-- Call precursor and apply bitmap.
 		do
 			convert_icon_to_bitmap
@@ -639,12 +806,26 @@ feature -- Drawing primitives
 			update_display
 		end
 
-	draw_pie_slice (a_x, a_y, a_vertical_radius, a_horizontal_radius: INTEGER; a_start_angle, an_aperture: REAL) is
+	draw_pie_slice (
+		a_x					: INTEGER 
+		a_y					: INTEGER
+		a_vertical_radius	: INTEGER
+		a_horizontal_radius	: INTEGER
+		a_start_angle		: REAL 
+		an_aperture			: REAL
+		) is
 			-- Call precursor and apply bitmap.
 		do
 			convert_icon_to_bitmap
 			reset_dc(False)
-			Precursor (a_x, a_y, a_vertical_radius, a_horizontal_radius, a_start_angle, an_aperture)
+			Precursor (
+				a_x, 
+				a_y, 
+				a_vertical_radius, 
+				a_horizontal_radius, 
+				a_start_angle, 
+				an_aperture
+				)
 			update_display
 		end
 
@@ -657,7 +838,12 @@ feature -- Drawing primitives
 			update_display
 		end
 
-	fill_ellipse (a_x, a_y, a_vertical_radius, a_horizontal_radius: INTEGER) is
+	fill_ellipse (
+		a_x					: INTEGER
+		a_y					: INTEGER
+		a_vertical_radius	: INTEGER
+		a_horizontal_radius	: INTEGER
+		) is
 			-- Call precursor and apply bitmap.
 		do
 			convert_icon_to_bitmap
@@ -675,12 +861,26 @@ feature -- Drawing primitives
 			update_display
 		end
 
-	fill_pie_slice (a_x, a_y, a_vertical_radius, a_horizontal_radius: INTEGER; a_start_angle, an_aperture: REAL) is
+	fill_pie_slice (
+		a_x					: INTEGER
+		a_y					: INTEGER
+		a_vertical_radius	: INTEGER
+		a_horizontal_radius	: INTEGER
+		a_start_angle		: REAL
+		an_aperture			: REAL
+		) is
 			-- Call precursor and apply bitmap.
 		do
 			convert_icon_to_bitmap
 			reset_dc(False)
-			Precursor (a_x, a_y, a_vertical_radius, a_horizontal_radius, a_start_angle, an_aperture)
+			Precursor (
+				a_x, 
+				a_y, 
+				a_vertical_radius, 
+				a_horizontal_radius, 
+				a_start_angle, 
+				an_aperture
+				)
 			update_display
 		end
 
@@ -716,12 +916,22 @@ feature -- Obsolete
 			info: WEL_BITMAP_INFO
 		do
 			create info.make_by_dc (bitmap_dc, bitmap, Dib_rgb_colors)
-			Result := bitmap_dc.di_bits (bitmap, 0, height, info, Dib_rgb_colors)
+			Result := bitmap_dc.di_bits (
+				bitmap, 
+				0, 
+				height, 
+				info, 
+				Dib_rgb_colors
+				)
 		end
 
 feature {NONE} -- Externals
 
-	c_ev_load_pixmap(curr_object: POINTER; file_name: POINTER; update_fields_routine: POINTER) is
+	c_ev_load_pixmap(
+		curr_object: POINTER; 
+		file_name: POINTER; 
+		update_fields_routine: POINTER
+		) is
 		external
 			"C | %"load_pixmap.h%""
 		end
@@ -734,6 +944,7 @@ feature {NONE} -- Externals
 
 invariant
 	bitmap_not_void: is_initialized implies bitmap /= Void
+	mask_consistent: mask_bitmap /= Void implies mask_bitmap_dc /= Void
 
 end -- class EV_PIXMAP_IMP
 
@@ -758,6 +969,10 @@ end -- class EV_PIXMAP_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.23  2000/03/28 19:18:27  pichery
+--| - Implemented `set_size'
+--| - Formatting
+--|
 --| Revision 1.22  2000/03/23 23:24:14  brendel
 --| Renamed on_contained to on_parented.
 --|
@@ -791,7 +1006,8 @@ end -- class EV_PIXMAP_IMP
 --| - implemented set_size for EV_PIXMAP under windows.
 --|
 --| Revision 1.14  2000/02/16 18:08:52  pichery
---| implemented the newly added features: redraw_rectangle, clear_and_redraw, clear_and_redraw_rectangle
+--| implemented the newly added features: redraw_rectangle, clear_and_redraw, 
+--| clear_and_redraw_rectangle
 --|
 --| Revision 1.12.6.10  2000/01/29 01:05:04  brendel
 --| Tweaked inheritance clause.
@@ -818,10 +1034,13 @@ end -- class EV_PIXMAP_IMP
 --| Removed old invariant.
 --|
 --| Revision 1.12.6.3  1999/12/22 19:26:37  rogers
---| added set_with_buffer and stretch, both are not yet implemented yet though. read from_file now takes an IO_MEDIUM.
+--| added set_with_buffer and stretch, both are not yet implemented yet
+--| though. read from_file now takes an IO_MEDIUM.
 --|
 --| Revision 1.12.6.2  1999/12/17 00:20:17  rogers
---| Altered to fit in with the review branch. Also altered to allow compilation. The last version commited to CVS would not compile at all. These changes have not been tested thoroughly.
+--| Altered to fit in with the review branch. Also altered to allow 
+--| compilation. The last version commited to CVS would not compile at all. 
+--| These changes have not been tested thoroughly.
 --|
 --| Revision 1.12.6.1  1999/11/24 17:30:36  oconnor
 --| merged with DEVEL branch

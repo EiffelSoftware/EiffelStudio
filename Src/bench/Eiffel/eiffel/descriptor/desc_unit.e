@@ -115,7 +115,7 @@ feature -- Generation
 			end;
 		end;
 
-	generate_precomp (f: INDENT_FILE; start: INTEGER) is
+	generate_precomp (f: INDENT_FILE; start: INTEGER; cnt : COUNTER) is
 			-- C code of Current precompiled descriptor unit
 			--|Note1: Currently the feature type is written for all the 
 			--|features when in practice it is used rather seldom. Try
@@ -126,6 +126,7 @@ feature -- Generation
 		require
 			file_not_void: f /= Void
 			file_exists: f.exists
+			valid_counter: cnt /= Void
 		local
 			i,j: INTEGER;
 			re: ROUT_ENTRY;
@@ -163,9 +164,10 @@ feature -- Generation
 						f.putstring ("].gen_type = ");
 
 						if re.is_generic then
-							f.putstring ("{");
-							f.putstring (re.gen_type_string (False));
-							f.putstring ("-1};%N")
+							f.putstring (" gen_type");
+							f.putint (cnt.value);
+							f.putstring (";%N")
+							j := cnt.next
 						else
 							f.putstring ("(int16 *) 0;%N")
 						end
@@ -190,9 +192,10 @@ feature -- Generation
 							f.putstring ("].gen_type = ");
 
 							if ae.is_generic then
-								f.putstring ("{");
-								f.putstring (ae.gen_type_string (False));
-								f.putstring ("-1};%N")
+								f.putstring (" gen_type");
+								f.putint (cnt.value);
+								f.putstring (";%N")
+								j := cnt.next
 							else
 								f.putstring ("(int16 *) 0;%N")
 							end
@@ -242,7 +245,7 @@ feature -- Generation
 						f.putstring ("static int16 gen_type");
 						f.putint (cnt.value);
 						j := cnt.next;
-						f.putstring (" [] = {");
+						f.putstring (" [] = {0,");
 						f.putstring (re.gen_type_string (False));
 						f.putstring ("-1};%N")
 					else
@@ -251,7 +254,7 @@ feature -- Generation
 							f.putstring ("static int16 gen_type");
 							f.putint (cnt.value);
 							j := cnt.next;
-							f.putstring (" [] = {");
+							f.putstring (" [] = {0,");
 							f.putstring (ae.gen_type_string (False));
 							f.putstring ("-1};%N")
 						end
@@ -274,8 +277,8 @@ feature -- Melting
 			i: INTEGER;
 			re: ROUT_ENTRY;
 			ae: ATTR_ENTRY
-			local_copy: like Current
 			entry_item: ENTRY
+			local_copy: like Current
 		do
 				-- Append the id of the origin class
 			ba.append_short_integer (class_id.id);
@@ -302,6 +305,7 @@ feature -- Melting
 						ba.append_short_integer (re.static_feature_type_id -1);
 
 						if re.is_generic then
+							ba.append_short_integer (0)
 							re.make_gen_type_byte_code (ba)
 						end;
 
@@ -317,6 +321,7 @@ feature -- Melting
 							ba.append_short_integer (ae.static_feature_type_id - 1);
 
 							if ae.is_generic then
+								ba.append_short_integer (0)
 								ae.make_gen_type_byte_code (ba)
 							end;
 

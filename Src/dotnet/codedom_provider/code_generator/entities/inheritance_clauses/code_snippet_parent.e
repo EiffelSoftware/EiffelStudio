@@ -9,6 +9,9 @@ indexing
 class
 	CODE_SNIPPET_PARENT
 
+inherit
+	CODE_ENTITY
+
 create
 	make
 	
@@ -54,8 +57,159 @@ feature	-- Access
 	selects: LIST [CODE_SNIPPET_SELECT_CLAUSE]
 			-- Select inheritance clauses
 
+	code: STRING is
+			-- Code
+		do
+			create Result.make (1024)
+			Result.append (renames_code)
+			Result.append (exports_code)
+			Result.append (undefines_code)
+			Result.append (redefines_code)
+			Result.append (selects_code)
+		end
+	
+	renames_code: STRING is
+			-- Code for rename clauses
+		local
+			l_rename: CODE_SNIPPET_RENAME_CLAUSE
+		do
+			if renames /= Void then
+				create Result.make (1024)
+				Result.append ("%T%Trename%N")
+				from
+					renames.start
+					if not renames.after then
+						l_rename := renames.item
+						Result.append ("%T%T%T")
+						Result.append (l_rename.routine_name)
+						Result.append (" as ")
+						Result.append (l_rename.target_name)
+						renames.forth
+					end
+				until
+					renames.after
+				loop
+					Result.append (",%N")
+					Result.append ("%T%T%T")
+					Result.append (l_rename.routine_name)
+					Result.append (" as ")
+					Result.append (l_rename.target_name)
+					renames.forth
+				end
+				Result.append_character ('%N')
+			end
+		ensure
+			valid_code: exports /= Void implies Result /= Void
+		end
+		
+
+	exports_code: STRING is
+			-- Code for exports clauses
+		local
+			l_export: CODE_SNIPPET_EXPORT_CLAUSE
+			l_types: LIST [STRING]
+		do
+			if exports /= Void then
+				create Result.make (1024)
+				Result.append ("%T%Texport%N")
+				from
+					exports.start
+				until
+					exports.after
+				loop
+					l_export := exports.item
+					Result.append ("%T%T%T{")
+					l_types := l_export.type_list
+					from
+						l_types.start
+						if not l_types.after then
+							Result.append (l_types.item)
+							l_types.forth
+						end
+					until
+						l_types.after
+					loop
+						Result.append (", ")
+						Result.append (l_types.item)
+						l_types.forth
+					end
+					Result.append ("} ")
+					Result.append (l_export.routine_name)
+					Result.append_character ('%N')
+				end
+			end
+		ensure
+			valid_code: exports /= Void implies Result /= Void
+		end
+		
+	undefines_code: STRING is
+			-- Code for undefine clauses
+		do
+			if undefines /= Void then
+				Result := generic_code (undefines, "undefine")			
+			end
+		end
+	
+	redefines_code: STRING is
+			-- Code for redefine clauses
+		do
+			if redefines /= Void then
+				Result := generic_code (redefines, "redefine")			
+			end
+		end
+	
+	selects_code: STRING is
+			-- Code for select clauses
+		do
+			if selects /= Void then
+				Result := generic_code (selects, "select")			
+			end
+		end
+
+feature -- Status Report
+
+	is_empty: BOOLEAN is
+			-- Are all clauses empty?
+		do
+			Result := renames = Void and exports = Void and undefines = Void and 
+				redefines = Void and selects = Void
+		end
+		
+feature {NONE} -- Implementation
+
+	generic_code (a_clauses: LIST [CODE_SNIPPET_INHERITANCE_CLAUSE]; a_keyword: STRING): STRING is
+			-- Generic inheritance clause code
+		require
+			non_void_clauses: a_clauses /= Void
+			non_void_keyword: a_keyword /= Void
+		do
+			create Result.make (1024)
+			Result.append ("%T%T")
+			Result.append (a_keyword)
+			from
+				a_clauses.start
+				if not a_clauses.after then
+					Result.append ("%N%T%T%T")
+					Result.append (a_clauses.item.routine_name)
+					a_clauses.forth
+				end	
+			until
+				a_clauses.after
+			loop
+				Result.append (",%N%T%T%T")
+				Result.append (a_clauses.item.routine_name)
+				a_clauses.forth
+			end
+			Result.append_character ('%N')
+		end
+		
 invariant
 	non_void_type: type /= Void
+	non_empty_renames_if_not_void: renames /= Void implies not renames.is_empty
+	non_empty_exports_if_not_void: exports /= Void implies not exports.is_empty
+	non_empty_undefines_if_not_void: undefines /= Void implies not undefines.is_empty
+	non_empty_redefines_if_not_void: redefines /= Void implies not redefines.is_empty
+	non_empty_selects_if_not_void: selects /= Void implies not selects.is_empty
 
 end -- class CODE_SNIPPET_PARENT
 

@@ -102,11 +102,17 @@ feature {NONE} -- Creation
 			man: BOOLEAN; is_fixed: BOOLEAN) is
 			-- Create a scrolled list with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
+		local
+			ot: OBSOLETE_TOOLKIT
 		do
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
 			identifier := clone (a_name);
-			implementation := toolkit.scroll_list (Current, man, is_fixed, a_parent);
+			ot ?= toolkit;
+			check
+				obsolete_toolkit_instantiated: ot /= Void
+			end;
+			implementation := ot.scroll_list (Current, man, is_fixed, a_parent);
 			implementation.set_widget_default;
 			list_imp.set_single_selection;
 		end;

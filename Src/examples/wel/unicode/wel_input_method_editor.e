@@ -18,11 +18,14 @@ creation
 	
 feature --Initialization
 		
-	make (input_cont: POINTER; input_loc: POINTER)is
+	make (a_input_context: POINTER; a_input_locale: POINTER)is
+		require
+			input_context_not_void: a_input_context /= Void
+			input_locale_not_void: a_input_locale /= Void
 		do
-			input_context := input_cont
-			input_locale := input_loc
-			create composition_string.make (input_cont)
+			input_context := a_input_context
+			input_locale := a_input_locale
+			create composition_string.make (a_input_context)
 		ensure
 			has_input_context: input_context /= Void
 			has_input_locale: input_locale /= Void
@@ -47,6 +50,8 @@ feature --Access
 			create l_string.make_empty (nb)
 			nb := cwel_get_imm_description(input_locale, l_string.item, nb + 1)
 			Result := l_string.string
+		ensure
+			result_not_void: Result /= Void
 		end
 		
 	filename: STRING is
@@ -60,16 +65,22 @@ feature --Access
 			create l_string.make_empty (nb)
 			nb := cwel_get_imm_ime_filename (input_locale, l_string.item, nb + 1)
 			Result := l_string.string
+		ensure
+			result_not_void: Result /= Void	
 		end
 	
-	filename_by_locale (input_loc: POINTER): STRING is
+	filename_by_locale (a_input_locale: POINTER): STRING is
 			-- The filename of the IME associated with the 'input_loc' input locale
+		require
+			input_locale_not_void: a_input_locale /= Void
 		local
 			buffer: POINTER
 			nb: INTEGER
 		do
-			nb := cwel_get_imm_ime_filename(input_loc, $buffer, 0)
+			nb := cwel_get_imm_ime_filename(a_input_locale, $buffer, 0)
 			create Result.make_from_c (buffer)
+		ensure
+			result_not_void: Result /= Void
 		end
 		
 	conversion_mode: INTEGER 
@@ -83,82 +94,102 @@ feature --Status Setting
 	open is
 			-- Open the IME 
 		do
-			opened := cwel_set_open_status (input_context, True)		
+			opened := cwel_set_open_status (input_context, True)
+		ensure
+			not_closed: opened = True
 		end
 		
 	close is
 			-- Close the IME
 		do
 			opened := cwel_set_open_status (input_context, False)
+		ensure
+			not_open: opened = False
 		end
 		
-	dialog_configure (parent: POINTER) is
-			-- Open the configuration dialog for the IME
+	dialog_configure (a_parent: POINTER) is
+			-- Open the configuration dialog for the IME associated with 'a_parent'
+		require
+			parent_not_void: a_parent /= Void
 		local
-			tmp_bool: BOOLEAN
+			a_bool: BOOLEAN
 		do
-			tmp_bool := cwel_imm_configure_ime (input_locale, parent, Ime_config_general, 0)
+			a_bool := cwel_imm_configure_ime (input_locale, a_parent, Ime_config_general, 0)
 		end
 		
-	regword_configure (parent: POINTER) is
-			-- Displays the register word dialog box for the current IME 
+	regword_configure (a_parent: POINTER) is
+			-- Displays the register word dialog box for the current IME associated with
+			-- 'a_parent'
+		require
+			parent_not_void: a_parent /= Void
 		local
-			tmp_bool: BOOLEAN
+			a_bool: BOOLEAN
 		do
-			tmp_bool := cwel_imm_configure_ime (input_locale, parent, Ime_config_register_word, 0)
+			a_bool := cwel_imm_configure_ime (input_locale, a_parent, Ime_config_register_word, 0)
 		end
 		
-	dictionary_configure (parent: POINTER) is
-			-- Displays the dictionary dialog box for the current IME 
+	dictionary_configure (a_parent: POINTER) is
+			-- Displays the dictionary dialog box for the current IME associated with
+			-- 'a_parent'
+		require
+			parent_not_void: a_parent /= Void
 		local
-			tmp_bool: BOOLEAN
+			a_bool: BOOLEAN
 		do
-			tmp_bool := cwel_imm_configure_ime (input_locale, parent, Ime_config_selectdictionary, 0)
+			a_bool := cwel_imm_configure_ime (input_locale, a_parent, Ime_config_selectdictionary, 0)
 		end
 		
-	set_conversion_status (conv_mode: INTEGER) is
-			-- Set the conversion status with 'conv_mode'
+	set_conversion_status (a_conv_mode: INTEGER) is
+			-- Set the conversion status with 'a_conv_mode'
+		require
+			valid_conv_mode:
 		local
-			tmp_bool: BOOLEAN
+			a_bool: BOOLEAN
 		do
-			tmp_bool := cwel_set_conversion_status (input_context, conv_mode, 0)
-			if tmp_bool then
-				conversion_mode := conv_mode
+			a_bool := cwel_set_conversion_status (input_context, a_conv_mode, 0)
+			if a_bool then
+				conversion_mode := a_conv_mode
 			end
 		end
 		
-	set_sentence_status (sent_mode: INTEGER) is
-			-- Set the sentence status with 'sent_mode'
+	set_sentence_status (a_sent_mode: INTEGER) is
+			-- Set the sentence status with 'a_sent_mode'
 		local
-			tmp_bool: BOOLEAN
+			a_bool: BOOLEAN
 		do
-			tmp_bool := cwel_set_conversion_status (input_context, 0, sent_mode)
-			if tmp_bool then
-				sentence_mode := sent_mode
+			a_bool := cwel_set_conversion_status (input_context, 0, a_sent_mode)
+			if a_bool then
+				sentence_mode := a_sent_mode
 			end
 		end
 	
-	move_composition_window (x, y: INTEGER) is
+	move_composition_window (a_x, a_y: INTEGER) is
 			-- Move the composition window to x,y position
+		require
+			x_valid: a_x >= 0
+			y_valid: a_y >= 0
 		local
 			moved: BOOLEAN
 			pt: WEL_POINT
 			rect: WEL_RECT
 			cf: WEL_COMPOSITION_FORM
 		do
-			create pt.make (x, y)
+			create pt.make (a_x, a_y)
 			create rect.make (10, 10, 200, 200)
 			create cf.make_by_point (pt, rect)
 			moved := cwel_ime_move_composition_window (input_context, cf.item)			
 		end
 		
-	move_status_window (x, y: INTEGER) is
+	move_status_window (a_x, a_y: INTEGER) is
 			-- Move the status window to x,y position
+		require
+			x_valid: a_x >= 0
+			y_valid: a_y >= 0
 		local
 			moved: BOOLEAN
 			pt: WEL_POINT
 		do
-			create pt.make (x, y)
+			create pt.make (a_x, a_y)
 			moved := cwel_ime_move_status_window (input_context, pt.item)			
 		end
 		
@@ -172,24 +203,27 @@ feature --Status Report
 			-- The composition string 
 			
 	get_conversion_status is
-			-- Retrieve the conversion status
+			-- Retrieve the conversion status into 'conversion_mode' and 'sentence_mode'
 		local
-			tmp_bool: BOOLEAN
+			a_bool: BOOLEAN
 		do
-			tmp_bool := cwel_get_conversion_status (input_context, $conversion_mode, $sentence_mode)
+			a_bool := cwel_get_conversion_status (input_context, $conversion_mode, $sentence_mode)
 		end
 		
-	get_property (prop_type: INTEGER): INTEGER is
+	get_property (a_prop_type: INTEGER): INTEGER is
 			-- The property and capabilities of the 'prop_type' as found in WEL_IME_CONSTANTS
+		require
+			prop_type_not_void: a_prop_type /= Void
 		do
-			Result := cwel_get_imm_property(input_locale, prop_type)
+			Result := cwel_get_imm_property(input_locale, a_prop_type)
+		ensure
+			result_valid: Result /= Void
 		end
 
 
 feature {NONE} -- Externals
 
-	cwel_get_imm_description (key_layout: POINTER; dest: POINTER; buff_len: INTEGER): INTEGER
-		is
+	cwel_get_imm_description (key_layout: POINTER; dest: POINTER; buff_len: INTEGER): INTEGER is
 			-- Given a keyboard layout `hKl' return associated IME description string in `dest'
 		external
 			"C macro signature (HKL, LPTSTR, UINT): EIF_INTEGER use <windows.h>"
@@ -206,7 +240,7 @@ feature {NONE} -- Externals
 			"ImmGetIMEFileName"
 		end
 		
-	cwel_get_imm_property (key_layout: POINTER; propty: INTEGER): INTEGER is
+	cwel_get_imm_property (key_layout: POINTER; a_property: INTEGER): INTEGER is
 			-- Get the property and capabilities of the IME associated with the specified keyboard layout
 		external
 			"C macro signature (HKL, DWORD): EIF_INTEGER use <windows.h>"
@@ -214,7 +248,7 @@ feature {NONE} -- Externals
 			"ImmGetProperty"
 		end
 		
-	cwel_set_open_status (input_loc: POINTER; open_flag: BOOLEAN): BOOLEAN is
+	cwel_set_open_status (a_input_locale: POINTER; open_flag: BOOLEAN): BOOLEAN is
 			-- Open or close the IME associated with the input context
 		external
 			"C macro signature (HIMC, BOOL): EIF_BOOLEAN use <windows.h>"
@@ -222,7 +256,7 @@ feature {NONE} -- Externals
 			"ImmSetOpenStatus"
 		end
 		
-	cwel_imm_configure_ime (input_loc, window: POINTER; flag, mode: INTEGER): BOOLEAN is
+	cwel_imm_configure_ime (a_input_loc, a_window: POINTER; flag, mode: INTEGER): BOOLEAN is
 			-- 
 		external
 			"C macro signature (HKL, HWND, DWORD, LPVOID): EIF_BOOLEAN use <windows.h>"
@@ -230,7 +264,7 @@ feature {NONE} -- Externals
 			"ImmConfigureIME"
 		end	
 		
-	cwel_get_conversion_status (input_cont, conv_mode, sent_mode: POINTER): BOOLEAN is
+	cwel_get_conversion_status (a_input_context, a_conv_mode, a_sent_mode: POINTER): BOOLEAN is
 			-- Get the conversion and/or sentence mode status into 'conv_mode' and 'sent_mode'
 		external
 			"C macro signature (HIMC, LPDWORD, LPDWORD): EIF_BOOLEAN use <imm.h>"
@@ -238,7 +272,7 @@ feature {NONE} -- Externals
 			"ImmGetConversionStatus"
 		end	
 		
-	cwel_set_conversion_status (input_cont: POINTER; conv_mode, sent_mode: INTEGER): BOOLEAN is
+	cwel_set_conversion_status (a_input_cont: POINTER; a_conv_mode, a_sent_mode: INTEGER): BOOLEAN is
 			-- Set the conversion and/or sentence mode status from values of 'conv_mode' and 'sent_mode'
 		external
 			"C macro signature (HIMC, DWORD, DWORD): EIF_BOOLEAN use <imm.h>"
@@ -246,7 +280,7 @@ feature {NONE} -- Externals
 			"ImmSetConversionStatus"
 		end	
 		
-	cwel_ime_move_composition_window (input_cont, comp_form: POINTER): BOOLEAN is
+	cwel_ime_move_composition_window (a_input_context, a_comp_form: POINTER): BOOLEAN is
 			-- 
 		external
 			"C macro signature (HIMC, LPCOMPOSITIONFORM): EIF_BOOLEAN use <imm.h>"
@@ -254,14 +288,17 @@ feature {NONE} -- Externals
 			"ImmSetCompositionWindow"
 		end
 		
-	cwel_ime_move_status_window (input_cont, point: POINTER): BOOLEAN is
+	cwel_ime_move_status_window (a_input_context, a_point: POINTER): BOOLEAN is
 			-- 
 		external
 			"C macro signature (HIMC, LPPOINT): EIF_BOOLEAN use <imm.h>"
 		alias
 			"ImmSetStatusWindowPos"
 		end
-		
+
+invariant
+	has_input_context: input_context /= Void
+	has_input_locale: input_locale /= Void
 		
 
 end -- class WEL_INPUT_METHOD_EDITOR

@@ -287,7 +287,7 @@ feature -- Basic Operations
 			end
 		end
 
-	search_classes (a_string: STRING; is_substring: BOOLEAN): CLASS_ENUMERATOR is
+	search_classes (a_string: STRING; match_case: BOOLEAN; is_substring: BOOLEAN; is_prefix: BOOLEAN): CLASS_ENUMERATOR is
 			-- Search classes with names matching `a_string'.
 			-- `a_string' [in].  
 			-- `is_substring' [in].  
@@ -303,9 +303,13 @@ feature -- Basic Operations
 		do
 			if Eiffel_project.initialized and then a_string /= Void then
 				-- Retrieve a list of all the CLASS_I objects in the Eiffel Universe.
-					string_to_match := a_string.as_lower
 					create matcher.make_empty
-					matcher.disable_case_sensitive
+					if not match_case then
+						matcher.disable_case_sensitive
+						string_to_match := a_string.as_lower
+					else
+						string_to_match := a_string.twin
+					end
 					matcher.set_pattern (string_to_match)
 					create res.make (100)
 				from
@@ -321,49 +325,58 @@ feature -- Basic Operations
 						cluster_classes.after
 					loop
 						eiffel_class := cluster_classes.item_for_iteration
-						if is_substring then
-							matcher.set_text (eiffel_class.name)
-							if matcher.search_for_pattern then
-								create class_desc.make_with_class_i (eiffel_class)
-								res.extend (class_desc)
+						if eiffel_class.file_name.string.substring (eiffel_class.file_name.string.count - 1, eiffel_class.file_name.string.count).is_equal (".e") then
+							if is_substring then
+								matcher.set_text (eiffel_class.name)
+								if matcher.search_for_pattern then
+									create class_desc.make_with_class_i (eiffel_class)
+									res.extend (class_desc)
+								else
+									dotnet_class ?= eiffel_class
+									if dotnet_class /= Void then
+										if dotnet_class.is_compiled then
+											matcher.set_text (dotnet_class.compiled_class.name)
+										else
+											matcher.set_text (dotnet_class.external_name)
+										end
+										if matcher.search_for_pattern then
+											create class_desc.make_with_class_i (dotnet_class)
+											res.extend (class_desc)
+										end
+									end
+								end		
 							else
-								dotnet_class ?= eiffel_class
-								if dotnet_class /= Void then
-									if dotnet_class.is_compiled then
-										matcher.set_text (dotnet_class.compiled_class.name)
-									else
-										matcher.set_text (dotnet_class.external_name)
-									end
-									if matcher.search_for_pattern then
-										create class_desc.make_with_class_i (dotnet_class)
-										res.extend (class_desc)
-									end
+								if not match_case then
+									class_name_string := eiffel_class.name.as_lower
+								else
+									class_name_string := eiffel_class.name.twin
 								end
-							end		
-						else
-							class_name_string := eiffel_class.name.as_lower
-							if class_name_string.is_equal (string_to_match) then
-								create class_desc.make_with_class_i (eiffel_class)
-								res.extend (class_desc)
-							else
-								dotnet_class ?= eiffel_class
-								if dotnet_class /= Void then
-									if dotnet_class.is_compiled then
-										class_name_string := dotnet_class.compiled_class.name.as_lower
-										if class_name_string.is_equal (string_to_match) then
-											create class_desc.make_with_class_i (eiffel_class)
-											res.extend (class_desc)
-										end -- if
-									else
-										class_name_string := dotnet_class.external_name.as_lower
-										if class_name_string.is_equal (string_to_match) then
-											create class_desc.make_with_class_i (eiffel_class)
-											res.extend (class_desc)
+								if is_prefix then
+									class_name_string.keep_head (string_to_match.count.min (class_name_string.count))
+								end
+								if class_name_string.is_equal (string_to_match) then
+									create class_desc.make_with_class_i (eiffel_class)
+									res.extend (class_desc)
+								else
+									dotnet_class ?= eiffel_class
+									if dotnet_class /= Void then
+										if dotnet_class.is_compiled then
+											class_name_string := dotnet_class.compiled_class.name.as_lower
+											if class_name_string.is_equal (string_to_match) then
+												create class_desc.make_with_class_i (eiffel_class)
+												res.extend (class_desc)
+											end -- if
+										else
+											class_name_string := dotnet_class.external_name.as_lower
+											if class_name_string.is_equal (string_to_match) then
+												create class_desc.make_with_class_i (eiffel_class)
+												res.extend (class_desc)
+											end -- if
 										end -- if
 									end -- if
 								end -- if
-							end -- if
-						end -- if
+							end -- if	
+						end
 						cluster_classes.forth
 					end -- loop
 					Eiffel_universe.clusters.forth
@@ -373,7 +386,7 @@ feature -- Basic Operations
 			end -- if
 		end -- search_classes
 
-	search_features (a_string: STRING; is_substring: BOOLEAN): FEATURE_ENUMERATOR is
+	search_features (a_string: STRING; match_case: BOOLEAN; is_substring: BOOLEAN; is_prefix: BOOLEAN): FEATURE_ENUMERATOR is
 			-- Search feature with names matching `a_string'.
 			-- `a_string' [in].  
 			-- `is_substring' [in].  
@@ -385,40 +398,59 @@ feature -- Basic Operations
 			count, i: INTEGER
 			matcher: KMP_MATCHER
 			feature_desc: FEATURE_DESCRIPTOR
+			string_to_match, feature_name_string: STRING
 		do
 			if Eiffel_project.initialized and then a_string /= Void then
 				classes := Eiffel_system.Workbench.system.classes.sorted_classes
 				count := Eiffel_system.Workbench.system.classes.count
 				create res.make (count * 5)
 				create matcher.make_empty
-				matcher.disable_case_sensitive
-				matcher.set_pattern (a_string)
+				if not match_case then
+					matcher.disable_case_sensitive
+					string_to_match := a_string.as_lower
+				else
+					string_to_match := a_string.twin
+				end
+				if is_substring then
+					matcher.set_pattern (string_to_match)
+				end
+				create res.make (100)
 				from
 					i := 1
 				until
 					i > count
 				loop
 					feature_table := classes.item (i).feature_table
-					if is_substring then
-						from
-							feature_table.start
-						until
-							feature_table.after
-						loop
-							feature_i := feature_table.item_for_iteration
-							matcher.set_text (feature_i.feature_name)
-							if matcher.search_for_pattern then
-								create feature_desc.make_with_class_i_and_feature_i (classes.item (i).lace_class, feature_i)
-								res.extend (feature_desc)
+					
+					from
+						feature_table.start
+					until
+						feature_table.after
+					loop
+						feature_i := feature_table.item_for_iteration
+						if feature_i.written_in = classes.item (i).class_id then
+							if is_substring then
+								matcher.set_text (feature_i.feature_name)
+								if matcher.search_for_pattern then
+									create feature_desc.make_with_class_i_and_feature_i (classes.item (i).lace_class, feature_i)
+									res.extend (feature_desc)
+								end
+							else
+								if not match_case then
+									feature_name_string := feature_i.feature_name.as_lower
+								else
+									feature_name_string := feature_i.feature_name.twin
+								end
+								if is_prefix then
+									feature_name_string.keep_head (string_to_match.count.min (feature_name_string.count))
+								end
+								if string_to_match.is_equal (feature_name_string) then
+									create feature_desc.make_with_class_i_and_feature_i (classes.item (i).lace_class, feature_i)
+									res.extend (feature_desc)
+								end
 							end
-							feature_table.forth
 						end
-					else
-						feature_table.search (a_string)
-						if feature_table.found_item /= Void then
-							create feature_desc.make_with_class_i_and_feature_i (classes.item (i).lace_class, feature_table.found_item)
-							res.extend (feature_desc)
-						end
+						feature_table.forth
 					end
 					i := i + 1
 				end
@@ -434,9 +466,8 @@ feature -- Basic Operations
 		do
 			if not l_retried then
 				l_dictionary := dictionary_for_assembly (a_assembly_name)
-				if l_dictionary /= Void and then l_dictionary.is_initialized then
-					l_dictionary.set_type (a_full_dotnet_type)
-					Result := l_dictionary.type_documentation
+				if l_dictionary /= Void then
+					Result := l_dictionary.type_documentation (a_full_dotnet_type)
 				end
 				if Result = Void then
 					Result := ""
@@ -452,18 +483,21 @@ feature -- Basic Operations
 		local
 			l_dictionary: IDM_DICTIONARY_INTERFACE
 			l_type_name, l_feature_name: STRING
+			l_description: IDM_FEATURE_DESCRIPTION_INTERFACE
 			l_index: INTEGER
 			l_retried: BOOLEAN
 		do
 			if not l_retried then
 				l_dictionary := dictionary_for_assembly (a_assembly_name)
-				if l_dictionary /= Void and then l_dictionary.is_initialized then
+				if l_dictionary /= Void then
 					l_index := a_full_dotnet_feature.last_index_of ('.', a_full_dotnet_feature.count)
 					if l_index > 0 then
 						l_type_name := a_full_dotnet_feature.substring (1, l_index - 1)
 						l_feature_name := a_full_dotnet_feature.substring (l_index + 1, a_full_dotnet_feature.count)
-						l_dictionary.set_type (l_type_name)
-						Result := l_dictionary.feature_documentation (l_feature_name, a_feature_signature)
+						l_description := l_dictionary.feature_documentation (l_type_name, l_feature_name, a_feature_signature)
+						if l_description /= Void then
+							Result := l_description.summary
+						end
 					end
 				end
 				if Result = Void then
@@ -483,7 +517,7 @@ feature {NONE} -- Implementation
 			create Result.make (10)
 		end
 
-	Documentation_manager: DOCUMENTATION_MANAGER_PROXY is
+	Documentation_manager: CDM_DOCUMENTATION_MANAGER_PROXY is
 			-- 	Documentation manager
 		once
 			create Result.make

@@ -69,7 +69,7 @@ feature {NONE} -- Implementation
 			-- `Result' is generated directory for current project.
 		do
 			create Result.make_from_string (system_status.current_project_settings.project_location)
-			Result.extend ("Generated")
+			Result.extend ("generated")
 		end
 		
 	build_ace_file is

@@ -76,7 +76,7 @@ feature -- Settings
 			modified_entry: ENTRY
 		do
 			associated_class := System.class_of_id (entry.class_id)
-			if associated_class /= Void then
+			if associated_class /= Void and then associated_class.has_types then
 					-- Classes could have been removed
 				from
 					types := associated_class.types
@@ -103,7 +103,7 @@ feature -- Settings
 			modified_entry: ENTRY
 		do
 			associated_class := System.class_of_id (entry.class_id)
-			if associated_class /= Void then
+			if associated_class /= Void and then associated_class.has_types then
 					-- Classes could have been removed
 				from
 					types := associated_class.types

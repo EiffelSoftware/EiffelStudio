@@ -1023,8 +1023,6 @@ rt_public void reclaim(void)
 	  eif_thr_panic("Problem with taskVarDelete\n");
 #endif	/* VXWORKS */
 #else	/* EIF_THREADS */
-	eif_free (eif_globals);			/* Global variables specific to the current
-									 * thread of the run-time */
 #ifdef LMALLOC_CHECK
 	eif_lm_display ();
 	eif_lm_free ();

@@ -34,10 +34,10 @@ feature -- Access
 		once
 			Result := "New..."
 		end
-		
+
 	png_location: STRING is
-			-- `Result' is location of PNG files in installation.
-		do
+			-- `Result' is DIRECTORY constant named `png_location'.
+		once
 			Result := (create {GB_SHARED_PIXMAPS}).png_location
 		end
 
@@ -96,7 +96,7 @@ feature -- Access
 			create Result
 			create a_file_name.make_from_string (png_location)
 			a_file_name.extend ("icon_component_viewer_color.png")
-			Result.set_with_named_file (a_file_name)
+			set_with_named_file (Result, a_file_name)
 		end
 
 	lightbulb_png: EV_PIXMAP is
@@ -106,7 +106,7 @@ feature -- Access
 			create Result
 			create a_file_name.make_from_string (png_location)
 			a_file_name.extend ("lightbulb.png")
-			Result.set_with_named_file (a_file_name)
+			set_with_named_file (Result, a_file_name)
 		end
 
 	tip_of_day_dialog_title: STRING is
@@ -122,7 +122,7 @@ feature -- Access
 			create Result
 			create a_file_name.make_from_string (png_location)
 			a_file_name.extend ("icon_component_build_view_color.png")
-			Result.set_with_named_file (a_file_name)
+			set_with_named_file (Result, a_file_name)
 		end
 
 	negative: INTEGER is 
@@ -137,12 +137,6 @@ feature -- Access
 			Result := "Project Configuration"
 		end
 
-	small_padding: INTEGER is 
-			-- `Result' is INTEGER constant named small_padding.
-		once
-			Result := 4
-		end
-
 	close_text: STRING is
 			-- `Result' is STRING constant named `close_text'.
 		once
@@ -153,6 +147,12 @@ feature -- Access
 			-- `Result' is STRING constant named `ok_button_text'.
 		once
 			Result := "OK"
+		end
+
+	large_spacing_width: INTEGER is 
+			-- `Result' is INTEGER constant named large_spacing_width.
+		once
+			Result := 12
 		end
 
 	next_tip_text: STRING is
@@ -168,7 +168,7 @@ feature -- Access
 			create Result
 			create a_file_name.make_from_string (png_location)
 			a_file_name.extend ("icon_component_display_view_color.png")
-			Result.set_with_named_file (a_file_name)
+			set_with_named_file (Result, a_file_name)
 		end
 
 	cancel_button_text: STRING is
@@ -183,14 +183,14 @@ feature -- Access
 			Result := "Pixmap Selection"
 		end
 
-	large_padding: INTEGER is 
-			-- `Result' is INTEGER constant named large_padding.
+	small_padding: INTEGER is 
+			-- `Result' is INTEGER constant named small_padding.
 		once
-			Result := 12
+			Result := 4
 		end
 
-	large_spacing_width: INTEGER is 
-			-- `Result' is INTEGER constant named large_spacing_width.
+	large_padding: INTEGER is 
+			-- `Result' is INTEGER constant named large_padding.
 		once
 			Result := 12
 		end
@@ -316,6 +316,21 @@ feature {NONE} -- Implementation
 		ensure
 			Result_not_void: Result /= Void
 			no_characters_lost: old content.count = Result.count + content.count
+		end
+
+	set_with_named_file (a_pixmap: EV_PIXMAP; a_file_name: STRING) is
+			-- Set image of `a_pixmap' from file, `a_file_name'.
+			-- If `a_file_name' does not exist, do nothing.
+		require
+			a_pixmap_not_void: a_pixmap /= Void
+			a_file_name /= Void
+		local
+			l_file: RAW_FILE
+		do
+			create l_file.make (a_file_name)
+			if l_file.exists then
+				a_pixmap.set_with_named_file (a_file_name)
+			end
 		end
 
 invariant

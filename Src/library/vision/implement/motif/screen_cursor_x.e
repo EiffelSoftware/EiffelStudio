@@ -1,130 +1,105 @@
 indexing
 
+	description: 
+		"EiffelVision implementation of a Screen cursor.";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class SCREEN_CURSOR_X 
+class 
+	SCREEN_CURSOR_X 
 
 inherit
 
-	RESOURCES_X [ANY]
-		rename
-			make as resources_x_make
-		export
-			{ANY} objects
+	RESOURCE_X
+		undefine
+			is_equal
 		end;
 
-	SCREEN_CURSOR_I;
+	SCREEN_CURSOR_I
+		undefine
+			is_equal
+		end;
+
+	G_ANY_I
+		undefine
+			is_equal
+		end;
+
+	MEL_SCREEN_CURSOR
+		undefine
+			has_valid_display
+		redefine
+			display
+		end;
 		
 	MEMORY
+		rename
+			free as gc_free
 		export
 			{NONE} all
+		undefine
+			is_equal
 		redefine
 			dispose
 		end
 
-
 creation
 
-	make
+	make,
+	make_for_screen
 
-	
-feature {NONE}
-
-	dispose is
-			-- Called when garbaged.
-		local
-			null_pointer: POINTER;
-		do
-			if type = User_defined_pixmap then
-				if arx_pixmap /= null_pointer then
-					c_free_pixmap (arx_pixmap);
-					arx_pixmap := null_pointer;
-				end;
-				if arx_mask /= null_pointer then
-					c_free_pixmap (arx_mask);
-					arx_mask := null_pointer;
-				end;
-			end
-		end; 
-	
-feature 
+feature {NONE} -- Initialization
 
 	make (a_cursor: SCREEN_CURSOR) is
 			-- Create a cursor implementation and set current type
 			-- to `X_cursor' by default.
-		do
-			resources_x_make;
-			type := X_cursor
-		end; 
-
-	cursor_id (a_screen: SCREEN_I): POINTER is
-			-- Cursor id for `a_screen_object'
 		require
-			a_screen_exists: not (a_screen = Void)
-		
+			last_open_display_not_null: last_open_display /= Void
+		do
+			type := X_cursor;
+			display := last_open_display
+		end; 
+
+	make_for_screen (a_cursor: SCREEN_CURSOR; a_screen: SCREEN) is
+			-- Create a font.
+		require
+			valid_screen: a_screen /= Void and then a_screen.is_valid
 		local
-			a_resource: RESOURCE_X
+			mel_display: MEL_DISPLAY
 		do
-			a_resource := find_same_screen (a_screen);
-			if (a_resource = Void) then
-				if type = User_defined_pixmap then
-					Result := c_create_pixmap_cursor (a_screen.screen_object, arx_pixmap, arx_mask)
-				else
-					Result := x_create_font_cursor (a_screen.screen_object, type*2)
-				end;
-				!CURSOR_RES_X! a_resource.make (a_screen, Result, true);
-				put_front (a_resource)
-			else
-				Result := a_resource.identifier
+			type := X_cursor;
+			display ?= a_screen.implementation;
+			check
+				valid_display: display /= Void
 			end
-		end; 
-	
-feature {NONE}
+		end;
 
-	free_resources is
-			-- Free all cursor resources.
-		do
-			from
-				start
-			until
-				off
-			loop
-				if item.is_allocated then
-					x_free_cursor (item.screen.screen_object, item.identifier);
-					item.set_allocated (False);
-				end;
-				forth
-			end;
-			wipe_out;
-			dispose
-		end; 
+feature -- Access
 
-	is_used_by (a_widget: WIDGET): BOOLEAN is
-			-- Is `a_widget' using this resource ?
-		require else
-			a_widget_exists: not (a_widget = Void)
-		do
-			Result := (a_widget.cursor /= Void) and then 
-					(a_widget.cursor.implementation = Current)
-		ensure then
-			(number_of_uses = 0) implies (not Result)
-		end; 
-	
-feature 
+	display: MEL_DISPLAY;
+			-- Display where resource is allocated
+
+	type: INTEGER;
+			-- Predefined type of current cursor
+
+	source_pixmap: PIXMAP_X;
+			-- Pixmap giving the shape of the cursor
+			-- (Reset to Void after allocation)
+
+	cursor_mask: PIXMAP_X;
+			-- Pixmap giving the pixels of cursor drawn
+			-- (Reset to Void after allocation)
+
+feature -- Status setting
 
 	set_type (new_type: INTEGER) is
 			-- Set type of current cursor to `new_type'.
 			-- Thie new type must be a predefined one.
-		require else
-			type_ok: (X_cursor <= new_type) and (new_type < Cursor_undefined)
 		do
-			free_resources;
+			dispose;
 			type := new_type;
 			update_widgets
-		ensure then
-			type = new_type
 		end; 
 
 	set_pixmap (pixmap: PIXMAP; mask: PIXMAP) is
@@ -134,102 +109,72 @@ feature
 			-- Note that `pixmap' and `mask' are not kept by the cursor,
 			-- they may be disposed, and if they change, cursor will be
 			-- altered.
-		require else
-			pixmap_exists: not (pixmap = Void);
-			pixmap_is_valid: pixmap.is_valid;
-			mask_is_valid_if_exists: (not (mask = Void)) implies mask.is_valid
 		local
 			pixmap_implementation: PIXMAP_X;
 			mask_implementation: PIXMAP_X
 		do
-			free_resources;
+			dispose;
 			type := User_defined_pixmap;
-			pixmap_implementation ?= pixmap.implementation;
-			arx_pixmap := c_arx_duplicate (pixmap_implementation.arx_pixmap);
-			if not (mask = Void) then
-				mask_implementation ?= mask.implementation;
-				arx_mask := c_arx_duplicate (mask_implementation.arx_pixmap)
+			source_pixmap ?= pixmap.implementation;
+			source_pixmap.allocate_bitmap;
+			if mask = Void then
+				cursor_mask ?= pixmap.implementation;
 			else
-				arx_mask := c_arx_mask (arx_pixmap)
+				cursor_mask ?= mask.implementation;
 			end;
+			cursor_mask.allocate_bitmap
 			update_widgets
-		ensure then
-			type = User_defined_pixmap
 		end;
 
-	
-feature {NONE}
+feature -- Element change
 
-	arx_pixmap: POINTER;
-			-- ArXpixmap giving the shape of the cursor
-
-	arx_mask: POINTER;
-			-- ArXpixmap giving the pixels of arx_pixmap drawn.
-
-	
-feature 
-
-	type: INTEGER;
-			-- Predefined type of current cursor
-
-	
-feature {NONE}
-
-	update_widgets is
-			-- Update widgets.
-		
+	allocate_cursor is
+			-- Allocate the screen cursor.
+		require
+			set_up: (type = User_defined_pixmap and then 
+				not is_allocated) implies (source_pixmap /= Void and then
+					cursor_mask /= Void)
 		local
-			widgets_to_update: LIST [WIDGET_M]
+			mask_bitmap: BITMAP_RESOURCE_X
 		do
-			from
-				widgets_to_update ?= objects;
-				widgets_to_update.start
-			until
-				widgets_to_update.off
-			loop
-				widgets_to_update.item.update_cursor;
-				widgets_to_update.forth
+			if not is_allocated then
+				if type = User_defined_pixmap then 
+					make_from_pixmap (
+						source_pixmap.bitmap, cursor_mask.bitmap, 
+						source_pixmap.hot_x, source_pixmap.hot_y)
+						-- Let the GC call dispose on the pixmaps in
+						-- order to free them if no other object is using them.
+					cursor_mask := Void;
+					source_pixmap := Void;
+				else
+					make_from_type (display, type*2)
+				end;
+				is_allocated := True
 			end
-		end
-
-feature {NONE} -- External features
-
-	x_create_font_cursor (scr_obj: POINTER; val: INTEGER): POINTER is
-		external
-			"C"
-		end; 
-
-	c_arx_mask (pix: POINTER): POINTER is
-		external
-			"C"
-		end; 
-
-	c_arx_duplicate (pix: POINTER): POINTER is
-		external
-			"C"
-		end; 
-
-	c_free_pixmap (mask: POINTER) is
-		external
-			"C"
-		end; 
-
-	x_free_cursor (scr_obj: POINTER; ident: POINTER) is
-		external
-			"C"
-		end; 
-
-	c_create_pixmap_cursor (scr_obj, pix, mask: POINTER): POINTER is
-		external
-			"C"
 		end;
 
-invariant
+	dispose is
+			-- Called when garbaged collected.
+		do
+			if not is_destroyed then
+				free;
+			end;
+			is_allocated := False;
+		end; 
 
-	((type >= X_cursor) and (type < Cursor_undefined)) or (type = User_defined_pixmap)
+	update_widget_resource (widget_m: WIDGET_M) is
+			-- Update resource for `widget_m'.
+		local
+			c: SCREEN_CURSOR
+		do
+			c := widget_m.cursor;	
+			if (c /= Void) and then (c.implementation = Current) then
+				number_of_users := number_of_users + 1;
+				widget_m.update_cursor
+			end
+		end; 
 
-end 
-
+end -- class SCREEN_CURSOR_X
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

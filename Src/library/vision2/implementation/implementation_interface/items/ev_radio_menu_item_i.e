@@ -11,6 +11,28 @@ deferred class
 
 inherit
 	EV_CHECK_MENU_ITEM_I
+
+feature -- Status report
+
+	is_peer (peer: EV_RADIO_MENU_ITEM): BOOLEAN is
+			-- Is this item in same group as peer
+		require
+			exists: not destroyed
+		deferred
+		end
+
+
+feature -- Status Setting
+
+	set_peer (peer: EV_RADIO_MENU_ITEM) is
+			-- Put in same group as peer
+		require
+			exists: not destroyed
+		deferred
+		ensure
+			same_group: is_peer(peer)
+		end
+
 	
 end -- class EV_RADIO_MENU_ITEM_I
 

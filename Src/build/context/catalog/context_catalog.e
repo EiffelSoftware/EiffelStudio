@@ -13,8 +13,6 @@ inherit
 
 	CONSTANTS
 
-	TOOLTIP_INITIALIZER
-
 	FORM
 		rename
 			init_toolkit as form_init_toolkit

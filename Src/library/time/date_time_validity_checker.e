@@ -33,6 +33,25 @@ feature -- Preconditions
 				code.is_date_time (s)
 		end
 
+	date_time_valid_with_base (s: STRING; code_string: STRING;
+					base: INTEGER): BOOLEAN is
+			-- Is the code_string enough precise
+			-- To create an instance of type DATE_TIME
+			-- And does the string `s' correspond to `code_string'?
+			-- Use base century `base'.
+		require
+			s_exists: s /= Void
+			code_exists: code_string /= Void
+			base_valid: base > 0 and (base \\ 100 = 0)
+		local
+			code: DATE_TIME_CODE_STRING
+		do
+			create code.make (code_string)
+			code.set_base_century (base)
+			Result := code.precise and code.correspond (s) and then
+				code.is_date_time (s)
+		end
+
 	is_correct_date_time (y, mo, d, h, mi: INTEGER; s: DOUBLE): BOOLEAN is
 			-- Is date-time specified by `y', `mo', `d', `h', `mi', `s'
 			-- correct?

@@ -17,21 +17,11 @@ inherit
 
 	EV_ITEM_EVENTS_CONSTANTS_IMP
 
-	WEL_BIT_OPERATIONS
-		export
-			{NONE} all
-		end
-
-	WEL_LIST_VIEW_ITEM
-		rename
-			text as wel_text,
-			set_text as wel_set_text,
-			make as wel_make
-		end
-
 creation
 	make,
-	make_with_text
+	make_with_text,
+	make_with_index,
+	make_with_all
 
 feature {NONE} -- Initialization
 
@@ -40,18 +30,37 @@ feature {NONE} -- Initialization
 			-- The sub-items start at 2. 1 is the index of
 			-- the current item.
 		do
-			wel_make
-			!! subitems.make (2, 1)
+			create internal_text.make (1)
+			internal_text.extend ("")
 		end
 
 	make_with_text (txt: ARRAY [STRING]) is
 			-- Create the row with the given text that also
 			-- set the length of the row.
 		do
-			wel_make
-			!! subitems.make (2, 1)
-			set_columns (txt.count)
-			set_text (txt)
+			internal_text ?= txt.linear_representation
+		end
+
+	make_with_index (par: EV_MULTI_COLUMN_LIST; value: INTEGER) is
+			-- Create a row at the given `value' index in the list.
+		local
+			par_imp: EV_MULTI_COLUMN_LIST_IMP
+		do
+			create internal_text.make (1)
+			internal_text.extend ("")
+			par_imp ?= par.implementation
+			set_columns (par_imp.columns)
+			parent_imp := par_imp
+			parent_imp.insert_item (Current, value)
+		end
+
+	make_with_all (par: EV_MULTI_COLUMN_LIST; txt: ARRAY [STRING]; value: INTEGER) is
+			-- Create a row with `txt' as text at the given
+			-- `value' index in the list.
+		do
+			internal_text ?= txt.linear_representation
+			parent_imp ?= par.implementation
+			parent_imp.insert_item (Current, value)
 		end
 
 feature -- Access
@@ -69,42 +78,39 @@ feature -- Access
 			end
 		end
 
-	subitems: ARRAY [WEL_LIST_VIEW_ITEM]
-			-- A list to keep the subitems of the item.
-
 	columns: INTEGER is
 			-- Number of columns in the row
 		do
-			Result := subitems.upper
+			Result := internal_text.count
 		end
 
 	index: INTEGER is
 			-- Index of the row in the list
 		do
-			Result := iitem + 1
+			Result := parent_imp.internal_get_index (Current)
 		end
 
 	text: LINKED_LIST [STRING] is
 			-- Return the text of the row
+		local
+			list: ARRAYED_LIST [STRING]
 		do
 			from
 				!! Result.make
-				Result.start
+				list := internal_text
+				list.start
 			until
-				Result.count = columns
+				list.after
 			loop
-				Result.extend (cell_text (Result.count + 1))
+				Result.extend (list.item)
+				list.forth
 			end
 		end
 
 	cell_text (column: INTEGER): STRING is
 			-- Return the text of the cell number `column' .
 		do
-			if column = 1 then
-				Result := wel_text
-			else
-				Result := (subitems @ column).text
-			end
+			Result := internal_text @ column
 		end
 
 feature -- Status report
@@ -112,16 +118,13 @@ feature -- Status report
 	destroyed: BOOLEAN is
 			-- Is Current row destroyed?  
 		do
-			Result := False
+			Result := (internal_text = Void) or else (internal_text.empty)
 		end
 
 	is_selected: BOOLEAN is
-			-- Is the item selected
-		local
-			flags: INTEGER
+			-- Is the item selected?
 		do
-			flags := parent_imp.get_item_state (iitem, Lvis_selected)
-			Result := flag_set (flags, Lvis_selected)
+			Result := parent_imp.internal_is_selected (Current)
 		end
 
 feature -- Status setting
@@ -133,66 +136,48 @@ feature -- Status setting
 				parent_imp.remove_item (Current)
 				parent_imp := Void
 			end
+			internal_text := Void
 			interface := Void
 		end
 
 	set_index (value: INTEGER) is
 			-- Make `value' the new index of the item.
-		local
-			i: INTEGER
 		do
---			set_iitem (value)
-			parent_imp.move_item (value, Current)
-			from
-				i := 2
-			until
-				i = columns + 1
-			loop
-				parent_imp.move_item (value, subitems @ i)
-				i := i + 1
-			end
+			parent_imp.move_item (Current, value)
 		end
 
 	set_selected (flag: BOOLEAN) is
 			-- Select the item if `flag', unselect it otherwise.
-		local
-			flags: INTEGER
 		do
-			if flag then
-				flags := set_flag (state, Lvis_selected)
-			else
-				flags := clear_flag (state, Lvis_selected)
-			end
-			set_state (flags)
-			set_statemask (Lvis_selected)
-			parent_imp.update_state (iitem, Current)
+ 			if flag then
+ 				parent_imp.internal_select (Current)
+ 			else
+				parent_imp.internal_deselect (Current)
+ 			end
 		end
 
 	set_columns (value: INTEGER) is
 			-- Set the number of columns of the row.
 		local
-			array: ARRAY [WEL_LIST_VIEW_ITEM]
-			an_item: WEL_LIST_VIEW_ITEM
-			start: INTEGER
-			i: INTEGER
+			list: ARRAYED_LIST [STRING]
 		do
-			!! array.make (2, value)
-			if subitems.count > 0 then
-				array.subcopy (subitems, 2, subitems.upper, 2)
-				start := subitems.upper
-			else
-				start := 2
+			list := internal_text
+			if columns < value then
+				from
+				until
+					list.count = value
+				loop
+					list.extend ("")
+				end
+			elseif columns > value then
+				from
+					list.go_i_th (value + 1)
+				until
+					list.after
+				loop
+					list.remove
+				end
 			end
-			from
-				i := start
-			until
-				i = value + 1
-			loop
-				!! an_item.make_with_attributes (Lvif_text, iitem, i - 1, 0, "")
-				array.put (an_item, i)
-				i := i + 1
-			end
-			subitems := array
 		end
 
 feature -- Element Change
@@ -213,17 +198,13 @@ feature -- Element Change
 			end
 		end
 
-	set_cell_text (column: INTEGER; a_text: STRING) is
+	set_cell_text (column: INTEGER; txt: STRING) is
 			-- Make `text ' the new label of the `column'-th
 			-- cell of the row.
 		do
-			if column = 1 then
-				wel_set_text (a_text)
-			else
-				(subitems @ column).set_text (a_text)
-			end
+			internal_text.put_i_th (txt, column)
 			if parent_imp /= Void then
-				parent_imp.set_cell_text (column - 1, iitem, a_text)
+				parent_imp.set_cell_text (column - 1, index - 1, txt)
 			end
 		end
 
@@ -249,7 +230,7 @@ feature -- Event -- removing command association
 			-- Empty the list of commands to be executed
 			-- when the item is activated.
 		do
-			remove_command (Cmd_item_activate)			
+			remove_command (Cmd_item_activate)
 		end	
 
 	remove_deactivate_commands is
@@ -259,23 +240,10 @@ feature -- Event -- removing command association
 			remove_command (Cmd_item_deactivate)		
 		end
 
-feature {EV_MULTI_COLUMN_LIST_IMP} -- Implementation
+feature -- Implementation
 
-	set_rows (value: INTEGER) is
-			-- Set the index of the rows in the list
-		local
-			i: INTEGER
-		do
-			set_iitem (value)
-			from
-				i := 2
-			until
-				i = columns + 1
-			loop
-				(subitems @ i).set_iitem (value)
-				i := i + 1
-			end
-		end
+	internal_text: ARRAYED_LIST [STRING]
+			-- List of strings of the item.
 
 end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 

@@ -41,48 +41,55 @@ extern void eif_thr_proxy_dispose(EIF_POINTER);
 
 /* Tuning for FSU POSIX Threads */
 #ifdef EIF_FSUTHREADS
-#ifndef EIF_POSIX_THREADS
 #define EIF_POSIX_THREADS
-#endif
 #define EIF_NONPOSIX_TSD
 #define HASNT_SCHEDPARAM
-#ifdef __linux__
-#ifndef ASMi386_SIGCONTEXT_H
-#define ASMi386_SIGCONTEXT_H 
-/* Or there will be a conflict between sys/time.h and pthread/signal.h */
-#endif
-#endif
+#define pthread_attr_setschedpolicy pthread_attr_setsched
+#define EIF_THR_SET_DETACHSTATE(attr,detach) \
+	{int idetach = (int) detach; pthread_attr_setdetachstate (&attr, &idetach);}
+#define EIF_MAX_PRIORITY 101
 #endif
 
 /* Tuning for POSIX LinuxThreads */
 #ifdef EIF_LINUXTHREADS
-#ifndef EIF_POSIX_THREADS
 #define EIF_POSIX_THREADS
-#endif
+#include <sched.h>
 #endif
 
 /* Tuning for POSIX PCThreads */
 #ifdef EIF_PCTHREADS
-#ifndef EIF_POSIX_THREADS
 #define EIF_POSIX_THREADS
-#endif
 #define EIF_NONPOSIX_TSD
+#define EIF_SCHEDPARAM_EXTRA param.sched_quantum = 2; /* bug in PCThreads */
+#define EIF_DEFAULT_PRIORITY 16
 #endif
 
 /* Tuning for Solaris Threads */
 #ifdef SOLARIS_THREADS
-#define EIF_NO_JOIN_ALL
+/* #define EIF_NO_JOIN_ALL paulv */
+#endif
+
+/* Tuning for VxWorks */
+#ifdef VXWORKS
+#define EIF_NO_CONDVAR
+#endif
+
+/* Tuning for Windows */
+#ifdef EIF_WIN32
+#define EIF_NO_CONDVAR
 #endif
 
 /* Exported functions */
 extern void eif_thr_init_root(void);
 extern void eif_thr_register(void);
 extern unsigned int eif_thr_is_initialized(void);
-extern void eif_thr_create(EIF_OBJ, EIF_PROC);
+extern void eif_thr_create(EIF_OBJ, EIF_PROC, EIF_BOOLEAN *);
 extern void eif_thr_exit(void);
 extern void eif_thr_yield(void);
 extern void eif_thr_join_all(void);
-extern void eif_thr_create_with_args(EIF_OBJ, EIF_PROC, EIF_INTEGER, EIF_INTEGER);
+extern void eif_thr_join(EIF_POINTER);
+extern void eif_thr_wait(EIF_BOOLEAN *);
+extern void eif_thr_create_with_args(EIF_OBJ, EIF_PROC, EIF_BOOLEAN *, EIF_INTEGER, EIF_INTEGER, EIF_BOOLEAN);
 extern EIF_INTEGER eif_thr_default_priority(void);
 extern EIF_INTEGER eif_thr_min_priority(void);
 extern EIF_INTEGER eif_thr_max_priority(void);
@@ -99,19 +106,24 @@ extern EIF_POINTER eif_thr_last_thread(void);
 #define EIF_SCHED_FIFO    2  /* FIFO scheduling        */
 #define EIF_SCHED_RR      3  /* Round-robin scheduling */
 
+#ifdef EIF_NO_CONDVAR
+#define EIF_COND_INIT(cond, msg)
+#define EIF_COND_WAIT(cond, mutex, msg)
+#define EIF_COND_BROADCAST(cond, msg)
+#define EIF_COND_DESTROY(cond, msg)
+#define EIF_COND_TYPE		undefined
+#define EIF_COND_ATTR_TYPE	undefined
+#endif /* EIF_NO_CONDVAR */
+
 /* --------------------------------------- */
 
 #ifdef EIF_POSIX_THREADS
-
 /*-----------------------*/
 /*---  POSIX Threads  ---*/
 /*-----------------------*/
 
 /* Includes */
 #include <pthread.h>
-#if defined EIF_LINUXTHREADS
-#include <sched.h>
-#endif
 
 /* Types */
 #define EIF_THR_ENTRY_TYPE		void *
@@ -121,54 +133,60 @@ extern EIF_POINTER eif_thr_last_thread(void);
 #define EIF_MUTEX_TYPE			pthread_mutex_t
 #define EIF_TSD_TYPE			pthread_key_t
 #define EIF_TSD_VAL_TYPE		void *
+#ifndef EIF_NO_CONDVAR
+#define EIF_COND_TYPE			pthread_cond_t
+#define EIF_COND_ATTR_TYPE		pthread_condattr_t
+#endif /* EIF_NO_CONDVAR */
 
 /* Constants */
-#define EIF_THR_CREATION_FLAGS
-#ifdef EIF_PCTHREADS
-#define EIF_DEFAULT_PRIORITY 16
-#else
+#ifndef EIF_DEFAULT_PRIORITY
 #define EIF_DEFAULT_PRIORITY 0
 #endif
+
+#ifndef EIF_MIN_PRIORITY
 #define EIF_MIN_PRIORITY 0
-#if defined EIF_FSUTHREADS
-#define EIF_MAX_PRIORITY 101
-#else
+#endif
+
+#ifndef EIF_MAX_PRIORITY
 #define EIF_MAX_PRIORITY 255
 #endif
 
 /* Thread attributes initialization macros */
+#define EIF_THR_SET_SCHED(attr,sc) \
+	switch(sc) { \
+		case EIF_SCHED_OTHER: \
+			pthread_attr_setschedpolicy(&attr,SCHED_OTHER); break; \
+		case EIF_SCHED_RR: \
+			pthread_attr_setschedpolicy(&attr,SCHED_RR); break; \
+		case EIF_SCHED_FIFO: \
+			pthread_attr_setschedpolicy(&attr,SCHED_FIFO); break; }
+#ifndef EIF_THR_SET_DETACHSTATE
+#define EIF_THR_SET_DETACHSTATE(attr,detach) \
+	pthread_attr_setdetachstate(&attr, \
+		detach ? PTHREAD_CREATE_DETACHED : PTHREAD_CREATE_JOINABLE);
+#endif
+
 #ifdef HASNT_SCHEDPARAM
-#define EIF_THR_ATTR_INIT(attr,pr,sc) \
+#define EIF_THR_ATTR_INIT(attr,pr,sc,detach) \
 	pthread_attr_init(&(attr)); \
 	attr.prio = pr; \
-	switch(sc) { \
-		case EIF_SCHED_OTHER: pthread_attr_setsched(&attr,SCHED_OTHER); break; \
-		case EIF_SCHED_RR:    pthread_attr_setsched(&attr,SCHED_RR); break; \
-		case EIF_SCHED_FIFO:  pthread_attr_setsched(&attr,SCHED_FIFO); break; }
+	EIF_THR_SET_SCHED(attr,sc) \
+	EIF_THR_SET_DETACHSTATE(attr,detach)
 #else
-#ifdef EIF_PCTHREADS
-#define EIF_THR_ATTR_INIT(attr,pr,sc) \
+#ifndef EIF_SCHEDPARAM_EXTRA
+#define EIF_SCHEDPARAM_EXTRA
+#endif
+#define EIF_THR_ATTR_INIT(attr,pr,sc,detach) \
 	pthread_attr_init(&(attr)); \
 	{ struct sched_param param; \
 	param.sched_priority = pr;  \
-	param.sched_quantum = 2; /* Due to a bug in PCThreads */ \
+	EIF_SCHEDPARAM_EXTRA \
 	pthread_attr_setschedparam(&attr, &param); } \
-	switch(sc) { \
-		case EIF_SCHED_OTHER: pthread_attr_setschedpolicy(&attr,SCHED_OTHER); break; \
-		case EIF_SCHED_RR:    pthread_attr_setschedpolicy(&attr,SCHED_RR); break; \
-		case EIF_SCHED_FIFO:  pthread_attr_setschedpolicy(&attr,SCHED_FIFO); break; }
-#else /* EIF_PCTHREADS */
-#define EIF_THR_ATTR_INIT(attr,pr,sc) \
-	pthread_attr_init(&(attr)); \
-	{ struct sched_param param; \
-	param.sched_priority = pr;  \
-	pthread_attr_setschedparam(&attr, &param); } \
-	switch(sc) { \
-		case EIF_SCHED_OTHER: pthread_attr_setschedpolicy(&attr,SCHED_OTHER); break; \
-		case EIF_SCHED_RR:    pthread_attr_setschedpolicy(&attr,SCHED_RR); break; \
-		case EIF_SCHED_FIFO:  pthread_attr_setschedpolicy(&attr,SCHED_FIFO); break; }
-#endif /* EIF_PCTHREADS */
+	EIF_THR_SET_SCHED(attr,sc) \
+	EIF_THR_SET_DETACHSTATE(attr,detach)
 #endif /* HASNT_SCHEDPARAM */
+
+#define EIF_THR_ATTR_DESTROY(attr) pthread_attr_destroy(&attr)
 
 /* Thread control macros */
 #define EIF_THR_CREATE(entry,arg,tid,msg) \
@@ -178,7 +196,7 @@ extern EIF_POINTER eif_thr_last_thread(void);
 	if (pthread_create (&tid, &attr, entry, (EIF_THR_ENTRY_ARG_TYPE) arg)) \
 		eif_thr_panic(msg)
 #define EIF_THR_EXIT(arg)			pthread_exit(NULL)
-#define EIF_THR_JOIN(which)			pthread_join((which),NULL)
+#define EIF_THR_JOIN(which)			pthread_join(which,NULL)
 #define EIF_THR_JOIN_ALL
 #define EIF_THR_YIELD				pthread_yield(0)
 
@@ -186,9 +204,11 @@ extern EIF_POINTER eif_thr_last_thread(void);
 #define EIF_THR_GET_PRIORITY(tid,prio)
 
 /* Mutex management */
-#define EIF_MUTEX_CREATE(m,msg)		\
+#define EIF_MUTEX_CREATE(m,msg) \
 	m = (EIF_MUTEX_TYPE *) malloc(sizeof(EIF_MUTEX_TYPE)); \
 	if (!(m)) eif_thr_panic("cannot allocate memory for mutex creation\n"); \
+	EIF_MUTEX_INIT(m,msg)
+#define EIF_MUTEX_INIT(m,msg) \
 	if (pthread_mutex_init(m,NULL)) eif_thr_panic(msg)
 #define EIF_MUTEX_LOCK(m,msg) if (pthread_mutex_lock(m)) eif_thr_panic(msg)
 #define EIF_MUTEX_TRYLOCK(m,r,msg)	\
@@ -196,8 +216,9 @@ extern EIF_POINTER eif_thr_last_thread(void);
 	if (r && (r!=EBUSY)) eif_thr_panic(msg)
 #define EIF_MUTEX_UNLOCK(m,msg) if (pthread_mutex_unlock(m)) eif_thr_panic(msg)
 #define EIF_MUTEX_DESTROY(m,msg) \
-	if (pthread_mutex_destroy(m)) eif_thr_panic(msg); free(m)
-
+	EIF_MUTEX_DESTROY0(m,msg); free(m)
+#define EIF_MUTEX_DESTROY0(m,msg) \
+	if (pthread_mutex_destroy(m)) eif_thr_panic(msg)
 #define EIF_TSD_CREATE(key,msg)				\
 	if (pthread_key_create(&(key),NULL))	\
 		eif_thr_panic(msg)
@@ -218,6 +239,17 @@ extern EIF_POINTER eif_thr_last_thread(void);
 #endif
 #define EIF_TSD_DESTROY(key,msg) if (pthread_key_delete(key) eif_thr_panic(msg)
 
+/* Condition variables management */
+#ifndef EIF_NO_CONDVAR
+#define EIF_COND_INIT(pcond, msg) \
+	if (pthread_cond_init (pcond, NULL)) eif_thr_panic (msg)
+#define EIF_COND_WAIT(pcond, pmutex, msg) \
+	if (pthread_cond_wait (pcond, pmutex)) eif_thr_panic (msg)
+#define EIF_COND_BROADCAST(pcond, msg) \
+	if (pthread_cond_broadcast (pcond)) eif_thr_panic (msg)
+#define EIF_COND_DESTROY(pcond, msg) \
+	if (pthread_cond_destroy (pcond)) eif_thr_panic (msg)
+#endif
 
 #elif defined EIF_WIN32
 
@@ -238,13 +270,13 @@ extern EIF_POINTER eif_thr_last_thread(void);
 #define EIF_TSD_VAL_TYPE		LPVOID
 
 /* Constants */
-#define EIF_THR_CREATION_FLAGS
 #define EIF_MIN_PRIORITY 0			/* FIXME - not used */
 #define EIF_MAX_PRIORITY 1000		/* FIXME - not used */
 #define EIF_DEFAULT_PRIORITY 0		/* FIXME - not used */
 
 /* Thread attributes initialization macros */
-#define EIF_THR_ATTR_INIT(attr,prio,sched) /* FIXME - not used */
+#define EIF_THR_ATTR_INIT(attr,prio,sched,detach) /* FIXME - not used */
+#define EIF_THR_ATTR_DESTROY(attr) /* FIXME - not used */
 
 /* Thread control macros */
 #define EIF_THR_CREATE_WITH_ATTR(entry,arg,tid,attr,msg) \
@@ -269,9 +301,7 @@ extern EIF_POINTER eif_thr_last_thread(void);
 #define EIF_MUTEX_LOCK(m,msg)				EnterCriticalSection(m)
 #define EIF_MUTEX_TRYLOCK(m,r,msg)
 #define EIF_MUTEX_UNLOCK(m,msg)				LeaveCriticalSection(m)
-#define EIF_MUTEX_DESTROY(m,msg)	\
-	DeleteCriticalSection(m); 		\
-	free(m)
+#define EIF_MUTEX_DESTROY(m,msg)			DeleteCriticalSection(m); free(m)
 
 /* Thread Specific Data management */
 #define EIF_TSD_CREATE(key,msg) \
@@ -310,21 +340,27 @@ typedef struct {
 #define EIF_MUTEX_TYPE			mutex_t
 #define EIF_TSD_TYPE			thread_key_t
 #define EIF_TSD_VAL_TYPE		void *
+#ifndef EIF_NO_CONDVAR
+#define EIF_COND_TYPE			cond_t
+#define EIF_COND_ATTR_TYPE		condattr_t
+#endif /* EIF_NO_CONDVAR */
 
 /* Constants */
-#define EIF_THR_CREATION_FLAGS THR_NEW_LWP
+#define EIF_THR_CREATION_FLAGS THR_NEW_LWP | THR_DETACHED
 #define EIF_MIN_PRIORITY 0
 #define EIF_MAX_PRIORITY INT_MAX
 #define EIF_DEFAULT_PRIORITY 0
 
 /* Thread attributes initialization macros */
 /* -- There's no such thing as a thread attribute with Solaris threads. For
-   -- us it's astruct containing two integers.
+   -- us it's a struct containing two integers.
    -- In the case of FIFO scheduling, we create the thread without increasing
    -- the level of concurrency */
-#define EIF_THR_ATTR_INIT(attr,pr,policy) \
+#define EIF_THR_ATTR_INIT(attr,pr,policy,detach) \
 	attr.prio = pr; \
-	attr.pol = (policy == EIF_SCHED_FIFO) ? 0 : THR_NEW_LWP
+	attr.pol = (policy == EIF_SCHED_FIFO) ? 0 : THR_NEW_LWP; \
+	if (detach) attr.pol |= THR_DETACHED
+#define EIF_THR_ATTR_DESTROY(attr)
 
 /* Thread control macros */
 #define EIF_THR_CREATE(entry,arg,tid,msg)	\
@@ -336,30 +372,33 @@ typedef struct {
 	if (thr_create (NULL, 0, (void *(*)(void *))(entry), \
 		   (EIF_THR_ENTRY_ARG_TYPE)(arg), attr.pol, &(tid))) \
 		eif_thr_panic(msg); \
-	if (thr_setprio(tid,attr.prio)) eif_thr_panic(msg); \
-	if (attr.pol == THR_NEW_LWP) thr_setconcurrency(1)
+	if (!(attr.pol & THR_DETACHED)) \
+		if(thr_setprio(tid,attr.prio)) eif_thr_panic(msg)
+
 #define EIF_THR_EXIT(arg)			thr_exit(arg)
-#define EIF_THR_JOIN(which)			thr_join(0,(which),NULL)
+#define EIF_THR_JOIN(which)			thr_join(which,0,NULL)
 #define EIF_THR_JOIN_ALL			while (thr_join(0, 0, 0) == 0)
 #define EIF_THR_YIELD				thr_yield()
 #define EIF_THR_SET_PRIORITY(tid,prio) thr_setprio(tid,prio)
 #define EIF_THR_GET_PRIORITY(tid,prio) thr_setprio(tid,&(prio))
 
+/* Mutex management */
 #define EIF_MUTEX_CREATE(m,msg)		\
 	m = (EIF_MUTEX_TYPE *) malloc (sizeof(EIF_MUTEX_TYPE)); \
 	if (!(m)) eif_thr_panic("cannot allocate memory for mutex creation\n"); \
 	if (mutex_init((m),USYNC_THREAD,NULL)) eif_thr_panic(msg)
-
 #define EIF_MUTEX_LOCK(m,msg)		if (mutex_lock(m)) eif_thr_panic(msg)
 #define EIF_MUTEX_TRYLOCK(m,r,msg)	\
 		r = mutex_trylock(m); \
 		if(r && (r != EBUSY)) \
 			eif_thr_panic(msg)
 #define EIF_MUTEX_UNLOCK(m,msg)		if (mutex_unlock(m)) eif_thr_panic(msg)
-#define EIF_MUTEX_DESTROY(m,msg)	\
-	if (mutex_destroy(m)) eif_thr_panic(msg) \
-	free(m)
+#define EIF_MUTEX_DESTROY0(m,msg)	\
+	if (mutex_destroy(m)) eif_thr_panic(msg)
+#define EIF_MUTEX_DESTROY(m,msg) \
+	EIF_MUTEX_DESTROY0(m,msg); free(m)
 
+/* Thread Specific Data management */
 #define EIF_TSD_CREATE(key,msg) \
 	if (thr_keycreate(&(key),NULL)) eif_thr_panic(msg)
 #define EIF_TSD_SET(key,val,msg) \
@@ -371,6 +410,17 @@ typedef struct {
 
 #define EIF_TSD_DESTROY(key,msg)
 
+/* Condition variables management */
+#ifndef EIF_NO_CONDVAR
+#define EIF_COND_INIT(pcond, msg) \
+	if (cond_init (pcond, USYNC_THREAD, NULL)) eif_thr_panic (msg)
+#define EIF_COND_WAIT(pcond, pmutex, msg) \
+	if (cond_wait (pcond, pmutex)) eif_thr_panic (msg)
+#define EIF_COND_BROADCAST(pcond, msg) \
+	if (cond_broadcast (pcond)) eif_thr_panic (msg)
+#define EIF_COND_DESTROY(pcond, msg) \
+	if (cond_destroy (pcond)) eif_thr_panic (msg)
+#endif
 
 #elif defined VXWORKS
 
@@ -405,7 +455,8 @@ typedef struct {
 /* Thread attributes initialization macros */
 /* -- There's no such thing as a thread attribute under VxWorks, so for us,
    -- the thread attribute is only its priority */
-#define EIF_THR_ATTR_INIT(attr,pr,sc) attr = pr
+#define EIF_THR_ATTR_INIT(attr,pr,sc,detach) attr = pr
+#define EIF_THR_ATTR_DESTROY(attr)
 
 /* Thread control macros */
 #define EIF_THR_CREATE(entry,arg,tid,msg)		\
@@ -476,9 +527,12 @@ typedef struct {
 typedef struct {
 	EIF_OBJ current;
 	EIF_PROC routine;
-#ifndef EIF_NO_JOIN_ALL
+	EIF_MUTEX_TYPE *children_mutex;
+	EIF_BOOLEAN *terminated;
 	int *addr_n_children;
-#endif
+#ifndef EIF_NO_CONDVAR
+	EIF_COND_TYPE *children_cond;
+#endif	
 	EIF_THR_TYPE *tid;
 } start_routine_ctxt_t;
 
@@ -493,6 +547,7 @@ extern EIF_MUTEX_TYPE *eif_thr_mutex_create(void);
 extern void eif_thr_mutex_lock(EIF_MUTEX_TYPE *a_mutex_pointer);
 extern void eif_thr_mutex_unlock(EIF_MUTEX_TYPE *a_mutex_pointer);
 extern EIF_BOOLEAN eif_thr_mutex_trylock(EIF_MUTEX_TYPE *a_mutex_pointer);
+extern void eif_thr_mutex_destroy(EIF_MUTEX_TYPE *a_mutex_pointer);
 
 
 #else

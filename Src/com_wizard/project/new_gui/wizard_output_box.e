@@ -104,21 +104,31 @@ feature -- Basic Operations
 			l_output_event: WIZARD_OUTPUT_EVENT
 			l_progress_event: WIZARD_PROGRESS_EVENT
 			l_percent: INTEGER
+			l_text, l_underline, l_event_text: STRING
 		do
 			l_output_event ?= a_event
 			if l_output_event /= Void then
+				l_event_text := l_output_event.text
 				inspect
 					l_output_event.id
 				when feature {WIZARD_OUTPUT_EVENT_ID}.Display_title then
-					add_output (l_output_event.text + "%N", Title_format)
+					create l_underline.make (l_event_text.count)
+					l_underline.fill_with ('-')
+					create l_text.make (1 + 2 * l_event_text.count + 3)
+					l_text.append_character ('%N')
+					l_text.append (l_event_text)
+					l_text.append_character ('%N')
+					l_text.append (l_underline)
+					l_text.append ("%N%N")
+					add_output (l_text, Title_format)
 				when feature {WIZARD_OUTPUT_EVENT_ID}.Display_text then
-					add_output (l_output_event.text, Message_format)
+					add_output (l_event_text, Message_format)
 				when feature {WIZARD_OUTPUT_EVENT_ID}.Display_message then
-					add_output (l_output_event.text + "%N", Message_format)
+					add_output (l_event_text + "%N", Message_format)
 				when feature {WIZARD_OUTPUT_EVENT_ID}.Display_warning then
-					add_output (l_output_event.text + "%N", Warning_format)
+					add_output (l_event_text + "%N", Warning_format)
 				when feature {WIZARD_OUTPUT_EVENT_ID}.Display_error then
-					add_output (l_output_event.text + "%N", Error_format)
+					add_output (l_event_text + "%N", Error_format)
 				when feature {WIZARD_OUTPUT_EVENT_ID}.Clear then
 					clear
 				else

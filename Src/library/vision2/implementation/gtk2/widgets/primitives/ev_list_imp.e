@@ -224,7 +224,7 @@ feature {EV_ANY_I} -- Implementation
 
 	visual_widget: POINTER is
 		do
-			Result := c_object-- list_widget
+			Result := tree_view
 		end
 
 	interface: EV_LIST

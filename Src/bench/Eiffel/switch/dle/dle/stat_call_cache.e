@@ -2,7 +2,7 @@
 
 class STAT_CALL_CACHE inherit
 
-	CACHE [DLE_STATIC_CALLS]
+	CACHE [DLE_STATIC_CALLS, INTEGER_ID]
 
 creation
 

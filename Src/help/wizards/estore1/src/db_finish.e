@@ -170,7 +170,7 @@ feature -- Processing
 			s: STRING
 		do
 			notify_user("Importing database_manager ...")
-			copy_class("database_manager")
+			copy_database_manager
 			notify_user("Importing db_action ...")
 			copy_class("db_action")
 			notify_user("Importing db_shared ...")
@@ -182,6 +182,35 @@ feature -- Processing
 				copy_class("estore_root")
 			end
 		end
+
+	copy_database_manager is
+		local
+			f1,f_name: FILE_NAME
+			fi: PLAIN_TEXT_FILE
+			new_s,s: STRING
+		do
+			Create f1.make_from_string(wizard_resources_path)
+			f_name := clone(f1)
+			f_name.extend("database_manager")
+			f_name.add_extension("e")
+			Create fi.make_open_read(f_name)
+			fi.read_stream(fi.count)
+			s := fi.last_string
+			new_s := clone (s)
+			if state_information.is_oracle then
+				new_s.replace_substring_all("<FL_HANDLE>", "ORACLE")
+			else
+				new_s.replace_substring_all("<FL_HANDLE>", "ODBC")
+			end
+			fi.close
+			Create f_name.make_from_string(state_information.location)
+			f_name.extend("database_manager")
+			f_name.add_extension("e")
+			Create fi.make_open_write(f_name)
+			fi.put_string(new_s)
+			fi.close
+		end
+
 
 	copy_class(name: STRING) is
 			-- Copy Class whose name is 'name'.
@@ -280,7 +309,8 @@ feature -- Processing
 			fi.close
 			Create root_generator.make(example_generator,s,
 					state_information.username,
-					state_information.password)
+					state_information.password,
+					state_information.data_source)
 			s := root_generator.result_string
 			Create fi.make_open_write(f_name)
 			fi.put_string(s)

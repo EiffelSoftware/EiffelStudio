@@ -93,7 +93,7 @@ feature -- Initialization
 				a_request:=a_request +s1
 			end
 			a_request := a_request + " where "+s2+"="+s3
-			Result_string.append("%T%T%TResult := db_manager.load_list(%"")
+			Result_string.append("%T%T%TResult := db_manager.load_list_from_select(%"")
 			Result_string.append(a_request+"%", obj)%N")
 			Result_string.append("%T%Tensure%N")
 			Result_string.append("%T%T%Texists: Result /= Void%N")

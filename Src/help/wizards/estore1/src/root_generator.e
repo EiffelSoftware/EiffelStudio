@@ -13,7 +13,7 @@ creation
 
 feature -- Initialization
 
-	make (ex: EXAMPLE_GENERATOR;s,t,u: STRING) is
+	make (ex: EXAMPLE_GENERATOR;s,t,u,v: STRING) is
 		require
 			ex /= Void and s /= Void
 		do
@@ -24,6 +24,7 @@ feature -- Initialization
 			result_string.replace_substring_all("<FL3>",ex.a_request)
 			result_string.replace_substring_all("<FL4>",t)
 			result_string.replace_substring_all("<FL5>",u)
+			result_string.replace_substring_all("<FL6>",v)
 		ensure
 			result_string /= Void and example /= Void
 			set: example = ex

@@ -79,7 +79,7 @@ feature {NONE} -- Implementation
 				-- status.
 			
 			output_file_name := clone (generated_path)
-			output_file_name.extend ("completion_status.txt")
+			output_file_name.extend (wizard_completion_file_name)
 			create output_file.make_open_write (output_file_name)
 			output_file.start
 			output_file.putstring ("Empty")

@@ -25,7 +25,7 @@ EIF_POINTER w;
  	return (EIF_INTEGER) end;
 }
 
-xm_text_is_selection_active (w)
+EIF_BOOLEAN xm_text_is_selection_active (w)
 EIF_POINTER w;
 {
 	XmTextPosition begin, end;
@@ -202,25 +202,35 @@ void xm_text_set_do_it (event_ptr, b)
 EIF_POINTER event_ptr;
 EIF_BOOLEAN b;
 {
-    /*
-     * Allows or forbids the cursor to move or the text to be modified
-     * during a `motion' or a `modify' action.
-    */
-    if (b) 
+	/*
+	 * Allows or forbids the cursor to move or the text to be modified
+	 * during a `motion' or a `modify' action.
+	*/
+	if (b) 
 		((XmTextVerifyCallbackStruct *) event_ptr)->doit = True;
-    else ((XmTextVerifyCallbackStruct *) event_ptr)->doit = False;
+	else ((XmTextVerifyCallbackStruct *) event_ptr)->doit = False;
 }
 
 void xm_text_wcs_set_do_it (event_ptr, b)
 EIF_POINTER event_ptr;
 EIF_BOOLEAN b;
 {
-    /*
-     * Allows or forbids the cursor to move or the text to be modified
-     * during a `motion' or a `modify' action.
-    */
-    if (b) 
+	/*
+	 * Allows or forbids the cursor to move or the text to be modified
+	 * during a `motion' or a `modify' action.
+	 */
+	if (b) 
 		((XmTextVerifyCallbackStructWcs *) event_ptr)->doit = True;
-    else ((XmTextVerifyCallbackStructWcs *) event_ptr)->doit = False;
+	else ((XmTextVerifyCallbackStructWcs *) event_ptr)->doit = False;
 }
 
+void xm_font_list_entry_free (an_entry)
+EIF_POINTER an_entry;
+{
+	/*
+	 * Free the address of font list entry
+	 */
+
+	XmFontListEntry xm_entry = (XmFontListEntry) an_entry;
+	XmFontListEntryFree (&xm_entry);
+}

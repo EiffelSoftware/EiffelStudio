@@ -20,7 +20,7 @@ odbc_store.lib: $(OBJ) odbc.h
 
 il_odbc_store.lib: $(IL_OBJ) odbc.h
 		-del $@
-		lib /OUT:$@ $(OBJ)
+		lib /OUT:$@ $(IL_OBJ)
 		if not exist ..\..\..\..\spec mkdir ..\..\..\..\spec
 		if not exist ..\..\..\..\spec\msc mkdir ..\..\..\..\spec\msc
 		if not exist ..\..\..\..\spec\msc\lib mkdir ..\..\..\..\spec\msc\lib

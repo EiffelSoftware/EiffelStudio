@@ -81,75 +81,83 @@ feature -- Access
 
 	procedures: ARRAY [CONSUMED_PROCEDURE] is
 			-- All procedures in type. 
-			-- ie: immediate and inherited procedures, but also procedures associated to a property or an event.
+			-- ie: immediate and inherited procedures, but also procedures associated
+			-- to a property or an event.
 		local
-			i, nb_prop_event_proc: INTEGER
+			i, j, nb, nb_prop_event_proc: INTEGER
 			event_or_set_procedures: ARRAY [CONSUMED_PROCEDURE]
 			l_event: CONSUMED_EVENT
+			l_prop: CONSUMED_PROPERTY
 		do
-			if properties /= Void and events /= Void then
-				create event_or_set_procedures.make (1, properties.count + events.count * 3)
-			elseif properties /= Void then
-				create event_or_set_procedures.make (1, properties.count)
-			elseif events /= Void then
-				create event_or_set_procedures.make (1, 3 * events.count)
+			if
+				(properties = Void or else properties.is_empty) and
+				(events = Void or else events.is_empty)
+			then
+				Result := internal_procedures
 			else
-				create event_or_set_procedures.make (0, 0)
-			end
-			from
-				i := 1
-			until
-				properties = void or else
-				i = properties.count or else
-				properties.upper <= properties.lower
-			loop
-				if properties.item (i).setter /= Void then
-					nb_prop_event_proc := nb_prop_event_proc + 1
-					event_or_set_procedures.put (properties.item (i).setter, nb_prop_event_proc)
+				create event_or_set_procedures.make (1, properties.count + events.count * 3)
+				if properties /= Void and then not properties.is_empty then
+					from
+						i := properties.lower
+						nb := properties.upper
+					until
+						i > nb
+					loop
+						l_prop := properties.item (i)
+						if l_prop.setter /= Void then
+							nb_prop_event_proc := nb_prop_event_proc + 1
+							event_or_set_procedures.put (l_prop.setter, nb_prop_event_proc)
+						end
+						i := i + 1
+					end
+					
 				end
-				i := i + 1
-			end
-			from
-				i := 1
-			until
-				events = Void or else
-				i = events.count or else
-				events.upper <= events.lower
-			loop
-				l_event := events.item (i)
-				if l_event.raiser /= Void then
-					nb_prop_event_proc := nb_prop_event_proc + 1
-					event_or_set_procedures.put (l_event.raiser, nb_prop_event_proc)
+				
+				if events /= Void and then not events.is_empty then
+					from
+						i := events.lower
+						nb := events.upper
+					until
+						i > nb
+					loop
+						l_event := events.item (i)
+						if l_event.raiser /= Void then
+							nb_prop_event_proc := nb_prop_event_proc + 1
+							event_or_set_procedures.put (l_event.raiser, nb_prop_event_proc)
+						end
+						if l_event.remover /= Void then
+							nb_prop_event_proc := nb_prop_event_proc + 1
+							event_or_set_procedures.put (l_event.remover, nb_prop_event_proc)
+						end
+						if l_event.adder /= Void then
+							nb_prop_event_proc := nb_prop_event_proc + 1
+							event_or_set_procedures.put (l_event.adder, nb_prop_event_proc)
+						end
+						i := i + 1
+					end					
 				end
-				if l_event.remover /= Void then
-					nb_prop_event_proc := nb_prop_event_proc + 1
-					event_or_set_procedures.put (l_event.remover, nb_prop_event_proc)
+				
+				create Result.make (1, internal_procedures.count + nb_prop_event_proc)
+				from
+					i := internal_procedures.lower
+					nb := internal_procedures.upper
+				until
+					i > nb
+				loop
+					Result.put (internal_procedures.item (i), i)
+					i := i + 1
 				end
-				if l_event.adder /= Void then
-					nb_prop_event_proc := nb_prop_event_proc + 1
-					event_or_set_procedures.put (l_event.adder, nb_prop_event_proc)
+				from
+					j := i
+					i := event_or_set_procedures.lower
+					nb := Result.upper
+				until
+					j > nb
+				loop
+					Result.put (event_or_set_procedures.item (i), j)
+					i := i + 1
+					j := j + 1
 				end
-				i := i + 1
-			end
-			
-			create Result.make (1, internal_procedures.count + nb_prop_event_proc)
-			from
-				i := 1
-			until
-				i > internal_procedures.count
-			loop
-				Result.put (internal_procedures.item (i), i)
-				i := i + 1
-			end
-			from
-				nb_prop_event_proc := i
-				i := 1
-			until
-				i > event_or_set_procedures.count or else event_or_set_procedures.item (i) = Void
-			loop
-				Result.put (event_or_set_procedures.item (i), nb_prop_event_proc)
-				i := i + 1
-				nb_prop_event_proc := nb_prop_event_proc + 1
 			end
 		ensure
 			non_void_result: Result /= Void
@@ -157,44 +165,47 @@ feature -- Access
 
 	functions: ARRAY [CONSUMED_FUNCTION] is
 			-- All functions in type. 
-			-- ie: immediate and inherited functions, but also functions associated to a property or an event.
+			-- ie: immediate and inherited functions, but also functions associated
+			-- to a property or an event.
 		local
-			i, j, nb_getter: INTEGER
+			i, j, nb, nb_getter: INTEGER
 			get_functions: ARRAY [CONSUMED_FUNCTION]
-			l_event: CONSUMED_EVENT
+			l_prop: CONSUMED_PROPERTY
 		do
-			if properties = Void then
+			if properties = Void or else properties.is_empty then
 				Result := internal_functions
 			else
 				create get_functions.make (1, properties.count)
 				from
-					i := 1
+					i := properties.lower
+					nb := properties.upper
 				until
-					properties = Void or else
-					i = properties.count or else
-					properties.upper <= properties.lower
+					i > nb
 				loop
-					if properties.item (i).getter /= Void then
+					l_prop := properties.item (i)
+					if l_prop.getter /= Void then
 						nb_getter := nb_getter + 1
-						get_functions.put (properties.item (i).getter, nb_getter)
+						get_functions.put (l_prop.getter, nb_getter)
 					end
 					i := i + 1
 				end
 				
 				create Result.make (1, internal_functions.count + nb_getter)
 				from
-					i := 1
+					i := internal_functions.lower
+					nb := internal_functions.upper
 				until
-					i > internal_functions.count
+					i > nb
 				loop
 					Result.put (internal_functions.item (i), i)
 					i := i + 1
 				end
 				from
 					j := i
-					i := 1
+					i := get_functions.lower
+					nb := Result.upper
 				until
-					i > get_functions.count or else get_functions.item (i) = Void 
+					j > nb 
 				loop
 					Result.put (get_functions.item (i), j)
 					i := i + 1
@@ -213,7 +224,6 @@ feature {NONE} -- Internal vales
 
 	internal_functions: ARRAY [CONSUMED_FUNCTION]
 			-- Class functions
-
 
 feature -- Status Setting
 
@@ -333,11 +343,10 @@ feature -- Functions used for easy browsing of data from ConsumerWrapper.
 		end
 		
 	entities: ARRAYED_LIST [CONSUMED_ENTITY] is
-			-- All fields, procedures, functions, properties and events immediately implemented by type.
+			-- All fields, procedures, functions, properties and events immediately
+			-- implemented by type.
 		require
 			fields_not_void: fields /= Void
---			internal_functions_not_void: internal_functions /= Void
---			internal_procedures_not_void: internal_procedures /= Void
 		do
 			Result := consumed_type_entities (True)
 			Result.compare_objects
@@ -349,18 +358,15 @@ feature -- Functions used for easy browsing of data from ConsumerWrapper.
 			-- All fields, procedures, functions, properties and events inherited by type.
 		require
 			fields_not_void: fields /= Void
---			internal_functions_not_void: internal_functions /= Void
---			internal_procedures_not_void: internal_procedures /= Void
 		do
 			Result := consumed_type_entities (False)
 		end
 		
 	flat_entities: ARRAYED_LIST [CONSUMED_ENTITY] is
-			-- All fields, procedures, functions, properties and events implemented/inherited by type.
+			-- All fields, procedures, functions, properties and events
+			-- implemented/inherited by type.
 		require
 			fields_not_void: fields /= Void
---			internal_functions_not_void: internal_functions /= Void
---			internal_procedures_not_void: internal_procedures /= Void
 		do
 			Result := consumed_type_entities (True)
 			Result.fill (consumed_type_entities (False))
@@ -391,74 +397,51 @@ feature {NONE} -- Internal
 			-- If `a_immediate' then return immediate features, else return inherited.
 		require
 			fields_not_void: fields /= Void
---			internal_functions_not_void: internal_functions /= Void
---			internal_procedures_not_void: internal_procedures /= Void
+			internal_functions_not_void: internal_functions /= Void
+			internal_procedures_not_void: internal_procedures /= Void
 			properties_not_void: properties /= Void
 			events_not_void: events /= Void
-		local
-			i: INTEGER
 		do
-			create Result.make (0)
---			Result.fill (fields)
-			from 
-				i := 1
-			until
-				i > fields.count or else fields.item (i) = Void
-			loop
-				if (fields.item (i).declared_type.is_equal (associated_reference_type) = a_immediate) then
-					Result.extend (fields @ i)
-				end
-				i := i + 1
-			end
-
-			from 
-				i := 1
-			until
-				i > internal_functions.count or else internal_functions.item (i) = Void
-			loop
-				if (internal_functions.item (i).declared_type.is_equal (associated_reference_type) = a_immediate) then
-					Result.extend (internal_functions @ i)
-				end
-				i := i + 1
-			end
-
-			from 
-				i := 1
-			until
-				i > internal_procedures.count or else internal_procedures.item (i) = Void
-			loop
-				if (internal_procedures.item (i).declared_type.is_equal (associated_reference_type) = a_immediate) then
-					Result.extend (internal_procedures @ i)
-				end
-				i := i + 1
-			end
-			
-			from 
-				i := 1
-			until
-				i > properties.count or else properties.item (i) = Void
-			loop
-				if (properties.item (i).declared_type.is_equal (associated_reference_type) = a_immediate) then
-					Result.extend (properties @ i)
-				end
-				i := i + 1
-			end
-
-			from 
-				i := 1
-			until
-				i > events.count or else events.item (i) = Void
-			loop
-				if (events.item (i).declared_type.is_equal (associated_reference_type) = a_immediate) then
-					Result.extend (events @ i)
-				end
-				i := i + 1
-			end
+			create Result.make (fields.count + internal_functions.count + internal_procedures.count +
+				events.count + properties.count)
+			consumed_a_type_entities (fields, a_immediate, Result)
+			consumed_a_type_entities (internal_functions, a_immediate, Result)
+			consumed_a_type_entities (internal_procedures, a_immediate, Result)
+			consumed_a_type_entities (events, a_immediate, Result)
+			consumed_a_type_entities (properties, a_immediate, Result)
 		ensure
 			result_not_void: Result /= Void
 		end
-		
 
+	consumed_a_type_entities (
+			a_features: ARRAY [CONSUMED_ENTITY]; a_immediate: BOOLEAN; a_result: like consumed_type_entities)
+		is
+			-- All fields, procedures, functions, properties and events implemented by type.
+			-- If `a_immediate' then return immediate features, else return inherited.
+		require
+			a_features_not_void: a_features /= Void
+			a_result_not_void: a_result /= Void
+		local
+			i, nb: INTEGER
+			l_entity: CONSUMED_ENTITY
+		do
+			from 
+				i := a_features.lower
+				nb := a_features.upper
+			until
+				i > nb
+			loop
+				l_entity := a_features.item (i)
+				if
+					l_entity /= Void and then
+					(l_entity.declared_type.is_equal (associated_reference_type) = a_immediate)
+				then
+					a_result.extend (l_entity)
+				end
+				i := i + 1
+			end
+		end
+ 			
 	internal_flags: INTEGER
 			-- Store status of current type.
 

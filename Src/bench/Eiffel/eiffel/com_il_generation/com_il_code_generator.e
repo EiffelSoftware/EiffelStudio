@@ -45,7 +45,7 @@ feature -- Basic Operations
 			create key_path.make_from_string ((create {PROJECT_CONTEXT}).Final_generation_path)
 			key_path := key_path + (create {OPERATING_ENVIRONMENT}).Directory_separator.out + Key_filename
 			if not (create {RAW_FILE}.make (key_path)).exists then
-				(create {WEL_PROCESS_LAUNCHER}).launch (Sn_command + key_path, (create {EXECUTION_ENVIRONMENT}).current_working_directory, Void)
+				(create {WEL_PROCESS_LAUNCHER}).launch (Sn_command + Double_quote + key_path + Double_quote, (create {EXECUTION_ENVIRONMENT}).current_working_directory, Void)
 			end
 		end
 
@@ -251,6 +251,9 @@ feature {NONE} -- Implementation
 
 	Empty_string: STRING is ""
 			-- Empty string
+
+	Double_quote: STRING is "%""
+			-- Double quote
 
 	Key_filename: STRING is
 			-- Key pair filename

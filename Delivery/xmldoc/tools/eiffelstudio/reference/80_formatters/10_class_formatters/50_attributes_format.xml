@@ -1,10 +1,10 @@
 <document title="Attributes" output="studio">
 	<meta_data/>
 	<paragraph>
-		<paragraph>The attributes view 
+		<paragraph>The attributes view
 			<image>
 				<url>/images/eiffelstudio/icons/icon_format_attributes_color.gif</url>
-			</image> displays all the attributes of the current class, including inherited attributes.
+			</image>displays all the attributes of the current class, including inherited attributes.
 			<line_break/>It is available through the 
 			<bold>Class</bold> tab of the 
 			<link>

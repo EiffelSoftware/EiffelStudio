@@ -15,7 +15,7 @@
 				<paragraph>Enable syntax autocomplete: If this is set to True, automatic syntax completion will be triggered when you type a keyword. If not, keywords will be handled the same way as other words. The default value is True.</paragraph>
 			</item>
 			<item>
-				<paragraph>Any features appear in the feature call complete window: If this is set to True, the features of class ANY will appear in the list of the feature call completion window. Otherwise, they will be hidden. The default value is False.</paragraph>
+				<paragraph>Any features appear in the feature call complete window: If this is set to True, the features of class <code><class_name>ANY</class_name></code> will appear in the list of the feature call completion window. Otherwise, they will be hidden. The default value is False.</paragraph>
 			</item>
 		</list>
 	</paragraph></document>

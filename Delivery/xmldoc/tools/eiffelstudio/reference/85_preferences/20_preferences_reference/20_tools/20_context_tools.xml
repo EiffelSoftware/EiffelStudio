@@ -2,38 +2,38 @@
 	<meta_data/>
 	<paragraph>This sub-categories gathers the preferences related to context tools. 
 		<paragraph>There are ten of them :</paragraph>
-		<table>
+		<table><border>1</border>
 			<row>
 				<cell>Label in the preferences window</cell>
 				<cell>Complete description</cell>
 			</row>
 			<row>
 				<cell>Link the context tool with other tools by default?</cell>
-				<cell>This boolean preference sets whether, by default, the editor and thecontext tools display information about the same element (Class, Featureor Cluster). The default value is True.</cell>
+				<cell>This boolean preference sets whether, by default, the editor and the context tools display information about the same element (Class, Featureor Cluster). The default value is True.</cell>
 			</row>
 			<row>
 				<cell>Show ALL classes in the diagram?</cell>
-				<cell>You can choose not to display some classes in the Diagram Tool. Ifyou set this property to False, you will be given the opportunity to definethe list of excluded classes (see below). The default value is False.</cell>
+				<cell>You can choose not to display some classes in the Diagram Tool. Ifyou set this property to False, you will be given the opportunity to define the list of excluded classes (see below). The default value is False.</cell>
 			</row>
 			<row>
 				<cell>Names of classes that should not appear in generated diagrams.</cell>
-				<cell>This is the list of classes that will be ignored in the Diagram toolif the previous preferences is set to False. By default, this list includes: INTEGER, BOOLEAN, STRING, CHARACTER, REAL and DOUBLE.</cell>
+				<cell>This is the list of classes that will be ignored in the Diagram tool if the previous preferences is set to False. By default, this list includes: <code><class_name>INTEGER, BOOLEAN, STRING, CHARACTER, REAL</class_name> and <class_name>DOUBLE</class_name></code>.</cell>
 			</row>
 			<row>
 				<cell>Order used to sort feature clauses in class views.</cell>
-				<cell>This sets the order of appearance of feature clauses in class textswhen it is displayed in any view but the basic text one (i.e. Clickable,Flat, Contract or Interface views).</cell>
+				<cell>This sets the order of appearance of feature clauses in class texts when it is displayed in any view but the basic text one (i.e. Clickable,Flat, Contract or Interface views).</cell>
 			</row>
 			<row>
 				<cell>Show all callers in `callers' view.</cell>
-				<cell>When the Feature Tool is centered on a feature, you can see its callersby requesting the `callers' view. If this property is set to True, this view will include  callers of descendant versions of the feature. Otherwise,it will only display callers of the current version. The default value is True.</cell>
+				<cell>When the Feature Tool is centered on a feature, you can see its callers by requesting the `callers' view. If this property is set to True, this view will include  callers of descendant versions of the feature. Otherwise, it will only display callers of the current version. The default value is True.</cell>
 			</row>
 			<row>
 				<cell>Show syntactical suppliers (as opposed to actual suppliers) in the`suppliers' view.</cell>
-				<cell>There are two types of suppliers for a given class. On one hand, thereare the syntactical suppliers, i.e. the ones the name of which appear inthe class text. On the other hand, there are the actual suppliers, i.e.the ones features of which are used in the class. This preference allowsyou to choose what type you want to be displayed when you select the `suppliers'view in the class tool. If it is True, syntactical suppliers will be shown.The default value is False.</cell>
+				<cell>There are two types of suppliers for a given class. On one hand, there are the syntactical suppliers, i.e. the ones the name of which appear inthe class text. On the other hand, there are the actual suppliers, i.e.the ones features of which are used in the class. This preference allows you to choose what type you want to be displayed when you select the `suppliers' view in the class tool. If it is True, syntactical suppliers will be shown.The default value is False.</cell>
 			</row>
 			<row>
 				<cell>Indexing items that need not be included in class views.</cell>
-				<cell>This is a list of items in the indexing clause that will be hiddenin Clickable, Flat, Contract and Flat Contract views of classes. By default,it includes "revision", "date" and "status".</cell>
+				<cell>This is a list of items in the indexing clause that will be hidden in Clickable, Flat, Contract and Flat Contract views of classes. By default, it includes "revision", "date" and "status".</cell>
 			</row>
 			<row>
 				<cell>Class view that is selected by default.</cell>
@@ -59,7 +59,7 @@
 					<link>
 						<url>/tools/eiffelstudio/reference/05_general_interface_description/10_general_interface_mechanisms/20_pick_and_drop_shortcut.xml</url>
 						<label>Control-picking</label>
-					</link>items. The possible values are  editor, context, new_editor, new_context, new_window and external. The default  is new_window, which creates a new window centered on the picked object.  Editor and context send the object to the current editor or context tool.  New_editor and new_context create a new editor or context window and set the  object in it. External sends the object to the 
+					</link> items. The possible values are  editor, context, new_editor, new_context, new_window and external. The default is new_window, which creates a new window centered on the picked object.  Editor and context send the object to the current editor or context tool.  New_editor and new_context create a new editor or context window and set the object in it. External sends the object to the 
 					<link>
 						<url>../10_global_preferences.xml</url>
 						<label>external editor</label>
@@ -68,7 +68,7 @@
 			</row>
 		</table>  
 		<paragraph>Class views indices
-			<table>
+			<table><border>1</border>
 				<row>
 					<cell>Index</cell>
 					<cell>Class view</cell>
@@ -132,7 +132,7 @@
 			</table>
 		</paragraph>
 		<paragraph>Feature views indices
-			<table>
+			<table><border>1</border>
 				<row>
 					<cell>Index</cell>
 					<cell>Feature view</cell>

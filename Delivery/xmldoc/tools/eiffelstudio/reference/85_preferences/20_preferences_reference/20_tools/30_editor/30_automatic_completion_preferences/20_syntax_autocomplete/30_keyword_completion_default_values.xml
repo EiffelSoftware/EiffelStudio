@@ -12,18 +12,18 @@
 			<link>
 				<url>10_automatic_keyword_completion.xml</url>
 				<label>four preferences</label>
-			</link>attached to each keyword.
+			</link> attached to each keyword.
 		</paragraph>
 		<list ordered="true">
 			<item>
 				<paragraph>Default value for 
 					<link>
 						<url>10_automatic_keyword_completion.xml</url>
-						<label>"Customizedautocomplete (Space after keyword was typed)"</label>
+						<label>"Customized autocomplete (Space after keyword was typed)"</label>
 					</link>
 					<line_break/>
 				</paragraph>
-				<table>
+				<table><border>1</border>
 					<row>
 						<cell>Keyword</cell>
 						<cell>Value</cell>
@@ -187,11 +187,11 @@
 				<paragraph>Default value for 
 					<link>
 						<url>10_automatic_keyword_completion.xml</url>
-						<label>"Customizedautocomplete (Return after keyword was typed)"</label>
+						<label>"Customized autocomplete (Return after keyword was typed)"</label>
 					</link>
 					<line_break/>
 				</paragraph>
-				<table>
+				<table><border>1</border>
 					<row>
 						<cell>Keyword</cell>
 						<cell>Return</cell>
@@ -355,11 +355,11 @@
 				<paragraph>Default value for 
 					<link>
 						<url>10_automatic_keyword_completion.xml</url>
-						<label>"Customizedautocomplete (Space, other cases)"</label>
+						<label>"Customized autocomplete (Space, other cases)"</label>
 					</link>
 					<line_break/>
 				</paragraph>
-				<table>
+				<table><border>1</border>
 					<row>
 						<cell>Keyword</cell>
 						<cell>Space</cell>
@@ -523,11 +523,11 @@
 				<paragraph>Default value for 
 					<link>
 						<url>10_automatic_keyword_completion.xml</url>
-						<label>"Customizedautocomplete (Return, other cases)"</label>
+						<label>"Customized autocomplete (Return, other cases)"</label>
 					</link>
 					<line_break/>
 				</paragraph>
-				<table>
+				<table><border>1</border>
 					<row>
 						<cell>Keyword</cell>
 						<cell>Return</cell>

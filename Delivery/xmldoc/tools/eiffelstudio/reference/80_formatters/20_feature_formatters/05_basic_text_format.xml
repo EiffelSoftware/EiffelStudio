@@ -5,7 +5,7 @@
 			<image>
 				<url>/images/eiffelstudio/icons/icon_format_text_color.gif</url>
 			</image>displays the text of the current feature as it is written in the enclosing class.
-			<line_break/>It does not allow to work with 
+			<line_break/>It does not work with 
 			<link>
 				<url>/tools/eiffelstudio/reference/40_debugger/20_breakpoints/index.xml</url>
 				<label>breakpoints</label>

@@ -29,16 +29,16 @@
 			</image>
 		</div>
 		<code_block>
-feature -- Element change
+	<keyword>feature</keyword> <indexing_tag>-- Element change</indexing_tag>
 
-	set_button (a_button: EV_BUTTON) is
-			-- Assign `a_button' to `button'
-		require
-			a_button_not_void: a_button /= Void
-		do
-			button := a_button
-		ensure
-			button_assigned: button = a_button
-		end
+		<feature_name>set_button</feature_name> <symbol>(</symbol><local_variable>a_button</local_variable><symbol>:</symbol> <class_name>EV_BUTTON</class_name><symbol>)</symbol> <keyword>is</keyword>
+				<comment>-- Assign `a_button' to `button'</comment>
+			<keyword>require</keyword>
+				<contract_tag>a_button_not_void</contract_tag><symbol>:</symbol> <local_variable>a_button</local_variable> /<symbol>=</symbol> <keyword>Void</keyword>
+			<keyword>do</keyword>
+				<feature_name>button</feature_name> <symbol>:</symbol><symbol>=</symbol> <local_variable>a_button</local_variable>
+			<keyword>ensure</keyword>
+				<contract_tag>button_assigned</contract_tag><symbol>:</symbol> <feature_name>button</feature_name> <symbol>=</symbol> <local_variable>a_button</local_variable>
+			<keyword>end</keyword>
 </code_block>
 	</paragraph></document>

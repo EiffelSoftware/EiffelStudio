@@ -1,4 +1,14 @@
-class CLASS_TYPE 
+indexing
+	description: "[
+		Description of a generic derivation of a generic CLASS_C. It contains
+		type of the current generic derivation. All generic derivations are stored
+		in TYPE_LIST of CLASS_C
+		]"
+	date: "$Date$"
+	revision: "$Revision$"
+
+class
+	CLASS_TYPE 
 
 inherit
 	SHARED_COUNTER
@@ -43,8 +53,24 @@ inherit
 
 creation
 	make
+
+feature {NONE} -- Initialization
+
+	make (t: CL_TYPE_I) is
+			-- Create new generic derivation CLASS_TYPE based on
+			-- `t', type of actual CLASS_C as used in Eiffel code.
+		require
+			good_argument: t /= Void
+			not_formal: not t.has_formal
+		do
+			type := t
+			is_changed := True
+			type_id := System.type_id_counter.next
+			static_type_id := Static_type_id_counter.next_id
+			System.reset_melted_conformance_table
+		end
 	
-feature 
+feature -- Access
 
 	static_type_id: INTEGER
 			-- Unique static_type_id for current class type
@@ -56,8 +82,6 @@ feature
 	type: CL_TYPE_I
 			-- Type of the class: it includes meta-instantiation of
 			-- possible generic parameters
-
-feature 
 
 	type_id: INTEGER
 			-- Identification of the class type
@@ -75,30 +99,6 @@ feature
 			-- Is the attribute list changed ? [has the skeleton of
 			-- attributes to be re-generated ?]
 
-	set_is_changed (b: BOOLEAN) is
-			-- Assign `b' to `is_changed' ?
-		do
-			is_changed := b
-		end
-
-	set_skeleton (s: like skeleton) is
-			-- Assign `s' to `skeleton'.
-		do
-			skeleton := s
-		end
-
-	make (t: CL_TYPE_I) is
-		require
-			good_argument: t /= Void
-			not t.has_formal
-		do
-			type := t
-			is_changed := True
-			type_id := System.type_id_counter.next
-			static_type_id := Static_type_id_counter.next_id
-			System.reset_melted_conformance_table
-		end
-
 	has_cpp_externals: BOOLEAN
 			-- Does current class_type contain C++ externals
 
@@ -106,7 +106,28 @@ feature
 			-- Has the class changed its `has_cpp_externals' flag
 			-- after a recompilation.
 
-feature -- Conveniences
+	is_precompiled: BOOLEAN is
+		do
+			Result := Static_type_id_counter.is_precompiled (static_type_id)
+		end
+
+feature -- Settings
+
+	set_is_changed (b: BOOLEAN) is
+			-- Assign `b' to `is_changed' ?
+		do
+			is_changed := b
+		ensure
+			is_changed_set: is_changed = b
+		end
+
+	set_skeleton (s: like skeleton) is
+			-- Assign `s' to `skeleton'.
+		do
+			skeleton := s
+		ensure
+			skeleton_set: skeleton = s
+		end
 
 	set_has_cpp_externals (b: BOOLEAN) is
 			-- Assign `b' to `has_cpp_externals'.
@@ -116,19 +137,31 @@ feature -- Conveniences
 			if b then
 				system.set_has_cpp_externals (b)
 			end
+		ensure
+			has_cpp_externals_set: has_cpp_externals = b
 		end
 
 	set_type (t: CL_TYPE_I) is
 			-- Assign `t' to `type'.
+		require
+			t_not_void: t /= Void
 		do
 			type := t
+		ensure
+			type_set: type = t
 		end
 
 	set_type_id (i: INTEGER) is
 			-- Assign `i' to `type_id'.
+		require
+			valid_i: i > 0
 		do
 			type_id := i
+		ensure
+			type_id_set: type_id = i
 		end
+
+feature -- Conveniences
 
 	associated_class: CLASS_C is
 			-- Associated class
@@ -326,7 +359,8 @@ feature -- Generation
 					end
 
 						-- Create module initialization procedure
-					buffer.generate_function_signature ("void", Encoder.module_init_name (static_type_id), True, header_buffer, <<"">>, <<"void">>)
+					buffer.generate_function_signature ("void", Encoder.module_init_name
+						(static_type_id), True, header_buffer, <<"">>, <<"void">>)
 	
 					if once_count > 0 then
 						buffer.putstring ("%TEIF_oidx_off")
@@ -339,7 +373,11 @@ feature -- Generation
 						buffer.putstring ("%N}%N%N")
 					end
 
-					if current_class.has_invariant and then ((not final_mode) or else current_class.assertion_level.check_invariant) then
+					if
+						current_class.has_invariant and then
+						((not final_mode) or else
+						current_class.assertion_level.check_invariant)
+					then
 						inv_byte_code := Inv_byte_server.disk_item (current_class.class_id)
 						inv_byte_code.generate_invariant_routine
 						byte_context.clear_all
@@ -722,9 +760,11 @@ feature -- Generation
 					if written_class.generics = Void then
 						written_ctype := written_class.types.first
 					else
-						written_ctype := written_class.meta_type (class_type.type).associated_class_type
+						written_ctype := written_class.meta_type
+							(class_type.type).associated_class_type
 					end
-					creat_name := Encoder.feature_name (written_ctype.static_type_id, creation_feature.body_index)
+					creat_name := Encoder.feature_name (written_ctype.static_type_id,
+						creation_feature.body_index)
 					buffer.putstring (creat_name)
 					buffer.putstring ("(Current")
 					skeleton.generate(buffer, False)
@@ -733,7 +773,8 @@ feature -- Generation
 					buffer.new_line
 						-- Generate in the header file, the declaration of the creation
 						-- routine.
-					Extern_declarations.add_routine_with_signature (Void_c_type, creat_name, <<"EIF_REFERENCE">>)
+					Extern_declarations.add_routine_with_signature (Void_c_type,
+						creat_name, <<"EIF_REFERENCE">>)
 				end
 					-- If the expanded object also has expandeds, we need
 					-- to call the initialization routine too.
@@ -741,7 +782,8 @@ feature -- Generation
 				sub_skel := sub_class_type.skeleton
 				sub_skel.go_expanded
 				if not sub_skel.after then
-					buffer.putstring (Encoder.feature_name (sub_class_type.static_type_id, Initialization_body_index))
+					buffer.putstring (Encoder.feature_name (sub_class_type.static_type_id,
+						Initialization_body_index))
 					buffer.putstring("(Current")
 					skeleton.generate(buffer, False)
 					buffer.putstring(", parent);")
@@ -1337,21 +1379,6 @@ feature -- Byte code generation
 			Result := ba.feature_table
 		end
 
-feature -- Precompilation
-
-	is_precompiled: BOOLEAN is
-		do
-			Result := Static_type_id_counter.is_precompiled (static_type_id)
-		end
-
-feature -- Debug
-
-	trace is
-		do
-			skeleton.trace
-			type.trace
-		end
-
 feature -- Cecil generation for Concurrent Eiffel
 
 	generate_separate_pattern (buffer: GENERATION_BUFFER) is
@@ -1372,5 +1399,18 @@ feature -- Cecil generation for Concurrent Eiffel
 				buffer.putstring ("{(int32) 0, (int) 0, (char **) 0, (char *) 0}")
 			end
 		end
+
+feature -- Debug
+
+	trace is
+		do
+			skeleton.trace
+			type.trace
+		end
+
+invariant
+	type_not_void: type /= Void
+	valid_type_id: type_id > 0
+	valid_static_type_id: type_id > 0
 
 end

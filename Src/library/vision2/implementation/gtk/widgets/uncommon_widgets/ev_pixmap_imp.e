@@ -361,6 +361,7 @@ temp_alpha_int: INTEGER
 				a_color_map := C.gdk_rgb_get_cmap
 				a_visual := C.gdk_colormap_get_visual (a_color_map)
 				a_visual_type := C.gdk_visual_struct_type (a_visual)
+print ("Visual Type = " + a_visual_type.out + "%N")
 				a_color := C.c_gdk_color_struct_allocate
 				array_size := a_width * height
 				array_area := Result.area
@@ -375,7 +376,7 @@ temp_alpha := temp_alpha_int.ascii_char
 					(array_offset \\ (a_width) // 4), -- Zero based X coord
 					((array_offset) // a_width) -- Zero based Y coord
 				)
-				C.c_gdk_colormap_query_color (a_color_map, a_pixel, a_color)
+			--	C.c_gdk_colormap_query_color (a_color_map, a_pixel, $a_color)
 				array_area.put (C.gdk_color_struct_red (a_color).ascii_char, array_offset)
 				array_area.put (C.gdk_color_struct_green (a_color).ascii_char, array_offset + 1)
 				array_area.put (C.gdk_color_struct_blue (a_color).ascii_char, array_offset + 2)
@@ -526,6 +527,9 @@ end -- EV_PIXMAP_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.44  2001/07/09 01:53:59  king
+--| Temporarily commented out colormap_query external
+--|
 --| Revision 1.43  2001/07/02 16:19:30  king
 --| Corrected pixmap data retrieval
 --|

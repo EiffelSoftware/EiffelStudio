@@ -11,9 +11,9 @@
 
 */
 
+#include "eif_str.h"
 #include "eif_globals.h"
 #include "config.h"
-#include "portable.h"
 #include <ctype.h>
 
 #include <stdio.h>					/* For sscanf() */

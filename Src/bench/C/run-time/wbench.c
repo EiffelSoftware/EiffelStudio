@@ -77,7 +77,7 @@ rt_public char *(*wfeat(int static_type, int32 feature_id, int dyn_type))(/* ???
 	EIF_END_GET_CONTEXT
 }
 
-rt_public char *(*wpfeat(int32 origin, int32 offset, int dyn_type))(EIF_CONTEXT_NOARG /* ??? */)
+rt_public char *(*wpfeat(int32 origin, int32 offset, int dyn_type))()
 {
 	/* Function pointer associated to Eiffel feature of origin class
 	 * `origin', identified by `offset' in that class, and to
@@ -114,7 +114,7 @@ rt_public char *(*wpfeat(int32 origin, int32 offset, int dyn_type))(EIF_CONTEXT_
 	EIF_END_GET_CONTEXT
 }
 
-rt_public char *(*wfeat_inv(int static_type, int32 feature_id, char *name, char *object))(EIF_CONTEXT_NOARG /* ??? */)
+rt_public char *(*wfeat_inv(int static_type, int32 feature_id, char *name, char *object))()
 {
 	/* Function pointer associated to Eiffel feature of feature id
 	 * `feature_id' accessed in Eiffel static type `static_type' to
@@ -166,7 +166,7 @@ rt_public char *(*wfeat_inv(int static_type, int32 feature_id, char *name, char 
 	EIF_END_GET_CONTEXT
 }
 
-rt_public char *(*wpfeat_inv(int32 origin, int32 offset, char *name, char *object))(EIF_CONTEXT_NOARG /* ??? */)
+rt_public char *(*wpfeat_inv(int32 origin, int32 offset, char *name, char *object))()
 {
 	/* Function pointer associated to Eiffel feature of origin class
 	 * `origin', identified by `offset' in that class, and to
@@ -215,7 +215,7 @@ rt_public char *(*wpfeat_inv(int32 origin, int32 offset, char *name, char *objec
 }
 
 
-rt_public void wexp(EIF_CONTEXT int static_type, int32 feature_id, int dyn_type, char *object)
+rt_public void wexp(int static_type, int32 feature_id, int dyn_type, char *object)
 {
 	/* Call the creation of the expanded.
 	 * with static type `stype', dynamic type `dtype' and
@@ -271,7 +271,7 @@ rt_public void wexp(EIF_CONTEXT int static_type, int32 feature_id, int dyn_type,
 	EIF_END_GET_CONTEXT
 }
 
-rt_public void wpexp(EIF_CONTEXT int32 origin, int32 offset, int dyn_type, char *object)
+rt_public void wpexp(int32 origin, int32 offset, int dyn_type, char *object)
 {
 	/* Call the creation of the expanded (when precompiled).
 	 * with origin class `origin', dynamic type `dtype' and

@@ -372,6 +372,12 @@ feature -- Generation Info
 			implementation.set_verifiability (verifiable)
 		end
 
+	set_cls_compliant (cls_compliant: BOOLEAN) is
+			-- Mark current generation to generate cls_compliant code.
+		do
+			implementation.set_cls_compliant (cls_compliant)
+		end
+
 feature -- Class info
 
 	start_class_mappings (class_count: INTEGER) is

@@ -108,6 +108,11 @@ feature -- Generation Info
 		deferred
 		end
 
+	set_cls_compliant (cls_compliant: BOOLEAN) is
+			-- Mark current generation to generate cls compliant code.
+		deferred
+		end
+
 feature -- Class info
 
 	start_class_mappings (class_count: INTEGER) is

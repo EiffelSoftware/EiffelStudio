@@ -103,6 +103,11 @@ feature -- Generation Info
 		do
 		end
 
+	set_cls_compliant (cls_compliant: BOOLEAN) is
+			-- Mark current generation to generate cls compliant code.
+		do
+		end
+
 feature -- Class info
 
 	generate_class_mappings (dotnet_name, eiffel_name: STRING; id, interface_id: INTEGER; filename, element_type_name: STRING) is

@@ -61,8 +61,10 @@ feature {NONE} -- Initialization
 				i := i + 1
 			end
 
-			if count > 0 and then count <= nb then
-					-- Resize array only if needed.
+			if count <= nb then
+					-- Resize array only if needed. To ensure that it contains
+					-- no void element in case no interfaces were added to it
+					-- in the above loop.
 				interfaces := interfaces.subarray (1, count)
 			end
 

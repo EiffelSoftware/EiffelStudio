@@ -82,7 +82,10 @@ feature -- Type check
 			-- Reconstitute text.
 		do
 			ctxt.begin
-			simple_format (ctxt)
+			ctxt.new_expression
+			ctxt.prepare_for_feature (feature_name, Void)
+			ctxt.put_text_item_without_tabs (ti_Dollar)
+			ctxt.put_current_feature
 			if ctxt.last_was_printed then
 				ctxt.commit
 			else
@@ -111,7 +114,7 @@ feature {NONE} -- Output
 			-- Reconstitute text.
 		do
 			ctxt.new_expression
-			ctxt.prepare_for_feature (feature_name, Void)
+			ctxt.case_prepare_for_feature (feature_name, Void)
 			ctxt.put_text_item_without_tabs (ti_Dollar)
 			ctxt.put_current_feature
 		end

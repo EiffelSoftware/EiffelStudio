@@ -528,7 +528,7 @@ feature {NONE} -- Implementation
 	New_known_type_id: INTEGER_REF is
 			-- ID for new stored type
 		once
-			Result := 14
+			Result := (14).to_integer
 		end
 
 	field_dynamic_type_of_type (i: INTEGER; type_id: INTEGER): INTEGER is

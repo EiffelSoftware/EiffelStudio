@@ -24,62 +24,63 @@ feature {NONE} -- Formats
 			!!filter_file.make (filename);
 			if filter_file.exists and then filter_file.is_readable then
 				filter_file.open_read;
-				from
-					line_nb := 1
-				until
-					filter_file.end_of_file
-				loop
+				if filter_file.readable then
 					from
-						in_construct := true;
-						in_before := false;
-						!!construct.make (10);
-						before := Void;
-						after := Void;
-						get_next_character
+						line_nb := 1
 					until
-						read_error or else
-						(is_last_meta and then last_char_read = '%N')
+						filter_file.end_of_file
 					loop
-						if in_construct then
-							if not is_last_meta then
-								construct.extend (last_char_read)
- 							elseif last_char_read = '|' then
-								construct.left_adjust;
-								construct.right_adjust;
-								construct.to_lower;
-								in_construct := false;
-								in_before := true;
-								!!before.make (5)
+						from
+							in_construct := true;
+							in_before := false;
+							!!construct.make (10);
+							before := Void;
+							after := Void;
+							get_next_character
+						until
+							read_error or else
+							(is_last_meta and then last_char_read = '%N')
+						loop
+							if in_construct then
+								if not is_last_meta then
+									construct.extend (last_char_read)
+ 								elseif last_char_read = '|' then
+									construct.left_adjust;
+									construct.right_adjust;
+									construct.to_lower;
+									in_construct := false;
+									in_before := true;
+									!!before.make (5)
+								else
+									syntax_error ("%"|%" expected");
+									read_error := true
+								end
+							elseif in_before then
+								if not is_last_meta then
+									before.extend (last_char_read)
+ 								elseif last_char_read = '*' then
+									in_before := false;
+									!!after.make (5)
+								else
+									syntax_error ("%"*%" expected");
+									read_error := true
+								end
 							else
-								syntax_error ("%"|%" expected");
-								read_error := true
-							end
-						elseif in_before then
-							if not is_last_meta then
-								before.extend (last_char_read)
- 							elseif last_char_read = '*' then
-								in_before := false;
-								!!after.make (5)
-							else
-								syntax_error ("%"*%" expected");
-								read_error := true
-							end
-						else
-							if not is_last_meta then
-								after.extend (last_char_read)
-							else
-								syntax_error ("End of line expected");
-								read_error := true
+								if not is_last_meta then
+									after.extend (last_char_read)
+								else
+									syntax_error ("End of line expected");
+									read_error := true
+								end
+							end;
+							if not read_error then
+								get_next_character
 							end
 						end;
 						if not read_error then
-							get_next_character
-						end
-					end;
-					if not read_error then
-						if not construct.empty and then before /= Void then
-							!!new_format.make (before, after);
-							format_table.force (new_format, construct)
+							if not construct.empty and then before /= Void then
+								!!new_format.make (before, after);
+								format_table.force (new_format, construct)
 debug ("FILTERS")
 	io.error.putstring (construct);
 	io.error.putstring (" -> ");
@@ -90,20 +91,21 @@ debug ("FILTERS")
 	end;
 	io.error.new_line
 end
-						elseif construct.empty and before /= Void then
-							syntax_error ("Construct expected")
-						elseif not construct.empty and before = Void then
-							syntax_error ("Appearance expected")
+							elseif construct.empty and before /= Void then
+								syntax_error ("Construct expected")
+							elseif not construct.empty and before = Void then
+								syntax_error ("Appearance expected")
+							end
+						else
+								-- Go to the beginning of the next line
+							read_error := false;
+							char_in_buffer := false;
+							filter_file.readline;
+							line_nb := line_nb + 1
 						end
-					else
-							-- Go to the beginning of the next line
-						read_error := false;
-						char_in_buffer := false;
-						filter_file.readline;
-						line_nb := line_nb + 1
-					end
-				end;
-				filter_file.close
+					end;
+					filter_file.close
+				end
 			else
 				io.error.putstring ("Warning: Cannot read filter ");
 				io.error.putstring (filename);

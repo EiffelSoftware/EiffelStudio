@@ -49,7 +49,7 @@ feature {EV_TITLED_WINDOW_IMP} -- Implementation
 			if shift_required then
 				Result := Result.bit_or (feature {EV_GTK_EXTERNALS}.gDK_SHIFT_MASK_ENUM)
 			end
-		end
+		end		
 
 feature {EV_TITLED_WINDOW_IMP} -- Implementation
 
@@ -58,14 +58,29 @@ feature {EV_TITLED_WINDOW_IMP} -- Implementation
 		require
 			a_window_imp_not_void: a_window_imp /= Void
 		local
-			a_cs: EV_GTK_C_STRING
+			a_cs, a_accel: EV_GTK_C_STRING
+			accel_key, accel_mods: INTEGER
+			a_keymap_array: POINTER
+			n_keys: INTEGER
+			a_success: BOOLEAN
 		do
 			a_cs := "activate"
+			
+			if shift_required then
+					-- We need to get the key val for the uppercase symbol
+				a_success := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_keymap_get_entries_for_keyval (default_pointer, key_code_to_gtk (key.code), $a_keymap_array, $n_keys)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.set_gdk_keymapkey_struct_level (a_keymap_array, 1)
+				internal_gdk_key_code := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_keymap_lookup_key (default_pointer, a_keymap_array)
+				feature {EV_GTK_EXTERNALS}.g_free (a_keymap_array)
+			else
+				internal_gdk_key_code := key_code_to_gtk (key.code)
+			end
+			
 			feature {EV_GTK_EXTERNALS}.gtk_widget_add_accelerator (
 				a_window_imp.accel_box,
 				a_cs.item,
 				a_window_imp.accel_group,
-				key_code_to_gtk (key.code),
+				internal_gdk_key_code,
 				modifier_mask,
 				0
 			)
@@ -79,7 +94,7 @@ feature {EV_TITLED_WINDOW_IMP} -- Implementation
 			feature {EV_GTK_EXTERNALS}.gtk_widget_remove_accelerator (
 				a_window_imp.accel_box,
 				a_window_imp.accel_group,
-				key_code_to_gtk (key.code),
+				internal_gdk_key_code,
 				modifier_mask
 			)
 		end
@@ -144,6 +159,9 @@ feature -- Element change
 		end
 
 feature {NONE} -- Implementation
+
+	internal_gdk_key_code: INTEGER
+		-- Internal gdk key code used to represent key of `Current'
 
 	interface: EV_ACCELERATOR
 		-- Interface object of `Current'

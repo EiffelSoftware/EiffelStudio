@@ -31,9 +31,6 @@ cluster
 		end
 
 	gel:	"$ISE_EIFFEL/library/gel"
-		exclude
-			"glib"; "gtk_gl"; 
-		end
 
 	all vision2:	"$ISE_EIFFEL/library/vision2"
 		exclude

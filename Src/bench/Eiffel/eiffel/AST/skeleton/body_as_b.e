@@ -10,12 +10,9 @@ inherit
 		end;
 
 	AST_EIFFEL_B
-		undefine
-			simple_format
 		redefine
 			type_check, byte_node,
 			find_breakable,
-			format,
 			fill_calls_list, replicate
 		end
 
@@ -170,16 +167,16 @@ feature -- New feature description
 			else
 				routine ?= content;
 				check
-                    routine_exists: routine /= Void;
-                end;
-                if routine.is_deferred then
-                        -- Deferred function
-                    !!def_func;
+					routine_exists: routine /= Void;
+				end;
+				if routine.is_deferred then
+						-- Deferred function
+					!!def_func;
 					def_func.set_type (type);
 					func := def_func;
-                elseif routine.is_once then
-                        -- Once function
-                    !!once_func;
+				elseif routine.is_once then
+						-- Once function
+					!!once_func;
 					once_func.set_type (type);
 					func := once_func;
 				elseif routine.is_external then
@@ -237,7 +234,7 @@ feature -- New feature description
 			--|involving at least on attribute, the True value is retuned:
 			--|   . If they are both attributes, the assertions are equivalent
 			--|   . If only on is an attribute, we don't care since the bodies will
-			--|     not be equivalent anyway.
+			--|	 not be equivalent anyway.
 			--|The best way to understand all this, is to draw a two-dimensional
 			--|table, for all possible combinations of the values (CONSTANT_AS,
 			--|ROUTINE_AS, Void) of content and other.content)
@@ -264,43 +261,6 @@ feature -- Debugger
 			end;
 		end
  
-feature -- formatter
-
-	format (ctxt: FORMAT_CONTEXT_B) is
-			-- Reconstitute text.
-		local
-			routine_as: ROUTINE_AS_B;
-		do
-			ctxt.begin;
-			if arguments /= void and then not arguments.empty then
-				ctxt.put_space;
-				ctxt.put_text_item (ti_L_parenthesis);
-				ctxt.set_separator (ti_Semi_colon);
-				ctxt.space_between_tokens;
-				arguments.format (ctxt);
-				ctxt.put_text_item (ti_R_parenthesis)
-			end;
-			if type /= void then
-				ctxt.put_text_item (ti_Colon);
-				ctxt.put_space;
-				if type.has_like then
-					ctxt.new_expression;
-				end;
-				type.format (ctxt);	
-		 	end;
-			if content /= void then
-				content.format (ctxt)
-			end;
-			if not ctxt.is_short then
-				ctxt.put_text_item (ti_Semi_colon);
-				routine_as ?= content;
-				if routine_as /= Void then
-					ctxt.next_line;
-				end;
-			end;
-			ctxt.commit;
-		end;
-
 feature -- Replication
 
 	fill_calls_list (l: CALLS_LIST) is

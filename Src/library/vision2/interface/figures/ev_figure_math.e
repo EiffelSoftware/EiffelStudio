@@ -40,7 +40,7 @@ feature -- Implementation
 		end
 
 	line_angle (x1, y1, x2, y2: INTEGER): DOUBLE is
-			-- Return angle of line from (`x2', `y2') to (`x1', `y1').
+			-- Return angle of line from (`x1', `y1') to (`x2', `y2') relative to world.
 		do
 			if x2 = x1 then
 				if y1 > y2 then
@@ -49,8 +49,8 @@ feature -- Implementation
 					Result := 1/2 * Pi
 				end
 			else
-				Result := arc_tangent ((y1 - y2) / (x2 - x1))
-				if x1 < x2 then
+				Result := arc_tangent ((y1 - y2) / (x1 - x2))
+				if x1 > x2 then
 					Result := Result - Pi
 				end
 				Result := modulo (Result, 2 * Pi)

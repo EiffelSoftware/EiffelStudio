@@ -106,7 +106,7 @@ feature -- Insertion
 			u: POLY_UNIT;
 			ri: ROUT_INFO;
 			origin: CLASS_ID;
-			origin_id, offset, nb_routines: INTEGER;
+			offset, nb_routines: INTEGER;
 			desc: DESCRIPTOR;
 			du: DESC_UNIT;
 			void_entry: ENTRY
@@ -125,7 +125,6 @@ feature -- Insertion
 
 					ri := System.rout_info_table.item (r_id);
 					origin := ri.origin;
-					origin_id := origin.id;
 					offset := ri.offset;
 					nb_routines :=
 						System.rout_info_table.descriptor_size (origin);
@@ -145,10 +144,10 @@ feature -- Insertion
 							-- Create a desc_unit if an origin is encountered
 							-- for the first time and insert it in the
 							-- descriptor,  (otherwise recuperate existing one).
-						du := desc.table_item (origin_id);
+						du := desc.table_item (origin);
 						if du = Void then
-							!! du.make (origin_id, nb_routines);
-							desc.table_put (du, origin_id)
+							!! du.make (origin, nb_routines);
+							desc.table_put (du, origin)
 						end;
 							-- Insert the polymorphical entry correponding to
 							-- the current class type and routine of id `r_id'

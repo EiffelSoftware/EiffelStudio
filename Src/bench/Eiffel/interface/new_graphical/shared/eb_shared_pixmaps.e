@@ -988,6 +988,11 @@ feature -- Icons
 			Result := build_classic_pixmap ("new_expression")
 		end
 
+	Icon_toggle_state_very_small: ARRAY [EV_PIXMAP] is
+		once
+			Result := build_classic_pixmap ("on_off_very_small")
+		end
+
 	Icon_edit_expression: ARRAY [EV_PIXMAP] is
 		once
 			Result := build_classic_pixmap ("edit_expression")

@@ -36,13 +36,27 @@ remtrace preferences
 exprt -r $DEFAULT_CVS_TAG -d preferences "Src/library/preferences"
 remtrace time
 exprt -r $DEFAULT_CVS_TAG -d time "Src/library/time"
-remtrace gel
-exprt -r $DEFAULT_CVS_TAG -d gel "Src/library/gel"
 remtrace vision2
 exprt -r $DEFAULT_CVS_TAG -d vision2 "Src/library/vision2"
+if [ "$1" == "gtk2" ]; then
+	cp -rf vision2/implementation/gtk2/* vision2/implementation/gtk
+fi
 fullrd vision2/implementation/gtk2
 remtrace wizard
 exprt -r $DEFAULT_CVS_TAG -d wizard "Src/library/wizard"
+
+remtrace Additional libraries for producing documentation
+exprt -r $DEFAULT_CVS_TAG -d com "Src/library/com"
+exprt -r $DEFAULT_CVS_TAG -d Eiffel2Java "Src/library/Eiffel2Java"
+exprt -r $DEFAULT_CVS_TAG -d store "Src/library/store"
+exprt -r $DEFAULT_CVS_TAG -d thread "Src/library/thread"
+exprt -r $DEFAULT_CVS_TAG -d web "Src/library/web"
+exprt -r $DEFAULT_CVS_TAG -d wel "Src/library/wel"
+
+remtrace Compiling additional libraries
+cd vision2/Clib
+$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/finish_freezing -library >> $INSTALL_LOG
+cd ../implementation/gtk/Clib
+$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/finish_freezing -library >> $INSTALL_LOG
+
 cd $EIFFEL_SRC
-
-

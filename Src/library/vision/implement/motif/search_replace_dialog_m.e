@@ -21,8 +21,17 @@ inherit
 		end;
 
 	DIALOG_M
+		rename
+			popup as dialog_popup
 		redefine	
 			parent
+		end;
+
+	DIALOG_M
+		redefine	
+			parent, popup
+		select
+			popup
 		end;
 
 	TERMINAL_M
@@ -172,7 +181,6 @@ feature -- Status setting
 				replace_form.manage;
 				replace_b.manage;
 				replace_all_b.manage;
-				adjust_buttons;
 			end
 		end
 
@@ -189,7 +197,6 @@ feature -- Status setting
 				replace_form.unmanage	
 				replace_b.unmanage;
 				replace_all_b.unmanage;
-				adjust_buttons
 			end
 		end
 
@@ -265,6 +272,15 @@ feature -- Element change
 				replace_all_b.set_activate_callback (list, Void)
 			end;
 			list.add_command (a_command, argument)
+		end;
+
+feature -- Update
+
+	popup is
+			-- Popup the dialog
+		do
+			find_b.set_show_as_default (1);
+			dialog_popup
 		end;
 
 feature -- Removal
@@ -400,6 +416,8 @@ feature {NONE} -- Implementation
 
 			sep.attach_left;
 			sep.attach_right;
+			sep.set_left_offset (2);
+			sep.set_right_offset (2);
 			sep.set_bottom_offset (5);
 			sep.attach_bottom_to_widget (buttons_form);
 			buttons_form.attach_left;
@@ -407,73 +425,28 @@ feature {NONE} -- Implementation
 			buttons_form.attach_bottom;
 
 			find_b.set_left_offset (5);
-			replace_b.set_left_offset (5);
-			replace_b.set_right_offset (5);
-			replace_all_b.set_left_offset (5);
-			replace_all_b.set_right_offset (5);
-			cancel_b.set_left_offset (5);
+			find_b.set_default_button_shadow_thickness (1);
+			replace_b.set_left_offset (4);
+			replace_b.set_right_offset (4);
+			replace_b.set_default_button_shadow_thickness (1);
+			replace_all_b.set_left_offset (4);
+			replace_all_b.set_right_offset (4);
+			replace_all_b.set_default_button_shadow_thickness (1);
+			cancel_b.set_left_offset (4);
 			cancel_b.set_right_offset (5);
+			cancel_b.set_default_button_shadow_thickness (1);
 
-			adjust_buttons
+			buttons_form.set_fraction_base (12);
+			find_b.attach_left;
+			replace_b.attach_left_to_position (3);
+			replace_b.attach_right_to_position (6);
+			replace_all_b.attach_left_to_position (6);
+			replace_all_b.attach_right_to_position (9);
+			find_b.attach_right_to_position (3);
+			cancel_b.attach_left_to_position (9);
+			cancel_b.attach_right;
 		end;
 		
-	adjust_buttons is
-			-- Adjust the buttons of the buttons_form.
-		local
-			i: INTEGER;
-			list: LINKED_LIST [MEL_RECT_OBJ];
-			mel_obj: MEL_RECT_OBJ;
-			c: INTEGER
-		do
-			!! list.make;
-			i := i + 1; -- `find' button always managed
-			list.extend (find_b)
-			if (replace_b.is_managed) then
-				i := i + 1;
-				list.extend (replace_b)
-			end;
-			if (replace_all_b.is_managed) then
-				i := i + 1;
-				list.extend (replace_all_b)
-			end;
-			i := i + 1; -- `cancel' button always managed
-			list.extend (cancel_b)
-			buttons_form.unmanage;
-			c := list.count;
-			list.start;
-			check
-				valid_c: c = 2 or else c = 4
-			end;
-			if c = 2 then
-				buttons_form.set_fraction_base (2);
-				mel_obj := list.item;
-				mel_obj.attach_left;
-				mel_obj.attach_right_to_position (1);
-				list.forth;
-				mel_obj := list.item;
-				mel_obj.attach_right;
-				mel_obj.attach_left_to_position (1);
-			else  -- c = 4
-				buttons_form.set_fraction_base (4);
-				mel_obj := list.item;
-				mel_obj.attach_left;
-				mel_obj.attach_right_to_position (1);
-				list.forth;
-				mel_obj := list.item;
-				mel_obj.attach_left_to_position (1);
-				mel_obj.attach_right_to_position (2);
-				list.forth;
-				mel_obj := list.item;
-				mel_obj.attach_left_to_position (2);
-				mel_obj.attach_right_to_position (3);
-				list.forth;
-				mel_obj := list.item;
-				mel_obj.attach_right;
-				mel_obj.attach_left_to_position (3);
-			end;
-			buttons_form.manage
-		end
-
 feature {NONE} -- Implementation
 
     children_list: LIST [POINTER] is

@@ -22,12 +22,22 @@ feature -- High level
 
 feature -- Disposal
 
-	frozen release (a_pointer: POINTER) is
+	frozen release (a_pointer: POINTER): INTEGER is
 			-- Release COM objects represented by `a_pointer'.
 		external
 			"C++ IUnknown use %"unknwn.h%""
 		alias
 			"Release"
+		end
+		
+feature -- AddRef
+
+	frozen add_ref (a_pointer: POINTER): INTEGER is
+			-- AddRef COM objects represented by `a_pointer'.
+		external
+			"C++ IUnknown use %"unknwn.h%""
+		alias
+			"AddRef"
 		end
 		
 feature {NONE} -- Initialization

@@ -420,7 +420,7 @@ feature -- Plug and Makefile file
 			creation_feature, correct_mismatch_feat: FEATURE_I
 			set_rout_disp_feat: FEATURE_I
 			creators: HASH_TABLE [EXPORT_I, STRING]
-			dispose_name, str_make_name, init_name, exp_init_name, count_name,
+			dispose_name, str_make_name, init_name, exp_init_name,
 			set_count_name, to_c_name: STRING
 			arr_make_name, set_rout_disp_name: STRING
 			correct_mismatch_name: STRING

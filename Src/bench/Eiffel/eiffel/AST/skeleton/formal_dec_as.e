@@ -77,6 +77,10 @@ feature -- Status
 				and then not creation_feature_list.empty
 		end
 
+	has_default_create: BOOLEAN
+			-- Does the construct list `default_create' has creation procedure?
+			-- Set after a call to `constraint_creation_list'.
+
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is
@@ -152,6 +156,11 @@ feature -- Status
 					feature_name := creation_feature_list.item.internal_name
 					Result.extend (feat_table.item (feature_name))
 					Result.forth
+
+					if not has_default_create then
+						has_default_create := equal (feat_table.found_item.rout_id_set.first,
+													System.default_create_id)
+					end
 					creation_feature_list.forth
 				end
 			end

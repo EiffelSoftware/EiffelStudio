@@ -113,40 +113,12 @@ feature {NONE} -- Convenience
 				i > nb
 			loop
 				if l_used_entries.item (i) then
-					put (l_values.item (i), class_name (l_values.item (i), l_keys.item (i), for_expanded))
+					put (l_values.item (i), l_keys.item (i))
 				end
 				i := i + 1
 			end
 		end
 
-	class_name (a_class: CLASS_C; a_given_class_name: STRING; for_expanded: BOOLEAN): STRING is
-			-- Associated class name of `a_class' using given name `a_given_class_name'
-			-- when treated as `for_expanded' status.
-		require
-			a_class_not_void: a_class /= Void
-			a_given_class_name: a_given_class_name /= Void
-		do
-			if for_expanded then
-				if a_class.is_expanded then
-					Result := a_given_class_name
-				else
-					create Result.make (9 + a_given_class_name.count)
-					Result.append ("expanded ")
-					Result.append (a_given_class_name)
-				end
-			else
-				if a_class.is_expanded then
-					create Result.make (10 + a_given_class_name.count)
-					Result.append ("reference ")
-					Result.append (a_given_class_name)
-				else
-					Result := a_given_class_name
-				end
-			end
-		ensure
-			class_name_not_void: Result /= Void
-		end
-		
 feature {NONE} -- C code generation
 
 	internal_generate (buffer: GENERATION_BUFFER; for_expanded: BOOLEAN) is

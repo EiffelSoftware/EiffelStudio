@@ -89,6 +89,7 @@ feature -- Basic Operation
 					else
 							-- create the directory
 						recursive_create_directory (an_emit_directory)
+						copy_assembly
 						emit 
 						update_local_assemblies
 						create {WIZARD_THIRD_STATE} next_window.make (wizard_information)
@@ -153,6 +154,32 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	copy_assembly is
+			-- Copy assembly with filename `dotnet_assembly.text' in current project directory.
+		local
+			assembly_filename: STRING
+			original_assembly_file: RAW_FILE
+			assembly_name: STRING
+			new_assembly_file: RAW_FILE
+		do
+			assembly_filename := clone (dotnet_assembly.text)
+			create original_assembly_file.make_open_read (assembly_filename)
+			assembly_name := assembly_filename.substring (assembly_filename.last_index_of ('\', assembly_filename.count) + 1, assembly_filename.count)
+			local_assembly_filename := clone (wizard_information.project_location)
+			if local_assembly_filename @ local_assembly_filename.count /= '\' then
+				local_assembly_filename.append ("\")
+			end
+
+			local_assembly_filename.append (assembly_name)
+			create new_assembly_file.make_create_read_write (local_assembly_filename)
+			original_assembly_file.copy_to (new_assembly_file)			
+			original_assembly_file.close
+			new_assembly_file.close
+		end
+	
+	local_assembly_filename: STRING
+			-- Filename of local assembly that will be imported
+			
 	emit is
 			-- Emit assembly corresponding to `dotnet_assembly.text' in directory `emit_directory.text'.
 			-- Generate Eiffel friendly names if `eiffel_formatting_b.is_selected'.
@@ -195,8 +222,8 @@ feature {NONE} -- Implementation
 		require
 			emit_succeeded: emit_succeeded
 		do
-			if not wizard_information.proxy.is_signed (dotnet_assembly.text) then
-				wizard_information.local_assemblies.extend (clone (emit_directory.text), clone (dotnet_assembly.text))
+			if not wizard_information.proxy.is_signed (local_assembly_filename) then
+				wizard_information.local_assemblies.extend (clone (emit_directory.text), clone (local_assembly_filename))
 			else
 				wizard_information.update_lists
 			end

@@ -10,8 +10,9 @@ class
 	POLYGON 
 
 inherit
-
 	CLOSED_FIG
+		undefine
+			copy, is_equal
 		redefine
 			conf_recompute
 		end;
@@ -20,9 +21,12 @@ inherit
 		rename 
 			make as twl_make,
 			extend as add
-		end;
+		end
 
 	JOINABLE
+		undefine
+			copy, is_equal
+		end
 
 creation
 

@@ -19,6 +19,8 @@ inherit
 			remove as remove_fig,
 			composite_mark as complexe_mark,
 			composite_return as complexe_return
+		undefine
+			copy, is_equal
 		redefine
 			set_origin,
 			set_no_origin,

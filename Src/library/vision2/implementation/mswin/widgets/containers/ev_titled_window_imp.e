@@ -14,26 +14,52 @@ class
 	
 inherit
 	EV_WINDOW_I
-
-	EV_CONTAINER_IMP	
-			redefine
-				wel_window,
-				set_minimum_width,
-				set_minimum_height,
-				child_has_resized
-			end
+					
+	EV_CONTAINER_IMP
+		rename
+			make as old_make
+		redefine
+			wel_window,
+			parent_imp,
+			set_width,
+			set_height,
+			set_size,
+			set_minimum_width,
+			set_minimum_height,
+			child_has_resized
+		end
 
 creation
-	
-	make
+	make, make_top_level
+
 	
 feature {NONE} -- Initialization
 	
-      make (interface: EV_WINDOW) is
-                        -- Create a window. Window does not have any
-                        -- parents
+	old_make (par: EV_CONTAINER) is
+			-- do nothing
+		do
+		end
+
+	make_top_level (interface: EV_WINDOW) is
+			-- Create a window. Window does not have any
+			-- parents
 		do
 			!!wel_window.make_top ("EV_WINDOW")
+			wel_window.attach_container (Current)
+		end
+
+	make (par: EV_WINDOW; interface: EV_WINDOW) is
+			-- Create a window. Window does not have any
+			-- parents
+		local
+			par_imp: EV_WINDOW_IMP
+		do
+			par_imp ?= par.implementation
+			check
+				par_imp_not_void: par_imp /= Void
+			end
+			set_parent_imp (par_imp)
+			!!wel_window.make_child (par_imp.wel_window, "EV_WINDOW")
 			wel_window.attach_container (Current)
 		end
 
@@ -41,129 +67,129 @@ feature {NONE} -- Initialization
 feature  -- Access
 
 
-      icon_name: STRING is
-                        -- Short form of application name to be
-                        -- displayed by the window manager when
-                        -- application is iconified
+	icon_name: STRING is
+			-- Short form of application name to be
+			-- displayed by the window manager when
+			-- application is iconified
 		do
 			check
-                                not_yet_implemented: False
+           		not_yet_implemented: False
+    		end
+		end
+
+	icon_mask: EV_PIXMAP is
+			-- Bitmap that could be used by window manager
+			-- to clip `icon_pixmap' bitmap to make the
+			-- icon nonrectangular 
+		do
+			check
+                not_yet_implemented: False
             end
-        end
+		end
 
-      icon_mask: EV_PIXMAP is
-                        -- Bitmap that could be used by window manager
-                        -- to clip `icon_pixmap' bitmap to make the
-                        -- icon nonrectangular 
+	icon_pixmap: EV_PIXMAP is
+			-- Bitmap that could be used by the window manager
+			-- as the application's icon
 		do
 			check
-                                not_yet_implemented: False
-                        end
-                end
-
-      icon_pixmap: EV_PIXMAP is
-                        -- Bitmap that could be used by the window manager
-                        -- as the application's icon
-		do
-			check
-                                not_yet_implemented: False
-                        end
+	            not_yet_implemented: False
+            end
 		end
 	
 
-      title: STRING is
-                        -- Application name to be displayed by
-                        -- the window manager
+	title: STRING is
+			-- Application name to be displayed by
+			-- the window manager
+		do
+			Result := wel_window.text
+       	end
+
+	widget_group: EV_WIDGET is
+			-- Widget with wich current widget is associated.
+			-- By convention this widget is the "leader" of a group
+			-- widgets. Window manager will treat all widgets in
+			-- a group in some way; for example, it may move or
+			-- iconify them together
 		do
 			check
-                                not_yet_implemented: False
-                        end
-                end
+                not_yet_implemented: False
+	        end
+		end 
 
-
-      widget_group: EV_WIDGET is
-                        -- Widget with wich current widget is associated.
-                        -- By convention this widget is the "leader" of a group
-                        -- widgets. Window manager will treat all widgets in
-                        -- a group in some way; for example, it may move or
-                        -- iconify them together
-				do
-						check
-                                not_yet_implemented: False
-                        end
-                end 
 
 feature -- Element change
 
-        set_icon_mask (mask: EV_PIXMAP) is
-                        -- Set `icon_mask' to `mask'.
+	set_icon_mask (mask: EV_PIXMAP) is
+			-- Set `icon_mask' to `mask'.
 		do
 			check
-                                not_yet_implemented: False
-                        end
-                end
+                not_yet_implemented: False
+            end
+		end
 
-        set_icon_pixmap (pixmap: EV_PIXMAP) is
-                        -- Set `icon_pixmap' to `pixmap'.
+	set_icon_pixmap (pixmap: EV_PIXMAP) is
+			-- Set `icon_pixmap' to `pixmap'.
 		do
 			check
-                                not_yet_implemented: False
-                        end
-                end
+                not_yet_implemented: False
+            end
+		end
 
- 	    set_title (new_title: STRING) is
-                        -- Set `title' to `new_title'.            
+	set_title (new_title: STRING) is
+			-- Set `title' to `new_title'.            
 		do
-			check
-					not_yet_implemented: False
-			end
+			wel_window.set_text (new_title)
         end
 
-        set_widget_group (group_widget: EV_WIDGET) is
-                        -- Set `widget_group' to `group_widget'.
+	set_widget_group (group_widget: EV_WIDGET) is
+			-- Set `widget_group' to `group_widget'.
 		do
 			check
-                                not_yet_implemented: False
-                        end
+                not_yet_implemented: False
+            end
 		end
+
 
 feature -- Status report
 
-        is_iconic_state: BOOLEAN is
-                        -- Does application start in iconic state?
+	is_iconic_state: BOOLEAN is
+			-- Does application start in iconic state?
 		do
 			check
-                                not_yet_implemented: False
-                        end
-                end
+                not_yet_implemented: False
+            end
+		end
+
 
 feature -- Status setting
 
-        set_iconic_state is
-                        -- Set start state of the application to be iconic.
+	set_iconic_state is
+			-- Set start state of the application to be iconic.
 		do
 			check
-                                not_yet_implemented: False
-                        end	
-                end
+                not_yet_implemented: False
+            end	
+		end
 
-        set_normal_state is
-                        -- Set start state of the application to be normal.
+	set_normal_state is
+			-- Set start state of the application to be normal.
 		do
 			check
-                                not_yet_implemented: False
-                        end
-                end
+                not_yet_implemented: False
+            end
+		end
+
 
 feature -- Element change
 
-        set_icon_name (a_name: STRING) is
-                        -- Set `icon_name' to `a_name'.
+	set_icon_name (a_name: STRING) is
+			-- Set `icon_name' to `a_name'.
 		do
 			check
-                                not_yet_implemented: False
-                        end
-                end	
+                not_yet_implemented: False
+            end
+		end	
+
 
 feature -- Resizing
 
@@ -178,7 +204,26 @@ feature -- Resizing
 				  new_height + system_metrics.title_bar_height + system_metrics.window_border_height + 2 * system_metrics.window_frame_height)
 		end
 
-feature -- Redefine for windows
+	set_size (new_width:INTEGER; new_height: INTEGER) is
+			-- Resize the widget and don't notify the parent.
+		do
+			wel_window.resize (minimum_width.max(new_width), minimum_height.max (new_height))
+		end
+
+	
+	set_width (new_width :INTEGER) is
+			-- Set `width' to `new_width'.
+		do
+			wel_window.set_width (minimum_width.max(new_width))
+		end
+
+		
+	set_height (new_height: INTEGER) is
+			-- Set `height' to `new_height'
+		do
+			wel_window.set_height (minimum_height.max(new_height))
+		end
+
 
 	set_minimum_width (min_width: INTEGER) is
 			-- Minimum width of window
@@ -193,7 +238,8 @@ feature -- Redefine for windows
 			minimum_height := min_height --.max (system_metrics.window_minimum_height)
 		end
 
-feature --{EV_WINOW_IMP} -- Implementation
+
+feature --{EV_WINDOW_IMP} -- Implementation
 	
 	system_metrics: WEL_SYSTEM_METRICS is
 			-- System metrics to query things like
@@ -202,11 +248,13 @@ feature --{EV_WINOW_IMP} -- Implementation
 			!!Result
 		end
 
+	parent_imp: EV_WINDOW_IMP
+			-- Current parent of the window
+			-- is `void' if no parent
 
-feature {EV_APPLICATION_IMP} -- Implementation
+feature {EV_APPLICATION_IMP, EV_WINDOW_IMP} -- Implementation
 	
 	wel_window: EV_WEL_FRAME_WINDOW
-
 
 end
 

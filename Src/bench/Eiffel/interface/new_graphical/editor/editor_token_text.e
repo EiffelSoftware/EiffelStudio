@@ -17,11 +17,13 @@ feature -- Initialisation
 
 	make(text: STRING) is
 		require
-			text_not_void: text /= Void
+			text_valid: text /= Void and then text.count > 0
 		do
 			image := text
+			length := text.count
 		ensure
 			image_not_void: image /= Void
+			length_positive: length > 0
 		end
 
 feature -- Miscellaneous

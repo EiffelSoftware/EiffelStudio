@@ -194,7 +194,6 @@ feature -- Basic operations
 			end
 		end
 
-
 	update_buffered_screen(dc: WEL_DC; top: INTEGER; bottom: INTEGER) is
 			-- Update the device context `dc'. Redraw the text.
 		local
@@ -301,6 +300,8 @@ feature {NONE} -- Implementation
 		once
 			create Result.make
 		end
+
+	cursor: EDITOR_CURSOR
 
 --	text_displayed: LINKED_LIST[EDITOR_LINE]
 	text_displayed: STRUCTURED_TEXT

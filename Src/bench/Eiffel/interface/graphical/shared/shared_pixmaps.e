@@ -201,12 +201,12 @@ feature {NONE}
 
 	bm_Debug_status: PIXMAP is
 		do
-			Result := pixmap_file_content ("debug_status.bm");
+			Result := pixmap_file_content ("debugstatus.bm");
 		end;
 
 	bm_Debug_step: PIXMAP is
 		do
-			Result := pixmap_file_content ("debug_step.bm");
+			Result := pixmap_file_content ("debugstep.bm");
 		end;
 
 	bm_Exec_last: PIXMAP is
@@ -242,6 +242,11 @@ feature {NONE}
 	bm_Explain_icon: PIXMAP is
 		do
 			Result := pixmap_file_content ("expl_icon.bm");
+		end;
+
+	bm_Filter: PIXMAP is
+		do
+			Result := pixmap_file_content ("filter.bm");
 		end;
 
 	bm_Finalize: PIXMAP is

@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
         end	
 
 feature -- Event - command association
-	
+
 	add_click_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
 			-- Add 'cmd' to the list of commands to be executed
 			-- the button is pressed.
@@ -55,7 +55,7 @@ feature -- Event -- removing command association
 
 feature {EV_PIXMAP} -- Implementation
 
-	pixmap_size_ok (pixmap: EV_PIXMAP): BOOLEAN is
+	pixmap_size_ok (pix: EV_PIXMAP): BOOLEAN is
 			-- Check if the size of the pixmap is ok for
 			-- the container.
 		do

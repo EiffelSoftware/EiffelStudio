@@ -11,89 +11,115 @@ class
 feature {NONE} -- GTK C functions for widgets
 
 	gtk_widget_show (w: POINTER) is
-		external "C | <gtk/gtk.h>"
+		external
+			"C | <gtk/gtk.h>"
 		end
 
 	gtk_widget_hide (w: POINTER) is
-		external "C | <gtk/gtk.h>"
+		external
+			"C | <gtk/gtk.h>"
 		end
 	
 	gtk_widget_realize (w: POINTER) is
-		external "C | <gtk/gtk.h>"
+		external
+			"C | <gtk/gtk.h>"
 		end	
 	
 	gtk_widget_unrealize (w: POINTER) is
-		external "C | <gtk/gtk.h>"
+		external
+			"C | <gtk/gtk.h>"
 		end	
 	
 	gtk_widget_set_uposition (w: POINTER; x,y: INTEGER) is
-		external "C | <gtk/gtk.h>"
+		external
+			"C | <gtk/gtk.h>"
 		end	
 
 	gtk_widget_set_usize (w: POINTER; width, height: INTEGER) is
-		external "C | <gtk/gtk.h>"
+		external
+			"C | <gtk/gtk.h>"
 		end	
 
 	gtk_widget_set_sensitive (w: POINTER; sensitive: BOOLEAN) is
-		external "C | <gtk/gtk.h>"
+		external
+			"C | <gtk/gtk.h>"
 		end
 
 	gtk_widget_grab_default (w: POINTER) is
-		external "C | <gtk/gtk.h>"
+		external
+			"C | <gtk/gtk.h>"
 		end
 
 	gtk_widget_grab_focus (w: POINTER) is
-		external "C | <gtk/gtk.h>"
+		external
+			"C | <gtk/gtk.h>"
 		end
 
 	gtk_widget_destroy (w: POINTER) is
-		external "C | <gtk/gtk.h>"
+		external
+			"C | <gtk/gtk.h>"
 		end
 
 	gtk_widget_reparent (w: POINTER; p: POINTER) is
-		external "C | <gtk/gtk.h>"
+		external
+			"C | <gtk/gtk.h>"
 		end
 
 	gtk_widget_set_parent (w: POINTER; p:POINTER) is
-		external "C | <gtk/gtk.h>"
+		external
+			"C | <gtk/gtk.h>"
 		end
 
 	gtk_widget_unparent (w: POINTER) is
-		external "C | <gtk/gtk.h>"
+		external
+			"C | <gtk/gtk.h>"
 		end
 
 feature {NONE} -- code in the glue library
 
 	c_gtk_widget_destroyed (widget: POINTER): BOOLEAN is
-		external "C | %"gtk_eiffel.h%""
+		external
+			"C | %"gtk_eiffel.h%""
 		end
 	
 	c_gtk_widget_set_flags (w: POINTER; flags: INTEGER) is
-		external "C | %"gtk_eiffel.h%""
+		external
+			"C | %"gtk_eiffel.h%""
 		end
 
 	c_gtk_widget_realized (w: POINTER): BOOLEAN is
-		external "C | %"gtk_eiffel.h%""
+		external
+			"C | %"gtk_eiffel.h%""
 		end	
 	
+	c_gtk_widget_displayed (w: POINTER): BOOLEAN is
+		external
+			"C (GtkWidget *): EIF_BOOLEAN | %"gtk_eiffel.h%""
+		end	
+
 	c_gtk_widget_visible (w: POINTER): BOOLEAN is
-		external "C | %"gtk_eiffel.h%""
+		external
+			"C | %"gtk_eiffel.h%""
 		end
 	
 	c_gtk_widget_height (w: POINTER): INTEGER is
-		external "C [macro %"gtk_eiffel.h%"]"
+		external
+			"C [macro %"gtk_eiffel.h%"]"
 		end
 	
 	c_gtk_widget_width (w: POINTER): INTEGER is
-		external "C [macro %"gtk_eiffel.h%"]"
+		external
+			"C [macro %"gtk_eiffel.h%"]"
 		end
 
 	c_gtk_widget_x (w:POINTER): INTEGER is
-		external "C [macro %"gtk_eiffel.h%"]"
+		external
+			"C [macro %"gtk_eiffel.h%"]"
 		end
 	
 	c_gtk_widget_y (w: POINTER): INTEGER is
-		external "C [macro %"gtk_eiffel.h%"]"
+		external
+			"C [macro %"gtk_eiffel.h%"]"
 		end
 
 	c_gtk_widget_sensitive (w: POINTER): BOOLEAN is

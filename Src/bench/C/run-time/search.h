@@ -16,16 +16,12 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
- 
+
+#include "eif_types.h"
+
 /*
  * Search table declarations.
  */
-
-struct s_table {
-	uint32 s_size;		/* Search table size */
-	uint32 s_count;		/* Count of inserted keys */
-	char **s_keys;		/* Search table keys */
-};
 
 #define S_OK		0			/* No conflict result value of `s_put' */
 #define S_CONFLICT	1			/* Conflict result value of `s_put' */

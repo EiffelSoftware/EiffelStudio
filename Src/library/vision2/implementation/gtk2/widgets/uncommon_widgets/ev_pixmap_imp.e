@@ -189,6 +189,7 @@ feature -- Element change
 			"C inline use <gtk/gtk.h>"
 		alias
 			"[
+				{
 				int x, y;
 				
 				GdkPixbuf *pixbuf, *mask;
@@ -212,6 +213,7 @@ feature -- Element change
 						dest += 4;				
 					}
 					
+				}
 				}
 			]"
 		end

@@ -626,8 +626,6 @@ feature {NONE} -- Commands
 			table_file: PLAIN_TEXT_FILE
 			table_name: STRING
 		do
---print (config.get_config_name)
---print("%N")
 			if not config.get_config_name.is_equal ("eiffel") then
 
 						-- Other profile tools use C names, so we need

@@ -129,14 +129,14 @@ feature -- Status setting
 		end
 		
 	set_text (a_text: STRING) is
-			-- 
+			-- Set 'text' to 'a_text'
 		do
 			internal_text := clone (a_text)
 			insert_pixmap
 		end
 		
 	remove_text is
-			-- 
+			-- Remove 'text' from 'Current'
 		do
 			internal_text := ""
 			insert_pixmap
@@ -144,7 +144,8 @@ feature -- Status setting
 
 feature -- PND
 
-	enable_transport is 
+	enable_transport is
+			-- Enable PND transport
 		do
 			is_transport_enabled := True
 			if parent_tree_imp /= Void then
@@ -153,6 +154,7 @@ feature -- PND
 		end
 
 	disable_transport is
+			-- Disable PND transport
 		do
 			is_transport_enabled := False
 			if parent_tree_imp /= Void then
@@ -192,6 +194,7 @@ feature -- PND
         	a_x, a_y, a_button: INTEGER;
         	a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
         	a_screen_x, a_screen_y: INTEGER) is 
+        	-- Start PND transport (not needed)
 		do
 			check
 				do_not_call: False
@@ -201,6 +204,7 @@ feature -- PND
 	end_transport (a_x, a_y, a_button: INTEGER;
 		a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
 		a_screen_x, a_screen_y: INTEGER) is
+			-- End PND transport (not needed)
 		do
 			check
 				do_not_call: False
@@ -208,6 +212,7 @@ feature -- PND
 		end
 
 	set_pointer_style, internal_set_pointer_style (curs: EV_CURSOR) is
+			-- Set 'pointer_style' to 'curs' (not needed)
 		do
 			check
 				do_not_call: False
@@ -215,6 +220,7 @@ feature -- PND
 		end
 
 	is_transport_enabled_iterator: BOOLEAN is
+			-- Has 'Current' or a child of 'Current' pnd transport enabled?
 		do
 			if is_transport_enabled then
 				Result := True
@@ -289,8 +295,10 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 		end
 
 	tree_node_ptr: POINTER
-
+			-- Pointer to the GtkCtreeNode of 'Current'.
+			
 	set_tree_node (a_tree_node_ptr: POINTER) is
+			-- Set 'tree_node_ptr' to 'a_tree_node_ptr'
 		do
 			if a_tree_node_ptr /= NULL then
 				parent_tree_imp.tree_node_ptr_table.put (Current, a_tree_node_ptr)
@@ -299,6 +307,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 		end
 
 	insert_pixmap is
+			-- Insert 'pixmap' in to 'Current'
 		local
 			a_cs: C_STRING
 			is_leaf: INTEGER
@@ -323,12 +332,13 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 			end
 		end
 
-	set_item_and_children (parent_node: POINTER) is
+	set_item_and_children (parent_node: POINTER; sibling_node: POINTER) is
 			-- Used for setting items on addition and removal
+			-- Insert as child of 'parent_node' and one position above 'sibling_node'
 		do
 			if tree_node_ptr = NULL then
 					-- Current has been added to tree
-				set_tree_node (parent_tree_imp.insert_ctree_node (Current, parent_node, NULL))
+				set_tree_node (parent_tree_imp.insert_ctree_node (Current, parent_node, sibling_node))
 			else
 					-- Current is being removed from tree.
 				parent_tree_imp.tree_node_ptr_table.remove (tree_node_ptr)
@@ -340,7 +350,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 			until
 				ev_children.after
 			loop
-				ev_children.item.set_item_and_children (tree_node_ptr)
+				ev_children.item.set_item_and_children (tree_node_ptr, NULL)
 				ev_children.forth
 			end
 		end
@@ -370,7 +380,7 @@ feature {EV_APPLICATION_IMP} -- Implementation
 feature {EV_TREE_IMP} -- Implementation
 
 	parent_widget_is_displayed: BOOLEAN is
-			--
+			-- Is parent tree displayed?
 		local
 			temp_par_tree_imp: EV_TREE_IMP
 		do
@@ -422,6 +432,7 @@ feature {EV_TREE_IMP} -- Implementation
 			internal_tooltip := ""		
 		end
 	
+-- Text alignment not implemented
 	align_text_left is do  end
 	
 	align_text_center is do  end
@@ -431,6 +442,7 @@ feature {EV_TREE_IMP} -- Implementation
 	alignment: EV_TEXT_ALIGNMENT	
 	
 	set_pixmap (a_pixmap: EV_PIXMAP) is
+			-- Set the pixmap for 'Current'
 		local
 			a_pix_imp: EV_PIXMAP_IMP
 		do
@@ -450,6 +462,7 @@ feature {EV_TREE_IMP} -- Implementation
 		end
 		
 	pix_width, pix_height: INTEGER
+			-- Height and width of pixmap in Tree.
 
 	remove_pixmap is
 		do
@@ -457,7 +470,7 @@ feature {EV_TREE_IMP} -- Implementation
 		end
 		
 	pixmap: EV_PIXMAP is
-			-- 
+			-- Pixmap displayed in 'Current' if any.
 		local
 			pix_imp: EV_PIXMAP_IMP
 		do
@@ -472,11 +485,13 @@ feature {EV_TREE_IMP} -- Implementation
 		-- Stored gdk pixmap data.
 
 	count: INTEGER is
+			-- Number of child nodes in 'Current'
 		do
 			Result := ev_children.count
 		end
 	
 	i_th (i: INTEGER): EV_TREE_NODE is
+			-- i-th node of 'Current'
 		do
 			Result := (ev_children @ i).interface
 		end
@@ -502,17 +517,20 @@ feature {EV_TREE_IMP} -- Implementation
 		local
 			item_imp: EV_TREE_NODE_IMP
 			par_t_imp: EV_TREE_IMP
+			sibling_ptr: POINTER
 		do
-			--add_to_container (v, v_imp)
 			item_imp ?= v.implementation
 			item_imp.set_parent_imp (Current)
-			ev_children.force (item_imp)
+			ev_children.go_i_th (i)
+			ev_children.put_left (item_imp)
 
-
-			-- Using a local prevents recalculation
+				-- Using a local prevents recalculation
 			par_t_imp := parent_tree_imp
 			if par_t_imp /= Void then
-				item_imp.set_item_and_children (tree_node_ptr)
+				if ev_children.valid_index (i + 1) then
+					sibling_ptr := ev_children.i_th (i + 1).tree_node_ptr
+				end
+				item_imp.set_item_and_children (tree_node_ptr, sibling_ptr)
 				if item_imp.is_transport_enabled_iterator then
 					par_t_imp.update_pnd_connection (True)
 				end	
@@ -521,12 +539,6 @@ feature {EV_TREE_IMP} -- Implementation
 	
 			child_array.go_i_th (i)
 			child_array.put_left (v)
-			if i < count then
-				--reorder_child (v, v_imp, i)
-				ev_children.prune_all (item_imp)
-				ev_children.go_i_th (i)
-				ev_children.put_left (item_imp)
-			end
 		end
 
 	remove_i_th (a_position: INTEGER) is
@@ -549,8 +561,8 @@ feature {EV_TREE_IMP} -- Implementation
 				else
 					feature {EV_GTK_EXTERNALS}.gtk_ctree_remove_node (par_tree_imp.list_widget, item_imp.tree_node_ptr)
 				end
-				item_imp.set_item_and_children (NULL)
-				-- This resets item and all children
+				item_imp.set_item_and_children (NULL, NULL)
+					-- This resets item and all children
 				item_imp.set_parent_imp (Void)
 			end
 
@@ -573,7 +585,7 @@ feature {EV_TREE_IMP} -- Implementation
 			-- Pointer used as hack to prevent gtk sigsegv on removal of last item.
 	
 	remove_dummy_node is
-			--
+			-- Remove the dummy node used to prevent seg fault on last item removal
 		local
 			a_d_node: POINTER
 		do

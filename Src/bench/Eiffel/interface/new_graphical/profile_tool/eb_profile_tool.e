@@ -111,18 +111,18 @@ feature {NONE} -- Initialization
 --			browse_button.set_minimum_width (100)
 			browse_button.set_horizontal_resize (False)
 			browse_button.set_vertical_resize (False)
-			browse_button.set_expand (False)
+			h_box.set_child_expandable (browse_button, False)
 			browse_button.add_click_command (Current, browse_it)
 
 				-- Query Frame
 			create query_frame.make_with_text (container, Interface_names.l_Query)
 			create query_text.make_with_text (query_frame, Interface_names.t_Empty)
 			query_text.set_horizontal_resize (True)
-			query_text.add_activate_command (run_prof_query_cmd, Void)
+			query_text.add_return_command (run_prof_query_cmd, Void)
 
 				-- Button bar
 			create button_bar.make (container)
-			button_bar.set_expand (False)
+			container.set_child_expandable (button_bar, False)
 			button_bar.set_border_width (4)
 
 			create run_button.make_with_text (button_bar, Interface_names.b_Run_query)
@@ -222,7 +222,7 @@ feature {EB_RUN_PROFILE_QUERY_CMD} -- Access
 			-- Fill `shared_values' with value specified
 			-- by the user.
 		local
-			parser: QUERY_PARSER
+			parser: EB_QUERY_PARSER
 			filename: STRING
 			i: INTEGER
 			wd: EV_WARNING_DIALOG

@@ -10,10 +10,12 @@ inherit
 	EV_VERTICAL_BOX
 
 	EB_SYSTEM_TAB
+		rename
+			make as tab_make
 		undefine
 			default_create, is_equal, copy
 		redefine
-			reset, make, post_store_reset
+			reset, post_store_reset
 		end
 
 	EIFFEL_ENV
@@ -69,7 +71,7 @@ feature -- Location access
 	cluster_name: EV_TEXT_FIELD
 			-- Name of cluster
 			
-	cluster_path: EV_TEXT_FIELD
+	cluster_path: EV_PATH_FIELD
 			-- Location of cluster
 
 	all_check, library_check: EV_CHECK_BUTTON
@@ -110,6 +112,11 @@ feature -- Cluster tree
 	cluster_tree: EV_TREE
 			-- Tree representing all clusters in system.
 			
+feature -- Parent access
+
+	system_window: EB_SYSTEM_WINDOW
+			-- Graphical parent of Current.
+
 feature -- Store/Retrieve
 
 	store (root_ast: ACE_SD) is
@@ -297,8 +304,6 @@ feature {NONE} -- Filling
 			end
 
 		end
-
-feature {NONE} -- Filling AST
 
 feature {NONE} -- Cluster display and saving
 
@@ -715,7 +720,7 @@ feature {NONE} -- Initialization
 	
 feature {NONE} -- Initialization
 
-	make is
+	make (top: like system_window) is
 			-- Create widget corresponding to `General' tab in notebook.
 		local
 			split: EB_HORIZONTAL_SPLIT_AREA
@@ -726,10 +731,12 @@ feature {NONE} -- Initialization
 			widget: EV_WIDGET
 			button: EV_BUTTON
 		do
-			Precursor {EB_SYSTEM_TAB}
+			system_window := top
 			create clusters.make (10)
 
+			tab_make
 			default_create
+
 			set_border_width (5)
 	
 			create split
@@ -773,12 +780,7 @@ feature {NONE} -- Initialization
 			vbox.extend (cluster_name)
 			vbox.disable_item_expand (cluster_name)
 
-			create label.make_with_text ("Cluster path:")
-			label.align_text_left
-			vbox.extend (label)
-			vbox.disable_item_expand (label)
-
-			create cluster_path
+			create cluster_path.make_with_text_and_parent ("Cluster path:", system_window.window)
 			vbox.extend (cluster_path)
 			vbox.disable_item_expand (cluster_path)
 			
@@ -942,7 +944,8 @@ feature {NONE} -- Actions
 			clus_window.show_modal_to_window (window_manager.last_focused_window.window)
 			if clus_window.is_selected then
 					-- A new cluster has been added
-				add_cluster_name (clus_window.parent_cluster, clus_window.cluster_name)
+				add_cluster_name (clus_window.parent_cluster,
+					clus_window.cluster_name, clus_window.cluster_path)
 			end
 		end
 
@@ -1066,7 +1069,7 @@ feature {NONE} -- Actions
 
 feature {NONE} -- Cluster addition implementation
 
-	add_cluster_name (parent_name, cl_name: STRING) is
+	add_cluster_name (parent_name, cl_name, path: STRING) is
 		require
 			cl_name_not_void: cl_name /= Void
 			cl_name_valid: valid_identifier (cl_name)
@@ -1079,7 +1082,7 @@ feature {NONE} -- Cluster addition implementation
 			if parent_name = Void then
 				cluster_tree.extend (new_cluster_item (cl_name))
 				cluster_sd := new_cluster_sd (
-					new_id_sd (cl_name, False), Void, new_id_sd ("Fill path", True), Void, False, False)
+					new_id_sd (cl_name, False), Void, new_id_sd (path, True), Void, False, False)
 				clusters.put (cluster_sd, cl_name)
 			else
 				from
@@ -1091,13 +1094,13 @@ feature {NONE} -- Cluster addition implementation
 					check
 						node_not_void: node /= Void
 					end
-					recursive_traversal (node, parent_name, cl_name)
+					add_cluster_recursive_traversal (node, parent_name, cl_name, path)
 					cluster_tree.forth
 				end
 			end
 		end
 
-	recursive_traversal (tree: EV_TREE_ITEM; parent_name, cl_name: STRING) is
+	add_cluster_recursive_traversal (tree: EV_TREE_ITEM; parent_name, cl_name, path: STRING) is
 		require
 			tree_not_void: tree /= Void
 			cl_name_not_void: cl_name /= Void
@@ -1114,7 +1117,7 @@ feature {NONE} -- Cluster addition implementation
 				tree.extend (new_cluster_item (cl_name))
 				cluster_sd := new_cluster_sd (
 					new_id_sd (cl_name, False), new_id_sd (parent_name, False),
-					new_id_sd ("Fill path", True), Void, False, False)
+					new_id_sd (path, True), Void, False, False)
 				clusters.put (cluster_sd, cl_name)
 			else
 				from
@@ -1126,7 +1129,7 @@ feature {NONE} -- Cluster addition implementation
 					check
 						node_not_void: node /= Void
 					end
-					recursive_traversal (node, parent_name, cl_name)
+					add_cluster_recursive_traversal (node, parent_name, cl_name, path)
 					tree.forth
 				end
 			end

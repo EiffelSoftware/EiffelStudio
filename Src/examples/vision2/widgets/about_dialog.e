@@ -10,6 +10,8 @@ inherit
 	EV_DIALOG
 
 	EV_STOCK_COLORS
+		rename
+				implementation as stock_colors_implementation
 		export
 			{NONE} all
 		undefine

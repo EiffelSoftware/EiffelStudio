@@ -133,6 +133,18 @@ feature -- Status report
 		ensure
 			result_not_void: result /= Void
 		end
+		
+	max_tip_width: INTEGER is
+			-- Maximum width that tooltip window will be displayed.
+			-- -1 if `set_max_tip_width' has not been called.
+		require
+			exists
+		do
+			Result := cwin_send_message_result (item, ttm_getmaxtipwidth, 0, 0)
+		ensure
+			result_valid: Result >= -1
+		end
+		
 
 feature -- Status setting
 
@@ -176,6 +188,18 @@ feature -- Status setting
 			cwin_send_message (item, Ttm_setdelaytime,
 				Ttdt_autopop, cwin_make_long (delay, 0))
 		end
+		
+	set_max_tip_width (a_width: INTEGER) is
+			-- Set the maximum width for the tooltip window. If this
+			-- is set, then the text will be word wrapped to this width,
+			-- and newline characters will be processed.
+		require
+			exists: exists
+			poisitive_width: a_width >=0
+		do
+			cwin_send_message (item, ttm_setmaxtipwidth, 0, a_width)
+		end
+		
 
 	set_initial_delay_time (delay: INTEGER) is
 			-- Set the length of time (in milliseconds) that the

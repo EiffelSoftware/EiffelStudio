@@ -252,7 +252,8 @@ feature -- Status setting
 			end
 		end
 
-	column_alignment_changed (an_alignment: EV_TEXT_ALIGNMENT; a_column: INTEGER) is
+	column_alignment_changed (an_alignment: EV_TEXT_ALIGNMENT;
+		a_column: INTEGER) is
 			-- Set alignment of `a_column' to corresponding `alignment_code'.
 		do
 			if an_alignment.is_left_aligned then
@@ -284,8 +285,8 @@ feature {NONE} -- Implementation
 					current_image_list_info.extend ([1, 1], item_value)
 				end
 			end
-			--|FIXME I think we should now tell the list view that an item has ben updated.
-			--| How do we do this?
+			--|FIXME I think we should now tell the list view that an item has
+			--| been updated. How do we do this?
 			temp_row ?= i_th (a_row).implementation
 			temp_row.set_image (1)
 			replace_item (temp_row)
@@ -361,9 +362,10 @@ feature -- Access
 
 	last_column_width_setting: INTEGER
 		-- The width that the last column was set to by the user.
-		--| Used by compute_column_widths somehow.
+		--| See compute_column_widths. 
 
-	find_item_at_position (x_pos, y_pos: INTEGER): EV_MULTI_COLUMN_LIST_ROW_IMP is
+	find_item_at_position (x_pos, y_pos: INTEGER):
+		EV_MULTI_COLUMN_LIST_ROW_IMP is
 			-- Find the item at the given position.
 			-- Position is relative to the multi-column list.
 		local
@@ -371,9 +373,9 @@ feature -- Access
 			info: WEL_LV_HITTESTINFO
 		do
 			create pt.make (16, y_pos)
-			--|FIXME 16 is used as it will always be within the selected part of the
-			--| row. Need to make the whole row selectable, see the extended style in this
-			--| class. However, this is not working yet.
+			--|FIXME 16 is used as it will always be within the selected part
+			--| of the row. Need to make the whole row selectable, see the
+			--| extended style in this class. However, this is not working yet.
 			create info.make_with_point (pt)
 			cwin_send_message (wel_item, Lvm_hittest, 0, info.to_integer)
 			if flag_set (info.flags, Lvht_onitemlabel)
@@ -420,9 +422,16 @@ feature -- Element change
 
 	compute_column_widths is
 			-- Re-compute column widths to fill parent.
+			--| This feature is require in order to fix a bug with the sizing
+			--| of the columns. The last column needs to always fill the
+			--| remaining space in `Current' and this feature will do that.
+			--| `Last_column_width_setting' holds the last size that the user
+			--| assigned to the last column, and when the width of `Current'
+			--| is reduced, if we reduce the width of the last column, then we
+			--| should never reduce it below this size.
 		local
 			current_width: INTEGER
-				-- Width of multi column list.
+				-- Width of `Current'.
 			counter: INTEGER
 		do
 			current_width := width
@@ -443,8 +452,7 @@ feature -- Element change
 							(last_column_width_setting, counter - 1)
 					end
 				end
-				current_width := current_width - 
-					column_width (counter)
+				current_width := current_width - column_width (counter)
 				counter := counter + 1
 			end
 		end
@@ -558,7 +566,8 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 
 feature {NONE} -- WEL Implementation
 
-	internal_propagate_pointer_press (event_id, x_pos, y_pos, button: INTEGER) is
+	internal_propagate_pointer_press
+		(event_id, x_pos, y_pos, button: INTEGER) is
 			-- Propagate `event_id' to the good item. 
 		local 
 			mcl_row: EV_MULTI_COLUMN_LIST_ROW_IMP
@@ -566,14 +575,16 @@ feature {NONE} -- WEL Implementation
 		do
 			mcl_row := find_item_at_position (x_pos, y_pos) 
 			pt := client_to_screen (x_pos, y_pos)
-			if mcl_row /= Void and mcl_row.is_transport_enabled and not parent_is_pnd_source then
+			if mcl_row /= Void and mcl_row.is_transport_enabled and not
+				parent_is_pnd_source then
 					mcl_row.pnd_press (x_pos, y_pos, 3, pt.x, pt.y)
 				elseif pnd_item_source /= Void then 
 					pnd_item_source.pnd_press (x_pos, y_pos, 3, pt.x, pt.y)
 				end
 			if mcl_row /= Void then 
 				mcl_row.interface.pointer_button_press_actions.call ([x_pos,
-				y_pos - relative_y (mcl_row), button, 0.0, 0.0, 0.0, pt.x, pt.y])
+					y_pos - relative_y (mcl_row), button, 0.0, 0.0, 0.0,
+					pt.x, pt.y])
 			end 
 		end
 
@@ -651,7 +662,8 @@ feature {NONE} -- WEL Implementation
 			-- List resized.
 		do
 			Precursor (size_type, a_width, a_height)
-			interface.resize_actions.call ([screen_x, screen_y, a_width, a_height])
+			interface.resize_actions.call ([screen_x, screen_y, a_width,
+				a_height])
 		end
 
 	on_mouse_move (keys, x_pos, y_pos: INTEGER) is
@@ -663,8 +675,8 @@ feature {NONE} -- WEL Implementation
 			mcl_row := find_item_at_position (x_pos, y_pos)
 			pt := client_to_screen (x_pos, y_pos)
 			if mcl_row /= Void then
-				mcl_row.interface.pointer_motion_actions.call ([x_pos, -- - offsets.integer_arrayed @ 1 + 1,
-				y_pos - relative_y (mcl_row), 0.0, 0.0, 0.0, pt.x, pt.y])
+				mcl_row.interface.pointer_motion_actions.call ([x_pos,
+					y_pos - relative_y (mcl_row), 0.0, 0.0, 0.0, pt.x, pt.y])
 			end
 			if pnd_item_source /= Void then
 				pnd_item_source.pnd_motion (x_pos, y_pos, pt.x, pt.y)
@@ -756,10 +768,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.89  2000/04/21 18:39:05  rogers
---| Modified find_item_at_position, so any x position is part
---| of the item. Added relative_y which is now used to simplify both
---| on_mouse_move and internal_propagate_pointer_press.
+--| Revision 1.90  2000/04/21 19:37:23  rogers
+--| Useful comments on compute_column_widths and last_column
+--| width_setting. Formatted all long lines.
 --|
 --| Revision 1.87  2000/04/21 16:58:01  rogers
 --| Removed child_x and wel_window_parent fix.
@@ -867,43 +878,59 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --| Commented out line that uses internal_text. get back to this.
 --|
 --| Revision 1.56  2000/03/22 20:21:27  rogers
---| On_right_button_down no longer calls the precursor, but calls the pointer_button_press_actions directly.
+--| On_right_button_down no longer calls the precursor, but calls the
+--| pointer_button_press_actions directly.
 --|
 --| Revision 1.55  2000/03/21 23:10:03  rogers
---| Added features for chechking PND status with relation, and modified features to support this. Fixed column_title with a tmeporary implementation.
+--| Added features for chechking PND status with relation, and modified
+--| features to support this. Fixed column_title with a temporary
+--| implementation.
 --|
 --| Revision 1.54  2000/03/14 23:51:15  rogers
 --| Removed unused local.
 --|
 --| Revision 1.53  2000/03/14 19:02:00  rogers
---| Removed all commented code from on_****_button_down, and implemented correctly. Removed all on_****_button_up.
+--| Removed all commented code from on_****_button_down, and implemented
+--| correctly. Removed all on_****_button_up.
 --|
 --| Revision 1.52  2000/03/14 18:41:05  rogers
---| Changed internal_propagate_event to internal_propagate_pointer_press and implemented this feature. Re-implemented child_y.
+--| Changed internal_propagate_event to internal_propagate_pointer_press and
+--| implemented this feature. Re-implemented child_y.
 --|
 --| Revision 1.49  2000/03/13 23:15:21  rogers
---| Added internal_propagate_event, not yet implemented. Redfined on_mouse_move from ev_primitive and call the pointer_motion_actions on an item if required. Changed the export status of implementation feature to {EV_MULTI_COLUMN_LIST_ROW_IMP}.
+--| Added internal_propagate_event, not yet implemented. Redfined
+--| on_mouse_move from ev_primitive and call the pointer_motion_actions on an
+--| item if required. Changed the export status of implementation feature to
+--| {EV_MULTI_COLUMN_LIST_ROW_IMP}.
 --|
 --| Revision 1.48  2000/03/13 22:22:13  rogers
---| Fixed set_columns so if the list does not have a parent and items are added, the default_parent will be used.
+--| Fixed set_columns so if the list does not have a parent and items are added,
+--| the default_parent will be used.
 --|
 --| Revision 1.47  2000/03/07 18:31:37  rogers
 --| Redefined on_size from WEL_LIST_VIEW, so the resize_actions can be called.
 --|
 --| Revision 1.46  2000/03/06 23:29:30  rogers
---| Corrected formatting in set_columns, interface.select_actions and interface.deselect_Actions have been connected. Removed commented out make which is redundent.
+--| Corrected formatting in set_columns, interface.select_actions and interface.
+--| deselect_Actions have been connected. Removed commented out make which is
+--| redundent.
 --|
 --| Revision 1.43  2000/03/06 17:13:33  rogers
---| Added calls to row select and deselect actions. Added call to column_click_actions.
+--| Added calls to row select and deselect actions. Added call to
+--| column_click_actions.
 --|
 --| Revision 1.42  2000/03/04 00:09:35  rogers
---| Removed commented item, implemented seemingly correct code for column_title which currently does not work. Appears to be a WEL bug.
+--| Removed commented item, implemented seemingly correct code for column_title
+--| which currently does not work. Appears to be a WEL bug.
 --|
 --| Revision 1.41  2000/03/03 19:33:19  rogers
---| renamed get_column_width -> column_width and changed all internal calls accordingly, added column_title which is still to be implemented.
+--| renamed get_column_width -> column_width and changed all internal calls
+--| accordingly, added column_title which is still to be implemented.
 --|
 --| Revision 1.40  2000/03/03 19:10:02  rogers
---| Redefined extend from EV_ITEM_LIST_IMP, added a boolean, first_addition which holds whether the addition is the first addition after creation. Implemented set_columns.
+--| Redefined extend from EV_ITEM_LIST_IMP, added a boolean, first_addition
+--| which holds whether the addition is the first addition after creation.
+--| Implemented set_columns.
 --|
 --| Revision 1.38  2000/03/03 00:54:20  brendel
 --| set_selected -> en/dis-able_select.

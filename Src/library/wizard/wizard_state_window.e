@@ -12,18 +12,18 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make(an_info: like state_information) is
+	make(an_info: like wizard_information) is
 			-- Create current object with information
 			-- relative to current state 'an_info'.
 			-- Should be redefined when needed.
 		do
-			state_information := clone(an_info)
+			wizard_information := clone(an_info)
 			change_entries
 --			if is_final_state then
 --				first_window.set_final_state
 --			end
 		ensure
-			information_set: state_information /= Void
+			information_set: wizard_information /= Void
 		end
 
 feature -- Basic Operations

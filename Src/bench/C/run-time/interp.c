@@ -135,6 +135,7 @@ private void write_fnptr();				/* Write a function pointer constant */
 private void write_address();			/* Write an address constant */
 
 /* Interpreter interface */
+public void exp_call();					/* Sets IC before calling interpret */
 public void xinterp();					/* Sets IC before calling interpret */
 public void xinitint();					/* Initialization of the interpreter */
 private void interpret();				/* Run the interpreter */
@@ -523,8 +524,11 @@ int where;			/* Are we checking invariant before or after compound? */
 						sync_registers(scur, stop);
 					break;
 				case SK_BIT:
+					stagval = tagval;
 					last->type = SK_POINTER;	/* GC: wait for malloc */
 					last->it_bit = RTLB(type & SK_BMASK);
+					if (tagval != stagval) 
+						sync_registers(scur, stop);
 					last->type = SK_BIT;
 					break;
 				default:
@@ -1120,6 +1124,9 @@ end:
 										 * need to sync the registers if it
 										 * called the interpreter for the
 										 * creation routine.
+										 * Also if the creation causes melted
+										 * Dispose to be called then sync_regs
+										 * has to be called. 
 										 */
 				sync_registers(scur, stop);
 		}
@@ -1188,8 +1195,10 @@ end:
 #endif 	
 		{	char *new_obj;
 			uint32 head_type;
+			unsigned long stagval;
 
 			last = opop();
+			stagval = tagval;
 			head_type = last->type & SK_HEAD;
 			if (head_type != SK_BIT) {
 				switch (last->type) {
@@ -1231,6 +1240,8 @@ end:
 				last->type = SK_BIT;
 				last->it_bit = new_obj;
 			}
+			if (tagval != stagval)				/* If G.C calls melted dispose */
+				sync_registers(scur, stop);
 		}
 		break;
 
@@ -1627,16 +1638,20 @@ end:
 			long nbr_of_items;
 			char *new_obj;
 			short stype, dtype, feat_id;
+			unsigned long stagval;
  
 			stype = get_short();			/* Get the static type */
 			feat_id = get_short();		  	/* Get the feature id */
 			nbr_of_items = get_long();	  	/* Number of items in array */
+			stagval = tagval;
  
 			new_obj = RTLN(RTUD(stype));	/* Create new object */
 			epush (&loc_stack, &new_obj);   /* Protect new_obj */
 			((void (*)()) RTWF(stype, feat_id, Dtype(new_obj)))
 									(new_obj, 1L, nbr_of_items);
 			epop (&loc_stack, 1);
+			if (tagval != stagval)
+				sync_registers(scur, stop); /* If G.C calls melted dispose */
 			last = iget();
 			last->type = SK_REF;
 			last->it_ref = new_obj;
@@ -1768,7 +1783,9 @@ end:
 			char **stripped;
 			char *array;
 			short s_type, d_type;
+			unsigned long stagval;
 
+			stagval = tagval;
 			d_type = get_short();           /* Get the dynamic type */
 			nbr_of_items = get_long();
 			temp = nbr_of_items;
@@ -1779,7 +1796,9 @@ end:
 				last = opop();
 				stripped[nbr_of_items] = last->it_ref; 
 			}
-			array = RTST(icurrent->it_ref, d_type, stripped, temp);
+			array = striparr(icurrent->it_ref, d_type, stripped, temp);
+			if (tagval != stagval)
+				sync_registers(scur, stop); /* If G.C calls melted dispose */
 			xfree (stripped);
 			last = iget();
 			last->type = SK_REF;
@@ -1796,7 +1815,9 @@ end:
 #endif
 		{
 			char *str_obj;			  /* String object created */
+			unsigned long stagval;
  
+			 stagval = tagval;
 			string = IC;
 			/* FIXME: string length */
 			IC += strlen(IC) + 1;
@@ -1807,10 +1828,13 @@ end:
 			 * the assignment directly into last->it_ref because the GC might
 			 * run a cycle when makestr() is called...
 			 */
+
 			str_obj = makestr(string, strlen(string));
  
 			last->type = SK_REF;
 			last->it_ref = str_obj;
+			if (tagval != stagval)
+				sync_registers(scur,stop);
 			break;
 		}
  
@@ -2704,9 +2728,23 @@ uint32 type;			/* Attribute meta-type */
 	default: panic(unknown_type);
 	}
 
+
 #undef i
 #undef b
 #undef l
+}
+
+void call_disp(dtype,object)
+uint32 dtype;
+char *object;
+{
+	/* Save the interpreter counter and restore it after the dispose
+	 * routine for `object' with dynamic type `dtype'.
+	 */
+	char *OLD_IC;
+	OLD_IC = IC;
+	(wdisp (dtype))(object);
+	IC = OLD_IC;
 }
 
 private void address(fid, stype)

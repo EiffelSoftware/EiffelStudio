@@ -361,11 +361,11 @@ feature -- Dynamic Library file
 				end
 				dynamic_lib_def_file_name.set_file_name (system_name)
 				create dynamic_lib_def_file.make_open_write (dynamic_lib_def_file_name)
-				dynamic_lib_def_file.put_string (def_buffer)
+				def_buffer.put_in_file (dynamic_lib_def_file)
 				dynamic_lib_def_file.close
 
 				create C_dynamic_lib_file.make_c_code_file (gen_file_name (context.final_mode, "edynlib"));
-				C_dynamic_lib_file.put_string (buffer)
+				buffer.put_in_file (C_dynamic_lib_file)
 				C_dynamic_lib_file.close
 			end
 		end
@@ -719,9 +719,9 @@ feature -- Plug and Makefile file
 			buffer.putstring (System.name)
 			buffer.putstring ("%";%N%Tegc_system_location = %"")
 			if context.final_mode then
-				buffer.putstring ((create {STRING_CONVERTER}).escaped_string (Final_generation_path))
+				buffer.escape_string (Final_generation_path)
 			else
-				buffer.putstring ((create {STRING_CONVERTER}).escaped_string (Workbench_generation_path))
+				buffer.escape_string (Workbench_generation_path)
 			end
 			buffer.putstring ("%";%N%Tegc_compiler_tag = ")
 			buffer.putint (System.version_tag)
@@ -765,7 +765,7 @@ feature -- Plug and Makefile file
 			buffer.end_c_specific_code
 
 			create plug_file.make_c_code_file (x_gen_file_name (final_mode, Eplug));
-			plug_file.put_string (buffer)
+			buffer.put_in_file (plug_file)
 			plug_file.close
 		end
 

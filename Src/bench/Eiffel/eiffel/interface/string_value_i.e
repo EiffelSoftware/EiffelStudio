@@ -113,7 +113,7 @@ feature -- Code generation
 			-- Generate value in `buffer'.
 		do
 			buffer.putstring ("RTMS_EX_H(%"")
-			buffer.escape_string (buffer,string_value)
+			buffer.escape_string (string_value)
 			buffer.putchar('"')
 			buffer.putchar(',')
 			buffer.putint(string_value.count)

@@ -14,9 +14,9 @@ feature
 		do
 			putstring (class_type.associated_class.cluster.cluster_name);
 			putchar ('%T');
-			create s.make (0)
+			create s.make (128)
 			class_type.type.dump (s);
-			putstring (s)
+			s.put_in_file (Current)
 			putchar ('%T');
 			putstring (feature_name);
 			new_line;

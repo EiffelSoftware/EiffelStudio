@@ -82,7 +82,7 @@ feature -- Code generation
 			-- Generate value in `buffer'.
 		do
 			buffer.putstring ("RTMB(%"")
-			buffer.escape_string (buffer,bit_value)
+			buffer.escape_string (bit_value)
 			buffer.putchar ('"')
 			buffer.putstring (", ")
 			buffer.putint (bit_count)

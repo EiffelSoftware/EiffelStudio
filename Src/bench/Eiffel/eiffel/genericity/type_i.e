@@ -299,7 +299,7 @@ feature -- Debugging
 		do
 			create s.make (0)
 			dump (s)
-			io.error.put_string (s)
+			io.error.put_string (s.as_string)
 		end
 
 feature -- Code generation

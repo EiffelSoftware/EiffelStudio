@@ -48,7 +48,7 @@ feature
 			-- Generate value in `buffer'.
 		do
 			buffer.putstring ("(EIF_CHARACTER) '");
-			buffer.escape_char (buffer,character_value);
+			buffer.escape_char (character_value);
 			buffer.putchar ('%'');
 		end;
 

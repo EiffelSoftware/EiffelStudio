@@ -100,7 +100,7 @@ feature -- Generation
 			buffer.end_c_specific_code
 
 			descriptor_file := class_type.open_descriptor_file
-			descriptor_file.put_string (buffer)
+			buffer.put_in_file (descriptor_file)
 			descriptor_file.close
 		end;
 

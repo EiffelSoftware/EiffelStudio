@@ -50,7 +50,7 @@ feature
 
 			packet_number := n // System.makefile_generator.System_packet_number + 2
 			create header_file.make_open_write (final_file_name (temp, Dot_h, packet_number))
-			header_file.put_string (current_buffer)
+			current_buffer.put_in_file (header_file)
 			header_file.close
 
 			current_buffer.clear_all

@@ -117,7 +117,7 @@ feature -- Access
 		do
 			file := new_file
 			init_file (file)
-			file.put_string (current_buffer)
+			current_buffer.put_in_file (file)
 			finish_file
 			file.close
 			increment_file_counter

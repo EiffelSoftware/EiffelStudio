@@ -2588,7 +2588,7 @@ end
 			buffer.putstring ("};%N")
 
 			create size_file.make_c_code_file (x_gen_file_name (byte_context.final_mode, Esize))
-			size_file.put_string (buffer)
+			buffer.put_in_file (size_file)
 			size_file.close
 		end
 
@@ -2633,7 +2633,7 @@ end
 			buffer.putstring ("%N};%N")
 
 			create reference_file.make_c_code_file (final_file_name (Eref, Dot_c, 1));
-			reference_file.put_string (buffer)
+			buffer.put_in_file (reference_file)
 			reference_file.close
 		end
 
@@ -2729,7 +2729,7 @@ end
 			buffer.end_c_specific_code
 
 			create parents_file.make_c_code_file (gen_file_name (final_mode, Eparents));
-			parents_file.put_string (buffer)
+			buffer.put_in_file (parents_file)
 			parents_file.close;
 		end;
 
@@ -2949,7 +2949,7 @@ end
 			buffer.end_c_specific_code
 			
 				-- Generate skeleton
-			skeleton_file.put_string (buffer)
+			buffer.put_in_file (skeleton_file)
 			skeleton_file.close
 		end
 
@@ -3016,7 +3016,7 @@ end
 				create f_name.make_from_string (dir_name)
 				f_name.set_file_name ("ececil.h")
 				create header_file.make_open_write (f_name)
-				header_file.put_string (header_buffer)
+				header_buffer.put_in_file (header_file)
 				header_file.close
 
 				buffer.putstring ("%Nstruct ctable egc_ce_rname_init[] = {%N")
@@ -3068,7 +3068,7 @@ end
 			buffer.end_c_specific_code
 			
 			create cecil_file.make_c_code_file (gen_file_name (final_mode, Evisib));
-			cecil_file.put_string (buffer)
+			buffer.put_in_file (cecil_file)
 			cecil_file.close
 		end
 
@@ -3555,7 +3555,7 @@ feature -- Pattern table generation
 			buffer.end_c_specific_code
 
 			create initialization_file.make_c_code_file (gen_file_name (final_mode, Einit));
-			initialization_file.put_string (buffer)
+			buffer.put_in_file (initialization_file)
 			initialization_file.close
 		end
 
@@ -3573,7 +3573,7 @@ feature -- Workbench routine info table file generation
 				rout_info_table.generate (buffer)
 
 				create rout_info_file.make_c_code_file (workbench_file_name (Ecall));
-				rout_info_file.put_string (buffer)
+				buffer.put_in_file (rout_info_file)
 				rout_info_file.close
 			end
 		end
@@ -3646,7 +3646,7 @@ feature --Workbench option file generation
 			buffer.end_c_specific_code
 
 			create option_file.make_c_code_file (workbench_file_name (Eoption));
-			option_file.put_string (buffer)
+			buffer.put_in_file (option_file)
 			option_file.close
 		end
 

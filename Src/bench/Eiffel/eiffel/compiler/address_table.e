@@ -166,7 +166,7 @@ end
 			create cecil_file.make_c_code_file (gen_file_name (final_mode, Ececil));
 			if final_mode then
 				buffer.end_c_specific_code
-				cecil_file.put_string (buffer)
+				buffer.put_in_file (cecil_file)
 				cecil_file.close
 
 					-- Generate the extern declarations
@@ -180,13 +180,13 @@ end
 				Extern_declarations.wipe_out
 
 				create address_file.make_open_write (final_file_name ("eaddress", Dot_h, 1))
-				address_file.put_string (buffer)
+				buffer.put_in_file (address_file)
 				address_file.close
 			else
 					-- Generate the dispatch table in Workbench mode
 				generate_dispatch_table (buffer)
 				buffer.end_c_specific_code
-				cecil_file.put_string (buffer)
+				buffer.put_in_file (cecil_file)
 				cecil_file.close
 			end
 

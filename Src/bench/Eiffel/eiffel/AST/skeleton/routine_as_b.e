@@ -19,12 +19,12 @@ inherit
 
 	CONTENT_AS_B
 		undefine
-			simple_format, is_require_else, is_ensure_then,
+			is_require_else, is_ensure_then,
 			has_rescue, has_precondition, has_postcondition,
 			check_local_names
 		redefine
 			type_check, byte_node, find_breakable, 
-			fill_calls_list, replicate, local_table
+			fill_calls_list, replicate, local_table, format
 		end;
 
 	SHARED_INSTANTIATOR;
@@ -434,21 +434,118 @@ feature	-- Replication
 			end;
 		end;
 
+feature -- Context format
+
+	format (ctxt: FORMAT_CONTEXT_B) is
+			-- Format routine ast to `ctxt'.
+		local
+			chained_assert: CHAINED_ASSERTIONS
+		do
+			if not ctxt.is_short then
+				ctxt.put_space;
+				ctxt.put_text_item_without_tabs (ti_Is_keyword);
+				ctxt.new_line;
+				if obsolete_message /= Void then
+					ctxt.indent;
+					ctxt.put_text_item (ti_Obsolete_keyword);
+					ctxt.put_space;
+					obsolete_message.format (ctxt);
+					ctxt.new_line;
+					ctxt.exdent;
+				end;
+			end;
+			ctxt.indent;
+			ctxt.indent;
+			if comment /= void then
+				ctxt.put_comment (comment);
+			end;
+			ctxt.put_origin_comment;
+			ctxt.exdent;
+			ctxt.set_first_assertion (true);
+			chained_assert := ctxt.chained_assertion;
+			if chained_assert /= Void then
+				chained_assert.format_precondition (ctxt);
+			elseif precondition /= void then
+				ctxt.set_in_assertion;
+				precondition.format (ctxt);
+				ctxt.set_not_in_assertion;
+			end;
+			if not ctxt.is_short then
+				if locals /= void then
+					ctxt.put_text_item (ti_Local_keyword);
+					ctxt.set_separator (ti_Semi_colon);
+					ctxt.indent;
+					ctxt.set_new_line_between_tokens;
+					ctxt.new_line;
+					locals.format (ctxt);
+					ctxt.new_line;
+					ctxt.exdent;
+				end;
+				if routine_body /= Void then
+					routine_body.format (ctxt)
+				end
+			end;
+			ctxt.set_first_assertion (true);
+			if chained_assert /= void then
+				chained_assert.format_postcondition (ctxt);
+			elseif postcondition /= void then
+				ctxt.set_in_assertion;
+				postcondition.format (ctxt);
+				ctxt.set_not_in_assertion;
+			end;
+			if not ctxt.is_short then
+				if rescue_clause /= void then
+					ctxt.put_text_item (ti_Rescue_keyword);
+					ctxt.indent;
+					ctxt.new_line;
+					ctxt.set_separator (ti_Semi_colon);
+					ctxt.set_new_line_between_tokens;
+					rescue_clause.format (ctxt);
+					ctxt.exdent;
+					ctxt.new_line;
+					ctxt.put_breakable;
+				end
+				ctxt.put_text_item (ti_End_keyword);
+			end;
+			ctxt.exdent;
+		end;
+
 feature -- Case storage
 
-	store_information (classc: CLASS_C; f: S_FEATURE_DATA) is
+	store_information (f: S_FEATURE_DATA) is
 			-- Store pre and post information into `f'.
 		require
 			valid_f: f /= Void
+		local
+			text: ARRAY [STRING];
+			i: INTEGER;
+			feature_comments: S_FREE_TEXT_DATA
+			c: like comment
 		do
 			if precondition /= Void and then 
 									precondition.assertions /= Void then
-				f.set_preconditions (precondition.storage_info (classc));
+				f.set_preconditions (precondition.storage_info);
 			end;
 			if postcondition /= Void and then 
 									postcondition.assertions /= Void then
-				f.set_postconditions (postcondition.storage_info (classc));
+				f.set_postconditions (postcondition.storage_info);
 			end;
+			c := comment;
+			if c /= Void and c.count > 0 then
+				text := c.text;
+				!! feature_comments.make (c.count)
+				from
+					i := 1;
+					feature_comments.start
+				until
+					i > c.count
+				loop
+					feature_comments.replace (clone (text.item (i)));
+					feature_comments.forth
+					i := i + 1
+				end
+				f.set_comments (feature_comments)
+			end
 		end;
 
 end -- class ROUTINE_AS_B

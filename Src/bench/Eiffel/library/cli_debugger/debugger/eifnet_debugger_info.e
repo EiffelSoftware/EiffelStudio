@@ -250,7 +250,6 @@ feature -- Progression
 			if previous_stack_info /= Void then
 				debug ("DEBUGGER_TRACE_STEPPING")
 					io.error.put_string ("PREVIOUS=" +previous_stack_info.to_string + "%N")
-					io.error.put_string ("CURRENT =" +current_stack_info.to_string + "%N")				
 				end
 				Result := current_stack_info.is_equal (previous_stack_info)
 			end
@@ -322,7 +321,6 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Change
 				last_icd_controller_updated := False
 				if last_p_icd_controller /= Default_pointer then
 					n := feature {CLI_COM}.add_ref (last_p_icd_controller)
-					jfiat_tools.output.put_string (Current, "Com AddRef on ICorDebugController " + last_p_icd_controller.out + " nb=" + n.out + "%N")					
 				end
 				debug ("DEBUGGER_EIFNET_DATA")
 					io.error.put_string ("/// EIFNET_DEBUGGER_INFO:: Controller changed%N")
@@ -336,8 +334,6 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Change
 		do
 			if last_p_icd_controller /= Default_pointer then
 				n := feature {CLI_COM}.release (last_p_icd_controller)
-				jfiat_tools.output.put_string (Current, "Com Release on ICorDebugController " + last_p_icd_controller.out + " nb=" + n.out + "%N")					
-				
 				last_p_icd_controller := Default_pointer
 			end
 			last_icd_controller := Void
@@ -355,8 +351,6 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Change
 				last_icd_process_updated := False
 				if last_p_icd_process /= Default_pointer then
 					n := feature {CLI_COM}.add_ref (last_p_icd_process)
-					jfiat_tools.output.put_string (Current, "Com AddRef on ICorDebugProcess " + last_p_icd_process.out + " nb=" + n.out + "%N")					
-					
 				end
 				debug ("DEBUGGER_EIFNET_DATA")
 					io.error.put_string ("/// EIFNET_DEBUGGER_INFO:: Process changed%N")
@@ -370,7 +364,6 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Change
 		do
 			if last_p_icd_process /= Default_pointer then
 				n := feature {CLI_COM}.release (last_p_icd_process)
-				jfiat_tools.output.put_string (Current, "Com Release on ICorDebugProcess " + last_p_icd_process.out + " nb=" + n.out + "%N")					
 				last_p_icd_process := Default_pointer
 			end
 			last_icd_process := Void
@@ -388,7 +381,6 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Change
 				last_icd_thread_updated := False
 				if last_p_icd_thread /= Default_pointer then
 					n := feature {CLI_COM}.add_ref (last_p_icd_thread)
-					jfiat_tools.output.put_string (Current, "Com AddRef on ICorDebugThread " + last_p_icd_thread.out + " nb=" + n.out + "%N")					
 				end
 
 				debug ("DEBUGGER_EIFNET_DATA")
@@ -403,7 +395,6 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Change
 		do
 			if last_p_icd_thread /= Default_pointer then
 				n := feature {CLI_COM}.release (last_p_icd_thread)
-				jfiat_tools.output.put_string (Current, "Com Release on ICorDebugThread " + last_p_icd_thread.out + " nb=" + n.out + "%N")			
 				last_p_icd_thread := Default_pointer
 			end
 			last_icd_thread := Void
@@ -421,7 +412,6 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Change
 				last_icd_breakpoint_updated := False
 				if last_p_icd_breakpoint /= Default_pointer then
 					n := feature {CLI_COM}.add_ref (last_p_icd_breakpoint)
-					jfiat_tools.output.put_string (Current, "Com AddRef on ICorDebugBreakpoint " + last_p_icd_breakpoint.out + " nb=" + n.out + "%N")			
 				end
 				debug ("DEBUGGER_EIFNET_DATA")
 					io.error.put_string ("/// EIFNET_DEBUGGER_INFO:: Breakpoint changed%N")
@@ -435,7 +425,6 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Change
 		do
 			if last_p_icd_breakpoint /= Default_pointer then
 				n := feature {CLI_COM}.release (last_p_icd_breakpoint)
-				jfiat_tools.output.put_string (Current, "Com Release on ICorDebugBreakpoint " + last_p_icd_breakpoint.out + " nb=" + n.out + "%N")			
 				last_p_icd_breakpoint := Default_pointer
 			end
 			last_icd_breakpoint := Void

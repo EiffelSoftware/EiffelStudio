@@ -384,11 +384,6 @@ feature -- ICorDebug... pointer helpers
 				l_hr := feature {ICOR_DEBUG_APP_DOMAIN}.cpp_get_process (p_app_domain, $p_process)
 				Result := p_process
 				n := feature {CLI_COM}.release (p_app_domain)
-				-- FIXME JFIAT : check ...
-				
-				debug ("DEBUG_JFIAT")
-					jfiat_tools.output.put_string (Current, "-> NbRef=" + n.out + "%N")
-				end
 			end
 			n := feature {CLI_COM}.release (p_controller)			
 		end

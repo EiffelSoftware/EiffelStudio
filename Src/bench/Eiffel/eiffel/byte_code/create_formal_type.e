@@ -44,6 +44,8 @@ feature -- C code generation
 			buffer := context.buffer
 
 			buffer.putstring ("RTGPTID(")
+			buffer.putint (context.current_type.generated_id (context.final_mode))
+			buffer.putchar (',')
 			context.current_register.print_register_by_name
 			buffer.putchar (',')
 			buffer.putint (formal_position)

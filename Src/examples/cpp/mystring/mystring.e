@@ -8,10 +8,7 @@ indexing
 class MYSTRING
 
 inherit
-	MEMORY
-		redefine
-			dispose
-		end
+	DISPOSABLE
 
 create
 	make

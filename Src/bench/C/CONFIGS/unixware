@@ -7,15 +7,34 @@
 #added by ET: use default sigwaiting in MT-mode
 d_dfltsigwaiting='define'
 
+ccflags=''
+mtccflags='-Kthread -D_REENTRANT -DEIF_THREADS -DUNIXWARE_THREADS'
+
+cppflags=''
+ldflags=''
+
+libs='-lsocket -lnsl -lm'
+mtlibs='-lsocket -lnsl -lm -ldl -lthread'
+
+optimize='-O'
+wkoptimize=''
+command_makefile='make'
+
+start_test='if [ ! -f finished ] ; then'
+end_test='; fi'
+create_test='touch finished'
+
 sharedlink='ld'
 ldsharedflags='-G'
 lngpad_2='LNGPAD(2)'
-command_makefile='make'
 shared_suffix='.so'
 shared_prefix='lib'
-d_bsdsig='undef'
 ld='ld'
 ar='ar'
+cc='scc'
+
+
+d_bsdsig='undef'
 d_bsd='undef'
 d_eunice='undef'
 d_xenix='undef'
@@ -109,16 +128,9 @@ binexp='/opt/bin'
 installbin='/opt/bin'
 bitpbyte='8'
 byteorder='1234'
-cc='cc'
 gccversion=''
 
-ccflags=''
-mtccflags='-Kthread -D_REENTRANT -DEIF_THREADS -DUNIXWARE_THREADS'
-
-cppflags=''
-ldflags=''
 lkflags=''
-optimize=''
 cf_by='manuelt'
 cf_time='Fri Jan 23 19:57:51 EST 1998'
 charsize='1'
@@ -265,9 +277,6 @@ glibpth='/lib/pa1.1 /usr/lib/large /lib /usr/lib /usr/lib/386 /lib/386 /lib/larg
 libpth='/lib /usr/lib /usr/ccs/lib /usr/ucblib'
 plibpth=''
 xlibpth='/usr/lib/386 /lib/386'
-
-libs='-lsocket -lnsl -lm'
-mtlibs='-lsocket -lnsl -lm -ldl -lthread'
 
 lns='/usr/bin/ln -s'
 longsize='4'

@@ -163,4 +163,11 @@ feature -- Update
 		do
 		end;
 
+	process_call_stack (dropped: CALL_STACK_STONE) is
+			-- Accept all stone types
+		require
+			valid_stone: dropped /= Void
+		do
+		end;
+
 end -- class HOLE

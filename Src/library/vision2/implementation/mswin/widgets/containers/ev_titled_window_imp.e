@@ -377,20 +377,20 @@ feature -- Element change
 
 feature -- Event - command association
 
-	add_close_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+	add_close_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Make `cmd' the executed command when the window is closed.
 		do
 			add_command (Cmd_close, cmd, arg)
 		end
 
-	add_resize_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+	add_resize_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed
 			-- when the window is resized.
 		do
 			add_command (Cmd_size, cmd, arg)
 		end
 
-	add_move_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+	add_move_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed
 			-- when the widget is resized.
 		do
@@ -509,9 +509,12 @@ feature {NONE} -- Implementation
 			-- Can the user close the window?
 			-- Yes by default.
 		do
-			execute_command (Cmd_close, Void)
-			interface.remove_implementation
-			Result := True
+			if (command_list @ Cmd_close) = Void then
+				Result := True
+			else
+				execute_command (Cmd_close, Void)
+				Result := False
+			end
 		end
 
 --	min_track: WEL_POINT

@@ -299,7 +299,8 @@ feature -- Insertion
 			-- Put `an_item' to the left of cursor index.
 			-- Do not move cursor.
 		require
-			exists: not destroyed
+			exists: not destroyed;
+			not_before_unless_empty: before implies empty
 		do
 			implementation.put_left (an_item)
 		ensure
@@ -310,7 +311,8 @@ feature -- Insertion
 			-- Put item `v' to the right of cursor position.
 			-- Do not move cursor.
 		require
-			exists: not destroyed
+			exists: not destroyed;
+			not_after_unless_empty: after implies empty
 		do
 			implementation.put_right (an_item)
 		ensure

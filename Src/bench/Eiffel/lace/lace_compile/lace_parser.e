@@ -74,34 +74,10 @@ feature
 			end;
 		end;
 
-	parse_string (to_parse: STRING; file_name: STRING) is
-			-- Parse  string `to_parse' and make built ast node
-			-- (void if failure) available through `ast'.
-		require
-			parsable: to_parse /= Void
-		local
-			ptr: ANY;
-		do
-			ptr := to_parse.to_c;
-			collection_off;
-			ast := lp_string ($ptr, file_name);
-			collection_on;
-		rescue
-			if Rescue_status.is_error_exception then
-				collection_on;
-			end;
-		end;
-
 feature {NONE} -- Externals
 
 	lp_file (file: POINTER; fn: STRING): ACE_SD is
 			-- Call lace parser with a source file.
-		external
-			"C"
-		end;
-
-	lp_string (s: ANY; fn: STRING): ACE_SD  is
-			-- Call lace parser iwth a source string.
 		external
 			"C"
 		end;

@@ -846,16 +846,6 @@ feature -- Variables access
 		do
 		end
 
-	generate_any_feature_access (type_i: TYPE_I; a_feature_id: INTEGER; nb: INTEGER;
-			is_function, is_virtual: BOOLEAN)
-		is
-			-- Generate access to feature of `a_feature_id' in `type_i'.
-		require
-			type_i_not_void: type_i /= Void
-			positive_feature_id: a_feature_id > 0
-		do
-		end
-
 	generate_feature_access (type_i: TYPE_I; a_feature_id: INTEGER; nb: INTEGER;
 			is_function, is_virtual: BOOLEAN)
 		is
@@ -918,6 +908,7 @@ feature -- Variables access
 			-- corresponding reference type.
 		require
 			type_i_not_void: type_i /= Void
+			type_is_expanded: type_i.is_expanded
 		do
 		end
 
@@ -927,6 +918,7 @@ feature -- Variables access
 			-- Load content of address resulting from unbox operation.
 		require
 			type_i_not_void: type_i /= Void
+			type_is_expanded: type_i.is_expanded
 		do
 		end
 
@@ -977,6 +969,7 @@ feature -- Addresses
 			-- Load value of `a_type' type from address pushed on stack.
 		require
 			type_not_void: a_type /= Void
+			type_is_expanded: a_type.is_expanded
 		do
 		end
 

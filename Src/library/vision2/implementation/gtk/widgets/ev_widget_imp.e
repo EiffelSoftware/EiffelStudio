@@ -152,6 +152,7 @@ feature -- Status report
 	has_focus: BOOLEAN is
 			-- Does the Current widget has the focus.
 		do
+			Result := c_gtk_widget_has_focus (widget)
 		end
 
 feature -- Status setting
@@ -188,7 +189,6 @@ feature -- Status setting
 	set_focus is
 			-- Set focus to Current
 		do
-				-- to be tested
 			gtk_widget_grab_focus (widget)
 		end
 
@@ -734,9 +734,9 @@ feature -- Removal
 			-- since these may also be dead and reclaimed.
 		do
 			-- Destroy the gtkwidget.
-			if (gtk_is_widget (widget)) then
-				gtk_widget_destroy (widget)
-			end
+--			if (gtk_is_widget (widget)) then
+--				gtk_widget_destroy (widget)
+--			end
 -- Check for each widget if there are other gtk object than `widget'.
 		end	
 

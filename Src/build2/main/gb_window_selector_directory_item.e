@@ -24,6 +24,13 @@ inherit
 			default_create, copy, is_equal
 		end
 		
+	GB_SHARED_TOOLS
+		export
+			{NONE} all
+		undefine
+			default_create, copy, is_equal
+		end
+		
 	GB_SHARED_COMMAND_HANDLER
 	
 create
@@ -102,16 +109,20 @@ feature {GB_XML_LOAD} -- Implementation
 		ensure
 			item_contained: has (an_item)
 		end
+		
+feature {NONE} -- Implementation
 	
 	add_window_object (an_object: GB_TITLED_WINDOW_OBJECT) is
 			-- Add representation of `an_object' to `Current'.
+		require
+			an_object_not_void: an_object /= Void
 		local
-			window_selector: GB_WINDOW_SELECTOR
+			directory: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
 		do
-			window_selector ?= parent
-			check
-				parent_is_window_selector: window_selector /= Void
-			end
+			directory ?= an_object.window_selector_item.parent
+				-- Note that directory may well be Void if the window is currently not in a directory.
+			window_selector.update_class_files_location (an_object.window_selector_item, directory, current)
+			
 			if an_object.window_selector_item = Void then
 				window_selector.add_new_object (an_object)
 			end

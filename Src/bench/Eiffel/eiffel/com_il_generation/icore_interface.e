@@ -101,6 +101,13 @@ feature -- Status Report
 			Result := True
 		end
 
+	add_eiffel_interface_user_precondition (type_id: INTEGER): BOOLEAN is
+			-- User-defined preconditions for `add_eiffel_interface'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
 	end_parents_list_user_precondition: BOOLEAN is
 			-- User-defined preconditions for `end_parents_list'.
 			-- Redefine in descendants if needed.
@@ -388,6 +395,13 @@ feature -- Status Report
 			Result := True
 		end
 
+	set_eiffel_type_user_precondition (exported_type_id: INTEGER): BOOLEAN is
+			-- User-defined preconditions for `set_eiffel_type'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
 	duplicate_top_user_precondition: BOOLEAN is
 			-- User-defined preconditions for `duplicate_top'.
 			-- Redefine in descendants if needed.
@@ -516,6 +530,13 @@ feature -- Status Report
 
 	generate_precursor_feature_access_user_precondition (type_id: INTEGER; feature_id: INTEGER): BOOLEAN is
 			-- User-defined preconditions for `generate_precursor_feature_access'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	put_method_token_user_precondition (type_id: INTEGER; feature_id: INTEGER): BOOLEAN is
+			-- User-defined preconditions for `put_method_token'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -1200,6 +1221,15 @@ feature -- Basic Operations
 
 		end
 
+	add_eiffel_interface (type_id: INTEGER) is
+			-- No description available.
+			-- `type_id' [in].  
+		require
+			add_eiffel_interface_user_precondition: add_eiffel_interface_user_precondition (type_id)
+		deferred
+
+		end
+
 	end_parents_list is
 			-- No description available.
 		require
@@ -1607,6 +1637,15 @@ feature -- Basic Operations
 
 		end
 
+	set_eiffel_type (exported_type_id: INTEGER) is
+			-- No description available.
+			-- `exported_type_id' [in].  
+		require
+			set_eiffel_type_user_precondition: set_eiffel_type_user_precondition (exported_type_id)
+		deferred
+
+		end
+
 	duplicate_top is
 			-- No description available.
 		require
@@ -1766,6 +1805,16 @@ feature -- Basic Operations
 			-- `feature_id' [in].  
 		require
 			generate_precursor_feature_access_user_precondition: generate_precursor_feature_access_user_precondition (type_id, feature_id)
+		deferred
+
+		end
+
+	put_method_token (type_id: INTEGER; feature_id: INTEGER) is
+			-- No description available.
+			-- `type_id' [in].  
+			-- `feature_id' [in].  
+		require
+			put_method_token_user_precondition: put_method_token_user_precondition (type_id, feature_id)
 		deferred
 
 		end

@@ -145,6 +145,13 @@ feature -- Basic Operations
 			ccom_add_interface (initializer, type_id)
 		end
 
+	add_eiffel_interface (type_id: INTEGER) is
+			-- No description available.
+			-- `type_id' [in].  
+		do
+			ccom_add_eiffel_interface (initializer, type_id)
+		end
+
 	end_parents_list is
 			-- No description available.
 		do
@@ -456,6 +463,13 @@ feature -- Basic Operations
 			ccom_create_attribute_object (initializer, type_id, feature_id)
 		end
 
+	set_eiffel_type (exported_type_id: INTEGER) is
+			-- No description available.
+			-- `exported_type_id' [in].  
+		do
+			ccom_set_eiffel_type (initializer, exported_type_id)
+		end
+
 	duplicate_top is
 			-- No description available.
 		do
@@ -579,6 +593,14 @@ feature -- Basic Operations
 			-- `feature_id' [in].  
 		do
 			ccom_generate_precursor_feature_access (initializer, type_id, feature_id)
+		end
+
+	put_method_token (type_id: INTEGER; feature_id: INTEGER) is
+			-- No description available.
+			-- `type_id' [in].  
+			-- `feature_id' [in].  
+		do
+			ccom_put_method_token (initializer, type_id, feature_id)
 		end
 
 	generate_argument (n: INTEGER) is
@@ -1179,6 +1201,12 @@ feature {NONE}  -- Externals
 			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER)"
 		end
 
+	ccom_add_eiffel_interface (cpp_obj: POINTER; type_id: INTEGER) is
+			-- No description available.
+		external
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER)"
+		end
+
 	ccom_end_parents_list (cpp_obj: POINTER) is
 			-- No description available.
 		external
@@ -1425,6 +1453,12 @@ feature {NONE}  -- Externals
 			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER,EIF_INTEGER)"
 		end
 
+	ccom_set_eiffel_type (cpp_obj: POINTER; exported_type_id: INTEGER) is
+			-- No description available.
+		external
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER)"
+		end
+
 	ccom_duplicate_top (cpp_obj: POINTER) is
 			-- No description available.
 		external
@@ -1534,6 +1568,12 @@ feature {NONE}  -- Externals
 		end
 
 	ccom_generate_precursor_feature_access (cpp_obj: POINTER; type_id: INTEGER; feature_id: INTEGER) is
+			-- No description available.
+		external
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER,EIF_INTEGER)"
+		end
+
+	ccom_put_method_token (cpp_obj: POINTER; type_id: INTEGER; feature_id: INTEGER) is
 			-- No description available.
 		external
 			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER,EIF_INTEGER)"

@@ -99,6 +99,10 @@ public class Core : ICore {
 		core.AddInterface (TypeID);
 	}
 
+	public void AddEiffelInterface (int TypeID) {
+		core.AddEiffelInterface (TypeID);
+	}
+
 	public void EndParentsList() {
 		core.EndParentsList();
 	}
@@ -308,6 +312,10 @@ public class Core : ICore {
 		core.CreateAttributeObject (TypeID, FeatureID);
 	}
 
+	public void SetEiffelType (int ExportedTypeID) {
+		core.SetEiffelType (ExportedTypeID);
+	}
+
 	public void DuplicateTop() {
 		core.DuplicateTop();
 	}
@@ -376,6 +384,10 @@ public class Core : ICore {
 		core.GeneratePrecursorFeatureAccess (TypeID, FeatureID);
 	}
 	
+	public void PutMethodToken (int TypeID, int FeatureID) {
+		core.PutMethodToken (TypeID, FeatureID);
+	}
+
 	public void GenerateArgument (int n) {
 		core.GenerateArgument (n);
 	}

@@ -33,10 +33,10 @@ namespace ISE.Runtime {
 
 		public static int generic_parameter_count (object o) {
 				// Number of generic Parameter if any.
-			_IGeneric gen;		
-			if (o is _IGeneric) {
-				gen = (_IGeneric) o;
-				return gen.____count();
+			_EIFFEL_TYPE_INFO gen;		
+			if (o is _EIFFEL_TYPE_INFO) {
+				gen = (_EIFFEL_TYPE_INFO) o;
+				return gen.____type_id();
 			} else {
 				return 0;
 			}
@@ -59,8 +59,9 @@ namespace ISE.Runtime {
 	}
 
 	[CLSCompliantAttribute (false)]
-	public interface _IGeneric {
-		int ____count();
+	public interface _EIFFEL_TYPE_INFO {
+		int ____type_id();
+		void ____set_type_id(Int32 type_id);
 	}
 
 	public class EIFFEL_TYPES {

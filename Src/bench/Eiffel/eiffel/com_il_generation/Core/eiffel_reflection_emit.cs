@@ -269,6 +269,21 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 		#endif
 	}
 
+	// Add interface with id `TypeID' into list of parents of current type.
+	public void AddEiffelInterface (int TypeID) {
+		#if DEBUG
+			Log ("AddEiffelInterface" + " (" + TypeID + ")");
+		try {
+		#endif
+			Classes [CurrentTypeID].AddEiffelInterface (TypeID);
+		#if DEBUG
+		}
+		catch (Exception error) {
+			LogError (error);
+		}
+		#endif
+	}
+
 	// Finish inheritance part description
 	public void EndParentsList()
 	{
@@ -1032,7 +1047,9 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 	public void CreateLikeCurrentObject() {
 			// FIXME: Code is not correct, we should evaluate current type
 			// and create an instance of it.
-		MethodIL.Emit (OpCodes.Newobj, Classes [CurrentTypeID].DefaultConstructor);
+		EiffelClass eiffel_class = Classes [CurrentTypeID];
+		MethodIL.Emit (OpCodes.Newobj, eiffel_class.DefaultConstructor);
+		LastCreatedClass = eiffel_class;
 	}
 	
 	public void CreateObject (int TypeID) {
@@ -1047,6 +1064,7 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 			eiffel_class = Classes [TypeID + 1];
 
 		MethodIL.Emit (OpCodes.Newobj, eiffel_class.DefaultConstructor);
+		LastCreatedClass = eiffel_class;
 	}
 
 	public void CreateAttributeObject (int TypeID, int FeatureID) {
@@ -1065,16 +1083,27 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 			if (!eiffel_class.IsExternal && !eiffel_class.IsFrozen)
 				type_id = type_id + 1;
 			
-			if (Classes [type_id].IsArray) {
-				MethodIL.Emit (OpCodes.Newarr, Classes [type_id].ArrayElementType());
+			eiffel_class = Classes [type_id];
+			if (eiffel_class.IsArray) {
+				MethodIL.Emit (OpCodes.Newarr, eiffel_class.ArrayElementType());
 			} else {
-				if (! (Classes [type_id].IsExternal))
-					MethodIL.Emit (OpCodes.Newobj, Classes [type_id].DefaultConstructor);
+				if (! (eiffel_class.IsExternal)) {
+					MethodIL.Emit (OpCodes.Newobj, eiffel_class.DefaultConstructor);
+				}
 			}
+			LastCreatedClass = eiffel_class;
 		}
 		catch (Exception error)
 		{
 			LogError (error, "With object of type " + Classes [TypeID].Builder);
+		}
+	}
+
+	public void SetEiffelType (int ExportedTypeID) {
+		if (!LastCreatedClass.IsExternal) {
+			MethodIL.Emit (OpCodes.Dup);
+			MethodIL.Emit (OpCodes.Ldc_I4, ExportedTypeID);
+			MethodIL.Emit (OpCodes.Call, LastCreatedClass.set_type_id);
 		}
 	}
 
@@ -1187,6 +1216,20 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 		Feature = (MethodInfo) ((EiffelMethod)Classes [TypeID].
 				StaticFeatureIDTable [FeatureID]).Builder;
 		MethodIL.Emit (OpCodes.Call, Feature);
+	}
+
+	// Put associated token of a feature
+	public void PutMethodToken (int TypeID, int FeatureID) {
+		try {
+			MethodBuilder Feature = (MethodBuilder) ((EiffelMethod)Classes [TypeID].
+						FeatureIDTable [FeatureID]).Builder;
+			MethodIL.Emit (OpCodes.Ldtoken, Feature);
+		}
+		catch (Exception error) {
+			LogError (error, " in method " + ((EiffelMethod)Classes [TypeID].
+				FeatureIDTable [FeatureID]).Name() + " from class " +
+				((EiffelClass)Classes [TypeID]).Name);
+		}
 	}
 	
 	// Generate access to `n'-th argument of current feature.
@@ -1764,6 +1807,8 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 
 		ISE_class = IseRuntimeAssembly.GetType ("ISE.Runtime.EXCEPTION_MANAGER");
 		last_exception = ISE_class.GetField ("last_exception");
+
+		ISE_EiffelInterface = IseRuntimeAssembly.GetType ("ISE.Runtime._EIFFEL_TYPE_INFO");
 	}
 
 /* Perform Type lookup */
@@ -2015,4 +2060,10 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 
 	// Internal counter for MethodImpl
 	private static int counter = 0;
+
+	// Interface to which all Eiffel implementation classes inherits from.
+	public static Type ISE_EiffelInterface = null;
+
+	// Last created Eiffel type
+	private static EiffelClass LastCreatedClass = null;
 }

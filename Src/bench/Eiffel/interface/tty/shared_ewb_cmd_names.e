@@ -17,6 +17,8 @@ feature {NONE}
 
 	class_cmd_name: STRING is "class"
 
+	class_list_cmd_name: STRING is "classes";
+
 	clients_cmd_name: STRING is "clients"
 
 	clusters_cmd_name: STRING is "clusters"
@@ -82,6 +84,8 @@ feature {NONE}
 	run_cmd_name: STRING is "run"
 
 	short_cmd_name: STRING is "short"
+
+	statistics_cmd_name: STRING is "statistics";
 
 	stop_cmd_name: STRING is "stop"
 

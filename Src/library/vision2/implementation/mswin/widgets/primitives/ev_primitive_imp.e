@@ -12,7 +12,7 @@ deferred class
 	EV_PRIMITIVE_IMP
 	
 inherit
-	EV_PRIMITIVE_I	
+	EV_PRIMITIVE_I
 
 	EV_WIDGET_IMP
 
@@ -27,6 +27,32 @@ feature -- Access
 			-- Top level window that contains the current widget.
 
 feature -- Element change
+
+	set_parent (par: EV_CONTAINER) is
+			-- Make `par' the new parent of the widget.
+			-- `par' can be Void then the parent is the
+			-- default_parent.
+		local
+			par_imp: EV_CONTAINER_IMP
+			ww: WEL_WINDOW
+		do
+			if par /= Void then
+				if parent_imp /= Void then
+					parent_imp.remove_child (Current)
+				end
+				ww ?= par.implementation
+				wel_set_parent (ww)
+				par_imp ?= par.implementation
+				check
+					valid_cast: par_imp /= Void
+				end
+				set_top_level_window_imp (par_imp.top_level_window_imp)
+				par_imp.add_child (Current)
+			elseif parent_imp /= Void then
+				parent_imp.remove_child (Current)
+				wel_set_parent (default_parent.item)
+			end
+		end
 
 	set_top_level_window_imp (a_window: WEL_WINDOW) is
 			-- Make `a_window' the new `top_level_window_imp'
@@ -64,7 +90,7 @@ feature {NONE} -- Implementation
 	on_first_display is
 			-- Called by the top_level window when it is displayed
 			-- for the first time.
-			-- Do nothing for a primitive
+			-- do nothing here.
 		do
 		end
 

@@ -1,5 +1,5 @@
 indexing	
-	description: "Eiffel Vision radio menu item. Implementation interface."
+	description: "Eiffel Vision radio menu item. Mswindows implementation."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,19 +15,32 @@ inherit
 			interface
 		end
 
-	EV_CHECK_MENU_ITEM_IMP
+	EV_SELECT_MENU_ITEM_IMP
 		redefine
-			disable_select,
 			enable_select,
-			toggle,
 			interface,
-			on_activate
+			on_activate,
+			is_selected
 		end
 
 create
 	make
 
 feature -- Status report
+
+	is_selected: BOOLEAN is
+			-- Is this menu item checked?
+		do
+			if parent_imp = Void then
+				--| If a radio menu item does not have a parent, it must appear
+				--| to be checked to satisfy radio grouping contracts.
+				--| (an unparented radio item is checked, or in other words: has
+				--| its own group and a group always has 1 selected item)
+				Result := True
+			else
+				Result := parent_imp.item_checked (id)	
+			end
+		end
 
 	peers: LINKED_LIST [like interface] is
 			-- List of all radio items in the group `Current' is in.
@@ -46,6 +59,39 @@ feature -- Status report
 					radio_group.forth
 				end
 				radio_group.go_to (cur)
+			else
+				check
+					-- This item should be selected as enforced by other contracts.
+					is_selected: is_selected
+				end
+				Result.extend (interface)
+			end
+		end
+
+	selected_peer: like interface is
+			-- Radio item that is currently selected.
+		local
+			cur: CURSOR
+		do
+			if radio_group /= Void then
+				cur := radio_group.cursor
+				from
+					radio_group.start
+				until
+					radio_group.off or else Result /= Void
+				loop
+					if radio_group.item.is_selected then
+						Result := radio_group.item.interface
+					end
+					radio_group.forth
+				end
+				radio_group.go_to (cur)
+			else
+				check
+					-- This item should be selected as enforced by other contracts.
+					is_selected: is_selected
+				end
+				Result := interface
 			end
 		end
 
@@ -55,7 +101,6 @@ feature -- Status setting
 		local
 			cur: CURSOR
 		do
-			is_in_transitional_state := True
 			if radio_group /= Void then
 				cur := radio_group.cursor
 				from
@@ -69,48 +114,6 @@ feature -- Status setting
 				radio_group.go_to (cur)
 			end
 			Precursor
-			is_in_transitional_state := True
-		end
-
-	disable_select is
-		do
-			check
-				inapplicable_for_radio_items: False
-			end
-		end
-
-	toggle is
-			-- Change the checked state of the menu-item.
-		do
-			check
-				inapplicable_for_radio_items: False
-			end
-		end
-
-feature -- Contract support
-
-	is_in_transitional_state: BOOLEAN
-			-- When `True', `radio_group_selected_count' might be zero.
-
-	radio_group_selected_count: INTEGER is
-			-- Number of selected radio items in `radio_group'.
-		local
-			cur: CURSOR
-		do
-			if radio_group /= Void then
-				cur := radio_group.cursor
-				from
-					radio_group.start
-				until
-					radio_group.off
-				loop
-					if radio_group.item.is_selected then
-						Result := Result + 1
-					end
-					radio_group.forth
-				end
-				radio_group.go_to (cur)
-			end
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -164,15 +167,8 @@ feature {NONE} -- Implementation
 	on_activate is
 		do
 			enable_select
-			interface.press_actions.call ([])
+			Precursor
 		end
-
-invariant
-	radio_group_not_void_implies_has_current:
-		radio_group /= Void implies radio_group.has (Current)
-	radio_group_not_void_implies_one_selected:
-		(radio_group /= Void and not is_in_transitional_state) implies
-			radio_group_selected_count = 1
 
 end -- class EV_RADIO_MENU_ITEM_IMP
 
@@ -197,6 +193,10 @@ end -- class EV_RADIO_MENU_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/02/24 20:36:47  brendel
+--| Changed to comply with new inheritance structure. Invariants have been
+--| moved from this file to EV_RADIO_PEER.
+--|
 --| Revision 1.15  2000/02/24 16:50:58  brendel
 --| Made `toggle' inapplicable.
 --| Added redefine of `on_activate', since toggle cannot be called anymore.

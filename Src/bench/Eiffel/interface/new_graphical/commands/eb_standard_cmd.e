@@ -11,7 +11,8 @@ class
 inherit
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
 		redefine
-			mini_pixmap
+			mini_pixmap,
+			tooltext
 		end
 
 create
@@ -41,6 +42,9 @@ feature -- Access
 	tooltip: STRING
 			-- Help text displayed when associated buttons are focused.
 
+	tooltext: STRING
+			-- Text displayed on toolbar button.
+
 	description: STRING
 			-- Help text displayed in the customize tool bar dialog.
 
@@ -68,6 +72,12 @@ feature -- Status setting
 			if description = Void then
 				description := s
 			end
+		end
+
+	set_tooltext (s: STRING) is
+			-- Define a new tooltext for `Current' that is displayed
+		do
+			tooltext := s
 		end
 
 	set_description (s: STRING) is

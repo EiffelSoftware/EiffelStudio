@@ -8,6 +8,10 @@ class
 
 inherit
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
+		redefine
+			tooltext,
+			is_tooltext_important
+		end
 
 	EB_SHARED_GRAPHICAL_COMMANDS
 		export
@@ -341,6 +345,18 @@ feature {NONE} -- Execution
 		end
 
 feature {NONE} -- Implementation
+
+	tooltext: STRING is
+			-- Text displayed in toolbar
+		do
+			Result := Interface_names.b_Compile
+		end
+
+	is_tooltext_important: BOOLEAN is
+			-- Is the tooltext important shown when view is 'Selective Text'
+		do
+			Result := tooltext.is_equal (Interface_names.b_Compile)
+		end
 
 	menu_name: STRING is
 			-- Name as it appears in the menu (with & symbol).

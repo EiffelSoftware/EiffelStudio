@@ -15,6 +15,9 @@ inherit
 		end
 
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
+		redefine
+			tooltext
+		end
 
 	EB_SHARED_WINDOW_MANAGER
 		export
@@ -140,6 +143,12 @@ feature {NONE} -- Implementation
 			-- Tooltip for the toolbar button.
 		do
 			Result := Interface_names.f_Print
+		end
+
+	tooltext: STRING is
+			-- Text for the toolbar button.
+		do
+			Result := Interface_names.b_Print
 		end
 
 	description: STRING is

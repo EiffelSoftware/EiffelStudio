@@ -157,6 +157,43 @@ feature -- Pngs
 		once
 			Result := build_classic_pixmap ("close")
 		end
+		
+	pixmap_by_name (a_name: STRING): EV_PIXMAP is
+			-- `Result' is a pixmap loaded from file matching
+			-- `a_name' in Build bitmaps location.
+			-- If platform is windows then add ".ico" to name
+			-- else add ".png" to name.
+		require
+			a_name_not_void: a_name /= Void
+		local
+			full_path: FILE_NAME
+			retried: BOOLEAN
+			warning_dialog: EV_WARNING_DIALOG
+			file: RAW_FILE
+		do
+			create Result
+			if Eiffel_platform.as_lower.is_equal ("windows") then
+				create full_path.make_from_string (Icon_path)
+				full_path.set_file_name (a_name)
+				full_path.add_extension ("ico")
+			else
+				create full_path.make_from_string (Bitmap_path)
+				full_path.set_file_name (a_name)
+				full_path.add_extension (Pixmap_suffix)
+			end
+			create file.make (full_path)
+			--| FIXME This is a temporary hack to display
+			--| a not found pixmap if the pixmap does not exist.
+			--| Replace with a check when all pixmaps have been implemented.
+			if file.exists then
+				Result.set_with_named_file (full_path)
+			else
+				Result := icon_delete_small @ 1
+			end
+		ensure
+			result_not_void: Result /= Void
+		end
+		
 
 feature -- Reading
 
@@ -171,11 +208,7 @@ feature -- Reading
 
 			if not retried then
 					-- Initialize the pathname & load the file
-				if
-					-- |FIXME
-					True --Platform_constants.is_windows and then
-					--fn.substring_index ("icon_", 1) = 1
-				then
+				if Eiffel_platform.as_lower.is_equal ("windows") then
 					create full_path.make_from_string (Icon_path)
 					full_path.set_file_name (fn)
 					full_path.add_extension ("ico")

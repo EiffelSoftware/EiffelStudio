@@ -32,9 +32,6 @@ creation
 feature 
 
 	make (a_name: STRING; a_parent: COMPOSITE; a_tool: TOOL_W) is
-		local
-			nothing: ANY;
-			temp: SCROLLED_T_M
 		do
 			text_create (a_name, a_parent);
 			!! history.make (10);

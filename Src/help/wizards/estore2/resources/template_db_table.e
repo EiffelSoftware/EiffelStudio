@@ -10,15 +10,17 @@ class
 
 inherit
 	DB_TABLE
-	--	redefine
-	--		out
-	--	end
 		undefine
 			Tables,
 			is_valid_code
+		redefine
+			out
 		end
 
 	DB_SPECIFIC_TABLES_ACCESS_USE	
+		redefine
+			out
+		end
 
 create
 	make
@@ -50,10 +52,13 @@ feature -- Basic operations
 
 </A>feature -- Output
 
---FIXME: add this	out: STRING is
---		do
---			Result := ""
---			Result.append (myid.out + "%N")
---		end
+	out: STRING is
+			-- Printable representation of current object.
+		do
+			Result := ""
+<A:A:A>			if <AN:L> /= Void then
+				Result.append ("<AN:I>: " + <AN:L>.out + "%N")
+			end
+</A>		end
 
 end -- class CODES

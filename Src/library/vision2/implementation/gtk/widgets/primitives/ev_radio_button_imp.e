@@ -1,5 +1,5 @@
 indexing
-        description: "Eiffel Vision radio butto. GTK+ implementation."
+        description: "Eiffel Vision radio button. GTK+ implementation."
         status: "See notice at end of class"
         date: "$Date$"
         revision: "$Revision$"
@@ -43,30 +43,6 @@ feature {EV_ANY_I} -- Implementation
 			Result := C.gtk_radio_button_group (c_object)
 		end
 
-feature -- Obsolete
-
---	set_peer (peer: EV_RADIO_BUTTON) is
---			-- Put radio button in group of `peer'.
---		local
---			peer_imp: EV_RADIO_BUTTON_IMP
---		do
---			peer_imp ?= peer.implementation
---			check
---				peer_imp_not_void: peer_imp /= Void
---			end
---
---			C.gtk_radio_button_set_group (
---				c_object,
---				C.gtk_radio_button_group (peer_imp.c_object)
---			)
---		end
-
---	remove_from_group is
---			-- Remove radio button from its current group, if any.
---		do
---			C.gtk_radio_button_set_group (c_object, default_pointer)
---		end
-
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_RADIO_BUTTON
@@ -94,6 +70,9 @@ end -- class EV_RADIO_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.18  2000/02/29 02:21:41  brendel
+--| Revised.
+--|
 --| Revision 1.17  2000/02/25 01:51:38  brendel
 --| Added inheritance of EV_RADIO_PEER_IMP, which needs `gslist' effected.
 --| Still needs implementing, so old implementation is not removed yet.

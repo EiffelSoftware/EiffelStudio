@@ -38,6 +38,8 @@ feature -- Access
 	drop_agent: PROCEDURE [ANY, TUPLE [ANY]]
 	
 	veto_drop_agent: FUNCTION [ANY, TUPLE [ANY], BOOLEAN]
+	
+	pebble_function: FUNCTION [ANY, TUPLE, ANY]
 
 feature -- Status Report
 
@@ -138,6 +140,9 @@ feature -- Basic operations
 			end
 			if veto_drop_agent /= Void then
 				Result.drop_actions.set_veto_pebble_function (veto_drop_agent)
+			end
+			if pebble_function /= Void then
+				Result.set_pebble_function (pebble_function)
 			end
 		end
 

@@ -93,7 +93,7 @@ feature -- Basic operations
 						end
 						if create_project then
 							created_project := True
-							create settings.make_with_default_values
+							create settings.make_stand_alone_with_default_values
 							settings.set_project_location (dialog.directory)
 							system_status.set_current_project (settings)
 							main_window.show_tools

@@ -81,7 +81,7 @@ feature
 			!! generate_selec_b.make ("generate_selec_b", associated_form);
 			!! exit_b.make ("exit_b", associated_form);
 			!! label6.make ("label6", associated_form);
-			!! launch_ecase_b.make ("launch ecase after generation", associated_form)
+		--	!! launch_ecase_b.make ("launch ecase after generation", associated_form)
 			initialize_lists
 			set_values
 			set_commands
@@ -153,7 +153,7 @@ feature
 			label5.forbid_recompute_size;
 			label5.set_x_y (10, 29);
 			label5.set_size (100, 27);
-			launch_ecase_b.set_x_y (13, 280 )
+			--launch_ecase_b.set_x_y (13, 280 )
 			browsw_b.set_text ("Browse");
 			browsw_b.forbid_recompute_size;
 			browsw_b.set_x_y (413, 319);

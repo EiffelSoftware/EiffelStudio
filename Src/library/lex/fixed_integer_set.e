@@ -49,7 +49,7 @@ feature -- Access
 	empty: BOOLEAN is
 			-- Is current set empty?
 		do
-			Result := bempty ($area, count) /= 0
+			Result := bempty ($area, count)
 		end;
 
 	smallest: INTEGER is
@@ -149,7 +149,7 @@ feature {NONE} -- Implementation
 			"C"
 		end;
 
-	bempty (a1: POINTER; size: INTEGER): INTEGER is
+	bempty (a1: POINTER; size: INTEGER): BOOLEAN is
 		external
 			"C"
 		end;

@@ -2,12 +2,12 @@ Windows Eiffel Library (WEL)
 ISE, Inc.
 ----------------------------
 
-1. What is WEL?
----------------
+What is WEL?
+------------
 
 The new Windows Eiffel Library (WEL), which has been designed to 
 make Windows programming easier, more reliable, more convenient, 
-and more powerful.  
+and more powerful.
 
 The most obvious definition of WEL is that it is an encapsulation of 
 Windows primitives, making it possible for users of Graphical Eiffel 
@@ -28,37 +28,82 @@ graphical API, the benefits of the Eiffel method and of reusable Eiffel
 components will show up quickly.
 
 
-2. What WEL does not include yet?
----------------------------------
-
-o New Windows 95 common controls.
-
-o Common dialog boxes (Print, Page setup, Choose font, Find and replace).
-  They will be available in future release. However, the File open, File
-  save and Choose color dialog boxes are available.
-
-
-3. Resource file
-----------------
-
-When you change the resource file (.rc) of the application, you have to
-freeze the system in order to recompile the resource file and see the effect.
-
-
-4. Documentation
-----------------
-
-The documentation is not yet available but the shipped examples should
-be a good start to understand how to use WEL.
-
-
-5. Examples
+What's new?
 -----------
+
+o New `Win32' cluster
+  WEL provides a new Win32-specific cluster which includes classes that work
+  only under Windows 95/NT. This cluster needs a recent common controls header
+  file (commctrl.h) provided with Microsoft Visual C++ 4.1 and Borland C++ 4.52.
+
+o New H2E utility
+  The interface has been improved, it's easier than ever to use it.
+
+o WEL tutorial
+  A tutorial to learn WEL step by step.
+  See directory $EIFFEL3\examples\wel\tutorial.
+
+o WEL reference manual
+  This manual describes all the WEL classes (description, interface, example).
+
+o New WEL Examples
+  `Timer', `Fontenum', `Stddlgs', `Comctrls', `Magnify', `Richedit'.
+
+
+What WEL does not include yet?
+------------------------------
+
+o Some Windows 95 common controls: Animation Controls,
+  Drag List Boxes, Header Controls, Hot-Key Controls, Image Lists,
+  List View Controls, Property Sheets, Tab Controls, Tree View Controls,
+  Up-Down Controls.
+
+o Find and replace common dialog box.
+
+
+Resource file
+-------------
+
+The resource file name must have the same name as the system name specified in
+the Ace file.
+
+When you change the resource file (.RC), you have to freeze the system in
+order to recompile the resource file and see the effect. A quicker way consists
+of running the make utility (`make' for Borland or `nmake' for Microsoft) in
+.\EIFGEN\W_CODE. But first, make sure to delete the .RES file.
+
+If you have created a resource file using Microsoft Developer Studio, you will
+probably need to change the file $EIFFEL3\bench\spec\w32msc\es3sh\config.eif.
+Retrieve the following portion of text:
+
+-------------
+$appl.res: $appl.rc working.ico $appl.ico Makefile appl.ico
+	if exist ..\..\*.ico xcopy ..\..\*.ico .
+	if exist ..\..\*.cur xcopy ..\..\*.cur .
+	if exist ..\..\*.bmp xcopy ..\..\*.bmp .
+	if exist ..\..\*.h xcopy ..\..\*.h .
+	rc -I..\.. -r $appl.rc
+-------------
+
+and modify the last line by:
+
+	rc -ic:\msdev\mfc\include -r $appl.rc
+
+
+H2E utility
+-----------
+
+h2e is a convenient tool to generate an Eiffel class which contains resource
+identifiers. The program and the documentation are in $EIFFEL3\util.
+
+
+Examples
+--------
 
 WEL includes a few examples (Eiffel classes and an executable) which are:
 
-o Minimal: The minimal WEL program (in term of lines of code able to
-  create a windows application).
+o Minimal: The minimal WEL program (in terms of lines of code able to
+  create a Windows application).
 
 o Hello: The famous ``Hello, World!'' program in WEL.
 
@@ -80,7 +125,7 @@ o Pizza: Order your pizza with WEL.
 
 o Brushes: A nice example to illustrate the brushes.
 
-o Bitmap Viewer: A MDI bitmap file viewer (16 colors bitmap only).
+o Bmpview: A MDI bitmap file viewer (16-color bitmaps only).
 
 o Windows: Shows the different kind of windows.
 
@@ -88,8 +133,20 @@ o Printer: A simple example to print a page.
 
 o Xcell: A pretty nice card game. (*)
 
-All the examples (except those marked by `(*)') are compatible with Windows 95, Windows NT and
-Windows 3.1 with Win32s 1.25 and above.
+o Stddlgs: Shows all the standard dialog boxes available.
+
+o Comctrls: Shows the new Windows 95/NT common controls supported by WEL.
+
+o Fontenum: Demonstrates the font enumeration capability.
+
+o Timer: Shows how to use Windows timers.
+
+o Magnify: Tool to magnify a part of your screen.
+
+o Richedit: A small word processor based on the rich edit control.
+
+All the examples (except those marked by `(*)') are compatible with Windows 95,
+Windows NT and Windows 3.1 with Win32s 1.30 and above.
 The examples marked by `(*)' do not work under Win32s since Win32s has DC
 limitations.
 

@@ -77,11 +77,6 @@ feature -- IL Generation
 				-- Clean IL recorded information
 			clean_debug_information (class_type)
 
-				-- Define all features used by ISE runtime.
-			if class_c.simple_conform_to (System.any_class.compiled_class) then
-				define_runtime_features (class_type)
-			end
-
 				-- Generate current features implement locally in `current_class_type'
 				-- and traverse parents to define inherited features.
 			main_parent := class_c.main_parent
@@ -91,6 +86,11 @@ feature -- IL Generation
 			generate_il_implementation_local (class_interface, class_c, class_type)
 			generate_il_main_parent (class_type)
 			generate_il_implementation_parents (class_interface)
+
+				-- Define all features used by ISE runtime.
+			if class_c.simple_conform_to (System.any_class.compiled_class) then
+				define_runtime_features (class_type)
+			end
 
 				-- Generate invariant routine.
 			generate_invariant_feature (class_c.invariant_feature)

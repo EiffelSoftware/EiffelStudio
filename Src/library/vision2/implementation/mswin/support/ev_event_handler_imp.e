@@ -47,14 +47,14 @@ feature {EV_PND_SOURCE_IMP} -- Element change
 --|FIXME		do
 --|FIXME		end
 
---|FIXME	remove_command (event_id: INTEGER) is
---|FIXME			-- Remove all the commands associated with
---|FIXME			-- the event `event_id'. If the array of command
---|FIXME			-- is then empty, we set it to Void.
---|FIXME		require
---|FIXME			valid_id: event_id >= 1 and event_id <= command_count
---|FIXME		do
---|FIXME		end
+		remove_command (event_id: INTEGER) is
+			-- Remove all the commands associated with
+			-- the event `event_id'. If the array of command
+			-- is then empty, we set it to Void.
+		require
+			valid_id: event_id >= 1 and event_id <= command_count
+		do
+		end
 
 feature -- Deferred features
 
@@ -86,6 +86,9 @@ end -- class EV_EVENT_HANDLER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.20  2000/02/19 07:26:17  oconnor
+--| replace incorrectly removed feature remove_command
+--|
 --| Revision 1.19  2000/02/19 06:34:12  oconnor
 --| removed old command stuff
 --|

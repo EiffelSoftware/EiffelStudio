@@ -55,7 +55,7 @@ feature -- Inlining
 		do
 				-- Inlining will not be done if the feature
 				-- optimizes array access
-			Result := 100 + 1	-- Maximum size of inlining + 1 (Found in FREE_OPTION_SD)
+			Result := 101	-- Maximum size of inlining + 1 (Found in FREE_OPTION_SD)
 		end
 
 	pre_inlined_code: like Current is

@@ -88,7 +88,7 @@ feature -- Conversion
 			l_html_filter: HTML_FILTER
 		do
 			if not retried then
-				l_string := a_doc.text
+				l_string := a_doc.text.twin
 				if not l_string.is_empty then					
 					create l_html_filter.make
 					l_html_filter.set_filename (a_doc.name)
@@ -100,7 +100,7 @@ feature -- Conversion
 					check
 						ok_parsing: l_parser.is_correct
 					end
-					Result := l_html_filter.output_string
+					Result := l_html_filter.output_string.twin
 				end
 			else
 				Result := "Could not produce HTML for document " + a_doc.name

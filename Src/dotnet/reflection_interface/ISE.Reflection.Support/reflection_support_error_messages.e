@@ -49,4 +49,17 @@ feature -- Access
 			external_name: "HashValueComputationFailedMessage"
 		end
 
+
+	Registry_key_not_registered: STRING is "ISE_EIFFEL registry key does not exist."
+		indexing
+			description: "Error name: ISE_EIFFEL registry key does not exist"
+			external_name: "RegistryKeyNotRegistered"
+		end
+
+	Registry_key_not_registered_message: STRING is "The `ISE_EIFFEL' registry key does not exist. %NPlease create this key in `HKEY_CURRENT_USER\Software\ISE\Eiffel50\ec' before starting the assembly manager or the .NET Wizard."
+		indexing
+			description: "Error message when ISE_EIFFEL registry key does not exist"
+			external_name: "RegistryKeyNotRegisteredMessage"
+		end
+		
 end -- class REFLECTION_SUPPORT_ERROR_MESSAGES	

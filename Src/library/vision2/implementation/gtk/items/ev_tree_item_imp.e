@@ -18,6 +18,7 @@ inherit
 			has_parent,
 			set_expand,
 			set_pixmap,
+			unset_pixmap,
 			set_text,
 			text,
 			destroy,
@@ -26,18 +27,18 @@ inherit
 
 	EV_TREE_ITEM_HOLDER_IMP
 		rename
-			parent_set as widget_parent_set,
-			add_double_click_command as old_add_dblclk,
-			remove_double_click_commands as old_remove_dblclk,
-			parent_imp as widget_parent_imp,
-			set_parent as widget_set_parent
+--			parent_set as widget_parent_set,
+--			add_double_click_command as old_add_dblclk,
+--			remove_double_click_commands as old_remove_dblclk,
+--			parent_imp as widget_parent_imp,
+--			set_parent as widget_set_parent
 		undefine
-			has_parent,
-			set_foreground_color,
-			destroy,
-			destroyed
+--			has_parent,
+--			set_foreground_color,
+--			destroy,
+--			destroyed
 		redefine
-			set_expand
+--			set_expand
 		end
 
 creation
@@ -51,16 +52,6 @@ feature {NONE} -- Initialization
 	make is
 			-- Create an item with an empty name.
 		do
---			-- Create the gtk object.
---			widget := gtk_tree_item_new
---			gtk_object_ref (widget)
---
---			-- Create the `box'.
---			initialize
---
---			-- Set the text to "".
---			Create_text_label ("")
-
 			-- Set the text to "".
 			text := ""
 
@@ -109,8 +100,6 @@ feature -- Status report
 
 			tree_item_imp: EV_TREE_ITEM_IMP
 		do
---			Result := c_gtk_ctree_item_is_selected (tree_parent_imp.tree_widget, widget)				
-
 			tree_item_imp ?= tree_parent_imp.selected_item.implementation
 			Result := (tree_item_imp = Current)
 		end
@@ -118,15 +107,12 @@ feature -- Status report
 	is_expanded: BOOLEAN is
 			-- is the item expanded ?
 		do
---			Result := c_gtk_tree_item_expanded (widget)
 			Result := c_gtk_ctree_item_is_expanded (widget)
 		end
 
 	is_parent: BOOLEAN is
 			-- is the item the parent of other items?
 		do
---			Result := (GTK_TREE_ITEM_SUBTREE(widget) /= default_pointer)
-
 			Result := (ev_children.count > 0)
 		end
 
@@ -135,13 +121,14 @@ feature -- Status report
 		local
 			array: ARRAYED_LIST [EV_TREE_ITEM_IMP]
 		do
---			Result := gtk_tree_child_position (GTK_TREE_ITEM_SUBTREE (parent_imp.widget), Current.widget) + 1 
-
 			array := parent_imp.ev_children
 			array.start
 			array.search (Current)
 			Result := array.index
 		end
+
+	destroyed: BOOLEAN
+			-- Is screen widget destroyed?
 
 feature -- Status setting
 
@@ -190,12 +177,13 @@ feature -- Status setting
 					gtk_ctree_move (tree_parent_imp.tree_widget, widget, parent_imp.widget, default_pointer)
 				end
 
-				-- updating the parent `ev_children' array
+				-- updating the parent `ev_children' array.
 				local_array.search (Current)
 				pos := local_array.index
 
 				local_array.go_i_th (value)
 				local_array.put_left (Current)
+
 
 				if (value < pos) then
 					local_array.go_i_th (pos + 1)
@@ -206,7 +194,6 @@ feature -- Status setting
 			end
 		end
 
-destroyed: BOOLEAN
 
 	destroy is
 			-- Destroy screen widget implementation.
@@ -255,9 +242,11 @@ feature -- Element change
 			-- `par' can be Void.
 		local
 			par_imp: EV_TREE_ITEM_HOLDER_IMP
-			parent_temp : EV_TREE_ITEM_HOLDER
+			parent_item : EV_TREE_ITEM_IMP
 		do
 			if (par /= Void) then
+				-- The new parent is not Void.
+
 				par_imp ?= par.implementation
 				check
 					parent_not_void: par_imp /= Void
@@ -271,7 +260,15 @@ feature -- Element change
 					if (tree_parent_imp = par_imp.tree_parent_imp) then
 						-- We set the node to another place in the same tree,
 						-- therefore we only move it.
-						gtk_ctree_move (tree_parent_imp.tree_widget, widget, par_imp.widget, default_pointer)
+
+						parent_item ?= par_imp
+						if (parent_item /= Void) then
+							-- The parent is a tree item.
+							gtk_ctree_move (tree_parent_imp.tree_widget, widget, parent_item.widget, default_pointer)
+						else
+							-- The parent is the tree.
+							gtk_ctree_move (tree_parent_imp.tree_widget, widget, default_pointer, default_pointer)
+						end
 
 						-- We need to update the `ev_children' by adding the new menu_item:
 						par_imp.ev_children.force (Current)		
@@ -288,19 +285,22 @@ feature -- Element change
 
 						-- We have to reconnect the callback functions
 						-- to the new GtkCTreeNode.
-						update_commands (tree_select_row_id)
+						update_all_commands
 					end
 				else
 					par_imp.add_item (Current)
 					-- There was no former parent. So we have to reconnect the callback functions
 					-- to the new GtkCTreeNode.
-					update_commands (tree_select_row_id)
+					update_all_commands
 				end
 				parent_imp := par_imp					
 			else
 				-- The new parent is void.
 				if (parent_imp /= Void) then
-					-- There was a parent before, remove the node.
+					-- There was a parent before:
+					-- 1- Disconnect the callbacks.
+					update_all_commands
+					-- 2- Remove the node.
 					parent_imp.remove_item (Current)
 				end				
 				parent_imp := Void
@@ -341,6 +341,20 @@ feature -- Element change
 			end
 		end
 
+	unset_pixmap is
+			-- Add a pixmap in the container
+		local
+			pix_imp: EV_PIXMAP_IMP
+			a: ANY
+		do
+			pixmap := Void
+
+			if (has_parent) then
+				a ?= text.to_c
+				c_gtk_ctree_item_set_pixtext (tree_parent_imp.tree_widget, widget, 1, default_pointer, $a, 5)
+			end
+		end
+
 feature -- Assertion
 
 	has_parent : BOOLEAN is
@@ -359,12 +373,20 @@ feature -- Event : command association
 			-- The toggle event doesn't work on gtk, then
 			-- we add both event command.
 		local
-			ev_data: EV_EVENT_DATA
+--			ev_data: EV_EVENT_DATA
 			arg_list: LINKED_LIST [EV_ARGUMENT]
 		do
-			!EV_EVENT_DATA!ev_data.make  -- temporary, create a correct object here XX
+--			!EV_EVENT_DATA!ev_data.make  -- temporary, create a correct object here XX
 
-			add_command_with_event_data (tree_parent_imp.tree_widget, "tree_select_row", command, arguments, ev_data, 0, False, widget)
+			-- Connect to the GtkCTreeNode if it exists already.
+			-- Otherwise just store the command and argument.
+			if (widget /= default_pointer) then
+--				add_command_with_event_data (tree_parent_imp.tree_widget, "tree_select_row", command, arguments, ev_data, 0, False, widget)
+				add_command (tree_parent_imp.tree_widget, "tree_select_row", command, arguments, widget)
+			else
+--				add_command_with_event_data (default_pointer, "tree_select_row", command, arguments, ev_data, 0, False, default_pointer)
+				add_command (default_pointer, "tree_select_row", command, arguments, default_pointer)
+			end	
 
 			if ((argument_array @ tree_select_row_id) = Void) then
 				create arg_list.make
@@ -378,12 +400,13 @@ feature -- Event : command association
 			-- Make `cmd' the executed command when the item is
 			-- unactivated.
 		local
-			ev_data: EV_EVENT_DATA
+--			ev_data: EV_EVENT_DATA
 			arg_list: LINKED_LIST [EV_ARGUMENT]
 		do
-			!EV_EVENT_DATA!ev_data.make  -- temporary, create a correct object here XX
+--			!EV_EVENT_DATA!ev_data.make  -- temporary, create a correct object here XX
 
-			add_command_with_event_data (tree_parent_imp.tree_widget, "tree_unselect_row", command, arguments, ev_data, 0, False, widget)
+--			add_command_with_event_data (tree_parent_imp.tree_widget, "tree_unselect_row", command, arguments, ev_data, 0, False, widget)
+			add_command (tree_parent_imp.tree_widget, "tree_unselect_row", command, arguments, widget)
 
 			if ((argument_array @ tree_unselect_row_id) = Void) then
 				create arg_list.make
@@ -398,12 +421,13 @@ feature -- Event : command association
 			-- executed when the selection subtree
 			-- expanded or collapsed.
 		local
-			ev_data: EV_EVENT_DATA
+--			ev_data: EV_EVENT_DATA
 			arg_list: LINKED_LIST [EV_ARGUMENT]
 		do
-			!EV_EVENT_DATA!ev_data.make  -- temporary, create a correct object here XX
+--			!EV_EVENT_DATA!ev_data.make  -- temporary, create a correct object here XX
 
-			add_command_with_event_data (tree_parent_imp.tree_widget, "tree_expand", command, arguments, ev_data, 0, False, widget)
+--			add_command_with_event_data (tree_parent_imp.tree_widget, "tree_expand", command, arguments, ev_data, 0, False, widget)
+			add_command (tree_parent_imp.tree_widget, "tree_expand", command, arguments, widget)
 
 			if ((argument_array @ tree_expand_id) = Void) then
 				create arg_list.make
@@ -413,9 +437,10 @@ feature -- Event : command association
 			(argument_array @ tree_expand_id).force (arguments)
 
 
-			!EV_EVENT_DATA!ev_data.make  -- temporary, create a correct object here XX
+--			!EV_EVENT_DATA!ev_data.make  -- temporary, create a correct object here XX
 
-			add_command_with_event_data (tree_parent_imp.tree_widget, "tree_collapse", command, arguments, ev_data, 0, False, widget)
+--			add_command_with_event_data (tree_parent_imp.tree_widget, "tree_collapse", command, arguments, ev_data, 0, False, widget)
+			add_command (tree_parent_imp.tree_widget, "tree_collapse", command, arguments, widget)
 
 			if ((argument_array @ tree_collapse_id) = Void) then
 				create arg_list.make
@@ -423,9 +448,6 @@ feature -- Event : command association
 			end
 
 			(argument_array @ tree_collapse_id).force (arguments)
-
---			add_command (widget, "expand", cmd, arg)
---			add_command (widget, "collapse", cmd, arg)
 		end
 
 feature -- Event -- removing command association
@@ -435,6 +457,7 @@ feature -- Event -- removing command association
 			-- the item is activated.
 		local
 			list: LINKED_LIST [EV_COMMAND]
+			list_com: EV_GTK_COMMAND_LIST
 		do
 			-- list of the commands to be executed for "select_row" signal.
 			list := (event_command_array @ tree_select_row_id).command_list
@@ -448,8 +471,6 @@ feature -- Event -- removing command association
 				-- we do not need to do "list.forth" as an item has been removed
 				-- that list.
 			end
-
---			remove_commands (widget, select_id)
 		end	
 
 	remove_unselect_commands is
@@ -470,8 +491,6 @@ feature -- Event -- removing command association
 				-- we do not need to do "list.forth" as an item has been removed
 				-- that list.
 			end
-
---			remove_commands (widget, deselect_id)
 		end
 
 	remove_subtree_commands is
@@ -496,12 +515,9 @@ feature -- Event -- removing command association
 				-- we do not need to do "list.forth" as an item has been removed
 				-- that list.
 			end
-
---			remove_commands (widget, expand_id)
---			remove_commands (widget, collapse_id)
 		end
 
-feature {NONE} -- Implementation
+feature {EV_TREE_ITEM_IMP} -- Implementation
 
 	add_item (item_imp: EV_TREE_ITEM_IMP) is
 			-- Add `item' to the list
@@ -514,28 +530,11 @@ feature {NONE} -- Implementation
 		do
 			local_array := item_imp.ev_children
 
-			-- Create a GtkCTreeNode and insert it.
-			a ?= item_imp.text.to_c
-			p := c_gtk_ctree_insert_node (tree_parent_imp.tree_widget, widget, default_pointer, $a, 2, default_pointer, default_pointer, False, False)
-			item_imp.set_widget (p)
-
 			-- Set the `tree_parent_widget' of the tree_item:
 			item_imp.set_tree_parent_imp (tree_parent_imp)
 
-			-- If `item_imp' has children, create the gtk objects.
-			if (local_array.count > 0) then
-				from
-					local_array.start
-				until
-					local_array.after
-				loop
-					tree_item_imp := local_array.item
-					a ?= tree_item_imp.text.to_c
-					p := c_gtk_ctree_insert_node (tree_parent_imp.tree_widget, item_imp.widget, default_pointer, $a, 2, default_pointer, default_pointer, False, False)
-					tree_item_imp.set_widget (p)
-					local_array.forth
-				end
-			end
+			-- Create a GtkCTreeNode and insert it as well as the children.
+			add_gtk_ctree_node (item_imp)
 
 			-- We need to update the `ev_children' by adding the new menu_item:
 			local_array := ev_children
@@ -549,8 +548,42 @@ feature {NONE} -- Implementation
 			tree_parent_imp.all_children.force (item_imp)
 		end
 
+	add_gtk_ctree_node (item_imp: EV_TREE_ITEM_IMP) is
+			-- Called by `add_item'.
+			-- Add a GtkCTreeNode, associated to `item_imp', to the current GtkCTreeNode.
+			-- If the `item_imp' has children, create the GtkCTreeNode object associated to them.
+		local
+			p: POINTER
+			a: ANY
+			local_array: ARRAYED_LIST [EV_TREE_ITEM_IMP]
+			tree_item_imp: EV_TREE_ITEM_IMP
+		do
+			local_array := item_imp.ev_children
+
+			-- Create a GtkCTreeNode and insert it.
+			a ?= item_imp.text.to_c
+			p := c_gtk_ctree_insert_node (tree_parent_imp.tree_widget, widget, default_pointer, $a, 2, default_pointer, default_pointer, False, False)
+			item_imp.set_widget (p)
+
+			-- If `item_imp' has children, create the gtk objects.
+			if (local_array.count > 0) then
+				from
+					local_array.start
+				until
+					local_array.after
+				loop
+					tree_item_imp := local_array.item
+					item_imp.add_gtk_ctree_node (tree_item_imp)
+
+					local_array.forth
+				end
+			end
+		end
+
 	remove_item (item_imp: EV_TREE_ITEM_IMP) is
 			-- Remove `item_imp' from the list.
+		require else
+			tree_has_this_child: tree_parent_imp.has_tree_item (item_imp)
 		local
 			local_array: ARRAYED_LIST [EV_TREE_ITEM_IMP]
 		do
@@ -583,26 +616,35 @@ feature {NONE} -- Implementation
 			local_array.remove
 		end
 
---	position_in_tree: INTEGER is
---				-- Position of the node in the whole tree.
---				-- We need this to handle correctly add_select_command.
---		do
---			Result := 1 + c_gtk_ctree_item_get_position_in_tree (tree_parent_imp.tree_widget, widget)
---		end
+feature {EV_TREE_ITEM_IMP} -- Implementation
 
 	argument_array: ARRAY[LINKED_LIST [EV_ARGUMENT]]
-				-- Array of the arguments. Same index for the categories as `event_command_data'.
-				-- We need it for ctrees.
-				-- XXXX 
+			-- Array of the arguments. Same index for the categories as `event_command_data'.
+			-- We need it for ctrees.
+			-- XXXX 
+
+	update_all_commands is
+			-- Removed the callbacks for all type of events.
+		do
+			update_commands (tree_select_row_id)
+			update_commands (tree_unselect_row_id)
+			update_commands (tree_subtree_id)
+		end
+
 
 	update_commands (event_id: INTEGER) is
-				-- Remove the callbacks assigned to the previous pointer to GtkCTreeNode.
-				-- Put them back associated to the new GtkCTreeNode.
+			-- Called by feature `update_all_commands'.
+			-- Remove the callbacks, of type `event_id', assigned to the previous pointer
+			-- to GtkCTreeNode. Put them back associated to the new GtkCTreeNode.
+			-- If there is no former  or new GtkCtreeNode, it will just update the different
+			-- commands and argument arrays.
 		local
 			cmd_list: LINKED_LIST [EV_COMMAND]
 			arg_list: LINKED_LIST [EV_ARGUMENT]
 			cmd_list_copy: LINKED_LIST [EV_COMMAND]
 			arg_list_copy: LINKED_LIST [EV_ARGUMENT]
+			local_array: ARRAYED_LIST [EV_TREE_ITEM_IMP]
+			tree_item_imp: EV_TREE_ITEM_IMP
 		do
 			if ((argument_array @ event_id) /= Void) then
 				cmd_list := (event_command_array @ event_id).command_list
@@ -626,7 +668,12 @@ feature {NONE} -- Implementation
 				-- 2. Update the `event_command_array' and `argument_array':
 	
 				-- 2-1. First, we remove the former commands and arguments.
-				disconnect_all_commands (event_id)
+				if (event_id = tree_subtree_id) then
+					disconnect_commands (tree_expand_id)
+					disconnect_commands (tree_collapse_id)
+				else
+					disconnect_commands (event_id)
+				end
 	
 				-- 2-2. Then we connect new commands because there is a new GtkCTreeNode pointer.
 				from
@@ -635,14 +682,48 @@ feature {NONE} -- Implementation
 				until
 					cmd_list_copy.after
 				loop
-					add_select_command (cmd_list_copy.item, arg_list_copy.item)
+					inspect
+						event_id
+					when tree_select_row_id then
+						add_select_command (cmd_list_copy.item, arg_list_copy.item)
+					when tree_unselect_row_id then
+						add_unselect_command (cmd_list_copy.item, arg_list_copy.item)
+					when tree_subtree_id then
+						add_subtree_command (cmd_list_copy.item, arg_list_copy.item)
+					end
+
 					cmd_list_copy.forth
 					arg_list_copy.forth
 				end
+
+			end
+
+			-- Do the same processing for the children if there are some.
+			local_array := ev_children
+			if (local_array.count > 0) then
+				from
+					local_array.start
+				until
+					local_array.after
+				loop
+					tree_item_imp := local_array.item
+					tree_item_imp.update_commands (event_id)
+					local_array.forth
+				end		
 			end
 		end
 
-	disconnect_all_commands (event_id: INTEGER) is
+	disconnect_all_commands is
+			-- Disconnect every callbacks for the different signals.
+		do
+			disconnect_commands (tree_select_row_id)
+			disconnect_commands (tree_unselect_row_id)
+			disconnect_commands (tree_expand_id)
+			disconnect_commands (tree_collapse_id)
+		end
+
+	disconnect_commands (event_id: INTEGER) is
+			-- Called by feature `update_commands'.
 			-- Clear `argument_array' list for the events of type `event_id'.
 			-- And clear `event_command_array @ event_id' list by disconnecting
 			-- the callback functions.
@@ -650,19 +731,29 @@ feature {NONE} -- Implementation
 			arg_list: LINKED_LIST [EV_ARGUMENT]
 			cmd_list: LINKED_LIST [EV_COMMAND]
 		do
-			from
-				arg_list := (argument_array @ event_id)
-				cmd_list := (event_command_array @ event_id).command_list
-				cmd_list.start
-				arg_list.start
-			until
-				cmd_list.empty
-			loop
-				-- Disconnect the commands for event of type `event_id'.
-				remove_single_command (tree_parent_imp.tree_widget, select_row_id, cmd_list.item)
+			if (event_command_array /= Void) then
+				if (event_command_array @ event_id /= Void) then
+					cmd_list := (event_command_array @ event_id).command_list
 
-				-- Clear the `arg_list'.
-				arg_list.remove
+					from
+						cmd_list.start
+					until
+						cmd_list.empty
+					loop
+						-- Disconnect the commands for event of type `event_id'.
+						remove_single_command (tree_parent_imp.tree_widget, event_id, cmd_list.item)
+					end
+
+					from
+						arg_list := argument_array @ event_id
+						arg_list.start
+					until
+						arg_list.empty
+					loop
+						-- Remove all arguments.
+						arg_list.remove
+					end
+				end
 			end
 		end
 

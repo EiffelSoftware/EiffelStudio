@@ -275,10 +275,10 @@ feature {NONE} -- GTK C functions for list
 		external "C | <gtk/gtk.h>"
 		end
 
-	c_gtk_add_list_item (list: POINTER; item: POINTER) is
-		external
-			"C | %"gtk_eiffel.h%""
-		end
+--	c_gtk_list_add_item (list: POINTER; item: POINTER) is
+--		external
+--			"C | %"gtk_eiffel.h%""
+--		end
 
 	c_gtk_list_rows (list: POINTER): INTEGER is
 		external

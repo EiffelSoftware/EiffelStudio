@@ -113,6 +113,8 @@ feature -- Access
 	event_data_type: $data_type
 
 	wrapper (${wrapper_args}action: PROCEDURE [ANY, TUPLE]) is
+			-- Use this to circumvent tuple type checking. (at your own risk!)
+			-- Calls `action' passing all other arguments.
 		do
 			action.call ([$arg_name_list])
 		end
@@ -129,6 +131,9 @@ EOT
 #===============================================================================
 #
 # $Log$
+# Revision 1.7  1999/10/28 00:28:52  oconnor
+# added warning comment to generated code
+#
 # Revision 1.6  1999/10/27 20:48:43  oconnor
 # added some more comments
 #

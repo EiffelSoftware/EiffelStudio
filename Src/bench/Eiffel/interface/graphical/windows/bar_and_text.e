@@ -60,28 +60,35 @@ feature -- Standard Interface
 
 	build_widgets is
 			-- Build system widget.
-		local
-			popup_cmd: TOOLBAR_CMD
 		do
 			if is_a_shell then
 				set_default_size
 			end;
 
-			!! toolbar_parent.make (new_name, global_form, Current);
-			toolbar_parent.set_column_layout;
-			toolbar_parent.set_free_size;
-			!! popup_cmd.make (Current);
-			toolbar_parent.add_button_press_action (3, popup_cmd, Void);
+			create_toolbar_parent (global_form);
 			
 			build_text_windows;
 			build_menus;
-			!! edit_bar.make (l_Command_bar_name, toolbar_parent, Current);
+			!! edit_bar.make (l_Command_bar_name, toolbar_parent);
 			build_bar;
-			!! toolbar_separator.make (new_name, toolbar_parent);
-			!! format_bar.make (l_Format_bar_name, toolbar_parent, Current);
+			!! format_bar.make (l_Format_bar_name, toolbar_parent);
 			build_format_bar;
+			build_toolbar_menu;
 			set_last_format (default_format);
 			attach_all
+		end;
+
+	build_toolbar_menu is
+			-- Build the toolbar menu under the special sub menu.
+		local
+			sep: SEPARATOR;
+			toolbar_t: TOGGLE_B
+		do
+			!! sep.make ("", special_menu);
+			!! toolbar_t.make (edit_bar.identifier, special_menu);
+			edit_bar.init_toggle (toolbar_t);
+			!! toolbar_t.make (format_bar.identifier, special_menu);
+			format_bar.init_toggle (toolbar_t)
 		end;
 
 	build_menus is
@@ -122,7 +129,7 @@ feature -- Standard Interface
 			search_menu_entry: EB_MENU_ENTRY;
 		do
 				-- Creation of all the commands, holes, buttons, and menu entries
-			!! hole.make (text_window);
+			!! hole.make (Current);
 			!! hole_button.make (hole, edit_bar);
 			!! hole_holder.make_plain (hole);
 			hole_holder.set_button (hole_button);
@@ -155,7 +162,7 @@ feature -- Standard Interface
 	build_edit_bar is
 			-- Build top bar (with editing commands).
 		do
-			!! hole.make (text_window);
+			!! hole.make (Current);
 			!! hole_button.make (hole, edit_bar);
 			!! hole_holder.make_plain (hole);
 			hole_holder.set_button (hole_button);
@@ -453,7 +460,7 @@ feature -- Window Properties
 
 	help_menu: MENU_PULL;
 
-	hole: HOLE_COMMAND;
+	hole: DEFAULT_HOLE_COMMAND;
 			-- Hole characterizing Current.
 
 	hole_button: EB_BUTTON_HOLE;

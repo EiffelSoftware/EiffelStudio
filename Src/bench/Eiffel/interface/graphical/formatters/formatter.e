@@ -9,7 +9,7 @@ deferred class FORMATTER
 
 inherit
 
-	ICONED_COMMAND
+	PIXMAP_COMMAND
 		rename
 			work as format
 		redefine
@@ -30,6 +30,11 @@ feature -- Properties
 			-- Will we call `format' without checking if this is 
 			-- really necessary (i.e. the format and the stone
 			-- haven't changed since last call)?
+
+	dark_symbol: PIXMAP is
+			-- Symbol to denote selected format
+		deferred
+		end
 
 feature -- Callbacks
 

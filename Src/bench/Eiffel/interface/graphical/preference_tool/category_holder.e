@@ -18,28 +18,21 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_command: like associated_command; a_button: like associated_button; a_menu_entry: like associated_menu_entry) is
+	make (a_button: like associated_button; a_menu_entry: like associated_menu_entry) is
 			-- Initialize Current.
 		do
-			associated_command := a_command;
 			associated_button := a_button;
 			associated_menu_entry := a_menu_entry;
 			is_sensitive := True
 		end;
 
-	make_plain (a_command: like associated_command) is
-			-- Initialize Current with `a_command'.
+	make_plain is
+			-- Initialize Current.
 		do
-			associated_command := a_command
+			is_sensitive := True
 		end
 
 feature -- Setting
-
-	set_command (a_command: like associated_command) is
-			-- Set `associated_command' to `a_command'.
-		do
-			associated_command := a_command
-		end;
 
 	set_button (a_button: like associated_button) is
 			-- Set `associated_button' to `a_button'.

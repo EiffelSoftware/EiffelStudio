@@ -9,7 +9,7 @@ indexing
 class LIST_HISTORY
 
 inherit
-	ICONED_COMMAND
+	PIXMAP_COMMAND
 		redefine
 			execute
 		end

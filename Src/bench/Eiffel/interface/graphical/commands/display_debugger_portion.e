@@ -8,7 +8,7 @@ indexing
 
 deferred class DISPLAY_DEBUGGER_PORTION
 
-inherit ICONED_COMMAND
+inherit PIXMAP_COMMAND
 
 feature -- Initialization
 

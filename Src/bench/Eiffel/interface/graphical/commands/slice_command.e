@@ -9,7 +9,7 @@ class SLICE_COMMAND
 
 inherit
 
-	ICONED_COMMAND
+	PIXMAP_COMMAND
 		redefine
 			tool
 		end;

@@ -9,7 +9,7 @@ class CASE_STORAGE
 
 inherit
 
-	ICONED_COMMAND
+	PIXMAP_COMMAND
 		rename
 			init as make
 		end;

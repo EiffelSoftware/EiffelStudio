@@ -9,7 +9,7 @@ class PREVIOUS_TARGET
 
 inherit
 
-	ICONED_COMMAND
+	PIXMAP_COMMAND
 		redefine
 			execute
 		end;

@@ -9,6 +9,8 @@ class PREFERENCE_HOLDER
 
 inherit
 	ISE_CMD_HOLDER
+		rename
+			make_plain as ise_make_plain
 		redefine
 			associated_button, associated_menu_entry
 		end
@@ -20,9 +22,14 @@ feature {NONE} -- Initialization
 
 	make_plain (a_command: like associated_command) is
 			-- Initialize Current with `a_command'.
+		require
+			a_command_not_void: a_command /= Void
 		do
 			associated_command := a_command;
 			is_sensitive := True
+		ensure
+			sensitive: is_sensitive;
+			command_set: a_command.is_equal (associated_command)
 		end
 
 feature -- Setting
@@ -59,10 +66,14 @@ feature -- Setting
 
 feature -- Properties
 
+	associated_command: PREFERENCE_COMMAND;
+			-- Command for the preference tool
+
 	associated_button: PREFERENCE_BUTTON;
 			-- Button on the toolbar
 
-	associated_menu_entry: PREFERENCE_MENU_ENTRY;
+	associated_menu_entry: PREFERENCE_MENU_ENTRY
+			-- Menu entry for in the menu
 
 feature {NONE} -- Useless
 
@@ -71,9 +82,14 @@ feature {NONE} -- Useless
 		do
 		end;
 
-	make (a_command: like associated_command; a_button: like associated_button; a_menu_entry: like associated_menu_entry) is
+	make (a_button: like associated_button; a_menu_entry: like associated_menu_entry) is
 			-- Useless here.
 		do
 		end;
-	
+
+	ise_make_plain is
+			-- Useless here.
+		do
+		end
+
 end -- class PREFERENCE_HOLDER

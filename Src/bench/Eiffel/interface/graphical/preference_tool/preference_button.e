@@ -11,6 +11,8 @@ inherit
 	ISE_BUTTON
 		rename
 			make as ise_button_make
+		redefine
+			set_sensitive, set_insensitive
 		end
 
 feature {NONE} -- Initialization
@@ -49,12 +51,6 @@ feature -- Status Setting
 			else
 				set_symbol (symbol)
 			end
-		end;
-
-	set_symbol (p: PIXMAP) is
-			-- Set the pixmap if it it valid
-		do
-			set_pixmap (p)
 		end;
 
 feature {NONE} -- Useless

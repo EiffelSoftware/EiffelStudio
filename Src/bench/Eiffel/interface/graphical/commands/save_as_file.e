@@ -9,7 +9,7 @@ class SAVE_AS_FILE
 
 inherit
 
-	ICONED_COMMAND
+	PIXMAP_COMMAND
 		redefine
 			licence_checked
 		end;

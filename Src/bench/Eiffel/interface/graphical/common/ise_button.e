@@ -21,11 +21,6 @@ feature -- Access
 		deferred
 		end;
 
-	dark_symbol: PIXMAP is
-			-- Dark version of `symbol'
-		deferred
-		end;
-
 	grey_symbol: PIXMAP is
 			-- Insensitive version of `symbol'
 		deferred
@@ -43,17 +38,25 @@ feature -- Access
 
 feature -- Status Setting
 
-	set_selected (b: BOOLEAN) is
-			-- Darken the symbol of current button if `b', lighten it otherwise.
-		deferred
-		end;
+        set_symbol (p: PIXMAP) is
+                        -- Set the pixmap if it it valid
+                do
+                        if p.is_valid then
+                                set_pixmap (p)
+                        end;
+                end;
 
-	set_symbol (p: PIXMAP) is
-			-- Set the pixmap if it it valid
-		require
-			non_void_arg: p /= Void
-		deferred
-		end;
+        set_sensitive is
+                        -- Make Current sensitive for user input.
+                do
+                        set_symbol (symbol)
+                end;
+
+        set_insensitive is
+                        -- Make Current insensitive for user input.
+                do
+                        set_symbol (grey_symbol)
+                end;
 
 feature {NONE} -- Properties
 

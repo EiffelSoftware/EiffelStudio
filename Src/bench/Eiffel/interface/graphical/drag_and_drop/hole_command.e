@@ -1,7 +1,7 @@
 class HOLE_COMMAND
 
 inherit
-	ICONED_COMMAND
+	PIXMAP_COMMAND
 		redefine
 			holder
 		end;
@@ -48,7 +48,17 @@ feature -- Properties
 		do
 		end;
 
-	holder: HOLE_HOLDER
-			-- Holder of Current.
+	holder: HOLE_HOLDER;
+			-- Holder of Current
+
+	full_symbol: PIXMAP is
+		do	
+			Result := symbol
+		end;
+
+	icon_symbol: PIXMAP is
+		do
+			Result := symbol
+		end;
 
 end -- class HOLE_COMMAND

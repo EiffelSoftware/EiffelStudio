@@ -11,7 +11,7 @@ inherit
 
 	SHARED_EIFFEL_PROJECT;
 	PROJECT_CONTEXT;
-	ICONED_COMMAND
+	PIXMAP_COMMAND
 		rename
 			init as make
 		redefine

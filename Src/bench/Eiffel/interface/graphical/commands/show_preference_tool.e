@@ -8,7 +8,7 @@ indexing
 class SHOW_PREFERENCE_TOOL
 
 inherit
-	ICONED_COMMAND
+	PIXMAP_COMMAND
 		rename
 			init as make
 		end;

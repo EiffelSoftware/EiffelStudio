@@ -19,7 +19,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (cmd: ICONED_COMMAND; a_parent: COMPOSITE) is
+	make (cmd: PIXMAP_COMMAND; a_parent: COMPOSITE) is
 		do
 			associated_command := cmd;
 			button_make (button_name, a_parent);
@@ -36,12 +36,6 @@ feature -- Access
 			Result := associated_command.symbol
 		end;
 
-	dark_symbol: PIXMAP is
-			-- Dark version of `symbol'
-		do
-			Result := associated_command.dark_symbol
-		end;
-
 	grey_symbol: PIXMAP is
 			-- Insensitive version of `symbol'
 		do
@@ -53,38 +47,6 @@ feature -- Access
 			Result := associated_command.name
 		end
 
-feature -- Status Setting
-
-	set_selected (b: BOOLEAN) is
-			-- Darken the symbol of current button if `b', lighten it otherwise.
-		do
-			if b then
-				set_symbol (dark_symbol)
-			else
-				set_symbol (symbol)
-			end
-		end;
-
-	set_sensitive is
-			-- Make Current sensitive for user input.
-		do
-			set_symbol (symbol)
-		end;
-
-	set_insensitive is
-			-- Make Current insensitive for user input.
-		do
-			set_symbol (grey_symbol)
-		end;
-
-	set_symbol (p: PIXMAP) is
-			-- Set the pixmap if it it valid
-		do
-			if p.is_valid then
-				set_pixmap (p)
-			end;
-		end;
-
 feature {NONE} -- Implementation
 
 	focus_label: FOCUS_LABEL_I is
@@ -95,6 +57,6 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Properties
 
-	associated_command: ICONED_COMMAND
+	associated_command: PIXMAP_COMMAND
 
 end -- class EB_BUTTON

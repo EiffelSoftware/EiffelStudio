@@ -56,7 +56,7 @@ feature {PREFERENCE_TOOL} -- Initialization
 		do
 			!! button.make (Current, a_button_parent);
 			!! menu_entry.make (Current, a_menu);
-			!! holder.make (Current, button, menu_entry);
+			!! holder.make (button, menu_entry);
 
 			button.set_selected (False);
 

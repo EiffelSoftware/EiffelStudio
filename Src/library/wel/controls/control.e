@@ -84,6 +84,16 @@ feature -- Status report
 				0, 0) = 0
 		end
 
+feature -- Basic operations
+
+	default_process_notification (notification_code: INTEGER) is
+			-- Process a `notification_code' which has not been
+			-- processed by `process_notification'.
+		require
+			exists: exists
+		do
+		end
+
 feature {WEL_DIALOG} -- Status setting
 
 	set_exists (new_value: BOOLEAN) is
@@ -102,14 +112,6 @@ feature {WEL_COMPOSITE_WINDOW}
 			exists: exists
 		do
 			default_process_notification (notification_code)
-		end
-
-	default_process_notification (notification_code: INTEGER) is
-			-- Process a `notification_code' which has not been
-			-- processed by `process_notification'.
-		require
-			exists: exists
-		do
 		end
 
 feature {NONE} -- Implementation

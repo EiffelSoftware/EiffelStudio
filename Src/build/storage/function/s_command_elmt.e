@@ -1,16 +1,18 @@
+indexing
+	description: "Class used to store the event element of a behavior."
+	id: "$Id$"
+	date: "$Date$"
+	revision: "$Revision$"
 
-class S_COMMAND_ELMT 
+class S_COMMAND_ELMT
 
 inherit
-
 	SHARED_STORAGE_INFO
 
 creation
-
 	make
 
-	
-feature 
+feature {NONE} -- Initialization
 
 	make (other: CMD_INSTANCE) is
 		local
@@ -21,7 +23,9 @@ feature
 			-- TODO: create it to be both an element used in a command
 			-- and and argument
 			identifier := other.identifier
-			!! arguments.make
+			instance_identifier := other.inst_identifier
+
+			create arguments.make
 			from
 				args := other.arguments
 				args.start
@@ -30,20 +34,20 @@ feature
 			loop
 				arguments.extend (args.item.identifier)
 				args.forth
-			end;
+			end
 				--| Added for version 4.3.
-			!! observers.make
+			create observers.make
 			from
 				obs := other.observers
 				obs.start
 			until
 				obs.after
 			loop
-				!! s_obs.make (obs.item)
+				create s_obs.make (obs.item)
 				observers.extend (s_obs)
 				obs.forth
 			end
-		end;
+		end
 
 	command: CMD_INSTANCE is
 		local
@@ -70,7 +74,7 @@ feature
 				Result := command_instance_table.item (inst_id)
 			end
 			if Result = Void then
-				!! arg_list.make
+				create arg_list.make
 				from
 					arguments.start		
 				until
@@ -83,12 +87,12 @@ feature
 						ct := context_type_table.item (- arguments.item)
 						cs := Void
 					end
-					!!arg.storage_init (ct, cs)
+					create arg.storage_init (ct, cs)
 					arg_list.extend (arg)
 					arguments.forth
 				end
 					--| Added for version 4.3.
-				!! obs_list.make
+				create obs_list.make
 				from
 					observers.start
 				until
@@ -97,10 +101,8 @@ feature
 					obs_list.extend (observers.item.command)
 					observers.forth
 				end
-					--| <Guillaume>
-				
-					--| </Guillaume>
-				!! Result.storage_init (cmd, arg_list, obs_list)
+
+				create Result.storage_init (cmd, arg_list, obs_list)
 				if inst_id /= -1 then
 					-- New version (3.3.2)
 					command_instance_table.put (Result, inst_id)
@@ -115,15 +117,12 @@ feature
 			-- rebuilt result
 		end
 
-feature {NONE}
+feature {NONE} -- Implementation
 
-	instance_identifier: INTEGER is
+	instance_identifier: INTEGER
 			-- Instance identifier
-		do
-			Result := -1
-		end;
 
-	identifier: INTEGER;
+	identifier: INTEGER
 			-- Command identifier
 
 	arguments: LINKED_LIST [INTEGER]
@@ -131,4 +130,5 @@ feature {NONE}
 	observers: LINKED_LIST [like Current]
 			-- List of observers
 
-end
+end -- class S_COMMAND_ELMT
+

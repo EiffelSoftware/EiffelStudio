@@ -1,46 +1,46 @@
-
+indexing
+	description: "Class used to store state circles."
+	id: "$Id$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class S_CIRCLE 
 
 inherit
-
 	SHARED_STORAGE_INFO
 
 creation
-
 	make
-	
-feature 
+
+feature {NONE} -- Initialization
 
 	make (s: STATE_CIRCLE) is
 		do
-			identifier := s.data.identifier;
-			x := s.center.x;
+			identifier := s.data.identifier
+			x := s.center.x
 			y := s.center.y
-		end;
+		end
 
-	identifier: INTEGER;
-
-	
-feature {NONE}
-
-	x, y: INTEGER;
-
-	
-feature 
+feature -- Access
 
 	state_circle: STATE_CIRCLE is
 		do
-			!!Result.make;
-			Result.init;
-			Result.set_stone (state_table.item (identifier));
-			circle_table.put (Result, identifier);
-		end;
+			create Result.make
+			Result.init
+			Result.set_data (state_table.item (identifier))
+			circle_table.put (Result, identifier)
+		end
 
-	center: COORD_XY_FIG is
+	center: EV_POINT is
 		do
-			!!Result;
-			Result.set (x, y);
-		end;
+			create Result.set (x, y)
+		end
 
-end
+feature {NONE} -- Implementation
+
+	identifier: INTEGER
+
+	x, y: INTEGER
+
+end -- class S_CIRCLE
+

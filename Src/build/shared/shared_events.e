@@ -1,140 +1,223 @@
-class SHARED_EVENTS 
+indexing
+	description: "Creation of all the events."
+	id: "$Id$"
+	date: "$Date$"
+	revision: "$Revision$"
 
-feature
+class SHARED_EVENTS
 
-	but_act_ev: BUT_ACT_EV is
+feature -- Items
+
+	select_ev: SELECT_EV is
 		once
-			!!Result.make
-		end;
+			create Result.make
+		end
 
-	but_rel_ev: BUT_REL_EV is
+	unselect_ev: DESELECT_EV is
 		once
-			!!Result.make
-		end;
+			create Result.make
+		end
 
-	but_arm_ev: BUT_ARM_EV is
-		once
-			!!Result.make
-		end;
+		--| Tree item
 
-	expose_ev: EXPOSE_EV is
+	subtree_ev: SUBTREE_EV is
 		once
-			!!Result.make
-		end;
+			create Result.make
+		end
 
-	input_ev: INPUT_EV is
-		once
-			!!Result.make
-		end;
+		--| List item
 
-	resize_ev: RESIZE_EV is
+	double_click_ev: DOUBLE_CLICK_EV is
 		once
-			!!Result.make
-		end;
+			create Result.make
+		end
 
-	widget_destroy_ev: WIDGET_DEST_EV is
-		once
-			!!Result.make
-		end;
+feature -- Widgets
 
-	mouse_enter_ev: MOUSE_ENTER_EV is
+	destroy_ev: DESTROY_EV is
 		once
-			!!Result.make
-		end;
+			create Result.make
+		end
+
+	get_focus_ev: GET_FOCUS_EV is
+		once
+			create Result.make
+		end
+
+	lose_focus_ev: LOSE_FOCUS_EV is
+		once
+			create Result.make
+		end
+
+		--| Key events
 
 	key_press_ev: KEY_PRESS_EV is
 		once
-			!!Result.make
-		end;
+			create Result.make
+		end
 
 	key_release_ev: KEY_RELEASE_EV is
 		once
-			!!Result.make
-		end;
+			create Result.make
+		end
 
-	mouse_leave_ev: MOUSE_LEAVE_EV is
-		once
-			!!Result.make
-		end;
+		--| Mouse events
 
-	pointer_motion_ev: POINTER_MOTION_EV is
+	enter_notify_ev: ENTER_NOTIFY_EV is
 		once
-			!!Result.make
-		end;
+			create Result.make
+		end
+
+	motion_notify_ev: MOTION_NOTIFY_EV is
+		once
+			create Result.make
+		end
+
+	leave_notify_ev: LEAVE_NOTIFY_EV is
+		once
+			create Result.make
+		end
+
+	mouse1_press_ev: MOUSE1_PRESS_EV is
+		once
+			create Result.make
+		end
+
+	mouse2_press_ev: MOUSE2_PRESS_EV is
+		once
+			create Result.make
+		end
+
+	mouse3_press_ev: MOUSE3_PRESS_EV is
+		once
+			create Result.make
+		end
+
+	mouse1_release_ev: MOUSE1_RELEASE_EV is
+		once
+			create Result.make
+		end
+
+	mouse2_release_ev: MOUSE2_RELEASE_EV is
+		once
+			create Result.make
+		end
+
+	mouse3_release_ev: MOUSE3_RELEASE_EV is
+		once
+			create Result.make
+		end
+
+	mouse1_motion_ev: MOUSE1_MOTION_EV is
+		once
+			create Result.make
+		end
+
+	mouse2_motion_ev: MOUSE2_MOTION_EV is
+		once
+			create Result.make
+		end
+
+	mouse3_motion_ev: MOUSE3_MOTION_EV is
+		once
+			create Result.make
+		end
+
+	mouse1_dbl_click_ev: MOUSE1_DBL_CLICK_EV is
+		once
+			create Result.make
+		end
+
+	mouse2_dbl_click_ev: MOUSE2_DBL_CLICK_EV is
+		once
+			create Result.make
+		end
+
+	mouse3_dbl_click_ev: MOUSE3_DBL_CLICK_EV is
+		once
+			create Result.make
+		end
+
+feature -- Buttons
+
+	click_ev: CLICK_EV is
+		once
+			create Result.make
+		end
+
+		--| Toggle button
+
+	toggle_ev: TOGGLE_EV is
+		once
+			create Result.make
+		end
+
+feature -- Lists
 
 	selection_ev: SELECTION_EV is
 		once
-			!!Result.make
-		end;
+			create Result.make
+		end
 
-	mouse_motion1_ev: MOUSE_MOT1_EV is
-		once
-			!!Result.make
-		end;
+		--| Multi column list
 
-	mouse_motion2_ev: MOUSE_MOT2_EV is
+	column_click_ev: COLUMN_CLICK_EV is
 		once
-			!!Result.make
-		end;
+			create Result.make
+		end
 
-	mouse_motion3_ev: MOUSE_MOT3_EV is
-		once
-			!!Result.make
-		end;
+feature -- Drawing area
 
-	mouse1u_ev: MOUSE1U_EV is
+	paint_ev: PAINT_EV is
 		once
-			!!Result.make
-		end;
+			create Result.make
+		end
 
-	mouse2u_ev: MOUSE2U_EV is
+	resize_ev: RESIZE_EV is
 		once
-			!!Result.make
-		end;
+			create Result.make
+		end
 
-	mouse3u_ev: MOUSE3U_EV is
-		once
-			!!Result.make
-		end;
+feature -- Notebook
 
-	mouse1d_ev: MOUSE1D_EV is
+	switch_ev: SWITCH_EV is
 		once
-			!!Result.make
-		end;
+			create Result.make
+		end
 
-	mouse2d_ev: MOUSE2D_EV is
-		once
-			!!Result.make
-		end;
-
-	mouse3d_ev: MOUSE3D_EV is
-		once
-			!!Result.make
-		end;
+feature -- Windows
 
 	move_ev: MOVE_EV is
 		once
-			!!Result.make
-		end;
+			create Result.make
+		end
 
-	value_changed_ev: VALUE_CHANGED_EV is
+	close_ev: CLOSE_EV is
 		once
-			!!Result.make
-		end;
+			create Result.make
+		end
 
-	text_modify_ev: TEXT_MODIFIED_EV is
+feature -- Text components
+
+	change_ev: CHANGE_EV is
 		once
-			!!Result.make
-		end;
+			create Result.make
+		end
 
-	text_motion_ev: TEXT_MOTION_EV is
+	return_ev: RETURN_EV is
 		once
-			!!Result.make
-		end;
+			create Result.make
+		end
 
-	key_return_ev: KEY_RET_EV is
-		once
-			!!Result.make
-		end;
+--	insert_ev: TEXT_MODIFIED_EV is
+--		once
+--			create Result.make
+--		end
 
-end
+--	delete_ev: TEXT_MOTION_EV is
+--		once
+--			create Result.make
+--		end
+
+end -- class SHARED_EVENTS
+

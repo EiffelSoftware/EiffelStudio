@@ -1,4 +1,4 @@
-class EB_LINKED_LIST [T->DATA]
+class EB_LINKED_LIST [T->HELPABLE]
 
 inherit
 

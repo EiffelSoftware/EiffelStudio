@@ -1,15 +1,8 @@
-
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.	  --
---|	270 Storke Road, Suite 7 Goleta, California 93117		--
---|				   (805) 685-1006							--
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
-
 indexing
-
-   date: "$Date$";
-   revision: "$Revision$"
+	description: "EiffelBuild Table."
+	Id: "$Id$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class EB_TABLE [T] 
 
@@ -21,7 +14,7 @@ inherit
 			put as basic_put,
 			count as max_size
 		export
-			{NONE} all;
+			{NONE} all
 			{ANY} item, max_size
 		end
 
@@ -37,9 +30,9 @@ feature
 		 Positive_argument: size >= 1
 	  do
 		 old_create (1, size)
-	  end;
+	  end
 
-   count: INTEGER;
+   count: INTEGER
 
    put (v: T) is
 		 -- insert `v' in the table.
@@ -48,23 +41,14 @@ feature
 	  do
 		 if (count >= upper - 1) then
 			extra_block_size := Block_threshold.max 
-								((Extra_percentage * upper) // 100);
+								((Extra_percentage * upper) // 100)
 			resize (1, upper + extra_block_size)
-		 end;
-		 count := count + 1;
+		 end
+		 count := count + 1
 		 basic_put (v, count)
 	  ensure
 		 One_more_item: count = old count + 1
-	  end;
-
-   trim is
-		 -- Free unused memory space.
-	  do
-		 --area := arycpy (area, count, 0, count);
-		 --upper := count
-	  --ensure
-		 --Optimal_size: max_size = count
-	  end;
+	  end
 
    index_of (v: T): INTEGER is
 		 -- index of `v' in the table.
@@ -81,22 +65,22 @@ feature
 			(i > count) or else v.is_equal (item (i))
 		 loop
 			i := i + 1
-		 end;
+		 end
 		 if i > count then
 			Result := 0
 		 else
 			Result := i
 		 end
-	  end;
+	  end
 
    
 feature {NONE}
 
-	Block_threshold: INTEGER is 5;
+	Block_threshold: INTEGER is 5
 
-   Extra_percentage: INTEGER is 10
+	Extra_percentage: INTEGER is 10
 
 invariant
-   max_size = upper
+	max_size = upper
 
 end -- class TABLE 

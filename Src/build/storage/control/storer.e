@@ -7,36 +7,32 @@ indexing
 class STORER 
 
 inherit
-
-	MEMORY
-	CONSTANTS
 	SHARED_STORAGE_INFO
-	WINDOWS
+
 	SHARED_CONTEXT
+
 	SHARED_APPLICATION
-	SHARED_TRANSLATIONS
+
+	WINDOWS
+
+	CONSTANTS
 
 creation
-
 	make
 
-	
-feature 
+feature {NONE} -- Initialization
 
 	make is
 		do
-			!! context_storer
-			!! command_storer
-			!! state_storer
-			!! namer_storer
-			!! application_storer
-			!! group_storer
-			!! translation_storer
+			create context_storer
+			create command_storer
+			create state_storer
+			create namer_storer
+			create application_storer
+			create group_storer
 		end
 
--- **************
--- Retrieved data
--- **************
+feature -- Retrieved data
 
 	contexts: LINKED_LIST [CONTEXT]
 
@@ -44,14 +40,9 @@ feature
 
 	behaviors: LINKED_LIST [BEHAVIOR]
 
-	
-feature {NONE}
-
 	states: LINKED_LIST [BUILD_STATE]
 
--- *******
--- Storers
--- *******
+feature {NONE} -- Storers
 
 	context_storer: CONTEXT_STORER
 
@@ -63,12 +54,9 @@ feature {NONE}
 
 	group_storer: GROUP_STORER
 
-	translation_storer: TRANSL_STORER
-
 	namer_storer: NAMER_STORER
 
-	
-feature 
+feature -- Access
 
 	store (dir_name: STRING) is
 			-- Store eiffelbuild application to
@@ -79,7 +67,6 @@ feature
 				-- Save storer temporarily
 			context_storer.tmp_store (dir_name)
 			group_storer.tmp_store (dir_name)
-			translation_storer.tmp_store (dir_name)
 			command_storer.tmp_store (dir_name)
 			state_storer.tmp_store (dir_name)
 			application_storer.tmp_store (dir_name)
@@ -88,7 +75,6 @@ feature
 				-- Move tmp file to saved file name
 			context_storer.save_stored_information (dir_name)
 			group_storer.save_stored_information (dir_name)
-			translation_storer.save_stored_information (dir_name)
 			command_storer.save_stored_information (dir_name)
 			state_storer.save_stored_information (dir_name)
 			application_storer.save_stored_information (dir_name)
@@ -109,9 +95,6 @@ feature
 			context_catalog.update_groups
 			context_storer.retrieve (dir_name)
 
-			translation_storer.retrieve (dir_name)
-			Shared_translation_list.wipe_out
-			Shared_translation_list.merge_right (translation_storer.retrieved_data)
 			command_storer.retrieve (dir_name)
 			commands := command_storer.retrieved_data
 			command_catalog.merge (commands)
@@ -122,17 +105,12 @@ feature
 			contexts := context_storer.retrieved_data
 			from
 				contexts.start
-				tree.disable_drawing
 			until
 				contexts.after
 			loop
 				a_context := contexts.item
 				a_context.retrieve_oui_widget
 				contexts.forth
-			end
-			tree.enable_drawing
-			if not Shared_window_list.empty then
-				tree.display (Shared_window_list.first)
 			end
 
 				-- Order is important. Need to
@@ -147,9 +125,10 @@ feature
 				app_editor.set_initial_state_circle (c)
 				c.set_double_thickness
 			end
-
 			app_editor.set_default_selected
+
 			clear_shared_storage_info
 		end
 
-end
+end -- class STORER
+

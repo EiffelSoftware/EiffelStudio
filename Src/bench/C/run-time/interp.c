@@ -28,7 +28,7 @@
 #include "bits.h"
 #include "equal.h"	/* for xequal() */
 #include <math.h>
-#include "oncekeys.h"
+#include "main.h"
 
 #ifdef CONCURRENT_EIFFEL
 #include "curextern.h"
@@ -428,7 +428,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 				/* Put pointer to 'result' in 'rvar' */
 
 				/* MTOG = MT Once Get */
-			if (MTOG((char *),EIF_once_keys[once_key], rvar))
+			if (MTOG((char *),EIF_once_values[once_key], rvar))
 			{
 				/* Already executed. 'rvar' points to result */
 
@@ -468,8 +468,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 						 * suitably aligned, therefore making it impossible to
 						 * use onceset.
 						 */
-/* PLEASE CHECK if we need an 'eif_access' here!!! */
-								last->it_ref = eif_access(*((char**)rvar));
+								last->it_ref = eif_access(rvar);
 								break;
 						default:
 								panic(MTC "invalid result type");
@@ -507,7 +506,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 						case SK_EXP:
 						case SK_REF:    
 							/*	rvar = (char *) cmalloc (sizeof (char *)); */
-							/* %%zs rvar allocated in hector stack */
+							/* rvar allocated in hector stack */
 								rvar = henter((char *) 0);
 								break;
 					default:        
@@ -516,13 +515,12 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 				}
 				else
 				{
-					/* It's a procedure - allocate space for a char */
-					/* %%zs we need only to store something != 0 */
-					rvar = (char *) 1;	/* cmalloc (sizeof (char)) */
+					/* It's a procedure we need only to store something != 0 */
+					rvar = (char *) 1;
 				}
 
-				/* %%zs MTOS = MT Once Set */
-				MTOS(EIF_once_keys[once_key], rvar);
+				/* MTOS = MT Once Set */
+				MTOS(EIF_once_values[once_key], rvar);
 			}
 
 			onceadd(body_id);	/* Add this routine to the list of already */
@@ -660,9 +658,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 					/* If the Result is an expanded, then we have an hector pointer
 					 * in place of the result.
 					 */
-/* PLEASE CHECK if we need an 'eif_access' here!!! */
-
-				eif_access(*((char**)rvar)) = last->it_ref;	/* %%zs was last_it_ref */
+					eif_access(rvar) = last->it_ref;
 				}
 				break;
 			case SK_BIT:
@@ -673,8 +669,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 					/* If the Result is a bit, then we have an hector pointer
 					* in place of the result.
 					*/
-/* PLEASE CHECK if we need an 'eif_access' here!!! */
-					eif_access(*((char**)rvar)) = last->it_bit;  /* %%zs was last_it_bit */
+					eif_access(rvar) = last->it_bit;
 				}
 				break;
 			default:
@@ -902,8 +897,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 				 * suitably aligned, therefore making it impossible to
 				 * use onceset.
 				 */
-/*PLEASE CHECK if we need an 'eif_access' here!!! */
-						eif_access(*((char**)rvar)) = last->it_ref;
+						eif_access(rvar) = last->it_ref;
 						break;
 			}
 		}
@@ -931,8 +925,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 					/* If the Result is a reference, then we have an hector pointer
 				 	* in place of the result.
 					*/
-/* PLEASE CHECK if we need an 'eif_access' here!!! */
-					eif_access(*((char**)rvar)) = last->it_ref; /* %%zs was last_it_ref */
+					eif_access(rvar) = last->it_ref;
 					break;
 				}
 			}
@@ -1097,8 +1090,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 				/* If the Result is a reference, then we have an hector pointer
 				 * in place of the result.
 				 */
-/* PLEASE CHECK if we need an 'eif_access' here!!! */
-			eif_access(*((char**)rvar)) = last->it_ref; /* %%zs was last_it_ref */
+			eif_access(rvar) = last->it_ref;
 		}
 		break;
 

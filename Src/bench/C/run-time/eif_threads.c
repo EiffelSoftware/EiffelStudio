@@ -63,6 +63,9 @@ rt_public void eif_thr_init_root(void) {
 }
 
 rt_public void eif_thr_register(void) {
+	static once = 0;	/* For initial eif_thread, we don't know how
+						 * many once values we have to allocate */
+
 	eif_global_context_t *eif_globals;
 
 	eif_globals = (eif_global_context_t *)malloc(sizeof(eif_global_context_t));
@@ -71,6 +74,19 @@ rt_public void eif_thr_register(void) {
 
 	eif_init_context(eif_globals);
 	EIF_TSD_SET(eif_global_key,eif_globals,"could not bind a context to a thread");
+
+	if (once) {
+		/* Allocate room for once values for all threads but the initial */
+		/* because we do not have the number of onces yet */
+		EIF_once_values = (char **) cmalloc ( EIF_once_count * sizeof (char *) );
+
+		if (EIF_once_values == (char **) 0)
+			/* Out of memory */
+			enomem();
+
+		bzero((char *)EIF_once_values, EIF_once_count * sizeof (char *));
+	} else 
+		once = 1;
 }
 
 
@@ -201,7 +217,8 @@ rt_public void eif_thr_panic(char *msg) {
 
 
 rt_public void eif_thr_freeze(EIF_OBJ object) {
-	if (!efreeze(eif_access(object))) {
+/*	if (!efreeze(eif_access(object))) { */
+	if (!efreeze(object)) {
 		if (!spfreeze(eif_access(object)))
 			eif_thr_panic("cannot freeze\n");
 	}

@@ -35,13 +35,12 @@ inherit
 feature -- Access
 		
 	object: GB_OBJECT is
-			-- `Result' is a new object representing clipboard contents.
+			--
 		local
 			a_list: ARRAYED_LIST [GB_OBJECT]
 		do
-			if contents_cell.item /= Void then
-				Result := new_object (contents_cell.item, True)
-					-- Modify id of `Result' so that it is not the same as that of `Current'.
+			Result := internal_object
+			if Result /= Void then
 				create a_list.make (20)
 				Result.all_children_recursive (a_list)
 				a_list.extend (Result)
@@ -59,7 +58,7 @@ feature -- Access
 				end
 			end
 		end
-		
+
 	object_type: STRING
 			-- Type of `object' or Void if `is_empty'.
 		
@@ -67,6 +66,19 @@ feature -- Access
 			-- Is clipboard empty?
 		do
 			Result := contents_cell.item = Void
+		end
+		
+feature {GB_CLIPBOARD_COMMAND} -- Implementation
+
+	internal_object: GB_OBJECT is
+			-- `Result' is a new object representing clipboard contents.
+			-- This is a minimal representation and does not have it's id's updated, referers connected etc etc.
+			-- Used when you simply need a copy of the clipboard's contents for viewing.
+		do
+			if contents_cell.item /= Void then
+				Result := new_object (contents_cell.item, True)
+					-- Modify id of `Result' so that it is not the same as that of `Current'.
+			end
 		end
 
 feature {GB_CUT_OBJECT_COMMAND, GB_COPY_OBJECT_COMMAND, GB_CLIPBOARD_COMMAND} -- Implementation

@@ -4447,11 +4447,6 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_bstr (SAFEARRAY * a_safearray)
 
     // free memory
 
-//    hr = SafeArrayDestroy (a_safearray);
-//    if (hr != S_OK)
-//    {
-//      com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
-//    }
     free (lower_indices);
     free (element_counts);
     free (upper_indices);

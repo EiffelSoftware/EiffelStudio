@@ -27,7 +27,7 @@ feature -- Access bytes size
 	Character_bytes, Wide_character_bytes: INTEGER is
 			-- Number of bytes in a value of type `CHARACTER' or `WIDE_CHARACTER'.
 		do
-			Result := feature {MARSHAL}.size_of_object ('c')
+			Result := 2
 		end
 
 	Integer_8_bytes: INTEGER is

@@ -28,6 +28,12 @@ inherit
 			resize_actions
 		end
 
+	EV_FONTABLE_IMP
+		redefine
+			interface,
+			set_font
+		end
+
 	EV_GAUGE_IMP
 		redefine
 			on_key_down,
@@ -75,7 +81,9 @@ inherit
 			y as y_position,
 			set_text as wel_set_text,
 			text as wel_text,
-			has_capture as wel_has_capture
+			has_capture as wel_has_capture,
+			font as wel_font,
+			set_font as wel_set_font
 		undefine
 			on_left_button_down,
 			on_middle_button_down,
@@ -148,6 +156,7 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Initialize `Current'.
 		do
+			set_default_font
 			create internal_arrows_control.make
 				(Current, 0, 0, default_spin_height, spin_width, -1)
 			internal_text_field.wel_set_parent (Current)
@@ -303,6 +312,21 @@ feature {EV_SPIN_BUTTON_I} -- Status setting.
 
 				-- Adapt interval
 			internal_arrows_control.set_range (i, j)
+		end
+		
+	set_font (ft: EV_FONT) is
+			-- Make `ft' new font of `Current'.
+		local
+			local_font_windows: EV_FONT_IMP
+		do
+			Precursor {EV_FONTABLE_IMP} (ft)
+			local_font_windows ?= private_font.implementation
+			check
+				valid_font: local_font_windows /= Void
+			end
+			internal_text_field.wel_set_font (local_font_windows.wel_font)
+				-- We don't need the WEL private font anymore since it is set by user.
+			private_wel_font := Void
 		end
 
 feature -- action sequences

@@ -188,9 +188,9 @@ feature {NONE} -- Events
 				set_clean
 			end
 		ensure then
-			clean: not is_dirty
-			save_button_disabled: not save_button.is_sensitive
-			revert_button_disabled: not revert_button.is_sensitive
+			clean: active_configuration /= Void implies not is_dirty
+			save_button_disabled: active_configuration /= Void implies not save_button.is_sensitive
+			revert_button_disabled: active_configuration /= Void implies not revert_button.is_sensitive
 		end
 
 	on_revert is
@@ -208,9 +208,9 @@ feature {NONE} -- Events
 				manager.roll_back
 			end
 		ensure then
-			clean: not is_dirty
-			save_button_disabled: not save_button.is_sensitive
-			revert_button_disabled: not revert_button.is_sensitive
+			clean: active_configuration /= Void and then feature {SYSTEM_FILE}.exists (active_configuration.path) implies not is_dirty
+			save_button_disabled: active_configuration /= Void and then feature {SYSTEM_FILE}.exists (active_configuration.path) implies not save_button.is_sensitive
+			revert_button_disabled: active_configuration /= Void and then feature {SYSTEM_FILE}.exists (active_configuration.path) implies not revert_button.is_sensitive
 		end
 		
 	on_config_info is
@@ -741,12 +741,18 @@ feature {NONE} -- Implementation
 					if delete_button.is_sensitive then
 						delete_button.disable_sensitive
 					end
+					if delete_menu_item.is_sensitive then
+						delete_menu_item.disable_sensitive
+					end
 				else
 					if not applications_frame.is_show_requested then
 						applications_frame.show
 					end
 					if not delete_button.is_sensitive then
 						delete_button.enable_sensitive
+					end
+					if not delete_menu_item.is_sensitive then
+						delete_menu_item.enable_sensitive
 					end
 					l_apps := manager.applications (l_config)
 					if l_apps /= Void then

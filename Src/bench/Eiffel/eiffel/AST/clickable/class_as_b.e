@@ -9,11 +9,22 @@ class CLASS_AS_B
 inherit
 
 	CLASS_AS
+		rename
+			set as abstract_set
+		redefine
+			class_name, obsolete_message, indexes,
+			generics, parents, creators, features,
+			invariant_part, suppliers,
+			associated_eiffel_class
+		end
+	CLASS_AS
 		redefine
 			class_name, obsolete_message, indexes,
 			generics, parents, creators, features,
 			invariant_part, suppliers, set,
 			associated_eiffel_class
+		select
+			set
 		end;
 
 	AST_EIFFEL_B
@@ -65,32 +76,17 @@ feature -- Initialization
 		local
 			click_class_name: CLICK_AST
 		do
-			class_name ?= yacc_arg (0);
-			is_deferred := yacc_bool_arg (0);
-			is_expanded := yacc_bool_arg (1);
-			indexes ?= yacc_arg (1);
-			generics ?= yacc_arg (2);
-			parents ?= yacc_arg (3);
-			creators ?= yacc_arg (4);
-			features ?= yacc_arg (5);
-			invariant_part ?= yacc_arg (6);
-			if (invariant_part /= Void)
-				and then
-				invariant_part.assertion_list = Void
-			then
-					-- The keyword `invariant' followed by no assertion
-					-- at all is not significant.
-				invariant_part := Void;
-			end;
-			suppliers ?= yacc_arg (7);
+			abstract_set;
+
+				-- Check for Concurrent Eiffel
+			if is_separate and not System.Concurrent_eiffel then
+				Error_handler.make_separate_syntax_error
+			end
+
+				-- Click list management
 			click_list ?= yacc_arg (8);
-			obsolete_message ?= yacc_arg (9);	
 			click_class_name ?= click_list.first;
 			click_class_name.set_node (Current);
-			end_position := yacc_int_arg (0);
-		ensure then
-			class_name_exists: class_name /= Void;
-			suppliers_exists: suppliers /= Void;
 		end;
 
 feature {COMPILER_EXPORTER} -- Setting

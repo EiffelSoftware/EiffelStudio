@@ -184,7 +184,7 @@ feature -- Output
 					-- Print object address.
 				st.add_string ("Stopped in object [");
 				c := dynamic_class;
-				st.add_address (object_address, c);
+				st.add_address (object_address, e_feature.name, c);
 				st.add_string ("]");
 				st.add_new_line;
 					-- Print class name.
@@ -233,7 +233,9 @@ feature -- Output
 					stack_num := Application.current_execution_stack_number;
 					cs := where.i_th (stack_num);
 					cs.display_arguments (st);
-					cs.display_locals (st);
+					if not oc.lace_class.hide_implementation then
+						cs.display_locals (st);
+					end;
 					where.display_stack (st)
 				end
 			end;

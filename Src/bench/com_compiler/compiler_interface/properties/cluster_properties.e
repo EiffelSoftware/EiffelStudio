@@ -318,7 +318,7 @@ feature -- Access
 			end
 		end
 
-	excluded: CLUSTER_EXCLUDES_ENUMERATOR is
+	excluded: EIFFEL_STRING_ENUMERATOR is
 			-- List of excluded directories.
 			-- Void if none.
 		local

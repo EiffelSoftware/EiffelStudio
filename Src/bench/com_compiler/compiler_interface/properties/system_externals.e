@@ -37,13 +37,13 @@ feature {NONE} -- Implementation
 
 feature -- Access
 
-	object_files: OBJECT_FILES_ENUMERATOR is
+	object_files: EIFFEL_STRING_ENUMERATOR is
 			-- retieve tje list of assemblies
 		do
 			create Result.make (object_files_list);
 		end
 		
-	include_paths: INCLUDE_PATHS_ENUMERATOR is
+	include_paths: EIFFEL_STRING_ENUMERATOR is
 			-- retieve tje list of assemblies
 		do
 			create Result.make (include_paths_list);

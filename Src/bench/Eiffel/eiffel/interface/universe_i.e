@@ -135,9 +135,15 @@ feature -- Access
 		local
 			cur: CURSOR
 			classes: HASH_TABLE [CLASS_I, STRING]
+			l_class_name: STRING
 		do
+				-- FIXME: Manu 03/06/2004: When we are 100% sure that all callers
+				-- of `classes_with_name' satisfy the precondition, we will be able to remove
+				-- this line:
+			l_class_name := class_name.as_upper
+
 			create {ARRAYED_LIST [CLASS_I]} Result.make (2)
-			buffered_classes.search (class_name)
+			buffered_classes.search (l_class_name)
 			if not buffered_classes.found then
 				cur := clusters.cursor
 				from
@@ -146,7 +152,7 @@ feature -- Access
 					clusters.after
 				loop
 					classes := clusters.item.classes
-					if classes.has (class_name) then
+					if classes.has (l_class_name) then
 						Result.extend (classes.found_item)
 						Result.forth
 					end
@@ -154,7 +160,7 @@ feature -- Access
 				end
 				clusters.go_to (cur)
 				if Result.count = 1 then
-					buffered_classes.put (Result.first, class_name)
+					buffered_classes.put (Result.first, l_class_name)
 				end
 			else
 				Result.extend (buffered_classes.found_item)
@@ -225,10 +231,16 @@ feature -- Access
 			renamings: HASH_TABLE [STRING, STRING]
 			old_cursor: CURSOR
 			l_ignore: LINKED_LIST [CLUSTER_I]
+			l_class_name: STRING
 		do
+				-- FIXME: Manu 03/06/2004: When we are 100% sure that all callers
+				-- of `class_named' satisfy the precondition, we will be able to remove
+				-- this line:
+			l_class_name := class_name.as_upper
+
 			l_ignore := a_cluster.ignore
 				-- First look for a renamed class in `a_cluster'
-			Result := a_cluster.renamed_class (class_name)
+			Result := a_cluster.renamed_class (l_class_name)
 
 			if Result = Void then
 				from
@@ -239,14 +251,14 @@ feature -- Access
 				loop
 					l_cluster := clusters.item
 					if l_ignore = Void or else not l_ignore.has (l_cluster) then
-						real_name := class_name
+						real_name := l_class_name
 						rename_clause := a_cluster.rename_clause_for (l_cluster)
 						if rename_clause /= Void then
 								-- Evaluation of the real name of the class
 							renamings := rename_clause.renamings
-							if renamings.has (class_name) then
+							if renamings.has (l_class_name) then
 								real_name := renamings.found_item
-							elseif renamings.has_item (class_name) then
+							elseif renamings.has_item (l_class_name) then
 								real_name := Has_been_renamed
 							end
 						end

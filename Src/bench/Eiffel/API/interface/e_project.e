@@ -623,8 +623,6 @@ feature -- Update
 		require
 			able_to_compile: able_to_compile
 			project_is_new: is_new
-		local
-			retried: BOOLEAN
 		do
 			set_error_status (ok_status)
 			Compilation_modes.set_is_precompiling (True)

@@ -172,7 +172,7 @@ feature -- Access
 			-- (not if it doesn't have class types
 			-- or is a special class)
 		do
-			Result := (not (is_special or else is_basic)) and then has_types
+			Result := not is_basic and then has_types
 		end
 
 	has_expanded: BOOLEAN
@@ -3414,11 +3414,6 @@ debug ("GENERICITY")
 	io.error.put_string ("new type%N")
 end
 					new_class_type := new_type (data)
-						-- If class is TO_SPECIAL or else SPECIAL
-						-- then freeze system.
-					if is_special then
-						System.set_freeze
-					end
 
 						-- If the $ operator is used in the class,
 						-- an encapsulation of the feature must be generated
@@ -3499,7 +3494,7 @@ end
 		end
 
 	is_special: BOOLEAN is
-			-- Is class SPECIAL or TO_SPECIAL ?
+			-- Is class SPECIAL?
 		do
 			-- Do nothing
 		end
@@ -3512,11 +3507,6 @@ end
 
 	is_typed_pointer: BOOLEAN is
 			-- Is class TYPED_POINTER?
-		do
-		end
-
-	is_special_array: BOOLEAN is
-			-- Is class SPECIAL?
 		do
 		end
 

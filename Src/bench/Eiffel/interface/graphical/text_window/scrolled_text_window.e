@@ -331,6 +331,7 @@ feature -- Update
 	search (s: STRING) is
 			-- Highlight and show next occurence of `s'.
 		local
+			l_t, l_s: STRING;
 			local_text: like text;
 			search_sub: STRING;
 			c_pos: INTEGER;
@@ -340,10 +341,14 @@ feature -- Update
 			local_text := text;
 
 			if changed or else not equal(matcher.text, local_text) then
-				matcher.set_text (local_text)
+				l_t := clone (local_text);
+				l_t.to_lower;
+				matcher.set_text (l_t)
 			end;
 			if not equal(matcher.pattern, s) then
-				matcher.set_pattern (s)
+				l_s := clone (s);
+				l_s.to_lower;
+				matcher.set_pattern (l_s)
 			end;
 
 			c_pos := cursor_position;

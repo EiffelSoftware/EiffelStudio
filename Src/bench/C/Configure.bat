@@ -242,6 +242,7 @@ del run-time\wdir.c
 del run-time\wdle.c
 del run-time\weif_threads.c
 del run-time\weif_cond_var.c
+del run-time\weif_once.c
 del run-time\weif_project.c
 del run-time\wequal.c
 del run-time\werror.c

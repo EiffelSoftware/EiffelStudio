@@ -140,12 +140,12 @@ feature -- Status setting
 		do
 			c := children_list
 			from
-				c.start
+				c.finish
 			until
-				c.after
+				c.before
 			loop
 				add_a_child (c.item)
-				c.forth
+				c.back
 			end
 		end
 

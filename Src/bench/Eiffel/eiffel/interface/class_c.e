@@ -1607,7 +1607,13 @@ feature -- Class initialization
 
 				-- Separate mark
 			old_is_separate := is_separate;
-			e_class.set_is_separate (ast.is_separate);
+			if ast.is_separate then
+				e_class.set_is_separate (True);
+				System.set_has_separate
+			else
+				e_class.set_is_separate (False);
+			end
+
 
 			--if (old_is_separate) then
 				--FIXME

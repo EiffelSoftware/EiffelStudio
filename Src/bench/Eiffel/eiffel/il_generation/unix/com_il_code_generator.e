@@ -588,6 +588,16 @@ feature -- Once management
 		do
 		end
 
+	generate_once_computed is
+			-- Mark current once as being computed.
+		do
+		end
+
+	generate_once_result_address is
+			-- Generate test on `done' of once feature `name'.
+		do
+		end
+
 	generate_once_test is
 			-- Generate test on `done' of once feature `name'.
 		do
@@ -898,7 +908,7 @@ feature -- Basic feature
 	
 feature -- Line Info for debugging
 
-	put_line_info (n: INTEGER) is
+	put_line_info (n1, n2, n3: INTEGER) is
 			-- Generate `file_name' and `n' to enable to find corresponding
 			-- Eiffel class file in IL code.
 		do

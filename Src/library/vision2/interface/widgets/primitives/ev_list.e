@@ -154,8 +154,8 @@ invariant
 		not selected_items.empty implies selected_items.first = selected_item
 
 	--| FIXME IEK  Selected items needs implementing
-	--selected_items_empty_implies_selected_item_void:
-	--	selected_items.empty implies selected_item = Void
+	--selected_items_empty_xor_selected_item_not_void:
+	--	selected_items.empty xor selected_item /= Void
 	selection_size_within_bounds:
 		not multiple_selection_enabled implies selected_items.count <= 1
 
@@ -182,6 +182,9 @@ end -- class EV_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.30  2000/02/17 01:09:25  oconnor
+--| fixed invariant
+--|
 --| Revision 1.29  2000/02/14 11:40:52  oconnor
 --| merged changes from prerelease_20000214
 --|

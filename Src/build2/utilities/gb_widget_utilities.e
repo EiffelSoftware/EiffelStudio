@@ -23,4 +23,18 @@ feature -- Basic operations
 			
 		end
 		
+	extend_no_expand (a_box: EV_BOX; a_widget: EV_WIDGET) is
+			-- Extend `a_widget' into `a_box' and disable expandability.
+		require
+			box_not_void: a_box /= Void
+			a_widget_not_void: a_widget /= Void
+		do
+			a_box.extend (a_widget)
+			a_box.disable_item_expand (a_widget)
+		ensure
+			box_contains_widget: a_box.has (a_widget)
+			widget_not_expanded: not a_box.is_item_expanded (a_widget)
+		end
+
+		
 end -- class GB_UTILITIES

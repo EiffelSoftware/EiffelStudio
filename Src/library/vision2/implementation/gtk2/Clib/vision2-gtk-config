@@ -1,0 +1,33 @@
+#! /bin/sh
+
+usage()
+{
+	cat <<EOF
+Usage: vision2-gtk-config [OPTIONS]
+Options
+	[--include_path]
+	[--object]
+EOF
+	exit $1
+}
+
+if test $# -eq 0; then
+	usage 1 1>&2
+fi
+
+while test $# -gt 0; do
+	case $1 in
+		--object)
+		echo `pkg-config gtk+-2.0 --libs` -L/usr/X11R6/lib -lXtst
+		;;
+    		--include_path)
+		echo `pkg-config gtk+-2.0 --cflags`
+		;;
+    		*)
+      		usage 1 1>&2
+      		;;
+ 	esac
+  	shift
+done
+
+

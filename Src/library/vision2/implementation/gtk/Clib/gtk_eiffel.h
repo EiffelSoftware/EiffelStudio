@@ -592,7 +592,12 @@ void c_gtk_progress_bar_set_adjustment (GtkProgressBar *progressbar, gfloat val,
 EIF_INTEGER c_gtk_progress_bar_style (GtkWidget *progressbar);
 #define c_gtk_progress_bar_adjustment(p)      (GTK_PROGRESS (p)->adjustment)      /*GtkAdjustment*/
 
-
+void c_gtk_progressbar_set_minimum (GtkProgressBar *bar, gfloat value);
+gfloat c_gtk_progressbar_get_minimum (GtkProgressBar *bar);
+void c_gtk_progressbar_set_maximum (GtkProgressBar *bar, gfloat value);
+gfloat c_gtk_progressbar_get_maximum (GtkProgressBar *bar);
+void c_gtk_progressbar_set_step (GtkProgressBar *bar, gfloat value);
+gfloat c_gtk_progressbar_get_step (GtkProgressBar *bar);
 /*==============================================================================
  gtk_file_selection functions
 ==============================================================================*/

@@ -223,31 +223,31 @@ long nextarg()
 long chroff()
 {
 	long to_add = nb_ref * REFSIZ;
-	return to_add + padding(to_add, CHRSIZ);
+	return to_add + padding(to_add, (long) CHRSIZ);
 }
 
 long lngoff()
 {
 	long to_add = chroff() + nb_char *CHRSIZ;
-	return to_add + padding(to_add, LNGSIZ);
+	return to_add + padding(to_add,(long)  LNGSIZ);
 }
 
 long fltoff()
 {
 	long to_add = lngoff() + nb_int * LNGSIZ;
-	return to_add + padding(to_add, FLTSIZ);
+	return to_add + padding(to_add, (long) FLTSIZ);
 }
 
 long ptroff()
 {
 	long to_add = fltoff() + nb_flt * FLTSIZ;
-	return to_add + padding(to_add, PTRSIZ);
+	return to_add + padding(to_add, (long) PTRSIZ);
 }
 
 long dbloff()
 {
 	long to_add = ptroff() + nb_ptr * PTRSIZ;
-	return to_add + padding(to_add, DBLSIZ);
+	return to_add + padding(to_add, (long) DBLSIZ);
 }
 
 long objsiz()

@@ -34,8 +34,9 @@
 
 #include "macros.h"
 
+extern double math_power ();
+
 #endif
 
-extern double math_power ();
 
 

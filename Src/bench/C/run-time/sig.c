@@ -74,7 +74,9 @@ shared void initsig();				/* Run-time initialization for trapping */
 private void spush();				/* Queue signal in a FIFO stack */
 private int spop();					/* Extract signals from queued stack */
 
+#ifndef __WATCOMC__
 extern int errno;					/* Kernel error report variable */
+#endif
 
 /* Compiled with -DTEST, we turn on DEBUG if not already done */
 #ifdef TEST

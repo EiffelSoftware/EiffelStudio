@@ -73,11 +73,11 @@ int fuzzy;			/* Fuzzy matching quantifier (0 = perfect matching) */
 
 	if (fuzzy == 0) {
 		compile(eif_access(pattern), plen, delta);		/* Compile pattern */
-		p = qsearch(eif_access(text) + start, tlen,
+		p = qsearch(eif_access(text) + start, tlen-start,
 			eif_access(pattern), plen);					/* Quick search */
 	} else {
 		fuz_compile(pattern, plen, fuzzy);				/* Compile pattern */
-		p = fuz_qsearch(eif_access(text) + start, tlen,
+		p = fuz_qsearch(eif_access(text) + start, tlen-start,
 			eif_access(pattern), plen, fuzzy);			/* Quick search */
 		free_structures(fuzzy);							/* Free tables */
 	}

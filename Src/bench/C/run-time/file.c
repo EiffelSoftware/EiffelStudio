@@ -21,8 +21,10 @@
 #include <ctype.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#ifndef __WATCOMC__
 #include <pwd.h>
 #include <grp.h>
+#endif
 
 #ifdef I_STRING
 #include <string.h>
@@ -50,8 +52,6 @@
 
 #include "file.h"
 
-#include "confmagic.h"
-
 #define FS_START	0			/* Beginning of file for `fseek' */
 #define FS_CUR		1			/* Current position for `fseek' */
 #define FS_END		2			/* End of file for `fseek' */
@@ -64,7 +64,9 @@ private char *file_fdopen();	/* Open file descriptor (UNIX specific) */
 private char *file_freopen();	/* Reopen file */
 private void swallow_nl();		/* Swallow next character if new line */
 
+#ifndef __WATCOMC__
 extern int errno;				/* Kernel error report */
+#endif 
 extern int esys();				/* Raise 'Operating system error' exception */
 extern int eio();				/* Raise 'I/O error' exception */
 
@@ -87,6 +89,21 @@ int how;
 	case 3: type = "r+"; break;		/* Open for reading & writing */
 	case 4: type = "w+"; break;		/* Truncate/create for reading & writing */
 	case 5: type = "a+"; break;		/* Reading anywhere, writing at the end */
+#ifdef __WATCOMC__
+	case 10: type = "rt"; break;		/* Open for reading */
+	case 11: type = "wt"; break;		/* Truncate/create for writing */
+	case 12: type = "at"; break;		/* Open for writing at end of file */
+	case 13: type = "rt+"; break;		/* Open for reading & writing */
+	case 14: type = "wt+"; break;		/* Truncate/create for reading & writing */
+	case 15: type = "at+"; break;		/* Reading anywhere, writing at the end */
+#else
+	case 10: type = "r"; break;		/* Open for reading */
+	case 11: type = "w"; break;		/* Truncate/create for writing */
+	case 12: type = "a"; break;		/* Open for writing at end of file */
+	case 13: type = "r+"; break;		/* Open for reading & writing */
+	case 14: type = "w+"; break;		/* Truncate/create for reading & writing */
+	case 15: type = "a+"; break;		/* Reading anywhere, writing at the end */
+#endif
 	default: type = "r";
 	}
 
@@ -108,6 +125,21 @@ int how;
 	case 3: type = "r+"; break;		/* Open for reading & writing */
 	case 4: type = "w+"; break;		/* UNUSED: does not make any sense--RAM */
 	case 5: type = "a+"; break;		/* Reading anywhere, writing at the end */
+#ifdef __WATCOMC__
+	case 10: type = "rt"; break;		/* Open for reading */
+	case 11: type = "wt"; break;		/* Truncate/create for writing */
+	case 12: type = "at"; break;		/* Open for writing at end of file */
+	case 13: type = "rt+"; break;		/* Open for reading & writing */
+	case 14: type = "wt+"; break;		/* UNUSED: does not make any sense--RAM */
+	case 15: type = "at+"; break;		/* Reading anywhere, writing at the end */
+#else
+	case 10: type = "r"; break;		/* Open for reading */
+	case 11: type = "w"; break;		/* Truncate/create for writing */
+	case 12: type = "a"; break;		/* Open for writing at end of file */
+	case 13: type = "r+"; break;		/* Open for reading & writing */
+	case 14: type = "w+"; break;		/* UNUSED: does not make any sense--RAM */
+	case 15: type = "a+"; break;		/* Reading anywhere, writing at the end */
+#endif
 	default: type = "r";
 	}
 
@@ -133,6 +165,21 @@ FILE *old;
 	case 3: type = "r+"; break;		/* Open for reading & writing */
 	case 4: type = "w+"; break;		/* Truncate/create for reading & writing */
 	case 5: type = "a+"; break;		/* Reading anywhere, writing at the end */
+#ifdef __WATCOMC__
+	case 10: type = "rt"; break;		/* Open for reading */
+	case 11: type = "wt"; break;		/* Truncate/create for writing */
+	case 12: type = "at"; break;		/* Open for writing at end of file */
+	case 13: type = "rt+"; break;		/* Open for reading & writing */
+	case 14: type = "wt+"; break;		/* Truncate/create for reading & writing */
+	case 15: type = "at+"; break;		/* Reading anywhere, writing at the end */
+#else
+	case 10: type = "r"; break;		/* Open for reading */
+	case 11: type = "w"; break;		/* Truncate/create for writing */
+	case 12: type = "a"; break;		/* Open for writing at end of file */
+	case 13: type = "r+"; break;		/* Open for reading & writing */
+	case 14: type = "w+"; break;		/* Truncate/create for reading & writing */
+	case 15: type = "a+"; break;		/* Reading anywhere, writing at the end */
+#endif
 	default: type = "r";
 	}
 
@@ -568,6 +615,9 @@ FILE *f;
 public void file_chown(name, uid)
 char *name;
 int uid;
+#ifdef __WATCOMC__
+{}
+#else
 {
 	/* Change the owner of the file to `uid' */
 
@@ -590,10 +640,14 @@ int uid;
 		break;
 	}
 }
+#endif
 
 public void file_chgrp(name, gid)
 char *name;
 int gid;
+#ifdef __WATCOMC__
+{}
+#else
 {
 	/* Change the group of the file to `gid' */
 
@@ -616,6 +670,7 @@ int gid;
 		break;
 	}
 }
+#endif
 
 public void file_stat (path, buf)
 char *path;				/* Path name */
@@ -720,25 +775,31 @@ int op;
 
     switch (op) {
 	case 0: /* Is file readable */
+#ifndef __WATCOMC__
 		if (uid == geteuid())
 			return (mode & S_IRUSR) ? '\01' : '\0';
 		else if (gid = getegid())
 			return (mode & S_IRGRP) ? '\01' : '\0';
 		else
+#endif
 			return (mode & S_IROTH) ? '\01' : '\0';
 	case 1: /* Is file writable */
+#ifndef __WATCOMC__
 		if (uid == geteuid())
 			return (mode & S_IWUSR) ? '\01' : '\0';
 		else if (gid = getegid())
 			return (mode & S_IWGRP) ? '\01' : '\0';
 		else
+#endif
 			return (mode & S_IWOTH) ? '\01' : '\0';
 	case 2: /* Is file executable */
+#ifndef __WATCOMC__
 		if (uid == geteuid())
 			return (mode & S_IXUSR) ? '\01' : '\0';
 		else if (gid = getegid())
 			return (mode & S_IXGRP) ? '\01' : '\0';
 		else
+#endif
 			return (mode & S_IXOTH) ? '\01' : '\0';
 	case 3: /* Is file setuid */
 		return (mode & S_ISUID) ? '\01' : '\0';
@@ -822,6 +883,9 @@ char *to;
 public void file_link(from, to)
 char *from;
 char *to;
+#ifdef __WATCOMC__
+{}
+#else
 {
 	/* Link file `from' into `to' */
 
@@ -839,7 +903,7 @@ char *to;
 		break;
 	}
 }
-
+#endif
 public void file_mkdir(path)
 char *path;
 {
@@ -1153,6 +1217,9 @@ int uid;
 	struct passwd *pp;
 	extern struct passwd *getpwuid();
 
+#ifdef __WATCOMC__
+	return makestr(str, 0);
+#else
 	pp = getpwuid(uid);
 	if (pp == (struct passwd *) 0)
 		sprintf(str, "%d", uid);		/* Not available: use UID */
@@ -1160,6 +1227,7 @@ int uid;
 		strcpy(str, pp->pw_name);		/* Available: fetch login name */
 	
 	return makestr(str, strlen(str));
+#endif
 }
 
 public char *file_group(gid)
@@ -1174,6 +1242,9 @@ int gid;
 	struct group *gp;
 	extern struct group *getgrgid();
 
+#ifdef __WATCOMC__
+	return makestr(str, 0);
+#else
 	gp = getgrgid(gid);
 	if (gp == (struct group *) 0)
 		sprintf(str, "%d", gid);		/* Not available: use GID */
@@ -1181,6 +1252,7 @@ int gid;
 		strcpy(str, gp->gr_name);		/* Available: fetch login name */
 	
 	return makestr(str, strlen(str));
+#endif
 }
 
 public char *file_def(file)

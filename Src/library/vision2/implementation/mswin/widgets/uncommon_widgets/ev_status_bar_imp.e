@@ -222,9 +222,10 @@ feature -- Implementation
 			until
 				clist.after
 			loop
-				set_text_part (clist.index - 1, clist.item.text)
-				if clist.item.pixmap /= Void then
-					set_child_owner_draw (clist.item)
+				if clist.item.pixmap_imp /= Void then
+					set_child_owner_draw (clist.item, True)
+				else
+					set_child_owner_draw (clist.item, False)
 				end
 				clist.forth
 			end
@@ -233,27 +234,33 @@ feature -- Implementation
 			end
 		end
 
-	set_child_owner_draw (current_child: EV_STATUS_BAR_ITEM_IMP) is
+	set_child_owner_draw (current_child: EV_STATUS_BAR_ITEM_IMP; bool: BOOLEAN) is
 			-- Set `current_child' to ownerdrawn.
 			-- The child will be drawn by the status bar when on_wmdraw is recieved
 			-- by the status bar. See also EV_INTERNAL_SILLY_WIDGET_IMP.
 		local
 			counter: INTEGER
 			child_found: BOOLEAN
+			clist: ARRAYED_LIST [EV_STATUS_BAR_ITEM_IMP]
 		do
 			from
 				counter := 0
-				ev_children.start
+				clist := ev_children
+				clist.start
 			until
-				counter = ev_children.count or child_found
+				counter = clist.count or child_found
 			loop
-				if equal (ev_children.item, current_child) then
-					set_part_owner_drawn (counter, 0 ,0)
+				if equal (clist.item, current_child) then
+					if bool then
+						set_part_owner_drawn (counter, 0 ,0)
+					else
+						set_text_part (clist.index - 1, clist.item.text)
+					end
 					child_found := True
 				end
 				counter := counter + 1
 				if not child_found then
-					ev_children.forth
+					clist.forth
 				end
 			end
 		end
@@ -283,6 +290,7 @@ feature {EV_INTERNAL_SILLY_WINDOW_IMP} -- Implementation
 			item_id: INTEGER
 			current_item: EV_STATUS_BAR_ITEM_IMP
 			pixmap : EV_PIXMAP_IMP
+			P: EV_PIXMAP
 			bitmap: WEL_BITMAP
 			rect2: WEL_RECT
 		do
@@ -290,15 +298,17 @@ feature {EV_INTERNAL_SILLY_WINDOW_IMP} -- Implementation
 			rect := struct.rect_item
 			item_id := struct.item_id + 1
 			current_item := ev_children @ item_id
-			pixmap ?= current_item.pixmap.implementation
-			bitmap := pixmap.internal_bitmap
-			dc.draw_bitmap (bitmap, rect.left + 1, rect.top + 1, bitmap.width, bitmap.height)
-				-- Draw `bitmap'
-			create rect2.make (bitmap.width + rect.left + 2, vertical_offset, rect.width + rect.left, vertical_offset + rect.height)
-			dc.set_background_transparent
-			dc.draw_text (current_item.text, rect2, Dt_left)
-				-- Draw text associated with status bar item.
-		end
+			if current_item.pixmap /= Void then
+				pixmap ?= current_item.pixmap.implementation
+				bitmap := pixmap.internal_bitmap
+				dc.draw_bitmap (bitmap, rect.left + 1, rect.top + 1, bitmap.width, bitmap.height)
+					-- Draw `bitmap'
+				create rect2.make (bitmap.width + rect.left + 2, vertical_offset, rect.width + rect.left, vertical_offset + rect.height)
+				dc.set_background_transparent
+				dc.draw_text (current_item.text, rect2, Dt_left)
+					-- Draw text associated with status bar item.
+			end
+		end	
 
 feature {NONE} -- WEL Implementation
 

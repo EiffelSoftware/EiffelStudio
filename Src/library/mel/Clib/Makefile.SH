@@ -50,7 +50,7 @@ libMel.a: $(OBJECTS)
 
 libMel.so: $(OBJECTS)
 	$(RM) $@
-	$(SHAREDLINK) $(LDSHAREDFLAGS) -o $@ $(OBJECTS)
+	$(SHAREDLINK) $(LDSHAREDFLAGS) $@ $(OBJECTS)
 
 #libmtMel.a
 
@@ -103,7 +103,7 @@ libmtMel.a: $(MT_OBJECTS)
 
 libmtMel.so: $(MT_OBJECTS)
 	$(RM) $@
-	$(SHAREDLINK) $(LDSHAREDFLAGS) -o $@ $(MT_OBJECTS)
+	$(SHAREDLINK) $(LDSHAREDFLAGS) $@ $(MT_OBJECTS)
 
 ALL_OBJECTS= $(OBJECTS) $(MT_OBJECTS)
 

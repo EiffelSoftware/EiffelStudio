@@ -38,7 +38,7 @@ feature -- Access
 	not_external_docking_enabled: BOOLEAN
 			-- Attribute used for `is_externally_dockable'. We must implement
 			-- `is_externally_dockable' this way as we have no easy solution to
-			-- assign `True' to `is_externally_dockable'
+			-- assign `True' to `is_externally_dockable'.
 			
 	is_external_docking_enabled: BOOLEAN is
 			-- Is `Current' able to be docked into an EV_DOCKABLE_DIALOG
@@ -46,6 +46,21 @@ feature -- Access
 			-- of the transport?
 		do
 			Result := not not_external_docking_enabled
+		end
+		
+	not_is_external_docking_relative: BOOLEAN
+			-- Will dockable dialog displayed when `Current' is docked externally
+			-- be displayed relative to parent window of `Current'?
+			-- Otherwise displayed as a standard window.
+			-- Internal reversed value of `is_external_docking_relative' as we cannot
+			-- easily initialize a BOOLE to True in this case.
+			
+	is_external_docking_relative: BOOLEAN is
+			-- Will dockable dialog displayed when `Current' is docked externally
+			-- be displayed relative to parent window of `Current'?
+			-- Otherwise displayed as a standard window.
+		do
+			Result := not not_is_external_docking_relative
 		end
 
 feature -- Status report
@@ -198,6 +213,30 @@ feature -- Status setting
 		ensure
 			not_externally_dockable: not is_external_docking_enabled
 		end
+		
+	enable_external_docking_relative is
+			-- Assign `True' to `is_external_docking_relative', ensuring that
+			-- a dockable dialog displayed when `Current' is docked externally
+			-- is displayed relative to the top level window.
+		require
+			external_docking_enabled: is_external_docking_enabled
+		do
+			not_is_external_docking_relative := False
+		ensure
+			external_docking_not_relative: is_external_docking_relative
+		end
+		
+	disable_external_docking_relative is
+			-- Assign `False' to `is_external_docking_relative', ensuring that
+			-- a dockable dialog displayed when `Current' is docked externally
+			-- is displayed as a standard window.
+		require
+			external_docking_enabled: is_external_docking_enabled
+		do
+			not_is_external_docking_relative := True
+		ensure
+			external_docking_not_relative: not is_external_docking_relative
+		end	
 
 feature -- Basic operations
 			
@@ -335,7 +374,11 @@ feature -- Basic operations
 						dialog_imp.enable_closeable
 						dockable_dialog_target.close_request_actions.extend (agent close_dockable_dialog (dockable_dialog_target))
 						move_dialog_to_pointer (dockable_dialog_target)
-						dockable_dialog_target.show_relative_to_window (original_widget_window)
+						if source_being_docked.is_external_docking_relative then
+							dockable_dialog_target.show_relative_to_window (original_widget_window)
+						else
+							dockable_dialog_target.show
+						end
 						target_container_interface ?= dockable_dialog_target
 					else
 							-- As there is no valid target, and the transport began in an EV_DRAGABLE_DIALOG

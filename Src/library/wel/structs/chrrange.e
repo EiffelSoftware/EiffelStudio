@@ -15,6 +15,7 @@ inherit
 
 creation
 	make,
+	make_by_pointer,
 	make_empty
 
 feature {NONE} -- Initialization
@@ -24,11 +25,10 @@ feature {NONE} -- Initialization
 			-- `minimum', with `a_maximum', `a_minimum'
 		require
 			positive_minimum: a_minimum >= 0
-			valid_values: a_minimum <= a_maximum
+			valid_range: a_minimum <= a_maximum
 		do
 			structure_make
-			set_maximum (a_maximum)
-			set_minimum (a_minimum)
+			set_range (a_minimum, a_maximum)
 		ensure
 			minimum_set: minimum = a_minimum
 			maximum_set: maximum = a_maximum
@@ -59,24 +59,17 @@ feature -- Access
 
 feature -- Element change
 
-	set_minimum (a_minimum: INTEGER) is
-			-- Set `minimum' with `a_minimum'.
+	set_range (a_minimum, a_maximum: INTEGER) is
+			-- Set `minimum' with `a_minimum' and
+			-- `maximum' with `a_maximum'
 		require
 			positive_minimum: a_minimum >= 0
-			valid_minimum: a_minimum <= maximum
+			valid_range: a_minimum <= a_maximum
 		do
 			cwel_charrange_set_cpmin (item, a_minimum)
-		ensure
-			minimum_set: minimum = a_minimum
-		end
-
-	set_maximum (a_maximum: INTEGER) is
-			-- Set `maximum' with `a_maximum'.
-		require
-			valid_maximum: a_maximum >= minimum
-		do
 			cwel_charrange_set_cpmax (item, a_maximum)
 		ensure
+			minimum_set: minimum = a_minimum
 			maximum_set: maximum = a_maximum
 		end
 

@@ -22,7 +22,8 @@ inherit
 
 create
 	default_create,
-	make_with_text
+	make_with_text,
+	make_for_test
 
 feature {NONE} -- Initialization
 
@@ -60,6 +61,9 @@ end -- class EV_PASSWORD_FIELD
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/04/14 16:53:18  brendel
+--| Added make_for_test.
+--|
 --| Revision 1.8  2000/04/07 01:11:28  brendel
 --| Revised.
 --|

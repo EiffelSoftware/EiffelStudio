@@ -10,7 +10,8 @@ inherit
 	ICONED_COMMAND;
 	SHARED_DEBUG;
 	SHARED_RESCUE_STATUS;
-	SHARED_FORMAT_TABLES
+	SHARED_FORMAT_TABLES;
+	SHARED_RESOURCES
 
 creation
 
@@ -181,7 +182,9 @@ feature {NONE}
 				elseif compilation_allowed then
 					if Lace.file_name /= Void then
 						confirm_and_compile (argument);
-						project_tool.raise
+						if resources.get_boolean (r_Raise_on_error, false) then
+							project_tool.raise
+						end
 					elseif argument = Void then
 						system_tool.display;	
 						load_default_ace;	

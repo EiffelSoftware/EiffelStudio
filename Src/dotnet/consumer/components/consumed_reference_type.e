@@ -25,6 +25,9 @@ feature {NONE} -- Initialization
 			valid_name: not n.is_empty
 			valid_id: id > 0
 		do
+			if n.item (n.count) = '&' then
+				n.keep_head (n.count - 1)
+			end
 			name := n
 			assembly_id := id
 		ensure

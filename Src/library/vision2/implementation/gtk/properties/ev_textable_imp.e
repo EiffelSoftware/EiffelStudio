@@ -32,12 +32,13 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	text: STRING is
+			-- Text of the label
 		local
 			p: POINTER
 		do
 			p := text_label
 			C.gtk_label_get (text_label, $p)
-			if p /= Void then
+			if p /= Default_pointer then
 				create Result.make_from_c (p)
 				if Result.empty then
 					Result := Void
@@ -89,7 +90,7 @@ feature -- Element change
 feature {NONE} -- Implementation
 	
 	text_label: POINTER
-				-- GtkLabel containing `text'.
+			-- GtkLabel containing `text'.
 
 feature {EV_ANY_I} -- Implementation
 
@@ -121,6 +122,9 @@ end -- class EV_TEXTABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.24  2000/03/03 20:09:11  king
+--| Corrected incorrect equivalence of pointer to void
+--|
 --| Revision 1.23  2000/03/01 03:17:08  oconnor
 --| reverted last commit which was in error
 --|

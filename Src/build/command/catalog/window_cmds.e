@@ -1,3 +1,8 @@
+indexing
+	description: "Command page representing window commands."
+	Id: "$Id$"
+	Date: "$Date$"
+	Revision: "$Revision$"
 
 class WINDOW_CMDS 
 
@@ -15,29 +20,29 @@ feature {NONE}
 	symbol: PIXMAP is
 		do
 			Result := Pixmaps.windows_pixmap
-		end;
+		end
 
 	selected_symbol: PIXMAP is
 		do
 			Result := Pixmaps.selected_windows_pixmap
-		end;
+		end
 
 	set_focus_string is
 		do
 			button.set_focus_string (Focus_labels.window_label)
 		end
 
-	make is 
+	make (cmd_catalog: COMMAND_CATALOG) is 
 		do
-			old_make (command_catalog)
+			old_make (cmd_catalog)
 			reset_commands
-		end;
+		end
 
 	reset_commands is
 		do
-			extend (popup_cmd);
-			extend (popdown_cmd);
-		end;
+			extend (popup_cmd)
+			extend (popdown_cmd)
+		end
 
 
 end -- class WINDOW_CMDS

@@ -14,6 +14,8 @@ inherit
 			build
 		end
 		
+	GB_SHARED_SYSTEM_STATUS
+		
 	GB_CONSTANTS
 
 create
@@ -38,6 +40,10 @@ feature -- Basic Operation
 			-- User has clicked next, go to next step.
 		do
 			Precursor
+				-- Now we must set the project location into the
+				-- project settings.
+			project_settings.set_project_location (directory.text)
+			
 			proceed_with_new_state(create {WIZARD_SECOND_STATE}.make(wizard_information))
 		end
 
@@ -56,6 +62,12 @@ feature {NONE} -- Implementation
 		do
 			title.set_text ("Project location")
 			subtitle.set_text ("Select project location.")
+		end
+		
+	project_settings: GB_PROJECT_SETTINGS is
+			--
+		do
+			Result := system_status.current_project_settings
 		end
 		
 end -- class wizard_first_state

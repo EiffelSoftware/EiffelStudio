@@ -1,0 +1,109 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>Command-line Tools</title>
+<link rev="made" href="mailto:webmaster@eiffel.com">
+<link rel="stylesheet" href="../styles/tech.css" type="text/css">
+<meta name="Microsoft Border" content="t, default">
+</head>
+
+<body><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><table border="0" cellspacing="0" cellpadding="0" width="100%">
+  <tr>
+    <td valign="top" bgcolor="#000063" width="291"><b><font face="Arial" size="4" color="#FFFFFF">Interactive<br>
+      Software Engineering</font></b></td>
+    <td valign="top" bgcolor="#000063" width="720"><b><font face="Arial" size="6" color="#FFFFCC">Command-line Tools</font></b></td>
+  </tr>
+  <tr>
+    <td colspan="2" valign="top" width="100%">
+<p align="right"><nobr>[&nbsp;<a href="../index.html">Home</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="index.html">Technology&nbsp;Papers</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../install.html">Installation&nbsp;Notes</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../Eiffel/index.html">About&nbsp;Eiffel</a>&nbsp;]</nobr>
+    </td>
+  </tr>
+</table></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top"><table cols="1" cellpadding="5" cellspacing="0" border="0">
+<tr><td>
+<h1>Eiffel batch compiler - es4</h1>
+    <pre>Usage:
+	es4 [-help | -version | -batch -freeze | -finalize [-keep] | -precompile |
+	-loop | -quick_melt | -clients [-filter filtername] class |
+	-suppliers [-filter filtername] class |
+	-flatshort [-filter filtername] [-all | -all_and_parents | class] |
+	-flat [-filter filtername] [-all | -all_and_parents | class] |
+	-short [-filter filtername] [-all | -all_and_parents | class] | 
+	-filter filtername [-all | class] |
+	-descendants [-filter filtername] class |
+	-ancestors [-filter filtername] class |
+	-aversions [-filter filtername] class feature |
+	-dversions [-filter filtername] class feature |
+	-implementers [-filter filtername] class feature |
+	-callers [-filter filtername] [-show_all] class feature |
+	[-stop] [-ace Ace] [-project Project_file_name]|
+	[-project_path Project_directory_path] [-file File]]
+
+Options:
+	default (no option): recompile the system.
+
+	-ace: specify the Ace file.
+	-ancestors: show the ancestors of a class.
+	-aversions: show the ancestor versions of a feature.
+	-batch: launch the compilation without user request.
+	-callers: show the callers of a feature.
+	-clients: show the clients of a class.
+	-descendants: show the descendants of a class.
+	-dversions: show the descendant versions of a feature.
+	-file: save the output to a file.
+	-filter: show a filtered form (troff, ...) of the class text.
+	-finalize: finalize the system (discard assertions by default).
+	-flat: show the flat form of a class.
+	-flatshort: show the flat-short form of a class.
+	-freeze: freeze the system.
+	-help: show this help message.
+	-implementers: show the classes implementing a feature.
+	-loop: run es4 as a command loop.
+	-precompile: precompile the system.
+	-project: specify the project file to load.
+	-project_path: specify the compilation directory.
+	-quick melt: quick melt the system.
+	-short: show the short form of a class.
+	-stop: stop on error.
+	-suppliers: show the suppliers of a class.
+	-version: show compiler version number.
+</pre>
+For example:
+    <ul>
+      <li>to freeze a project from scratch: es4 -project_path /your_path -ace my_ace.ace</li>
+      <li>to freeze an existing project: es4 -project your_project.epr -freeze</li>
+      <li>to finalize a project from scratch: es4 -finalize -project_path /your_path -ace my_ace.ace</li>
+    </ul>
+
+<p>&nbsp;</p>
+
+<h1>finish_freezing</h1>
+
+<p>On Unix there is no option for finish_freezing, on Windows they are the following:
+    <ul>
+      <li><b>-location</b> location_path: enables to launch `finish_freezing' on a
+    remote directory.</li>
+      <li><b>-silent</b>: does not prompt the user to tell him if the compilation
+    either succeeded or failed.</li>
+    </ul>
+<p>&nbsp;</p>
+
+
+<h1 align="left"><a name="batch">Batch compilation</a></h1>
+<p>Since the introduction of ISE EiffelBench 4.3, you can do some batch
+processing on Windows. Until then it was only possible on Unix platforms. With
+the introduction of ISE EiffelBench 4.5 new options has been added (see above
+for a list of options).</p>
+<p>In order to launch a compilation which can either be successful or
+unsuccessful you have to specify the `-batch' switch in the `es4' command line,
+otherwise the Eiffel compilation will be blocked. When compiling</p>
+<h2>Unix</h2>
+<p>&nbsp;</p>
+<h2>Windows</h2>
+
+  </td></tr></table>&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table></body>
+
+</html>

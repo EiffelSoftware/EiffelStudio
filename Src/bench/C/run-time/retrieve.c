@@ -114,6 +114,10 @@ int old_retrieve_read_with_compression (void);
 
 int (*retrieve_read_func)(void) = retrieve_read_with_compression;
 int (*char_read_func)(char *, int) = char_read;
+int (*old_retrieve_read_func)(void) = retrieve_read_with_compression;
+int (*old_char_read_func)(char *, int) = char_read;
+rt_private long old_buffer_size = RETRIEVE_BUFFER_SIZE;
+rt_private char old_rt_kind;			/* Kind of storable */
 
 /*
  * Convenience functions
@@ -129,6 +133,14 @@ rt_private int stream_buffer_size;
  
 rt_public void rt_init_retrieve(int (*retrieve_function) (void), int (*char_read_function)(char *, int), int buf_size)
 {
+		/* Storing the previous state of the retrieving operation before the new one start */
+	old_retrieve_read_func = retrieve_read_func;
+	old_char_read_func = char_read_func;
+	old_buffer_size = buffer_size;
+	old_rt_kind = rt_kind;
+
+		/* Set the retrieving functions which are going to be used for the current retrieving
+		 * operation */
     retrieve_read_func = retrieve_function;
 	char_read_func = char_read_function;
 	if (buf_size)
@@ -138,9 +150,10 @@ rt_public void rt_init_retrieve(int (*retrieve_function) (void), int (*char_read
 /* Reset retrieve function pointers and globals to their default values */
  
 rt_public void rt_reset_retrieve(void) {
-    retrieve_read_func = retrieve_read_with_compression;
-	char_read_func = char_read;
-	buffer_size = RETRIEVE_BUFFER_SIZE;
+    retrieve_read_func = old_retrieve_read_func;
+	char_read_func = old_char_read_func;
+	buffer_size = old_buffer_size;
+	rt_kind = old_rt_kind;
 }
 
 /*
@@ -151,7 +164,7 @@ rt_public char *eretrieve(EIF_INTEGER file_desc)
 {
 	EIF_GET_CONTEXT
 	r_fides = file_desc;
-
+	
 	return portable_retrieve(char_read);
 	EIF_END_GET_CONTEXT
 }
@@ -214,18 +227,18 @@ rt_public char *portable_retrieve(int (*char_read_function)(char *, int))
 			rt_kind = GENERAL_STORE;
 			break;
 		case INDEPENDENT_STORE_3_2:		/* New Independent store */
-			rt_kind = INDEPENDENT_STORE;
 			rt_init_retrieve(retrieve_read, char_read_function, 4096);
+			rt_kind = INDEPENDENT_STORE;
 			independent_retrieve_init (4096, 1);
 			break;
 		case INDEPENDENT_STORE_4_0:		/* New Independent store */
-			rt_kind = INDEPENDENT_STORE;
 			rt_init_retrieve(retrieve_read_with_compression, char_read_function, 4096);
+			rt_kind = INDEPENDENT_STORE;
 			independent_retrieve_init (4096, 1);
 			break;
 		case INDEPENDENT_STORE_4_3:		/* New Independent store */
-			rt_kind = INDEPENDENT_STORE;
 			rt_init_retrieve(retrieve_read_with_compression, char_read_function, RETRIEVE_BUFFER_SIZE);
+			rt_kind = INDEPENDENT_STORE;
 			independent_retrieve_init (RETRIEVE_BUFFER_SIZE, 0);
 			break;
 		default: 			/* If not one of the above, error!! */

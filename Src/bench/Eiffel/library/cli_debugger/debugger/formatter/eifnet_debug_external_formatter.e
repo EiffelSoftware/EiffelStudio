@@ -1,5 +1,5 @@
 indexing
-	description: "Format data coming from external types"
+	description: "Format data coming from external types, handle specific case"
 	author: "$Author$"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,50 +17,17 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	SHARED_EIFNET_DEBUG_VALUE_FORMATTER
+		export
+			{NONE} all
+		end		
 
 feature -- Conversion String
 
 	system_string_value_to_string (v: ICOR_DEBUG_VALUE): STRING is
 		do
-			Result := Eifnet_debug_value_formatter.icor_debug_value_to_string (v)
-		end
-
-feature -- get member data
-
-	string_from (v: ICOR_DEBUG_VALUE; token: INTEGER): STRING is
-		require
-			v_not_void: v /= Void
-		local
-			l_icd_value: ICOR_DEBUG_VALUE
-			l_value_info: EIFNET_DEBUG_VALUE_INFO
-			l_icd_obj_value: ICOR_DEBUG_OBJECT_VALUE
-		do
-			l_icd_value := v
-			create l_value_info.make (l_icd_value)
-
-			l_icd_obj_value := l_value_info.interface_debug_object_value
-			if l_icd_obj_value /= Void then
-				l_icd_value := l_icd_obj_value.get_field_value (l_icd_obj_value.get_class, token)
-				if l_icd_value /= Void then
-					Result := system_string_value_to_string (l_icd_value)
---					Result := Eifnet_debug_value_formatter.icor_debug_value_to_string (l_icd_value)
-				end
-			end	
-		end
-
-	integer_from (v: ICOR_DEBUG_VALUE; token: INTEGER): INTEGER is
-		local
-			l_icd_value: ICOR_DEBUG_VALUE
-			l_value_info: EIFNET_DEBUG_VALUE_INFO
-			l_icd_obj_value: ICOR_DEBUG_OBJECT_VALUE
-		do
-			l_icd_value := v
-			create l_value_info.make (l_icd_value)
-			l_icd_obj_value := l_value_info.interface_debug_object_value
-			if l_icd_obj_value /= Void then
-				l_icd_value := l_icd_obj_value.get_field_value (l_icd_obj_value.get_class, token)
-				Result := Eifnet_debug_value_formatter.icor_debug_value_to_integer (l_icd_value)
-			end	
+			Result := Edv_formatter.icor_debug_value_to_string (v)
 		end
 
 feature -- StringBuilder
@@ -79,7 +46,7 @@ feature -- exception
 			l_str: STRING
 		do
 			create Result.make (0)
-			l_str := string_from (v, token_Exception__className) 
+			l_str := classname_from_exception (v)
 			if l_str /= Void then
 				Result.append_string (l_str)
 				Result.append_string (" :: ")
@@ -90,18 +57,50 @@ feature -- exception
 				Result.append_string (l_str)
 			end
 		end
-		
-feature {EIFNET_DEBUGGER} -- Implementation
 
-	Eifnet_debug_value_formatter: EIFNET_DEBUG_VALUE_FORMATTER is
-		once
-			create Result		
+	classname_from_exception (v: ICOR_DEBUG_VALUE): STRING is
+		do
+			Result := string_from (v, token_Exception__className) 
+		end
+
+feature {NONE} -- get member data
+
+	string_from (v: ICOR_DEBUG_VALUE; token: INTEGER): STRING is
+		require
+			v_not_void: v /= Void
+		local
+			l_icd_value: ICOR_DEBUG_VALUE
+			l_value_info: EIFNET_DEBUG_VALUE_INFO
+			l_icd_obj_value: ICOR_DEBUG_OBJECT_VALUE
+		do
+			l_icd_value := v
+			create l_value_info.make (l_icd_value)
+
+			l_icd_obj_value := l_value_info.interface_debug_object_value
+			if l_icd_obj_value /= Void then
+				l_icd_value := l_icd_obj_value.get_field_value (l_icd_obj_value.get_class, token)
+				if l_icd_value /= Void then
+					Result := system_string_value_to_string (l_icd_value)
+				end
+			end	
+		end
+
+	integer_from (v: ICOR_DEBUG_VALUE; token: INTEGER): INTEGER is
+		local
+			l_icd_value: ICOR_DEBUG_VALUE
+			l_value_info: EIFNET_DEBUG_VALUE_INFO
+			l_icd_obj_value: ICOR_DEBUG_OBJECT_VALUE
+		do
+			l_icd_value := v
+			create l_value_info.make (l_icd_value)
+			l_icd_obj_value := l_value_info.interface_debug_object_value
+			if l_icd_obj_value /= Void then
+				l_icd_value := l_icd_obj_value.get_field_value (l_icd_obj_value.get_class, token)
+				Result := Edv_formatter.icor_debug_value_to_integer (l_icd_value)
+			end	
 		end
 		
-	Il_environment: IL_ENVIRONMENT is
-		once
-			create Result.make (Eiffel_system.System.clr_runtime_version)
-		end
+feature {EIFNET_DEBUGGER} -- Restricted access
 		
 	token_StringBuilder_m_StringValue: INTEGER is
 			-- Attribute token of System.StringBuilder::m_StringValue	
@@ -145,6 +144,25 @@ feature {EIFNET_DEBUGGER} -- Implementation
 			end
 		end	
 
+	token_Exception_get_Message: INTEGER is
+			-- Attribute token of System.Exception::get_Message
+		once
+			if il_environment.version.is_equal (Il_environment.v1_2) then		
+				Result := token_exception_get_Message_v1_2
+			elseif il_environment.version.is_equal (Il_environment.v1_1) then		
+				Result := token_exception_get_Message_v1_1
+			elseif il_environment.version.is_equal (Il_environment.v1_0) then			
+				Result := token_exception_get_Message_v1_0
+			end
+		end	
+		
+feature {NONE} -- Implementation
+		
+	Il_environment: IL_ENVIRONMENT is
+		once
+			create Result.make (Eiffel_system.System.clr_runtime_version)
+		end
+
 feature {NONE} -- Constants
 
 	token_StringBuilder_m_StringValue_v1_1: INTEGER is 0x0400001B
@@ -162,17 +180,28 @@ feature {NONE} -- Constants
 	token_Exception_ToString_v1_0: INTEGER is 0x06000182
 			--| v1.0 => System.Exception::_message: string :: 0x06000182 |--	
 			
-	token_exception_tostring_v1_1: INTEGER is 0x06000192			
+	token_Exception_ToString_v1_1: INTEGER is 0x06000192			
 			--| v1.1 => System.Exception::_message: string :: 0x06000192 |--	
 
-	token_exception_tostring_v1_2: INTEGER is 0x06000212			
+	token_Exception_ToString_v1_2: INTEGER is 0x06000212			
 			--| v1.2 => System.Exception::_message: string :: 0x06000212 |--	
+
+	token_Exception_get_Message_v1_2: INTEGER is 0x06000185	--| FIXME: JFIAT: please put real data
+			--| v1.2 => System.Exception::get_Message(): string :: 0x |--
+			
+	token_Exception_get_Message_v1_1: INTEGER is 0x06000185			
+			--| v1.1 => System.Exception::get_Message(): string :: 0x06000185 |--	
+
+	token_Exception_get_Message_v1_0: INTEGER is 0x06000176		
+			--| v1.0 => System.Exception::get_Message(): string :: 0x06000176 |--
+
+	token_Exception_GetClassName_v1_1: INTEGER is 0x06000186			
+			--| v1.1 => System.Exception::GetClassName: string :: 0x06000186 |--
 			
 	token_Exception__className_v1_1: INTEGER is 0x0400001D
 			--| v1.0/1.1 => System.Exception::_className: string :: 0x0400001D |--	
 
 	token_Exception__className_v1_2: INTEGER is 0x04000060
 			--| v1.2 => System.Exception::_className: string :: 0x04000060 |--	
-
 			
 end -- class EIFNET_DEBUG_EXTERNAL_FORMATTER

@@ -37,7 +37,7 @@ echo %DEL% /s *.bak >> cleanup.bat
 echo %DEL% /s *.pdb >> cleanup.bat
 echo %DEL% * >> cleanup.bat
 
-rem Precompiling EiffelBase
+echo Precompiling EiffelBase
 cd precomp\spec\windows\base
 if exist EIFGEN %RM% EIFGEN
 %EC% -precompile
@@ -50,7 +50,7 @@ if .%2. == .wel. goto wel
 if .%2. == .vision2. goto wel
 goto END
 :wel
-rem Precompiling WEL
+echo Precompiling WEL
 cd ..\..\..\wel
 %RM% EIFGEN
 %EC% -precompile
@@ -62,7 +62,7 @@ call cleanup.bat
 if .%2. == .vision2. goto vision2
 goto END
 :vision2
-rem Precompiling EiffelVision2
+echo Precompiling EiffelVision2
 cd ..\..\..\vision2
 %RM% EIFGEN
 %EC% -precompile

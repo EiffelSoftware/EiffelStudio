@@ -26,7 +26,7 @@ feature -- Initialization
 	make (a_scrolled_text: TABBED_TEXT; man: BOOLEAN; oui_parent: COMPOSITE) is
 		do
 			make_text (a_scrolled_text, man, oui_parent);
-			tab_length := 8
+			tab_length := 6
 			private_text := ""
 		end
 
@@ -40,41 +40,52 @@ feature -- Initialization
 				if width = 0 then
 					set_width (200)
 				end
+
 				if height = 0  then 
 					if private_font /= Void then
 						fw ?= font.implementation
 						set_height (fw.string_height (Current, "I"))
 					end
 				end
+
 				resize_for_shell
+
 				wc ?= parent
 				wel_make (wc, text, x, y, width, height, id_default)
+
 				set_control_options
 				set_text_limit (131072)	-- 131072 = 128 * 1024
 				set_tab_length (tab_length)
+
 				if private_background_color /= Void then
 					set_background_color (private_background_color)
 				end
+
 				enable_standard_notifications
 				if private_font /= Void then
 					set_font (private_font)
 				end
+
 				set_text (private_text)
 				if maximum_size > 0 then
 					set_maximum_size (maximum_size)
 				end
+
 				set_cursor_position (private_cursor_position)
 				if margin_width + margin_height > 0 then
 					set_margins (margin_width, margin_height)
 				end
+
 				if is_multi_line_mode then
 					set_top_character_position (private_top_character_position)
 				end
+
 				if not managed then
 					wel_hide
 				elseif parent.shown then
 					shown := true
 				end
+
 				if private_is_read_only then
 					set_read_only
 				end
@@ -85,10 +96,13 @@ feature -- Status setting
 
 	set_tab_length (new_length: INTEGER) is
 			-- Set `tab_length' to `new_length'.
+		local
+			fw: FONT_WINDOWS
 		do
 			tab_length := new_length
 			if exists then
-				set_tab_stops (tab_length * 124)
+				fw ?= font.implementation
+				set_tab_stops (tab_length * fw.average_width * 10)
 				invalidate
 			end
 		end

@@ -98,7 +98,6 @@ feature -- Basic operations
 		local
 			a_date_time: DATE_TIME
 			a_string: STRING
-			an_integer, i: INTEGER
 		do
 			create a_date_time.make_now
 			a_string := clone (type_title.item (a_type))

@@ -277,8 +277,6 @@ feature {NONE} -- Implementation
 			-- Set `last_created_header_file_name' with header file name for `a_generator'.
 		require
 			non_void_writer: transient_writer /= Void
-		local
-			an_eiffel_writer: WIZARD_WRITER_EIFFEL_CLASS
 		do
 			create_directory_prefix (Common)
 			add_subdirectory (Interfaces)
@@ -290,8 +288,6 @@ feature {NONE} -- Implementation
 			-- Set `last_created_header_file_name' with header file name for `a_generator'.
 		require
 			non_void_writer: transient_writer /= Void
-		local
-			an_eiffel_writer: WIZARD_WRITER_EIFFEL_CLASS
 		do
 			create_directory_prefix (Common)
 			add_subdirectory (Structures)

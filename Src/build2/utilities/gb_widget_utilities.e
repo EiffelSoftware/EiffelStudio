@@ -265,6 +265,48 @@ feature -- Basic operations
 			Result_not_void: Result /= Void
 		end
 		
+	select_named_combo_item (combo_box: EV_COMBO_BOX; a_text: STRING) is
+			-- Ensure item in `combo_box' with `text' matching `a_text' is
+			-- selected. Case insensitive.
+		require
+			combo_box_not_void: combo_box /= Void
+			a_text_not_void: a_text /= Void
+		local
+			selected: BOOLEAN
+			lower_text: STRING
+		do
+			lower_text := a_text.as_lower
+			from
+				combo_box.start
+			until
+				combo_box.off or selected
+			loop
+				if combo_box.item.text.as_lower.is_equal (lower_text) then
+					combo_box.item.enable_select
+				end
+				combo_box.forth
+			end
+		end
+		
+	list_item_with_matching_text (item_list: EV_LIST_ITEM_LIST; a_text:STRING): EV_LIST_ITEM is
+			-- `Result' is item contained in `item_list' with
+			-- `text' matching `a_text', or `Void' if none.
+		local
+			lower_text: STRING
+		do
+			lower_text := a_text.as_lower
+			from
+				item_list.start
+			until
+				item_list.off or Result /= Void
+			loop
+				if item_list.item.text.as_lower.is_equal (lower_text) then
+					Result := item_list.item
+				end
+				item_list.forth
+			end
+		end
+		
 
 feature {NONE} -- Implementation
 

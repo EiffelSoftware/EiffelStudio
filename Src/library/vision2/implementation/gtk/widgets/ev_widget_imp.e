@@ -15,9 +15,31 @@ inherit
         EV_WIDGET_I
         
         EV_GTK_EXTERNALS
+
+	EV_GTK_TYPES_EXTERNALS
+	EV_GTK_WIDGETS_EXTERNALS
+	EV_GTK_GENERAL_EXTERNALS
+
         EV_GTK_CONSTANTS
 	
 
+feature -- Access
+
+	background_color: EV_COLOR_IMP is
+			-- Color used for the background of the widget
+		do
+		end
+
+	foreground_color: EV_COLOR_IMP is
+			-- Color used for the foreground of the widget,
+			-- usually the text.
+		do
+		end
+
+	parent_imp: EV_CONTAINER_IMP
+			-- Parent container of this widget. The same than
+			-- parent but with a different type.
+	
 feature -- Status report
 
 	destroyed: BOOLEAN is
@@ -72,23 +94,35 @@ feature -- Status setting
 		do
 			gtk_widget_set_sensitive (widget, not flag)
 		end
+
+	set_background_color (color: EV_COLOR) is
+			-- Make `color' the new `background_color'
+		do
+			check
+				not_yet_implemented: False
+			end
+		end
+
+	set_foreground_color (color: EV_COLOR) is
+			-- Make `color' the new `foreground_color'
+		do
+			check
+				not_yet_implemented: False
+			end
+		end
 	
 feature -- Measurement
 	
 	x: INTEGER is
 			-- Horizontal position relative to parent
 		do
-                        check
-                                not_yet_implemented: False
-                        end
+			Result := c_gtk_widget_x (widget) 
 		end
 
 	y: INTEGER is
 			-- Vertical position relative to parent
 		do
-                        check
-                                not_yet_implemented: False
-                        end
+			Result := c_gtk_widget_y (widget) 
 		end	
 
 	width: INTEGER is
@@ -103,25 +137,7 @@ feature -- Measurement
                         Result := c_gtk_widget_height (widget)
 		end
 	
-        maximum_width: INTEGER is
-                        -- Maximum width that application wishes widget
-                        -- instance to have
- 		do
-                        check
-                                not_yet_implemented: False
-                        end
-		end	
-	
-	maximum_height: INTEGER is
-                        -- Maximum height that application wishes widget
-                        -- instance to have
- 		do
-                        check
-                                not_yet_implemented: False
-                        end
-		end	
-
-	minimum_width: INTEGER is
+ 	minimum_width: INTEGER is
 			-- Minimum width of widget
 		do
                         Result := c_gtk_widget_minimum_width (widget)
@@ -154,22 +170,6 @@ feature -- Resizing
                         c_gtk_widget_set_size (widget, -1, new_height)
 		end
 
-	set_maximum_height (max_height: INTEGER) is
-                        -- Set `maximum_height' to `max_height'.
-		do
-                        check
-                                not_yet_implemented: False
-                        end		
-		end
-
-        set_maximum_width (max_width: INTEGER) is
-                        -- Set `maximum_width' to `max_width'.
-		do
-                        check
-                                not_yet_implemented: False
-                        end		
-		end
-
         set_minimum_size (min_width, min_height: INTEGER) is
                         -- Set `minimum_width' to `min_width'.
 			-- Set `minimum__height' to `min_height'.
@@ -189,13 +189,11 @@ feature -- Resizing
 			gtk_widget_set_usize (widget, -1, min_height) 
 		end
 
-	set_x (new_x: INTEGER) is
+	set_x (value: INTEGER) is
 			-- Put at horizontal position `new_x' relative
 			-- to parent.
 		do
-                        check
-                                not_yet_implemented: False
-                        end
+                        set_x_y (value, y)
 		end
 
 	set_x_y (new_x: INTEGER; new_y: INTEGER) is
@@ -205,13 +203,11 @@ feature -- Resizing
 			gtk_widget_set_uposition (widget, new_x, new_y)
 		end
 
-	set_y (new_y: INTEGER) is
+	set_y (value: INTEGER) is
 			-- Put at vertical position `new_y' relative
 			-- to parent.
 		do
-                        check
-                                not_yet_implemented: False
-                        end
+                    set_x_y (x, value)
 		end
 
 feature -- Event - command association
@@ -255,7 +251,7 @@ feature -- Event - command association
 			add_command_with_event_data ("motion_notify_event", command, arguments, ev_data, 0, False)
 		end
 	
-	add_delete_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+	add_destroy_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
 		local
 			ev_data: EV_EVENT_DATA		
 		do
@@ -401,17 +397,24 @@ feature {NONE} -- Implementation
 						      0,
 						      False)
 		end
-	
+
+feature -- Implementation
+
+	test_and_set_parent (par: EV_CONTAINER) is
+			-- Set the parent to `par.implementation'.
+			-- It is not possible to change the parent,
+			-- therefore, if there is already a parent,
+			-- we don't do anything
+		do
+			parent_imp ?= par.implementation
+		end
+
 feature {EV_WIDGET_IMP} -- Implementation
 	
 	widget: POINTER
                         -- pointer to the C structure representing this widget
 
-
-
-
-
-end
+end -- class EV_WIDGET_IMP
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

@@ -409,19 +409,25 @@ feature -- Event handling
 				else
 					close
 					eiffel_class := type_view_handler.eiffel_class
+					if eiffel_class.get_assembly_descriptor = Void then
+						eiffel_class.set_assembly_descriptor (assembly_descriptor)
+					end
 					eiffel_class.set_modified (type_modifications.features_modifications /= Void and then type_modifications.features_modifications.get_count > 0)
 					children := type_view_handler.children
 					assembly_view.set_children (eiffel_class, children)
 					create xml_generator.make_xmlcodegenerator
 					xml_generator.make_xml_code_generator
-					xml_generator.replace_type (assembly_descriptor, eiffel_class)
+					xml_generator.replace_type (eiffel_class)
 					from
 					until
 						i = children.get_count
 					loop
 						a_child ?= children.get_item (i)
 						if a_child /= Void then
-							xml_generator.replace_type (assembly_descriptor, a_child)
+							if a_child.get_assembly_descriptor = Void then
+								a_child.set_assembly_descriptor (assembly_descriptor)
+							end
+							xml_generator.replace_type (a_child)
 						end
 						i := i + 1
 					end

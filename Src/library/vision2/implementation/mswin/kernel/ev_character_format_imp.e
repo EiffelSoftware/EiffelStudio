@@ -128,10 +128,10 @@ feature -- Access
 			font_imp.set_by_wel_font (a_wel_font)
 
 			if shape = shape_italic then
-				font_imp.set_shape (feature {EV_FONT_CONSTANTS}.shape_italic)
+				font_imp.set_shape ({EV_FONT_CONSTANTS}.shape_italic)
 			end
 			if is_bold then
-				font_imp.set_weight (feature {EV_FONT_CONSTANTS}.weight_bold)
+				font_imp.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
 			end
 		end
 		

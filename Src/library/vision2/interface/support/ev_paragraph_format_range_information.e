@@ -40,17 +40,17 @@ feature -- Creation
 		require
 			valid_paragraph_flag: valid_paragraph_flag (flags)
 		do
-			alignment := flags | feature {EV_PARAGRAPH_CONSTANTS}.alignment = flags
-			left_margin := flags | feature {EV_PARAGRAPH_CONSTANTS}.left_margin = flags
-			right_margin := flags | feature {EV_PARAGRAPH_CONSTANTS}.right_margin = flags
-			top_spacing := flags | feature {EV_PARAGRAPH_CONSTANTS}.top_spacing = flags
-			bottom_spacing := flags | feature {EV_PARAGRAPH_CONSTANTS}.bottom_spacing = flags
+			alignment := flags | {EV_PARAGRAPH_CONSTANTS}.alignment = flags
+			left_margin := flags | {EV_PARAGRAPH_CONSTANTS}.left_margin = flags
+			right_margin := flags | {EV_PARAGRAPH_CONSTANTS}.right_margin = flags
+			top_spacing := flags | {EV_PARAGRAPH_CONSTANTS}.top_spacing = flags
+			bottom_spacing := flags | {EV_PARAGRAPH_CONSTANTS}.bottom_spacing = flags
 		ensure
-			attributes_set: alignment = (flags | feature {EV_PARAGRAPH_CONSTANTS}.alignment = flags) and
-				left_margin = (flags | feature {EV_PARAGRAPH_CONSTANTS}.left_margin = flags) and
-				right_margin = (flags | feature {EV_PARAGRAPH_CONSTANTS}.right_margin = flags) and
-				top_spacing = (flags | feature {EV_PARAGRAPH_CONSTANTS}.top_spacing = flags) and
-				bottom_spacing = (flags | feature {EV_PARAGRAPH_CONSTANTS}.bottom_spacing = flags)
+			attributes_set: alignment = (flags | {EV_PARAGRAPH_CONSTANTS}.alignment = flags) and
+				left_margin = (flags | {EV_PARAGRAPH_CONSTANTS}.left_margin = flags) and
+				right_margin = (flags | {EV_PARAGRAPH_CONSTANTS}.right_margin = flags) and
+				top_spacing = (flags | {EV_PARAGRAPH_CONSTANTS}.top_spacing = flags) and
+				bottom_spacing = (flags | {EV_PARAGRAPH_CONSTANTS}.bottom_spacing = flags)
 		end
 
 feature -- Access

@@ -126,9 +126,9 @@ feature -- Basic operations
 		do
 				-- Initialize `draw_state_flags' dependent on current state of `is_sensitive'.
 			if is_sensitive then
-				draw_state_flags := feature {WEL_DRAWING_CONSTANTS}.Dss_normal
+				draw_state_flags := {WEL_DRAWING_CONSTANTS}.Dss_normal
 			else
-				draw_state_flags := feature {WEL_DRAWING_CONSTANTS}.Dss_disabled
+				draw_state_flags := {WEL_DRAWING_CONSTANTS}.Dss_disabled
 			end
 
 			if mask_bitmap = Void then
@@ -151,7 +151,7 @@ feature -- Basic operations
 					buffer_dc.draw_state_bitmap (Void, a_bitmap, 0, 0, draw_state_flags)
 						-- Copy the image from `buffer_dc' to `dc'.
 					dc.mask_blt (an_x, a_y, a_bitmap.width, a_bitmap.height, buffer_dc, 0, 0, mask_bitmap, 0 , 0,
-						buffer_dc.make_rop4 (feature {WEL_RASTER_OPERATIONS_CONSTANTS}.srcpaint, feature {WEL_RASTER_OPERATIONS_CONSTANTS}.srccopy))
+						buffer_dc.make_rop4 ({WEL_RASTER_OPERATIONS_CONSTANTS}.srcpaint, {WEL_RASTER_OPERATIONS_CONSTANTS}.srccopy))
 						-- Clean up GDI.
 				else
 						-- Windows platform does not support mask_blt, so we must simulate this ourselves with `bit_blt'.
@@ -163,18 +163,18 @@ feature -- Basic operations
 					
 						-- Blt the current background of the button, onto `buffer_dc'. This is necessary, as a toggle
 						-- button will have a checked background when selected.
-					buffer_dc.bit_blt (0, 0, a_bitmap.width, a_bitmap.height, dc, an_x, a_y, feature {WEL_RASTER_OPERATIONS_CONSTANTS}.Srccopy)
+					buffer_dc.bit_blt (0, 0, a_bitmap.width, a_bitmap.height, dc, an_x, a_y, {WEL_RASTER_OPERATIONS_CONSTANTS}.Srccopy)
 						-- Draw the image to `image_buffer_dc' using `draw_state_flags'.
 						-- Note that we must draw the image to another dc, as it is not possible to use any masking
 						-- with `draw_state_bitmap'.
 					image_buffer_dc.draw_state_bitmap (Void, a_bitmap, 0, 0, draw_state_flags)
 						-- We now and `mask_bitmap' onto `buffer_dc'.
-					buffer_dc.draw_bitmap_with_raster_operation (mask_bitmap, 0, 0, a_bitmap.width, a_bitmap.height, feature {WEL_RASTER_OPERATIONS_CONSTANTS}.srcand)
+					buffer_dc.draw_bitmap_with_raster_operation (mask_bitmap, 0, 0, a_bitmap.width, a_bitmap.height, {WEL_RASTER_OPERATIONS_CONSTANTS}.srcand)
 						-- Copy the actual image already drawn on `image_buffer_dc' to `buffer_dc'. Due to the previous operation, this
 						-- will be effectively masked.
-					buffer_dc.bit_blt (0, 0, a_bitmap.width, a_bitmap.height, image_buffer_dc, 0, 0, feature {WEL_RASTER_OPERATIONS_CONSTANTS}.srcpaint)
+					buffer_dc.bit_blt (0, 0, a_bitmap.width, a_bitmap.height, image_buffer_dc, 0, 0, {WEL_RASTER_OPERATIONS_CONSTANTS}.srcpaint)
 						-- Copy the final image from `buffer_dc' to `dc'.
-					dc.bit_blt (an_x, a_y, a_bitmap.width, a_bitmap.height, buffer_dc, 0, 0, feature {WEL_RASTER_OPERATIONS_CONSTANTS}.Srccopy)
+					dc.bit_blt (an_x, a_y, a_bitmap.width, a_bitmap.height, buffer_dc, 0, 0, {WEL_RASTER_OPERATIONS_CONSTANTS}.Srccopy)
 					wel_bitmap_image.dispose
 					image_buffer_dc.unselect_all
 					image_buffer_dc.delete
@@ -219,37 +219,37 @@ feature {NONE} -- Implementation
 	color_gray_text: WEL_COLOR_REF is
 			-- `Result' is color corresponding to Windows color - Colorgraytext.
 		do
-			create Result.make_system (feature {WEL_COLOR_CONSTANTS}.Color_graytext)
+			create Result.make_system ({WEL_COLOR_CONSTANTS}.Color_graytext)
 		end
 
 	rtext_color: WEL_COLOR_REF is
 			-- `Result' is color corresponding to Windows color - Colorbtntext
 		do
-			create Result.make_system (feature {WEL_COLOR_CONSTANTS}.Color_btntext)
+			create Result.make_system ({WEL_COLOR_CONSTANTS}.Color_btntext)
 		end
 
 	rlight: WEL_COLOR_REF is
 			-- `Result' is color corresponding to Windows color - Color3dlight
 		do
-			create Result.make_system (feature {WEL_COLOR_CONSTANTS}.Color_3dlight)
+			create Result.make_system ({WEL_COLOR_CONSTANTS}.Color_3dlight)
 		end
 		
 	rhighlight: WEL_COLOR_REF is
 			-- `Result' is color corresponding to Windows color - Colorbtnhighlight
 		do
-			create Result.make_system (feature {WEL_COLOR_CONSTANTS}.Color_btnhighlight)
+			create Result.make_system ({WEL_COLOR_CONSTANTS}.Color_btnhighlight)
 		end
 		
 	rshadow: WEL_COLOR_REF is
 			-- `Result' is color corresponding to Windows color - Colorbtnshadow.
 		do
-			create Result.make_system (feature {WEL_COLOR_CONSTANTS}.Color_btnshadow)
+			create Result.make_system ({WEL_COLOR_CONSTANTS}.Color_btnshadow)
 		end
 		
 	rdark_shadow: WEL_COLOR_REF is
 			-- `Result' is color corresponding to Windows color -Color3ddkshadow
 		do
-			create Result.make_system (feature {WEL_COLOR_CONSTANTS}.Color_3ddkshadow)
+			create Result.make_system ({WEL_COLOR_CONSTANTS}.Color_3ddkshadow)
 		end
 
 end

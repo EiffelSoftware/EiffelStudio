@@ -61,20 +61,20 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			
 				-- Create a new pixmap
-			gdkpix := feature {EV_GTK_EXTERNALS}.gdk_pixmap_new (App_implementation.default_gdk_window, 1, 1, Default_color_depth)
+			gdkpix := {EV_GTK_EXTERNALS}.gdk_pixmap_new (App_implementation.default_gdk_window, 1, 1, Default_color_depth)
 				-- Box the pixmap into a container to receive events
-			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_event_box_new)
-			gtk_pixmap := feature {EV_GTK_EXTERNALS}.gtk_pixmap_new (gdkpix, gdkmask)
-			feature {EV_GTK_EXTERNALS}.gdk_pixmap_unref (gdkpix)
+			set_c_object ({EV_GTK_EXTERNALS}.gtk_event_box_new)
+			gtk_pixmap := {EV_GTK_EXTERNALS}.gtk_pixmap_new (gdkpix, gdkmask)
+			{EV_GTK_EXTERNALS}.gdk_pixmap_unref (gdkpix)
 			
-			feature {EV_GTK_EXTERNALS}.gtk_container_add (c_object, gtk_pixmap)
-			feature {EV_GTK_EXTERNALS}.gtk_widget_show (gtk_pixmap)
+			{EV_GTK_EXTERNALS}.gtk_container_add (c_object, gtk_pixmap)
+			{EV_GTK_EXTERNALS}.gtk_widget_show (gtk_pixmap)
 
-			drawable := feature {EV_GTK_EXTERNALS}.gtk_pixmap_struct_pixmap (gtk_pixmap)
+			drawable := {EV_GTK_EXTERNALS}.gtk_pixmap_struct_pixmap (gtk_pixmap)
 			
 				-- Initialize the Graphical Context
-			gc := feature {EV_GTK_EXTERNALS}.gdk_gc_new (drawable)
-			feature {EV_GTK_EXTERNALS}.gdk_gc_set_function (gc, feature {EV_GTK_EXTERNALS}.GDK_COPY_ENUM)
+			gc := {EV_GTK_EXTERNALS}.gdk_gc_new (drawable)
+			{EV_GTK_EXTERNALS}.gdk_gc_set_function (gc, {EV_GTK_EXTERNALS}.GDK_COPY_ENUM)
 			initialize_graphical_context
 			init_default_values
 		end
@@ -93,11 +93,11 @@ feature {NONE} -- Initialization
 			Result.draw_sub_pixmap (0, 0, interface, area)
 			
 			if mask /= default_pointer then
-				a_mask := feature {EV_GTK_EXTERNALS}.gdk_pixmap_new (null, area.width, area.height, monochrome_color_depth)
-				maskgc := feature {EV_GTK_EXTERNALS}.gdk_gc_new (a_mask)
-				feature {EV_GTK_EXTERNALS}.gdk_draw_pixmap (a_mask, maskgc, mask, area.x, area.y, 0, 0, area.width, area.height)
-				feature {EV_GTK_EXTERNALS}.gdk_gc_unref (maskgc)
-				a_src := feature {EV_GTK_EXTERNALS}.gdk_pixmap_ref (pix_imp.drawable)
+				a_mask := {EV_GTK_EXTERNALS}.gdk_pixmap_new (null, area.width, area.height, monochrome_color_depth)
+				maskgc := {EV_GTK_EXTERNALS}.gdk_gc_new (a_mask)
+				{EV_GTK_EXTERNALS}.gdk_draw_pixmap (a_mask, maskgc, mask, area.x, area.y, 0, 0, area.width, area.height)
+				{EV_GTK_EXTERNALS}.gdk_gc_unref (maskgc)
+				a_src := {EV_GTK_EXTERNALS}.gdk_pixmap_ref (pix_imp.drawable)
 				pix_imp.set_pixmap (a_src, a_mask)
 			end
 		end
@@ -115,10 +115,10 @@ feature {NONE} -- Initialization
 			mask_gc: POINTER
 		do
 			if mask /= NULL then
-				mask_gc := feature {EV_GTK_EXTERNALS}.gdk_gc_new (mask)
-				feature {EV_GTK_EXTERNALS}.gdk_gc_set_function (mask_gc, feature {EV_GTK_EXTERNALS}.GDK_INVERT_ENUM)
-	 			feature {EV_GTK_EXTERNALS}.gdk_draw_point (mask, mask_gc, x, y)
-	 			feature {EV_GTK_EXTERNALS}.gdk_gc_unref (mask_gc)
+				mask_gc := {EV_GTK_EXTERNALS}.gdk_gc_new (mask)
+				{EV_GTK_EXTERNALS}.gdk_gc_set_function (mask_gc, {EV_GTK_EXTERNALS}.GDK_INVERT_ENUM)
+	 			{EV_GTK_EXTERNALS}.gdk_draw_point (mask, mask_gc, x, y)
+	 			{EV_GTK_EXTERNALS}.gdk_gc_unref (mask_gc)
 			end
 			Precursor {EV_DRAWABLE_IMP} (x, y)
 		end
@@ -128,7 +128,7 @@ feature -- Drawing operations
 	flush is
 		do
 			if is_displayed then
-				feature {EV_GTK_EXTERNALS}.gtk_widget_queue_draw (gtk_pixmap)
+				{EV_GTK_EXTERNALS}.gtk_widget_queue_draw (gtk_pixmap)
 			end
 		end
 
@@ -139,7 +139,7 @@ feature -- Measurement
 		local
 			wid, hgt: INTEGER
 		do
-			feature {EV_GTK_EXTERNALS}.gdk_window_get_size (feature {EV_GTK_EXTERNALS}.gtk_pixmap_struct_pixmap (gtk_pixmap), $wid, $hgt)
+			{EV_GTK_EXTERNALS}.gdk_window_get_size ({EV_GTK_EXTERNALS}.gtk_pixmap_struct_pixmap (gtk_pixmap), $wid, $hgt)
 			Result := wid
 		end
 
@@ -148,7 +148,7 @@ feature -- Measurement
 		local
 			wid, hgt: INTEGER
 		do
-			feature {EV_GTK_EXTERNALS}.gdk_window_get_size (feature {EV_GTK_EXTERNALS}.gtk_pixmap_struct_pixmap (gtk_pixmap), $wid, $hgt)
+			{EV_GTK_EXTERNALS}.gdk_window_get_size ({EV_GTK_EXTERNALS}.gtk_pixmap_struct_pixmap (gtk_pixmap), $wid, $hgt)
 			Result := hgt
 		end
 
@@ -212,18 +212,18 @@ feature -- Element change
 			end
 			
 				-- Create our new stretched pixmap canvas.
-			gdkpix := feature {EV_GTK_EXTERNALS}.gdk_pixmap_new (App_implementation.default_gdk_window, a_x, a_y, Default_color_depth)
-			pixgc := feature {EV_GTK_EXTERNALS}.gdk_gc_new (gdkpix)
+			gdkpix := {EV_GTK_EXTERNALS}.gdk_pixmap_new (App_implementation.default_gdk_window, a_x, a_y, Default_color_depth)
+			pixgc := {EV_GTK_EXTERNALS}.gdk_gc_new (gdkpix)
 			
 			
 				-- Retrieve our existing image information
-			source_gdkimage := feature {EV_GTK_EXTERNALS}.gdk_image_get (drawable, 0, 0, width, height)
-			destination_gdkimage := feature {EV_GTK_EXTERNALS}.gdk_image_get (gdkpix, 0, 0, a_x, a_y)
+			source_gdkimage := {EV_GTK_EXTERNALS}.gdk_image_get (drawable, 0, 0, width, height)
+			destination_gdkimage := {EV_GTK_EXTERNALS}.gdk_image_get (gdkpix, 0, 0, a_x, a_y)
 			if mask /= NULL then
-				gdkmask := feature {EV_GTK_EXTERNALS}.gdk_pixmap_new (NULL, a_x, a_y, 1)
-				source_mask_gdkimage := feature {EV_GTK_EXTERNALS}.gdk_image_get (mask, 0, 0, width, height)
-				destination_mask_gdkimage := feature {EV_GTK_EXTERNALS}.gdk_image_get (gdkmask, 0, 0, a_x, a_y)
-				maskgc := feature {EV_GTK_EXTERNALS}.gdk_gc_new (gdkmask)
+				gdkmask := {EV_GTK_EXTERNALS}.gdk_pixmap_new (NULL, a_x, a_y, 1)
+				source_mask_gdkimage := {EV_GTK_EXTERNALS}.gdk_image_get (mask, 0, 0, width, height)
+				destination_mask_gdkimage := {EV_GTK_EXTERNALS}.gdk_image_get (gdkmask, 0, 0, a_x, a_y)
+				maskgc := {EV_GTK_EXTERNALS}.gdk_gc_new (gdkmask)
 			end
 		
 			from
@@ -238,19 +238,19 @@ feature -- Element change
 					column_counter = a_x
 				loop
 						-- Map destination pixels to source pixels
-					feature {EV_GTK_EXTERNALS}.gdk_image_put_pixel (
+					{EV_GTK_EXTERNALS}.gdk_image_put_pixel (
 						destination_gdkimage,
 						column_counter,
 						row_counter,
-						feature {EV_GTK_EXTERNALS}.gdk_image_get_pixel (source_gdkimage, mapped_x_lookup @ column_counter, mapped_y_lookup @ row_counter)
+						{EV_GTK_EXTERNALS}.gdk_image_get_pixel (source_gdkimage, mapped_x_lookup @ column_counter, mapped_y_lookup @ row_counter)
 					)
 						-- Map mask destination to mask source.
 					if gdkmask /= NULL then
-						feature {EV_GTK_EXTERNALS}.gdk_image_put_pixel (
+						{EV_GTK_EXTERNALS}.gdk_image_put_pixel (
 							destination_mask_gdkimage,
 							column_counter,
 							row_counter,
-							feature {EV_GTK_EXTERNALS}.gdk_image_get_pixel (source_mask_gdkimage, mapped_x_lookup @ column_counter, mapped_y_lookup @ row_counter)
+							{EV_GTK_EXTERNALS}.gdk_image_get_pixel (source_mask_gdkimage, mapped_x_lookup @ column_counter, mapped_y_lookup @ row_counter)
 						)
 					end
 					column_counter := column_counter + 1
@@ -259,21 +259,21 @@ feature -- Element change
 			end
 			
 				-- Copy image over to our new pixmap and cleanup
-			feature {EV_GTK_EXTERNALS}.gdk_draw_image (gdkpix, pixgc, destination_gdkimage, 0, 0, 0, 0, a_x, a_y)
+			{EV_GTK_EXTERNALS}.gdk_draw_image (gdkpix, pixgc, destination_gdkimage, 0, 0, 0, 0, a_x, a_y)
 			if gdkmask /= NULL then
-				feature {EV_GTK_EXTERNALS}.gdk_draw_image (gdkmask, maskgc, destination_mask_gdkimage, 0, 0, 0, 0, a_x, a_y)
+				{EV_GTK_EXTERNALS}.gdk_draw_image (gdkmask, maskgc, destination_mask_gdkimage, 0, 0, 0, 0, a_x, a_y)
 			end
 			
 			set_pixmap (gdkpix, gdkmask)
 			
-			feature {EV_GTK_EXTERNALS}.gdk_gc_unref (pixgc)
-			feature {EV_GTK_EXTERNALS}.gdk_image_destroy (source_gdkimage)
-			feature {EV_GTK_EXTERNALS}.gdk_image_destroy (destination_gdkimage)
+			{EV_GTK_EXTERNALS}.gdk_gc_unref (pixgc)
+			{EV_GTK_EXTERNALS}.gdk_image_destroy (source_gdkimage)
+			{EV_GTK_EXTERNALS}.gdk_image_destroy (destination_gdkimage)
 			
 			if gdkmask /= NULL then
-				feature {EV_GTK_EXTERNALS}.gdk_image_destroy (source_mask_gdkimage)
-				feature {EV_GTK_EXTERNALS}.gdk_image_destroy (destination_mask_gdkimage)
-				feature {EV_GTK_EXTERNALS}.gdk_gc_unref (maskgc)
+				{EV_GTK_EXTERNALS}.gdk_image_destroy (source_mask_gdkimage)
+				{EV_GTK_EXTERNALS}.gdk_image_destroy (destination_mask_gdkimage)
+				{EV_GTK_EXTERNALS}.gdk_gc_unref (maskgc)
 			end
 		end
 
@@ -284,20 +284,20 @@ feature -- Element change
 			pixgc, maskgc: POINTER
 			loc_default_pointer: POINTER
 		do
-			gdkpix := feature {EV_GTK_EXTERNALS}.gdk_pixmap_new (App_implementation.default_gdk_window, a_x, a_y, Default_color_depth)
-			pixgc := feature {EV_GTK_EXTERNALS}.gdk_gc_new (gdkpix)
-			feature {EV_GTK_EXTERNALS}.gdk_gc_set_function (pixgc, feature {EV_GTK_EXTERNALS}.GDK_COPY_INVERT_ENUM)
-			feature {EV_GTK_EXTERNALS}.gdk_draw_rectangle (gdkpix, pixgc, 1, 0, 0, -1, -1)
-			feature {EV_GTK_EXTERNALS}.gdk_gc_set_function (pixgc, feature {EV_GTK_EXTERNALS}.GDK_COPY_ENUM)
+			gdkpix := {EV_GTK_EXTERNALS}.gdk_pixmap_new (App_implementation.default_gdk_window, a_x, a_y, Default_color_depth)
+			pixgc := {EV_GTK_EXTERNALS}.gdk_gc_new (gdkpix)
+			{EV_GTK_EXTERNALS}.gdk_gc_set_function (pixgc, {EV_GTK_EXTERNALS}.GDK_COPY_INVERT_ENUM)
+			{EV_GTK_EXTERNALS}.gdk_draw_rectangle (gdkpix, pixgc, 1, 0, 0, -1, -1)
+			{EV_GTK_EXTERNALS}.gdk_gc_set_function (pixgc, {EV_GTK_EXTERNALS}.GDK_COPY_ENUM)
 			
-			feature {EV_GTK_EXTERNALS}.gdk_draw_pixmap (gdkpix, pixgc, drawable, 0, 0, 0, 0, width, height)
-			feature {EV_GTK_EXTERNALS}.gdk_gc_unref (pixgc)
+			{EV_GTK_EXTERNALS}.gdk_draw_pixmap (gdkpix, pixgc, drawable, 0, 0, 0, 0, width, height)
+			{EV_GTK_EXTERNALS}.gdk_gc_unref (pixgc)
 
 			if mask /= loc_default_pointer then
-				gdkmask := feature {EV_GTK_EXTERNALS}.gdk_pixmap_new (NULL, a_x, a_y, Monochrome_color_depth)
-				maskgc := feature {EV_GTK_EXTERNALS}.gdk_gc_new (gdkmask)
-				feature {EV_GTK_EXTERNALS}.gdk_draw_pixmap (gdkmask, maskgc, mask, 0, 0, 0, 0, width, height)
-				feature {EV_GTK_EXTERNALS}.gdk_gc_unref (maskgc)
+				gdkmask := {EV_GTK_EXTERNALS}.gdk_pixmap_new (NULL, a_x, a_y, Monochrome_color_depth)
+				maskgc := {EV_GTK_EXTERNALS}.gdk_gc_new (gdkmask)
+				{EV_GTK_EXTERNALS}.gdk_draw_pixmap (gdkmask, maskgc, mask, 0, 0, 0, 0, width, height)
+				{EV_GTK_EXTERNALS}.gdk_gc_unref (maskgc)
 			end
 			set_pixmap (gdkpix, gdkmask)
 		end
@@ -328,33 +328,33 @@ feature -- Access
 			array_size := array_size // 8
 			create Result.make (1, array_size)
 			
-			a_gdkimage := feature {EV_GTK_EXTERNALS}.gdk_image_get (feature {EV_GTK_EXTERNALS}.gtk_pixmap_struct_pixmap (gtk_pixmap), 0, 0, width, height)
+			a_gdkimage := {EV_GTK_EXTERNALS}.gdk_image_get ({EV_GTK_EXTERNALS}.gtk_pixmap_struct_pixmap (gtk_pixmap), 0, 0, width, height)
 			from
 				a_width := width
-				a_color_map := feature {EV_GTK_EXTERNALS}.gdk_rgb_get_cmap
-				a_visual := feature {EV_GTK_EXTERNALS}.gdk_colormap_get_visual (a_color_map)
-				a_visual_type := feature {EV_GTK_EXTERNALS}.gdk_visual_struct_type (a_visual)
-				a_color := feature {EV_GTK_EXTERNALS}.c_gdk_color_struct_allocate
+				a_color_map := {EV_GTK_EXTERNALS}.gdk_rgb_get_cmap
+				a_visual := {EV_GTK_EXTERNALS}.gdk_colormap_get_visual (a_color_map)
+				a_visual_type := {EV_GTK_EXTERNALS}.gdk_visual_struct_type (a_visual)
+				a_color := {EV_GTK_EXTERNALS}.c_gdk_color_struct_allocate
 				array_area := Result.area
-				color_struct_size := feature {EV_GTK_EXTERNALS}.c_gdk_color_struct_size
+				color_struct_size := {EV_GTK_EXTERNALS}.c_gdk_color_struct_size
 				array_offset := 0
 				n_character := 0
 			until
 				array_offset = width * height
 			loop
-				a_pixel := feature {EV_GTK_EXTERNALS}.gdk_image_get_pixel (
+				a_pixel := {EV_GTK_EXTERNALS}.gdk_image_get_pixel (
 					a_gdkimage,
 					(array_offset \\ (a_width)), -- Zero based X coord
 					((array_offset) // a_width) -- Zero based Y coord
 				)
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.c_gdk_colormap_query_color (a_color_map, a_pixel, a_color)
+				{EV_GTK_DEPENDENT_EXTERNALS}.c_gdk_colormap_query_color (a_color_map, a_pixel, a_color)
 				-- RGB values of a_color are 16 bit.
 				if n_character = 8 then
 					n_character := 0
 					character_result := 0
 				end		
 				if 
-					feature {EV_GTK_EXTERNALS}.gdk_color_struct_red (a_color) > 0
+					{EV_GTK_EXTERNALS}.gdk_color_struct_red (a_color) > 0
 					--or else local_feature {EV_GTK_EXTERNALS}.gdk_color_struct_green (a_color) > 0
 					--or else local_feature {EV_GTK_EXTERNALS}.gdk_color_struct_blue (a_color) > 0
 				then
@@ -369,7 +369,7 @@ feature -- Access
 				array_offset := array_offset + 1
 			end
 			a_color.memory_free
-			feature {EV_GTK_EXTERNALS}.gdk_image_destroy (a_gdkimage)
+			{EV_GTK_EXTERNALS}.gdk_image_destroy (a_gdkimage)
 		end
 
 	raw_image_data: EV_RAW_IMAGE_DATA is
@@ -387,36 +387,36 @@ feature -- Access
 		do
 			create Result.make_with_alpha_zero (width, height)
 			Result.set_originating_pixmap (interface)
-			a_gdkimage := feature {EV_GTK_EXTERNALS}.gdk_image_get (feature {EV_GTK_EXTERNALS}.gtk_pixmap_struct_pixmap (gtk_pixmap), 0, 0, width, height)
+			a_gdkimage := {EV_GTK_EXTERNALS}.gdk_image_get ({EV_GTK_EXTERNALS}.gtk_pixmap_struct_pixmap (gtk_pixmap), 0, 0, width, height)
 			from
 				a_width := width * 4
-				a_color_map := feature {EV_GTK_EXTERNALS}.gdk_rgb_get_cmap
-				a_visual := feature {EV_GTK_EXTERNALS}.gdk_colormap_get_visual (a_color_map)
-				a_visual_type := feature {EV_GTK_EXTERNALS}.gdk_visual_struct_type (a_visual)
-				a_color := feature {EV_GTK_EXTERNALS}.c_gdk_color_struct_allocate
+				a_color_map := {EV_GTK_EXTERNALS}.gdk_rgb_get_cmap
+				a_visual := {EV_GTK_EXTERNALS}.gdk_colormap_get_visual (a_color_map)
+				a_visual_type := {EV_GTK_EXTERNALS}.gdk_visual_struct_type (a_visual)
+				a_color := {EV_GTK_EXTERNALS}.c_gdk_color_struct_allocate
 				array_size := a_width * height
 				array_area := Result.area
-				color_struct_size := feature {EV_GTK_EXTERNALS}.c_gdk_color_struct_size
+				color_struct_size := {EV_GTK_EXTERNALS}.c_gdk_color_struct_size
 				temp_alpha_int := 255
 				temp_alpha := temp_alpha_int.to_character
 			until
 				array_offset = array_size
 			loop
-				a_pixel := feature {EV_GTK_EXTERNALS}.gdk_image_get_pixel (
+				a_pixel := {EV_GTK_EXTERNALS}.gdk_image_get_pixel (
 					a_gdkimage,
 					(array_offset \\ (a_width) // 4), -- Zero based X coord
 					((array_offset) // a_width) -- Zero based Y coord
 				)
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.c_gdk_colormap_query_color (a_color_map, a_pixel, a_color)
+				{EV_GTK_DEPENDENT_EXTERNALS}.c_gdk_colormap_query_color (a_color_map, a_pixel, a_color)
 				-- RGB values of a_color are 16 bit.
-				array_area.put ((feature {EV_GTK_EXTERNALS}.gdk_color_struct_red (a_color) // 256).to_character, array_offset)
-				array_area.put ((feature {EV_GTK_EXTERNALS}.gdk_color_struct_green (a_color) // 256).to_character, array_offset + 1)
-				array_area.put ((feature {EV_GTK_EXTERNALS}.gdk_color_struct_blue (a_color) // 256).to_character, array_offset + 2)
+				array_area.put (({EV_GTK_EXTERNALS}.gdk_color_struct_red (a_color) // 256).to_character, array_offset)
+				array_area.put (({EV_GTK_EXTERNALS}.gdk_color_struct_green (a_color) // 256).to_character, array_offset + 1)
+				array_area.put (({EV_GTK_EXTERNALS}.gdk_color_struct_blue (a_color) // 256).to_character, array_offset + 2)
 				array_area.put (temp_alpha, array_offset + 3)
 				array_offset := array_offset + 4
 			end
 			a_color.memory_free
-			feature {EV_GTK_EXTERNALS}.gdk_image_destroy (a_gdkimage)
+			{EV_GTK_EXTERNALS}.gdk_image_destroy (a_gdkimage)
 		end
 
 feature -- Duplication
@@ -439,15 +439,15 @@ feature {EV_ANY_I} -- Implementation
 			gdkpix, gdkmask: POINTER
 			pixgc, maskgc: POINTER
 		do
- 			gdkpix := feature {EV_GTK_EXTERNALS}.gdk_pixmap_new (App_implementation.default_gdk_window, a_width, a_height, Default_color_depth)
-			pixgc := feature {EV_GTK_EXTERNALS}.gdk_gc_new (gdkpix)
-			feature {EV_GTK_EXTERNALS}.gdk_draw_pixmap (gdkpix, pixgc, a_src_pix, 0, 0, 0, 0, a_width, a_height)
-			feature {EV_GTK_EXTERNALS}.gdk_gc_unref (pixgc)
+ 			gdkpix := {EV_GTK_EXTERNALS}.gdk_pixmap_new (App_implementation.default_gdk_window, a_width, a_height, Default_color_depth)
+			pixgc := {EV_GTK_EXTERNALS}.gdk_gc_new (gdkpix)
+			{EV_GTK_EXTERNALS}.gdk_draw_pixmap (gdkpix, pixgc, a_src_pix, 0, 0, 0, 0, a_width, a_height)
+			{EV_GTK_EXTERNALS}.gdk_gc_unref (pixgc)
 			if a_src_mask /= NULL then
-				gdkmask := feature {EV_GTK_EXTERNALS}.gdk_pixmap_new (NULL, a_width, a_height, Monochrome_color_depth)
-				maskgc := feature {EV_GTK_EXTERNALS}.gdk_gc_new (gdkmask)
-				feature {EV_GTK_EXTERNALS}.gdk_draw_pixmap (gdkmask, maskgc, a_src_mask, 0, 0, 0, 0, a_width, a_height)
-				feature {EV_GTK_EXTERNALS}.gdk_gc_unref (maskgc)
+				gdkmask := {EV_GTK_EXTERNALS}.gdk_pixmap_new (NULL, a_width, a_height, Monochrome_color_depth)
+				maskgc := {EV_GTK_EXTERNALS}.gdk_gc_new (gdkmask)
+				{EV_GTK_EXTERNALS}.gdk_draw_pixmap (gdkmask, maskgc, a_src_mask, 0, 0, 0, 0, a_width, a_height)
+				{EV_GTK_EXTERNALS}.gdk_gc_unref (maskgc)
 			end
 			set_pixmap (gdkpix, gdkmask)			
 		end
@@ -470,12 +470,12 @@ feature {EV_STOCK_PIXMAPS_IMP, EV_PIXMAPABLE_IMP, EV_NOTEBOOK_IMP, EV_PIXMAP_IMP
 	set_pixmap (gdkpix, gdkmask: POINTER) is
 			-- Set the GtkPixmap using Gdk pixmap data and mask.
 		do
-			feature {EV_GTK_EXTERNALS}.gtk_pixmap_set (gtk_pixmap, gdkpix, gdkmask)
-			feature {EV_GTK_EXTERNALS}.gdk_pixmap_unref (gdkpix)
+			{EV_GTK_EXTERNALS}.gtk_pixmap_set (gtk_pixmap, gdkpix, gdkmask)
+			{EV_GTK_EXTERNALS}.gdk_pixmap_unref (gdkpix)
 			drawable := gdkpix
 			mask := gdkmask
 			if gdkmask /= NULL then
-				feature {EV_GTK_EXTERNALS}.gdk_pixmap_unref (gdkmask)
+				{EV_GTK_EXTERNALS}.gdk_pixmap_unref (gdkmask)
 			end
 		end	
 
@@ -487,8 +487,8 @@ feature {EV_STOCK_PIXMAPS_IMP, EV_PIXMAPABLE_IMP, EV_NOTEBOOK_IMP, EV_PIXMAP_IMP
 			gdkpix, gdkmask: POINTER
 			a_style: POINTER
 		do
-			a_style := feature {EV_GTK_EXTERNALS}.gtk_widget_get_style (App_implementation.default_gtk_window)
-			gdkpix := feature {EV_GTK_EXTERNALS}.gdk_pixmap_create_from_xpm_d (App_implementation.default_gdk_window, $gdkmask, NULL, a_xpm_data)
+			a_style := {EV_GTK_EXTERNALS}.gtk_widget_get_style (App_implementation.default_gtk_window)
+			gdkpix := {EV_GTK_EXTERNALS}.gdk_pixmap_create_from_xpm_d (App_implementation.default_gdk_window, $gdkmask, NULL, a_xpm_data)
 			set_pixmap (gdkpix, gdkmask)
 		end
 
@@ -532,14 +532,14 @@ feature {NONE} -- Implementation
 			allocated: BOOLEAN
 			fg: POINTER
 		do
-			fg := feature {EV_GTK_EXTERNALS}.c_gdk_color_struct_allocate
+			fg := {EV_GTK_EXTERNALS}.c_gdk_color_struct_allocate
 
 				-- Create the color black (default with calloc)
-			allocated := feature {EV_GTK_EXTERNALS}.gdk_colormap_alloc_color (feature {EV_GTK_EXTERNALS}.gdk_rgb_get_cmap, fg, False, True)
+			allocated := {EV_GTK_EXTERNALS}.gdk_colormap_alloc_color ({EV_GTK_EXTERNALS}.gdk_rgb_get_cmap, fg, False, True)
 			check
 				color_has_been_allocated: allocated = True
 			end
-			feature {EV_GTK_EXTERNALS}.gdk_gc_set_foreground (gc, fg)
+			{EV_GTK_EXTERNALS}.gdk_gc_set_foreground (gc, fg)
 			fg.memory_free
 		end
 
@@ -564,10 +564,10 @@ feature {NONE} -- Implementation
 			if error_code /= Loadpixmap_error_noerror then
 				(create {EXCEPTIONS}).raise ("Could not load image file.")
 			end
-			gdkpix := feature {EV_GTK_EXTERNALS}.gdk_pixmap_new (App_implementation.default_gdk_window, pixmap_width, pixmap_height, Default_color_depth)
-			feature {EV_GTK_EXTERNALS}.gdk_draw_rgb_image (gdkpix, gc, 0, 0, pixmap_width, pixmap_height, feature {EV_GTK_EXTERNALS}.Gdk_rgb_dither_normal_enum, rgb_data, pixmap_width * 3)
+			gdkpix := {EV_GTK_EXTERNALS}.gdk_pixmap_new (App_implementation.default_gdk_window, pixmap_width, pixmap_height, Default_color_depth)
+			{EV_GTK_EXTERNALS}.gdk_draw_rgb_image (gdkpix, gc, 0, 0, pixmap_width, pixmap_height, {EV_GTK_EXTERNALS}.Gdk_rgb_dither_normal_enum, rgb_data, pixmap_width * 3)
 			if alpha_data /= Default_pointer then
-				gdkmask := feature {EV_GTK_EXTERNALS}.gdk_bitmap_create_from_data (App_implementation.default_gdk_window, alpha_data, pixmap_width, pixmap_height)
+				gdkmask := {EV_GTK_EXTERNALS}.gdk_bitmap_create_from_data (App_implementation.default_gdk_window, alpha_data, pixmap_width, pixmap_height)
 			end
 			set_pixmap (gdkpix, gdkmask)
 		end
@@ -577,7 +577,7 @@ feature {NONE} -- Implementation
 		do
 			Precursor {EV_PRIMITIVE_IMP}
 			if gc /= NULL then
-				feature {EV_GTK_EXTERNALS}.gdk_gc_unref (gc)
+				{EV_GTK_EXTERNALS}.gdk_gc_unref (gc)
 				gc := NULL	
 			end
 		end

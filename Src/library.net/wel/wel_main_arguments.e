@@ -29,7 +29,7 @@ feature -- Access
 		once
 				-- Note: 
 			l_name := current_instance.name
-			l_pos := l_name.last_index_of (feature {PATH}.Directory_separator_char, l_name.count)
+			l_pos := l_name.last_index_of ({PATH}.Directory_separator_char, l_name.count)
 			l_name.insert_string ("lib", l_pos + 1)
 			l_name.remove_tail (4)
 			l_name.append (".dll")
@@ -50,7 +50,7 @@ feature -- Access
 	command_line: STRING is
 			-- Command line argument received in WinMain
 		once
-			create Result.make_from_cil (feature {ENVIRONMENT}.command_line)
+			create Result.make_from_cil ({ENVIRONMENT}.command_line)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -58,7 +58,7 @@ feature -- Access
 	command_show: INTEGER is
 			-- Command show argument received in WinMain
 		once
-			Result := feature {WEL_SW_CONSTANTS}.Sw_show
+			Result := {WEL_SW_CONSTANTS}.Sw_show
 		end
 
 feature {NONE} -- Externals

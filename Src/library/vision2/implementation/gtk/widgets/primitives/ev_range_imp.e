@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'
 		do
 			Precursor {EV_GAUGE_IMP}
-			feature {EV_GTK_EXTERNALS}.gtk_scale_set_digits (visual_widget, 0)
+			{EV_GTK_EXTERNALS}.gtk_scale_set_digits (visual_widget, 0)
 		end
 
 feature {EV_ANY_I} -- Implementation

@@ -36,7 +36,7 @@ feature -- Implementation
 			-- (export status {NONE})
 		do
 			Precursor {EV_LIST_IMP} (v, v_imp)
-			feature {EV_GTK_EXTERNALS}.gtk_widget_show (v_imp.check_box)
+			{EV_GTK_EXTERNALS}.gtk_widget_show (v_imp.check_box)
 		end
 		
 feature -- Access
@@ -47,7 +47,7 @@ feature -- Access
 			item_imp: EV_LIST_ITEM_IMP
 		do
 			item_imp ?= list_item.implementation
-			Result := feature {EV_GTK_EXTERNALS}.gtk_toggle_button_get_active (item_imp.check_box)
+			Result := {EV_GTK_EXTERNALS}.gtk_toggle_button_get_active (item_imp.check_box)
 		end
 
 feature -- Status setting
@@ -59,7 +59,7 @@ feature -- Status setting
 			item_imp: EV_LIST_ITEM_IMP
 		do
 			item_imp ?= list_item.implementation
-			feature {EV_GTK_EXTERNALS}.gtk_toggle_button_set_active (item_imp.check_box, True)
+			{EV_GTK_EXTERNALS}.gtk_toggle_button_set_active (item_imp.check_box, True)
 		end
 
 	uncheck_item (list_item: EV_LIST_ITEM) is
@@ -69,7 +69,7 @@ feature -- Status setting
 			item_imp: EV_LIST_ITEM_IMP
 		do
 			item_imp ?= list_item.implementation
-			feature {EV_GTK_EXTERNALS}.gtk_toggle_button_set_active (item_imp.check_box, False)
+			{EV_GTK_EXTERNALS}.gtk_toggle_button_set_active (item_imp.check_box, False)
 		end
 
 feature {EV_ANY_I} -- Implementation

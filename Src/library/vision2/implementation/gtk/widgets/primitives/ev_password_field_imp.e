@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			-- Create password field with `*'.
 		do
 			Precursor
-			feature {EV_GTK_EXTERNALS}.gtk_entry_set_visibility (entry_widget, False)		
+			{EV_GTK_EXTERNALS}.gtk_entry_set_visibility (entry_widget, False)		
 		end
 
 feature {NONE} -- Implementation

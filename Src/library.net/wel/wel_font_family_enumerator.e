@@ -31,9 +31,9 @@ feature {NONE} -- Initialization
 		do
 			create font_enumerator_delegate.make (Current, $update_current)
 			cwel_set_enum_font_fam_procedure_address (font_enumerator_delegate)
-			font_enumerator_object := feature {GC_HANDLE}.alloc (Current)
+			font_enumerator_object := {GC_HANDLE}.alloc (Current)
 			cwel_set_font_family_enumerator_object
-				(feature {GC_HANDLE}.to_pointer (font_enumerator_object))
+				({GC_HANDLE}.to_pointer (font_enumerator_object))
 
 			enumerate (dc, family)
 

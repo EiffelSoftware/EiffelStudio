@@ -39,9 +39,9 @@ feature {NONE} -- Initialization
 
 	initialize is
 		do
-			list_widget := feature {EV_GTK_EXTERNALS}.gtk_menu_new
-			feature {EV_GTK_EXTERNALS}.gtk_widget_show (list_widget)
-			feature {EV_GTK_EXTERNALS}.gtk_menu_item_set_submenu (
+			list_widget := {EV_GTK_EXTERNALS}.gtk_menu_new
+			{EV_GTK_EXTERNALS}.gtk_widget_show (list_widget)
+			{EV_GTK_EXTERNALS}.gtk_menu_item_set_submenu (
 				c_object, list_widget
 			)
 			Precursor {EV_MENU_ITEM_LIST_IMP}
@@ -57,7 +57,7 @@ feature -- Basic operations
 			bw: INTEGER
 		do
 			pc := (create {EV_SCREEN}).pointer_position
-			bw := feature {EV_GTK_EXTERNALS}.gtk_container_struct_border_width (list_widget)
+			bw := {EV_GTK_EXTERNALS}.gtk_container_struct_border_width (list_widget)
 			if not interface.is_empty then
 				c_gtk_menu_popup (list_widget, pc.x + bw, pc.y + bw)
 			end

@@ -127,7 +127,7 @@ feature -- Status report
 			if not retried then
 				l_data := cwin_get_window_long (hwnd, gwlp_userdata)
 				if l_data /= null then
-					Result := eif_id_object (feature {WEL_INTERNAL_DATA}.object_id (l_data))
+					Result := eif_id_object ({WEL_INTERNAL_DATA}.object_id (l_data))
 				end
 			else
 					-- We received an exception because looks like `l_data'

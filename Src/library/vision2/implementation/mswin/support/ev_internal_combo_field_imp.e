@@ -186,7 +186,7 @@ feature {NONE} -- Implementation
 			-- Wm_setcursor message.
 			-- See class WEL_HT_CONSTANTS for valid `hit_code' values.
 		do
-			if (hit_code = (feature {WEL_HT_CONSTANTS}.Htnowhere) or else hit_code = (feature {WEL_HT_CONSTANTS}.Htclient))
+			if (hit_code = ({WEL_HT_CONSTANTS}.Htnowhere) or else hit_code = ({WEL_HT_CONSTANTS}.Htclient))
 				and then parent.cursor_pixmap /= Void then
 				parent.internal_on_set_cursor
 			end
@@ -207,7 +207,7 @@ feature {NONE} -- Implementation
 			-- Process `msg' which has not been processed by
 			-- `process_message'.
 		do
-			if msg = (feature {WEL_WINDOW_CONSTANTS}.Wm_contextmenu) then
+			if msg = ({WEL_WINDOW_CONSTANTS}.Wm_contextmenu) then
 				allow_pick_and_drop
 			else
 				Precursor {WEL_SINGLE_LINE_EDIT} (msg, wparam, lparam)

@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'
 		do
 			Precursor {EV_DIALOG_IMP}
-			feature {EV_GTK_EXTERNALS}.gdk_window_set_decorations (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), 0)
+			{EV_GTK_EXTERNALS}.gdk_window_set_decorations ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), 0)
 				-- We don't want any decorations at all
 		end
 
@@ -36,7 +36,7 @@ feature -- Status setting
 			-- Set the vertical size to `a_height'.
 		do
 			Precursor {EV_DIALOG_IMP} (a_width, a_height)
-			feature {EV_GTK_EXTERNALS}.gtk_widget_set_usize (c_object, default_width.max (minimum_width), default_height.max (minimum_height))
+			{EV_GTK_EXTERNALS}.gtk_widget_set_usize (c_object, default_width.max (minimum_width), default_height.max (minimum_height))
 		end
 
 feature {NONE} -- Implementation

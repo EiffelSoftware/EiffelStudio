@@ -43,9 +43,9 @@ feature {NONE} -- Initialization
 			-- Create a gtk label.
 		do
 			base_make (an_interface)
-			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_event_box_new)
+			set_c_object ({EV_GTK_EXTERNALS}.gtk_event_box_new)
 			textable_imp_initialize
-			feature {EV_GTK_EXTERNALS}.gtk_container_add (c_object, text_label)
+			{EV_GTK_EXTERNALS}.gtk_container_add (c_object, text_label)
 			align_text_center
 		end
 
@@ -60,8 +60,8 @@ feature {NONE} -- Implementation
 	foreground_color_pointer: POINTER is
 			-- Color of foreground features like text.
 		do
-			Result := feature {EV_GTK_EXTERNALS}.gtk_style_struct_fg (
-				feature {EV_GTK_EXTERNALS}.gtk_widget_struct_style (text_label)
+			Result := {EV_GTK_EXTERNALS}.gtk_style_struct_fg (
+				{EV_GTK_EXTERNALS}.gtk_widget_struct_style (text_label)
 			)
 		end
 

@@ -48,10 +48,10 @@ feature {NONE} -- Initialization
 			-- Create an empty drawing area.
 		do
 			base_make (an_interface)
-			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_drawing_area_new)
+			set_c_object ({EV_GTK_EXTERNALS}.gtk_drawing_area_new)
 			real_signal_connect (c_object, "button-press-event", agent (App_implementation.gtk_marshal).on_drawing_area_event_intermediary (c_object, 1), Void)
 			real_signal_connect (c_object, "focus-out-event", agent (App_implementation.gtk_marshal).on_drawing_area_event_intermediary (c_object, 2), Void)
-			gc := feature {EV_GTK_EXTERNALS}.gdk_gc_new (App_implementation.default_gdk_window)
+			gc := {EV_GTK_EXTERNALS}.gdk_gc_new (App_implementation.default_gdk_window)
 			init_default_values
 		end
 
@@ -73,7 +73,7 @@ feature {NONE} -- Implementation
 
 	redraw_rectangle (a_x, a_y, a_width, a_height: INTEGER) is
 		do
-			feature {EV_GTK_EXTERNALS}.gtk_widget_queue_draw_area (visual_widget, a_x, a_y, a_width, a_height)
+			{EV_GTK_EXTERNALS}.gtk_widget_queue_draw_area (visual_widget, a_x, a_y, a_width, a_height)
 		end
 		
 	clear_and_redraw is
@@ -98,7 +98,7 @@ feature {EV_DRAWABLE_IMP} -- Implementation
 
 	drawable: POINTER is
 		do
-			Result := feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (visual_widget)
+			Result := {EV_GTK_EXTERNALS}.gtk_widget_struct_window (visual_widget)
 		end
 		
 feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
@@ -114,7 +114,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 	lose_focus is
 		do
 			top_level_window_imp.set_focus_widget (Void)
-			feature {EV_GTK_EXTERNALS}.GTK_WIDGET_UNSET_FLAGS (c_object, feature {EV_GTK_EXTERNALS}.GTK_HAS_FOCUS_ENUM)
+			{EV_GTK_EXTERNALS}.GTK_WIDGET_UNSET_FLAGS (c_object, {EV_GTK_EXTERNALS}.GTK_HAS_FOCUS_ENUM)
 			-- This is a hack to make sure focus flag is unset.
 		end
 		
@@ -122,15 +122,15 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			-- Grab keyboard focus.
 		do
 			if not has_focus then
-				feature {EV_GTK_EXTERNALS}.GTK_WIDGET_SET_FLAGS (c_object, feature {EV_GTK_EXTERNALS}.GTK_CAN_FOCUS_ENUM)
+				{EV_GTK_EXTERNALS}.GTK_WIDGET_SET_FLAGS (c_object, {EV_GTK_EXTERNALS}.GTK_CAN_FOCUS_ENUM)
 				if focus_in_actions_internal /= Void then
 					focus_in_actions_internal.block
 					-- This needs to be called manually for cases that gtk doesn't handle.
 				end
-				feature {EV_GTK_EXTERNALS}.gtk_widget_grab_focus (c_object)
-				feature {EV_GTK_EXTERNALS}.GTK_WIDGET_SET_FLAGS (c_object, feature {EV_GTK_EXTERNALS}.GTK_HAS_FOCUS_ENUM)
+				{EV_GTK_EXTERNALS}.gtk_widget_grab_focus (c_object)
+				{EV_GTK_EXTERNALS}.GTK_WIDGET_SET_FLAGS (c_object, {EV_GTK_EXTERNALS}.GTK_HAS_FOCUS_ENUM)
 				top_level_window_imp.set_focus_widget (Current)
-				feature {EV_GTK_EXTERNALS}.GTK_WIDGET_UNSET_FLAGS (c_object, feature {EV_GTK_EXTERNALS}.GTK_CAN_FOCUS_ENUM)
+				{EV_GTK_EXTERNALS}.GTK_WIDGET_UNSET_FLAGS (c_object, {EV_GTK_EXTERNALS}.GTK_CAN_FOCUS_ENUM)
 				if focus_in_actions_internal /= Void then
 					focus_in_actions_internal.resume
 					focus_in_actions_internal.call (Void)
@@ -149,7 +149,7 @@ feature {NONE} -- Implementation
 				(a_key.code = App_implementation.Key_constants.Key_up or else a_key.code = App_implementation.Key_constants.Key_down)
 			then
 				-- This is a hack for Studio to force trailing cursors to be undrawn upon key scrolling.
-				feature {EV_GTK_EXTERNALS}.gtk_widget_queue_draw (visual_widget)
+				{EV_GTK_EXTERNALS}.gtk_widget_queue_draw (visual_widget)
 			end				
 		end
 
@@ -158,7 +158,7 @@ feature {NONE} -- Implementation
 		do
 			Precursor {EV_PRIMITIVE_IMP}
 			if gc /= NULL then
-				feature {EV_GTK_EXTERNALS}.gdk_gc_unref (gc)
+				{EV_GTK_EXTERNALS}.gdk_gc_unref (gc)
 				gc := NULL
 			end
 		end

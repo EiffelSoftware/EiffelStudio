@@ -21,7 +21,7 @@ feature -- Access
 	current_working_directory: STRING is
 			-- Directory of current execution
 		do
-			Result := feature {ENVIRONMENT}.current_directory
+			Result := {ENVIRONMENT}.current_directory
 		end
 
 	default_shell: STRING is
@@ -46,7 +46,7 @@ feature -- Access
 				Result := user_environment_variables.found_item.twin
 			else
 				cs := s.to_cil
-				cs := feature {ENVIRONMENT}.get_environment_variable (cs)
+				cs := {ENVIRONMENT}.get_environment_variable (cs)
 				if cs /= Void then
 					create Result.make_from_cil (cs)
 				end
@@ -80,7 +80,7 @@ feature -- Status setting
 	change_working_directory (path: STRING) is
 			-- Set the current directory to `path'
 		do
-			feature {ENVIRONMENT}.set_current_directory (path)
+			{ENVIRONMENT}.set_current_directory (path)
 		end
 
 	put (value, key: STRING) is
@@ -163,7 +163,7 @@ feature {NONE} -- Implementation
 					merge_env_vars (l_si.environment_variables)
 					l_si.set_redirect_standard_error (True)
 					l_si.set_redirect_standard_output (True)
-					last_process := feature {SYSTEM_DLL_PROCESS}.start_process_start_info (l_si)
+					last_process := {SYSTEM_DLL_PROCESS}.start_process_start_info (l_si)
 					if should_wait then
 						last_process.wait_for_exit
 						return_code := last_process.exit_code
@@ -210,7 +210,7 @@ feature {NONE} -- Implementation
 			end
 			l_si.set_use_shell_execute (False)
 			merge_env_vars (l_si.environment_variables)
-			last_process := feature {SYSTEM_DLL_PROCESS}.start_process_start_info (l_si)
+			last_process := {SYSTEM_DLL_PROCESS}.start_process_start_info (l_si)
 			if should_wait then
 				last_process.wait_for_exit
 				return_code := last_process.exit_code
@@ -226,8 +226,8 @@ feature {NONE} -- Implementation
 			l_ext, l_paths: ARRAYED_LIST [STRING]
 			l_program_name: STRING
 		do
-			if feature {SYSTEM_FILE}.exists (a_cmd) then
-				Result := feature {PATH}.get_full_path (a_cmd)
+			if {SYSTEM_FILE}.exists (a_cmd) then
+				Result := {PATH}.get_full_path (a_cmd)
 			else
 				l_ext := executable_extensions
 				l_paths:= search_directories
@@ -242,9 +242,9 @@ feature {NONE} -- Implementation
 						Result /= Void or l_paths.off
 					loop
 						l_program_name := l_paths.item.twin
-						l_program_name.extend (feature {PATH}.directory_separator_char)
+						l_program_name.extend ({PATH}.directory_separator_char)
 						l_program_name.append (a_cmd + l_ext.item)
-						if feature {SYSTEM_FILE}.exists (l_program_name) then
+						if {SYSTEM_FILE}.exists (l_program_name) then
 							Result := l_program_name
 						end
 						l_paths.forth
@@ -279,8 +279,8 @@ feature {NONE} -- Implementation
 			l_path: STRING
 		do
 			create Result.make (100)
-			Result.extend (feature {PATH}.get_directory_name (
-				(feature {ASSEMBLY}.get_entry_assembly).location))
+			Result.extend ({PATH}.get_directory_name (
+				({ASSEMBLY}.get_entry_assembly).location))
 			Result.extend (current_working_directory)
 			l_path := get ("PATH")
 			if l_path /= Void then

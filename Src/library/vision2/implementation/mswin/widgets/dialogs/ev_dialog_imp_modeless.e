@@ -51,7 +51,7 @@ feature -- Status report
 					-- we need to query the interface.
 				Result := interface.implementation.is_show_requested
 			else
-				Result := flag_set (style, feature {WEL_WINDOW_CONSTANTS}.Ws_visible)
+				Result := flag_set (style, {WEL_WINDOW_CONSTANTS}.Ws_visible)
 			end	
 		end
 		

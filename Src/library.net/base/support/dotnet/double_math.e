@@ -34,84 +34,84 @@ feature -- Access
 			-- Trigonometric cosine of radian `v' approximated
 			-- in the range [-pi/4, +pi/4]
 		do
-			Result := feature {MATH}.cos (v)
+			Result := {MATH}.cos (v)
 		end
 
 	arc_cosine (v: DOUBLE): DOUBLE is
 			-- Trigonometric arccosine of radian `v'
 			-- in the range [0, pi]
 		do
-			Result := feature {MATH}.acos (v)
+			Result := {MATH}.acos (v)
 		end
 
 	sine (v: DOUBLE): DOUBLE is
 			-- Trigonometric sine of radian `v' approximated
 			-- in range [-pi/4, +pi/4]
 		do
-			Result := feature {MATH}.sin (v)
+			Result := {MATH}.sin (v)
 		end
 
 	arc_sine (v: DOUBLE): DOUBLE is
 			-- Trigonometric arcsine of radian `v'
 			-- in the range [-pi/2, +pi/2]
 		do
-			Result := feature {MATH}.asin (v)
+			Result := {MATH}.asin (v)
 		end
 
 	tangent (v: DOUBLE): DOUBLE is
 			-- Trigonometric tangent of radian `v' approximated
 			-- in range [-pi/4, +pi/4]
 		do
-			Result := feature {MATH}.tan (v)
+			Result := {MATH}.tan (v)
 		end
 
 	arc_tangent (v: DOUBLE): DOUBLE is
 			-- Trigonometric arctangent of radian `v'
 			-- in the range [-pi/2, +pi/2]
 		do
-			Result := feature {MATH}.atan (v)
+			Result := {MATH}.atan (v)
 		end
 
 	sqrt (v: DOUBLE): DOUBLE is
 			-- Square root of `v'
 		do
-			Result := feature {MATH}.sqrt (v)
+			Result := {MATH}.sqrt (v)
 		end
 
 	exp (v: DOUBLE): DOUBLE is
 			-- Exponential of `v'.
 		do
-			Result := feature {MATH}.exp (v)
+			Result := {MATH}.exp (v)
 		end
 
 	log (v: DOUBLE): DOUBLE is
 			-- Natural logarithm of `v'
 		do
-			Result := feature {MATH}.log (v)
+			Result := {MATH}.log (v)
 		end
 
 	log10 (v: DOUBLE): DOUBLE is
 			-- Base 10 logarithm of `v'
 		do
-			Result := feature {MATH}.log_10 (v)
+			Result := {MATH}.log_10 (v)
 		end
 
 	floor (v: DOUBLE): DOUBLE is
 			-- Greatest integral less than or equal to `v'
 		do
-			Result := feature {MATH}.floor (v)
+			Result := {MATH}.floor (v)
 		end
 
 	ceiling (v: DOUBLE): DOUBLE is
 			-- Least integral greater than or equal to `v'
 		do
-			Result := feature {MATH}.ceiling (v)
+			Result := {MATH}.ceiling (v)
 		end
 
 	dabs (v: DOUBLE): DOUBLE is
 			-- Absolute of `v'
 		do
-			Result := feature {MATH}.abs_double (v)
+			Result := {MATH}.abs_double (v)
 		end
 
 indexing

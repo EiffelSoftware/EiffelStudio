@@ -34,11 +34,11 @@ feature {NONE} -- Initialization
 			end_byte: POINTER
 			utf8_valid: BOOLEAN
 		do
-			utf8_valid := feature {EV_GTK_DEPENDENT_EXTERNALS}.g_utf8_validate (a_utf8_ptr, -1, $end_byte)
+			utf8_valid := {EV_GTK_DEPENDENT_EXTERNALS}.g_utf8_validate (a_utf8_ptr, -1, $end_byte)
 			if utf8_valid then
 				create managed_data.make_from_pointer (a_utf8_ptr, pointer_diff (a_utf8_ptr, end_byte) + 1)
 			else
-				create managed_data.make_from_pointer (a_utf8_ptr, feature {EV_GTK_EXTERNALS}.g_utf8_strlen (a_utf8_ptr, -1) + 1)
+				create managed_data.make_from_pointer (a_utf8_ptr, {EV_GTK_EXTERNALS}.g_utf8_strlen (a_utf8_ptr, -1) + 1)
 			end
 		end
 
@@ -66,11 +66,11 @@ feature -- Access
 			bytes_read, bytes_written: INTEGER
 			gerror: POINTER
 		do
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.g_locale_from_utf8 (item, managed_data.count - 1, $bytes_read, $bytes_written, $gerror, $str_ptr)
+			{EV_GTK_DEPENDENT_EXTERNALS}.g_locale_from_utf8 (item, managed_data.count - 1, $bytes_read, $bytes_written, $gerror, $str_ptr)
 			if str_ptr /= default_pointer then
 				create Result.make (bytes_written)
 				Result.from_c_substring (str_ptr, 1, bytes_written)
-				feature {EV_GTK_EXTERNALS}.g_free (str_ptr)
+				{EV_GTK_EXTERNALS}.g_free (str_ptr)
 			else
 				-- Sometimes the UTF8 string cannot be translated
 				create Result.make_from_c (item)
@@ -99,7 +99,7 @@ feature {NONE} -- Implementation
 			a_end: POINTER
 		do
 			string_value := a_string.to_c
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.g_locale_to_utf8 ($string_value, a_string.count, $bytes_read, $bytes_written, $gerror, $utf8_ptr)
+			{EV_GTK_DEPENDENT_EXTERNALS}.g_locale_to_utf8 ($string_value, a_string.count, $bytes_read, $bytes_written, $gerror, $utf8_ptr)
 			if utf8_ptr = default_pointer then
 					-- An error has occurred, this is probably due to `a_string' containing invalid characters
 				from
@@ -110,21 +110,21 @@ feature {NONE} -- Implementation
 				loop
 					temp_string := a_str.item (i).out
 					string_value := temp_string.to_c
-					if not feature {EV_GTK_DEPENDENT_EXTERNALS}.g_utf8_validate ($string_value, -1, $a_end) then
+					if not {EV_GTK_DEPENDENT_EXTERNALS}.g_utf8_validate ($string_value, -1, $a_end) then
 						a_str.put (' ', i)
 							-- If character doesn't validate as UTF8 then we change to a blank character
 					end
 					i := i + 1
 				end
 				string_value := a_str.to_c
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.g_locale_to_utf8 ($string_value, -1, $bytes_read, $bytes_written, $gerror, $utf8_ptr)
+				{EV_GTK_DEPENDENT_EXTERNALS}.g_locale_to_utf8 ($string_value, -1, $bytes_read, $bytes_written, $gerror, $utf8_ptr)
 			end
 				-- The value of bytes_written doesn't take the null character in to account
 			if a_shared then
 				create managed_data.share_from_pointer (utf8_ptr, bytes_written + 1)
 			else
 				create managed_data.make_from_pointer (utf8_ptr, bytes_written + 1)
-				feature {EV_GTK_EXTERNALS}.g_free (utf8_ptr)
+				{EV_GTK_EXTERNALS}.g_free (utf8_ptr)
 			end
 		end
 

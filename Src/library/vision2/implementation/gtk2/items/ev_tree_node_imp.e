@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 			-- Clean up
 		do
 			if not is_in_final_collect and then gdk_pixbuf /= default_pointer then
-					feature {EV_GTK_EXTERNALS}.object_unref (gdk_pixbuf)
+					{EV_GTK_EXTERNALS}.object_unref (gdk_pixbuf)
 			end
 		end
 
@@ -85,9 +85,9 @@ feature -- Status report
 			par_tree: EV_TREE_IMP
 		do
 			par_tree := parent_tree_imp
-			a_tree_path := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_path (par_tree.tree_store, list_iter.item)
-			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_row_expanded (par_tree.tree_view, a_tree_path)
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_free (a_tree_path)
+			a_tree_path := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_path (par_tree.tree_store, list_iter.item)
+			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_row_expanded (par_tree.tree_view, a_tree_path)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_free (a_tree_path)
 		end
 
 feature -- Status setting
@@ -100,8 +100,8 @@ feature -- Status setting
 		do
 			par_tree := parent_tree_imp
 			if par_tree /= Void then
-				a_selection := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (par_tree.tree_view)
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_select_iter (a_selection, list_iter.item)				
+				a_selection := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (par_tree.tree_view)
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_select_iter (a_selection, list_iter.item)				
 			end
 		end
 
@@ -113,8 +113,8 @@ feature -- Status setting
 		do
 			par_tree := parent_tree_imp
 			if par_tree /= Void then
-				a_selection := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (par_tree.tree_view)
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_unselect_iter (a_selection, list_iter.item)				
+				a_selection := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (par_tree.tree_view)
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_unselect_iter (a_selection, list_iter.item)				
 			end
 		end
 	
@@ -126,13 +126,13 @@ feature -- Status setting
 			a_success: BOOLEAN
 		do
 			par_tree := parent_tree_imp
-			a_tree_path := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_path (par_tree.tree_store, list_iter.item)
+			a_tree_path := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_path (par_tree.tree_store, list_iter.item)
 			if a_flag then
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_expand_to_path (par_tree.tree_view, a_tree_path)
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_expand_to_path (par_tree.tree_view, a_tree_path)
 			else
-				a_success := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_collapse_row (par_tree.tree_view, a_tree_path)
+				a_success := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_collapse_row (par_tree.tree_view, a_tree_path)
 			end
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_free (a_tree_path)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_free (a_tree_path)
 		end
 		
 	set_text (a_text: STRING) is
@@ -306,7 +306,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 			end
 			create a_tree_iter.make
 			set_list_iter (a_tree_iter)
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_store_insert (a_parent_tree.tree_store, a_tree_iter.item, a_parent_iter, a_index - 1)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_store_insert (a_parent_tree.tree_store, a_tree_iter.item, a_parent_iter, a_index - 1)
 			a_parent_tree.set_text_on_position (Current, text)
 			a_parent_tree.update_row_pixmap (Current)
 			from
@@ -402,7 +402,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 			par_tree: EV_TREE_IMP
 		do
 			if gdk_pixbuf /= default_pointer then
-				feature {EV_GTK_EXTERNALS}.object_unref (gdk_pixbuf)
+				{EV_GTK_EXTERNALS}.object_unref (gdk_pixbuf)
 				gdk_pixbuf := default_pointer				
 			end
 			par_tree := parent_tree_imp
@@ -477,7 +477,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 			par_tree_imp := parent_tree_imp
 			if par_tree_imp /= Void then
 				item_imp.set_internal_text (par_tree_imp.get_text_from_position (item_imp))
-				feature {EV_GTK_EXTERNALS}.gtk_tree_store_remove (par_tree_imp.tree_store, item_imp.list_iter.item)
+				{EV_GTK_EXTERNALS}.gtk_tree_store_remove (par_tree_imp.tree_store, item_imp.list_iter.item)
 			end
 			item_imp.set_parent_imp (Void)
 			child_array.go_i_th (a_position)

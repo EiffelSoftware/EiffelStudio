@@ -49,9 +49,9 @@ feature -- Access
 				c_object /= NULL
 			end
 			check
-				feature {EV_GTK_EXTERNALS}.gtk_window_struct_title (c_object) /= NULL
+				{EV_GTK_EXTERNALS}.gtk_window_struct_title (c_object) /= NULL
 			end
-			create Result.make_from_c (feature {EV_GTK_EXTERNALS}.gtk_window_struct_title (c_object))
+			create Result.make_from_c ({EV_GTK_EXTERNALS}.gtk_window_struct_title (c_object))
 		end
 
 feature -- Status report
@@ -115,7 +115,7 @@ feature -- Status setting
 			a_cs: EV_GTK_C_STRING
 		do
 			create a_cs.make (a_title)
-			feature {EV_GTK_EXTERNALS}.gtk_window_set_title (c_object, a_cs.item)
+			{EV_GTK_EXTERNALS}.gtk_window_set_title (c_object, a_cs.item)
 		end
 
 feature {NONE} -- Implementation
@@ -143,10 +143,10 @@ feature {NONE} -- Implementation
 			until
 				is_destroyed or else selected_button /= Void
 			loop
-				if feature {EV_GTK_EXTERNALS}.gtk_events_pending = 0 then
+				if {EV_GTK_EXTERNALS}.gtk_events_pending = 0 then
 					App_implementation.call_idle_actions
 				end
-				dummy := feature {EV_GTK_EXTERNALS}.gtk_main_iteration_do (True)
+				dummy := {EV_GTK_EXTERNALS}.gtk_main_iteration_do (True)
 			end
 		end
 		
@@ -155,11 +155,11 @@ feature {NONE} -- Implementation
 		local
 			close_fct: INTEGER
 		do
-			close_fct := feature {EV_GTK_EXTERNALS}.Gdk_func_close_enum
-			close_fct := close_fct.bit_or (feature {EV_GTK_EXTERNALS}.Gdk_func_move_enum)
-			close_fct := close_fct.bit_or (feature {EV_GTK_EXTERNALS}.Gdk_func_resize_enum)
-			feature {EV_GTK_EXTERNALS}.gdk_window_set_functions (
-				feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object),
+			close_fct := {EV_GTK_EXTERNALS}.Gdk_func_close_enum
+			close_fct := close_fct.bit_or ({EV_GTK_EXTERNALS}.Gdk_func_move_enum)
+			close_fct := close_fct.bit_or ({EV_GTK_EXTERNALS}.Gdk_func_resize_enum)
+			{EV_GTK_EXTERNALS}.gdk_window_set_functions (
+				{EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object),
 				close_fct
 			)
 		end
@@ -188,14 +188,14 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 		do
 			user_clicked_ok := True
 			selected_button := internal_accept
-			feature {EV_GTK_EXTERNALS}.gtk_widget_hide (c_object)
+			{EV_GTK_EXTERNALS}.gtk_widget_hide (c_object)
 		end
 
 	on_cancel is
 			-- Close window and call action sequence.
 		do
 			selected_button := ev_cancel
-			feature {EV_GTK_EXTERNALS}.gtk_widget_hide (c_object)
+			{EV_GTK_EXTERNALS}.gtk_widget_hide (c_object)
 		end
 
 end -- class EV_STANDARD_DIALOG_IMP

@@ -38,10 +38,10 @@ feature {NONE} -- Initialization
 			set_font_attributes
 				(
 					app_implementation.default_font_name,
-					feature {EV_FONT_CONSTANTS}.family_sans,
+					{EV_FONT_CONSTANTS}.family_sans,
 					app_implementation.default_font_point_height_internal,
 					app_implementation.default_font_weight_internal,
-					feature {EV_FONT_CONSTANTS}.shape_regular,
+					{EV_FONT_CONSTANTS}.shape_regular,
 					0
 				)
 			is_initialized := True
@@ -177,15 +177,15 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 			-- Used for creating a fully set GtkTextTag
 		once
 			create Result.make_with_flags (
-				feature {EV_CHARACTER_FORMAT_CONSTANTS}.font_family
-				| feature {EV_CHARACTER_FORMAT_CONSTANTS}.font_weight
-				| feature {EV_CHARACTER_FORMAT_CONSTANTS}.font_shape
-				| feature {EV_CHARACTER_FORMAT_CONSTANTS}.font_height
-				| feature {EV_CHARACTER_FORMAT_CONSTANTS}.color
-				| feature {EV_CHARACTER_FORMAT_CONSTANTS}.background_color
-				| feature {EV_CHARACTER_FORMAT_CONSTANTS}.effects_striked_out
-				| feature {EV_CHARACTER_FORMAT_CONSTANTS}.effects_underlined
-				| feature {EV_CHARACTER_FORMAT_CONSTANTS}.effects_vertical_offset
+				{EV_CHARACTER_FORMAT_CONSTANTS}.font_family
+				| {EV_CHARACTER_FORMAT_CONSTANTS}.font_weight
+				| {EV_CHARACTER_FORMAT_CONSTANTS}.font_shape
+				| {EV_CHARACTER_FORMAT_CONSTANTS}.font_height
+				| {EV_CHARACTER_FORMAT_CONSTANTS}.color
+				| {EV_CHARACTER_FORMAT_CONSTANTS}.background_color
+				| {EV_CHARACTER_FORMAT_CONSTANTS}.effects_striked_out
+				| {EV_CHARACTER_FORMAT_CONSTANTS}.effects_underlined
+				| {EV_CHARACTER_FORMAT_CONSTANTS}.effects_vertical_offset
 			)
 		end
 
@@ -197,45 +197,45 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 			a_text_tag_name: EV_GTK_C_STRING
 			prop_value_int: INTEGER
 		do
-			a_tag_table := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_tag_table (a_text_buffer)
+			a_tag_table := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_tag_table (a_text_buffer)
 			
 			if applicable_attributes.font_family then
 				a_text_tag_name := name
-				a_text_tag := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_lookup (a_tag_table, a_text_tag_name.item)
+				a_text_tag := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_lookup (a_tag_table, a_text_tag_name.item)
 				if a_text_tag = default_pointer then
-					a_text_tag := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_new (a_text_tag_name.item)
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_string (a_text_tag, family_string.item, a_text_tag_name.item)
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_add (a_tag_table, a_text_tag)
+					a_text_tag := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_new (a_text_tag_name.item)
+					{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_string (a_text_tag, family_string.item, a_text_tag_name.item)
+					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_add (a_tag_table, a_text_tag)
 				end
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_apply_tag (a_text_buffer, a_text_tag, a_start_iter, a_end_iter)
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_apply_tag (a_text_buffer, a_text_tag, a_start_iter, a_end_iter)
 			end
 
 			if applicable_attributes.font_height then
 				a_text_tag_name := "fh" + height_in_points.out
-				a_text_tag := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_lookup (a_tag_table, a_text_tag_name.item)
+				a_text_tag := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_lookup (a_tag_table, a_text_tag_name.item)
 				if a_text_tag = default_pointer then
-					a_text_tag := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_new (a_text_tag_name.item)
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (a_text_tag, size_string.item, height_in_points * feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_scale)
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_add (a_tag_table, a_text_tag)
+					a_text_tag := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_new (a_text_tag_name.item)
+					{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (a_text_tag, size_string.item, height_in_points * {EV_GTK_DEPENDENT_EXTERNALS}.pango_scale)
+					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_add (a_tag_table, a_text_tag)
 				end
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_apply_tag (a_text_buffer, a_text_tag, a_start_iter, a_end_iter)
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_apply_tag (a_text_buffer, a_text_tag, a_start_iter, a_end_iter)
 			end
 			
 			if applicable_attributes.font_shape then
-				if shape = feature {EV_FONT_CONSTANTS}.shape_italic then
+				if shape = {EV_FONT_CONSTANTS}.shape_italic then
 					a_text_tag_name := "fsi"
 					prop_value_int := 2
 				else
 					a_text_tag_name := "fsr"
 					prop_value_int := 0
 				end
-				a_text_tag := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_lookup (a_tag_table, a_text_tag_name.item)
+				a_text_tag := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_lookup (a_tag_table, a_text_tag_name.item)
 				if a_text_tag = default_pointer then
-					a_text_tag := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_new (a_text_tag_name.item)
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (a_text_tag, style_string.item, prop_value_int)
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_add (a_tag_table, a_text_tag)
+					a_text_tag := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_new (a_text_tag_name.item)
+					{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (a_text_tag, style_string.item, prop_value_int)
+					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_add (a_tag_table, a_text_tag)
 				end
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_apply_tag (a_text_buffer, a_text_tag, a_start_iter, a_end_iter)
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_apply_tag (a_text_buffer, a_text_tag, a_start_iter, a_end_iter)
 			end
 
 
@@ -243,64 +243,64 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 				inspect
 					weight
 				when
-					feature {EV_FONT_CONSTANTS}.weight_bold
+					{EV_FONT_CONSTANTS}.weight_bold
 				then
 					a_text_tag_name := "fwb"
-					prop_value_int := feature {EV_FONT_IMP}.pango_weight_bold
+					prop_value_int := {EV_FONT_IMP}.pango_weight_bold
 				when
-					feature {EV_FONT_CONSTANTS}.weight_regular
+					{EV_FONT_CONSTANTS}.weight_regular
 				then
 					a_text_tag_name := "fwr"
-					prop_value_int := feature {EV_FONT_IMP}.pango_weight_normal
+					prop_value_int := {EV_FONT_IMP}.pango_weight_normal
 				when
-					feature {EV_FONT_CONSTANTS}.weight_thin
+					{EV_FONT_CONSTANTS}.weight_thin
 				then
 					a_text_tag_name := "fwt"
-					prop_value_int := feature {EV_FONT_IMP}.pango_weight_ultra_light
+					prop_value_int := {EV_FONT_IMP}.pango_weight_ultra_light
 				when
-					feature {EV_FONT_CONSTANTS}.weight_black
+					{EV_FONT_CONSTANTS}.weight_black
 				then
 					a_text_tag_name := "fwb"
-					prop_value_int := feature {EV_FONT_IMP}.pango_weight_heavy
+					prop_value_int := {EV_FONT_IMP}.pango_weight_heavy
 				end
-				a_text_tag := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_lookup (a_tag_table, a_text_tag_name.item)
+				a_text_tag := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_lookup (a_tag_table, a_text_tag_name.item)
 				if a_text_tag = default_pointer then
-					a_text_tag := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_new (a_text_tag_name.item)
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (a_text_tag, weight_string.item, prop_value_int)
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_add (a_tag_table, a_text_tag)
+					a_text_tag := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_new (a_text_tag_name.item)
+					{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (a_text_tag, weight_string.item, prop_value_int)
+					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_add (a_tag_table, a_text_tag)
 				end
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_apply_tag (a_text_buffer, a_text_tag, a_start_iter, a_end_iter)
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_apply_tag (a_text_buffer, a_text_tag, a_start_iter, a_end_iter)
 			end
 			
 			
 			if applicable_attributes.color then
 				a_text_tag_name := "fg" + fcolor.out
-				a_text_tag := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_lookup (a_tag_table, a_text_tag_name.item)
+				a_text_tag := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_lookup (a_tag_table, a_text_tag_name.item)
 				if a_text_tag = default_pointer then
-					a_text_tag := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_new (a_text_tag_name.item)
+					a_text_tag := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_new (a_text_tag_name.item)
 
-					feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (App_implementation.reusable_color_struct, (fcolor |>> 16) * 257)
-					feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_green (App_implementation.reusable_color_struct, ((fcolor |<< 16) |>> 24) * 257)
-					feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_red (App_implementation.reusable_color_struct, ((fcolor |<< 24) |>> 24) * 257)
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_pointer (a_text_tag, foreground_gdk_string.item, App_implementation.reusable_color_struct, default_pointer)
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_add (a_tag_table, a_text_tag)
+					{EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (App_implementation.reusable_color_struct, (fcolor |>> 16) * 257)
+					{EV_GTK_EXTERNALS}.set_gdk_color_struct_green (App_implementation.reusable_color_struct, ((fcolor |<< 16) |>> 24) * 257)
+					{EV_GTK_EXTERNALS}.set_gdk_color_struct_red (App_implementation.reusable_color_struct, ((fcolor |<< 24) |>> 24) * 257)
+					{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_pointer (a_text_tag, foreground_gdk_string.item, App_implementation.reusable_color_struct, default_pointer)
+					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_add (a_tag_table, a_text_tag)
 				end
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_apply_tag (a_text_buffer, a_text_tag, a_start_iter, a_end_iter)
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_apply_tag (a_text_buffer, a_text_tag, a_start_iter, a_end_iter)
 			end
 
 			if applicable_attributes.background_color then
 				a_text_tag_name := "bg" + bcolor.out
-				a_text_tag := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_lookup (a_tag_table, a_text_tag_name.item)
+				a_text_tag := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_lookup (a_tag_table, a_text_tag_name.item)
 				if a_text_tag = default_pointer then
-					a_text_tag := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_new (a_text_tag_name.item)
+					a_text_tag := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_new (a_text_tag_name.item)
 
-					feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (App_implementation.reusable_color_struct, (bcolor |>> 16) * 257)
-					feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_green (App_implementation.reusable_color_struct, ((bcolor |<< 16) |>> 24) * 257)
-					feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_red (App_implementation.reusable_color_struct, ((bcolor |<< 24) |>> 24) * 257)
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_pointer (a_text_tag, background_gdk_string.item, App_implementation.reusable_color_struct, default_pointer)
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_add (a_tag_table, a_text_tag)
+					{EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (App_implementation.reusable_color_struct, (bcolor |>> 16) * 257)
+					{EV_GTK_EXTERNALS}.set_gdk_color_struct_green (App_implementation.reusable_color_struct, ((bcolor |<< 16) |>> 24) * 257)
+					{EV_GTK_EXTERNALS}.set_gdk_color_struct_red (App_implementation.reusable_color_struct, ((bcolor |<< 24) |>> 24) * 257)
+					{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_pointer (a_text_tag, background_gdk_string.item, App_implementation.reusable_color_struct, default_pointer)
+					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_add (a_tag_table, a_text_tag)
 				end
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_apply_tag (a_text_buffer, a_text_tag, a_start_iter, a_end_iter)
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_apply_tag (a_text_buffer, a_text_tag, a_start_iter, a_end_iter)
 			end
 
 			if applicable_attributes.effects_striked_out then
@@ -309,13 +309,13 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 				else
 					a_text_tag_name := "sof"
 				end
-				a_text_tag := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_lookup (a_tag_table, a_text_tag_name.item)
+				a_text_tag := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_lookup (a_tag_table, a_text_tag_name.item)
 				if a_text_tag = default_pointer then
-					a_text_tag := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_new (a_text_tag_name.item)
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_boolean (a_text_tag, strikethrough_string.item, is_striked_out)
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_add (a_tag_table, a_text_tag)
+					a_text_tag := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_new (a_text_tag_name.item)
+					{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_boolean (a_text_tag, strikethrough_string.item, is_striked_out)
+					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_add (a_tag_table, a_text_tag)
 				end
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_apply_tag (a_text_buffer, a_text_tag, a_start_iter, a_end_iter)
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_apply_tag (a_text_buffer, a_text_tag, a_start_iter, a_end_iter)
 			end
 
 			if applicable_attributes.effects_underlined then
@@ -324,24 +324,24 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 				else
 					a_text_tag_name := "uf"
 				end
-				a_text_tag := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_lookup (a_tag_table, a_text_tag_name.item)
+				a_text_tag := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_lookup (a_tag_table, a_text_tag_name.item)
 				if a_text_tag = default_pointer then
-					a_text_tag := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_new (a_text_tag_name.item)
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_boolean (a_text_tag, underline_string.item, is_underlined)
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_add (a_tag_table, a_text_tag)
+					a_text_tag := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_new (a_text_tag_name.item)
+					{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_boolean (a_text_tag, underline_string.item, is_underlined)
+					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_add (a_tag_table, a_text_tag)
 				end
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_apply_tag (a_text_buffer, a_text_tag, a_start_iter, a_end_iter)
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_apply_tag (a_text_buffer, a_text_tag, a_start_iter, a_end_iter)
 			end
 	
 			if applicable_attributes.effects_vertical_offset then
 				a_text_tag_name := "vo" + vertical_offset.out
-				a_text_tag := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_lookup (a_tag_table, a_text_tag_name.item)
+				a_text_tag := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_lookup (a_tag_table, a_text_tag_name.item)
 				if a_text_tag = default_pointer then
-					a_text_tag := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_new (a_text_tag_name.item)
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (a_text_tag, rise_string.item, vertical_offset)
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_add (a_tag_table, a_text_tag)					
+					a_text_tag := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_new (a_text_tag_name.item)
+					{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (a_text_tag, rise_string.item, vertical_offset)
+					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_add (a_tag_table, a_text_tag)					
 				end
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_apply_tag (a_text_buffer, a_text_tag, a_start_iter, a_end_iter)
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_apply_tag (a_text_buffer, a_text_tag, a_start_iter, a_end_iter)
 			end
 		end
 		
@@ -355,42 +355,42 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 			temp_string: STRING
 		do
 			
-			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_new (default_pointer)
+			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_new (default_pointer)
 			
 			if (applicable_attributes.font_family or else applicable_attributes.font_height or else applicable_attributes.font_shape or else applicable_attributes.font_weight) then
 				if applicable_attributes.font_family then
 					propvalue := (name)
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_string (Result, family_string.item, propvalue.item)					
+					{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_string (Result, family_string.item, propvalue.item)					
 				end
 				if applicable_attributes.font_height then
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, size_string.item, height_in_points * feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_scale)	
+					{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, size_string.item, height_in_points * {EV_GTK_DEPENDENT_EXTERNALS}.pango_scale)	
 				end
 				if applicable_attributes.font_shape then
-					if shape = feature {EV_FONT_CONSTANTS}.shape_italic then
-						feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, style_string.item, 2)
+					if shape = {EV_FONT_CONSTANTS}.shape_italic then
+						{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, style_string.item, 2)
 					else
-						feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, style_string.item, 0)
+						{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, style_string.item, 0)
 					end
 				end
 				if applicable_attributes.font_weight then
 					inspect
 						weight
 					when
-						feature {EV_FONT_CONSTANTS}.weight_bold
+						{EV_FONT_CONSTANTS}.weight_bold
 					then
-						feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, weight_string.item, feature {EV_FONT_IMP}.pango_weight_bold)
+						{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, weight_string.item, {EV_FONT_IMP}.pango_weight_bold)
 					when
-						feature {EV_FONT_CONSTANTS}.weight_regular
+						{EV_FONT_CONSTANTS}.weight_regular
 					then
-						feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, weight_string.item, feature {EV_FONT_IMP}.pango_weight_normal)
+						{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, weight_string.item, {EV_FONT_IMP}.pango_weight_normal)
 					when
-						feature {EV_FONT_CONSTANTS}.weight_thin
+						{EV_FONT_CONSTANTS}.weight_thin
 					then
-						feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, weight_string.item, feature {EV_FONT_IMP}.pango_weight_ultra_light)
+						{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, weight_string.item, {EV_FONT_IMP}.pango_weight_ultra_light)
 					when
-						feature {EV_FONT_CONSTANTS}.weight_black
+						{EV_FONT_CONSTANTS}.weight_black
 					then
-						feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, weight_string.item, feature {EV_FONT_IMP}.pango_weight_heavy)
+						{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, weight_string.item, {EV_FONT_IMP}.pango_weight_heavy)
 					end				
 				end
 			end
@@ -403,7 +403,7 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 				temp_string := (a_red + a_green + a_blue).to_hex_string
 				temp_string.keep_tail (6)
 				propvalue := "#" +  temp_string
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_string (Result, foreground_string.item, propvalue.item)
+				{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_string (Result, foreground_string.item, propvalue.item)
 
 				--feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (color_struct, (fcolor |>> 16) * 257)
 				--feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_green (color_struct, ((fcolor |<< 16) |>> 24) * 257)
@@ -419,22 +419,22 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 				temp_string := (a_red + a_green + a_blue).to_hex_string
 				temp_string.keep_tail (6)
 				propvalue := "#" +  temp_string
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_string (Result, background_string.item, propvalue.item)		
+				{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_string (Result, background_string.item, propvalue.item)		
 			end	
 
 			if (applicable_attributes.effects_striked_out or else applicable_attributes.effects_underlined or else applicable_attributes.effects_vertical_offset) then
 				if applicable_attributes.effects_striked_out then
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_boolean (Result, strikethrough_string.item, is_striked_out)
+					{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_boolean (Result, strikethrough_string.item, is_striked_out)
 				end
 				if applicable_attributes.effects_underlined then 
 					if is_underlined then
-						feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, underline_string.item, feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_underline_single_enum)
+						{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, underline_string.item, {EV_GTK_DEPENDENT_EXTERNALS}.pango_underline_single_enum)
 					else
-						feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, underline_string.item, feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_underline_none_enum)
+						{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, underline_string.item, {EV_GTK_DEPENDENT_EXTERNALS}.pango_underline_none_enum)
 					end
 				end
 				if applicable_attributes.effects_vertical_offset then
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, rise_string.item, vertical_offset)
+					{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, rise_string.item, vertical_offset)
 				end
 			end
 		end
@@ -534,7 +534,7 @@ feature {NONE} -- Implementation
 	is_bold: BOOLEAN is
 			-- Is `Current' bold?
 		do
-			Result := (weight = feature {EV_FONT_CONSTANTS}.weight_bold)
+			Result := (weight = {EV_FONT_CONSTANTS}.weight_bold)
 		end
 		
 	shape: INTEGER

@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			a_cs := "Select directory"
 			set_c_object
-				(feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_dialog_new (a_cs.item, NULL, feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_action_select_folder_enum))
+				({EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_dialog_new (a_cs.item, NULL, {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_action_select_folder_enum))
 		end
 
 	initialize is
@@ -43,10 +43,10 @@ feature {NONE} -- Initialization
 			Precursor {EV_STANDARD_DIALOG_IMP}
 			is_initialized := False
 			
-			a_cancel_button := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_dialog_add_button (c_object, feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_stock_cancel_enum, feature {EV_GTK_EXTERNALS}.gtk_response_cancel_enum)
-			a_ok_button := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_dialog_add_button (c_object, feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_stock_ok_enum, feature {EV_GTK_EXTERNALS}.gtk_response_accept_enum)
+			a_cancel_button := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_dialog_add_button (c_object, {EV_GTK_DEPENDENT_EXTERNALS}.gtk_stock_cancel_enum, {EV_GTK_EXTERNALS}.gtk_response_cancel_enum)
+			a_ok_button := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_dialog_add_button (c_object, {EV_GTK_DEPENDENT_EXTERNALS}.gtk_stock_ok_enum, {EV_GTK_EXTERNALS}.gtk_response_accept_enum)
 			
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_dialog_set_default_response (c_object, feature {EV_GTK_EXTERNALS}.gtk_response_accept_enum)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_dialog_set_default_response (c_object, {EV_GTK_EXTERNALS}.gtk_response_accept_enum)
 			
 			real_signal_connect (
 				a_ok_button,
@@ -76,13 +76,13 @@ feature -- Access
 				selected_button /= Void and then selected_button.is_equal (internal_accept)
 			then
 				Result := ""
-				a_filename := feature {EV_GTK_EXTERNALS}.gtk_file_chooser_get_filename (c_object)
+				a_filename := {EV_GTK_EXTERNALS}.gtk_file_chooser_get_filename (c_object)
 				if a_filename /= NULL then
 					Result.from_c (a_filename)
 					if Result.item (Result.count) /= '/' then
 						Result.append ("/")
 					end
-					feature {EV_GTK_EXTERNALS}.g_free (a_filename)
+					{EV_GTK_EXTERNALS}.g_free (a_filename)
 				end
 			else
 				Result := ""
@@ -101,7 +101,7 @@ feature -- Element change
 		do
 			start_directory := a_path.twin
 			create a_cs.make (start_directory + "/.")
-			feature {EV_GTK_EXTERNALS}.gtk_file_chooser_set_filename (
+			{EV_GTK_EXTERNALS}.gtk_file_chooser_set_filename (
 				c_object,
 				a_cs.item
 			)

@@ -90,7 +90,7 @@ feature {NONE} -- Implementation
 		local
 			t: like resize_actions_internal
 		do
-			if size_type /= (feature {WEL_WINDOW_CONSTANTS}.Size_minimized) then
+			if size_type /= ({WEL_WINDOW_CONSTANTS}.Size_minimized) then
 				if internal_child_window /= Void then
 					internal_child_window.resize (a_width, a_height)
 				end

@@ -192,7 +192,7 @@ feature {EV_ANY_I} -- WEL Implementation
 	on_size (size_type, a_width, a_height: INTEGER) is
 			-- Called when `Current' is resized.
 		do
-			if size_type /= (feature {WEL_WINDOW_CONSTANTS}.Size_minimized) then
+			if size_type /= ({WEL_WINDOW_CONSTANTS}.Size_minimized) then
 				if item /= Void then
 					item_imp.set_move_and_size (client_x, client_y, client_width, client_height)
 				end

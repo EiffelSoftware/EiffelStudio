@@ -39,12 +39,12 @@ feature {NONE} -- Initialization
 			disable_item_expand (minimum_size_cell)
 			create label_box
 			create frame
-			frame.set_style (feature {EV_FRAME_CONSTANTS}.Ev_frame_lowered)
+			frame.set_style ({EV_FRAME_CONSTANTS}.Ev_frame_lowered)
 			main_box.extend (frame)
 			create vertical_box
 			frame.extend (vertical_box)
 			create frame
-			frame.set_style (feature {EV_FRAME_CONSTANTS}.Ev_frame_raised)
+			frame.set_style ({EV_FRAME_CONSTANTS}.Ev_frame_raised)
 			vertical_box.extend (frame)
 			frame.extend (label_box)
 			create label.make_with_text (a_display_name)

@@ -54,10 +54,10 @@ feature {NONE} -- Implementation
 			internal_blocking_window := a_window
 			if a_window /= Void then
 				win_imp ?= a_window.implementation
-				feature {EV_GTK_EXTERNALS}.gtk_window_set_transient_for (c_object, win_imp.c_object)
+				{EV_GTK_EXTERNALS}.gtk_window_set_transient_for (c_object, win_imp.c_object)
 			else
 				if not is_destroyed then
-					feature {EV_GTK_EXTERNALS}.gtk_window_set_transient_for (c_object, NULL)
+					{EV_GTK_EXTERNALS}.gtk_window_set_transient_for (c_object, NULL)
 				end		
 			end
 		end
@@ -93,8 +93,8 @@ feature {NONE} -- Implementation
 			update_request_size
 			default_width := a_width
 			default_height := a_height
-			feature {EV_GTK_EXTERNALS}.gdk_window_resize (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), default_width.max (minimum_width), default_height.max (minimum_height))
-			feature {EV_GTK_EXTERNALS}.gtk_window_set_default_size (c_object, default_width.max (minimum_width), default_height.max (minimum_height))
+			{EV_GTK_EXTERNALS}.gdk_window_resize ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), default_width.max (minimum_width), default_height.max (minimum_height))
+			{EV_GTK_EXTERNALS}.gtk_window_set_default_size (c_object, default_width.max (minimum_width), default_height.max (minimum_height))
 		end
 
 	default_width, default_height: INTEGER
@@ -131,8 +131,8 @@ feature {NONE} -- Implementation
 		do
 			user_x_position := a_x
 			user_y_position := a_y
-			feature {EV_GTK_EXTERNALS}.gtk_widget_set_uposition (c_object, a_x, a_y)
-			feature {EV_GTK_EXTERNALS}.gdk_window_move (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), a_x, a_y)
+			{EV_GTK_EXTERNALS}.gtk_widget_set_uposition (c_object, a_x, a_y)
+			{EV_GTK_EXTERNALS}.gdk_window_move ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), a_x, a_y)
 			positioned_by_user := True
 		end
 
@@ -152,18 +152,18 @@ feature {NONE} -- Implementation
 			if positioned_by_user then
 				Result := user_x_position
 			else
-				if has_struct_flag (c_object, feature {EV_GTK_EXTERNALS}.gtk_mapped_enum) then
+				if has_struct_flag (c_object, {EV_GTK_EXTERNALS}.gtk_mapped_enum) then
 					if has_wm_decorations then
-						feature {EV_GTK_EXTERNALS}.gdk_window_get_root_origin (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), $a_x, null)
+						{EV_GTK_EXTERNALS}.gdk_window_get_root_origin ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), $a_x, null)
 						Result := a_x
 					else
-						i := feature {EV_GTK_EXTERNALS}.gdk_window_get_origin (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), $a_x, null)
+						i := {EV_GTK_EXTERNALS}.gdk_window_get_origin ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), $a_x, null)
 						Result := a_x
 					end
 				else
 					a_aux_info := aux_info_struct
 					if a_aux_info /= null then
-						Result := feature {EV_GTK_EXTERNALS}.gtk_widget_aux_info_struct_x (a_aux_info)
+						Result := {EV_GTK_EXTERNALS}.gtk_widget_aux_info_struct_x (a_aux_info)
 					end
 				end
 			end
@@ -179,18 +179,18 @@ feature {NONE} -- Implementation
 			if positioned_by_user then
 				Result := user_y_position
 			else
-				if has_struct_flag (c_object, feature {EV_GTK_EXTERNALS}.gtk_mapped_enum) then
+				if has_struct_flag (c_object, {EV_GTK_EXTERNALS}.gtk_mapped_enum) then
 					if has_wm_decorations then
-						feature {EV_GTK_EXTERNALS}.gdk_window_get_root_origin (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), null, $a_y)
+						{EV_GTK_EXTERNALS}.gdk_window_get_root_origin ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), null, $a_y)
 						Result := a_y
 					else
-						i := feature {EV_GTK_EXTERNALS}.gdk_window_get_origin (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), null, $a_y)
+						i := {EV_GTK_EXTERNALS}.gdk_window_get_origin ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), null, $a_y)
 						Result := a_y
 					end
 				else
 					a_aux_info := aux_info_struct
 					if a_aux_info /= null then
-						Result := feature {EV_GTK_EXTERNALS}.gtk_widget_aux_info_struct_y (a_aux_info)
+						Result := {EV_GTK_EXTERNALS}.gtk_widget_aux_info_struct_y (a_aux_info)
 					end
 				end
 			end
@@ -208,27 +208,27 @@ feature {EV_ANY_I} -- Implementation
 	enable_modal is
 			-- Set `is_modal' to `True'.
 		do
-			feature {EV_GTK_EXTERNALS}.gtk_window_set_modal (c_object, True)
+			{EV_GTK_EXTERNALS}.gtk_window_set_modal (c_object, True)
 		end
 
 	disable_modal is
 			-- Set `is_modal' to `False'.
 		do
-			feature {EV_GTK_EXTERNALS}.gtk_window_set_modal (c_object, False)
+			{EV_GTK_EXTERNALS}.gtk_window_set_modal (c_object, False)
 		end
 
 	is_modal: BOOLEAN is
 			-- Must the window be closed before application continues?
 		do
 			if not is_destroyed then
-				Result := feature {EV_GTK_EXTERNALS}.gtk_window_struct_modal (c_object) = 1
+				Result := {EV_GTK_EXTERNALS}.gtk_window_struct_modal (c_object) = 1
 			end
 		end
 
 	forbid_resize is
 			-- Forbid the resize of the window.
 		do
-			feature {EV_GTK_EXTERNALS}.gtk_window_set_policy (c_object, 0, 0, 0)
+			{EV_GTK_EXTERNALS}.gtk_window_set_policy (c_object, 0, 0, 0)
 		end
 
 end -- class EV_GTK_WINDOW_IMP

@@ -60,7 +60,7 @@ feature -- Status Report
 	is_relative: BOOLEAN is
 			-- Is `Current' shown relative to another window?
 		do
-			Result := not is_modal and feature {EV_GTK_EXTERNALS}.gtk_window_struct_transient_parent (c_object) /= default_pointer
+			Result := not is_modal and {EV_GTK_EXTERNALS}.gtk_window_struct_transient_parent (c_object) /= default_pointer
 				and is_show_requested
 		end
 		
@@ -165,12 +165,12 @@ feature {NONE} -- Implementation
 			close_fct: INTEGER
 		do
 			if new_status then
-				close_fct := feature {EV_GTK_EXTERNALS}.Gdk_func_close_enum
+				close_fct := {EV_GTK_EXTERNALS}.Gdk_func_close_enum
 			end
-			close_fct := close_fct.bit_or (feature {EV_GTK_EXTERNALS}.Gdk_func_move_enum)
-		    close_fct := close_fct.bit_or (feature {EV_GTK_EXTERNALS}.Gdk_func_resize_enum)
-			feature {EV_GTK_EXTERNALS}.gdk_window_set_functions (
-				feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object),
+			close_fct := close_fct.bit_or ({EV_GTK_EXTERNALS}.Gdk_func_move_enum)
+		    close_fct := close_fct.bit_or ({EV_GTK_EXTERNALS}.Gdk_func_resize_enum)
+			{EV_GTK_EXTERNALS}.gdk_window_set_functions (
+				{EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object),
 				close_fct
 			)
 			is_dialog_closeable := new_status

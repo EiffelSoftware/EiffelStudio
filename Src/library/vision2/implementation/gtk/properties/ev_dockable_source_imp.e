@@ -30,7 +30,7 @@ feature -- Status setting
 			is
 				-- Filter out double click events.
 			do
-				if a_type = feature {EV_GTK_EXTERNALS}.gdk_button_press_enum then
+				if a_type = {EV_GTK_EXTERNALS}.gdk_button_press_enum then
 					if a_button = 1 and not dawaiting_movement and widget_imp_at_pointer_position = Current then
 							orig_cursor := pointer_style
 							original_x_offset := a_x
@@ -110,7 +110,7 @@ feature {NONE} -- Implementation
 			-- Deactivate drag mechanism
 		do
 			if drag_button_press_connection_id > 0 then
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (event_widget, drag_button_press_connection_id)
+				{EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (event_widget, drag_button_press_connection_id)
 				drag_button_press_connection_id := 0
 			end
 		end
@@ -148,11 +148,11 @@ feature {NONE} -- Implementation
 			disable_capture
 			set_composite_widget_pointer_style (NULL)
 			if drag_button_release_connection_id > 0 then
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (event_widget, drag_button_release_connection_id)
+				{EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (event_widget, drag_button_release_connection_id)
 				drag_button_release_connection_id := 0
 			end
 			if drag_motion_notify_connection_id > 0 then
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (event_widget, drag_motion_notify_connection_id)
+				{EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (event_widget, drag_motion_notify_connection_id)
 				drag_motion_notify_connection_id := 0
 			end
 			if not dawaiting_movement then

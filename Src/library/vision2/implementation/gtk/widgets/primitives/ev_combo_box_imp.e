@@ -69,23 +69,23 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 
 			-- create of the gtk object.
-			a_vbox := feature {EV_GTK_EXTERNALS}.gtk_vbox_new (False, 0)
+			a_vbox := {EV_GTK_EXTERNALS}.gtk_vbox_new (False, 0)
 			set_c_object (a_vbox)
-			container_widget := feature {EV_GTK_EXTERNALS}.gtk_combo_new
-			feature {EV_GTK_EXTERNALS}.gtk_widget_show (container_widget)
-			dropdown_window := feature {EV_GTK_EXTERNALS}.gtk_combo_struct_popwin (container_widget)
-			feature {EV_GTK_EXTERNALS}.gtk_box_pack_start (a_vbox, container_widget, False, False, 0)
+			container_widget := {EV_GTK_EXTERNALS}.gtk_combo_new
+			{EV_GTK_EXTERNALS}.gtk_widget_show (container_widget)
+			dropdown_window := {EV_GTK_EXTERNALS}.gtk_combo_struct_popwin (container_widget)
+			{EV_GTK_EXTERNALS}.gtk_box_pack_start (a_vbox, container_widget, False, False, 0)
 
 			-- Pointer to the text we see.
-			entry_widget := feature {EV_GTK_EXTERNALS}.gtk_combo_struct_entry (container_widget)
+			entry_widget := {EV_GTK_EXTERNALS}.gtk_combo_struct_entry (container_widget)
 
 			-- Pointer to the list of items.
-			list_widget := feature {EV_GTK_EXTERNALS}.gtk_combo_struct_list (container_widget)
-			feature {EV_GTK_EXTERNALS}.gtk_combo_set_use_arrows (container_widget, 0)
-			feature {EV_GTK_EXTERNALS}.gtk_combo_set_case_sensitive (container_widget, 1)
+			list_widget := {EV_GTK_EXTERNALS}.gtk_combo_struct_list (container_widget)
+			{EV_GTK_EXTERNALS}.gtk_combo_set_use_arrows (container_widget, 0)
+			{EV_GTK_EXTERNALS}.gtk_combo_set_case_sensitive (container_widget, 1)
 
-			activate_id := feature {EV_GTK_EXTERNALS}.gtk_combo_struct_activate_id (container_widget)
-			feature {EV_GTK_EXTERNALS}.signal_handler_block (entry_widget, activate_id)
+			activate_id := {EV_GTK_EXTERNALS}.gtk_combo_struct_activate_id (container_widget)
+			{EV_GTK_EXTERNALS}.signal_handler_block (entry_widget, activate_id)
 			
 			on_key_pressed_intermediary_agent := agent (App_implementation.gtk_marshal).on_list_item_list_key_pressed_intermediary (c_object, ?, ?, ?)
 			on_item_clicked_intermediary_agent := agent (App_implementation.gtk_marshal).on_list_item_list_item_clicked_intermediary (c_object)
@@ -97,9 +97,9 @@ feature {NONE} -- Initialization
 			Precursor {EV_LIST_ITEM_LIST_IMP}
 				-- List item sets up all events
 
-			feature {EV_GTK_EXTERNALS}.gtk_list_set_selection_mode (
+			{EV_GTK_EXTERNALS}.gtk_list_set_selection_mode (
 				list_widget,
-				feature {EV_GTK_EXTERNALS}.gTK_SELECTION_BROWSE_ENUM
+				{EV_GTK_EXTERNALS}.gTK_SELECTION_BROWSE_ENUM
 			)
 			real_signal_connect (dropdown_window, "unmap-event", agent (App_implementation.gtk_marshal).on_combo_box_dropdown_unmapped (c_object), App_implementation.default_translate)
 		end
@@ -109,8 +109,8 @@ feature -- Status report
 	rows: INTEGER is
 		 	-- Number of lines.
 		do
-			Result := feature {EV_GTK_EXTERNALS}.g_list_length (
-				feature {EV_GTK_EXTERNALS}.gtk_list_struct_children (list_widget)
+			Result := {EV_GTK_EXTERNALS}.g_list_length (
+				{EV_GTK_EXTERNALS}.gtk_list_struct_children (list_widget)
 			)
 		end
 
@@ -120,9 +120,9 @@ feature -- Status report
 			item_pointer: POINTER
 			cur: EV_DYNAMIC_LIST_CURSOR [EV_ITEM]
 		do
-			item_pointer := feature {EV_GTK_EXTERNALS}.gtk_list_struct_selection (list_widget)
+			item_pointer := {EV_GTK_EXTERNALS}.gtk_list_struct_selection (list_widget)
 			if item_pointer /= NULL then
-				item_pointer := feature {EV_GTK_EXTERNALS}.gslist_struct_data (item_pointer)
+				item_pointer := {EV_GTK_EXTERNALS}.gslist_struct_data (item_pointer)
 				if item_pointer /= NULL then
 					Result ?= eif_object_from_c (item_pointer).interface
 					check Result_not_void: Result /= Void end
@@ -148,7 +148,7 @@ feature -- Status setting
 	set_maximum_text_length (len: INTEGER) is
 			-- Set the length of the longest 
 		do
-			feature {EV_GTK_EXTERNALS}.gtk_entry_set_max_length (entry_widget, len)
+			{EV_GTK_EXTERNALS}.gtk_entry_set_max_length (entry_widget, len)
 		end
 
 feature {EV_LIST_ITEM_IMP, EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
@@ -196,14 +196,14 @@ feature {NONE} -- Implementation
 			a_cs: EV_GTK_C_STRING
 		do
 			create a_cs.make (v_imp.text)
-			feature {EV_GTK_EXTERNALS}.gtk_combo_set_item_string (container_widget, v_imp.c_object, a_cs.item)
-			feature {EV_GTK_EXTERNALS}.gtk_container_add (list_widget, v_imp.c_object)
+			{EV_GTK_EXTERNALS}.gtk_combo_set_item_string (container_widget, v_imp.c_object, a_cs.item)
+			{EV_GTK_EXTERNALS}.gtk_container_add (list_widget, v_imp.c_object)
 			v_imp.set_item_parent_imp (Current)
 			real_signal_connect (v_imp.c_object, "button-press-event", on_item_clicked_intermediary_agent, Void)
 			real_signal_connect (v_imp.c_object, "key-press-event", on_key_pressed_intermediary_agent, key_event_translate_agent)
 
 			-- Make sure the first item is always selected.
-			feature {EV_GTK_EXTERNALS}.gtk_list_select_item (list_widget, 0)
+			{EV_GTK_EXTERNALS}.gtk_list_select_item (list_widget, 0)
 		end
 
 	remove_i_th (a_position: INTEGER) is
@@ -223,7 +223,7 @@ feature {NONE} -- Implementation
 			-- Reorder `a_child' to `an_index' in `c_object'.
 			-- `a_container' is ignored.
 		do
-			feature {EV_GTK_EXTERNALS}.gtk_box_reorder_child (container_widget, a_child, an_index - 1)
+			{EV_GTK_EXTERNALS}.gtk_box_reorder_child (container_widget, a_child, an_index - 1)
 		end
 
 	select_callback (n: INTEGER; an_item: POINTER) is

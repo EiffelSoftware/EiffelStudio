@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 			-- Make a radio button with a default of selected.
 		do
 			base_make (an_interface)
-			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_toggle_button_new)
+			set_c_object ({EV_GTK_EXTERNALS}.gtk_toggle_button_new)
 			avoid_reselection := True
 				-- Needed to prevent calling of action sequence.
 			enable_select
@@ -67,8 +67,8 @@ feature {NONE} -- Initialization
 			Precursor
 			connect_signals
 				-- Make the label text left aligned
-			feature {EV_GTK_EXTERNALS}.gtk_misc_set_alignment (text_label, 0, 0.5)
-			feature {EV_GTK_EXTERNALS}.gtk_label_set_justify (text_label, feature {EV_GTK_EXTERNALS}.gtk_justify_left_enum)
+			{EV_GTK_EXTERNALS}.gtk_misc_set_alignment (text_label, 0, 0.5)
+			{EV_GTK_EXTERNALS}.gtk_label_set_justify (text_label, {EV_GTK_EXTERNALS}.gtk_justify_left_enum)
 		end
 
 feature -- Status setting
@@ -77,7 +77,7 @@ feature -- Status setting
 			-- Select `Current' in its grouping.
 		do
 			if not is_selected then
-				feature {EV_GTK_EXTERNALS}.gtk_toggle_button_set_active (visual_widget, True)
+				{EV_GTK_EXTERNALS}.gtk_toggle_button_set_active (visual_widget, True)
 			end
 		end
 
@@ -86,7 +86,7 @@ feature -- Status report
 	is_selected: BOOLEAN is
 			-- Is `Current' selected.
 		do
-			Result := feature {EV_GTK_EXTERNALS}.gtk_toggle_button_get_active (visual_widget)
+			Result := {EV_GTK_EXTERNALS}.gtk_toggle_button_get_active (visual_widget)
 		end
 
 feature {NONE} -- Implementation
@@ -130,7 +130,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 
 			if not avoid_reselection then
 				avoid_reselection := True
-				feature {EV_GTK_EXTERNALS}.gtk_toggle_button_set_active (visual_widget, True)
+				{EV_GTK_EXTERNALS}.gtk_toggle_button_set_active (visual_widget, True)
 				-- Calls on_activate callback immediately
 				avoid_reselection := False
 			end				
@@ -143,7 +143,7 @@ feature {EV_ANY_I} -- Implementation
 		do
 			if is_selected then
 				avoid_reselection := True
-				feature {EV_GTK_EXTERNALS}.gtk_toggle_button_set_active (visual_widget, False)
+				{EV_GTK_EXTERNALS}.gtk_toggle_button_set_active (visual_widget, False)
 				-- Calls on_activate callback immediately
 				avoid_reselection := False
 			end
@@ -153,8 +153,8 @@ feature {EV_ANY_I} -- Implementation
 			-- 
 		do
 			if not is_sensitive then
-				feature {EV_GTK_EXTERNALS}.gtk_widget_set_sensitive (c_object, True)
-				feature {EV_GTK_EXTERNALS}.gtk_widget_set_state (c_object, gtk_state)
+				{EV_GTK_EXTERNALS}.gtk_widget_set_sensitive (c_object, True)
+				{EV_GTK_EXTERNALS}.gtk_widget_set_state (c_object, gtk_state)
 			end
 		end
 	
@@ -162,8 +162,8 @@ feature {EV_ANY_I} -- Implementation
 			-- 
 		do
 			if is_sensitive then
-				gtk_state := feature {EV_GTK_EXTERNALS}.gtk_widget_struct_state (c_object)
-				feature {EV_GTK_EXTERNALS}.gtk_widget_set_sensitive (c_object, False)
+				gtk_state := {EV_GTK_EXTERNALS}.gtk_widget_struct_state (c_object)
+				{EV_GTK_EXTERNALS}.gtk_widget_set_sensitive (c_object, False)
 			end		
 		end
 	

@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 			l_ex: EXCEPTIONS
 		do
 			create default_vm_args.make
-			default_vm_args.set_version (feature {JAVA_VM_INIT_ARGS}.Jni_version_1_4)
+			default_vm_args.set_version ({JAVA_VM_INIT_ARGS}.Jni_version_1_4)
 			
 			create l_options.make (1, 1)
 			create l_option.make

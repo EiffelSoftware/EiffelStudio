@@ -49,11 +49,11 @@ feature {NONE} -- Implementation
 			a_vbox: POINTER
 		do
 			Precursor {EV_GAUGE_IMP} (an_interface)
-			a_vbox := feature {EV_GTK_EXTERNALS}.gtk_vbox_new (False, 0)
+			a_vbox := {EV_GTK_EXTERNALS}.gtk_vbox_new (False, 0)
 			set_c_object (a_vbox)
-			entry_widget := feature {EV_GTK_EXTERNALS}.gtk_spin_button_new (adjustment, 0, 0)
-			feature {EV_GTK_EXTERNALS}.gtk_widget_show (entry_widget)
-			feature {EV_GTK_EXTERNALS}.gtk_box_pack_start (a_vbox, entry_widget, False, False, 0)
+			entry_widget := {EV_GTK_EXTERNALS}.gtk_spin_button_new (adjustment, 0, 0)
+			{EV_GTK_EXTERNALS}.gtk_widget_show (entry_widget)
+			{EV_GTK_EXTERNALS}.gtk_box_pack_start (a_vbox, entry_widget, False, False, 0)
 		end
 
 	initialize is

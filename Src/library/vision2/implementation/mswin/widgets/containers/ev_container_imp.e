@@ -218,14 +218,14 @@ feature {NONE} -- WEL Implementation
 			button_imp: EV_BUTTON_IMP
 		do
 			item_type := draw_item.ctl_type
-			if item_type = (feature {WEL_ODT_CONSTANTS}.Odt_menu) then
+			if item_type = ({WEL_ODT_CONSTANTS}.Odt_menu) then
 				Precursor {EV_MENU_CONTAINER_IMP} (control_id, draw_item)
-			elseif item_type = (feature {WEL_ODT_CONSTANTS}.Odt_static) then
+			elseif item_type = ({WEL_ODT_CONSTANTS}.Odt_static) then
 				label_imp ?= draw_item.window_item
 				if label_imp /= Void then
 					label_imp.on_draw_item (draw_item)
 				end
-			elseif item_type = (feature {WEL_ODT_CONSTANTS}.odt_button) then
+			elseif item_type = ({WEL_ODT_CONSTANTS}.odt_button) then
 				button_imp ?= draw_item.window_item
 				if button_imp /= Void then
 					button_imp.on_draw_item (draw_item)
@@ -392,7 +392,7 @@ feature {NONE} -- WEL Implementation
 			bk_brush: WEL_BRUSH
 		do
 			theme_drawer := application_imp.theme_drawer
-			if info.code = (feature {WEL_TVN_CONSTANTS}.Tvn_getinfotip) then
+			if info.code = ({WEL_TVN_CONSTANTS}.Tvn_getinfotip) then
 					-- Create the relevent WEL_TOOLTIP_TEXT.
 				create tooltip_text.make_by_nmhdr (info)
 					-- Retrieve tree view get info tip structure.
@@ -415,7 +415,7 @@ feature {NONE} -- WEL Implementation
 						tooltip_text.set_text (temp_node.tooltip)
 					end
 				end
-			elseif info.code = feature {WEL_LIST_VIEW_CONSTANTS}.Lvn_getinfotip then
+			elseif info.code = {WEL_LIST_VIEW_CONSTANTS}.Lvn_getinfotip then
 					--| FIXME The way we handle toolips for lists and multi column lists
 					--| is somewhat strange. The height of the tooltip returned is too great, and
 					--| we are unable to use `tooltip_text' as we do for trees above. This code is
@@ -442,21 +442,21 @@ feature {NONE} -- WEL Implementation
 				lvninfotip.psztext.memory_copy (string.item, string.count.min (lvninfotip.cchtextmax))
 				(lvninfotip.psztext + (lvninfotip.cchtextmax - 1)).memory_copy ($l_zero, 1)
 				
-			elseif info.code = (feature {WEL_LIST_VIEW_CONSTANTS}.Lvn_marqueebegin) then
+			elseif info.code = ({WEL_LIST_VIEW_CONSTANTS}.Lvn_marqueebegin) then
 					-- A message has been received from an EV_LIST notifying
 					-- us that a bounding box selection is beginning. We
 					-- return 1 to override this behaviour.
 				set_message_return_value (to_lresult (1))
-			elseif info.code = (feature {WEL_RICH_EDIT_MESSAGE_CONSTANTS}.en_selchange) then
+			elseif info.code = ({WEL_RICH_EDIT_MESSAGE_CONSTANTS}.en_selchange) then
 				rich_text ?= info.window_from
 				create selchange.make_by_nmhdr (info)
 				rich_text.on_en_selchange (selchange.selection_type, selchange.character_range)
-			elseif info.code = feature {WEL_NM_CONSTANTS}.nm_click then
+			elseif info.code = {WEL_NM_CONSTANTS}.nm_click then
 				checkable_tree ?= info.window_from
 				if checkable_tree /= Void then
 					checkable_tree.on_nm_click				
 				end
-			elseif info.code = feature {WEL_NM_CONSTANTS}.nm_customdraw then
+			elseif info.code = {WEL_NM_CONSTANTS}.nm_customdraw then
 				radio_button ?= info.window_from
 				if radio_button = Void then
 					check_button ?= info.window_from
@@ -472,10 +472,10 @@ feature {NONE} -- WEL Implementation
 					-- On older versions, nothing needs to be performed here.
 				if button /= Void and application_imp.themes_active then
 					create custom.make_by_pointer (info.item)
-					if custom.dwdrawstage = feature {WEL_CDDS_CONSTANTS}.cdds_preerase then
+					if custom.dwdrawstage = {WEL_CDDS_CONSTANTS}.cdds_preerase then
 						create bk_brush.make_solid (button.wel_background_color)
 						theme_drawer.draw_widget_background (button, custom.hdc, button.client_rect, bk_brush)
-						set_message_return_value (to_lresult (feature {WEL_CDRF_CONSTANTS}.cdrf_dodefault))
+						set_message_return_value (to_lresult ({WEL_CDRF_CONSTANTS}.cdrf_dodefault))
 						bk_brush.delete
 					end
 				end

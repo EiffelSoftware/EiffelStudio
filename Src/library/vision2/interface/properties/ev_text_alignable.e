@@ -36,7 +36,7 @@ feature -- Status report
 		require
 			not_destroyed: not is_destroyed
 		do
-			Result := text_alignment = feature {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_left
+			Result := text_alignment = {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_left
 		end
 		
 	is_center_aligned: BOOLEAN is
@@ -44,7 +44,7 @@ feature -- Status report
 		require
 			not_destroyed: not is_destroyed
 		do
-			Result := text_alignment = feature {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_center
+			Result := text_alignment = {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_center
 		end
 
 	is_right_aligned: BOOLEAN is
@@ -52,7 +52,7 @@ feature -- Status report
 		require
 			not_destroyed: not is_destroyed
 		do
-			Result := text_alignment = feature {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_right
+			Result := text_alignment = {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_right
 		end
 
 feature -- Status setting

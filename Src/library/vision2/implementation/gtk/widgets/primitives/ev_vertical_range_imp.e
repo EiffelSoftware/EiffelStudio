@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			-- Create the vertical range.
 		do
 			Precursor (an_interface)
-			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_vscale_new (adjustment))
+			set_c_object ({EV_GTK_EXTERNALS}.gtk_vscale_new (adjustment))
 		end
 
 feature {EV_ANY_I} -- Implementation

@@ -345,7 +345,7 @@ feature {NONE} -- Implementation
 			-- `process_message'.
 		do
 			
-			if msg = (feature {WEL_WINDOW_CONSTANTS}.Wm_contextmenu) then
+			if msg = ({WEL_WINDOW_CONSTANTS}.Wm_contextmenu) then
 				allow_pick_and_drop
 			else
 				Precursor {EV_PRIMITIVE_IMP} (msg, wparam, lparam)

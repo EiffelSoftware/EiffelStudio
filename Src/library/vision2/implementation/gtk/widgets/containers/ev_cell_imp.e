@@ -40,7 +40,7 @@ feature -- initialization
 			-- Connect interface and initialize `c_object'.
 		do
 			base_make (an_interface)
-			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_hbox_new (True, 0))
+			set_c_object ({EV_GTK_EXTERNALS}.gtk_hbox_new (True, 0))
 		end
 
 feature -- Access
@@ -60,12 +60,12 @@ feature -- Element change
 			if i /= Void then
 				imp ?= i.implementation
 				on_removed_item (imp)
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.object_ref (imp.c_object)
-				feature {EV_GTK_EXTERNALS}.gtk_container_remove (container_widget, imp.c_object)
+				{EV_GTK_DEPENDENT_EXTERNALS}.object_ref (imp.c_object)
+				{EV_GTK_EXTERNALS}.gtk_container_remove (container_widget, imp.c_object)
 			end
 			if v /= Void then
 				imp ?= v.implementation
-				feature {EV_GTK_EXTERNALS}.gtk_container_add (container_widget, imp.c_object)
+				{EV_GTK_EXTERNALS}.gtk_container_add (container_widget, imp.c_object)
 				on_new_item (imp)
 			end
 			item := v

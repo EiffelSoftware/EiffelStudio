@@ -197,12 +197,12 @@ feature {EV_ANY_IMP} -- Button intermediary agent routines
 			a_widget: EV_PICK_AND_DROPABLE_IMP
 		do
 			a_widget ?= c_get_eif_reference_from_object_id (a_c_object)
-			if a_type = feature {EV_GTK_EXTERNALS}.gdk_button_press_enum and then a_widget.is_transport_enabled and then (a_button = 1 or a_button = 3) then
+			if a_type = {EV_GTK_EXTERNALS}.gdk_button_press_enum and then a_widget.is_transport_enabled and then (a_button = 1 or a_button = 3) then
 					-- We don't want button press events from gtk is PND is enabled as these are handled via PND implementation
 			else
 				a_widget.button_press_switch (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
-				if a_type = feature {EV_GTK_ENUMS}.gdk_button_press_enum and then (a_button = 4 or a_button = 5) then
-					feature {EV_GTK_EXTERNALS}.gtk_widget_queue_draw (a_c_object)
+				if a_type = {EV_GTK_ENUMS}.gdk_button_press_enum and then (a_button = 4 or a_button = 5) then
+					{EV_GTK_EXTERNALS}.gtk_widget_queue_draw (a_c_object)
 						-- This is a hack to get the Studio editor to redraw properly upon mouse scrolling
 				end
 			end
@@ -313,7 +313,7 @@ feature {EV_ANY_IMP} -- Pick and Drop intermediary agent routines
 		do
 			a_cs := signal
 			a_pick_and_dropable_imp ?= eif_id_object (a_object_id)
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_emit_stop_by_name (a_c_object, a_cs.item)
+			{EV_GTK_DEPENDENT_EXTERNALS}.signal_emit_stop_by_name (a_c_object, a_cs.item)
 		end
 
 	add_grab_cb_intermediary (a_c_object: POINTER) is
@@ -341,7 +341,7 @@ feature {EV_ANY_IMP} -- Pointer intermediary agent routines
 			end
 				-- We have motion hinting so we call get pointer to request our next motion event if any, this means we only get motion events when
 				-- the application can handle them
-			p := feature {EV_GTK_EXTERNALS}.gdk_window_get_pointer (default_pointer, default_pointer, default_pointer, default_pointer)
+			p := {EV_GTK_EXTERNALS}.gdk_window_get_pointer (default_pointer, default_pointer, default_pointer, default_pointer)
 		end
 
 	pointer_button_release_action_intermediary (a_c_object: POINTER; a_x, a_y, a_button: INTEGER;

@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			-- Connect interface.
 		do
 			base_make (an_interface)
-			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_menu_item_new)
+			set_c_object ({EV_GTK_EXTERNALS}.gtk_menu_item_new)
 			create key
 		end
 
@@ -49,13 +49,13 @@ feature {NONE} -- Implementation
 			-- The mask consisting of alt, shift and control keys.
 		do
 			if control_required then
-				Result := feature {EV_GTK_EXTERNALS}.gDK_CONTROL_MASK_ENUM
+				Result := {EV_GTK_EXTERNALS}.gDK_CONTROL_MASK_ENUM
 			end
 			if alt_required then
-				Result := Result.bit_or (feature {EV_GTK_EXTERNALS}.gDK_MOD1_MASK_ENUM)
+				Result := Result.bit_or ({EV_GTK_EXTERNALS}.gDK_MOD1_MASK_ENUM)
 			end
 			if shift_required then
-				Result := Result.bit_or (feature {EV_GTK_EXTERNALS}.gDK_SHIFT_MASK_ENUM)
+				Result := Result.bit_or ({EV_GTK_EXTERNALS}.gDK_SHIFT_MASK_ENUM)
 			end
 		end
 
@@ -69,7 +69,7 @@ feature {EV_TITLED_WINDOW_IMP} -- Implementation
 			a_cs: EV_GTK_C_STRING
 		do
 			create a_cs.make ("activate")
-			feature {EV_GTK_EXTERNALS}.gtk_widget_add_accelerator (
+			{EV_GTK_EXTERNALS}.gtk_widget_add_accelerator (
 				c_object,
 				a_cs.item,
 				a_accel_grp,
@@ -84,7 +84,7 @@ feature {EV_TITLED_WINDOW_IMP} -- Implementation
 		require
 			a_accel_grp_not_null: a_accel_grp /= NULL
 		do
-			feature {EV_GTK_EXTERNALS}.gtk_widget_remove_accelerator (
+			{EV_GTK_EXTERNALS}.gtk_widget_remove_accelerator (
 				c_object,
 				a_accel_grp,
 				key_code_to_gtk (key.code),

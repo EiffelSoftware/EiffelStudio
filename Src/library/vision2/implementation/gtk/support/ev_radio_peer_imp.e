@@ -45,7 +45,7 @@ feature -- Status report
 							Result.extend (peer_imp.interface)
 						end
 					end		
-					cur := feature {EV_GTK_EXTERNALS}.gslist_struct_next (cur)
+					cur := {EV_GTK_EXTERNALS}.gslist_struct_next (cur)
 				end
 			end
 		end
@@ -71,7 +71,7 @@ feature -- Status report
 							Result := peer_imp.interface
 						end
 					end
-					cur := feature {EV_GTK_EXTERNALS}.gslist_struct_next (cur)
+					cur := {EV_GTK_EXTERNALS}.gslist_struct_next (cur)
 				end
 			end
 		end
@@ -81,7 +81,7 @@ feature {NONE} -- Implementation
 	widget_object (a_list: POINTER): POINTER is
 			-- Returns c_object relative to a_list data.
 		do
-			Result := feature {EV_GTK_EXTERNALS}.gslist_struct_data (a_list)
+			Result := {EV_GTK_EXTERNALS}.gslist_struct_data (a_list)
 		end
 
 feature {EV_ANY_I} -- Implementation

@@ -12,7 +12,7 @@ feature -- Implementation
 	create_gtk_dialog: POINTER is
 			-- Create our gtk dialog
 		do
-			Result := feature {EV_GTK_EXTERNALS}.gtk_window_new (feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_window_dialog_enum)
+			Result := {EV_GTK_EXTERNALS}.gtk_window_new ({EV_GTK_DEPENDENT_EXTERNALS}.gtk_window_dialog_enum)
 		end
 
 	client_area_from_c_object (a_c_object: POINTER): POINTER is

@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			-- Create the fixed container.
 		do
 			base_make (an_interface)
-			set_c_object (feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_fixed_new)
+			set_c_object ({EV_GTK_DEPENDENT_EXTERNALS}.gtk_fixed_new)
 		end
 
 feature -- Status setting
@@ -46,7 +46,7 @@ feature -- Status setting
 			update_request_size
 			w_imp ?= a_widget.implementation
 			--feature {EV_GTK_EXTERNALS}.gtk_widget_set_uposition (w_imp.c_object, an_x, a_y)
-			feature {EV_GTK_EXTERNALS}.gtk_fixed_move (visual_widget, w_imp.c_object, an_x, a_y)
+			{EV_GTK_EXTERNALS}.gtk_fixed_move (visual_widget, w_imp.c_object, an_x, a_y)
 			set_minimum_size (minimum_width.max (w_imp.width + an_x), minimum_height.max (w_imp.height + a_y))
 		end
 		
@@ -58,7 +58,7 @@ feature -- Status setting
 		do
 			w_imp ?= a_widget.implementation
 			w_imp.store_minimum_size
-			feature {EV_GTK_EXTERNALS}.gtk_widget_set_usize (w_imp.c_object, a_width, a_height)
+			{EV_GTK_EXTERNALS}.gtk_widget_set_usize (w_imp.c_object, a_width, a_height)
 			update_request_size
 		end
 
@@ -78,15 +78,15 @@ feature {EV_ANY_I} -- Implementation
 			glist, fixlist, fixitem: POINTER
 			temp_index: INTEGER
 		do
-			glist := feature {EV_GTK_EXTERNALS}.gtk_container_children (a_container)
-			temp_index := feature {EV_GTK_EXTERNALS}.g_list_index (glist, a_child)
-			fixlist := feature {EV_GTK_EXTERNALS}.gtk_fixed_struct_children (a_container)
-			fixitem := feature {EV_GTK_EXTERNALS}.g_list_nth_data (fixlist, temp_index)
-			fixlist := feature {EV_GTK_EXTERNALS}.g_list_remove (fixlist, fixitem)
-			fixlist := feature {EV_GTK_EXTERNALS}.g_list_insert (fixlist, fixitem, a_position)
-			feature {EV_GTK_EXTERNALS}.set_gtk_fixed_struct_children (a_container, fixlist)
-			feature {EV_GTK_EXTERNALS}.gtk_widget_queue_resize (c_object)
-			feature {EV_GTK_EXTERNALS}.g_list_free (glist)
+			glist := {EV_GTK_EXTERNALS}.gtk_container_children (a_container)
+			temp_index := {EV_GTK_EXTERNALS}.g_list_index (glist, a_child)
+			fixlist := {EV_GTK_EXTERNALS}.gtk_fixed_struct_children (a_container)
+			fixitem := {EV_GTK_EXTERNALS}.g_list_nth_data (fixlist, temp_index)
+			fixlist := {EV_GTK_EXTERNALS}.g_list_remove (fixlist, fixitem)
+			fixlist := {EV_GTK_EXTERNALS}.g_list_insert (fixlist, fixitem, a_position)
+			{EV_GTK_EXTERNALS}.set_gtk_fixed_struct_children (a_container, fixlist)
+			{EV_GTK_EXTERNALS}.gtk_widget_queue_resize (c_object)
+			{EV_GTK_EXTERNALS}.g_list_free (glist)
 		end
 
 	interface: EV_FIXED

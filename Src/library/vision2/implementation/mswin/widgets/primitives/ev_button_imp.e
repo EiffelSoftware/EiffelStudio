@@ -224,7 +224,7 @@ feature -- Status setting
 			new_style := set_flag (new_style, Bs_left)
 			set_style (new_style)
 
-			text_alignment := feature {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_Text_alignment_left
+			text_alignment := {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_Text_alignment_left
 			invalidate
 		end
 
@@ -238,7 +238,7 @@ feature -- Status setting
 			new_style := set_flag (new_style, Bs_right)
 			set_style (new_style)
 
-			text_alignment := feature {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_Text_alignment_right
+			text_alignment := {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_Text_alignment_right
 			invalidate
 		end
 
@@ -252,7 +252,7 @@ feature -- Status setting
 			new_style := set_flag (new_style, Bs_center)
 			set_style (new_style)
 
-			text_alignment := feature {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_Text_alignment_center
+			text_alignment := {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_Text_alignment_center
 			invalidate
 		end
 
@@ -438,7 +438,7 @@ feature {EV_ANY_I} -- Drawing implementation
 			if color_imp = Void then
 				create color
 				color_imp ?= color.implementation
-				color_imp.set_with_system_id (feature {WEL_COLOR_CONSTANTS}.Color_btnface)
+				color_imp.set_with_system_id ({WEL_COLOR_CONSTANTS}.Color_btnface)
 			end
 			create Result.make_solid (color_imp)
 		end
@@ -663,7 +663,7 @@ feature {EV_ANY_I} -- Drawing implementation
 
 				-- Copy the image from `memory_dc' to `dc' which is the dc originally provided
 				-- in `draw_item_state'.
-			dc.bit_blt (rect.left, rect.top, rect.width, rect.height, memory_dc, 0, 0, feature {WEL_RASTER_OPERATIONS_CONSTANTS}.Srccopy)
+			dc.bit_blt (rect.left, rect.top, rect.width, rect.height, memory_dc, 0, 0, {WEL_RASTER_OPERATIONS_CONSTANTS}.Srccopy)
 
 				-- Clean up GDI objects created.
 			memory_dc.unselect_all

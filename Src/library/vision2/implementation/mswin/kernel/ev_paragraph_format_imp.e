@@ -58,15 +58,15 @@ feature -- Status report
 			l_alignment := wel_alignment
 			inspect l_alignment
 			when pfa_left then
-				Result := feature {EV_PARAGRAPH_CONSTANTS}.alignment_left
+				Result := {EV_PARAGRAPH_CONSTANTS}.alignment_left
 			when pfa_center then
-				Result := feature {EV_PARAGRAPH_CONSTANTS}.alignment_center
+				Result := {EV_PARAGRAPH_CONSTANTS}.alignment_center
 			when pfa_right then
-				Result := feature {EV_PARAGRAPH_CONSTANTS}.alignment_right
+				Result := {EV_PARAGRAPH_CONSTANTS}.alignment_right
 			when pfa_justify then
-				Result := feature {EV_PARAGRAPH_CONSTANTS}.alignment_justified
+				Result := {EV_PARAGRAPH_CONSTANTS}.alignment_justified
 			else
-				Result := feature {EV_PARAGRAPH_CONSTANTS}.alignment_left
+				Result := {EV_PARAGRAPH_CONSTANTS}.alignment_left
 			end
 		end
 
@@ -131,13 +131,13 @@ feature -- Status setting
 	set_alignment (an_alignment: INTEGER) is
 			-- Assign `an_alignment' to `alignment.
 		do
-			if an_alignment = feature {EV_PARAGRAPH_CONSTANTS}.alignment_left then
+			if an_alignment = {EV_PARAGRAPH_CONSTANTS}.alignment_left then
 				wel_set_alignment (pfa_left)
-			elseif an_alignment = feature {EV_PARAGRAPH_CONSTANTS}.alignment_center then
+			elseif an_alignment = {EV_PARAGRAPH_CONSTANTS}.alignment_center then
 				wel_set_alignment (pfa_center)
-			elseif an_alignment = feature {EV_PARAGRAPH_CONSTANTS}.alignment_right then
+			elseif an_alignment = {EV_PARAGRAPH_CONSTANTS}.alignment_right then
 				wel_set_alignment (pfa_right)
-			elseif an_alignment = feature {EV_PARAGRAPH_CONSTANTS}.alignment_justified then
+			elseif an_alignment = {EV_PARAGRAPH_CONSTANTS}.alignment_justified then
 				wel_set_alignment (pfa_justify)
 			else
 				check

@@ -73,7 +73,7 @@ feature -- Access
 			l_buf: NATIVE_ARRAY [NATURAL_8]
 		do
 			create l_buf.make (buffer_size)
-			feature {MARSHAL}.copy (item, l_buf, 0, buffer_size)
+			{MARSHAL}.copy (item, l_buf, 0, buffer_size)
 			create l_mem.make_from_buffer (l_buf)
 			create l_formatter.make
 			Result ?= l_formatter.deserialize (l_mem)
@@ -99,7 +99,7 @@ feature -- Element change
 				buffer_size := l_size
 				item := item.memory_realloc (l_size)
 			end
-			feature {MARSHAL}.copy (l_mem.get_buffer, 0, item, l_size)
+			{MARSHAL}.copy (l_mem.get_buffer, 0, item, l_size)
 			l_mem.close
 		end
 

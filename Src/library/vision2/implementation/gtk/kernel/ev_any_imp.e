@@ -42,18 +42,18 @@ feature {EV_ANY_I} -- Access
 		do
 			c_object := a_c_object
 			if needs_event_box then
-				c_object := feature {EV_GTK_EXTERNALS}.gtk_event_box_new
-				feature {EV_GTK_EXTERNALS}.gtk_container_add (c_object, a_c_object)
-				feature {EV_GTK_EXTERNALS}.gtk_widget_show (a_c_object)
+				c_object := {EV_GTK_EXTERNALS}.gtk_event_box_new
+				{EV_GTK_EXTERNALS}.gtk_container_add (c_object, a_c_object)
+				{EV_GTK_EXTERNALS}.gtk_widget_show (a_c_object)
 			end
 			
 				-- Add reference and removing floating state
-			feature {EV_GTK_EXTERNALS}.object_ref (c_object)
-			feature {EV_GTK_EXTERNALS}.gtk_object_sink (c_object)
+			{EV_GTK_EXTERNALS}.object_ref (c_object)
+			{EV_GTK_EXTERNALS}.gtk_object_sink (c_object)
 			debug ("EV_GTK_CREATION")
 				print (generator + " created%N")
 			end
-			feature {EV_GTK_CALLBACK_MARSHAL}.set_eif_oid_in_c_object (c_object, object_id, $c_object_dispose)
+			{EV_GTK_CALLBACK_MARSHAL}.set_eif_oid_in_c_object (c_object, object_id, $c_object_dispose)
 		end
 
 	eif_object_from_c (a_c_object: POINTER): EV_ANY_IMP is
@@ -101,7 +101,7 @@ feature {EV_ANY_I} -- Event handling
 			a_cs: EV_GTK_C_STRING
 		do
 			a_cs := a_signal_name
-			a_connection_id := feature {EV_GTK_CALLBACK_MARSHAL}.c_signal_connect_true (
+			a_connection_id := {EV_GTK_CALLBACK_MARSHAL}.c_signal_connect_true (
 				c_object,
 				a_cs.item,
 				an_agent
@@ -151,14 +151,14 @@ feature {EV_ANY_I} -- Event handling
 		do
 			a_cs := a_signal_name
 			if translate /= Void then
-				last_signal_connection_id := feature {EV_GTK_CALLBACK_MARSHAL}.c_signal_connect (
+				last_signal_connection_id := {EV_GTK_CALLBACK_MARSHAL}.c_signal_connect (
 					a_c_object,
 					a_cs.item,
 					agent (App_implementation.gtk_marshal).translate_and_call (an_agent, translate, ?, ?),
 					invoke_after_handler
 				)
 			else
-				last_signal_connection_id := feature {EV_GTK_CALLBACK_MARSHAL}.c_signal_connect (
+				last_signal_connection_id := {EV_GTK_CALLBACK_MARSHAL}.c_signal_connect (
 					a_c_object,
 					a_cs.item,
 					an_agent,
@@ -186,11 +186,11 @@ feature {NONE} -- Implementation
 		do
 			if not is_in_final_collect then
 				if c_object /= NULL then
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect_by_data (c_object, internal_id)
+					{EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect_by_data (c_object, internal_id)
 					--| This is the signal attached in ev_any_imp.c
 					--| used for GC/Ref-Counting interaction.
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.object_destroy (c_object)
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.object_unref (c_object)
+					{EV_GTK_DEPENDENT_EXTERNALS}.object_destroy (c_object)
+					{EV_GTK_DEPENDENT_EXTERNALS}.object_unref (c_object)
 				end
 			end
 			Precursor {IDENTIFIED}
@@ -214,7 +214,7 @@ feature {EV_ANY_I} -- Access
 			-- Pointer to the widget viewed by user.
 		do
 			if needs_event_box then
-				Result := feature {EV_GTK_EXTERNALS}.gtk_bin_struct_child (c_object)
+				Result := {EV_GTK_EXTERNALS}.gtk_bin_struct_child (c_object)
 			else
 				Result := c_object
 			end

@@ -177,7 +177,7 @@ feature {NONE} -- Implementation
 	on_getdlgcode is
 			-- Called when window receives WM_GETDLGCODE message.
 		do
-			set_message_return_value (to_lresult (feature {WEL_DLGC_CONSTANTS}.dlgc_want_arrows))
+			set_message_return_value (to_lresult ({WEL_DLGC_CONSTANTS}.dlgc_want_arrows))
 		end
 		
 	on_bn_clicked is

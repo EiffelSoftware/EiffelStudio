@@ -31,20 +31,20 @@ feature -- Initialization
 		local
 			dummy_boolean: BOOLEAN
 		do
-			feature {MONITOR}.enter (Current)
+			{MONITOR}.enter (Current)
 			from
 			until
 				count > 0
 			loop
-				dummy_boolean := feature {MONITOR}.wait (Current)
+				dummy_boolean := {MONITOR}.wait (Current)
 				check
 					dummy_boolean
 				end
 			end
 			count := count - 1
-			feature {MONITOR}.exit (Current)
+			{MONITOR}.exit (Current)
 		rescue
-			feature {MONITOR}.exit (Current)
+			{MONITOR}.exit (Current)
 		end
 
 	wait_with_timeout (a_timeout: INTEGER): BOOLEAN is
@@ -52,15 +52,15 @@ feature -- Initialization
 			-- count with only `a_timeout' ?
 		local
 		do
-			feature {MONITOR}.enter (Current)
+			{MONITOR}.enter (Current)
 			Result := (count > 0) 
-				and then feature {MONITOR}.wait (Current, a_timeout)
+				and then {MONITOR}.wait (Current, a_timeout)
 			if Result then
 				count := count - 1
 			end
-			feature {MONITOR}.exit (Current)
+			{MONITOR}.exit (Current)
 		rescue
-			feature {MONITOR}.exit (Current)
+			{MONITOR}.exit (Current)
 		end		
 
 	try_wait: BOOLEAN is
@@ -73,12 +73,12 @@ feature -- Initialization
 	post is
 			-- Increment semaphore count.
 		do
-			feature {MONITOR}.enter (Current)
+			{MONITOR}.enter (Current)
 			count := count + 1
-			feature {MONITOR}.pulse (Current)
-			feature {MONITOR}.exit (Current)
+			{MONITOR}.pulse (Current)
+			{MONITOR}.exit (Current)
 		rescue
-			feature {MONITOR}.exit (Current)
+			{MONITOR}.exit (Current)
 		end
 
 	post_count (nb: INTEGER) is
@@ -86,12 +86,12 @@ feature -- Initialization
 		require
 			nb > 0
 		do
-			feature {MONITOR}.enter (Current)
+			{MONITOR}.enter (Current)
 			count := count + nb
-			feature {MONITOR}.pulse (Current)
-			feature {MONITOR}.exit (Current)
+			{MONITOR}.pulse (Current)
+			{MONITOR}.exit (Current)
 		rescue
-			feature {MONITOR}.exit (Current)
+			{MONITOR}.exit (Current)
 		end
 
 feature -- Access

@@ -45,21 +45,21 @@ feature {NONE} -- Initialization
 			-- Create the titled window.
 		do
 			base_make (an_interface)
-			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_window_new (feature {EV_GTK_EXTERNALS}.gtk_window_toplevel_enum))
+			set_c_object ({EV_GTK_EXTERNALS}.gtk_window_new ({EV_GTK_EXTERNALS}.gtk_window_toplevel_enum))
 		end
 
 	initialize is
 			-- Setup accelerators for window
 		do
 			Precursor {EV_WINDOW_IMP}
-			accel_group := feature {EV_GTK_EXTERNALS}.gtk_accel_group_new
+			accel_group := {EV_GTK_EXTERNALS}.gtk_accel_group_new
 			real_signal_connect (
 				accel_group,
 				"accel-activate",
 				agent (App_implementation.gtk_marshal).accel_activate_intermediary (internal_id, ?, ?),
 				agent (App_implementation.gtk_marshal).gtk_args_to_tuple
 			)
-			feature {EV_GTK_EXTERNALS}.gtk_window_add_accel_group (c_object, accel_group)
+			{EV_GTK_EXTERNALS}.gtk_window_add_accel_group (c_object, accel_group)
 			real_signal_connect (c_object, "window-state-event", agent (App_implementation.gtk_marshal).window_state_intermediary (internal_id, ? , ?), agent (App_implementation.gtk_marshal).gtk_args_to_tuple)
 		end
 
@@ -67,11 +67,11 @@ feature {NONE} -- Initialization
 			-- Setup client area of window
 		do
 			Precursor {EV_WINDOW_IMP}
-			accel_box := feature {EV_GTK_EXTERNALS}.gtk_menu_item_new
-			feature {EV_GTK_EXTERNALS}.gtk_container_add (accel_box, feature {EV_GTK_EXTERNALS}.gtk_label_new (NULL))
-			feature {EV_GTK_EXTERNALS}.gtk_widget_show (accel_box)
-			feature {EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (accel_box, 0, 0)
-			feature {EV_GTK_EXTERNALS}.gtk_box_pack_start (vbox, accel_box, False, False, 0)
+			accel_box := {EV_GTK_EXTERNALS}.gtk_menu_item_new
+			{EV_GTK_EXTERNALS}.gtk_container_add (accel_box, {EV_GTK_EXTERNALS}.gtk_label_new (NULL))
+			{EV_GTK_EXTERNALS}.gtk_widget_show (accel_box)
+			{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (accel_box, 0, 0)
+			{EV_GTK_EXTERNALS}.gtk_box_pack_start (vbox, accel_box, False, False, 0)
 		end
 
 feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
@@ -79,13 +79,13 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 	call_window_state_event (a_window_state: INTEGER) is
 			-- Call either minimize, maximize or restore actions for window
 		do
-			if a_window_state = feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_iconified_enum then
+			if a_window_state = {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_iconified_enum then
 				is_minimized := True
 				is_maximized := False
 				if minimize_actions_internal /= Void then
 					minimize_actions_internal.call (Void)
 				end
-			elseif a_window_state = feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_maximized_enum then
+			elseif a_window_state = {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_maximized_enum then
 				is_maximized := True
 				is_minimized := False
 				if maximize_actions_internal /= Void then
@@ -136,13 +136,13 @@ feature {NONE} -- Accelerators
 			acc_imp ?= an_accel.implementation
 			acc_imp.add_accel (Current)
 			
-			if acc_imp.key.code = feature {EV_KEY_CONSTANTS}.key_f10 then
+			if acc_imp.key.code = {EV_KEY_CONSTANTS}.key_f10 then
 					-- F10 is used as a default window accelerator key, if we use F10 in a custom accelerator then we override the default setting
 				a_property := "gtk-menu-bar-accel"
 				a_value := "<Shift><Control><Mod1><Mod2><Mod3><Mod4><Mod5>F10"
 					-- This is a value that is highly unlikely to be used
 				a_origin := "Vision2"
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_settings_set_string_property (app_implementation.default_gtk_settings, a_property.item, a_value.item, a_origin.item)				
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_settings_set_string_property (app_implementation.default_gtk_settings, a_property.item, a_value.item, a_origin.item)				
 			end
 		end
 
@@ -192,34 +192,34 @@ feature -- Status setting
 	raise is
 			-- Request that window be displayed above all other windows.
 		do
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_window_present (c_object)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_window_present (c_object)
 		end
 
 	lower is
 			-- Request that window be displayed below all other windows.
 		do
-			feature {EV_GTK_EXTERNALS}.gdk_window_lower (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object))
+			{EV_GTK_EXTERNALS}.gdk_window_lower ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object))
 		end
 
 	minimize is
 			-- Display iconified/minimised.
 		do
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_window_iconify (c_object)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_window_iconify (c_object)
 		end
 
 	maximize is
 			-- Display at maximum size.
 		do
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_window_maximize (c_object)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_window_maximize (c_object)
 		end
 
 	restore is
 			-- Restore to original position when minimized or maximized.
 		do
 			if is_maximized then
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_window_unmaximize (c_object)
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_window_unmaximize (c_object)
 			else
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_window_deiconify (c_object)
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_window_deiconify (c_object)
 			end
 		end
 
@@ -231,8 +231,8 @@ feature -- Element change
 			a_cs: EV_GTK_C_STRING
 		do
 			create a_cs.make (an_icon_name)
-			feature {EV_GTK_EXTERNALS}.gdk_window_set_icon_name (
-				feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), a_cs.item)
+			{EV_GTK_EXTERNALS}.gdk_window_set_icon_name (
+				{EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), a_cs.item)
 			icon_name_holder := an_icon_name.twin
 		end
 
@@ -247,7 +247,7 @@ feature -- Element change
 				icon_implementation_exists: pixmap_imp /= Void
 			end
 
-			feature {EV_GTK_EXTERNALS}.gdk_window_set_icon (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), NULL, pixmap_imp.drawable, pixmap_imp.mask)
+			{EV_GTK_EXTERNALS}.gdk_window_set_icon ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), NULL, pixmap_imp.drawable, pixmap_imp.mask)
 		end
 		
 feature {NONE} -- Implementation

@@ -36,12 +36,12 @@ feature {NONE}-- Initialization
 			cs: EV_GTK_C_STRING
 		do
 			cs := "CLIPBOARD"
-			clipboard := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_clipboard_get (
-							feature {EV_GTK_EXTERNALS}.gdk_atom_intern (cs.item, 1)
+			clipboard := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_clipboard_get (
+							{EV_GTK_EXTERNALS}.gdk_atom_intern (cs.item, 1)
 			)
 			cs := "PRIMARY"
-			primary := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_clipboard_get (
-							feature {EV_GTK_EXTERNALS}.gdk_atom_intern (cs.item, 1)
+			primary := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_clipboard_get (
+							{EV_GTK_EXTERNALS}.gdk_atom_intern (cs.item, 1)
 			)
 			is_initialized := True
 		end
@@ -51,7 +51,7 @@ feature -- Access
 	has_text: BOOLEAN is
 			-- Does the clipboard currently contain text?
 		do
-			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_clipboard_wait_is_text_available (clipboard)
+			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_clipboard_wait_is_text_available (clipboard)
 		end
 
 	text: STRING is
@@ -60,10 +60,10 @@ feature -- Access
 			utf8_string: EV_GTK_C_STRING
 			text_ptr: POINTER
 		do			
-			text_ptr := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_clipboard_wait_for_text (clipboard)
+			text_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_clipboard_wait_for_text (clipboard)
 			if text_ptr /= Default_pointer then
 				create utf8_string.make_from_pointer (text_ptr)
-				feature {EV_GTK_EXTERNALS}.g_free (text_ptr)
+				{EV_GTK_EXTERNALS}.g_free (text_ptr)
 				Result := utf8_string.string
 			else
 				Result := ""
@@ -79,8 +79,8 @@ feature -- Status Setting
 			a_cs: EV_GTK_C_STRING
 		do
 			create a_cs.make (a_text)
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_clipboard_set_text (clipboard, a_cs.item, a_cs.string_length)
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_clipboard_set_text (primary, a_cs.item, a_cs.string_length)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_clipboard_set_text (clipboard, a_cs.item, a_cs.string_length)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_clipboard_set_text (primary, a_cs.item, a_cs.string_length)
 				-- We also set the primary selection as there is no windows equivalent.
 		end
 		

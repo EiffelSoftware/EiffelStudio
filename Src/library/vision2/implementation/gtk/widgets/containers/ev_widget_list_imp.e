@@ -53,7 +53,7 @@ feature {NONE} -- Implementation
 				v_imp_not_void: v_imp /= Void
 			end
 			a_c_object := v_imp.c_object
-			feature {EV_GTK_EXTERNALS}.gtk_container_add (list_widget, a_c_object)
+			{EV_GTK_EXTERNALS}.gtk_container_add (list_widget, a_c_object)
 
 			child_array.go_i_th (i)
 			child_array.put_left (v)
@@ -80,8 +80,8 @@ feature {NONE} -- Implementation
 			child_array.remove
 			on_removed_item (v_imp)
 			a_child := v_imp.c_object
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.object_ref (a_child)
-			feature {EV_GTK_EXTERNALS}.gtk_container_remove (list_widget, a_child)
+			{EV_GTK_DEPENDENT_EXTERNALS}.object_ref (a_child)
+			{EV_GTK_EXTERNALS}.gtk_container_remove (list_widget, a_child)
 			index := a_index
 				-- The call to gtk_container_remove might indirectly fire an event which changes the index so we reset just to make sure
 		end

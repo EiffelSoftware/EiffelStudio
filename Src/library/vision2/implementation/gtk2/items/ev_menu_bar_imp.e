@@ -32,8 +32,8 @@ feature {NONE} -- Initialization
 	make (an_interface: like interface) is
 		do
 			base_make (an_interface)
-			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_menu_bar_new)
-			feature {EV_GTK_EXTERNALS}.gtk_widget_show (c_object)
+			set_c_object ({EV_GTK_EXTERNALS}.gtk_menu_bar_new)
+			{EV_GTK_EXTERNALS}.gtk_widget_show (c_object)
 		end
 		
 feature {EV_WINDOW_IMP} -- Implementation
@@ -68,7 +68,7 @@ feature {NONE} -- Implementation
 			-- Generic menu item insertion.
 		do
 			an_item_imp.set_item_parent_imp (Current)
-			feature {EV_GTK_EXTERNALS}.gtk_menu_shell_insert (list_widget, an_item_imp.c_object, pos - 1)
+			{EV_GTK_EXTERNALS}.gtk_menu_shell_insert (list_widget, an_item_imp.c_object, pos - 1)
 			child_array.go_i_th (pos)
 			child_array.put_left (an_item_imp.interface)
 		end

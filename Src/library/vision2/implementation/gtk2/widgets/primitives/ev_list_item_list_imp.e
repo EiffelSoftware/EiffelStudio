@@ -114,7 +114,7 @@ feature -- Status report
 				button_release_not_connected: button_release_connection_id = 0
 			end
 			if button_press_connection_id > 0 then
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (visual_widget, button_press_connection_id)
+				{EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (visual_widget, button_press_connection_id)
 			end
 			real_signal_connect (visual_widget,
 				"button-press-event", 
@@ -234,16 +234,16 @@ feature -- Insertion
 		do
 			a_cs := a_text
 			str_value := g_value_string_struct
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.g_value_set_string (str_value, a_cs.item)
+			{EV_GTK_DEPENDENT_EXTERNALS}.g_value_set_string (str_value, a_cs.item)
 			a_list_item_imp ?= child_array.i_th (a_row).implementation
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_set_value (list_store, a_list_item_imp.list_iter.item, 1, str_value)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_set_value (list_store, a_list_item_imp.list_iter.item, 1, str_value)
 		end
 
 	g_value_string_struct: POINTER is
 			-- Optimization for GValue struct access
 		once
-			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.c_g_value_struct_allocate
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.g_value_init_string (Result)
+			Result := {EV_GTK_DEPENDENT_EXTERNALS}.c_g_value_struct_allocate
+			{EV_GTK_DEPENDENT_EXTERNALS}.g_value_init_string (Result)
 		end
 
 	set_row_pixmap (a_row: INTEGER; a_pixmap: EV_PIXMAP) is
@@ -256,8 +256,8 @@ feature -- Insertion
 			pixmap_imp ?= a_pixmap.implementation
 			a_pixbuf := pixmap_imp.pixbuf_from_drawable_with_size (pixmaps_width, pixmaps_height)
 			a_list_item_imp ?= child_array.i_th (a_row).implementation
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_set_pixbuf (list_store, a_list_item_imp.list_iter.item, 0, a_pixbuf)
-			feature {EV_GTK_EXTERNALS}.object_unref (a_pixbuf)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_set_pixbuf (list_store, a_list_item_imp.list_iter.item, 0, a_pixbuf)
+			{EV_GTK_EXTERNALS}.object_unref (a_pixbuf)
 		end
 
 	remove_row_pixmap (a_row: INTEGER) is
@@ -266,7 +266,7 @@ feature -- Insertion
 			a_list_item_imp: EV_LIST_ITEM_IMP
 		do
 			a_list_item_imp ?= child_array.i_th (a_row).implementation
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_set_pixbuf (list_store, a_list_item_imp.list_iter.item, 0, NULL)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_set_pixbuf (list_store, a_list_item_imp.list_iter.item, 0, NULL)
 		end
 
 	insert_i_th (v: like item; i: INTEGER) is
@@ -284,7 +284,7 @@ feature -- Insertion
 				-- Add row to model
 			create a_tree_iter.make
 			item_imp.set_list_iter (a_tree_iter)
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_insert (list_store, a_tree_iter.item, i - 1)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_insert (list_store, a_tree_iter.item, i - 1)
 			set_text_on_position (i, v.text)
 			
 			if v.pixmap /= Void then
@@ -312,7 +312,7 @@ feature {NONE} -- Implementation
 			clear_selection
 			item_imp ?= (child_array @ (an_index)).implementation
 			item_imp.set_parent_imp (Void)
-			feature {EV_GTK_EXTERNALS}.gtk_list_store_remove (list_store, item_imp.list_iter.item)
+			{EV_GTK_EXTERNALS}.gtk_list_store_remove (list_store, item_imp.list_iter.item)
 			-- remove the row from the `ev_children'
 			child_array.go_i_th (an_index)
 			child_array.remove

@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 			-- Create a list item with an empty name.
 		do
 			base_make (an_interface)
-			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_list_item_new)
+			set_c_object ({EV_GTK_EXTERNALS}.gtk_list_item_new)
 		end
 
 	initialize is
@@ -64,19 +64,19 @@ feature {NONE} -- Initialization
 			textable_imp_initialize
 			pixmapable_imp_initialize
 			checkable_imp_initialize
-			item_box := feature {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
-			feature {EV_GTK_EXTERNALS}.gtk_container_add (c_object, item_box)
-			feature {EV_GTK_EXTERNALS}.gtk_widget_show (item_box)
+			item_box := {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
+			{EV_GTK_EXTERNALS}.gtk_container_add (c_object, item_box)
+			{EV_GTK_EXTERNALS}.gtk_widget_show (item_box)
 				-- Add the pixmap box to the item but hide it so it
 				-- takes up no space in the item.
 				
-			feature {EV_GTK_EXTERNALS}.gtk_box_pack_start (item_box, check_box, False, False, 0)
+			{EV_GTK_EXTERNALS}.gtk_box_pack_start (item_box, check_box, False, False, 0)
 				-- The check box is only shown in an EV_CHECKABLE_LIST
 			real_signal_connect (check_box, "toggled", agent (App_implementation.gtk_marshal).list_item_check_intermediary (c_object), Void)
 
-			feature {EV_GTK_EXTERNALS}.gtk_box_pack_start (item_box, pixmap_box, False, False, 2)
+			{EV_GTK_EXTERNALS}.gtk_box_pack_start (item_box, pixmap_box, False, False, 2)
 				-- Padding of 2 pixels used for pixmap
-			feature {EV_GTK_EXTERNALS}.gtk_box_pack_start (item_box, text_label, True, True, 0)
+			{EV_GTK_EXTERNALS}.gtk_box_pack_start (item_box, text_label, True, True, 0)
 
 			--feature {EV_GTK_EXTERNALS}.gtk_widget_hide (pixmap_box)	
 			is_initialized := True
@@ -85,8 +85,8 @@ feature {NONE} -- Initialization
 	checkable_imp_initialize is
 			-- 
 		do
-			check_box := feature {EV_GTK_EXTERNALS}.gtk_check_button_new
-			feature {EV_GTK_EXTERNALS}.gtk_widget_unset_flags (check_box, feature {EV_GTK_EXTERNALS}.gTK_CAN_FOCUS_ENUM)
+			check_box := {EV_GTK_EXTERNALS}.gtk_check_button_new
+			{EV_GTK_EXTERNALS}.gtk_widget_unset_flags (check_box, {EV_GTK_EXTERNALS}.gTK_CAN_FOCUS_ENUM)
 		end
 
 feature {EV_LIST_ITEM_LIST_IMP} -- Implementation
@@ -96,7 +96,7 @@ feature {EV_LIST_ITEM_LIST_IMP} -- Implementation
 		do
 			Precursor {EV_ITEM_IMP} (a_parent)
 			if a_parent = Void then
-				feature {EV_GTK_EXTERNALS}.gtk_widget_hide (check_box) 				
+				{EV_GTK_EXTERNALS}.gtk_widget_hide (check_box) 				
 			end
 		end
 		
@@ -140,8 +140,8 @@ feature -- Status report
 			par_imp ?= parent_imp
 			par := par_imp.list_widget
 			if par /= NULL then
-				Result := feature {EV_GTK_EXTERNALS}.g_list_find (
-					feature {EV_GTK_EXTERNALS}.gtk_list_struct_selection (par),
+				Result := {EV_GTK_EXTERNALS}.g_list_find (
+					{EV_GTK_EXTERNALS}.gtk_list_struct_selection (par),
 					c_object
 				) /= NULL
 			end
@@ -160,15 +160,15 @@ feature -- Status setting
 				par_imp ?= parent_imp
 				par := par_imp.list_widget
 				if par /= NULL then
-					feature {EV_GTK_EXTERNALS}.gtk_list_select_child (par, c_object);
+					{EV_GTK_EXTERNALS}.gtk_list_select_child (par, c_object);
 	--| FIXME hack to ensure the element is selected.				
 					if
-						feature {EV_GTK_EXTERNALS}.g_list_find (
-							feature {EV_GTK_EXTERNALS}.gtk_list_struct_selection (par),
+						{EV_GTK_EXTERNALS}.g_list_find (
+							{EV_GTK_EXTERNALS}.gtk_list_struct_selection (par),
 							c_object
 						) = NULL
 					then
-						feature {EV_GTK_EXTERNALS}.gtk_list_select_child (par, c_object);
+						{EV_GTK_EXTERNALS}.gtk_list_select_child (par, c_object);
 					end
 					combo_par ?= parent_imp
 					-- We need to explicitly launch select actions in combo box due to selection workaround
@@ -189,7 +189,7 @@ feature -- Status setting
 				par_imp ?= parent_imp
 				par := par_imp.list_widget
 				if par /= NULL then
-					feature {EV_GTK_EXTERNALS}.gtk_list_unselect_child (par, c_object);
+					{EV_GTK_EXTERNALS}.gtk_list_unselect_child (par, c_object);
 				end				
 			end
 
@@ -208,7 +208,7 @@ feature -- Element change
 			-- the gtk part if the parent is a combo_box
 			combo_par ?= parent_imp
 			if (combo_par /= Void) then
-				feature {EV_GTK_EXTERNALS}.gtk_combo_set_item_string (
+				{EV_GTK_EXTERNALS}.gtk_combo_set_item_string (
 					combo_par.container_widget,
 					c_object, a_cs.item
 				)

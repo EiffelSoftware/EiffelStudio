@@ -38,16 +38,16 @@ feature -- Initialization
 			-- Create the tree item.
 		do
 			base_make (an_interface)
-			set_c_object  (feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_new)
+			set_c_object  ({EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_new)
 		end
 
 	initialize is
 			-- Initialize the header item
 		do
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_resizable (c_object, True)
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_clickable (c_object, True)
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_sizing (c_object, feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_fixed_enum)
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_fixed_width (c_object, 80)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_resizable (c_object, True)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_clickable (c_object, True)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_sizing (c_object, {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_fixed_enum)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_fixed_width (c_object, 80)
 			
 			pixmapable_imp_initialize
 			textable_imp_initialize
@@ -78,11 +78,11 @@ feature -- Initialization
 		local
 			box: POINTER
 		do
-			box := feature {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
-			feature {EV_GTK_EXTERNALS}.gtk_widget_show (box)
-			feature {EV_GTK_EXTERNALS}.gtk_container_add (box, pixmap_box)
-			feature {EV_GTK_EXTERNALS}.gtk_container_add (box, text_label)
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_widget (c_object, box)
+			box := {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
+			{EV_GTK_EXTERNALS}.gtk_widget_show (box)
+			{EV_GTK_EXTERNALS}.gtk_container_add (box, pixmap_box)
+			{EV_GTK_EXTERNALS}.gtk_container_add (box, text_label)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_widget (c_object, box)
 		end
 
 feature -- Access
@@ -91,7 +91,7 @@ feature -- Access
 			-- `Result' is width of `Current' used
 			-- while parented.
 		do
-			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_get_width (c_object)
+			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_get_width (c_object)
 		end
 
 feature -- Status setting
@@ -99,7 +99,7 @@ feature -- Status setting
 	set_width (a_width: INTEGER) is
 			-- Assign `a_width' to `width'.
 		do
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_fixed_width (c_object, a_width)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_fixed_width (c_object, a_width)
 		end
 		
 	resize_to_content is

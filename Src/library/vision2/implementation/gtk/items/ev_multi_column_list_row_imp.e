@@ -66,7 +66,7 @@ feature -- Status setting
 			-- Select the row in the list.
 		do
 			if not is_selected then
-				feature {EV_GTK_EXTERNALS}.gtk_clist_select_row (parent_imp.list_widget, index - 1, 0)
+				{EV_GTK_EXTERNALS}.gtk_clist_select_row (parent_imp.list_widget, index - 1, 0)
 			end
 		end
 
@@ -74,7 +74,7 @@ feature -- Status setting
 			-- Deselect the row from the list.
 		do
 			if is_selected then
-				feature {EV_GTK_EXTERNALS}.gtk_clist_unselect_row (parent_imp.list_widget, index - 1, 0)
+				{EV_GTK_EXTERNALS}.gtk_clist_unselect_row (parent_imp.list_widget, index - 1, 0)
 			end
 		end
 

@@ -24,8 +24,8 @@ feature {NONE} -- Initialization
 			create dialog_delegate.make (Current, $dialog_procedure)
 			cwel_set_window_procedure_address (window_delegate)
 			cwel_set_dialog_procedure_address (dialog_delegate)
-			dispatcher_object := feature {GC_HANDLE}.alloc (Current)
-			cwel_set_dispatcher_object (feature {GC_HANDLE}.to_pointer (dispatcher_object))
+			dispatcher_object := {GC_HANDLE}.alloc (Current)
+			cwel_set_dispatcher_object ({GC_HANDLE}.to_pointer (dispatcher_object))
 		end
 
 feature {NONE} -- Implementation

@@ -44,25 +44,25 @@ feature -- Creation
 		require
 			valid_flags: valid_character_format_flag (flags)
 		do
-			font_family := flags | feature {EV_CHARACTER_FORMAT_CONSTANTS}.font_family = flags
-			font_weight := flags | feature {EV_CHARACTER_FORMAT_CONSTANTS}.font_weight = flags
-			font_shape := flags | feature {EV_CHARACTER_FORMAT_CONSTANTS}.font_shape = flags
-			font_height := flags | feature {EV_CHARACTER_FORMAT_CONSTANTS}.font_height = flags
-			color := flags | feature {EV_CHARACTER_FORMAT_CONSTANTS}.color = flags
-			background_color := flags | feature {EV_CHARACTER_FORMAT_CONSTANTS}.background_color = flags
-			effects_striked_out := flags | feature {EV_CHARACTER_FORMAT_CONSTANTS}.effects_striked_out = flags
-			effects_underlined := flags | feature {EV_CHARACTER_FORMAT_CONSTANTS}.effects_underlined = flags
-			effects_vertical_offset := flags | feature {EV_CHARACTER_FORMAT_CONSTANTS}.effects_vertical_offset = flags
+			font_family := flags | {EV_CHARACTER_FORMAT_CONSTANTS}.font_family = flags
+			font_weight := flags | {EV_CHARACTER_FORMAT_CONSTANTS}.font_weight = flags
+			font_shape := flags | {EV_CHARACTER_FORMAT_CONSTANTS}.font_shape = flags
+			font_height := flags | {EV_CHARACTER_FORMAT_CONSTANTS}.font_height = flags
+			color := flags | {EV_CHARACTER_FORMAT_CONSTANTS}.color = flags
+			background_color := flags | {EV_CHARACTER_FORMAT_CONSTANTS}.background_color = flags
+			effects_striked_out := flags | {EV_CHARACTER_FORMAT_CONSTANTS}.effects_striked_out = flags
+			effects_underlined := flags | {EV_CHARACTER_FORMAT_CONSTANTS}.effects_underlined = flags
+			effects_vertical_offset := flags | {EV_CHARACTER_FORMAT_CONSTANTS}.effects_vertical_offset = flags
 		ensure
-			attributes_set: font_family = (flags | feature {EV_CHARACTER_FORMAT_CONSTANTS}.font_family = flags) and
-			font_weight = (flags | feature {EV_CHARACTER_FORMAT_CONSTANTS}.font_weight = flags) and
-			font_shape = (flags | feature {EV_CHARACTER_FORMAT_CONSTANTS}.font_shape = flags) and
-			font_height = (flags | feature {EV_CHARACTER_FORMAT_CONSTANTS}.font_height = flags) and
-			color = (flags | feature {EV_CHARACTER_FORMAT_CONSTANTS}.color = flags) and
-			background_color = (flags | feature {EV_CHARACTER_FORMAT_CONSTANTS}.background_color = flags) and
-			effects_striked_out = (flags | feature {EV_CHARACTER_FORMAT_CONSTANTS}.effects_striked_out = flags) and
-			effects_underlined = (flags | feature {EV_CHARACTER_FORMAT_CONSTANTS}.effects_underlined = flags) and
-			effects_vertical_offset = (flags | feature {EV_CHARACTER_FORMAT_CONSTANTS}.effects_vertical_offset = flags)
+			attributes_set: font_family = (flags | {EV_CHARACTER_FORMAT_CONSTANTS}.font_family = flags) and
+			font_weight = (flags | {EV_CHARACTER_FORMAT_CONSTANTS}.font_weight = flags) and
+			font_shape = (flags | {EV_CHARACTER_FORMAT_CONSTANTS}.font_shape = flags) and
+			font_height = (flags | {EV_CHARACTER_FORMAT_CONSTANTS}.font_height = flags) and
+			color = (flags | {EV_CHARACTER_FORMAT_CONSTANTS}.color = flags) and
+			background_color = (flags | {EV_CHARACTER_FORMAT_CONSTANTS}.background_color = flags) and
+			effects_striked_out = (flags | {EV_CHARACTER_FORMAT_CONSTANTS}.effects_striked_out = flags) and
+			effects_underlined = (flags | {EV_CHARACTER_FORMAT_CONSTANTS}.effects_underlined = flags) and
+			effects_vertical_offset = (flags | {EV_CHARACTER_FORMAT_CONSTANTS}.effects_vertical_offset = flags)
 		end
 
 feature -- Access

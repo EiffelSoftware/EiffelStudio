@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			-- Create a gtk check button.
 		do
 			base_make (an_interface)
-			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_check_button_new)
+			set_c_object ({EV_GTK_EXTERNALS}.gtk_check_button_new)
 		end
 		
 	initialize is
@@ -52,10 +52,10 @@ feature -- Element change
 			Precursor {EV_TOGGLE_BUTTON_IMP} (txt)
 
 				-- We left-align and vertical_center-position the text
-			feature {EV_GTK_EXTERNALS}.gtk_misc_set_alignment (text_label, 0.0, 0.5)
+			{EV_GTK_EXTERNALS}.gtk_misc_set_alignment (text_label, 0.0, 0.5)
 
 			if gtk_pixmap /= NULL then
-				feature {EV_GTK_EXTERNALS}.gtk_misc_set_alignment (pixmap_box, 0.0, 0.5)
+				{EV_GTK_EXTERNALS}.gtk_misc_set_alignment (pixmap_box, 0.0, 0.5)
 			end				
 		end
 

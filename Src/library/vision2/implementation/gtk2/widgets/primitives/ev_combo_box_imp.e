@@ -69,12 +69,12 @@ feature {NONE} -- Initialization
 			a_vbox: POINTER
 		do
 			base_make (an_interface)
-			a_vbox := feature {EV_GTK_EXTERNALS}.gtk_vbox_new (False, 0)
+			a_vbox := {EV_GTK_EXTERNALS}.gtk_vbox_new (False, 0)
 			set_c_object (a_vbox)
-			container_widget := feature {EV_GTK_EXTERNALS}.gtk_combo_box_entry_new
-			feature {EV_GTK_EXTERNALS}.gtk_widget_show (container_widget)
-			feature {EV_GTK_EXTERNALS}.gtk_box_pack_start (a_vbox, container_widget, False, False, 0)
-			entry_widget := feature {EV_GTK_EXTERNALS}.gtk_combo_box_get_entry (container_widget)
+			container_widget := {EV_GTK_EXTERNALS}.gtk_combo_box_entry_new
+			{EV_GTK_EXTERNALS}.gtk_widget_show (container_widget)
+			{EV_GTK_EXTERNALS}.gtk_box_pack_start (a_vbox, container_widget, False, False, 0)
+			entry_widget := {EV_GTK_EXTERNALS}.gtk_combo_box_get_entry (container_widget)
 		end
 
 	call_selection_action_sequences is
@@ -119,24 +119,24 @@ feature {NONE} -- Initialization
 		do
 			Precursor {EV_LIST_ITEM_LIST_IMP}
 			initialize_combo_box_style (container_widget)
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_combo_box_set_model (container_widget, list_store)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_combo_box_set_model (container_widget, list_store)
 
 				-- The combo box is already initialized with a text cell renderer at position 0, that is why we reorder the pixbuf cell renderer to position 0 and set the text column to 1
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_combo_box_entry_set_text_column (container_widget, 1)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_combo_box_entry_set_text_column (container_widget, 1)
 			
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_layout_clear (container_widget)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_layout_clear (container_widget)
 			
-			a_cell_renderer := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_renderer_pixbuf_new
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_layout_pack_start (container_widget, a_cell_renderer, True)
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_layout_reorder (container_widget, a_cell_renderer, 0)
+			a_cell_renderer := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_renderer_pixbuf_new
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_layout_pack_start (container_widget, a_cell_renderer, True)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_layout_reorder (container_widget, a_cell_renderer, 0)
 			a_attribute := "pixbuf"
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_layout_set_attribute (container_widget, a_cell_renderer, a_attribute.item, 0)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_layout_set_attribute (container_widget, a_cell_renderer, a_attribute.item, 0)
 
-			a_cell_renderer := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_renderer_text_new
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_layout_pack_start (container_widget, a_cell_renderer, True)
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_layout_reorder (container_widget, a_cell_renderer, 0)
+			a_cell_renderer := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_renderer_text_new
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_layout_pack_start (container_widget, a_cell_renderer, True)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_layout_reorder (container_widget, a_cell_renderer, 0)
 			a_attribute := "text"
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_layout_set_attribute (container_widget, a_cell_renderer, a_attribute.item, 1)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_layout_set_attribute (container_widget, a_cell_renderer, a_attribute.item, 1)
 
 			real_signal_connect (container_widget, "changed", agent (app_implementation.gtk_marshal).on_pnd_deferred_item_parent_selection_change (internal_id), Void)
 		end
@@ -171,7 +171,7 @@ feature -- Status report
 		local
 			a_active: INTEGER
 		do
-			a_active := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_combo_box_get_active (container_widget)
+			a_active := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_combo_box_get_active (container_widget)
 			if a_active >= 0 then
 				Result := child_array @ (a_active + 1)
 			end
@@ -187,19 +187,19 @@ feature -- Status report
 	select_item (an_index: INTEGER) is
 			-- Select an item at the one-based `index' of the list.
 		do
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_combo_box_set_active (container_widget, an_index - 1)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_combo_box_set_active (container_widget, an_index - 1)
 		end
 
 	deselect_item (an_index: INTEGER) is
 			-- Unselect the item at the one-based `index'.
 		do
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_combo_box_set_active (container_widget, -1)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_combo_box_set_active (container_widget, -1)
 		end
 
 	clear_selection is
 			-- Clear the item selection of `Current'
 		do
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_combo_box_set_active (container_widget, -1)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_combo_box_set_active (container_widget, -1)
 		end
 
 feature -- Status setting
@@ -207,7 +207,7 @@ feature -- Status setting
 	set_maximum_text_length (len: INTEGER) is
 			-- Set the length of the longest 
 		do
-			feature {EV_GTK_EXTERNALS}.gtk_entry_set_max_length (entry_widget, len)
+			{EV_GTK_EXTERNALS}.gtk_entry_set_max_length (entry_widget, len)
 		end
 
 feature {EV_LIST_ITEM_IMP, EV_INTERMEDIARY_ROUTINES} -- Implementation

@@ -60,9 +60,9 @@ feature {NONE} -- Implementation
 				if not has_focus then
 					set_focus
 				end
-				feature {EV_GTK_EXTERNALS}.gtk_grab_add (event_widget)
-				i := feature {EV_GTK_EXTERNALS}.gdk_pointer_grab (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (event_widget), 1, feature {EV_GTK_EXTERNALS}.gdk_button_release_mask_enum + feature {EV_GTK_EXTERNALS}.gdk_button_press_mask_enum + feature {EV_GTK_EXTERNALS}.gdk_pointer_motion_mask_enum, null, null, 0)
-				i := feature {EV_GTK_EXTERNALS}.gdk_keyboard_grab (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (event_widget), True, 0)
+				{EV_GTK_EXTERNALS}.gtk_grab_add (event_widget)
+				i := {EV_GTK_EXTERNALS}.gdk_pointer_grab ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (event_widget), 1, {EV_GTK_EXTERNALS}.gdk_button_release_mask_enum + {EV_GTK_EXTERNALS}.gdk_button_press_mask_enum + {EV_GTK_EXTERNALS}.gdk_pointer_motion_mask_enum, null, null, 0)
+				i := {EV_GTK_EXTERNALS}.gdk_keyboard_grab ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (event_widget), True, 0)
 			end
 		end
 
@@ -71,11 +71,11 @@ feature {NONE} -- Implementation
 			--| Used by pick and drop.
 		do
 			if has_capture then
-				feature {EV_GTK_EXTERNALS}.gtk_grab_remove (event_widget)
-				feature {EV_GTK_EXTERNALS}.gdk_pointer_ungrab (
+				{EV_GTK_EXTERNALS}.gtk_grab_remove (event_widget)
+				{EV_GTK_EXTERNALS}.gdk_pointer_ungrab (
 					0 -- guint32 time
 				)
-				feature {EV_GTK_EXTERNALS}.gdk_keyboard_ungrab (0) -- guint32 time
+				{EV_GTK_EXTERNALS}.gdk_keyboard_ungrab (0) -- guint32 time
 				App_implementation.enable_debugger				
 			end	
 		end
@@ -83,7 +83,7 @@ feature {NONE} -- Implementation
 	has_capture: BOOLEAN is
 			-- Does Current have the keyboard and mouse event capture?
 		do
-			Result := has_struct_flag (event_widget, feature {EV_GTK_EXTERNALS}.GTK_HAS_GRAB_ENUM)
+			Result := has_struct_flag (event_widget, {EV_GTK_EXTERNALS}.GTK_HAS_GRAB_ENUM)
 		end
 
 feature -- Implementation
@@ -122,7 +122,7 @@ feature -- Implementation
  		do
  			if not is_destroyed then
 				if button_press_connection_id > 0 then
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (event_widget, button_press_connection_id)
+					{EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (event_widget, button_press_connection_id)
 				end
 				real_signal_connect (
 					event_widget,
@@ -149,11 +149,11 @@ feature -- Implementation
 	disable_transport_signals is
 		do
 			if button_press_connection_id > 0 then
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (event_widget, button_press_connection_id)
+				{EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (event_widget, button_press_connection_id)
 				button_press_connection_id := 0
 			end
 			if button_release_connection_id > 0 then
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (event_widget, button_release_connection_id)
+				{EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (event_widget, button_release_connection_id)
 				button_release_connection_id := 0
 			end
 		end
@@ -166,7 +166,7 @@ feature -- Implementation
 		is
 			-- Filter out double click events.
 		do
-			if a_type = feature {EV_GTK_EXTERNALS}.Gdk_button_press_enum and then gtk_widget_imp_at_pointer_position = Current 
+			if a_type = {EV_GTK_EXTERNALS}.Gdk_button_press_enum and then gtk_widget_imp_at_pointer_position = Current 
 			and then not App_implementation.is_in_transport then
 				start_transport (
 					a_x,
@@ -277,7 +277,7 @@ feature -- Implementation
 						end
 					end
 
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (event_widget, button_press_connection_id)
+					{EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (event_widget, button_press_connection_id)
 					real_signal_connect (
 						event_widget,
 						"button-press-event",
@@ -349,7 +349,7 @@ feature -- Implementation
 			a_cs: EV_GTK_C_STRING
 		do
 			a_cs := signal
-			feature {EV_GTK_EXTERNALS}.signal_emit_stop_by_name (a_c_object, a_cs.item)
+			{EV_GTK_EXTERNALS}.signal_emit_stop_by_name (a_c_object, a_cs.item)
 		end
 
 	end_transport_filter (a_type, a_x, a_y, a_button: INTEGER;
@@ -357,7 +357,7 @@ feature -- Implementation
 				a_screen_x, a_screen_y: INTEGER) is
 			-- Filter out double click events.
 		do
-			if a_type = feature {EV_GTK_EXTERNALS}.Gdk_button_press_enum then
+			if a_type = {EV_GTK_EXTERNALS}.Gdk_button_press_enum then
 				end_transport (a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 			end
 		end
@@ -377,23 +377,23 @@ feature -- Implementation
 			erase_rubber_band
 			disable_capture
 			if button_release_connection_id > 0 then
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (event_widget, button_release_connection_id)
+				{EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (event_widget, button_release_connection_id)
 				button_release_connection_id := 0
 			end
 			if motion_notify_connection_id > 0 then
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (event_widget, motion_notify_connection_id)
+				{EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (event_widget, motion_notify_connection_id)
 				motion_notify_connection_id := 0
 			end
 			if enter_notify_connection_id > 0 then
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (event_widget, enter_notify_connection_id)
+				{EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (event_widget, enter_notify_connection_id)
 				enter_notify_connection_id := 0
 			end
 			if leave_notify_connection_id > 0 then
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (event_widget, leave_notify_connection_id)
+				{EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (event_widget, leave_notify_connection_id)
 				leave_notify_connection_id := 0
 			end
 			if grab_callback_connection_id > 0 then
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (event_widget, grab_callback_connection_id)
+				{EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (event_widget, grab_callback_connection_id)
 				grab_callback_connection_id := 0
 			end
 			if not is_destroyed then
@@ -401,11 +401,11 @@ feature -- Implementation
 					internal_set_pointer_style (pointer_style)
 				else
 					-- Reset the cursors.
-					feature {EV_GTK_EXTERNALS}.gdk_window_set_cursor (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), NULL)
-					feature {EV_GTK_EXTERNALS}.gdk_window_set_cursor (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (event_widget), NULL)
+					{EV_GTK_EXTERNALS}.gdk_window_set_cursor ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), NULL)
+					{EV_GTK_EXTERNALS}.gdk_window_set_cursor ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (event_widget), NULL)
 				end
-				feature {EV_GTK_EXTERNALS}.gtk_widget_draw (c_object, NULL)
-				feature {EV_GTK_EXTERNALS}.gtk_widget_draw (event_widget, NULL)				
+				{EV_GTK_EXTERNALS}.gtk_widget_draw (c_object, NULL)
+				{EV_GTK_EXTERNALS}.gtk_widget_draw (event_widget, NULL)				
 			end
 			
 				-- Call appropriate action sequences
@@ -455,7 +455,7 @@ feature -- Implementation
 				wid_imp ?= wid.implementation
 				if wid_imp /= Void and not wid_imp.is_destroyed then
 					if (a_x >= 0 and a_x <= wid_imp.width) and (a_y >= 0 and a_y <= wid_imp.height) then
-						wid_imp.button_press_switch (feature {EV_GTK_ENUMS}.gdk_button_press_enum, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
+						wid_imp.button_press_switch ({EV_GTK_ENUMS}.gdk_button_press_enum, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 					end
 				end
 			end
@@ -482,7 +482,7 @@ feature -- Implementation
 			check
 				grab_callback_connected: grab_callback_connection_id > 0
 			end
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (event_widget, grab_callback_connection_id)
+			{EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (event_widget, grab_callback_connection_id)
 			grab_callback_connection_id := 0
 			enable_capture
 		end
@@ -526,14 +526,14 @@ feature -- Implementation
 			pnd_targets: ARRAYED_LIST [INTEGER] 
 		do
 			a_wid_imp ?= gtk_widget_imp_at_pointer_position
-			if a_wid_imp /= Void and then has_struct_flag (a_wid_imp.c_object, feature {EV_GTK_EXTERNALS}.gTK_SENSITIVE_ENUM) then
+			if a_wid_imp /= Void and then has_struct_flag (a_wid_imp.c_object, {EV_GTK_EXTERNALS}.gTK_SENSITIVE_ENUM) then
 				if App_implementation.pnd_targets.has (a_wid_imp.interface.object_id) then
 					Result := a_wid_imp.interface
 				end
 				a_pnd_deferred_item_parent ?= a_wid_imp
 				if a_pnd_deferred_item_parent /= Void then
 						-- We need to explicitly search for PND deferred items
-					gdkwin := feature {EV_GTK_EXTERNALS}.gdk_window_at_pointer ($x, $y)
+					gdkwin := {EV_GTK_EXTERNALS}.gdk_window_at_pointer ($x, $y)
 					pnd_targets := App_implementation.pnd_targets
 					a_row_imp := a_pnd_deferred_item_parent.row_from_y_coord (y)
 					if a_row_imp /= Void and then pnd_targets.has (a_row_imp.interface.object_id) then
@@ -558,8 +558,8 @@ feature {EV_APPLICATION_IMP, EV_PICK_AND_DROPABLE_IMP, EV_DOCKABLE_SOURCE_IMP} -
 		do
 			--| Shift to put bit in least significant place then take mod 2.
 			Result := ((
-				(feature {EV_GTK_EXTERNALS}.gtk_object_struct_flags (visual_widget)
-				// feature {EV_GTK_EXTERNALS}.GTK_MAPPED_ENUM) \\ 2)
+				({EV_GTK_EXTERNALS}.gtk_object_struct_flags (visual_widget)
+				// {EV_GTK_EXTERNALS}.GTK_MAPPED_ENUM) \\ 2)
 			) = 1
 		end
 	

@@ -28,8 +28,8 @@ feature {NONE} -- Initialization
 			-- Create the horizontal scroll bar.
 		do
 			base_make (an_interface)
-			adjustment := feature {EV_GTK_EXTERNALS}.gtk_adjustment_new (0, 0, 100 + 10, 1, 10, 10)
-			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_vscrollbar_new (adjustment))
+			adjustment := {EV_GTK_EXTERNALS}.gtk_adjustment_new (0, 0, 100 + 10, 1, 10, 10)
+			set_c_object ({EV_GTK_EXTERNALS}.gtk_vscrollbar_new (adjustment))
 		end
 
 feature {EV_ANY_I} -- Implementation

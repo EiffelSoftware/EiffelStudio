@@ -28,7 +28,7 @@ feature -- Initialization
 	pixmapable_imp_initialize is
 			-- Create a GtkHBox to hold a GtkPixmap.
 		do
-			pixmap_box := feature {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
+			pixmap_box := {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
 		end
 
 feature -- Access
@@ -55,7 +55,7 @@ feature -- Element change
 		do	
 			internal_pixmap := Void
 			internal_remove_pixmap
-			feature {EV_GTK_EXTERNALS}.gtk_widget_hide (pixmap_box)
+			{EV_GTK_EXTERNALS}.gtk_widget_hide (pixmap_box)
 		end
 		
 feature {EV_ITEM_PIXMAP_SCALER_I} -- Implementation
@@ -70,10 +70,10 @@ feature {EV_ITEM_PIXMAP_SCALER_I} -- Implementation
 				-- We need to scale pixmap before it is placed in to pixmap holder			
 				a_pixmap_imp.stretch (a_width, a_height)
 			end
-			gtk_pix_wid := feature {EV_GTK_EXTERNALS}.gtk_pixmap_new (a_pixmap_imp.drawable, a_pixmap_imp.mask)
-			feature {EV_GTK_EXTERNALS}.gtk_widget_show (gtk_pix_wid)
-			feature {EV_GTK_EXTERNALS}.gtk_container_add (pixmap_box, gtk_pix_wid)
-			feature {EV_GTK_EXTERNALS}.gtk_widget_show (pixmap_box)				
+			gtk_pix_wid := {EV_GTK_EXTERNALS}.gtk_pixmap_new (a_pixmap_imp.drawable, a_pixmap_imp.mask)
+			{EV_GTK_EXTERNALS}.gtk_widget_show (gtk_pix_wid)
+			{EV_GTK_EXTERNALS}.gtk_container_add (pixmap_box, gtk_pix_wid)
+			{EV_GTK_EXTERNALS}.gtk_widget_show (pixmap_box)				
 		end
 		
 	internal_remove_pixmap is
@@ -84,7 +84,7 @@ feature {EV_ITEM_PIXMAP_SCALER_I} -- Implementation
 			p := gtk_pixmap
 			if p /= NULL then
 				--| We want p to be deallocated by gtk.
-				feature {EV_GTK_EXTERNALS}.gtk_container_remove (pixmap_box, p)
+				{EV_GTK_EXTERNALS}.gtk_container_remove (pixmap_box, p)
 			end
 		end	
 
@@ -98,10 +98,10 @@ feature {NONE} -- Implementation
 		local
 			a_child_list: POINTER
 		do
-			a_child_list := feature {EV_GTK_EXTERNALS}.gtk_container_children (pixmap_box)
+			a_child_list := {EV_GTK_EXTERNALS}.gtk_container_children (pixmap_box)
 			if a_child_list /= NULL then
-				Result := feature {EV_GTK_EXTERNALS}.g_list_nth_data (a_child_list, 0)
-				feature {EV_GTK_EXTERNALS}.g_list_free (a_child_list)
+				Result := {EV_GTK_EXTERNALS}.g_list_nth_data (a_child_list, 0)
+				{EV_GTK_EXTERNALS}.g_list_free (a_child_list)
 			end
 		end
 

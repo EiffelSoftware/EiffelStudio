@@ -46,12 +46,12 @@ feature {NONE} -- Initialization
 			-- Create a fixed widget. 
 		do
 			base_make (an_interface)
-			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_notebook_new ())
-			feature {EV_GTK_EXTERNALS}.gtk_notebook_set_tab_border (visual_widget, 1)
-			feature {EV_GTK_EXTERNALS}.gtk_notebook_set_show_border (visual_widget, False)
-			feature {EV_GTK_EXTERNALS}.gtk_notebook_set_tab_hborder (visual_widget, 0)
-			feature {EV_GTK_EXTERNALS}.gtk_notebook_set_tab_vborder (visual_widget, 0)
-			feature {EV_GTK_EXTERNALS}.gtk_notebook_set_scrollable (visual_widget, True)
+			set_c_object ({EV_GTK_EXTERNALS}.gtk_notebook_new ())
+			{EV_GTK_EXTERNALS}.gtk_notebook_set_tab_border (visual_widget, 1)
+			{EV_GTK_EXTERNALS}.gtk_notebook_set_show_border (visual_widget, False)
+			{EV_GTK_EXTERNALS}.gtk_notebook_set_tab_hborder (visual_widget, 0)
+			{EV_GTK_EXTERNALS}.gtk_notebook_set_tab_vborder (visual_widget, 0)
+			{EV_GTK_EXTERNALS}.gtk_notebook_set_scrollable (visual_widget, True)
 			real_signal_connect (visual_widget, "switch-page", agent (App_implementation.gtk_marshal).on_notebook_page_switch_intermediary (c_object, ?), agent (App_implementation.gtk_marshal).page_switch_translate)
 		end
 
@@ -74,17 +74,17 @@ feature -- Access
 		do
 			from
 				i := 1
-				gdkwin := feature {EV_GTK_EXTERNALS}.gdk_window_at_pointer (default_pointer, default_pointer)
+				gdkwin := {EV_GTK_EXTERNALS}.gdk_window_at_pointer (default_pointer, default_pointer)
 				if gdkwin /= default_pointer then
-					feature {EV_GTK_EXTERNALS}.gdk_window_get_user_data (gdkwin, $mouse_ptr_wid)
+					{EV_GTK_EXTERNALS}.gdk_window_get_user_data (gdkwin, $mouse_ptr_wid)
 					a_wid ?= eif_object_from_c (mouse_ptr_wid)
 				end
 			until
 				Result > 0 or else i > count or else mouse_ptr_wid = default_pointer
 			loop
 				a_wid ?= i_th (i).implementation
-				tab_label := feature {EV_GTK_EXTERNALS}.gtk_notebook_get_tab_label (visual_widget, a_wid.c_object)
-				if mouse_ptr_wid = tab_label or else mouse_ptr_wid =  feature {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (mouse_ptr_wid) then
+				tab_label := {EV_GTK_EXTERNALS}.gtk_notebook_get_tab_label (visual_widget, a_wid.c_object)
+				if mouse_ptr_wid = tab_label or else mouse_ptr_wid =  {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (mouse_ptr_wid) then
 					Result := i
 				end
 				i := i + 1
@@ -111,9 +111,9 @@ feature -- Access
 			a_tab_label: POINTER--, a_hbox, a_list, a_label: POINTER
 		do
 			item_imp ?= an_item.implementation
-			a_tab_label := feature {EV_GTK_EXTERNALS}.gtk_notebook_get_tab_label (visual_widget, item_imp.c_object)
+			a_tab_label := {EV_GTK_EXTERNALS}.gtk_notebook_get_tab_label (visual_widget, item_imp.c_object)
 			
-			create Result.make_from_c (feature {EV_GTK_EXTERNALS}.gtk_label_struct_label (
+			create Result.make_from_c ({EV_GTK_EXTERNALS}.gtk_label_struct_label (
 				a_tab_label
 			))			
 			
@@ -143,18 +143,18 @@ feature -- Access
 			a_pix, a_mask: POINTER
 		do
 			item_imp ?= an_item.implementation
-			a_tab_label := feature {EV_GTK_EXTERNALS}.gtk_notebook_get_tab_label (visual_widget, item_imp.c_object)
-			a_hbox := feature {EV_GTK_EXTERNALS}.gtk_bin_struct_child (a_tab_label)
-			a_list := feature {EV_GTK_EXTERNALS}.gtk_container_children (a_hbox)
-			if feature {EV_GTK_EXTERNALS}.g_list_length (a_list) = 2 then
+			a_tab_label := {EV_GTK_EXTERNALS}.gtk_notebook_get_tab_label (visual_widget, item_imp.c_object)
+			a_hbox := {EV_GTK_EXTERNALS}.gtk_bin_struct_child (a_tab_label)
+			a_list := {EV_GTK_EXTERNALS}.gtk_container_children (a_hbox)
+			if {EV_GTK_EXTERNALS}.g_list_length (a_list) = 2 then
 				-- Our pixmap is set
 				create Result
 				pix_imp ?= Result.implementation
-				a_pixmap := feature {EV_GTK_EXTERNALS}.g_list_nth_data (a_list, 0)
-				feature {EV_GTK_EXTERNALS}.gtk_pixmap_get (a_pixmap, $a_pix, $a_mask)
+				a_pixmap := {EV_GTK_EXTERNALS}.g_list_nth_data (a_list, 0)
+				{EV_GTK_EXTERNALS}.gtk_pixmap_get (a_pixmap, $a_pix, $a_mask)
 				pix_imp.set_pixmap (a_pix, a_mask)
 			end
-			feature {EV_GTK_EXTERNALS}.g_list_free (a_list)
+			{EV_GTK_EXTERNALS}.g_list_free (a_list)
 		end
 
 feature -- Status report
@@ -168,7 +168,7 @@ feature -- Status report
 		do
 			if count > 0 then
 				pn := selected_item_index_internal - 1
-				p := feature {EV_GTK_EXTERNALS}.gtk_notebook_get_nth_page (
+				p := {EV_GTK_EXTERNALS}.gtk_notebook_get_nth_page (
 					visual_widget,
 					pn
 				)
@@ -201,7 +201,7 @@ feature -- Status report
  		local
  			gtk_pos: INTEGER
  		do
- 			gtk_pos := feature {EV_GTK_EXTERNALS}.gtk_notebook_struct_tab_pos (visual_widget)
+ 			gtk_pos := {EV_GTK_EXTERNALS}.gtk_notebook_struct_tab_pos (visual_widget)
  			inspect
  				gtk_pos
  			when 0 then
@@ -231,7 +231,7 @@ feature -- Status setting
 			elseif a_tab_position = interface.Tab_bottom then
 				gtk_pos := 3
 			end
-			feature {EV_GTK_EXTERNALS}.gtk_notebook_set_tab_pos (visual_widget, gtk_pos)
+			{EV_GTK_EXTERNALS}.gtk_notebook_set_tab_pos (visual_widget, gtk_pos)
 		end
 
 	select_item (an_item: like item) is
@@ -243,9 +243,9 @@ feature -- Status setting
 			check
 				an_item_has_implementation: item_imp /= Void
 			end
-			feature {EV_GTK_EXTERNALS}.gtk_notebook_set_page (
+			{EV_GTK_EXTERNALS}.gtk_notebook_set_page (
 				visual_widget,
-				feature {EV_GTK_EXTERNALS}.gtk_notebook_page_num (visual_widget, item_imp.c_object)
+				{EV_GTK_EXTERNALS}.gtk_notebook_page_num (visual_widget, item_imp.c_object)
 			)
 		end	
 	
@@ -256,7 +256,7 @@ feature -- Element change
 		do
 			Precursor {EV_WIDGET_LIST_IMP} (i)
 			if count > 0 then
-				selected_item_index_internal := feature {EV_GTK_EXTERNALS}.gtk_notebook_get_current_page (visual_widget) + 1
+				selected_item_index_internal := {EV_GTK_EXTERNALS}.gtk_notebook_get_current_page (visual_widget) + 1
 			else
 				selected_item_index_internal := 0
 			end
@@ -267,10 +267,10 @@ feature -- Element change
 		local
 			i: INTEGER
 		do
-			i := feature {EV_GTK_EXTERNALS}.gtk_notebook_get_current_page (visual_widget)
+			i := {EV_GTK_EXTERNALS}.gtk_notebook_get_current_page (visual_widget)
 			remove_i_th (index)
 			insert_i_th (v, index)
-			feature {EV_GTK_EXTERNALS}.gtk_notebook_set_page (visual_widget, i)
+			{EV_GTK_EXTERNALS}.gtk_notebook_set_page (visual_widget, i)
 		end
 
 	set_item_text (an_item: like item; a_text: STRING) is
@@ -283,7 +283,7 @@ feature -- Element change
 			item_imp ?= an_item.implementation
 			create a_cs.make (a_text)
 			
-			feature {EV_GTK_EXTERNALS}.gtk_notebook_set_tab_label_text (visual_widget, item_imp.c_object, a_cs.item)
+			{EV_GTK_EXTERNALS}.gtk_notebook_set_tab_label_text (visual_widget, item_imp.c_object, a_cs.item)
 			
 --			a_event_box := feature {EV_GTK_EXTERNALS}.gtk_event_box_new
 --			feature {EV_GTK_EXTERNALS}.gtk_widget_show (a_event_box)
@@ -304,19 +304,19 @@ feature -- Element change
 			a_pix_imp: EV_PIXMAP_IMP
 		do
 			item_imp ?= an_item.implementation
-			a_event_box := feature {EV_GTK_EXTERNALS}.gtk_notebook_get_tab_label (visual_widget, item_imp.c_object)
-			a_hbox := feature {EV_GTK_EXTERNALS}.gtk_bin_struct_child (a_event_box)
-			a_list := feature {EV_GTK_EXTERNALS}.gtk_container_children (a_hbox)
-			if  feature {EV_GTK_EXTERNALS}.g_list_length (a_list) = 2 then
+			a_event_box := {EV_GTK_EXTERNALS}.gtk_notebook_get_tab_label (visual_widget, item_imp.c_object)
+			a_hbox := {EV_GTK_EXTERNALS}.gtk_bin_struct_child (a_event_box)
+			a_list := {EV_GTK_EXTERNALS}.gtk_container_children (a_hbox)
+			if  {EV_GTK_EXTERNALS}.g_list_length (a_list) = 2 then
 				-- We already have a pixmap present so we remove it
-				feature {EV_GTK_EXTERNALS}.gtk_container_remove (a_hbox, feature {EV_GTK_EXTERNALS}.g_list_nth_data (a_list, 0))
+				{EV_GTK_EXTERNALS}.gtk_container_remove (a_hbox, {EV_GTK_EXTERNALS}.g_list_nth_data (a_list, 0))
 			end
 			a_pix_imp ?= a_pixmap.twin.implementation
 			a_pix_imp.stretch (pixmaps_width, pixmaps_height)
-			a_pix := feature {EV_GTK_EXTERNALS}.gtk_pixmap_new (a_pix_imp.drawable, a_pix_imp.mask)
-			feature {EV_GTK_EXTERNALS}.gtk_widget_show (a_pix)
-			feature {EV_GTK_EXTERNALS}.gtk_box_pack_start (a_hbox, a_pix, False, False, 0)
-			feature {EV_GTK_EXTERNALS}.gtk_box_reorder_child (a_hbox, a_pix, 0)
+			a_pix := {EV_GTK_EXTERNALS}.gtk_pixmap_new (a_pix_imp.drawable, a_pix_imp.mask)
+			{EV_GTK_EXTERNALS}.gtk_widget_show (a_pix)
+			{EV_GTK_EXTERNALS}.gtk_box_pack_start (a_hbox, a_pix, False, False, 0)
+			{EV_GTK_EXTERNALS}.gtk_box_reorder_child (a_hbox, a_pix, 0)
 		end
 
 feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
@@ -350,7 +350,7 @@ feature {EV_ANY_I} -- Implementation
 	gtk_reorder_child (a_container, a_child: POINTER; a_position: INTEGER) is
 			-- Move `a_child' to `a_position' in `a_container'.
 		do
-			feature {EV_GTK_EXTERNALS}.gtk_notebook_reorder_child (a_container, a_child, a_position)
+			{EV_GTK_EXTERNALS}.gtk_notebook_reorder_child (a_container, a_child, a_position)
 		end
 
 	interface: EV_NOTEBOOK

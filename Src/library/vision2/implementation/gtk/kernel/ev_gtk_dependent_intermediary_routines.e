@@ -22,8 +22,8 @@ feature {EV_ANY_IMP} -- Gtk Dependent intermediary routines
 		local
 			gtkarg2: POINTER
 		do
-			gtkarg2 := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_args_array_i_th (args, 1)
-			Result := [feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_int (gtkarg2)]
+			gtkarg2 := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_args_array_i_th (args, 1)
+			Result := [{EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_int (gtkarg2)]
 		end
 
 	mcl_event_intermediary (a_c_object: POINTER; a_event_number: INTEGER; a_int: INTEGER) is

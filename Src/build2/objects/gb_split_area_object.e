@@ -85,5 +85,8 @@ feature -- Basic operation
 				add_child (an_object, 2)
 			end
 		end
+		
+invariant
+	has_no_more_than_two_children: children.count <= 2
 
 end -- class GB_SPLIT_AREA_OBJECT

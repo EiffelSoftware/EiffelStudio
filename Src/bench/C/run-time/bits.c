@@ -127,7 +127,7 @@ rt_public char *bmalloc(long int size)
 	}
 
 	eraise(MTC "object allocation", EN_MEM);	/* Signals no more memory */
-	/* NOTREACHED */
+	return (0); /* NOTREACHED */
 }
 
 char *makebit(char *bit, long int bit_count)

@@ -222,6 +222,7 @@ rt_public long mem_info(long int field)
 		eraise("invalid mem_info request", EN_PROG);
 	}
 	/* NOTREACHED */
+	return 0;
 	EIF_END_GET_CONTEXT
 }
 
@@ -288,6 +289,7 @@ rt_public long gc_info(long int field)
 		eraise("invalid gc_info request", EN_PROG);
 	}
 	/* NOTREACHED */
+	return 0;
 	EIF_END_GET_CONTEXT
 }
 
@@ -317,6 +319,7 @@ rt_public double gc_infod(long int field)
 		eraise("invalid gc_info request", EN_PROG);
 	}
 	/* NOTREACHED */
+	return 0;
 	EIF_END_GET_CONTEXT
 }
 

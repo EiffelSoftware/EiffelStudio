@@ -98,12 +98,13 @@ rt_public char *striparr(EIF_CONTEXT register char *curr, register int dtype, re
 	EIF_GET_CONTEXT
 	char *array, *sp, *o_ref; 
 	char *new_obj;
-	long nbr_attr, offset, stripped_nbr;
+	long nbr_attr, stripped_nbr;
 	struct cnode *obj_desc;
 #ifndef WORKBENCH
 	register5 long **offsets;
 #else
 	register6 int32 *rout_ids;
+	long offset;
 #endif
 	register7 char** attr_names;
 	char *attr;
@@ -311,7 +312,7 @@ rt_public void chkinv (EIF_CONTEXT char *obj, int where)
 {
 	/* Check invariant on object `obj'. Assumes that `obj' is not null */
 	EIF_GET_CONTEXT
-	union overhead *zone = HEADER(obj);
+	  /*	union overhead *zone = HEADER(obj);    (not used in this fct) */
 	int dtype = Dtype(obj);
 
 	if (inv_mark_tablep == (char *) 0)

@@ -42,7 +42,7 @@ rt_private char *make_string(char *s, int length)
 	l = length > MAX_NUM_LEN ? MAX_NUM_LEN : length;
 
 	for (i = 0; l > 0; l--)
-		if (c = *s++)			/* Do not copy embeded null characters */
+		if ((c = *s++))			/* Do not copy embedded null characters */
 			buffer[i++] = c;
 
 	buffer[i] = '\0';			/* Ensure null terminated string */

@@ -365,8 +365,6 @@ feature {NONE} -- Implementation: event handling
 			end
 			if Eiffel_project.Manager.has_edited_classes then
 				on_project_edited
-			else
-				on_project_updated
 			end
 		end
 
@@ -379,6 +377,7 @@ feature {NONE} -- Implementation: event handling
 			if eiffel_project.workbench.successful then
 				p := Pixmaps.Icon_compilation_succeeded
 				compilation_icon.set_tooltip (Interface_names.E_compilation_succeeded)
+				on_project_updated
 			else
 				p := Pixmaps.Icon_compilation_failed
 				compilation_icon.set_tooltip (Interface_names.E_compilation_failed)

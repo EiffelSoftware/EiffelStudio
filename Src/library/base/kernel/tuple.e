@@ -26,70 +26,70 @@ feature -- Creation
 
 feature -- Type queries
 
-	is_boolean_item (idx: INTEGER): BOOLEAN is
-			-- Is item at index `idx' a BOOLEAN?
+	is_boolean_item (index: INTEGER): BOOLEAN is
+			-- Is item at `index' a BOOLEAN?
 		require
-			valid_index: valid_index (idx)
+			valid_index: valid_index (index)
 		do
-			Result := (eif_gen_typecode ($Current, idx) = 'b')
+			Result := (eif_gen_typecode ($Current, index) = 'b')
 		end
 
-	is_character_item (idx: INTEGER): BOOLEAN is
-			-- Is item at index `idx' a CHARACTER?
+	is_character_item (index: INTEGER): BOOLEAN is
+			-- Is item at `index' a CHARACTER?
 		require
-			valid_index: valid_index (idx)
+			valid_index: valid_index (index)
 		do
-			Result := (eif_gen_typecode ($Current, idx) = 'c')
+			Result := (eif_gen_typecode ($Current, index) = 'c')
 		end
 
-	is_double_item (idx: INTEGER): BOOLEAN is
-			-- Is item at index `idx' a DOUBLE?
+	is_double_item (index: INTEGER): BOOLEAN is
+			-- Is item at `index' a DOUBLE?
 		require
-			valid_index: valid_index (idx)
+			valid_index: valid_index (index)
 		do
-			Result := (eif_gen_typecode ($Current, idx) = 'd')
+			Result := (eif_gen_typecode ($Current, index) = 'd')
 		end
 
-	is_integer_item (idx: INTEGER): BOOLEAN is
-			-- Is item at index `idx' an INTEGER?
+	is_integer_item (index: INTEGER): BOOLEAN is
+			-- Is item at `index' an INTEGER?
 		require
-			valid_index: valid_index (idx)
+			valid_index: valid_index (index)
 		do
-			Result := (eif_gen_typecode ($Current, idx) = 'i')
+			Result := (eif_gen_typecode ($Current, index) = 'i')
 		end
 
-	is_pointer_item (idx: INTEGER): BOOLEAN is
-			-- Is item at index `idx' a POINTER?
+	is_pointer_item (index: INTEGER): BOOLEAN is
+			-- Is item at `index' a POINTER?
 		require
-			valid_index: valid_index (idx)
+			valid_index: valid_index (index)
 		do
-			Result := (eif_gen_typecode ($Current, idx) = 'p')
+			Result := (eif_gen_typecode ($Current, index) = 'p')
 		end
 
-	is_real_item (idx: INTEGER): BOOLEAN is
-			-- Is item at index `idx' a REAL?
+	is_real_item (index: INTEGER): BOOLEAN is
+			-- Is item at `index' a REAL?
 		require
-			valid_index: valid_index (idx)
+			valid_index: valid_index (index)
 		do
-			Result := (eif_gen_typecode ($Current, idx) = 'f')
+			Result := (eif_gen_typecode ($Current, index) = 'f')
 		end
 
-	is_reference_item (idx: INTEGER): BOOLEAN is
-			-- Is item at index `idx' a REFERENCE?
+	is_reference_item (index: INTEGER): BOOLEAN is
+			-- Is item at `index' a REFERENCE?
 		require
-			valid_index: valid_index (idx)
+			valid_index: valid_index (index)
 		do
-			Result := (eif_gen_typecode ($Current, idx) = 'r')
+			Result := (eif_gen_typecode ($Current, index) = 'r')
 		end
 
-	is_numeric_item (idx: INTEGER): BOOLEAN is
-			-- Is item at index `idx' a number?
+	is_numeric_item (index: INTEGER): BOOLEAN is
+			-- Is item at `index' a number?
 		require
-			valid_index: valid_index (idx)
+			valid_index: valid_index (index)
 		local
 			tcode: CHARACTER
 		do
-			tcode := eif_gen_typecode ($Current, idx)
+			tcode := eif_gen_typecode ($Current, index)
 			Result := (tcode = 'i') or else
 					  (tcode = 'f') or else
 					  (tcode = 'd')
@@ -239,53 +239,53 @@ feature -- Type conversion queries
 
 feature -- Access
 
-	boolean_item (idx: INTEGER): BOOLEAN is
-			-- Boolean item at index `idx'.
+	boolean_item (index: INTEGER): BOOLEAN is
+			-- Boolean item at `index'.
 		require
-			valid_index: valid_index (idx);
-			is_boolean: is_boolean_item (idx)
+			valid_index: valid_index (index);
+			is_boolean: is_boolean_item (index)
 		local
 			ref: BOOLEAN_REF
 		do
-			ref ?= item (idx)
+			ref ?= item (index)
 			if ref /= Void then
 				Result := ref.item
 			end
 		end
 
-	character_item (idx: INTEGER): CHARACTER is
-			-- Character item at index `idx'.
+	character_item (index: INTEGER): CHARACTER is
+			-- Character item at `index'.
 		require
-			valid_index: valid_index (idx);
-			is_character: is_character_item (idx)
+			valid_index: valid_index (index);
+			is_character: is_character_item (index)
 		local
 			ref: CHARACTER_REF
 		do
-			ref ?= item (idx)
+			ref ?= item (index)
 			if ref /= Void then
 				Result := ref.item
 			end
 		end
 
-	double_item (idx: INTEGER): DOUBLE is
-			-- Double item at index `idx'.
+	double_item (index: INTEGER): DOUBLE is
+			-- Double item at `index'.
 		require
-			valid_index: valid_index (idx);
-			is_numeric: is_numeric_item (idx)
+			valid_index: valid_index (index);
+			is_numeric: is_numeric_item (index)
 		local
 			iref: INTEGER_REF
 			rref: REAL_REF
 			dref: DOUBLE_REF
 		do
-			dref ?= item (idx)
+			dref ?= item (index)
 			if dref /= Void then
 				Result := dref.item
 			else
-				rref ?= item (idx)
+				rref ?= item (index)
 				if rref /= Void then
 					Result := rref.item
 				else
-					iref ?= item (idx)
+					iref ?= item (index)
 					if iref /= Void then
 						Result := iref.item
 					end
@@ -293,54 +293,54 @@ feature -- Access
 			end
 		end
 
-	integer_item (idx: INTEGER): INTEGER is
-			-- Integer item at index `idx'.
+	integer_item (index: INTEGER): INTEGER is
+			-- Integer item at `index'.
 		require
-			valid_index: valid_index (idx);
-			is_integer: is_integer_item (idx)
+			valid_index: valid_index (index);
+			is_integer: is_integer_item (index)
 		local
 			ref: INTEGER_REF
 		do
-			ref ?= item (idx)
+			ref ?= item (index)
 			if ref /= Void then
 				Result := ref.item
 			end
 		end
 
-	pointer_item (idx: INTEGER): POINTER is
-			-- Pointer item at index `idx'.
+	pointer_item (index: INTEGER): POINTER is
+			-- Pointer item at `index'.
 		require
-			valid_index: valid_index (idx);
-			is_pointer: is_pointer_item (idx)
+			valid_index: valid_index (index);
+			is_pointer: is_pointer_item (index)
 		local
 			ref: POINTER_REF
 		do
-			ref ?= item (idx)
+			ref ?= item (index)
 			if ref /= Void then
 				Result := ref.item
 			end
 		end
 
-	real_item (idx: INTEGER): REAL is
-			-- real item at index `idx'.
+	real_item (index: INTEGER): REAL is
+			-- real item at `index'.
 		require
-			valid_index: valid_index (idx);
-			is_real_or_integer: is_real_item (idx) or else is_integer_item (idx)
+			valid_index: valid_index (index);
+			is_real_or_integer: is_real_item (index) or else is_integer_item (index)
 		local
 			iref: INTEGER_REF
 			rref: REAL_REF
 			dref: DOUBLE_REF
 		do
-			rref ?= item (idx)
+			rref ?= item (index)
 			if rref /= Void then
 				Result := rref.item
 			else
-				iref ?= item (idx)
+				iref ?= item (index)
 				if iref /= Void then
 					Result := iref.item
 				else
 					-- Special case (manifest TUPLEs)
-					dref ?= item (idx)
+					dref ?= item (index)
 					if dref /= Void then
 						Result := dref.truncated_to_real
 					end
@@ -535,13 +535,13 @@ feature -- Conversion
 
 feature {ROUTINE}
 
-	arg_item_code (idx: INTEGER): CHARACTER is
+	arg_item_code (index: INTEGER): CHARACTER is
 			-- Type code of item at `index'. Used for
 			-- argument processing in ROUTINE
 		require
-			valid_index: valid_index (idx)
+			valid_index: valid_index (index)
 		do
-			Result := eif_gen_typecode ($Current, idx)
+			Result := eif_gen_typecode ($Current, index)
 		end
 
 feature {NONE} -- Implementation

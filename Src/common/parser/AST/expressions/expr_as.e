@@ -1,20 +1,16 @@
--- Abstract class for expression nodes
+indexing
+
+	description: "Abstract class for expression nodes";
+	date: "$Date$";
+	revision: "$Revision$"
 
 deferred class EXPR_AS
 
 inherit
 
 	AST_EIFFEL
-		undefine
-			byte_node
-		end
 
 feature
-
-	byte_node: EXPR_B is
-			-- Byte code type
-		deferred
-		end;
 
 	text_string: STRING is
 			-- Text representation of Current
@@ -22,4 +18,4 @@ feature
 			Result := "gogo"
 		end;
 
-end
+end -- class EXPR_AS

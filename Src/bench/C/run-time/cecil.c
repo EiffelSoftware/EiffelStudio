@@ -392,7 +392,7 @@ rt_public void *eif_field_safe (EIF_REFERENCE object, char *name, int type_int, 
 } 	/* eif_field_safe */
 	
 
-rt_public void *eifaddr(EIF_REFERENCE object, char *name, int * const ret)
+rt_public EIF_INTEGER eifaddr_offset(EIF_REFERENCE object, char *name, int * const ret)
 {
 	/*
 	 * Returns the physical address of the attribute named 'name' in the given
@@ -426,7 +426,7 @@ rt_public void *eifaddr(EIF_REFERENCE object, char *name, int * const ret)
 	rout_id = System(dtype).cn_attr[i]; 
 	CAttrOffs(offset,rout_id,dtype);
 	
-	return (void *) (object + offset);
+	return offset;
 #endif
 }
 

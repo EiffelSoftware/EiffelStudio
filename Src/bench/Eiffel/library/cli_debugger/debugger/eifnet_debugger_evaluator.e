@@ -23,11 +23,16 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	EIFNET_ICOR_ELEMENT_TYPES_CONSTANTS
+		export
+			{NONE} all
+		end
 
 create 
 	make
 
-feature 
+feature -- Initialization
 
 	make (dbg: EIFNET_DEBUGGER) is
 		do
@@ -38,19 +43,19 @@ feature
 
 feature {EIFNET_EXPORTER, EB_OBJECT_TOOL} -- Evaluation primitives
 
-	function_evaluation (a_frame: ICOR_DEBUG_FRAME; a_icd: ICOR_DEBUG_VALUE; a_func: ICOR_DEBUG_FUNCTION): ICOR_DEBUG_VALUE is
+	function_evaluation (a_frame: ICOR_DEBUG_FRAME; a_func: ICOR_DEBUG_FUNCTION; a_args: ARRAY [ICOR_DEBUG_VALUE]): ICOR_DEBUG_VALUE is
 			-- Function evaluation result for `a_func' on `a_icd'
 		require
-			object_not_void: a_icd /= Void
+			args_not_void: a_args /= Void
 			func_not_void: a_func /= Void
 		do
 			prepare_evaluation (a_frame)
-			last_icor_debug_eval.call_function (a_func, 1, << a_icd >>)
+			last_icor_debug_eval.call_function (a_func, a_args)
 			Result := complete_evaluation
 		end
-
+		
 	new_string_evaluation (a_frame: ICOR_DEBUG_FRAME; a_string: STRING): ICOR_DEBUG_VALUE is
-			-- Function evaluation result for `a_func' on `a_icd'
+			-- NewString evaluation with `a_string'
 		require
 			a_string /= Void
 		do
@@ -59,6 +64,140 @@ feature {EIFNET_EXPORTER, EB_OBJECT_TOOL} -- Evaluation primitives
 			Result := complete_evaluation
 		end
 
+	new_object_no_constructor_evaluation (a_frame: ICOR_DEBUG_FRAME; a_icd_class: ICOR_DEBUG_CLASS): ICOR_DEBUG_VALUE is
+			-- NewObjectNoConstructor evaluation on `a_icd_class'
+		require
+			a_icd_class /= Void
+		do
+			prepare_evaluation (a_frame)
+			last_icor_debug_eval.new_object_no_constructor (a_icd_class)
+			Result := complete_evaluation
+		end
+
+	new_object_evaluation (a_frame: ICOR_DEBUG_FRAME; a_icd_func: ICOR_DEBUG_FUNCTION; a_args: ARRAY [ICOR_DEBUG_VALUE]): ICOR_DEBUG_VALUE is
+			-- NewObject evaluation on `a_icd_class'
+		require
+			a_icd_func /= Void
+			a_args /= Void
+		do
+			prepare_evaluation (a_frame)
+			last_icor_debug_eval.new_object (a_icd_func, a_args)
+			Result := complete_evaluation
+		end
+
+feature {EIFNET_EXPORTER, EB_OBJECT_TOOL} -- Basic value creation
+
+	new_i4_evaluation (a_frame: ICOR_DEBUG_FRAME; a_val: INTEGER): ICOR_DEBUG_VALUE is
+			-- New Object evaluation with i4
+		require
+		local
+			l_gen_obj: ICOR_DEBUG_GENERIC_VALUE
+			
+		do
+			prepare_evaluation (a_frame)
+			Result := last_icor_debug_eval.create_value (Element_type_i4 , Void)
+			if Result /= Void then
+				l_gen_obj := Result.query_interface_icor_debug_generic_value
+				check l_gen_obj /= Void end					
+
+				l_gen_obj.set_value ($a_val)
+				l_gen_obj.set_associated_frame (a_frame)				
+				Result := l_gen_obj
+			end
+			end_evaluation
+		end
+		
+	new_boolean_evaluation (a_frame: ICOR_DEBUG_FRAME; a_val: BOOLEAN): ICOR_DEBUG_VALUE is
+			-- New Object evaluation with Boolean
+		require
+		local
+			l_gen_obj: ICOR_DEBUG_GENERIC_VALUE
+			
+		do
+			prepare_evaluation (a_frame)
+			Result := last_icor_debug_eval.create_value (element_type_boolean , Void)
+			if Result /= Void then
+				l_gen_obj := Result.query_interface_icor_debug_generic_value
+				check l_gen_obj /= Void end					
+
+				l_gen_obj.set_value ($a_val)
+				l_gen_obj.set_associated_frame (a_frame)				
+				Result := l_gen_obj
+			end
+			end_evaluation
+		end	
+		
+	new_char_evaluation (a_frame: ICOR_DEBUG_FRAME; a_val: CHARACTER): ICOR_DEBUG_VALUE is
+			-- New Object evaluation with Character
+		require
+		local
+			l_gen_obj: ICOR_DEBUG_GENERIC_VALUE
+			
+		do
+			prepare_evaluation (a_frame)
+			Result := last_icor_debug_eval.create_value (element_type_char , Void)
+			if Result /= Void then
+				l_gen_obj := Result.query_interface_icor_debug_generic_value
+				check l_gen_obj /= Void end					
+
+				l_gen_obj.set_value ($a_val)
+				l_gen_obj.set_associated_frame (a_frame)				
+				Result := l_gen_obj
+			end
+			end_evaluation
+		end	
+		
+	new_void_evaluation (a_frame: ICOR_DEBUG_FRAME): ICOR_DEBUG_VALUE is
+			-- New Object evaluation with Void
+		require
+		local
+			l_gen_obj: ICOR_DEBUG_GENERIC_VALUE
+			
+		do
+			prepare_evaluation (a_frame)
+			Result := last_icor_debug_eval.create_value (element_type_class, Void)
+			Result.set_associated_frame (a_frame)
+			end_evaluation
+		end	
+		
+feature {EIFNET_EXPORTER} -- String facilities
+
+	new_eiffel_string_evaluation (a_frame: ICOR_DEBUG_FRAME; a_val: STRING): ICOR_DEBUG_VALUE is
+			-- New Object evaluation with String
+		require
+		local
+			l_str_icdv: ICOR_DEBUG_VALUE
+		do
+			l_str_icdv := new_string_evaluation (a_frame, a_val)
+			prepare_evaluation (a_frame)
+			last_icor_debug_eval.new_object (eiffel_string_make_from_cil_constructor, <<l_str_icdv>>)			
+			Result := complete_evaluation
+		end	
+
+	eiffel_string_make_from_cil_constructor: ICOR_DEBUG_FUNCTION is
+
+		once
+			Result := eifnet_debugger.eiffel_string_make_from_cil_constructor
+		ensure
+			Result /= Void
+		end		
+		
+feature {NONE} -- Backup state
+
+	saved_last_managed_callback: INTEGER
+	
+	save_state_info is
+			-- Save current debugger state information
+		do
+			saved_last_managed_callback := application.imp_dotnet.eifnet_debugger.last_managed_callback			
+		end	
+
+	restore_state_info is
+			-- Restore saved debugger state information
+		do
+			application.imp_dotnet.eifnet_debugger.set_last_managed_callback (saved_last_managed_callback)
+		end	
+		
 feature {NONE}
 
 	last_icor_debug_eval: ICOR_DEBUG_EVAL
@@ -72,6 +211,7 @@ feature {NONE}
 			l_icd_eval: ICOR_DEBUG_EVAL
 			l_status: APPLICATION_STATUS_DOTNET
 		do
+			save_state_info
 			if a_frame /= Void then
 				l_chain := a_frame.get_chain
 				l_icd_thread := l_chain.get_thread
@@ -88,6 +228,20 @@ feature {NONE}
 			last_icor_debug_eval := l_icd_eval
 			last_app_status := l_status
 				--| We then call effective evaluation
+		end
+
+	end_evaluation is
+		require
+			last_icor_debug_eval /= Void
+			last_app_status /= Void
+		local
+			l_icd_eval: ICOR_DEBUG_EVAL
+			l_status: APPLICATION_STATUS_DOTNET
+		do
+			l_icd_eval := last_icor_debug_eval
+			l_status := last_app_status
+			l_status.set_is_evaluating (False)
+			restore_state_info			
 		end
 
 	complete_evaluation: ICOR_DEBUG_VALUE is
@@ -122,6 +276,7 @@ feature {NONE}
 			end
 			l_status.set_is_evaluating (False)
 			eifnet_debugger.start_dbg_timer
+			restore_state_info			
 		end
 
 	display_last_exception is
@@ -135,11 +290,10 @@ feature {NONE}
 			l_exception := eifnet_debugger.active_exception_value
 			if l_exception /= Void then
 				create l_exception_info.make (l_exception)
-	
+
 				print ("%N%NException ....%N")
 				print ("%T Class   => " + l_exception_info.value_class_name + "%N")
 				print ("%T Module  => " + l_exception_info.value_module_file_name + "%N")
-				print ("%T Message => " + (create {EIFNET_EXCEPTION_CODE} ).exception_string_representation (l_exception_info.value_class_token ) + "%N")			
 			end
 		end
 

@@ -92,9 +92,7 @@ feature
 				run_info.dump_stack;
 		--	end;
 
-			Debug_info.remove_step_breakpoints;
 			if Run_info.feature_i /= Void then
-				Debug_info.add_stepped_routine (Run_info.feature_i, Run_info.break_index);
 				Window_manager.routine_win_mgr.show_stoppoint (Run_info.feature_i, Run_info.break_index)
 			end;		
 			Run_info.display_status

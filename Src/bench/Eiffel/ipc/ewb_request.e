@@ -7,7 +7,8 @@ inherit
 	DEBUG_EXT;
 	IPC_SHARED;
 	SHARED_DEBUG;
-	SHARED_WORKBENCH
+	SHARED_WORKBENCH;
+	EXEC_MODES
 
 creation
 
@@ -88,9 +89,76 @@ feature
 		local
 			bpts: LINKED_LIST [BREAKPOINT];
 			bp: BREAKPOINT;
+			routine: FEATURE_I
 		do
-			Debug_info.remove_stepped_routine;
-			Debug_info.add_step_breakpoints;
+			Debug_info.remove_all_breakpoints;
+			inspect Run_info.execution_mode
+			when No_stop_points then
+					-- Do not send new stop points.
+			when User_stop_points then
+					-- Execution with no stop points set.
+				Debug_info.set_all_breakpoints
+			when Routine_breakables then
+					-- Execution with only breakable points of current 
+					-- routine set.
+				if Run_info.is_running then
+						-- If the application is not running, there is no 
+						-- current routine ...
+					routine := Run_info.feature_i;
+					if 
+						routine /= Void and then 
+						Debug_info.has_feature (routine) 
+					then
+						Debug_info.set_routine_breakables (routine)
+					end
+				end
+			when Routine_breakables_and_user_stop_points then
+					-- Execution with breakable points of current routine
+					-- and user-defined stop points set.
+				Debug_info.set_all_breakpoints;
+				if Run_info.is_running then
+						-- If the application is not running, there is no 
+						-- current routine ...
+					routine := Run_info.feature_i;
+					if 
+						routine /= Void and then 
+						Debug_info.has_feature (routine) 
+					then
+						Debug_info.set_routine_breakables (routine)
+					end
+				end
+			when Routine_stop_points then
+					-- Execution with only user-defined stop points of
+					-- current routine set.
+				if Run_info.is_running then
+						-- If the application is not running, there is no 
+						-- current routine ...
+					routine := Run_info.feature_i;
+					if 
+						routine /= Void and then 
+						Debug_info.has_feature (routine) 
+					then
+						Debug_info.set_routine_breakpoints (routine)
+					end
+				end
+			when Last_routine_breakable then
+					-- Execution with only the last breakable point of
+					-- current routine set.
+				if Run_info.is_running then
+						-- If the application is not running, there is no 
+						-- current routine ...
+					routine := Run_info.feature_i;
+					if 
+						routine /= Void and then 
+						Debug_info.has_feature (routine) 
+					then
+						Debug_info.set_routine_last_breakable (routine)
+					end
+				end
+			else
+					-- Unknown execution mode. Do nothing.
+			end;
+
 			bpts := debug_info.new_breakpoints;
 			from
 				bpts.start

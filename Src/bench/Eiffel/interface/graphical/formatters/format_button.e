@@ -23,6 +23,7 @@ feature {NONE} -- Initialization
 		do
 			associated_command := cmd;
 			button_make (button_name, a_parent);
+			init_button (implementation);
 			set_symbol (cmd.symbol);
 			add_activate_action (cmd, cmd.tool);
 			initialize_focus 
@@ -41,10 +42,8 @@ feature -- Status Setting
 	set_selected (b: BOOLEAN) is
 			-- Darken the symbol of current button if `b', lighten it otherwise.
 		do
-			if b then
-				set_symbol (dark_symbol)
-			else
-				set_symbol (symbol)
+			if b /= is_pressed then
+				set_pressed (b)
 			end
 		end;
 

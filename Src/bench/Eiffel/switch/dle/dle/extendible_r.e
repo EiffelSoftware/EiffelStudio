@@ -9,7 +9,9 @@ inherit
 	SHARED_ENV;
 	SHARED_ERROR_HANDLER;
 	SHARED_RESCUE_STATUS;
-	PROJECT_CONTEXT
+	PROJECT_CONTEXT;
+	COMPILER_EXPORTER;
+	SHARED_EIFFEL_PROJECT
 
 feature
 
@@ -21,9 +23,10 @@ feature
 		local
 			project_name: STRING;
 			project_dir: REMOTE_PROJECT_DIRECTORY;
-			workb: WORKBENCH_I;
-			workbench_file: RAW_FILE;
+			project: E_PROJECT;
+			project_eif: RAW_FILE;
 			freeze: BOOLEAN;
+			workb: WORKBENCH_I;	
 			precomp_r: PRECOMP_R;
 			v9ds: V9DS;
 			dle_system: DLE_SYSTEM_I
@@ -37,14 +40,15 @@ feature
 
 				if project_dir.is_valid then
 					Extendible_directory.make_from_string (project_name);
-					!! workb;
-					!! workbench_file.make_open_read (Extendible_file_name);
-					workb ?= workb.retrieved (workbench_file);
-					workbench_file.close;
+					!! project_eif.make_open_read (Extendible_file_name);
+					project ?= Eiffel_project.retrieved (project_eif);
+					project_eif.close;
 
 						-- Check that it is a dynamically extendible system.
-					if 
-						workb /= Void and then 
+					if project /= Void then
+						workb := project.saved_workbench
+					end;
+					if workb /= Void and then 
 						workb.system.extendible
 					then
 						Workbench.set_precompiled_directory_name 
@@ -76,10 +80,10 @@ end;
 				end
 			else
 				if 
-					workbench_file /= Void and then 
-					not workbench_file.is_closed 
+					project_eif /= Void and then 
+					not project_eif.is_closed 
 				then
-					workbench_file.close
+					project_eif.close
 				end;
 				retried := False;
 				!! v9ds;

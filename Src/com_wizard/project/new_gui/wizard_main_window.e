@@ -17,15 +17,6 @@ inherit
 			is_equal
 		end
 
-	WIZARD_SHARED_DATA
-		export
-			{NONE} all
-		undefine
-			default_create,
-			copy,
-			is_equal
-		end
-
 	WIZARD_SHARED_GENERATION_ENVIRONMENT
 		export
 			{NONE} all
@@ -64,6 +55,13 @@ feature {NONE} -- Initialization
 		local
 			l_accel: EV_ACCELERATOR
 		do
+			notebook.set_item_text (settings_box, "General Settings")
+			notebook.set_item_text (generation_options_outter_box, "Generation Options")
+			notebook.set_item_text (output_box, "Output")
+			notebook.item_tab (settings_box).set_pixmap (settings_png)
+			notebook.item_tab (generation_options_outter_box).set_pixmap (settings_png)
+			notebook.item_tab (output_box).set_pixmap (output_png)
+
 			initialize_checker
 			close_request_actions.extend (agent on_exit)
 			com_project_box.hide
@@ -303,26 +301,26 @@ feature {NONE} -- Implementation
 			-- Called by `select_actions' of `compile_eiffel_check_button'.
 			-- Set environment accordingly.
 		do
-			environment.set_compile_eiffel (not compile_eiffel_check_button.is_selected)
+			environment.set_compile_eiffel (compile_eiffel_check_button.is_selected)
 			Profile_manager.save_active_profile
 		end
 	
-	on_no_c_compilation is
+	on_select_compile_c is
 			-- Called by `select_actions' of `compile_c_code_check_button'.
 			-- Disable no Eiffel compilation check box if selected.
 			-- Set environment accordingly.
 		do
 			if compile_c_code_check_button.is_selected then
-				compile_eiffel_check_button_was_selected := compile_eiffel_check_button.is_selected
-				compile_eiffel_check_button.enable_select
-				compile_eiffel_check_button.disable_sensitive
-			else
-				if not compile_eiffel_check_button_was_selected then
-					compile_eiffel_check_button.disable_select
+				if compile_eiffel_check_button_was_selected then
+					compile_eiffel_check_button.enable_select
 				end
 				compile_eiffel_check_button.enable_sensitive
+			else
+				compile_eiffel_check_button_was_selected := compile_eiffel_check_button.is_selected
+				compile_eiffel_check_button.disable_select
+				compile_eiffel_check_button.disable_sensitive
 			end
-			environment.set_compile_c (not compile_c_code_check_button.is_selected)
+			environment.set_compile_c (compile_c_code_check_button.is_selected)
 			Profile_manager.save_active_profile
 		end
 
@@ -516,11 +514,11 @@ feature {NONE} -- Implementation
 		local
 			l_target: STRING
 		do
-			if compile_eiffel_check_button.is_selected then
-				if compile_c_code_check_button.is_selected then
+			if compile_c_code_check_button.is_selected then
+				if compile_eiffel_check_button.is_selected then
 					l_target := Both_compile_code
 				else
-					l_target := Eiffel_compile_code
+					l_target := C_compile_code
 				end
 			else
 				l_target := None_code
@@ -603,15 +601,15 @@ feature {NONE} -- Implementation
 				if l_value.is_equal (Both_compile_code) then
 					compile_eiffel_check_button.enable_select
 					compile_c_code_check_button.enable_select
-				elseif l_value.is_equal (Eiffel_compile_code) then
-					compile_c_code_check_button.disable_select
-					compile_eiffel_check_button.enable_select
+				elseif l_value.is_equal (C_compile_code) then
+					compile_c_code_check_button.enable_select
+					compile_eiffel_check_button.disable_select
 				else
 					compile_c_code_check_button.disable_select
 				end
 			else
-				compile_eiffel_check_button.disable_select
-				compile_c_code_check_button.disable_select
+				compile_eiffel_check_button.enable_select
+				compile_c_code_check_button.enable_select
 			end
 			cleanup_radio_button.enable_select
 			Profile_manager.search_active_profile (Backup_key)

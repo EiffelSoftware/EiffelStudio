@@ -44,7 +44,7 @@ feature -- Access
 	Both_compile_code: STRING is "Both"
 			-- String encoding for not compiling C nor Eiffel code
 
-	Eiffel_compile_code: STRING is "Eiffel"
+	C_compile_code: STRING is "C"
 			-- String encoding for not compiling Eiffel code
 
 	None_code: STRING is "None"

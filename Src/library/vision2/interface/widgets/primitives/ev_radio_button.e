@@ -1,8 +1,8 @@
 indexing
 	description:
 		"Toggle button with state displayed as a circular check box.%N%
-		%State is mutually exclusive with respect to other radio buttons%
-		%in `parent' container."
+		%`is_selected' is mutually exclusive with respect to other%
+		%radio buttons in `parent' container."
 	appearance:
 		" (*) `text' "
 	status: "See notice at end of class"
@@ -77,6 +77,9 @@ end -- class EV_RADIO_BUTTON
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.20  2000/03/27 19:48:35  oconnor
+--| comments
+--|
 --| Revision 1.19  2000/03/21 19:10:39  oconnor
 --| comments, formatting
 --|

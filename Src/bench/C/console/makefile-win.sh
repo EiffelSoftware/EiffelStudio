@@ -33,14 +33,14 @@ wwinconsole.$lib: $(WOBJECTS)
 mtwwinconsole.$lib: $(MT_WOBJECTS)
 	$link_mtwline
 
+weconsole.$obj: econsole.c
+	$(CC) $(JCFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ -c $?
+
 MTargcargv.$obj: argcargv.c
 	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?
 
 MTeconsole.$obj: econsole.c
 	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?
-
-weconsole.$obj: econsole.c
-	$(CC) $(JMTCFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ -c $?
 
 MTweconsole.$obj: econsole.c
 	$(CC) $(JMTCFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ -c $?

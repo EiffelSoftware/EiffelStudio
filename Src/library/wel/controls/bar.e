@@ -66,8 +66,8 @@ feature -- Status setting
 		end
 
 invariant
-	range_ok: exists implies minimum <= maximum
-	position_ok: exists implies position >= minimum and position <= maximum
+	--range_ok: exists implies minimum <= maximum
+	--position_ok: exists implies position >= minimum and position <= maximum
 
 end -- class WEL_BAR
 

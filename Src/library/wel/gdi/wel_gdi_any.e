@@ -35,7 +35,7 @@ feature {NONE} -- Creation
 			--
 			-- `gdi_make' should be called by all creation procedure.
 		do
-			debug ("GDI_COUNT")
+			debug ("WEL_GDI_COUNT")
 				increase_gdi_objects_count
 			end
 		end
@@ -46,7 +46,7 @@ feature -- Access
 			-- Number of GDI object currently allocated by the
 			-- program.
 			--
-			-- Note: debug option "GDI_COUNT" should be set, otherwise
+			-- Note: debug option "WEL_GDI_COUNT" should be enabled, otherwise
 			-- this function will return zero.
 		do
 			Result := gdi_objects_count_cell.item
@@ -68,7 +68,7 @@ feature {NONE} -- Removal
 			delete_result: BOOLEAN
 		do
 			if item /= p then
-				debug ("GDI_COUNT")
+				debug ("WEL_GDI_COUNT")
 					decrease_gdi_objects_count
 				end
 				delete_result := cwin_delete_object (item)
@@ -90,9 +90,8 @@ feature {NONE} -- Implementation
 			-- Increase the number of GDI objects allocated by this program.
 		do
 			gdi_objects_count_cell.replace (gdi_objects_count_cell.item + 1)
-			debug ("GDI_COUNT")
-				io.putstring ("GDI Objects = "+gdi_objects_count.out)
-				io.putstring ("%N")
+			debug ("WEL_GDI_COUNT")
+				io.putstring ("GDI Objects = "+gdi_objects_count.out+"%N")
 			end
 		end
 
@@ -100,9 +99,8 @@ feature {NONE} -- Implementation
 			-- Decrease the number of GDI objects allocated by this program.
 		do
 			gdi_objects_count_cell.replace (gdi_objects_count_cell.item - 1)
-			debug ("GDI_COUNT")
-				io.putstring ("GDI Objects = "+gdi_objects_count.out)
-				io.putstring ("%N")
+			debug ("WEL_GDI_COUNT")
+				io.putstring ("GDI Objects = "+gdi_objects_count.out+"%N")
 			end
 		end
 

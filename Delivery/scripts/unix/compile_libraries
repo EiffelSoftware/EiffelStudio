@@ -65,9 +65,4 @@ cd $INITIAL_DIR/library/vision2/Clib
 default_make
 cd $INITIAL_DIR/library/vision2/implementation/gtk/Clib
 default_make
-remtrace gel
-cd $INITIAL_DIR/library/gel/glib
-configure
 cd $INITIAL_DIR
-
-

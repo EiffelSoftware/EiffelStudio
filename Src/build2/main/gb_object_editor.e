@@ -127,6 +127,7 @@ feature -- Initialization
 			vertical_box1.extend (scrollable_holder)
 			create control_holder
 			create scroll_bar
+			scroll_bar.set_step (12)
 			control_holder.set_minimum_width (Minimum_width_of_object_editor)
 			vertical_box1.set_minimum_width (Minimum_width_of_object_editor + scroll_bar.width)
 			scrollable_holder.extend (viewport)
@@ -382,6 +383,7 @@ feature {NONE} -- Implementation
 				current_window_parent.lock_update	
 			end
 			attribute_editor_box.wipe_out
+			
 			create label.make_with_text ("Type:")
 			label.align_text_left
 			attribute_editor_box.extend (label)

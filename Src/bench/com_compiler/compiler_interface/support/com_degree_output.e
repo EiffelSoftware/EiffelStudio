@@ -18,7 +18,16 @@ inherit
 			put_string,
 			put_dead_code_removal_message,
 			put_system_compiled,
-			put_header
+			put_header,
+			put_degree_1,
+			put_degree_2,
+			put_degree_3,
+			put_degree_4,
+			put_degree_5,
+			put_degree_6,
+			put_degree_minus_1,
+			put_degree_minus_2,
+			put_degree_minus_3
 		end
 
 	SHARED_ERROR_HANDLER
@@ -80,6 +89,86 @@ feature -- Start output features
 		do
 			put_string ("System recompiled.")
 		end
+		
+	put_degree_1 (a_class: CLASS_C; nbr_to_go: INTEGER) is
+			-- Put message to indicate that `a_class' is being
+			-- compiled during degree one with `nbr_to_go'
+			-- classes to go.
+		do
+			Precursor {DEGREE_OUTPUT} (a_class, nbr_to_go)
+			interface.event_begin_degree (1)
+		end
+
+	put_degree_2 (a_class: CLASS_C; nbr_to_go: INTEGER) is
+			-- Put message to indicate that `a_class' is being
+			-- compiled during degree one with `nbr_to_go'
+			-- classes to go.
+		do
+			Precursor {DEGREE_OUTPUT} (a_class, nbr_to_go)
+			interface.event_begin_degree (2)
+		end
+		
+	put_degree_3 (a_class: CLASS_C; nbr_to_go: INTEGER) is
+			-- Put message to indicate that `a_class' is being
+			-- compiled during degree one with `nbr_to_go'
+			-- classes to go.
+		do
+			Precursor {DEGREE_OUTPUT} (a_class, nbr_to_go)
+			interface.event_begin_degree (3)
+		end
+		
+	put_degree_4 (a_class: CLASS_C; nbr_to_go: INTEGER) is
+			-- Put message to indicate that `a_class' is being
+			-- compiled during degree one with `nbr_to_go'
+			-- classes to go.
+		do
+			Precursor {DEGREE_OUTPUT} (a_class, nbr_to_go)
+			interface.event_begin_degree (4)
+		end
+		
+	put_degree_5 (a_class: CLASS_C; nbr_to_go: INTEGER) is
+			-- Put message to indicate that `a_class' is being
+			-- compiled during degree one with `nbr_to_go'
+			-- classes to go.
+		do
+			Precursor {DEGREE_OUTPUT} (a_class, nbr_to_go)
+			interface.event_begin_degree (5)
+		end
+		
+	put_degree_6 (a_name: STRING; nbr_to_go: INTEGER) is
+			-- Put message to indicate that `a_name' is being
+			-- compiled during degree six' clusters to go.
+		do
+			Precursor {DEGREE_OUTPUT} (a_name, nbr_to_go)
+			interface.event_begin_degree (6)
+		end
+			
+	put_degree_minus_1 (a_class: CLASS_C; nbr_to_go: INTEGER) is
+			-- Put message to indicate that `a_class' is being
+			-- compiled during degree one with `nbr_to_go'
+			-- classes to go.
+		do
+			Precursor {DEGREE_OUTPUT} (a_class, nbr_to_go)
+			interface.event_begin_degree (-1)
+		end
+
+	put_degree_minus_2 (a_class: CLASS_C; nbr_to_go: INTEGER) is
+			-- Put message to indicate that `a_class' is being
+			-- compiled during degree one with `nbr_to_go'
+			-- classes to go.
+		do
+			Precursor {DEGREE_OUTPUT} (a_class, nbr_to_go)
+			interface.event_begin_degree (-2)
+		end
+		
+	put_degree_minus_3 (a_class: CLASS_C; nbr_to_go: INTEGER) is
+			-- Put message to indicate that `a_class' is being
+			-- compiled during degree one with `nbr_to_go'
+			-- classes to go.
+		do
+			Precursor {DEGREE_OUTPUT} (a_class, nbr_to_go)
+			interface.event_begin_degree (-3)
+		end
 				
 feature -- Output on per class
 
@@ -118,9 +207,10 @@ feature {NONE} -- Implementation
 			
 	display_degree (deg_nbr: STRING; to_go: INTEGER; a_name: STRING) is
 			-- Display degree `deg_nbr' with entity `a_class'.
-		do
+		do		
 			put_string (percentage_output (to_go) + 
 										deg_nbr + a_name)
+
 			if not should_continue then
 				Error_handler.insert_interrupt_error (True)
 			end
@@ -136,6 +226,5 @@ feature {NONE} -- Implementation
 			interface.event_should_continue (l_should_continue)
 			Result := l_should_continue.item
 		end
-		
-		
+
 end -- class COM_DEGREE_OUTPUT

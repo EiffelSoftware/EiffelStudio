@@ -120,7 +120,7 @@ extern size_t one_param_return(FILE *f);</code_block>
 		<heading>
 			<size>2</size>Structs
 		</heading>
-		<paragraph>The struct encapsulation enables you to wrap C/C++ structures easily without having to write any additional code in a C header file as it was the case until  Eiffel Software  introduced this new keyword in the external specification with  Eiffel Software  EiffelBench 4.5. With the struct encapsulation you can set and retrieve the value of a certain field of a struct.</paragraph>
+		<paragraph>The struct encapsulation enables you to wrap C/C++ structures easily without having to write any additional code in a C header file as it was the case until Eiffel Software introduced this new keyword in the external specification with the 4.5 release of the Eiffel Software environment. With the struct encapsulation you can set and retrieve the value of a certain field of a struct.</paragraph>
 		<paragraph>If in a header file called `my_header.h', you have the following declaration of the `Point' structure whose `x' and `y' fields we want to access and set:</paragraph>
 		<code_block>
 	/* Definition of `Point' */

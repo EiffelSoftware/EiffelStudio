@@ -87,7 +87,7 @@ feature -- Miscellaneous
 			end
 			dc.unselect_font
 
-			Result := current_position + 1 -- We return a 1-based resul (first character = 1)
+			Result := current_position + 1 -- We return a 1-based result (first character = 1)
 		end
 
 	display(d_y: INTEGER; a_dc: WEL_DC) is

@@ -418,7 +418,7 @@ feature {NONE} -- Keywords
 	ti_Precursor_keyword: KEYWORD_TEXT is
 			-- "precursor" keyword
 		once
-			!!Result.make ("precursor")
+			!!Result.make ("Precursor")
 		end
 
 	ti_Prefix_keyword: KEYWORD_TEXT is

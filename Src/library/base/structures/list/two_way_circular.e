@@ -18,71 +18,51 @@ indexing
 
 class TWO_WAY_CIRCULAR [G] inherit
 
-	LINKED_CIRCULAR [G]
-		undefine
-			remove_right, remove_left, add_front,
-			remove, first_element, previous, last_element,
-			ll_move, finish, islast, merge_left, add_left,
-			add_right, add, merge_right, wipe_out,
-			new_chain, new_cell
-		redefine
-			forth, back, move
+	DYNAMIC_CIRCULAR [G]
+        undefine
+			wipe_out,
+            isfirst,
+            readable, first ,
+            islast, last
 		select
-			back, move, forth
-		end;
+			search, search_equal,
+			remove,
+			start, finish, back, forth, move, go_i_th
+        end;
+
 
 	TWO_WAY_LIST [G]
 		rename
-			back as twl_back,
-			move as twl_move,
-			forth as twl_forth
-		export
-			{NONE}
-				twl_back, twl_move, twl_forth
+			search as standard_search,
+			search_equal as standard_search_equal,
+			remove as standard_remove,
+			forth as standard_forth,
+			back as standard_back,
+			move as standard_move,
+			start as standard_start,
+			finish as standard_finish,
+			go_i_th as standard_go_i_th
 		undefine
-			valid_cursor_index
+			valid_cursor_index, exhausted
+		redefine
+			new_chain
+		end;
+
+	TWO_WAY_LIST [G]
+		undefine
+			valid_cursor_index, exhausted,
+			search, search_equal,
+			remove,
+			forth, back, move, start, finish, go_i_th
 		redefine
 			new_chain
 		end
 
+	
+
 creation
 
 	make
-
-feature -- Cursor movement
-
-	forth is
-			-- Move to next item in `Current'.
-		do
-			if not empty then
-				if islast then
-					start
-				else
-					twl_forth
-				end
-			end
-		end;
-
-	back is
-			-- Move to previous item in `Current'.
-		do
-			if not empty then
-				if isfirst then
-					finish
-				else
-					twl_back
-				end
-			end
-		end;
-
-	move (i: INTEGER) is
-			-- Move cursor `i' positions around.
-		local
-			ind: INTEGER
-		do
-			ind := index;
-			twl_move (modulo (ind + i, count) - ind)
-		end;
 
 feature  {TWO_WAY_CIRCULAR} -- Initialization
 

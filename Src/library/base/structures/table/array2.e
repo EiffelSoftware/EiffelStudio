@@ -38,6 +38,25 @@ class ARRAY2 [G] inherit
             {ARRAY2}
 				array_put;
 			area
+		end;
+
+	ARRAY [G]
+		rename
+			make as array_make,
+			item as array_item,
+			put as array_put,
+			force as array_force,
+			resize as array_resize
+		export
+			{NONE}
+				all;
+			{ARRAY2}
+				array_put;
+			area
+		redefine
+			wipe_out
+		select
+			wipe_out
 		end
 
 creation

@@ -20,6 +20,8 @@ deferred class LIST [G] inherit
 
 
 	CHAIN [G]
+		export
+			remove
 		undefine
 			search, off, search_equal
 		end;

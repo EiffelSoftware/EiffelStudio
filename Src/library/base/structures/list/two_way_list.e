@@ -105,6 +105,7 @@ feature -- Modification & Insertion
 				first_element := p;
 				last_element := p;
 				active := p;
+				before := false;
 			elseif after then
 				p.put_left (last_element);
 				last_element := p;
@@ -320,9 +321,10 @@ feature -- Removal
 			end
 		end;
 
-
-
-
+	remove_sublist is
+		do
+			sublist := Void;
+		end;
 
 feature -- Cursor movement
 
@@ -387,7 +389,7 @@ feature -- Status report
 feature  {TWO_WAY_LIST} -- Initialization
 
 	make_sublist (first_item, last_item: like first_element; n: INTEGER) is
-			-- Create an empty sublist
+			-- Create sublist
 		do
 			make;
 			first_element := first_item;

@@ -20,69 +20,45 @@ class LINKED_CIRCULAR [G] inherit
 
 	DYNAMIC_CIRCULAR [G]
 		undefine
-			go_i_th, remove, isfirst,
-			start, first, finish, readable,
-			islast, last, search, search_equal
-		redefine
-			forth, back, move
+			wipe_out,
+			isfirst,first,readable,
+			islast, last
 		select
-			forth, back, move
+			search, search_equal,
+			remove,
+			start, finish, back, forth, move, go_i_th	
 		end;
 
 	LINKED_LIST [G]
 		rename
-			forth as ll_forth,
-			back as ll_back,
-			move as ll_move
-		export
-			{NONE}
-				ll_forth, ll_back,
-				ll_move
+			search as standard_search,
+			search_equal as standard_search_equal,
+			remove as standard_remove,
+			forth as standard_forth,
+			back as standard_back,
+			move as standard_move,
+			start as standard_start,
+			finish as standard_finish,
+			go_i_th as standard_go_i_th
 		undefine
-			wipe_out, valid_cursor_index
+			valid_cursor_index, exhausted
 		redefine
-			new_chain
-		end
+		 	new_chain
+		end;
+
+		 LINKED_LIST [G]
+        undefine
+            valid_cursor_index, exhausted,
+		 	search, search_equal,
+			remove,
+			forth, back, move, start, finish, go_i_th
+        redefine
+            new_chain
+        end
 
 creation
 
 	make
-
-feature -- Cursor movement
-
-	forth is
-			-- Move to next item in `Current'.
-		do
-			if not empty then
-				if islast then
-					start
-				else
-					ll_forth
-				end
-			end
-		end;
-
-	back is
-			-- Move to previous item in `Current'.
-		do
-			if not empty then
-				if isfirst then
-					finish
-				else
-					ll_back
-				end
-			end
-		end;
-
-	move (i: INTEGER) is
-			-- Move cursor `i' positions around.
-		local
-			ind: INTEGER
-		do
-			ind := index;
-			ll_move (modulo (ind + i, count) - ind)
-		end;
-
 
 feature  {LINKED_CIRCULAR} -- Initialization
 
@@ -90,24 +66,6 @@ feature  {LINKED_CIRCULAR} -- Initialization
 			-- Instance of class `like Current'.
 		do
 			!! Result.make
-		end;
-
-
-feature  {LINKED_CIRCULAR} -- Miscellaneous
-
-	modulo (n1, n2: INTEGER): INTEGER is
-			-- Modulus, plus one; 0 if `n2' = 0
-		require
-			positive_number: n2 >= 0
-		do
-			if n2 /= 0 then
-				Result := n1 \\ n2;
-				if Result <= 0 then
-					Result := Result + n2
-				end
-			end
-		ensure
-			Result >= 0 and Result <= n2
 		end;
 
 end -- class LINKED_CIRCULAR

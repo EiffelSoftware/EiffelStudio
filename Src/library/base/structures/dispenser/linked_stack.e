@@ -114,7 +114,7 @@ feature -- Duplication
 
 feature -- Modification & Insertion
 
-	add (v: like item) is
+	push, add (v: like item) is
 			-- Push `v' onto `Current'.
 		do
 			add_front (v)

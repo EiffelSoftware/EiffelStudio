@@ -79,7 +79,7 @@ feature -- Access
 					forth;
 				elseif after then
 					if not empty then start end
-				elseif v < item then
+				elseif v <= item then
 					start
 				end;
 			until
@@ -103,7 +103,7 @@ feature -- Access
 			(not off) implies (item <= v)
 		end;
 
-    	search_equal (v: like item) is
+   	search_equal (v: like item) is
             		-- Move cursor to first position
             		-- (at or after current cursor position)
             		-- where item and `v' are identical.
@@ -117,7 +117,7 @@ feature -- Access
                 		if before then forth end;
             		until
                 		exhausted
-                		or else equal (item, v)
+                		or else equal (v, item) 
             		loop
                 		forth;
             		end

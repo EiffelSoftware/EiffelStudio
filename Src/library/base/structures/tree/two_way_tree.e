@@ -98,7 +98,11 @@ class TWO_WAY_TREE [G] inherit
 			isfirst as child_isfirst,
 			islast as child_islast
 		export
-			{ANY} child
+			{ANY} child;
+			{NONE}
+				twl_make, twl_has, twl_replace,
+				twl_add, twl_fill, twl_duplicate,	
+				twl_full	
 		undefine
 			child_readable, is_leaf,
 			child_writable,

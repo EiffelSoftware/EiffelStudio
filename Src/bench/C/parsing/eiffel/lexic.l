@@ -77,10 +77,12 @@ extern struct token *in_word_set();		/* Pointer to static data */
 
 D		[0-9]
 O		[0-7]	
-E		(e|E)[+-]?{D}+
+E		(((e|E)[+-]?{D}+)?)
 A		([a-z]|[A-Z])
 X		([a-z]|[A-Z]|[0-9]|_)
 W		[ \t\n]
+T		[0-9][0-9][0-9]
+U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 
 %%
 --.*						{	start_position = end_position;
@@ -124,8 +126,8 @@ W		[ \t\n]
 "\\\\"						{return process(TE_MOD);}
 {A}{X}*						{return process_name(TE_ID);}
 [0-1]+[bB]					{return process_bit();}
-([0-9]|_[0-9][0-9][0-9])+	{return process_int();}
-({D}*\.{D}+({E})?)|({D}+\.{D}*({E})?) {return process_name(TE_REAL); }
+({U}(_{D}{D}{D})*)|{D}+		{return process_int();}
+({D}*\.{D}+{E})|({D}+\.{D}*{E})|({U}(_{T})*)?\.(({T}_)*{U})?{E}|{U}(_{T})*\.((({T}_)*{U})?{E}) {return process_name(TE_REAL); }
 \"							{return get_string();}
 \'							{return get_char();}
 .							{	start_position = end_position;
@@ -263,7 +265,7 @@ static int get_string()
 	start_position = end_position;
 	end_position++;
 
-	while ((c = input()) != 0 && c != '"' && n < STRINGLENGTH) {
+	while ((c = input()) != 0 && c != '"' && n < STRINGLENGTH && c != '\n') {
 		end_position++;
 		if (c == '%') {
 			extension = 0;
@@ -343,16 +345,16 @@ char c;
 		case '>': return (int) '}';
 		case '\000': return -1;
 		case '/':
-			for (i=1; i<4; i++) {
-				c = input(); end_position++;
+            c = input();
+			end_position++;
+			for (i=1; i<4 && c != '/'; i++) {
 				if (c && (c >= '0' && c <= '9'))
-					dec_value += ((int) (c - '0')) *
-						(100 * (i == 1) + 10 * (i == 2) + (i == 3));
+					dec_value =  dec_value * 10 + ((int) (c - '0')) ;
 				else
 					return -1;
+				c = input(); end_position++;
 			}
-			c = input(); end_position++;
-			return (((c == '/') && dec_value < MAX_CHAR) ? dec_value : -1);
+			return (((c == '/') && (i > 1) &&  (dec_value < MAX_CHAR)) ? dec_value : -1);
 		default: return -1;
 		}
 		/* NOTREACHED */

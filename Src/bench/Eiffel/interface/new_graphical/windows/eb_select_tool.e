@@ -85,17 +85,7 @@ feature -- Update
 	
 feature -- Hole processing
 
-	process_classi (a_stone: CLASSI_STONE) is
-			-- Process dropped stone `a_stone'.
-		local
-			new_tool: EB_CLASS_TOOL
-		do
-			new_tool := tool_supervisor.new_class_tool
-			new_tool.raise
-			new_tool.process_classi (a_stone)
-		end
- 
-	process_class (a_stone: CLASSC_STONE) is
+	process_class (a_stone: CLASS_STONE) is
 			-- Process dropped stone `a_stone'.
 		local
 			new_tool: EB_CLASS_TOOL

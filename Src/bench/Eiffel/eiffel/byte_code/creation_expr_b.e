@@ -132,7 +132,7 @@ feature -- IL code generation
 			-- Generate IL code for creation instruction
 		local
 			create_type: CREATE_TYPE
-			is_special_creation, is_external_creation: BOOLEAN
+			is_native_creation, is_external_creation: BOOLEAN
 			cl_type: CL_TYPE_I
 			class_c: CLASS_C
 		do
@@ -148,19 +148,21 @@ feature -- IL code generation
 
 			if cl_type.is_reference then
 				class_c := cl_type.base_class
-				is_special_creation := class_c.is_special
+				is_native_creation := class_c.is_native_array
 				is_external_creation := class_c.is_external
 
-				if is_external_creation and then not is_special_creation then
+				if is_external_creation and then not is_native_creation then
 						-- Creation call on external class.
 					if call /= Void then
+						context.set_il_external_creation (True)
 						call.set_parent (create {NESTED_B})
 						call.set_info (info)
 						call.generate_il
 						call.set_parent (Void)
+						context.set_il_external_creation (False)
 					end
 				else
-					if not is_special_creation then
+					if not is_native_creation then
 							-- Standard creation call
 						info.generate_il
 						if call /= Void then

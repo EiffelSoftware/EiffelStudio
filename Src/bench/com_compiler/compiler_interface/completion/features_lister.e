@@ -84,7 +84,9 @@ feature -- Basic Operations
 					l_targets.remove
 					l_feature_table := recursive_lookup (l_target_type, l_targets, feature_table)
 					if l_feature_table /= Void then
-						create found_items.make_from_array (features_list_from_table (l_feature_table, class_i, use_overloading))
+						l_variables_list := features_list_from_table (l_feature_table, class_i, use_overloading)
+						l_variables_list.sort
+						create found_items.make_from_array (l_variables_list)
 						found := True
 					end
 				end

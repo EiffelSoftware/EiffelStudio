@@ -47,6 +47,12 @@ feature -- Status report
 	writable: BOOLEAN is True
 			-- Is there a current item that may be modified?
 
+	readable: BOOLEAN is
+			-- Is there a current item that may be accessed?
+		do
+			Result := full
+		end
+
 feature -- Removal
 
 	prune (v: like item) is
@@ -110,6 +116,9 @@ end -- class EV_CELL
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/03/01 18:55:24  brendel
+--| Added feature `readable'.
+--|
 --| Revision 1.6  2000/03/01 03:30:06  oconnor
 --| added make_for_test
 --|

@@ -31,7 +31,7 @@ extern "C" {
 #ifdef VXWORKS
 #define CHUNK_DEFAULT	8192		/* standard chunk (in VxWorks case) */
 #else
-#define CHUNK_DEFAULT	524288		/* Number of bytes in standard chunk */
+#define CHUNK_DEFAULT	1048576		/* Number of bytes in standard chunk */
 #endif
 
 #ifdef ISE_GC

@@ -28,13 +28,13 @@ feature -- basic Operations
 			lab: EV_LABEL
 			txt: WIZARD_SMART_TEXT
 		do 
-			Create selected_items
-			Create unselected_items
+			create selected_items
+			create unselected_items
 			
-			Create h1
+			create h1
 
-			Create v1
-			Create lab.make_with_text("To be ignored")
+			create v1
+			create lab.make_with_text("To be ignored")
 			v1.extend(lab)
 			v1.disable_item_expand(lab)
 			v1.extend(unselected_items)
@@ -43,7 +43,7 @@ feature -- basic Operations
 		
 			create v1
 
-			Create add_all_b.make_with_text ("Add all ->")
+			create add_all_b.make_with_text ("Add all ->")
 			add_all_b.select_actions.extend (~add_all_items)
 			v1.extend (add_all_b)
 			add_all_b.set_minimum_width (25)
@@ -53,7 +53,7 @@ feature -- basic Operations
 			v1.extend (create {EV_CELL})
 
 			v1.extend (create {EV_CELL})
-			Create add_b.make_with_text ("Add->")
+			create add_b.make_with_text ("Add->")
 			add_b.select_actions.extend (~add_items)
 			v1.extend (add_b)
 			add_b.set_minimum_width (15)
@@ -61,7 +61,7 @@ feature -- basic Operations
 			add_b.align_text_center
 			v1.disable_item_expand (add_b)
 
-			Create remove_b.make_with_text ("<-Remove")
+			create remove_b.make_with_text ("<-Remove")
 			remove_b.select_actions.extend (~remove_items)
 			v1.extend (remove_b)
 			remove_b.set_minimum_width (15)
@@ -71,7 +71,7 @@ feature -- basic Operations
 			v1.extend (create {EV_CELL})
 
 			v1.extend (create {EV_CELL})
-			Create remove_all_b.make_with_text ("<- Remove all")
+			create remove_all_b.make_with_text ("<- Remove all")
 			remove_all_b.select_actions.extend (~remove_all_items)
 			v1.extend (remove_all_b)
 			remove_all_b.set_minimum_width (25)
@@ -84,8 +84,8 @@ feature -- basic Operations
 			h1.extend(v1)
 
 
-			Create v1
-			Create lab.make_with_text("To be generated")
+			create v1
+			create lab.make_with_text("To be generated")
 			v1.extend(lab)
 			v1.disable_item_expand(lab)
 			v1.extend(selected_items)		
@@ -116,7 +116,7 @@ feature -- basic Operations
 			until
 				wizard_information.table_list.after
 			loop
-				Create it.make_with_text(wizard_information.table_list.item.table_name)
+				create it.make_with_text(wizard_information.table_list.item.table_name)
 				it.set_data(wizard_information.table_list.item)
 				selected_items.extend(it)				
 				wizard_information.table_list.forth
@@ -126,7 +126,7 @@ feature -- basic Operations
 			until
 				wizard_information.unselected_table_list.after
 			loop
-				Create it.make_with_text (wizard_information.unselected_table_list.item.table_name)
+				create it.make_with_text (wizard_information.unselected_table_list.item.table_name)
 				it.set_data (wizard_information.unselected_table_list.item)
 				unselected_items.extend (it)
 				wizard_information.unselected_table_list.forth
@@ -243,7 +243,7 @@ feature -- basic Operations
 			cl_name: CLASS_NAME
 		do
 			from
-				Create li.make
+				create li.make
 				selected_items.start
 			until
 				selected_items.after

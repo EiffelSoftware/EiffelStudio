@@ -23,7 +23,8 @@ inherit
 feature {EV_WIDGET}
 	
 	add_child (c: EV_WIDGET) is
-			-- Add child into composite
+			-- Add child into composite. There can be only
+			-- one child inside.
 		require
 			exists: not destroyed
 			valid_child: c /= Void and then not c.destroyed
@@ -62,6 +63,13 @@ feature -- Access
 			Result := implementation.client_height
 		ensure
 			positive_result: Result >= 0	
+		end
+	
+	manager: BOOLEAN is
+			-- Manager container manages the geometry of its 
+			-- child(ren). Default True.
+		once
+			Result := True
 		end
 	
 feature {EV_WIDGET_IMP} -- Implementation

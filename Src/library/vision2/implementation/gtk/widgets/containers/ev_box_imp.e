@@ -1,47 +1,49 @@
 indexing
 
 	description: 
-		"EiffelVision composite, gtk implementation."
+		"EiffelVision box, gtk implementation."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 	
-deferred class
+class
 	
-	EV_CONTAINER_IMP
+	EV_BOX_IMP
 	
 inherit
-	EV_CONTAINER_I
 	
-	EV_WIDGET_IMP
+	EV_BOX_I
+		
+	EV_INVISIBLE_CONTAINER_IMP
+		redefine
+			add_child
+		end
 	
-feature {EV_CONTAINER}
+creation
+	
+	make
+
+feature {NONE} -- Initialization
+	
+        make (parent: EV_CONTAINER) is
+                        -- Create a fixed widget. 
+		do
+			widget := gtk_hbox_new (Default_homogenous, 
+						Default_spacing)
+		end	
+	
+feature {EV_BOX} -- Implementation
 	
 	add_child (child_imp: EV_WIDGET_IMP) is
-			-- Add child into composite
+			-- Add child into composite. Several children
+			-- possible.
 		do
-			gtk_container_add (widget, child_imp.widget)
+			gtk_box_pack_start (widget, child_imp.widget, 
+					    Default_expand, Default_fill, 
+					    Default_padding)
 		end
-	
 
-feature -- Access
-	
-	client_width: INTEGER is
-			-- Width of the client area of container
-		do
-                        check
-                                not_yet_implemented: False
-                        end		
-		end
-	
-	client_height: INTEGER is
-			-- Height of the client area of container
-		do
-                        check
-                                not_yet_implemented: False
-                        end		
-		end
 end
 
 --|----------------------------------------------------------------

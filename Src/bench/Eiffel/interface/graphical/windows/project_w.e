@@ -2098,7 +2098,7 @@ feature -- Information
 				if root_class_name /= Void then
 					st.add_new_line
 					st.add_comment_text("ROOT CLASS    : ")
-					root_class_c := Eiffel_universe.compiled_classes_with_name (root_class_name).i_th(0).compiled_class
+					root_class_c := Eiffel_universe.compiled_classes_with_name (root_class_name).i_th(1).compiled_class
 					root_class_name.to_upper
 					st.add_classi(root_class_c.lace_class, root_class_name)
 

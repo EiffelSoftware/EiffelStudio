@@ -90,13 +90,39 @@ if [ ! "$NO_NEW_EC" ]; then
 	move ec.tar.gz $EXPORT_DIR
 
 	if [ "$MULTIPLE_EDITIONS" ]; then
+		remtrace University version edition
+		cd $FINALIZATION_DIR
+		copy $NEW_EIFFEL_SRC/Eiffel/Ace/newbench.linux.ace ace.ace
+		sed -e "s/free/enterprise/g" ace.ace >> newace.ace
+		move newace.ace ace.ace
+		cd $EIFFEL_SRC/Eiffel/library/activation/free
+		sed -e "s/is_evaluating\ := \True/is_evaluating\ :=\ False/g" activation_checker.e >> tmp.e
+		move tmp.e activation_checker.e
+		cd $EIFFEL_SRC/Eiffel/API/constants
+		sed -e "s/Version_type_name:\ STRING\ is\ \"Enterprise\ Edition\"/Version_type_name:\ STRING\ is\ \"University\ Edition\"/g" system_constants.e >> new_system_constants.e
+		move new_system_constants.e system_constants.e
+		cd $FINALIZATION_DIR
+		clean_project
+		finalize ace.ace
+		tgz_ccode ec
+		if [ ! -e ec.tar.gz ]; then
+			echo Could not finalize a new EiffelStudio
+			CANCEL
+		fi
+		clean_project
+		move ec.tar.gz $EXPORT_DIR/ecuni.tar.gz
+
+
 		remtrace Free version edition
 		cd $FINALIZATION_DIR
 		copy $NEW_EIFFEL_SRC/Eiffel/Ace/newbench.linux.ace ace.ace
 		sed -e "s/free/enterprise/g" ace.ace >> newace.ace
 		move newace.ace ace.ace
+		cd $EIFFEL_SRC/Eiffel/library/activation/free
+		sed -e "s/is_evaluating\ := \False/is_evaluating\ :=\ True/g" activation_checker.e >> tmp.e
+		move tmp.e activation_checker.e
 		cd $EIFFEL_SRC/Eiffel/API/constants
-		sed -e "s/Version_type_name:\ STRING\ is\ \"Enterprise\ Edition\"/Version_type_name:\ STRING\ is\ \"Free\ Edition\"/g" system_constants.e >> new_system_constants.e
+		sed -e "s/Version_type_name:\ STRING\ is\ \"University\ Edition\"/Version_type_name:\ STRING\ is\ \"Free\ Edition\"/g" system_constants.e >> new_system_constants.e
 		move new_system_constants.e system_constants.e
 		sed -e "s/has_case:\ BOOLEAN\ is\ True/has_case:\ BOOLEAN\ is\ False/g" eiffel_env.e >> new_eiffel_env.e
 		move new_eiffel_env.e eiffel_env.e
@@ -112,9 +138,6 @@ if [ ! "$NO_NEW_EC" ]; then
 		move new_eiffel_env.e eiffel_env.e
 		sed -e "s/\has_signable_generation:\ BOOLEAN\ is\ True/\has_signable_generation:\ BOOLEAN\ is\ False/g" eiffel_env.e >> new_eiffel_env.e
 		move new_eiffel_env.e eiffel_env.e
-		cd $EIFFEL_SRC/Eiffel/switch/license/license
-		sed -e "s/Is_free_version:\ BOOLEAN\ is\ False/\Is_free_version:\ BOOLEAN\ is\ True/g" bench_licence.e >> new_bench_license.e
-		move new_bench_license.e bench_licence.e
 		cd $FINALIZATION_DIR
 		clean_project
 		finalize ace.ace

@@ -234,6 +234,13 @@ move ec.gz $EXPORT_DIR/ecs/ec_enterprise.gz
 if [ -z "$MULTIPLE_EDITIONS" ]; then
 	gunzip -c $EXPORT_DIR/ecs/ec_enterprise.gz > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
 else
+	remtrace University edition
+	cp ecuni.tar.gz ecuni.tar.gz.old
+	move ecuni.tar.gz ec.tar.gz
+	untgz_ccode ec
+	gzip ec
+	move ec.gz $EXPORT_DIR/ecs/ec_university.gz
+
 	remtrace Free edition
 	cp ecfree.tar.gz ecfree.tar.gz.old
 	move ecfree.tar.gz ec.tar.gz

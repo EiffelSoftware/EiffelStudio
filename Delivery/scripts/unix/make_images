@@ -35,14 +35,14 @@ if [ ! -e cdrom ]; then
 	mkdir cdrom
 fi
 
-if [ ! -f Eiffel54_deliv.tgz ]; then
-	remtrace Saving empty delivery in Eiffel54_deliv.tgz
-	tar -c Eiffel54 | gzip -c > Eiffel54_deliv.tgz
+if [ ! -f Eiffel55_deliv.tgz ]; then
+	remtrace Saving empty delivery in Eiffel55_deliv.tgz
+	tar -c Eiffel55 | gzip -c > Eiffel55_deliv.tgz
 fi
 
-if [ ! -e Eiffel54 ]; then
+if [ ! -e Eiffel55 ]; then
 	remtrace Extracting current delivery
-	gunzip -c Eiffel54_deliv.tgz | tar -xf -
+	gunzip -c Eiffel55_deliv.tgz | tar -xf -
 fi
 
 
@@ -59,11 +59,31 @@ if [ "$MULTIPLE_EDITIONS" ]; then
 	chmod go-w $INSTALL_DIR/build/spec/$ISE_PLATFORM/bin/build 
 
 	remtrace Building Home CD image
-	mv Eiffel54 cdrom
-	cp cdrom/Eiffel54/INSTALL cdrom	
-	make_cd_image Eiffel54_free Eiffel54_free.iso cdrom
-	mv cdrom/Eiffel54 Eiffel54
-	tar -c Eiffel54 | gzip -c > Eiffel54_free.tgz
+	mv Eiffel55 cdrom
+	cp cdrom/Eiffel55/INSTALL cdrom	
+	make_cd_image Eiffel55_free Eiffel55_free.iso cdrom
+	gzip Eiffel55_free.iso
+	mv cdrom/Eiffel55 Eiffel55
+	tar -c Eiffel55 | gzip -c > Eiffel55_free.tgz
+
+	remtrace Preparing University version
+	cp -r commercial_rt/* $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib
+	gunzip -c $EXPORT_DIR/ecs/ec_university.gz > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
+	chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
+	chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec 
+
+	remtrace copying Build
+	gunzip -c $EXPORT_DIR/build/build_enterprise.gz > $INSTALL_DIR/build/spec/$ISE_PLATFORM/bin/build
+	chmod a+rx $INSTALL_DIR/build/spec/$ISE_PLATFORM/bin/build
+	chmod go-w $INSTALL_DIR/build/spec/$ISE_PLATFORM/bin/build 
+
+	remtrace Building Home CD image
+	mv Eiffel55 cdrom
+	cp cdrom/Eiffel55/INSTALL cdrom	
+	make_cd_image Eiffel55_university Eiffel55_university.iso cdrom
+	gzip Eiffel55_university.iso
+	mv cdrom/Eiffel55 Eiffel55
+	tar -c Eiffel55 | gzip -c > Eiffel55_university.tgz
 fi
 
 remtrace Preparing Enterprise version
@@ -85,8 +105,9 @@ cp $INSTALL_DIR/studio/bitmaps/png/logo.png $INSTALL_DIR/setup/install_logo.png
 cp $INSTALL_DIR/studio/bitmaps/png/activation.png $INSTALL_DIR/setup/install_left.png
 
 remtrace Building Enterprise CD image
-mv Eiffel54 cdrom
-cp cdrom/Eiffel54/INSTALL cdrom	
-make_cd_image Eiffel54_enterprise Eiffel54_enterprise.iso cdrom
-mv cdrom/Eiffel54 Eiffel54
-tar -c Eiffel54 | gzip -c > Eiffel54_enterprise.tgz
+mv Eiffel55 cdrom
+cp cdrom/Eiffel55/INSTALL cdrom	
+make_cd_image Eiffel55_enterprise Eiffel55_enterprise.iso cdrom
+gzip Eiffel55_enterprise.iso
+mv cdrom/Eiffel55 Eiffel55
+tar -c Eiffel55 | gzip -c > Eiffel55_enterprise.tgz

@@ -13,15 +13,18 @@ verbose
 open rh9.ise 
 user manus manus 
 binary
-get local/TEST_DELIV/PorterPackage/Eiffel54_enterprise.tgz Eiffel54_rh9.tgz
-get local/TEST_DELIV/PorterPackage/Eiffel54_enterprise.iso Eiffel54_enterprise_rh9.iso
+get local/TEST_DELIV/PorterPackage/Eiffel55_enterprise.tgz Eiffel55_rh9.tgz
+get local/TEST_DELIV/PorterPackage/Eiffel55_free.tgz Eiffel55_free_rh9.tgz
+get local/TEST_DELIV/PorterPackage/Eiffel55_enterprise.iso.gz Eiffel55_enterprise_rh9.iso.gz
+get local/TEST_DELIV/PorterPackage/Eiffel55_university.iso.gz Eiffel55_university_rh9.iso.gz
+get local/TEST_DELIV/PorterPackage/Eiffel55_free.iso.gz Eiffel55_free_rh9.iso.gz
 close 
 EOF
 
 	echo Linux for RH9.0 compilation done
 else
 	rm -rf PorterPackage
-	tar xvf ~/PorterPackage_enterprise.tar
+	tar xvf ~/PorterPackage_all.tar
 	cd PorterPackage
 	export ISE_PLATFORM=linux-glibc2.1
 	compile_exes

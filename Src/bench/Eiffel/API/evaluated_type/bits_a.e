@@ -10,14 +10,14 @@ inherit
 		redefine
 			is_bits, associated_class, dump,
 			heaviest, same_as, append_clickable_signature,
-			check_conformance
+			check_conformance, format
 		end;
 
 	BASIC_A
 		redefine
 			is_bits, internal_conform_to, associated_class, dump,
 			heaviest, same_as, append_clickable_signature,
-			check_conformance
+			check_conformance, format
 		select
 			internal_conform_to
 		end;
@@ -35,6 +35,7 @@ feature
 			if not conform_to (target_type) then
 				!!vncb;
 				context.init_error (vncb);
+				vncb.set_target_name (target_name);
 				vncb.set_source_type (Current);
 				vncb.set_target_type (target_type);
 				Error_handler.insert_error (vncb);
@@ -92,13 +93,13 @@ feature
 			-- Dumped trace
 		do
 			!!Result.make (9);
-			Result.append ("BITS ");
+			Result.append ("BIT ");
 			Result.append_integer (base_type);
 		end;
 
 	append_clickable_signature (a_clickable: CLICK_WINDOW) is
 		do
-			a_clickable.put_string ("BITS ");
+			a_clickable.put_string ("BIT ");
 			a_clickable.put_int (base_type);
 		end;
 
@@ -119,5 +120,11 @@ feature
 						and then
 						other_bits.base_type = base_type
 		end;
+
+	format (ctxt: FORMAT_CONTEXT) is
+		do
+			ctxt.put_string ("BIT ");
+			ctxt.put_string (base_type.out);
+		end
 
 end

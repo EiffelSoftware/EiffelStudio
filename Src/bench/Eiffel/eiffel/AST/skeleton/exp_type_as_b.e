@@ -23,6 +23,7 @@ feature
 		do
 			Result := basic_solved_type (feat_table, f);
 			Result.set_is_expanded (True);
+			System.set_has_expanded;
 		end;
 
 	actual_type: CL_TYPE_A is
@@ -30,6 +31,7 @@ feature
 		do
 			Result := basic_actual_type;
 			Result.set_is_expanded (True);
+			System.set_has_expanded;
 		end;
 
 	dump: STRING is

@@ -29,7 +29,7 @@ feature
 	format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text
 		do
-			ctxt.put_string ("none");
+			ctxt.put_string ("NONE");
 			ctxt.always_succeed;
 		end;
 

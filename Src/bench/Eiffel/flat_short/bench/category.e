@@ -2,7 +2,8 @@ class CATEGORY
 
 inherit
 	
-	COMPARABLE
+	COMPARABLE;
+	SPECIAL_AST
 
 creation
 
@@ -34,7 +35,6 @@ feature
 			end;
 		end;
 
-
 	same_comment (c: like comment): BOOLEAN is
 		do
 			Result := comment = void and c = void
@@ -53,8 +53,6 @@ feature
 				clauses.forth
 			end;
 		end;
-
-
 
 	merge (other: like Current) is
 			-- Import other category clauses. Merge them with
@@ -120,10 +118,29 @@ feature
 				else
 					!!new_clause.make (names_adapter.ast, names.feature_i);
 					clauses.finish;
-					clauses.add_right (new_clause)	
+					clauses.add_right (new_clause)
 				end
 			end;
 		end;
+
+	add_at_end (names_adapter: NAMES_ADAPTER) is
+		require
+			good_argument: names_adapter /= void
+		local
+			names: NAMES_LIST;
+			new_clause: FEATURE_CLAUSE_EXPORT;
+		do
+			names := names_adapter.names_list;
+			names_adapter.update_ast;
+			if clauses.empty then
+				!!new_clause.make (names_adapter.ast, names.feature_i);
+				clauses.finish;
+				clauses.add_right (new_clause)
+			else
+				clauses.finish;
+				clauses.item.add (names_adapter.ast);
+			end;
+		end
 
 	format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text

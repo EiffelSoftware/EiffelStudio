@@ -146,7 +146,7 @@ feature
 							if Result.has (feature_name) then
 								!!vgcp3;
 								vgcp3.set_class (a_class);
-								vgcp3.set_feature (a_feature);
+								vgcp3.set_feature_name (feature_name);
 								Error_handler.insert_error (vgcp3);
 							else
 								Result.put (export_status, feature_name);
@@ -154,7 +154,7 @@ feature
 							if not a_feature.type.is_void then
 								!!vgcp21;
 								vgcp21.set_class (a_class);
-								vgcp21.set_feature (a_feature);
+								vgcp21.set_feature_name (feature_name);
 								Error_handler.insert_error (vgcp21);
 							end;
 							if a_class.is_expanded 
@@ -167,7 +167,7 @@ feature
 							then
 								!!vgcp4;
 								vgcp4.set_class (a_class);
-								vgcp4.set_feature (a_feature);
+								vgcp4.set_feature_name (feature_name);
 								Error_handler.insert_error (vgcp4);
 								Error_handler.checksum
 							end;

@@ -35,6 +35,11 @@ feature -- Flat and flat/short modes
 			troff_format := True
 		end;
 
+	set_order_same_as_text is
+		do
+			order_same_as_text_bool.set_value (True)
+		end;
+
 feature
 
 	rescued: BOOLEAN;
@@ -63,6 +68,7 @@ feature
 			file: UNIX_FILE;
 		do
 			if not rescued then
+				Error_handler.wipe_out;
 				!!previous.make;
 				!!text.make;
 				!!first_format.make(class_c.actual_type);
@@ -73,8 +79,8 @@ feature
 					client := system.any_class.compiled_class;
 				end;
 				!!flat_struct.make (class_c, client);
-				System.set_current_class (class_c);
 				flat_struct.fill (current_class_only);
+				System.set_current_class (class_c);
 				if flat_struct.ast /= void then
 					prepare_class_text;
 					Inst_context.set_cluster (class_c.cluster);
@@ -123,17 +129,35 @@ feature
 		-- Save format before a change
 		local
 			new_format: LOCAL_FORMAT;
+			i: INTEGER
 		do
 			new_format := format.twin;
+			text.finish;
 			new_format.set_position(text.cursor);
 			previous.add(new_format);
+debug ("FS_RBRF")
+			io.error.putstring ("beginning format... %N");
+			i := text.index;
+			io.error.putstring (text.image);
+			text.go_i_th (i);
+			io.error.new_line;
+end
 		end;
 
 	commit is
 		-- go back to previous format. keep text modifications
+		local
+			i: INTEGER
 		do
 			previous.remove;
 			last_was_printed := true;
+debug ("FS_RBRF")
+			io.error.putstring ("committin..%N");
+			i := text.index;
+			io.error.putstring (text.image);
+			text.go_i_th (i);
+			io.error.new_line;
+end
 		end;
 
 
@@ -152,6 +176,11 @@ feature
 			text.head (format.position_in_text);
 			previous.remove;
 			last_was_printed := false;
+debug ("FS_RBRF")
+			io.error.putstring ("rollback to..%N");
+			io.error.putstring (text.image);
+			io.error.new_line;
+end
 		end;
 
 
@@ -164,6 +193,16 @@ feature
 	last_was_printed: BOOLEAN;
 
 	is_in_first_pass: BOOLEAN;
+
+	set_in_assertion is
+		do
+			in_assertion_bool.set_value (True);
+		end
+
+	set_not_in_assertion is
+		do
+			in_assertion_bool.set_value (False);
+		end
 
 feature -- text construction
 
@@ -265,7 +304,6 @@ feature -- text construction
 			end;
 		end;
 
-
 	next_line is
 			--	 go to next line, indent as necessary
 		local
@@ -274,7 +312,6 @@ feature -- text construction
 			!!item.make (format.indent_depth);
 			text.add (item)
 		end;
-
 
 	prepare_class_text is
 			-- append standard text before class 
@@ -294,22 +331,49 @@ feature -- text construction
 			text.add (item);
 		end;
 
-	prepare_feature (feature_names: EIFFEL_LIST [FEATURE_NAME]) is
+	prepare_feature (feature_name: STRING; is_prefix, is_infix: BOOLEAN) is
 			-- append standard text before feature declaration 
 		local
 			item: BEFORE_FEATURE;
+			temp: STRING;
 		do
-			!!item.make(upper_name, feature_names);
-			text.add (item);
+			if troff_format then
+				old_types := format.local_types;
+				temp := feature_name.duplicate;
+				if is_infix then
+					if temp.substring (1, 7).is_equal ("_infix_") then
+						temp.tail (feature_name.count - 7);
+						temp := old_types.operator_name (temp);
+						!!item.make (upper_name, temp);
+					else
+						!!item.make (upper_name, feature_name);
+					end;
+					item.set_is_infix
+				elseif is_prefix then
+					if feature_name.substring (1, 8).is_equal ("_prefix_") then
+						temp.tail (feature_name.count - 8);
+						temp := old_types.operator_name (temp);
+						!!item.make (upper_name, temp);
+					else
+						!!item.make (upper_name, feature_name);
+					end;
+					item.set_is_prefix
+				else
+					!!item.make(upper_name, feature_name);
+				end;
+				text.add (item);
+			end
 		end;
 
-	end_feature (feature_names: EIFFEL_LIST [FEATURE_NAME]) is
+	end_feature is
 			-- append standard text after feature declaration
 		local
 			item: AFTER_FEATURE;
 		do
-			!!item.make (upper_name, feature_names);
-			text.add (item);
+			if troff_format then
+				!!item.make (upper_name, Void);
+				text.add (item);
+			end
 		end;
 
 	put_breakable is
@@ -426,6 +490,26 @@ feature -- type control
 			arguments := arg;
 		end;
 
+	prepare_for_main_infix is
+			-- Prepare for class features
+		do
+			set_types_back_to_global;
+			old_types := format.local_types;
+			new_types := format.local_types.main_adapt_infix;
+			format.set_local_types (new_types);
+			arguments := Void;
+		end;
+
+	prepare_for_main_prefix is
+			-- Prepare for class features
+		do
+			set_types_back_to_global;
+			old_types := format.local_types;
+			new_types := format.local_types.main_adapt_prefix;
+			format.set_local_types (new_types);
+			arguments := Void;
+		end;
+
 	prepare_for_main_feature is
 			-- Prepare for class features
 		do
@@ -434,10 +518,25 @@ feature -- type control
 			new_types := format.local_types.main_adapt_feat;
 			format.set_local_types (new_types);
 			arguments := Void;
+debug ("FS_RBRF")
+	io.error.putstring ("ANALZYING FEATURE FOR ROLLBACK/COMMIT: ");
+	io.error.putstring (format.local_types.final_name);
+	io.error.new_line;
+end;
+		end;
+
+	prepare_for_result is
+			-- Prepare for Result
+		do
+			old_types := format.local_types;
+			new_types := format.local_types.new_adapt_result;
+			format.set_local_types (new_types);
+			arguments := Void;
 		end;
 
 	prepare_for_infix (internal_name: STRING; right: EXPR_AS) is
 		do
+			old_types := format.local_types;
 			new_types := format.local_types.new_adapt_infix (internal_name);
 			format.set_local_types (new_types);
 			arguments := right;
@@ -445,11 +544,11 @@ feature -- type control
 
 	prepare_for_prefix (internal_name: STRING) is
 		do
+			old_types := format.local_types;
 			new_types := format.local_types.new_adapt_prefix (internal_name);
 			format.set_local_types (new_types);
 			arguments := void;
 		end;
-
 
 	put_current_feature is
 		do
@@ -485,49 +584,73 @@ feature -- type control
 			feature_i := format.local_types.target_feature;
 			if dot_needed then
 				put_dot
+			elseif (in_assertion and then not is_feature_visible) then
+				last_was_printed := false;
 			end;
-			f_name := format.local_types.final_name;
-			if feature_i /= void and then in_bench_mode then
-				stone := feature_i.stone (old_types.target_class);
-				!CLICKABLE_TEXT!item.make (f_name, stone);
-			else			
-				!!item.make (f_name)
-			end;
-			text.add (item);
-			arg ?= arguments;
-			if arg /= void then
-				begin;
-				set_separator(",");
-				no_new_line_between_tokens;
-				put_special (" (");
-				abort_on_failure;
-				arguments.format (Current);
-				put_special (")");
-				if last_was_printed then
-					commit;
-					keep_types;
-				else
-					rollback;
+			if last_was_printed then
+				f_name := format.local_types.final_name;
+				if feature_i /= void and then in_bench_mode then
+					stone := feature_i.stone (old_types.target_class);
+					!CLICKABLE_TEXT!item.make (f_name, stone);
+				else			
+					!!item.make (f_name)
 				end;
-				from
-					arg.start;
-					nb := arg.count;
-					i := 1;
-				until	
-					i > nb	
-				loop
-					i := i + i
-				end
-			else
-				last_was_printed := true;
-			end;			
+				text.add (item);
+				arg ?= arguments;
+				if arg /= void then
+					begin;
+					set_separator(",");
+					no_new_line_between_tokens;
+					put_special (" (");
+					abort_on_failure;
+					arguments.format (Current);
+					put_special (")");
+					if last_was_printed then
+						commit;
+						keep_types;
+					else
+						rollback;
+					end;
+					from
+						arg.start;
+						nb := arg.count;
+						i := 1;
+					until	
+						i > nb	
+					loop
+						i := i + i
+					end
+				else
+					last_was_printed := true;
+				end;			
+			end;
 		end;
 
+	put_main_fix is
+				-- Print main pre or infix
+		local
+			feature_i: FEATURE_I; 
+			item: BASIC_TEXT;
+			stone: FEATURE_STONE;
+			f_name: STRING;
+		do
+			feature_i := format.local_types.target_feature;
+			f_name := format.local_types.final_name;
+			if feature_i /= Void and then in_bench_mode then
+				stone := feature_i.stone (old_types.target_class)
+				!CLICKABLE_TEXT!item.make (f_name, stone);
+			else
+				!!item.make (f_name)
+			end;
+			text.add (item)
+		end;
 
 	put_prefix is
 		local
 			feature_i: FEATURE_I; 
 			item: BASIC_TEXT;
+			stone: FEATURE_STONE;
+			f_name: STRING;
 		do
 			if illegal_operator then
 				put_special ("(");
@@ -541,8 +664,16 @@ feature -- type control
 				put_special ("%")");
 			else
 				feature_i := format.local_types.target_feature;
+				f_name := format.local_types.final_name;
 				insert (" ");
-				insert_special (format.local_types.final_name);
+				if feature_i /= Void and then in_bench_mode then
+					stone := feature_i.stone (old_types.target_class);
+					!CLICKABLE_TEXT!item.make (f_name, stone);
+					item.set_is_special;
+					text.insert (format.insertion_point, item);
+				else
+					insert_special (f_name);
+				end;
 					-- careful: stone + keyword or special
 				if not dot_needed then
 					put_keyword ("Current");
@@ -557,6 +688,9 @@ feature -- type control
 			arg: EXPR_AS;
 			old_priority : INTEGER;
 			feature_i: FEATURE_I;
+			stone: FEATURE_STONE;
+			f_name: STRING;
+			item: BASIC_TEXT
 		do
 			if illegal_operator then
 				put_special ("(");
@@ -568,11 +702,19 @@ feature -- type control
 				last_was_printed := true;
 			else
 				feature_i := format.local_types.target_feature;
+				f_name := format.local_types.final_name;
 				if not dot_needed then
 					put_keyword ("Current");
 				end;
 				put_string(" ");
-				put_special (format.local_types.final_name);
+				if feature_i /= Void and then in_bench_mode then
+					stone := feature_i.stone (old_types.target_class);
+					!CLICKABLE_TEXT!item.make (f_name, stone);
+					item.set_is_special;
+					text.add (item);
+				else	
+					put_special (format.local_types.final_name);
+				end;
 				put_string(" ");
 				old_priority := format.local_types.priority;
 				arg ?= arguments;
@@ -733,7 +875,7 @@ feature -- comments
 				begin;
 				next_line;
 				!!s.make (50);
-				put_string ("-- (from ");
+				put_string ("--  (from ");
 				c := format.global_types.source_class;
 				put_class_name (c);
 				put_string (")");

@@ -6,7 +6,8 @@ inherit
 
 	FEATURE_NAME
 		redefine
-			is_infix, is_valid, format
+			is_infix, is_valid, format, main_feature_format,
+			offset
 		end
 
 feature -- Attributes
@@ -152,6 +153,34 @@ feature
 			ctxt.commit;
 		end;
 
+    main_feature_format (ctxt: FORMAT_CONTEXT) is
+            -- Reconstitute text.
+        do
+			ctxt.begin;
+            if is_frozen then
+                ctxt.put_keyword ("frozen ");
+            end;
+			if is_infix then
+				ctxt.put_keyword ("infix ");
+				ctxt.prepare_for_main_infix;
+			else
+				ctxt.put_keyword ("prefix ");
+				ctxt.prepare_for_main_prefix;
+			end;
+			ctxt.put_main_fix;
+			ctxt.commit;
+       end;
 	
-	
+	offset: INTEGER is
+		do
+			if is_frozen then
+				Result := 7
+			end;
+			if is_prefix then
+				Result := Result + 7
+			else
+				Result := Result + 6
+			end
+		end
+
 end

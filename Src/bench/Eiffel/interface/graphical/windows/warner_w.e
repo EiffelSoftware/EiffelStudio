@@ -27,7 +27,6 @@ feature
 		do
 			warning_create (l_Warning, a_composite);
 			set_title (l_Warning);
-			set_exclusive_grab;
 			hide_help_button;
 			add_ok_action (Current, Current);
 			add_cancel_action (Current, void_argument);
@@ -40,6 +39,7 @@ feature
 		do
 			last_caller := a_command;
 			set_message (a_message);
+			set_exclusive_grab;
 			popup
 		ensure
 			last_caller_recorded: last_caller = a_command
@@ -52,7 +52,9 @@ feature
 
 	custom_call (a_command: COMMAND_W; a_message: STRING;
 		ok_text, help_text, cancel_text: STRING) is
-			
+			-- A gotcha custom call is when a popup has one (or more) button
+			-- in which the callback only pops the window down. 
+			-- (a void a_command implies a gotcha warner)
 		do
 			last_caller := a_command;
 			set_message (a_message);
@@ -72,10 +74,10 @@ feature
 			else
 				set_cancel_label (cancel_text)
 			end;
+			set_exclusive_grab;
 			popup;
 		end;
-			
-	
+
 feature {NONE}
 
 	work (argument: ANY) is

@@ -7,7 +7,8 @@ inherit
 
 	HOLE
 		redefine
-			compatible, symbol, stone_type, command_name
+			compatible, symbol, stone_type, command_name,
+			icon_symbol
 		end
 
 creation
@@ -20,6 +21,12 @@ feature
 			-- Icon for the explain tool
 		once
 			Result := bm_Explain
+		end;
+
+	icon_symbol: PIXMAP is
+			-- Icon for the explain tool
+		once
+			Result := bm_Explain_icon
 		end;
 
 	compatible (dropped: STONE): BOOLEAN is

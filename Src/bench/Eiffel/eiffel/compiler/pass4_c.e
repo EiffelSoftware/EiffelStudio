@@ -22,11 +22,11 @@ feature
 			associated_class.update_melted_set;
 			if associated_class.has_features_to_melt then
 					-- Verbose
-				io.putstring ("Degree 2: class ");
+				io.error.putstring ("Degree 2: class ");
 					temp := associated_class.class_name.duplicate;
 					temp.to_upper;
-				io.putstring (temp);
-				io.new_line;
+				io.error.putstring (temp);
+				io.error.new_line;
 
 				associated_class.melt;
 			end;
@@ -40,11 +40,11 @@ feature
 			associated_class.update_melted_set;
 			if associated_class.has_features_to_melt then
 					-- Verbose
-				io.putstring ("Degree 2: class ");
+				io.error.putstring ("Degree 2: class ");
 					temp := associated_class.class_name.duplicate;
 					temp.to_upper;
-				io.putstring (temp);
-				io.new_line;
+				io.error.putstring (temp);
+				io.error.new_line;
 
 				associated_class.update_dispatch_table;
 			end;

@@ -70,6 +70,8 @@ feature -- formatter
 			loop
 				if value.item (i) = '%N' then
 					tmp.append ("%%N");
+				elseif value.item (i) = '%U' then
+					tmp.append ("%%U");
 				else
 					tmp.append_character (value.item (i))
 				end;

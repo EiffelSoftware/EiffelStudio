@@ -22,8 +22,13 @@ feature
 		end;
 
 	update_more is
+		local
+			show_text: SHOW_TEXT
 		do
-			Lace.set_file_name (text_window.file_name)
+			show_text ?= text_window.last_format;
+			if show_text /= Void then
+				Lace.set_file_name (text_window.file_name)
+			end;
 		end
 
 end

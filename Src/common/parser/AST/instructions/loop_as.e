@@ -66,7 +66,7 @@ feature -- Type check, byte code and dead code removal
 			stop.type_check;
 				-- Check if if is a boolean expression
 			current_context := context.item;
-			if not current_context.conform_to (Boolean_type) then
+			if not current_context.is_boolean then
 				!!vwbe4;
 				context.init_error (vwbe4);
 				vwbe4.set_type (current_context);

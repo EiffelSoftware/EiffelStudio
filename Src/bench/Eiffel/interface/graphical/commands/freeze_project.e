@@ -31,13 +31,18 @@ feature {NONE}
 		local
 			freeze_with_argument: STRING;
 			file: UNIX_FILE;
-			temp: STRING
+			temp: STRING;
+			fn: STRING;
+			f: UNIX_FILE;
 		do
 			debug_info.wipe_out;
 			if project_tool.initialized then
 				error_window.clear_window;
 				if Lace.file_name /= Void then
-					if argument = text_window  then
+					if 
+						(argument = text_window) or else  
+						(argument = Current)
+					then
 						warner.custom_call (Current, 
 									"Freezing implies some C compilation%N%
 									%and linking. Do you want to do it now?",
@@ -60,6 +65,8 @@ feature {NONE}
 								temp.append ("%NThen press Freeze again%N");
 								error_window.put_string (temp)
 							else
+								error_window.put_string
+									("Launching C compilation in background...%N");
 								finish_freezing;
 								error_window.put_string ("System recompiled%N");
 							end;
@@ -72,11 +79,22 @@ feature {NONE}
 				elseif argument = void then
 					system_tool.display;	
 					load_default_ace;	
-					system_tool.set_quit_command (Current, 0);
-						-- 0 /= void
 				elseif argument = name_chooser then
-					Lace.set_file_name (name_chooser.selected_file);
-					work (Current)
+					fn := name_chooser.selected_file.duplicate;
+					!! f.make (fn);
+					if
+						f.exists and then f.is_readable and then f.is_plain
+					then
+						Lace.set_file_name (fn);
+						work (Current)
+					else
+						!!temp.make (0);
+						temp.append ("File: ");
+						temp.append (fn);
+						temp.append ("%Ncannot be read. Try again?");
+						warner.custom_call 
+							(Current, temp, " Ok ", Void, "Cancel");
+					end
 				elseif argument = text_window then
 					warner.custom_call (Current, l_Specify_ace,
 						"Choose", "Template", "Cancel");
@@ -160,6 +178,7 @@ feature {NONE}
 				file_name.append (Eiffel3_dir_name);
 				file_name.append ("/bench/help/defaults/Ace.default");
 				system_tool.text_window.show_file_content (file_name);
+				system_tool.text_window.set_changed (True)
 		end;
 
 			

@@ -48,7 +48,7 @@ feature
 						io.error.putstring 
 							("Warning: the finalized system might not be optimal%N");
 						io.error.putstring
-							("%Tin size and speed. In order to produce and optimal%N");
+							("%Tin size and speed. In order to produce an optimal%N");
 						io.error.putstring
 							("%Texecutable, finalize the system from scratch and do%N");
 						io.error.putstring
@@ -56,6 +56,7 @@ feature
 					end;
 				end;
 				print_tail;
+				prompt_finish_freezing (True);
 			end;
 		end;
 

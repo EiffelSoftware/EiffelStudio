@@ -30,6 +30,21 @@ feature -- making
 	feature_i: FEATURE_I;
 	class_c: CLASS_C;
 
+	icon_name: STRING is
+		require else
+			is_valid
+		local
+			temp: STRING
+		do
+			!!Result.make (0);
+			Result.append (feature_i.feature_name);
+			Result.append (" (");
+			temp := class_c.class_name.duplicate;
+			temp.to_upper;
+			Result.append (temp);
+			Result.append (")");
+		end;
+
 	header: STRING is
 		require else
 			is_valid
@@ -90,7 +105,10 @@ feature -- dragging
 	file_name: STRING is
 			-- The one from class origin of `feature_i'
 		do
-			if feature_i /= Void then
+			if feature_i /= Void and then 
+				feature_i.written_class /= Void and then
+				class_c /= Void
+			then
 				Result := feature_i.written_class.file_name
 			end;
 		end;

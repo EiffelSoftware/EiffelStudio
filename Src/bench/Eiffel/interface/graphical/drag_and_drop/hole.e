@@ -31,6 +31,8 @@ feature {NONE}
 			-- Tool attached to Current
 
 	transporter_arg: ANY;
+
+	icon_name: STRING is do end;
 	
 feature 
 
@@ -68,9 +70,9 @@ feature {NONE}
 feature  -- to redefine
 
 	symbol: PIXMAP is do end;
+	icon_symbol: PIXMAP is do Result := symbol end;
 	command_name: STRING is do end;
 	stone_type: INTEGER is do end;
-
 	stone_name: STRING is do Result := command_name end;
 
 feature -- useless

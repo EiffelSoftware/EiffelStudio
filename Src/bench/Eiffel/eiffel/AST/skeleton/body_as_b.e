@@ -98,7 +98,8 @@ feature -- New feature description
 				-- declaration that wont do!
 			ras: REAL_TYPE_AS;
 			rvi: REAL_VALUE_I;
-			fvi: FLOAT_VALUE_I
+			fvi: FLOAT_VALUE_I;
+			cvi: VALUE_I;
 		do
 			if content = Void then
 					-- It is an attribute
@@ -122,9 +123,14 @@ feature -- New feature description
 					if (ras = Void) then
 						const.set_value (constant.value_i);
 					else
-						rvi ?= constant.value_i;
-						!!fvi; fvi.set_real_val (rvi.real_val);
-						const.set_value (fvi);
+						cvi := constant.value_i;
+						if cvi.is_double then
+							rvi ?= cvi;
+							!!fvi; fvi.set_real_val (rvi.real_val);
+							const.set_value (fvi);
+						else
+							const.set_value (cvi);
+						end;
 					end
 				end;
 				check

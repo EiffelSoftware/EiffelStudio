@@ -29,6 +29,8 @@ feature {NONE}
 	work (argument: ANY) is
 			-- Finalize the project.
         local
+			fn: STRING;
+			f: UNIX_FILE;
 			file: UNIX_FILE;
 			temp: STRING;
         do
@@ -44,6 +46,7 @@ feature {NONE}
                            	"Finalize now", Void, "Cancel");
 					elseif 
 						(argument = warner) or else
+						(argument = Current) or else
 						(argument = Void)
 					then
 						if not assert_confirmed then
@@ -53,7 +56,7 @@ feature {NONE}
 								%file are kept in final mode.%N%
 								%A final executable with assertion checking%N%
 								%enabled is sub-optimal in speed and size.%N",
-                            	"Keep assertions", "Discard assertions", Void); 
+                            	"Keep assertions", "Discard assertions", "Cancel"); 
 						else
 							set_global_cursor (watch_cursor);
 							project_tool.set_changed (true);
@@ -74,12 +77,14 @@ feature {NONE}
 										-- If the argument is `warner' the user 
 										-- pressed on "Keep assertions"
 									System.finalized_generation (argument = warner);
+									error_window.put_string
+										("Launching C compilation in background...%N");
 									finish_freezing;
 									if System.poofter_finalization then
 										error_window.put_string 
 											("Warning: the finalized system might not be optimal%N");
 										error_window.put_string 
-											("%Tin size and speed. In order to produce and optimal%N");
+											("%Tin size and speed. In order to produce an optimal%N");
 										error_window.put_string 
 											("%Texecutable, finalize the system from scratch and do%N");
 										error_window.put_string 
@@ -103,11 +108,22 @@ feature {NONE}
 				elseif argument = void then
 					system_tool.display;	
 					load_default_ace;	
-					system_tool.set_quit_command (Current, 0);
-						-- 0 /= void
 				elseif argument = name_chooser then
-					Lace.set_file_name (name_chooser.selected_file);
-					work (Current)
+					fn := name_chooser.selected_file.duplicate;
+					!! f.make (fn);
+					if
+						f.exists and then f.is_readable and then f.is_plain
+					then
+						Lace.set_file_name (fn);
+						work (Current)
+					else
+						!!temp.make (0);
+						temp.append ("File: ");
+						temp.append (fn);
+						temp.append ("%Ncannot be read. Try again?");
+						warner.custom_call 
+							(Current, temp, " Ok ", Void, "Cancel");
+					end
 				elseif argument = text_window then
 					warner.custom_call (Current, l_Specify_ace,
 						"Choose", "Template", "Cancel");
@@ -193,6 +209,7 @@ feature {NONE}
 				file_name.append (Eiffel3_dir_name);
 				file_name.append ("/bench/help/defaults/Ace.default");
 				system_tool.text_window.show_file_content (file_name);
+				system_tool.text_window.set_changed (True)
 		end;
 
 end

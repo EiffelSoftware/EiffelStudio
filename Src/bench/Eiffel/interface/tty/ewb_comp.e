@@ -29,6 +29,9 @@ feature
 				compile;
 				terminate_project;
 				print_tail;
+				if System.freezing_occurred then
+					prompt_finish_freezing (False)
+				end;
 			end;
 		end;
 

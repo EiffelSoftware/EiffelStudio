@@ -36,6 +36,12 @@ feature -- dragging
 --			Result.append (" (not in system)")
 		end;
 
+	icon_name: STRING is
+		do
+			Result := class_i.class_name.duplicate;
+			Result.to_upper
+		end;
+
 	header: STRING is
 		do
 			!!Result.make (20);

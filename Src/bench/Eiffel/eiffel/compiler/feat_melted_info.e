@@ -36,9 +36,19 @@ feature
 			-- Is the melted info still valid ?
 		local
 			feat_tbl: FEATURE_TABLE;
+			f: FEATURE_I;
 		do
 			feat_tbl := associated_class.feature_table;
-			Result := feat_tbl.has (feature_name)
+			f := feat_tbl.item (feature_name)
+			Result := f /= Void and then
+				(not f.is_attribute or else f.to_generate_in (associated_class))
+debug ("ACTIVITY")
+	io.error.putstring ("FEAT_MELTED_INFO is_valid (");
+	io.error.putstring (feature_name);
+	io.error.putstring ("): ");
+	io.error.putbool (Result);
+	io.error.new_line;
+end;
 		end;
 
 end

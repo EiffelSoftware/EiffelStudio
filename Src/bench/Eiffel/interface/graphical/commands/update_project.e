@@ -27,6 +27,8 @@ feature {NONE}
 	work (argument: ANY) is
 			-- Recompile the project.
 		local
+			fn: STRING;
+			f: UNIX_FILE;
 			temp: STRING
 		do
 			debug_info.wipe_out;
@@ -37,7 +39,6 @@ feature {NONE}
 					project_tool.set_changed (true);
 					Workbench.recompile;
 					if Workbench.successfull then
-						link_driver;
 						project_tool.set_changed (false);
 						system.server_controler.wipe_out; -- ???
 						save_failed := False;
@@ -50,6 +51,17 @@ feature {NONE}
 							temp.append ("%NThen press Melt again%N");
 							error_window.put_string (temp);
 						else
+							if System.freezing_occurred then
+								error_window.put_string 
+									("The system had to be frozen (i.e. the modifications could not%N");
+								error_window.put_string 
+									("be melted in). This occurs when new externals are introduced.%N");
+								error_window.put_string 
+									("Launching C compilation in background...%N");
+								finish_freezing 
+							else
+								link_driver
+							end;		
 							error_window.put_string ("System recompiled%N");
 						end;
 					end;
@@ -60,11 +72,22 @@ feature {NONE}
 				elseif argument = void then
 					system_tool.display;	
 					load_default_ace;	
-					system_tool.set_quit_command (Current, 0);
-						-- 0 /= void
 				elseif argument = name_chooser then
-					Lace.set_file_name (name_chooser.selected_file);
-					work (Current)
+					fn := name_chooser.selected_file.duplicate;
+					!! f.make (fn);
+					if
+						f.exists and then f.is_readable and then f.is_plain
+					then
+						Lace.set_file_name (fn);
+						work (Current)
+					else
+						!!temp.make (0);
+						temp.append ("File: ");
+						temp.append (fn);
+						temp.append ("%Ncannot be read. Try again?");
+						warner.custom_call 
+							(Current, temp, " Ok ", Void, "Cancel");
+					end
 				elseif argument = text_window then
 					warner.custom_call (Current, l_Specify_ace,
 						"Choose", "Template", "Cancel");
@@ -148,6 +171,33 @@ feature {NONE}
 				file_name.append (Eiffel3_dir_name);
 				file_name.append ("/bench/help/defaults/Ace.default");
 				system_tool.text_window.show_file_content (file_name);
+				system_tool.text_window.set_changed (True)
 		end;
 				
+	finish_freezing is
+		local
+			d: DIRECTORY;
+			cmd, copy_cmd: STRING;
+			request: ASYNC_SHELL
+		do
+			!!cmd.make (50);
+			cmd.append ("cd ");
+			cmd.append (Workbench_generation_path);
+			cmd.append ("; finish_freezing");
+ 
+			!!d.make (Workbench_generation_path);
+			if not d.has_entry ("finish_freezing") then
+				!!copy_cmd.make (50);
+				copy_cmd.append ("cp ");
+				copy_cmd.append (freeze_command_name);
+				copy_cmd.append (" ");
+				copy_cmd.append (Workbench_generation_path);
+				copy_cmd.append ("; ");
+				cmd.prepend (copy_cmd);
+			end;
+			!! request;
+			request.set_command_name (cmd);
+			request.send;
+		end;
+
 end

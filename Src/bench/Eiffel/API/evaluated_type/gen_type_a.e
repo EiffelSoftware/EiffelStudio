@@ -26,7 +26,8 @@ inherit
 			instantiated_in,
 			has_expanded,
 			same_as,
-			same_class_type
+			same_class_type,
+			format
 		end;
 	CL_TYPE_A
 		redefine
@@ -49,7 +50,8 @@ inherit
 			expanded_deferred,
 			valid_expanded_creation,
 			same_as,
-			same_class_type
+			same_class_type,
+			format
 		select
 			dump, expanded_deferred, valid_expanded_creation,
 			is_valid, append_clickable_signature
@@ -554,6 +556,27 @@ feature -- Primitives
 				end;
 				i := i + 1;
 			end;
+		end;
+
+	format (ctxt: FORMAT_CONTEXT) is
+		local
+			i, count: INTEGER;
+		do
+			ctxt.put_class_name (associated_class);
+			ctxt.put_special (" [");
+			from
+				i := 1;
+				count := generics.count;
+			until
+				i > count
+			loop
+				generics.item (i).format (ctxt);
+				if i /= count then
+					ctxt.put_string (", ");
+				end;
+				i := i + 1;
+			end;
+			ctxt.put_special ("]");
 		end;
 
 end

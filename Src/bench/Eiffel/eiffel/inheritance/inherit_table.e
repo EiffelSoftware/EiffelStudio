@@ -206,6 +206,8 @@ feature
 				a_class.changed_features.clear_all;
 					-- Class `a_class' is syntactically changed
 				analyze_declarations;
+					-- No update of `Instantiator' if there is an error
+				Error_handler.checksum;
 					-- Look for generic types in the inheritance clause
 					-- of a syntactically changed class
 				a_class.update_instantiator1;
@@ -221,6 +223,8 @@ feature
 			resulting_table := inherited_features.twin;
 				-- Check redeclarations into an attribute
 			check_redeclarations (resulting_table);
+				-- Check sum
+			Error_handler.checksum;
 				-- Compute selection table
 			Origin_table.compute_feature_table
 					(parents, feature_table, resulting_table);
@@ -241,6 +245,8 @@ feature
 				old_creators := a_class.creators;
 			   	a_class.set_creators
 							(class_info.creation_table (resulting_table));
+					-- No update of `Instantiator' if there is an error
+				Error_handler.checksum;
 					-- Generic types tracking
 				resulting_table.update_instantiator2;
 					-- Compute invariant clause
@@ -251,22 +257,24 @@ feature
 			check
 				No_error: not Error_handler.has_error;
 			end;
-            if rep_parent_list.count > 0 then
-                process_replicated_features (resulting_table);
-            else
-				if Rep_server.has (a_class.id) then
-                	--! Remove it from the server if it
-                	--! previously existed
-                	Rep_server.remove (a_class.id)
-				end;
-				if Tmp_rep_info_server.has (a_class.id) then
-					--| An error may have occured during Degree 3
-					--| and there may have been replicated info
-					--| originally and when recompiled 
-					--| these may have been removed.
-					Tmp_rep_info_server.remove (a_class.id)
-				end;
-            end;
+			if not System.code_replication_off then
+            	if rep_parent_list.count > 0 then
+                	process_replicated_features (resulting_table);
+            	else
+					if Rep_server.has (a_class.id) then
+                		--! Remove it from the server if it
+                		--! previously existed
+                		Rep_server.remove (a_class.id)
+					end;
+					if Tmp_rep_info_server.has (a_class.id) then
+						--| An error may have occured during Degree 3
+						--| and there may have been replicated info
+						--| originally and when recompiled 
+						--| these may have been removed.
+						Tmp_rep_info_server.remove (a_class.id)
+					end;
+            	end;
+			end;
 
 				-- Pass2 controler evaluation
 			pass2_control := feature_table.pass2_control (resulting_table);
@@ -284,10 +292,21 @@ feature
 				-- Insert the changed creators in the propagators list
 			new_creators := a_class.creators;
 			if old_creators = Void then
-				if new_creators /= Void
-				or else a_class.is_deferred then
+				if
+					new_creators /= Void
+				or else
+					(a_class.is_deferred and then pass_c.deferred_modified)
+				then
 						-- the clients using !! without a creation routine
 						-- must be recompiled
+debug ("ACTIVITY")
+	io.error.putstring ("Insert -1 in the propagators%N");
+	if new_creators /= Void then
+		io.error.putstring ("Creators have been added");
+	else
+		io.error.putstring ("The class is now deferred%N");
+	end;
+end;
 					!!depend_unit.make (a_class.id, -1);
 					pass2_control.propagators.add (depend_unit)
 				end;
@@ -309,6 +328,11 @@ feature
 						if resulting_table.has (creation_name) then
 								-- The routine is not a creation routine any more
 								-- or the export status has changed
+debug ("ACTIVITY")
+	io.error.putstring ("Creators: ");
+	io.error.putstring (creation_name);
+	io.error.putstring (" inserted in pass2_control.propagators%N");
+end;
 							!!depend_unit.make (a_class.id, resulting_table.item (creation_name).feature_id);
 							pass2_control.propagators.add (depend_unit);
 						end;
@@ -369,6 +393,7 @@ feature
 			Tmp_feat_tbl_server.put (resulting_table);
 debug ("HAS_CALLS", "TRACE_TABLE")
 			resulting_table.trace_replications;
+			resulting_table.trace;
 end;
 				-- Update `Tmp_body_server'.
 			update_body_server;
@@ -382,8 +407,10 @@ end;
 					-- Error happened during second pass: clear the
 					-- structure
 				clear;
-					-- Reset the old creation table
-				a_class.set_creators (old_creators);
+				if a_class.changed then
+						-- Reset the old creation table
+					a_class.set_creators (old_creators);
+				end;
 			end;
 		end;
 
@@ -864,9 +891,7 @@ end;
 					is_the_same := old_description.is_assertion_equiv (yacc_feature);
 debug ("ACTIVITY")
 	if not is_the_same then
-		io.error.putchar ('%T');
-		io.error.putstring (feature_name);
-		io.error.putstring (" assertions has syntactically changed%N");
+		io.error.putstring ("%Tassertions has syntactically changed%N");
 	end;
 end;
 					if not is_the_same then
@@ -875,11 +900,18 @@ end;
 						assert_prop_list.add (feature_i.rout_id_set.first)
 					else
 						is_the_same := old_description.is_body_equiv (yacc_feature)
-							and then Result.same_interface (feature_i);
+							-- Same interface does NOT work: the types must be resolved first
+							-- The check is done later anyway
+
+							--and then Result.same_interface (feature_i);
 debug ("ACTIVITY")
 	if not is_the_same then
-		io.error.putchar ('%T');
-		io.error.putstring (feature_name);
+		if not old_description.is_body_equiv (yacc_feature) then
+			io.error.putstring ("%Tbody is not equiv%N");
+		end;
+--		if not Result.same_interface (feature_i) then
+--			io.error.putstring ("%TInterface has changed%N");
+--		end;
 	end;
 end;
 					end;

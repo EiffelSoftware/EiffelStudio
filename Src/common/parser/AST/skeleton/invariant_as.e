@@ -84,10 +84,47 @@ feature -- Formatter
 			ctxt.next_line;
 			ctxt.set_separator (";");
 			if assertion_list /= Void then
-				assertion_list.format (ctxt);
+				format_assertions (ctxt);
 			end;
-			ctxt.commit;
+			if ctxt.last_was_printed then
+				ctxt.commit;
+			else
+				ctxt.rollback
+			end
 		end;
 
+	format_assertions (ctxt: FORMAT_CONTEXT) is
+		local
+			i, l_count: INTEGER;
+			not_first: BOOLEAN
+		do
+			from
+				ctxt.begin;
+				i := 1;
+				l_count := assertion_list.count;
+			until
+				i > l_count
+			loop
+				ctxt.begin;
+				if not_first then
+					ctxt.put_separator;
+				end;
+				ctxt.new_expression;
+				assertion_list.i_th(i).format(ctxt);
+				if ctxt.last_was_printed then
+					not_first := True
+					ctxt.commit;
+				else
+					ctxt.rollback;
+				end;
+				i := i + 1
+			end;
+			if not_first then
+				ctxt.indent_one_less;
+				ctxt.commit
+			else
+				ctxt.rollback
+			end
+		end
 
 end

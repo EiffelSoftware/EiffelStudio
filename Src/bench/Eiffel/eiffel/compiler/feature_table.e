@@ -340,6 +340,7 @@ end;
 			feature_i: FEATURE_I;
 			vcch1: VCCH1;
 			vcch2: VCCH2;
+			pos: INTEGER;
 		do
 			from
 				non_deferred := not associated_class.is_deferred;
@@ -347,6 +348,7 @@ end;
 			until
 				after
 			loop
+				pos := position_for_iteration;
 				feature_i := item_for_iteration;
 				if feature_i.is_deferred then
 					deferred_found := True;
@@ -358,6 +360,7 @@ end;
 					end;
 				end;
 				check_feature (feature_i);
+				go (pos);
 				forth;
 			end;
 			if not (non_deferred or else deferred_found) then
@@ -375,6 +378,11 @@ end;
 		local
 			arguments: FEAT_ARG;
 		do
+debug
+io.error.putstring ("Check feature: ");
+io.error.putstring (f.feature_name);
+io.error.new_line;
+end;
 			if f.written_in = feat_tbl_id then
 					-- Take a feature written in the class associated
 					-- to the feature table
@@ -409,7 +417,9 @@ end;
 			-- Feature of feature_id id equal to `i'.
 		local
 			feat: FEATURE_I;
+			pos: INTEGER
 		do
+			pos := position_for_iteration;
 			from
 				start
 			until
@@ -421,13 +431,16 @@ end;
 				end;
 				forth;
 			end;
+			go (pos);
 		end;
 
 	feature_of_body_id (i: INTEGER): FEATURE_I is
 			-- Feature of body id equal to `i'.
 		local
 			feat: FEATURE_I;
+			pos: INTEGER
 		do
+			pos := position_for_iteration;
 			from
 				start
 			until
@@ -439,13 +452,16 @@ end;
 				end;
 				forth;
 			end;
+			go (pos);
 		end;
 
 	feature_of_rout_id (set: ROUT_ID_SET): FEATURE_I is
 			-- Feature found in routine id set
 		local
 			feat: FEATURE_I;
+			pos: INTEGER
 		do
+			pos := position_for_iteration;
 			from
 				start
 			until
@@ -457,6 +473,7 @@ end;
 				end;
 				forth;
 			end;
+			go (pos);
 		end;
 
 	update_instantiator2 is

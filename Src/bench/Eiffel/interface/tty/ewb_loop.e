@@ -34,7 +34,7 @@ feature -- Initialization
 			ewb_ancestors: EWB_ANCESTORS;
 			ewb_clients: EWB_CLIENTS;
 			ewb_comp: EWB_COMP;
-			ewb_depend: EWB_DEPEND;
+--			ewb_depend: EWB_DEPEND;
 			ewb_descendants: EWB_DESCENDANTS;
 			ewb_finalize: EWB_FINALIZE;
 			ewb_flat: EWB_FLAT;
@@ -54,7 +54,7 @@ feature -- Initialization
 
 			!! ewb_ancestors.null;
 			!! ewb_clients.null;
-			!! ewb_depend.null;
+--			!! ewb_depend.null;
 			!! ewb_descendants.null;
 			!! ewb_flat.null;
 			!! ewb_fs.null;
@@ -67,7 +67,7 @@ feature -- Initialization
 			Result.put (ewb_ancestors, "ancestors");
 			Result.put (ewb_clients, "clients");
 			Result.put (ewb_comp, "melt");
-			Result.put (ewb_depend, "dependents");
+--			Result.put (ewb_depend, "dependents");
 			Result.put (ewb_descendants, "descendants");
 			Result.put (ewb_finalize, "finalize");
 			Result.put (ewb_flat, "flat");

@@ -134,6 +134,9 @@ feature
 	freeze: BOOLEAN;
 			-- Has the system to be frozen again ?
 
+	freezing_occurred: BOOLEAN;
+			-- Did a freezing of the system occur ?
+
 	history_control: HISTORY_CONTROL;
 			-- Routine table controler
 			-- Only used for final mode code generation.
@@ -274,6 +277,10 @@ feature
 	exception_stack_managed: BOOLEAN;
 			-- Is the exception stack managed in final mode
 
+	has_expanded: BOOLEAN;
+			-- Is there an expanded declaration in the system,
+			-- i.e. some extra check must be done after pass2 ?
+
 	current_pass: PASS;
 			-- Current compiler pass
 			-- Useful for `current_class'
@@ -384,26 +391,21 @@ feature
 				-- At the very beginning of a session, even class ANY is
 				-- not compiled. So we must say to the workbench to compile
 				-- classes ANY, DOUBLE... ARRAY
+				-- It is very important that the number of calls below
+				-- is equal to the value of `protected_classes'
 			local_workbench.change_class (general_class);
 			local_workbench.change_class (any_class);
-			local_workbench.change_class
-							(local_universe.class_named ("numeric", local_root_cluster));
-			local_workbench.change_class
-							(local_universe.class_named ("double", local_root_cluster));
-			local_workbench.change_class
-							(local_universe.class_named ("real", local_root_cluster));
-			local_workbench.change_class
-							(local_universe.class_named ("integer", local_root_cluster));
-			local_workbench.change_class
-							(local_universe.class_named ("boolean", local_root_cluster));
-			local_workbench.change_class
-							(local_universe.class_named ("character", local_root_cluster));
-			local_workbench.change_class
-							(local_universe.class_named ("array", local_root_cluster));
-			local_workbench.change_class
-							(local_universe.class_named ("bit_ref", local_root_cluster));
-			local_workbench.change_class
-							(local_universe.class_named ("pointer", local_root_cluster));
+			local_workbench.change_class (double_class);
+			local_workbench.change_class (real_class);
+			local_workbench.change_class (integer_class);
+			local_workbench.change_class (boolean_class);
+			local_workbench.change_class (character_class);
+			local_workbench.change_class (array_class);
+			local_workbench.change_class (bit_class);
+			local_workbench.change_class (pointer_class);
+			local_workbench.change_class (string_class);
+				-- The root class is not protected 
+				-- Godammit.
 			local_workbench.change_class (root_class)
 		end;
 
@@ -477,8 +479,12 @@ end;
 			id: INTEGER;
 			types: TYPE_LIST;
 			local_cursor: LINKABLE [SUPPLIER_CLASS];
+			ftable: FEATURE_TABLE;
+			f: FEATURE_I;
 		do
-			if (a_class.id > max_precompiled_id) then
+			id := a_class.id;
+
+			if (id > max_precompiled_id) then
 debug ("ACTIVITY");
 	io.error.putstring ("%TRemoving class ");
 	io.error.putstring (a_class.class_name);
@@ -490,6 +496,26 @@ end;
 					-- Remove type check relations
 				if a_class.parents /= Void then
 					a_class.remove_relations;
+				end;
+
+					-- Remove one occurrence for each external written
+					-- in the class
+				if Feat_tbl_server.has (id) then
+					ftable := Feat_tbl_server.item (id)
+					from
+						ftable.start
+					until
+						ftable.after
+					loop
+						f := ftable.item_for_iteration;
+						if
+							f.is_external and then
+							f.written_in = id
+						then
+							Externals.remove_occurence (ftable.key_for_iteration);
+						end;
+						ftable.forth
+					end;
 				end;
 
 					-- Remove class `a_class' from the lists of changed classes
@@ -513,8 +539,6 @@ end;
 				end;
 
 					-- Remove if from the servers
-				id := a_class.id;
-
 debug ("ACTIVITY");
 	io.error.putstring ("%TRemoving id from servers: ");
 	io.error.putint (id);
@@ -668,6 +692,7 @@ feature -- Recompilation
 		require
 			no_error: not Error_handler.has_error;
 		do
+			freezing_occurred := False;
 			do_recompilation;
 			successfull := True;
 		rescue
@@ -808,14 +833,14 @@ end;
 				-- Produce the update file
 			if freeze then
 					-- Verbose
-				io.putstring ("Freezing system%N");
+				io.error.putstring ("Freezing system%N");
 
 				freeze_system;
 				freeze := False;
 
 			else
 					-- Verbose
-				io.putstring ("Melting changes%N");
+				io.error.putstring ("Melting changes%N");
 
 				make_update;
 			end;
@@ -1029,7 +1054,9 @@ end;
 			a_class: CLASS_C;
 			local_cursor: LINKABLE [PASS_C];
 			type_cursor: LINKABLE [CLASS_TYPE];
+			check_exp: BOOLEAN;
 		do
+			check_exp := has_expanded;
 			from
 				local_cursor := pass4_controler.changed_classes.first_element
 			until
@@ -1054,8 +1081,10 @@ debug ("CHECK_EXPANDED")
 	io.error.putstring (a_class.class_name);
 	io.error.new_line;
 end;
-						Expanded_checker.set_current_type (class_type);
-						Expanded_checker.check_expanded;
+						if check_exp then
+							Expanded_checker.set_current_type (class_type);
+							Expanded_checker.check_expanded;
+						end;
 						class_type.set_is_changed (False);
 					end;
 				
@@ -1106,11 +1135,11 @@ debug ("COUNT")
 	io.error.putstring (") ");
 	i := i - 1;
 end;
-					io.putstring ("Degree 1: class ");
+					io.error.putstring ("Degree 1: class ");
 						temp := a_class.class_name.duplicate;
 						temp.to_upper;
-					io.putstring (temp);
-					io.new_line;
+					io.error.putstring (temp);
+					io.error.new_line;
 					a_class.melt_feature_table;
 					a_class.melt_descriptor_tables;
 					id_cursor := id_cursor.right;
@@ -1460,6 +1489,7 @@ feature  -- Freeezing
 			i, nb: INTEGER;
 			temp: STRING
 		do
+			freezing_occurred := True;
 			if precompilation then
 				!PRECOMP_MAKER!makefile_generator.make
 			else
@@ -1507,11 +1537,11 @@ debug ("COUNT")
 	i := i - 1;
 end;
 						-- Verbose
-					io.putstring ("Degree -1: class ");
+					io.error.putstring ("Degree -1: class ");
 						temp := a_class.class_name.duplicate;
 						temp.to_upper;
-					io.putstring (temp);
-					io.new_line;
+					io.error.putstring (temp);
+					io.error.new_line;
 	
 					a_class.generate_descriptor_tables;
 
@@ -1549,11 +1579,11 @@ debug ("COUNT")
 end;
 					if a_class /= Void then
 							-- Verbose
-						io.putstring ("Degree -1: class ");
+						io.error.putstring ("Degree -1: class ");
 							temp := a_class.class_name.duplicate;
 							temp.to_upper;
-						io.putstring (temp);
-						io.new_line;
+						io.error.putstring (temp);
+						io.error.new_line;
 	
 						a_class.generate_descriptor_tables;
 					end;
@@ -1581,11 +1611,11 @@ debug ("COUNT")
 	i := i - 1;
 end;
 					-- Verbose
-				io.putstring ("Degree -2: class ");
+				io.error.putstring ("Degree -2: class ");
 					temp := a_class.class_name.duplicate;
 					temp.to_upper;
-				io.putstring (temp);
-				io.new_line;
+				io.error.putstring (temp);
+				io.error.new_line;
 
 				a_class.pass4;
 
@@ -1610,11 +1640,11 @@ debug ("COUNT")
 end;
 				if not a_class.is_precompiled then
 						-- Verbose
-					io.putstring ("Degree -3: class ");
+					io.error.putstring ("Degree -3: class ");
 						temp := a_class.class_name.duplicate;
 						temp.to_upper;
-					io.putstring (temp);
-					io.new_line;
+					io.error.putstring (temp);
+					io.error.new_line;
 
 					a_class.generate_feature_table;
 				end;
@@ -1833,11 +1863,11 @@ debug ("COUNT");
 	io.error.putstring (") ");
 end;
 						-- Verbose
-					io.putstring ("Degree -4: class ");
+					io.error.putstring ("Degree -4: class ");
 						temp := a_class.class_name.duplicate;
 						temp.to_upper;
-					io.putstring (temp);
-					io.new_line;
+					io.error.putstring (temp);
+					io.error.new_line;
 
 					a_class.process_polymorphism;
 					History_control.check_overload;
@@ -1877,11 +1907,11 @@ debug ("COUNT")
 	io.error.putint (nb-i+1);
 	io.error.putstring (") ");
 end;
-					io.putstring ("Degree -5: class ");
+					io.error.putstring ("Degree -5: class ");
 						temp := a_class.class_name.duplicate;
 						temp.to_upper;
-					io.putstring (temp);
-					io.new_line;
+					io.error.putstring (temp);
+					io.error.new_line;
 
 					a_class.pass4;
 				end;
@@ -3102,6 +3132,15 @@ feature
 	set_exception_stack_managed (b: BOOLEAN) is
 		do
 			exception_stack_managed := b;
+		end;
+
+	set_has_expanded is
+			-- Set `has_expanded' to True
+		do
+debug ("ACTIVITY")
+	io.error.putstring ("%N%NSystem has expanded%N%N");
+end;
+			has_expanded := True;
 		end;
 
 	process_pass (a_pass: PASS) is

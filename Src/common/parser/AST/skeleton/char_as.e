@@ -68,7 +68,13 @@ feature -- Conveniences
 		do
 			ctxt.always_succeed;
 			ctxt.put_string("%'");
-			ctxt.put_string(value.out);
-			ctxt.put_string("%'");
+			if value = '%N' then
+				ctxt.put_string ("%%N");
+			elseif value = '%U' then
+				ctxt.put_string ("%%U");
+			else
+				ctxt.put_string (value.out);
+			end;
+			ctxt.put_string ("%'");
 		end;
 end

@@ -122,7 +122,7 @@ feature
 								rout_id_set.has (feat.rout_id_set.first) then
 								c.append_clickable_name (display);
 								if c = written_cl then
-									display.put_string (" (current class)");
+									display.put_string (" (version from)");
 								end;
 								--| I commented the next two lines 
 								--| because Fred pleaded with me to

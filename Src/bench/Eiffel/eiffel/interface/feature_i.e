@@ -232,6 +232,8 @@ feature -- Incrementality
 						and then
 						is_deferred = other.is_deferred
 						and then
+						is_external = other.is_external
+						and then
 						export_status.same_as (other.export_status)
 						and then
 						same_signature (other)
@@ -1109,7 +1111,7 @@ end;
 			then
 				!!ve01;
 				ve01.set_class (current_class);
-				ve01.set_new_feature (Current);
+				ve01.set_feature (Current);
 				ve01.set_old_feature (old_feature);
 				Error_handler.insert_error (ve01);
 			elseif is_external then

@@ -35,6 +35,11 @@ feature
 		require
 			current_type_exists: current_type /= Void
 		do
+debug
+io.error.putstring ("Check expanded%N");
+io.error.putstring (current_type.associated_class.signature);
+io.error.new_line;
+end;
 			recursive_check (current_type);
 			id_set.wipe_out;
 			Error_handler.checksum;
@@ -52,27 +57,33 @@ feature {NONE}
 			expanded_desc: EXPANDED_DESC;
 			client_type: CLASS_TYPE;
 			client: CLASS_C;
+			current_id: INTEGER;
 			id: INTEGER;
 			vlec: VLEC;
 			finished: BOOLEAN;
 			attr_desc: ATTR_DESC;
 			stop_recursion: BOOLEAN;
+			pos: INTEGER;
 		do
-			stop_recursion := id_set.has (class_type.associated_class.id);
+			current_id := class_type.associated_class.id;
+			stop_recursion := id_set.has (current_id);
 			from
 				current_skeleton := class_type.skeleton;
 debug
-io.error.putstring ("Recursive check%N");
-current_skeleton.trace;
+	io.error.putstring ("Recursive check%N");
+	io.error.putbool (stop_recursion);
+	io.error.new_line;
+	current_skeleton.trace;
 end;
 				current_skeleton.go_expanded;
 			until
 				current_skeleton.after or else finished
 			loop
-				attr_desc := current_skeleton.item;	
+				attr_desc := current_skeleton.item;
 				if attr_desc.is_expanded = False then
 					finished := True
 				else
+					pos := current_skeleton.index;
 					expanded_desc ?= attr_desc;
 					client_type := System.class_type_of_id (expanded_desc.type_id);
 					client := client_type.associated_class;
@@ -84,11 +95,19 @@ end;
 						vlec.set_client (class_type.associated_class);
 						Error_handler.insert_error (vlec);
 					else
-						id_set.put (id);
+debug
+	io.error.putstring ("Inserting ");
+	io.error.putint (id);
+	io.error.putstring (" for class ");
+	io.error.putstring (client.class_name);
+	io.error.new_line;
+end;
+						id_set.put (current_id);
 						if not stop_recursion then
 							recursive_check (client_type);
 						end;
 					end;
+					current_skeleton.go_i_th (pos);
 				end;
 
 				current_skeleton.forth;

@@ -454,11 +454,11 @@ feature -- Third pass: byte code production and type check
 			new_body_id: INTEGER;
 		do
 				-- Verbose
-			io.putstring ("Degree 3: class ");
+			io.error.putstring ("Degree 3: class ");
 				temp := class_name.duplicate;
 				temp.to_upper;
-			io.putstring (temp);
-			io.new_line;
+			io.error.putstring (temp);
+			io.error.new_line;
 
 			from
 					-- Initialization for actual types evaluation
@@ -671,6 +671,9 @@ end;
 
 				-- Recomputation of invariant clause
 
+debug ("ACTIVITY")
+	io.error.putstring ("%TProcessing invariant%N");
+end;
 
 			f_suppliers := dependances.item ("_inv_");
 
@@ -679,7 +682,9 @@ end;
 				if new_suppliers = Void then
 					new_suppliers := suppliers.same_suppliers;
 				end;
-				new_suppliers.remove_occurence (f_suppliers);
+				if f_suppliers /= Void then
+					new_suppliers.remove_occurence (f_suppliers);
+				end;
 				invariant_feature := Void;
 			else
 				invariant_changed := propagators.invariant_changed;
@@ -707,7 +712,7 @@ end;
 							)
 					)
 				then
-					invar_clause := Tmp_inv_ast_server.item (id);
+					invar_clause := Inv_ast_server.item (id);
 					Error_handler.mark;
 
 debug ("ACTIVITY")
@@ -844,6 +849,7 @@ end;
 					-- Clean context if error
 				ast_context.clear2;
 					-- Clean the caches if error
+				tmp_ast_server.cache.wipe_out
 				tmp_body_server.cache.wipe_out
 				tmp_rep_feat_server.cache.wipe_out
 				tmp_inv_ast_server.cache.wipe_out
@@ -1402,6 +1408,22 @@ feature -- Class initialization
 				-- Expanded mark
 			old_is_expanded := is_expanded;
 			is_expanded := ast.is_expanded;
+
+			if is_expanded then
+					-- Record the fact that an expanded is in the system
+					-- Extra check must be done after pass2
+				if
+					Current /= System.boolean_class.compiled_class and then
+					Current /= System.character_class.compiled_class and then
+					Current /= System.double_class.compiled_class and then
+					Current /= System.integer_class.compiled_class and then
+					Current /= System.real_class.compiled_class and then
+					Current /= System.pointer_class.compiled_class
+				then
+					System.set_has_expanded
+				end;
+			end;
+
 			if (is_expanded /= old_is_expanded and then old_parents /= Void) then
 					-- The expanded status has been modifed
 					-- (`old_parents' is Void only for the first compilation of the class)
@@ -1991,9 +2013,11 @@ feature -- Supplier checking
 				if Universe.last_class /= a_class.lace_class then
 						-- one of the suppliers has changed (different CLASS_I)
 						-- recompile the client (Current class)
-
-					recompile := True;
-					Workbench.add_class_to_recompile (lace_class);
+					a_class := lace_class.compiled_class;
+					if a_class = Void or else not a_class.is_precompiled then
+						recompile := True;
+						Workbench.add_class_to_recompile (lace_class);
+					end;
 				end;
 				syntactical_suppliers.forth
 			end;
@@ -2875,11 +2899,17 @@ feature -- PS
 					loop
 						formal_dec := generics.item;
 						Result.append (formal_dec.formal_name);
-						if formal_dec.constraint /= Void then
+						constraint_type := formal_dec.constraint;
+						if constraint_type /= Void then
 							Result.append (" -> ");
-							constraint_type := formal_dec.constraint.actual_type;
-							if constraint_type = Void then
-								constraint_type := formal_dec.constraint
+							if not constraint_type.has_like then
+								constraint_type := formal_dec.constraint.actual_type;
+								if constraint_type = Void then
+										-- Problem in building the type
+										-- Should occur only for invalid constraint
+										-- i.e. `like weasel'
+									constraint_type := formal_dec.constraint
+								end;
 							end;
 							Result.append (constraint_type.dump)
 						end;
@@ -2919,14 +2949,17 @@ feature -- PS
 						c_name := formal_dec.formal_name.duplicate;
 						c_name.to_upper;
 						a_clickable.put_string (c_name);
-						if formal_dec.constraint /= Void then
+						constraint_type := formal_dec.constraint;
+						if constraint_type /= Void then
 							a_clickable.put_string (" -> ");
-							constraint_type := formal_dec.constraint.actual_type;
-							if constraint_type = Void then
-									-- Problem in building the type
-									-- Should occur only for invalid constraint
-									-- i.e. i`like weasel'
-								constraint_type := formal_dec.constraint
+							if not constraint_type.has_like then
+								constraint_type := formal_dec.constraint.actual_type;
+								if constraint_type = Void then
+										-- Problem in building the type
+										-- Should occur only for invalid constraint
+										-- i.e. `like weasel'
+									constraint_type := formal_dec.constraint
+								end;
 							end;
 							constraint_type.append_clickable_signature (a_clickable)
 						end;

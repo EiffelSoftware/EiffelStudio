@@ -53,13 +53,13 @@ feature
 			-- Debug purpose
 		do
 			!!Result.make (10);
-			Result.append ("BITS ");
+			Result.append ("BIT ");
 			Result.append_integer (bits_value.value);
 		end;
 
 	append_clickable_signature (a_clickable: CLICK_WINDOW) is
 		do
-			a_clickable.put_string ("BITS ");
+			a_clickable.put_string ("BIT ");
 			a_clickable.put_int (bits_value.value);
 		end;
 
@@ -67,8 +67,8 @@ feature
 			-- Reconstitute text.
 		do
 			ctxt.always_succeed;
-			--ctxt.put_class_name("BITS ");
-			ctxt.put_string(bits_value.value.out);
+			ctxt.put_string ("BIT ");
+			ctxt.put_string (bits_value.value.out);
 		end
 
 end

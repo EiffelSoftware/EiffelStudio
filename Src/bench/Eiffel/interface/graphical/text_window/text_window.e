@@ -106,7 +106,12 @@ feature
 	set_root_stone (r: like root_stone) is
 				-- Assign `r' to `root_stone'.
 		do
-			root_stone := r
+			root_stone := r;
+			if root_stone /= Void then
+				tool.set_icon_name (root_stone.icon_name)
+			else
+				tool.set_icon_name (tool.tool_name);
+			end;
 		ensure
 			root_stone = r
 		end;
@@ -205,6 +210,7 @@ feature
 			root_stone := Void;
 			file_name := Void;
 			set_changed (false);
+			tool.set_icon_name (tool.tool_name);
 		ensure
 			image.empty;
 			position = 0;
@@ -286,11 +292,14 @@ feature
 			-- that RAM has writen for the STRING class (str_str)
 			-- but it is 2:30 AM and we are doing bootstrap today
 			-- so we are implementing a stupid but safe algorithm.		
+			-- We are making it even more stupid now in order to
+			-- have the search be case-insensitive.
 		local
 			search_sub: STRING;
 			c_pos: INTEGER;
 			start_position: INTEGER;
-			s1, s2: ANY
+			s1, s2: ANY;
+			temp: STRING
 		do
 			c_pos := cursor_position;
 			if
@@ -298,26 +307,32 @@ feature
 				(c_pos + 1 < text.count)
 			then
 				search_sub := text.substring (c_pos + 1, text.count);
+				search_sub.to_lower;
 				s1 := search_sub.to_c;
-				s2 := s.to_c;
+				temp := s.duplicate;
+				temp.to_lower;	
+				s2 := temp.to_c;
 				start_position := text_window_search_str_after (s1, s2);
 				if start_position >= 0 then
 					start_position := start_position + c_pos;
 					set_cursor_position (start_position + s.count);
-					highlight_selected (start_position, start_position + s.count);
+					highlight_selected (start_position, start_position + temp.count);
 					found := true
 				else
 					if (c_pos > 0) then
 						search_sub := text.substring (1, c_pos);
+						search_sub.to_lower;
 						s1 := search_sub.to_c;
-						s2 := s.to_c;
+						temp := s.duplicate;
+						temp.to_lower;	
+						s2 := temp.to_c;
 						start_position := 
 							text_window_search_str_after (s1, s2);
 						if start_position >= 0 then
 							start_position := start_position;
-							set_cursor_position (start_position + s.count);
+							set_cursor_position (start_position + temp.count);
 							highlight_selected 
-								(start_position, start_position + s.count);
+								(start_position, start_position + temp.count);
 							found := true
 						end;	
 					end;
@@ -369,7 +384,6 @@ feature {NONE}
 					window_manager.raise_class_windows
 				elseif argument = raise_routine_w then
 					window_manager.raise_routine_windows
-					project_tool.raise
 				elseif argument = raise_object_w then
 					window_manager.raise_object_windows
 				elseif argument = raise_explain_w then

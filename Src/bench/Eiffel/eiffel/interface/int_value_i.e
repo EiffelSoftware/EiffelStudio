@@ -55,9 +55,9 @@ feature
 			!VQMC3!Result;
 		end;
 
-	trace is
+	dump: STRING is
 		do
-			io.error.putint (int_val);
+			Result := int_val.out
 		end;
 
 end

@@ -69,8 +69,10 @@ feature -- Type check, byte code and dead code removal
 
 	format (ctxt: FORMAT_CONTEXT) is
 		do
-			ctxt.put_string("Result");
-			ctxt.always_succeed;
+			ctxt.begin;
+			ctxt.prepare_for_result;
+			ctxt.put_string (ctxt.new_types.final_name);
+			ctxt.commit;
 		end;
 
 	access_name: STRING is

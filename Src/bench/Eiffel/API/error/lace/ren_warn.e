@@ -4,9 +4,9 @@ class REN_WARN
 
 inherit
 
-	WARNING
+	CLUSTER_ERROR
 		redefine
-			build_explain
+			build_explain, code
 		end
 
 feature
@@ -14,18 +14,9 @@ feature
 	code: STRING is "VD35";
 			-- Error code
 
-	cluster_name: STRING;
-
-	set_cluster_name (s: STRING) is
-		do
-			cluster_name := s;
-		end;
-
 	build_explain is
 		do
-			put_string ("Cluster name: ");
-			put_string (cluster_name);
-			new_line;
+			put_cluster_name
 		end;
 
 end

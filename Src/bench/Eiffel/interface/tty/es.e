@@ -46,12 +46,12 @@ feature -- Input/Output
 		do
 			io.putstring ("Usage:%N%T");
 			io.putstring (argument (0));
-			io.putstring (" [-help|-freeze|-finalize [-keep]|-precompile|-clean|%N%
+			io.putstring (" [-help|-freeze|-finalize [-keep]|-precompile|%N%
 				%%T-loop|-clients class|-suppliers class%N%
 				%%T-flatshort [-troff] class|-flat class|-short [-troff] class%N%
 				%%T-descendants class|-ancestors class|%N%
 				%%T-aversions class feature|-dversions class feature|-implementers class feature%N%
-				%%T-callers class feature|-dependents class feature|%N%
+				%%T-callers class feature|%N%
 				%%T[-stop] [-ace Ace] [-project Project]]%N");
 		end;
 
@@ -161,12 +161,12 @@ feature -- Command line options
 					end;
 					!EWB_FINALIZE!command.make (keep);
 				end
-			elseif option.is_equal ("-clean") then
-				if command /= Void then
-					option_error := True
-				else
-					!EWB_CLEAN!command
-				end
+--			elseif option.is_equal ("-clean") then
+--				if command /= Void then
+--					option_error := True
+--				else
+--					!EWB_CLEAN!command
+--				end
 			elseif option.is_equal ("-precompile") then
 				if command /= Void then
 					option_error := True
@@ -229,20 +229,20 @@ feature -- Command line options
 				else
 					option_error := True
 				end;
-			elseif option.is_equal ("-dependents") then
-				if current_option < (argument_count - 2) then
-					if command /= Void then
-						option_error := True
-					else
-						current_option := current_option + 1;
-						cn := argument (current_option);
-						current_option := current_option + 1;
-						fn := argument (current_option);
-						!EWB_DEPEND!command.make (cn, fn);
-					end;
-				else
-					option_error := True
-				end;
+--			elseif option.is_equal ("-dependents") then
+--				if current_option < (argument_count - 2) then
+--					if command /= Void then
+--						option_error := True
+--					else
+--						current_option := current_option + 1;
+--						cn := argument (current_option);
+--						current_option := current_option + 1;
+--						fn := argument (current_option);
+--						!EWB_DEPEND!command.make (cn, fn);
+--					end;
+--				else
+--					option_error := True
+--				end;
 			elseif 
 				option.is_equal ("-short") or else
 				option.is_equal ("-flatshort") 

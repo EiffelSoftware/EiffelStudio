@@ -27,6 +27,11 @@ feature
 
 	set_fail_on_rescue (b: BOOLEAN) is
 		do
+debug
+	io.error.putstring ("Rescue_status.set_fail_on_rescue: ");
+	io.error.putbool (b);
+	io.error.new_line;
+end;
 			fail_on_rescue := b
 		end;
 

@@ -41,6 +41,16 @@ feature {NONE}
 			Result := pixmap_file_content ("class.bm");
 		end;
 
+	bm_Class_icon: PIXMAP is
+		do
+			Result := pixmap_file_content ("class_icon.bm");
+		end;
+
+	bm_Clickable: PIXMAP is
+		do
+			Result := pixmap_file_content ("clickable.bm");
+		end;
+
 	bm_Continue: PIXMAP is
 		do
 			Result := pixmap_file_content ("continue.bm");
@@ -64,6 +74,11 @@ feature {NONE}
 	bm_Explain: PIXMAP is
 		do
 			Result := pixmap_file_content ("explain.bm");
+		end;
+
+	bm_Explain_icon: PIXMAP is
+		do
+			Result := pixmap_file_content ("explain_icon.bm");
 		end;
 
 	bm_Finalize: PIXMAP is
@@ -101,6 +116,11 @@ feature {NONE}
 			Result := pixmap_file_content ("object.bm");
 		end;
 
+	bm_Object_icon: PIXMAP is
+		do
+			Result := pixmap_file_content ("object_icon.bm");
+		end;
+
 	bm_Object_inv: PIXMAP is
 		do
 			Result := pixmap_file_content ("object_inv.bm");
@@ -111,6 +131,16 @@ feature {NONE}
 			Result := pixmap_file_content ("open.bm");
 		end;
 
+	bm_Project: PIXMAP is
+		do
+			Result := pixmap_file_content ("tower.bm");
+		end;
+ 
+	bm_Project_icon: PIXMAP is
+		do
+			Result := pixmap_file_content ("project_icon.bm");
+		end;
+ 
 	bm_Quit: PIXMAP is
 		do
 			Result := pixmap_file_content ("quit.bm");
@@ -124,6 +154,11 @@ feature {NONE}
 	bm_Routine: PIXMAP is
 		do
 			Result := pixmap_file_content ("routine.bm");
+		end;
+
+	bm_Routine_icon: PIXMAP is
+		do
+			Result := pixmap_file_content ("routine_icon.bm");
 		end;
 
 	bm_Run: PIXMAP is
@@ -266,16 +301,16 @@ feature {NONE}
 			Result := pixmap_file_content ("system.bm");
 		end;
 
+	bm_System_icon: PIXMAP is
+		do
+			Result := pixmap_file_content ("system_icon.bm");
+		end;
+
 	bm_Update: PIXMAP is
 		do
 			Result := pixmap_file_content ("update.bm");
 		end;
 
-	bm_Tower: PIXMAP is
-		do
-			Result := pixmap_file_content ("tower.bm");
-		end;
- 
 	bm_class_cur: PIXMAP is
 		do
 			Result := pixmap_file_content ("class_cur.bm");

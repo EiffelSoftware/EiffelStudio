@@ -9,12 +9,12 @@ inherit
 
 feature
 
-	put_string (s: STRING) is do io.putstring (s) end;
+	put_string (s: STRING) is do io.error.putstring (s) end;
 
-	put_clickable_string (a: ANY; s: STRING) is do io.putstring (s) end;
+	put_clickable_string (a: ANY; s: STRING) is do io.error.putstring (s) end;
 
-	new_line is do io.new_line end;
+	new_line is do io.error.new_line end;
 
-	put_char (c: CHARACTER) is do io.putchar (c) end;
+	put_char (c: CHARACTER) is do io.error.putchar (c) end;
 
 end

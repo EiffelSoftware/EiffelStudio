@@ -64,6 +64,10 @@ feature
 		
 					if context.level1 or else context.level4 then
 							-- Local in post- or precondition
+							--|Note: this should not happen since
+							--|in the context of assertions we would have
+							--|ACCESS_ASSERT_AS and not ACCESS_ID_AS objects.
+							--|(Fred)
 						!!veen2B;
 						context.init_error (veen2B);
 						veen2B.set_identifier (feature_name);

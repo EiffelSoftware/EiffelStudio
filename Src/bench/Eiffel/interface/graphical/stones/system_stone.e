@@ -58,6 +58,12 @@ feature
 			end
 		end;
 
+	icon_name: STRING is
+		do
+			!!Result.make (0);
+			Result.append ("Ace");
+		end;
+
 	header: STRING is
 		do
 			!!Result.make (0);

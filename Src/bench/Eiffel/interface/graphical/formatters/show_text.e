@@ -63,6 +63,8 @@ feature
 			-- Show text of `stone' in `text_window'
 		local
 			stone_text: STRING;
+			filed_stone: FILED_STONE;
+			temp: STRING
 		do
 			if stone /= Void then
 				stone_text := stone.origin_text;
@@ -81,6 +83,19 @@ feature
 					text_window.show_image;
 					text_window.set_mode_for_editing;
 					text_window.set_last_format (Current);
+				else
+					filed_stone ?= stone;
+					if filed_stone /= Void then
+						!! temp.make (0);
+						if filed_stone.file_name /= Void then
+							temp.append ("File: ");
+							temp.append (filed_stone.file_name);	
+							temp.append (" cannot be read");
+						else
+							temp.append ("There is no associated file for pebble dropped");
+						end;
+						warner.custom_call (Void, temp, Void, Void, " Ok ")	
+					end			
 				end
 			end
 		end;

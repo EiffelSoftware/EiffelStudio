@@ -234,9 +234,9 @@ feature -- Creation feature
 			-- Verbose
 		do
 				-- Verbose
-			io.putstring ("Degree 6: cluster ");
-			io.putstring (cluster_name);
-			io.new_line;
+			io.error.putstring ("Degree 6: cluster ");
+			io.error.putstring (cluster_name);
+			io.error.new_line;
 		end;
 
 	fill (ex_l, inc_l: LACE_LIST [FILE_NAME_SD]) is
@@ -430,8 +430,10 @@ feature -- Creation feature
 						str := class_path.to_c;
 						file_date := eif_date ($str);
 						if a_class.date /= file_date then
-								-- The class has changed
-							Workbench.change_class (a_class);
+							if a_class.compiled then
+									-- The class has changed
+								Workbench.change_class (a_class);
+							end;
 							a_class.set_date;
 						end;
 					end;

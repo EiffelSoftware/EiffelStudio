@@ -55,7 +55,6 @@ feature -- Compiled parent computation
 			rename_pair: RENAME_AS;
 			old_name, new_name: FEATURE_NAME;
 			vhrc2: VHRC2;
-			vhrc4: VHRC4;
 			export_adapt: EXPORT_ADAPTATION;
 			s: STRING;
 		do
@@ -84,17 +83,6 @@ feature -- Compiled parent computation
 					rename_pair := renaming.item;
 					old_name := rename_pair.old_name;
 					new_name := rename_pair.new_name;
-					if
-						(old_name.is_infix and then new_name.is_prefix)
-					or else
-						(old_name.is_prefix and then new_name.is_infix)
-					then
-						!!vhrc4;
-						vhrc4.set_class (System.current_class);
-						vhrc4.set_parent (Result.parent);
-						vhrc4.set_feature_name (old_name.internal_name);
-						Error_handler.insert_error (vhrc4);
-					end;
 					s := old_name.internal_name;
 					if renaming_c.has (s) then
 						!!vhrc2;

@@ -5,6 +5,9 @@ class SHOW_ONCES
 inherit
 
 	ROUTINE_FORM
+		redefine
+			display_feature
+		end
 
 creation
 
@@ -31,7 +34,20 @@ feature {NONE}
 	criterium (f: FEATURE_I): BOOLEAN is
 		do
 			Result := any_criterium (f);
-			Result := Result and f.is_once 
-		end
+			Result := Result and then (f.is_once or else
+							f.is_constant)
+		end;
+
+	display_feature (f: FEATURE_I; c: CLASS_C) is
+		local
+			const: CONSTANT_I
+		do
+			f.append_clickable_signature (text_window, c);
+			if f.is_constant then
+				text_window.put_string (" is ");
+				const ?= f;	--| Cannot fail
+				text_window.put_string (const.value.dump);
+			end
+		end;
 
 end

@@ -22,7 +22,7 @@ feature
 	message, class_l: LABEL;
 	cluster_name: LABEL;
 	create_b, cancel_b: PUSH_B;
-	row_column: ROW_COLUMN;
+	form: FORM;
 	create, cancel, clust: ANY;
 
 	cluster: CLUSTER_I;
@@ -42,9 +42,9 @@ feature
 			!!message.make ("", Current);
 			!!cluster_name.make ("", Current);
 			!!cluster_entry.make ("", Current);
-			!!row_column.make ("", Current);
-			!!create_b.make ("Create", row_column);
-			!!cancel_b.make ("Cancel", row_column);
+			!!form.make ("", Current);
+			!!create_b.make ("Create", form);
+			!!cancel_b.make ("Cancel", form);
 			attach_top (class_l, 5);
 			attach_left (class_l, 10);
 			attach_left (cluster_name, 10);
@@ -54,13 +54,17 @@ feature
 			attach_left_widget (cluster_name, cluster_entry, 5);
 			attach_top_widget (cluster_name, message, 5);
 			attach_top_widget (cluster_entry, message, 5);
-			attach_top_widget (message, row_column, 5);
-			attach_top_widget (message, row_column, 5);
-			attach_left (row_column, 10);
-			attach_right (row_column, 10);
-			attach_bottom (row_column, 10);
-			row_column.set_row_layout;	
-			row_column.set_same_size;
+			attach_top_widget (message, form, 5);
+			form.attach_left (create_b, 5);
+			form.attach_top (create_b, 5);
+			form.attach_bottom (create_b, 5);
+			form.attach_right (cancel_b, 5);
+			form.attach_top (cancel_b, 5);
+			form.attach_bottom (cancel_b, 5);
+			attach_right (cluster_entry, 5);
+			attach_left (form, 10);
+			attach_right (form, 10);
+			attach_bottom (form, 10);
 			cluster_name.set_text ("Cluster: ");
 			message.set_text ("No such class in system");
 			cluster_entry.add_activate_action (Current, clust);
@@ -114,31 +118,30 @@ feature
 					base_name := class_name.duplicate;
 					base_name.append (".e");
 					!!file.make (fname);
-					if not file.exists then	
-						class_i.set_base_name (base_name);
-						class_i.set_cluster (cluster);
-						class_i.set_date;
-						if cluster.classes.has (fname) then
-							fname.wipe_out;
-							str := class_name.duplicate;
-							str.to_upper;
-							fname.append ("Class ");
-							fname.append (str);
-							fname.append (" already exist in cluster");
-							warner.custom_call (Void, fname,
-											Void, Void, " Ok "); 
-						elseif
-							not file.is_creatable
-						then
-							str := fname.duplicate;
-							fname.wipe_out;
-							fname.append ("Cannot create file:%N");
-							fname.append (str);
-							warner.custom_call (Void, fname,
-											Void, Void, " Ok "); 
-						else
-							cluster.classes.put (class_i, class_name);
-							stone := class_i.stone;
+					class_i.set_base_name (base_name);
+					class_i.set_cluster (cluster);
+					class_i.set_date;
+					if cluster.classes.has (fname) then
+						fname.wipe_out;
+						str := class_name.duplicate;
+						str.to_upper;
+						fname.append ("Class ");
+						fname.append (str);
+						fname.append (" already exist in cluster");
+						warner.custom_call (Void, fname,
+										Void, Void, " Ok "); 
+					elseif
+						(not file.exists and then not file.is_creatable)
+					then
+						str := fname.duplicate;
+						fname.wipe_out;
+						fname.append ("Cannot create file:%N");
+						fname.append (str);
+						warner.custom_call (Void, fname,
+										Void, Void, " Ok "); 
+					else 
+						stone := class_i.stone;
+						if not file.exists then
 							file.open_write;
 							file.putstring ("class ");
 							file.putstring (stone.signature);
@@ -146,20 +149,30 @@ feature
 							file.putstring (stone.signature);
 							file.new_line;
 							file.close;
+							cluster.classes.put (class_i, class_name);
+							stone := class_i.stone;
 							class_text.receive (stone);
-							popdown
+						elseif
+							not (file.is_readable and then file.is_plain)
+						then
+							fname.prepend ("File ");
+							fname.append ("%N cannot be read");
+							warner.custom_call (Void, fname,
+												Void, Void, " Ok ");
+						else
+								--| Reading in existing file (created outside
+								--| ebench).
+							cluster.classes.put (class_i, class_name);
+							class_text.receive (stone);
 						end;
-					else
-						fname.prepend ("file ");
-						fname.append ("%N already exists");
-						warner.custom_call (Void, fname,
-											Void, Void, " Ok "); 
+						popdown
 					end;
 				end;
 			elseif argument = cancel then
 				popdown
 			elseif argument = clust then
 				change_cluster
+				work (create)
 			end;
 		end;
 

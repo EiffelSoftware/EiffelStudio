@@ -28,6 +28,12 @@ feature -- dragging
 			Result := class_c.signature
 		end;
 
+	icon_name: STRING is
+		do
+			Result := class_c.class_name.duplicate;
+			Result.to_upper;
+		end;
+
 	header: STRING is
 		do
 			!!Result.make (20);
@@ -50,7 +56,9 @@ feature -- dragging
 	file_name: STRING is
 			-- The one from CLASSC
 		do
-			Result := class_c.file_name
+			if class_c /= Void then
+				Result := class_c.file_name
+			end
 		end;
 
 	set_file_name (s: STRING) is do end;

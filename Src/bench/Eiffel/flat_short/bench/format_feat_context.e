@@ -5,6 +5,8 @@ inherit
 	FORMAT_CONTEXT
 		rename
 			execute as old_execute
+		redefine
+			put_origin_comment
 		end
 
 creation
@@ -32,9 +34,11 @@ feature
 			rout_id: INTEGER
 		do
 			ast := Body_server.item (feat.body_id)
+			export_status := feat.export_status;
 			!!previous.make;
 			!!text.make;
 			!!first_format.make (class_c.actual_type);
+			last_was_printed := True;
 			previous.add (first_format);
 			System.set_current_class (class_c);
 			Inst_context.set_cluster (class_c.cluster);
@@ -70,11 +74,14 @@ feature
 				begin;
 					indent_one_more;
 					indent_one_more;
-					next_line;
 					if feat.written_class /= class_c then
-						put_string ("(from ");
+						next_line;
+						put_string ("--  (from ");
 						put_class_name (feat.written_class);
 						put_string (")");
+						print_export_status;
+					else
+						print_export_status
 					end;
 				commit;
 			end
@@ -84,6 +91,39 @@ feature
 		end
 
 feature {NONE} -- Feature comments 
+
+	export_status: EXPORT_I;
+
+	put_origin_comment is
+		local
+			s: STRING;
+			c: CLASS_C;
+		do
+			begin;
+			if
+				format.global_types.source_class
+				/= format.global_types.target_class
+			then
+				next_line;
+				!!s.make (50);
+				put_string ("--  (from ");
+				c := format.global_types.source_class;
+				put_class_name (c);
+				put_string (")");
+			end;
+			print_export_status;
+			commit;
+		end;
+
+	print_export_status is
+		do
+			if not export_status.is_all then
+				next_line;
+				put_string ("--  (export status ");
+				export_status.format (Current);
+				put_string (")");
+			end;
+		end;
 
 	eiffel_file: EIFFEL_FILE
 			-- For format feature 

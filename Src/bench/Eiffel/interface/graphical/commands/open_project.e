@@ -39,6 +39,9 @@ feature {NONE}
 		do
 
 			if not project_tool.initialized then
+				name_chooser.set_directory_selection;
+				name_chooser.hide_file_selection_list;
+				name_chooser.hide_file_selection_label;
 				if argument = name_chooser then
 					dir_name := name_chooser.selected_file.duplicate;
 					last_char := dir_name.item (dir_name.count); 
@@ -46,7 +49,10 @@ feature {NONE}
 						dir_name.remove (dir_name.count)
 					end;
 					!!project_dir.make (dir_name);
-					make_project (project_dir)
+					make_project (project_dir);
+					name_chooser.set_file_selection;
+					name_chooser.show_file_selection_list;
+					name_chooser.show_file_selection_label;
 				elseif argument = void then
 					-- No Help
 				else

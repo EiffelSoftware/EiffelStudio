@@ -72,6 +72,11 @@ feature -- dragging
 		end;
  
 	click_list: ARRAY [CLICK_STONE];
+
+	icon_name: STRING is
+		do
+			Result := signature
+		end;
  
 	clickable: BOOLEAN is
 			-- Is Current an element with recorded structures information?

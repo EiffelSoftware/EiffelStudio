@@ -127,4 +127,12 @@ feature -- Formatting
 			ctxt.put_current_feature;
 	   end;
 
+	offset: INTEGER is
+		do
+			if is_frozen then
+					--| offset for frozen routines
+				Result := 7
+			end
+		end
+
 end

@@ -53,9 +53,9 @@ feature -- Type check, byte code and dead code removal
 				-- Type check if it is an expression conform either to
 				-- and integer or to a character
 			current_item := context.item;
-			if current_item.conform_to (Integer_type) then		
+			if current_item.is_integer then		
 				Inspect_control.set_integer_type;
-			elseif	current_item.conform_to (Character_type) then
+			elseif	current_item.is_character then
 				Inspect_control.set_character_type;
 			else
 					-- Error

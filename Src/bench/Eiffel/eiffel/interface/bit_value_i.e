@@ -56,9 +56,9 @@ feature
 			!VQMC6!Result;
 		end;
 
-	trace is
+	dump: STRING is
 		do
-			io.error.putstring (bit_val);
+			Result := bit_val			
 		end;
 
 end

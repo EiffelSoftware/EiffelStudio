@@ -415,14 +415,14 @@ feature -- Byte code generation
 					-- Target is expanded: copy with possible exeception
 				ba.append (expanded_assign_code);
 				assignment := True;
+			elseif target_type.is_bit then
+				ba.append (bit_assign_code);	
+				assignment := True;
 			elseif target_type.is_basic then
 					-- Target is basic: simple attachment if source type
 					-- is not none
 				if source_type.is_none then
 					ba.append (Bc_exp_excep);
-				elseif source_type.is_bit then
-					ba.append (bit_assign_code);	
-					assignment := True;
 				else
 					if target_type.is_numeric and then source_type.is_numeric then
 						basic_target ?= target_type;

@@ -13,7 +13,7 @@ creation
 
 feature
 
-	used_table: ARRAY [BOOLEAN];
+	used_table: ARRAY [ROUT_ID_SET];
 			-- Table of used body ids
 
 	make is
@@ -55,7 +55,7 @@ feature {NONE}
 			loop
 				traversal_unit := control.item;
 				next := traversal_unit.a_feature;
-				if not (next.is_attribute or else is_alive (next)) then
+				if not (next.is_attribute or else is_marked (next)) then
 					mark (traversal_unit)
 				end;
 				control.remove
@@ -142,7 +142,7 @@ feature {NONE}
 					unit := c.item;
 					if System.class_of_id (unit.id).conform_to (written_class) then
 						other_body_id := body_table.item (unit.body_index);
-						if used_table.item (other_body_id) = False then
+						if not bid_rid_is_marked (other_body_id, rout_id_val) then
 							descendant_class := System.class_of_id (unit.id);
 							des_feat_table := descendant_class.feature_table;
 							des_orig_table := des_feat_table.origin_table;
@@ -180,60 +180,63 @@ feature {NONE}
 			unit_to_traverse: TRAVERSAL_UNIT;
 			static_class, written_class: CLASS_C;
 			feature_name: STRING;
+			just_born: BOOLEAN;
 		do
+			just_born := not is_alive (feat);
 				-- Mark feature alive
 			mark_alive (feat);
 
-				-- Take care of dependances
-			written_class := feat.written_class;
-			if actual_class = written_class then
-				original_feature := feat;
-			else
-				original_feature :=
-					written_class.feature_table.feature_of_body_id
-															(feat.body_id);
-				check
-					original_feature_exists: original_feature /= Void
+			if just_born then
+
+					-- Take care of dependances
+				written_class := feat.written_class;
+				if actual_class = written_class then
+					original_feature := feat;
+				else
+					original_feature :=
+						written_class.feature_table.feature_of_body_id
+																(feat.body_id);
+					check
+						original_feature_exists: original_feature /= Void
+					end;
 				end;
-			end;
-			feature_name := original_feature.feature_name;
-			class_depend := Depend_server.item (written_class.id);
+				feature_name := original_feature.feature_name;
+				class_depend := Depend_server.item (written_class.id);
 debug ("DEAD_CODE_REMOVAL")
     io.error.putstring (feature_name);
     io.error.putstring (" from ");
     io.error.putstring (written_class.class_name);
     io.error.new_line;
 end;
-			if class_depend.has (feature_name) then
-				from
-					depend_list := class_depend.item (feature_name);
-					depend_list.start
-				until
-					depend_list.after
-				loop
-					depend_unit := depend_list.item;
-					if depend_unit.feature_id /= -1 then
-						static_class := System.class_of_id (depend_unit.id);
-						feature_table := static_class.feature_table;
-						depend_feature := feature_table.feature_of_feature_id
-													(depend_unit.feature_id);
-						if not is_alive (depend_feature) then
-debug
+				if class_depend.has (feature_name) then
+					from
+						depend_list := class_depend.item (feature_name);
+						depend_list.start
+					until
+						depend_list.after
+					loop
+						depend_unit := depend_list.item;
+						if depend_unit.feature_id /= -1 then
+							static_class := System.class_of_id (depend_unit.id);
+							feature_table := static_class.feature_table;
+							depend_feature := feature_table.feature_of_feature_id
+														(depend_unit.feature_id);
+							if not is_marked (depend_feature) then
+debug ("DEAD_CODE_REMOVAL")
 	io.error.putstring ("Propagated to ");
 	io.error.putstring (depend_feature.feature_name);
 	io.error.putstring (" from ");
 	io.error.putstring (static_class.class_name);
 	io.error.new_line;
 end;
-							!!unit_to_traverse.make (depend_feature, static_class);
-							control.add (unit_to_traverse);
+								!!unit_to_traverse.make (depend_feature, static_class);
+								control.add (unit_to_traverse);
+							end;
 						end;
+						depend_list.forth
 					end;
-					depend_list.forth
 				end;
 			end;
-		ensure
-			is_alive: is_alive (feat)
 		end;
 
 	mark_alive (feat: FEATURE_I) is
@@ -242,37 +245,59 @@ end;
 			good_argument: feat /= Void
 		local
 			class_name: STRING;
+			temp: ROUT_ID_SET
 		do
 				-- Verbose
-			io.putstring ("%TMarking ");
-			io.putstring (feat.feature_name);
-			io.putstring (" from ");
+			io.error.putstring ("%TMarking ");
+			io.error.putstring (feat.feature_name);
+			io.error.putstring (" from ");
 			class_name := feat.written_class.class_name.duplicate;
 			class_name.to_upper;
-			io.putstring (class_name);
-			io.new_line;
+			io.error.putstring (class_name);
+			io.error.new_line;
 
-			used_table.put (True, feat.body_id);
-		ensure
-			is_alive: is_alive (feat)
+			temp := used_table.item (feat.body_id);
+			if (temp = Void) then
+				!! temp.make (1);
+				used_table.put (temp, feat.body_id);
+			end;
+			temp.force (feat.rout_id_set.first);
 		end;
 
 feature
+
+	is_marked (feat: FEATURE_I): BOOLEAN is
+		require
+			good_argument: feat /= Void
+		local
+			temp: ROUT_ID_SET
+		do
+			temp := used_table.item (feat.body_id);
+			Result := (temp /= Void) and then
+				temp.has (feat.rout_id_set.first)
+		end;
+
+	bid_rid_is_marked (bid, rid: INTEGER): BOOLEAN is
+		local
+			temp: ROUT_ID_SET
+		do
+			temp := used_table.item (bid);
+			Result := (temp /= Void) and then
+				temp.has (rid)
+		end;
 
 	is_alive (feat: FEATURE_I): BOOLEAN is
 			-- Is the feature `feat' already recorded ?
 		require
 			good_argument: feat /= Void
 		do
-			Result := used_table.item (feat.body_id)
-		ensure
-			is_used: Result implies used_table.item (feat.body_id)
+			Result := is_body_alive (feat.body_id)
 		end;
 
 	is_body_alive (body_id: INTEGER): BOOLEAN is
 			-- Is the body id recorded in the `used_table' ?
 		do
-			Result := used_table.item (body_id)
+			Result := (used_table.item (body_id) /= Void)
 		end;
 
 end

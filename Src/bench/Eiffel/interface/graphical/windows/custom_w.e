@@ -38,7 +38,9 @@ feature
 			catalog_list.deselect_item;
 			realize;
 			transporter_init;
-			set_icon_pixmap (hole.symbol);
+			if hole.symbol.is_valid then
+				set_icon_pixmap (hole.symbol);
+			end;
 			set_icon_name (tool_name)
 		end;
 

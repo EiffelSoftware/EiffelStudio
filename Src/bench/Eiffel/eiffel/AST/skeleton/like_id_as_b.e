@@ -120,8 +120,6 @@ feature -- Implementation of inherited deferred features
 						like_argument.set_position (argument_position);
 						like_argument.set_actual_type
 						(anchor_type.solved_type (feat_table, f).actual_type);
-						like_argument.set_argument_position
-														(argument_position);
 						Result := like_argument;
 					end;
 				else

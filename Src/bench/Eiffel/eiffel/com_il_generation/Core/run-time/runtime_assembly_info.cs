@@ -54,5 +54,7 @@ using System.Runtime.CompilerServices;
 //       documentation for more information on this.
 //
 [assembly: AssemblyDelaySign(false)]
+#if !VS_DEVEL
 [assembly: AssemblyKeyFile("ise_runtime.key")]
+#endif
 [assembly: AssemblyKeyName("")]

@@ -1224,6 +1224,8 @@ feature {NONE} -- Implementation
 			if fcw.ok_clicked then
 				extend_from_diagram_successful := True
 				extend_feature_on_diagram_with_wizard (fcw)
+			else
+				extend_from_diagram_successful := False	
 			end
 		end
 
@@ -1347,7 +1349,7 @@ feature {NONE} -- Implementation
 		do
 			if not context_editor.history.is_empty then
 				create l_text.make
-				l_text.add_string (warning_messages.w_class_modified_outside_diagram)
+				l_text.add_multiline_string (warning_messages.w_class_modified_outside_diagram)
 				l_text.add_new_line
 				output_manager.process_text (l_text)
 				context_editor.reset_history

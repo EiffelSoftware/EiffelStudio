@@ -338,6 +338,7 @@ int print_err_msg (FILE *err, char *StrFmt, ...)
 	getcwd(saved_cwd, MAX_PATH);
 	chdir (starting_working_directory);
 
+		/* If we are not allowed to write the exception, we don't do it */
 	if ((exception_saved = fopen( "exception_trace.log", "a" )) != NULL) {
 		fprintf (exception_saved, "%s", s);
 		fclose (exception_saved);

@@ -1582,6 +1582,8 @@ feature -- Cecil generation for Concurrent Eiffel
 	generate_separate_pattern (file: FILE) is
 			-- Generation of the Cecil table
 			-- Caller must guarantee it's called in Final mode
+        require
+            finalized_mode: byte_context.final_mode
 		do
 			if associated_class.has_visible then
 				file.putchar ('{');

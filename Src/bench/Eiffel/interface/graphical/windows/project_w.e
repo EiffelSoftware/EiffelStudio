@@ -717,6 +717,8 @@ feature -- Graphical Interface
 			stop_points_menu_entry: EB_MENU_ENTRY;
 			show_pref_cmd: SHOW_PREFERENCE_TOOL;
 			show_pref_menu_entry: EB_MENU_ENTRY;
+			show_prof_cmd: SHOW_PROFILE_TOOL;
+			show_prof_menu_entry: EB_MENU_ENTRY;
 			sep: SEPARATOR
 			display_feature_cmd: DISPLAY_ROUTINE_PORTION;
 			display_feature_button: EB_BUTTON;
@@ -779,6 +781,11 @@ feature -- Graphical Interface
 						clear_bp_cmd, clear_bp_cmd.clear_it_action);
 			!! clear_bp_menu_entry.make (clear_bp_cmd, debug_menu);
 			!! clear_bp_cmd_holder.make (clear_bp_cmd, clear_bp_button, clear_bp_menu_entry);
+
+			!! show_prof_cmd.make (text_window);
+			!! show_prof_menu_entry.make (show_prof_cmd, window_menu);
+			!! show_profile_cmd_holder.make_plain (show_prof_cmd);
+			show_profile_cmd_holder.set_menu_entry (show_prof_menu_entry);
 
 			!! change_font_cmd.make (text_window);
 			--if not change_font_cmd.tabs_disabled then
@@ -1086,6 +1093,8 @@ feature -- Commands
 	display_object_cmd_holder: COMMAND_HOLDER;
 
 	show_preference_cmd_holder: COMMAND_HOLDER;
+
+	show_profile_cmd_holder: COMMAND_HOLDER;
 
 	up_exception_stack_holder: COMMAND_HOLDER;
 

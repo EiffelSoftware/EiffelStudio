@@ -140,40 +140,40 @@ feature {EIFNET_DEBUG_VALUE_FACTORY, SHARED_EIFNET_DEBUG_VALUE_FORMATTER, DEBUG_
 			Result := l_mp.read_character (0)
 		end
 
-	prepared_icor_debug_value_as_natural_8 (a_data: ICOR_DEBUG_VALUE): INTEGER_8 is
+	prepared_icor_debug_value_as_natural_8 (a_data: ICOR_DEBUG_VALUE): NATURAL_8 is
 		local
 			l_mp: MANAGED_POINTER
 		do
 			fixme ("Use NATURAL_xxx when ready")			
 			l_mp := value_data_pointer (a_data)
-			Result := l_mp.read_integer_8 (0)
+			Result := l_mp.read_natural_8 (0)
 		end
 
-	prepared_icor_debug_value_as_natural_16 (a_data: ICOR_DEBUG_VALUE): INTEGER_16 is
+	prepared_icor_debug_value_as_natural_16 (a_data: ICOR_DEBUG_VALUE): NATURAL_16 is
 		local
 			l_mp: MANAGED_POINTER
 		do
 			fixme ("Use NATURAL_xxx when ready")			
 			l_mp := value_data_pointer (a_data)
-			Result := l_mp.read_integer_16 (0)
+			Result := l_mp.read_natural_16 (0)
 		end
 
-	prepared_icor_debug_value_as_natural_32 (a_data: ICOR_DEBUG_VALUE): INTEGER is
+	prepared_icor_debug_value_as_natural_32 (a_data: ICOR_DEBUG_VALUE): NATURAL_32 is
 		local
 			l_mp: MANAGED_POINTER
 		do
 			fixme ("Use NATURAL_xxx when ready")			
 			l_mp := value_data_pointer (a_data)
-			Result := l_mp.read_integer_32 (0)
+			Result := l_mp.read_natural_32 (0)
 		end		
 		
-	prepared_icor_debug_value_as_natural_64 (a_data: ICOR_DEBUG_VALUE): INTEGER_64 is
+	prepared_icor_debug_value_as_natural_64 (a_data: ICOR_DEBUG_VALUE): NATURAL_64 is
 		local
 			l_mp: MANAGED_POINTER
 		do
 			fixme ("Use NATURAL_xxx when ready")			
 			l_mp := value_data_pointer (a_data)
-			Result := l_mp.read_integer_64 (0)
+			Result := l_mp.read_natural_64 (0)
 		end			
 
 	prepared_icor_debug_value_as_integer_8 (a_data: ICOR_DEBUG_VALUE): INTEGER_8 is

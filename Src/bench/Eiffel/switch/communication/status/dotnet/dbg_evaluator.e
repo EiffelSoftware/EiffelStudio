@@ -321,14 +321,14 @@ feature {NONE} -- Implementation
 					--| This means this value has been created by eStudioDbg
 					--| We need to build the corresponding ICorDebugValue object.
 				inspect dmv.type 
-				when feature {DUMP_VALUE_CONSTANTS}.type_integer then
-					Result := eifnet_evaluator.new_i4_evaluation (new_active_icd_frame, dmv.value_integer)
+				when feature {DUMP_VALUE_CONSTANTS}.type_integer_32 then
+					Result := eifnet_evaluator.new_i4_evaluation (new_active_icd_frame, dmv.value_integer_32)
 				when feature {DUMP_VALUE_CONSTANTS}.type_boolean then
 					Result := eifnet_evaluator.new_boolean_evaluation (new_active_icd_frame, dmv.value_boolean )
 				when feature {DUMP_VALUE_CONSTANTS}.type_character then
 					Result := eifnet_evaluator.new_char_evaluation (new_active_icd_frame, dmv.value_character )
 				when feature {DUMP_VALUE_CONSTANTS}.type_string then
-					Result := eifnet_evaluator.new_eiffel_string_evaluation (new_active_icd_frame, dmv.value_string )				
+					Result := eifnet_evaluator.new_eiffel_string_evaluation (new_active_icd_frame, dmv.value_string )
 				else					
 				end
 
@@ -347,8 +347,8 @@ feature {NONE} -- Implementation
 						
 						--| typically result of previous expression
 					inspect dmv.type 
-					when feature {DUMP_VALUE_CONSTANTS}.type_integer then
-						Result := eifnet_evaluator.icdv_reference_integer_from_icdv_integer (new_active_icd_frame, Result)
+					when feature {DUMP_VALUE_CONSTANTS}.type_integer_32 then
+						Result := eifnet_evaluator.icdv_reference_integer_32_from_icdv_integer_32 (new_active_icd_frame, Result)
 					when feature {DUMP_VALUE_CONSTANTS}.type_real_32 then
 						Result := eifnet_evaluator.icdv_reference_real_from_icdv_real (new_active_icd_frame, Result)							
 					when feature {DUMP_VALUE_CONSTANTS}.type_real_64 then
@@ -367,8 +367,8 @@ feature {NONE} -- Implementation
 						--| This means this value has been created by eStudioDbg
 						--| We need to build the corresponding ICorDebugValue object.
 					inspect dmv.type 
-					when feature {DUMP_VALUE_CONSTANTS}.type_integer then
-						Result := eifnet_evaluator.new_reference_i4_evaluation (new_active_icd_frame, dmv.value_integer)
+					when feature {DUMP_VALUE_CONSTANTS}.type_integer_32 then
+						Result := eifnet_evaluator.new_reference_i4_evaluation (new_active_icd_frame, dmv.value_integer_32)
 					when feature {DUMP_VALUE_CONSTANTS}.type_real_32 then
 						Result := eifnet_evaluator.new_reference_real_evaluation (new_active_icd_frame, dmv.value_real )
 					when feature {DUMP_VALUE_CONSTANTS}.type_real_64 then

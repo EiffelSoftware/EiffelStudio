@@ -41,8 +41,6 @@ feature -- Access
 			l_icd_prepared := a_prepared_icd
 			if l_icd_prepared /= Void then -- and then l_icd_prepared.last_call_succeed then
 				l_type := l_icd_prepared.get_type
-				fixme ("Use NATURAL_xxx when ready")
-				
 				inspect l_type
 				when feature {MD_SIGNATURE_CONSTANTS}.element_type_boolean then
 					create {EIFNET_DEBUG_BASIC_VALUE [BOOLEAN]} Result.make (a_icd, sk_bool, 
@@ -58,16 +56,16 @@ feature -- Access
 								Edv_formatter.prepared_icor_debug_value_as_pointer (l_icd_prepared))
 								
 				when feature {MD_SIGNATURE_CONSTANTS}.element_type_u1 then
-					create {EIFNET_DEBUG_BASIC_VALUE [INTEGER_8]} Result.make (a_icd, sk_uint8, 
+					create {EIFNET_DEBUG_BASIC_VALUE [NATURAL_8]} Result.make (a_icd, sk_uint8, 
 								Edv_formatter.prepared_icor_debug_value_as_natural_8 (l_icd_prepared))
 				when feature {MD_SIGNATURE_CONSTANTS}.element_type_u2 then
-					create {EIFNET_DEBUG_BASIC_VALUE [INTEGER_16]} Result.make (a_icd, sk_uint16, 
+					create {EIFNET_DEBUG_BASIC_VALUE [NATURAL_16]} Result.make (a_icd, sk_uint16, 
 								Edv_formatter.prepared_icor_debug_value_as_natural_16 (l_icd_prepared))
 				when feature {MD_SIGNATURE_CONSTANTS}.element_type_u4 then
-					create {EIFNET_DEBUG_BASIC_VALUE [INTEGER]} Result.make (a_icd, sk_uint32, 
+					create {EIFNET_DEBUG_BASIC_VALUE [NATURAL_32]} Result.make (a_icd, sk_uint32, 
 								Edv_formatter.prepared_icor_debug_value_as_natural_32 (l_icd_prepared))
 				when feature {MD_SIGNATURE_CONSTANTS}.element_type_u8 then
-					create {EIFNET_DEBUG_BASIC_VALUE [INTEGER_64]} Result.make (a_icd, sk_uint64, 
+					create {EIFNET_DEBUG_BASIC_VALUE [NATURAL_64]} Result.make (a_icd, sk_uint64, 
 								Edv_formatter.prepared_icor_debug_value_as_natural_64 (l_icd_prepared))
 
 				when feature {MD_SIGNATURE_CONSTANTS}.element_type_i1 then

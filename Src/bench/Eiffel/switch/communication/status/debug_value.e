@@ -88,10 +88,10 @@ feature -- Access
 	dump_value: DUMP_VALUE is
 			-- Dump_value corresponding to `Current'.
 		local
-			uint8val: INTEGER_8_REF
-			uint16val: INTEGER_16_REF
-			uint32val: INTEGER_REF
-			uint64val: INTEGER_64_REF
+			uint8val: NATURAL_8_REF
+			uint16val: NATURAL_16_REF
+			uint32val: NATURAL_32_REF
+			uint64val: NATURAL_64_REF
 
 			int8val: INTEGER_8_REF
 			int16val: INTEGER_16_REF
@@ -105,21 +105,19 @@ feature -- Access
 			bval: BOOLEAN_REF
 --			wcval: WIDE_CHARACTER_REF
 		do
-			fixme ("Use NATURAL_XX instead when compiler support them.")
-			
 			inspect sk_type
 			when sk_uint8   then
 				uint8val ?= value
-				create Result.make_integer_32 (uint8val.item.to_integer, Dynamic_class)
+				create Result.make_natural_32 (uint8val.item.to_natural_32, Dynamic_class)
 			when sk_uint16  then
 				uint16val ?= value
-				create Result.make_integer_32 (uint16val.item.to_integer, Dynamic_class)
+				create Result.make_natural_32 (uint16val.item.to_natural_32, Dynamic_class)
 			when sk_uint32  then
 				uint32val ?= value
-				create Result.make_integer_32 (uint32val.item, Dynamic_class)
+				create Result.make_natural_32 (uint32val.item, Dynamic_class)
 			when sk_uint64  then
 				uint64val ?= value
-				create Result.make_integer_64 (uint64val.item, Dynamic_class)
+				create Result.make_natural_64 (uint64val.item, Dynamic_class)
 				
 			when sk_int8    then
 				int8val ?= value

@@ -16,7 +16,6 @@ inherit
 
 	EV_PRIMITIVE_IMP
 		redefine
-			pointer_over_widget,
 			initialize,
 			interface,
 			make,
@@ -182,14 +181,6 @@ feature -- Removal
 			end
 			child_array.wipe_out
 			index := 0
-		end
-
-feature {EV_APPLICATION_IMP} -- Implementation
-
-	pointer_over_widget (a_gdkwin: POINTER; a_x, a_y: INTEGER): BOOLEAN is
-			-- Is mouse pointer over widget.
-		do
-			Result := a_gdkwin = feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (list_widget)
 		end
 		
 feature {EV_LIST_ITEM_LIST_IMP, EV_LIST_ITEM_IMP} -- Implementation

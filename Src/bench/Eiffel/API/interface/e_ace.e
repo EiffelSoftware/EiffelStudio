@@ -42,7 +42,7 @@ feature -- Access
 	successful: BOOLEAN is
 			-- Was the last compilation of the Ace file successful?
 		do
-			Result := Lace.successfull
+			Result := Lace.successful
 		end;
 
 	text: STRING is

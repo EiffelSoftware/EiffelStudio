@@ -235,7 +235,7 @@ void ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy::ccom_feature_loc
 	};
 	};
 	BSTR * tmp_file_path = 0;
-	tmp_file_path = (BSTR *)grt_ec_Eif_compiler.ccom_ec_pointed_cell_65 (eif_access (file_path), NULL);
+	tmp_file_path = (BSTR *)grt_ec_Eif_compiler.ccom_ec_pointed_cell_61 (eif_access (file_path), NULL);
 	LONG * tmp_line_number = 0;
 	tmp_line_number = (LONG *)rt_ec.ccom_ec_pointed_long (eif_access (line_number), NULL);
 	
@@ -246,11 +246,11 @@ void ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy::ccom_feature_loc
 			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
-	grt_ce_Eif_compiler.ccom_ce_pointed_cell_65 ((BSTR *)tmp_file_path, file_path);
+	grt_ce_Eif_compiler.ccom_ce_pointed_cell_61 ((BSTR *)tmp_file_path, file_path);
 	rt_ce.ccom_ce_pointed_long ((LONG *)tmp_line_number, line_number);
 	
-	grt_ce_Eif_compiler.ccom_free_memory_pointed_65 (tmp_file_path);
-grt_ce_Eif_compiler.ccom_free_memory_pointed_66 (tmp_line_number);
+	grt_ce_Eif_compiler.ccom_free_memory_pointed_61 (tmp_file_path);
+grt_ce_Eif_compiler.ccom_free_memory_pointed_62 (tmp_line_number);
 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -306,19 +306,9 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy::ccom_al
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
+	ecom_eiffel_compiler::IEnumFeature * ret_value = 0;
 	
-	EIF_TYPE_ID tid = -1;
-	EIF_OBJECT result = 0;
-	EIF_PROCEDURE make = 0;
-	VARIANT * ret_value;
-
-	tid = eif_type_id ("ECOM_VARIANT");
-	make = eif_procedure ("make", tid);
-	result = eif_create (tid);
-	make (eif_access (result));
-	ret_value = (VARIANT *)eif_field (eif_access (result), "item", EIF_POINTER);
-	
-	hr = p_IEiffelFeatureDescriptor->all_callers( ret_value);
+	hr = p_IEiffelFeatureDescriptor->all_callers( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -327,7 +317,8 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy::ccom_al
 	};
 	
 	
-	return eif_wean (result);
+	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_Eif_compiler.ccom_ce_pointed_interface_42 (ret_value));
+	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -348,7 +339,7 @@ EIF_INTEGER ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy::ccom_all_
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
-	LONG ret_value = 0;
+	ULONG ret_value = 0;
 	
 	hr = p_IEiffelFeatureDescriptor->all_callers_count( &ret_value);
 	if (FAILED (hr))
@@ -381,19 +372,9 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy::ccom_lo
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
+	ecom_eiffel_compiler::IEnumFeature * ret_value = 0;
 	
-	EIF_TYPE_ID tid = -1;
-	EIF_OBJECT result = 0;
-	EIF_PROCEDURE make = 0;
-	VARIANT * ret_value;
-
-	tid = eif_type_id ("ECOM_VARIANT");
-	make = eif_procedure ("make", tid);
-	result = eif_create (tid);
-	make (eif_access (result));
-	ret_value = (VARIANT *)eif_field (eif_access (result), "item", EIF_POINTER);
-	
-	hr = p_IEiffelFeatureDescriptor->local_callers( ret_value);
+	hr = p_IEiffelFeatureDescriptor->local_callers( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -402,7 +383,8 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy::ccom_lo
 	};
 	
 	
-	return eif_wean (result);
+	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_Eif_compiler.ccom_ce_pointed_interface_42 (ret_value));
+	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -423,7 +405,7 @@ EIF_INTEGER ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy::ccom_loca
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
-	LONG ret_value = 0;
+	ULONG ret_value = 0;
 	
 	hr = p_IEiffelFeatureDescriptor->local_callers_count( &ret_value);
 	if (FAILED (hr))
@@ -456,19 +438,9 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy::ccom_de
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
+	ecom_eiffel_compiler::IEnumFeature * ret_value = 0;
 	
-	EIF_TYPE_ID tid = -1;
-	EIF_OBJECT result = 0;
-	EIF_PROCEDURE make = 0;
-	VARIANT * ret_value;
-
-	tid = eif_type_id ("ECOM_VARIANT");
-	make = eif_procedure ("make", tid);
-	result = eif_create (tid);
-	make (eif_access (result));
-	ret_value = (VARIANT *)eif_field (eif_access (result), "item", EIF_POINTER);
-	
-	hr = p_IEiffelFeatureDescriptor->descendant_callers( ret_value);
+	hr = p_IEiffelFeatureDescriptor->descendant_callers( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -477,7 +449,8 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy::ccom_de
 	};
 	
 	
-	return eif_wean (result);
+	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_Eif_compiler.ccom_ce_pointed_interface_42 (ret_value));
+	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -498,7 +471,7 @@ EIF_INTEGER ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy::ccom_desc
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
-	LONG ret_value = 0;
+	ULONG ret_value = 0;
 	
 	hr = p_IEiffelFeatureDescriptor->descendant_callers_count( &ret_value);
 	if (FAILED (hr))
@@ -531,19 +504,9 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy::ccom_im
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
+	ecom_eiffel_compiler::IEnumFeature * ret_value = 0;
 	
-	EIF_TYPE_ID tid = -1;
-	EIF_OBJECT result = 0;
-	EIF_PROCEDURE make = 0;
-	VARIANT * ret_value;
-
-	tid = eif_type_id ("ECOM_VARIANT");
-	make = eif_procedure ("make", tid);
-	result = eif_create (tid);
-	make (eif_access (result));
-	ret_value = (VARIANT *)eif_field (eif_access (result), "item", EIF_POINTER);
-	
-	hr = p_IEiffelFeatureDescriptor->implementers( ret_value);
+	hr = p_IEiffelFeatureDescriptor->implementers( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -552,7 +515,8 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy::ccom_im
 	};
 	
 	
-	return eif_wean (result);
+	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_Eif_compiler.ccom_ce_pointed_interface_42 (ret_value));
+	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -573,7 +537,7 @@ EIF_INTEGER ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy::ccom_impl
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
-	LONG ret_value = 0;
+	ULONG ret_value = 0;
 	
 	hr = p_IEiffelFeatureDescriptor->implementer_count( &ret_value);
 	if (FAILED (hr))
@@ -606,19 +570,9 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy::ccom_an
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
+	ecom_eiffel_compiler::IEnumFeature * ret_value = 0;
 	
-	EIF_TYPE_ID tid = -1;
-	EIF_OBJECT result = 0;
-	EIF_PROCEDURE make = 0;
-	VARIANT * ret_value;
-
-	tid = eif_type_id ("ECOM_VARIANT");
-	make = eif_procedure ("make", tid);
-	result = eif_create (tid);
-	make (eif_access (result));
-	ret_value = (VARIANT *)eif_field (eif_access (result), "item", EIF_POINTER);
-	
-	hr = p_IEiffelFeatureDescriptor->ancestor_versions( ret_value);
+	hr = p_IEiffelFeatureDescriptor->ancestor_versions( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -627,7 +581,8 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy::ccom_an
 	};
 	
 	
-	return eif_wean (result);
+	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_Eif_compiler.ccom_ce_pointed_interface_42 (ret_value));
+	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -648,7 +603,7 @@ EIF_INTEGER ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy::ccom_ance
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
-	LONG ret_value = 0;
+	ULONG ret_value = 0;
 	
 	hr = p_IEiffelFeatureDescriptor->ancestor_version_count( &ret_value);
 	if (FAILED (hr))
@@ -681,19 +636,9 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy::ccom_de
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
+	ecom_eiffel_compiler::IEnumFeature * ret_value = 0;
 	
-	EIF_TYPE_ID tid = -1;
-	EIF_OBJECT result = 0;
-	EIF_PROCEDURE make = 0;
-	VARIANT * ret_value;
-
-	tid = eif_type_id ("ECOM_VARIANT");
-	make = eif_procedure ("make", tid);
-	result = eif_create (tid);
-	make (eif_access (result));
-	ret_value = (VARIANT *)eif_field (eif_access (result), "item", EIF_POINTER);
-	
-	hr = p_IEiffelFeatureDescriptor->descendant_versions( ret_value);
+	hr = p_IEiffelFeatureDescriptor->descendant_versions( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -702,7 +647,8 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy::ccom_de
 	};
 	
 	
-	return eif_wean (result);
+	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_Eif_compiler.ccom_ce_pointed_interface_42 (ret_value));
+	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -723,7 +669,7 @@ EIF_INTEGER ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy::ccom_desc
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
-	LONG ret_value = 0;
+	ULONG ret_value = 0;
 	
 	hr = p_IEiffelFeatureDescriptor->descendant_version_count( &ret_value);
 	if (FAILED (hr))

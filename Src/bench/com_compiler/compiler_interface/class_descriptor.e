@@ -94,31 +94,25 @@ feature -- Access
 			result_exists: Result /= Void
 		end
 
-	features: ECOM_VARIANT is
+	features: FEATURE_ENUMERATOR is
 			-- List of class features.
 		local
-			res: ARRAY [IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE]
-			ecom_res: ECOM_ARRAY [IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE]
+			res: ARRAYED_LIST [IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE]
 			l: LIST [E_FEATURE]
 			f: FEATURE_DESCRIPTOR
-			i: INTEGER
 		do
 			l := compiler_class.compiled_class.written_in_features
-			create res.make (1, l.count)
+			create res.make (l.count)
 			from
 				l.start
-				i := 1
 			until
 				l.after
 			loop
 				create f.make_with_class_i_and_feature_i (compiler_class, l.item.associated_feature_i)
-				res.put (f, i)
-				i := i + 1
+				res.extend (f)
 				l.forth
 			end
-			create ecom_res.make_from_array (res, 1, <<1>>, <<l.count>>)
-			create Result.make
-			Result.set_unknown_array (ecom_res)
+			create Result.make (res)
 		ensure then
 			result_exists: Result /= Void
 		end
@@ -129,31 +123,25 @@ feature -- Access
 			Result := compiler_class.compiled_class.written_in_features.count
 		end
 
-	flat_features: ECOM_VARIANT is
+	flat_features: FEATURE_ENUMERATOR is
 			-- List of class features including ancestor features.
 		local
-			res: ARRAY [IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE]
-			ecom_res: ECOM_ARRAY [IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE]
+			res: ARRAYED_LIST [IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE]
 			l: ARRAYED_LIST [FEATURE_I]
 			f: FEATURE_DESCRIPTOR
-			i: INTEGER
 		do
 			l := compiler_class.compiled_class.feature_table.linear_representation
-			create res.make (1, l.count)
+			create res.make (l.count)
 			from
 				l.start
-				i := 1
 			until
 				l.after
 			loop
 				create f.make_with_class_i_and_feature_i (compiler_class, l.item)
-				res.put (f, i)
-				i := i + 1
+				res.extend (f)
 				l.forth
 			end
-			create ecom_res.make_from_array (res, 1, <<1>>, <<l.count>>)
-			create Result.make
-			Result.set_unknown_array (ecom_res)
+			create Result.make (res)
 		ensure then
 			result_exists: Result /= Void			
 		end
@@ -178,33 +166,27 @@ feature -- Access
 			end
 		end
 
-	clients: ECOM_VARIANT is
+	clients: CLASS_ENUMERATOR is
 			-- List of class clients.
 		local
 			client_list: LINKED_LIST [CLASS_C]
-			res: ARRAY [IEIFFEL_CLASS_DESCRIPTOR_INTERFACE]
-			ecom_res: ECOM_ARRAY [IEIFFEL_CLASS_DESCRIPTOR_INTERFACE]
+			res: ARRAYED_LIST [IEIFFEL_CLASS_DESCRIPTOR_INTERFACE]
 			client: CLASS_DESCRIPTOR
-			i: INTEGER
 		do
 			client_list := compiler_class.compiled_class.clients
-			create res.make (1, client_list.count - 1)
+			create res.make (client_list.count)
 			from
 				client_list.start
-				i := 1
 			until
 				client_list.after
 			loop
 				if client_list.item /= compiler_class.compiled_class then
 					create client.make_with_class_i (client_list.item.lace_class)
-					res.put (client, i)
-					i := i + 1
+					res.extend (client)
 				end
 				client_list.forth
 			end
-			create ecom_res.make_from_array (res, 1, <<1>>, <<res.count>>)
-			create Result.make
-			Result.set_unknown_array (ecom_res)
+			create Result.make (res)
 		ensure then
 			result_exists: Result /= Void
 		end
@@ -215,33 +197,27 @@ feature -- Access
 			Result := compiler_class.compiled_class.clients.count - 1
 		end
 		
-	suppliers: ECOM_VARIANT is
+	suppliers: CLASS_ENUMERATOR is
 			-- List of class suppliers.
 		local
 			supplier_list: LINKED_LIST [CLASS_C]
-			res: ARRAY [IEIFFEL_CLASS_DESCRIPTOR_INTERFACE]
-			ecom_res: ECOM_ARRAY [IEIFFEL_CLASS_DESCRIPTOR_INTERFACE]
+			res: ARRAYED_LIST [IEIFFEL_CLASS_DESCRIPTOR_INTERFACE]
 			supplier: CLASS_DESCRIPTOR
-			i: INTEGER
 		do
 			supplier_list := compiler_class.compiled_class.suppliers.classes
-			create res.make (1, supplier_list.count - 1)
+			create res.make (supplier_list.count)
 			from
 				supplier_list.start
-				i := 1
 			until
 				supplier_list.after
 			loop
 				if supplier_list.item /= compiler_class.compiled_class then
 					create supplier.make_with_class_i (supplier_list.item.lace_class)
-					res.put (supplier, i)
-					i := i + 1
+					res.extend(supplier)
 				end
 				supplier_list.forth
 			end
-			create ecom_res.make_from_array (res, 1, <<1>>, <<res.count>>)
-			create Result.make
-			Result.set_unknown_array (ecom_res)
+			create Result.make (res)
 		ensure then
 			result_exists: Result /= Void
 		end
@@ -252,31 +228,25 @@ feature -- Access
 			Result := compiler_class.compiled_class.suppliers.classes.count - 1
 		end
 
-	ancestors: ECOM_VARIANT is
+	ancestors: CLASS_ENUMERATOR is
 			-- List of class direct ancestors.
 		local
 			ancestor_list: FIXED_LIST [CL_TYPE_A]
-			res: ARRAY [IEIFFEL_CLASS_DESCRIPTOR_INTERFACE]
-			ecom_res: ECOM_ARRAY [IEIFFEL_CLASS_DESCRIPTOR_INTERFACE]
+			res: ARRAYED_LIST [IEIFFEL_CLASS_DESCRIPTOR_INTERFACE]
 			ancestor: CLASS_DESCRIPTOR
-			i: INTEGER
 		do
 			ancestor_list := compiler_class.compiled_class.parents
-			create res.make (1, ancestor_list.count)
+			create res.make (ancestor_list.count)
 			from
 				ancestor_list.start
-				i := 1
 			until
 				ancestor_list.after
 			loop
 				create ancestor.make_with_class_i (ancestor_list.item.associated_class.lace_class)
-				res.put (ancestor, i)
-				i := i + 1
+				res.extend (ancestor)
 				ancestor_list.forth
 			end
-			create ecom_res.make_from_array (res, 1, <<1>>, <<res.count>>)
-			create Result.make
-			Result.set_unknown_array (ecom_res)
+			create Result.make (res)
 		ensure then
 			result_exists: Result /= Void
 		end
@@ -287,31 +257,25 @@ feature -- Access
 			Result := compiler_class.compiled_class.parents.count
 		end
 		
-	descendants: ECOM_VARIANT is
+	descendants: CLASS_ENUMERATOR is
 			-- List of class direct descendants.
 		local
 			descendant_list: LINKED_LIST [CLASS_C]
-			res: ARRAY [IEIFFEL_CLASS_DESCRIPTOR_INTERFACE]
-			ecom_res: ECOM_ARRAY [IEIFFEL_CLASS_DESCRIPTOR_INTERFACE]
+			res: ARRAYED_LIST [IEIFFEL_CLASS_DESCRIPTOR_INTERFACE]
 			descendant: CLASS_DESCRIPTOR
-			i: INTEGER
 		do
 			descendant_list := compiler_class.compiled_class.descendants
-			create res.make (1, descendant_list.count)
+			create res.make (descendant_list.count)
 			from
 				descendant_list.start
-				i := 1
 			until
 				descendant_list.after
 			loop
 				create descendant.make_with_class_i (descendant_list.item.lace_class)
-				res.put (descendant, i)
-				i := i + 1
+				res.extend (descendant)
 				descendant_list.forth
 			end
-			create ecom_res.make_from_array (res, 1, <<1>>, <<res.count>>)
-			create Result.make
-			Result.set_unknown_array (ecom_res)
+			create Result.make (res)
 		ensure then
 			result_exists: Result /= Void
 		end

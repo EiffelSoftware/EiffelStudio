@@ -90,7 +90,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_stub::descripti
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_stub::classes(  /* [out, retval] */ VARIANT * some_classes )
+STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_stub::classes(  /* [out, retval] */ ecom_eiffel_compiler::IEnumClass * * some_classes )
 
 /*-----------------------------------------------------------
 	List of classes in cluster.
@@ -109,18 +109,18 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_stub::classes( 
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		VARIANT * tmpsome_classes = (VARIANT *) eif_field (eif_access(tmp_object), "item", EIF_POINTER);
-		VariantCopy (some_classes, tmpsome_classes);
-		
+		*some_classes = grt_ec_Eif_compiler.ccom_ec_pointed_interface_18 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
+	else
+		*some_classes = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_stub::class_count(  /* [out, retval] */ LONG * return_value )
+STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_stub::class_count(  /* [out, retval] */ ULONG * return_value )
 
 /*-----------------------------------------------------------
 	Number of classes in cluster.
@@ -136,14 +136,14 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_stub::class_cou
 		tmp_value = (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "class_count", EIF_INTEGER);
-	*return_value = (LONG)tmp_value;
+	*return_value = (ULONG)tmp_value;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_stub::clusters(  /* [out, retval] */ VARIANT * some_clusters )
+STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_stub::clusters(  /* [out, retval] */ ecom_eiffel_compiler::IEnumCluster * * some_clusters )
 
 /*-----------------------------------------------------------
 	List of subclusters in cluster.
@@ -162,18 +162,18 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_stub::clusters(
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		VARIANT * tmpsome_clusters = (VARIANT *) eif_field (eif_access(tmp_object), "item", EIF_POINTER);
-		VariantCopy (some_clusters, tmpsome_clusters);
-		
+		*some_clusters = grt_ec_Eif_compiler.ccom_ec_pointed_interface_22 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
+	else
+		*some_clusters = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_stub::cluster_count(  /* [out, retval] */ LONG * return_value )
+STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_stub::cluster_count(  /* [out, retval] */ ULONG * return_value )
 
 /*-----------------------------------------------------------
 	Number of subclusters in cluster.
@@ -189,7 +189,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_stub::cluster_c
 		tmp_value = (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "cluster_count", EIF_INTEGER);
-	*return_value = (LONG)tmp_value;
+	*return_value = (ULONG)tmp_value;
 	
 	END_ECATCH;
 	return S_OK;

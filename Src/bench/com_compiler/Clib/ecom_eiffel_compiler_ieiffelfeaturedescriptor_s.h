@@ -27,6 +27,16 @@ class IEiffelFeatureDescriptor;
 extern "C" {
 #endif
 
+#ifndef __ecom_eiffel_compiler_IEnumFeature_FWD_DEFINED__
+#define __ecom_eiffel_compiler_IEnumFeature_FWD_DEFINED__
+namespace ecom_eiffel_compiler
+{
+class IEnumFeature;
+}
+#endif
+
+
+
 #ifdef __cplusplus
 extern "C" {
 #ifndef __ecom_eiffel_compiler_IEiffelFeatureDescriptor_INTERFACE_DEFINED__
@@ -84,73 +94,73 @@ public:
 	/*-----------------------------------------------------------
 	List of all feature callers, includding callers of ancestor and descendant versions.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP all_callers(  /* [out, retval] */ VARIANT * some_callers ) = 0;
+	virtual STDMETHODIMP all_callers(  /* [out, retval] */ ecom_eiffel_compiler::IEnumFeature * * some_callers ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Number of all callers.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP all_callers_count(  /* [out, retval] */ LONG * return_value ) = 0;
+	virtual STDMETHODIMP all_callers_count(  /* [out, retval] */ ULONG * return_value ) = 0;
 
 
 	/*-----------------------------------------------------------
 	List of feature callers.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP local_callers(  /* [out, retval] */ VARIANT * some_callers ) = 0;
+	virtual STDMETHODIMP local_callers(  /* [out, retval] */ ecom_eiffel_compiler::IEnumFeature * * some_callers ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Number of local callers.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP local_callers_count(  /* [out, retval] */ LONG * return_value ) = 0;
+	virtual STDMETHODIMP local_callers_count(  /* [out, retval] */ ULONG * return_value ) = 0;
 
 
 	/*-----------------------------------------------------------
 	List of feature callers, including callers of descendant versions.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP descendant_callers(  /* [out, retval] */ VARIANT * some_callers ) = 0;
+	virtual STDMETHODIMP descendant_callers(  /* [out, retval] */ ecom_eiffel_compiler::IEnumFeature * * some_callers ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Number of descendant callers.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP descendant_callers_count(  /* [out, retval] */ LONG * return_value ) = 0;
+	virtual STDMETHODIMP descendant_callers_count(  /* [out, retval] */ ULONG * return_value ) = 0;
 
 
 	/*-----------------------------------------------------------
 	List of implementers.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP implementers(  /* [out, retval] */ VARIANT * some_implementers ) = 0;
+	virtual STDMETHODIMP implementers(  /* [out, retval] */ ecom_eiffel_compiler::IEnumFeature * * some_implementers ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Number of feature implementers.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP implementer_count(  /* [out, retval] */ LONG * return_value ) = 0;
+	virtual STDMETHODIMP implementer_count(  /* [out, retval] */ ULONG * return_value ) = 0;
 
 
 	/*-----------------------------------------------------------
 	List of ancestor versions.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP ancestor_versions(  /* [out, retval] */ VARIANT * some_implementers ) = 0;
+	virtual STDMETHODIMP ancestor_versions(  /* [out, retval] */ ecom_eiffel_compiler::IEnumFeature * * some_implementers ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Number of ancestor versions.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP ancestor_version_count(  /* [out, retval] */ LONG * return_value ) = 0;
+	virtual STDMETHODIMP ancestor_version_count(  /* [out, retval] */ ULONG * return_value ) = 0;
 
 
 	/*-----------------------------------------------------------
 	List of descendant versions.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP descendant_versions(  /* [out, retval] */ VARIANT * some_implementers ) = 0;
+	virtual STDMETHODIMP descendant_versions(  /* [out, retval] */ ecom_eiffel_compiler::IEnumFeature * * some_implementers ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Number of descendant versions.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP descendant_version_count(  /* [out, retval] */ LONG * return_value ) = 0;
+	virtual STDMETHODIMP descendant_version_count(  /* [out, retval] */ ULONG * return_value ) = 0;
 
 
 	/*-----------------------------------------------------------

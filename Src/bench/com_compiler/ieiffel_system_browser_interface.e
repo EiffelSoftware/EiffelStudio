@@ -61,7 +61,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	system_classes: ECOM_ARRAY [STRING] is
+	system_classes: IENUM_CLASS_INTERFACE is
 			-- List of classes in system.
 		require
 			system_classes_user_precondition: system_classes_user_precondition
@@ -77,7 +77,7 @@ feature -- Basic Operations
 
 		end
 
-	system_clusters: ECOM_ARRAY [STRING] is
+	system_clusters: IENUM_CLUSTER_INTERFACE is
 			-- List of system's clusters.
 		require
 			system_clusters_user_precondition: system_clusters_user_precondition

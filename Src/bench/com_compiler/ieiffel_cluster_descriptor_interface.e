@@ -77,14 +77,12 @@ feature -- Basic Operations
 
 		end
 
-	classes: ECOM_VARIANT is
+	classes: IENUM_CLASS_INTERFACE is
 			-- List of classes in cluster.
 		require
 			classes_user_precondition: classes_user_precondition
 		deferred
 
-		ensure
-			valid_classes: Result.item /= default_pointer
 		end
 
 	class_count: INTEGER is
@@ -95,14 +93,12 @@ feature -- Basic Operations
 
 		end
 
-	clusters: ECOM_VARIANT is
+	clusters: IENUM_CLUSTER_INTERFACE is
 			-- List of subclusters in cluster.
 		require
 			clusters_user_precondition: clusters_user_precondition
 		deferred
 
-		ensure
-			valid_clusters: Result.item /= default_pointer
 		end
 
 	cluster_count: INTEGER is

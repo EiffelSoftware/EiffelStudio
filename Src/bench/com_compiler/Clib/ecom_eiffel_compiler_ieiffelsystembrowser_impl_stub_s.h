@@ -43,19 +43,19 @@ public:
 	/*-----------------------------------------------------------
 	List of classes in system.
 	-----------------------------------------------------------*/
-	STDMETHODIMP system_classes(  /* [out, retval] */ SAFEARRAY *  * names );
+	STDMETHODIMP system_classes(  /* [out, retval] */ ecom_eiffel_compiler::IEnumClass * * some_classes );
 
 
 	/*-----------------------------------------------------------
 	Number of classes in system.
 	-----------------------------------------------------------*/
-	STDMETHODIMP class_count(  /* [out, retval] */ LONG * return_value );
+	STDMETHODIMP class_count(  /* [out, retval] */ ULONG * return_value );
 
 
 	/*-----------------------------------------------------------
 	List of system's clusters.
 	-----------------------------------------------------------*/
-	STDMETHODIMP system_clusters(  /* [out, retval] */ SAFEARRAY *  * names );
+	STDMETHODIMP system_clusters(  /* [out, retval] */ ecom_eiffel_compiler::IEnumCluster * * some_clusters );
 
 
 	/*-----------------------------------------------------------

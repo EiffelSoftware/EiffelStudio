@@ -184,14 +184,12 @@ feature -- Basic Operations
 
 		end
 
-	features: ECOM_VARIANT is
+	features: IENUM_FEATURE_INTERFACE is
 			-- List of class features.
 		require
 			features_user_precondition: features_user_precondition
 		deferred
 
-		ensure
-			valid_features: Result.item /= default_pointer
 		end
 
 	feature_count: INTEGER is
@@ -202,14 +200,12 @@ feature -- Basic Operations
 
 		end
 
-	flat_features: ECOM_VARIANT is
+	flat_features: IENUM_FEATURE_INTERFACE is
 			-- List of class features including ancestor features.
 		require
 			flat_features_user_precondition: flat_features_user_precondition
 		deferred
 
-		ensure
-			valid_flat_features: Result.item /= default_pointer
 		end
 
 	flat_feature_count: INTEGER is
@@ -220,14 +216,12 @@ feature -- Basic Operations
 
 		end
 
-	clients: ECOM_VARIANT is
+	clients: IENUM_CLASS_INTERFACE is
 			-- List of class clients.
 		require
 			clients_user_precondition: clients_user_precondition
 		deferred
 
-		ensure
-			valid_clients: Result.item /= default_pointer
 		end
 
 	client_count: INTEGER is
@@ -238,14 +232,12 @@ feature -- Basic Operations
 
 		end
 
-	suppliers: ECOM_VARIANT is
+	suppliers: IENUM_CLASS_INTERFACE is
 			-- List of class suppliers.
 		require
 			suppliers_user_precondition: suppliers_user_precondition
 		deferred
 
-		ensure
-			valid_suppliers: Result.item /= default_pointer
 		end
 
 	supplier_count: INTEGER is
@@ -256,14 +248,12 @@ feature -- Basic Operations
 
 		end
 
-	ancestors: ECOM_VARIANT is
+	ancestors: IENUM_CLASS_INTERFACE is
 			-- List of direct ancestors of class.
 		require
 			ancestors_user_precondition: ancestors_user_precondition
 		deferred
 
-		ensure
-			valid_ancestors: Result.item /= default_pointer
 		end
 
 	ancestor_count: INTEGER is
@@ -274,14 +264,12 @@ feature -- Basic Operations
 
 		end
 
-	descendants: ECOM_VARIANT is
+	descendants: IENUM_CLASS_INTERFACE is
 			-- List of direct descendants of class.
 		require
 			descendants_user_precondition: descendants_user_precondition
 		deferred
 
-		ensure
-			valid_descendants: Result.item /= default_pointer
 		end
 
 	descendant_count: INTEGER is

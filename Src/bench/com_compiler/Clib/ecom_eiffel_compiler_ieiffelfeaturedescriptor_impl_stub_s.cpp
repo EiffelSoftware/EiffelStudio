@@ -191,7 +191,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::feature_l
 	EIF_OBJECT tmp_file_path = NULL;
 	if (file_path != NULL)
 	{
-		tmp_file_path = eif_protect (grt_ce_Eif_compiler.ccom_ce_pointed_cell_65 (file_path, NULL));
+		tmp_file_path = eif_protect (grt_ce_Eif_compiler.ccom_ce_pointed_cell_61 (file_path, NULL));
 	}
 	EIF_OBJECT tmp_line_number = NULL;
 	if (line_number != NULL)
@@ -206,7 +206,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::feature_l
 	
 	if (*file_path != NULL)
 		rt_ce.free_memory_bstr (*file_path);
-	grt_ec_Eif_compiler.ccom_ec_pointed_cell_65 (((tmp_file_path != NULL) ? eif_wean (tmp_file_path) : NULL), file_path);
+	grt_ec_Eif_compiler.ccom_ec_pointed_cell_61 (((tmp_file_path != NULL) ? eif_wean (tmp_file_path) : NULL), file_path);
 	rt_ec.ccom_ec_pointed_long (((tmp_line_number != NULL) ? eif_wean (tmp_line_number) : NULL), line_number);
 	
 	END_ECATCH;
@@ -244,7 +244,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::signature
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::all_callers(  /* [out, retval] */ VARIANT * some_callers )
+STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::all_callers(  /* [out, retval] */ ecom_eiffel_compiler::IEnumFeature * * some_callers )
 
 /*-----------------------------------------------------------
 	List of all feature callers, includding callers of ancestor and descendant versions.
@@ -263,18 +263,18 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::all_calle
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		VARIANT * tmpsome_callers = (VARIANT *) eif_field (eif_access(tmp_object), "item", EIF_POINTER);
-		VariantCopy (some_callers, tmpsome_callers);
-		
+		*some_callers = grt_ec_Eif_compiler.ccom_ec_pointed_interface_42 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
+	else
+		*some_callers = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::all_callers_count(  /* [out, retval] */ LONG * return_value )
+STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::all_callers_count(  /* [out, retval] */ ULONG * return_value )
 
 /*-----------------------------------------------------------
 	Number of all callers.
@@ -290,14 +290,14 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::all_calle
 		tmp_value = (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "all_callers_count", EIF_INTEGER);
-	*return_value = (LONG)tmp_value;
+	*return_value = (ULONG)tmp_value;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::local_callers(  /* [out, retval] */ VARIANT * some_callers )
+STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::local_callers(  /* [out, retval] */ ecom_eiffel_compiler::IEnumFeature * * some_callers )
 
 /*-----------------------------------------------------------
 	List of feature callers.
@@ -316,18 +316,18 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::local_cal
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		VARIANT * tmpsome_callers = (VARIANT *) eif_field (eif_access(tmp_object), "item", EIF_POINTER);
-		VariantCopy (some_callers, tmpsome_callers);
-		
+		*some_callers = grt_ec_Eif_compiler.ccom_ec_pointed_interface_42 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
+	else
+		*some_callers = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::local_callers_count(  /* [out, retval] */ LONG * return_value )
+STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::local_callers_count(  /* [out, retval] */ ULONG * return_value )
 
 /*-----------------------------------------------------------
 	Number of local callers.
@@ -343,14 +343,14 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::local_cal
 		tmp_value = (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "local_callers_count", EIF_INTEGER);
-	*return_value = (LONG)tmp_value;
+	*return_value = (ULONG)tmp_value;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::descendant_callers(  /* [out, retval] */ VARIANT * some_callers )
+STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::descendant_callers(  /* [out, retval] */ ecom_eiffel_compiler::IEnumFeature * * some_callers )
 
 /*-----------------------------------------------------------
 	List of feature callers, including callers of descendant versions.
@@ -369,18 +369,18 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::descendan
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		VARIANT * tmpsome_callers = (VARIANT *) eif_field (eif_access(tmp_object), "item", EIF_POINTER);
-		VariantCopy (some_callers, tmpsome_callers);
-		
+		*some_callers = grt_ec_Eif_compiler.ccom_ec_pointed_interface_42 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
+	else
+		*some_callers = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::descendant_callers_count(  /* [out, retval] */ LONG * return_value )
+STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::descendant_callers_count(  /* [out, retval] */ ULONG * return_value )
 
 /*-----------------------------------------------------------
 	Number of descendant callers.
@@ -396,14 +396,14 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::descendan
 		tmp_value = (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "descendant_callers_count", EIF_INTEGER);
-	*return_value = (LONG)tmp_value;
+	*return_value = (ULONG)tmp_value;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::implementers(  /* [out, retval] */ VARIANT * some_implementers )
+STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::implementers(  /* [out, retval] */ ecom_eiffel_compiler::IEnumFeature * * some_implementers )
 
 /*-----------------------------------------------------------
 	List of implementers.
@@ -422,18 +422,18 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::implement
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		VARIANT * tmpsome_implementers = (VARIANT *) eif_field (eif_access(tmp_object), "item", EIF_POINTER);
-		VariantCopy (some_implementers, tmpsome_implementers);
-		
+		*some_implementers = grt_ec_Eif_compiler.ccom_ec_pointed_interface_42 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
+	else
+		*some_implementers = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::implementer_count(  /* [out, retval] */ LONG * return_value )
+STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::implementer_count(  /* [out, retval] */ ULONG * return_value )
 
 /*-----------------------------------------------------------
 	Number of feature implementers.
@@ -449,14 +449,14 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::implement
 		tmp_value = (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "implementer_count", EIF_INTEGER);
-	*return_value = (LONG)tmp_value;
+	*return_value = (ULONG)tmp_value;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::ancestor_versions(  /* [out, retval] */ VARIANT * some_implementers )
+STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::ancestor_versions(  /* [out, retval] */ ecom_eiffel_compiler::IEnumFeature * * some_implementers )
 
 /*-----------------------------------------------------------
 	List of ancestor versions.
@@ -475,18 +475,18 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::ancestor_
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		VARIANT * tmpsome_implementers = (VARIANT *) eif_field (eif_access(tmp_object), "item", EIF_POINTER);
-		VariantCopy (some_implementers, tmpsome_implementers);
-		
+		*some_implementers = grt_ec_Eif_compiler.ccom_ec_pointed_interface_42 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
+	else
+		*some_implementers = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::ancestor_version_count(  /* [out, retval] */ LONG * return_value )
+STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::ancestor_version_count(  /* [out, retval] */ ULONG * return_value )
 
 /*-----------------------------------------------------------
 	Number of ancestor versions.
@@ -502,14 +502,14 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::ancestor_
 		tmp_value = (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "ancestor_version_count", EIF_INTEGER);
-	*return_value = (LONG)tmp_value;
+	*return_value = (ULONG)tmp_value;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::descendant_versions(  /* [out, retval] */ VARIANT * some_implementers )
+STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::descendant_versions(  /* [out, retval] */ ecom_eiffel_compiler::IEnumFeature * * some_implementers )
 
 /*-----------------------------------------------------------
 	List of descendant versions.
@@ -528,18 +528,18 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::descendan
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		VARIANT * tmpsome_implementers = (VARIANT *) eif_field (eif_access(tmp_object), "item", EIF_POINTER);
-		VariantCopy (some_implementers, tmpsome_implementers);
-		
+		*some_implementers = grt_ec_Eif_compiler.ccom_ec_pointed_interface_42 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
+	else
+		*some_implementers = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::descendant_version_count(  /* [out, retval] */ LONG * return_value )
+STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::descendant_version_count(  /* [out, retval] */ ULONG * return_value )
 
 /*-----------------------------------------------------------
 	Number of descendant versions.
@@ -555,7 +555,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::descendan
 		tmp_value = (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "descendant_version_count", EIF_INTEGER);
-	*return_value = (LONG)tmp_value;
+	*return_value = (ULONG)tmp_value;
 	
 	END_ECATCH;
 	return S_OK;

@@ -313,14 +313,12 @@ feature -- Basic Operations
 
 		end
 
-	all_callers: ECOM_VARIANT is
+	all_callers: IENUM_FEATURE_INTERFACE is
 			-- List of all feature callers, includding callers of ancestor and descendant versions.
 		require
 			all_callers_user_precondition: all_callers_user_precondition
 		deferred
 
-		ensure
-			valid_all_callers: Result.item /= default_pointer
 		end
 
 	all_callers_count: INTEGER is
@@ -331,14 +329,12 @@ feature -- Basic Operations
 
 		end
 
-	local_callers: ECOM_VARIANT is
+	local_callers: IENUM_FEATURE_INTERFACE is
 			-- List of feature callers.
 		require
 			local_callers_user_precondition: local_callers_user_precondition
 		deferred
 
-		ensure
-			valid_local_callers: Result.item /= default_pointer
 		end
 
 	local_callers_count: INTEGER is
@@ -349,14 +345,12 @@ feature -- Basic Operations
 
 		end
 
-	descendant_callers: ECOM_VARIANT is
+	descendant_callers: IENUM_FEATURE_INTERFACE is
 			-- List of feature callers, including callers of descendant versions.
 		require
 			descendant_callers_user_precondition: descendant_callers_user_precondition
 		deferred
 
-		ensure
-			valid_descendant_callers: Result.item /= default_pointer
 		end
 
 	descendant_callers_count: INTEGER is
@@ -367,14 +361,12 @@ feature -- Basic Operations
 
 		end
 
-	implementers: ECOM_VARIANT is
+	implementers: IENUM_FEATURE_INTERFACE is
 			-- List of implementers.
 		require
 			implementers_user_precondition: implementers_user_precondition
 		deferred
 
-		ensure
-			valid_implementers: Result.item /= default_pointer
 		end
 
 	implementer_count: INTEGER is
@@ -385,14 +377,12 @@ feature -- Basic Operations
 
 		end
 
-	ancestor_versions: ECOM_VARIANT is
+	ancestor_versions: IENUM_FEATURE_INTERFACE is
 			-- List of ancestor versions.
 		require
 			ancestor_versions_user_precondition: ancestor_versions_user_precondition
 		deferred
 
-		ensure
-			valid_ancestor_versions: Result.item /= default_pointer
 		end
 
 	ancestor_version_count: INTEGER is
@@ -403,14 +393,12 @@ feature -- Basic Operations
 
 		end
 
-	descendant_versions: ECOM_VARIANT is
+	descendant_versions: IENUM_FEATURE_INTERFACE is
 			-- List of descendant versions.
 		require
 			descendant_versions_user_precondition: descendant_versions_user_precondition
 		deferred
 
-		ensure
-			valid_descendant_versions: Result.item /= default_pointer
 		end
 
 	descendant_version_count: INTEGER is

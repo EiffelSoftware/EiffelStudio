@@ -32,25 +32,27 @@ feature {NONE} -- Initialization
 		
 feature -- Access
 
-	system_classes: ECOM_ARRAY [STRING] is
+	system_classes: CLASS_ENUMERATOR is
 			-- List of classes in system.
 		local
-			res: ARRAY [STRING]
+			res: ARRAYED_LIST [IEIFFEL_CLASS_DESCRIPTOR_INTERFACE]
 			classes: ARRAY [CLASS_C]
+			class_desc: CLASS_DESCRIPTOR
 			i: INTEGER
 		do
 			if Eiffel_project.initialized then
 				classes := Eiffel_system.Workbench.system.classes.sorted_classes
-				create res.make (1, Eiffel_system.Workbench.system.classes.count)
+				create res.make (Eiffel_system.Workbench.system.classes.count)
 				from
-					i := 1
+					i := 0
 				until
-					i > res.count
+					i >= res.count
 				loop
-					res.put (classes.item (i).name, i)
+					create class_desc.make_with_class_i (classes.item (i).lace_class)
+					res.extend (class_desc)
 					i := i + 1
 				end
-				create Result.make_from_array (res, 1, <<1>>, <<res.count>>)
+				create Result.make (res)
 			end
 		end
 
@@ -62,29 +64,28 @@ feature -- Access
 			end
 		end
 
-	system_clusters: ECOM_ARRAY [STRING] is
+	system_clusters: CLUSTER_ENUMERATOR is
 			-- List of system's top-level clusters.
 		local
 			list: LINKED_LIST [CLUSTER_I]
-			res: ARRAY [STRING]
-			i: INTEGER
+			cluster_desc: CLUSTER_DESCRIPTOR
+			res: ARRAYED_LIST [IEIFFEL_CLUSTER_DESCRIPTOR_INTERFACE]
 		do
 			if Eiffel_project.initialized then
 				list := Eiffel_universe.clusters
-				create res.make (1,1)
+				create res.make (list.count)
 				from
 					list.start
-					i := 1
 				until
 					list.after
 				loop
 					if list.item.parent_cluster = Void then
-						res.force (list.item.cluster_name, i)
-						i := i + 1
+						create cluster_desc.make_with_cluster_i (list.item)
+						res.extend (cluster_desc)
 					end
 					list.forth
 				end
-				create Result.make_from_array (res, 1, <<1>>, <<res.count>>)
+				create Result.make (res)
 			end
 		end
 		

@@ -116,6 +116,8 @@ feature {NONE} -- Implementation
 			drawing_area_simple_drawing_test: DRAWING_AREA_SIMPLE_DRAWING_TEST
 			drawing_area_expose_actions_test: DRAWING_AREA_EXPOSE_ACTIONS_TEST
 			drawing_area_clipped_test: DRAWING_AREA_CLIPPED_TEST
+			checkable_tree_basic_test: CHECKABLE_TREE_BASIC_TEST
+			checkable_tree_advanced_test: CHECKABLE_TREE_ADVANCED_TEST
 		do
 		end
 

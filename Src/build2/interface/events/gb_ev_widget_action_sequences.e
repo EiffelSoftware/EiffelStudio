@@ -72,7 +72,6 @@ feature -- Access
 			-- If `adding', then connect an agent to `action_sequence' actions of `widget' which will display name of 
 			-- action sequence and all arguments in `textable'. If no `adding' then `wipe_out' `action_sequence'.
 		local
-			gb_ev_action_sequence: GB_EV_ACTION_SEQUENCE
 			notify_sequence: GB_EV_NOTIFY_ACTION_SEQUENCE
 			key_sequence: GB_EV_KEY_ACTION_SEQUENCE
 			key_string_sequence: GB_EV_KEY_STRING_ACTION_SEQUENCE

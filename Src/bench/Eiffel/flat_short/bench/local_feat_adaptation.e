@@ -110,11 +110,14 @@ feature -- Access
 		end;
 
 	adapted_type (f: FORMAL_AS): TYPE_A is
-			-- Adapted type of `source_class' for format `f'
+			-- Adapted type of `source_class' for format `f'\
+		local
+			l_source_class: like source_class
 		do
-			if source_class /= Void then
+			l_source_class := source_class
+			if l_source_class /= Void then
 				Result := f.actual_type.
-					instantiation_in (target_type, source_class.class_id);
+					instantiation_in (source_type, l_source_class.class_id);
 			end
 		end;
 

@@ -326,6 +326,26 @@ feature {EV_ANY_IMP} -- Agent implementation routines
 			c_get_eif_reference_from_object_id (a_c_object).on_size_allocate (a_x, a_y, a_width, a_height)
 		end
 		
+	on_tree_event_intermediary (a_c_object: POINTER; a_event_number: INTEGER; a_tree_item: POINTER) is
+			-- 
+		local
+			a_tree_imp: EV_TREE_IMP
+		do
+			a_tree_imp ?= c_get_eif_reference_from_object_id (a_c_object)
+			inspect
+				a_event_number
+			when 1 then		
+				a_tree_imp.select_callback (a_tree_item)
+			when 2 then
+				a_tree_imp.deselect_callback (a_tree_item)
+			when 3 then
+				a_tree_imp.expand_callback (a_tree_item)
+			when 4 then
+				a_tree_imp.collapse_callback (a_tree_item)
+			end
+		end
+		
+		
 	kamikaze_agent (an_action_sequence: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]];
 		target: PROCEDURE [ANY, TUPLE]):
 		PROCEDURE [ANY, TUPLE []] is
@@ -431,6 +451,13 @@ feature {EV_ANY_IMP} -- Tuple optimizations.
 	integer_pointer_tuple: TUPLE [INTEGER, POINTER] is
 		once
 			Result := [0, default_pointer]
+		end
+		
+	gtk_value_pointer_to_tuple (n_args: INTEGER; args: POINTER): TUPLE [POINTER] is
+			-- Tuple containing integer value from first of `args'.
+		do
+			pointer_tuple.put (gtk_value_pointer (args), 1)
+			Result := pointer_tuple
 		end
 
 feature {NONE} -- Externals

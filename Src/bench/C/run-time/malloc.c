@@ -371,6 +371,9 @@ rt_private EIF_REFERENCE add_to_stack (EIF_REFERENCE, struct stack *);
 rt_shared void lxtract(union overhead *next);					/* Extract a block from free list */
 rt_shared EIF_REFERENCE malloc_from_eiffel_list_no_gc (unsigned int nbytes);			/* Wrapper to eif_rt_xmalloc */
 rt_shared EIF_REFERENCE get_to_from_core(size_t nbytes);		/* Get a free eiffel chunk from kernel */
+#ifdef EIF_EXPENSIVE_ASSERTIONS
+rt_private void check_free_list (size_t nbytes, register union overhead **hlist);
+#endif
 #endif
 
 #ifdef ISE_GC
@@ -1761,6 +1764,10 @@ rt_private EIF_REFERENCE allocate_free_list(size_t nbytes, register union overhe
 	GC_THREAD_PROTECT(EIF_FREE_LIST_MUTEX_LOCK);
 	SIGBLOCK;				/* Critical section */
 
+#ifdef EIF_EXPENSIVE_ASSERTIONS
+	check_free_list (nbytes, hlist);
+#endif
+
 	if (i >= HLIST_INDEX_LIMIT) {
 		selected = allocate_free_list_helper (i, nbytes, hlist);
 	} else {
@@ -1821,7 +1828,6 @@ rt_private union overhead * allocate_free_list_helper(size_t i, size_t nbytes, r
 	union overhead *selected;	/* The selected block */
 	union overhead *p;		/* To walk through free-list */
 
-
 	for (; i < NBLOCKS; i++) {
 		if ((selected = hlist[i]) == NULL)
 			continue;
@@ -1851,13 +1857,33 @@ rt_private union overhead * allocate_free_list_helper(size_t i, size_t nbytes, r
 		}
 	}
 
-#if DEBUG
+	return NULL;
+}
+
+
+#ifdef EIF_EXPENSIVE_ASSERTIONS
+/*
+doc:	<routine name="check_free_list" return_type="void" export="private">
+doc:		<summary>Perform a sanity check of the free list to ensure that content of the X_data accounting match the actual content of the free list.</summary>
+doc:		<param name="nbytes" type="size_t">Number of bytes requested to be found.</param>
+doc:		<param name="hlist" type="union overhead **">Free list where search will take place.</param>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>Safe if caller holds `eif_free_list_mutex' or is under GC synchronization.</synchronization>
+doc:	</routine>
+*/
+
+rt_private void check_free_list (size_t nbytes, register union overhead **hlist)
 {
-	uint32 bytes_available = 0;
-	int found = 0;
-	fprintf(stderr, "\nallocate_free_list_helper: Requested %d, but found nothing.\n", nbytes);
-	for (i = 0; i < NBLOCKS; i++) {
-		selected = hlist [i];
+	union overhead *selected;	/* The selected block */
+	union overhead *p;		/* To walk through free-list */
+	size_t bytes_available = 0;
+	int j, found = 0;
+
+#ifdef DEBUG
+	fprintf(stderr, "\nallocate_free_list_helper: Requested %d\n", nbytes);
+#endif
+	for (j = 0; j < NBLOCKS; j++) {
+		selected = hlist [j];
 		if (selected) {
 			uint32 count = 0;
 			uint32 list_bytes = 0;
@@ -1872,29 +1898,37 @@ rt_private union overhead * allocate_free_list_helper(size_t i, size_t nbytes, r
 				list_bytes += selected->ov_size & B_SIZE;
 				count++;
 			}
-			fprintf(stderr, "hlist [%d] has %d elements and %d free bytes.\n", i, count, list_bytes);
+#ifdef DEBUG
+			fprintf(stderr, "hlist [%d] has %d elements and %d free bytes.\n", j, count, list_bytes);
+#endif
 			bytes_available += list_bytes;
 		} else {
-//			fprintf(stderr, "hlist [%d] is empty.\n", i);
+				/* Fee list empty. */
 		}
 	}
+
+	if (CHUNK_TYPE(hlist) == EIFFEL_T) {
+		CHECK("Consistent", bytes_available == (e_data.ml_total - e_data.ml_over - e_data.ml_used));
+	} else {
+		CHECK("Consistent", bytes_available == (c_data.ml_total - c_data.ml_over - c_data.ml_used));
+	}
+
+#ifdef DEBUG
 	if (found) {
 		fprintf(stderr, "We found a possible %d block(s) of size greater than %d bytes.\n", found, nbytes);
 	}
 	fprintf(stderr, "Total available bytes is %d\n", bytes_available);
 	if (CHUNK_TYPE(hlist) == EIFFEL_T) {
 		fprintf(stderr, "Eiffel free list has %d bytes allocated, %d used and %d free.\n",
-			e_data.ml_total, e_data.ml_used, e_data.ml_total - e_data.ml_used); 
+			e_data.ml_total, e_data.ml_used, e_data.ml_total - e_data.ml_used - e_data.ml_over); 
 	} else {
 		fprintf(stderr, "C free list has %d bytes allocated, %d used and %d free.\n",
-			c_data.ml_total, c_data.ml_used, c_data.ml_total - c_data.ml_used); 
+			c_data.ml_total, c_data.ml_used, c_data.ml_total - c_data.ml_used - c_data.ml_over); 
 	}
 	flush;
+#endif
 }
 #endif
-	return NULL;
-}
-
 
 /*
 doc:	<routine name="get_to_from_core" return_type="EIF_REFERENCE" export="shared">
@@ -2565,9 +2599,9 @@ rt_public void eif_rt_xfree(register EIF_REFERENCE ptr)
 	/* Memory accounting */
 	i = r & B_SIZE;				/* Amount of memory released */
 	m_data.ml_used -= i;		/* At least this is free */
-	if (r & B_CTYPE)
+	if (r & B_CTYPE) {
 		c_data.ml_used -= i;
-	else {
+	} else {
 		e_data.ml_used -= i;
 #ifdef MEM_STAT
 	printf ("Eiffel: %ld used (-%ld), %ld total (eif_rt_xfree)\n",
@@ -2732,7 +2766,7 @@ rt_shared EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, size_t nbytes, int 
 	uint32 i;					/* Index in free list */
 	union overhead *zone;		/* The to-be-reallocated zone */
 	EIF_REFERENCE safeptr = NULL;		/* GC-safe pointer */
-	int size, size_gain;				/* Gain in size brought by coalesc */
+	size_t size, size_gain;				/* Gain in size brought by coalesc */
 	
 #ifdef LMALLOC_CHECK
 	if (is_in_lm (ptr))
@@ -2822,6 +2856,14 @@ rt_shared EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, size_t nbytes, int 
 	while ((size = coalesc(zone))) {	/* Perform coalescing as long as possible */
 		size_gain += size;
 	}
+		/* Update memory statistic. No need to handle the overheads,
+		 * it was already done in `coalesc'. */
+	m_data.ml_used += size_gain;
+	if (zone->ov_size & B_CTYPE) {
+		c_data.ml_used += size_gain;
+	} else {
+		e_data.ml_used += size_gain;
+	}
 #endif	/* EIF_MALLOC_OPTIMIZATION */
 
 #ifdef DEBUG
@@ -2860,47 +2902,32 @@ rt_shared EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, size_t nbytes, int 
 	i = zone->ov_size & B_SIZE;			/* Coalesc modified data in zone */
 
 	if (i >= nbytes) {					/* Total size is ok ? */
-
 		r = i - r;						/* Amount of memory over-used */
+		CHECK("computation correct", size_gain == r);
 		i = (uint32) eif_rt_split_block(zone, nbytes);	/* Split block, i holds size */
 		if (i == (uint32) -1) {			/* If we did not split it */
-			m_data.ml_used += r;		/* Update memory used */
-			if (zone->ov_size & B_CTYPE)
-				c_data.ml_used += r;
-			else {
-				e_data.ml_used += r;
-#ifdef MEM_STAT
-		printf ("Eiffel: %ld used (+%ld), %ld total (xrealloc)\n",
-			e_data.ml_used, r, e_data.ml_total);
-#endif
-			}
-
 			SIGRESUME;					/* Exiting from critical section */
 			GC_THREAD_PROTECT(EIF_FREE_LIST_MUTEX_UNLOCK);
 			return ptr;					/* Leave block unsplit */
-		}
-		
-		r -= i + OVERHEAD;				/* Split occurred, overhead unused */
-		m_data.ml_used += r;			/* Data we gained in realloc */
-		if (zone->ov_size & B_CTYPE)
-			c_data.ml_used += r;
-		else {
-			e_data.ml_used += r;
-#ifdef MEM_STAT
-		printf ("Eiffel: %ld used (+%ld), %ld total (xrealloc)\n",
-			e_data.ml_used, r, e_data.ml_total);
-#endif
-		}
+		} else {
+				/* Split occurred, return unused part and overhead as free for memory accounting. */
+			m_data.ml_used -= i + OVERHEAD;
+			if (zone->ov_size & B_CTYPE) {
+				c_data.ml_used -= i + OVERHEAD;
+			} else {
+				e_data.ml_used -= i + OVERHEAD;
+			}
 
 #ifdef DEBUG
-		dprintf(16)("realloc: block is now %d bytes\n",
-			zone->ov_size & B_SIZE);
-		flush;
+			dprintf(16)("realloc: block is now %d bytes\n",
+				zone->ov_size & B_SIZE);
+			flush;
 #endif
 
-		SIGRESUME;		/* Exiting from critical section */
-		GC_THREAD_PROTECT(EIF_FREE_LIST_MUTEX_UNLOCK);
-		return ptr;		/* Block address did not change */
+			SIGRESUME;		/* Exiting from critical section */
+			GC_THREAD_PROTECT(EIF_FREE_LIST_MUTEX_UNLOCK);
+			return ptr;		/* Block address did not change */
+		}
 	}
 
 	SIGRESUME;			/* End of critical section */
@@ -3089,10 +3116,11 @@ rt_private int coalesc(register union overhead *zone)
 	r = next->ov_size & B_SIZE;			/* Fetch its size */
 	zone->ov_size = i + r + OVERHEAD;	/* Update size (no overflow possible) */
 	m_data.ml_over -= OVERHEAD;			/* Overhead freed */
-	if (i & B_CTYPE)
+	if (i & B_CTYPE) {
 		c_data.ml_over -= OVERHEAD;
-	else
+	} else {
 		e_data.ml_over -= OVERHEAD;
+	}
 			
 #ifdef DEBUG
 	dprintf(1)("coalesc: coalescing with a %d bytes %s %s block at 0x%lx\n",
@@ -3689,7 +3717,7 @@ rt_private void explode_scavenge_zone(struct sc_zone *sc)
 	union overhead *next;		/* Next zone to be studied */
 	uint32 size = 0;			/* Flags to bo OR'ed on each object */
 	EIF_REFERENCE top = sc->sc_top;	/* Top in scavenge space */
-	int object = 0;			/* Count released objects */
+	rt_uint_ptr nb_objects = 0;	/* Number of objects in scavenge zone. */
 
 	next = (union overhead *) sc->sc_arena;
 	if (next == (union overhead *) 0)
@@ -3714,8 +3742,7 @@ rt_private void explode_scavenge_zone(struct sc_zone *sc)
 		 * the next object in the space.
 		 */
 		flags = zone->ov_size;
-		next = (union overhead *)
-			(((EIF_REFERENCE) zone) + (flags & B_SIZE) + OVERHEAD);
+		next = (union overhead *) (((EIF_REFERENCE) zone) + (flags & B_SIZE) + OVERHEAD);
 		zone->ov_size = flags | size;
 
 		/* The released object belongs to the new generation so add it
@@ -3727,7 +3754,7 @@ rt_private void explode_scavenge_zone(struct sc_zone *sc)
 		if (-1 == epush(&moved_set, (EIF_REFERENCE) (zone + 1)))
 			enomem(MTC_NOARG);					/* Critical exception */
 		zone->ov_flags |= EO_NEW;		/* Released object is young */
-		object++;						/* One more released object */
+		nb_objects++;
 	}
 
 #ifdef MAY_PANIC
@@ -3763,9 +3790,10 @@ rt_private void explode_scavenge_zone(struct sc_zone *sc)
 #endif
 
 		eif_rt_xfree((EIF_REFERENCE) (zone + 1));			/* Put remainder back to free-list */
-		object++;							/* One more released block */
-	} else
+		nb_objects++;
+	} else {
 		next = HEADER(sc->sc_arena);	/* Point to the header of the arena */
+	}
 
 	/* Freeing the header of the arena (the scavenge zone) is easy. We fake a
 	 * zero length block and call free on it. Note that this does not change
@@ -3776,17 +3804,23 @@ rt_private void explode_scavenge_zone(struct sc_zone *sc)
 	next->ov_size = size;				/* A zero length bloc */
 	eif_rt_xfree((EIF_REFERENCE) (next + 1));			/* Free header of scavenge zone */
 
-	/* Update the statistics: we released 'object' blocks, so we created that
-	 * amount of overhead. Note that we do not have to change the amount of
-	 * memory used.
+	/* Update the statistics: we released 'nb_objects' blocks, so we created that
+	 * amount of overhead. Note that we do have to change the amount of
+	 * memory used as the above call to `eif_rt_xfree' to mark the remaining
+	 * zone as free did not take into account the `nb_objects' overhead that was
+	 * added (it considered it was a single block).
 	 */
 
-	flags = object * OVERHEAD;			/* Amount of "added" overhead space */
+	flags = nb_objects * OVERHEAD;			/* Amount of "added" overhead space */
+	m_data.ml_used -= flags;
 	m_data.ml_over += flags;
-	if (size & B_CTYPE)					/* Scavenge zone in a C chunk */
+	if (size & B_CTYPE) {					/* Scavenge zone in a C chunk */
+		c_data.ml_used -= flags;
 		c_data.ml_over += flags;
-	else								/* Scavenge zone in an Eiffel chunk */
+	} else {								/* Scavenge zone in an Eiffel chunk */
+		e_data.ml_used -= flags;
 		e_data.ml_over += flags;
+	}
 
 	SIGRESUME;							/* End of critical section */
 }

@@ -161,8 +161,7 @@ feature -- Access
 				if Result.item.compiled then
 					Result.forth
 				else
-						-- Could be `remove' IF ONLY it was exported in list!!!
-					Result.prune_all (Result.item)
+					Result.remove
 				end
 			end
 		end

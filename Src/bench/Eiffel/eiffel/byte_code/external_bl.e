@@ -154,6 +154,9 @@ feature
 			internal_name, table_name: STRING;
 			i: INTEGER;
 		do
+			check
+				final_mode: context.final_mode
+			end;
 			entry := Eiffel_table.item_id (rout_id);
 			if entry.is_polymorphic (typ.type_id) then
 					-- The call is polymorphic, so generate access to the
@@ -197,7 +200,7 @@ feature
 						-- We don't need to test if an include file is already in the
 						-- shared_include_set of the current class because this
 						-- shared set is a set and every item appears only once
-					if context.final_mode and (is_special_ext or has_include_list) then
+					if (is_special_ext or has_include_list) then
 						if is_special_ext and not ((special_id = dll16_id) or (special_id = dll32_id)) then
 							shared_include_set.extend (special_file_name);
 						end;
@@ -228,8 +231,6 @@ feature
 						-- A prototype is added only if it's a dll, or if it's an external
 						-- for which there's no include file defining it.
 					if
-						context.final_mode
-					and then 
 						(special_id = dll16_id
 					or
 						 special_id = dll32_id
@@ -241,9 +242,23 @@ feature
 				else
 					internal_name := external_name;
 					generated_file.putstring (internal_name);
-						-- Remember external routine declaration
-					Extern_declarations.add_routine
-						(real_type (type).c_type, internal_name);
+					if has_include_list then
+							-- The external uses some include files
+							-- We assume the declaration of the function is
+							-- done in one of these include files
+						from
+							i := include_list.lower
+						until
+							i > include_list.upper
+						loop
+							shared_include_set.extend (include_list.item (i));
+							i := i + 1
+						end;
+					else
+							-- Remember external routine declaration
+						Extern_declarations.add_routine
+							(real_type (type).c_type, internal_name);
+					end;
 				end;
 			end;
 		end;
@@ -289,7 +304,7 @@ feature
 				loop
 					expr ?= parameters.item;	-- Cannot fail
 						-- add cast before parameter
-					if has_signature
+					if has_arg_list
 						and then (special_id /= dll16_id) and (special_id /= dll32_id) then
 						generated_file.putchar ('(');
 						generated_file.putstring (arg_list.item (i));

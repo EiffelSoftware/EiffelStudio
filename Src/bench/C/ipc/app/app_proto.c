@@ -43,6 +43,7 @@ private void wean();				/* Wean adopted object */
 private void load_bc();				/* Load byte code information */
 private void obj_inspect();
 private void bit_inspect();
+private void string_inspect();		/* String object inspection */
 private void once_inspect();		/* Once routines inspection */
 
 private IDRF idrf;			/* IDR filter for serialize communications */
@@ -301,6 +302,10 @@ Opaque *what;		/* Generic structure describing request */
 	case IN_BIT_ADDR:				/* Bit address inspection */
 		addr = (char *) what->op_third;		/* long -> (char *) */
 		bit_inspect((EIF_OBJ) &addr);
+		return;
+	case IN_STRING_ADDR:			/* String object inspection (hector addr) */
+		addr = (char *) what->op_third;		/* long -> (char *) */
+		string_inspect(&(eif_access((EIF_OBJ) addr)));
 		return;
 	case IN_ADDRESS:				/* Address inspection */
 		addr = (char *) what->op_third;		/* long -> (char *) */
@@ -764,6 +769,41 @@ EIF_OBJ object;		/* Reference to a bit object (= BIT_REF) */
 {
 	sprintf(buffer, "%s", b_out(*(char **)object));
 	twrite (buffer, strlen(buffer));
+}
+
+private void string_inspect(object)
+EIF_OBJ object;		/* Reference to a string object */
+{
+		/* Inspect the string object to get the string value */
+
+	register2 struct cnode *obj_desc;		/* Object type description */
+	register3 long nb_attr;					/* Attribute number */
+	register4 int32 *cn_attr;				/* Attribute keys */
+	long offset;
+	register5 int16 dyn_type;				/* Object dynamic type */
+	char *o_ref;
+	register7 char **names;					/* Attribute names */
+	char *reference;
+	long i, string_count = 0;
+	char *string_area;
+
+	reference = eif_access(object);
+	dyn_type = Dtype(reference);
+	obj_desc = &System(dyn_type);
+	nb_attr = obj_desc->cn_nbattr;
+	names = obj_desc->cn_names;
+	cn_attr = obj_desc->cn_attr;
+
+	for (i = 0; i < nb_attr; i++) {
+		CAttrOffs(offset,cn_attr[i],dyn_type);
+		o_ref = reference + offset;
+		if (strcmp(names[i], "count") == 0) {
+			string_count = *(long *) o_ref;
+		} else if (strcmp(names[i], "area") == 0) {
+			string_area = *(char **) o_ref;
+		}
+	}
+	twrite (string_area, string_count);
 }
 
 private void write_char (c, buf)

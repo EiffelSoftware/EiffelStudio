@@ -48,7 +48,7 @@ private int store_buffer ();
 private void object_write ();
 public long get_offset ();
 public void allocate_gen_buffer();
-private void store_write();
+void store_write();
 private void st_clean();
 
 /*
@@ -70,6 +70,7 @@ private char *rcsid =
 void (*make_header_func)() = make_header;
 void (*st_write_func)() = st_write;
 void (*flush_buffer_func)() = flush_st_buffer;
+void (*store_write_func)() = store_write;
 
 /*
  * Functions definitions
@@ -859,7 +860,7 @@ int size;
     	for (i = 0; i < size; i++) {
         	*(general_buffer + current_position) = *(data++);
         	if (++current_position >= buffer_size)
-			store_write();
+			store_write_func();
     	}
 	} else {
     	for (i = 0; i < size; i++) {
@@ -872,11 +873,11 @@ int size;
 public void flush_st_buffer ()
 {
 	if (current_position != 0)
-		store_write ();
+		store_write_func ();
 }
 
 
-private void store_write()
+void store_write()
 {
 	register char * ptr = general_buffer;
 	register int number_left = current_position;

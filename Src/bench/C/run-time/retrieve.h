@@ -60,4 +60,9 @@ extern struct htable *rt_table;	/* Table used for solving references */
 extern int32 nb_recorded;		/* Number of items recorded in Hector */
 extern char rt_kind;
 
+extern int old_retrieve_read();
+extern int retrieve_read();
+
+extern int (*retrieve_read_func)();
+
 #endif

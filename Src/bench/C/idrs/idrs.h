@@ -69,13 +69,13 @@ extern int idr_size();			/* Retrieve/store a size (variable length) */
 extern bool_t idr_setpos();		/* Set position in stream */
 extern bool_t idr_void();		/* Always return TRUE */
 extern bool_t idr_char();		/* Encoding of a char */
-extern bool_t idr_uchar();		/* Encoding of an unsigned char */
+extern bool_t idr_u_char();		/* Encoding of an unsigned char */
 extern bool_t idr_short();		/* Encoding of a short integer */
-extern bool_t idr_ushort();		/* Encoding of an unsigned short */
+extern bool_t idr_u_short();		/* Encoding of an unsigned short */
 extern bool_t idr_long();		/* Encoding of a long integer */
 extern bool_t idr_u_long();		/* Encoding of an unsigned long */
 extern bool_t idr_int();		/* Encoding of an integer */
-extern bool_t idr_uint();		/* Encoding of an unsigned integer */
+extern bool_t idr_u_int();		/* Encoding of an unsigned integer */
 extern bool_t idr_float();		/* Encoding of a float */
 extern bool_t idr_double();		/* Encoding of a double */
 extern bool_t idr_opaque();		/* Opaque data transmission */

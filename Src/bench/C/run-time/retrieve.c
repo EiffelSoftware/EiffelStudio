@@ -69,10 +69,10 @@ private long get_expanded_pos ();
 #define GEN_MAX	4		/* Maximum number of generic parameters */
 
 /* read function declarations */
-private int retrieve_read ();
-private int old_retrieve_read ();
+int retrieve_read ();
+int old_retrieve_read ();
 
-private int (*retrieve_read_func)() = retrieve_read;
+int (*retrieve_read_func)() = retrieve_read;
 
 /*
  * Function definitions
@@ -1189,7 +1189,7 @@ int size;
 
 
 
-private int old_retrieve_read ()
+public int old_retrieve_read ()
 {
 	char * ptr = general_buffer;
 
@@ -1201,7 +1201,7 @@ private int old_retrieve_read ()
 	return (end_of_buffer);
 }
 
-private int retrieve_read ()
+public int retrieve_read ()
 {
 	char * ptr = general_buffer;
 	short read_size;

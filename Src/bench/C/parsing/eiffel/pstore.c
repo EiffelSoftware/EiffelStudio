@@ -23,6 +23,8 @@ private fnptr make_index;	/* Index building routine */
 private char *server;		/* Current server used */
 private long pst_store();	/* Recursive store */
 
+private void partial_store_write();
+
 #undef DEBUG
 
 long st_counter = 0;
@@ -65,6 +67,9 @@ char *s;
 	char gc_stopped;
 
 	/* Initialization */
+
+	store_write_func = partial_store_write;
+
 	fides = (int)f_desc;				/* For use of `st_write' */
 	result = lseek (fides, 0, SEEK_CUR);
 
@@ -104,6 +109,9 @@ char *s;
 	flush_st_buffer();				/* Flush the buffer */
 
 	if (!gc_stopped) gc_run();					/* Restart GC */
+
+	store_write_func = store_write;
+
 	return result;
 }
 
@@ -121,6 +129,7 @@ long object_count;
 	uint32 flags;
 	int is_expanded;
 	long saved_file_pos = lseek(fides, 0, SEEK_CUR)+current_position;
+
 	long saved_object_count = object_count;
 
 	flags = zone->ov_flags;
@@ -187,11 +196,32 @@ zone->ov_flags);
 
 long fpos1()
 {
-	return (long) lseek(fides, 0, SEEK_CUR);
+	return (long) lseek(fides, 0, SEEK_CUR) + current_position;
 }
 
 long fpos2(file_desc)
 EIF_INTEGER file_desc;
 {
-	return (long) lseek((int)file_desc, 0, SEEK_CUR);
+	return (long) lseek((int)file_desc, 0, SEEK_CUR) + current_position;
 }
+
+private void partial_store_write()
+{
+	register char * ptr = general_buffer;
+	register int number_left = current_position;
+
+	int number_writen;
+
+	while (number_left > 0) {
+		number_writen = write (fides, ptr, number_left);
+		if (number_writen <= 0)
+			eio();
+		number_left -= number_writen;
+		ptr += number_writen;
+		}
+	if (ptr - general_buffer == current_position)
+		current_position = 0;
+	else
+		eio();
+}
+

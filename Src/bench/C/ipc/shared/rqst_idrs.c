@@ -67,7 +67,7 @@ Opaque *ext;
 {
 	return idr_int(idrs, &ext->op_type) &&
 			idr_int(idrs, &ext->op_cmd) &&
-			idr_long(idrs, &ext->op_size);
+			idr_u_long(idrs, &ext->op_size);
 }
 
 private bool_t idr_Acknlge(idrs, ext)
@@ -82,10 +82,10 @@ IDR *idrs;
 Where *ext;
 {
 	return idr_string(idrs, &ext->wh_name, -MAX_STRLEN) &&
-			idr_long(idrs, &ext->wh_obj) &&
+			idr_u_long(idrs, &ext->wh_obj) &&
 			idr_int(idrs, &ext->wh_origin) &&
 			idr_int(idrs, &ext->wh_type) &&
-			idr_long(idrs, &ext->wh_offset);
+			idr_u_long(idrs, &ext->wh_offset);
 }
 
 private bool_t idr_Stop(idrs, ext)
@@ -106,7 +106,7 @@ struct item* ext;
 		return 0;
 	switch (ext -> type & SK_HEAD) {
 	case SK_POINTER:
-		return idr_long(idrs, &ext->it_ptr);
+		return idr_u_long(idrs, &ext->it_ptr);
 	case SK_BOOL:
 	case SK_CHAR:
 		return idr_char (idrs, &ext->it_char);
@@ -115,9 +115,9 @@ struct item* ext;
 	case SK_DOUBLE:
 		return idr_double (idrs, &ext->it_double);
 	case SK_BIT:
-		return idr_long (idrs, &ext->it_bit);
+		return idr_u_long (idrs, &ext->it_bit);
 	default:
-		return idr_long (idrs, &ext->it_ref);
+		return idr_u_long (idrs, &ext->it_ref);
 	}
 }
 
@@ -148,14 +148,14 @@ struct item *exi;
 			return 0;
 		switch (exv->ex_type){
 		case EX_CALL:
-			return idr_long (idrs, &exv->exu.exur.exur_id)
+			return idr_u_long (idrs, &exv->exu.exur.exur_id)
 				&& idr_string (idrs, &exv->exu.exur.exur_rout, -MAX_STRLEN)
 				&& idr_int (idrs, &exv -> exu.exur.exur_orig);
 		default:
 			return idr_string (idrs, &exv->exu.exua.exua_name, -MAX_STRLEN)
 				&& idr_string (idrs, &exv->exu.exua.exua_where, -MAX_STRLEN)
 				&& idr_int (idrs, &exv->exu.exua.exua_from)
-				&& idr_long (idrs, &exv->exu.exua.exua_oid);
+				&& idr_u_long (idrs, &exv->exu.exua.exua_oid);
 		}
 	case DMP_ITEM:
 		exi = ext -> dmpu.dmpu_item;

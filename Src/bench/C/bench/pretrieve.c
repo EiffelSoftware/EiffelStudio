@@ -24,6 +24,8 @@ long position, nb_obj;
 	/* Return `nb_obj' retrieved in file `file_ptr' read at `position'. */
 	char *result;
 
+	retrieve_read_func = old_retrieve_read;
+
 	rt_kind = '\0';
 	r_fides = (int)f_desc;
 	lseek(r_fides, position, SEEK_SET);
@@ -31,6 +33,8 @@ long position, nb_obj;
 	result = rt_nmake(nb_obj);			/* Retrieve `nb_obj' objects */
 	ht_free(rt_table);                  /* Free hash table descriptor */
     epop(&hec_stack, nb_recorded);      /* Pop hector records */
+
+	retrieve_read_func = retrieve_read;
 
 	return result;
 }
@@ -43,6 +47,8 @@ long position;
 	 * position. */
 	char *result;
 
+	retrieve_read_func = old_retrieve_read;
+
 	rt_kind = '\0';
 	r_fides = (int)f_desc;
 	lseek(r_fides, position, SEEK_SET);
@@ -50,6 +56,8 @@ long position;
 	result = rt_make();
 	ht_free(rt_table);					/* Free hash table descriptor */
 	epop(&hec_stack, nb_recorded);		/* Pop hector records */
+
+	retrieve_read_func = retrieve_read;
 
 	return result;
 }

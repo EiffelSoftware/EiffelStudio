@@ -1292,7 +1292,7 @@ char *path;
 	return (-1 != access(temp, W_OK)) ? '\01' : '\0';
 }
 
-public long file_fd(f)
+public EIF_INTEGER file_fd(f)
 FILE *f;
 {
 	/* Return the associated file descriptor */
@@ -1300,7 +1300,7 @@ FILE *f;
 	if (f == (FILE *) 0)
 		eraise("invalid file pointer", EN_EXT);
 
-	return (long) fileno(f);	/* Might be an int */
+	return (EIF_INTEGER) fileno(f);	/* Might be an int */
 }
 
 public char *file_owner(uid)

@@ -115,8 +115,6 @@ feature -- Output
 		do
 			writer.write_integer_8 (c.code.to_integer.to_integer_8)
 		end
-		
-		
 
 feature -- Input
 
@@ -151,13 +149,10 @@ feature -- Input
 	read_integer, readint is
 			-- Read the binary representation of a new integer
 			-- from file. Make result available in `last_integer'.
-		local
-			buf: SPECIAL [CHARACTER]
 		do
 			last_integer := reader.read_int_32
 			internal_end_of_file := reader.peek_char = -1
 		end
-
 
 	read_real, readreal is
 			-- Read the binary representation of a new real

@@ -59,8 +59,8 @@ feature {NONE} -- Initialization
 			tool.build_file_menu (file_menu)
 			create format_menu.make_with_text (menu_bar, Interface_names.m_Formats)
 			tool.build_format_menu (format_menu)
---			create special_menu.make_with_text (menu_bar, Interface_names.m_Special)
---			tool.build_special_menu (special_menu)
+			create special_menu.make_with_text (menu_bar, Interface_names.m_Special)
+			tool.build_special_menu (special_menu)
 			create windows_menu.make_with_text (menu_bar, Interface_names.m_Windows)
 			build_windows_menu (windows_menu)
 		end
@@ -90,8 +90,8 @@ feature -- Tool management
  
 	destroy_tool (t: like tool) is
 		do
-			precursor (t)
 			Project_tool.remove_object_entry (t)			
+			precursor (t)
 		end
 
 end -- class EB_OBJECT_WINDOW

@@ -10,8 +10,14 @@ class
 inherit
 	
 	GB_SHARED_OBJECT_HANDLER
+		export
+			{NONE} all
+		end
 	
 	GB_COMMAND
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_HISTORY
 		export
@@ -19,8 +25,14 @@ inherit
 		end
 	
 	GB_SHARED_OBJECT_EDITORS
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_COMMAND_HANDLER
+		export
+			{NONE} all
+		end
 	
 	GB_WIDGET_UTILITIES
 		export

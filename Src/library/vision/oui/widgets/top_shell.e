@@ -25,8 +25,8 @@ feature {NONE} -- Creation
 	make  (a_name: STRING; a_screen: SCREEN) is
 			-- Create a top_shell with `a_name' as identifier,
 			-- only if `a_name' not void otherwise identifier
-			-- will be defined as application name or the name
-			-- precised with -name option and call `set_default'.
+			-- will be defined as application name and call
+			-- `set_default'.
 		do
 			depth := 0;
 			screen := a_screen;

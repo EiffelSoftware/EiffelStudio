@@ -32,10 +32,6 @@ inherit
 	SHARED_DECLARATIONS
 	SHARED_PASS
 	SHARED_RESCUE_STATUS
-	C_COMPILE_ACTIONS
-		rename
-			freeze_system as c_comp_actions_freeze_system
-		end
 	SHARED_DLE
 	COMPILER_EXPORTER
 	SHARED_ID
@@ -185,8 +181,8 @@ feature -- Properties
 	address_table: ADDRESS_TABLE
 			-- Generate encapsulation of function pointers ($ operator)
 
-	successfull: BOOLEAN;
-			-- Was the last recompilation successfull ?
+	successful: BOOLEAN;
+			-- Was the last recompilation successful?
 
 	freeze: BOOLEAN is
 			-- Has the system to be frozen again ?
@@ -540,13 +536,9 @@ feature -- Properties
 					if a_class_i /= Void then
 						a_visible_i := a_class_i.visible_level
 
-						if a_visible_i /= Void and then 
-											a_visible_i.has_visible then
+						if a_visible_i /= Void and then a_visible_i.has_visible then
 							-- Add visible class to system.
 							local_workbench.change_class (a_class_i)
-							io.put_string ("%NAdd visible class <")
-							io.put_string (a_class_i.name)
-							io.put_string (">%N")
 						end
 					end
 
@@ -827,11 +819,11 @@ end;
 
 			private_freeze := private_freeze or else frozen_level = 0;
 
-				-- If status of compilation is successfull, copy
+				-- If status of compilation is successful, copy
 				-- a duplication of the body index table in
 				-- `origin_body_index_table' and re-initialize the
 				-- melted set of feature tables.
-			if successfull then
+			if successful then
 					-- !!!!!!!!!!!!!!
 					-- Important Note
 					-- !!!!!!!!!!!!!!
@@ -962,10 +954,10 @@ feature -- Recompilation
 				precomp_r.check_version_number
 			end;
 			do_recompilation;
-			successfull := True;
+			successful := True;
 		rescue
 			if Rescue_status.is_error_exception then
-				successfull := False;
+				successful := False;
 			end;
 		end;
 
@@ -1108,7 +1100,7 @@ end;
 				-- Melt the changed features
 			melt;
 
-				-- Finalize a successfull compilation
+				-- Finalize a successful compilation
 			finalize;
 
 				-- Produce the update file
@@ -1116,7 +1108,7 @@ end;
 			if freeze then
 				deg_output.put_freezing_message
 
-				c_comp_actions_freeze_system;
+				freeze_system;
 				private_freeze := False;
 			else
 				deg_output.put_melting_changes_message
@@ -1857,7 +1849,7 @@ end;
 		end;
 
 	finalize is
-			-- Finalize a successfull recompilation and update the
+			-- Finalize a successful recompilation and update the
 			-- compilation files.
 		local
 			class_array: ARRAY [CLASS_C];
@@ -2242,7 +2234,7 @@ feature -- Final mode generation
 			Result := byte_context.final_mode
 		end;
 
-	finalized_generation (keep_assert: BOOLEAN) is
+	finalize_system (keep_assert: BOOLEAN) is
 			-- Finalized generation.
 		require
 			root_class_compiled: root_class.compiled
@@ -2385,6 +2377,8 @@ feature -- Final mode generation
 
 	degree_minus_5 is
 			-- Process Degree -5.
+			-- Generation of C files associated to the classes of
+			-- the system.
 		local
 			class_array: ARRAY [CLASS_C];
 			i, nb: INTEGER;
@@ -2392,21 +2386,23 @@ feature -- Final mode generation
 			j: INTEGER;
 			deg_output: DEGREE_OUTPUT
 		do
-			j := classes.count;
-			deg_output := Degree_output;
-			deg_output.put_start_degree (-5, j);
-			!FINAL_MAKER! makefile_generator.make;
-			open_log_files;
-				-- Generation of C files associated to the classes of
-				-- the system.
 			from
+				!FINAL_MAKER! makefile_generator.make;
+				open_log_files;
+				j := classes.count;
+				deg_output := Degree_output;
+				deg_output.put_start_degree (-5, j);
 				classes.start
 			until
 				classes.after
 			loop
 				class_array := classes.item_for_iteration;
 				nb := class_counter.item (classes.key_for_iteration).count
-				from i := 1 until i > nb loop
+				from
+					i := 1
+				until
+					i > nb
+				loop
 					a_class := class_array.item (i)
 					if a_class /= Void then
 						deg_output.put_degree_minus_5 (a_class, j);
@@ -3421,9 +3417,9 @@ feature -- Plug and Makefile file
 			str_type_id := cl_type.type_id;
 			creators := string_cl.creators;
 			creators.start;
-			--! make string declaration
-			creation_feature := string_cl.feature_table.item
-											(creators.key_for_iteration);
+
+				-- Make string declaration
+			creation_feature := string_cl.feature_table.item (creators.key_for_iteration);
 			set_count_feat := string_cl.feature_table.item ("set_count");
 			str_make_name := creation_feature.body_id.feature_name (id)
 			set_count_name := set_count_feat.body_id.feature_name (id)
@@ -3447,9 +3443,7 @@ feature -- Plug and Makefile file
 			--| name of the make routine will (unfortunately) change. Therefore, the
 			--| name in the plug file might not match the name in the precompiled
 			--| C file... Heavy!
-			if
-				(array_make_name = Void) or not uses_precompiled or final_mode
-			then
+			if (array_make_name = Void) or not uses_precompiled or final_mode then
 				array_cl := class_of_id (array_id);
 					--! Array ref type (i.e. ARRAY[ANY])
 				cl_type := Instantiator.Array_type.associated_class_type; 
@@ -3457,15 +3451,15 @@ feature -- Plug and Makefile file
 				arr_type_id := cl_type.type_id;
 				creators := array_cl.creators;
 				creators.start;
-				creation_feature := array_cl.feature_table.item
-											(creators.key_for_iteration);
+				creation_feature := array_cl.feature_table.item (creators.key_for_iteration);
 				arr_make_name := creation_feature.body_id.feature_name (id)
 				array_make_name := clone (arr_make_name)
 			else
 				cl_type := Instantiator.Array_type.associated_class_type; 
 				arr_type_id := cl_type.type_id;
 				arr_make_name := array_make_name
-			end;
+			end
+
 			Plug_file.putstring ("extern void ");
 			Plug_file.putstring (arr_make_name);
 			Plug_file.putstring ("();%N");
@@ -4154,7 +4148,7 @@ feature -- Purge of compilation files
 	purge is
 			-- Purge compilation files and delete useless datas.
 		require
-			successfull
+			successful
 		do
 			server_controler.remove_useless_files;
 

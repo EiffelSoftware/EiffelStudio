@@ -1,9 +1,6 @@
 <document output="envision" title="Compiling Projects">
 	<meta_data/>
 	<paragraph>
-		<table>
-			<row>
-				<cell>
 					<paragraph>Compiling is the process of building a project into an executable file which may  be then executed externally to ENViSioN!. To compile a project, select 
 						<bold>Build  Solution</bold> from the 
 						<bold>Build</bold> menu as demonstrated below:
@@ -93,7 +90,4 @@
 						</link>
 						<line_break/>
 					</seealso>
-				</cell>
-			</row>
-		</table>
 	</paragraph></document>

@@ -16,9 +16,6 @@ inherit
 
 feature -- Access
 
-	interface: EV_POPUP_MENU
-			--- Current interface of the menu
-
 	parent: EV_CONTAINER is
 			-- Parent of the popup.
 		require
@@ -37,12 +34,6 @@ feature -- Status setting
 		end
 
 feature -- Element change
-
-	set_interface (int: EV_POPUP_MENU) is
-			-- Make `int' the new interface.
-		do
-			interface := int
-		end
 
 	set_parent (par: EV_CONTAINER) is
 			-- Make `par' the new parent of the popup.

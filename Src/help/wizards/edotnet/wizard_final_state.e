@@ -87,9 +87,15 @@ feature -- Access
 			end
 			if not wizard_information.selected_assemblies.is_empty then
 				if not wizard_information.dependencies.is_empty then
-					message_text_field.set_text (Common_message +
-						l_External_assemblies + Space + New_line + assemblies_string (wizard_information.selected_assemblies) + New_line + local_assemblies_string + New_line +	
-						l_Dependencies + Space + New_line + assemblies_string (wizard_information.dependencies))
+					if not wizard_information.local_dependencies.is_empty then
+						message_text_field.set_text (Common_message +
+							l_External_assemblies + Space + New_line + assemblies_string (wizard_information.selected_assemblies) + New_line + local_assemblies_string + New_line +	
+							l_Dependencies + Space + New_line + assemblies_string (wizard_information.dependencies) + New_line + assemblies_string (wizard_information.local_dependencies))
+					else
+						message_text_field.set_text (Common_message +
+							l_External_assemblies + Space + New_line + assemblies_string (wizard_information.selected_assemblies) + New_line + local_assemblies_string + New_line +	
+							l_Dependencies + Space + New_line + assemblies_string (wizard_information.dependencies))
+					end
 				else
 					message_text_field.set_text (Common_message +
 						l_External_assemblies + Space + New_line + assemblies_string (wizard_information.selected_assemblies) + New_line + local_assemblies_string)				

@@ -173,7 +173,7 @@ feature {NONE} -- Vision2 controls
 	
 	emit_button: EV_BUTTON
 			-- Button used to import local assemblies, i.e. run the emitter on them
-	
+
 feature {NONE} -- Implementation
 
 	display_state_text is
@@ -311,48 +311,11 @@ feature {NONE} -- Implementation
 		ensure
 			entries_processed: not entries_changed
 		end
-		
+
 	update_gui is
 			-- Update list of assemblies
-		local
-			last_available_assemblies: LINKED_LIST [ASSEMBLY_INFORMATION]
-			assemblies: LINKED_LIST [ASSEMBLY_INFORMATION]
-			assemblies_to_remove: LINKED_LIST [ASSEMBLY_INFORMATION]
-			an_assembly: ASSEMBLY_INFORMATION
-			selected_assemblies: LINKED_LIST [ASSEMBLY_INFORMATION]
 		do
-			last_available_assemblies := clone (wizard_information.available_assemblies)
-			wizard_information.available_assemblies.wipe_out
-			wizard_information.retrieve_available_assemblies
-			wizard_information.remove_kernel_assembly
-			wizard_information.remove_system_assembly
-			assemblies := wizard_information.available_assemblies
-			selected_assemblies := wizard_information.selected_assemblies
-			from
-				create assemblies_to_remove.make
-				assemblies.start
-			until
-				assemblies.after
-			loop
-				an_assembly := assemblies.item
-				if not wizard_information.has_assembly (last_available_assemblies, an_assembly) and not wizard_information.has_assembly (selected_assemblies, an_assembly) then
-					selected_assemblies.extend (an_assembly)
-					assemblies_to_remove.extend (an_assembly)
-				end
-				if wizard_information.has_assembly (selected_assemblies, an_assembly) then
-					assemblies_to_remove.extend (an_assembly)
-				end
-				assemblies.forth
-			end
-			from
-				assemblies_to_remove.start
-			until
-				assemblies_to_remove.after
-			loop
-				an_assembly := assemblies_to_remove.item
-				assemblies.prune_all (an_assembly)
-				assemblies_to_remove.forth
-			end
+			wizard_information.update_lists
 			references_to_add.wipe_out
 			added_references.wipe_out
 			fill_lists			

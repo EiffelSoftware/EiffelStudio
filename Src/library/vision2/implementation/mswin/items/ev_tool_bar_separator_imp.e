@@ -15,13 +15,27 @@ inherit
 			parent_imp as tb_parent_imp
 		undefine
 			parent
+		redefine
+			interface
+		end
+
+	EV_SEPARATOR_ITEM_IMP
+		rename
+			parent_imp as old_item_parent_imp
+		undefine
+			parent,
+			set_pixmap,
+			set_pointer_style,
+			pnd_press
+		redefine
+			interface
 		select
 			interface
 		end
 
 	EV_TOOL_BAR_BUTTON_IMP
 		rename
-			interface as ev_tool_bar_button_interface
+			interface as ev_tool_bar_button_imp_interface
 		redefine
 			type
 		select
@@ -53,6 +67,10 @@ feature -- Status report
 			do
 			end
 
+feature {EV_ANY_I} -- Implementation
+
+	interface: EV_TOOL_BAR_SEPARATOR
+
 end -- class EV_TOOL_BAR_SEPARATOR_IMP
 
 --|----------------------------------------------------------------
@@ -76,6 +94,9 @@ end -- class EV_TOOL_BAR_SEPARATOR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/04/11 17:11:20  rogers
+--| Now inherits EV_SEPARATOR_ITEM_IMP. Redefined interface.
+--|
 --| Revision 1.9  2000/04/10 17:44:09  brendel
 --| Removed inheritance of obsolete class EV_SEPARATOR_ITEM.
 --|

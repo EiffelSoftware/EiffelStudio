@@ -638,12 +638,6 @@ feature -- Status setting
 				-- Update changes
 			cur_ex_style := ex_style
 			update_cached_style (cur_ex_style, cur_ex_style)
-		ensure
-			style_set: style >= a_style
-				-- we cannot be sure that the two styles are
-				-- exactly the same. Windows may have added a
-				-- flag (for example, when a_style=Ws_popup,
-				-- Windows automatically adds Ws_clipsiblings)
 		end
 
 	set_ex_style (an_ex_style: INTEGER) is
@@ -662,12 +656,6 @@ feature -- Status setting
 
 				-- Update changes
 			update_cached_style (old_ex_style, an_ex_style)
-		ensure
-			ex_style_set: ex_style >= an_ex_style
-				-- we cannot be sure that the two styles are
-				-- exactly the same. Windows may have added a
-				-- flag (for example, when a_style=Ws_popup,
-				-- Windows automatically adds Ws_clipsiblings)
 		end
 
 	update_cached_style(new_ex_style, old_ex_style: INTEGER) is

@@ -25838,14 +25838,6 @@ feature -- Externals
 			" C | %"gtk_eiffel.h%""
 		end
 
-	frozen c_match_font_name (pattern: POINTER): STRING is
-			-- Match to first in list or return NULL.
-			-- `pattern' and `Result': char *
-			-- (from EV_C_GTK)
-		external
-			" C signature (char *): EIF_REFERENCE use %"gtk_eiffel.h%""
-		end
-
 	frozen gdk_current_time: INTEGER is
 			-- (from EV_C_GTK)
 		external

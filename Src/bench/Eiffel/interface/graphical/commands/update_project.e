@@ -347,7 +347,7 @@ feature {NONE} -- Implementation; Execution
 				elseif compilation_allowed then
 					if Eiffel_ace.file_name /= Void then
 						confirm_and_compile (arg);
-						if Project_resources.raise_on_error.actual_value then
+						if Project_tool_resources.raise_on_error.actual_value then
 							tool.raise
 						end
 					elseif arg = Void then

@@ -50,7 +50,7 @@ feature -- Initialization
 			v1.extend (left_list)
 
 			create right_list
-			right_list.set_column_titles (<<"Short Name","Litteral Value">>)
+			right_list.set_column_titles (<<"Short Name","Literal Value">>)
 			right_list.set_column_widths (<<150, 400>>)
 			v2.extend (right_list)
 			right_list.select_actions.extend (~right_select)

@@ -58,8 +58,24 @@ feature -- Access
 		ensure
 			bridge_ok: Result = implementation.selected_item
 		end
+		
+	find_item_recursively_by_data (some_data: ANY): EV_TREE_NODE is
+			-- If `data' contained in a tree item at any level then
+			-- assign this item to `Result'.
+		do
+			Result := implementation.find_item_recursively_by_data (some_data)
+		end
 
 feature -- Status report
+
+	ensure_item_visible (an_item: EV_TREE_ITEM) is
+			-- Ensure `tree_item' is visible in `Current'.
+		require
+			item_contained: has_recursively	(an_item)
+		do
+			implementation.ensure_item_visible (an_item)
+		end
+		
 
 	selected: BOOLEAN is
 			-- Is an item selected in `Current' ?
@@ -90,7 +106,13 @@ feature -- Status report
 		ensure
 			bridge_ok: Result = implementation.pixmaps_height
 		end
-
+		
+	has_recursively (an_item: EV_TREE_ITEM): BOOLEAN is
+			-- Is `an_item' contained in `Current' at any level?
+		do
+			Result := implementation.has_recursively (an_item)
+		end
+		
 feature -- Status setting
 
 	set_pixmaps_size (a_width: INTEGER; a_height: INTEGER) is

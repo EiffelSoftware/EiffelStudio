@@ -187,7 +187,7 @@ feature {NONE} -- Implementation
 			{EV_DRAWABLE_IMP} Precursor (color)
 		end
 
-	redraw is
+	redraw (left, top, right, bottom: INTEGER) is
 			-- Redraw the area if necessary.
 		do
 			-- Nothing to do here
@@ -227,7 +227,7 @@ feature {NONE} -- WEL Implementation
 		do
 			-- If a pixmap is linked to the area, we draw it
 			if pixmap_imp /= Void then
-				dc.copy_dc (pixmap_imp.internal_dc, client_rect)
+				dc.copy_dc (pixmap_imp.internal_dc, invalid_rect) --client_rect)
 			end
 
 			-- arguments for the paint event.

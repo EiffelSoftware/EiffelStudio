@@ -173,11 +173,14 @@ feature -- Basic operation
 			internal_dc.select_bitmap (bmp)
 		end
 
-	redraw is
+	redraw (left, top, right, bottom: INTEGER) is
 			-- Redraw the area if necessary.
+		local
+			rect: WEL_RECT
 		do
 			if parent_imp /= Void then
-				parent_imp.dc.copy_dc (internal_dc, parent_imp.client_rect)
+				create rect.make (left, top, right, bottom)
+				parent_imp.dc.copy_dc (internal_dc, rect)
 			end
 		end
 

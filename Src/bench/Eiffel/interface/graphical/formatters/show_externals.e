@@ -21,7 +21,7 @@ creation
 	
 feature -- Initialization
 
-	make (a_text_window: CLASS_TEXT) is
+	make (a_text_window: TEXT_WINDOW) is
 		do
 			init (a_text_window)
 		end;
@@ -66,7 +66,7 @@ feature {NONE} -- Implementation
 	display_temp_header (stone: STONE) is
 			-- Display a temporary header during the format processing.
 		do
-			text_window.display_header ("Searching for external features...")
+			tool.set_title ("Searching for external features...")
 		end;
 
 end -- class SHOW_EXTERNALS

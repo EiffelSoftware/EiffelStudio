@@ -58,7 +58,7 @@ feature {NONE} -- Implementation
 	display_temp_header (stone: STONE) is
 			-- Display a temporary header during the format processing.
 		do
-			text_window.display_header ("Exploring ancestors to produce flat form...")
+			tool.set_title ("Exploring ancestors to produce flat form...")
 		end;
 
 end -- class SHOW_ROUT_FLAT

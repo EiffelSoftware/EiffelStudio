@@ -68,7 +68,7 @@ feature {NONE} -- Implementation
 	display_temp_header (stone: STONE) is
 			-- Display a temporary header during the format processing.
 		do
-			text_window.display_header ("Exploring the system's clusters...")
+			tool.set_title ("Exploring the system's clusters...")
 		end;
 
 end

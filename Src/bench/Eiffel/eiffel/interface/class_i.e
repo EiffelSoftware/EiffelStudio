@@ -242,6 +242,11 @@ feature -- Status report
 
 feature -- Access
 
+	is_external_class: BOOLEAN is
+			-- Is class defined outside current system.
+		do
+		end
+
 	compiled: BOOLEAN is
 			-- Is the class already compiled ?
 		do
@@ -525,7 +530,11 @@ feature {COMPILER_EXPORTER} -- Compiled class
 			elseif Current = local_system.native_array_class then
 				create {NATIVE_ARRAY_B} Result.make (Current)
 			else
-				create Result.make (Current)
+				if is_external_class then
+					create {EXTERNAL_CLASS_C} Result.make (Current)
+				else
+					create Result.make (Current)
+				end
 			end
 		ensure
 			Result_exists: Result /= Void

@@ -701,7 +701,7 @@ feature -- Status report
 	caret_position: INTEGER is
 			-- Current position of caret.
 		do
-			Result := internal_caret_position + 1
+			Result := (internal_caret_position + 1).min (text_length + 1)
 		end
 		
 	set_caret_position (pos: INTEGER) is
@@ -758,7 +758,9 @@ feature -- Status setting
 		end
 		
 	format_paragraph (start_position, end_position: INTEGER; format: EV_PARAGRAPH_FORMAT) is
-			-- Apply paragraph formatting `format' to lines `start_line', `end_line' inclusive.
+			-- Apply paragraph formatting `format' to caret positions `start_position', `end_position' inclusive.
+			-- Formatting applies to complete lines as seperated by new line characters that `start_position' and
+			-- `end_position' fall on.
 		do
 			format_paragraph_internal (start_position, end_position, format, pfm_alignment | pfm_startindent | pfm_rightindent | pfm_spacebefore | pfm_spaceafter | pfm_linespacing)
 		end
@@ -837,9 +839,9 @@ feature -- Status setting
 		end
 		
 	modify_paragraph (start_position, end_position: INTEGER; format: EV_PARAGRAPH_FORMAT; applicable_attributes: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION) is
-			-- Modify paragraph formatting from lines `start_position' to `end_position' applying all attributes of `format' that are set to
-			-- `True' within `applicable_attributes', ignoring others. Modification applies to complete lines as seperated by
-			-- new line characters that `start_position' and `end_position' fall on.
+			-- Modify paragraph formatting `format' from caret positions `start_position' to `end_position' inclusive.
+			-- Formatting applies to complete lines as seperated by new line characters that `start_position' and
+			-- `end_position' fall on. All attributes of `format' that are set to `True' within `applicable_attributes' are applied.
 		local
 			mask: INTEGER
 		do

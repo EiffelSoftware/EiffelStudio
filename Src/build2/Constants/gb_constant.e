@@ -76,7 +76,7 @@ feature -- Element change
 		do
 			referers.extend (referer)
 		ensure
-			has_referer: not referers.has (referer)
+			has_referer: referers.has (referer)
 		end
 	
 	remove_referer (referer: GB_CONSTANT_CONTEXT) is

@@ -101,11 +101,11 @@ feature
 				bg_pixmap := Void
 			end;
 			if bg_color /= Void then
-				color_implementation ?= background_color.implementation;
+				color_implementation ?= bg_color.implementation;
 				color_implementation.remove_object (Current)
 			end;
 			bg_color := a_color;
-			color_implementation ?= background_color.implementation;
+			color_implementation ?= a_color.implementation;
 			color_implementation.put_object (Current);
 			ext_name := Mbackground.to_c;
 			c_set_color (screen_object, color_implementation.pixel (screen),

@@ -95,6 +95,7 @@ feature -- Interface
 			-- | Create `code_dom_source' and call `generate_code' on it, which calls appropriate code_generator.
 			-- | Call `compile_unit' on current `CODE_COMPILE_UNIT' and write code in `a_text_writer'.
 		do
+			Resolver.reset_generated_types
 			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeGenerator.GenerateCodeFromCompileUnit"])
 			if a_compile_unit = Void then
 				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_input, ["GenerateCodeFromCompileUnit"])
@@ -106,7 +107,6 @@ feature -- Interface
 				output.write_string (last_compile_unit.code)
 				output := Void
 			end
-			Resolver.reset_generated_types
 			Type_reference_factory.reset_cache
 			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Ending CodeGenerator.GenerateCodeFromCompileUnit"])
 		end
@@ -115,6 +115,7 @@ feature -- Interface
 			-- | Call `generate_namespace_from_dom'.
 			-- | Call `namespace' on `CODE_NAMESPACE' and write code in `a_text_writer'.
 		do
+			Resolver.reset_generated_types
 			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeGenerator.GenerateCodeFromNamespace"])
 			Resolver.reset_generated_types
 			Type_reference_factory.reset_cache
@@ -128,7 +129,6 @@ feature -- Interface
 				output.write_string (last_namespace.code)
 				output := Void
 			end
-			Resolver.reset_generated_types
 			Type_reference_factory.reset_cache
 			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Ending CodeGenerator.GenerateCodeFromNamespace"])
 		end
@@ -137,6 +137,7 @@ feature -- Interface
 			-- | Call `generate_type_from_dom'.
 			-- | Call `type' on `CODE_GENERATED_TYPE' and write code in `a_text_writer'.
 		do
+			Resolver.reset_generated_types
 			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeGenerator.GenerateCodeFromType"])
 			if a_type = Void then
 				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_input, ["GenerateCodeFromType"])
@@ -156,6 +157,7 @@ feature -- Interface
 			-- | Call `generate_statement_from_dom'.
 			-- | Call `statement' on `CODE_STATEMENT' and write code in `a_text_writer'.
 		do
+			Resolver.reset_generated_types
 			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeGenerator.GenerateCodeFromStatement"])
 			if a_statement = Void then
 				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_input, ["GenerateCodeFromStatement"])
@@ -175,6 +177,7 @@ feature -- Interface
 			-- | Call `generate_expression_from_dom'
 			-- | Call `expression' on `CODE_EXPRESSION' and write code in `a_text_writer'.
 		do
+			Resolver.reset_generated_types
 			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeGenerator.GenerateCodeFromExpression"])
 			if a_expression = Void then
 				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_input, ["GenerateCodeFromExpression"])
@@ -281,9 +284,9 @@ feature -- Interface
 			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeGenerator.Supports"])
 			Result := a_flag = feature {SYSTEM_DLL_GENERATOR_SUPPORT}.arrays_of_arrays or
 					a_flag = feature {SYSTEM_DLL_GENERATOR_SUPPORT}.assembly_attributes or
-					a_flag = feature {SYSTEM_DLL_GENERATOR_SUPPORT}.chained_constructor_arguments or
+			--		a_flag = feature {SYSTEM_DLL_GENERATOR_SUPPORT}.chained_constructor_arguments or
 					a_flag = feature {SYSTEM_DLL_GENERATOR_SUPPORT}.complex_expressions or
-					a_flag = feature {SYSTEM_DLL_GENERATOR_SUPPORT}.declare_delegates or
+			--		a_flag = feature {SYSTEM_DLL_GENERATOR_SUPPORT}.declare_delegates or
 					a_flag = feature {SYSTEM_DLL_GENERATOR_SUPPORT}.declare_enums or
 					a_flag = feature {SYSTEM_DLL_GENERATOR_SUPPORT}.declare_events or
 					a_flag = feature {SYSTEM_DLL_GENERATOR_SUPPORT}.declare_interfaces or
@@ -297,7 +300,7 @@ feature -- Interface
 			--		a_flag = feature {SYSTEM_DLL_GENERATOR_SUPPORT}.public_static_members or			No static members
 					a_flag = feature {SYSTEM_DLL_GENERATOR_SUPPORT}.reference_parameters or
 			--		a_flag = feature {SYSTEM_DLL_GENERATOR_SUPPORT}.return_type_attributes or			No return type attributes
-					a_flag = feature {SYSTEM_DLL_GENERATOR_SUPPORT}.static_constructors or
+			--		a_flag = feature {SYSTEM_DLL_GENERATOR_SUPPORT}.static_constructors or
 					a_flag = feature {SYSTEM_DLL_GENERATOR_SUPPORT}.try_catch_statements or
 					a_flag = feature {SYSTEM_DLL_GENERATOR_SUPPORT}.win_32_resources;
 			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Ending CodeGenerator.Supports"])

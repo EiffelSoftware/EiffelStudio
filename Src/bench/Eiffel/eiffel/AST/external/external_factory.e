@@ -83,15 +83,18 @@ feature -- Low level factories
 			Result_not_void: Result /= Void
 		end
 
-	new_external_type_as (id: ID_AS; is_struct: BOOLEAN; nb_pointer: INTEGER;
-			is_byref, is_enum: BOOLEAN): EXTERNAL_TYPE_AS
+	new_external_type_as (id: ID_AS; type_prefix: STRING; is_struct: BOOLEAN; nb_pointer: INTEGER;
+			is_byref: BOOLEAN): EXTERNAL_TYPE_AS
 		is
 			-- New EXTERNAL_TYPE_AS node.
 		require
 			id_not_void: id /= Void
 		do
 			create Result
-			Result.initialize (id, is_struct, nb_pointer, is_byref, is_enum)
+			if type_prefix /= Void then
+				id.prepend (type_prefix)
+			end
+			Result.initialize (id, is_struct, nb_pointer, is_byref)
 		ensure
 			Result_not_void: Result /= Void
 		end

@@ -324,6 +324,7 @@ feature -- Application editor
 
 feature -- Question Box
 
+	Create_nam: STRING is "Create";
 	Discard_name: STRING is "Discard";
 	New_choice_name: STRING is "New choice";
 	Open_name: STRING is "Open";

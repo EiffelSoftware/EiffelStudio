@@ -458,6 +458,8 @@ feature -- Status setting
 			not_destroyed: not is_destroyed
 		do
 			implementation.enable_row_height_fixed
+		ensure
+			row_height_fixed: is_row_height_fixed
 		end
 		
 	disable_row_height_fixed is
@@ -466,6 +468,8 @@ feature -- Status setting
 			not_destroyed: not is_destroyed
 		do
 			implementation.disable_row_height_fixed
+		ensure
+			row_height_variable: not is_row_height_fixed
 		end
 		
 	set_column_count_to (a_column_count: INTEGER) is
@@ -713,7 +717,8 @@ feature {NONE} -- Contract support
 			-- Is `Current' in its default state?
 		do
 			Result := not is_horizontal_scrolling_per_item and
-				is_vertical_scrolling_per_item and is_header_displayed
+				is_vertical_scrolling_per_item and is_header_displayed and
+				is_row_height_fixed
 		end
 			
 feature {EV_ANY, EV_ANY_I} -- Implementation

@@ -14,32 +14,48 @@ feature -- Basic operations
 
 	get is
 			-- Get the device context
+		local
+			p: POINTER
 		do
-			item := cwin_get_dc (default_pointer)
+			if item = p then
+				item := cwin_get_dc (default_pointer)
+			end
 		end
 
 	release is
 			-- Release the device context
+		local
+			p: POINTER
 		do
-			unselect_all
-			cwin_release_dc (default_pointer, item)
-			item := default_pointer
+			if item /= p then
+				unselect_all
+				cwin_release_dc (default_pointer, item)
+				item := p
+			end
 		end
 
 	quick_release is
 			-- Release the device context
+		local
+			p: POINTER
 		do
-			cwin_release_dc (default_pointer, item)
-			item := default_pointer
+			if item /= p then
+				cwin_release_dc (default_pointer, item)
+				item := p
+			end
 		end
 
 feature {NONE} -- Implementation
 
 	destroy_item is
+		local
+			p: POINTER
 		do
-			unselect_all
-			cwin_release_dc (default_pointer, item)
-			item := default_pointer
+			if item /= p then
+				unselect_all
+				cwin_release_dc (default_pointer, item)
+				item := p
+			end
 		end
 
 end -- class WEL_SCREEN_DC

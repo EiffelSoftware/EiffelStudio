@@ -14,6 +14,10 @@ inherit
 	
 	GB_ACCESSIBLE_OBJECT_EDITOR
 	
+	GB_ACCESSIBLE_SYSTEM_STATUS
+	
+	GB_ACCESSIBLE_COMMAND_HANDLER
+	
 create
 	initialize
 
@@ -83,7 +87,11 @@ feature -- Basic operation
 			
 				-- We must now update the pick and drop status of the container
 				-- as it may now be full.
-			--container.build_drop_action_for_new_object	
+			--container.build_drop_action_for_new_object
+			
+				-- Notify the system that we have modified something.
+			system_status.enable_project_modified
+			command_handler.update
 		ensure
 			new_obect_added_to_object_list: objects.has (new_object)
 			new_object_layout_item_not_void: new_object.layout_item /= Void

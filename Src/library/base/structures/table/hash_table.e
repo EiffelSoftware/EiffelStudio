@@ -110,17 +110,23 @@ feature -- Initialization
 			-- if more than `n' items are inserted.
 		local
 			clever: PRIMES
+			l_content: ARRAY [G]
+			l_keys: ARRAY [H]
+			l_deleted_marks: ARRAY [BOOLEAN]
 		do
 			create clever
 			capacity := n.Max (Minimum_capacity)
 			capacity := (capacity * 100) // Initial_occupation + 1
 			capacity := clever.higher_prime (capacity)
-			create content.make (0, capacity)
-			create keys.make (0, capacity)
+			create l_content.make (0, capacity)
+			content := l_content.area
+			create l_keys.make (0, capacity)
+			keys := l_keys.area
 					-- Position `capacity' ignored by hash sequences,
 					-- used to store value for default key.
 
-			create deleted_marks.make (0, capacity - 1)
+			create l_deleted_marks.make (0, capacity - 1)
+			deleted_marks := l_deleted_marks.area
 			iteration_position := capacity + 1
 		ensure
 			breathing_space: n * 100 < capacity * Initial_occupation
@@ -138,10 +144,14 @@ feature -- Initialization
 			i: INTEGER
 			new_table: HASH_TABLE [G, H]
 			default_key: H
+			l_content: like content
+			l_keys: like keys
 		do
 				-- (Could also use iteration facilities.)
 			from
 				create new_table.make (count.max (n))
+				l_content := content
+				l_keys := keys
 			until
 				i = capacity
 			loop
@@ -150,13 +160,13 @@ feature -- Initialization
 						not new_table.soon_full
 							-- See invariant clause `sized_generously_enough'
 					end
-					new_table.put (content.item (i), keys.item (i))
+					new_table.put (l_content.item (i), l_keys.item (i))
 				end
 				i := i + 1
 			end
 
 			if has_default then
-				new_table.put (content.item (capacity), default_key)
+				new_table.put (l_content.item (capacity), default_key)
 			end
 
 			set_content (new_table.content)
@@ -215,17 +225,19 @@ feature -- Access
 			-- based on `object_comparison'.)
 		local
 			i: INTEGER
+			l_content: like content
 		do
 			if has_default then
 				Result := (v = default_key_value)
 			end
 			if not Result then
+				l_content := content
 				if object_comparison then
 					from
 					until
 						i = capacity or else Result
 					loop
-						Result := occupied (i) and then equal (v, content.item (i))
+						Result := occupied (i) and then equal (v, l_content.item (i))
 						i := i + 1
 					end
 				else
@@ -233,7 +245,7 @@ feature -- Access
 					until
 						i = capacity or else Result
 					loop
-						Result := occupied (i) and then (v = content.item (i))
+						Result := occupied (i) and then (v = l_content.item (i))
 						i := i + 1
 					end
 				end
@@ -623,7 +635,7 @@ feature -- Element change
 				add_space
 				search_for_insertion (key)
 			end
-			if position < capacity and then deleted (position) then
+			if position < capacity and then deleted_marks.item (position) then
 				set_not_deleted (position)
 			else
 				used_slot_count := used_slot_count + 1
@@ -823,13 +835,13 @@ feature -- Duplication
 
 feature {HASH_TABLE} -- Implementation: content attributes and preservation
 
-	content: ARRAY [G]
+	content: SPECIAL [G]
 			-- Array of contents
 
-	keys: ARRAY [H]
+	keys: SPECIAL [H]
 			-- Array of keys
 
-	deleted_marks: ARRAY [BOOLEAN]
+	deleted_marks: SPECIAL [BOOLEAN]
 			-- Is position that of a deleted element?
 
 	has_default: BOOLEAN
@@ -913,7 +925,6 @@ feature {NONE} -- Implementation
 			normal_key: (i < capacity) implies (occupied (i) implies Result)
 			default_key: (i = capacity) implies (Result = has_default)
 		end
-
 
 	is_off_position (pos: INTEGER): BOOLEAN is
 			-- Is `pos' a cursor position past last item?
@@ -1002,41 +1013,51 @@ feature {NONE} -- Implementation
 			-- and set status to `found' or `not_found'.
 		local
 			default_key: H
-			hash_value, increment: INTEGER
+			hash_value, increment, l_pos, l_capacity: INTEGER
+			first_deleted_position: INTEGER
 			stop: BOOLEAN
+			l_keys: like keys
+			l_deleted_marks: like deleted_marks
 		do
-			deleted_position := Impossible_position
+			first_deleted_position := Impossible_position
 			if key = default_key then
 				position := capacity
 				if has_default then
-					set_found
+					control := Found_constant
 				else
-					set_not_found
+					control := Not_found_constant
 				end
 			else
 				from
+					l_keys := keys
+					l_deleted_marks := deleted_marks
+					l_capacity := capacity
 					hash_value := key.hash_code
-					increment := position_increment (hash_value)
-					position := initial_position (hash_value)
+					increment := 1 + hash_value \\ (l_capacity - 1)
+					l_pos := (hash_value \\ l_capacity)
 				until
 					stop
 				loop
-					if deleted (position) then
-						if deleted_position = Impossible_position then
-							deleted_position := position
+					if l_deleted_marks.item (l_pos) then
+						if first_deleted_position = Impossible_position then
+							first_deleted_position := l_pos
 						end
-						to_next_candidate (increment)
-					elseif keys.item (position) = default_key then
+							-- Go to next increment.
+						l_pos := (l_pos + increment) \\ l_capacity
+					elseif l_keys.item (l_pos) = default_key then
 						stop := True
-						set_not_found
-					elseif keys.item (position).is_equal (key) then
+						control := Not_found_constant
+					elseif l_keys.item (l_pos).is_equal (key) then
 						stop := True
-						set_found
+						control := Found_constant
 					else
-						to_next_candidate (increment)
+							-- Go to next increment.
+						l_pos := (l_pos + increment) \\ l_capacity
 					end
 				end
+				position := l_pos
 			end
+			deleted_position := first_deleted_position
 		ensure
 			found_or_not_found: found or not_found
 			deleted_item_at_deleted_position:
@@ -1056,7 +1077,9 @@ feature {NONE} -- Implementation
 			not_present: not has (key)
 		local
 			default_key: H
-			hash_value, increment: INTEGER
+			hash_value, increment, l_pos, l_capacity: INTEGER
+			l_deleted_marks: like deleted_marks
+			l_keys: like keys
 		do
 			if key = default_key then
 					check
@@ -1067,13 +1090,17 @@ feature {NONE} -- Implementation
 			else
 				from
 					hash_value := key.hash_code
-					increment := position_increment (hash_value)
-					position := initial_position (hash_value)
+					l_capacity := capacity
+					increment := 1 + hash_value \\ (l_capacity - 1)
+					l_pos := (hash_value \\ l_capacity)
+					l_deleted_marks := deleted_marks
+					l_keys := keys
 				until
-					deleted (position) or keys.item (position) = default_key
+					l_deleted_marks.item (l_pos) or l_keys.item (l_pos) = default_key
 				loop
-					to_next_candidate (increment)
+					l_pos := (l_pos + increment) \\ l_capacity
 				end
+				position := l_pos
 			end
 		ensure
 			deleted_or_default:
@@ -1090,9 +1117,11 @@ feature {NONE} -- Implementation
 				(position = capacity) implies (key = computed_default_key)
 		local
 			default_key: H
+			l_pos: INTEGER
 		do
-			content.put (new, position)
-			keys.put (key, position)
+			l_pos := position
+			content.put (new, l_pos)
+			keys.put (key, l_pos)
 			if key = default_key then
 				set_default
 			end
@@ -1110,11 +1139,13 @@ feature {NONE} -- Implementation
 		local
 			default_value: G
 			default_key: H
+			l_pos: INTEGER
 		do
-			content.put (default_value, position)
-			keys.put (default_key, position)
-			set_deleted (position)
-			if iteration_position = position then
+			l_pos := position
+			content.put (default_value, l_pos)
+			keys.put (default_key, l_pos)
+			set_deleted (l_pos)
+			if iteration_position = l_pos then
 				forth
 			end
 		ensure
@@ -1134,22 +1165,22 @@ feature {NONE} -- Implementation
 		end
 
 	initial_position (hash_value: INTEGER): INTEGER is
-				-- Initial position for an item of hash code `hash_value'
-			do
-				Result := (hash_value \\ capacity)
-			end
+			-- Initial position for an item of hash code `hash_value'
+		do
+			Result := (hash_value \\ capacity)
+		end
 
 	position_increment (hash_value: INTEGER): INTEGER is
-				-- Distance between successive positions for hash code
-				-- `hash_value' (computed for no cycle: `capacity' is prime)
-			do
-				Result := 1 + hash_value \\ (capacity - 1)
-			end
+			-- Distance between successive positions for hash code
+			-- `hash_value' (computed for no cycle: `capacity' is prime)
+		do
+			Result := 1 + hash_value \\ (capacity - 1)
+		end
 
 	to_next_candidate (increment: INTEGER) is
 			-- Move from current `position' to next for same key
 		do
-				position := (position + increment) \\ capacity
+			position := (position + increment) \\ capacity
 		end
 
 	Conflict_constant: INTEGER is unique
@@ -1267,9 +1298,6 @@ invariant
 	keys_same_capacity_plus_one: keys.count = capacity + 1
 	content_same_capacity_plus_one: content.count = capacity + 1
 	deleted_same_capacity: deleted_marks.count = capacity
-	keys_starts_at_zero: keys.lower = 0
-	content_starts_at_zero: content.lower = 0
-	deleted_starts_at_zero: deleted_marks.lower = 0
 	valid_iteration_position: off or truly_occupied (iteration_position)
 	control_non_negative: control >= 0
 	special_status: special_status =

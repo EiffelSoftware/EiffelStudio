@@ -11,14 +11,25 @@ inherit
 	GB_TWO_STATE_COMMAND
 	
 	GB_SHARED_TOOLS
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_SYSTEM_STATUS
+		export
+			{NONE} all
+		end
 	
 	GB_CONSTANTS
+		export
+			{NONE} all
+		end
 	
 	WIZARD_SHARED
 		rename
 			pixmap as wizard_pixmap
+		export
+			{NONE} all
 		end
 
 create

@@ -82,6 +82,9 @@ feature -- Initialization
 
 						if not error_occurred then
 							compilation ?= command
+							if compilation /= Void then
+								compilation.set_is_finish_freezing_called (is_finish_freezing_called)
+							end
 							ewb_loop ?= command
 							if
 								project_is_new and then
@@ -154,6 +157,10 @@ feature -- Properties
 
 	option: STRING
 			-- Current option being analyzed
+
+	is_finish_freezing_called: BOOLEAN
+			-- Should a freeze or a finalize call `finish_freezing' after generating
+			-- C code
 
 	help_messages: HASH_TABLE [STRING, STRING] is
 			-- Help message table
@@ -239,7 +246,7 @@ feature -- Output
 		do
 			io.putstring ("Usage:%N%T")
 			io.putstring (argument (0))
-			io.putstring (" [-help | -version | -batch ")
+			io.putstring (" [-help | -version | -batch | ")
 			add_usage_special_cmds
 			io.putstring ("-loop | -quick_melt | ")
 			if Has_documentation_generation then
@@ -315,7 +322,7 @@ feature -- Update
 
 	add_usage_special_cmds is
 		do
-			io.putstring ("-freeze | -finalize [-keep] | -precompile |%N%T")
+			io.putstring ("-freeze | %N%T-finalize [-keep] | -precompile | -c_compile |%N%T")
 		end
 
 	add_help_special_cmds is
@@ -323,6 +330,7 @@ feature -- Update
 			help_messages.put (freeze_help, freeze_cmd_name)
 			help_messages.put (precompile_help, precompile_cmd_name)
 			help_messages.put (finalize_help, finalize_cmd_name)
+			Help_messages.put (c_compile_help, c_compile_cmd_name)
 		end
 
 	analyze_options is
@@ -505,6 +513,8 @@ feature -- Update
 --				else
 --					option_error := True
 --				end
+			elseif option.is_equal ("-c_compile") then
+				is_finish_freezing_called := True
 			elseif
 				has_documentation_generation and then
 				(option.is_equal ("-short") or else

@@ -29,6 +29,8 @@ feature -- Access
 	tool_order: STRING is "tool_order"
 	
 	external_tool_order: STRING is "external_tool_order"
+	
+	show_tip_of_the_day: STRING is "show_tip_of_the_day"
 			
 feature -- Basic operations
 

@@ -55,6 +55,9 @@ feature -- Access
 				Result.prune_all ('%R')
 			end
 			close_clipboard
+			if Result = Void then
+				Result := ""
+			end
 		end
 
 feature -- Status Setting

@@ -47,7 +47,7 @@ cluster
 		end
 
 external
-	include_path:		"$EIFFEL4/libary/vision2/implementation/gtk/Clib `gtk-config --cflags`"
-	object:			"$EIFFEL4/libary/vision2/implementation/gtk/Clib/gtk_eiffel.o `gtk-config --libs`"
+	include_path:		"$EIFFEL4/library/vision2/implementation/gtk/Clib `gtk-config --cflags`"
+	object:			"$(EIFFEL4)/library/vision2/implementation/gtk/Clib/gtk_eiffel.o `gtk-config --libs`"
 
 end -- paintbrush

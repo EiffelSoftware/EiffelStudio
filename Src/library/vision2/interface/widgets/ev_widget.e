@@ -483,6 +483,28 @@ feature {EV_ANY} -- Contract support
 					i := i + 1
 				end
 			end
+			create_test_actions
+		end
+
+	create_test_actions is
+		local
+			t: HASH_TABLE [ACTION_SEQUENCE [TUPLE], STRING]
+			asq: EV_ACTION_SEQUENCE [TUPLE]
+		do
+			t := action_sequences
+			from
+				t.start
+			until
+				t.after
+			loop
+				asq ?= t.item_for_iteration
+				if asq /= Void then
+					asq.force_extend (
+						~print (t.key_for_iteration + " fired %N")
+					)
+				end
+				t.forth
+			end
 		end
 
 feature -- Obsolete
@@ -775,6 +797,9 @@ end -- class EV_WIDGET
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.77  2000/04/21 21:13:24  oconnor
+--| added create_test_actions
+--|
 --| Revision 1.76  2000/03/27 19:01:40  oconnor
 --| added fixme
 --|

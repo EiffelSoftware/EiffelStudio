@@ -49,6 +49,9 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 
 			set_c_object (C.gtk_scrolled_window_new (NULL, NULL))
+		
+					-- Creating the gtk_list, pointed by `list_widget':
+			list_widget := C.gtk_list_new
 			gtk_widget_set_flags (
 				c_object,
 				C.GTK_CAN_FOCUS_ENUM
@@ -59,14 +62,14 @@ feature {NONE} -- Initialization
 				C.GTK_POLICY_AUTOMATIC_ENUM
 			)
 
-			-- Creating the gtk_list, pointed by `list_widget':
-			list_widget := C.gtk_list_new
+
 
 			C.gtk_widget_show (list_widget)
 			C.gtk_scrolled_window_add_with_viewport (
 				c_object,
 				list_widget
 			)
+--			C.gtk_container_add (c_object, list_widget)
 			real_signal_connect (
 				list_widget,
 				"unselect_child",
@@ -86,10 +89,6 @@ feature {NONE} -- Initialization
 				"select_child",
 				agent select_callback,
 				Void
-			)
-			gtk_widget_set_flags (
-				visual_widget,
-				C.GTK_CAN_FOCUS_ENUM
 			)
 			temp_sig_id := c_signal_connect (
 					visual_widget,
@@ -372,7 +371,7 @@ feature {NONE} -- Implementation
 			end
 			list_has_been_clicked := False
 		end
-		
+
 	create_focus_in_actions: EV_FOCUS_ACTION_SEQUENCE is
 			-- 	
 		do

@@ -84,7 +84,7 @@ feature {NONE}
 	display_info (i: INTEGER; s: FEATURE_STONE) is
 			-- Display debug format of `stone'.
 		do
-			text_window.process_text (debug_context (s).text)
+			text_window.process_text (debug_context_text (s))
 		end;
 
 	command_name: STRING is

@@ -168,7 +168,7 @@ feature -- Access
 				features_deep_equal (other.features)	
 		end
 
-feature {COMPILER_EXPORTER} -- Element change
+feature {COMPILER_EXPORTER, CLASS_AS} -- Element change
 
 	--| NB: Since fixed structures are used, the following operations
 	--| are generally very expensive...

@@ -1,10 +1,17 @@
 indexing
 	description:
-		"Representation of a typeface.%N%
-		%Appearance is specified in terms of font family, height, shape and%N%
-		%weight. The local system font closest to the specification will be%N%
-		%displayed. A specific font name may optionally be specified. %
-		%See `set_preferred_face'"
+		"[
+			Representation of a typeface.
+			Appearance is specified in terms of font family, height, shape and
+			weight. The local system font closest to the specification will be
+			displayed. A specific font name may optionally be specified. See `set_preferred_face'"
+			
+			There are two available queries for a font height, `height' and `height_in_points'.
+			Changing one, changes the other accordingly. `height' is given in pixels while
+			`height_in_points' is in points or 1/72 of an inch. Using `height_in_points' ensures
+			that on different screen resolutions `Current' has the same physical size, although
+			the pixel height may differ to achieve this.
+		]"
 	status: "See notice at end of class"
 	keywords: "character, face, height, family, weight, shape, bold, italic"
 	date: "$Date$"
@@ -109,7 +116,17 @@ feature -- Access
 		ensure
 			bridge_ok: Result = implementation.height
 		end
-
+		
+	height_in_points: INTEGER is
+			-- Preferred font height in points.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.height_in_points
+		ensure
+			bridge_ok: Result = implementation.height_in_points
+		end
+		
 	preferred_families: EV_ACTIVE_LIST [STRING] is
 			-- Preferred familys. The first one in the list
 			-- will be tried first. If it does not exists on
@@ -162,6 +179,7 @@ feature -- Element change
 
 	set_height (a_height: INTEGER) is
 			-- Set `a_height' to `height'.
+			-- `height_in_points' changes accordingly based on screen resolution.
 		require
 			not_destroyed: not is_destroyed
 			a_height_bigger_than_zero: a_height > 0
@@ -169,6 +187,18 @@ feature -- Element change
 			implementation.set_height (a_height)
 		ensure
 			height_assigned: height = a_height
+		end
+		
+	set_height_in_points (a_height: INTEGER) is
+			-- Set `height_in_points' to `a_height'.
+			-- `height' changes accordingly based on screen resolution.
+		require
+			not_destroyed: not is_destroyed
+			a_height_bigger_than_zero: a_height > 0
+		do
+			implementation.set_height_in_points (a_height)
+		ensure
+			height_assigned: height_in_points = a_height
 		end
 
 feature -- Status report
@@ -323,13 +353,7 @@ feature -- Basic operations
 			if implementation = Void then
 				default_create
 			end
-			implementation.set_values (
-				other.family,
-				other.weight,
-				other.shape,
-				other.height,
-				other.preferred_families.twin
-			)
+			implementation.copy_font (other)
 		end
 
 feature {NONE} -- Contract support

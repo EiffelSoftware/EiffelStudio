@@ -133,7 +133,7 @@ feature {NONE} -- Special childrens
 			
 			if l_object_value /= Void then
 				l_icd_class := l_object_value.get_class
-				l_icd_frame := Eifnet_debugger.current_icor_debug_frame
+				l_icd_frame := Eifnet_debugger.current_stack_icor_debug_frame
 				check
 					l_icd_frame /= Void
 				end

@@ -639,15 +639,15 @@ feature -- Bridge to EIFNET_DEBUGGER_INFO
 			end
 		end
 		
-	current_icor_debug_frame: ICOR_DEBUG_IL_FRAME is
-			-- IL Frame related to current call stack.
+	current_stack_icor_debug_frame: ICOR_DEBUG_FRAME is
+			-- Frame related to current call stack.
 			-- This is a shared instance, so don't release it unless you know
 			-- what you do.
 		local
 			l_cse: CALL_STACK_ELEMENT_DOTNET
 		do
 			l_cse ?= application.status.current_stack_element
-			Result := l_cse.icd_il_frame
+			Result := l_cse.icd_frame
 		end
 
 feature -- Easy access

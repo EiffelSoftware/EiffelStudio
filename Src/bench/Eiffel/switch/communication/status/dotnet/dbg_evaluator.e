@@ -57,7 +57,7 @@ feature {NONE} -- Properties
 	current_icor_debug_frame: ICOR_DEBUG_FRAME is
 			-- Current shared ICorDebugFrame encapsulated instance
 		do
-			Result := eifnet_debugger.current_icor_debug_frame
+			Result := eifnet_debugger.current_stack_icor_debug_frame
 		end
 		
 
@@ -224,7 +224,7 @@ feature -- Access
 						
 						l_icdv_args.put (l_icdv_obj, 1) -- First arg is the obj on which the evaluation is done.
 
-						l_icd_frame := eifnet_debugger.current_icor_debug_frame
+						l_icd_frame := eifnet_debugger.current_stack_icor_debug_frame
 						if l_icd_frame = Void then
 								-- In case `associated_frame' is not set
 							l_icd_frame := new_active_icd_frame

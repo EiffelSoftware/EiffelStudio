@@ -27,13 +27,13 @@ feature {NONE} -- Implementation
 			f: PLAIN_TEXT_FILE
 			temp: STRING
 			fod: EV_FILE_OPEN_DIALOG
+			csd: EB_CONFIRM_SAVE_DIALOG
 			arg: EV_ARGUMENT1 [EV_FILE_OPEN_DIALOG]
 		do
 			if argument = Void then
 					-- First click on open
 				if tool.text_window.changed then
---					warner (popup_parent).custom_call (Current, Warning_messages.w_File_changed,
---						Interface_names.b_Yes, Interface_names.b_No, Interface_names.b_Cancel)
+					create csd.make_and_launch (tool, Current, argument)
 				else
 					create fod.make (tool.parent)
 					fod.set_filter (<<"System File (*.ace)">>, <<"*.ace">>)

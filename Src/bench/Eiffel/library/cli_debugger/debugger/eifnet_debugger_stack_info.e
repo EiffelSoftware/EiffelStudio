@@ -13,6 +13,29 @@ inherit
 			is_equal
 		end
 
+create
+	default_create, make_copy 
+	
+feature {NONE} -- Initialization
+
+	make_copy (other: like Current) is
+		do
+			copy (other)
+			
+--| FIXME: JFIAT: check if some info can be void, at the copy time.
+--			is_synchronized            := other.is_synchronized
+--
+--			current_stack_address      := other.current_stack_address.twin
+--			current_stack_pseudo_depth := other.current_stack_pseudo_depth
+--			
+--			current_module_name        := other.current_module_name.twin
+--			
+--			current_class_token        := other.current_class_token
+--			current_feature_token      := other.current_feature_token
+--			current_il_offset          := other.current_il_offset
+--			current_il_code_size       := other.current_il_code_size
+		end		
+	
 feature -- Access
 
 	is_synchronized: BOOLEAN
@@ -26,6 +49,8 @@ feature -- Access
 	current_il_code_size: INTEGER
 
 	to_string: STRING is
+			-- String representation
+			-- debug purpose only
 		do
 			Result := current_stack_pseudo_depth.out 
 					+ ":"
@@ -110,6 +135,7 @@ feature -- Change
 feature
 
 	reset is
+			-- Reset values
 		do
 			current_stack_address         := Void
 			current_stack_pseudo_depth	  := 0
@@ -118,10 +144,6 @@ feature
 			current_feature_token         := 0
 			current_il_offset             := 0
 			current_il_code_size		  := 0
-
---			current_callstack_initialized := False
 		end
-
-
 
 end -- class EIFNET_DEBUGGER_STACK_INFO

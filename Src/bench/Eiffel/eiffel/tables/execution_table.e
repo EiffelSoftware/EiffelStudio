@@ -112,6 +112,28 @@ feature
 			file.putstring ("};%N");
 		end;
 
+feature -- Debugging
+
+	debug_counter: COUNTER is
+		-- Counter used to generate real body
+		-- id's for debuggable byte arrays.
+		once
+			!!Result
+		end;
+
+	reset_debug_counter is
+			-- Reset `debug_counter'.
+		do
+			debug_counter.reset
+		end;
+
+	debuggable_body_id: INTEGER is
+			-- New body id for 
+			-- debuggable byte arrays.
+		do
+			Result := count + debug_counter.next
+		end;
+
 feature {NONE} -- External features
 
 	write_int (f: POINTER; v: INTEGER) is

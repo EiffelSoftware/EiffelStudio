@@ -77,16 +77,10 @@ feature -- Access
 			end
 		end
 
-	start_position: INTEGER is
-			-- Stating position of the token involved in the syntax error
+	line: INTEGER is
+			-- Line of the token involved in the syntax error
 		do
-			Result := syntax_message.start_position
-		end
-
-	end_position: INTEGER is
-			-- Ending position of the of the token involved in the syntax error
-		do
-			Result := syntax_message.end_position
+			Result := syntax_message.line
 		end
 
 	code: STRING is "Syntax error"

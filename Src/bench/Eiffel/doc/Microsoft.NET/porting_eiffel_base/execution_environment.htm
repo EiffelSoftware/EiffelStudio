@@ -1,0 +1,41 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>EXECUTION_ENVIRONMENT</title>
+</head>
+
+<body>
+<h1>EXECUTION_ENVIRONMENT</h1>
+<h2>Used .NET classes</h2>
+<ul>
+	<li>ENVIRONMENT
+</ul>
+<h2>Static methods used</h2>
+<ul>
+	<li>{ENVIRONMENT}.get_current_directory, set_current_directory, get_environment_variable
+</ul>
+<h2>Security notes</h2>
+<ul>
+	<li>Need unrestricted permission to get the current directory.
+	<li>Need unmanaged code to set the current directory.
+	<li>Read permission is needed when accessing the Path environment variable.
+</ul>
+<h2>Unhandled exceptions</h2>
+<ul>
+	<li>If the directory doesn't exist in set_current_directory, DirectoryNotFoundException is raised.
+	<li>When trying to set the current directory to a Void or empty string, exceptions are raised too.
+</ul>
+<h2>Other notes</h2>
+<ul>
+	<li>.NET doesn't seem to provide a way to set environment variables, so that 
+	"user_environment_variables" was added to store additional environment variables.
+	Of course these variables won't be accessible by {ENVIRONMENT}.get_environment_variable.
+	<li>Do not support home directories by default.
+	<li>Needed to include some system.dll classes (PROCESS, PROCESSSTARTINFO)
+      =&gt; TODO
+</ul>
+
+</body>
+
+</html>

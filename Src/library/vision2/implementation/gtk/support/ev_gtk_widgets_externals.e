@@ -114,6 +114,26 @@ feature {NONE} -- code in the glue library
 			"C | %"gtk_eiffel.h%""
 		end
 
+	c_gtk_widget_set_bg_color (widget: POINTER; r, g, b: INTEGER) is
+		external
+			"C | %"gtk_eiffel.h%""
+		end
+
+	c_gtk_widget_get_bg_color (widget: POINTER; r, g, b: POINTER) is
+		external
+			"C | %"gtk_eiffel.h%""
+		end
+
+	c_gtk_widget_set_fg_color (widget: POINTER; r, g, b: INTEGER) is
+		external
+			"C | %"gtk_eiffel.h%""
+		end
+
+	c_gtk_widget_get_fg_color (widget: POINTER; r, g, b: POINTER) is
+		external
+			"C | %"gtk_eiffel.h%""
+		end
+
 end -- class EV_GTK_WIDGETS_EXTERNALS
 
 --|----------------------------------------------------------------

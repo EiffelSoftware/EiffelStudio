@@ -36,7 +36,7 @@ feature -- Access
 				dn := p.name
 				en := formatted_argument_name (dn, i + 1)
 				if dn = Void or dn.is_empty then
-					dn := en.clone (en)
+					dn := en.twin
 				end
 				t := p.parameter_type
 				Result.put (create {CONSUMED_ARGUMENT}.make (dn, en,

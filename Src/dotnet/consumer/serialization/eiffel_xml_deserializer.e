@@ -68,7 +68,7 @@ feature -- Basic Operations
 							ser.serialize (deserialized_object, path)
 						else
 							last_error := Invalid_xml_file_error
-							last_error_context := clone (path)
+							last_error_context := path.twin
 						end
 						xml_reader.close
 					else

@@ -904,7 +904,7 @@ feature {NONE} -- Added features of System.Object to Interfaces
 			internal_update_interface_members (t, l_processed)
 
 			from
-				l_object_methods := clone (Object_methods)
+				l_object_methods := Object_methods.twin
 				l_members := internal_members
 				i := l_members.lower
 				nb := l_members.upper

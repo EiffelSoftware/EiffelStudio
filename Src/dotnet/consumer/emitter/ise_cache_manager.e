@@ -112,7 +112,7 @@ feature -- Basic Oprtations
 			is_successful := True
 			last_error_message := ""
 			
-			destination_path := adest.clone (adest)
+			destination_path := adest.twin
 			assembly_consumer.set_destination_path (adest)
 			assembly := feature {ASSEMBLY}.load_from (apath.to_cil)
 			if assembly /= Void then
@@ -185,7 +185,7 @@ feature {NONE} -- Basic Operations
 		local
 			full_name: STRING
 		do
-			Result := aname.clone (aname)
+			Result := aname.twin
 			Result.append (", Version=" + aversion)
 			Result.append (", Culture=" + aculture)
 			Result.append (", PublicKeyToken=")
@@ -212,7 +212,7 @@ feature {NONE} -- Internal Agents
 			-- process an error message
 		do
 			is_successful := False
-			last_error_message := s.clone (s)
+			last_error_message := s.twin
 		end
 		
 	display_status (s: STRING) is

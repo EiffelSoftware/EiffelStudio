@@ -20,7 +20,7 @@ feature -- Basic Operation
 			l_bin_path: STRING
 		do
 			if not retried then
-				l_bin_path := clone (path)
+				l_bin_path := path.twin
 				l_bin_path.remove_tail (4)
 				l_bin_path.append (".bin")
 				create f.make_open_write (l_bin_path)

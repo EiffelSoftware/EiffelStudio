@@ -248,7 +248,7 @@ feature {NONE} -- Implementation
 					-- set internal eiffel path to registry key
 					internal_eiffel_path.put (Result)
 				else
-					Result := clone (internal_eiffel_path.item)
+					Result := internal_eiffel_path.item.twin
 				end
 				if Result.item (Result.count) /= (create {OPERATING_ENVIRONMENT}).Directory_separator then
 					Result.append_character ((create {OPERATING_ENVIRONMENT}).Directory_separator)

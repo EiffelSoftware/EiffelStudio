@@ -30,7 +30,7 @@ feature -- Basic Operation
 			if not retried then
 				last_error := No_error
 				last_error_context := Void
-				binary_path := clone (path)
+				binary_path := path.twin
 				binary_path.remove_tail (4)
 				binary_path.append (".bin")
 				if feature {SYSTEM_FILE}.exists (binary_path.to_cil) then

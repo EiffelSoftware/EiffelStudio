@@ -321,7 +321,7 @@ feature -- Initialization
 			inlining_size_field_set: inlining_size_field.value = 0
 			shared_library_check_not_selected: not shared_library_check.is_selected
 			shared_library_field_is_insensitive: not shared_library_field.is_sensitive
-			shared_library_field_voided: shared_library_field.text = Void
+			shared_library_field_voided: shared_library_field.text.is_empty
 		end
 
 feature {NONE} -- Initialization

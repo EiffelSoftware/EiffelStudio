@@ -58,11 +58,11 @@ EIF_INTEGER xm_text_y_coord (EIF_POINTER widget, EIF_INTEGER pos)
 
 EIF_INTEGER xm_text_find_string (EIF_POINTER widget, EIF_INTEGER pos, char *pattern)
 {
-	XmTextPosition new_position = pos;
+	XmTextPosition new_position = (XmTextPosition) pos;
 	Boolean found = False;
 
-	found = XmTextFindString ((Widget) widget, pos, pattern, XmTEXT_FORWARD, &new_position);
-	if (found)
+	found = XmTextFindString ((Widget) widget, new_position, pattern, XmTEXT_FORWARD, &new_position);
+	if (found == True)
 		return new_position;
 	else
 		return -1;

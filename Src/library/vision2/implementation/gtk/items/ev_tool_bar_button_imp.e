@@ -19,9 +19,12 @@ inherit
 			set_background_color,
 			create_pixmap_place,
 			set_insensitive
+			
 		redefine
+			parent_imp,
 			make_with_text
 		end
+
 
 	EV_BUTTON_IMP
 		rename
@@ -36,7 +39,7 @@ inherit
 			add_double_click_command	
 		end
 
-creation
+create
 	make,
 	make_with_text,
 	make_with_pixmap,
@@ -69,6 +72,8 @@ feature {NONE} -- Initialization
 
 
 feature -- Access
+
+	parent_imp: EV_TOOL_BAR_IMP
 
 	
 	index: INTEGER is
@@ -144,4 +149,4 @@ end -- class EV_TOOL_BAR_BUTTON_IMP
 --! Electronic mail <info@eiffel.com>
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
---!----------------------------------------------------------------
+--!---------------------------------------------------------------

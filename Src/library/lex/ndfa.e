@@ -183,7 +183,7 @@ feature {NONE} -- Implementation
 		local
 			index, last_index: INTEGER
 		do
-			!! Result.make (initial_set.count);
+			create Result.make (initial_set.count);
 			last_index := initial_set.count;
 			from
 				index := initial_set.smallest
@@ -201,7 +201,7 @@ feature {NONE} -- Implementation
 		local
 			index: INTEGER
 		do
-			!! closures.make (1, nb_states);
+			create closures.make (1, nb_states);
 			from
 				index := 0
 			until

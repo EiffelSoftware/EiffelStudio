@@ -45,10 +45,10 @@ feature -- Status setting
 		do
 			buffer_size := buf;
 			line_length := lin;
-			!! buffer.make (buffer_size);
+			create buffer.make (buffer_size);
 			buffer.fill_blank;
-			!! line_nb_array.make (1, buffer_size);
-			!! column_nb_array.make (1, buffer_size)
+			create line_nb_array.make (1, buffer_size);
+			create column_nb_array.make (1, buffer_size)
 		ensure
 			buffer_size = buf;
 			line_length = lin
@@ -116,7 +116,7 @@ feature -- Status setting
 			index, last_index: INTEGER
 		do
 			if mask = Void then
-				!! mask.make (line_length);
+				create mask.make (line_length);
 				mask.all_true
 			end
 			if j = 0 then
@@ -140,7 +140,7 @@ feature -- Status setting
 			file_name_not_void: f_name /= Void
 		do
 			close_file;
-			!! file.make_open_read (f_name);
+			create file.make_open_read (f_name);
 			reset;
 			char_buffered_number := 0;
 			source_is_file := True;

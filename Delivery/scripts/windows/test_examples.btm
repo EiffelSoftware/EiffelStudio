@@ -13,9 +13,18 @@ if exist %INSTALL_LOG fullrf %INSTALL_LOG
 fullrf %INIT_DIR\examples_errors.log
 set ISE_EIFFEL=%INSTALL_DIR
 
+iff not defined ISE_PLATFORM then
+	set ISE_PLATFORM=windows
+endiff
+iff not defined ISE_C_COMPILER then
+	remtrace ISE_C_COMPILER not defined
+	CANCEL
+endiff
+set PATH=%PATH;%ISE_EIFFEL\studio\spec\%ISE_PLATFORM\bin
+
 alias compile_ace `^
-remtrace ***Compiling Ace: %@EXECSTR[cd]\%2 &^
-remtrace ***Melting %@EXECSTR[cd]\%2 &^
+remtrace Compiling Ace: %@EXECSTR[cd]\%2 &^
+remtrace Melting %@EXECSTR[cd]\%2 &^
 clean_project &^
 melt %2 &^
 wff &^
@@ -24,14 +33,14 @@ remtrace *****Error***** %@EXECSTR[cd]\%2 won't freeze. &^
 echo *****Error***** %@EXECSTR[cd]\%2 won't freeze. >> %INIT_DIR\examples_errors.log &^
 endiff &^
 clean_project &^
-remtrace ***Finalizing %@EXECSTR[cd]\%2 &^
+remtrace Finalizing %@EXECSTR[cd]\%2 &^
 finalize %2 &^
 fff &^
 iff not exist EIFGEN\F_code\*.exe then &^
 remtrace *****Error***** %@EXECSTR[cd]\%2 won't finalize. &^
 echo *****Error***** %@EXECSTR[cd]\%2 won't finalize. >> %INIT_DIR\examples_errors.log  &^
 endiff &^
-clean_project`
+cleanup_eiffel *.exe`
 
 alias compile_aces `for %a in (*.ace) do compile_ace %1 %a`
 

@@ -26,6 +26,7 @@
 #include "eif_interp.h"
 #include "eif_update.h"
 #include "eif_main.h"
+#include "eif_lmalloc.h"
 
 #undef STACK_CHUNK
 #define STACK_CHUNK		200			/* Number of items in a stack chunk */

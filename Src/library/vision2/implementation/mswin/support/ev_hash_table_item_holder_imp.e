@@ -44,7 +44,7 @@ feature -- Basic operations
 				list.after or Result /= Void
 			loop
 				litem ?= list.item.interface
-				if litem.data.is_equal (data) then
+				if equal (data, litem.data) then
 					Result ?= litem
 				end
 				list.forth

@@ -2943,6 +2943,10 @@ doc:	</routine>
 */
 rt_private int old_attribute_type_matched (int16 **gtype, int16 **atype)
 {
+#ifdef EIF_ASSERTIONS
+	RT_GET_CONTEXT
+#endif
+
 	int result = 1;
 	int16 dftype = **gtype;
 	int16 aftype = **atype;
@@ -4564,6 +4568,10 @@ rt_private EIF_REFERENCE object_rread_special (
  */
 rt_private void object_rread_tuple (EIF_REFERENCE object, uint32 count)
 {
+#ifdef EIF_ASSERTIONS
+	RT_GET_CONTEXT
+#endif
+
 	EIF_REFERENCE addr, trash = NULL;
 	EIF_TYPED_ELEMENT *l_item;
 	char l_type;

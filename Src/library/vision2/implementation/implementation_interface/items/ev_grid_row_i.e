@@ -37,6 +37,9 @@ feature {NONE} -- Initialization
 			is_initialized := True
 			internal_height := 16
 			depth_in_tree := 1
+			subnode_count_recursive := 0
+			expanded_subnode_count_recursive := 0
+			is_expanded := False
 		end
 
 feature {EV_GRID_I} -- Initialization
@@ -146,11 +149,8 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 		
-	is_expanded: BOOLEAN is
+	is_expanded: BOOLEAN
 			-- Are subrows of `Current' displayed?
-		do
-			to_implement ("EV_GRID_ROW.is_expanded")
-		end
 		
 	height: INTEGER is
 			-- Height of `Current'.
@@ -216,7 +216,11 @@ feature -- Status setting
 			has_subrows: subrow_count > 0
 			is_parented: parent /= Void
 		do
-			to_implement ("EV_GRID_ROW.expand")
+			if not is_expanded then
+				is_expanded := True
+				update_parent_expanded_node_counts_recursively (subnode_count_recursive)
+				parent_grid_i.redraw_client_area
+			end
 		ensure
 			is_expanded: is_expanded
 		end
@@ -226,7 +230,11 @@ feature -- Status setting
 		require
 			is_parented: parent /= Void
 		do
-			to_implement ("EV_GRID_ROW.collapse")
+			if is_expanded then
+				is_expanded := False
+				update_parent_expanded_node_counts_recursively ( - subnode_count_recursive)
+				parent_grid_i.redraw_client_area
+			end
 		ensure
 			not_is_expanded: not is_expanded
 		end
@@ -274,13 +282,15 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 				-- parent.row (i).parent_row = Current
 		local
 			row_imp: EV_GRID_ROW_I
-			parent_row_imp: EV_GRID_ROW_I
 		do
 			--to_implement ("EV_GRID_ROW.add_subrow")
 			row_imp := a_row.implementation
 			subrows.extend (row_imp)
 			row_imp.internal_set_parent_row (Current)
 			parent_grid_i.redraw_client_area
+			
+			update_parent_node_counts_recursively (1)
+			update_parent_expanded_node_counts_recursively (1)
 		ensure
 			added: a_row.parent_row = interface
 			subrow (subrow_count) = a_row
@@ -317,9 +327,6 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 
 	disable_select is
 			-- Deselect the object.
-		local
-			i: INTEGER
-			a_item: EV_GRID_ITEM_I
 		do
 			disable_select_internal
 			parent_grid_i.update_row_selection_status (Current)
@@ -418,6 +425,70 @@ feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I} -- Implementation
 	depth_in_tree: INTEGER
 		-- Depth of `Current' within a tree structure.
 		
+	set_subnode_count_recursive (a_count: INTEGER) is
+			-- Assign `a_count' to `subnode_count_recursive'.
+		require
+			a_count_non_negative: a_count > 0
+		do
+			subnode_count_recursive := a_count
+		ensure
+			subnode_count_set: subnode_count_recursive = a_count
+		end
+		
+	set_expanded_subnode_count_recursive (a_count: INTEGER) is
+			-- Assign `a_count' to `expanded_subnode_count_recursive'.
+		require
+			a_count_non_negative: a_count > 0
+		do
+			expanded_subnode_count_recursive := a_count
+		ensure
+			expanded_subnode_count_set: expanded_subnode_count_recursive = a_count
+		end
+	
+	subnode_count_recursive: INTEGER
+		-- Number of subnodes contained within `Current' recursively.
+		
+	expanded_subnode_count_recursive: INTEGER
+		-- Number of expanded subnodes contained within `Current' recursively.
+		
+	update_parent_node_counts_recursively (adjustment_value: INTEGER) is
+			-- For `Current' and all parent nodes of `Current' recursively, update their
+			-- `subnode_count_recursive' by `adjustment_value'.
+		require
+			has_subrows: subrow_count > 0
+			adjustment_value_not_zero: adjustment_value /= 0
+		local
+			parent_row_imp: EV_GRID_ROW_I
+		do
+			from
+				parent_row_imp := Current
+			until
+				parent_row_imp = Void
+			loop
+				parent_row_imp.set_subnode_count_recursive (parent_row_imp.subnode_count_recursive + adjustment_value)
+				parent_row_imp := parent_row_imp.parent_row_i
+			end
+		end
+		
+	update_parent_expanded_node_counts_recursively (adjustment_value: INTEGER) is
+			-- For `Current' and all parent nodes of `Current' recursively, update their
+			-- `subnode_count_recursive' by `adjustment_value'.
+		require
+			has_subrows: subrow_count > 0
+			adjustment_value_not_zero: adjustment_value /= 0
+		local
+			parent_row_imp: EV_GRID_ROW_I
+		do
+			from
+				parent_row_imp := Current
+			until
+				parent_row_imp = Void
+			loop
+				parent_row_imp.set_expanded_subnode_count_recursive (parent_row_imp.expanded_subnode_count_recursive + adjustment_value)
+				parent_row_imp := parent_row_imp.parent_row_i
+			end
+		end
+		
 feature {EV_ANY_I, EV_GRID_ROW} -- Implementation
 
 	interface: EV_GRID_ROW
@@ -429,7 +500,11 @@ invariant
 	index_same_as_parent_index: parent_grid_i /= Void implies parent_grid_i.grid_rows.index_of (Current, 1) = index
 	selected_item_count_valid: selected_item_count >= 0 and then selected_item_count <= count
 	subrows_not_void: subrows /= Void
-
+	subnode_count_recursive_zero_when_no_subrows: subrows.count = 0 implies subnode_count_recursive = 0
+	expanded_subnode_count_recursive_zero_when_no_subrows: subrows.count = 0 implies expanded_subnode_count_recursive = 0
+--	subnode_count_recursive_at_least_subrow_count: subrow_count > 0 implies subnode_count_recursive >= subrow_count
+	expanded_subnode_count_recursive_at_least_subrow_count_when_expanded: subrow_count > 0 and is_expanded implies expanded_subnode_count_recursive >= subrow_count
+	expanded_subnode_count_recursive_non_negative_while_collapsed: subrow_count > 0 and not is_expanded implies expanded_subnode_count_recursive >= 0
 end
 
 --|----------------------------------------------------------------

@@ -279,8 +279,6 @@ feature -- Concurrent Eiffel
 
     generate_only_separate_pattern (file: INDENT_FILE) is
             -- Generate pattern for separate calls in FIANALIZE mode.
-		require
-			has_separate_calls: System.has_separate
         do
             from
                 c_patterns.start

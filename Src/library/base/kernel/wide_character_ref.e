@@ -8,12 +8,12 @@ class WIDE_CHARACTER_REF inherit
 
 	COMPARABLE
 		redefine
-			three_way_comparison, is_equal
+			three_way_comparison, is_equal, out
 		end
 
 	HASHABLE
 		redefine
-			is_hashable, is_equal
+			is_hashable, is_equal, out
 		end
 
 feature -- Access
@@ -64,6 +64,17 @@ feature -- Element change
 			-- Make `c' the `item' value.
 		do
 			item := c
+		end
+
+feature -- Output
+
+	out: STRING is
+			-- Printable representation of wide character
+		do
+			create Result.make (6)
+			Result.extend ('U')
+			Result.extend ('+')
+			Result.append (chcode (item).to_hexa_string)
 		end
 
 feature {NONE} -- Implementation

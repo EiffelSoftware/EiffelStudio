@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 			gtk_misc_set_alignment (gtk_misc (label_widget), 0.5, 0.5)
 		end	
 		
-	create_pixmap_place is
+	create_pixmap_place (pix_imp: EV_PIXMAP_IMP) is
 			-- prepare the place for the pixmap in the `box'.
 			-- For that, we add a pixmap with a default gdk pixmap
 			-- in the `box'.
@@ -64,7 +64,9 @@ feature {NONE} -- Initialization
 			pixmap_imp: EV_PIXMAP_IMP
 		do
 			-- create the pixmap with a default xpm.
-			pixmap_widget := c_gtk_pixmap_create_empty (box)
+			-- We use the pixmap's `create_window' to create the new pixmap
+			-- as we need a GdkWindow.
+			pixmap_widget := c_gtk_pixmap_create_empty (pix_imp.create_window)
 
 			-- Set the pixmap in the `box'.
 			gtk_box_pack_start (GTK_BOX (box), pixmap_widget, True, True, 0)
@@ -74,6 +76,9 @@ feature {NONE} -- Initialization
 
 			-- We right-align and vertical_center-position the pixmap.
 			gtk_misc_set_alignment (gtk_misc (pixmap_widget), 1.0, 0.5)
+
+			-- We left-align and vertical_center-position the text.
+			gtk_misc_set_alignment (gtk_misc (label_widget), 0.0, 0.5)
 		end					
 
 feature -- Element change

@@ -329,7 +329,6 @@ feature -- Status setting
 				call_stack_tool.change_manager (debugging_window, debugging_window.left_panel)
 			end
 			call_stack_tool.update
-			call_stack_tool.show
 			debug ("DEBUGGER_INTERFACE")
 				io.putstring ("editor height: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
 			end
@@ -345,7 +344,6 @@ feature -- Status setting
 			
 			object_tool.set_debugger_manager (Current)
 			object_tool.update
-			object_tool.show
 			debug ("DEBUGGER_INTERFACE")
 				io.putstring ("editor height: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
 			end
@@ -361,11 +359,10 @@ feature -- Status setting
 			
 			evaluator_tool.prepare_for_debug
 			evaluator_tool.update
-			evaluator_tool.show
 			debug ("DEBUGGER_INTERFACE")
 				io.putstring ("editor height: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
 			end
-			
+			debugging_window.show_tools
 			split ?= object_tool.widget
 				--| 200 is the default size of the local tree.
 			split.set_split_position (object_split_position.max (split.minimum_split_position))
@@ -373,12 +370,13 @@ feature -- Status setting
 				debug ("DEBUGGER_INTERFACE")
 					io.putstring("Searching resource%N")
 				end
-				rl ?= resources.item ("left_debug_layout")
-				rr ?= resources.item ("right_debug_layout")
+				rl ?= resources.item ("left_debug_layout_new")
+				rr ?= resources.item ("right_debug_layout_new")
 				if rl /= Void and rr /= Void then
 					debug ("DEBUGGER_INTERFACE")
 						io.putstring("Found resource%N")
 					end
+					
 					debugging_window.left_panel.load_from_resource (rl.actual_value)
 					debugging_window.right_panel.load_from_resource (rr.actual_value)
 				else
@@ -392,9 +390,6 @@ feature -- Status setting
 			end
 			debugging_window.panel.set_split_position (debug_splitter_position.
 				max (debugging_window.panel.minimum_split_position))
-			debugging_window.show_tools
-			debugging_window.left_panel.refresh_splitter
-			debugging_window.right_panel.refresh_splitter
 			debug ("DEBUGGER_INTERFACE")
 				io.putstring ("editor height during debug: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
 			end
@@ -419,7 +414,7 @@ feature -- Status setting
 			debug ("DEBUGGER_INTERFACE")
 				io.putstring ("editor height after debug: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
 			end
-		
+			
 			debug_left_layout := debugging_window.left_panel.save_to_resource
 			debug_right_layout := debugging_window.right_panel.save_to_resource
 			debug_splitter_position := debugging_window.panel.split_position
@@ -427,8 +422,8 @@ feature -- Status setting
 			if split /= Void then
 				object_split_position := split.split_position
 			end
-			set_array_resource ("left_debug_layout", debug_left_layout)
-			set_array_resource ("right_debug_layout", debug_right_layout)
+			set_array_resource ("left_debug_layout_new", debug_left_layout)
+			set_array_resource ("right_debug_layout_new", debug_right_layout)
 			set_integer_resource ("debug_main_splitter_position", debug_splitter_position)
 			debug ("DEBUGGER_INTERFACE")
 				io.putstring ("Right debug layout: %N")
@@ -450,18 +445,20 @@ feature -- Status setting
 	 				i := i + 1
 	 			end
 			end
-		
-			debugging_window.hide_tools
+			
 				-- Hide debugging tools.
+			debugging_window.left_panel.block
+			debugging_window.right_panel.block
 			call_stack_tool.recycle
 			object_tool.recycle
 			evaluator_tool.recycle
+			debugging_window.right_panel.unblock
+			debugging_window.left_panel.unblock
 			debug ("DEBUGGER_INTERFACE")
 				io.putstring ("editor height after debug: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
 			end
 		
 			raised := False
-
 				-- Change the state of the debugging window.
 			debugging_window.left_panel.load_from_resource (normal_left_layout)
 			debugging_window.right_panel.load_from_resource (normal_right_layout)
@@ -469,9 +466,6 @@ feature -- Status setting
 				debugging_window.panel.set_split_position (normal_splitter_position.
 					max (debugging_window.panel.minimum_split_position))
 			end
-			debugging_window.show_tools
-			debugging_window.left_panel.refresh_splitter
-			debugging_window.right_panel.refresh_splitter
 			debug ("DEBUGGER_INTERFACE")
 				io.putstring ("editor height after debug: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
 			end
@@ -514,8 +508,6 @@ feature -- Debugging events
 
 	on_application_launched is
 			-- Application has just been launched.
-		require
---			debugging_window_set: debugging_window /= Void
 		do
 			Window_manager.display_message (Interface_names.E_running)
 			Application.status.set_max_depth (maximum_stack_depth)
@@ -528,9 +520,7 @@ feature -- Debugging events
 				-- Test whether application was really launched.
 			output_manager.clear
 			output_manager.display_application_status
-				-- Update `Current'.
-				-- Raise debugging tools.
-			raise
+
 				-- Modify the debugging window display.
 			stop_cmd.enable_sensitive
 			quit_cmd.enable_sensitive
@@ -726,6 +716,17 @@ feature {EB_DEBUGGER_OBSERVER} -- Manager implementation
 
 	observers: ARRAYED_LIST [EB_DEBUGGER_OBSERVER]
 			-- List of observers of `Current'.
+			
+feature {EB_DEVELOPMENT_WINDOW} -- Implementation
+
+	save_original_layout is
+			-- Save original layout of development window to resources.
+			-- Called by the development window with the debugger when closed,
+			-- so that the original layout of the window is stored in the registry.
+		do
+			set_array_resource ("development_window__left_panel_layout_new", normal_left_layout)
+			set_array_resource ("development_window__right_panel_layout_new", normal_right_layout)
+		end
 
 feature {NONE} -- Implementation
 

@@ -1,4 +1,4 @@
-indexing
+ indexing
 	description: "Splitter, will generate Eiffel class files from Eiffel multi-class files."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -32,6 +32,7 @@ feature {NONE} -- Initialization
 			destination_folder := a_destination_folder
 			process_subfolders := a_process_subfolders
 			create parser.make_il_parser
+			create generated_files.make (20)
 		ensure
 			folder_set: folder = a_folder
 			regexp_set: regexp = a_regexp
@@ -56,8 +57,11 @@ feature -- Access
 	event_handler: ROUTINE [ANY, TUPLE [EV_THREAD_EVENT]]
 			-- Event handler
 
-	file_count: INTEGER
+	file_count: INTEGER is
 			-- Number of created files
+		do
+			Result := generated_files.count
+		end
 
 feature -- Basic Operation
 
@@ -73,7 +77,7 @@ feature -- Basic Operation
 			l_severity: INTEGER
 		do
 			event_handler := a_event_handler
-			file_count := 0
+			generated_files.clear_all
 			create l_dir.make (folder)
 			if l_dir.exists then
 				split_files_in_folder (folder)
@@ -239,13 +243,17 @@ feature {NONE} -- Implementation
 		local
 			l_retried: BOOLEAN
 			l_file: PLAIN_TEXT_FILE
-			l_name: STRING
+			l_name, l_class_name: STRING
 		do
 			if not l_retried then
 				parser.parse_from_string (a_class_text)
 				if parser.root_node /= Void and then parser.root_node.class_name /= Void then
-					l_name := parser.root_node.class_name.as_lower
-					create l_file.make (a_directory + l_name + ".e")
+					l_class_name := parser.root_node.class_name.as_lower
+					create l_name.make (a_directory.count + l_class_name.count + 2)
+					l_name.append (a_directory)
+					l_name.append (l_class_name)
+					l_name.append (".e")
+					create l_file.make (l_name)
 					if l_file.exists then
 						l_file.delete
 						raise_event (create {CODE_ES_EVENT}.make ("A file with path '" + l_file.name + "' already existed and has been overwritten.",
@@ -255,7 +263,7 @@ feature {NONE} -- Implementation
 					l_file.open_write
 					l_file.put_string (a_class_text)
 					l_file.close
-					file_count := file_count + 1
+					generated_files.force (l_name, l_name)
 					raise_event (create {CODE_ES_EVENT}.make ("Created file '" + l_file.name + "'",
 																"File Created",
 																feature {EV_THREAD_SEVERITY_CONSTANTS}.Information))
@@ -283,6 +291,11 @@ feature {NONE} -- Implementation
 	
 	parser: EIFFEL_PARSER
 			-- Eiffel parser
+
+	generated_files: HASH_TABLE [STRING, STRING]
+			-- Generated file names
+			--| We have to keep file names as simply incrementing a counter wouldn't work
+			--| because the same file can be generated twice.
 
 invariant
 	non_void_folder: folder /= Void

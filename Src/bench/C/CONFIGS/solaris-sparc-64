@@ -36,8 +36,10 @@ lngpad_2='LNGPAD(2)'
 #Check value for next 4
 inttypes_include='#include <sys/inttypes.h>'
 eif_integer_64_display='PRId64'
+eif_natural_64_display='PRIu64'
 eif_pointer_display='"lX"'
 eif_integer_64_constant='INT64_C(x)'
+d_uint64_to_real='define'
 
 #File system
 nofile='256'
@@ -116,6 +118,7 @@ pidtype='pid_t'
 prototype='define'
 d_gethid='define'
 d_maypanic='undef'
+d_nanosleep='define'
 d_pidcheck='define'
 d_sbrk='define'
 d_sbrksmart='define'

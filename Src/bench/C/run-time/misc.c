@@ -235,16 +235,15 @@ rt_public EIF_REFERENCE arycpy(EIF_REFERENCE area, EIF_INTEGER i, EIF_INTEGER j,
 	int dftype;				/* Full dynamic type of the first expanded object */
 	int n;					/* Counter for initialization of expanded */
 
-/* FIXME: check efficiency
-
-	request from Philippe Stephan CALFP
-
-*/
-
+	assert (HEADER (area)->ov_flags & EO_SPEC);	/* Must be special. */
+ 
 	zone = HEADER(area);
 	ref = area + (zone->ov_size & B_SIZE) - LNGPAD_2;
-	ref += sizeof(long);
-	elem_size = *(long *) ref;			/* Extract the element size */
+	elem_size = *((long *) ref + 1);		/* Extract the element size */
+
+#ifdef ARYCPY_DEBUG
+	printf ("ARYCPY: area 0x%x, new count %d, old count %d, start %d and %d long\n", area, i, *(long*) ref, j, k);
+#endif	/* ARYCPY_DEBUG */
 
 	/* Possible optimization: remembering process for special objects full of
 	 * references can be discarded in this call to `sprealloc', since
@@ -255,6 +254,15 @@ rt_public EIF_REFERENCE arycpy(EIF_REFERENCE area, EIF_INTEGER i, EIF_INTEGER j,
 
 	/* Move old contents to the right position and fill in empty parts with
 	 * zeros.
+	 */
+	if (				/* Is this the usaul case. */
+		(j == 0) &&
+		(*(long *) ref == k)
+		)
+		return new_area;		/* All have been done in sprealloc () . */
+
+	/* Otherwise, in some rare cases, we may change the 
+	 * order of the items in the array. 
 	 */
 
 	safe_bcopy(new_area, new_area + j * elem_size, k * elem_size);
@@ -273,7 +281,8 @@ rt_public EIF_REFERENCE arycpy(EIF_REFERENCE area, EIF_INTEGER i, EIF_INTEGER j,
 			== (EO_REF | EO_REM)) {
 				/* Is object is special table? */
 		/* Update new references. */
-		eif_promote_special (new_area);
+		eif_promote_special (new_area);	
+									
 	}
 	
 	

@@ -1,5 +1,4 @@
 indexing
-
 	description: 
 		"EiffelVision menu box. Mswindows implementation."
 	status: "See notice at end of class"
@@ -41,6 +40,14 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 	
+	destroyed: BOOLEAN is
+			-- Is Current object destroyed?  
+		do
+			check
+				not_yet_implemented: False
+			end
+		end
+
 	container: EV_MENU_CONTAINER_IMP
 
 	text: STRING
@@ -49,6 +56,16 @@ feature -- Status report
 			-- Set `text' to `str'
 		do
 			text := str
+		end
+
+feature -- Status setting
+
+	destroy is
+			-- Destroy actual object.
+		do
+			check
+				not_yet_implemented: False
+			end
 		end
 
 feature {EV_MENU_ITEM_CONTAINER_IMP} -- Implementation
@@ -63,7 +80,7 @@ feature {EV_MENU_ITEM_CONTAINER_IMP} -- Implementation
 				valid_item: item_imp /= Void
 			end
 			ev_children.extend (item_imp)
-			append_string (name_item, ev_children.count)
+			append_string (item_imp.text, ev_children.count)
 			item_imp.set_id (ev_children.count)
 			item_imp.set_position (count - 1)
 		end

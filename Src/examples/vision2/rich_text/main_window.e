@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			list_item: EV_LIST_ITEM
 			counter: INTEGER
 			font: EV_FONT
-			format: EV_CHARACTER_FORMAT
+			format, format2: EV_CHARACTER_FORMAT
 			tab_positioner: EV_RICH_TEXT_TAB_POSITIONER
 		do
 				-- Initialize color display to black.
@@ -79,7 +79,9 @@ feature {NONE} -- Initialization
 				counter := counter + 2 + (counter // 10)
 			end
 			
-			rich_text.set_caret_position (5)
+				-- Add introductory text for example.
+			(create {DEFAULT_TEXT_INITIALIZER}).set_default_text (rich_text)
+			
 				-- Add an example of every available font to `rich_text'.
 			format := rich_text.character_format (1)
 			from
@@ -101,18 +103,18 @@ feature {NONE} -- Initialization
 			end
 			rich_text.flush_buffer_to (rich_text.text_length + 1, rich_text.text_length + 1)
 			
-			create accelerator.make_with_key_combination (create {EV_KEY}.make_with_code ((create {EV_KEY_CONSTANTS}).key_s), False, True, False)
-			accelerators.extend (accelerator)
-			accelerator.actions.extend (agent check_line_positions)
 			create accelerator.make_with_key_combination (create {EV_KEY}.make_with_code ((create {EV_KEY_CONSTANTS}).key_d), False, True, False)
 			accelerators.extend (accelerator)
 			accelerator.actions.extend (agent random_test)
+
 			
 				-- Initialize a test that checks the contents of each line.
 			create timer.make_with_interval (2000)
 			timer.actions.extend (agent check_line_positions)
-			show_actions.extend (agent window_shown)
+			show_actions.extend (agent window_shown)			
 		end
+		
+	
 		
 	window_shown is
 			-- `Current' has been shown. Perform necessary processing.
@@ -1171,6 +1173,7 @@ feature {NONE} -- To be removed
 ----			end
 --		--	format := rich_text.paragraph_format (10)
 		end
+		
 	
 	offset: INTEGER
 	

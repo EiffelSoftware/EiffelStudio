@@ -83,7 +83,7 @@ feature {COMPILER_EXPORTER} -- Case storage
 
     storage_info: S_EXPORT_SET_I is
         do
-			!! Result.make
+			!! Result.make (0)
         end
 
 end

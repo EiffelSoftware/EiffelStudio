@@ -10,7 +10,7 @@ class
 
 inherit
 
-	ARRAY [STRING]
+	ARRAYED_LIST [STRING]
 
 	S_EXPORT_I
 		undefine
@@ -20,7 +20,19 @@ inherit
 		end
 
 creation
-	make
+	make,
+	make_none
+
+feature {NONE} -- Initialization
+ 
+	make_none is
+			-- Initialize Current to be exported to none.
+		do
+			make (1);
+			put_front (None_string)
+		ensure
+			is_none: is_none
+		end
 
 feature -- Properties
 
@@ -28,13 +40,13 @@ feature -- Properties
 			-- Is Current exported to none?
 		do
 			Result := (count = 0) or else 
-					((count = 1) and then Any_string.is_equal(item(1)))
+					((count = 1) and then Any_string.is_equal(i_th(1)))
 		end
 
 	is_none: BOOLEAN is
 			-- Is Current exported to none?
 		do
-			Result := (count = 1) and then None_string.is_equal(item(1))
+			Result := (count = 1) and then None_string.is_equal(i_th(1))
 		end
 
 	is_set: BOOLEAN is True;
@@ -47,7 +59,7 @@ feature -- Comparison
 			-- Is `other' the same as Current ?
 		local
 			other_set: S_EXPORT_SET_I
-			index: INTEGER
+			i: INTEGER
 		do
 			if other.is_all then
 				Result := is_all
@@ -58,14 +70,14 @@ feature -- Comparison
 				if other_set /= Void and then count = other_set.count then
 					from
 						Result := True
-						index := 1
+						i := 1
 					variant
-						remaining_elements: count - index
+						remaining_elements: count - i
 					until
-						not Result or else index > count
+						not Result or else i > count
 					loop
-						Result :=  other_set.has (item (index))
-						index := index + 1
+						Result :=  other_set.has (i_th (i))
+						i := i + 1
 					end
 				end
 			end

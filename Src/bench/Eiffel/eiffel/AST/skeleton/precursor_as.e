@@ -328,8 +328,7 @@ feature -- Type check, byte code and dead code removal
 			end
 
 				-- Access managment
-			access_b ?= a_feature.access (Result.type_i)
-			access_b.set_precursor_type (p_type.type_i)
+			access_b ?= a_feature.access_for_feature (Result.type_i, p_type.type_i)
 			context.access_line.insert (access_b)
 		end
 

@@ -21,13 +21,13 @@ feature {NONE} -- Initialization
 		do
 			Precursor {MELTED_INFO} (f, associated_class)
 			is_encapsulated_call := f.can_be_encapsulated
-			feature_name := f.feature_name
+			feature_name_id := f.feature_name_id
 		end
 
 feature {NONE} -- Implementation
 
-	feature_name: STRING
-			-- Name of current_feature
+	feature_name_id: INTEGER
+			-- Name ID of current_feature
 
 	is_encapsulated_call: BOOLEAN
 			-- Is Current a feature encapsulation of something that we usually do
@@ -61,9 +61,9 @@ feature {NONE} -- Implementation
 			-- Associated feature
 		do
 			check
-				consistency: feat_tbl.has (feature_name)
+				consistency: feat_tbl.has_id (feature_name_id)
 			end
-			Result := feat_tbl.item (feature_name)
+			Result := feat_tbl.item_id (feature_name_id)
 		end
 
 end

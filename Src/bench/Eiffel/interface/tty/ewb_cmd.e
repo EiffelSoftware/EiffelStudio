@@ -13,6 +13,9 @@ inherit
 		end;
 	WINDOWS;
 	SHARED_RESCUE_STATUS;
+	SHARED_EWB_HELP;
+	SHARED_EWB_CMD_NAMES;
+	COMPARABLE;
 	LIC_EXITER
 
 feature -- Creation
@@ -71,7 +74,7 @@ if not initialized.item then
 					-- Workbench file
 				!! temp.make (0);
 				temp.append (project_dir.name);
-				temp.append ("/EIFFELGEN/.workbench");
+				temp.append (workb_rel_path);
 				!!workbench_file.make (temp);
 
 					-- Is the project new?
@@ -377,6 +380,16 @@ feature -- Input/Output
 		deferred
 		end;
 
+	infix "<" (other: EWB_CMD): BOOLEAN is
+			-- The sort criteria is the command name
+		do
+			Result := name < other.name
+		end;
+
+	help_message: STRING is
+		deferred
+		end;
+
 	confirmed: BOOLEAN is
 		do
 --			io.putstring ("Do you wish to ");
@@ -392,7 +405,9 @@ feature -- Input/Output
 		do
 			io.putstring ("%
 			   	%Eiffel compilation manager%N%
-			  	%  (version 3.2 level 0)%N");
+			  	%  (version ");
+			io.putstring (Version_number);
+			io.putstring (")%N");
 		end;
 
 	print_tail is

@@ -28,7 +28,7 @@ feature
 	system_name: STRING is
 			-- Name of executable
 		do
-			Result := "driver"
+			Result := Driver
 		end;
 
 	remove_after_partial: BOOLEAN is True;

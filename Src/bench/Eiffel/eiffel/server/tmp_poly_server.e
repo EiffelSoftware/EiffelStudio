@@ -38,6 +38,8 @@ feature
 				-- Nothing is stored after a finalization
 				-- so we do NOT have to update all the objects
 				-- (server_control, caches, ...)
+				-- Wrong assumption above!!!!
+				-- We can finalize several times in the same session!!!
 			from
 				file_ids.start
 			until
@@ -46,6 +48,10 @@ feature
 				Server_controler.file_of_id (file_ids.item).delete;
 				file_ids.forth
 			end;
+			clear_all;
+			file_ids.wipe_out;
+			cache.wipe_out;
+			set_current_id;
 		end;
 
 end

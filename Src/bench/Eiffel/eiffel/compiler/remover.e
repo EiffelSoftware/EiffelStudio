@@ -59,7 +59,7 @@ feature {NONE}
 					mark (traversal_unit)
 				end;
 				control.remove
-			end
+			end;
 		ensure
 			control_empty: control.empty
 		end;
@@ -239,6 +239,16 @@ end;
 			end;
 		end;
 
+	dots: INTEGER;
+		-- Number of dots on the current line
+
+	features: INTEGER;
+		-- Number of features for the current dot
+
+	dots_per_line: INTEGER is 79;
+
+	features_per_dot: INTEGER is 100;
+
 	mark_alive (feat: FEATURE_I) is
 			-- Record feature `feat'
 		require
@@ -247,6 +257,7 @@ end;
 			class_name: STRING;
 			temp: ROUT_ID_SET
 		do
+debug ("DEAD_CODE_REMOVAL")
 				-- Verbose
 			io.error.putstring ("%TMarking ");
 			io.error.putstring (feat.feature_name);
@@ -255,6 +266,18 @@ end;
 			class_name.to_upper;
 			io.error.putstring (class_name);
 			io.error.new_line;
+end;
+
+			features := features + 1;
+			if features = features_per_dot then
+				io.error.putchar ('.');
+				features := 0;
+				dots := dots + 1;
+				if dots = dots_per_line then
+					io.error.new_line;
+					dots := 0
+				end;
+			end;
 
 			temp := used_table.item (feat.body_id);
 			if (temp = Void) then

@@ -485,7 +485,7 @@ end;
 			id := a_class.id;
 
 			if (id > max_precompiled_id) then
-debug ("ACTIVITY");
+debug ("ACTIVITY", "REMOVE_CLASS");
 	io.error.putstring ("%TRemoving class ");
 	io.error.putstring (a_class.class_name);
 	io.error.new_line;
@@ -930,6 +930,11 @@ end;
 						vd31.set_cluster (a_class.cluster);
 						Error_handler.insert_error (vd31);
 					else
+debug ("REMOVE_CLASS")
+	io.error.putstring ("Remove useless classes: ");
+	io.error.putstring (a_class.class_name);
+	io.error.new_line;
+end;
 						remove_class (a_class)
 					end;
 				end;
@@ -1917,7 +1922,7 @@ end;
 				-- Dead code removal
 			if not remover_off then
 				-- Verbose
-				io.error.putstring ("Removing dead code...%N");
+				io.error.putstring ("Removing dead code%N");
 				remove_dead_code;
 			end;
 
@@ -2015,17 +2020,19 @@ feature -- Dead code removal
 				i := i + 1
 			end;
 
-			from
-				i := 1;
-				nb := Type_id_counter.value
-			until
-				i > nb
-			loop
-				ct := class_types.item (i);
-				if ct /= Void then
-					ct.mark_creation_routine (remover);
+			if has_expanded then
+				from
+					i := 1;
+					nb := Type_id_counter.value
+				until
+					i > nb
+				loop
+					ct := class_types.item (i);
+					if ct /= Void then
+						ct.mark_creation_routine (remover);
+					end;
+					i := i + 1;
 				end;
-				i := i + 1;
 			end;
 
 				-- Protection of the attribute `area' in class TO_SPECIAL
@@ -2044,6 +2051,9 @@ feature -- Dead code removal
 
 				-- Protection of feature `make' of class STRING
 			string_class.compiled_class.mark_all_used (remover);
+
+				-- New line at the end of the last line of dots
+			io.error.new_line;
 		end;
 
 	is_used (f: FEATURE_I): BOOLEAN is
@@ -2273,7 +2283,10 @@ end;
 
 			Skeleton_file.putstring ("#include %"struct.h%"%N");
 			if final_mode then
-				Skeleton_file.putstring ("#include %"Eskelet.h%"%N%N");
+				Skeleton_file.putstring ("#include %"");
+				Skeleton_file.putstring (Eskelet);
+				Skeleton_file.putstring (Dot_h);
+				Skeleton_file.putstring ("%"%N%N");
 				from
 					i := 1
 				until
@@ -2285,8 +2298,8 @@ if class_types.item (i) /= Void then
 end;
 					i := i + 1;
 				end;
-				f_name := Final_generation_path.twin;
-				f_name.append ("/Eskelet.h");
+				f_name := build_path (Final_generation_path, Eskelet);
+				f_name.append (Dot_h);
 				Extern_declarations.generate (f_name);
 				Extern_declarations.wipe_out;
 			else
@@ -2781,7 +2794,9 @@ feature -- Plug and Makefile file
 			--| name of the make routine will (unfortunately) change. Therefore, the
 			--| name in the plug file might not match the name in the precompiled
 			--| C file... Heavy!
-			if (array_make_name = Void) or not uses_precompiled then
+			if
+				(array_make_name = Void) or not uses_precompiled or final_mode
+			then
 				array_cl := class_of_id (array_id);
 					--! Array ref type (i.e. ARRAY[ANY])
 				cl_type := Instantiator.Array_type.associated_class_type; 

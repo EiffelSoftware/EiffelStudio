@@ -1,33 +1,49 @@
-
 class SHARED_EWB_HELP
 
-feature
+feature {NONE}
 
-	help_messages: EXTEND_TABLE [STRING, STRING] is
-		once
-			!! Result.make (21);
+	ace_help: STRING is "specify the Ace file";
 
-			Result.put ("print this help message", "help");
-			Result.put ("run es3 as a command loop", "loop");
-			Result.put ("freeze the system", "freeze");
-			Result.put ("finalize the system (discard assertions by default)", "finalize");
-			Result.put ("precompile the system", "precompile");
---			Result.put ("clean the compilation structures", "clean");
-			Result.put ("specify the Ace file", "ace");
-			Result.put ("specify the compilation directory", "project");
-			Result.put ("print the clients of a class", "clients");
-			Result.put ("print the suppliers of a class", "suppliers");
-			Result.put ("print the callers of a class feature", "callers");
-			Result.put ("print the descendants of a class", "descendants");
-			Result.put ("print the ancestors of a class", "ancestors");
-			Result.put ("print the flat-short form of a class", "flatshort");
-			Result.put ("print the flat form of a class", "flat");
-			Result.put ("print the short form of a class", "short");
-			Result.put ("print the classes implementing a class feature", "implementers");
-			Result.put ("print the ancestor versions of a class feature", "aversions");
-			Result.put ("print the descendant versions of a class feature", "dversions");
---			Result.put ("print the classes depending on a class feature", "dependents")
-			Result.put ("stop on error", "stop")
-		end
+	ancestors_help: STRING is "print the ancestors of a class";
+
+	aversions_help: STRING is "print the ancestor versions of a class feature";
+
+	callers_help: STRING is "print the callers of a class feature";
+
+	clients_help: STRING is "print the clients of a class";
+
+	descendants_help: STRING is "print the descendants of a class";
+
+	dversions_help: STRING is "print the descendant versions of a class feature";
+
+	finalize_help: STRING is "finalize the system (discard assertions by default)";
+
+	flat_help: STRING is "print the flat form of a class";
+
+	flatshort_help: STRING is "print the flat-short form of a class";
+
+	freeze_help: STRING is "freeze the system";
+
+	help_help: STRING is "print this help message";
+
+	implementers_help: STRING is "print the classes implementing a class feature";
+
+	loop_help: STRING is "run es3 as a command loop";
+
+	loop_help_help: STRING is "print list of commands";
+
+	melt_help: STRING is "melt the system";
+
+	precompile_help: STRING is "precompile the system";
+
+	project_help: STRING is "specify the compilation directory";
+
+	quit_help: STRING is "terminate session";
+
+	short_help: STRING is "print the short form of a class";
+
+	stop_help: STRING is "stop on error";
+
+	suppliers_help: STRING is "print the suppliers of a class";
 
 end

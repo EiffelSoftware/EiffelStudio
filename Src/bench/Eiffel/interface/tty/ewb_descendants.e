@@ -3,6 +3,10 @@ class EWB_DESCENDANTS
 inherit
 
 	EWB_CMD
+		rename
+			name as descendants_cmd_name,
+			help_message as descendants_help
+		end
 
 creation
 
@@ -19,8 +23,6 @@ feature -- Creation
 	class_name: STRING;
 
 feature
-
-	name: STRING is "compute the descendants";
 
 	loop_execute is
 		do

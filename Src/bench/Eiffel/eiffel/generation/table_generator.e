@@ -26,8 +26,8 @@ feature
 		deferred
 		end;
 
-	postfix_file_name: CHARACTER is
-			-- Postfix character for file names (after `.');
+	postfix_file_name: STRING is
+			-- Postfix string for file names;
 		deferred
 		end;
 
@@ -51,13 +51,9 @@ feature
 			file_name: STRING;
 		do
 			file_counter := file_counter + 1;
-			!!file_name.make
-				(infix_file_name.count + 4 + Final_generation_path.count);
-			file_name.append (Final_generation_path);
-			file_name.append (infix_file_name);
+			file_name := build_path (Final_generation_path, infix_file_name);
 			file_name.append_integer (file_counter);
-			file_name.append_character ('.');
-			file_name.append_character (postfix_file_name);
+			file_name.append (postfix_file_name);
 			!!Result.make (file_name);
 		end;
 

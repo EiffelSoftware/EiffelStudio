@@ -4,6 +4,10 @@ class EWB_FUTURE
 inherit
 
 	EWB_CMD
+		rename
+			name as dversions_cmd_name,
+			help_message as dversions_help
+		end
 
 creation
 
@@ -46,10 +50,10 @@ feature
 			if not (error_occurred or project_is_new) then
 				retrieve_project;
 				if not error_occurred then
-                    class_i := Universe.unique_class (class_name);
-                    if class_i /= Void then
-                        class_c := class_i.compiled_class;
-                    end;
+					class_i := Universe.unique_class (class_name);
+					if class_i /= Void then
+						class_c := class_i.compiled_class;
+					end;
 					if class_c = Void then
 						io.error.putstring (class_name);
 						io.error.putstring (" is not in the system%N");

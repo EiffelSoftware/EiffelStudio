@@ -3,10 +3,12 @@ class EWB_FREEZE
 inherit
 
 	EWB_CMD
+		rename
+			name as freeze_cmd_name,
+			help_message as freeze_help
+		end
 
 feature
-
-	name: STRING is "freeze";
 
 	loop_execute is
 		do

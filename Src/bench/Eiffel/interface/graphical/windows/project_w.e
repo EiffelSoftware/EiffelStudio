@@ -29,7 +29,7 @@ inherit
 	BASE
 		rename
 			make as base_make
-		end
+		end;
 
 creation
 
@@ -47,6 +47,26 @@ feature
 			!! Result;
 		end
 
+	display: SCREEN is
+		local
+			any: ANY;
+			display_name: STRING;
+		do
+			!!Result.make ("");
+		rescue
+			io.error.putstring ("Cannot open display %"");
+			any := ("DISPLAY").to_c;
+			any := getenv ($any);
+			if any /= Void then
+				!!display_name.make (0);
+				display_name.from_c (any);
+				io.error.putstring (display_name);
+			end;
+			io.error.putstring ("%"%N%
+				%Check that $DISPLAY is properly set and that you are%N%
+				%authorized to connect to the corresponding server%N");
+		end;
+
 	make is
 			-- Create a project application.
 		local
@@ -57,7 +77,7 @@ feature
 --xterm_name := "Tregastel vaincra";
 			if popup /= Void then end;
 			if popdown /= Void then end;
-			!!a_screen.make ("");
+			a_screen := display;
 			base_make (tool_name, a_screen);
 			forbid_resize;
 			build_widgets;

@@ -5,6 +5,10 @@ class EWB_ANCESTORS
 inherit
 
 	EWB_CMD
+		rename
+			name as ancestors_cmd_name,
+			help_message as ancestors_help
+		end
 
 creation
 
@@ -21,8 +25,6 @@ feature -- Creation
 	class_name: STRING;
 
 feature
-
-	name: STRING is "compute the ancestors";
 
 	loop_execute is
 		do

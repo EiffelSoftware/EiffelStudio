@@ -1240,7 +1240,8 @@ feature -- Workbench feature and descriptor table generation
 			feat_tbl := feature_table;
 			table_file_name := full_file_name;
 			table_file_name.append_integer (id);
-			table_file_name.append ("F.c");
+			table_file_name.append (feature_table_suffix);
+			table_file_name.append (Dot_c);
 			!!file.make (table_file_name);
 			file.open_write;
 			file.putstring ("%
@@ -1269,23 +1270,19 @@ feature -- Workbench feature and descriptor table generation
 		local
 			fname: STRING;
 		do
-			fname := base_file_name;
-			!!Result.make (Workbench_generation_path.count + fname.count + 1);
 			if System.in_final_mode then
-				Result.append (Final_generation_path);
+				Result := build_path (Final_generation_path, base_file_name)
 			else
-				Result.append (Workbench_generation_path);
+				Result := build_path (Workbench_generation_path, base_file_name)
 			end;
-			Result.append ("/");
-			Result.append (fname);
 		end;
 
 	base_file_name: STRING is
 			-- Generated base file name prefix
 		do
 			!!Result.make (11);
-			if class_name.count > 7 then
-				Result.append (class_name.substring (1, 7));
+			if class_name.count > Max_non_encrypted then
+				Result.append (class_name.substring (1, Max_non_encrypted));
 			else
 				Result.append (class_name);
 			end;

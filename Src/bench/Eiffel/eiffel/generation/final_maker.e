@@ -34,8 +34,8 @@ feature
 			file_name: STRING;
 			i, nb: INTEGER;
 		do
-            system_basket.put ("Eref.o");
-            system_basket.put ("Esize.o");
+			add_in_system_basket (Eref);
+			add_in_system_basket (Esize);
 
 				-- Routine tables.
 			from
@@ -45,10 +45,9 @@ feature
 				i > nb
 			loop
 				!!file_name.make (16);
-				file_name.append ("Erout");
+				file_name.append (Erout);
 				file_name.append_integer (i);
-				file_name.append (".o");
-				system_basket.put(file_name);
+				add_in_system_basket(file_name);
 				i := i + 1;
 			end;
  
@@ -60,10 +59,9 @@ feature
 				i > nb
 			loop
 				!!file_name.make (16);
-				file_name.append ("Eattr");
+				file_name.append (Eattr);
 				file_name.append_integer (i);
-				file_name.append (".o");
-				system_basket.put(file_name);
+				add_in_system_basket(file_name);
 				i := i + 1;
 			end;
 		end;
@@ -139,7 +137,7 @@ feature
 							object_name := cl_type.base_file_name;
 							!!file_name.make (16);
 							file_name.append (object_name);
-							file_name.append (".o");
+							file_name.append (Dot_o);
 							object_basket.put (file_name);
 						end;
 

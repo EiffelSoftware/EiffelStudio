@@ -41,6 +41,8 @@ inherit
 			adapt
 		end;
 	SHARED_USE;
+	SHARED_STATUS;
+	SYSTEM_CONSTANTS
 	CLICKER
 
 feature -- Attributes
@@ -146,7 +148,9 @@ feature -- Lace compilation
 			value: OPT_VAL_SD;
 			vd38: VD38
 		do
-			if defaults /= Void then
+			if melt_only and then not System.precompilation then
+				Result := Default_precompiled_location
+			elseif defaults /= Void then
 				from
 					defaults.start
 				until
@@ -171,7 +175,6 @@ feature -- Lace compilation
 					defaults.forth
 				end
 			end;
-			
 		end;
 
 	process_system_level_options is
@@ -346,7 +349,7 @@ feature -- Lace compilation
 				old_clusters.after
 			loop
 				old_cluster := old_clusters.item;
-				if not Universe.has_cluster_of_name (old_cluster.cluster_name) then
+				if not Universe.has_cluster_of_path (old_cluster.path) then
 						-- Defensive programming test. The old cluster
 						-- should never be precompiled at this stage. 
 					if not old_cluster.is_precompiled then

@@ -4,6 +4,10 @@ class EWB_CLIENTS
 inherit
 
 	EWB_CMD
+		rename
+			name as clients_cmd_name,
+			help_message as clients_help
+		end
 
 creation
 
@@ -20,8 +24,6 @@ feature -- Creation
 	class_name: STRING;
 
 feature
-
-	name: STRING is "compute the clients";
 
 	loop_execute is
 		do

@@ -4,6 +4,10 @@ class EWB_FINALIZE
 inherit
 
 	EWB_CMD
+		rename
+			name as finalize_cmd_name,
+			help_message as finalize_help
+		end
 
 creation
 
@@ -17,8 +21,6 @@ feature
 		end;
 
 	keep_assertions: BOOLEAN;
-
-	name: STRING is "finalize";
 
 	loop_execute is
 		do

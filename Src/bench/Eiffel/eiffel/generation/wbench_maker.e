@@ -34,11 +34,11 @@ feature
 	add_specific_objects is
 			-- Add workbench mode specific files to the object list
 		do
-			system_basket.put ("Eoption.o");
-			system_basket.put ("Epattern.o");
-			system_basket.put ("Efrozen.o");
-			system_basket.put ("Edispatch.o");
-			system_basket.put ("Ecall.o");
+			add_in_system_basket (Eoption);
+			add_in_system_basket (Epattern);
+			add_in_system_basket (Efrozen);
+			add_in_system_basket (Edispatch);
+			add_in_system_basket (Ecall);
 		end;
 
 	add_cecil_objects is
@@ -118,13 +118,14 @@ feature
 							object_name := cl_type.base_file_name;
 							!!file_name.make (16);
 							file_name.append (object_name);
-							file_name.append (".o");
+							file_name.append (Dot_o);
 							object_basket.put (file_name);
 
 								-- Descriptor file
 							!!file_name.make (16);
 							file_name.append (object_name);
-							file_name.append ("D.o");
+							file_name.append (Descriptor_suffix);
+							file_name.append (Dot_o);
 							object_basket.put (file_name);
 						end;
 
@@ -137,7 +138,8 @@ feature
 						!!file_name.make (16);
 						file_name.append (object_name);
 						file_name.append_integer (i);
-						file_name.append ("F.o");
+						file_name.append (Feature_table_suffix);
+						file_name.append (Dot_o);
 						object_basket.put (file_name);
 					end;
 				end;
@@ -155,8 +157,8 @@ feature
 		do
 			if System.uses_precompiled then
 				Make_file.putstring ("%T%T");
-				Make_file.putstring (Precompilation_directory.name);
-				Make_file.putstring ("/EIFFELGEN/W_code/preobj.o \");
+				Make_file.putstring (Precompilation_preobj);
+				Make_file.putstring (" \");
 				Make_file.new_line;
 			end;
 		end;

@@ -3,7 +3,11 @@ class EWB_SENDERS
 
 inherit
 
-	EWB_CMD;
+	EWB_CMD
+		rename
+			name as callers_cmd_name,
+			help_message as callers_help
+		end;
 	SHARED_SERVER
 
 creation
@@ -23,8 +27,6 @@ feature -- Creation
 	class_name, feature_name: STRING;
 
 feature
-
-	name: STRING is "compute the senders";
 
 	loop_execute is
 		do
@@ -49,10 +51,10 @@ feature
 				if not error_occurred then
 						-- Get the class
 						-- Note: class name amiguities are not resolved.
-                    class_i := Universe.unique_class (class_name);
-                    if class_i /= Void then
-                        class_c := class_i.compiled_class;
-                    end;
+					class_i := Universe.unique_class (class_name);
+					if class_i /= Void then
+						class_c := class_i.compiled_class;
+					end;
 
 					if class_c = Void then
 						io.error.putstring (class_name);

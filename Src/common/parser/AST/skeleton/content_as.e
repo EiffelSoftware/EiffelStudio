@@ -70,10 +70,10 @@ feature -- Type check and byte code
 
 	byte_node: BYTE_CODE is
             -- Associated byte code
-        do
+		do
 		ensure then
 			False
-        end;
+		end;
 
 	check_local_names is
 			-- Check conflicts between local names and feature names

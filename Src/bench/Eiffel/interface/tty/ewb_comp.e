@@ -4,10 +4,12 @@ class EWB_COMP
 inherit
 
 	EWB_CMD
+		rename
+			name as melt_cmd_name,
+			help_message as melt_help
+		end
 
 feature
-
-	name: STRING is "compile";
 
 	loop_execute is
 		do

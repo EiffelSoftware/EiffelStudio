@@ -5,7 +5,8 @@ inherit
 	ROUT_BODY_AS
 		redefine
 			is_external, byte_node, format
-		end
+		end;
+	SHARED_STATUS
 
 feature -- Attributes
 
@@ -19,7 +20,17 @@ feature -- Initialization
 
 	set is
 			-- Yacc initialization
+		local
+			melt_only_error: MELT_ONLY
 		do
+			if melt_only and then not System.precompilation then
+					-- The `melt_only' compiler can only generate C code
+					-- during the precompilation
+				!!melt_only_error;
+				melt_only_error.set_class (System.current_class);
+				Error_handler.insert_error (melt_only_error);
+				Error_handler.raise_error;
+			end;
 			language_name ?= yacc_arg (0);
 			alias_name ?= yacc_arg (1);
 		ensure then

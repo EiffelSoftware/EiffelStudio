@@ -217,8 +217,6 @@ feature -- C keywords
 
 	Typedef: STRING is "typedef"
 
-	Virtual: STRING is "virtual"
-
 	C_true: STRING is "TRUE"
 
 	Assert: STRING is "assert"

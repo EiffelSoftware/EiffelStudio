@@ -76,19 +76,25 @@ feature -- Access
 			non_void_info: Result /= Void
 		end
 		
-	consumed_type_from_dotnet_type_name (a_assembly: CONSUMED_ASSEMBLY; type: STRING): CONSUMED_TYPE is
+	consumed_type_from_dotnet_type_name (a_assembly: CONSUMED_ASSEMBLY; a_type: STRING): CONSUMED_TYPE is
 			-- Type information from type `type' contained in `ca'
 		require
-			non_void_assembly: a_assembly /= Void
-			valid_assembly: is_assembly_in_cache (a_assembly.gac_path, True)
+			a_assembly_not_void: a_assembly /= Void
+			a_assembly_is_in_consumed_cache: is_assembly_in_cache (a_assembly.gac_path, True)
+			a_type_not_void: a_type /= Void
+			not_a_type_empty: not a_type.is_empty
 		local
-			des: EIFFEL_XML_DESERIALIZER
-			type_path: STRING
+			l_des: EIFFEL_XML_DESERIALIZER
+			l_type_path: STRING
+			i: INTEGER
 		do
-			create des
-			type_path := absolute_assembly_path_from_consumed_assembly (a_assembly) + classes_path + type + ".xml"			
-			des.deserialize (type_path, True)
-			Result ?= des.deserialized_object
+			i := type_index_from_type_name (a_assembly, a_type)
+			if i > 0 then
+				create l_des
+				l_type_path := absolute_assembly_path_from_consumed_assembly (a_assembly) + classes_path + i.out + ".xml"			
+				l_des.deserialize (l_type_path, True)
+				Result ?= l_des.deserialized_object
+			end
 		ensure
 			non_void_result: Result /= Void
 		end
@@ -133,24 +139,28 @@ feature -- Access
 		end
 		
 	consumed_type (a_type: TYPE): CONSUMED_TYPE is
-			-- Consumed type corresponding to `t'.
+			-- Consumed type corresponding to `a_type'.
 		require
-			non_void_type: a_type /= Void
-			valid_type: is_type_in_cache (a_type)
+			a_type_not_void: a_type /= Void
+			a_type_is_in_cache: is_type_in_cache (a_type)
 		local
 			l_des: EIFFEL_XML_DESERIALIZER
 			l_ca: CONSUMED_ASSEMBLY
+			i: INTEGER
 		do
-			l_ca := consumed_assembly_from_path (a_type.assembly.location)
-			if l_ca /= Void then
-				create l_des
-				l_des.deserialize (absolute_type_path (l_ca, a_type), True)
-				Result ?= l_des.deserialized_object
+			i := type_index_from_type (a_type)
+			if i > 0 then
+				l_ca := consumed_assembly_from_path (a_type.assembly.location)
+				if l_ca /= Void then
+					create l_des
+					l_des.deserialize (absolute_type_path (l_ca, i), True)
+					Result ?= l_des.deserialized_object					
+				end				
 			end
 		ensure
 			non_void_consumed_type: Result /= Void
 		end
-	
+
 	client_assemblies (a_assembly: CONSUMED_ASSEMBLY): ARRAY [CONSUMED_ASSEMBLY] is
 			-- List of assemblies in EAC depending on `a_assembly'.
 		require
@@ -204,13 +214,17 @@ feature -- Status Report
 		local
 			l_ca: CONSUMED_ASSEMBLY
 			l_type_path: STRING
+			i: INTEGER			
 		do
-			l_ca := consumed_assembly_from_path (a_type.assembly.location)
-			if l_ca /= Void then
-				l_type_path := absolute_type_path (l_ca, a_type)
-				if l_type_path /= Void and not l_type_path.is_empty then
-					Result := (create {RAW_FILE}.make (l_type_path)).exists	
-				end
+			i := type_index_from_type (a_type)
+			if i > 0 then
+				l_ca := consumed_assembly_from_path (a_type.assembly.location)
+				if l_ca /= Void then
+					l_type_path := absolute_type_path (l_ca, i)
+					if l_type_path /= Void and not l_type_path.is_empty then
+						Result := (create {RAW_FILE}.make (l_type_path)).exists	
+					end			
+				end				
 			end
 		end
 		
@@ -237,6 +251,53 @@ feature {CACHE_WRITER} -- Implementation
 			end
 		ensure
 			non_void_if_initialized: is_initialized implies Result /= Void
+		end
+		
+feature {NONE} -- Implementation
+
+	type_index_from_type (a_type: TYPE): INTEGER is
+			-- retrieve type index from `a_type' in `a_assembly'
+		require
+			a_type_not_void: a_type /= Void
+		local
+			l_ca: CONSUMED_ASSEMBLY
+		do
+			l_ca := consumed_assembly_from_path (a_type.assembly.location)
+			if l_ca /= Void then
+				Result := type_index_from_type_name	(l_ca, a_type.full_name)
+			end
+		ensure
+			result_is_positive: Result > 0
+		end
+
+	type_index_from_type_name (a_assembly: CONSUMED_ASSEMBLY; a_type: STRING): INTEGER is
+			-- retrieve type index from `a_type' in `a_assembly'
+		require
+			a_assembly_not_void: a_assembly /= Void
+			a_type_not_void: a_type /= Void
+			not_a_type_empty: not a_type.is_empty
+		local
+			l_types: like assembly_types
+			i: INTEGER
+		do
+			l_types := assembly_types (a_assembly)
+			if l_types /= Void then
+				from
+					i := 1
+				until
+					i > l_types.index
+					or else Result > 0
+					or else l_types.dotnet_names @ i = Void
+				loop
+					if (l_types.dotnet_names @ i).is_equal (a_type) then
+						Result := i
+					else
+						i := i + 1
+					end
+				end
+			end
+		ensure
+			result_is_positive: Result > 0
 		end
 
 end -- class CACHE_READER

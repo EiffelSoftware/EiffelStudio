@@ -93,6 +93,8 @@ feature -- Basic operation
 						feat := described_feature (token, line, ft)
 					when assertion_part then
 						feat := described_feature (token, line, ft)
+					when local_part then
+						feat := described_feature (token, line, ft)
 					else
 					end
 				end

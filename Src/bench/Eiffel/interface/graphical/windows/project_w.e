@@ -60,7 +60,7 @@ feature -- Initialization
 			set_title (l_project);
 			set_icon_name (tool_name);
 			if bm_Project_icon.is_valid then
-				set_icon_pixmap (bm_Project_icon);
+				set_icon_pixmap (bm_Project_icon)
 			end;
 			set_action ("<Unmap>,<Prop>", Current, popdown);
 			set_action ("<Configure>", Current, remapped);
@@ -82,8 +82,8 @@ feature -- Resource Update
 
 	update_boolean_resource (old_res, new_res: BOOLEAN_RESOURCE) is
 		local
-            rout_cli_cmd: SHOW_ROUTCLIENTS;
-            stop_cmd: SHOW_BREAKPOINTS;
+			rout_cli_cmd: SHOW_ROUTCLIENTS;
+			stop_cmd: SHOW_BREAKPOINTS;
 			pr: like Project_tool_resources
 		do
 			pr := Project_tool_resources
@@ -99,14 +99,14 @@ feature -- Resource Update
 				else
 					format_bar.remove
 				end
-            elseif old_res = pr.debugger_show_all_callers then
-                rout_cli_cmd ?=
-                    feature_part.showroutclients_frmt_holder.associated_command;
-                rout_cli_cmd.set_show_all_callers (new_res.actual_value)
-            elseif old_res = pr.debugger_do_flat_in_breakpoints then
-                stop_cmd ?=
-                    feature_part.showstop_frmt_holder.associated_command;
-                stop_cmd.set_format_mode (new_res.actual_value)
+			elseif old_res = pr.debugger_show_all_callers then
+				rout_cli_cmd ?=
+					feature_part.showroutclients_frmt_holder.associated_command;
+				rout_cli_cmd.set_show_all_callers (new_res.actual_value)
+			elseif old_res = pr.debugger_do_flat_in_breakpoints then
+				stop_cmd ?=
+					feature_part.showstop_frmt_holder.associated_command;
+				stop_cmd.set_format_mode (new_res.actual_value)
 			end;
 			old_res.update_with (new_res)
 		end;
@@ -559,8 +559,8 @@ feature -- Graphical Interface
 			-- Build the menu bar
 		local
 			sep: SEPARATOR;
-            case_storage_cmd: CASE_STORAGE;
-            case_storage_menu_entry: EB_MENU_ENTRY;
+			case_storage_cmd: CASE_STORAGE;
+			case_storage_menu_entry: EB_MENU_ENTRY;
 		do
 			!! menu_bar.make (new_name, std_form);
 			!! file_menu.make ("File", menu_bar);
@@ -588,13 +588,13 @@ feature -- Graphical Interface
 			!! special_object_menu.make ("Object", special_menu);
 			special_object_menu.button.set_insensitive;
 			!! format_object_menu.make ("Object", format_menu);
-			format_object_menu.button.set_insensitive
+			format_object_menu.button.set_insensitive;
 
 			!! sep.make ("", special_menu);
 			!! case_storage_cmd.make (Current);
-            !! case_storage_menu_entry.make (case_storage_cmd, special_menu);
-            !! case_storage_cmd_holder.make_plain (case_storage_cmd);
-            case_storage_cmd_holder.set_menu_entry (case_storage_menu_entry);
+			!! case_storage_menu_entry.make (case_storage_cmd, special_menu);
+			!! case_storage_cmd_holder.make_plain (case_storage_cmd);
+			case_storage_cmd_holder.set_menu_entry (case_storage_menu_entry);
 		end;
 
 	build_toolbar_menu is
@@ -1012,7 +1012,7 @@ feature -- Hole access
 			t: INTEGER
 		do
 			t := dropped_stone.stone_type;
-			Result :=  t = Class_type or else
+			Result := t = Class_type or else
 				t = Routine_type or else
 				t = Explain_type or else
 				t = Object_type or else
@@ -1246,14 +1246,11 @@ feature {DISPLAY_ROUTINE_PORTION} -- Implementation
 	hide_feature_portion is
 			-- Hide the feature potion and hide the menu entries
 			-- regarding the feature tool.
-		local
-			new_height: INTEGER
-			new_pos: INTEGER
 		do
 			shown_portions := shown_portions - 1;
-			new_pos := 6 // shown_portions;
 			allow_resize;
 			feature_form.unmanage;
+			set_height (height - feature_height);
 			forbid_resize;
 			feature_part.close_windows;
 
@@ -1301,13 +1298,13 @@ feature {DISPLAY_ROUTINE_PORTION} -- Implementation
 			new_height := height + feature_height;
 			feature_form.set_height (feature_height);
 			feature_form.manage;
-			if y + new_height > screen.height - off then
-				new_height := screen.height - off - y;
-				set_height (new_height)
-			end;
-			forbid_resize
-
 			off := Project_tool_resources.bottom_offset.actual_value;
+			if y + new_height > screen.height - off then
+				new_height := screen.height - off - y
+			end;
+			set_height (new_height);
+			forbid_resize;
+
 			show_current_stoppoint;
 			mp.restore
 		end;
@@ -1320,14 +1317,12 @@ feature {DISPLAY_OBJECT_PORTION} -- Implementation
 	hide_object_portion is
 			-- Hide the object portion and the menu entries
 			-- regarding the feature tool.
-		local
-			new_pos: INTEGER
 		do
 			shown_portions := shown_portions - 1;
-			new_pos := 6 // shown_portions;
 
 			allow_resize;
 			object_form.unmanage;
+			set_height (height - object_height);
 			forbid_resize;
 			object_part.close_windows;
 
@@ -1377,9 +1372,9 @@ feature {DISPLAY_OBJECT_PORTION} -- Implementation
 			object_form.manage;
 			if y + new_height > screen.height - off then
 				new_height := screen.height - off - y
-				set_height (new_height)
 			end;
-			forbid_resize
+			set_height (new_height);
+			forbid_resize;
 			show_current_object;
 			mp.restore
 		end;

@@ -295,6 +295,8 @@ parsing/shared/yacc_err.c
 platform/Jmakefile
 platform/Makefile.SH
 platform/names.c
+platform/sizes.c
+platform/commands.c
 portable.h
 run-time/
 run-time/Jmakefile
@@ -349,6 +351,7 @@ run-time/option.c
 run-time/option.h
 run-time/out.c
 run-time/out.h
+run-time/path_name.c
 run-time/pattern.c
 run-time/plug.c
 run-time/plug.h

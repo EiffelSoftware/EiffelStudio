@@ -31,7 +31,10 @@ feature {EV_CONTAINER}
 		do
 			child_imp.set_parent_imp (Current)
 			the_child := child_imp
-			-- no other implementation needed (yet?) XXX
+			set_minimum_size (the_child.minimum_width, the_child.minimum_height)
+			if the_child.width /= 0 or the_child.height /= 0 then
+				child_has_resized (the_child.width, the_child.height, the_child)
+			end
 		end
 
 feature -- Access
@@ -54,12 +57,10 @@ feature {EV_WIDGET_IMP, EV_WEL_FRAME_WINDOW} -- Resizing
 			-- When the parent asks the resize, it's not 
 			-- necessary to send him back the information
 		do
-			wel_window.disable_commands 
 			wel_window.resize (minimum_width.max(new_width), minimum_height.max (new_height))
 			if the_child /= Void then
 				the_child.parent_ask_resize (client_width, client_height)
 			end
-			wel_window.enable_commands
 		end
 	
 	child_has_resized (new_width, new_height: INTEGER; child: EV_WIDGET_IMP) is
@@ -72,7 +73,7 @@ feature {EV_WIDGET_IMP, EV_WEL_FRAME_WINDOW} -- Resizing
 			set_size (new_width, new_height)
 		end
 	
-	
+		
 feature -- Access
 
 	the_child: EV_WIDGET_IMP

@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 	make (par: EV_WINDOW) is
 			-- Create a status bar with one part.
 		do 
-			wel_make (default_parent.item, 0)
+			wel_make (default_parent, 0)
 			!! ev_children.make (1)
 			set_parent (par)
 		end
@@ -103,7 +103,7 @@ feature -- Element change
 				par_imp.set_status_bar (Current)
 			elseif parent_imp /= Void then
 				parent_imp.remove_status_bar
-				wel_set_parent (default_parent.item)
+				wel_set_parent (default_parent)
 			end
 		end
 

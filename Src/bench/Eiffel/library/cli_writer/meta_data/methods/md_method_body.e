@@ -343,16 +343,22 @@ feature -- Labels manipulation
 		require
 			not_yet_written: not is_written
 			has_opcodes: opcodes.has (opcode)
+		do
+			put_opcode (opcode)
+			put_label (label_id, 0)
+		end
+
+	put_label (label_id: INTEGER; offset: INTEGER) is
+			-- Insert offset of `label', incremented by `offset'.
+		require
+			not_yet_written: not is_written
 		local
 			l_label: MD_LABEL
 			l_jmp: INTEGER
 		do
 			l_label := labels.item (label_id)
-			
-			put_opcode (opcode)
-			
 			if l_label.is_position_set then
-				l_jmp := l_label.position - (current_position + 4)
+				l_jmp := l_label.position - current_position
 			else
 					-- Store current location so that we can 
 					-- update with correct offset as soon as we
@@ -369,7 +375,7 @@ feature -- Labels manipulation
 				end
 				labels_stack_depth.put (current_stack_depth, label_id)
 			end
-			add_integer (l_jmp)
+			add_integer (l_jmp + offset - 4)
 				-- When handling a jump we reset `last_current_stack_depth' as it
 				-- does not matter to us what the stack depth is if the next call
 				-- is a call to `mark_label'.
@@ -379,14 +385,9 @@ feature -- Labels manipulation
 	set_branch_location (branch_inst_pos: INTEGER; jump_offset: INTEGER) is
 			-- Update code at `branch_inst_pos' with new jump value `jump_offset'.
 		require
-			valid_pos: branch_inst_pos > 0 and branch_inst_pos < count
-		local
-			l_old_pos: like current_position
+			valid_pos: branch_inst_pos > 0 and branch_inst_pos + 4 <= count
 		do
-			l_old_pos := current_position
-			current_position := branch_inst_pos
-			add_integer (jump_offset)
-			current_position := l_old_pos
+			item.put_integer_32_le (item.read_integer_32_le (branch_inst_pos) + jump_offset, branch_inst_pos)
 		end
 		
 feature -- Opcode insertion with manual update of `current_stack_depth'.

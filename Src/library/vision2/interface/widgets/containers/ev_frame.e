@@ -32,6 +32,9 @@ inherit
 		end
 
 	EV_FRAME_CONSTANTS
+		export
+			{NONE} all
+			{ANY} valid_frame_border
 		undefine
 			default_create, copy
 		end

@@ -31,231 +31,242 @@ feature {NONE}-- Initialization
 			Precursor {EV_DIALOG}
 			initialize_constants
 			
-			create l_vertical_box_19
-			create l_frame_13
-			create l_vertical_box_20
-			create l_notebook_1
-			create l_vertical_box_21
-			create l_horizontal_box_43
-			create l_label_27
-			create l_horizontal_separator_7
-			create l_horizontal_box_44
+				-- Create all widgets.
+			create l_ev_vertical_box_1
+			create l_ev_frame_1
+			create l_ev_vertical_box_2
+			create l_ev_notebook_1
+			create l_ev_vertical_box_3
+			create l_ev_horizontal_box_1
+			create l_ev_label_1
+			create l_ev_horizontal_separator_1
+			create l_ev_horizontal_box_2
 			create name_text
-			create l_horizontal_box_45
-			create l_label_28
-			create l_horizontal_separator_8
-			create l_horizontal_box_46
-			create l_label_29
+			create l_ev_horizontal_box_3
+			create l_ev_label_2
+			create l_ev_horizontal_separator_2
+			create l_ev_horizontal_box_4
+			create l_ev_label_3
 			create index_filename_text
-			create l_horizontal_box_47
+			create l_ev_horizontal_box_5
 			create index_root_check
-			create l_horizontal_box_48
+			create l_ev_horizontal_box_6
 			create include_empty_dirs_check
-			create l_horizontal_box_49
+			create l_ev_horizontal_box_7
 			create include_no_index_check
-			create l_horizontal_box_50
+			create l_ev_horizontal_box_8
 			create include_skipped_sub_dirs_check
-			create l_cell_26
-			create l_vertical_box_22
-			create l_horizontal_box_51
-			create l_label_30
-			create l_horizontal_separator_9
-			create l_horizontal_box_52
+			create l_ev_horizontal_box_9
+			create order_alphabetical_check
+			create l_ev_cell_1
+			create l_ev_vertical_box_4
+			create l_ev_horizontal_box_10
+			create l_ev_label_4
+			create l_ev_horizontal_separator_3
+			create l_ev_horizontal_box_11
 			create schema_loc_text
 			create browse_schema_bt
-			create l_horizontal_box_53
-			create l_label_31
-			create l_horizontal_separator_10
-			create l_horizontal_box_54
+			create l_ev_horizontal_box_12
+			create l_ev_label_5
+			create l_ev_horizontal_separator_4
+			create l_ev_horizontal_box_13
 			create auto_validate_check
-			create l_horizontal_box_55
+			create l_ev_horizontal_box_14
 			create invalid_file_flag_check
-			create l_vertical_box_23
-			create l_horizontal_box_56
-			create l_label_32
-			create l_horizontal_separator_11
-			create l_horizontal_box_57
+			create l_ev_vertical_box_5
+			create l_ev_horizontal_box_15
+			create l_ev_label_6
+			create l_ev_horizontal_separator_5
+			create l_ev_horizontal_box_16
 			create xsl_loc_text
 			create browse_xsl_bt
-			create l_horizontal_box_58
-			create l_label_33
-			create l_horizontal_separator_12
-			create l_horizontal_box_59
+			create l_ev_horizontal_box_17
+			create l_ev_label_7
+			create l_ev_horizontal_separator_6
+			create l_ev_horizontal_box_18
 			create css_loc_text
 			create browse_css_bt
-			create l_horizontal_box_60
-			create l_cell_27
+			create l_ev_horizontal_box_19
+			create l_ev_cell_2
 			create apply_bt
 			create okay_bt
 			create cancel_bt
 			
-			extend (l_vertical_box_19)
-			l_vertical_box_19.extend (l_frame_13)
-			l_frame_13.extend (l_vertical_box_20)
-			l_vertical_box_20.extend (l_notebook_1)
-			l_notebook_1.extend (l_vertical_box_21)
-			l_vertical_box_21.extend (l_horizontal_box_43)
-			l_horizontal_box_43.extend (l_label_27)
-			l_horizontal_box_43.extend (l_horizontal_separator_7)
-			l_vertical_box_21.extend (l_horizontal_box_44)
-			l_horizontal_box_44.extend (name_text)
-			l_vertical_box_21.extend (l_horizontal_box_45)
-			l_horizontal_box_45.extend (l_label_28)
-			l_horizontal_box_45.extend (l_horizontal_separator_8)
-			l_vertical_box_21.extend (l_horizontal_box_46)
-			l_horizontal_box_46.extend (l_label_29)
-			l_horizontal_box_46.extend (index_filename_text)
-			l_vertical_box_21.extend (l_horizontal_box_47)
-			l_horizontal_box_47.extend (index_root_check)
-			l_vertical_box_21.extend (l_horizontal_box_48)
-			l_horizontal_box_48.extend (include_empty_dirs_check)
-			l_vertical_box_21.extend (l_horizontal_box_49)
-			l_horizontal_box_49.extend (include_no_index_check)
-			l_vertical_box_21.extend (l_horizontal_box_50)
-			l_horizontal_box_50.extend (include_skipped_sub_dirs_check)
-			l_vertical_box_21.extend (l_cell_26)
-			l_notebook_1.extend (l_vertical_box_22)
-			l_vertical_box_22.extend (l_horizontal_box_51)
-			l_horizontal_box_51.extend (l_label_30)
-			l_horizontal_box_51.extend (l_horizontal_separator_9)
-			l_vertical_box_22.extend (l_horizontal_box_52)
-			l_horizontal_box_52.extend (schema_loc_text)
-			l_horizontal_box_52.extend (browse_schema_bt)
-			l_vertical_box_22.extend (l_horizontal_box_53)
-			l_horizontal_box_53.extend (l_label_31)
-			l_horizontal_box_53.extend (l_horizontal_separator_10)
-			l_vertical_box_22.extend (l_horizontal_box_54)
-			l_horizontal_box_54.extend (auto_validate_check)
-			l_vertical_box_22.extend (l_horizontal_box_55)
-			l_horizontal_box_55.extend (invalid_file_flag_check)
-			l_notebook_1.extend (l_vertical_box_23)
-			l_vertical_box_23.extend (l_horizontal_box_56)
-			l_horizontal_box_56.extend (l_label_32)
-			l_horizontal_box_56.extend (l_horizontal_separator_11)
-			l_vertical_box_23.extend (l_horizontal_box_57)
-			l_horizontal_box_57.extend (xsl_loc_text)
-			l_horizontal_box_57.extend (browse_xsl_bt)
-			l_vertical_box_23.extend (l_horizontal_box_58)
-			l_horizontal_box_58.extend (l_label_33)
-			l_horizontal_box_58.extend (l_horizontal_separator_12)
-			l_vertical_box_23.extend (l_horizontal_box_59)
-			l_horizontal_box_59.extend (css_loc_text)
-			l_horizontal_box_59.extend (browse_css_bt)
-			l_vertical_box_20.extend (l_horizontal_box_60)
-			l_horizontal_box_60.extend (l_cell_27)
-			l_horizontal_box_60.extend (apply_bt)
-			l_horizontal_box_60.extend (okay_bt)
-			l_horizontal_box_60.extend (cancel_bt)
+				-- Build_widget_structure.
+			extend (l_ev_vertical_box_1)
+			l_ev_vertical_box_1.extend (l_ev_frame_1)
+			l_ev_frame_1.extend (l_ev_vertical_box_2)
+			l_ev_vertical_box_2.extend (l_ev_notebook_1)
+			l_ev_notebook_1.extend (l_ev_vertical_box_3)
+			l_ev_vertical_box_3.extend (l_ev_horizontal_box_1)
+			l_ev_horizontal_box_1.extend (l_ev_label_1)
+			l_ev_horizontal_box_1.extend (l_ev_horizontal_separator_1)
+			l_ev_vertical_box_3.extend (l_ev_horizontal_box_2)
+			l_ev_horizontal_box_2.extend (name_text)
+			l_ev_vertical_box_3.extend (l_ev_horizontal_box_3)
+			l_ev_horizontal_box_3.extend (l_ev_label_2)
+			l_ev_horizontal_box_3.extend (l_ev_horizontal_separator_2)
+			l_ev_vertical_box_3.extend (l_ev_horizontal_box_4)
+			l_ev_horizontal_box_4.extend (l_ev_label_3)
+			l_ev_horizontal_box_4.extend (index_filename_text)
+			l_ev_vertical_box_3.extend (l_ev_horizontal_box_5)
+			l_ev_horizontal_box_5.extend (index_root_check)
+			l_ev_vertical_box_3.extend (l_ev_horizontal_box_6)
+			l_ev_horizontal_box_6.extend (include_empty_dirs_check)
+			l_ev_vertical_box_3.extend (l_ev_horizontal_box_7)
+			l_ev_horizontal_box_7.extend (include_no_index_check)
+			l_ev_vertical_box_3.extend (l_ev_horizontal_box_8)
+			l_ev_horizontal_box_8.extend (include_skipped_sub_dirs_check)
+			l_ev_vertical_box_3.extend (l_ev_horizontal_box_9)
+			l_ev_horizontal_box_9.extend (order_alphabetical_check)
+			l_ev_vertical_box_3.extend (l_ev_cell_1)
+			l_ev_notebook_1.extend (l_ev_vertical_box_4)
+			l_ev_vertical_box_4.extend (l_ev_horizontal_box_10)
+			l_ev_horizontal_box_10.extend (l_ev_label_4)
+			l_ev_horizontal_box_10.extend (l_ev_horizontal_separator_3)
+			l_ev_vertical_box_4.extend (l_ev_horizontal_box_11)
+			l_ev_horizontal_box_11.extend (schema_loc_text)
+			l_ev_horizontal_box_11.extend (browse_schema_bt)
+			l_ev_vertical_box_4.extend (l_ev_horizontal_box_12)
+			l_ev_horizontal_box_12.extend (l_ev_label_5)
+			l_ev_horizontal_box_12.extend (l_ev_horizontal_separator_4)
+			l_ev_vertical_box_4.extend (l_ev_horizontal_box_13)
+			l_ev_horizontal_box_13.extend (auto_validate_check)
+			l_ev_vertical_box_4.extend (l_ev_horizontal_box_14)
+			l_ev_horizontal_box_14.extend (invalid_file_flag_check)
+			l_ev_notebook_1.extend (l_ev_vertical_box_5)
+			l_ev_vertical_box_5.extend (l_ev_horizontal_box_15)
+			l_ev_horizontal_box_15.extend (l_ev_label_6)
+			l_ev_horizontal_box_15.extend (l_ev_horizontal_separator_5)
+			l_ev_vertical_box_5.extend (l_ev_horizontal_box_16)
+			l_ev_horizontal_box_16.extend (xsl_loc_text)
+			l_ev_horizontal_box_16.extend (browse_xsl_bt)
+			l_ev_vertical_box_5.extend (l_ev_horizontal_box_17)
+			l_ev_horizontal_box_17.extend (l_ev_label_7)
+			l_ev_horizontal_box_17.extend (l_ev_horizontal_separator_6)
+			l_ev_vertical_box_5.extend (l_ev_horizontal_box_18)
+			l_ev_horizontal_box_18.extend (css_loc_text)
+			l_ev_horizontal_box_18.extend (browse_css_bt)
+			l_ev_vertical_box_2.extend (l_ev_horizontal_box_19)
+			l_ev_horizontal_box_19.extend (l_ev_cell_2)
+			l_ev_horizontal_box_19.extend (apply_bt)
+			l_ev_horizontal_box_19.extend (okay_bt)
+			l_ev_horizontal_box_19.extend (cancel_bt)
 			
 			set_minimum_width (dialog_width)
 			set_minimum_height (dialog_height)
 			set_title ("Project Settings")
-			l_vertical_box_19.set_padding_width (padding_width)
-			l_vertical_box_19.set_border_width (border_width)
-			l_frame_13.set_text ("Project Settings")
-			l_vertical_box_20.set_padding_width (padding_width)
-			l_vertical_box_20.set_border_width (border_width)
-			l_vertical_box_20.disable_item_expand (l_horizontal_box_60)
-			l_notebook_1.set_item_text (l_vertical_box_21, "General")
-			l_notebook_1.set_item_text (l_vertical_box_22, "Schema")
-			l_notebook_1.set_item_text (l_vertical_box_23, "XSL")
-			l_vertical_box_21.set_padding_width (padding_width)
-			l_vertical_box_21.set_border_width (border_width)
-			l_vertical_box_21.disable_item_expand (l_horizontal_box_43)
-			l_vertical_box_21.disable_item_expand (l_horizontal_box_44)
-			l_vertical_box_21.disable_item_expand (l_horizontal_box_45)
-			l_vertical_box_21.disable_item_expand (l_horizontal_box_46)
-			l_vertical_box_21.disable_item_expand (l_horizontal_box_47)
-			l_vertical_box_21.disable_item_expand (l_horizontal_box_48)
-			l_vertical_box_21.disable_item_expand (l_horizontal_box_49)
-			l_vertical_box_21.disable_item_expand (l_horizontal_box_50)
-			l_horizontal_box_43.set_padding_width (padding_width)
-			l_horizontal_box_43.set_border_width (border_width)
-			l_horizontal_box_43.disable_item_expand (l_label_27)
-			l_label_27.set_text ("Project Name")
-			l_horizontal_box_44.set_padding_width (padding_width)
-			l_horizontal_box_44.set_border_width (border_width)
-			l_horizontal_box_45.set_padding_width (padding_width)
-			l_horizontal_box_45.set_border_width (border_width)
-			l_horizontal_box_45.disable_item_expand (l_label_28)
-			l_label_28.set_text ("TOC View")
-			l_label_28.align_text_left
-			l_horizontal_box_46.set_padding_width (padding_width)
-			l_horizontal_box_46.set_border_width (border_width)
-			l_horizontal_box_46.disable_item_expand (l_label_29)
-			l_label_29.set_text ("Index filename")
-			l_label_29.align_text_left
+			l_ev_vertical_box_1.set_padding_width (padding_width)
+			l_ev_vertical_box_1.set_border_width (border_width)
+			l_ev_frame_1.set_text ("Project Settings")
+			l_ev_vertical_box_2.set_padding_width (padding_width)
+			l_ev_vertical_box_2.set_border_width (border_width)
+			l_ev_vertical_box_2.disable_item_expand (l_ev_horizontal_box_19)
+			l_ev_notebook_1.set_item_text (l_ev_vertical_box_3, "General")
+			l_ev_notebook_1.set_item_text (l_ev_vertical_box_4, "Schema")
+			l_ev_notebook_1.set_item_text (l_ev_vertical_box_5, "XSL")
+			l_ev_vertical_box_3.set_padding_width (padding_width)
+			l_ev_vertical_box_3.set_border_width (border_width)
+			l_ev_vertical_box_3.disable_item_expand (l_ev_horizontal_box_1)
+			l_ev_vertical_box_3.disable_item_expand (l_ev_horizontal_box_2)
+			l_ev_vertical_box_3.disable_item_expand (l_ev_horizontal_box_3)
+			l_ev_vertical_box_3.disable_item_expand (l_ev_horizontal_box_4)
+			l_ev_vertical_box_3.disable_item_expand (l_ev_horizontal_box_5)
+			l_ev_vertical_box_3.disable_item_expand (l_ev_horizontal_box_6)
+			l_ev_vertical_box_3.disable_item_expand (l_ev_horizontal_box_7)
+			l_ev_vertical_box_3.disable_item_expand (l_ev_horizontal_box_8)
+			l_ev_vertical_box_3.disable_item_expand (l_ev_horizontal_box_9)
+			l_ev_horizontal_box_1.set_padding_width (padding_width)
+			l_ev_horizontal_box_1.set_border_width (border_width)
+			l_ev_horizontal_box_1.disable_item_expand (l_ev_label_1)
+			l_ev_label_1.set_text ("Project Name")
+			l_ev_horizontal_box_2.set_padding_width (padding_width)
+			l_ev_horizontal_box_2.set_border_width (border_width)
+			l_ev_horizontal_box_3.set_padding_width (padding_width)
+			l_ev_horizontal_box_3.set_border_width (border_width)
+			l_ev_horizontal_box_3.disable_item_expand (l_ev_label_2)
+			l_ev_label_2.set_text ("TOC View")
+			l_ev_label_2.align_text_left
+			l_ev_horizontal_box_4.set_padding_width (padding_width)
+			l_ev_horizontal_box_4.set_border_width (border_width)
+			l_ev_horizontal_box_4.disable_item_expand (l_ev_label_3)
+			l_ev_label_3.set_text ("Index filename")
+			l_ev_label_3.align_text_left
 			index_filename_text.set_text ("index.xml")
-			l_horizontal_box_47.set_padding_width (padding_width)
-			l_horizontal_box_47.set_border_width (border_width)
+			l_ev_horizontal_box_5.set_padding_width (padding_width)
+			l_ev_horizontal_box_5.set_border_width (border_width)
 			index_root_check.enable_select
 			index_root_check.set_text ("Automatically make root nodes from index files")
-			l_horizontal_box_48.set_padding_width (padding_width)
-			l_horizontal_box_48.set_border_width (border_width)
+			l_ev_horizontal_box_6.set_padding_width (padding_width)
+			l_ev_horizontal_box_6.set_border_width (border_width)
 			include_empty_dirs_check.set_text ("Include empty directories in Table of Contents")
-			l_horizontal_box_49.set_padding_width (padding_width)
-			l_horizontal_box_49.set_border_width (border_width)
+			l_ev_horizontal_box_7.set_padding_width (padding_width)
+			l_ev_horizontal_box_7.set_border_width (border_width)
 			include_no_index_check.set_text ("Include directories without index file in Table of Contents")
-			l_horizontal_box_50.set_padding_width (padding_width)
-			l_horizontal_box_50.set_border_width (border_width)
+			l_ev_horizontal_box_8.set_padding_width (5)
+			l_ev_horizontal_box_8.set_border_width (2)
 			include_skipped_sub_dirs_check.enable_select
 			include_skipped_sub_dirs_check.set_text ("Include sub directories of skipped directories")
-			l_cell_26.set_minimum_height (20)
-			l_vertical_box_22.set_padding_width (padding_width)
-			l_vertical_box_22.set_border_width (border_width)
-			l_vertical_box_22.disable_item_expand (l_horizontal_box_51)
-			l_vertical_box_22.disable_item_expand (l_horizontal_box_52)
-			l_vertical_box_22.disable_item_expand (l_horizontal_box_53)
-			l_vertical_box_22.disable_item_expand (l_horizontal_box_54)
-			l_vertical_box_22.disable_item_expand (l_horizontal_box_55)
-			l_horizontal_box_51.set_padding_width (padding_width)
-			l_horizontal_box_51.set_border_width (border_width)
-			l_horizontal_box_51.disable_item_expand (l_label_30)
-			l_label_30.set_text ("Schema File")
-			l_horizontal_box_52.set_padding_width (padding_width)
-			l_horizontal_box_52.set_border_width (border_width)
-			l_horizontal_box_52.disable_item_expand (browse_schema_bt)
+			l_ev_horizontal_box_9.set_padding_width (padding_width)
+			l_ev_horizontal_box_9.set_border_width (border_width)
+			order_alphabetical_check.enable_select
+			order_alphabetical_check.set_text ("Order Alphabetically")
+			l_ev_cell_1.set_minimum_height (20)
+			l_ev_vertical_box_4.set_padding_width (padding_width)
+			l_ev_vertical_box_4.set_border_width (border_width)
+			l_ev_vertical_box_4.disable_item_expand (l_ev_horizontal_box_10)
+			l_ev_vertical_box_4.disable_item_expand (l_ev_horizontal_box_11)
+			l_ev_vertical_box_4.disable_item_expand (l_ev_horizontal_box_12)
+			l_ev_vertical_box_4.disable_item_expand (l_ev_horizontal_box_13)
+			l_ev_vertical_box_4.disable_item_expand (l_ev_horizontal_box_14)
+			l_ev_horizontal_box_10.set_padding_width (padding_width)
+			l_ev_horizontal_box_10.set_border_width (border_width)
+			l_ev_horizontal_box_10.disable_item_expand (l_ev_label_4)
+			l_ev_label_4.set_text ("Schema File")
+			l_ev_horizontal_box_11.set_padding_width (padding_width)
+			l_ev_horizontal_box_11.set_border_width (border_width)
+			l_ev_horizontal_box_11.disable_item_expand (browse_schema_bt)
 			browse_schema_bt.set_text (button_browse_text)
 			browse_schema_bt.set_minimum_width (button_width)
-			l_horizontal_box_53.set_padding_width (padding_width)
-			l_horizontal_box_53.set_border_width (border_width)
-			l_horizontal_box_53.disable_item_expand (l_label_31)
-			l_label_31.set_text ("Validation")
-			l_horizontal_box_54.set_padding_width (padding_width)
-			l_horizontal_box_54.set_border_width (border_width)
+			l_ev_horizontal_box_12.set_padding_width (padding_width)
+			l_ev_horizontal_box_12.set_border_width (border_width)
+			l_ev_horizontal_box_12.disable_item_expand (l_ev_label_5)
+			l_ev_label_5.set_text ("Validation")
+			l_ev_horizontal_box_13.set_padding_width (padding_width)
+			l_ev_horizontal_box_13.set_border_width (border_width)
 			auto_validate_check.set_text ("Auto validate open documents during editing")
-			l_horizontal_box_55.set_padding_width (padding_width)
-			l_horizontal_box_55.set_border_width (border_width)
+			l_ev_horizontal_box_14.set_padding_width (padding_width)
+			l_ev_horizontal_box_14.set_border_width (border_width)
 			invalid_file_flag_check.set_text ("Flag invalid files in document directory hierarchy")
-			l_vertical_box_23.set_padding_width (padding_width)
-			l_vertical_box_23.set_border_width (border_width)
-			l_vertical_box_23.disable_item_expand (l_horizontal_box_56)
-			l_vertical_box_23.disable_item_expand (l_horizontal_box_57)
-			l_vertical_box_23.disable_item_expand (l_horizontal_box_58)
-			l_vertical_box_23.disable_item_expand (l_horizontal_box_59)
-			l_horizontal_box_56.set_padding_width (padding_width)
-			l_horizontal_box_56.set_border_width (border_width)
-			l_horizontal_box_56.disable_item_expand (l_label_32)
-			l_label_32.set_text ("Transform File")
-			l_horizontal_box_57.set_padding_width (padding_width)
-			l_horizontal_box_57.set_border_width (border_width)
-			l_horizontal_box_57.disable_item_expand (browse_xsl_bt)
+			l_ev_vertical_box_5.set_padding_width (padding_width)
+			l_ev_vertical_box_5.set_border_width (border_width)
+			l_ev_vertical_box_5.disable_item_expand (l_ev_horizontal_box_15)
+			l_ev_vertical_box_5.disable_item_expand (l_ev_horizontal_box_16)
+			l_ev_vertical_box_5.disable_item_expand (l_ev_horizontal_box_17)
+			l_ev_vertical_box_5.disable_item_expand (l_ev_horizontal_box_18)
+			l_ev_horizontal_box_15.set_padding_width (padding_width)
+			l_ev_horizontal_box_15.set_border_width (border_width)
+			l_ev_horizontal_box_15.disable_item_expand (l_ev_label_6)
+			l_ev_label_6.set_text ("Transform File")
+			l_ev_horizontal_box_16.set_padding_width (padding_width)
+			l_ev_horizontal_box_16.set_border_width (border_width)
+			l_ev_horizontal_box_16.disable_item_expand (browse_xsl_bt)
 			browse_xsl_bt.set_text (button_browse_text)
 			browse_xsl_bt.set_minimum_width (button_width)
-			l_horizontal_box_58.set_padding_width (padding_width)
-			l_horizontal_box_58.set_border_width (border_width)
-			l_horizontal_box_58.disable_item_expand (l_label_33)
-			l_label_33.set_text ("HTML Stylesheet File")
-			l_horizontal_box_59.set_padding_width (padding_width)
-			l_horizontal_box_59.set_border_width (border_width)
-			l_horizontal_box_59.disable_item_expand (browse_css_bt)
+			l_ev_horizontal_box_17.set_padding_width (padding_width)
+			l_ev_horizontal_box_17.set_border_width (border_width)
+			l_ev_horizontal_box_17.disable_item_expand (l_ev_label_7)
+			l_ev_label_7.set_text ("HTML Stylesheet File")
+			l_ev_horizontal_box_18.set_padding_width (padding_width)
+			l_ev_horizontal_box_18.set_border_width (border_width)
+			l_ev_horizontal_box_18.disable_item_expand (browse_css_bt)
 			browse_css_bt.set_text (button_browse_text)
 			browse_css_bt.set_minimum_width (button_width)
-			l_horizontal_box_60.set_padding_width (padding_width)
-			l_horizontal_box_60.set_border_width (border_width)
-			l_horizontal_box_60.disable_item_expand (apply_bt)
-			l_horizontal_box_60.disable_item_expand (okay_bt)
-			l_horizontal_box_60.disable_item_expand (cancel_bt)
+			l_ev_horizontal_box_19.set_padding_width (padding_width)
+			l_ev_horizontal_box_19.set_border_width (border_width)
+			l_ev_horizontal_box_19.disable_item_expand (apply_bt)
+			l_ev_horizontal_box_19.disable_item_expand (okay_bt)
+			l_ev_horizontal_box_19.disable_item_expand (cancel_bt)
 			apply_bt.set_text (button_apply_text)
 			apply_bt.set_minimum_width (button_width)
 			okay_bt.set_text (button_ok_text)
@@ -263,12 +274,35 @@ feature {NONE}-- Initialization
 			cancel_bt.set_text (button_cancel_text)
 			cancel_bt.set_minimum_width (button_width)
 			
+				--Connect events.
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.
 
 				-- Call `user_initialization'.
 			user_initialization
 		end
+
+feature -- Access
+
+	l_ev_vertical_box_1, l_ev_vertical_box_2, l_ev_vertical_box_3, l_ev_vertical_box_4, 
+	l_ev_vertical_box_5: EV_VERTICAL_BOX
+	l_ev_frame_1: EV_FRAME
+	l_ev_notebook_1: EV_NOTEBOOK
+	l_ev_horizontal_box_1, l_ev_horizontal_box_2, l_ev_horizontal_box_3, l_ev_horizontal_box_4, 
+	l_ev_horizontal_box_5, l_ev_horizontal_box_6, l_ev_horizontal_box_7, l_ev_horizontal_box_8, 
+	l_ev_horizontal_box_9, l_ev_horizontal_box_10, l_ev_horizontal_box_11, l_ev_horizontal_box_12, 
+	l_ev_horizontal_box_13, l_ev_horizontal_box_14, l_ev_horizontal_box_15, l_ev_horizontal_box_16, 
+	l_ev_horizontal_box_17, l_ev_horizontal_box_18, l_ev_horizontal_box_19: EV_HORIZONTAL_BOX
+	l_ev_label_1, l_ev_label_2, l_ev_label_3, l_ev_label_4, l_ev_label_5, l_ev_label_6, 
+	l_ev_label_7: EV_LABEL
+	l_ev_horizontal_separator_1, l_ev_horizontal_separator_2, l_ev_horizontal_separator_3, 
+	l_ev_horizontal_separator_4, l_ev_horizontal_separator_5, l_ev_horizontal_separator_6: EV_HORIZONTAL_SEPARATOR
+	name_text, index_filename_text, schema_loc_text, xsl_loc_text, css_loc_text: EV_TEXT_FIELD
+	index_root_check, include_empty_dirs_check, include_no_index_check, include_skipped_sub_dirs_check, 
+	order_alphabetical_check, auto_validate_check, invalid_file_flag_check: EV_CHECK_BUTTON
+	l_ev_cell_1, l_ev_cell_2: EV_CELL
+	browse_schema_bt, browse_xsl_bt, browse_css_bt, apply_bt, okay_bt, cancel_bt: EV_BUTTON
+
 feature {NONE} -- Implementation
 
 	is_in_default_state: BOOLEAN is
@@ -284,20 +318,4 @@ feature {NONE} -- Implementation
 		deferred
 		end
 	
-	l_vertical_box_19, l_vertical_box_20, l_vertical_box_21, l_vertical_box_22, l_vertical_box_23: EV_VERTICAL_BOX
-	l_frame_13: EV_FRAME
-	l_notebook_1: EV_NOTEBOOK
-	l_horizontal_box_43, l_horizontal_box_44, l_horizontal_box_45, l_horizontal_box_46, 
-	l_horizontal_box_47, l_horizontal_box_48, l_horizontal_box_49, l_horizontal_box_50, 
-	l_horizontal_box_51, l_horizontal_box_52, l_horizontal_box_53, l_horizontal_box_54, 
-	l_horizontal_box_55, l_horizontal_box_56, l_horizontal_box_57, l_horizontal_box_58, 
-	l_horizontal_box_59, l_horizontal_box_60: EV_HORIZONTAL_BOX
-	l_label_27, l_label_28, l_label_29, l_label_30, l_label_31, l_label_32, l_label_33: EV_LABEL
-	l_horizontal_separator_7, l_horizontal_separator_8, l_horizontal_separator_9, 
-	l_horizontal_separator_10, l_horizontal_separator_11, l_horizontal_separator_12: EV_HORIZONTAL_SEPARATOR
-	name_text, index_filename_text, schema_loc_text, xsl_loc_text, css_loc_text: EV_TEXT_FIELD
-	index_root_check, include_empty_dirs_check, include_no_index_check, include_skipped_sub_dirs_check, 
-	auto_validate_check, invalid_file_flag_check: EV_CHECK_BUTTON
-	l_cell_26, l_cell_27: EV_CELL
-	browse_schema_bt, browse_xsl_bt, browse_css_bt, apply_bt, okay_bt, cancel_bt: EV_BUTTON
-	end -- class PREFERENCES_DIALOG_IMP
+end -- class PREFERENCES_DIALOG_IMP

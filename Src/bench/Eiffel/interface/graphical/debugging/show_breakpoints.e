@@ -34,17 +34,38 @@ feature
 	format (stone: FEATURE_STONE) is
 			-- Show the "debug" format of `stone' if it is debuggable.
 		local
-			tool: BAR_AND_TEXT
+			tool: BAR_AND_TEXT;
+			feature_i: FEATURE_I;
+			message: STRING
 		do
 			if stone /= Void then
-				if stone.feature_i.is_debuggable then
+				feature_i := stone.feature_i;
+				if feature_i.is_debuggable then
 					old_format (stone)
 				else
 					tool ?= text_window.tool;
 					if tool /= Void then
 						tool.showtext_command.execute (stone)
-					end
-				end
+					end;
+					if feature_i.is_external then
+						message := w_Cannot_debug_externals
+					elseif feature_i.is_deferred then
+						message := w_Cannot_debug_deferreds
+					elseif feature_i.is_unique then
+						message := w_Cannot_debug_uniques
+					elseif feature_i.is_constant then
+						message := w_Cannot_debug_constants
+					elseif feature_i.is_attribute then
+						message := w_Cannot_debug_attributes
+					elseif feature_i.is_dynamic then
+							-- DLE temporary constraint:
+							-- Cannot debug routines from the DC-set.
+						message := w_Cannot_debug_dynamics
+					else
+						message := w_Cannot_debug_feature
+					end;
+					warner (text_window).gotcha_call (message)
+				end;
 			end
 		end;
 			

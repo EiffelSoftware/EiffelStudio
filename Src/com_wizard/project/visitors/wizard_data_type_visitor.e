@@ -170,6 +170,9 @@ feature -- Access
 	is_array_basic_type: BOOLEAN
 			-- Is type array of basic type?
 
+	is_array_type: BOOLEAN
+			-- Is type C array?
+
 	is_basic_type_ref: BOOLEAN
 			-- Is type reference to basic type?
 
@@ -474,6 +477,7 @@ feature -- Processing
 		do
 			create a_generator
 			a_generator.process (an_array_descriptor, Current)
+			is_array_type := True
 		end
 
 	process_user_defined_data_type (a_user_defined_descriptor: WIZARD_USER_DEFINED_DATA_TYPE_DESCRIPTOR) is

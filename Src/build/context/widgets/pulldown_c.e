@@ -11,7 +11,7 @@ inherit
 			reset_modified_flags as menu_reset_modified_flags,
 			context_initialization as old_context_initialization
 		redefine
-			set_visual_name, widget, add_to_option_list,
+			set_visual_name, widget, 
 			retrieve_set_visual_name,  source,
 			add_widget_callbacks
 		end;
@@ -20,7 +20,7 @@ inherit
 		redefine
 			set_visual_name, context_initialization, copy_attributes, 
 			undo_cut, cut, widget, reset_modified_flags,
-			add_to_option_list, source, retrieve_set_visual_name
+			source, retrieve_set_visual_name
 		select
 			cut, undo_cut, copy_attributes, context_initialization, 
 			reset_modified_flags
@@ -55,12 +55,6 @@ feature
 			visual_name := clone (s);
 		end;
 
-	add_to_option_list (opt_list: ARRAY [INTEGER]) is
-		do
-			opt_list.put (Context_const.pulldown_sm_form_nbr,
-						Context_const.Submenu_format_nbr);
-		end;
-
 	set_text (a_string: STRING) is
 		do
 			retrieve_set_visual_name (a_string);
@@ -80,7 +74,7 @@ feature
 			menu_reset_modified_flags;
 			text_modified := False;
 		end;
-	
+
 feature {NONE}
 
 	copy_attributes (other_context: like Current) is

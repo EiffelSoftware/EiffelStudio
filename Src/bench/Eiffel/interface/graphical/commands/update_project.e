@@ -246,7 +246,6 @@ feature {NONE}
 
 	link_driver is
 		local
-			arg2: STRING;
 			cmd_string: STRING;
 			uf: RAW_FILE;
 			file_name: FILE_NAME;
@@ -259,9 +258,7 @@ feature {NONE}
 				app_name.append (Executable_suffix);
 				file_name.set_file_name (app_name);
 
-				arg2 := file_name.path;
-
-				!!uf.make (arg2);
+				!!uf.make (file_name);
 				if not uf.exists then
 					eif_gr_link_driver (request, Workbench_generation_path.to_c, System.system_name.to_c,
 						Prelink_command_name.to_c, Precompilation_driver.to_c);

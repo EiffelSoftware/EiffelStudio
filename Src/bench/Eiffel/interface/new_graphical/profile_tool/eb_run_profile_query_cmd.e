@@ -31,7 +31,7 @@ feature {NONE} -- Execution
 			profiler_options: PROFILER_OPTIONS
 			st: STRUCTURED_TEXT
 			executer: E_SHOW_PROFILE_QUERY
-			error_dialog: EB_MESSAGE_WINDOW
+			error_dialog: EV_WARNING_DIALOG
 --			mp: MOUSE_PTR
 		do
 			if arg = Void then

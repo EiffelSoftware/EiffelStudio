@@ -10,7 +10,6 @@ inherit
 			setup_dialog,
 			on_ok,
 			parent,
-			on_wm_destroy,
 			on_control_command
 		end
 
@@ -53,7 +52,7 @@ feature {NONE} -- Initialization
 			create welcome_static.make_by_id (Current, Title_static_constant)
 			help_topic_id := 731
 
-			new_project := False
+			shared_wizard_environment.set_new_project (False)
 		end
 
 feature -- Behavior
@@ -77,26 +76,15 @@ feature -- Behavior
 		do
 			if create_project_from_com_radio.checked then
 				shared_wizard_environment.set_new_eiffel_project (False)
-				new_project := True
+				shared_wizard_environment.set_new_project (True)
 			elseif create_project_from_eiffel_class_radio.checked then
 				shared_wizard_environment.set_new_eiffel_project (True)
-				new_project := True
+				shared_wizard_environment.set_new_project (True)
+			else
+				shared_wizard_environment.set_new_eiffel_project (False)
+				shared_wizard_environment.set_new_project (False)
 			end
-
 			Precursor {WEL_MODAL_DIALOG}
-		end
-
-	on_wm_destroy is
-			-- Open project if needed
-		do
-			Precursor {WEL_MODAL_DIALOG}
-			if ok_pushed then
-				if new_project then
-					parent.on_menu_command (Launch_string_constant)
-				else
-					parent.on_menu_command (Open_string_constant)
-				end
-			end
 		end
 
 	on_help is
@@ -104,7 +92,7 @@ feature -- Behavior
 		local
 			tmp_help_path: STRING			
 		do
-			tmp_help_path := clone (execution_environment.get ("EIFFEL4"))
+			tmp_help_path := clone (Eiffel4_location)
 			tmp_help_path.append ("\wizards\com\eiffelcom.hlp")
 			win_help (tmp_help_path, Help_context, help_topic_id)
 		end
@@ -123,9 +111,6 @@ feature -- Access
 
 	open_project_radio: WEL_RADIO_BUTTON
 			-- Open existing project button
-
-	new_project: BOOLEAN
-			-- Should a new EiffelCOM project be created?
 
 	create_project_from_com_radio: WEL_RADIO_BUTTON
 			-- Create new project from COM definition file button

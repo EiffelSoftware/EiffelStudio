@@ -198,6 +198,7 @@ rt_private EIF_REFERENCE retrieve_objects (EIF_INTEGER nb_obj)
 		tmp_buffer = rt_read_cid (tmp_buffer, &crflags, &fflags, flags);
 	
 		if (flags & EO_SPEC) {	/* Special reference */
+			CHECK("Not tuple", !(flags & EO_TUPLE));
 				/* Read SPECIAL size. */
 			tmp_buffer = buffer_read (tmp_buffer, &nb_bytes, sizeof(EIF_INTEGER));
 
@@ -233,6 +234,7 @@ rt_private EIF_REFERENCE retrieve_objects (EIF_INTEGER nb_obj)
 		zone = HEADER(o_ref);
 		flags = zone->ov_flags;
 		if (flags & EO_SPEC) {	/* SPECIAL object */
+			CHECK("Not tuple", !(flags & EO_TUPLE));
 				/* We update SPECIAL object only if it is full of references. */
 			if (flags & EO_REF) {	/* SPECIAL of reference */
 					/* Get the number of elements in SPECIAL */
@@ -346,6 +348,7 @@ rt_private int store_object (EIF_REFERENCE object, int object_count)
 	written_byte += st_write_cid (&saved_buffer, fflags & EO_TYPE);
 
 	if (flags & EO_SPEC) {	/* SPECIAL object */
+		CHECK("Not tuple", !(flags & EO_TUPLE));
 			/* Compute SPECIAL size */
 		object_size = (zone->ov_size & B_SIZE);
 
@@ -564,6 +567,7 @@ rt_private void traversal (EIF_REFERENCE object)
 	obj_nb++;
 
 	if (flags & EO_SPEC) {	/* Special object */
+		CHECK("Not tuple", !(flags & EO_TUPLE));
 		if (!(flags & EO_REF))	/* Object does not have any references. */
 			return;
 		assert (!(flags & EO_COMP));	/* We do not handle SPECIAL of expanded objects. */

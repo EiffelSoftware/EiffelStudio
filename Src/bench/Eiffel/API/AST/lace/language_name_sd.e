@@ -27,6 +27,12 @@ feature
 			-- Do nothing
 		end;
 
+	is_executable: BOOLEAN is
+			-- Is the language "Executable" ?
+		do
+			-- Do nothing
+		end;
+
 	set is
 			-- Yacc initialization
 		do

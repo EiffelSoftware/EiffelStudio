@@ -18,8 +18,6 @@ inherit
 			process_record
 		end
 
-	WIZARD_SHARED_DATA
-
 	ECOM_TYPE_FLAGS
 		export
 			{NONE} all

@@ -317,48 +317,48 @@ feature {NONE} -- Implementation
 			-- IDL file extension
 
 	initialize_shared_wizard_environment is
-			-- Set `shared_wizard_environment'.
+			-- Set `environment'.
 		do
 			if ace_file_name /= Void and then not ace_file_name.is_empty then
-				shared_wizard_environment.set_ace_file_name (ace_file_name)
+				environment.set_ace_file_name (ace_file_name)
 			end
-			shared_wizard_environment.set_in_process_server (in_process_server)
-			shared_wizard_environment.set_output_level (output_level)
-			shared_wizard_environment.set_out_of_process_server (out_of_process_server)
+			environment.set_in_process_server (in_process_server)
+			environment.set_output_level (output_level)
+			environment.set_out_of_process_server (out_of_process_server)
 			if eiffel_class_name /= Void and then not eiffel_class_name.is_empty then
-				shared_wizard_environment.set_eiffel_class_name (eiffel_class_name)
+				environment.set_eiffel_class_name (eiffel_class_name)
 			end
 			if class_cluster_name /= Void and then not class_cluster_name.is_empty then
-				shared_wizard_environment.set_class_cluster_name (class_cluster_name)
+				environment.set_class_cluster_name (class_cluster_name)
 			end
 			if eiffel_project_name /= Void and then not eiffel_project_name.is_empty then
-				shared_wizard_environment.set_eiffel_project_name (eiffel_project_name)
+				environment.set_eiffel_project_name (eiffel_project_name)
 			end
 			if destination_folder /= Void and then not destination_folder.is_empty then
-				shared_wizard_environment.set_destination_folder (destination_folder)
+				environment.set_destination_folder (destination_folder)
 			end
 			if project_name /= Void and then not project_name.is_empty then
-				shared_wizard_environment.set_project_name (project_name)
+				environment.set_project_name (project_name)
 			end
 			if proxy_stub_file_name /= Void and then not proxy_stub_file_name.is_empty then
-				shared_wizard_environment.set_proxy_stub_file_name (proxy_stub_file_name)
+				environment.set_proxy_stub_file_name (proxy_stub_file_name)
 			end
 			if idl_file_name /= Void and then not idl_file_name.is_empty then
-				shared_wizard_environment.set_idl_file_name (idl_file_name)
+				environment.set_idl_file_name (idl_file_name)
 			end
 			if type_library_file_name /= Void and then not type_library_file_name.is_empty then
-				shared_wizard_environment.set_type_library_file_name (type_library_file_name)
+				environment.set_type_library_file_name (type_library_file_name)
 			end
-			shared_wizard_environment.set_new_eiffel_project (is_new_eiffel_project)
-			shared_wizard_environment.set_idl (idl)
-			shared_wizard_environment.set_client_server (is_client,is_server)
-			shared_wizard_environment.set_use_universal_marshaller (use_universal_marshaller)
-			shared_wizard_environment.set_automation (automation)
-			shared_wizard_environment.set_compile_eiffel (compile_eiffel)
-			shared_wizard_environment.set_compile_c (compile_c)
-			shared_wizard_environment.set_stop_on_error (stop_on_error)
-			shared_wizard_environment.set_new_project (new_project)
-			shared_wizard_environment.set_spawn_ebench (not_spawn_ebench)
+			environment.set_new_eiffel_project (is_new_eiffel_project)
+			environment.set_idl (idl)
+			environment.set_client_server (is_client,is_server)
+			environment.set_use_universal_marshaller (use_universal_marshaller)
+			environment.set_automation (automation)
+			environment.set_compile_eiffel (compile_eiffel)
+			environment.set_compile_c (compile_c)
+			environment.set_stop_on_error (stop_on_error)
+			environment.set_new_project (new_project)
+			environment.set_spawn_ebench (not_spawn_ebench)
 		end
 			
 	wizard_environment_set: BOOLEAN is
@@ -369,8 +369,8 @@ feature {NONE} -- Implementation
 			l_retried: BOOLEAN
 		do
 			if not l_retried then
-				if shared_wizard_environment.destination_folder /= Void then
-					create a_folder.make (shared_wizard_environment.destination_folder.substring (1, shared_wizard_environment.destination_folder.count - 1))
+				if environment.destination_folder /= Void then
+					create a_folder.make (environment.destination_folder.substring (1, environment.destination_folder.count - 1))
 					if not a_folder.exists then
 						a_folder.create_dir
 					end
@@ -381,21 +381,21 @@ feature {NONE} -- Implementation
 				end
 				
 				Result := Result and
-					(shared_wizard_environment.server xor shared_wizard_environment.client) and
-					(not shared_wizard_environment.idl implies (shared_wizard_environment.type_library_file_name /= Void)) and
-					(not shared_wizard_environment.compile_c implies not shared_wizard_environment.compile_eiffel)
+					(environment.server xor environment.client) and
+					(not environment.idl implies (environment.type_library_file_name /= Void)) and
+					(not environment.compile_c implies not environment.compile_eiffel)
 							
-				if shared_wizard_environment.new_eiffel_project and
-					(shared_wizard_environment.new_eiffel_project implies
-					((shared_wizard_environment.eiffel_class_name /= Void) and 
-					(shared_wizard_environment.class_cluster_name /= Void) and
-					(shared_wizard_environment.eiffel_project_name /= Void) and
-					(shared_wizard_environment.ace_file_name /= Void))) 
+				if environment.new_eiffel_project and
+					(environment.new_eiffel_project implies
+					((environment.eiffel_class_name /= Void) and 
+					(environment.class_cluster_name /= Void) and
+					(environment.eiffel_project_name /= Void) and
+					(environment.ace_file_name /= Void))) 
 				then
-					create a_file.make (shared_wizard_environment.eiffel_project_name)
+					create a_file.make (environment.eiffel_project_name)
 					Result := Result and a_file.exists
 					
-					create a_file.make (shared_wizard_environment.ace_file_name)
+					create a_file.make (environment.ace_file_name)
 					Result := Result and a_file.exists
 				end						
 			else

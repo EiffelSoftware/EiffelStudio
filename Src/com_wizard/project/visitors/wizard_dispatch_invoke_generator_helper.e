@@ -38,6 +38,11 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_SHARED_DATA
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	excepinfo_setting: STRING is
@@ -50,7 +55,7 @@ feature -- Access
 	%						BSTR b_string = SysAllocString (wide_string);%N%
 	%						free (wide_string);%N%
 	%						pExcepInfo->bstrDescription = b_string;%N%
-	%						wide_string = ccom_create_from_string (%"" + Shared_wizard_environment.project_name + "%");%N%
+	%						wide_string = ccom_create_from_string (%"" + environment.project_name + "%");%N%
 	%						b_string = SysAllocString (wide_string);%N%
 	%						free (wide_string);%N%
 	%						pExcepInfo->bstrSource = b_string;%N%

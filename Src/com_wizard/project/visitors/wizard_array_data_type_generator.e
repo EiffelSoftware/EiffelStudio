@@ -71,7 +71,7 @@ feature -- Basic operations
 			writable := True
 
 			if is_void (an_element_type) then
-				message_output.add_warning (Current, message_output.void_array)
+				message_output.add_warning (Current, "ARRAY of type void is not supprted")
 
 			elseif is_ptr (an_element_type) or is_safearray (an_element_type) or
 					is_user_defined (an_element_type) then

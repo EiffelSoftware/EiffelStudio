@@ -19,6 +19,7 @@ inherit
 		end
 
 feature -- Processing
+
 	process_alias (a_descriptor: WIZARD_ALIAS_DESCRIPTOR) is
 			-- process alias
 			-- generate code for alias described in `a_descriptor'
@@ -42,7 +43,7 @@ feature -- Processing
 			l_impl_generator: WIZARD_COCLASS_EIFFEL_SERVER_IMPL_GENERATOR
 		do
 			Precursor (a_descriptor)
-			if shared_wizard_environment.new_eiffel_project then
+			if environment.is_eiffel_interface then
 				create l_impl_generator
 				l_impl_generator.generate (a_descriptor)
 			else
@@ -78,7 +79,7 @@ feature -- Processing
 			l_eiffel_generator: WIZARD_EIFFEL_CLASS_INTERFACE_GENERATOR
 		do
 			Precursor (a_descriptor)
-			if not shared_wizard_environment.new_eiffel_project then
+			if not environment.is_eiffel_interface then
 				if not a_descriptor.is_iunknown and not a_descriptor.is_idispatch then
 					create l_generator
 					l_generator.generate (a_descriptor)

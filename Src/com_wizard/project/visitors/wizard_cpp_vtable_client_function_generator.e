@@ -123,68 +123,32 @@ feature {NONE} -- Implementation
 
 						if visitor.is_structure_pointer or visitor.is_interface_pointer then
 							variables.append (retval_struct_pointer_set_up (visitor))
-							
-							signature.append (Space)
-							signature.append (Return_value_name)
-							signature.append (Comma)
-							
-							return_value.append (Tab)
-							return_value.append (Return)
-							return_value.append (Space)
-							return_value.append (Eif_wean)
-							return_value.append (Space_open_parenthesis)
-							return_value.append (C_result)
-							return_value.append (Close_parenthesis)
-							return_value.append (Semicolon)
+							signature.append (" ret_value,")
+							return_value.append ("%Treturn eif_wean (result);")
 						else
 							pointed_descriptor ?= arguments.item.type
 							if pointed_descriptor /= Void then
 								visitor := pointed_descriptor.pointed_data_type_descriptor.visitor
-
-								signature.append (Space)
-								signature.append (Ampersand)
-								signature.append (Return_value_name)
-								signature.append (Comma)
+								signature.append (" &ret_value,")
 							else
-								signature.append (Space)
-								signature.append (Return_value_name)
-								signature.append (Comma)
+								signature.append (" ret_value,")
 							end
-
 							variables.append (visitor.c_type)
-							variables.append (Space)
-							variables.append (Return_value_name)
+							variables.append (" ret_value")
 							variables.append (visitor.c_post_type)
-							variables.append (Space_equal_space)
-							variables.append (Zero)
-							variables.append (Semicolon)
-							variables.append (New_line_tab)
-
-							return_value.append (return_value_setup (visitor, Return_value_name))
+							variables.append (" = 0;%N%T")
+							return_value.append (return_value_setup (visitor, "ret_value"))
 						end
 					else 
-						if 
-							visitor.is_interface_pointer or
-							visitor.is_coclass_pointer
-						then
+						if visitor.is_interface_pointer or visitor.is_coclass_pointer then
 							signature.append (arguments.item.name)
-
-						elseif
-							visitor.is_structure_pointer or 
-							visitor.is_array_basic_type
-						then
+						elseif visitor.is_structure_pointer or visitor.is_array_basic_type then
 							signature.append (arguments.item.name)
-		
-						elseif 
-							visitor.is_interface or 
-							visitor.is_coclass or 
-							visitor.is_structure 
-						then
+						elseif visitor.is_interface or visitor.is_coclass or visitor.is_structure then
 							signature.append ("*(")
 							signature.append (visitor.c_type)
 							signature.append ("*)")
 							signature.append (arguments.item.name)
-
 						else
 							variables.append (visitor.c_type)
 							variables.append (" ")
@@ -199,7 +163,9 @@ feature {NONE} -- Implementation
 							if not visitor.is_array_type then
 								variables.append (visitor.c_post_type)
 							end
-							variables.append (" = 0;%N%Ttmp_")
+							variables.append (" = 0;%N%T")
+							
+							signature.append ("tmp_")
 							signature.append (arguments.item.name)
 	
 							variables.append (in_out_parameter_set_up (arguments.item.name, arguments.item.type, visitor))
@@ -212,11 +178,7 @@ feature {NONE} -- Implementation
 								tmp_name.append (arguments.item.name)
 							end
 						end
-						if 
-							visitor.need_free_memory and 
-							not visitor.is_interface_pointer and
-							not visitor.is_coclass_pointer
-						then
+						if visitor.need_free_memory and not visitor.is_interface_pointer and not visitor.is_coclass_pointer then
 							free_memory.append (free_memory_set_up (visitor, Tmp_clause + arguments.item.name))
 						end
 						signature.append (Comma)
@@ -230,64 +192,52 @@ feature {NONE} -- Implementation
 				if not signature.is_empty then
 					signature.remove (signature.count)
 				end
-				signature.append (Close_parenthesis)
-				signature.append (Semicolon)
-				signature.append (New_line)			
+				signature.append (");%N")
 
 				-- Set up body
 				Result.append (variables)
-				Result.append (New_line_tab)
+				Result.append ("%N%T")
 				if  (func_desc.return_type.type = Vt_hresult) then
-					Result.append (Hresult_variable_name)
-					Result.append (Space_equal_space)
+					Result.append ("hr = ")
 				elseif not (func_desc.return_type.type = Vt_void) then
 					visitor := func_desc.return_type.visitor
 					Result.append (visitor.c_type)
-					Result.append (Space)
-					Result.append (C_result)
-					Result.append (Space_equal_space)
-
-					return_value.append (return_value_setup (visitor, C_result))
+					Result.append (" result = ")
+					return_value.append (return_value_setup (visitor, "result"))
 				end
-				Result.append (Interface_variable_prepend)
+				Result.append ("p_")
 				Result.append (interface_name)
-				Result.append (Struct_selection_operator)
+				Result.append ("->")
 				Result.append (func_desc.name)
 				Result.append (signature)
 				if  (func_desc.return_type.type = Vt_hresult) then
-					Result.append (examine_hresult (Hresult_variable_name))
+					Result.append (examine_hresult ("hr"))
 				end
 				Result.append (out_value)
 				Result.append (free_memory)
 				if not return_value.is_empty then
-					Result.append (New_line)
+					Result.append ("%N")
 					Result.append (return_value)
 				end
 			else
-				Result.append (New_line_tab)
+				Result.append ("%N%T")
 				if  (func_desc.return_type.type = Vt_hresult) then
-					Result.append (Hresult_variable_name)
-					Result.append (Space_equal_space)
+					Result.append ("hr = ")
 				elseif not (func_desc.return_type.type = Vt_void) then
 					visitor := func_desc.return_type.visitor
 					Result.append (visitor.c_type)
-					Result.append (Space)
-					Result.append (C_result)
-					Result.append (Space_equal_space)
-					return_value.append (return_value_setup (visitor, C_result))
+					Result.append (" result = ")
+					return_value.append (return_value_setup (visitor, "result"))
 				end
-				Result.append (Interface_variable_prepend)
+				Result.append ("p_")
 				Result.append (interface_name)
-				Result.append (Struct_selection_operator)
+				Result.append ("->")
 				Result.append (func_desc.name)
-				Result.append (Space_open_parenthesis)
-				Result.append (Close_parenthesis)
-				Result.append (Semicolon)
-				Result.append (New_line)
+				Result.append (" ();%N")
 				if  (func_desc.return_type.type = Vt_hresult) then
-					Result.append (examine_hresult (Hresult_variable_name))
+					Result.append (examine_hresult ("hr"))
 				end
-				Result.append (tab)
+				Result.append ("%T")
 				if not return_value.is_empty then
 					Result.append (return_value)
 				end

@@ -25,7 +25,7 @@ feature -- Basic operations
 			property_generator.generate (component, a_property)
 			cpp_class_writer.add_function (property_generator.c_access_feature, Public)
 
-			if not is_varflag_freadonly (a_property.var_flags) then
+			if a_property.is_read_only then
 				cpp_class_writer.add_function (property_generator.c_setting_feature, Public)
 			end
 		end

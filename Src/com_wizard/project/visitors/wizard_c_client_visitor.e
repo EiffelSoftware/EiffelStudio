@@ -18,8 +18,6 @@ inherit
 			process_record
 		end
 
-	WIZARD_SHARED_DATA
-
 	ECOM_TYPE_FLAGS
 		export
 			{NONE} all
@@ -33,7 +31,7 @@ feature -- Processing
 		local
 			l_generator: WIZARD_ALIAS_C_CLIENT_GENERATOR
 		do
-			if not shared_wizard_environment.server then
+			if environment.is_client then
 				Precursor (a_descriptor)
 				create l_generator
 				l_generator.generate (a_descriptor)
@@ -95,7 +93,7 @@ feature -- Processing
 			-- for every constant in `enum_descriptor'
 				-- generate code for constant
 		do
-			if not shared_wizard_environment.server then
+			if environment.is_client then
 				Precursor (a_descriptor)
 			end
 		end

@@ -45,7 +45,7 @@ feature -- Basic operation
 			add_creation
 			add_default_features (a_coclass)
 
-			if not shared_wizard_environment.new_eiffel_project then
+			if not environment.is_eiffel_interface then
 				process_interfaces (a_coclass)
 			end
 
@@ -76,7 +76,7 @@ feature -- Basic operation
 			-- Add default features to coclass server. 
 			-- e.g. make, constructor etc.
 		do
-			if shared_wizard_environment.new_eiffel_project then
+			if environment.is_eiffel_interface then
 				eiffel_writer.add_feature (make_feature_precursor, Initialization)
 			else
 				eiffel_writer.add_feature (make_feature, Initialization)
@@ -99,8 +99,8 @@ feature {NONE} -- Implementation
 		do
 			create l_writer.make
 
-			if shared_wizard_environment.new_eiffel_project then
-				l_writer.set_name (shared_wizard_environment.eiffel_class_name)
+			if environment.is_eiffel_interface then
+				l_writer.set_name (environment.eiffel_class_name)
 				l_writer.add_redefine (make_word)
 			else
 				l_writer.set_name (coclass_descriptor.eiffel_class_name)
@@ -108,7 +108,7 @@ feature {NONE} -- Implementation
 
 			a_writer.add_inherit_clause (l_writer)
 
-			if shared_wizard_environment.new_eiffel_project then
+			if environment.is_eiffel_interface then
 				create l_writer.make
 				l_writer.set_name ("ECOM_STUB")
 				a_writer.add_inherit_clause (l_writer)
@@ -132,7 +132,7 @@ feature {NONE} -- Implementation
 			Result.set_result_type ("POINTER")
 
 			create l_body.make (100)
-			l_body.append ("%T%T%T%"[C++ %(new ")
+			l_body.append ("%T%T%T%"C++ [new ")
 			if a_component.namespace /= Void and then not a_component.namespace.is_empty then
 				l_body.append (a_component.namespace)
 				l_body.append ("::")
@@ -161,7 +161,7 @@ feature {NONE} -- Implementation
 
 			create l_body.make (100)
 			l_body.append ("%T%T%TPrecursor {")
-			l_body.append (shared_wizard_environment.eiffel_class_name)
+			l_body.append (environment.eiffel_class_name)
 			l_body.append ("}")
 
 			Result.set_effective

@@ -86,14 +86,11 @@ feature {NONE} -- Implementation
 			a_message: STRING
 		do
 			create a_message.make (100)
-			a_message.append (Processing)
-			a_message.append (Space)
+			a_message.append ("Processing ")
 			a_message.append (a_wizard_descriptor.name)
-			a_message.append (Space)
-			a_message.append (For)
-			a_message.append (Space)
+			a_message.append (" for ")
 			a_message.append (language)
-			a_message.append (Space)
+			a_message.append (" ")
 			a_message.append (module_type)
 			message_output.add_message (Current, a_message)
 		end

@@ -85,7 +85,7 @@ feature -- Basic operations
 			-- File name for generated Eiffel to C structure mapper
 		do
 			transient_writer := a_writer
-			if shared_wizard_environment.client then
+			if environment.is_client then
 				create_directory_prefix (Client)
 			else
 				create_directory_prefix (Server)
@@ -405,7 +405,7 @@ feature {NONE} -- Implementation
 	create_directory_prefix (a_directory: STRING) is
 			-- Prepend `last_created_file_name' with path to `a_directory'.
 		do
-			last_created_file_name := shared_wizard_environment.destination_folder.twin
+			last_created_file_name := environment.destination_folder.twin
 			last_created_file_name.append (a_directory)
 		end
 

@@ -10,8 +10,6 @@ inherit
 	WIZARD_ROUTINES
 
 	WIZARD_PROCESS_LAUNCHER
-		rename
-			message_output as process_launcher_message_output
 		export
 			{NONE} all
 		end
@@ -35,9 +33,6 @@ inherit
 		export
 			{NONE} all
 		end
-
-create
-	make
 
 feature -- Basic Operations
 
@@ -82,7 +77,7 @@ feature -- Basic Operations
 			a_string := C_compiler.twin
 			a_string.append (Space)
 			a_string.append (last_make_command)
-			launch (a_string, execution_environment.current_working_directory)
+			launch (a_string, Env.current_working_directory)
 			check_return_code
 		end
 
@@ -98,9 +93,7 @@ feature {NONE} -- Implementation
 			-- Display error message and stops execution if last system call failed
 		do
 			if last_process_result /= 0 or not last_launch_successful then
-				if Shared_wizard_environment.stop_on_error then
-					shared_wizard_environment.set_abort (last_process_result)
-				end
+				environment.set_abort (last_process_result)
 			end
 		end
 
@@ -117,7 +110,7 @@ feature {NONE} -- Implementation
 			a_string: STRING
 		do
 			if not retried then
-				a_string := execution_environment.current_working_directory.twin
+				a_string := Env.current_working_directory.twin
 				a_string.append_character (Directory_separator)
 				a_string.append (a_file_name)
 				create a_file.make_open_write (a_string)
@@ -126,7 +119,7 @@ feature {NONE} -- Implementation
 				last_make_command.append (a_file_name)
 				a_file.close
 			else
-				message_output.add_error (Current, message_output.Could_not_write_makefile)
+				message_output.add_error (Current, "Could not write makefile")
 			end
 		rescue
 			if not failed_on_rescue then
@@ -139,10 +132,8 @@ feature {NONE} -- Implementation
 			-- Cl command line used to compile Proxy Stub
 		do
 			Result := Common_c_compiler_options.twin
-			if Shared_wizard_environment.output_level = message_output.Output_none then
-				Result.append (" /nologo ")
-			end
-			Result.append (execution_environment.current_working_directory.twin)
+			Result.append (" /nologo ")
+			Result.append (Env.current_working_directory.twin)
 			Result.append_character (Directory_separator)
 			Result.append (a_file_name)
 		end

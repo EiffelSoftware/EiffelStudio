@@ -10,11 +10,6 @@ deferred class
 inherit
 	WIZARD_EIFFEL_WRITER_GENERATOR
 
-	ECOM_VAR_FLAGS
-		export
-			{NONE} all
-		end
-
 feature -- Basic Operations
 
 	generate (a_descriptor: WIZARD_INTERFACE_DESCRIPTOR) is

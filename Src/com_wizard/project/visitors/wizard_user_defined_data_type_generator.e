@@ -181,7 +181,7 @@ feature -- Processing
 			create c_post_type.make (100)
 			c_definition_header_file_name := l_interface.c_definition_header_file_name
 			c_declaration_header_file_name := l_interface.c_definition_header_file_name
-			eiffel_type := name_for_class (coclass_descriptor.name, coclass_descriptor.type_kind, shared_wizard_environment.client)
+			eiffel_type := name_for_class (coclass_descriptor.name, coclass_descriptor.type_kind, environment.is_client)
 
 			is_coclass := True
 

@@ -11,11 +11,11 @@ inherit
 		rename
 			field_label as text_label,
 			field_combo as text_combo
+		export
+			{NONE} all
 		end
 
 	WIZARD_TEXT_BOX
-		export
-			{ANY} setup
 		undefine
 			default_create,
 			is_equal,

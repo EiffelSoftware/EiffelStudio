@@ -29,6 +29,11 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_SHARED_DATA
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -272,8 +277,7 @@ feature -- Access
 					Result := Variant_ppunkval.twin
 				else
 					tmp_string := a_visitor.c_type.twin
-					tmp_string.append (Space)
-					tmp_string.append (message_output.Not_variant_type)
+					tmp_string.append (" Variable type is not Variant")
 					message_output.add_warning (Current, tmp_string)
 					create Result.make (0)
 				end

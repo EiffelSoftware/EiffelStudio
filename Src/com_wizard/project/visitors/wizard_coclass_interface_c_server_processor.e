@@ -26,8 +26,8 @@ feature -- Basic operations
 			if a_interface.is_implementing_coclass (coclass) then
 				coclass_generator.cpp_class_writer.add_parent (a_interface.c_type_name, a_interface.namespace, Public)
 				
-				if not a_interface.c_declaration_header_file_name.is_empty then
-					coclass_generator.cpp_class_writer.add_import (a_interface.c_declaration_header_file_name)
+				if not a_interface.c_definition_header_file_name.is_empty then
+					coclass_generator.cpp_class_writer.add_import (a_interface.c_definition_header_file_name)
 				end
 
 				coclass_generator.interface_names.extend (a_interface.c_type_name)

@@ -27,13 +27,13 @@ feature -- Basic operations
 			define_feature_names (a_component_descriptor, a_descriptor)
 			generate_access_feature (l_visitor, a_descriptor)
 			generate_external_access_feature (l_visitor, a_component_descriptor, a_descriptor)
-			if not is_varflag_freadonly (a_descriptor.var_flags) then
+			if a_descriptor.is_read_only then
 				generate_setting_feature (l_visitor)
 				generate_external_setting_feature (l_visitor, a_component_descriptor)
 			end
 		ensure then
 			external_access_feature_exist: external_access_feature /= Void
-			external_setting_feature_exist: not is_varflag_freadonly (a_descriptor.var_flags)  implies (external_setting_feature /= Void)
+			external_setting_feature_exist: a_descriptor.is_read_only  implies external_setting_feature /= Void
 		end
 
 feature {NONE} -- Implementation

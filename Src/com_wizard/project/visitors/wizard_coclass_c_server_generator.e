@@ -58,7 +58,7 @@ feature -- Basic operations
 			Precursor {WIZARD_COMPONENT_C_SERVER_GENERATOR} (a_coclass)
 			create {ARRAYED_LIST [STRING]} interface_names.make (20)
 
-			if shared_wizard_environment.out_of_process_server then
+			if environment.is_out_of_process then
 				create l_string.make (500)
 				l_string.append (a_coclass.c_type_name)
 				l_string.append ("_factory.h")
@@ -278,6 +278,7 @@ feature {NONE} -- Implementation
 			end
 
 		l_body.append ("[
+
 	return (*ppv = 0), E_NOINTERFACE;
 		
 	reinterpret_cast<IUnknown *>(*ppv)->AddRef ();

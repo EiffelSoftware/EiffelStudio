@@ -10,11 +10,6 @@ class
 inherit
 	WIZARD_IMPLEMENTED_INTERFACE_C_GENERATOR
 
-	WIZARD_SHARED_DATA
-		export
-			{NONE} all
-		end
-
 	WIZARD_CPP_FEATURE_GENERATOR
 		export
 			{NONE} all

@@ -27,8 +27,8 @@ feature -- Access
 			-- C++ class header file contains information that all generated class require
 			-- e.g. global variables, system header files etc.
 		once
-			Result := "ecom_grt_globals_" + Shared_wizard_environment.project_name
-			if Shared_wizard_environment.client then
+			Result := "ecom_grt_globals_" + environment.project_name
+			if environment.is_client then
 				Result.append ("_c")
 			end
 			Result.append (".h")
@@ -43,8 +43,8 @@ feature -- Access
 	Generated_ec_mapper: STRING is 
 			-- C++ class holding generated Eiffel to C mappers
 		once
-			Result := "grt_ec_" + Shared_wizard_environment.project_name
-			if Shared_wizard_environment.client then
+			Result := "grt_ec_" + environment.project_name
+			if environment.is_client then
 				Result.append ("_c")
 			end
 		end
@@ -52,8 +52,8 @@ feature -- Access
 	Generated_ce_mapper: STRING is 
 			-- C++ class holding generated C to Eiffel mappers, object name.
 		once
-			Result := "grt_ce_" + Shared_wizard_environment.project_name
-			if Shared_wizard_environment.client then
+			Result := "grt_ce_" + environment.project_name
+			if environment.is_client then
 				Result.append ("_c")
 			end
 		end
@@ -61,8 +61,8 @@ feature -- Access
 	Generated_ec_class_name: STRING is 
 			-- C++ class name for generated mapper functions Eiffel to C.
 		once
-			Result := "ecom_gec_" + Shared_wizard_environment.project_name
-			if Shared_wizard_environment.client then
+			Result := "ecom_gec_" + environment.project_name
+			if environment.is_client then
 				Result.append ("_c")
 			end
 		end
@@ -70,8 +70,8 @@ feature -- Access
 	Generated_ce_class_name: STRING is 
 			-- C++ class name for generated mapper functions C to Eiffel.
 		once
-			Result := "ecom_gce_" + Shared_wizard_environment.project_name
-			if Shared_wizard_environment.client then
+			Result := "ecom_gce_" + environment.project_name
+			if environment.is_client then
 				Result.append ("_c")
 			end
 		end

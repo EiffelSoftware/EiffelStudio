@@ -17,11 +17,11 @@ feature -- Access
 		local
 			a_string: STRING
 		once
-			a_string := execution_environment.get (Env_variable_name)
+			a_string := Env.get (Env_variable_name)
 			if a_string /= Void then
 				Result := a_string.is_equal (True_string)
 			else
-				execution_environment.put (False_string, Env_variable_name)
+				Env.put (False_string, Env_variable_name)
 			end
 		end
 

@@ -24,11 +24,6 @@ inherit
 			{NONE} all
 		end
 
-	ECOM_VAR_FLAGS
-		export
-			{NONE} all
-		end
-
 	ECOM_INVOKE_KIND
 		export
 			{NONE} all

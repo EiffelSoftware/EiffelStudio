@@ -13,11 +13,6 @@ inherit
 			{NONE} all
 		end
 
-	ECOM_VAR_FLAGS
-		export
-			{NONE} all
-		end
-
 feature -- Access
 
 	access_feature: WIZARD_WRITER_FEATURE

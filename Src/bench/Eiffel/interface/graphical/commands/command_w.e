@@ -10,6 +10,7 @@ deferred class COMMAND_W
 inherit
 
 	WINDOWS;
+	EB_CONSTANTS;
 	INTERFACE_W;
 	GRAPHICS;
 	COMMAND;

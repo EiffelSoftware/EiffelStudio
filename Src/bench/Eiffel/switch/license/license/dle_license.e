@@ -24,6 +24,7 @@ feature
 		do
 				-- Make sure there is no interference with
 				-- the Bench regular license.
+--!!!!!!!!!! FIXME !!!!!!!!!!!!!!!
 			discard_licence;
 			set_version (3.5);
 			set_application_name ("eiffeldle");

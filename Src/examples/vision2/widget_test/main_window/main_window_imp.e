@@ -52,6 +52,7 @@ feature {NONE}-- Initialization
 			create controller_parent
 			create l_horizontal_box_6
 			create test_class_display
+			create flat_short_display
 			
 				-- Build_widget_structure.
 			extend (l_vertical_box_1)
@@ -80,6 +81,7 @@ feature {NONE}-- Initialization
 			l_vertical_split_area_1.extend (controller_parent)
 			l_vertical_split_area_1.extend (l_horizontal_box_6)
 			l_horizontal_box_6.extend (test_class_display)
+			l_notebook_1.extend (flat_short_display)
 			
 				-- Initialize properties of all widgets.
 			
@@ -89,6 +91,7 @@ feature {NONE}-- Initialization
 			l_horizontal_box_1.disable_item_expand (l_notebook_1)
 			l_notebook_1.set_item_text (l_horizontal_box_2, "Properties")
 			l_notebook_1.set_item_text (l_horizontal_box_5, "Tests")
+			l_notebook_1.set_item_text (flat_short_display, "Documentation")
 			l_horizontal_box_2.disable_item_expand (l_vertical_box_4)
 			l_vertical_box_2.disable_item_expand (l_frame_1)
 			l_scrollable_area_1.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (216, 213, 255))
@@ -153,7 +156,7 @@ feature {NONE} -- Implementation
 	l_notebook_1: EV_NOTEBOOK
 	l_frame_1: EV_FRAME
 	l_scrollable_area_1: EV_SCROLLABLE_AREA
-	event_output, test_class_display: EV_TEXT
+	event_output, test_class_display, flat_short_display: EV_TEXT
 	event_selector_list: EV_CHECKABLE_LIST
 	l_vertical_split_area_1: EV_VERTICAL_SPLIT_AREA
 	end -- class MAIN_WINDOW_IMP

@@ -85,6 +85,26 @@ feature -- Element change
 			end
 		end
 
+	set_text (txt: STRING) is
+			-- Assign `txt' to `text'.
+		local
+			option_button_imp: EV_OPTION_BUTTON_IMP
+			a: ANY
+		do
+			name := txt
+
+			-- If the parent is an option button, we add an GtkMenuItem
+			-- for a title with `txt' as the value.
+			if ((parent_imp /= Void) and then (parent_is_option_button)) then
+				option_button_imp ?= parent_imp
+				a := txt.to_c
+				option_button_imp.set_menu_title_widget (gtk_menu_item_new_with_label ($a))
+				gtk_widget_show (option_button_imp.menu_title_widget)
+				-- Append it so it is the first item.
+				gtk_menu_prepend (widget, option_button_imp.menu_title_widget)
+			end	
+		end	
+
 	clear_items is
 			-- Clear all the items of the list.
 		do

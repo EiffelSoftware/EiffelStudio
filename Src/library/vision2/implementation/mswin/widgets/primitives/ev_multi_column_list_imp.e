@@ -85,8 +85,8 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	selected_item: EV_MULTI_COLUMN_LIST_ROW is
-			-- Item which is currently selected, for a multiple
-			-- selection, it gives the last selected item.
+			-- Item which is currently selected in a single
+			-- selection mode.
 		do
 			Result ?= selected_items.last
 		end
@@ -134,6 +134,34 @@ feature -- Status report
 		end
 
 feature -- Status setting
+
+	select_item (index: INTEGER) is
+			-- Select an item at the one-based `index' the list.
+		do
+			(ev_children @ index).set_selected (True)
+		end
+
+	deselect_item (index: INTEGER) is
+			-- Unselect the item at the one-based `index'.
+		do
+			(ev_children @ index).set_selected (False)
+		end
+
+	clear_selection is
+			-- Clear the selection of the list.
+		local
+			c: LINKED_LIST [EV_MULTI_COLUMN_LIST_ROW]
+		do
+			from
+				c := selected_items
+				c.start
+			until
+				c.after
+			loop
+				deselect_item (c.item.index)
+				c.forth
+			end
+		end
 
 	set_multiple_selection is
 			-- Allow the user to do a multiple selection simply
@@ -274,17 +302,42 @@ feature -- Event -- removing command association
 			remove_command (Cmd_column_click)
 		end
 
-feature {EV_MULTI_COLUMN_LIST_ROW} -- Implementation
+feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 
-	add_item (an_item: EV_MULTI_COLUMN_LIST_ROW) is
+	remove_item (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP) is
+			-- Remove `item' from the list
+		local
+			interf: EV_MULTI_COLUMN_LIST_ROW
+		do
+			interf ?= item_imp.interface
+			ev_children.prune_all (interf)
+			delete_item (item_imp.iitem)
+		end
+
+	add_item (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP) is
 			-- Add `item' to the list
 		local
-			item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
+			interf: EV_MULTI_COLUMN_LIST_ROW
+			i: INTEGER
 		do
-			item_imp ?= an_item.implementation
-			item_imp.set_iitem (rows)
+			interf ?= item_imp.interface
+			item_imp.set_rows (rows)
 			insert_item (item_imp)
-			ev_children.force (an_item)
+			from
+				i := 2
+			until
+				i = columns + 1
+			loop
+				cwin_send_message (item, Lvm_setitem, 0, (item_imp.subitems @ i).to_integer)
+				i := i + 1
+			end
+			ev_children.force (interf)
+		end
+
+	update_state (index: INTEGER; an_item: WEL_LIST_VIEW_ITEM) is
+			-- Update the state of the given item.
+		do
+			cwin_send_message (item, Lvm_setitemstate, index, an_item.to_integer)
 		end
 
 feature {NONE} -- WEL Implementation

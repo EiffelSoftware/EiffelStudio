@@ -25,16 +25,20 @@ feature {NONE} -- Initialization
 	make (par: EV_MULTI_COLUMN_LIST) is
 			-- Create an empty row.
 		do
-			!EV_MULTI_COLUMN_LIST_ROW_IMP! implementation.make (par)
+			!EV_MULTI_COLUMN_LIST_ROW_IMP! implementation.make
 			implementation.set_interface (Current)
-			par.implementation.add_item (Current)
+			if par /= Void then
+				set_columns (par.columns)
+			end
+			set_parent (par)
 		end
 
 	make_with_text (par: EV_MULTI_COLUMN_LIST; txt: ARRAY [STRING]) is
 			-- Create a row with the given texts.
 		do
-			make (par)
-			set_text (txt)
+			!EV_MULTI_COLUMN_LIST_ROW_IMP! implementation.make_with_text (txt)
+			implementation.set_interface (Current)
+			set_parent (par)
 		end
 
 feature -- Access
@@ -53,12 +57,39 @@ feature -- Access
 			Result := implementation.columns
 		end
 
+	index: INTEGER is
+			-- Index of the row in the list
+		require
+			exist: not destroyed
+			has_parent: parent /= Void
+		do
+			Result := implementation.index
+		end
+
+	text: LINKED_LIST [STRING] is
+			-- Return the text of the row
+		require
+			exists: not destroyed
+		do
+			Result := implementation.text
+		end
+
+	cell_text (column: INTEGER): STRING is
+			-- Return the text of the cell number `column' 
+		require
+			exists: not destroyed
+			valid_column: column >= 1 and column <= columns
+		do
+			Result := implementation.cell_text (column)
+		end
+
 feature -- Status report
 	
 	is_selected: BOOLEAN is
 			-- Is the item selected
 		require
 			exists: not destroyed
+			has_parent: parent /= Void
 		do
 			Result := implementation.is_selected
 		end
@@ -69,6 +100,7 @@ feature -- Status setting
 			-- Select the item if `flag', unselect it otherwise.
 		require
 			exists: not destroyed
+			has_parent: parent /= Void
 		do
 			implementation.set_selected (flag)
 		end
@@ -77,19 +109,44 @@ feature -- Status setting
 			-- Change the state of selection of the item.
 		require
 			exists: not destroyed
+			has_parent: parent /= Void
 		do
 			implementation.toggle
 		end
 
+	set_columns (value: INTEGER) is
+			-- Set the number of columns of the row.
+			-- When there is a parent, the row has the
+			-- same number of column than it.
+		require
+			exists: not destroyed
+			no_parent: parent = Void
+			valid_value: value > 0
+		do
+			implementation.set_columns (value)
+		end
+
 feature -- Element Change
+
+	set_parent (par: EV_MULTI_COLUMN_LIST) is
+			-- Make `par' the new parent of the widget.
+			-- `par' can be Void then the parent is the screen.
+		require
+			exists: not destroyed
+			valid_size: par /= Void implies (columns = par.columns)
+		do
+			implementation.set_parent (par)
+		ensure
+			parent_set: parent = par
+		end
 
 	set_cell_text (column: INTEGER; a_text: STRING) is
 			-- Make `text ' the new label of the `column'-th
 			-- cell of the row.
 		require
 			exists: not destroyed
-			column_exists: column >= 1 and column <= columns
-			text_not_void: a_text /= Void
+			valid_column: column >= 1 and column <= columns
+			valid_text: a_text /= Void
 		do
 			implementation.set_cell_text (column, a_text)
 		end
@@ -97,8 +154,8 @@ feature -- Element Change
 	set_text (a_text: ARRAY[STRING]) is
 		require
 			exists: not destroyed
-			text_not_void: a_text /= Void
-			valid_text_length: a_text.count <= columns
+			valid_text: a_text /= Void
+			valid_text_length: a_text.count = columns
 		do
 			implementation.set_text (a_text)
 		end
@@ -148,10 +205,6 @@ feature -- Event -- removing command association
 feature {EV_MULTI_COLUMN_LIST_I} -- Implementation
 
 	implementation: EV_MULTI_COLUMN_LIST_ROW_I
-
-invariant
---	parent_not_void: parent /= Void
---	parent_exists: not parent.destroyed
 
 end -- class EV_MULTI_COLUMN_LIST_ROW
 

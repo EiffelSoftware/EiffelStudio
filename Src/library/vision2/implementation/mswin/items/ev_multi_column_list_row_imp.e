@@ -103,18 +103,18 @@ feature {EV_ANY_I} -- Access
 			if press_action = Ev_pnd_start_transport then
 				start_transport (a_x, a_y, a_button, 
 					0, 0, 0.5, a_screen_x, a_screen_y)
-				multi_column_list_imp.set_source_true
-				multi_column_list_imp.set_pnd_child_source (Current)
-				multi_column_list_imp.set_t_item_true
+				multi_column_list_imp.set_parent_source_true
+				multi_column_list_imp.set_item_source (Current)
+				multi_column_list_imp.set_item_source_true
 			elseif press_action = Ev_pnd_end_transport then
 				end_transport (a_x, a_y, a_button)
-				multi_column_list_imp.set_source_false
-				multi_column_list_imp.set_pnd_child_source (Void)
-				multi_column_list_imp.set_t_item_false
+				multi_column_list_imp.set_parent_source_false
+				multi_column_list_imp.set_item_source (Void)
+				multi_column_list_imp.set_item_source_false
 			else
-				multi_column_list_imp.set_source_false
-				multi_column_list_imp.set_pnd_child_source (Void)
-				multi_column_list_imp.set_t_item_false
+				multi_column_list_imp.set_parent_source_false
+				multi_column_list_imp.set_item_source (Void)
+				multi_column_list_imp.set_item_source_false
 				check
 					disabled: press_action = Ev_pnd_disabled
 				end
@@ -224,6 +224,12 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.34  2000/03/30 19:52:24  rogers
+--| Changed all instances of:
+--| 	set_source_true -> set_parent_source_true
+--| 	set_pnd_child_source -> set_item_source
+--| 	set_t_item_true -> set_item_source_true
+--|
 --| Revision 1.33  2000/03/29 19:19:19  rogers
 --| Redefined on_parented from EV_ITEM_IMP so that a row which
 --| had texts added before the parent was set will have it's texts

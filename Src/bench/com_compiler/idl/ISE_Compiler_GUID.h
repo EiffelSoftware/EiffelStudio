@@ -18,7 +18,7 @@
 // =========================================================================
 //                                                           Proxy Stub GUID
 
-#define UUID_EiffelCompilerPS                   e1ffe11e-43e6-4654-a436-b5fa1997ea5b // This GUID has to be the same as first interfaces IDL!!!
+#define UUID_EiffelCompilerPS                   e1ffe10c-06f1-448e-a221-9c702b9df685 // This GUID has to be the same as last interface GUID in library declaration!!!
 
 // =========================================================================
 //                                                              CoClass GUID
@@ -30,7 +30,7 @@
 // =========================================================================
 //                                                            Interface GUID
 
-#define UUID_IEiffelException                   e1ffe10c-06f1-448e-a221-9c702b9df685
+#define UUID_IEiffelException                   e1ffe10c-06f1-448e-a221-9c702b9df685 // Last interface in library
 #define UUID_IEiffelProject                     e1ffe1ea-1aed-489b-9e8a-e35342582b2b
 #define UUID_IEiffelCompletionInfo              e1ffe139-edae-46b7-880b-27d68e7184fa
 #define UUID_IEiffelCompletionEntry             e1ffe15d-24b4-49a9-9cbc-6aff6aeb6de3
@@ -50,7 +50,7 @@
 #define UUID_IEnumCluster                       e1ffe1d5-c033-4f33-98a2-551d8451b8c4
 #define UUID_IEnumFeature                       e1ffe149-6c17-4be2-bd81-3d3540b738b1
 #define UUID_IEnumClusterProp                   e1ffe166-8a44-40e1-a090-3e5cc36ca72d
-#define UUID_IEiffelEnumString                  e1ffe11e-43e6-4654-a436-b5fa1997ea5b // This is the first interface.
+#define UUID_IEiffelEnumString                  e1ffe11e-43e6-4654-a436-b5fa1997ea5b
 #define UUID_IEnumAssembly                      e1ffe1f4-b23b-45a9-b3b1-2e0e004ffb8d
 #define UUID_IEnumCompletionEntry               e1ffe1bd-9335-48d5-b75f-401f525afb76
 #define UUID_IEnumParameter                     e1ffe1fb-730c-498f-a168-418ee482a2d7

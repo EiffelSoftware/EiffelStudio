@@ -50,6 +50,12 @@ feature -- Properties
 			Result := System.root_cluster
 		end
 
+	statistics: SYSTEM_STATISTICS is
+			-- Statistics of the Eiffel System
+		do
+			!! Result.make
+		end;
+
 feature -- Access
 
 	current_class: E_CLASS is

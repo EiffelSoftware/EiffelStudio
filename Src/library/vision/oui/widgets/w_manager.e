@@ -223,7 +223,7 @@ feature -- Widget
 			count := count - nbr_to_remove;
 			from
 			until
-				w_position >= count - 1
+				w_position >= count
 			loop
 				moved_widget := area.item (w_position + nbr_to_remove);
 				area.put (moved_widget, w_position);

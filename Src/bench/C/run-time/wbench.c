@@ -9,13 +9,17 @@
 		Workbench primitives
 */
 
+/*
+doc:<file name="wbench.c" header="eif_wbench.h" version="$Id$" summary="Workbench primitives">
+*/
+
 #include "eif_portable.h"
 #include "rt_wbench.h"
 #include "eif_project.h"
 #include "eif_macros.h"
 #include "eif_malloc.h"
 #include "eif_garcol.h"
-#include "eif_struct.h"
+#include "rt_struct.h"
 #include "eif_hashin.h"
 #include "eif_except.h"
 #include "eif_interp.h"
@@ -371,34 +375,41 @@ rt_public EIF_REFERENCE_FUNCTION wdisp(int dyn_type)
 }
 
 /*
- * Initialization of the run time feature call structures. 
- * The central call structure is called `desc_tab'.
- * It contains one entry per class (NOT class type) and
- * it is indexed by class id (not the toplogical id).
- * The entry for a given class is a table of descriptor
- * pointers, and is indexed by "dynamic" class type ids.
- */
+doc:	<attribute name="desc_tab" return_type="struct desc_info ***" export="shared">
+doc:		<summary>Global descriptor table. Initialization of the run-time feature call structures. The central call structure is called `desc_tab'. It contains one entry per class (NOT class type) and it is indexed by class id (not the toplogical id). The entry for a given class is a table of descriptor pointers, and is indexed by "dynamic" class type ids.</summary>
+doc:		<access>Read/Write once</access>
+doc:		<indexing>[class_id, dtype, offset]</indexing>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None since initialized once through `put_desc' called from InitXXX routines generated in *d.c files</synchronization>
+doc:	</attribute>
+*/
+rt_shared struct desc_info ***desc_tab;
 
-struct desc_info ***desc_tab; 			/* Global descriptor table */
-
-/* Temporary structures used for the construction
- * of the global descriptor table. The `bounds_tab' table
- * contains the bounds (minimum and maximum dynamic class
- * type ids) for each class in the system.
- */
 
 struct bounds { 			/* Structure used to record min/max dtypes */
 	int16 min;
 	int16 max;
 };
-struct bounds *bounds_tab;	/* Bounds of the various classes */
-char desc_fill;				/* Flag for descriptor table initialization */
 
-/* Temporary structures for melted descriptors 
- * When the byte code file is read, all new 
- * descriptors are recorded, so that they can
- * be porperly inserted during the insertion pass
- */
+/*
+doc:	<attribute name="bounds_tab" return_type="struct bounds *" export="private">
+doc:		<summary>Bounds of the various classes. Temporary structures used for the construction of the global descriptor table. The `bounds_tab' table contains the bounds (minimum and maximum dynamic class type ids) for each class in the system.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None since only used during initialization.</synchronization>
+doc:	</attribute>
+*/
+rt_private struct bounds *bounds_tab;
+
+/*
+doc:	<attribute name="desc_fill" return_type="char" export="public">
+doc:		<summary>Flag for descriptor table initialization. Is it an actual insertion or do we wish to compute the size?</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None since only done during application initialization.</synchronization>
+doc:	</attribute>
+*/
+rt_public char desc_fill;				/* Flag for descriptor table initialization */
 
 struct mdesc {				/* Structure used to record melted descriptor */
 	struct desc_info *desc_ptr;
@@ -406,9 +417,36 @@ struct mdesc {				/* Structure used to record melted descriptor */
 	int16 type;
 };
 
-struct mdesc *mdesc_tab;	/* Temporary table of melted descriptors */
-int mdesc_count;			/* Number of melted descriptors */
-int mdesc_tab_size;			/* Size of the `mdesc_tab' */
+/*
+doc:	<attribute name="mdesc_tab" return_type="struct mdesc *" export="private">
+doc:		<summary>Temporary table of melted descriptors. When byte code is read, all new descriptors are recoreded, so that they can be properly inserted during insertion pass.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None since only done during application initialization.</synchronization>
+doc:	</attribute>
+*/
+rt_private struct mdesc *mdesc_tab;
+
+/*
+doc:	<attribute name="mdesc_count" return_type="int" export="private">
+doc:		<summary>Number of melted descriptors in `mdesc_tab'.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None since only done during application initialization.</synchronization>
+doc:	</attribute>
+*/
+rt_private int mdesc_count;
+
+/*
+doc:	<attribute name="mdesc_tab_size" return_type="int" export="private">
+doc:		<summary>Size of `mdesc_tab'.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None since only done during application initialization.</synchronization>
+doc:	</attribute>
+*/
+rt_private int mdesc_tab_size;
+
 #define MDESC_INC 10000		/* Size increment of `mdesc_tab' */
 
 /* The following routines are used to build the
@@ -556,3 +594,7 @@ rt_public void create_desc(void)
 	/* Free temporary structure */
 	xfree((char *) mdesc_tab);
 }
+
+/*
+doc:</file>
+*/

@@ -284,6 +284,7 @@ feature -- Basic operations
 			l_x_start, l_x_end: INTEGER
 			current_horizontal_pos: INTEGER
 			loop_current_row, loop_parent_row: EV_GRID_ROW_I
+			are_tree_node_connectors_shown: BOOLEAN
 		do
 			dynamic_content_function := grid.dynamic_content_function
 			
@@ -293,6 +294,7 @@ feature -- Basic operations
 			expand_pixmap := grid.expand_node_pixmap
 			collapse_pixmap := grid.collapse_node_pixmap
 
+			are_tree_node_connectors_shown := grid.are_tree_node_connectors_shown
 			
 			tree_node_spacing := grid.tree_node_spacing
 				-- Retrieve the spacing around each node.
@@ -511,9 +513,11 @@ feature -- Basic operations
 												-- Note we add 1 to account for rounding errors when odd values.
 											if current_row.is_expanded then
 												l_pixmap := collapse_pixmap
-												grid.drawable.set_foreground_color (black)
-												grid.drawable.draw_segment (node_pixmap_vertical_center, vertical_node_pixmap_bottom_offset, node_pixmap_vertical_center, row_vertical_bottom)
-													-- This draws the vertical segment beneath the expand icon which reaches down to the bottom of the row.
+												if are_tree_node_connectors_shown then
+													grid.drawable.set_foreground_color (black)
+													grid.drawable.draw_segment (node_pixmap_vertical_center, vertical_node_pixmap_bottom_offset, node_pixmap_vertical_center, row_vertical_bottom)
+														-- This draws the vertical segment beneath the expand icon which reaches down to the bottom of the row.
+												end
 											else
 												l_pixmap := expand_pixmap
 											end
@@ -528,18 +532,19 @@ feature -- Basic operations
 										end
 											-- We must now draw the lines for the tree structure.
 										
-										if current_subrow_indent > 0 then
-											grid.drawable.set_foreground_color (black)
+										if current_subrow_indent > 0 and are_tree_node_connectors_shown then
 											if current_column_index > 1 or drawing_subrow then
 												l_x_start := current_item_x_position.max (parent_x_indent_position)
 												l_x_end := horizontal_node_pixmap_left_offset
 												if l_x_start < current_item_x_position + current_column_width and
 													l_x_end < current_item_x_position + current_column_width then
 														fixme ("Clip this line correctly as required")
+													grid.drawable.set_foreground_color (black)
 													grid.drawable.draw_segment (l_x_start, row_vertical_center, l_x_end, row_vertical_center)
-												end
-											 		-- Draw a horizontal line from the left edge of the item to the either the node horizontal offset or the edge of the actual item position
+													-- Draw a horizontal line from the left edge of the item to the either the node horizontal offset or the edge of the actual item position
 												 	-- if the node to which we are connected is within a different column.
+												end
+											 		
 											end
 											 
 											if drawing_subrow and then parent_node_index = current_column_index then
@@ -550,36 +555,38 @@ feature -- Basic operations
 --												print ("Parent row index : " + parent_row_i.index.out + "%N")
 --												print ("index diff : " + (current_row.index - parent_row_i.index).out + "%N")
 												current_horizontal_pos := current_item_x_position.max (parent_x_indent_position)
-												if not row_node_clipped then
-													
-													if parent_row_i.subnode_count_recursive > ((current_row.index + current_row.subnode_count_recursive) - parent_row_i.index) then
-														grid.drawable.draw_segment (current_horizontal_pos, row_vertical_bottom, current_horizontal_pos, current_item_y_position)
-													else	
-														grid.drawable.draw_segment (current_horizontal_pos, row_vertical_center, current_horizontal_pos, current_item_y_position)
+												if are_tree_node_connectors_shown then
+													if not row_node_clipped then
+														
+														if parent_row_i.subnode_count_recursive > ((current_row.index + current_row.subnode_count_recursive) - parent_row_i.index) then
+															grid.drawable.draw_segment (current_horizontal_pos, row_vertical_bottom, current_horizontal_pos, current_item_y_position)
+														else	
+															grid.drawable.draw_segment (current_horizontal_pos, row_vertical_center, current_horizontal_pos, current_item_y_position)
+														end
 													end
-												end
-
-													-- Now we draw all of the horizontal lines required to fill in the lines of parents at any level.
-													-- We iterate backwards from the current position and for each subsequent parent node, determine
-													-- if a line must be drawn.
-												from
-													loop_current_row := parent_row_i
-													loop_parent_row := parent_row_i.parent_row_i
-												until
-													current_horizontal_pos < current_item_x_position or loop_parent_row = Void
-												loop
-													current_horizontal_pos := current_horizontal_pos - subrow_indent
-													if loop_parent_row.subnode_count_recursive > ((loop_current_row.index + loop_current_row.subnode_count_recursive) - loop_parent_row.index) then
-															-- If the current item is the last one contained within the parent then a line must be drawn. As this is
-															-- computed in a nested fashion, the subnode count is used recursively.
-															
-														grid.drawable.draw_segment (current_horizontal_pos, row_vertical_bottom, current_horizontal_pos, current_item_y_position)
-															-- Draw the vertical line from the bottom of the item to the top.
+	
+														-- Now we draw all of the horizontal lines required to fill in the lines of parents at any level.
+														-- We iterate backwards from the current position and for each subsequent parent node, determine
+														-- if a line must be drawn.
+													from
+														loop_current_row := parent_row_i
+														loop_parent_row := parent_row_i.parent_row_i
+													until
+														current_horizontal_pos < current_item_x_position or loop_parent_row = Void
+													loop
+														current_horizontal_pos := current_horizontal_pos - subrow_indent
+														if loop_parent_row.subnode_count_recursive > ((loop_current_row.index + loop_current_row.subnode_count_recursive) - loop_parent_row.index) then
+																-- If the current item is the last one contained within the parent then a line must be drawn. As this is
+																-- computed in a nested fashion, the subnode count is used recursively.
+																
+															grid.drawable.draw_segment (current_horizontal_pos, row_vertical_bottom, current_horizontal_pos, current_item_y_position)
+																-- Draw the vertical line from the bottom of the item to the top.
+														end
+														
+															-- Move one position upwards within the parenting node structure
+														loop_current_row := loop_parent_row
+														loop_parent_row := loop_parent_row.parent_row_i
 													end
-													
-														-- Move one position upwards within the parenting node structure
-													loop_current_row := loop_parent_row
-													loop_parent_row := loop_parent_row.parent_row_i
 												end
 											end
 										end
@@ -593,7 +600,7 @@ feature -- Basic operations
 									-- parent background color.
 								grid.drawable.set_foreground_color (grid.background_color)
 								grid.drawable.fill_rectangle (current_item_x_position, current_item_y_position, current_column_width, current_row_height)
-								if (drawing_subrow or drawing_parentrow) and current_column_index < node_index and current_column_index >= parent_node_index then
+								if are_tree_node_connectors_shown and (drawing_subrow or drawing_parentrow) and current_column_index < node_index and current_column_index >= parent_node_index then
 									
 										-- We must now draw the lines for the tree structure, as although there is no item
 										-- at this location in the grid, a tree line may cross it horizontally.

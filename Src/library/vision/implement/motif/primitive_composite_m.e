@@ -81,11 +81,18 @@ feature -- Status setting
 			main_widget.lower
 		end;
 
-	propagate_event (b: BOOLEAN) is
-			-- Propagate event to direct ancestor according to `b'.
+	propagate_event is
+			-- Propagate event to direct ancestor if no action
+			-- is specified for event.
 		do	
-			main_widget.propagate_event (b)
+			main_widget.propagate_event
 		end; 
+
+	set_no_event_propagation is
+			-- Don't propagate event to direct ancestor.
+		do
+			main_widget.set_no_event_propagation
+		end;
 
 	raise is
 			--raise current to top of
@@ -105,12 +112,6 @@ feature -- Status setting
 			-- Set height to `new_height'.
 		do	
 			main_widget.set_height (new_height)
-		end; 
-
-	set_no_event_propagation is
-			-- Don't propagate event to direct ancestor.
-		do	
-			main_widget.propagate_event (False)
 		end; 
 
 	set_size (new_width:INTEGER; new_height: INTEGER) is

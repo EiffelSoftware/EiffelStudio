@@ -20,6 +20,14 @@ inherit
 			make
 		end
 
+	EV_LIST	
+		export
+			{NONE} set_multiple_selection 
+		redefine
+			implementation,
+			make
+		end
+
 creation
 	make
 
@@ -30,26 +38,6 @@ feature {NONE} -- Initialization
 		do
 			!EV_COMBO_BOX_IMP!implementation.make (par)
 			widget_make (par)
-		end
-
-feature -- Access
-
-	get_item (index: INTEGER): EV_COMBO_BOX_ITEM is
-			-- Text at the one-based `index'
-		require
-			exists: not destroyed
-			index_large_enough: index > 0
-			index_small_enough: index < count
-		do
-			Result := implementation.get_item (index)
-		end
-
-	selected_item: EV_COMBO_BOX_ITEM is
-			-- Give the item which is currently selected
-		require
-			exists: not destroyed
-		do
-			Result := implementation.selected_item
 		end
 
 feature -- Measurement
@@ -63,51 +51,7 @@ feature -- Measurement
 			Result := implementation.extended_height
 		end
 
-feature -- Status report
-
-	count: INTEGER is
-			-- number of items in the list of the combo-box
-		require
-			exists: not destroyed
-		do
-			Result := implementation.count
-		end
-
-feature -- Status setting
-
-	select_item (index: INTEGER) is
-			-- Select an item at the one-based `index' the list.
-		require
-			exists: not destroyed
-			index_large_enough: index > 0
-			index_small_enough: index <= count
-		do
-			implementation.select_item (index)
-		end
-
-feature -- Element change
-
-	clear_items is
-			-- Remove all the elements of the combo-box.
-		require
-			exists: not destroyed
-		do
-			implementation.clear_items
-		end
-
-feature -- Event : command association
-
-	add_selection_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is	
-			-- Make `cmd' the executed command when the
-			-- selection has changed.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-		do
-			implementation.add_selection_command (cmd, arg)
-		end
-
-feature -- Implementation
+feature {NONE}-- Implementation
 
 	implementation: EV_COMBO_BOX_I
 

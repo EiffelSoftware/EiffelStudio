@@ -33,6 +33,22 @@ feature -- Access
 		alias
 			"PFA_CENTER"
 		end
+		
+	Pfa_justify: INTEGER is 
+			-- Paragraphs are justified.
+		external
+			"C [macro %"redit.h%"]"
+		alias
+			"PFA_JUSTIFY"
+		end
+		
+	Pfa_full_interword: INTEGER is
+			--
+		external
+			"C [macro %"redit.h%"]"
+		alias
+			"PFA_FULL_INTERWORD"
+		end
 
 end -- class WEL_PFA_CONSTANTS
 

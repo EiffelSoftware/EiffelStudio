@@ -92,6 +92,24 @@ typedef struct _smart_string {
 	long size;		/* Length of the area */
 } SMART_STRING;
 
+/* Structure used to record general flags. These are the value to take into
+ * account for the last exception that occurred, which might not be in the
+ * stack yet if manually or system raised.
+ */
+struct eif_except {
+	unsigned char ex_val;	/* Exception code (raised) */
+	unsigned char ex_nomem;	/* An "Out of memory" exception occurred */
+	unsigned char ex_nsig;	/* Number of last signal received */
+	unsigned int ex_level;	/* Exception level (rescue branches) */
+	unsigned char ex_org;	/* Original exception at this level */
+ 	char *ex_tag;			/* Assertion tag */
+	char *ex_otag;			/* Tag associated with original exception */
+	char *ex_rt;			/* Routine associated with current exception */
+	char *ex_ort;			/* Routine associated with original exception */
+	int ex_class;			/* Class associated with current exception */
+	int ex_oclass;			/* Class associated with original exception */
+};
+
 
 	/*------------*/
 	/*	garcol.h  */
@@ -282,9 +300,9 @@ struct s_table {
 };
 
 
-    /* ----------------------------------------------------------------- */
-    /*  sig.h */
-    /* ----------------------------------------------------------------- */
+    /*---------*/
+    /*  sig.h  */
+    /*---------*/
 
 /* Structure used as FIFO stack for signal buffering. I really do not expect
  * this stack to overflow, so it has a huge fixed size--RAM. Should it really

@@ -46,7 +46,6 @@ feature -- Execution
 						popdown_timer.set_no_call_back
 					end;
 				end
-			-- elseif last_focusable /= Void then
 			else
 				focus_label.reset;
 				last_focusable := Void;

@@ -67,7 +67,7 @@ feature -- Access
 			end
 		end
 
-	pixmap_cell (index: INTEGER): EV_PIXMAP is
+	cell_pixmap (index: INTEGER): EV_PIXMAP is
 			-- Return the pixmap of the cell number
 			-- `index'. On windows platform, 
 			-- if index > 1, the result is void.
@@ -137,6 +137,13 @@ feature -- Element change
 			-- `index'-th cell of the item.
 		do
 			internal_pixmap.put_i_th (pix, index)
+		end
+
+	unset_cell_pixmap (index: INTEGER) is
+			-- Remove the pixmap of the 
+			-- `index'-th cell of the item.
+		do
+			-- To implement.
 		end
 
 feature {EV_ITEM_HOLDER_IMP} -- Implementation

@@ -32,15 +32,6 @@ feature -- Access
 			Result := parent_imp.current_widget
 		end
 
-	wel_window: WEL_WINDOW is
-			-- Window used to create the related pixmap. It has
-			-- to be a wel_control.
-			-- It correspond to the implementation of the
-			-- parent_widget.
-		do
-			Result ?= parent_widget.implementation
-		end
-
 end -- class EV_ITEM_IMP
 
 --|----------------------------------------------------------------

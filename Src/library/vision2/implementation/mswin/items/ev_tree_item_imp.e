@@ -63,7 +63,7 @@ feature -- Status report
 		local
 			tree: WEL_TREE_VIEW
 		do
-			tree ?= wel_window
+			tree ?= parent_widget.implementation
 			Result := tree.is_selected (Current)
 		end
 
@@ -72,7 +72,7 @@ feature -- Status report
 		local
 			tree: WEL_TREE_VIEW
 		do
-			tree ?= wel_window
+			tree ?= parent_widget.implementation
 			Result := tree.is_expanded (Current)
 		end
 
@@ -82,7 +82,7 @@ feature -- Status report
 			tree: WEL_TREE_VIEW
 		do
 			if parent_imp /= Void then
-				tree ?= wel_window
+				tree ?= parent_widget.implementation
 				Result := tree.is_parent (Current)
 			else
 				Result := False
@@ -157,16 +157,14 @@ feature -- Element change
 			-- Add `item_imp' to the list
 		local
 			struct: WEL_TREE_VIEW_INSERT_STRUCT
-			tree: WEL_TREE_VIEW
 			ev_tree: EV_TREE_IMP
 		do
 			!! struct.make
 			struct.set_parent (h_item)
 			struct.set_tree_view_item (item_imp)
-			tree ?= wel_window
-			tree.insert_item (struct)
-			ev_tree ?= wel_window
-			ev_tree.ev_children.force (item_imp, tree.last_item)
+			ev_tree ?= parent_widget.implementation
+			ev_tree.insert_item (struct)
+			ev_tree.ev_children.force (item_imp, ev_tree.last_item)
 			ev_tree.invalidate
 		end
 
@@ -175,7 +173,7 @@ feature -- Element change
 		local
 			ev_tree: EV_TREE_IMP
 		do
-			ev_tree ?= wel_window
+			ev_tree ?= parent_widget.implementation
 			ev_tree.remove_item (item_imp)
 			ev_tree.invalidate
 		end

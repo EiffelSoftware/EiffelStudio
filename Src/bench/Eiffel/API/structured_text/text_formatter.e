@@ -71,7 +71,7 @@ feature {TEXT_ITEM} -- Implementation
 		deferred
 		end;
 
-	process_breakpoint is
+	process_breakpoint (a_bp: BREAKPOINT_ITEM) is
 			-- Process breakpoint.
 		deferred
 		end;

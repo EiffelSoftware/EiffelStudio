@@ -43,7 +43,6 @@ feature {EV_ANY_I} -- Access
 			c_object := a_c_object
 			if needs_event_box then
 				c_object := feature {EV_GTK_EXTERNALS}.gtk_event_box_new
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_event_box_set_visible_window (c_object, False)
 				feature {EV_GTK_EXTERNALS}.gtk_container_add (c_object, a_c_object)
 				feature {EV_GTK_EXTERNALS}.gtk_widget_show (a_c_object)
 			end
@@ -221,7 +220,7 @@ feature {EV_ANY_I} -- Access
 			end
 		end
 
-feature {EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation
+feature {EV_INTERMEDIARY_ROUTINES, EV_ANY_I, EV_STOCK_PIXMAPS_IMP} -- Implementation
 
 	App_implementation: EV_APPLICATION_IMP is
 			-- 

@@ -340,7 +340,7 @@ feature -- Implementation
 			set_debug_mode (0)
 		end
 		
-feature {EV_ANY_I, EV_FONT_IMP} -- Implementation
+feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP} -- Implementation
 
 	default_gtk_window: POINTER is
 			-- Pointer to a default GtkWindow.

@@ -21,8 +21,7 @@ feature -- Status setting
 feature -- Basic operations
 
 	new_id: INTEGER is
-			-- `Result' is a new id, guaranteed
-			-- not to be already contained in `current_ids'.
+			-- `Result' is a new id.
 		do
 			Result := internal_counter.item
 			set_current_id_counter (internal_counter.item + 1)

@@ -122,7 +122,6 @@ feature {NONE} -- Project
 		local
 			l_cnt,
 			l_upper_count: INTEGER
-			l_file: RAW_FILE
 			l_folder: DIRECTORY
 			l_name: DIRECTORY_NAME
 			l_url: STRING

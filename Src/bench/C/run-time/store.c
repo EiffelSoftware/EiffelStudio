@@ -1505,7 +1505,7 @@ rt_private int stream_write (char *pointer, int size)
 {
 	if (stream_buffer_size - stream_buffer_position < size) {
 		stream_buffer_size += buffer_size;
-		stream_buffer = (char *) realloc (stream_buffer, stream_buffer_size);
+		stream_buffer = (char *) eif_realloc (stream_buffer, stream_buffer_size);
 	}
 
 	memcpy ((stream_buffer + stream_buffer_position), pointer, size);

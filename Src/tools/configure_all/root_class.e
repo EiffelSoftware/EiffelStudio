@@ -18,12 +18,13 @@ feature {NONE} -- Initialization
 		do
 			create exec_env
 			parse_arguments (args)
+			update_registry
 			initialize_borland
 			create_project_directory
 			shell_name := exec_env.get ("COMSPEC")
-			exec_env.change_working_directory (install_dir)
+			exec_env.change_working_directory (short_path)
 			precompile_libraries
-			exec_env.change_working_directory (install_dir)
+			exec_env.change_working_directory (short_path)
 			install_dotnet
 			update_registry
 		ensure
@@ -64,9 +65,9 @@ feature -- Actions
 						-- bcc32.cfg file.
 					fn2 := clone (fn1)
 					fn2.set_file_name ("bcc32.cfg")
-					txt := "-DWINVER=0x400 -I$(ISE_EIFFEL)BCC55\include -L$(ISE_EIFFEL)BCC55\lib %
-							%-L$(ISE_EIFFEL)BCC55\lib\PSDK"
-					txt.replace_substring_all ("$(ISE_EIFFEL)", install_dir)
+					txt := "-DWINVER=0x400 -I$(ISE_EIFFEL)\BCC55\include -L$(ISE_EIFFEL)\BCC55\lib %
+							%-L$(ISE_EIFFEL)\BCC55\lib\PSDK"
+					txt.replace_substring_all ("$(ISE_EIFFEL)", short_path)
 					create f.make_open_write (fn2)
 					f.put_string (txt)
 					f.close
@@ -74,8 +75,8 @@ feature -- Actions
 						-- ilink32.cfg file.
 					fn2 := clone (fn1)
 					fn2.set_file_name ("ilink32.cfg")
-					txt := "-L$(ISE_EIFFEL)BCC55\lib -L$(ISE_EIFFEL)BCC55\lib\PSDK"
-					txt.replace_substring_all ("$(ISE_EIFFEL)", install_dir)
+					txt := "-L$(ISE_EIFFEL)\BCC55\lib -L$(ISE_EIFFEL)\BCC55\lib\PSDK"
+					txt.replace_substring_all ("$(ISE_EIFFEL)", short_path)
 					create f.make_open_write (fn2)
 					f.put_string (txt)
 					f.close
@@ -110,7 +111,7 @@ feature -- Actions
 		do
 			if dotnet_cmd_line.is_equal ("InstallDotNet") then
 				io.putstring ("Registering the .NET components%N")
-				exec_env.launch (shell_name + " /c call " + install_dir + "\install_dotnet.bat")
+				exec_env.launch (shell_name + " /c call " + short_path + "\dotnet_install.bat")
 			end
 		end
 
@@ -125,13 +126,13 @@ feature -- Actions
 			lib.tail (4)
 			if not lib.is_equal ("none") then
 				io.putstring ("Precompiling the libraries%N")
-				exec_env.launch (shell_name + " /c call " + install_dir + "\precompile_install.bat " + precompilation_params)
+				exec_env.launch (shell_name + " /c call " + short_path + "\precompile_install.bat " + precompilation_params)
 			end
 		end
 
 	update_registry is
 			-- Update ISE_EIFFEL in registry so that last `\' character is
-			-- removed.
+			-- removed. And change long path names into short ones.
 		require
 			initialized: initialized
 		local
@@ -139,17 +140,24 @@ feature -- Actions
 			p: POINTER
 			key: WEL_REGISTRY_KEY_VALUE
 			new_key_val: STRING
+			changed: BOOLEAN
+			buf: STRING
+			a1, a2: ANY
+			ret: INTEGER
 		do
-			new_key_val := clone (install_dir)
+			new_key_val := clone (short_path)
 			if new_key_val.item (new_key_val.count) = '\' then
 				new_key_val.remove (new_key_val.count)
+				changed := True
+			end
+				
+			create key.make (feature {WEL_REGISTRY_KEY_VALUE_TYPE}.Reg_sz, new_key_val)
+			create reg
+			p := reg.open_key_with_access ("hkey_local_machine\Software\ISE\Eiffel51\ec", feature {WEL_REGISTRY_ACCESS_MODE}.key_all_access)
+			reg.set_key_value (p, "ISE_EIFFEL", key)
+			reg.close_key (p)
 
-				create key.make (feature {WEL_REGISTRY_KEY_VALUE_TYPE}.Reg_sz, new_key_val)
-				create reg
-
-				p := reg.open_key_with_access ("hkey_local_machine\Software\ISE\Eiffel51\ec", feature {WEL_REGISTRY_ACCESS_MODE}.key_all_access)
-				reg.set_key_value (p, "ISE_EIFFEL", key)
-				reg.close_key (p)
+--			if changed or not new_key_val.is_equal (install_dir) then
 
 				p := reg.open_key_with_access ("hkey_local_machine\Software\ISE\Eiffel51\finish_freezing", feature {WEL_REGISTRY_ACCESS_MODE}.key_all_access)
 				reg.set_key_value (p, "ISE_EIFFEL", key)
@@ -158,7 +166,11 @@ feature -- Actions
 				p := reg.open_key_with_access ("hkey_local_machine\Software\ISE\Eiffel51\wizard", feature {WEL_REGISTRY_ACCESS_MODE}.key_all_access)
 				reg.set_key_value (p, "ISE_EIFFEL", key)
 				reg.close_key (p)
-			end
+
+				p := reg.open_key_with_access ("hkey_local_machine\Software\ISE\Eiffel51\build", feature {WEL_REGISTRY_ACCESS_MODE}.key_all_access)
+				reg.set_key_value (p, "ISE_EIFFEL", key)
+				reg.close_key (p)
+--			end
 		end
 		
 feature -- Status report
@@ -177,6 +189,34 @@ feature {NONE} -- Implementation
 
 	exec_env: EXECUTION_ENVIRONMENT
 			-- Environment used to perform calls and get/set environment variables.
+
+	internal_short_path: STRING
+			-- Short path name corresponding to install_dir.
+
+	short_path: STRING is
+			-- Short path name corresponding to install_dir.
+		require
+			install_dir_initialized: install_dir /= Void
+		local
+			p: POINTER
+			a1, a2: ANY
+			buf: STRING
+			ret: INTEGER
+		do
+			if internal_short_path = Void then
+				create buf.make (1024)
+				a1 := install_dir.to_c
+				a2 := buf.to_c
+				p := $a2
+				ret := convert_path ($a1, p, 1024)
+				if ret > 0 and ret <= 1024 then
+					create internal_short_path.make_from_c (p)
+				else
+					internal_short_path := install_dir
+				end
+			end
+			Result := internal_short_path
+		end
 
 	install_dir: STRING
 			-- Installation directory.
@@ -215,6 +255,14 @@ feature {NONE} -- Implementation
 				Result.append (args @ i)
 				Result.append_character (' ')
 			end
+		end
+
+	convert_path (a1, a2: POINTER; sz: INTEGER): INTEGER is
+			-- Convert a long path name to a short path name.
+		external
+			"C | <windows.h>"
+		alias
+			"GetShortPathName"
 		end
 
 end -- class ROOT_CLASS

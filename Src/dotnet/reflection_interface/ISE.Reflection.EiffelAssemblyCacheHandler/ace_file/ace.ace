@@ -1,0 +1,33 @@
+system 
+	"ISE.Reflection.EiffelAssemblyCacheHandler"
+
+root
+	EIFFEL_ASSEMBLY_CACHE_HANDLER (root_cluster): "make"
+
+default
+	assertion (all)
+	line_generation (yes)
+	il_generation ("dll")
+
+cluster
+	root_cluster: "F:\reflection_interface\ISE.Reflection.EiffelAssemblyCacheHandler"
+	
+	eiffel_components_generated: "F:\reflection_interface\generated\eiffel_components_generated"
+	
+	support_generated: "F:\reflection_interface\generated\support_generated"
+	
+	notifier_generated: "F:\reflection_interface\generated\notifier_generated"
+	
+	all dot_net_base: "F:\Eiffel50\library\base.net"
+		exclude
+			"accessbility"; "system_data"; "system_drawing"; "system_web"; "system_web_services"; "system_windows_forms";
+		end
+
+external
+	assembly: 	"C:\WINNT\Microsoft.NET\Framework\v1.0.2728\System.XML.dll",
+			"C:\WINNT\Microsoft.NET\Framework\v1.0.2728\System.dll",
+			"F:\reflection_interface\generated\eiffel_components_generated\ISE.Reflection.EiffelComponents.dll",
+			"F:\reflection_interface\generated\notifier_generated\ISE.Reflection.EiffelAssemblyCacheNotifier.dll",	
+			"F:\reflection_interface\generated\support_generated\ISE.Reflection.Support.dll"		
+	
+end

@@ -649,7 +649,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_set_cursor (code: INTEGER): BOOLEAN is
+	on_set_cursor (code: INTEGER) is
 			-- Respond to a cursor message.
 		local
 			point: WEL_POINT
@@ -664,7 +664,6 @@ feature {NONE} -- Implementation
 			end
 			if cursor /= Void and then code = Htclient then								
 				cursor.set
-				Result := true
 				disable_default_processing
 			end
 		end

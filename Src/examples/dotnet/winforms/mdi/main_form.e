@@ -8,8 +8,6 @@ inherit
 	WINFORMS_FORM
 		rename
 			make as make_form
-		undefine
-			to_string, finalize, equals, get_hash_code
 		redefine
 			dispose_boolean
 		end
@@ -30,7 +28,7 @@ feature {NONE} -- Initialization
 			initialize_component
 
 				-- Setup MDI stuff
-			set_is_mdi_container (true)
+			set_is_mdi_container (True)
 			add_mdi_child_activate (create {EVENT_HANDLER}.make (Current, $on_MDI_child_activated))
 
 				-- Add File Menu
@@ -38,10 +36,14 @@ feature {NONE} -- Initialization
 			mi_file.set_merge_order (0)
 			mi_file.set_merge_type (feature {WINFORMS_MENU_MERGE}.merge_items)
 
-			create mi_add_doc.make ("&Add Document", create {EVENT_HANDLER}.make (Current, $on_file_add_clicked), feature {WINFORMS_SHORTCUT}.ctrl_a)
+			create mi_add_doc.make ("&Add Document",
+				create {EVENT_HANDLER}.make (Current, $on_file_add_clicked),
+				feature {WINFORMS_SHORTCUT}.ctrl_a)
 			mi_add_doc.set_merge_order (100)
 
-			create mi_exit.make ("E&xit", create {EVENT_HANDLER}.make (Current, $on_file_exit_clicked), feature {WINFORMS_SHORTCUT}.ctrl_X)
+			create mi_exit.make ("E&xit",
+				create {EVENT_HANDLER}.make (Current, $on_file_exit_clicked),
+				feature {WINFORMS_SHORTCUT}.ctrl_x)
 			mi_exit.set_merge_order (110)
 
 			res := mi_file.menu_items.add_menu_item (mi_add_doc)
@@ -51,9 +53,12 @@ feature {NONE} -- Initialization
 				-- Add Window Menu
 			mi_window := main_menu.menu_items.add ("&Window")
 			mi_window.set_merge_order (10)
-			res := mi_window.menu_items.add_string_event_handler ("&Cascade", create {EVENT_HANDLER}.make (Current, $on_window_cascade_clicked))
-			res := mi_window.menu_items.add_string_event_handler ("Tile &Horizontal", create {EVENT_HANDLER}.make (Current, $on_window_tileH_clicked))
-			res := mi_window.menu_items.add_string_event_handler ("Tile &Vertical", create {EVENT_HANDLER}.make (Current, $on_window_tileV_clicked))
+			res := mi_window.menu_items.add_string_event_handler ("&Cascade",
+				create {EVENT_HANDLER}.make (Current, $on_window_cascade_clicked))
+			res := mi_window.menu_items.add_string_event_handler ("Tile &Horizontal",
+				create {EVENT_HANDLER}.make (Current, $on_window_tile_h_clicked))
+			res := mi_window.menu_items.add_string_event_handler ("Tile &Vertical",
+				create {EVENT_HANDLER}.make (Current, $on_window_tile_v_clicked))
 			mi_window.set_mdi_list (True)  -- Adds the MDI Window List to the bottom of the menu
 
 			feature {WINFORMS_APPLICATION}.run_form (Current)
@@ -124,7 +129,7 @@ feature {NONE} -- Implementation
 			end
 			Precursor {WINFORMS_FORM}(a_disposing)
 		rescue
-			retried := true
+			retried := True
 			retry
 		end
 
@@ -179,7 +184,7 @@ feature {NONE} -- Implementation
 			layout_mdi (feature {WINFORMS_MDI_LAYOUT}.cascade)
 		end
 
-	on_window_tileH_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
+	on_window_tile_h_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
 			-- Window->Tile Horizontally Menu item handler.
 		require
 			non_void_sender: sender /= Void
@@ -188,7 +193,7 @@ feature {NONE} -- Implementation
 			layout_mdi (feature {WINFORMS_MDI_LAYOUT}.tile_horizontal)
 		end
 
-	on_window_tileV_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
+	on_window_tile_v_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
 			-- Window->Tile Vertically Menu item handler.
 		require
 			non_void_sender: sender /= Void

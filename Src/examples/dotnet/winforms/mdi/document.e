@@ -8,11 +8,6 @@ inherit
 	WINFORMS_FORM
 		rename
 			make as make_form
-		undefine
-			to_string,
-			finalize,
-			equals,
-			get_hash_code
 		redefine
 			dispose_boolean
 		end
@@ -150,7 +145,6 @@ feature {NONE} -- Implementation
 			-- Initialize all components of form.
 		local
 			l_size: DRAWING_SIZE
-			l_point: DRAWING_POINT
 		do
 			create components.make
 			create rich_text_box.make

@@ -38,20 +38,8 @@ feature -- Execution
 					call_stack := status.current_stack_element;
 					Window_manager.routine_win_mgr.show_stoppoint
 								(status.e_feature, status.break_index);
-					if Application.current_execution_stack_number = 1 then
-						e_feature := status.e_feature;
-						break_index := status.break_index;
-						dynamic_class := status.dynamic_class;
-						object_address := status.object_address;
-					else
-						e_feature := call_stack.routine;
-						dynamic_class := call_stack.dynamic_class;
-						object_address := call_stack.object_address;
-					end;
-					Project_tool.show_stoppoint
-						(e_feature, break_index)
-					Project_tool.show_object
-						(object_address, dynamic_class)
+					Project_tool.show_current_stoppoint;
+					Project_tool.show_current_object;
 					Project_tool.display_exception_stack
 				end;
 				mp.restore

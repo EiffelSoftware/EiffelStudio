@@ -322,6 +322,123 @@ feature -- Status setting
 			selection_not_changed: old has_selection = has_selection and has_selection implies
 				old selection_start = selection_start and old selection_end = selection_end
 		end
+		
+	save_to_named_file (a_filename: FILE_NAME) is
+			-- Save `text' and formatting of `Current' to file `a_filename' in RTF format.
+		require
+			filename_not_void: a_filename /= Void
+		local
+			l_text_length: INTEGER
+			l_text: STRING
+			counter: INTEGER
+			current_format: EV_CHARACTER_FORMAT
+			buffer: EV_RICH_TEXT_BUFFERING_STRUCTURES_I
+			last_counter: INTEGER
+			text_file: PLAIN_TEXT_FILE
+		do
+			create buffer.set_rich_text (Current)
+			initialize_for_saving
+			l_text := text
+			l_text_length := l_text.count
+			from
+				counter := 1
+				last_counter := 1
+			until
+				counter > l_text_length
+			loop
+				counter := next_change_of_character (counter)
+				current_format := last_format
+					-- Now process based on this character format spanning `counter' positions.
+				buffer.append_text_for_rtf (l_text.substring (last_counter, counter - 1), current_format)
+				last_counter := counter
+			end
+			buffer.generate_complete_rtf_from_buffering
+			complete_saving
+			create text_file.make_open_write (a_filename)
+			text_file.put_string (buffer.internal_text)
+			text_file.close
+		end
+		
+	next_change_of_character (current_pos: INTEGER): INTEGER is
+			-- `Result' is caret position at next change of character.
+		local
+			counter: INTEGER
+			last_false_pos, current_step: INTEGER
+			value_finder: INTEGER
+			last_contiguous_position: INTEGER
+		do
+			counter := current_pos
+			from
+				current_step := default_step
+				value_finder := default_step
+				last_false_pos := 0				
+			until
+				(last_contiguous_position - last_false_pos).abs = 1
+			loop
+				if internal_character_format_contiguous (counter, counter + current_step) then
+						-- This is performed here so that on Windows we do not have to
+						-- change the selection while querying the format. The previous call has
+						-- set the selection already.
+					last_format := internal_character_format (counter)
+					last_contiguous_position := current_step
+					if value_finder = default_step then
+						current_step := current_step + default_step
+					else
+						value_finder := value_finder // 2
+						current_step := current_step + value_finder
+					end
+				else
+					last_false_pos := current_step
+					value_finder := value_finder // 2
+					current_step := current_step - value_finder
+				end
+			end
+			Result := current_pos + last_contiguous_position
+		end
+		
+	last_format: EV_CHARACTER_FORMAT
+		-- Last contiguous character format found be last query to `next_change_of_character'.
+		-- By using this we can optimize various implementations by not providing another
+		-- query to the control if not needed.
+	
+	default_step: INTEGER is 8
+		-- Default step used when buffering into RTF.
+	
+	internal_character_format_contiguous (start_index, end_index: INTEGER): BOOLEAN is
+			-- Is formatting from caret position `start_index' to `end_index' contiguous?
+			-- Internal version which permits optimizations as caret position and selection
+			-- does not need to be restored.
+		deferred
+		end
+		
+	internal_character_format (pos: INTEGER): EV_CHARACTER_FORMAT is
+			-- `Result' is character format at position `pos'. On some platforms
+			-- this may be optimized to take the selected character format and therefore
+			-- should only be used by `next_change_of_character'.
+		deferred
+		end
+
+	initialize_for_saving is
+			-- Initialize `Current' for save operations, by performing
+			-- optimizations that prevent the control from slowing down due to
+			-- unecessary optimizations.
+		deferred
+		end
+		
+	complete_saving is
+			-- Restore `Current' back to its default state before last call
+			-- to `initialize_for_saving'.
+		deferred
+		end
+		
+	font_char_set (a_font: EV_FONT): INTEGER is
+			-- `Result' is char set of font `a_font'.
+		require
+			a_font_not_void: a_font /= Void
+		deferred
+		ensure
+			result_not_void: Result >= 0
+		end	
 	
 feature {NONE} -- Implementation
 

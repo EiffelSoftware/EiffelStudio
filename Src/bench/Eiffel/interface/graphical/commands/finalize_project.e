@@ -43,7 +43,7 @@ feature -- Callbacks
 			-- Question to keep assertions is answered with discard.
 			-- This is handled by keep_assertions.
 		do
-			if Eiffel_project.lace_file_name = Void then
+			if Eiffel_ace.file_name = Void then
 				update_project_choose_template
 			else
 				keep_assertions (Void)
@@ -54,11 +54,11 @@ feature -- Callbacks
 			-- Question to keep assertions is answered with keep.
 			-- If the question is answered with discard, it will come to here aswell.
 		do
-			if Eiffel_project.lace_file_name = Void then
+			if Eiffel_ace.file_name = Void then
 				update_project_warner_ok (argument)
 			elseif not assert_confirmed then
 				assert_confirmed := True;
-				warner (text_window).custom_call (Current, 
+				warner (popup_parent).custom_call (Current, 
 					w_Assertion_warning, "Keep assertions", 
 					"Discard assertions", "Cancel"); 
 			elseif 
@@ -73,7 +73,7 @@ feature -- Callbacks
 				compile (argument)
 			else
 				end_run_confirmed := true;
-				confirmer (text_window).call (Current,
+				confirmer (popup_parent).call (Current,
 						"Recompiling project will end current run.%N%
 						%Start compilation anyway?", "Compile")
 			end
@@ -129,12 +129,12 @@ feature {NONE} -- Implementation
 			-- finalize thereafter.
 		do
 			if 
-				argument = text_window or
+				argument = tool or
 				(argument /= Void and 
 				argument = last_confirmer and not end_run_confirmed)
 			then
 				assert_confirmed := False;
-				warner (text_window).custom_call (Current, w_Finalize_warning,
+				warner (popup_parent).custom_call (Current, w_Finalize_warning,
 					"Finalize now", Void, "Cancel");
 			elseif 
 				(argument = Current) or else
@@ -161,25 +161,37 @@ feature {NONE} -- Implementation
 		do
 			if start_c_compilation then
 				error_window.put_string
-					("Launching C compilation in background...%N");
+					("Launching C compilation in background...");
+				error_window.new_line;
 				Eiffel_project.call_finish_freezing (False);
 			end;
 			if not Eiffel_project.is_final_code_optimal then
-				error_window.put_string 
-					("Warning: the finalized system might not be optimal%N%
-					%%Tin size and speed. In order to produce an optimal%N%
-					%%Texecutable, finalize from a new project and do%N%
-					%%Tnot use precompilation.%N%N");
+				error_window.put_string ("Warning: the finalized system might not be optimal");
+				error_window.new_line;
+				error_window.put_one_indent;
+				error_window.put_string ("in size and speed. In order to produce an optimal");
+				error_window.new_line;
+				error_window.put_one_indent;
+				error_window.put_string ("executable, finalize from a new project and do");
+				error_window.new_line;
+				error_window.put_one_indent;
+				error_window.put_string ("not use precompilation.");
+				error_window.new_line;
+				error_window.new_line;
 			end;
 			if 
 				(last_warner /= Void and argument = last_warner)
 				and then Eiffel_project.lace_has_assertions
 			then
-				error_window.put_string 
-					("Warning: the finalized system incorporates assertions.%N%
-						%%TIt might therefore not be optimal in size and speed%N%N");
+				error_window.put_string ("Warning: the finalized system incorporates assertions.");
+				error_window.new_line;
+				error_window.put_one_indent;
+				error_window.put_string ("It might therefore not be optimal in size and speed");
+				error_window.new_line;
+				error_window.new_line;
 			end;
-			error_window.put_string ("System recompiled%N");
+			error_window.put_string ("System recompiled");
+			error_window.new_line;
 		end;
  
 end -- class FINALIZE_PROJECT

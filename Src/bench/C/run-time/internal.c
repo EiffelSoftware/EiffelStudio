@@ -15,6 +15,7 @@
 #include "eif_cecil.h"
 #include "eif_project.h" /* for egc_..._ref_dtype */
 #include "rt_wbench.h"
+#include "rt_assert.h"
 
 #include <string.h>
 
@@ -222,9 +223,15 @@ rt_public void eif_set_dynamic_type (EIF_REFERENCE object, EIF_INTEGER dtype)
 	 */
 {
 	uint32 flags;
+
+	REQUIRE ("object not null", object);
+	REQUIRE ("dtype valid", dtype > 0);
+
 	flags = HEADER(object)->ov_flags;
 	flags = (flags & 0xFFFF0000) | (dtype & 0x0000FFFF);
 	HEADER(object)->ov_flags = flags;
+
+	ENSURE ("dtype set", Dftype(object) == dtype);
 }
 
 rt_public void * ei_oref(long i, EIF_REFERENCE object)

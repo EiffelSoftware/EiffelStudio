@@ -1,8 +1,6 @@
 indexing 
-
-	description:
-		"Most general notion of widget %
-		%(i.e. user interface object)"
+	description: "Most general notion of widget %
+				% (i.e. user interface object)"
 	status: "See notice at end of class"
 	names: widget
 	date: "$Date$"
@@ -33,9 +31,21 @@ feature {NONE} -- Initialization
  		ensure
  			exists: not destroyed
 		end
+
+feature -- Access
+	
+	parent: EV_WIDGET is
+			-- The parent of the Current widget
+			-- If the widget is an EV_WINDOW without parent,
+			-- this attribute will be `Void'
+		require
+			exists: not destroyed
+		do
+			Result := implementation.parent
+		end
 	
 feature -- Status report
-	
+
 	destroyed: BOOLEAN is
 			-- Is Current widget destroyed?  
 			-- (= implementation does not exist)
@@ -45,9 +55,9 @@ feature -- Status report
 
 	insensitive: BOOLEAN is
 			-- Is current widget insensitive to
-			-- user actions? (If it is, events will
-			-- not be dispatched to Current widget or
-			-- any of its children)
+			-- user actions?
+			-- (If it is, events will not be dispatched
+			-- to Current widget or any of its children)
 		require
 			exists: not destroyed
 		do
@@ -61,7 +71,6 @@ feature -- Status report
 		do
 			Result := implementation.shown
 		end
-
 	
 	managed: BOOLEAN
 			-- Is the geometry of current widget managed by its 
@@ -72,17 +81,18 @@ feature -- Status report
 		
 	automatic_resize: BOOLEAN is
 			-- Is the widget resized automatically when
-			-- the parent resize ?  In this case,
-			-- automatic_position has no effect.  True by
-			-- default
+			-- the parent resize ? In this case,
+			-- automatic_position has no effect.
+			-- True by default
 		do
 			Result := implementation.automatic_resize
 		end
 
 	automatic_position: BOOLEAN is
 			-- Does the widget take a new position when
-			-- the parent resize ?  (If it does, its size
-			-- doesn't changed).  False by default
+			-- the parent resize ?
+			-- (If it does, its size doesn't changed).
+			-- False by default
 		do
 			Result := implementation.automatic_position
 		end
@@ -102,8 +112,7 @@ feature -- Status setting
 		end
 
 	hide is
-		 	-- Make widget and all children (recursively)
-		 	-- invisible on the screen.
+		 	-- Make widget invisible on the screen.
 		require
 			exists: not destroyed
 		do
@@ -113,8 +122,7 @@ feature -- Status setting
 		end
 
 	show is
-		 	-- Make widget and all children (recursively)
-		 	-- visible on the screen. (default)
+		 	-- Make widget visible on the screen. (default)
 		require
 			exists: not destroyed
 		do
@@ -122,7 +130,6 @@ feature -- Status setting
 		ensure
 			shown: shown
 		end
-	
 
 	set_insensitive (flag: BOOLEAN) is
 			-- Set current widget in insensitive mode if
@@ -142,7 +149,7 @@ feature -- Status setting
 		end
 
 	set_automatic_resize (state: BOOLEAN) is
-			-- Set `automatic_resize' to `state'.
+			-- Make `state' the new `automatic_resize'.
 		require
 			exists: not destroyed
 		do
@@ -152,7 +159,7 @@ feature -- Status setting
 		end
 
 	set_automatic_position (state: BOOLEAN) is
-			-- Set `automatic_position' at `state'.
+			-- Make `state' the new `automatic_position'.
 		require
 			exists: not destroyed
 		do
@@ -208,7 +215,7 @@ feature -- Measurement
 		end
 
 	width: INTEGER is
-			-- Width of widget
+			-- Width of the widget
 		require
 			exists: not destroyed
 		do
@@ -218,7 +225,7 @@ feature -- Measurement
 		end
 
 	height: INTEGER is
-			-- Height of widget
+			-- Height of the widget
 		require
 			exists: not destroyed
 		do
@@ -227,31 +234,9 @@ feature -- Measurement
 			Positive_height: Result >= 0
 		end 
 	
-	maximum_width: INTEGER is
-                        -- Maximum width that application wishes widget
-                        -- instance to have
-                require
-                        exists: not destroyed
-                do
-                        Result := implementation.maximum_width
-                ensure
-                        Result >= 0
-                end
-
-	maximum_height: INTEGER is
-                        -- Maximum height that application wishes widget
-                        -- instance to have
-                require
-                        exists: not destroyed
-                do
-                        Result := implementation.maximum_height
-                ensure
-                        Result >= 0
-                end
-
 	minimum_width: INTEGER is
-                        -- Minimum width that application wishes widget
-                        -- instance to have
+			-- Minimum width that application wishes widget
+			-- instance to have
 		require
 			exists: not destroyed
 		do
@@ -261,8 +246,8 @@ feature -- Measurement
 		end 
 	
 	minimum_height: INTEGER is
-                        -- Minimum height that application wishes widget
-                        -- instance to have
+			-- Minimum height that application wishes widget
+			-- instance to have
 		require
 			exists: not destroyed
 		do
@@ -295,8 +280,8 @@ feature -- Measurement
 feature -- Resizing
 
 	set_size (new_width: INTEGER; new_height: INTEGER) is
-			-- Set width and height to `new_width'
-			-- and `new_height'.
+			-- Make `new_width' the new `width'
+			-- and `new_height' the new `height'.
 		require
 			exists: not destroyed
 			Positive_width: new_width >= 0
@@ -308,7 +293,7 @@ feature -- Resizing
 		end 
 
 	set_width (new_width :INTEGER) is
-			-- Set width to `new_width'.
+			-- Make `new_width' the new `width'.
 		require
 			exists: not destroyed
 			Positive_width: new_width >= 0
@@ -319,7 +304,7 @@ feature -- Resizing
 		end
 
 	set_height (new_height: INTEGER) is
-			-- Set height to `new_height'.
+			-- Make `new_height' the new `height'.
 		require
 			exists: not destroyed
 			Positive_height: new_height >= 0
@@ -329,32 +314,12 @@ feature -- Resizing
 			dimensions_set: implementation.dimensions_set (width, new_height)
 		end
 	
-        set_maximum_width (max_width: INTEGER) is
-                        -- Set `maximum_width' to `max_width'.
-                require
-                        exists: not destroyed
-                        large_enough: max_width >= 0
-                do
-                        implementation.set_maximum_width (max_width)
-                ensure
-                        max_width = max_width
-                end 
-
-	set_maximum_height (max_height: INTEGER) is
-                        -- Set `maximum_height' to `max_height'.
-                require
-                        exists: not destroyed
-                        large_enough: max_height >= 0
-                do
-                        implementation.set_maximum_height (max_height)
-                ensure
-                        max_height = max_height
-                end
-
 	set_minimum_size (min_width, min_height: INTEGER) is
+			-- Make `min_width' the new `minimum_width'
+			-- and `min_height' the new `minimum_height'.
 		require
-                        exists: not destroyed
-                        large_enough: min_height >= 0
+			exists: not destroyed
+			large_enough: min_height >= 0
 			large_enough: min_width >= 0  
 		do
 			implementation.set_minimum_size (min_width, min_height)
@@ -364,7 +329,7 @@ feature -- Resizing
 		end
 		
         set_minimum_width (min_width: INTEGER) is
-                        -- Set `minimum_width' to `min_width'.
+			-- Make `min_width' the new `minimum_width'.
                 require
                         exists: not destroyed
                         large_enough: min_width >= 0
@@ -375,7 +340,7 @@ feature -- Resizing
                 end
         
 	set_minimum_height (min_height: INTEGER) is
-                        -- Set `minimum__height' to `min_height'.
+			-- Make `min_height' the new `minimum__height'.
                 require
                         exists: not destroyed
                         large_enough: min_height >= 0
@@ -386,8 +351,8 @@ feature -- Resizing
                 end
 
 	set_x (new_x: INTEGER) is
-			-- Set  horizontal position relative
-			-- to parent to `new_x'.
+			-- Put at horizontal position `new_x' relative
+			-- to parent.
 		require
 			exists: not destroyed
 			Unmanaged: not managed
@@ -399,13 +364,11 @@ feature -- Resizing
 		end
 
 	set_x_y (new_x: INTEGER; new_y: INTEGER) is
-			-- Set horizontal position and
-			-- vertical position relative to parent
-			-- to `new_x' and `new_y'.
+			-- Put at horizontal position `new_x' and at
+			-- vertical position `new_y' relative to parent.
 		require
 			exists: not destroyed
 			Unmanaged: not managed
-								   
 		do
 			implementation.set_x_y (new_x, new_y)
 		ensure
@@ -414,12 +377,11 @@ feature -- Resizing
 		end
 
 	set_y (new_y: INTEGER) is
-			-- Set vertical position relative
-			-- to parent to `new_y'.
+			-- Put at vertical position `new_y' relative
+			-- to parent.
 		require
 			exists: not destroyed
 			Unmanaged: not managed
-								   
 		do
 			implementation.set_y (new_y)
 		ensure
@@ -440,108 +402,130 @@ feature -- Comparison
 feature -- Event - command association
 	
 	add_button_press_command (mouse_button: INTEGER; 
-				  command: EV_COMMAND; 
-				  arguments: EV_ARGUMENTS) is
-			-- Add 'command' to the list of commands to 
-			-- be executed when button no 'mouse_button' 
-			-- is pressed
+		  command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+			-- Add `command' to the list of commands to be executed when
+			-- button no 'mouse_button' is pressed.
+		require
+			exists: not destroyed
 		do
 			implementation.add_button_press_command (mouse_button,
-								 command, 
-								 arguments)
+								 command, arguments)
 		end
 	
 	
 	add_button_release_command (mouse_button: INTEGER;
-				    command: EV_COMMAND; 
-				    arguments: EV_ARGUMENTS) is
-			-- Add 'command' to the list of commands to 
-			-- be executed when button no 'mouse_button' 
-			-- is released
+		    command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+			-- Add `command' to the list of commands to be executed when
+			-- button no 'mouse_button' is released.
+		require
+			exists: not destroyed
 		do
 			implementation.add_button_release_command (mouse_button,
-								   command, 
-								   arguments)
+								   command, arguments)
 		end
 	
 	add_double_click_command (mouse_button: INTEGER;
-				  command: EV_COMMAND; 
-				  arguments: EV_ARGUMENTS) is
-			-- Add 'command' to the list of commands to 
-			-- be executed when button no 'mouse_button' 
-			-- is double clicked
+				  command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+			-- Add `command' to the list of commands to be executed when
+			-- button no `mouse_button' is double clicked.
+		require
+			exists: not destroyed
 		do
 			implementation.add_double_click_command (mouse_button,
-								 command, 
-								 arguments)
+								 command, arguments)
 		end
 	
 	add_motion_notify_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+			-- Add `command' to the list of commands to be executed when
+			-- mouse move.
+		require
+			exists: not destroyed
 		do
 			implementation.add_motion_notify_command (command, 
 								  arguments)
 		end
 	
-	add_delete_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+	add_destroy_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+			-- Add `command' to the list of commands to be executed when 
+			-- the widget is destroyed.
+		require
+			exists: not destroyed
 		do
-			implementation.add_delete_command (command, 
+			implementation.add_destroy_command (command, 
 							   arguments)
 		end	
 	
 	add_expose_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+			-- Add `command' to the list of commands to be executed when 
+			-- the widget has to be redrawn because it was exposed from
+			-- behind another widget.
+		require
+			exists: not destroyed
 		do
 			implementation.add_expose_command (command, 
 							      arguments)
 		end	
 	
 	add_key_press_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+			-- Add `command' to the list of commands to be executed when 
+			-- a key is pressed on the keyboard while the widget has the
+			-- focus.
+		require
+			exists: not destroyed
 		do
 			implementation.add_key_press_command (command, 
 							      arguments)
 		end	
 	
 	add_key_release_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+			-- Add `command' to the list of commands to be executed when 
+			-- a key is released on the keyboard while the widget has the
+			-- focus.
+		require
+			exists: not destroyed
 		do
 			implementation.add_key_release_command (command, 
 								arguments)
 		end	
 	
 	add_enter_notify_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+			-- Add `command' to the list of commands to be executed when 
+			-- the cursor of the mouse enter the widget.
+		require
+			exists: not destroyed
 		do
 			implementation.add_enter_notify_command (command, 
 								 arguments)
 		end	
 	
 	add_leave_notify_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+			-- Add `command' to the list of commands to be executed when 
+			-- the cursor of the mouse leave the widget.
+		require
+			exists: not destroyed
 		do
 			implementation.add_leave_notify_command (command, 
 								 arguments)
 		end	
 
-
 	remove_command (command_id: INTEGER) is
-			-- Remove the command associated with
-			-- 'command_id' from the list of actions for
-			-- this context. If there is no command
-			-- associated with 'command_id', nothing
-			-- happens.
+			-- Remove the command associated with `command_id' from the
+			-- list of actions for this context. If there is no command
+			-- associated with `command_id', nothing happens.
 		require
 			exists: not destroyed
 		do
 			implementation.remove_command (command_id)
 		end
-	
-	
+		
 	last_command_id: INTEGER is
-			-- Id of the last command added by feature
-			-- 'add_command'
+			-- Id of the last command added by feature `add_command'
 		require		
 			exists: not destroyed
 		do
 			Result := implementation.last_command_id
 		end
 	
-
 feature {EV_WIDGET, EV_WIDGET_IMP} -- Implementation
 
 	implementation: EV_WIDGET_I
@@ -551,18 +535,17 @@ feature {NONE} -- Implementation
 	
 	remove_implementation is
 			-- Remove implementation of Current widget.
-                do
-                        implementation := Void
-                ensure
-                        void_implementation: implementation = Void
-                end
+		do
+			implementation := Void
+		ensure
+			void_implementation: implementation = Void
+		end
 
 invariant
 
   --XX      Widget_Positive_depth:  depth >= 0
 
 end -- class EV_WIDGET
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

@@ -282,7 +282,9 @@ register1 int num;
 
 	SIGBLOCK;			/* Protect against signals */
 
-	bzero(top, loc_set.st_end - top);			/* Fill in end of chunk */
+	bzero(top, (loc_set.st_end - top) * sizeof(char *));
+												/* Fill in end of chunk */
+
 	top = (char **) loc_set.st_cur->sk_next;	/* Pointer to next chunk */
 
 	if (top == (char **) 0) {					/* No next chunk */

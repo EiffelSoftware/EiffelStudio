@@ -88,37 +88,47 @@ feature -- Miscellaneous
 	test_widget: EV_WIDGET is
 			-- Controls that let the user control the timer.
 		local
+			f: EV_FRAME
 			vb: EV_VERTICAL_BOX
 			hb: EV_HORIZONTAL_BOX
-			interval_gauge: EV_HORIZONTAL_RANGE
+			interval_label: EV_LABEL
+			interval_gauge: EV_HORIZONTAL_SCROLL_BAR
 			reset_button: EV_BUTTON
 			count_label: EV_LABEL
 		do
+			create f.make_with_text ("Move the slider to change the timer %
+				%interval. (0 disables)")
+			f.align_text_center
+			f.set_style (f.Ev_frame_etched_out)
 			create vb
+			f.extend (vb)
 			create hb
 			vb.extend (hb)
-			hb.extend (create {EV_LABEL}.make_with_text ("Interval: "))
-			hb.disable_item_expand (hb.last)
+			create interval_label.make_with_text ("Interval: 500")
 			create interval_gauge.make_with_range (0 |..| 1000)
 			hb.extend (interval_gauge)
 			interval_gauge.set_value (500)
+			set_interval (500)
 			interval_gauge.change_actions.extend (
-				~on_value_change (interval_gauge))
-			create hb
-			vb.extend (hb)
+				~on_value_change (interval_gauge, interval_label))
 			create reset_button.make_with_text ("Reset count")
 			reset_button.select_actions.extend (~reset_count)
 			hb.extend (reset_button)
+			hb.disable_item_expand (reset_button)
+			create hb
+			vb.extend (hb)
+			hb.extend (interval_label)
 			create count_label
 			actions.extend (~on_timer (count_label))
 			hb.extend (count_label)	
-			Result := vb
+			Result := f
 		end
 
-	on_value_change (a_gauge: EV_GAUGE) is
+	on_value_change (a_gauge: EV_GAUGE; a_label: EV_LABEL) is
 			-- `interval_gauge.value' changed.
 		do
 			set_interval (a_gauge.value)
+			a_label.set_text ("Interval: " + interval.out)
 		end
 
 	on_timer (a_label: EV_LABEL) is
@@ -186,8 +196,8 @@ end -- class EV_TIMEOUT
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.8  2000/05/01 18:50:57  brendel
---| Put hb in vb.
+--| Revision 1.9  2000/05/01 19:33:29  brendel
+--| Improved `test_widget'.
 --|
 --| Revision 1.6  2000/03/16 01:18:48  oconnor
 --| formatting

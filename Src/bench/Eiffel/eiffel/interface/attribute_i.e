@@ -353,6 +353,9 @@ feature {NONE} -- Implementation
 			t: TYPE_A
 		do
 			t ?= type;
+			if t = Void then
+				t := type.actual_type
+			end;
 			!! Result.make (feature_name, feature_id);
 			Result.set_type (t)
 		end;

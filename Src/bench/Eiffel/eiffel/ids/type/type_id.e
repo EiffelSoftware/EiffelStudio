@@ -64,6 +64,15 @@ feature -- Access
 			Result.append_integer (internal_id)
 		end
 
+	module_init_name: STRING is
+			-- Name of the init procedure of the C module 
+			-- associated with current type
+		do
+			!! Result.make (15);
+			Result.append ("EIF_Minit");
+			Result.append_integer (internal_id)
+		end
+
 feature {BODY_ID} -- Access
 
 	prefix_name: STRING is

@@ -6,27 +6,28 @@ class
 	GAC_BROWSER
 
 inherit
-	ISE_REFLECTION_CONVERSIONSUPPORT
+	CONVERSION_SUPPORT
 	
 feature -- Access
 
-	shared_assemblies: SYSTEM_COLLECTIONS_ARRAYLIST is
+	shared_assemblies: LINKED_LIST [ASSEMBLY_DESCRIPTOR] is
 		indexing
 			description: "Assemblies in the GAC"
 			external_name: "SharedAssemblies"
 		local
 			assembly_path: STRING
-			assemblies, subdirectories: ARRAY [SYSTEM_IO_DIRECTORYINFO]
+			assemblies, subdirectories: NATIVE_ARRAY [DIRECTORY_INFO]
 			wde: WINDOWS_DIRECTORY_EXTRACTOR
-			dir_info: SYSTEM_IO_DIRECTORYINFO
-			versions: SYSTEM_COLLECTIONS_ARRAYLIST
+			dir_info: DIRECTORY_INFO
+			versions: LINKED_LIST [ASSEMBLY_DESCRIPTOR]
 			i: INTEGER
 		do
 			create Result.make
 			create wde.make
-			assembly_path := wde.windows_directory_name
-			assembly_path := assembly_path.concat_string_string (assembly_path.remove (assembly_path.get_length - 1, 1), Gac_path)
-			create dir_info.make_directoryinfo (assembly_path)
+			create assembly_path.make_from_cil (wde.windows_directory_name)
+			assembly_path.remove (assembly_path.count)
+			assembly_path.append (gac_path)
+			create dir_info.make_directory_info (assembly_path.to_cil)
 			assemblies := dir_info.get_directories
 			from
 				i := 0
@@ -41,7 +42,7 @@ feature -- Access
 		    Result_exists: Result /= Void
 		end 
 
-	Gac_path: STRING is "\Assembly\GAC"
+	gac_path: STRING is "\Assembly\GAC"
 		indexing
 			description: "Relative path to the GAC"
 			external_name: "GacPath"
@@ -49,19 +50,20 @@ feature -- Access
 		
 feature {NONE} -- Implementation
 
-	assembly_versions (dir: SYSTEM_IO_DIRECTORYINFO): SYSTEM_COLLECTIONS_ARRAYLIST is
+	assembly_versions (dir: DIRECTORY_INFO): LINKED_LIST [ASSEMBLY_DESCRIPTOR] is
 		indexing
 			description: "Versions of assembly in `dir'"
 			external_name: "AssemblyVersions"
 		require
 			dir_not_void: dir /= Void
 		local
-			version_dirs: ARRAY [SYSTEM_IO_DIRECTORYINFO]
-			desc: ISE_REFLECTION_ASSEMBLYDESCRIPTOR
-			assembly: SYSTEM_REFLECTION_ASSEMBLYNAME
+			version_dirs: NATIVE_ARRAY [DIRECTORY_INFO]
+			desc: ASSEMBLY_DESCRIPTOR
+			assembly: ASSEMBLY_NAME
 			name, version, culture, public_key: STRING
-			files: ARRAY [SYSTEM_IO_FILEINFO]
+			files: NATIVE_ARRAY [FILE_INFO]
 			i, j, n: INTEGER
+			file: STRING
 		do
 			create Result.make
 			version_dirs := dir.get_directories
@@ -76,10 +78,11 @@ feature {NONE} -- Implementation
 				until
 					j >= files.count
 				loop
-					assembly := load_from_file (files.item (j).get_full_name)
+					create file.make_from_cil (files.item (j).get_full_name)
+					assembly := load_from_file (file)
 					if assembly /= Void then
 						desc := assembly_descriptor_from_name (assembly)
-						n := Result.extend (desc)
+						Result.extend (desc)							
 					end
 					j := j + 1
 				end
@@ -88,8 +91,8 @@ feature {NONE} -- Implementation
 		ensure
 			Result_exists: Result /= Void
 		end
-
-	load_from_file (file: STRING): SYSTEM_REFLECTION_ASSEMBLYNAME is
+		
+	load_from_file (file: STRING): ASSEMBLY_NAME is
 		indexing
 			description: "Assembly stored in `file' (Void if `file' format is invalid)"
 			external_name: "LoadFromFile"
@@ -99,8 +102,13 @@ feature {NONE} -- Implementation
 			rescued: BOOLEAN
 		do
 			if not rescued then
-				create Result.make
-				Result := Result.get_assembly_name (file)
+				if file.substring_index (current_assembly_path, 1) = 0 then
+					create Result.make
+					Result ?= Result.get_assembly_name (file.to_cil)
+				else
+					Result := Void
+				end
+
 			else 
 				Result := Void
 			end
@@ -108,5 +116,29 @@ feature {NONE} -- Implementation
 			rescued := True
 			retry
 		end
+		
+		
+	current_assembly_path: STRING is
+			-- a list of all the assembly file types
+		local
+			assembly: ASSEMBLY
+			assembly_descriptor: ASSEMBLY_DESCRIPTOR
+		once
+				assembly_descriptor := assembly_descriptor_from_name (assembly.get_executing_assembly.get_name)
+				Result := ""
+				Result.append (assembly_descriptor.name)
+				Result.append ("\")
+				Result.append (assembly_descriptor.version)
+				Result.append ("_")
+				-- need to locate Netural keyword in dictionary
+				if not assembly_descriptor.culture.is_equal("neutral") then
+					Result.append (assembly_descriptor.culture)
+				end
+				Result.append ("_")
+				Result.append (assembly_descriptor.public_key)
+				Result.append ("_")
+				Result.append ("\")
+		end
+		
 
 end -- class GAC_BROWSER

@@ -316,6 +316,9 @@ feature -- Event handling
 
 	close_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when window is closed.
+			--| FIXME, close_actions not working on GTK.
+			--| Fix and test that this works for titled, untitled
+			--| and dialog windows on both platforms.
 
 	move_actions: EV_GEOMETRY_ACTION_SEQUENCE
 			-- Actions to be performed when window moves.
@@ -382,6 +385,9 @@ end -- class EV_WINDOW
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.52  2000/03/27 19:48:14  oconnor
+--| added fixme
+--|
 --| Revision 1.51  2000/03/21 23:05:31  brendel
 --| By request, make_with_title.
 --|

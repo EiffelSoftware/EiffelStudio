@@ -27,7 +27,7 @@ cluster
         liman_abstract:     "$BENCH/Eiffel/limand/abstract";
         liman_graphical:        "$BENCH/Eiffel/limand/graphical";
         liman_shared:       "$BENCH/Eiffel/limand/shared";
-        liman_client:       "$BENCBENCH/Eiffel/limand/client";
+        liman_client:       "$BENCH/Eiffel/limand/client";
  
 		beurk:				"$BENCH/Eiffel/beurk";
 		compiler_support:	"$BENCH/Eiffel/support";

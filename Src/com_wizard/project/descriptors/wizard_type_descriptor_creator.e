@@ -42,6 +42,9 @@ feature -- Basic Operations
 			a_descriptor.set_c_header_file_name (c_header_file_name)
 			a_descriptor.set_c_type_name (c_type_name)
 			a_descriptor.set_type_kind (type_kind)
+			if guid /= Void then
+				a_descriptor.set_guid (guid)
+			end
 		ensure
 			name_set: a_descriptor.name /= Void
 		end
@@ -65,6 +68,9 @@ feature {NONE} -- Implementation
 
 	type_kind: INTEGER 
 			-- Kind of descriptor
+
+	guid: ECOM_GUID
+			-- GUID of type
 
 end -- class WIZARD_TYPE_DESCRIPTOR_CREATOR
 

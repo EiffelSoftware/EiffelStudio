@@ -69,13 +69,10 @@ feature {NONE} -- Initialization
 			-- can be added here.
 		do
 			set_icon_pixmap (icon)
-			-- Set up cancel actions on `Current'.
+				-- Set up cancel actions on `Current'.
 			fake_cancel_button (Current, agent show_hide_component_viewer_command.execute)
-component_button.drop_actions.extend (agent set_component (?))
-
-
+			component_button.drop_actions.extend (agent set_component (?))
 			display_view_enabled := True
-
 		end
 		
 feature -- Access
@@ -112,6 +109,129 @@ feature -- Basic operation
 		
 	set_component (a_component: GB_COMPONENT) is
 			-- Assign `a_component' to `Current'
+		require
+			component_not_void: a_component /= Void
+		do
+			-- We have to handle all items seperately. There may be a better
+			-- way to do this at some point.
+			
+				-- Reset our previous widgets, as `component'
+				-- has now changed.
+			display_widget := Void
+			builder_widget := Void
+				-- Assign `a_component' to `component'.
+			component := a_component
+				-- Update the title of `Current'.
+			set_title ("Component viewer - " + component.name)
+				-- Display type
+			type_display.set_text ("Type : " + component.root_element_type)
+			lock_update
+			show_object (a_component.object)
+			system_status.disable_project_modified
+			update
+			unlock_update
+		end
+		
+feature -- Status setting
+	
+	set_display_view is
+			-- Set `display_view' to `True' and reflect in `Current'.
+		do
+			if not display_view_enabled then
+				display_view_enabled := True
+				if component /= Void then
+					lock_update
+					component_holder.wipe_out
+					if display_widget = Void then
+						show_object (component.object)
+					else
+						component_holder.extend (display_widget)
+					end
+					unlock_update
+				end
+			end
+		ensure then
+			display_view_set: display_view_enabled
+		end
+		
+	set_build_view is
+			-- Set `display_view' to `False' and reflect in `Current'.
+		do
+			if display_view_enabled then
+				display_view_enabled := False
+				if component /= Void then
+					lock_update
+					component_holder.wipe_out
+					if builder_widget = Void then
+						show_object (component.object)
+					else
+						component_holder.extend (builder_widget)
+					end
+					unlock_update
+				end
+			end
+		ensure then
+			build_view_set: not display_view_enabled
+		end
+		
+feature {NONE} -- Implementation
+		
+	force_object_to_component (an_object: GB_OBJECT) is
+			-- Remove `an_object' from the object list,
+			-- and remove the pebbles from current
+			-- representations.
+			--| FIXME, in the next release, we should not do this
+			--| a component should be built as a component
+			--| from the start. The current method is most
+			--| certainly a hack of sorts.
+		local
+			display_object: GB_DISPLAY_OBJECT
+			pick_and_dropable: EV_PICK_AND_DROPABLE
+			widget: EV_WIDGET
+		do
+			object_handler.objects.prune_all (an_object)
+			display_object ?= an_object.display_object
+	
+			if display_object /= Void then
+				pick_and_dropable ?= display_object.child
+				pick_and_dropable.remove_pebble
+					-- We must remove the ability to drop another object into
+					-- the display object.
+				display_object.drop_actions.wipe_out
+				display_object.child.drop_actions.wipe_out
+			end
+			pick_and_dropable ?= an_object.display_object
+				-- We need this as menu bars are not pick and dropable.
+			if pick_and_dropable /= Void then
+				pick_and_dropable.remove_pebble
+			end
+			widget ?= an_object.display_object
+		end
+		
+	show_usage_dialog is
+				-- Show an information dialog explaining usage
+				-- of the component button.
+			local
+				dialog: EV_INFORMATION_DIALOG
+			do
+				create dialog.make_with_text (Component_tool_button_warning)
+				dialog.show_modal_to_window (Current)
+			end
+
+	display_widget: EV_WIDGET
+		-- Display widget of `component'. Used so that if a user
+		-- keeps toggling between the display and builder views, we only
+		-- have to build the display widget once as it is slow.
+		
+	builder_widget: EV_WIDGET
+		-- Builder widget of `component'. Used so that if a user
+		-- keeps toggling between the display and builder views, we only
+		-- have to build the builder widget once as it is slow.
+		
+	show_object (an_object: GB_OBJECT) is
+			-- Display object in `Current', based on `display_view_enabled'.
+		require
+			an_object_not_void: an_object /= Void
 		local
 			new_object: GB_OBJECT
 			widget: EV_WIDGET
@@ -129,20 +249,6 @@ feature -- Basic operation
 			a_menu_bar: EV_MENU_BAR
 			keep_menu_bar: BOOLEAN
 		do
-			-- We have to handle all items seperately. There may be a better
-			-- way to do this at some point.
-			
-				-- Reset our previous widgets, as `component'
-				-- has now changed.
-			display_widget := Void
-			builder_widget := Void
-				-- Assign `a_component' to `component'.
-			component := a_component
-				-- Update the title of `Current'.
-			set_title ("Component viewer - " + component.name)
-				-- Display type
-			type_display.set_text ("Type : " + component.root_element_type)
-			lock_update
 				-- Remove any existing displayed component.
 			component_holder.wipe_out
 
@@ -210,11 +316,11 @@ feature -- Basic operation
 			else
 				display_button.enable_sensitive
 				builder_button.enable_sensitive	
-				object_handler.recursive_do_all (new_object, agent force_object_to_component)
+				object_handler.recursive_do_all (an_object, agent force_object_to_component)
 				if display_view_enabled then
-					widget ?= new_object.object	
+					widget ?= an_object.object	
 				else
-					widget ?= new_object.display_object
+					widget ?= an_object.display_object
 				end
 				check
 					widget_not_void: widget /= Void
@@ -232,133 +338,8 @@ feature -- Basic operation
 			if not keep_menu_bar then
 				remove_menu_bar
 			end
-			system_status.disable_project_modified
-			update
-			unlock_update
 		end
 		
-feature -- Status setting
-	
-	set_display_view is
-			-- Set `display_view' to `True' and reflect in `Current'.
-		local
-			widget: EV_WIDGET
-		do
-			if not display_view_enabled then
-				display_view_enabled := True
-				if component /= Void then
-					lock_update
-					component_holder.wipe_out
-					if display_widget = Void then
-						widget ?= component.object.object
-						check
-							widget_not_void: widget /= Void
-						end
-						component_holder.extend (widget)
-						display_widget := component_holder.item
-					else
-						component_holder.extend (display_widget)
-					end
-					unlock_update
-				end
-			end
-		ensure then
-			display_view_set: display_view_enabled
-		end
 		
-	set_build_view is
-			-- Set `display_view' to `False' and reflect in `Current'.
-		local
-			widget: EV_WIDGET
-			new_object: GB_OBJECT
-		do
-			if display_view_enabled then
-				display_view_enabled := False
-				if component /= Void then
-					lock_update
-					component_holder.wipe_out
-					if builder_widget = Void then
-							new_object := component.object
-							object_handler.recursive_do_all (new_object, agent force_object_to_component)
-							widget ?= new_object.display_object
-						check
-							widget_not_void: widget /= Void
-						end
-						component_holder.extend (widget)
-						builder_widget := component_holder.item
-					else
-						component_holder.extend (builder_widget)
-					end
-					unlock_update
-				end
-			end
-		ensure then
-			build_view_set: not display_view_enabled
-		end
-		
-feature {NONE} -- Implementation
-		
-	force_object_to_component (an_object: GB_OBJECT) is
-			-- Remove `an_object' from the object list,
-			-- and remove the pebbles from current
-			-- representations.
-			--| FIXME, in the next release, we should not do this
-			--| a component should be built as a component
-			--| from the start. The current method is most
-			--| certainly a hack of sorts.
-		local
-			display_object: GB_DISPLAY_OBJECT
-			pick_and_dropable: EV_PICK_AND_DROPABLE
-			widget: EV_WIDGET
-		do
-			object_handler.objects.prune_all (an_object)
-			display_object ?= an_object.display_object
-	
-			if display_object /= Void then
-				pick_and_dropable ?= display_object.child
-				pick_and_dropable.remove_pebble
-					-- We must remove the ability to drop another object into
-					-- the display object.
-				display_object.drop_actions.wipe_out
-				display_object.child.drop_actions.wipe_out
-			end
-			pick_and_dropable ?= an_object.display_object
-				-- We need this as menu bars are not pick and dropable.
-			if pick_and_dropable /= Void then
-				pick_and_dropable.remove_pebble
-			end
-			widget ?= an_object.display_object
-		end
-		
-	show_usage_dialog is
-				-- Show an information dialog explaining usage
-				-- of the component button.
-			local
-				dialog: EV_INFORMATION_DIALOG
-			do
-				create dialog.make_with_text (Component_tool_button_warning)
-				dialog.show_modal_to_window (Current)
-			end
-
---	component_holder: EV_CELL
---		-- The current component representation is
---		-- placed in here.
---		
---	display_button, builder_button: EV_TOOL_BAR_RADIO_BUTTON
---		-- Buttons used to modify the current display.
-		
-	display_widget: EV_WIDGET
-		-- Display widget of `component'. Used so that if a user
-		-- keeps toggling between the display and builder views, we only
-		-- have to build the display widget once as it is slow.
-		
-	builder_widget: EV_WIDGET
-		-- Builder widget of `component'. Used so that if a user
-		-- keeps toggling between the display and builder views, we only
-		-- have to build the builder widget once as it is slow.
-		
---	type_display: EV_LABEL
---		-- Displays root type of `component'.
-
 end -- class GB_COMPONENT_VIEWER
 

@@ -1,4 +1,10 @@
-deferred class ROUTINE [TBASE, TOPEN -> TUPLE]
+indexing
+	description: "";
+	status: "See notice at end of class";
+	date: "$Date$";
+	revision: "$Revision$"
+
+edeferred class ROUTINE [TBASE, TOPEN -> TUPLE]
 
 inherit
 	MEMORY
@@ -201,6 +207,9 @@ feature {ROUTINE} -- Implementation
 					i := i + 1
 				end
 			end
+
+				-- Special initialization for FUNCTION
+			func_init
 		end
 
 feature {NONE}  -- Routine C argument structure
@@ -216,19 +225,32 @@ feature {NONE}  -- Routine C argument structure
 			ref_arg: ANY
 			null_ptr: POINTER
 			was_on: BOOLEAN
+			loc_open_map: like open_map
+			loc_closed_map: like closed_map
+			loc_arguments: like arguments
+			loc_closed_arguments: like closed_arguments
+			loc_open_type_codes: like open_type_codes
+			loc_closed_type_codes: like closed_type_codes
 		do
-			-- We must disable the GC in this routine
+			-- We must disable the GC in this routine.
 			was_on := collecting
 			collection_off
-			
+
+			loc_open_map := open_map
+			loc_closed_map := closed_map
+			loc_arguments := arguments
+			loc_closed_arguments := closed_arguments
+			loc_open_type_codes := open_type_codes
+			loc_closed_type_codes := closed_type_codes
+
 			-- Compute no. arguments, including target.
 
-			if open_map /= Void then
-				ocnt := open_map.count
+			if loc_open_map /= Void then
+				ocnt := loc_open_map.count
 			end
 
-			if closed_map /= Void then
-				ccnt := closed_map.count
+			if loc_closed_map /= Void then
+				ccnt := loc_closed_map.count
 			end
 
 			-- Create C union structure if necessary
@@ -246,16 +268,16 @@ feature {NONE}  -- Routine C argument structure
 			until
 				i > ocnt
 			loop
-				code := open_type_codes.item (i+1) -- pos. 1 is code of TBASE!
+				code := loc_open_type_codes.item (i+1) -- pos. 1 is code of TBASE!
 
 				if code = 'f' then
 					-- Special treatment of reals
-					ref_arg := arguments.real_item (i)
+					ref_arg := loc_arguments.real_item (i)
 				else
-					ref_arg := arguments.item (i)
+					ref_arg := loc_arguments.item (i)
 				end
 
-				j := open_map.item (i)
+				j := loc_open_map.item (i)
 
 				inspect code
 					when 'b' then
@@ -284,16 +306,16 @@ feature {NONE}  -- Routine C argument structure
 			until
 				i > ccnt
 			loop
-				code := closed_type_codes.item (i)
+				code := loc_closed_type_codes.item (i)
 
 				if code = 'f' then
 					-- Special treatment of reals
-					ref_arg := closed_arguments.real_item (i)
+					ref_arg := loc_closed_arguments.real_item (i)
 				else
-					ref_arg := closed_arguments.item (i)
+					ref_arg := loc_closed_arguments.item (i)
 				end
 
-				j := closed_map.item (i)
+				j := loc_closed_map.item (i)
 
 				inspect code
 					when 'b' then
@@ -324,6 +346,14 @@ feature {NONE}  -- Routine C argument structure
 			if was_on then
 				collection_on
 			end
+		end
+
+feature {NONE}  -- Function initialization
+
+	func_init is
+
+		do
+			-- Nothing
 		end
 
 feature {NONE}  -- Run-time
@@ -391,3 +421,21 @@ feature {NONE}  -- Run-time
 
 end -- class ROUTINE
 
+--|----------------------------------------------------------------
+--| EiffelBase: Library of reusable components for Eiffel.
+--| Copyright (C) 1986-1998 Interactive Software Engineering (ISE).
+--| For ISE customers the original versions are an ISE product
+--| covered by the ISE Eiffel license and support agreements.
+--| EiffelBase may now be used by anyone as FREE SOFTWARE to
+--| develop any product, public-domain or commercial, without
+--| payment to ISE, under the terms of the ISE Free Eiffel Library
+--| License (IFELL) at http://eiffel.com/products/base/license.html.
+--|
+--| Interactive Software Engineering Inc.
+--| ISE Building, 2nd floor
+--| 270 Storke Road, Goleta, CA 93117 USA
+--| Telephone 805-685-1006, Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <support@eiffel.com>
+--| For latest info see award-winning pages: http://eiffel.com
+--|----------------------------------------------------------------

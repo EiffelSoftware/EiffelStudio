@@ -62,7 +62,7 @@ feature {NONE} -- Basic operation
 				-- FIXME improve this comment. sam
 		local
 			tuple: TUPLE
-			mcl_int_agent: PROCEDURE [EV_MULTI_COLUMN_LIST TUPLE [INTEGER]]
+			mcl_int_agent: PROCEDURE [EV_MULTI_COLUMN_LIST, TUPLE [INTEGER]]
 		do
 			if n_args = 1 then
 				tuple := gdk_event_to_tuple (gtk_value_pointer (args))
@@ -78,7 +78,7 @@ feature {NONE} -- Basic operation
 						agent.call (tuple)
 					end
 				end
-			elseif n_args = 3
+			elseif n_args = 3 then
 					-- If we have a single INTEGER operand agent on EV_MULTI_COLUMN_LIST
 					-- we assume we have a row number in the first arg and we pass it.
 				mcl_int_agent ?= agent
@@ -308,6 +308,9 @@ end -- class EV_GTK_CALLBACK_MARSHAL
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/02/18 19:26:25  king
+--| Corrected changes to marshal
+--|
 --| Revision 1.5  2000/02/18 19:17:24  oconnor
 --| added experimental support for MCL data
 --|

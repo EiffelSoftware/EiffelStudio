@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 			button_make (button_name, a_parent);
 			set_symbol (cmd.symbol);
 			add_activate_action (cmd, cmd.tool);
-			initialize_focus (a_parent)
+			initialize_focus 
 		end;
 
 feature -- Access

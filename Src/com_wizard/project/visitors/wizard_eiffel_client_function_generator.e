@@ -341,22 +341,28 @@ feature {NONE} -- Implementation
 							visitor.is_interface or 
 							visitor.is_interface_pointer or 
 							visitor.is_coclass or 
-							visitor.is_coclass_pointer or 
+							visitor.is_coclass_pointer
+						then
+							feature_writer.add_local_variable 
+								(argument_item_name (arguments.item.name) +
+								": POINTER")
+
+							Result.append (check_interface_item (arguments.item.name))
+							if not is_interface_pointer then
+								feature_writer.add_local_variable ("a_stub: ECOM_STUB")
+								is_interface_pointer := True
+							end
+							tmp_string.append (argument_item_name (arguments.item.name))
+						elseif
 							visitor.is_structure_pointer or
 							visitor.is_structure 
 						then
-							if visitor.is_interface_pointer then
-								Result.append (check_interface_item (arguments.item.name))
-								if not is_interface_pointer then
-									feature_writer.add_local_variable ("a_stub: ECOM_STUB")
-									is_interface_pointer := True
-								end
-							end
 							tmp_string.append (arguments.item.name)
 							tmp_string.append (Item_function)
-						elseif is_paramflag_fin (arguments.item.flags) and
-								not is_paramflag_fout (arguments.item.flags) and
-								(is_hresult (visitor.vt_type) or is_error (visitor.vt_type))
+						elseif
+							is_paramflag_fin (arguments.item.flags) and
+							not is_paramflag_fout (arguments.item.flags) and
+							(is_hresult (visitor.vt_type) or is_error (visitor.vt_type))
 						then
 							tmp_string.append (arguments.item.name)
 							tmp_string.append (Item_function)
@@ -393,33 +399,59 @@ feature {NONE} -- Implementation
 			valid_name: not an_argument_name.empty
 		do
 			create Result.make (200)
+			Result.append ("if " + an_argument_name + " /= Void then")
+			Result.append (New_line_tab_tab_tab)
+			Result.append (tab)
+			
 			Result.append ("if (")
 			Result.append (an_argument_name)
 			Result.append (".item = default_pointer) then")
 			Result.append (New_line_tab_tab_tab)
-			Result.append (tab)
+			Result.append (tab_tab)
 
 			Result.append ("a_stub ?= ")
 			Result.append (an_argument_name)
 			Result.append (New_line_tab_tab_tab)
-			Result.append (tab)
+			Result.append (tab_tab)
 
 			Result.append ("if a_stub /= Void then")
 			Result.append (New_line_tab_tab_tab)
-			Result.append (tab_tab)
+			Result.append (tab_tab_tab)
 
 			Result.append ("a_stub.create_item")
+			Result.append (New_line_tab_tab_tab)
+			Result.append (tab_tab)
+
+			Result.append (End_keyword)
 			Result.append (New_line_tab_tab_tab)
 			Result.append (tab)
 
 			Result.append (End_keyword)
 			Result.append (New_line_tab_tab_tab)
-
+			Result.append (tab)
+			
+			Result.append (argument_item_name (an_argument_name) +
+							" := " + an_argument_name + ".item")
+			Result.append (New_line_tab_tab_tab)
 			Result.append (End_keyword)
 			Result.append (New_line_tab_tab_tab)
 		ensure
 			non_void_body: Result /= Void
 			valid_body: not Result.empty
+		end
+
+	argument_item_name (an_argument_name: STRING): STRING is
+			-- Argument item name.
+		require
+			non_void_name: an_argument_name /= Void
+			valid_name: not an_argument_name.empty
+		do
+			create Result.make (100)
+			Result.append (an_argument_name)
+			Result.append ("_item")
+		ensure
+			non_void_name: Result /= Void
+			valid_name: not Result.empty
 		end
 
 end -- class WIZARD_EIFFEL_CLIENT_FUNCTION_GENERATOR

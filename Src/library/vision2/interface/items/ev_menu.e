@@ -41,6 +41,7 @@ feature {NONE} -- Initialization
 		do
 			{EV_MENU_ITEM} Precursor
 			{EV_MENU_ITEM_LIST} Precursor
+			create item_select_actions
 		end
 
 feature -- Standard operations
@@ -62,11 +63,18 @@ feature -- Standard operations
 			end
 		end
 
+feature -- Event handling
+
+	item_select_actions: EV_MENU_ITEM_SELECT_ACTION_SEQUENCE
+			-- Actions to be performed when a menu item is selected.
+
 feature {EV_ANY_I} -- Implementation
 
 	implementation: EV_MENU_I	
 			-- Responsible for interaction with the native graphics toolkit.
 
+invariant
+	item_select_actions_not_void: is_useable implies item_select_actions /= Void
 end -- class EV_MENU
 
 --!-----------------------------------------------------------------------------
@@ -90,6 +98,9 @@ end -- class EV_MENU
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.24  2000/03/20 20:25:15  oconnor
+--| added item_select_actions
+--|
 --| Revision 1.23  2000/03/17 19:28:54  brendel
 --| Added interfaces for show and show_at.
 --|

@@ -9,7 +9,7 @@ indexing
 
 	description: "[
 		Class used to ensure proper precompilation of EiffelBase. 
-		Not to be used otherwise."
+		Not to be used otherwise.
 		]"
 
 	status: "See notice at end of class"

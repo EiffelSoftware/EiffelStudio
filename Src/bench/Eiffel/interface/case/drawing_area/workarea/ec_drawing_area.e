@@ -1550,15 +1550,12 @@ feature {CLUSTER_WINDOW_NAVIGATION_COM, WORKAREA_MOVE_DATA_COM} -- Implementatio
 
 invariant
 
-	has_select_command:		workarea_select_com /= void;
-	has_multi_select_command:		workarea_multiselect_com /= void;
-	has_show_focus_command:		workarea_show_focus_com /= void;
-	has_selected_figures_list:		selected_figures /= void;
-	has_class_figures_list:		class_list /= void;
-	has_icon_figures_list:		icon_list /= void;
-	has_cluster_figures_list:		cluster_list /= void;
-	has_inherit_links_list:		inherit_list /= void;
-	has_reference_links_list:		cli_sup_list /= void;
-	has_aggregation_links_list:		aggreg_list /= void;
+--	has_selected_figures_list:		selected_figures /= void;
+--	has_class_figures_list:		class_list /= void;
+--	has_icon_figures_list:		icon_list /= void;
+--	has_cluster_figures_list:		cluster_list /= void;
+--	has_inherit_links_list:		inherit_list /= void;
+--	has_reference_links_list:		cli_sup_list /= void;
+--	has_aggregation_links_list:		aggreg_list /= void;
 
 end -- class WORKAREA

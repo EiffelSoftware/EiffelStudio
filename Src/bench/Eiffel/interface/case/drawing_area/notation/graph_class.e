@@ -11,23 +11,24 @@ inherit
  
 	GRAPH_LINKABLE
 		rename
-			select_it as old_select,
-			unselect as old_unselect
+			title as class_name
 		redefine
-			data
-		end;
-	GRAPH_LINKABLE
-		redefine
-			unselect, select_it, data
-		select
-			unselect, select_it
-		end;
+			data,select_it,unselect
+		end
+
 	SINGLE_MATH
 		undefine
 			is_equal
 		end
 
 	CLASS_CONST
+		undefine
+			is_equal
+		end
+
+	OBSERVER
+		rename
+			update as observer_update
 		undefine
 			is_equal
 		end
@@ -48,7 +49,8 @@ feature {NONE} -- Initialization
 			i: INTEGER
 			interior: EC_INTERIOR
 		do
-			data := a_class;
+			data := a_class
+			observer_management.add_observer(data,Current)
 			data.set_color_name (resources.class_interior_color.name)
 			parent_group := graph_group;
 		
@@ -68,8 +70,9 @@ feature {NONE} -- Initialization
 				picture.set_foreground_color (Resources.class_color);
 				i := i+1
 			end;
-			!!class_name.make;
-			class_name.set_text (data.name);
+			!!class_name.make
+			observer_management.add_observer(data,class_name)
+			class_name.set_text (data.name)
 			class_name.set_font (Resources.class_name_font);
 			!! generic_param.make;
 			build_generics_text;
@@ -96,6 +99,15 @@ feature {NONE} -- Initialization
 		ensure
 			data_set: data = a_class
 		end -- make
+
+
+feature -- Updates
+
+	observer_update is
+		do
+			update_clip_area
+			workarea.refresh
+		end
 
 feature -- Properties
 
@@ -262,18 +274,18 @@ feature -- Output
 			-- Add this figure in `workarea.selected_figures'.
 			-- Draw this figure.
 		do
-			set_selected_style;
-			old_select
-		end;
+			set_selected_style
+			precursor
+		end
 
 	unselect is
 			-- Set `selected' to false.
 			-- Remove this figure in `workarea.selected_figures'.
 			-- Draw this figure.
 		do
-			set_unselected_style;
-			old_unselect
-		end;
+			set_unselected_style
+			precursor
+		end
 
 	invert_skeleton (painter: PATCH_PAINTER; relative_x, relative_y: INTEGER) is
 			-- Invert the class's skeleton.
@@ -307,7 +319,7 @@ feature {NONE} -- Implementation properties
 	segment: EC_SEGMENT;
 			-- Segment which indicate if the class is reused
 
-	class_name: EC_TEXT_FIG;
+	class_name: EC_TEXT_FIG
 			-- Text to write the class name
 
 	generic_param: EC_TEXT_FIG;

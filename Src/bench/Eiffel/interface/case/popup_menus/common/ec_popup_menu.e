@@ -22,7 +22,6 @@ feature -- Operations
 		local
 			clas_data: CLASS_DATA
 			r_data: RELATION_DATA
-		--	class_window: EC_CLASS_WINDOW
 			relation_window: EC_RELATION_WINDOW
 		do
 			clas_data ?= data

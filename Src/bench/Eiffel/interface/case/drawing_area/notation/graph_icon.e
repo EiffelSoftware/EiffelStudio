@@ -44,7 +44,8 @@ feature {NONE} -- Initialization
 			parent_group := graph_group;
 			!!center;
 			parent_group.icon_list.add_form (Current);
-			!!title.make;
+			!!title.make
+			observer_management.add_observer(data,title)
 			title.set_text (data.name);
 			title.set_font (Resources.cluster_name_font);
 			!!cluster_title.make;

@@ -31,7 +31,7 @@ feature -- Properties
 			Result := stone_types.feature_type_pnd
 		end
 
-	destroy_command: DESTROY_FEATURE is
+	destroy_command: DESTROY is --DESTROY_FEATURE is
 		do
 			--if data.class_container.is_in_system then
 			--	!! Result.make (data.class_container, 
@@ -93,14 +93,14 @@ feature -- Duplication
 	copy_data (a_stone: like Current) is
 			-- Copy `a_stone' data to Current;
 		local
-			a_data: DATA;
-			replace_command: REPLACE_DATA_U;
-			f_data: FEATURE_DATA
+		--	a_data: DATA;
+		--	replace_command: REPLACE_DATA_U;
+		--	f_data: FEATURE_DATA
 		do
-			f_data := data;
-			a_data := clone (a_stone.data);
-			!! replace_command.make (f_data.class_container,
-					f_data, a_data);
+		--	f_data := data;
+		--	a_data := clone (a_stone.data);
+		--	!! replace_command.make (f_data.class_container,
+		--			f_data, a_data);
 		end;
 
 feature -- Element change
@@ -111,8 +111,8 @@ feature -- Element change
 			valid_stone: a_stone /= Void;
 			--compatible: a_stone.stone_type = stone_type
 		local
-			swap: SWAP_FEATURE_ELEMENT_U;
-			features: FEATURE_LIST
+		--	swap: SWAP_FEATURE_ELEMENT_U;
+		--	features: FEATURE_LIST
 		do
 		--	if not data.class_container.is_in_server then
 		--		data.class_container.request_for_information

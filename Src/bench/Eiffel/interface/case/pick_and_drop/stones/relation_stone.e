@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 
 feature -- Properties
 
-	data: RELATION_DATA;
+	data: RELATION_DATA
 			-- Associated relation data
 
 	--stone_cursor: SCREEN_CURSOR is

@@ -320,41 +320,41 @@ feature
 			tmp : STRING
 			i : INTEGER
 		do
-			if cl.features/= Void then
-				quer := cl.features
-				!! str.make ( 30 )
-				from
-					quer.start
-					i := 0
-				until
-					quer.after
-				loop
-					!! tmp.make ( 20 )
-					if quer.item.has_result then
-						tmp.append (quer.item.name)
-						if i=3 then 
-							str.append("<BR>")
-							i := 0
-						else
-							if i>0 then
-								str.append(", ")
-							end
-						end
-					end
-					str.append ( tmp )
-					quer.forth
-					if tmp.count>0 then
-						i := i +1
-					end
-				end
-				if str.is_equal("") then
-					s.extend("No queries")
-				else
-					s.extend(str)
-				end
-			else
-				s.extend("No queries")
-			end
+		--	if cl.features/= Void then
+		--		quer := cl.features
+		--		!! str.make ( 30 )
+		--		from
+		--			quer.start
+		--			i := 0
+		--		until
+		--			quer.after
+		--		loop
+		--			!! tmp.make ( 20 )
+		--			if quer.item.has_result then
+		--				tmp.append (quer.item.name)
+		--				if i=3 then 
+		--					str.append("<BR>")
+		--					i := 0
+		--				else
+		--					if i>0 then
+		--						str.append(", ")
+		--					end
+		--				end
+		--			end
+		--			str.append ( tmp )
+		--			quer.forth
+		--			if tmp.count>0 then
+		--				i := i +1
+		--			end
+		--		end
+		--		if str.is_equal("") then
+		--			s.extend("No queries")
+		--		else
+		--			s.extend(str)
+		--		end
+		--	else
+		--		s.extend("No queries")
+		--	end
 		end
 
 	generate_commands(cl : class_data ; s: LINKED_LIST [ STRING ] ) is 
@@ -365,41 +365,41 @@ feature
 			tmp : STRING
 			i : INTEGER
 		do
-			if cl.features/= Void then
-				quer := cl.features
-				!! str.make ( 30 )
-				from
-					quer.start
-					i := 0
-				until
-					quer.after
-				loop
-					!! tmp.make ( 20 )
-					if not (quer.item.has_result) then
-						tmp.append (quer.item.name)
-						if i=3 then 
-							str.append("<BR>")
-							i := 0
-						else
-							if i>0 then
-								str.append(", ")
-							end
-						end
-					end
-					str.append ( tmp )
-					quer.forth
-					if tmp.count>0 then
-						i := i +1
-					end
-				end
-				if str.is_equal("") then
-					s.extend("No commands")
-				else
-					s.extend(str)
-				end
-			else
-				s.extend("No commands")
-			end
+			--if cl.features/= Void then
+			--	quer := cl.features
+			--	!! str.make ( 30 )
+			--	from
+			--		quer.start
+			--		i := 0
+			--	until
+			--		quer.after
+			--	loop
+			--		!! tmp.make ( 20 )
+			--		if not (quer.item.has_result) then
+			--			tmp.append (quer.item.name)
+			--			if i=3 then 
+			--				str.append("<BR>")
+			--				i := 0
+			--			else
+			--				if i>0 then
+			--					str.append(", ")
+			--				end
+			--			end
+			--		end
+			--		str.append ( tmp )
+			--		quer.forth
+			--		if tmp.count>0 then
+			--			i := i +1
+			--		end
+			--	end
+			--	if str.is_equal("") then
+			--		s.extend("No commands")
+			--	else
+			--		s.extend(str)
+			--	end
+			--else
+			--	s.extend("No commands")
+			--end
 		end
 
 		generate_constraints(cl : class_data ; s: LINKED_LIST [ STRING ] ) is 
@@ -407,29 +407,29 @@ feature
 			invar : ELEMENT_LIST [ INVARIANT_DATA ]
 			str : STRING
 		do
-			if cl.content/= Void and then
-				cl.content.invariants/= Void and then
-			 	cl.content.invariants.count>0 then
-						invar := cl.content.invariants
-						if invar.count>0 then
-							!! str.make ( 30 )
-							if invar.i_th(1).assertion_clause/=Void then
-								str.append ( invar.i_th(1).assertion_clause )
-								if invar.count>1 then
-									str.append ("<BR>")
-									if invar.i_th(2).assertion_clause/= Void then
-										str.append ( invar.i_th(2).assertion_clause )
-									end
-								end
-							end
-							if invar.count>2 then
-								str.append (" ... ")
-							end
-							s.extend(str)
-						end
-			else
-				s.extend("No invariants")
-			end
+		--	if cl.content/= Void and then
+		--		cl.content.invariants/= Void and then
+		--	 	cl.content.invariants.count>0 then
+		--				invar := cl.content.invariants
+		--				if invar.count>0 then
+		--					!! str.make ( 30 )
+		--					if invar.i_th(1).assertion_clause/=Void then
+		--						str.append ( invar.i_th(1).assertion_clause )
+		--						if invar.count>1 then
+		--							str.append ("<BR>")
+		--							if invar.i_th(2).assertion_clause/= Void then
+		--								str.append ( invar.i_th(2).assertion_clause )
+		--							end
+		--						end
+		--					end
+		--					if invar.count>2 then
+		--						str.append (" ... ")
+		--					end
+		--					s.extend(str)
+		--				end
+		--	else
+		--		s.extend("No invariants")
+		--	end
 		end
 
 

@@ -640,10 +640,10 @@ feature {NONE} -- Implementation
 	set_color is
 			-- Set the color to the current link.
 		do
-			clientele_set_color;
+			clientele_set_color
 			if is_shared then
-				shared_circle.set_color (data.color);
-			end;
-		end;
+				shared_circle.set_color (data.color)
+			end
+		end
 
 end -- class GRAPH_CLI_SUP

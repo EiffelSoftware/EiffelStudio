@@ -42,7 +42,11 @@ feature -- Properties
 	bottom_right: EC_COORD_XY is
 			-- figure bottom right poiont.
 		deferred
-		end; 
+		end 
+
+	title: EC_TEXT_FIG is 
+		deferred 
+		end
 
 	sort_node: GRAPH_SORT_NODE is
 			-- Sort node for current
@@ -58,7 +62,7 @@ feature -- Properties
 	stone: STONE is
 		do
 			Result := data.stone
-		end;
+		end
 
 feature -- Access
 

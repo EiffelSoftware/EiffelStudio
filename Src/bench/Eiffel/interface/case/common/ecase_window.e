@@ -19,13 +19,13 @@ inherit
 
 	CONSTANTS
 
+	OBSERVER
+
 feature -- Callbacks
 
 	--execute ( arg: EV_ARGUMENT2[ECASE_WINDOW,INTEGER]; data: EV_EVENT_DATA) is
 	--	deferred
 	--	end
-
-	update is deferred end
 
 	cancel( arg: EV_ARGUMENT; data: EV_EVENT_DATA) is do end
 

@@ -56,8 +56,8 @@ feature {NONE} -- Initialization
 				create grid.make (Current)
 
 			--	!! resize_coin.make (Current)
-			--	!! to_refresh.make
-			--	!! refresh_upper_left
+				!! to_refresh.make
+				!! refresh_upper_left.make
 				!! refresh_clip.make	
 	
 				-- Initialize the commands.
@@ -178,7 +178,7 @@ feature -- components
 	inverted_painter: PATCH_PAINTER;
 		-- Painer
 
-	--refresh_upper_left: COORD_XY;
+	refresh_upper_left: EV_COORDINATES
 		-- Upper left corner of closure to be refreshed
 
 	refresh_clip: EV_CLIP
@@ -727,12 +727,12 @@ feature {WORKAREAS_L} -- Update
 			-- Change the color of data
 			-- in the workarea.
 		local
-			a_graph_form: GRAPH_FORM;
+			a_graph_form: GRAPH_FORM
 		do
-			a_graph_form := find (a_data);
+			a_graph_form := find (a_data)
 			if a_graph_form /= Void then
-				a_graph_form.set_color;
-				a_graph_form.update_clip_area;
+				a_graph_form.set_color
+				a_graph_form.update_clip_area
 			end
 		end;
 
@@ -740,14 +740,14 @@ feature {NONE} -- Update
 
 	change_for_existing_form (a_form: GRAPH_FORM) is
 			-- Update current workarea for modified 
-			-- graph_form -- `a_form'.
+			-- graph_form.
 		require
 			a_form /= Void
 		local
 			graph_linkable: GRAPH_LINKABLE;
 		do
-			a_form.update;
-			graph_linkable ?= a_form;
+			a_form.update
+			graph_linkable ?= a_form
 			if graph_linkable /= Void then
 				if graph_linkable.data.visible_descendant_of (data) then
 					inherit_list.update_form_if_associated_with 
@@ -763,9 +763,9 @@ feature {NONE} -- Update
 							(graph_linkable, System.is_client_hidden)
 					aggreg_list.erase_form_if_associated_with
 							(graph_linkable, System.is_aggreg_hidden)
-				end;
+				end
 			end
-		end; 
+		end
 
 	change_for_new_data (a_data: DATA) is
 			-- Update current workarea after insertion of a new data
@@ -778,19 +778,19 @@ feature {NONE} -- Update
 			an_inherit_link: INHERIT_DATA;
 			a_client_link: CLI_SUP_DATA		
 		do
-			a_class ?= a_data;
-			a_cluster ?= a_data;
-			an_inherit_link ?= a_data;
-			a_client_link ?= a_data;
+			a_class ?= a_data
+			a_cluster ?= a_data
+			an_inherit_link ?= a_data
+			a_client_link ?= a_data
 			if a_class /= Void then 
-				new_class (a_class);
+				new_class (a_class)
 					-- Draw all links going into/from class data
 				if find_class (a_class) /= Void then
 					add_inherit_links_in_list (a_class.extern_inherit_links, false);
 					add_cli_sup_links_in_list (a_class.extern_client_links, false);
 				end
 			elseif a_cluster /= Void then
-				new_cluster (a_cluster);
+				new_cluster (a_cluster)
 				if find_cluster (a_cluster) /= Void or else
 					find_icon (a_cluster) /= Void
 				then
@@ -823,16 +823,16 @@ feature -- Class management
 		require
 			valid_class: a_class /= Void
 		local
-			new_graph_class: GRAPH_CLASS;
+			new_graph_class: GRAPH_CLASS
 			new_group_parent: GRAPH_GROUP
 		do
 			if not a_class.is_hidden then
-				new_group_parent := find_graph_group (a_class.parent_cluster);
+				new_group_parent := find_graph_group (a_class.parent_cluster)
 				if new_group_parent /= void then
-					!! new_graph_class.make (a_class, new_group_parent);
-				end;
-			end;
-		end; 
+					!! new_graph_class.make (a_class, new_group_parent)
+				end
+			end
+		end
 
 	destroy_class (old_class: CLASS_DATA) is
 			-- Update workareas after the suppression of an old class
@@ -841,14 +841,14 @@ feature -- Class management
 		local
 			old_graph_class: GRAPH_CLASS
 		do
-			old_graph_class := find_class (old_class);
+			old_graph_class := find_class (old_class)
 			if old_graph_class /= void then
-				old_graph_class.destroy;
+				old_graph_class.destroy
 				old_graph_class.parent_group.class_list.remove_form
-								(old_graph_class);
-				selected_figures.remove_form (old_graph_class);
-			end;
-		end; 
+								(old_graph_class)
+				selected_figures.remove_form (old_graph_class)
+			end
+		end 
 
 feature -- Cluster management
 
@@ -1429,10 +1429,10 @@ feature -- Output
 			list: LINKED_LIST [EC_DOUBLE_LINE]
 		do
 			!! clip_closure.make;
-			--clip_closure.set (refresh_clip.upper_left.x, 
-			--		refresh_clip.upper_left.y,
-			--		refresh_clip.width, 
-			--		refresh_clip.height);
+			clip_closure.set (refresh_clip.upper_left.x, 
+					refresh_clip.upper_left.y,
+					refresh_clip.width, 
+					refresh_clip.height);
 
 			if grid /= Void then
 				grid.draw_in (clip_closure);
@@ -1547,27 +1547,27 @@ feature -- Output
 		local
 			w, h: INTEGER
 		do
-		--	if not to_refresh.empty then
+			if not to_refresh.empty then
 
-				--	if refresh_clip.upper_left /= Void then
-				--		inverted_painter.draw_rectangle (refresh_clip.upper_left.x - 2, refresh_clip.upper_left.y -2, refresh_clip.width +4, refresh_clip.height+4)
-				--	end
+					if refresh_clip.upper_left /= Void then
+						inverted_painter.draw_rectangle (refresh_clip.upper_left.x - 2, refresh_clip.upper_left.y -2, refresh_clip.width +4, refresh_clip.height+4)
+					end
 
-		--		refresh_upper_left.set (to_refresh.up_left_x - 1,
-		--				to_refresh.up_left_y - 1);
-		--		w := to_refresh.down_right_x - to_refresh.up_left_x + 2;
-		--		h := to_refresh.down_right_y - to_refresh.up_left_y + 2;
-		--		if w > 0 and then h > 0 then
-		--			refresh_clip.set (refresh_upper_left, w, h);
-				--	set_clip (refresh_clip);
-					display;
-				--	set_no_clip;
-		--			to_refresh.wipe_out;
-		--			debug ("DRAWING")
-		--				inverted_painter.draw_rectangle (refresh_clip.upper_left.x -2, refresh_clip.upper_left.y -2, refresh_clip.width+4, refresh_clip.height+4)
-		--			end;
-		--		end;
-		--	end
+				refresh_upper_left.set (to_refresh.up_left_x - 1,
+						to_refresh.up_left_y - 1);
+				w := to_refresh.down_right_x - to_refresh.up_left_x + 2;
+				h := to_refresh.down_right_y - to_refresh.up_left_y + 2;
+				if w > 0 and then h > 0 then
+					refresh_clip.set (refresh_upper_left, w, h);
+					--set_clip (refresh_clip);
+					display
+					--set_no_clip;
+					to_refresh.wipe_out;
+					debug ("DRAWING")
+						inverted_painter.draw_rectangle (refresh_clip.upper_left.x -2, refresh_clip.upper_left.y -2, refresh_clip.width+4, refresh_clip.height+4)
+					end;
+				end;
+			end
 		end
 
 feature -- Selection management
@@ -1616,6 +1616,6 @@ invariant
 	has_inherit_links_list:		inherit_list /= void
 	has_reference_links_list:		cli_sup_list /= void
 	has_aggregation_links_list:	aggreg_list /= void
-	area_navigation_exists: 		area_navigation /= Void
+	--area_navigation_exists: 		area_navigation /= Void
 
 end -- class WORKAREA

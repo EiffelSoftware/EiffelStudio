@@ -64,8 +64,8 @@ feature -- Implementation
 	fill_menu is
 		local
 			com: EV_ROUTINE_COMMAND
-			default_command: IMPORT_INDEXING_COM
-			browse_command: IMPORT_INDEXING_COM
+		--	default_command: IMPORT_INDEXING_COM
+		--	browse_command: IMPORT_INDEXING_COM
 		--	chart_command: SHOW_CLASS_CHART
 		--	specification_command: SHOW_CLASS_CHART
 		--	eiffel_code_command: SHOW_CLASS_CODE

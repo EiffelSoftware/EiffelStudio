@@ -162,10 +162,10 @@ feature -- Access
 			
 invariant
 
-	not (upper_left = Void);
-	not (pixmap = Void);
+	--not (upper_left = Void);
+	--not (pixmap = Void);
 	--pixmap.is_valid implies pixmap.depth <= 2;
-	not (foreground_color = Void);
-	not (background_color = Void)
+	--not (foreground_color = Void);
+	--not (background_color = Void)
 
 end -- class EC_PICTURE

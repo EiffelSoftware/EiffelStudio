@@ -52,7 +52,8 @@ feature {NONE} -- Initialization
 			parent_group.cluster_list.add_form (Current);
 			!!closure.make;
 			!!cluster_title.make;
-			!!title.make;
+			!!title.make
+			observer_management.add_observer(data,title)
 			!!cluster_path.make;
 			!!interior.make;
 			cluster_path.set_line_width (2);
@@ -256,13 +257,13 @@ feature -- Output
 	draw is
 			-- Display cluster in analysis view.
 		do
-			cluster_title.draw;
-			title.draw;
-			cluster.draw;
-			cluster_list.draw_in (closure);
-			class_list.draw_in (closure);
-			icon_list.draw_in (closure);
-		end; 
+			cluster_title.draw
+			title.draw
+			cluster.draw
+			cluster_list.draw_in (closure)
+			class_list.draw_in (closure)
+			icon_list.draw_in (closure)
+		end 
 
 	draw_in (clip_closure: EC_CLOSURE) is
 			-- Draw cluster if in `clip_closure'.
@@ -285,26 +286,26 @@ feature -- Output
 		local
 			cluster_title_interior, cluster_interior : EC_INTERIOR
 		do
-			cluster_title_interior := cluster_title.interior;
-			cluster_interior := cluster.interior;
-			cluster_title.set_interior (Void);
-			cluster.set_interior (Void);
-			cluster_title.draw;
-			cluster.draw;
-			cluster_title.set_interior (cluster_title_interior);
+			cluster_title_interior := cluster_title.interior
+			cluster_interior := cluster.interior
+			cluster_title.set_interior (Void)
+			cluster.set_interior (Void)
+			cluster_title.draw
+			cluster.draw
+			cluster_title.set_interior (cluster_title_interior)
 			cluster.set_interior (cluster_interior)
 		end;
 
 	erase_drawing is
 			-- Erase current figure.
 		do
-			erase_rectangle.draw;
-			erase_rectangle_title.draw;
+			erase_rectangle.draw
+			erase_rectangle_title.draw
 				-- This was done for figures on the cluster border 
 				-- so it is erased correctly.
-			cluster_list.erase_if_not_in (erase_rectangle.closure);
-			class_list.erase_if_not_in (erase_rectangle.closure);
-			icon_list.erase_if_not_in (erase_rectangle.closure);
+			cluster_list.erase_if_not_in (erase_rectangle.closure)
+			class_list.erase_if_not_in (erase_rectangle.closure)
+			icon_list.erase_if_not_in (erase_rectangle.closure)
 		end;
 
 	update_title is
@@ -503,41 +504,41 @@ feature -- Update
 	update_lists is
 			-- Update `cluster_list', `class_list' and 'icon_list'
 		local
-			new_graph_class: GRAPH_CLASS;
+			new_graph_class: GRAPH_CLASS
 			classes: LINKED_LIST [ CLASS_DATA ]
 			clusters: LINKED_LIST [ CLUSTER_DATA ]
-			new_graph_cluster: GRAPH_CLUSTER;
-			new_graph_icon: GRAPH_ICON;
+			new_graph_cluster: GRAPH_CLUSTER
+			new_graph_icon: GRAPH_ICON
 			cluster_data: CLUSTER_DATA
 		do
-			class_list.wipe_out;
-			classes := data.classes;
+			class_list.wipe_out
+			classes := data.classes
 			from
 				classes.start
 			until
 				classes.after
 			loop
 				if not classes.item.is_hidden then
-					!!new_graph_class.make (classes.item, Current);
-				end;
+					!!new_graph_class.make (classes.item, Current)
+				end
 				classes.forth
-			end;
-			cluster_list.wipe_out;
-			icon_list.wipe_out;
-			clusters := data.clusters;
+			end
+			cluster_list.wipe_out
+			icon_list.wipe_out
+			clusters := data.clusters
 			from
 				clusters.start
 			until
 				clusters.after
 			loop
-				cluster_data := clusters.item;
+				cluster_data := clusters.item
 				if not cluster_data.is_hidden then
 					if cluster_data.is_icon then
-						!!new_graph_icon.make (cluster_data, Current);
+						!!new_graph_icon.make (cluster_data, Current)
 					else
-						!!new_graph_cluster.make (cluster_data, Current);
+						!!new_graph_cluster.make (cluster_data, Current)
 					end
-				end;
+				end
 				clusters.forth
 			end
 		end; 
@@ -670,15 +671,15 @@ feature {NONE} -- Implementation
 	recompute_closure is
 			-- Recalculate closure.
 		do
-			closure.wipe_out;
-			erase_rectangle.recompute_closure;
-			closure.merge (erase_rectangle.closure);
-			recompute_title_closure;	
+			closure.wipe_out
+			erase_rectangle.recompute_closure
+			closure.merge (erase_rectangle.closure)
+			recompute_title_closure	
 				-- This was done for figures on the cluster border 
 				-- so it is erased correctly.
-			cluster_list.merge_closure (closure);
-			class_list.merge_closure (closure);
-			icon_list.merge_closure (closure);
+			cluster_list.merge_closure (closure)
+			class_list.merge_closure (closure)
+			icon_list.merge_closure (closure)
 		end -- recompute_closure
 
 	recompute_title_closure is

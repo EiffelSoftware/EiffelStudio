@@ -8,7 +8,7 @@ class
 
 feature
 
-generate_indexing ( cl : LINKABLE_DATA ; s: LINKED_LIST [ STRING ] ) is
+	generate_indexing ( cl : LINKABLE_DATA ; s: LINKED_LIST [ STRING ] ) is
 	local
 		list : ELEMENT_LIST [ INDEX_DATA ]
 		fi : FILE_NAME
@@ -16,22 +16,22 @@ generate_indexing ( cl : LINKABLE_DATA ; s: LINKED_LIST [ STRING ] ) is
 		st : STRING
 		i : INTEGER
 	do
-			if cl.chart /= Void and then
-				cl.chart.indexes/= Void and then 
-				cl.chart.indexes.count>0 then
-					list := cl.chart.indexes
-					from
-						list.start
-					until
-						list.after
-					loop
-						s.extend(list.item.clickable_string)
-						s.extend("<BR>")
-						list.forth
-					end
-			else
-				s.extend("??")
-			end
+		--	if cl.chart /= Void and then
+		--		cl.chart.indexes/= Void and then 
+		--		cl.chart.indexes.count>0 then
+		--			list := cl.chart.indexes
+		--			from
+		--				list.start
+		--			until
+		--				list.after
+		--			loop
+		--				s.extend(list.item.clickable_string)
+		--				s.extend("<BR>")
+		--				list.forth
+		--			end
+		--	else
+		--		s.extend("??")
+		--	end
 	end
 
 	generate_description ( desc : DESCRIPTION_DATA; s : 

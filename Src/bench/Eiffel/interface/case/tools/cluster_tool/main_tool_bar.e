@@ -77,6 +77,9 @@ feature -- Settings
 			!! com1.make(~drag_class)
 			class_hole_b.activate_pick_and_drop (com1,Void)
 
+			!! iconify_hole_b.make(tool_bar)
+			iconify_hole_b.set_pixmap(pixmaps.iconize_pixmap)
+
 			!! com1.make(~select_cluster)
 			!! cluster_selected_b.make(tool_bar, pixmaps.selected_cluster_pixmap, com1, com2)
 

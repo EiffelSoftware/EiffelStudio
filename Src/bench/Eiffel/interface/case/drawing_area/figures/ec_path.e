@@ -9,12 +9,18 @@ class EC_PATH
 
 inherit
 
-	EC_LOGICAL;
-	EC_CHILD_CLIP;
-	EC_DASHABLE;
-	EC_FILLABLE;
-	EC_FOREGROUND;
-	EC_BACKGROUND;
+	EC_LOGICAL
+
+	EC_CHILD_CLIP
+
+	EC_DASHABLE
+
+	EC_FILLABLE
+
+	EC_FOREGROUND
+
+	EC_BACKGROUND
+
 	EC_LINE_WIDTH
 
 creation
@@ -26,11 +32,12 @@ feature -- Initialization
 	make is
 			-- Create a path
 		do
-			!! dash_pattern.make;
-			dash_pattern.extend (4);
-			dash_pattern.extend (4);
-			logical_function_mode := GXcopy;
+			!! dash_pattern.make
+			dash_pattern.extend (4)
+			dash_pattern.extend (4)
+			logical_function_mode := GXcopy
 			!! foreground_color.make
+			line_width := 1
 		end -- make
 
 feature {EC_FIGURE} -- Implementation
@@ -40,11 +47,11 @@ feature {EC_FIGURE} -- Implementation
 		require
 			drawing_exists: not (drawing = Void)
 		do
-			drawing.set_logical_mode (logical_function_mode);
-			--drawing.set_subwindow_mode (subwindow_mode);
-			drawing.set_line_width (line_width);
-			--drawing.set_line_style (line_style);
-			--drawing.set_fill_style (fill_style);
+			drawing.set_logical_mode (logical_function_mode)
+			--drawing.set_subwindow_mode (subwindow_mode)
+			drawing.set_line_width (line_width)
+			--drawing.set_line_style (line_style)
+			--drawing.set_fill_style (fill_style)
 			if fill_style = FillTiled then
 				--drawing.set_tile (tile)
 			else

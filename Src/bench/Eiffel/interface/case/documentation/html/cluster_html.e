@@ -470,7 +470,7 @@ feature
 	generate_heir ( cl : CLUSTER_DATA; s : LINKED_LIST[STRING]) is
 		-- generate heir clusters
 	local
-		list : CLUSTER_LIST
+		list : LINKED_LIST [CLUSTER_DATA]
 		fi : FILE_NAME
 		str,s0 : STRING
 	do
@@ -512,7 +512,7 @@ feature
 
 	generate_class ( cl : CLUSTER_DATA; s : LINKED_LIST[STRING]) is
 	local
-		list : CLASS_LIST
+		list: LINKED_LIST[CLASS_DATA]
 		fi : FILE_NAME
 		str,s0 : STRING
 	

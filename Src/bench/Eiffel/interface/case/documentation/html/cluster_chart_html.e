@@ -194,60 +194,60 @@ feature
 		st,s0 : STRING
 		i : INTEGER
 	do
-			if (cl.content /= Void ) and (cl.content.classes/= Void or cl.content.clusters/= Void )then
-				!! list.make
-				if cl.content.classes/= Void then
-					list.append(cl.content.classes)
-				end
-				if cl.content.clusters/= Void then
-					list.append(cl.content.clusters)
-				end
-				from 
-					list.start
-				until
-					list.after
-				loop
-					!! str.make(20)
-					!! s0.make(20) 
-					!! st.make ( 20 )
-					st := deep_clone ( line )
-					str.append("<A HREF=%"")
-					--fi.extend(Environment.html_directory)
-					s0.append("../")
-					if list.item.is_cluster then
-						s0.append(list.item.name)
-					else
-						s0.append(list.item.parent_cluster.name)
-					end
-					s0.append("/")
-					s0.append(list.item.name)
-					str.append(s0)
-					str.append("_chart_cas.html")
-					str.append("%">")
-					if list.item.is_cluster then
-						str.append("(")
-					end			
-					str.append(list.item.name)
-					if list.item.is_cluster then
-						str.append(")")
-					end
-					str.append("</A>")
-					i := line.substring_index ("...", 0 )
-					st.replace_substring(str,i,i+2)
-					if list.item.description/= Void then
-						i := st.substring_index ("...", 0 )
-						str := list.item.description.text_value
-						if str.is_equal("<<description>>") then
-							st.replace_substring("?? ", i, i+2 )
-						else
-							str.replace_substring_all("%N","<BR>")
-							st.replace_substring(str, i, i+2)
-						end
-					end
-					s.extend ( st )
-					list.forth
-				end
-		end
+		--	if (cl.content /= Void ) and (cl.content.classes/= Void or cl.content.clusters/= Void )then
+		--		!! list.make
+		--		if cl.content.classes/= Void then
+		--			list.append(cl.content.classes)
+		--		end
+		--		if cl.content.clusters/= Void then
+		--			list.append(cl.content.clusters)
+		--		end
+		--		from 
+		--			list.start
+		--		until
+		--			list.after
+		--		loop
+		--			!! str.make(20)
+		--			!! s0.make(20) 
+		--			!! st.make ( 20 )
+		--			st := deep_clone ( line )
+		--			str.append("<A HREF=%"")
+		--			--fi.extend(Environment.html_directory)
+		--			s0.append("../")
+		--			if list.item.is_cluster then
+		--				s0.append(list.item.name)
+		--			else
+		--				s0.append(list.item.parent_cluster.name)
+		--			end
+		--			s0.append("/")
+		--			s0.append(list.item.name)
+		--			str.append(s0)
+		--			str.append("_chart_cas.html")
+		--			str.append("%">")
+		--			if list.item.is_cluster then
+		--				str.append("(")
+		--			end			
+		--			str.append(list.item.name)
+		--			if list.item.is_cluster then
+		--				str.append(")")
+		--			end
+		--			str.append("</A>")
+		--			i := line.substring_index ("...", 0 )
+		--			st.replace_substring(str,i,i+2)
+		--			if list.item.description/= Void then
+		--				i := st.substring_index ("...", 0 )
+		--				str := list.item.description.text_value
+		--				if str.is_equal("<<description>>") then
+		--					st.replace_substring("?? ", i, i+2 )
+		--				else
+		--					str.replace_substring_all("%N","<BR>")
+		--					st.replace_substring(str, i, i+2)
+		--				end
+		--			end
+		--			s.extend ( st )
+		--			list.forth
+		--		end
+		--end
 	end
 
 end -- class CLUSTER_HTML

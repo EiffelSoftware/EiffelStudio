@@ -134,48 +134,48 @@ feature -- generation
 			stl,str,s0 : STRING
 			fi : FILE_NAME
 		do
-			if sys.classes_in_system/= Void or error then
-				from
-					li := sys.classes_in_system
-					li.start
-					!! stl.make (20 )
-				until
-					li.after
-				loop
-				--	stl:= deep_clone (line )
-					i := line.substring_index ("...", 0 )
-					!! str.make ( 20 )
-					!! s0.make (20)
-					s0.append("../")
-					s0.append(li.item.parent_cluster.name)
-					s0.append("/")
-					s0.append(li.item.name)
-					str.append("<A HREF=%"")
-					str.append(s0)
-					str.append("_chart_cas.html")
-					str.append("%">")			
-					str.append(li.item.name)
-					str.append("</A>")
-					st.extend ( line.substring(1, i-1 ))
-					st.extend( "%N")
-					st.extend(str)
-					i2 := line.substring_index ("...", i+3 )
-					stl := line.substring(i+3, i2-1) 
-					st.extend((line.substring(i+3, i2-1) ))
-					st.extend("%N")
-					generate_description ( li.item.description, st )
-					i := line.substring_index ("...", i2+3 )
-					st.extend((line.substring(i2+3, i-1)))
-					st.extend("<BR>")
-					generate_parent_cluster(li.item, st, TRUE )
-					st.extend(line.substring (i+3, line.count ))
-					st.extend("%N")
-					li.forth
-				end
-			end
-			rescue
-				error := TRUE 
-				retry
+			--if sys.classes_in_system/= Void or error then
+			--	from
+			--		li := sys.classes_in_system
+			--		li.start
+			--		!! stl.make (20 )
+			--	until
+			--		li.after
+			--	loop
+			--	--	stl:= deep_clone (line )
+			--		i := line.substring_index ("...", 0 )
+			--		!! str.make ( 20 )
+			--		!! s0.make (20)
+			--		s0.append("../")
+			--		s0.append(li.item.parent_cluster.name)
+			--		s0.append("/")
+			--		s0.append(li.item.name)
+			--		str.append("<A HREF=%"")
+			--		str.append(s0)
+			--		str.append("_chart_cas.html")
+			--		str.append("%">")			
+			--		str.append(li.item.name)
+			--		str.append("</A>")
+			--		st.extend ( line.substring(1, i-1 ))
+			--		st.extend( "%N")
+			--		st.extend(str)
+			--		i2 := line.substring_index ("...", i+3 )
+			--		stl := line.substring(i+3, i2-1) 
+			--		st.extend((line.substring(i+3, i2-1) ))
+			--		st.extend("%N")
+			--		generate_description ( li.item.description, st )
+			--		i := line.substring_index ("...", i2+3 )
+			--		st.extend((line.substring(i2+3, i-1)))
+			--		st.extend("<BR>")
+			--		generate_parent_cluster(li.item, st, TRUE )
+			--		st.extend(line.substring (i+3, line.count ))
+			--		st.extend("%N")
+			--		li.forth
+			--	end
+			--end
+			--rescue
+			--	error := TRUE 
+			--	retry
 		end
 
 end -- class DICO_HTML

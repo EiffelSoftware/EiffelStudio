@@ -9,8 +9,8 @@ class
 
 inherit
 	EC_TOOL
-		rename
-			execute as generate
+		--rename
+			--execute as generate
 		redefine
 			make,
 			global_container ,
@@ -33,24 +33,24 @@ feature -- Initialization
 			precursor ( par )
 			prepare_exit(Current)
 			set_title("HTML Generation")
-			Windows_manager.html_list.extend(Current)
+		--	Windows_manager.html_list.extend(Current)
 
-			!! component_list.make
-			!! menu.make (Current )
+		--	!! component_list.make
+		--	!! menu.make (Current )
 			
-			!! global_container.make ( Current )
-			global_container.set_homogeneous(FALSE)
-			global_container.set_spacing(10)
+		--	!! global_container.make ( Current )
+		--	global_container.set_homogeneous(FALSE)
+		--	global_container.set_spacing(10)
 
-			!! path_component.make(global_container,Current)
+		--	!! path_component.make(global_container,Current)
 
-			!! format_component.make(global_container, Current)
+		--	!! format_component.make(global_container, Current)
 	
-			!! sep.make(global_container)
+		--	!! sep.make(global_container)
 
-			!! progress_bar.make_with_text(global_container,"HTML Generation Status: ")
-			!! exec_toolbar.make(Current)
-			show
+		--	!! progress_bar.make_with_text(global_container,"HTML Generation Status: ")
+		--	!! exec_toolbar.make(Current)
+		--	show
 		end
 
 feature -- Graphical Implementation
@@ -84,8 +84,11 @@ feature -- Callbacks
 		local
 			generate_classes_html : GENERATE_CLASSES_HTML
 		do
-			Environment.set_html_dir("d:\pascalf\new")
-			!! generate_classes_html.make(Current)
+		--	Environment.set_html_dir("d:\pascalf\new")
+		--	!! generate_classes_html.make(Current)
 		end
+
+
+	get_width_name, get_height_name: STRING is do end
 
 end -- class HTML_WINDOW

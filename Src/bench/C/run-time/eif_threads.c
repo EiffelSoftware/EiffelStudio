@@ -159,6 +159,9 @@ rt_public void eif_thr_init_root(void)
 	EIF_LW_MUTEX_CREATE(eif_gc_mutex, "Couldn't create GC mutex");
 	EIF_LW_MUTEX_CREATE(eif_gc_set_mutex, "Couldn't create GC set mutex");
 	EIF_LW_MUTEX_CREATE(eif_gc_gsz_mutex, "Couldn't create GSZ mutex");
+	EIF_LW_MUTEX_CREATE(eif_free_list_mutex, "Couldn't create free list mutex");
+	EIF_LW_MUTEX_CREATE(eiffel_usage_mutex, "Couldn't create eiffel_usage mutex");
+	EIF_LW_MUTEX_CREATE(trigger_gc_mutex, "Couldn't create trigger gc mutex");
 #endif
 	EIF_LW_MUTEX_CREATE(eif_thread_launch_mutex, "Cannot create mutex for thread launcher\n");
 	EIF_LW_MUTEX_CREATE(eif_except_lock, "Couldn't create exception lock");
@@ -175,6 +178,33 @@ rt_public void eif_thr_init_root(void)
 		yield_address = GetProcAddress (kernel_module, "SwitchToThread");
 	}
 #endif
+}
+
+/*
+doc:	<routine name="eif_thread_cleanup" export="shared">
+doc:		<summary>To cleanup thread runtime data such as mutexes used for synchronization of CECIL, memory and GC.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None required</synchronization>
+doc:	</routine>
+*/
+
+rt_shared void eif_thread_cleanup (void)
+{
+#ifdef ISE_GC
+	EIF_LW_MUTEX_DESTROY(eif_gc_mutex, "Could not destroy mutex");
+	EIF_LW_MUTEX_DESTROY(eif_gc_set_mutex, "Could not destroy mutex");
+	EIF_LW_MUTEX_DESTROY(eif_gc_gsz_mutex, "Could not destroy mutex");
+	EIF_LW_MUTEX_DESTROY(eif_free_list_mutex, "Could not destroy mutex");
+	EIF_LW_MUTEX_DESTROY(eiffel_usage_mutex, "Could not destroy mutex");
+	EIF_LW_MUTEX_DESTROY(trigger_gc_mutex, "Could not destroy mutex");
+#endif
+	EIF_LW_MUTEX_DESTROY(eif_thread_launch_mutex, "Could not destroy mutex");
+	EIF_LW_MUTEX_DESTROY(eif_except_lock, "Could not destroy mutex");
+	EIF_LW_MUTEX_DESTROY(eif_memory_mutex, "Could not destroy mutex");
+	EIF_MUTEX_DESTROY(eif_global_once_mutex, "Could not destroy mutex");
+
+	EIF_TSD_DESTROY(eif_global_key, "Could not free key");
+	EIF_TSD_DESTROY(rt_global_key, "Could not free key");
 }
 
 rt_public void eif_thr_register(void)

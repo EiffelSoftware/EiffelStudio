@@ -106,6 +106,16 @@ feature -- Element change
 
 feature -- Assertion
 
+	grand_parent_is_option_button: BOOLEAN is
+			-- Is true if the grand parent is an option button.
+			-- False otherwise.
+		local
+			gd_par: EV_OPTION_BUTTON
+		do
+			gd_par ?= parent_imp.parent_imp.interface
+			Result := (gd_par /= Void)
+		end
+
 	is_selected: BOOLEAN is
 			-- True if the current item is selected.
 			-- False otherwise.

@@ -151,7 +151,11 @@ feature -- Access
 			Result.set_pixmap (small_pixmap)
 			Result.extend (name)			
 			Result.extend (type)
-			Result.extend (" ")
+			if is_absolute then
+				Result.extend ("Absolute : " + value)
+			else
+				Result.extend ("Relative to %"" + directory + "%"")
+			end
 			Result.set_data (Current)
 		end
 

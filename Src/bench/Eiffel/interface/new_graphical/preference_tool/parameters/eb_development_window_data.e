@@ -121,13 +121,13 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			-- Toolbar organization
 		do
 			Result := general_toolbar_layout_preference.value
-		end	
+		end
 		
 	max_history_size: INTEGER is
 			-- Maximum number of items displayed in the history (in the address combo boxes).
 		do
 			Result := max_history_size_preference.value
-		end	
+		end
 		
 	use_animated_icons: BOOLEAN -- (True)	
 	 
@@ -135,19 +135,25 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			-- 
 		do
 			Result := remember_completion_list_size_preference.value
-		end		
+		end
 		
 	completion_list_width: INTEGER is
 			-- 
 		do
 			Result := completion_list_width_preference.value
-		end		
+		end
 	
 	completion_list_height: INTEGER is
 			-- 
 		do			
 			Result := completion_list_height_preference.value
-		end		
+		end
+
+	progress_bar_color: EV_COLOR is
+			-- 
+		do
+			Result := progress_bar_color_preference.value	
+		end
 		
 feature {EB_SHARED_PREFERENCES} -- Preference
 
@@ -206,6 +212,8 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	completion_list_width_preference: INTEGER_PREFERENCE
 	
 	completion_list_height_preference: INTEGER_PREFERENCE
+
+	progress_bar_color_preference: COLOR_PREFERENCE
 
 feature -- Element change
 
@@ -309,6 +317,7 @@ feature {NONE} -- Preference Strings
 	remember_completion_list_size_string: STRING is "development_window.remember_completion_list_size"
 	completion_list_width_string: STRING is "development_window.completion_list_width"
 	completion_list_height_string: STRING is "development_window.completion_list_height"
+	progress_bar_color_preference_string: STRING is "misc.progress_bar_color"
 
 feature {NONE} -- Implementation
 
@@ -339,6 +348,7 @@ feature {NONE} -- Implementation
 			remember_completion_list_size_preference := l_manager.new_boolean_resource_value (l_manager, remember_completion_list_size_string, True)
 			completion_list_height_preference := l_manager.new_integer_resource_value (l_manager, completion_list_height_string, 100)
 			completion_list_width_preference := l_manager.new_integer_resource_value (l_manager, completion_list_width_string, 80)
+			progress_bar_color_preference := l_manager.new_color_resource_value (l_manager, progress_bar_color_preference_string, create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 128))
 		end
 	
 	preferences: PREFERENCES

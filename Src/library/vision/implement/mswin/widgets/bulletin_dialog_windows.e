@@ -77,7 +77,7 @@ feature {NONE} -- Initialization
 			parent ?= oui_parent.implementation
 			a_bulletin_d.set_dialog_imp (Current)
 			managed := True
-			shell_height := title_bar_height + 2 * window_border_height + window_frame_height --+ dialog_window_frame_height
+			shell_height := title_bar_height + 2 * window_border_height + window_frame_height
 			shell_width := 2 * window_frame_width
 		end
 

@@ -2100,6 +2100,7 @@
               </Directory>
               <Component Id="wel_system_parameters_info.e" Guid="BC44338C-CBE7-4DF8-A3C6-8BAFA5824038">
                 <File Id="wel_system_parameters_info.e" Name="WEL_SY~2.E" LongName="wel_system_parameters_info.e" KeyPath="yes" />
+                <File Id="wel_data_type.e" Name="WEL_DA~1.E" LongName="wel_data_type.e" />
                 <File Id="wel_shared_memory.e" Name="WEL_SH~1.E" LongName="wel_shared_memory.e" />
                 <File Id="wel_reference_trackable.e" Name="WEL_RE~2.E" LongName="wel_reference_trackable.e" />
                 <File Id="wel_message_information_creator.e" Name="WEL_ME~2.E" LongName="wel_message_information_creator.e" />

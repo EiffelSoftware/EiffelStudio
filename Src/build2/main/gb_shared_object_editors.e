@@ -227,7 +227,7 @@ feature {NONE} -- Implementation
 			button.select_actions.extend (agent object_editor_window.destroy)
 
 			object_editor_window.set_default_cancel_button (button)
-			object_editor_window.prune (button)
+			object_editor_window.prune_all (button)
 
 			object_editor_window.set_height (Default_floating_object_editor_height)
 			create editor

@@ -29,7 +29,7 @@ creation
 
 feature {NONE} -- Intialization
 
-	make_with_coordinates (a_parent: WEL_COMPOSITE_WINDOW; a_name: STRING;
+	make_with_coordinates (a_parent: WEL_WINDOW; a_name: STRING;
 			a_x, a_y, a_width, a_height: INTEGER) is
 			-- Make a control using `a_parent' as parent and
 			-- `a_name' as name. `a_x', `a_y', `a_width', and

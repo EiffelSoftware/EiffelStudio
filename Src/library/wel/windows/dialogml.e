@@ -37,7 +37,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	internal_dialog_make (a_parent: WEL_COMPOSITE_WINDOW; an_id: INTEGER;
+	internal_dialog_make (a_parent: WEL_WINDOW; an_id: INTEGER;
 			a_name: STRING) is
 			-- Create the dialog
 		local

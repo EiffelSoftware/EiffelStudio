@@ -104,7 +104,7 @@ feature -- Window Properties
 		deferred
 		end;
 
-	save_cmd_holder: COMMAND_HOLDER is
+	save_cmd_holder: TWO_STATE_CMD_HOLDER is
 			-- The command to save the contents of Current.
 		do
 		end;
@@ -137,7 +137,21 @@ feature -- Window Properties
 			-- Button to represent Current's default hole.
 			-- By default: Void
 		do
+		end;
+
+	toolbar_parent: TOOLBAR_PARENT;
+			-- Row column for the toolbars
+			-- `classic_bar' and `format_bar'
+
+	toolbar_separator: SEPARATOR;
+			-- Separator for the toolbars
+
+	popup_cell: CELL [POPUP] is
+			-- Cell for the toolbar popup menu
+		once
+			!! Result.put (Void)
 		end
+
 feature -- Access
 
 	has_editable_text: BOOLEAN is
@@ -415,9 +429,9 @@ feature -- Update
 		do
 			if save_cmd_holder /= Void then
 				if text_window.changed then
-					save_cmd_holder.set_selected (true)
+					save_cmd_holder.change_state (False)
 				else
-					save_cmd_holder.set_selected (false)
+					save_cmd_holder.change_state (True)
 				end
 			end
 		end;

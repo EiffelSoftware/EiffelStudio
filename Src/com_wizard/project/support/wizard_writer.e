@@ -82,24 +82,19 @@ feature {NONE} -- Implementation
 			a_file_name.to_lower
 			if not l_retried then
 				create l_file.make (a_file_name)
-				if l_file.exists then
-					if environment.backup then
-						l_string := "File already exists: "
-						l_string.append (a_file_name)
-						l_string.append ("%R%N")
-						l_string.append ("File backed up with extension %".bac%"")
-						message_output.add_warning (l_string)
-						file_delete (backup_file_name (a_file_name))
-						file_copy (a_file_name, backup_file_name (a_file_name))
-					end
-					l_file.make_open_write (a_file_name)
-					l_file.put_string (a_content)
-					l_file.close
-				else
-					l_file.make_open_write (a_file_name)
-					l_file.put_string (a_content)
-					l_file.close
+				if l_file.exists and environment.backup then
+					l_string := "File already exists: "
+					l_string.append (a_file_name)
+					l_string.append ("%N")
+					l_string.append ("File backed up with extension %".bac%"")
+					message_output.add_warning (l_string)
+					file_delete (backup_file_name (a_file_name))
+					file_copy (a_file_name, backup_file_name (a_file_name))
 				end
+				l_file.make_open_write (a_file_name)
+				l_file.put_string (a_content)
+				l_file.put_string ("%N")
+				l_file.close
 			else
 				environment.set_abort (File_write_error)
 				environment.set_error_data (a_file_name)

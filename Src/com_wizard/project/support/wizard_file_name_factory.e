@@ -266,14 +266,15 @@ feature {NONE} -- Implementation
 		require
 			non_void_name: a_name /= Void
 		local
-			i: INTEGER 
+			i, l_count: INTEGER 
 		do
+			l_count := a_name.count
 			if not a_name.is_empty then
-				i := a_name.last_index_of ('\', a_name.count)
-				create Result.make (a_name.count + 5)
+				i := a_name.last_index_of ('\', l_count)
+				create Result.make (l_count + 5)
 				Result.append (a_name.substring (1, i))
 				Result.append ("decl_")
-				Result.append (a_name.substring (i + 1, a_name.count))
+				Result.append (a_name.substring (i + 1, l_count))
 			else
 				create Result.make_empty
 			end

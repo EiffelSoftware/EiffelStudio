@@ -14,8 +14,17 @@ deferred class
 inherit
 	
 	EV_SPLIT_AREA_I
+		redefine
+			add_child1,
+			add_child2
+		end
 
 	EV_CONTAINER_IMP
+		undefine
+			add_child_ok,
+			child_add_successful,
+			add_child
+		end
 		
 	
 feature {EV_SPLIT_AREA} -- Implementation
@@ -23,16 +32,18 @@ feature {EV_SPLIT_AREA} -- Implementation
 	add_child1 (child_imp: EV_WIDGET_IMP) is
 			-- Add the first child of the split.
 		do
+			{EV_SPLIT_AREA_I} Precursor (child_imp)
 			gtk_paned_add1 (widget, child_imp.widget)
 		end
 	
 	add_child2 (child_imp: EV_WIDGET_IMP) is
 			-- Add the second child.
 		do
+			{EV_SPLIT_AREA_I} Precursor (child_imp)
 			gtk_paned_add2 (widget, child_imp.widget)
 		end
 
-end
+end -- class EV_SPLIT_AREA_IMP
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

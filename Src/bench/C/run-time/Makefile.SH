@@ -39,14 +39,18 @@ INSTALL = $INSTALL
 # Parameters set by Configure -- edit config.sh if changes are needed
 
 AR = $ar rc
+LD=$ld
 CC = $cc
 CTAGS = ctags
-JCFLAGS = \$(CFLAGS) $optimize $ccflags $large
+JCFLAGS = \$(CFLAGS) $optimize $sharedccflags $ccflags $large
 JLDFLAGS = \$(LDFLAGS) $optimize $ldflags
+SHAREDEIFLIB = $prefix$eiflib$sharedsuffix$sharedlibversion
+SHAREDWKEIFLIB = $prefix$wkeiflib$sharedsuffix$sharedlibversion
+LDSHAREDFLAGS = $ldsharedflags
 L = $manext
 LIBS = $libs
 LINT = lint
-LN = $ln
+LN = $ln 
 MANSRC = $installmansrc
 MAKE = make
 MKDEP = $mkdep \$(DPFLAGS) --
@@ -383,6 +387,30 @@ install.man:: size_h.man
 deinstall.man::
 	$(RM) $(MANSRC)/eif_size.h.$(L)
 
+all:: libwkbench.so 
+
+local_realclean::
+	$(RM) $(SHAREDWKEIFLIB) 
+	$(RM) libwkbench.so 
+
+libwkbench.so: $(WOBJ)
+	$(RM) $@
+	$(RM) $(SHAREDWKEIFLIB)
+	$(CC) $(LDSHAREDFLAGS) -o $(SHAREDWKEIFLIB) $(WOBJ)
+	$(LN) $(SHAREDWKEIFLIB) $@
+
+all:: libfinalized.so 
+
+local_realclean::
+	$(RM) $(SHAREDEIFLIB)
+	$(RM) libfinalized.so	
+
+libfinalized.so: $(LOBJ)
+	$(RM) $@
+	$(RM) $(SHAREDEIFLIB)
+	$(CC) $(LDSHAREDFLAGS) -o $(SHAREDEIFLIB) $(LOBJ)
+	$(LN) $(SHAREDEIFLIB) $@
+	
 all:: libfinalized.a
 
 local_realclean::
@@ -913,6 +941,11 @@ wbench.o: wbench.c
 
 local_clean:: remove
 
+shared: sharedfinal sharedwork
+sharedfinal: libfinalized.so
+sharedwork: libwkbench.so
+
+static: final work
 final: libfinalized.a
 work: libwkbench.a
 

@@ -105,6 +105,7 @@ feature -- Access
 			Result := implementation.title
 		ensure
 			bridge_ok: equal (Result, implementation.title)
+			not_void: Result /= Void
 		end
 
 	menu_bar: EV_MENU_BAR is
@@ -227,21 +228,21 @@ feature -- Status setting
 		require
 			not_destroyed: not is_destroyed
 			a_title_not_void: a_title /= Void
-			a_title_not_empty: not a_title.is_empty
 		do
 			implementation.set_title (a_title)
 		ensure
 			a_title_assigned: title.is_equal (a_title)
+			cloned: title /= a_title
 		end
 
 	remove_title is
-			-- Make `title' `Void'.
+			-- Make `title' empty.
 		require
 			not_destroyed: not is_destroyed
 		do
-			implementation.remove_title
+			set_title ("")
 		ensure
-			a_title_removed: title = Void
+			title_empty: title.is_empty
 		end
 
 	set_menu_bar (a_menu_bar: EV_MENU_BAR) is

@@ -44,6 +44,18 @@ feature -- Access
 			"RGN_COPY"
 		end
 
+feature -- Status report
+
+	valid_region_constant (c: INTEGER): BOOLEAN is
+			-- Is `c' a valid region constant?
+		do
+			Result := c = Rgn_and or else
+				c = Rgn_or or else
+				c = Rgn_xor or else
+				c = Rgn_diff or else
+				c = Rgn_copy
+		end
+
 end -- class WEL_RGN_CONSTANTS
 
 --|-------------------------------------------------------------------------

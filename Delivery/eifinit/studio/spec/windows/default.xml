@@ -13,6 +13,7 @@
 		<TEXT DESCRIPTION="Command invoked to print a text">print_shell_command<STRING>notepad /p $target</STRING></TEXT>
 		<TEXT DESCRIPTION="Send a postscript file to this command?">use_postscript<BOOLEAN>False</BOOLEAN></TEXT>
 		<TEXT DESCRIPTION="Number of projects kept in the recent projects list">recent_projects_number<INTEGER>10</INTEGER></TEXT>
+		<TEXT DESCRIPTION="Launch debugger for debugging .NET projects">dotnet_debugger<LIST_SELECTED_STRING>No debugger;cordbg;DbgCLR;</LIST_SELECTED_STRING></TEXT>
 	</TOPIC>
 	<TOPIC TOPIC_ID="Tools" ICON="icon_preferences_folder">
 		<HEAD>Tools</HEAD>
@@ -34,7 +35,7 @@
 			<TEXT DESCRIPTION="Indexing items that need not be included in formatted texts">excluded_indexing_items<LIST_STRING>revision;date;status</LIST_STRING></TEXT>
 			<TEXT DESCRIPTION="Class format that is selected by default">default_class_formatter_index<INTEGER>5</INTEGER></TEXT>
 			<TEXT DESCRIPTION="Feature format that is selected by default">default_feature_formatter_index<INTEGER>2</INTEGER></TEXT>
-			<TEXT DESCRIPTION="Receiver of control-right-click (among editor, context, new_editor, new_context, new_window and external)">ctrl_right_click_receiver<STRING>new_window</STRING></TEXT>
+			<TEXT DESCRIPTION="Receiver of control-right-click">ctrl_right_click_receiver<LIST_SELECTED_STRING>new_window;among editor; context;new_editor;new_context;external</LIST_SELECTED_STRING></TEXT>
 			<TEXT>formatters_history_size<INTEGER>60</INTEGER></TEXT>
 		</TOPIC>
 		<TOPIC TOPIC_ID="Editor" ICON="icon_preferences_folder">

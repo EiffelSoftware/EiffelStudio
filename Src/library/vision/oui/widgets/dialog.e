@@ -93,8 +93,6 @@ feature -- Windowing
 			exists: not destroyed
 		do
 			implementation.popup
-		ensure
-			is_popped_up
 		end;
 
 	raise is

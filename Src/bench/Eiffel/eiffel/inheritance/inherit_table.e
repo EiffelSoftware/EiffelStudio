@@ -941,14 +941,9 @@ end;
 			if Result.is_unique then
 					-- Unique value processing
 				unique_feature ?= Result;
-				create integer_value.make_default
-				integer_value.set_lower (class_info.unique_values.item (Result.feature_name));
+				create integer_value.make_with_value (
+					class_info.unique_values.item (Result.feature_name))
 				unique_feature.set_value (integer_value);
-debug ("ACTIVITY")
-	io.error.put_string ("Value: ");
-	io.error.put_integer (integer_value.value);
-	io.error.put_new_line;
-end;
 			elseif Result.is_c_external then
 					-- Track new externals introduced in the class. Freeze is taken care by
 					-- EXTERNALS.is_equivalent queried by SYSTEM_I.

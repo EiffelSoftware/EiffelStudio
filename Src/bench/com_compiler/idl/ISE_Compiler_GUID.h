@@ -92,7 +92,8 @@ enum
     DISPID_EiffelComCompiler_RetrieveEiffelProject = EIFFEL_BASE_DISPID,
     DISPID_EiffelComCompiler_CreateEiffelProject,
     DISPID_EiffelComCompiler_GenerateNewEiffelProject,
-    DISPID_EiffelComCompiler_ProjectFileName,
+	DISPID_EiffelComCompiler_CreateInMemoryEiffelProject,
+	DISPID_EiffelComCompiler_ProjectFileName,
     DISPID_EiffelComCompiler_AceFileName,
     DISPID_EiffelComCompiler_ProjectDirectory,
     DISPID_EiffelComCompiler_IsValidProject,
@@ -149,6 +150,7 @@ enum
     DISPID_EiffelComCompiler_DisplayWarnings,
     DISPID_EiffelComCompiler_DiscardAssertions,
     DISPID_EiffelComCompiler_GenerateMsilKeyFileName,
+	DISPID_EiffelComCompiler_SetQuickFinalization,
 
     // IEiffelCompilerEvents dispatch ID's
 

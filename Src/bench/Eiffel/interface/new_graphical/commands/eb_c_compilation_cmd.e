@@ -1,7 +1,7 @@
 indexing
 
 	description:
-		""
+		"Command to perform C compilation of the system"
 	date: "$Date$"
 	revision: "$Revision$"
 

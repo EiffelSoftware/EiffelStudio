@@ -11,21 +11,6 @@ class
 
 inherit
 	PRIMITIVE_IMP
-		rename
-			set_managed as widget_set_managed
-		redefine
-			set_foreground_color,
-			realize,
-			realized,
-			set_width, 
-			set_height,
-			set_size,
-			set_x,
-			set_y,
-			destroy
-		end
-
-	PRIMITIVE_IMP
 		redefine
 			set_foreground_color,
 			set_managed,
@@ -37,8 +22,6 @@ inherit
 			set_x,
 			set_y,
 			destroy
-		select
-			set_managed
 		end
 
 	WEL_CONTROL_WINDOW
@@ -66,6 +49,8 @@ inherit
 			release_capture as wel_release_capture,
 			item as wel_item
 		undefine
+			class_background,
+			background_brush,
 			on_show,
 			on_hide,
 			on_size,
@@ -74,8 +59,7 @@ inherit
 			on_left_button_up, on_right_button_down,
 			on_mouse_move, on_destroy, on_set_cursor,
 			on_key_up,
-			on_key_down,
-			class_background
+			on_key_down
 		redefine
 			on_paint,
 			class_name
@@ -180,7 +164,7 @@ feature -- Status setting
 				end
 				managed := flag
 			else
-				widget_set_managed (flag)
+				{PRIMITIVE_IMP} Precursor (flag)
 			end
 		end
 

@@ -53,6 +53,7 @@ inherit
 			make as wel_make
 		undefine
 			class_background,
+			background_brush,
 			on_show,
 			on_hide,
 			on_size,

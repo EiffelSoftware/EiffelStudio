@@ -48,19 +48,6 @@ feature  -- Status setting
 			end
 		end
 
-	class_background: WEL_BRUSH is
-			-- Default background.
-		local
-			windows_color: COLOR_IMP
-		do
-			if private_background_color = Void then
-				!! Result.make_by_sys_color (Color_window + 1)
-			else
-				windows_color ?= private_background_color.implementation
-				Result := windows_color.brush
-			end	
-		end
-
 end -- class PRIMITIVE_IMP
 
 --|----------------------------------------------------------------

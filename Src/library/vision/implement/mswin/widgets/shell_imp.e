@@ -62,6 +62,8 @@ inherit
 			set_menu as wel_set_menu,
 			menu as wel_menu
 		undefine
+			class_background,
+			background_brush,
 			on_hide,
 			on_show,
 			on_move,
@@ -80,8 +82,7 @@ inherit
 		redefine
 			default_style,
 			default_ex_style,
-			class_name,
-			class_background
+			class_name
 		end
 
 feature -- Initialization
@@ -378,19 +379,6 @@ feature {NONE} -- Implementation
 	default_style: INTEGER is
 		once
 			Result := Ws_overlappedwindow + Ws_visible
-		end
-
-	class_background: WEL_BRUSH is
-			-- Default background
-		local
-			windows_color: COLOR_IMP
-		do
-			if private_background_color = Void then
-				!! Result.make_by_sys_color (Color_window + 1)
-			else
-				windows_color ?= private_background_color.implementation
-				Result := windows_color.brush
-			end
 		end
 
 	class_name: STRING is

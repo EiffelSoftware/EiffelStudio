@@ -58,6 +58,7 @@ inherit
 			set_vertical_position as wel_set_vertical_position
 		undefine
 			class_background,
+			background_brush,
 			on_show,
 			on_hide,
 			on_size,

@@ -9,20 +9,6 @@ class
 
 inherit
 	MANAGER_IMP
-		rename
-			set_size as manager_set_size,
-			set_width as manager_set_width,
-			set_height as manager_set_height
-		redefine
-			realize,
-			realize_current,
-			child_has_resized,
-			set_enclosing_size,
-			set_form_width,
-			set_form_height
-		end
-
-	MANAGER_IMP
 		redefine
 			realize,
 			realize_current,
@@ -33,10 +19,6 @@ inherit
 			set_enclosing_size,
 			set_form_width,
 			set_form_height
-		select
-			set_height,
-			set_size,
-			set_width
 		end
 
 	ROW_COLUMN_I
@@ -72,6 +54,7 @@ inherit
 			make as wel_make
 		undefine
 			class_background,
+			background_brush,
 			on_right_button_up,
 			on_left_button_down,
 			on_left_button_up,
@@ -208,7 +191,7 @@ feature -- Status setting
 				if not mapping then
 					map_widgets (new_width, height)
 				end
-				manager_set_width (new_width)
+				{MANAGER_IMP} Precursor (new_width)
 			end
 		end
 
@@ -219,7 +202,7 @@ feature -- Status setting
 				if not mapping then
 					map_widgets (new_height, width)
 				end
-				manager_set_height (new_height)
+				{MANAGER_IMP} Precursor (new_height)
 			end
 		end
 
@@ -232,7 +215,7 @@ feature -- Status setting
 				if not mapping then
 					map_widgets (new_width, new_height)
 				end
-				manager_set_size (new_width, new_height)
+				{MANAGER_IMP} Precursor (new_width, new_height)
 			end
 		end
 

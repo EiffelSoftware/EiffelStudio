@@ -54,6 +54,7 @@ inherit
 			item as wel_item
 		undefine
 			class_background,
+			background_brush,
 			on_show,
 			on_hide,
 			on_draw_item,

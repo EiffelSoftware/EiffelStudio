@@ -1,0 +1,307 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<HTML>
+	<HEAD>
+		<TITLE>EiffelNet</TITLE>
+		<LINK REL=StyleSheet HREF="../../default.css">
+	</HEAD>
+
+	<BODY>
+		<H1>Event-driven command execution</H1>
+        <center>
+        <table border="1" width="75%">
+          <tbody>
+            <tr>
+              <td>The example classes discussed in this section appear in the
+                subdirectory <i>polling </i>of the example directory</td>
+            </tr>
+          </tbody>
+        </table>
+        </center>
+        <h3>9.1 Commands and events</h3>
+        <p>In the preceding examples each participant in a communication had to
+        get ready to send or receive at specific stages of its life. Although
+        this did not preclude asynchronous communication, it is sometimes
+        desirable to make the scheme even more asynchronous, and control more
+        decentralized, by letting each system simply specify certain
+        communication events that it wants to monitor, and certain commands to
+        be executed on occurrence of the specified events.</p>
+        <p>This event-command model of computation is of course not new with
+        EiffelNet. In ISE Eiffel 3, it is already used in EiffelVision and
+        especially in EiffelBuild, which makes it possible to build a graphical
+        application by specifying which command should be executed in response
+        to each of a set of specified interface events, such as mouse click or
+        keyboard entry. The commands are objects, instances of a general-purpose
+        class COMMAND or its proper descendants. Class COMMAND has, among its
+        features, a procedure <i>execute</i> which executes the current command;
+        some commands are undoable and have an <i>undo</i> procedure.</p>
+        <p>Class COMMAND<i> </i>and related classes used to be in EiffelVision
+        but because of their generality were moved to [2], although this
+        occurred after the publication of [2].</p>
+        <p>In EiffelNet the possible events associated with a socket will be of
+        three kind: a read event; a write event; or a special event (out of
+        bounds operation). The command classes will be descendants of <a CLASS="eclass" href="../reference/polling/abstract/poll_command_chart.html">POLL_COMMAND</a>,
+        an heir of COMMAND.</p>
+        <h3>9.2 Command classes</h3>
+        <p>The example uses four command classes: CLIENT_DATAGRAM_READER,
+        CLIENT_DATAGRAM_WRITER and their counterpart for servers, representing
+        operations that must be triggered in the case of a read event and a
+        write event.</p>
+        <p>Here is the reader command for clients:
+        <code>
+        <ul>
+              <p>class<br>
+              &nbsp;&nbsp;&nbsp; CLIENT_DATAGRAM_READER</p>
+              <p>inherit</p>
+              <p>	&nbsp;&nbsp;&nbsp;	<a CLASS="eclass" href="../reference/polling/abstract/poll_command_chart.html">POLL_COMMAND</a>
+              <br>
+              &nbsp;&nbsp;&nbsp; redefine<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; active_medium<br>
+              &nbsp;&nbsp;&nbsp; end</p>
+              <p>creation<br>
+              &nbsp;&nbsp;&nbsp; make</p>
+              <p>feature</p>
+              <p>	&nbsp;&nbsp;&nbsp; active_medium: <a CLASS="eclass" href="../reference/network/socket/network_datagram_socket_chart.html">NETWORK_DATAGRAM_SOCKET</a></p>
+              <p>	&nbsp;&nbsp;&nbsp; execute is<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              -- Obtain a packet of ten characters and print them.<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; local<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              rec_pack: <a CLASS="eclass" href="../reference/abstract/socket/datagram_packet_chart.html">DATAGRAM_PACKET</a>
+              <br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              i: INTEGER<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; do<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              rec_pack := active_medium.received (10, 0)<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              io.putint (rec_pack.packet_number)<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              io.new_line<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              from<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              i := 0<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              until<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              i &gt; 9<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              loop<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              io.putchar (rec_pack.element (i)); i := i + 1<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              end<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              io.new_line<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              end</p>
+              <p>end</p>
+        </ul>
+         </code>
+       <p>The <i>execute</i> procedure reads a packet of ten characters and
+        prints these characters. Its counterpart in the writing command will
+        produce these ten packets:
+        <code>
+        <ul>
+              <p>class<br>
+              &nbsp;&nbsp;&nbsp; CLIENT_DATAGRAM_WRITER</p>
+              <p>inherit</p>
+              <p>	&nbsp;&nbsp;&nbsp;	<a CLASS="eclass" href="../reference/polling/abstract/poll_command_chart.html">POLL_COMMAND</a>
+              <br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; redefine<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              active_medium<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; end</p>
+              <p>	&nbsp;&nbsp;&nbsp; BASIC_ROUTINES</p>
+              <p>creation<br>
+              &nbsp;&nbsp;&nbsp; make</p>
+              <p>feature</p>
+              <p>	&nbsp;&nbsp;&nbsp; active_medium: <a CLASS="eclass" href="../reference/network/socket/network_datagram_socket_chart.html">NETWORK_DATAGRAM_SOCKET</a></p>
+              <p>	&nbsp;&nbsp;&nbsp; execute is<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              -- Make a packet with characters 'a' to 'k' in successive
+              positions.<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; local<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              sen_pack: <a CLASS="eclass" href="../reference/abstract/socket/datagram_packet_chart.html">DATAGRAM_PACKET</a>
+              <br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              ccode: INTEGER<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; do<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              create sen_pack.make (10)<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              from<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              ccode := charcode ('a')<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              until<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              ccode &gt; charcode ('k')<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              loop<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              sen_pack.put_element (charconv (ccode), ccode -- charcode ('a'))<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              ccode := ccode + 1<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              end<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              sen_pack.set_packet_number (1)<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              active_medium.send (sen_pack, Void, 0)<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; end</p>
+              <p>end</p>
+        </ul>
+        </code>
+        <h3>9.3 The server and the client</h3>
+        <p>Once the commands have been defined, it suffices for the server and
+        the client to associate instances of these commands with the
+        appropriate.</p>
+        <p>The abstraction needed for this purpose is provided by class <a CLASS="eclass" href="../reference/polling/abstract/medium_poller_chart.html">MEDIUM_POLLER</a>.
+        An instance of this class knows about a number of commands, each
+        associated with a certain socket in read, write or special event mode.
+        By applying procedure <i>execute</i> to such a medium poller, you direct
+        it to monitor these sockets for the corresponding events and to execute
+        the command associated with each event that will be received. Procedure <i>execute</i>
+        takes two integer arguments: the maximum number of sockets to monitor,
+        and the timeout in milliseconds.</p>
+        <p>Here is the server built with this mechanism:
+        <code>
+        <ul>
+              <p>class</p>
+              <p>	&nbsp;&nbsp;&nbsp; POLLING_SERVER</p>
+              <p>creation<br>
+              &nbsp;&nbsp;&nbsp; make</p>
+              <p>feature</p>
+              <p>	&nbsp;&nbsp;&nbsp; make is<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              -- Create read and write commands, attach them to a poller,<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              -- set up the poller for execution.<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; local<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              soc: <a CLASS="eclass" href="../reference/network/socket/network_datagram_socket_chart.html">NETWORK_DATAGRAM_SOCKET</a>
+              <br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              poller: <a CLASS="eclass" href="../reference/polling/abstract/medium_poller_chart.html">MEDIUM_POLLER</a>
+              <br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              readcomm: SERVER_DATAGRAM_READER<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              writecomm: SERVER_DATAGRAM_WRITER<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; do<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              create soc.make_server_by_port (6530)<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              create poller.make<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              create readcomm.make (soc); poller.put_read_command (readcomm)<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              create writecomm.make (soc); poller.put_write_command (writecomm)<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              poller.make_read_only; poller.execute (15, 20000)<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              poller.make_write_only; poller.execute (15, 20000)<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              soc.close<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              end</p>
+              <p>end</p>
+        </ul>
+         </code>
+       <p>Procedure <i>make</i> creates three objects: a socket, which it
+        associates with a specific port; a poller; and a read command (an
+        instance of SERVER_DATAGRAM_READER), which it attaches to the socket. It
+        then enters the read command into the poller, and does the same thing
+        with a write command. It sets up the poller to accept read commands only
+        and then executes the poller; this will enable the server to get the
+        read event triggered by the client's write command (as it appears below
+        in the text of class POLLING_CLIENT). Then the server reverses the
+        poller's set-up to write-only, and calls <i>execute</i> again.</p>
+        <p>The procedures <i>make_read_only</i> and <i>make_write_only</i> are
+        creation procedures, so that it is possible in a single instruction to
+        create a poller and set it up for read-only or write-only, as in <b>create</b>
+        <i>poller</i>l<i>make_read_only</i>. For clarity, however, the above
+        class and the next separate calls to these procedures from the creation
+        of the poller, which uses <i>make</i> as creation procedure.</p>
+        <p>The client follows the same scheme, reversing the order of read and
+        write operations:
+        <code>
+        <ul>
+              <p>class</p>
+              <p>	&nbsp;&nbsp;&nbsp; POLLING_CLIENT</p>
+              <p>creation<br>
+              &nbsp;&nbsp;&nbsp; make</p>
+              <p>feature</p>
+              <p>	&nbsp;&nbsp;&nbsp; make is<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              -- Create read and write commands, attach them to a poller,<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              -- set up the poller for execution.<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; local<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              soc: <a CLASS="eclass" href="../reference/network/socket/network_datagram_socket_chart.html">NETWORK_DATAGRAM_SOCKET</a>
+              <br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              poller&gt;: <a CLASS="eclass" href="../reference/polling/abstract/medium_poller_chart.html">MEDIUM_POLLER</a>
+              <br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              readcomm: DATAGRAM_READER<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              writecomm&gt;: DATAGRAM_WRITER<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; do<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              create soc.make_client_by_port (6530, &quot;serverhost&quot;)<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              create poller.make<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              create readcomm.make (soc)<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              poller.put_read_command (readcomm)<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              create writecomm.make (soc)<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              poller.put_write_command (writecomm)<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              poller.make_write_only<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              poller.execute (15, 20000)<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              poller.make_read_only<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              poller.execute (15, 20000)<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              soc.close<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; rescue<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              if soc /= Void and then not soc.is_closed then<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              soc.close<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              end<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; end</p>
+              <p>end</p>
+        </ul>
+         </code>
+       <h3>9.4 A less deterministic scheme</h3>
+        <p>Although the example uses the event-driven mechanisms of EiffelNet,
+        it is still relatively deterministic in that it follows a precise
+        protocol defined by a strict sequence of read and write operations on
+        both sides. This is why every call to <i>execute</i> is preceded by a
+        call to either <i>make_read_only</i> or <i>make_write_only </i>to set up
+        the poller in the appropriate mode.</p>
+        <p>A less deterministic scheme may often be desirable, where you simply
+        enter a number of commands (read, write, out of bounds processing) into
+        a poller and then wait for arbitrary events to occur and trigger
+        commands. There is no need with this scheme to know in advance the order
+        in which events may occur: a read event will trigger the command entered
+        into the poller through <i>put_read_command</i>; a write event will
+        trigger the command entered through <i>put_write_command</i>.</p>
+        <p>To achieve this behavior, simply create the poller using <i>make</i>
+        as creation procedure. This will set up the poller so as to accept all
+        socket events, and enter into event-driven command execution by calling <i>execute</i>
+        on the poller.</p>
+	</BODY>
+</HTML>

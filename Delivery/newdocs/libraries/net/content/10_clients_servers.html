@@ -1,0 +1,53 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<HTML>
+	<HEAD>
+		<TITLE>EiffelNet</TITLE>
+		<LINK REL=StyleSheet HREF="../../default.css">
+	</HEAD>
+
+	<BODY>
+		<H1>Clients and servers</H1>
+        <p>In the client-server model of computing, a number of software
+        systems, the clients, may require general-purpose services provided by
+        other systems, the servers. Clients and servers run concurrently, on the
+        same machine or, more generally, on different machines connected through
+        a network.</p>
+        <p>Typically, the clients are systems, for example systems that provide
+        useful facilities for human users; the servers take care of operations
+        that clients could not perform on their own (or would perform less
+        efficiently), and of operations that are common to several clients.
+        Example of servers include:
+        <ul>
+          <li><b>Computation servers</b>, which take care of heavy or
+            specialized computations not appropriate for the clients, assuming
+            the servers' processors are more powerful.
+          <li><b>File servers</b> and <b>database servers</b>, providing access
+            to persistent data that different clients may need to access.<b></li>
+          </ul>
+          <p></b>The client-server relation is usually many-to-many: each client
+          application, in the course of performing its duties, may successively
+          require services from different servers; and each server may cater to
+          different clients. This second aspect, illustrated by the following
+          figure, is particularly important; it allows a single server to
+          communicate with as many clients as appropriate.</p>
+        <center><img src="fig_1.gif" width="448" height="251"></center>
+        <p>Although communication occurs both ways - clients sending objects to
+        servers and conversely - the situation in such a scheme is usually not
+        symmetric. Whereas a client requesting a certain service will need to
+        know beforehand what server provides that service, the server, for its
+        part, will not in general name its clients in advance; it will simply
+        stand ready to provide its services to whatever suitable client happens
+        to request them.</p>
+        <p>This dissymmetry appears clearly in EiffelNet and in the examples of
+        this manual. It means in particular that clients and servers act
+        differently at the <b>beginning</b> of their client-server lifecycle.
+        The party that initiates the communication is the client; in this
+        operation it will identify the desired server (through a local file name
+        for communication on the same machine, or though a machine name for
+        network communication). The server simply makes itself ready for
+        possible connections by starting to &quot;listen&quot; on the
+        communication channels - relying for this on an EiffelNet procedure that
+        is indeed called <i>listen</i>.</p>
+	</BODY>
+</HTML>

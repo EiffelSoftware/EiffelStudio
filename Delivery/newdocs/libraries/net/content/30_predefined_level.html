@@ -1,0 +1,52 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<HTML>
+	<HEAD>
+		<TITLE>EiffelNet</TITLE>
+		<LINK REL=StyleSheet HREF="../../default.css">
+	</HEAD>
+
+	<BODY>
+		<H1>The predefined level</H1>
+        <p>Many client-server applications follow a standard scheme that relies
+        on the facilities outlined so far. When your application conforms to
+        this scheme, you can avoid most of the work by relying on the client and
+        server classes of the predefined level. There is no need to consider
+        sockets explicitly or to worry about synchronization.</p>
+        <p>As in many other cases found in the ISE Eiffel 3 libraries, the
+        object-oriented method makes it possible here to encapsulate the
+        standard pattern found in most usual cases.</p>
+        <h3>The predefined client and server classes</h3>
+        <p>The classes of the predefined level, which only support stream
+        communication (not datagrams), are <a href="../reference/abstract/client_server/client_chart.html">CLIENT</a>,
+        <a href="../reference/abstract/client_server/server_chart.html">SERVER</a>,
+        and their descendants <a href="../reference/local/client_server/unix_client_chart.html">UNIX_CLIENT</a>,
+        <a href="../reference/local/client_server/unix_server_chart.html">UNIX_SERVER</a>,
+        <a href="../reference/network/client_server/network_client_chart.html">NETWORK_CLIENT</a>
+        and <a href="../reference/network/client_server/network_server_chart.html">NETWORK_SERVER</a>.
+        All the architecture of a client-server application is already available
+        through these classes. All you have to do is to specify the address you
+        want to use, what you want to send, when you want to send it, and what
+        you want to do when you receive data. The rest will be taken care of
+        automatically.</p>
+        <p>The UNIX_<i> </i>classes are meant for systems running on the same
+        machine, using <a href="../reference/local/socket/unix_stream_socket_chart.html">UNIX_STREAM_SOCKET</a>;
+        the NETWORK_<i> </i>classes support inter-machine communication, using <a href="../reference/network/socket/network_socket_chart.html">NETWORK_SOCKET</a>.</p>
+        <h3>Using the client classes</h3>
+        <p>When you want to write an application, your client should inherit
+        from <a href="../reference/local/client_server/unix_client_chart.html">UNIX_CLIENT</a>
+        for example, and in your creation procedure, you have to setup your
+        address, and then call the inherited make routine, with your address as
+        an argument. You are then provided with some send and receive routines.</p>
+        <h3>4.3 Using the server classes</h3>
+        <p>For the server, you inherit for example from <a href="../reference/local/client_server/unix_server_chart.html">UNIX_SERVER</a>.
+        In the same way as for the client, you set up your address in the
+        creation procedure, and then call the <i>make</i> creation procedure
+        inherited from <a href="../reference/local/client_server/unix_server_chart.html">UNIX_SERVER</a>.
+        After that your creation procedure should call <i>execute</i>, which is
+        inherited from <a href="../reference/abstract/client_server/server_chart.html">SERVER</a>,
+        and provides you with a loop calling <i>receive</i>, <i>process_message</i>,
+        <i>respond</i> and <i>clean_up</i>. Then, you should redefine these
+        routines to do what you want your server to do.</p>
+	</BODY>
+</HTML>

@@ -1,0 +1,64 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<HTML>
+	<HEAD>
+		<TITLE>EiffelNet</TITLE>
+		<LINK REL=StyleSheet HREF="../../default.css">
+	</HEAD>
+
+	<BODY>
+		<H1>Introduction</H1>
+        <h3>What is EiffelNet?</h3>
+        <p>The client-server model of computing is quickly gaining ground as a
+        way of optimizing network resources and of building sophisticated and
+        flexible transactional applications.</p>
+        <p>The object-oriented method of software development, as embodied in
+        Eiffel, potentially provides ideal support for developing client-server
+        applications. The EiffelNet library described in this report makes this
+        potential a reality by addressing one the crucial needs of client-server
+        development: how to exchange objects between software systems. Systems
+        using EiffelNet can exchange object structures with other systems
+        running on the same machine or on different machines; in the case of
+        different machines, the hardware architectures need not be the same.
+        Objects are transmitted using sockets.</p>
+        <p>Writing client-server applications, especially their communication
+        aspects, is an arduous task; developers must master many tricky details
+        of socket programming and other low-level mechanisms. EiffelNet hides
+        this complexity by providing ready-made classes addressing the most
+        common cases, so that developers only have to describe what is specific
+        to their application, letting EiffelNet handle the whole process of
+        communication and synchronization between clients and servers. This part
+        of EiffelNet is known as the <b>predefined level</b> and for many uses
+        this is the only one that you will need to learn about. For developments
+        requiring a finer degree of control, all the major mechanisms of socket
+        programming are still accessible in a convenient form through more
+        specialized classes.</p>
+        <p>In offering these varying levels of abstraction and control,
+        EiffelNet follows the principles set by other libraries of the ISE
+        Eiffel 3 environment (see for example the discussion of EiffelLex in
+        reference [2]). Some users require a mechanism that will be very easy to
+        learn and will hide all the details in common cases; other users (or the
+        same at later stages of their work) need to access the whole array of
+        facilities available at the level of the underlying hardware or
+        software. The various components of the library should address all these
+        needs.</p>
+        <p>This manual describes how to use EiffelNet at its various levels of
+        abstraction.</p>
+        <h3>Background and prerequisites</h3>
+        <p>EiffelNet is a component of the ISE Eiffel 3 development environment.
+        Please contact your ISE Eiffel distributor or ISE to find out how to
+        acquire EiffelNet if it is not already part of your delivery.</p>
+        <p>This manual assumes the following prerequisites:
+        <ul>
+          <li>Familiarity with the basic Eiffel concepts: classes, inheritance,
+            features, assertions, exception handling (see reference [1]).
+          <li>Experience of writing software with Eiffel.
+          <li>Basic knowledge of the EiffelBase libraries, as described in
+            reference [2].</li>
+        </ul>
+        <p>Familiarity with the basic concepts of client-server computing will
+        also be helpful (see for example reference [3]; if you are new to this
+        area, however, you will still be able to use EiffelNet, as this manual
+        defines all the needed concepts.</p>
+	</BODY>
+</HTML>

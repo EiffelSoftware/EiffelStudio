@@ -1,0 +1,45 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<HTML>
+	<HEAD>
+		<TITLE>EiffelNet</TITLE>
+		<LINK REL=StyleSheet HREF="../../default.css">
+	</HEAD>
+
+	<BODY>
+		<H1>Using datagram sockets</H1>
+        <center>
+        <table border="1" width="75%">
+          <tbody>
+            <tr>
+              <td>The example classes discussed in this section appear in the
+                subdirectory <i>datagram </i>of the example directory</td>
+            </tr>
+          </tbody>
+        </table>
+        </center>
+        <p>Using datagram sockets implies a few differences from the preceding
+        schemes. You create a <a href="../reference/network/socket/network_datagram_socket_chart.html">NETWORK_DATAGRAM_SOCKET</a>
+        or a <a href="../reference/local/socket/unix_datagram_socket_chart.html">UNIX_DATAGRAM_SOCKET</a>
+        as before. You do not need to call <i>listen</i>, <i>accept</i> or <i>connect</i>.
+        Once you have created your sockets using the <i>make_client </i>or <i>make_server</i>
+        creation procedure, you can use the <i>send </i>and <i>received </i>routines,
+        specifying the socket to which you want to send, or from which you want
+        to receive.</p>
+        <p>The command <i>send </i>takes an argument of type <a href="../reference/abstract/socket/datagram_packet_chart.html">DATAGRAM_PACKET</a>,
+        and the query <i>received </i>returns a result of this type. <a href="../reference/abstract/socket/datagram_packet_chart.html">DATAGRAM_PACKET</a>
+        is an heir of class <a href="../reference/abstract/socket/packet_chart.html">PACKET</a>,
+        itself an heir of <a href="../../base/reference/kernel/array_chart.html">ARRAY</a><i>
+        </i>[<a href="../../base/reference/kernel/character_chart.html">CHARACTER</a>].
+        Class <a href="../reference/abstract/socket/datagram_packet_chart.html">DATAGRAM_PACKET</a>
+        makes it possible, through the query <i>number</i> and the associated
+        command <i>set_number</i>, to associate a packet number with each
+        packet. This compensates for lack of guaranteed sequencing of datagram
+        sockets: the sender can number packets through <i>set_number</i>, and
+        the receiver can check that all packets have been received through <i>number</i>,
+        asking the sender to re-emit missing objects.</p>
+        <p>The text of this example is similar to what appears below (in a more
+        general setting involving event-driven computation) for the next
+        example.</p>
+	</BODY>
+</HTML>

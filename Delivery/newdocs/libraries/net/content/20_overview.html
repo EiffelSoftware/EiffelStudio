@@ -1,0 +1,268 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<HTML>
+	<HEAD>
+		<TITLE>EiffelNet</TITLE>
+		<LINK REL=StyleSheet HREF="../../default.css">
+	</HEAD>
+
+	<BODY>
+		<H1>An overview of EiffelNet Mechanisms</H1>
+        <p>To enable clients and servers to exchange objects, you will have to
+        ensure that they can refer to a common <b>address</b>. At the predefined
+        level this is really the only notion that you need to know, although it
+        is useful to get the bigger picture, in particular the concept of <b>socket
+        </b>(which enables systems to set up communication channels), the
+        various forms of communication (single-machine versus multi-machine,
+        stream versus datagram), the kinds of object structure that may be
+        exchanged, the notion of packet, and how to associate commands with
+        communication events. The following paragraphs review these ideas and
+        the corresponding EiffelNet abstractions.</p>
+        <h3>Establishing a common address</h3>
+        <p>When two systems need to communicate through sockets, they must
+        establish a binding through some common point of reference, called an <b>address</b>.
+        Predictably, the notion of address is one of the important internal
+        abstractions of EiffelNet, although in most cases developers of
+        applications using EiffelNet do not need to manipulate address objects
+        directly.</p>
+        <p>EiffelNet supports two modes of communication: single-machine and
+        multi-machine. In the single-machine case, the two communicating systems
+        are known to be running on the same machine. In the multi-machine case,
+        also known as the <b>network</b> case, they may be running on different
+        machines, and communication occurs through a network. These two modes
+        clearly require a different binding mechanism.</p>
+        <p>When a client and a server reside on the same machine, they both have
+        access to that machine's file system. This provides a straightforward
+        binding mechanism: the common address will simply be a &quot;path
+        name&quot;, the Unix terminology for the full name of a file in a
+        hierarchically organized file system. In the examples below this file
+        will be <i>/tmp/here </i>(file <i>here</i> in the <i>/tmp</i> directory,
+        conventionally used for temporary files). This file must not exist prior
+        to the communication; it will be created by the socket mechanisms and
+        then removed.</p>
+        <p>For the network style of communication, this simple device of using a
+        path name is no longer applicable. To define a common address, we may
+        use two elements of information: the name of a machine, and the
+        indication of a <b>port</b> on that machine. More precisely:
+        <ul>
+          <li>The port will be identified by an integer. In the examples below
+            port <i>2000</i> will be used.
+          <li>The machine may be identified in either of two ways: its <b>host
+            name</b> (the name assigned to the machine when the operating system
+            was first installed on it) or its <b>Internet address</b>, a
+            sequence of numbers separated by periods, such as <i>127.0.0.1</i>.
+            EiffelNet routines that need an argument identifying a machine will
+            indifferently take a host name or an Internet address, passed in
+            either case as a string. In the examples below the identification
+            will be a host name, given as the string <i>&quot;serverhost&quot;</i>.</li>
+        </ul>
+        <p>In network-style client-server communication, the mechanism will be
+        dissymmetric, reflecting the possibility (noted earlier) of a single
+        server catering to many clients. The clients will state both the machine
+        identification of their intended server and the port on which they will
+        talk to that server. The server, however, will only specify the port;
+        this means that it makes itself available to any client that cares to
+        talk to it on that port. This provides some of the essential flexibility
+        of client-server communication, where only one of the partners needs to
+        state beforehand whom it wants to talk to.</p>
+        <h3>Sockets and communication modes</h3>
+        <p>A software system will exchange objects with another by sending them
+        to a socket. Although if you stay at the predefined level you will not
+        need to manipulate sockets explicitly, it is useful to understand this
+        concept and know about the corresponding EiffelNet classes.</p>
+        <p>You may think of a socket as a communication port; by attaching
+        sockets together you enable communication between the corresponding
+        systems, for example a client and a server:</p>
+        <center><img src="fig_2.gif" width="568" height="76"></center>
+        <p>EiffelNet has been designed so that sockets look very much like
+        files. You send objects to a socket in the same way that you write
+        objects onto a file, and receive objects from a socket in the same way
+        that you read objects from a file. This fundamental commonality is
+        reflected in the inheritance hierarchy of the corresponding classes:</p>
+        <center><img src="fig_3.gif" width="592" height="413"></center>
+        <p>Note that the hierarchy as shown is not complete; in particular the
+        full structure uses classes <a CLASS="eclass" href="../../base/reference/kernel/stream_chart.html">STREAM</a><i>
+        </i>(of which the <SPAN CLASS="eclass">STREAM_</SPAN><i> </i>classes are heirs) and <SPAN CLASS="eclass">DATAGRAM</SPAN><i> </i>for
+        multiple inheritance<i>. </i>Only the classes below the dotted line are
+        part of EiffelNet; the others are part of EiffelBase, the fundamental
+        data structure and algorithm library of ISE Eiffel [2].</p>
+        <p>The most important property of this inheritance hierarchy is that it
+        shows how sockets fit within the overall structure. Thanks to the common
+        ancestor <a CLASS="eclass" href="../../base/reference/kernel/io_medium_chart.html">IO_MEDIUM</a>,
+        socket classes have most of their features in common with files.</p>
+        <p>In normal usage, the only socket classes that you will need are four
+        classes appearing at the bottom of the above figure. They correspond to
+        two separate distinctions: single-machine versus multi-machine, and
+        reliable versus unreliable.</p>
+        <p>On the first distinction:
+        <ul>
+          <li>If the communicating systems run on the same machine, you may use
+            one of the <SPAN CLASS="eclass">UNIX_<SPAN> classes.
+          <li>For systems that run on different machines, you must use one of
+            the <SPAN CLASS="eclass">NETWORK_</SPAN><i> </i>classes. This will also work if the systems are
+            on the same machine, but less efficiently since communication may go
+            through the network.</li>
+        </ul>
+        <p>The use of the word <SPAN CLASS="eclass">UNIX_</SPAN><i> </i>does not mean that the machine must
+        be running the Unix operating system; rather, it denotes a certain style
+        of client-server communication, the Unix style. (This is comparable to
+        the use of the name <SPAN CLASS="eclass">UNIX_FILE</SPAN> in EiffelBase, for a class describing
+        files that behave in the Unix style even though they may be implemented
+        on non-Unix machines.)</p>
+        <p>The second distinction reflects two modes of socket communication:
+        stream communication and datagram communication. Both of these modes
+        support two-way communication between systems, but with different
+        properties:
+        <ul>
+          <li>A stream socket, as provided by the <SPAN CLASS="eclass">STREAM_<</SPAN>i> </i>classes,
+            provides sequenced communication without any loss or duplication of
+            data. Stream communication is normally synchronous: the sending
+            system waits until it has established a connection to the receiving
+            system and transmitted the data.
+          <li>A datagram socket, as provided by the <SPAN CLASS="eclass">DATAGRAM_</SPAN><i> </i>classes, is
+            asynchronous: the sending system emits its data and does not wait
+            for an acknowledgment. Because the sender is not blocked, this mode
+            is more efficient, but it does not guarantee sequencing, reliability
+            or non-duplication.</li>
+        </ul>
+        <h3>Sending and receiving simple values</h3>
+        <p><a CLASS="eclass" href="../../base/reference/kernel/io_medium_chart.html">IO_MEDIUM</a>
+        has all the basic input and output facilities applying to objects of
+        basic types, as also offered in <a CLASS="eclass" href="../../base/reference/kernel/file_chart.html">FILE</a><i>
+        </i>(see the specification of <a CLASS="eclass" href="../../base/reference/kernel/file_chart.html">FILE</a>
+        in reference [2]). So you can use sockets to send and receive
+        characters, integers, real numbers in simple or double precision and
+        strings. For example, if the type of</span></span> `<SPAN CLASS="eclass">my_socket'</span>
+          <SPAN CLASS="eclass">is one of the socket classes shown on the preceding figures, any of
+        the above calls will be valid:
+           <dl>
+          <blockquote>
+          <code>
+          <p>my_socket.putstring (&quot;Some text&quot;)
+my_socket.readint; my_last_integer := my_socketllastint</p>
+			</code>
+          </blockquote>
+
+        <p>Since sockets are bidirectional, these instructions may all appear as
+        part of the same class provided you make sure to guarantee proper
+        synchronization between senders and receivers. You may also prefer to
+        specialize certain sockets for sending and others for receiving.</p>
+        <h3>Sending and receiving object structures</h3>
+        <p>In many cases, what you will want to send and receive is not just
+        simple values but non-basic objects (instances of arbitrary classes,
+        having as many fields as needed) and, more generally, entire object
+        structures.</p>
+        <p>The basic mechanism enabling a system to send objects through
+        EiffelNet is also the basic mechanism for storing objects into a file:
+        class <a CLASS="eclass" href="../../base/reference/kernel/storable_chart.html">STORABLE</a>
+        from EiffelBase.</p>
+        <p>As documented in [2], <a CLASS="eclass" href="../../base/reference/kernel/storable_chart.html">STORABLE</a>
+        provides features to store and retrieve complete object structures.
+        There are three storage procedures, called under the respective forms
+        <dd>
+        <code>
+          <p>struct1.basic_store (iom1)
+struct1.general_store (iom1)
+struct1.independent_store (iom1)</p>
+		</code>
+        </dd>
+        <p>Assuming that the type of <i>iom1 </i>is <a CLASS="eclass" href="../../base/reference/kernel/io_medium_chart.html">IO_MEDIUM</a>or
+        a conforming type such as <a href="../../base/reference/kernel/file_chart.html">FILE</a>
+        or one of the _SOCKET classes, and that the type of <i>struct1</i>
+        conforms to <a CLASS="eclass" href="../../base/reference/kernel/storable_chart.html">STORABLE</a><i>.</p>
+        <p></i>Note that reference [2] in its original version does not include <i>independent_store</i>,
+        and requires <i>iom</i> to be of type <a CLASS="eclass" href="../../base/reference/kernel/file_chart.html">FILE</a>
+        rather than the more general <a CLASS="eclass" href="../../base/reference/kernel/io_medium_chart.html">IO_MEDIUM</a>.
+        The current version of EiffelBase, however, supports the more general
+        properties described here.</p>
+        <p>All three storage procedures have the effect of sending to <i>iom1 </i>(whether
+        a file, a socket or some other IO-medium) a copy of the entire object
+        structure starting at <i>struc1</i>. Together with the retrieval
+        routines seen below, they apply the principle of reference completeness
+        stated in [1] and [2]:</p>
+        <center>
+        <table border="1" width="75%">
+          <tbody>
+            <tr>
+              <td>Whenever a routine of class <a CLASS="eclass" href="../../base/reference/kernel/storable_chart.html">STORABLE</a>
+                stores an object into an external file, it stores with it the
+                dependents of that object.</td>
+              <td>Whenever one of the associated retrieval routines retrieves a
+                previously stored object, it also retrieves all its dependents.</td>
+            </tr>
+          </tbody>
+        </table>
+        </center>
+        <p>For EiffelNet, of course, &quot;storing&quot; and
+        &quot;retrieving&quot; mean sending and receiving. The rest of this
+        section, which applies to sockets as well as to files, will continue to
+        use the original terminology of storage and retrieval.</p>
+        <p>The three storage procedures differ in their degree of generality:
+        <ul>
+          <li><i>basic_store</i> will only work if the sending and retrieving
+            are performed by instances of the same system (the same executable
+            module).
+          <li><i>general_store</i> will work if the sender and retriever are
+            different systems (using the same classes for the objects that they
+            exchange), but these systems must run on machines of the same
+            architecture, or at least of architectures that use the same data
+            representation.
+          <li><i>independent_store</i> will work in the most general case, with
+            the sender and receiver possibly running on platforms using
+            different data representations.</li>
+        </ul>
+        <p>The penalty for using more general representations is that the data
+        representation (as stored into the file or sent to the socket) will have
+        to include more information. So <i>basic_store </i>uses the most compact
+        representation, and <i>independent_store</i> the most verbose.</p>
+        <p>The scheme for accessing an object structure produced by one of these
+        three procedures is the following, used in a descendant of class <a CLASS="eclass" href="../../base/reference/kernel/storable_chart.html">STORABLE</a>:</p>
+        <ul>
+          <dl>
+            <dd>
+            	<code>
+              <p>struct2 ?= retrieved (iom2)</p>
+              	</code>
+            </dd>
+          </dl>
+        </ul>
+        <p>Here <i>iom2</i> must be of a type conforming to <a CLASS="eclass" href="../../base/reference/kernel/io_medium_chart.html">IO_MEDIUM</a>.
+        The assignment attempt ?= checks that the root object of the structure
+        produced by the corresponding call to one of the <i>_store</i>
+        procedures is of a type that conforms to the type of <i>struct2</i>; if
+        not, the assignment will assign to <i>struct2</i> a void reference.</p>
+        <p>Although there are three separate storage procedures, there is only
+        one retrieval routine, <i>retrieved</i>; the algorithm for <i>retrieved </i>is
+        able to figure out, from the format of the retrieved objects, whether
+        they were produced in the basic, general or independent mode.</p>
+        <h3>Packets</h3>
+        <p>The classes <a CLASS="eclass" href="../reference/abstract/socket/packet_chart.html">PACKET</a>
+        and <a CLASS="eclass" href="../reference/abstract/socket/datagram_packet_chart.html">DATAGRAM_PACKET</a><i>
+        </i>are used to represent packets of data that can be sent to sockets.</p>
+        <p>Their main use is for a system that relies on datagram communication.
+        As noted above, this mode does not guarantee sequencing, making each
+        system responsible for checking that packets arrive in the proper order.
+        This is possible through feature <i>number </i>of class <a CLASS="eclass" href="../reference/abstract/socket/datagram_packet_chart.html">DATAGRAM_PACKET</a>,
+        which<i> </i>gives the number of the current packet.</p>
+        <h3>Associating commands with events</h3>
+        <p>EiffelNet supports a highly asynchronous (and hence efficient) mode
+        of operation by offering mechanisms through which you can specify that a
+        certain action must be executed whenever a certain medium becomes
+        available for reading, writing or handling of special cases (out of
+        bounds). This facility is provided by a set of related classes:
+        <ul>
+          <li>The actions are represented by class <a CLASS="eclass" href="../reference/polling/abstract/poll_command_chart.html">POLL_COMMAND</a>,
+            an heir of the EiffelBase class <SPAN CLASS="eclass">COMMAND</SPAN> with, in particular, the
+            procedure <i>execute</i>.
+          <li>Using <a CLASS="eclass" href="../reference/polling/abstract/medium_poller_chart.html">MEDIUM_POLLER</a>,
+            you can specify that a certain command (an instance of <a CLASS="eclass" href="../reference/polling/abstract/poll_command_chart.html">POLL_COMMAND</a>)
+            must be executed whenever a certain medium becomes available for the
+            appropriate operation (read, write, handling of out-of-bounds
+            cases).
+          <li>Using <a CLASS="eclass" href="../reference/polling/abstract/poll_mask_chart.html">POLL_MASK</a>,
+            you can set a mask to select the sockets or files on which your
+            instance of <a CLASS="eclass" href="../reference/polling/abstract/medium_poller_chart.html">MEDIUM_POLLER</a>
+            is working.</li>
+        </ul>
+	</BODY>
+</HTML>

@@ -15,7 +15,8 @@ inherit
 
 	EV_MENU_ITEM_LIST_IMP
 		redefine
-			interface
+			interface,
+			gtk_reorder_child
 		end
 	
 create
@@ -28,12 +29,26 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			set_c_object (C.gtk_menu_bar_new)
 			C.gtk_widget_show (c_object)
-			list_widget := c_object
 		end
 
 	initialize is
 		do
 			is_initialized := True
+		end
+
+feature {NONE} -- Implementation
+
+	gtk_reorder_child (a_container, a_child: POINTER; a_position: INTEGER) is
+			-- Move `a_child' to `a_position' in `a_container'.
+		do
+			--C.gtk_menu_reorder_child (a_container, a_child, a_position)
+
+			C.gtk_container_remove (a_container, a_child)
+			C.gtk_menu_shell_insert (a_container, a_child, a_position)
+
+			if needs_radio_regrouping (eif_object_from_c (a_child)) then
+				reset_radio_groups
+			end
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -63,6 +78,10 @@ end -- class EV_MENU_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/04/06 23:57:35  brendel
+--| Added redefinition gtk_reorder_child because a gtk_menu_bar is not a menu,
+--| so gtk_menu_reorder_child does not work.
+--|
 --| Revision 1.8  2000/04/06 02:05:13  brendel
 --| Added initialization of list_widget.
 --|

@@ -218,13 +218,15 @@ feature -- Debugger access
 			loc_assert_id_set		: ASSERT_ID_SET
 			inh_assert_info			: INH_ASSERT_INFO
 			i						: INTEGER
+			l_body: like body			
 		do
 				-- Get the number of breakpoint slots in the body + rescue +
 				-- inner preconditions and inner postconditions
-			if body /= Void then
+			l_body := body
+			if l_body /= Void then
 					-- May be Void in case of Invariant_feature_i
-				Result := body.number_of_breakpoint_slots
-			end
+				Result := l_body.number_of_breakpoint_slots
+			end				
 
 				-- Add the number of breakpoint slots for inherited
 				-- pre & postconditions.

@@ -12,25 +12,174 @@ class
 inherit
 	EV_SPLIT_AREA
 		redefine
-			implementation
+			initialize
 		end
-	
+
 create
 	default_create
 
-feature {EV_ANY_I} -- Implementation
+feature -- Initialization
 
-	implementation: EV_HORIZONTAL_SPLIT_AREA_I
-			-- Responsible for interaction with the underlying native graphics
-			-- toolkit.
-
-	create_implementation is
-			-- Create implementation of horizontal split area.
+	initialize is
 		do
-			create implementation.make (Current)
+			create {EV_HORIZONTAL_BOX} split_box
+			create {EV_VERTICAL_SEPARATOR} sep
+			initialize_split_area
+			sep.pointer_button_press_actions.extend (~on_click)
+			is_initialized := True
 		end
 	
-end -- class EV_HORIZONTAL_SPLIT_AREA
+feature -- Access
+
+	split_position: INTEGER is
+			-- split_position of the left side of `sep' relative to
+			-- the left side of `split_box'.
+		do
+			Result := first_cell.width + 1
+
+		end
+
+	minimum_split_position: INTEGER is
+			-- Minimum size of `split_position'.
+		do
+			if first /= Void then
+				Result := first.minimum_width + 1
+			else
+				Result := 1
+			end
+		end
+
+	maximum_split_position: INTEGER is
+			-- Maximum size of `split_position'.
+		local
+			sec_item_min_width: INTEGER
+		do
+			if second /= Void then
+				sec_item_min_width := second.minimum_width
+			end
+			Result := (split_box.width - sep.width - sec_item_min_width) + 1
+		end
+
+feature -- Status setting
+
+	set_split_position (a_split_position: INTEGER) is
+			-- Set the pixel-split_position of the left side of `sep'
+			-- with respect to `split_box'.
+		do
+			first_cell.set_minimum_width (a_split_position - 1)
+		end
+
+	set_proportion (a_proportion: REAL) is
+			-- Set the position of the separator relative to `split_box'
+			-- The position set must not break min sizes of items.
+		local
+			current_proportion: INTEGER	
+		do
+			current_proportion := (a_proportion * split_box.width).rounded
+			if current_proportion < minimum_split_position then
+				set_split_position (minimum_split_position)
+			elseif current_proportion > maximum_split_position then
+				set_split_position (maximum_split_position)
+			else
+				set_split_position (current_proportion)
+			end	
+		end
+			
+
+feature {NONE} -- Implementation
+
+	separator_in_motion: BOOLEAN
+		-- Is the separator currently being dragged.
+
+	line_drawn: BOOLEAN
+		-- Has the separator line been drawn on screen.
+
+	x_offset: INTEGER
+		-- X offset of the initial click on the separator.
+
+	mouse_screen_coord: INTEGER
+		-- Initial X screen-coordinate of the drag.
+
+	on_click (a_x, a_y, e: INTEGER; f, g, h: DOUBLE; scr_x, scr_y: INTEGER) is
+			-- Start of the drag.
+		do
+			if first /= Void then
+				mouse_screen_coord := scr_x
+				x_offset := a_x
+				sep.pointer_motion_actions.extend (~on_motion)
+				first_cell_screen_x := first_cell.screen_x
+				first_cell_screen_y := first_cell.screen_y 
+				sep.enable_capture
+				sep.pointer_button_release_actions.extend (~on_release)
+			end
+		end
+
+	on_motion (a_x, a_y: INTEGER; f, g, h: DOUBLE; scr_x, scr_y: INTEGER) is
+			-- Draw separator line.
+		local
+			wid: INTEGER
+		do
+			wid := valid_split_position (scr_x - mouse_screen_coord)
+			wid := first_cell_screen_x + wid + x_offset
+
+			if separator_in_motion then
+				scr.draw_segment (previous_split_position, first_cell_screen_y,
+					previous_split_position, first_cell_screen_y + sep.height)
+				scr.draw_segment (wid, first_cell_screen_y, wid, first_cell_screen_y + sep.height)
+			else
+				scr.draw_segment (wid, first_cell_screen_y, wid, first_cell_screen_y + sep.height)
+				separator_in_motion := True
+			end
+
+			line_drawn := True
+
+			previous_split_position := wid
+		end
+
+	previous_split_position: INTEGER
+		-- Previous split_position
+
+	first_cell_screen_x: INTEGER
+	first_cell_screen_y: INTEGER
+		-- Screen X/Y of first cell, used for speed optimization of motion routine.
+
+	on_release (a_x, a_y, e: INTEGER; f, g, h: DOUBLE; scr_x, scr_y: INTEGER) is
+			-- End of the drag.
+		do
+			if line_drawn then
+				line_drawn := False
+				scr.draw_segment (previous_split_position, first_cell_screen_y,
+					previous_split_position, first_cell_screen_y + sep.height)
+			end
+	
+			first_cell.set_minimum_width (valid_split_position (scr_x - mouse_screen_coord))
+			sep.pointer_motion_actions.wipe_out
+			sep.disable_capture
+			separator_in_motion := False
+			sep.pointer_button_release_actions.wipe_out
+		end
+
+	valid_split_position (wid: INTEGER): INTEGER is
+			-- Valid split_position of `sep' from `wid'.
+		require
+			first_item_not_void: first /= Void
+		local
+			sec_item_min_width: INTEGER
+		do
+			Result := wid + first.width
+
+			if second /= Void then
+				sec_item_min_width := second.minimum_width
+			end
+
+			if Result < first.minimum_width then
+				Result := first.minimum_width
+			elseif Result > (split_box.width - sep.width - sec_item_min_width) then
+				Result := (split_box.width - sep.width - sec_item_min_width)
+			end
+		end
+			
+end -- class EV_HORIZONTAL_SPLIT_AREA_I
 
 --!-----------------------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.
@@ -53,6 +202,9 @@ end -- class EV_HORIZONTAL_SPLIT_AREA
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/02/21 20:11:17  rogers
+--| There is no longer an EV_HORIZONTAL_SPLIT_AREA_I, so moved the appropriate implementation into this class.
+--|
 --| Revision 1.5  2000/02/14 11:40:51  oconnor
 --| merged changes from prerelease_20000214
 --|

@@ -135,7 +135,7 @@ interface IEiffelProject: IUnknown
   [helpstring ("Completion information")]
   HRESULT completion_information ([out, retval] IEiffelCompletionInfo ** return_value);
 
-  [propget, helpstring ("Help documentation generator")]
+  [helpstring ("Help documentation generator")]
   HRESULT html_doc_generator ([out, retval] IEiffelHTMLDocGenerator ** return_value);
 };
 //---------------------------------------------------------------------
@@ -198,6 +198,9 @@ interface IEiffelCompiler: IUnknown
   [helpstring ("Return ISE_EIFFEL environment var.")]
   HRESULT ise_eiffel ([out, retval] BSTR * return_value);
 
+  [helpstring ("Generate a cyrptographic key filename.")]
+  HRESULT generate_msil_keyfile ([in] BSTR filename);
+
   [helpstring ("Eiffel Freeze command name")]
   HRESULT freeze_command_name ([out, retval] BSTR * return_value);
 
@@ -228,6 +231,25 @@ interface IEiffelCompilerEvents: IUnknown
 
   [helpstring ("Last error.")]
   HRESULT last_error ([in] BSTR error_message, [in] BSTR file_name, [in] ULONG line_number);
+};
+//---------------------------------------------------------------------
+[
+  oleautomation,
+  uuid (AF48D380-8F9A-436c-9763-AE1C732AB3F1),
+  helpstring ("Eiffel Project HTML Documentation Generator.")
+]
+interface IEiffelHTMLDocGenerator: IUnknown
+{
+
+  [helpstring ("Exclude a cluster from being generated.")]
+  HRESULT add_excluded_cluster ([in] BSTR cluster_full_name);
+
+  [helpstring ("Exclude a cluster from being generated.")]
+  HRESULT remove_excluded_cluster ([in] BSTR cluster_full_name);
+
+  [helpstring ("Exclude a cluster from being generated.")]
+  HRESULT generate ([in] BSTR path);
+
 };
 //---------------------------------------------------------------------
 
@@ -818,6 +840,12 @@ interface IEiffelProjectProperties: IDispatch
   [id (119), propget, helpstring ("Assemblies.")]
   HRESULT assemblies ([out, retval] IEiffelSystemAssemblies ** return_value);
 
+  [id (120), propget, helpstring ("Precompiled file.")]
+  HRESULT precompiled ([out, retval] BSTR * return_value);
+
+  [id (120), propput, helpstring ("Precompiled file.")]
+  HRESULT precompiled ([in] BSTR new_value);
+
   [id (133), propget, helpstring ("Project title.")]
   HRESULT title ([out, retval] BSTR * return_value);
 
@@ -1142,39 +1170,6 @@ interface IEiffelSystemExternals: IDispatch
 
   [id(ISECompilerID_object_files), helpstring ("Object files.")]
   HRESULT object_files ([out, retval] IEnumObjectFiles ** return_value);
-
-};
-
-//---------------------------------------------------------------------
-
-[
-  dual, object,
-  uuid (30626121-3DF8-41f2-81B9-6F554A0F7D5C),
-  helpstring ("Eiffel Project HTML Document generator.")
-]
-interface IEiffelHTMLDocGenerator: IDispatch
-{
-
-  [id(ISECompilerID_add_exclude_cluster), helpstring("Add excluded cluster")]
-  HRESULT add_excluded_cluster ([in] BSTR cluster_to_exclude);
-
-  [id(ISECompilerID_remove_exclude_cluster), helpstring("Remove excluded cluster")]
-  HRESULT remove_excluded_cluster ([in] BSTR excluded_cluster);
-
-  [helpstring("is the project incompatible?")]
-  HRESULT is_incompatible ([out, retval] VARIANT_BOOL * return_value);
-
-  [helpstring("is the project corrupted?")]
-  HRESULT is_corrupted ([out, retval] VARIANT_BOOL * return_value);
-
-  [propget, helpstring("the last error")]
-  HRESULT last_error ([out, retval] BSTR * return_value);
-
-  [id(ISECompilerID_project), helpstring("Load a compiled project")]
-  HRESULT load_project ([in] BSTR project_dir, [out, retval] VARIANT_BOOL * return_value);
-
-  [id(ISECompilerID_generate), helpstring("Generate the documentation.")]
-  HRESULT generate ([in] BSTR generation_dir);
 
 };
 

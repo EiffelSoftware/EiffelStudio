@@ -1174,7 +1174,7 @@ feature -- Menu Building
 				-- Search
 			create cmd.make
 			cmd.set_menu_name (Interface_names.m_Search + "%T" + Editor_preferences.shorcut_name_for_action (3))
-			cmd.add_agent (editor~search)
+			cmd.add_agent (~search)
 			command_menu_item := cmd.new_menu_item
 			command_controller.add_edition_command (cmd)
 			add_recyclable (command_menu_item)
@@ -1524,7 +1524,7 @@ feature -- Menu Building
 
 			if has_metrics then
 					-- Metric tool
-				create metric_menu.make_with_text (interface_names.l_Tab_metrics)
+				create metric_menu.make_with_text (interface_names.metric_metrics)
 					create menu_item.make_with_text (interface_names.metric_calculate)
 					metric_menu.extend (menu_item)
 					create menu_item.make_with_text (interface_names.metric_add)
@@ -2304,7 +2304,7 @@ feature {NONE} -- Implementation
 							end
 							managed_main_formatters.i_th (2).execute
 						else
-							if not changed then
+							if not changed or not same_class then
 									--| Enable all formatters.
 								if
 									not feature_stone_already_processed or
@@ -2321,7 +2321,14 @@ feature {NONE} -- Implementation
 								end
 							else
 								address_manager.disable_formatters
-								managed_main_formatters.first.set_stone (new_class_stone)
+								from
+									managed_main_formatters.start
+								until
+									managed_main_formatters.after
+								loop
+									managed_main_formatters.item.set_stone (new_class_stone)
+									managed_main_formatters.forth
+								end
 							end
 						end
 					end
@@ -2677,6 +2684,17 @@ feature {NONE} -- Implementation: Editor commands
 			-- Select the whole text in the focused editor.
 		do
 			current_editor.select_all
+		end
+
+	search is
+			-- Search some text in the focused editor.
+		local
+			cv_ced: EB_CLICKABLE_EDITOR
+		do
+			cv_ced ?= current_editor
+			if cv_ced /= Void then
+				cv_ced.search
+			end
 		end
 
 	find_next is

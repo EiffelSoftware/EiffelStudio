@@ -20,7 +20,6 @@ feature {NONE}
 			execute (an_associated_command)
 		end;
 
-
 	cmd_instance: CMD_INSTANCE;
 
 	c_name: STRING is
@@ -46,7 +45,7 @@ feature {NONE}
 	undo is
 		do
 			if cmd_instance.edited then
-				cmd_instance.command_tool.clear
+				cmd_instance.command_tool.close
 			end;
 		end;
 

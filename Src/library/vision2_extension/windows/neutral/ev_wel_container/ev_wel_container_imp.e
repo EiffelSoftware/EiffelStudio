@@ -161,6 +161,8 @@ feature {NONE} -- Implementation
 			wel_message_actions.call ([hwnd, msg, wparam, lparam])
 		end
 
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
 	interface: EV_WEL_CONTAINER
 		-- Interface of `Current'.
 

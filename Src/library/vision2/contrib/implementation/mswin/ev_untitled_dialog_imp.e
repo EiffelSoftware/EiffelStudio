@@ -14,7 +14,8 @@ inherit
 			update_style,
 			extra_minimum_height,
 			promote_to_modeless_dialog,
-			promote_to_modal_dialog
+			promote_to_modal_dialog,
+			common_dialog_imp
 		end
 
 create

@@ -45,7 +45,7 @@ feature -- Access
 			Result := implementation.implementation_window
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: WEL_EV_CONTAINER_I
 			-- Responsible for interaction with native graphics toolkit.

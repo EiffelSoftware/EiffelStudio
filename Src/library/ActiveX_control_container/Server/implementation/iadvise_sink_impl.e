@@ -11,7 +11,7 @@ inherit
 	
 feature -- Basic Operations
 
-	on_data_change (p_formatetc: TAG_FORMATETC_RECORD; p_stgmed: CELL [WIRE_STGMEDIUM_ALIAS]) is
+	on_data_change (p_formatetc: TAG_FORMATETC_RECORD; p_stgmed: STGMEDIUM_RECORD) is
 			-- Advises that data has changed.
 			-- `p_formatetc' [in].  
 			-- `p_stgmed' [in].  

@@ -17,7 +17,7 @@ inherit
 
 	EV_COMMAND
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			frame: EV_FRAME
 			button: EV_BUTTON
 		do
-			{EV_VERTICAL_BOX} Precursor (par)
+			Precursor {EV_VERTICAL_BOX} (par)
 			create tooltip.make
 
 			create button.make_with_text (Current, "Move mouse over button.")

@@ -16,7 +16,7 @@ inherit
 		end
 
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -26,7 +26,7 @@ feature -- Initialization
 		local
 			l1: EV_LABEL
 		do
-			{ANY_TAB} Precursor (par)
+			Precursor {ANY_TAB} (par)
 				-- Creates the objects and their commands
 			create l1.make_with_text(Current,"EV_PRIMITIVE is a deferred class and therefore,%N there are no features that can be modified.")
 			set_child_position (l1, 0, 0, 1, 1)

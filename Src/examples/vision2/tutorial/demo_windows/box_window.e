@@ -15,7 +15,7 @@ inherit
 	DEMO_WINDOW
 	WIDGET_COMMANDS		
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -25,12 +25,12 @@ feature {NONE} -- Initialization
 			-- For efficiency, we first create the box without
 			-- parent.
 		do
-			{EV_HORIZONTAL_BOX} Precursor (Void)
+			Precursor {EV_HORIZONTAL_BOX} (Void)
 			set_border_width (10)
-			!! button.make_with_text (Current, "Press me")
-			!! button.make_with_text (Current, "Button with a very long label")
+			create button.make_with_text (Current, "Press me")
+			create button.make_with_text (Current, "Button with a very long label")
 			set_child_expandable (button, False)
-			!! button.make_with_text (Current, "Button 3")
+			create button.make_with_text (Current, "Button 3")
 			create event_window.make (Current)
 			add_widget_commands (Current, event_window, "box")
 			set_parent (par)

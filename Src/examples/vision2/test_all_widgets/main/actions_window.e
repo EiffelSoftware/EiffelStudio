@@ -13,7 +13,7 @@ class
 inherit
 	EV_WINDOW
 
-creation
+create
 	make_with_main_widget
 
 feature -- Access
@@ -55,59 +55,59 @@ feature -- Status setting
 			vsep: EV_VERTICAL_SEPARATOR
 			hsep: EV_HORIZONTAL_SEPARATOR
                 do
-			!! table.make (Current)
+			create table.make (Current)
 			table.set_homogeneous (False)
 
-			!! hide_c
-			!! show_c
-			!! a.make (active_widget)
+			create hide_c
+			create show_c
+			create a.make (active_widget)
 			
 			-- Show and hide button
-			!! show_button.make_with_text (table, "Show")
+			create show_button.make_with_text (table, "Show")
 			show_button.add_click_command (show_c, a)
 			table.set_child_position (show_button, 0, 0, 4, 1)
-			!! hide_button.make_with_text (table, "Hide")
+			create hide_button.make_with_text (table, "Hide")
 			hide_button.add_click_command (hide_c, a)
 			table.set_child_position (hide_button, 4, 0, 8, 1)
-			!! vsep.make (table)
+			create vsep.make (table)
 			table.set_child_position (vsep, 0, 1, 8, 2)
 			vsep.set_minimum_width (10)
 
 			-- Width and height entries
-			!! width_entry.make_with_label (table, "Width: ")
+			create width_entry.make_with_label (table, "Width: ")
 			table.set_child_position (width_entry.box, 0, 2, 1, 4)
-			!! height_entry.make_with_label (table, "Height: ")
+			create height_entry.make_with_label (table, "Height: ")
 			table.set_child_position (height_entry.box, 1, 2, 2, 4)
 
 			-- Get and set buttons
-			!! aaa.make (active_widget, width_entry, height_entry)
-			!! g_s_c
-			!! get_size_b.make_with_text (table, "Get")
+			create aaa.make (active_widget, width_entry, height_entry)
+			create g_s_c
+			create get_size_b.make_with_text (table, "Get")
  			get_size_b.add_click_command (g_s_c, aaa)
 			table.set_child_position (get_size_b, 2, 2, 3, 3)
-			!! s_s_c
-			!! set_size_b.make_with_text (table, "Set")
+			create s_s_c
+			create set_size_b.make_with_text (table, "Set")
 			set_size_b.add_click_command (s_s_c, aaa)
 			table.set_child_position (set_size_b, 2, 3, 3, 4)
 			set_size_b.set_insensitive (True)
-			!! hsep.make (table)
+			create hsep.make (table)
 			table.set_child_position (hsep, 3, 2, 5, 4)
 			hsep.set_minimum_height (10)
 
 			-- Minimum width and height entries
-			!! min_width_entry.make_with_label (table, "Minimum width: ")
+			create min_width_entry.make_with_label (table, "Minimum width: ")
 			table.set_child_position (min_width_entry.box, 5, 2, 6, 4)
-			!! min_height_entry.make_with_label (table, "Minimum height: ")
+			create min_height_entry.make_with_label (table, "Minimum height: ")
 			table.set_child_position (min_height_entry.box, 6, 2, 7, 4)
 			
 			-- Get and set buttons
-			!! aaa.make (active_widget, min_width_entry, min_height_entry)
-			!! g_ms_c
-			!! get_size_b.make_with_text (table, "Get")
+			create aaa.make (active_widget, min_width_entry, min_height_entry)
+			create g_ms_c
+			create get_size_b.make_with_text (table, "Get")
 			get_size_b.add_click_command (g_ms_c, aaa)
 			table.set_child_position (get_size_b, 7, 2, 8, 3)
-			!! s_ms_c
-			!! set_size_b.make_with_text (table, "Set")
+			create s_ms_c
+			create set_size_b.make_with_text (table, "Set")
 			set_size_b.add_click_command (s_ms_c, aaa)
 			table.set_child_position (set_size_b, 7, 3, 8, 4)
 		end

@@ -29,21 +29,21 @@ feature -- Initialization
 			create a_menu_bar
 			create a_menu.make_with_text ("Actions")
 			create a_menu_item.make_with_text ("Get Selected Item(s)")
-			a_menu_item.select_actions.extend (~get_selected_items)
+			a_menu_item.select_actions.extend (agent get_selected_items)
 			a_menu.extend (a_menu_item)
 			create a_menu_item.make_with_text ("Select All Items")
-			a_menu_item.select_actions.extend (~select_all_items)
+			a_menu_item.select_actions.extend (agent select_all_items)
 			a_menu.extend (a_menu_item)
 			create a_menu_item.make_with_text ("Enable Multiple Selection")
-			a_menu_item.select_actions.extend (~enable_multiple_selection)
+			a_menu_item.select_actions.extend (agent enable_multiple_selection)
 			a_menu.extend (a_menu_item)
 			create a_menu_item.make_with_text ("Disable Multiple Selection")
-			a_menu_item.select_actions.extend (~disable_multiple_selection)
+			a_menu_item.select_actions.extend (agent disable_multiple_selection)
 			a_menu.extend (a_menu_item)
 			create a_menu_separator
 			a_menu.extend (a_menu_separator)
 			create a_menu_item.make_with_text ("Exit")
-			a_menu_item.select_actions.extend (~exit_application)
+			a_menu_item.select_actions.extend (agent exit_application)
 			a_menu.extend (a_menu_item)
 			a_menu_bar.extend (a_menu)
 			first_window.set_menu_bar (a_menu_bar)
@@ -57,7 +57,7 @@ feature -- Initialization
 			my_list.enable_multiple_selection
 
 			create an_item.make_with_text ("Item "+i.out)
-			an_item.pointer_motion_actions.extend (~toto)
+			an_item.pointer_motion_actions.extend (agent toto)
 			my_list.extend (an_item)
 
 			from
@@ -70,8 +70,8 @@ feature -- Initialization
 				i := i + 1
 			end
 
-			my_list.select_actions.extend (~report_selected)
-			my_list.deselect_actions.extend (~report_selected)
+			my_list.select_actions.extend (agent report_selected)
+			my_list.deselect_actions.extend (agent report_selected)
 
 			my_container.extend (my_list)
 			my_container.extend (my_label)

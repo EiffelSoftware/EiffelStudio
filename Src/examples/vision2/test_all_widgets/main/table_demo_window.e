@@ -16,7 +16,7 @@ inherit
 			set_values
 		end
 
-creation
+create
 	make
 
 feature -- Access
@@ -24,7 +24,7 @@ feature -- Access
 	main_widget: EV_TABLE is
 			-- The main widget of the demo
 		once
-			!! Result.make (Current)
+			create Result.make (Current)
 			Result.set_minimum_size(300,300)
 		end
 	
@@ -39,16 +39,16 @@ feature -- Status setting
 	set_widgets is
 			-- Set the widgets in the demo windows.
 		do
-			!! button.make_with_text (main_widget, "OK")
+			create button.make_with_text (main_widget, "OK")
 			main_widget.set_child_position (button, 0, 0, 3, 1)
 
-			!! note.make (main_widget)
-			!! button.make_with_text (note, "Press me")
+			create note.make (main_widget)
+			create button.make_with_text (note, "Press me")
 			note.append_page (button, "Page 1")
-			!! button.make_with_text (note, "Me too")
+			create button.make_with_text (note, "Me too")
 			note.append_page (button, "Page 2")
 			main_widget.set_child_position (note, 1, 1, 3, 3)
-			!! text.make (main_widget)
+			create text.make (main_widget)
 			main_widget.set_child_position (text, 0, 1, 1, 3)
 		end
 	

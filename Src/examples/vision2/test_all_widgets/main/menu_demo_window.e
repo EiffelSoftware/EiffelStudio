@@ -20,7 +20,7 @@ inherit
 
 	EV_COMMAND
 
-creation
+create
 	make
 
 feature -- Access
@@ -28,7 +28,7 @@ feature -- Access
 	main_widget: EV_OPTION_BUTTON is
 			-- The main widget of the demo
 		once
-			!! Result.make (Current)
+			create Result.make (Current)
 			Result.set_minimum_size(300,100)
 		end
 	
@@ -47,39 +47,39 @@ feature -- Status setting
 	set_widgets is
 			-- Set the widgets in the demo windows.
 		do
-			!! menu.make_with_text (main_widget, "Menu")
-			!! menu_item.make_with_text (menu, "Item 1")
-			!! menu_item.make_with_text (menu, "Item 2")
+			create menu.make_with_text (main_widget, "Menu")
+			create menu_item.make_with_text (menu, "Item 1")
+			create menu_item.make_with_text (menu, "Item 2")
 			menu_item.set_insensitive (True)
-			!! menu_item.make_with_text (menu, "Item 3")
-			!! menu2.make_with_text (menu, "Menu 2")
-			!! menu_item.make_with_text (menu2, "Item 1")
-			!! menu_item.make_with_text (menu2, "Item 2")
-			!! menu_item.make_with_text (menu2, "Item 3")
+			create menu_item.make_with_text (menu, "Item 3")
+			create menu2.make_with_text (menu, "Menu 2")
+			create menu_item.make_with_text (menu2, "Item 1")
+			create menu_item.make_with_text (menu2, "Item 2")
+			create menu_item.make_with_text (menu2, "Item 3")
 
-			!! static.make (Current)
-			!! menu.make_with_text (static, "File")
-			!! menu_item.make_with_text (menu, "New")
-			!! menu_item.make_with_text (menu, "Open")
-			!! menu_item.make_with_text (menu, "Save")
+			create static.make (Current)
+			create menu.make_with_text (static, "File")
+			create menu_item.make_with_text (menu, "New")
+			create menu_item.make_with_text (menu, "Open")
+			create menu_item.make_with_text (menu, "Save")
 			menu_item.set_insensitive (True)
-			!! check_menu_item.make_with_text (menu, "Auto save")
-			!! menu_item5.make_with_text (menu, "Quit")
+			create check_menu_item.make_with_text (menu, "Auto save")
+			create menu_item5.make_with_text (menu, "Quit")
 			menu_item5.add_select_command (Current, Void)
 						
-			!! menu.make_with_text (static, "Edit")
-			!! check_menu_item.make_with_text (menu, "Cut")
-			!! check_menu_item.make_with_text (menu, "Copy")
-			!! check_menu_item.make_with_text (menu, "Paste")
+			create menu.make_with_text (static, "Edit")
+			create check_menu_item.make_with_text (menu, "Cut")
+			create check_menu_item.make_with_text (menu, "Copy")
+			create check_menu_item.make_with_text (menu, "Paste")
 			
-			!! menu.make_with_text (static, "Test")
-			!! menu_item.make_with_text (menu, "Sub menu1")
-			!! menu_item2.make_with_text (menu_item, "Selection 1")
-			!! menu_item3.make_peer_with_text (menu_item, "Selection 2", menu_item2)
-			!! menu_item4.make_peer_with_text (menu_item, "Selection 3", menu_item2)
-			!! menu_item2.make_with_text (menu_item, "Selection 1")
-			!! menu_item3.make_peer_with_text (menu_item, "Selection 2", menu_item2)
-			!! menu_item4.make_peer_with_text (menu_item, "Selection 3", menu_item2)
+			create menu.make_with_text (static, "Test")
+			create menu_item.make_with_text (menu, "Sub menu1")
+			create menu_item2.make_with_text (menu_item, "Selection 1")
+			create menu_item3.make_peer_with_text (menu_item, "Selection 2", menu_item2)
+			create menu_item4.make_peer_with_text (menu_item, "Selection 3", menu_item2)
+			create menu_item2.make_with_text (menu_item, "Selection 1")
+			create menu_item3.make_peer_with_text (menu_item, "Selection 2", menu_item2)
+			create menu_item4.make_peer_with_text (menu_item, "Selection 3", menu_item2)
 		end
 	
 feature -- Status setting

@@ -15,7 +15,7 @@ inherit
 		end
 
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -25,11 +25,11 @@ feature -- Initialization
 		local
 			cmd1, cmd2: EV_ROUTINE_COMMAND
 		do
-			{ANY_TAB} Precursor (Void)
+			Precursor {ANY_TAB} (Void)
 		
 				-- Creates the objects and their commands
-			create cmd1.make (~set_split_position)
-			create cmd2.make (~get_split_position)
+			create cmd1.make (agent set_split_position)
+			create cmd2.make (agent get_split_position)
 			create f1.make (Current, 0, 0, "Split Position", cmd1, cmd2)
 --			create cmd1.make (~set_minimum_position)
 --			create cmd2.make (~get_minimum_position)

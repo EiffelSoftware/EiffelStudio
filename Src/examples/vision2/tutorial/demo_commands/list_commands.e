@@ -18,9 +18,9 @@ feature -- Initialization
 			list_current_name := name
 			list_e_window := e
 			list ?= w
-			create cmd.make (~select_command)
+			create cmd.make (agent select_command)
 			list.add_select_command (cmd, Void)
-			create cmd.make (~unselect_command)
+			create cmd.make (agent unselect_command)
 			list.add_unselect_command (cmd, Void)
 		end
 

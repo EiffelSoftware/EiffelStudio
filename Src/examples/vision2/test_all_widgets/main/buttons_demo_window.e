@@ -17,7 +17,7 @@ inherit
 			set_values
 		end
 
-creation
+create
 	make
 
 feature -- Access
@@ -25,7 +25,7 @@ feature -- Access
 	main_widget: EV_VERTICAL_BOX is
 			-- The main widget of the demo
 		once
-			!! Result.make (Current)
+			create Result.make (Current)
 		end
 	
 feature -- Access
@@ -46,20 +46,20 @@ feature -- Status setting
 			-- Set the widgets in the demo windows.
 		do
 			main_widget.set_homogeneous (False)
-			!! b1.make_with_text (main_widget, "Button")
+			create b1.make_with_text (main_widget, "Button")
 			
 --			!! pixmap.make_from_file (the_parent.pixname("power_small"))
-			!! b2.make (main_widget)
+			create b2.make (main_widget)
 --			!! pixmap.make_from_file (the_parent.pixname("power_small"))
-			!! toggle_b.make_with_text (main_widget, "Toggle Button")
-			!! check_b.make_with_text (main_widget, "Check Button")
+			create toggle_b.make_with_text (main_widget, "Toggle Button")
+			create check_b.make_with_text (main_widget, "Check Button")
 
-			!! frame.make_with_text (main_widget, "Frame")
+			create frame.make_with_text (main_widget, "Frame")
 			frame.set_foreground_color (blue)
-			!! box.make (frame)
-			!! radio1_b.make_with_text (box, "Radio 1")
-			!! radio2_b.make_with_text (box, "Radio 2")
-			!! radio3_b.make_with_text (box, "Radio 3")
+			create box.make (frame)
+			create radio1_b.make_with_text (box, "Radio 1")
+			create radio2_b.make_with_text (box, "Radio 2")
+			create radio3_b.make_with_text (box, "Radio 3")
        	end
 
 	set_values is
@@ -72,7 +72,7 @@ feature -- Color
 
 	blue: EV_COLOR is
 		do
-			!! Result.make_rgb (0, 0, 255)
+			create Result.make_rgb (0, 0, 255)
 		end
 
 end -- class BUTTONS_DEMO_WINDOW

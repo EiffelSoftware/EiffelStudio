@@ -14,7 +14,7 @@ inherit
 			current_widget
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -25,28 +25,28 @@ feature -- Initialization
 			cmd1,cmd2: EV_ROUTINE_COMMAND
 			h1: EV_HORIZONTAL_SEPARATOR
 		do
-			{ANY_TAB} Precursor (Void)
+			Precursor {ANY_TAB} (Void)
 				
 				-- Creates the objects and their commands
-			create cmd2.make (~get_rows)
+			create cmd2.make (agent get_rows)
 			create f1.make (Current, 0, 0, "Rows", Void, cmd2)
-			create cmd2.make (~get_columns)
+			create cmd2.make (agent get_columns)
 			create f2.make (Current, 1, 0, "Columns", Void, cmd2)
-			create cmd1.make (~aset_row_spacing)
-			create cmd2.make (~get_row_spacing)
+			create cmd1.make (agent aset_row_spacing)
+			create cmd2.make (agent get_row_spacing)
 			create f3.make (Current, 2, 0, "Row Spacing", cmd1, cmd2)
-			create cmd1.make (~aset_column_spacing)
-			create cmd2.make (~get_column_spacing)
+			create cmd1.make (agent aset_column_spacing)
+			create cmd2.make (agent get_column_spacing)
 			create f4.make (Current, 3, 0, "Column Spacing", cmd1, cmd2)
 			create h1.make (Current)
 			set_child_position (h1, 4, 0, 5, 3)
 			create b2.make_with_text (Current,"Add Buttons")
-			create cmd1.make (~add_buttons)
+			create cmd1.make (agent add_buttons)
 			b2.add_click_command(cmd1, Void)
 			b2.set_vertical_resize(False)
 			set_child_position (b2, 5, 0, 6, 1)
 			create b1.make_with_text (Current, "Reset Table")
-			create cmd1.make (~reset_table)
+			create cmd1.make (agent reset_table)
 			b1.add_click_command(cmd1, Void)
 			b1.set_vertical_resize(False)
 			set_child_position (b1, 5, 1, 6, 2)

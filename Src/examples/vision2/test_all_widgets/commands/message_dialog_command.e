@@ -18,7 +18,7 @@ feature -- Command execution
 		local
 			dialog: EV_INFORMATION_DIALOG
 		do
-			!!dialog.make_default(arg.first, "Info box", "This is some information!")
+			create dialog.make_default(arg.first, "Info box", "This is some information!")
 		end
 
 end -- class MESSAGE_DIALOG_COMMAND

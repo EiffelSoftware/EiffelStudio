@@ -15,7 +15,7 @@ inherit
 			make
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			make_with_text (par, " Show ")
 			set_vertical_resize (False)
 			set_horizontal_resize (False)
-			!! cmd.make (~execute1)
+			create cmd.make (agent execute1)
 			add_click_command (cmd, Void)
 		end
 
@@ -50,7 +50,7 @@ feature -- Execution features
 			if information /= Void then
 				information.show
 			else
-				!! information.make_default (parent, "Information Dialog", "2 + 2 = 4")
+				create information.make_default (parent, "Information Dialog", "2 + 2 = 4")
 			end
 		end
 

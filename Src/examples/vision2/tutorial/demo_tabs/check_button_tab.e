@@ -15,7 +15,7 @@ inherit
 		end
 
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -24,7 +24,7 @@ feature -- Initialization
 			-- Create the tab and initialise objects
 
 		once
-			{ANY_TAB} Precursor (Void)
+			Precursor {ANY_TAB} (Void)
 			
 				-- Creates the objects and their commands
 			create label.make_with_text(Current, "All features are inherited from EV_TOGGLE_BUTTON,%Ntherefore there are no features unique to EV_CHECK_BUTTON to modify")

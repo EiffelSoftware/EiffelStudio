@@ -15,7 +15,7 @@ inherit
 			make
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			pparent:= par
 			set_vertical_resize (False)
 			set_horizontal_resize (False)
-			!! cmd.make (~execute1)
+			create cmd.make (agent execute1)
 			add_click_command (cmd, Void)
 		end
 
@@ -56,7 +56,7 @@ feature -- Execution features
 			if dialog /= Void then
 				dialog.show
 			else
-				!! dialog.make (parent)
+				create dialog.make (parent)
 				create col.make_rgb (134, 23, 57)
 				dialog.select_color (col)
 				dialog.show

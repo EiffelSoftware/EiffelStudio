@@ -19,7 +19,7 @@ inherit
 	TOGGLE_BUTTON_COMMANDS
 
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			-- We create the box first without parent because it
 			-- is faster.
 		do
-			{EV_CHECK_BUTTON} Precursor (par)
+			Precursor {EV_CHECK_BUTTON} (par)
 			set_text ("Check Button")
 			create event_window.make (Current)
 			add_widget_commands (Current, event_window, "toggle button")

@@ -14,7 +14,7 @@ inherit
 			current_widget
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -24,16 +24,16 @@ feature -- Initialization
 		local
 			cmd1, cmd2: EV_ROUTINE_COMMAND
 		do
-			{ANY_TAB} Precursor (Void)
+			Precursor {ANY_TAB} (Void)
 		
 			-- Create the objects and their commands
-			create cmd2.make (~get_client_width)
+			create cmd2.make (agent get_client_width)
 			create f1.make (Current, 0, 0, "client width", Void, cmd2)
 
-			create cmd2.make (~get_client_height)
+			create cmd2.make (agent get_client_height)
 			create f2.make (Current, 1, 0, "client height", Void, cmd2)
 
-			create cmd2.make (~get_managed)
+			create cmd2.make (agent get_managed)
 			create f3.make (Current, 2, 0, "Managed", Void, cmd2)
 			set_parent(par)
 		end

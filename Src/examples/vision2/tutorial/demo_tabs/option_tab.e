@@ -15,7 +15,7 @@ inherit
 		end
 
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -25,13 +25,13 @@ feature -- Initialization
 		local
 			cmd2: EV_ROUTINE_COMMAND
 		once
-			{ANY_TAB} Precursor (par)
+			Precursor {ANY_TAB} (par)
 			
 				-- Creates the objects and their commands
-			create cmd2.make(~selected_item)
+			create cmd2.make(agent selected_item)
 			create f1.make (Current, 0, 0, "Selected Item", Void, cmd2)
 
-			create cmd2.make (~child_menu)
+			create cmd2.make (agent child_menu)
 			create f2.make (Current, 1, 0, "Child Menu", Void, cmd2)
 --			set_parent(par)
 		end

@@ -10,7 +10,7 @@ class
 inherit
 	FIGURE_ITEM
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -28,8 +28,8 @@ feature -- Access
 		local
 			pict: EV_PIXMAP
 		do
-			!! Result.make
-			!! pict.make_from_file ("c:\winnt\winnt256.bmp")
+			create Result.make
+			create pict.make_from_file ("c:\winnt\winnt256.bmp")
 			Result.set_pixmap (pict)
 		end
 

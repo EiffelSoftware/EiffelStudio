@@ -22,7 +22,7 @@ feature -- Initialization
 		do
 			create ev_screen
 			create timer
-			timer.actions.extend (~on_timer)
+			timer.actions.extend (agent on_timer)
 			timer.set_interval (200)
 		end
 

@@ -102,9 +102,9 @@ feature -- Initialization
 
 			my_device.draw_pixmap (0, 0, pixmap)
 
-			my_device.expose_actions.extend (~on_repaint)
-			my_device.pointer_motion_actions.extend (~on_mouse_move)
-			my_device.pointer_button_press_actions.extend (~on_click)
+			my_device.expose_actions.extend (agent on_repaint)
+			my_device.pointer_motion_actions.extend (agent on_mouse_move)
+			my_device.pointer_button_press_actions.extend (agent on_click)
 
 			-- Bind the world and the device and you're all set.
 			create projector.make (my_world, my_device)

@@ -16,7 +16,7 @@ inherit
 		end
 	WIDGET_COMMANDS
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -26,13 +26,13 @@ feature {NONE} -- Initialization
 		local
 			cmd: EV_ROUTINE_COMMAND
 		do
-			{EV_DRAWING_AREA} Precursor (par)
+			Precursor {EV_DRAWING_AREA} (par)
 			set_minimum_size (200, 200)
 			create event_window.make (Current)
 			add_widget_commands (Current, event_window, "drawing area")
-			create cmd.make (~resize_command)
+			create cmd.make (agent resize_command)
 			add_resize_command (cmd, Void)
-			create cmd.make (~paint_command)
+			create cmd.make (agent paint_command)
 			add_paint_command (cmd, Void)
 		end
 

@@ -19,7 +19,7 @@ inherit
 	
 	EXECUTION_ENVIRONMENT
 
-creation
+create
 	make_top_level
 
 feature --Access
@@ -53,47 +53,47 @@ feature -- Initialization
 			c18: COMBO_DEMO_WINDOW
 			c19: STATUS_DEMO_WINDOW
 		do
-			{EV_WINDOW} Precursor
-			!!container.make (Current)
+			Precursor {EV_WINDOW}
+			create container.make (Current)
 			container.set_finite_dimension (3)
 			container.set_row_layout
-			!!c1.make (Current)
-			!!c2.make (Current)
-			!!c3.make (Current)
-			!!c4.make (Current)
-			!!c5.make (Current)
-			!!c6.make (Current)
-			!!c7.make (Current)
-			!!c8.make (Current)
-			!!c9.make (Current)
-			!!c10.make (Current)
-			!!c11.make (Current)
-			!!c12.make (Current)		
-			!!c13.make (Current)
-			!!c14.make (Current)
-			!!c15.make (Current)
-			!!c16.make (Current)
-			!!c18.make (Current)
-			!!c19.make (Current)
+			create c1.make (Current)
+			create c2.make (Current)
+			create c3.make (Current)
+			create c4.make (Current)
+			create c5.make (Current)
+			create c6.make (Current)
+			create c7.make (Current)
+			create c8.make (Current)
+			create c9.make (Current)
+			create c10.make (Current)
+			create c11.make (Current)
+			create c12.make (Current)		
+			create c13.make (Current)
+			create c14.make (Current)
+			create c15.make (Current)
+			create c16.make (Current)
+			create c18.make (Current)
+			create c19.make (Current)
 			
-			!!b.make_button (Current, "Label", "", c1)
-			!!b.make_button (Current, "Buttons", pixname("buttons"), c10)
-			!!b.make_button (Current, "Fixed", "", c2) -- pixname("fixed")
-			!!b.make_button (Current, "Box", pixname("box"), c3) 
-			!!b.make_button (Current, "Notebook", pixname("notebook"), c4) 
-			!!b.make_button (Current, "Text field", pixname("text_field"), c5)  
-			!!b.make_button (Current, "Text area", pixname("text_area"), c6)
- 			!!b.make_button (Current, "Menu", pixname("menu"), c7) 
-			!!b.make_button (Current, "Split area", pixname("split_area"), c8)
-			!!b.make_button (Current, "Scrollable area", pixname("scrollable_area"), c9)
-			!!b.make_button (Current, "List", "", c11)
-			!!b.make_button (Current, "Table", "", c12)  --pixname("table")
-			!!b.make_button (Current, "Dynamic Table", "", c13) -- pixname("dtable")
-			!!b.make_button (Current, "Tree", "", c14)  --pixname("tree")
-			!!b.make_button (Current, "MC List", "", c15)
-			!!b.make_button (Current, "Dialog", "", c16)
-			!!b.make_button (Current, "Combo box", "", c18)
-			!!b.make_button (Current, "Status Bar", "", c19)
+			create b.make_button (Current, "Label", "", c1)
+			create b.make_button (Current, "Buttons", pixname("buttons"), c10)
+			create b.make_button (Current, "Fixed", "", c2) -- pixname("fixed")
+			create b.make_button (Current, "Box", pixname("box"), c3) 
+			create b.make_button (Current, "Notebook", pixname("notebook"), c4) 
+			create b.make_button (Current, "Text field", pixname("text_field"), c5)  
+			create b.make_button (Current, "Text area", pixname("text_area"), c6)
+ 			create b.make_button (Current, "Menu", pixname("menu"), c7) 
+			create b.make_button (Current, "Split area", pixname("split_area"), c8)
+			create b.make_button (Current, "Scrollable area", pixname("scrollable_area"), c9)
+			create b.make_button (Current, "List", "", c11)
+			create b.make_button (Current, "Table", "", c12)  --pixname("table")
+			create b.make_button (Current, "Dynamic Table", "", c13) -- pixname("dtable")
+			create b.make_button (Current, "Tree", "", c14)  --pixname("tree")
+			create b.make_button (Current, "MC List", "", c15)
+			create b.make_button (Current, "Dialog", "", c16)
+			create b.make_button (Current, "Combo box", "", c18)
+			create b.make_button (Current, "Status Bar", "", c19)
 
 			set_values
 		end

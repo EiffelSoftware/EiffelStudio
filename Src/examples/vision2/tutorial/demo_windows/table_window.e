@@ -15,7 +15,7 @@ inherit
 	DEMO_WINDOW
 	WIDGET_COMMANDS
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -24,19 +24,19 @@ feature {NONE} -- Initialization
 			-- Create the demo in `par'.
 			-- First, we put a Void parent because it is faster
 		do
-			{EV_TABLE} Precursor (Void)
+			Precursor {EV_TABLE} (Void)
 			
-			!! button.make_with_text (Current, "OK")
+			create button.make_with_text (Current, "OK")
 			set_child_position (button, 0, 0, 1, 1)
-			!! button.make_with_text (Current, "KO")
+			create button.make_with_text (Current, "KO")
 			set_child_position (button, 1, 0, 3, 1)
-			!! note.make (Current)
-			!! button.make_with_text (note, "Press me")
+			create note.make (Current)
+			create button.make_with_text (note, "Press me")
 			note.append_page (button, "Page 1")
-			!! button.make_with_text (note, "Me too")
+			create button.make_with_text (note, "Me too")
 			note.append_page (button, "Page 2")
 			set_child_position (note, 1, 1, 3, 5)
-			!! text.make (Current)
+			create text.make (Current)
 			set_child_position (text, 0, 1, 1, 5)
 
 			set_homogeneous (false)
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			set_column_spacing (5)
 			create event_window.make (Current)
 			add_widget_commands (Current, event_window, "table")
-			!!button_list.make
+			create button_list.make
 			set_parent (par)
 		end
 

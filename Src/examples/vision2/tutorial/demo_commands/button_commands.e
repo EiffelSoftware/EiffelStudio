@@ -18,7 +18,7 @@ feature -- Initialization
 			button_current_name := name
 			button_e_window := e
 			button ?= w
-			create cmd.make (~click_command)
+			create cmd.make (agent click_command)
 			button.add_click_command (cmd, Void)
 		end
 

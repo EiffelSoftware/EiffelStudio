@@ -19,7 +19,7 @@ inherit
 	TEXT_FIELD_COMMANDS
 	LIST_COMMANDS
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -29,14 +29,14 @@ feature {NONE} -- Initialization
 			-- We create the box first without parent because it
 			-- is faster.
 		do
-			{EV_COMBO_BOX} Precursor (par)
+			Precursor {EV_COMBO_BOX} (par)
 --			set_editable (False)
 
-			!! item1.make_with_text (Current, "Item 1")
-			!! item2.make (Current)
+			create item1.make_with_text (Current, "Item 1")
+			create item2.make (Current)
 			item2.set_text ("Item 2")
 			item2.set_selected (True)
-			!! item3.make_with_text (Current, "Item 3")
+			create item3.make_with_text (Current, "Item 3")
 			set_text ("Please select an item")
 			select_all
 			create event_window.make (Current)

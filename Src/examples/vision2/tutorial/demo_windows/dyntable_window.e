@@ -15,7 +15,7 @@ inherit
 	DEMO_WINDOW
 	WIDGET_COMMANDS
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -25,28 +25,28 @@ feature {NONE} -- Initialization
 			-- We create the table first without parent because
 			-- it is faster.
 		do
-			{EV_DYNAMIC_TABLE} Precursor (Void)
+			Precursor {EV_DYNAMIC_TABLE} (Void)
 			set_row_layout
 			set_finite_dimension (2)
 
-			!!button.make_with_text (Current, "Element 1")
-			!!button.make_with_text (Current, "Element 2")
-			!!button.make_with_text (Current, "Element 3")
-			!!button.make_with_text (Current, "Element 4")
-			!!button.make_with_text (Current, "Element 5")
-			!!button.make_with_text (Current, "Element 6")
-			!!button.make_with_text (Current, "Element 7")
-			!!button.make_with_text (Current, "Element 8")
-			!!button.make_with_text (Current, "Element 9")
-			!!button.make_with_text (Current, "Element 10")
-			!!button.make_with_text (Current, "Element 11")
+			create button.make_with_text (Current, "Element 1")
+			create button.make_with_text (Current, "Element 2")
+			create button.make_with_text (Current, "Element 3")
+			create button.make_with_text (Current, "Element 4")
+			create button.make_with_text (Current, "Element 5")
+			create button.make_with_text (Current, "Element 6")
+			create button.make_with_text (Current, "Element 7")
+			create button.make_with_text (Current, "Element 8")
+			create button.make_with_text (Current, "Element 9")
+			create button.make_with_text (Current, "Element 10")
+			create button.make_with_text (Current, "Element 11")
 
 			set_homogeneous (True)
 			set_row_spacing (5)
 			set_column_spacing (5)
 			create event_window.make (Current)
 			add_widget_commands (Current, event_window, "dynamic table")
-			!!button_list.make
+			create button_list.make
 			set_parent (par)
 			end
 

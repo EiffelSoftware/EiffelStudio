@@ -15,7 +15,7 @@ inherit
 			make
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			sep: EV_HORIZONTAL_SEPARATOR
 			font: EV_FONT
 		do
-			{EV_VERTICAL_BOX} Precursor (Void)
+			Precursor {EV_VERTICAL_BOX} (Void)
 			create basic
 			color := basic.all_colors
 			color.start
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 			--label.set_font (font)
 			--label.set_default_minimum_size
 
-			create cmd.make (~timeout_action)
+			create cmd.make (agent timeout_action)
 			create timeout.make (150, cmd, Void)
 
 			set_parent (par)

@@ -17,7 +17,7 @@ inherit
 			make
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -25,7 +25,7 @@ feature -- Initialization
 	make (par: MAIN_WINDOW) is
 		do
 			the_parent := par
-			{EV_WINDOW} Precursor (the_parent)
+			Precursor {EV_WINDOW} (the_parent)
 			set_widgets
 			set_values
 		end
@@ -73,10 +73,10 @@ feature -- Show the window
 		local
 			arg1: EV_ARGUMENT1[DEMO_WINDOW]
 		do
-			!! actions_window.make_with_main_widget (Current, main_widget)
+			create actions_window.make_with_main_widget (Current, main_widget)
 			actions_window.show
 			win.set_insensitive (True)
-			!! arg1.make (Current)
+			create arg1.make (Current)
 			add_close_command (win, arg1)
 			show
 		end

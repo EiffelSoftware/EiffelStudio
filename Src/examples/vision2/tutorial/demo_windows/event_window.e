@@ -16,7 +16,7 @@ class
 		
 		
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -40,15 +40,15 @@ feature -- Initialization
 				create b1.make_with_text (box, "Clear Event List")
 				b1.set_vertical_Resize (False)
 				box.set_child_expandable (b1, False)
-				create cmd.make (~clear_events)
+				create cmd.make (agent clear_events)
 				b1.add_click_command (cmd, Void)
 				create b2.make_with_text (box, "Enable Motion Tracking")
 				b2.set_vertical_Resize (False)
 				box.set_child_expandable (b2, False)
-				create cmd.make (~toggle_motion_tracking)
+				create cmd.make (agent toggle_motion_tracking)
 				b2.add_click_command (cmd, Void)
 			end
-			create cmd.make (~my_function)
+			create cmd.make (agent my_function)
 			create arg.make (1)
 			add_close_command (cmd, arg)
 		end

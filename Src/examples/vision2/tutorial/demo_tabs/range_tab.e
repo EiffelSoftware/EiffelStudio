@@ -14,7 +14,7 @@ inherit
 			current_widget
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -25,22 +25,22 @@ feature -- Initialization
 			cmd1,cmd2: EV_ROUTINE_COMMAND
 			h1: EV_HORIZONTAL_SEPARATOR
 		once
-			{ANY_TAB} Precursor (Void)
-			create cmd1.make (~set_leap)
-			create cmd2.make (~get_leap)
+			Precursor {ANY_TAB} (Void)
+			create cmd1.make (agent set_leap)
+			create cmd2.make (agent get_leap)
 			create f1.make (Current, 0, 0, "Leap Value", cmd1, cmd2)
 			create h1.make (Current)
 			set_child_position (h1, 1, 0, 2, 3)
 			
 			create b1.make_with_text(Current, "Increase Leap")
-			create cmd1.make (~leap_forward)
+			create cmd1.make (agent leap_forward)
 			b1.add_click_command (cmd1, Void)
 			b1.set_vertical_resize(False)
 			set_child_position (b1, 2, 0, 3, 3)
 
 
 			create b2.make_with_text(Current, "Decrease Leap")
-			create cmd2.make (~leap_backward)
+			create cmd2.make (agent leap_backward)
 			b2.add_click_command (cmd2, Void)
 			b2.set_vertical_resize(False)
 			set_child_position (b2, 2, 1, 3, 2)

@@ -18,7 +18,7 @@ inherit
 	BUTTON_COMMANDS
 	TOGGLE_BUTTON_COMMANDS
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			-- We create the box first without parent because it
 			-- is faster.
 		do
-			{EV_TOGGLE_BUTTON} Precursor (par)
+			Precursor {EV_TOGGLE_BUTTON} (par)
 			set_text ("Toggle Button")
 			set_parent (par)
 			create event_window.make (Current)

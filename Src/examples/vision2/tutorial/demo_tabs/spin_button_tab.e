@@ -14,7 +14,7 @@ inherit
 			current_widget
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -24,9 +24,9 @@ feature -- Initialization
 		local
 			cmd1,cmd2: EV_ROUTINE_COMMAND
 		once
-			{ANY_TAB} Precursor (Void)
-			create cmd1.make (~set_step)
-			create cmd2.make (~get_step)
+			Precursor {ANY_TAB} (Void)
+			create cmd1.make (agent set_step)
+			create cmd2.make (agent get_step)
 			create f1.make (Current, 0, 0, "Step Value", cmd1, cmd2)
 			
 		end

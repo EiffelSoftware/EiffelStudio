@@ -15,7 +15,7 @@ inherit
 		end
 
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -25,23 +25,23 @@ feature -- Initialization
 		local
 			cmd1,cmd2: EV_ROUTINE_COMMAND
 		once
-			{ANY_TAB} Precursor (Void)
+			Precursor {ANY_TAB} (Void)
 				
 			-- Creates the commands for the buttons	
-			!!cmd1.make (~set_max)
-			!!cmd2.make (~get_max)
+			create cmd1.make (agent set_max)
+			create cmd2.make (agent get_max)
 			create f1.make(Current, 0, 0, "X", cmd1, cmd2)
 
-			!!cmd1.make (~set_min)
-			!!cmd2.make (~get_min)
+			create cmd1.make (agent set_min)
+			create cmd2.make (agent get_min)
 			create f2.make (Current, 1, 0, "Y", cmd1, cmd2)
 
-			!!cmd1.make (~set_step)
-			!!cmd2.make (~get_step)
+			create cmd1.make (agent set_step)
+			create cmd2.make (agent get_step)
 			create f3.make (Current, 2, 0, "Width", cmd1, cmd2)
 
-			!!cmd1.make (~set_value)
-			!!cmd2.make (~get_value)
+			create cmd1.make (agent set_value)
+			create cmd2.make (agent get_value)
 			create f4.make (Current, 3, 0, "Height", cmd1, cmd2)
 
 			set_parent(par)	

@@ -15,7 +15,7 @@ inherit
 		end
 
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -25,7 +25,7 @@ feature -- Initialization
 		local
 			cmd1,cmd2: EV_ROUTINE_COMMAND
 		once
-			{ANY_TAB} Precursor (Void)
+			Precursor {ANY_TAB} (Void)
 		
 				-- Creates the objects and their commands
 			--	create cmd2.make (~get_font_name)

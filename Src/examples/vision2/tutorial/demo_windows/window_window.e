@@ -17,7 +17,7 @@ inherit
 	DEMO_WINDOW
 	WIDGET_COMMANDS
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			set_vertical_resize (False)
 			set_horizontal_resize (False)
 			create event_window.make (Current)
-			!! cmd.make (~execute1)
+			create cmd.make (agent execute1)
 			add_click_command (cmd, Void)
 			set_parent (par)
 		end
@@ -55,9 +55,9 @@ feature -- Execution features
 			item: DEMO_ITEM [WINDOW_WINDOW]
 		do
 			if current_widget = Void then
-				!! current_widget.make_top_level
+				create current_widget.make_top_level
 				current_widget.set_title ("Window")	
-				!!cmd.make (~hide_window)
+				create cmd.make (agent hide_window)
 				current_widget.add_close_command (cmd, Void)
 				current_widget.set_width(640)
 				current_widget.set_height(480)
@@ -90,7 +90,7 @@ feature {NONE} -- Implementation
 			-- Make `par' the new parent of the widget.
 			-- `par' can be Void then the parent is the screen.
 		do
-			{EV_BUTTON} Precursor (par)
+			Precursor {EV_BUTTON} (par)
 			if current_widget /= Void then
 				current_widget.hide
 			end

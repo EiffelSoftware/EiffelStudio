@@ -17,7 +17,7 @@ inherit
 
 	PIXMAP_PATH
 
-creation
+create
 	make
 
 feature -- Access
@@ -25,7 +25,7 @@ feature -- Access
 	first_window: MAIN_WINDOW is
 			-- Main window of the example
 		once
-			!! Result.make_top_level 
+			create Result.make_top_level 
 		end
 
 feature -- Application initialization

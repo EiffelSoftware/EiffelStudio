@@ -26,7 +26,7 @@ feature -- Initialization
 		do
 			create but.make_with_text ("dialog test")
 			first_window.extend (but)
-			but.press_actions.extend (~on_click)
+			but.press_actions.extend (agent on_click)
 			create fdlg
 			create odlg
 		end

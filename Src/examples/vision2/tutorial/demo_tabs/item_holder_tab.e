@@ -14,7 +14,7 @@ inherit
 			current_widget
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -26,8 +26,8 @@ feature -- Initialization
 				-- Commands used by the tab.
 			h1: EV_HORIZONTAL_SEPARATOR
 		do
-			{ANY_TAB} Precursor (Void)
-			create cmd2.make (~count)
+			Precursor {ANY_TAB} (Void)
+			create cmd2.make (agent count)
 			create f1.make (Current, 0, 0, "Count", Void, cmd2)
 
 

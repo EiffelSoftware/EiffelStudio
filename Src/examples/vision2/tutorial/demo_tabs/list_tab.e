@@ -14,7 +14,7 @@ inherit
 			current_widget
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -26,38 +26,38 @@ feature -- Initialization
 				-- Commands used by the tab.
 			h1: EV_HORIZONTAL_SEPARATOR
 		do
-		{ANY_TAB} Precursor (Void)
+		Precursor {ANY_TAB} (Void)
 
-		create cmd2.make (~e_rows)
+		create cmd2.make (agent e_rows)
 		create f1.make (Current, 0, 0, "Rows", Void, cmd2)	
-		create cmd2.make (~selected)
+		create cmd2.make (agent selected)
 		create f2.make (Current, 1, 0, "Selected", Void, cmd2)
-		create cmd2.make (~selected_items)
+		create cmd2.make (agent selected_items)
 		create f3.make (Current, 2, 0, "Selected Items", cmd2, cmd2)
-		create cmd1.make (~get_item)
+		create cmd1.make (agent get_item)
 		create f4.make (Current, 3, 0, "Item", cmd1, cmd1)
-		create cmd1.make (~select_item)
+		create cmd1.make (agent select_item)
 		create f5.make (Current, 4, 0, "Select Item", cmd1, cmd1)
-		create cmd1.make (~deselect_item)
+		create cmd1.make (agent deselect_item)
 		create f6.make (Current, 5, 0, "Deselect Item", cmd1, cmd1)
 		create h1.make (Current)
 		set_child_position (h1, 6, 0, 7, 3)
-		create cmd1.make (~clear_selection)
+		create cmd1.make (agent clear_selection)
 		create b1.make_with_text (Current, "Clear Selection")
 		b1.set_vertical_resize (False)
 		b1.add_click_command (cmd1, Void)
 		set_child_position (b1, 7, 0, 8, 1)
-		create cmd1.make (~toggle_selection_type)
+		create cmd1.make (agent toggle_selection_type)
 		create b2.make_with_text (Current, "Single Selection")
 		b2.set_vertical_resize (False)
 		b2.add_click_command (cmd1, Void)
 		set_child_position (b2, 7, 1, 8, 2)
-		create cmd1.make (~clear_items)
+		create cmd1.make (agent clear_items)
 		create b3.make_with_text (Current, "Clear Items")
 		b3.set_vertical_resize (False)
 		b3.add_click_command (cmd1, Void)
 		set_child_position (b3, 7, 2, 8, 3)
-		create cmd1.make (~add_item)
+		create cmd1.make (agent add_item)
 		create b4.make_with_text (Current, "Add Item")
 		b4.set_vertical_resize (False)
 		b4.add_click_command (cmd1, Void)

@@ -18,7 +18,7 @@ inherit
 			set_values
 		end
 
-creation
+create
 	make
 
 feature -- Access
@@ -26,7 +26,7 @@ feature -- Access
 	main_widget: EV_TEXT is
 			-- The main widget of the demo
 		once
-			!! Result.make (Current)
+			create Result.make (Current)
 		end
 	
 

@@ -15,7 +15,7 @@ inherit
 			make_top_level
 		end
 
-creation
+create
 	make_top_level
 
 feature -- Initialization
@@ -28,13 +28,13 @@ feature -- Initialization
 			box: EV_HORIZONTAL_BOX
 			box2: EV_VERTICAL_BOX
 		do
-			{EV_WINDOW} Precursor
+			Precursor {EV_WINDOW}
 			set_title ("Test events")
 
 			-- Common datas
-			!! color.make_rgb (0, 0, 255)
-			!! cmd
-			!! box.make (Current)
+			create color.make_rgb (0, 0, 255)
+			create cmd
+			create box.make (Current)
 			box.set_spacing (5)
 
 			-- Differents frame and events
@@ -50,9 +50,9 @@ feature -- Initialization
 		local
 			arg: EV_ARGUMENT1 [STRING]
 		do
-			!! arg.make ("Move event")
+			create arg.make ("Move event")
 			add_move_command (cmd, arg)
-			!! arg.make ("Size event")
+			create arg.make ("Size event")
 			add_resize_command (cmd, arg)
 		end
 
@@ -64,23 +64,23 @@ feature -- Initialization
 			arg: EV_ARGUMENT1 [STRING]
 			box: EV_VERTICAL_BOX
 		do
-			!! frame.make_with_text (par, "Button event")
+			create frame.make_with_text (par, "Button event")
 			frame.set_foreground_color (color)
-			!! box.make (frame)
+			create box.make (frame)
 
 			-- Button press
-			!! button.make_with_text (box, "Button press")
-			!! arg.make ("Button press event")
+			create button.make_with_text (box, "Button press")
+			create arg.make ("Button press event")
 			button.add_button_press_command (1, cmd, arg)
 
 			-- Button release
-			!!button.make_with_text (box, "Button release")
-			!! arg.make ("Button release event")
+			create button.make_with_text (box, "Button release")
+			create arg.make ("Button release event")
 			button.add_button_release_command (1, cmd, arg)
 
 			-- Double click
-			!!button.make_with_text (box, "Double click")
-			!! arg.make ("Double click event")
+			create button.make_with_text (box, "Double click")
+			create arg.make ("Double click event")
 			button.add_double_click_command (1, cmd, arg)
 		end
 
@@ -92,23 +92,23 @@ feature -- Initialization
 			arg: EV_ARGUMENT1 [STRING]
 			box: EV_VERTICAL_BOX
 		do
-			!! frame.make_with_text (par, "Motion event")
+			create frame.make_with_text (par, "Motion event")
 			frame.set_foreground_color (color)
-			!! box.make (frame)
+			create box.make (frame)
 
 			-- Motion notify
-			!! button.make_with_text (box, "Motion notify")
-			!! arg.make ("Motion event")
+			create button.make_with_text (box, "Motion notify")
+			create arg.make ("Motion event")
 			button.add_motion_notify_command (cmd, arg)
 
 			-- Enter Notify
-			!! button.make_with_text (box, "Enter notify")
-			!! arg.make ("Enter notify event")
+			create button.make_with_text (box, "Enter notify")
+			create arg.make ("Enter notify event")
 			button.add_enter_notify_command (cmd, arg)
 
 			-- Leave notify
-			!! button.make_with_text (box, "Leave notify")
-			!! arg.make ("Leave notify event")
+			create button.make_with_text (box, "Leave notify")
+			create arg.make ("Leave notify event")
 			button.add_leave_notify_command (cmd, arg)
 		end
 
@@ -120,18 +120,18 @@ feature -- Initialization
 			arg: EV_ARGUMENT1 [STRING]
 			box: EV_VERTICAL_BOX
 		do
-			!! frame.make_with_text (par, "Key event")
+			create frame.make_with_text (par, "Key event")
 			frame.set_foreground_color (color)
-			!! box.make (frame)
+			create box.make (frame)
 
 			-- Key press
-			!! button.make_with_text (box, "Key press")
-			!! arg.make ("Key press event")
+			create button.make_with_text (box, "Key press")
+			create arg.make ("Key press event")
 			button.add_key_press_command (cmd, arg)
 
 			-- Key release
-			!! button.make_with_text (box, "Key release")
-			!! arg.make ("Key release event")
+			create button.make_with_text (box, "Key release")
+			create arg.make ("Key release event")
 			button.add_key_release_command (cmd, arg)
 		end
 
@@ -143,18 +143,18 @@ feature -- Initialization
 			arg: EV_ARGUMENT1 [STRING]
 			box: EV_VERTICAL_BOX
 		do
-			!! frame.make_with_text (par, "Focus event")
+			create frame.make_with_text (par, "Focus event")
 			frame.set_foreground_color (color)
-			!! box.make (frame)
+			create box.make (frame)
 
 			-- Key press
-			!! button.make_with_text (box, "Get focus")
-			!! arg.make ("Get focus event")
+			create button.make_with_text (box, "Get focus")
+			create arg.make ("Get focus event")
 			button.add_get_focus_command (cmd, arg)
 
 			-- Key release
-			!! button.make_with_text (box, "Lose focus")
-			!! arg.make ("Lose focus event")
+			create button.make_with_text (box, "Lose focus")
+			create arg.make ("Lose focus event")
 			button.add_lose_focus_command (cmd, arg)
 		end
 

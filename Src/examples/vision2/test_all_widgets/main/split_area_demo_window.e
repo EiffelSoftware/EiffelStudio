@@ -18,7 +18,7 @@ inherit
 			set_values
 		end
 	
-creation
+create
 	make
 
 feature -- Access
@@ -26,7 +26,7 @@ feature -- Access
 	main_widget: EV_VERTICAL_SPLIT_AREA is
 			-- The main widget of the demo
 		once
-			!! Result.make (Current)
+			create Result.make (Current)
 		end
 	
 	
@@ -43,16 +43,16 @@ feature -- Status setting
 		do
 			-- The first child of the vertical split area
 			-- is a horizontal split area
-			!! h.make (main_widget)
+			create h.make (main_widget)
 			-- The first child of the horizontal split
 			-- area is a button
-			!! button.make_with_text (h, "Hello")
+			create button.make_with_text (h, "Hello")
 			-- There is no second child for the horizontal
 			-- split area (this is acceptable)
 			
 			-- The second child of the vertical split area
 			-- is a text area
-			!! texta.make (main_widget)
+			create texta.make (main_widget)
 		end
 	
 feature -- Status setting

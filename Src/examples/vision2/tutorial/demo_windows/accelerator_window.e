@@ -15,7 +15,7 @@ inherit
 			make
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			vbox: EV_VERTICAL_BOX
 			but: EV_BUTTON
 		do
-			{EV_DYNAMIC_TABLE} Precursor (Void)
+			Precursor {EV_DYNAMIC_TABLE} (Void)
 			set_finite_dimension (2)
 			set_row_spacing (10)
 			set_column_spacing (10)
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			create lab1.make (frame)
 			lab1.set_editable (False)
 			create acc.make (code.key_s, False, False, True)
-			create cmd.make (~execute1)
+			create cmd.make (agent execute1)
 			frame.add_accelerator_command (acc, cmd, Void)
 
 			create frame.make_with_text (Current, "Press [F2]")
@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 			create lab2.make (frame)
 			lab2.set_editable (False)
 			create acc.make (code.key_f2, False, False, False)
-			create cmd.make (~execute2)
+			create cmd.make (agent execute2)
 			frame.add_accelerator_command (acc, cmd, Void)
 
 			create frame.make_with_text (Current, "Press [F2]")
@@ -58,7 +58,7 @@ feature {NONE} -- Initialization
 			create lab3.make (frame)
 			lab3.set_editable (False)
 			create acc.make (code.key_f2, False, False, False)
-			create cmd.make (~execute3)
+			create cmd.make (agent execute3)
 			frame.add_accelerator_command (acc, cmd, Void)
 
 			create frame.make_with_text (Current, "Choose your accelerator - None")
@@ -69,7 +69,7 @@ feature {NONE} -- Initialization
 			lab4.set_editable (False)
 			create but.make_with_text (vbox, "Choose")
 			vbox.set_child_expandable (but, False)
-			create cmd.make (~execute_button)
+			create cmd.make (agent execute_button)
 			but.add_click_command (cmd, Void)
 			set_parent (par)
 		end
@@ -134,7 +134,7 @@ feature -- Execution features
 		local
 			cmd: EV_ROUTINE_COMMAND
 		do
-			create cmd.make (~execute4)
+			create cmd.make (agent execute4)
 			if accelerator /= Void then
 				frame.remove_accelerator_commands (accelerator)
 			end
@@ -157,7 +157,7 @@ feature -- Execution features
 			create action.make
 			action.extend ("Your accelerator")
 			create dialog.make_with_actions (parent, action)
-			create cmd.make (~execute5)
+			create cmd.make (agent execute5)
 			dialog.add_ok_command (cmd, Void)
 			dialog.show
 		end

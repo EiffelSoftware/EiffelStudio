@@ -17,7 +17,7 @@ inherit
 	DEMO_WINDOW
 	WIDGET_COMMANDS
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			set_center_alignment (3)
 			set_left_alignment (4)
 
-			!! row1.make_with_text (Current, <<"Ceci","est","un","objet","row">>)
+			create row1.make_with_text (Current, <<"Ceci","est","un","objet","row">>)
 			row1.set_selected (True)
 			row1.set_data (1)
 			row1.activate_pick_and_drop (Void, Void)
@@ -44,12 +44,12 @@ feature {NONE} -- Initialization
 			row1.set_data_type (type)
 			row1.set_transported_data ("Bonjour")
 
-			!! row2.make (Current)
+			create row2.make (Current)
 			row2.set_text (<<"This","is", "2nd", "Created","Row">>)
 			row2.set_data (2)
-			!! row3.make_with_text (Current, <<"This","is","2nd","created","row">>)
+			create row3.make_with_text (Current, <<"This","is","2nd","created","row">>)
 			row3.set_data (3)
-			!! row4.make_with_all (Current, <<"This","is","Last","created","row">>, 2)
+			create row4.make_with_all (Current, <<"This","is","Last","created","row">>, 2)
 			row4.set_selected (True)
 			row4.set_data (4)
 			--set_parent (par)
@@ -58,7 +58,7 @@ feature {NONE} -- Initialization
 		--	add_select_command (cmd, Void)
 		--	create cmd.make (~unselect_command)
 		--	add_unselect_command (cmd, Void)
-			create cmd.make (~column_click_command)
+			create cmd.make (agent column_click_command)
 			add_column_click_command (cmd, Void)
 			create event_window.make (Current)
 			add_widget_commands (Current, event_window, "multi column list")

@@ -15,7 +15,7 @@ inherit
 	DEMO_WINDOW
 	WIDGET_COMMANDS
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -25,12 +25,12 @@ feature {NONE} -- Initialization
 			-- We first create the split area without parent,
 			-- it is more efficient.
 		do
-			{EV_VERTICAL_SPLIT_AREA} Precursor (Void)
-			!! hsplit.make (Current)
+			Precursor {EV_VERTICAL_SPLIT_AREA} (Void)
+			create hsplit.make (Current)
 			set_position (50)
-			!! button.make_with_text (hsplit, "Hello")
+			create button.make_with_text (hsplit, "Hello")
 			hsplit.set_position (100)
-			!! texta.make (Current)
+			create texta.make (Current)
 			set_position (50)
 			create event_window.make (Current)
 			add_widget_commands (Current, event_window, "split area")

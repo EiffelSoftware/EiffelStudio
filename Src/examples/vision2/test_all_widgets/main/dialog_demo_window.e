@@ -16,7 +16,7 @@ inherit
 			set_values
 		end
 
-creation
+create
 	make
 
 feature -- Access
@@ -24,7 +24,7 @@ feature -- Access
 	main_widget: EV_DYNAMIC_TABLE is
 			-- The main widget of the demo
 		once
-			!! Result.make (Current)
+			create Result.make (Current)
 			Result.set_row_layout
 			Result.set_finite_dimension (1)
 		end
@@ -44,18 +44,18 @@ feature -- Status setting
 			warning_cmd: WARNING_DIALOG_COMMAND
 			arg: EV_ARGUMENT1 [EV_WIDGET]
 		do
-			!! arg.make(Current)
-			!! button.make_with_text (main_widget, "EV_INFORMATION_DIALOG")
-			!! info_cmd
+			create arg.make(Current)
+			create button.make_with_text (main_widget, "EV_INFORMATION_DIALOG")
+			create info_cmd
 			button.add_click_command (info_cmd, arg)
-			!! button.make_with_text (main_widget, "EV_ERROR_DIALOG")
-			!! error_cmd
+			create button.make_with_text (main_widget, "EV_ERROR_DIALOG")
+			create error_cmd
 			button.add_click_command (error_cmd, arg)
-			!! button.make_with_text (main_widget, "EV_QUESTION_DIALOG")
-			!! question_cmd
+			create button.make_with_text (main_widget, "EV_QUESTION_DIALOG")
+			create question_cmd
 			button.add_click_command (question_cmd, arg)
-			!! button.make_with_text (main_widget, "EV_WARNING_DIALOG")
-			!! warning_cmd
+			create button.make_with_text (main_widget, "EV_WARNING_DIALOG")
+			create warning_cmd
 			button.add_click_command (warning_cmd, arg)
 		end
 		

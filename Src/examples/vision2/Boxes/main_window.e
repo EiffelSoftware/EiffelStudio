@@ -15,7 +15,7 @@ inherit
 			make_top_level
 		end
 
-creation
+create
 	make_top_level
 
 feature --Access
@@ -32,28 +32,28 @@ feature -- Initialization
 			-- Only one child allowed in the Current window
 		do
 			Precursor
-			!! box.make (Current)	-- vertical
+			create box.make (Current)	-- vertical
 			box.set_spacing (5)
 			box.set_homogeneous (False)
 	
-			!! box2.make (box)		-- horizontal
+			create box2.make (box)		-- horizontal
 			box2.set_spacing (5)
 			box2.set_homogeneous (False)
 
-			!! but.make (box)
+			create but.make (box)
 			but.set_text ("A button")
 			box.set_child_expandable (but, False)
 
-			!! box3.make (box)		-- horizontal
+			create box3.make (box)		-- horizontal
 			box3.set_spacing (5)
 			box3.set_homogeneous (False)
-			!! but.make (box)
+			create but.make (box)
 			but.set_text ("Another button")
 			box.set_child_expandable (but, False)
 
 			set_one (box2)
 			set_two (box3)
-			!! box1.make (box2)
+			create box1.make (box2)
 			set_three (box1)
 	end
 	
@@ -62,28 +62,28 @@ feature -- Status setting
 	set_one (par: EV_CONTAINER) is
 			-- Create four button
 		do
-			!! but.make_with_text (par, "Hello World")
-			!! but.make_with_text (par, "Bonjour monde")
-			!! but.make_with_text (par, "Ola o mundo")
-			!! but.make_with_text (par, "Hola el mundo")
+			create but.make_with_text (par, "Hello World")
+			create but.make_with_text (par, "Bonjour monde")
+			create but.make_with_text (par, "Ola o mundo")
+			create but.make_with_text (par, "Hola el mundo")
 		end
 
 	set_two (par: EV_CONTAINER) is
 			-- Create four button
 		do
-			!! but.make_with_text (par, "Hello World")
-			!! but.make_with_text (par, "Bonjour monde")
-			!! but.make_with_text (par, "Ola o mundo")
-			!! but.make_with_text (par, "Hola el mundo")
+			create but.make_with_text (par, "Hello World")
+			create but.make_with_text (par, "Bonjour monde")
+			create but.make_with_text (par, "Ola o mundo")
+			create but.make_with_text (par, "Hola el mundo")
 		end
 
 
 	set_three (par: EV_CONTAINER) is
 		do
-			!! lab.make_with_text (par, "Hy my friend")
-			!! lab.make_with_text (par, "Salut mon pote")
-			!! lab.make_with_text (par, "Ola o meu amigo")
-			!! lab.make_with_text (par, "Hola amigo")
+			create lab.make_with_text (par, "Hy my friend")
+			create lab.make_with_text (par, "Salut mon pote")
+			create lab.make_with_text (par, "Ola o meu amigo")
+			create lab.make_with_text (par, "Hola amigo")
 		end
 
 end -- class MAIN_WINDOW

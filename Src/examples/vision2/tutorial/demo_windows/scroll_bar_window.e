@@ -16,7 +16,7 @@ inherit
 	DEMO_WINDOW
 	WIDGET_COMMANDS
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			-- is faster.
 		do
 
-			{EV_HORIZONTAL_SCROLL_BAR} Precursor (Void)	
+			Precursor {EV_HORIZONTAL_SCROLL_BAR} (Void)	
 			make_with_range (par, 0, 100)
 			create event_window.make (Current)
 			add_widget_commands (Current, event_window, "scroll bar")

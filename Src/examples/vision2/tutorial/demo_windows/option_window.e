@@ -18,7 +18,7 @@ inherit
 	WIDGET_COMMANDS
 	BUTTON_COMMANDS
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -26,19 +26,19 @@ feature {NONE} -- Initialization
 	make (par: EV_CONTAINER) is
 			-- Create the demo in `par'.
 		do
-			{EV_OPTION_BUTTON} Precursor (par)
+			Precursor {EV_OPTION_BUTTON} (par)
 			set_vertical_resize (False)
 			set_horizontal_resize (False)
 
-			!! menu.make_with_text (Current, "Menu")
-			!! menu_item.make_with_text (menu, "Item 1")
-			!! menu_item.make_with_text (menu, "Item 2")
+			create menu.make_with_text (Current, "Menu")
+			create menu_item.make_with_text (menu, "Item 1")
+			create menu_item.make_with_text (menu, "Item 2")
 			menu_item.set_insensitive (True)
-			!! menu_item.make_with_text (menu, "Item 3")
-			!! menu2.make_with_text (menu, "Menu 2")
-			!! menu_item.make_with_text (menu2, "Item 1")
-			!! menu_item.make_with_text (menu2, "Item 2")
-			!! menu_item.make_with_text (menu2, "Item 3")
+			create menu_item.make_with_text (menu, "Item 3")
+			create menu2.make_with_text (menu, "Menu 2")
+			create menu_item.make_with_text (menu2, "Item 1")
+			create menu_item.make_with_text (menu2, "Item 2")
+			create menu_item.make_with_text (menu2, "Item 3")
 			create event_window.make (Current)
 			add_widget_commands (Current, event_window, "option window")
 			add_button_commands (Current, event_window, "Option window")

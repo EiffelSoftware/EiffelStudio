@@ -20,7 +20,7 @@ inherit
 	PIXMAP_PATH
 	WIDGET_COMMANDS
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 		local
 			sep: EV_HORIZONTAL_SEPARATOR
 		do
-			{EV_VERTICAL_BOX} Precursor (Void)
+			Precursor {EV_VERTICAL_BOX} (Void)
 			create sep.make (Current)
 			set_child_expandable (sep, False)
 			create_first_bar (Current)
@@ -111,12 +111,12 @@ feature {NONE} -- Implementation
 			tool: EV_TOOL_BAR
 			sep: EV_TOOL_BAR_SEPARATOR
 		do
-			!! hbox.make (par)
+			create hbox.make (par)
 			par.set_child_expandable (hbox, False)
 
 			-- We create a first tool_bar
-			!! tool.make (hbox)
-			!! tool1.make (hbox)
+			create tool.make (hbox)
+			create tool1.make (hbox)
 			hbox.set_child_expandable (tool, False)
 			add_button (tool1, "", "explain", False)
 			add_button (tool1, "", "system", False)
@@ -135,12 +135,12 @@ feature {NONE} -- Implementation
 			label.set_insensitive (True)
 
 			-- We create a second tool_bar
-			!! tool.make (hbox)
+			create tool.make (hbox)
 			hbox.set_child_expandable (tool, False)
 			add_button (tool, "", "search", True)
 			create sep.make (tool)
 			
-			!! tool.make_with_size (hbox, 50, 16)
+			create tool.make_with_size (hbox, 50, 16)
 			hbox.set_child_expandable (tool, False)
 			add_button (tool, "", "update", True)
 			add_button (tool, "", "qupdate", True)
@@ -154,14 +154,14 @@ feature {NONE} -- Implementation
 			tool: EV_TOOL_BAR
 			sep: EV_TOOL_BAR_SEPARATOR
 		do
-			!! hbox.make (par)
+			create hbox.make (par)
 			par.set_child_expandable (hbox, False)
 
 			create label.make (hbox)
 			label.set_insensitive (True)
 
 			-- We create a tool_bar
-			!! tool.make (hbox)
+			create tool.make (hbox)
 			hbox.set_child_expandable (tool, False)
 			add_button (tool, "", "up_stack", True)
 			add_button (tool, "", "dn_stack", True)
@@ -177,7 +177,7 @@ feature {NONE} -- Implementation
 			create sep.make (tool)
 			
 
-			!! tool.make_with_size (hbox, 50, 16)
+			create tool.make_with_size (hbox, 50, 16)
 			hbox.set_child_expandable (tool, False)
 			add_button (tool, "", "dbgrun", True)
 		end
@@ -195,12 +195,12 @@ feature {NONE} -- Implementation
 			tool_button3: EV_TOOL_BAR_RADIO_BUTTON
 			tool_imp: EV_TOOL_BAR_IMP
 		do
-			!! hbox.make (par)
+			create hbox.make (par)
 			par.set_child_expandable (hbox, False)
 			hbox.set_spacing (5)
 
 			-- We create a tool_bar
-			!! tool.make (hbox)
+			create tool.make (hbox)
 			hbox.set_child_expandable (tool, False)
 			add_button (tool, "", "routdot", True)
 			add_button (tool, "", "classdot", True)
@@ -256,11 +256,11 @@ feature {NONE} -- Implementation
 			tool: EV_TOOL_BAR
 			sep: EV_TOOL_BAR_SEPARATOR
 		do
-			!! hbox.make (par)
+			create hbox.make (par)
 			par.set_child_expandable (hbox, False)
 
 			-- We create a tool_bar
-			!! tool.make (hbox)
+			create tool.make (hbox)
 			hbox.set_child_expandable (tool, False)
 			add_toggle (tool, "", "sattribu", True)
 			add_toggle (tool, "", "sonces", True)

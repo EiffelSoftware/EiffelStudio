@@ -17,7 +17,7 @@ inherit
 	WIDGET_COMMANDS
 	LIST_COMMANDS
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -29,11 +29,11 @@ feature {NONE} -- Initialization
 			cmd2: EV_ROUTINE_COMMAND
 			arg: EV_ARGUMENT1 [EV_LIST_ITEM]
 		do
-			{EV_LIST} Precursor (par)
- 			!! item1.make_with_text (Current, "This is item1")
- 			!! item2.make (Current)
+			Precursor {EV_LIST} (par)
+ 			create item1.make_with_text (Current, "This is item1")
+ 			create item2.make (Current)
  			item2.set_text ("Item 2")
- 			!! item3.make_with_text (Current, "item 3")
+ 			create item3.make_with_text (Current, "item 3")
 			set_multiple_selection
 			create event_window.make (Current)
 			add_widget_commands (Current, event_window, "list")

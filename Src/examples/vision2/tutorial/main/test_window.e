@@ -20,7 +20,7 @@ inherit
 
 
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -31,11 +31,11 @@ feature {NONE} -- Initialization
 			-- is faster.
 	
 		do
-			{EV_HORIZONTAL_BOX} Precursor (Void)
+			Precursor {EV_HORIZONTAL_BOX} (Void)
 
 			set_homogeneous (False)
-			!!test_but.make_with_text (Current,"TEST BUTTON")
-			!!test_but2.make_with_text (Current,"TEST BUTTON")
+			create test_but.make_with_text (Current,"TEST BUTTON")
+			create test_but2.make_with_text (Current,"TEST BUTTON")
 
 			set_parent (par)
 		end

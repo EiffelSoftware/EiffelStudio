@@ -14,7 +14,7 @@ inherit
 			current_widget
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -25,27 +25,27 @@ feature -- Initialization
 			cmd1,cmd2: EV_ROUTINE_COMMAND
 			h1: EV_HORIZONTAL_SEPARATOR
 		once
-			{ANY_TAB} Precursor (Void)
+			Precursor {ANY_TAB} (Void)
 				
 				-- Creates the objects and their commands
 
-			create cmd1.make (~set_level)
-			create cmd2.make (~get_level)
+			create cmd1.make (agent set_level)
+			create cmd2.make (agent get_level)
 			create f1.make (Current, 0, 0, "Bar Level", cmd1, cmd2)
 
-			create cmd2.make (~get_mode)
+			create cmd2.make (agent get_mode)
 			create f2.make (Current, 1, 0, "Mode", Void, cmd2)
 			create h1.make (Current)
 			set_child_position (h1, 2, 0, 3, 3)
 
-			create cmd1.make (~set_continuous)
+			create cmd1.make (agent set_continuous)
 			--create b1.make_with_text(Current, "Continuous Mode")
 			create b1.make(Current)
 			b1.set_text("Set to Continuous Mode")
 			b1.set_vertical_resize(False)
 			b1.add_click_command (cmd1, Void)
 			set_child_position (b1, 3, 0, 4, 1)
-			create cmd1.make (~set_segmented)
+			create cmd1.make (agent set_segmented)
 			--b2.make_with_text (Current, "Segmented Mode")
 			create b2.make (Current)
 			b2.set_text("Set to Segmented Mode")

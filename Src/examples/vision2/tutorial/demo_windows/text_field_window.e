@@ -20,7 +20,7 @@ inherit
 	TEXT_COMPONENT_COMMANDS
 	TEXT_FIELD_COMMANDS
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -31,8 +31,8 @@ feature {NONE} -- Initialization
 		local
 			frame: EV_FRAME
 		do
-			{EV_VERTICAL_BOX} Precursor (Void)
-			!! textfield.make_with_text (Current, "Edit me")
+			Precursor {EV_VERTICAL_BOX} (Void)
+			create textfield.make_with_text (Current, "Edit me")
 			create event_window.make (textfield)
 			add_widget_commands (textfield, event_window, "text field")
 			add_text_component_commands (textfield, event_window, "Text field")

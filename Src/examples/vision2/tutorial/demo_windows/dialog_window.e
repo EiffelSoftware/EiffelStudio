@@ -16,7 +16,7 @@ inherit
 
 	DEMO_WINDOW
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			make_with_text (par, " Show ")
 			set_vertical_resize (False)
 			set_horizontal_resize (False)
-			!! cmd.make (~execute1)
+			create cmd.make (agent execute1)
 			add_click_command (cmd, Void)
 			set_parent (par)
 		end
@@ -60,7 +60,7 @@ feature -- Execution features
 				create temp_window.make_top_level
 				create current_widget.make (temp_window)
 				current_widget.set_title ("Dialog Window")
-				create cmd.make (~hide_dialog)
+				create cmd.make (agent hide_dialog)
 				current_widget.add_close_command (cmd, Void)
 
 				-- We customize the dialog
@@ -93,7 +93,7 @@ feature {NONE} -- Implementation
 			-- Make `par' the new parent of the widget.
 			-- `par' can be Void then the parent is the screen.
 		do
-			{EV_BUTTON} Precursor (par)
+			Precursor {EV_BUTTON} (par)
 			if current_widget /= Void then
 				current_widget.hide
 			end

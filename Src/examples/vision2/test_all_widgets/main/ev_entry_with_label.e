@@ -8,7 +8,7 @@ inherit
 		end
 	
 	
-creation
+create
 	
 	make,
 	make_with_label 
@@ -19,10 +19,10 @@ feature -- Initialization
                         -- Create a text field with, `par' as
                         -- parent
 		do
-			!!box.make (par)
+			create box.make (par)
 			box.set_homogeneous (False)
-			!!label.make (box)
-			{EV_TEXT_FIELD} Precursor (box)
+			create label.make (box)
+			Precursor {EV_TEXT_FIELD} (box)
 			set_text ("0")
 			set_minimum_width (50)
 		end

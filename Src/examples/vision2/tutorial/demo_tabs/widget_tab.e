@@ -16,7 +16,7 @@ inherit
 		end
 	EV_BASIC_COLORS
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -29,30 +29,30 @@ feature -- Initialization
 			l1: EV_LIST_ITEM
 			s1: EV_HORIZONTAL_SEPARATOR
 		do
-			{ANY_TAB} Precursor (par)
+			Precursor {ANY_TAB} (par)
 				
 			-- Creates the commands for the buttons	
-			!!cmd1.make (~set_xcoor)
-			!!cmd2.make (~get_xcoor)
+			create cmd1.make (agent set_xcoor)
+			create cmd2.make (agent get_xcoor)
 			create f1.make(Current, 0, 0, "X", cmd1, cmd2)
-			!!cmd1.make (~set_ycoor)
-			!!cmd2.make (~get_ycoor)
+			create cmd1.make (agent set_ycoor)
+			create cmd2.make (agent get_ycoor)
 			create f2.make (Current, 1, 0, "Y", cmd1, cmd2)
-			!!cmd1.make (~set_width_val)
-			!!cmd2.make (~get_width)
+			create cmd1.make (agent set_width_val)
+			create cmd2.make (agent get_width)
 			create f3.make (Current, 2, 0, "Width", cmd1, cmd2)
-			!!cmd1.make (~set_height_val)
-			!!cmd2.make (~get_height)
+			create cmd1.make (agent set_height_val)
+			create cmd2.make (agent get_height)
 			create f4.make (Current, 3, 0, "Height", cmd1, cmd2)
-			!!cmd1.make (~set_min_width)
-			!!cmd2.make (~get_min_width)
+			create cmd1.make (agent set_min_width)
+			create cmd2.make (agent get_min_width)
 			create f5.make (Current, 4, 0, "Min Width", cmd1, cmd2)
-			!!cmd1.make (~set_min_height)
-			!!cmd2.make (~get_min_height)
+			create cmd1.make (agent set_min_height)
+			create cmd2.make (agent get_min_height)
 			create f6.make (Current, 5, 0, "Min Height", cmd1, cmd2)
-			create cmd2.make (~back_color)
+			create cmd2.make (agent back_color)
 			create c1.make (Current, 6, 0, "Background Color", cmd2, cmd2)
-			create cmd2.make (~fore_color)
+			create cmd2.make (agent fore_color)
 			create c2.make (Current, 7, 0, "Foreground Color", cmd2, cmd2)
 			available_colors:= all_colors
 			from
@@ -68,7 +68,7 @@ feature -- Initialization
 			end
 			create s1.make (Current)
 			set_child_position (s1,8,0,9,3)
-			create cmd1.make (~hide_show)
+			create cmd1.make (agent hide_show)
 			create b1.make_with_text (Current, "Hide")
 			b1.add_click_command (cmd1, Void)
 			b1.set_vertical_resize (False)
@@ -80,7 +80,7 @@ feature -- element change
 	set_current_widget (wid: EV_WIDGET) is
 			-- Make `wid' the new widget.
 		do
-			{ANY_TAB} Precursor (wid)
+			Precursor {ANY_TAB} (wid)
 			if current_widget.managed then
 				f1.disable_text
 				f2.disable_text

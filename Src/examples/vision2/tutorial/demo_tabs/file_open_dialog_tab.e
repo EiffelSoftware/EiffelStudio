@@ -13,7 +13,7 @@ inherit
 			current_widget
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -23,7 +23,7 @@ feature -- Initialization
 			local
 				cmd1, cmd2: EV_COMMAND			
 			do
-				{ANY_TAB} Precursor (Void)
+				Precursor {ANY_TAB} (Void)
 					-- Creates the objects and their commands.
 				set_parent (par)
 			end

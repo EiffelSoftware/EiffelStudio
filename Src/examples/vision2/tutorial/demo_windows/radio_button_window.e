@@ -17,7 +17,7 @@ inherit
 	BUTTON_COMMANDS
 	TOGGLE_BUTTON_COMMANDS
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -29,11 +29,11 @@ feature {NONE} -- Initialization
 		local
 			radio: EV_RADIO_BUTTON
 		do
-			{EV_HORIZONTAL_BOX} Precursor (par)
+			Precursor {EV_HORIZONTAL_BOX} (par)
 
 			set_homogeneous (False)
 			create radio.make_with_text (Current, "Dummy Radio")
-			!! radio_b.make_with_text (Current, "Action Button")
+			create radio_b.make_with_text (Current, "Action Button")
 			create event_window.make (radio_b)
 			add_widget_commands (radio_b, event_window, "toggle button")
 			add_button_commands (radio_b, event_window, "Toggle button")

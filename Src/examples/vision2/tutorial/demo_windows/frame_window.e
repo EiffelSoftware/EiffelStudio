@@ -16,7 +16,7 @@ inherit
 	DEMO_WINDOW
 	WIDGET_COMMANDS
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 			-- first create the frame without parent.
 
 		do
-			{EV_FRAME} Precursor (par)
+			Precursor {EV_FRAME} (par)
 			set_text ("A frame with text")
 			create event_window.make (Current)
 			add_widget_commands (Current, event_window, "frame")

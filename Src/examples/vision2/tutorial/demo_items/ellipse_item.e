@@ -10,7 +10,7 @@ class
 inherit
 	FIGURE_ITEM
 
-creation
+create
 	make_with_title
 
 feature -- Access
@@ -20,8 +20,8 @@ feature -- Access
 			pt: EV_POINT
 			angle: EV_ANGLE
 		do
-			!! Result.make
-			!! pt.set (150, 150)
+			create Result.make
+			create pt.set (150, 150)
 			Result.set_center (pt)
 			create angle.make_in_degrees (0.0)
 			Result.set_orientation (angle)

@@ -18,7 +18,7 @@ inherit
 
 	WIDGET_COMMANDS
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 		local
 			pix: EV_PIXMAP
 		do
-			{EV_SCROLLABLE_AREA} Precursor (par)
+			Precursor {EV_SCROLLABLE_AREA} (par)
 			create pix.make_from_file (pixmap_path ("isepower"))
 			create ta.make_with_pixmap (Current, pix)
 			create event_window.make (Current)

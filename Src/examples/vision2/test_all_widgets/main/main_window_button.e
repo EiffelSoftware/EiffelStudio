@@ -15,7 +15,7 @@ inherit
 
 	EV_COMMAND
 
-creation
+create
 	make_button
 	
 feature {NONE} --Initialization
@@ -33,7 +33,7 @@ feature {NONE} --Initialization
 			end
 			demo_window := cmd
 			demo_window.set_effective_button (Current)
-			!! arg.make (main_w)
+			create arg.make (main_w)
 			add_toggle_command (Current, arg)
 		end
 

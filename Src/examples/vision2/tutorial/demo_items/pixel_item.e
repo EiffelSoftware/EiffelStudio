@@ -10,14 +10,14 @@ class
 inherit
 	FIGURE_ITEM
 
-creation
+create
 	make_with_title
 
 feature -- Access
 
 	figure: EV_PIXEL is
 		do
-			!! Result.set (150, 150)
+			create Result.set (150, 150)
 		end
 
 end -- class PIXEL_ITEM

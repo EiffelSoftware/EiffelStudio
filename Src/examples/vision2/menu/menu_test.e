@@ -56,15 +56,15 @@ feature -- Initialization
 
 			create exit_menu.make_with_text ("Exit")
 			file_menu.extend (exit_menu)
-			exit_menu.press_actions.extend (~on_exit)
+			exit_menu.press_actions.extend (agent on_exit)
 
 			create rgt.make_with_text ("radio group test")
 			file_menu.extend (rgt)
-			rgt.press_actions.extend (~on_radio_test)
+			rgt.press_actions.extend (agent on_radio_test)
 
 			create rgt.make_with_text ("Insert separator in help-menu")
 			file_menu.extend (rgt)
-			rgt.press_actions.extend (~annoy)
+			rgt.press_actions.extend (agent annoy)
 
 			create edit_menu.make_with_text ("Edit-a-bit-too-longggg")
 			bar.extend (edit_menu)
@@ -107,7 +107,7 @@ feature -- Initialization
 			i3.extend (i4)
 
 			create sd
-			sd.ok_actions.extend (~on_ok)
+			sd.ok_actions.extend (agent on_ok)
 			create si
 			si.set_text ("Dialog inside dialog.")
 
@@ -127,34 +127,34 @@ feature -- Initialization
 			create hsa
 			hb.extend (hsa)
 			create rb.make_with_text ("radio1")
-			rb.press_actions.extend (~on_radio_test (rb))
+			rb.press_actions.extend (agent on_radio_test (rb))
 			hsa.extend (rb)
 			create rb.make_with_text ("radio2")
-			rb.press_actions.extend (~on_radio_test (rb))
+			rb.press_actions.extend (agent on_radio_test (rb))
 			hsa.extend (rb)
 			create rb.make_with_text ("radio3")
-			rb.press_actions.extend (~on_radio_test (rb))
+			rb.press_actions.extend (agent on_radio_test (rb))
 			hsa.extend (rb)
 
 			create hsb
 			hb.extend (hsb)
 			create rb.make_with_text ("TV1")
-			rb.press_actions.extend (~on_radio_test (rb))
+			rb.press_actions.extend (agent on_radio_test (rb))
 			hsb.extend (rb)
 			create rb.make_with_text ("TV2")
-			rb.press_actions.extend (~on_radio_test (rb))
+			rb.press_actions.extend (agent on_radio_test (rb))
 			hsb.extend (rb)
 			create rb.make_with_text ("TV3")
-			rb.press_actions.extend (~on_radio_test (rb))
+			rb.press_actions.extend (agent on_radio_test (rb))
 			hsb.extend (rb)
 
 			create hsc
 			hb.extend (hsc)
 			create rb.make_with_text ("a1")
-			rb.press_actions.extend (~on_radio_test (rb))
+			rb.press_actions.extend (agent on_radio_test (rb))
 			hsc.extend (rb)
 			create rb.make_with_text ("a2")
-			rb.press_actions.extend (~on_radio_test (rb))
+			rb.press_actions.extend (agent on_radio_test (rb))
 			hsc.extend (rb)
 
 			hsb.merge_radio_button_groups (hsa)

@@ -10,7 +10,7 @@ class
 inherit
 	FEATURE_MODIFIER
 
-creation
+create
 	make
 
 feature -- Initialization

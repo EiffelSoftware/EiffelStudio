@@ -14,7 +14,7 @@ inherit
 			current_widget
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -24,11 +24,11 @@ feature -- Initialization
 		local
 			cmd1, cmd2: EV_ROUTINE_COMMAND
 		do
-			{ANY_TAB} Precursor (Void)
+			Precursor {ANY_TAB} (Void)
 				
 			-- Creates the objects and their commands
-			create cmd1.make (~set_text1)
-			create cmd2.make (~get_text1)
+			create cmd1.make (agent set_text1)
+			create cmd2.make (agent get_text1)
 			create f1.make (Current, 0, 0, "Frame Text", cmd1, cmd2)
 
 			set_parent(par)

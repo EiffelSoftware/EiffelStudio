@@ -18,7 +18,7 @@ inherit
 			set_values
 		end
 	
-creation
+create
 	make
 
 feature -- Access
@@ -26,7 +26,7 @@ feature -- Access
 	main_widget: EV_SCROLLABLE_AREA is
 			-- The main widget of the demo
 		once
-			!! Result.make (Current)
+			create Result.make (Current)
 			Result.set_minimum_size(200,200)
 		end
 
@@ -37,7 +37,7 @@ feature -- Status setting
 		local
 			ta: EV_TEXT
 		do
-			!! ta.make (main_widget)
+			create ta.make (main_widget)
 		end
 	
 	set_values is

@@ -18,7 +18,7 @@ inherit
 			set_values
 		end
 
-creation
+create
 	make
 
 feature -- Access
@@ -26,7 +26,7 @@ feature -- Access
 	main_widget: EV_NOTEBOOK is
 			-- The main widget of the demo
 		once
-			!! Result.make (Current)
+			create Result.make (Current)
 		end
 	
 feature -- Access
@@ -42,12 +42,12 @@ feature -- Status setting
 	set_widgets is
 			-- Set the widgets in the demo windows.
 		do
-			!! button1.make (main_widget)
-			!! box.make (main_widget)
-			!! button_box.make_with_text (box, "button 1")
-			!! button_box.make_with_text (box, "button 2")
-			!! button_box.make_with_text (box, "button 3")
-			!! button_box.make_with_text (box, "button 4")
+			create button1.make (main_widget)
+			create box.make (main_widget)
+			create button_box.make_with_text (box, "button 1")
+			create button_box.make_with_text (box, "button 2")
+			create button_box.make_with_text (box, "button 3")
+			create button_box.make_with_text (box, "button 4")
 		end
 	
 feature -- Status setting

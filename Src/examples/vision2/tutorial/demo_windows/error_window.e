@@ -15,7 +15,7 @@ inherit
 			make
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			make_with_text (par, " Show ")
 			set_vertical_resize (False)
 			set_horizontal_resize (False)
-			!! cmd.make (~execute1)
+			create cmd.make (agent execute1)
 			add_click_command (cmd, Void)
 		end
 
@@ -53,7 +53,7 @@ feature -- Execution features
 			if error /= Void then
 				error.show
 			else
-				!! error.make_default (parent, "Error Dialog", "There is an error !")
+				create error.make_default (parent, "Error Dialog", "There is an error !")
 			end				
 		end
 

@@ -16,7 +16,7 @@ inherit
 		end
 	WIDGET_COMMANDS
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 		local
 			cmd: EV_ROUTINE_COMMAND
 		do
-			{EV_TREE} Precursor (par)
+			Precursor {EV_TREE} (par)
 			--tree_item1 := create_item (Current, "Item")
 			--tree_item2 := create_item (tree_item1, "Item 2")
 			--tree_item1 := create_item (Current, "Item 3")
@@ -44,9 +44,9 @@ feature {NONE} -- Initialization
 			--action_item.add_select_command (cmd, Void)
 			create event_window.make (Current)
 			add_widget_commands (Current, event_window, "tree")
-			create cmd.make (~select_command)
+			create cmd.make (agent select_command)
 			add_select_command (cmd, Void)
-			create cmd.make (~unselect_command)
+			create cmd.make (agent unselect_command)
 			add_unselect_command (cmd, Void)
 		end
 

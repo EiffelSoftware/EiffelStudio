@@ -225,6 +225,8 @@ feature -- Basic operations
 
 	die (code: INTEGER) is
 			-- Exit program with exit status `code'.
+		obsolete
+			"procedure `die' is now in EXCEPTIONS; inherit it from there"
 		external
 			"C"
 		alias

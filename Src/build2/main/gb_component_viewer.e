@@ -99,6 +99,7 @@ feature -- Basic operation
 		local
 			new_object: GB_OBJECT
 			widget: EV_WIDGET
+			an_item: EV_ITEM
 		do
 				-- Rest our previous widgets, as `component'
 				-- has now changed.
@@ -113,23 +114,18 @@ feature -- Basic operation
 			lock_update
 				-- Remove any exisiting displayed component.
 			component_holder.wipe_out
+
+			new_object := component.object
+			widget ?= new_object.object
+			object_handler.recursive_do_all (new_object, agent force_object_to_component)
+			check
+				widget_not_void: widget /= Void
+			end
+			component_holder.extend (widget)
+			
 			if display_view then
-				new_object := component.object
-				object_handler.recursive_do_all (new_object, agent force_object_to_component)
-				widget ?= new_object.object
-				check
-					widget_not_void: widget /= Void
-				end
-				component_holder.extend (widget)
 				display_widget := component_holder.item
 			else
-				new_object := component.object
-				object_handler.recursive_do_all (new_object, agent force_object_to_component)
-				widget ?= new_object.display_object
-				check
-					widget_not_void: widget /= Void
-				end
-				component_holder.extend (widget)
 				builder_widget := component_holder.item
 			end
 			unlock_update

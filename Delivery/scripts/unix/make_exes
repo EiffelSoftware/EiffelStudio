@@ -36,6 +36,7 @@ fi
 clean_project
 move $EIFFEL_SRC/vision2_tour/flatshort $INSTALL_DIR/vision2_tour
 move $EIFFEL_SRC/vision2_tour/tests $INSTALL_DIR/vision2_tour
+move $EIFFEL_SRC/vision2_tour/bitmaps/png/*.png $INSTALL_DIR/vision2_tour/bitmaps/png
 move vision2_tour.tar.gz $EXPORT_DIR/vision2_tour
 
 

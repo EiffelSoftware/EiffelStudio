@@ -51,18 +51,18 @@ feature {NONE} -- Implementation
 		do
 			status := Application.status;
 			if status = Void then
-				warner (text_window).gotcha_call (w_System_not_running)
+				warner (popup_parent).gotcha_call (w_System_not_running)
 			elseif not status.is_stopped then
-				warner (text_window).gotcha_call (w_System_not_stopped)
+				warner (popup_parent).gotcha_call (w_System_not_stopped)
 			else
 				address := status.object_address;
 				if address = Void or status.dynamic_class = Void then
 						-- Should never happen.
-					warner (text_window).gotcha_call (w_Unknown_object)
+					warner (popup_parent).gotcha_call (w_Unknown_object)
 				else
 					e_class := status.dynamic_class;
 					!! stone.make (address, e_class);
-					text_window.tool.process_object (stone)
+					tool.process_object (stone)
 				end
 			end
 		end;

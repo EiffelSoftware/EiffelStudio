@@ -11,8 +11,10 @@ class CURRENT_ROUTINE
 inherit
 
 	ICONED_COMMAND
+		rename
+			init_from_tool as make
 		redefine
-			text_window
+			tool
 		end;
 	SHARED_APPLICATION_EXECUTION
 
@@ -20,17 +22,9 @@ creation
 
 	make
 
-feature -- Initialization
-
-	make (a_text_window: ROUTINE_TEXT) is
-			-- Initialize the associated window.
-		do 
-			init (a_text_window)
-		end;
-
 feature -- Properties
 
-	text_window: ROUTINE_TEXT;
+	tool: ROUTINE_W;
 			-- Text of the routine.
 
 	symbol: PIXMAP is
@@ -52,23 +46,21 @@ feature {NONE} -- Implementation
 		local
 			e_class: E_CLASS;
 			status: APPLICATION_STATUS;
-			st: FEATURE_STONE
+			st: FEATURE_STONE;
 		do
 			status := Application.status;
 			if status = Void then
-				warner (text_window).gotcha_call (w_System_not_running)
+				warner (popup_parent).gotcha_call (w_System_not_running)
 			elseif not status.is_stopped then
-				warner (text_window).gotcha_call (w_System_not_stopped)
+				warner (popup_parent).gotcha_call (w_System_not_stopped)
 			elseif status.e_feature = Void or status.dynamic_class = Void then
 					-- Should never happen.
-				warner (text_window).gotcha_call (w_Unknown_feature)
+				warner (popup_parent).gotcha_call (w_Unknown_feature)
 			else
 				e_class := status.origin_class;
 				!! st.make (status.e_feature, e_class);
-				text_window.tool.process_feature (st);
-				if text_window.in_debug_format then
-					text_window.highlight_breakable (status.break_index)
-				end
+				tool.process_feature (st);
+				tool.highlight_breakable (status.break_index)
 			end
 		end;
 

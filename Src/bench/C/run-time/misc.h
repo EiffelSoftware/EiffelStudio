@@ -20,10 +20,10 @@ extern EIF_OBJ eif_getenv();
 extern EIF_INTEGER eif_putenv ();
 extern EIF_INTEGER eif_system ();
 
-#ifdef __WINDOWS_386__
+#ifdef EIF_WINDOWS
 
 /* DLL declarations */
-
+#define WIN32
 #include <windows.h>
 
 extern HANDLE eif_load_dll();

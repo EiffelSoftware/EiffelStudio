@@ -287,6 +287,11 @@ feature {NONE} -- Implementation
 			set_cell_text (a_x - 1, a_y - 1, a_text)
 		end
 
+	expand_columns_to (a_columns: INTEGER) is
+			-- Set `columns' to `a_columns'.
+		do
+		end
+
 	add_column is
 			-- Append new column at end.
 		local
@@ -901,6 +906,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.67  2000/03/27 16:16:09  brendel
+--| Added expand_columns_to. To be implemented.
+--|
 --| Revision 1.66  2000/03/25 01:45:57  brendel
 --| Cleanup.
 --|

@@ -47,6 +47,7 @@ inherit
 		redefine
 --			set_width,
 	--		set_height,
+			set_menu,
 			default_style,
 			on_size,
 			on_get_min_max_info,
@@ -302,7 +303,7 @@ feature -- Resizing
                         end		
 		end
 
-    set_maximum_width (max_width: INTEGER) is
+	set_maximum_width (max_width: INTEGER) is
                         -- Set `maximum_width' to `max_width'.
 		do
                         check
@@ -341,7 +342,11 @@ feature -- Implementation : WEL redefinition
 			min_track: WEL_POINT
 		do
 			if child /= Void then
-				!! min_track.make (child.minimum_width + 2*window_frame_width, child.minimum_height + title_bar_height + window_border_height + 2 * window_frame_height)
+				if has_menu then
+					!! min_track.make (child.minimum_width + 2*window_frame_width, child.minimum_height + title_bar_height + menu_bar_height + window_border_height + 2 * window_frame_height)
+				else
+					!! min_track.make (child.minimum_width + 2*window_frame_width, child.minimum_height + title_bar_height + window_border_height + 2 * window_frame_height)
+				end
 				min_max_info.set_min_track_size (min_track)
 			end
 		end
@@ -359,13 +364,19 @@ feature -- Implementation : WEL redefinition
 			-- The `menu_id' has been choosen from the menu.
 			-- If this feature is called, it means that the 
 			-- child is a menu.
-		local
-			current_menu: EV_MENU_ITEM_CONTAINER_IMP
 		do
-			current_menu ?= child
 			if current_menu /= Void then
 				current_menu.on_menu_command (menu_id)
 			end
+		end
+
+	set_menu (a_menu: WEL_MENU) is
+			-- Set `menu' with `a_menu'.
+		do
+			{WEL_FRAME_WINDOW} Precursor (a_menu)
+			current_menu ?= a_menu
+		ensure then
+			current_menu_set: current_menu /= Void
 		end
 
 feature {NONE} -- Implementation
@@ -376,6 +387,9 @@ feature {NONE} -- Implementation
 		once
 			!!Result
 		end
+
+	current_menu: EV_MENU_ITEM_CONTAINER_IMP
+			-- The current menu of the window.
 
 end -- class EV_WINDOW_IMP
 

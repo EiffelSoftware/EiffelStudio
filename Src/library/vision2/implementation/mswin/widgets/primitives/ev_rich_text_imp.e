@@ -188,7 +188,6 @@ feature {NONE} -- Initialization
 			show_vertical_scroll_bar
 			set_text_limit (2560000)
 			enable_all_notifications
-			PRINT ("SIMPLE : " + to_simplelinebreak.OUT + " " + to_advancedtypography.out)
 			cwin_send_message (wel_item, Em_settypographyoptions, to_advancedtypography, to_advancedtypography)
 			
 			

@@ -61,15 +61,6 @@ feature -- Windowing
 			Result := implementation.is_no_grab
 		end;
 
-	is_poped_up: BOOLEAN is
-			-- Is the popup widget popped up on screen ?
-		obsolete "Use is_popped_up, corrected spelling for feature."
-		require
-			exists: not destroyed
-		do
-			Result := implementation.is_popped_up
-		end;
-
 	is_popped_up: BOOLEAN is
 			-- Is the popup widget popped up on screen ?
 		require
@@ -147,8 +138,19 @@ feature -- Windowing
 
 feature
 
+	set_parent_action (action: STRING; cmd: COMMAND; arg: ANY) is
+			-- Set the dialog shell action to `cmd' with `arg'
+		require
+			action_exists: action /= Void
+			cmd_exists: cmd /= Void
+		do
+			implementation.set_parent_action (action, cmd, arg)
+		end
+
 	dialog_command_target is
 			-- Set the command target to be the dialog shell
+		obsolete
+			"Use set_parent_action instead."
 		require
 			exists: not destroyed
 		do
@@ -156,7 +158,9 @@ feature
 		end;
 
 	widget_command_target is
-			-- set the command target to be the widget
+			-- Set the command target to be the widget
+		obsolete
+			"Not required when using set_parent_action."
 		require
 			exists: not destroyed
 		do
@@ -170,15 +174,13 @@ feature {DIALOG_I}
 		do
 			implementation := a_dialog_imp
 		end;
-
 	
 feature {NONE}
 
 	implementation: DIALOG_I;
 			-- Implementation of dialog
 
-end 
-
+end  -- class DIALOG 
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

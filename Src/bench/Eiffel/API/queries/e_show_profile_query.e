@@ -506,11 +506,14 @@ end;
 					end
 				elseif val.is_equal ("avg") then
 					if prof_options.language_names.item (1).is_equal ("eiffel") then
-						int_ref.set_item (profile_information.profile_data.calls_avg_eiffel)
+						int_ref.set_item (profile_information.profile_data.calls_avg_eiffel 
+									// profile_information.profile_data.number_of_eiffel_features)
 					elseif prof_options.language_names.item (1).is_equal ("c") then
-						int_ref.set_item (profile_information.profile_data.calls_avg_c)
+						int_ref.set_item (profile_information.profile_data.calls_avg_c
+									// profile_information.profile_data.number_of_c_functions)
 					elseif prof_options.language_names.item (1).is_equal ("cycle") then
-						int_ref.set_item (profile_information.profile_data.calls_avg_cycle)
+						int_ref.set_item (profile_information.profile_data.calls_avg_cycle
+									// profile_information.profile_data.number_of_cycles)
 					end
 				else
 					int_ref.set_item (val.to_integer)
@@ -537,11 +540,14 @@ end;
 						end
 					elseif val.is_equal ("avg") then
 						if prof_options.language_names.item (1).is_equal ("eiffel") then
-							real_ref.set_item (profile_information.profile_data.calls_avg_eiffel)
+							real_ref.set_item (profile_information.profile_data.calls_avg_eiffel
+									/ profile_information.profile_data.number_of_eiffel_features)
 						elseif prof_options.language_names.item (1).is_equal ("c") then
-							real_ref.set_item (profile_information.profile_data.calls_avg_c)
+							real_ref.set_item (profile_information.profile_data.calls_avg_c
+									/ profile_information.profile_data.number_of_c_functions)
 						elseif prof_options.language_names.item (1).is_equal ("cycle") then
-							real_ref.set_item (profile_information.profile_data.calls_avg_cycle)
+							real_ref.set_item (profile_information.profile_data.calls_avg_cycle
+									/ profile_information.profile_data.number_of_cycles)
 						end
 					else
 						real_ref.set_item (val.to_real)
@@ -565,11 +571,14 @@ end;
 						end
 					elseif val.is_equal ("avg") then
 						if prof_options.language_names.item (1).is_equal ("eiffel") then
-							real_ref.set_item (profile_information.profile_data.descendants_avg_eiffel)
+							real_ref.set_item (profile_information.profile_data.descendants_avg_eiffel
+									/ profile_information.profile_data.number_of_eiffel_features)
 						elseif prof_options.language_names.item (1).is_equal ("c") then
-							real_ref.set_item (profile_information.profile_data.descendants_avg_c)
+							real_ref.set_item (profile_information.profile_data.descendants_avg_c
+									/ profile_information.profile_data.number_of_c_functions)
 						elseif prof_options.language_names.item (1).is_equal ("cycle") then
-							real_ref.set_item (profile_information.profile_data.descendants_avg_cycle)
+							real_ref.set_item (profile_information.profile_data.descendants_avg_cycle
+									/ profile_information.profile_data.number_of_cycles)
 						end
 					else
 						real_ref.set_item (val.to_real)
@@ -593,11 +602,14 @@ end;
 						end
 					elseif val.is_equal ("avg") then
 						if prof_options.language_names.item (1).is_equal ("eiffel") then
-							real_ref.set_item (profile_information.profile_data.self_avg_eiffel)
+							real_ref.set_item (profile_information.profile_data.self_avg_eiffel
+									/ profile_information.profile_data.number_of_eiffel_features)
 						elseif prof_options.language_names.item (1).is_equal ("c") then
-							real_ref.set_item (profile_information.profile_data.self_avg_c)
+							real_ref.set_item (profile_information.profile_data.self_avg_c
+									/ profile_information.profile_data.number_of_c_functions)
 						elseif prof_options.language_names.item (1).is_equal ("cycle") then
-							real_ref.set_item (profile_information.profile_data.self_avg_cycle)
+							real_ref.set_item (profile_information.profile_data.self_avg_cycle
+									/ profile_information.profile_data.number_of_cycles)
 						end
 					else
 						real_ref.set_item (val.to_real)
@@ -621,11 +633,14 @@ end;
 						end
 					elseif val.is_equal ("avg") then
 						if prof_options.language_names.item (1).is_equal ("eiffel") then
-							real_ref.set_item (profile_information.profile_data.total_avg_eiffel);
+							real_ref.set_item (profile_information.profile_data.total_avg_eiffel
+									/ profile_information.profile_data.number_of_eiffel_features);
 						elseif prof_options.language_names.item (1).is_equal ("c") then
-							real_ref.set_item (profile_information.profile_data.total_avg_c)
+							real_ref.set_item (profile_information.profile_data.total_avg_c
+									/ profile_information.profile_data.number_of_c_functions)
 						elseif prof_options.language_names.item (1).is_equal ("cycle") then
-							real_ref.set_item (profile_information.profile_data.total_avg_cycle)
+							real_ref.set_item (profile_information.profile_data.total_avg_cycle
+									/ profile_information.profile_data.number_of_cycles)
 						end
 					else
 						real_ref.set_item (val.to_real)

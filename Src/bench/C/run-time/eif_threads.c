@@ -242,6 +242,7 @@ rt_private void eif_init_context(eif_global_context_t *eif_globals)
 		/*----------*/
 		/* garcol.c */
 		/*----------*/
+#ifdef ISE_GC
 	loc_stack.st_hd = 		(struct stchunk *) 0;	
 	loc_stack.st_tl = 		(struct stchunk *) 0;	
 	loc_stack.st_cur = 		(struct stchunk *) 0;	
@@ -253,6 +254,7 @@ rt_private void eif_init_context(eif_global_context_t *eif_globals)
 	loc_set.st_cur = 		(struct stchunk *) 0;	
 	loc_set.st_top = 		(EIF_REFERENCE *) 0;			
 	loc_set.st_end = 		(EIF_REFERENCE *) 0;			
+#endif
 	
 #ifdef EIF_REM_SET_OPTIMIZATION
 	special_rem_set = (struct special_table *) 0; 
@@ -265,6 +267,7 @@ rt_private void eif_init_context(eif_global_context_t *eif_globals)
 	once_set.st_top = 		(EIF_REFERENCE *) 0;			
 	once_set.st_end = 		(EIF_REFERENCE *) 0;			
 
+#ifdef ISE_GC
 		/*----------*/
 		/* hector.c */
 		/*----------*/
@@ -286,6 +289,7 @@ rt_private void eif_init_context(eif_global_context_t *eif_globals)
 	free_stack.st_cur = 		(struct stchunk *) 0;	
 	free_stack.st_top = 		(EIF_REFERENCE *) 0;			
 	free_stack.st_end = 		(EIF_REFERENCE *) 0;			
+#endif
 
 #ifdef WORKBENCH
 		/*----------*/
@@ -605,6 +609,7 @@ rt_public void eif_thr_exit(void)
 
 rt_private void eif_init_gc_stacks(eif_global_context_t *eif_globals)
 {
+#ifdef ISE_GC
 	EIF_GC_MUTEX_LOCK;
 	load_stack_in_gc (&loc_stack_list, &loc_stack);	
 	load_stack_in_gc (&loc_set_list, &loc_set);	
@@ -617,6 +622,7 @@ rt_private void eif_init_gc_stacks(eif_global_context_t *eif_globals)
 	load_stack_in_gc (&opstack_list, &op_stack);
 #endif
 	EIF_GC_MUTEX_UNLOCK;
+#endif
 }
 
 
@@ -631,6 +637,7 @@ rt_private void eif_destroy_gc_stacks(void)
 {
 	EIF_GET_CONTEXT
 	EIF_GC_MUTEX_LOCK;
+#ifdef ISE_GC
 	remove_stack_from_gc (&loc_stack_list, &loc_stack);
 	remove_stack_from_gc (&loc_set_list, &loc_set);	
 	remove_stack_from_gc (&once_set_list, &once_set);	
@@ -642,6 +649,7 @@ rt_private void eif_destroy_gc_stacks(void)
 	remove_stack_from_gc (&opstack_list, &op_stack);
 #endif
 	eif_stack_free (&free_stack);
+#endif
 	EIF_GC_MUTEX_UNLOCK;
 }
 

@@ -61,6 +61,10 @@ feature -- Element change
 			original_key := type + item_text + position.out
 			constants.remove (original_key)
 			if position < children.count then
+					-- We must update all items greater than the one removed so that if they
+					-- use constants, their contexts are updated accordingly. This is because
+					-- constants with notebook items use the index of the item as a look up
+					-- for their context.
 				from
 					counter := position + 1
 				until

@@ -73,6 +73,8 @@ feature -- Access
 			-- Eiffel string
 		do
 			create Result.make_from_c (item)
+		ensure
+			string_not_void: Result /= Void
 		end
 
 	item: POINTER is

@@ -88,10 +88,28 @@ feature {NONE} -- Initialization
 					-- Lookup members of current interface `t' but also add members coming
 					-- from parent interfaces as `t.get_members_binding_flags' does not do it.
 				update_interface_members (t)
+--				internal_properties := t.get_properties_binding_flags (feature {BINDING_FLAGS}.instance |
+--						feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public | feature {BINDING_FLAGS}.non_public |
+--						feature {BINDING_FLAGS}.flatten_hierarchy)
+--				internal_events := t.get_events_binding_flags (feature {BINDING_FLAGS}.instance |
+--						feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public | feature {BINDING_FLAGS}.non_public |
+--						feature {BINDING_FLAGS}.flatten_hierarchy)
 			else
 				internal_members := t.get_members_binding_flags (feature {BINDING_FLAGS}.instance |
-					feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public |
-					feature {BINDING_FLAGS}.non_public)
+						feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public |
+						feature {BINDING_FLAGS}.non_public)
+--				internal_methods := t.get_methods_binding_flags (feature {BINDING_FLAGS}.instance |
+--						feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public |
+--						feature {BINDING_FLAGS}.non_public | feature {BINDING_FLAGS}.flatten_hierarchy)
+--				internal_fields := t.get_fields_binding_flags (feature {BINDING_FLAGS}.instance |
+--						feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public |
+--						feature {BINDING_FLAGS}.non_public | feature {BINDING_FLAGS}.flatten_hierarchy)
+--				internal_properties := t.get_properties_binding_flags (feature {BINDING_FLAGS}.instance |
+--						feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public | feature {BINDING_FLAGS}.non_public |
+--						feature {BINDING_FLAGS}.flatten_hierarchy)
+--				internal_events := t.get_events_binding_flags (feature {BINDING_FLAGS}.instance |
+--						feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public | feature {BINDING_FLAGS}.non_public |
+--						feature {BINDING_FLAGS}.flatten_hierarchy)
 			end
 			
 			internal_properties := t.get_properties_binding_flags (feature {BINDING_FLAGS}.instance |
@@ -100,12 +118,19 @@ feature {NONE} -- Initialization
 			internal_events := t.get_events_binding_flags (feature {BINDING_FLAGS}.instance |
 					feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public |
 					feature {BINDING_FLAGS}.flatten_hierarchy)
+
 			internal_constructors := t.get_constructors
 			internal_referenced_type := referenced_type_from_type (t)
+			
+			create properties_and_events.make
 		ensure
 			non_void_consumed_type: consumed_type /= Void
-			non_void_internal_members: internal_members /= Void
 			non_void_internal_constructors: internal_constructors /= Void
+			non_void_internal_fields: internal_fields /= Void
+			non_void_internal_methods: internal_members /= Void
+--			non_void_internal_methods: internal_methods /= Void
+			non_void_internal_properties: internal_properties /= Void
+			non_void_internal_events: internal_events /= Void
 			non_void_internal_referenced_type: internal_referenced_type /= Void
 		end
 		
@@ -124,6 +149,7 @@ feature -- Status Report
 	initialized: BOOLEAN
 			-- Was `consumed_type' initialized?
 
+
 feature -- Basic Operation
 
 	initialize is
@@ -140,19 +166,23 @@ feature -- Basic Operation
 			l_procedures: ARRAYED_LIST [CONSUMED_PROCEDURE]
 			cf: CONSUMED_FIELD
 			cons: CONSTRUCTOR_INFO
-			field: FIELD_INFO
-			meth: METHOD_INFO
+			l_field: FIELD_INFO
+			l_meth: METHOD_INFO
 			l_property: PROPERTY_INFO
 			l_event: EVENT_INFO
-			member: MEMBER_INFO
+			l_member: MEMBER_INFO
 			tc: SORTED_TWO_WAY_LIST [CONSTRUCTOR_SOLVER]
 			l_events: ARRAYED_LIST [CONSUMED_EVENT]
 			l_properties: ARRAYED_LIST [CONSUMED_PROPERTY]
 		do
 			if not rescued then
 				check
-					non_void_internal_members: internal_members /= Void
 					non_void_internal_constructors: internal_constructors /= Void
+					non_void_internal_fields: internal_fields /= Void
+					non_void_internal_methods: internal_members /= Void
+					--non_void_internal_methods: internal_methods /= Void
+					non_void_internal_properties: internal_properties /= Void
+					non_void_internal_events: internal_events /= Void
 				end
 				create tc.make
 				create l_fields.make (0)
@@ -176,67 +206,12 @@ feature -- Basic Operation
 					i := i + 1
 				end
 				
-					-- Add all methods in overload_solver.
-					-- Add methods and fields in overload_solver
-				from
-					i := 0
-					nb := internal_members.count
-					create overload_solver.make
-				until
-					i = nb
-				loop
-					member := internal_members.item (i)
-					if member.get_member_type = feature {MEMBER_TYPES}.method then
-						meth ?= member
-						check
-							is_method: meth /= Void
-						end
-						if is_consumed_method (meth) then
-							if not is_property_or_event (meth) then
-								overload_solver.add_method (meth)
-							else
-								-- The method will be added at the same time than the property or the event.
-							end
-						end
-					end
-					i := i + 1
-				end
-	
-					-- Add properties in overload_solver.
-				from
-					i := 0
-					nb := internal_properties.count
-				until
-					i = nb
-				loop
-					l_property := internal_properties.item (i)
-					check
-						non_void_l_propery: l_property /= Void
-					end
-					overload_solver.add_property (l_property)
-					i := i + 1
-				end
-	
-					-- Add events in overload_solver.
-				from
-					i := 0
-					nb := internal_events.count
-				until
-					i = nb
-				loop
-					l_event := internal_events.item (i)
-					check
-						non_void_l_event: l_event /= Void
-					end
-					overload_solver.add_event (l_event)
-					i := i + 1
-				end				
-
+					-- Initialize overload solver.
+				initialize_overload_solver
 					-- Resolve oveload conflicts.
 				overload_solver.set_reserved_names (reserved_names)
 				overload_solver.solve
 				
---**********************************************************************************************				
 					-- Add methods and fields.
 				from
 					i := 0
@@ -244,34 +219,72 @@ feature -- Basic Operation
 				until
 					i = nb
 				loop
-					member := internal_members.item (i)
-					if member.get_member_type = feature {MEMBER_TYPES}.method then
-						meth ?= member
+					l_member := internal_members.item (i)
+					if l_member.get_member_type = feature {MEMBER_TYPES}.method then
+						l_meth ?= l_member
 						check
-							is_method: meth /= Void
+							is_method: l_meth /= Void
 						end
-						if is_consumed_method (meth) then
-							if not is_property_or_event (meth) then
-								if is_function (meth) then
-									l_functions.extend (consumed_function (meth))
+						if is_consumed_method (l_meth) then
+							if not is_property_or_event (l_meth) then
+								if is_function (l_meth) then
+									l_functions.extend (consumed_function (l_meth, False))
 								else
-									l_procedures.extend (consumed_procedure (meth))
+									l_procedures.extend (consumed_procedure (l_meth, False))
 								end
 							else
 								-- The method will be added at the same time than the property or the event.
 							end
 						end
-					elseif member.get_member_type = feature {MEMBER_TYPES}.field then
-						field ?= member
+					elseif l_member.get_member_type = feature {MEMBER_TYPES}.field then
+						l_field ?= l_member
 						check
-							is_field: field /= Void
+							is_field: l_field /= Void
 						end
-						if is_consumed_field (field) then
-							l_fields.extend (consumed_field (field))						
+						if is_consumed_field (l_field) then
+							l_fields.extend (consumed_field (l_field))						
 						end
 					end
 					i := i + 1
 				end
+
+--					-- Add methods.
+--				from
+--					i := 0
+--					nb := internal_methods.count
+--				until
+--					i = nb
+--				loop
+--					l_meth := internal_methods.item (i)
+--					check
+--						is_method: l_meth /= Void
+--					end
+--					if not is_property_or_event (l_meth) then
+--						if is_function (l_meth) then
+--							l_functions.extend (consumed_function (l_meth, False))
+--						else
+--							l_procedures.extend (consumed_procedure (l_meth, False))
+--						end
+--					end
+--					i := i + 1
+--				end
+				
+--					-- Add fields
+--				from
+--					i := 0
+--					nb := internal_fields.count
+--				until
+--					i = nb
+--				loop
+--					l_field := internal_fields.item (i)
+--					check
+--						is_field: l_field /= Void
+--					end
+--					if is_consumed_field (l_field) then
+--						l_fields.extend (consumed_field (l_field))						
+--					end
+--					i := i + 1
+--				end
 	
 					-- Add properties.
 				from
@@ -329,9 +342,97 @@ feature -- Basic Operation
 			non_void_functions: consumed_type.functions /= Void
 			non_void_properties: consumed_type.properties /= Void
 			non_void_events: consumed_type.events /= Void
---		rescue
---			rescued := True
---			retry
+		rescue
+			rescued := True
+			retry
+		end
+
+
+	initialize_overload_solver is
+			-- Initialize overload solver.
+			-- Add all methods (properties, events, procedures and functions) in overload_solver.
+		local
+			i, nb: INTEGER
+			l_member: MEMBER_INFO
+			l_meth: METHOD_INFO
+			l_property: PROPERTY_INFO
+			l_event: EVENT_INFO
+		do
+				-- Add properties in overload_solver.
+			from
+				i := 0
+				nb := internal_properties.count
+				create overload_solver.make
+			until
+				i = nb
+			loop
+				l_property := internal_properties.item (i)
+				check
+					non_void_l_propery: l_property /= Void
+				end
+				add_property (l_property)
+				overload_solver.add_property (l_property)
+				i := i + 1
+			end
+
+				-- Add events in overload_solver.
+			from
+				i := 0
+				nb := internal_events.count
+			until
+				i = nb
+			loop
+				l_event := internal_events.item (i)
+				check
+					non_void_l_event: l_event /= Void
+				end
+				add_event (l_event)
+				overload_solver.add_event (l_event)
+				i := i + 1
+			end				
+
+				-- Add methods in overload_solver
+			from
+				i := 0
+				nb := internal_members.count
+			until
+				i = nb
+			loop
+				l_member := internal_members.item (i)
+				if l_member.get_member_type = feature {MEMBER_TYPES}.method then
+					l_meth ?= l_member
+					check
+						is_method: l_meth /= Void
+					end
+					if is_consumed_method (l_meth) then
+						if not is_property_or_event (l_meth) then
+							overload_solver.add_method (l_meth)
+						else
+							-- The method will be added at the same time than the property or the event.
+						end
+					end
+				end
+				i := i + 1
+			end
+	
+--				-- Add methods in overload_solver.
+--			from
+--				i := 0
+--				nb := internal_methods.count
+--			until
+--				i = nb
+--			loop
+--				l_meth := internal_methods.item (i)
+--				check
+--					is_method: l_meth /= Void
+--				end
+--				if is_consumed_method (l_meth) then
+--					if not is_property_or_event (l_meth) then
+--						overload_solver.add_method (l_meth)
+--					end
+--				end
+--				i := i + 1
+--			end
 		end
 
 
@@ -412,7 +513,7 @@ feature {NONE} -- Implementation
 			non_void_arguments: Result /= Void
 		end
 
-	consumed_procedure (info: METHOD_INFO): CONSUMED_PROCEDURE is
+	consumed_procedure (info: METHOD_INFO; property_or_event: BOOLEAN): CONSUMED_PROCEDURE is
 			-- Consumed procedure.
 		require
 			non_void_info: info /= Void
@@ -432,11 +533,11 @@ feature {NONE} -- Implementation
 				info.get_is_static,
 				info.get_is_abstract,
 				info.get_is_public,
-				is_property_or_event (info),
+				property_or_event,
 				referenced_type_from_type (info.get_declaring_type))		
 		end
 	
-	consumed_function (info: METHOD_INFO): CONSUMED_FUNCTION is
+	consumed_function (info: METHOD_INFO; property_or_event: BOOLEAN): CONSUMED_FUNCTION is
 			-- Consumed function.
 		require
 			non_void_info: info /= Void
@@ -458,7 +559,7 @@ feature {NONE} -- Implementation
 				is_infix (info),
 				is_prefix (info),
 				info.get_is_public,
-				is_property_or_event (info),
+				property_or_event,
 				referenced_type_from_type (info.get_declaring_type))			
 		end
 
@@ -476,18 +577,18 @@ feature {NONE} -- Implementation
 			create dotnet_name.make_from_cil (info.get_name)
 			if info.get_can_read then
 				l_info := info.get_get_method
-				l_getter := consumed_function (l_info)
+				l_getter := consumed_function (l_info, True)
 			end
 			if info.get_can_write then
 				l_info := info.get_set_method
-				l_setter := consumed_procedure (l_info)
+				l_setter := consumed_procedure (l_info, True)
 			end
 			check
 				is_property: l_info /= Void
 				non_void_setter_or_getter: l_setter = Void implies l_getter /= Void 
 				non_void_setter_or_getter: l_getter = Void implies l_setter /= Void 
 			end
-			create Result.my_make (
+			create Result.make (
 				dotnet_name,
 				l_info.get_is_public,
 				l_info.get_is_static,
@@ -515,65 +616,24 @@ feature {NONE} -- Implementation
 			l_raise_method := info.get_raise_method
 
 			if l_raise_method /= Void then
-				create dotnet_name.make_from_cil (l_raise_method.get_name)
-				l_eiffel_raiser_event_name := overload_solver.unique_eiffel_name (l_raise_method.get_name, l_raise_method.get_parameters)
-				check
-					non_void_raiser_name: l_eiffel_raiser_event_name /= Void
-				end
-				create l_raiser.make (
-					l_eiffel_raiser_event_name,
-					dotnet_name,
-					consumed_arguments (l_raise_method),
-					l_raise_method.get_is_final,
-					l_raise_method.get_is_static,
-					l_raise_method.get_is_abstract,
-					l_raise_method.get_is_public,
-					True,
-					referenced_type_from_type (l_raise_method.get_declaring_type))
+				l_raiser := consumed_procedure (l_raise_method, True)
 			end
 			if l_add_method /= Void then
-				create dotnet_name.make_from_cil (l_add_method.get_name)
-				l_eiffel_adder_event_name := overload_solver.unique_eiffel_name (l_add_method.get_name, l_add_method.get_parameters)
-				check
-					non_void_adder_name: l_eiffel_adder_event_name /= Void
-				end
-				create l_adder.make (
-					l_eiffel_adder_event_name,
-					dotnet_name,
-					consumed_arguments (l_add_method),
-					l_add_method.get_is_final,
-					l_add_method.get_is_static,
-					l_add_method.get_is_abstract,
-					l_add_method.get_is_public,
-					True,
-					referenced_type_from_type (l_add_method.get_declaring_type))
+				l_adder := consumed_procedure (l_add_method, True)
 			end
 			if l_remove_method /= Void then
-				create dotnet_name.make_from_cil (l_remove_method.get_name)
-				l_eiffel_remover_event_name := overload_solver.unique_eiffel_name (l_remove_method.get_name, l_remove_method.get_parameters)
-				check
-					non_void_remover_name: l_eiffel_remover_event_name /= Void
-				end
-				create l_remover.make (
-					l_eiffel_remover_event_name,
-					dotnet_name,
-					consumed_arguments (l_remove_method),
-					l_remove_method.get_is_final,
-					l_remove_method.get_is_static,
-					l_remove_method.get_is_abstract,
-					l_remove_method.get_is_public,
-					True,
-					referenced_type_from_type (l_remove_method.get_declaring_type))
+				l_remover := consumed_procedure (l_remove_method, True)
 			end
 
 			create dotnet_name.make_from_cil (info.get_name)
-			if l_add_method /= Void then
+			if l_raise_method /= Void then
+				l_parameter_type := referenced_type_from_type (l_raise_method.get_parameters.item (0).get_parameter_type)
+			elseif l_add_method /= Void then
 				l_parameter_type := referenced_type_from_type (l_add_method.get_parameters.item (0).get_parameter_type)
 			elseif l_remove_method /= Void then
 				l_parameter_type := referenced_type_from_type (l_remove_method.get_parameters.item (0).get_parameter_type)
 			end
-			create Result.my_make (
-				dotnet_name,
+			create Result.make (
 				dotnet_name,
 				True,
 				l_parameter_type,
@@ -679,6 +739,12 @@ feature {NONE} -- Implementation
 	internal_members: NATIVE_ARRAY [MEMBER_INFO]
 			-- Type members used to initialize `features'
 
+--	internal_methods: NATIVE_ARRAY [METHOD_INFO]
+			-- Methods.
+
+	internal_fields: NATIVE_ARRAY [FIELD_INFO]
+			-- Fields.
+
 	internal_properties: NATIVE_ARRAY [PROPERTY_INFO]
 			-- Properties from type and parents
 
@@ -707,23 +773,129 @@ feature {NONE} -- Implementation
 	Partial_creation_routine_name_prefix: STRING is "make_with_"
 			-- Creation routine name prefix
 
+
 feature {NONE} -- Status Setting.
+
+--	properties_and_events: HASH_TABLE [LINKED_LIST [METHOD_INFO], STRING]
+	properties_and_events: HASHTABLE --[METHOD_INFO, SYSTEM_STRING]
+			-- List of properties and events.
+
+	key_args (args: NATIVE_ARRAY [PARAMETER_INFO]): SYSTEM_STRING is
+			-- return signature corresponding to args.
+		local
+			i: INTEGER
+			l_str: STRING
+		do
+			create l_str.make_empty
+			from
+				i := 0
+			until
+				args = Void or else i = args.count
+			loop
+				l_str.append (create {STRING}.make_from_cil (args.item (i).get_parameter_type.get_name))
+				i := i + 1
+			end
+			Result := l_str.to_cil
+		ensure
+			non_void_result: Result /= Void
+		end
+
+
+	add_property (info: PROPERTY_INFO) is
+			-- add property.
+		require
+			non_void_info: info /= Void
+		do
+			if info.get_can_read then
+				add_properties_or_events (info.get_get_method)
+			end
+			if info.get_can_write then
+				add_properties_or_events (info.get_set_method)
+			end
+		end
+		
+	add_event (info:EVENT_INFO) is
+			-- Add event.
+		require
+			non_void_info: info /= Void
+		local
+			l_adder, l_remover, l_raiser: METHOD_INFO
+		do
+			l_adder := info.get_add_method
+			l_remover := info.get_remove_method
+			l_raiser := info.get_raise_method
+			
+			if l_adder /= Void then
+				add_properties_or_events (l_adder)
+			end
+			if l_remover /= Void then
+				add_properties_or_events (l_remover)
+			end
+			if l_raiser /= Void then
+				add_properties_or_events (l_raiser)
+			end
+		end
+
+	add_properties_or_events (info: METHOD_INFO) is
+			-- Add info to `properties_and_events'.
+		require
+			non_void_info: info /= Void
+		local
+			i, nb: INTEGER
+			l_key: SYSTEM_STRING
+			l_dotnet_name: SYSTEM_STRING
+		do
+			l_dotnet_name := info.get_name
+			create l_key.make_from_c_and_count (' ', 0)
+			l_key := l_key.concat_string_string (l_dotnet_name, key_args (info.get_parameters))
+			if not properties_and_events.contains_key (l_key) then
+				properties_and_events.add (l_key, info)
+			end
+		ensure
+--			info_added: properties_and_events.contains_key (info.get_name + key_args (info.get_parameters).to_cil)
+		end
 
 	is_property_or_event (info: METHOD_INFO): BOOLEAN is
 			-- Is `internal_method' a property or event related feature?
 		require
 			non_void_info: info /= Void
 		local
-			l_dotnet_name: STRING
+			i, nb: INTEGER
+			l_key: SYSTEM_STRING
+			l_dotnet_name: SYSTEM_STRING
+			l_method: METHOD_INFO
+			l_method_list: NATIVE_ARRAY [METHOD_INFO]
+			l_index: INTEGER
 		do
-			create l_dotnet_name.make_from_cil (info.get_name)
-			Result := info.get_is_special_name and (
-				l_dotnet_name.substring_index ("set_", 1) = 1 or
-				l_dotnet_name.substring_index ("get_", 1) = 1 or
-				l_dotnet_name.substring_index ("add_", 1) = 1 or
-				l_dotnet_name.substring_index ("remove_", 1) = 1 or
-				l_dotnet_name.substring_index ("raise_", 1) = 1)
+			l_dotnet_name := info.get_name
+			l_index := l_dotnet_name.last_index_of_character ('.')
+			if l_index > 0 then
+				l_dotnet_name := l_dotnet_name.substring (l_index + 1)
+			end
+			create l_key.make_from_c_and_count (' ', 0)
+			l_key := l_key.concat_string_string (l_dotnet_name, key_args (info.get_parameters))
+			if properties_and_events.contains_key (l_key) then
+				Result := True
+			else
+				Result := False
+			end
 		end
+
+--	is_property_or_event (info: METHOD_INFO): BOOLEAN is
+--			-- Is `internal_method' a property or event related feature?
+--		require
+--			non_void_info: info /= Void
+--		local
+--			l_dotnet_name: STRING
+--		do
+--			create l_dotnet_name.make_from_cil (info.get_name)
+--			Result := info.get_is_special_name and (
+--				l_dotnet_name.substring_index ("set_", 1) = 1 or
+--				l_dotnet_name.substring_index ("get_", 1) = 1 or
+--				l_dotnet_name.substring_index ("add_", 1) = 1 or
+--				l_dotnet_name.substring_index ("remove_", 1) = 1 or
+--				l_dotnet_name.substring_index ("raise_", 1) = 1)
+--		end
 
 	is_infix (info: METHOD_INFO): BOOLEAN is
 			-- Is function an infix function?
@@ -787,32 +959,87 @@ feature {NONE} -- Added features of System.Object to Interfaces
 			-- 
 		local
 			l_members: NATIVE_ARRAY [MEMBER_INFO]
+--			l_methods: NATIVE_ARRAY [METHOD_INFO]
 			l_processed: HASHTABLE
 		do
 			create l_processed.make_from_capacity (10)
-			internal_members := internal_update_interface_members (t, l_processed)
+			
+--			create internal_fields.make (0)
+			create internal_members.make (0)
+--			create internal_methods.make (0)
+--			create internal_properties.make (0)
+--			create internal_events.make (0)
+			
+			internal_update_interface_members (t, l_processed)
 
-			create l_members.make (internal_members.count + Object_members.count)
+			create l_members.make (internal_members.count + object_members.count)
 			feature {SYSTEM_ARRAY}.copy (internal_members, l_members, internal_members.count)
-			feature {SYSTEM_ARRAY}.copy_array_integer_32 (Object_members, 0, l_members,
-				internal_members.count, Object_members.count)
+			feature {SYSTEM_ARRAY}.copy_array_integer_32 (object_members, 0, l_members,
+				internal_members.count, object_members.count)
 			internal_members := l_members
+
+--			create l_methods.make (internal_methods.count + Object_methods.count)
+--			feature {SYSTEM_ARRAY}.copy (internal_methods, l_methods, internal_methods.count)
+--			feature {SYSTEM_ARRAY}.copy_array_integer_32 (Object_methods, 0, l_methods,
+--				internal_methods.count, Object_methods.count)
+--			internal_methods := l_methods
 		end
 
-	internal_update_interface_members (t: TYPE; processed: HASHTABLE): NATIVE_ARRAY [MEMBER_INFO] is
-			-- Update `internal_members' and recursively explores parent interface
+	internal_update_interface_members (t: TYPE; processed: HASHTABLE) is
+			-- Update `internal_methods', `internal_properties' and `internal_events' and recursively explores parent interface
 			-- if not already in `processed'.
 		local
-			l_members, l_merged_members: NATIVE_ARRAY [MEMBER_INFO]
+			l_merged_members: NATIVE_ARRAY [MEMBER_INFO]
+--			l_merged_methods: NATIVE_ARRAY [METHOD_INFO]
+			l_merged_properties: NATIVE_ARRAY [PROPERTY_INFO]
+			l_merged_events: NATIVE_ARRAY [EVENT_INFO]
 			l_interfaces: NATIVE_ARRAY [TYPE]
 			i, nb: INTEGER
 			l_interface: TYPE
+			l_members: NATIVE_ARRAY [MEMBER_INFO]
+--			l_methods: NATIVE_ARRAY [METHOD_INFO]
+			l_properties: NATIVE_ARRAY [PROPERTY_INFO] 
+			l_events: NATIVE_ARRAY [EVENT_INFO]
 		do
-			from
-				l_interfaces := t.get_interfaces
-				Result := t.get_members_binding_flags (feature {BINDING_FLAGS}.instance |
+			l_members := t.get_members_binding_flags (feature {BINDING_FLAGS}.instance |
 					feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public |
 					feature {BINDING_FLAGS}.non_public)
+--			l_methods := t.get_methods_binding_flags (feature {BINDING_FLAGS}.instance |
+--					feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public |
+--					feature {BINDING_FLAGS}.non_public | feature {BINDING_FLAGS}.flatten_hierarchy)
+--			l_properties := t.get_properties_binding_flags (feature {BINDING_FLAGS}.instance |
+--					feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public | feature {BINDING_FLAGS}.non_public |
+--					feature {BINDING_FLAGS}.flatten_hierarchy)
+--			l_events := t.get_events_binding_flags (feature {BINDING_FLAGS}.instance |
+--					feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public | feature {BINDING_FLAGS}.non_public |
+--					feature {BINDING_FLAGS}.flatten_hierarchy)
+			
+
+				-- merge members.
+			create l_merged_members.make (internal_members.count + l_members.count)
+			feature {SYSTEM_ARRAY}.copy (internal_members, l_merged_members, internal_members.count)
+			feature {SYSTEM_ARRAY}.copy_array_integer_32 (l_members, 0, l_merged_members, internal_members.count, l_members.count)
+			internal_members := l_merged_members
+
+--				-- merge methods.
+--			create l_merged_methods.make (internal_methods.count + l_methods.count)
+--			feature {SYSTEM_ARRAY}.copy (internal_methods, l_merged_methods, internal_methods.count)
+--			feature {SYSTEM_ARRAY}.copy_array_integer_32 (l_methods, 0, l_merged_methods, internal_methods.count, l_methods.count)
+--			internal_methods := l_merged_methods
+
+--				-- merge properties.
+--			create l_merged_properties.make (internal_properties.count + l_properties.count)
+--			feature {SYSTEM_ARRAY}.copy (internal_properties, l_merged_properties, internal_properties.count)
+--			feature {SYSTEM_ARRAY}.copy_array_integer_32 (l_properties, 0, l_merged_properties, internal_properties.count, l_properties.count)
+--			internal_properties := l_merged_properties
+
+--				-- merge events.
+--			create l_merged_events.make (internal_events.count + l_events.count)
+--			feature {SYSTEM_ARRAY}.copy (internal_events, l_merged_events, internal_events.count)
+--			feature {SYSTEM_ARRAY}.copy_array_integer_32 (l_events, 0, l_merged_events, internal_events.count, l_events.count)
+--			internal_events := l_merged_events
+			from
+				l_interfaces := t.get_interfaces
 				processed.Add (t, t)
 				i := 0
 				nb := l_interfaces.count - 1
@@ -821,12 +1048,7 @@ feature {NONE} -- Added features of System.Object to Interfaces
 			loop
 				l_interface := l_interfaces.item (i)
 				if not processed.Contains (l_interface) then
-					l_members := internal_update_interface_members (l_interface, processed)
-					create l_merged_members.make (Result.count + l_members.count)
-					feature {SYSTEM_ARRAY}.copy (Result, l_merged_members, Result.count)
-					feature {SYSTEM_ARRAY}.copy_array_integer_32 (l_members, 0, l_merged_members,
-						Result.count, l_members.count)
-					Result := l_merged_members
+					internal_update_interface_members (l_interface, processed)
 				end
 				i := i + 1
 			end

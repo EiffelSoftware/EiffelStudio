@@ -54,17 +54,4 @@ feature {NONE} -- Externals
 			"C"
 		end;
 
-	yacc_position: INTEGER is
-			-- position of an expected comment
-		external
-			"C"
-		end;
-
-	yacc_prev_pos (depth: INTEGER): INTEGER is
-			-- position of an expected comment, if several
-		external
-			"C"
-		end;
-		
-
 end

@@ -6,8 +6,11 @@ class SPECIAL_TABLE
 inherit
 	ROUT_TABLE
 		redefine
-			generate, final_table_size, generable
+			generate, final_table_size
 		end
+
+creation
+	make
 
 feature
 
@@ -76,9 +79,6 @@ feature
 			end;
 			buffer.putstring ("};%N%N");
 		end;
-
-	generable: BOOLEAN is True
-			-- Is the current table generable ?
 
 	void_type: VOID_I is
 			-- Void universal type

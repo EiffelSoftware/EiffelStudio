@@ -16,8 +16,6 @@ inherit
 			set_default_colors
 		end
 
-	EV_BAR_ITEM_I
-
 feature -- Access
 
 	text: STRING is

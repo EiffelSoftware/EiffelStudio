@@ -9,6 +9,8 @@ deferred class
 inherit
 	ANY	
 
+	EV_GTK_GENERAL_EXTERNALS
+
 	MEMORY
 		export
 			{NONE} all
@@ -62,7 +64,7 @@ feature -- Status report
 feature -- Element change
 
 	set_handle (a_handle: POINTER) is
-			-- Set `handle' with `a_handle'
+			-- Set `handle' with `a_handle'.
 		do
 			handle := a_handle
 		ensure
@@ -92,9 +94,9 @@ feature -- Conversion
 	to_integer: INTEGER is
 			-- Converts `handle' to an integer.
 		do
-			Result := cgtk_pointer_to_integer (handle)
+			Result := c_gtk_pointer_to_integer (handle)
 		ensure
-			Result = cgtk_pointer_to_integer (handle)
+			Result = c_gtk_pointer_to_integer (handle)
 		end
 
 feature {NONE} -- Removal
@@ -118,20 +120,6 @@ feature {NONE} -- Removal
 			if exists and then not shared then
 				destroy
 			end
-		end
-
-feature {NONE} -- Externals
-
-	cgtk_pointer_to_integer (p: POINTER): INTEGER is
-			-- Converts a pointer `p' to an integer
-		external
-			"C [macro <gtk_eiffel.h>] (EIF_POINTER): EIF_INTEGER"
-		end
-
-	cgtk_integer_to_pointer (i: INTEGER): POINTER is
-			-- Converts an integer `i' to a pointer
-		external
-			"C [macro <gtk_eiffel.h>] (EIF_INTEGER): EIF_POINTER"
 		end
 
 end -- class EV_GTK_OBJECT_MANAGER

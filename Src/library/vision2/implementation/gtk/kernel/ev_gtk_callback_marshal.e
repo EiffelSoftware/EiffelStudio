@@ -26,6 +26,16 @@ inherit
 			default_create,
 			is_equal
 		end
+		
+	EV_GTK_KEY_CONVERSION
+		undefine
+			default_create
+		end
+		
+	GTK_ENUMS
+		undefine
+			default_create
+		end
 
 
 create
@@ -40,6 +50,281 @@ feature {NONE} -- Initialization
 			c_ev_gtk_callback_marshal_init (Current, $marshal)
 		end
 		
+feature {EV_ANY_IMP} -- Access
+
+	translate_and_call (
+		an_agent: PROCEDURE [ANY, TUPLE];
+		translate: FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE];
+		n_args: INTEGER;
+		args: POINTER
+	) is
+			-- Call `an_agent' using `translate' to convert `args' and `n_args'
+			-- from raw GTK+ event data to a TUPLE.
+		require
+			an_agent_not_void: an_agent /= Void
+			translate_not_void: translate /= Void
+		local
+			t: TUPLE []
+			gdk_event: POINTER
+		do
+			t := translate.item ([n_args, args])
+			--FIXME
+			if t /= Void then
+				if
+					type_conforms_to (
+						dynamic_type (an_agent),
+						f_of_tuple_type_id
+					)
+				then
+					an_agent.call ([t])
+				else	
+					an_agent.call (t)
+				end
+			else
+				gdk_event := gtk_value_pointer (args)
+				if 
+					gdk_event = NULL or else
+					C.gdk_event_any_struct_type (gdk_event) /= C.GDK_3BUTTON_PRESS_ENUM
+				then
+					print ("FIXME " + an_agent.generating_type + " in " + generating_type + " not called%N")
+				end
+			end
+		end
+		
+	gdk_event_to_tuple (n_args: INTEGER; args: POINTER): TUPLE is
+			-- A TUPLE containing `args' data from a GdkEvent.
+			-- `n_args' is ignored.
+		require
+			--FIXME n_args_is_one: n_args = 1
+		local
+			gdk_event: POINTER
+			p: POINTER
+			keyval: INTEGER
+			key: EV_KEY
+		do
+			gdk_event := gtk_value_pointer (args)
+			--print (C.gdk_event_any_struct_type (gdk_event).out + "%N");
+			if C.gdk_event_any_struct_type (gdk_event) < 100000 then
+			inspect
+				C.gdk_event_any_struct_type (gdk_event)
+			when
+				Gdk_motion_notify_enum
+			then
+					-- gdk_event type GdkEventMotion
+				Result := [
+					C.gdk_event_motion_struct_x (gdk_event).truncated_to_integer,
+					C.gdk_event_motion_struct_y (gdk_event).truncated_to_integer,
+					C.gdk_event_motion_struct_xtilt (gdk_event),
+					C.gdk_event_motion_struct_ytilt (gdk_event),
+					C.gdk_event_motion_struct_pressure (gdk_event),
+					C.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer,
+					C.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer
+				]
+			when
+				Gdk_nothing_enum,
+				Gdk_delete_enum,
+				Gdk_destroy_enum,
+				Gdk_focus_change_enum,
+				Gdk_map_enum,
+				Gdk_unmap_enum
+			then
+					-- gdk_event type GdkEventAny
+				Result := []
+
+			when
+				Gdk_expose_enum
+			then
+					-- gdk_event type GdkEventExpose
+				p := C.gdk_event_expose_struct_area (gdk_event)
+				Result := [
+					C.gdk_rectangle_struct_x (p),
+					C.gdk_rectangle_struct_y (p),
+					C.gdk_rectangle_struct_width (p),
+					C.gdk_rectangle_struct_height (p)
+				]
+			when
+				Gdk_button_press_enum,
+				Gdk_2button_press_enum
+			then
+					-- gdk_event type GdkEventButton
+				Result := [
+					C.gdk_event_button_struct_type (gdk_event),
+					C.gdk_event_button_struct_x (gdk_event).truncated_to_integer,
+					C.gdk_event_button_struct_y (gdk_event).truncated_to_integer,
+					C.gdk_event_button_struct_button (gdk_event),
+					C.gdk_event_button_struct_xtilt (gdk_event),
+					C.gdk_event_button_struct_ytilt (gdk_event),
+					C.gdk_event_button_struct_pressure (gdk_event),
+					C.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer,
+					C.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer
+				]
+
+			when
+				Gdk_button_release_enum
+			then
+					-- gdk_event type GdkEventButton
+				Result := [
+					C.gdk_event_button_struct_x (gdk_event).truncated_to_integer,
+					C.gdk_event_button_struct_y (gdk_event).truncated_to_integer,
+					C.gdk_event_button_struct_button (gdk_event),
+					C.gdk_event_button_struct_xtilt (gdk_event),
+					C.gdk_event_button_struct_ytilt (gdk_event),
+					C.gdk_event_button_struct_pressure (gdk_event),
+					C.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer,
+					C.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer
+				]
+
+			when
+				Gdk_3button_press_enum
+			then
+					-- gdk_event type GdkEventButton
+					-- Ignored
+
+			when
+				Gdk_key_press_enum,
+				Gdk_key_release_enum
+			then
+					-- gdk_event type GdkEventKey
+				keyval := C.gdk_event_key_struct_keyval (gdk_event)
+				if valid_gtk_code (keyval) then
+					create key.make_with_code (key_code_from_gtk (keyval))
+				end
+				Result := [ key ]
+			when
+				Gdk_enter_notify_enum,
+				Gdk_leave_notify_enum
+			then
+					-- gdk_event type GdkEventCrossing
+				Result := []
+
+			when
+				Gdk_configure_enum
+			then
+					-- gdk_event type GdkEventConfigure
+				Result := [
+					C.gdk_event_configure_struct_x (gdk_event),
+					C.gdk_event_configure_struct_y (gdk_event),
+					C.gdk_event_configure_struct_width (gdk_event),
+					C.gdk_event_configure_struct_height (gdk_event)
+				]
+
+			when
+				Gdk_property_notify_enum
+			then
+					-- gdk_event type GdkEventProperty
+				check
+					gdk_property_event_not_handled: False
+				end
+
+			when
+				Gdk_selection_clear_enum,
+				Gdk_selection_request_enum,
+				Gdk_selection_notify_enum
+			then
+					-- gdk_event type GdkEventSelection
+				check
+					gdk_selection_event_not_handled: False
+				end
+
+			when
+				Gdk_proximity_in_enum,
+				Gdk_proximity_out_enum
+			then
+					-- gdk_event type GdkEventProximity
+				Result := []
+					
+			when
+				Gdk_drag_enter_enum,
+				Gdk_drag_leave_enum,
+				Gdk_drag_motion_enum,
+				Gdk_drag_status_enum,
+				Gdk_drop_start_enum,
+				Gdk_drop_finished_enum
+			then
+				check
+					gdk_drag_and_drop_event_not_handled: False
+				end
+
+			when
+				Gdk_client_event_enum
+			then
+					-- gdk_event type GdkEventSelection
+				check	
+					gdk_client_event_not_handled: False
+				end
+			when	
+				Gdk_visibility_notify_enum
+			then
+					-- gdk_event type GdkEventAny
+				check
+					gdk_visibility_event_not_handled: False
+				end
+
+			when
+				Gdk_no_expose_enum
+			then
+					-- gdk_event type GdkEventNoExpose
+				check
+					gdk_no_expose_event_not_handled: False
+				end
+
+			end
+			end
+		end
+		
+	key_event_translate (n: INTEGER; p: POINTER): TUPLE is
+			-- Convert GdkEventKey to tuple.
+		local
+			keyval: INTEGER
+			gdkeventkey: POINTER
+			a_key_string: STRING
+			key: EV_KEY
+			a_key_press: BOOLEAN
+		do
+			gdkeventkey := gtk_value_pointer (p)
+			if C.gdk_event_key_struct_type (gdkeventkey) = C.gdk_key_press_enum then
+				a_key_press := True
+				create a_key_string.make (0)
+				a_key_string.from_c (C.gdk_event_key_struct_string (gdkeventkey))
+			end
+			keyval := C.gdk_event_key_struct_keyval (gdkeventkey)
+			if valid_gtk_code (keyval) then
+				create key.make_with_code (key_code_from_gtk (keyval))
+			end
+			
+			Result := [key, a_key_string, a_key_press]
+		end
+		
+	size_allocate_translate (n: INTEGER; p: POINTER): TUPLE is
+			-- Convert GtkAllocation to tuple.
+		local
+			gtk_alloc: POINTER
+		do
+			gtk_alloc := gtk_value_pointer (p)
+			Result := [
+				C.gtk_allocation_struct_x (gtk_alloc),
+				C.gtk_allocation_struct_y (gtk_alloc),
+				C.gtk_allocation_struct_width (gtk_alloc),
+				C.gtk_allocation_struct_height (gtk_alloc)
+			]
+		end
+		
+		
+	gtk_value_pointer (arg: POINTER): POINTER is
+			-- Pointer to the value of a GtkArg.
+			--| FIXME find a better home for this feature. - sam
+		external
+			"C | %"ev_gtk_callback_marshal.h%""
+		end
+
+	gtk_value_int (arg: POINTER): INTEGER is
+			-- Integer value from a GtkArg.
+			--| FIXME find a better home for this feature. - sam
+		external
+			"C | %"ev_gtk_callback_marshal.h%""
+		end
+
+		
 feature {EV_APPLICATION_IMP} -- Destruction
 
 	destroy is
@@ -49,6 +334,12 @@ feature {EV_APPLICATION_IMP} -- Destruction
 		end
 
 feature {NONE} -- Implementation
+
+	C: EV_C_EXTERNALS is
+			--
+		once
+			create Result
+		end
 
 	marshal (action: PROCEDURE [ANY, TUPLE]; n_args: INTEGER; args: POINTER) is
 			-- Call `action' with GTK+ event data from `args'.

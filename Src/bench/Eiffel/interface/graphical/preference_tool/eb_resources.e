@@ -40,4 +40,12 @@ feature {NONE} -- Initialization
 			end
 		end
 
+feature -- Access
+
+	is_graphical_output_disabled: BOOLEAN is
+			-- Is the graphical output disabled?
+		do
+			Result := Project_resources.graphical_output_disabled.actual_value
+		end;
+
 end -- class EB_RESOURCES

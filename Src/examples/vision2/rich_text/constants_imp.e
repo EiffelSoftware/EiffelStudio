@@ -81,10 +81,14 @@ feature -- Access
 			Result := 2
 		end
 
-	small_padding: INTEGER is 
-			-- `Result' is INTEGER constant named small_padding.
-		once
-			Result := 4
+	bold_png: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		Once
+			create Result
+			create a_file_name.make_from_string (rich_text_example_root)
+			a_file_name.set_file_name ("bold.png")
+			set_with_named_file (Result, a_file_name)
 		end
 
 	underline_png: EV_PIXMAP is
@@ -103,20 +107,16 @@ feature -- Access
 			Result := 320
 		end
 
-	bold_png: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		Once
-			create Result
-			create a_file_name.make_from_string (rich_text_example_root)
-			a_file_name.set_file_name ("bold.png")
-			set_with_named_file (Result, a_file_name)
+	small_padding: INTEGER is 
+			-- `Result' is INTEGER constant named small_padding.
+		once
+			Result := 4
 		end
 
 	window_width: INTEGER is 
 			-- `Result' is INTEGER constant named window_width.
 		once
-			Result := 540
+			Result := 640
 		end
 
 	right_alignment_png: EV_PIXMAP is

@@ -62,7 +62,7 @@ feature -- Properties
 				file_name := version_list.i_th (pos - 1);
 				!! f.make (file_name);
 				if f.exists and then f.is_readable and then f.is_plain then
-					tool.show_file (f)
+					tool.set_text_from_file (f);
 				else
  					warner (popup_parent).gotcha_call
 						(Warning_messages.w_Cannot_read_file (file_name))

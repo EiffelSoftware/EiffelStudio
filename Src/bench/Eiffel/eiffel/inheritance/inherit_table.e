@@ -123,13 +123,13 @@ feature
 			!!new_externals.make;
 		end;
 
-	pass2 is
+	pass2 (pass_c: PASS2_C) is
 			-- Second pass of the compiler on class `cl'. The ultimate
 			-- goal here is to calculate the feature table `inherited_features'.
 		require
-			a_class /= Void;
---			second_pass_has_to_be_done: a_class.make_pass2;
-			class_info_exists: Class_info_server.has (a_class.id);
+			argument_not_void: pass_c /= Void;
+			class_not_void: pass_c.associated_class /= Void;
+			class_info_exists: Class_info_server.has (pass_c.associated_class.id);
 		local
 			class_id, i, nb: INTEGER;
 			resulting_table: like inherited_features;
@@ -137,9 +137,11 @@ feature
 			pass2_control: PASS2_CONTROL;
 			pass3_control: PASS3_CONTROL;
 			depend_unit: DEPEND_UNIT;
-			creation_name: STRING;
 			old_creators, new_creators: EXTEND_TABLE [EXPORT_I, STRING];
+			creation_name: STRING;
 		do
+			a_class := pass_c.associated_class;
+
 				-- Verbose
 			a_cluster := a_class.cluster;
 			io.error.putstring ("Pass 2 on class ");
@@ -292,26 +294,10 @@ feature
 			pass3_control.set_removed_features (pass2_control.removed_features);
 			pass3_control.set_invariant_changed (invariant_changed);
 			pass3_control.set_invariant_removed (invariant_removed);
-			
-			if pass2_control.propagate_pass3 then
-					-- Mark the current class `changed3' and the clients
-					-- also.
-				a_class.propagate_pass2;
-					-- Propagation of second pass in order to update
-					-- feature table of direct descendantstns
-				a_class.propagate_pass3 (pass2_control);
-					-- Propagation of third pass in order to type check
-					-- clients of the current class
-				a_class.set_skeleton (resulting_table.skeleton);
-				resulting_table.melt;
-			elseif  not resulting_table.equiv (feature_table) then
-					-- Incremetality test: asked the compiler to apply at
-					-- least the second pass to the direct descendants
-					-- of the class `a_class'.
-				a_class.propagate_pass2;
-				a_class.set_skeleton (resulting_table.skeleton);
-				resulting_table.melt;
-			end;
+
+				-- Propagation
+			pass_c.propagate (feature_table, resulting_table, pass2_control);
+
 				-- Process creation feature of `a_class'.
 			a_class.process_creation_feature (resulting_table);
 				-- Process paterns of origin features

@@ -44,24 +44,20 @@ feature
 
 	make_pass3: BOOLEAN is
 			-- Has a third pass to be done ?
-		require
-			removed_features_exists: removed_features /= Void
 		do
-			Result := 	propagate_pass3
-						or else
-						removed_features.count > 0
-						
+			Result := propagate_pass3 or else removed_features.count > 0
 		end;
 
 	propagate_pass3: BOOLEAN is
 			-- Has a third pass to be propagated to clients ?
-		require
-			propagators_exists: propagators /= Void;
-			melted_propagators_exists: melted_propagators /= Void;
 		do
-			Result :=   not (   propagators.empty
-								and then
-								melted_propagators.empty)
+			Result := not (propagators.empty and then melted_propagators.empty)
 		end;
+
+invariant
+
+	removed_features_exists: removed_features /= Void;
+	propagators_exists: propagators /= Void;
+	melted_propagators_exists: melted_propagators /= Void;
 
 end

@@ -115,7 +115,9 @@ end;
 	trace is
 			-- Trace
 		do
-			io.error.putstring ("PASS_CONTROLER: trace%N");
+			io.error.putstring ("PASS_CONTROLER ");
+			io.error.putint (level);
+			io.error.putstring (": trace%N");
 			from
 				changed_classes.start
 			until

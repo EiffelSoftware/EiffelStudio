@@ -75,7 +75,7 @@ feature
 			-- Level for analysis of precondition
 			
 
-	supplier_ids: SORTED_SET [DEPEND_UNIT];
+	supplier_ids: FEATURE_DEPENDANCE;
 			-- Supplier units
 
 	make is
@@ -310,6 +310,7 @@ feature
 			-- a_class.
 		do
 			a_class := Void;
+			actual_class_type := Void;
 			feature_table := Void;
 			clear2;
 		end;
@@ -329,6 +330,7 @@ feature
 			level1 := False;
 			level2 := False;
 			level3 := False;
+			level4 := False;
 			supplier_ids.wipe_out;
 			wipe_out;
 		end;

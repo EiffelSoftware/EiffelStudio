@@ -54,6 +54,10 @@ feature
 			-- in `a_clickable'.
 		do
 			old_build_explain (a_clickable);
+			a_clickable.put_string ("%T%Ttarget ");
+			a_clickable.put_string (formal_type.dump);
+			a_clickable.put_string ("%T%Tsource	");
+			a_clickable.put_string (actual_type.dump);
 			a_clickable.put_string ("%T%Tfor argument `");
 			a_clickable.put_string (argument_name);
 			a_clickable.put_string ("'%N")

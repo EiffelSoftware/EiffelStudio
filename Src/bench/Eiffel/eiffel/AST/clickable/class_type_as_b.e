@@ -126,9 +126,13 @@ feature -- Conveniences
 
 	dump: STRING is
 			-- Dumped string
+		local
+			dumped_class_name: STRING;
 		do
 			!!Result.make (class_name.count);
-			Result.append (class_name);
+			dumped_class_name := class_name.duplicate;
+			dumped_class_name.to_upper;
+			Result.append (dumped_class_name);
 			if generics /= Void then
 				from
 					generics.start; 

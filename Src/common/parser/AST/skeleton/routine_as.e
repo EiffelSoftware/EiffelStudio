@@ -189,6 +189,7 @@ feature -- Type check, byte code and dead code removal
 		local
 			id_list: EIFFEL_LIST [ID_AS];
 			local_type: TYPE;
+			local_class_c: CLASS_C;
 			local_name: ID_AS;
 			solved_type: TYPE_A;
 			context_class: CLASS_C;
@@ -237,14 +238,7 @@ feature -- Type check, byte code and dead code removal
 					id_list.offright
 				loop
 					local_name := id_list.item;
-					if context.feature_table.has (local_name) then
-							-- The local name is a feature name of the
-							-- current analyzed class.
-						!!vrle1;
-						context.init_error (vrle1);
-						vrle1.set_local_name (local_name);
-						Error_handler.insert_error (vrle1);
-					elseif
+					if 
 						context.a_feature.has_argument_name (local_name)
 					then
 							-- The local name is an argument name of the
@@ -253,6 +247,13 @@ feature -- Type check, byte code and dead code removal
 						context.init_error (vrle2);
 						vrle2.set_local_name (local_name);
 						Error_handler.insert_error (vrle2);
+					elseif
+							-- The local name is a feature name of the
+							-- current analyzed class.
+						!!vrle1;
+						context.init_error (vrle1);
+						vrle1.set_local_name (local_name);
+						Error_handler.insert_warning (vrle1);
 					end;
 						-- Build the local table in the context
 					counter := counter + 1;
@@ -318,6 +319,13 @@ feature -- Type check, byte code and dead code removal
 					end;
 					id_list.forth;
 				end;
+
+				local_class_c := solved_type.associated_class;
+				if local_class_c /= Void then
+						-- Add the supplier in the feature_dependance list
+					context.supplier_ids.add_supplier (local_class_c.id);
+				end;
+
 				if solved_type /= Void then
 					solved_type.check_for_obsolete_class
 				end;

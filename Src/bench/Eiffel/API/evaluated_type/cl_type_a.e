@@ -236,7 +236,8 @@ feature
 		local
 			class_name: STRING;
 		do
-			class_name := associated_class.class_name;
+			class_name := associated_class.class_name.duplicate;
+			class_name.to_upper;
 			if is_expanded then
 				!!Result.make (class_name.count + 9);
 				Result.append ("expanded ");

@@ -6,14 +6,15 @@ inherit
 
 	PASS_CONTROL
 		rename
-			wipe_out as basic_wipe_out
+			wipe_out as basic_wipe_out,
+			make as basic_make
 		end;
 
 	PASS_CONTROL
 		redefine
-			wipe_out
+			wipe_out, make
 		select
-			wipe_out
+			wipe_out, make
 		end
 
 creation
@@ -28,6 +29,16 @@ feature
 	invariant_removed: BOOLEAN;
 			-- Is the invariant clause removed ?
 
+	changed_status: SORTED_SET [INTEGER];
+			-- Set of class ids for the classes for which the
+			-- expanded or deferred status has changed
+
+	make is
+		do
+			basic_make;
+			!!changed_status.make;
+		end;
+
 	set_invariant_removed (b: BOOLEAN) is
 			-- Assign `b' to `invariant_removed'.
 		do
@@ -38,6 +49,13 @@ feature
 			-- Assign `b' to `invariant_changed'.
 		do
 			invariant_changed := b;
+		end;
+
+	add_changed_status (an_id: INTEGER) is
+			-- Add `an_id' to the set of ids for the classes for which the
+			-- expanded or deferred status has changed
+		do
+			changed_status.add (an_id)
 		end;
 
 	update (pass2_control: PASS2_CONTROL) is
@@ -96,6 +114,15 @@ feature
 			depend_list.go (pos);
 		end;
 
+	changed_status_empty_intersection (feature_depend: FEATURE_DEPENDANCE): BOOLEAN is
+			-- Is the intersection of `feature_depend'.suppliers and `changed_status'
+			-- empty ?
+		require
+			good_argument: feature_depend /= Void
+		do
+			Result := changed_status.disjoint (feature_depend.suppliers)
+		end;
+
 	set_removed_features (r: like removed_features) is
 			-- Assign `r' to `removed_features'.
 		do
@@ -106,6 +133,7 @@ feature
 			-- Empty the controller
 		do
 			basic_wipe_out;
+			changed_status.wipe_out;
 			invariant_changed := False;
 			invariant_removed := False;
 		end;

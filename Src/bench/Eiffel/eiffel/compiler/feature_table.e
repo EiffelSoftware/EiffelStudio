@@ -231,10 +231,15 @@ end;
 			loop
 				type_a ?= item_for_iteration.type;
 				if type_a /= Void then
-					base_type := type_a.base_type;
-					if base_type > 0 and then
-						System.class_of_id (type_a.base_type) = Void
-					then
+						-- it is not a procedure
+					if type_a.is_void = False and then
+							-- The result is not none
+						type_a.is_none = False and then
+							-- The result is not a formal argument
+						type_a.is_formal = False and then
+							-- and the class associated with the result does not
+							-- exist in the system any more
+						type_a.associated_class = Void then
 						remove (key_for_iteration)
 					end;
 				end;

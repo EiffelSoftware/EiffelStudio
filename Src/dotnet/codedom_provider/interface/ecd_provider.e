@@ -12,7 +12,7 @@ indexing
 		create {COM_VISIBLE_ATTRIBUTE}.make (False) end
 
 class
-	ECDP_PROVIDER
+	ECD_PROVIDER
 
 inherit
 	SYSTEM_DLL_CODE_DOM_PROVIDER
@@ -39,7 +39,7 @@ feature -- Access
 			-- Get the file name extension to use when creating source code files.
 			-- Files passed to codeDomGenerator.
 		once
-			Result := ".e"
+			Result := ".es"
 		end
 
 	language_options: SYSTEM_DLL_LANGUAGE_OPTIONS is
@@ -50,13 +50,13 @@ feature -- Access
 		
 feature -- Basic Operations
 
-	create_generator: ECDP_GENERATOR is
+	create_generator: ECD_CODE_GENERATOR is
 			-- Create an instance of the Eiffel for .NET code code_generator.
 		do
 			create Result
 		end
 
-	create_generator_text_writer (output: SYSTEM_DLL_INDENTED_TEXT_WRITER): ECDP_GENERATOR is
+	create_generator_text_writer (output: SYSTEM_DLL_INDENTED_TEXT_WRITER): ECD_CODE_GENERATOR is
 			-- Create a new code code_generator using the specified text writer `output'.
 		require else
 			non_void_output: output /= Void		
@@ -66,7 +66,7 @@ feature -- Basic Operations
 			non_void_result: Result /= Void
 		end
 
-	create_generator_string (file_name: SYSTEM_STRING): ECDP_GENERATOR is
+	create_generator_string (file_name: SYSTEM_STRING): ECD_CODE_GENERATOR is
 			-- Create a new code generator using the specified `file_name' for output.
 		require else
 			non_void_file_name: file_name /= Void
@@ -77,7 +77,7 @@ feature -- Basic Operations
 			non_void_result: Result /= Void
 		end
 
-	create_compiler: ECDP_COMPILER is
+	create_compiler: ECD_COMPILER is
 			-- Create an instance of the Eiffel for .NET code compiler.
 		do
 			create Result
@@ -85,7 +85,7 @@ feature -- Basic Operations
 			non_void_result: Result /= Void
 		end
 
-	create_parser: EIFFEL_CODE_DOM_PARSER is
+	create_parser: ECD_PARSER is
 			-- Create a new code parser.
 		do
 			create Result
@@ -93,14 +93,14 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	installer: ECDP_INSTALLER is
+	installer: ECD_INSTALLER is
 			-- Installer
 			--| Referenced here so that it is in system
 		do
 			create Result
 		end
 
-end -- class ECDP_PROVIDER
+end -- class ECD_PROVIDER
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider

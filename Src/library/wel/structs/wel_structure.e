@@ -89,7 +89,7 @@ feature {NONE} -- Externals
 			-- Eiffel run-time function to raise an
 			-- "Out of memory" exception.
 		external
-			"C"
+			"C | %"eif_except.h%""
 		alias
 			"enomem"
 		end

@@ -15,6 +15,8 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	BASIC_ROUTINES
 
 feature -- Access
 
@@ -193,7 +195,7 @@ feature -- Access
 						loop
 							current_data_element ?= current_element.item_for_iteration
 							if current_data_element /= Void then
-								char_data := current_data_element.content.to_utf8
+								char_data := ucstring_to_latin_1 (current_data_element.content)
 								char_data.replace_substring_all ("%T","")
 								if data_valid (char_data) then
 									info.set_data (char_data)
@@ -251,13 +253,41 @@ feature -- Access
 				element.forth
 			end
 		end
-		
+
+	ucstring_to_latin_1 (ucstring: UCSTRING): STRING is
+			-- Convert `ucstring' to latin-1 format
+		require
+			ucstring_not_void: ucstring /= Void
+		local
+			i: INTEGER
+			c: INTEGER		
+		do
+			create Result.make (ucstring.count)
+			from
+				i := 1
+			until
+				i > ucstring.count
+			loop
+				c := ucstring.item (i).code
+				if c < 256 then
+					Result.append_character (charconv (c))
+				else
+					check
+						not_supported: False
+					end
+				end
+				i := i + 1
+			end
+		ensure
+			Count_identical: Result.count = ucstring.count
+		end
+
 feature {NONE} -- Implementation
 
 	data_valid (current_data: STRING):BOOLEAN is
 			-- Is `current_data' not empty and valid?
 		do
-			if current_data.count > 0 and current_data.item (1).code /= 10 then	
+			if current_data.count > 0 and current_data.item (1).code /= 10 then
 				Result := True
 			end
 		end

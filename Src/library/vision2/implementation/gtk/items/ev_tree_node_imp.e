@@ -302,19 +302,14 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 			-- Used for setting items on addition and removal
 		do
 			if tree_node_ptr = NULL then
-				-- Current has been added to tree
-				set_tree_node (
-					parent_tree_imp.insert_ctree_node (
-						Current,
-						parent_node,
-						NULL
-					)
-				)
+					-- Current has been added to tree
+				set_tree_node (parent_tree_imp.insert_ctree_node (Current, parent_node, NULL))
 			else
-				-- Current is being removed from tree.
+					-- Current is being removed from tree.
 				parent_tree_imp.tree_node_ptr_table.remove (tree_node_ptr)
 				set_tree_node (NULL)
 			end
+			
 			from
 				ev_children.start
 			until
@@ -323,8 +318,9 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 				ev_children.item.set_item_and_children (tree_node_ptr)
 				ev_children.forth
 			end
+			
 			if tree_node_ptr = NULL then
-				-- Reset here as descendants access parent_imp in iteration.
+					-- Reset here as descendants access `parent_imp' in iteration.
 				set_parent_imp (Void)
 			end
 		end

@@ -87,7 +87,7 @@ feature -- Access
 	Bc_string:			CHARACTER is '%/073/';
 	Bc_and_then:		CHARACTER is '%/074/';
 	Bc_or_else:			CHARACTER is '%/075/';
-	Bc_protect:			CHARACTER is '%/076/';
+	Bc_notused_76:		CHARACTER is '%/076/';
 	Bc_notused_77:		CHARACTER is '%/077/';
 	Bc_jmp_t:			CHARACTER is '%/078/';
 	Bc_rescue: 			CHARACTER is '%/080/';

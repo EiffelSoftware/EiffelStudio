@@ -48,7 +48,10 @@ feature {NONE} -- Implementation
 		do
 			inspect yy_act
 when 1 then
---|#line 37
+--|#line 37 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 37")
+end
 
 				current_position.go_to (text_count)
 				if is_windows then
@@ -58,269 +61,404 @@ when 1 then
 				end
 			
 when 2 then
---|#line 48
+--|#line 48 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 48")
+end
 current_position.go_to (text_count)
 when 3 then
---|#line 49
+--|#line 49 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 49")
+end
 
 				line_number := line_number + text_count
 				current_position.go_to (text_count)
 				current_position.set_line_number (line_number)
 			
 when 4 then
---|#line 58
+--|#line 58 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 58")
+end
 
 				current_position.go_to (1)
 				last_token := LAC_SEMICOLON
 			
 when 5 then
---|#line 62
+--|#line 62 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 62")
+end
 
 				current_position.go_to (1)
 				last_token := LAC_COLON
 			
 when 6 then
---|#line 66
+--|#line 66 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 66")
+end
 
 				current_position.go_to (1)
 				last_token := LAC_COMMA
 			
 when 7 then
---|#line 70
+--|#line 70 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 70")
+end
 
 				current_position.go_to (1)
 				last_token := LAC_LEFT_PARAM
 			
 when 8 then
---|#line 74
+--|#line 74 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 74")
+end
 
 				current_position.go_to (1)
 				last_token := LAC_RIGHT_PARAM
 			
 when 9 then
---|#line 82
+--|#line 82 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 82")
+end
 
 				current_position.go_to (5)
 				last_token := LAC_ADAPT
 			
 when 10 then
---|#line 86
+--|#line 86 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 86")
+end
 
 				current_position.go_to (3)
 				last_token := LAC_ALL
 			
 when 11 then
---|#line 90
+--|#line 90 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 90")
+end
 
 				current_position.go_to (2)
 				last_token := LAC_AS
 			
 when 12 then
---|#line 94
+--|#line 94 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 94")
+end
 
 				current_position.go_to (8)
 				last_token := LAC_ASSEMBLY
 			
 when 13 then
---|#line 98
+--|#line 98 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 98")
+end
 
 				current_position.go_to (9)
 				last_token := LAC_ASSERTION
 			
 when 14 then
---|#line 102
+--|#line 102 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 102")
+end
 
 				current_position.go_to (5)
 				last_token := LAC_CHECK
 			
 when 15 then
---|#line 106
+--|#line 106 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 106")
+end
 
 				current_position.go_to (7)
 				last_token := LAC_CLUSTER
 			
 when 16 then
---|#line 110
+--|#line 110 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 110")
+end
 
 				current_position.go_to (6)
 				last_token := LAC_CREATION
 			
 when 17 then
---|#line 114
+--|#line 114 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 114")
+end
 
 				current_position.go_to (8)
 				last_token := LAC_CREATION
 			
 when 18 then
---|#line 118
+--|#line 118 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 118")
+end
 
 				current_position.go_to (5)
 				last_token := LAC_DEBUG
 			
 when 19 then
---|#line 122
+--|#line 122 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 122")
+end
 
 				current_position.go_to (14)
 				last_token := LAC_DISABLED_DEBUG
 			
 when 20 then
---|#line 126
+--|#line 126 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 126")
+end
 
 				current_position.go_to (7)
 				last_token := LAC_DEFAULT
 			
 when 21 then
---|#line 130
+--|#line 130 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 130")
+end
 
 				current_position.go_to (3)
 				last_token := LAC_END
 			
 when 22 then
---|#line 134
+--|#line 134 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 134")
+end
 
 				current_position.go_to (6)
 				last_token := LAC_ENSURE
 			
 when 23 then
---|#line 138
+--|#line 138 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 138")
+end
 
 				current_position.go_to (7)
 				last_token := LAC_EXCLUDE
 			
 when 24 then
---|#line 142
+--|#line 142 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 142")
+end
 
 				current_position.go_to (6)
 				last_token := LAC_DEPEND
 			
 when 25 then
---|#line 146
+--|#line 146 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 146")
+end
 
 				current_position.go_to (6)
 				last_token := LAC_EXPORT
 			
 when 26 then
---|#line 150
+--|#line 150 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 150")
+end
 
 				current_position.go_to (8)
 				last_token := LAC_EXTERNAL
 			
 when 27 then
---|#line 154
+--|#line 154 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 154")
+end
 
 				current_position.go_to (8)
 				last_token := LAC_GENERATE
 			
 when 28 then
---|#line 159
+--|#line 159 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 159")
+end
 
 				current_position.go_to (6)
 				last_token := LAC_IGNORE
 			
 when 29 then
---|#line 163
+--|#line 163 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 163")
+end
 
 				current_position.go_to (7)
 				last_token := LAC_INCLUDE
 			
 when 30 then
---|#line 167
+--|#line 167 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 167")
+end
 
 				current_position.go_to (9)
 				last_token := LAC_INVARIANT
 			
 when 31 then
---|#line 171
+--|#line 171 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 171")
+end
 
 				current_position.go_to (7)
 				last_token := LAC_LIBRARY
 			
 when 32 then
---|#line 175
+--|#line 175 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 175")
+end
 
 				current_position.go_to (4)
 				last_token := LAC_LOOP
 			
 when 33 then
---|#line 179
+--|#line 179 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 179")
+end
 
 				current_position.go_to (2)
 				last_token := LAC_NO
 			
 when 34 then
---|#line 183
+--|#line 183 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 183")
+end
 
 				current_position.go_to (8)
 				last_token := LAC_OPTIMIZE
 			
 when 35 then
---|#line 187
+--|#line 187 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 187")
+end
 
 				current_position.go_to (6)
 				last_token := LAC_OPTION
 			
 when 36 then
---|#line 191
+--|#line 191 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 191")
+end
 
 				current_position.go_to (11)
 				last_token := LAC_PRECOMPILED
 			
 when 37 then
---|#line 195
+--|#line 195 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 195")
+end
 
 				current_position.go_to (6)
 				last_token := LAC_PREFIX
 			
 when 38 then
---|#line 199
+--|#line 199 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 199")
+end
 
 				current_position.go_to (6)
 				last_token := LAC_RENAME
 			
 when 39 then
---|#line 203
+--|#line 203 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 203")
+end
 
 				current_position.go_to (7)
 				last_token := LAC_REQUIRE
 			
 when 40 then
---|#line 207
+--|#line 207 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 207")
+end
 
 				current_position.go_to (4)
 				last_token := LAC_ROOT
 			
 when 41 then
---|#line 211
+--|#line 211 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 211")
+end
 
 				current_position.go_to (6)
 				last_token := LAC_SYSTEM
 			
 when 42 then
---|#line 215
+--|#line 215 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 215")
+end
 
 				current_position.go_to (5)
 				last_token := LAC_TRACE
 			
 when 43 then
---|#line 219
+--|#line 219 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 219")
+end
 
 				current_position.go_to (3)
 				last_token := LAC_USE
 			
 when 44 then
---|#line 223
+--|#line 223 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 223")
+end
 
 				current_position.go_to (7)
 				last_token := LAC_VISIBLE
 			
 when 45 then
---|#line 227
+--|#line 227 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 227")
+end
 
 				current_position.go_to (3)
 				last_token := LAC_YES
 			
 when 46 then
---|#line 235
+--|#line 235 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 235")
+end
 
 					-- Note: Identifiers are converted to lower-case.
 				token_buffer.clear_all
@@ -330,7 +468,10 @@ when 46 then
 				last_token := LAC_IDENTIFIER
 			
 when 47 then
---|#line 247
+--|#line 247 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 247")
+end
 
 					-- Empty string.
 				current_position.go_to (2)
@@ -338,7 +479,10 @@ when 47 then
 				last_token := LAC_STRING
 			
 when 48 then
---|#line 253
+--|#line 253 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 253")
+end
 
 				token_buffer.clear_all
 				append_text_substring_to_string (2, text_count - 1, token_buffer)
@@ -346,7 +490,10 @@ when 48 then
 				last_token := LAC_STRING
 			
 when 49 then
---|#line 259
+--|#line 259 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 259")
+end
 
 				token_buffer.clear_all
 				if text_count > 1 then
@@ -356,145 +503,217 @@ when 49 then
 				set_start_condition (IN_STR)
 			
 when 50 then
---|#line 268
+--|#line 268 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 268")
+end
 
 				current_position.go_to (text_count)
 				append_text_to_string (token_buffer)
 			
 when 51 then
---|#line 272
+--|#line 272 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 272")
+end
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%A')
 			
 when 52 then
---|#line 276
+--|#line 276 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 276")
+end
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%B')
 			
 when 53 then
---|#line 280
+--|#line 280 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 280")
+end
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%C')
 			
 when 54 then
---|#line 284
+--|#line 284 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 284")
+end
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%D')
 			
 when 55 then
---|#line 288
+--|#line 288 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 288")
+end
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%F')
 			
 when 56 then
---|#line 292
+--|#line 292 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 292")
+end
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%H')
 			
 when 57 then
---|#line 296
+--|#line 296 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 296")
+end
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%L')
 			
 when 58 then
---|#line 300
+--|#line 300 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 300")
+end
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%N')
 			
 when 59 then
---|#line 304
+--|#line 304 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 304")
+end
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%Q')
 			
 when 60 then
---|#line 308
+--|#line 308 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 308")
+end
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%R')
 			
 when 61 then
---|#line 312
+--|#line 312 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 312")
+end
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%S')
 			
 when 62 then
---|#line 316
+--|#line 316 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 316")
+end
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%T')
 			
 when 63 then
---|#line 320
+--|#line 320 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 320")
+end
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%U')
 			
 when 64 then
---|#line 324
+--|#line 324 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 324")
+end
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%V')
 			
 when 65 then
---|#line 328
+--|#line 328 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 328")
+end
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%%')
 			
 when 66 then
---|#line 332
+--|#line 332 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 332")
+end
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%'')
 			
 when 67 then
---|#line 336
+--|#line 336 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 336")
+end
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%"')
 			
 when 68 then
---|#line 340
+--|#line 340 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 340")
+end
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%(')
 			
 when 69 then
---|#line 344
+--|#line 344 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 344")
+end
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%)')
 			
 when 70 then
---|#line 348
+--|#line 348 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 348")
+end
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%<')
 			
 when 71 then
---|#line 352
+--|#line 352 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 352")
+end
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%>')
 			
 when 72 then
---|#line 356
+--|#line 356 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 356")
+end
 
 				current_position.go_to (text_count)
 				process_string_character_code (text_substring (3, text_count - 1).to_integer)
 			
 when 73 then
---|#line 360
+--|#line 360 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 360")
+end
 
 					-- This regular expression should actually be: %\n[ \t\r]*%
 					-- Left as-is for compatibility with previous releases.
@@ -503,7 +722,10 @@ when 73 then
 				current_position.set_line_number (line_number)
 			
 when 74 then
---|#line 367
+--|#line 367 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 367")
+end
 
 				if text_count > 1 then
 					append_text_substring_to_string (1, text_count - 1, token_buffer)
@@ -516,7 +738,10 @@ when 74 then
 				last_token := LAC_STRING
 			
 when 75 then
---|#line 378
+--|#line 378 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 378")
+end
 
 					-- Bad special character.
 				current_position.go_to (1)
@@ -524,7 +749,10 @@ when 75 then
 				report_string_bad_special_character_error
 			
 when 76 then
---|#line 384
+--|#line 384 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 384")
+end
 
 					-- No final double-quote.
 				line_number := line_number + 1
@@ -534,13 +762,19 @@ when 76 then
 				report_string_missing_quote_error (token_buffer)
 			
 when 77 then
---|#line 405
+--|#line 405 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 405")
+end
 
 				current_position.go_to (1)
 				report_unknown_token_error (text_item (1))
 			
 when 78 then
---|#line 0
+--|#line 0 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 0")
+end
 last_token := yyError_token
 fatal_error ("scanner jammed")
 			else
@@ -554,12 +788,18 @@ fatal_error ("scanner jammed")
 		do
 			inspect yy_sc
 when 0 then
---|#line 0
+--|#line 0 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 0")
+end
 
 				terminate
 			
 when 1 then
---|#line 0
+--|#line 0 "lace.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 0")
+end
 
 					-- No final double-quote.
 				set_start_condition (INITIAL)
@@ -892,6 +1132,12 @@ feature {NONE} -- Constants
 
 	yyEnd_of_buffer: INTEGER is 79
 			-- End of buffer rule code
+
+	yyLine_used: BOOLEAN is false
+			-- Are line and column numbers used?
+
+	yyPosition_used: BOOLEAN is false
+			-- Is `position' used?
 
 	INITIAL: INTEGER is 0
 	IN_STR: INTEGER is 1

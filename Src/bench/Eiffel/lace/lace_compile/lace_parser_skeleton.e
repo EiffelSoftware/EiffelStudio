@@ -55,7 +55,7 @@ feature -- Initialization
 
 feature -- Parsing
 
-	parse_lace (a_file: FILE) is
+	parse_lace (a_file: KL_BINARY_INPUT_FILE) is
 			-- Parse Lace class text from `a_file'.
 			-- Make result available in `ast'.
 			-- An exception is raised if a syntax error is found.

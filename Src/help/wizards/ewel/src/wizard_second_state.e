@@ -29,7 +29,7 @@ feature -- Basic Operation
 			cell: EV_CELL
 		do 
 			create h1
-			create project_name.make("Name of the project",
+			create project_name.make("Project Name",
 							 wizard_information.project_name, 10, 50, Current, False)
 			h1.extend (project_name)
 			create cell	
@@ -41,12 +41,12 @@ feature -- Basic Operation
 
 			create h1
 			h1.set_padding (5)
-			create icon_location.make("Choose the icon to add to your application",
+			create icon_location.make("Project icon (Enter file name)",
 							 wizard_information.icon_location, 10, 50, Current, False)		
 			create browse_b.make_with_text("Browse...")
 			browse_b.select_actions.extend(~Browse)
-
 			h1.extend (icon_location)
+		
 			create v1
 --			v1.set_minimum_width (50)
 			create cell
@@ -57,8 +57,13 @@ feature -- Basic Operation
 			h1.extend (v1)
 			h1.disable_item_expand (v1)
 
-			choice_box.extend (h1)
-			choice_box.disable_item_expand(h1)
+			if not wizard_information.dialog_application then
+					-- Test because the second state is used by 2 examples.
+					-- And for the dialog, we don't ask for an icon.
+
+				choice_box.extend (h1)
+				choice_box.disable_item_expand(h1)
+			end
 
 			choice_box.extend (create {EV_HORIZONTAL_BOX})
 			choice_box.extend (create {EV_HORIZONTAL_BOX})
@@ -105,9 +110,16 @@ feature {NONE} -- Implementation
 	display_state_text is
 		do
 			title.set_text ("CHOOSE PROJECT OPTIONS")
-			message.set_text ("%NAs you choose to create a frame based application you should provide now:%
-								%%N%T+ The name of your project%
-								%%N%T+ An icon (By default we will use the Eiffel icon)")
+			if not wizard_information.dialog_application then
+				message.set_text ("%NYou have chosen to build a Frame-Based Application.%
+								%%NYou must provide:%
+								%%N%T+ A project name.%
+								%%N%T+ (Optional) An icon (Default: ISE Eiffel icon.)")
+			else
+				message.set_text ("%NYou chosen to build a Frame-Based Application.%
+								%%NYou must provide:%
+								%%N%T+ The name of your project")
+			end
 		end
 
 	icon_location, project_name: WIZARD_SMART_TEXT_FIELD

@@ -7,19 +7,23 @@ indexing
 class
 	WIZARD_INFORMATION
 
+inherit
+	WIZARD_SHARED
+
 Creation
 	make
 
 feature  -- Initialization
 	make is
 		do
-			location:= "d:\tmp4"
+			location:= "d:\tmp3"
 			compile_project:= False
-			icon_location:= ""
+			icon_location:= wizard_resources_path + "\eiffel.ico"
 			project_name:= "My_new_project"
 			dialog_application:= False
 			rc_location:= ""
 			full_path_rc:= ""
+			dialog_with_no_rc:= False
 		end
 
 feature -- Setting
@@ -64,22 +68,39 @@ feature -- Setting
 			root_dialog_name:= s
 		end
 
+	set_dialog_with_no_rc (b: BOOLEAN) is
+		do
+			dialog_with_no_rc:= b
+		end
+
 feature -- Access
 
-	root_dialog_name: STRING
 
-	compile_project: BOOLEAN
+	root_dialog_name: STRING
+		-- Name of the root dialog name
 
 	icon_location: STRING
+		-- Location of the icon choose by the user
 	
 	location: STRING
+		-- Location of the generated code
 
 	project_name: STRING
-
-	dialog_application: BOOLEAN
+		-- Name of the project
 
 	rc_location: STRING
+		-- Location of the rc file
 
 	full_path_rc: STRING
+		-- The path of the rc file
+
+	dialog_with_no_rc: BOOLEAN
+		-- Does the user has selected to generate a dialog with no rc file
+
+	compile_project: BOOLEAN
+		-- Does the user want to compile the project at the end of the generation
+
+	dialog_application: BOOLEAN
+		-- Does the user want to generate a dialog application
 
 end -- class WIZARD_INFORMATION

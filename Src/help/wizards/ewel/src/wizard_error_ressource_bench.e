@@ -10,8 +10,8 @@ class
 
 inherit
 	WIZARD_FINAL_STATE_WINDOW
-		rename
-			pixmap_location as last_pixmap_location
+--		rename
+--			pixmap_location as last_pixmap_location
 		redefine
 			build
 		end
@@ -33,12 +33,12 @@ feature -- basic Operations
 
 	display_state_text is
 		do
-			title.set_text ("ROOT DIALOG ERROR")
-			message.set_text ("%NWhen you create a dialog application, you must choose a main dialog.%
-								%%N%NTo specify it, you must have one and only one dialog that inherit from%
-								% the class WEL_MAIN_DIALOG.%
-								%%N%NYou should go back to the previous step and make sure that one of your %
-								%dialog inherit from this class.")
+			title.set_text ("PLEASE CORRECT SELECTION")
+			message.set_text ("%NA Dialog-Based Application must have a main dialog.%
+								%%N%NPlease make sure that exactly one of the dialogs inherit from WEL_MAIN_DIALOG%
+								%%NThis will be your main dialog.%
+								%%N%N%NUse the Back button to correct your selection.%
+								%")
 		end
 
 	final_message: STRING is
@@ -47,6 +47,8 @@ feature -- basic Operations
 
 feature {WIZARD_STATE_WINDOW}
 
-	pixmap_location: STRING is "f_state_red.bmp"
+--	pixmap_location: STRING is "f_state_red.bmp"
+
+	pixmap_icon_location: STRING is "eiffel_wizard_icon.bmp"
 
 end -- class WIZARD_ERROR_RESSOURCE_BENCH

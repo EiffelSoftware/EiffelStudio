@@ -56,6 +56,7 @@ feature -- Basic Operation
 			create h1
 --			h1.set_minimum_height (300)
 			h1.extend (tree_view)
+			h1.disable_item_expand (tree_view)
 			choice_box.extend (h1)
 
 			create client_window.make (Current)
@@ -72,7 +73,7 @@ feature -- Basic Operation
 
 			first_dialog_node.enable_select
 
-			set_updatable_entries(<<>>)
+			set_updatable_entries(<<tree_view.select_actions, tree_view.deselect_actions>>)
 --			client_window.properties_dialog.show
 		end
 
@@ -109,7 +110,7 @@ feature {NONE} -- Implementation
 	display_state_text is
 		do
 			title.set_text ("DIALOGS SETTING")
-			message.set_text ("For each dialogs, choose the options to be generated.%N")
+			message.set_text ("Choose the options to be generated for each dialogs.%N")
 		end
 
 

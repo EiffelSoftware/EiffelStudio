@@ -52,10 +52,10 @@ feature {NONE} -- Initialization
 					"Vision2 GTK Debug Mode, Gtk version = " +
 					gtk_maj_ver.out + "." + gtk_min_ver.out + "."+ gtk_mic_ver.out + "%N"
 				)
-				(create {EV_C_UTIL}).enable_ev_gtk_log (temp_int)
+				enable_ev_gtk_log (temp_int)
 				C.gdk_set_show_events (True)	
 			else
-				(create {EV_C_UTIL}).enable_ev_gtk_log (0)
+				enable_ev_gtk_log (0)
 				C.gdk_set_show_events (False)
 			end
 
@@ -400,6 +400,13 @@ feature -- Implementation
 		end
 		
 feature -- External implementation
+
+	enable_ev_gtk_log (a_mode: INTEGER) is
+			-- Connect GTK+ logging to Eiffel exception handler.
+			-- `a_mode' = 0 means no log messages, 1 = messages, 2 = messages with exceptions.
+		external
+			"C (EIF_INTEGER) | %"ev_c_util.h%""
+		end
 
 	usleep (micro_seconds: INTEGER) is
 		external

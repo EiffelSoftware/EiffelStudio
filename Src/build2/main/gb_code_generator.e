@@ -502,6 +502,7 @@ feature {NONE} -- Implementation
 			local_name: STRING
 			comment_object_name, parameters: STRING
 			feature_implementation: STRING
+			indent_value: STRING
 		do
 			if element.has_attribute_by_name (type_string) then
 				stored_current_type := element.attribute_by_name (type_string).value.to_utf8
@@ -573,7 +574,13 @@ feature {NONE} -- Implementation
 										parameters := " (" +action_sequence.parameter_list + ") is"
 									end	
 									
-									feature_implementation := indent + "io.putstring (%"" + action_sequence_info.feature_name + " executed%")" + indent_less_one
+									if action_sequence.count = 0 then
+										feature_implementation := indent + "io.putstring (%"" + action_sequence_info.feature_name + " executed%%N%%N%%N%")"-- + indent_less_one
+										--indent_value := indent_less_one
+									else
+										feature_implementation := indent + "io.putstring (%"" + action_sequence_info.feature_name + " executed%%N%")" + indent + action_sequence.debugging_info --+ indent_less_one
+										--indent_value := indent_less_one
+									end
 									
 										-- Now we must generate the event declarations.
 									add_event_declaration (action_sequence_info.feature_name + parameters +
@@ -582,7 +589,7 @@ feature {NONE} -- Implementation
 									
 									add_event_implementation (action_sequence_info.feature_name + parameters +
 									indent + "-- Called by `" + action_sequence_info.name + "' of `" + comment_object_name + "'." +
-									indent_less_one + "do" + feature_implementation + "end" + indent_less_two)
+									indent_less_one + "do" + feature_implementation + indent_less_one + "end" + "%N%N")
 								end
 								another_element.forth
 							end

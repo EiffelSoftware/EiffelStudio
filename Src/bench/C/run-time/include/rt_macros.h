@@ -86,7 +86,7 @@ extern "C" {
 #define EIF_THREAD_BLOCKED 		3
 #define EIF_THREAD_SUSPENDED	4
 #define EIF_THREAD_DYING		5
-#define GC_THREAD_PROTECT(x)	(x)
+#define GC_THREAD_PROTECT(x)	x
 #else
 #define GC_THREAD_PROTECT(x)
 #endif

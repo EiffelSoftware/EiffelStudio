@@ -158,6 +158,7 @@ feature -- Access
 			a_mapper_include.append (c_writer.cpp_protector_start)
 			c_writer.add_other (a_mapper_include)
 
+			c_writer.add_other ("#ifdef __cplusplus")
 			from
 				a_descriptor.fields.start
 			until
@@ -168,6 +169,8 @@ feature -- Access
 				c_writer.add_other (set_macro (a_descriptor, a_descriptor.fields.item))
 				a_descriptor.fields.forth
 			end
+			c_writer.add_other ("#endif")
+
 			c_writer.set_header_file_name (a_descriptor.c_header_file_name)
 
 			create header.make (1000)
@@ -389,8 +392,7 @@ feature {NONE} -- Implementation
 					Result.append (Close_parenthesis)
 					Result.append (Struct_selection_operator)
 					Result.append (a_field_descriptor.name)
-					Result.append (Close_parenthesis)	
-				
+					Result.append (Close_parenthesis)
 				end
 
 			elseif a_data_visitor.is_structure then
@@ -483,15 +485,17 @@ feature {NONE} -- Implementation
 						Result.append (Open_parenthesis)
 					end
 					Result.append ("_field_")
-					Result.append (Close_parenthesis)
 					if not (a_data_visitor.vt_type = Vt_bool) then
 						Result.append (Close_parenthesis)
 					end
-
+					if a_data_visitor.writable then
+						Result.append (Comma_space)
+						Result.append (Null)
+					end
+					Result.append (Close_parenthesis)
 				end	
 			end
 			Result.append (Close_parenthesis)
-
 		ensure
 			non_void_set_macro: Result /= Void
 			valid_set_macro: not Result.empty

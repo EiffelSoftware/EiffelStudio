@@ -40,6 +40,7 @@ feature -- Access
 		end
 
 	sk_value: INTEGER is
+			-- Skeleton characteristic value
 		do
 			inspect size
 			when 8 then Result := Sk_int8
@@ -50,7 +51,7 @@ feature -- Access
 		end
 		
 	type_i: TYPE_I is
-			-- 
+			-- Corresponding TYPE_I instance
 		do
 			inspect size
 			when 8 then Result := Int8_c_type

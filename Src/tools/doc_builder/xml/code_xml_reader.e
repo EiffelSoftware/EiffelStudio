@@ -190,7 +190,7 @@ feature {NONE} -- Implementation
 			l_done: BOOLEAN
 		do
 			l_name := a_url
-			if not l_name.has_substring ("http://") and then l_name.has_substring ("mailto:") then			
+			if not (l_name.has_substring ("http://") or l_name.has_substring ("mailto:")) then			
 				from
 					l_start_pos := 1
 				until

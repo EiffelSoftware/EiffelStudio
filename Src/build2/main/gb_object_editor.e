@@ -435,6 +435,7 @@ feature {NONE} -- Implementation
 					gb_ev_any ?= new_instance_of (dynamic_type_from_string (current_type))
 					gb_ev_any.set_parent_editor (Current)
 					gb_ev_any.default_create
+					gb_ev_any.set_object (object)
 					check
 						gb_ev_any_exists: gb_ev_any /= Void
 					end

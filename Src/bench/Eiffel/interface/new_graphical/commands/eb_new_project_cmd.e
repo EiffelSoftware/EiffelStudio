@@ -160,7 +160,7 @@ feature -- Project initialization
 			g_degree_output: EB_GRAPHICAL_DEGREE_OUTPUT
 			msg: STRING
 		do
-			Eiffel_project.make_new (project_dir)
+			Eiffel_project.make_new (project_dir, True)
 			msg := clone (Interface_names.t_New_project)
 			msg.append (": ")
 			msg.append (project_dir.name)

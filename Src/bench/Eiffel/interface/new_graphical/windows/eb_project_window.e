@@ -187,6 +187,9 @@ feature -- Pulldown Menus
 	window_menu: EV_MENU
 			-- Window ID menu.
 
+	help_menu: EV_MENU
+			-- Window ID menu.
+
 	open_classes_menu: EV_MENU_ITEM
 			-- ID Menu for open class tools
 
@@ -288,6 +291,7 @@ feature -- Update
 			create format_menu.make_with_text (menu_bar, Interface_names.m_Formats)
 			create special_menu.make_with_text (menu_bar, Interface_names.m_Special)
 			create window_menu.make_with_text (menu_bar, Interface_names.m_Windows)
+			create help_menu.make_with_text (menu_bar, Interface_names.m_Help)
 
 			build_file_menu (file_menu)
 			build_compile_menu
@@ -295,7 +299,7 @@ feature -- Update
 			debug_tool.build_special_menu (debug_menu)
 			build_special_menu
 			build_windows_menu (window_menu)
---			build_help_menu
+			build_help_menu (help_menu)
 
 				--| Creation of empty menus that are disabled goes here,
 				--| for we want to create the object and / or feature portion
@@ -368,14 +372,14 @@ feature -- Update
 		local
 			melt_cmd: EB_MELT_PROJECT_CMD
 			quick_melt_cmd: EB_QUICK_MELT_PROJECT_CMD
---			freeze_cmd: EB_FREEZE_PROJECT_CMD
---			finalize_cmd: EB_FINALIZE_PROJECT_CMD
---			precompile_cmd: EB_PRECOMPILE_PROJECT_CMD
+			freeze_cmd: EB_FREEZE_PROJECT_CMD
+			finalize_cmd: EB_FINALIZE_PROJECT_CMD
+			precompile_cmd: EB_PRECOMPILE_PROJECT_CMD
 			c_compilation: EB_C_COMPILATION_CMD
 			c_compile_menu: EV_MENU_ITEM
 			i: EV_MENU_ITEM
 			arg: EV_ARGUMENT1 [EB_PROJECT_TOOL]
---			sep: SEPARATOR
+--			sep: EV_SEPARATOR
 		do
 --			create special_cmd.make (Current)
 --			create special_cmd_holder.make_plain (special_cmd)
@@ -391,19 +395,19 @@ feature -- Update
 			create quick_melt_menu_item.make_with_text (compile_menu, m_Quick_update)
 			quick_melt_menu_item.add_select_command (quick_melt_cmd, arg)
 
---			create freeze_cmd.make (tool)
+			create freeze_cmd.make (tool)
 			create freeze_menu_item.make_with_text (compile_menu, m_Freeze)
---			freeze_menu_item.add_select_command (freeze_cmd, arg)
+			freeze_menu_item.add_select_command (freeze_cmd, arg)
 
---			create finalize_cmd.make (tool)
+			create finalize_cmd.make (tool)
 			create finalize_menu_item.make_with_text (compile_menu, m_Finalize)
---			finalize_menu_itemi.add_select_command (finalize_cmd, arg)
+			finalize_menu_item.add_select_command (finalize_cmd, arg)
 
---			create precompile_cmd.make (tool)
+			create precompile_cmd.make (tool)
 			create precompile_menu_item.make_with_text (compile_menu, m_Precompile)
---			precompile_menu_item.add_select_command (precompile_cmd, arg)
+			precompile_menu_item.add_select_command (precompile_cmd, arg)
 
---			create sep.make (Interface_names.t_Empty, compile_menu)
+--			create sep.make (compile_menu)
 
 			create c_compile_menu.make_with_text (compile_menu, Interface_names.m_C_compilation)
 			create c_compilation.make_workbench
@@ -509,6 +513,20 @@ feature -- Update
 			create show_preferences.make
 			create i.make_with_text (a_menu, Interface_names.m_Preferences)
 			i.add_select_command (show_preferences, Void)
+		end
+
+	build_help_menu (a_menu: EV_MENU_ITEM_HOLDER) is
+		local
+			i: EV_MENU_ITEM
+			s: STRING
+			about_cmd: EB_ABOUT_COMMAND
+		do
+			s := clone(Interface_names.f_About)
+			s.append(" ")
+			s.append(version_number)
+			create i.make_with_text (a_menu, s)
+			create about_cmd.make (tool)
+			i.add_select_command (about_cmd, Void) 
 		end
 
 	build_top is

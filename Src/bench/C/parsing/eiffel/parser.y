@@ -1096,8 +1096,10 @@ Creation_clause:			TE_CREATION
 								yacc_error_code=273;}
 	;
 
-Routine_creation:			TE_TILDE Feature_name
-								{$$ = create_node1(ROUTINE_CREATION_AS,click_list_elem($<value>2));}
+Routine_creation:			TE_TILDE TE_LCURLY Type TE_RCURLY Feature_name
+								{$$ = create_node2(ROUTINE_CREATION_AS,$3,click_list_elem($<value>5));}
+	|						TE_TILDE Feature_name
+								{$$ = create_node2(ROUTINE_CREATION_AS,NULL,click_list_elem($<value>2));}
 	;
 
 Creation:					TE_BANG Creation_type TE_BANG Creation_target Creation_call

@@ -141,7 +141,7 @@ feature {NONE}
 
 	Updt: STRING is "melted.eif"
 
-	Version_number: STRING is "3.4 b"
+	Version_number: STRING is "3.4 c"
 
 	W_code: STRING is "W_code"
 

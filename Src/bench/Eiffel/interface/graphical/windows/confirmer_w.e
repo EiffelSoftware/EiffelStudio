@@ -89,9 +89,9 @@ feature -- Graphical Interface
 			last_caller_recorded: last_caller = a_command
 		end;
 
-	set_window (wind: TEXT_WINDOW) is
+	set_window (wind: COMPOSITE) is
 		do
-			window ?= wind.tool
+			window := wind
 		end;
 	
 feature {NONE} -- Implementation

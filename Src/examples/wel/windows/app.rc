@@ -1,5 +1,23 @@
 #include <windows.h>
-#include "app_ids.h"
+
+#define MODAL_DLG_ID			1
+#define MODELESS_DLG_ID 		2
+
+#define EDIT_ID				100
+
+#define ID_ICO_APPLICATION		1
+
+#define ON_BMP_ID			1
+#define OFF_BMP_ID			2
+
+#define ID_MAIN_MENU			1
+
+#define CMD_MODAL_DLG			101
+#define CMD_MODELESS_DLG		102
+#define CMD_POPUP_WINDOW_WITH_PARENT	103
+#define CMD_POPUP_WINDOW_WITHOUT_PARENT 104
+
+#define CMD_EXIT			1000
 
 ID_ICO_APPLICATION ICON "app.ico"
 

@@ -1932,7 +1932,7 @@ feature -- IL code generation
 		require
 			il_generation: il_generation
 		local
-			il_generator: IL_GENERATOR
+			il_generator: CIL_GENERATOR
 			old_remover_off: BOOLEAN
 		do
 			create il_generator.make (Degree_output)

@@ -8,7 +8,7 @@ cd C_library/expat
 make
 remtrace libpng
 cd $INITIAL_DIR/C_library/libpng
-if [ "$ISE_PLATFORM" = "linux-glibc" -o "$ISE_PLATFORM" = "linux-glibc2.1" ]; then
+if [ "$ISE_PLATFORM" = "linux-glibc" -o "$ISE_PLATFORM" = "linux-glibc2.1" -o "$ISE_PLATFORM" = "linuxppc" ]; then
 	cp scripts/makefile.linux .
 	make -f makefile.linux
 else

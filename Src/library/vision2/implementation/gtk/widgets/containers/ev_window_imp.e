@@ -16,7 +16,7 @@ inherit
 		
 	EV_CONTAINER_IMP
 		undefine
-			initialize_colors
+			build
 		redefine
 			add_child,
 			x,
@@ -43,10 +43,43 @@ feature {NONE} -- Initialization
 	
 feature  -- Access
 
-        icon_name: STRING is
-                        -- Short form of application name to be
-                        -- displayed by the window manager when
-                        -- application is iconified
+	x: INTEGER is
+			-- Horizontal position relative to parent
+		do
+			Result := c_gtk_window_x (widget) 
+		end
+
+	y: INTEGER is
+			-- Vertical position relative to parent
+		do
+			Result := c_gtk_window_y (widget) 
+		end	
+
+ 	maximum_width: INTEGER is
+			-- Maximum width that application wishes widget
+			-- instance to have
+		do
+		end	
+	
+	maximum_height: INTEGER is
+			-- Maximum height that application wishes widget
+			-- instance to have
+		do
+		end
+
+	title: STRING is
+			-- Application name to be displayed by
+			-- the window manager
+		do
+			check
+                                not_yet_implemented: False
+                        end
+                end
+
+	icon_name: STRING is
+			-- Short form of application name to be
+			-- displayed by the window manager when
+			-- application is iconified
 		do
 			check
                                 not_yet_implemented: False
@@ -72,15 +105,6 @@ feature  -- Access
                         end
 		end
 	
-        title: STRING is
-                        -- Application name to be displayed by
-                        -- the window manager
-		do
-			check
-                                not_yet_implemented: False
-                        end
-                end
-
         widget_group: EV_WIDGET is
                         -- Widget with wich current widget is associated.
                         -- By convention this widget is the "leader" of a group
@@ -93,32 +117,6 @@ feature  -- Access
                         end
                 end 
 
-feature -- Measurement
-
-	x: INTEGER is
-			-- Horizontal position relative to parent
-		do
-			Result := c_gtk_window_x (widget) 
-		end
-
-	y: INTEGER is
-			-- Vertical position relative to parent
-		do
-			Result := c_gtk_window_y (widget) 
-		end	
-
-	maximum_width: INTEGER is
-			-- Maximum width that application wishes widget
-			-- instance to have
-		do
-		end	
-	
-	maximum_height: INTEGER is
-			-- Maximum height that application wishes widget
-			-- instance to have
-		do
-		end
-
 feature -- Status report
 
         is_iconic_state: BOOLEAN is
@@ -130,6 +128,16 @@ feature -- Status report
                 end
 
 feature -- Status setting
+
+	forbid_resize is
+			-- Forbid the resize of the window.
+		do
+		end
+
+	allow_resize is
+			-- Allow the resize of the window.
+		do
+		end
 
         set_iconic_state is
                         -- Set start state of the application to be iconic.
@@ -155,6 +163,33 @@ feature -- Status setting
 
 feature -- Element change
 
+	set_maximum_width (max_width: INTEGER) is
+			-- Set `maximum_width' to `max_width'.
+		do
+		end 
+
+	set_maximum_height (max_height: INTEGER) is
+			-- Set `maximum_height' to `max_height'.
+		do
+		end
+
+        set_title (new_title: STRING) is
+                        -- Set `title' to `new_title'.
+                local
+                        a: ANY
+		do
+			a ?= new_title.to_c	
+			gtk_window_set_title (widget, $a)
+                end
+
+        set_icon_name (new_name: STRING) is
+                        -- Set `icon_name' to `new_name'.
+		do
+			check
+                                not_yet_implemented: False
+                        end
+                end
+
         set_icon_mask (mask: EV_PIXMAP) is
                         -- Set `icon_mask' to `mask'.
 		do
@@ -171,15 +206,6 @@ feature -- Element change
                         end
                 end
 
-        set_title (new_title: STRING) is
-                        -- Set `title' to `new_title'.
-                local
-                        a: ANY
-		do
-			a ?= new_title.to_c	
-			gtk_window_set_title (widget, $a)
-                end
-
         set_widget_group (group_widget: EV_WIDGET) is
                         -- Set `widget_group' to `group_widget'.
 		do
@@ -188,28 +214,15 @@ feature -- Element change
                         end
 		end
 
-
-        set_icon_name (new_name: STRING) is
-                        -- Set `icon_name' to `new_name'.
-		do
-			check
-                                not_yet_implemented: False
-                        end
-                end
-
-feature -- Resizing
-
-	set_maximum_width (max_width: INTEGER) is
-			-- Set `maximum_width' to `max_width'.
-		do
-		end 
-
-	set_maximum_height (max_height: INTEGER) is
-			-- Set `maximum_height' to `max_height'.
-		do
-		end
-
 feature -- Event - command association
+
+	add_close_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+		local
+			ev_data: EV_EVENT_DATA		
+		do
+			!EV_EVENT_DATA!ev_data.make-- temporary, craeta a correct object here XX
+			add_command_with_event_data ("delete_event", command, arguments, ev_data, 0, False)
+		end
 
 	add_resize_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
 			-- Add `command' to the list of commands to be executed when the
@@ -234,28 +247,28 @@ feature -- Event - command association
 feature {NONE} -- Implementation
 	
 	initialize is
-		local
-			i: INTEGER
-			a: ANY
-			s: string
+--		local
+--			i: INTEGER
+--			a: ANY
+--			s: string
 		do
-			-- connect delete and destroy events to exit signals
-			-- Temporary XXX!
-			!!s.make (0)
-			s := "destroy"
-			a ?= s.to_c
-						
-			-- Connect the signal
-			i := c_gtk_signal_connect (widget, $a, $window_closed, 
-						   $Current, Default_pointer, 
-						   Default_pointer, 
-						   Default_pointer, 0, False)
-			
-			-- What about delete signal?
-			s := "delete"
-			a ?= s.to_c
-			--			i := c_gtk_signal_connect (widget, $a, interface.routine_address($delete_window_action), Current, Default_pointer)
-
+--			-- connect delete and destroy events to exit signals
+--			-- Temporary XXX!
+--			!!s.make (0)
+--			s := "destroy"
+--			a ?= s.to_c
+--						
+--			-- Connect the signal
+--			i := c_gtk_signal_connect (widget, $a, $window_closed, 
+--						   $Current, Default_pointer, 
+--						   Default_pointer, 
+--						   Default_pointer, 0, False)
+--			
+--			-- What about delete signal?
+--			s := "delete"
+--			a ?= s.to_c
+--			--			i := c_gtk_signal_connect (widget, $a, interface.routine_address($delete_window_action), Current, Default_pointer)
+--
 			vbox := gtk_vbox_new (False, 0)
 			gtk_container_add (GTK_CONTAINER (widget), vbox)
 		end
@@ -274,11 +287,11 @@ feature {NONE} -- Implementation
 
 feature {EV_CONTAINER, EV_WIDGET} -- Element change
 	
-	add_child (child_i: EV_WIDGET_I) is
+	add_child (child_imp: EV_WIDGET_IMP) is
 			-- Add child into composite
 		do
-			child ?= child_i
-			gtk_box_pack_end (vbox, child.widget, True, True, 0)
+			child := child_imp
+			gtk_box_pack_end (vbox, child_imp.widget, True, True, 0)
 		end
 
 feature {EV_STATIC_MENU_BAR_IMP} -- Implementation

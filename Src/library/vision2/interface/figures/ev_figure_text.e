@@ -115,18 +115,27 @@ feature {NONE} -- Implementation
 	update_dimensions is
 			-- Reassign `width' and `height'.
 		local
-			t: TUPLE [INTEGER, INTEGER]
+			t: TUPLE [INTEGER, INTEGER, INTEGER, INTEGER]
 		do
 			t := font.string_size (text)
 			width := t.integer_item (1)
+			width := width - t.integer_item (3)
+			width := width + t.integer_item (4)
 			height := t.integer_item (2)
 		end
 
 	bounding_box: EV_RECTANGLE is
 			-- Smallest orthogonal rectangle `Current' fits in.
+		local
+			t: TUPLE [INTEGER, INTEGER, INTEGER, INTEGER]
+			x_pos: INTEGER
 		do
 			update_dimensions
-			create Result.make (point.x_abs, point.y_abs, width, height)
+			t := font.string_size (text)
+			x_pos := point.x_abs
+			x_pos := x_pos + t.integer_item (3)
+			create Result.make (x_pos, point.y_abs, width, height)
+			
 		end
 
 	Default_font: EV_FONT is

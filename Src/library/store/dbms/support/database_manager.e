@@ -240,6 +240,20 @@ feature -- Queries without result to load.
 
 feature -- Access
 
+	database_handle_name: STRING is
+			-- Database handle name
+		do
+			Result := database_appl.db_spec.database_handle_name
+		ensure
+			not_void: Result /= Void
+		end
+
+	string_format (s: STRING): STRING is
+			-- String representation in SQL of `s'.
+		do
+			Result := database_appl.db_spec.string_format (s)
+		end
+
 	session_control: DB_CONTROL
 			-- Session control.
 

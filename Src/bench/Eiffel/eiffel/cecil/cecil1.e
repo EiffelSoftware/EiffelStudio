@@ -208,4 +208,48 @@ end;
 			end;
 		end;
 
+feature -- Concurrent Eiffel
+
+	generate_separate_pattern_id_table (file: INDENT_FILE; type_id: INTEGER) is
+			-- Generation of the hash table
+		require
+			file.is_open_write;
+		local
+			i: INTEGER;
+			feat: FEATURE_I;
+			written_class: CLASS_C;
+			class_type, written_type: CLASS_TYPE;
+		do
+			file.putstring ("static EIF_INTEGER cpatid");
+			file.putint (type_id);
+			file.putstring ("[] = {%N");
+			from
+				i := 0;
+			until
+				i > upper
+			loop
+				feat := values.item (i);
+				if 
+					(feat = Void) or else 
+					feat.is_external or else
+					feat.is_deferred
+				then
+					file.putstring ("-1");
+				else
+					written_class := System.class_of_id (feat.written_in);
+					class_type := System.class_type_of_id (type_id);
+					if (written_class.generics = Void) then
+						written_type := written_class.types.first
+					else
+						written_type := written_class.meta_type 
+											(class_type.type).associated_class_type;
+					end;
+					file.putint (system.pattern_table.c_pattern_id(feat.pattern_id, written_type.type));
+				end;
+				file.putstring (",%N");
+				i := i + 1;
+			end;
+			file.putstring ("};%N%N");
+		end;
+
 end

@@ -2126,6 +2126,9 @@ feature -- Final mode generation
 				-- Generate main file
 			generate_main_file;
 			generate_init_file;
+			if System.has_separate then
+				generate_only_separate_pattern_table;
+			end;
 
 			if extendible then
 					-- Keep track of the generated data for the
@@ -2834,6 +2837,30 @@ end;
 				Cecil_file.putstring ("struct ctable *ce_rname = fce_rname;");
 				Cecil_file.new_line;
 				Cecil_file.new_line
+
+				if System.has_separate then
+						-- Now, generate for Concurrent Eiffel
+					Cecil_file.putstring ("%Nstruct ctable fce_sep_pat[] = {%N");
+					from
+						i := 1;
+						nb := Type_id_counter.value;
+					until
+						i > nb
+					loop
+if class_types.item (i) /= Void then
+					class_types.item (i).generate_separate_pattern (Cecil_file);
+else
+		-- FIXME
+		Cecil_file.putstring ("{(int32) 0, (int) 0, (char **) 0, (char *) 0}")
+end;
+						Cecil_file.putstring (",%N");
+						i := i + 1;
+					end;
+					Cecil_file.putstring ("};%N");
+					Cecil_file.putstring ("%Nstruct ctable *ce_sep_pat = fce_sep_pat;");
+					Cecil_file.new_line;
+					Cecil_file.new_line
+				end;
 			end;
 
 			make_cecil_tables;
@@ -3340,6 +3367,12 @@ feature -- Pattern table generation
 			-- Generate pattern table.
 		do
 			pattern_table.generate
+		end
+
+	generate_only_separate_pattern_table is
+			-- Generate pattern table.
+		do
+			pattern_table.generate_in_finalized_mode;
 		end
 
 feature -- Main file generation

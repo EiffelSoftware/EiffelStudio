@@ -1577,4 +1577,25 @@ feature -- Debug
 			type.trace;
 		end;
 
+feature -- Cecil generation for Concurrent Eiffel
+
+	generate_separate_pattern (file: FILE) is
+			-- Generation of the Cecil table
+			-- Caller must guarantee it's called in Final mode
+		do
+			if associated_class.has_visible then
+				file.putchar ('{');
+				file.putstring ("(int32) ");
+				file.putint (associated_class.visible_table_size);
+				file.putstring (", sizeof(EIF_INTEGER), cl");
+				file.putint (associated_class.id.id);
+				file.putstring (", (char *) cpatid");
+				file.putint (type_id);
+				file.putchar ('}');
+			else
+				file.putstring
+					("{(int32) 0, (int) 0, (char **) 0, (char *) 0}");
+			end;
+		end;
+
 end

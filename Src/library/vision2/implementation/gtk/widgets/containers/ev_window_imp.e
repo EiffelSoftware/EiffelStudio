@@ -12,7 +12,7 @@ class
 	EV_WINDOW_IMP
 	
 inherit
-	EV_WINDOW_I	
+	EV_WINDOW_I
 		
 	EV_CONTAINER_IMP
 	
@@ -185,10 +185,6 @@ feature -- Element change
                                 not_yet_implemented: False
                         end
                 end
-
-
-
-
 end
 
 --|----------------------------------------------------------------

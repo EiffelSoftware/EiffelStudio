@@ -32,6 +32,7 @@ feature {NONE} -- Initialization
 		do
 			parent := par
 			!EV_WINDOW_IMP!implementation.make (par)
+			implementation.set_interface (Current)
 		end
 	
     make_top_level is
@@ -40,7 +41,8 @@ feature {NONE} -- Initialization
 		require
 			-- toolkit initialized XXX
 		do
-			!EV_WINDOW_IMP!implementation.make_top_level
+			!EV_WINDOW_IMP!implementation.make_top_level 
+			implementation.set_interface (Current)
 		end
 	
 		
@@ -177,16 +179,6 @@ feature -- Element change
                 do
                         implementation.set_icon_name (new_name)
                 end
-
-	window_closed is
-                        -- Called when the window is deleted (closed).
-                        -- If window is the main window of the
-                        -- application, this feature will exit
-                        -- application if `close_command' is not set).
-                do
-			implementation.window_closed
-                end
-
 
         set_close_command (c: EV_COMMAND) is
                 do

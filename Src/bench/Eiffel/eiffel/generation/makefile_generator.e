@@ -757,18 +757,11 @@ feature -- Generation (Linking rules)
 
 			make_file.putstring ("OBJECTS= lib")
 			make_file.putstring (system_name)
-			make_file.putstring (".obj $(IL_RESOURCE).res")
+			make_file.putstring (".obj")
 			make_file.new_line
 			
 				-- Continue the declaration for the IL_SYSTEM
-			make_file.putstring ("%NIL_SYSTEM_OBJ = $(OBJECTS) $(EXTERNALS)")
-			make_file.putstring ("%NDYNLIBSHAREDFLAGS = $(LDSHAREDFLAGS) -out:$(IL_SYSTEM)%N");
-			make_file.putstring ("$(IL_SYSTEM): $(IL_SYSTEM_OBJ) %N")
-			make_file.putstring ("%T$(FILE_EXIST) $(IL_SYSTEM) $(RM) $(IL_SYSTEM) %N")
-			make_file.putstring ("%T$(SHAREDLINK) $(DYNLIBSHAREDFLAGS) $(IL_SYSTEM_OBJ) $(SHAREDLIBS) %N")
-			make_file.putstring ("%T$(RM) $(OBJECTS)%N")
-			make_file.putstring ("%Techo Success > completed.eif")
-			make_file.new_line
+			make_file.putstring ("$il_system_compilation_line")
 			make_file.new_line
 
 			make_file.new_line

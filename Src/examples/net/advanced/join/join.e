@@ -24,14 +24,14 @@ feature
 
 	make_join (argv: ARRAY [STRING]) is
 		do
-			if argv.count /= 2 then
+			if argv.count /= 3 then
 				io.error.putstring ("Usage: ")
 				io.error.putstring (argv.item (0))
-				io.error.putstring (" hostname%N")
+				io.error.putstring (" hostname port%N")
 			else
 				check_name
 	
-				make (2000, argv.item (1))
+				make (argv.item (2).to_integer, argv.item (1))
 				max_to_poll := in_out.descriptor + 1
 
 				!!connection.make (in_out)

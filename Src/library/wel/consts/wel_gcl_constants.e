@@ -23,7 +23,7 @@ feature -- GCL Constants
 			-- Sets the size, in bytes, of the extra window memory associated 
 			-- with each window in the class. Setting this value does not 
 			-- change the number of extra bytes already allocated. For 
-			-- information on how to access this memory, see SetWindowLong. 
+			-- information on how to access this memory, see SetWindowLongPtr.
 			--
 			-- Declared in Windows as GCL_CBWNDEXTRA
 

@@ -393,11 +393,13 @@ feature {NONE} -- Implementation
 					label.set_background_color (text_background_color)
 					label.align_text_left
 					horizontal_box.extend (label)
+					label.pointer_button_press_actions.force_extend (agent toggle_i_th_check_button (?, ?, ?, building_counter))
 				else
 						-- Build interface with feature name included and displayed.
 					check_button.enable_select
 					create frame.make_with_text (renamed_action_sequence_name)
 					frame.set_background_color (text_background_color)
+					frame.pointer_button_press_actions.force_extend (agent toggle_i_th_check_button (?, ?, ?, building_counter))
 					horizontal_box.extend (frame)
 					horizontal_box.disable_item_expand (frame)
 					create cell
@@ -436,6 +438,16 @@ feature {NONE} -- Implementation
 			end
 		end
 		
+	toggle_i_th_check_button (an_x, a_y, a_button, index: INTEGER) is
+			-- Toggle `index' check button in `all_check_buttons'.
+		require
+			index_valid: index >= 1 and index <= all_check_buttons.count
+		do
+			if a_button = 1 then
+				all_check_buttons.i_th (index).toggle
+			end	
+		end
+
 	update_text_field_minimum_width is
 			-- For all text field in `all_text_fields' that are displayed,
 			-- update minimum width relative to the scroll bar
@@ -552,6 +564,7 @@ feature {NONE} -- Implementation
 				current_text_field.set_text (current_text_field.text.as_lower)
 				horizontal_box.extend (current_text_field)
 				frame.extend (horizontal_box)
+				frame.pointer_button_press_actions.force_extend (agent toggle_i_th_check_button (?, ?, ?, index))
 			else
 				vertical_box ?= current_check_button.parent
 				horizontal_box ?= vertical_box.parent
@@ -562,6 +575,7 @@ feature {NONE} -- Implementation
 				label.set_background_color (text_background_color)
 				label.align_text_left
 				horizontal_box.extend (label)
+				label.pointer_button_press_actions.force_extend (agent toggle_i_th_check_button (?, ?, ?, index))
 					-- Need to unparent the previous text field, as this object
 					-- is retained. This enables us to keep the previous name
 					-- as the text is not lost.

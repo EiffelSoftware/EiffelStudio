@@ -364,6 +364,9 @@ feature {NONE} -- Implementation
 	put_string (a_message: STRING) is
 			-- Put `a_message' to output window.
 		do
+			if is_destroyed then
+				create_window
+			end
 			put_non_degree_message (a_message)
 		end;
 

@@ -381,7 +381,7 @@ feature -- COM constants -- 6
 
 	Inprocess_server: STRING is "CLSCTX_INPROC_SERVER"
 
-	Remote_server: STRING is "CLSCTX_REMOTE_SERVER"
+	Remote_server: STRING is "CLSCTX_LOCAL_SERVER|CLSCTX_REMOTE_SERVER"
 
 	Coserverinfo: STRING is "COSERVERINFO"
 

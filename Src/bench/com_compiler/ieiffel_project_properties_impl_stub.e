@@ -102,6 +102,12 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
+	precompiled: STRING is
+			-- Precompiled file.
+		do
+			-- Put Implementation here.
+		end
+
 	title: STRING is
 			-- Project title.
 		do
@@ -237,6 +243,13 @@ feature -- Basic Operations
 
 	set_default_namespace (return_value: STRING) is
 			-- Default namespace.
+			-- `return_value' [in].  
+		do
+			-- Put Implementation here.
+		end
+
+	set_precompiled (return_value: STRING) is
+			-- Precompiled file.
 			-- `return_value' [in].  
 		do
 			-- Put Implementation here.

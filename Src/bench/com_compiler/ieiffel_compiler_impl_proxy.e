@@ -87,6 +87,13 @@ feature -- Basic Operations
 			ccom_precompile (initializer)
 		end
 
+	generate_msil_keyfile (filename: STRING) is
+			-- Generate a cyrptographic key filename.
+			-- `filename' [in].  
+		do
+			ccom_generate_msil_keyfile (initializer, filename)
+		end
+
 	remove_file_locks is
 			-- Remove file locks
 		do
@@ -143,6 +150,12 @@ feature {NONE}  -- Externals
 			-- Return ISE_EIFFEL environment var.
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelCompiler_impl_proxy %"ecom_eiffel_compiler_IEiffelCompiler_impl_proxy_s.h%"](): EIF_REFERENCE"
+		end
+
+	ccom_generate_msil_keyfile (cpp_obj: POINTER; filename: STRING) is
+			-- Generate a cyrptographic key filename.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelCompiler_impl_proxy %"ecom_eiffel_compiler_IEiffelCompiler_impl_proxy_s.h%"](EIF_OBJECT)"
 		end
 
 	ccom_freeze_command_name (cpp_obj: POINTER): STRING is

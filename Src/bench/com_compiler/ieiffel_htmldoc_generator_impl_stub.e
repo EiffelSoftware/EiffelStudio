@@ -10,52 +10,25 @@ inherit
 
 	ECOM_STUB
 
-feature -- Access
-
-	is_incompatible: BOOLEAN is
-			-- is the project incompatible?
-		do
-			-- Put Implementation here.
-		end
-
-	is_corrupted: BOOLEAN is
-			-- is the project corrupted?
-		do
-			-- Put Implementation here.
-		end
-
-	last_error: STRING is
-			-- the last error
-		do
-			-- Put Implementation here.
-		end
-
 feature -- Basic Operations
 
-	add_excluded_cluster (cluster_to_exclude: STRING) is
-			-- Add excluded cluster
-			-- `cluster_to_exclude' [in].  
+	add_excluded_cluster (cluster_full_name: STRING) is
+			-- Exclude a cluster from being generated.
+			-- `cluster_full_name' [in].  
 		do
 			-- Put Implementation here.
 		end
 
-	remove_excluded_cluster (excluded_cluster: STRING) is
-			-- Remove excluded cluster
-			-- `excluded_cluster' [in].  
+	remove_excluded_cluster (cluster_full_name: STRING) is
+			-- Exclude a cluster from being generated.
+			-- `cluster_full_name' [in].  
 		do
 			-- Put Implementation here.
 		end
 
-	load_project (project_dir: STRING): BOOLEAN is
-			-- Load a compiled project
-			-- `project_dir' [in].  
-		do
-			-- Put Implementation here.
-		end
-
-	generate (generation_dir: STRING) is
-			-- Generate the documentation.
-			-- `generation_dir' [in].  
+	generate (path: STRING) is
+			-- Exclude a cluster from being generated.
+			-- `path' [in].  
 		do
 			-- Put Implementation here.
 		end

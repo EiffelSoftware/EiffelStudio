@@ -116,6 +116,12 @@ feature -- Access
 			Result := ccom_assemblies (initializer)
 		end
 
+	precompiled: STRING is
+			-- Precompiled file.
+		do
+			Result := ccom_precompiled (initializer)
+		end
+
 	title: STRING is
 			-- Project title.
 		do
@@ -280,6 +286,13 @@ feature -- Basic Operations
 			-- `return_value' [in].  
 		do
 			ccom_set_default_namespace (initializer, return_value)
+		end
+
+	set_precompiled (return_value: STRING) is
+			-- Precompiled file.
+			-- `return_value' [in].  
+		do
+			ccom_set_precompiled (initializer, return_value)
 		end
 
 	set_title (return_value: STRING) is
@@ -521,6 +534,18 @@ feature {NONE}  -- Externals
 			-- Assemblies.
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](): EIF_REFERENCE"
+		end
+
+	ccom_precompiled (cpp_obj: POINTER): STRING is
+			-- Precompiled file.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](): EIF_REFERENCE"
+		end
+
+	ccom_set_precompiled (cpp_obj: POINTER; return_value: STRING) is
+			-- Precompiled file.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_OBJECT)"
 		end
 
 	ccom_title (cpp_obj: POINTER): STRING is

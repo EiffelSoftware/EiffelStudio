@@ -208,6 +208,32 @@ STDMETHODIMP ecom_eiffel_compiler::CEiffelCompiler::ise_eiffel(  /* [out, retval
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
+STDMETHODIMP ecom_eiffel_compiler::CEiffelCompiler::generate_msil_keyfile(  /* [in] */ BSTR filename )
+
+/*-----------------------------------------------------------
+	Generate a cyrptographic key filename.
+-----------------------------------------------------------*/
+{
+	ECATCH;
+
+	EIF_OBJECT tmp_filename = NULL;
+	if (filename != NULL)
+	{
+		tmp_filename = eif_protect (rt_ce.ccom_ce_bstr (filename));
+	}
+	
+	EIF_PROCEDURE eiffel_procedure = 0;
+	eiffel_procedure = eif_procedure ("generate_msil_keyfile", type_id);
+
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_filename != NULL) ? eif_access (tmp_filename) : NULL));
+	if (tmp_filename != NULL)
+		eif_wean (tmp_filename);
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
 STDMETHODIMP ecom_eiffel_compiler::CEiffelCompiler::freeze_command_name(  /* [out, retval] */ BSTR * return_value )
 
 /*-----------------------------------------------------------

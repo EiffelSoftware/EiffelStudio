@@ -82,6 +82,12 @@ public:
 
 
 	/*-----------------------------------------------------------
+	Generate a cyrptographic key filename.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP generate_msil_keyfile(  /* [in] */ BSTR filename ) = 0;
+
+
+	/*-----------------------------------------------------------
 	Eiffel Freeze command name
 	-----------------------------------------------------------*/
 	virtual STDMETHODIMP freeze_command_name(  /* [out, retval] */ BSTR * return_value ) = 0;

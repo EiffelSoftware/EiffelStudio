@@ -74,6 +74,13 @@ feature -- Basic Operations
 			-- Put Implementation here.
 		end
 
+	generate_msil_keyfile (filename: STRING) is
+			-- Generate a cyrptographic key filename.
+			-- `filename' [in].  
+		do
+			-- Put Implementation here.
+		end
+
 	remove_file_locks is
 			-- Remove file locks
 		do

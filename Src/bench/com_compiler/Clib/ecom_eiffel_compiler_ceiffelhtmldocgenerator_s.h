@@ -46,69 +46,21 @@ public:
 	virtual ~CEiffelHTMLDocGenerator ();
 
 	/*-----------------------------------------------------------
-	Add excluded cluster
+	Exclude a cluster from being generated.
 	-----------------------------------------------------------*/
-	STDMETHODIMP add_excluded_cluster(  /* [in] */ BSTR cluster_to_exclude );
+	STDMETHODIMP add_excluded_cluster(  /* [in] */ BSTR cluster_full_name );
 
 
 	/*-----------------------------------------------------------
-	Remove excluded cluster
+	Exclude a cluster from being generated.
 	-----------------------------------------------------------*/
-	STDMETHODIMP remove_excluded_cluster(  /* [in] */ BSTR excluded_cluster );
+	STDMETHODIMP remove_excluded_cluster(  /* [in] */ BSTR cluster_full_name );
 
 
 	/*-----------------------------------------------------------
-	is the project incompatible?
+	Exclude a cluster from being generated.
 	-----------------------------------------------------------*/
-	STDMETHODIMP is_incompatible(  /* [out, retval] */ VARIANT_BOOL * return_value );
-
-
-	/*-----------------------------------------------------------
-	is the project corrupted?
-	-----------------------------------------------------------*/
-	STDMETHODIMP is_corrupted(  /* [out, retval] */ VARIANT_BOOL * return_value );
-
-
-	/*-----------------------------------------------------------
-	the last error
-	-----------------------------------------------------------*/
-	STDMETHODIMP last_error(  /* [out, retval] */ BSTR * return_value );
-
-
-	/*-----------------------------------------------------------
-	Load a compiled project
-	-----------------------------------------------------------*/
-	STDMETHODIMP load_project(  /* [in] */ BSTR project_dir, /* [out, retval] */ VARIANT_BOOL * return_value );
-
-
-	/*-----------------------------------------------------------
-	Generate the documentation.
-	-----------------------------------------------------------*/
-	STDMETHODIMP generate(  /* [in] */ BSTR generation_dir );
-
-
-	/*-----------------------------------------------------------
-	Get type info
-	-----------------------------------------------------------*/
-	STDMETHODIMP GetTypeInfo( unsigned int itinfo, LCID lcid, ITypeInfo **pptinfo );
-
-
-	/*-----------------------------------------------------------
-	Get type info count
-	-----------------------------------------------------------*/
-	STDMETHODIMP GetTypeInfoCount( unsigned int * pctinfo );
-
-
-	/*-----------------------------------------------------------
-	IDs of function names 'rgszNames'
-	-----------------------------------------------------------*/
-	STDMETHODIMP GetIDsOfNames( REFIID riid, OLECHAR ** rgszNames, unsigned int cNames, LCID lcid, DISPID *rgdispid );
-
-
-	/*-----------------------------------------------------------
-	Invoke function.
-	-----------------------------------------------------------*/
-	STDMETHODIMP Invoke( DISPID dispID, REFIID riid, LCID lcid, unsigned short wFlags, DISPPARAMS *pDispParams, VARIANT *pVarResult, EXCEPINFO *pExcepInfo, unsigned int *puArgErr );
+	STDMETHODIMP generate(  /* [in] */ BSTR path );
 
 
 	/*-----------------------------------------------------------
@@ -162,12 +114,6 @@ private:
 	Eiffel type id
 	-----------------------------------------------------------*/
 	EIF_TYPE_ID type_id;
-
-
-	/*-----------------------------------------------------------
-	Type information
-	-----------------------------------------------------------*/
-	ITypeInfo * pTypeInfo;
 
 
 

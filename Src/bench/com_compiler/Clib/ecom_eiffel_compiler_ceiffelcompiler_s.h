@@ -90,6 +90,12 @@ public:
 
 
 	/*-----------------------------------------------------------
+	Generate a cyrptographic key filename.
+	-----------------------------------------------------------*/
+	STDMETHODIMP generate_msil_keyfile(  /* [in] */ BSTR filename );
+
+
+	/*-----------------------------------------------------------
 	Eiffel Freeze command name
 	-----------------------------------------------------------*/
 	STDMETHODIMP freeze_command_name(  /* [out, retval] */ BSTR * return_value );

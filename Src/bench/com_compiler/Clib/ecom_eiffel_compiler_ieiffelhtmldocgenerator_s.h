@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------
-Eiffel Project HTML Document generator.  Help file: 
+Eiffel Project HTML Documentation Generator.  Help file: 
 -----------------------------------------------------------*/
 
 #ifndef __ECOM_EIFFEL_COMPILER_IEIFFELHTMLDOCGENERATOR_S_H__
@@ -33,52 +33,28 @@ extern "C" {
 #define __ecom_eiffel_compiler_IEiffelHTMLDocGenerator_INTERFACE_DEFINED__
 namespace ecom_eiffel_compiler
 {
-class IEiffelHTMLDocGenerator : public IDispatch
+class IEiffelHTMLDocGenerator : public IUnknown
 {
 public:
 	IEiffelHTMLDocGenerator () {};
 	~IEiffelHTMLDocGenerator () {};
 
 	/*-----------------------------------------------------------
-	Add excluded cluster
+	Exclude a cluster from being generated.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP add_excluded_cluster(  /* [in] */ BSTR cluster_to_exclude ) = 0;
+	virtual STDMETHODIMP add_excluded_cluster(  /* [in] */ BSTR cluster_full_name ) = 0;
 
 
 	/*-----------------------------------------------------------
-	Remove excluded cluster
+	Exclude a cluster from being generated.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP remove_excluded_cluster(  /* [in] */ BSTR excluded_cluster ) = 0;
+	virtual STDMETHODIMP remove_excluded_cluster(  /* [in] */ BSTR cluster_full_name ) = 0;
 
 
 	/*-----------------------------------------------------------
-	is the project incompatible?
+	Exclude a cluster from being generated.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP is_incompatible(  /* [out, retval] */ VARIANT_BOOL * return_value ) = 0;
-
-
-	/*-----------------------------------------------------------
-	is the project corrupted?
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP is_corrupted(  /* [out, retval] */ VARIANT_BOOL * return_value ) = 0;
-
-
-	/*-----------------------------------------------------------
-	the last error
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP last_error(  /* [out, retval] */ BSTR * return_value ) = 0;
-
-
-	/*-----------------------------------------------------------
-	Load a compiled project
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP load_project(  /* [in] */ BSTR project_dir, /* [out, retval] */ VARIANT_BOOL * return_value ) = 0;
-
-
-	/*-----------------------------------------------------------
-	Generate the documentation.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP generate(  /* [in] */ BSTR generation_dir ) = 0;
+	virtual STDMETHODIMP generate(  /* [in] */ BSTR path ) = 0;
 
 
 

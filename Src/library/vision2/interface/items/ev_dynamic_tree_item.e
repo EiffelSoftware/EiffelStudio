@@ -72,19 +72,37 @@ feature -- Access
 		end
 
 	subtree_function: FUNCTION [ANY, TUPLE [], LINEAR [EV_TREE_NODE]]
-			-- Tree items contained.
+			-- Function be be executed to fill `Current' with items of
+			-- type EV_TREE_NODE.
 
 	set_subtree_function (a_subtree_function: like subtree_function) is
 			-- Assign `a_subtree_function' to `subtree_function'.
 		require
 			not_destroyed: not is_destroyed
+			not_Void: a_subtree_function /= Void
 		do
-			if a_subtree_function /= Void and subtree_function = Void then
+			if subtree_function /= Void then
+				remove_subtree_function
+			end
+			if a_subtree_function /= Void then
 				expand_actions.extend (~fill_from_subtree_function)
 				implementation.extend (create {EV_TREE_ITEM})
 				set_subtree_function_timeout (default_subtree_function_timeout)
 			end
 			subtree_function := a_subtree_function
+		end
+		
+	remove_subtree_function is
+			-- Assign `Void' to `subtree_function'. Ensure `Current'
+			-- is no longer expandable.
+		do
+				-- We reset all attributes.
+			subtree_function := Void
+			expand_actions.wipe_out
+			implementation.start
+			implementation.remove
+			last_subtree_function_call_time := 0
+			subtree_function_timeout := 0
 		end
 
 	subtree_function_timeout: INTEGER
@@ -96,7 +114,7 @@ feature -- Access
 			-- Default is 1 second.
 
 	default_subtree_function_timeout: INTEGER is 1000
-			-- 1 second.
+			-- 1000 milliseconds = 1 second.
 
 	set_subtree_function_timeout (a_timeout: like subtree_function_timeout) is
 			-- Assign `a_timeout' to `subtree_function_timeout'.

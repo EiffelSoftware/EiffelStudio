@@ -138,7 +138,6 @@ feature -- Action
 			-- XMI representation of the class.
 		local
 			l_association: XMI_ASSOCIATION
-			l_association_id: INTEGER
 		do	
 			Result := "<Foundation.Core.Class xmi.id = 'S."
 			Result.append (xmi_id.out)

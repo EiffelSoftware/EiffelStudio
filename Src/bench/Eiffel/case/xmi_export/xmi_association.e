@@ -74,8 +74,6 @@ feature -- Actions
 
 	code: STRING is
 			-- XMI representation of the attribute.
-		local
-			xmi_class: XMI_CLASS
 		do
 			Result := "<Foundation.Core.Association xmi.id = 'G."
 			Result.append (xmi_id.out)

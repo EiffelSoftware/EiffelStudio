@@ -321,7 +321,6 @@ feature {NONE} -- Cluster display and saving
 			default_options: LACE_LIST [D_OPTION_SD]
 			l_item: EV_LIST_ITEM
 			cl_name: STRING
-			l_namespace: NAMESPACE_SD
 		do
 			reset_cluster_info
 

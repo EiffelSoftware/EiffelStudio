@@ -337,8 +337,6 @@ feature {NONE} -- Implementation
 			current_compiled_class: CLASS_C
 			current_feature: E_FEATURE
 			current_feature_list: LIST [E_FEATURE]
-			current_association_list: LIST [XMI_ASSOCIATION]
-			f_name: STRING
 		do
 			from
 				xmi_classes.start
@@ -729,8 +727,6 @@ feature {NONE} -- Implementation
 			a_feature_has_generics: a_feature.type.has_generics
 		local
 			new_xmi_association: XMI_ASSOCIATION
-			l_container: CONTAINER [ANY]
-			l_list: LIST [ANY]
 			l_ordered,
 			l_multiple: BOOLEAN
 			f_name,
@@ -769,8 +765,6 @@ feature {NONE} -- Implementation
 		local
 			new_xmi_association: XMI_ASSOCIATION
 			new_xmi_type: XMI_TYPE
-			l_container: CONTAINER [ANY]
-			l_list: LIST [ANY]
 			l_ordered,
 			l_multiple: BOOLEAN
 			f_name,

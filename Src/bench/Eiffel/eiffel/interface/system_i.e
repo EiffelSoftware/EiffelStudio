@@ -1582,7 +1582,6 @@ feature -- IL code generation
 		do
 			create il_generator.make (Degree_output)
 			il_generator.generate 
-			il_generator.deploy
 			if il_c_externals.count > 0 then
 				old_remover_off := remover_off
 				remover_off := True
@@ -1599,6 +1598,7 @@ feature -- IL code generation
 				makefile_generator.generate_il
 				remover_off := old_remover_off
 			end
+			il_generator.deploy
 		end
 
 feature {NONE} -- IL generation

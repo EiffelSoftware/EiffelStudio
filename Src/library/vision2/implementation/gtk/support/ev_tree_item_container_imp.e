@@ -20,24 +20,17 @@ inherit
 
 feature -- Access
 
-	count: INTEGER is
-			-- Number of items
-		do
-			Result := ev_children.count
-		end
-
-	get_item (index: INTEGER): EV_TREE_ITEM is
-			-- Give the item of the tree (or tree item) at
-			-- `index'.
-		do
-			Result ?= (ev_children.i_th (index)).interface
-		end
-
-feature -- Element change
-
---	clear_items is
---			-- Clear all the items of the list.
+--	count: INTEGER is
+--			-- Number of items
 --		do
+--			Result := ev_children.count
+--		end
+
+--	get_item (index: INTEGER): EV_TREE_ITEM is
+--			-- Give the item of the tree (or tree item) at
+--			-- `index'.
+--		do
+--			Result ?= (ev_children.i_th (index)).interface
 --		end
 
 feature {EV_TREE_IMP, EV_TREE_ITEM_IMP} -- Implementation
@@ -52,13 +45,6 @@ feature {EV_TREE_IMP, EV_TREE_ITEM_IMP} -- Implementation
 			-- set the `tree_parent_imp' to `tree_par_imp'.
 		do
 			tree_parent_imp := tree_par_imp
-		end
-
-feature -- Basic operations
-
-	find_item_by_data (data: ANY): EV_ITEM is
-			-- Find a child with data equal to `data'.
-		do
 		end
 
 feature {EV_TREE_ITEM_HOLDER_IMP} -- Implementation

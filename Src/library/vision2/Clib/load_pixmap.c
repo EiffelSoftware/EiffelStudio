@@ -1428,13 +1428,15 @@ void c_ev_load_png_file(LoadPixmapCtx *pCtx)
 	pImage = (unsigned char *) malloc(width * height * 3);
 	pData = pImage;
 
-	pAlphaImage = (unsigned char *) malloc(1 + ((width * height) >> 3));
+	pAlphaImage = (unsigned char *) malloc(height * (1 + (width >> 3)));
 	pAlphaData = pAlphaImage;
 
 	for (row = 0; row < height; row++)
 		{
 		unsigned char *pSrc = ppImage[row];
 		unsigned long column;
+		unsigned long nAlign;
+		unsigned long iAlign;
 
 		for (column = 0; column < width; column++)
 			{
@@ -1454,7 +1456,16 @@ void c_ev_load_png_file(LoadPixmapCtx *pCtx)
 			pSrc += 4;
 			iAlphaData++;
 			}
+
+		/* Align line to BYTE padding - Alpha data */
+		nAlign = (8 - width%8) % 8;
+		for (iAlign = 0; iAlign < nAlign; iAlign++)
+			{
+			c_ev_set_bit(0, pAlphaData, iAlphaData);
+			iAlphaData++;
+			}
 		}
+
 #endif /* EIF_WIN32 */
 
 	/* The mast is empty, remove it */

@@ -464,7 +464,7 @@ feature {GB_INTEGER_INPUT_FIELD, GB_STRING_INPUT_FIELD, GB_EV_ANY, GB_EV_EDITOR_
 			context_not_void: context /= Void
 			context_object_is_current: context.object = Current
 		do
-			constants.extend (context, context.property + context.attribute)
+			constants.force (context, context.property + context.attribute)
 		ensure
 			constants.has (context.property + context.attribute)
 		end

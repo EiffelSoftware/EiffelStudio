@@ -18,9 +18,19 @@ inherit
 	EV_WIDGET_IMP
 		redefine
 			set_insensitive,
-			on_first_display
+			on_first_display,
+			plateform_build
 		end
-			
+
+feature {NONE} -- Initialization
+
+	plateform_build (par: EV_CONTAINER_IMP) is
+			-- Plateform dependant initializations.
+		do
+			{EV_WIDGET_IMP} Precursor (par)
+			!! menu_items.make (1)
+		end
+	
 feature -- Access
 	
 	client_width: INTEGER is
@@ -67,6 +77,12 @@ feature -- Element change
 			child := child_imp
 		end
 
+feature {EV_MENU_CONTAINER_IMP} -- Implementation
+
+	menu_items: HASH_TABLE [EV_MENU_ITEM_IMP, INTEGER]
+			-- It can be only one list by container because
+			-- all the ids must be different
+
 feature {EV_WIDGET_IMP} -- Implementation
 
 	child_minwidth_changed (value: INTEGER; the_child: EV_WIDGET_IMP) is
@@ -112,6 +128,13 @@ feature {EV_WIDGET_IMP} -- Implementation
 			end
 		end
 
+	on_menu_command (menu_id: INTEGER) is
+			-- The `menu_id' has been choosen from the menu.
+			-- If this feature is called, it means that the 
+			-- child is a menu.
+		do
+			menu_items.item(menu_id).on_activate
+		end
 
 feature -- Implementation : deferred features of 
 		-- WEL_COMPOSITE_WINDOW that are used here but not 

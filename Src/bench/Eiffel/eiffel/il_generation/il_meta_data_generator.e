@@ -99,7 +99,7 @@ feature -- Generation
 					-- Generate association with a NATIVE_ARRAY []
 				name := native_array.il_type_name
 				element_name := native_array.il_element_type_name
-				il_generator.generate_class_mappings (name,
+				il_generator.generate_class_mappings (name, native_array.associated_class.name_in_upper,
 					class_type.static_type_id, -1, "", element_name)
 			else
 				name := class_type.type.il_type_name
@@ -107,7 +107,7 @@ feature -- Generation
 				is_frozen_class := class_c.is_frozen
 
 				if not class_c.is_external then
-					name := pascal_casing (name)
+					name := pascal_casing (name, upper_case)
 					full_name := System.system_name + "." + class_c.cluster.cluster_name
 					full_name := namespace_casing (full_name)
 					full_name.append_character ('.')
@@ -116,6 +116,7 @@ feature -- Generation
 				if class_c.is_external then
 						-- Generate mapping for external class
 					il_generator.generate_class_mappings (name,
+						class_type.associated_class.name_in_upper,
 						class_type.static_type_id, class_type.static_type_id,
 						class_c.lace_class.base_name, Empty_string)
 				end
@@ -123,6 +124,7 @@ feature -- Generation
 						-- Generate mapping for the interface representation
 						-- of an Eiffel class.
 					il_generator.generate_class_mappings (full_name + name,
+						class_type.associated_class.name_in_upper,
 						class_type.static_type_id, class_type.static_type_id,
 						class_c.lace_class.base_name, Empty_string)
 
@@ -135,10 +137,12 @@ feature -- Generation
 					end
 					if not is_frozen_class then
 						il_generator.generate_class_mappings (full_name + "Implementation." + name,
+							class_type.associated_class.name_in_upper,
 							class_type.implementation_id,
 							class_type.static_type_id, file_name, Empty_string)
 					else
 						il_generator.generate_class_mappings (full_name + name,
+							class_type.associated_class.name_in_upper,
 							class_type.implementation_id,
 							class_type.static_type_id, file_name, Empty_string)
 					end
@@ -249,10 +253,13 @@ feature -- Generation
 			-- Generate features written in `class_c'.
 		require
 			class_c_not_void: class_c /= Void
+			class_type_not_void: class_type /= Void
 		local
 			select_tbl: SELECT_TABLE
 			features: SEARCH_TABLE [INTEGER]
 			feat: FEATURE_I
+			l_formals: HASH_TABLE [FORMAL_ATTRIBUTE_I, INTEGER]
+			l_formal: FORMAL_ATTRIBUTE_I
 		do
 			from
 				select_tbl := class_c.feature_table.origin_table
@@ -267,11 +274,29 @@ feature -- Generation
 				features.forth
 			end
 
+			if class_c.generic_features /= Void then
+				l_formals := class_c.generic_features
+				from
+					l_formals.start
+				until
+					l_formals.after
+				loop
+					l_formal := l_formals.item_for_iteration
+					if l_formal.origin_class_id = class_c.class_id then
+						generate_interface_feature (l_formal)					
+					end
+					l_formals.forth
+				end
+			end
+
 			il_generator.end_features_list
 		end
 
 	generate_implementation_features (class_c: CLASS_C; class_type: CLASS_TYPE) is
 			-- Generate features written in `class_c'.
+		require
+			class_c_not_void: class_c /= Void
+			class_type_not_void: class_type /= Void
 		local
 			select_tbl: SELECT_TABLE
 			features: SEARCH_TABLE [INTEGER]
@@ -347,11 +372,11 @@ feature {IL_CODE_GENERATOR} -- Feature generation
 						if feat.is_attribute then
 							name := camel_casing (feat.feature_name)
 						else
-							name := "$$" + pascal_casing (feat.feature_name)
+							name := "$$" + pascal_casing (feat.feature_name, lower_case)
 						end
 					end
 				else
-					name := pascal_casing (feat.feature_name)
+					name := pascal_casing (feat.feature_name, lower_case)
 				end
 
 				il_generator.generate_feature_identification (name, feat.feature_id,
@@ -468,6 +493,8 @@ feature {IL_CODE_GENERATOR} -- Feature generation
 				else
  					il_generator.generate_feature_return_type (byte_context.real_type (type_i))
 				end
+			elseif feat.is_formal_attribute then
+				il_generator.generate_type_info_return_type
 			end
 		end
 
@@ -475,6 +502,8 @@ feature {NONE} -- Feature generation
 
 	generate_interface_feature (feat: FEATURE_I) is
 			-- Generate interface `feat' description.
+		require
+			feat_not_void: feat /= Void
 		do
 			if feat.feature_name_id /= Names_heap.void_name_id then
 				if feat.has_arguments then
@@ -483,7 +512,7 @@ feature {NONE} -- Feature generation
 					il_generator.start_feature_description (0)
 				end
 
-				il_generator.generate_interface_feature_identification (pascal_casing (feat.feature_name),
+				il_generator.generate_interface_feature_identification (pascal_casing (feat.feature_name, lower_case),
 					feat.feature_id, feat.is_attribute)
 
 				generate_arguments (feat)
@@ -501,6 +530,7 @@ feature {NONE} -- Implementation: ancestors description
 			-- Generate ancestors map of `class_c'.
 		require
 			class_c_not_void: class_c /= Void
+			class_type_not_void: class_type /= Void
 		local
 			parents: FIXED_LIST [CL_TYPE_A]
 			parent_type: CL_TYPE_I
@@ -551,6 +581,7 @@ feature {NONE} -- Implementation: ancestors description
 			-- Generate ancestors map of `class_c'.
 		require
 			class_c_not_void: class_c /= Void
+			class_type_not_void: class_type /= Void
 		local
 			nb_generics: INTEGER
 --			parents: FIXED_LIST [CL_TYPE_A]
@@ -577,13 +608,17 @@ feature {NONE} -- Implementation: ancestors description
 
 feature {NONE} -- Implementation: naming convention
 
-	pascal_casing (name: STRING): STRING is
+	lower_case: INTEGER is 1
+	upper_case: INTEGER is 2
+
+	pascal_casing (name: STRING; type: INTEGER): STRING is
 			-- Convert `name' using PascalCasing convention.
 			--| Used for all names apart for attributes in
 			--| implementation classes.
 		require
 			name_not_void: name /= Void
 			name_not_empty: not name.is_empty
+			valid_type: type = lower_case or type = upper_case
 		local
 			i, nb: INTEGER
 		do
@@ -607,6 +642,10 @@ feature {NONE} -- Implementation: naming convention
 						Result.put (Result.item (i).upper, i)
 					end
 					i := i + 1
+				end
+			else
+				if type = upper_case then
+					Result := name.as_upper
 				end
 			end
 		ensure
@@ -641,6 +680,11 @@ feature {NONE} -- Implementation: naming convention
 						Result.put (Result.item (i).upper, i)
 					end
 					i := i + 1
+				end
+			else
+					-- Do nothing as `Result' is already in lowercase.
+				check
+					already_lower_case: Result.as_lower.is_equal (Result)
 				end
 			end
 		ensure
@@ -792,6 +836,8 @@ feature {NONE} -- Implementation: Custom Attributes
 	add_custom_attribute_argument (e: EXPR_B) is
 			-- Add `e' to list of arguments needed by custom attribute
 			-- creation routine.
+		require
+			e_not_void: e /= Void
 		local
 			real: REAL_CONST_B
 			int: INTEGER_CONSTANT

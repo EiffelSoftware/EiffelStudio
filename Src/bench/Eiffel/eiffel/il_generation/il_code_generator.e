@@ -92,7 +92,85 @@ feature -- Access
 	is_for_interfaces: BOOLEAN
 			-- Is current mode set for generating interfaces?
 
+	type_id: INTEGER
+			-- Identifier for class ISE.Runtime.TYPE.
+
+	class_type_id: INTEGER
+			-- Identifier for class ISE.Runtime.CLASS_TYPE.
+
+	basic_type_id: INTEGER
+			-- Identifier for class ISE.Runtime.BASIC_TYPE.
+
+	generic_type_id: INTEGER
+			-- Identifier for class ISE.Runtime.GENERIC_TYPE.
+			
+	formal_type_id: INTEGER
+			-- Identifier for class ISE.Runtime.FORMAL_TYPE.
+			
+	anchored_type_id: INTEGER
+			-- Identifier for class ISE.Runtime.ANCHORED_TYPE.
+	
 feature -- Settings
+
+	set_type_id (an_id: like type_id) is
+			-- Set `an_id' to `type_id'.
+		require
+			valid_id: an_id > 0
+		do
+			type_id := an_id
+		ensure
+			type_id_set: type_id = an_id
+		end
+		
+	set_class_type_id (an_id: like class_type_id) is
+			-- Set `an_id' to `class_type_id'.
+		require
+			valid_id: an_id > 0
+		do
+			class_type_id := an_id
+		ensure
+			class_type_id_set: class_type_id = an_id
+		end
+		
+	set_generic_type_id (an_id: like generic_type_id) is
+			-- Set `an_id' to `generic_type_id'.
+		require
+			valid_id: an_id > 0
+		do
+			generic_type_id := an_id
+		ensure
+			generic_type_id_set: generic_type_id = an_id
+		end
+		
+	set_formal_type_id (an_id: like formal_type_id) is
+			-- Set `an_id' to `formal_type_id'.
+		require
+			valid_id: an_id > 0
+		do
+			formal_type_id := an_id
+		ensure
+			formal_type_id_set: formal_type_id = an_id
+		end
+		
+	set_anchored_type_id (an_id: like anchored_type_id) is
+			-- Set `an_id' to `anchored_type_id'.
+		require
+			valid_id: an_id > 0
+		do
+			anchored_type_id := an_id
+		ensure
+			anchored_type_id_set: anchored_type_id = an_id
+		end
+		
+	set_basic_type_id (an_id: like basic_type_id) is
+			-- Set `an_id' to `basic_type_id'.
+		require
+			valid_id: an_id > 0
+		do
+			basic_type_id := an_id
+		ensure
+			basic_type_id_set: basic_type_id = an_id
+		end
 
 	set_meta_data_generator (il_md_gen: IL_META_DATA_GENERATOR) is
 			-- Set `meta_data_generator' to `il_md_gen'.
@@ -215,15 +293,15 @@ feature -- Generation Structure
 			module_generation_started: module_generation_started
 		end
 
-	define_entry_point (creation_type_id, type_id: INTEGER; feature_id: INTEGER) is
+	define_entry_point (creation_type_id, a_type_id: INTEGER; feature_id: INTEGER) is
 			-- Define entry point for IL component from `feature_id' in
-			-- class `type_id'.
+			-- class `a_type_id'.
 		require
 			positive_creation_type_id: creation_type_id > 0
-			positive_type_id: type_id > 0
+			positive_type_id: a_type_id > 0
 			positive_feature_id: feature_id > 0
 		do
-			implementation.define_entry_point (creation_type_id, type_id, feature_id)
+			implementation.define_entry_point (creation_type_id, a_type_id, feature_id)
 		end
 
 	end_assembly_generation is
@@ -281,24 +359,39 @@ feature -- Class info
 			class_mappings_started: class_mappings_started
 		end
 
-	generate_class_mappings (class_name: STRING;
+	generate_class_mappings (il_name, class_name: STRING;
 			id, interface_id: INTEGER; filename, element_type: STRING)
 		is
 			-- Create a correspondance table between `id' and `class_name'.
 			-- `filename' is the path to the source file of `class_name'
 		require
 			class_mappings_started: class_mappings_started
-			name_not_void: class_name /= Void
-			name_not_empty: not class_name.is_empty
+			il_name_not_void: il_name /= Void
+			il_name_not_empty: not il_name.is_empty
+			class_name_not_void: class_name /= Void
+			class_name_not_empty: not class_name.is_empty
 			id_positive: id > 0
 			interface_id_positive: interface_id > 0
 			non_void_filename: filename /= Void
 			element_type_not_void: element_type /= Void
 		do
-			implementation.generate_class_mappings (class_name, id, interface_id,
-				filename, element_type)
+			implementation.generate_class_mappings (il_name, class_name, id,
+				interface_id, filename, element_type)
 		end
 
+	generate_type_class_mappings is
+			-- Create correspondance between `type_id' and ISE.Runtime.TYPE.
+		require
+			type_id_set: type_id > 0
+		do
+			implementation.generate_type_class_mapping (type_id)
+			implementation.generate_class_type_class_mapping (class_type_id)
+			implementation.generate_basic_type_class_mapping (basic_type_id)
+			implementation.generate_generic_type_class_mapping (generic_type_id)
+			implementation.generate_formal_type_class_mapping (formal_type_id)
+			implementation.generate_anchored_type_class_mapping (anchored_type_id)
+		end
+		
 	start_classes_descriptions is
 			-- Following calls to current will only describe parents and features of current class.
 		require
@@ -325,15 +418,15 @@ feature -- Class info
 
 	generate_class_header
 			(is_interface, is_deferred, is_frozen, is_expanded,
-			is_external: BOOLEAN; type_id: INTEGER)
+			is_external: BOOLEAN; a_type_id: INTEGER)
 		is
 			-- Generate class name and its specifier.
  		require
  			class_descriptions_generation_started: class_descriptions_generation_started
-			positive_type_id: type_id > 0
+			positive_type_id: a_type_id > 0
 		do
 			implementation.generate_class_header (is_interface, is_deferred, is_frozen,
-				is_expanded, is_external, type_id)		
+				is_expanded, is_external, a_type_id)		
 		end
 
 	end_class is
@@ -355,30 +448,30 @@ feature -- Class info
 			parents_list_generation_started: parents_list_generation_started
 		end
 
-	add_to_parents_list (type_id: INTEGER) is
-			-- Add class of `type_id' into list of parents of current type.
+	add_to_parents_list (a_type_id: INTEGER) is
+			-- Add class of `a_type_id' into list of parents of current type.
 			-- `start_parents_list' should have been called before.
 		require
 			parents_list_generation_started: parents_list_generation_started
-			positive_type_id: type_id > 0
+			positive_type_id: a_type_id > 0
 		do
-			implementation.add_to_parents_list (type_id)
+			implementation.add_to_parents_list (a_type_id)
 		end
 
-	add_interface (type_id: INTEGER) is
-			-- Add interface of `type_id' into list of parents of current type.
+	add_interface (a_type_id: INTEGER) is
+			-- Add interface of `a_type_id' into list of parents of current type.
 		require
-			positive_type_id: type_id > 0
+			positive_type_id: a_type_id > 0
 		do
-			implementation.add_interface (type_id)
+			implementation.add_interface (a_type_id)
 		end
 
-	add_eiffel_interface (type_id: INTEGER) is
-			-- Add interface of `type_id' into list of parents of current type.
+	add_eiffel_interface (a_type_id: INTEGER) is
+			-- Add interface of `a_type_id' into list of parents of current type.
 		require
-			positive_type_id: type_id >= 0
+			positive_type_id: a_type_id >= 0
 		do
-			implementation.add_eiffel_interface (type_id)
+			implementation.add_eiffel_interface (a_type_id)
 		end
 
 	end_parents_list is
@@ -395,13 +488,13 @@ feature -- Class info
 	
 feature -- Features info
 
-	start_features_list (type_id: INTEGER) is
+	start_features_list (a_type_id: INTEGER) is
 			-- Starting enumeration of features written in current class.
 		require
 			class_descriptions_generation_started: class_descriptions_generation_started
-			positive_type_id: type_id > 0
+			positive_type_id: a_type_id > 0
 		do
-			implementation.start_features_list (type_id)
+			implementation.start_features_list (a_type_id)
 			features_list_generation_started := True
 		ensure
 			features_list_generation_started: features_list_generation_started
@@ -527,6 +620,14 @@ feature -- Features info
 		do
 			implementation.generate_feature_return_type (static_id_of (type_i))
 		end
+		
+	generate_type_info_return_type is
+			-- Generate return type of known type `type_id' for Current feature.
+		require
+			feature_description_generation_started: feature_description_generation_started
+		do
+			implementation.generate_feature_return_type (type_id)
+		end
 
 	start_arguments_list (count: INTEGER) is
 			-- Start declaration of arguments list of `count' size of current feature.
@@ -574,28 +675,28 @@ feature -- IL Generation
 			il_generation_started: il_generation_started
 		end
 
-	start_il_generation (type_id: INTEGER) is
-			-- Start code generation on class of type `type_id.
+	start_il_generation (a_type_id: INTEGER) is
+			-- Start code generation on class of type `a_type_id.
 		do
-			implementation.start_il_generation (type_id)
+			implementation.start_il_generation (a_type_id)
 		end
 
-	generate_feature_il (feature_id, type_id, code_feature_id: INTEGER) is
-			-- Specifies for which feature of `feature_id' written in class of `type_id'
-			-- IL code will be generated. If `type_id' is different from current type id,
+	generate_feature_il (feature_id, a_type_id, code_feature_id: INTEGER) is
+			-- Specifies for which feature of `feature_id' written in class of `a_type_id'
+			-- IL code will be generated. If `a_type_id' is different from current type id,
 			-- it means that `feature_id' is simply a delegation to a call on `code_feature_id'
-			-- defined in `type_id': call to static version of feature if not `imp_inherited'.
+			-- defined in `a_type_id': call to static version of feature if not `imp_inherited'.
 		require
 			il_generation_started: il_generation_started
 			positive_feature_id: feature_id > 0
-			positive_type_id: type_id > 0
+			positive_type_id: a_type_id > 0
 			positive_code_feature_id: code_feature_id > 0
 		do
-			implementation.generate_feature_il (feature_id, type_id, code_feature_id)
+			implementation.generate_feature_il (feature_id, a_type_id, code_feature_id)
 		end
 
 	generate_implementation_feature_il (feature_id: INTEGER) is
-			-- Specifies for which feature of `feature_id' written in class of `type_id'
+			-- Specifies for which feature of `feature_id' written in class of `a_type_id'
 			-- IL code will be generated.
 		require
 			il_generation_started: il_generation_started
@@ -606,7 +707,7 @@ feature -- IL Generation
 
 	generate_creation_feature_il (feature_id: INTEGER) is
 			-- Specifies for which creation feature of `feature_id' written in
-			-- class of `type_id' IL code will be generated.
+			-- class of `a_type_id' IL code will be generated.
 		require
 			il_generation_started: il_generation_started
 			positive_feature_id: feature_id > 0
@@ -655,6 +756,7 @@ feature -- IL Generation
 				-- and traverse parents to define inherited features.
 			generate_il_implementation_local (class_interface, class_c, class_type)
 			generate_il_implementation_parents (class_interface)
+			generate_il_formal_generics (class_c, class_type)
 
 				-- Reset global variable for collection.
 			current_class_type := Void
@@ -663,9 +765,34 @@ feature -- IL Generation
 			processed_tbl.wipe_out
 		end
 
-	generate_il_implementation_parents
-			(class_interface: CLASS_INTERFACE)
-		is
+	generate_il_formal_generics (class_c: CLASS_C; class_type: CLASS_TYPE) is
+			-- Generate IL code for feature that represents type of a formal
+			-- generic parameter of `class_c'.
+		require
+			il_generation_started: il_generation_started
+			class_c_not_void: class_c /= Void
+			class_type_not_void: class_type /= Void
+		local
+			l_formals: HASH_TABLE [FORMAL_ATTRIBUTE_I, INTEGER]
+			l_formal: FORMAL_ATTRIBUTE_I
+		do
+			l_formals := class_c.generic_features
+			if l_formals /= Void then
+				from
+					l_formals.start
+				until
+					l_formals.after
+				loop
+					l_formal := l_formals.item_for_iteration
+					meta_data_generator.generate_feature (l_formal, False)
+					implementation.generate_formal_feature (l_formal.feature_id)
+					generate_formal_feature (l_formal)
+					l_formals.forth
+				end
+			end
+		end
+
+	generate_il_implementation_parents (class_interface: CLASS_INTERFACE) is
 			-- Generate IL code for feature in `class_c'.
 		require
 			il_generation_started: il_generation_started
@@ -703,6 +830,7 @@ feature -- IL Generation
 			il_generation_started: il_generation_started
 			class_c_not_void: class_c /= Void
 			eiffel_class: not class_c.is_external
+			class_type_not_void: class_type /= Void
 		local
 			select_tbl: SELECT_TABLE
 			features: SEARCH_TABLE [INTEGER]
@@ -763,6 +891,7 @@ feature -- IL Generation
 			il_generation_started: il_generation_started
 			class_c_not_void: class_c /= Void
 			eiffel_class: not class_c.is_external
+			class_type_not_void: class_type /= Void
 		local
 			select_tbl: SELECT_TABLE
 			features: SEARCH_TABLE [INTEGER]
@@ -824,6 +953,7 @@ feature -- IL Generation
 			-- generate encapsulation that calls its static implementation.
 		require
 			feat_not_void: feat /= Void
+			class_type_not_void: class_type /= Void
 		local
 			l_is_method_impl_generated: BOOLEAN
 			dup_feat: FEATURE_I
@@ -938,6 +1068,7 @@ feature -- IL Generation
 			-- Generate encapsulation that calls `rep_feat'.
 		require
 			rep_feat_not_void: rep_feat /= Void
+			class_type_not_void: class_type /= Void
 		do
 			Byte_context.set_class_type (class_type)
 			class_type.generate_il_feature (rep_feat)
@@ -981,6 +1112,7 @@ feature -- IL Generation
 			-- Generate description for creation routines of `class_c' if any.
 		require
 			class_c_not_void: class_c /= Void
+			class_type_not_void: class_type /= Void
 		local
 			creators: EXTEND_TABLE [EXPORT_I, STRING]
 			feat_tbl: FEATURE_TABLE
@@ -1008,7 +1140,7 @@ feature -- IL Generation
 
 	generate_external_call (base_name: STRING; name: STRING; ext_kind: INTEGER;
 				parameters_type: ARRAY [INTEGER]; return_type: INTEGER;
-				is_virtual: BOOLEAN; type_i: TYPE_I; feature_id: INTEGER) is
+				is_virtual: BOOLEAN) is
 			-- Generate call to `name' with signature `parameters_type' + `return_type'.
 		require
 			il_generation_started: il_generation_started
@@ -1025,8 +1157,7 @@ feature -- IL Generation
 		do
 			implementation.generate_external_call (base_name, name, ext_kind,
 					Names_heap.convert_to_string_array (parameters_type),
-					Names_heap.item (return_type), is_virtual,
-					static_id_of (type_i), feature_id)
+					Names_heap.item (return_type), is_virtual)
 		end
 
 feature -- Local variable info generation
@@ -1073,29 +1204,17 @@ feature -- Object creation
 			-- Create object of same type as current object.
 		require
 			il_generation_started: il_generation_started
-		local
-			gen_type_i: GEN_TYPE_I
 		do
 			implementation.create_like_current_object
-			gen_type_i ?= current_class_type.type
-			if gen_type_i /= Void then
-				implementation.set_eiffel_type (gen_type_i.meta_generic.count)
-			end
 		end
 
 	create_object (type_i: TYPE_I) is
-			-- Create object of `type_id'.
+			-- Create object of `type_i'.
 		require
 			il_generation_started: il_generation_started
 			type_i_not_void: type_i /= Void
-		local
-			gen_type_i: GEN_TYPE_I
 		do
 			implementation.create_object (static_id_of (type_i))
-			gen_type_i ?= type_i
-			if gen_type_i /= Void then
-				implementation.set_eiffel_type (gen_type_i.meta_generic.count)
-			end
 		end
 
 	create_attribute_object (type_i: TYPE_I; feature_id: INTEGER) is
@@ -1104,14 +1223,8 @@ feature -- Object creation
 			il_generation_started: il_generation_started
 			type_i_not_void: type_i /= Void
 			positive_feature_id: feature_id > 0
-		local
-			gen_type_i: GEN_TYPE_I
 		do
 			implementation.create_attribute_object (static_id_of (type_i), feature_id)
-			gen_type_i ?= type_i
-			if gen_type_i /= Void then
-				implementation.set_eiffel_type (gen_type_i.meta_generic.count)
-			end
 		end
 
 	mark_creation_routines (feature_ids: ARRAY [INTEGER]) is
@@ -1160,7 +1273,7 @@ feature -- Variables access
 		end
 
 	generate_attribute (type_i: TYPE_I; feature_id: INTEGER) is
-			-- Generate access to attribute of `feature_id' in `type_id'.
+			-- Generate access to attribute of `feature_id' in `type_i'.
 		require
 			il_generation_started: il_generation_started
 			type_i_not_void: type_i /= Void
@@ -1229,7 +1342,7 @@ feature -- Variables access
 
 
 	generate_unmetamorphose (type_i: TYPE_I) is
-			-- Generate `unmetamorphose', ie unboxing a reference to a basic type of `type_id'.
+			-- Generate `unmetamorphose', ie unboxing a reference to a basic type of `type_i'.
 			-- Load content of address resulting from unbox operation.
 		require
 			il_generation_started: il_generation_started
@@ -1275,7 +1388,7 @@ feature -- Addresses
 		end
 
 	generate_attribute_address (type_i: TYPE_I; feature_id: INTEGER) is
-			-- Generate address of attribute of `feature_id' in class `type_id'.
+			-- Generate address of attribute of `feature_id' in class `type_i'.
 		require
 			il_generation_started: il_generation_started
 			type_i_not_void: type_i /= Void
@@ -1523,12 +1636,12 @@ feature -- Array manipulation
 			implementation.generate_array_write (kind)
 		end
 
-	generate_array_creation (type_id: INTEGER) is
+	generate_array_creation (a_type_id: INTEGER) is
 		require
 			il_generation_started: il_generation_started
-			positive_type_id: type_id > 0
+			positive_type_id: a_type_id > 0
 		do
-			implementation.generate_array_creation (type_id)
+			implementation.generate_array_creation (a_type_id)
 		end
 
 	generate_array_count is
@@ -2002,7 +2115,172 @@ feature -- Convenience
 			end
 		end
 
-feature {IL_META_DATA_GENERATOR} -- Implementation
+feature -- Generic conformance
+
+	generate_formal_type_instance (formal_type: FORMAL_I) is
+			-- Generate a FORMAL_TYPE instance corresponding to `formal_type'.
+		require
+			formal_type_not_void: formal_type /= Void
+		do
+			implementation.create_object (formal_type_id)
+			implementation.duplicate_top
+			implementation.put_integer32_constant (formal_type.position)
+			implementation.generate_external_call (formal_type_class_name, "set_position",
+				Normal_type, <<integer_32_class_name>>, Void, True)
+		end
+	
+	generate_class_type_instance (cl_type: CL_TYPE_I) is
+			-- Generate a CLASS_TYPE instance corresponding to `cl_type'.
+		require
+			cl_type_not_void: cl_type /= Void
+		local
+			l_type_id: INTEGER
+		do
+			if cl_type.is_basic then
+				l_type_id := basic_type_id
+			else
+				l_type_id := class_type_id
+			end
+			implementation.create_object (l_type_id)
+			implementation.duplicate_top
+			implementation.put_type_token (implementation_id_of (cl_type))
+			implementation.generate_external_call (class_type_class_name, "set_type",
+				Normal_type, <<type_handle_class_name>>, Void, True)
+		end
+
+	generate_generic_type_instance (n: INTEGER) is
+			-- Generate a GENERIC_TYPE instance corresponding that will hold `n' items.
+		require
+			valid_n: n > 0
+		do
+			implementation.create_object (generic_type_id)
+			implementation.duplicate_top
+			implementation.put_integer32_constant (n)
+			implementation.generate_array_creation (type_id)
+		end
+
+	generate_generic_type_settings (gen_type: GEN_TYPE_I) is
+			-- Generate a CLASS_TYPE instance corresponding to `cl_type'.
+		require
+			gen_type_not_void: gen_type /= Void
+		do
+			implementation.generate_external_call (generic_type_class_name, "set_type_array",
+				Normal_type, <<type_array_class_name>>, Void, True);
+
+			implementation.duplicate_top
+			implementation.put_type_token (implementation_id_of (gen_type))
+			implementation.generate_external_call (generic_type_class_name, "set_type",
+				Normal_type, <<type_handle_class_name>>, Void, True)
+
+			implementation.duplicate_top
+			implementation.put_integer32_constant (gen_type.meta_generic.count)
+			implementation.generate_external_call (generic_type_class_name, "set_nb_generics",
+				Normal_type, <<integer_32_class_name>>, Void, True)
+		end
+
+	generate_anchored_type_instance (feat: FEATURE_I) is
+			-- Generate a ANCHORED_TYPE instance corresponding to creation
+			-- of an object whose type matches type of `feat' in current context.
+		do
+		end
+
+	create_formal_type is
+			-- Given info on stack, it will create a new instance of a generic formal
+			-- parameter.
+		do
+			implementation.generate_external_call (generic_conformance_class_name,
+				"create_formal_generic", Static_type, <<type_class_name,
+				type_info_class_name>>, type_info_class_name,
+				True)			
+		end
+
+	assign_computed_type is
+			-- Given elements on stack, compute associated type and set it to
+			-- newly created object.
+		do
+				-- First object on stack is newly created object on which we 
+				-- want to assign the computed type.
+				-- Second object is the array containing the type array.
+				-- Last, we push current object to the stack.
+			implementation.generate_current
+			implementation.generate_external_call (generic_conformance_class_name, "compute_type",
+				Static_type, <<type_info_class_name, type_class_name,
+				type_info_class_name>>, Void, False)
+		end
+		
+feature {NONE} -- Implementation: generation
+
+	generate_formal_feature (a_formal: FORMAL_ATTRIBUTE_I) is
+			-- Generate type description for `a_formal'.
+		require
+			a_formal_not_void: a_formal /= Void
+		local
+			l_cl_type: CL_TYPE_I
+			l_gen_type: GEN_TYPE_I
+			l_formal_type: FORMAL_I
+			l_type_i: TYPE_I
+			l_type_id: INTEGER
+		do
+			l_type_i := a_formal.type.actual_type.type_i
+
+				-- We are now evaluation `l_type_i' in the context of current CLASS_TYPE
+				-- generation. So if it is a formal, we have to make sure that call to
+				-- `byte_context.real_type (l_type_i)' keeps its formal status, by default
+				-- it translates a FORMAL_I into a REFERENCE_I.
+			if l_type_i.has_formal then
+				if l_type_i.is_formal then
+					l_formal_type ?= l_type_i
+					l_type_i := byte_context.real_type (l_type_i)
+					if not l_type_i.is_expanded then
+						l_type_i := l_formal_type
+					end
+				else
+					l_type_i := byte_context.real_type (l_type_i)
+				end
+			end
+
+			if l_type_i.is_formal then
+				l_type_id := formal_type_id
+			else
+				l_cl_type ?= l_type_i
+				if l_cl_type.is_basic then
+					l_type_id := basic_type_id
+				else
+					l_gen_type ?= l_cl_type
+					if l_gen_type /= Void then
+						l_type_id := generic_type_id
+					else
+						l_type_id := class_type_id
+					end
+				end
+			end
+			implementation.put_result_info (l_type_id)
+			implementation.create_object (l_type_id)
+			implementation.generate_result_assignment
+
+			implementation.generate_result
+			
+			if l_type_id = formal_type_id then
+				implementation.put_integer32_constant (l_formal_type.position)
+				implementation.generate_external_call (formal_type_class_name, "set_position",
+					Normal_type, <<integer_32_class_name>>, Void, True)
+			elseif l_type_id = class_type_id then
+				implementation.put_type_token (implementation_id_of (l_cl_type))
+				implementation.generate_external_call (class_type_class_name, "set_type",
+					Normal_type, <<type_handle_class_name>>, Void, True)
+			elseif l_type_id = basic_type_id then
+				implementation.put_type_token (implementation_id_of (l_cl_type))
+				implementation.generate_external_call (basic_type_class_name, "set_type",
+					Normal_type, <<type_handle_class_name>>, Void, True)
+			else
+				implementation.put_type_token (implementation_id_of (l_cl_type))
+				implementation.generate_external_call (generic_type_class_name, "set_type",
+					Normal_type, <<type_handle_class_name>>, Void, True)
+			end
+			generate_return_value
+		end
+	
+feature {IL_META_DATA_GENERATOR} -- Implementation: convenience
 
 	implementation: IL_CODE_GENERATOR_I
 			-- COM object that knows how to generate IL code.
@@ -2080,12 +2358,28 @@ feature {IL_META_DATA_GENERATOR} -- Implementation
 			create Result
 		end
 		
-		
+feature {NONE} -- Constants
+
+	type_class_name: STRING is "ISE.Runtime.TYPE"
+	type_array_class_name: STRING is "ISE.Runtime.TYPE[]"
+	generic_type_class_name: STRING is "ISE.Runtime.GENERIC_TYPE"
+	basic_type_class_name: STRING is "ISE.Runtime.BASIC_TYPE"
+	class_type_class_name: STRING is "ISE.Runtime.CLASS_TYPE"
+	formal_type_class_name: STRING is "ISE.Runtime.FORMAL_TYPE"
+	generic_conformance_class_name: STRING is "ISE.Runtime.GENERIC_CONFORMANCE"
+	type_info_class_name: STRING is "ISE.Runtime.EIFFEL_TYPE_INFO"
+	integer_32_class_name: STRING is "System.Int32"
+	system_type_class_name: STRING is "System.Type"
+	type_handle_class_name: STRING is "System.RuntimeTypeHandle"
+
 feature {NONE} -- Implementation
 
 	buffer: GENERATION_BUFFER is
 			-- Inherited feature from ASSERT_TYPE which is not used therefore hidden.
 		do
+			check
+				not_callable: False
+			end
 		end
 
 invariant -- State invariants

@@ -170,6 +170,26 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 		
+	tool_by_widget (a_widget: EV_WIDGET): GB_STORABLE_TOOL is
+			-- `Result' is tool with widget `a_widget'.
+		require
+			a_widget_not_void: a_widget /= Void
+		local
+			tools: ARRAYED_LIST [GB_STORABLE_TOOL]
+		do
+			tools := all_storable_tools
+			from
+				tools.start
+			until
+				tools.off or Result /= Void
+			loop
+				if tools.item.as_widget = a_widget then
+					Result := tools.item
+				end
+				tools.forth
+			end
+		end
+
 	name_by_tool (a_widget: GB_STORABLE_TOOL): STRING is
 			-- Result is STRING representation of tool `a_widget'
 			-- Will be displayed with tool.

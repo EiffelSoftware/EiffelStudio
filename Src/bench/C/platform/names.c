@@ -7,7 +7,7 @@
 
 public EIF_REFERENCE eif_dot_e ()
 {
-#if defined EIF_WINDOWS || __VMS
+#if defined EIF_WINDOWS || __VMS || defined EIF_OS2
 	return RTMS (".E");
 #else
 	return RTMS (".e");
@@ -16,7 +16,7 @@ public EIF_REFERENCE eif_dot_e ()
 
 public EIF_REFERENCE eif_dot_o ()
 {
-#if defined EIF_WINDOWS || __VMS
+#if defined EIF_WINDOWS || __VMS || defined EIF_OS2
 	return RTMS (".obj");
 #else
 	return RTMS (".o");
@@ -25,7 +25,7 @@ public EIF_REFERENCE eif_dot_o ()
 
 public EIF_REFERENCE eif_driver ()
 {
-#if defined EIF_WINDOWS || __VMS
+#if defined EIF_WINDOWS || __VMS || defined EIF_OS2
 	return RTMS ("driver.exe");
 #else
 	return RTMS ("driver");
@@ -34,7 +34,7 @@ public EIF_REFERENCE eif_driver ()
 
 public EIF_CHARACTER eif_eiffel_suffix ()
 {
-#if defined EIF_WINDOWS || __VMS
+#if defined EIF_WINDOWS || __VMS || defined EIF_OS2
 	return 'E';
 #else
 	return 'e';
@@ -43,7 +43,7 @@ public EIF_CHARACTER eif_eiffel_suffix ()
 
 public EIF_REFERENCE eif_exec_suffix ()
 {
-#if defined EIF_WINDOWS || __VMS
+#if defined EIF_WINDOWS || __VMS || defined EIF_OS2
 	return RTMS (".exe");
 #else
 	return RTMS ("");
@@ -52,7 +52,7 @@ public EIF_REFERENCE eif_exec_suffix ()
 
 public EIF_REFERENCE eif_finish_freezing ()
 {
-#ifdef EIF_WINDOWS
+#if defined EIF_WINDOWS || defined EIF_OS2
 	return RTMS ("es3sh");
 #else
 	return RTMS ("finish_freezing");
@@ -61,7 +61,7 @@ public EIF_REFERENCE eif_finish_freezing ()
 
 public EIF_REFERENCE eif_preobj ()
 {
-#ifdef EIF_WINDOWS
+#if defined EIF_WINDOWS || defined EIF_OS2
 	return RTMS ("preobj.obj");
 #elif defined __VMS
 	return RTMS ("preobj.olb");
@@ -74,6 +74,8 @@ public EIF_REFERENCE eif_copy_cmd ()
 {
 #ifdef EIF_WINDOWS
 	return RTMS ("\\command.com /c copy");
+#elif defined EIF_OS2
+    return RTMS ("copy");
 #elif defined __VMS
 	return RTMS ("copy");
 #else

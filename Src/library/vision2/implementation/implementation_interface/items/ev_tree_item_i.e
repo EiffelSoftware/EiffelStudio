@@ -13,6 +13,14 @@ inherit
 
 	EV_TREE_ITEM_CONTAINER_I
 
+feature {NONE} -- Initialization
+
+	make_with_text (par: EV_TREE_ITEM_CONTAINER; txt: STRING) is
+			-- Create a tree-item with `txt' as label and
+			-- `par' as parent.
+		deferred
+		end
+
 feature -- Status report
 
 	is_expanded: BOOLEAN is
@@ -22,11 +30,13 @@ feature -- Status report
 		deferred
 		end
 
-feature {NONE} -- Initialization
+feature -- Event : command association
 
-	make_with_text (par: EV_TREE_ITEM_CONTAINER; txt: STRING) is
-			-- Create a tree-item with `txt' as label and
-			-- `par' as parent.
+	add_subtree_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+			-- Add 'command' to the list of commands to be
+			-- executed when the menu item is activated
+		require
+			exists: not destroyed
 		deferred
 		end
 

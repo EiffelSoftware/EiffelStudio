@@ -172,27 +172,27 @@ feature -- Status setting
 
 feature -- PND
 
-enable_transport is do end
+enable_transport is do check to_be_implemented: False end end
 
-disable_transport is do end
+disable_transport is do check to_be_implemented: False end end
 
-draw_rubber_band is do end
+draw_rubber_band is do check to_be_implemented: False end end
 
-erase_rubber_band is do end
+erase_rubber_band is do check to_be_implemented: False end end
 
-enable_capture is do end
+enable_capture is do check to_be_implemented: False end end
 
-disable_capture is do end
+disable_capture is do check to_be_implemented: False end end
 
 start_transport (
         a_x, a_y, a_button: INTEGER;
         a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
         a_screen_x, a_screen_y: INTEGER) is 
-do end
+do check to_be_implemented: False end  end
 
 end_transport (a_x, a_y, a_button: INTEGER) is do end
 
-pointed_target: EV_PICK_AND_DROPABLE is do end
+pointed_target: EV_PICK_AND_DROPABLE is do check to_be_implemented: False end end
 
 feature -- Element Change
 
@@ -351,6 +351,9 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.36  2000/03/15 22:43:09  king
+--| check falsed PND features
+--|
 --| Revision 1.35  2000/03/09 01:16:37  king
 --| Added unimplemented pick and drop features
 --|

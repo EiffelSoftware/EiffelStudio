@@ -3,7 +3,6 @@ indexing
 	status		: "See notice at end of class."
 	date		: "$Date$"
 	revision	: "$Revision$"
-	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
 	note		: "Used to find items in a list view with the given%
 				  % properties."
 

@@ -1,7 +1,7 @@
 indexing
 	description	: "Constants used in WEL_INPUT_EVENT %
 				  %about mouse and keyboard events"
-	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
+	status		: "See notice at end of class."
 	date		: "$Date$"
 	revision	: "$Revision$"
 

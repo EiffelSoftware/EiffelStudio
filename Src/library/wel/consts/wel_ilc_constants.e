@@ -1,6 +1,5 @@
 indexing
 	description	: "Image List Color constants."
-	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
 	status		: "See notice at end of class."
 	date		: "$Date$"
 	revision	: "$Revision$"

@@ -18,6 +18,7 @@ inherit
 
 	EV_PIXMAPABLE_I
 		redefine
+			pixmap_size_ok,
 			pixmap_drawable_ok
 		end
 
@@ -72,6 +73,13 @@ feature -- Event - command removal
 		end
 
 feature -- Assertion feature
+
+	pixmap_size_ok (pix: EV_PIXMAP): BOOLEAN is
+			-- Check if the size of the pixmap is ok for
+			-- the container.
+		do
+			Result := True
+		end
 
 	pixmap_drawable_ok (pix: EV_PIXMAP): BOOLEAN is
 			-- Check if the size of the pixmap is ok for

@@ -119,9 +119,10 @@ feature -- Access
 
 	gotcha_call (a_message: STRING) is
 		do
+			last_caller := Void;
 			set_no_grab;
 			add_button_press_action (1, Current, popdown_action);
-			custom_call (Void, a_message, Void, Void, Void);
+			custom_call (Void, a_message, Void, Interface_names.b_Ok, Void);
 		end;
 
 	custom_call (a_command: WARNER_CALLBACKS; a_message: STRING;
@@ -191,7 +192,10 @@ feature {NONE} -- Implementation
 					if argument = help_it then
 						last_caller.execute_warner_help
 					elseif argument = Current then
-						last_caller.execute_warner_ok (Current)
+						if last_caller /= Void then	
+								-- ok button for custom call window
+							last_caller.execute_warner_ok (Current)
+						end
 					end
 				end
 			end

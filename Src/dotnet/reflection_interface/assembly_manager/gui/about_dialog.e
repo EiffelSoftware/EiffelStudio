@@ -114,7 +114,7 @@ feature {NONE} -- Implementation
 			external_name: "DisplayText"
 		do
 			create_panel_label (dictionary.Product_name, 2 * dictionary.Margin, True)
-			create_panel_label (dictionary.Powered_by_eiffel_sharp, 3 * dictionary.Margin + dictionary.Label_height, True)
+			create_panel_label (dictionary.Powered_by_eiffel_dotnet, 3 * dictionary.Margin + dictionary.Label_height, True)
 			create_panel_label (dictionary.Company_name, 4 * dictionary.Margin + 2 * dictionary.Label_height, False)
 			create_panel_label (dictionary.Street, 4 * dictionary.Margin + 3 * dictionary.Label_height, False)
 			create_panel_label (dictionary.Town, 4 * dictionary.Margin + 4 * dictionary.Label_height, False)

@@ -33,6 +33,8 @@ extern "C" {
 
 #else
 
+#include <unistd.h>		/* For R_OK,... */
+
 #ifndef PATH_MAX
 #define PATH_MAX 1024	/* Maximum length of full path name */
 #endif

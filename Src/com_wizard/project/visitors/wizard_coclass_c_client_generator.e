@@ -140,7 +140,13 @@ feature {NONE} -- Implementation
 			until
 				a_coclass_descriptor.interface_descriptors.off
 			loop
-				Result.append (release_interface (a_coclass_descriptor.interface_descriptors.item.name))
+				if
+					not a_coclass_descriptor.interface_descriptors.item.c_type_name.is_equal (Idispatch_type) and
+					not a_coclass_descriptor.interface_descriptors.item.c_type_name.is_equal (Iunknown_type) and
+					not has_descendants_in_coclass (a_coclass_descriptor, a_coclass_descriptor.interface_descriptors.item)
+				then
+					Result.append (release_interface (a_coclass_descriptor.interface_descriptors.item.name))
+				end
 				a_coclass_descriptor.interface_descriptors.forth
 			end
 
@@ -178,13 +184,19 @@ feature {NONE} -- Implementation
 			until
 				a_coclass_descriptor.interface_descriptors.off
 			loop
-				constructor_body.append (New_line_tab)
-				constructor_body.append (Interface_variable_prepend)
-				constructor_body.append (a_coclass_descriptor.interface_descriptors.item.name)
-				constructor_body.append (Space_equal_space)
-				constructor_body.append (Zero)
-				constructor_body.append (Semicolon)
-				constructor_body.append (New_line)
+				if 
+					not a_coclass_descriptor.interface_descriptors.item.c_type_name.is_equal (Idispatch_type) and
+					not a_coclass_descriptor.interface_descriptors.item.c_type_name.is_equal (Iunknown_type) and
+					not has_descendants_in_coclass (a_coclass_descriptor, a_coclass_descriptor.interface_descriptors.item)
+				then
+					constructor_body.append (New_line_tab)
+					constructor_body.append (Interface_variable_prepend)
+					constructor_body.append (a_coclass_descriptor.interface_descriptors.item.name)
+					constructor_body.append (Space_equal_space)
+					constructor_body.append (Zero)
+					constructor_body.append (Semicolon)
+					constructor_body.append (New_line)
+				end
 				a_coclass_descriptor.interface_descriptors.forth
 			end
 
@@ -268,34 +280,40 @@ feature {NONE} -- Implementation
 			until
 				a_coclass_descriptor.interface_descriptors.off
 			loop
-				constructor_body.append (New_line_tab)
-				constructor_body.append (Interface_variable_prepend)
-				constructor_body.append (a_coclass_descriptor.interface_descriptors.item.name)
-				constructor_body.append (Space_equal_space)
-				constructor_body.append (Zero)
-				constructor_body.append (Semicolon)
+				if
+					not a_coclass_descriptor.interface_descriptors.item.c_type_name.is_equal (Idispatch_type) and
+					not a_coclass_descriptor.interface_descriptors.item.c_type_name.is_equal (Iunknown_type) and
+					not has_descendants_in_coclass (a_coclass_descriptor, a_coclass_descriptor.interface_descriptors.item)
+				then
+					constructor_body.append (New_line_tab)
+					constructor_body.append (Interface_variable_prepend)
+					constructor_body.append (a_coclass_descriptor.interface_descriptors.item.name)
+					constructor_body.append (Space_equal_space)
+					constructor_body.append (Zero)
+					constructor_body.append (Semicolon)
 
-				constructor_body.append (New_line_tab)
-				constructor_body.append (Hresult_variable_name)
-				constructor_body.append (Space_equal_space)
-				constructor_body.append (A_pointer)
-				constructor_body.append (Struct_selection_operator)
-				constructor_body.append (Query_interface)
-				constructor_body.append (Open_parenthesis)
-				constructor_body.append (iid_name (a_coclass_descriptor.interface_descriptors.item.name))
-				constructor_body.append (Comma_space)
-				constructor_body.append (Open_parenthesis)
-				constructor_body.append (C_void_pointer)
-				constructor_body.append (Asterisk)
-				constructor_body.append (Close_parenthesis)
-				constructor_body.append (Ampersand)
-				constructor_body.append (Interface_variable_prepend)
-				constructor_body.append (a_coclass_descriptor.interface_descriptors.item.name)
-				constructor_body.append (Close_parenthesis)
-				constructor_body.append (Semicolon)
-				constructor_body.append (New_line)
-				constructor_body.append (examine_hresult (Hresult_variable_name))
-				constructor_body.append (New_line)
+					constructor_body.append (New_line_tab)
+					constructor_body.append (Hresult_variable_name)
+					constructor_body.append (Space_equal_space)
+					constructor_body.append (A_pointer)
+					constructor_body.append (Struct_selection_operator)
+					constructor_body.append (Query_interface)
+					constructor_body.append (Open_parenthesis)
+					constructor_body.append (iid_name (a_coclass_descriptor.interface_descriptors.item.name))
+					constructor_body.append (Comma_space)
+					constructor_body.append (Open_parenthesis)
+					constructor_body.append (C_void_pointer)
+					constructor_body.append (Asterisk)
+					constructor_body.append (Close_parenthesis)
+					constructor_body.append (Ampersand)
+					constructor_body.append (Interface_variable_prepend)
+					constructor_body.append (a_coclass_descriptor.interface_descriptors.item.name)
+					constructor_body.append (Close_parenthesis)
+					constructor_body.append (Semicolon)
+					constructor_body.append (New_line)
+					constructor_body.append (examine_hresult (Hresult_variable_name))
+					constructor_body.append (New_line)
+				end
 
 				a_coclass_descriptor.interface_descriptors.forth
 			end

@@ -83,14 +83,10 @@ feature
 		end;
 
 	update_other_bg_color (pixel: POINTER) is
-		require
-			valid_a_color: pixel /= default_pointer
 		do
 		end;
 
 	update_other_fg_color (pixel: POINTER) is
-		require
-			valid_a_color: pixel /= default_pointer
 		do
 		end;
 

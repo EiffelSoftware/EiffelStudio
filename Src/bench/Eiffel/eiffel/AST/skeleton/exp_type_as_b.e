@@ -25,7 +25,6 @@ inherit
 			actual_type as basic_actual_type,
 			solved_type as basic_solved_type,
 			format as basic_format
-			--class_name as basic_class_name
 		undefine
 			set, is_deep_equal, dump, simple_format
 		end;
@@ -73,7 +72,9 @@ feature
 			record_exp_dependance (Result.associated_class);
 		end;
 
-	format (ctxt: FORMAT_CONTEXT_B) is 
+feature -- Output
+
+	format (ctxt: FORMAT_CONTEXT_B) is
 		do
 			ctxt.put_text_item (ti_Expanded_keyword);
 			ctxt.put_space;

@@ -75,6 +75,9 @@ feature -- Initialization
 				elseif parent.shown then
 					shown := true
 				end
+				if private_is_read_only then
+					set_read_only
+				end
 			end
 		end
 

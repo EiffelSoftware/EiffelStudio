@@ -59,6 +59,13 @@ feature {NONE} -- Implementation
 			Result := list_widget
 		end
 		
+feature {EV_DOCKABLE_SOURCE_I} -- Implementation
+		
+	block_selection_for_docking is
+			-- 
+		do
+			-- For now, do nothing.
+		end
 
 feature -- Implementation
 

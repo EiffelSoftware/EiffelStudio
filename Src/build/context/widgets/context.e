@@ -106,7 +106,8 @@ feature -- Editable
 			menu_c: MENU_C
 		do
 			menu_c ?= parent_context;
-			Result := menu_c = Void
+			Result := menu_c = Void and then 
+				not parent_context.is_group_composite
 		end;
 
 feature {NONE, CONTEXT}
@@ -649,17 +650,7 @@ feature
 					widget.manage
 				end
 			else
-					-- Widgets in radio box, check box ...
-				group_composite ?= parent;
-				if group_composite = Void then
-					widget.set_size (new_w, new_h)
-				elseif retrieved_node = Void then
-					group_composite.widget.unmanage;
-					group_composite.set_size_for_group_comp (new_w, new_h);
-					group_composite.widget.manage;
-				else
-					widget.set_size (new_w, new_h)
-				end;
+				widget.set_size (new_w, new_h)
 			end
 		end;
 
@@ -696,20 +687,6 @@ feature
 			else
 				widget.realize
 			end
-		end;
-
-feature {GROUP_COMPOSITE_C}
-
-	set_size_for_group_comp (new_w, new_h: INTEGER) is
-		do
-			size_modified := True;
-			widget.set_size (new_w, new_h);
-		end;
-
-	set_width (new_w: INTEGER) is
-		do
-			size_modified := True;
-			widget.set_width (new_w);
 		end;
 
 feature -- EiffelVision attributes

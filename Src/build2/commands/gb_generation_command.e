@@ -73,7 +73,7 @@ feature -- Access
 	executable: BOOLEAN is
 			-- May `execute' be called on `Current'?
 		do
-			Result := system_status.project_open
+			Result := system_status.project_open and not window_selector.objects.is_empty
 		end
 
 feature -- Basic operations

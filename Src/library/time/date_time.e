@@ -39,6 +39,7 @@ create
 	make_by_date_time,
 	make_by_date,
 	make_now,
+	make_now_utc,
 	make_from_string,
 	make_from_string_with_base,
 	make_from_string_default,
@@ -112,6 +113,17 @@ feature -- Initialization
 			l_date: C_DATE
 		do 
 			create l_date
+			create date.make (l_date.year_now, l_date.month_now, l_date.day_now) 
+			create time.make_fine (l_date.hour_now, l_date.minute_now,
+				l_date.second_now + l_date.millisecond_now / 1000)
+		end
+
+	make_now_utc is
+			-- Get the date and the time from the system.
+		local
+			l_date: C_DATE
+		do 
+			create l_date.make_utc
 			create date.make (l_date.year_now, l_date.month_now, l_date.day_now) 
 			create time.make_fine (l_date.hour_now, l_date.minute_now,
 				l_date.second_now + l_date.millisecond_now / 1000)

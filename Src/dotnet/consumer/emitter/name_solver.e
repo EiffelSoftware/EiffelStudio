@@ -51,12 +51,4 @@ feature {TYPE_CONSUMER} -- Element Settings
 			set: reserved_names = names
 		end
 
-feature {NONE} -- Implementation
-
-	Digits: NATIVE_ARRAY [CHARACTER] is
-			-- Digits
-		once
-			Result := (<<'0','1','2','3','4','5','6','7','8','9','_'>>).to_cil
-		end
-
 end -- class NAME_SOLVER

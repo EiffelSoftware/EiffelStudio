@@ -16,6 +16,8 @@ inherit
 		end;
 	ERROR_POPUPER
 
+	DATA
+
 creation
 
 	make

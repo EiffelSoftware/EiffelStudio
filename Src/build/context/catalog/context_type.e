@@ -7,32 +7,19 @@ indexing
 class CONTEXT_TYPE 
 
 inherit
-
-	DRAG_SOURCE
+	TYPE_DATA
 
 	WINDOWS
 
-	COMMAND_ARGS
-
-	TYPE_STONE
-
 	SHARED_STORAGE_INFO
 
---	FOCUSABLE
---		redefine
---			initialize_focus
---		end
-
-	TYPE_DATA
-
 creation
-
 	make
 	
-feature  {NONE}
+feature  {NONE} -- Initialization
 
-	make (a_name: STRING; a_context: like dummy_context) is
-			-- create a context type associated with `a_context'
+	make (a_context: like dummy_context) is
+			-- Create a context type associated with `a_context'.
 		do
 			dummy_context := a_context
 			int_generator.next
@@ -40,7 +27,7 @@ feature  {NONE}
 			context_type_table.put (Current, identifier)
 		end
 
-feature
+feature -- Access
 
 	identifier: INTEGER
 
@@ -52,41 +39,40 @@ feature
 			end
 		end
 
-	is_valid_parent (parent_context: COMPOSITE_C): BOOLEAN is
+	is_valid_parent (par: HOLDER_C): BOOLEAN is
 			-- Is `parent_context' a valid parent?
 		do
-			Result := dummy_context.is_valid_parent (parent_context)
+			Result := dummy_context.is_valid_parent (par)
 		end
 
-feature {NONE}
-
-	int_generator: INT_GENERATOR is
-		once
-			!!Result
-		end
-
-	focus_source: WIDGET
-
-feature 
-
-	initialize_callbacks (a_source: WIDGET) is
-			-- Set the callbacks of `a_source' for
-			-- the context_type
-		do
-			focus_source := a_source
---			create_focus_label
---			initialize_focus
-			initialize_transport
-		end
-	
-feature {NONE}
+feature {NONE} -- Implementation
 
 	dummy_context: CONTEXT
 			-- Reference to a context, descendant of current type
 
-feature 
+	int_generator: INT_GENERATOR is
+		once
+			create Result
+		end
 
-	create_context (a_parent: COMPOSITE_C): CONTEXT is
+feature -- Callbacks
+
+	initialize_callbacks (a_source: EV_TOOL_BAR_BUTTON) is
+			-- Set the callbacks of `a_source' for
+			-- the context_type.
+		do
+			a_source.activate_pick_and_drop (Void, Void)
+			if dummy_context.is_window then
+				a_source.set_data_type (Pnd_types.window_type)
+			else
+				a_source.set_data_type (Pnd_types.type_data_type)
+			end
+			a_source.set_transported_data (Current)
+		end
+	
+feature -- Context creation
+
+	create_context (a_parent: HOLDER_C): CONTEXT is
 		do
 			Result := dummy_context.create_context (a_parent)
 		end
@@ -96,54 +82,20 @@ feature
 			Result := dummy_context.eiffel_type
 		end
 
-	source: WIDGET is
-		do
-			Result := focus_source
-		end
-
 	label: STRING is
 		do
 			Result := eiffel_type
 		end
 
-	symbol: PIXMAP is
+	symbol: EV_PIXMAP is
 		do
 			Result := dummy_context.symbol
 		end
 
-	type, data: CONTEXT_TYPE is
+	type: CONTEXT_TYPE is
 		do
 			Result := Current
 		end
 
-feature {NONE}
+end -- class CONTEXT_TYPE
 
--- 	create_focus_label is
--- 		do
--- 			set_focus_string (label)
--- 		end
--- 
--- 	focus_label: FOCUS_LABEL_I is
--- 		local
--- 			ti: TOOLTIP_INITIALIZER
--- 		do
--- 			if focus_source /= Void then
--- 				ti ?= focus_source.top
--- 				check
--- 					valid_tooltip_initializer: ti /= void
--- 				end
--- 				Result := ti.label
--- 			end
--- 		end
--- 
--- 	destroyed: BOOLEAN is
--- 		do
--- 			Result := focus_source.destroyed
--- 		end
--- 
--- 	initialize_focus is
--- 		do
--- 			focus_label.initialize_widget (focus_source)
--- 		end
-
-end

@@ -1,3 +1,8 @@
+indexing
+	description: "Page representing the menus."
+	Id: "$Id$"
+	Date: "$Date$"
+	Revision: "$Revision$"
 
 class MENU_PAGE 
 
@@ -9,61 +14,67 @@ creation
 
 	make
 	
-feature 
+feature -- Access
 
-	submenu_type: CONTEXT_TYPE;
-	menu_entry_type: CONTEXT_TYPE;
-	bar_type: CONTEXT_TYPE;
-	option_btn_type: CONTEXT_TYPE;
+	static_bar_type: CONTEXT_TYPE
+--	bar_type: CONTEXT_TYPE
+	menu_type: CONTEXT_TYPE
+	menu_item_type: CONTEXT_TYPE
+	check_menu_type: CONTEXT_TYPE
+	radio_menu_type: CONTEXT_TYPE
+	popup_menu_type: CONTEXT_TYPE
+	option_b_type: CONTEXT_TYPE
+	status_bar_type: CONTEXT_TYPE
+	status_bar_item_type: CONTEXT_TYPE
 
-feature {NONE}
+feature {NONE} -- Initialization
 
 	build_interface is
 		local
-			bar_c: BAR_C;
-			submenu_c: MENU_PULL_C;
-			option_btn_c: OPT_PULL_C;
-			menu_entry_c: MENU_ENTRY_C;
+ 			static_bar_c: STATIC_MENU_BAR_C
+--			bar_c: MENU_BAR_C
+			menu_c: MENU_C
+			menu_item_c: MENU_ITEM_C
+			check_menu_c: CHECK_MENU_ITEM_C
+			radio_menu_c: RADIO_MENU_ITEM_C
+			popup_menu_c: POPUP_MENU_C
+			option_b_c: OPTION_BUTTON_C
+			status_bar_c: STATUS_BAR_C
+			status_item_c: STATUS_BAR_ITEM_C
 		do
-			!!menu_entry_c;
-			menu_entry_type := create_type (Widget_names.menu_entry_name, 
-					menu_entry_c, Pixmaps.cat_menu_entry_pixmap);
+			create static_bar_c
+			static_bar_type := create_type (static_bar_c, Pixmaps.cat_static_bar_pixmap)
+ 			create menu_c
+ 			menu_type := create_type (menu_c, Pixmaps.cat_menu_pixmap)
 
-			!!bar_c;
-			bar_type := create_type (Widget_names.bar_name, 
-					bar_c, Pixmaps.cat_bar_pixmap);
+ 			create menu_item_c
+			menu_item_type := create_type (menu_item_c, Pixmaps.cat_menu_item_pixmap)
 
-			!!submenu_c;
-			submenu_type := create_type (Widget_names.submenu_name, 
-					submenu_c, Pixmaps.cat_menu_pull_pixmap);
+			create check_menu_c
+			check_menu_type := create_type (check_menu_c, Pixmaps.cat_check_menu_pixmap)
 
-			!!option_btn_c;
-			option_btn_type := create_type (Widget_names.opt_pull_name, 
-					option_btn_c, Pixmaps.cat_opt_pull_pixmap);
+			create radio_menu_c
+			radio_menu_type := create_type (radio_menu_c, Pixmaps.cat_radio_menu_pixmap)
 
-			attach_left (bar_type.source, 1);
-			attach_left_widget (bar_type.source, option_btn_type.source, 10);
-			attach_left (submenu_type.source, 1);
-			attach_left_widget (submenu_type.source, menu_entry_type.source, 10);
+			create popup_menu_c
+			popup_menu_type := create_type (popup_menu_c, Pixmaps.cat_popup_menu_pixmap)
 
-			attach_top (bar_type.source, 1);
-			attach_top (option_btn_type.source, 1);
+			create option_b_c
+			option_b_type := create_type (option_b_c, Pixmaps.cat_opt_pull_pixmap)
 
-			attach_top_widget (bar_type.source, submenu_type.source, 10);
-			attach_top_widget (bar_type.source, menu_entry_type.source, 10);
+ 			create status_bar_c
+ 			status_bar_type := create_type (status_bar_c, Pixmaps.cat_status_bar_pixmap)
 
-			button.set_focus_string (Focus_labels.menus_label)
-		end;
+ 			create status_item_c
+ 			status_bar_item_type := create_type (status_item_c, Pixmaps.cat_status_bar_item_pixmap)
 
-	symbol: PIXMAP is
+-- 			button.set_focus_string (Focus_labels.menus_label)
+		end
+
+	tab_label: STRING is
 		do
-			Result := Pixmaps.menus_pixmap
-		end;
+			Result := Context_const.menus_name
+		end
 
-	selected_symbol: PIXMAP is
-		do
-			Result := Pixmaps.selected_menus_pixmap
-		end;
+end -- class MENU_PAGE
 
-
-end

@@ -101,7 +101,6 @@ feature -- Byte code generation
 		do
 			current_type := context.current_type
 			target_type ?= Context.real_type (info.type)
-			make_breakable (ba)
 
 			if target_type.is_separate then
 				

@@ -237,16 +237,14 @@ feature {COMPILER_EXPORTER} -- Primitives
 			end
 		end
 
-	check_constraints (context_class: CLASS_C): LINKED_LIST [CONSTRAINT_INFO] is
+	check_constraints (context_class: CLASS_C) is
 			-- Check the constrained genericity validity rule
 		local
 			i, count: INTEGER
 			gen_param: TYPE_A
-			error_list: LINKED_LIST [CONSTRAINT_INFO]
 		do
-			-- There are no constraints in a TUPLE type.
-			-- Therefore we only check the gen. parameters. 
-
+				-- There are no constraints in a TUPLE type.
+				-- Therefore we only check the gen. parameters. 
 			from
 				i := 1
 				count := generics.count
@@ -254,18 +252,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 				i > count
 			loop
 				gen_param := generics.item (i)
-
-					-- We append the list coming from the recursive call
-
-				error_list := gen_param.check_constraints (context_class)
-
-				if error_list /= Void then
-					if Result = void then
-						!! Result.make
-					end
-					Result.append (error_list)
-				end
-
+				gen_param.check_constraints (context_class)
 				i := i + 1
 			end
 		end

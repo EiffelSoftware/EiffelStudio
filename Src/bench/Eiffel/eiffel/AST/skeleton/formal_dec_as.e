@@ -125,6 +125,7 @@ feature -- Status
 	constraint_creation_list: LINKED_LIST [FEATURE_I] is
 			-- Actual creation routines from a constraint clause
 		require
+			has_creation_constraint: has_creation_constraint
 			has_computed_feature_table: has_computed_feature_table
 		local
 			class_type: CL_TYPE_A
@@ -132,27 +133,25 @@ feature -- Status
 			feature_name: STRING
 			feat_table: FEATURE_TABLE
 		do
-			if creation_feature_list /= Void then
-				class_type ?= constraint_type
-				if class_type /= Void then
-					class_id := class_type.base_class_id
-					feat_table := Feat_tbl_server.item (class_id)
-					check
-							-- A feature table associated to `base_class_id' should
-							-- always be in the system
-						feature_table_exists: feat_table /= Void
-					end
-					from
-						creation_feature_list.start
-						!! Result.make
-					until
-						creation_feature_list.after
-					loop
-						feature_name := creation_feature_list.item.internal_name
-						Result.extend (feat_table.item (feature_name))
-						Result.forth
-						creation_feature_list.forth
-					end
+			class_type ?= constraint_type
+			if class_type /= Void then
+				class_id := class_type.base_class_id
+				feat_table := Feat_tbl_server.item (class_id)
+				check
+						-- A feature table associated to `base_class_id' should
+						-- always be in the system
+					feature_table_exists: feat_table /= Void
+				end
+				from
+					creation_feature_list.start
+					!! Result.make
+				until
+					creation_feature_list.after
+				loop
+					feature_name := creation_feature_list.item.internal_name
+					Result.extend (feat_table.item (feature_name))
+					Result.forth
+					creation_feature_list.forth
 				end
 			end
 		end

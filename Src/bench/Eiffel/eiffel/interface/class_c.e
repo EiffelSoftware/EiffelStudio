@@ -2212,6 +2212,9 @@ feature
 		end
 
 	check_creation_constraint_genericity is
+			-- Check validity of creation constraint genericity
+			-- I.e. that the specified creation procedures does exist
+			-- in the constraint class.
 		require
 			generics_exists: generics /= Void
 		local
@@ -2268,7 +2271,6 @@ feature -- Parent checking
 		local
 			vtug: VTUG
 			vtcg4: VTCG4
-			constraint_error_list: LINKED_LIST [CONSTRAINT_INFO]
 			parent_actual_type: CL_TYPE_A
 			l_area: SPECIAL [CL_TYPE_A]
 			i, nb: INTEGER
@@ -2291,11 +2293,12 @@ feature -- Parent checking
 
 				if parent_actual_type.generics /= Void then
 						-- Check constrained genericity validity rule
-					constraint_error_list := parent_actual_type.check_constraints (Current)
-					if constraint_error_list /= Void then
+					parent_actual_type.reset_constraint_error_list
+					parent_actual_type.check_constraints (Current)
+					if not parent_actual_type.constraint_error_list.empty then
 						!!vtcg4
 						vtcg4.set_class (Current)
-						vtcg4.set_error_list (constraint_error_list)
+						vtcg4.set_error_list (parent_actual_type.constraint_error_list)
 						vtcg4.set_parent_type (parent_actual_type)
 						Error_handler.insert_error (vtcg4)
 					end

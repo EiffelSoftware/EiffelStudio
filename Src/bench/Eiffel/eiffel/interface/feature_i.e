@@ -1071,7 +1071,6 @@ feature -- Signature checking
 			vffd7: VFFD7
 			vtug: VTUG
 			vtcg1: VTCG1
-			constraint_error_list: LINKED_LIST [CONSTRAINT_INFO]
 		do
 			if type.has_like and then is_once then
 					-- We have an anchored type.
@@ -1116,12 +1115,13 @@ end
 					Error_handler.raise_error
 				end
 					-- Check constrained genericity validity rule
-				constraint_error_list := solved_type.check_constraints (written_class)
-				if constraint_error_list /= Void then
+				solved_type.reset_constraint_error_list
+				solved_type.check_constraints (written_class)
+				if not solved_type.constraint_error_list.empty then
 					!!vtcg1
 					vtcg1.set_class (written_class)
 					vtcg1.set_feature (Current)
-					vtcg1.set_error_list (constraint_error_list)
+					vtcg1.set_error_list (solved_type.constraint_error_list)
 					Error_handler.insert_error (vtcg1)
 				end
 			end

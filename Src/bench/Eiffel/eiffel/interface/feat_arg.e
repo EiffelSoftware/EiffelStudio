@@ -70,7 +70,6 @@ feature
 			argument_name: ID_AS
 			vtug: VTUG
 			vtcg2: VTCG2
-			constraint_error_list: LINKED_LIST [CONSTRAINT_INFO]
 			i, nb: INTEGER
 			l_area: SPECIAL [TYPE]
 			a_area: SPECIAL [ID_AS]
@@ -107,13 +106,14 @@ feature
 						Error_handler.raise_error
 					end
 						-- Check constrained genericity
-					constraint_error_list := solved_type.check_constraints (associated_class)
-					if Constraint_error_list /= Void then
-						!!vtcg2
+					solved_type.reset_constraint_error_list
+					solved_type.check_constraints (associated_class)
+					if not solved_type.constraint_error_list.empty then
+						!! vtcg2
 						vtcg2.set_class (associated_class)
 						vtcg2.set_feature (f)
 						vtcg2.set_entity_name (argument_name)
-						vtcg2.set_error_list (constraint_error_list)
+						vtcg2.set_error_list (solved_type.constraint_error_list)
 						Error_handler.insert_error (vtcg2)
 					end
 				end

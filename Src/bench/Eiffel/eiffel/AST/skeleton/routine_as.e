@@ -369,7 +369,6 @@ feature -- Type check, byte code and dead code removal
 			vtec1: VTEC1
 			vtec2: VTEC2
 			vtcg3: VTCG3
-			constraint_error_list: LINKED_LIST [CONSTRAINT_INFO]
 			vreg: VREG
 			curr_feat: FEATURE_I
 			vrrr2: VRRR2
@@ -457,13 +456,14 @@ feature -- Type check, byte code and dead code removal
 							Error_handler.raise_error
 						end
 							-- Check constraint genericity
-						constraint_error_list := solved_type.check_constraints (context_class)
-						if constraint_error_list /= Void then
+						solved_type.reset_constraint_error_list
+						solved_type.check_constraints (context_class)
+						if not solved_type.constraint_error_list.empty then
 							!!vtcg3
 							vtcg3.set_class (context_class)
 							vtcg3.set_feature (curr_feat)
 							vtcg3.set_entity_name (local_name)
-							vtcg3.set_error_list (constraint_error_list)
+							vtcg3.set_error_list (solved_type.constraint_error_list)
 							Error_handler.insert_error (vtcg3)
 						end
 	

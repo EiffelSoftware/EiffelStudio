@@ -471,7 +471,7 @@
         will find <a CLASS="efeature" HREF="../../reference/kernel/file.html#f_read_integer">read_integer</a>
         and its co-conspirators.</p>
         <p class="warning">
-        <b>CAUTION</b>:
+        <b>Caution</b>:
         Note the application to input features of the command-query separation principle.<br>
         The input features such as <a CLASS="efeature" HREF="../../reference/kernel/file.html#f_read_integer">read_integer</a>
         do not by themselves return a result; they set the
@@ -493,7 +493,7 @@
         and so on.
         </p>
         <p class="warning">
-        <b>CAUTION</b>:
+        <b>Caution</b>:
         You will notice in the flat-short form that all these queries except the first have
         <A CLASS="efeature" HREF="../../reference/kernel/file.html#f_exists">exists</a>
         as a precondition. This precondition is good for efficiency since it saves an
@@ -713,7 +713,7 @@
         to describe dispose actions. Normally such actions will involve freeing external resources: for example a class describing file
         descriptors may redefine dispose so that whenever a descriptor object is garbage-collected
         the corresponding file will be closed.</p>
-        <p class="warning"><b>CAUTION</b>: This example is typical of proper uses of dispose.In
+        <p class="warning"><b>Caution</b>: This example is typical of proper uses of dispose.In
         a dispose procedure you should not include any instruction that could modify the Eiffel object structure, especially if some objects in that
         structure may themselves have become unreachable: these instructions could conflict with the
         garbage collector’s operations and cause catastrophic behavior. The legitimate use of dispose

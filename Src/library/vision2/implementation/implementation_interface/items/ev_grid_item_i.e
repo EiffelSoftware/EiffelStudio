@@ -1,0 +1,145 @@
+indexing
+	description: "Item that can be inserted in a cell of an EV_GRID."
+	date: "$Date$"
+	revision: "$Revision$"
+
+class
+	EV_GRID_ITEM_I
+
+inherit
+	EV_ANY_I
+		redefine
+			interface
+		end
+
+	REFACTORING_HELPER
+		undefine
+			copy, default_create
+		end
+	
+	EV_SELECTABLE_I
+		redefine
+			interface
+		end
+
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make (an_interface: like interface) is
+			-- Create the widget with `par' as parent.
+		do
+			base_make (an_interface)
+		end
+
+	initialize is
+			-- Initialize `Current'.
+		do
+		end
+
+feature -- Access
+
+	background_color: EV_COLOR is
+			-- Background color of current item if any
+		do
+			to_implement ("EV_GRID_ITEM_I.background_color")
+		end
+
+	column: EV_GRID_COLUMN is
+			-- Column to which current item belongs
+		require
+			is_parented: is_parented
+		do
+			to_implement ("EV_GRID_ITEM_I.column")
+		ensure
+			column_not_void: Result /= Void
+		end
+
+	parent: EV_GRID is
+		do
+			to_implement ("EV_GRID_ITEM_I.grid")
+		end
+
+	row: EV_GRID_ROW is
+			-- Row to which current item belongs
+		require
+			parented: is_parented
+		do
+			to_implement ("EV_GRID_ITEM_I.row")
+		ensure
+			row_not_void: Result /= Void
+		end
+
+feature -- Status setting
+
+	enable_select is
+			-- Set `is_selected' `True'.
+		do
+			to_implement ("EV_GRID_ITEM_I.enable_select")
+		end
+
+	disable_select is
+			-- Set `is_selected' `False'.
+		do
+			to_implement ("EV_GRID_ITEM_I.disable_select")
+		end
+
+feature -- Status report
+
+	is_parented: BOOLEAN is
+			-- Does current item belongs to an EV_GRID?
+		do
+			to_implement ("EV_GRID_ITEM_I.is_parented")
+		end
+		
+	is_selected: BOOLEAN is
+			-- Is `Current' selected?
+		do
+			to_implement ("EV_GRID_ITEM_I.is_selected")
+		end
+
+feature -- Element change
+
+	set_background_color (a_color: like background_color) is
+			-- Set `background_color' with `a_color'
+		require
+			a_color_not_void: a_color /= Void
+		do
+			to_implement ("EV_GRID_ITEM_I.set_background_color")
+		ensure
+			background_color_set: background_color = a_color
+		end
+		
+feature {NONE} -- Implementation
+
+	destroy is
+			-- Destroy `Current'.
+		do
+			to_implement ("EV_GRID_ITEM_I.destroy")
+		end
+
+feature {EV_ANY_I} -- Implementation
+
+	interface: EV_GRID_ITEM
+			-- Provides a common user interface to platform dependent
+			-- functionality implemented by `Current'
+			
+end
+
+--|----------------------------------------------------------------
+--| EiffelVision2: library of reusable components for ISE Eiffel.
+--| Copyright (C) 1985-2004 Eiffel Software. All rights reserved.
+--| Duplication and distribution prohibited.  May be used only with
+--| ISE Eiffel, under terms of user license.
+--| Contact Eiffel Software for any other use.
+--|
+--| Interactive Software Engineering Inc.
+--| dba Eiffel Software
+--| 356 Storke Road, Goleta, CA 93117 USA
+--| Telephone 805-685-1006, Fax 805-685-6869
+--| Contact us at: http://www.eiffel.com/general/email.html
+--| Customer support: http://support.eiffel.com
+--| For latest info on our award winning products, visit:
+--|	http://www.eiffel.com
+--|----------------------------------------------------------------

@@ -309,8 +309,6 @@ feature
 			-- Process the deferred features
 		require
 			nb_deferred > 0;
-		local
-			inherit_feat: FEATURE_I;
 		do
 				-- Update `rout_id_set'.
 			rout_id_set.update (deferred_features);
@@ -322,7 +320,7 @@ feature
 			features /= Void;
 			nb_features > 0;
 		local
-			inherit_feat: FEATURE_I;
+			att: ATTRIBUTE_I
 			vmfn2: VMFN2;
 		do
 			if features_all_redefined (feature_name) then
@@ -330,6 +328,25 @@ feature
 			elseif features_all_the_same then
 					-- Shared features
 				inherited_info := features.first;
+-- TEMPORARY fix
+				att ?= inherited_info.a_feature
+				if att /= void and then att.generate_in = void then
+					from
+						features.start
+						inherited_info := void
+					until
+						features.after or else inherited_info /= Void
+					loop
+						att ?= features.item.a_feature
+						if att /= void and then att.generate_in /= Void then
+							inherited_info := features.item
+						end
+						features.forth
+					end
+					if inherited_info = Void then
+						inherited_info := features.first;
+					end
+				end
 			else
 					-- Name clash
 				!!vmfn2;

@@ -61,7 +61,7 @@ feature -- Element Change
 			-- by `parent'.
 		do
 			Result := clone (internal_pixmap)
-			if internal_pixmap /= Void and parent /= Void then
+			if internal_pixmap /= Void and then parent /= Void and then internal_pixmap.width /= parent_imp.pixmaps_width and then internal_pixmap.height /= parent_imp.pixmaps_height then
 				Result.stretch (parent_imp.pixmaps_width, parent_imp.pixmaps_height)
 			end
 		end

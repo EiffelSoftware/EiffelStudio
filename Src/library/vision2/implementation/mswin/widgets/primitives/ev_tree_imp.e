@@ -39,11 +39,13 @@ inherit
 			on_set_focus,
 			on_kill_focus,
 			on_key_down,
-			on_key_up
+			on_key_up,
+			on_set_cursor
 		redefine
 			default_style,
 			on_tvn_selchanged,
-			on_tvn_itemexpanded
+			on_tvn_itemexpanded,
+			on_tvn_beginrdrag
 		end
 
 creation
@@ -132,6 +134,7 @@ feature {NONE} -- WEL Implementation
 			clist: HASH_TABLE [EV_TREE_ITEM_IMP, INTEGER]
 		do
 			clist := ev_children
+--			selected_item ?= (clist @ info.new_item.h_item).interface
 			if clist @ info.old_item.h_item /= Void then
 				(clist @ info.old_item.h_item).execute_command (Cmd_item_deactivate, Void)
 			end
@@ -149,6 +152,13 @@ feature {NONE} -- WEL Implementation
 				info.action = Tve_expand then
 				(ev_children @ info.new_item.h_item).execute_command (Cmd_item_subtree, Void)
 			end
+		end
+
+	on_tvn_beginrdrag (info: WEL_NM_TREE_VIEW) is
+			-- A drag-and-drop operation involving the right mouse
+			-- button is being initiated.
+		do
+			(ev_children @ info.new_item.h_item).execute_command (Cmd_item_right_selection, Void)
 		end
 
 	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is

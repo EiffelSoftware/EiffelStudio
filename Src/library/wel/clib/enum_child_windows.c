@@ -7,33 +7,51 @@
 
 #include "wel_globals.h"
 
-struct TEiffelCallback
-	{
+struct TEiffelCallback {
+#ifndef EIF_IL_DLL
 	EIF_OBJECT pCurrObject;
+#endif
 	void *fnptr;
-	};
+};
 typedef struct TEiffelCallback EiffelCallback;
 
 
 BOOL CALLBACK EnumChildProc(HWND hwnd, LPARAM lparam)
-	{
+{
 	EiffelCallback* pEif_callback;
-	void (*EnumChildWindowsAdd)(void*, HWND);
-
 	pEif_callback = (EiffelCallback*)lparam;
+
+	{
+#ifndef EIF_IL_DLL
+	void (*EnumChildWindowsAdd)(EIF_REFERENCE, HWND);
+
 	EnumChildWindowsAdd = (void (*) (EIF_REFERENCE, HWND)) pEif_callback->fnptr;
 	EnumChildWindowsAdd(eif_access (pEif_callback->pCurrObject), hwnd);
-	return TRUE; // TRUE => Continue enumeration.
-	}
+#else
+	void (__stdcall *EnumChildWindowsAdd)(HWND);
 
-void cwel_enum_child_windows_procedure (EIF_OBJECT pCurrObject, void *fnptr, HWND hWndParent)
-	{
+	EnumChildWindowsAdd = (void (__stdcall *) (HWND)) pEif_callback->fnptr;
+	EnumChildWindowsAdd(hwnd);
+#endif
+	}
+	return TRUE; // TRUE => Continue enumeration.
+}
+
+void cwel_enum_child_windows_procedure (
+#ifndef EIF_IL_DLL
+		EIF_OBJECT pCurrObject,
+#endif
+		void *fnptr,
+		HWND hWndParent)
+{
 	EiffelCallback eif_callback;
+#ifndef EIF_IL_DLL
 	eif_callback.pCurrObject = pCurrObject;
+#endif
 	eif_callback.fnptr = fnptr;
 
 	EnumChildWindows(hWndParent, &EnumChildProc, (LPARAM)&eif_callback);
-	}
+}
 
 /*
 --|-------------------------------------------------------------------------

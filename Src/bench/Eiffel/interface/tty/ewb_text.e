@@ -37,9 +37,11 @@ feature {NONE} -- Implementation
 	process_uncompiled_class (class_i: CLASS_I) is
 			-- Display the class text.
 		local
-			text: STRING;
+			text: STRING
 		do
-			text := class_i.stone.origin_text
+			if class_i.file_name /= Void then
+				text := class_i.text
+			end;
 			if text /= Void then
 				output_window.put_string (text);
 				output_window.new_line;

@@ -29,10 +29,34 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	window_height: INTEGER is 
-			-- `Result' is INTEGER constant named window_height.
-		once
-			Result := 320
+	strike_png: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		Once
+			create Result
+			create a_file_name.make_from_string (rich_text_example_root)
+			a_file_name.set_file_name ("strike.png")
+			set_with_named_file (Result, a_file_name)
+		end
+
+	justified_png: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		Once
+			create Result
+			create a_file_name.make_from_string (rich_text_example_root)
+			a_file_name.set_file_name ("justified.png")
+			set_with_named_file (Result, a_file_name)
+		end
+
+	italic_png: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		Once
+			create Result
+			create a_file_name.make_from_string (rich_text_example_root)
+			a_file_name.set_file_name ("italic.png")
+			set_with_named_file (Result, a_file_name)
 		end
 
 	caret_position_status_bar_width: INTEGER is 
@@ -41,16 +65,14 @@ feature -- Access
 			Result := 100
 		end
 
-	window_width: INTEGER is 
-			-- `Result' is INTEGER constant named window_width.
-		once
-			Result := 540
-		end
-
-	font_selection_combo_box_width: INTEGER is 
-			-- `Result' is INTEGER constant named font_selection_combo_box_width.
-		once
-			Result := 150
+	left_alignment_png: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		Once
+			create Result
+			create a_file_name.make_from_string (rich_text_example_root)
+			a_file_name.set_file_name ("left_alignment.png")
+			set_with_named_file (Result, a_file_name)
 		end
 
 	tiny_padding: INTEGER is 
@@ -59,10 +81,74 @@ feature -- Access
 			Result := 2
 		end
 
+	underline_png: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		Once
+			create Result
+			create a_file_name.make_from_string (rich_text_example_root)
+			a_file_name.set_file_name ("underline.png")
+			set_with_named_file (Result, a_file_name)
+		end
+
+	window_height: INTEGER is 
+			-- `Result' is INTEGER constant named window_height.
+		once
+			Result := 320
+		end
+
+	bold_png: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		Once
+			create Result
+			create a_file_name.make_from_string (rich_text_example_root)
+			a_file_name.set_file_name ("bold.png")
+			set_with_named_file (Result, a_file_name)
+		end
+
+	window_width: INTEGER is 
+			-- `Result' is INTEGER constant named window_width.
+		once
+			Result := 540
+		end
+
+	right_alignment_png: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		Once
+			create Result
+			create a_file_name.make_from_string (rich_text_example_root)
+			a_file_name.set_file_name ("right_alignment.png")
+			set_with_named_file (Result, a_file_name)
+		end
+
 	font_size_combo_box_width: INTEGER is 
 			-- `Result' is INTEGER constant named font_size_combo_box_width.
 		once
 			Result := 50
+		end
+
+	center_alignment_png: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		Once
+			create Result
+			create a_file_name.make_from_string (rich_text_example_root)
+			a_file_name.set_file_name ("center_alignment.png")
+			set_with_named_file (Result, a_file_name)
+		end
+
+	font_selection_combo_box_width: INTEGER is 
+			-- `Result' is INTEGER constant named font_selection_combo_box_width.
+		once
+			Result := 150
+		end
+
+	rich_text_example_root: STRING is
+			-- `Result' is DIRECTORY constant named `rich_text_example_root'.
+		once
+			Result := "E:\projects\rich_text"
 		end
 
 

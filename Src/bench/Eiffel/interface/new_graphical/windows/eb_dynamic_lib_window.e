@@ -1034,7 +1034,7 @@ feature {NONE} -- Implementation: Low_level dialog, file operations
 			tmpfn: STRING
 		do
 			tmpfn := dd.file_name
-			if tmpfn /= Void then
+			if not tmpfn.is_empty then
 				create fn.make_from_string (tmpfn)
 				if not (tmpfn.substring (tmpfn.count - 3, tmpfn.count)).is_equal (".def") then
 					fn.add_extension ("def")

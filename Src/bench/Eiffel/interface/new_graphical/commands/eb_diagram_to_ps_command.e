@@ -55,7 +55,7 @@ feature -- Basic operations
 					-- EA: added this to prevent working directory changes by file dialog.
 					-- Will maybe be fixed in Vision 2
 				env.change_working_directory (current_directory)
-				if dial.file_name /= Void then
+				if not dial.file_name.is_empty then
 					error := 1
 					size := cd.bounds
 					p := tool.projector.diagram_image (size)

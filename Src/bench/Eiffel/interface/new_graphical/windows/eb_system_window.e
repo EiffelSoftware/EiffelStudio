@@ -420,7 +420,7 @@ feature {NONE} -- Implementation
 			new_location := f.file_name
 
 			if
-				new_location /= Void and then
+				not new_location.is_empty and then
 				Eiffel_ace.valid_file_name (new_location)
 			then
 				Eiffel_ace.set_file_name (f.file_name)

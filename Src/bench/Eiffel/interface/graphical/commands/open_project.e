@@ -143,6 +143,24 @@ feature {NONE} -- Implementation
 
 feature -- Project Initialization
 
+	open_from_ebench is
+			-- To open a project from `ebench'.
+		require
+			open_from_name: has_project_name
+			project_file_name_exists: project_file_name /= Void
+		local
+			file: RAW_FILE
+		do
+			!! file.make (project_file_name)
+			if not file.exists then
+				warner (Project_tool).custom_call (Current,
+					Warning_messages.w_file_not_exist (project_file_name), 
+					Interface_names.b_Ok, Void, Void)
+			else
+				open_project_file (project_file_name)
+			end
+		end
+
 	open_project_file (file_name: STRING) is
 			-- Initialize project as a new one or retrieving
 			-- existing data in the valid directory `project_dir'.

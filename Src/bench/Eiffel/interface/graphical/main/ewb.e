@@ -36,6 +36,8 @@ feature -- Initialization
 			new_resources: EB_RESOURCES
 			compiler: ES
 			eifgen_init: INIT_SERVERS
+			project_index: INTEGER
+			open_project: OPEN_PROJECT
 		do
 			if not retried then
 					-- Check that environment variables
@@ -68,6 +70,11 @@ feature -- Initialization
 					if init_license then
 						if toolkit = Void then end
 						init_windowing
+						project_index := index_of_word_option ("project")
+						if project_index /= 0 then
+							!! open_project.make_from_project_file (Project_tool, argument (project_index + 1))
+							open_project.open_from_ebench
+						end
 						iterate
 					end
 				else

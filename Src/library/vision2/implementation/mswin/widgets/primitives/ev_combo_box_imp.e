@@ -21,7 +21,8 @@ inherit
 	EV_TEXT_COMPONENT_IMP
 		redefine
 			set_editable,
-			move_and_resize
+			move_and_resize,
+			on_key_down
 		end
 		
 	EV_BAR_ITEM_IMP
@@ -57,7 +58,7 @@ inherit
 		redefine
 			default_process_message,
 			on_cbn_selchange,
-			on_cbn_editupdate,
+			on_cbn_editchange,
 			move_and_resize,
 			default_style
 		end
@@ -109,7 +110,29 @@ feature -- Measurement
 			move_and_resize (x, y, width, value, True)
 		end
 
+feature -- Status report
+
+	item_height: INTEGER is
+			-- height needed for an item
+		do
+			Result := wel_font.log_font.height
+		end
+
+	is_selected (an_id: INTEGER): BOOLEAN is
+			-- Is item given by `an_id' selected?
+		do
+			Result := (an_id = wel_selected_item + 1)
+		end
+
 feature -- Status setting
+
+	set_maximum_line_length (length: INTEGER) is
+			-- Maximum number of charachters on line
+		do
+			if is_editable then
+				cwin_send_message (item, Cb_limittext, length, 0)
+			end
+		end
 
 	select_item (index: INTEGER) is
 			-- Select an item of the `index'-th item of the list.
@@ -167,18 +190,13 @@ feature -- Event : command association
 			-- Add `cmd' to the list of commands to be executed
 			-- when the text in the field is activated, i.e. the
 			-- user press the enter key.
-			-- XX. To check
 		do
-			check
-				not_yet_implemented: False
-			end
 			add_command (Cmd_activate, cmd, arg)
 		end
 
 	add_change_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add 'cmd' to the list of commands to be executed 
 			-- when the text of the widget have changed.
-			-- XX. To check
 		do
 			add_command (Cmd_change, cmd, arg)
 		end
@@ -196,43 +214,24 @@ feature -- Event -- removing command association
 			-- Empty the list of commands to be executed
 			-- when the text in the field is activated, i.e. the
 			-- user press the enter key.
-			-- XX. To check
 		do
-			check
-				not_yet_implemented: False
-			end
 			remove_command (Cmd_activate)
 		end
 
 	remove_change_commands is
 			-- Empty the list of commands to be executed
 			-- when the text of the widget have changed.
-			-- XX. To check
 		do
 			remove_command (Cmd_change)
 		end
 
-feature {EV_LIST_ITEM_IMP} -- Implementation
-
-	item_height: INTEGER is
-			-- height needed for an item
-		do
-			Result := wel_font.log_font.height
-		end
-
-	is_selected (an_id: INTEGER): BOOLEAN is
-			-- Is item given by `an_id' selected?
-		do
-			Result := (an_id = wel_selected_item + 1)
-		end
-
-feature {NONE} -- Implementation
+feature {NONE} -- Inapplicable
 
 	caret_position: INTEGER is
 			-- Caret position
 		do
 			check
-				not_yet_implemented: False
+				Inapplicable: False
 			end
 		end
 
@@ -240,7 +239,7 @@ feature {NONE} -- Implementation
 			-- Set the caret position with `position'.
 		do
 			check
-				not_yet_implemented: False
+				Inapplicable: False
 			end
 		end
 
@@ -249,9 +248,100 @@ feature {NONE} -- Implementation
 			-- and `end_position'.
 		do
 			check
-				not_yet_implemented: False
+				Inapplicable: False
 			end
 		end
+
+	select_all is
+			-- Select all the text.
+		do
+			check
+				Inapplicable: False
+			end
+		end
+
+	deselect_all is
+			-- Unselect the current selection.
+		do
+			check
+				Inapplicable: False
+			end
+		end
+
+	delete_selection is
+			-- Delete the current selection.
+		do
+			check
+				Inapplicable: False
+			end
+		end
+
+	has_selection: BOOLEAN is
+			-- Is something selected?
+		do
+			check
+				Inapplicable: False
+			end
+		end
+
+	selection_start: INTEGER is
+			-- Index of the first character selected
+		do
+			check
+				Inapplicable: False
+			end
+		end
+
+	selection_end: INTEGER is
+			-- Index of the last character selected
+		do
+			check
+				Inapplicable: False
+			end
+		end
+
+	make_with_text (txt: STRING) is
+			-- Create a text area with `par' as
+			-- parent and `txt' as text.
+		do
+			check
+				Inapplicable: False
+			end
+		end
+
+	copy_selection is
+			-- Copy the `selected_region' in the Clipboard
+			-- to paste it later.
+			-- If the `selected_region' is empty, it does
+			-- nothing.
+		do
+			check
+				Inapplicable: False
+			end
+		end
+
+	cut_selection is
+			-- Cut the `selected_region' by erasing it from
+			-- the text and putting it in the Clipboard 
+			-- to paste it later.
+			-- If the `selectd_region' is empty, it does
+			-- nothing.
+		do
+			check
+				Inapplicable: False
+			end
+		end
+
+	clip_paste is
+			-- Paste at the current caret position the
+			-- content of the clipboard.
+		do
+			check
+				Inapplicable: False
+			end
+		end
+
+feature {NONE} -- Implementation
 
 	set_read_only is
 			-- Set the read-only state.
@@ -319,17 +409,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-feature {NONE} -- Inapplicable
-
-	make_with_text (txt: STRING) is
-			-- Create a text area with `par' as
-			-- parent and `txt' as text.
-		do
-			check
-				Inapplicable: False
-			end
-		end
-
 feature {NONE} -- Wel implementation
 
    	move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
@@ -337,6 +416,17 @@ feature {NONE} -- Wel implementation
    		do
   			cwin_move_window (item, a_x, a_y, a_width, height, repaint)
   		end
+
+	on_key_down (virtual_key, key_data: INTEGER) is
+			-- We check if the enter key is pressed)
+			-- 13 is the number of the return key.
+		do
+			{EV_TEXT_COMPONENT_IMP} Precursor (virtual_key, key_data)
+			if virtual_key = Vk_return then
+				execute_command (Cmd_activate, Void)
+				set_caret_position (0)
+			end
+		end
 
 	on_cbn_selchange is
 			-- The selection is about to be changed.
@@ -347,10 +437,11 @@ feature {NONE} -- Wel implementation
 			end
 		end
 
-	on_cbn_editupdate is
+	on_cbn_editchange is
 			-- The edit control portion is about to
 			-- display altered text.
 		do
+			execute_command (Cmd_change, Void)
 		end
 
 	default_style: INTEGER is
@@ -377,7 +468,7 @@ feature {NONE} -- Wel implementation
 			if msg = Wm_erasebkgnd then
 				disable_default_processing
 			end
- 		end
+  		end
 
 	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
 			-- Encapsulation of the SDK GetNextDlgTabItem,

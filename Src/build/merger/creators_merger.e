@@ -2,54 +2,54 @@ class CREATORS_MERGER
 
 feature
 
-	merge2 (c1, c2: EIFFEL_LIST [CREATE_AS]) is
-			-- Merge creators `c1' and `c2'.
-			-- Clients of creators `c1' appearing
-			-- in creators `c2' are overwritten.
+	merge2 (user, new_tmp: EIFFEL_LIST [CREATE_AS]) is
+			-- Merge creators `user' and `new_tmp'.
+			-- Clients of creators `user' appearing
+			-- in creators `new_tmp' are overwritten.
 			-- Result of merge will be stored in
 			-- `merge_result'.
 		local
 			new_creators, temp_creators: EIFFEL_LIST [CREATE_AS]
-			c1_features, temp_feature_list: EIFFEL_LIST [FEATURE_NAME]
+			user_features, temp_feature_list: EIFFEL_LIST [FEATURE_NAME]
 			current_feature_list: LINKED_LIST [FEATURE_NAME]
 			current_clients: CLIENT_AS
 			new_create_as: CREATE_AS
 			creator_found: BOOLEAN
 		do
-			if c1 /= Void then
+			if user /= Void then
 				from
-					c1.start
+					user.start
 				until
-					c1.after
+					user.after
 				loop
-					c1_features := c1.item.feature_list
-					current_clients := c1.item.clients
+					user_features := user.item.feature_list
+					current_clients := user.item.clients
 					!! current_feature_list.make
 					current_feature_list.start
 
 					from
-						c1_features.start
+						user_features.start
 					until
-						c1_features.after
+						user_features.after
 					loop
 						from
-							c2.start
+							new_tmp.start
 							creator_found := False
 						until
-							c2.after or else creator_found
+							new_tmp.after or else creator_found
 						loop
-							creator_found := c2.item.has_feature_name (c1_features.item)
-							c2.forth
+							creator_found := new_tmp.item.has_feature_name (user_features.item)
+							new_tmp.forth
 						end
 
 						if not creator_found then
-							current_feature_list.put_left (c1_features.item)
+							current_feature_list.put_left (user_features.item)
 						end
 							
-						c1_features.forth
+						user_features.forth
 					end
 
-					-- Keeping creators from `c1', not appearing in `c2'.
+					-- Keeping creators from `user', not appearing in `new_tmp'.
 
 					!! temp_feature_list.make (current_feature_list.count)
 					from
@@ -83,24 +83,24 @@ feature
 					end
 
 					new_creators := temp_creators
-					c1.forth
+					user.forth
 				end
 
-				-- Now adding creators from `c2'.
+				-- Now adding creators from `new_tmp'.
 	
 				if new_creators = Void then
-					!! temp_creators.make (c2.count)
-					temp_creators.merge_after_position (0, c2)
+					!! temp_creators.make (new_tmp.count)
+					temp_creators.merge_after_position (0, new_tmp)
 				else
-					!! temp_creators.make (new_creators.count + c2.count)
-					temp_creators.merge_after_position (0, c2)
-					temp_creators.merge_after_position (c2.count, new_creators)
+					!! temp_creators.make (new_creators.count + new_tmp.count)
+					temp_creators.merge_after_position (0, new_tmp)
+					temp_creators.merge_after_position (new_tmp.count, new_creators)
 				end
 				merge_result := temp_creators
 			else
-				if c2 /= Void then
-					!! merge_result.make (c2.count)
-					merge_result.merge_after_position (0, c2)
+				if new_tmp /= Void then
+					!! merge_result.make (new_tmp.count)
+					merge_result.merge_after_position (0, new_tmp)
 				else
 					merge_result := Void
 				end

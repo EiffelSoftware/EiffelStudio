@@ -2,16 +2,19 @@ class ARGUMENTS_MERGER
 
 feature
 
-	merge2 (a1, a2: EIFFEL_LIST [TYPE_DEC_AS]) is
-			-- Merge arguments `a1' and `a2'.
-			-- Result will be `a2'.
+	merge2 (user, new_tmp: EIFFEL_LIST [TYPE_DEC_AS]) is
+            -- Merge arguments `user' and `new_tmp' in case
+            -- user changes template feature. The user is not
+            -- allowed to change the arguments of a template
+            -- feature manually, so the result will be `new_tmp'.
 		do
-			if a2 /= Void then
-				!! merge_result.make (a2.count)
-				merge_result.merge_after_position (0, a2)
+			if new_tmp /= Void then
+				-- Copying arguments of `new_tmp'.
+				!! merge_result.make (new_tmp.count)
+				merge_result.merge_after_position (0, new_tmp)
 			else
-				-- Otherwise the result will be the same
-				-- as the previous merge result.
+				-- Resetting merge result, otherwise it will
+				-- be the same as the previous result.
 				merge_result := Void
 			end
 		end;

@@ -197,6 +197,19 @@ feature -- Access
 			-- forall x : start..Result, item (x) /= c
 		end;
 
+	last_index_of (c: CHARACTER; start_index_from_end: INTEGER): INTEGER is
+			-- Position of last occurence of `c'.
+			-- 0 if none
+		require
+			start_index_small_enough: start_index_from_end <= count
+			start_index_large_enough: start_index_from_end >= 1
+		do
+			Result := str_last_search ($area, c, start_index_from_end)
+		ensure
+			correct_place: Result > 0 implies item (Result) = c
+			-- forall x : Result..last, item (x) /= c
+		end
+
 	substring_index (other: STRING; start: INTEGER): INTEGER is
 			-- Position of first occurrence of `other' at or after `start';
 			-- 0 if none.
@@ -632,7 +645,7 @@ feature -- Element change
 			str_append ($area, $s_area, count, s.count);
 			count := new_size
 		ensure then
-			new_count: count = old count + s.count
+			new_count: count = old count + old s.count
 			-- appended: For every `i' in 1..`s'.`count', `item' (old `count'+`i') = `s'.`item' (`i')
 		end;
 
@@ -672,6 +685,7 @@ feature -- Element change
 			count := count + 1;
 		ensure then
 			item_inserted: item (count) = c;
+			new_count: count = old count + 1
 		end;
 
 	append_boolean (b: BOOLEAN) is
@@ -1059,6 +1073,13 @@ feature {STRING} -- Implementation
 	str_search (c_str: POINTER; c: CHARACTER; i, len: INTEGER): INTEGER is
 			-- Index of first occurrence of `c' in `c_str',
 			-- equal or following `i'-th position
+			-- 0 if no occurrence
+		external
+			"C | %"eif_str.h%""
+		end;
+
+	str_last_search (c_str: POINTER; c: CHARACTER; len: INTEGER): INTEGER is
+			-- Index of last occurrence of `c' in `c_str',
 			-- 0 if no occurrence
 		external
 			"C | %"eif_str.h%""

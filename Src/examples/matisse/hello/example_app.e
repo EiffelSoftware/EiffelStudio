@@ -9,8 +9,6 @@ class
 inherit
 	MT_CONSTANTS
 	
-	INTERNAL
-
 	ARGUMENTS
 	
 creation

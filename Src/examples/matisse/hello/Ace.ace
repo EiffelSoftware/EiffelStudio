@@ -68,8 +68,8 @@ cluster
 	
 external
 	object:	
-		"$EIFFEL4\library\time\Clib\datetime.lib",
+		"$(EIFFEL4)\library\time\spec\$(COMPILER)\lib\datetime.lib",
 		"$MTS_ROOT\lib\matisse.lib",
-		"$EIFFEL$\library\matisse\matisse_externals\Clib\mt_support.lib";
+		"$EIFFEL4\library\matisse\matisse_externals\Clib\mt_support.lib";
 
 end

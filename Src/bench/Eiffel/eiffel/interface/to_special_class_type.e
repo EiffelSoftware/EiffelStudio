@@ -254,7 +254,7 @@ feature
 			table_name: STRING;
 			rout_info: ROUT_INFO
 		do
-			file.putstring ("*(char **) (l[0] + ");
+			file.putstring ("*(char **) (l[0]");
 
 			area_feature := associated_class.feature_table.item ("area");
 
@@ -265,7 +265,7 @@ feature
 				if table.is_polymorphic (type_id) then
 						-- Access to area is polymorphic
 					table_name := rout_id.table_name;
-					file.putchar ('(');
+					file.putstring (" + (");
 					file.putstring (table_name);
 					file.putchar ('-');
 					file.putint (table.min_type_id - 1);
@@ -276,7 +276,11 @@ feature
 					   -- Mark attribute table used
 					Eiffel_table.mark_used (rout_id);
 				else
-					skeleton.generate_offset (file, area_feature.feature_id);
+						--| In this instruction, we put `False' as second
+						--| arguments. This means we won't generate anything if there is nothing
+						--| to generate. Remember that `True' is used in the generation of attributes
+						--| table in Final mode.
+					skeleton.generate_offset (file, area_feature.feature_id, False);
 				end;
 				file.putchar (')');
 			elseif
@@ -284,13 +288,13 @@ feature
 				associated_class.is_precompiled
 			then
 				rout_info := System.rout_info_table.item (rout_id);
-				file.putstring ("RTWPA(");
+				file.putstring ("+ RTWPA(");
 				file.putstring (rout_info.origin.generated_id);
 				file.putstring (", ");
 				file.putint (rout_info.offset);
 				file.putstring (", Dtype(l[0])))");
 			else
-				file.putstring ("RTWA(");
+				file.putstring ("+ RTWA(");
 				file.putint (id.id - 1);
 				file.putstring (", ");
 				file.putint (area_feature.feature_id);

@@ -514,6 +514,7 @@ feature -- Generation
 			c_name, creat_name: STRING
 			bits_desc: BITS_DESC
 			creation_feature: FEATURE_I
+			value: INTEGER
 		do
 			c_name := init_procedure_name
 			nb_ref := skeleton.nb_reference
@@ -539,13 +540,18 @@ feature -- Generation
 				skeleton.after or else not skeleton.item.is_bits
 			loop
 					-- Initialize dynamic type of the bit attribute
-				file.putstring ("HEADER(l[0] + ")
-				skeleton.generate(file)
+				file.putstring ("HEADER(l[0]")
+
+					--| In this instruction and in the followings, we put `False' as second
+					--| arguments. This means we won't generate anything if there is nothing
+					--| to generate. Remember that `True' is used in the generation of attributes
+					--| table in Final mode.
+				skeleton.generate(file, False)
 				file.putstring(")->ov_flags = egc_bit_dtype;")
 				file.new_line
-				file.putstring ("*(uint32 *) (l[0] + ")
+				file.putstring ("*(uint32 *) (l[0]")
 				bits_desc ?= skeleton.item; 	-- Cannot fail
-				skeleton.generate(file)
+				skeleton.generate(file, False)
 				file.putstring(") = ")
 				file.putint (bits_desc.value)
 				file.putchar (';')
@@ -560,15 +566,21 @@ feature -- Generation
 			until
 				skeleton.after
 			loop
-				file.putstring ("*(char **) (l[0] + REFACS(")
-				file.putint (nb_ref + i)
-				file.putstring (")) =")
+				file.putstring ("*(char **) (l[0] ")
+				value := nb_ref + i
+				if value /= 0 then
+					file.putstring (" + REFACS(")
+					file.putint (value)
+					file.putstring (")) =")
+				else
+					file.putstring (") =")
+				end
 				file.new_line
 				file.indent
-				file.putstring("l[0] + ")
+				file.putstring("l[0]")
 					-- There is a side effect with generation
 				old_cursor := skeleton.cursor
-				skeleton.generate(file)
+				skeleton.generate(file, False)
 				skeleton.go_to (old_cursor)
 				file.putchar (';')
 				file.new_line
@@ -576,8 +588,8 @@ feature -- Generation
 
 				exp_desc ?= skeleton.item;		-- Cannot fail
 					-- Initialize dynaminc type of the expanded object
-				file.putstring ("HEADER(l[0] + ")
-				skeleton.generate(file)
+				file.putstring ("HEADER(l[0]")
+				skeleton.generate(file, False)
 				skeleton.go_to (old_cursor)
 				file.putstring(")->ov_flags = ")
 				file.putint(exp_desc.type_id - 1)
@@ -585,16 +597,16 @@ feature -- Generation
 				file.new_line
 
 					-- Mark expanded object
-				file.putstring ("HEADER(l[0] + ")
-				skeleton.generate(file)
+				file.putstring ("HEADER(l[0]")
+				skeleton.generate(file, False)
 				skeleton.go_to (old_cursor)
 				file.putstring(")->ov_flags |= EO_EXP;")
 				file.new_line
-				file.putstring ("HEADER(l[0] + ")
-				skeleton.generate(file)
+				file.putstring ("HEADER(l[0]")
+				skeleton.generate(file, False)
 				skeleton.go_to (old_cursor)
 				file.putstring(")->ov_size = ")
-				skeleton.generate(file)
+				skeleton.generate(file, False)
 				skeleton.go_to (old_cursor)
 				file.putstring (" + (l[0] - l[1]);")
 				file.new_line
@@ -607,9 +619,8 @@ feature -- Generation
 					creat_name := 
 						creation_feature.body_id.feature_name (class_type.id)
 					file.putstring (creat_name)
-					file.putchar ('(')
-					file.putstring ("l[0] + ")
-					skeleton.generate(file)
+					file.putstring ("(l[0]")
+					skeleton.generate(file, False)
 					skeleton.go_to (old_cursor)
 					file.putstring (");");	
 					file.new_line
@@ -621,9 +632,8 @@ feature -- Generation
 				sub_skel.go_expanded
 				if not sub_skel.after then
 					file.putstring (sub_class_type.init_procedure_name)
-					file.putchar ('(')
-					file.putstring("l[0] + ")
-					skeleton.generate(file)
+					file.putstring("(l[0]")
+					skeleton.generate(file, False)
 					file.putstring(", l[1]);")
 					file.new_line
 				end

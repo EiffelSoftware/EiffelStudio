@@ -150,7 +150,6 @@ feature -- Basic operations
 			do
 				set_common_fields (a_descriptor)
 				a_descriptor.set_interface_descriptors (interface_descriptors)
-				a_descriptor.set_guid (guid)
 				a_descriptor.set_lcid (lcid)
 				a_descriptor.set_type_library (type_library_descriptor)
 			end
@@ -159,9 +158,6 @@ feature {NONE} -- Implementation
 
 	interface_descriptors: LIST [WIZARD_INTERFACE_DESCRIPTOR]
 			-- Coclass interfaces descriptors
-
-	guid: ECOM_GUID
-			-- CLSID
 
 	lcid: INTEGER
 			-- Locale of member names and doc strings.

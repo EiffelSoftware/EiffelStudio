@@ -242,6 +242,7 @@ feature -- Element change
 			wel_insert_button (index - 1, but)
 			ev_children.put (button, button.id)
 
+
 			-- We notify the change to integrate them if necessary
 			notify_change (2 + 1)
 		end
@@ -555,11 +556,12 @@ feature {NONE} -- WEL Implementation
 			-- Executed when the mouse move.
 			-- We verify that there is indeed a command to avoid
 			-- the creation of an object for nothing.
+		local
+			ev_data: EV_BUTTON_EVENT_DATA
 		do
 			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
-			if has_capture then
-				disable_default_processing
-			end
+			ev_data := get_button_data (2, keys, x_pos, y_pos)
+			internal_propagate_event (Cmd_motion_notify, x_pos, y_pos, ev_data)
 		end
 
 	on_key_down (virtual_key, key_data: INTEGER) is

@@ -292,8 +292,6 @@ feature -- Element change
 
 	append_uint32_integer (i: INTEGER) is
 			-- Append integer `i' in the array
-		require
-			valid_uint32_integer: i >= 0
 		do
 			fixme ("[
 				Callers should verify that they actually don't mean to

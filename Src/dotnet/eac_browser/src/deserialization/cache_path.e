@@ -9,7 +9,7 @@ class
 inherit
 	COMMON_PATH
 
-feature {TYPE_PRINTER} -- Access
+feature -- Access
 
 	relative_assembly_path (an_assembly: CONSUMED_ASSEMBLY): STRING is
 			-- Path to folder containing `an_assembly' types relative to `Eac_path'.
@@ -23,7 +23,7 @@ feature {TYPE_PRINTER} -- Access
 			create Result.make (an_assembly.name.count + an_assembly.version.count + an_assembly.culture.count + an_assembly.key.count + 4)
 			Result.append (an_assembly.name)
 			Result.append ("-")
-			version := an_assembly.version
+			version := clone (an_assembly.version)
 			version.replace_substring_all (".", "_")
 			Result.append (version)
 			Result.append ("-")
@@ -121,7 +121,7 @@ feature {TYPE_PRINTER} -- Access
 			valid_path: Result /= Void implies (create {RAW_FILE}.make (Result)).exists
 		end
 
-feature {MAIN_WINDOW} -- Access
+feature -- Access
 
 	absolute_info_assembly_path (an_assembly: CONSUMED_ASSEMBLY): STRING is
 			-- Path to file describing `a_dotnet_type_name' relative to `Eac_path'.

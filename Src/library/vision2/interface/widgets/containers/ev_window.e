@@ -191,6 +191,15 @@ feature -- Status setting
 			implementation.set_maximize_state
 		end
 
+	set_modal is
+			-- Make the window modal
+		require
+			exists: not destroyed
+		do
+			implementation.set_modal
+		end
+
+
 feature -- Element change
 
 	set_maximum_width (value: INTEGER) is

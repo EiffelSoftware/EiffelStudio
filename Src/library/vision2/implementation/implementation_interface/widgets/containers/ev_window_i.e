@@ -171,6 +171,13 @@ feature -- Status setting
 		deferred
 		end
 
+	set_modal is
+			-- Make the window modal
+		require
+			exists: not destroyed
+		deferred
+		end
+
 feature -- Element change
 
 	set_maximum_width (value: INTEGER) is

@@ -161,6 +161,12 @@ feature -- Status setting
 		do
 		end
 
+	set_modal is
+			-- Make the window modal
+		do
+			c_gtk_window_set_modal(widget, True)
+		end
+
 feature -- Element change
 
 	set_maximum_width (max_width: INTEGER) is

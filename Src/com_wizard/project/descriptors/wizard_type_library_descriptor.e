@@ -259,6 +259,37 @@ feature -- Basic operations
 			end
 		end
 
+	finalize_interface_features is
+			-- Finalize interface_features.
+		require
+			complete: complete
+		local
+			i, local_counter: INTEGER
+			interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR
+		do
+			from
+				i := 1
+			variant
+				descriptors.count - i + 1
+			until
+				i > descriptors.count
+			loop
+				if descriptors.item (i) /= Void then
+					if 
+						(descriptors.item (i).type_kind = Tkind_interface) or 
+						(descriptors.item (i).type_kind = Tkind_dispatch) 
+					then
+						interface_descriptor ?= descriptors.item (i)
+						if interface_descriptor /= Void then
+							interface_descriptor.finalize_interface_functions
+						end
+					end
+				end
+				i := i + 1
+			end
+		end
+
+
 	finalize_names is
 			-- Remove name clashes in system.
 		require
@@ -275,9 +306,11 @@ feature -- Basic operations
 				i > descriptors.count
 			loop
 				if descriptors.item (i) /= Void then
-					if system_descriptor.eiffel_names.has (descriptors.item (i).eiffel_class_name) then
+					if 
+						system_descriptor.eiffel_names.has (descriptors.item (i).eiffel_class_name) 
+					then
 						local_counter := counter
-						create tmp_string.make (30)
+						create tmp_string.make (3)
 						tmp_string.append_integer (local_counter)
 						descriptors.item (i).eiffel_class_name.append (tmp_string)
 						if not (descriptors.item (i).type_kind = Tkind_alias) then
@@ -289,12 +322,10 @@ feature -- Basic operations
 									(tmp_string, descriptors.item (i).c_header_file_name.index_of ('.', 1))
 							end
 						end
-						if (descriptors.item (i).type_kind = Tkind_interface) or (descriptors.item (i).type_kind = Tkind_dispatch) then
-							descriptors.item (i).c_type_name.append (tmp_string)
-							descriptors.item (i).name.append (tmp_string)
-						end
+						descriptors.item (i).c_type_name.append (tmp_string)
+						descriptors.item (i).name.append (tmp_string)
 					end
-					system_descriptor.eiffel_names.force (descriptors.item (i).eiffel_class_name)
+					system_descriptor.eiffel_names.force (descriptors.item (i).eiffel_class_name, descriptors.item (i).eiffel_class_name)
 				end
 				i := i + 1
 			end

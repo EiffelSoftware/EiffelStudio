@@ -44,9 +44,10 @@ feature -- Output
 			check
 				parent_classes_set: parent_classes /= Void
 			end
-			st.add_string ("Class ")
+			st.add_string ("Class: ")
 			class_c.append_signature (st, False)
-			st.add_string (" inherits multiply from classes that cannot be multiply inherited:")
+			st.add_new_line
+			st.add_string ("Inherited classes that cannot be multiply inherited:")
 			st.add_new_line
 			from
 				parent_classes.start

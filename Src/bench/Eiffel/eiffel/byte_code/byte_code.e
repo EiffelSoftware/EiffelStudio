@@ -490,11 +490,7 @@ feature -- Inherited Assertions
 				if has_assertion then
 					--! Has assertion
 					inh_c := System.class_of_id (inh_f.written_in)
-					if inh_c.generics = Void then
-						ct := inh_c.types.first
-					else
-						ct := inh_c.meta_type (Context.current_type).associated_class_type
-					end
+					ct := inh_c.meta_type (Context.class_type)
 					byte_code := System.byte_server.disk_item (inh_f.body_index)
 					if inh_f.has_precondition and gen_prec then
 						Context.inherited_assertion.add_precondition_type (ct, byte_code)

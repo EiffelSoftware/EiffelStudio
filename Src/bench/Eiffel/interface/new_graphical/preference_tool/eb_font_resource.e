@@ -17,38 +17,39 @@ creation
 	make,
 	make_from_string,
 	make_with_values,
-	make_from_old
+	make_default
 
 feature {NONE} -- Initialization
 
 	make_with_values (a_name: STRING; a_font: EV_FONT) is
-		-- Initialize Current
-	do
-		name := a_name
-		actual_value := a_font
-	end
+			-- Initialize Current
+		do
+			name := a_name
+			actual_value := a_font
+		end
 
 	make_from_string (a_name: STRING; a_string: STRING) is
-		-- Initialize Current
-	do
-		name := a_name
-		Create actual_value.make_by_system_name (a_string)
-	end
+			-- Initialize Current
+		do
+			name := a_name
+			create actual_value.make_by_system_name (a_string)
+		end
 
 	make (a_name: STRING; rt: RESOURCE_TABLE; def_value: EV_FONT) is
 			-- Initialize Current
 		do
 			name := a_name
 			default_value := def_value
-			Create actual_value.make_by_name (rt.get_string (a_name, def_value.name))
---			if not actual_value.is_valid then
---				io.error.putstring ("Warning: Could not allocate font ")
---				io.error.putstring (value)
---				io.error.putstring (" for resource ")
---				io.error.putstring (name)
---				io.error.new_line
---				actual_value := default_font
---			end
+			create actual_value.make_by_system_name (rt.get_string (a_name, def_value.name))
+		end
+
+	make_default (a_name: STRING; rt: RESOURCE_TABLE; def_name: STRING) is
+			-- Initialize Current
+		local
+			dv: EV_FONT
+		do
+			create dv.make_by_system_name (def_name)
+			make (a_name, rt, dv)
 		end
 
 feature -- Access
@@ -84,13 +85,14 @@ feature -- Status report
 	is_valid (a_value: STRING): BOOLEAN is
 			-- Is `a_value' valid for use in Current?
 			--| Always `True'.
+			-- Oops! creates borber effect. to be redone.
 		local
-			font: FONT
+			font: EV_FONT
 		do
 			if not a_value.empty then
-				!! font.make
+				create font.make
 				font.set_name (a_value)
-				Result := font.is_font_valid
+				Result := True
 			else
 				Result := True
 			end
@@ -108,7 +110,7 @@ feature -- Status Setting
 			-- Set `value' to `new_value'.
 		do
 			if not new_value.empty then	
-				!! actual_value.make
+				create actual_value.make
 				actual_value.set_name (new_value)
 			else
 				actual_value := Void
@@ -119,13 +121,6 @@ feature -- Status Setting
 			-- Set `value' to `new_value'.
 		do
 			actual_value := a_font
-		end
-
-feature {NONE} -- Obsolete
-
-	make_from_old (old_r: FONT_RESOURCE) is
-		do
-			make_from_string (old_r.name, old_r.value)
 		end
 
 end -- class EB_FONT_RESOURCE

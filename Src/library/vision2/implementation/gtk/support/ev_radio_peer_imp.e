@@ -40,7 +40,6 @@ feature -- Status report
 					cur := C.gslist_struct_next (cur)
 				end
 			end
-			io.put_string (Result.count.out + "%N")
 		end
 
 	selected_peer: like interface is
@@ -98,6 +97,9 @@ end -- class EV_RADIO_PEER
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.4  2000/02/26 01:26:02  brendel
+--| Removed annoying put_string.
+--|
 --| Revision 1.3  2000/02/25 01:48:52  brendel
 --| Implemented.
 --|

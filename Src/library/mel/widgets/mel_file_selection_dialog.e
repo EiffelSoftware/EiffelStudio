@@ -20,40 +20,44 @@ inherit
 			set_prompt_dialog, set_selection_dialog, set_command_dialog,
 			set_file_selection_dialog
 		redefine
-			clean_up
+			parent, created_dialog_automatically
 		end;
 
 creation
 	make
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
 	make (a_name: STRING; a_parent: MEL_COMPOSITE) is
 			-- Create file selection dialog.
+		require
+			name_exists: a_name /= Void
+			parent_exists: a_parent /= Void and then not a_parent.is_destroyed
 		local
 			widget_name: ANY
 		do
-			parent := a_parent;
 			widget_name := a_name.to_c;
 			screen_object := xm_create_file_selection_dialog (a_parent.screen_object, $widget_name, default_pointer, 0);
-			Mel_widgets.put (Current, screen_object);
-			!! dialog_shell.make_from_existing (xt_parent (screen_object));
-			create_file_selection_children;
-			set_file_selection_dialog;
+			!! parent.make_from_existing (xt_parent (screen_object), a_parent);
+			Mel_widgets.add (Current);
+			set_default
+		ensure
+			exists: not is_destroyed;
+			parent_set: parent.parent = a_parent;
+			name_set: name.is_equal (a_name)
 		end;
 
 feature -- Access
 
-	dialog_shell: MEL_DIALOG_SHELL;
+	parent: MEL_DIALOG_SHELL;
 			-- Dialog shell
 
-feature -- Removal
+feature {NONE} -- Implementation
 
-	clean_up is
-			-- Destroy the widget.
+	created_dialog_automatically: BOOLEAN is
+			-- Was the dialog shell created automatically?
 		do
-			object_clean_up;
-			dialog_shell.object_clean_up
+			Result := True
 		end;
 
 feature {NONE} -- Implementation

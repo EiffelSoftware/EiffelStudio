@@ -33,20 +33,26 @@ feature {NONE}
 			if project_tool.initialized then
 				error_window.clear_window;
 				if Lace.file_name /= Void then
-					set_global_cursor (watch_cursor);
-					project_tool.set_changed (true);
-					Workbench.recompile;
-					if Workbench.successfull then
-						System.server_controler.wipe_out;
-						project_tool.set_changed (false);
-						!!file.make (Project_file_name);
-						file.open_write;
-						workbench.basic_store (file);
-						file.close;
-							-- The project is saved before the finalization
-							-- so that it can be reused after the finalization.
-						System.finalized_generation;
-						finish_freezing;
+					if argument = text_window then
+						warner.custom_call (Current,
+							"Finalizing implies some C compilation%N%
+                            %and linking. Do you want to do it now?",
+                            "Finalizing now", "Cancel", Void);
+					elseif argument = warner then
+						set_global_cursor (watch_cursor);
+						project_tool.set_changed (true);
+						Workbench.recompile;
+						if Workbench.successfull then
+							System.server_controler.wipe_out;
+							project_tool.set_changed (false);
+							!!file.make (Project_file_name);
+							file.open_write;
+							workbench.basic_store (file);
+							file.close;
+								-- The project is saved before the finalization
+								-- so that it can be reused after the finalization.
+							System.finalized_generation;
+							finish_freezing;
 -- FIXME
 -- FIXME
 -- FIXME
@@ -57,6 +63,9 @@ feature {NONE}
 -- various stones.
 
 -- Exiting: Popup window
+						end;
+						error_window.put_string ("System recompiled%N");
+						error_window.display;
 					end;
 					restore_cursors;
 				elseif argument = warner then
@@ -73,8 +82,6 @@ feature {NONE}
 					warner.custom_call (Current, l_Specify_ace,
 						"Choose", "Template", "Cancel");
 				end;
-				error_window.put_string ("System recompiled%N");
-				error_window.display;
 			elseif argument = name_chooser then
 				!!project_dir.make (name_chooser.selected_file);
 				if project_dir.valid then

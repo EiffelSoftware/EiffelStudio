@@ -51,7 +51,14 @@ feature
 			-- Reset the window contents
 		do
 			set_title (tool_name);
-			text_window.clean
+			set_default_format;
+			text_window.clear_window;
+		end;
+
+	set_default_format is
+			-- Default format of windows
+		do
+			-- Do nothing
 		end;
 
 	

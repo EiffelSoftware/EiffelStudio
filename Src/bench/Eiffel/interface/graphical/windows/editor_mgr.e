@@ -1,5 +1,10 @@
 
 class EDITOR_MGR 
+
+inherit
+
+	GRAPHICS;
+	CURSOR_W;
 	
 feature {NONE}
 
@@ -55,8 +60,6 @@ feature {WINDOW_MGR}
 	editor: like editor_type is
 			-- Creates a new editor or retrieves a previously destroyed
 			-- (i.e. hidden) editor. 
-		local
-			--mp: MOUSE_PTR
 		do
 			if
 				not free_list.empty
@@ -65,10 +68,9 @@ feature {WINDOW_MGR}
 				Result := free_list.item;
 				free_list.remove;
 			else
-				--!!mp;
-				--mp.set_watch_shape;
+				set_global_cursor (watch_cursor);
 				!!Result.make (screen);
-				--mp.restore;
+				restore_cursors;
 			end;
 			active_editors.add (Result);
 		end;
@@ -116,7 +118,7 @@ feature {WINDOW_MGR}
 				ed.hide;
 				ed.reset;
 				active_editors.remove;
-				if free_list.count > 5 then
+				if free_list.count > free_list_max then
 					ed.destroy
 				else
 					free_list.add (ed)

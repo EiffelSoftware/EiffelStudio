@@ -65,10 +65,10 @@ feature
 		end;
 			
 
-	lines: LINKED_LIST [EIFFEL_LINE];
+	lines: TWO_WAY_LIST [EIFFEL_LINE];
 			-- the content of the file, stripped of comments
 
-	comments: LINKED_LIST [EIFFEL_COMMENTS];
+	comments: TWO_WAY_LIST [EIFFEL_COMMENTS];
 			-- extracted comments
 
 	between_lines: BOOLEAN;
@@ -107,15 +107,15 @@ feature
 				between_lines := true;
 				if not lines.off then position_in_line :=  line.text.count end
 			until
-				lines.offleft
-					or else line.position + position_in_line - 1 <= pos
+				lines.before
+					or else (line.position + position_in_line - 1) <= pos
 			loop
 				if line.text.count + line.position - 1 <= pos then
 					position_in_line := pos - line.position + 1;
 					between_lines := false;
 				else
 					lines.back;
-					if not lines.offleft then
+					if not lines.before then
 							position_in_line := line.text.count;
 					end;
 				end;
@@ -277,14 +277,14 @@ feature
 			-- next comment. Return the following comment while
 			-- there is no text in between, and void after that.
 		do
-			if not comments.off then
+			if not comments.after then
 				comments.forth;
 			end;
 			if 
-				not comments.off
-				and then lines.off
+				not comments.after
+				and then (lines.off
 					or else (lines.item.position
-						> comments.item.position)
+						> comments.item.position))
 			then
 				Result := comments.item;
 				comment_position := Result.position;

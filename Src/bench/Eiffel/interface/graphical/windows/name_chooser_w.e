@@ -24,7 +24,7 @@ feature
 			hide_help_button;
 			add_ok_action (Current, Current);
 			add_cancel_action (Current, Void);
-			set_title (l_Select_a_file)
+			set_title (l_Select_a_file);
 		end;
 
 	call (a_command: COMMAND_W) is
@@ -44,6 +44,10 @@ feature {NONE}
 			popdown;
 			if argument = Current then
 				last_caller.execute (Current)
+			else
+				set_global_cursor (watch_cursor);
+                project_tool.set_changed (false);
+				exit
 			end
 		end;
 

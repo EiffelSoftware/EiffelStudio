@@ -519,7 +519,7 @@ feature -- Formatter
 					ctxt.next_line;
 				end;
 			end;
-			if rescue_clause /= void then
+			if rescue_clause /= void and not ctxt.no_internals then
 				ctxt.put_keyword ("rescue");
 				ctxt.indent_one_more;
 				ctxt.next_line;

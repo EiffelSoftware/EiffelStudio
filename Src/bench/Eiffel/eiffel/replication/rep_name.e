@@ -1,5 +1,12 @@
 class REP_NAME
 
+inherit
+
+	COMPARABLE
+		redefine
+			is_equal
+		end;
+
 feature
 
 	old_feature: FEATURE_I;
@@ -12,6 +19,18 @@ feature
 
 	rep_feature: FEATURE_I;
 			-- Latest feature from feature table 
+
+	infix "<" (other: REP_NAME): BOOLEAN is
+			-- Is `other' greater than Current ?
+		do
+			Result := rep_feature.written_in < other.rep_feature.written_in
+		end;
+
+	is_equal (other: like Current): BOOLEAN is
+			-- Is `other' equal to Current ?
+		do
+			Result := rep_feature.written_in = other.rep_feature.written_in
+		end;
 
 	set_old_feature (f: FEATURE_I) is
 			-- Assign `f' to old_feature.

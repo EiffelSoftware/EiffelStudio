@@ -19,9 +19,9 @@ creation
 	
 feature 
 
-	make (c: COMPOSITE; a_text_window: TEXT_WINDOW) is
+	make (a_text_window: TEXT_WINDOW) is
 		do
-			init (c, a_text_window)
+            text_window := a_text_window
 		end;
 
 	
@@ -52,7 +52,7 @@ feature {NONE}
 						make_project (project_dir)
 					else
 						warner.custom_call (Current, l_Invalid_directory,
-							"OK", "Help", "Cancel");
+							"OK", Void, Void);
 					end
 				elseif argument = void then
                 	!!help_window.make(project_tool.screen);

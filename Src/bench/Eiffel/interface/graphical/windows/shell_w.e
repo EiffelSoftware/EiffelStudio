@@ -22,13 +22,15 @@ feature
 			-- Create a file selection dialog
 		do
 			prompt_dialog_create (l_Shell_w, a_composite);
+			set_title (l_Shell_w);
+			set_selection_label ("Specify shell command");
 			hide_apply_button;
 			hide_help_button;
 			!!ok_it;
 			!!cancel_it;
 			add_ok_action (Current, ok_it);
 			add_cancel_action (Current, cancel_it);
-			set_width (100);
+			set_width (200);
 		end;
 
 	

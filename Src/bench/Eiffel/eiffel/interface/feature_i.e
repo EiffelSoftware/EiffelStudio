@@ -1683,7 +1683,7 @@ feature -- PS
 				!!Result.make (Current, c, body.start_position, body.end_position);
 			else
 io.error.putstring ("Making a stone for a FEATURE_NAME, with 0,0 as start/end: FIX ME%N");
-				!!Result.make (Current, c, 0, 0);
+				!!Result.make (Void, c, 0, 0);
 			end;
 		end;
 

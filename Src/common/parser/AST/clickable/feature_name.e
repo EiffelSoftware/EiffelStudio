@@ -95,7 +95,14 @@ feature -- stoning
 			a_feature_i: FEATURE_I
 		do
 			a_feature_i := reference_class.feature_named (internal_name);
-			Result := a_feature_i.stone (reference_class)
+			if a_feature_i /= Void then
+				Result := a_feature_i.stone (reference_class)
+			else
+--io.error.putstring ("error in making feature stone ");
+--io.error.putstring (internal_name);
+--io.error.new_line;
+				!!Result.make (Void, reference_class, 0, 0);
+			end
 		end
 
 feature -- Formatting

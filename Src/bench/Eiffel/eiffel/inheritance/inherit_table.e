@@ -1352,6 +1352,7 @@ end;
 				needs_replication := False;
 				from
 					-- Need to update because f_table contains unselected.
+					written_in_cont := 0;
 					rep_name_list.start
 				until
 					rep_name_list.after 
@@ -1361,23 +1362,21 @@ end;
 					if not rep_feat.is_deferred and then
 						(rep_feat.written_in /= a_class.id) 
 					then
-						written_in_cont := rep_feat.written_in;
+						if written_in_cont /= rep_feat.written_in then
+							written_in_cont := rep_feat.written_in;
+							rep_name_list.update_old_features (f_table,
+													written_in_cont);
+						end;
 						if tmp_rep_class_info.has (written_in_cont) then
 							s_rep_name_list := tmp_rep_class_info.item (written_in_cont);
-io.error.putstring ("retrieving list: ");
-io.error.new_line;
 						else
 							!!s_rep_name_list.make (
 								rep_name_list.parent_clause.parent_id);
 							tmp_rep_class_info.put (s_rep_name_list,
 													written_in_cont);
 							new_list := True;
-							rep_name_list.update_old_features (f_table,
-													written_in_cont);
 							rep_name_list.update_new_features (f_table,
 													written_in_cont);
-io.error.putstring ("creating list: ");
-io.error.new_line;
 						end;
 						f_name := rep_feat.feature_name;
 debug ("REPLICATION")
@@ -1428,7 +1427,6 @@ end;
 							new_list := False;
 							rep_class_info.put (s_rep_name_list, 	
 												written_in_cont);
-io.error.putstring ("add_front to rep_class_info%N");
 						elseif not rep_class_info.has (written_in_cont) then
 							rep_class_info.put (s_rep_name_list,
 												written_in_cont);
@@ -1437,7 +1435,6 @@ io.error.putstring ("add_front to rep_class_info%N");
 						s_rep_name.set_old_feature (rep_name.old_feature);
 						s_rep_name.set_new_feature (rep_name.new_feature);
 						s_rep_name_list.add_replicated_feature (s_rep_name);
-s_rep_name_list.trace;
 						needs_replication := False;
 					end;
 					rep_name_list.forth;
@@ -1447,7 +1444,6 @@ s_rep_name_list.trace;
 			end;
 			if rep_class_info.count > 0 then
 				Tmp_rep_info_server.put (rep_class_info);
-rep_class_info.trace
 			elseif Tmp_rep_info_server.has (a_class.id) then
 debug ("REPLICATION")
 	io.error.putstring ("removing class ");

@@ -221,20 +221,16 @@ feature -- File warnings
 			Result.append ("%Nis not writable.%NPlease check permissions.")
 		end
 		
-	w_Still_referenced (a_class_name: STRING): STRING is
+	w_Still_referenced (a_class_name: STRING; referenced_classes: STRING): STRING is
 		require
 			a_class_name_not_void: a_class_name /= Void
+			referenced_classes_not_void: referenced_classes /= Void
 		do
 			create Result.make (30)
 			Result.append ("Can't delete class " + a_class_name)
 			Result.append (" because it is referenced by%N")
-		end
-		
-	w_Recompile_to_remove_references (a_class_name: STRING): STRING is
-		require
-			a_class_name_not_void: a_class_name /= Void
-		do
-			Result := "Can't delete class " + a_class_name + " because it is referenced.%NPlease recompile the system and try again."
+			Result.append (referenced_classes)
+			Result.append ("%N%NIf this is not the case recompile the system and try again.")
 		end
 		
 	w_File_modified_by_another_editor: STRING is "This file has been modified by another editor."

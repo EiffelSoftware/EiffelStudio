@@ -85,7 +85,7 @@ rt_public EIF_POINTER dir_open(char *name)
 #ifdef EIF_WIN32
 	EIF_WIN_DIRENT *c;
 
-	c = eif_malloc (sizeof(EIF_WIN_DIRENT));
+	c = (EIF_WIN_DIRENT *) eif_malloc (sizeof(EIF_WIN_DIRENT));
 	if (c == (EIF_WIN_DIRENT *) 0)
 		enomem(MTC_NOARG);
 
@@ -181,7 +181,7 @@ rt_public char *dir_search(EIF_WIN_DIRENT *dirp, char *name)
 	WIN32_FIND_DATA wfd;
 	char *filename;
 
-	filename = eif_malloc (strlen(name) + strlen (dirp->name) + 2);
+	filename = (char *) eif_malloc (strlen(name) + strlen (dirp->name) + 2);
 	if (filename == (char *) 0)
 		enomem(MTC_NOARG);
 
@@ -284,7 +284,7 @@ rt_public char *dir_next(EIF_WIN_DIRENT *dirp)
 		}
 	else
 		{
-		name = eif_malloc (strlen(dirp->name) + 5);
+		name = (char *) eif_malloc (strlen(dirp->name) + 5);
 		if (name == (char *) 0)
 			enomem(MTC_NOARG);
 
@@ -498,7 +498,7 @@ rt_public EIF_BOOLEAN eif_dir_exists(char *name)
 
 #elif defined EIF_WIN32		/* ifdef VMS */
 
-	return (EIF_BOOLEAN) (access(name,0) == 0);
+	return (EIF_BOOLEAN) (access(name,0) != -1 );
 
 #else
 
@@ -532,7 +532,7 @@ rt_public EIF_BOOLEAN eif_dir_is_readable(char *name)
 
 #elif defined EIF_WIN32
 
-	return (EIF_BOOLEAN) (access (name, 0) == 0);
+	return (EIF_BOOLEAN) (access (name, 04) != -1);
 
 #elif defined EIF_OS2
 
@@ -595,7 +595,7 @@ rt_public EIF_BOOLEAN eif_dir_is_writable(char *name)
 		return (EIF_BOOLEAN) TRUE;
 #elif defined EIF_WIN32
 
-	return (EIF_BOOLEAN) (access (name, 0) == 0);
+	return (EIF_BOOLEAN) (access (name, 02) != -1);
 
 #elif defined EIF_OS2
 	int mode;																				/* Current mode */
@@ -654,7 +654,7 @@ rt_public EIF_BOOLEAN eif_dir_is_executable(char *name)
 	else
 		return (EIF_BOOLEAN) TRUE;
 #elif defined EIF_WIN32
-	return (EIF_BOOLEAN) (access (name, 0) == 0);
+	return (EIF_BOOLEAN) (access (name, 0) != -1);
 
 #elif defined EIF_OS2
 	int mode;																				/* Current mode */

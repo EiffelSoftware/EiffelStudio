@@ -48,7 +48,7 @@ end
 
 	default_value: INTEGER is
 			-- Default value of cache
-		once
+		do
 			Result :=  Configure_resources.get_integer (r_Cache_size, Default_size)
 		end;
 

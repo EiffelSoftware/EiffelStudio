@@ -158,14 +158,20 @@ feature -- Access
 			-- `an_item' has been hidden in `Current'.
 		require
 			an_item_not_void: an_item /= Void
+		local
+			development_window: EB_DEVELOPMENT_WINDOW
 		do
+			development_window ?= explorer_bar_manager
+			if development_window /= Void then
+				development_window.remove_tool_window (an_item.widget)
+			end
 			if count = 0 then
 					-- If `an_item' is hidden, and was the last tool,
 					-- `Current' must be closed, as it is now empty.
 				explorer_bar_manager.close_bar (Current)
 			end
 		end
-		
+
 	item_maximized (a_widget: EV_WIDGET) is
 			-- `a_widget' has been maximized in `Current'.
 		require

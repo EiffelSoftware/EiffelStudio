@@ -14,7 +14,7 @@
 #ifndef _eif_globals_h_
 #define _eif_globals_h_
 
-#include "eif_threads.h"		/* Make sure we're defining global variables as requested */
+#include "eif_threads.h"
 
 #include "portable.h"
 #include "eif_types.h"
@@ -32,21 +32,20 @@
 
 #define MTC_NOARG			/* eif_globals */
 #define MTC					/* MTC_NOARG, */
-#define EIF_CONTEXT_NOARG	/* eif_global_context_t	*MTC_NOARG */
+#define EIF_CONTEXT_NOARG	void /* eif_global_context_t	*MTC_NOARG */
 #define EIF_CONTEXT			/* EIF_CONTEXT_NOARG, */
 #define EIF_STATIC_OPT
 
-extern EIF_TSD_TYPE eif_global_key
-
 #define EIF_GET_CONTEXT \
-	EIF_TSD_TYPE eif_globals;\
-	EIF_ERRCODE_TYPE tsd_key_err;
-	EIF_TSD_GET(eif_global_key,eif_globals,tsd_key_err);
-	if (EIF_TSD_INVALID_ERRCODE(tsd_key_err)) {
-		panic("Thread data not available");
-	else {
+	eif_global_context_t *eif_globals;\
+	EIF_TSD_ERRCODE_TYPE tsd_key_err; \
+	EIF_TSD_GET(eif_global_key,eif_globals,tsd_key_err); \
+	if (EIF_TSD_INVALID_ERRCODE(tsd_key_err)) { \
+		panic("Thread data not available"); \
+	} else {
 #define EIF_END_GET_CONTEXT }
 
+extern EIF_TSD_TYPE eif_global_key;
 
 typedef struct tag_eif_globals		/* Structure containing all global variables to the run-time */
 {
@@ -134,7 +133,7 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 		/* sig.c */
 	char sig_ign[NSIG];		/* Is signal ignored by default? */
 	char osig_ign[NSIG];	/* Original signal default (1 = ignored) */
-	int esigblk = 0;		/* By default, signals are not blocked */
+	int esigblk;			/* By default, signals are not blocked */
 	struct s_stack sig_stk;	/* Initialized by initsig() */
 
 
@@ -155,6 +154,7 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 #endif
 
 #if defined __VMS || defined EIF_OS2 || defined SYMANTEC_CPP
+#else
 		/* garcol.c and retrieve.c */
 	int r_fides;					/* File descriptor use for retrieve */
 	char r_fstoretype;				/* File storage type used for retrieve */
@@ -165,15 +165,15 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 
 	/* except.c */
 /* Exported data structures (used by the generated C code) */
-#define eif_stack	(eif_globals->eif_stack)	/* rt_public */
-#define eif_trace	(eif_globals->eif_trace)	/* rt_public */
-#define ex_ign		(eif_globals->ex_ign)		/* rt_public */
-#define exdata		(eif_globals->exdata)		/* rt_public */
-#define except		(eif_globals->except)		/* rt_private */
+#define eif_stack		(eif_globals->eif_stack)	/* rt_public */
+#define eif_trace		(eif_globals->eif_trace)	/* rt_public */
+#define ex_ign			(eif_globals->ex_ign)		/* rt_public */
+#define exdata			(eif_globals->exdata)		/* rt_public */
+#define except			(eif_globals->except)		/* rt_private */
 #define print_history_table (eif_globals->print_history_table)   /* rt_private */
-#define ex_string	(eif_globals->ex_string)	/* rt_public */
+#define ex_string		(eif_globals->ex_string)	/* rt_public */
 #ifdef WORKBENCH
-#define db_ign (eif_globals->db_ign)	/* rt_public */
+#define db_ign			(eif_globals->db_ign)		/* rt_public */
 #endif
 #ifdef EIF_WINDOWS
 #define exception_trace_string (eif_globals->exception_trace_string)	/* no rt_ */
@@ -181,86 +181,94 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 
 	/* garcol.c */
 #ifdef ITERATIVE_MARKING
-#define path_stack	(eif_globals->path_stack)		/* rt_private */
+#define path_stack		(eif_globals->path_stack)	/* rt_private */
 #define parent_expanded_stack (eif_globals->parent_expanded_stack)	/* rt_private */
 #endif
-#define g_data		(eif_globals->g_data)			/* rt_shared */
-#define g_stat		(eif_globals->g_stat)			/* rt_shared */
-#define loc_stack	(eif_globals->loc_stack)		/* rt_shared */
-#define loc_set		(eif_globals->loc_set)			/* rt_public */
-#define rem_set		(eif_globals->rem_set)			/* rt_private */
-#define moved_set	(eif_globals->moved_set)		/* rt_shared */
-#define once_set	(eif_globals->once_set)			/* rt_public */
-#define age_table	(eif_globals->age_table)		/* rt_private */
-#define size_table	(eif_globals->size_table)		/* rt_private */
-#define tenure		(eif_globals->tenure)			/* rt_shared */
-#define plsc_per	(eif_globals->plsc_per)			/* rt_public */
-#define gc_running	(eif_globals->gc_running)		/* rt_public */
+#define g_data			(eif_globals->g_data)		/* rt_shared */
+#define g_stat			(eif_globals->g_stat)		/* rt_shared */
+#define loc_stack		(eif_globals->loc_stack)	/* rt_shared */
+#define loc_set			(eif_globals->loc_set)		/* rt_public */
+#define rem_set			(eif_globals->rem_set)		/* rt_private */
+#define moved_set		(eif_globals->moved_set)	/* rt_shared */
+#define once_set		(eif_globals->once_set)		/* rt_public */
+#define age_table		(eif_globals->age_table)	/* rt_private */
+#define size_table		(eif_globals->size_table)	/* rt_private */
+#define tenure			(eif_globals->tenure)		/* rt_shared */
+#define plsc_per		(eif_globals->plsc_per)		/* rt_public */
+#define gc_running		(eif_globals->gc_running)	/* rt_public */
 #define last_gc_time	(eif_globals->last_gc_time)	/* rt_public */
-#define gc_ran		(eif_globals->gc_ran)			/* rt_public */
+#define gc_ran			(eif_globals->gc_ran)		/* rt_public */
 #if defined __VMS || defined EIF_OS2 || defined SYMANTEC_CPP
-#define r_fides		(eif_globals->r_fides)			/* rt_public */
-#define r_fstoretype (eif_globals->r_fstoretype)	/* rt_public */
+#else
+#define r_fides			(eif_globals->r_fides)		/* rt_public */
+#define r_fstoretype	(eif_globals->r_fstoretype)	/* rt_public */
 #endif
-#define spoilt_tbl	(eif_globals->spoilt_tbl)		/* rt_private */
-#define ps_from		(eif_globals->ps_from)			/* rt_shared */
-#define ps_to		(eif_globals->ps_to)			/* rt_shared */
-#define last_from	(eif_globals->last_from)		/* rt_shared */
-#define th_alloc	(eif_globals->th_alloc)			/* rt_public */
-#define gc_monitor	(eif_globals->gc_monitor)		/* rt_public */
-#define root_obj	(eif_globals->root_obj)			/* rt_public */
+#define spoilt_tbl		(eif_globals->spoilt_tbl)	/* rt_private */
+#define ps_from			(eif_globals->ps_from)		/* rt_shared */
+#define ps_to			(eif_globals->ps_to)		/* rt_shared */
+#define last_from		(eif_globals->last_from)	/* rt_shared */
+#define th_alloc		(eif_globals->th_alloc)		/* rt_public */
+#define gc_monitor		(eif_globals->gc_monitor)	/* rt_public */
+#define root_obj		(eif_globals->root_obj)		/* rt_public */
 
 	/* interp.c */
-#define op_stack	(eif_globals->op_stack)         /* rt_shared */
-#define IC			(eif_globals->IC)               /* rt_public */
-#define iregs		(eif_globals->iregs)            /* rt_private */
-#define iregsz		(eif_globals->iregsz)           /* rt_private */
-#define argnum		(eif_globals->argnum)           /* rt_private */
-#define locnum		(eif_globals->locnum)           /* rt_private */
-#define tagval		(eif_globals->tagval)           /* rt_private */
-#define inv_mark_table	(eif_globals->inv_mark_table)   /* rt_private */
+#define op_stack		(eif_globals->op_stack)		/* rt_shared */
+#define IC				(eif_globals->IC)			/* rt_public */
+#define iregs			(eif_globals->iregs)		/* rt_private */
+#define iregsz			(eif_globals->iregsz)		/* rt_private */
+#define argnum			(eif_globals->argnum)		/* rt_private */
+#define locnum			(eif_globals->locnum)		/* rt_private */
+#define tagval			(eif_globals->tagval)		/* rt_private */
+#define inv_mark_table	(eif_globals->inv_mark_table)	/* rt_private */
 
 	/* malloc.c */
-#define m_data					(eif_globals->m_data)         /* rt_shared */
-#define c_data					(eif_globals->c_data)         /* rt_shared */
-#define e_data					(eif_globals->e_data)         /* rt_shared */
-#define cklst					(eif_globals->cklst)		  /* rt_shared */
-#define c_hlist					(eif_globals->c_hlist)		  /* rt_private */
-#define e_hlist					(eif_globals->e_hlist)		  /* rt_private */
-#define c_buffer				(eif_globals->c_buffer)		  /* rt_private */
-#define e_buffer				(eif_globals->e_buffer)		  /* rt_private */
-#define sc_from					(eif_globals->sc_from)        /* rt_shared */
-#define sc_to					(eif_globals->sc_to)		  /* rt_shared */
-#define gen_scavenge			(eif_globals->gen_scavenge)	  /* rt_shared */
-#define eiffel_usage			(eif_globals->eiffel_usage)   /* rt_public */
-#define type_use				(eif_globals->type_use)		  /* rt_private */
-#define c_mem					(eif_globals->c_mem)		  /* rt_private */
+#define m_data			(eif_globals->m_data)		/* rt_shared */
+#define c_data			(eif_globals->c_data)		/* rt_shared */
+#define e_data			(eif_globals->e_data)		/* rt_shared */
+#define cklst			(eif_globals->cklst)		/* rt_shared */
+#define c_hlist			(eif_globals->c_hlist)		/* rt_private */
+#define e_hlist			(eif_globals->e_hlist)		/* rt_private */
+#define c_buffer		(eif_globals->c_buffer)		/* rt_private */
+#define e_buffer		(eif_globals->e_buffer)		/* rt_private */
+#define sc_from			(eif_globals->sc_from)		/* rt_shared */
+#define sc_to			(eif_globals->sc_to)		/* rt_shared */
+#define gen_scavenge	(eif_globals->gen_scavenge)	/* rt_shared */
+#define eiffel_usage	(eif_globals->eiffel_usage)	/* rt_public */
+#define type_use		(eif_globals->type_use)		/* rt_private */
+#define c_mem			(eif_globals->c_mem)		/* rt_private */
 
 	/* memory.c */
-#define m_largest				(eif_globals->m_largest)	  /* rt_private */
-#define mem_stats				(eif_globals->mem_stats)	  /* rt_private */
-#define gc_stats				(eif_globals->gc_stats)		  /* rt_private */
-#define gc_count				(eif_globals->gc_count)		  /* rt_private */
+#define m_largest		(eif_globals->m_largest)	/* rt_private */
+#define mem_stats		(eif_globals->mem_stats)	/* rt_private */
+#define gc_stats		(eif_globals->gc_stats)		/* rt_private */
+#define gc_count		(eif_globals->gc_count)		/* rt_private */
 
 	/* out.c */
-#define buffero		(eif_globals->buffero)		/* rt_private */
-#define tagged_out	(eif_globals->tagged_out)	/* rt_private */
-#define tagged_max	(eif_globals->tagged_max)	/* rt_private */
-#define tagged_len	(eif_globals->tagged_len)	/* rt_private */
+#define buffero			(eif_globals->buffero)		/* rt_private */
+#define tagged_out		(eif_globals->tagged_out)	/* rt_private */
+#define tagged_max		(eif_globals->tagged_max)	/* rt_private */
+#define tagged_len		(eif_globals->tagged_len)	/* rt_private */
 
 	/* pattern.c */
-#define delta	(eif_globals->delta)	/* rt_private */
-#define darray	(eif_globals->darray)	/* rt_private */
+#define delta			(eif_globals->delta)		/* rt_private */
+#define darray			(eif_globals->darray)		/* rt_private */
 
 	/* plug.c */
 #define nstcall			(eif_globals->nstcall)			/* rt_public */
 #define inv_mark_tablep	(eif_globals->inv_mark_tablep)	/* rt_private */
 
 	/* sig.c */
-#define sig_ign					(eif_globals->sig_ign)		/* rt_public */
-#define osig_ign				(eif_globals->osig_ign)		/* rt_public */
-#define esigblk					(eif_globals->esigblk)		/* rt_shared */
-#define sig_stk					(eif_globals->sig_stk)		/* rt_shared */
+#define sig_ign			(eif_globals->sig_ign)		/* rt_public */
+#define osig_ign		(eif_globals->osig_ign)		/* rt_public */
+#define esigblk			(eif_globals->esigblk)		/* rt_shared */
+#define sig_stk			(eif_globals->sig_stk)		/* rt_shared */
+
+	/* special */
+/* These variables are defined only if
+ * __VMS, EIF_OS2 or SYMANTEC_CPP
+ * Found in retrieve.h */
+/*extern int r_fides;				/* moved here from retrieve.c */
+/*extern char r_fstoretype;		/* File storage type use for retrieve */
 
 
 #else

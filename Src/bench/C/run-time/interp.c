@@ -5367,7 +5367,7 @@ rt_private short get_compound_id(char *Current, short dtype)
 		}
 
 		if (cnt >= MAX_CID_SIZE)
-			eif_panic(MTC "Too many generic paramters in compound type");
+			eif_panic(MTC "Too many generic parameters in compound type");
 
 	} while (last != -1);
 

@@ -135,7 +135,7 @@ feature {NONE} -- Inspection constants
 			-- Ask for result of already called once function
 
 
-feature {NONE} -- Implementation
+feature {APPLICATION_STATUS} -- Implementation
 
 	Pg_raise: INTEGER is 1
 			-- Explicitely raised exception

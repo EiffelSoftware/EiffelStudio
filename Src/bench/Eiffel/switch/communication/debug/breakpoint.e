@@ -12,6 +12,9 @@ class BREAKPOINT
 inherit
 	HASHABLE
 			-- to be able to create an hashtable of breakpoints
+		export
+			{NONE} all
+			{ANY} is_equal
 		redefine
 			is_equal
 		end
@@ -334,7 +337,7 @@ feature {DEBUG_INFO} -- Saving protocol.
 			end
 		end
 
-feature {EWB_REQUEST} -- application status access
+feature {EWB_REQUEST, APPLICATION_EXECUTION_IMP} -- application status access
 
 	is_set_for_application: BOOLEAN is
 			-- Is the breakpoint set for the application?

@@ -8,6 +8,12 @@ indexing
 
 class RECV_VALUE
 
+inherit
+	DEBUG_VALUE_EXPORTER
+		export 
+			{NONE} all
+		end
+		
 feature	{} -- Initialization of the C/Eiffel interface
 
 	init_recv_c is

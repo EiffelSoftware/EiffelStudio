@@ -565,7 +565,7 @@ feature {NONE} -- Sorting
 						manager.shared_document_manager.add_document (l_doc)
 					end
 					if is_code_document (l_doc) then
-						Result := False
+						Result := not is_required_library_document (l_url)
 					else
 						Result := not l_doc.can_display
 					end
@@ -868,6 +868,24 @@ feature {NONE} -- Sorting
 		once
 			Result := (create {SHARED_OBJECTS}).Shared_toc_manager	
 		end		
+
+	is_required_library_document (a_url: STRING): BOOLEAN is
+			-- Is url a required library file according to current filter?
+		local
+			l_filter: DOCUMENT_FILTER
+		do
+			if l_filter /= Void then
+				l_filter := filter
+			else
+				l_filter := manager.shared_project.filter_manager.filter
+			end
+			Result := (l_filter.description.has_substring ("ENViSioN!") and 
+						manager.shared_constants.application_constants.envision_libraries.has (a_url)) or
+						(l_filter.description.has_substring ("EiffelStudio") and 
+						manager.shared_constants.application_constants.studio_libraries.has (a_url))
+		end
+		
+	
 
 invariant
 	has_name: name /= Void and then not	name.is_empty

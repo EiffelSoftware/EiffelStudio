@@ -39,7 +39,29 @@ feature {ICOR_EXPORTER} -- Access
 			if internal_md_import = Void then
 				internal_md_import := get_md_import_interface
 			end
-			Result:= internal_md_import
+			Result := internal_md_import
+		end
+
+feature {ICOR_EXPORTER} -- Meta Data queries
+
+	md_member_token_by_names (a_type_name: STRING; a_feat_name: STRING): INTEGER is
+		local
+			l_type_token: INTEGER
+		do
+			l_type_token := interface_md_import.find_type_def_by_name (a_type_name, 0)
+			Result := md_member_token (l_type_token, a_feat_name)
+		end
+
+	md_class_token_by_type_name (a_type_name: STRING): INTEGER is
+			-- class token for full type name `a_type_name' using the Meta Data
+		do
+			Result := interface_md_import.find_type_def_by_name (a_type_name, 0)
+		end
+
+	md_member_token (a_class_token: INTEGER; a_feat_name: STRING): INTEGER is
+			-- member token for type identified by `a_class_token' and `a_feat_name'
+		do
+			Result := internal_md_import.find_member (a_class_token, a_feat_name)
 		end
 	
 feature {ICOR_EXPORTER} -- Access

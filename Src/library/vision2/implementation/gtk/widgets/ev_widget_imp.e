@@ -298,7 +298,7 @@ feature -- Measurement
 	minimum_height: INTEGER is
 			-- Minimum height of widget
 		do
-                        Result := c_gtk_widget_minimum_height (widget)
+                       Result := c_gtk_widget_minimum_height (widget)
 		end	
 	
 feature -- Resizing
@@ -325,7 +325,7 @@ feature -- Resizing
 
         set_minimum_size (min_width, min_height: INTEGER) is
                         -- Set `minimum_width' to `min_width'.
-			-- Set `minimum__height' to `min_height'.
+			-- Set `minimum_height' to `min_height'.
 		do
 			gtk_widget_set_usize (widget, min_width, min_height)
 		end
@@ -333,13 +333,13 @@ feature -- Resizing
         set_minimum_width (value: INTEGER) is
                         -- Set `minimum_width' to `min_width'.
 		do
-			gtk_widget_set_usize (widget, value, -1) 
+			gtk_widget_set_usize (widget, value, -2) 
 		end
 	
         set_minimum_height (value: INTEGER) is
-                        -- Set `minimum__height' to `min_height'.
+                        -- Set `minimum_height' to `min_height'.
 		do
-			gtk_widget_set_usize (widget, -1, value) 
+			gtk_widget_set_usize (widget, -2, value) 
 		end
 
 	set_x (value: INTEGER) is

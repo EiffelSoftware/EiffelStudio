@@ -46,7 +46,7 @@ feature -- Access
 			if is_cloning_enabled then
 				Result := clone (found_item)
 			else
-				Result  := found_item
+				Result := found_item
 			end
 		end
 

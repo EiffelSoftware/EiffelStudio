@@ -1744,6 +1744,16 @@ void c_gtk_pixmap_gdk_unref (GtkWidget *pixmap)
  gtk_progressbar functions
 ==============================================================================*/
 
+/*********************************
+ *
+ * Function : `c_gtk_progress_bar_style'			(1)
+ *
+ * Note : (1) Style of the progress bar.
+ *
+ * Author : Alex
+ *
+ *********************************/
+
 EIF_INTEGER c_gtk_progress_bar_style (GtkWidget *progressbar)
 {
 	GtkProgressBarStyle style;
@@ -1756,6 +1766,29 @@ EIF_INTEGER c_gtk_progress_bar_style (GtkWidget *progressbar)
 	}
 	else
 	return 0;	
+}
+
+/*==============================================================================
+ Fiel selection functions
+==============================================================================*/
+
+/*********************************
+ *
+ * Function : `c_gtk_file_selection_get_file_name'			(1)
+ *
+ * Note : (1) Value in the gtk_entry of the gtk_file_selection.
+ *
+ * Author : Alex
+ *
+ *********************************/
+
+EIF_POINTER c_gtk_file_selection_get_file_name (GtkWidget *file_dialog)
+{
+  GtkEntry *entry;
+	
+  entry = (GtkEntry *)((GtkFileSelection *) file_dialog)->selection_entry;
+  
+  return (EIF_POINTER) gtk_entry_get_text (entry);
 }
 
 /*********************************

@@ -23,10 +23,10 @@ feature -- Creation
 	make is
 			-- Initialize and execute demonstration
 		do
-			create  driver.make
+			create driver.make
 			driver.new_menu ("%N%N* GENERAL TREE DEMO *%N%N[XX] Shows current node, (YY) shows child cursor%N")
 			fill_menu
-			create  tree_root.make (0)
+			create tree_root.make (0)
 			active := tree_root
 			cycle
 		end

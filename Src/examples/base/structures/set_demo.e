@@ -28,12 +28,12 @@ feature -- Creation
 	make is
 			-- Initialize and execute demonstration
 		do
-			create  driver.make
+			create driver.make
 			driver.new_menu ("%N%N* LINKED SET DEMO*%N%N[XX] shows current item %N") 
 			fill_menu 
-			create  a.make 
-			create  b.make 
-			create  c.make 
+			create a.make 
+			create b.make 
+			create c.make 
 			cycle
 		end 
 

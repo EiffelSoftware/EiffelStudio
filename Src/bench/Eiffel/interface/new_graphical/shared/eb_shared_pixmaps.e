@@ -305,7 +305,7 @@ feature -- Icons
 	Icon_compile: ARRAY [EV_PIXMAP] is
 			-- Icon for "Melt project" command.
 		once
-			Result := build_text_pixmap ("compile")
+			Result := build_classic_pixmap ("compile")
 		end
 
 	Icon_quick_compile: ARRAY [EV_PIXMAP] is
@@ -372,14 +372,14 @@ feature -- Icons
 			-- Array containing both the color & the gray pixmap
 			-- Color is at index 1, gray at index 2
 		once
-			Result := build_text_pixmap ("debug_run")
+			Result := build_classic_pixmap ("debug_run")
 		end
 
 	Icon_run_debug_continue: ARRAY [EV_PIXMAP] is
 			-- Array containing both the color & the gray pixmap
 			-- Color is at index 1, gray at index 2
 		once
-			Result := build_text_pixmap ("debug_run_continue")
+			Result := build_classic_pixmap ("debug_run_continue")
 		end
 		
 	Icon_save_call_stack: ARRAY [EV_PIXMAP] is
@@ -403,7 +403,7 @@ feature -- Icons
 			-- Color is at index 1, gray at index 2
 			-- Color with explaining text is at index 3, gray with explaining text at index 4
 		once
-			Result := build_text_pixmap ("cluster_tool")
+			Result := build_classic_pixmap ("cluster_tool")
 		end
 
 	Icon_context_tool: ARRAY [EV_PIXMAP] is
@@ -411,7 +411,7 @@ feature -- Icons
 			-- Color is at index 1, gray at index 2
 			-- Color with explaining text is at index 3, gray with explaining text at index 4
 		once
-			Result := build_text_pixmap ("context_tool")
+			Result := build_classic_pixmap ("context_tool")
 		end
 
 	Icon_cut: ARRAY [EV_PIXMAP] is
@@ -440,7 +440,7 @@ feature -- Icons
 			-- Color is at index 1, gray at index 2
 			-- Color with explaining text is at index 3, gray with explaining text at index 4
 		once
-			Result := build_text_pixmap ("search")
+			Result := build_classic_pixmap ("search")
 		end
 
 	Icon_view_small: ARRAY [EV_PIXMAP] is
@@ -455,7 +455,7 @@ feature -- Icons
 			-- Color is at index 1, gray at index 2
 			-- Color with explaining text is at index 3, gray with explaining text at index 4
 		once
-			Result := build_text_pixmap ("windows")
+			Result := build_classic_pixmap ("windows")
 		end
 
 	Icon_favorites: ARRAY [EV_PIXMAP] is
@@ -463,7 +463,7 @@ feature -- Icons
 			-- Color is at index 1, gray at index 2
 			-- Color with explaining text is at index 3, gray with explaining text at index 4
 		once
-			Result := build_text_pixmap ("favorites")
+			Result := build_classic_pixmap ("favorites")
 		end
 
 	Icon_features: ARRAY [EV_PIXMAP] is
@@ -471,7 +471,7 @@ feature -- Icons
 			-- Color is at index 1, gray at index 2
 			-- Color with explaining text is at index 3, gray with explaining text at index 4
 		once
-			Result := build_text_pixmap ("features")
+			Result := build_classic_pixmap ("features")
 		end
 
 	Icon_help_tool: ARRAY [EV_PIXMAP] is
@@ -1233,18 +1233,9 @@ feature -- Reading
 
 			if not retried then
 					-- Initialize the pathname & load the file
-				if
-					Platform_constants.is_windows and then
-					fn.substring_index ("icon_", 1) = 1
-				then
-					create full_path.make_from_string (Icon_path)
-					full_path.set_file_name (fn)
-					full_path.add_extension ("ico")
-				else
-					create full_path.make_from_string (Bitmap_path)
-					full_path.set_file_name (fn)
-					full_path.add_extension (Pixmap_suffix)
-				end
+				create full_path.make_from_string (pixmap_path)
+				full_path.set_file_name (fn)
+				full_path.add_extension (Pixmap_suffix)
 				Result.set_with_named_file (full_path)
 			else
 				create warning_dialog.make_with_text (
@@ -1263,23 +1254,16 @@ feature {NONE} -- Update
 	Pixmap_suffix: STRING is "png"
 			-- Suffix for pixmaps.
 
-	Bitmap_path: DIRECTORY_NAME is
-			-- Path for Bmp/Xpm for Windows/Unix.
+	pixmap_path: DIRECTORY_NAME is
+			-- Path containing all of the Studio pixmaps
 		once
 			create Result.make_from_string ((create {EIFFEL_ENV}).Bitmaps_path)
 			Result.extend (Pixmap_suffix)
 		end
 
-	Icon_path: DIRECTORY_NAME is
-			-- Path for Icons for Windows.
-		once
-			create Result.make_from_string ((create {EIFFEL_ENV}).Bitmaps_path)
-			Result.extend ("ico")
-		end
-
 	build_classic_pixmap (pixmap_name: STRING): ARRAY [EV_PIXMAP] is
-			-- Build an array of 2 pixmaps. The first pixmap is the
-			-- colored pixmap, the second is the corresponding gray pixmap.
+			-- Build an array of pixmaps. The first pixmap is the
+			-- colored pixmap, others are for future expansion such as large icons 
 			--
 			-- `pixmap_name' is the core name of the pixmap.
 		do
@@ -1288,22 +1272,6 @@ feature {NONE} -- Update
 			Result.put (pixmap_file_content ("icon_" + pixmap_name + "_color"), 1)
 		ensure
 			result_valid: Result /= Void and then Result.count = 1
-		end
-
-	build_text_pixmap (pixmap_name: STRING): ARRAY [EV_PIXMAP] is
-			-- Build an array of 4 pixmaps. The first pixmap is the
-			-- colored pixmap, the second is the corresponding gray pixmap.
-			-- The third is a colored pixmap with some explaining text and
-			-- the forth is the grayed version of the third.
-			--
-			-- `pixmap_name' is the core name of the pixmap.
-		do
-				-- Read the pixmaps 
-			create Result.make (1,2)
-			Result.put (pixmap_file_content ("icon_" + pixmap_name + "_color"), 1)
-			Result.put (pixmap_file_content ("icon_" + pixmap_name + "_text_color"), 2)
-		ensure
-			result_valid: Result /= Void and then Result.count = 2
 		end
 
 end

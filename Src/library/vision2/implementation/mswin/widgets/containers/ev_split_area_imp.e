@@ -69,8 +69,6 @@ feature -- Initialize
 
 	make is
 			-- Create the control window.
-		local
-			par_imp: WEL_COMPOSITE_WINDOW
 		do
 			{EV_WEL_CONTROL_CONTAINER_IMP} Precursor
 			!! dc.make (Current)
@@ -140,8 +138,6 @@ feature -- Element change
 			else
 				child2 := child_imp
 			end
-			child_minwidth_changed (child_imp.minimum_width, child_imp)
-			child_minheight_changed (child_imp.minimum_height, child_imp)
 			update_display
 		end
 
@@ -149,8 +145,6 @@ feature -- Element change
 			-- Remove the given child from the children of
 			-- the container.
 		do
-			child_minwidth_changed (0, child_imp)
-			child_minheight_changed (0, child_imp)
 			if child_imp.is_equal (child1) then
 				child1 := Void
 			else

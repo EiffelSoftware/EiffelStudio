@@ -552,10 +552,8 @@ rt_public void eif_thr_join (EIF_POINTER tid)
 
 	EIF_GET_CONTEXT
 
-	EIF_THR_TYPE *thread_id = eif_thr_context->tid;
-
 	if (tid != (EIF_POINTER) 0) {
-		EIF_THR_JOIN(*thread_id);
+		EIF_THR_JOIN(* (EIF_THR_TYPE *) tid);
 	} else {
 		eraise ("Trying to join a thread whose ID is NULL", EN_EXT);
 	}

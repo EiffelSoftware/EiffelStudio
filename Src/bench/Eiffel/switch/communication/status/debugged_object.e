@@ -11,6 +11,12 @@ inherit
 
 	SHARED_APPLICATION_EXECUTION
 
+	SHARED_EIFFEL_PROJECT
+
+	SHARED_WORKBENCH
+
+	COMPILER_EXPORTER
+
 creation
 
 	make
@@ -39,6 +45,15 @@ feature
 			attributes := rqst.attributes;
 			is_special := rqst.is_special;
 			capacity := rqst.capacity;
+			if Eiffel_system.valid_dynamic_id (rqst.object_type_id) then
+				class_type := eiffel_system.type_of_dynamic_id (rqst.object_type_id)
+				dtype := eiffel_system.class_of_dynamic_id (rqst.object_type_id)
+			else
+					-- Oops, the run-time returned a type that is not in the system.
+					-- We then default to class ANY.
+				dtype := eiffel_system.Any_class.compiled_class
+				class_type := dtype.types.first
+			end
 			object_address := addr;
 			max_capacity := rqst.max_capacity
 		ensure
@@ -63,6 +78,12 @@ feature -- Properties
 			-- Maximum capacity if the object or its
 			-- attributes are SPECIAL
 			-- (negative means special objects were not found)
+
+	dtype: CLASS_C
+			-- Dynamic type of `Current'.
+
+	class_type: CLASS_TYPE
+			-- Dynamic type of `Current', one per generic implementation.
 
 invariant
 

@@ -77,10 +77,10 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 
 			-- create of the gtk object.
-			set_c_object (C.gtk_event_box_new)
+			set_c_object (C.gtk_vbox_new (False, 0))
 			container_widget := C.gtk_combo_new
 			C.gtk_widget_show (container_widget)
-			C.gtk_container_add (c_object, container_widget)
+			C.gtk_box_pack_start (c_object, container_widget, False, False, 0)
 
 			-- Pointer to the text we see.
 			entry_widget := C.gtk_combo_struct_entry (container_widget)

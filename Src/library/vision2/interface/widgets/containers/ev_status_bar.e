@@ -38,11 +38,7 @@ feature -- Access
 			-- The parent of the Current widget
 			-- Can be Void
 		do
-			if implementation.parent_imp /= Void then
-				Result ?= implementation.parent_imp.interface
-			else
-				Result := Void
-			end
+			Result ?= {EV_PRIMITIVE} Precursor
 		end
 
 feature -- Status report

@@ -83,7 +83,7 @@ feature -- Status setting
 	select_item (an_index: INTEGER) is
 			-- Select item at `an_index'.
 		require
-			index_within_range: index > 0 and index <= count
+			index_within_range: an_index > 0 and an_index <= count
 		do
 			implementation.select_item (an_index)
 		end
@@ -91,7 +91,7 @@ feature -- Status setting
 	deselect_item (an_index: INTEGER) is
 			-- Deselect item at `an_index'.
 		require
-			index_within_range: index > 0 and index <= count
+			index_within_range: an_index > 0 and an_index <= count
 		do
 			implementation.deselect_item (an_index)
 		end
@@ -182,6 +182,9 @@ end -- class EV_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.32  2000/02/24 19:59:15  rogers
+--| Corrected postconditions in select_item and deselect_item, they now reference an_index instead of index.
+--|
 --| Revision 1.31  2000/02/22 18:39:51  oconnor
 --| updated copyright date and formatting
 --|

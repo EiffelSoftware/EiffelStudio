@@ -170,7 +170,7 @@ rt_private long pst_store(char *object, long int object_count)
 	zone->ov_flags &= ~EO_STORE;	/* Unmark it */
 
 #ifdef DEBUG
-		printf("object 0x%lx [%s %lx]\n", object, System(flags & EO_TYPE).cn_generator, zone->ov_flags);
+		printf("object 0x%lx [%s %lx]\n", object, System(Deif_bid(flags)).cn_generator, zone->ov_flags);
 #endif
 	/* Evaluation of the number of references of the object */
 	if (flags & EO_SPEC) {					/* Special object */
@@ -196,7 +196,7 @@ rt_private long pst_store(char *object, long int object_count)
 			}
 		}
 	} else {								/* Normal object */
-		nb_references = References(flags & EO_TYPE);
+		nb_references = References(Deif_bid(flags));
 
 		/* Traversal of references of `object' */
 		for (

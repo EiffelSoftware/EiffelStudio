@@ -24,7 +24,7 @@
 
 
 #ifndef EIF_THREADS
-rt_private uint32 delta[ASIZE];				/* Records shifting deltas */ /* %%ss mt */
+rt_private uint32 eif_delta[ASIZE];				/* Records shifting deltas */ /* %%ss mt */
 rt_private uint32 **darray = (uint32 **) 0;	/* Pointer to array recording shifting tables */ /* %%ss mt */
 #endif /* EIF_THREADS */
 
@@ -74,7 +74,7 @@ rt_public int str_str(EIF_CONTEXT EIF_OBJ text, EIF_OBJ pattern, int tlen, int p
 	 */
 
 	if (fuzzy == 0) {
-		compile(eif_access(pattern), plen, delta);		/* Compile pattern */
+		compile(eif_access(pattern), plen, eif_delta);		/* Compile pattern */
 		p = qsearch(eif_access(text) + start, tlen-start,
 			eif_access(pattern), plen);					/* Quick search */
 	} else {
@@ -211,7 +211,7 @@ rt_private char *qsearch(EIF_CONTEXT char *text, int tlen, char *pattern, int pl
 		if (tx + plen == (unsigned char *)text)
 			return (char *) 0;
 
-		tx += delta[*(tx + plen)];	/* Shift to next text location */
+		tx += eif_delta[*(tx + plen)];	/* Shift to next text location */
 	}
 	return (char *) 0;		/* No substring found */
 

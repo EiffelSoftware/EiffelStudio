@@ -3,7 +3,7 @@ indexing
 	external_name: "System.Reflection.AssemblyName"
 	assembly: "mscorlib", "1.0.3300.0", "neutral", "b77a5c561934e089"
 
-external class
+frozen external class
 	ASSEMBLY_NAME
 
 inherit
@@ -30,70 +30,70 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	get_hash_algorithm: ASSEMBLY_HASH_ALGORITHM is
-		external
-			"IL signature (): System.Configuration.Assemblies.AssemblyHashAlgorithm use System.Reflection.AssemblyName"
-		alias
-			"get_HashAlgorithm"
-		end
-
-	get_name: SYSTEM_STRING is
-		external
-			"IL signature (): System.String use System.Reflection.AssemblyName"
-		alias
-			"get_Name"
-		end
-
-	get_culture_info: CULTURE_INFO is
-		external
-			"IL signature (): System.Globalization.CultureInfo use System.Reflection.AssemblyName"
-		alias
-			"get_CultureInfo"
-		end
-
-	get_flags: ASSEMBLY_NAME_FLAGS is
-		external
-			"IL signature (): System.Reflection.AssemblyNameFlags use System.Reflection.AssemblyName"
-		alias
-			"get_Flags"
-		end
-
-	get_version_compatibility: ASSEMBLY_VERSION_COMPATIBILITY is
-		external
-			"IL signature (): System.Configuration.Assemblies.AssemblyVersionCompatibility use System.Reflection.AssemblyName"
-		alias
-			"get_VersionCompatibility"
-		end
-
-	get_full_name: SYSTEM_STRING is
+	frozen get_full_name: SYSTEM_STRING is
 		external
 			"IL signature (): System.String use System.Reflection.AssemblyName"
 		alias
 			"get_FullName"
 		end
 
-	get_code_base: SYSTEM_STRING is
+	frozen get_name: SYSTEM_STRING is
+		external
+			"IL signature (): System.String use System.Reflection.AssemblyName"
+		alias
+			"get_Name"
+		end
+
+	frozen get_culture_info: CULTURE_INFO is
+		external
+			"IL signature (): System.Globalization.CultureInfo use System.Reflection.AssemblyName"
+		alias
+			"get_CultureInfo"
+		end
+
+	frozen get_code_base: SYSTEM_STRING is
 		external
 			"IL signature (): System.String use System.Reflection.AssemblyName"
 		alias
 			"get_CodeBase"
 		end
 
-	get_escaped_code_base: SYSTEM_STRING is
+	frozen get_version_compatibility: ASSEMBLY_VERSION_COMPATIBILITY is
+		external
+			"IL signature (): System.Configuration.Assemblies.AssemblyVersionCompatibility use System.Reflection.AssemblyName"
+		alias
+			"get_VersionCompatibility"
+		end
+
+	frozen get_flags: ASSEMBLY_NAME_FLAGS is
+		external
+			"IL signature (): System.Reflection.AssemblyNameFlags use System.Reflection.AssemblyName"
+		alias
+			"get_Flags"
+		end
+
+	frozen get_escaped_code_base: SYSTEM_STRING is
 		external
 			"IL signature (): System.String use System.Reflection.AssemblyName"
 		alias
 			"get_EscapedCodeBase"
 		end
 
-	get_key_pair: STRONG_NAME_KEY_PAIR is
+	frozen get_hash_algorithm: ASSEMBLY_HASH_ALGORITHM is
+		external
+			"IL signature (): System.Configuration.Assemblies.AssemblyHashAlgorithm use System.Reflection.AssemblyName"
+		alias
+			"get_HashAlgorithm"
+		end
+
+	frozen get_key_pair: STRONG_NAME_KEY_PAIR is
 		external
 			"IL signature (): System.Reflection.StrongNameKeyPair use System.Reflection.AssemblyName"
 		alias
 			"get_KeyPair"
 		end
 
-	get_version: VERSION is
+	frozen get_version: VERSION is
 		external
 			"IL signature (): System.Version use System.Reflection.AssemblyName"
 		alias
@@ -102,56 +102,56 @@ feature -- Access
 
 feature -- Element Change
 
-	set_culture_info (value: CULTURE_INFO) is
+	frozen set_culture_info (value: CULTURE_INFO) is
 		external
 			"IL signature (System.Globalization.CultureInfo): System.Void use System.Reflection.AssemblyName"
 		alias
 			"set_CultureInfo"
 		end
 
-	set_key_pair (value: STRONG_NAME_KEY_PAIR) is
+	frozen set_key_pair (value: STRONG_NAME_KEY_PAIR) is
 		external
 			"IL signature (System.Reflection.StrongNameKeyPair): System.Void use System.Reflection.AssemblyName"
 		alias
 			"set_KeyPair"
 		end
 
-	set_hash_algorithm (value: ASSEMBLY_HASH_ALGORITHM) is
+	frozen set_hash_algorithm (value: ASSEMBLY_HASH_ALGORITHM) is
 		external
 			"IL signature (System.Configuration.Assemblies.AssemblyHashAlgorithm): System.Void use System.Reflection.AssemblyName"
 		alias
 			"set_HashAlgorithm"
 		end
 
-	set_version (value: VERSION) is
+	frozen set_version (value: VERSION) is
 		external
 			"IL signature (System.Version): System.Void use System.Reflection.AssemblyName"
 		alias
 			"set_Version"
 		end
 
-	set_name (value: SYSTEM_STRING) is
+	frozen set_name (value: SYSTEM_STRING) is
 		external
 			"IL signature (System.String): System.Void use System.Reflection.AssemblyName"
 		alias
 			"set_Name"
 		end
 
-	set_flags (value: ASSEMBLY_NAME_FLAGS) is
+	frozen set_flags (value: ASSEMBLY_NAME_FLAGS) is
 		external
 			"IL signature (System.Reflection.AssemblyNameFlags): System.Void use System.Reflection.AssemblyName"
 		alias
 			"set_Flags"
 		end
 
-	set_code_base (value: SYSTEM_STRING) is
+	frozen set_code_base (value: SYSTEM_STRING) is
 		external
 			"IL signature (System.String): System.Void use System.Reflection.AssemblyName"
 		alias
 			"set_CodeBase"
 		end
 
-	set_version_compatibility (value: ASSEMBLY_VERSION_COMPATIBILITY) is
+	frozen set_version_compatibility (value: ASSEMBLY_VERSION_COMPATIBILITY) is
 		external
 			"IL signature (System.Configuration.Assemblies.AssemblyVersionCompatibility): System.Void use System.Reflection.AssemblyName"
 		alias
@@ -188,14 +188,14 @@ feature -- Basic Operations
 			"GetPublicKey"
 		end
 
-	on_deserialization (sender: SYSTEM_OBJECT) is
+	frozen on_deserialization (sender: SYSTEM_OBJECT) is
 		external
 			"IL signature (System.Object): System.Void use System.Reflection.AssemblyName"
 		alias
 			"OnDeserialization"
 		end
 
-	clone_: SYSTEM_OBJECT is
+	frozen clone_: SYSTEM_OBJECT is
 		external
 			"IL signature (): System.Object use System.Reflection.AssemblyName"
 		alias

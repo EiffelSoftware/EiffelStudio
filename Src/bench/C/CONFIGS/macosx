@@ -173,6 +173,7 @@ libs='-L/opt/local/lib -lcompat -lm'
 ln='/bin/ln'
 make='make'
 mkdep='/Users/manus/56dev/C/mkdep'
+mkdir='mkdir'
 mtldflags="$ldflags"
 mtldsharedflags="$ldsharedflags"
 mtlibs="$libs -lpthread"

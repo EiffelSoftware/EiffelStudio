@@ -173,6 +173,7 @@ libs='-lm'
 ln='/bin/ln'
 make='make'
 mkdep='/home/manus/local/56dev/C/mkdep'
+mkdir='mkdir'
 mtldflags="$ldflags"
 mtldsharedflags="$ldsharedflags"
 mtlibs="$libs -lpthread"

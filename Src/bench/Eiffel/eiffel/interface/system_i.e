@@ -1099,8 +1099,6 @@ end
 					create d1.make_now
 				end
 
-				Error_handler.set_error_position (0)
-
 				if
 					not Compilation_modes.is_precompiling and
 					not Lace.compile_all_classes

@@ -263,7 +263,7 @@ end;
 			cluster_file: DIRECTORY;
 			file_name: STRING;
 			i, j: INTEGER;
-			class_path: STRING;
+			class_path: FILE_NAME;
 			vd01: VD01;
 			vd07: VD07;
 			vd12: VD12;
@@ -297,11 +297,9 @@ end;				-- Check if the path is valid
 					i > ex_l.count
 				loop
 					file_name := Environ.interpret (ex_l.i_th (i).file__name);
-					!!class_path.make (path.count + file_name.count + 1);
-					class_path.append (path);
-					class_path.extend (Directory_separator);
-					class_path.append (file_name);
-					!!class_file.make (class_path)
+					!!class_path.make_from_string (path);
+					class_path.set_file_name (file_name);
+					!!class_file.make (class_path.path)
 					if not class_file.exists then
 						!!vd12;
 						vd12.set_cluster (Current);
@@ -321,11 +319,9 @@ end;				-- Check if the path is valid
 					i > inc_l.count
 				loop
 					file_name := Environ.interpret (inc_l.i_th (i).file__name);
-					!!class_path.make (path.count + file_name.count + 1);
-					class_path.append (path);
-					class_path.extend (Directory_separator);
-					class_path.append (file_name);
-					!!class_file.make (class_path)
+					!!class_path.make_from_string (path);
+					class_path.set_file_name (file_name);
+					!!class_file.make (class_path.path)
 					if not class_file.exists then
 						!!vd07;
 						vd07.set_cluster (Current);
@@ -417,6 +413,7 @@ end;				-- Check if the path is valid
 	insert_class_from_file (file_name: STRING) is
 		local
 			class_path: STRING;
+			fn: FILE_NAME;
 			a_class: CLASS_I;
 			class_name: STRING;
 			vd11: VD11;
@@ -424,10 +421,9 @@ end;				-- Check if the path is valid
 			str: ANY;
 			file_date: INTEGER;
 		do
-			!!class_path.make (path.count + file_name.count + 1);
-			class_path.append (path);
-			class_path.extend (Directory_separator);
-			class_path.append (file_name);
+			!!fn.make_from_string (path);
+			fn.set_file_name (file_name);
+			class_path := fn.path;
 			class_name := read_class_name_in_file (class_path);
 			if class_name /= Void then
 debug ("REMOVE_CLASS")
@@ -854,8 +850,10 @@ end;
 			-- Is the cluster directory changed ?
 		local
 			i: INTEGER;
+			ptr: ANY
 		do
-			Result := date /= new_date;
+			ptr := path.to_c;
+			Result := eif_directory_has_changed ($ptr, date);
 			if Not Result then
 				from
 					classes.start
@@ -942,6 +940,12 @@ feature {NONE} -- Externals
 
 	eif_date (s: POINTER): INTEGER is
 			-- Date of file of name `str'.
+		external
+			"C"
+		end;
+
+	eif_directory_has_changed (cluster_path: POINTER; old_date: INTEGER): BOOLEAN is
+			-- Does the directory have new entries?
 		external
 			"C"
 		end;

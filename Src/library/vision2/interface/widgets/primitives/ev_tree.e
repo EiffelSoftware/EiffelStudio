@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			-- Create a tree widget with `par' as
 			-- parent.
 		do
-			!EV_TREE_IMP!implementation.make (par)
+			!EV_TREE_IMP!implementation.make
 			widget_make (par)
 		end
 

@@ -27,7 +27,7 @@ feature -- Initialization
 			-- radio button with `par' as parent and `txt' as
 			-- text label
 		do
-			!EV_RADIO_BUTTON_IMP!implementation.make_with_text (par, txt)
+			!EV_RADIO_BUTTON_IMP!implementation.make_with_text (txt)
 			widget_make (par)
 		end
 

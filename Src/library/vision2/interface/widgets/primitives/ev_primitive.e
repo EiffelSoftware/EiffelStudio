@@ -7,11 +7,9 @@ indexing
 	revision: "$Revision$"
 
 deferred class 
-
 	EV_PRIMITIVE
 
 inherit
-
 	EV_WIDGET
 	
 end -- class EV_PRIMITIVE

@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 	make (par: EV_CONTAINER) is
 			-- Create a frame with `par' as parent.
 		do
-			!EV_FRAME_IMP! implementation.make (par)
+			!EV_FRAME_IMP! implementation.make
 			widget_make (par)
 		end
 
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			-- Create a frame with `par' as parent ant `txt'
 			-- as label.
 		do
-			!EV_FRAME_IMP! implementation.make_with_text (par, txt)
+			!EV_FRAME_IMP! implementation.make_with_text (txt)
 			widget_make (par)
 		end
 

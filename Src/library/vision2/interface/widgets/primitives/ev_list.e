@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 			-- parent.
 			-- By default, a list allow only one selection.
 		do
-			!EV_LIST_IMP!implementation.make (par)
+			!EV_LIST_IMP!implementation.make
 			widget_make (par)
 		end
 

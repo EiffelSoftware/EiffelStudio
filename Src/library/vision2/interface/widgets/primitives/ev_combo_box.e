@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 	make (par: EV_CONTAINER) is
 			-- Create a combo-box with `par' as parent.
 		do
-			!EV_COMBO_BOX_IMP!implementation.make (par)
+			!EV_COMBO_BOX_IMP!implementation.make
 			widget_make (par)
 		end
 

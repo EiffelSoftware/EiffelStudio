@@ -12,7 +12,7 @@ class
 inherit
 	EV_PRIMITIVE
 		redefine
-			make, implementation
+			implementation
 		end
 		
 	EV_BAR_ITEM
@@ -22,7 +22,7 @@ inherit
 	
 	EV_TEXTABLE
 		redefine
-			implementation, make
+			implementation
 		end
 
 	EV_PIXMAPABLE
@@ -42,17 +42,17 @@ creation
 feature {NONE} -- Initialization
 	
  	make (par: EV_CONTAINER) is
- 		-- Empty button
+ 		-- Create a button with `par' as parent'.
 		do
- 			!EV_BUTTON_IMP!implementation.make (par)
+ 			!EV_BUTTON_IMP!implementation.make
  			widget_make (par)
  		end
 	
 	make_with_text (par: EV_CONTAINER; txt: STRING) is
 			-- Button with 'par' as parent and 'txt' as 
-			-- text label
+			-- text label.
 		do
-			!EV_BUTTON_IMP!implementation.make_with_text (par, txt)
+			!EV_BUTTON_IMP!implementation.make_with_text (txt)
 			widget_make (par)
 		end
 	

@@ -20,7 +20,8 @@ inherit
 		end
 
 creation
-	make_with_size
+	make_with_size,
+	make_with_text
 
 feature {NONE} -- Initialization
 
@@ -29,7 +30,16 @@ feature {NONE} -- Initialization
 			-- parent and `col_nb' columns.
 			-- By default, a list allow only one selection.
 		do
-			!EV_MULTI_COLUMN_LIST_IMP!implementation.make_with_size (par, col_nb)
+			!EV_MULTI_COLUMN_LIST_IMP!implementation.make_with_size (col_nb)
+			widget_make (par)
+		end
+
+	make_with_text (par: EV_CONTAINER; txt: ARRAY [STRING]) is         
+			-- Create a list widget with `par' as parent,
+			-- and as many columns as the number of titles
+			-- given.
+		do
+			!EV_MULTI_COLUMN_LIST_IMP!implementation.make_with_text (txt)
 			widget_make (par)
 		end
 
@@ -182,6 +192,16 @@ feature -- Element change
 			implementation.set_column_title (txt, column)
 		end
 
+	set_columns_title (txt: ARRAY [STRING]) is         
+			-- Make `txt' the new titles of the columns.
+		require
+			exists: not destroyed
+			text_not_void: txt /= Void
+			valid_text_length: txt.count <= columns
+		do
+			implementation.set_columns_title (txt)
+		end
+
 	set_column_width (value: INTEGER; column: INTEGER) is
 			-- Make `value' the new width of the one-based column.
 		require
@@ -189,6 +209,16 @@ feature -- Element change
 			column_exists: column >= 1 and column <= columns
 		do
 			implementation.set_column_width (value, column)
+		end
+
+	set_columns_width (value: ARRAY [INTEGER]) is         
+			-- Make `value' the new values of the columns width.
+		require
+			exists: not destroyed
+			value_not_void: value /= Void
+			valid_value_length: value.count <= columns
+		do
+			implementation.set_columns_width (value)
 		end
 
 	set_rows_height (value: INTEGER) is

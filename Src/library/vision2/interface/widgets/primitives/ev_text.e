@@ -1,5 +1,4 @@
 indexing
-
 	description: 
 	"EiffelVision text area. To query multiple lines of text from the user"
 	status: "See notice at end of class"
@@ -17,19 +16,26 @@ inherit
 		end
 	
 creation
-
-	make
+	make,
+	make_with_text
 	
 feature {NONE} -- Initialization
 
 	make (par: EV_CONTAINER) is
-			-- Create an entry with, `par' as
-			-- parent
+			-- Create an empty text area with `par' as
+			-- parent.
 		do
-			!EV_TEXT_AREA_IMP!implementation.make (par)
+			!EV_TEXT_AREA_IMP!implementation.make
 			widget_make (par)
 		end
-	
+
+	make_with_text (par: EV_CONTAINER; txt: STRING) is
+			-- Create a text area with `par' as
+			-- parent and `txt' as text.
+		do
+			!EV_TEXT_AREA_IMP!implementation.make_with_text (txt)
+			widget_make (par)
+		end
 
 feature {NONE} -- Implementation
 

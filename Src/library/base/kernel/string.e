@@ -1089,7 +1089,7 @@ feature {STRING} -- Implementation
 	str_code (c_string: POINTER; i: INTEGER): INTEGER is
 			-- Numeric code of `i'-th character in `c_string'
 		external
-			"C | %"eif_str.h%""
+			"C [macro %"eif_str.h%"]"
 		end;
 
 	hashcode (c_string: POINTER; len: INTEGER): INTEGER is
@@ -1133,6 +1133,8 @@ feature {STRING} -- Implementation
 			-- Length of the C string: `c_string'
 		external
 			"C | %"eif_str.h%""
+		alias
+			"strlen"
 		end;
 
 	str_ljustify (c_string: POINTER; length,cap: INTEGER) is

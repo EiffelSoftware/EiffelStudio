@@ -64,32 +64,32 @@ feature {NONE} -- Execution
 		do
 			if arg = Close_all then
 				tool_supervisor.close_all_editors
---				if is_system_tool_is_valid then 
---					System_tool.destroy
---				end
+				if system_tool_is_valid then 
+					System_tool.destroy
+				end
 				if  profile_tool_is_valid then
 					profile_tool.destroy
 				end
-				if preference_tool_is_valid then
-					preference_tool.destroy
-				end
---				if dynamic_lib_tool_is_valid then
---					Dynamic_lib_tool.destroy
+--				if preference_tool_is_valid then
+--					preference_tool.destroy
 --				end
+				if dynamic_lib_tool_is_valid then
+					Dynamic_lib_tool.destroy
+				end
 			elseif arg = Raise_all then
 				tool_supervisor.raise_all_editors
---				if system_tool_is_valid then 
---					System_tool.force_raise
---				end
+				if system_tool_is_valid then 
+					System_tool.raise
+				end
 				if profile_tool_is_valid then
 					profile_tool.raise
 				end
-				if preference_tool_is_valid then
-					preference_tool.raise
-				end
---				if dynamic_lib_tool_is_valid then
---					Dynamic_lib_tool.force_raise
+--				if preference_tool_is_valid then
+--					preference_tool.raise
 --				end
+				if dynamic_lib_tool_is_valid then
+					Dynamic_lib_tool.raise
+				end
 			end
 		end
 

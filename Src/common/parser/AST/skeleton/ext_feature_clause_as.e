@@ -17,14 +17,15 @@ inherit
 			has_equiv_declaration
 		end
 
-creation --%%%AAA
+creation
 
 	make_from_other_and_features
 
 feature -- Initialization
 
-	make_from_other_and_features (other: like Current; flist: like features) is --%%%AAA
-			--%%%AA beware ! maybe not deep enough... check
+	make_from_other_and_features (other: like Current; flist: like features) is
+			-- Create a feature clause similar to `other' in every aspect,
+			-- except that the feature list will be `flist'
 		do
 			clients := other.clients
 			position := other.position

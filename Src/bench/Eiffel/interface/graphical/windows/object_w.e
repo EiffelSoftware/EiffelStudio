@@ -468,11 +468,12 @@ feature {NONE} -- Implementation; Graphical Interface
 			history_list_cmd: LIST_HISTORY
 		do
 				-- Here we create all objects needed for the attachments.
-			!! slice_cmd.make (format_bar, Current);
+			!! slice_cmd.make (Current);
 			!! slice_button.make (slice_cmd, format_bar);
 			slice_button.add_third_button_action;
 			!! slice_menu_entry.make_button_only (slice_cmd, special_menu);
-			slice_menu_entry.add_activate_action (slice_cmd, Void);
+			slice_menu_entry.add_activate_action 
+					(slice_cmd, slice_cmd.button_three_action);
 			!! slice_cmd_holder.make (slice_cmd, slice_button, slice_menu_entry)
 			!! current_target_cmd.make (Current);
 			!! sep.make (new_name, special_menu);

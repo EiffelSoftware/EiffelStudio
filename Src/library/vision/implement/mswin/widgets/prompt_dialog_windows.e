@@ -576,7 +576,7 @@ feature {NONE} -- Implementation
 			!! a_dc.make (selection_static)
 			a_dc.get
 			!! local_color.make_system (Color_window)
-			a_dc.set_bk_color (local_color)
+			a_dc.set_background_color (local_color)
 			a_dc.release
 			if selection_label = Void then
 				!! selection_label.make (0)

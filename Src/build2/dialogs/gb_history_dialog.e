@@ -141,7 +141,6 @@ feature {NONE} -- Implementation
 		do
 			index_of_current_item := history_list.index_of (history_list.selected_item, 1)
 				if last_selected_item > index_of_current_item then
-					io.putstring ("Warning values equal%N")
 					history.step_from (last_selected_item, index_of_current_item)
 				elseif last_selected_item < index_of_current_item then
 					history.step_from (last_selected_item + 1, index_of_current_item)

@@ -6,6 +6,11 @@ indexing
 
 deferred class
 	GB_EV_ACTION_SEQUENCE
+	
+inherit
+	ANY
+	
+	GB_CONSTANTS
 
 feature -- Access
 
@@ -80,5 +85,28 @@ feature -- Access
 			result_void_implies_count_zero: Result = Void implies count = 0
 			result_not_void_implies_count_valid: Result /= Void implies count > 0
 		end
+		
+	debugging_info: STRING is
+			-- `Result' is a string representation
+			-- which when compiled will generate debugging
+			-- information for `Current'.
+		do
+			create Result.make (0)
+			from
+				argument_names.start
+			until
+				argument_names.off
+			loop
+				Result := Result + "io.putstring (%"" + argument_names.item + " : %" + " + argument_names.item
+					-- Now add newlines for last output of `Current'.
+				if argument_names.index = count then
+					Result := Result + ".out + %"%%N%%N%%N%")"
+				else
+					Result := Result + ".out + %"%%N%")" + indent
+				end
+				argument_names.forth
+			end
+		end
+		
 
 end -- class GB_EV_ACTION_SEQUENCE

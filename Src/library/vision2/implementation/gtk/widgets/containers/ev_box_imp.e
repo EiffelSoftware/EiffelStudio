@@ -45,7 +45,7 @@ feature -- Status report
 	is_child_expanded (child: EV_WIDGET): BOOLEAN is
 			-- Is `child' expanded to occupy avalible spare space.
 		local
-			fill: BOOLEAN
+			fill: INTEGER
 			expand, pad, pack_type: INTEGER
 			wid_imp: EV_WIDGET_IMP
 		do
@@ -180,6 +180,11 @@ end -- class EV_BOX_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.24  2000/04/12 17:39:48  oconnor
+--| Changed BOOLEAN whos address was passed to GTK to INTEGER.
+--| gboolean is int whereas EIF_BOOLEAN is char, this caused the stack to
+--| be munged.
+--|
 --| Revision 1.23  2000/02/22 18:39:37  oconnor
 --| updated copyright date and formatting
 --|

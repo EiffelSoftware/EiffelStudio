@@ -30,6 +30,9 @@ feature {NONE} -- Initialization
 		
 feature {NONE} -- Access
 
+	is_single_inheritance_implementation: BOOLEAN is False
+			-- Multiple interface code generation.
+
 	rout_ids_tbl: HASH_TABLE [FEATURE_I, INTEGER]
 			-- Table of FEATURE_I indexed by routine IDs, to quickly find out
 			-- if a FEATURE_I with a given routine ID has already been generated 
@@ -199,7 +202,7 @@ feature -- IL Generation
 							-- are still deferred. It should only happen when
 							-- generating a deferred class.
 						check
-							deferred_classe:
+							deferred_class:
 								current_class_type.associated_class.is_deferred
 						end
 					end
@@ -268,7 +271,7 @@ feature -- IL Generation
 								-- are still deferred. It should only happen when
 								-- generating a deferred class.
 							check
-								deferred_classe:
+								deferred_class:
 									current_class_type.associated_class.is_deferred
 							end
 						end						

@@ -84,9 +84,17 @@ feature -- Access
 	
 	last_parents: ARRAY [INTEGER]
 			-- List of parents last described after call to `update_parents'.
+	
+	single_inheritance_parent_id: INTEGER
+			-- Token of parent if `is_single_inheritance_implementation'.
 
 	output_file_name: FILE_NAME
 			-- File where assembly is stored.
+
+	is_single_inheritance_implementation: BOOLEAN is
+			-- Is current generation of type SINGLE_IL_CODE_GENERATOR?
+		deferred
+		end
 
 feature {IL_CODE_GENERATOR} -- Access
 
@@ -149,8 +157,8 @@ feature {IL_CODE_GENERATOR} -- Access
 	is_cls_compliant: BOOLEAN
 			-- Does code generation generate CLS compliant code?
 			
-	any_type_id: INTEGER
-			-- Type id of ANY class.
+	object_type_id, any_type_id: INTEGER
+			-- Type id of SYSTEM_OBJECT and ANY class.
 
 	c_module_name: UNI_STRING
 			-- Name of C generated module containing all C externals.
@@ -325,7 +333,18 @@ feature -- Settings
 			once_generation_set: once_generation = v
 		end
 
+	set_object_type_id (an_id: INTEGER) is
+			-- Set `object_type_id' to `an_id'.
+		require
+			valid_id: an_id > 0
+		do
+			object_type_id := an_id
+		ensure
+			object_type_id_set: object_type_id = an_id
+		end
+
 	set_any_type_id (an_id: INTEGER) is
+			-- Set `any_type_id' to `an_id'.
 		require
 			valid_id: an_id > 0
 		do
@@ -443,6 +462,7 @@ feature -- Generation Structure
 			
 			entry_point_token := md_emit.define_method (create {UNI_STRING}.make ("Main"),
 				entry_type_token, feature {MD_METHOD_ATTRIBUTES}.Public |
+				feature {MD_METHOD_ATTRIBUTES}.Hide_by_signature |
 				feature {MD_METHOD_ATTRIBUTES}.Static, l_sig,
 				feature {MD_METHOD_ATTRIBUTES}.Managed)
 			
@@ -552,6 +572,7 @@ feature -- Class info
 			-- Following calls to current will only be `generate_class_mappings'.
 		do
 			create class_mapping.make (0, class_count)
+			create single_parent_mapping.make (0, class_count)
 			create external_class_mapping.make (class_count)
 			create external_token_mapping.make (class_count)
 			create constructor_token.make (0, class_count)
@@ -725,8 +746,16 @@ feature -- Class info
 						l_attributes := l_attributes | feature {MD_TYPE_ATTRIBUTES}.Sealed
 					end
 					one_element_array.put (class_mapping.item (class_type.static_type_id), 0)
-					l_type_token := md_emit.define_type (uni_string, l_attributes,
-						object_type_token, one_element_array)
+
+					if is_single_inheritance_implementation then
+						single_parent_mapping.put (single_inheritance_parent_id,
+							class_type.implementation_id)
+						l_type_token := md_emit.define_type (uni_string, l_attributes,
+							class_mapping.item (single_inheritance_parent_id), one_element_array)
+					else
+						l_type_token := md_emit.define_type (uni_string, l_attributes,
+							object_type_token, one_element_array)
+					end
 					class_mapping.put (l_type_token, class_type.implementation_id)
 					external_class_mapping.put (class_type.type, impl_name)
 					external_token_mapping.put (l_type_token, impl_name)
@@ -741,6 +770,7 @@ feature -- Class info
 		local
 			l_meth_token: INTEGER
 			l_sig: like method_sig
+			l_ctor_token: INTEGER
 		do
 			l_sig := default_sig
 			
@@ -748,13 +778,24 @@ feature -- Class info
 			l_meth_token := md_emit.define_method (uni_string,
 				class_mapping.item (class_type.implementation_id),
 				feature {MD_METHOD_ATTRIBUTES}.Public |
+				feature {MD_METHOD_ATTRIBUTES}.Hide_by_signature |
 				feature {MD_METHOD_ATTRIBUTES}.Special_name |
 				feature {MD_METHOD_ATTRIBUTES}.Rt_special_name,
 				l_sig, feature {MD_METHOD_ATTRIBUTES}.Managed)
-				
+			
+			if
+				not is_single_inheritance_implementation or else 
+				single_parent_mapping.item (class_type.implementation_id) = object_type_id
+			then
+				l_ctor_token := object_ctor_token
+			else
+				l_ctor_token := constructor_token.item (single_parent_mapping.item (
+					class_type.implementation_id))
+			end
+
 			start_new_body (l_meth_token)
 			generate_current
-			method_body.put_call (feature {MD_OPCODES}.Call, object_ctor_token, 0, False)
+			method_body.put_call (feature {MD_OPCODES}.Call, l_ctor_token, 0, False)
 			generate_return
 			method_writer.write_current_body
 			
@@ -774,6 +815,7 @@ feature -- Class info
 			l_class_token: INTEGER
 			l_name_ca: MD_CUSTOM_ATTRIBUTE
 			l_class_name: STRING
+			l_meth_attr: INTEGER
 		do
 			l_class_token := class_mapping.item (class_type.implementation_id)
 			l_class_name := class_type.associated_class.name_in_upper
@@ -782,7 +824,18 @@ feature -- Class info
 			l_name_ca.put_string (l_class_name)
 			define_custom_attribute (l_class_token, ise_eiffel_class_name_attr_ctor_token,
 				l_name_ca)
-			
+		
+			if is_single_inheritance_implementation then
+				l_meth_attr := feature {MD_METHOD_ATTRIBUTES}.Public |
+					feature {MD_METHOD_ATTRIBUTES}.Hide_by_signature |
+					feature {MD_METHOD_ATTRIBUTES}.Virtual
+			else
+				l_meth_attr := feature {MD_METHOD_ATTRIBUTES}.Public |
+					feature {MD_METHOD_ATTRIBUTES}.Hide_by_signature |
+					feature {MD_METHOD_ATTRIBUTES}.Virtual |
+					feature {MD_METHOD_ATTRIBUTES}.Final
+			end
+
 				-- Define `____class_name'.
 			l_sig := method_sig
 			l_sig.reset
@@ -792,11 +845,7 @@ feature -- Class info
 
 			uni_string.set_string ("____class_name")
 			l_meth_token := md_emit.define_method (uni_string,
-				l_class_token,
-				feature {MD_METHOD_ATTRIBUTES}.Public |
-				feature {MD_METHOD_ATTRIBUTES}.Virtual |
-				feature {MD_METHOD_ATTRIBUTES}.Final,
-				l_sig, feature {MD_METHOD_ATTRIBUTES}.Managed)
+				l_class_token, l_meth_attr, l_sig, feature {MD_METHOD_ATTRIBUTES}.Managed)
 			
 			if is_cls_compliant then
 				define_custom_attribute (l_meth_token, cls_compliant_ctor_token,
@@ -808,73 +857,73 @@ feature -- Class info
 			generate_return
 			method_writer.write_current_body
 			
-				-- Define `$$____type'.
-			l_field_sig := field_sig
-			l_field_sig.reset
-			l_field_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_class,
-				ise_eiffel_derivation_type_token)
-			uni_string.set_string ("$$____type")
-			l_type_token := md_emit.define_field (uni_string, l_class_token,
-				feature {MD_FIELD_ATTRIBUTES}.Family, l_field_sig)
 
-			if is_cls_compliant then
-				define_custom_attribute (l_type_token, cls_compliant_ctor_token,
-					not_cls_compliant_ca)
-			end
+			if
+				not is_single_inheritance_implementation or else
+				class_type.static_type_id = any_type_id
+			then
+				l_meth_attr := l_meth_attr | feature {MD_METHOD_ATTRIBUTES}.Final
+
+					-- Define `$$____type'.
+				l_field_sig := field_sig
+				l_field_sig.reset
+				l_field_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_class,
+					ise_eiffel_derivation_type_token)
+				uni_string.set_string ("$$____type")
+				l_type_token := md_emit.define_field (uni_string, l_class_token,
+					feature {MD_FIELD_ATTRIBUTES}.Family, l_field_sig)
+
+				if is_cls_compliant then
+					define_custom_attribute (l_type_token, cls_compliant_ctor_token,
+						not_cls_compliant_ca)
+				end
+				
+					-- Define `____set_type'.
+				l_sig.reset
+				l_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Has_current)
+				l_sig.set_parameter_count (1)
+				l_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+				l_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_class,
+					ise_eiffel_derivation_type_token)
 			
-				-- Define `____set_type'.
-			l_sig.reset
-			l_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Has_current)
-			l_sig.set_parameter_count (1)
-			l_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
-			l_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_class,
-				ise_eiffel_derivation_type_token)
-		
-			uni_string.set_string ("____set_type")
-			l_meth_token := md_emit.define_method (uni_string,
-				l_class_token,
-				feature {MD_METHOD_ATTRIBUTES}.Public |
-				feature {MD_METHOD_ATTRIBUTES}.Virtual |
-				feature {MD_METHOD_ATTRIBUTES}.Final,
-				l_sig, feature {MD_METHOD_ATTRIBUTES}.Managed)
+				uni_string.set_string ("____set_type")
+				l_meth_token := md_emit.define_method (uni_string,
+					l_class_token, l_meth_attr, l_sig, feature {MD_METHOD_ATTRIBUTES}.Managed)
 
-			if is_cls_compliant then
-				define_custom_attribute (l_meth_token, cls_compliant_ctor_token,
-					not_cls_compliant_ca)
-			end
+				if is_cls_compliant then
+					define_custom_attribute (l_meth_token, cls_compliant_ctor_token,
+						not_cls_compliant_ca)
+				end
 
-			start_new_body (l_meth_token)
-			generate_current
-			generate_argument (1)
-			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Stfld, l_type_token)
-			generate_return
-			method_writer.write_current_body
+				start_new_body (l_meth_token)
+				generate_current
+				generate_argument (1)
+				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Stfld, l_type_token)
+				generate_return
+				method_writer.write_current_body
+				
+					-- Define `____type'.
+				l_sig.reset
+				l_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Has_current)
+				l_sig.set_parameter_count (0)
+				l_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_class,
+					ise_eiffel_derivation_type_token)
 			
-				-- Define `____type'.
-			l_sig.reset
-			l_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Has_current)
-			l_sig.set_parameter_count (0)
-			l_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_class,
-				ise_eiffel_derivation_type_token)
-		
-			uni_string.set_string ("____type")
-			l_meth_token := md_emit.define_method (uni_string,
-				l_class_token,
-				feature {MD_METHOD_ATTRIBUTES}.Public |
-				feature {MD_METHOD_ATTRIBUTES}.Virtual |
-				feature {MD_METHOD_ATTRIBUTES}.Final,
-				l_sig, feature {MD_METHOD_ATTRIBUTES}.Managed)
+				uni_string.set_string ("____type")
+				l_meth_token := md_emit.define_method (uni_string,
+					l_class_token, l_meth_attr, l_sig, feature {MD_METHOD_ATTRIBUTES}.Managed)
 
-			if is_cls_compliant then
-				define_custom_attribute (l_meth_token, cls_compliant_ctor_token,
-					not_cls_compliant_ca)
+				if is_cls_compliant then
+					define_custom_attribute (l_meth_token, cls_compliant_ctor_token,
+						not_cls_compliant_ca)
+				end
+
+				start_new_body (l_meth_token)
+				generate_current
+				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldfld, l_type_token)
+				generate_return
+				method_writer.write_current_body
 			end
-
-			start_new_body (l_meth_token)
-			generate_current
-			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldfld, l_type_token)
-			generate_return
-			method_writer.write_current_body				
 		end
 
 	update_parents (class_type: CLASS_TYPE; class_c: CLASS_C) is
@@ -902,6 +951,7 @@ feature -- Class info
 				create l_list.make (parents.count)
 				parents.start
 				create l_parents.make (0, parents.count)
+				single_inheritance_parent_id := 0
 			until
 				parents.after
 			loop
@@ -913,6 +963,12 @@ feature -- Class info
 					if not cl_type.associated_class.is_external then
 							-- Add parent interfaces only.
 						l_parents.put (class_mapping.item (cl_type.static_type_id), i)
+						if single_inheritance_parent_id = 0 then
+								-- We arbitrary take the first parent as principal parent.
+								-- FIXME: Manu 4/15/2002: To optimize we should take the one
+								-- with the most features
+							single_inheritance_parent_id := cl_type.implementation_id
+						end
 					end
 					pars.force (parent_type.associated_class_type.class_interface)
 					i := i + 1
@@ -928,6 +984,9 @@ feature -- Class info
 			else
 				l_parents.put (0, i)
 				last_parents := l_parents
+			end
+			if single_inheritance_parent_id = 0 then
+				single_inheritance_parent_id := object_type_id
 			end
 		end
 
@@ -1124,7 +1183,9 @@ feature -- Features info
 					
 					insert_attribute (l_meth_token, current_type_id, feat.feature_id)
 				else
-					l_meth_attr := feature {MD_METHOD_ATTRIBUTES}.Public
+					l_meth_attr := feature {MD_METHOD_ATTRIBUTES}.Public |
+						feature {MD_METHOD_ATTRIBUTES}.Hide_by_signature
+
 					if in_interface then
 						l_meth_attr := l_meth_attr | feature {MD_METHOD_ATTRIBUTES}.Virtual |
 							feature {MD_METHOD_ATTRIBUTES}.Abstract
@@ -1164,10 +1225,12 @@ feature -- Features info
 							-- Let's define attribute setter.
 						if in_interface then
 							l_meth_attr := feature {MD_METHOD_ATTRIBUTES}.Public |
+								feature {MD_METHOD_ATTRIBUTES}.Hide_by_signature |
 								feature {MD_METHOD_ATTRIBUTES}.Virtual |
 								feature {MD_METHOD_ATTRIBUTES}.Abstract
 						else
 							l_meth_attr := feature {MD_METHOD_ATTRIBUTES}.Public |
+								feature {MD_METHOD_ATTRIBUTES}.Hide_by_signature |
 								feature {MD_METHOD_ATTRIBUTES}.Virtual
 						end
 
@@ -1560,7 +1623,7 @@ feature -- IL Generation
 		local
 			l_meth_token: INTEGER
 		do
-			if not feat.is_attribute and not feat.is_c_external then
+			if not feat.is_attribute and not feat.is_c_external and not feat.is_deferred then
 				l_meth_token := implementation_feature_token (current_type_id, feat.feature_id)
 				start_new_body (l_meth_token)
 
@@ -1610,6 +1673,14 @@ feature -- IL Generation
 			method_writer.write_current_body
 		end
 
+	generate_object_equality_test is
+			-- Generate comparison of two objects.
+		do
+			internal_generate_external_call (ise_runtime_token, 0, runtime_class_name,
+				"standard_equal", Static_type, <<type_info_class_name, type_info_class_name>>,
+				"System.Boolean", False)			
+		end
+
 	generate_finalize_feature (feat: FEATURE_I) is
 			-- Generate `Finalize' that calls `finalize' definition from ANY.
 		require
@@ -1626,7 +1697,9 @@ feature -- IL Generation
 				-- Generate `Finalize' that calls `finalize'.
 			uni_string.set_string ("Finalize")
 			l_dotnet_finalize_token := md_emit.define_method (uni_string, current_class_token,
-				feature {MD_METHOD_ATTRIBUTES}.Family | feature {MD_METHOD_ATTRIBUTES}.Virtual,
+				feature {MD_METHOD_ATTRIBUTES}.Family |
+				feature {MD_METHOD_ATTRIBUTES}.Hide_by_signature |
+				feature {MD_METHOD_ATTRIBUTES}.Virtual,
 				default_sig, feature {MD_METHOD_ATTRIBUTES}.Managed)
 		
 			start_new_body (l_dotnet_finalize_token)
@@ -1732,6 +1805,7 @@ feature -- IL Generation
 
 				if cur_feat.is_attribute and then inh_feat.is_attribute then
 					l_meth_attr := feature {MD_METHOD_ATTRIBUTES}.Virtual |
+						feature {MD_METHOD_ATTRIBUTES}.Hide_by_signature |
 						feature {MD_METHOD_ATTRIBUTES}.Private
 
 					l_meth_sig := method_sig
@@ -3542,6 +3616,7 @@ feature {NONE} -- Predefine custom attributes
 feature {NONE} -- Constants
 
 	runtime_namespace: STRING is "ISE.Runtime"
+	runtime_class_name: STRING is "ISE.Runtime.RUN_TIME"
 	type_class_name: STRING is "ISE.Runtime.TYPE"
 	type_array_class_name: STRING is "ISE.Runtime.TYPE[]"
 	generic_type_class_name: STRING is "ISE.Runtime.GENERIC_TYPE"
@@ -3815,7 +3890,7 @@ feature {NONE} -- Once per modules being generated.
 		local
 			l_ass_info: MD_ASSEMBLY_INFO
 			l_pub_key: MD_PUBLIC_KEY_TOKEN
-			l_runtime_type_token, l_excep_man_token: INTEGER
+			l_excep_man_token: INTEGER
 			l_sig: like field_sig
 			l_meth_sig: like method_sig
 		do
@@ -3845,22 +3920,21 @@ feature {NONE} -- Once per modules being generated.
 				l_sig)
 				
 				-- Define `ise_in_assertion_token'.
-			l_runtime_type_token := md_emit.define_type_ref (
-				create {UNI_STRING}.make ("ISE.Runtime.RUN_TIME"),
-				ise_runtime_token)
+			ise_runtime_type_token := md_emit.define_type_ref (
+				create {UNI_STRING}.make (runtime_class_name), ise_runtime_token)
 
 			l_sig.reset
 			l_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_boolean, 0)
 			
 			ise_in_assertion_token := md_emit.define_member_ref (
-				create {UNI_STRING}.make ("in_assertion"), l_runtime_type_token, l_sig)
+				create {UNI_STRING}.make ("in_assertion"), ise_runtime_type_token, l_sig)
 				
 				-- Define `ise_assertion_tag_token'.
 			l_sig.reset
 			l_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_string, 0)
 
 			ise_assertion_tag_token := md_emit.define_member_ref (
-				create {UNI_STRING}.make ("assertion_tag"), l_runtime_type_token, l_sig)
+				create {UNI_STRING}.make ("assertion_tag"), ise_runtime_type_token, l_sig)
 
 				-- Define `ise_**_type_token'.
 			ise_eiffel_type_info_type_token := md_emit.define_type_ref (
@@ -3907,6 +3981,9 @@ feature {NONE} -- Mapping between Eiffel compiler and generated tokens
 
 	class_mapping: ARRAY [INTEGER]
 			-- Array of type token indexed by their `type_id'.
+
+	single_parent_mapping: ARRAY [INTEGER]
+			-- Array of type token showing single inheritance parent for a given `type_id'.
 
 	constructor_token: ARRAY [INTEGER]
 			-- Array of ctor token indexed by their `type_id'.

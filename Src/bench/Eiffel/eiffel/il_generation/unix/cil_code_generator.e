@@ -599,6 +599,11 @@ feature -- IL Generation
 		do
 		end
 
+	generate_object_equality_test is
+			-- Generate comparison of two objects.
+		do
+		end
+
 	generate_finalize_feature (feat: FEATURE_I) is
 			-- Generate `Finalize' that calls `finalize' definition from ANY.
 		require

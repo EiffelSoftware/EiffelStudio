@@ -45,7 +45,7 @@ feature {NONE} -- Implementation
 		local
 			csd: EB_CONFIRM_SAVE_DIALOG
 		do
-			if tool.text_window.changed then
+			if tool.text_area.changed then
 				create csd.make_and_launch (tool, Current)
 			else
 				process
@@ -54,7 +54,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Attributes
 
-	tool: EB_EDITOR
+	tool: EB_EDIT_TOOL
 
 --	name: STRING is
 --			-- Name of the command.

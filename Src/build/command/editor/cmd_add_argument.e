@@ -9,7 +9,6 @@ inherit
 		redefine
 			element, 
 			undo, 
-			update_information, 
 			redo, 
 			worked_on
 		end
@@ -19,7 +18,6 @@ inherit
 			element, 
 			undo, 
 			command_work, 
-			update_information, 
 			redo, 
 			worked_on
 		select
@@ -38,8 +36,6 @@ inherit
 			question_help_action
 		end
 
-	SHARED_INSTANTIATOR
-
 	CAT_ADD_COMMAND
 		rename
 			redo as catalog_redo,
@@ -52,13 +48,13 @@ inherit
 			page as catalog_page,
 			execute as catalog_execute
 		redefine
-			parent_work,
+			catalog_work,
 			c_name
 		end
 
 feature -- Feature from CAT_ADD_COMMAND
 
-	parent_work is
+	catalog_work is
 			-- Do not call update_history.
 		do
 			catalog_element := page.last
@@ -188,15 +184,9 @@ feature {NONE}
 			end
 		end
 
-	update_information is
-		do
-			Precursor
-			command_instantiator_generator.update_command
-		end
-
 	worked_on: STRING is
 		do
-			result := {CMD_ADD} Precursor
+			Result := {CMD_ADD} Precursor
 		end
 
 feature {NONE} -- Features of QUEST_POPUPER

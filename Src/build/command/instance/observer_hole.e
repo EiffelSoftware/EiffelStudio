@@ -110,23 +110,16 @@ feature {NONE}
 			if observer /= Void then
 				error_message := observer.label
 				observed_command := command_tool.command_instance
-				if observed_command.instance /= Void then
-					if observed_command /= observer and then
-							not observed_command.is_observer (observer) and then
-							not observed_command.observers.has (observer) then  
-						!! command.make (observed_command, observer)
-						command.execute (Void)
-					else
-						error := True
-						error_message.append (" can't observe ")
-						error_message.append (observed_command.label)
-						error_message.append (" since %Nit already observe or it will imply an infinite loop.")
-					end
+				if observed_command /= observer and then
+						not observed_command.is_observer (observer) and then
+						not observed_command.observers.has (observer) then  
+					!! command.make (observed_command, observer)
+					command.execute (Void)
 				else
 					error := True
 					error_message.append (" can't observe ")
 					error_message.append (observed_command.label)
-					error_message.append (" since %Nit hasn't be totally instantiated yet.")
+					error_message.append (" since %Nit already observe or it will imply an infinite loop.")
 				end
 				if error then
 					!! warning.make ("Warning", command_tool)

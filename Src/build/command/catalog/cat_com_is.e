@@ -20,7 +20,6 @@ inherit
 		end
 	REMOVABLE
 	ERROR_POPUPER
-	SHARED_INSTANTIATOR
 
 creation
 
@@ -60,7 +59,6 @@ feature {NONE}
 						user_cmd.label)
 				else
 					page.remove_command (user_cmd)
-					command_instantiator_generator.remove_command (user_cmd)
 				end
 			end
 		end

@@ -20,7 +20,11 @@ feature -- Access
 	default_dispinterface (an_interface: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR): WIZARD_INTERFACE_DESCRIPTOR is
 			-- Default dispinterface.
 		do
-			Result := an_interface.interface_descriptor
+			if an_interface.interface_descriptor.dual then
+				Result := an_interface.interface_descriptor.dispinterface_descriptor
+			else
+				Result := an_interface.interface_descriptor
+			end
 		end
 
 feature -- Basic operations

@@ -49,6 +49,12 @@ feature -- Access
 			Result := associated_command.dark_symbol
 		end;
 
+	grey_symbol: PIXMAP is
+			-- Insensitive version of `symbol'
+		do
+			Result := associated_command.grey_symbol
+		end;
+
 	focus_source: WIDGET is
 			-- Widget representing Current on the screen.
 		do

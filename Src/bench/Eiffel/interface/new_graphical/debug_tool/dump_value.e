@@ -62,7 +62,8 @@ inherit
 create
 	make_boolean, make_character, make_integer, make_integer_64, make_real,
 	make_double, make_pointer, make_object,	make_manifest_string,
-	make_string_for_dotnet, make_object_for_dotnet
+	make_string_for_dotnet, make_object_for_dotnet, make_bits,
+	make_expanded_object
 	
 feature -- Initialization
 
@@ -144,6 +145,39 @@ feature -- Initialization
 			dynamic_class := dtype
 		ensure
 			type /= Type_unknown
+		end
+
+	make_expanded_object (dtype: CLASS_C) is
+			-- Make an expanded object item of type `dtype'.
+		require
+			dtype_not_void: dtype /= Void
+		do
+			value_address := Void
+			type := Type_expanded_object
+			dynamic_class := dtype
+		ensure
+			value_address_set: value_address = Void
+			type_set: type = type_expanded_object
+			dynamic_class_set: dynamic_class = dtype
+		end
+
+	make_bits (a_value, a_type: STRING; dtype: CLASS_C) is
+			-- Make bit item of type `a_type' and class `dtype'
+			-- initialized with `value'.
+		require
+			a_value_not_void: a_value /= Void
+			a_type_not_void: a_type /= Void
+			dtype_not_void: dtype /= Void
+		do
+			value_bits := a_value
+			type_of_bits := a_type
+			type := Type_bits
+			dynamic_class := dtype
+		ensure
+			type_set: type /= Type_unknown
+			dynamic_class_set: dynamic_class = dtype
+			value_bits_set: value_bits = a_value
+			type_of_bits_set: type_of_bits = a_type
 		end
 
 	make_manifest_string(value: STRING; dtype: CLASS_C) is
@@ -337,7 +371,7 @@ feature -- Status report
 				Result := True
 			elseif type = Type_string_dotnet then
 				Result := not is_void
-			elseif type = Type_object and not is_void then
+			elseif is_type_object and not is_void then
 				if dynamic_class /= Void and then Eiffel_system.string_class.is_compiled then
 					if
 						dynamic_class.simple_conform_to (Eiffel_system.string_class.compiled_class) 
@@ -395,7 +429,9 @@ feature -- Status report
 		do
 			Result := output_value.twin
 			if type /= type_string and has_formatted_output then
+				Result.append_character (' ')
 				Result.append_character ('=')
+				Result.append_character (' ')
 				Result.append (formatted_output)
 			end
 			debug ("debug_recv")
@@ -678,7 +714,7 @@ feature -- Action
 				when Type_string then
 					value_string_c := value_string.to_c
 					send_string_value($value_string_c)
-				when Type_object then
+				when Type_object, Type_expanded_object then
 					if value_address /= Void then
 						send_ref_value(hex_to_integer(value_address))
 					else
@@ -705,10 +741,12 @@ feature -- Access
 			elseif dynamic_class /= Void then
 				Result.append (type_representation)
 				
-				if type = Type_object or type = Type_string_dotnet then
+				if is_type_object or type = Type_string_dotnet then
 					Result.append_character (' ')
 				else
+					Result.append_character (' ')
 					Result.append_character ('=')
+					Result.append_character (' ')
 				end
 				Result.append (full_output)
 			else		
@@ -730,6 +768,8 @@ feature -- Access
 				l_generating_type_string := dynamic_class.external_class_name
 			elseif dynamic_class.is_generic or dynamic_class.is_tuple then
 				l_generating_type_string := generating_type_evaluated_string
+			elseif type = type_bits then
+				l_generating_type_string := type_of_bits
 			end
 			if l_generating_type_string	/= Void then
 				Result := l_generating_type_string
@@ -790,20 +830,24 @@ feature -- Access
 			when Type_double then
 				Result := value_double.out
 			when Type_bits then
-				Result := value_bits.out
+				Result := value_bits
 			when Type_string then
 				create Result.make (value_string.count + 2)
 				Result.append_character ('%"')
 				Result.append (value_string)
 				Result.append_character ('%"')
-			when Type_string_dotnet , Type_object then
+			when Type_string_dotnet , Type_object, type_expanded_object then
 				if value_address /= Void then
 					create Result.make (value_address.count + 2)
 					Result.append_character ('<')
 					Result.append (value_address)
 					Result.append_character ('>')
 				else
-					Result := "Void"
+					if type = type_expanded_object then
+						Result := ""
+					else
+						Result := "Void"
+					end
 				end
 			when Type_pointer then
 				Result := value_pointer.out
@@ -833,13 +877,13 @@ feature -- Access
 	is_void: BOOLEAN is
 			-- Is `Current' a Void reference?
 		do
-			Result := (type = Type_object or type = Type_string_dotnet) and address = Void
+			Result := ((type = Type_object or type = Type_string_dotnet) and address = Void)
 		end
 
 	is_basic: BOOLEAN is
 			-- Is `Current' of a basic type?
 		do
-			Result := type /= Type_object and type /= Type_string and type /= Type_string_dotnet
+			Result := not is_type_object and type /= Type_string and type /= Type_string_dotnet
 		end
 
 feature {DUMP_VALUE, EB_OBJECT_TREE_ITEM, EIFNET_EXPORTER, DBG_EXPRESSION_EVALUATOR} -- Internal data
@@ -850,7 +894,8 @@ feature {DUMP_VALUE, EB_OBJECT_TREE_ITEM, EIFNET_EXPORTER, DBG_EXPRESSION_EVALUA
 	value_integer_64: INTEGER_64
 	value_real		: REAL
 	value_double	: DOUBLE
-	value_bits		: BIT_REF -- not yet implemented.
+	value_bits		: STRING
+	type_of_bits	: STRING
 	value_pointer	: POINTER
 	value_address	: STRING -- string standing for the address of the object if type=Type_object
 	value_string    : STRING -- String value
@@ -868,7 +913,13 @@ feature {DUMP_VALUE, EB_OBJECT_TREE_ITEM, EIFNET_EXPORTER, DBG_EXPRESSION_EVALUA
 --	is_type_double        : BOOLEAN is do Result := type = Type_double end
 --	is_type_bits          : BOOLEAN is do Result := type = Type_bits end
 --	is_type_pointer       : BOOLEAN is do Result := type = Type_pointer end
---	is_type_object        : BOOLEAN is do Result := type = Type_object end
+
+	is_type_object: BOOLEAN is
+			-- Is Current value corresponding to an object or an expanded object?
+		do
+			Result := type = Type_object or type = type_expanded_object
+		end
+
 	is_type_string        : BOOLEAN is do Result := type = Type_string end
 --	is_type_string_dotnet : BOOLEAN is do Result := type = Type_string_dotnet end
 --	is_type_integer_64    : BOOLEAN is do Result := type = Type_integer_64 end

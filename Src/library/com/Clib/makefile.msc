@@ -1,15 +1,16 @@
 # Requires environment variable LIBRARY and EIFFEL4.
 
 CC = cl
-CFLAGS = -c -Zi -I$(EIFFEL4)\bench\spec\windows\include\ -I$(LIBRARY)\COM\library\include\ -I$(LIBRARY)\COM\Runtime\include\ -c -Tp
+CFLAGS = -c -Zi -I$(EIFFEL4)\bench\spec\windows\include\ -I..\spec\windows\include -c -Tp
 
 OBJ = E_variant.obj E_IRootStorage.obj E_IStorage.obj E_IStream.obj E_statstg.obj E_wide_string.obj E_IEnumSTATSTG.obj E_Routines.obj ecom_exception.obj E_arraydesc.obj E_custdata.obj E_bstr.obj E_IType_lib.obj E_IType_Info.obj E_IType_Comp.obj E_guid.obj E_Currency.obj E_Decimal.obj E_generic_interface.obj E_automation_interface.obj
 
 com.lib: $(OBJ)
 	if exist $@ del $@
 	lib /OUT:$@ $(OBJ)
-	if not exist $(LIBRARY)\com\Library\lib mkdir $(LIBRARY)\com\Library\lib
-	copy $@ $(LIBRARY)\com\Library\lib
+	if not exist ..\spec\msc mkdir ..\spec\msc
+	if not exist ..\spec\msc\lib mkdir ..\spec\msc\lib
+	copy $@ ..\spec\msc\lib
 	del $@
 
 .cpp.obj:

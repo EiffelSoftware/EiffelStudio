@@ -13,6 +13,107 @@
 
 ecom_runtime_ec rt_ec;
 
+
+IFont * ecom_runtime_ec::ccom_ec_pointed_ifont( EIF_REFERENCE eif_ref )
+
+/*-----------------------------------------------------------
+	Convert IFONT_INTERFACE to IFont *.
+-----------------------------------------------------------*/
+{
+	EIF_OBJECT eif_object = 0;
+	EIF_POINTER a_pointer = 0;
+
+	eif_object = eif_protect (eif_ref);
+	a_pointer = (EIF_POINTER) eif_field (eif_access (eif_object), "item", EIF_POINTER);
+		if (a_pointer  == NULL)
+	{
+		EIF_PROCEDURE create_item = 0;
+		EIF_TYPE_ID type_id = eif_type (eif_object);
+		create_item = eif_procedure ("create_item", type_id);
+		(FUNCTION_CAST (void, (EIF_REFERENCE)) create_item) (eif_access (eif_object));
+		a_pointer = (EIF_POINTER) eif_field (eif_access (eif_object), "item", EIF_POINTER);
+	}
+	((IFont *) a_pointer)->AddRef ();
+	eif_wean (eif_object);
+	return  (IFont * ) a_pointer;
+};
+//-------------------------------------------------------------------------
+
+IFont * * ecom_runtime_ec::ccom_ec_pointed_pointed_ifont( EIF_REFERENCE eif_ref, IFont * * old )
+
+/*-----------------------------------------------------------
+	Convert CELL [IFONT_INTERFACE] to IFont * *.
+-----------------------------------------------------------*/
+{
+	EIF_OBJECT eif_object = 0;
+	IFont * * result = 0;
+	EIF_REFERENCE cell_item = 0;
+
+	eif_object = eif_protect (eif_ref);
+	if (old != NULL)
+		result = old;
+	else
+		result = (IFont * *) CoTaskMemAlloc (sizeof (IFont *));
+	cell_item = eif_field (eif_access (eif_object), "item", EIF_REFERENCE);
+	if (cell_item == NULL)
+		*result = NULL;
+	else
+		*result = ccom_ec_pointed_ifont (cell_item);
+	eif_wean (eif_object);
+	return result;
+};
+//-------------------------------------------------------------------------
+
+IEnumVARIANT * ecom_runtime_ec::ccom_ec_pointed_enum_variant( EIF_REFERENCE eif_ref )
+
+/*-----------------------------------------------------------
+	Convert IENUM_VARIANT_INTERFACE to IEnumVARIANT *.
+-----------------------------------------------------------*/
+{
+	EIF_OBJECT eif_object = 0;
+	EIF_POINTER a_pointer = 0;
+
+	eif_object = eif_protect (eif_ref);
+	a_pointer = (EIF_POINTER) eif_field (eif_access (eif_object), "item", EIF_POINTER);
+		if (a_pointer  == NULL)
+	{
+		EIF_PROCEDURE create_item = 0;
+		EIF_TYPE_ID type_id = eif_type (eif_object);
+		create_item = eif_procedure ("create_item", type_id);
+		(FUNCTION_CAST (void, (EIF_REFERENCE)) create_item) (eif_access (eif_object));
+		a_pointer = (EIF_POINTER) eif_field (eif_access (eif_object), "item", EIF_POINTER);
+	}
+	((IEnumVARIANT *) a_pointer)->AddRef ();
+	eif_wean (eif_object);
+	return  (IEnumVARIANT * ) a_pointer;
+};
+//-------------------------------------------------------------------------
+
+IEnumVARIANT * * ecom_runtime_ec::ccom_ec_pointed_pointed_enum_variant( EIF_REFERENCE eif_ref, IEnumVARIANT * * old )
+
+/*-----------------------------------------------------------
+	Convert CELL [IENUM_VARIANT_INTERFACE] to IEnumVARIANT * *.
+-----------------------------------------------------------*/
+{
+	EIF_OBJECT eif_object = 0;
+	IEnumVARIANT * * result = 0;
+	EIF_REFERENCE cell_item = 0;
+
+	eif_object = eif_protect (eif_ref);
+	if (old != NULL)
+		result = old;
+	else
+		result = (IEnumVARIANT * *) CoTaskMemAlloc (sizeof (IEnumVARIANT *));
+	cell_item = eif_field (eif_access (eif_object), "item", EIF_REFERENCE);
+	if (cell_item == NULL)
+		*result = NULL;
+	else
+		*result = ccom_ec_pointed_enum_variant (cell_item);
+	eif_wean (eif_object);
+	return result;
+};
+//-------------------------------------------------------------------------
+
 HRESULT * ecom_runtime_ec::ccom_ec_pointed_hresult (EIF_REFERENCE a_ref, HRESULT * old)
 
 // create HRESULT * from ECOM_HRESULT

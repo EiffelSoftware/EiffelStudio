@@ -1,30 +1,41 @@
+indexing
+	description: "Description of a boolean value."
+	date: "$Date$"
+	revision: "$Revision$"
+
 class BOOL_VALUE_I 
 
 inherit
-
 	VALUE_I
 		redefine
-			generate, is_boolean
+			generate, is_boolean, boolean_value
 		end;
-	
+
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make (v: BOOLEAN) is
+			-- Create current with value `v'.
+		do
+			boolean_value := v
+		ensure
+			boolean_value_set: boolean_value = v
+		end
+
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is
 			-- Is `other' equivalent to the current object ?
 		do
-			Result := bool_val = other.bool_val
+			Result := boolean_value = other.boolean_value
 		end
+		
+feature -- Access
 
-feature 
-
-	bool_val: BOOLEAN;
+	boolean_value: BOOLEAN;
 			-- Integer constant value
-
-	set_bool_val (i: BOOLEAN) is
-			-- Assign `i' to `bool_val'.
-		do
-			bool_val := i;
-		end;
 
 	is_boolean: BOOLEAN is True
 			-- Is the constant value a boolean one ?
@@ -38,7 +49,7 @@ feature
 	generate (buffer: GENERATION_BUFFER) is
 			-- Generate value in `file'.
 		do
-			if bool_val then
+			if boolean_value then
 				buffer.putstring ("'\01'");
 			else
 				buffer.putstring ("'\0'");
@@ -48,14 +59,14 @@ feature
 	generate_il is
 			-- Generate IL code for boolean constant value.
 		do
-			il_generator.put_boolean_constant (bool_val)	
+			il_generator.put_boolean_constant (boolean_value)	
 		end
 
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Generate byte code for a boolean constant value.
 		do
 			ba.append (Bc_bool);
-			if bool_val then
+			if boolean_value then
 				ba.append ('%/001/');
 			else
 				ba.append ('%U');
@@ -64,7 +75,7 @@ feature
 
 	dump: STRING is
 		do
-			Result := bool_val.out			
+			Result := boolean_value.out			
 		end;
 
 end

@@ -102,7 +102,6 @@ feature -- Element change
 
 	new_line is
 			-- Write a '\n'.
-			-- Do not allow two ore more consecutive blank lines.
 		do
 			append_character ('%N')
 			emitted := false

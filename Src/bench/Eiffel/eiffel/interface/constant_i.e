@@ -81,7 +81,7 @@ feature
 			Precursor {ENCAPSULATED_I} (feat_tbl)
 			actual_type := type.actual_type
 			if value.valid_type (actual_type) then
-				value.set_real_value (actual_type)
+				value.set_real_type (actual_type)
 			else
 				create vqmc
 				vqmc.set_class (written_class)

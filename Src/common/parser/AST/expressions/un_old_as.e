@@ -5,7 +5,7 @@ inherit
 	UNARY_AS
 		redefine
 			type_check, byte_node
-		end
+		end;
 
 feature -- Type check
 
@@ -51,6 +51,7 @@ feature -- Type check, byte code and dead code removal
 			!!Result;
 			old_expr := expr.byte_node;
 			Result.set_expr (old_expr);
+			Result.add_old_expression;
 		end;
 
 end

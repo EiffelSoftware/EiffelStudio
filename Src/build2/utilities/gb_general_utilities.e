@@ -59,8 +59,6 @@ feature -- Basic operations
 			-- i.e. "   a_string   " becomes "a_string"
 		require
 			string_not_void: string /= Void
-		local
-			counter: INTEGER
 		do
 			Result := string
 			Result.prune_all_trailing (' ')

@@ -11,30 +11,59 @@ inherit
 	DIALOG_WINDOWS
 		rename
 			allow_resize as allow_recompute_size,
-			forbid_resize as forbid_recompute_size
+			forbid_resize as forbid_recompute_size,
+			show as dialog_show
 		undefine
 			child_has_resized,
 			on_destroy,
 			make_with_coordinates,
-			show,
 			set_default_position,
 			set_enclosing_size,
 			maximal_width,
 			maximal_height
 		redefine
-			class_name,
-			dialog_realize, 
-			on_size,
+			unrealize,
 			realize,
+			class_name,
+			on_size,
 			set_form_width,
 			set_form_height,
 			set_height,
 			set_size,
 			set_width,
-			unrealize,
-			default_style
+			default_style,
+			default_position
 		select
 			unrealize
+		end;
+
+	DIALOG_WINDOWS
+		rename
+			allow_resize as allow_recompute_size,
+			forbid_resize as forbid_recompute_size
+		undefine
+			child_has_resized,
+			on_destroy,
+			make_with_coordinates,
+			set_default_position,
+			set_enclosing_size,
+			maximal_width,
+			maximal_height
+		redefine
+			unrealize,
+			show,
+			realize,
+			class_name,
+			on_size,
+			set_form_width,
+			set_form_height,
+			set_height,
+			set_size,
+			set_width,
+			default_style,
+			default_position
+		select
+			show
 		end;
 
 	FORM_WINDOWS
@@ -43,6 +72,7 @@ inherit
 			wel_make as make_child,
 			unrealize as form_unrealize
 		undefine
+			realize_current,
 			default_style,
 			destroy,
 			class_background,
@@ -52,12 +82,12 @@ inherit
 			move_and_resize,
 			on_menu_command,
 			on_paint,
-			realize_current,
 			realized,
 			resize_for_shell,
 			width,
 			wel_move,
 			real_x,
+			show,
 			real_y
 		redefine
 			class_name,
@@ -69,7 +99,7 @@ inherit
 			set_width,
 			set_height,
 			set_size,
-			show
+			default_position
 		end
 
 	FORM_D_I
@@ -104,9 +134,14 @@ feature -- Initialization
 			!! form_child_list.make
 		end
 
+feature -- Access
+
+	default_position: BOOLEAN
+			-- Use default position?
+
 feature -- Status setting
 
-	dialog_realize is
+	realize is
 			-- Realize the current widget
 		local
 			h,w: INTEGER
@@ -114,28 +149,11 @@ feature -- Status setting
 		do
 			if not exists then
 				realize_current
-				shown := true
-				realized := true
-				updating := True
 				realize_children
 				if not fixed_size_flag then
-					updating := False
-					update_all
-					updating := True
 					set_enclosing_size
+					update_all
 				end
-				h := form_child_list.height (Current)
-				if h > height then
-					set_form_height (h)
-				end			
-				w := form_child_list.width (Current)
-				if w > width then
-					set_form_width (w)
-				end
-				updating := false
-			end
-			if grab_style = modal then
-				set_windows_insensitive
 			end
 			if default_position then
 				xpos := parent.real_x + ((parent.width - width) // 2) 
@@ -144,13 +162,7 @@ feature -- Status setting
 				ypos := ypos.max (0)
 				set_x_y (xpos, ypos)
 			end
-			show
 			update_all
-		end
-
-	realize is
-		do
-			realized := true
 		end
 
 	set_form_height (new_height: INTEGER) is
@@ -227,7 +239,9 @@ feature -- Status setting
 
 	unrealize is
 		do
-			realized := false
+			if insensitive_list /= Void then
+				set_windows_sensitive
+			end
 			form_unrealize
 		end
 

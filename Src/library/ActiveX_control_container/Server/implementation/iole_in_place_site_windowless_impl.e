@@ -8,7 +8,17 @@ deferred class
 
 inherit
 	IOLE_IN_PLACE_SITE_WINDOWLESS_INTERFACE
-
+	
+	CONTROL_WINDOW
+		redefine
+			process_message,
+			on_size,
+			on_set_focus,
+			on_kill_focus,
+			on_destroy,
+			dispose
+		end
+		
 	OLE_CONTROL_PROXY
 	
 	ECOM_EXCEPTION
@@ -22,44 +32,7 @@ inherit
 	
 	AMBIENT_PROPERTIES
 
-	WEL_WINDOW
-		rename
-			class_name as wel_class_name,
-			exists as wel_exists,
-			has_capture as wel_has_capture,
-			has_heavy_capture as wel_has_heavy_capture,
-			invalidate_rect as wel_invalidate_rect,
-			item as wel_item,
-			release_capture as wel_release_capture,
-			set_capture as wel_set_capture,
-			set_focus as wel_set_focus,
-			set_item as wel_set_item,
-			scroll as wel_scroll
-		redefine
-			process_message,
-			on_size,
-			on_set_focus,
-			on_kill_focus,
-			on_destroy,
-			dispose
-		end
-	
-	WEL_UNIT_CONVERSION
-		export
-			{NONE} all
-		end
-	
-	DVASPECT_ENUM
-		export
-			{NONE} all
-		end
-	
 	HIT_RESULT_ENUM
-		export
-			{NONE} all
-		end
-	
-	OLEIVERB_ENUM
 		export
 			{NONE} all
 		end
@@ -74,7 +47,7 @@ inherit
 			{NONE} all
 		end
 
-	WEL_OCM_CONSTANTS
+	WEL_CONSTANTS
 		export
 			{NONE} all
 		end
@@ -155,12 +128,20 @@ feature -- Basic Operations
 				frame_window.create_item
 				create m_in_place_frame_proxy.make_from_other (frame_window)
 			end
+			check
+				non_void_frame: m_in_place_frame_proxy /= Void
+				window_exists: frame_window.wel_exists
+			end
 			pp_frame.put (m_in_place_frame_proxy)
 			
 			if m_in_place_uiwindow = Void then
 				create ui_window.make
 				ui_window.create_item
 				create m_in_place_uiwindow.make_from_other (ui_window)
+			end
+			check
+				non_void_document: m_in_place_uiwindow /= Void
+				window_exists: ui_window.wel_exists
 			end
 			pp_doc.put (m_in_place_uiwindow)
 			
@@ -422,30 +403,32 @@ feature {NONE} -- Messages
 			a_size_in_himetric: WEL_SIZE
 			psizel: TAG_SIZEL_RECORD
 		do
-			if 
-				m_position = Void
-			then
-				create m_position.make
-			end
-			m_position.set_right (m_position.left + a_width)
-			m_position.set_bottom (m_position.top + a_height)
-			
-			create a_size_in_pixel
-			a_size_in_pixel.set_width (a_width)
-			a_size_in_pixel.set_height (a_height)
-			a_size_in_himetric := pixel_to_himetric (a_size_in_pixel)
-			
-			create psizel.make_from_pointer (a_size_in_himetric.item)
-			if
-				ole_object /= Void
-			then
-				ole_object.set_extent (Dvaspect_content, psizel)
-			end
-			if ole_in_place_object /= Void then
-				ole_in_place_object.set_object_rects (m_position, m_position)
-			end
-			if m_windowless then
-				invalidate
+			if unknown_control /= Void then
+				if 
+					m_position = Void
+				then
+					create m_position.make
+				end
+				m_position.set_right (m_position.left + a_width)
+				m_position.set_bottom (m_position.top + a_height)
+
+				create a_size_in_pixel
+				a_size_in_pixel.set_width (a_width)
+				a_size_in_pixel.set_height (a_height)
+				a_size_in_himetric := pixel_to_himetric (a_size_in_pixel)
+
+				create psizel.make_from_pointer (a_size_in_himetric.item)
+				if
+					ole_object /= Void
+				then
+					ole_object.set_extent (Dvaspect_content, psizel)
+				end
+				if ole_in_place_object /= Void then
+					ole_in_place_object.set_object_rects (m_position, m_position)
+				end
+				if m_windowless then
+					invalidate
+				end
 			end
 		end
 
@@ -531,13 +514,12 @@ feature {NONE} -- Messages
 			compare_item_struct: WEL_COMPARE_ITEM_STRUCT
 			delete_item_struct: WEL_DELETE_ITEM_STRUCT
 		do
-			inspect msg
-			when Wm_notify then
+			if msg = Wel_window_constants.Wm_notify then
 				if lparam /= Void then
 					create nmhdr.make_by_pointer (cwel_integer_to_pointer (lparam))
 					child_window := nmhdr.window_from 
 				end
-			when Wm_parentnotify then
+			elseif msg = Wel_window_constants.Wm_parentnotify then
 				if 
 					wparam = Wm_create or
 					wparam = Wm_destroy
@@ -548,7 +530,7 @@ feature {NONE} -- Messages
 				else
 					child_window := window_of_item (cwin_get_dlg_item (wel_item, wparam))
 				end
-			when Wm_drawitem then
+			elseif msg = Wel_window_constants.Wm_drawitem then
 				if 
 					wparam /= 0 and
 					lparam /= 0
@@ -556,7 +538,7 @@ feature {NONE} -- Messages
 					create draw_item_struct.make_by_pointer (cwel_integer_to_pointer (lparam))
 					child_window := draw_item_struct.window_item
 				end
-			when Wm_measureitem then
+			elseif msg = Wel_window_constants.Wm_measureitem then
 				if 
 					wparam /= 0 and
 					lparam /= 0
@@ -564,7 +546,7 @@ feature {NONE} -- Messages
 					create measure_item_struct.make_by_pointer (cwel_integer_to_pointer (lparam))
 					child_window := window_of_item (cwin_get_dlg_item (wel_item, measure_item_struct.ctl_id))
 				end
-			when Wm_compareitem then
+			elseif msg = Wel_window_constants.Wm_compareitem then
 				if 
 					wparam /= 0 and
 					lparam /= 0
@@ -572,7 +554,7 @@ feature {NONE} -- Messages
 					create compare_item_struct.make_by_pointer (cwel_integer_to_pointer (lparam))
 					child_window := window_of_item (cwin_get_dlg_item (wel_item, compare_item_struct.ctl_id))
 				end
-			when Wm_deleteitem then
+			elseif msg = Wel_window_constants.Wm_deleteitem then
 				if 
 					wparam /= 0 and
 					lparam /= 0
@@ -580,32 +562,31 @@ feature {NONE} -- Messages
 					create delete_item_struct.make_by_pointer (cwel_integer_to_pointer (lparam))
 					child_window := window_of_item (cwin_get_dlg_item (wel_item, delete_item_struct.ctl_id))
 				end
-			else
-				if 
-					msg = Wm_command or
-					msg = Wm_vkeytoitem or
-					msg = Wm_chartoitem or
-					msg = Wm_hscroll or
-					msg = Wm_vscroll or
-					msg = Wm_ctlcolorbtn or
-					msg = Wm_ctlcolordlg or
-					msg = Wm_ctlcoloredit or
-					msg = Wm_ctlcolorlistbox or
-					msg = Wm_ctlcolormsgbox or
-					msg = Wm_ctlcolorscrollbar or
-					msg = Wm_ctlcolorstatic 
-				then
-					if lparam /= 0 then
-						child_window := window_of_item (cwel_integer_to_pointer (lparam))
-					end
+			elseif 
+				msg = Wel_window_constants.Wm_command or
+				msg = Wel_window_constants.Wm_vkeytoitem or
+				msg = Wel_window_constants.Wm_chartoitem or
+				msg = Wel_window_constants.Wm_hscroll or
+				msg = Wel_window_constants.Wm_vscroll or
+				msg = Wel_window_constants.Wm_ctlcolorbtn or
+				msg = Wel_window_constants.Wm_ctlcolordlg or
+				msg = Wel_window_constants.Wm_ctlcoloredit or
+				msg = Wel_window_constants.Wm_ctlcolorlistbox or
+				msg = Wel_window_constants.Wm_ctlcolormsgbox or
+				msg = Wel_window_constants.Wm_ctlcolorscrollbar or
+				msg = Wel_window_constants.Wm_ctlcolorstatic 
+			then
+				if lparam /= 0 then
+					child_window := window_of_item (cwel_integer_to_pointer (lparam))
 				end
 			end
+
 			if child_window /= Void then
-				cwin_send_message (child_window.item, Ocm__base + msg, wparam, lparam)
+				cwin_send_message (child_window.item, Wel_window_constants.Ocm__base + msg, wparam, lparam)
 			end
 		end
 
-	on_wm_paint is
+	on_wm_paint (wparam: INTEGER) is
 			-- Wm_paint message.
 			-- A WEL_DC and WEL_PAINT_STRUCT are created and
 			-- passed to the `on_paint' routine.
@@ -613,8 +594,6 @@ feature {NONE} -- Messages
 			-- need to paint something, this routine can be
 			-- redefined to do nothing (eg. The object creation are
 			-- useless).
-		require
-			wel_exists: wel_exists
 		local
 			paint_dc: WEL_PAINT_DC
 		do
@@ -628,10 +607,6 @@ feature {NONE} -- Messages
 
 	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
 			-- Wm_paint message.
-		require
-			paint_dc_not_void: paint_dc /= Void
-			paint_dc_exists: paint_dc.exists
-			invalid_rect_not_void: invalid_rect /= Void
 		local
 			a_client_rect: WEL_RECT
 			a_brush: WEL_BRUSH
@@ -725,35 +700,35 @@ feature {WEL_DISPATCHER, WEL_WINDOW} -- Implementation
 				end
 				if 
 					hit_result = Hitresult_hit and
-					(msg = Wm_mousemove or
-					msg = Wm_setcursor or
-					msg = Wm_lbuttonup or
-					msg = Wm_rbuttonup or
-					msg = Wm_mbuttonup or
-					msg = Wm_lbuttondown or
-					msg = Wm_rbuttondown or
-					msg = Wm_mbuttondown or
-					msg = Wm_lbuttondblclk or
-					msg = Wm_rbuttondblclk or
-					msg = Wm_mbuttondblclk)
+					(msg = Wel_window_constants.Wm_mousemove or
+					msg = Wel_window_constants.Wm_setcursor or
+					msg = Wel_window_constants.Wm_lbuttonup or
+					msg = Wel_window_constants.Wm_rbuttonup or
+					msg = Wel_window_constants.Wm_mbuttonup or
+					msg = Wel_window_constants.Wm_lbuttondown or
+					msg = Wel_window_constants.Wm_rbuttondown or
+					msg = Wel_window_constants.Wm_mbuttondown or
+					msg = Wel_window_constants.Wm_lbuttondblclk or
+					msg = Wel_window_constants.Wm_rbuttondblclk or
+					msg = Wel_window_constants.Wm_mbuttondblclk)
 				then
 					Result := on_mouse_message (msg, wparam, lparam)
 				end
 				if 
 					m_have_focus and
-					(msg = Wm_keydown or
-					msg = Wm_keyup or
-					msg = Wm_char or
-					msg = Wm_deadchar or
-					msg = Wm_syskeydown or
-					msg = Wm_syskeyup or
-					msg = Wm_sysdeadchar or
-					msg = Wm_help or
-					msg = Wm_cancelmode or
-					msg = Wm_ime_char or
-					msg = Wm_mbuttondblclk or
-					(msg >= Wm_ime_setcontext and
-					msg <= Wm_ime_keyup ))
+					(msg = Wel_window_constants.Wm_keydown or
+					msg = Wel_window_constants.Wm_keyup or
+					msg = Wel_window_constants.Wm_char or
+					msg = Wel_window_constants.Wm_deadchar or
+					msg = Wel_window_constants.Wm_syskeydown or
+					msg = Wel_window_constants.Wm_syskeyup or
+					msg = Wel_window_constants.Wm_sysdeadchar or
+					msg = Wel_window_constants.Wm_help or
+					msg = Wel_window_constants.Wm_cancelmode or
+					msg = Wel_window_constants.Wm_ime_char or
+					msg = Wel_window_constants.Wm_mbuttondblclk or
+					(msg >= Wel_window_constants.Wm_ime_setcontext and
+					msg <= Wel_window_constants.Wm_ime_keyup ))
 				then
 					Result := on_mouse_message (msg, wparam, lparam)
 				end
@@ -762,10 +737,10 @@ feature {WEL_DISPATCHER, WEL_WINDOW} -- Implementation
 					Result := reflect_notifications (msg, wparam, lparam)
 				end
 			end
-			inspect msg
-			when Wm_paint then
-				on_wm_paint
-			when Wm_forwardmsg then
+			
+			if msg = Wel_window_constants.Wm_paint then
+				on_wm_paint (wparam)
+			elseif msg = Wel_window_constants.Wm_forwardmsg then
 				on_forward_message (lparam)
 			else
 				-- Call the `process_message' routine of the
@@ -791,9 +766,6 @@ feature {NONE} -- Implementation
 	
 	m_have_focus: BOOLEAN
 			-- Does control have focus?
-			
-	m_position: TAG_RECT_RECORD
-			-- Client rectangle.
 				
 	m_client_dc: WEL_CLIENT_DC
 			-- Window's client area device context.
@@ -811,13 +783,11 @@ feature {NONE} -- Implementation
 			-- object is collected or by the user if `Current' is
 			-- no more usefull. 
 		do
-			Precursor {WEL_WINDOW}
+			Precursor {CONTROL_WINDOW}
 			Precursor {ECOM_EXCEPTION}
 		end
 	
 feature {NONE} -- Externals
-
-	Wm_forwardmsg: INTEGER is 895
 
 	ole_lock_running (an_ole_object: POINTER; 
 		a_lock, a_last_unlock_closes: BOOLEAN) is

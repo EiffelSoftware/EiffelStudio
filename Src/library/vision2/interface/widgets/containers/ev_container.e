@@ -112,7 +112,6 @@ feature -- Element change
 		do
 			implementation.extend (v)
 		ensure
-			item_is_old_item: item = old item
 			has_v: has (v)
 		end
 
@@ -361,6 +360,9 @@ end -- class EV_CONTAINER
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.29  2000/03/20 19:39:25  king
+--| Removed item_is_old_item post cond as n/a to cell
+--|
 --| Revision 1.28  2000/03/18 00:09:24  brendel
 --| Added generic parameter.
 --|

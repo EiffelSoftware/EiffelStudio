@@ -1,7 +1,7 @@
 # wel.lib - Makefile for Microsoft C
 
-EIFFEL_SRC="E:\43dev"
-EIFFEL_SRC2="F:\Eiffel43"
+EIFFEL_SRC="E:\45dev"
+EIFFEL_SRC2="F:\Eiffel45"
 
 CC = cl
 CFLAGS = -c -Ox -W3 -I$(EIFFEL_SRC)\library\encryption\Clib -I$(EIFFEL_SRC2)\bench\spec\windows\include

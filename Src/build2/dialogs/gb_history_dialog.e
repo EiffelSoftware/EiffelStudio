@@ -110,7 +110,8 @@ feature {GB_GLOBAL_HISTORY} -- Implementation
 		end
 		
 	remove_items_from_position (pos: INTEGER) is
-			--
+			-- Remove all items in `history_list' from
+			-- position `pos'.
 		do
 			from
 				history_list.go_i_th (pos)
@@ -122,6 +123,11 @@ feature {GB_GLOBAL_HISTORY} -- Implementation
 			last_selected_item := history_list.count - 1
 		end
 		
+	remove_all_items is
+			-- Clear `history_list' completely.
+		do
+			history_list.wipe_out
+		end
 		
 		
 feature {NONE} -- Implementation

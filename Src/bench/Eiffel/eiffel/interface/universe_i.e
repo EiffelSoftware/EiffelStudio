@@ -423,12 +423,12 @@ feature {COMPILER_EXPORTER} -- Implementation
 			system.set_double_class (unique_class ("double"))
 			system.set_string_class (unique_class ("string"))
 			system.set_pointer_class (unique_class ("pointer"))
+			system.set_array_class (unique_class ("array"))
+			system.set_special_class (unique_class ("special"))
 
 			if not system.il_generation then
 				system.set_tuple_class (unique_class ("tuple"))
-				system.set_array_class (unique_class ("array"))
 				system.set_to_special_class (unique_class ("to_special"))
-				system.set_special_class (unique_class ("special"))
 				system.set_bit_class (unique_class ("bit_ref"))
 				system.set_character_ref_class (unique_class ("character_ref"), False)
 				system.set_boolean_ref_class (unique_class("boolean_ref"))
@@ -445,11 +445,6 @@ feature {COMPILER_EXPORTER} -- Implementation
 				system.set_function_class (unique_class ("function"))
 				system.set_character_class (unique_class ("wide_character"), True)
 				system.set_character_ref_class (unique_class ("wide_character_ref"), True)
-			else
-					-- In IL generation an ARRAY is equivalent to a SPECIAL object
-					-- in normal generation
-				system.set_special_class (unique_class ("array"))
-				system.set_array_class (system.special_class)
 			end
 
 				-- Check sum error

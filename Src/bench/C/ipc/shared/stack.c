@@ -430,7 +430,7 @@ int n;
 	 */
 	type = ip->type & SK_HEAD;
 	if ((type == SK_EXP || type == SK_REF) && (ip->it_ref != (char *)0))
-		ip->type = ip->type | Dtype(ip->it_ref);
+		ip->type = type | Dtype(ip->it_ref);
 
 	return &dumped;			/* Pointer to static data */
 }
@@ -460,7 +460,7 @@ int n;
 	 */
 	type = ip->type & SK_HEAD;
 	if ((type == SK_EXP || type == SK_REF) && (ip->it_ref != (char *)0))
-		ip->type = ip->type | Dtype(ip->it_ref);
+		ip->type = type | Dtype(ip->it_ref);
 
 	return &dumped;			/* Pointer to static data */
 }
@@ -522,7 +522,7 @@ int arg_num;		/* Number of arguments */
 	 */
 	type = ip->type & SK_HEAD;
 	if ((type == SK_EXP || type == SK_REF) && (ip->it_ref != (char *)0))
-		ip->type = ip->type | Dtype(ip->it_ref);
+		ip->type = type | Dtype(ip->it_ref);
 
 	send_dump(s, &dumped);
 }

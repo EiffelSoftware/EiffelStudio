@@ -11,18 +11,12 @@ inherit
 
 	STONE
 		redefine
-			is_valid, synchronized_stone, is_equal
+			is_valid, synchronized_stone, same_as, history_name
 		end;
 
-	SHARED_APPLICATION_EXECUTION
-		redefine
-			is_equal
-		end;
+	SHARED_APPLICATION_EXECUTION;
 
 	INTERFACE_W
-		redefine
-			is_equal
-		end
 	
 creation
 
@@ -78,12 +72,27 @@ feature -- Access
 
 	click_list: ARRAY [CLICK_STONE];
 
+	history_name: STRING is
+			-- Name used in the history list
+		do
+			!! Result.make (0);
+			Result.append (object_address);
+			Result.append (": ");
+			Result.append (dynamic_class.name_in_upper)
+		end;
+
 feature -- Status report
 
-	is_equal (other: like Current): BOOLEAN is
+	same_as (other: like Current): BOOLEAN is
 			-- Do `Current' and `other' reference the same object?
 		do
-			Result := object_address.is_equal (other.object_address)
+			if object_address /= Void and then other /= Void and then
+					other.object_address /= Void then
+				Result := object_address.is_equal (other.object_address)
+			else
+				Result := object_address = Void and
+					(other /= Void and then other.object_address = Void)
+			end
 		end;
 
 	is_valid: BOOLEAN is

@@ -1,17 +1,15 @@
---=========================== class XXXXXXXX ========================
---
--- Author: Deramat
--- Last revision: 03/30/92
---
--- Icon: Picture symbol and text label.
---
---===================================================================
+indexing
+	description: "Icon: Picture symbol and text label."
+	Id: "$Id$"
+	Date: "$Date$"
+	Revision: "$Revision$"
 
 class ICON 
 
 inherit
 
-	CONSTANTS;
+	CONSTANTS
+
 	BULLETIN
 		rename
 			make as bulletin_make,
@@ -21,72 +19,72 @@ inherit
 		redefine
 			set_managed,
 			add_button_press_action
-		end;
+		end
 
 feature 
 
-	init_y: INTEGER is 29;	
+	init_y: INTEGER is 29	
 
 	source_button: PICT_COLOR_B is
 		do
 			Result := button
-		end;
+		end
 
-	symbol: PIXMAP;
+	symbol: PIXMAP
 			-- Icon picture
 
-	label: STRING;
+	label: STRING
 			-- Icon label
 
 	set_symbol (s: PIXMAP) is
 			-- Set icon symbol.
 		require
-			valid_argument: s /= Void;
+			valid_argument: s /= Void
 		local
-			was_managed: BOOLEAN;
+			was_managed: BOOLEAN
 		do
-			symbol := s;
+			symbol := s
 			if s.is_valid and then widget_created then
-				button.unmanage;
-				button.set_pixmap (s);
-				button.manage;
-			end;
-		end;
+				button.unmanage
+				button.set_pixmap (s)
+				button.manage
+			end
+		end
 
 	set_label (s: STRING) is
 			-- Set icon label.
 		require
-			not_void: s /= Void;
+			not_void: s /= Void
 		local
-			was_managed: BOOLEAN;
+			was_managed: BOOLEAN
 		do
-			label := clone (s);
+			label := clone (s)
 			if widget_created then
-				icon_label.unmanage;
-				icon_label.set_y (init_y);
-				icon_label.set_text (label);
-				icon_label.manage;
-			end;
-		end;
+				icon_label.unmanage
+				icon_label.set_y (init_y)
+				icon_label.set_text (label)
+				icon_label.manage
+			end
+		end
 
 	widget_created: BOOLEAN is
 		do
 			Result := implementation /= Void
-		end;
+		end
 	
 feature {NONE} -- Interface section
 
-	button: ACTIVE_PICT_COLOR_B;
-	icon_label: LABEL;
+	button: ACTIVE_PICT_COLOR_B
+	icon_label: LABEL
 	
 	update_label is
 		do
 			if label.empty then
-				icon_label.unmanage;
+				icon_label.unmanage
 			else
-				icon_label.manage;
-			end;
-		end;
+				icon_label.manage
+			end
+		end
 
 feature  -- Interface section
 
@@ -97,26 +95,26 @@ feature  -- Interface section
 		require
 			not_created: not widget_created
 		do
-			bulletin_make_unmanaged (Widget_names.bulletin, a_parent);
-			!! button.make_unmanaged (Widget_names.pcbutton, Current);
-			button.set_x_y (1, 1);
+			bulletin_make_unmanaged (Widget_names.bulletin, a_parent)
+			!! button.make_unmanaged (Widget_names.pcbutton, Current)
+			button.set_x_y (1, 1)
 			if 
 				symbol /= Void and
 				symbol.is_valid
 			then 
 				button.set_pixmap (symbol)
-			end;
-			!!icon_label.make_unmanaged (Widget_names.label, Current);
-			icon_label.set_left_alignment;
-			icon_label.allow_recompute_size;
+			end
+			!! icon_label.make_unmanaged (Widget_names.label, Current)
+			icon_label.set_left_alignment
+			icon_label.allow_recompute_size
 			if (label /= Void) and then not label.empty then
-				icon_label.set_y (init_y);
-				icon_label.set_text (label);
+				icon_label.set_y (init_y)
+				icon_label.set_text (label)
 			else
-				icon_label.set_text ("");
-			end;
+				icon_label.set_text ("")
+			end
 			set_widget_default
-		end;
+		end
 
 	frozen make_visible (a_parent: COMPOSITE) is
 			-- Create current unmanaged.
@@ -125,44 +123,45 @@ feature  -- Interface section
 		require
 			not_created: not widget_created
 		do
-			make_unmanaged (a_parent);
-			set_managed (true);	
-		end;
+			make_unmanaged (a_parent)
+			set_managed (true)	
+		end
 
 	set_widget_default is
 			-- Set default behaviour after widget
 			-- has been created
 		do
 			-- Do nothing
-		end;
+		end
 
-	add_activate_action (a_command: COMMAND; an_argument: ANY) is
+	add_activate_action (a_command: COMMAND an_argument: ANY) is
 		do
 			button.add_activate_action (a_command, an_argument)
-		end;
+		end
 
-	add_button_press_action (i: INTEGER; a_command: COMMAND; an_argument: ANY) is
+	add_button_press_action (i: INTEGER a_command: COMMAND an_argument: ANY) is
 		do
 			button.add_button_press_action (i, a_command, an_argument)
-		end;
+		end
 
 	set_managed (b: BOOLEAN) is
 		do
 			if b then 
 				if not icon_label.text.empty then
-					icon_label.manage;
-				end;
-				button.manage;
-				manage;
-			else unmanage;
+					icon_label.manage
+				end
+				button.manage
+				manage
+			else 
+				unmanage
 				if button.managed then
-					button.unmanage;
-				end;
+					button.unmanage
+				end
 				if icon_label.managed then
-					icon_label.unmanage;
-				end;
-			end;
-		end;
+					icon_label.unmanage
+				end
+			end
+		end
 
 feature {EB_BOX}
 
@@ -171,20 +170,20 @@ feature {EB_BOX}
 		require
 			exists: widget_created
 		local
-			color: COLOR;	
-			font: FONT;
+			color: COLOR	
+			font: FONT
 			res: like Resources
 		do
-			res := Resources;
-			color := res.foreground_color;
+			res := Resources
+			color := res.foreground_color
 			if color /= Void then
 				button.set_foreground_color (color)
-				icon_label.set_foreground_color (color);
-			end;
-			font := res.default_font;
+				icon_label.set_foreground_color (color)
+			end
+			font := res.default_font
 			if font /= Void then
-				icon_label.set_font (font);
-			end;
-		end;
+				icon_label.set_font (font)
+			end
+		end
 
 end

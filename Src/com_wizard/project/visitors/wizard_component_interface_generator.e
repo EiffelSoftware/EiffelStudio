@@ -46,6 +46,14 @@ feature -- Basic operations
 		require
 			non_void_interface: an_interface /= Void
 		do
+			if 
+				an_interface.inherited_interface /= Void and then 
+				not an_interface.inherited_interface.c_type_name.is_equal (Iunknown_type) and then
+				not an_interface.inherited_interface.c_type_name.is_equal (Idispatch_type) 
+			then
+				generate_functions_and_properties (an_interface.inherited_interface)
+			end		
+
 			if not an_interface.properties.empty then
 				from
 					an_interface.properties.start
@@ -67,14 +75,6 @@ feature -- Basic operations
 					an_interface.functions.forth
 				end
 			end
-
-			if an_interface.inherited_interface /= Void and not
-					an_interface.inherited_interface.c_type_name.is_equal (Iunknown_type) and then
-					not an_interface.inherited_interface.c_type_name.is_equal (Idispatch_type) then
-				generate_functions_and_properties (an_interface.inherited_interface)
-			end		
-			finished := True
-			clean_up
 		end
 
 	process_property (a_property: WIZARD_PROPERTY_DESCRIPTOR) is

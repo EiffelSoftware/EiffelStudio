@@ -176,7 +176,6 @@ feature -- Status setting
 			l_tree_item: EV_TREE_ITEM
 			l_dv: ABSTRACT_DEBUG_VALUE
 		do
-			print ("EB_PRETTY_PRINT_DIALOG.set_stone %N")
 			current_dump_value := Void
 			current_object := st
 			
@@ -209,7 +208,6 @@ feature -- Status setting
 			l_dv: ABSTRACT_DEBUG_VALUE			
 		do
 			if current_dump_value = Void then
-				print ("retrieve_dump_value: processing ... %N")
 				if application.is_dotnet then
 					l_dv := Application.imp_dotnet.kept_object_item (current_object.object_address)
 					if l_dv /= Void then
@@ -333,7 +331,6 @@ feature {NONE} -- Event handling
 	auto_slice_selected is
 			-- Called by `select_actions' of `auto_set_slice_button'.
 		do
-			print ("Auto Slice action ..%N")
 			lower_slice_field.set_text ("0")
 			upper_slice_field.set_text ((-1).out) --(current_dump_value.last_string_representation_length - 1).out)
 			slice_min_ref.set_item (0)

@@ -20,7 +20,7 @@ feature {NONE} -- Implementation
 
 	associated_cmd: E_STORE_CASE_INFO is
 			-- Associated system command to be executed
-		once
+		do
 			!! Result.make_with_window (output_window)
 		end;
 

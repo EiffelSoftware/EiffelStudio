@@ -25,7 +25,7 @@ feature {NONE} -- Implementation
 	associated_cmd: E_SHOW_ROUTINE_HOMONYMNS is
 			-- Associated feature command to be executed
 			-- after successfully retrieving the feature_i
-		once
+		do
 			!! Result.do_nothing
 		end;
 

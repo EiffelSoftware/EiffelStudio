@@ -193,8 +193,13 @@ feature -- Status report
 
 	foreground_window: WEL_WINDOW is
 			-- Foreground window (window with focus)
+		local
+			p, null: POINTER
 		do
-			Result := window_of_item (cwin_get_foreground_window)
+			p := cwin_get_foreground_window
+			if p /= null then
+				Result := window_of_item (p)
+			end
 		end
 		
 feature {NONE} -- Implementation

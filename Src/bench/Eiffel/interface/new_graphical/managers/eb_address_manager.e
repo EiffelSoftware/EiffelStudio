@@ -39,6 +39,11 @@ inherit
 			on_position_changed
 		end
 
+	SHARED_RESOURCES
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -125,7 +130,7 @@ feature {NONE} -- Initialization
 				generate_header_info
 
 				cluster_address.return_actions.extend (~execute_with_cluster)
-				cluster_address.key_press_actions.extend (~type_cluster)
+				cluster_address.key_release_actions.extend (~type_cluster)
 				cluster_address.select_actions.extend (~change_hist_to_cluster)
 
 				cluster_address.focus_out_actions.extend (~one_lost_focus)
@@ -133,12 +138,14 @@ feature {NONE} -- Initialization
 				feature_address.focus_out_actions.extend (~one_lost_focus)
 			end
 
-			class_address.return_actions.extend (~execute_with_class)
-			class_address.key_press_actions.extend (~type_class)
+--			class_address.return_actions.extend (~execute_with_class)
+			class_address.key_release_actions.extend (~class_key_up)
+			class_address.key_press_actions.extend (~class_key_down)
+			class_address.change_actions.extend (~type_class)
 			class_address.select_actions.extend (~change_hist_to_class)
 
 			feature_address.return_actions.extend (~execute_with_feature)
-			feature_address.key_press_actions.extend (~type_feature)
+			feature_address.key_release_actions.extend (~type_feature)
 			feature_address.select_actions.extend (~change_hist_to_feature)
 
 			if not Eiffel_project.manager.is_created then
@@ -465,6 +472,83 @@ feature {NONE} -- Execution
 			-- The user just entered a new cluster name, process it.
 		do
 			extract_cluster_from_user_entry
+		end
+
+	execute_with_class is
+			-- The user just entered a new class name, process it.
+		do
+			choosing_class := True
+			process_user_entry
+		end
+
+	execute_with_feature is
+			-- The user just entered a new feature name, process it.
+		do
+			choosing_class := False
+			process_user_entry
+		end
+
+	process_cluster_callback (pos: INTEGER) is
+			-- The choice `pos' has been selected, process the choice.
+		require
+			looking_for_a_cluster: cluster_list /= Void
+		local
+			cname: STRING
+		do
+			if pos /= 0 then
+				current_cluster := cluster_list.i_th (pos)
+				cname := clone (current_cluster.cluster_name)
+				cluster_address.set_text (cname)
+			end
+			cluster_list := Void
+			process_cluster
+		end
+
+	process_class_callback (pos: INTEGER) is
+			-- The choice `pos' has been selected, process the choice.
+		require
+			looking_for_a_class: class_list /= Void
+		local
+			cname: STRING
+		do
+			if pos /= 0 then
+				class_i := class_list.i_th (pos)
+				cname := clone (class_i.name)
+				cname.to_upper
+				class_address.set_text (cname)
+			end
+			class_list := Void
+			if choosing_class then
+				process_class
+			else
+				process_feature_class
+			end
+		end
+
+	process_feature_callback (pos: INTEGER) is
+			-- The choice `pos' has been selected, process the choice.
+		require
+			looking_for_a_feature: feature_list /= Void
+		local
+			fname: STRING
+		do
+			if pos > 0 then
+				current_feature := feature_list.i_th (pos)
+				fname := clone (current_feature.name)
+				fname.to_lower
+				feature_address.set_text (fname)
+			end
+			feature_list := Void
+			if choosing_class then
+				process_class_feature
+			else
+				process_feature_feature
+			end
+		end
+
+	process_cluster is
+			-- Finish processing the cluster after the user chose it.
+		do
 			if current_cluster = Void then
 				if output_line /= Void then
 					output_line.set_text (Warning_messages.w_No_cluster_matches)
@@ -482,13 +566,12 @@ feature {NONE} -- Execution
 			end
 		end
 
-	execute_with_class is
-			-- The user just entered a new class name, process it.
+	process_class is
+			-- Finish processing the class after the user chose it.
 		local
 			ctxt: STRING
 			wd: EV_WARNING_DIALOG
 		do
-			process_user_entry
 			if class_i = Void then
 				ctxt := class_address.text
 				if
@@ -522,23 +605,15 @@ feature {NONE} -- Execution
 					parent.advanced_set_stone (create {CLASSI_STONE}.make (class_i))
 				else
 					extract_feature_from_user_entry
-					if
-						current_feature = Void or else
-						current_feature.written_class /= class_i.compiled_class and
-						not mode
-					then
-						parent.advanced_set_stone (create {CLASSC_STONE}.make (current_class))
-					else
-						parent.advanced_set_stone (create {FEATURE_STONE}.make (current_feature))
-					end
 				end
 			end
 		end
 
-	execute_with_feature is
-			-- The user just entered a new feature name, process it.
+	process_feature_class is
+			-- Analyze the class the user chose, but we are choosing a feature.
+		local
+			f: E_FEATURE
 		do
-			process_user_entry
 			if current_class = Void then
 				if class_i = Void then
 					if class_address.is_displayed then
@@ -558,81 +633,58 @@ feature {NONE} -- Execution
 			else
 				if not feature_address.text.is_empty then
 					extract_feature_from_user_entry
-					if current_feature = Void then
-						if output_line /= Void then
-							output_line.set_text (Warning_messages.w_No_feature_matches)
-						else
-							--| FIXME XR: How do we warn the user?
-						end
-						if feature_address.is_displayed then
-								-- The selected feature is not in the selected class.
-							feature_address.set_focus
-							if not feature_address.text.is_empty then
-								feature_address.select_all
-							end
-						end
---| FIXME XR: Propose to create a new feature in current_class instead?
-					elseif mode then
-						parent.advanced_set_stone (create {FEATURE_STONE}.make (current_feature))
-					elseif current_feature.written_class.has_feature_table then
-						parent.advanced_set_stone (create {FEATURE_STONE}.make (
-							current_feature.written_class.feature_with_body_index (current_feature.body_index)
-						))
-					else
-							-- Gasp, we are in the editor address and we can't find the origin feature...
-						parent.advanced_set_stone (create {FEATURE_STONE}.make (current_feature))
-					end
 				else
 					parent.advanced_set_stone (create {CLASSC_STONE}.make (current_class))
 				end
 			end
 		end
 
-	process_cluster_callback (pos: INTEGER) is
-			-- The choice `pos' has been selected, process the choice.
-		require
-			looking_for_a_cluster: cluster_list /= Void
+	process_feature_feature is
+			-- Process the feature the user has selected.
 		local
-			cname: STRING
+			f: E_FEATURE
 		do
-			if pos /= 0 then
-				current_cluster := cluster_list.i_th (pos)
-				cname := clone (current_cluster.cluster_name)
-				cluster_address.set_text (cname)
+			if current_feature = Void then
+				if output_line /= Void then
+					output_line.set_text (Warning_messages.w_No_feature_matches)
+				else
+					--| FIXME XR: How do we warn the user?
+				end
+				if feature_address.is_displayed then
+						-- The selected feature is not in the selected class.
+					feature_address.set_focus
+					if not feature_address.text.is_empty then
+						feature_address.select_all
+					end
+				end
+				--| FIXME XR: Propose to create a new feature in current_class instead?
+			elseif mode then
+				parent.advanced_set_stone (create {FEATURE_STONE}.make (current_feature))
+			else
+				if current_feature.written_class.has_feature_table then
+					f := current_feature.written_class.feature_with_body_index (current_feature.body_index)
+				end
+				if f /= Void then
+					parent.advanced_set_stone (create {FEATURE_STONE}.make (f))
+				else
+						-- Gasp, we are in the editor address and we can't find the origin feature...
+					parent.advanced_set_stone (create {FEATURE_STONE}.make (current_feature))
+				end
 			end
-			cluster_list := Void
 		end
 
-	process_class_callback (pos: INTEGER) is
-			-- The choice `pos' has been selected, process the choice.
-		require
-			looking_for_a_class: class_list /= Void
-		local
-			cname: STRING
+	process_class_feature is
+			-- We are choosing a class, but just in case we analyze the given feature.
 		do
-			if pos /= 0 then
-				class_i := class_list.i_th (pos)
-				cname := clone (class_i.name)
-				cname.to_upper
-				class_address.set_text (cname)
+			if
+				current_feature = Void or else
+				current_feature.written_class /= class_i.compiled_class and
+				not mode
+			then
+				parent.advanced_set_stone (create {CLASSC_STONE}.make (current_class))
+			else
+				parent.advanced_set_stone (create {FEATURE_STONE}.make (current_feature))
 			end
-			class_list := Void
-		end
-
-	process_feature_callback (pos: INTEGER) is
-			-- The choice `pos' has been selected, process the choice.
-		require
-			looking_for_a_feature: feature_list /= Void
-		local
-			fname: STRING
-		do
-			if pos > 0 then
-				current_feature := feature_list.i_th (pos)
-				fname := clone (current_feature.name)
-				fname.to_lower
-				feature_address.set_text (fname)
-			end
-			feature_list := Void
 		end
 
 feature -- Assertions
@@ -654,6 +706,9 @@ feature {NONE} -- Implementation
 
 	current_cluster: CLUSTER_I
 			-- Current selected cluster.
+
+	choosing_class: BOOLEAN
+			-- Do we want a feature or a class?
 
 	class_list: LINKED_LIST [CLASS_I]
 			-- List of classes displayed in `choice'.
@@ -699,7 +754,7 @@ feature {NONE} -- Implementation
 					choice.set_title (Interface_names.t_Select_cluster)
 					choice.set_list (cluster_names)
 					choice.set_position (cluster_address.screen_x, cluster_address.screen_y + cluster_address.height)
-					choice.show_modal_to_window (window_manager.last_focused_window.window)
+					choice.show_relative_to_window (window_manager.last_focused_window.window)
 				end
 			else
 				if output_line /= Void then
@@ -707,6 +762,7 @@ feature {NONE} -- Implementation
 				else
 					--| FIXME XR: Add a way to cleanly say that.
 				end
+				process_cluster
 			end
 		end
 
@@ -754,13 +810,18 @@ feature {NONE} -- Implementation
 					choice.set_title (Interface_names.t_Select_class)
 					choice.set_list (class_names)
 					choice.set_position (class_address.screen_x, class_address.screen_y + class_address.height)
-					choice.show_modal_to_window (window_manager.last_focused_window.window)
+					choice.show_relative_to_window (window_manager.last_focused_window.window)
 				end
 			else
 				if output_line /= Void then
 					output_line.set_text (Warning_messages.w_No_class_matches)
 				else
 					--| FIXME XR: Add a way to cleanly say that.
+				end
+				if choosing_class then
+					process_class
+				else
+					process_feature_class
 				end
 			end
 		end
@@ -790,13 +851,13 @@ feature {NONE} -- Implementation
 					choice.set_title (Interface_names.t_Select_feature)
 					choice.set_list (feature_names)
 					choice.set_position (feature_address.screen_x, feature_address.screen_y + feature_address.height)
-					choice.show_modal_to_window (window_manager.last_focused_window.window)
+					choice.show_relative_to_window (window_manager.last_focused_window.window)
 				end
 			else
-				if output_line /= Void then
-					output_line.set_text (Warning_messages.w_No_class_matches)
+				if choosing_class then
+					process_class_feature
 				else
-					--| FIXME XR: Add a way to cleanly say that.
+					process_feature_feature
 				end
 			end
 		end
@@ -840,18 +901,19 @@ feature {NONE} -- open new class
 		do
 			current_cluster := Void
 			fname := clone (cluster_address.text)
-			if not fname.is_empty then
+			if fname /= Void then
 				fname.left_adjust
 				fname.right_adjust
 			end
 			if fname = Void or else fname.is_empty then
-				-- Do nothing here, do it in execute_from*.
+				process_cluster
 			else
 				fname.to_lower
 				create matcher.make_empty
 				matcher.set_pattern (fname)
 				if not matcher.has_wild_cards then
 					current_cluster := get_cluster_from_name (fname)
+					process_cluster
 				else
 					from
 						cl := Universe.clusters
@@ -897,12 +959,16 @@ feature {NONE} -- open new class
 		do
 			class_i := Void
 			cname := clone (class_address.text)
-			if not cname.is_empty then
+			if cname /= Void then
 				cname.left_adjust
 				cname.right_adjust
 			end
 			if cname = Void or else cname.is_empty then
-				-- Do nothing here, do it in execute_from*.
+				if choosing_class then
+					process_class
+				else
+					process_feature_class
+				end
 			else
 				cname.to_lower
 				create matcher.make_empty
@@ -920,10 +986,20 @@ feature {NONE} -- open new class
 							class_list := Void
 --							create new_class_win.make_default (parent)
 --							new_class_win.call (cname)
+							if choosing_class then
+								process_class
+							else
+								process_feature_class
+							end
 						elseif class_list.count = 1 then
 							class_i := class_list.first
 --							process
 --							class_list := Void
+							if choosing_class then
+								process_class
+							else
+								process_feature_class
+							end
 						else
 							display_class_choice
 						end
@@ -949,6 +1025,11 @@ feature {NONE} -- open new class
 --								new_class_win.call (cname)
 --							end
 						end	
+						if choosing_class then
+							process_class
+						else
+							process_feature_class
+						end
 					end
 				else
 					from
@@ -996,16 +1077,21 @@ feature {NONE} -- open new class
 				fname.right_adjust
 			end
 			if fname = Void or else fname.is_empty then
-				-- Do nothing here, do it in execute_from*.
+				if choosing_class then
+					process_class_feature
+				else
+					process_feature_feature
+				end
 			else
 				fname.to_lower
 				create matcher.make_empty
 				matcher.set_pattern (fname)
 				if not matcher.has_wild_cards then
 					current_feature := get_feature_named (fname)
-					if current_feature = Void then
-							-- Feature does not exist, create it (?).
---| FIXME XR: propose to create a new feature named fname in class_c.
+					if choosing_class then
+						process_class_feature
+					else
+						process_feature_feature
 					end
 				else
 					from
@@ -1094,62 +1180,148 @@ feature {NONE} -- open new class
 			end
 		end
 
-	type_class (k: EV_KEY) is
-			-- The user typed a new key in the class combo.
-			-- Try to complete the class name.
-		local
-			str: STRING
-			nb: INTEGER
-			index: INTEGER
-			list: CLASS_C_SERVER
-			current_found: STRING
-			cname: STRING
-			last_string: STRING
-			array_count: INTEGER
+	class_key_up (k: EV_KEY) is
+			-- A key was released in the class address.
+			-- If it is return, call execute_with_class.
 		do
-			if
-				mode and then
-				k.code = Key_csts.Key_escape
-			then
-				address_dialog.hide
-			else
-				str := clone (class_address.text)
-				if not str.is_empty then
-					str.left_adjust
-					str.right_adjust
-					str.to_lower
-					nb := str.count
-				end
-					-- Prevent the auto completion. (Temporary: waiting for Vision2)
-				nb := 0
-				
-				if nb > 1 then
-						--| This string should be alphabetically after any class name...
-					last_string := "¦¦¦¦"
-					current_found := last_string
-					list := System.classes
-					array_count := list.count
-					from
-						index := 1
-					until
-						index > array_count
-					loop
-						cname := (list @ index).name
-						if cname.substring (1, nb).is_equal (str) then
-							if cname < current_found then
-								current_found := cname
-							end
-						end
-						index := index + 1
-					end
-					if not current_found.is_equal (last_string) then
-						current_found := clone (current_found)
-						current_found.to_upper
-						class_address.set_text (current_found)
-						class_address.select_region (nb, current_found.count)
+			if k /= Void then
+				if k.code = Key_csts.key_enter then
+					execute_with_class
+				elseif k.code = Key_csts.Key_escape then
+					if mode then
+						address_dialog.hide
 					end
 				end
 			end
+		end
+
+	class_key_down (k: EV_KEY) is
+			-- A key was pressed in the class address.
+			-- If it is return, call execute_with_class.
+		do
+			if k /= Void then
+				last_key_was_delete := False
+				last_key_was_backspace := False
+				if k.code = Key_csts.Key_delete then
+					last_key_was_delete := True
+				elseif k.code = Key_csts.Key_back_space then
+					last_key_was_backspace := True
+					if class_address.has_selection then
+						had_selection := True
+					else
+						had_selection := False
+					end
+				end
+			end
+		end
+
+	last_key_was_delete: BOOLEAN
+			-- Was the last pressed key `delete'?
+
+	last_key_was_backspace: BOOLEAN
+			-- Was the last pressed key `back_space'?
+
+	had_selection: BOOLEAN
+			-- Did the class address had a selection when the user hit the key?
+			-- Only meaningful if `last_key_was_backspace'.
+
+	type_class is
+			-- Try to complete the class name.
+		local
+			str: STRING
+			nb, minc: INTEGER
+			index, j: INTEGER
+			list: CLASS_C_SERVER
+			current_found: STRING
+			cname: STRING
+			array_count: INTEGER
+			do_not_complete: BOOLEAN
+			same_st, dif: BOOLEAN
+			str_area, current_area, other_area: SPECIAL [CHARACTER]
+		do
+			class_address.change_actions.block
+			str := clone (class_address.text)
+			if str /= Void then
+				str.left_adjust
+				str.right_adjust
+				str.to_lower
+				nb := str.count
+				do_not_complete := last_key_was_delete or not enable_complete
+				if nb > 0 and last_key_was_backspace and had_selection then
+					str.head (nb - 1)
+					nb := nb - 1
+				end
+			end
+			
+			if not do_not_complete and nb > 1 then
+				list := System.classes
+				array_count := list.count
+				from
+					index := 1
+					str_area := str.area
+				until
+					index > array_count
+				loop
+					cname := (list @ index).name
+					other_area := cname.area
+						-- We first check that other_area and str_area have the same start.
+					if other_area.count >= nb then
+						from
+							j := 0
+							same_st := True
+						until
+							j = nb or not same_st
+						loop
+							same_st := (str_area.item (j)) = (other_area.item (j))
+							j := j + 1
+						end
+						if same_st then
+							if current_found = Void then
+								current_found := cname
+								current_area := other_area
+							else
+								from
+									minc := other_area.count.min (current_area.count)
+									dif := False
+								until
+									dif or j = minc
+								loop
+									if (current_area.item (j)) /= (other_area.item (j)) then
+										dif := True
+										if (current_area.item (j)) > (other_area.item (j)) then
+											current_found := cname
+											current_area := other_area
+										end
+									end
+									j := j + 1
+								end
+								if not dif and other_area.count < current_area.count then
+										-- Other and Current have the same characters.
+										-- Return the shorter one.
+									current_found := cname
+									current_area := other_area
+								end
+							end
+						end
+					end
+					index := index + 1
+				end
+				if current_found /= Void then
+					current_found := clone (current_found)
+					current_found.to_upper
+					class_address.set_text (current_found)
+					class_address.select_region (nb + 1, current_found.count)
+				elseif not (last_key_was_backspace and had_selection) then
+					str.to_upper
+					class_address.set_text (str)
+					class_address.set_caret_position (str.count + 1)
+				end
+			else
+				str.to_upper
+				class_address.set_text (str)
+				class_address.set_caret_position (str.count + 1)
+			end
+			class_address.change_actions.resume
 		end
 
 	type_feature (k: EV_KEY) is
@@ -1552,6 +1724,12 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 			-- Display `lab' with a bold font.
 		do
 			lab.set_font (create {EV_FONT})
+		end
+
+	enable_complete: BOOLEAN is
+			-- Does the user want class names to be completed?
+		do
+			Result := boolean_resource_value ("class_completion", True)
 		end
 
 	default_class_name: STRING is "(no_class)"

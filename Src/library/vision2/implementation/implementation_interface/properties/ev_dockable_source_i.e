@@ -637,7 +637,7 @@ feature {NONE} -- Implementation
 			counter: INTEGER
 			target: EV_DOCKABLE_TARGET
 			container: EV_CONTAINER
-			vertical_box: EV_BOX_IMP
+			box: EV_BOX_IMP
 			cursor: EV_DYNAMIC_LIST_CURSOR [EV_WIDGET]
 			cell: EV_CELL_IMP
 			insert_position: INTEGER
@@ -646,6 +646,7 @@ feature {NONE} -- Implementation
 			tool_bar: EV_TOOL_BAR_IMP
 			tool_bar_button: EV_TOOL_BAR_BUTTON
 			veto_result: BOOLEAN
+			temp_int: INTEGER
 		do
 			target := closest_dockable_target
 			if widget_source_being_docked /= Void then
@@ -655,49 +656,46 @@ feature {NONE} -- Implementation
 				
 				if target /= Void and target /= insert_label then
 
-					if widget_source_being_docked /= Void then
-						 -- remove `insert_label' if the pointed target has changed
-						container ?= target 
-						if container /= Void then
+					 -- remove `insert_label' if the pointed target has changed
+					container ?= target 
+					if container /= Void then
+						if target.veto_dock_function /= Void then
+							veto_result := True
+						end
+						from
+							counter := 0
+						until
+							target = Void or (target /= Void and then target.veto_dock_function = Void) or 
+							(target /= Void and then target.veto_dock_function /= Void and (not veto_result))
+						loop
+							counter := counter + 1
 							if target.veto_dock_function /= Void then
-								veto_result := True
-							end
-							from
-								counter := 0
-							until
-								target = Void or (target /= Void and then target.veto_dock_function = Void) or 
-								(target /= Void and then target.veto_dock_function /= Void and (not veto_result))
-							loop
-								counter := counter + 1
-								if target.veto_dock_function /= Void then
-									target.veto_dock_function.call ([widget_source_being_docked.interface])
-									veto_result := target.veto_dock_function.last_result
-									if veto_result then
-										target := get_next_target (container)										
-									end
+								target.veto_dock_function.call ([widget_source_being_docked.interface])
+								veto_result := target.veto_dock_function.last_result
+								if veto_result then
+									target := get_next_target (container)										
 								end
-							end
-							if target /= Void then
-							container ?= target
-							check
-								container_not_void: container /= Void
-							end
-								if insert_label.parent /= container then
-									remove_insert_label
-								end
-								vertical_box ?= container.implementation
-								cell ?= container.implementation
-	
 							end
 						end
+						if target /= Void then
+						container ?= target
+						check
+							container_not_void: container /= Void
+						end
+							if insert_label.parent /= container then
+								remove_insert_label
+							end
+							box ?= container.implementation
+							cell ?= container.implementation
+
+						end
 					end
-					if vertical_box /= Void then
-						insert_position := vertical_box.insertion_position
+					if box /= Void then
+						insert_position := box.insertion_position
 						if insert_position /= -1 then
-							if not ((vertical_box.i_th (insert_position.min (vertical_box.count)) = insert_label) or (vertical_box.i_th ((insert_position - 1).max (1)) = insert_label)) then
-								dragged_index := vertical_box.index_of (widget_source_being_docked.interface, 1)
-								if widget_source_being_docked.parent = vertical_box.interface and (dragged_index = insert_position or dragged_index = insert_position - 1) then
-									
+							if not ((box.i_th (insert_position.min (box.count)) = insert_label) or (box.i_th ((insert_position - 1).max (1)) = insert_label)) then
+								dragged_index := box.index_of (widget_source_being_docked.interface, 1)
+								if widget_source_being_docked.parent = box.interface and (dragged_index = insert_position or dragged_index = insert_position - 1) then
 								else
 									if insert_label.parent /= Void then
 										insert_label_pos := position_in_parent (insert_label_imp)
@@ -705,14 +703,14 @@ feature {NONE} -- Implementation
 											insert_position := insert_position - 1
 										end
 									end
-									vertical_box.top_level_window_imp.interface.lock_update
+									box.top_level_window_imp.interface.lock_update
 									remove_insert_label
-									cursor := vertical_box.cursor
-									vertical_box.go_i_th (insert_position)
-									vertical_box.put_left (insert_label)
-									vertical_box.interface.disable_item_expand (insert_label)
-									vertical_box.go_to (cursor)
-									vertical_box.top_level_window_imp.interface.unlock_update
+									cursor := box.cursor
+									box.go_i_th (insert_position)
+									box.put_left (insert_label)
+									box.interface.disable_item_expand (insert_label)
+									box.go_to (cursor)
+									box.top_level_window_imp.interface.unlock_update
 								end
 							end	
 						end

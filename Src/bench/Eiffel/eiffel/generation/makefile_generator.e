@@ -1114,14 +1114,14 @@ feature -- Cleaning rules
 			Make_file.putchar ('/');
 			Make_file.putstring ("Makefile ]; then \%N%T%T%T");
 			Make_file.putstring ("(cd $$i ; $(MAKE) clean); \");
-			Make_file.putstring ("%N%T%Tfi \%N%Tdone%N%N");
+			Make_file.putstring ("%N%T%Tfi; \%N%Tdone%N%N");
 			Make_file.putstring ("sub_clobber::%N");
 			Make_file.putstring ("%Tfor i in $(SUBDIRS); \%N");
 			Make_file.putstring ("%Tdo \%N%T%Tif [ -r $$i");
 			Make_file.putchar ('/');
 			Make_file.putstring ("Makefile ]; then \%N%T%T%T");
 			Make_file.putstring ("(cd $$i ; $(MAKE) clobber); \");
-			Make_file.putstring ("%N%T%Tfi \%N%Tdone%N%N")
+			Make_file.putstring ("%N%T%Tfi; \%N%Tdone%N%N")
 		end;
 
 	generate_sub_cleaning is

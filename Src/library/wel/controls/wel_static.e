@@ -72,7 +72,7 @@ feature -- Basic operations
 		do
 			set_text ("")
 		ensure
-			text_empty: text.empty
+			text_empty: text.is_empty
 		end
 
 feature {NONE} -- Implementation

@@ -75,7 +75,7 @@ feature -- Access
 				current_pos := item
 				create current_string.make_from_c (current_pos)
 			until
-				current_string.empty
+				current_string.is_empty
 			loop
 				Result.extend (current_string)
 				current_pos := current_pos + current_string.count + 1

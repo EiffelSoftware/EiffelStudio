@@ -107,7 +107,7 @@ feature -- Element Change
 			-- Set `target' with `a_target'.
 		require
 			non_void_target: a_target /= Void
-			valid_target: not a_target.empty
+			valid_target: not a_target.is_empty
 		do
 			add_flag (Lvfi_string)
 			cwel_list_view_search_info_set_target (item, (create {WEL_STRING}.make (a_target)).item)

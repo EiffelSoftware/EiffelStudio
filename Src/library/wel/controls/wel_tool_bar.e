@@ -408,7 +408,7 @@ feature -- Element change
 		require
 			exists: exists
 			buttons_not_void: buttons /= Void
-			buttons_not_empty: not buttons.empty
+			buttons_not_empty: not buttons.is_empty
 			no_void_button: not buttons.has (Void)
 		local
 			i: INTEGER
@@ -441,7 +441,7 @@ feature -- Element change
 		require
 			exists: exists
 			string_not_void: strings /= Void
-			strings_not_empty: not strings.empty
+			strings_not_empty: not strings.is_empty
 		local
 			i: INTEGER
 			s: STRING

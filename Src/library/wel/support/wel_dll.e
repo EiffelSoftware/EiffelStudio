@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 			-- Load the DLL `dll_name'
 		require
 			dll_name_not_void: dll_name /= Void
-			dll_name_not_empty: not dll_name.empty
+			dll_name_not_empty: not dll_name.is_empty
 		local
 			a_wel_string: WEL_STRING
 		do
@@ -48,7 +48,7 @@ feature -- Access
 			Result.head (nb)
 		ensure
 			result_not_void: Result /= Void
-			result_not_empty: not Result.empty
+			result_not_empty: not Result.is_empty
 		end
 
 feature {NONE} -- Removal

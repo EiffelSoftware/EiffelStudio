@@ -1050,7 +1050,7 @@ feature {NONE} -- Feature that should be directly implemented by externals
 		deferred
 		end
 
-feature -- Idem
+feature -- Feature that should be directly implemented by externals
 
 	show_window (hwnd: POINTER; cmd_show: INTEGER) is
 			-- Encapsulation of the cwin_show_window function of

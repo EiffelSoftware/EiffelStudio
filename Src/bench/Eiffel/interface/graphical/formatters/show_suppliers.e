@@ -14,7 +14,8 @@ feature
 
 	make (c: COMPOSITE; a_text_window: CLASS_TEXT) is
 		do
-			init (c, a_text_window)
+			init (c, a_text_window);
+			indent := 4
 		end;
 
 	symbol: PIXMAP is 
@@ -32,23 +33,26 @@ feature {NONE}
 	display_info (i: INTEGER; c: CLASSC_STONE) is
 			-- Display suppliers of `c' in tree form.
 		local
---			suppliers: SUPPLIER_LIST;
-			d: CLASSC_STONE
+			suppliers: SUPPLIER_LIST;
+			classc_stone: CLASSC_STONE
 		do
---			from
---				suppliers := c.suppliers;
---				suppliers.start
---			until
---				suppliers.offright
---			loop
---				d := suppliers.item.supplier;
---				if d /= c then
---					text_window.put_string ("%T");
---					text_window.put_clickable_string (d, d.signature);
---					text_window.put_string ("%N")
---				end;
---				suppliers.forth
---			end
+			text_window.put_string ("Suppliers of class ");
+			text_window.put_clickable_string (c, c.signature);
+			text_window.put_string (":%N%N");	
+			from
+				suppliers := c.class_c.suppliers;
+				suppliers.start
+			until
+				suppliers.after
+			loop
+				!!classc_stone.make (suppliers.item.supplier);
+				if (c.class_c /= classc_stone.class_c) then
+					text_window.put_string (tabs (1));
+					text_window.put_clickable_string (classc_stone, classc_stone.signature);
+					text_window.put_string ("%N");
+				end;
+				suppliers.forth
+			end
 		end
 
 end

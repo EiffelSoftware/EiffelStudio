@@ -6,6 +6,8 @@
 --|---------------------------------------------------------------
 
 -- First window of the project
+-- TODO:
+--	Xterminal stuff
 
 class PROJECT_W
 
@@ -30,9 +32,9 @@ feature
 			-- Create a project application.
 		local
 			void_reference: ANY;
-xterm_name: STRING
+--xterm_name: STRING
 		do
-xterm_name := "Tregastel vaincra";
+--xterm_name := "Tregastel vaincra";
 			!!screen.make ("");
 			base_create (tool_name, screen);
 			forbid_resize;
@@ -42,7 +44,7 @@ xterm_name := "Tregastel vaincra";
 			transporter_init;
 			set_icon_pixmap (eiffel_symbol);
 			set_icon_name (tool_name);
-			get_xterm_in_xterminal (xterm_name);
+--get_xterm_in_xterminal (xterm_name);
 		end;
 
 	eiffel_symbol: PIXMAP is
@@ -117,7 +119,7 @@ feature -- rest
 			build_text;
 			build_top;
 			build_icing;
-			build_xterminal;
+--build_xterminal;
 			attach_all
 		end; -- build
 
@@ -213,11 +215,13 @@ feature -- rest
 			form_manager.attach_right_widget (icing, text_window, 0);
 				-- (text_window will resize when window grows)
 
-			form_manager.attach_left (xterminal, 5);
-			form_manager.attach_top_widget (text_window, xterminal, 5);
-			form_manager.attach_right_widget (icing, xterminal, 5);
+		--	form_manager.attach_left (xterminal, 5);
+		--	form_manager.attach_top_widget (text_window, xterminal, 5);
+		--	form_manager.attach_right_widget (icing, xterminal, 5);
 				-- (xterminal will resize when window grows)
-			form_manager.attach_bottom (xterminal, 5);
+		--	form_manager.attach_bottom (xterminal, 5);
+
+			form_manager.attach_bottom (text_window, 5);
 
 			form_manager.attach_top (icing, 0);
 			form_manager.attach_right (icing, 0);

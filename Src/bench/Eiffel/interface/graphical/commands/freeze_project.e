@@ -19,7 +19,7 @@ feature
 	make (c: COMPOSITE; a_text_window: TEXT_WINDOW) is
 		do 
 			init (c, a_text_window);
-			!!request.make
+			!!request
 		end; 
  
 feature {NONE}
@@ -41,7 +41,7 @@ feature {NONE}
 --						!!freeze_with_argument.make (50);
 --						freeze_with_argument.append (Freeze_command_name);
 --						freeze_with_argument.append (Generation_path);
---						request.set_os_command_name (freeze_with_argument);
+--						request.set_command_name (freeze_with_argument);
 --						request.send
 --					end
 --				elseif argument = warner then
@@ -81,6 +81,6 @@ feature {NONE}
 
 	command_name: STRING is do Result := l_Freeze end;
 
-	request: ASYNCOS_REQUEST
+	request: ASYNC_SHELL
 
 end

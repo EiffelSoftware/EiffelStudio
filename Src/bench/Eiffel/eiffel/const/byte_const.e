@@ -84,7 +84,7 @@ feature {NONE}
 	Bc_protect:			CHARACTER is '%/076/';
 	Bc_release:			CHARACTER is '%/077/';
 	Bc_jmp_t:			CHARACTER is '%/078/';
-Bc_unused:		CHARACTER is '%/079/';
+	Bc_debuggable:		CHARACTER is '%/079/';
 	Bc_rescue: 			CHARACTER is '%/080/';
 	Bc_end_rescue:		CHARACTER is '%/081/';
 	Bc_retry:			CHARACTER is '%/082/';
@@ -101,5 +101,7 @@ Bc_unused:		CHARACTER is '%/079/';
 	Bc_true_compar:		CHARACTER is '%/093/';
 	Bc_standard_equal:	CHARACTER is '%/094/';
 	Bc_not_standard_equal:	CHARACTER is '%/095/';
+	Bc_break:			CHARACTER is '%/096/';
+	Bc_cont:			CHARACTER is '%/097/';
 
 end

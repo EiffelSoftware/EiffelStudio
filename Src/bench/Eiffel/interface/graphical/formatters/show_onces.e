@@ -29,9 +29,10 @@ feature {NONE}
 
 	title_part: STRING is do Result := l_Onces_of end;
 
-	criterium (f: FEATURE_STONE): BOOLEAN is
+	criterium (f: FEATURE_I): BOOLEAN is
 		do
---			Result := f.is_once 
+			Result := any_criterium (f);
+			Result := Result and f.is_once 
 		end
 
 end

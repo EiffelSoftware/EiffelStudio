@@ -29,9 +29,11 @@ feature {NONE}
 
 	title_part: STRING is do Result := l_Routines_of end;
 
-	criterium (f: FEATURE_STONE): BOOLEAN is
+	criterium (f: FEATURE_I): BOOLEAN is
 		do
---			Result := not f.is_attribute
+			Result := any_criterium (f);
+			Result := Result and (not f.is_attribute);
+			Result := Result and (not f.is_constant)
 		end
 
 end

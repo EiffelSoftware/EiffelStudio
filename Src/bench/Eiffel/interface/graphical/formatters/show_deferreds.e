@@ -31,9 +31,10 @@ feature {NONE}
 
 	title_part: STRING is do Result := l_Deferreds_of end;
 
-	criterium (f: FEATURE_STONE): BOOLEAN is
+	criterium (f: FEATURE_I): BOOLEAN is
 		do
---			Result := f.is_deferred
+			Result := any_criterium (f);
+			Result := Result and f.is_deferred
 		end
 
 end

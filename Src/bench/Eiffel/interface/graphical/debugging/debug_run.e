@@ -4,6 +4,7 @@ class DEBUG_RUN
 
 inherit
 
+	IPC_SHARED;
 	SHARED_WORKBENCH
 		export
 			{NONE} all
@@ -29,7 +30,7 @@ feature
 	make (c: COMPOSITE; a_text_window: TEXT_WINDOW) is
 		do
 			init (c, a_text_window);
-			!!request.make;
+			!!request.make (Rqst_run)
 		end;
 
 	
@@ -38,14 +39,15 @@ feature {NONE}
 	work (argument: ANY) is
 			-- Re-run the application
 		local
-			application_path: STRING
+			application_path: STRING;
 		do
 			if project_tool.initialized then
 				!!application_path.make (50);
 				application_path.append (Generation_path);
 				application_path.append ("/");
---				application_path.append (System.system_name);
-				request.set_os_command_name (application_path);
+				application_path.append (System.system_name);
+io.putstring ("Pop up prompt window to ask for arguments%N");
+				request.set_application_name (application_path);
 				request.send
 			end
 		end;
@@ -64,6 +66,6 @@ feature {NONE}
 
 	command_name: STRING is do Result := l_Debug_run end;
 
-	request: ASYNCOS_REQUEST
+	request: RUN_REQUEST
 
 end

@@ -53,6 +53,7 @@ feature {NONE}
 			!!showattributes_command.make (format_bar, text_window);
 			!!showroutines_command.make (format_bar, text_window);
 			!!showdeferreds_command.make (format_bar, text_window);
+			--!!! !!showexternals_command.make (format_bar, text_window);
 			!!showonces_command.make (format_bar, text_window);
 			!!showcustom_command.make (format_bar, text_window);
 				format_bar.attach_top (showtext_command, 0);
@@ -72,11 +73,14 @@ feature {NONE}
 				format_bar.attach_top (showattributes_command, 0);
 				format_bar.attach_right_widget (showroutines_command, showattributes_command, 25);
 				format_bar.attach_top (showroutines_command, 0);
-				format_bar.attach_right_widget (showdeferreds_command, showroutines_command, 0);
+				format_bar.attach_right_widget (showdeferreds_command, showroutines_command, 5);
 				format_bar.attach_top (showdeferreds_command, 0);
 				format_bar.attach_right_widget (showonces_command, showdeferreds_command, 0);
 				format_bar.attach_top (showonces_command, 0);
-				format_bar.attach_right_widget (showcustom_command, showonces_command, 25);
+				--!!! format_bar.attach_right_widget (showexternals_command, showonces_command, 0);
+				--!!! format_bar.attach_top (showexternals_command, 0);
+				--!!! format_bar.attach_right_widget (showcustom_command, showexternals_command, 25);
+format_bar.attach_right_widget (showcustom_command, showonces_command, 25);
 				format_bar.attach_top (showcustom_command, 0);
 				format_bar.attach_right (showcustom_command, 0);
 		end;
@@ -90,6 +94,7 @@ feature {NONE}
 	showattributes_command: SHOW_ATTRIBUTES;
 	showroutines_command: SHOW_ROUTINES;
 	showdeferreds_command: SHOW_DEFERREDS;
+	--!!! showexternals_command: SHOW_EXTERNALS;
 	showonces_command: SHOW_ONCES;
 	showcustom_command: SHOW_CUSTOM
 

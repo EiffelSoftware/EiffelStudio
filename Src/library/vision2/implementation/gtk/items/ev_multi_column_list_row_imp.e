@@ -69,50 +69,98 @@ feature -- Status setting
 
 feature -- PND
 
-enable_transport is do check to_be_implemented: False end end
-
-disable_transport is do check to_be_implemented: False end end
-
-draw_rubber_band is do check to_be_implemented: False end end
-
-erase_rubber_band is do check to_be_implemented: False end end
-
-enable_capture is do check to_be_implemented: False end end
-
-disable_capture is do check to_be_implemented: False end end
-
-start_transport (
-        a_x, a_y, a_button: INTEGER;
-        a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
-        a_screen_x, a_screen_y: INTEGER) is 
-do check to_be_implemented: False end  end
-
-end_transport (a_x, a_y, a_button: INTEGER) is do end
-
-pointed_target: EV_PICK_AND_DROPABLE is do check to_be_implemented: False end end
-
-set_pointer_style (curs: EV_CURSOR) is do end
-
-pebble_over_widget (a_gdk_window: POINTER; a_x, a_y: INTEGER): BOOLEAN is
-	local
-		gdkwin_parent, clist_parent, v_adjust: POINTER
-		new_y: INTEGER
-	do
-		if parent_imp /= Void then
-			gdkwin_parent := C.gdk_window_get_parent (a_gdk_window)
-			clist_parent := C.gdk_window_get_parent (
-				C.gtk_clist_struct_clist_window (parent_imp.list_widget)
-			)
-			if gdkwin_parent = clist_parent then
-				v_adjust := C.gtk_scrolled_window_get_vadjustment (parent_imp.scroll_window)
-				new_y := C.gtk_adjustment_struct_value (v_adjust).rounded
-				new_y := a_y + new_y
-				if parent_imp.row_from_y_coord (new_y) = index then
-					Result := True
-				end	
+	enable_transport is 
+		do 
+			check
+				do_not_call: False
 			end
 		end
-	end
+
+	disable_transport is
+		do
+			check
+				do_not_call: False
+			end
+		end
+
+	draw_rubber_band is
+		do
+			check
+				do_not_call: False
+			end
+		end
+
+	erase_rubber_band is
+		do
+			check
+				do_not_call: False
+			end
+		end
+
+	enable_capture is
+		do
+			check
+				do_not_call: False
+			end
+		end
+
+	disable_capture is
+		do
+			check
+				do_not_call: False
+			end
+		end
+
+	start_transport (
+        	a_x, a_y, a_button: INTEGER;
+        	a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
+        	a_screen_x, a_screen_y: INTEGER) is 
+		do
+			check
+				do_not_call: False
+			end
+		end
+
+	end_transport (a_x, a_y, a_button: INTEGER) is
+		do
+			check
+				do_not_call: False
+			end
+		end
+
+	pointed_target: EV_PICK_AND_DROPABLE is
+		do
+			check
+				do_not_call: False
+			end
+		end
+
+	set_pointer_style (curs: EV_CURSOR) is
+		do
+			check
+				do_not_call: False
+			end
+		end
+
+feature {EV_APPLICATION_IMP} -- Implementation
+
+	pointer_over_widget (a_gdk_window: POINTER; a_x, a_y: INTEGER): BOOLEAN is
+		-- Is mouse pointer over the row.
+		local
+			gdkwin_parent, clist_parent: POINTER
+		do
+			if parent_imp /= Void then
+				gdkwin_parent := C.gdk_window_get_parent (a_gdk_window)
+				clist_parent := C.gdk_window_get_parent (
+					C.gtk_clist_struct_clist_window (parent_imp.list_widget)
+				)
+				if gdkwin_parent = clist_parent then
+					if parent_imp.row_from_y_coord (a_y) = index then
+						Result := True
+					end	
+				end
+			end
+		end
 
 feature {EV_ANY_I} -- Implementation
 
@@ -166,8 +214,8 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.45  2000/03/30 23:46:40  king
---| Removed testing statement
+--| Revision 1.46  2000/03/31 19:07:26  king
+--| Renamed pebble_o_wid -> pointer_o_wid, indented redundant PND features
 --|
 --| Revision 1.44  2000/03/30 23:22:21  king
 --| Implemented pnd target functionality

@@ -610,15 +610,15 @@ feature -- Access
 		do
 			buf := buffer
 			buf.exdent
-			buf.putstring ("body:;")
-			buf.new_line
+			buf.put_string ("body:;")
+			buf.put_new_line
 			buf.indent
 		end
 
 	print_body_label is
 			-- Print label "body"
 		do
-			buffer.putstring ("body")
+			buffer.put_string ("body")
 		end
 
 	generate_current_label_definition is
@@ -637,10 +637,10 @@ feature -- Access
 			if label > 0 then
 				buf := buffer
 				buf.exdent
-				buf.new_line
+				buf.put_new_line
 				print_label (l)
-				buf.putchar (':')
-				buf.new_line
+				buf.put_character (':')
+				buf.put_new_line
 				buf.indent
 			end
 		end
@@ -659,8 +659,8 @@ feature -- Access
 			buf: GENERATION_BUFFER
 		do
 			buf := buffer
-			buf.putstring ("label_")
-			buf.putint (l)
+			buf.put_string ("label_")
+			buf.put_integer (l)
 		end
 
 	set_local_index (s: STRING; r: REGISTRABLE) is
@@ -878,13 +878,13 @@ feature -- Access
 			-- Generate the dynamic type of `Current'
 		do
 			if inlined_dt_current > 1 then
-				buffer.putstring (gc_inlined_dtype)
+				buffer.put_string (gc_inlined_dtype)
 			elseif dt_current > 1 then
-				buffer.putstring (gc_dtype)
+				buffer.put_string (gc_dtype)
 			else
-				buffer.putstring (gc_upper_dtype_lparan)
+				buffer.put_string (gc_upper_dtype_lparan)
 				Current_register.print_register
-				buffer.putchar (')')
+				buffer.put_character (')')
 			end
 		end
 
@@ -892,13 +892,13 @@ feature -- Access
 			-- Generate the dynamic type of `Current'
 		do
 			if inlined_dftype_current > 1 then
-				buffer.putstring (gc_inlined_dftype)
+				buffer.put_string (gc_inlined_dftype)
 			elseif dftype_current > 1 then
-				buffer.putstring (gc_dftype)
+				buffer.put_string (gc_dftype)
 			else
-				buffer.putstring (gc_upper_dftype_lparan)
+				buffer.put_string (gc_upper_dftype_lparan)
 				Current_register.print_register
-				buffer.putchar (')')
+				buffer.put_character (')')
 			end
 		end
 
@@ -944,13 +944,13 @@ feature -- Access
 					i > j
 				loop
 					if has_rescue_clause then
-						buf.putstring ("EIF_OBJECT EIF_VOLATILE xp")
+						buf.put_string ("EIF_OBJECT EIF_VOLATILE xp")
 					else
-						buf.putstring ("EIF_OBJECT xp")
+						buf.put_string ("EIF_OBJECT xp")
 					end
-					buf.putint (i)
-					buf.putchar (';')
-					buf.new_line
+					buf.put_integer (i)
+					buf.put_character (';')
+					buf.put_new_line
 					i := i + 1
 				end
 			end
@@ -969,49 +969,49 @@ feature -- Access
 			then
 					-- Protect access to local variables due
 					-- to rescue clause.
-				buf.putstring ("EIF_VOLATILE ")
+				buf.put_string ("EIF_VOLATILE ")
 			end
 
 			inspect
 				ctype
 			when C_int8 then
-				buf.putstring ("EIF_INTEGER_8 ti8_")
-				buf.putint (num)
+				buf.put_string ("EIF_INTEGER_8 ti8_")
+				buf.put_integer (num)
 			when C_int16 then
-				buf.putstring ("EIF_INTEGER_16 ti16_")
-				buf.putint (num)
+				buf.put_string ("EIF_INTEGER_16 ti16_")
+				buf.put_integer (num)
 			when C_int32 then
-				buf.putstring ("EIF_INTEGER_32 ti32_")
-				buf.putint (num)
+				buf.put_string ("EIF_INTEGER_32 ti32_")
+				buf.put_integer (num)
 			when C_int64 then
-				buf.putstring ("EIF_INTEGER_64 ti64_")
-				buf.putint (num)
+				buf.put_string ("EIF_INTEGER_64 ti64_")
+				buf.put_integer (num)
 			when C_ref then
-				buf.putstring ("EIF_REFERENCE tp")
-				buf.putint (num)
-				buf.putstring (" = NULL")
+				buf.put_string ("EIF_REFERENCE tp")
+				buf.put_integer (num)
+				buf.put_string (" = NULL")
 			when C_float then
-				buf.putstring ("EIF_REAL tf")
-				buf.putint (num)
+				buf.put_string ("EIF_REAL tf")
+				buf.put_integer (num)
 			when C_char then
-				buf.putstring ("EIF_CHARACTER tc")
-				buf.putint (num)
+				buf.put_string ("EIF_CHARACTER tc")
+				buf.put_integer (num)
 			when C_wide_char then
-				buf.putstring ("EIF_WIDE_CHAR twc")
-				buf.putint (num)
+				buf.put_string ("EIF_WIDE_CHAR twc")
+				buf.put_integer (num)
 			when C_double then
-				buf.putstring ("EIF_DOUBLE td")
-				buf.putint (num)
+				buf.put_string ("EIF_DOUBLE td")
+				buf.put_integer (num)
 			when C_pointer then
 				if has_rescue then
-					buf.putstring ("EIF_POINTER EIF_VOLATILE ta")
+					buf.put_string ("EIF_POINTER EIF_VOLATILE ta")
 				else
-					buf.putstring ("EIF_POINTER ta")
+					buf.put_string ("EIF_POINTER ta")
 				end
-				buf.putint (num)
+				buf.put_integer (num)
 			end
-			buf.putchar (';')
-			buf.new_line
+			buf.put_character (';')
+			buf.put_new_line
 		end
 
 	generate_gc_hooks (compound_or_post: BOOLEAN) is
@@ -1041,13 +1041,13 @@ feature -- Access
 				-- The hooks are only needed if there is at least one reference
 			if nb_refs > 0 then
 				if compound_or_post or else byte_code.rescue_clause = Void then
-					buf.putstring ("RTLI(")
+					buf.put_string ("RTLI(")
 				else
-					buf.putstring ("RTXI(")
+					buf.put_string ("RTXI(")
 				end
-				buf.putint (nb_refs)
-				buf.putstring (gc_rparan_semi_c)
-				buf.new_line
+				buf.put_integer (nb_refs)
+				buf.put_string (gc_rparan_semi_c)
+				buf.put_new_line
 				from
 					hash_table := local_index_table
 					associated := associated_register_table
@@ -1073,20 +1073,20 @@ feature -- Access
 						if (reg.c_type.is_bit) and (reg.is_argument) then
 								-- Clone argument if it is bit
 							buf.put_local_registration (position, rname)
-							buf.new_line
-							buf.putstring (rname)
-							buf.putstring (" = RTCB(")
-							buf.putstring (rname)
-							buf.putchar (')')
-							buf.putchar (';')
+							buf.put_new_line
+							buf.put_string (rname)
+							buf.put_string (" = RTCB(")
+							buf.put_string (rname)
+							buf.put_character (')')
+							buf.put_character (';')
 						else
 							buf.put_local_registration (position, rname)
 						end
 					end
-					buf.new_line
+					buf.put_new_line
 					hash_table.forth
 				end
-				buf.new_line
+				buf.put_new_line
 			end
 		end
 
@@ -1125,11 +1125,11 @@ feature -- Access
 			if vars > 0 then
 				buf := buffer
 				if byte_code.rescue_clause /= Void then
-					buf.putstring ("RTXE;")
-					buf.new_line
+					buf.put_string ("RTXE;")
+					buf.put_new_line
 				else
-					buf.putstring ("RTLE;")
-					buf.new_line
+					buf.put_string ("RTLE;")
+					buf.put_new_line
 				end
 			end
 		end

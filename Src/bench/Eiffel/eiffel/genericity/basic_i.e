@@ -68,14 +68,14 @@ feature -- Byte code generation
 			l_metamorphose_type: CL_TYPE_I	
 		do
 			reg.print_register
-			buffer.putstring (" = ")
+			buffer.put_string (" = ")
 				-- Type used for metamorphose.
 			l_metamorphose_type := reference_type;
 			(create {CREATE_TYPE}.make (l_metamorphose_type)).generate
-			buffer.putstring (", *")
+			buffer.put_string (", *")
 			generate_access_cast (buffer)
 			reg.print_register
-			buffer.putstring (" = ")
+			buffer.put_string (" = ")
 			value.print_register
 		end
 
@@ -88,8 +88,8 @@ feature -- Byte code generation
 			valid_file: buffer /= Void
 		do
 --			value.print_register
---			buffer.putstring (" = ")
---			buffer.putchar ('*')
+--			buffer.put_string (" = ")
+--			buffer.put_character ('*')
 --			generate_access_cast (buffer)
 --			reg.print_register
 		end
@@ -107,9 +107,9 @@ feature -- C code generation
 		require
 			valid_buffer: buffer /= Void
 		do
-			buffer.putchar ('(')
+			buffer.put_character ('(')
 			generate_cast (buffer)
-			buffer.putstring ("0)")
+			buffer.put_string ("0)")
 		end
 	
 	make_default_byte_code (ba: BYTE_ARRAY) is

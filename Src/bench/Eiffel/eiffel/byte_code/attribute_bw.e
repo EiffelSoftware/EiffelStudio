@@ -48,17 +48,17 @@ feature
 			type_c := type_i.c_type;
 			if not type_i.is_true_expanded and then not type_c.is_bit then
 					-- For dereferencing, we need a star...
-				buf.putchar ('*');
+				buf.put_character ('*');
 					-- ...followed by the appropriate access cast
 				type_c.generate_access_cast (buf);
 			end;
-			buf.putchar ('(');
+			buf.put_character ('(');
 			reg.print_register;
 			if reg.is_predefined or reg.register /= No_register then
-				buf.putstring (gc_plus);
+				buf.put_string (gc_plus);
 			else
-				buf.putstring (" +");
-				buf.new_line;
+				buf.put_string (" +");
+				buf.put_new_line;
 				buf.indent;
 			end;
 			base_class := typ.base_class;
@@ -67,35 +67,35 @@ feature
 				base_class.is_precompiled
 			then
 				if is_nested then
-					buf.putstring ("RTVPA(");
+					buf.put_string ("RTVPA(");
 				else
-					buf.putstring ("RTWPA(");
+					buf.put_string ("RTWPA(");
 				end;
 				r_id := base_class.feature_table.item_id (attribute_name_id).rout_id_set.first;
 				rout_info := System.rout_info_table.item (r_id);
-				buf.generate_class_id (rout_info.origin)
-				buf.putstring (gc_comma);
-				buf.putint (rout_info.offset)
+				buf.put_class_id (rout_info.origin)
+				buf.put_string (gc_comma);
+				buf.put_integer (rout_info.offset)
 			else
 				if is_nested then
-					buf.putstring ("RTVA(");
+					buf.put_string ("RTVA(");
 				else
-					buf.putstring ("RTWA(");
+					buf.put_string ("RTWA(");
 				end;
-				buf.putint (typ.associated_class_type.static_type_id - 1);
-				buf.putstring (gc_comma);
-				buf.putint (real_feature_id);
+				buf.put_static_type_id (typ.associated_class_type.static_type_id)
+				buf.put_string (gc_comma);
+				buf.put_integer (real_feature_id);
 			end;
-			buf.putstring (gc_comma);
+			buf.put_string (gc_comma);
 			if is_nested then
-				buf.putchar ('"');
-				buf.putstring (escaped_attribute_name);
-				buf.putstring ("%", ");
+				buf.put_character ('"');
+				buf.put_string (escaped_attribute_name);
+				buf.put_string ("%", ");
 				reg.print_register;
 			else
 				context.generate_current_dtype;
 			end;
-			buf.putstring ("))");
+			buf.put_string ("))");
 			if not (reg.is_predefined or reg.register /= No_register) then
 			  buf.exdent;
 			end;

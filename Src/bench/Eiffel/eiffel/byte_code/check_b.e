@@ -81,21 +81,21 @@ feature -- Code generation
 				workbench_mode := context.workbench_mode
 				context.set_assertion_type (In_check)
 				if workbench_mode then
-					buf.putstring ("if (RTAL & CK_CHECK) {")
-					buf.new_line
+					buf.put_string ("if (RTAL & CK_CHECK) {")
+					buf.put_new_line
 					buf.indent
 					check_list.generate
 					buf.exdent
-					buf.putchar ('}')
-					buf.new_line
+					buf.put_character ('}')
+					buf.put_new_line
 				elseif context.assertion_level.check_check then
-					buf.putstring ("if (~in_assertion) {")
-					buf.new_line
+					buf.put_string ("if (~in_assertion) {")
+					buf.put_new_line
 					buf.indent
 					check_list.generate
 					buf.exdent
-					buf.putchar ('}')
-					buf.new_line
+					buf.put_character ('}')
+					buf.put_new_line
 				end
 			end
 		end

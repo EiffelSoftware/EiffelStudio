@@ -60,8 +60,8 @@ feature
 		require
 			good_argument: buffer /= Void
 		do
-			buffer.putstring (C_string)
-			buffer.putchar (' ')
+			buffer.put_string (C_string)
+			buffer.put_character (' ')
 		end
 
 	generate_cast (buffer: GENERATION_BUFFER) is
@@ -69,9 +69,9 @@ feature
 		require
 			good_argument: buffer /= Void
 		do
-			buffer.putchar ('(')
-			buffer.putstring (C_string)
-			buffer.putchar (')')
+			buffer.put_character ('(')
+			buffer.put_string (C_string)
+			buffer.put_character (')')
 		end
 
 	generate_access_cast (buffer: GENERATION_BUFFER) is
@@ -80,11 +80,11 @@ feature
 			good_argument: buffer /= Void
 			not_void_type: not is_void
 		do
-			buffer.putchar ('(')
-			buffer.putstring (C_string)
-			buffer.putchar (' ')
-			buffer.putchar ('*')
-			buffer.putchar (')')
+			buffer.put_character ('(')
+			buffer.put_string (C_string)
+			buffer.put_character (' ')
+			buffer.put_character ('*')
+			buffer.put_character (')')
 		end
 
 	generate_size (buffer: GENERATION_BUFFER) is
@@ -92,9 +92,9 @@ feature
 		require
 			good_argument: buffer /= Void
 		do
-			buffer.putstring (Sizeof)
-			buffer.putstring (C_string)
-			buffer.putchar (')')
+			buffer.put_string (Sizeof)
+			buffer.put_string (C_string)
+			buffer.put_character (')')
 		end
 
 	generate_function_cast (buffer: GENERATION_BUFFER; arg_types: ARRAY [STRING]) is
@@ -116,15 +116,15 @@ feature
 			sep: STRING
 		do
 			if call_type /= Void then
-				buffer.putstring ("FUNCTION_CAST_TYPE(")
-				buffer.putstring (c_string)
-				buffer.putchar (',')
-				buffer.putstring (call_type)
+				buffer.put_string ("FUNCTION_CAST_TYPE(")
+				buffer.put_string (c_string)
+				buffer.put_character (',')
+				buffer.put_string (call_type)
 			else
-				buffer.putstring ("FUNCTION_CAST(")
-				buffer.putstring (c_string)
+				buffer.put_string ("FUNCTION_CAST(")
+				buffer.put_string (c_string)
 			end
-			buffer.putstring (", (")
+			buffer.put_string (", (")
 			from
 				i := 1
 				nb := arg_types.count
@@ -133,12 +133,12 @@ feature
 				i > nb
 			loop
 				if i /= 1 then
-					buffer.putstring (sep)
+					buffer.put_string (sep)
 				end
-				buffer.putstring (arg_types @ i)
+				buffer.put_string (arg_types @ i)
 				i := i + 1
 			end
-			buffer.putstring (")) ")
+			buffer.put_string (")) ")
 		end
 
 	generate_union (buffer: GENERATION_BUFFER) is

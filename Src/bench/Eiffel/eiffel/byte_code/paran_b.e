@@ -105,9 +105,9 @@ feature
 				and not expr.is_simple_expr
 			then
 				buf := buffer
-				buf.putchar ('(');
+				buf.put_character ('(');
 				expr.print_register;
-				buf.putchar (')');
+				buf.put_character (')');
 			else
 					-- No need for parenthesis if expression is held in a
 					-- register (e.g. a semi-strict boolean op).

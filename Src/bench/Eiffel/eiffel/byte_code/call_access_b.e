@@ -179,13 +179,13 @@ feature -- Byte code generation
 								basic_type.reference_type.base_class
 					feat_tbl := associated_class.feature_table
 debug ("BYTE_CODE")
-io.error.putstring ("Associated class: ")
-io.error.putstring (associated_class.name)
-io.error.putstring (", feature name: ")
-io.error.putstring (feature_name)
-io.error.putstring ("%NFEATURE_TABLE: ")
+io.error.put_string ("Associated class: ")
+io.error.put_string (associated_class.name)
+io.error.put_string (", feature name: ")
+io.error.put_string (feature_name)
+io.error.put_string ("%NFEATURE_TABLE: ")
 feat_tbl.trace
-io.error.new_line
+io.error.put_new_line
 end
 					if parameters /= Void then
 						ba.append (Bc_rotate)
@@ -429,12 +429,12 @@ end
 						-- If an invariant is to be checked however, the
 						-- metamorphosis was already made by the invariant
 						-- checking routine.
-					buf.putchar ('(')
+					buf.put_character ('(')
 					basic_type.metamorphose (basic_register, reg,
 									buf, context.workbench_mode)
-					buf.putchar (',')
-					buf.new_line
-					buf.putchar ('%T')
+					buf.put_character (',')
+					buf.put_new_line
+					buf.put_character ('%T')
 					generate_metamorphose_end (basic_register, reg,
 									class_type, basic_type, buf)
 				end
@@ -456,7 +456,7 @@ end
 				-- Now generate the parameters of the call, if needed.
 			if not is_attribute then
 				buf := buffer
-				buf.putchar ('(')
+				buf.put_character ('(')
 			end
 			if is_feature_call then
 				gen_reg.print_register
@@ -465,7 +465,7 @@ end
 				generate_parameters_list
 			end
 			if not is_attribute then
-				buf.putchar (')')
+				buf.put_character (')')
 			end
 		end
 
@@ -481,8 +481,8 @@ end
 			generate_end (gen_reg, class_type)
 
 				-- Now generate the parameters of the call, if needed.
-			buf.putstring (");")
-			buf.new_line
+			buf.put_string (");")
+			buf.put_new_line
 			basic_type.end_of_metamorphose (basic_register, meta_reg, buf)
 		end
 

@@ -190,12 +190,12 @@ feature -- Debug
 				i > argument_count
 			loop
 				argument_types.item (i).trace;
-				io.error.putchar ('/');
+				io.error.put_character ('/');
 				i := i + 1;
 			end;
-			io.error.putchar ('|');
+			io.error.put_character ('|');
 			result_type.trace;
-			io.error.putstring ("|");
+			io.error.put_string ("|");
 		end;
 
 feature {NONE} -- Implementation

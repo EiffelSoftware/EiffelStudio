@@ -90,27 +90,27 @@ feature
 					-- Initialize value to false
 				buf := buffer
 				register.print_register;
-				buf.putstring (" = '\0';");
-				buf.new_line;
+				buf.put_string (" = '\0';");
+				buf.put_new_line;
 					-- Test first value. If it is false, then the whole
 					-- expression is false and the right handside is not evaled.
 				left.generate;
-				buf.putstring (gc_if_l_paran);
+				buf.put_string (gc_if_l_paran);
 				left.print_register;
-				buf.putstring (") {");
-				buf.new_line;
+				buf.put_string (") {");
+				buf.put_new_line;
 					-- Left handside was true. Value of the expression is the
 					-- value of the right handside.
 				buf.indent;
 				right.generate;
 				register.print_register;
-				buf.putstring (" = ");
+				buf.put_string (" = ");
 				right.print_register;
-				buf.putchar (';');
-				buf.new_line;
+				buf.put_character (';');
+				buf.put_new_line;
 				buf.exdent;
-				buf.putchar ('}');
-				buf.new_line;
+				buf.put_character ('}');
+				buf.put_new_line;
 			else
 				Precursor {B_AND_THEN_B};
 			end;

@@ -169,17 +169,17 @@ feature -- Generation
 			rout_infos := renumbered_table
 			nb_elements := rout_infos.count
 
-			buffer.putstring ("#include %"eif_project.h%"%N%
+			buffer.put_string ("#include %"eif_project.h%"%N%
 						 %#include %"eif_macros.h%"%N%N")
 
 			buffer.start_c_specific_code
 			
-			buffer.putstring ("struct rout_info egc_forg_table_init[] = {%N")
+			buffer.put_string ("struct rout_info egc_forg_table_init[] = {%N")
 				-- C tables start at 0, we want to start at 1, to
 				-- that effect we insert a dummy entry.
-			buffer.putstring ("%T{(int16) -1, (int16) -1},%N")
+			buffer.put_string ("%T{(int16) -1, (int16) -1},%N")
 				-- Entry for the invariant "routine"
-			buffer.putstring ("%T{(int16) 0, (int16) 0},%N")
+			buffer.put_string ("%T{(int16) 0, (int16) 0},%N")
 
 			from
 				i := 2	
@@ -188,18 +188,18 @@ feature -- Generation
 			loop
 				ri := rout_infos.item (i)
 				if ri /= Void then
-					buffer.putstring ("%N%T{(int16) ")
-					buffer.putint (ri.origin)
-					buffer.putstring (", (int16) ")
-					buffer.putint (ri.offset)
-					buffer.putstring ("},")
+					buffer.put_string ("%N%T{(int16) ")
+					buffer.put_integer (ri.origin)
+					buffer.put_string (", (int16) ")
+					buffer.put_integer (ri.offset)
+					buffer.put_string ("},")
 				else
-					buffer.putstring ("%N%T{(int16) -1, (int16) -1},")
+					buffer.put_string ("%N%T{(int16) -1, (int16) -1},")
 				end
 				i := i + 1
 			end
 
-			buffer.putstring ("%N};%N")
+			buffer.put_string ("%N};%N")
 
 			buffer.end_c_specific_code
 		end

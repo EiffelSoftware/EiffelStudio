@@ -39,7 +39,7 @@ feature
 			new_classes := System.new_classes;
 			if not new_classes.is_empty then
 debug ("ACTIVITY")
-io.error.putstring ("TIME_CHECK check_suppliers_of_unchanged_classes%N");
+io.error.put_string ("TIME_CHECK check_suppliers_of_unchanged_classes%N");
 end;
 				create old_classes.make (500);
 				clusters := Universe.clusters;
@@ -50,9 +50,9 @@ end;
 				loop
 					class_name := new_classes.item.name;
 debug ("ACTIVITY")
-io.error.putstring ("%Tfind classes of name ");
-io.error.putstring (class_name);
-io.error.putstring ("%N");
+io.error.put_string ("%Tfind classes of name ");
+io.error.put_string (class_name);
+io.error.put_string ("%N");
 end;
 						-- Find the classes with this name that can be
 						-- reached from one of the clusters
@@ -90,9 +90,9 @@ end;
 								-- Valid clients must be checked
 							class_id := old_classes.key_for_iteration;
 debug ("ACTIVITY")
-io.error.putstring ("%T%Tcheck clients of ");
-io.error.putstring (System.class_of_id (class_id).name);
-io.error.putstring ("%N");
+io.error.put_string ("%T%Tcheck clients of ");
+io.error.put_string (System.class_of_id (class_id).name);
+io.error.put_string ("%N");
 end;
 							clients := System.class_of_id (class_id).syntactical_clients;
 							from
@@ -109,9 +109,9 @@ end;
 								then
 									checked_classes.put (True, class_c.class_id);
 debug ("ACTIVITY")
-io.error.putstring ("%T%Tcheck: ");
-io.error.putstring (class_c.name);
-io.error.putstring ("%N");
+io.error.put_string ("%T%Tcheck: ");
+io.error.put_string (class_c.name);
+io.error.put_string ("%N");
 end;
 									class_c.check_suppliers_and_parents
 								end;

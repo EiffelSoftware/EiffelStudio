@@ -60,10 +60,10 @@ feature
 			if register /= No_register then
 				buf := buffer
 				register.print_register
-				buf.putstring (" = ")
+				buf.put_string (" = ")
 				generate_string
-				buf.putchar (';')
-				buf.new_line
+				buf.put_character (';')
+				buf.put_new_line
 			end
 		end
 
@@ -84,14 +84,14 @@ feature
 		do
 				-- RTMS_EX is the macro used to create Eiffel strings from C ones
 			buf := buffer
-			buf.putstring ("RTMS_EX_H(%"")
+			buf.put_string ("RTMS_EX_H(%"")
 			buf.escape_string (value)
-			buf.putchar('"')
-			buf.putchar(',')
-			buf.putint(value.count)
-			buf.putchar(',')
-			buf.putint (value.hash_code)
-			buf.putchar(')')
+			buf.put_character('"')
+			buf.put_character(',')
+			buf.put_integer(value.count)
+			buf.put_character(',')
+			buf.put_integer (value.hash_code)
+			buf.put_character(')')
 		end
 
 end

@@ -282,7 +282,7 @@ feature -- Formatting
 		require
 			buffer_exists: buffer /= Void
 		do
-			buffer.putstring (name)
+			buffer.put_string (name)
 		end
 
 feature -- Comparison
@@ -395,8 +395,8 @@ feature -- Generic conformance
 		require
 			valid_file : buffer /= Void
 		do
-			buffer.putint (generated_id (final_mode))
-			buffer.putstring (", ")
+			buffer.put_integer (generated_id (final_mode))
+			buffer.put_string (", ")
 		end
 
 	generate_cid_array (buffer : GENERATION_BUFFER; 

@@ -89,8 +89,8 @@ feature -- Debug
 
 	trace is
 		do
-			io.error.putint (c_pattern_id)
-			io.error.new_line
+			io.error.put_integer (c_pattern_id)
+			io.error.put_new_line
 			pattern.trace
 		end
 

@@ -54,10 +54,10 @@ feature
 			if register /= No_register then
 				register.print_register
 				buf := buffer
-				buf.putstring (" = ")
+				buf.put_string (" = ")
 				generate_bit
-				buf.putchar (';')
-				buf.new_line
+				buf.put_character (';')
+				buf.put_new_line
 			end
 		end
 
@@ -78,13 +78,13 @@ feature
 		do
 			buf := buffer
 				-- RTMB is the macro used to create Eiffel strings from C ones
-			buf.putstring ("RTMB(")
-			buf.putchar('"')
+			buf.put_string ("RTMB(")
+			buf.put_character('"')
 			buf.escape_string (value)
-			buf.putchar ('"')
-			buf.putstring(", ")
-			buf.putint (value.count)
-			buf.putchar(')')
+			buf.put_character ('"')
+			buf.put_string(", ")
+			buf.put_integer (value.count)
+			buf.put_character(')')
 		end
 
 end

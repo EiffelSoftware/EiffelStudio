@@ -147,15 +147,15 @@ feature -- Debug
 
 	trace is
 		do
-			io.error.putstring("Suppliers%N");
+			io.error.put_string("Suppliers%N");
 			from
 				suppliers.start
 			until
 				suppliers.after
 			loop
-				io.error.putstring ("Supplier id: ");
-				io.error.putint (suppliers.item);
-				io.error.new_line;
+				io.error.put_string ("Supplier id: ");
+				io.error.put_integer (suppliers.item);
+				io.error.put_new_line;
 				suppliers.forth
 			end;
 			from

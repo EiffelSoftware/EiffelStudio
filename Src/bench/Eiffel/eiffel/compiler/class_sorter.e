@@ -386,10 +386,10 @@ feature {NONE} -- Filling
 			loop
 				cl := order.item (i)
 debug ("ACTIVITY", "DLE TOPO")
-io.error.putint (i)
-io.error.putstring (": ")
-io.error.putstring (cl.name)
-io.error.new_line
+io.error.put_integer (i)
+io.error.put_string (": ")
+io.error.put_string (cl.name)
+io.error.put_new_line
 end
 				cl.set_topological_id (i)
 				i := i + 1

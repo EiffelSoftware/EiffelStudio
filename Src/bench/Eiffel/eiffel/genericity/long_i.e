@@ -193,15 +193,15 @@ feature -- Access
 			-- Generate discriminant of C structure "item" associated
 			-- to the current C type in `buffer'.
 		do
-			buffer.putstring ("it_int")
-			buffer.putint (size)
+			buffer.put_string ("it_int")
+			buffer.put_integer (size)
 		end
 
 	generate_sk_value (buffer: GENERATION_BUFFER) is
 			-- Generate SK value associated to current C type in `buffer'.
 		do
-			buffer.putstring ("SK_INT")
-			buffer.putint (size)
+			buffer.put_string ("SK_INT")
+			buffer.put_integer (size)
 		end
 
 	type_a: INTEGER_A is

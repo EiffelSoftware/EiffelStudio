@@ -14,13 +14,13 @@ feature
 	generate_compilation_rule is
 			-- Generates the .c -> .o compilation rule
 		do
-			Make_file.putstring ("%
+			Make_file.put_string ("%
 				%.SUFFIXES: .x .xpp .o%N%N%
 				%.c.o:%N%
 				%%T$(CC) $(CFLAGS) -c $<%N%N%
 				%.cpp.o:%N%
 				%%T$(CPP) $(CPPFLAGS) -c $<%N%N")
-			Make_file.putstring ("%
+			Make_file.put_string ("%
 				%.x.o:%N%
 				%%T$(X2C) $< $*.c%N%
 				%%T$(CC) $(CFLAGS) -c $*.c%N%
@@ -29,7 +29,7 @@ feature
 				%%T$(X2C) $< $*.cpp%N%
 				%%T$(CPP) $(CPPFLAGS) -c $*.cpp%N%
 				%%T$(RM) $*.cpp%N%N")
-			Make_file.putstring ("%
+			Make_file.put_string ("%
 				%.x.c:%N%
 				%%T$(X2C) $< $*.c%N%N%
 				%.xpp.cpp:%N%

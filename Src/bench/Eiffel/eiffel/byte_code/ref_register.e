@@ -43,7 +43,7 @@ feature
 		require else
 			register_exists: regnum /= 0;
 		do
-			context.buffer.putstring (register_name);
+			context.buffer.put_string (register_name);
 		end;
 
 end

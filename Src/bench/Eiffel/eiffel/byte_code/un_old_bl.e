@@ -46,16 +46,16 @@ feature
 			expr.generate;
 			target_type := Context.real_type (type);
 			register.print_register;
-			buf.putstring (" = ");
+			buf.put_string (" = ");
 			if target_type.is_true_expanded then
-				buf.putstring ("RTCL(")
+				buf.put_string ("RTCL(")
 				expr.print_register
-				buf.putchar (')')
+				buf.put_character (')')
 			else
 				expr.print_register;
 			end
-			buf.putchar (';');
-			buf.new_line;
+			buf.put_character (';');
+			buf.put_new_line;
 		end;
 
 	unanalyze is

@@ -163,13 +163,13 @@ feature -- Byte code generation
 			l_type := real_type (expr.type)
 			if not is_pointer or else (l_type.is_basic and not l_type.is_bit) then
 				buf := buffer
-				buf.putstring ("&(")
+				buf.put_string ("&(")
 				if expr.is_attribute then
 					expr.generate_access
 				else
 					expr.print_register
 				end
-				buf.putchar (')')
+				buf.put_character (')')
 			else
 				expr.print_register
 			end

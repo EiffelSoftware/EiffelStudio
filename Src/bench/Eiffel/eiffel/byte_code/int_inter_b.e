@@ -40,11 +40,11 @@ feature -- C generation
 			until
 				low > up
 			loop
-				buf.putstring ("case ")
-				buf.putint (low)
-				buf.putchar ('L')
-				buf.putchar (':')
-				buf.new_line
+				buf.put_string ("case ")
+				buf.put_integer (low)
+				buf.put_character ('L')
+				buf.put_character (':')
+				buf.put_new_line
 				low := low + 1
 			end
 		end

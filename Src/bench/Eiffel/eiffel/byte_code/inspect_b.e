@@ -101,34 +101,34 @@ feature -- C code generation
 		do
 			buf := buffer
 			generate_line_info
-			buf.new_line
+			buf.put_new_line
 			generate_frozen_debugger_hook
 			switch.generate
-			buf.putstring ("switch (")
+			buf.put_string ("switch (")
 			switch.print_register
-			buf.putstring (") {")
-			buf.new_line
+			buf.put_string (") {")
+			buf.put_new_line
 			buf.indent
 			if case_list /= Void then
 				case_list.generate
 			end
 			if else_part = Void or else not else_part.is_empty then
-				buf.putstring ("default:")
-				buf.new_line
+				buf.put_string ("default:")
+				buf.put_new_line
 				buf.indent
 				if else_part = Void then
 						-- Raise an exception
-					buf.putstring ("RTEC(EN_WHEN);")
+					buf.put_string ("RTEC(EN_WHEN);")
 				else
 					else_part.generate
-					buf.putstring ("break;")
+					buf.put_string ("break;")
 				end
-				buf.new_line
+				buf.put_new_line
 				buf.exdent
 			end
 			buf.exdent
-			buf.putchar ('}')
-			buf.new_line
+			buf.put_character ('}')
+			buf.put_new_line
 		end
 
 feature -- IL code generation

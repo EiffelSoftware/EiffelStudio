@@ -70,12 +70,12 @@ feature -- Attributes
 				end
 
 				debug
-					io.error.putstring ("Dispatch : ");
-					io.error.putstring (a_class.name);
-					io.error.putint (a_class.class_id);
-					io.error.new_line;
-					io.error.putstring (a_type.dump);
-					io.error.new_line;
+					io.error.put_string ("Dispatch : ");
+					io.error.put_string (a_class.name);
+					io.error.put_integer (a_class.class_id);
+					io.error.put_new_line;
+					io.error.put_string (a_type.dump);
+					io.error.put_new_line;
 				end;
 
 					-- Look for the item in the insertion list
@@ -136,9 +136,9 @@ feature -- Attributes
 			loop
 				data := l_area.item (i);
 debug
-	io.error.putstring ("Adding data%N");
+	io.error.put_string ("Adding data%N");
 	data.trace
-	io.error.new_line;
+	io.error.put_new_line;
 end;
 				data.base_class.update_types (data);
 				i := i + 1
@@ -160,9 +160,9 @@ end;
 						class_type := types.item;
 						if not class_type.type.is_valid then
 debug
-io.error.putstring ("Removing a type of ");
-io.error.putstring (a_class.name);
-io.error.new_line;
+io.error.put_string ("Removing a type of ");
+io.error.put_string (a_class.name);
+io.error.put_new_line;
 end;
 							System.class_types.put (Void, class_type.type_id);
 							types.remove;

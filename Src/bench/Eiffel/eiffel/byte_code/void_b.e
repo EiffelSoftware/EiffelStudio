@@ -56,7 +56,7 @@ feature -- C code generation
 	print_register is
 			-- Print Void value.
 		do
-			buffer.putstring ("NULL")
+			buffer.put_string ("NULL")
 		end
 		
 end -- class VOID_B

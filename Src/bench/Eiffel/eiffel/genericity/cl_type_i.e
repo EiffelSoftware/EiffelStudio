@@ -400,18 +400,18 @@ feature -- C generation
 					-- RTLX is a macro used to create
 					-- expanded types
 				if gen_type /= Void then
-					buffer.putstring (" = RTLX(typres")
+					buffer.put_string (" = RTLX(typres")
 				else
-					buffer.putstring (" = RTLX(RTUD(")
-					buffer.generate_type_id (associated_class_type.static_type_id)
-					buffer.putchar (')')
+					buffer.put_string (" = RTLX(RTUD(")
+					buffer.put_static_type_id (associated_class_type.static_type_id)
+					buffer.put_character (')')
 				end
 			else
 				if gen_type /= Void then
-					buffer.putstring (" = RTLN(typres")
+					buffer.put_string (" = RTLN(typres")
 				else
-					buffer.putstring (" = RTLN(")
-					buffer.putint (type_id - 1)
+					buffer.put_string (" = RTLN(")
+					buffer.put_type_id (type_id)
 				end
 				class_type := associated_class_type
 				creation_feature := class_type.associated_class.creation_feature
@@ -425,33 +425,33 @@ feature -- C generation
 					end
 					c_name := Encoder.feature_name (written_type.static_type_id,
 						creation_feature.body_index)
-					buffer.putstring (");")
-					buffer.new_line
-					buffer.putstring (c_name)
-					buffer.putchar ('(')
+					buffer.put_string (");")
+					buffer.put_new_line
+					buffer.put_string (c_name)
+					buffer.put_character ('(')
 					reg.print_register
 					Extern_declarations.add_routine_with_signature (Void_c_type,
 						c_name, <<"EIF_REFERENCE">>)
 				end
 			end
-			buffer.putchar (')')
-			buffer.putchar (';')
+			buffer.put_character (')')
+			buffer.put_character (';')
 
 			if gen_type /= Void then
 				byte_code.generate_block_close
 			end
-			buffer.new_line
+			buffer.put_new_line
 		end
 
 	generate_cecil_value (buffer: GENERATION_BUFFER) is
 			-- Generate cecil value
 		do
 			if not is_expanded then
-				buffer.putstring ("SK_REF + (uint32) ")
+				buffer.put_string ("SK_REF + (uint32) ")
 			else
-				buffer.putstring ("SK_EXP + (uint32) ")
+				buffer.put_string ("SK_EXP + (uint32) ")
 			end
-			buffer.putint (associated_class_type.type_id - 1)
+			buffer.put_type_id (associated_class_type.type_id)
 		end
 
 feature -- Array optimization
@@ -490,8 +490,8 @@ feature -- Generic conformance
 				-- It's an anchored type 
 				cr_info.generate_cid (buffer, final_mode)
 			else
-				buffer.putint (generated_id (final_mode))
-				buffer.putstring (", ")
+				buffer.put_integer (generated_id (final_mode))
+				buffer.put_string (", ")
 			end
 		end
 
@@ -520,8 +520,8 @@ feature -- Generic conformance
 					-- It's an anchored type 
 				cr_info.generate_cid_array (buffer, final_mode, idx_cnt)
 			else
-				buffer.putint (generated_id (final_mode))
-				buffer.putstring (", ")
+				buffer.put_integer (generated_id (final_mode))
+				buffer.put_string (", ")
 
 					-- Increment counter
 				dummy := idx_cnt.next

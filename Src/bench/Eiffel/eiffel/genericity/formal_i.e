@@ -144,10 +144,10 @@ feature -- Generic conformance
 
 	generate_cid (buffer: GENERATION_BUFFER; final_mode, use_info: BOOLEAN) is
 		do
-			buffer.putint (Formal_type)
-			buffer.putstring (", ")
-			buffer.putint (position)
-			buffer.putstring (", ")
+			buffer.put_integer (Formal_type)
+			buffer.put_string (", ")
+			buffer.put_integer (position)
+			buffer.put_string (", ")
 		end
 
 	make_gen_type_byte_code (ba: BYTE_ARRAY; use_info: BOOLEAN) is
@@ -160,10 +160,10 @@ feature -- Generic conformance
 		local
 			dummy: INTEGER
 		do
-			buffer.putint (Formal_type)
-			buffer.putstring (", ")
-			buffer.putint (position)
-			buffer.putstring (", ")
+			buffer.put_integer (Formal_type)
+			buffer.put_string (", ")
+			buffer.put_integer (position)
+			buffer.put_string (", ")
 			dummy := idx_cnt.next
 			dummy := idx_cnt.next
 		end

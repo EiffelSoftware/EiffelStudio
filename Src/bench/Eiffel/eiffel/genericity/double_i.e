@@ -103,13 +103,13 @@ feature
 			-- Generate discriminant of C structure "item" associated
 			-- to the current C type in `buffer'.
 		do
-			buffer.putstring ("it_double")
+			buffer.put_string ("it_double")
 		end
 
 	generate_sk_value (buffer: GENERATION_BUFFER) is
 			-- Generate SK value associated to current C type in `buffer'.
 		do
-			buffer.putstring ("SK_DOUBLE")
+			buffer.put_string ("SK_DOUBLE")
 		end
 
 	type_a: DOUBLE_A is

@@ -32,9 +32,9 @@ feature -- C code generation
 			gen_type_a: GEN_TYPE_A
 			l_values: like values
 		do
-			buffer.putstring ("static char *(*cr");
-			buffer.putint (a_class_type.type_id);
-			buffer.putstring ("[])() = {%N");
+			buffer.put_string ("static char *(*cr");
+			buffer.put_integer (a_class_type.type_id);
+			buffer.put_string ("[])() = {%N");
 			from
 				i := 0;
 				nb := capacity - 1
@@ -44,7 +44,7 @@ feature -- C code generation
 			loop
 				feat := l_values.item (i);
 				if (feat = Void) or else feat.is_external or else feat.is_deferred then
-					buffer.putstring ("(char *(*)()) 0");
+					buffer.put_string ("(char *(*)()) 0");
 				else
 					if feat.is_constant and then not feat.is_once then
 							-- A non-string constant has always its feature generated in
@@ -56,18 +56,18 @@ feature -- C code generation
 					written_type := written_class.meta_type (a_class_type.type).associated_class_type
 					routine_name := Encoder.feature_name (written_type.static_type_id, feat.body_index);
 debug ("CECIL")
-    io.putstring ("Generating entry for feature: ");
-    io.putstring (feat.feature_name);
-    io.putstring (" of class: ");
-    io.putstring (written_type.associated_class.name);
-    io.putstring (", encoded name is: ");
-    io.putstring (routine_name);
-    io.new_line;
+    io.put_string ("Generating entry for feature: ");
+    io.put_string (feat.feature_name);
+    io.put_string (" of class: ");
+    io.put_string (written_type.associated_class.name);
+    io.put_string (", encoded name is: ");
+    io.put_string (routine_name);
+    io.put_new_line;
 end;
 
 
-					buffer.putstring ("(char *(*)()) ");
-					buffer.putstring (routine_name);
+					buffer.put_string ("(char *(*)()) ");
+					buffer.put_string (routine_name);
 
 						-- Remember extern declarations
 					actual_type := feat.type.actual_type;
@@ -85,10 +85,10 @@ end;
 					c_type := actual_type.type_i.c_type;
 					Extern_declarations.add_routine (c_type, routine_name);
 				end;
-				buffer.putstring (",%N");
+				buffer.put_string (",%N");
 				i := i + 1;
 			end;
-			buffer.putstring ("};%N%N");
+			buffer.put_string ("};%N%N");
 		end;
 
 	generate_workbench (buffer: GENERATION_BUFFER; class_id: INTEGER) is
@@ -98,9 +98,9 @@ end;
 			feat: FEATURE_I;
 			l_values: like values
 		do
-			buffer.putstring ("uint32 cr");
-			buffer.putint (class_id);
-			buffer.putstring ("[] = {%N");
+			buffer.put_string ("uint32 cr");
+			buffer.put_integer (class_id);
+			buffer.put_string ("[] = {%N");
 			from
 				l_values := values
 				i := 0
@@ -109,16 +109,16 @@ end;
 				i > nb
 			loop
 				feat := l_values.item (i);
-				buffer.putstring ("(uint32) ");
+				buffer.put_string ("(uint32) ");
 				if feat = Void then
-					buffer.putchar ('0');
+					buffer.put_character ('0');
 				else
-					buffer.putint (feat.feature_id);
+					buffer.put_integer (feat.feature_id);
 				end;
-				buffer.putstring (",%N");
+				buffer.put_string (",%N");
 				i := i + 1
 			end;
-			buffer.putstring ("};%N%N");
+			buffer.put_string ("};%N%N");
 		end;
 
 	generate_precomp_workbench (buffer: GENERATION_BUFFER; class_id: INTEGER) is
@@ -129,9 +129,9 @@ end;
 			feat: FEATURE_I;
 			l_values: like values
 		do
-			buffer.putstring ("uint32 cr");
-			buffer.putint (class_id);
-			buffer.putstring ("[] = {%N");
+			buffer.put_string ("uint32 cr");
+			buffer.put_integer (class_id);
+			buffer.put_string ("[] = {%N");
 			from
 				l_values := values
 				i := 0
@@ -140,16 +140,16 @@ end;
 				i > nb
 			loop
 				feat := l_values.item (i);
-				buffer.putstring ("(uint32) ");
+				buffer.put_string ("(uint32) ");
 				if feat = Void then
-					buffer.putchar ('0');
+					buffer.put_character ('0');
 				else
-					buffer.putint (feat.rout_id_set.first);
+					buffer.put_integer (feat.rout_id_set.first);
 				end;
-				buffer.putstring (",%N");
+				buffer.put_string (",%N");
 				i := i + 1
 			end;
-			buffer.putstring ("};%N%N");
+			buffer.put_string ("};%N%N");
 		end;
 
 	generate_name_table (buffer: GENERATION_BUFFER; id: INTEGER) is
@@ -161,9 +161,9 @@ end;
 			str: STRING
 			l_keys: like keys
 		do
-			buffer.putstring ("char *cl")
-			buffer.putint (id)
-			buffer.putstring (" [] = {%N")
+			buffer.put_string ("char *cl")
+			buffer.put_integer (id)
+			buffer.put_string (" [] = {%N")
 			from
 				i := 0
 				nb := capacity - 1
@@ -173,16 +173,16 @@ end;
 			loop
 				str := l_keys.item (i)
 				if str = Void then
-					buffer.putstring ("(char *) 0")
+					buffer.put_string ("(char *) 0")
 				else
-					buffer.putchar ('"')
-					buffer.putstring (str)
-					buffer.putstring ("%"")
+					buffer.put_character ('"')
+					buffer.put_string (str)
+					buffer.put_string ("%"")
 				end
-				buffer.putstring (",%N")
+				buffer.put_string (",%N")
 				i := i + 1
 			end
-			buffer.putstring ("};%N%N")
+			buffer.put_string ("};%N%N")
 		end
 
 feature -- Byte code generation

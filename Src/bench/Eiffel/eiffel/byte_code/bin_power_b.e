@@ -78,23 +78,23 @@ feature -- C code generation
 				power_value := power_nb.value.to_double
 				if power_value = 0.0 then
 					done := True
-					buf.putstring ("(EIF_DOUBLE) 1")
+					buf.put_string ("(EIF_DOUBLE) 1")
 				elseif power_value = 1.0 then
 					done := True
-					buf.putstring ("(EIF_DOUBLE) (")
+					buf.put_string ("(EIF_DOUBLE) (")
 					left.print_register
-					buf.putchar (')')
+					buf.put_character (')')
 				elseif power_value = 2.0 or power_value = 3.0 then
 					done := True
-					buf.putstring ("(EIF_DOUBLE) ((EIF_DOUBLE)")
+					buf.put_string ("(EIF_DOUBLE) ((EIF_DOUBLE)")
 					left.print_register
-					buf.putstring (" * (EIF_DOUBLE) ")
+					buf.put_string (" * (EIF_DOUBLE) ")
 					left.print_register
 					if power_value = 3.0 then
-						buf.putstring (" * (EIF_DOUBLE) ")
+						buf.put_string (" * (EIF_DOUBLE) ")
 						left.print_register
 					end
-					buf.putchar (')')
+					buf.put_character (')')
 				end
 			end
 
@@ -102,11 +102,11 @@ feature -- C code generation
 					-- No optimization could have been done, so we generate the
 					-- call to `pow'.
 				shared_include_queue.put (Names_heap.math_header_name_id)
-				buf.putstring ("(EIF_DOUBLE) pow ((EIF_DOUBLE)");
+				buf.put_string ("(EIF_DOUBLE) pow ((EIF_DOUBLE)");
 				left.print_register;
-				buf.putstring (",(EIF_DOUBLE)");
+				buf.put_string (",(EIF_DOUBLE)");
 				right.print_register;
-				buf.putchar (')');
+				buf.put_character (')');
 			end
 		end;
 

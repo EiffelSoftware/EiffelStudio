@@ -72,10 +72,10 @@ feature -- Debug
 			until
 				i >= count
 			loop
-				io.error.putint (i)
-				io.error.putstring (": ")
-				io.error.putchar (item (i))
-				io.error.new_line
+				io.error.put_integer (i)
+				io.error.put_string (": ")
+				io.error.put_character (item (i))
+				io.error.put_new_line
 				i := i + 1
 			end
 		end

@@ -111,12 +111,12 @@ feature -- Generic conformance
 				-- It's an ancored type 
 				cr_info.generate_cid (buffer, final_mode)
 			else
-				buffer.putint (Tuple_type)
-				buffer.putstring (", ")
-				buffer.putint (true_generics.count)
-				buffer.putstring (", ")
-				buffer.putint (generated_id (final_mode))
-				buffer.putstring (", ")
+				buffer.put_integer (Tuple_type)
+				buffer.put_string (", ")
+				buffer.put_integer (true_generics.count)
+				buffer.put_string (", ")
+				buffer.put_integer (generated_id (final_mode))
+				buffer.put_string (", ")
 	
 				from
 					i  := true_generics.lower
@@ -164,12 +164,12 @@ feature -- Generic conformance
 					-- It's an anchored type 
 				cr_info.generate_cid_array (buffer, final_mode, idx_cnt)
 			else
-				buffer.putint (Tuple_type)
-				buffer.putstring (", ")
-				buffer.putint (true_generics.count)
-				buffer.putstring (", ")
-				buffer.putint (generated_id (final_mode))
-				buffer.putstring (", ")
+				buffer.put_integer (Tuple_type)
+				buffer.put_string (", ")
+				buffer.put_integer (true_generics.count)
+				buffer.put_string (", ")
+				buffer.put_integer (generated_id (final_mode))
+				buffer.put_string (", ")
 	
 					-- Increment counter by 3
 				dummy := idx_cnt.next

@@ -32,27 +32,27 @@ feature
 			buf := buffer
 				-- Generate the recording of the assertion
 			if tag /= Void then
-				buf.putstring ("RTIT(")
-				buf.putchar ('"')
-				buf.putstring (tag)
-				buf.putchar ('"')
-				buf.putstring (gc_comma)
+				buf.put_string ("RTIT(")
+				buf.put_character ('"')
+				buf.put_string (tag)
+				buf.put_character ('"')
+				buf.put_string (gc_comma)
 			else
-				buf.putstring ("RTIS(")
+				buf.put_string ("RTIS(")
 			end
 			context.Current_register.print_register
-			buf.putstring (gc_rparan_semi_c)
-			buf.new_line
+			buf.put_string (gc_rparan_semi_c)
+			buf.put_new_line
 				-- Now evaluate the expression
 			expr.generate
-			buf.putstring (gc_if_l_paran)
+			buf.put_string (gc_if_l_paran)
 			expr.print_register
-			buf.putstring (") {")
+			buf.put_string (") {")
 			generate_success (buf)
-			buf.putstring (gc_lacc_else_r_acc)
+			buf.put_string (gc_lacc_else_r_acc)
 			generate_failure (buf)
-			buf.putchar ('}')
-			buf.new_line
+			buf.put_character ('}')
+			buf.put_new_line
 		end
 
 end

@@ -39,9 +39,9 @@ feature -- C code generation
 			buffer: GENERATION_BUFFER
 		do
 			buffer := context.buffer
-			buffer.putstring ("RTLNC(")
+			buffer.put_string ("RTLNC(")
 			context.Current_register.print_register
-			buffer.putchar (')')
+			buffer.put_character (')')
 		end
 
 feature -- Assignment attempt
@@ -102,7 +102,7 @@ feature -- Generic conformance
 		local
 			dummy : INTEGER
 		do
-			buffer.putstring ("0,")
+			buffer.put_string ("0,")
 			dummy := idx_cnt.next
 		end
 
@@ -111,12 +111,12 @@ feature -- Generic conformance
 		local
 			dummy : INTEGER
 		do
-			buffer.putstring ("typarr[")
-			buffer.putint (idx_cnt.value)
-			buffer.putstring ("] = RTID(")
+			buffer.put_string ("typarr[")
+			buffer.put_integer (idx_cnt.value)
+			buffer.put_string ("] = RTID(")
 			context.generate_current_dftype
-			buffer.putstring (");")
-			buffer.new_line
+			buffer.put_string (");")
+			buffer.put_new_line
 			dummy := idx_cnt.next
 		end
 

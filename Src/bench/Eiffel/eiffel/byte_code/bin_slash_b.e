@@ -37,24 +37,24 @@ feature -- C code generation
 	generate_operator is
 			-- Generate the operator
 		do
-			buffer.putstring (" / ");
+			buffer.put_string (" / ");
 		end;
 
 	generate_simple is
 			-- Generate a simple assignment operation
 		do
-			buffer.putstring (" /= ");
+			buffer.put_string (" /= ");
 		end;
 
 	print_register is
 			-- Print expression value
 		do
 			if left.type.is_long and then right.type.is_long then
-				buffer.putstring (" ((EIF_DOUBLE)");
+				buffer.put_string (" ((EIF_DOUBLE)");
 				left.print_register;
 				generate_operator;
 				right.print_register;
-				buffer.putchar (')');
+				buffer.put_character (')');
 			else
 				Precursor {NUM_BINARY_B}
 			end;

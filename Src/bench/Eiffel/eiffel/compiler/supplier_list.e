@@ -83,9 +83,9 @@ feature -- Element change
 					has_class: Eiffel_system.class_of_id (l_class_id) /= Void
 				end
 				debug ("ACTIVITY")
-					io.error.putstring ("SUPPLIER_LIST add_occurrence: ")
-					io.error.putstring (Eiffel_system.class_of_id (l_class_id).name)
-					io.error.new_line
+					io.error.put_string ("SUPPLIER_LIST add_occurrence: ")
+					io.error.put_string (Eiffel_system.class_of_id (l_class_id).name)
+					io.error.put_new_line
 				end
 				suppl_info := info (l_class_id)
 				if suppl_info = Void then
@@ -190,16 +190,16 @@ feature {NONE} -- Implementation: debugging
 	trace is
 			-- Debug purpose
 		do
-			io.error.putstring ("SUPPLIER_LIST.trace%N")
+			io.error.put_string ("SUPPLIER_LIST.trace%N")
 			from
 				start
 			until
 				after
 			loop
-				io.error.putstring (item.supplier.name)
-				io.error.putstring (" [")
-				io.error.putint (item.occurrence)
-				io.error.putstring ("]  ")
+				io.error.put_string (item.supplier.name)
+				io.error.put_string (" [")
+				io.error.put_integer (item.occurrence)
+				io.error.put_string ("]  ")
 				forth
 			end
 		end

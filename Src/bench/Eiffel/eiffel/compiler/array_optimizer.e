@@ -185,11 +185,11 @@ feature {NONE} -- Array optimization
 					a_feature := ftable.item_for_iteration
 					if unsafe_body_indexes.item (a_feature.body_index) then
 debug ("OPTIMIZATION")
-	io.error.putstring ("Inserting ")
-	io.error.putstring (a_feature.feature_name)
-	io.error.putstring (" from ")
-	io.error.putstring (a_class.name)
-	io.error.new_line
+	io.error.put_string ("Inserting ")
+	io.error.put_string (a_feature.feature_name)
+	io.error.put_string (" from ")
+	io.error.put_string (a_class.name)
+	io.error.put_new_line
 end
 						create dep.make (a_class.class_id, a_feature)
 						unsafe_features.extend (dep)
@@ -221,9 +221,9 @@ end
 		do
 			if not array_descendants.has (a_class) then
 debug ("OPTIMIZATION")
-	io.error.putstring ("Adding ")
-	io.error.putstring (a_class.name)
-	io.error.putstring (" as a descendant of ARRAY%N")
+	io.error.put_string ("Adding ")
+	io.error.put_string (a_class.name)
+	io.error.put_string (" as a descendant of ARRAY%N")
 end
 				array_descendants.extend (a_class)
 				array_descendants.forth
@@ -403,15 +403,15 @@ feature -- Contexts
 			entry := Eiffel_table.poly_table (rout_id)
 			Eiffel_table.mark_used (rout_id)
 			temp := Encoder.table_name (rout_id)
-			buffer.putstring ("extern long ")
-			buffer.putstring (temp)
-			buffer.putstring ("[];%Nlong *")
-			buffer.putstring (table_name)
-			buffer.putstring (" = ")
-			buffer.putstring (temp)
-			buffer.putstring (" - ")
-			buffer.putint (entry.min_type_id - 1)
-			buffer.putstring (";%N")
+			buffer.put_string ("extern long ")
+			buffer.put_string (temp)
+			buffer.put_string ("[];%Nlong *")
+			buffer.put_string (table_name)
+			buffer.put_string (" = ")
+			buffer.put_string (temp)
+			buffer.put_string (" - ")
+			buffer.put_type_id (entry.min_type_id)
+			buffer.put_string (";%N")
 		end
 
 feature {NONE} -- Contexts

@@ -75,10 +75,10 @@ feature -- Generation
 							-- Write the body index of the routine (index
 							-- into the run-time dispatch table) and the type
 							-- of the feature.
-						buffer.putstring (body_index_type)
-						buffer.putint (re.real_body_index - 1)
-						buffer.putstring (int16)
-						buffer.putint (re.static_feature_type_id - 1)
+						buffer.put_string (body_index_type)
+						buffer.put_real_body_index (re.real_body_index)
+						buffer.put_string (int16)
+						buffer.put_static_type_id (re.static_feature_type_id)
 					else
 						ae ?= entry_item
 						check
@@ -88,29 +88,29 @@ feature -- Generation
 							-- Write the offset of the attribute in the 
 							-- run-time structure (object) and the type of
 							-- the feature.
-						buffer.putstring (body_index_type)
-						buffer.putint (ae.workbench_offset)
-						buffer.putstring (int16)
-						buffer.putint (ae.static_feature_type_id - 1)
+						buffer.put_string (body_index_type)
+						buffer.put_integer (ae.workbench_offset)
+						buffer.put_string (int16)
+						buffer.put_static_type_id (ae.static_feature_type_id)
 					end
 
 					if entry_item.is_generic then
-						buffer.putstring (gen_type)
-						buffer.putint (cnt.value)
-						buffer.putstring (id_string)
+						buffer.put_string (gen_type)
+						buffer.put_integer (cnt.value)
+						buffer.put_string (id_string)
 						j := cnt.next
 					else           
-						buffer.putstring (null_init)
+						buffer.put_string (null_init)
 					end
 
-					buffer.putstring (separator)
+					buffer.put_string (separator)
 
 				else
 						-- The entry corresponds to a routine that
 						-- is not polymorphic.
-					buffer.putstring (body_index_type)
-					buffer.putint (Invalid_index)
-					buffer.putstring (invalid_entry)
+					buffer.put_string (body_index_type)
+					buffer.put_integer (Invalid_index)
+					buffer.put_string (invalid_entry)
 				end
 				i := i + 1
 			end
@@ -160,17 +160,17 @@ feature -- Generation
 							-- Write the body index of the routine (index
 							-- into the run-time dispatch table) and the type
 							-- of the feature.
-						buffer.putstring (desc1)
-						buffer.putint (nb)
-						buffer.putstring (info)
-						buffer.generate_real_body_index (re.real_body_index)
-						buffer.putstring (desc2)
-						buffer.putint (nb)
-						buffer.putstring (type)
+						buffer.put_string (desc1)
+						buffer.put_integer (nb)
+						buffer.put_string (info)
+						buffer.put_real_body_index (re.real_body_index)
+						buffer.put_string (desc2)
+						buffer.put_integer (nb)
+						buffer.put_string (type)
 						re.generated_static_feature_type_id (buffer)
-						buffer.putstring (desc2)
-						buffer.putint (nb)
-						buffer.putstring (gen_type)
+						buffer.put_string (desc2)
+						buffer.put_integer (nb)
+						buffer.put_string (gen_type)
 					else
 						ae ?= entry_item
 						check
@@ -180,44 +180,44 @@ feature -- Generation
 							-- Write the offset of the attribute in the 
 							-- run-time structure (object) and the type of
 							-- the feature.
-						buffer.putstring (desc1)
-						buffer.putint (nb)
-						buffer.putstring (info)
-						buffer.putint (ae.workbench_offset)
-						buffer.putstring (desc2)
-						buffer.putint (nb)
-						buffer.putstring (type)
+						buffer.put_string (desc1)
+						buffer.put_integer (nb)
+						buffer.put_string (info)
+						buffer.put_integer (ae.workbench_offset)
+						buffer.put_string (desc2)
+						buffer.put_integer (nb)
+						buffer.put_string (type)
 						ae.generated_static_feature_type_id (buffer)
-						buffer.putstring (desc2)
-						buffer.putint (nb)
-						buffer.putstring (gen_type)
+						buffer.put_string (desc2)
+						buffer.put_integer (nb)
+						buffer.put_string (gen_type)
 					end
 
 					if entry_item.is_generic then
-						buffer.putstring (gen_type_string)
-						buffer.putint (cnt.value)
-						buffer.putstring (id_string)
-						buffer.putstring (end_of_line)
+						buffer.put_string (gen_type_string)
+						buffer.put_integer (cnt.value)
+						buffer.put_string (id_string)
+						buffer.put_string (end_of_line)
 						j := cnt.next
 					else
-						buffer.putstring (non_generic)
+						buffer.put_string (non_generic)
 					end
 
 				else
 						-- The entry corresponds to a routine that
 						-- is not polymorphic.
-					buffer.putstring (desc1)
-					buffer.putint (nb)
-					buffer.putstring (info)
-					buffer.putint (Invalid_index)
-					buffer.putstring (desc2)
-					buffer.putint (nb)
-					buffer.putstring (type)
-					buffer.putint (-1)
-					buffer.putstring (desc2)
-					buffer.putint (nb)
-					buffer.putstring (gen_type)
-					buffer.putstring (non_generic)
+					buffer.put_string (desc1)
+					buffer.put_integer (nb)
+					buffer.put_string (info)
+					buffer.put_integer (Invalid_index)
+					buffer.put_string (desc2)
+					buffer.put_integer (nb)
+					buffer.put_string (type)
+					buffer.put_integer (-1)
+					buffer.put_string (desc2)
+					buffer.put_integer (nb)
+					buffer.put_string (gen_type)
+					buffer.put_string (non_generic)
 				end
 				i := i + 1
 			end
@@ -244,13 +244,13 @@ feature -- Generation
 			loop
 				entry_item := item (i)
 				if entry_item /= Void and then entry_item.is_generic then
-					buffer.putstring (static_decl)
-					buffer.putint (cnt.value)
-					buffer.putstring (id_string)
+					buffer.put_string (static_decl)
+					buffer.put_integer (cnt.value)
+					buffer.put_string (id_string)
 					j := cnt.next
-					buffer.putstring (start_decl)
+					buffer.put_string (start_decl)
 					entry_item.generate_cid (buffer, False)
-					buffer.putstring (end_decl)
+					buffer.put_string (end_decl)
 				end
 				i := i + 1
 			end

@@ -105,7 +105,7 @@ feature
 			-- held in `value'. 
 		do
 			reg.print_register
-			buffer.putstring (" = ")
+			buffer.put_string (" = ")
 			value.print_register
 		end
 
@@ -113,14 +113,14 @@ feature
 			-- Generate discriminant of C structure "item" associated
 			-- to the current C type in `buffer'.
 		do
-			 buffer.putstring ("it_bit")
+			 buffer.put_string ("it_bit")
 		end
 
 	generate_sk_value (buffer: GENERATION_BUFFER) is
 			-- Generate SK value associated to current C type in `buffer'.
 		do
-			buffer.putstring ("SK_BIT + (uint32) ")
-			buffer.putint (size)
+			buffer.put_string ("SK_BIT + (uint32) ")
+			buffer.put_integer (size)
 		end
 
 	type_a: BITS_A is
@@ -133,10 +133,10 @@ feature -- Generic conformance
 	generate_cid (buffer : GENERATION_BUFFER; final_mode, use_info : BOOLEAN) is
 
 		do
-			buffer.putint (generated_id (final_mode))
-			buffer.putstring (", ")
-			buffer.putint (size)
-			buffer.putstring (", ")
+			buffer.put_integer (generated_id (final_mode))
+			buffer.put_string (", ")
+			buffer.put_integer (size)
+			buffer.put_string (", ")
 		end
 
 	make_gen_type_byte_code (ba : BYTE_ARRAY; use_info : BOOLEAN) is
@@ -176,9 +176,9 @@ feature
 	generate_default_value (buffer : GENERATION_BUFFER) is
 			-- Generate default value associated to current basic type.
 		do
-			buffer.putstring ("RTLB(")
-			buffer.putint (size)
-			buffer.putchar (')')
+			buffer.put_string ("RTLB(")
+			buffer.put_integer (size)
+			buffer.put_character (')')
 		end
 	
 	make_default_byte_code (ba: BYTE_ARRAY) is
@@ -196,10 +196,10 @@ feature
 		do
 			l_buffer := byte_code.buffer
 			reg.print_register
-			l_buffer.putstring (" = RTLB(")
-			l_buffer.putint (size)
-			l_buffer.putstring (Gc_rparan_semi_c)
-			l_buffer.new_line
+			l_buffer.put_string (" = RTLB(")
+			l_buffer.put_integer (size)
+			l_buffer.put_string (Gc_rparan_semi_c)
+			l_buffer.put_new_line
 		end
 		
 end

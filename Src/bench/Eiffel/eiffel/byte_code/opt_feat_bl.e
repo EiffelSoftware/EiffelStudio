@@ -95,9 +95,9 @@ feature -- Code generation
 	register_acces (buf: GENERATION_BUFFER; id: INTEGER) is
 		do
 			if context.byte_code.is_once and then id = 0 then
-				buf.putstring ("Result")
+				buf.put_string ("Result")
 			else
-				buf.putstring (internal_reg_name (id));
+				buf.put_string (internal_reg_name (id));
 			end
 		end
 
@@ -116,36 +116,36 @@ feature -- Code generation
 			id := array_desc.array_descriptor;
 			if is_item then
 				if access_area then
-					buf.putstring ("RTAA(");
+					buf.put_string ("RTAA(");
 				else
-					buf.putstring ("RTAUA(");
+					buf.put_string ("RTAUA(");
 				end;
 			else
 				if access_area then
-					buf.putstring ("RTAP(");
+					buf.put_string ("RTAP(");
 				else
-					buf.putstring ("RTAUP(");
+					buf.put_string ("RTAUP(");
 				end;
 			end;
 			type_c (id).generate (buf)
-			buf.putstring (gc_comma);
-			buf.putstring (external_reg_name (id));
-			buf.putstring (gc_comma);
+			buf.put_string (gc_comma);
+			buf.put_string (external_reg_name (id));
+			buf.put_string (gc_comma);
 			if not access_area then
 				register_acces (buf, id);
-				buf.putstring (gc_comma);
+				buf.put_string (gc_comma);
 			end;
 
 			expr := parameters @ 1;
 			expr.print_register
 
 			if not is_item then
-				buf.putstring (gc_comma);
+				buf.put_string (gc_comma);
 					-- Index
 				expr := parameters @ 2
 				expr.print_register
 			end
-			buf.putchar (')');
+			buf.put_character (')');
 		end
 
 	generate_metamorphose_end (gen_reg, meta_reg: REGISTRABLE; class_type: CL_TYPE_I;

@@ -37,18 +37,18 @@ feature -- C generation
 				buf := buffer
 				low := lower.generation_value
 				up := upper.generation_value
-				buf.putstring ("case (EIF_CHARACTER) '")
+				buf.put_string ("case (EIF_CHARACTER) '")
 				buf.escape_char (low)
-				buf.putstring ("':")
-				buf.new_line
+				buf.put_string ("':")
+				buf.put_new_line
 			until
 				low = up
 			loop
 				low := low + 1
-				buf.putstring ("case (EIF_CHARACTER) '")
+				buf.put_string ("case (EIF_CHARACTER) '")
 				buf.escape_char (low)
-				buf.putstring ("':")
-				buf.new_line
+				buf.put_string ("':")
+				buf.put_new_line
 			end
 		end
 

@@ -160,18 +160,18 @@ feature -- C code generation
 				if l_expr_type.is_true_expanded then
 						-- Expanded objects are cloned
 					register.print_register
-					buf.putstring (" = ")
-					buf.putstring ("RTCL(")
+					buf.put_string (" = ")
+					buf.put_string ("RTCL(")
 					expr.print_register
-					buf.putchar(')')
+					buf.put_character(')')
 				else
 						-- Simple type objects are metamorphosed
 					basic_i ?= l_expr_type		-- Cannot fail
 					basic_i.metamorphose
 						(register, expr, buf, context.workbench_mode)
 				end
-				buf.putchar(';')
-				buf.new_line
+				buf.put_character(';')
+				buf.put_new_line
 			end
 		end
 		

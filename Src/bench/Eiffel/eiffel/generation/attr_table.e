@@ -115,17 +115,17 @@ feature
 				-- consecutives rows are identical we will generate a loop to fill the rows
 			from
 					-- Private table
-				buffer.putstring ("long ")
+				buffer.put_string ("long ")
 				l_table_name := Encoder.table_name (rout_id)
-				buffer.putstring (l_table_name)
-				buffer.putstring ("[")
-				buffer.putint (final_table_size)
-				buffer.putstring ("];")
-				buffer.new_line
-				buffer.putstring ("void ")
-				buffer.putstring (l_table_name)
-				buffer.putstring ("_init () {")
-				buffer.new_line
+				buffer.put_string (l_table_name)
+				buffer.put_string ("[")
+				buffer.put_integer (final_table_size)
+				buffer.put_string ("];")
+				buffer.put_new_line
+				buffer.put_string ("void ")
+				buffer.put_string (l_table_name)
+				buffer.put_string ("_init () {")
+				buffer.put_new_line
 				buffer.indent
 
 				create l_buf.make (24)
@@ -185,7 +185,7 @@ feature
 			end
 
 			buffer.exdent
-			buffer.putstring ("};%N%N")
+			buffer.put_string ("};%N%N")
 		end
 
 feature {POLY_TABLE} -- Special data
@@ -210,26 +210,26 @@ feature {NONE} -- Implementation
 			a_upper_greater_or_equal_than_a_lower: a_upper >= a_lower
 		do
 			if a_lower = a_upper then
-				buffer.putstring (a_table_name)
-				buffer.putchar ('[')
-				buffer.putint (a_lower)
-				buffer.putstring ("] = ")
-				buffer.putstring (a_offset)
-				buffer.putchar (';')
-				buffer.new_line
+				buffer.put_string (a_table_name)
+				buffer.put_character ('[')
+				buffer.put_integer (a_lower)
+				buffer.put_string ("] = ")
+				buffer.put_string (a_offset)
+				buffer.put_character (';')
+				buffer.put_new_line
 			else
-				buffer.putstring ("{long i; for (i = ")
-				buffer.putint (a_lower)
-				buffer.putstring ("; i < ")
-				buffer.putint (a_upper + 1)
-				buffer.putstring ("; i++) ")
-				buffer.putstring (a_table_name)
-				buffer.putstring ("[i] = ")
-				buffer.putstring (a_offset)
-				buffer.putchar (';')
-				buffer.putchar ('}')
-				buffer.putchar (';')
-				buffer.new_line
+				buffer.put_string ("{long i; for (i = ")
+				buffer.put_integer (a_lower)
+				buffer.put_string ("; i < ")
+				buffer.put_integer (a_upper + 1)
+				buffer.put_string ("; i++) ")
+				buffer.put_string (a_table_name)
+				buffer.put_string ("[i] = ")
+				buffer.put_string (a_offset)
+				buffer.put_character (';')
+				buffer.put_character ('}')
+				buffer.put_character (';')
+				buffer.put_new_line
 			end
 		end
 

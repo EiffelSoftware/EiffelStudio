@@ -138,9 +138,9 @@ feature -- Settings
 				until
 					queue.after
 				loop
-					buffer.putstring ("#include ")
-					buffer.putstring (l_names_heap.item (queue.item_for_iteration))
-					buffer.new_line
+					buffer.put_string ("#include ")
+					buffer.put_string (l_names_heap.item (queue.item_for_iteration))
+					buffer.put_new_line
 					queue.forth
 				end
 				queue.wipe_out
@@ -152,7 +152,7 @@ feature -- Settings
 		require
 			buffer_not_void: buffer /= Void
 		do
-			buffer.putstring ("%N#include %"eif_portable.h%"%N%
+			buffer.put_string ("%N#include %"eif_portable.h%"%N%
 					%#include %"eif_macros.h%"%N%N")
 			buffer.start_c_specific_code
 		end
@@ -174,9 +174,9 @@ feature -- Settings
 			until
 				local_routines.after
 			loop
-				buffer.putstring ("%Nextern ")
+				buffer.put_string ("%Nextern ")
 				local_routines.item_for_iteration.generate (buffer)
-				buffer.putstring (local_routines.key_for_iteration)
+				buffer.put_string (local_routines.key_for_iteration)
 				local_routines.forth
 			end
 
@@ -187,14 +187,14 @@ feature -- Settings
 				local_onces.after
 			loop
 				if not local_onces.item_for_iteration.is_void then
-					buffer.putstring ("%Nextern ")
+					buffer.put_string ("%Nextern ")
 					local_onces.item_for_iteration.generate (buffer)
-					buffer.putstring (local_onces.key_for_iteration)
-					buffer.putstring ("_result;")
+					buffer.put_string (local_onces.key_for_iteration)
+					buffer.put_string ("_result;")
 				end
-				buffer.putstring ("%Nextern EIF_BOOLEAN ")
-				buffer.putstring (local_onces.key_for_iteration)
-				buffer.putstring ("_done;")
+				buffer.put_string ("%Nextern EIF_BOOLEAN ")
+				buffer.put_string (local_onces.key_for_iteration)
+				buffer.put_string ("_done;")
 				local_onces.forth
 			end
 
@@ -204,9 +204,9 @@ feature -- Settings
 			until
 				local_routine_tables.after
 			loop
-				buffer.putstring ("%Nextern char *(*")
-				buffer.putstring (local_routine_tables.item_for_iteration)
-				buffer.putstring ("[])();")
+				buffer.put_string ("%Nextern char *(*")
+				buffer.put_string (local_routine_tables.item_for_iteration)
+				buffer.put_string ("[])();")
 				local_routine_tables.forth
 			end
 
@@ -216,9 +216,9 @@ feature -- Settings
 			until
 				local_attribute_tables.after
 			loop
-				buffer.putstring ("%Nextern long ")
-				buffer.putstring (local_attribute_tables.item_for_iteration)
-				buffer.putstring ("[];")
+				buffer.put_string ("%Nextern long ")
+				buffer.put_string (local_attribute_tables.item_for_iteration)
+				buffer.put_string ("[];")
 				local_attribute_tables.forth
 			end
 
@@ -228,12 +228,12 @@ feature -- Settings
 			until
 				local_type_tables.after
 			loop
-				buffer.putstring ("%Nextern int16 ")
-				buffer.putstring (local_type_tables.item_for_iteration)
-				buffer.putstring ("[];")
-				buffer.putstring ("%Nextern int16 *")
-				buffer.putstring (local_type_tables.item_for_iteration)
-				buffer.putstring ("_gen_type [];")
+				buffer.put_string ("%Nextern int16 ")
+				buffer.put_string (local_type_tables.item_for_iteration)
+				buffer.put_string ("[];")
+				buffer.put_string ("%Nextern int16 *")
+				buffer.put_string (local_type_tables.item_for_iteration)
+				buffer.put_string ("_gen_type [];")
 				local_type_tables.forth
 			end
 			buffer.end_c_specific_code

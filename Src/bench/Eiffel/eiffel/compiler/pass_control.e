@@ -60,7 +60,7 @@ feature -- Debug
 
 	trace is
 		do
-			io.error.putstring ("Propagators:%N");
+			io.error.put_string ("Propagators:%N");
 			from
 				propagators.start
 			until
@@ -69,7 +69,7 @@ feature -- Debug
 				propagators.item.trace;
 				propagators.forth
 			end;
-			io.error.putstring ("Melted propagators:%N");
+			io.error.put_string ("Melted propagators:%N");
 			from
 				melted_propagators.start
 			until

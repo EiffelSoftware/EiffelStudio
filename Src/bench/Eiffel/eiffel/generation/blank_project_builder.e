@@ -114,7 +114,7 @@ feature {NONE} -- Implementation
 			new_file.open_write
 			if not contents.is_empty then
 				contents.replace_substring_all ("%R", "")
-				new_file.putstring (contents)
+				new_file.put_string (contents)
 				char := contents.item (contents.count)
 				if Platform_constants.is_unix and 
 					then char /= '%N' and
@@ -122,7 +122,7 @@ feature {NONE} -- Implementation
 						-- Add a carriage return like vi if there's none at
 						-- the end
 				then
-					new_file.new_line
+					new_file.put_new_line
 				end
 			end
 			new_file.close
@@ -139,9 +139,9 @@ feature {NONE} -- Implementation
 		do
 			create a_file.make (Default_ace_name)
 			a_file.open_read
-			a_file.readstream (a_file.count)
+			a_file.read_stream (a_file.count)
 			a_file.close
-			Result := a_file.laststring
+			Result := a_file.last_string
 		rescue
 			add_error_message (
 				"Unable to read the template ace file '"+Default_ace_name+"'%N%
@@ -176,7 +176,7 @@ feature {NONE} -- Implementation
 			create new_class.make (root_class_filename)
 			if not new_class.exists then
 				new_class.open_write
-				new_class.putstring (
+				new_class.put_string (
 					"indexing%N%
 					%%Tdescription%T: %"System's root class%"%N%
 					%%Tnote%T%T: %"Initial version automatically generated%"%N%

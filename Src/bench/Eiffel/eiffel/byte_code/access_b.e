@@ -325,11 +325,11 @@ feature -- C generation
 						-- Procedures have a void return type
 				if register /= Void then
 					register.print_register
-					buf.putstring (" = ")
+					buf.put_string (" = ")
 				end
 				generate_access
-				buf.putchar (';')
-				buf.new_line
+				buf.put_character (';')
+				buf.put_new_line
 			end
 		end
 

@@ -60,17 +60,17 @@ feature -- C code generation
 			l_is_tuple := l_tuple_type /= Void
 			
 			if l_final_mode and not l_is_tuple then
-				l_buffer.putstring ("RTLNS(")
+				l_buffer.put_string ("RTLNS(")
 				generate_cid (l_buffer, l_final_mode)
-				l_buffer.putstring (", ")
-				l_buffer.putint (l_cl_type.type_id - 1)
-				l_buffer.putstring (", ")
+				l_buffer.put_string (", ")
+				l_buffer.put_type_id (l_cl_type.type_id)
+				l_buffer.put_string (", ")
 				l_cl_type.associated_class_type.skeleton.generate_size (l_buffer)
 			else
 				if l_is_tuple then
-					l_buffer.putstring ("RTLNTS(")	
+					l_buffer.put_string ("RTLNTS(")	
 				else
-					l_buffer.putstring ("RTLN(")
+					l_buffer.put_string ("RTLN(")
 				end
 				generate_cid (l_buffer, l_final_mode)
 			end
@@ -79,18 +79,18 @@ feature -- C code generation
 				check
 					l_tuple_type_not_void: l_tuple_type /= Void
 				end
-				l_buffer.putstring (", ")
+				l_buffer.put_string (", ")
 					-- We add `+1' so that we do not need to do `i - 1' each time
 					-- we want to access a tuple item in TUPLE class.
-				l_buffer.putint (l_tuple_type.true_generics.count + 1)
-				l_buffer.putstring (", ")
+				l_buffer.put_integer (l_tuple_type.true_generics.count + 1)
+				l_buffer.put_string (", ")
 				if l_tuple_type.is_basic_uniform then
-					l_buffer.putint (1)
+					l_buffer.put_integer (1)
 				else
-					l_buffer.putint (0)
+					l_buffer.put_integer (0)
 				end
 			end
-			l_buffer.putchar (')')
+			l_buffer.put_character (')')
 		end
 
 feature -- IL code generation
@@ -172,14 +172,14 @@ feature -- Generic conformance
 			gen_type  ?= cl_type_i
 
 			if gen_type /= Void then
-				buffer.putstring ("typres")
+				buffer.put_string ("typres")
 			else
 				if final_mode then
-					buffer.putint (cl_type_i.type_id - 1)
+					buffer.put_type_id (cl_type_i.type_id)
 				else
-					buffer.putstring ("RTUD(")
-					buffer.generate_type_id (cl_type_i.associated_class_type.static_type_id)
-					buffer.putchar (')')
+					buffer.put_string ("RTUD(")
+					buffer.put_static_type_id (cl_type_i.associated_class_type.static_type_id)
+					buffer.put_character (')')
 				end
 			end
 		end
@@ -199,11 +199,11 @@ feature -- Assignment attempt
 			cl_type_i ?= context.creation_type (type)
 
 			if final_mode then
-				buffer.putint (cl_type_i.type_id - 1)
+				buffer.put_type_id (cl_type_i.type_id)
 			else
-				buffer.putstring ("RTUD(")
-				buffer.generate_type_id (cl_type_i.associated_class_type.static_type_id)
-				buffer.putchar (')')
+				buffer.put_string ("RTUD(")
+				buffer.put_static_type_id (cl_type_i.associated_class_type.static_type_id)
+				buffer.put_character (')')
 			end
 		end
 

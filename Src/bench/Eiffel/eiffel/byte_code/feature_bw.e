@@ -80,7 +80,7 @@ feature
 		do
 			is_nested := not is_first;
 			buf := buffer
-			buf.putchar ('(');
+			buf.put_character ('(');
 			real_type (type).c_type.generate_function_cast (buf, argument_types);
 			base_class := typ.base_class;
 
@@ -89,54 +89,54 @@ feature
 				base_class.is_precompiled
 			then
 				if is_nested and need_invariant then
-					buf.putstring ("RTVPF(");
+					buf.put_string ("RTVPF(");
 				else
-					buf.putstring ("RTWPF(");
+					buf.put_string ("RTWPF(");
 				end;
 				r_id := base_class.feature_table.item_id (feature_name_id).rout_id_set.first;
 				rout_info := System.rout_info_table.item (r_id);
-				buf.generate_class_id (rout_info.origin)
-				buf.putstring (gc_comma);
-				buf.putint (rout_info.offset);
+				buf.put_class_id (rout_info.origin)
+				buf.put_string (gc_comma);
+				buf.put_integer (rout_info.offset);
 			else
 				if is_nested and need_invariant then
-					buf.putstring ("RTVF(");
+					buf.put_string ("RTVF(");
 				else
-					buf.putstring ("RTWF(");
+					buf.put_string ("RTWF(");
 				end;
-				buf.putint (typ.associated_class_type.static_type_id - 1);
-				buf.putstring (gc_comma);
-				buf.putint (real_feature_id);
+				buf.put_static_type_id (typ.associated_class_type.static_type_id);
+				buf.put_string (gc_comma);
+				buf.put_integer (real_feature_id);
 			end;
-			buf.putstring (gc_comma);
+			buf.put_string (gc_comma);
 			if not is_nested then
 				if precursor_type /= Void then
 						-- Use dynamic type of parent instead 
 						-- of dynamic type of Current.
-					buf.putstring ("RTUD(");
+					buf.put_string ("RTUD(");
 
 					gen_type_i ?= context.current_type
 					if gen_type_i /= Void then
 						cl_type_i := precursor_type.instantiation_in (gen_type_i)
-						buf.generate_type_id (cl_type_i.associated_class_type.static_type_id)
+						buf.put_static_type_id (cl_type_i.associated_class_type.static_type_id)
 					else
-						buf.generate_type_id (precursor_type.associated_class_type.static_type_id)
+						buf.put_static_type_id (precursor_type.associated_class_type.static_type_id)
 					end
-					buf.putchar (')');
+					buf.put_character (')');
 				else
 					context.generate_current_dtype;
 				end
 			elseif need_invariant then
-				buf.putchar ('"');
-				buf.putstring (escaped_feature_name);
-				buf.putstring ("%", ");
+				buf.put_character ('"');
+				buf.put_string (escaped_feature_name);
+				buf.put_string ("%", ");
 				reg.print_register;
 			else
-				buf.putstring (gc_upper_dtype_lparan);
+				buf.put_string (gc_upper_dtype_lparan);
 				reg.print_register;
-				buf.putchar (')');
+				buf.put_character (')');
 			end;
-			buf.putstring ("))");
+			buf.put_string ("))");
 		end;
 
 end

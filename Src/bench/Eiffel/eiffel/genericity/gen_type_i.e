@@ -299,8 +299,8 @@ feature -- Generic conformance
 				-- It's an ancored type 
 				cr_info.generate_cid (buffer, final_mode)
 			else
-				buffer.putint (generated_id (final_mode))
-				buffer.putstring (", ")
+				buffer.put_integer (generated_id (final_mode))
+				buffer.put_string (", ")
 	
 				from
 					i  := true_generics.lower
@@ -346,8 +346,8 @@ feature -- Generic conformance
 					-- It's an anchored type 
 				cr_info.generate_cid_array (buffer, final_mode, idx_cnt)
 			else
-				buffer.putint (generated_id (final_mode))
-				buffer.putstring (", ")
+				buffer.put_integer (generated_id (final_mode))
+				buffer.put_string (", ")
 	
 					-- Increment counter
 				dummy := idx_cnt.next

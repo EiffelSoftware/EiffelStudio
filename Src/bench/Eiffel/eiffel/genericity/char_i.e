@@ -133,9 +133,9 @@ feature -- Access
 			-- Generate SK value associated to current C type in `buffer'.
 		do
 			if is_wide then
-				buffer.putstring ("SK_WCHAR")
+				buffer.put_string ("SK_WCHAR")
 			else
-				buffer.putstring ("SK_CHAR")
+				buffer.put_string ("SK_CHAR")
 			end
 		end
 	
@@ -149,9 +149,9 @@ feature -- Access
 			-- to the current C type in `buffer'.
 		do
 			if is_wide then
-				buffer.putstring ("it_wchar")
+				buffer.put_string ("it_wchar")
 			else
-				buffer.putstring ("it_char")
+				buffer.put_string ("it_char")
 			end
 		end
 

@@ -151,9 +151,9 @@ feature -- from ENTRY
 				--or else-class_type.is_expanded
 				)
 			then
-				buffer.generate_type_id (class_type.associated_class_type.static_type_id)
+				buffer.put_static_type_id (class_type.associated_class_type.static_type_id)
 			else
-				buffer.putint (-1)
+				buffer.put_integer (-1)
 			end
 		end;
 

@@ -180,10 +180,10 @@ feature -- Code generation
 				context.set_buffer (buffer)
 				context.set_header_buffer (header_buffer)
 				extern_declarations.wipe_out
-				buffer.putstring ("#include %"eif_eiffel.h%"%N")
-				buffer.putstring ("#include %"lib" + System.name + ".h%"%N")
+				buffer.put_string ("#include %"eif_eiffel.h%"%N")
+				buffer.put_string ("#include %"lib" + System.name + ".h%"%N")
 				buffer.start_c_specific_code
-				header_buffer.putstring ("#include %"eif_eiffel.h%"%N")
+				header_buffer.put_string ("#include %"eif_eiffel.h%"%N")
 				header_buffer.start_c_specific_code
 				start
 			until
@@ -200,7 +200,7 @@ feature -- Code generation
 						generate_class_il (item_for_iteration, l_class, l_types.item, buffer)					
 						l_types.forth
 					end
-					buffer.new_line
+					buffer.put_new_line
 				end
 				forth
 			end
@@ -208,19 +208,19 @@ feature -- Code generation
 			header_buffer.end_c_specific_code
 
 			create header_file.make_open_write (
-				full_file_name ("lib" + System.name + ".h", final_mode))
+				full_file_name (final_mode, '%U', "lib" + System.name, Dot_h, 0))
 			extern_declarations.generate_header_files (header_buffer)
 			header_buffer.put_in_file (header_file)
 			header_file.close
 
 			if is_cpp then
-				l_extension := ".cpp"
+				l_extension := Dot_cpp
 			else
-				l_extension := ".c"
+				l_extension := Dot_c
 			end
 			
 			create external_file.make_open_write (
-				full_file_name ("lib" + System.name + l_extension, final_mode))
+				full_file_name (final_mode, '%U', "lib" + System.name, l_extension, 0))
 			buffer.put_in_file (external_file)
 			external_file.close
 			
@@ -247,43 +247,14 @@ feature {NONE} -- Implementation
 			loop
 				ext ?= feat_tbl.item_id (a_s.item_for_iteration)
 				is_cpp := is_cpp or else ext.extension.is_cpp
-				buffer.putstring ("/* ")
-				buffer.putstring (class_c.name)
-				buffer.putstring (" */")
+				buffer.put_string ("/* ")
+				buffer.put_string (class_c.name)
+				buffer.put_string (" */")
 				ext.generate (class_type, buffer)
 				a_s.forth
 			end
 		end
 
-feature {NONE} -- Path
-
-	full_file_name (base_file_name: STRING; final: BOOLEAN): STRING is
-			-- Generated file name prefix
-		local
-			f_name: FILE_NAME
-			dir_name: DIRECTORY_NAME
-			finished_file: PLAIN_TEXT_FILE
-			finished_file_name: FILE_NAME
-		do
-			if final then
-				Result := final_generation_path
-			else
-				Result := workbench_generation_path
-			end
-
-			create dir_name.make_from_string (Result)
-			create f_name.make_from_string (dir_name)
-			f_name.set_file_name (base_file_name)
-			Result := f_name
-
-			create finished_file_name.make_from_string (dir_name)
-			finished_file_name.set_file_name (Finished_file_for_make)
-			create finished_file.make (finished_file_name)
-			if finished_file.exists and then finished_file.is_writable then
-				finished_file.delete	
-			end
-		end
-		
 	is_cpp: BOOLEAN
 			-- Does current has some C++ externals?
 

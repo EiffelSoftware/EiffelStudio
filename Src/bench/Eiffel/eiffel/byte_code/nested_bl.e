@@ -222,7 +222,7 @@ feature
 			msg_target: ACCESS_B
 		do
 debug
-io.error.putstring ("In nested_bl%N")
+io.error.put_string ("In nested_bl%N")
 end
 			msg_target := message.target
 			if parent = Void then
@@ -274,23 +274,23 @@ end
 				get_register
 			end
 debug
-io.error.putstring ("TARGET REGISTER%N")
+io.error.put_string ("TARGET REGISTER%N")
 if target.register /= Void then
-	io.error.putstring (target.register.out)
+	io.error.put_string (target.register.out)
 else
-	io.error.putstring ("%TVOID%N")
+	io.error.put_string ("%TVOID%N")
 end
-io.error.putstring ("MESSAGE TARGET REGISTER%N")
+io.error.put_string ("MESSAGE TARGET REGISTER%N")
 if msg_target.register /= Void then
-	io.error.putstring (msg_target.register.out)
+	io.error.put_string (msg_target.register.out)
 else
-	io.error.putstring ("%TVOID%N")
+	io.error.put_string ("%TVOID%N")
 end
-io.error.putstring ("CURRENT REGISTER%N")
+io.error.put_string ("CURRENT REGISTER%N")
 if register /= Void then
-	io.error.putstring (register.out)
+	io.error.put_string (register.out)
 else
-	io.error.putstring ("%TVOID%N")
+	io.error.put_string ("%TVOID%N")
 end
 end
 			if register /= No_register then
@@ -315,7 +315,7 @@ end
 				message.analyze
 			end
 debug
-io.error.putstring ("Out nested_bl%N")
+io.error.put_string ("Out nested_bl%N")
 end
 		end
 
@@ -362,15 +362,15 @@ end
 				-- assignment.
 			if register /= Void and register /= No_register then
 				register.print_register
-				buf.putstring (" = ")
+				buf.put_string (" = ")
 			end
 				-- If register is No_register, then the call will be
 				-- generated directly by a call to `print_register'.
 				-- Otherwise, we have to generate it now.
 			if register /= No_register then
 				message_target.generate_on (reg)
-				buf.putchar (';')
-				buf.new_line
+				buf.put_character (';')
+				buf.put_new_line
 			end
 		end
 

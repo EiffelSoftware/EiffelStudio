@@ -204,14 +204,14 @@ feature -- Pattern generation
 				until
 					j > nbtab
 				loop
-					buffer.putchar ('%T');
+					buffer.put_character ('%T');
 					j := j + 1;
 				end;
 				argument_types.item (i).generate (buffer);
-				buffer.putstring ("arg");
-				buffer.putint (i);
-				buffer.putchar (';');
-				buffer.new_line;
+				buffer.put_string ("arg");
+				buffer.put_integer (i);
+				buffer.put_character (';');
+				buffer.put_new_line;
 				i := i + 1;
 			end;
 		end;
@@ -236,26 +236,26 @@ feature -- Pattern generation
 
 			buffer.generate_function_signature ("void", f_name, False, buffer,
 					<<"ptr">>, <<"fnptr">>);
-			buffer.putstring ("%
+			buffer.put_string ("%
 				%%TEIF_REFERENCE Current;%N");
 			if not result_type.is_void then
-				buffer.putchar ('%T');
+				buffer.put_character ('%T');
 				result_type.generate (buffer);
-				buffer.putstring ("result;%N%Tstruct item *it;%N");
+				buffer.put_string ("result;%N%Tstruct item *it;%N");
 			end;
 			generate_argument_declaration (1, buffer);
 			generate_toc_pop (buffer);
-			buffer.putchar ('%T');
+			buffer.put_character ('%T');
 			generate_routine_call (buffer);
 			if not result_type.is_void then
-				buffer.putstring ("%Tit = iget();%N");
-				buffer.putstring ("%Tit->type = ");
+				buffer.put_string ("%Tit = iget();%N");
+				buffer.put_string ("%Tit->type = ");
 				result_type.generate_sk_value (buffer);
-				buffer.putstring (";%N%Tit->");
+				buffer.put_string (";%N%Tit->");
 				result_type.generate_union (buffer);
-				buffer.putstring (" = result;%N");
+				buffer.put_string (" = result;%N");
 			end;
-			buffer.putstring ("}%N%N"); -- ss MT
+			buffer.put_string ("}%N%N"); -- ss MT
 		end;
 
 	generate_toi_compound (id: INTEGER; buffer: GENERATION_BUFFER) is
@@ -276,17 +276,17 @@ feature -- Pattern generation
 				(result_string, f_name, False, buffer,
 				 argument_name_array, arg_types)
 
-			buffer.putstring ("%Tstruct item *it;%N");
+			buffer.put_string ("%Tstruct item *it;%N");
 			generate_toi_push (buffer);
-			buffer.putstring ("%Txinterp(IC);%N");
+			buffer.put_string ("%Txinterp(IC);%N");
 			if not result_type.is_void then
-				buffer.putstring ("%
+				buffer.put_string ("%
 					%%Tit = opop();%N%
 					%%Treturn it->");
 				result_type.generate_union (buffer);
-				buffer.putstring (";%N");
+				buffer.put_string (";%N");
 			end;
-			buffer.putstring ("}%N%N"); -- ss MT
+			buffer.put_string ("}%N%N"); -- ss MT
 		end;
 
 	generate_toi_push (buffer: GENERATION_BUFFER) is
@@ -303,17 +303,17 @@ feature -- Pattern generation
 				i > nb
 			loop
 				arg := argument_types.item (i);
-				buffer.putstring ("%Tit = iget();%N");
-				buffer.putstring ("%Tit->type = ");
+				buffer.put_string ("%Tit = iget();%N");
+				buffer.put_string ("%Tit->type = ");
 				arg.generate_sk_value (buffer);
-				buffer.putstring (";%N%Tit->");
+				buffer.put_string (";%N%Tit->");
 				arg.generate_union (buffer);
-				buffer.putstring (" = arg");
-				buffer.putint (i);
-				buffer.putstring (";%N");
+				buffer.put_string (" = arg");
+				buffer.put_integer (i);
+				buffer.put_string (";%N");
 				i := i + 1;
 			end;
-			buffer.putstring ("%
+			buffer.put_string ("%
 				%%Tit = iget();%N%
 				%%Tit->type = SK_REF;%N%
 				%%Tit->it_ref = Current;%N");
@@ -325,17 +325,17 @@ feature -- Pattern generation
 		local
 			i: INTEGER;
 		do
-			buffer.putstring ("%TCurrent = opop()->it_ref;%N");
+			buffer.put_string ("%TCurrent = opop()->it_ref;%N");
 			from
 				i := argument_count;
 			until
 				i < 1
 			loop
-				buffer.putstring ("%Targ");
-				buffer.putint (i);
-				buffer.putstring (" = opop()->");
+				buffer.put_string ("%Targ");
+				buffer.put_integer (i);
+				buffer.put_string (" = opop()->");
 				argument_types.item (i).generate_union (buffer);
-				buffer.putstring (";%N");
+				buffer.put_string (";%N");
 				i := i - 1;
 			end;
 		end;
@@ -347,32 +347,32 @@ feature -- Pattern generation
 			generate_test_macro: BOOLEAN;
 		do
 			if not result_type.is_void then
-				buffer.putstring ("result = ");
+				buffer.put_string ("result = ");
 			end;
-			buffer.putchar ('(');
+			buffer.put_character ('(');
 			result_type.generate_function_cast (buffer, argument_type_array);
-			buffer.putstring ("ptr)(");
+			buffer.put_string ("ptr)(");
 			nb := argument_count;
-			buffer.putstring ("Current");
+			buffer.put_string ("Current");
 			if nb > 0 then
-				buffer.putchar (',');
+				buffer.put_character (',');
 			end;
 			from
 				i := 1;
 			until
 				i > nb
 			loop
-				buffer.putstring ("arg");
-				buffer.putint (i);
+				buffer.put_string ("arg");
+				buffer.put_integer (i);
 				if i < nb then
-					buffer.putchar (',');
+					buffer.put_character (',');
 				end;
 				i := i + 1;
 			end;
 			if generate_test_macro then
-				buffer.putchar (')');
+				buffer.put_character (')');
 			end;
-			buffer.putstring (");%N");
+			buffer.put_string (");%N");
 		end;
 
 	trace is
@@ -386,12 +386,12 @@ feature -- Pattern generation
 				i > argument_count
 			loop
 				argument_types.item (i).trace;
-				io.error.putchar ('/');
+				io.error.put_character ('/');
 				i := i + 1;
 			end;
-			io.error.putchar ('|');
+			io.error.put_character ('|');
 			result_type.trace;
-			io.error.putstring ("|");
+			io.error.put_string ("|");
 		end;
 
 feature {NONE} -- Implemantation

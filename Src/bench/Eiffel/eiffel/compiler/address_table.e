@@ -68,11 +68,11 @@ feature -- Insert
 			sorted_set: TWO_WAY_SORTED_SET [INTEGER]
 		do
 debug ("DOLLAR")
-	io.putstring ("ADDRESS_TABLE.record ")
-	io.putint (class_id)
-	io.putchar (' ')
-	io.putint (feature_id)
-	io.new_line
+	io.put_string ("ADDRESS_TABLE.record ")
+	io.put_integer (class_id)
+	io.put_character (' ')
+	io.put_integer (feature_id)
+	io.put_new_line
 end
 				-- The encapsulation needs to be generated
 				-- Freeze the system
@@ -103,13 +103,13 @@ feature -- Generation
 			buffer := Generation_buffer
 			buffer.clear_all
 
-			buffer.putstring ("#include %"eif_eiffel.h%"%N")
-			buffer.putstring ("#include %"eif_rout_obj.h%"%N")
+			buffer.put_string ("#include %"eif_eiffel.h%"%N")
+			buffer.put_string ("#include %"eif_rout_obj.h%"%N")
 
 			if final_mode then
-				buffer.putstring ("#include %"eaddress")
-				buffer.putstring (Dot_h)
-				buffer.putstring ("%"%N%N")
+				buffer.put_string ("#include %"eaddress")
+				buffer.put_string (Dot_h)
+				buffer.put_string ("%"%N%N")
 			end
 			
 			buffer.start_c_specific_code
@@ -140,11 +140,11 @@ feature -- Generation
 									-- Feature is not dead code removed
 
 debug ("DOLLAR")
-	io.putstring ("ADDRESS_TABLE.generate_feature ")
-	io.putstring (a_class.name)
-	io.putchar (' ')
-	io.putstring (a_feature.feature_name)
-	io.new_line
+	io.put_string ("ADDRESS_TABLE.generate_feature ")
+	io.put_string (a_class.name)
+	io.put_character (' ')
+	io.put_string (a_feature.feature_name)
+	io.put_new_line
 end
 								generate_feature (a_class, a_feature, final_mode, buffer, False)
 								generate_feature (a_class, a_feature, final_mode, buffer, True)
@@ -172,8 +172,8 @@ end
 					-- Generate the extern declarations
 
 				buffer.clear_all
-				buffer.putstring ("#include %"eif_eiffel.h%"%N")
-				buffer.putstring ("#include %"eif_rout_obj.h%"%N")
+				buffer.put_string ("#include %"eif_eiffel.h%"%N")
+				buffer.put_string ("#include %"eif_rout_obj.h%"%N")
 
 				Extern_declarations.generate_header (buffer)
 				Extern_declarations.generate (buffer)
@@ -238,9 +238,9 @@ feature {NONE} -- Generation
 
 					type_id_array.put (a_type.type_id, a_type.static_type_id)
 
-					buffer.putstring ("char *(*feif_address_t")
-					buffer.putint (a_type.static_type_id)
-					buffer.putstring ("[])() = {%N")
+					buffer.put_string ("char *(*feif_address_t")
+					buffer.put_integer (a_type.static_type_id)
+					buffer.put_string ("[])() = {%N")
 
 					from
 						i := sorted_set.first
@@ -249,21 +249,21 @@ feature {NONE} -- Generation
 						i > nb
 					loop
 						if sorted_set.has (i) then
-							buffer.putstring ("(char *(*)())")
-							buffer.putstring ("f")
-							buffer.putstring (Encoder.address_table_name (i, a_type.static_type_id))
-							buffer.putstring (",%N")
-							buffer.putstring ("(char *(*)())")
-							buffer.putstring ("_f")
-							buffer.putstring (Encoder.address_table_name (i, a_type.static_type_id))
-							buffer.putstring (",%N")
+							buffer.put_string ("(char *(*)())")
+							buffer.put_string ("f")
+							buffer.put_string (Encoder.address_table_name (i, a_type.static_type_id))
+							buffer.put_string (",%N")
+							buffer.put_string ("(char *(*)())")
+							buffer.put_string ("_f")
+							buffer.put_string (Encoder.address_table_name (i, a_type.static_type_id))
+							buffer.put_string (",%N")
 						else
-							buffer.putstring ("(char *(*)()) 0,%N")
-							buffer.putstring ("(char *(*)()) 0,%N")
+							buffer.put_string ("(char *(*)()) 0,%N")
+							buffer.put_string ("(char *(*)()) 0,%N")
 						end
 						i := i + 1
 					end
-					buffer.putstring ("};%N%N")
+					buffer.put_string ("};%N%N")
 
 					types.go_to (cursor)
 					types.forth
@@ -272,7 +272,7 @@ feature {NONE} -- Generation
 				forth
 			end
 
-			buffer.putstring ("%N%Nstatic fnptr *feif_address_table[] = {%N")
+			buffer.put_string ("%N%Nstatic fnptr *feif_address_table[] = {%N")
 
 			from
 				i := 1
@@ -285,26 +285,26 @@ feature {NONE} -- Generation
 					a_type := System.class_type_of_id (type_id)
 					if a_type /= Void then
 						if class_has_dollar_operator (a_type.associated_class.class_id) then
-							buffer.putstring ("(fnptr *) (")
-							buffer.putstring ("f")
-							buffer.putstring ("eif_address_t")
-							buffer.putint (a_type.static_type_id)
-							buffer.putstring (" - ")
-							buffer.putint (2*(found_item.first))
-							buffer.putstring ("),%N")
+							buffer.put_string ("(fnptr *) (")
+							buffer.put_string ("f")
+							buffer.put_string ("eif_address_t")
+							buffer.put_integer (a_type.static_type_id)
+							buffer.put_string (" - ")
+							buffer.put_integer (2*(found_item.first))
+							buffer.put_string ("),%N")
 						else
-							buffer.putstring ("(fnptr *) 0,%N")
+							buffer.put_string ("(fnptr *) 0,%N")
 						end
 					else
-						buffer.putstring ("(fnptr *) 0,%N")
+						buffer.put_string ("(fnptr *) 0,%N")
 					end
 				else
-					buffer.putstring ("(fnptr *) 0,%N")
+					buffer.put_string ("(fnptr *) 0,%N")
 				end
 				i := i + 1
 			end
 
-			buffer.putstring ("};%N%Nfnptr **egc_address_table_init = feif_address_table;%N%N")
+			buffer.put_string ("};%N%Nfnptr **egc_address_table_init = feif_address_table;%N%N")
 		end
 
 	solved_type (type_a: TYPE_A): TYPE_C is
@@ -368,8 +368,8 @@ feature {NONE} -- Generation
 			until
 				i > nb
 			loop
-				buffer.putstring (", arg")
-				buffer.putint (i)
+				buffer.put_string (", arg")
+				buffer.put_integer (i)
 				i := i + 1
 			end
 		end
@@ -430,11 +430,11 @@ feature {NONE} -- Generation
 
 				function_name := Encoder.address_table_name (feature_id, a_type.static_type_id)
 
-				buffer.putstring ("%T/* ")
+				buffer.put_string ("%T/* ")
 				a_type.type.dump (buffer)
-				buffer.putstring (" ")
-				buffer.putstring (a_feature.feature_name)
-				buffer.putstring (" */%N")
+				buffer.put_string (" ")
+				buffer.put_string (a_feature.feature_name)
+				buffer.put_string (" */%N")
 
 				c_return_type := solved_type (return_type)
 				return_type_string := c_return_type.c_string
@@ -460,38 +460,38 @@ feature {NONE} -- Generation
 						(return_type_string, f_name, True, buffer,
 						arg_names (args_count), a_types)
 				end
-				buffer.putstring ("%N%T")
+				buffer.put_string ("%N%T")
 
 				if final_mode then
 						-- Routine is always implemented unless found otherwise (Deferred routine 
 						-- with no implementation).
 					l_is_implemented := True
 					if is_function then
-						buffer.putstring ("return ")
+						buffer.put_string ("return ")
 					end
 
 					entry :=  Eiffel_table.poly_table (rout_id)
 
-					buffer.putchar ('(')
+					buffer.put_character ('(')
 					if entry = Void then
 						-- Function pointer associated to a deferred feature
 						-- without any implementation
 						c_return_type.generate_function_cast (buffer, <<"EIF_REFERENCE">>)
-						buffer.putstring ("RTNR) (");
-						buffer.putstring (l_current_name)
-						buffer.putstring( ");")
+						buffer.put_string ("RTNR) (");
+						buffer.put_string (l_current_name)
+						buffer.put_string( ");")
 					else
 						l_type_id := a_type.type_id
 						if entry.is_polymorphic (l_type_id) then
 							c_return_type.generate_function_cast (buffer, a_types)
 							table_name := Encoder.table_name (rout_id)
-							buffer.putstring (table_name)
-							buffer.putstring ("[Dtype(")
-							buffer.putstring (l_current_name)
-							buffer.putstring (") - ")
-							buffer.putint (entry.min_used - 1)
-							buffer.putstring ("])(")
-							buffer.putstring (l_current_name)
+							buffer.put_string (table_name)
+							buffer.put_string ("[Dtype(")
+							buffer.put_string (l_current_name)
+							buffer.put_string (") - ")
+							buffer.put_type_id (entry.min_used)
+							buffer.put_string ("])(")
+							buffer.put_string (l_current_name)
 
 								-- Mark table used.
 							Eiffel_table.mark_used (rout_id)
@@ -503,9 +503,9 @@ feature {NONE} -- Generation
 							if rout_table.is_implemented then
 								c_return_type.generate_function_cast (buffer, a_types)
 								function_name := rout_table.feature_name
-								buffer.putstring (function_name)
-								buffer.putstring (")(")
-								buffer.putstring (l_current_name)
+								buffer.put_string (function_name)
+								buffer.put_string (")(")
+								buffer.put_string (l_current_name)
 								extern_declarations.add_routine_with_signature (c_return_type,
 									function_name, <<>>)
 							else
@@ -515,8 +515,8 @@ feature {NONE} -- Generation
 									-- RTNR takes only one argument.
 								l_is_implemented := False
 								c_return_type.generate_function_cast (buffer, <<"EIF_REFERENCE">>)
-								buffer.putstring ("RTNR) (")
-								buffer.putstring (l_current_name)
+								buffer.put_string ("RTNR) (")
+								buffer.put_string (l_current_name)
 							end
 						end
 
@@ -528,16 +528,16 @@ feature {NONE} -- Generation
 							end
 						end
 
-						buffer.putstring (");%N")
+						buffer.put_string (");%N")
 					end
 				else
 						-- Workbench mode
 
 					if is_function then
-						buffer.putstring ("return ")
+						buffer.put_string ("return ")
 					end
 
-					buffer.putchar ('(')
+					buffer.put_character ('(')
 					c_return_type.generate_function_cast (buffer, a_types)
 
 					if
@@ -545,22 +545,22 @@ feature {NONE} -- Generation
 						a_type.associated_class.is_precompiled
 					then
 						rout_info := System.rout_info_table.item (rout_id)
-						buffer.putstring ("RTVPF(")
-						buffer.generate_class_id (rout_info.origin)
-						buffer.putstring (", ")
-						buffer.putint (rout_info.offset)
+						buffer.put_string ("RTVPF(")
+						buffer.put_class_id (rout_info.origin)
+						buffer.put_string (", ")
+						buffer.put_integer (rout_info.offset)
 					else
-						buffer.putstring ("RTVF(")
-						buffer.putint (a_type.static_type_id - 1)
-						buffer.putstring (", ")
-						buffer.putint (feature_id)
+						buffer.put_string ("RTVF(")
+						buffer.put_static_type_id (a_type.static_type_id)
+						buffer.put_string (", ")
+						buffer.put_integer (feature_id)
 					end
-					buffer.putstring (", %"")
-					buffer.putstring (a_feature.escaped_feature_name)
-					buffer.putstring ("%", ")
-					buffer.putstring (l_current_name)
-					buffer.putstring ("))(")
-					buffer.putstring (l_current_name)
+					buffer.put_string (", %"")
+					buffer.put_string (a_feature.escaped_feature_name)
+					buffer.put_string ("%", ")
+					buffer.put_string (l_current_name)
+					buffer.put_string ("))(")
+					buffer.put_string (l_current_name)
 					if has_arguments then
 						if is_for_routine then
 							generate_arg_list_for_rout (buffer, args_count, arg_tags (args))
@@ -568,10 +568,10 @@ feature {NONE} -- Generation
 							generate_arg_list (buffer, args_count)
 						end
 					end
-					buffer.putstring (");%N")
+					buffer.put_string (");%N")
 				end
 
-				buffer.putstring ("%N}%N%N")
+				buffer.put_string ("%N}%N%N")
 
 				types.go_to (cursor)
 				types.forth
@@ -609,12 +609,12 @@ feature {NONE} -- Generation
 			until
 				i > nb 
 			loop
-				buffer.putstring (", args[")
+				buffer.put_string (", args[")
 					-- First argument position in `args' is 2.
 					-- Position `1' is current object.
-				buffer.putint (i + 1)
-				buffer.putstring ("].element.")
-				buffer.putstring (tags.item (i))
+				buffer.put_integer (i + 1)
+				buffer.put_string ("].element.")
+				buffer.put_string (tags.item (i))
 				i := i + 1
 			end
 		end

@@ -693,9 +693,9 @@ feature -- inherited postcondition
 			c: CLASS_C
 		do
 			if has_precondition then
-				io.putstring ("Precondition for feature:")
-				io.putstring (Context.byte_code.feature_name)
-				io.new_line
+				io.put_string ("Precondition for feature:")
+				io.put_string (Context.byte_code.feature_name)
+				io.put_new_line
 				from
 					precondition_start
 				until
@@ -703,16 +703,16 @@ feature -- inherited postcondition
 				loop
 					precondition_context_init
 					c := precondition_types.item.associated_class
-					io.putstring ("  precursor class - ")
-					io.putstring (c.name)
-					io.new_line
+					io.put_string ("  precursor class - ")
+					io.put_string (c.name)
+					io.put_new_line
 					precondition_forth
 				end
 			end
 			if has_postcondition then
-				io.putstring ("Postcondition for feature:")
-				io.putstring (Context.byte_code.feature_name)
-				io.new_line
+				io.put_string ("Postcondition for feature:")
+				io.put_string (Context.byte_code.feature_name)
+				io.put_new_line
 				from
 					postcondition_start
 				until
@@ -720,9 +720,9 @@ feature -- inherited postcondition
 				loop
 					postcondition_context_init
 					c := postcondition_types.item.associated_class
-					io.putstring ("  precursor class - ")
-					io.putstring (c.name)
-					io.new_line
+					io.put_string ("  precursor class - ")
+					io.put_string (c.name)
+					io.put_new_line
 					postcondition_forth
 				end
 			end

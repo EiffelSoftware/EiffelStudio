@@ -17,7 +17,7 @@ feature
 	generate_compilation_rule is
 			-- Generates the .c -> .o compilation rule
 		do
-			Make_file.putstring ("%
+			Make_file.put_string ("%
 				%%N.SUFFIXES:.cpp .o%N%N%
 				%.c.o:%N%
 				%%T$(CC) $(CFLAGS) -c $<%N%N%
@@ -29,7 +29,7 @@ feature
 			-- Generate specific "-D" flags.
 			-- In this case "-DWORKBENCH"
 		do
-			Make_file.putstring ("-DWORKBENCH ");
+			Make_file.put_string ("-DWORKBENCH ");
 		end;
 
 	add_specific_objects is
@@ -262,11 +262,11 @@ feature
 				loop
 					dir := precomp.item_for_iteration;
 					if dir.has_precompiled_preobj then
-						Make_file.putstring ("%T%T");
-						Make_file.putstring (dir.precompiled_preobj);
-						Make_file.putchar (' ');
-						Make_file.putchar (Continuation);
-						Make_file.new_line
+						Make_file.put_string ("%T%T");
+						Make_file.put_string (dir.precompiled_preobj);
+						Make_file.put_character (' ');
+						Make_file.put_character (Continuation);
+						Make_file.put_new_line
 					end;
 					precomp.forth
 				end

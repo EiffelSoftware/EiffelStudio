@@ -101,7 +101,7 @@ feature
 	generate_sk_value (buffer: GENERATION_BUFFER) is
 			-- Generate SK value associated to current C type in `buffer'.
 		do
-			buffer.putstring ("SK_VOID")
+			buffer.put_string ("SK_VOID")
 		end
 
 	type_a: TYPE_A is

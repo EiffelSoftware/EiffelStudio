@@ -58,7 +58,7 @@ feature -- C code generation
 	print_register is
 			-- Print real value
 		do
-			buffer.putstring (value)
+			buffer.put_string (value)
 		end
 
 	used (r: REGISTRABLE): BOOLEAN is

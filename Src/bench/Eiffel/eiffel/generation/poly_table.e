@@ -323,14 +323,14 @@ feature
 				entry := array_item (index)
 				if i = entry.type_id then
 					if entry.is_generic then
-						buffer.putstring ("static int16 ")
-						buffer.putstring (l_table_name)
-						buffer.putstring ("_pgtype")
-						buffer.putint (j)
-						buffer.putstring ("[] = {0, ")
+						buffer.put_string ("static int16 ")
+						buffer.put_string (l_table_name)
+						buffer.put_string ("_pgtype")
+						buffer.put_integer (j)
+						buffer.put_string ("[] = {0, ")
 						entry.generate_cid (buffer, True);
-						buffer.putstring ("-1};");
-						buffer.new_line
+						buffer.put_string ("-1};");
+						buffer.put_new_line
 						j := j + 1
 					end
 					index := index + 1
@@ -340,24 +340,24 @@ feature
 
 				-- Generate pointer table
 			nb := max_type_id - min_type_id + 1
-			buffer.putstring ("int16 *")
-			buffer.putstring (l_table_name)
-			buffer.putstring ("_gen_type [")
-			buffer.putint (nb)
-			buffer.putstring ("];");
-			buffer.new_line
+			buffer.put_string ("int16 *")
+			buffer.put_string (l_table_name)
+			buffer.put_string ("_gen_type [")
+			buffer.put_integer (nb)
+			buffer.put_string ("];");
+			buffer.put_new_line
 
-			buffer.putstring ("int16 ")
-			buffer.putstring (l_table_name)
-			buffer.putstring (" [")
-			buffer.putint (nb)
-			buffer.putstring ("];")
-			buffer.new_line
+			buffer.put_string ("int16 ")
+			buffer.put_string (l_table_name)
+			buffer.put_string (" [")
+			buffer.put_integer (nb)
+			buffer.put_string ("];")
+			buffer.put_new_line
 
-			buffer.putstring ("void ")
-			buffer.putstring (l_table_name)
-			buffer.putstring ("_init (void) {")
-			buffer.new_line
+			buffer.put_string ("void ")
+			buffer.put_string (l_table_name)
+			buffer.put_string ("_init (void) {")
+			buffer.put_new_line
 			buffer.indent
 
 				-- Compact generation for `XXX_gen_type' table. No need to try to be
@@ -374,15 +374,15 @@ feature
 				entry := array_item (index)
 				if i = entry.type_id then
 					if entry.is_generic then
-						buffer.putstring (l_table_name)
-						buffer.putstring ("_gen_type [")
-						buffer.putint (k)
-						buffer.putstring ("] = ")
-						buffer.putstring (l_table_name)
-						buffer.putstring ("_pgtype")
-						buffer.putint (j)
-						buffer.putstring (";");
-						buffer.new_line
+						buffer.put_string (l_table_name)
+						buffer.put_string ("_gen_type [")
+						buffer.put_integer (k)
+						buffer.put_string ("] = ")
+						buffer.put_string (l_table_name)
+						buffer.put_string ("_pgtype")
+						buffer.put_integer (j)
+						buffer.put_string (";");
+						buffer.put_new_line
 						j := j + 1
 					end
 					index := index + 1
@@ -441,8 +441,8 @@ feature
 			end
 
 			buffer.exdent
-			buffer.new_line
-			buffer.putstring ("};%N%N")
+			buffer.put_new_line
+			buffer.put_string ("};%N%N")
 		end
 
 	is_routine_table: BOOLEAN is
@@ -721,26 +721,26 @@ feature {NONE} -- Implementation
 			a_upper_greater_or_equal_than_a_lower: a_upper >= a_lower
 		do
 			if a_lower = a_upper then
-				buffer.putstring (a_table_name)
-				buffer.putchar ('[')
-				buffer.putint (a_lower)
-				buffer.putstring ("] = ")
-				buffer.putint (a_type_id)
-				buffer.putchar (';')
-				buffer.new_line
+				buffer.put_string (a_table_name)
+				buffer.put_character ('[')
+				buffer.put_integer (a_lower)
+				buffer.put_string ("] = ")
+				buffer.put_integer (a_type_id)
+				buffer.put_character (';')
+				buffer.put_new_line
 			else
-				buffer.putstring ("{long i; for (i = ")
-				buffer.putint (a_lower)
-				buffer.putstring ("; i < ")
-				buffer.putint (a_upper + 1)
-				buffer.putstring ("; i++) ")
-				buffer.putstring (a_table_name)
-				buffer.putstring ("[i] = ")
-				buffer.putint (a_type_id)
-				buffer.putchar (';')
-				buffer.putchar ('}')
-				buffer.putchar (';')
-				buffer.new_line
+				buffer.put_string ("{long i; for (i = ")
+				buffer.put_integer (a_lower)
+				buffer.put_string ("; i < ")
+				buffer.put_integer (a_upper + 1)
+				buffer.put_string ("; i++) ")
+				buffer.put_string (a_table_name)
+				buffer.put_string ("[i] = ")
+				buffer.put_integer (a_type_id)
+				buffer.put_character (';')
+				buffer.put_character ('}')
+				buffer.put_character (';')
+				buffer.put_new_line
 			end
 		end
 

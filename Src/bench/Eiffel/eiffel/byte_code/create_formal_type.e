@@ -37,26 +37,26 @@ feature -- C code generation
 		do
 			buffer := context.buffer
 
-			buffer.putstring ("RTLNSMART(RTGPTID(")
-			buffer.putint (context.current_type.generated_id (context.final_mode))
-			buffer.putchar (',')
+			buffer.put_string ("RTLNSMART(RTGPTID(")
+			buffer.put_integer (context.current_type.generated_id (context.final_mode))
+			buffer.put_character (',')
 			context.current_register.print_register
-			buffer.putchar (',')
-			buffer.putint (type.position)
-			buffer.putchar (')')
-			buffer.putchar (')')
+			buffer.put_character (',')
+			buffer.put_integer (type.position)
+			buffer.put_character (')')
+			buffer.put_character (')')
 		end
 
 	generate_reverse (buffer: GENERATION_BUFFER; final_mode : BOOLEAN) is
 			-- Generate computed type of creation for assignment attempt.
 		do
-			buffer.putstring ("RTGPTID(")
-			buffer.putint (context.current_type.generated_id (final_mode))
-			buffer.putchar (',')
+			buffer.put_string ("RTGPTID(")
+			buffer.put_integer (context.current_type.generated_id (final_mode))
+			buffer.put_character (',')
 			context.current_register.print_register
-			buffer.putchar (',')
-			buffer.putint (type.position)
-			buffer.putchar (')')
+			buffer.put_character (',')
+			buffer.put_integer (type.position)
+			buffer.put_character (')')
 		end
 
 feature -- IL code generation

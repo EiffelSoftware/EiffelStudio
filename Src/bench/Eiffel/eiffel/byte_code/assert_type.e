@@ -30,17 +30,17 @@ feature
 		do
 			inspect i
 			when In_precondition then
-				buffer.putstring ("EX_PRE");
+				buffer.put_string ("EX_PRE");
 			when In_postcondition then
-				buffer.putstring ("EX_POST");
+				buffer.put_string ("EX_POST");
 			when In_check then
-				buffer.putstring ("EX_CHECK");
+				buffer.put_string ("EX_CHECK");
 			when In_loop_invariant then
-				buffer.putstring ("EX_LINV");
+				buffer.put_string ("EX_LINV");
 			when In_loop_variant then
-				buffer.putstring ("EX_VAR");
+				buffer.put_string ("EX_VAR");
 			when In_invariant then
-				buffer.putstring ("(where ? EX_CINV:EX_INVC)");
+				buffer.put_string ("(where ? EX_CINV:EX_INVC)");
 			end;
 		end;
 

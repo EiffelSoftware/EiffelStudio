@@ -194,11 +194,11 @@ feature -- Debug
 
 	trace is
 		do
-			io.error.putstring ("Class id: ")
-			io.error.putint (class_id)
-			io.error.putstring (" body index: ")
-			io.error.putint (body_index)
-			io.error.new_line
+			io.error.put_string ("Class id: ")
+			io.error.put_integer (class_id)
+			io.error.put_string (" body index: ")
+			io.error.put_integer (body_index)
+			io.error.put_new_line
 		end
 
 feature {NONE} -- Debug

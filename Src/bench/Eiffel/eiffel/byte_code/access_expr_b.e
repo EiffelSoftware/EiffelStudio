@@ -125,9 +125,9 @@ feature -- Status
 				(expr.register = Void or expr.register = No_register)
 				and then not expr.is_simple_expr
 			then
-				buffer.putchar ('(');
+				buffer.put_character ('(');
 				expr.print_register;
-				buffer.putchar (')');
+				buffer.put_character (')');
 			else
 					-- No need for parenthesis if expression is held in a
 					-- register (e.g. a semi-strict boolean op).

@@ -84,7 +84,7 @@ feature
 	print_register is
 			-- Print local
 		do
-			buffer.putstring (register_name)
+			buffer.put_string (register_name)
 		end
 
 feature -- IL code generation

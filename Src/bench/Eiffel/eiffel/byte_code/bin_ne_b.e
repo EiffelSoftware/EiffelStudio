@@ -18,26 +18,26 @@ feature
 	generate_operator is
 			-- Generate the operator
 		do
-			buffer.putstring (" != ");
+			buffer.put_string (" != ");
 		end;
 
 	generate_boolean_constant is
 			-- Generate true constant
 		do
-			buffer.putstring ("EIF_TRUE");
+			buffer.put_string ("EIF_TRUE");
 		end;
 	
 	generate_equal is
 			-- Generate non-equality.
 		do
-			buffer.putchar ('!');
+			buffer.put_character ('!');
 			Precursor {BIN_EQUAL_B};
 		end;
 
 	generate_bit_equal is
 			-- Generate non-equality for bits.
 		do
-			buffer.putchar ('!');
+			buffer.put_character ('!');
 			Precursor {BIN_EQUAL_B};
 		end;
 

@@ -18,14 +18,14 @@ feature
 			buf: GENERATION_BUFFER
 		do
 			buf := buffer
-			buf.putstring ("(EIF_BOOLEAN) !")
+			buf.put_string ("(EIF_BOOLEAN) !")
 			expr.print_register
 		end
 
 	generate_operator is
 			-- Generate the unary operator
 		do
-			buffer.putchar ('!');
+			buffer.put_character ('!');
 		end;
 
 	is_built_in: BOOLEAN is

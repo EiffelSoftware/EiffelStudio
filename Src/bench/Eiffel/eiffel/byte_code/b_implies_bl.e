@@ -91,27 +91,27 @@ feature
 					-- Initialize value to true
 				register.print_register;
 				buf := buffer
-				buf.putstring (" = '\01';");
-				buf.new_line;
+				buf.put_string (" = '\01';");
+				buf.put_new_line;
 					-- Test first value. If it is false, then the whole
 					-- expression is true and the right handside is not evaled.
 				left.generate;
-				buf.putstring (gc_if_l_paran);
+				buf.put_string (gc_if_l_paran);
 				left.print_register;
-				buf.putstring (") {");
-				buf.new_line;
+				buf.put_string (") {");
+				buf.put_new_line;
 					-- Left handside was true. Value of the expression is the
 					-- value of the right handside.
 				buf.indent;
 				right.generate;
 				register.print_register;
-				buf.putstring (" = ");
+				buf.put_string (" = ");
 				right.print_register;
-				buf.putchar (';');
-				buf.new_line;
+				buf.put_character (';');
+				buf.put_new_line;
 				buf.exdent;
-				buf.putchar ('}');
-				buf.new_line;
+				buf.put_character ('}');
+				buf.put_new_line;
 			else
 				Precursor {B_IMPLIES_B};
 			end;

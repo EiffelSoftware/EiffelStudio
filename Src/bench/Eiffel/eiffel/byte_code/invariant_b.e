@@ -82,19 +82,19 @@ feature
 			context.generate_temporary_ref_variables;
 				-- Dynamic type of Current
 			if context.dftype_current > 1 then
-				buf.putstring ("RTCFDT;");
-				buf.new_line;
+				buf.put_string ("RTCFDT;");
+				buf.put_new_line;
 			end;
 			if context.dt_current > 1 then
-				buf.putstring ("RTCDT;");
-				buf.new_line;
+				buf.put_string ("RTCDT;");
+				buf.put_new_line;
 			end;
 
 				-- Generation of the local variable array
 			i := context.ref_var_used;
 			if i > 0 then
-				buf.putstring ("RTLD;");
-				buf.new_line;
+				buf.put_string ("RTLD;");
+				buf.put_new_line;
 			end;
 
 				-- Generate temporary variables not under the control
@@ -102,7 +102,7 @@ feature
 			context.generate_temporary_nonref_variables;
 			
 				-- Separate declarations and body with a blank line
-			buf.new_line;
+			buf.put_new_line;
 
 				-- Generate GC hooks
 			context.generate_gc_hooks (True);
@@ -112,11 +112,11 @@ feature
 				-- Remove gc hooks
 			i := context.ref_var_used;
 			if i > 0 then
-				buf.putstring ("RTLE;%N");
+				buf.put_string ("RTLE;%N");
 			end;
 				-- End of C routine
 			buf.exdent;
-			buf.putstring ("}%N%N");
+			buf.put_string ("}%N%N");
 		end;
 
 feature -- IL code generation

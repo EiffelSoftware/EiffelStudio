@@ -170,7 +170,7 @@ feature -- Generation
 			buffer := generation_buffer
 			buffer.clear_all
 
-			buffer.putstring ("%
+			buffer.put_string ("%
 				%#include %"eif_macros.h%"%N%
 				%#include %"eif_struct.h%"%N%
 				%#include %"eif_interp.h%"%N%N")
@@ -180,25 +180,25 @@ feature -- Generation
 			generate_pattern (buffer)
 
 				-- Generate pattern table
-			buffer.putstring ("struct p_interface egc_fpattern_init[] = {%N")
+			buffer.put_string ("struct p_interface egc_fpattern_init[] = {%N")
 			from
 				i := 1
 				nb := c_pattern_id_counter.value
 			until
 				i > nb
 			loop
-				buffer.putstring ("{(void (*)()) toc")
-				buffer.putint (i)
-				buffer.putstring (", (fnptr) toi")
-				buffer.putint (i)
-				buffer.putstring ("},%N")
+				buffer.put_string ("{(void (*)()) toc")
+				buffer.put_integer (i)
+				buffer.put_string (", (fnptr) toi")
+				buffer.put_integer (i)
+				buffer.put_string ("},%N")
 				i := i + 1
 			end
-			buffer.putstring ("};%N%N")
+			buffer.put_string ("};%N%N")
 
 			buffer.end_c_specific_code
 
-			create pattern_file.make_c_code_file (workbench_file_name (Epattern));
+			create pattern_file.make_c_code_file (workbench_file_name (Epattern, Dot_c, 1));
 			buffer.put_in_file (pattern_file)
 			pattern_file.close
 		end

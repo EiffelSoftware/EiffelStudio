@@ -96,11 +96,11 @@ feature
 		do
 			Result := registers.item (ctype.level).get_register;
 debug
-io.error.putstring ("get register #");
-io.error.putint (Result);
-io.error.putstring (" of type ");
-io.error.putstring (ctype.generator);
-io.error.new_line;
+io.error.put_string ("get register #");
+io.error.put_integer (Result);
+io.error.put_string (" of type ");
+io.error.put_string (ctype.generator);
+io.error.put_new_line;
 end;
 		end;
 
@@ -108,11 +108,11 @@ end;
 			-- Free register number `n' of type `ctype'
 		do
 debug
-io.error.putstring ("free register #");
-io.error.putint (n);
-io.error.putstring (" of type ");
-io.error.putstring (ctype.generator);
-io.error.new_line;
+io.error.put_string ("free register #");
+io.error.put_integer (n);
+io.error.put_string (" of type ");
+io.error.put_string (ctype.generator);
+io.error.put_new_line;
 end;
 			registers.item (ctype.level).free_register (n);
 		end;

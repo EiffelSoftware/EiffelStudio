@@ -587,11 +587,11 @@ feature -- Array optimization
 			base_class := cl_type.base_class
 			f := base_class.feature_table.item_id (feature_name_id)
 debug ("OPTIMIZATION")
-	io.error.putstring ("%N%N%NTESTING is_unsafe for ")
-	io.error.putstring (feature_name)
-	io.error.putstring (" from ")
-	io.error.putstring (base_class.name)
-	io.error.putstring (" is NOT safe%N")
+	io.error.put_string ("%N%N%NTESTING is_unsafe for ")
+	io.error.put_string (feature_name)
+	io.error.put_string (" from ")
+	io.error.put_string (base_class.name)
+	io.error.put_string (" is NOT safe%N")
 end
 			optimizer.test_safety (f, base_class)
 			create dep.make (base_class.class_id, f)
@@ -599,10 +599,10 @@ end
 				or else (parameters /= Void and then parameters.is_unsafe)
 debug ("OPTIMIZATION")
 	if Result then
-		io.error.putstring (f.feature_name)
-		io.error.putstring (" from ")
-		io.error.putstring (base_class.name)
-		io.error.putstring (" is NOT safe%N")
+		io.error.put_string (f.feature_name)
+		io.error.put_string (" from ")
+		io.error.put_string (base_class.name)
+		io.error.put_string (" is NOT safe%N")
 	end
 end
 		end

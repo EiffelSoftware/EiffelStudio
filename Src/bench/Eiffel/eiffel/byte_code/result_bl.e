@@ -65,11 +65,11 @@ feature
 			if context.result_used then
 					-- Once function have their result recorded into the GC,
 					-- so it's useless to use an l[] variable.
-				buffer.putstring (register_name);
+				buffer.put_string (register_name);
 			else
 				type_i := real_type (context.byte_code.result_type);
 				type_i.c_type.generate_cast (buffer);
-				buffer.putchar ('0');
+				buffer.put_character ('0');
 			end;
 		end;
 

@@ -25,116 +25,116 @@ feature -- Generation
 			when feature {PREDEFINED_NAMES}.put_name_id then
 				parameters.generate
 				buf := buffer
-				buf.putstring ("/* INLINED CODE (SPECIAL.put) */")
-				buf.new_line
+				buf.put_string ("/* INLINED CODE (SPECIAL.put) */")
+				buf.put_new_line
 
 					-- Get the type of the generic parameter of SPECIAL
 				l_gen_param := generic_type
 				if l_gen_param.is_true_expanded then
-					buf.putstring ("ecopy(")
+					buf.put_string ("ecopy(")
 					parameters.i_th (1).print_register
-					buf.putstring (", ")
+					buf.put_string (", ")
 					gen_reg.print_register
-					buf.putstring (" + OVERHEAD + ")
+					buf.put_string (" + OVERHEAD + ")
 					parameters.i_th (2).print_register
-					buf.putstring (" * sp_elem_size(")
+					buf.put_string (" * sp_elem_size(")
 					gen_reg.print_register
-					buf.putstring ("));")
-					buf.new_line
+					buf.put_string ("));")
+					buf.put_new_line
 				else
 					type_c := l_gen_param.c_type
-					buf.putstring ("*(")
+					buf.put_string ("*(")
 					type_c.generate_access_cast (buf)
 					gen_reg.print_register
-					buf.putstring (" + (")
+					buf.put_string (" + (")
 					parameters.i_th (2).print_register
-					buf.putstring (")) = ")
+					buf.put_string (")) = ")
 					parameters.i_th (1).print_register
-					buf.putstring (";")
-					buf.new_line
+					buf.put_string (";")
+					buf.put_new_line
 					if type_c.level = C_ref then
-						buf.putstring ("RTAR(")
+						buf.put_string ("RTAR(")
 						gen_reg.print_register
-						buf.putchar (',')
+						buf.put_character (',')
 						parameters.i_th (1).print_register
-						buf.putstring (");")
-						buf.new_line
+						buf.put_string (");")
+						buf.put_new_line
 					end
 				end
-				buf.putstring ("/* END INLINED CODE */")
-				buf.new_line
+				buf.put_string ("/* END INLINED CODE */")
+				buf.put_new_line
 			when feature {PREDEFINED_NAMES}.item_name_id then
 				parameters.generate
 				buf := buffer
-				buf.putstring ("/* INLINED CODE (SPECIAL.item) */")
-				buf.new_line
+				buf.put_string ("/* INLINED CODE (SPECIAL.item) */")
+				buf.put_new_line
 
 					-- Get the type of the generic parameter of SPECIAL
 				l_gen_param := generic_type
 
 				if l_gen_param.is_true_expanded then
 					result_reg.print_register 
-					buf.putstring (" = ")
+					buf.put_string (" = ")
 					gen_reg.print_register
-					buf.putstring (" + OVERHEAD + ")
+					buf.put_string (" + OVERHEAD + ")
 					parameters.i_th (1).print_register
-					buf.putstring (" * sp_elem_size(")
+					buf.put_string (" * sp_elem_size(")
 					gen_reg.print_register
-					buf.putstring (");")
-					buf.new_line
+					buf.put_string (");")
+					buf.put_new_line
 				else
 					type_c := l_gen_param.c_type
 					result_reg.print_register
-					buf.putstring (" = *(")
+					buf.put_string (" = *(")
 					type_c.generate_access_cast (buf)
 					gen_reg.print_register
-					buf.putstring (" + (")
+					buf.put_string (" + (")
 					parameters.i_th (1).print_register
-					buf.putstring ("));")
-					buf.new_line
+					buf.put_string ("));")
+					buf.put_new_line
 				end
-				buf.putstring ("/* END INLINED CODE */")
-				buf.new_line
+				buf.put_string ("/* END INLINED CODE */")
+				buf.put_new_line
 			when feature {PREDEFINED_NAMES}.base_address_name_id then
 				buf := buffer
 
-				buf.putstring ("/* INLINED CODE (SPECIAL.base_address) */")
-				buf.new_line
+				buf.put_string ("/* INLINED CODE (SPECIAL.base_address) */")
+				buf.put_new_line
 				result_reg.print_register
-				buf.putstring (" = ")
+				buf.put_string (" = ")
 				gen_reg.print_register
-				buf.putstring (";")
-				buf.new_line
-				buf.putstring ("/* END INLINED CODE */")
-				buf.new_line
+				buf.put_string (";")
+				buf.put_new_line
+				buf.put_string ("/* END INLINED CODE */")
+				buf.put_new_line
 			when feature {PREDEFINED_NAMES}.item_address_name_id then
 				parameters.generate
 				buf := buffer
 
-				buf.putstring ("/* INLINED CODE (SPECIAL.item_address) */")
-				buf.new_line
+				buf.put_string ("/* INLINED CODE (SPECIAL.item_address) */")
+				buf.put_new_line
 				result_reg.print_register
-				buf.putstring (" = ")
+				buf.put_string (" = ")
 				gen_reg.print_register
 
 				l_gen_param := generic_type
 				if l_gen_param.is_true_expanded then
-					buf.putstring (" + OVERHEAD + ")
+					buf.put_string (" + OVERHEAD + ")
 					parameters.i_th (1).print_register
-					buf.putstring (" * sp_elem_size (")
+					buf.put_string (" * sp_elem_size (")
 					gen_reg.print_register
 				else
 					type_c := l_gen_param.c_type
-					buf.putstring (" + ")
+					buf.put_string (" + ")
 					parameters.i_th (1).print_register
-					buf.putstring (" * sizeof(")
+					buf.put_string (" * sizeof(")
 					type_c.generate (buf)
 				end
-				buf.putchar (')')
-				buf.putchar (';')
-				buf.new_line
-				buf.putstring ("/* END INLINED CODE */")
-				buf.new_line
+				buf.put_character (')')
+				buf.put_character (';')
+				buf.put_new_line
+				buf.put_string ("/* END INLINED CODE */")
+				buf.put_new_line
 			else
 				Precursor {INLINED_FEAT_B} (gen_reg)
 			end

@@ -39,7 +39,7 @@ feature
 	generate_equal is
 			-- Generate equality if one side at least is an expanded
 		do
-			buffer.putstring ("RTEQ(");
+			buffer.put_string ("RTEQ(");
 			generate_equal_end;
 		end;
 
@@ -51,19 +51,19 @@ feature
 			else
 				left_register.print_register;
 			end;
-			buffer.putstring (gc_comma);
+			buffer.put_string (gc_comma);
 			if right_register = Void then
 				right.print_register;
 			else
 				right_register.print_register;
 			end;
-			buffer.putchar (')');
+			buffer.put_character (')');
 		end;
 
 	generate_bit_equal is
 			-- Generate equality if one side at least is a bit.
 		do
-			buffer.putstring ("RTEB(");
+			buffer.put_string ("RTEB(");
 			generate_equal_end
 		end;
 
@@ -156,15 +156,15 @@ feature
 				basic_i ?= context.real_type (left.type);
 				basic_i.metamorphose
 					(left_register, left, buf, context.workbench_mode);
-				buf.putchar (';');
-				buf.new_line;
+				buf.put_character (';');
+				buf.put_new_line;
 			end;
 			if right_register /= Void then
 				basic_i ?= context.real_type (right.type);
 				basic_i.metamorphose
 					(right_register, right, buf, context.workbench_mode);
-				buf.putchar (';');
-				buf.new_line;
+				buf.put_character (';');
+				buf.put_new_line;
 			end;
 		end;
 
@@ -192,7 +192,7 @@ feature
 				generate_bit_equal
 			else
 				buf := buffer
-				buf.putstring ("(EIF_BOOLEAN)(")
+				buf.put_string ("(EIF_BOOLEAN)(")
 				if left_register = Void then
 					left.print_register;
 				else
@@ -204,7 +204,7 @@ feature
 				else
 					right_register.print_register;
 				end;
-				buf.putchar (')')
+				buf.put_character (')')
 			end;
 		end;
 

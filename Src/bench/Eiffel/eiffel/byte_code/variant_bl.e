@@ -57,39 +57,39 @@ feature
 
 				-- Assertion recording on stack
 			if tag /= Void then
-				buf.putstring ("RTCT(")
-				buf.putchar ('"')
-				buf.putstring (tag)
-				buf.putchar ('"')
-				buf.putstring (gc_comma)
+				buf.put_string ("RTCT(")
+				buf.put_character ('"')
+				buf.put_string (tag)
+				buf.put_character ('"')
+				buf.put_string (gc_comma)
 			else
-				buf.putstring ("RTCS(")
+				buf.put_string ("RTCS(")
 			end
 			generate_assertion_code (In_loop_variant)
-			buf.putstring (gc_rparan_semi_c)
-			buf.new_line
+			buf.put_string (gc_rparan_semi_c)
+			buf.put_new_line
 			expr.generate
 			register.print_register
-			buf.putstring (" = ")
+			buf.put_string (" = ")
 			expr.print_register
-			buf.putchar (';')
-			buf.new_line
-			buf.putstring ("if (")
+			buf.put_character (';')
+			buf.put_new_line
+			buf.put_string ("if (")
 			register.print_register
-			buf.putstring (" >= 0) {")
-			buf.new_line
+			buf.put_string (" >= 0) {")
+			buf.put_new_line
 			buf.indent
-			buf.putstring ("RTCK;");
-			buf.new_line
+			buf.put_string ("RTCK;");
+			buf.put_new_line
 			buf.exdent
-			buf.putstring("} else {")
-			buf.new_line
+			buf.put_string("} else {")
+			buf.put_new_line
 			buf.indent
-			buf.putstring ("RTCF;")
-			buf.new_line
+			buf.put_string ("RTCF;")
+			buf.put_new_line
 			buf.exdent
-			buf.putchar ('}')
-			buf.new_line
+			buf.put_character ('}')
+			buf.put_new_line
 		end
 
 	print_register is
@@ -104,51 +104,51 @@ feature
 
 				-- Assertion recording on stack
 			if tag /= Void then
-				buf.putstring ("RTCT(")
-				buf.putchar ('"')
-				buf.putstring (tag)
-				buf.putchar ('"')
-				buf.putstring (gc_comma)
+				buf.put_string ("RTCT(")
+				buf.put_character ('"')
+				buf.put_string (tag)
+				buf.put_character ('"')
+				buf.put_string (gc_comma)
 			else
-				buf.putstring ("RTCS(")
+				buf.put_string ("RTCS(")
 			end
 			generate_assertion_code (In_loop_variant)
-			buf.putstring (gc_rparan_semi_c)
-			buf.new_line
+			buf.put_string (gc_rparan_semi_c)
+			buf.put_new_line
 			expr.generate
 			new_register.print_register
-			buf.putstring (" = ")
+			buf.put_string (" = ")
 			expr.print_register
-			buf.putchar (';')
-			buf.new_line
+			buf.put_character (';')
+			buf.put_new_line
 				-- Variant check
-			buf.putstring ("if ((")
+			buf.put_string ("if ((")
 			register.print_register
-			buf.putstring (" > ")
+			buf.put_string (" > ")
 			new_register.print_register
-			buf.putstring (") && ")
+			buf.put_string (") && ")
 			new_register.print_register
-			buf.putstring (" >= 0) {")
-			buf.new_line
+			buf.put_string (" >= 0) {")
+			buf.put_new_line
 			buf.indent
-			buf.putstring ("RTCK;")
-			buf.new_line
+			buf.put_string ("RTCK;")
+			buf.put_new_line
 			register.print_register
-			buf.putstring (" = ")
+			buf.put_string (" = ")
 			new_register.print_register
-			buf.putchar (';')
-			buf.new_line
+			buf.put_character (';')
+			buf.put_new_line
 			buf.exdent
-			buf.putchar ('}')
-			buf.new_line
-			buf.putstring ("else {")
-			buf.new_line
+			buf.put_character ('}')
+			buf.put_new_line
+			buf.put_string ("else {")
+			buf.put_new_line
 			buf.indent
-			buf.putstring ("RTCF;")
-			buf.new_line
+			buf.put_string ("RTCF;")
+			buf.put_new_line
 			buf.exdent
-			buf.putchar ('}')
-			buf.new_line
+			buf.put_character ('}')
+			buf.put_new_line
 		end
 
 	free_register is

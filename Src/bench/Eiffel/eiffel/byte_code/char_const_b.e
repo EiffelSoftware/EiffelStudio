@@ -55,9 +55,9 @@ feature -- C code generation
 			buf: GENERATION_BUFFER
 		do
 			buf := buffer
-			buf.putstring ("(EIF_CHARACTER) %'")
+			buf.put_string ("(EIF_CHARACTER) %'")
 			buf.escape_char (value)
-			buf.putchar ('%'')
+			buf.put_character ('%'')
 		end
 
 	used (r: REGISTRABLE): BOOLEAN is

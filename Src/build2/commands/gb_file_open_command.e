@@ -66,7 +66,8 @@ feature -- Basic operations
 					project_settings.load (dialog.file_name)
 					system_status.set_current_project (project_settings)
 					xml_handler.load
-					command_handler.update	
+					system_status.main_window.show_tools
+					command_handler.update
 				end
 			end
 

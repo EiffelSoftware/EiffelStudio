@@ -14,7 +14,7 @@ inherit
 		rename
 			make as prompt_dialog_create
 		end;
-	SET_WINDOW_ATTRIBUTES
+	WINDOW_ATTRIBUTES
 
 creation
 

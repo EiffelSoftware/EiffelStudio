@@ -108,6 +108,72 @@ void do_init()
 }
 #endif
 
+/* The following macros and functions are added by Yuanchang(Terry) Tang to
+ * process REAL/DOUBLE between different platforms. We change all formats
+ * into UNIX format. Because Eiffel run-time does not distinguish Linux
+ * from Unix, we have to use "ntohl" to distinguish them in the
+ * functions instead of defining different macros.
+ */
+
+#define ise_ntohf(x)		change_float_order(x)
+#define ise_htonf(x)		change_float_order(x)
+#define ise_ntohd(x)		change_double_order(x)
+#define ise_htond(x)		change_double_order(x)
+
+static char ise_order_flag=0; /* value 1: No order reversing is necessary;
+															 *       2: Order reversing is necessary;
+															 *       0: Test if order reversing is necessary
+															 */
+
+float change_float_order(f) 
+float f;
+{
+	float x, y;
+	unsigned char *px=(unsigned char *)(&x);
+	unsigned char *py=(unsigned char *)(&y);
+	int i;
+
+	if (ise_order_flag==0) {
+		if (0x1122 == ntohl(0x1122)) 
+			ise_order_flag = 1;
+		else
+			ise_order_flag = 2;
+	}
+	if (ise_order_flag == 1)
+		return f;
+	else {
+		x = f; /* It's necessary in Windows */
+		for (i=0; i<sizeof(float); i++) 
+			py[i] = px[sizeof(float)-1-i];
+		return y;
+	}
+}
+
+double change_double_order(d) 
+double d;
+{
+	double x, y;
+	unsigned char *px=(unsigned char *)(&x);
+	unsigned char *py=(unsigned char *)(&y);
+	int i;
+
+	if (ise_order_flag==0) {
+		if (0x1122 == ntohl(0x1122)) 
+			ise_order_flag = 1;
+		else
+			ise_order_flag = 2;
+	}
+	if (ise_order_flag == 1)
+		return d;
+	else {
+		x = d; /* It's necessary in Windows. */
+		for (i=0; i<sizeof(double); i++) 
+			py[i] = px[sizeof(double)-i-1];
+		return y;
+	}
+}
+
+
 
 /*x** select facilities ***/
 
@@ -755,6 +821,7 @@ EIF_DOUBLE f;
 
 	float tf;
 	tf = f;
+	tf = ise_htonf(tf);
 	CPUTX(fd,&tf,sizeof(tf))
 }
 
@@ -764,7 +831,7 @@ EIF_DOUBLE d;
 	/*x transmission of double d through socket fd */
 {
 	double dbl;
-	dbl = d;
+	dbl = ise_htond(d);
 	CPUTX(fd,&dbl,sizeof(dbl))
 }
 
@@ -797,15 +864,13 @@ EIF_INTEGER length;
 			eio();
 #endif
 
-
-
 EIF_REAL c_read_float (fd)
 EIF_INTEGER fd;
 	/*x read a real from socket fd */
 {
 	float f=0.0;
 	CREADX(fd,&f,sizeof(float))
-	return (EIF_REAL) f;
+	return (EIF_REAL) ise_ntohf(f);
 }
 
 EIF_DOUBLE c_read_double(fd)
@@ -814,7 +879,7 @@ EIF_INTEGER fd;
 {
 	double d=0.0;
 	CREADX(fd,&d,sizeof(double))
-	return (EIF_DOUBLE) d;
+	return (EIF_DOUBLE) ise_ntohd(d);
 }
 
 EIF_CHARACTER c_read_char(fd)

@@ -27,6 +27,18 @@ feature -- Access
 	eiffel_name: STRING
 			-- Eiffel entity name
 
+feature -- Status report
+
+	has_arguments: BOOLEAN is
+			-- Does current entity have argments?
+		do
+		end
+
+	has_return_value: BOOLEAN is
+			-- Does current entity returns a value?
+		do
+		end
+
 invariant
 	non_void_eiffel_name: eiffel_name /= Void
 	valid_eiffel_name: not eiffel_name.is_empty

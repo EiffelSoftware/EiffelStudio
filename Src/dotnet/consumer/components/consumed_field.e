@@ -10,6 +10,8 @@ inherit
 	CONSUMED_MEMBER
 		rename
 			make as member_make
+		redefine
+			has_return_value
 		end
 
 create
@@ -38,10 +40,15 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	is_static: BOOLEAN
-		-- Is field static?
-
 	return_type: CONSUMED_REFERENCED_TYPE
-		-- Field type
+			-- Field type
+
+feature -- Status report
+
+	is_static: BOOLEAN
+			-- Is field static?
+
+	has_return_value: BOOLEAN is True
+			-- An attribute always return a value.
 
 end -- class CONSUMED_FIELD

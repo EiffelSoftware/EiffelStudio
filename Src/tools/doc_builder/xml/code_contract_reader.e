@@ -26,7 +26,7 @@ feature -- Creation
 	make is
 			-- Create
 		do
-			make_with_id (1)
+			make
 			create element_stack.make (2)
 			element_stack.compare_objects
 			create anchors.make (1)
@@ -88,12 +88,6 @@ feature {NONE} -- Implementation
 
 	in_anchor: BOOLEAN
 			-- In anchor?
-
-	description: STRING is
-			-- Description
-		do
-			Result := "Eiffel XML contract code file reader"
-		end
 
 	element_stack: ARRAYED_STACK [STRING]
 			-- Stack of element names

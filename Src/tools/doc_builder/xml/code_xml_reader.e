@@ -9,7 +9,7 @@ class
 inherit
 	DOCUMENT_FILTER
 		rename
-			make as make_with_id
+			make as make_filter
 		redefine			
 			on_start_tag,
 			on_end_tag,
@@ -33,8 +33,8 @@ feature -- Creation
 			file_not_void: a_file /= Void
 			file_exists: a_file.exists
 		do
-			file := a_file
-			make_with_id (1)
+			make_filter
+			file := a_file			
 		end
 
 feature -- Tag
@@ -142,12 +142,6 @@ feature {NONE} -- Implementation
 
 	file: PLAIN_TEXT_FILE
 			-- File from which XML is being read
-
-	description: STRING is
-			-- Description
-		do
-			Result := "Eiffel XML code file reader"
-		end
 
 	element_stack: ARRAYED_STACK [STRING] is
 			-- Stack of element names

@@ -21,11 +21,12 @@ feature  -- Initialization
 			valid_type: r_type /= Void
 			valid_maps: omap /= Void or cmap /= Void
 		do
+			class_type := cl_type
 			if System.il_generation then
-				class_type := il_generator.implemented_type (f.origin_class_id, cl_type)
+				class_id := f.origin_class_id
 				feature_id := f.origin_feature_id
 			else
-				class_type := cl_type
+				class_id := f.written_in
 				feature_id := f.feature_id
 			end
 			rout_id := f.rout_id_set.first
@@ -62,6 +63,9 @@ feature -- Attributes
 
 	feature_id: INTEGER
 			-- Feature id of the addressed feature
+			
+	class_id: INTEGER
+			-- Class ID which defines current feature.
 
 	rout_id: INTEGER
 			-- Routine id of the feature
@@ -174,6 +178,7 @@ feature -- IL code generation
 			set_rout_disp_feat: FEATURE_I
 			real_ty: GEN_TYPE_I
 			l_decl_type: CL_TYPE_I
+			cl_type: like class_type
 		do
 			real_ty ?= context.real_type (type)
 			il_generator.create_object (real_ty)
@@ -183,7 +188,9 @@ feature -- IL code generation
 				item_id (feature {PREDEFINED_NAMES}.set_rout_disp_name_id)
 			l_decl_type := il_generator.implemented_type (set_rout_disp_feat.origin_class_id,
 				real_ty)
-			il_generator.put_method_token (class_type, feature_id)
+
+			cl_type := il_generator.implemented_type (class_id, class_type)
+			il_generator.put_method_token (cl_type, feature_id)
 
 				-- Arguments
 			if arguments /= Void then

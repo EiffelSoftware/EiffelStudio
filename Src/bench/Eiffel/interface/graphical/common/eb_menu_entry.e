@@ -18,7 +18,8 @@ inherit
 		end
 
 creation
-	make, make_button_only
+	make, make_button_only,
+	make_tools_menu
 
 feature {NONE} -- Initialization
 
@@ -40,13 +41,22 @@ feature {NONE} -- Initialization
 		do
 			button_make (a_cmd.name, a_parent);
 			set_text (a_cmd.name)
+		end;
+
+	make_tools_menu (a_cmd: like associated_command; a_parent: MENU) is
+			-- Initialize Current with `associated_command' set
+			-- to `a_cmd' and `parent' set to `a_parent'.
+		require
+			non_void_cmd: a_cmd /= Void;
+			non_void_parent: a_parent /= Void
+		do
+			associated_command := a_cmd;
+			initialize_button (a_cmd, a_parent)
 		end
 
 feature -- Properties
 
-	associated_command: TOOL_COMMAND is
+	associated_command: TOOL_COMMAND
 			-- Command type that menu entry expects
-		do
-		end;
 
 end -- class EB_MENU_ENTRY

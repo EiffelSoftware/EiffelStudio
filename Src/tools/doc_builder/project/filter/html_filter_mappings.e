@@ -32,6 +32,8 @@ feature {HTML_FILTER} -- Access
 			Result.extend ("meta", "meta")			
 			Result.extend ("sub", "sub_script")
 			Result.extend ("sup", "super_script")
+			Result.extend ("span", "output")
+			Result.extend ("script", "script")
 		end
 		
 	element_element_complex_mappings: HASH_TABLE [STRING, STRING] is
@@ -123,6 +125,7 @@ feature -- Element Data
 			Result.extend ("content")
 			Result.extend ("code")
 			Result.extend ("character")
+			Result.extend ("output")
 		end
 
 	conc_content_elements: ARRAYED_LIST [STRING] is
@@ -154,6 +157,9 @@ feature -- Element Data
 			Result.extend ("image_link")
 			Result.extend ("paragraph")
 			Result.extend ("help_link")
+			Result.extend ("output")
+			Result.extend ("script")
+			Result.extend ("document_paragraph")
 		end
 	
 	style_elements: ARRAYED_LIST [STRING] is

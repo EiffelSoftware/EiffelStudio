@@ -44,4 +44,5 @@ feature {NONE}
 	click_list_sd: INTEGER is 140;
 	click_elem_sd: INTEGER is 141;
 
+	executable_name_sd: INTEGER is 157;
 end

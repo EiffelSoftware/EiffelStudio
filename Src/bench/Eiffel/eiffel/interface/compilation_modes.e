@@ -11,12 +11,18 @@ feature -- Properties
 
 	is_freezing, is_finalizing,
 	is_extendible, is_extending, 
-	is_precompiling: BOOLEAN;
+	is_precompiling, is_quick_melt: BOOLEAN;
 
 	set_is_freezing (b: BOOLEAN) is
 			-- Set `is_freezing' to `b'
 		do
 			is_freezing := b
+		end;
+
+	set_is_quick_melt (b: BOOLEAN) is
+			-- Set `is_freezing' to `b'
+		do
+			is_quick_melt := b
 		end;
 
 	set_is_finalizing (b: BOOLEAN) is
@@ -47,11 +53,12 @@ feature -- Setting
 
 	reset_modes is
 		do
+			is_quick_melt := False;
 			is_freezing := False;
 			is_finalizing := False;
 			is_extendible := False;
 			is_extending := False;
-			is_precompiling := False;
+			is_precompiling := False
 		end;
 
 end -- class COMPILATION_MODES

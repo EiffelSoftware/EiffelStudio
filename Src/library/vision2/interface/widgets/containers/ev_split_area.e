@@ -247,7 +247,7 @@ feature -- Conversion
 			Result := l
 		end
 
-feature -- Implementation
+feature {NONE}-- Implementation
 
 	first_cell, second_cell: EV_CELL
 		-- Two client areas.
@@ -317,8 +317,8 @@ end -- class EV_SPLIT_AREA
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.12  2000/02/21 20:09:15  rogers
---| There is no longer an EV_SPLIT_AREA_I, so moved the appropriate implementation into this class. Now also inherits EV_WIDGET.
+--| Revision 1.13  2000/02/22 01:18:00  rogers
+--| Changed the export status of box to NONE.
 --|
 --| Revision 1.11  2000/02/14 11:40:51  oconnor
 --| merged changes from prerelease_20000214

@@ -49,6 +49,28 @@ feature -- Properties
 			Result := melt_abb
 		end;
 
+feature -- Actions
+
+	execute is
+		require else
+			can_always_be_compiled: True
+		do
+			if Eiffel_project.is_read_only then
+				io.error.put_string ("Read-only project: cannot compile.%N")
+			else
+				init;
+				if Eiffel_ace.file_name /= Void then
+					compile;
+					if Eiffel_project.successful then
+						print_tail;
+						if Eiffel_project.freezing_occurred then
+							prompt_finish_freezing (False)
+						end
+					end;
+				end;
+			end
+		end;
+
 feature {NONE} -- Update
 
 	select_ace_file is
@@ -158,25 +180,6 @@ feature {NONE} -- Update
 			execute
 		end;
 
-	execute is
-		require else
-			can_always_be_compiled: True
-		do
-			if Eiffel_project.is_read_only then
-				io.error.put_string ("Read-only project: cannot compile.%N")
-			else
-				init;
-				if Eiffel_ace.file_name /= Void then
-					compile;
-					if Eiffel_project.successful then
-						print_tail;
-						if Eiffel_project.freezing_occurred then
-							prompt_finish_freezing (False)
-						end
-					end;
-				end;
-			end
-		end;
 
 feature {NONE} -- Output
 

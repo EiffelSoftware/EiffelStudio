@@ -576,22 +576,6 @@ feature -- Event - command association
 
 feature -- Event -- removing command association
 
-	remove_button_press_commands (mouse_button: INTEGER) is
-			-- Empty the list of commands to be executed when
-			-- button number 'mouse_button' is pressed.
-		require
-			exists: not destroyed
-		deferred
-		end
-
-	remove_button_release_commands (mouse_button: INTEGER) is
-			-- Empty the list of commands to be executed when
-			-- button number 'mouse_button' is released.
-		require
-			exists: not destroyed
-		deferred
-		end
-
 	remove_double_click_commands (mouse_button: INTEGER) is
 			-- Empty the list of commands to be executed when
 			-- button number 'mouse_button' is double clicked.

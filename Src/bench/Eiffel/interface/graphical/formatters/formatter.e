@@ -11,7 +11,7 @@ inherit
 
 	TWO_STATE_CMD
 		rename
-			true_state_symbol as symbol,
+			active_symbol as symbol,
 			work as format
 		redefine
 			execute

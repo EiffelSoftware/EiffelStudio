@@ -278,6 +278,21 @@ FILE *fp;
 		esys();				/* Flush failed, raise exception */
 }
 
+public  EIF_INTEGER file_size (fp)
+EIF_POINTER fp;
+{
+	struct stat buf;
+	int status;
+
+	errno = 0;
+	if (0 != fflush ((FILE *)fp))   /* Without a flush the information */
+		esys();						/* is not up to date */
+	fstat (fileno ((FILE *)fp), &buf);
+	if (status == -1) 				/* An error occurred */
+		esys();						/* Raise exception */
+	return (EIF_INTEGER) buf.st_size;
+}
+
 public char file_feof(fp)
 FILE *fp;      
 {

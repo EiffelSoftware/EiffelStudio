@@ -89,7 +89,7 @@ feature {NONE} -- Implementation
 			Result.set_name ("make_from_pointer")
 			Result.set_effective
 			Result.add_argument ("a_pointer: POINTER")
-			Result.set_body ("make_by_pointer (a_pointer)")
+			Result.set_body ("%T%T%Tmake_by_pointer (a_pointer)")
 			Result.set_comment ("Make from pointer.")
 		end
 
@@ -122,7 +122,7 @@ feature {NONE} -- Implementation
 		do
 			create Result.make
 
-			Result.set_name (name_for_feature (a_field_descriptor.name))
+			Result.set_name (name_for_feature_with_keyword_check (a_field_descriptor.name))
 			Result.set_comment (a_field_descriptor.description)
 
 			create a_data_type_visitor
@@ -190,11 +190,11 @@ feature {NONE} -- Implementation
 
 			create a_name.make (0)
 			a_name.append ("set_")
-			a_name.append (name_for_feature (a_field_descriptor.name))
+			a_name.append (name_for_feature_with_keyword_check (a_field_descriptor.name))
 
 			create an_argument_name.make (0)
 			an_argument_name.append ("a_")
-			an_argument_name.append (name_for_feature (a_field_descriptor.name))
+			an_argument_name.append (name_for_feature_with_keyword_check (a_field_descriptor.name))
 
 			Result.set_name (a_name)
 
@@ -217,17 +217,14 @@ feature {NONE} -- Implementation
 			an_argument.append (an_argument_name)
 			an_argument.append (Colon)
 			an_argument.append (Space)
-			if not a_data_type_visitor.is_enumeration then
-				an_argument.append (a_data_type_visitor.eiffel_type)
-			else
-				an_argument.append (Integer_type)
-			end
+			an_argument.append (a_data_type_visitor.eiffel_type)
+		
 			Result.add_argument (an_argument)
 
 			create a_comment.make (0)
 			a_comment.append ("Set ")
 			a_comment.append (Back_quote)
-			a_comment.append (name_for_feature (a_field_descriptor.name))
+			a_comment.append (name_for_feature_with_keyword_check (a_field_descriptor.name))
 			a_comment.append (Single_quote)
 			a_comment.append (Space)
 			a_comment.append ("with")
@@ -251,10 +248,7 @@ feature {NONE} -- Implementation
 			body.append ("item")
 			body.append (Comma_space)
 
-			if a_data_type_visitor.is_basic_type or a_data_type_visitor.is_enumeration then
-				body.append (an_argument_name)
-
-			elseif a_data_type_visitor.is_array_basic_type then
+			if a_data_type_visitor.is_array_basic_type then
 				body.append (Dollar)
 				body.append ("any")
 

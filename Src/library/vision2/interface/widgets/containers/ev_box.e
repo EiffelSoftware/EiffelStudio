@@ -20,23 +20,22 @@ inherit
 	
 feature -- Element change (box specific)
 	
-	set_homogeneous (homogeneous: BOOLEAN) is
+	set_homogeneous (flag: BOOLEAN) is
 			-- Homogenous controls whether each object in
-			-- the box has the same size. If homogenous =
-			-- True, expand argument for each child is
-			-- automatically True
+			-- the box has the same size.
 		require
 			exist: not destroyed
 		do
-			implementation.set_homogeneous (homogeneous)
+			implementation.set_homogeneous (flag)
 		end
 	
-	set_spacing (spacing: INTEGER) is
+	set_spacing (value: INTEGER) is
 			-- Spacing between the objects in the box
 		require
 			exist: not destroyed
+			positive_value: value >= 0
 		do
-			implementation.set_spacing (spacing)
+			implementation.set_spacing (value)
 		end
 		
 feature {NONE} -- Implementation

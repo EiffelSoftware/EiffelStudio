@@ -11,6 +11,11 @@ inherit
 		redefine
 			default_rescue
 		end
+	
+	IOUTPUT_HANDLER
+		redefine
+			default_rescue
+		end
 
 	CODE_DOM_PATH
 		redefine
@@ -234,7 +239,9 @@ feature -- Basic Operations
 		ensure then
 			non_void_results: Result /= Void
 		rescue
-			l_stream.close
+			if l_stream /= Void then
+				l_stream.close
+			end
 		end
 
 	compile_assembly_from_dom_batch (a_options: SYSTEM_DLL_COMPILER_PARAMETERS; a_compilation_units: NATIVE_ARRAY [SYSTEM_DLL_CODE_COMPILE_UNIT]): SYSTEM_DLL_COMPILER_RESULTS is
@@ -272,7 +279,9 @@ feature -- Basic Operations
 		ensure then
 			non_void_results: Result /= Void
 		rescue
-			l_stream.close
+			if l_stream /= Void then
+				l_stream.close
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -297,21 +306,27 @@ feature {NONE} -- Implementation
 		require
 			non_void_options: a_options /= Void
 		local
-			l_temp_dir, l_root_class, l_system_name, l_resource_file, l_ace_file_name, l_path, l_assembly_file_name: STRING
+			l_temp_dir, l_root_class, l_system_name, l_resource_file, l_ace_file_name, l_path, l_assembly_file_name, l_file: STRING
+			l_directory: DIRECTORY
 			l_res: DIRECTORY_INFO
 			l_project: CEIFFEL_PROJECT_CLASS
 			l_properties: IEIFFEL_PROJECT_PROPERTIES
 			l_sep_char: CHARACTER
 			l_ace_file: RAW_FILE
-			l_retried: BOOLEAN
+			l_retried, l_precompiled_set: BOOLEAN
 			l_cluster_properties: IEIFFEL_CLUSTER_PROPERTIES
 			l_assemblies: SYSTEM_DLL_STRING_COLLECTION
 			i, l_count: INTEGER
 			l_assembly: CODE_REFERENCED_ASSEMBLY
+			l_dotnet_assembly: ASSEMBLY
 			l_type: CODE_GENERATED_TYPE
 			l_creation_routines: HASH_TABLE [CODE_CREATION_ROUTINE, STRING]
+			l_creation_routine: STRING
 			l_arguments: LIST [CODE_PARAMETER_DECLARATION_EXPRESSION]
 			l_found: BOOLEAN
+			l_referenced_assemblies: NATIVE_ARRAY [ASSEMBLY_NAME]
+			l_referenced_assembly: ASSEMBLY_NAME
+			l_file_list: LIST [STRING]
 		do
 			if not l_retried then
 				-- First create temporary directory if needed
@@ -357,20 +372,13 @@ feature {NONE} -- Implementation
 					end
 					l_properties.set_system_name (l_system_name)
 					
+					l_properties.set_namespace_generation (feature {EIF_CLUSTER_NAMESPACE_GENERATION}.eif_cluster_namespace_generation_full_cluster_name)
+					l_properties.set_dot_net_naming_convention (True)
+
 					l_properties.clusters.add_cluster ("root_cluster", "", compilation_directory)
-					l_properties.clusters.add_cluster ("base", "", "$ISE_EIFFEL\library\base")
-					l_cluster_properties := l_properties.clusters.get_cluster_properties ("base")
-					l_cluster_properties.set_cluster_namespace ("EiffelSoftware.Library.Base")
-					l_cluster_properties.add_exclude ("table_eiffel3")
-					l_cluster_properties.add_exclude ("desc")
-					l_cluster_properties.add_exclude ("classic")
-					l_cluster_properties.set_is_library (True)
-					l_properties.clusters.add_cluster ("base_net", "", "$ISE_EIFFEL\library.net\base")
-					l_cluster_properties := l_properties.clusters.get_cluster_properties ("base_net")
-					l_cluster_properties.set_cluster_namespace ("EiffelSoftware.Library.BaseNet")
-					l_cluster_properties.set_is_library (True)
 					
 					l_root_class := Compilation_context.root_class_name
+					l_creation_routine := Compilation_context.root_creation_routine_name
 					if l_root_class = Void or else l_root_class.is_empty then
 						l_root_class := a_options.main_class
 						if l_root_class = Void or else l_root_class.is_empty then
@@ -389,7 +397,7 @@ feature {NONE} -- Implementation
 										l_arguments := l_creation_routines.item_for_iteration.arguments
 										l_found := l_arguments = Void or else l_arguments.is_empty 
 										if l_found then
-											l_properties.set_creation_routine (l_creation_routines.item_for_iteration.eiffel_name)
+											l_creation_routine := l_creation_routines.item_for_iteration.eiffel_name
 										end
 										l_type.creation_routines.forth
 									end
@@ -406,11 +414,9 @@ feature {NONE} -- Implementation
 						end
 					end
 					l_properties.set_root_class_name (l_root_class)
-		
-					if not l_root_class.is_equal ("ANY") and not l_root_class.is_equal ("NONE") then
-						if Compilation_context.root_creation_routine_name /= Void then
-							l_properties.set_creation_routine (Compilation_context.root_creation_routine_name)
-						end
+
+					if not l_root_class.is_equal ("ANY") and not l_root_class.is_equal ("NONE") and l_creation_routine /= Void then
+						l_properties.set_creation_routine (l_creation_routine)
 					end
 		
 					if a_options.generate_executable then
@@ -420,7 +426,8 @@ feature {NONE} -- Implementation
 					end
 		
 					l_properties.set_target_clr_version (Clr_version)
-
+					
+					-- Setup referenced assemblies
 					l_assemblies := a_options.referenced_assemblies
 					if l_assemblies /= Void and then l_assemblies.count > 0 then
 						from
@@ -447,7 +454,86 @@ feature {NONE} -- Implementation
 					else
 						add_default_assemblies
 					end
+					
+					-- Complete list of referenced assemblies so all required assemblies are listed
 					complete
+					
+					-- Remove precompiled library assemblies from list to add to ace file
+					if precompile /= Void then
+						l_path := precompile.twin
+						if l_path.item (l_path.count) /= l_sep_char then
+							l_path.append_character (l_sep_char)
+						end
+						l_path.append ("EIFGEN\W_code")
+						create l_directory.make (l_path)
+						if l_directory.exists then
+							l_file_list := l_directory.linear_representation
+							from
+								l_file_list.start
+								l_assembly_file_name := Void
+							until
+								l_file_list.after or l_assembly_file_name /= Void
+							loop
+								l_file := l_file_list.item
+								l_count := l_file.count
+								if l_count > 4 and then l_file.substring_index (".dll", l_count - 3) = l_count - 3 and then l_file.substring_index ("lib", 1) = 0 then
+									create l_assembly_file_name.make (l_directory.name.count + l_file.count + 1)
+									l_assembly_file_name.append (l_directory.name)
+									l_assembly_file_name.append_character (l_sep_char)
+									l_assembly_file_name.append (l_file)
+								end
+								l_file_list.forth
+							end
+							if l_assembly_file_name /= Void then
+								l_dotnet_assembly := feature {ASSEMBLY}.load_from (l_assembly_file_name)
+								l_referenced_assemblies := l_dotnet_assembly.get_referenced_assemblies
+								from
+									i := 0
+									l_count := l_referenced_assemblies.count
+								until
+									i = l_count
+								loop
+									l_referenced_assembly := l_referenced_assemblies.item (i)
+									from
+										Referenced_assemblies.start
+										l_found := False
+									until
+										Referenced_assemblies.after or l_found
+									loop
+										l_assembly := Referenced_assemblies.item
+										l_found := l_assembly.assembly.full_name.equals (l_referenced_assembly.full_name)
+										if l_found then
+											Referenced_assemblies.remove
+										else
+											Referenced_assemblies.forth
+										end
+									end
+									i := i + 1
+								end
+								
+								-- Only set the precompile if it is valid
+								l_properties.set_precompiled_library (precompile)
+								l_precompiled_set := True
+							end
+						end
+					end
+					
+					-- Only add base clusters if requires
+					if not l_precompiled_set then
+						l_properties.clusters.add_cluster ("base", "", "$ISE_EIFFEL\library\base")
+						l_cluster_properties := l_properties.clusters.get_cluster_properties ("base")
+						l_cluster_properties.set_cluster_namespace ("EiffelSoftware.Library.Base")
+						l_cluster_properties.add_exclude ("table_eiffel3")
+						l_cluster_properties.add_exclude ("desc")
+						l_cluster_properties.add_exclude ("classic")
+						l_cluster_properties.set_is_library (True)
+						l_properties.clusters.add_cluster ("base_net", "", "$ISE_EIFFEL\library.net\base")
+						l_cluster_properties := l_properties.clusters.get_cluster_properties ("base_net")
+						l_cluster_properties.set_cluster_namespace ("EiffelSoftware.Library.BaseNet")
+						l_cluster_properties.set_is_library (True)
+					end
+					
+					-- Add referenced assemblies
 					from
 						Referenced_assemblies.start
 					until
@@ -458,6 +544,7 @@ feature {NONE} -- Implementation
 						Referenced_assemblies.forth
 					end
 					
+					-- Setup resource file
 					if a_options.win_32_resource /= Void then
 						l_resource_file := compilation_directory + l_sep_char.out + l_system_name + ".rc"
 						copy_file (a_options.win_32_resource, l_resource_file)
@@ -466,10 +553,7 @@ feature {NONE} -- Implementation
 						end
 					end
 					
-					if precompile /= Void then
-						l_properties.set_precompiled_library (precompile)
-					end
-		
+					-- Setup miscelleaneous settings
 					if metadata_cache /= Void then
 						l_properties.set_metadata_cache_path (metadata_cache)
 					end
@@ -512,10 +596,9 @@ feature {NONE} -- Implementation
 			l_res: SYSTEM_OBJECT
 		do
 			if not l_retried then
-			--	compiler.add_output_error ((create {IEIFFEL_COMPILER_EVENTS_OUTPUT_ERROR_EVENT_HANDLER}.make (Current, $on_error)))
-			--	compiler.add_output_string ((create {IEIFFEL_COMPILER_EVENTS_OUTPUT_STRING_EVENT_HANDLER}.make (Current, $on_output)))
-				compiler.compile (feature {EIF_COMPILATION_MODE}.eif_compilation_mode_finalize)
+				feature {OUTPUT_DISPATCHER}.add_handler (compiler, Current)
 				create last_compilation_results.make (temp_files)
+				compiler.compile (feature {EIF_COMPILATION_MODE}.eif_compilation_mode_finalize)
 				(create {SECURITY_PERMISSION}.make_from_flag (feature {SECURITY_PERMISSION_FLAG}.Control_evidence)).assert
 				last_compilation_results.set_evidence (evidence)
 				last_compilation_results.set_native_compiler_return_value (1)
@@ -609,24 +692,24 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Compiler callbacks
 
-	on_error (bstr_full_error, bstr_short_error, bstr_code, bstr_file_name: SYSTEM_STRING; ul_line, ul_col: INTEGER) is
+	process_error (bstr_full_error, bstr_short_error, bstr_code, bstr_file_name: SYSTEM_STRING; ul_line, ul_col: INTEGER) is
 			-- Record error in `last_error'.
-		require
-			non_void_compilation_results: last_compilation_results /= Void
 		local
 			l_res: INTEGER
 		do	
-			l_res := last_compilation_results.errors.add (create {SYSTEM_DLL_COMPILER_ERROR}.make (bstr_file_name, ul_line, ul_col, bstr_code, bstr_full_error))
+			if last_compilation_results /= Void then
+				l_res := last_compilation_results.errors.add (create {SYSTEM_DLL_COMPILER_ERROR}.make (bstr_file_name, ul_line, ul_col, bstr_code, bstr_full_error))
+			end
 		end
 
-	on_output (a_output: SYSTEM_STRING) is
+	process_output (a_output: SYSTEM_STRING) is
 			-- Append `a_output' to `output'.
-		require
-			non_void_compilation_results: last_compilation_results /= Void
 		local
 			l_res: INTEGER
 		do
-			l_res := last_compilation_results.output.add (a_output)
+			if last_compilation_results /= Void then
+				l_res := last_compilation_results.output.add (a_output)
+			end
 		end
 
 feature {NONE} -- Private access

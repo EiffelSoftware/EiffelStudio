@@ -593,7 +593,11 @@ RT_LNK int fcount;
 
 /* Macros needed for profile stack and trace clean up */
 
+#ifdef WORKBENCH
+#define RTPS		if (prof_stack) prof_stack_rewind(saved_prof_top)		/* Clean up profiler stack */
+#else
 #define RTPS		prof_stack_rewind(saved_prof_top)		/* Clean up profiler stack */
+#endif
 #define RTTS		trace_call_level = current_call_level	/* Clean up trace levels */
 
 

@@ -28,7 +28,7 @@ cwel_msgboxparams_set (LPMSGBOXPARAMS item, HWND wd, HINSTANCE hinst, LPCSTR txt
 	item -> lpszCaption = ttl;
 	item -> dwStyle = s;
 	item -> lpszIcon = ico;
-	item -> dwContextHelpId = NULL;
+	item -> dwContextHelpId = (DWORD)NULL;
 	item -> lpfnMsgBoxCallback = NULL;
 	item -> dwLanguageId = langid;
 }

@@ -9,21 +9,24 @@ frozen expanded external class
 inherit
 	VALUE_TYPE
 		undefine
-			finalize
-		redefine
+			finalize,
 			get_hash_code,
 			equals,
-			to_string
+			to_string,
+			memberwise_clone
 		end
+
 	ICOMPARABLE
+		undefine
+			memberwise_clone
+		end
+
 	IFORMATTABLE
+		undefine
+			memberwise_clone
+		end
 
 	DOUBLE_REF
-		redefine
-			get_hash_code,
-			equals,
-			to_string
-		end
 
 create {NONE}
 
@@ -36,13 +39,6 @@ feature -- Access
 	frozen epsilon: DOUBLE is 4.94065645841247E-324
 
 feature -- Basic Operations
-
-	equals (obj: SYSTEM_OBJECT): BOOLEAN is
-		external
-			"IL signature (System.Object): System.Boolean use System.Double"
-		alias
-			"Equals"
-		end
 
 	frozen parse_string_number_styles (s: SYSTEM_STRING; style: NUMBER_STYLES): DOUBLE is
 		external
@@ -65,25 +61,11 @@ feature -- Basic Operations
 			"TryParse"
 		end
 
-	get_hash_code: INTEGER is
-		external
-			"IL signature (): System.Int32 use System.Double"
-		alias
-			"GetHashCode"
-		end
-
 	frozen compare_to (value: SYSTEM_OBJECT): INTEGER is
 		external
 			"IL signature (System.Object): System.Int32 use System.Double"
 		alias
 			"CompareTo"
-		end
-
-	to_string: SYSTEM_STRING is
-		external
-			"IL signature (): System.String use System.Double"
-		alias
-			"ToString"
 		end
 
 	frozen is_na_n (d: DOUBLE): BOOLEAN is

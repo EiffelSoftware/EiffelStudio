@@ -12,15 +12,14 @@ inherit
 		rename
 			make as exc_make
 		undefine
-			finalize
+			finalize,
+			equals,
+			to_string,
+			get_hash_code,
+			memberwise_clone
 		end
 
 	EXCEP_CONST
-		undefine
-			equals,
-			to_string,
-			get_hash_code
-		end
 
 create
 	make

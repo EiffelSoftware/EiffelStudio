@@ -9,20 +9,18 @@ frozen expanded external class
 inherit
 	VALUE_TYPE
 		undefine
-			finalize
-		redefine
+			finalize,
 			get_hash_code,
 			equals,
-			to_string
+			to_string,
+			memberwise_clone
 		end
 	ICOMPARABLE
+		undefine
+			memberwise_clone
+		end
 
 	BOOLEAN_REF
-		redefine
-			get_hash_code,
-			equals,
-			to_string
-		end
 
 create {NONE}
 
@@ -51,30 +49,9 @@ feature -- Basic Operations
 			"Parse"
 		end
 
-	get_hash_code: INTEGER is
-		external
-			"IL signature (): System.Int32 use System.Boolean"
-		alias
-			"GetHashCode"
-		end
-
-	equals (obj: SYSTEM_OBJECT): BOOLEAN is
-		external
-			"IL signature (System.Object): System.Boolean use System.Boolean"
-		alias
-			"Equals"
-		end
-
 	frozen to_string_iformat_provider (provider: IFORMAT_PROVIDER): SYSTEM_STRING is
 		external
 			"IL signature (System.IFormatProvider): System.String use System.Boolean"
-		alias
-			"ToString"
-		end
-
-	to_string: SYSTEM_STRING is
-		external
-			"IL signature (): System.String use System.Boolean"
 		alias
 			"ToString"
 		end

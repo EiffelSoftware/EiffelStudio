@@ -9,23 +9,20 @@ frozen expanded external class
 inherit
 	VALUE_TYPE
 		undefine
-			finalize
-		redefine
+			finalize,
 			get_hash_code,
 			equals,
-			to_string
+			to_string,
+			memberwise_clone
 		end
 	ISERIALIZABLE
 		rename
 			get_object_data as system_runtime_serialization_iserializable_get_object_data
+		undefine
+			memberwise_clone
 		end
 
 	POINTER_REF
-		redefine
-			get_hash_code,
-			equals,
-			to_string
-		end
 
 create {NONE}
 
@@ -64,27 +61,6 @@ feature -- Basic Operations
 			"IL signature (): System.Int64 use System.IntPtr"
 		alias
 			"ToInt64"
-		end
-
-	get_hash_code: INTEGER is
-		external
-			"IL signature (): System.Int32 use System.IntPtr"
-		alias
-			"GetHashCode"
-		end
-
-	equals (obj: SYSTEM_OBJECT): BOOLEAN is
-		external
-			"IL signature (System.Object): System.Boolean use System.IntPtr"
-		alias
-			"Equals"
-		end
-
-	to_string: SYSTEM_STRING is
-		external
-			"IL signature (): System.String use System.IntPtr"
-		alias
-			"ToString"
 		end
 
 	frozen to_int32: INTEGER is

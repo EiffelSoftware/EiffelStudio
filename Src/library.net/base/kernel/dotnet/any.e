@@ -8,7 +8,7 @@ class
 inherit
 	SYSTEM_OBJECT
 		redefine
-			finalize
+			finalize, equals, get_hash_code, memberwise_clone, to_string
 		end
 	
 feature {NONE} -- Initialization
@@ -240,7 +240,7 @@ feature -- Output
 			-- New string containing terse printable representation
 			-- of current object
 		do
-			Result := create {STRING}.make_from_cil (to_string)
+			Result := create {STRING}.make_from_cil (feature {ISE_RUNTIME}.tagged_out (Current))
 		end
 
 	print (some: ANY) is
@@ -315,6 +315,41 @@ feature {NONE} -- Disposal
 			end
 		end
 
+feature {NONE} -- Implement .NET feature
+
+	frozen equals (obj: ANY): BOOLEAN is
+			-- Compare `obj' to Current using Eiffel semantic.
+		do
+			Result := equal (Current, obj)
+		end
+		
+	frozen to_string: SYSTEM_STRING is
+			-- New string containing terse printable representation
+			-- of current object
+		do
+			Result := out.to_cil
+		end
+		
+	frozen get_hash_code: INTEGER is
+			-- Hash code value.
+		local
+			h: HASHABLE
+		do
+			h ?= Current
+			if h /= Void then
+				Result := h.hash_code
+			else
+				Result := feature {ISE_RUNTIME}.hash_code (Current)
+			end
+		end
+		
+	frozen memberwise_clone: like Current is
+			-- New object equal to `other' using `copy'
+		 	-- To change copying/cloning semantics, redefine `copy'.
+		 do
+			Result := clone (Current)
+		end
+		
 invariant
 	reflexive_equality: standard_is_equal (Current)
 	reflexive_conformance: conforms_to (Current)

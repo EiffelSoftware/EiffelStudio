@@ -1,4 +1,3 @@
---| FIXME Not for release
 indexing
 	description:
 		"Eiffel Vision standard dialog, Mswindows implementation."
@@ -83,6 +82,9 @@ end -- class EV_STANDARD_DIALOG_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/03/07 02:01:32  brendel
+--| Released
+--|
 --| Revision 1.8  2000/02/23 04:51:29  pichery
 --| removed 2 commented lines in order to have actions performed when
 --| clicking on "ok" or "cancel" buttons.

@@ -50,8 +50,7 @@ doc:	<attribute name="hec_saved" return_type="struct stack" export="shared">
 doc:		<summary>This stack records the saved references. Entries in this stack are obtained either via eif_freeze() or eif_adopt(). Hence the stack structure is not completely appropriate and holes may appear. The `free_stack' stack records those holes.</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>Per thread data and `eif_gc_mutex'.</synchronization>
-doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:		<synchronization>Private per thread data and `eif_gc_mutex'.</synchronization>
 doc:	</attribute>
 */
 rt_shared struct stack hec_saved = {
@@ -67,8 +66,7 @@ doc:	<attribute name="free_stack" return_type="struct stack" export="private">
 doc:		<summary>Due to the way the hector stack is managed, there can be "holes" in it, when an object in the middle of the stack is released by the C. To avoid having an eternal growing bunch (EGB -- an Eternal Golden Braid :-) of chunks, we record free locations in the following stack.</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>Per thread data.</synchronization>
-doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:		<synchronization>Private per thread data.</synchronization>
 doc:	</attribute>
 */
 rt_private struct stack free_stack = {			/* Entries free in hector */

@@ -90,8 +90,7 @@ rt_public struct xstack eif_stack = {		/* Calling stack */
 doc:	<attribute name="eif_trace" return_type="struct xstack" export="shared">
 doc:		<summary>The exception trace records all the unresolved exceptions. For the case where multiple exceptions occurred and we entered different rescue clauses, we have to store the exception levels along with the unsolved exceptions.</summary>
 doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>Per thread data.</synchronization>
-doc:		<fixme>We should protect access through use of a private per thread data.</fixme>
+doc:		<synchronization>Private per thread data.</synchronization>
 doc:	</attribute>
 */
 rt_shared struct xstack eif_trace = {		/* Exception trace */
@@ -138,7 +137,7 @@ rt_public struct eif_exception exdata = {
 doc:	<attribute name="db_ign" return_type="unsigned char []" export="private">
 doc:		<summary>Array of ignored exceptions, from the debugger's point of view. Normally an exception stops the program to allow user inspection of the objects.</summary>
 doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>Per thread data.</synchronization>
+doc:		<synchronization>Private per thread data.</synchronization>
 doc:	</attribute>
 */
 rt_private unsigned char db_ign[EN_NEX];	/* Item set to 1 to ignore exception */
@@ -148,8 +147,7 @@ rt_private unsigned char db_ign[EN_NEX];	/* Item set to 1 to ignore exception */
 doc:	<attribute name="eif_except" return_type="struct exprint" export="private">
 doc:		<summary>Structure used to store routine information during exception stack dumps (gathered thanks to stack look-ahead).</summary>
 doc:		<thread_safety>Safe.</thread_safety>
-doc:		<synchronization>Per thread data.</synchronization>
-doc:		<fixme>We should protect access through use of a private per thread data.</fixme>
+doc:		<synchronization>Private per thread data.</synchronization>
 doc:	</attribute>
 */
 rt_private struct exprint eif_except;		/* Where exception has been raised */
@@ -209,9 +207,8 @@ rt_private void exception(int how);		/* Debugger hook */
 doc:	<attribute name="print_history_table" return_type="int" export="private">
 doc:		<summary>Enable/disable printing of history table.</summary>
 doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>Per thread data.</synchronization>
+doc:		<synchronization>Private per thread data.</synchronization>
 doc:		<eiffel_classes>EXCEPTIONS</eiffel_classes>
-doc:		<fixme>We should protect access through use of a private per thread data.</fixme>
 doc:	</attribute>
 */
 rt_private int print_history_table = ~0;
@@ -251,9 +248,8 @@ rt_private void extend_trace_string(char *line);	/* Extend exception trace strin
 doc:	<attribute name="ex_string" return_type="SMART_STRING" export="private">
 doc:		<summary>Container of the exception trace</summary>
 doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>Per thread data.</synchronization>
+doc:		<synchronization>Private per thread data.</synchronization>
 doc:		<eiffel_classes>EXCEPTIONS</eiffel_classes>
-doc:		<fixme>Should we protect access through use of a private per thread data?</fixme>
 doc:	</attribute>
 */
 rt_private SMART_STRING ex_string = {	/* Container of the exception trace */

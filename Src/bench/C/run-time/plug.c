@@ -311,8 +311,7 @@ doc:	<attribute name="inv_mark_tablep" return_type="char *" export="private">
 doc:		<summary>Marking table to avoid checking the same invariant several times.</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>Per thread data.</synchronization>
-doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:		<synchronization>Private per thread data.</synchronization>
 doc:	</attribute>
 */
 rt_private char *inv_mark_tablep = (char * ) 0;

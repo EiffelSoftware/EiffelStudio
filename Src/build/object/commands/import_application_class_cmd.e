@@ -62,6 +62,8 @@ feature {NONE} -- Implementation
 					process_query (value)
 				elseif key_value.substring_index (command_keyword, 1) > 0 then
 					process_command (value)
+				elseif key_value.substring_index (routine_keyword, 1) > 0 then
+					process_routine (value)
 				end			
 			end
 		end
@@ -70,10 +72,24 @@ feature {NONE} -- Implementation
 			-- Create a new application class object and add into the list.
 		local
 			an_app_class: APPLICATION_CLASS
+			cmd_list: LINKED_LIST [APPLICATION_COMMAND]
+			app_routine: APPLICATION_ROUTINE
 		do
 			if class_name.has (':') or class_name.has ('(') or class_name.has (')') then
 				display_error_message
 			else
+				if current_application_class /= Void and not class_list.empty then
+					cmd_list := current_application_class.command_list
+					from
+						cmd_list.start
+					until
+						cmd_list.after
+					loop
+						!! app_routine.make_from_command (cmd_list.item)
+						current_application_class.add_routine (app_routine)
+						cmd_list.forth
+					end
+				end
 				!! an_app_class.make (class_name)
 				class_list.extend (an_app_class)
 				class_list.finish
@@ -136,6 +152,62 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	process_routine (signature: STRING) is
+			-- Add a routine to currently edited APPLICATION_CLASS object.
+		local
+			app_routine: APPLICATION_ROUTINE
+			lower, upper: INTEGER
+			cmd_name, arg_type, arg_name: STRING
+			arg_list: LINKED_LIST [APPLICATION_ARGUMENT]
+			arg: APPLICATION_ARGUMENT
+			finished, error: BOOLEAN
+		do
+			lower := 1
+			upper := signature.index_of ('(', 1)
+			if (upper <= 1) or (upper > (signature.count - 5)) then
+				display_error_message
+			else
+				cmd_name := signature.substring (lower, upper - 1)
+				!! arg_list.make
+				from
+				until
+					finished or error
+				loop
+					lower := upper + 1
+					upper := signature.index_of (':', lower)
+					if (upper <= 1) or (upper > (signature.count - 2)) then
+						display_error_message
+						error := True
+					else
+						arg_name := signature.substring (lower, upper - 1)
+						lower := upper + 1
+						upper := signature.index_of (';', lower)
+						if upper <= 1 then
+							upper := signature.index_of (')', lower)
+							if lower < upper then
+								finished := True
+							else
+								display_error_message
+								error := True
+							end
+						end
+						if upper <= 1 then
+							display_error_message
+							error := True
+						else
+							arg_type := signature.substring (lower, upper - 1)
+							!! arg.make (arg_name, arg_type)
+							arg_list.extend (arg)
+						end
+					end
+				end
+				if not error then
+					!! app_routine.make (cmd_name, arg_list)
+					current_application_class.add_routine (app_routine)
+				end
+			end
+		end
+
 	display_error_message is
 			-- Display Error message.
 		do
@@ -157,13 +229,16 @@ feature {NONE} -- Attribute
 
 feature {NONE} -- Constants
 
-	query_keyword: STRING is "query"
-			-- Keyword "query"
+	query_keyword: STRING is "<query>"
+			-- Keyword "<query>"
 
-	command_keyword: STRING is "command"
-			-- Keyword "command"
+	command_keyword: STRING is "<command>"
+			-- Keyword "<command>"
 
-	classname_keyword: STRING is "class_name"
-			-- Keyword "class_name"
+	classname_keyword: STRING is "<class_name>"
+			-- Keyword "<class_name>"
+
+	routine_keyword: STRING is "<routine>"
+			-- Keyword "<routine>"
 
 end -- class IMPORT_APPLICATION_CLASS_CMD	

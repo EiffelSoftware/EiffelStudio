@@ -34,5 +34,13 @@ clean:
 	$(RM) main.obj 
 	$(RM) core 
 	$(RM) cecil.epr
+	$(RM) cecil.ilc
+	$(RM) cecil.ild
+	$(RM) cecil.ilf
+	$(RM) cecil.ils
+	$(RM) cecil.map
+	$(RM) cecil.melted
+	$(RM) cecil.rc
+	$(RM) cecil.tds
 	$(DELDIR) EIFGEN
 	

@@ -149,6 +149,17 @@ feature -- Access
 		ensure
 			assembly_driver_not_void: assembly_driver /= Void
 		end
+
+	assembly_helper_driver: FILE_NAME is
+			-- Full name of assembly driver.
+		do
+			create Result.make_from_string (name)
+			Result.extend_from_array (<<Eiffelgen, W_code>>)
+			Result.set_file_name ("lib" + system_name)
+			Result.add_extension ("dll")
+		ensure
+			assembly_driver_not_void: assembly_driver /= Void
+		end
 		
 	system_name: STRING
 			-- Name of the precompiled library

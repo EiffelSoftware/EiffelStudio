@@ -1,6 +1,6 @@
 indexing 
-	description: "EiffelVision widget. Most general notion of%
-				% widget (i.e. user interface object)."
+	description: "EiffelVision password field. A text field%
+		% That displays always the same character."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -8,8 +8,51 @@ indexing
 class
 	EV_PASSWORD_FIELD
 
---inherit
---	EV_TEXT_FIELD
+inherit
+	EV_TEXT_FIELD
+		redefine
+			make,
+			implementation
+		end
+
+creation
+	make
+
+feature {NONE} -- Initialization
+
+	make (par: EV_CONTAINER) is
+			-- Create a text field with, `par' as
+			-- parent
+		do
+			!EV_PASSWORD_FIELD_IMP!implementation.make (par)
+			widget_make (par)
+		end
+
+feature -- Access
+
+	character: CHARACTER is
+			-- Displayed character instead of the text.
+		require
+			exists: not destroyed
+		do
+			Result := implementation.character
+		end
+
+feature -- Element change
+
+	set_character (char: CHARACTER) is
+			-- Make `char' the new character displayed in the
+			-- password field.
+		require
+			exists: not destroyed
+		do
+			implementation.set_character (char)
+		end
+
+feature {NONE} -- Implementation
+
+	implementation: EV_PASSWORD_FIELD_I
+		-- Implementation
 
 end -- class EV_PASSWORD_FIELD
 

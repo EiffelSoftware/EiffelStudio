@@ -26,4 +26,24 @@ New changes in 4.3:
 - Most of the case of anchored types are now handled correctly:
   - like Current
   - like x, where x is a function or a redefined feature
-  
+
+- Changed the implementation of `Precursor', the new rule is:
+
+VUPR
+        A Precursor is valid if and only if it satisfies the 
+        following five conditions:
+ 
+            1. It appears in the Routine_body or the Rescue_clause
+            of the declaration of exactly one routine `r' of C.
+
+            2. If the Parent_qualification part is present, its
+            Class_name is the name of a parent P of C.
+
+            3. The declaration of `r' in C is the redefinition of a
+            routine that has exactly one effective version in the set
+            of Parent types of C, restricted if case 2 applies to
+            those having P as their Class_name.
+
+- New run-time in DLL and shared library
+
+- Generation of DLLs.

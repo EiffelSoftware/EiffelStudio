@@ -501,6 +501,9 @@ feature {NONE} -- Implementation
 					Result := l_directory_dialog.directory
 				end
 			end
+			if Result /= Void and then not Result.is_empty then
+				Result.replace_substring_all ("\", "/")
+			end
 		end	
 
 invariant

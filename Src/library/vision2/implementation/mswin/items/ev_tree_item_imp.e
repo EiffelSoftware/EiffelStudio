@@ -170,17 +170,8 @@ feature -- {EV_TREE_IMP}
 			-- Because this message is only recieved when a tree item becomes
 			-- the child of a tree, we need to recurse through all children of 
 			-- the item and send this message.
-		local
-			local_parent: EV_TREE_IMP
-			value: INTEGER
 		do
-			local_parent := top_parent_imp
-			value := local_parent.image_list.count
 			remove_all_direct_references
-			if value /= local_parent.image_list.count then
-				-- If an image has been removed from the image list.
-				local_parent.reduce_image_list_references (image_index)
-			end
 		ensure then
 			index_not_changed: ev_children.index = old ev_children.index
 		end
@@ -246,8 +237,9 @@ feature -- {EV_TREE_IMP}
 						-- Decrease and store the number of items referencing
 						-- this image.
 					if loc_tuple.integer_item (2) = 0 then
-						-- If there are no longer any items referencing 
-						-- this image.
+						top_parent_imp.reduce_image_list_references (image_index)
+							-- Reduce all indices greater than `image_index' by
+							-- one.
 						top_parent_imp.image_list.remove_image 
 							(loc_tuple.integer_item (1))
 							-- Remove the icon from the image_list
@@ -579,6 +571,10 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.51  2000/03/28 22:52:42  rogers
+--| Fixed index alteration bug in orphaning a sub tree structure.
+--| Simplified on_orphaned.
+--|
 --| Revision 1.50  2000/03/28 18:39:43  rogers
 --| Pnd_press now uses top_parent_imp when retrieveing the parent.
 --| Previously used parent_imp which was wrong.

@@ -9,17 +9,15 @@ inherit
 	ATOMIC_AS
 		rename
 			context as ast_context,
-			is_inspect_value as valid_type
-		undefine
-			is_character
+			is_valid_inspect_value as valid_type
 		redefine
-			is_integer, good_integer, is_equivalent,
-			type_check, byte_node, value_i, make_integer, valid_type
+			is_equivalent,
+			type_check, byte_node, value_i, valid_type, inspect_value
 		end
 
 	VALUE_I
 		redefine
-			generate, is_integer, is_natural,
+			generate, is_integer, is_natural, inspect_constant,
 			set_real_type, unary_minus
 		end
 
@@ -339,7 +337,7 @@ feature -- Type checking
 			l_nat: NATURAL_A
 		do
 			if is_integer then
-				Result := t.is_integer 
+				Result := t.is_integer
 				if Result then
 					int_a ?= t
 					Result := int_a.size >= compatibility_size
@@ -370,10 +368,36 @@ feature -- Type checking
 			Result := Current
 		end
 
-	make_integer: INT_VAL_B is
-			-- Integer value for Intervals.
+	inspect_value (value_type: TYPE_A): INTERVAL_VAL_B is
+			-- Inspect value of the given `value_type'
+		local
+			integer_a: INTEGER_A
 		do
-			create Result.make (integer_32_value)
+			integer_a ?= value_type
+			if integer_a.size <= 32 then
+				create {INT_VAL_B} Result.make (integer_32_value)
+			else
+				check
+					integer_64: integer_a.size = 64
+				end
+				create {INT64_VAL_B} Result.make (integer_64_value)
+			end
+		end
+
+	inspect_constant (context_class: CLASS_C; constant_i: CONSTANT_I; value_type: TYPE_A): INTERVAL_VAL_B is
+			-- Inspect value for `constant_i' from `context_class' of the given `value_type'
+		local
+			integer_a: INTEGER_A
+		do
+			integer_a ?= value_type
+			if integer_a.size <= 32 then
+				create {INT_CONST_VAL_B} Result.make (context_class, integer_32_value, constant_i)
+			else
+				check
+					integer_64: integer_a.size = 64
+				end
+				create {INT64_CONST_VAL_B} Result.make (context_class, integer_64_value, constant_i)
+			end
 		end
 
 feature -- Conveniences
@@ -637,14 +661,6 @@ feature -- Generation
 					ba.append_natural_64 (natural_64_value)
 				end
 			end
-		end
-
-feature -- Type check
-
-	good_integer: BOOLEAN is
-			-- Is the atomic a good integer bound for multi-branch ?
-		do
-			Result := size <= 32
 		end
 
 feature {INTEGER_CONSTANT} -- Storage

@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			extend (v1)
 
 			load_first_state
-			Create wizard_information.make
+		--	Create wizard_information.make
 		end
 
 	build_navigation_bar (a_box: EV_BOX) is

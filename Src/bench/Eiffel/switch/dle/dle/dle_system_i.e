@@ -19,7 +19,8 @@ inherit
 			dle_type_set, generate_plug, remove_dead_code,
 			dle_finalized_nobid_table, generate_routine_table,
 			generate_table, remove_useless_classes, remove_class,
-			check_dle_finalize, dle_system_name, dle_max_topo_id
+			check_dle_finalize, dle_system_name, dle_max_topo_id,
+			dynamic_class_ids
 		end
 
 feature -- Initialization

@@ -394,48 +394,42 @@ feature {NONE} -- Initialization
 			l_array_type ?= c
 			l_is_array := l_array_type /= Void
 			if l_is_array then
-				l_name := l_array_type.element_type_name
-			else
-				l_name := c.name
-			end
-			l_result := l_assembly.dotnet_classes.item (l_name)
-			if l_result = Void then
-					-- Case where this is a class from `mscorlib' that is in fact
-					-- written as an Eiffel class, e.g. SYSTEM_OBJECT, INTEGER, ....
-				if l_name.is_equal ("System.Byte") or l_name.is_equal ("System.SByte") then
-					l_result := System.integer_8_class
-				elseif l_name.is_equal ("System.Int16") or l_name.is_equal ("System.UInt16") then
-					l_result := System.integer_16_class
-				elseif l_name.is_equal ("System.Int32") or l_name.is_equal ("System.UInt32") then
-					l_result := System.integer_32_class
-				elseif l_name.is_equal ("System.Int64") or l_name.is_equal ("System.UInt64") then
-					l_result := System.integer_64_class
-				elseif l_name.is_equal ("System.IntPtr") then
-					l_result := System.pointer_class
-				elseif l_name.is_equal ("System.Double") then
-					l_result := System.double_class
-				elseif l_name.is_equal ("System.Single") then
-					l_result := System.real_class
-				elseif l_name.is_equal ("System.Char") then
-					l_result := System.character_class
-				elseif l_name.is_equal ("System.Boolean") then
-					l_result := System.boolean_class
-				end
-			end
-
-			if not l_result.compiled then
-				Workbench.add_class_to_recompile (l_result)
-			end
-
-			l_class := l_result.compiled_class
-
-			if l_is_array then
 				create l_generics.make (1, 1)
-				l_generics.put (l_class.actual_type, 1)
+				l_generics.put (type_from_consumed_type (l_array_type.element_type), 1)
 				create {GEN_TYPE_A} Result.make (
 					System.native_array_class.compiled_class.class_id, l_generics)
 			else
-				Result := l_class.actual_type
+				l_name := c.name
+				l_result := l_assembly.dotnet_classes.item (l_name)
+				if l_result = Void then
+						-- Case where this is a class from `mscorlib' that is in fact
+						-- written as an Eiffel class, e.g. SYSTEM_OBJECT, INTEGER, ....
+					if l_name.is_equal ("System.Byte") or l_name.is_equal ("System.SByte") then
+						l_result := System.integer_8_class
+					elseif l_name.is_equal ("System.Int16") or l_name.is_equal ("System.UInt16") then
+						l_result := System.integer_16_class
+					elseif l_name.is_equal ("System.Int32") or l_name.is_equal ("System.UInt32") then
+						l_result := System.integer_32_class
+					elseif l_name.is_equal ("System.Int64") or l_name.is_equal ("System.UInt64") then
+						l_result := System.integer_64_class
+					elseif l_name.is_equal ("System.IntPtr") then
+						l_result := System.pointer_class
+					elseif l_name.is_equal ("System.Double") then
+						l_result := System.double_class
+					elseif l_name.is_equal ("System.Single") then
+						l_result := System.real_class
+					elseif l_name.is_equal ("System.Char") then
+						l_result := System.character_class
+					elseif l_name.is_equal ("System.Boolean") then
+						l_result := System.boolean_class
+					end
+				end
+				
+				if not l_result.compiled then
+					Workbench.add_class_to_recompile (l_result)
+				end
+				l_class := l_result.compiled_class
+				Result := l_class.actual_type				
 			end
 		ensure
 			result_not_void: Result /= Void

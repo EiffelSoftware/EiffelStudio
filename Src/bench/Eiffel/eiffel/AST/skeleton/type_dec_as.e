@@ -13,6 +13,8 @@ inherit
 			fill_calls_list, replicate, is_equivalent
 		end
 
+	SHARED_NAMES_HEAP
+
 feature {AST_FACTORY} -- Initialization
 
 	initialize (i: like id_list; t: like type) is
@@ -28,20 +30,31 @@ feature {AST_FACTORY} -- Initialization
 			type_set: type = t
 		end
 
-feature -- Attributes
+feature -- Access
 
-	id_list: EIFFEL_LIST [ID_AS]
+	id_list: ARRAYED_LIST [INTEGER]
 			-- List of ids
 
 	type: TYPE
 			-- Type
+
+	item_name (i: INTEGER): STRING is
+			-- Name of `id' at position `i'.
+		require
+			valid_index: id_list.valid_index (i)
+		do
+			Result := Names_heap.item (id_list.i_th (i))
+		ensure
+			Result_not_void: Result /= Void
+			Result_not_empty: not Result.is_empty
+		end
 
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is
 			-- Is `other' equivalent to the current object ?
 		do
-			Result := equivalent (id_list, other.id_list) and then
+			Result := equal (id_list, other.id_list) and then
 				equivalent (type, other.type)
 		end
 
@@ -59,45 +72,28 @@ feature  -- Replication
 		do
 			Result := clone (Current)
 			Result.set_type (clone (type))
-			Result.set_id_list (id_list.replicate (ctxt))
+			Result.set_id_list (clone (id_list))
 				--| useful for like ... only
-		end
-
-feature -- Status report
-
-	has_id (i: ID_AS): BOOLEAN is
-			-- Does current type declaration contain id `i'?
-		local
-			cur: CURSOR
-		do
-			cur := id_list.cursor
-			from
-				id_list.start
-			until
-				id_list.after or else Result
-			loop
-				Result := id_list.item.is_equal (i)
-				id_list.forth
-			end
-
-			id_list.go_to (cur)
 		end
 
 feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
+		local
+			l_names_heap: like Names_heap
 		do
 			ctxt.set_separator (ti_Comma)
 			ctxt.set_space_between_tokens
 
 			from
+				l_names_heap := Names_heap
 				id_list.start
 			until
 				id_list.after
 			loop
 				ctxt.put_text_item (
-					create {LOCAL_TEXT}.make (id_list.item)
+					create {LOCAL_TEXT}.make (l_names_heap.item (id_list.item))
 				)
 				id_list.forth
 				if not id_list.after then

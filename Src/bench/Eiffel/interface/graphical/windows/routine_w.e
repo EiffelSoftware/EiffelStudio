@@ -172,6 +172,15 @@ feature -- Update
 			end
 		end;
 
+	set_debug_format is 
+			-- Set the current format to be in `debug_format'.		
+		do
+			set_read_only_text;
+			set_last_format (showstop_frmt_holder);
+		ensure
+			set: showstop_frmt_holder = last_format
+		end;
+
 	show_stoppoint (f: E_FEATURE; index: INTEGER) is
 			-- If stone feature is equal to feature `f' and if in debug
 			-- mode then redisplay the sign of the `index'-th breakable point.
@@ -242,7 +251,7 @@ feature -- Stone updating
 
 	process_breakable (a_stone: BREAKABLE_STONE) is
 		do
-			stop_hole.receive (a_stone)
+			stop_hole_button.process_breakable (a_stone)
 		end;
 
 	process_class (a_stone: CLASSC_STONE) is

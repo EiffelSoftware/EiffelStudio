@@ -45,8 +45,8 @@ feature {NONE}
 			if project_tool.initialized then
 				if lace.file_name = void then
 					if argument = void then
-						load_default_ace;
 						system_tool.display;
+						load_default_ace;
 					elseif argument = warner then
 						name_chooser.set_window (project_tool.text_window);
 						name_chooser.call (Current);
@@ -73,8 +73,8 @@ feature {NONE}
 					end;	
 				else
 					!!system_stone.make (System);
-					system_tool.receive (system_stone);
 					system_tool.display;
+					system_tool.receive (system_stone);
 				end;
 			end
 		end;

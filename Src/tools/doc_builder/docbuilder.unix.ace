@@ -41,6 +41,9 @@ cluster
 	project (root_cluster):		"$/project"
 
 	managers (project):		"$/managers"
+		exclude
+			"help_manager.e";
+		end
 
 	filters (project):		"$/filter"
 
@@ -60,6 +63,9 @@ cluster
 	shared (root_cluster):		"$/shared"
 
 	shared_constants (shared):		"$/constants"
+		exclude
+			"help_setting_constants.e";
+		end
 
 	shared_misc (shared):		"$/miscellaneous"
 

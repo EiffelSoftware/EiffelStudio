@@ -145,11 +145,10 @@ feature
 			is_used: used
 		local
 			entry: T
-			i, nb: INTEGER
+			i: INTEGER
 		do
 			from
 				i := lower
-				nb := max_position
 			until
 				Result > 0
 			loop
@@ -168,11 +167,10 @@ feature
 			is_used: used
 		local
 			entry: T
-			i, nb: INTEGER
+			i: INTEGER
 		do
 			from
 				i := max_position
-				nb := lower
 			until
 				Result > 0
 			loop

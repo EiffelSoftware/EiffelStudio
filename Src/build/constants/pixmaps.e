@@ -315,6 +315,11 @@ feature -- General Pixmaps
 		once
 			Result := symbol_file_content ("raise_wd")
 		end;
+	
+	Reset_pixmap: PIXMAP is
+		once
+			Result := symbol_file_content ("reset")
+		end
 
 	Save_pixmap: PIXMAP is
 		once
@@ -405,6 +410,11 @@ feature -- General Pixmaps
 		once
 			Result := symbol_file_content ("sresize");
 		end;
+
+	Selected_reset_pixmap: PIXMAP is
+		once
+			Result := symbol_file_content ("sreset")
+		end
 
 	Selected_windows_pixmap: PIXMAP is
 		once

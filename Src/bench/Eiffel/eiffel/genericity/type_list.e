@@ -53,7 +53,11 @@ feature -- Merging
 			class_type: CLASS_TYPE;
 			other_id: TYPE_ID
 		do
-			from other.start until other.after loop
+			from
+				other.start
+			until
+				other.after
+			loop
 				class_type := other.item;
 				other_id := class_type.id;
 				from 

@@ -44,8 +44,7 @@ feature
 			integer_value: INT_VALUE_I;
 			current_feature_table: FEATURE_TABLE;
 		do
-			current_feature_table :=
-						context.current_type.base_class.feature_table;
+			current_feature_table := context.current_type.base_class.feature_table;
 			constant_i ?= current_feature_table.origin_table.item (rout_id);
 			integer_value ?= constant_i.value;
 			Result := integer_value.int_val;

@@ -1,0 +1,58 @@
+system
+	rb
+
+root 
+	APPLICATION (interface): "make"
+
+default
+	assertion (no);
+
+cluster
+		-- EiffelBase:
+	base:				"$EIFFEL_SRC\library\base";
+	structures(base):		"$\structures";
+
+	kernel(base):		"$\kernel";
+	support(base):		"$\support";
+	access(structures):	"$\access";
+	cursors(structures):	"$\cursors";
+	dispenser(structures):	"$\dispenser";
+	list(structures):		"$\list";
+	set(structures):		"$\set";
+	sort(structures):		"$\sort";
+	storage(structures):	"$\storage";
+	table(structures):		"$\table";
+	traversing(structures):	"$\traversing";
+	tree(structures):		"$\tree";
+
+		-- Lex and Parse
+	lex:			"$EIFFEL_SRC\library\lex";
+	parse:			"$EIFFEL_SRC\library\parse";
+
+		-- Resource bench
+	interface:		".\interface";
+	lexical:		".\lexical";
+	Sem_expression: 	".\semantic\expression";
+	Sem_resource:	".\semantic\resource";
+	Synt_resource:	".\syntactic\resource";
+	Synt_expression:	".\syntactic\expression";
+	table_of_symbols:	".\tos";
+
+		-- Wel:
+	wel:					"$EIFFEL_SRC\library\wel";
+
+	wel_constants(wel):		"$\consts";
+	wel_controls(wel):		"$\controls";
+	wel_gdi(wel):			"$\gdi";
+	wel_gdi_stocks(wel):		"$\gdistock";
+	wel_standard_dialogs(wel):	"$\stddlgs";
+	wel_structures(wel):		"$\structs";
+	wel_support(wel):			"$\support";
+	wel_windows(wel):			"$\windows";
+	wel_messages(wel):		"$\messages";
+
+external
+	include_path:	"$(EIFFEL_SRC)\library\wel\spec\windows\include";
+	object: 	"$(EIFFEL_SRC)\library\wel\spec\$(COMPILER)\lib\wel.lib"
+
+end -- system rb

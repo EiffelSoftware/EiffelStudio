@@ -1,0 +1,184 @@
+#include <windows.h>
+#include "app_ids.h"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+IDR_ACCELERATOR ACCELERATORS DISCARDABLE 
+BEGIN
+    "O",            CMD_FILE_OPEN,          VIRTKEY, CONTROL
+    "S",            CMD_FILE_SAVE_PROJECT,  VIRTKEY, CONTROL
+    "G",            CMD_BUILD_WEL_CODE,     VIRTKEY, CONTROL
+    VK_F1,          CMD_HELP_CONTENT,       VIRTKEY 
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDR_TOOLBAR		BITMAP	DISCARDABLE	"toolbar.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+RB_ICON                 ICON    DISCARDABLE     "rb.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_MENU MENU DISCARDABLE 
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "&New...\tCtrl+N",             CMD_FILE_NEW, GRAYED
+        MENUITEM "&Open...\tCtrl+O",            CMD_FILE_OPEN
+        MENUITEM "&Close",                      CMD_FILE_CLOSE
+        MENUITEM SEPARATOR
+        MENUITEM "&Save Project...\tCtrl+S",    CMD_FILE_SAVE_PROJECT
+        MENUITEM SEPARATOR
+        MENUITEM "E&xit",                       CMD_FILE_EXIT
+    END
+    POPUP "&Build"
+    BEGIN
+        MENUITEM "&Generate Eiffel Code...\tCtrl+E", CMD_BUILD_WEL_CODE
+        MENUITEM "Generate &Resource file Code...\tCtrl+R", 
+                                                CMD_BUILD_RESOURCE_FILE
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&Contents...\tF1",            CMD_HELP_CONTENT
+        MENUITEM SEPARATOR
+        MENUITEM "&About...",                   CMD_HELP_ABOUT_RB
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_DIALOG_MESSAGE DIALOG DISCARDABLE  20, 20, 150, 34
+STYLE DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION
+CAPTION "Processing"
+FONT 8, "MS Sans Serif"
+BEGIN
+    CTEXT           "",IDC_INFO,5,7,140,17
+END
+
+IDD_DIALOG_ERROR DIALOG DISCARDABLE  180, 20, 150, 70
+STYLE DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION
+CAPTION "Error"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,50,47,50,14
+    CTEXT           "",IDC_INFO,10,5,130,30
+END
+
+IDD_DIALOG_ABOUT DIALOG DISCARDABLE  0, 0, 167, 81
+STYLE DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "About Resource Bench"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,58,62,50,14
+    LTEXT           "Resource Bench\n\nVersion 4.3\nCopyright © 1996-1998\nInteractive Software Engineering, Inc.\nAll rights reserved.",
+                    IDC_STATIC,35,6,120,51
+    ICON            RB_ICON,IDC_STATIC,6,6,18,20
+END
+
+IDD_DIALOG_BROWSE DIALOG DISCARDABLE  0, 0, 257, 65
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Browse for folder"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,68,43,50,14
+    EDITTEXT        IDC_EDIT_PATH,8,20,240,15,ES_AUTOHSCROLL
+    LTEXT           "Please Enter the directory path to save your Eiffel classes:",
+                    IDC_STATIC,8,6,226,10
+    PUSHBUTTON      "Cancel",IDCANCEL,138,43,50,14
+END
+
+IDD_DIALOG_PROPERTIES DIALOG DISCARDABLE  1, 2, 255, 217
+STYLE WS_CHILD
+FONT 8, "MS Sans Serif"
+BEGIN
+    CONTROL         "Generate code",IDC_CHECK_CODE_GENERATION,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,5,6,63,10
+    LTEXT           "Class name:",IDC_STATIC,5,22,39,13
+    EDITTEXT        IDC_CLASS_NAME,47,21,118,14,ES_AUTOHSCROLL
+    LTEXT           "Select controls you want generate:",IDC_STATIC,5,84,125,
+                    8
+    LISTBOX         IDC_CONTROL_LIST,5,95,162,116,LBS_MULTIPLESEL | 
+                    LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_HSCROLL | 
+                    WS_TABSTOP
+    GROUPBOX        "Inherit from",IDC_STATIC,5,37,114,42
+    CONTROL         "WEL_MODAL_DIALOG",IDC_MODAL,"Button",BS_AUTORADIOBUTTON,
+                    9,46,106,10
+    CONTROL         "WEL_MODELESS_DIALOG",IDC_MODELESS,"Button",
+                    BS_AUTORADIOBUTTON,9,56,106,10
+    CONTROL         "WEL_MAIN_DIALOG",IDC_MAIN_DIALOG,"Button",
+                    BS_AUTORADIOBUTTON,9,66,106,10
+    GROUPBOX        "Redefined features",IDC_STATIC,176,92,73,119
+    CONTROL         "setup_dialog",IDC_SETUP_DIALOG,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,183,102,56,10
+    CONTROL         "notify",IDC_NOTIFY,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,183,114,33,10
+    CONTROL         "on_ok",IDC_ON_OK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,
+                    183,126,36,10
+    CONTROL         "on_cancel",IDC_ON_CANCEL,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,183,138,49,10
+    CONTROL         "on_abort",IDC_ON_ABORT,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,183,150,44,10
+    CONTROL         "on_ignore",IDC_ON_IGNORE,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,183,162,47,10
+    CONTROL         "on_retry",IDC_ON_RETRY,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,183,174,41,10
+    CONTROL         "on_yes",IDC_ON_YES,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,183,186,39,10
+    CONTROL         "on_no",IDC_ON_NO,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,
+                    183,198,36,10
+    LTEXT           "",IDC_DIALOG_CAPTION,149,6,101,8
+    LTEXT           "Caption:",IDC_STATIC,121,6,25,8
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Toolbar
+//
+
+IDR_TOOLBAR TOOLBAR DISCARDABLE  16, 15
+BEGIN
+    BUTTON      CMD_BUILD_WEL_CODE
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    CMD_FILE_OPEN           "Open a resource file or an existing project"
+    CMD_FILE_CLOSE          "Close the active project"
+    CMD_FILE_EXIT           "Exit from Resource Bench"
+    CMD_BUILD_WEL_CODE      "Generate the WEL Eiffel code"
+    CMD_HELP_CONTENT        "Show the Resource Bench help"
+    CMD_HELP_ABOUT_RB       "Show the Resource Bench about dialog"
+    CMD_FILE_SAVE_PROJECT   "Save the active project"
+    CMD_FILE_NEW            "Create a new resource bench project (not implemented)"
+    CMD_BUILD_RESOURCE_FILE "Generate the resource file"
+    CMD_EDIT_CUT            "Cut (not implemented)"
+    CMD_EDIT_COPY           "Copy (not implemented)"
+    CMD_EDIT_PASTE          "Paste (not implemented)"
+END

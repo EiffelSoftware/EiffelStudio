@@ -1,0 +1,225 @@
+#include <windows.h>
+#include "example.h"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+BITMAP_1                BITMAP  FIXED IMPURE    "bitmap_1.bmp"
+BITMAP_2                BITMAP  FIXED IMPURE    "bitmap_2.bmp"
+TOOLBAR_1               BITMAP  DISCARDABLE     "toolbar.bmp"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+MENU_1 MENU DISCARDABLE 
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "&New...\tCtrl+N",             ID_FILE_NEW, GRAYED
+        MENUITEM "&Open...\tCtrl+O",            ID_FILE_OPEN
+        MENUITEM "&Close",                      ID_FILE_CLOSE
+        MENUITEM SEPARATOR
+        MENUITEM "&Save Project\tCtrl+S",       ID_FILE_SAVE_PROJECT
+        MENUITEM SEPARATOR
+        MENUITEM "E&xit",                       ID_FILE_EXIT
+    END
+    POPUP "&Build"
+    BEGIN
+        MENUITEM "&Generate Eiffel Code\tCtrl+E", ID_BUILD_WEL_CODE
+        MENUITEM "Generate &Resource file Code\tCtrl+R", 
+                                                ID_BUILD_RESOURCE_FILE
+        MENUITEM SEPARATOR
+        MENUITEM "&Option",                     ID_BUILD_OPTION
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&Contents",                   ID_HELP_CONTENT
+        MENUITEM SEPARATOR
+        MENUITEM "&About Resource Bench",       ID_HELP_ABOUT_RB
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+DIALOG_1 DIALOG FIXED IMPURE  0, 0, 301, 56
+STYLE DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "Prompt Box"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",1,236,5,50,14
+    PUSHBUTTON      "Cancel",2,236,31,50,14
+    LTEXT           "Please enter something....",123,10,7,180,17
+    EDITTEXT        124,10,32,214,14,ES_AUTOHSCROLL
+END
+
+DIALOG_2 DIALOG FIXED IMPURE  0, 0, 240, 68
+STYLE DS_SYSMODAL | DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | 
+    WS_SYSMENU
+CAPTION "Password Entry Dialog"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "Please enter your password:",123,5,7,150,26
+    DEFPUSHBUTTON   "OK",1,180,17,50,14
+    PUSHBUTTON      "Cancel",2,180,38,50,14
+    EDITTEXT        124,5,39,150,12,ES_PASSWORD | ES_AUTOHSCROLL
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Toolbar
+//
+
+TOOLBAR_1 TOOLBAR DISCARDABLE  16, 15
+BEGIN
+    BUTTON      ID_BUTTON_1
+    BUTTON      ID_BUTTON_2
+    BUTTON      ID_BUTTON_3
+    SEPARATOR
+    BUTTON      ID_BUTTON_4
+    BUTTON      ID_BUTTON_5
+    BUTTON      ID_BUTTON_6
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+ACCELERATOR_1 ACCELERATORS DISCARDABLE 
+BEGIN
+    "O",            ID_FILE_OPEN,           VIRTKEY, CONTROL
+    "S",            ID_FILE_SAVE_PROJECT,   VIRTKEY, CONTROL
+    "G",            ID_BUILD_WEL_CODE,      VIRTKEY, CONTROL
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Data
+//
+
+ABOUTPLG RCDATA FIXED IMPURE 
+BEGIN
+    0x6854, 0x7369, 0x6920, 0x2073, 0x2061, 0x6d73, 0x6c61, 0x206c, 0x7865, 
+    0x6d61, 0x6c70, 0x2e65, 0x5920, 0x756f, 0x6320, 0x6e61, 0x7520, 0x6573, 
+    0x6920, 0x2074, 0x6977, 0x6874, 0x5220, 0x7365, 0x756f, 0x6372, 0x2065, 
+    0x6542, 0x636e, 0x2e68
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Cursor
+//
+
+CURSOR_1                CURSOR  DISCARDABLE     "cursor_1.cur"
+CURSOR_2                CURSOR  DISCARDABLE     "cursor_2.cur"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+ICON_1                  ICON    DISCARDABLE     "icon_1.ico"
+ICON_2                  ICON    DISCARDABLE     "icon_2.ico"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+1 VERSIONINFO
+ FILEVERSION 2,0,0,30
+ PRODUCTVERSION 2,0,0,30
+ FILEFLAGSMASK 0x3fL
+ FILEFLAGS 0x0L
+ FILEOS 0x10001L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904e4"
+        BEGIN
+            VALUE "CompanyName", "ISE Inc.\0"
+            VALUE "FileDescription", "Resource Bench Program\0"
+            VALUE "FileVersion", "1.0\0"
+            VALUE "InternalName", "RB\0"
+            VALUE "LegalCopyright", "Copyright ISE Inc. 1996\0"
+            VALUE "LegalTrademarks", "ISE Inc.\0"
+            VALUE "OriginalFilename", "RB.EXE\0"
+            VALUE "ProductName", "Resource Bench\0"
+            VALUE "ProductVersion", "1.0\0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1252
+    END
+END
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog Info
+//
+
+2024 DLGINIT
+BEGIN
+    2202, 0x403, 12, 0
+0x2025, 0x666f, 0x7720, 0x6e69, 0x6f64, 0x0077, 
+    2202, 0x403, 7, 0
+0x6950, 0x6578, 0x736c, "\000" 
+    0
+END
+
+2165 DLGINIT
+BEGIN
+    2124, 0x403, 8, 0
+0x6544, 0x6166, 0x6c75, 0x0074, 
+    2124, 0x403, 3, 0
+0x322d, "\000" 
+    2124, 0x403, 3, 0
+0x312d, "\000" 
+    2124, 0x403, 2, 0
+0x0030, 
+    2124, 0x403, 2, 0
+0x0031, 
+    2124, 0x403, 2, 0
+0x0032, 
+    2124, 0x403, 2, 0
+0x0033, 
+    2124, 0x403, 2, 0
+0x0034, 
+    2124, 0x403, 13, 0
+0x6f44, 0x276e, 0x2074, 0x6863, 0x6e61, 0x6567, "\000" 
+    0
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_FILE_OPEN            "Open a resource file or an existing project"
+    ID_FILE_SAVE_PROJECT    "Save the active project"
+    ID_EDIT_CUT             "Cut"
+    ID_EDIT_COPY            "Copy"
+    ID_EDIT_PASTE           "Paste"
+END

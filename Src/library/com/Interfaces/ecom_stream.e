@@ -261,7 +261,7 @@ feature -- Basic Operations
 			-- See class ECOM_STREAM_SEEK for `origin' values.
 		require
 			non_void_displacement: displacement /= Void
-			valid_displacement: displacement.item /= default_pointer
+			valid_displacement: displacement.exists
 			valid_seek_origin: is_valid_seek(origin)
 		do
 			ccom_seek (initializer, displacement.item, origin)	
@@ -295,7 +295,7 @@ feature -- Basic Operations
 			-- Change size of stream to `new_size'.
 		require
 			valid_new_size: new_size /= Void and then
-				new_size.item /= default_pointer;
+				new_size.exists;
 		do
 			ccom_set_size (initializer, new_size.item)
 		ensure
@@ -308,9 +308,9 @@ feature -- Basic Operations
 			-- `destination'.
 		require
 			valid_destination: destination /= Void 
-					and then destination.item /= default_pointer
+					and then destination.exists
 			valid_bytes_number: bytes /= Void and then
-					bytes.item /= default_pointer
+					bytes.exists
 		do
 			ccom_copy_to (initializer, destination.item, bytes.item)
 		end
@@ -319,8 +319,8 @@ feature -- Basic Operations
 			-- Restricts access to range of bytes defined by
 			-- `offset' and `count'.
 		require
-			valid_offset: offset /= Void and then offset.item /= default_pointer
-			valid_count: count /= Void and then count.item /= default_pointer
+			valid_offset: offset /= Void and then offset.exists
+			valid_count: count /= Void and then count.exists
 			valid_lock: is_valid_lock (lock)
 		do
 			ccom_lock_region (initializer, offset.item, count.item, lock)
@@ -330,8 +330,8 @@ feature -- Basic Operations
 			-- Removes access restriction to range of bytes defined by
 			-- `offset' and `count'.
 		require
-			valid_offset: offset /= Void and then offset.item /= default_pointer
-			valid_count: count /= Void and then count.item /= default_pointer
+			valid_offset: offset /= Void and then offset.exists
+			valid_count: count /= Void and then count.exists
 			valid_lock: is_valid_lock (lock)
 		do
 			ccom_unlock_region (initializer, offset.item, count.item, lock)
@@ -344,7 +344,7 @@ feature -- Basic Operations
 		do
 			!! Result.make_from_pointer(ccom_clone(initializer))
 		ensure
-			clone_created: Result /= Void and then Result.item /= default_pointer
+			clone_created: Result /= Void and then Result.exists
 		end
 
 feature {NONE} -- Implementation

@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 			make
 			ccom_set_large_integer (item, integer)
 		ensure	
-			item /= Default_pointer
+			exists
 		end
 
 feature -- Measurement

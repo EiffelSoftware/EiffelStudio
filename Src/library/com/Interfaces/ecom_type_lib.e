@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			item := ccom_item (initializer)
 		ensure
 			interface_exist: initializer /= default_pointer and then
-					item /= default_pointer
+					exists
 		end
 
 feature -- Access

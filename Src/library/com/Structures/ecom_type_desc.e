@@ -90,9 +90,6 @@ feature {NONE} -- Externals
 			"C [macro %"E_typedesc.h%"](EIF_POINTER): EIF_INTEGER"
 		end
 
-invariant
-	invariant_clause: -- Your invariant here
-
 end -- class ECOM_TYPE_DESC
 
 --|----------------------------------------------------------------

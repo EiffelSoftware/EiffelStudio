@@ -34,7 +34,7 @@ feature {NONE} -- Removal
 	destroy_item is
 			-- Free `item'
 		do
-			if item /= default_pointer then
+			if exists then
 				co_task_mem_free (item)
 				item := default_pointer
 			end

@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 			ccom_create_doc_file (initializer, wide_string.item, a_mode)
 			item := ccom_storage (initializer)
 		ensure
-			compound_file_created: item /= default_pointer
+			compound_file_created: exists
 		end
 
 	make_temporary_doc_file (a_mode: INTEGER) is
@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 			ccom_create_doc_file (initializer, default_pointer, a_mode)
 			item := ccom_storage (initializer)
 		ensure
-			compound_file_created: item /= default_pointer
+			compound_file_created: exists
 		end
 
 	make_open_file (filename: FILE_NAME; a_mode: INTEGER) is
@@ -75,7 +75,7 @@ feature {NONE} -- Initialization
 			ccom_open_root_storage (initializer, wide_string.item, a_mode)	
 			item := ccom_storage (initializer)
 		ensure
-			compound_file_open: item /= default_pointer			
+			compound_file_open: exists			
 		end
 
 feature -- Access
@@ -98,7 +98,7 @@ feature -- Access
 					wide_string.item, a_mode))
 		ensure
 			non_void_stream: Result /= Void
-			valid_stream: Result.item /= default_pointer
+			valid_stream: Result.exists
 		end
 
 	retrieved_stream (a_name: STRING; a_mode: INTEGER): ECOM_STREAM is
@@ -118,7 +118,7 @@ feature -- Access
 					wide_string.item, a_mode))
 		ensure
 			non_void_stream: Result /= Void
-			valid_stream: Result.item /= default_pointer
+			valid_stream: Result.exists
 		end
 
 	new_substorage (a_name: STRING; a_mode: INTEGER): ECOM_STORAGE is
@@ -137,7 +137,7 @@ feature -- Access
 					wide_string.item, a_mode))
 		ensure
 			non_void_storage: Result /= Void
-			valid_storage: Result.item /= default_pointer
+			valid_storage: Result.exists
 		end
 
 	retrieved_substorage (a_name: STRING; a_mode: INTEGER): ECOM_STORAGE is
@@ -158,7 +158,7 @@ feature -- Access
 					wide_string.item, a_mode))
 		ensure
 			non_void_storage: Result /= Void
-			valid_storage: Result.item /= default_pointer
+			valid_storage: Result.exists
 		end
 
 	root_storage: ECOM_ROOT_STORAGE is
@@ -270,7 +270,7 @@ feature -- Basic Operations
 			-- Copy entire contents to `dest_storage'.
 		require
 			non_void_destination: dest_storage /= Void
-			valid_destination: dest_storage.item /= default_pointer
+			valid_destination: dest_storage.exists
 		do
 			ccom_copy_to (initializer, 0, default_pointer, 
 					dest_storage.item)
@@ -339,7 +339,7 @@ feature -- Element Change
 			non_void_element_name: a_element_name /= Void
 			valid_element_name: is_valid_name (a_element_name)
 			non_void_dest_storage: dest_storage /= Void
-			valid_dest_storage: dest_storage.item /= default_pointer
+			valid_dest_storage: dest_storage.exists
 			non_void_new_name: new_name /= Void
 			valid_new_name: not new_name.empty
 			valid_mode: is_valid_stgmove (a_mode)

@@ -24,12 +24,12 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 		do
-			ow.put_string ("Cluster path: ");
+			st.add_string ("Cluster path: ");
 -- FIXME
-			ow.put_string ("FIX ME!");
-			ow.new_line
+			st.add_string ("FIX ME!");
+			st.add_new_line
 		end;
 
 feature {NONE} -- Setting

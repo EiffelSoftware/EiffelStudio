@@ -1947,36 +1947,36 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 			conv_clus ?= c_stone
 			if conv_clus /= Void then
 				text := conv_clus.cluster_i.cluster_name
-				cluster_label.set_minimum_width (big_font.string_width (text))
+				cluster_label.set_minimum_width (maximum_label_width (text))
 				cluster_label.set_text (text)
 				cluster_label.set_pebble (conv_clus)
-				class_label.set_minimum_width (big_font.string_width (default_class_name))
+				class_label.set_minimum_width (maximum_label_width (default_class_name))
 				class_label.set_text (default_class_name)
 				class_label.remove_pebble
-				feature_label.set_minimum_width (big_font.string_width (default_feature_name))
+				feature_label.set_minimum_width (maximum_label_width (default_feature_name))
 				feature_label.set_text (default_feature_name)
 				feature_label.remove_pebble
 			else
 				conv_f ?= c_stone
 				if conv_f /= Void then
 					text := conv_f.feature_name
-					feature_label.set_minimum_width (big_font.string_width (text))
+					feature_label.set_minimum_width (maximum_label_width (text))
 					feature_label.set_text (text)
 					feature_label.set_pebble (create {FEATURE_STONE}.make (conv_f.e_feature))
 					text := conv_f.e_feature.associated_class.name_in_upper
-					class_label.set_minimum_width (big_font.string_width (text))
+					class_label.set_minimum_width (maximum_label_width (text))
 					class_label.set_text (text)
 					class_label.set_pebble (create {CLASSC_STONE}.make (conv_f.e_feature.associated_class))
 					text := conv_f.e_feature.associated_class.cluster.cluster_name
 					cluster_label.set_pebble (create {CLUSTER_STONE}.make (conv_f.e_feature.associated_class.cluster))
-					cluster_label.set_minimum_width (big_font.string_width (text))
+					cluster_label.set_minimum_width (maximum_label_width (text))
 					cluster_label.set_text (text)
 				else
 					conv_class ?= c_stone
 					if conv_class /= Void then
 						text := conv_class.cluster.cluster_name
 						cluster_label.set_pebble (create {CLUSTER_STONE}.make (conv_class.cluster))
-						cluster_label.set_minimum_width (big_font.string_width (text))
+						cluster_label.set_minimum_width (maximum_label_width (text))
 						cluster_label.set_text (text)
 						text := conv_class.class_i.name_in_upper
 						if conv_class.class_i.compiled then
@@ -1984,20 +1984,20 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 						else
 							class_label.set_pebble (create {CLASSI_STONE}.make (conv_class.class_i))
 						end
-						class_label.set_minimum_width (big_font.string_width (text))
+						class_label.set_minimum_width (maximum_label_width (text))
 						class_label.set_text (text)
 						feature_label.remove_pebble
-						feature_label.set_minimum_width (big_font.string_width (default_feature_name))
+						feature_label.set_minimum_width (maximum_label_width (default_feature_name))
 						feature_label.set_text (default_feature_name)
 					else
 						cluster_label.remove_pebble
-						cluster_label.set_minimum_width (big_font.string_width (default_cluster_name))
+						cluster_label.set_minimum_width (maximum_label_width (default_cluster_name))
 						cluster_label.set_text (default_cluster_name)
 						class_label.remove_pebble
-						class_label.set_minimum_width (big_font.string_width (default_class_name))
+						class_label.set_minimum_width (maximum_label_width (default_class_name))
 						class_label.set_text (default_class_name)
 						feature_label.remove_pebble
-						feature_label.set_minimum_width (big_font.string_width (default_feature_name))
+						feature_label.set_minimum_width (maximum_label_width (default_feature_name))
 						feature_label.set_text (default_feature_name)
 					end
 				end
@@ -2130,8 +2130,16 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 			a_font: EV_FONT
 		do
 			a_font := big_font
-			lab.set_minimum_width (a_font.string_width (lab.text))
+			lab.set_minimum_width (maximum_label_width (lab.text))
 			lab.set_font (a_font)
+		end
+
+	maximum_label_width (a_text: STRING): INTEGER is
+			-- Maximum width of a label when set with text `a_text'
+		require
+			a_text_not_void: a_text /= Void
+		do
+			Result := Default_font.string_width (a_text).max (big_font.string_width (a_text))
 		end
 
 	unhighlight_label (lab: EV_LABEL) is

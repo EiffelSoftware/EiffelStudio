@@ -507,7 +507,7 @@ RT_LNK int fcount;
 
 #define RTCID(tp,x,y,z) eif_compound_id((tp),(x),(y),(z))
 #define RTFCID(ct,x,y,z) eif_final_id((ct),(x),(y),(z))
-#define RTGPTID(x,y) eif_gen_param_id ((x),(y))
+#define RTGPTID(st,x,y) eif_gen_param_id ((st),(x),(y))
 
 #ifdef WORKBENCH
 #define RTDT int current_call_level; char **saved_prof_top    /* Declare saved trace and profile */

@@ -98,8 +98,8 @@ rt_private long get_expanded_pos (uint32 o_type, uint32 num_attrib);
 
 rt_private int readline (register char *ptr, register int *maxlen);
 rt_private int buffer_read (register char *object, int size);
-rt_private void rt_read_cid (uint32 *, uint32);
-rt_private void rt_id_read_cid (uint32 *, uint32);
+rt_private void rt_read_cid (uint32 *, uint32 *, uint32);
+rt_private void rt_id_read_cid (uint32 *, uint32 *, uint32);
 
 /* Initialization and Resetting for retrieving an independent store */
 rt_private void independent_retrieve_init (long idrf_size, EIF_BOOLEAN is_limited_by_short);
@@ -356,7 +356,7 @@ rt_public char *rt_nmake(EIF_CONTEXT long int objectCount)
 	char *oldadd;
 	char *newadd = (char *) 0;
 	EIF_OBJ new_hector;
-	uint32 fflags, flags;
+	uint32 crflags, fflags, flags;
 	uint32 spec_size = 0;
 	char g_status = g_data.status;
 	jmp_buf exenv;
@@ -386,19 +386,22 @@ rt_public char *rt_nmake(EIF_CONTEXT long int objectCount)
 
 	for (;objectCount > 0; objectCount--) {
 		/* Read object address */
+
 		buffer_read((char *)(&oldadd), (sizeof(char *)));
 
 #if DEBUG & 2
 		printf ("\n  %lx", oldadd);
 #endif
 
+
 		/* Read object flags (dynamic type) */
 		buffer_read((char *)(&flags), (sizeof(uint32)));
-		rt_read_cid (&fflags, flags);
+		rt_read_cid (&crflags, &fflags, flags);
 
 #if DEBUG & 2
 		printf (" %x", flags);
 #endif
+
 
 		/* Read a possible size */
 		if (flags & EO_SPEC) {
@@ -417,10 +420,10 @@ rt_public char *rt_nmake(EIF_CONTEXT long int objectCount)
 			/* Normal object */
 			if (rt_kind) {
 				nb_char = Size((uint16)(dtypes[flags & EO_TYPE]));
-				newadd = emalloc(fflags & EO_TYPE); 
+				newadd = emalloc(crflags & EO_TYPE); 
 			} else {
 				nb_char = Size((uint16)(flags & EO_TYPE));
-				newadd = emalloc(fflags & EO_TYPE);
+				newadd = emalloc(crflags & EO_TYPE);
 			}
 		}
 		
@@ -506,7 +509,7 @@ rt_public char *grt_nmake(EIF_CONTEXT long int objectCount)
 	char *oldadd;
 	char *newadd = (char *) 0;
 	EIF_OBJ new_hector;
-	uint32 fflags, flags;
+	uint32 crflags, fflags, flags;
 	uint32 spec_size = 0;
 	char g_status = g_data.status;
 	jmp_buf exenv;
@@ -538,7 +541,7 @@ rt_public char *grt_nmake(EIF_CONTEXT long int objectCount)
 
 		/* Read object flags (dynamic type) */
 		buffer_read((char *)(&flags), sizeof(uint32));
-		rt_read_cid (&fflags, flags);
+		rt_read_cid (&crflags, &fflags, flags);
 
 #if DEBUG & 1
 		printf (" %x", flags);
@@ -627,7 +630,7 @@ rt_public char *grt_nmake(EIF_CONTEXT long int objectCount)
 		} else {
 			/* Normal object */
 			nb_char = Size((uint16)(dtypes[flags & EO_TYPE]));
-			newadd = emalloc(fflags & EO_TYPE); 
+			newadd = emalloc(crflags & EO_TYPE); 
 		}
 		
 		/* Creation of the Eiffel object */	
@@ -689,7 +692,7 @@ rt_public char *irt_nmake(EIF_CONTEXT long int objectCount)
 	char *oldadd;
 	char *newadd = (char *) 0;
 	EIF_OBJ new_hector;
-	uint32 fflags, flags;
+	uint32 crflags, fflags, flags;
 	uint32 spec_size = 0;
 	char g_status = g_data.status;
 	jmp_buf exenv;
@@ -727,7 +730,7 @@ rt_public char *irt_nmake(EIF_CONTEXT long int objectCount)
 
 		/* Read object flags (dynamic type) */
 		ridr_norm_int (&flags);
-		rt_id_read_cid (&fflags, flags);
+		rt_id_read_cid (&crflags, &fflags, flags);
 
 #if DEBUG & 1
 		printf (" %x", flags);
@@ -821,7 +824,7 @@ rt_public char *irt_nmake(EIF_CONTEXT long int objectCount)
 		} else {
 			/* Normal object */
 			nb_char = Size((uint16)(dtypes[flags & EO_TYPE]));
-			newadd = emalloc(fflags & EO_TYPE); 
+			newadd = emalloc(crflags & EO_TYPE); 
 		}
 		
 		/* Creation of the Eiffel object */	
@@ -1393,6 +1396,7 @@ rt_private void iread_header(EIF_CONTEXT_NOARG)
 		if (sscanf(temp_buf," %d", &num_attrib) != 1)
 			eio();					/* error no value in buffer */
 
+
 								/* Check the number of attributes
 								 * match then verify the attributes
 								 * types and names. Then store the
@@ -1417,6 +1421,7 @@ rt_private void iread_header(EIF_CONTEXT_NOARG)
 						xfree ((char *) attrib_order);
 						eio();
 					}
+
 								/* check attribute types */
 					if ((*(System(new_dtype).cn_types + --num_attrib) & SK_HEAD) 
 							== (uint32) read_attrib) {
@@ -1757,7 +1762,7 @@ rt_private void gen_object_read (char *object, char *parent)
 
 							HEADER(bptr)->ov_flags = egc_bit_dtype;
 							buffer_read((char *) (&old_flags), sizeof(uint32));
-							rt_read_cid (&hflags, old_flags);
+							rt_read_cid ((uint32 *) 0, &hflags, old_flags);
 							HEADER(bptr)->ov_flags = hflags & (EO_COMP | EO_REF);
 
 							buffer_read((char *) bptr, bptr->b_length);
@@ -1772,7 +1777,7 @@ rt_private void gen_object_read (char *object, char *parent)
 
 					buffer_read(object + attrib_offset, sizeof(EIF_REFERENCE));
 					buffer_read((char *) (&old_flags), sizeof(uint32));
-					rt_read_cid (&hflags, old_flags);
+					rt_read_cid ((uint32 *) 0, &hflags, old_flags);
 					/* FIXME size_count = get_expanded_pos (o_type, attrib_order[--num_attrib]);*/
 					size_count = get_expanded_pos (o_type, --num_attrib);
 
@@ -1841,7 +1846,7 @@ rt_private void gen_object_read (char *object, char *parent)
 
 						elem_size = *(long *) (o_ptr + sizeof(long));
 						buffer_read((char *) (&old_flags), sizeof(uint32));
-						rt_read_cid (&hflags, old_flags);
+						rt_read_cid ((uint32 *) 0, &hflags, old_flags);
 						for (ref = object + OVERHEAD; count > 0;
 							count --, ref += elem_size) {
 	
@@ -1872,7 +1877,7 @@ rt_private void gen_object_read (char *object, char *parent)
 					uint32  old_flags, hflags;
 
 					buffer_read((char *) (&old_flags), sizeof(uint32));
-					rt_read_cid (&hflags, old_flags);
+					rt_read_cid ((uint32 *) 0, &hflags, old_flags);
 					elem_size = *(long *) (o_ptr + sizeof(long));
 					for (ref = object + OVERHEAD; count > 0;
 							count --, ref += elem_size) {
@@ -1951,7 +1956,7 @@ rt_private void object_read (char *object, char *parent)
 
 							HEADER(bptr)->ov_flags = egc_bit_dtype;
 							ridr_norm_int (&old_flags);
-							rt_id_read_cid (&hflags, old_flags);
+							rt_id_read_cid ((uint32 *) 0, &hflags, old_flags);
 							HEADER(bptr)->ov_flags = hflags & (EO_COMP | EO_REF);
 
 							ridr_multi_bit (bptr, 1, 0);
@@ -1975,7 +1980,7 @@ rt_private void object_read (char *object, char *parent)
 
 					ridr_multi_any (object + attrib_offset, 1);
 					ridr_norm_int (&old_flags);
-					rt_id_read_cid (&hflags, old_flags);
+					rt_id_read_cid ((uint32 *) 0, &hflags, old_flags);
 					size_count = get_expanded_pos (o_type, attrib_order[--num_attrib]);
 
 #if DEBUG & 1
@@ -2086,7 +2091,7 @@ rt_private void object_read (char *object, char *parent)
 
 						elem_size = *(long *) (o_ptr + sizeof(long));
 						ridr_norm_int (&old_flags);
-						rt_id_read_cid (&hflags, old_flags);
+						rt_id_read_cid ((uint32 *) 0, &hflags, old_flags);
 						for (ref = object + OVERHEAD; count > 0;
 							count --, ref += elem_size) {
 	
@@ -2135,7 +2140,7 @@ rt_private void object_read (char *object, char *parent)
 						break;
 
 					default:
-   	   			  		eio();
+						eio();
 						break;
 				}
 			} else {
@@ -2154,7 +2159,7 @@ rt_private void object_read (char *object, char *parent)
 					uint32  old_flags, hflags;
 
 					ridr_norm_int (&old_flags);
-					rt_read_cid (&hflags, old_flags);
+					rt_read_cid ((uint32 *) 0, &hflags, old_flags);
 #if DEBUG & 1
 					printf (" %x", old_flags);
 #endif
@@ -2253,12 +2258,19 @@ int stream_read(char *pointer, int size)
 	EIF_END_GET_CONTEXT
 }
 
-rt_private void rt_read_cid (uint32 *nflags, uint32 oflags)
+rt_private void rt_read_cid (uint32 *crflags, uint32 *nflags, uint32 oflags)
 
 {
 	int16 count, dftype;
 
 	*nflags = oflags;   /* default */
+
+	if (rt_kind) {
+		if (crflags != (uint32 *) 0)
+			/* Used for creation (emalloc). Map type */
+			*crflags = (uint32) dtypes [oflags & EO_TYPE];
+	} else
+		*crflags = oflags;
 
 	buffer_read ((char *) &count, sizeof (int16));
 
@@ -2275,9 +2287,13 @@ rt_private void rt_read_cid (uint32 *nflags, uint32 oflags)
 		dftype = eif_gen_id_from_cid (cidarr, (int *)0);
 
 	*nflags = (oflags & EO_UPPER) | dftype;
+
+	if (crflags != (uint32 *) 0)
+		/* Used for creation (emalloc). Map type */
+		*crflags = *nflags;
 }
 
-rt_private void rt_id_read_cid (uint32 *nflags, uint32 oflags)
+rt_private void rt_id_read_cid (uint32 *crflags, uint32 *nflags, uint32 oflags)
 
 {
 	uint32 count, val;
@@ -2285,6 +2301,13 @@ rt_private void rt_id_read_cid (uint32 *nflags, uint32 oflags)
 	int i;
 
 	*nflags = oflags;   /* default */
+
+	if (rt_kind) {
+		if (crflags != (uint32 *) 0)
+			/* Used for creation (emalloc). Map type */
+			*crflags = (uint32) dtypes [oflags & EO_TYPE];
+	} else
+			*crflags = oflags;
 
 	ridr_norm_int (&count);    
 
@@ -2308,5 +2331,9 @@ rt_private void rt_id_read_cid (uint32 *nflags, uint32 oflags)
 		dftype = eif_gen_id_from_cid (cidarr, (int *)0);
 
 	*nflags = (oflags & EO_UPPER) | dftype;
+
+	if (crflags != (uint32 *) 0)
+		/* Used for creation (emalloc). Map type */
+		*crflags = *nflags;
 }
 

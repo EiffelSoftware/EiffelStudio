@@ -41,6 +41,7 @@
 #include "eif_tools.h"
 #include "eif_special_table.h"
 #include "eif_malloc.h"
+#include "eif_lmalloc.h"
 #include "eif_except.h"			/* For eif_panic() */
 
 #ifdef I_STRING

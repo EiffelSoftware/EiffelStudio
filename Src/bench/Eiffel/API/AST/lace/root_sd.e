@@ -56,14 +56,14 @@ feature -- Access
 
 	is_class: BOOLEAN is True
 
-	valid_reference_class (reference_class: E_CLASS): BOOLEAN is
+	valid_reference_class (reference_class: CLASS_C): BOOLEAN is
 		do
 			Result := True
 		end;
 
-	associated_eiffel_class (reference_class: E_CLASS): E_CLASS is
+	associated_eiffel_class (reference_class: CLASS_C): CLASS_C is
 		do
-			Result := System.root_class.compiled_eclass
+			Result := System.root_class.compiled_class
 		end
 
 feature {COMPILER_EXPORTER}

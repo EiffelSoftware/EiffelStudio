@@ -62,7 +62,7 @@ feature -- Status setting
 		end
 
 	disable_case_sensitive is
-			-- Set `is_case_sensitive' to True
+			-- Set `is_not_case_sensitive' to True
 		do	
 			is_not_case_sensitive := True
 		end

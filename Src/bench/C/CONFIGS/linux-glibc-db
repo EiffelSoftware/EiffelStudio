@@ -1,9 +1,6 @@
 #!/bin/sh
 # Configured by: manuelt
 # Target system: Linux + LinuxThreads (kernel threads)
-# In MT mode,gcc 2.7.2.3 thread lib. are incompatible with previous lib.
-# You should use the  run-time mt-libraries in 
-# $EIFFEL4/bench/spec/linux/lib/glibc/.
 
 d_bsdsig='undef'
 ar='ar'
@@ -12,16 +9,23 @@ eiflib='finalized'
 ld='ld'
 mt_prefix='mt'
 
-mtccflags='-D_REENTRANT -DEIF_THREADS -DEIF_LINUXTHREADS'
-mtlibs='-lbsd -lm -lpthread'
-mtsharedlibs='-lbsd -lm -lpthread'
+mtccflags='-DEIF_THREADS -DEIF_LINUXTHREADS'
+mtlibs='-lm -lpthread'
+mtsharedlibs='-lm -lpthread'
+
+optimize='-g'
+wkoptimize='-g'
+
+start_test='if [ ! -f finished ] ; then'
+end_test='; fi'
+create_test='touch finished'
 
 # flags libs and mtlibs for graphical application (needs motif)
-#libs='-L/usr/X11R6/lib -lXm -lXt -lXext -lX11 -lXpm -lSM -lICE -lbsd -lm'
-#mtlibs='-L/usr/X11R6/lib -lXm -lXt -lXext -lX11 -lXpm -lSM -lICE -lbsd -lm -lpthread'
+#libs='-L/usr/X11R6/lib -lXm -lXt -lXext -lX11 -lXpm -lSM -lICE -lm'
+#mtlibs='-L/usr/X11R6/lib -lXm -lXt -lXext -lX11 -lXpm -lSM -lICE -lm -lpthread'
 
-libs='-lbsd -lm'
-sharedlibs='-lbsd -lm'
+libs='-lm'
+sharedlibs='-lm'
 ccflags=''
 sharedccflags='-fPIC'
 
@@ -31,7 +35,7 @@ shared_prefix='lib'
 sharedlibversion='.1.0'
 wkeiflib='wkbench'
 
-command_makefile='make'
+command_makefile='make -f'
 make='make'
 lngpad_2='8'
 d_bsd='undef'
@@ -130,11 +134,11 @@ cc='gcc'
 gccversion='2.7.2.1'
 cppflags=$ccflags
 mtcppflags=$mtccflags
-ldsharedflags='-shared'
+ldsharedflags='-shared -o'
+mtldsharedflags='-shared -o'
 sharedlink='ld'
 ldflags=''
 lkflags=''
-optimize='-g'
 cf_by='manuelt'
 cf_time='Fri Feb  6 15:24:59 PDT 1998'
 charsize='1'
@@ -308,7 +312,7 @@ groupcat=''
 hostcat=''
 passcat=''
 orderlib='false'
-ranlib=':'
+ranlib='ranlib'
 package='Eiffel4'
 spackage='Eiffel4'
 d_maypanic='undef'

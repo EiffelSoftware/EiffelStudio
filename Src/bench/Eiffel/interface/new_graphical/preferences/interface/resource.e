@@ -73,8 +73,6 @@ feature -- Access
 		deferred
 		end
 
-	get_value: ANY is deferred end
-
 feature -- Comparison
 
 	infix "<" (other: like Current): BOOLEAN is

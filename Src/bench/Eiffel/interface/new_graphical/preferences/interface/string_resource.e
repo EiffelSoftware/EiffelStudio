@@ -29,11 +29,6 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	get_value: ANY is
-		-- No use
-		do
-		end
-
 	default_value, value: STRING
 			-- Value as a `STRING' as represented by Current
 

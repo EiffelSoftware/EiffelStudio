@@ -26,9 +26,6 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	get_value: ANY is do end
-		-- No use
-
 	default_value, actual_value: BOOLEAN
 			-- Value represented by Current
 

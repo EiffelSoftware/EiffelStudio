@@ -343,7 +343,7 @@ feature -- Functions used for easy browsing of data from ConsumerWrapper.
 				Result.fill (constructors)
 			end
 		end
-		
+
 	entities: ARRAYED_LIST [CONSUMED_ENTITY] is
 			-- All fields, procedures, functions, properties and events immediately
 			-- implemented by type.
@@ -355,7 +355,7 @@ feature -- Functions used for easy browsing of data from ConsumerWrapper.
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	inherited_entities: ARRAYED_LIST [CONSUMED_ENTITY] is
 			-- All fields, procedures, functions, properties and events inherited by type.
 		require
@@ -363,7 +363,7 @@ feature -- Functions used for easy browsing of data from ConsumerWrapper.
 		do
 			Result := consumed_type_entities (False)
 		end
-		
+
 	flat_entities: ARRAYED_LIST [CONSUMED_ENTITY] is
 			-- All fields, procedures, functions, properties and events
 			-- implemented/inherited by type.
@@ -391,7 +391,7 @@ feature {NONE} -- Implementation
 
 	internal_associated_reference_type: CONSUMED_REFERENCED_TYPE
 		-- Reference type of `Current'.
-			
+
 feature {NONE} -- Internal
 
 	consumed_type_entities (a_immediate: BOOLEAN): ARRAYED_LIST [CONSUMED_ENTITY] is

@@ -30,7 +30,7 @@ feature -- Basic Operation
 		rescue
 			retried := True
 			if f /= Void then
-				f.close		
+				f.close
 			end
 			retry
 		end

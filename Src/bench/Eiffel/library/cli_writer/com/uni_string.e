@@ -20,16 +20,9 @@ feature --{NONE} -- Initialization
 			-- Make a C string from `a_string'.
 		require
 			a_string_not_void: a_string /= Void
-		local
-			a: ANY
-			nb: INTEGER
 		do
-			nb := a_string.count
-			count := nb
-			make_empty (nb)
-			a := a_string.to_c
-			nb := cwel_multi_byte_to_wide_char (feature {WEL_CP_CONSTANTS}.Cp_acp, 0,
-				$a, nb, managed_data.item, managed_data.count)
+			make_empty (a_string.count)
+			set_string (a_string)
 		end
 
 	make_empty (a_length: INTEGER) is
@@ -38,7 +31,7 @@ feature --{NONE} -- Initialization
 		require
 			positive_length: a_length >= 0
 		do
-			create managed_data.make (4 * (a_length + 1))
+			create managed_data.make (2 * (a_length + 1))
 			count := 0
 		end
 	
@@ -50,7 +43,7 @@ feature --{NONE} -- Initialization
 			lth: INTEGER
 		do
 			lth := cwel_string_length (a_ptr)
-			create managed_data.make (4 * (lth + 1))
+			create managed_data.make (2 * (lth + 1))
 			managed_data.item.memory_copy (a_ptr, lth * 2)
 		end
 	
@@ -97,25 +90,32 @@ feature -- Element change
 		require
 			a_string_not_void: a_string /= Void
 		local
-			a: ANY
-			nb: INTEGER
+			i, nb: INTEGER
 			new_size: INTEGER
+			l_area: SPECIAL [CHARACTER]
+			l_c: CHARACTER
 		do
-			nb := a_string.count
-			count := nb
+			nb := a_string.count - 1
+			count := nb + 1
 			
-			a := a_string.to_c
-
-			new_size := 4 * (nb + 1)
+			new_size := 2 * (nb + 2)
 			
 			if managed_data.count < new_size  then
 				managed_data.resize (new_size)
 			end
 
-			nb := cwel_multi_byte_to_wide_char (feature {WEL_CP_CONSTANTS}.Cp_acp, 0,
-				$a, nb, managed_data.item, managed_data.count)
-
-			managed_data.put_integer_16 (0, nb * 2)
+			from
+				i := 0
+				l_area := a_string.area
+			until
+				i > nb
+			loop
+				l_c := l_area.item (i)
+				managed_data.put_integer_8 (l_c.code.to_integer_8, i * 2)
+				managed_data.put_integer_8 (0, i * 2 + 1)
+				i := i + 1
+			end
+			managed_data.put_integer_16 (0, (nb + 1) * 2)
 		end
 
 feature {NONE} -- Implementation
@@ -167,6 +167,7 @@ feature {NONE} -- Implementation
 
 invariant
 	managed_data_not_void: managed_data /= Void
+	count_not_negative: count >= 0
 
 end -- class UNI_STRING
 

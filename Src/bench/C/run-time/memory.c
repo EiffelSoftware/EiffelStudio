@@ -235,10 +235,10 @@ rt_private long gc_count; /* %%ss mt */
 #endif /* EIF_THREADS */
 
 rt_public void gc_mon(char flag)
-	EIF_GET_CONTEXT
 {
-	EIF_END_GET_CONTEXT
+	EIF_GET_CONTEXT
 	gc_monitor = (int) flag;	/* Turn GC statistics on/off */
+	EIF_END_GET_CONTEXT
 }
 
 rt_public void gc_stat(long int type)

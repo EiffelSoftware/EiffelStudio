@@ -17,7 +17,7 @@ inherit
 create
 	make_with_document
 
-feature -- Access
+feature -- Creation
 
 	make_with_document (a_document: DOCUMENT) is
 			-- Make with `a_document'
@@ -25,8 +25,20 @@ feature -- Access
 			document_not_void: a_document /= Void
 		do
 			make
+			create links.make (0)
+			create images.make (0)
 			document := a_document
 		end
+
+feature -- Access
+
+	links: ARRAYED_LIST [DOCUMENT_LINK]
+			-- Links
+
+	images: ARRAYED_LIST [DOCUMENT_LINK]
+			-- Images
+
+feature -- Tag
 
 	process_element (e: XM_ELEMENT) is
 			-- Process element `e'.
@@ -35,18 +47,6 @@ feature -- Access
 				extract_url_from_link (e)
 			end
 			Precursor {XM_FORMATTER} (e)
-		end
-
-feature {DOCUMENT} -- Status Setting
-
-	set_links (a_old, a_new: DOCUMENT_LINK) is
-			-- Update all links in Current to `a_old' to link to `a_new'
-		require
-			old_link_not_void: a_old /= Void
-			new_link_not_void: a_new /= Void
-		do
-			old_link := a_old
-			new_link := a_new
 		end
 
 feature {NONE} -- Commands
@@ -66,27 +66,11 @@ feature {NONE} -- Commands
 				if l_url /= Void and then not l_url.is_empty then
 					l_url := tidied_string (l_url)
 							-- Create document link based on `document' and `e' link
-					create l_link.make (document.name, l_url)
-					if document.do_update_link then
-								-- Check link in `l_link' matches link to update
-						if l_link.matches (old_link) then
-							l_element.wipe_out
-									-- Create the new link required, but using `document' so
-									-- we know location
-							create new_link.make (document.name, new_link.url)
-									-- Get the url string to replace old link by formatting
-									-- according to current old link formatting (relative, absolute, etc.)
-							l_new_link := clone (new_link.format (l_link.format_type))
-							if l_new_link /= Void then
-								l_element.put_first (create {XM_CHARACTER_DATA}.make (l_element, l_new_link))	
-							end
-						end
-					else
-						document.add_link (l_link)
-						if e.name.is_equal ("image") then
-							document.add_image (l_link)
-						end
-					end					
+					create l_link.make (document.name, l_url)				
+					links.extend (l_link)
+					if e.name.is_equal ("image") then
+						images.extend (l_link)
+					end
 				end
 			end
 		end
@@ -105,11 +89,5 @@ feature {NONE} -- Implementation
 			Result.extend ("image")
 			Result.compare_objects
 		end		
-
-	old_link: DOCUMENT_LINK
-			-- Old link
-	
-	new_link: DOCUMENT_LINK
-			-- New link
 
 end -- class XM_DOCUMENT_FORMATTER

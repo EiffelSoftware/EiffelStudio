@@ -450,7 +450,7 @@ rt_public void eif_std_ref_copy(register EIF_REFERENCE source, register EIF_REFE
 
 		/* Copy of source object into target object
 		 * with same dynamic type. Block copy here, but references on
-		 * expanded must be updated and sepcial objects reallocated.
+		 * expanded must be updated and special objects reallocated.
 		 */
 		safe_bcopy(source, target, size);
 

@@ -351,6 +351,18 @@ feature -- Window Messages
 	Wm_sizing: INTEGER is 532
 			-- Declared in Windows as WM_SIZING
 
+	Wm_capturechanged: INTEGER is 533
+			-- Declared in Windows as WM_CAPTURECHANGED
+
+	Wm_moving: INTEGER is 534
+			-- Declared in Windows as WM_MOVING
+
+	Wm_powerbroadcast: INTEGER is 536
+			-- Declared in Windows as WM_POWERBROADCAST
+
+	Wm_devicechange: INTEGER is 537
+			-- Declared in Windows as WM_DEVICECHANGE
+
 	Wm_mdicreate: INTEGER is 544
 			-- Declared in Windows as WM_MDICREATE
 

@@ -117,12 +117,9 @@ if is_special or has_signature then
 			generate_expanded_variables;
 				-- Now we want the body
 			generate_body;
-			generated_file.putstring ("EDCX%N"); -- ss MT
 			generated_file.exdent;
-			generated_file.putchar ('}');
-			generated_file.new_line;
 				-- Leave a blank line after function definition
-			generated_file.new_line;
+			generated_file.putstring ("}%N%N");
 			Context.inherited_assertion.wipe_out;
 elseif encapsulated then
 	old_generate

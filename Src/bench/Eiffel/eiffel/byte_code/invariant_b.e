@@ -104,16 +104,11 @@ feature
 				-- Remove gc hooks
 			i := context.ref_var_used;
 			if i > 0 then
-				generated_file.putstring ("RTLE;");
-				generated_file.new_line;
+				generated_file.putstring ("RTLE;%N");
 			end;
 				-- End of C routine
-			generated_file.putstring ("EDCX%N"); -- ss MT
 			generated_file.exdent;
-			generated_file.putchar ('}');
-			generated_file.new_line;
-			generated_file.new_line;
-
+			generated_file.putstring ("}%N%N");
 		end;
 
 feature -- Byte code geenration

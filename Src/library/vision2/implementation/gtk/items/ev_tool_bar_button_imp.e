@@ -131,7 +131,7 @@ feature -- Event : command association
 			-- Add `cmd' to the list of commands to be executed
 			-- when the item is selected.
 		do
-			add_command (widget, "clicked", com, arg, default_pointer)
+			add_command (widget, "clicked", cmd, arg, default_pointer)
 		end
 
 feature -- Event -- removing command association

@@ -10,7 +10,8 @@ inherit
 	CALLBACK_GENE;
 	CONSTANTS;
 	WINDOWS;
-	ERROR_POPUPER
+	ERROR_POPUPER;
+	SHARED_TOOLKIT_NAME
 
 feature 
 
@@ -37,6 +38,8 @@ feature
 			retry
 		end;
 
+feature -- Code generation
+
 	generate_files is
 		local
 			current_cursor, old_cursor: CURSOR;
@@ -46,26 +49,44 @@ feature
 			group: GROUP;
 			user_cmds: LINKED_LIST [LINKED_LIST [USER_CMD]];
 			cmd_list: LINKED_LIST [USER_CMD];
+			error: BOOLEAN;
+			translate_fn: FILE_NAME;
+			type, translate_content: STRING;
+			window_c: WINDOW_C
 		do
 				-- ==========================
 				-- Widget classes generation.
 				-- ==========================
 			callback_generator.update;
 			from
+				!! translate_content.make (0);
 				old_cursor := Shared_window_list.cursor;
 				Shared_window_list.start
 			until
-				Shared_window_list.after
+				Shared_window_list.after or else error
 			loop
 				current_cursor := Shared_window_list.cursor;
+				window_c := Shared_window_list.item;
 				!!doc;
 				doc.set_directory_name (Environment.context_directory);
-				doc.set_document_name (Shared_window_list.item.entity_name);
-					temp := Shared_window_list.item.eiffel_text;
+				doc.set_document_name (window_c.base_file_name_without_dot_e);
+				temp := window_c.eiffel_text;
 				doc.update (temp);
+				error := doc.error;
 				doc := Void;
+				translate_content.append (window_c.base_file_name_without_dot_e);
+				translate_content.append (".e");
+				translate_content.append (":  ");
+				translate_content.append (window_c.label);
+				translate_content.extend ('%N');
 				Shared_window_list.go_to (current_cursor);
 				Shared_window_list.forth
+			end;
+			if not translate_content.empty then
+					-- Update the translate file is necessary
+				!! translate_fn.make_from_string (Environment.context_directory);
+				translate_fn.set_file_name (Environment.translate_name);
+				save_translation (translate_fn, translate_content);
 			end;
 			Shared_window_list.go_to (old_cursor);
 			callback_generator.clear_all;
@@ -77,7 +98,7 @@ feature
 				old_cursor := Shared_group_list.cursor;
 				Shared_group_list.start
 			until
-				Shared_group_list.after
+				Shared_group_list.after or else error
 			loop
 				group := Shared_group_list.item;
 				if group.eiffel_text /= Void then
@@ -87,6 +108,7 @@ feature
 					doc.set_document_name (group.entity_name);
 					temp := group.eiffel_text;
 					doc.update (temp);
+					error := doc.error;
 					doc := Void;
 					Shared_group_list.go_to (current_cursor);
 				end;
@@ -97,13 +119,16 @@ feature
 				-- ===========================
 				-- Command classes generation.
 				-- ===========================
-				--now done from command editor
+				-- Now done from command editor
 				-- every time the command is changed
+				-- Save may be necessary if `.e' has been
+				-- removed or changed just before generation.
 			from
+				translate_content.wipe_out;
 				user_cmds := command_catalog.user_commands;
 				user_cmds.start
 			until
-				user_cmds.after
+				user_cmds.after or else error
 			loop
 				cmd_list := user_cmds.item;
 				from
@@ -112,66 +137,76 @@ feature
 					cmd_list.after
 				loop
 					cmd := cmd_list.item;
-					!!doc;
-					doc.set_directory_name (Environment.commands_directory);
-					doc.set_document_name (cmd.eiffel_type);
-					temp := clone (cmd.eiffel_text);
-					if temp.item (1) /= '-' and cmd.label /= Void 
-					  and then not cmd.label.empty then
-						temp.prepend ("%N");
-						temp.prepend (cmd.label);
-						temp.prepend ("-- ");
-					end;
-					doc.update (temp);
-					doc := Void;
+					cmd.update_text_if_modified;
+					translate_content.append (cmd.base_file_name);
+					translate_content.append (":  ");
+					translate_content.append (cmd.label);
+					translate_content.extend ('%N');
 					cmd_list.forth
 				end;
 				user_cmds.forth;
+			end;
+			if not translate_content.empty then
+					-- Update the translate file is necessary
+				!! translate_fn.make_from_string (Environment.commands_directory);
+				translate_fn.set_file_name (Environment.translate_name);
+				save_translation (translate_fn, translate_content);
 			end;
 				
 				-- =========================
 				-- Windows class generation.
 				-- =========================
-			!!doc;
-			doc.set_directory_name (Environment.windows_directory);
-			doc.set_document_name (Environment.windows_file_name);
-			temp := windows_text;
-			doc.update (temp);
-			doc := Void;
+			if not error then
+				!!doc;
+				doc.set_directory_name (Environment.windows_directory);
+				doc.set_document_name (Environment.windows_file_name);
+				temp := windows_text;
+				doc.update (temp);
+				error := doc.error;
+				doc := Void;
+			end
 
 				-- =========================
 				-- States class generation.
 				-- =========================
-			!!doc;
-			doc.set_directory_name (Environment.state_directory);
-			doc.set_document_name (Environment.states_file_name);
-			temp := states_text;
-			doc.update (temp);
-			doc := Void;
+			if not error then
+				!!doc;
+				doc.set_directory_name (Environment.state_directory);
+				doc.set_document_name (Environment.states_file_name);
+				temp := states_text;
+				doc.update (temp);
+				error := doc.error
+				doc := Void;
+			end;
 
 				-- ============================
 				-- Application class generation
 				-- ============================
-			!!doc;
-			doc.set_directory_name (Environment.application_directory);
-			doc.set_document_name (Environment.application_file_name);
-			temp := Shared_app_graph.eiffel_text;
-			if temp.item (temp.count) /= '%N' then
-				temp.append ("%N");
+			if not error then
+				!!doc;
+				doc.set_directory_name (Environment.application_directory);
+				doc.set_document_name (Environment.application_file_name);
+				temp := Shared_app_graph.eiffel_text;
+				if temp.item (temp.count) /= '%N' then
+					temp.append ("%N");
+				end;
+				doc.update (temp);
+				error := doc.error;
+				doc := Void;
 			end;
-			doc.update (temp);
-			doc := Void;
 
 				-- ===============================
 				-- Shared control class generation
 				-- ===============================
 
-			!!doc;
-			doc.set_directory_name (Environment.application_directory);
-			doc.set_document_name (Environment.shared_control_file_name);
-			temp := shared_control_text;
-			doc.update (temp);
-			doc := Void;
+			if not error then
+				!!doc;
+				doc.set_directory_name (Environment.application_directory);
+				doc.set_document_name (Environment.shared_control_file_name);
+				temp := shared_control_text;
+				doc.update (temp);
+				doc := Void;
+			end
 		end;
 
 	
@@ -220,7 +255,9 @@ feature {NONE}
 			Result.append ("inherit%N%N%TGRAPHICS%N%T%Tredefine%N%T%T%Tinit_toolkit%N%T%Tend%N%N");
 			Result.append ("feature%N%N");	
 			Result.append ("%Tapplication_screen: SCREEN is%N%T%Tonce%N%T%T%T!!Result.make (%"%")%N%T%Tend;%N%N");
-			Result.append ("%Tinit_toolkit: MOTIF is%N%T%Tonce%N%T%T%T!!Result.make (%"%")%N%T%Tend;%N%N");
+			Result.append ("%Tinit_toolkit: ");
+			Result.append (Shared_toolkit_name);
+			Result.append (" is%N%T%Tonce%N%T%T%T!!Result.make (%"%")%N%T%Tend;%N%N");
 			Result.append ("%Tinit_windowing is%N%T%Tdo%N%
 					%%T%T%Tif (init_toolkit = Void) then end;%N%
 					%%T%T%Tif (toolkit = Void) then end;%N");
@@ -286,6 +323,38 @@ feature {NONE}
 			Result.append ("%Tcontrol: CONTROL is%N%T%Tonce%N%T%T%T!!Result.make (");
 			Result.append_integer (Shared_app_graph.count);
 			Result.append (")%N%T%Tend%N%Nend%N");
+		end;
+
+
+feature {NONE} -- Writing out the translate file
+
+	save_translation (translate_fn: FILE_NAME; 
+				translate_content: STRING) is
+		require
+			valid_translate_fn: translate_fn /= Void
+			valid_translate_content: translate_content /= Void
+		local
+			translate_file: PLAIN_TEXT_FILE;
+		do
+			!! translate_file.make (translate_fn);
+			if translate_file.exists and then 
+				translate_file.is_readable 
+			then
+				translate_file.open_read;
+				translate_file.read_stream (translate_file.count);
+				translate_file.close;
+				if not translate_file.last_string.is_equal 
+						(translate_content) 
+				then
+					translate_file.open_write;
+					translate_file.put_string (translate_content);
+					translate_file.close;
+				end
+			else
+				translate_file.open_write;
+				translate_file.put_string (translate_content);
+				translate_file.close;
+			end
 		end;
 
 end

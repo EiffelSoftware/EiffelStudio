@@ -35,10 +35,13 @@ struct bit {
 
 extern char *makestr();				/* Build an Eiffel string object */
 extern char *makebit();				/* Build an Eiffel bit object */
+extern char *createarr();			/* Build an Eiffel ARRAY[ANY] object */
 extern int str_dtype;				/* Dynamic type for string */
 extern int bit_dtype;				/* Dynamic type for bit */
+extern int arr_dtype;				/* Dynamic type for ARRAY[ANY] */
 extern void (*strmake)();			/* STRING creation feature */
 extern void (*strset)();			/* STRING `set_count' feature */
+extern void (*arrmake)();			/* STRING creation feature */
 
 #ifdef WORKBENCH
 extern void wstdinit();				/* Composite objects initialization */
@@ -80,6 +83,13 @@ extern int sp_char;			/* Dynamic type of SPECIAL[CHARACTER] */
 extern int sp_int;			/* Dynamic type of SPECIAL[INTEGER] */
 extern int sp_real;			/* Dynamic type of SPECIAL[REAL] */
 extern int sp_double;			/* Dynamic type of SPECIAL[DOUBLE] */
+
+extern int int_ref_dtype;	/* Dynamic type of INTEGER_REF */
+extern int bool_ref_dtype;	/* Dynamic type of BOOLEAN_REF */
+extern int real_ref_dtype;	/* Dynamic type of REAL_REF */
+extern int doub_ref_dtype;	/* Dynamic type of DOUBLE_REF */
+extern int char_ref_dtype;	/* Dynamic type of CHARACTER_REF */
+extern int point_ref_dtype;	/* Dynamic type of POINTER_REF */
 
 /*
  * Miscellaneous routines.

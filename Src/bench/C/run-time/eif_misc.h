@@ -20,6 +20,8 @@
 #include <windows.h> /* DLL declarations */
 #endif
 
+#include <math.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -47,6 +49,19 @@ RT_LNK EIF_INTEGER upintdiv(EIF_INTEGER n1, EIF_INTEGER n2);
 #define esint_size ((EIF_INTEGER) BYTSIZ*LNGSIZ)
 #define esptr_size ((EIF_INTEGER) BYTSIZ*PTRSIZ)
 #define esdouble_size ((EIF_INTEGER) BYTSIZ*DBLSIZ)
+
+#define float_cos(x)	(cos ((EIF_DOUBLE) (x)))
+#define float_acos(x)	(acos ((EIF_DOUBLE) (x)))
+#define float_fabs(x)	(fabs ((EIF_DOUBLE) (x)))
+#define float_ceil(x)	(ceil ((EIF_DOUBLE) (x)))
+#define float_floor(x)	(floor ((EIF_DOUBLE) (x)))
+#define float_log10(x)	(log10 ((EIF_DOUBLE) (x)))
+#define float_log(x)	(log ((EIF_DOUBLE) (x)))
+#define float_sqrt(x)	(sqrt ((EIF_DOUBLE) (x)))
+#define float_tan(x)	(tan ((EIF_DOUBLE) (x)))
+#define float_atan(x)	(atan ((EIF_DOUBLE) (x)))
+#define float_sin(x)	(sin ((EIF_DOUBLE) (x)))
+#define float_asin(x)	(asin ((EIF_DOUBLE) (x)))
 
 RT_LNK EIF_INTEGER eif_system (char *s);
 RT_LNK EIF_INTEGER eif_putenv (char * v, char * k);

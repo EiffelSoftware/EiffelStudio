@@ -21,7 +21,17 @@ feature {NONE} -- Initialization
 			debug_value_kept.compare_objects
 		end
 
-feature {APPLICATION_EXECUTION_DOTNET, EB_DEBUGGER_MANAGER} -- Operation
+feature {EIFNET_EXPORTER, APPLICATION_EXECUTION_DOTNET, EB_DEBUGGER_MANAGER} -- Operation
+
+	initialize is
+		do
+			create debug_value_kept.make (10)
+			debug_value_kept.compare_objects
+		end
+
+	terminate is
+		do
+		end
 
 	recycle is
 		do

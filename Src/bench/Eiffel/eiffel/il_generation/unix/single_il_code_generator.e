@@ -419,7 +419,7 @@ feature {NONE} -- Implementation
 								-- its `feature_id' is not appropriate in `current_class_type'.
 							Byte_context.set_class_type (class_type)
 							dup_feat := feat.duplicate
-							if dup_feat.is_procedure then
+							if dup_feat.is_routine then
 								proc ?= dup_feat
 								proc.set_arguments (inh_feat.arguments)
 							end
@@ -511,7 +511,7 @@ feature {NONE} -- Implementation
 							-- its `feature_id' is not appropriate in `current_class_type'.
 						Byte_context.set_class_type (class_type)
 						dup_feat := feat.duplicate
-						if dup_feat.is_procedure then
+						if dup_feat.is_routine then
 							proc ?= dup_feat
 							proc.set_arguments (inh_feat.arguments)
 						end

@@ -119,7 +119,7 @@ fullrd C_library\.libs
 remtrace Free add ons
 exprt -r %DEFAULT_CVS_TAG -d free_add_ons free_add_ons
 remtrace .NET assemblies
-exprt -l -r %DEFAULT_CVS_TAG -d dotnet Delivery/dotnet
+exprt -r %DEFAULT_CVS_TAG -d dotnet Delivery/dotnet
 remtrace root
 exprt -l -r %DEFAULT_CVS_TAG Delivery/
 move Delivery\*.* . >>& %INSTALL_LOG

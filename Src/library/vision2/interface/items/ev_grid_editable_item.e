@@ -52,6 +52,7 @@ feature {NONE} -- Implementation
 	deactivate is
 			-- Cleanup from previous call to activate.
 		do
+			text_field.focus_out_actions.wipe_out
 			Precursor {EV_GRID_LABEL_ITEM}
 			if text_field /= Void then
 				if validation_agent = Void or else validation_agent.item ([text_field.text]) then

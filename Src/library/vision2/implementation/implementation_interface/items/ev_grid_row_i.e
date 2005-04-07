@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 feature {EV_GRID_I, EV_GRID_ROW_I} -- Initialization
 
 	internal_index: INTEGER
-			-- Index of `Current' in parent grid
+			-- Index of `Current' in parent grid.
 
 	set_internal_index (a_index: INTEGER) is
 			-- Set the internal index of row
@@ -57,7 +57,7 @@ feature {EV_GRID_I, EV_GRID_ROW_I} -- Initialization
 		end
 
 	set_parent_i (a_grid_i: EV_GRID_I) is
-			-- Make `Current' associated with `a_grid_i'
+			-- Make `Current' associated with `a_grid_i'.
 		require
 			a_grid_i_not_void: a_grid_i /= Void
 			grid_not_already_set: parent_i = Void
@@ -70,7 +70,7 @@ feature {EV_GRID_I, EV_GRID_ROW_I} -- Initialization
 feature -- Access
 
 	subrow (i: INTEGER): EV_GRID_ROW is
-			-- `i'-th child of Current
+			-- `i'-th child of Current.
 		require
 			is_parented: parent /= Void
 			i_positive: i > 0
@@ -95,7 +95,7 @@ feature -- Access
 		end
 
 	parent_row: EV_GRID_ROW is
-			-- Parent of Current if any, Void otherwise
+			-- Parent of Current if any, Void otherwise.
 		do
 			if parent_row_i /= Void then
 				Result := parent_row_i.interface
@@ -105,7 +105,7 @@ feature -- Access
 		end
 
 	parent: EV_GRID is
-			-- Grid to which current row belongs
+			-- Grid to which current row belongs.
 		do
 			if parent_i /= Void then
 				Result := parent_i.interface
@@ -113,7 +113,7 @@ feature -- Access
 		end
 
 	item (i: INTEGER): EV_GRID_ITEM is
-			-- Item at `i'-th column
+			-- Item at `i'-th column.
 		require
 			i_within_bounds: i > 0 and i <= count
 			is_parented: parent /= Void
@@ -129,20 +129,18 @@ feature -- Access
 			is_parented: parent /= Void
 		local
 			i: INTEGER
-			create_if_void: BOOLEAN
 			a_item: EV_GRID_ITEM_I
 			temp_parent_i: like parent_i
 		do
 			from
 				i := 1
-				create_if_void := is_selected
 				create Result.make (count)
 				temp_parent_i := parent_i
 			until
 				i > count
 			loop
 					-- If `is_selected' then we need to make sure there are no Void items contained within `Current'
-				a_item := temp_parent_i.item_internal (i, index, create_if_void)
+				a_item := temp_parent_i.item_internal (i, index)
 				if a_item /= Void and then a_item.is_selected then
 					Result.extend (a_item.interface)
 				end
@@ -181,7 +179,7 @@ feature -- Access
 feature -- Status report
 
 	subrow_count: INTEGER is
-			-- Number of children
+			-- Number of children.
 		require
 			is_parented: parent /= Void
 		do
@@ -192,7 +190,7 @@ feature -- Status report
 		end
 
 	index: INTEGER is
-			-- Position of Current in `parent'
+			-- Position of Current in `parent'.
 		require
 			is_parented: parent /= Void
 		do
@@ -204,7 +202,7 @@ feature -- Status report
 		end
 
 	count: INTEGER is
-			-- Number of items in current
+			-- Number of items in current.
 		do
 			if parent_i /= Void then
 				Result := parent_i.column_count
@@ -280,7 +278,7 @@ feature -- Status setting
 feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 
 	set_item (i: INTEGER; a_item: EV_GRID_ITEM) is
-			-- Set item at `i'-th column to be `a_item'
+			-- Set item at `i'-th column to be `a_item'.
 		require
 			i_positive: i > 0
 			a_item_not_void: a_item /= Void
@@ -292,7 +290,7 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 		end
 
 	remove_subrow (a_row: EV_GRID_ROW) is
-			-- Unparent `a_row' from `Current'
+			-- Unparent `a_row' from `Current'.
 		require
 			is_parented: parent /= Void
 			a_row_not_void: a_row /= Void
@@ -306,7 +304,7 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 		end
 
 	add_subrow (a_row: EV_GRID_ROW) is
-			-- Make `a_row' a child of Current
+			-- Make `a_row' a child of Current.
 		require
 			is_parented: parent /= Void
 			a_row_not_void: a_row /= Void
@@ -349,7 +347,7 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 		end
 
 	set_background_color (a_color: EV_COLOR) is
-			-- Set `a_color' to all items in Current
+			-- Set `a_color' to all items in Current.
 		require
 			is_parented: parent /= Void
 			a_color_not_void: a_color /= Void
@@ -449,7 +447,7 @@ feature {EV_GRID_ROW_I, EV_GRID_I} -- Implementation
 feature {EV_GRID_ITEM_I} -- Implementation
 
 	increase_selected_item_count is
-			-- Increase `selected_item_count' by 1
+			-- Increase `selected_item_count' by 1.
 		require
 			selected_item_count_less_than_count: selected_item_count < count
 		do
@@ -459,7 +457,7 @@ feature {EV_GRID_ITEM_I} -- Implementation
 		end
 
 	decrease_selected_item_count is
-			-- Decrease selected_item_count by 1
+			-- Decrease selected_item_count by 1.
 		require
 			selected_item_count_greater_than_zero: selected_item_count > 0
 		do
@@ -470,7 +468,7 @@ feature {EV_GRID_ITEM_I} -- Implementation
 		end
 
 	selected_item_count: INTEGER
-		-- Number of selected items in `Current'
+		-- Number of selected items in `Current'.
 		
 	subrows: EV_GRID_ARRAYED_LIST [EV_GRID_ROW_I]
 		-- All subrows of `Current'.
@@ -478,7 +476,7 @@ feature {EV_GRID_ITEM_I} -- Implementation
 feature {EV_GRID_I} -- Implementation
 		
 	disable_select_internal is
-			-- Set internal data to signify that `Current' is unselected
+			-- Set internal data to signify that `Current' is unselected.
 		local
 			i: INTEGER
 			a_item: EV_GRID_ITEM_I
@@ -488,7 +486,7 @@ feature {EV_GRID_I} -- Implementation
 			until
 				i > count
 			loop
-				a_item := parent_i.item_internal (i, index, False)
+				a_item := parent_i.item_internal (i, index)
 				if a_item /= Void and then a_item.internal_is_selected then
 					a_item.disable_select_internal
 				end

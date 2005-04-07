@@ -356,13 +356,13 @@ feature -- Access
 feature -- Status setting
 
 	activate_window: EV_WINDOW
-		-- Window used to edit grid item contents on `activate'
+		-- Window used to edit grid item contents on `activate'.
 
 	currently_active_item: EV_GRID_ITEM
-		-- Item that is currently active
+		-- Item that is currently active.
 
 	activate_item (a_item: EV_GRID_ITEM) is
-			-- Setup `a_item' for user interactive editing
+			-- Setup `a_item' for user interactive editing.
 		require
 			a_item_not_void: a_item /= Void
 		local
@@ -404,7 +404,7 @@ feature -- Status setting
 		end
 
 	enable_selection_on_click is
-			-- Enable selection handling of items when clicked upon
+			-- Enable selection handling of items when clicked upon.
 		do
 			is_selection_on_click_enabled := True
 		ensure
@@ -412,7 +412,7 @@ feature -- Status setting
 		end
 
 	disable_selection_on_click is
-			-- Disable selection handling when items are clicked upon
+			-- Disable selection handling when items are clicked upon.
 		do
 			is_selection_on_click_enabled := False
 		ensure
@@ -1027,7 +1027,7 @@ feature -- Element change
 		end
 
 	insert_new_row_parented (i: INTEGER; a_parent_row: EV_GRID_ROW) is
-			-- Insert `a_row' between rows `i' and `i+1'
+			-- Insert `a_row' between rows `i' and `i+1'.
 		require
 			i_positive: i > 0
 			i_less_than_row_count: i <= row_count
@@ -1041,7 +1041,7 @@ feature -- Element change
 		end
 
 	insert_new_column (a_index: INTEGER) is
-			-- Insert a new column at index `a_index'
+			-- Insert a new column at index `a_index'.
 		require
 			i_positive: a_index > 0
 		do
@@ -1085,7 +1085,7 @@ feature -- Element change
 		end
 
 	move_column (i, j: INTEGER) is
-			-- Move row at index `i' to index `j'
+			-- Move row at index `i' to index `j'.
 		require
 			i_positive: i > 0
 			j_positive: j > 0
@@ -1120,7 +1120,7 @@ feature -- Element change
 		end
 
 	set_item (a_column, a_row: INTEGER; a_item: EV_GRID_ITEM) is
-			-- Replace grid item at position (`a_column', `a_row') with `a_item'
+			-- Replace grid item at position (`a_column', `a_row') with `a_item'.
 		require
 			a_column_positive: a_column > 0
 			a_row_positive: a_row > 0
@@ -1132,7 +1132,7 @@ feature -- Element change
 		end
 
 	remove_item (a_column, a_row: INTEGER) is
-			-- Remove grid item at position (`a_column', `a_row')
+			-- Remove grid item at position (`a_column', `a_row').
 		require
 			a_column_positive: a_column > 0
 			a_row_positive: a_row > 0
@@ -1207,10 +1207,10 @@ feature -- Removal
 feature -- Measurements
 
 	visible_column_count: INTEGER
-			-- Number of visible columns in Current
+			-- Number of visible columns in Current.
 
 	column_count: INTEGER is
-			-- Number of columns in Current
+			-- Number of columns in Current.
 		do
 			if columns /= Void then
 				Result := columns.count
@@ -1218,7 +1218,7 @@ feature -- Measurements
 		end
 
 	row_count: INTEGER is
-			-- Number of rows in Current
+			-- Number of rows in Current.
 		do
 			if internal_row_data /= Void then
 				Result := internal_row_data.count
@@ -1284,7 +1284,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 		end
 
 	previous_visible_column_from_index (a_index: INTEGER): INTEGER is
-			-- Return the index of the previous visible column's logical index from index `a_index'
+			-- Return the index of the previous visible column's logical index from index `a_index'.
 		require
 			a_index_valid: a_index > 0 and then a_index <= column_count
 		local
@@ -1309,20 +1309,20 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 		end
 
 	rows: EV_GRID_ARRAYED_LIST [EV_GRID_ROW_I]
-		-- Arrayed list returning the appropriate EV_GRID_ROW
+		-- Arrayed list returning the appropriate EV_GRID_ROW.
 		
 	columns: EV_GRID_ARRAYED_LIST [EV_GRID_COLUMN_I]
-		-- Arrayed list returning the appropriate EV_GRID_COLUMN
+		-- Arrayed list returning the appropriate EV_GRID_COLUMN.
 
 	physical_column_count: INTEGER
-		-- Number of physical columns stored in `row_list'
+		-- Number of physical columns stored in `row_list'.
 		
 	vertical_computation_required: BOOLEAN
 		-- Do the row offsets and vertical scroll bar position need to
 		-- be re-computed before the next drawing cycle?
 		
 	set_vertical_computation_required is
-			-- Assign `True' to `vertical_computation_required'
+			-- Assign `True' to `vertical_computation_required'.
 		do
 			vertical_computation_required := True
 		ensure
@@ -1494,7 +1494,7 @@ feature {EV_GRID_DRAWER_I, EV_GRID_COLUMN_I, EV_GRID_ROW_I, EV_GRID_ITEM_I, EV_G
 	column_offsets: ARRAYED_LIST [INTEGER]
 		-- Cumulative offset of each column in pixels.
 		-- For example, if there are 5 columns, each with a width of 80 pixels,
-		-- `column_offsets' contains 0, 80, 160, 240, 320, 400 (Note this is 6 items)
+		-- `column_offsets' contains 0, 80, 160, 240, 320, 400 (Note this is 6 items).
 		
 	row_offsets: EV_GRID_ARRAYED_LIST [INTEGER]
 		-- Cumulative offset of each row in pixels.
@@ -2020,7 +2020,7 @@ feature {NONE} -- Drawing implementation
 		end
 		
 	internal_set_virtual_y_position (a_y_position: INTEGER) is
-			-- Set virtual y position of `Current' to `a_y_position'
+			-- Set virtual y position of `Current' to `a_y_position'.
 		require
 			a_y_position_non_negative: a_y_position >= 0
 		local
@@ -2055,7 +2055,7 @@ feature {NONE} -- Drawing implementation
 		end
 		
 	internal_set_virtual_x_position (a_x_position: INTEGER) is
-			-- Set virtual x position of `Current' to `a_x_position'
+			-- Set virtual x position of `Current' to `a_x_position'.
 		require
 			a_x_position_non_negative: a_x_position >= 0
 		local
@@ -2342,7 +2342,7 @@ feature {NONE} -- Event handling
 		end
 
 	handle_newly_selected_item (a_item: EV_GRID_ITEM) is
-			-- Handle selection for newly selected `a_item'
+			-- Handle selection for newly selected `a_item'.
 		local
 			start_item: EV_GRID_ITEM
 			start_row_index, end_row_index, start_column_index, end_column_index: INTEGER
@@ -2418,7 +2418,7 @@ feature {NONE} -- Implementation
 
 	add_column_at (a_index: INTEGER; replace_existing_item: BOOLEAN) is
 			-- Add a new column at index `a_index'.
-			-- If `replace_existing_item' then replace value at `a_index', else insert at `a_index'
+			-- If `replace_existing_item' then replace value at `a_index', else insert at `a_index'.
 		require
 			i_positive: a_index > 0
 		local
@@ -2462,7 +2462,7 @@ feature {NONE} -- Implementation
 
 	add_row_at (a_index: INTEGER; replace_existing_item: BOOLEAN) is
 			-- Add a new row at index `a_index'.
-			-- If `replace_existing_item' then replace value at `a_index', else insert at `a_index'
+			-- If `replace_existing_item' then replace value at `a_index', else insert at `a_index'.
 		require
 			i_positive: a_index > 0
 		local
@@ -2505,7 +2505,7 @@ feature {NONE} -- Implementation
 		end
 
 	update_grid_row_indices (a_index: INTEGER) is
-			-- Recalculate subsequent row indexes starting from `a_index'
+			-- Recalculate subsequent row indexes starting from `a_index'.
 		require
 			valid_index: to_implement_assertion ("Add assertion for `a_index' values.")
 		local
@@ -2530,7 +2530,7 @@ feature {NONE} -- Implementation
 		end
 
 	update_grid_column_indices (a_index: INTEGER) is
-			-- Recalculate subsequent column indexes starting from `a_index'
+			-- Recalculate subsequent column indexes starting from `a_index'.
 		require
 			valid_index: to_implement_assertion ("Add assertion for `a_index' values.")
 		local
@@ -2555,7 +2555,7 @@ feature {NONE} -- Implementation
 		end
 
 	resize_row_lists (new_count: INTEGER) is
-			-- Resize the row lists so count equals `new_count'
+			-- Resize the row lists so count equals `new_count'.
 		require
 			valid_new_count: new_count >= 0
 		do
@@ -2586,7 +2586,7 @@ feature {NONE} -- Implementation
 		end
 
 	column_internal (a_column: INTEGER): EV_GRID_COLUMN_I is
-			-- Column number `a_column', returns a new column if it doesn't exist
+			-- Column number `a_column', returns a new column if it doesn't exist.
 		require
 			a_column_positive: a_column > 0
 		local
@@ -2607,7 +2607,7 @@ feature {NONE} -- Implementation
 		end
 
 	row_internal (a_row: INTEGER): EV_GRID_ROW_I is
-			-- Row `a_row', creates a new one if it doesn't exist
+			-- Row `a_row', creates a new one if it doesn't exist.
 		require
 			a_row_positive: a_row > 0
 		local
@@ -2628,15 +2628,15 @@ feature {NONE} -- Implementation
 feature {EV_GRID_ROW_I} -- Implementation
 
 	internal_selected_rows: ARRAYED_LIST [EV_GRID_ROW]
-		-- List of selected rows
+		-- List of selected rows.
 
 	internal_selected_items: ARRAYED_LIST [EV_GRID_ITEM]
-		-- List of selected items, only used when in item selection modes
+		-- List of selected items, only used when in item selection modes.
 
 feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- Implementation
 
 	update_row_selection_status (a_row_i: EV_GRID_ROW_I) is
-			-- Update the selection status for `a_row' in `Current'
+			-- Update the selection status for `a_row' in `Current'.
 		local
 			row_has_selection: BOOLEAN
 			row_interface: EV_GRID_ROW
@@ -2659,7 +2659,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- I
 		end
 
 	update_item_selection_status (a_item_i: EV_GRID_ITEM_I) is
-			-- Update the selection status for `a_item_i' in `Current'
+			-- Update the selection status for `a_item_i' in `Current'.
 		require
 			a_item_i_not_void: a_item_i /= Void
 		local
@@ -2684,7 +2684,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- I
 		end
 
 	internal_set_item (a_column, a_row: INTEGER; a_item: EV_GRID_ITEM) is
-			-- Replace grid item at position (`a_column', `a_row') with `a_item', `a_item' may be Void, as called by `remove_item'
+			-- Replace grid item at position (`a_column', `a_row') with `a_item', `a_item' may be Void, as called by `remove_item'.
 		require
 			a_column_positive: a_column > 0
 			a_row_positive: a_row > 0
@@ -2709,7 +2709,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- I
 		end
 
 	item_internal (a_column: INTEGER; a_row: INTEGER): EV_GRID_ITEM_I is
-			-- Cell at `a_row' and `a_column' position, if `create_item_if_void' then a new item will be created if Void
+			-- Cell at `a_row' and `a_column' position, if `create_item_if_void' then a new item will be created if Void.
 		require
 			a_row_positive: a_row > 0
 			a_row_less_than_row_count: a_row <= row_count
@@ -2718,7 +2718,6 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- I
 		local
 			grid_row_i: EV_GRID_ROW_I
 			grid_row: SPECIAL [EV_GRID_ITEM_I]
-			a_item: EV_GRID_ITEM
 			a_grid_column_i: EV_GRID_COLUMN_I
 			grid_item_i: EV_GRID_ITEM_I
 			col_index: INTEGER

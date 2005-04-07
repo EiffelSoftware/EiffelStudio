@@ -20,7 +20,7 @@
 		<code_block>InstallUtil /u EiffelSoftware.Codedom.dll</code_block>
 
 		<note>
-			<bold>Note</bold>: The <bold>ASP.NET Enabler</bold> installation program will take care of registering 
+			<bold>Note</bold>: The <bold>EiffelASP.NET</bold> installation program will take care of registering 
 			and unregistering the Eiffel CodeDom Provider properly.
 		</note>
 		<seealso>

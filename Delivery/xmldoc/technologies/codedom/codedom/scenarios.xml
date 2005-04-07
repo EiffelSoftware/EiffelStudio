@@ -7,8 +7,8 @@
 		</heading>
 
 		Probably the most common use of the CodeDom technology is via Internet Information Services (IIS) and ASP.NET. 
-		The installation of the ASP.NET Enabler will configure the machine so ASP.NET pages can be written in Eiffel. 
-		Consult the <link><url>../enabler/installation</url><label>ASP.NET Enabler documentation</label></link> for 
+		The installation of the EiffelASP.NET will configure the machine so ASP.NET pages can be written in Eiffel. 
+		Consult the <link><url>../enabler/installation</url><label>EiffelASP.NET documentation</label></link> for 
 		details on how to write ASP.NET Eiffel pages.
 
 		<heading>

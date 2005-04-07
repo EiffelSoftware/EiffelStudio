@@ -20,7 +20,7 @@
 			The standard Eiffel compilers can only parse <bold>.e</bold> files.
 		</note>
 
-		ASP.NET Enabler includes the <link> <url>../tools/esplitter.xml</url> <label>eSplitter</label> </link> utility which can
+		EiffelASP.NET includes the <link> <url>../tools/esplitter.xml</url> <label>eSplitter</label> </link> utility which can
 		 'split' Eiffel multi-class files (<bold>.es</bold> files) into single class files (<bold>.e</bold> files).
 
 		<heading>

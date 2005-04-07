@@ -1,7 +1,7 @@
-<document title="ASP.NET Enabler Tools">
+<document title="EiffelASP.NET Tools &amp; Administration">
 	<meta_data/>
 	<paragraph>
-		The ASP.NET Enabler delivery comes together with several tools:
+		The EiffelASP.NET delivery comes together with several tools:
 		<list ordered="false">
 			<item>
 				<link>
@@ -23,7 +23,7 @@
 					<url>name_mapper.xml</url>
 					<label>Name Mapper</label>
 				</link> 
-				allows retrieving the Eiffel identifier corresponding to a .NET type or member.
+				allows retrieving the Eiffel identifier corresponding to a .NET type or type member.
 			</item>
 		</list>
 	</paragraph>

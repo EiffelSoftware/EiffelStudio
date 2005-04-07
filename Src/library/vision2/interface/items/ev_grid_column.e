@@ -41,15 +41,13 @@ feature -- Access
 		end
 
 	item (i: INTEGER): EV_GRID_ITEM is
-			-- Item at `i'-th row
+			-- Item at `i'-th row, Void if none.
 		require
 			i_positive: i > 0
 			i_less_than_count: i <= count
 			is_parented: parent /= Void
 		do
 			Result := implementation.item (i)
-		ensure
-			item_not_void: Result /= Void
 		end
 
 	parent: EV_GRID is

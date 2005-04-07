@@ -113,14 +113,12 @@ feature -- Access
 		end
 
 	item (i: INTEGER): EV_GRID_ITEM is
-			-- Item at `i'-th column.
+			-- Item at `i'-th column, Void if none.
 		require
 			i_within_bounds: i > 0 and i <= count
 			is_parented: parent /= Void
 		do
 			Result := parent_i.item (i, index)
-		ensure
-			item_not_void: Result /= Void
 		end
 		
 	selected_items: ARRAYED_LIST [EV_GRID_ITEM] is

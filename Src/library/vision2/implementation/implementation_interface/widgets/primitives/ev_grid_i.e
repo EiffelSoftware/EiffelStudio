@@ -2317,7 +2317,9 @@ feature {NONE} -- Event handling
 						-- Find the next visible node above currently selected item by looping up through parent rows if any
 					from
 						a_sel_item := a_sel_item.column.item ((a_sel_item.row.index - sel_offset).max (1))
-						parent_row := a_sel_item.row.parent_row
+						if a_sel_item /= Void then
+							parent_row := a_sel_item.row.parent_row
+						end
 					until
 						parent_row = Void
 					loop

@@ -22,6 +22,22 @@ default
 	msil_assembly_compatibility ("None")
 
 cluster
+	library base_net:		"$EIFFEL_SRC\library.net\base"
+		default
+			namespace ("EiffelSoftware.Library.BaseNet")
+			assertion (no)
+			assertion (require)
+		end
+
+	library base:		"$EIFFEL_SRC\library\base"
+		exclude
+			"table_eiffel3"; "desc"; "classic"; 
+		default
+			namespace ("EiffelSoftware.Library.Base")
+			assertion (no)
+			assertion (require)
+		end
+
 	all interface:		"$EIFFEL_SRC\dotnet\codedom_provider\interface"
 		exclude
 			"CVS"; 

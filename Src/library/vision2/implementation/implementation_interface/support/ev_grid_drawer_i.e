@@ -232,7 +232,7 @@ feature -- Basic operations
 			horizontal_span_items := items_spanning_horizontal_span (an_x, 0)
 			vertical_span_items := items_spanning_vertical_span (a_y, 0)
 			if not horizontal_span_items.is_empty and not vertical_span_items.is_empty then
-				Result := grid.item_internal (horizontal_span_items.first, vertical_span_items.first, False)
+				Result := grid.item_internal (horizontal_span_items.first, vertical_span_items.first)
 			end
 		end
 		
@@ -253,7 +253,7 @@ feature -- Basic operations
 			horizontal_span_items := items_spanning_horizontal_span (an_x, 0)
 			vertical_span_items := items_spanning_vertical_span (a_y, 0)
 			if not horizontal_span_items.is_empty and not vertical_span_items.is_empty then
-				Result := grid.item_internal (horizontal_span_items.first, vertical_span_items.first, False)
+				Result := grid.item_internal (horizontal_span_items.first, vertical_span_items.first)
 				if Result /= Void then
 					item_indent := grid.item_indent (Result)
 					if an_x - Result.virtual_x_position < 0 then

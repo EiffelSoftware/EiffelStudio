@@ -39,18 +39,8 @@ inherit
 
 feature -- Access
 
-	is_item_set (a_column, a_row: INTEGER): BOOLEAN is
-			-- Has the item at position (`a_column' , `a_row') been set?
-		require
-			not_destroyed: not is_destroyed
-			a_column_positive: a_column > 0
-			a_row_positive: a_row > 0
-		do
-			Result := implementation.is_item_set (a_column, a_row)
-		end
-
 	row (a_row: INTEGER): EV_GRID_ROW is
-			-- Row `a_row'
+			-- Row `a_row'.
 		require
 			not_destroyed: not is_destroyed
 			a_row_positive: a_row > 0
@@ -62,7 +52,7 @@ feature -- Access
 		end
 
 	visible_column (i: INTEGER): EV_GRID_COLUMN is
-			-- `i'-th visible column
+			-- `i'-th visible column.
 		require
 			not_destroyed: not is_destroyed
 			i_positive: i > 0
@@ -74,7 +64,7 @@ feature -- Access
 		end
 
 	column (a_column: INTEGER): EV_GRID_COLUMN is
-			-- Column number `a_column'
+			-- Column number `a_column'.
 		require
 			not_destroyed: not is_destroyed
 			a_column_positive: a_column > 0
@@ -86,7 +76,7 @@ feature -- Access
 		end
 
 	item (a_column: INTEGER; a_row: INTEGER): EV_GRID_ITEM is
-			-- Cell at `a_row' and `a_column' position
+			-- Cell at `a_row' and `a_column' position.
 		require
 			not_destroyed: not is_destroyed
 			a_column_positive: a_column > 0
@@ -469,7 +459,27 @@ feature -- Status setting
 		ensure
 			selection_on_click_disabled: not is_selection_on_click_enabled
 		end
-		
+
+	enable_selection_key_handling is
+			-- Enable selection handling of items via the keyboard.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.enable_selection_keyboard_handling
+		ensure
+			selection_key_handling_enabled: is_selection_keyboard_handling_enabled
+		end
+
+	disable_selection_key_handling is
+			-- Disable selection handling of items via the keyboard.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.enable_selection_keyboard_handling
+		ensure
+			selection_key_handling_disabled: not is_selection_keyboard_handling_enabled
+		end
+
 	enable_single_row_selection is
 			-- Set user selection mode so that clicking an item selects the whole row,
 			-- unselecting any previous rows.
@@ -809,7 +819,9 @@ feature -- Status report
 		end
 		
 	column_displayed (a_column: INTEGER): BOOLEAN is
-			-- Is column `a_column' displayable in `Current'?
+			-- May column `a_column' be displayed when `Current' is?
+			-- Will return False if `hide' has been called on column `a_column'.
+			-- A value of True does not signify that column `a_column' is visible on screen at that particular time.
 		require
 			not_destroyed: not is_destroyed
 			a_column_within_bounds: a_column > 0 and a_column <= column_count
@@ -859,6 +871,14 @@ feature -- Status report
 			not_destroyed: not is_destroyed
 		do
 			Result := implementation.is_selection_on_click_enabled
+		end
+
+	is_selection_keyboard_handling_enabled: BOOLEAN is
+			-- May items be selected via the keyboard?
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.is_selection_keyboard_handling_enabled
 		end
 
 	first_visible_row: INTEGER is
@@ -951,19 +971,18 @@ feature -- Element change
 			implementation.set_item (a_column, a_row, a_item)
 		ensure
 			inserted: column (a_column).item (a_row) = a_item
-			item_set: is_item_set (a_column, a_row)
 		end
 
-	unset_item (a_column, a_row: INTEGER) is
-			-- Replace grid item at position (`a_column', `a_row') with a default item
+	remove_item (a_column, a_row: INTEGER) is
+			-- Remove grid item at position (`a_column', `a_row').
 		require
 			not_destroyed: not is_destroyed
 			a_column_positive: a_column > 0
 			a_row_positive: a_row > 0
 		do
-			implementation.unset_item (a_column, a_row)
+			implementation.remove_item (a_column, a_row)
 		ensure
-			item_unset: not is_item_set (a_column, a_row)
+			item_removed: item (a_column, a_row) = Void
 		end
 
 feature -- Removal

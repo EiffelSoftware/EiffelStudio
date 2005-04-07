@@ -41,10 +41,12 @@ feature {NONE} -- Implementation
 		do
 			create text_field
 			text_field.set_text (text)
-			text_field.select_all
 			popup_window.extend (text_field)
 			text_field.return_actions.extend (agent deactivate)
+			text_field.focus_out_actions.extend (agent deactivate)
 			popup_window.show
+			text_field.set_focus
+			text_field.select_all
 		end
 
 	deactivate is

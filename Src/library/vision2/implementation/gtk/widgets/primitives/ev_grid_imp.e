@@ -14,7 +14,17 @@ inherit
 		rename
 			item as cell_item,
 			pointer_motion_actions as cell_pointer_motion_actions,
-			pointer_motion_actions_internal as cell_pointer_motion_actions_internal
+			pointer_motion_actions_internal as cell_pointer_motion_actions_internal,
+			pointer_double_press_actions_internal as cell_pointer_double_press_actions_internal,
+			pointer_button_release_actions_internal as cell_pointer_button_release_actions_internal,
+			pointer_enter_actions_internal as cell_pointer_enter_actions_internal,
+			pointer_leave_actions_internal as cell_pointer_leave_actions_internal,
+			pointer_button_press_actions_internal as cell_pointer_button_press_actions_internal,
+			pointer_leave_actions as cell_pointer_leave_actions,
+			pointer_button_press_actions as cell_pointer_button_press_actions,
+			pointer_double_press_actions as cell_pointer_double_press_actions,
+			pointer_button_release_actions as cell_pointer_button_release_actions,
+			pointer_enter_actions as cell_pointer_enter_actions
 		redefine
 			interface,
 			initialize,

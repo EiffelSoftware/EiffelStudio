@@ -9,6 +9,17 @@ deferred class
 
 feature -- Event handling
 
+	item_deactivate_actions: EV_GRID_ITEM_ACTION_SEQUENCE is
+			-- Actions to be performed when an item is deactivated.
+		do
+			if item_deactivate_actions_internal = Void then
+				create item_deactivate_actions_internal
+			end
+			Result := item_deactivate_actions_internal
+		ensure
+			not_void: Result /= Void
+		end
+
 	item_select_actions: EV_GRID_ITEM_ACTION_SEQUENCE is
 			-- Actions to be performed when an item is selected
 		do
@@ -46,6 +57,21 @@ feature -- Event handling
 			Result := pointer_motion_actions_internal
 		ensure
 			result_not_void: Result /= Void
+		end
+
+	active_item_setup_actions: ACTION_SEQUENCE [TUPLE [EV_GRID_ITEM, EV_WINDOW]] is
+			-- Actions to be performed to setup an item that is currently activated.
+			-- Overrides default setup of activatable items.
+			-- Arguments of TUPLE (with names for clarity):
+
+			-- activate_item: EV_GRID_ITEM		The item that is currently activated.
+			-- popup_window: EV_WINDOW		The popup window used to interactively edit `activate_item', this
+			--						window has already been sized and positioned by the grid
+		do
+			if active_item_setup_actions_internal = Void then
+				create active_item_setup_actions_internal
+			end
+			Result := active_item_setup_actions_internal
 		end
 		
 	pointer_button_press_actions: ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, INTEGER, EV_GRID_ITEM]] is
@@ -142,6 +168,9 @@ feature -- Event handling
 
 feature {EV_ANY_I} -- Implementation
 
+	item_deactivate_actions_internal: EV_GRID_ITEM_ACTION_SEQUENCE
+			-- Implementation of once per object `item_deactivate_actions'.
+
 	item_select_actions_internal: EV_GRID_ITEM_ACTION_SEQUENCE
 			-- Implementation of once per object `item_select_actions'.
 
@@ -150,6 +179,9 @@ feature {EV_ANY_I} -- Implementation
 			
 	pointer_motion_actions_internal: ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, EV_GRID_ITEM]]
 			-- Implementation of once per object `motion_actions_internal'.
+
+	active_item_setup_actions_internal: ACTION_SEQUENCE [TUPLE [EV_GRID_ITEM, EV_WINDOW]]
+			-- Implementation of once per object `active_item_setup_actions'
 			
 	pointer_double_press_actions_internal: ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, INTEGER, EV_GRID_ITEM]]
 		-- Implementation of once per object `double_press_actions_internal'.

@@ -89,8 +89,13 @@ feature -- Access
 			a_column_less_than_column_count: a_column <= column_count
 			a_row_positive: a_row > 0
 			a_row_less_than_row_count: a_row <= row_count
+		local
+			item_i: EV_GRID_ITEM_I
 		do
-			Result := item_internal (a_column, a_row).interface
+			item_i := item_internal (a_column, a_row)
+			if item_i /= Void then
+				Result := item_i.interface
+			end
 		end
 		
 	item_at_virtual_position (a_virtual_x, a_virtual_y: INTEGER): EV_GRID_ITEM is

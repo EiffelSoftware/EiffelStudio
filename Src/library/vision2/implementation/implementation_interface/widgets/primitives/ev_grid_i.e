@@ -380,7 +380,6 @@ feature -- Status setting
 			else
 					-- If the active setup action sequence is empty then we call setup on the item itself
 				a_item.activate_action (activate_window)
-				activate_window.focus_out_actions.extend (agent a_item.deactivate)
 			end
 		end
 

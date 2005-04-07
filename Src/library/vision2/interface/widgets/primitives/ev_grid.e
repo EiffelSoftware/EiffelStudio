@@ -76,7 +76,7 @@ feature -- Access
 		end
 
 	item (a_column: INTEGER; a_row: INTEGER): EV_GRID_ITEM is
-			-- Cell at `a_row' and `a_column' position.
+			-- Cell at `a_row' and `a_column' position, Void if none
 		require
 			not_destroyed: not is_destroyed
 			a_column_positive: a_column > 0
@@ -84,10 +84,7 @@ feature -- Access
 			a_row_positive: a_row > 0
 			a_row_less_than_row_count: a_row <= row_count
 		do
-			fixme ("Re-implement to return Void when not set")
 			Result := implementation.item (a_column, a_row)
-		ensure
-			item_not_void: Result /= Void
 		end
 		
 	item_at_virtual_position (a_virtual_x, a_virtual_y: INTEGER): EV_GRID_ITEM is

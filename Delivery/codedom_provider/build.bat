@@ -23,9 +23,9 @@ ECHO CODEDOM_RELEASE=%CODEDOM_RELEASE%
 
 SET EIFFEL_SRC=%CD%\checkout\compiler
 ECHO EIFFEL_SRC=%EIFFEL_SRC%
-SET GOBO=%CD%\checkout\library\gobo
+SET GOBO=%CD%\checkout\head\library\gobo
 ECHO GOBO=%GOBO%
-SET ECLOP=%CD%\checkout\eclop
+SET ECLOP=%CD%\checkout\head\eclop
 ECHO ECLOP=%ECLOP%
 ECHO ***********************************
 

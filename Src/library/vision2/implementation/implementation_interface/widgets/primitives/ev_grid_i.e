@@ -83,7 +83,7 @@ feature -- Access
 		end
 
 	item (a_column: INTEGER; a_row: INTEGER;): EV_GRID_ITEM is
-			-- Cell at `a_column' and `a_row' position.
+			-- Cell at `a_column' and `a_row' position, Void if none.
 		require
 			a_column_positive: a_column > 0
 			a_column_less_than_column_count: a_column <= column_count

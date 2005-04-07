@@ -54,6 +54,7 @@ cvs -z3 export -rHEAD -d wel Src/library/wel
 cvs -z3 export -rHEAD -d vision2 Src/library/vision2
 cvs -z3 export -rHEAD -d vision2_extension Src/library/vision2_extension
 cvs -z3 export -rHEAD -d thread Src/library/thread
+cvs -z3 export -rHEAD -d helpers Src/library/helpers
 CD ..\..\compiler
 REM in checkout\compiler
 cvs -z3 export -r%RELEASE% -d library free_add_ons/gobo
@@ -79,7 +80,7 @@ cvs -z3 export -r%RELEASE% -d eac_browser Src/dotnet/eac_browser
 MKDIR VisualStudio\tools
 CD VisualStudio\tools\
 REM in checkout\compiler\dotnet\VisualStudio\tools
-cvs -z3 export -rHEAD -d documentation_manager Src/dotnet/VisualStudio/tools/documentation_manager/
+cvs -z3 export -r%COMPILER_RELEASE% -d documentation_manager Src/dotnet/VisualStudio/tools/documentation_manager/
 
 CD ..\..\..\..\head
 REM in checkout\head
@@ -87,10 +88,24 @@ MKDIR dotnet
 CD dotnet
 REM in checkout\head\dotnet
 cvs -z3 export -r%CODEDOM_RELEASE% -d codedom_provider Src/dotnet/codedom_provider
-cvs -z3 export -r%COMPILER_RELEASE% -d consumer Src/dotnet/consumer
-cvs -z3 export -r%COMPILER_RELEASE% -d helpers Src/dotnet/helpers
+cvs -z3 export -r%CODEDOM_RELEASE% -d consumer Src/dotnet/consumer
+cvs -z3 export -r%CODEDOM_RELEASE% -d helpers Src/dotnet/helpers
 
+CD..
+REM in checkout\head
+MKDIR Eiffel\common\parser
+CD Eiffel\common\parser
+REM in checkout\head\Eiffel\common\parser
+cvs -z3 export -r%COMPILER_RELEASE% -d parser Src/common/parser/parser
+cvs -z3 export -r%COMPILER_RELEASE% -d ast Src/common/parser/AST
 CD ..\..
-REM in checkout
+REM in checkout\head\Eiffel
+cvs -z3 export -r%COMPILER_RELEASE% -d API Src/bench/Eiffel/API
+cvs -z3 export -r%COMPILER_RELEASE% -d yacc Src/bench/Eiffel/yacc
+MKDIR eiffel
+CD eiffel
+REM in checkout\head\Eiffel\eiffel
+cvs -z3 export -r%COMPILER_RELEASE% -d structures Src/bench/Eiffel/eiffel/structures
+cvs -z3 export -r%COMPILER_RELEASE% -d const Src/bench/Eiffel/eiffel/const
 
-CD ..
+CD ..\..\..\..

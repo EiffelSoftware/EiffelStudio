@@ -66,7 +66,7 @@ feature -- Event handling
 
 			-- activate_item: EV_GRID_ITEM		The item that is currently activated.
 			-- popup_window: EV_WINDOW		The popup window used to interactively edit `activate_item', this
-			--						window has already been sized and positioned by the grid
+			--						window has already been sized and positioned by the grid.
 		do
 			if active_item_setup_actions_internal = Void then
 				create active_item_setup_actions_internal

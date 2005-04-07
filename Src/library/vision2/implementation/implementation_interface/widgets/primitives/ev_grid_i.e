@@ -35,20 +35,6 @@ inherit
 
 feature -- Access
 
-	is_item_set (a_column, a_row: INTEGER): BOOLEAN is
-			-- Has the item at position (`a_column' , `a_row') been set?
-		require
-			a_column_positive: a_column > 0
-			a_row_positive: a_row > 0
-		local
-			a_item: EV_GRID_ITEM_I
-		do
-			a_item := item_internal (a_column, a_row, False)
-			if a_item /= Void then
-				Result := not a_item.created_from_grid
-			end
-		end
-
 	row (a_row: INTEGER): EV_GRID_ROW is
 			-- Row `a_row'
 		require
@@ -366,21 +352,38 @@ feature -- Access
 
 feature -- Status setting
 
+	activate_window: EV_WINDOW
+		-- Window used to edit grid item contents on `activate'
+
+	currently_active_item: EV_GRID_ITEM
+		-- Item that is currently active
+
 	activate_item (a_item: EV_GRID_ITEM) is
 			-- Setup `a_item' for user interactive editing
 		require
 			a_item_not_void: a_item /= Void
 		local
-			popup_window: EV_WINDOW
 			x_coord, y_coord: INTEGER
 		do
-			create popup_window
-			x_coord := screen_x + viewable_x_offset - viewport_x_offset + a_item.virtual_x_position
-			y_coord := screen_y + viewable_y_offset - viewport_y_offset + a_item.virtual_y_position
-			popup_window.set_position (x_coord, y_coord)
-			popup_window.set_size (a_item.column.width, a_item.row.height)
-			popup_window.focus_out_actions.extend (agent popup_window.destroy)
-			a_item.active_action (popup_window)
+			if currently_active_item /= Void then
+					-- If an item is currently active then deactivate it
+				deactivate_item (currently_active_item)
+			end
+			currently_active_item := a_item
+			create activate_window
+			x_coord := screen_x - virtual_x_position + a_item.virtual_x_position
+			y_coord := screen_y - virtual_y_position + a_item.virtual_y_position + viewable_y_offset
+			activate_window.set_position (x_coord, y_coord)
+			activate_window.set_size (a_item.column.width, a_item.row.height)
+
+			if active_item_setup_actions_internal /= Void and then not active_item_setup_actions_internal.is_empty then
+					-- The user has requested to setup all activatable items themselves
+				active_item_setup_actions_internal.call ([a_item, activate_window])
+			else
+					-- If the active setup action sequence is empty then we call setup on the item itself
+				a_item.activate_action (activate_window)
+				activate_window.focus_out_actions.extend (agent a_item.deactivate)
+			end
 		end
 
 	deactivate_item (a_item: EV_GRID_ITEM) is
@@ -388,7 +391,14 @@ feature -- Status setting
 		require
 			a_item_not_void: a_item /= Void
 		do
-			
+			if activate_window /= Void and then not activate_window.is_destroyed then
+				activate_window.destroy				
+			end
+			if item_deactivate_actions_internal /= Void then
+				item_deactivate_actions_internal.call (Void)
+			end
+			activate_window := Void
+			currently_active_item := Void
 		end
 
 	enable_selection_on_click is
@@ -1115,18 +1125,17 @@ feature -- Element change
 			internal_set_item (a_column, a_row, a_item)
 		ensure
 			inserted: column (a_column).item (a_row) = a_item
-			item_set: is_item_set (a_column, a_row)
 		end
 
-	unset_item (a_column, a_row: INTEGER) is
-			-- Replace grid item at position (`a_column', `a_row') with a default item
+	remove_item (a_column, a_row: INTEGER) is
+			-- Remove grid item at position (`a_column', `a_row')
 		require
 			a_column_positive: a_column > 0
 			a_row_positive: a_row > 0
 		do
 			internal_set_item (a_column, a_row, Void)
 		ensure
-			item_unset: not is_item_set (a_column, a_row)
+			item_removed: item (a_column, a_row) = Void
 		end
 
 feature -- Removal
@@ -2225,7 +2234,9 @@ feature {NONE} -- Event handling
 			pointed_item_interface: EV_GRID_ITEM
 		do
 			if pointer_motion_actions_internal /= Void and then not pointer_motion_actions_internal.is_empty then
-				pointed_item := drawer.item_at_position_strict (a_x, a_y)
+				if a_x >= 0 and then a_y >= 0 then
+					pointed_item := drawer.item_at_position_strict (a_x, a_y)
+				end
 				if pointed_item /= Void then
 					pointed_item_interface := pointed_item.interface
 				end
@@ -2634,7 +2645,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- I
 		end
 
 	internal_set_item (a_column, a_row: INTEGER; a_item: EV_GRID_ITEM) is
-			-- Replace grid item at position (`a_column', `a_row') with `a_item', `a_item' may be Void as called by `unset_item'
+			-- Replace grid item at position (`a_column', `a_row') with `a_item', `a_item' may be Void, as called by `remove_item'
 		require
 			a_column_positive: a_column > 0
 			a_row_positive: a_row > 0

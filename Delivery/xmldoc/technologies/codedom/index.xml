@@ -1,6 +1,6 @@
 <document title="Code Document Object Model (CodeDom)">
 	<meta_data></meta_data>
-	<paragraph>CodeDom is a Microsoft .NET technology which allows representing source code programatically so that it may be rendered in different languages. The Eiffel CodeDom Provider is installed through the ASP.NET Enabler which is available for download for free on the Eiffel Software web site (
+	<paragraph>CodeDom is a Microsoft .NET technology which allows representing source code programatically so that it may be rendered in different languages. The Eiffel CodeDom Provider is installed through EiffelASP.NET which is available for download for free on the Eiffel Software web site (
 		<link>
 			<label>http://www.eiffel.com</label> 
 			<url>http://www.eiffel.com</url> 
@@ -8,39 +8,24 @@
 		</link>).
 		<line_break/>The following documents cover different aspects of the Eiffel CodeDom Provider:
 		<list ordered="false">
-			<item>The 
+			<item> 
 				<link>
-					<url>enabler/installation.xml</url>
-					<label>ASP.NET Enabler</label>
-				</link> documentation covers topics related to writting Eiffel pages in ASP.NET.
+					<url>enabler/index.xml</url>
+					<label>Writing ASP.NET pages in Eiffel</label>
+				</link> covers topics related to writting Eiffel pages in ASP.NET.
 			</item>
 			<item>The 
 				<link>
-					<url>codedom/about.xml</url>
+					<url>codedom/index.xml</url>
 					<label>Eiffel CodeDom Provider</label>
 				</link> documentation focuses on the Eiffel CodeDom Provider per se. Read this documentation if you intend on using the Eiffel CodeDom Provider via a different mean than ASP.NET (e.g. to generate Web Services stubs using Microsoft's WSDL utility).
 			</item>
-			<item>Finally, the 
+			<item>Finally,  
 				<link>
-					<url>tools/manager.xml</url>
-					<label>Tools</label>
-				</link> documentation covers the Eiffel CodeDom Provider Manager, the eSplitter and the Name Mapper tools that are included in the ASP.NET Enabler delivery.
+					<url>tools/index.xml</url>
+					<label>EiffelASP.NET Tools and Administration</label>
+				</link> covers the Eiffel CodeDom Provider Manager, the eSplitter and the Name Mapper tools that are included in the EiffelASP.NET delivery.
 			</item>
 		</list>
-		<seealso>
-			<bold>See also</bold>: 
-			<link>
-				<url>enabler/installation.xml</url>
-				<label>ASP.NET Enabler</label>
-			</link>, 
-			<link>
-				<url>codedom/about.xml</url>
-				<label>Eiffel CodeDom Provider</label>
-			</link>, 
-			<link>
-				<url>tools/manager.xml</url>
-				<label>Tools</label>
-			</link>
-		</seealso>
 	</paragraph>
 </document>

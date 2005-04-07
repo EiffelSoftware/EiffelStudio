@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 feature {EV_GRID_I} -- Initialization
 
 	set_parent_i (a_grid_i: EV_GRID_I) is
-			-- Make `Current' associated with `a_grid_i'
+			-- Make `Current' associated with `a_grid_i'.
 		require
 			a_grid_i_not_void: a_grid_i /= Void
 		do
@@ -46,7 +46,7 @@ feature {EV_GRID_I} -- Initialization
 		end
 
 	set_physical_index (a_index: INTEGER) is
-			-- Set the physical index of the column
+			-- Set the physical index of the column.
 		require
 			valid_index: a_index >= 0
 			physical_index_not_set: physical_index = -1
@@ -77,7 +77,7 @@ feature -- Access
 		end
 
 	item (i: INTEGER): EV_GRID_ITEM is
-			-- Item at `i'-th row
+			-- Item at `i'-th row.
 		require
 			i_positive: i > 0
 			i_less_than_count: i <= count
@@ -89,7 +89,7 @@ feature -- Access
 		end
 
 	parent: EV_GRID is
-			-- Grid to which current column belongs
+			-- Grid to which current column belongs.
 		do
 			if parent_i /= Void then
 				Result := parent_i.interface
@@ -102,17 +102,15 @@ feature -- Access
 			is_parented: parent /= Void
 		local
 			i: INTEGER
-			create_if_void: BOOLEAN
 			a_item: EV_GRID_ITEM_I
 		do
 			from
 				i := 1
-				create_if_void := is_selected
 				create Result.make (count)
 			until
 				i > count
 			loop
-				a_item := parent_i.item_internal (index, i, create_if_void)
+				a_item := parent_i.item_internal (index, i)
 				if a_item /= Void and then a_item.is_selected then
 					Result.extend (a_item.interface)
 				end
@@ -135,7 +133,7 @@ feature -- Access
 feature -- Status setting
 
 	hide is
-			-- Prevent column from being displayed in `parent'
+			-- Prevent column from being displayed in `parent'.
 		require
 			is_parented: parent /= Void
 		do
@@ -145,7 +143,7 @@ feature -- Status setting
 		end
 
 	show is
-			-- Allow column to be displayable within `parent'
+			-- Allow column to be displayable within `parent'.
 		require
 			is_parented: parent /= Void
 		do
@@ -157,18 +155,18 @@ feature -- Status setting
 feature -- Status report
 
 	index: INTEGER is
-			-- Position of Current in `parent'
+			-- Position of Current in `parent'.
 		require
 			is_parented: parent /= Void
 		do
-			Result := parent_i.columns.index_of (Current, 1)
+			Result := internal_index
 		ensure
 			index_positive: Result > 0
 			index_less_than_column_count: Result <= parent.column_count
 		end
 
 	count: INTEGER is
-			-- Number of items in current
+			-- Number of items in current.
 		require
 			is_parented: parent /= Void
 		do
@@ -186,7 +184,7 @@ feature -- Status report
 feature -- Element change
 
 	set_item (i: INTEGER; a_item: EV_GRID_ITEM) is
-			-- Set item at `i'-th row to be `a_item'
+			-- Set item at `i'-th row to be `a_item'.
 		require
 			i_positive: i > 0
 			a_item_not_void: a_item /= Void
@@ -198,7 +196,7 @@ feature -- Element change
 		end
 
 	set_title (a_title: like title) is
-			-- a_title_not_void: a_title /= Void
+			-- a_title_not_void: a_title /= Void.
 		require
 			is_parented: parent /= Void
 		do
@@ -208,7 +206,7 @@ feature -- Element change
 		end
 
 	set_background_color (a_color: EV_COLOR) is
-			-- Set `background_color' with `a_color'
+			-- Set `background_color' with `a_color'.
 		require
 			a_color_not_void: a_color /= Void
 			is_parented: parent /= Void
@@ -242,7 +240,7 @@ feature -- Element change
 feature {EV_GRID_I} -- Implementation
 
 	remove_parent_i is
-			-- Set `parent_i' to Void
+			-- Set `parent_i' to Void.
 		require
 			is_parented: parent /= Void
 		do
@@ -252,7 +250,7 @@ feature {EV_GRID_I} -- Implementation
 		end
 
 	enable_select is
-			-- Select `Current' in `parent_i'
+			-- Select `Current' in `parent_i'.
 		do
 			remove_selection_from_children
 			selected_item_count := count
@@ -261,7 +259,7 @@ feature {EV_GRID_I} -- Implementation
 		end
 
 	remove_selection_from_children is
-			-- Remove the selection from children in current
+			-- Remove the selection from children in current.
 		local
 			sel_items: ARRAYED_LIST [EV_GRID_ITEM]
 		do
@@ -279,7 +277,7 @@ feature {EV_GRID_I} -- Implementation
 		end
 
 	disable_select is
-			-- Deselect `Current' from `parent_i'
+			-- Deselect `Current' from `parent_i'.
 		local
 			i: INTEGER
 			a_item: EV_GRID_ITEM_I
@@ -289,7 +287,7 @@ feature {EV_GRID_I} -- Implementation
 			until
 				i > count
 			loop
-				a_item := parent_i.item_internal (index, i, False)
+				a_item := parent_i.item_internal (index, i)
 				if a_item /= Void and then a_item.internal_is_selected then
 					a_item.disable_select_internal
 				end
@@ -307,7 +305,7 @@ feature {EV_GRID_I} -- Implementation
 		end
 
 	set_is_visible (a_visible: BOOLEAN) is
-			-- Set `is_visible' to `a_visible'
+			-- Set `is_visible' to `a_visible'.
 		do
 			is_visible := a_visible
 		ensure
@@ -317,7 +315,7 @@ feature {EV_GRID_I} -- Implementation
 feature {EV_GRID_ITEM_I} -- Implementation
 
 	increase_selected_item_count is
-			-- Increase `selected_item_count' by 1
+			-- Increase `selected_item_count' by 1.
 		require
 			selected_item_count_less_than_count: selected_item_count < count
 		do
@@ -327,7 +325,7 @@ feature {EV_GRID_ITEM_I} -- Implementation
 		end
 
 	decrease_selected_item_count is
-			-- Decrease `selected_item_count' by 1
+			-- Decrease `selected_item_count' by 1.
 		require
 			selected_item_count_greater_than_zero: selected_item_count > 0
 		do
@@ -338,15 +336,26 @@ feature {EV_GRID_ITEM_I} -- Implementation
 		end
 
 	selected_item_count: INTEGER
-		-- Number of selected items in `Current'
+		-- Number of selected items in `Current'.
 
-feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_COLUMN} -- Implementation
+feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_COLUMN, EV_GRID_COLUMN_I} -- Implementation
+
+	set_internal_index (a_index: INTEGER) is
+			-- Set the internal index of row
+		require
+			a_index_greater_than_zero: a_index > 0
+		do
+			internal_index := a_index
+		end
+
+	internal_index: INTEGER
+			-- Index of `Current' in parent grid.
 
 	is_visible: BOOLEAN
 		-- Is the column visible in the grid?
 
 	physical_index: INTEGER
-		-- Physical index of column row data stored in `parent_i'
+		-- Physical index of column row data stored in `parent_i'.
 
 	parent_i: EV_GRID_I
 		-- Grid that `Current' resides in.

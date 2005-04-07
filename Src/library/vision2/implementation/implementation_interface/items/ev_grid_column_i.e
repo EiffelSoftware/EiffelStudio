@@ -141,7 +141,8 @@ feature -- Status setting
 		end
 
 	show is
-			-- Allow column to be displayable within `parent'.
+			-- Allow column to be displayed when `parent' is.
+			-- Does not signify that the column will be visible on screen but that it will be visible within its parent.
 		require
 			is_parented: parent /= Void
 		do

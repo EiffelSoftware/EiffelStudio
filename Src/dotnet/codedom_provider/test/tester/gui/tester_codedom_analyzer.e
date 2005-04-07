@@ -35,7 +35,7 @@ feature -- Basic Operations
 		local
 			l_config: CODE_MACHINE_CONFIGURATION
 			l_assembly: ASSEMBLY
-			l_types: NATIVE_ARRAY [TYPE]
+			l_types: NATIVE_ARRAY [SYSTEM_TYPE]
 			i: INTEGER
 			l_found: BOOLEAN
 			l_retried: BOOLEAN
@@ -46,7 +46,7 @@ feature -- Basic Operations
 			if not l_retried then
 				create l_config.make
 				if l_config.languages.has (a_codedom_provider) then
-					codedom_provider ?= feature {ACTIVATOR}.create_instance (feature {TYPE}.get_type (l_config.language_provider (a_codedom_provider)))
+					codedom_provider ?= feature {ACTIVATOR}.create_instance (feature {SYSTEM_TYPE}.get_type (l_config.language_provider (a_codedom_provider)))
 				else
 					if feature {SYSTEM_FILE}.exists (a_codedom_provider) then
 						l_assembly := feature {ASSEMBLY}.load_from (a_codedom_provider)

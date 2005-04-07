@@ -28,7 +28,7 @@ create
 feature -- Access
 
 	subrow (i: INTEGER): EV_GRID_ROW is
-			-- `i'-th child of Current
+			-- `i'-th child of Current.
 		require
 			is_parented: parent /= Void
 			i_positive: i > 0
@@ -53,7 +53,7 @@ feature -- Access
 		end
 
 	parent_row: EV_GRID_ROW is
-			-- Parent of Current if any, Void otherwise
+			-- Parent of Current if any, Void otherwise.
 		do
 			Result := implementation.parent_row
 		ensure
@@ -61,7 +61,7 @@ feature -- Access
 		end
 
 	parent: EV_GRID is
-			-- Grid to which current row belongs
+			-- Grid to which current row belongs.
 		do
 			Result := implementation.parent
 		end
@@ -108,7 +108,7 @@ feature -- Access
 feature -- Status report
 
 	subrow_count: INTEGER is
-			-- Number of children
+			-- Number of children.
 		require
 			is_parented: parent /= Void
 		do
@@ -119,7 +119,7 @@ feature -- Status report
 		end
 
 	index: INTEGER is
-			-- Position of Current in `parent'
+			-- Position of Current in `parent'.
 		require
 			is_parented: parent /= Void
 		do
@@ -130,7 +130,7 @@ feature -- Status report
 		end
 
 	count: INTEGER is
-			-- Number of items in current
+			-- Number of items in current.
 		do
 			Result := implementation.count
 		ensure
@@ -173,7 +173,7 @@ feature -- Status setting
 feature -- Element change
 
 	set_item (i: INTEGER; a_item: EV_GRID_ITEM) is
-			-- Set item at `i'-th column to be `a_item'
+			-- Set item at `i'-th column to be `a_item'.
 		require
 			i_positive: i > 0
 			a_item_not_void: a_item /= Void
@@ -185,7 +185,7 @@ feature -- Element change
 		end
 
 	add_subrow (a_row: EV_GRID_ROW) is
-			-- Make `a_row' a child of Current
+			-- Make `a_row' a child of Current.
 		require
 			is_parented: parent /= Void
 			a_row_not_void: a_row /= Void
@@ -207,7 +207,7 @@ feature -- Element change
 		end
 
 	set_background_color (a_color: EV_COLOR) is
-			-- Set `a_color' to all items in Current
+			-- Set `a_color' to all items in Current.
 		require
 			is_parented: parent /= Void
 			a_color_not_void: a_color /= Void

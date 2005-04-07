@@ -36,7 +36,7 @@ inherit
 feature -- Access
 
 	row (a_row: INTEGER): EV_GRID_ROW is
-			-- Row `a_row'
+			-- Row `a_row'.
 		require
 			a_row_positive: a_row > 0
 			a_row_not_greater_than_row_count: a_row <= row_count
@@ -47,7 +47,7 @@ feature -- Access
 		end
 
 	column (a_column: INTEGER): EV_GRID_COLUMN is
-			-- Column number `a_column'
+			-- Column number `a_column'.
 		require
 			a_column_positive: a_column > 0
 			a_column_not_greater_than_column_count: a_column <= column_count
@@ -58,7 +58,7 @@ feature -- Access
 		end
 
 	visible_column (i: INTEGER): EV_GRID_COLUMN is
-			-- `i'-th visible column
+			-- `i'-th visible column.
 		require
 			i_positive: i > 0
 			i_column_not_greater_than_visible_column_count: i <= visible_column_count
@@ -83,7 +83,7 @@ feature -- Access
 		end
 
 	item (a_column: INTEGER; a_row: INTEGER;): EV_GRID_ITEM is
-			-- Cell at `a_column' and `a_row'   position
+			-- Cell at `a_column' and `a_row' position.
 		require
 			a_column_positive: a_column > 0
 			a_column_less_than_column_count: a_column <= column_count
@@ -395,7 +395,7 @@ feature -- Status setting
 				activate_window.destroy				
 			end
 			if item_deactivate_actions_internal /= Void then
-				item_deactivate_actions_internal.call (a_item)
+				item_deactivate_actions_internal.call ([a_item])
 			end
 			activate_window := Void
 			currently_active_item := Void

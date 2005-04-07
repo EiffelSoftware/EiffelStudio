@@ -33,7 +33,7 @@
 			<content>Samples</content>
 		</heading>
 
-		The <bold>Samples</bold> folder of the ASP.NET Enabler delivery includes ASP.NET pages written in Eiffel. To run 
+		The <bold>Samples</bold> folder of the EiffelASP.NET delivery includes ASP.NET pages written in Eiffel. To run 
 		the samples you can either click on the corresponding link in the <italic>Start</italic> menu or open the page 
 		<link>
 			<url>http://localhost/EiffelSample</url>
@@ -42,7 +42,7 @@
 		 in your internet browser. Each sample comes with an extensively commented source code.
 		
 		<note>
-			<bold>Note</bold>: The samples will only be available if IIS was installed prior to installing ASP.NET Enabler.
+			<bold>Note</bold>: The samples will only be available if IIS was installed prior to installing EiffelASP.NET.
 		</note>
 
 		<seealso>

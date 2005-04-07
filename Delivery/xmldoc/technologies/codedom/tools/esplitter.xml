@@ -11,7 +11,7 @@
 			<content>Command Line Utility (esplit.exe)</content>
 		</heading>
 		
-		This utility is located in the <italic>Codedom\bin</italic> subfolder of the ASP.NET Enabler directory. 
+		This utility is located in the <italic>Codedom\bin</italic> subfolder of the EiffelASP.NET directory. 
 		The command line syntax is:
 		
 		<code_block>

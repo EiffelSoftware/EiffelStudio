@@ -5,7 +5,7 @@
 		be multiple configurations, each of them being associated with at least one application.
 		
 		<note>
-			<bold>Note:</bold> The ASP.NET Enabler installation program will add a shortcut in the start menu to the
+			<bold>Note:</bold> The EiffelASP.NET installation program will add a shortcut in the start menu to the
 			 Eiffel CodeDom Provider Manager.
 		</note>
 
@@ -71,7 +71,7 @@
 				application that uses the CodeDom Provider must have write access rights to the Eiffel Metadata Cache folder.
 
 				<note>
-					<bold>Note:</bold> The ASP.NET Enabler installation program will grant write access rights to the
+					<bold>Note:</bold> The EiffelASP.NET installation program will grant write access rights to the
 					 Eiffel Metadata Cache folder to the ASPNET and IIS_WPG users if they exist. ASPNET is the 
 					default user account used by the ASP.NET process (aspnet_wp.exe) under Windows XP while 
 					IIS_WPG is the default user account used by the ASP.NET process (w3wp.exe) under Windows 

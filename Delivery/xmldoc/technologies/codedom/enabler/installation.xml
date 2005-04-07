@@ -1,26 +1,26 @@
-<document title="ASP.NET Enabler Installation">
+<document title="EiffelASP.NET Installation">
 	<meta_data/>
 	<paragraph>
-		ASP.NET Enabler is available for downloading for free at 
+		EiffelASP.NET is available for downloading for free at 
 		<link>
 			<label>http://www.eiffel.com</label>
 			<url>http://www.eiffel.com</url>
 		</link>.
 		 Simply run the file and follow the installer instructions. It is recommended that Internet Information Services (IIS)
-		 be deployed on the machine prior to installing ASP.NET Enabler. If IIS is not deployed then the installation 
+		 be deployed on the machine prior to installing EiffelASP.NET. If IIS is not deployed then the installation 
 		program will display a warning message box. Click <bold>ignore</bold> to keep installing the product.
 	
 		<paragraph>		
 			Without IIS, ASP.NET pages cannot be loaded and thus the samples will not be installed. It might still be useful
-			 to install ASP.NET Enabler without IIS if the Eiffel CodeDom Provider is going to be used through other 
+			 to install EiffelASP.NET without IIS if the Eiffel CodeDom Provider is going to be used through other 
 			<link>
 				<label>scenarios</label>
 				<url>../codedom/scenarios.xml</url>
 			</link>
 			. If IIS is available then the installer will open an Eiffel ASP.NET page at the end of the installation process. 
 			This page contains links to the documentation and samples. The installer will also put links to these documents
-			 in the <italic>Start</italic> menu under 'Programs\ASP.NET Enabler x.x' where 'x.x' corresponds to the version
-			 number of the ASP.NET Enabler.
+			 in the <italic>Start</italic> menu under 'Programs\EiffelASP.NET x.x' where 'x.x' corresponds to the version
+			 number of EiffelASP.NET.
 		
 			<heading> <size>2</size><content>System Requirements</content></heading>
 		

@@ -13,6 +13,12 @@ feature {NONE} -- Implementation
 
 feature -- Access
 
+	item_deactivate_actions: EV_GRID_ITEM_ACTION_SEQUENCE is
+			-- Actions to be performed when an item has been deactivated.
+		do
+			Result := implementation.item_deactivate_actions
+		end
+
 	item_select_actions: EV_GRID_ITEM_ACTION_SEQUENCE is
 			-- Actions to be performed when an item is selected.
 		do

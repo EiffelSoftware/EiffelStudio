@@ -395,7 +395,7 @@ feature -- Status setting
 				activate_window.destroy				
 			end
 			if item_deactivate_actions_internal /= Void then
-				item_deactivate_actions_internal.call (Void)
+				item_deactivate_actions_internal.call (a_item)
 			end
 			activate_window := Void
 			currently_active_item := Void

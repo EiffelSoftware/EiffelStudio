@@ -102,6 +102,9 @@ feature -- Basic operations
 					extracted_description := formatted (l_ctxt.text)
 					extracted_description.replace_substring_all ("%T", "  ")
 				end
+				if extracted_description /= Void then
+					extracted_description.prune_all_trailing ('%N')
+				end
 			else
 				if extracted_description = Void then
 					create extracted_description.make_empty

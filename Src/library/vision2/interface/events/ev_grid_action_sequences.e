@@ -13,6 +13,17 @@ feature {NONE} -- Implementation
 
 feature -- Access
 
+	active_item_setup_actions: ACTION_SEQUENCE [TUPLE [EV_GRID_ITEM, EV_WINDOW]] is
+			-- Actions to be performed to setup an item that is currently activated.
+			-- Overrides default setup of activatable items.
+			-- Arguments of TUPLE (with names for clarity):
+			-- activate_item: EV_GRID_ITEM		The item that is currently activated.
+			-- popup_window: EV_WINDOW		The popup window used to interactively edit `activate_item', this
+			--						window has already been sized and positioned by the grid.
+		do
+			Result := implementation.active_item_setup_actions
+		end
+
 	item_deactivate_actions: EV_GRID_ITEM_ACTION_SEQUENCE is
 			-- Actions to be performed when an item has been deactivated.
 		do

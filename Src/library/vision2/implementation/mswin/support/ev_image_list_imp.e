@@ -110,7 +110,6 @@ feature -- Element change
 		local
 			pixmap_imp: EV_PIXMAP_IMP
 			pixmap_filename: STRING
-			pixmap_already_present: BOOLEAN
 		do
 			pixmap_imp ?= a_pixmap.implementation
 			if pixmap_imp /= Void then  
@@ -119,16 +118,16 @@ feature -- Element change
 				   filenames_index.has (pixmap_filename)
 				then
 					last_position := filenames_index.item (pixmap_filename)
-					pixmap_already_present := True
 				elseif pixmap_imp.private_bitmap /= Void and then
 					bitmap_ids_index.has (pixmap_imp.private_bitmap.object_id)
 				then
 					last_position := bitmap_ids_index.item (pixmap_imp.private_bitmap.object_id)
-					pixmap_already_present := True
 				else
 					internal_add_pixmap (a_pixmap)
 					if pixmap_filename /= Void then
 						filenames_index.put (last_position, pixmap_filename)
+					else
+						bitmap_ids_index.put (last_position, pixmap_imp.private_bitmap.object_id)
 					end
 				end
 			else

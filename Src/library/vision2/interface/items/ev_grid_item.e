@@ -35,7 +35,7 @@ create
 feature -- Access
 
 	column: EV_GRID_COLUMN is
-			-- Column to which current item belongs
+			-- Column to which current item belongs.
 		require
 			not_destroyed: not is_destroyed
 			is_parented: is_parented
@@ -46,12 +46,13 @@ feature -- Access
 		end
 
 	parent: EV_GRID is
+			-- Grid in which `Current' is contained if any.
 		do
 			Result := implementation.parent
 		end
 
 	row: EV_GRID_ROW is
-			-- Row to which current item belongs
+			-- Row to which current item belongs.
 		require
 			not_destroyed: not is_destroyed
 			parented: is_parented
@@ -103,7 +104,7 @@ feature -- Actions
 		end
 
 	activate is
-            -- Setup `Current' for user interactive editing
+            -- Setup `Current' for user interactive editing.
         require
             not_destroyed: not is_destroyed
             parented: is_parented
@@ -112,7 +113,7 @@ feature -- Actions
         end
 
     deactivate is
-            -- Cleanup from previous call to `activate'
+            -- Cleanup from previous call to `activate'.
         require
             not_destroyed: not is_destroyed
             parented: is_parented
@@ -135,16 +136,18 @@ feature {EV_ANY_I, EV_GRID_DRAWER_I} -- Implementation
 	implementation: EV_GRID_ITEM_I
 			-- Responsible for interaction with native graphics toolkit.
 
-feature {NONE} -- Implementation
+feature {EV_GRID_I} -- Implementation
 
-    activate_action (popup_window: EV_WINDOW) is
-            -- `Current' has been requested to be updated via `popup_window'
-        require
-            popup_window_not_void: popup_window /= Void
-            popup_window_not_destroyed: not popup_window.is_destroyed
-        do
-            -- Redefined by descendents
-        end
+	activate_action (popup_window: EV_WINDOW) is
+			-- `Current' has been requested to be updated via `popup_window'.
+			-- (export status {NONE})
+		require
+			popup_window_not_void: popup_window /= Void
+			popup_window_not_destroyed: not popup_window.is_destroyed
+		do
+		end
+
+feature {NONE} -- Implementation
 
 	create_implementation is
 			-- See `{EV_ANY}.create_implementation'.

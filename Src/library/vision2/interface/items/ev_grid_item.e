@@ -82,10 +82,11 @@ feature -- Access
 			not_destroyed: not is_destroyed
 		do
 			Result := implementation.virtual_y_position
-		ensure
-			parent_void_implies_result_zero: parent = Void implies Result = 0
+--		ensure
 --			valid_result: Result >= 0 and Result <= virtual_height - viewable_height
 		end
+
+feature -- Actions
 		
 	horizontal_indent: INTEGER is
 			-- Horizontal distance in pixels from left edge of `Current' to left edge of `column'.
@@ -119,17 +120,6 @@ feature -- Access
             implementation.deactivate
         end
 
-    active_action (popup_window: EV_WINDOW) is
-            -- `Current' has been requested to be updated via `popup_window'
-        require
-            popup_window_not_void: popup_window /= Void
-            popup_window_not_destroyed: not popup_window.is_destroyed
-        do
-            -- Redefined by descendents
-        ensure
-            popup_window_shown: popup_window.is_show_requested
-        end
-
 feature -- Status report
 
 	is_parented: BOOLEAN is
@@ -146,6 +136,15 @@ feature {EV_ANY_I, EV_GRID_DRAWER_I} -- Implementation
 			-- Responsible for interaction with native graphics toolkit.
 
 feature {NONE} -- Implementation
+
+    activate_action (popup_window: EV_WINDOW) is
+            -- `Current' has been requested to be updated via `popup_window'
+        require
+            popup_window_not_void: popup_window /= Void
+            popup_window_not_destroyed: not popup_window.is_destroyed
+        do
+            -- Redefined by descendents
+        end
 
 	create_implementation is
 			-- See `{EV_ANY}.create_implementation'.

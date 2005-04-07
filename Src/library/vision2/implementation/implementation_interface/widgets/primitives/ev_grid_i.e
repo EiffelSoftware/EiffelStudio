@@ -979,7 +979,9 @@ feature -- Status report
 			-- Is tree functionality enabled?
 		
 	column_displayed (a_column: INTEGER): BOOLEAN is
-			-- Is column `a_column' displayable in `Current'?
+			-- May column `a_column' be displayed when `Current' is?
+			-- Will return False if `hide' has been called on column `a_column'.
+			-- A value of True does not signify that column `a_column' is visible on screen at that particular time.
 		require
 			a_column_within_bounds: a_column > 0 and a_column <= column_count
 		local
@@ -1128,7 +1130,7 @@ feature -- Element change
 		do
 			internal_set_item (a_column, a_row, a_item)
 		ensure
-			inserted: column (a_column).item (a_row) = a_item
+			inserted: item (a_column, a_row) = a_item
 		end
 
 	remove_item (a_column, a_row: INTEGER) is

@@ -549,8 +549,7 @@ feature -- Status setting
 		do
 			implementation.set_first_visible_row (a_row)
 		ensure
-			-- Enough following rows implies `first_visible_row' = a_row.
-			-- Can be calculated from `height' of `Current' and row heights.
+			to_implement_assertion ("EV_GRID.set_first_visible_row - Enough following rows implies `first_visible_row' = a_row, Can be calculated from `height' of `Current' and row heights.")
 		end
 		
 	enable_resizing_divider is
@@ -967,7 +966,7 @@ feature -- Element change
 		do
 			implementation.set_item (a_column, a_row, a_item)
 		ensure
-			inserted: column (a_column).item (a_row) = a_item
+			inserted: item (a_column, a_row) = a_item
 		end
 
 	remove_item (a_column, a_row: INTEGER) is

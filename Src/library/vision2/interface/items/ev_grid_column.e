@@ -51,7 +51,7 @@ feature -- Access
 		end
 
 	parent: EV_GRID is
-			-- Grid to which current column belongs
+			-- Grid to which current column belongs.
 		do
 			Result := implementation.parent
 		end
@@ -79,7 +79,7 @@ feature -- Access
 feature -- Status setting
 
 	hide is
-			-- Prevent column from being shown in `parent'
+			-- Prevent column from being shown in `parent'.
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -89,7 +89,8 @@ feature -- Status setting
 		end
 
 	show is
-			-- Allow column to be displayable within `parent'
+			-- Allow column to be displayed when `parent' is.
+			-- Does not signify that the column will be visible on screen but that it will be visible within its parent.
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -101,7 +102,7 @@ feature -- Status setting
 feature -- Status report
 
 	index: INTEGER is
-			-- Position of Current in `parent'
+			-- Position of Current in `parent'.
 		require
 			is_parented: parent /= Void
 		do
@@ -112,7 +113,7 @@ feature -- Status report
 		end
 
 	count: INTEGER is
-			-- Number of items in current
+			-- Number of items in current.
 		require
 			is_parented: parent /= Void
 		do
@@ -124,7 +125,7 @@ feature -- Status report
 feature -- Element change
 
 	set_item (i: INTEGER; a_item: EV_GRID_ITEM) is
-			-- Set item at `i'-th row to be `a_item'
+			-- Set item at `i'-th row to be `a_item'.
 		require
 			i_positive: i > 0
 			a_item_not_void: a_item /= Void
@@ -136,7 +137,7 @@ feature -- Element change
 		end
 
 	set_title (a_title: like title) is
-			-- a_title_not_void: a_title /= Void
+			-- a_title_not_void: a_title /= Void.
 		require
 			is_parented: parent /= Void
 		do
@@ -146,7 +147,7 @@ feature -- Element change
 		end
 
 	set_background_color (a_color: EV_COLOR) is
-			-- Set `background_color' with `a_color'
+			-- Set `background_color' with `a_color'.
 		require
 			a_color_not_void: a_color /= Void
 			is_parented: parent /= Void

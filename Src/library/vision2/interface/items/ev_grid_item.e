@@ -140,7 +140,6 @@ feature {EV_GRID_I} -- Implementation
 
 	activate_action (popup_window: EV_WINDOW) is
 			-- `Current' has been requested to be updated via `popup_window'.
-			-- (export status {NONE})
 		require
 			popup_window_not_void: popup_window /= Void
 			popup_window_not_destroyed: not popup_window.is_destroyed

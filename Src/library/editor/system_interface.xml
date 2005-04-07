@@ -10,35 +10,8 @@
 <item type="Directory"><Internal_properties>
 	<name>interface</name>
 	</Internal_properties>
-<item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>26</id>
-	<name>margin_widget</name>
-	<Expanded>1</Expanded>
-	<generate_as_client>True</generate_as_client>
-	</Internal_properties>
-<EV_COLORIZABLE></EV_COLORIZABLE>
-<EV_SENSITIVE></EV_SENSITIVE>
-<EV_WIDGET></EV_WIDGET>
-<EV_BOX><Is_item_expanded>1</Is_item_expanded>
-	</EV_BOX>
-<EV_PIXMAPABLE></EV_PIXMAPABLE>
-<EV_CONTAINER></EV_CONTAINER>
-<item type="EV_DRAWING_AREA"><Internal_properties>
-	<id>27</id>
-	<name>margin_area</name>
-	<Expanded>0</Expanded>
-	</Internal_properties>
-<EV_COLORIZABLE></EV_COLORIZABLE>
-<EV_FONTABLE></EV_FONTABLE>
-<EV_SENSITIVE></EV_SENSITIVE>
-<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
-<EV_WIDGET><Minimum_width>1</Minimum_width>
-	<Minimum_height>1</Minimum_height>
-	</EV_WIDGET>
-</item>
-</item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>28</id>
+	<id>3</id>
 	<name>text_panel</name>
 	<Expanded>1</Expanded>
 	<generate_as_client>True</generate_as_client>
@@ -51,7 +24,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>29</id>
+	<id>4</id>
 	<name>main_vbox</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -63,7 +36,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>30</id>
+	<id>17</id>
 	<name>inner_hbox</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -74,33 +47,65 @@
 	</EV_BOX>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
-<item type="EV_CELL"><Internal_properties>
-	<id>36</id>
-	<name>margin_cell</name>
-	<Expanded>0</Expanded>
+<item type="EV_VIEWPORT"><Internal_properties>
+	<id>13</id>
+	<name>margin_viewport</name>
+	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
 <EV_WIDGET></EV_WIDGET>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
+<EV_VIEWPORT><X_offset>0</X_offset>
+	<Y_offset>0</Y_offset>
+	<Item_width>0</Item_width>
+	<Item_height>0</Item_height>
+	</EV_VIEWPORT>
 <EV_CONTAINER></EV_CONTAINER>
-</item>
 <item type="EV_DRAWING_AREA"><Internal_properties>
-	<id>31</id>
-	<name>editor_area</name>
+	<id>15</id>
+	<name>margin_drawing_area</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
-<EV_WIDGET><Minimum_width>1</Minimum_width>
-	<Minimum_height>1</Minimum_height>
+<EV_WIDGET></EV_WIDGET>
+</item>
+</item>
+<item type="EV_VIEWPORT"><Internal_properties>
+	<id>14</id>
+	<name>editor_viewport</name>
+	<Expanded>1</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_WIDGET></EV_WIDGET>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<EV_VIEWPORT><X_offset>0</X_offset>
+	<Y_offset>0</Y_offset>
+	<Item_width>10</Item_width>
+	<Item_height>10</Item_height>
+	</EV_VIEWPORT>
+<EV_CONTAINER></EV_CONTAINER>
+<item type="EV_DRAWING_AREA"><Internal_properties>
+	<id>16</id>
+	<name>editor_drawing_area</name>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_FONTABLE></EV_FONTABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_WIDGET><Minimum_width>10</Minimum_width>
+	<Minimum_height>10</Minimum_height>
 	</EV_WIDGET>
 </item>
 </item>
+</item>
 <item type="EV_HORIZONTAL_SCROLL_BAR"><Internal_properties>
-	<id>32</id>
+	<id>7</id>
 	<name>horizontal_scrollbar</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -115,7 +120,7 @@
 </item>
 </item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>33</id>
+	<id>8</id>
 	<name>scroll_vbox</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -127,7 +132,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_SCROLL_BAR"><Internal_properties>
-	<id>34</id>
+	<id>9</id>
 	<name>vertical_scrollbar</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -141,7 +146,7 @@
 	</EV_GAUGE>
 </item>
 <item type="EV_CELL"><Internal_properties>
-	<id>35</id>
+	<id>10</id>
 	<name>scroll_cell</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -151,6 +156,33 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 </item>
+</item>
+</item>
+<item type="EV_VERTICAL_BOX"><Internal_properties>
+	<id>1</id>
+	<name>margin_widget</name>
+	<Expanded>1</Expanded>
+	<generate_as_client>True</generate_as_client>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_WIDGET></EV_WIDGET>
+<EV_BOX><Is_item_expanded>1</Is_item_expanded>
+	</EV_BOX>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<EV_CONTAINER></EV_CONTAINER>
+<item type="EV_DRAWING_AREA"><Internal_properties>
+	<id>2</id>
+	<name>margin_area</name>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_FONTABLE></EV_FONTABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_WIDGET><Minimum_width>1</Minimum_width>
+	<Minimum_height>1</Minimum_height>
+	</EV_WIDGET>
 </item>
 </item>
 <item type="Directory"><Internal_properties>

@@ -90,9 +90,7 @@ feature -- Access
 			a_row_positive: a_row > 0
 			a_row_less_than_row_count: a_row <= row_count
 		do
-			Result := item_internal (a_column, a_row, True).interface
-		ensure
-			item_not_void: Result /= Void
+			Result := item_internal (a_column, a_row).interface
 		end
 		
 	item_at_virtual_position (a_virtual_x, a_virtual_y: INTEGER): EV_GRID_ITEM is
@@ -1101,6 +1099,8 @@ feature -- Element change
 				-- Insert retrieved column at position `j'
 			columns.go_i_th (j)
 			columns.put_left (a_col)
+
+			update_grid_column_indices (i.min (j))
 			
 			recompute_column_offsets
 			redraw_client_area
@@ -1157,6 +1157,8 @@ feature -- Removal
 			
 			columns.go_i_th (a_column)
 			columns.remove
+
+			update_grid_column_indices (a_column)
 			
 			if a_col_i.is_visible then
 				visible_column_count := visible_column_count - 1
@@ -2339,6 +2341,7 @@ feature {NONE} -- Event handling
 			start_item: EV_GRID_ITEM
 			start_row_index, end_row_index, start_column_index, end_column_index: INTEGER
 			col_counter, row_counter: INTEGER
+			current_item: EV_GRID_ITEM
 		do
 			if (create {EV_ENVIRONMENT}).application.shift_pressed and then is_multiple_item_selection_enabled then
 				start_item := selected_items.last
@@ -2357,7 +2360,10 @@ feature {NONE} -- Event handling
 						until
 							row_counter > start_row_index.max (end_row_index)
 						loop
-							item (col_counter, row_counter).enable_select
+							current_item := item (col_counter, row_counter)
+							if current_item /= Void then
+								current_item.enable_select
+							end
 							row_counter := row_counter + 1
 						end
 						col_counter := col_counter + 1
@@ -2430,8 +2436,10 @@ feature {NONE} -- Implementation
 					replaced_column.remove_parent_i
 				end
 				columns.replace (a_column_i)
+				a_column_i.set_internal_index (a_index)
 			else
 				columns.put_left (a_column_i)
+				update_grid_column_indices (a_index)
 			end
 
 				-- Set column's internal data
@@ -2510,6 +2518,31 @@ feature {NONE} -- Implementation
 				row_i := temp_rows @ i
 				if row_i /= Void then
 					row_i.set_internal_index (i)
+				end
+				i := i + 1
+			end
+		end
+
+	update_grid_column_indices (a_index: INTEGER) is
+			-- Recalculate subsequent column indexes starting from `a_index'
+		require
+			valid_index: to_implement_assertion ("Add assertion for `a_index' values.")
+		local
+			i, a_column_count: INTEGER
+			column_i: EV_GRID_COLUMN_I
+			temp_columns: like columns
+		do
+				-- Set subsequent indexes to their new values
+			temp_columns := columns
+			from
+				i := a_index
+				a_column_count := temp_columns.count
+			until
+				i > a_column_count
+			loop
+				column_i := temp_columns @ i
+				if column_i /= Void then
+					column_i.set_internal_index (i)
 				end
 				i := i + 1
 			end
@@ -2669,7 +2702,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- I
 			end
 		end
 
-	item_internal (a_column: INTEGER; a_row: INTEGER; create_item_if_void: BOOLEAN): EV_GRID_ITEM_I is
+	item_internal (a_column: INTEGER; a_row: INTEGER): EV_GRID_ITEM_I is
 			-- Cell at `a_row' and `a_column' position, if `create_item_if_void' then a new item will be created if Void
 		require
 			a_row_positive: a_row > 0
@@ -2691,27 +2724,10 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- I
 			grid_row_i := row_internal (a_row)
 			grid_row :=  internal_row_data @ a_row
 
-				-- Enlarge row so that it can hold the data at the column's `physical_index'
-			if col_index >= grid_row.count then
-				if create_item_if_void then
-						-- We only want to make the row bigger if we are creating a new item if Void
-					enlarge_row (a_row, col_index + 1)
-					grid_row := internal_row_data @ a_row
-					grid_item_i := grid_row @ (col_index)
-				end
-			else
+			if col_index < grid_row.count then
 				grid_item_i := grid_row @ (col_index)
+				Result := grid_item_i
 			end
-
-				-- Create new row if requested
-			if grid_item_i = Void and then create_item_if_void then
-				create a_item
-				grid_item_i := a_item.implementation
-				grid_item_i.set_created_from_grid
-				grid_item_i.set_parents (Current, a_grid_column_i, grid_row_i)
-				grid_row.put (grid_item_i, (col_index))
-			end
-			Result := grid_item_i
 		end
 
 feature {EV_ANY_I, EV_GRID_ROW, EV_GRID_COLUMN, EV_GRID} -- Implementation

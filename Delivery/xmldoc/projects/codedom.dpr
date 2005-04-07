@@ -1,8 +1,8 @@
 <project>
-	<project_name>ASP.NET Enabler Documentation</project_name>
-	<root_directory>$DOCUMENT_DIR/xmldoc</root_directory>
-	<schema>$EIFFEL_SRC\Documentation Builder\resources\xml\schema\document.xsd</schema>
-	<html_css>$DOCUMENT_DIR/xmldoc/technologies/codedom/default.css</html_css>
+	<project_name>EiffelASP.NET Documentation</project_name>
+	<root_directory>E:/xmldoc/technologies/codedom</root_directory>
+	<schema>E:/Sources/tools/doc_builder/resources/xml/schema/document.xsd</schema>
+	<html_css>E:/xmldoc/technologies/codedom/default.css</html_css>
 	<header_override>True</header_override>
 	<use_header_from_file>False</use_header_from_file>
 	<footer_override>True</footer_override>

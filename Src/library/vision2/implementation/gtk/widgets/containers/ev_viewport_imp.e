@@ -149,10 +149,10 @@ feature -- Element change
 			block_resize_actions
 			internal_x_offset := a_x
 			if a_x < 0 then
-				{EV_GTK_EXTERNALS}.gtk_fixed_move (fixed_widget, container_widget, -a_x, -1)
+				{EV_GTK_EXTERNALS}.gtk_fixed_move (fixed_widget, container_widget, -a_x, -internal_y_offset.max (0))
 				internal_set_value_from_adjustment (horizontal_adjustment, 0)
 			else
-				{EV_GTK_EXTERNALS}.gtk_fixed_move (fixed_widget, container_widget, 0, -1)
+				{EV_GTK_EXTERNALS}.gtk_fixed_move (fixed_widget, container_widget, 0, -internal_y_offset.max (0))
 				internal_set_value_from_adjustment (horizontal_adjustment, a_x)
 			end
 			
@@ -165,10 +165,10 @@ feature -- Element change
 			block_resize_actions
 			internal_y_offset := a_y
 			if a_y < 0 then
-				{EV_GTK_EXTERNALS}.gtk_fixed_move (fixed_widget, container_widget, -1, -a_y)
+				{EV_GTK_EXTERNALS}.gtk_fixed_move (fixed_widget, container_widget, -internal_x_offset.max (0), -a_y)
 				internal_set_value_from_adjustment (vertical_adjustment, 0)
 			else
-				{EV_GTK_EXTERNALS}.gtk_fixed_move (fixed_widget, container_widget, -1, 0)
+				{EV_GTK_EXTERNALS}.gtk_fixed_move (fixed_widget, container_widget, -internal_x_offset.max (0), 0)
 				internal_set_value_from_adjustment (vertical_adjustment, a_y)
 			end
 			unblock_resize_actions

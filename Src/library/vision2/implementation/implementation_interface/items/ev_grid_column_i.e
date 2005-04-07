@@ -59,7 +59,9 @@ feature {EV_GRID_I} -- Initialization
 feature -- Access
 
 	is_displayed: BOOLEAN is
-		-- Is `Current' displayable in `parent'
+		-- May `Current' be displayed when its `parent' is?
+		-- Will return False if `hide' has been called on `Current'.
+		-- A column that `is_displayed' does not necessarily have to be visible on screen at that particular time.
 	do
 		Result := is_visible
 	end

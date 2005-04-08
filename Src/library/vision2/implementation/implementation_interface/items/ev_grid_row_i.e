@@ -228,6 +228,14 @@ feature -- Status setting
 						-- otherwise the row offsets are already correct.
 					parent_i.set_vertical_computation_required
 				end
+			
+				if parent_i.row_expand_actions_internal /= Void then
+						-- The expand actions are fired after we set vertical computation
+						-- to ensure that if you query a dimension from within the actions,
+						-- they are up to date.
+					parent_i.row_expand_actions_internal.call ([interface])
+				end
+				
 				parent_i.redraw_client_area
 			end
 		ensure
@@ -245,13 +253,20 @@ feature -- Status setting
 
 				update_parent_expanded_node_counts_recursively (- contained_expanded_items_recursive)
 					-- Update the expanded node counts for `Current' and all parent nodes.
-
 				
 				if displayed_in_grid_tree then
 						-- Only recompute the row offsets if `Current' is visible
 						-- otherwise the row offsets are already correct.
 					parent_i.set_vertical_computation_required
 				end
+				
+				if parent_i.row_collapse_actions_internal /= Void then
+						-- The collapse actions are fired after we set vertical computation
+						-- to ensure that if you query a dimension from within the actions,
+						-- they are up to date.
+					parent_i.row_collapse_actions_internal.call ([interface])
+				end
+				
 				parent_i.redraw_client_area
 			end
 		ensure

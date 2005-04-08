@@ -5,14 +5,41 @@ indexing
 
 class
 	EV_GRID_ROW_ACTION_SEQUENCES
+	
+inherit
+	REFACTORING_HELPER
 
 feature -- Access
 
-	expand_actions: EV_NOTIFY_ACTION_SEQUENCE
-		-- Actions to be performed when `Current' is expanded.
+-- Note that these are commented as they have been moved to EV_GRID_ACTION_SEQUENCES
+-- Review this class and possibly remove if no action sequences are to be available at the row level.
+
+	review is
+			--
+		do
+			fixme ("dfg")
+		end
+		
 	
-	collapse_actions: EV_NOTIFY_ACTION_SEQUENCE
-		-- Actions to be performed when `Current' is collapsed.
+--	expand_actions: EV_NOTIFY_ACTION_SEQUENCE is
+--			-- Actions to be performed when `Current' is expanded.
+--		do
+--	--		Result := implementation.expand_actions
+--		ensure
+--			result_not_void: Result /= Void
+--		end
+--	
+--	collapse_actions: EV_NOTIFY_ACTION_SEQUENCE is
+--			-- Actions to be performed when `Current' is collapsed.
+--		do
+--	--		Result := implementation.collapse_actions
+--		ensure
+--			result_not_void: Result /= Void
+--		end
+--		
+--feature {NONE} -- Implementation
+--
+--	implementation: EV_GRID_ROW_ACTION_SEQUENCES_I
 
 end
 

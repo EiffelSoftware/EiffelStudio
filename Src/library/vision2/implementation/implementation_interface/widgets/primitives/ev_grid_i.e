@@ -205,7 +205,7 @@ feature -- Access
 				sel_columns.remove
 			end
 			fixme ("Remove this full redraw and only redraw those items that have actually changed.")
-			redraw_client_area
+			--redraw_client_area
 		ensure
 			selected_items_empty: selected_items.is_empty
 			selected_rows_empty: selected_rows.is_empty
@@ -2294,46 +2294,105 @@ feature {NONE} -- Event handling
 			to_implement ("EV_GRID_I.pointer_leave_received")
 		end
 
+	find_next_item_in_row (grid_row: EV_GRID_ROW; starting_index: INTEGER; look_right: BOOLEAN): EV_GRID_ITEM is
+			-- Find the next item horizontally in `grid_row' starting at index `starting_index', if 'look_right' then the the item to the right is found, else it looks to the left.
+			-- Result is Void if no item is found.
+		local
+			item_offset: INTEGER
+			item_index: INTEGER
+		do
+			if look_right then
+				item_offset := 1
+			else
+				item_offset := -1
+			end
+
+			from
+				item_index := starting_index + item_offset
+			until
+				Result /= Void or else item_index = 0 or else item_index > grid_row.count
+			loop
+				Result := grid_row.item (item_index)
+				item_index := item_index + item_offset
+			end
+		end
+
+	find_next_item_in_column (grid_column: EV_GRID_COLUMN; starting_index: INTEGER; look_down: BOOLEAN; look_left_right_if_void: BOOLEAN): EV_GRID_ITEM is
+			-- Find the next item vertically in `grid_column' starting a index `starting_index' if 'look_down' then the the item below is found, else it looks above.
+			-- If `look_left_right_if_void', if a Void item is found it will search along the current row starting to the left of `starting_index', then to the right if none found.
+			-- Result is Void if no item is found.
+		local
+			item_offset: INTEGER
+			item_index: INTEGER
+			is_viewable: BOOLEAN
+			a_parent_row: EV_GRID_ROW
+		do
+			if look_down then
+				item_offset := 1
+			else
+				item_offset := -1
+			end
+
+			from
+				item_index := starting_index + item_offset
+			until
+				Result /= Void or else item_index = 0 or else item_index > grid_column.count
+			loop
+				Result := grid_column.item (item_index)
+				if Result = Void and then look_left_right_if_void then
+					-- There is no item in the column so we first look left, then right
+					Result := find_next_item_in_row (row (item_index), grid_column.index, False)
+					if Result = Void then
+						Result := find_next_item_in_row (row (item_index), grid_column.index, True)
+					end
+				end
+				if Result /= Void then
+					from
+						is_viewable := True
+						a_parent_row := Result.row.parent_row
+					until
+						a_parent_row = Void or else not is_viewable
+					loop
+						if not a_parent_row.is_expanded then
+							is_viewable := False
+						end
+						a_parent_row := a_parent_row.parent_row
+					end
+					if not is_viewable then
+						Result := Void
+					end
+				end
+				item_index := item_index + item_offset
+			end
+		end		
+
 	key_press_received (a_key: EV_KEY) is
 			-- Called by `key_press_actions' of `drawable'.
 		local
 			a_sel_item: EV_GRID_ITEM
 			a_sel_row, parent_row: EV_GRID_ROW
 			sel_items: like selected_items
-			sel_offset: INTEGER
+			look_left_right: BOOLEAN
 		do
 				-- Handle the selection events
 			sel_items := selected_items
+			if is_single_row_selection_enabled or else is_multiple_row_selection_enabled  then
+					-- We always want to find an item above or below for row selection
+				look_left_right := True
+			end
 			if not sel_items.is_empty then
 				a_sel_item := sel_items.last
 				a_sel_row := a_sel_item.row
-				sel_offset := 1
 				inspect
 					a_key.code
 				when {EV_KEY_CONSTANTS}.Key_down then
-					if not a_sel_row.is_expanded then
-						sel_offset := sel_offset + a_sel_row.implementation.subnode_count_recursive
-					end
-					a_sel_item := a_sel_item.column.item ((a_sel_item.row.index + sel_offset).min (row_count))					
+					a_sel_item := find_next_item_in_column (a_sel_item.column, a_sel_item.row.index, True, look_left_right)
 				when {EV_KEY_CONSTANTS}.Key_up then
-						-- Find the next visible node above currently selected item by looping up through parent rows if any
-					from
-						a_sel_item := a_sel_item.column.item ((a_sel_item.row.index - sel_offset).max (1))
-						if a_sel_item /= Void then
-							parent_row := a_sel_item.row.parent_row
-						end
-					until
-						parent_row = Void
-					loop
-						if not parent_row.is_expanded then
-							a_sel_item := parent_row.item (a_sel_item.column.index)
-						end
-						parent_row := parent_row.parent_row
-					end
+					a_sel_item := find_next_item_in_column (a_sel_item.column, a_sel_item.row.index, False, look_left_right)
 				when {EV_KEY_CONSTANTS}.Key_right then
-					a_sel_item := a_sel_item.row.item ((a_sel_item.column.index + 1).min (column_count))
+					a_sel_item := find_next_item_in_row (a_sel_item.row, a_sel_item.column.index, True)
 				when {EV_KEY_CONSTANTS}.Key_left then
-					a_sel_item := a_sel_item.row.item ((a_sel_item.column.index - 1).max (1))
+					a_sel_item := find_next_item_in_row (a_sel_item.row, a_sel_item.column.index, False)
 				else
 					a_sel_item := Void
 				end

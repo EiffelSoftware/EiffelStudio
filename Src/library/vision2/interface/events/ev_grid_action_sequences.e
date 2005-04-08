@@ -42,6 +42,22 @@ feature -- Access
 			not_void: Result /= Void
 		end
 		
+	row_expand_actions: EV_GRID_ROW_ACTION_SEQUENCE is
+			-- Actions to be performed when a row is expanded.
+		do
+			Result := implementation.row_expand_actions
+		ensure
+			result_not_void: Result /= Void
+		end
+	
+	row_collapse_actions: EV_GRID_ROW_ACTION_SEQUENCE is
+			-- Actions to be performed when a row is collapsed.
+		do
+			Result := implementation.row_collapse_actions
+		ensure
+			result_not_void: Result /= Void
+		end
+		
 	pointer_motion_actions: ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, EV_GRID_ITEM]] is
 			-- Actions to be performed when a screen pointer moves over a grid.
 			-- Arguments (with names for clarity):

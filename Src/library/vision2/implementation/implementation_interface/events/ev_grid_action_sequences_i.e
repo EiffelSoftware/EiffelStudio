@@ -42,6 +42,28 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 		
+	row_expand_actions: EV_GRID_ROW_ACTION_SEQUENCE is
+			-- Actions to be performed when a row is expanded.
+		do
+			if row_expand_actions_internal = Void then
+				create row_expand_actions_internal
+			end
+			Result := row_expand_actions_internal
+		ensure
+			result_not_void: Result /= Void
+		end
+	
+	row_collapse_actions: EV_GRID_ROW_ACTION_SEQUENCE is
+			-- Actions to be performed when a row is collapsed.
+		do
+			if row_collapse_actions_internal = Void then
+				create row_collapse_actions_internal
+			end
+			Result := row_collapse_actions_internal
+		ensure
+			result_not_void: Result /= Void
+		end
+		
 	pointer_motion_actions: ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, EV_GRID_ITEM]] is
 			-- Actions to be performed when a screen pointer moves over a grid.
 			-- Arguments of TUPLE (with names for clarity):
@@ -197,6 +219,12 @@ feature {EV_ANY_I} -- Implementation
 		
 	pointer_button_release_actions_internal: ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, INTEGER, EV_GRID_ITEM]]
 			-- Implementation of once per object `pointer_button_release_actions_internal'.
+			
+	row_expand_actions_internal: EV_GRID_ROW_ACTION_SEQUENCE
+			-- Implementation of once per object `row_expand_actions_internal'.
+			
+	row_collapse_actions_internal: EV_GRID_ROW_ACTION_SEQUENCE
+			-- Implementation of once per object `row_collapse_actions_internal'.
 
 end
 

@@ -5,7 +5,9 @@ indexing
 
 deferred class
 	 EV_GRID_ACTION_SEQUENCES_I
-
+	 
+inherit
+	REFACTORING_HELPER
 
 feature -- Event handling
 
@@ -30,6 +32,14 @@ feature -- Event handling
 		ensure
 			not_void: Result /= Void
 		end
+		
+	item_deselect_actions: EV_GRID_ITEM_ACTION_SEQUENCE is
+			-- Actions to be performed when an item is deselected
+		do
+			to_implement ("EV_GRID_ACTION_SEQUENCE_I.item_deselect_actions")
+		ensure
+			not_void: Result /= Void
+		end
 
 	row_select_actions: EV_GRID_ROW_ACTION_SEQUENCE is
 			-- Actions to be performed when a row is selected
@@ -38,6 +48,30 @@ feature -- Event handling
 				create row_select_actions_internal
 			end
 			Result := row_select_actions_internal
+		ensure
+			not_void: Result /= Void
+		end
+		
+	row_deselect_actions: EV_GRID_ROW_ACTION_SEQUENCE is
+			-- Actions to be performed when a row is deselected
+		do
+			to_implement ("EV_GRID_ACTION_SEQUENCE_I.row_deselect_actions")
+		ensure
+			not_void: Result /= Void
+		end
+		
+	column_select_actions: EV_GRID_ROW_ACTION_SEQUENCE is
+			-- Actions to be performed when a column is selected
+		do
+			to_implement ("EV_GRID_ACTION_SEQUENCE_I.column_select_actions")
+		ensure
+			not_void: Result /= Void
+		end
+		
+	column_deselect_actions: EV_GRID_ROW_ACTION_SEQUENCE is
+			-- Actions to be performed when a column is deselected
+		do
+			to_implement ("EV_GRID_ACTION_SEQUENCE_I.column_deselect_actions")
 		ensure
 			not_void: Result /= Void
 		end

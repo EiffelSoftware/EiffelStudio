@@ -769,7 +769,8 @@ feature -- Status setting
 				
 				row_height := a_row_height
 				is_item_height_changing := True
-				recompute_vertical_scroll_bar
+				fixme ("Remove following line when tested as it should not be required")
+--				recompute_vertical_scroll_bar
 				is_item_height_changing := False
 				set_vertical_computation_required
 				redraw_client_area
@@ -1334,14 +1335,15 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 	perform_vertical_computation is
 			-- Re-compute vertical row offsets and other such values
 			-- required before drawing may be performed, only if required.
+		local
+			app_imp: EV_APPLICATION_IMP
 		do
 			if vertical_computation_required then
 				vertical_computation_required := False
 				if row_count > 0 then
 						-- Do nothing if `Current' is empty.
-						
 					recompute_row_offsets (1)
-					recompute_vertical_scroll_bar
+					((create {EV_ENVIRONMENT}).application).do_once_on_idle (agent recompute_vertical_scroll_bar)
 				end
 			end
 		ensure
@@ -1424,11 +1426,11 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 						row_index := row_index + 1
 						visible_count := visible_count + 1
 					end
-					
 				end
 			else
 				row_offsets := Void
 			end
+			
 		ensure
 			offsets_consistent_when_not_fixed: not is_row_height_fixed implies row_offsets.count = rows.count + 1
 		end
@@ -1449,9 +1451,13 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			-- Redraw area of `an_item' if visible.
 		require
 			an_item_not_void: an_item /= Void
+		local
+			a1, a2: INTEGER
 		do
 			fixme ("Do we need to check if item is visible? There may be no effect to simply invalidate the area...")
-			drawable.redraw_rectangle (an_item.virtual_x_position - (internal_client_x - viewport_x_offset) , an_item.virtual_y_position - (internal_client_y - viewport_y_offset), an_item.column.width, an_item.row.height)
+			a1 := an_item.virtual_x_position - (internal_client_x - viewport_x_offset)
+			a2 := an_item.virtual_y_position - (internal_client_y - viewport_y_offset)
+			drawable.redraw_rectangle (a1, a2, an_item.column.width, an_item.row.height)
 		end
 
 	redraw_client_area is
@@ -2767,6 +2773,12 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- I
 			else
 				internal_row_data.i_th (a_row).put (Void, a_grid_col_i.physical_index)
 			end
+			
+			fixme ("To Implement this optimization")
+--			if a_item /= Void then
+--				redraw_item (a_item.implementation)
+--			else
+--			end
 		end
 
 	item_internal (a_column: INTEGER; a_row: INTEGER): EV_GRID_ITEM_I is

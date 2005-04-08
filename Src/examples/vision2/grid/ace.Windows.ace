@@ -41,6 +41,11 @@ cluster
 		exclude
 			"gtk";
 		end
+		
+	all time:		"$ISE_EIFFEL\library\time"
+				exclude
+					"german"; "french"; 
+		end
 
 external
 	include_path:

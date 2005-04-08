@@ -33,11 +33,43 @@ feature -- Access
 		ensure
 			not_void: Result /= Void
 		end
+		
+	item_deselect_actions: EV_GRID_ITEM_ACTION_SEQUENCE is
+			-- Actions to be performed when an item is deselected.
+		do
+			Result := implementation.item_deselect_actions
+		ensure
+			not_void: Result /= Void
+		end
 
 	row_select_actions: EV_GRID_ROW_ACTION_SEQUENCE is
-			-- Actions to be performed when an row is selected.
+			-- Actions to be performed when a row is selected.
 		do
 			Result := implementation.row_select_actions
+		ensure
+			not_void: Result /= Void
+		end
+		
+	row_deselect_actions: EV_GRID_ROW_ACTION_SEQUENCE is
+			-- Actions to be performed when a row is deselected.
+		do
+			Result := implementation.row_deselect_actions
+		ensure
+			not_void: Result /= Void
+		end
+		
+	column_select_actions: EV_GRID_ROW_ACTION_SEQUENCE is
+			-- Actions to be performed when a column is selected
+		do
+			Result := implementation.column_select_actions
+		ensure
+			not_void: Result /= Void
+		end
+		
+	column_deselect_actions: EV_GRID_ROW_ACTION_SEQUENCE is
+			-- Actions to be performed when a column is deselected
+		do
+			Result := implementation.column_deselect_actions
 		ensure
 			not_void: Result /= Void
 		end

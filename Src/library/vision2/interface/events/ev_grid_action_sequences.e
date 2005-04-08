@@ -6,11 +6,6 @@ indexing
 class
 	EV_GRID_ACTION_SEQUENCES
 
-
-feature {NONE} -- Implementation
-
-	implementation: EV_GRID_ACTION_SEQUENCES_I
-
 feature -- Access
 
 	active_item_setup_actions: ACTION_SEQUENCE [TUPLE [EV_GRID_ITEM, EV_WINDOW]] is
@@ -137,6 +132,10 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
+		
+feature {NONE} -- Implementation
+
+	implementation: EV_GRID_ACTION_SEQUENCES_I
 		
 end
 

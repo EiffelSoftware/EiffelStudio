@@ -177,7 +177,6 @@ feature -- Status setting
 					parent_i.update_row_selection_status (row_i)
 				end
 				parent_i.update_item_selection_status (Current)
-				parent_i.redraw_item (Current)
 			end
 		end
 
@@ -231,7 +230,8 @@ feature {EV_GRID_I, EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implementation
 		do
 			internal_is_selected := True
 			row_i.increase_selected_item_count
-			column_i.increase_selected_item_count					
+			column_i.increase_selected_item_count				
+			parent_i.redraw_item (Current)
 		end
 
 	disable_select_internal is
@@ -242,6 +242,7 @@ feature {EV_GRID_I, EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implementation
 			row_i.decrease_selected_item_count
 			column_i.decrease_selected_item_count
 			internal_is_selected := False
+			parent_i.redraw_item (Current)
 		end
 
 feature {EV_GRID_I, EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implementation

@@ -1335,8 +1335,6 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 	perform_vertical_computation is
 			-- Re-compute vertical row offsets and other such values
 			-- required before drawing may be performed, only if required.
-		local
-			app_imp: EV_APPLICATION_IMP
 		do
 			if vertical_computation_required then
 				vertical_computation_required := False
@@ -2192,6 +2190,16 @@ feature {NONE} -- Event handling
 		do
 			drawable.set_focus
 			pointed_item := drawer.item_at_position (a_x, a_y)
+			
+				-- We fire the pointer button press actions before the node or selection actions which may occur
+				-- as a result of this press.
+			if pointer_button_press_actions_internal /= Void and then not pointer_button_press_actions_internal.is_empty then
+				if pointed_item /= Void then
+					pointed_item_interface := pointed_item.interface
+				end
+				pointer_button_press_actions_internal.call ([client_x_to_virtual_x(a_x), client_y_to_virtual_y (a_y), a_button, pointed_item_interface])
+			end
+
 			if pointed_item /= Void then
 				pointed_row_i := pointed_item.row_i
 				node_pixmap_width := expand_node_pixmap.width
@@ -2211,12 +2219,6 @@ feature {NONE} -- Event handling
 						handle_newly_selected_item (pointed_item.interface)
 					end
 				end
-			end
-			if pointer_button_press_actions_internal /= Void and then not pointer_button_press_actions_internal.is_empty then
-				if pointed_item /= Void then
-					pointed_item_interface := pointed_item.interface
-				end
-				pointer_button_press_actions_internal.call ([client_x_to_virtual_x(a_x), client_y_to_virtual_y (a_y), a_button, pointed_item_interface])
 			end
 		end
 		

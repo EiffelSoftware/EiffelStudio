@@ -2189,7 +2189,7 @@ feature {NONE} -- Event handling
 			pointed_item_interface: EV_GRID_ITEM
 		do
 			drawable.set_focus
-			pointed_item := drawer.item_at_position (a_x, a_y)
+			pointed_item := drawer.item_at_position_strict (a_x, a_y)
 			
 				-- We fire the pointer button press actions before the node or selection actions which may occur
 				-- as a result of this press.
@@ -2200,6 +2200,7 @@ feature {NONE} -- Event handling
 				pointer_button_press_actions_internal.call ([client_x_to_virtual_x(a_x), client_y_to_virtual_y (a_y), a_button, pointed_item_interface])
 			end
 
+			pointed_item := drawer.item_at_position (a_x, a_y)
 			if pointed_item /= Void then
 				pointed_row_i := pointed_item.row_i
 				node_pixmap_width := expand_node_pixmap.width
@@ -2267,7 +2268,7 @@ feature {NONE} -- Event handling
 			pointed_item_interface: EV_GRID_ITEM
 		do
 			if pointer_double_press_actions_internal /= Void and then not pointer_double_press_actions_internal.is_empty then
-				pointed_item := drawer.item_at_position (a_x, a_y)
+				pointed_item := drawer.item_at_position_strict (a_x, a_y)
 				if pointed_item /= Void then
 					pointed_item_interface := pointed_item.interface
 				end
@@ -2282,7 +2283,7 @@ feature {NONE} -- Event handling
 			pointed_item_interface: EV_GRID_ITEM
 		do
 			if pointer_button_release_actions_internal /= Void and then not pointer_button_release_actions_internal.is_empty then
-				pointed_item := drawer.item_at_position (a_x, a_y)
+				pointed_item := drawer.item_at_position_strict (a_x, a_y)
 				if pointed_item /= Void then
 					pointed_item_interface := pointed_item.interface
 				end

@@ -35,7 +35,7 @@ feature -- Access
 		end
 
 	row_select_actions: EV_GRID_ROW_ACTION_SEQUENCE is
-			-- Actions to be performed when an row is deselected.
+			-- Actions to be performed when an row is selected.
 		do
 			Result := implementation.row_select_actions
 		ensure

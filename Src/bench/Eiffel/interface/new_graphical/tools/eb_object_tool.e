@@ -376,8 +376,7 @@ feature -- Status setting
 				if conv_stack /= Void then
 					if Application.status.is_stopped then
 						clean_stack_objects_tree						
-						build_stack_info (stack_objects_tree)
-						build_stack_objects (stack_objects_tree)
+						build_stack_objects_tree (stack_objects_tree)
 						objects_tree.start
 						if not objects_tree.is_empty then
 							objects_tree.remove
@@ -431,10 +430,14 @@ feature -- Status setting
 			-- Class has changed in `development_window'.
 		do
 			clean_stack_objects_tree
-			build_stack_info (stack_objects_tree)
-			build_stack_objects (stack_objects_tree)
-			objects_tree.wipe_out
+			build_stack_objects_tree (stack_objects_tree)
+			clean_objects_tree
 			build_object_tree
+		end
+
+	clean_objects_tree is
+		do
+			objects_tree.wipe_out
 		end
 
 	update is
@@ -445,7 +448,8 @@ feature -- Status setting
 		do
 			cancel_process_real_update_on_idle
 			clean_stack_objects_tree
-			objects_tree.wipe_out
+			clean_objects_tree
+
 			l_status := application.status
 			if l_status /= Void then
 				process_real_update_on_idle (l_status.is_stopped)
@@ -621,7 +625,7 @@ feature {NONE} -- Implementation
 			if l_status /= Void then
 				pretty_print_cmd.refresh
 				clean_stack_objects_tree
-				objects_tree.wipe_out
+				clean_objects_tree
 
 				if l_status.is_stopped and dbg_was_stopped then
 					if
@@ -630,8 +634,7 @@ feature {NONE} -- Implementation
 							--| FIXME jfiat [2005/01/27] : maybe in futur evolution, 
 							--| we'll display some external data...
 					then
-						build_stack_info (stack_objects_tree)
-						build_stack_objects (stack_objects_tree)
+						build_stack_objects_tree (stack_objects_tree)
 						build_object_tree
 					end
 				else
@@ -706,6 +709,15 @@ feature {NONE} -- Implementation
 					a_target_container.extend (exception_item)
 					exception_item.expand
 				end
+			end
+		end
+
+	build_stack_objects_tree (a_target_container: EV_TREE) is
+		do
+			build_stack_info (a_target_container)
+			build_stack_objects (a_target_container)
+			if not a_target_container.is_empty then
+				a_target_container.first.enable_select	
 			end
 		end
 

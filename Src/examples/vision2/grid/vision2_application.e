@@ -9,6 +9,11 @@ class
 
 inherit
 	EV_APPLICATION
+	
+	GRID_ACCESSOR
+		undefine
+			default_create, is_equal, copy
+		end
 
 create
 	make_and_launch
@@ -20,14 +25,8 @@ feature {NONE} -- Initialization
 			-- then launch the application.
 		do
 			default_create
-			create main_window
 			main_window.show
 			launch
 		end
-		
-feature {NONE} -- Implementation
-
-	main_window: MAIN_WINDOW
-		-- Main window of `Current'.
 
 end -- class VISION2_APPLICATION

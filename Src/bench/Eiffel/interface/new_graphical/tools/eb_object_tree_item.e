@@ -35,10 +35,6 @@ inherit
 			is_equal, copy, default_create
 		end
 
-
---create 
---	make_with_value
-	
 feature {NONE} -- Initialization
 
 	make_with_value (dv: ABSTRACT_DEBUG_VALUE; ot: EB_OBJECT_TOOL) is
@@ -70,7 +66,7 @@ feature -- Change
 				dmdv ?= dv
 				set_text (dv.name + ": " + dmdv.display_message)
 				set_pixmap (icons @ (dv.kind))
-				set_data (dv)			
+				set_data (dv)
 			else
 				last_dump_value := dv.dump_value
 				set_text (dv.name + ": " + last_dump_value.type_and_value)

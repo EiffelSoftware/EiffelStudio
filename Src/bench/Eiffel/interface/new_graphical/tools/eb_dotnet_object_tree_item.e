@@ -77,8 +77,6 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Debug Value
 
-feature {NONE} -- Debug Value
-
 	associated_debug_value: ABSTRACT_DEBUG_VALUE is
 		local
 			l_addr: STRING

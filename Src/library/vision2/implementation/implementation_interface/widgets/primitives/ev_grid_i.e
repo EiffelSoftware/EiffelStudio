@@ -2452,6 +2452,8 @@ feature {NONE} -- Event handling
 				remove_selection
 			end
 			a_item.enable_select
+			fixme ("EV_GRID_I.handle_newly_selected_item - Perform the visibllity at the item level.")
+			a_item.row.ensure_visible
 		end
 
 	key_press_string_received (a_keystring: STRING) is

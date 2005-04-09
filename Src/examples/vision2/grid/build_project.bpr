@@ -4,7 +4,7 @@
 <Project_location>C:\Rogers\examples\grid</Project_location>
 <Main_window_class_name>MAIN_WINDOW</Main_window_class_name>
 <Application_class_name>VISION2_APPLICATION</Application_class_name>
-<Complete_project>True</Complete_project>
+<Complete_project>False</Complete_project>
 <Group_locals>True</Group_locals>
 <Generate_debugging_output>False</Generate_debugging_output>
 <Attributes_local>Optimal</Attributes_local>

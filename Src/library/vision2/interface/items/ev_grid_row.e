@@ -104,6 +104,18 @@ feature -- Access
 		ensure
 			result_not_negative: Result >= 0
 		end
+		
+	virtual_y_position: INTEGER is
+			-- Vertical offset of `Current' in relation to the
+			-- the virtual area of `parent' grid in pixels.
+			-- `Result' is 0 if `parent' is `Void'.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.virtual_y_position
+--		ensure
+--			valid_result: Result >= 0 and Result <= virtual_height - viewable_height
+		end
 
 feature -- Status report
 
@@ -168,6 +180,18 @@ feature -- Status setting
 			implementation.set_height (a_height)
 		ensure
 			height_set: height = a_height
+		end
+		
+	ensure_visible is
+			-- Ensure `Current' is visible in viewable area of `parent'.
+		require
+			not_destroyed: not is_destroyed
+			parented: parent /= Void
+		do
+			implementation.ensure_visible
+		ensure
+			--already_visible_implies_virtual_position_not_changed: 
+			to_implement_assertion ("Ensure virtual position of item is contained within viewable area")
 		end
 
 feature -- Element change

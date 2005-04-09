@@ -173,6 +173,29 @@ feature -- Access
 		do
 			Result := selected_item_count > 0 and then selected_item_count = count
 		end
+		
+	virtual_y_position: INTEGER is
+			-- Vertical offset of `Current' in relation to the
+			-- the virtual area of `parent' grid in pixels.
+			-- `Result' is 0 if `parent' is `Void'.
+		do
+			if parent_i /= Void then
+					-- If there is no parent then return 0.
+					
+				parent_i.perform_vertical_computation
+					-- Recompute vertically if required.
+					
+				if parent_i.row_offsets /= Void then
+						-- As `row_offsets' exists, we can look it up,
+						-- otherwise it must be computed.
+					Result := parent_i.row_offsets @ (index)
+				else
+					Result := (index - 1) * parent_i.row_height
+				end
+			end
+		ensure
+			parent_void_implies_result_zero: parent = Void implies Result = 0
+		end
 
 feature -- Status report
 
@@ -286,6 +309,30 @@ feature -- Status setting
 			end
 		ensure
 			height_set: height = a_height
+		end
+		
+	ensure_visible is
+			-- Ensure `Current' is visible in viewable area of `parent'.
+		require
+			parented: parent /= Void
+		local
+			virtual_y: INTEGER
+		--	first_item: EV_GRID_ITEM
+			l_height: INTEGER
+		do
+			virtual_y := virtual_y_position
+			if parent_i.is_row_height_fixed then
+				l_height := parent_i.row_height
+			else
+				l_height := height
+			end
+			if virtual_y < parent_i.virtual_y_position then
+				parent_i.set_virtual_position (parent_i.virtual_x_position, virtual_y)
+			elseif virtual_y + l_height > parent_i.virtual_y_position + parent_i.viewable_height then
+				parent_i.set_virtual_position (parent_i.virtual_x_position, virtual_y + l_height - parent_i.viewable_height)
+			end
+		ensure
+			to_implement_assertion ("Ensure virtual position of item is contained within viewable area")
 		end
 
 feature {EV_GRID_ROW, EV_ANY_I}-- Element change

@@ -10,6 +10,8 @@ deferred class
 inherit
 	ANY
 
+	REFACTORING_HELPER
+
 	SHARED_DEBUG
 		export
 			{NONE} all
@@ -270,6 +272,56 @@ feature {EB_SET_SLICE_SIZE_CMD} -- Refreshing
 
 	refresh is
 			-- Reload attributes (useful if `Current' represents a special object)
+		local
+			list: DS_LIST [ABSTRACT_DEBUG_VALUE]
+			list_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
+			obj_is_special: BOOLEAN
+		do
+			debug ("debug_recv")
+				print ("EB_OBJECT_DISPLAY_PARAMETERS.refresh%N")
+			end
+			attr_item.wipe_out
+			attr_item.expand_actions.wipe_out
+			attr_item.collapse_actions.wipe_out
+			attributes_loaded := True
+
+			list := refreshed_sorted_children
+			obj_is_special := is_sorted_children_about_special
+			if list /= Void and then not list.is_empty then
+				from
+					list_cursor := list.new_cursor
+					list_cursor.start
+				until
+					list_cursor.after
+				loop
+					attr_item.extend (debug_value_to_item (list_cursor.item))
+					list_cursor.forth
+				end
+				if obj_is_special then
+					if spec_lower > 0 then
+						attr_item.put_front (create {EV_TREE_ITEM}.make_with_text (
+							Interface_names.l_More_items))
+					end
+					if spec_higher = spec_lower + list.count - 1 then
+						attr_item.extend (create {EV_TREE_ITEM}.make_with_text (
+							Interface_names.l_More_items))
+					end
+				end
+				attr_item.expand
+				attr_item.expand_actions.extend (agent on_expand (attributes_id))
+				attr_item.collapse_actions.extend (agent on_unexpand (attributes_id))
+			end
+		end
+
+feature {NONE} -- Refreshing implementation
+
+	is_sorted_children_about_special: BOOLEAN
+			-- Is current related to special object
+			-- this value is set during refreshed_sorted_children
+
+	refreshed_sorted_children: DS_LIST [ABSTRACT_DEBUG_VALUE] is
+			-- Sorted children used by refresh
+			-- set `is_sorted_children_about_special' attribute
 		deferred
 		end
 
@@ -295,11 +347,46 @@ feature -- Inapplicable
 
 feature {NONE} -- Specific Implementation
 
+	sorted_attributes: DS_LIST [ABSTRACT_DEBUG_VALUE] is
+		deferred
+		end
+
 	load_attributes_under (parent: EV_TREE_NODE_LIST) is
-			-- Fill in `parent' with the once functions associated object.
+			-- Fill in `parent' with the associated attributes object.
 		require
 			attributes_not_loaded_yet: not attributes_loaded
-		deferred
+		local
+			list: DS_LIST [ABSTRACT_DEBUG_VALUE]
+			list_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
+			ti: EV_TREE_ITEM
+			ti_list: ARRAYED_LIST [EV_TREE_ITEM]
+		do
+			debug ("debug_recv")
+				print ("EB_OBJECT_DISPLAY_PARAMETERS.load_attributes_under%N")
+			end
+				--| Remove dummy item
+			parent.start
+			parent.remove
+
+				--| add the real childrens
+			list := sorted_attributes
+			if list /= Void then
+					--| Build the tree_item
+				from
+					create ti_list.make (list.count)
+					list_cursor := list.new_cursor
+					list_cursor.start
+				until
+					list_cursor.after
+				loop
+					ti := debug_value_to_item (list_cursor.item)
+					ti_list.extend (ti)
+					list_cursor.forth
+				end
+					--| Now add to the tree
+				parent.append (ti_list)
+			end
+			attributes_loaded := True
 		end
 
 	fill_onces_with_list (parent: EV_TREE_NODE_LIST; a_once_list: LIST [E_FEATURE]; dv: ABSTRACT_DEBUG_VALUE) is
@@ -460,7 +547,7 @@ feature {NONE} -- Implementation
 				end
 				if once_item.is_empty then
 					once_item.set_text (once_item.text + " : None")
-				end				
+				end
 			when main_id then
 				display := True
 			end

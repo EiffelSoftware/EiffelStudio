@@ -48,25 +48,16 @@ feature -- Transformation
 			end
 		end
 
-feature {EB_SET_SLICE_SIZE_CMD} -- Refreshing
+feature {NONE} -- Refreshing Implementation
 
-	refresh is
-			-- Reload attributes (useful if `Current' represents a special object)
+	refreshed_sorted_children: DS_LIST [ABSTRACT_DEBUG_VALUE] is
+			-- Sorted children used by refresh
+			-- set `is_sorted_children_about_special' attribute
 		local
-			list: DS_LIST [ABSTRACT_DEBUG_VALUE]
-			list_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
 			dv: ABSTRACT_DEBUG_VALUE
-			conv_abs_spec: ABSTRACT_SPECIAL_VALUE
 			conv_nat_value: EIFNET_DEBUG_NATIVE_ARRAY_VALUE
+			conv_abs_spec: ABSTRACT_SPECIAL_VALUE
 		do
-			debug ("debug_recv")
-				print ("EB_OBJECT_DISPLAY_PARAMETERS.refresh%N")
-			end
-			attr_item.wipe_out
-			attr_item.expand_actions.wipe_out
-			attr_item.collapse_actions.wipe_out
-			attributes_loaded := True
-
 			dv ?= associated_debug_value
 			if dv /= Void then
 				conv_nat_value ?= dv
@@ -75,65 +66,24 @@ feature {EB_SET_SLICE_SIZE_CMD} -- Refreshing
 					conv_nat_value.reset_items
 					conv_nat_value.fill_items (spec_lower, spec_higher)
 				end
-				list := dv.sorted_children
-				if list /= Void and then not list.is_empty then
-					from
-						list_cursor := list.new_cursor
-						list_cursor.start
-					until
-						list_cursor.after
-					loop
-						attr_item.extend (debug_value_to_item (list_cursor.item))
-						list_cursor.forth
-					end
-					conv_abs_spec ?= dv
-					if conv_abs_spec /= Void then
-						if spec_lower > 0 then
-							attr_item.put_front (create {EV_TREE_ITEM}.make_with_text (
-								Interface_names.l_More_items))
-						end
-						if spec_higher = spec_lower + list.count - 1 then
-							attr_item.extend (create {EV_TREE_ITEM}.make_with_text (
-								Interface_names.l_More_items))
-						end
-					end
-					attr_item.expand
-					attr_item.expand_actions.extend (agent on_expand (attributes_id))
-					attr_item.collapse_actions.extend (agent on_unexpand (attributes_id))
-				end
+
+				conv_abs_spec ?= dv
+				is_sorted_children_about_special := conv_abs_spec /= Void
+				Result := dv.sorted_children
 			end
 		end
 
+
 feature {NONE} -- Specific Implementation
 
-	load_attributes_under (parent: EV_TREE_NODE_LIST) is
-			-- Fill in `parent' with the associated attributes object.
+	sorted_attributes: DS_LIST [ABSTRACT_DEBUG_VALUE] is
 		local
-			list: DS_LIST [ABSTRACT_DEBUG_VALUE]
-			list_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
 			dv: ABSTRACT_DEBUG_VALUE
 		do
-			debug ("debug_recv")
-				print ("EB_OBJECT_DISPLAY_PARAMETERS.load_attributes_under%N")
-			end
 			dv ?= associated_debug_value
 			if dv /= Void then
-				list := dv.sorted_children
-				if list /= Void then
-					from
-						list_cursor := list.new_cursor
-						list_cursor.start
-					until
-						list_cursor.after
-					loop
-						parent.extend (debug_value_to_item (list_cursor.item))
-						list_cursor.forth
-					end					
-				end
-				parent.start
-				parent.remove
+				Result := dv.sorted_children
 			end
-			attributes_loaded := True
 		end
 
 	fill_onces_with_list (parent: EV_TREE_NODE_LIST; a_once_list: LIST [E_FEATURE]; dv: ABSTRACT_DEBUG_VALUE) is

@@ -356,13 +356,13 @@ feature -- Status report
 			l_attribs_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
 			att: ABSTRACT_DEBUG_VALUE
 		do
-			if application.is_classic then			
+			if application.is_dotnet then
+				create {DEBUGGED_OBJECT_DOTNET} o.make (address, 0, 1)
+			else
 				debug ("debug_recv")
 					print ("DUMP_VALUE.to_basic%N")
 				end
 				create {DEBUGGED_OBJECT_CLASSIC} o.make (address, 0, 1)
-			else
-				create {DEBUGGED_OBJECT_DOTNET} o.make (address, 0, 1)				
 			end
 			attribs := o.attributes
 			if attribs /= Void then

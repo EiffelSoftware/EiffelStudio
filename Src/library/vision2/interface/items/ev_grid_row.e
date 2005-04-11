@@ -190,8 +190,10 @@ feature -- Status setting
 		do
 			implementation.ensure_visible
 		ensure
-			--already_visible_implies_virtual_position_not_changed: 
-			to_implement_assertion ("Ensure virtual position of item is contained within viewable area")
+			parent_virtual_x_position_unchanged: old parent.virtual_x_position = parent.virtual_x_position
+			to_implement_assertion ("old_is_visible_implies_vertical_position_not_changed")
+			row_visible_when_heights_fixed_in_parent: parent.is_row_height_fixed implies  virtual_y_position >= parent.virtual_y_position and virtual_y_position + parent.row_height <= parent.virtual_y_position + parent.viewable_height
+			row_visible_when_heights_not_fixed_in_parent: not parent.is_row_height_fixed implies virtual_y_position >= parent.virtual_y_position and virtual_y_position + height <= parent.virtual_y_position + parent.viewable_height
 		end
 
 feature -- Element change

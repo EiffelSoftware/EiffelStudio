@@ -61,7 +61,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 		
-	column_select_actions: EV_GRID_ROW_ACTION_SEQUENCE is
+	column_select_actions: ACTION_SEQUENCE [TUPLE [EV_GRID_COLUMN]] is
 			-- Actions to be performed when a column is selected
 		do
 			Result := implementation.column_select_actions
@@ -69,7 +69,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 		
-	column_deselect_actions: EV_GRID_ROW_ACTION_SEQUENCE is
+	column_deselect_actions: ACTION_SEQUENCE [TUPLE [EV_GRID_COLUMN]] is
 			-- Actions to be performed when a column is deselected
 		do
 			Result := implementation.column_deselect_actions

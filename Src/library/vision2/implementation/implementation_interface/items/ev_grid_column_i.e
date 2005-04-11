@@ -210,7 +210,7 @@ feature -- Status setting
 		ensure
 			parent_virtual_y_position_unchanged: old parent.virtual_y_position = parent.virtual_y_position
 			to_implement_assertion ("old_is_visible_implies_horizontal_position_not_changed")
-			column_visible_when_heights_fixed_in_parent: virtual_x_position >= parent.virtual_x_position and virtual_x_position + width <= parent.virtual_x_position + (parent.viewable_width).max (width)
+			column_visible: virtual_x_position >= parent.virtual_x_position and virtual_x_position + width <= parent.virtual_x_position + (parent.viewable_width).max (width)
 		end
 
 feature -- Status report

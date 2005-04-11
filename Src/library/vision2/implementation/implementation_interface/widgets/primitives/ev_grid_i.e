@@ -444,7 +444,7 @@ feature -- Status setting
 					-- The row offsets must always be computed when
 					-- in tree mode so when enabling it, recompute unless
 					-- there are no rows contained.
-				set_vertical_computation_required
+				set_vertical_computation_required (1)
 			end
 		ensure
 			tree_enabled: is_tree_enabled
@@ -455,7 +455,7 @@ feature -- Status setting
 		do
 			is_tree_enabled := False
 			adjust_hidden_node_count (- hidden_node_count)
-			set_vertical_computation_required
+			set_vertical_computation_required (1)
 			redraw_client_area
 		ensure
 			tree_disabled: not is_tree_enabled
@@ -772,7 +772,7 @@ feature -- Status setting
 				fixme ("Remove following line when tested as it should not be required")
 --				recompute_vertical_scroll_bar
 				is_item_height_changing := False
-				set_vertical_computation_required
+				set_vertical_computation_required (1)
 				redraw_client_area
 			end
 			
@@ -815,7 +815,7 @@ feature -- Status setting
 			-- Ensure all rows have the same height.
 		do
 			is_row_height_fixed := True
-			set_vertical_computation_required
+			set_vertical_computation_required (1)
 			redraw_client_area
 		end
 		
@@ -823,7 +823,7 @@ feature -- Status setting
 			-- Permit rows to have varying heights.
 		do
 			is_row_height_fixed := False
-			set_vertical_computation_required
+			set_vertical_computation_required (1)
 			redraw_client_area
 		end
 		
@@ -859,7 +859,7 @@ feature -- Status setting
 			a_row_count_positive: a_row_count >= 1
 		do
 			resize_row_lists (a_row_count)
-			set_vertical_computation_required
+			set_vertical_computation_required (1)
 			redraw_client_area
 		ensure
 			row_count_set: row_count = a_row_count
@@ -963,7 +963,7 @@ feature -- Status setting
 				horizontal_scroll_bar.set_value (virtual_x)
 				horizontal_scroll_bar.change_actions.resume
 			end
-			set_vertical_computation_required
+--			set_vertical_computation_required
 		ensure
 			virtual_position_set: virtual_x_position = virtual_x and virtual_y_position = virtual_y
 		end
@@ -1324,12 +1324,21 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 		-- Do the row offsets and vertical scroll bar position need to
 		-- be re-computed before the next drawing cycle?
 		
-	set_vertical_computation_required is
+	invalid_row_index: INTEGER
+		-- Index of invalid row from which vertical row computation
+		-- must begin. This is used by `perform_vertical_computation' to ensure
+		-- that we only recompute those rows that are strictly necessary.
+		
+	set_vertical_computation_required (an_invalid_row_index: INTEGER) is
 			-- Assign `True' to `vertical_computation_required'.
+		require
+			valid_row_index: an_invalid_row_index >= 1 and an_invalid_row_index <= row_count
 		do
 			vertical_computation_required := True
+			invalid_row_index := invalid_row_index.min (an_invalid_row_index)
 		ensure
 			vertical_computation_required: vertical_computation_required
+			invalid_row_index_set: invalid_row_index = invalid_row_index.min (old invalid_row_index)
 		end
 		
 	perform_vertical_computation is
@@ -1340,7 +1349,9 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 				vertical_computation_required := False
 				if row_count > 0 then
 						-- Do nothing if `Current' is empty.
-					recompute_row_offsets (1)
+					recompute_row_offsets (invalid_row_index)
+						-- Restore to an arbitarily large index.
+					invalid_row_index := invalid_row_index.max_value;
 					((create {EV_ENVIRONMENT}).application).do_once_on_idle (agent recompute_vertical_scroll_bar)
 				end
 			end
@@ -1362,12 +1373,16 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			visible_count: INTEGER
 			row_index: INTEGER
 			l_row_count: INTEGER
-		do
-			fixme ("[
-				We always recompute from the first item for now as otherwise we must ensure that we find the top level
-				tree node that is the first expanded if the row is current hidden and start from there
+		do			
+			if not is_tree_enabled then
+				internal_index := an_index
+			else
+				fixme ("[
+					We always recompute from the first item for now as otherwise we must ensure that we find the top level
+					tree node that is the first expanded if the row is current hidden and start from there
 				]")
-			internal_index := 1
+				internal_index := 1
+			end
 			if not is_row_height_fixed or is_tree_enabled then
 					-- Only perform recomputation if the rows do not all have the same height
 					-- or there is tree functionality enabled. Otherwise, we do not need to
@@ -2574,7 +2589,7 @@ feature {NONE} -- Implementation
 				-- Set grid of `grid_row' to `Current'
 			row_i.set_parent_i (Current)
 
-			set_vertical_computation_required
+			set_vertical_computation_required (a_index)
 		end
 
 	update_grid_row_indices (a_index: INTEGER) is
@@ -2779,12 +2794,13 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- I
 			else
 				internal_row_data.i_th (a_row).put (Void, a_grid_col_i.physical_index)
 			end
-			
-			fixme ("To Implement this optimization")
---			if a_item /= Void then
---				redraw_item (a_item.implementation)
---			else
---			end
+
+			if a_item /= Void then
+				redraw_item (a_item.implementation)
+			else
+					-- We no longer have access to the item so we calculate the redraw area based on the rows and columns.
+				drawable.redraw_rectangle (a_grid_col_i.virtual_x_position, a_grid_row_i.virtual_y_position, a_grid_col_i.width, a_grid_row_i.width)
+			end
 		end
 
 	item_internal (a_column: INTEGER; a_row: INTEGER): EV_GRID_ITEM_I is

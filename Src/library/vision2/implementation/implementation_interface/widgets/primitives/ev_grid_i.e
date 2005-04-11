@@ -1505,7 +1505,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			
 				-- Not a postcondition as `node_index' is a local.
 			check
-				result_zero_when_item_not_in_subrow_or_first: an_item.row_i.parent_row_i = Void and node_index > 1 implies Result = 0
+				result_zero_when_item_not_in_subrow_or_first: an_item.row_i.parent_row_i = Void and node_index > pointed_row_i.first_set_item_index implies Result = 0
 				result_positive_when_in_subrow: an_item.row_i.parent_row_i /= Void implies Result >= 0	
 			end			
 		end

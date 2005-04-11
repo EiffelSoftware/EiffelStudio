@@ -101,9 +101,9 @@ extern "C" {
 #define EIF_GC_SET_MUTEX_LOCK	EIF_LW_MUTEX_LOCK(eif_gc_set_mutex, "Could not lock GC rem_set mutex");
 #define EIF_GC_SET_MUTEX_UNLOCK	EIF_LW_MUTEX_UNLOCK(eif_gc_set_mutex, "Could not unlock GC rem_set mutex")
 
-	/* To protect access to `g_data'. */
-#define EIF_G_DATA_MUTEX_LOCK	EIF_LW_MUTEX_LOCK(eif_g_data_mutex, "Could not lock GC rem_set mutex");
-#define EIF_G_DATA_MUTEX_UNLOCK	EIF_LW_MUTEX_UNLOCK(eif_g_data_mutex, "Could not unlock GC rem_set mutex")
+	/* To protect access to `rt_g_data'. */
+#define EIF_G_DATA_MUTEX_LOCK	EIF_LW_MUTEX_LOCK(eif_rt_g_data_mutex, "Could not lock GC rem_set mutex");
+#define EIF_G_DATA_MUTEX_UNLOCK	EIF_LW_MUTEX_UNLOCK(eif_rt_g_data_mutex, "Could not unlock GC rem_set mutex")
 
 	/* Values used to set the running status of a thread. */
 #define EIF_THREAD_RUNNING		0

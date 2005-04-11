@@ -103,15 +103,15 @@ rt_private void run_gc(void)
 {
 	scollect(partial_scavenging, GST_PART);
 	printf(">>> GC status:\n");
-	printf(">>>> # of full collects    : %ld\n", g_data.nb_full);
-	printf(">>>> # of partial collects : %ld\n", g_data.nb_partial);
-	printf(">>>> Amount of memory freed: %ld\n", g_stat->mem_collect);
-	printf(">>>> Total time used       : %lfs\n", g_stat->real_time / 100.);
-	printf(">>>> Total time used (avg) : %lfs\n", g_stat->real_avg / 100.);
-	printf(">>>> CPU time used         : %lfs\n", g_stat->cpu_time);
-	printf(">>>> CPU time used (avg)   : %lfs\n", g_stat->cpu_avg);
-	printf(">>>> System time used      : %lfs\n", g_stat->sys_time);
-	printf(">>>> System time used (avg): %lfs\n", g_stat->sys_avg);
+	printf(">>>> # of full collects    : %ld\n", rt_g_data.nb_full);
+	printf(">>>> # of partial collects : %ld\n", rt_g_data.nb_partial);
+	printf(">>>> Amount of memory freed: %ld\n", rt_g_stat->mem_collect);
+	printf(">>>> Total time used       : %lfs\n", rt_g_stat->real_time / 100.);
+	printf(">>>> Total time used (avg) : %lfs\n", rt_g_stat->real_avg / 100.);
+	printf(">>>> CPU time used         : %lfs\n", rt_g_stat->cpu_time);
+	printf(">>>> CPU time used (avg)   : %lfs\n", rt_g_stat->cpu_avg);
+	printf(">>>> System time used      : %lfs\n", rt_g_stat->sys_time);
+	printf(">>>> System time used (avg): %lfs\n", rt_g_stat->sys_avg);
 }
 
 /* Functions not provided here */

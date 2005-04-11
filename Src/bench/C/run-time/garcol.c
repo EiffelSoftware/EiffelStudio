@@ -86,14 +86,14 @@ extern EIF_BOOLEAN has_object (struct stack *, EIF_REFERENCE);
 /*#define MEM_STAT		*/		/* Activate Eiffel memory monitoring */
 
 /*
-doc:	<attribute name="g_data" return_type="struct gcinfo" export="shared">
+doc:	<attribute name="rt_g_data" return_type="struct gcinfo" export="shared">
 doc:		<summary>Internal data structure used to monitor the activity of the garbage collection process and help the auto-adaptative algorithm in its decisions (heuristics).</summary>
 doc:		<thread_safety>Not safe</thread_safety>
 doc:		<synchronization>Safe if caller holds either `eif_gc_mutex' or `eif_g_data_mutex'.</synchronization>
 doc:		<fixme>Because it is very easy to turn the GC on or off, if more than one threads plays with it we are stuck a most likely the GC will be off. We need to have a better synchronization thanwhat we have at the moment, so that we only let one thread turn the GC off, no one else but this threads can turn it back on.</fixme>
 doc:	</attribute>
 */
-rt_shared struct gacinfo g_data = {			/* Global status */
+rt_shared struct gacinfo rt_g_data = {			/* Global status */
 	0L,			/* nb_full */
 	0L,			/* nb_partial */
 	0L,			/* mem_used */
@@ -102,13 +102,13 @@ rt_shared struct gacinfo g_data = {			/* Global status */
 };
 
 /*
-doc:	<attribute name="g_stat" return_type="struct gacstat [GST_NBR]" export="shared">
+doc:	<attribute name="rt_g_stat" return_type="struct gacstat [GST_NBR]" export="shared">
 doc:		<summary>Run-time statistics, one for partial scavenging and one for generational.</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Through `eif_gc_mutex'.</synchronization>
 doc:	</attribute>
 */
-rt_shared struct gacstat g_stat[GST_NBR] = {	/* Run-time statistics */
+rt_shared struct gacstat rt_g_stat[GST_NBR] = {	/* Run-time statistics */
 	{
 		0L,		/* count */				0L,		/* mem_used */
 		0L,		/* mem_collect */		0L,		/* mem_avg */
@@ -451,11 +451,11 @@ rt_public EIF_LW_MUTEX_TYPE *eif_gc_set_mutex = NULL;
 #ifdef ISE_GC
 /*
 doc:	<attribute name="eif_g_data_mutex" return_type="EIF_LW_MUTEX_TYPE *" export="public">
-doc:		<summary>Mutex used to access `g_data' when not protected by `eif_gc_mutex'.</summary>
+doc:		<summary>Mutex used to access `rt_g_data' when not protected by `eif_gc_mutex'.</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:	</attribute>
 */
-rt_public EIF_LW_MUTEX_TYPE *eif_g_data_mutex = NULL;
+rt_public EIF_LW_MUTEX_TYPE *eif_rt_g_data_mutex = NULL;
 #endif
 
 /*
@@ -726,7 +726,7 @@ rt_private void mark_op_stack(struct opstack *stk, MARKER marker, int move);		/*
 
 #define debug_ok(n)	( \
 	(n) & DEBUG || \
-	(g_data.nb_full == NB_FULL && fdone || g_data.nb_partial == NB_PARTIAL) \
+	(rt_g_data.nb_full == NB_FULL && fdone || rt_g_data.nb_partial == NB_PARTIAL) \
 	)
 #define dprintf(n)	\
 	if ( \
@@ -777,7 +777,7 @@ rt_shared int acollect(void)
 	int half_tau;					
 	int allocated;					/* Memory used since last full collect */
 #endif	/* EIF_CONDITIONAL_COLLECT */
-	if (g_data.status & GC_STOP)
+	if (rt_g_data.status & GC_STOP)
 #ifdef DEBUG
 	{
 		dprintf(1)("acollect: Nothing has to be done because GC_STOP\n");
@@ -860,7 +860,7 @@ rt_shared int acollect(void)
 doc:	<routine name="scollect" return_type="int" export="shared">
 doc:		<summary>Run a garbage collection cycle with statistics updating. We monitor both the time spent in the collection and the memory released, if any, as well as time between two collections... </summary>
 doc:		<param name="gc_func" type="int (*) (void)">Collection function to be called.</param>
-doc:		<param name="i" type="int">Index in `g_stat' array where statistics are kept.</param>
+doc:		<param name="i" type="int">Index in `rt_g_stat' array where statistics are kept.</param>
 doc:		<return>Return the status given by the collection function.</return>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Performs a GC synchronization before executing itself.</synchronization>
@@ -882,17 +882,17 @@ rt_shared int scollect(int (*gc_func) (void), int i)
 	rt_uint_ptr mem_used;						/* Current amount of memory used */
 	rt_uint_ptr e_mem_used_before, e_mem_used_after;
 	int status;							/* Status reported by GC function */
-	struct gacstat *gstat = &g_stat[i];	/* Address where stats are kept */
+	struct gacstat *gstat = &rt_g_stat[i];	/* Address where stats are kept */
 	int nbstat;							/* Current number of statistics */
 	unsigned long nb_full;
 
-	if (g_data.status & GC_STOP)
+	if (rt_g_data.status & GC_STOP)
 		return -1;						/* Garbage collection stopped */
 
 	GC_THREAD_PROTECT(eif_synchronize_gc (rt_globals));
 	DISCARD_BREAKPOINTS;
 
-	nb_full = g_data.nb_full;
+	nb_full = rt_g_data.nb_full;
 	mem_used = m_data.ml_used + m_data.ml_over;		/* Count overhead */
 	e_mem_used_before = e_data.ml_used + e_data.ml_over;
 	nbstat = ++nb_stats[i];							/* One more computation */
@@ -901,8 +901,8 @@ rt_shared int scollect(int (*gc_func) (void), int i)
 	 * scavenging routines when needed.
 	 */
 
-	g_data.mem_move = 0;				/* Memory subject to scavenging */
-	g_data.mem_copied = 0;				/* Amount of that memory which moved */
+	rt_g_data.mem_move = 0;				/* Memory subject to scavenging */
+	rt_g_data.mem_copied = 0;				/* Amount of that memory which moved */
 
 #ifndef FAST_RUNTIME
 	/* Get the current time before CPU time, because the accuracy of the
@@ -943,29 +943,29 @@ rt_shared int scollect(int (*gc_func) (void), int i)
 	}
 #endif
 
-	/* Now collect the statistics in the g_stat structure. The real time
+	/* Now collect the statistics in the rt_g_stat structure. The real time
 	 * field will not be really significant if the time() system call is
 	 * used (granularity is one second).
 	 * Note that the memory collected can be negative, e.g. at the first
 	 * partial scavenging where a scavenge zone is allocated.
 	 */
 
-	g_data.mem_used = m_data.ml_used + m_data.ml_over;	/* Total mem used */
-	gstat->mem_used = g_data.mem_used;
+	rt_g_data.mem_used = m_data.ml_used + m_data.ml_over;	/* Total mem used */
+	gstat->mem_used = rt_g_data.mem_used;
 		/* Sometimes during a collection we can have increased our memory
 		 * pool because for example we moved objects outside the scavenge zone
 		 * and therefore more objects have been allocated in memory. */
-	if (mem_used > g_data.mem_used) {
-		gstat->mem_collect = mem_used - g_data.mem_used;	/* Memory collected */
+	if (mem_used > rt_g_data.mem_used) {
+		gstat->mem_collect = mem_used - rt_g_data.mem_used;	/* Memory collected */
 	} else {
 		gstat->mem_collect = 0;
 	}
 	gstat->mem_collect +=		/* Memory freed by scavenging (with overhead) */
-		g_data.mem_copied - g_data.mem_move;
+		rt_g_data.mem_copied - rt_g_data.mem_move;
 	gstat->mem_avg = ((gstat->mem_avg * (nbstat - 1)) +
 		gstat->mem_collect) / nbstat;					/* Average mem freed */
 
-	if (nb_full != g_data.nb_full) {
+	if (nb_full != rt_g_data.nb_full) {
 			/* We are during a full collection cycle. This is were we
 			 * will update value of `plsc_per' to a better value.
 			 * We only increase its value if the ratio freed memory
@@ -973,8 +973,8 @@ rt_shared int scollect(int (*gc_func) (void), int i)
 			 * anything, and above 2/3 we decrease its value. */
 		rt_uint_ptr partial_used_memory = (e_data.ml_used + e_data.ml_over) / 3;
 		rt_uint_ptr freed_memory;
-		if (mem_used > g_data.mem_used) {
-			freed_memory = mem_used - g_data.mem_used;
+		if (mem_used > rt_g_data.mem_used) {
+			freed_memory = mem_used - rt_g_data.mem_used;
 		} else {
 			freed_memory = 0;
 		}
@@ -1096,14 +1096,14 @@ rt_shared int scollect(int (*gc_func) (void), int i)
 #ifdef DEBUG
 	dprintf(1)("scollect: statistics for %s\n",
 		i == GST_PART ? "partial scavenging" : "generation collection");
-	dprintf(1)("scollect: # of full collects: %ld\n", g_data.nb_full);
-	dprintf(1)("scollect: # of partial collects: %ld\n", g_data.nb_partial);
+	dprintf(1)("scollect: # of full collects: %ld\n", rt_g_data.nb_full);
+	dprintf(1)("scollect: # of partial collects: %ld\n", rt_g_data.nb_partial);
 	dprintf(1)("scollect: Total mem allocated: %ld bytes\n", m_data.ml_total);
 	dprintf(1)("scollect: Total mem used: %ld bytes\n", m_data.ml_used);
 	dprintf(1)("scollect: Total overhead: %ld bytes\n", m_data.ml_over);
 	dprintf(1)("scollect: Collected: %ld bytes\n", gstat->mem_collect);
 	dprintf(1)("scollect: (Scavenging collect: %ld bytes)\n",
-		g_data.mem_copied - g_data.mem_move);
+		rt_g_data.mem_copied - rt_g_data.mem_move);
 	if (gc_monitor) {
 		dprintf(1)("scollect: Real time: %lfs\n", gstat->real_time / 100.);
 		dprintf(1)("scollect: CPU time: %lfs\n", gstat->cpu_time);
@@ -1141,8 +1141,8 @@ rt_public void gc_stop(void)
 
 #ifdef ISE_GC
 	EIF_G_DATA_MUTEX_LOCK;
-	if (!(g_data.status & GC_SIG))		/* If not in signal handler */
-		g_data.status |= GC_STOP;		/* Stop GC */
+	if (!(rt_g_data.status & GC_SIG))		/* If not in signal handler */
+		rt_g_data.status |= GC_STOP;		/* Stop GC */
 	EIF_G_DATA_MUTEX_UNLOCK;
 #endif
 }
@@ -1160,8 +1160,8 @@ rt_public void gc_run(void)
 
 #ifdef ISE_GC
 	EIF_G_DATA_MUTEX_LOCK;
-	if (!(g_data.status & GC_SIG))		/* If not in signal handler */
-		g_data.status &= ~GC_STOP;		/* Restart GC */
+	if (!(rt_g_data.status & GC_SIG))		/* If not in signal handler */
+		rt_g_data.status &= ~GC_STOP;		/* Restart GC */
 	EIF_G_DATA_MUTEX_UNLOCK;
 #endif
 }
@@ -1257,7 +1257,7 @@ rt_public void reclaim(void)
 #endif
 
 #ifdef ISE_GC
-		if (!eif_no_reclaim && !(g_data.status & GC_STOP)) {	/* Does user want no reclaim? */
+		if (!eif_no_reclaim && !(rt_g_data.status & GC_STOP)) {	/* Does user want no reclaim? */
 #else
 		if (!eif_no_reclaim) {
 #endif
@@ -1279,7 +1279,7 @@ rt_public void reclaim(void)
 			/* Reset GC status otherwise full_sweep() might skip some memory blocks
 			 * (those previously used as partial scavenging areas).
 			 */
-			g_data.status = (char) 0;
+			rt_g_data.status = (char) 0;
 			
 			full_sweep();				/* Reclaim ALL the objects in the system */
 
@@ -1336,12 +1336,12 @@ rt_private void run_collector(void)
 	 * collected excepted by using a scavenging algorithm (with no aging).
 	 */
 
-	g_data.nb_full++;	/* One more full collection */
+	rt_g_data.nb_full++;	/* One more full collection */
 
 #ifdef DEBUG
-	fdone = g_data.nb_full == NB_FULL;
+	fdone = rt_g_data.nb_full == NB_FULL;
 	dprintf(1)("run_collector: gen_scavenge: 0x%lx, status: 0x%lx\n",
-		gen_scavenge, g_data.status);
+		gen_scavenge, rt_g_data.status);
 	flush;
 #endif
 
@@ -1388,7 +1388,7 @@ rt_private void full_mark (EIF_CONTEXT_NOARG)
 #ifdef EIF_THREADS
 	int i;
 #endif
-	int moving = g_data.status & (GC_PART | GC_GEN);
+	int moving = rt_g_data.status & (GC_PART | GC_GEN);
 
 		/* Initialize our overflow depth */
 	overflow_stack_depth = 0;
@@ -2151,7 +2151,7 @@ rt_private EIF_REFERENCE hybrid_mark(EIF_REFERENCE *a_root)
 		 * mark. The expanded objects are never scavenged (only the object which
 		 * holds them is).
 		 */
-		offset = (uint32) g_data.status;		/* Garbage collector's status */
+		offset = (uint32) rt_g_data.status;		/* Garbage collector's status */
 
 		if (offset & (GC_PART | GC_GEN)) {
 
@@ -2255,7 +2255,7 @@ marked: /* Goto label needed to avoid code duplication */
 					 * to avoid offset computation from Eiffel code */
 				l_item++;
 				offset--;
-				if (g_data.status & (GC_PART | GC_GEN)) {
+				if (rt_g_data.status & (GC_PART | GC_GEN)) {
 					for (; offset > 1; offset--, l_item++ ) {
 						if (eif_tuple_item_type(l_item) == EIF_REFERENCE_CODE) {
 							eif_reference_tuple_item(l_item) =
@@ -2286,7 +2286,7 @@ marked: /* Goto label needed to avoid code duplication */
 				 * want to to slow down the normal loop--RAM.
 				 */
 				size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ref);	/* Item's size */
-				if (g_data.status & (GC_PART | GC_GEN)) {	/* Moving objects */
+				if (rt_g_data.status & (GC_PART | GC_GEN)) {	/* Moving objects */
 					object = (EIF_REFERENCE *) (current + OVERHEAD);/* First expanded */
 					for (; offset > 1; offset--) {		/* Loop over array */
 						*object = hybrid_mark(object);
@@ -2325,7 +2325,7 @@ marked: /* Goto label needed to avoid code duplication */
 
 		/* Mark all objects under root, updating the references if scavenging */
 
-		if (g_data.status & (GC_PART | GC_GEN))
+		if (rt_g_data.status & (GC_PART | GC_GEN))
 			for (object = (EIF_REFERENCE *) current; offset > 1; offset--, object++)
 				*object = hybrid_mark(object);
 		else
@@ -2389,7 +2389,7 @@ rt_private void full_sweep(void)
 		 * last scavenging cycle).
 		 */
 
-		if (g_data.status & GC_PART) {			/* In partial scavenge */
+		if (rt_g_data.status & GC_PART) {			/* In partial scavenge */
 			if (arena == ps_from.sc_arena || arena == ps_to.sc_arena)
 				continue;					/* Skip scavenge zones */
 		} else if (arena == ps_to.sc_arena)
@@ -2502,7 +2502,7 @@ doc:	</routine>
 rt_public void plsc(void)
 {
 #ifdef ISE_GC
-	if (g_data.status & GC_STOP)
+	if (rt_g_data.status & GC_STOP)
 		return;				/* Garbage collection stopped */
 
 	(void) scollect(partial_scavenging, GST_PART);
@@ -2549,7 +2549,7 @@ rt_shared void urgent_plsc(EIF_REFERENCE *object)
 	 */
 
 	RT_GET_CONTEXT
-	if ((g_data.status & GC_STOP) GC_THREAD_PROTECT(|| !thread_can_launch_gc))
+	if ((rt_g_data.status & GC_STOP) GC_THREAD_PROTECT(|| !thread_can_launch_gc))
 		return;							/* Garbage collection stopped */
 
 	SIGBLOCK;				/* Block all signals during garbage collection */
@@ -2582,7 +2582,7 @@ rt_private void clean_zones(void)
 #endif
 
 
-	if (!(g_data.status & GC_PART))
+	if (!(rt_g_data.status & GC_PART))
 		return;				/* A simple mark and sweep was done */
 
 	/* Compute the amount of copied bytes and the size of the scavenging zone
@@ -2592,8 +2592,8 @@ rt_private void clean_zones(void)
 	 * malloc statistics inaccurate in this respect)--RAM.
 	 */
 
-	g_data.mem_copied += ps_from.sc_size;	/* Bytes subject to copying */
-	g_data.mem_move += ps_to.sc_top - ps_to.sc_arena;
+	rt_g_data.mem_copied += ps_from.sc_size;	/* Bytes subject to copying */
+	rt_g_data.mem_move += ps_to.sc_top - ps_to.sc_arena;
 
 	split_to_block();		/* Put final free block back to the free list */
 
@@ -2635,7 +2635,7 @@ rt_private void clean_zones(void)
 			((union overhead *) ps_from.sc_arena)->ov_size |= B_BUSY;
 			eif_rt_xfree (ps_from.sc_arena + OVERHEAD);	/* One big bloc */
 			memset (&ps_from, 0, sizeof(struct sc_zone));	/* Was freed */
-			g_data.gc_to--;
+			rt_g_data.gc_to--;
 
 		} else {
 
@@ -2683,15 +2683,15 @@ rt_private void init_plsc(void)
 	 */
 
 	if (0 == find_scavenge_spaces())
-		g_data.status = (char) ((gen_scavenge & GS_ON) ? GC_PART | GC_GEN : GC_PART);
+		rt_g_data.status = (char) ((gen_scavenge & GS_ON) ? GC_PART | GC_GEN : GC_PART);
 	else
-		g_data.status = (char) ((gen_scavenge & GS_ON) ? GC_GEN : 0);
+		rt_g_data.status = (char) ((gen_scavenge & GS_ON) ? GC_GEN : 0);
 
 	/* If partial scavenging was not activated, make sure no scavenge space is
 	 * recorded at all, to avoid problems with malloc and core releasing.
 	 */
 
-	if (!(g_data.status & GC_PART)) {
+	if (!(rt_g_data.status & GC_PART)) {
 		ps_from.sc_arena = (EIF_REFERENCE) 0;		/* Will restart from end */
 		if (ps_to.sc_arena != (EIF_REFERENCE) 0) {	/* One chunk was kept in reserve */
 			/* Somehow, it is important to make sure the one big block in the
@@ -2885,10 +2885,10 @@ rt_private int sweep_from_space(void)
 			if (!(flags & B_FWD)) {	/* Non-forwarded block is dead */
 				if (zone->ov_flags & EO_DISP) {			/* Exists ? */
 					dtype = Deif_bid(zone->ov_flags);		/* Dispose ptr */
-					gc_status = g_data.status;			/* Save GC current status */
-					g_data.status |= GC_STOP;			/* Stop GC */
+					gc_status = rt_g_data.status;			/* Save GC current status */
+					rt_g_data.status |= GC_STOP;			/* Stop GC */
 					DISP(dtype, (EIF_REFERENCE) (zone + 1));	/* Call it */
-					g_data.status = gc_status;			/* Restart GC */
+					rt_g_data.status = gc_status;			/* Restart GC */
 				}
 				CHECK ("Cannot be in object ID stack",
 					!has_object (&object_id_stack, (EIF_REFERENCE) zone + 1));
@@ -2963,10 +2963,10 @@ rt_private int sweep_from_space(void)
 				if (!(flags & B_FWD)) {	/* Non-forwarded block is dead */
 					if (next->ov_flags & EO_DISP) {				/* Exists ? */
 						dtype = Deif_bid(next->ov_flags);	/* Dispose ptr */
-						gc_status = g_data.status;		/* Save GC current status */
-						g_data.status |= GC_STOP;		/* Stop GC */
+						gc_status = rt_g_data.status;		/* Save GC current status */
+						rt_g_data.status |= GC_STOP;		/* Stop GC */
 						DISP(dtype,(EIF_REFERENCE) (next + 1));/* Call it */
-						g_data.status = gc_status;		/* Restore previous GC status */
+						rt_g_data.status = gc_status;		/* Restore previous GC status */
 					}
 					CHECK ("Cannot be in object ID stack",
 						!has_object (&object_id_stack, (EIF_REFERENCE) next + 1));
@@ -3132,7 +3132,7 @@ rt_private int find_scavenge_spaces(void)
 	 * 'to' zones decreases accordingly.
 	 */
 
-	if (g_data.gc_to >= TO_MAX || e_data.ml_chunk < CHUNK_MIN)
+	if (rt_g_data.gc_to >= TO_MAX || e_data.ml_chunk < CHUNK_MIN)
 		return -1;						/* Cannot allocate a 'to' space */
 
 	/* Find a 'to' space.
@@ -3163,7 +3163,7 @@ rt_private int find_scavenge_spaces(void)
 	 * original, doing the split and finally restoring the saved header.
 	 */
 
-	g_data.gc_to++;								/* Count 'to' zone allocation */
+	rt_g_data.gc_to++;								/* Count 'to' zone allocation */
 	ps_to.sc_arena = to_space - OVERHEAD;		/* Overwrite the header */
 	ps_to.sc_flgs = HEADER(to_space)->ov_size;	/* Save flags */
 	ps_to.sc_size = from_size;					/* Used for statistics */
@@ -3172,7 +3172,7 @@ rt_private int find_scavenge_spaces(void)
 
 #ifdef DEBUG
 	dprintf(1)("find_scavenge_spaces: malloc'ed a to space at 0x%lx (#%d)\n",
-		ps_to.sc_arena, g_data.gc_to);
+		ps_to.sc_arena, rt_g_data.gc_to);
 	dprintf(1)("find_scavenge_spaces: from [0x%lx, 0x%lx] to [0x%lx, 0x%lx]\n",
 		ps_from.sc_arena, ps_from.sc_end - 1,
 		ps_to.sc_arena, ps_to.sc_end - 1);
@@ -3284,7 +3284,7 @@ rt_private void find_to_space(struct sc_zone *to)
 
 #ifdef DEBUG
 	dprintf(1)("find_to_space: coalesced a to space at 0x%lx (#%d)\n",
-		ps_to.sc_arena, g_data.gc_to);
+		ps_to.sc_arena, rt_g_data.gc_to);
 	dprintf(1)("find_to_space: from [0x%lx, 0x%lx] to [0x%lx, 0x%lx]\n",
 		ps_from.sc_arena, ps_from.sc_end - 1,
 		ps_to.sc_arena, ps_to.sc_end - 1);
@@ -3318,7 +3318,7 @@ rt_private EIF_REFERENCE scavenge(register EIF_REFERENCE root, struct sc_zone *t
 	int length;						/* Length of scavenged object */
 
 	REQUIRE ("Algorithm moves objects",
-			g_data.status & (GC_GEN | GC_PART) || g_data.status & GC_FAST);
+			rt_g_data.status & (GC_GEN | GC_PART) || rt_g_data.status & GC_FAST);
 
 	zone = HEADER(root);
 
@@ -3348,14 +3348,14 @@ rt_private EIF_REFERENCE scavenge(register EIF_REFERENCE root, struct sc_zone *t
 		}
 
 		CHECK ("In Generation Scavenge From zone",
-			(g_data.status & GC_PART) ||
-				((g_data.status & (GC_GEN | GC_FAST)) &&
+			(rt_g_data.status & GC_PART) ||
+				((rt_g_data.status & (GC_GEN | GC_FAST)) &&
 				(root > sc_from.sc_arena) && 
 				(root <= sc_from.sc_end)));
 
 		CHECK ("In Partial Scavenge From zone",
-			(g_data.status & (GC_GEN | GC_FAST)) ||
-				((g_data.status & GC_PART) &&
+			(rt_g_data.status & (GC_GEN | GC_FAST)) ||
+				((rt_g_data.status & GC_PART) &&
 				(root > ps_from.sc_arena) && 
 				(root <= ps_from.sc_end)));
 
@@ -3368,24 +3368,24 @@ rt_private EIF_REFERENCE scavenge(register EIF_REFERENCE root, struct sc_zone *t
 	}
 
 	CHECK ("In Generation Scavenge From zone",
-		(g_data.status & GC_PART) ||
-			((g_data.status & (GC_GEN | GC_FAST)) &&
+		(rt_g_data.status & GC_PART) ||
+			((rt_g_data.status & (GC_GEN | GC_FAST)) &&
 			(root > sc_from.sc_arena) && 
 			(root <= sc_from.sc_end)));
 
 	CHECK ("In Partial Scavenge From zone",
-		(g_data.status & (GC_GEN | GC_FAST)) ||
-			((g_data.status & GC_PART) &&
+		(rt_g_data.status & (GC_GEN | GC_FAST)) ||
+			((rt_g_data.status & GC_PART) &&
 			(root > ps_from.sc_arena) && 
 			(root <= ps_from.sc_end)));
 
 	CHECK ("Not in Generation Scavenge TO zone",
-		!((g_data.status & GC_GEN) &&
+		!((rt_g_data.status & GC_GEN) &&
 		(root > sc_to.sc_arena) && 
 		(root <= sc_to.sc_end))
 	);				
 	CHECK ("Not in Partial Scavenge TO zone.",
-		!((g_data.status & GC_PART) &&
+		!((rt_g_data.status & GC_PART) &&
 		(root > ps_to.sc_arena) && 
 		(root <= ps_to.sc_end))
 	);
@@ -3486,12 +3486,12 @@ rt_private int generational_collect(void)
 	rt_uint_ptr overused;		/* Amount of data over watermark */
 	EIF_REFERENCE watermark;			/* Watermark in generation zone */
 
-	if (g_data.status & GC_STOP)
+	if (rt_g_data.status & GC_STOP)
 		return -1;				/* Garbage collection stopped */
 
 	SIGBLOCK;					/* Block signals during garbage collection */
-	g_data.status = GC_FAST;	/* Fast generation collection */
-	g_data.nb_partial++;		/* One more partial collection */
+	rt_g_data.status = GC_FAST;	/* Fast generation collection */
+	rt_g_data.nb_partial++;		/* One more partial collection */
 
 #ifdef DEBUG
 	dprintf(1)("collect: tenure age is %d for this cycle\n", tenure);
@@ -4064,7 +4064,7 @@ rt_private void update_moved_set(void)
 	 * alive object must still be marked).
 	 */
 
-	if (g_data.status & GC_PART) {			/* Partial collection */
+	if (rt_g_data.status & GC_PART) {			/* Partial collection */
 		for (s = moved_set.st_hd; s && !done; s = s->sk_next) {
 			obj = s->sk_arena;					/* Start of stack */
 			if (s != moved_set.st_cur)			/* Top is before after 's' */
@@ -4083,7 +4083,7 @@ rt_private void update_moved_set(void)
 					epush(&new_stack, (EIF_REFERENCE)(zone+1));	/* Remain as is */
 			}
 		}
-	} else if (g_data.status & GC_FAST) {	/* Generation collection */
+	} else if (rt_g_data.status & GC_FAST) {	/* Generation collection */
 		for (s = moved_set.st_hd; s && !done; s = s->sk_next) {
 			obj = s->sk_arena;					/* Start of stack */
 			if (s != moved_set.st_cur)			/* Top is before after 's' */
@@ -4165,7 +4165,7 @@ rt_private void update_rem_set(void)
 		new_stack.st_end = s->sk_end;			/* End of first chunk */
 	}
 
-	moving = g_data.status;				/* Garbage collector's state */
+	moving = rt_g_data.status;				/* Garbage collector's state */
 	generational = moving & GC_FAST;	/* Is this a collect() cycle? */
 	moving &= GC_PART | GC_GEN;			/* Current algorithm moves objects? */
 
@@ -4292,7 +4292,7 @@ rt_private void update_memory_set ()
 	int dtype;						/* Dynamic type of Current object.	*/
 	int done = 0;					/* Top of stack not reached yet */
 
-	REQUIRE ("GC is not stopped", !(g_data.status & GC_STOP));
+	REQUIRE ("GC is not stopped", !(rt_g_data.status & GC_STOP));
 
 	/************************* End of postconditions. **********************/
 
@@ -4363,8 +4363,8 @@ rt_private void update_memory_set ()
 
 				CHECK ("Has with dispose routine", Disp_rout (dtype));
 
-				gc_status = g_data.status;			/* Save GC status. */
-				g_data.status |= GC_STOP;			/* Stop GC. */
+				gc_status = rt_g_data.status;			/* Save GC status. */
+				rt_g_data.status |= GC_STOP;			/* Stop GC. */
 
 				/* We should disable invariants but not postconditions 
 				 * (see `dispose' from IDENTIFIED).
@@ -4373,7 +4373,7 @@ rt_private void update_memory_set ()
 				in_assertion = ~0;			/* Turn off assertion checking. */
 				DISP(dtype,(EIF_REFERENCE) (zone + 1));	/* Call 'dispose'. */
 				in_assertion = saved_in_assertion;	/* Set in_assertion back. */
-				g_data.status = gc_status;		/* Restore previous GC status.*/
+				rt_g_data.status = gc_status;		/* Restore previous GC status.*/
 				CHECK ("Cannot be in object ID stack",
 					!has_object (&object_id_stack, (EIF_REFERENCE) zone + 1));
 			}
@@ -4495,8 +4495,8 @@ rt_private void swap_gen_zones(void)
 	 * overhead associated with the objects--RAM.
 	 */
 
-	g_data.mem_copied += sc_from.sc_top - sc_from.sc_arena;	/* Initial */
-	g_data.mem_move += sc_to.sc_top - sc_to.sc_arena;		/* Moved */
+	rt_g_data.mem_copied += sc_from.sc_top - sc_from.sc_arena;	/* Initial */
+	rt_g_data.mem_move += sc_to.sc_top - sc_to.sc_arena;		/* Moved */
 
 	memcpy (&temp, &sc_from, sizeof(struct sc_zone));
 	memcpy (&sc_from, &sc_to, sizeof(struct sc_zone));
@@ -4592,15 +4592,15 @@ rt_shared void gfree(register union overhead *zone)
 		if (zone->ov_flags & EO_DISP) { 
 			dtype = Deif_bid(zone->ov_flags);
 			EIF_G_DATA_MUTEX_LOCK;
-			gc_status = g_data.status;			/* Save GC status */
-			g_data.status |= GC_STOP;			/* Stop GC */
+			gc_status = rt_g_data.status;			/* Save GC status */
+			rt_g_data.status |= GC_STOP;			/* Stop GC */
 			EIF_G_DATA_MUTEX_UNLOCK;
 			saved_in_assertion = in_assertion;	/* Save in_assertion */
 			in_assertion = ~0;					/* Turn off assertion checking */
 			DISP(dtype,(EIF_REFERENCE) (zone + 1));	/* Call 'dispose' */
 			in_assertion = saved_in_assertion;	/* Set in_assertion back */
 			EIF_G_DATA_MUTEX_LOCK;
-			g_data.status = gc_status;			/* Restore previous GC status */
+			rt_g_data.status = gc_status;			/* Restore previous GC status */
 			EIF_G_DATA_MUTEX_UNLOCK;
 		}
 	}

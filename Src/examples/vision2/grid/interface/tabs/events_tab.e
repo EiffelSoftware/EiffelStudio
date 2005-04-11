@@ -39,6 +39,13 @@ feature {NONE} -- Initialization
 			grid.resize_actions.extend (agent resize_event)
 			grid.row_expand_actions.extend (agent row_expanded)
 			grid.row_collapse_actions.extend (agent row_collapsed)
+			grid.item_select_actions.extend (agent item_selected)
+			fixme ("Uncomment following selection events when implemented in EV_GRID")
+--			grid.item_deselect_actions.extend (agent item_deselected)
+			grid.row_select_actions.extend (agent row_selected)
+--			grid.row_deselect_actions.extend (agent row_deselected)
+--			grid.column_select_actions.extend (agent column_selected)
+--			grid.column_deselect_actions.extend (agent column_deselected)
 		end
 		
 feature -- Events
@@ -161,6 +168,42 @@ feature -- Events
 			--
 		do
 			add_event_item_to_list ("Row " + a_row.index.out + " expanded.")
+		end
+		
+	item_selected (an_item: EV_GRID_ITEM) is
+			--
+		do
+			add_event_item_to_list ("Item at row " + an_item.row.index.out + ", column " + an_item.column.index.out + " selected.")
+		end
+		
+	item_deselected (an_item: EV_GRID_ITEM) is
+			--
+		do
+			add_event_item_to_list ("Item at row " + an_item.row.index.out + ", column " + an_item.column.index.out + " deselected.")
+		end
+	
+	row_selected (a_row: EV_GRID_ROW) is
+			--
+		do
+			add_event_item_to_list ("Row " + a_row.index.out + " selected.")
+		end
+		
+	row_deselected (a_row: EV_GRID_ROW) is
+			--
+		do
+			add_event_item_to_list ("Row " + a_row.index.out + " selected.")
+		end
+		
+	column_selected (a_column: EV_GRID_COLUMN) is
+			--
+		do
+			add_event_item_to_list ("Column " + a_column.index.out + " selected.")
+		end
+		
+	column_deselected (a_column: EV_GRID_COLUMN) is
+			--
+		do
+			add_event_item_to_list ("Column " + a_column.index.out + " selected.")
 		end
 
 	add_event_item_to_list (a_string: STRING) is

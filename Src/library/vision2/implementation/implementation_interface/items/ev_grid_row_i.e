@@ -317,8 +317,9 @@ feature -- Status setting
 			parented: parent /= Void
 		local
 			virtual_y: INTEGER
-		--	first_item: EV_GRID_ITEM
 			l_height: INTEGER
+			extra_height: INTEGER
+			i: INTEGER
 		do
 			virtual_y := virtual_y_position
 			if parent_i.is_row_height_fixed then
@@ -329,10 +330,34 @@ feature -- Status setting
 			if virtual_y < parent_i.virtual_y_position then
 				parent_i.set_virtual_position (parent_i.virtual_x_position, virtual_y)
 			elseif virtual_y + l_height > parent_i.virtual_y_position + parent_i.viewable_height then
-				parent_i.set_virtual_position (parent_i.virtual_x_position, virtual_y + l_height - parent_i.viewable_height)
+				if parent_i.is_vertical_scrolling_per_item then
+						-- In this case, we must ensure that it is always the top item that still matches flush to
+						-- the top of the viewable area of `parent_i'. There are two cases that we must handle.
+					if parent_i.is_row_height_fixed then
+						extra_height := parent_i.viewable_height \\ parent_i.row_height
+					else
+							-- In this case, the only way to determine the extra amount to add in order
+							-- for the top row to be flush with the top of the viewable area, is
+							-- to loop up until we find the first one that intersects the viewable area.
+						from
+							i := index
+							extra_height := parent_i.viewable_height 
+						until
+							i = 1 or extra_height < 0
+						loop
+							extra_height := extra_height - parent_i.row (i).height
+							i := i - 1
+						end
+						extra_height := parent_i.row (i + 1).height + extra_height
+					end
+				end
+				parent_i.set_virtual_position (parent_i.virtual_x_position, virtual_y + l_height + extra_height - parent_i.viewable_height)
 			end
 		ensure
-			to_implement_assertion ("Ensure virtual position of item is contained within viewable area")
+			parent_virtual_x_position_unchanged: old parent.virtual_x_position = parent.virtual_x_position
+			to_implement_assertion ("old_is_visible_implies_vertical_position_not_changed")
+			row_visible_when_heights_fixed_in_parent: parent.is_row_height_fixed implies  virtual_y_position >= parent.virtual_y_position and virtual_y_position + parent.row_height <= parent.virtual_y_position + parent.viewable_height
+			row_visible_when_heights_not_fixed_in_parent: not parent.is_row_height_fixed implies virtual_y_position >= parent.virtual_y_position and virtual_y_position + height <= parent.virtual_y_position + parent.viewable_height
 		end
 
 feature {EV_GRID_ROW, EV_ANY_I}-- Element change

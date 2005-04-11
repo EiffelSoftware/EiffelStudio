@@ -106,6 +106,7 @@ feature -- Access
 			end
 		ensure
 			parent_void_implies_result_zero: parent = Void implies Result = 0
+			valid_result: parent /= Void implies Result >= 0 and Result <= parent.virtual_width - column.width
 		end
 		
 	virtual_y_position: INTEGER is
@@ -129,6 +130,8 @@ feature -- Access
 			end
 		ensure
 			parent_void_implies_result_zero: parent = Void implies Result = 0
+			valid_result_when_parent_row_height_fixed: parent /= Void implies Result >= 0 and Result <= parent.virtual_height - parent.row_height
+			valid_result_when_parent_row_height_not_fixed: parent /= Void implies Result >= 0 and Result <= parent.virtual_height - row.height
 		end
 		
 	horizontal_indent: INTEGER is

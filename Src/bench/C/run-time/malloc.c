@@ -2421,8 +2421,8 @@ rt_private int free_last_chunk(void)
 	 * the process size by releasing some core, we may allow a new allocation.
 	 */
 
-	if (g_data.gc_to > 0)
-		g_data.gc_to--;					/* Decrease number of allocated 'to' */
+	if (rt_g_data.gc_to > 0)
+		rt_g_data.gc_to--;					/* Decrease number of allocated 'to' */
 
 	if (last_chk == cklst.eck_tail) {	/* Chunk was an Eiffel one */
 		e_data.ml_chunk--;

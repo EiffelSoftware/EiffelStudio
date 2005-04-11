@@ -270,15 +270,15 @@ rt_public void gc_stat(EIF_POINTER item, EIF_INTEGER type)
 	 */
 	
 #ifdef ISE_GC
-	struct gacstat *gs = &g_stat[type];	/* Get structure by type */
+	struct gacstat *gs = &rt_g_stat[type];	/* Get structure by type */
 
 	memcpy (item, gs, sizeof(struct gacstat));
 
 	EIF_G_DATA_MUTEX_LOCK;
 	if (type == GST_PART) {
-		((struct gacstat *) item)->count = g_data.nb_full;
+		((struct gacstat *) item)->count = rt_g_data.nb_full;
 	} else {
-		((struct gacstat *) item)->count = g_data.nb_partial;
+		((struct gacstat *) item)->count = rt_g_data.nb_partial;
 	}
 	EIF_G_DATA_MUTEX_UNLOCK;
 #endif
@@ -293,7 +293,7 @@ rt_public char gc_ison(void)
 #ifdef ISE_GC
 	char result;
 	EIF_G_DATA_MUTEX_LOCK;
-	result = (char) (g_data.status & GC_STOP ? '\0' : '\01');
+	result = (char) (rt_g_data.status & GC_STOP ? '\0' : '\01');
 	EIF_G_DATA_MUTEX_UNLOCK;
 	return result;
 #else

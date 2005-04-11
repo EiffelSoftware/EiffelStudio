@@ -88,14 +88,14 @@ extern EIF_LW_MUTEX_TYPE *eif_gc_mutex;	/* GC mutex */
 extern EIF_LW_MUTEX_TYPE *eif_gc_set_mutex;	/* GC mutex */
 extern EIF_LW_MUTEX_TYPE *eif_global_once_set_mutex;
 #ifdef ISE_GC
-extern EIF_LW_MUTEX_TYPE *eif_g_data_mutex;
+extern EIF_LW_MUTEX_TYPE *eif_rt_g_data_mutex;
 #endif
 #endif
 
 #ifdef ISE_GC
 extern EIF_INTEGER clsc_per;			/* Period of full coalescing: 0 => never. */
-extern struct gacinfo g_data;			/* Garbage collection status */
-extern struct gacstat g_stat[GST_NBR];	/* Collection statistics */
+extern struct gacinfo rt_g_data;			/* Garbage collection status */
+extern struct gacstat rt_g_stat[GST_NBR];	/* Collection statistics */
 
 /* Exported data-structure declarations */
 extern struct stack memory_set;	/* Memory set stack.	*/

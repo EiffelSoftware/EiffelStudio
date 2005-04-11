@@ -856,9 +856,9 @@ rt_shared void exhdlr(Signal_t (*handler)(int), int sig)
 	 * we saw a potential problem but did not know how best fix it.
 	 */
 	EIF_G_DATA_MUTEX_LOCK;
-	gc_status = g_data.status;		/* Save GC current status */
-	g_data.status |= GC_STOP;		/* Stop garbage collection anyway */
-	g_data.status |= GC_SIG;		/* Signals entering in signal handler */
+	gc_status = rt_g_data.status;		/* Save GC current status */
+	rt_g_data.status |= GC_STOP;		/* Stop garbage collection anyway */
+	rt_g_data.status |= GC_SIG;		/* Signals entering in signal handler */
 	EIF_G_DATA_MUTEX_UNLOCK;
 #endif
 
@@ -867,7 +867,7 @@ rt_shared void exhdlr(Signal_t (*handler)(int), int sig)
 		echmem |= MEM_FSTK;					/* Stack is full */
 #ifdef ISE_GC
 		EIF_G_DATA_MUTEX_LOCK;
-		g_data.status = gc_status;			/* Restore previous GC status */
+		rt_g_data.status = gc_status;			/* Restore previous GC status */
 		EIF_G_DATA_MUTEX_UNLOCK;
 #endif
 		enomem();							/* We ran out of memory */
@@ -887,7 +887,7 @@ rt_shared void exhdlr(Signal_t (*handler)(int), int sig)
 		echlvl--;							/* We did not enter a new level */
 #ifdef ISE_GC
 		EIF_G_DATA_MUTEX_LOCK;
-		g_data.status = gc_status;			/* Restore previous GC status */
+		rt_g_data.status = gc_status;			/* Restore previous GC status */
 		EIF_G_DATA_MUTEX_UNLOCK;
 #endif
 		xraise(EN_MEM);						/* Non-critical exception */
@@ -905,7 +905,7 @@ rt_shared void exhdlr(Signal_t (*handler)(int), int sig)
 		RTXSC;						/* Restore stack contexts */
 #ifdef ISE_GC
 		EIF_G_DATA_MUTEX_LOCK;
-		g_data.status = gc_status;	/* Restore previous GC status */
+		rt_g_data.status = gc_status;	/* Restore previous GC status */
 		EIF_G_DATA_MUTEX_UNLOCK;
 #endif
 		xraise(EN_HDLR);			/* Raise exception in signal handler */
@@ -915,7 +915,7 @@ rt_shared void exhdlr(Signal_t (*handler)(int), int sig)
 	(handler)(sig);					/* LISPish call to signal handler :-) */
 #ifdef ISE_GC
 	EIF_G_DATA_MUTEX_LOCK;
-	g_data.status = gc_status;		/* Restore saved GC status */
+	rt_g_data.status = gc_status;		/* Restore saved GC status */
 	EIF_G_DATA_MUTEX_UNLOCK;
 #endif
 	expop(&eif_trace);				/* Remove EN_ILVL record */

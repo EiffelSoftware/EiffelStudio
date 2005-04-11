@@ -1378,7 +1378,7 @@ rt_public EIF_REFERENCE rt_nmake(long int objectCount)
 	uint32 spec_size = 0;
 	volatile size_t n = objectCount;
 #ifdef ISE_GC
-	volatile char g_status = g_data.status;
+	volatile char g_status = rt_g_data.status;
 #endif
 	jmp_buf exenv;
 	RTXD;
@@ -1389,7 +1389,7 @@ rt_public EIF_REFERENCE rt_nmake(long int objectCount)
 	if (setjmp(exenv)) {
 		rt_clean();				/* Clean data structure */
 		RTXSC;					/* Restore stack contexts */
-		g_data.status = g_status;		/* If a crash occurs, since we may disable the GC in the
+		rt_g_data.status = g_status;		/* If a crash occurs, since we may disable the GC in the
 										 * code below, we need to make sure to restore the status
 										 * to what it originally was. */
 		ereturn(MTC_NOARG);				/* Propagate exception */
@@ -1448,7 +1448,7 @@ rt_public EIF_REFERENCE rt_nmake(long int objectCount)
 #ifdef ISE_GC
 			/* Stop in the garbage collector because we have now an unstable
 			 * object. */
-		g_data.status |= GC_STOP;
+		rt_g_data.status |= GC_STOP;
 #endif /* ISE_GC */
 
 			/* Record the new object in hector table */
@@ -1471,7 +1471,7 @@ rt_public EIF_REFERENCE rt_nmake(long int objectCount)
 
 #ifdef ISE_GC
 			/* Restore garbage collector status */
-		g_data.status = g_status;
+		rt_g_data.status = g_status;
 #endif /* ISE_GC */
 	}
 	expop(&eif_stack);
@@ -1503,7 +1503,7 @@ rt_public EIF_REFERENCE grt_nmake(long int objectCount)
 	volatile uint32 spec_size = 0;
 	volatile long int n = objectCount;
 #ifdef ISE_GC
-	volatile char g_status = g_data.status;
+	volatile char g_status = rt_g_data.status;
 #endif
 	jmp_buf exenv;
 	RTXD;
@@ -1514,7 +1514,7 @@ rt_public EIF_REFERENCE grt_nmake(long int objectCount)
 	if (setjmp(exenv)) {
 		rt_clean();				/* Clean data structure */
 		RTXSC;					/* Restore stack contexts */
-		g_data.status = g_status;		/* If a crash occurs, since we may disable the GC in the
+		rt_g_data.status = g_status;		/* If a crash occurs, since we may disable the GC in the
 										 * code below, we need to make sure to restore the status
 										 * to what it originally was. */
 		ereturn(MTC_NOARG);				/* Propagate exception */
@@ -1626,7 +1626,7 @@ rt_public EIF_REFERENCE grt_nmake(long int objectCount)
 #ifdef ISE_GC
 			/* Stop in the garbage collector because we have know an unstable
 			 * object. */
-		g_data.status |= GC_STOP;
+		rt_g_data.status |= GC_STOP;
 #endif /* ISE_GC */
 
 			/* Record the new object in hector table */
@@ -1647,7 +1647,7 @@ rt_public EIF_REFERENCE grt_nmake(long int objectCount)
 
 #ifdef ISE_GC
 			/* Restore garbage collector status */
-		g_data.status = g_status;
+		rt_g_data.status = g_status;
 #endif /* ISE_GC */
 	}
 	expop(&eif_stack);
@@ -1685,7 +1685,7 @@ rt_public EIF_REFERENCE irt_nmake(long int objectCount)
 	volatile uint32 spec_size = 0;
 	volatile long int n = objectCount;
 #ifdef ISE_GC
-	volatile char g_status = g_data.status;
+	volatile char g_status = rt_g_data.status;
 #endif
 	jmp_buf exenv;
 	RTXD;
@@ -1696,7 +1696,7 @@ rt_public EIF_REFERENCE irt_nmake(long int objectCount)
 	if (setjmp(exenv)) {
 		rt_clean();				/* Clean data structure */
 		RTXSC;					/* Restore stack contexts */
-		g_data.status = g_status;		/* If a crash occurs, since we may disable the GC in the
+		rt_g_data.status = g_status;		/* If a crash occurs, since we may disable the GC in the
 										 * code below, we need to make sure to restore the status
 										 * to what it originally was. */
 		ereturn(MTC_NOARG);				/* Propagate exception */
@@ -1799,7 +1799,7 @@ rt_public EIF_REFERENCE irt_nmake(long int objectCount)
 #ifdef ISE_GC
 			/* Stop in the garbage collector because we have know an unstable
 			 * object. */
-		g_data.status |= GC_STOP;
+		rt_g_data.status |= GC_STOP;
 #endif /* ISE_GC */
 
 			/* Record the new object in hector table */
@@ -1820,7 +1820,7 @@ rt_public EIF_REFERENCE irt_nmake(long int objectCount)
 
 #ifdef ISE_GC
 			/* Restore garbage collector status */
-		g_data.status = g_status;
+		rt_g_data.status = g_status;
 #endif /* ISE_GC */
 	}
 	expop(&eif_stack);
@@ -1847,7 +1847,7 @@ rt_private void add_mismatch (EIF_REFERENCE object, EIF_REFERENCE old_values)
 	EIF_REFERENCE spec;
 
 #ifdef ISE_GC
-	REQUIRE ("No GC", g_data.status & GC_STOP);
+	REQUIRE ("No GC", rt_g_data.status & GC_STOP);
 #endif
 	if (mismatches->count == mismatches->capacity) {
 		EIF_GET_CONTEXT
@@ -1946,7 +1946,7 @@ rt_public EIF_REFERENCE rrt_nmake (long int objectCount)
 	volatile long int i;
 	jmp_buf exenv;
 #ifdef ISE_GC
-	volatile char g_status = g_data.status;
+	volatile char g_status = rt_g_data.status;
 #endif
 	RTXD;
 
@@ -1956,7 +1956,7 @@ rt_public EIF_REFERENCE rrt_nmake (long int objectCount)
 	if (setjmp (exenv)) {
 		rt_clean ();			/* Clean data structure */
 		RTXSC;					/* Restore stack contexts */
-		g_data.status = g_status;		/* If a crash occurs, since we may disable the GC in the
+		rt_g_data.status = g_status;		/* If a crash occurs, since we may disable the GC in the
 										 * code below, we need to make sure to restore the status
 										 * to what it originally was. */
 		ereturn (MTC_NOARG);	/* Propagate exception */
@@ -2021,7 +2021,7 @@ rt_public EIF_REFERENCE rrt_nmake (long int objectCount)
 #ifdef ISE_GC
 			/* Stop in the garbage collector because we have now an unstable
 			 * object. */
-		g_data.status |= GC_STOP;
+		rt_g_data.status |= GC_STOP;
 #endif
 
 #ifdef RECOVERABLE_DEBUG
@@ -2089,7 +2089,7 @@ rt_public EIF_REFERENCE rrt_nmake (long int objectCount)
 
 #ifdef ISE_GC
 			/* Restore garbage collector status */
-		g_data.status = g_status;
+		rt_g_data.status = g_status;
 #endif
 	}
 	expop (&eif_stack);
@@ -4423,7 +4423,7 @@ rt_private EIF_REFERENCE object_rread_attributes (
 		return NULL;		/* Nothing to read if no attributes */
 
 #ifdef ISE_GC
-	REQUIRE ("No GC", g_data.status & GC_STOP);
+	REQUIRE ("No GC", rt_g_data.status & GC_STOP);
 #endif
 	REQUIRE ("Attribute order exists", attributes != NULL);
 	REQUIRE ("Offset only for expanded", object == NULL  ||

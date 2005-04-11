@@ -44,6 +44,7 @@ feature {NONE}-- Initialization
 			create textable_entry
 			create selectable_frame
 			create is_selected
+			create remove_item_button
 			
 				-- Build_widget_structure.
 			extend (item_finder)
@@ -59,6 +60,7 @@ feature {NONE}-- Initialization
 			textable_frame.extend (textable_entry)
 			main_box.extend (selectable_frame)
 			selectable_frame.extend (is_selected)
+			main_box.extend (remove_item_button)
 			
 			item_frame.set_text ("Item Properties")
 			main_box.set_padding_width (box_padding)
@@ -67,6 +69,7 @@ feature {NONE}-- Initialization
 			main_box.disable_item_expand (l_ev_horizontal_box_2)
 			main_box.disable_item_expand (textable_frame)
 			main_box.disable_item_expand (selectable_frame)
+			main_box.disable_item_expand (remove_item_button)
 			l_ev_horizontal_box_1.set_padding_width (box_padding)
 			l_ev_horizontal_box_1.disable_item_expand (l_ev_label_1)
 			l_ev_horizontal_box_1.disable_item_expand (l_ev_label_2)
@@ -78,6 +81,7 @@ feature {NONE}-- Initialization
 			textable_frame.set_text ("Textable")
 			selectable_frame.set_text ("Selectable")
 			is_selected.set_text ("is_selected")
+			remove_item_button.set_text ("Remove Item from Grid")
 			set_border_width (box_padding)
 			disable_item_expand (item_finder)
 			
@@ -86,6 +90,7 @@ feature {NONE}-- Initialization
 			item_y_index.change_actions.extend (agent item_y_index_changed (?))
 			textable_entry.change_actions.extend (agent textable_entry_changed)
 			is_selected.select_actions.extend (agent is_selected_selected)
+			remove_item_button.select_actions.extend (agent remove_item_button_selected)
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.
 
@@ -100,6 +105,7 @@ feature -- Access
 	item_x_index, item_y_index: EV_SPIN_BUTTON
 	item_finder: GRID_ITEM_FINDER
 	textable_entry: EV_TEXT_FIELD
+	remove_item_button: EV_BUTTON
 	item_frame,
 	textable_frame, selectable_frame: EV_FRAME
 
@@ -140,6 +146,11 @@ feature {NONE} -- Implementation
 	
 	is_selected_selected is
 			-- Called by `select_actions' of `is_selected'.
+		deferred
+		end
+	
+	remove_item_button_selected is
+			-- Called by `select_actions' of `remove_item_button'.
 		deferred
 		end
 	

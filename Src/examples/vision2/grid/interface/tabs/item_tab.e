@@ -62,12 +62,14 @@ feature {NONE} -- Implementation
 	item_x_index_changed (a_value: INTEGER) is
 			-- Called by `change_actions' of `item_x_index'.
 		do
+			--found_item := grid.item (a_value, item_y_index.value)
 			update_item_data (a_value, item_y_index.value)
 		end
 	
 	item_y_index_changed (a_value: INTEGER) is
 			-- Called by `change_actions' of `item_y_index'.
 		do
+			--found_item := grid.item (item_x_index.value, a_value)
 			update_item_data (item_x_index.value, a_value)
 		end
 		
@@ -132,6 +134,12 @@ feature {NONE} -- Implementation
 			end
 		end
 		
+	remove_item_button_selected is
+			-- Called by `select_actions' of `remove_item_button'.
+		do
+			grid.remove_item (found_item.column.index, found_item.row.index)
+			update_item_data (item_x_index.value, item_y_index.value)
+		end
 
 end -- class ITEM_TAB
 

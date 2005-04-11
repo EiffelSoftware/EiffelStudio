@@ -351,13 +351,19 @@ feature -- Status setting
 						extra_height := parent_i.row (i + 1).height + extra_height
 					end
 				end
-				parent_i.set_virtual_position (parent_i.virtual_x_position, virtual_y + l_height + extra_height - parent_i.viewable_height)
+				if l_height >= parent_i.viewable_height then
+						-- In this case, the height of the row is greater than the viewable height
+						-- so we simply set it at the top of the viewable area.
+					parent_i.set_virtual_position (parent_i.virtual_x_position, virtual_y)
+				else
+					parent_i.set_virtual_position (parent_i.virtual_x_position, virtual_y + l_height + extra_height - parent_i.viewable_height)
+				end
 			end
 		ensure
 			parent_virtual_x_position_unchanged: old parent.virtual_x_position = parent.virtual_x_position
 			to_implement_assertion ("old_is_visible_implies_vertical_position_not_changed")
-			row_visible_when_heights_fixed_in_parent: parent.is_row_height_fixed implies  virtual_y_position >= parent.virtual_y_position and virtual_y_position + parent.row_height <= parent.virtual_y_position + parent.viewable_height
-			row_visible_when_heights_not_fixed_in_parent: not parent.is_row_height_fixed implies virtual_y_position >= parent.virtual_y_position and virtual_y_position + height <= parent.virtual_y_position + parent.viewable_height
+			row_visible_when_heights_fixed_in_parent: parent.is_row_height_fixed implies  virtual_y_position >= parent.virtual_y_position and virtual_y_position + parent.row_height <= parent.virtual_y_position + (parent.viewable_height).max (parent.row_height)
+			row_visible_when_heights_not_fixed_in_parent: not parent.is_row_height_fixed implies virtual_y_position >= parent.virtual_y_position and virtual_y_position + height <= parent.virtual_y_position + (parent.viewable_height).max (height)
 		end
 
 feature {EV_GRID_ROW, EV_ANY_I}-- Element change

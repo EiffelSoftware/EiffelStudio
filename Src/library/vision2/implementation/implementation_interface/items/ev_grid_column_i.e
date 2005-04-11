@@ -127,6 +127,21 @@ feature -- Access
 		ensure
 			Result_non_negative: Result >= 0
 		end
+		
+	virtual_x_position: INTEGER is
+			-- Vertical offset of `Current' in relation to the
+			-- the virtual area of `parent' grid in pixels.
+			-- `Result' is 0 if `parent' is `Void'.
+		do
+			if parent_i /= Void then
+					-- If there is no parent then return 0.
+					
+				Result := parent_i.column_offsets @ (index)
+			end
+		ensure
+			parent_void_implies_result_zero: parent = Void implies Result = 0
+			to_implement_assertion ("valid_result: Result >= 0 and Result <= virtual_width - viewable_width")
+		end
 
 feature -- Status setting
 
@@ -149,6 +164,53 @@ feature -- Status setting
 			parent.show_column (index)
 		ensure
 			is_displayed: is_displayed
+		end
+		
+	ensure_visible is
+			-- Ensure `Current' is visible in viewable area of `parent'.
+		require
+			parented: parent /= Void
+			shown: is_displayed
+		local
+			virtual_x: INTEGER
+			l_width: INTEGER
+			extra_width: INTEGER
+			i: INTEGER
+		do
+			virtual_x := virtual_x_position			
+			l_width := width
+			if virtual_x < parent_i.virtual_x_position then
+				parent_i.set_virtual_position (virtual_x, parent_i.virtual_y_position)
+			elseif virtual_x + l_width > parent_i.virtual_x_position + parent_i.viewable_width then
+				if parent_i.is_horizontal_scrolling_per_item then
+						-- In this case, we must ensure that it is always the left item that still matches flush to
+						-- the left of the viewable area of `parent_i'.
+						-- The only way to determine the extra amount to add in order
+						-- for the top row to be flush with the top of the viewable area, is
+						-- to loop up until we find the first one that intersects the viewable area.
+					from
+						i := index
+						extra_width := parent_i.viewable_width
+					until
+						i = 1 or extra_width < 0
+					loop
+						extra_width := extra_width - parent_i.column (i).width
+						i := i - 1
+					end
+					extra_width := parent_i.column (i + 1).width + extra_width
+				end
+				if l_width >= parent_i.viewable_height then
+						-- In this case, the width of the column is greater than the viewable width
+						-- so we simply set it to the left of the viewable area.
+					parent_i.set_virtual_position (virtual_x, parent_i.virtual_y_position)
+				else
+					parent_i.set_virtual_position (virtual_x + l_width + extra_width - parent_i.viewable_width, parent_i.virtual_y_position)
+				end
+			end
+		ensure
+			parent_virtual_y_position_unchanged: old parent.virtual_y_position = parent.virtual_y_position
+			to_implement_assertion ("old_is_visible_implies_horizontal_position_not_changed")
+			column_visible_when_heights_fixed_in_parent: virtual_x_position >= parent.virtual_x_position and virtual_x_position + width <= parent.virtual_x_position + (parent.viewable_width).max (width)
 		end
 
 feature -- Status report

@@ -302,7 +302,6 @@ feature -- Basic operations
 			dynamic_content_function: FUNCTION [ANY, TUPLE [INTEGER, INTEGER], EV_GRID_ITEM]
 			internal_client_width, internal_client_height: INTEGER
 			current_subrow_indent: INTEGER
-			skipped_rows: INTEGER
 			visible_column_indexes: ARRAYED_LIST [INTEGER]
 			visible_row_indexes: ARRAYED_LIST [INTEGER]
 			subrow_indent: INTEGER
@@ -713,10 +712,10 @@ feature -- Basic operations
 				grid.drawable.set_foreground_color (grid.background_color)
 				grid.drawable.fill_rectangle (horizontal_buffer_offset + internal_client_width - rectangle_width, vertical_buffer_offset, rectangle_width, internal_client_height)
 			end
-			if current_row = Void or else current_row.index = grid.row_count - grid.hidden_node_count then
+			if current_row = Void or else current_row.index >= grid.row_count - grid.hidden_node_count then
 				if grid.is_row_height_fixed and not grid.is_tree_enabled then
 						-- Special handling for fixed row heights as `row_offsets' does not exist.
-					rectangle_height := internal_client_height - ((grid.row_height * (grid.row_count - skipped_rows)) - internal_client_y)
+					rectangle_height := internal_client_height - ((grid.row_height * (grid.row_count)) - internal_client_y)
 				else
 					rectangle_height := internal_client_height - (row_offsets @ (row_offsets.count) - internal_client_y)
 				end

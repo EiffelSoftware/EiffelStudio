@@ -88,8 +88,6 @@ feature -- Access
 			valid_result_when_parent_row_height_fixed: parent /= Void implies Result >= 0 and Result <= parent.virtual_height - parent.row_height
 			valid_result_when_parent_row_height_not_fixed: parent /= Void implies Result >= 0 and Result <= parent.virtual_height - row.height
 		end
-
-feature -- Actions
 		
 	horizontal_indent: INTEGER is
 			-- Horizontal distance in pixels from left edge of `Current' to left edge of `column'.
@@ -104,6 +102,24 @@ feature -- Actions
 			not_parent_tree_enabled_implies_result_zero: not parent.is_tree_enabled implies Result = 0
 			parent_tree_enabled_implies_result_greater_or_equal_to_zero: parent.is_tree_enabled implies Result >= 0
 		end
+		
+feature -- Status setting
+
+	ensure_visible is
+			-- Ensure `Current' is visible in viewable area of `parent'.
+		require
+			not_destroyed: not is_destroyed
+			parented: parent /= Void
+		do
+			implementation.ensure_visible
+		ensure
+			to_implement_assertion ("old_is_visible_implies_positions_not_changed")
+			row_visible_when_heights_fixed_in_parent: parent.is_row_height_fixed implies  virtual_y_position >= parent.virtual_y_position and virtual_y_position + parent.row_height <= parent.virtual_y_position + (parent.viewable_height).max (parent.row_height)
+			row_visible_when_heights_not_fixed_in_parent: not parent.is_row_height_fixed implies virtual_y_position >= parent.virtual_y_position and virtual_y_position + row.height <= parent.virtual_y_position + (parent.viewable_height).max (row.height)
+			column_visible: virtual_x_position >= parent.virtual_x_position and virtual_x_position + column.width <= parent.virtual_x_position + (parent.viewable_width).max (column.width)
+		end
+
+feature -- Actions
 
 	activate is
             -- Setup `Current' for user interactive editing.

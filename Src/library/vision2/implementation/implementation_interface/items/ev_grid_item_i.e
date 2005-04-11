@@ -99,9 +99,8 @@ feature -- Access
 			-- the virtual area of `parent' grid in pixels.
 			-- `Result' is 0 if `parent' is `Void'.
 		do
+			Result := column_i.virtual_x_position
 			if parent_i /= Void then
-					-- If there is no parent, then return 0
-				Result := parent_i.column_offsets @ (column_i.index)
 				Result := Result + parent_i.item_indent (Current)
 			end
 		ensure
@@ -114,20 +113,7 @@ feature -- Access
 			-- the virtual area of `parent' grid in pixels.
 			-- `Result' is 0 if `parent' is `Void'.
 		do
-			if parent_i /= Void then
-					-- If there is no parent then return 0.
-					
-				parent_i.perform_vertical_computation
-					-- Recompute vertically if required.
-					
-				if parent_i.row_offsets /= Void then
-						-- As `row_offsets' exists, we can look it up,
-						-- otherwise it must be computed.
-					Result := parent_i.row_offsets @ (row_i.index)
-				else
-					Result := (row_i.index - 1) * parent_i.row_height
-				end
-			end
+			Result := row_i.virtual_y_position
 		ensure
 			parent_void_implies_result_zero: parent = Void implies Result = 0
 			valid_result_when_parent_row_height_fixed: parent /= Void implies Result >= 0 and Result <= parent.virtual_height - parent.row_height

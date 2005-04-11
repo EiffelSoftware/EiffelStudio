@@ -250,7 +250,7 @@ feature -- Status setting
 				if displayed_in_grid_tree then
 						-- Only recompute the row offsets if `Current' is visible
 						-- otherwise the row offsets are already correct.
-					parent_i.set_vertical_computation_required
+					parent_i.set_vertical_computation_required (index)
 				end
 			
 				if parent_i.row_expand_actions_internal /= Void then
@@ -281,7 +281,7 @@ feature -- Status setting
 				if displayed_in_grid_tree then
 						-- Only recompute the row offsets if `Current' is visible
 						-- otherwise the row offsets are already correct.
-					parent_i.set_vertical_computation_required
+					parent_i.set_vertical_computation_required (index)
 				end
 				
 				if parent_i.row_collapse_actions_internal /= Void then
@@ -305,7 +305,7 @@ feature -- Status setting
 		do
 			internal_height := a_height
 			if not parent_i.is_row_height_fixed then
-				parent_i.set_vertical_computation_required
+				parent_i.set_vertical_computation_required (index)
 				parent_i.redraw_client_area
 			end
 		ensure
@@ -430,7 +430,7 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 				-- Update the hidden node count in the parent grid.
 			parent_i.adjust_hidden_node_count ((row_imp.subnode_count_recursive + 1) - row_imp.expanded_subnode_count_recursive)
 			
-			parent_i.set_vertical_computation_required
+			parent_i.set_vertical_computation_required (index)
 			parent_i.redraw_client_area
 		ensure
 			added: a_row.parent_row = interface

@@ -72,7 +72,7 @@ feature -- Access
 			Result := implementation.virtual_x_position
 		ensure
 			parent_void_implies_result_zero: parent = Void implies Result = 0
---			valid_result: Result >= 0 and Result <= virtual_width - viewable_width
+			valid_result: parent /= Void implies Result >= 0 and Result <= parent.virtual_width - column.width
 		end
 		
 	virtual_y_position: INTEGER is
@@ -83,8 +83,10 @@ feature -- Access
 			not_destroyed: not is_destroyed
 		do
 			Result := implementation.virtual_y_position
---		ensure
---			valid_result: Result >= 0 and Result <= virtual_height - viewable_height
+		ensure
+			parent_void_implies_result_zero: parent = Void implies Result = 0
+			valid_result_when_parent_row_height_fixed: parent /= Void implies Result >= 0 and Result <= parent.virtual_height - parent.row_height
+			valid_result_when_parent_row_height_not_fixed: parent /= Void implies Result >= 0 and Result <= parent.virtual_height - row.height
 		end
 
 feature -- Actions

@@ -2452,6 +2452,8 @@ feature {NONE} -- Event handling
 				remove_selection
 			end
 			a_item.enable_select
+			
+			fixme ("When in per row selection mode, this appears to always force the last column to be visible.")
 			a_item.ensure_visible
 		end
 

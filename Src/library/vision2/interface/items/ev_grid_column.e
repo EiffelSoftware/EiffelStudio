@@ -26,6 +26,8 @@ feature -- Access
 		-- May `Current' be displayed when its `parent' is?
 		-- Will return False if `hide' has been called on `Current'.
 		-- A column that `is_displayed' does not necessarily have to be visible on screen at that particular time.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.is_displayed
 		end
@@ -33,6 +35,7 @@ feature -- Access
 	title: STRING is
 			-- Title of Current column. Empty if none.
 		require
+			not_destroyed: not is_destroyed
 			is_parented: parent /= Void
 		do
 			Result := implementation.title
@@ -43,6 +46,7 @@ feature -- Access
 	item (i: INTEGER): EV_GRID_ITEM is
 			-- Item at `i'-th row, Void if none.
 		require
+			not_destroyed: not is_destroyed
 			i_positive: i > 0
 			i_less_than_count: i <= count
 			is_parented: parent /= Void
@@ -52,6 +56,8 @@ feature -- Access
 
 	parent: EV_GRID is
 			-- Grid to which current column belongs.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.parent
 		end
@@ -59,6 +65,7 @@ feature -- Access
 	selected_items: ARRAYED_LIST [EV_GRID_ITEM] is
 			-- All items selected in `Current'.
 		require
+			not_destroyed: not is_destroyed
 			is_parented: parent /= Void
 		do
 			Result := implementation.selected_items
@@ -69,11 +76,25 @@ feature -- Access
 	width: INTEGER is
 			-- `Result' is width of `Current'.
 		require
+			not_destroyed: not is_destroyed
 			is_parented: parent /= Void
 		do
 			Result := implementation.width
 		ensure
 			Result_non_negative: Result >= 0
+		end
+		
+	virtual_x_position: INTEGER is
+			-- Horizontal offset of `Current' in relation to the
+			-- the virtual area of `parent' grid in pixels.
+			-- `Result' is 0 if `parent' is `Void'.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.virtual_x_position
+		ensure
+			parent_void_implies_result_zero: parent = Void implies Result = 0
+			to_implement_assertion ("valid_result: Result >= 0 and Result <= virtual_width - viewable_width")
 		end
 
 feature -- Status setting
@@ -98,12 +119,27 @@ feature -- Status setting
 		ensure
 			is_displayed: is_displayed
 		end
+		
+	ensure_visible is
+			-- Ensure `Current' is visible in viewable area of `parent'.
+		require
+			not_destroyed: not is_destroyed
+			parented: parent /= Void
+			shown: is_displayed
+		do
+			implementation.ensure_visible
+		ensure
+			parent_virtual_y_position_unchanged: old parent.virtual_y_position = parent.virtual_y_position
+			to_implement_assertion ("old_is_visible_implies_horizontal_position_not_changed")
+			column_visible_when_heights_fixed_in_parent: virtual_x_position >= parent.virtual_x_position and virtual_x_position + width <= parent.virtual_x_position + (parent.viewable_width).max (width)
+		end
 
 feature -- Status report
 
 	index: INTEGER is
 			-- Position of Current in `parent'.
 		require
+			not_destroyed: not is_destroyed
 			is_parented: parent /= Void
 		do
 			Result := implementation.index
@@ -115,6 +151,7 @@ feature -- Status report
 	count: INTEGER is
 			-- Number of items in current.
 		require
+			not_destroyed: not is_destroyed
 			is_parented: parent /= Void
 		do
 			Result := implementation.count
@@ -127,6 +164,7 @@ feature -- Element change
 	set_item (i: INTEGER; a_item: EV_GRID_ITEM) is
 			-- Set item at `i'-th row to be `a_item'.
 		require
+			not_destroyed: not is_destroyed
 			i_positive: i > 0
 			a_item_not_void: a_item /= Void
 			is_parented: parent /= Void
@@ -139,6 +177,7 @@ feature -- Element change
 	set_title (a_title: like title) is
 			-- a_title_not_void: a_title /= Void.
 		require
+			not_destroyed: not is_destroyed
 			is_parented: parent /= Void
 		do
 			implementation.set_title (a_title)
@@ -149,6 +188,7 @@ feature -- Element change
 	set_background_color (a_color: EV_COLOR) is
 			-- Set `background_color' with `a_color'.
 		require
+			not_destroyed: not is_destroyed
 			a_color_not_void: a_color /= Void
 			is_parented: parent /= Void
 		do
@@ -160,6 +200,7 @@ feature -- Element change
 	set_width (a_width: INTEGER) is
 			-- Assign `a_width' to `width'.
 		require
+			not_destroyed: not is_destroyed
 			width_non_negative: a_width >= 0
 			is_parented: parent /= Void
 		do

@@ -2245,7 +2245,7 @@ feature {NONE} -- Event handling
 		do
 			Result := client_x + internal_client_x - viewport_x_offset
 		ensure
-			result_greater_or_equal_to_client_x: Result >= client_x
+			result_positive: Result >= 0
 		end
 		
 	client_y_to_virtual_y (client_y: INTEGER): INTEGER is
@@ -2255,9 +2255,8 @@ feature {NONE} -- Event handling
 		do
 			Result := client_y + internal_client_y - viewport_y_offset
 		ensure
-			result_greater_or_equal_to_client_y: Result >= client_y
+			result_positive: Result >= 0
 		end
-		
 
 	pointer_motion_received (a_x, a_y: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 			-- Called by `pointer_motion_actions' of `drawable'.

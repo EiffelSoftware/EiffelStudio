@@ -2798,7 +2798,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- I
 				redraw_item (a_item.implementation)
 			else
 					-- We no longer have access to the item so we calculate the redraw area based on the rows and columns.
-				drawable.redraw_rectangle (a_grid_col_i.virtual_x_position, a_grid_row_i.virtual_y_position, a_grid_col_i.width, a_grid_row_i.height)
+				drawable.redraw_rectangle (a_grid_col_i.virtual_x_position - (internal_client_x - viewport_x_offset), a_grid_row_i.virtual_y_position - (internal_client_y - viewport_y_offset), a_grid_col_i.width, a_grid_row_i.height)
 			end
 		end
 

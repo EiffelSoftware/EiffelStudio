@@ -2379,7 +2379,7 @@ feature {NONE} -- Event handling
 			-- Called by `key_press_actions' of `drawable'.
 		local
 			a_sel_item: EV_GRID_ITEM
-			a_sel_row, parent_row: EV_GRID_ROW
+			a_sel_row: EV_GRID_ROW
 			sel_items: like selected_items
 			look_left_right: BOOLEAN
 		do
@@ -2454,6 +2454,7 @@ feature {NONE} -- Event handling
 			a_item.enable_select
 			fixme ("EV_GRID_I.handle_newly_selected_item - Perform the visibllity at the item level.")
 			a_item.row.ensure_visible
+			a_item.column.ensure_visible
 		end
 
 	key_press_string_received (a_keystring: STRING) is

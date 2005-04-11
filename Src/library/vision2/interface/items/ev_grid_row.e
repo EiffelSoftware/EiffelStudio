@@ -113,8 +113,9 @@ feature -- Access
 			not_destroyed: not is_destroyed
 		do
 			Result := implementation.virtual_y_position
---		ensure
---			valid_result: Result >= 0 and Result <= virtual_height - viewable_height
+		ensure
+			parent_void_implies_result_zero: parent = Void implies result = 0
+			to_implement_assertion ("valid_result: Result >= 0 and Result <= virtual_height - viewable_height")
 		end
 
 feature -- Status report

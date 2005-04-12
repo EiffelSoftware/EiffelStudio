@@ -37,7 +37,7 @@ feature {EV_GRID_I} -- Implementation
 	resize (new_capacity: INTEGER) is
 			-- Resize list so that it can contain
 			-- at least `n' items. Lose items if `new_capacity' is less than `capacity'
-		require -- from ARRAYED_LIST
+		require
 			new_capacity_not_negative: new_capacity >= 0
 		local
 			temp_array: ARRAY [G]
@@ -45,10 +45,12 @@ feature {EV_GRID_I} -- Implementation
 			if new_capacity > count then
 				conservative_resize (lower, upper + new_capacity - capacity)
 				set_count (capacity)				
-			else
+			elseif count > 0 then
 					-- Shrink existing array only losing items with index greater than `new_capacity'
 				temp_array := subarray (lower, upper + new_capacity - capacity)
 				make_from_array (temp_array)
+			else
+				arrayed_list_make (new_capacity)
 			end
 		ensure
 			capacity_set: capacity = new_capacity

@@ -39,22 +39,22 @@ feature -- Access
 			-- Row `a_row'.
 		require
 			a_row_positive: a_row > 0
-			a_row_not_greater_than_row_count: a_row <= row_count
 		do
 			Result := row_internal (a_row).interface
 		ensure
 			row_not_void: Result /= Void
+			row_count_enlarged_if_needed: a_row > old row_count implies row_count = a_row
 		end
 
 	column (a_column: INTEGER): EV_GRID_COLUMN is
 			-- Column number `a_column'.
 		require
 			a_column_positive: a_column > 0
-			a_column_not_greater_than_column_count: a_column <= column_count
 		do
 			Result := column_internal (a_column).interface
 		ensure
 			column_not_void: Result /= Void
+			column_count_enlarged_if_needed: a_column > old column_count implies column_count = a_column
 		end
 
 	visible_column (i: INTEGER): EV_GRID_COLUMN is
@@ -1030,7 +1030,7 @@ feature -- Element change
 		do
 			add_row_at (a_index, False)
 		ensure
-			row_count_set: (a_index < old row_count implies (row_count = old row_count + 1)) or a_index = row_count
+			row_count_set: (a_index <= old row_count implies (row_count = old row_count + 1)) or a_index = row_count
 		end
 
 	insert_new_row_parented (i: INTEGER; a_parent_row: EV_GRID_ROW) is
@@ -1051,8 +1051,15 @@ feature -- Element change
 			-- Insert a new column at index `a_index'.
 		require
 			i_positive: a_index > 0
+		local
+			a_column: EV_GRID_COLUMN_I
 		do
-			add_column_at (a_index, False)
+			if a_index > column_count then
+					-- If `a_index' is greater than existing count than we just query the column
+				a_column := column_internal (a_index)
+			else
+				add_column_at (a_index, False)
+			end
 		end
 
 	move_row (i, j: INTEGER) is

@@ -1377,6 +1377,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			visible_count: INTEGER
 			row_index: INTEGER
 			l_row_count: INTEGER
+			l_parent_row_i: EV_GRID_ROW_I
 		do			
 			if not is_tree_enabled then
 				internal_index := an_index
@@ -1385,7 +1386,15 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 					We always recompute from the first item for now as otherwise we must ensure that we find the top level
 					tree node that is the first expanded if the row is current hidden and start from there
 				]")
-				internal_index := 1
+				from
+					l_parent_row_i := row_internal (an_index)
+				until
+					l_parent_row_i.parent_row_i = Void
+				loop
+					l_parent_row_i := l_parent_row_i.parent_row_i
+				end
+				internal_index := l_parent_row_i.index
+		--		internal_index := 1
 			end
 			if not is_row_height_fixed or is_tree_enabled then
 					-- Only perform recomputation if the rows do not all have the same height
@@ -1410,7 +1419,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 					visible_indexes_to_row_indexes.resize (rows.count + 1)
 				end
 				from
-					row_index := 1
+					row_index := internal_index
 					l_row_count := rows.count
 				until
 					row_index > l_row_count

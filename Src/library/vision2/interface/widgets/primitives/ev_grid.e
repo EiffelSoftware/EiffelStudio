@@ -44,11 +44,11 @@ feature -- Access
 		require
 			not_destroyed: not is_destroyed
 			a_row_positive: a_row > 0
-			a_row_not_greater_than_row_count: a_row <= row_count
 		do
 			Result := implementation.row (a_row)
 		ensure
 			row_not_void: Result /= Void
+			row_count_enlarged_if_needed: a_row > old row_count implies row_count = a_row
 		end
 
 	visible_column (i: INTEGER): EV_GRID_COLUMN is
@@ -68,15 +68,15 @@ feature -- Access
 		require
 			not_destroyed: not is_destroyed
 			a_column_positive: a_column > 0
-			a_column_not_greater_than_column_count: a_column <= column_count
 		do
 			Result := implementation.column (a_column)
 		ensure
 			column_not_void: Result /= Void
+			column_count_enlarged_if_needed: a_column > old column_count implies column_count = a_column
 		end
 
 	item (a_column: INTEGER; a_row: INTEGER): EV_GRID_ITEM is
-			-- Cell at `a_row' and `a_column' position, Void if none
+			-- Cell at `a_row' and `a_column' position, Void if none.
 		require
 			not_destroyed: not is_destroyed
 			a_column_positive: a_column > 0
@@ -890,15 +890,15 @@ feature -- Status report
 
 feature -- Element change
 
-	insert_new_row (a_index: INTEGER) is
-			-- Insert a new row at index `a_index'.
+	insert_new_row (i: INTEGER) is
+			-- Insert a new row at index `i'.
 		require
 			not_destroyed: not is_destroyed
-			i_positive: a_index > 0
+			i_positive: i > 0
 		do
-			implementation.insert_new_row (a_index)
+			implementation.insert_new_row (i)
 		ensure
-			row_count_set: row_count = old row_count + 1
+			row_count_set: (i <= old row_count implies row_count = old row_count + 1) or (i = row_count)
 		end
 
 	insert_new_row_parented (i: INTEGER; a_parent_row: EV_GRID_ROW) is
@@ -912,7 +912,7 @@ feature -- Element change
 		do
 			implementation.insert_new_row_parented (i, a_parent_row)
 		ensure
-			row_count_set: row_count = old row_count + 1
+			row_count_set: (i <= old row_count implies row_count = old row_count + 1) or (i = row_count)
 			subrow_count_set: a_parent_row.subrow_count = old a_parent_row.subrow_count + 1
 		end
 
@@ -921,11 +921,11 @@ feature -- Element change
 		require
 			not_destroyed: not is_destroyed
 			i_positive: a_index > 0
+			to_implement_assertion ("Add preconditions for subnode handling")
 		do
 			implementation.insert_new_column (a_index)
 		ensure
 			column_count_set: (a_index < old column_count implies column_count = old column_count + 1) or else (a_index > old column_count implies a_index = column_count) 
-			visible_column_count_set: visible_column_count = old visible_column_count + 1
 		end
 
 	move_row (i, j: INTEGER) is
@@ -936,6 +936,7 @@ feature -- Element change
 			j_positive: j > 0
 			i_less_than_row_count: i <= row_count
 			j_less_than_row_count: j <= row_count
+			to_implement_assertion ("Add preconditions for subnode handling")
 		do
 			implementation.move_row (i, j)
 		ensure
@@ -963,6 +964,7 @@ feature -- Element change
 			a_column_positive: a_column > 0
 			a_row_positive: a_row > 0
 			a_item_not_void: a_item /= Void
+			to_implement_assertion ("Add preconditions for subnode handling")
 		do
 			implementation.set_item (a_column, a_row, a_item)
 		ensure
@@ -975,6 +977,7 @@ feature -- Element change
 			not_destroyed: not is_destroyed
 			a_column_positive: a_column > 0
 			a_row_positive: a_row > 0
+			to_implement_assertion ("Add preconditions for subnode handling")
 		do
 			implementation.remove_item (a_column, a_row)
 		ensure

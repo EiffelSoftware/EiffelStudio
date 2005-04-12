@@ -1394,7 +1394,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 					l_parent_row_i := l_parent_row_i.parent_row_i
 				end
 				internal_index := l_parent_row_i.index
-		--		internal_index := 1
+				internal_index := 1
 			end
 			if not is_row_height_fixed or is_tree_enabled then
 					-- Only perform recomputation if the rows do not all have the same height

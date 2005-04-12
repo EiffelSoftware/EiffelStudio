@@ -377,8 +377,12 @@ feature -- Status setting
 			x_coord := screen_x - virtual_x_position + a_item.virtual_x_position
 			y_coord := screen_y - virtual_y_position + a_item.virtual_y_position + viewable_y_offset
 			activate_window.set_position (x_coord, y_coord)
-			activate_window.set_size (a_item.column.width, a_item.row.height)
 
+			activate_window.set_minimum_size (a_item.column.width -  a_item.horizontal_indent, a_item.row.height)
+
+				-- Prevent the popup window from being resized
+			activate_window.disable_user_resize
+			
 			if active_item_setup_actions_internal /= Void and then not active_item_setup_actions_internal.is_empty then
 					-- The user has requested to setup all activatable items themselves
 				active_item_setup_actions_internal.call ([a_item, activate_window])
@@ -2320,9 +2324,13 @@ feature {NONE} -- Event handling
 	find_next_item_in_row (grid_row: EV_GRID_ROW; starting_index: INTEGER; look_right: BOOLEAN): EV_GRID_ITEM is
 			-- Find the next item horizontally in `grid_row' starting at index `starting_index', if 'look_right' then the the item to the right is found, else it looks to the left.
 			-- Result is Void if no item is found.
+		require
+			grid_row_not_void: grid_row /= Void
+			starting_index_valid: starting_index > 0 and then starting_index <= grid_row.count
 		local
 			item_offset: INTEGER
 			item_index: INTEGER
+
 		do
 			if look_right then
 				item_offset := 1
@@ -2344,6 +2352,9 @@ feature {NONE} -- Event handling
 			-- Find the next item vertically in `grid_column' starting a index `starting_index' if 'look_down' then the the item below is found, else it looks above.
 			-- If `look_left_right_if_void', if a Void item is found it will search along the current row starting to the left of `starting_index', then to the right if none found.
 			-- Result is Void if no item is found.
+		require
+			column_not_void: grid_column /= Void
+			starting_index_valid: starting_index > 0 and then starting_index <= grid_column.count
 		local
 			item_offset: INTEGER
 			item_index: INTEGER
@@ -2392,32 +2403,36 @@ feature {NONE} -- Event handling
 	key_press_received (a_key: EV_KEY) is
 			-- Called by `key_press_actions' of `drawable'.
 		local
-			a_sel_item: EV_GRID_ITEM
+			prev_sel_item, a_sel_item: EV_GRID_ITEM
 			a_sel_row: EV_GRID_ROW
 			sel_items: like selected_items
-			look_left_right: BOOLEAN
+			in_row_selection: BOOLEAN
 		do
 				-- Handle the selection events
 			sel_items := selected_items
-			if is_single_row_selection_enabled or else is_multiple_row_selection_enabled  then
+			in_row_selection := is_single_row_selection_enabled or else is_multiple_row_selection_enabled
 					-- We always want to find an item above or below for row selection
-				look_left_right := True
-			end
 			if not sel_items.is_empty then
-				a_sel_item := sel_items.last
-				a_sel_row := a_sel_item.row
+				prev_sel_item := sel_items.last
+				a_sel_row := prev_sel_item.row
 				inspect
 					a_key.code
 				when {EV_KEY_CONSTANTS}.Key_down then
-					a_sel_item := find_next_item_in_column (a_sel_item.column, a_sel_item.row.index, True, look_left_right)
+					a_sel_item := find_next_item_in_column (prev_sel_item.column, prev_sel_item.row.index, True, in_row_selection)
 				when {EV_KEY_CONSTANTS}.Key_up then
-					a_sel_item := find_next_item_in_column (a_sel_item.column, a_sel_item.row.index, False, look_left_right)
+					a_sel_item := find_next_item_in_column (prev_sel_item.column, prev_sel_item.row.index, False, in_row_selection)
 				when {EV_KEY_CONSTANTS}.Key_right then
-					a_sel_item := find_next_item_in_row (a_sel_item.row, a_sel_item.column.index, True)
+					if not in_row_selection then
+							-- Key right shouldn't affect row selection
+						a_sel_item := find_next_item_in_row (prev_sel_item.row, prev_sel_item.column.index, True)
+					end
 				when {EV_KEY_CONSTANTS}.Key_left then
-					a_sel_item := find_next_item_in_row (a_sel_item.row, a_sel_item.column.index, False)
+					if not in_row_selection then
+							-- Key left shouldn't affect row selection
+						a_sel_item := find_next_item_in_row (prev_sel_item.row, prev_sel_item.column.index, False)
+					end
 				else
-					a_sel_item := Void
+					-- Do nothing
 				end
 				if a_sel_item /= Void then
 					handle_newly_selected_item (a_sel_item)

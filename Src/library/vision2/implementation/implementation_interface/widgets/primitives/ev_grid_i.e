@@ -2820,10 +2820,16 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- I
 			if a_item /= Void then
 				a_item.implementation.set_parents (Current, a_grid_col_i, a_grid_row_i)
 				internal_row_data.i_th (a_row).put (a_item.implementation, a_grid_col_i.physical_index)
+				if a_grid_row_i.parent_row_i /= Void then
+						-- The row in which we are setting an item is already a subrow of another
+						-- row, so we must update the internal settings for the tree.
+						-- fixme ("EV_GRID_I.internal_set_item Should refactor `internal_set_parent_row' so that the parent row is not set and only the calculations are performed.)
+					a_grid_row_i.internal_set_parent_row (a_grid_row_i.parent_row_i)
+				end
 			else
 				internal_row_data.i_th (a_row).put (Void, a_grid_col_i.physical_index)
 			end
-
+			
 			if a_item /= Void then
 				redraw_item (a_item.implementation)
 			else

@@ -31,9 +31,6 @@ feature -- Basic operation
 
 			create l_visible.make
 			l_visible.set_name (implemented_coclass_name (a_coclass.eiffel_class_name))
-			l_visible.add_feature ("make")
-			l_visible.add_feature (Make_from_other)
-			l_visible.add_feature (Make_from_pointer)
 			system_descriptor.add_visible_class_server (l_visible)
 			create eiffel_writer.make
 

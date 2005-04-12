@@ -1513,7 +1513,12 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			first_tree_node_indent := total_tree_node_width + 2 * tree_node_spacing
 			node_index := an_item.column_i.index.min (pointed_row_i.first_set_item_index)
 			if node_index = an_item.column_i.index then
-				Result := a_subrow_indent * (pointed_row_i.indent_depth_in_tree - 1) + first_tree_node_indent	
+				Result := a_subrow_indent * (pointed_row_i.indent_depth_in_tree - 1) + first_tree_node_indent
+				if pointed_row_i.subrow_count = 0 then
+						-- If the item's row has no subrows then
+						-- reduce `Result' to account for this.
+					Result := Result - a_subrow_indent
+				end
 			end
 			
 				-- Not a postcondition as `node_index' is a local.

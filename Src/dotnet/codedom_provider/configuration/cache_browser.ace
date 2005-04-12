@@ -38,7 +38,7 @@ cluster
  
  	all helpers:		"$EIFFEL_SRC\dotnet\helpers"
  		exclude
- 			"CVS";
+ 			"CVS"; "assembly_resolver";
   		default
  			namespace ("EiffelSoftware.Library.Helpers")
  		end

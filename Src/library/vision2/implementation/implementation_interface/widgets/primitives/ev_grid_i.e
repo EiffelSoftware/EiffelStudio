@@ -1833,6 +1833,7 @@ feature {NONE} -- Drawing implementation
 			are_tree_node_connectors_shown := True
 			build_expand_node_pixmap
 			build_collapse_node_pixmap
+			invalid_row_index := invalid_row_index.max_value
 			
 			create internal_row_data.make
 			create columns.make

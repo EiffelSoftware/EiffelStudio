@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 					pointer_double_press_actions_internal.call (t)
 				end
 			end
-        end
+        	end
 		
 feature -- Access
 
@@ -69,7 +69,7 @@ feature -- Access
 			-- The parent of the Current widget
 			-- May be void.
 		do
-				Result := item_parent_imp
+			Result := item_parent_imp
 		end
 
 feature {EV_ANY_I} -- Implementation

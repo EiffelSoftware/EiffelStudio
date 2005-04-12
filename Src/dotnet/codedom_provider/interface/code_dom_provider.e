@@ -25,8 +25,6 @@ inherit
 			create_generator_string,
 			create_parser
 		end
-	
-	ANY
 
 create 
 	default_create

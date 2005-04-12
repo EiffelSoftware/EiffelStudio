@@ -72,7 +72,7 @@ feature -- Access
 			Result := implementation.virtual_x_position
 		ensure
 			parent_void_implies_result_zero: parent = Void implies Result = 0
-			valid_result: parent /= Void implies Result >= 0 and Result <= parent.virtual_width - column.width
+			valid_result: parent /= Void implies Result >= 0 and Result <= parent.virtual_width - column.width + horizontal_indent
 		end
 		
 	virtual_y_position: INTEGER is

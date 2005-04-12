@@ -30,33 +30,24 @@ feature -- Access
 			Result.append (Tab_tab_tab)
 			Result.append (name)
 			if not exported_features.is_empty then
-				Result.append (New_line)
-				Result.append (Tab_tab_tab)
-				Result.append (tab)
-				Result.append (Export_keyword)
-				Result.append (New_line)
+				Result.append ("%N%T%T%T%Texport%N")
 				from
 					exported_features.start
 				until
 					exported_features.after
 				loop
-					Result.append (Tab_tab_tab)
-					Result.append (Tab_tab)
-					Result.append (Double_quote)
+					Result.append ("%T%T%T%T%T%"")
 					Result.append (exported_features.item)
-					Result.append (Double_quote)
+					Result.append_character ('"')
 					exported_features.forth
 					if not exported_features.after then
-						Result.append (Comma)
+						Result.append_character (',')
 					end
-					Result.append (New_line)
+					Result.append_character ('%N')
 				end
-				Result.append (Tab_tab_tab)
-				Result.append (tab)
-				Result.append (End_keyword)
+				Result.append ("%T%T%T%Tend")
 			end
-			Result.append (Semicolon)
-			Result.append (New_line)
+			Result.append (";%N")
 		end
 
 	can_generate: BOOLEAN is

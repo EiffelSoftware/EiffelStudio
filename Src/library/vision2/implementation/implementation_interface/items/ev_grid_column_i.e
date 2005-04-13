@@ -250,6 +250,7 @@ feature -- Element change
 			i_positive: i > 0
 			a_item_not_void: a_item /= Void
 			is_parented: parent /= Void
+			valid_tree_structure: parent.is_tree_enabled and parent.row (i).parent_row /= Void implies index >= parent.row (i).parent_row.index_of_first_item
 		do
 			parent_i.set_item (index, i, a_item)
 		ensure

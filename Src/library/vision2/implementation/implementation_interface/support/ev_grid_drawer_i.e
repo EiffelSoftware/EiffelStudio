@@ -528,7 +528,7 @@ feature -- Basic operations
 									-- If we are dynamically computing the contents of the grid and we have not already retrieved an item for
 									-- the grid, then we execute this code.
 									
-								dynamic_content_function.call ([current_physical_column_index, visible_row_indexes.item])
+								dynamic_content_function.call ([current_physical_column_index + 1, visible_row_indexes.item])
 								grid_item_interface := dynamic_content_function.last_result
 								if grid_item_interface /= Void then
 									grid_item := grid_item_interface.implementation

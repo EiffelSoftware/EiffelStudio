@@ -1134,11 +1134,12 @@ feature -- Element change
 		end
 
 	set_item (a_column, a_row: INTEGER; a_item: EV_GRID_ITEM) is
-			-- Replace grid item at position (`a_column', `a_row') with `a_item'.
+			-- Set grid item at position (`a_column', `a_row') to `a_item'.
 		require
 			a_column_positive: a_column > 0
 			a_row_positive: a_row > 0
 			a_item_not_void: a_item /= Void
+			valid_tree_structure: is_tree_enabled and row (a_row).parent_row /= Void implies a_column >= row (a_row).parent_row.index_of_first_item
 		do
 			internal_set_item (a_column, a_row, a_item)
 		ensure

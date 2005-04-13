@@ -233,6 +233,31 @@ feature -- Status report
 			count_not_negative: count >= 0
 		end
 		
+	index_of_first_item: INTEGER is
+			-- Return the index of the first non `Void' item within `Current'
+			-- or 0 if none.
+		local
+			counter: INTEGER
+			current_row_list: SPECIAL [EV_GRID_ITEM_I]
+			current_row_count: INTEGER
+		do
+			fixme ("EV_GRID_ROW_I.index_of_first_item convert into an attrbute for speed.")
+			current_row_list := parent_i.row_list @ (index - 1)
+			current_row_count := current_row_list.count
+			from
+				counter := 0
+			until
+				counter = current_row_count or Result > 0
+			loop
+				if current_row_list.item (counter) /= Void then
+					Result := counter + 1
+				end
+				counter := counter + 1
+			end
+		ensure
+			valid_result: Result >= 0 and Result <= count
+		end
+		
 feature -- Status setting
 
 	expand is
@@ -504,36 +529,13 @@ feature {EV_GRID_ROW_I, EV_GRID_I} -- Implementation
 			if parent_row_i /= Void then
 				depth_in_tree := a_parent_row.depth_in_tree + 1
 				indent_depth_in_tree := a_parent_row.indent_depth_in_tree + 1
-				if parent_row_i.first_set_item_index /= first_set_item_index then
+				if parent_row_i.index_of_first_item /= index_of_first_item then
 					indent_depth_in_tree := 1
 				end				
 			else
 				depth_in_tree := 0
 				indent_depth_in_tree := 0
 			end
-		end
-
-	first_set_item_index : INTEGER is
-			-- Return the first item within `Current' that has been set.
-		local
-			counter: INTEGER
-			current_row_list: SPECIAL [EV_GRID_ITEM_I]
-			current_row_count: INTEGER
-		do
-			current_row_list := parent_i.row_list @ (index - 1)
-			current_row_count := current_row_list.count
-			from
-				counter := 0
-			until
-				counter = current_row_count or Result > 0
-			loop
-				if current_row_list.item (counter) /= Void then
-					Result := counter + 1
-				end
-				counter := counter + 1
-			end
-		ensure
-			result_positive: Result >= 0
 		end
 
 feature {EV_GRID_ITEM_I} -- Implementation

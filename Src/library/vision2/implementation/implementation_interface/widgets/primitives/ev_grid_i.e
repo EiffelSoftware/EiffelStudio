@@ -1490,11 +1490,17 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			an_item_not_void: an_item /= Void
 		local
 			a1, a2: INTEGER
+			item_height: INTEGER
 		do
 			fixme ("Do we need to check if item is visible? There may be no effect to simply invalidate the area...")
 			a1 := an_item.virtual_x_position - (internal_client_x - viewport_x_offset)
 			a2 := an_item.virtual_y_position - (internal_client_y - viewport_y_offset)
-			drawable.redraw_rectangle (a1, a2, an_item.column.width, an_item.row.height)
+			if is_row_height_fixed then
+				item_height := row_height
+			else
+				item_height := an_item.row.height
+			end
+			drawable.redraw_rectangle (a1, a2, an_item.column.width, item_height)
 		end
 
 	redraw_client_area is

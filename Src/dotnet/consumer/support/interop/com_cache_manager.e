@@ -48,6 +48,10 @@ feature -- Basic Exportations
 			-- initialize the object using default path to EAC
 		do
 			clr_version := a_clr_version
+
+				-- Turn of all security to prevent any security exceptions
+			{SECURITY_MANAGER}.set_security_enabled (False)
+
 			is_initialized := True
 		end
 		
@@ -56,7 +60,7 @@ feature -- Basic Exportations
 		local
 			cr: CACHE_READER
 		do
-			clr_version := a_clr_version
+			initialize (a_clr_version)
 			eac_path := a_path
 			create cr
 			cr.set_internal_eiffel_cache_path (eac_path)

@@ -1518,21 +1518,32 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			total_tree_node_width := node_pixmap_width + 2 * tree_node_spacing
 			a_subrow_indent := (tree_node_spacing * 2) + node_pixmap_width + subrow_indent
 			first_tree_node_indent := total_tree_node_width + 2 * tree_node_spacing
-			node_index := an_item.column_i.index.min (pointed_row_i.first_set_item_index)
+			node_index := an_item.column_i.index.min (pointed_row_i.index_of_first_item)
 			if node_index = an_item.column_i.index then
 				Result := a_subrow_indent * (pointed_row_i.indent_depth_in_tree - 1) + first_tree_node_indent
 				if pointed_row_i.subrow_count = 0 then
 						-- If the item's row has no subrows then
 						-- reduce `Result' to account for this.
 					Result := Result - a_subrow_indent
+					if pointed_row_i.parent_row_i /= Void and then pointed_row_i.index_of_first_item /= pointed_row_i.parent_row_i.index_of_first_item then
+						Result := 0
+					end
+				end
+			end
+			if pointed_row_i.parent_row_i = Void then
+				if is_tree_enabled and an_item.column.index = 1 then
+					Result := first_tree_node_indent
+				else
+					Result := 0
 				end
 			end
 			
 				-- Not a postcondition as `node_index' is a local.
 			check
-				result_zero_when_item_not_in_subrow_or_first: an_item.row_i.parent_row_i = Void and node_index > pointed_row_i.first_set_item_index implies Result = 0
-				result_positive_when_in_subrow: an_item.row_i.parent_row_i /= Void implies Result >= 0	
-			end			
+				result_zero_when_item_not_in_subrow_or_first: an_item.row_i.parent_row_i = Void and node_index > pointed_row_i.index_of_first_item implies Result = 0
+				result_positive_when_in_subrow: an_item.row_i.parent_row_i /= Void implies Result >= 0
+				result_zero_when_node_index_differs_from_parent: an_item.row_i.parent_row_i /= Void and an_item.row_i.index_of_first_item /= an_item.row_i.parent_row_i.index_of_first_item and an_item.row_i.subrow_count = 0 implies Result = 0
+			end
 		end
 
 feature {EV_GRID_DRAWER_I, EV_GRID_COLUMN_I, EV_GRID_ROW_I, EV_GRID_ITEM_I, EV_GRID} -- Implementation
@@ -2179,7 +2190,8 @@ feature {NONE} -- Drawing implementation
 				recompute_horizontal_scroll_bar
 			end
 			if row_count /= 0 then
-				recompute_vertical_scroll_bar
+				--recompute_vertical_scroll_bar
+				set_vertical_computation_required (1)
 			end
 		ensure
 			client_dimensions_set: internal_client_width = viewport.width and internal_client_height = viewport.height

@@ -400,6 +400,7 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			i_positive: i > 0
 			a_item_not_void: a_item /= Void
 			is_parented: parent /= Void
+			valid_tree_structure: parent.is_tree_enabled and parent_row /= Void implies i >= parent_row.index_of_first_item
 		do
 			parent_i.set_item (i, index, a_item)
 		ensure

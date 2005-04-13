@@ -477,8 +477,11 @@ feature -- Basic operations
 							
 							if drawing_parentrow or (drawing_subrow and current_row.subrow_count > 0) then
 								current_subrow_indent := subrow_indent * (current_row.indent_depth_in_tree - 1) + first_tree_node_indent
-							elseif (drawing_subrow and current_row.subrow_count =0) then
+							elseif (drawing_subrow and current_row.subrow_count = 0) then
 								current_subrow_indent := subrow_indent * (current_row.indent_depth_in_tree - 2) + first_tree_node_indent
+								if current_row.parent_row_i /= Void and current_row.index_of_first_item /= current_row.parent_row_i.index_of_first_item then
+									current_subrow_indent := 0
+								end
 							else
 								current_subrow_indent := 0
 							end

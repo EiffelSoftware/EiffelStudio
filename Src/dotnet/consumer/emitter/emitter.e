@@ -181,6 +181,9 @@ feature {NONE} -- Implementation
 			elseif not successful then
 				display_error
 			else
+					-- Turn of all security to prevent any security exceptions
+				{SECURITY_MANAGER}.set_security_enabled (False)
+
 				if path_is_full_name then
 					l_assembly := load_assembly_from_full_name (target_path)
 				else

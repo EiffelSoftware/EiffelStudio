@@ -44,6 +44,7 @@ feature -- Access
 		require
 			not_destroyed: not is_destroyed
 			a_row_positive: a_row > 0
+			a_row_not_greater_than_row_count: a_row <= row_count
 		do
 			Result := implementation.row (a_row)
 		ensure
@@ -68,6 +69,7 @@ feature -- Access
 		require
 			not_destroyed: not is_destroyed
 			a_column_positive: a_column > 0
+			a_column_not_greater_than_column_count: a_column <= column_count
 		do
 			Result := implementation.column (a_column)
 		ensure

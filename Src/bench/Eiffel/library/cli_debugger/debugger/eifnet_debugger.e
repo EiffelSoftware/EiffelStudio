@@ -402,6 +402,7 @@ feature {EIFNET_DEBUGGER} -- Callback notification about synchro
 				reset_current_callstack
 				eifnet_debugger_info.set_last_icd_breakpoint (Default_pointer)
 				eifnet_debugger_info.set_last_icd_exception (Default_pointer)
+				reset_exception_info
 			end
 				--| Consume Callback data (stored on the C side in struct)
 			consume_managed_callback_info (cb_id)

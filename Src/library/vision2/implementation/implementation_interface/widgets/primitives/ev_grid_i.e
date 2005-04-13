@@ -39,6 +39,7 @@ feature -- Access
 			-- Row `a_row'.
 		require
 			a_row_positive: a_row > 0
+			a_row_not_greater_than_row_count: a_row <= row_count
 		do
 			Result := row_internal (a_row).interface
 		ensure
@@ -50,6 +51,7 @@ feature -- Access
 			-- Column number `a_column'.
 		require
 			a_column_positive: a_column > 0
+			a_column_not_greater_than_column_count: a_column <= column_count
 		do
 			Result := column_internal (a_column).interface
 		ensure
@@ -2463,9 +2465,9 @@ feature {NONE} -- Event handling
 				inspect
 					a_key.code
 				when {EV_KEY_CONSTANTS}.Key_down then
-					a_sel_item := find_next_item_in_column (prev_sel_item.column, prev_sel_item.row.index, True, in_row_selection)
+					a_sel_item := find_next_item_in_column (prev_sel_item.column, prev_sel_item.row.index, True, in_row_selection or else a_sel_row.subrow_count > 0 or else a_sel_row.parent_row /= Void)
 				when {EV_KEY_CONSTANTS}.Key_up then
-					a_sel_item := find_next_item_in_column (prev_sel_item.column, prev_sel_item.row.index, False, in_row_selection)
+					a_sel_item := find_next_item_in_column (prev_sel_item.column, prev_sel_item.row.index, False, in_row_selection or else a_sel_row.subrow_count > 0 or else a_sel_row.parent_row /= Void)
 				when {EV_KEY_CONSTANTS}.Key_right then
 					if not in_row_selection then
 							-- Key right shouldn't affect row selection

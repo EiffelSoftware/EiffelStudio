@@ -418,20 +418,6 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			item_set: item (i) = a_item
 		end
 
-	remove_subrow (a_row: EV_GRID_ROW) is
-			-- Unparent `a_row' from `Current'.
-		require
-			is_parented: parent /= Void
-			a_row_not_void: a_row /= Void
-			is_child: a_row.parent_row = interface
-		local
-			row_imp: EV_GRID_ROW_I
-		do
-			row_imp := a_row.implementation
-			subrows.prune_all (row_imp)
-			row_imp.internal_set_parent_row (Void)
-		end
-
 	add_subrow (a_row: EV_GRID_ROW) is
 			-- Make `a_row' a child of Current.
 		require
@@ -519,17 +505,40 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			to_implement ("EV_GRID_ROW_I.destroy")
 		end
 
-feature {EV_GRID_I} -- Implementation
+feature {EV_GRID_I, EV_GRID_ROW_I} -- Implementation
 
-	remove_parent_i  is
-			-- Set `parent_i' to `Void.
+	update_for_removal is
+			-- Update settings in `Current' to reflact the fact that
+			-- it is being removed from `parent_i'.
 		require
 			is_parented: parent /= Void
 		do
+			if parent_row_i /= Void then
+				parent_row_i.update_for_subrow_removal (Current)
+			end
+			
 			parent_i := Void
+			parent_row_i := Void
 			internal_index := 0
 		ensure
-			parent_i_unset: parent_i = Void
+			parent_i_void: parent_i = Void
+			parent_row_i_void: parent_row_i = Void
+			internal_index_set_to_zero: internal_index = 0
+		end
+		
+	update_for_subrow_removal (a_subrow: EV_GRID_ROW_I) is
+			-- Update `Current' to reflect the fact that `a_subrow'
+			-- is being removed from `Current'.
+		require
+			a_row_not_void: a_subrow /= Void
+			a_subrow.parent_row_i = Current
+		do
+			subrows.prune_all (a_subrow)
+			subnode_count_recursive := subnode_count_recursive - 1
+		ensure
+			subrow_count_decreased: subrow_count = old subrow_count - 1
+			subrow_count_recursive_decreased: subrow_count_recursive = old subrow_count_recursive - 1
+			subrow_not_contained_in_subrows: not subrows.has (a_subrow)
 		end
 
 feature {EV_GRID_ROW_I, EV_GRID_I} -- Implementation

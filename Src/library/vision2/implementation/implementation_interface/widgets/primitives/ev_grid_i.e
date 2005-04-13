@@ -1342,8 +1342,12 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 		
 	set_vertical_computation_required (an_invalid_row_index: INTEGER) is
 			-- Assign `True' to `vertical_computation_required'.
+			-- `an_invalid_row_index' specifies the index from which the computation
+			-- is to be performed when actually performed. It may be `row_count' + 1 to
+			-- handle the case where the grid is empty and an operation is performed
+			-- that requires a later recompute.
 		require
-			valid_row_index: an_invalid_row_index >= 1 and an_invalid_row_index <= row_count
+			valid_row_index: an_invalid_row_index >= 1 and an_invalid_row_index <= row_count + 1
 		do
 			vertical_computation_required := True
 			invalid_row_index := invalid_row_index.min (an_invalid_row_index)

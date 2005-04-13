@@ -30,6 +30,7 @@ feature -- Access
 	subrow (i: INTEGER): EV_GRID_ROW is
 			-- `i'-th child of Current.
 		require
+			not_destroyed: not is_destroyed
 			is_parented: parent /= Void
 			i_positive: i > 0
 			i_less_than_subrow_count: i <= subrow_count
@@ -43,6 +44,7 @@ feature -- Access
 	has_subrow (a_row: EV_GRID_ROW): BOOLEAN is
 			-- Is `a_row' a child of Current?
 		require
+			not_destroyed: not is_destroyed
 			a_row_not_void: a_row /= Void
 			is_parented: parent /= Void
 		do
@@ -54,6 +56,8 @@ feature -- Access
 
 	parent_row: EV_GRID_ROW is
 			-- Parent of Current if any, Void otherwise.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.parent_row
 		ensure
@@ -62,6 +66,8 @@ feature -- Access
 
 	parent: EV_GRID is
 			-- Grid to which current row belongs.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.parent
 		end
@@ -69,6 +75,7 @@ feature -- Access
 	item (i: INTEGER): EV_GRID_ITEM is
 			-- Item at `i'-th column, Void if none.
 		require
+			not_destroyed: not is_destroyed
 			i_within_bounds: i > 0 and i <= count
 			is_parented: parent /= Void
 		do
@@ -78,6 +85,7 @@ feature -- Access
 	selected_items: ARRAYED_LIST [EV_GRID_ITEM] is
 			-- All items selected in `Current'.
 		require
+			not_destroyed: not is_destroyed
 			is_parented: parent /= Void
 		do
 			Result := implementation.selected_items
@@ -87,6 +95,8 @@ feature -- Access
 		
 	is_expanded: BOOLEAN is
 			-- Are subrows of `Current' displayed?
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.is_expanded
 		end
@@ -98,6 +108,7 @@ feature -- Access
 			-- `is_row_height_fixed' set to `True' and then all rows
 			-- are displayed with identical heights set to `parent.row_height'.
 		require
+			not_destroyed: not is_destroyed
 			is_parented: parent /= Void
 		do
 			Result := implementation.height
@@ -134,6 +145,7 @@ feature -- Status report
 	subrow_count: INTEGER is
 			-- Number of children.
 		require
+			not_destroyed: not is_destroyed
 			is_parented: parent /= Void
 		do
 			Result := implementation.subrow_count
@@ -141,10 +153,23 @@ feature -- Status report
 			subrow_count_non_negative: subrow_count >= 0
 			subrow_count_in_range: subrow_count <= (parent.row_count - index)
 		end
+		
+	subrow_count_recursive: INTEGER is
+			-- Number of child rows and their child rows recursively.
+		require
+			not_destroyed: not is_destroyed
+			is_parented: parent /= Void
+		do
+			Result := implementation.subrow_count_recursive
+		ensure
+			subrow_count_recursive_greater_or_equal_to_subrow_count: subrow_count_recursive >= subrow_count
+			subrow_count_recursive_in_range: subrow_count_recursive <= (parent.row_count - index)
+		end
 
 	index: INTEGER is
 			-- Position of Current in `parent'.
 		require
+			not_destroyed: not is_destroyed
 			is_parented: parent /= Void
 		do
 			Result := implementation.index
@@ -155,6 +180,8 @@ feature -- Status report
 
 	count: INTEGER is
 			-- Number of items in current.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.count
 		ensure
@@ -166,6 +193,7 @@ feature -- Status setting
 	expand is
 			-- Display all subrows of `Current'.
 		require
+			not_destroyed: not is_destroyed
 			has_subrows: subrow_count > 0
 			is_parented: parent /= Void
 		do
@@ -177,6 +205,7 @@ feature -- Status setting
 	collapse is
 			-- Hide all subrows of `Current'.
 		require
+			not_destroyed: not is_destroyed
 			is_parented: parent /= Void
 		do
 			implementation.collapse
@@ -187,6 +216,7 @@ feature -- Status setting
 	set_height (a_height: INTEGER) is
 			-- Assign `a_height' to `height'.
 		require
+			not_destroyed: not is_destroyed
 			is_parented: parent /= Void
 		do
 			implementation.set_height (a_height)
@@ -213,6 +243,7 @@ feature -- Element change
 	set_item (i: INTEGER; a_item: EV_GRID_ITEM) is
 			-- Set item at `i'-th column to be `a_item'.
 		require
+			not_destroyed: not is_destroyed
 			i_positive: i > 0
 			a_item_not_void: a_item /= Void
 			is_parented: parent /= Void
@@ -226,6 +257,7 @@ feature -- Element change
 	add_subrow (a_row: EV_GRID_ROW) is
 			-- Make `a_row' a child of Current.
 		require
+			not_destroyed: not is_destroyed
 			is_parented: parent /= Void
 			a_row_not_void: a_row /= Void
 			a_row_is_parented: a_row.parent /= Void
@@ -248,6 +280,7 @@ feature -- Element change
 	set_background_color (a_color: EV_COLOR) is
 			-- Set `a_color' to all items in Current.
 		require
+			not_destroyed: not is_destroyed
 			is_parented: parent /= Void
 			a_color_not_void: a_color /= Void
 		do

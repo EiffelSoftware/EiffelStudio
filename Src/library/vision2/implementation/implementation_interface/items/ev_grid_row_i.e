@@ -210,6 +210,17 @@ feature -- Status report
 			subrow_count_non_negative: subrow_count >= 0
 			subrow_count_in_range: subrow_count <= (parent.row_count - index)
 		end
+		
+	subrow_count_recursive: INTEGER is
+			-- Number of child rows and their child rows recursively.
+		require
+			is_parented: parent /= Void
+		do
+			Result := subnode_count_recursive
+		ensure
+			subrow_count_recursive_greater_or_equal_to_subrow_count: subrow_count_recursive >= subrow_count
+			subrow_count_recursive_in_range: subrow_count_recursive <= (parent.row_count - index)
+		end
 
 	index: INTEGER is
 			-- Position of Current in `parent'.

@@ -1206,7 +1206,7 @@ feature -- Removal
 			rows.go_i_th (a_row)
 			removed_row := rows.item
 			if removed_row /= Void then
-				removed_row.remove_parent_i
+				removed_row.update_for_removal
 			end
 			rows.remove
 			
@@ -2636,7 +2636,7 @@ feature {NONE} -- Implementation
 				internal_row_data.replace (a_row_data)
 				replaced_row := rows.item
 				if replaced_row /= Void then
-					replaced_row.remove_parent_i
+					replaced_row.update_for_removal
 				end
 				rows.replace (row_i)
 				row_i.set_internal_index (a_index)

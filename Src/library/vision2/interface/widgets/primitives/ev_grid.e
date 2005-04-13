@@ -964,7 +964,7 @@ feature -- Element change
 			a_column_positive: a_column > 0
 			a_row_positive: a_row > 0
 			a_item_not_void: a_item /= Void
-			to_implement_assertion ("Add preconditions for subnode handling")
+			valid_tree_structure: is_tree_enabled and row (a_row).parent_row /= Void implies a_row >= row (a_row).parent_row.index_of_first_item
 		do
 			implementation.set_item (a_column, a_row, a_item)
 		ensure
@@ -1015,7 +1015,7 @@ feature -- Removal
 feature -- Measurements
 
 	column_count: INTEGER is
-			-- Number of columns in Current
+			-- Number of columns in Current.
 		require
 			not_destroyed: not is_destroyed
 		do

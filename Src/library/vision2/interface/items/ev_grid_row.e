@@ -257,7 +257,7 @@ feature -- Element change
 		end
 
 	add_subrow (a_row: EV_GRID_ROW) is
-			-- Make `a_row' a child of Current.
+			-- Make `a_row' a child row of Current.
 		require
 			not_destroyed: not is_destroyed
 			is_parented: parent /= Void
@@ -265,7 +265,6 @@ feature -- Element change
 			a_row_is_parented: a_row.parent /= Void
 			a_row_is_not_current: a_row /= Current
 			a_row_is_not_a_subrow: a_row.parent_row = Void
-			current_is_parented: parent /= Void
 			same_parent: a_row.parent = parent
 			parent_enabled_as_tree: parent.is_tree_enabled
 			a_row_is_below_current: a_row.index > index
@@ -278,6 +277,26 @@ feature -- Element change
 		ensure
 			added: a_row.parent_row = Current
 			subrow (subrow_count) = a_row
+		end
+		
+	remove_subrow (a_row: EV_GRID_ROW) is
+			-- Ensure that `a_row' is no longer a child row of `Current'
+		require
+			not_destroyed: not is_destroyed
+			is_parented: parent /= Void
+			a_row_not_void: a_row /= Void
+			a_row_is_parented: a_row.parent /= Void
+			a_row_is_not_current: a_row /= Current
+			a_row_is_a_subrow: a_row.parent_row = Current
+			same_parent: a_row.parent = parent
+			parent_enabled_as_tree: parent.is_tree_enabled
+			row_is_final_subrow_in_tree_structure:
+				a_row.index = index + subrow_count_recursive
+		do
+			to_implement ("EV_GRID_ROW.remove_subrow")
+		ensure
+			removed: a_row.parent_row = Void
+			subrow_count_decreased: subrow_count = old subrow_count - 1
 		end
 
 	set_background_color (a_color: EV_COLOR) is

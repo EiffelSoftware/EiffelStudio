@@ -45,8 +45,7 @@ feature -- Access
 		require
 			exists: exists
 		do
-			create Result.make (0)
-			Result.from_c (cwel_hd_item_get_psz_text (item))
+			Result := internal_text.string
 		end
 
 	text_count: INTEGER is
@@ -136,12 +135,10 @@ feature -- Element change
 			-- Also Updates `text_count' and `mask'
 		require
 			text_not_void: a_text /= Void
-		local
-			str_text: WEL_STRING
 		do
-			create str_text.make (a_text)
-			cwel_hd_item_set_psz_text (item, str_text.item)
-			cwel_hd_item_set_cch_text_max (item, str_text.length)
+			create internal_text.make (a_text)
+			cwel_hd_item_set_psz_text (item, internal_text.item)
+			cwel_hd_item_set_cch_text_max (item, internal_text.length)
 			set_mask (set_flag (mask, {WEL_HDI_CONSTANTS}.Hdi_text))
 			internal_add_format (hdf_string)
 			set_format (clear_flag (format, hdf_bitmap))
@@ -239,6 +236,9 @@ feature -- Measurement
 		end
 		
 feature {NONE} -- Implementation
+
+	internal_text: WEL_STRING
+			-- Prevent buffer of HDITEM.pszText to be garbage collected
 
 	internal_add_format (a_format: INTEGER) is
 			-- Add `a_format' to `format' and set `Hdi_format' into `mask'
@@ -343,7 +343,7 @@ feature {NONE} -- Externals
 			"iImage"
 		end
 
-end -- class WEL_HDI_ITEM
+end -- class WEL_HD_ITEM
 
 --|----------------------------------------------------------------
 --| Windows Eiffel Library: library of reusable components for ISE Eiffel.

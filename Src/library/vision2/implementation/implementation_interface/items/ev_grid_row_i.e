@@ -426,7 +426,6 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			a_row_is_parented: a_row.parent /= Void
 			a_row_is_not_current: a_row /= interface
 			a_row_is_not_a_subrow: a_row.parent_row = Void
-			current_is_parented: parent /= Void
 			same_parent: a_row.parent = parent
 			parent_enabled_as_tree: parent.is_tree_enabled
 			a_row_is_below_current: a_row.index > index

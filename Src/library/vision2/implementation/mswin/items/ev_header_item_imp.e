@@ -35,7 +35,8 @@ inherit
 			make as wel_make,
 			set_text as wel_set_text,
 			text as wel_text,
-			initialize as wel_initialize
+			initialize as wel_initialize,
+			text_count as text_length
 		undefine
 			copy, is_equal
 		redefine
@@ -66,14 +67,6 @@ feature {NONE} -- Initialization
 			set_width (80)
 			set_text ("")
 			is_initialized := True
-		end
-
-feature -- Access
-
-	text_length: INTEGER is
-			-- Length of text in characters.
-		do
-			Result := internal_text.count
 		end
 		
 feature -- Status report
@@ -220,9 +213,6 @@ feature {NONE} -- implementation
 				parent_imp.refresh_item (Current)
 			end
 		end
-
-	internal_text: STRING
-			-- Text of `Current'.
 
 feature {EV_ANY_I} -- Implementation
 

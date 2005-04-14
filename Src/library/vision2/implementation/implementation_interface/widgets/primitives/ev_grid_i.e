@@ -1029,7 +1029,7 @@ feature -- Element change
 			-- Insert a new row at index `a_index'.
 		require
 			i_positive: a_index > 0
-			not_inserting_between_existing_subrows: not (row (i).parent_row /= Void and row (i + 1).parent_row /= Void)
+			not_inserting_between_existing_subrows: not (row (a_index).parent_row /= Void and row (a_index + 1).parent_row /= Void)
 		do
 			add_row_at (a_index, False)
 		ensure

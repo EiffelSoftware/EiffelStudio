@@ -956,6 +956,13 @@ feature -- C enums
 			"GDK_CAP_BUTT"
 		end
 
+	frozen gdk_cap_round_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_CAP_ROUND"
+		end
+
 	frozen gdk_join_bevel_enum: INTEGER is
 		external
 			"C inline use <gtk/gtk.h>"

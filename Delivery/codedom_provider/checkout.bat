@@ -12,6 +12,8 @@ CD head
 REM in checkout\head
 cvs -z3 export -rHEAD -d library.net Src/library.net
 cvs -z3 export -rHEAD -d eclop free_add_ons/eclop
+cvs -z3 export -rHEAD -d run-time Src/bench/Eiffel/eiffel/com_il_generation/Core/run-time
+
 CD ..\compiler
 REM in checkout\compiler
 cvs -z3 export -r%COMPILER_RELEASE% Eiffel
@@ -80,7 +82,7 @@ cvs -z3 export -r%RELEASE% -d eac_browser Src/dotnet/eac_browser
 MKDIR VisualStudio\tools
 CD VisualStudio\tools\
 REM in checkout\compiler\dotnet\VisualStudio\tools
-cvs -z3 export -r%COMPILER_RELEASE% -d documentation_manager Src/dotnet/VisualStudio/tools/documentation_manager/
+cvs -z3 export -rHEAD -d documentation_manager Src/dotnet/VisualStudio/tools/documentation_manager/
 
 CD ..\..\..\..\head
 REM in checkout\head

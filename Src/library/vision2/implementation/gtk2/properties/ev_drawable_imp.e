@@ -70,7 +70,7 @@ feature {EV_DRAWABLE_IMP} -- Implementation
 	cap_style: INTEGER is
 			-- Style used for drawing end of lines.
 		do
-			Result := {EV_GTK_EXTERNALS}.Gdk_cap_butt_enum
+			Result := {EV_GTK_EXTERNALS}.gdk_cap_round_enum
 		end
 
 	join_style: INTEGER is

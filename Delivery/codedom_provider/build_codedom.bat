@@ -22,8 +22,14 @@ IF NOT EXIST build_studio\ecdpman\EIFGEN\F_code\ecdpman.exe GOTO END
 IF NOT EXIST build_studio\esplitter\EIFGEN\F_code\esplitter.exe GOTO END
 IF NOT EXIST build_studio\esplit\EIFGEN\F_code\esplit.exe GOTO END
 
+ECHO Compiling Runtime
+CD ..\..\run-time
+REM in "checkout\head\run-time"
+CALL nmake
+IF NOT EXIST EiffelSoftware.Runtime.dll GOTO END
+
 ECHO Copying files
-CD ..\..\..\..\delivery
+CD ..\..\..\delivery
 REM in delivery
 MKDIR codedom
 CD codedom
@@ -44,7 +50,7 @@ COPY ..\..\checkout\head\dotnet\codedom_provider\build_studio\ecdpman\EIFGEN\F_c
 COPY ..\..\checkout\head\dotnet\codedom_provider\build_studio\esplitter\EIFGEN\F_code\esplitter.exe bin\
 COPY ..\..\checkout\head\dotnet\codedom_provider\build_studio\esplit\EIFGEN\F_code\esplit.exe bin\
 COPY ..\..\checkout\head\dotnet\codedom_provider\build_studio\nmap\EIFGEN\F_code\nmap.exe bin\
-COPY ..\..\checkout\compiler\Eiffel\eiffel\com_il_generation\Core\run-time\EiffelSoftware.Runtime.dll bin\
+COPY ..\..\checkout\head\run-time\EiffelSoftware.Runtime.dll bin\
 
 CD bin
 REM in delivery\codedom\bin

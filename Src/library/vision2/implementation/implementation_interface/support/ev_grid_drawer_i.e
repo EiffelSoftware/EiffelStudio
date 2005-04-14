@@ -720,7 +720,7 @@ feature -- Basic operations
 						-- Special handling for fixed row heights as `row_offsets' does not exist.
 					rectangle_height := internal_client_height - ((grid.row_height * (grid.row_count)) - internal_client_y)
 				else
-					rectangle_height := internal_client_height - (row_offsets @ (row_offsets.count) - internal_client_y)
+					rectangle_height := internal_client_height - (row_offsets @ (grid.row_count + 1) - internal_client_y)
 				end
 				if rectangle_height >= 0 then
 						-- Check to see if must draw the background below the items.

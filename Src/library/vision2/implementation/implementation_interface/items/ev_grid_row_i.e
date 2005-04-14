@@ -430,9 +430,10 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			same_parent: a_row.parent = parent
 			parent_enabled_as_tree: parent.is_tree_enabled
 			a_row_is_below_current: a_row.index > index
-			valid_parent: parent.row (a_row.index - 1) = interface or
-				True -- for (i in index .. a_row.index - 1) there exists i where
-				-- parent.row (i).parent_row = Current
+			all_rows_between_row_and_current_are_subrows:
+				a_row.index = index + subrow_count_recursive + 1
+			row_index_of_first_item_greater_or_equal_to_index_of_first_item:
+				a_row.index_of_first_item >= index_of_first_item
 		local
 			row_imp: EV_GRID_ROW_I
 		do

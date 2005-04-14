@@ -1222,11 +1222,12 @@ feature -- Removal
 				-- Note that we must tell the computation to start from the 
 				-- pervious row as if we are removing the final item then
 				-- the index is invalid.
-			set_vertical_computation_required (a_row - 1)
+			set_vertical_computation_required ((a_row - 1).max (1))
 			redraw_client_area
 		ensure
 			row_count_updated: row_count = old row_count - (old row (a_row).subrow_count_recursive + 1)
 			old_row_removed: (old row (a_row)).parent = Void
+			node_counts_correct_in_parent: old (row_internal (a_row).parent_row_i) /= Void implies (old row_internal (a_row).parent_row_i).node_counts_correct
 		end
 		
 	internal_remove_row (a_row: EV_GRID_ROW_I) is
@@ -1247,7 +1248,9 @@ feature -- Removal
 			internal_row_data.go_i_th (l_row_index)
 			internal_row_data.remove
 			
-			update_grid_row_indices (l_row_index)	
+			update_grid_row_indices (l_row_index)
+		ensure
+			node_counts_correct_in_parent: old (a_row.parent_row_i) /= Void implies (old a_row.parent_row_i).node_counts_correct
 		end
 		
 

@@ -93,15 +93,15 @@ feature -- Output
 			create Result.make (64)
 			Result.append (assembly_name)
 			if version /= Void then
-				Result.append (", ")
+				Result.append (", Version=")
 				Result.append (version)
 			end
 			if culture /= Void then
-				Result.append (", ")
+				Result.append (", Culture=")
 				Result.append (culture)
 			end
 			if public_key_token /= Void then
-				Result.append (", ")
+				Result.append (", PublicKeyToken=")
 				Result.append (public_key_token)
 			end
 		ensure

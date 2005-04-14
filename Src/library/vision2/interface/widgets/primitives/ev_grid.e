@@ -1010,7 +1010,7 @@ feature -- Removal
 		do
 			implementation.remove_row (a_row)
 		ensure
-			row_count_updated: row_count = old row_count - 1
+			row_count_updated: row_count = old row_count - (old row (a_row).subrow_count_recursive + 1)
 			old_row_removed: (old row (a_row)).parent = Void
 		end
 

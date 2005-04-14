@@ -532,7 +532,7 @@ feature {DUMP_VALUE} -- string_representation Implementation
 			l_area_name, l_count_name: STRING
 		do
 			sc := Eiffel_system.string_class.compiled_class
-			l_conform_to_string := dynamic_class /= sc and then dynamic_class.simple_conform_to (sc)
+			l_conform_to_string := dynamic_class /= Void and then dynamic_class /= sc and then dynamic_class.simple_conform_to (sc)
 			if dynamic_class = sc or l_conform_to_string then
 				if l_conform_to_string then
 						--| Take name of `area' and `count' from STRING in descendant version.
@@ -634,12 +634,14 @@ feature {DUMP_VALUE} -- string_representation Implementation
 			l_final_result_value: DUMP_VALUE
 			l_feat: FEATURE_I
 		do
-			l_feat := debug_output_feature_i (dynamic_class)
-			l_final_result_value := classic_feature_result_value_on_current (l_feat, dynamic_class)
-				
-			if l_final_result_value /= Void and then not l_final_result_value.is_void then
-				Result := l_final_result_value.classic_string_representation (min, max)
-				last_string_representation_length := l_final_result_value.last_string_representation_length
+			if dynamic_class /= Void then
+				l_feat := debug_output_feature_i (dynamic_class)
+				l_final_result_value := classic_feature_result_value_on_current (l_feat, dynamic_class)
+	
+				if l_final_result_value /= Void and then not l_final_result_value.is_void then
+					Result := l_final_result_value.classic_string_representation (min, max)
+					last_string_representation_length := l_final_result_value.last_string_representation_length
+				end
 			end
 		end
 
@@ -772,11 +774,10 @@ feature -- Access
 		do
 			create Result.make (100)
 
+			Result.append (generating_type_representation)
 			if is_void then
-				Result.append ("NONE = Void")
+				Result.append (" = Void")
 			elseif dynamic_class /= Void then
-				Result.append (type_representation)
-				
 				if is_type_object or type = Type_string_dotnet then
 					Result.append_character (' ')
 				else
@@ -786,7 +787,6 @@ feature -- Access
 				end
 				Result.append (full_output)
 			else		
-				Result.append ("ANY ")			
 				Result.append (full_output)
 			end
 		end
@@ -824,10 +824,14 @@ feature -- Access
 			if is_void then
 				Result := "NONE"
 			elseif dynamic_class /= Void then
-				if dynamic_class.is_true_external then
+				if is_dotnet_value and then dynamic_class.is_true_external then
+					l_generating_type_string := value_class_name				
+				elseif dynamic_class.is_true_external then
 					l_generating_type_string := dynamic_class.external_class_name
 				elseif dynamic_class.is_generic or dynamic_class.is_tuple then
 					l_generating_type_string := generating_type_evaluated_string
+				elseif type = type_bits then
+					l_generating_type_string := type_of_bits
 				end
 				if l_generating_type_string	/= Void then
 					Result := l_generating_type_string
@@ -926,7 +930,7 @@ feature -- Access
 			Result := not is_type_object and type /= Type_string and type /= Type_string_dotnet
 		end
 
-feature {DUMP_VALUE, EB_OBJECT_TREE_ITEM, EIFNET_EXPORTER, DBG_EXPRESSION_EVALUATOR} -- Internal data
+feature {DUMP_VALUE, EB_OBJECT_TREE_ITEM, ES_OBJECTS_TOOL_ITEM, EIFNET_EXPORTER, DBG_EXPRESSION_EVALUATOR} -- Internal data
 
 	value_boolean	: BOOLEAN
 	value_character	: CHARACTER

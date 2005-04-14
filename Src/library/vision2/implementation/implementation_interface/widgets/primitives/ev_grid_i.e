@@ -1193,7 +1193,9 @@ feature -- Removal
 		end
 		
 	remove_row (a_row: INTEGER) is
-			-- Remove row `a_row'.
+			-- Remove row `a_row' and all subrows recursively.
+			-- If `row (a_row).subrow_count_recursive' is greater than 0 then
+			-- all subrows of the row are also removed from `Current'.
 		require
 			a_row_positive: a_row > 0
 			a_row_less_than_row_count: a_row <= row_count
@@ -1229,6 +1231,7 @@ feature -- Removal
 			row_count_updated: row_count = old row_count - (old row (a_row).subrow_count_recursive + 1)
 			old_row_removed: (old row (a_row)).parent = Void
 			node_counts_correct_in_parent: old (row_internal (a_row).parent_row_i) /= Void implies (old row_internal (a_row).parent_row_i).node_counts_correct
+			to_implement_assertion ("EV_GRID.remove_row		All old recursive subrows removed.")
 		end
 		
 	internal_remove_row (a_row: EV_GRID_ROW_I) is

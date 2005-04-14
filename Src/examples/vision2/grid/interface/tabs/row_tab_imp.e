@@ -43,6 +43,7 @@ feature {NONE}-- Initialization
 			create l_ev_horizontal_box_2
 			create row_selected_button
 			create swap_row_button
+			create remove_row_button
 			
 				-- Build_widget_structure.
 			extend (l_ev_horizontal_box_1)
@@ -53,6 +54,7 @@ feature {NONE}-- Initialization
 			l_ev_vertical_box_1.extend (l_ev_horizontal_box_2)
 			l_ev_horizontal_box_2.extend (row_selected_button)
 			extend (swap_row_button)
+			extend (remove_row_button)
 			
 			row_properties_frame.set_text ("Row Properties")
 			l_ev_vertical_box_1.set_padding_width (box_padding)
@@ -76,15 +78,18 @@ feature {NONE}-- Initialization
 			row_height_entry.set_value (100)
 			row_selected_button.set_text ("Is Row Selected?")
 			swap_row_button.set_text ("Move first selected row past second")
+			remove_row_button.set_text ("Remove Row")
 			disable_item_expand (l_ev_horizontal_box_1)
 			disable_item_expand (row_properties_frame)
 			disable_item_expand (swap_row_button)
+			disable_item_expand (remove_row_button)
 			
 				--Connect events.
 			row_index_entry.change_actions.extend (agent row_index_entry_changed (?))
 			row_height_entry.change_actions.extend (agent row_height_entry_changed (?))
 			row_selected_button.select_actions.extend (agent row_selected_button_selected)
 			swap_row_button.select_actions.extend (agent swap_row_button_selected)
+			remove_row_button.select_actions.extend (agent remove_row_button_selected)
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.
 
@@ -97,7 +102,8 @@ feature -- Access
 	row_index_entry, row_height_entry: EV_SPIN_BUTTON
 	row_selected_button: EV_CHECK_BUTTON
 	row_finder: GRID_ITEM_FINDER
-	swap_row_button: EV_BUTTON
+	swap_row_button,
+	remove_row_button: EV_BUTTON
 	row_properties_frame: EV_FRAME
 
 feature {NONE} -- Implementation
@@ -140,6 +146,11 @@ feature {NONE} -- Implementation
 	
 	swap_row_button_selected is
 			-- Called by `select_actions' of `swap_row_button'.
+		deferred
+		end
+	
+	remove_row_button_selected is
+			-- Called by `select_actions' of `remove_row_button'.
 		deferred
 		end
 	

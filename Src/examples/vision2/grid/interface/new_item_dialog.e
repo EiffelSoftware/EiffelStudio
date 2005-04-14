@@ -114,6 +114,14 @@ feature {NONE} -- Implementation
 					grid.row (grid.row_count).set_height ((16 + (l_ycount // 2)).min (40))
 					l_ycount := l_ycount + 1
 				end
+			from
+				l_xcount := 0
+			until
+				l_xcount = upper_x
+			loop
+				grid.column (l_xcount + 1).set_title ("Column " + (l_xcount + 1).out)
+				l_xcount := l_xcount + 1
+			end
 			if profile then
 				stop_profiling
 			end

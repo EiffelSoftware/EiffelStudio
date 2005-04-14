@@ -114,6 +114,12 @@ feature {NONE} -- Implementation
 			end
 			grid.move_row (first_selected, second_selected)
 		end
+		
+	remove_row_button_selected is
+			-- Called by `select_actions' of `remove_row_button'.
+		do
+			grid.remove_row (current_row_index)			
+		end
 
 end -- class ROW_TAB
 

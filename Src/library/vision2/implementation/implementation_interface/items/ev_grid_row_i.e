@@ -533,8 +533,20 @@ feature {EV_GRID_I, EV_GRID_ROW_I} -- Implementation
 			a_row_not_void: a_subrow /= Void
 			a_subrow.parent_row_i = Current
 		do
+			update_parent_node_counts_recursively (-1)
+			if a_subrow.is_expanded then
+				update_parent_expanded_node_counts_recursively (-1)
+				
+					-- The previous call to `update_parent_expanded_node_counts_recursively'
+					-- updates the hidden node count in parent. However, as the row has
+					-- actually been removed, we must undo this now.
+				fixme ("EV_GRID_ROW_I.update_for_subrow_removal Removed the need for the above mentioned work around.")
+				parent_i.adjust_hidden_node_count ( -1)
+			end
+			if not is_expanded then
+				parent_i.adjust_hidden_node_count ( 1)
+			end
 			subrows.prune_all (a_subrow)
-			subnode_count_recursive := subnode_count_recursive - 1
 		ensure
 			subrow_count_decreased: subrow_count = old subrow_count - 1
 			subrow_count_recursive_decreased: subrow_count_recursive = old subrow_count_recursive - 1
@@ -627,7 +639,7 @@ feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I} -- Implementation
 	set_subnode_count_recursive (a_count: INTEGER) is
 			-- Assign `a_count' to `subnode_count_recursive'.
 		require
-			a_count_non_negative: a_count > 0
+			a_count_non_negative: a_count >= 0
 		do
 			subnode_count_recursive := a_count
 		ensure

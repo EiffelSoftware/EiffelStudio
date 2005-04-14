@@ -40,8 +40,8 @@ CALL setup.bat %1 %2
 
 :COMPILER
 ECHO Building compiler
-REM CALL build_compiler.bat %1
-REM IF "%COMPILER_BUILT%"=="" GOTO END
+CALL build_compiler.bat %1
+IF "%COMPILER_BUILT%"=="" GOTO END
 
 ECHO Building codedom
 CALL build_codedom.bat %2

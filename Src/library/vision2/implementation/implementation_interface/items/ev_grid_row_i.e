@@ -534,7 +534,7 @@ feature {EV_GRID_I, EV_GRID_ROW_I} -- Implementation
 			a_subrow.parent_row_i = Current
 		do
 			update_parent_node_counts_recursively (-1)
-			if a_subrow.is_expanded then
+			if is_expanded then
 				update_parent_expanded_node_counts_recursively (-1)
 				
 					-- The previous call to `update_parent_expanded_node_counts_recursively'
@@ -542,15 +542,20 @@ feature {EV_GRID_I, EV_GRID_ROW_I} -- Implementation
 					-- actually been removed, we must undo this now.
 				fixme ("EV_GRID_ROW_I.update_for_subrow_removal Removed the need for the above mentioned work around.")
 				parent_i.adjust_hidden_node_count ( -1)
-			end
-			if not is_expanded then
-				parent_i.adjust_hidden_node_count ( 1)
+			else
+				parent_i.adjust_hidden_node_count ( -1)
 			end
 			subrows.prune_all (a_subrow)
+			
+				-- Set the expanded state to `False' if no subrows.
+			if subrow_count = 0 then
+				is_expanded := False
+			end
 		ensure
 			subrow_count_decreased: subrow_count = old subrow_count - 1
 			subrow_count_recursive_decreased: subrow_count_recursive = old subrow_count_recursive - 1
 			subrow_not_contained_in_subrows: not subrows.has (a_subrow)
+			not_expanded_when_no_subrows: subrow_count = 0 implies not is_expanded
 		end
 
 feature {EV_GRID_ROW_I, EV_GRID_I} -- Implementation
@@ -703,8 +708,8 @@ feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I} -- Implementation
 			end
 		end
 		
-feature {NONE} -- Implementation
-
+feature {EV_ANY_I} -- Contract support
+		
 	node_counts_correct: BOOLEAN is
 			-- Are the node counts for `Current' in a valid state?
 			-- This was originally written as class invaraints, but as the node setting
@@ -732,7 +737,9 @@ feature {NONE} -- Implementation
 			if parent_i.is_tree_enabled then
 				Result := Result and parent_i.hidden_node_count <= parent_i.row_count - 1
 			end
-		end
+		end	
+	
+feature {NONE} -- Implementation
 		
 	contained_expanded_items_recursive: INTEGER is
 			-- `Result' is sum of of expanded nodes for each of the child rows

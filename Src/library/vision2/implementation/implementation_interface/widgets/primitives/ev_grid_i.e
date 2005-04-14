@@ -1197,29 +1197,59 @@ feature -- Removal
 			a_row_positive: a_row > 0
 			a_row_less_than_row_count: a_row <= row_count
 		local
-			a_row_i, removed_row: EV_GRID_ROW_I
+			a_row_i: EV_GRID_ROW_I
+			subrow_count_recursive: INTEGER
+			l_row_index: INTEGER
 		do
 				-- Retrieve row from the grid
 			a_row_i := row_internal (a_row)
 			
+			
+				-- Firstly handle subnode removal recursively
+			subrow_count_recursive := a_row_i.subrow_count_recursive
+			from
+				l_row_index := a_row + subrow_count_recursive
+			until
+				l_row_index = a_row
+			loop
+				internal_remove_row (row (l_row_index).implementation)
+				l_row_index := l_row_index - 1
+			end
+			
+			
+			internal_remove_row (a_row_i)
+			
+				-- Note that we must tell the computation to start from the 
+				-- pervious row as if we are removing the final item then
+				-- the index is invalid.
+			set_vertical_computation_required (a_row - 1)
+			redraw_client_area
+		ensure
+			row_count_updated: row_count = old row_count - (old row (a_row).subrow_count_recursive + 1)
+			old_row_removed: (old row (a_row)).parent = Void
+		end
+		
+	internal_remove_row (a_row: EV_GRID_ROW_I) is
+			--
+		local
+			removed_row: EV_GRID_ROW_I
+			l_row_index: INTEGER
+		do
 				-- Remove row and its corresponding data from `rows' and `internal_row_data'
-			rows.go_i_th (a_row)
+			l_row_index := a_row.index
+			rows.go_i_th (l_row_index)
 			removed_row := rows.item
 			if removed_row /= Void then
 				removed_row.update_for_removal
 			end
 			rows.remove
 			
-			internal_row_data.go_i_th (a_row)
+			internal_row_data.go_i_th (l_row_index)
 			internal_row_data.remove
 			
-			update_grid_row_indices (a_row)
-
-			to_implement ("EV_GRID_I.remove_row redraw plus subnode removal handling")
-		ensure
-			row_count_updated: row_count = old row_count - 1
-			old_row_removed: (old row (a_row)).parent = Void
+			update_grid_row_indices (l_row_index)	
 		end
+		
 
 feature -- Measurements
 
@@ -1481,7 +1511,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			if is_row_height_fixed and not is_tree_enabled then
 				Result := row_count * row_height
 			else
-				Result := row_offsets.last
+				Result := row_offsets.i_th (row_count + 1)
 			end
 		ensure
 			result_positive: result >= 0

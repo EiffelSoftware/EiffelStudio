@@ -22,7 +22,8 @@ feature -- Access
 	debuggable_feature_name: STRING is "debug_output"
 
 	debug_output_feature_i (c: CLASS_C): FEATURE_I is
-			-- 
+		require
+			class_not_void: c /= Void
 		local
 			l_rout_id: INTEGER
 		do

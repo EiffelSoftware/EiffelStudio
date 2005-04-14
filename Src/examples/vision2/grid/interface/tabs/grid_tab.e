@@ -282,8 +282,7 @@ feature {NONE} -- Implementation
 			time1, time2: DATE_TIME
 		do
 			create time1.make_now
-			add_items (5, 400)
-		--	add_items (5, 15)
+			add_items (5, 400)			
 			grid.column (1).set_title ("One")
 			grid.column (2).set_title ("Two")
 			grid.column (3).set_title ("Three")
@@ -319,10 +318,11 @@ feature {NONE} -- Implementation
 			grid.insert_new_row (110)
 			grid.set_item (3, 110, create {EV_GRID_LABEL_ITEM}.make_with_text ("Deep subnode"))
 			grid.row (109).add_subrow (grid.row (110))
+			
 			from
 				counter := 111
 			until
-				counter = 120
+				counter = 113
 			loop
 				grid.insert_new_row (counter)
 				grid.set_item (3, counter, create {EV_GRID_LABEL_ITEM}.make_with_text ("Subnode"))
@@ -332,13 +332,46 @@ feature {NONE} -- Implementation
 			from
 				counter := 113
 			until
-				counter = 120
+				counter = 121
 			loop
-				grid.insert_new_row (counter)
+				grid.remove_item (1, counter)
+				grid.remove_item (2, counter)
+				grid.remove_item (3, counter)
+				grid.remove_item (4, counter)
 				grid.set_item (5, counter, create {EV_GRID_LABEL_ITEM}.make_with_text ("Subnode"))
 				grid.row (112).add_subrow (grid.row (counter))
 				counter := counter + 1
 			end
+			grid.remove_item (1, 121)
+			grid.remove_item (2, 121)
+			grid.row (112).add_subrow (grid.row (121))
+			from
+				counter := 122
+			until
+				counter = 128
+			loop
+				grid.remove_item (1, counter)
+				grid.remove_item (2, counter)
+				grid.remove_item (3, counter)
+				grid.set_item (3, counter, create {EV_GRID_LABEL_ITEM}.make_with_text ("Subnode"))
+				grid.row (counter - 1).add_subrow (grid.row (counter))
+				counter := counter + 1
+			end
+			
+			fixme ("Uncomment this code and replace that just above to show a redrawing bug.")
+--			from
+--				counter := 121
+--			until
+--				counter = 128
+--			loop
+--				grid.remove_item (1, counter)
+--				grid.remove_item (2, counter)
+--				grid.set_item (3, counter, create {EV_GRID_LABEL_ITEM}.make_with_text ("Subnode"))
+--				grid.row (110).add_subrow (grid.row (counter))
+--				counter := counter + 1
+--			end
+
+			
 			from
 				counter := 150
 			until
@@ -350,15 +383,23 @@ feature {NONE} -- Implementation
 				
 				counter := counter + 1
 			end
+			
+				-- Now perform a heavy test of the vertical tree lines.
 			from
 				counter := 160
-				counter2 := 360
 			until
-				counter = 260
+				counter = 259
 			loop
 				grid.row (counter).add_subrow (grid.row (counter + 1))
-				
-				grid.row (counter).add_subrow (grid.row (counter2))
+				counter := counter + 1
+			end
+			from
+				counter := 259
+				counter2 := 259
+			until
+				counter = 359
+			loop
+				grid.row (counter2).add_subrow (grid.row (counter + 1))
 				counter := counter + 1
 				counter2 := counter2 - 1
 			end
@@ -678,13 +719,70 @@ feature {NONE} -- Implementation
 			-- Called by `select_actions' of `custom_button'.
 		local
 			l_item: EV_GRID_ITEM
+			r, row: EV_GRID_ROW
+			grid_label_item: EV_GRID_LABEL_ITEM
+			counter: INTEGER
 		do
 			l_item := grid.item_at_virtual_position (200, 16)
 --			misc_button_selected
 --			grid.column (3).set_width (200)
 --			grid.column (4).set_width (200)
 --			grid.enable_horizontal_scrolling_per_item
+
+--			grid.enable_tree
+--			grid.set_item (1, 1, create {EV_GRID_LABEL_ITEM}.make_with_text ("An item"))
+--			grid.set_item (1, 2, create {EV_GRID_LABEL_ITEM}.make_with_text ("An item"))
+--			grid.set_item (2, 1, create {EV_GRID_LABEL_ITEM}.make_with_text ("An item"))
+--			grid.set_item (2, 2, create {EV_GRID_LABEL_ITEM}.make_with_text ("An item"))
+--			r := grid.row (grid.row_count)
+--			grid.insert_new_row (r.index + 1)
+--            row := grid.row (r.index + 1)
+--			r.add_subrow (row)            
+--                -- and then create the item
+--            create grid_label_item
+--            grid_label_item.set_text ("POP")
+--            row.set_item (1, grid_label_item)
+
+
+--			grid.insert_new_row (r.index + 2)
 			
+--			r.add_subrow (row)  
+			grid.enable_tree
+--			grid.set_item (8, 1, create {EV_GRID_LABEL_ITEM}.make_with_text ("Sub Sub row"))
+--			grid.set_item (1, 2, create {EV_GRID_LABEL_ITEM}.make_with_text ("Parent Row"))
+--			grid.set_item (4, 3, create {EV_GRID_LABEL_ITEM}.make_with_text ("Sub row"))
+--			grid.set_item (8, 4, create {EV_GRID_LABEL_ITEM}.make_with_text ("Sub Sub row"))
+--			grid.row (2).add_subrow (grid.row (3))
+--			grid.row (3).add_subrow (grid.row (4))
+--			grid.row (4).set_item (5, create {EV_GRID_LABEL_ITEM}.make_with_text ("New item"))
+--			grid.row (4).set_item (4, create {EV_GRID_LABEL_ITEM}.make_with_text ("New item"))
+----			grid.set_item (4, 4, create {EV_GRID_LABEL_ITEM}.make_with_text ("New item"))
+--			grid.row (4).set_item (4, create {EV_GRID_LABEL_ITEM}.make_with_text ("New item"))
+--			--grid.column (3).set_item (4, create {EV_GRID_LABEL_ITEM}.make_with_text ("New item"))
+--			grid.column (4).set_item (4, create {EV_GRID_LABEL_ITEM}.make_with_text ("New item"))
+
+
+			grid.set_item (1, 1, create {EV_GRID_LABEL_ITEM}.make_with_text ("Top level 1"))
+			from
+				counter := 2
+			until
+				counter > 5
+			loop
+				grid.set_item (1, counter, create {EV_GRID_LABEL_ITEM}.make_with_text ("Sub row " + counter.out))
+				grid.row (counter - 1).add_subrow (grid.row (counter))
+				counter := counter + 1
+			end
+			grid.set_item (1, 6, create {EV_GRID_LABEL_ITEM}.make_with_text ("New Row 6"))
+			grid.set_item (2, 6, create {EV_GRID_LABEL_ITEM}.make_with_text ("New Row 6"))
+
+--			grid.row (3).add_subrow (grid.row (4))
+--			print (grid.row (3).subrow_count_recursive.out + "%N")
+--			print (grid.row (3).subrow_count.out + "%N")
+			print (grid.row_count.out)
+			grid.remove_row (5)
+			print (grid.row_count.out + "%N")
+--			print (grid.row (3).subrow_count.out + "%N")
+--			print (grid.row (3).subrow_count_recursive.out + "%N")
 		end
 
 end -- class GRID_TAB

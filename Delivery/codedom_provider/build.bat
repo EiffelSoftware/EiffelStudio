@@ -40,8 +40,8 @@ CALL setup.bat %1 %2
 
 :COMPILER
 ECHO Building compiler
-CALL build_compiler.bat %1
-IF "%COMPILER_BUILT%"=="" GOTO END
+REM CALL build_compiler.bat %1
+REM IF "%COMPILER_BUILT%"=="" GOTO END
 
 ECHO Building codedom
 CALL build_codedom.bat %2
@@ -58,15 +58,16 @@ IF NOT EXIST EIFGEN\F_Code\installer.exe GOTO END
 COPY EIFGEN\F_Code\installer.exe ..\..\..\..\delivery
 
 CD ..\..\..\..
-:END
-ECHO Done.
+GOTO END
 
 :USAGE
-ECHO                                                    .
-ECHO Usage: build.bat $ISE_EIFFEL55 $ISE_EIFFEL56       .
-ECHO --------------------------------------------       .
-ECHO                                                    .
-ECHO $ISE_EIFFEL55 is path to EiffelStudio 5.5 delivery .
-ECHO $ISE_EIFFEL56 is path to EiffelStudio 5.6 delivery .
-ECHO                                                    .
+ECHO                                                               .
+ECHO Usage: build.bat $ISE_EIFFEL_REL $ISE_EIFFEL_DEV              .
+ECHO --------------------------------------------                  .
+ECHO                                                               .
+ECHO $ISE_EIFFEL_REL is path to EiffelStudio last release delivery .
+ECHO $ISE_EIFFEL_DEV is path to development EiffelStudio           .
+ECHO                                                               .
 
+:END
+ECHO Done.

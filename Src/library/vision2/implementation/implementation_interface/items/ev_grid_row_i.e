@@ -95,7 +95,9 @@ feature -- Access
 		end
 
 	parent_row: EV_GRID_ROW is
-			-- Parent of Current if any, Void otherwise.
+			-- Parent row of Current if any, Void otherwise.
+		require
+			is_parented: parent /= Void
 		do
 			if parent_row_i /= Void then
 				Result := parent_row_i.interface
@@ -116,23 +118,32 @@ feature -- Access
 		
 	parent_row_root: EV_GRID_ROW is
 			-- Parent row which is the root of the tree structure
-			-- in which `Current' is contained.
+			-- in which `Current' is contained. May be `Current' if
+			-- `Current' is the root node of a tree structure.
+		require
+			is_parented: parent /= Void
 		local
 			current_parent: EV_GRID_ROW_I
 		do
-			from
-				current_parent := parent_row_i
-			until
-				current_parent.parent_row_i = Void
-			loop
-				current_parent := current_parent.parent_row_i
+			if parent.is_tree_enabled then
+					-- If the tree is not enabled then `Result' must be False.
+				if parent_row_i /= Void then
+					from
+						current_parent := parent_row_i
+					until
+						current_parent.parent_row_i = Void
+					loop
+						current_parent := current_parent.parent_row_i
+					end
+					Result := current_parent.interface
+				else
+						-- In this case, there is no `parent_row_i' as `Current'
+						-- is the root node of a tree, so return `interface'
+					Result := interface
+				end
 			end
-			Result := current_parent.interface
 		ensure
-			result_void_when_tree_node_enabled: (parent = Void) or
-				(parent /= Void and then not parent.is_tree_enabled) implies Result = Void
-			parent_row_not_void_implies_result_not_void: parent_row /= Void implies Result /= Void
-			parent_row_void_implies_result_void: parent_row = Void implies Result = Void
+			result_consistent_with_parent_tree_properties: (parent = Void or else not parent.is_tree_enabled) = (Result = Void)
 		end
 
 	item (i: INTEGER): EV_GRID_ITEM is

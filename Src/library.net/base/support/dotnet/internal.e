@@ -218,7 +218,7 @@ feature -- Access
 		require
 			type_id_nonnegative: type_id >= 0
 		do
-			Result := id_to_eiffel_type.item (type_id).type_name
+			Result := pure_implementation_type (type_id).type_name
 		end
 
 	dynamic_type (object: ANY): INTEGER is

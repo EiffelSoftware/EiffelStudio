@@ -415,7 +415,6 @@ feature {NONE} -- Implementation
 			if an_x = 2 then
 				do_nothing
 			end
-			print ("Computing item : " + an_x.out + " " + a_y.out + "%N")
 			if a_y \\ 2 = 1 then
 				create {EV_GRID_LABEL_ITEM} Result.make_with_text ("Item at position : " + an_x.out + ", " + a_y.out)
 			else
@@ -776,14 +775,158 @@ feature {NONE} -- Implementation
 			grid.set_item (2, 6, create {EV_GRID_LABEL_ITEM}.make_with_text ("New Row 6"))
 
 --			grid.row (3).add_subrow (grid.row (4))
---			print (grid.row (3).subrow_count_recursive.out + "%N")
---			print (grid.row (3).subrow_count.out + "%N")
-			print (grid.row_count.out)
 			grid.remove_row (5)
-			print (grid.row_count.out + "%N")
---			print (grid.row (3).subrow_count.out + "%N")
---			print (grid.row (3).subrow_count_recursive.out + "%N")
 		end
+		
+	draw_tree_check_button_selected is
+			-- Called by `select_actions' of `draw_tree_check_button'.
+		do
+			if draw_tree_check_button.is_selected then
+				grid.disable_selection_on_click
+				grid.pointer_motion_actions.wipe_out
+				grid.pointer_button_press_actions.wipe_out
+				grid.pointer_button_release_actions.wipe_out
+				grid.pointer_button_press_actions.extend (agent draw_tree_item_press)
+				grid.pointer_button_release_actions.extend (agent draw_tree_item_release)
+				grid.pointer_motion_actions.extend (agent draw_tree_item_motion)
+			else
+				grid.enable_selection_on_click
+				grid.pointer_motion_actions.wipe_out
+				grid.pointer_button_press_actions.wipe_out
+				grid.pointer_button_release_actions.wipe_out
+			end
+		end
+		
+	offsets: ARRAY [INTEGER]	
+	
+	start_x, start_y: INTEGER
+	
+	start_item: EV_GRID_ITEM
+	
+	max_set: INTEGER
+		
+	draw_tree_item_press (an_x, a_y, button: INTEGER; an_item: EV_GRID_ITEM) is
+			--
+		do
+			if button = 1 and an_item /= Void then
+				create offsets.make (1, 100)
+				start_x := an_x
+				start_y := a_y
+				start_item := an_item
+				max_set := 0
+			else
+				start_item := Void
+			end
+		end
+		
+		
+	draw_tree_item_release (an_x, a_y, button: INTEGER; an_item: EV_GRID_ITEM) is
+			--
+		local
+			counter: INTEGER
+			current_indent: INTEGER
+			previous_indent: INTEGER
+			new_row: EV_GRID_ROW
+			parent_row: EV_GRID_ROW
+			column_to_check: INTEGER
+			column_counter: INTEGER
+			total_column_indent: INTEGER
+			row_counter: INTEGER
+			i: INTEGER
+			j: INTEGER
+			found: BOOLEAN
+		do
+			if button = 1 then
+
+				previous_indent := 0
+				from
+					counter := 1
+				until
+					counter > max_set
+				loop
+					
+					current_indent := offsets.item (counter) - start_x
+					if offsets.item (counter) = 360 then
+						do_nothing
+					end
+
+					grid.insert_new_row (start_item.row.index + counter)
+					new_row := grid.row (start_item.row.index + counter)
+					
+					current_indent := current_indent.max (0)
+					parent_row := Void
+					column_to_check := start_item.column.index
+					total_column_indent := 0
+					from
+						column_counter := column_to_check
+					until
+						column_counter > grid.column_count or total_column_indent > current_indent
+					loop
+						if current_indent > total_column_indent then
+							column_to_check := column_counter
+						end						
+						total_column_indent := total_column_indent + grid.column (column_counter).width
+						column_counter := column_counter + 1
+					end
+					i := 0
+					from
+						j := 1
+					until
+						j = column_to_check
+					loop
+						i := i + grid.column (j).width
+						j := j + 1
+					end
+					found := False
+					if parent_row = Void then		
+						from
+							row_counter := new_row.index - 1
+						until
+							found or row_counter = start_item.row.index
+						loop
+							if (grid.item (column_to_check, row_counter) /= Void and grid.row (row_counter).index + grid.row (row_counter).subrow_count_recursive + 1 = new_row.index) then
+								if (grid.item (column_to_check, row_counter)).horizontal_indent <= offsets.item (counter) - i then--current_indent then
+									--parent_row := grid.row (counter2)
+									found := True
+								end						
+							end
+							if not found then
+								row_counter := row_counter - 1
+							end
+						end
+						parent_row := grid.row (row_counter)
+					end
+					grid.set_item (column_to_check, new_row.index, create {EV_GRID_LABEL_ITEM}.make_with_text (offsets.item (counter).out))
+					parent_row.add_subrow (new_row)
+					if not parent_row.is_expanded then
+						parent_row.expand
+					end
+
+					counter := counter + 1
+					previous_indent := current_indent
+				end
+				start_item := Void
+				draw_tree_check_button.disable_select
+			end
+		end
+		
+		
+	draw_tree_item_motion (an_x, a_y: INTEGER; an_item: EV_GRID_ITEM) is
+			--
+		local
+			distance_down: INTEGER
+			item_index: INTEGER
+		do
+			if start_item /= Void then
+				distance_down := a_y - start_item.virtual_y_position
+				item_index := (distance_down // 16) + 1
+				if item_index >= offsets.count or else offsets @ item_index < an_x then
+					offsets.force (an_x, item_index)
+					max_set := item_index.max (item_index)
+				end
+			end
+		end
+		
 
 end -- class GRID_TAB
 

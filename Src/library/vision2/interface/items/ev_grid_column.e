@@ -23,11 +23,12 @@ create
 feature -- Access
 
 	is_displayed: BOOLEAN is
-		-- May `Current' be displayed when its `parent' is?
-		-- Will return False if `hide' has been called on `Current'.
-		-- A column that `is_displayed' does not necessarily have to be visible on screen at that particular time.
+			-- May `Current' be displayed when its `parent' is?
+			-- Will return False if `hide' has been called on `Current'.
+			-- A column that `is_displayed' does not necessarily have to be visible on screen at that particular time.
 		require
 			not_destroyed: not is_destroyed
+			is_parented: parent /= Void
 		do
 			Result := implementation.is_displayed
 		end
@@ -90,6 +91,7 @@ feature -- Access
 			-- `Result' is 0 if `parent' is `Void'.
 		require
 			not_destroyed: not is_destroyed
+			is_parented: parent /= Void
 		do
 			Result := implementation.virtual_x_position
 		ensure
@@ -103,6 +105,7 @@ feature -- Status setting
 			-- Prevent column from being shown in `parent'.
 		require
 			not_destroyed: not is_destroyed
+			is_parented: parent /= Void
 		do
 			implementation.hide
 		ensure
@@ -114,6 +117,7 @@ feature -- Status setting
 			-- Does not signify that the column will be visible on screen but that it will be visible within its parent.
 		require
 			not_destroyed: not is_destroyed
+			is_parented: parent /= Void
 		do
 			implementation.show
 		ensure

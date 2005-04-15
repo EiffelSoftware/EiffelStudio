@@ -530,6 +530,7 @@ feature {DUMP_VALUE} -- string_representation Implementation
 			sc: CLASS_C
 			l_conform_to_string, done: BOOLEAN
 			l_area_name, l_count_name: STRING
+			l_slice_max: INTEGER
 		do
 			sc := Eiffel_system.string_class.compiled_class
 			l_conform_to_string := dynamic_class /= Void and then dynamic_class /= sc and then dynamic_class.simple_conform_to (sc)
@@ -544,7 +545,11 @@ feature {DUMP_VALUE} -- string_representation Implementation
 					l_area_name := area_name
 					l_count_name := count_name
 				end
-				create obj.make (value_address, min, max)
+					--| Getting count value and area object
+					--| we set slices to 1,1 to avoid receiving all the capacity item of SPECIAL
+					--| since here only the printable characters matter
+				create obj.make (value_address, 1, 1)
+				
 				l_attributes := obj.attributes
 				from
 					l_attributes_cursor := l_attributes.new_cursor
@@ -574,9 +579,20 @@ feature {DUMP_VALUE} -- string_representation Implementation
 				check
 					count_attribute_found: count_attribute /= Void
 				end
-				
 				l_count := count_attribute.value
+				
 				if area_attribute /= Void then
+						--| Now we have the real count, we'll get the l_slice_max items 
+						--| and not all the capacity
+					if max < 0 then
+						l_slice_max := l_count
+					else
+						l_slice_max := max.min (l_count)
+					end
+					area_attribute.reset_items
+					area_attribute.set_sp_bounds (min, l_slice_max)
+					create obj.make (area_attribute.address, min, l_slice_max)
+					area_attribute.items.append_last (obj.attributes)
 					Result := area_attribute.truncated_raw_string_value (l_count)
 				end
 				
@@ -601,7 +617,7 @@ feature {DUMP_VALUE} -- string_representation Implementation
 			l_icdov: ICOR_DEBUG_OBJECT_VALUE			
 		do
 			sc := Eiffel_system.string_class.compiled_class
-			l_conform_to_string := dynamic_class /= sc and then dynamic_class.simple_conform_to (sc)
+			l_conform_to_string := dynamic_class /= Void and then dynamic_class /= sc and then dynamic_class.simple_conform_to (sc)
 			l_eifnet_debugger := Application.imp_dotnet.eifnet_debugger
 			if dynamic_class = sc or l_conform_to_string then
 				l_icdov := new_value_object_dotnet

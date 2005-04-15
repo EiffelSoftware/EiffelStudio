@@ -87,6 +87,7 @@ feature {NONE}-- Initialization
 			create l_ev_horizontal_box_5
 			create expand_all_button
 			create collapse_all_button
+			create draw_tree_check_button
 			create l_ev_frame_4
 			create l_ev_vertical_box_4
 			create l_ev_horizontal_box_6
@@ -143,6 +144,7 @@ feature {NONE}-- Initialization
 			l_ev_vertical_box_3.extend (l_ev_horizontal_box_5)
 			l_ev_horizontal_box_5.extend (expand_all_button)
 			l_ev_horizontal_box_5.extend (collapse_all_button)
+			l_ev_vertical_box_3.extend (draw_tree_check_button)
 			l_ev_notebook_1.extend (l_ev_frame_4)
 			l_ev_frame_4.extend (l_ev_vertical_box_4)
 			l_ev_vertical_box_4.extend (l_ev_horizontal_box_6)
@@ -246,6 +248,7 @@ feature {NONE}-- Initialization
 			l_ev_vertical_box_3.disable_item_expand (l_ev_horizontal_box_4)
 			l_ev_vertical_box_3.disable_item_expand (set_selected_row_as_subnode_button)
 			l_ev_vertical_box_3.disable_item_expand (l_ev_horizontal_box_5)
+			l_ev_vertical_box_3.disable_item_expand (draw_tree_check_button)
 			is_tree_enabled_button.set_text ("is_tree_enabled")
 			tree_lines_enabled.enable_select
 			tree_lines_enabled.set_text ("tree_lines_enabled")
@@ -260,6 +263,7 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_5.set_padding_width (box_padding)
 			expand_all_button.set_text ("Expand all")
 			collapse_all_button.set_text ("Collapse all")
+			draw_tree_check_button.set_text ("Draw New Tree Nodes")
 			l_ev_vertical_box_4.disable_item_expand (l_ev_horizontal_box_6)
 			set_background_color_button.set_text ("Set Background Color")
 			set_background_color_button.hide
@@ -313,6 +317,7 @@ feature {NONE}-- Initialization
 			set_selected_row_as_subnode_button.select_actions.extend (agent set_selected_row_as_subnode_button_selected)
 			expand_all_button.select_actions.extend (agent expand_all_button_selected)
 			collapse_all_button.select_actions.extend (agent collapse_all_button_selected)
+			draw_tree_check_button.select_actions.extend (agent draw_tree_check_button_selected)
 			set_background_color_button.select_actions.extend (agent set_background_color_button_selected)
 			set_background_color_combo.select_actions.extend (agent set_background_color_combo_selected)
 				-- Close the application when an interface close
@@ -330,7 +335,7 @@ feature -- Access
 	is_header_displayed_button, is_vertical_divider_displayed_button,
 	is_horizontal_scrolling_per_item, is_vertical_scrolling_per_item, is_row_height_fixed,
 	is_partially_dynamic, is_completely_dynamic, resize_columns_to_button, resize_rows_to_button,
-	selection_on_click, is_tree_enabled_button, tree_lines_enabled: EV_CHECK_BUTTON
+	selection_on_click, is_tree_enabled_button, tree_lines_enabled, draw_tree_check_button: EV_CHECK_BUTTON
 	is_vertical_divider_dashed_button,
 	is_vertical_divider_solid_button, single_item_selection_button, single_row_selection_button,
 	multiple_item_selection_button, multiple_row_selection_button: EV_RADIO_BUTTON
@@ -541,6 +546,11 @@ feature {NONE} -- Implementation
 	
 	collapse_all_button_selected is
 			-- Called by `select_actions' of `collapse_all_button'.
+		deferred
+		end
+	
+	draw_tree_check_button_selected is
+			-- Called by `select_actions' of `draw_tree_check_button'.
 		deferred
 		end
 	

@@ -56,7 +56,7 @@ feature -- Access
 		end
 
 	parent_row: EV_GRID_ROW is
-			-- Parent of Current if any, Void otherwise.
+			-- Parent row of Current if any, Void otherwise.
 		require
 			not_destroyed: not is_destroyed
 			is_parented: parent /= Void
@@ -78,17 +78,15 @@ feature -- Access
 		
 	parent_row_root: EV_GRID_ROW is
 			-- Parent row which is the root of the tree structure
-			-- in which `Current' is contained.
+			-- in which `Current' is contained. May be `Current' if
+			-- `Current' is the root node of a tree structure.
 		require
 			not_destroyed: not is_destroyed
 			is_parented: parent /= Void
 		do
 			Result := implementation.parent_row_root
 		ensure
-			result_void_when_tree_node_enabled: (parent = Void) or
-				(parent /= Void and then not parent.is_tree_enabled) implies Result = Void
-			parent_row_not_void_implies_result_not_void: parent_row /= Void implies Result /= Void
-			parent_row_void_implies_result_void: parent_row = Void implies Result = Void
+			result_consistent_with_parent_tree_properties: (parent = Void or else not parent.is_tree_enabled) = (Result = Void)
 		end
 
 	item (i: INTEGER): EV_GRID_ITEM is

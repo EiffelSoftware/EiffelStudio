@@ -40,6 +40,10 @@ extern struct opstack op_stack;               /* Operational stack */
 #define IV_CURRENT	2				/* Current value wanted */
 #define IV_RESULT	3				/* Result value wanted */
 
+/* Kinds of once routines */
+#define ONCE_MARK_THREAD_RELATIVE  1	/* Thread-relative once routine */
+#define ONCE_MARK_PROCESS_RELATIVE 2	/* Process-relative once routine */
+
 /*
  * Byte-code tokens
  */

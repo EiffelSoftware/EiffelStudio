@@ -101,6 +101,8 @@ feature -- Access
 				Result := parent_row_i.interface
 			end
 		ensure
+			result_void_when_tree_node_enabled: (parent = Void) or
+				(parent /= Void and then not parent.is_tree_enabled) implies Result = Void
 			has_parent: Result /= Void implies Result.has_subrow (interface)
 		end
 
@@ -110,6 +112,27 @@ feature -- Access
 			if parent_i /= Void then
 				Result := parent_i.interface
 			end
+		end
+		
+	parent_row_root: EV_GRID_ROW is
+			-- Parent row which is the root of the tree structure
+			-- in which `Current' is contained.
+		local
+			current_parent: EV_GRID_ROW_I
+		do
+			from
+				current_parent := parent_row_i
+			until
+				current_parent.parent_row_i = Void
+			loop
+				current_parent := current_parent.parent_row_i
+			end
+			Result := current_parent.interface
+		ensure
+			result_void_when_tree_node_enabled: (parent = Void) or
+				(parent /= Void and then not parent.is_tree_enabled) implies Result = Void
+			parent_row_not_void_implies_result_not_void: parent_row /= Void implies Result /= Void
+			parent_row_void_implies_result_void: parent_row = Void implies Result = Void
 		end
 
 	item (i: INTEGER): EV_GRID_ITEM is
@@ -146,6 +169,7 @@ feature -- Access
 			end
 		ensure
 			result_not_void: Result /= Void
+			valid_count: Result.count <= count
 		end
 		
 	is_expanded: BOOLEAN

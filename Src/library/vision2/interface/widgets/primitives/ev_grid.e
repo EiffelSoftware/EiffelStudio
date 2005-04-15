@@ -897,7 +897,9 @@ feature -- Element change
 		require
 			not_destroyed: not is_destroyed
 			i_positive: i > 0
-			not_inserting_between_existing_subrows: not (row (i).parent_row /= Void and row (i + 1).parent_row /= Void)
+			not_inserting_within_existing_subrow_structure: i < row_count and
+				row (i - 1).parent_row_root /= Void and row (i).parent_row_root /= Void implies
+				row (i - 1).parent_row_root /= row (i).parent_row_root
 		do
 			implementation.insert_new_row (i)
 		ensure

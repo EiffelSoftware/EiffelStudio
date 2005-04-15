@@ -228,7 +228,7 @@ feature -- IL code generation
 				instruction.generate_il_load_value
 				lower.il_load_value
 				il_generator.generate_binary_operator (il_minus)
-				lower.il_load_difference (upper)
+				upper.il_load_difference (lower)
 				if label = Void then
 					il_generator.branch_on_condition ({MD_OPCODES}.bgt_un, else_label)
 				else

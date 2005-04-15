@@ -121,7 +121,7 @@ feature {INTERVAL_B} -- IL code generation
 		require
 			other_not_void: other /= Void
 			same_type: same_type (other)
-			other_not_less: other >= Current
+			other_not_greater: other <= Current
 		deferred
 		end
 

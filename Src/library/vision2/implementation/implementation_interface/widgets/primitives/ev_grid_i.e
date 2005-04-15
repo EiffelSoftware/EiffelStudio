@@ -1025,15 +1025,17 @@ feature -- Status report
 
 feature -- Element change
 
-	insert_new_row (a_index: INTEGER) is
-			-- Insert a new row at index `a_index'.
+	insert_new_row (i: INTEGER) is
+			-- Insert a new row at index `i'.
 		require
-			i_positive: a_index > 0
-			not_inserting_between_existing_subrows: not (row (a_index).parent_row /= Void and row (a_index + 1).parent_row /= Void)
+			i_positive: i > 0
+			not_inserting_within_existing_subrow_structure: i < row_count and
+				row (i - 1).parent_row_root /= Void and row (i).parent_row_root /= Void implies
+				row (i - 1).parent_row_root /= row (i).parent_row_root
 		do
-			add_row_at (a_index, False)
+			add_row_at (i, False)
 		ensure
-			row_count_set: (a_index <= old row_count implies (row_count = old row_count + 1)) or a_index = row_count
+			row_count_set: (i <= old row_count implies (row_count = old row_count + 1)) or i = row_count
 		end
 
 	insert_new_row_parented (i: INTEGER; a_parent_row: EV_GRID_ROW) is

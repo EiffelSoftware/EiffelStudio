@@ -374,13 +374,13 @@ static  void    print_byte_code ()
 	uint32    rid;    /* Routine id      */
 	char    rescue; /* Has rescue?     */
 	int     i;
-	int     is_once;
+	EIF_NATURAL_8   once_mark;
 
 	ip = body;
 
-	is_once = (int) get_bool(&ip);  /* Once flag */
+	once_mark = get_uint8(&ip);  /* Once mark */
 
-	if (is_once)
+	if (once_mark)
 		(void) get_int32(&ip);     /* Reserved space - skip it */
 
 	advance (1);
@@ -404,11 +404,14 @@ static  void    print_byte_code ()
 
 	fprintf (ofp,"Nr. args     : %d\n", i);
 
-	if (is_once)
+	switch (once_mark)
 	{
-		/* A once routine */
-
-		fprintf (ofp,"Once routine : YES\n");
+	case ONCE_MARK_THREAD_RELATIVE:
+		fprintf (ofp,"Once routine : thread-relative\n");
+		break;
+	case ONCE_MARK_PROCESS_RELATIVE:
+		fprintf (ofp,"Once routine : process-relative\n");
+		break;
 	}
 
 	i = (int) get_int16(&ip);
@@ -893,8 +896,8 @@ static  void    print_instructions ()
 			case  BC_CAST_NATURAL :
 				fprintf (ofp,"%d", get_int32(&ip));
 				break;
+			case  BC_CAST_CHAR :
 			case  BC_CAST_REAL_32 :
-				break;
 			case  BC_CAST_REAL_64 :
 				break;
 			case  BC_METAMORPHOSE :

@@ -68,6 +68,7 @@ feature -- Access
 			-- `Result' is 0 if `parent' is `Void'.
 		require
 			not_destroyed: not is_destroyed
+			parented: is_parented
 		do
 			Result := implementation.virtual_x_position
 		ensure
@@ -81,6 +82,7 @@ feature -- Access
 			-- `Result' is 0 if `parent' is `Void'.
 		require
 			not_destroyed: not is_destroyed
+			parented: is_parented
 		do
 			Result := implementation.virtual_y_position
 		ensure
@@ -95,6 +97,7 @@ feature -- Access
 			-- of `parent' and `row'.
 		require
 			not_destroyed: not is_destroyed
+			parented: is_parented
 		do
 			Result := implementation.horizontal_indent
 		ensure

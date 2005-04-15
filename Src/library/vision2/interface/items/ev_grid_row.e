@@ -50,6 +50,7 @@ feature -- Access
 		do
 			Result := implementation.has_subrow (a_row)
 		ensure
+			
 			has_subrow_same_parent: Result implies
 				((a_row.parent /= Void and parent /= Void) and then a_row.parent = parent)
 		end
@@ -58,9 +59,12 @@ feature -- Access
 			-- Parent of Current if any, Void otherwise.
 		require
 			not_destroyed: not is_destroyed
+			is_parented: parent /= Void
 		do
 			Result := implementation.parent_row
 		ensure
+			result_void_when_tree_node_enabled: (parent = Void) or
+				(parent /= Void and then not parent.is_tree_enabled) implies Result = Void
 			has_parent: Result /= Void implies Result.has_subrow (Current)
 		end
 
@@ -70,6 +74,21 @@ feature -- Access
 			not_destroyed: not is_destroyed
 		do
 			Result := implementation.parent
+		end
+		
+	parent_row_root: EV_GRID_ROW is
+			-- Parent row which is the root of the tree structure
+			-- in which `Current' is contained.
+		require
+			not_destroyed: not is_destroyed
+			is_parented: parent /= Void
+		do
+			Result := implementation.parent_row_root
+		ensure
+			result_void_when_tree_node_enabled: (parent = Void) or
+				(parent /= Void and then not parent.is_tree_enabled) implies Result = Void
+			parent_row_not_void_implies_result_not_void: parent_row /= Void implies Result /= Void
+			parent_row_void_implies_result_void: parent_row = Void implies Result = Void
 		end
 
 	item (i: INTEGER): EV_GRID_ITEM is
@@ -91,12 +110,14 @@ feature -- Access
 			Result := implementation.selected_items
 		ensure
 			result_not_void: Result /= Void
+			valid_count: Result.count <= count
 		end
 		
 	is_expanded: BOOLEAN is
 			-- Are subrows of `Current' displayed?
 		require
 			not_destroyed: not is_destroyed
+			is_parented: parent /= Void
 		do
 			Result := implementation.is_expanded
 		ensure
@@ -124,6 +145,7 @@ feature -- Access
 			-- `Result' is 0 if `parent' is `Void'.
 		require
 			not_destroyed: not is_destroyed
+			is_parented: parent /= Void
 		do
 			Result := implementation.virtual_y_position
 		ensure
@@ -136,6 +158,7 @@ feature -- Access
 			-- or 0 if none.
 		require
 			not_destroyed: not is_destroyed
+			is_parented: parent /= Void
 		do
 			Result := implementation.index_of_first_item
 		ensure
@@ -184,6 +207,7 @@ feature -- Status report
 			-- Number of items in current.
 		require
 			not_destroyed: not is_destroyed
+			is_parented: parent /= Void
 		do
 			Result := implementation.count
 		ensure

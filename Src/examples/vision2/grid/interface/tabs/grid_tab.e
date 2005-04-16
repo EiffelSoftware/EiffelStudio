@@ -835,6 +835,7 @@ feature {NONE} -- Implementation
 			i: INTEGER
 			j: INTEGER
 			found: BOOLEAN
+			new_row_index: INTEGER
 		do
 			if button = 1 then
 
@@ -850,8 +851,9 @@ feature {NONE} -- Implementation
 						do_nothing
 					end
 
-					grid.insert_new_row (start_item.row.index + counter)
-					new_row := grid.row (start_item.row.index + counter)
+				--	grid.insert_new_row (start_item.row.index + counter)
+				--	new_row := grid.row (start_item.row.index + counter)
+					new_row_index := start_item.row.index + counter
 					
 					current_indent := current_indent.max (0)
 					parent_row := Void
@@ -880,11 +882,11 @@ feature {NONE} -- Implementation
 					found := False
 					if parent_row = Void then		
 						from
-							row_counter := new_row.index - 1
+							row_counter := new_row_index - 1
 						until
 							found or row_counter = start_item.row.index
 						loop
-							if (grid.item (column_to_check, row_counter) /= Void and grid.row (row_counter).index + grid.row (row_counter).subrow_count_recursive + 1 = new_row.index) then
+							if (grid.item (column_to_check, row_counter) /= Void and grid.row (row_counter).index + grid.row (row_counter).subrow_count_recursive + 1 = new_row_index) then
 								if (grid.item (column_to_check, row_counter)).horizontal_indent <= offsets.item (counter) - i then--current_indent then
 									--parent_row := grid.row (counter2)
 									found := True
@@ -896,12 +898,18 @@ feature {NONE} -- Implementation
 						end
 						parent_row := grid.row (row_counter)
 					end
-					grid.set_item (column_to_check, new_row.index, create {EV_GRID_LABEL_ITEM}.make_with_text (offsets.item (counter).out))
-					parent_row.add_subrow (new_row)
+					
+					
+					
+--					i < row_count and row (i - 1).parent_row_root /= Void and row (i).parent_row_root /= Void implies row (i - 1).parent_row_root /= row (i).parent_row_root
+--					grid.insert_new_row (start_item.row.index + counter)
+					grid.insert_new_row_parented (new_row_index, parent_row)
+					new_row := grid.row (start_item.row.index + counter)
+					grid.set_item (column_to_check, new_row_index, create {EV_GRID_LABEL_ITEM}.make_with_text (offsets.item (counter).out))
+--					parent_row.add_subrow (new_row)
 					if not parent_row.is_expanded then
 						parent_row.expand
 					end
-
 					counter := counter + 1
 					previous_indent := current_indent
 				end

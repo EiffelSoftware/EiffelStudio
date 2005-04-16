@@ -292,8 +292,8 @@ feature -- Element change
 			a_row_is_below_current: a_row.index > index
 			all_rows_between_row_and_current_are_subrows:
 				a_row.index = index + subrow_count_recursive + 1
-			row_index_of_first_item_greater_or_equal_to_index_of_first_item:
-				a_row.index_of_first_item >= index_of_first_item
+			row_not_empty_implies_row_index_of_first_item_greater_or_equal_to_index_of_first_item:
+				a_row.index_of_first_item > 0 implies a_row.index_of_first_item >= index_of_first_item
 		do
 			implementation.add_subrow (a_row)
 		ensure

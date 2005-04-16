@@ -911,9 +911,10 @@ feature -- Element change
 		require
 			not_destroyed: not is_destroyed
 			i_positive: i > 0
-			i_less_than_row_count: i <= row_count
+			i_less_than_row_count: i <= row_count + 1
 			a_parent_row_not_void: a_parent_row /= Void
 			a_parent_row_in_current: a_parent_row.parent = Current
+			to_implement_assertion ("Ensure `i' is a valid row index to be inserted within `a_parent_row'.")
 		do
 			implementation.insert_new_row_parented (i, a_parent_row)
 		ensure

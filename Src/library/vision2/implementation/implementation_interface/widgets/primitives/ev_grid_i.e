@@ -1042,11 +1042,12 @@ feature -- Element change
 			-- Insert `a_row' between rows `i' and `i+1'.
 		require
 			i_positive: i > 0
-			i_less_than_row_count: i <= row_count
+			i_less_than_row_count: i <= row_count + 1
 			a_parent_row_not_void: a_parent_row /= Void
+			to_implement_assertion ("Ensure `i' is a valid row index to be inserted within `a_parent_row'.")
 		do
-			insert_new_row (i)
-			a_parent_row.add_subrow (row (i))
+			add_row_at (i, False)
+			a_parent_row.implementation.add_subrow_internal (row (i), True)
 		ensure
 			row_count_set: row_count = old row_count + 1
 			subrow_count_set: a_parent_row.subrow_count = old a_parent_row.subrow_count + 1

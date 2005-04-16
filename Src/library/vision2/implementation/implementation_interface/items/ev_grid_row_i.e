@@ -466,8 +466,33 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			a_row_is_below_current: a_row.index > index
 			all_rows_between_row_and_current_are_subrows:
 				a_row.index = index + subrow_count_recursive + 1
-			row_index_of_first_item_greater_or_equal_to_index_of_first_item:
-				a_row.index_of_first_item >= index_of_first_item
+			row_not_empty_implies_row_index_of_first_item_greater_or_equal_to_index_of_first_item:
+				a_row.index_of_first_item > 0 implies a_row.index_of_first_item >= index_of_first_item
+		do
+			add_subrow_internal (a_row, False)
+		ensure
+			added: a_row.parent_row = interface
+			subrow (subrow_count) = a_row
+			node_counts_correct: node_counts_correct
+		end
+		
+	add_subrow_internal (a_row: EV_GRID_ROW; inserting_within_tree_structure: BOOLEAN) is
+			-- Make `a_row' a child of Current. `inserting_within_tree_structure' determines
+			-- if `a_row' is to be added within an existing tree structure and is used to
+			-- relax the preconditions that determine if a row may be added.
+		require
+			is_parented: parent /= Void
+			a_row_not_void: a_row /= Void
+			a_row_is_parented: a_row.parent /= Void
+			a_row_is_not_current: a_row /= interface
+			a_row_is_not_a_subrow: a_row.parent_row = Void
+			same_parent: a_row.parent = parent
+			parent_enabled_as_tree: parent.is_tree_enabled
+			a_row_is_below_current: a_row.index > index
+			all_rows_between_row_and_current_are_subrows:
+				not inserting_within_tree_structure implies a_row.index = index + subrow_count_recursive + 1
+			row_not_empty_implies_row_index_of_first_item_greater_or_equal_to_index_of_first_item:
+				a_row.index_of_first_item > 0 implies a_row.index_of_first_item >= index_of_first_item
 		local
 			row_imp: EV_GRID_ROW_I
 		do

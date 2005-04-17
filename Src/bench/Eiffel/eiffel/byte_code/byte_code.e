@@ -121,12 +121,6 @@ feature -- Access
 	custom_attributes: BYTE_LIST [BYTE_NODE]
 			-- Custom attributes if any.
 
-	is_once: BOOLEAN is
-			-- Is the current byte code relative to a once feature ?
-		do
-			-- Do nothing
-		end
-
 	is_external: BOOLEAN is
 			-- Is the current byte code relative to an external feature ?
 		do
@@ -135,6 +129,12 @@ feature -- Access
 
 	is_deferred: BOOLEAN is
 			-- Is the current byte code relative to a deferred feature ?
+		do
+			-- Do nothing
+		end
+
+	is_once: BOOLEAN is
+			-- Is the current byte code relative to a once feature ?
 		do
 			-- Do nothing
 		end
@@ -851,17 +851,8 @@ feature -- Byte code generation
 			Temp_byte_code_array.clear
 
 				-- Once mark and reserved space for once key.
-
-			if is_once then
-					-- The once mark
-				Temp_byte_code_array.append ('%/001/')
-					-- Allocate space for once key
-				Temp_byte_code_array.allocate_space (int32_c_type)
-			else
-					-- Not a once routine
-				Temp_byte_code_array.append ('%U')
-			end
-
+			append_once_mark (Temp_byte_code_array)
+			
 				-- Header for byte code.
 			Temp_byte_code_array.append (Bc_start)
 
@@ -1002,6 +993,17 @@ debug ("DEBBUGGER_HOOK")
 		io.put_string ("."+context.current_feature.feature_name+"%N%N")
 	end
 end
+		end
+
+	append_once_mark (ba: BYTE_ARRAY) is
+			-- Append byte code indicating a kind of a once routine
+			-- (not once, thread-relative once, process-relative once, etc.)
+			-- and associated information (if required)
+		require
+			ba_not_void: ba /= Void
+		do
+				-- Append non-once mark by default
+			ba.append ('%U')
 		end
 
 	setup_local_variables is

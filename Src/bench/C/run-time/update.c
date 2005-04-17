@@ -27,6 +27,7 @@ doc:<file name="update.c" header="rt_update.h" version="$Id$" summary="Update ru
 #include "rt_hashin.h"
 #include "eif_except.h"
 #include "rt_update.h"
+#include "rt_interp.h"
 #include "eif_cecil.h"
 #include "eif_misc.h"
 #include "eif_file.h"
@@ -35,6 +36,7 @@ doc:<file name="update.c" header="rt_update.h" version="$Id$" summary="Update ru
 #include "rt_gen_conf.h"
 #include "rt_error.h"					/* for error_tag() */
 #include "rt_malloc.h"
+#include "rt_garcol.h"
 #include "eif_path_name.h"				/* for eifrt_vms_has_path_terminator */
 
 #ifdef DEBUG
@@ -94,13 +96,9 @@ rt_public void update(char ignore_updt)
 	char *meltpath = (char *) 0;			/* directory of .UPDT */
 	char *filename;							/* .UPDT complet path */
 	long pattern_id;
-	long bonce_idx;
 	long melt_count;						/* Size of melting table */
 	fnptr *tmp_frozen;						/* Update of `egc_frozen' */
 /* %%ss bloc moved below*/
-
-	/* Initialize count of bytecode once routines */
-	EIF_bonce_count = 0;
 
 	if (ignore_updt != (char) 0) {
 		init_desc();
@@ -188,6 +186,7 @@ rt_public void update(char ignore_updt)
 	count = wint32();			/* Read the count of class types */
 	ccount = wint32();			/* Read the count of classes */
 	eif_nb_org_routines = wint32();		/* Read the number of original routine bodies */
+	ALLOC_ONCE_INDEXES; 			/* Allocate array of once indexes. */
 #ifdef DEBUG
 	dprintf(1)("New class type count: %ld\n", count);
 #endif
@@ -248,8 +247,6 @@ rt_public void update(char ignore_updt)
 		/* Allocation of the variable `mpatidtab' */
 	SAFE_ALLOC(mpatidtab, int, melt_count);
 
-	bonce_idx = 0;
-
 	while ((body_id = wuint32()) != INVALID_ID) {
 		bsize = wint32();
 		pattern_id = wint32();
@@ -264,11 +261,21 @@ rt_public void update(char ignore_updt)
 		egc_frozen [body_id] = 0;	/* Reset the frozen feature to force call on new
 									 * melted feature */
 
-		if (*bcode) {
+		switch (*bcode) {
 				/* It's a once routine */
 				/* Assign a key to it  */
-			write_long ((char *) (bcode + 1), bonce_idx);
-			++bonce_idx;    /* Increment key */
+		case ONCE_MARK_THREAD_RELATIVE:
+			write_long ((char *) (bcode + 1), once_index (*(BODY_INDEX *)(bcode + 1)));
+			break;
+#ifdef EIF_THREADS
+		case ONCE_MARK_PROCESS_RELATIVE:
+			write_long ((char *) (bcode + 1), process_once_index (*(BODY_INDEX *)(bcode + 1)));
+			break;
+#endif
+		default:
+			if (*bcode)
+				eif_panic(MTC "Invalid kind of once routine");
+
 		}
 #ifdef DEBUG
 	dprintf(2)("------------------\n");
@@ -280,9 +287,6 @@ rt_public void update(char ignore_updt)
 	dprintf(1)("sizeof(melt[%ld]) = %ld\n", body_id, bsize);
 #endif
 	}
-
-		/* Record number of bytecode once routines */
-	EIF_bonce_count = bonce_idx;
 
 		/* Parent table and Cecil tables if any */
 	wread (&c, 1);

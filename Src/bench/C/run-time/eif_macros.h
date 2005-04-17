@@ -335,8 +335,8 @@ RT_LNK int fcount;
 #define RTOC(x)			onceset();
 #define RTOC_NEW(x)		new_onceset((EIF_REFERENCE) &x);
 #define RTOC_GLOBAL(x)	globalonceset((EIF_REFERENCE) &x);
-#define RTOVP(n,c,a)	if (CAT2(n,_succeeded)) { (void) a; } else { c a; }
-#define RTOVF(n,c,a)	(CAT2(n,_succeeded)? ((void) a, CAT2(n,_result)) : c a)
+#define RTOVP(n,c,a)	if (RTOFN(n,_succeeded)) { (void) a; } else { c a; }
+#define RTOVF(n,c,a)	(RTOFN(n,_succeeded)? ((void) a, RTOFN(n,_result)) : c a)
 
 /* Service macros for once routines:
  * RTO_TRY - try to excute routine body
@@ -372,50 +372,87 @@ RT_LNK int fcount;
 		}                                                            \
 	}
 
+#ifdef WORKBENCH
+
+/* Macros for once routine indexes:
+ * RTOIN - name of a variable that keeps index of a once result
+ * RTOID - declaration of index into once routine result table
+ */
+#define RTOIN(name) CAT2(name,_index)
+
+#define RTOID(name) static ONCE_INDEX RTOIN(name);
+
+#else
+
+/* Macros for once routine fields:
+ * RTOFN - name of a field for once feature with the given code index
+ */
+
+#define RTOFN(code_index,field_name) CAT2(o,code_index)field_name
+
+#endif /* WORKBENCH */
+
 /* Macros for single-threaded once routines:
- * RTOSH - declaration of variables for a single-threaded once routine (for header file)
- * RTOSD - definition of variables for a single-threaded once routine (for implementation)
+ * RTOSR - result field name (for once functions)
+ * RTOSHP - declaration of variables for a single-threaded once procedure
+ * RTOSHF - declaration of variables for a single-threaded once function
+ * RTOSDP - definition of variables for a single-threaded once procedure
+ * RTOSDF - definition of variables for a single-threaded once function
  * RTOSP - prologue for a single-threaded once routine
  * RTOSE - epilogue for a single-threaded once routine
  */
 
-#define RTOSH(n)                                                             \
-	extern EIF_BOOLEAN CAT2(n,_succeeded);
+#define RTOSR(code_index)                                                    \
+	RTOFN(code_index,_result)
 
-#define RTOSD(n)                                                             \
-	EIF_BOOLEAN CAT2(n,_done) = EIF_FALSE;                               \
-	unsigned char CAT2(n,_failed) = 0;                                   \
-	EIF_BOOLEAN CAT2(n,_succeeded) = EIF_FALSE;
+#define RTOSHP(code_index)                                                   \
+	extern EIF_BOOLEAN RTOFN(code_index,_done);                          \
+	extern unsigned char RTOFN(code_index,_failed);                      \
+	extern EIF_BOOLEAN RTOFN(code_index,_succeeded);
 
-#define RTOSP(n)                                                             \
+#define RTOSHF(type, code_index)                                             \
+	RTOSHP(code_index)                                                   \
+	extern type RTOSR(code_index);
+
+#define RTOSDP(code_index)                                                   \
+	EIF_BOOLEAN RTOFN(code_index,_done) = EIF_FALSE;                     \
+	unsigned char RTOFN(code_index,_failed) = 0;                         \
+	EIF_BOOLEAN RTOFN(code_index,_succeeded) = EIF_FALSE;
+
+#define RTOSDF(type, code_index)                                             \
+	RTOSDP(code_index)                                                   \
+	type RTOSR(code_index) = (type) 0;
+
+#define RTOSP(code_index)                                                    \
 		/* Check if evaluation has succeeded. */                     \
 		/* If yes, skip any other calculations. */                   \
-	if (!CAT2(n,_succeeded)) {                                           \
+	if (!RTOFN(code_index,_succeeded)) {                                 \
 			/* Check if evaluation is started earlier. */        \
 			/* If yes, evaluation is completed.        */        \
-		if (!CAT2(n,_done)) {                                        \
+		if (!RTOFN(code_index,_done)) {                              \
 				/* Evaluation has not been started yet.   */ \
 				/* Start it now.                          */ \
-			CAT2(n,_done) = EIF_TRUE;                            \
+			RTOFN(code_index,_done) = EIF_TRUE;                  \
 				/* Try to exceute routine body. */           \
 			RTO_TRY
 
-#define RTOSE(n)                                                             \
+#define RTOSE(code_index)                                                    \
 				/* Record successful execution result. */    \
-			CAT2(n,_succeeded) = EIF_TRUE;                       \
+			RTOFN(code_index,_succeeded) = EIF_TRUE;             \
 				/* Catch exception. */                       \
 			RTO_EXCEPT                                           \
 				/* Handle exception.                */       \
 				/* Record exception for future use. */       \
-			CAT2(n,_failed) = echval;                            \
+			RTOFN(code_index,_failed) = echval;                  \
 			RTO_END_EXCEPT                                       \
 		}                                                            \
-		if (CAT2(n,_failed)) {                                       \
-			xraise (CAT2(n,_failed));                            \
+		if (RTOFN(code_index,_failed)) {                             \
+			xraise (RTOFN(code_index,_failed));                  \
 		}                                                            \
 	}
 
 /* Macros for thread-relative once routines:
+ * RTOTS - stores index of a once routine into index variable given its code index
  * RTOTDB - declaration and initialization of variables for once function returning basic type
  * RTOTDR - declaration and initialization of variables for once function returning reference
  * RTOTDV - declaration and initialization of variables for once procedure
@@ -425,30 +462,71 @@ RT_LNK int fcount;
  * RTOTP - prologue for a thread-relative once routine
  * RTOTE - epilogue for a thread-relative once routine
  */
-                                                                             
-#define RTOTDV(index)                                                        \
-	MTOT OResult = (MTOT) 0;                                             \
-	OResult = MTOI(index)
 
-#define RTOTDB(type,index)                                                   \
-	RTOTDV(index);                                                       \
+#ifdef WORKBENCH
+
+#define RTOTS(code_index, name)                                              \
+	RTOIN(name) = once_index (code_index);
+
+#define RTOTDV(name)                                                         \
+	MTOT OResult = (MTOT) MTOI(RTOIN(name));
+
+#define RTOTDB(type, name)                                                   \
+	RTOTDV(name)                                                         \
 	if (!MTOD(OResult)) {                                                \
 		MTOP(type, OResult, (type) 0);                               \
 	}
 
-#define RTOTDR(index)                                                        \
-	RTOTDV(index);                                                       \
+#define RTOTDR(name)                                                         \
+	RTOTDV(name)                                                         \
 	if (!MTOD(OResult)) {                                                \
 		MTOP(EIF_REFERENCE, OResult, RTOC(0));                       \
 	}
 
+#define RTOTW(body_id) if (!MTOD(OResult)) RTWO(body_id);
 
-#ifdef WORKBENCH
-#	define RTOTW(body_id) if (!MTOD(OResult)) RTWO(body_id);
-#endif
+#define RTOTC(name, body_id, value)                                          \
+	RTOTDV(name)                                                         \
+	EIF_REFERENCE * PResult = MTOR(EIF_REFERENCE,OResult);               \
+	if (PResult) {                                                       \
+		return *PResult;                                             \
+	}                                                                    \
+	MTOP(EIF_REFERENCE, OResult, RTOC(0));                               \
+	MTOM(OResult);                                                       \
+	RTWO(body_id);                                                       \
+	return RTOTRR = value;
+
+#elif defined EIF_THREADS
+
+#define RTOUDV(once_index)                                                   \
+	MTOT OResult = (MTOT) MTOI(once_index);
+
+#define RTOUDB(type, once_index)                                             \
+	RTOUDV(once_index)                                                   \
+	if (!MTOD(OResult)) {                                                \
+		MTOP(type, OResult, (type) 0);                               \
+	}
+
+#define RTOUDR(once_index)                                                   \
+	RTOUDV(once_index)                                                   \
+	if (!MTOD(OResult)) {                                                \
+		MTOP(EIF_REFERENCE, OResult, RTOC(0));                       \
+	}
+
+#define RTOUC(once_index, value)                                             \
+	RTOUDV(once_index)                                                   \
+	EIF_REFERENCE * PResult = MTOR(EIF_REFERENCE,OResult);               \
+	if (PResult) {                                                       \
+		return *PResult;                                             \
+	}                                                                    \
+	MTOP(EIF_REFERENCE, OResult, RTOC(0));                               \
+	MTOM(OResult);                                                       \
+	return RTOTRR = value;
+
+#endif /* WORKBENCH */
 
 #define RTOTRB(type) MTOR(type,OResult)
-#define RTOTRR(type) (*MTOR(type,OResult))
+#define RTOTRR (*MTOR(EIF_REFERENCE,OResult))
 
 #define RTOTP                                                                \
 		/* Check if evaluation is started earlier. */                \
@@ -483,11 +561,7 @@ RT_LNK int fcount;
  * RTOPLP - once prologue that is executed with locked mutex
  * RTOPLE - once epilogue that is executed with locked mutex
  * RTOPRE - raise previously recorded exception
- *
- * Main macros for process-relative once routines:
- * RTOPD - declaration of local variables for a process-relative once routine
- * RTOPP - prologue for a process-relative once routine
- * RTOPE - epilogue for a process-relative once routine */
+ */
 
 #ifdef EIF_HAS_MEMORY_BARRIER
 #	define RTOPMBW EIF_MEMORY_WRITE_BARRIER
@@ -522,7 +596,7 @@ RT_LNK int fcount;
 		RTOPLU (mutex);                                              \
 	}
 
-#define RTOPLP(thread_id, started)                                           \
+#define RTOPLP(started, thread_id)                                           \
 		/* Check if some thread started evaluation earlier. */       \
 		/* If yes, evaluation is completed.                 */       \
 	if (!started) {                                                      \
@@ -533,7 +607,7 @@ RT_LNK int fcount;
 			/* Try to exceute routine body. */                   \
 		RTO_TRY
 
-#define RTOPLE(completed)                                                    \
+#define RTOPLE(completed,failed,thread_id)                                   \
 			/* Catch exception. */                               \
 		RTO_EXCEPT                                                   \
 			/* Handle exception.                */               \
@@ -548,20 +622,14 @@ RT_LNK int fcount;
 		completed = EIF_TRUE;                                        \
 	}
 
-#define RTOPRE                                                               \
+#define RTOPRE(failed)                                                       \
 	if (failed) {                                                        \
 		xraise (failed);                                             \
 	}
 
-#define RTOPD                                                                \
-	static volatile EIF_BOOLEAN started = 0;                             \
-	static volatile EIF_BOOLEAN completed = 0;                           \
-	static volatile unsigned char failed = 0;                            \
-	static volatile EIF_POINTER thread_id = NULL;
-
 #ifdef EIF_HAS_MEMORY_BARRIER
 
-#	define RTOPP(mutex)                                                              \
+#	define RTOFP(started, completed, mutex, thread_id)                               \
 		EIF_MEMORY_READ_BARRIER;                                                 \
 		if (!completed) {                                                        \
 				/* Once evaluation is not completed yet.           */    \
@@ -576,20 +644,20 @@ RT_LNK int fcount;
 					/* It's safe to lock a mutex.                 */ \
 				RTOPL (mutex);                                           \
 					/* Use thread-safe prologue. */                  \
-				RTOPLP (thread_id, started);
+				RTOPLP (started, thread_id);
 
-#	define RTOPE(mutex)                                                              \
+#	define RTOFE(completed, failed, mutex, thread_id)                                \
 					/* Use thread-safe epilogue. */                  \
-				RTOPLE (completed);                                      \
+				RTOPLE (completed, failed, thread_id);                   \
 					/* Unlock mutex. */                              \
 				RTOPLU (mutex);                                          \
 			}                                                                \
 		}                                                                        \
-		RTOPRE
+		RTOPRE(failed)
 
 #else /* !defined(EIF_HAS_MEMORY_BARRIER) */
 
-#	define RTOPP(mutex)                                                              \
+#	define RTOFP(started, completed, mutex, thread_id)                               \
 			/* Try to lock a mutex. */                                       \
 		if (RTOPLT (mutex)) {                                                    \
 				/* Mutex has been locked.                       */       \
@@ -597,11 +665,11 @@ RT_LNK int fcount;
 			if (!completed) {                                                \
 					/* Evaluation is not completed. */               \
 					/* Use thread-safe prologue.    */               \
-				RTOPLP (thread_id, started);
+				RTOPLP (started, thread_id);
 
-#	define RTOPE(mutex)                                                              \
+#	define RTOFE(completed, failed, mutex, thread_id)                                \
 					/* Use thread-safe epilogue. */                  \
-				RTOPLE (completed);                                      \
+				RTOPLE (completed, failed, thread_id);                     \
 			}                                                                \
 					/* Unlock mutex. */                              \
 			RTOPLU (mutex);                                                  \
@@ -612,9 +680,103 @@ RT_LNK int fcount;
 				/* Let it to complete.          */                       \
 			RTOPW (mutex, thread_id);                                        \
 		}                                                                        \
-		RTOPRE
+		RTOPRE(failed)
 
 #endif /* EIF_HAS_MEMORY_BARRIER */
+
+#ifdef WORKBENCH
+/* Main for process-relative once routines in workbench mode:
+ * RTOQS - stores index of a once routine into index variable given its code index
+ */
+
+#define RTOQS(code_index, name)                                              \
+	RTOIN(name) = process_once_index (code_index);
+
+#define RTOQDV(name)                                                         \
+	EIF_process_once_value_t * POResult =                                \
+		EIF_process_once_values + RTOIN(name);                       \
+	MTOT OResult = &(POResult -> value);
+
+#define RTOQDB(type, name)                                                   \
+	RTOQDV(name)
+
+#define RTOQDR(name)                                                         \
+	RTOQDV(name)                                                         \
+	MTOP(EIF_REFERENCE, OResult, &(POResult -> reference));
+
+#define RTOQRB(type) MTOR(type,OResult)
+#define RTOQRR (*MTOR(EIF_REFERENCE,OResult))
+
+#define RTOQP                                                                \
+	RTOFP (                                                              \
+		POResult -> value.done,                                      \
+		POResult -> completed,                                       \
+		POResult -> mutex,                                           \
+		POResult -> thread_id                                        \
+	)
+
+#define RTOQE                                                                \
+	RTOFE (                                                              \
+		POResult -> completed,                                       \
+		POResult -> value.failed,                                    \
+		POResult -> mutex,                                           \
+		POResult -> thread_id                                        \
+	)
+
+#else
+
+/* Main macros for process-relative once routines in finalized mode:
+ * RTOPH - declaration of variables (that is used to refer to the variables)
+ * RTOPD - definition of variables
+ * RTOPI - initialization of variables
+ * RTOPP - prologue
+ * RTOPE - epilogue */
+
+#define RTOPR(code_index)                                                    \
+	RTOFN(code_index,_result)
+
+#define RTOPHP(code_index)                                                   \
+	extern EIF_BOOLEAN RTOFN(code_index,_started);                       \
+	extern EIF_BOOLEAN RTOFN(code_index,_completed);                     \
+	extern unsigned char RTOFN(code_index,_failed);                      \
+	extern EIF_MUTEX_TYPE * RTOFN(code_index,_mutex);                    \
+	extern EIF_POINTER RTOFN(code_index,_thread_id);
+
+#define RTOPHF(type, code_index)                                             \
+	RTOPHP(code_index)                                                   \
+	extern type RTOPR(code_index);
+
+#define RTOPDP(code_index)                                                   \
+	volatile EIF_BOOLEAN RTOFN(code_index,_started) = EIF_FALSE;         \
+	volatile EIF_BOOLEAN RTOFN(code_index,_completed) = EIF_FALSE;       \
+	volatile unsigned char RTOFN(code_index,_failed) = 0;                \
+	volatile EIF_MUTEX_TYPE * RTOFN(code_index,_mutex) = NULL;           \
+	volatile EIF_POINTER RTOFN(code_index,_thread_id) = NULL;
+
+#define RTOPDF(type, code_index)                                             \
+	RTOPDP(code_index)                                                   \
+	volatile type RTOPR(code_index) = (type) 0;
+
+#define RTOPI(code_index)                                                    \
+	RTOFN(code_index,_mutex) = eif_thr_mutex_create ();
+
+#define RTOPP(code_index)                                                    \
+	RTOFP (                                                              \
+		RTOFN(code_index,_started),                                  \
+		RTOFN(code_index,_completed),                                \
+		RTOFN(code_index,_mutex),                                    \
+		RTOFN(code_index,_thread_id)                                 \
+	)
+
+#define RTOPE(code_index)                                                    \
+	RTOFE (                                                              \
+		RTOFN(code_index,_completed),                                \
+		RTOFN(code_index,_failed),                                   \
+		RTOFN(code_index,_mutex),                                    \
+		RTOFN(code_index,_thread_id)                                 \
+	)
+
+#endif /* WORKBENCH */
 
 #endif /* EIF_THREADS */
 
@@ -1150,3 +1312,4 @@ RT_LNK int fcount;
 #endif
 
 #endif
+

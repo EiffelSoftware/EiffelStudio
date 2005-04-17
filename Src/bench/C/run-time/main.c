@@ -262,7 +262,7 @@ rt_public unsigned TIMEOUT;     /* Time out for interprocess communications */
 
 /*
 doc:	<attribute name="EIF_once_count" return_type="long" export="public">
-doc:		<summary>Total number of once routines (computed by compiler).</summary>
+doc:		<summary>Total number of once routines (computed by run-time).</summary>
 doc:		<access>Read/Write once</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None since initialized at beginning with EIF_Minitxxx routines in generated code.</synchronization>
@@ -270,15 +270,51 @@ doc:	</attribute>
 */
 rt_public long EIF_once_count = 0;
 
+#if defined(WORKBENCH) || defined (EIF_THREADS)
 /*
-doc:	<attribute name="EIF_bonce_count" return_type="long" export="shared">
-doc:		<summary>Number of once routines in bytecode.</summary>
-doc:		<access>Read/Write once</access>
+doc:	<attribute name="EIF_once_indexes" return_type="BODY_INDEX *" export="shared">
+doc:		<summary>Code indexes of registered once routines.</summary>
+doc:		<access>Read/Write once/None when executing Eiffel code.</access>
 doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>None since initialized either to 0 or updated in `update.c'.</synchronization>
+doc:		<synchronization>None since initialized and used only during start-up.</synchronization>
 doc:	</attribute>
 */
-rt_shared long EIF_bonce_count = 0;
+rt_shared BODY_INDEX * EIF_once_indexes = 0;
+#endif
+
+#ifdef EIF_THREADS
+/*
+doc:	<attribute name="EIF_process_once_count" return_type="long" export="shared">
+doc:		<summary>Total number of process-relative once routines (computed by run-time).</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None since initialized at beginning with EIF_Minitxxx routines in generated code.</synchronization>
+doc:	</attribute>
+*/
+rt_shared long EIF_process_once_count = 0;
+
+/*
+doc:	<attribute name="EIF_process_once_indexes" return_type="BODY_INDEX *" export="shared">
+doc:		<summary>Code indexes of registered process-relative once routines.</summary>
+doc:		<access>Read/Write once/None when executing Eiffel code.</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None since initialized and used only during start-up.</synchronization>
+doc:	</attribute>
+*/
+rt_shared BODY_INDEX * EIF_process_once_indexes = 0;
+
+/*
+doc:	<attribute name="EIF_process_once_values" return_type="EIF_process_once_value_t *" export="public">
+doc:		<summary>Array to save value of each computed once. It is used to store process-relative once values.</summary>
+doc:		<access>Read/Write</access>
+doc:		<indexing>By once key.</indexing>
+doc:		<thread_safety>Unsafe</thread_safety>
+doc:		<synchronization>Array is initialized during start-up. Items are synchronized using their mutexes.</synchronization>
+doc:	</attribute>
+*/
+rt_public EIF_process_once_value_t *EIF_process_once_values = NULL;
+
+#endif
 
 #ifndef EIF_THREADS
 /*
@@ -345,33 +381,35 @@ rt_public void once_init (void)
 {
 	EIF_GET_CONTEXT
 
-	/* At this point 'EIF_bonce_count' has already been
-	   computed (by update) */
-
-	/* Run through all modules and count once routines
-	   This also assigns an offset to each module. The
-	   sum of the module offset and a once routines own
-	   key index gives the index in 'once_keys' */
-	/* Addition: we also the previous value of EIF_once_count to
-	 * EIF_once_count, since some once routines could have been
-	 * supermelted */
-
-	EIF_once_count = EIF_once_count + EIF_bonce_count;
-
-	egc_system_mod_init ();
+	ALLOC_ONCE_INDEXES; 	/* Allocate array of once indexes. */
+	egc_system_mod_init (); /* Assign once indexes. */
+	FREE_ONCE_INDEXES;	/* Free once indexes. */
 
 	/* Allocate room for once manifest strings array. */
 	ALLOC_OMS (EIF_oms);
 
-	/* Allocate room for once values */
-
+	/* Allocate room for once values. */
 	EIF_once_values = (EIF_once_value_t *) eif_realloc (EIF_once_values, EIF_once_count * sizeof *EIF_once_values);
 			/* needs malloc; crashes otherwise on some pure C-ansi compiler (SGI)*/
 	if (EIF_once_values == (EIF_once_value_t *) 0) /* Out of memory */
 		enomem();
-
 	memset (EIF_once_values, 0, EIF_once_count * sizeof *EIF_once_values);
 
+#ifdef EIF_THREADS
+		/* Allocate room for process-relative once values. */
+	EIF_process_once_values = (EIF_process_once_value_t *) eif_realloc (EIF_process_once_values, EIF_process_once_count * sizeof *EIF_process_once_values);
+			/* needs malloc; crashes otherwise on some pure C-ansi compiler (SGI)*/
+	if (EIF_process_once_values == (EIF_process_once_value_t *) 0) /* Out of memory */
+		enomem();
+	memset (EIF_process_once_values, 0, EIF_process_once_count * sizeof *EIF_process_once_values);
+	{
+		int i = EIF_process_once_count;
+		while (i > 0) {
+			i--;
+			EIF_process_once_values [i].mutex = eif_thr_mutex_create ();
+		}
+	}
+#endif
 }
 
 rt_public void eif_alloc_init(void)

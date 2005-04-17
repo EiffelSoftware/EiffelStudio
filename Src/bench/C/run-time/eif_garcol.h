@@ -79,7 +79,11 @@ RT_LNK void erembq(EIF_REFERENCE obj);				/* Quick veersion (no GC call) of erem
 #endif
 RT_LNK EIF_REFERENCE *onceset(void);				/* Recording of once function result */
 RT_LNK void new_onceset(EIF_REFERENCE);				/* Recording of once function result */
+#if defined(WORKBENCH) || defined(EIF_THREADS)
+RT_LNK ONCE_INDEX once_index (BODY_INDEX code_id);		/* Calculate index of once routine */
+#endif
 #ifdef EIF_THREADS
+RT_LNK ONCE_INDEX process_once_index (BODY_INDEX code_id);	/* Calculate index of process-relative once routine */
 RT_LNK void globalonceset(EIF_REFERENCE);			/* Recording of once function result */
 #endif
 RT_LNK void register_oms (EIF_REFERENCE *address);	/* Register an address of a once manifest string */

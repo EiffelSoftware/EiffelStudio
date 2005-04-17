@@ -29,22 +29,12 @@ feature -- Initialization
 			create old_expressions.make
 			create inherited_assertion.make
 			create global_onces.make (5)
+			create onces.make (5)
 			create once_manifest_string_count_table.make (100)
 			create once_manifest_string_table.make (100)
 		end
 
 feature -- Access
-
-	once_index: INTEGER
-			-- Index of current once routine
-			
-	global_onces: ARRAYED_LIST [INTEGER]
-			-- List of body indexes which represent all global onces for current
-			-- generated type
-
-	is_once_twofold: BOOLEAN
-			-- Is once routine generated in two functions to avoid
-			-- overhead caused by exception interception?
 
 	workbench_mode: BOOLEAN
 			-- Mode of generation: if set to True, generation of C code
@@ -182,16 +172,6 @@ feature -- Setting
 			is_argument_protected_set: is_argument_protected = v
 		end
 
-	set_once_index (idx : INTEGER) is
-			-- Set `once_index' to `idx'
-		require
-			valid_index : idx >= 0
-		do
-			once_index := idx
-		ensure
-			index_set : once_index = idx
-		end
-
 	set_workbench_mode is
 			-- Set `workbench_mode' to True.
 		do
@@ -242,6 +222,183 @@ feature -- Setting
 			assertion_type := a
 		end
 
+feature {NONE} -- Once features: implementation
+
+	onces: HASH_TABLE [PAIR [TYPE_C, like thread_relative_once_index], INTEGER]
+			-- List result types and once indexes indexed by body indexes which represent all non-global onces
+			-- for current generated type or for the whole system in finalized mode
+
+	global_onces: like onces
+			-- List result types and once indexes indexed by body indexes which represent all global onces for current
+			-- generated type or for the whole system in finalized mode
+
+	add_once (storage: like onces; type: TYPE_C; code_index: INTEGER) is
+			-- Register once routine identified by its `code_index' with result type `type' in `storage'.
+		require
+			storage_not_void: storage /= Void
+			type_not_void: type /= Void
+		do
+			if not storage.has (code_index) then
+					-- Register new once
+				storage.put (create {PAIR [TYPE_C, INTEGER]}.make (type, storage.count), code_index)
+			end
+		end
+
+feature -- C code generation: once features
+
+	is_once_twofold: BOOLEAN
+			-- Is once routine generated in two functions to avoid
+			-- overhead caused by exception interception?
+
+	add_thread_relative_once (type: TYPE_C; code_index: INTEGER) is
+			-- Register thread-relative once routine identified by its `code_index' with result type `type'.
+		require
+			type_not_void: type /= Void
+		do
+			add_once (onces, type, code_index)
+		ensure
+			added: has_thread_relative_once (code_index)
+		end
+
+	add_process_relative_once (type: TYPE_C; code_index: INTEGER) is
+			-- Register process-relative once routine identified by its `code_index' with result type `type'.
+		require
+			type_not_void: type /= Void
+		do
+			add_once (global_onces, type, code_index)
+		end
+
+	has_thread_relative_once (code_index: INTEGER): BOOLEAN is
+			-- Is once feature with `code_index' registered?
+		do
+			Result := onces.has (code_index)
+		end
+
+	thread_relative_once_index (code_index: INTEGER): INTEGER is
+			-- Index of a once routine with `code_index' counted from 0
+		require
+			final_mode: final_mode
+			has: has_thread_relative_once (code_index)
+		do
+			Result := onces.item (code_index).second
+		end
+
+	generate_once_data_definition (buf: like buffer) is
+			-- Generate definition of once data fields
+		require
+			buffer_not_void: buf /= Void
+		local
+			once_indexes: like onces
+			definition_macro_prefix: STRING
+			result_type: TYPE_C
+		do
+			if final_mode then
+				if system.has_multithreaded then
+					once_indexes := global_onces
+					definition_macro_prefix := "RTOPD"
+				else
+					once_indexes := onces
+					definition_macro_prefix := "RTOSD"
+				end
+				from
+					once_indexes.start
+				until
+					once_indexes.after
+				loop
+					buf.put_string (definition_macro_prefix)
+					result_type := once_indexes.item_for_iteration.first
+					if result_type.is_void then
+						buf.put_string ("P (")
+					else
+						buf.put_string ("F (")
+						buf.put_string (result_type.c_string)
+						buf.put_character (',')
+					end
+					buf.put_integer (once_indexes.key_for_iteration)
+					buf.put_character (')')
+					buf.put_new_line
+					once_indexes.forth
+				end
+			end
+		end
+
+	generate_module_once_data_initialization (static_type_id: INTEGER) is
+			-- Generate initialization of once data fields for type identified by `static_type_id'
+		require
+			buffer_not_void: buffer /= Void
+		local
+			buf: like buffer
+			once_indexes: like onces
+		do
+			if workbench_mode then
+				buf := buffer
+					-- Initialize indexes for single-threaded or thread-relative once routines
+				once_indexes := onces
+				from
+					once_indexes.start
+				until
+					once_indexes.after
+				loop
+					buf.put_string ("RTOTS (")
+					buf.put_integer (once_indexes.key_for_iteration)
+					buf.put_character (',')
+					buf.put_string (encoder.feature_name (static_type_id, once_indexes.key_for_iteration))
+					buf.put_character (')')
+					buf.put_new_line
+					once_indexes.forth
+				end
+					-- Initialize indexes for process-relative once routines
+				once_indexes := global_onces
+				from
+					once_indexes.start
+				until
+					once_indexes.after
+				loop
+					buf.put_string ("RTOQS (")
+					buf.put_integer (once_indexes.key_for_iteration)
+					buf.put_character (',')
+					buf.put_string (encoder.feature_name (static_type_id, once_indexes.key_for_iteration))
+					buf.put_character (')')
+					buf.put_new_line
+					once_indexes.forth
+				end
+			end
+		end
+
+	generate_system_once_data_initialization (buf: like buffer) is
+			-- Generate initialization of system-wide once data fields
+		require
+			buffer_not_void: buf /= Void
+		local
+			once_indexes: like onces
+			initialization_macro: STRING
+		do
+			if final_mode and then system.has_multithreaded then
+					-- Set number of thread-relative once routines
+				buf.put_string ("EIF_once_count = ")
+				buf.put_integer (onces.count)
+				buf.put_character (';')
+				buf.put_new_line
+					-- Initialize process-relative once routine fields
+					-- FIXME: Manu: 02/11/2003: Mutex are created but they are never freed,
+					-- thus a memory leak if upon program termination the system does not 
+					-- get back the resources allocated for the mutex.
+				once_indexes := global_onces
+				initialization_macro := "RTOPI("
+				from
+					once_indexes.start
+				until
+					once_indexes.after
+				loop
+					buf.put_string (initialization_macro)
+					buf.put_integer (once_indexes.key_for_iteration)
+					buf.put_character (')')
+					buf.put_new_line
+					once_indexes.forth
+				end
+			end
+		end
+
 feature {NONE} -- Access: once manifest strings
 
 	once_manifest_string_count_table: HASH_TABLE [INTEGER, INTEGER]
@@ -286,6 +443,8 @@ feature -- Access: once manifest strings
 
 	generate_once_manifest_string_declaration (buf: like buffer) is
 			-- Generate declarations for once manifest strings.
+		require
+			buffer_not_void: buf /= Void
 		local
 			string_counts: like once_manifest_string_count_table
 			i: INTEGER
@@ -397,7 +556,6 @@ feature -- Access: once manifest strings
 			value: STRING
 		do
 			buf := buffer
-			buf.indent
 			class_once_manifest_strings := once_manifest_string_table
 			from
 				class_once_manifest_strings.start
@@ -436,7 +594,6 @@ feature -- Access: once manifest strings
 				end
 				class_once_manifest_strings.forth
 			end
-			buf.exdent
 		end
 
 	register_once_manifest_string (value: STRING; number: INTEGER) is
@@ -1412,20 +1569,29 @@ feature -- Clearing
 	clear_class_type_data is
 			-- Clear class-type-specific data.
 		do
-				-- Wipe out content of `global_onces'.
-			global_onces.wipe_out
+			if workbench_mode then
+					-- Wipe out content of `global_onces'.
+				global_onces.wipe_out
+					-- Wipe out content of `onces'.
+				onces.wipe_out
+			end
 				-- Wipe out once manifest strings records.
 			once_manifest_string_table.wipe_out
 		ensure
-			global_onces_is_empty: global_onces.is_empty
+			global_onces_is_empty: workbench_mode implies global_onces.is_empty
+			onces_is_empty: workbench_mode implies onces.is_empty
 			once_manifest_string_table_is_empty: once_manifest_string_table.is_empty
 		end
 
 	clear_system_data is
 			-- Clear system-wide data.
 		do
+			global_onces.wipe_out
+			onces.wipe_out
 			once_manifest_string_count_table.wipe_out
 		ensure
+			global_onces_is_empty: global_onces.is_empty
+			onces_is_empty: onces.is_empty
 			once_manifest_string_count_table_is_empty: once_manifest_string_count_table.is_empty
 		end
 
@@ -1492,6 +1658,7 @@ feature -- Inlining
 
 invariant
 	global_onces_not_void: global_onces /= Void
+	onces_not_void: onces /= Void
 	once_manifest_string_count_table_not_void: once_manifest_string_count_table /= Void
 	once_manifest_string_table_not_void: once_manifest_string_table /= Void
 	class_type_valid_with_current_type: class_type /= Void implies class_type.type = current_type

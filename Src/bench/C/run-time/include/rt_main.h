@@ -26,7 +26,14 @@
 extern "C" {
 #endif
 
-extern long EIF_bonce_count;		/* Nr. of once routines in bytecode */
+#if defined(WORKBENCH) || defined (EIF_THREADS)
+extern BODY_INDEX * EIF_once_indexes; /* Code indexes of registered once routines */
+#endif
+
+#ifdef EIF_THREADS
+extern BODY_INDEX * EIF_process_once_indexes; /* Code indexes of registered process-relative once routines */
+#endif
+
 extern void once_init (void);		/* Initialization and creation of once keys */
 extern char dinterrupt(void);
 extern void dserver(void);

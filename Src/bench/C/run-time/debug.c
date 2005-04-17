@@ -1537,17 +1537,34 @@ rt_public void drecord_bc(BODY_INDEX old_body_id, BODY_INDEX body_id, unsigned c
 
 	}
 
-	if (*addr) {
-		/* It's a once routine
-		 * Assign a key to it */
-		write_long ((char *) (addr + 1), EIF_once_count);
-		EIF_once_count++;	/* Increment dynamically the number of onces */
-			/* Allocate room for once values */
-		EIF_once_values = (EIF_once_value_t *) eif_realloc ((void *) EIF_once_values, EIF_once_count * sizeof *EIF_once_values);
-			/* needs eif_malloc: it crashes otherwise 
-			 * on some pure C-ansi compiler (SGI)*/
-		if (EIF_once_values == (EIF_once_value_t *) 0) /* Out of memory */
-			enomem(); /* Raise an out-of memory exceptions */
+	switch (*addr) {
+	case ONCE_MARK_THREAD_RELATIVE:
+			/* FIXME: provide implementation that ensures that
+			 * - once indexes are not freed
+			 * - EIF_once_values is reallocated in all threads
+			 * - EIF_once_count is updated
+			 * - GC tracks new addresses of once results
+			 * - new once result is properly initialized
+			 */
+		fatal_error ("Once routines cannot be dynamically plugged-in.");
+		break;
+#ifdef EIF_THREADS
+	case ONCE_MARK_PROCESS_RELATIVE:
+			/* FIXME: provide implementation that ensures that
+			 * - once indexes are not freed
+			 * - reallocation of EIF_process_once_values is synchronized
+			 * - EIF_process_once_count is updated
+			 * - GC tracks new addresses of once results
+			 * - new once result is properly initialized
+			 */
+		fatal_error ("Once routines cannot be dynamically plugged-in.");
+		break;
+#endif
+#ifdef MAY_PANIC
+	default:
+		if (*addr)
+			eif_panic("Invalid once mark.");
+#endif
 	}
 }
 

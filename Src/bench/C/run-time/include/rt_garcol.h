@@ -159,6 +159,20 @@ extern void st_truncate(register struct stack *stk);	/* Truncate stack if necess
 extern void st_wipe_out(register struct stchunk *chunk);/* Remove unneeded chunk from stack */
 extern void st_reset(register struct stack *stk);/* Clean stack */
 
+/* Once indexes:
+ * 	ALLOC_ONCE_INDEXES allocates array of once indexes
+ * 	FREE_ONCE_INDEXES frees array of once indexes
+ */
+#if defined(WORKBENCH) || defined(EIF_THREADS)
+extern void alloc_once_indexes ();
+extern void free_once_indexes ();
+#define ALLOC_ONCE_INDEXES	alloc_once_indexes()
+#define FREE_ONCE_INDEXES	free_once_indexes()
+#else
+#define ALLOC_ONCE_INDEXES
+#define FREE_ONCE_INDEXES
+#endif
+
 /* Once manifest string manipulation:
  * 	ALLOC_OMS(a) allocates array to store string objects and assigns it to `a'
  * 	FREE_OMS(a) frees previously allocated array `a'

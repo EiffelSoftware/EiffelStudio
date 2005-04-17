@@ -3,7 +3,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class CONSTANT_I 
+class CONSTANT_I
 
 inherit
 	ENCAPSULATED_I
@@ -177,113 +177,96 @@ feature -- C code generation
 			not_deferred: not is_deferred
 			to_generate_in: to_generate_in (class_type.associated_class)
 		local
-			type_i: TYPE_I
+			type_c: TYPE_C
 			internal_name: STRING
 			local_byte_context: BYTE_CONTEXT
-			class_id: INTEGER
+			local_is_once: BOOLEAN
 			header_buffer: GENERATION_BUFFER
-			special_once_generation: BOOLEAN
 		do
 			if used then
 				local_byte_context := byte_context
 				generate_header (buffer)
-				type_i := type.actual_type.type_i
+				type_c := type.actual_type.type_i.c_type
 				internal_name := Encoder.feature_name (class_type.static_type_id, body_index)
 				add_in_log (class_type, internal_name)
+
+					-- If constant is a string, it is the semantic of a once
+				if is_once then
+					local_is_once := True
+					local_byte_context.add_thread_relative_once (type_c, body_index)
+					if local_byte_context.workbench_mode then
+						buffer.put_string ("RTOID (")
+						buffer.put_string (internal_name)
+						buffer.put_character (')')
+						buffer.put_new_line
+						buffer.put_new_line
+					elseif not System.has_multithreaded then
+						header_buffer := local_byte_context.header_buffer
+						header_buffer.put_string ("RTOSHF (EIF_REFERENCE, ")
+						header_buffer.put_integer (body_index)
+						header_buffer.put_character (')')
+						header_buffer.put_new_line
+						header_buffer.put_new_line
+					end
+				end
+					
 					-- Generation of function's header
-				buffer.generate_function_signature ( type_i.c_type.c_string,
+				buffer.generate_function_signature (type_c.c_string,
 						internal_name, True, local_byte_context.header_buffer,
 						<<"Current">>, <<"EIF_REFERENCE">>)
 
 					-- Function's body
-					-- If constant is a string, it is the semantic of a once
-				if is_once then
-					if local_byte_context.workbench_mode or else System.has_multithreaded then
-						class_id := byte_context.original_class_type.static_type_id
-						buffer.put_string ("%TEIF_REFERENCE *PResult;%N%
-							%%Tif (MTOG((EIF_REFERENCE *),*(EIF_once_values + EIF_oidx_off")
-						buffer.put_integer (class_id)
-						buffer.put_string (" + ")
-						buffer.put_integer (local_byte_context.once_index)
-						buffer.put_string ("),PResult)) return *PResult;%N%
-							%%TPResult = (EIF_REFERENCE *) RTOC(0);%N%
-							%%TMTOS(*(EIF_once_values + EIF_oidx_off")
-						buffer.put_integer (class_id)
-						buffer.put_string (" + ")
-						buffer.put_integer (local_byte_context.once_index)
-						buffer.put_string ("),PResult);%N%
-							%%T*PResult = ")
-						value.generate (buffer)
-						buffer.put_character (';')
-						buffer.put_new_line
+				buffer.indent
 
-						if local_byte_context.workbench_mode then
-								-- Real body id to be stored in the id list of 
-								-- already called once routines.
-							buffer.put_string ("%TRTWO(")
-							buffer.put_real_body_id (real_body_id)
-							buffer.put_string (");")
-							buffer.put_new_line
-						end
-						buffer.put_string ("%Treturn *PResult")
+					-- If constant is a string, it is the semantic of a once
+				if local_is_once then
+					if local_byte_context.workbench_mode then
+						buffer.put_string ("RTOTC (")
+						buffer.put_string (internal_name)
+						buffer.put_character (',')
+						buffer.put_integer (real_body_id)
+						buffer.put_character (',')
+						value.generate (buffer)
+					elseif System.has_multithreaded then
+						buffer.put_string ("RTOUC (")
+						buffer.put_integer (local_byte_context.thread_relative_once_index (body_index))
+						buffer.put_character (',')
+						value.generate (buffer)
 					else
-						special_once_generation := True
-						header_buffer := local_byte_context.header_buffer
-						header_buffer.put_new_line
-						header_buffer.put_string ("extern EIF_REFERENCE ")
-						header_buffer.put_string (internal_name)
-						header_buffer.put_string ("_result;")
-						header_buffer.put_new_line
-						header_buffer.put_string ("RTOSH(");
-						header_buffer.put_string (internal_name);
-						header_buffer.put_character (')');
-						header_buffer.put_new_line
-						header_buffer.put_new_line
-					
+						buffer.put_string ("if (!RTOFN (")
+						buffer.put_integer (body_index)
+						buffer.put_string (",_succeeded)) {")
+						buffer.put_new_line
 						buffer.indent
-						buffer.put_string ("if (")
-						buffer.put_string (internal_name)
-						buffer.put_string ("_succeeded) return ")
-						buffer.put_string (internal_name)
-						buffer.put_string ("_result;")
+						buffer.put_string ("RTOFN (")
+						buffer.put_integer (body_index)
+						buffer.put_string (",_succeeded) = EIF_TRUE;")
 						buffer.put_new_line
-						buffer.put_string (internal_name)
-						buffer.put_string ("_succeeded = EIF_TRUE;")
+						buffer.put_string ("RTOC_NEW (RTOSR (")
+						buffer.put_integer (body_index)
+						buffer.put_string ("));")
 						buffer.put_new_line
-						buffer.put_string ("RTOC_NEW(")
-						buffer.put_string (internal_name)
-						buffer.put_string ("_result);")
-						buffer.put_new_line
-						buffer.put_string (internal_name)
-						buffer.put_string ("_result = ")
+						buffer.put_string ("RTOSR (")
+						buffer.put_integer (body_index)
+						buffer.put_string (") = ")
 						value.generate (buffer)
 						buffer.put_character (';')
-						buffer.put_new_line
-						buffer.put_string ("return ")
-						buffer.put_string (internal_name)
-						buffer.put_string ("_result;")
 						buffer.exdent
+						buffer.put_new_line
+						buffer.put_character ('}')
+						buffer.put_new_line
+						buffer.put_string ("return RTOSR(")
+						buffer.put_integer (body_index)
 					end
+					buffer.put_character (')')
 				else
-					buffer.indent
 					buffer.put_string ("return ")
-					type_i.c_type.generate_cast (buffer)
+					type_c.generate_cast (buffer)
 					value.generate (buffer)
-					buffer.exdent
 				end
+				buffer.put_new_line
+				buffer.exdent
 				buffer.put_string (";%N}%N")
-				if special_once_generation then
-					buffer.put_new_line
-					buffer.put_string ("EIF_REFERENCE ")
-					buffer.put_string (internal_name)
-					buffer.put_string ("_result = NULL;")
-					buffer.put_new_line
-					buffer.put_string ("RTOSD(");
-					buffer.put_string (internal_name);
-					buffer.put_character (')');
-					buffer.put_new_line
-					buffer.put_new_line
-				end
 			elseif not System.is_used (Current) then
 				System.removed_log_file.add (class_type, feature_name)
 			end
@@ -346,9 +329,9 @@ feature -- Byte code generation
 				-- Once mark and reserved space for once key.
 			if is_once then
 					-- The once mark
-				ba.append ('%/001/')
-					-- Allocate space for once key
-				ba.allocate_space (int32_c_type)
+				ba.append ({ONCE_BYTE_CODE}.once_mark_thread_relative)
+					-- Record routine body index
+				ba.append_integer_32 (body_index)
 			else
 					-- Not a once routine
 				ba.append ('%U')

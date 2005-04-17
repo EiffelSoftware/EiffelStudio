@@ -1286,6 +1286,19 @@ rt_public void reclaim(void)
 #endif
 
 			eif_free (EIF_once_values); /* have been allocated with eif_malloc */
+			EIF_once_values = (EIF_once_value_t *) 0;
+#ifdef EIF_THREADS
+			{
+				int i = EIF_process_once_count;
+				while (i > 0) {
+					i--;
+					eif_thr_mutex_destroy (EIF_process_once_values [i].mutex);
+				}
+			}
+
+			eif_free (EIF_process_once_values); /* Free array of process-relative once results. */
+#endif
+			FREE_ONCE_INDEXES; /* Free array of once indexes. */
 
 			FREE_OMS (EIF_oms); /* Free array of once manifest strings */
 
@@ -4674,7 +4687,125 @@ rt_public void register_oms (EIF_REFERENCE *address)
 	}
 }
 
+#if defined(WORKBENCH) || defined(EIF_THREADS)
+/*
+doc:	<routine name="alloc_once_indexes" export="shared">
+doc:		<summary>Allocate array to store once routine indexes during start-up.</summary>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>Not required when used during start-up in main thread.</synchronization>
+doc:	</routine>
+*/
+rt_shared void alloc_once_indexes (void)
+{
+	if (EIF_once_indexes == (BODY_INDEX *) 0) {
+			/* Indexes have not been allocated yet. */
+		EIF_once_indexes = (BODY_INDEX *) eif_calloc (eif_nb_org_routines, sizeof *EIF_once_indexes);
+		if (EIF_once_indexes == (BODY_INDEX *) 0) { /* Out of memory */
+			enomem ();
+		}
+	}
 #ifdef EIF_THREADS
+	if (EIF_process_once_indexes == (BODY_INDEX *) 0) {
+			/* Indexes have not been allocated yet. */
+		EIF_process_once_indexes = (BODY_INDEX *) eif_calloc (eif_nb_org_routines, sizeof *EIF_process_once_indexes);
+		if (EIF_process_once_indexes == (BODY_INDEX *) 0) { /* Out of memory */
+			enomem ();
+		}
+	}
+#endif
+}
+
+/*
+doc:	<routine name="free_once_indexes" export="shared">
+doc:		<summary>Free array of once routine indexes.</summary>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>Not required when used during start-up in main thread.</synchronization>
+doc:	</routine>
+*/
+rt_shared void free_once_indexes (void)
+{
+	if (EIF_once_indexes != (BODY_INDEX *) 0) {
+		eif_free (EIF_once_indexes);
+		EIF_once_indexes = (BODY_INDEX *) 0;
+	}
+#ifdef EIF_THREADS
+	if (EIF_process_once_indexes != (BODY_INDEX *) 0) {
+		eif_free (EIF_process_once_indexes);
+		EIF_process_once_indexes = (BODY_INDEX *) 0;
+	}
+#endif
+}
+
+/*
+doc:	<routine name="once_index" return_type="ONCE_INDEX" export="public">
+doc:		<summary>Calculate index of a once routine in an array of
+doc:		once routine results given its code index.</summary>
+doc:		<param name="code_id" type="BODY_INDEX">Code index of a once routine.</param>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>Not required when used during start-up in main thread.</synchronization>
+doc:	</routine>
+*/
+rt_public ONCE_INDEX once_index (BODY_INDEX code_id)
+{
+	BODY_INDEX * p = EIF_once_indexes;
+	ONCE_INDEX i = 0;
+	while (1)
+	{
+		BODY_INDEX index = p [i];
+		if (index == code_id) {
+				/* Once routine with this `code_id' is found. */
+				/* Use it. */
+			break;
+		}
+		else if (index == 0)
+		{
+				/* Once routine with this `code_id' is not found. */
+				/* Add it. */
+			p [i] = code_id;
+			EIF_once_count++;
+			break;
+		}
+		i++;
+	}
+	return i;
+}
+#endif
+
+#ifdef EIF_THREADS
+/*
+doc:	<routine name="process_once_index" return_type="ONCE_INDEX" export="public">
+doc:		<summary>Calculate index of a process-relative once routine in an array of
+doc:		process-relative once routine results given its code index.</summary>
+doc:		<param name="code_id" type="BODY_INDEX">Code index of a once routine.</param>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>Not required when used during start-up in main thread.</synchronization>
+doc:	</routine>
+*/
+rt_public ONCE_INDEX process_once_index (BODY_INDEX code_id)
+{
+	BODY_INDEX * p = EIF_process_once_indexes;
+	ONCE_INDEX i = 0;
+	while (1)
+	{
+		BODY_INDEX index = p [i];
+		if (index == code_id) {
+				/* Once routine with this `code_id' is found. */
+				/* Use it. */
+			break;
+		}
+		else if (index == 0)
+		{
+				/* Once routine with this `code_id' is not found. */
+				/* Add it. */
+			p [i] = code_id;
+			EIF_process_once_count++;
+			break;
+		}
+		i++;
+	}
+	return i;
+}
+
 /*
 doc:	<routine name="globalonceset" export="public">
 doc:		<summary>Insert a global once result `address' which is an EIF_REFERENCE into `global_once_set' so that GC can update `address' and track objects references by `address' during a collection.</summary>

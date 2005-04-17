@@ -226,7 +226,7 @@ feature -- Analyzis
 	generate is
 			-- Generate C code.
 		local
-			type_i: TYPE_I
+			type_c: TYPE_C
 			internal_name: STRING
 			name: STRING
 			buf: GENERATION_BUFFER
@@ -238,7 +238,7 @@ feature -- Analyzis
 			l_is_once := is_once
 
 				-- Generate the header "int foo(Current, args)"
-			type_i := real_type (result_type)
+			type_c := real_type (result_type).c_type
 
 				-- Function's name
 			internal_name := generated_c_feature_name
@@ -248,7 +248,7 @@ feature -- Analyzis
 
 				-- If it is a once, performs once declaration.
 			if l_is_once then
-				generate_once_declaration (internal_name, type_i.c_type.c_string, type_i.c_type.is_void)
+				generate_once_declaration (internal_name, type_c)
 			end
 
 				-- Generate reference to once manifest string field
@@ -277,7 +277,7 @@ feature -- Analyzis
 			end
 			args := argument_names
 			buf.generate_function_signature
-				(type_i.c_type.c_string, name, True,
+				(type_c.c_string, name, True,
 				 Context.header_buffer, args, argument_types)
 
 				-- Starting body of C routine
@@ -371,7 +371,7 @@ feature -- Analyzis
 				-- Now the postcondition
 			generate_postcondition
 
-			if not result_type.is_void then
+			if not type_c.is_void then
 					-- Function returns something. This can be done
 					-- by inner returns, so have some mercy
 					-- for lint and highlight the NOTREACHED status...
@@ -393,7 +393,7 @@ feature -- Analyzis
 			buf.exdent
 
 				-- End of C function
-			if l_is_once and not is_global_once then
+			if l_is_once then
 				buf.put_new_line
 				buf.put_string ("#undef Result")
 				buf.put_new_line
@@ -412,15 +412,15 @@ feature -- Analyzis
 			if l_is_once and then context.is_once_twofold then
 					-- Generate optimized stub for once routine.
 				buf.generate_function_signature
-					(type_i.c_type.c_string, internal_name, True,
+					(type_c.c_string, internal_name, True,
 					 Context.header_buffer, argument_names, argument_types)
 				buf.indent
-				if result_type.is_void then
+				if type_c.is_void then
 					buf.put_string ("RTOVP (")
 				else
 					buf.put_string ("return RTOVF (")
 				end
-				buf.put_string (internal_name)
+				buf.put_integer (body_index)
 				buf.put_character (',')
 				buf.put_string (internal_name)
 				buf.put_string ("_body,(")
@@ -516,7 +516,7 @@ end
 			end
 		end -- generate_return_exp
 
-	generate_once_declaration (a_name, a_type: STRING; is_procedure: BOOLEAN) is
+	generate_once_declaration (a_name: STRING; a_type: TYPE_C) is
 			-- Generate static variable and their declarations used by
 			-- generation of opimized once functions.
 		require
@@ -1055,23 +1055,12 @@ end
 			ctype: TYPE_C
 			type_i: TYPE_I
 			buf: GENERATION_BUFFER
-			l_global_once: BOOLEAN
 		do
-			l_global_once := is_global_once
-			if not is_once or else l_global_once then
+			if not is_once then
 				buf := buffer
 				type_i := real_type (result_type)
 				ctype := type_i.c_type
-				if l_global_once then
-					buf.put_string ("static ")
-				end
-				if l_global_once then
-						-- Need `volatile' qualifier for global once in
-						-- multithreaded environment, to ensure that we
-						-- read the value in memory and not value from
-						-- the processor cache.
-					buf.put_string ("volatile ")
-				elseif may_need_volatile and then type_i.is_basic then
+				if may_need_volatile and then type_i.is_basic then
 					buf.put_string ("EIF_VOLATILE ")
 				end
 				ctype.generate (buf)

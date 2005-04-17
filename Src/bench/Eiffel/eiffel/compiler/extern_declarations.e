@@ -45,13 +45,12 @@ feature -- Settings
 			attribute_tables.put (attr_table.twin)
 		end
 
-	add_once (type: TYPE_C; once_name: STRING) is
+	add_once (type: TYPE_C; code_index: INTEGER) is
 			-- Add `once_name' to current extern declarations.
 		require
 			type__not_void: type /= Void
-			once_name_not_void: once_name /= Void
 		do
-			onces_table.put (type, once_name.twin)
+			onces_table.put (type, code_index)
 		end
 
 	add_type_table (type_table: STRING) is
@@ -156,7 +155,7 @@ feature -- Settings
 			local_routine_tables: SEARCH_TABLE [STRING]
 			local_attribute_tables: SEARCH_TABLE [STRING]
 			local_type_tables: SEARCH_TABLE [STRING]
-			local_onces: HASH_TABLE [TYPE_C, STRING]
+			local_onces: like onces_table
 		do
 			from
 				local_routines := routines
@@ -176,14 +175,14 @@ feature -- Settings
 			until
 				local_onces.after
 			loop
-				if not local_onces.item_for_iteration.is_void then
-					buffer.put_string ("%Nextern ")
-					local_onces.item_for_iteration.generate (buffer)
-					buffer.put_string (local_onces.key_for_iteration)
-					buffer.put_string ("_result;")
+				if local_onces.item_for_iteration.is_void then
+					buffer.put_string ("RTOSHP(")
+				else
+					buffer.put_string ("RTOSHF(")
+					buffer.put_string (local_onces.item_for_iteration.c_string)
+					buffer.put_character (',')
 				end
-				buffer.put_string ("%NRTOSH(")
-				buffer.put_string (local_onces.key_for_iteration)
+				buffer.put_integer (local_onces.key_for_iteration)
 				buffer.put_character (')')
 				local_onces.forth
 			end
@@ -242,7 +241,7 @@ feature {NONE} -- Attributes
 	routines: HASH_TABLE [TYPE_C, STRING]
 			-- Routine names
 
-	onces_table: HASH_TABLE [TYPE_C, STRING]
+	onces_table: HASH_TABLE [TYPE_C, INTEGER]
 			-- Once names
 
 end

@@ -229,11 +229,14 @@ rt_private void address(int32 fid, int stype, int for_rout_obj);					/* Address 
 rt_private void assign(long offset, uint32 type);									/* Assignment in an attribute */
 
 /* Calling protocol */
+rt_private void put_once_result (struct item * ptr, long int rtype, MTOT OResult); /* Save local result to permanent once storage */
+rt_private void get_once_result (MTOT OResult, long int rtype, struct item *ptr);   /* Retrieve local result from permanent once storage */
 rt_private void init_var(struct item *ptr, long int type, EIF_REFERENCE current_ref); /* Initialize to 0 a variable entity */
 rt_private void init_registers(void);			/* Intialize registers in callee */
 rt_private void allocate_registers(void);		/* Allocate the register array */
 rt_shared void sync_registers(struct stochunk *stack_cur, struct item *stack_top); /* Resynchronize the register array */
 rt_private void pop_registers(void);						/* Remove local vars and arguments */
+rt_private void create_expanded_locals (struct stochunk * scur, struct item * stop); /* Initialize expanded locals and result (if required) */
 
 /* Operational stack handling routines */
 rt_public struct item *opush(register struct item *val);	/* Push one value on op stack */
@@ -285,8 +288,6 @@ extern void undiscard_breakpoints(void);	/* un-discard all breakpoints. */
 
 /* Macros to handle exceptions in routine body:
  * SET_RESCUE - set rescue handler (if any)
- * ENTER_BODY - enter body of a routine
- * LEAVE_BODY - leave body of a routine
  */
 
 #define SET_RESCUE                                                            \
@@ -301,64 +302,6 @@ extern void undiscard_breakpoints(void);	/* un-discard all breakpoints. */
 				/* Jump to rescue clause. */                  \
 			IC = rescue;                                          \
 		}                                                             \
-	}
-
-#define ENTER_BODY(i)                                                                \
-	if (is_once) {                                                               \
-			/* Check if once routine was executed earlier. */            \
-		if (MTOD(i)) {                                                       \
-				/* Yes, it was executed.      */                     \
-				/* Ckeck if it failed or not. */                     \
-			if (MTOF(i)) {                                               \
-					/* Raise its exception. */                   \
-				xraise (MTOF(i));                                    \
-			}                                                            \
-				/* Pop registers */                                  \
-			pop_registers();	                                     \
-			if (rescue) {                                                \
-					/* End routine with rescue clause. */        \
-				RTEOK;                                               \
-			} else {                                                     \
-					/* Remove execution vector from stack. */    \
-				RTEE;                                                \
-			}                                                            \
-			return;                                                      \
-		} else {                                                             \
-				/* This is a first-time call. */                     \
-				/* Declare variables for exception handling. */      \
-			struct ex_vect * exvecto;                                    \
-			jmp_buf exenvo;                                              \
-				/* Mark once routine as executed. */                 \
-			MTOM(OResult);                                               \
-				/* Record execution vector to catch exception. */    \
-			exvecto = extre ();                                          \
-			if (!setjmp(exenvo)) {                                       \
-					/* Set catch address. */                     \
-				exvect->ex_jbuf = &exenvo;                           \
-					/* Update routine exception vector. */       \
-				exvect = exvecto;                                    \
-				dexset(exvect);                                      \
-					/* Register rescue handler (if any). */      \
-				SET_RESCUE;                                          \
-			} else {                                                     \
-					/* Exception occurred. */                    \
-					/* Record it for future use. */              \
-				MTOE(i, echval);                                     \
-					/* Raise the exception. */                   \
-				xraise (MTOF(i));                                    \
-			}                                                            \
-		}                                                                    \
-	} else {                                                                     \
-			/* Register rescue handler (if any). */                      \
-		SET_RESCUE;                                                          \
-	}
-
-#define LEAVE_BODY                                                  \
-	if (is_once) {                                              \
-			/* Remove execution vector to restore    */ \
-			/* previous exception catch point.       */ \
-		exvect = extrl();                                   \
-		dexset(exvect);                                     \
 	}
 
 rt_public void metamorphose_top()
@@ -555,14 +498,17 @@ rt_private void interpret(int flag, int where)
 	int volatile assert_type;				/* Assertion type */
 	char volatile pre_success;				/* Flag for precondition success */ 
 	long volatile rtype;					/* Result type */
-	EIF_REFERENCE * volatile PResult = NULL;	/* Result address for once */
 	MTOT OResult = (MTOT) 0;				/* Item for once data */
+#ifdef EIF_THREADS
+	EIF_process_once_value_t * POResult = NULL;	/* Process-relative once data */
+#endif
 	int32 volatile rout_id;					/* Routine id */
 	BODY_INDEX volatile body_id = 0;		/* Body id of routine */
 	int volatile current_trace_level;		/* Saved call level for trace, only needed when routine is retried */
 	char ** volatile saved_prof_top;		/* Saved top of `prof_stack' */
 	long volatile once_key;			/* Index in once table */
 	int  volatile is_once;			/* Is it a once routine? */
+	int  volatile is_process_once;		/* Is once routine process-relative? */
 	RTSN;							/* Save nested flag */
  
 #ifdef CONCURRENT_EIFFEL
@@ -584,10 +530,20 @@ rt_private void interpret(int flag, int where)
 	saved_assertion = in_assertion;
 	is_once = 0;
 
-	if (*IC++)
+	switch (*IC++)
 	{
+	case ONCE_MARK_THREAD_RELATIVE:
 		is_once  = 1;
+		is_process_once = 0;
 		once_key = get_int32(&IC);
+		break;
+#ifdef EIF_THREADS
+	case ONCE_MARK_PROCESS_RELATIVE:
+		is_once  = 1;
+		is_process_once = 1;
+		once_key = get_int32(&IC);
+		break;
+#endif
 	}
 
 	for (;;) {
@@ -609,79 +565,6 @@ rt_private void interpret(int flag, int where)
 		body_id = (BODY_INDEX) get_int32(&IC);	/* Get the body id */
 		rtype = get_int32(&IC);				/* Get the result type */
 		argnum = get_int16(&IC);			/* Get the argument number */
-	
-		if (is_once) {				/* If it is a once */
-
-				/* MTOI = MT Once Item */
-			OResult = MTOI(once_key);
-				/* MTOD = MT Once Done */
-			if (!MTOD(OResult))
-			{
-				/* Allocate space for 'result' then thread-specific (if MT
-				   mode) store it via the key table and initialize `Result'
-				   to its default value. */
-
-				if ((rtype & SK_HEAD) != SK_VOID) 
-				{
-					switch (rtype & SK_HEAD) 
-					{
-						case SK_BOOL:
-								MTOP(EIF_BOOLEAN, OResult, EIF_FALSE);
-								break;
-						case SK_CHAR:   
-								MTOP(EIF_CHARACTER, OResult, (EIF_CHARACTER) 0);
-								break;
-						case SK_WCHAR:   
-								MTOP(EIF_WIDE_CHAR, OResult, (EIF_WIDE_CHAR) 0);
-								break;
-						case SK_UINT8:    
-								MTOP(EIF_NATURAL_8, OResult, (EIF_NATURAL_8) 0);
-								break;
-						case SK_UINT16:    
-								MTOP(EIF_NATURAL_16, OResult, (EIF_NATURAL_16) 0);
-								break;
-						case SK_UINT32:    
-								MTOP(EIF_NATURAL_32, OResult, (EIF_NATURAL_32) 0);
-								break;
-						case SK_UINT64:    
-								MTOP(EIF_NATURAL_64, OResult, (EIF_NATURAL_64) 0);
-								break;
-						case SK_INT8:    
-								MTOP(EIF_INTEGER_8, OResult, (EIF_INTEGER_8) 0);
-								break;
-						case SK_INT16:    
-								MTOP(EIF_INTEGER_16, OResult, (EIF_INTEGER_16) 0);
-								break;
-						case SK_INT32:    
-								MTOP(EIF_INTEGER_32, OResult, (EIF_INTEGER_32) 0);
-								break;
-						case SK_INT64:    
-								MTOP(EIF_INTEGER_64, OResult, (EIF_INTEGER_64) 0);
-								break;
-						case SK_REAL32:  
-								MTOP(EIF_REAL_32, OResult, (EIF_REAL_32) 0);
-								break;
-						case SK_REAL64: 
-								MTOP(EIF_REAL_64, OResult, (EIF_REAL_64) 0);
-								break;
-						case SK_POINTER:
-								MTOP(EIF_POINTER, OResult, (EIF_POINTER) 0);
-								break;
-						case SK_BIT:
-						case SK_EXP:
-						case SK_REF:    
-								PResult = RTOC(0);
-								MTOP(EIF_REFERENCE, OResult, PResult);
-								break;
-					default:        
-								eif_panic(MTC "invalid result type");
-					}
-				}
-				onceadd(body_id);	/* Add this routine to the list of already */
-							/* called once routines */
-			}
-		}
-
 		locnum = get_int16(&IC);		/* Get the local number */
 		init_registers(MTC);		/* Initialize the registers */
 
@@ -715,6 +598,18 @@ rt_private void interpret(int flag, int where)
 		}
 
 		init_var(iresult, rtype, icurrent->it_ref);
+		if (is_once) {				/* If it is a once */
+
+#ifdef EIF_THREADS
+			if (is_process_once) {
+				POResult = EIF_process_once_values + once_key;
+				OResult = &(POResult -> value);
+			}
+			else
+#endif
+				/* MTOI = MT Once Item */
+			OResult = MTOI(once_key);
+		}
 
 		switch(flag) {				/* What are we interpreting? */
 		case INTERP_CMPD:			/* A compound (i.e. Eiffel feature) */
@@ -765,99 +660,7 @@ rt_private void interpret(int flag, int where)
 			rescue = IC + offset;	/* Compute rescue start */
 		}
 
-		switch (flag) {
-		case INTERP_CMPD: {
-			int i;
-			uint32 type;
-			unsigned long stagval;
-
-			/* After expanded local entities creation, registers may have
-			 * to be resynchronized because RTLN could call the interpreter
-			 * through creation procedure of expanded attributes.
-			 */
-			for (i = 1; i <= locnum; i++) {
-
-				last = loc(i);
-				type = last->type;
-				switch (type & SK_HEAD) {
-				case SK_EXP:
-					stagval = tagval;
-					last->type = SK_POINTER;	/* GC: wait for malloc */
-					last->it_ref = RTLX(type & SK_DTYPE);
-					last->type = SK_EXP;	
-					if (tagval != stagval) 
-						sync_registers(MTC scur, stop);
-					break;
-				case SK_BIT:
-					stagval = tagval;
-					last->type = SK_POINTER;	/* GC: wait for malloc */
-					last->it_bit = RTLB(type & SK_BMASK);
-					if (tagval != stagval) 
-						sync_registers(MTC scur, stop);
-					last->type = SK_BIT;
-					break;
-				default:
-					break;
-				}							
-			}
-			last = iresult;
-			if (is_once && MTOD(OResult) && (rtype & SK_HEAD) != SK_VOID) {
-				/* Already executed. 'OResult' points to once item */
-				/* Retrieve last value */
-
-				switch (rtype & SK_HEAD) 
-				{
-					case SK_BOOL:
-					case SK_CHAR: last->it_char = MTOR(EIF_CHARACTER, OResult); break;
-					case SK_WCHAR: last->it_wchar = MTOR(EIF_WIDE_CHAR, OResult); break;
-					case SK_UINT8: last->it_uint8 = MTOR(EIF_NATURAL_8, OResult); break;
-					case SK_UINT16: last->it_uint16 = MTOR(EIF_NATURAL_16, OResult); break;
-					case SK_UINT32: last->it_uint32 = MTOR(EIF_NATURAL_32, OResult); break;
-					case SK_UINT64: last->it_uint64 = MTOR(EIF_NATURAL_64, OResult); break;
-					case SK_INT8: last->it_int8 = MTOR(EIF_INTEGER_8, OResult); break;
-					case SK_INT16: last->it_int16 = MTOR(EIF_INTEGER_16, OResult); break;
-					case SK_INT32: last->it_int32 = MTOR(EIF_INTEGER_32, OResult); break;
-					case SK_INT64: last->it_int64 = MTOR(EIF_INTEGER_64, OResult); break;
-					case SK_REAL32: last->it_real32 = MTOR(EIF_REAL_32, OResult); break;
-					case SK_REAL64: last->it_real64 = MTOR(EIF_REAL_64, OResult); break;
-					case SK_POINTER: last->it_ptr = MTOR(EIF_POINTER, OResult); break;
-					case SK_BIT:
-					case SK_EXP:
-					case SK_REF:
-							PResult = MTOR(EIF_REFERENCE, OResult);
-							last->it_ref = *PResult;
-							break;
-					default:
-							eif_panic(MTC "invalid result type");
-				}
-			}
-			type = last->type;
-			switch (type & SK_HEAD) {
-			case SK_EXP:
-				stagval = tagval;
-				last->type = SK_POINTER;		/* For GC */
-					/* TODO: what happens to value assigned for once function before? */
-				last->it_ref = RTLX(type & SK_DTYPE);	
-				last->type = SK_EXP;
-				if (tagval != stagval)
-					sync_registers(MTC scur, stop);
-				if (is_once) {
-					*PResult = last->it_ref;
-				}
-				break;
-			case SK_BIT:
-				last->type = SK_POINTER;    /* GC: wait for malloc */
-					/* TODO: what happens to value assigned for once function before? */
-				last->it_bit = RTLB(type & SK_BMASK);
-				last->type = type;
-				if (is_once) {
-					*PResult = last->it_bit;
-				}
-				break;
-			default:
-				break;
-			}
-
+		if (flag == INTERP_CMPD) {
 			if (rescue) {	/* If there is a rescue clause */
 #ifdef ISE_GC
 				l_top = loc_set.st_top;		/* Save C local stack */
@@ -870,15 +673,10 @@ rt_private void interpret(int flag, int where)
 				current_trace_level = trace_call_level;	/* Save trace call level */
 				if (prof_stack) saved_prof_top = prof_stack->st_top;
 			}
-		}
-			break;
-		case INTERP_INVA:
-			break;
-		default:
-			eif_panic(MTC RT_BOTCHED_MSG);
+
 		}
 		if (*IC != BC_PRECOND) {
-			ENTER_BODY(OResult); /* Start execution of a routine body. */
+			goto enter_body; /* Start execution of a routine body. */
 		}
 		break;
 
@@ -941,13 +739,12 @@ rt_private void interpret(int flag, int where)
 		dprintf(2)("BC_PRECOND\n");
 #endif
 		offset = get_int32(&IC);
+		pre_success = '\01';
 		if (!(~in_assertion & WASC(icur_dtype) & CK_REQUIRE)) {
 				/* No precondition check? */
 			IC += offset; /* Skip preconditions */
-			ENTER_BODY(OResult); /* Start execution of a routine body. */
+			goto enter_body; /* Start execution of a routine body. */
 		}
-
-		pre_success = '\01';
 		break;
 
 	/*
@@ -1367,28 +1164,7 @@ rt_private void interpret(int flag, int where)
 		 * feature which is going to call this once feature again.
 		 */
 		if (is_once) {
-			last = iresult;
-			switch (rtype & SK_HEAD) 
-			{
-				case SK_BOOL: MTOP(EIF_BOOLEAN, OResult, last->it_char); break;
-				case SK_CHAR: MTOP(EIF_CHARACTER, OResult, last->it_char); break;
-				case SK_WCHAR: MTOP(EIF_WIDE_CHAR, OResult, last->it_wchar); break;
-				case SK_UINT8: MTOP(EIF_NATURAL_8, OResult, last->it_uint8); break;
-				case SK_UINT16: MTOP(EIF_NATURAL_16, OResult, last->it_uint16); break;
-				case SK_UINT32: MTOP(EIF_NATURAL_32, OResult, last->it_uint32); break;
-				case SK_UINT64: MTOP(EIF_NATURAL_64, OResult, last->it_uint64); break;
-				case SK_INT8: MTOP(EIF_INTEGER_8, OResult, last->it_int8); break;
-				case SK_INT16: MTOP(EIF_INTEGER_16, OResult, last->it_int16); break;
-				case SK_INT32: MTOP(EIF_INTEGER_32, OResult, last->it_int32); break;
-				case SK_INT64: MTOP(EIF_INTEGER_64, OResult, last->it_int64); break;
-				case SK_REAL32: MTOP(EIF_REAL_32, OResult, last->it_real32); break;
-				case SK_REAL64: MTOP(EIF_REAL_64, OResult, last->it_real64); break;
-				case SK_POINTER: MTOP(EIF_POINTER, OResult, last->it_ptr); break;
-				case SK_BIT:
-				case SK_EXP:
-				case SK_REF:
-						*PResult = last->it_ref; break;
-			}
+			put_once_result (iresult, rtype, OResult);
 		}
 		break;
 
@@ -1411,7 +1187,7 @@ rt_private void interpret(int flag, int where)
 				case SK_BIT:
 				case SK_EXP:
 				case SK_REF:	/* See below */ 
-					*PResult = last->it_ref;
+					*(OResult->result.EIF_REFERENCE_result) = last->it_ref;
 					break;
 				}
 			}
@@ -1574,7 +1350,7 @@ rt_private void interpret(int flag, int where)
 		 */
 		if (is_once) {
 			last = iresult;
-			*PResult = last->it_ref;
+			*(OResult->result.EIF_REFERENCE_result) = last->it_ref;
 		}
 		break;
 
@@ -1798,8 +1574,8 @@ rt_private void interpret(int flag, int where)
 		if (!pre_success) {
 			RTCF;
 		}
-		ENTER_BODY(OResult); /* Start execution of a routine body. */
-		break;
+		goto enter_body; /* Start execution of a routine body. */
+		/* break; */
 
 	/*
 	 * Go to the body of the routine 
@@ -3273,9 +3049,28 @@ rt_private void interpret(int flag, int where)
 		if (is_nested)		/* Nested feature call (dot notation) */
 			icheck_inv(MTC icurrent->it_ref, scur, stop, 1);	/* Invariant */
 		pop_registers();	/* Pop registers */
-		LEAVE_BODY;		/* Exit rutine body. */
+		/* leave_body: */
+			/* Exit rutine body. */
+		if (is_once) {
+				/* Remove execution vector to restore    */
+				/* previous exception catch point.       */
+			exvect = extrl();
+			dexset(exvect);
+#ifdef EIF_THREADS
+			if (is_process_once) {
+					/* Clear field that holds locking thread id. */
+				POResult -> thread_id = NULL;
+					/* Ensure memory is flushed (if required). */
+				RTOPMBW;
+					/* Mark evaluation as completed. */
+				POResult -> completed = EIF_TRUE;
+					/* Unlock mutex. */
+				RTOPLU (POResult -> mutex);
+			}
+#endif /* EIF_THREADS */
+		}
 		if (rescue) {
-			RTEOK;	/* ends routine with rescue clause by cleaning the trace stack */
+			RTEOK;	/* end routine with rescue clause by cleaning the trace stack */
 		} else {
 			RTEE;	/* remove execution vector from stack */
 		}
@@ -3291,6 +3086,132 @@ rt_private void interpret(int flag, int where)
 	default:
 		eif_panic(MTC "illegal opcode");
 		/* NOTREACHED */
+	}
+	continue;
+		/* Setup data on entering routine body */
+	enter_body:
+	if (is_once) {
+		EIF_BOOLEAN was_executed = EIF_FALSE;
+#ifdef EIF_THREADS
+		if (is_process_once) {
+				/* Try to lock a mutex. */
+			if (RTOPLT (POResult -> mutex)) {
+					/* Mutex has been locked.                       */
+					/* Check if once evaluation has been completed. */
+				was_executed = POResult -> completed;
+				if (!was_executed) {
+						/* Evaluation is not completed. */
+						/* Check if evaluation is started earlier. */
+					was_executed = MTOD(OResult);
+					if (!was_executed) {
+							/* Evaluation has not been started yet.   */
+							/* Record thread id and start evaluation. */
+						POResult -> thread_id = eif_thr_thread_id();
+					}
+				}
+				if (was_executed) {
+						/* Unlock mutex. */
+					RTOPLU (POResult -> mutex);
+				}
+			}
+			else {
+					/* Mutex cannot be locked.      */
+					/* Evaluation has been started. */
+					/* Let it to complete.          */
+				RTOPW (POResult -> mutex, POResult -> thread_id);
+				was_executed = EIF_TRUE;
+			}
+		}
+		else
+#endif /* EIF_THREADS */
+		was_executed = MTOD(OResult);
+
+			/* Check if once routine was executed earlier. */
+		if (was_executed) {
+				/* Yes, it was executed.      */
+				/* Ckeck if it failed or not. */
+			if (MTOF(OResult)) {
+					/* Raise its exception. */
+				xraise (MTOF(OResult));
+			}
+				/* Retrieve once result. */
+			get_once_result (OResult, rtype, iresult);
+				/* Pop registers */
+			pop_registers();
+			if (rescue) {
+					/* End routine with rescue clause. */
+				RTEOK;
+			} else {
+					/* Remove execution vector from stack. */
+				RTEE;
+			}
+			return;
+		} else {
+				/* This is a first-time call. */
+				/* Declare variables for exception handling. */
+			struct ex_vect * exvecto;
+			jmp_buf exenvo;
+				/* Mark once routine as executed. */
+			MTOM(OResult);
+				/* Record execution vector to catch exception. */
+			exvecto = extre ();
+			if (!setjmp(exenvo)) {
+					/* Set catch address. */
+				exvect->ex_jbuf = &exenvo;
+					/* Update routine exception vector. */
+				exvect = exvecto;
+				dexset(exvect);
+				switch (rtype & SK_HEAD)
+				{
+				case SK_BIT:
+				case SK_EXP:
+				case SK_REF:
+						/* Register once result for GC. */
+#ifdef EIF_THREADS
+					if (is_process_once) {
+						MTOP(EIF_REFERENCE, OResult, &(POResult -> reference));
+						RTOC_GLOBAL(*MTOR(EIF_REFERENCE, OResult));
+					}
+					else
+#endif
+					MTOP(EIF_REFERENCE, OResult, RTOC(0));
+					break;
+				}
+				create_expanded_locals (scur, stop);
+					/* Initialize permanent storage */
+				put_once_result (iresult, rtype, OResult);
+					/* FIXME: register process-relative onces. *
+					/* Mark this once routine as executed. */
+				onceadd(body_id);
+					/* Register rescue handler (if any). */
+				SET_RESCUE;
+			} else {
+					/* Exception occurred. */
+					/* Record it for future use. */
+				MTOE(OResult, echval);
+#ifdef EIF_THREADS
+				if (is_process_once) {
+						/* Clear field that holds locking thread id. */
+					POResult -> thread_id = NULL;
+						/* Ensure memory is flushed (if required). */
+					RTOPMBW;
+						/* Mark evaluation as completed. */
+					POResult -> completed = EIF_TRUE;
+						/* Unlock mutex. */
+					RTOPLU (POResult -> mutex);
+				}
+#endif /* EIF_THREADS */
+					/* Raise the exception. */
+				xraise (echval);
+			}
+		}
+	} else {
+		if (flag == INTERP_CMPD) {
+				/* Initialize expanded locals */
+			create_expanded_locals (scur, stop);
+		}
+			/* Register rescue handler (if any). */
+		SET_RESCUE;
 	}
 	}							/* Remember: indentation was wrong--RAM */
 	/* NOTREACHED */
@@ -4642,6 +4563,61 @@ rt_private void init_var(struct item *ptr, long int type, EIF_REFERENCE current_
 	}
 }
 
+rt_private void put_once_result (struct item *ptr, long int rtype, MTOT OResult)
+{
+	switch (rtype & SK_HEAD) 
+	{
+	case SK_BOOL:    MTOP(EIF_BOOLEAN,    OResult, ptr->it_char);   break;
+	case SK_CHAR:    MTOP(EIF_CHARACTER,  OResult, ptr->it_char);   break;
+	case SK_WCHAR:   MTOP(EIF_WIDE_CHAR,  OResult, ptr->it_wchar);  break;
+	case SK_UINT8:   MTOP(EIF_NATURAL_8,  OResult, ptr->it_uint8);  break;
+	case SK_UINT16:  MTOP(EIF_NATURAL_16, OResult, ptr->it_uint16); break;
+	case SK_UINT32:  MTOP(EIF_NATURAL_32, OResult, ptr->it_uint32); break;
+	case SK_UINT64:  MTOP(EIF_NATURAL_64, OResult, ptr->it_uint64); break;
+	case SK_INT8:    MTOP(EIF_INTEGER_8,  OResult, ptr->it_int8);   break;
+	case SK_INT16:   MTOP(EIF_INTEGER_16, OResult, ptr->it_int16);  break;
+	case SK_INT32:   MTOP(EIF_INTEGER_32, OResult, ptr->it_int32);  break;
+	case SK_INT64:   MTOP(EIF_INTEGER_64, OResult, ptr->it_int64);  break;
+	case SK_REAL32:  MTOP(EIF_REAL_32,    OResult, ptr->it_real32); break;
+	case SK_REAL64:  MTOP(EIF_REAL_64,    OResult, ptr->it_real64); break;
+	case SK_POINTER: MTOP(EIF_POINTER,    OResult, ptr->it_ptr);    break;
+	case SK_BIT:
+	case SK_EXP:
+	case SK_REF:
+		*(OResult->result.EIF_REFERENCE_result) = ptr->it_ref; break;
+	}
+}
+
+rt_private void get_once_result (MTOT OResult, long int rtype, struct item *ptr)
+{
+	switch (rtype & SK_HEAD) 
+	{
+	case SK_BOOL:
+	case SK_CHAR:    ptr->it_char   = MTOR(EIF_CHARACTER,  OResult); break;
+	case SK_WCHAR:   ptr->it_wchar  = MTOR(EIF_WIDE_CHAR,  OResult); break;
+	case SK_UINT8:   ptr->it_uint8  = MTOR(EIF_NATURAL_8,  OResult); break;
+	case SK_UINT16:  ptr->it_uint16 = MTOR(EIF_NATURAL_16, OResult); break;
+	case SK_UINT32:  ptr->it_uint32 = MTOR(EIF_NATURAL_32, OResult); break;
+	case SK_UINT64:  ptr->it_uint64 = MTOR(EIF_NATURAL_64, OResult); break;
+	case SK_INT8:    ptr->it_int8   = MTOR(EIF_INTEGER_8,  OResult); break;
+	case SK_INT16:   ptr->it_int16  = MTOR(EIF_INTEGER_16, OResult); break;
+	case SK_INT32:   ptr->it_int32  = MTOR(EIF_INTEGER_32, OResult); break;
+	case SK_INT64:   ptr->it_int64  = MTOR(EIF_INTEGER_64, OResult); break;
+	case SK_REAL32:  ptr->it_real32 = MTOR(EIF_REAL_32,    OResult); break;
+	case SK_REAL64:  ptr->it_real64 = MTOR(EIF_REAL_64,    OResult); break;
+	case SK_POINTER: ptr->it_ptr    = MTOR(EIF_POINTER,    OResult); break;
+	case SK_BIT:
+	case SK_EXP:
+	case SK_REF:
+		ptr->it_ref = *MTOR(EIF_REFERENCE, OResult);
+		break;
+	case SK_VOID:
+		break;
+	default:
+		eif_panic(MTC "invalid result type");
+	}
+}
+
 rt_private void init_registers(void)
 {
 	/* Upon entry in a new feature, given that locnum and argnum are set,
@@ -4846,6 +4822,68 @@ rt_private void pop_registers(void)
 		memcpy (result, &saved_result, ITEM_SZ);
 	}
 }
+
+
+/* Initialize expanded locals and result (if required) */
+rt_private void create_expanded_locals (
+	struct stochunk * scur,		/* Current chunk (stack context) */
+	struct item * stop			/* To save stack context */
+)
+{
+	RT_GET_CONTEXT
+	int i;
+	struct item * last;	/* Last pushed value */
+	uint32 type;
+	unsigned long stagval;
+
+		/* After expanded local entities creation, registers may have
+		 * to be resynchronized because RTLN could call the interpreter
+		 * through creation procedure of expanded attributes.
+		 */
+	for (i = 1; i <= locnum; i++) {
+		last = loc(i);
+		type = last->type;
+		switch (type & SK_HEAD) {
+		case SK_EXP:
+			stagval = tagval;
+			last->type = SK_POINTER;	/* GC: wait for malloc */
+			last->it_ref = RTLX(type & SK_DTYPE);
+			last->type = SK_EXP;
+			if (tagval != stagval)
+				sync_registers(MTC scur, stop);
+			break;
+		case SK_BIT:
+			stagval = tagval;
+			last->type = SK_POINTER;	/* GC: wait for malloc */
+			last->it_bit = RTLB(type & SK_BMASK);
+			last->type = SK_BIT;
+			if (tagval != stagval)
+				sync_registers(MTC scur, stop);
+			break;
+		}							
+	}
+	last = iresult;
+	type = last->type;
+	switch (type & SK_HEAD) {
+	case SK_EXP:
+		stagval = tagval;
+		last->type = SK_POINTER;		/* For GC */
+		last->it_ref = RTLX(type & SK_DTYPE);	
+		last->type = SK_EXP;
+		if (tagval != stagval)
+			sync_registers(MTC scur, stop);
+		break;
+	case SK_BIT:
+		stagval = tagval;
+		last->type = SK_POINTER;    /* GC: wait for malloc */
+		last->it_bit = RTLB(type & SK_BMASK);
+		last->type = SK_BIT;
+		if (tagval != stagval)
+			sync_registers(MTC scur, stop);
+		break;
+	}
+}
+
 
 /*
  * Operational stack handling.

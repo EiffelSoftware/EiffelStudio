@@ -114,8 +114,8 @@ feature -- STatus report
 	has_parsing_type: BOOLEAN is
 			-- Has parsing type been specified?
 		do
-			Result := not il_parser and not type_parser and not expression_parser and
-				not indexing_parser and not entity_declaration_parser
+			Result := il_parser or type_parser or expression_parser or
+				indexing_parser or entity_declaration_parser
 		end
 
 feature -- Initialization

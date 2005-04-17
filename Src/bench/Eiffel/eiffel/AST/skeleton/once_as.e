@@ -34,7 +34,6 @@ feature -- Access
 			-- Byte code for once body
 		local
 			body: FEATURE_AS
-			is_global_once: BOOLEAN
 		do
 			create Result
 			if compound /= Void then
@@ -47,13 +46,7 @@ feature -- Access
 			end
 
 			if body.indexes /= Void then
-				is_global_once := body.indexes.has_global_once
-				Result.set_is_global_once (is_global_once)
-				if is_global_once and System.has_multithreaded then
-						-- No byte code generation at the moment for global
-						-- onces in multithreaded mode.
-					System.set_freeze
-				end
+				Result.set_is_global_once (body.indexes.has_global_once)
 			end
 		end
 

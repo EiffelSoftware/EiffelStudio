@@ -4002,26 +4002,31 @@ feature -- Pattern table generation
 				i := i + 1
 			end
 
-
+				-- Declare once data fields
+			byte_context.generate_once_data_definition (buffer)
 
 			-- Module initialization
 			buffer.generate_function_signature (
 				"void", "egc_system_mod_init_init", True, buffer, <<>>, <<>>)
 
+			buffer.put_new_line
+			buffer.indent
+
 			if license.is_evaluating then
 					-- Set egc_type_of_gc = 25 * egc_platform_level + egc_compiler_tag - 1
-				buffer.put_string ("%N%Tegc_type_of_gc = 123173;%N")
+				buffer.put_string ("egc_type_of_gc = 123173;")
 			else
 					-- Set egc_type_of_gc = 25 * egc_platform_level + egc_compiler_tag
-				buffer.put_string ("%N%Tegc_type_of_gc = 123174;%N")
+				buffer.put_string ("egc_type_of_gc = 123174;")
 			end
+			buffer.put_new_line
 
 			if final_mode and then not byte_context.is_static_system_data_safe then
 					-- Set maximum routine body index
-				buffer.put_string ("%Teif_nb_org_routines = ")
+				buffer.put_string ("eif_nb_org_routines = ")
 				buffer.put_integer (body_index_counter.count)
 				buffer.put_character (';')
-				buffer.put_character ('%N')
+				buffer.put_new_line
 			end
 
 			from
@@ -4037,15 +4042,19 @@ feature -- Pattern table generation
 						not final_mode or else
 						(not cl_type.is_precompiled or else cl_type.associated_class.is_in_system)
 					then
-						buffer.put_string ("%T")
 						buffer.put_string (Encoder.module_init_name (cl_type.static_type_id))
-						buffer.put_string ("();%N")
+						buffer.put_string ("();")
+						buffer.put_new_line
 					end
 				end
 				i := i + 1
 			end
 
-			buffer.put_string ("%N}%N%N")
+			byte_context.generate_system_once_data_initialization (buffer)
+
+			buffer.exdent
+			buffer.put_new_line
+			buffer.put_string ("}%N%N")
 
 			byte_context.generate_once_manifest_string_declaration (buffer)
 

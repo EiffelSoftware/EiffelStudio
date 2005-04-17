@@ -515,9 +515,7 @@ feature -- Generation
 			inv_byte_code: INVARIANT_B
 			final_mode: BOOLEAN
 			generate_c_code: BOOLEAN
-			once_count:INTEGER
 			tmp, buffer, header_buffer, headers: GENERATION_BUFFER
-			l_globals: ARRAYED_LIST [INTEGER]
 		do
 			final_mode := byte_context.final_mode
 
@@ -610,19 +608,6 @@ feature -- Generation
 				loop
 					feature_i := feature_table.item_for_iteration
 					if feature_i.to_generate_in (current_class) then
-						if feature_i.is_once then
-								-- If it's a once, give it a key.
-							byte_context.set_once_index (once_count)
-							once_count := once_count + 1
-							if once_count = 1 then
-									--| First declaration of EIF_oidx_off in the
-									--| C code
-								buffer.put_string ("static int EIF_oidx_off")
-								buffer.put_integer (static_type_id)
-								buffer.put_string (" = 0;%N")
-							end
-						end
-						
 							-- Generate the C code of `feature_i'
 						generate_feature (feature_i, buffer)
 					end
@@ -643,34 +628,14 @@ feature -- Generation
 					-- Create module initialization procedure
 				buffer.generate_function_signature ("void", Encoder.module_init_name
 					(static_type_id), True, header_buffer, <<>>, <<>>)
+				buffer.indent
 
-				if once_count > 0 then
-					buffer.indent
-					buffer.put_string ("EIF_oidx_off")
-					buffer.put_integer (static_type_id)
-					buffer.put_string (" = EIF_once_count;")
-					buffer.put_new_line
-					buffer.put_string ("EIF_once_count += ")
-					buffer.put_integer (once_count)
-					buffer.put_character (';')
-					buffer.put_new_line
-					l_globals := byte_context.global_onces
-					from
-						l_globals.start
-					until
-						l_globals.after
-					loop
-						buffer.put_string (encoder.feature_name (static_type_id, l_globals.item))
-						buffer.put_string ("_mutex = eif_thr_mutex_create ();")
-						buffer.put_new_line
-						l_globals.forth
-					end
-					buffer.exdent
-				end
-
+					-- Initialize once data
+				byte_context.generate_module_once_data_initialization (static_type_id)
 					-- Initialize once manifest strings
 				byte_context.generate_once_manifest_string_initialization
 
+				buffer.exdent
 				buffer.put_character ('}')
 				buffer.put_new_line
 				buffer.put_new_line

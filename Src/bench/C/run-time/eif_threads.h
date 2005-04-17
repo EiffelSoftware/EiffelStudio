@@ -297,20 +297,20 @@ RT_LNK void eif_thr_rwl_destroy (EIF_POINTER rwlp);
 #if defined(_WIN32) && defined(_MSC_VER)
 #	if (_MSC_VER >= 1400)
 		void _ReadBarrier(void);
-		void _ReadWriteBarrier();
+		void _ReadWriteBarrier(void);
 		void _WriteBarrier(void);
 #		pragma intrinsic(_ReadBarrier)
 #		pragma intrinsic(_ReadWriteBarrier)
 #		pragma intrinsic(_WriteBarrier)
-#		define EIF_MEMORY_READ_BARRIER _ReadBarrier
-#		define EIF_MEMORY_BARRIER _ReadWriteBarrier
-#		define EIF_MEMORY_WRITE_BARRIER _WriteBarrier
+#		define EIF_MEMORY_READ_BARRIER _ReadBarrier()
+#		define EIF_MEMORY_BARRIER _ReadWriteBarrier()
+#		define EIF_MEMORY_WRITE_BARRIER _WriteBarrier()
 #	elif (_MSC_VER >= 1300)
-		void _ReadWriteBarrier();
+		void _ReadWriteBarrier(void);
 #		pragma intrinsic(_ReadWriteBarrier)
-#		define EIF_MEMORY_BARRIER _ReadWriteBarrier
+#		define EIF_MEMORY_BARRIER _ReadWriteBarrier()
 #	elif defined(MemoryBarrier)
-#		define EIF_MEMORY_BARRIER MemoryBarrier
+#		define EIF_MEMORY_BARRIER MemoryBarrier()
 #	endif
 #endif
 
@@ -362,9 +362,19 @@ typedef struct tag_EIF_once_value_t {
 		EIF_REFERENCE * EIF_REFERENCE_result;
 		EIF_POINTER     EIF_POINTER_result;
 	} result;               /* Result of a once function (if any) */
-	EIF_BOOLEAN     done;   /* Can result be used?                */
 	unsigned char   failed; /* Associated exception code (if any) */
+	EIF_BOOLEAN     done;   /* Can result be used?                */
 } EIF_once_value_t;
+
+#ifdef EIF_THREADS
+typedef struct tag_EIF_process_once_value_t {
+	EIF_once_value_t value;  /* Once data */
+	EIF_REFERENCE reference; /* Reference result (if any) */
+	EIF_MUTEX_TYPE * mutex;  /* Mutex to synchronize access to data */
+	EIF_POINTER thread_id;   /* ID of a thread that owns a mutex */
+	EIF_BOOLEAN completed;   /* Has execution been completed? */
+} EIF_process_once_value_t;
+#endif
 
 /* Macros for once routines:
  *  MTOT - type of an element that is used to access once value
@@ -377,7 +387,7 @@ typedef struct tag_EIF_once_value_t {
  *  MTOF(i) - get an exception raised in once routine "i"
  */
 #define MTOT EIF_once_value_t*
-#define MTOI(index) (EIF_once_values+index)
+#define MTOI(index) (EIF_once_values+(index))
 #define MTOD(item)  ((item)->done)
 #define MTOR(result_type,item) ((item)->result.CAT2(result_type,_result))
 #define MTOP(result_type,item,value) ((item)->result.CAT2(result_type,_result)) = value

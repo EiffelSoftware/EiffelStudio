@@ -380,6 +380,8 @@ feature {NONE} -- Implementation
 				Result ?= new_instance_of (dynamic_type_from_string (l_array_type))
 				Result.make (lower, upper)
 				parse_array (agent Result.put (?, ?))
+			else
+				read_next
 			end
 		ensure
 			array_set_if_not_none_type:

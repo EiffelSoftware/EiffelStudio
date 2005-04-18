@@ -907,7 +907,7 @@ feature -- Element change
 		end
 
 	insert_new_row_parented (i: INTEGER; a_parent_row: EV_GRID_ROW) is
-			-- Insert `a_row' between rows `i' and `i+1'
+			-- Insert a new row at index `i' and make that row a subnode of `a_parent_row'.
 		require
 			not_destroyed: not is_destroyed
 			i_positive: i > 0

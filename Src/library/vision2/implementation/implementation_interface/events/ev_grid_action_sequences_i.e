@@ -36,7 +36,10 @@ feature -- Event handling
 	item_deselect_actions: EV_GRID_ITEM_ACTION_SEQUENCE is
 			-- Actions to be performed when an item is deselected.
 		do
-			to_implement ("EV_GRID_ACTION_SEQUENCE_I.item_deselect_actions")
+			if item_deselect_actions_internal = Void then
+				create item_deselect_actions_internal
+			end
+			Result := item_deselect_actions_internal
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -55,7 +58,10 @@ feature -- Event handling
 	row_deselect_actions: EV_GRID_ROW_ACTION_SEQUENCE is
 			-- Actions to be performed when a row is deselected.
 		do
-			to_implement ("EV_GRID_ACTION_SEQUENCE_I.row_deselect_actions")
+			if row_deselect_actions_internal = Void then
+				create row_deselect_actions_internal
+			end
+			Result := row_deselect_actions_internal
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -63,7 +69,10 @@ feature -- Event handling
 	column_select_actions: ACTION_SEQUENCE [TUPLE [EV_GRID_COLUMN]] is
 			-- Actions to be performed when a column is selected.
 		do
-			to_implement ("EV_GRID_ACTION_SEQUENCE_I.column_select_actions")
+			if column_select_actions_internal = Void then
+				create column_select_actions_internal
+			end
+			Result := column_select_actions_internal
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -71,7 +80,10 @@ feature -- Event handling
 	column_deselect_actions: ACTION_SEQUENCE [TUPLE [EV_GRID_COLUMN]] is
 			-- Actions to be performed when a column is deselected.
 		do
-			to_implement ("EV_GRID_ACTION_SEQUENCE_I.column_deselect_actions")
+			if column_deselect_actions_internal = Void then
+				create column_deselect_actions_internal
+			end
+			Result := column_deselect_actions_internal
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -224,8 +236,20 @@ feature {EV_ANY_I} -- Implementation
 	item_select_actions_internal: EV_GRID_ITEM_ACTION_SEQUENCE
 			-- Implementation of once per object `item_select_actions'.
 
+	item_deselect_actions_internal: EV_GRID_ITEM_ACTION_SEQUENCE
+			-- Implementation of once per object `item_deselect_actions'.
+
 	row_select_actions_internal: EV_GRID_ROW_ACTION_SEQUENCE
 			-- Implementation of once per object `row_select_actions'.
+
+	column_select_actions_internal: ACTION_SEQUENCE [TUPLE [EV_GRID_COLUMN]]
+			-- Implementation of once per object `column_select_actions'.
+
+	row_deselect_actions_internal: EV_GRID_ROW_ACTION_SEQUENCE
+			-- Implementation of once per object `row_deselect_actions'.
+
+	column_deselect_actions_internal: ACTION_SEQUENCE [TUPLE [EV_GRID_COLUMN]]
+			-- Implementation of once per object `column_deselect_actions'.
 			
 	pointer_motion_actions_internal: ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, EV_GRID_ITEM]]
 			-- Implementation of once per object `motion_actions_internal'.

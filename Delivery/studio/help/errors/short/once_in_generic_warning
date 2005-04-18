@@ -1,0 +1,2 @@
+Warning: once feature produces the same result regardless of generic derivation it is called for
+What to do: Ensure that once feature is not expected to produce different results for different generic derivations.

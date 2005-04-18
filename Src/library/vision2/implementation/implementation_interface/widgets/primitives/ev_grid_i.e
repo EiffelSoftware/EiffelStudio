@@ -184,6 +184,9 @@ feature -- Access
 						sel_items.after
 					loop
 						sel_items.item.implementation.disable_select_internal
+						if item_deselect_actions_internal /= Void then
+							item_deselect_actions_internal.call ([sel_items.item])
+						end
 						sel_items.remove
 					end				
 			end
@@ -194,6 +197,9 @@ feature -- Access
 				sel_rows.after
 			loop
 				sel_rows.item.implementation.disable_select_internal
+				if row_deselect_actions_internal /= Void then
+					row_deselect_actions_internal.call ([sel_rows.item])
+				end
 				sel_rows.remove
 			end
 
@@ -204,6 +210,9 @@ feature -- Access
 				sel_columns.after
 			loop
 				sel_columns.item.disable_select
+				if column_deselect_actions_internal /= Void then
+					column_deselect_actions_internal.call ([sel_columns.item])
+				end
 				sel_columns.remove
 			end
 			fixme ("Remove this full redraw and only redraw those items that have actually changed.")
@@ -1125,6 +1134,9 @@ feature -- Element change
 			columns.put_left (a_col)
 
 			update_grid_column_indices (i.min (j))
+
+				-- Flag `physical_column_indexes' for recalculation
+			physical_column_indexes_dirty := True
 			
 			recompute_column_offsets
 			redraw_client_area
@@ -1188,6 +1200,9 @@ feature -- Removal
 			if a_col_i.is_visible then
 				visible_column_count := visible_column_count - 1
 			end
+
+				-- Flag `physical_column_indexes' for recalculation
+			physical_column_indexes_dirty := True
 			
 			to_implement ("EV_GRID_I:remove_column removal of header, redraw and blanking of items")
 		ensure
@@ -1323,18 +1338,25 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			a_col: EV_GRID_COLUMN_I
 			i, col_count: INTEGER
 		do
-			col_count := column_count
-			create Result.make (col_count)
-			from
-				i := 1
-			until
-				i > col_count
-			loop
-				a_col := column_internal (i)
-				Result.put (a_col.physical_index, i - 1)
-						-- SPECIAL is zero based
-				i := i + 1
+			if physical_column_indexes_dirty then
+				col_count := column_count
+				create Result.make (col_count)
+				from
+					i := 1
+				until
+					i > col_count
+				loop
+					a_col := column_internal (i)
+					Result.put (a_col.physical_index, i - 1)
+							-- SPECIAL is zero based
+					i := i + 1
+				end			
+				physical_column_indexes_internal := Result
+				physical_column_indexes_dirty := False
+			else
+				Result := physical_column_indexes_internal
 			end
+
 		ensure
 			result_not_void: Result /= Void
 			result_count_equals_column_count: Result.count = column_count
@@ -1910,6 +1932,9 @@ feature {NONE} -- Drawing implementation
 			build_expand_node_pixmap
 			build_collapse_node_pixmap
 			invalid_row_index := invalid_row_index.max_value
+
+				-- Flag `physical_column_indexes' for recalculation
+			physical_column_indexes_dirty := True
 			
 			create internal_row_data.make
 			create columns.make
@@ -2642,6 +2667,9 @@ feature {NONE} -- Implementation
 			a_column_i.set_parent_i (Current)
 			physical_column_count := physical_column_count + 1
 
+				-- Flag `physical_column_indexes' for recalculation
+			physical_column_indexes_dirty := True
+
 			show_column (a_index)
 			header_item_resizing (header.last)
 			header_item_resize_ended (header.last)
@@ -2814,6 +2842,12 @@ feature {NONE} -- Implementation
 			row_not_void: Result /= Void
 		end
 
+	physical_column_indexes_dirty: BOOLEAN
+		-- Does `physical_column_indexes' need recalculating?
+
+	physical_column_indexes_internal: SPECIAL [INTEGER]
+		-- Internal storage for `physical_column_indexes' to avoid unnecessary recalculation on each query.
+
 feature {EV_GRID_ROW_I} -- Implementation
 
 	internal_selected_rows: ARRAYED_LIST [EV_GRID_ROW]
@@ -2827,23 +2861,34 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- I
 	update_row_selection_status (a_row_i: EV_GRID_ROW_I) is
 			-- Update the selection status for `a_row' in `Current'.
 		local
-			row_has_selection: BOOLEAN
+			row_deselected: BOOLEAN
+			row_previously_selected: BOOLEAN
 			row_interface: EV_GRID_ROW
 		do
 			row_interface := a_row_i.interface
+			
 			if internal_selected_rows.has (row_interface) then
+				row_deselected := not a_row_i.is_selected
+				row_previously_selected := True
 				internal_selected_rows.prune_all (row_interface)
-				row_has_selection := True
 			end
 			if is_single_row_selection_enabled then
 					-- Deselect existing rows and then remove from list
 				remove_selection			
 			end
-				-- Add to last position in grid's selected rows
-			internal_selected_rows.extend (row_interface)
 
-			if row_select_actions_internal /= Void and then not row_has_selection then
+			if not row_deselected then
+					-- Add to last position in grid's selected rows
+				internal_selected_rows.extend (row_interface)				
+			end
+
+			if row_select_actions_internal /= Void and then not row_previously_selected then
+					-- Call `row_select_actions' if newly selected
 				row_select_actions_internal.call ([row_interface])
+			end
+			if row_deselect_actions_internal /= Void and then row_deselected then
+					-- Call `row_deselect_actions' if deselected
+				row_deselect_actions_internal.call ([row_interface])
 			end
 		end
 

@@ -10,7 +10,7 @@
 		<heading>
 			<size>2</size>What is a Widget?
 		</heading>
-		<paragraph> A Widget is the fundamental building block of your applications GUI, components such as Windows, Buttons and Labels are examples of such. The widget set of Vision2 provide you with the flexibility to easily create powerful graphical applications. All widgets in Vision2 inherit from 
+		<paragraph> A Widget is the fundamental building block of your applications GUI, components such as Windows, Buttons and Labels are examples of such. The widget set of Vision2 provides you with the flexibility to easily create powerful graphical applications. All widgets in Vision2 inherit from 
 			<link>
 				<url>/libraries/vision2/reference/interface/widgets/ev_widget_chart.xml</url>
 				<label> EV_WIDGET</label>
@@ -51,7 +51,7 @@
 		<heading>
 			<size>2</size>How do I create a widget?
 		</heading>
-		<paragraph>All widgets in Vision2 are based around the default_create mechanism    in Eiffel, this means that all that needs to be done to create a widget    is to declare a reference to a type (such as 
+		<paragraph>All widgets in Vision2 are based around the default_create mechanism    in Eiffel. This means that all that needs to be done to create a widget    is to declare a reference to a type (such as 
 			<link>
 				<url>../../reference/interface/widgets/primitives/ev_button_chart.xml</url>
 				<label>EV_BUTTON</label>
@@ -75,13 +75,13 @@
 	<keyword>create</keyword> <feature_name>a_button</feature_name>
 	<feature_name>a_button</feature_name>.<feature_name>set_text</feature_name> <symbol>(</symbol><string>"Click Me"</string><symbol>)</symbol>
 </code_block>
-		<note>Note: When a widget is created no extra initialization has to be    performed, 
-			<bold>the only exception is for a window where you have to call    show in order for it to be displayed on screen</bold>.
+		<note>Note: When a widget is created no extra initialization has to be    performed. 
+			<bold>The only exception is for a window where you have to call    show in order for it to be displayed on screen</bold>.
 		</note>
 		<heading>
 			<size>2</size>Sizing
 		</heading>
-		<paragraph> As <link><url>../../reference/interface/widgets/primitives/ev_primitive_chart.xml</url><label>EV_PRIMITIVE</label></link> is of type <link><url>../../reference/interface/widgets/ev_widget_chart.xml</url><label>EV_WIDGET</label></link>, the following facilities are provided for setting the minimum size : set_minimum_width, set_minimum_height and set_minimum_size. </paragraph>
+		<paragraph> As <link><url>../../reference/interface/widgets/primitives/ev_primitive_chart.xml</url><label>EV_PRIMITIVE</label></link> is of type <link><url>../../reference/interface/widgets/ev_widget_chart.xml</url><label>EV_WIDGET</label></link>, the following facilities are provided for setting the minimum size: set_minimum_width, set_minimum_height and set_minimum_size. </paragraph>
 		<paragraph> The minimum size of a widget is the smallest possible size that it can possibly be inside its parent container. If an 
 			<link>
 				<url>../../reference/interface/widgets/primitives/ev_button_chart.xml</url>
@@ -98,7 +98,7 @@
 		</note>
 		<heading>
 			<size>2</size>Now what do I do?
-		</heading>  Now that you can create a widget, you will need to actually make it    usable to your intended user, this will usually involve these three    steps.
+		</heading>  Now that you can create a widget, you will need to actually make it    usable to your intended user. This will usually involve these three steps.
 		<line_break/>
 		<list ordered="false">
 			<item>Setting 

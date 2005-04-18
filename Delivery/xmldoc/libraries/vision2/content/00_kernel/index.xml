@@ -132,6 +132,6 @@
 					</link>
 				</item>
 			</list>
-			<paragraph>Once you have learnt the basics of GUI programming within Vision2,  you are well on the way to creating powerful multi-platform  applications. The Application Programming Interface (API) of  Vision2 has been designed in a way to ensure that the library is as  intuitive, consistent and stylistic as possible, heavy reuse of components from  EiffelBase has been one of the main reasons that made this possible.</paragraph>
+			<paragraph>Once you have learnt the basics of GUI programming within Vision2,  you are well on the way to creating powerful multi-platform  applications. The Application Programming Interface (API) of  Vision2 has been designed in a way to ensure that the library is as  intuitive, consistent and stylistic as possible. Heavy reuse of components from  EiffelBase has been one of the main reasons that made this possible.</paragraph>
 		</paragraph>
 	</paragraph></document>

@@ -20,7 +20,7 @@
 		<heading>
 			<size>2</size>Item holders
 		</heading>
-		<paragraph>  Below is a structure showing the Vision2 components and the items that they  accept, all the items types available in Vision2 are included:  
+		<paragraph>  Below is a structure showing the Vision2 components and the items that they  accept. All the items types available in Vision2 are included:  
 			<list ordered="false">
 				<item><link><url>../../reference/interface/widgets/primitives/ev_list_chart.xml</url><label>EV_LIST</label></link> accepts items of type:  
 					<list ordered="false">

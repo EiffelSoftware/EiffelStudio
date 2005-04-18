@@ -125,26 +125,26 @@ feature -- Status setting
 feature -- Actions
 
 	activate is
-            -- Setup `Current' for user interactive editing.
-        require
-            not_destroyed: not is_destroyed
-            parented: is_parented
-        do
-            implementation.activate
-        end
-
-    deactivate is
-            -- Cleanup from previous call to `activate'.
-        require
-            not_destroyed: not is_destroyed
-            parented: is_parented
-        do
-            implementation.deactivate
-        end
+			-- Setup `Current' for user interactive editing.
+		require
+			not_destroyed: not is_destroyed
+			parented: is_parented
+		do
+			implementation.activate
+		end
+        
+	deactivate is
+			-- Cleanup from previous call to `activate'.
+		require
+			not_destroyed: not is_destroyed
+			parented: is_parented
+		do
+			implementation.deactivate
+		end
 
 feature -- Status report
 
-	is_parented: BOOLEAN is
+is_parented: BOOLEAN is
 			-- Does current item belongs to an EV_GRID?
 		require
 			not_destroyed: not is_destroyed
@@ -162,8 +162,9 @@ feature {EV_GRID_I} -- Implementation
 	activate_action (popup_window: EV_WINDOW) is
 			-- `Current' has been requested to be updated via `popup_window'.
 		require
+			parented: is_parented
 			popup_window_not_void: popup_window /= Void
-			popup_window_not_destroyed: not popup_window.is_destroyed
+			popup_window_not_destroyed: not popup_window.is_destroyed	
 		do
 		end
 

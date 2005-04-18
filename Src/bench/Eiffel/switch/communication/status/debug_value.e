@@ -27,6 +27,7 @@ feature {NONE} -- Initialization
 			set_default_name
 			value := v
 			sk_type := a_sk_type
+			set_dynamic_class
 		ensure
 			value_set: value = v
 		end
@@ -43,11 +44,12 @@ feature {NONE} -- Initialization
 				is_attribute := True
 			end
 			value := v
-			sk_type := a_sk_type			
+			sk_type := a_sk_type
+			set_dynamic_class
 		ensure
 			value_set: value = v
 		end
-		
+
 feature -- Access
 
 	sk_type: INTEGER
@@ -55,35 +57,8 @@ feature -- Access
 	value: G
 			-- Value of object.
 
-	dynamic_class: CLASS_C is
-			-- Find corresponding CLASS_C to type represented by `value'.
-		local
-			l_name: STRING
-			system: SYSTEM_I
-		once
-			l_name := value.generator
-			system := Eiffel_system.system
-			inspect sk_type
-			when sk_uint8   then Result := system.natural_8_class.compiled_class				
-			when sk_uint16  then Result := system.natural_16_class.compiled_class
-			when sk_uint32  then Result := system.natural_32_class.compiled_class
-			when sk_uint64  then Result := system.natural_64_class.compiled_class
-			when sk_int8    then Result := system.Integer_8_class.compiled_class
-			when sk_int16   then Result := system.Integer_16_class.compiled_class
-			when sk_int32   then Result := system.Integer_32_class.compiled_class
-			when sk_int64   then Result := system.Integer_64_class.compiled_class
-			when sk_bool    then Result := system.Boolean_class.compiled_class
-			when sk_char    then Result := system.Character_class.compiled_class
-			when sk_wchar   then Result := system.Wide_char_class.compiled_class
-			when sk_real32  then Result := system.real_32_class.compiled_class
-			when sk_real64  then Result := system.real_64_class.compiled_class
-			when sk_pointer then Result := system.Pointer_class.compiled_class
-			else
-				check known_type: False	end
-			end
-		ensure then
-			non_void_result: Result /= Void
-		end
+	dynamic_class: CLASS_C
+			-- Type represented by `value'.
 
 	dump_value: DUMP_VALUE is
 			-- Dump_value corresponding to `Current'.
@@ -208,5 +183,42 @@ feature -- ouput
 		do
 			Result := Immediate_value
 		end
+
+feature {NONE} -- Setting
+
+	set_dynamic_class is
+			-- Set `dynamic_class' to match `sk_type'.
+		require
+			valid_sk_type:
+				sk_type = sk_uint8 or sk_type = sk_uint16 or sk_type = sk_uint32 or sk_type = sk_uint64 or
+				sk_type = sk_int8 or sk_type = sk_int16 or sk_type = sk_int32 or sk_type = sk_int64 or
+				sk_type = sk_char or sk_type = sk_wchar or sk_type = sk_real32 or sk_type = sk_real64 or
+				sk_type = sk_bool or sk_type = sk_pointer
+		local
+			system: SYSTEM_I
+		do
+			system := Eiffel_system.system
+			inspect sk_type
+			when sk_uint8   then dynamic_class := system.natural_8_class.compiled_class				
+			when sk_uint16  then dynamic_class := system.natural_16_class.compiled_class
+			when sk_uint32  then dynamic_class := system.natural_32_class.compiled_class
+			when sk_uint64  then dynamic_class := system.natural_64_class.compiled_class
+			when sk_int8    then dynamic_class := system.Integer_8_class.compiled_class
+			when sk_int16   then dynamic_class := system.Integer_16_class.compiled_class
+			when sk_int32   then dynamic_class := system.Integer_32_class.compiled_class
+			when sk_int64   then dynamic_class := system.Integer_64_class.compiled_class
+			when sk_bool    then dynamic_class := system.Boolean_class.compiled_class
+			when sk_char    then dynamic_class := system.Character_class.compiled_class
+			when sk_wchar   then dynamic_class := system.Wide_char_class.compiled_class
+			when sk_real32  then dynamic_class := system.real_32_class.compiled_class
+			when sk_real64  then dynamic_class := system.real_64_class.compiled_class
+			when sk_pointer then dynamic_class := system.Pointer_class.compiled_class
+			end
+		ensure
+			dynamic_class_not_void: dynamic_class /= Void
+		end
+
+invariant
+	dynamic_class_not_void: dynamic_class /= Void
 
 end -- class DEBUG_VALUE

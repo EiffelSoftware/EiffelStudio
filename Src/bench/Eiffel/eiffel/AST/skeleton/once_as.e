@@ -8,8 +8,7 @@ class ONCE_AS
 inherit
 	INTERNAL_AS
 		redefine
-			process,
-			byte_node, is_once
+			byte_node, is_once, process, type_check
 		end
 
 create
@@ -27,6 +26,17 @@ feature -- Properties
 
 	is_once: BOOLEAN is True
 			-- Is the current routine body a once one ?
+
+feature -- Type check
+
+	type_check is
+			-- Type check compound
+		do
+			Precursor
+			if context.current_class.is_generic then
+				error_handler.insert_warning (create {ONCE_IN_GENERIC_WARNING}.make (context.current_class, context.current_feature))
+			end
+		end
 
 feature -- Access
 

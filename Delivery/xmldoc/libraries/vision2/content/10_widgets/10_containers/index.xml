@@ -51,16 +51,16 @@
 			<heading>
 				<size>2</size>Usage of Containers
 			</heading>
-			<paragraph>The main role of a container is to position its children in a certain way, an 
+			<paragraph>The main role of a container is to position its children in a certain way. An
 				<link>
 					<url>../../../reference/interface/widgets/containers/ev_horizontal_box_chart.xml</url>
 					<label> EV_HORIZONTAL_BOX</label>
-				</link> for example positions it children side by side along the horizontal axis, to get vertical stacking you would use an 
+				</link> for example positions its children side by side along the horizontal axis. To achieve vertical stacking you would use an
 				<link>
 					<url>../../../reference/interface/widgets/containers/ev_vertical_box_chart.xml</url>
 					<label> EV_VERTICAL_BOX</label>
 				</link>.
-				<paragraph>An code example of adding widgets to a container is as follows. 
+				<paragraph>A code example of adding widgets to a container is as follows:
 <code_block>
 	<feature_name>add_to_container</feature_name> <keyword>is</keyword>
 			<comment>-- Add 3 buttons to a hbox and then show in window.</comment>
@@ -100,7 +100,7 @@
 						</paragraph>
 						<heading>
 							<size>2</size>Sizing of containers
-						</heading>   As <link><url>../../../reference/interface/widgets/containers/ev_container_chart.xml</url><label>EV_CONTAINER</label></link> is of type <link><url>../../../reference/interface/widgets/ev_widget_chart.xml</url><label>EV_WIDGET</label></link>, the following facilities are provided for setting the minimum size : set_minimum_width,  set_minimum_height and set_minimum_size. It is important to remember that as a general rule,
+						</heading>   As <link><url>../../../reference/interface/widgets/containers/ev_container_chart.xml</url><label>EV_CONTAINER</label></link> is of type <link><url>../../../reference/interface/widgets/ev_widget_chart.xml</url><label>EV_WIDGET</label></link>, the following facilities are provided for setting the minimum size: set_minimum_width,  set_minimum_height and set_minimum_size. It is important to remember that as a general rule, 
 						<bold>the current size of a container is always at least the minimum size of all its contents.</bold>
 						<note>
 							<bold>Note: </bold>The exception to this is: <link><url>../../../reference/interface/widgets/containers/ev_fixed_chart.xml</url><label>EV_FIXED</label></link>, <link><url>../../../reference/interface/widgets/containers/ev_viewport_chart.xml</url><label>EV_VIEWPORT</label></link> and <link><url>../../../reference/interface/widgets/containers/ev_scrollable_area_chart.xml</url><label>EV_SCROLLABLE_AREA</label></link> which do actually allow their contents to be larger than their current size. 

@@ -8,13 +8,18 @@ class FEAT_ARG
 -- FIXME: redefine is_equivalent
 
 inherit
-	EIFFEL_LIST [TYPE_AS]
+	ARRAYED_LIST [TYPE_AS]
 		rename
 			make as old_make
 		export
 			{ANY} area
 		redefine
 			copy
+		end
+
+	COMPILER_EXPORTER
+		undefine
+			copy, is_equal
 		end
 
 	SHARED_WORKBENCH
@@ -28,6 +33,18 @@ inherit
 		end
 
 	SHARED_NAMES_HEAP
+		undefine
+			copy, is_equal
+		end
+
+	SHARED_ERROR_HANDLER
+		undefine
+			copy, is_equal
+		end
+
+	SHARED_STATELESS_VISITOR
+		export
+			{NONE} all
 		undefine
 			copy, is_equal
 		end
@@ -130,7 +147,7 @@ feature -- Duplication
 	copy (other: like Current) is
 			-- Clone
 		do
-			Precursor {EIFFEL_LIST} (other)
+			Precursor {ARRAYED_LIST} (other)
 			argument_names := other.argument_names.twin
 		end
 
@@ -154,8 +171,6 @@ feature -- Checking
 			solved_type: TYPE_A
 			associated_class: CLASS_C
 			argument_name: STRING
-			vtug: VTUG
-			vtcg2: VTCG2
 			i, nb: INTEGER
 			l_area: SPECIAL [TYPE_AS]
 			a_area: like argument_names
@@ -169,13 +184,13 @@ feature -- Checking
 				l_names_heap := Names_heap
 				nb := count
 				associated_class := feat_table.associated_class
+				type_checker.init_with_feature_table (f, feat_table)
 			until
 				i = nb
 			loop
 					-- Process anchored type for argument types
 				argument_name := l_names_heap.item (a_area.item (i))
-				arg_eval.set_argument_name (argument_name)
-				solved_type := arg_eval.evaluated_type (l_area.item(i), feat_table, f)
+				solved_type := type_checker.solved_type (l_area.item (i))
 
 				check
 						-- If an anchored type cannot be evlaluated,
@@ -184,26 +199,7 @@ feature -- Checking
 				end
 				if associated_class = f.written_class then
 						-- Check validity of a generic type
-					if 	not solved_type.good_generics then
-						vtug := solved_type.error_generics
-						vtug.set_class (associated_class)
-						vtug.set_feature (f)
-						vtug.set_entity_name (argument_name)
-						Error_handler.insert_error (vtug)
-							-- Cannot go on here ...
-						Error_handler.raise_error
-					end
-						-- Check constrained genericity
-					solved_type.reset_constraint_error_list
-					solved_type.check_constraints (associated_class)
-					if not solved_type.constraint_error_list.is_empty then
-						create vtcg2
-						vtcg2.set_class (associated_class)
-						vtcg2.set_feature (f)
-						vtcg2.set_entity_name (argument_name)
-						vtcg2.set_error_list (solved_type.constraint_error_list)
-						Error_handler.insert_error (vtcg2)
-					end
+					type_checker.check_type_validity (solved_type, l_area.item (i))
 				end
 					-- Instantiation: instantitation of the
 					-- argument types must be done in the context of the

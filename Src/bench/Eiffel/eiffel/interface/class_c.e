@@ -83,6 +83,11 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_STATELESS_VISITOR
+		export
+			{NONE} all
+		end
+
 	REFACTORING_HELPER
 		export
 			{NONE} all
@@ -410,7 +415,7 @@ feature -- Action
 				-- End of the first pass after syntax analysis
 		local
 			supplier_list: LINKED_LIST [ID_AS]
-			class_info: CLASS_INFO
+			l_class_info: CLASS_INFO
 				-- Temporary structure to build about the current class
 				-- which will be useful for second pass.
 			parent_list: EIFFEL_LIST [PARENT_AS]
@@ -441,8 +446,8 @@ feature -- Action
 			end
 
 				-- Process a compiled form of the parents
-			class_info := ast_b.info
-			class_info.set_class_id (class_id)
+			l_class_info := class_info (ast_b)
+			l_class_info.set_class_id (class_id)
 
 				-- Initialization of the current class
 			init (ast_b, old_syntactical_suppliers)
@@ -473,21 +478,21 @@ if System.class_of_id (class_id) /= Void then
 				ast_b.assign_unique_values (unique_counter, unique_values)
 
 					-- Compute the values of the unique constants
-				class_info.set_unique_values (unique_values)
+				l_class_info.set_unique_values (unique_values)
 			end
  
 				-- Save index left by the temporary ast server into the
 				-- class information.
-			class_info.set_index (Tmp_ast_server.index.twin)
+			l_class_info.set_index (Tmp_ast_server.index.twin)
 			invariant_info := Tmp_ast_server.invariant_info
 			if invariant_info /= Void then
-				class_info.set_invariant_info (Tmp_ast_server.invariant_info)
+				l_class_info.set_invariant_info (Tmp_ast_server.invariant_info)
 				Tmp_inv_ast_server.force (invariant_info, class_id)
 			end
 
 				-- Put class information in class information table for
 				-- feature `init'.
-			Tmp_class_info_server.put (class_info)
+			Tmp_class_info_server.put (l_class_info)
 
 				-- Clear index of the temporary ast server for next first
 				-- pass
@@ -737,17 +742,15 @@ feature -- Third pass: byte code production and type check
 				-- Is the current feature `feature_i' changed ?
 			dependances: CLASS_DEPENDANCE
 			new_suppliers: like suppliers
-			feature_name: STRING
 			feature_name_id: INTEGER
 			f_suppliers: FEATURE_DEPENDANCE
 			removed_features: SEARCH_TABLE [FEATURE_I]
 			type_check_error: BOOLEAN
 			check_local_names_needed: BOOLEAN
-			byte_code_generated, has_default_rescue: BOOLEAN
+			byte_code_generated: BOOLEAN
 
 				-- Invariant
 			invar_clause: INVARIANT_AS
-			invar_byte: INVARIANT_B
 			invariant_changed: BOOLEAN
 
 			old_invariant_body_index: INTEGER
@@ -757,8 +760,6 @@ feature -- Third pass: byte code production and type check
 			def_resc_depend: DEPEND_UNIT
 			type_checked: BOOLEAN
 
-				-- For full type checking
-			full_type_checking, local_type_checking: BOOLEAN
 		do
 			from
 					-- Initialization for actual types evaluation
@@ -782,56 +783,34 @@ feature -- Third pass: byte code production and type check
 				feat_table := Feat_tbl_server.item (class_id)
 				def_resc := default_rescue_feature
 
-				ast_context.set_current_class (Current)
+				ast_context.initialize (Current, actual_type, feat_table)
 
 				if melted_set /= Void then
 					melted_set.clear_all
 				end
 
+				feature_checker.init (ast_context)
 				feat_table.start
-				full_type_checking := System.full_type_checking
 			until
 				feat_table.after
 			loop
 				feature_i := feat_table.item_for_iteration
 				type_checked := False
 
-debug ("SEP_DEBUG")
-feature_name := feature_i.feature_name
-io.error.put_string ("CLASS_C.PASS3 Feature ")
-io.error.put_string (feature_name)
-io.error.put_string (" whose FEATURE_ID: ")
-io.error.put_integer (feature_i.feature_id)
-io.error.put_new_line
-end
-
-				local_type_checking := feature_i.to_melt_in (Current)
-				if full_type_checking or else local_type_checking then
+				if feature_i.to_melt_in (Current) then
 					feature_name_id := feature_i.feature_name_id
-					feature_name := feature_i.feature_name
 
-					has_default_rescue := False
 					if
 						def_resc /= Void
 						and then not def_resc.is_empty
 						and then def_resc.feature_name_id /= feature_name_id
 					then
-						feature_i.create_default_rescue (def_resc.feature_name)
-						has_default_rescue := True
+						feature_i.create_default_rescue (def_resc.feature_name_id)
 					end
 
-debug ("SEP_DEBUG", "ACTIVITY")
-	io.error.put_string ("%TTo melt_in True: ")
-	io.error.put_string (feature_name)
-	io.error.put_new_line
-end
 						-- For a feature written in the class
 					feature_changed := 	changed_features.has (feature_name_id)
 					
-					if not local_type_checking then
-						feature_changed := True
-					end
-
 					if not feature_changed then
 							-- Force a change on all feature of current class if line
 							-- debugging is turned on. Not doing so could make obsolete
@@ -843,12 +822,6 @@ end
 
 					feature_changed := feature_changed and not feature_i.is_attribute
 
-debug ("SEP_DEBUG", "ACTIVITY")
-	io.error.put_string ("%T%Tfeature_changed: ")
-	io.error.put_boolean (feature_changed)
-	io.error.put_new_line
-end
-			
 					f_suppliers := dependances.item (feature_i.body_index)
 
 						-- Feature is considered syntactically changed if
@@ -856,11 +829,6 @@ end
 						-- of nature (attribute/function versus incrementality).
 					if not (feature_changed or else f_suppliers = Void) then
 						feature_changed := (not propagators.melted_empty_intersection (f_suppliers))
-debug ("SEP_DEBUG", "ACTIVITY")
-	io.error.put_string ("%T%Tfeature_changed (After melted_empty_intersection): ")
-	io.error.put_boolean (feature_changed)
-	io.error.put_new_line
-end
 						if not feature_changed then
 							if f_suppliers.has_removed_id then
 								feature_changed := True
@@ -883,10 +851,10 @@ end
 	
 					ast_context.set_current_feature (feature_i)
 
-					if feature_i.in_pass3 then
+						-- No type check for constants and attributes.
+						-- [It is done in second pass.]
+					if feature_i.is_routine then
 						if
-							-- No type check for constants and attributes.
-							-- [It is done in second pass.]
 							feature_changed
 							or else
 							not (f_suppliers = Void
@@ -894,38 +862,12 @@ end
 								and then propagators.changed_status_empty_intersection (f_suppliers.suppliers)))
 						then
 								-- Type check
-debug ("SEP_DEBUG", "VERBOSE", "ACTIVITY")
-	io.error.put_string ("%Ttype check ")
-	io.error.put_string (feature_name)
-	io.error.put_new_line
-end
-debug ("SEP_DEBUG", "ACTIVITY")
-	io.error.put_string ("%T%Tfeature changed: ")
-	io.error.put_boolean (feature_changed)
-	io.error.put_new_line
-	if f_suppliers /= Void then
-		io.error.put_string ("%T%Tf_suppliers /= Void%N%T%Tempty_intersection: ")
-		io.error.put_boolean (propagators.empty_intersection (f_suppliers))
-		io.error.put_string ("%N%T%Tchanged_status_empty_intersection: ")
-		io.error.put_boolean (propagators.changed_status_empty_intersection (f_suppliers.suppliers))
-		io.error.put_new_line
-	end
-end
-
 							Error_handler.mark
-debug ("SEP_DEBUG", "ACTIVITY")
-	if f_suppliers /= Void then
-		io.error.put_string ("Feature_suppliers%N")
-		f_suppliers.trace
-		io.error.put_new_line
-	end
-end
-
-							feature_i.type_check
+							feature_checker.type_check_and_code (feature_i)
 							type_checked := True
 							type_check_error := Error_handler.new_error
 
-							if local_type_checking and then not type_check_error then
+							if not type_check_error then
 								if f_suppliers /= Void then
 										-- Dependances update: remove old
 										-- dependances for `feature_name'.
@@ -953,7 +895,7 @@ end
 								end
 
 									-- We need to duplicate `f_suppliers' now, otherwise
-									-- we will be wiped out in `ast_context.clear2'.
+									-- we will be wiped out in `ast_context.clear_feature_context'.
 								f_suppliers := f_suppliers.twin
 
 								f_suppliers.set_feature_name_id (feature_name_id)
@@ -964,40 +906,26 @@ end
 								new_suppliers.add_occurrence (f_suppliers)
 
 									-- Byte code processing
-debug ("SEP_DEBUG", "VERBOSE", "ACTIVITY")
-	io.error.put_string ("%Tbyte code for ")
-	io.error.put_string (feature_name)
-	io.error.put_new_line
-end
-								feature_i.compute_byte_code (has_default_rescue)
+								tmp_byte_server.put (feature_checker.byte_code)
 								byte_code_generated := True
 							end
 						else
 							-- Check the conflicts between local variable names
 							-- and feature names
--- FIX ME
--- ONLY needed when new features are inserted in the feature table
+							-- FIX ME: ONLY needed when new features are inserted in the feature table
 							check_local_names_needed := True
 						end
 					else
-							-- in_pass3 = False
-						if local_type_checking then
-							record_suppliers (feature_i, dependances)
-						end
+							-- is_routine = False
+						record_suppliers (feature_i, dependances)
 					end
 
-					ast_context.clear2
+					ast_context.clear_feature_context
 
 					if
-						local_type_checking and then 
 						(feature_changed or else byte_code_generated)
 						and then not (type_check_error or else feature_i.is_deferred)
 					then
-debug ("SEP_DEBUG", "VERBOSE", "ACTIVITY")
-	io.error.put_string ("%TMelted_set.put for ")
-	io.error.put_string (feature_name)
-	io.error.put_new_line
-end
 							-- Remember the melted feature information
 							-- if it is not deferred. If it is an external, then
 							-- we need to trigger a freeze.
@@ -1009,45 +937,32 @@ end
 					type_check_error := False
 					byte_code_generated := False
 
-					if not type_checked and then changed3 and then
-						not (feature_i.is_attribute or else feature_i.is_constant) then
-						-- Forced type check on the feature
+					if not type_checked and then changed3 and then feature_i.is_routine then
+							-- Forced type check on the feature
 						ast_context.set_current_feature (feature_i)
-
-						feature_i.type_check
+						feature_checker.type_check_only (feature_i)
 						check_local_names_needed := False
-						ast_context.clear2
-					end
-					if check_local_names_needed then
+						ast_context.clear_feature_context
+					elseif check_local_names_needed then
 						ast_context.set_current_feature (feature_i)
 						feature_i.check_local_names
-						ast_context.clear2
+						ast_context.clear_feature_context
 					end
 
-				elseif
-					((not feature_i.in_pass3)
-							-- The feature is deferred and written in the current class
-					or else (feature_i.is_deferred and then class_id = feature_i.written_in))
-				then
-					if feature_i.is_deferred then
-							-- Just type check it. See if VRRR or
-							-- VMRX error has occurred.
-						ast_context.set_current_feature (feature_i)
-
-						feature_i.type_check
-						ast_context.clear2
-					end
+				elseif not feature_i.is_routine then
+					record_suppliers (feature_i, dependances)
+				elseif feature_i.is_deferred and then class_id = feature_i.written_in then
+						-- Just type check it. See if VRRR or
+						-- VMRX error has occurred.
+					ast_context.set_current_feature (feature_i)
+					feature_checker.type_check_only (feature_i)
+					ast_context.clear_feature_context
 					record_suppliers (feature_i, dependances)
 				end
 				feat_table.forth
 			end -- Main loop
 
 				-- Recomputation of invariant clause
-
-debug ("SEP_DEBUG", "VERBOSE", "ACTIVITY")
-	io.error.put_string ("%TProcessing invariant%N")
-end
-
 			if invariant_feature /= Void then
 				old_invariant_body_index := invariant_feature.body_index
 				f_suppliers := dependances.item (old_invariant_body_index)
@@ -1099,15 +1014,9 @@ end
 					invar_clause := Inv_ast_server.item (class_id)
 					Error_handler.mark
 
-debug ("SEP_DEBUG", "ACTIVITY")
-	io.error.put_string ("%TType check for invariant%N")
-end
-					ast_context.set_current_feature (invariant_feature)
-					invar_clause.type_check
+					feature_checker.invariant_type_check_and_code (invariant_feature, invar_clause)
 
-					if
-						not Error_handler.new_error
-					then
+					if not Error_handler.new_error then
 						if f_suppliers /= Void then
 							if new_suppliers = Void then
 								new_suppliers := suppliers.same_suppliers
@@ -1118,7 +1027,7 @@ end
 							end
 						end
 							-- We need to duplicate `f_suppliers' now, otherwise
-							-- we will be wiped out in `ast_context.clear2'.
+							-- we will be wiped out in `ast_context.clear_feature_context'.
 						f_suppliers := ast_context.supplier_ids.twin
 						if invariant_feature /= Void then
 							f_suppliers.set_feature_name_id (invariant_feature.feature_name_id)
@@ -1129,21 +1038,12 @@ end
 						end
 						new_suppliers.add_occurrence (f_suppliers)
 
-debug ("SEP_DEBUG", "VERBOSE", "ACTIVITY")
-	io.error.put_string ("%TByte code for invariant%N")
-end
-
-						ast_context.start_lines
-						create invar_byte
-						invar_byte.set_class_id (class_id)
-						invar_byte.set_byte_list (invar_clause.byte_node)
-						invar_byte.set_once_manifest_string_count (invar_clause.once_manifest_string_count)
-						Tmp_inv_byte_server.put (invar_byte)
+						Tmp_inv_byte_server.put (feature_checker.invariant_byte_code)
 
 						add_feature_to_melted_set (invariant_feature)
 					end
 						-- Clean context
-					ast_context.clear2
+					ast_context.clear_feature_context
 				end
 			end
 
@@ -1204,8 +1104,8 @@ end
 		rescue
 			if Rescue_status.is_error_exception then
 					-- Clean context if error
-						-- FIXME call clear1 ????
-				ast_context.clear2
+						-- FIXME call `clear_all' ????
+				ast_context.clear_feature_context
 
 					-- Clean the caches if error
 
@@ -1322,7 +1222,6 @@ end
 --	io.error.put_string ("%TByte code for invariant%N")
 --end
 --
---						ast_context.start_lines
 --						create invar_byte
 --						invar_byte.set_class_id (class_id)
 --						invar_byte.set_byte_list (invar_clause.byte_node)
@@ -1333,7 +1232,7 @@ end
 --
 --					end
 --						-- Clean context
---					ast_context.clear2
+--					ast_context.clear_feature_context
 --				end
 --			end
 		end
@@ -1378,38 +1277,30 @@ end
 			l_ast: like most_recent_ast
 			l_ca_feature: INVARIANT_FEAT_I
 		do
-			ast_context.clear2
 			l_ast := most_recent_ast
 			if
 				l_ast.custom_attributes /= Void or l_ast.interface_custom_attributes /= Void or
 				l_ast.class_custom_attributes /= Void or l_ast.assembly_custom_attributes /= Void
 			then
 				create l_ca_feature.make (Current)
+				feature_checker.init (ast_context)
 			end
 			if l_ast.custom_attributes /= Void then
-				ast_context.set_current_feature (l_ca_feature)
-				l_ast.custom_attributes.type_check
-				ast_context.start_lines
-				custom_attributes := l_ast.custom_attributes.byte_node
-				ast_context.clear2
+
+				feature_checker.process_eiffel_list (l_ast.custom_attributes)
+				custom_attributes ?= feature_checker.last_byte_node
 			else
 				custom_attributes := Void
 			end
 			if l_ast.interface_custom_attributes /= Void then
-				ast_context.set_current_feature (l_ca_feature)
-				l_ast.interface_custom_attributes.type_check
-				ast_context.start_lines
-				interface_custom_attributes := l_ast.interface_custom_attributes.byte_node
-				ast_context.clear2
+				feature_checker.process_eiffel_list (l_ast.interface_custom_attributes)
+				interface_custom_attributes ?= feature_checker.last_byte_node
 			else
 				interface_custom_attributes := Void
 			end
 			if l_ast.class_custom_attributes /= Void then
-				ast_context.set_current_feature (l_ca_feature)
-				l_ast.class_custom_attributes.type_check
-				ast_context.start_lines
-				class_custom_attributes := l_ast.class_custom_attributes.byte_node
-				ast_context.clear2
+				feature_checker.process_eiffel_list (l_ast.class_custom_attributes)
+				class_custom_attributes ?= feature_checker.last_byte_node
 			else
 				class_custom_attributes := Void
 			end
@@ -1417,11 +1308,8 @@ end
 					-- We are processing the root class, let's figure out if there are some
 					-- assembly custom attributes.
 				if l_ast.assembly_custom_attributes /= Void then
-					ast_context.set_current_feature (l_ca_feature)
-					l_ast.assembly_custom_attributes.type_check
-					ast_context.start_lines
-					assembly_custom_attributes := l_ast.assembly_custom_attributes.byte_node
-					ast_context.clear2
+					feature_checker.process_eiffel_list (l_ast.assembly_custom_attributes)
+					assembly_custom_attributes ?= feature_checker.last_byte_node
 				end
 			else
 				assembly_custom_attributes := Void
@@ -2382,7 +2270,7 @@ feature
 				generic_dec := l_area.item (i)
 				constraint_type := generic_dec.constraint
 				if constraint_type /= Void then
-					constraint_type.check_constraint_type (Current)
+					type_checker.check_constraint_type (Current, constraint_type)
 				end
 				i := i + 1
 			end
@@ -2411,6 +2299,7 @@ feature -- Parent checking
 			l_dummy_list: LINKED_LIST [INTEGER]
 			l_client: CLASS_C
 			l_tuple: TUPLE [BOOLEAN, BOOLEAN]
+			l_compiled_parent_generator: AST_PARENT_C_GENERATOR
 		do
 			Inst_context.set_cluster (cluster)
 			l_parents_as := a_class_info.parents
@@ -2433,6 +2322,7 @@ feature -- Parent checking
 					create parents_classes.make (l_count)
 					create computed_parents.make (l_count)
 					create parents.make (l_count)
+					create l_compiled_parent_generator
 					l_parents_as.start
 				until
 					l_parents_as.after
@@ -2448,11 +2338,12 @@ feature -- Parent checking
 						l_ve04.set_location (l_parent_as.start_location)
 						Error_handler.insert_error (l_ve04)
 					else
-						l_parent_c := l_parent_as.parent_c
+						l_parent_c := l_compiled_parent_generator.compiled_parent (Current, l_parent_as)
 						computed_parents.extend (l_parent_c)
 						parents.extend (l_parent_c.parent_type)
 
-						l_parent_class := l_parent_as.associated_class (lace_class).compiled_class
+						l_parent_class := clickable_info.associated_eiffel_class (lace_class,
+							l_parent_as.type).compiled_class
 							-- Insertion of a new descendant for the parent class
 						check
 							parent_class_exists: l_parent_class /= Void
@@ -3233,7 +3124,7 @@ feature -- Actual class type
 			actual_type_not_void: Result /= Void
 		end
 
-feature {CLASS_TYPE_AS} -- Actual class type
+feature {CLASS_TYPE_AS, AST_TYPE_CHECKER} -- Actual class type
 
 	partial_actual_type (gen: ARRAY [TYPE_A]; is_exp, is_sep: BOOLEAN): CL_TYPE_A is
 			-- Actual type of `current depending on the context in which it is declared
@@ -5186,6 +5077,15 @@ feature {NONE} -- Implementation
 	internal_feature_table_file_id: INTEGER
 			-- Number added at end of C file corresponding to generated
 			-- feature table. Initialized by default to -1.
+
+	class_info (a_class: CLASS_AS): CLASS_INFO is
+			-- Associated info from `a_class'.
+		do
+			create Result
+			Result.set_parents (a_class.parents)
+			Result.set_creators (a_class.creators)
+			Result.set_convertors (a_class.convertors)
+		end
 
 invariant
 

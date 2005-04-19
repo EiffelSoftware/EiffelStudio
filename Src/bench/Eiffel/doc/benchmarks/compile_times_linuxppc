@@ -1,5 +1,6 @@
 LinuxPPC G4 with AltiVec technology and 733MHz
-From version 5.3.0417 to 5.y (was compiled against YDL 2.3)
+From version 5.6.0308 to 5.y (was compiled with YDL 4.0)
+From version 5.3.0417 to 5.6.0119 (was compiled against YDL 2.3)
 From version 5.x to 5.3.0417 (was compiled with LinuxPPC 2000 Q4)
 
 5.6

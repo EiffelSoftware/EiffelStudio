@@ -10,10 +10,8 @@ class LIKE_ARGUMENT
 inherit
 	LIKE_TYPE_A
 		redefine
-			conformance_type, is_like_argument
+			actual_argument_type, is_like_argument
 		end
-
-	SHARED_ARG_TYPES
 
 feature -- Properties
 
@@ -113,12 +111,15 @@ feature {COMPILER_EXPORTER} -- Primitives
 			Result.set_actual_type (actual_type.instantiation_in (type, written_id))
 		end
 
-	conformance_type: TYPE_A is
+	actual_argument_type (a_arg_types: ARRAY [TYPE_A]): TYPE_A is
 			-- Type for conformance.
 			-- `actual_type' is the declared type and is the wrong one for
 			-- conformance validation.
 		do
-			Result := Argument_types.i_th (position).actual_type
+			check
+				valid_position: a_arg_types.valid_index (position)
+			end
+			Result := a_arg_types.item (position)
 		end
 
 	create_info: CREATE_ARG is

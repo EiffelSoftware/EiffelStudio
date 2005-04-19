@@ -16,7 +16,7 @@ inherit
 			has_expanded, is_valid, expanded_deferred, valid_expanded_creation,
 			same_as, format, is_equivalent,
 			deep_actual_type, instantiation_in,
-			conformance_type, update_dependance, hash_code,
+			actual_argument_type, update_dependance, hash_code,
 			is_full_named_type
 		end
 
@@ -380,7 +380,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			end
 		end
 
-	conformance_type: like Current is
+	actual_argument_type (a_arg_types: ARRAY [TYPE_A]): like Current is
 
 		local
 			i, count: INTEGER
@@ -396,7 +396,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 				until
 					i > count
 				loop
-					new_generics.put (generics.item (i).conformance_type, i)
+					new_generics.put (generics.item (i).actual_argument_type (a_arg_types), i)
 					i := i + 1
 				end
 				create Result.make (class_id, new_generics)

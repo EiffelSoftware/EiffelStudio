@@ -458,9 +458,9 @@ feature -- Basic operations
 										-- Now calculate information regarding the parent of the current subrow
 										-- which is required for the drawing. We must know where the parent is positioned
 										-- in order to connect the lines correctly.
-									parent_subrow_indent := subrow_indent * (current_row.parent_row_i.indent_depth_in_tree - 1) + first_tree_node_indent - (tree_node_spacing * 2) - ((node_pixmap_width + 1) // 2)
+									parent_subrow_indent := grid.item_indent (grid.item (current_row.parent_row_i.index_of_first_item, current_row.parent_row_i.index).implementation) + ((node_pixmap_width + 1) // 2)
 									parent_x_indent_position := (column_offsets @ (parent_node_index)) - (internal_client_x - horizontal_buffer_offset)
-									parent_x_indent_position := parent_x_indent_position + parent_subrow_indent
+									parent_x_indent_position := parent_x_indent_position + parent_subrow_indent - 1
 								end
 							else
 								node_index := 1
@@ -475,13 +475,8 @@ feature -- Basic operations
 							vertical_node_pixmap_top_offset := current_item_y_position + ((current_row_height - node_pixmap_height + 1)// 2)
 							vertical_node_pixmap_bottom_offset := vertical_node_pixmap_top_offset + node_pixmap_height
 							
-							if drawing_parentrow or (drawing_subrow and current_row.subrow_count > 0) then
-								current_subrow_indent := subrow_indent * (current_row.indent_depth_in_tree - 1) + first_tree_node_indent
-							elseif (drawing_subrow and current_row.subrow_count = 0) then
-								current_subrow_indent := subrow_indent * (current_row.indent_depth_in_tree - 2) + first_tree_node_indent
-								if current_row.parent_row_i /= Void and current_row.index_of_first_item /= current_row.parent_row_i.index_of_first_item then
-									current_subrow_indent := 0
-								end
+							if drawing_parentrow or (drawing_subrow) then
+								current_subrow_indent := grid.item_indent (grid.item (current_row.index_of_first_item, current_row.index).implementation)
 							else
 								current_subrow_indent := 0
 							end
@@ -582,11 +577,6 @@ feature -- Basic operations
 												-- Note we add 1 to account for rounding errors when odd values.
 											if current_row.is_expanded then
 												l_pixmap := collapse_pixmap
-												if are_tree_node_connectors_shown then
-													grid.drawable.set_foreground_color (black)
-													grid.drawable.draw_segment (node_pixmap_vertical_center, vertical_node_pixmap_bottom_offset, node_pixmap_vertical_center, row_vertical_bottom)
-														-- This draws the vertical segment beneath the expand icon which reaches down to the bottom of the row.
-												end
 											else
 												l_pixmap := expand_pixmap
 											end
@@ -603,26 +593,51 @@ feature -- Basic operations
 										
 										if current_subrow_indent > 0 and are_tree_node_connectors_shown then
 											if current_column_index > 1 or drawing_subrow then
-												l_x_start := current_item_x_position.max (parent_x_indent_position)
-												l_x_end := horizontal_node_pixmap_left_offset
+												--l_x_start := current_item_x_position.max (parent_x_indent_position)
+												--l_x_start := horizontal_node_pixmap_left_offset - 4
+												l_x_start := current_item_x_position + current_subrow_indent
+												if current_row.subrow_count > 0 then
+													l_x_end := horizontal_node_pixmap_left_offset + node_pixmap_width
+												else
+													if parent_node_index = node_index then
+														l_x_end := node_pixmap_vertical_center
+													else
+														l_x_end := current_item_x_position
+													end
+												end
 												if l_x_start < current_item_x_position + current_column_width then
 													grid.drawable.set_foreground_color (black)
-													grid.drawable.draw_segment (l_x_start, row_vertical_center, l_x_end.min (current_item_x_position + current_column_width), row_vertical_center)
+													grid.drawable.draw_segment (l_x_start, row_vertical_center, l_x_end, row_vertical_center)
 														-- Draw a horizontal line from the left edge of the item to the either the node horizontal offset or the edge of the actual item position
 													 	-- if the node to which we are connected is within a different column.
+													 	
+													 if parent_node_index /= node_index and current_row.subrow_count > 0 then
+													 		-- Draw the horizontal line from the left edge of the expand icon to the start of
+													 		-- the grid cell as the horizontal line spans into other grid cells.
+													 	grid.drawable.draw_segment (current_item_x_position, row_vertical_center, horizontal_node_pixmap_left_offset, row_vertical_center)
+													 end
 												end	
 											end
 											 
 											if drawing_subrow and then parent_node_index = current_column_index then
 												
-												current_horizontal_pos := current_item_x_position.max (parent_x_indent_position)
+												current_horizontal_pos := node_pixmap_vertical_center
 												if are_tree_node_connectors_shown then
 													grid.drawable.set_foreground_color (black)
 													if current_horizontal_pos < column_offsets @ (node_index + 1) then
 														if parent_row_i.subnode_count_recursive > ((current_row.index + current_row.subnode_count_recursive) - parent_row_i.index) then
-															grid.drawable.draw_segment (current_horizontal_pos, row_vertical_bottom, current_horizontal_pos, current_item_y_position)
-														else	
-															grid.drawable.draw_segment (current_horizontal_pos, row_vertical_center, current_horizontal_pos, current_item_y_position)
+															if current_row.subrow_count > 0 then
+																grid.drawable.draw_segment (node_pixmap_vertical_center, vertical_node_pixmap_top_offset, node_pixmap_vertical_center, current_item_y_position)
+																grid.drawable.draw_segment (node_pixmap_vertical_center, vertical_node_pixmap_bottom_offset, node_pixmap_vertical_center, row_vertical_bottom)
+															else
+																grid.drawable.draw_segment (node_pixmap_vertical_center, current_item_y_position, node_pixmap_vertical_center, row_vertical_bottom)
+															end
+														else
+															if current_row.subrow_count > 0 then
+																grid.drawable.draw_segment (node_pixmap_vertical_center, vertical_node_pixmap_top_offset, node_pixmap_vertical_center, current_item_y_position)
+															else
+																grid.drawable.draw_segment (node_pixmap_vertical_center, row_vertical_center, node_pixmap_vertical_center, current_item_y_position)
+															end
 														end
 													end
 	
@@ -686,12 +701,12 @@ feature -- Basic operations
 										if parent_row_i.subrow_count > (current_row.index - parent_row_i.index) then
 												-- In this case, there are more subrows of `parent_row_i' to be drawn,
 												-- so the vertical line is drawn to span the complete height of the current row.
-											grid.drawable.draw_segment (current_item_x_position.max (parent_x_indent_position), row_vertical_bottom, current_item_x_position.max (parent_x_indent_position), current_item_y_position)
+											grid.drawable.draw_segment (parent_x_indent_position, row_vertical_bottom, parent_x_indent_position, current_item_y_position)
 											
 										else
 												-- There are no subsequent rows for `parent_row_i' so we must draw the vertical line
 												-- from the start of the current row to the center only.
-											grid.drawable.draw_segment (current_item_x_position.max (parent_x_indent_position), row_vertical_center, current_item_x_position.max (parent_x_indent_position), current_item_y_position)
+											grid.drawable.draw_segment (parent_x_indent_position, row_vertical_center, parent_x_indent_position, current_item_y_position)
 										end
 										
 									end

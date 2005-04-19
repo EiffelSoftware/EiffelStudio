@@ -14,7 +14,7 @@ inherit
 			actual_type, has_like, is_loose, is_like, is_external,
 			is_basic, instantiated_in, meta_type,
 			has_associated_class,
-			is_reference, is_expanded
+			is_reference, is_expanded, is_none
 		end
 
 	SHARED_LIKE_CONTROLER
@@ -58,6 +58,12 @@ feature -- Properties
 			-- Is current actual type an expanded one?
 		do
 			Result := actual_type.is_expanded
+		end
+	
+	is_none: BOOLEAN is
+			-- Is current actual type NONE?
+		do
+			Result := actual_type.is_none
 		end
 
 feature -- Access

@@ -3319,6 +3319,7 @@ feature -- Implementation
 			l_inspect: INSPECT_B
 			l_expr: EXPR_B
 			l_list: BYTE_LIST [BYTE_NODE]
+			l_constrained_type: TYPE_A
 		do
 			l_needs_byte_node := is_byte_node_enabled
 
@@ -3337,8 +3338,12 @@ feature -- Implementation
 
 				-- Type check if it is an expression conform either to
 				-- and integer or to a character
-			if last_type.is_integer or else last_type.is_character or else last_type.is_natural then
-				l_controler.set_type (last_type)
+			l_constrained_type := constrained_type (last_type.actual_type)
+			if
+				l_constrained_type.is_integer or else l_constrained_type.is_character or else
+				l_constrained_type.is_natural
+			then
+				l_controler.set_type (l_constrained_type)
 			else
 					-- Error
 				create l_vomb1

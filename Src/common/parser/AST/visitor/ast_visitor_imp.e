@@ -17,7 +17,7 @@ feature -- Implementation
 		do
 		end
 
-	process_integer_constant_as (l_as: INTEGER_CONSTANT) is
+	process_integer_as (l_as: INTEGER_AS) is
 		do
 		end
 
@@ -85,7 +85,7 @@ feature -- Implementation
 		do
 		end
 
-	process_access_id_as (l_as: ACCESS_id_AS) is
+	process_access_id_as (l_as: ACCESS_ID_AS) is
 		do
 		end
 
@@ -106,6 +106,10 @@ feature -- Implementation
 		end
 
 	process_creation_expr_as (l_as: CREATION_EXPR_AS) is
+		do
+		end
+
+	process_type_expr_as (l_as: TYPE_EXPR_AS) is
 		do
 		end
 
@@ -265,7 +269,7 @@ feature -- Implementation
 		do
 		end
 
-	process_bin_ne_as (l_as: bin_ne_as) is
+	process_bin_ne_as (l_as: BIN_NE_AS) is
 		do
 		end
 
@@ -449,22 +453,10 @@ feature -- Implementation
 		do
 		end
 		
-	process_expr_addresse_as (l_as: EXPR_ADDRESS_AS) is
-		do
-		end
-		
 	process_use_list_as (l_as: USE_LIST_AS) is
 		do
 		end
 		
-	process_delayed_access_feat_as (l_as: DELAYED_ACCESS_FEAT_AS) is
-		do
-		end
-		
-	process_access_address_as (l_as: ACCESS_ADDRESS_AS) is
-		do
-		end
-
 	process_void_as (l_as: VOID_AS) is
 		do
 		end

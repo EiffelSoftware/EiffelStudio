@@ -22,7 +22,7 @@ feature {NONE} -- Implementation
 				-- Nothing to be done
 		end
 
-	process_integer_constant_as (l_as: INTEGER_CONSTANT) is
+	process_integer_as (l_as: INTEGER_AS) is
 		do
 				-- Nothing to be done
 		end
@@ -143,6 +143,11 @@ feature {NONE} -- Implementation
 		do
 			l_as.type.process (Current)
 			safe_process (l_as.call)
+		end
+
+	process_type_expr_as (l_as: TYPE_EXPR_AS) is
+		do
+			l_as.type.process (Current)
 		end
 
 	process_routine_as (l_as: ROUTINE_AS) is
@@ -635,24 +640,9 @@ feature {NONE} -- Implementation
 			l_as.conversion_types.process (Current)
 		end
 		
-	process_expr_addresse_as (l_as: EXPR_ADDRESS_AS) is
-		do
-			l_as.expr.process (Current)
-		end
-		
 	process_use_list_as (l_as: USE_LIST_AS) is
 		do
 				-- Nothing to be done
-		end
-
-	process_delayed_access_feat_as (l_as: DELAYED_ACCESS_FEAT_AS) is
-		do
-			process_access_feat_as (l_as)
-		end
-		
-	process_access_address_as (l_as: ACCESS_ADDRESS_AS) is
-		do
-			safe_process (l_as.parameters)
 		end
 
 	process_void_as (l_as: VOID_AS) is

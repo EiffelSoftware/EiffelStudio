@@ -1,6 +1,6 @@
 indexing
-	description: "Objects that ..."
-	author: ""
+	description: "Associate each BINARY_AS and UNARY_AS descendants with their corresponding %
+		%BINARY_B and UNARY_B instances."
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -123,13 +123,16 @@ feature -- Incrementality
 
 	has_removed_id: BOOLEAN is
 			-- One of thesuppliers has been removed from the system?
+		local
+			l_system: like system
 		do
+			l_system := system
 			from
 				suppliers.start
 			until
 				suppliers.after or else Result
 			loop
-				if System.class_of_id (suppliers.item) = Void then
+				if l_system.class_of_id (suppliers.item) = Void then
 					Result := True
 				end;
 				suppliers.forth
@@ -139,7 +142,7 @@ feature -- Incrementality
 			until
 				after or else Result
 			loop
-				if System.class_of_id (item.class_id) = Void then
+				if l_system.class_of_id (item.class_id) = Void then
 					Result := True
 				end;
 				forth

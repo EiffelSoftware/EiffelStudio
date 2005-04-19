@@ -132,7 +132,6 @@ feature -- Access
 				end
 				temp_columns.forth
 			end
-			to_implement ("EV_GRID_I:selected_columns")
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -210,9 +209,6 @@ feature -- Access
 				sel_columns.after
 			loop
 				sel_columns.item.disable_select
-				if column_deselect_actions_internal /= Void then
-					column_deselect_actions_internal.call ([sel_columns.item])
-				end
 				sel_columns.remove
 			end
 			fixme ("Remove this full redraw and only redraw those items that have actually changed.")
@@ -1339,6 +1335,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			i, col_count: INTEGER
 		do
 			if physical_column_indexes_dirty then
+					-- `Result' needs to be recalculated
 				col_count := column_count
 				create Result.make (col_count)
 				from

@@ -8,19 +8,13 @@ class
 	
 inherit
 	EC_PREFERENCES
-		rename
-			make as initialize_ec_preferences
-		export
-			{EB_KERNEL}
-				initialize_ec_preferences
+		redefine
+			make
 		end
 	
 	EB_GUI_PREFERENCES
-		rename
-			make as initialize_gui_preferences
-		export
-			{EB_KERNEL}
-				initialize_gui_preferences
+		redefine
+			make
 		end
 	
 create
@@ -31,6 +25,8 @@ feature {NONE} -- Initialization
 	make (a_preferences: PREFERENCES) is
 			-- Create `Current' using `a_preferences'
 		do
+			Precursor {EC_PREFERENCES} (a_preferences)
+			Precursor {EB_GUI_PREFERENCES} (a_preferences)
 			preferences := a_preferences
 		end
 		

@@ -14,11 +14,6 @@ inherit
 			inlined_byte_code, pre_inlined_code
 		end
 
-	SHARED_AST_CONTEXT
-		rename
-			context as ast_context
-		end
-
 	SHARED_ERROR_HANDLER
 
 	SHARED_DECLARATIONS

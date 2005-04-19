@@ -1,6 +1,5 @@
 indexing
-	description: "Objects that ..."
-	author: ""
+	description: "Perform resolution of TYPE_AS into TYPE_A as well as checking validity of TYPE_A."
 	date: "$Date$"
 	revision: "$Revision$"
 

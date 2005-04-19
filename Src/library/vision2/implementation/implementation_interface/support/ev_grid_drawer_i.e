@@ -680,9 +680,12 @@ feature -- Basic operations
 								end
 							else
 									-- Calculate a translated parent x indent to include the subrow indent of
-									-- the tree.
-								translated_parent_x_indent_position := parent_x_indent_position + grid.subrow_indent - 1
-								
+									-- the tree. Must also be restricted to the edge of the current item in case the parent
+									-- is indented past the edge of the column.
+								translated_parent_x_indent_position := (parent_x_indent_position + grid.subrow_indent - 1)
+								if parent_node_index < current_column_index then
+									translated_parent_x_indent_position := current_item_x_position
+								end
 								
 									-- As there is no current item, we must now fill the background with the
 									-- parent background color.
@@ -692,9 +695,9 @@ feature -- Basic operations
 									
 										-- We must now draw the lines for the tree structure, as although there is no item
 										-- at this location in the grid, a tree line may cross it horizontally.
-										
+									
 									grid.drawable.set_foreground_color (black)
-									grid.drawable.draw_segment (current_item_x_position.max (translated_parent_x_indent_position), row_vertical_center, current_item_x_position + current_column_width, row_vertical_center)
+									grid.drawable.draw_segment (translated_parent_x_indent_position, row_vertical_center, current_item_x_position + current_column_width, row_vertical_center)
 										-- The background area for the tree node must always be refreshed, even if the node is not visible.
 										-- We draw no wider than `current_column_width' to ensure this.
 									

@@ -7,7 +7,6 @@ inherit
 			is_visible, mark_visible, has_visible,
 			generate_cecil_table, make_byte_code
 		end;
-	SHARED_AST_CONTEXT;
 	SHARED_SERVER;
 	SHARED_CECIL;
 	COMPILER_EXPORTER

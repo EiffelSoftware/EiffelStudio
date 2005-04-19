@@ -60,6 +60,13 @@ inherit
 			copy, is_equal
 		end
 
+	SHARED_STATELESS_VISITOR
+		export
+			{NONE} all
+		undefine
+			copy, is_equal
+		end
+
 	SHARED_NAMES_HEAP
 		export
 			{NONE} all
@@ -173,6 +180,11 @@ feature
 			equiv_tables: BOOLEAN;
 		do
 			a_class := pass_c
+				-- Store previous data
+			old_creators := a_class.creators
+			old_convert_to := a_class.convert_to
+			old_convert_from := a_class.convert_from
+
 			create pass2_control.make
 
 			if System.il_generation then
@@ -273,14 +285,11 @@ feature
 			parents.check_validity4;
 
 				-- Creators processing
-			old_creators := a_class.creators;
 		   	a_class.set_creators (class_info.creation_table (resulting_table));
 				-- No update of `Instantiator' if there is an error
 			Error_handler.checksum;
 
 				-- Convertibility processing
-			old_convert_to := a_class.convert_to
-			old_convert_from := a_class.convert_from;
 				-- Note: Manu 04/23/2003: Do we need to make a once of `CONVERTIBILITY_CHECKER'?
 				-- At the moment no as it does not seem expensive to create it all the time.
 			(create {CONVERTIBILITY_CHECKER}).init_and_check_convert_tables (
@@ -656,7 +665,7 @@ end;
 			feature_i: FEATURE_I;
 			feat_name: FEATURE_NAME;
 			clauses: EIFFEL_LIST [FEATURE_CLAUSE_AS];
-			export_status: EXPORT_I;
+			l_export_status: EXPORT_I;
 		do
 			clauses := class_info.features;
 			if clauses /= Void then
@@ -667,7 +676,8 @@ end;
 				loop
 					feature_clause := clauses.item;
 						-- Evaluation of the export status
-					export_status := feature_clause.export_status;
+					l_export_status := export_status_generator.
+						feature_clause_export_status (a_class, feature_clause)
 					from
 							-- Iteration of the feature written in class
 							-- `a_class'.
@@ -693,7 +703,7 @@ end;
 								-- compilation, we know if it was an origin.
 							analyze_local (feature_i, feature_i.feature_name_id)
 								-- Set the export status
-							feature_i.set_export_status (export_status);
+							feature_i.set_export_status (l_export_status);
 							name_list.forth;
 						end;
 						
@@ -932,7 +942,7 @@ debug ("ACTIVITY")
 	io.error.put_new_line;
 end;
 
-			Result := yacc_feature.new_feature;
+			Result := feature_i_generator.new_feature (yacc_feature)
 			Result.set_feature_name_id (feature_name_id);
 			Result.set_written_in (a_class.class_id);
 			Result.set_is_frozen (feat.is_frozen);

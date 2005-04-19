@@ -14,12 +14,17 @@ inherit
 	SHARED_EXPORT_STATUS;
 	SHARED_SERVER
 		export
-			{ANY} all
+			{NONE} all
 		end;
 	IDABLE
 		rename
 			id as class_id,
 			set_id as set_class_id
+		end
+
+	SHARED_STATELESS_VISITOR
+		export
+			{NONE} all
 		end
 
 	COMPILER_EXPORTER
@@ -48,8 +53,6 @@ feature -- Access
 
 	features: EIFFEL_LIST [FEATURE_CLAUSE_AS] is
 			-- Feature abstract syntax
-		require
-			ast_server_ok: Tmp_ast_server.has (class_id) or else Ast_server.has (class_id);
 		do
 			if Tmp_ast_server.has (class_id) then
 				Result := Tmp_ast_server.item (class_id).features;
@@ -69,7 +72,7 @@ feature -- Access
 			feature_list: EIFFEL_LIST [FEATURE_NAME];
 			clients: CLIENT_AS;
 			c_reation: CREATE_AS;
-			export_status: EXPORT_I;
+			l_export_status: EXPORT_I;
 			vgcp1: VGCP1;
 			vgcp2: VGCP2;
 			vgcp21: VGCP21;
@@ -100,9 +103,9 @@ feature -- Access
 						from
 							clients := c_reation.clients;
 							if clients /= Void then
-								export_status := clients.export_status;
+								l_export_status := export_status_generator.export_status (a_class, clients)
 							else
-								export_status := Export_all;
+								l_export_status := Export_all;
 							end;
 							feature_list := c_reation.feature_list;
 							feature_list.start
@@ -126,7 +129,7 @@ feature -- Access
 									Error_handler.insert_error (vgcp3);
 								else
 									has_default_create := has_default_create or a_feature = l_def_create
-									Result.put (export_status, feature_name);
+									Result.put (l_export_status, feature_name);
 								end;
 								if not a_feature.type.is_void then
 									create vgcp21;

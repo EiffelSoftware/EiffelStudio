@@ -388,7 +388,7 @@ RT_LNK int fcount;
  * RTOFN - name of a field for once feature with the given code index
  */
 
-#define RTOFN(code_index,field_name) CAT2(o,code_index)field_name
+#define RTOFN(code_index,field_name) CAT3(o,code_index,field_name)
 
 #endif /* WORKBENCH */
 

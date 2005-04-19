@@ -61,8 +61,10 @@ sed <<!GROK!THIS! >eif_config.h -e 's!^#undef\(.*\)/\*!/\*#define \1 \*/ /\*!' -
  */
 #if $cpp_stuff == 1
 #define CAT2(a,b)a/* NC */b
+#define CAT3(a,b,c)a/* NC */b/* NC */c
 #elif $cpp_stuff == 42
 #define CAT2(a,b)a ## b
+#define CAT3(a,b,c)a ## b ## c
 #endif
 
 #ifndef CAT2

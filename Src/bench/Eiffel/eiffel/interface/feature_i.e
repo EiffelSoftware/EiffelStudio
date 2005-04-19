@@ -26,8 +26,6 @@ inherit
 
 	SHARED_EVALUATOR
 
-	SHARED_ARG_TYPES
-
 	SHARED_TABLE
 
 	SHARED_AST_CONTEXT
@@ -66,6 +64,16 @@ inherit
 	COMPARABLE
 		undefine
 			is_equal
+		end
+
+	SHARED_STATELESS_VISITOR
+		export
+			{NONE} all
+		end
+
+	REFACTORING_HELPER
+		export
+			{NONE} all
 		end
 			
 feature -- Access
@@ -686,19 +694,20 @@ end
 
 feature -- creation of default rescue clause
 
-	create_default_rescue (def_resc_name : STRING) is
+	create_default_rescue (def_resc_name_id: INTEGER) is
 			-- Create default_rescue clause if necessary
 		require
-			valid_feature_name : def_resc_name /= Void
+			valid_feature_name_id : def_resc_name_id > 0
 		local
 			my_body : like body
 		do
-			if not (is_attribute or is_constant or 
-									is_external or is_deferred) then
+			if
+				not (is_attribute or is_constant or
+				is_external or is_deferred) 
+			then
 				my_body := body
-
-				if (my_body /= Void) then 
-					my_body.create_default_rescue (def_resc_name)
+				if (my_body /= Void) then
+					my_body.create_default_rescue (names_heap.item (def_resc_name_id))
 				end
 			end
 		end
@@ -924,10 +933,10 @@ feature -- Conveniences
 	type: TYPE_AS is
 			-- Type of feature
 		do
-			Result := Void_type
+			Result := void_type
 		end
 
-	set_type (t: TYPE_AS) is
+	set_type (t: like type) is
 			-- Assign `t' to `type'.
 		do
 			-- Do nothing
@@ -1060,26 +1069,6 @@ feature -- Check
 			end
 		end
 
-	type_check is
-			-- Third pass on current feature
-		require
-			in_pass3
-		do
-			record_suppliers (context.supplier_ids)
-
-			debug ("SERVER", "TYPE_CHECK")
-				io.error.put_string ("feature name: ")
-				io.error.put_string (feature_name)
-				io.error.put_new_line
-				io.error.put_string ("body index: ")
-				io.error.put_integer (body_index)
-				io.error.put_new_line
-			end
-
-				-- Make type check
-			body.type_check
-		end
-
 -- Note: `require else' can be used even if feature has no
 -- precursor. There is no problem to raise an error in normal case,
 -- only case  where we cannot do anything is when aliases are used
@@ -1098,12 +1087,6 @@ feature -- Check
 			-- Check conflicts between local names and feature names
 			-- for an unchanged feature
 		do
-		end
-
-	in_pass3: BOOLEAN is
-			-- Does current feature support type check ?
-		do
-			Result := True
 		end
 
 feature -- IL code generation
@@ -1136,26 +1119,6 @@ feature -- IL code generation
 		end
 
 feature -- Byte code computation
-
-	compute_byte_code (has_default_rescue: BOOLEAN) is
-			-- Compute byte code for melted feature
-		require
-			in_pass3: in_pass3
-		local
-			byte_code: BYTE_CODE
-		do
-				-- Process byte code
-			byte_code := body.byte_node
-			byte_code.set_default_rescue (has_default_rescue)
-
-				-- Put it in the temporary byte code server
-			if not byte_context.old_expressions.is_empty then
-				byte_code.set_old_expressions (byte_context.old_expressions)
-			end
-			byte_context.clear_old_expressions
-
-			Tmp_byte_server.put (byte_code)
-		end
 
 	melt (exec: EXECUTION_UNIT) is
 			-- Generate byte code for current feature
@@ -1333,16 +1296,15 @@ feature -- Signature checking
 			-- to deal with anchored types and genericity. All anchored
 			-- types are interpreted here and generic parameter
 			-- instantiated if possible.
-		require
-			type /= Void
 		local
 			solved_type: TYPE_A
 			vffd5: VFFD5
 			vffd6: VFFD6
 			vffd7: VFFD7
-			vtug: VTUG
-			vtcg1: VTCG1
+			l_class: CLASS_C
 		do
+			l_class := feat_table.associated_class
+			context.initialize (l_class, l_class.actual_type, feat_table)
 			context.set_current_feature (Current)
 			if type.has_like and then is_once then
 					-- We have an anchored type.
@@ -1354,48 +1316,17 @@ feature -- Signature checking
 			end
 				-- Process an actual type for the feature interpret
 				-- anchored types.
-			solved_type := Result_evaluator.evaluated_type
-												(type, feat_table, Current)
+			type_checker.init_with_feature_table (Current, feat_table)
+			solved_type := type_checker.solved_type (type)
 
 			check
 					-- If an anchored cannot be valuated then an
 					-- exection is triggered by the type evaluator.
 				solved_type /= Void
 			end
-debug ("ACTIVITY")
-	io.error.put_string ("Check types of ")
-	io.error.put_string (feature_name)
-	io.error.put_new_line
-	if solved_type = Void then
-		io.error.put_string ("VOID solved type!!%N")
-	else
-		io.error.put_string ("Solved type: ")
-		io.error.put_string (solved_type.dump)
-		io.error.put_new_line
-	end
-end
 
 			if feat_table.associated_class = written_class then
-					-- Check valididty of a generic class type
-				if not solved_type.good_generics then
-					vtug := solved_type.error_generics
-					vtug.set_class (written_class)
-					vtug.set_feature (Current)
-					vtug.set_entity_name ("Result")
-					Error_handler.insert_error (vtug)
-						-- Cannot go on here ..
-					Error_handler.raise_error
-				end
-					-- Check constrained genericity validity rule
-				solved_type.reset_constraint_error_list
-				solved_type.check_constraints (written_class)
-				if not solved_type.constraint_error_list.is_empty then
-					create vtcg1
-					vtcg1.set_class (written_class)
-					vtcg1.set_feature (Current)
-					vtcg1.set_error_list (solved_type.constraint_error_list)
-					Error_handler.insert_error (vtcg1)
-				end
+				type_checker.check_type_validity (solved_type, type)
 			end
 
 			set_type (solved_type)
@@ -1527,11 +1458,8 @@ end
 				Error_handler.insert_error (vdrd7)
 			end
 	
-				-- Initialization for like-argument types
-			Argument_types.init1 (Current)
-		
 			old_type ?= old_feature.type	
-			old_type := old_type.conformance_type.actual_type
+			old_type := old_type.actual_argument_type (special_arguments).actual_type
 				-- `new_type' is the actual type of the redefinition already
 				-- instantiated
 			new_type := type.actual_type
@@ -1585,7 +1513,7 @@ end
 					i > arg_count
 				loop
 					old_type ?= old_arguments.i_th (i)
-					old_type := old_type.conformance_type.actual_type
+					old_type := old_type.actual_argument_type (special_arguments).actual_type
 					new_type := arguments.i_th (i).actual_type
 debug ("ACTIVITY")
 	io.error.put_string ("Types:%N")
@@ -1684,6 +1612,24 @@ end
 			end
 		end
 
+	special_arguments: ARRAY [TYPE_A] is
+		local
+			i, nb: INTEGER
+		do
+			from
+				fixme ("we should resolve argument types early on in `init_arg' from PROCEDURE_I")
+				nb := argument_count
+				create Result.make (1, nb)
+				i := 1
+				nb := nb + 1
+			until
+				i = nb
+			loop
+				Result.put (arguments.i_th (i).actual_type, i)
+				i := i + 1
+			end
+		end
+
 	has_same_il_signature (a_parent_type, a_written_type: CL_TYPE_A; old_feature: FEATURE_I): BOOLEAN is
 			-- Is current feature defined in `a_written_type' same as `old_feature'
 			-- defined in `a_parent_type'?
@@ -1697,12 +1643,9 @@ end
 			i, arg_count, id: INTEGER
 			old_arguments: like arguments
 		do
-				-- Initialization for like-argument types
-			Argument_types.init1 (Current)
-	
 			id := a_written_type.class_id
 			old_type ?= old_feature.type	
-			old_type := old_type.conformance_type.
+			old_type := old_type.actual_argument_type (special_arguments).
 				instantiation_in (a_written_type, a_written_type.class_id).actual_type
 
 			new_type := type.actual_type
@@ -1719,7 +1662,7 @@ end
 				i > arg_count
 			loop
 				old_type ?= old_arguments.i_th (i)
-				old_type := old_type.conformance_type.
+				old_type := old_type.actual_argument_type (special_arguments).
 					instantiation_in (a_written_type, a_written_type.class_id).actual_type
 
 				new_type := arguments.i_th (i).actual_type
@@ -1734,6 +1677,7 @@ end
 			-- Evaluates signature types in context of `feat_tbl'.
 			-- | Take care of possible anchored types
 		do
+
 			set_type
 				(Result_evaluator.evaluated_type (type, feat_tbl, Current))
 			if arguments /= Void then

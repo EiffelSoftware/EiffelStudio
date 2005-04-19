@@ -14,7 +14,10 @@ inherit
 		end;
 	SHARED_TABLE;
 	SHARED_DECLARATIONS;
-	
+
+create
+	make
+
 feature 
 
 	register: REGISTRABLE;
@@ -32,15 +35,12 @@ feature
 	analyze is
 			-- Analyze expression
 		local
-			target_gen_type: TYPE_I;
-			real_ty: GEN_TYPE_I;
 			expr: EXPR_B;
 		do
 			-- We need 'Current'
 			context.add_dftype_current;
+			info.analyze
 
-			real_ty ?= context.real_type (type);
-			target_gen_type := real_ty.meta_generic.item (1);
 			get_register;
 			create array_area_reg.make (Reference_c_type.c_type);
 			from
@@ -109,20 +109,13 @@ feature {NONE} -- C code generation
 		local
 			buf: GENERATION_BUFFER
 		do
-			generate_block_open;
-			generate_gen_type_conversion (real_ty);
+			info.generate_start (Current)
+			info.generate_gen_type_conversion (Current)
 			print_register;
 			buf := buffer
 			buf.put_string (" = ");
-			if workbench_mode then
-				buf.put_string ("RTLN(typres");
-			else
-				buf.put_string ("RTLNS(typres, ");
-				buf.put_type_id (real_ty.type_id)
-				buf.put_string (", ")
-				real_ty.associated_class_type.skeleton.generate_size (buf)
-			end
-			buf.put_string (");");
+			info.generate
+			buf.put_character (';');
 			buf.put_new_line;
 			generate_block_close;
 		end;

@@ -11,7 +11,7 @@ class
 	NAME_CHANGE_VISITOR
 	
 inherit
-	AST_VISITOR_IMP
+	AST_NULL_VISITOR
 		redefine
 			process_class_as
 		end

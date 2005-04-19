@@ -45,7 +45,7 @@ feature -- Update
 			-- Register comments extracted from `class_ast' into
 			-- the temporary class comment server.
 		do
-			class_ast.register (Current);
+			register_class (class_ast)
 			if not class_comments.is_empty then
 				Tmp_class_comments_server.put (class_comments)
 			end
@@ -75,7 +75,7 @@ feature {AST_EIFFEL} -- Element change
 		do
 			comments := eiffel_file.current_feature_clause_comments;
 			if comments /= Void then
-				class_comments.put (comments, feature_clause.end_position);
+				class_comments.put (comments, feature_clause.feature_location.final_position);
 			end
 		end;
 

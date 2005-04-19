@@ -84,7 +84,7 @@ feature -- Access
 			--| Used when inlining is turned on in final mode, because we are not
 			--| allowed to inline once routines
 
-	parameters: BYTE_LIST [EXPR_B]
+	parameters: BYTE_LIST [PARAMETER_B]
 			-- Feature parameters: can be Void
 		
 	set_parameters (p: like parameters) is

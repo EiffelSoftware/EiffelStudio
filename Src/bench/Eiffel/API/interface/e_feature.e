@@ -327,7 +327,7 @@ feature -- Access
 					start_position < end_position
 				then
 					class_text := class_text.substring 
-								(start_position + 1, end_position);
+								(start_position, end_position);
 					Result.add_feature (Current, class_text)
 				end;
 				Result.add_new_line;
@@ -388,7 +388,7 @@ feature -- Access
 			else
 					-- In this case we must certainly be handling a dotnet feature and we need
 					-- to create an empty AST otherwise we cannot pick and drop it.
-				create Result.initialize (Void, Void, Void)
+				create Result.initialize (Void, Void, Void, 0)
 			end			
 		end;
 

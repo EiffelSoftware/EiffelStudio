@@ -29,6 +29,11 @@ inherit
 			{NONE} all
 		end
 
+	REFACTORING_HELPER
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -41,6 +46,7 @@ feature {NONE} -- Initialization
 		do
 			ctxt := a_ctxt
 			is_simple_formatting := a_ctxt.is_for_case
+			create export_status_generator
 		end
 		
 feature -- Formatting
@@ -60,6 +66,9 @@ feature {NONE} -- Implementation: Access
 			
 	is_simple_formatting: BOOLEAN
 			-- Is `simple' formatting enabled?
+	
+	export_status_generator: AST_EXPORT_STATUS_GENERATOR
+			-- To generate EXPORT_I instance for CLIENT_AS nodes
 
 feature {NONE} -- Implementation
 
@@ -73,7 +82,7 @@ feature {NONE} -- Implementation
 			ctxt.put_string (l_as)
 		end
 
-	process_integer_constant_as (l_as: INTEGER_CONSTANT) is
+	process_integer_as (l_as: INTEGER_AS) is
 		do
 			if l_as.constant_type /= Void then
 				ctxt.put_text_item (ti_l_curly)
@@ -460,6 +469,13 @@ feature {NONE} -- Implementation
 			ctxt.set_type_creation (l_as.type)
 		end
 
+	process_type_expr_as (l_as: TYPE_EXPR_AS) is
+		do
+			ctxt.put_text_item (ti_l_curly)
+			l_as.type.process (Current)
+			ctxt.put_text_item (ti_r_curly)
+		end
+
 	process_routine_as (l_as: ROUTINE_AS) is
 		local
 			comments: EIFFEL_COMMENTS
@@ -795,30 +811,29 @@ feature {NONE} -- Implementation
 	process_routine_creation_as (l_as: ROUTINE_CREATION_AS) is
 		local
 			dummy_call: ACCESS_FEAT_AS
-			dummy_name: ID_AS
+			l_operand: OPERAND_AS
 		do
 			ctxt.put_text_item (ti_agent_keyword)
 			ctxt.put_space
 			if l_as.target /= Void then
-				if l_as.target.class_type /= Void or l_as.target.expression /= Void or l_as.target.target /= Void then
-					if l_as.target_ast /= Void then
-						l_as.target_ast.process (Current)
-					else
-						ctxt.put_text_item (ti_l_curly)
-						l_as.target.class_type.process (Current)
-						ctxt.set_type_creation (l_as.target.class_type)
-						create dummy_name.initialize (ti_r_curly.image)
-						create dummy_call.initialize (dummy_name, Void)
-						dummy_call.process (Current)
-					end
-					ctxt.need_dot
+				l_operand := l_as.target
+				if l_operand.class_type /= Void then
+					ctxt.put_text_item (ti_l_curly)
+					l_operand.class_type.process (Current)
+					ctxt.put_text_item (ti_r_curly)
+					ctxt.put_space
+					ctxt.put_text_item (ti_question)
+				elseif l_operand.expression /= Void then
+					l_operand.expression.process (Current)
+				elseif l_operand.target /= Void then
+					l_operand.target.process (Current)
 				end
 			else
 				ctxt.put_text_item (ti_question)
-				ctxt.need_dot
 			end
-			l_as.call_ast.process (Current)
-			ctxt.set_type_creation (Void)
+			ctxt.need_dot
+			create dummy_call.initialize (l_as.feature_name, l_as.operands)
+			dummy_call.process (Current)
 		end
 
 	process_unary_as (l_as: UNARY_AS) is
@@ -1020,7 +1035,7 @@ feature {NONE} -- Implementation
 			process_binary_as (l_as)
 		end
 
-	process_bin_ne_as (l_as: bin_ne_as) is
+	process_bin_ne_as (l_as: BIN_NE_AS) is
 		do
 			process_binary_as (l_as)
 		end
@@ -1062,7 +1077,7 @@ feature {NONE} -- Implementation
 				ctxt.set_separator (ti_comma)
 				ctxt.set_space_between_tokens
 				ctxt.abort_on_failure
-				create feature_dec.make (l_as.feature_names.first.associated_feature_name)
+				create feature_dec.make (l_as.feature_names.first.internal_name)
 				feature_dec.set_before
 				ctxt.put_text_item (feature_dec)
 				if ctxt.has_feature_i then
@@ -1079,7 +1094,7 @@ feature {NONE} -- Implementation
 					ctxt.rollback
 				else
 					l_as.body.process (Current)
-					create feature_dec.make (l_as.feature_names.first.associated_feature_name)
+					create feature_dec.make (l_as.feature_names.first.internal_name)
 					feature_dec.set_after
 					ctxt.put_text_item_without_tabs (feature_dec)
 					if not ctxt.is_feature_short then
@@ -1872,6 +1887,7 @@ feature {NONE} -- Implementation
 			temp: STRING
 			cluster: CLUSTER_I
 			client_classi: CLASS_I
+			l_export_status: EXPORT_I
 		do
 			if is_simple_formatting then
 				ctxt.put_text_item (ti_l_curly)
@@ -1896,7 +1912,8 @@ feature {NONE} -- Implementation
 				ctxt.put_text_item (ti_l_curly)
 				ctxt.set_separator (ti_comma)
 				ctxt.set_space_between_tokens
-				if ctxt.client = Void or else l_as.export_status.valid_for (ctxt.client) then
+				l_export_status := export_status_generator.export_status (ctxt.class_c, l_as)
+				if ctxt.client = Void or else l_export_status.valid_for (ctxt.client) then
 					from
 						l_as.clients.start
 					until
@@ -1982,52 +1999,11 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	process_expr_addresse_as (l_as: EXPR_ADDRESS_AS) is
-		do
-			if not is_simple_formatting then
-				ctxt.begin
-			end
-			ctxt.put_text_item (ti_dollar)
-			ctxt.put_text_item_without_tabs (ti_l_parenthesis)
-			l_as.expr.process (Current)
-			ctxt.put_text_item_without_tabs (ti_r_parenthesis)
-			if not is_simple_formatting then
-				if ctxt.last_was_printed then
-					ctxt.commit
-				else
-					ctxt.rollback
-				end
-			end
-		end
-		
 	process_use_list_as (l_as: USE_LIST_AS) is
 		do
 			process_eiffel_list (l_as)
 		end
 		
-	process_delayed_access_feat_as (l_as: DELAYED_ACCESS_FEAT_AS) is
-		do
-			process_access_feat_as (l_as)
-		end
-		
-	process_access_address_as (l_as: ACCESS_ADDRESS_AS) is
-		do
-			if not is_simple_formatting then
-				ctxt.begin
-			end
-			ctxt.new_expression
-			ctxt.prepare_for_feature (l_as.feature_name, Void)
-			ctxt.put_text_item_without_tabs (ti_dollar)
-			ctxt.put_current_feature
-			if not is_simple_formatting then
-				if ctxt.last_was_printed then
-					ctxt.commit
-				else
-					ctxt.rollback
-				end
-			end
-		end
-
 	process_void_as (l_as: VOID_AS) is
 		do
 			ctxt.put_text_item (ti_void)

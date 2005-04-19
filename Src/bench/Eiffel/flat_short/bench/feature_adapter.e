@@ -306,10 +306,6 @@ feature {NONE} -- Implementation
 					end;
 				end;
 			end;
-				-- Record as creation feature.
-				-- `record_creation_feature' checks if `Current' is
-				-- a creation procedure and if so, adds it to format_reg.creation_table.
-			format_reg.record_creation_feature (Current)
 		end;
 
 	register_uncompiled_feature (format_reg: FORMAT_REGISTRATION) is

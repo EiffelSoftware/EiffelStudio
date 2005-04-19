@@ -16,11 +16,6 @@ inherit
 
 	SHARED_BYTE_CONTEXT
 
-	SHARED_AST_CONTEXT
-		rename
-			context as ast_context
-		end
-	
 	SHARED_ERROR_HANDLER
 	
 	EXCEPTIONS

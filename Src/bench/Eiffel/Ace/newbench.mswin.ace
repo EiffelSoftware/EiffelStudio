@@ -206,11 +206,6 @@ cluster
 			"CVS"; 
 		end
 
-	all helpers:		"$EIFFEL_SRC\library\helpers"
-		exclude
-			"CVS"; 
-		end
-
 	all preferences:		"$EIFFEL_SRC\library\preferences"
 		exclude
 			"CVS"; "xml_implementation"; 

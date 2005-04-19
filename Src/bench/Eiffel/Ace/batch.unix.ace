@@ -76,11 +76,6 @@ cluster
 			"CVS"; "text_formatter.e"; "structured_text.e";
 		end
 
-	all helpers:	"$EIFFEL_SRC/library/helpers"
-		exclude
-			"CVS"; 
-		end
-
 	switch:		"$EIFFEL_SRC/Eiffel/switch"
 
 	interface_switch (switch):		"$/interface/batch_only"

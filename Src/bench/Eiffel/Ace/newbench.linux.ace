@@ -151,11 +151,6 @@ cluster
 			"CVS"; 
 		end
 
-	all helpers:		"$EIFFEL_SRC/library/helpers"
-		exclude
-			"CVS"; 
-		end
-
 	encryption:		"$EIFFEL_SRC/library/encryption"
 		exclude
 			"des_encoder.e"; 

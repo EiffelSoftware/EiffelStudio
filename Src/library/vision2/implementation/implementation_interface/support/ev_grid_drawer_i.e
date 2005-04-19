@@ -582,12 +582,15 @@ feature -- Basic operations
 												l_pixmap := expand_pixmap
 											end
 												-- Now check if we must clip the pixmap vertically
-											if node_pixmap_height > current_row_height then
-													-- In this situation, the height of the expand image is greater than the current row height,
-													-- so we only draw the part that fits within the node.
-												grid.drawable.draw_sub_pixmap (horizontal_node_pixmap_left_offset, current_item_y_position, l_pixmap, create {EV_RECTANGLE}.make (0, (node_pixmap_height - current_row_height) // 2, node_pixmap_height, current_row_height))
-											else
-												grid.drawable.draw_pixmap (horizontal_node_pixmap_left_offset, vertical_node_pixmap_top_offset, l_pixmap)
+												fixme ("Add horizontal clipping for pixmaps.")
+											if horizontal_node_pixmap_left_offset < current_item_x_position + current_column_width then
+												if node_pixmap_height > current_row_height then
+														-- In this situation, the height of the expand image is greater than the current row height,
+														-- so we only draw the part that fits within the node.
+													grid.drawable.draw_sub_pixmap (horizontal_node_pixmap_left_offset, current_item_y_position, l_pixmap, create {EV_RECTANGLE}.make (0, (node_pixmap_height - current_row_height) // 2, node_pixmap_height, current_row_height))
+												else
+													grid.drawable.draw_pixmap (horizontal_node_pixmap_left_offset, vertical_node_pixmap_top_offset, l_pixmap)
+												end
 											end
 										end
 											-- We must now draw the lines for the tree structure.

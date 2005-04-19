@@ -5,7 +5,6 @@ inherit
 		redefine
 			make
 		end
-	SHARED_OPTIMIZATION_TABLES
 
 	SHARED_INST_CONTEXT
 
@@ -509,6 +508,11 @@ feature {NONE} -- Detection of safe/unsafe features
 				end
 				depend_list.forth
 			end
+		end
+
+	optimization_tables: SEARCH_TABLE [OPTIMIZE_UNIT] is
+		do
+			Result := System.optimization_tables
 		end
 
 end

@@ -9,7 +9,7 @@ class
 inherit
 	LIKE_TYPE_A
 		redefine
-			has_associated_class, is_like_current
+			has_associated_class, is_like_current, instantiated_in
 		end
 
 feature -- Properties
@@ -96,6 +96,15 @@ feature {COMPILER_EXPORTER} -- Primitives
 				-- or
 				-- i16 := (0x00FF & i8).to_integer_16
 			Result.set_actual_type (type.intrinsic_type)
+		end
+
+	instantiated_in (class_type: CL_TYPE_A): like Current is
+			-- Instantiation of Current in the context of `class_type'
+			-- assuming that Current is written in the associated class
+			-- of `class_type'.
+		do
+			create Result
+			Result.set_actual_type (class_type)
 		end
 
 	create_info: CREATE_CURRENT is

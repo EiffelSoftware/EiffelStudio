@@ -55,7 +55,7 @@ feature -- Basic Operations
 	enlarge_tree is
 			-- Enlarge generation tree
 		do
-			if compound /= Void then
+			if compound /= Void and then is_debug_clause_enabled then
 				compound.enlarge_tree
 			end
 		end
@@ -63,10 +63,8 @@ feature -- Basic Operations
 	analyze is
 			-- Analysis of debug compound
 		do
-			if compound /= Void then
-				if context.workbench_mode or else is_debug_clause_enabled then
-					compound.analyze;
-				end
+			if compound /= Void and then is_debug_clause_enabled then
+				compound.analyze
 			end
 		end
 
@@ -77,17 +75,20 @@ feature -- C Code generation
 		local
 			debug_level: DEBUG_I
 		do
-			debug_level := context.current_type.base_class.debug_level
-			if keys = Void then
-				Result := debug_level.is_yes
-			else
-				from
-					keys.start
-				until
-					keys.after or else Result
-				loop
-					Result := debug_level.is_debug (keys.item)
-					keys.forth
+			Result := context.workbench_mode
+			if not Result then
+				debug_level := context.current_type.base_class.debug_level
+				if keys = Void then
+					Result := debug_level.is_yes
+				else
+					from
+						keys.start
+					until
+						keys.after or else Result
+					loop
+						Result := debug_level.is_debug (keys.item)
+						keys.forth
+					end
 				end
 			end
 		end
@@ -99,11 +100,9 @@ feature -- C Code generation
 			buf: GENERATION_BUFFER
 		do
 			generate_line_info
-			if compound /= Void then
+			if compound /= Void and then is_debug_clause_enabled then
 				if context.final_mode then
-					if is_debug_clause_enabled then
-						compound.generate
-					end
+					compound.generate
 				else
 					buf := buffer
 						-- Generation of the debug compound in workbench
@@ -200,24 +199,26 @@ feature -- Array optimization
 
 	assigns_to (i: INTEGER): BOOLEAN is
 		do
-			Result := compound /= Void and then compound.assigns_to (i)
+			Result := (compound /= Void and then is_debug_clause_enabled) and then
+				compound.assigns_to (i)
 		end
 
 	calls_special_features (array_desc: INTEGER): BOOLEAN is
 		do
-			Result := compound /= Void and then
+			Result := (compound /= Void and then is_debug_clause_enabled) and then
 						compound.calls_special_features (array_desc)
 		end
 
 	is_unsafe: BOOLEAN is
 		do
-			Result := compound /= Void and then compound.is_unsafe
+			Result := (compound /= Void and then is_debug_clause_enabled) and then
+				compound.is_unsafe
 		end
 
 	optimized_byte_node: like Current is
 		do
 			Result := Current;
-			if compound /= Void then
+			if compound /= Void and then is_debug_clause_enabled then
 				compound := compound.optimized_byte_node
 			end
 		end
@@ -226,7 +227,7 @@ feature -- Inlining
 
 	size: INTEGER is
 		do
-			if compound /= Void then
+			if compound /= Void and then is_debug_clause_enabled then
 				Result := compound.size
 			end
 		end
@@ -234,7 +235,7 @@ feature -- Inlining
 	pre_inlined_code: like Current is
 		do
 			Result := Current
-			if compound /= Void then
+			if compound /= Void and then is_debug_clause_enabled then
 				compound := compound.pre_inlined_code
 			end
 		end
@@ -242,7 +243,7 @@ feature -- Inlining
 	inlined_byte_code: like Current is
 		do
 			Result := Current
-			if compound /= Void then
+			if compound /= Void and then is_debug_clause_enabled then
 				compound := compound.inlined_byte_code
 			end
 		end

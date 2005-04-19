@@ -101,9 +101,6 @@ feature -- Access
 	rescue_clause: BYTE_LIST [BYTE_NODE]
 			-- List of INSTR_B instances: can be Void.
 
-	has_default_rescue: BOOLEAN
-			-- Is `rescue_clause' the default_rescue?
-
 	clear_old_expressions is
 			-- Clear old_expressions
 		require
@@ -239,14 +236,6 @@ feature -- Settings
 			-- Assign `var' to `rescue_clause'.
 		do
 			rescue_clause := var
-		end
-
-	set_default_rescue (v: BOOLEAN) is
-			-- Assign `v' to `has_default_rescue'.
-		do
-			has_default_rescue := v
-		ensure
-			default_rescue_set: has_default_rescue = v
 		end
 
 	set_arguments (a: like arguments) is

@@ -49,6 +49,11 @@ inherit
 			{NONE} all
 		end	
 
+	SHARED_STATELESS_VISITOR
+		export
+			{NONE} all
+		end
+
 create
 	make_with_expression
 
@@ -1067,13 +1072,14 @@ feature {NONE} -- Implementation
 						--| we need to call `reset_expression_byte_nod' 
 
 					if context_class /= Void then
-						Ast_context.clear1
+						ast_context.clear_all
 							--| Prepare Compiler context
-						Ast_context.set_current_class (context_class)
 						if context_class_type /= Void then
 							l_ta := context_class_type.type.type_a
+						else
+							l_ta := context_class.actual_type
 						end
-						Ast_context.set_current_class_with_actual_type (context_class, l_ta)
+						ast_context.initialize (context_class, l_ta, context_class.feature_table)
 						Inst_context.set_cluster (context_class.cluster)
 
 						bak_byte_code := Byte_context.byte_code
@@ -1090,7 +1096,7 @@ feature {NONE} -- Implementation
 							Byte_context.set_byte_code (l_byte_code)
 							
 							if l_fi /= Void then
-								l_ct_locals := f_as.local_table (l_fi)
+								l_ct_locals := locals_builder.local_table (l_fi, f_as)
 								Ast_context.set_locals (l_ct_locals)
 							end
 						end
@@ -1100,10 +1106,10 @@ feature {NONE} -- Implementation
 						if bak_byte_code /= Void then
 							Byte_context.set_byte_code (bak_byte_code)
 						end
-						Ast_context.clear1
+						Ast_context.clear_all
 					else
 						set_error_expression_and_tag ("Context corrupted or not found", Void)
-						Ast_context.clear1
+						Ast_context.clear_all
 					end
 				end
 			else
@@ -1127,7 +1133,8 @@ feature {NONE} -- Implementation
 			if not retried then
 				error_handler.wipe_out
 				Ast_context.set_is_ignoring_export (True)
-				exp.type_check
+				feature_checker.init (ast_context)
+				exp.process (feature_checker)
 				Ast_context.set_is_ignoring_export (False)
 				
 				if error_handler.has_error then
@@ -1136,8 +1143,7 @@ feature {NONE} -- Implementation
 					set_error_expression_and_tag ("Error " + l_error.code + "%N" + error_to_string (l_error), l_error.code)
 					Result := Void
 				else
-					Ast_context.start_lines
-					Result := exp.byte_node
+					Result ?= feature_checker.last_byte_node
 				end
 			else
 				if not type_check_succeed then

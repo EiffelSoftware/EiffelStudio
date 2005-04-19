@@ -27,21 +27,5 @@ feature {NONE}
 		ensure
 			local_evaluator_not_void: Result /= Void
 		end
-
-	Creation_evaluator: CREATION_EVALUATOR is
-			-- Evaluator for type creation
-		once
-			create Result
-		ensure
-			creation_evaluator_not_void: Result /= Void
-		end
-		
-	type_expr_evaluator: TYPE_EXPR_EVALUATOR is
-			-- Evaluator for type expression
-		once
-			create Result
-		ensure
-			type_expr_evaluator_not_void: Result /= Void
-		end
 		
 end

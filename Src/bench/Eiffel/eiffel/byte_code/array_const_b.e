@@ -18,7 +18,33 @@ inherit
 		export
 			{NONE} all
 		end
-	
+
+	REFACTORING_HELPER
+		export
+			{NONE} all
+		end
+
+create
+	make
+
+feature {NONE} -- Initialize
+
+	make (e: like expressions; t: like type; i: like info) is
+			-- New instance of ARRAY_CONST_B initialized with `e' and `t'.
+		require
+			e_not_void: e /= Void
+			t_not_void: t /= Void
+			i_not_void: i /= Void
+		do
+			expressions := e
+			type := t
+			info := i
+		ensure
+			expressions_set: expressions = e
+			type_set: type = t
+			info_set: info = i
+		end
+		
 feature -- Access
 
 	expressions: BYTE_LIST [BYTE_NODE];
@@ -27,19 +53,8 @@ feature -- Access
 	type: GEN_TYPE_I;
 			-- Generic array type
 
-feature -- Settings
-
-	set_expressions (e: like expressions) is
-			-- Assign `e' to `expressions'.
-		do
-			expressions := e;
-		end;
-
-	set_type (t: like type) is
-			-- Assign `t' to `type'.
-		do
-			type := t;
-		end;
+	info: CREATE_INFO
+			-- Info to create manifest array instance
 
 feature -- Status report
 
@@ -79,9 +94,7 @@ feature -- Code generation
 	enlarged: ARRAY_CONST_BL is
 			-- Enlarge node
 		do
-			create Result;
-			Result.set_expressions (expressions);
-			Result.set_type (type);
+			create Result.make (expressions, type, info)
 			Result.enlarge_tree;
 		end;
 
@@ -111,7 +124,7 @@ feature -- IL generation
  			context.add_local (real_ty)
  			local_array := context.local_list.count
  			il_generator.put_dummy_local_info (real_ty, local_array)
-			(create {CREATE_TYPE}.make (real_ty)).generate_il
+			info.generate_il
  			il_generator.generate_local_assignment (local_array)
 
 				-- Call creation procedure of ARRAY
@@ -166,6 +179,7 @@ feature -- Byte code generation
 			r_id: INTEGER;
 			rout_info: ROUT_INFO
 		do
+			fixme ("We should use `info' to create byte code")
 			real_ty ?= context.real_type (type);
 			target_type := real_ty.meta_generic.item (1);
 			base_class := real_ty.base_class;
@@ -242,5 +256,10 @@ feature -- Inlining
 			Result := Current
 			expressions := expressions.inlined_byte_code
 		end
+
+invariant
+	expressions_not_void: expressions /= Void
+	type_not_void: type /= Void
+	info_not_void: info /= Void
 
 end

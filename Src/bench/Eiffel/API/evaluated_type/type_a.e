@@ -38,6 +38,7 @@ feature -- Visitor
 	process (v: AST_VISITOR) is
 			-- process current element.
 		do
+			v.process_type_a (Current)
 		end
 
 feature -- Location
@@ -374,8 +375,10 @@ feature {COMPILER_EXPORTER} -- Access
 			Result := Current
 		end
 
-	conformance_type: TYPE_A is
-			-- Conformance type including like argument process
+	actual_argument_type (a_arg_types: ARRAY [TYPE_A]): TYPE_A is
+			-- Type including like argument process based on `a_arg_types'.
+		require
+			a_arg_types_not_void: a_arg_types /= Void
 		do
 			Result := Current
 		end

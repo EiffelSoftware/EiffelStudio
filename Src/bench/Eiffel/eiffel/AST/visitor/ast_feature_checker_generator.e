@@ -2085,7 +2085,7 @@ feature -- Implementation
 
 				-- Check operand
 			l_as.expr.process (Current)
-			l_last_constrained := last_type
+			l_last_constrained := constrained_type (last_type.actual_type)
 			if l_needs_byte_node then
 				l_expr ?= last_byte_node
 			end

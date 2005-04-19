@@ -77,7 +77,7 @@ feature -- Output
 			st.add_new_line
 		end
 
-feature {ACCESS_FEAT_AS, PRECURSOR_AS} -- Setting
+feature -- Setting
 
 	set_obsolete_feature (f: FEATURE_I) is
 			-- Assign `f' to `obsolete_feature'

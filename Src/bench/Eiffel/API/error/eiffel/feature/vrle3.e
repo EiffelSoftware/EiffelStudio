@@ -1,15 +1,12 @@
 indexing
-
-	description: 
-		"Error when an access to Result is invalid: %
-		%invariant or procedure.";
+	description:
+		"Error when an access to Result is invalid: invariant or procedure.";
 	date: "$Date$";
 	revision: "$Revision $"
 
-class VRLE3 obsolete "NOT IN THE BOOK"
+class VRLE3
 
 inherit
-	
 	FEATURE_ERROR
 		redefine
 			subcode
@@ -17,9 +14,9 @@ inherit
 
 feature -- Property
 
-	code: STRING is "VEEN";
+	code: STRING is "VEEN"
 			-- Error code
 
-	subcode: INTEGER is 2;
+	subcode: INTEGER is 2
 
-end -- class VRLE3
+end

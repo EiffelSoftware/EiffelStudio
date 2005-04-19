@@ -27,6 +27,11 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_STATELESS_VISITOR
+		export
+			{NONE} all
+		end
+
 feature -- Settings
 
 	set_feature_custom_attributes (a_feature: FEATURE_I; a_feature_token: INTEGER) is
@@ -53,13 +58,9 @@ feature -- Settings
 							-- that represent the custom attribute
 						l_class_c := cil_generator.current_class_type.associated_class
 						Inst_context.set_cluster (l_class_c.cluster)
-						context.clear2
-						context.set_current_class (l_class_c)
-						context.set_current_feature (a_feature)
-						attributes.type_check
-						context.start_lines
-						l_attributes := attributes.byte_node
-						context.clear2
+						feature_checker.init (context)
+						feature_checker.process_eiffel_list (attributes)
+						l_attributes ?= feature_checker.last_byte_node
 					end
 				end
 			end

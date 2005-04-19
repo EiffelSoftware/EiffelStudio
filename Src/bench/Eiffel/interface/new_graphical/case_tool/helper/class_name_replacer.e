@@ -144,7 +144,6 @@ feature {NONE} -- Implementation
 			click_list: CLICK_LIST
 			click_item: CLICK_AST
 			class_as: CLASS_AS
-			basic_as: BASIC_TYPE
 			cl_type_as: CLASS_TYPE_AS
 			s: STRING
 			cur_disp, disp: INTEGER
@@ -171,14 +170,9 @@ feature {NONE} -- Implementation
 						if cl_type_as /= Void then
 							s := cl_type_as.class_name
 						else
-							basic_as ?= click_item.node
-							if basic_as /= Void then
-								s := basic_as.dump
-							else
-								class_as ?= click_item.node
-								if class_as /= Void then
-									s := class_as.class_name
-								end
+							class_as ?= click_item.node
+							if class_as /= Void then
+								s := class_as.class_name
 							end
 						end
 						if s /= Void and then s.is_equal (a_search_string) then

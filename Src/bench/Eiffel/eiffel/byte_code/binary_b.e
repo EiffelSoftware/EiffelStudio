@@ -143,6 +143,7 @@ feature -- Code generation
 		do
 				-- Access on expression
 			create access_expr
+			access_expr.set_expr (left)
 
 				-- Nested buffer for byte code generation of a binary
 				-- operation on non-simple types					
@@ -155,7 +156,6 @@ feature -- Code generation
 				-- of `access' is expression `right'.
 			Result.set_message (access)
 			access.set_parent (Result)
-			access_expr.set_expr (left)
 
 			create param.make (1)
 			create p

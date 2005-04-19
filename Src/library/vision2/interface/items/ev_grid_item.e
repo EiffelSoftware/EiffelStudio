@@ -144,7 +144,7 @@ feature -- Actions
 
 feature -- Status report
 
-is_parented: BOOLEAN is
+	is_parented: BOOLEAN is
 			-- Does current item belongs to an EV_GRID?
 		require
 			not_destroyed: not is_destroyed

@@ -78,15 +78,7 @@ cluster
 
 	all patterns: "$EIFFEL_SRC\library\patterns"
 
-	all ast:		"$EIFFEL_SRC\Eiffel\common\parser\AST"
-
-	yacc (ast):		"$EIFFEL_SRC\Eiffel\yacc"
-
-	structure (ast):		"$EIFFEL_SRC\Eiffel\eiffel\structures"
-
-	eiffel_helper (ast):		"$EIFFEL_SRC\library\helpers\eiffel"
-
-	eiffel_parser (ast):		"$EIFFEL_SRC\Eiffel\common\parser\parser"
+	all ast:		"$EIFFEL_SRC\Eiffel\common"
 
 	eiffel_parser_errors (ast):		"$EIFFEL_SRC\Eiffel\API\error\common"
 		exclude

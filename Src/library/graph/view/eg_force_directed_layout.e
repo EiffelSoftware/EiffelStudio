@@ -231,7 +231,7 @@ feature {NONE} -- Implementation
 		local
 			l_item: EG_LINKABLE_FIGURE
 			i, nb: INTEGER
-			l_force: VECTOR2D [DOUBLE]
+			l_force: EG_VECTOR2D [DOUBLE]
 			dx, dy: INTEGER
 			move: INTEGER
 			l_linkables: like linkables

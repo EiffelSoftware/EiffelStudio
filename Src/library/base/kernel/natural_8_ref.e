@@ -73,8 +73,8 @@ feature -- Access
 			Result := item.to_character
 		end
 
-	Min_value: NATURAL_8 is {NATURAL_8} 0
-	Max_value: NATURAL_8 is {NATURAL_8} 255
+	Min_value: NATURAL_8 is 0
+	Max_value: NATURAL_8 is 255
 			-- Minimum and Maximum value hold in `item'.
 
 feature -- Comparison

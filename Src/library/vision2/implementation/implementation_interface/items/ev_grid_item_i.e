@@ -154,15 +154,18 @@ feature -- Status setting
 
 	enable_select is
 			-- Set `is_selected' `True'.
+		local
+			row_previously_selected: BOOLEAN
 		do
 			if parent_i.is_single_row_selection_enabled or else parent_i.is_multiple_row_selection_enabled then
 					-- We are in row selection mode so we manipulate the parent row directly
 				row_i.enable_select
 			else
+				row_previously_selected := row_i.is_selected
 				if not is_selected then
 					enable_select_internal
 				end
-				if row_i.is_selected then
+				if not row_previously_selected and then row_i.is_selected then
 					parent_i.update_row_selection_status (row_i)
 				end
 				parent_i.update_item_selection_status (Current)
@@ -171,10 +174,21 @@ feature -- Status setting
 
 	disable_select is
 			-- Set `is_selected' `False'.
+		local
+			row_previously_selected: BOOLEAN
 		do
-			if is_selected then
-				disable_select_internal
-				parent_i.redraw_item (Current)
+			if parent_i.is_single_row_selection_enabled or else parent_i.is_multiple_row_selection_enabled then
+					-- We are in row selection mode so we manipulate the parent row directly
+				row_i.disable_select
+			else
+				row_previously_selected := row_i.is_selected
+				if is_selected then
+					disable_select_internal
+				end
+				if row_previously_selected then
+					parent_i.update_row_selection_status (row_i)
+				end
+				parent_i.update_item_selection_status (Current)
 			end
 		end
 		

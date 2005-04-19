@@ -502,11 +502,41 @@ feature {NONE} -- Implementation
 	add_string_multilined (text: STRUCTURED_TEXT; s: STRING) is
 			-- Append `s' to `text' using the multilined formatting.
 		local
-			s_as: STRING_AS
+			sb: STRING
+			n, ind: INTEGER
 		do
 			if s.substring_index ("%%N", 1) > 0 then
-				create s_as.initialize ("", 0, 0, 0)
-				s_as.append_nice_multilined (s, text, 2)
+					-- Format on a new line, breaking at every newline.
+					-- Indent `ind' times.
+					-- Prune all '%' and special characters.
+				ind := 2
+				text.add_new_line
+				text.add_indents (ind)
+				s.replace_substring_all ("%%T", "")
+				s.replace_substring_all ("%%R", "")
+				n := s.substring_index ("%%N", 1)
+				text.add_indexing_string (s.substring (1, n - 1))
+				text.add_new_line
+				text.add_indents (ind)
+				s.remove_head (n + 1)
+				from
+					n := s.substring_index ("%%N", 1)
+				until
+					n = 0
+				loop
+					if n = 0 then
+						n := s.count
+					else
+						n := n + 1
+					end
+					sb := s.substring (1, n - 2)
+					s.remove_head (n)
+					text.add_indexing_string (sb)
+					text.add_new_line
+					text.add_indents (ind)
+					n := s.substring_index ("%%N", 1)
+				end
+				text.add_indexing_string (s)
 			else
 				text.add_indexing_string (s)
 			end

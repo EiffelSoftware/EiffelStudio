@@ -1593,14 +1593,6 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			node_index := an_item.column_i.index.min (pointed_row_i.index_of_first_item)
 			if node_index = an_item.column_i.index then
 				Result := a_subrow_indent * (pointed_row_i.indent_depth_in_tree - 1) + first_tree_node_indent
-				if pointed_row_i.subrow_count = 0 then
-						-- If the item's row has no subrows then
-						-- reduce `Result' to account for this.
-					Result := Result - a_subrow_indent
-					if pointed_row_i.parent_row_i /= Void and then pointed_row_i.index_of_first_item /= pointed_row_i.parent_row_i.index_of_first_item then
-						Result := 0
-					end
-				end
 			end
 			if pointed_row_i.parent_row_i = Void then
 				if is_tree_enabled and an_item.column.index = 1 then
@@ -1613,7 +1605,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			check
 				result_zero_when_item_not_in_subrow_or_first: an_item.row_i.parent_row_i = Void and node_index > pointed_row_i.index_of_first_item implies Result = 0
 				result_positive_when_in_subrow: an_item.row_i.parent_row_i /= Void implies Result >= 0
-				result_zero_when_node_index_differs_from_parent: an_item.row_i.parent_row_i /= Void and an_item.row_i.index_of_first_item /= an_item.row_i.parent_row_i.index_of_first_item and an_item.row_i.subrow_count = 0 implies Result = 0
+				result_is_first_indent_when_node_index_differs_from_parent: an_item.row_i.parent_row_i /= Void and an_item.row_i.index_of_first_item /= an_item.row_i.parent_row_i.index_of_first_item and an_item.row_i.subrow_count = 0 implies Result = first_tree_node_indent
 			end
 		end
 

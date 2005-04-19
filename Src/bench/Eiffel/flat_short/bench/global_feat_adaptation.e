@@ -18,7 +18,10 @@ inherit
 
 	COMPILER_EXPORTER
 
-	SHARED_ARG_TYPES
+	SHARED_STATELESS_VISITOR
+		export
+			{NONE} all
+		end
 
 create
 
@@ -53,8 +56,6 @@ feature -- Initialization
 			source_enclosing_class := source.written_class;
 			target_enclosing_class := target_class;
 			target_feature_table := target_class.feature_table;
-				-- Initialize the target arguments for evaluating arguments. 
-			Argument_types.init1 (target);
 debug ("FLAT_SHORT")
 	io.error.put_string ("%Tsource feature: ");
 	io.error.put_string (source.feature_name);
@@ -291,9 +292,9 @@ feature {FORMAT_CONTEXT} -- Implementation
 				Inst_context.set_cluster (source_enclosing_class.cluster);
 				System.set_current_class (source_enclosing_class);
 					-- When evaluating like feature
-				s_locals := body.local_table_for_format (source_enclosing_feature);
+				s_locals := locals_builder.local_table_for_format (source_enclosing_feature, body);
 				System.set_current_class (target_enclosing_class);
-				if s_locals = Void then
+				if s_locals = Void or else s_locals.is_empty then
 					Inst_context.set_cluster (old_cluster);
 				else
 					if (source_enclosing_class = target_enclosing_class) or else

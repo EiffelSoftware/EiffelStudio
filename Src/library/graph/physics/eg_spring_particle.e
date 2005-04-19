@@ -13,7 +13,7 @@ class
 	EG_SPRING_PARTICLE
 
 inherit
-	EG_PARTICLE_SIMULATION_BH [VECTOR2D [DOUBLE]]
+	EG_PARTICLE_SIMULATION_BH [EG_VECTOR2D [DOUBLE]]
 	
 	EV_MODEL_DOUBLE_MATH
 		undefine
@@ -33,7 +33,7 @@ feature {NONE} -- Implementation
 	px, py: INTEGER
 			-- Position of a particle.
 
-	external_force (a_node: EG_LINKABLE_FIGURE): VECTOR2D [DOUBLE] is
+	external_force (a_node: EG_LINKABLE_FIGURE): EG_VECTOR2D [DOUBLE] is
 			-- External force for `a_node'. (attraction to center of universe).
 		local
 			l_distance: DOUBLE
@@ -51,7 +51,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	nearest_neighbor_force (a_node: EG_LINKABLE_FIGURE): VECTOR2D [DOUBLE] is
+	nearest_neighbor_force (a_node: EG_LINKABLE_FIGURE): EG_VECTOR2D [DOUBLE] is
 			-- Get the spring force between all of `a_node's adjacent nodes.
 		local
 			i, nb: INTEGER
@@ -85,7 +85,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	n_body_force (a_node, an_other: EG_PARTICLE): VECTOR2D [DOUBLE] is
+	n_body_force (a_node, an_other: EG_PARTICLE): EG_VECTOR2D [DOUBLE] is
 			-- Get the electrical repulsion between all nodes, including those that are not adjacent.
 		local
 			l_distance, l_force: DOUBLE

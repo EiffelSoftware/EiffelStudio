@@ -5,7 +5,7 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	VECTOR [G -> NUMERIC]
+	EG_VECTOR [G -> NUMERIC]
 
 inherit
 	NUMERIC
@@ -17,7 +17,7 @@ feature -- Basic operations
 		deferred
 		end
 
-end -- class VECTOR
+end -- class EG_VECTOR
 
 --|----------------------------------------------------------------
 --| EiffelGraph: library of graph components for ISE Eiffel.

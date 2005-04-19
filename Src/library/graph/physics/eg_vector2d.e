@@ -5,10 +5,10 @@ indexing
 	revision: "$Revision$"
 
 class
-	VECTOR2D [G -> NUMERIC]
+	EG_VECTOR2D [G -> NUMERIC]
 	
 inherit
-	VECTOR [G]
+	EG_VECTOR [G]
 	
 create
 	make,
@@ -104,7 +104,7 @@ feature -- Basic operations
 			create Result.make (x * other, y * other)
 		end
 
-end -- class VECTOR2D
+end -- class EG_VECTOR2D
 
 --|----------------------------------------------------------------
 --| EiffelGraph: library of graph components for ISE Eiffel.

@@ -57,13 +57,6 @@ inherit
 			{NONE} all
 		end
 
-	SHARED_AST_CONTEXT
-		rename
-			context as ast_context
-		export
-			{NONE} all
-		end
-
 	SHARED_IL_CASING
 		export
 			{NONE} all

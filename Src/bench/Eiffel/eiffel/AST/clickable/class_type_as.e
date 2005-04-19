@@ -9,14 +9,13 @@ inherit
 	TYPE_AS
 		redefine
 			has_formal_generic, has_like, is_loose,
-			is_equivalent,
-			check_constraint_type, solved_type_for_format,
-			append_to, start_location, end_location
+			is_equivalent, start_location, end_location,
+			solved_type_for_format, append_to
 		end
 
 	CLICKABLE_AST
 		redefine
-			is_class, associated_eiffel_class
+			is_class
 		end
 
 	SHARED_INST_CONTEXT
@@ -35,28 +34,12 @@ feature {NONE} -- Initialization
 			class_name.to_upper
 			generics := g
 			is_expanded := a_is_exp
-			if a_is_exp then
-				record_expanded
-			end
 			is_separate := a_is_sep
 		ensure
 			class_name_set: class_name.is_equal (n.as_upper)
 			generics_set: generics = g
 			is_expanded_set: is_expanded = a_is_exp
 			is_separate_st: is_separate = a_is_sep
-		end
-
-feature {NONE} -- Initialization
-
-	record_expanded is
-			-- This must be done before pass2 `solved_type' and `actual type'
-			-- are called in pass3 for local variables
-		do
-			System.set_has_expanded
-			check
-				system_initialized: System.current_class /= Void
-			end
-			System.current_class.set_has_expanded
 		end
 
 feature -- Visitor
@@ -279,122 +262,6 @@ feature -- Conveniences
 			end
 		end
 
-	check_constraint_type (a_class: CLASS_C) is
-		local
-			associated_class: CLASS_C
-			temp, cl_generics: EIFFEL_LIST [FORMAL_DEC_AS]
-			class_i: CLASS_I
-			cluster: CLUSTER_I
-			vcfg3: VCFG3
-			vtct: VTCT
-			vtug: VTUG
-			error: BOOLEAN
-			nb_errors: INTEGER
-			t1, t2: TYPE_AS
-			pos: INTEGER
-			is_tuple_type : BOOLEAN
-			l_gen_type: GEN_TYPE_A
-		do
-			if has_like then
-				create vcfg3
-				vcfg3.set_class (a_class)
-				vcfg3.set_formal_name ("Constraint genericity")
-				vcfg3.set_location (generics.start_location)
-				Error_handler.insert_error (vcfg3)
-			else
-				cluster := a_class.cluster
-				class_i := Universe.class_named (class_name, cluster)
-				if class_i = Void then
-					create vtct
-					vtct.set_class (a_class)
-					vtct.set_class_name (class_name)
-					vtct.set_location (class_name)
-					Error_handler.insert_error (vtct)
-					error_handler.raise_error
-				else
-					associated_class := class_i.compiled_class
-					is_tuple_type := associated_class.is_tuple
-					cl_generics := associated_class.generics
-						-- TUPLEs can have any number of generics
-					if not is_tuple_type then
-						if generics /= Void then
-							if (cl_generics = Void) then
-								create {VTUG1} vtug
-							elseif (cl_generics.count /= generics.count) then
-								create {VTUG2} vtug
-							end
-						elseif cl_generics /= Void then
-							create {VTUG2} vtug
-						end
-					end
-					if vtug /= Void then
-						vtug.set_class (a_class)
-						vtug.set_type (actual_type)
-						vtug.set_base_class (associated_class)
-						vtug.set_location (class_name)
-						Error_handler.insert_error (vtug)
-					elseif generics /= Void then
-						if not is_tuple_type then
-							from
-								temp := cl_generics
-								create cl_generics.make_filled (temp.count)
-								pos := temp.index
-								temp.start
-							until
-								temp.after
-							loop
-								cl_generics.put_i_th (temp.item, temp.index)
-								temp.forth
-							end
-							temp.go_i_th (pos)
-							from
-								l_gen_type ?= actual_type
-								check
-										-- Should be not Void since we have
-										-- some generic parameters
-									l_gen_type_not_void: l_gen_type /= Void
-								end
-								generics.start
-								cl_generics.start
-								pos := 1
-							until
-								generics.after or else error
-							loop
-								nb_errors := Error_handler.nb_errors
-								t1 := generics.item
-								t1.check_constraint_type (a_class)
-								error := Error_handler.nb_errors /= nb_errors
-								if not error then
-									t2 := cl_generics.item.constraint
-									if t2 /= Void then
-										t1.actual_type.check_const_gen_conformance
-											(l_gen_type, t2.actual_type, a_class, pos)
-										error := Error_handler.new_error
-									end
-								end
-								pos := pos + 1
-								generics.forth
-								cl_generics.forth
-							end
-						else
-								-- TUPLE: has no generics
-							from
-								generics.start
-							until
-								generics.after or else error
-							loop
-								nb_errors := Error_handler.nb_errors
-								t1 := generics.item
-								t1.check_constraint_type (a_class)
-								error := Error_handler.nb_errors /= nb_errors
-								generics.forth
-							end
-						end
-					end
-				end
-			end
-		end
-
 	record_exp_dependance (a_class: CLASS_C) is
 		local
 			d: DEPEND_UNIT
@@ -454,12 +321,6 @@ feature -- Output
 			end
 		end
  
-	associated_eiffel_class (reference_class: CLASS_I): CLASS_I is
-			-- Search for Current compiled class in context of `reference_class'.
-		do
-			Result := Universe.class_named (class_name, reference_class.cluster)
-		end
-
 feature {COMPILER_EXPORTER} -- Conveniences
 
 	set_class_name (s: like class_name) is

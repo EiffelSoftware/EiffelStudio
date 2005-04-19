@@ -8,7 +8,7 @@ class EXTERNAL_AS
 inherit
 	ROUT_BODY_AS
 		redefine
-			byte_node, type_check, is_external
+			is_external
 		end
 
 	EXTERNAL_CONSTANTS
@@ -80,33 +80,6 @@ feature -- Comparison
 		do
 			Result := alias_name_id = other.alias_name_id and then
 				equivalent (language_name, other.language_name)
-		end
-
-feature -- Conveniences
-
-	type_check is
-			-- Type checking
-		do
-			language_name.extension.type_check (Current)
-		end
-
-feature -- Byte code
-
-	byte_node: BYTE_CODE is
-			-- Byte code for external feature
-		local
-			extern: EXTERNAL_I
-		do
-			extern ?= context.current_feature
-			if extern = Void then
-				create {DEF_BYTE_CODE} Result
-			else
-				check
-					extern_exists: context.current_feature /= Void
-					is_extern: context.current_feature.is_external
-				end
-				create {EXT_BYTE_CODE} Result.make (extern.external_name_id)
-			end
 		end
 
 invariant

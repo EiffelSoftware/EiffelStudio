@@ -9,6 +9,14 @@ deferred class TYPE_AS
 inherit
 	AST_EIFFEL
 
+	SHARED_ERROR_HANDLER
+
+	SHARED_WORKBENCH
+
+	SHARED_AST_CONTEXT
+
+	COMPILER_EXPORTER
+
 feature -- Properties
 
 	has_like: BOOLEAN is
@@ -80,7 +88,14 @@ feature {NONE} -- Comparison
 			Result := is_equivalent (l_other)
 		end
 	
-feature
+feature -- Output
+
+	dump: STRING is
+			-- Dumped trace
+		deferred
+		end;
+
+feature -- Type checking
 
 	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): TYPE_A is
 			-- Calculated type in function of the feature `f' which has
@@ -91,7 +106,7 @@ feature
 		deferred
 		ensure
 			result_not_void: Result /= Void
-		end;
+		end
 
 	solved_type_for_format (feat_table: FEATURE_TABLE; f: FEATURE_I): TYPE_A is
 			-- Calculated type in function of the feature `f' which has
@@ -105,42 +120,15 @@ feature
 			Result := solved_type (feat_table, f)
 		ensure
 			result_not_void: Result /= Void
-		end;
+		end
 
 	actual_type: TYPE_A is
 			-- Processed type of the type without taking care of the
 			-- anchored type.
 		deferred
-		end;
-
-	check_constraint_type (a_class: CLASS_C) is
-			-- Is the constraint type valid in the
-			-- context of `a_class' ?
-			-- A valid type is a class type that exists
-			-- in the system
-		local
-			vcfg3: VCFG3;
-		do
-			if has_like then
-				create vcfg3;
-				vcfg3.set_class (a_class);
-				vcfg3.set_formal_name ("Constraint genericity");
-				vcfg3.set_location (start_location)
-				Error_handler.insert_error (vcfg3);
-			end
-		end;
+		end
 
 feature -- Output
-
-	trace is
-		do
-			io.error.put_string (dump);
-		end;
-
-	dump: STRING is
-			-- Dumped trace
-		deferred
-		end;
 
 	append_to (st: STRUCTURED_TEXT) is
 			-- Append Current type to `st'.
@@ -148,7 +136,7 @@ feature -- Output
 			non_void_st: st /= Void
 		do
 			st.add_string (dump)
-		end;
+		end
 
 feature
 
@@ -157,14 +145,6 @@ feature
 			-- to feature `solved_type' ?)
 		do
 			-- Do nothing
-		end;
-
-feature {COMPILER_EXPORTER} 
-
-	simple_format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			ctxt.put_class_name (dump)
-		end;
+		end
 
 end -- class TYPE_AS

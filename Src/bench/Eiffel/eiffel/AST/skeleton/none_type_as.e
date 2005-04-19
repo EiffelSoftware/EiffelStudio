@@ -6,11 +6,20 @@ indexing
 class NONE_TYPE_AS
 
 inherit
-	BASIC_TYPE
+	TYPE_AS
+		redefine
+			append_to
+		end
 
 create
 	initialize
 
+feature {NONE} -- Initialize
+
+	initialize is
+		do
+		end
+		
 feature -- Visitor
 
 	process (v: AST_VISITOR) is
@@ -33,7 +42,19 @@ feature -- Location
 			Result := null_location
 		end
 
+feature -- Comparison
+
+	is_equivalent (o: like Current): BOOLEAN is
+		do
+			Result := True
+		end
+		
 feature
+
+	append_to (st: STRUCTURED_TEXT) is
+		do
+			actual_type.append_to (st)
+		end
 
 	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): NONE_A is
 			-- Calculated type in function of the feature `f' which has

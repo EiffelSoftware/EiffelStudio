@@ -17,6 +17,16 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_ERROR_HANDLER
+		export
+			{NONE} all
+		end
+
+	SHARED_WORKBENCH		
+		export
+			{NONE} all
+		end
+
 create
 	initialize
 

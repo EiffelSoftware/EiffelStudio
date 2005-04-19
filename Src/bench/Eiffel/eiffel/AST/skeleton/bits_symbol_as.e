@@ -6,11 +6,9 @@ indexing
 class BITS_SYMBOL_AS
 
 inherit
-	BASIC_TYPE
-		rename
-			initialize as initialize_basic_type
+	TYPE_AS
 		redefine
-			is_equivalent, append_to
+			append_to
 		end
 
 create

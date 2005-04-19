@@ -12,6 +12,9 @@ inherit
 			unanalyze
 		end
 
+create
+	make
+
 feature 
 
 	register: REGISTRABLE

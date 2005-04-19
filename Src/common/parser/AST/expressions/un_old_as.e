@@ -1,25 +1,18 @@
 indexing
 	description: "AST represenation of a unary `old' operation."
 	date: "$Date$"
-	revision: "$Revision $"
+	revision: "$Revision$"
 
-class
-	UN_OLD_AS
+class UN_OLD_AS
 
 inherit
 	UNARY_AS
 		redefine
-			--simple_format, 
-			operator_is_keyword
+			prefix_feature_name
 		end
 
-feature -- Visitor
-
-	process (v: AST_VISITOR) is
-			-- process current element.
-		do
-			v.process_un_old_as (Current)
-		end
+create
+	initialize
 
 feature -- Properties
 
@@ -29,17 +22,13 @@ feature -- Properties
 		end
 
 	operator_name: STRING is "old"
-	
-	operator_is_keyword: BOOLEAN is True
 
---feature {AST_EIFFEL} -- Output
---
---	simple_format (ctxt: FORMAT_CONTEXT) is
---			-- Reconstitute text.
---		do
---			ctxt.put_text_item (ti_Old_keyword)
---			ctxt.put_space
---			ctxt.format_ast (expr)
---		end
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_un_old_as (Current)
+		end
 
 end -- class UN_OLD_AS

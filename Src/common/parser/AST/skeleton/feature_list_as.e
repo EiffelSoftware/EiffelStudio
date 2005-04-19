@@ -1,19 +1,17 @@
 indexing
-	description: 
-		"List of feature names."
-	date: "$Date$"
-	revision: "$Revision $"
+	description: "List of feature names.";
+	date: "$Date$";
+	revision: "$Revision$"
 
-class
-	FEATURE_LIST_AS
+class FEATURE_LIST_AS
 
 inherit
 	FEATURE_SET_AS
-		redefine
-			is_equivalent
-		end
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (f: like features) is
 			-- Create a new FEATURE_LIST AST node.
@@ -33,10 +31,24 @@ feature -- Visitor
 			v.process_feature_list_as (Current)
 		end
 
-feature -- Properties
+feature -- Attributes
 
-	features: EIFFEL_LIST [FEATURE_NAME];
+	features: EIFFEL_LIST [FEATURE_NAME]
 			-- List of feature names
+
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			Result := features.start_location
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			Result := features.end_location
+		end
 
 feature -- Comparison
 
@@ -46,14 +58,7 @@ feature -- Comparison
 			Result := equivalent (features, other.features)
 		end
 
---feature {AST_EIFFEL} -- Output
---
---	simple_format (ctxt: FORMAT_CONTEXT) is
---			-- Reconstitute text.
---		do
---			ctxt.set_separator (ti_Comma);
---			ctxt.set_space_between_tokens;
---			features.simple_format (ctxt);
---		end
-
+invariant
+	features_not_void: features /= Void
+			
 end -- class FEATURE_LIST_AS

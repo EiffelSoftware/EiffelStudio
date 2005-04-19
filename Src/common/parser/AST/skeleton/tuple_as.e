@@ -1,19 +1,20 @@
 indexing
-	description: 
-		"AST representation of manifest tuple."
+	description: "AST representation of manifest tuple."
 	date: "$Date$"
-	revision: "$Revision $"
+	revision: "$Revision$"
 
-class
-	TUPLE_AS
+class TUPLE_AS
 
 inherit
-	ATOMIC_AS
+	EXPR_AS
 		redefine
 			is_equivalent
 		end
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (exp: like expressions) is
 			-- Create a new Manifest TUPLE AST node.
@@ -25,6 +26,25 @@ feature {AST_FACTORY} -- Initialization
 			expressions_set: expressions = exp
 		end
 
+feature -- Attributes
+
+	expressions: EIFFEL_LIST [EXPR_AS]
+			-- Expression list symbolizing the manifest tuple
+
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			Result := expressions.start_location
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			Result := expressions.end_location
+		end
+
 feature -- Visitor
 
 	process (v: AST_VISITOR) is
@@ -32,11 +52,6 @@ feature -- Visitor
 		do
 			v.process_tuple_as (Current)
 		end
-
-feature -- Properties
-
-	expressions: EIFFEL_LIST [EXPR_AS];
-			-- Expression list symbolizing the manifest tuple
 
 feature -- Comparison
 
@@ -46,28 +61,12 @@ feature -- Comparison
 			Result := equivalent (expressions, other.expressions)
 		end
 
---feature {AST_EIFFEL} -- Output
---
---	simple_format (ctxt: FORMAT_CONTEXT) is
---			-- Reconstitute text.
---		do
---			ctxt.put_text_item (ti_L_array);
---			ctxt.set_separator (ti_Comma);
---			ctxt.set_space_between_tokens;
---			ctxt.format_ast (expressions);
---			ctxt.put_text_item_without_tabs (ti_R_array);
---		end
+feature {AST_EIFFEL} -- Output
 
 	string_value: STRING is ""
 
-feature {TUPLE_AS}	-- Replication
-
-	set_expressions (e: like expressions) is
-		require
-			valid_arg: e /= Void
-		do
-			expressions := e
-		end
+invariant
+	expressions_not_void: expressions /= Void
 
 end -- class TUPLE_AS
 

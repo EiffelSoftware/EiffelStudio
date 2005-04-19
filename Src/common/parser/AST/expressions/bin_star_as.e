@@ -3,21 +3,15 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	BIN_STAR_AS
+class BIN_STAR_AS
 
 inherit
 	ARITHMETIC_AS
 
 	PREFIX_INFIX_NAMES
 
-feature -- Visitor
-
-	process (v: AST_VISITOR) is
-			-- process current element.
-		do
-			v.process_bin_star_as (Current)
-		end
+create
+	initialize
 
 feature -- Properties
 
@@ -29,5 +23,13 @@ feature -- Properties
 
 	op_name: STRING is "*"
 			-- Name without the infix keyword.
+
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_bin_star_as (Current)
+		end
 
 end -- class BIN_STAR_AS

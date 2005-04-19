@@ -9,10 +9,8 @@ class
 feature -- Access
 
 	names_heap: NAMES_HEAP is
-			-- Unique instance of NAMES_HEAP in system,
-			-- ie SYSTEM_I.names.
+			-- Unique instance of NAMES_HEAP
 		once
-			--Result := (create {SHARED_WORKBENCH}).System.names
 			create Result.make
 		ensure
 			Result_not_void: Result /= Void

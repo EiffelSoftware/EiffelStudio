@@ -7,14 +7,16 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class 
-	ACCESS_INV_AS
+class ACCESS_INV_AS
 
 inherit
 	ACCESS_FEAT_AS
 		redefine
 			process
 		end
+
+create
+	initialize
 
 feature -- Visitor
 

@@ -1,17 +1,19 @@
 indexing
 	description: "AST representation of a `ensure then' structure."
 	date: "$Date$"
-	revision: "$Revision $"
+	revision: "$Revision$"
 
-class
-	ENSURE_THEN_AS
+class ENSURE_THEN_AS
 
 inherit
 	ENSURE_AS
 		redefine
-			is_then,
-			process
+			process,
+			is_then
 		end
+
+create
+	initialize
 
 feature -- Visitor
 

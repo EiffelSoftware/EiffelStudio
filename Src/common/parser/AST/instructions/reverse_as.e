@@ -1,17 +1,21 @@
 indexing
-	description: 
-		"AST representation of a reverse assignment"
+
+	description:
+		"Abstract description of a reverse assignment. %
+		%Version for Bench."
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	REVERSE_AS
+class REVERSE_AS
 
 inherit
 	ASSIGN_AS
 		redefine
 			process
 		end
+
+create
+	initialize
 
 feature -- Visitor
 
@@ -22,3 +26,4 @@ feature -- Visitor
 		end
 
 end -- class REVERSE_AS
+

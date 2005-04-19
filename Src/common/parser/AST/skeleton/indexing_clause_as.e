@@ -8,15 +8,15 @@ class
 
 inherit
 	EIFFEL_LIST [INDEX_AS]
-		export
-			{NONE} all
-			{ANY} is_empty
 		redefine
-			make, extend, process
+			process, make
 		end
 
 create
 	make
+	
+create {INDEXING_CLAUSE_AS}
+	make_filled
 
 feature -- Initialization
 
@@ -36,7 +36,7 @@ feature -- Visitor
 			v.process_indexing_clause_as (Current)
 		end
 
-feature -- Attributes
+feature -- Access
 
 	description: STRING is
 			-- Description.
@@ -80,20 +80,66 @@ feature -- Attributes
 
 	custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS] is
 			-- Expression representing custom attributes.
+		local
+			l_list: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
 		do
-			Result := internal_custom_attributes (Attribute_header)
+			Result := internal_custom_attributes (Metadata_header)
+			if Result /= Void then
+				l_list := internal_custom_attributes (Attribute_header)
+				if l_list /= Void then
+					Result.append (l_list)
+				end
+			else
+				Result := internal_custom_attributes (Attribute_header)
+			end
 		end
 
 	class_custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS] is
 			-- Expression representing custom attributes.
+		local
+			l_list: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
 		do
-			Result := internal_custom_attributes (Class_attribute_header)
+			Result := internal_custom_attributes (Class_metadata_header)
+			if Result /= Void then
+				l_list := internal_custom_attributes (Class_attribute_header)
+				if l_list /= Void then
+					Result.append (l_list)
+				end
+			else
+				Result := internal_custom_attributes (Class_attribute_header)
+			end
 		end
 
 	interface_custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS] is
 			-- Expression representing custom attributes.
+		local
+			l_list: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
 		do
-			Result := internal_custom_attributes (Interface_attribute_header)
+			Result := internal_custom_attributes (Interface_metadata_header)
+			if Result /= Void then
+				l_list := internal_custom_attributes (Interface_attribute_header)
+				if l_list /= Void then
+					Result.append (l_list)
+				end
+			else
+				Result := internal_custom_attributes (Interface_attribute_header)
+			end
+		end
+		
+	assembly_custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS] is
+			-- Expression representing custom attributes for an assembly
+		local
+			l_list: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
+		do
+			Result := internal_custom_attributes (Assembly_metadata_header)
+			if Result /= Void then
+				l_list := internal_custom_attributes (Assembly_attribute_header)
+				if l_list /= Void then
+					Result.append (l_list)
+				end
+			else
+				Result := internal_custom_attributes (Assembly_attribute_header)
+			end
 		end
 
 	has_global_once: BOOLEAN is
@@ -119,7 +165,7 @@ feature -- Attributes
 						Result := s /= Void and then s.value.is_equal (Global_value)
 						if not Result then
 							l_id ?= list.item
-						--	Result := l_id /= Void and then l_id.string_value.is_equal (Global_value)
+							Result := l_id /= Void and then l_id.string_value.is_equal (Global_value)
 						end
 						list.forth
 					end
@@ -157,20 +203,51 @@ feature -- Attributes
 
 feature -- Element change
 
-	extend (v: like item) is
+	update_lookup (v: like item) is
 			-- Add `v' to end.
 			-- Do not move cursor.
+		require
+			v_not_void: v /= Void
+		local
+			l_index: like item
 		do
-			Precursor {EIFFEL_LIST} (v)
 			if v.tag /= Void then
-				lookup_table.force (v, v.tag)
+				lookup_table.search (v.tag)
+				if lookup_table.found then
+						-- Merge data from two similar `Index_clause' into one.
+					l_index := lookup_table.found_item
+					l_index.index_list.append (v.index_list)
+				else
+					create l_index.initialize (v.tag, v.index_list.twin)
+					lookup_table.put (l_index, l_index.tag)
+				end
+--				if obsolete_tags.has (v.tag) then
+--					Error_handler.insert_warning (
+--						create {OBSOLETE_INDEXING_TAG}.make (
+--							System.current_class, v.tag,
+--							obsolete_tags.item (v.tag), v.start_location))
+--				end
 			end
 		end
 
-feature -- Constants
+feature {NONE} -- Constants
 
 	External_header: STRING is "external_name"
 			-- Index name which holds name as seen by other languages.
+
+	Metadata_header: STRING is "metadata"
+			-- Index name which holds custom attributes applied to both implementation
+			-- and interface of current class.
+
+	Class_metadata_header: STRING is "class_metadata"
+			-- Index name which holds custom attributes applied to associated class only.
+
+	Interface_metadata_header: STRING is "interface_metadata"
+			-- Index name which holds custom attributes applied to associated interface only.
+			
+	Assembly_metadata_header: STRING is "assembly_metadata"
+			-- Index name which holds custom attributes applied to associated assembly.
+			-- They are only taken into account for the root_class.
 
 	Attribute_header: STRING is "attribute"
 			-- Index name which holds custom attributes applied to both implementation
@@ -181,6 +258,10 @@ feature -- Constants
 
 	Interface_attribute_header: STRING is "interface_attribute"
 			-- Index name which holds custom attributes applied to associated interface only.
+			
+	Assembly_attribute_header: STRING is "assembly_attribute"
+			-- Index name which holds custom attributes applied to associated assembly.
+			-- They are only taken into account for the root_class.
 			
 	Description_header: STRING is "description"
 			-- Index name which holds class/feature desciption.
@@ -196,6 +277,19 @@ feature -- Constants
 	
 	global_value: STRING is "global"
 			-- Value name of `Once_status_header'.
+
+	obsolete_tags: HASH_TABLE [STRING, STRING] is
+			-- Table indexed by obsoleted indexing tag, where key is new indexing tag that
+			-- should be used
+		do
+			create Result.make (5)
+			Result.put (Metadata_header, attribute_header)
+			Result.put (Class_metadata_header, Class_attribute_header)
+			Result.put (Interface_metadata_header, Interface_attribute_header)
+			Result.put (Assembly_metadata_header, Assembly_attribute_header)
+		ensure
+			obsolete_tags_not_void: Result /= Void
+		end
 
 feature {NONE} -- Implementation
 
@@ -247,7 +341,7 @@ feature {NONE} -- Implementation
 
 	string_value (tag: STRING): STRING is
 			-- String associated with `tag'
-			-- Empty if not a string or not tag `tag'
+			-- Void if not a string or not tag `tag'
 		local
 			i: INDEX_AS
 			list: EIFFEL_LIST [ATOMIC_AS]
@@ -271,12 +365,8 @@ feature {NONE} -- Implementation
 					if not list.after and s /= Void then
 						Result.append (", ")
 					end
-				end
-			else
-				create Result.make_empty
+				end				
 			end
-		ensure
-			non_void_string_value: Result /= Void
 		end
 		
 end -- class FEATURE_LIST_AS

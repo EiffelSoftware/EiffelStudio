@@ -1,10 +1,9 @@
 indexing
 	description: "AST representation of a deferred routine."
 	date: "$Date$"
-	revision: "$Revision $"
+	revision: "$Revision$"
 
-class
-	DEFERRED_AS
+class DEFERRED_AS
 
 inherit
 	ROUT_BODY_AS
@@ -13,13 +12,10 @@ inherit
 			is_equivalent
 		end
 
-feature {AST_FACTORY} -- Initialization
+	LEAF_AS
 
-	initialize is
-			-- Create a new DEFERRED AST node.
-		do
-			-- Do nothing.
-		end
+create
+	make_with_location
 
 feature -- Visitor
 
@@ -54,14 +50,5 @@ feature -- Properties
 		do
 			Result := 0
 		end
-
---feature {AST_EIFFEL} -- Output
---
---	simple_format (ctxt: FORMAT_CONTEXT) is
---			-- Reconstitute text.
---		do
---			ctxt.put_text_item (ti_Deferred_keyword)
---			ctxt.put_new_line
---		end
 
 end -- class DEFERRED_AS

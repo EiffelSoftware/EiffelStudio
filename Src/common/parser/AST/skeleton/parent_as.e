@@ -1,21 +1,24 @@
 indexing
+
 	description: "Abstract description of a parent. Version for Bench."
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	PARENT_AS
+class PARENT_AS
 
 inherit
 	AST_EIFFEL
 		redefine
-			is_equivalent, location
+			is_equivalent
 		end
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (t: like type; rn: like renaming; e: like exports;
-		u: like undefining; rd: like redefining; s: like selecting) is
+		u: like undefining; rd: like redefining; s: like selecting; ek: like end_keyword) is
 			-- Create a new PARENT AST node.
 		require
 			t_not_void: t /= Void
@@ -26,6 +29,7 @@ feature {AST_FACTORY} -- Initialization
 			undefining := u
 			redefining := rd
 			selecting := s
+			end_keyword := ek
 		ensure
 			type_set: type = t
 			renaming_set: renaming = rn
@@ -33,6 +37,7 @@ feature {AST_FACTORY} -- Initialization
 			undefining_set: undefining = u
 			redefining_set: redefining = rd
 			selecting_set: selecting = s
+			end_keyword_set: end_keyword = ek
 		end
 
 feature -- Visitor
@@ -63,21 +68,28 @@ feature -- Attributes
 	selecting: EIFFEL_LIST [FEATURE_NAME]
 			-- Select clause
 
-	location: TOKEN_LOCATION
-			-- Index in class text.
+	end_keyword: LOCATION_AS
+			-- End of clause if any of the `rename', `export', `redefine', `undefine'
+			-- and `select' is present
 
-feature {EIFFEL_PARSER} -- Element change
+feature -- Location
 
-	set_location (l: like location) is
-			-- Set `location' to `l'.
-		require
-			l_not_void: l /= Void
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
 		do
-			location := l.twin
-		ensure
-			location_set: location.is_equal (l)
+			Result := type.start_location
 		end
-
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			if end_keyword /= Void then
+				Result := end_keyword
+			else
+				Result := type.end_location
+			end
+		end		
+		
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is
@@ -91,62 +103,6 @@ feature -- Comparison
 				equivalent (undefining, other.undefining)
 		end
 
---feature {AST_EIFFEL} -- Output
---
---	simple_format (ctxt : FORMAT_CONTEXT) is
---			-- Reconstitute text.
---		local
---			end_to_print: BOOLEAN
---		do
---				-- There is no source as it is a parent description and target is
---				-- current analyzed class.
---			ctxt.set_classes (Void, ctxt.class_c)
---			ctxt.format_ast (type)
---			if renaming /= Void then
---				format_clause (ctxt, ti_Rename_keyword, renaming)
---				end_to_print := true
---			end
---			if exports /= Void then
---				format_clause (ctxt, ti_Export_keyword, exports)
---				end_to_print := true
---			end
---			if undefining /= Void then
---				format_clause (ctxt, ti_Undefine_keyword, undefining)
---				end_to_print := true
---			end
---			if redefining /= Void then
---				format_clause (ctxt, ti_Redefine_keyword, redefining)
---				end_to_print := true
---			end
---			if selecting /= Void then
---				format_clause (ctxt, ti_Select_keyword, selecting)
---				end_to_print := true
---			end
---			if end_to_print then
---				ctxt.indent
---				ctxt.put_new_line
---				ctxt.put_text_item (ti_End_keyword)
---				ctxt.exdent
---			end
---		end
---
---feature {NONE} -- Implementation
---
---	format_clause (ctxt: FORMAT_CONTEXT; a_keyword: KEYWORD_TEXT; a_clause: EIFFEL_LIST [AST_EIFFEL]) is
---			-- Format one of rename, export, undefine, redefine or select clauses.
---		do
---			ctxt.indent
---			ctxt.put_new_line
---			ctxt.put_text_item (a_keyword)
---			ctxt.indent
---			ctxt.put_new_line
---			ctxt.set_separator (ti_Comma)
---			ctxt.set_new_line_between_tokens
---			ctxt.format_ast (a_clause)
---			ctxt.exdent
---			ctxt.exdent
---		end
-
 feature -- Status report
 
 	is_effecting: BOOLEAN is
@@ -156,11 +112,5 @@ feature -- Status report
 			Result := undefining /= Void and then not undefining.is_empty
 				and then redefining /= Void and then not redefining.is_empty
 		end
-
-feature {NONE} -- Implementation
-
-	Redef: INTEGER is 1
-	Undef: INTEGER is 2
-	Selec: INTEGER is 3
 
 end -- class PARENT_AS

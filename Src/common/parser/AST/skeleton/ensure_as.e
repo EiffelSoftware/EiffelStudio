@@ -1,17 +1,18 @@
 indexing
-	description: 
-		"AST representation of an `ensure' structure."
-	date: "$Date$"
-	revision: "$Revision $"
+	description	: "AST representation of an `ensure' structure."
+	date		: "$Date$"
+	revision	: "$Revision$"
 
-class
-	ENSURE_AS
+class ENSURE_AS
 
 inherit
 	ASSERT_LIST_AS
-		redefine
+		redefine 
 			process
 		end
+
+create
+	initialize
 
 feature -- Visitor
 
@@ -28,17 +29,5 @@ feature -- Properties
 		do
 			-- Do nothing
 		end
-
---feature {NONE}
---	
---	simple_put_clause_keywords (ctxt: FORMAT_CONTEXT) is
---			-- Append keyword "ensure".
---		do
---			ctxt.put_text_item (ti_Ensure_keyword);
---			if is_then then
---				ctxt.put_space;
---            	ctxt.put_text_item_without_tabs (ti_Then_keyword)
---			end
---		end
 
 end -- class ENSURE_AS

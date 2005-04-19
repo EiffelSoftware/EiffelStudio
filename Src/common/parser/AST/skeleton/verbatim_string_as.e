@@ -13,16 +13,22 @@ inherit
 		redefine
 			process
 		end
+		
+create
+	initialize
 
-feature {AST_FACTORY} -- Initialization
+feature {NONE} -- Initialization
 
-	initialize (s, marker: STRING; indentable: BOOLEAN) is
+	initialize (s, marker: STRING; indentable: BOOLEAN; l, c, p: INTEGER) is
 			-- Create a new Verbatim string AST node.
 		require
 			s_not_void: s /= Void
 			marker_not_void: marker /= Void
+			l_non_negative: l >= 0
+			c_non_negative: c >= 0
+			p_non_negative: p >= 0
 		do
-			string_initialize (s)
+			string_initialize (s, l, c, p)
 			verbatim_marker := marker
 			is_indentable := indentable
 		ensure
@@ -39,7 +45,7 @@ feature -- Visitor
 			v.process_verbatim_string_as (Current)
 		end
 
-feature -- Attributes
+feature -- Properties
 
 	verbatim_marker: STRING
 			-- Delimiter used to mark the beginning and end of the
@@ -52,16 +58,8 @@ feature -- Attributes
 			-- Normally, indentable verbatim string is enclosed in '[' and ']'.
 			-- Non-indentable verbatim string is enclosed in '{' and '}'.
 
---feature {AST_EIFFEL} -- Output
---
---	simple_format (ctxt: FORMAT_CONTEXT) is
---			-- Reconstitute text.
---		do
---			ctxt.put_string_item ("%"" + verbatim_marker + "[")
---			append_format_multilined (clone (value), ctxt.text, ctxt.in_indexing_clause)
---			ctxt.put_new_line
---			ctxt.put_string_item ("]" + verbatim_marker + "%"")
---		end
+invariant
+	verbatim_marker_not_void: verbatim_marker /= Void
 
 end -- class VERBATIM_STRING_AS
 

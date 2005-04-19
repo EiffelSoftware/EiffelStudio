@@ -1,24 +1,28 @@
 indexing
-	description: 
-		"AST representation of an Eiffel loop instruction"
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "Abstract description of an Eiffel loop instruction. %
+				  %Version for Bench."
+	date		: "$Date$"
+	revision	: "$Revision$"
 
-class
-	LOOP_AS
+class LOOP_AS
 
 inherit
 	INSTRUCTION_AS
+		redefine
+			number_of_breakpoint_slots
+		end
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (f: like from_part; i: like invariant_part;
 		v: like variant_part; s: like stop;
-		c: like compound; l, e: like location) is
+		c: like compound; e: like end_keyword) is
 			-- Create a new LOOP AST node.
 		require
 			s_not_void: s /= Void
-			l_not_void: l /= Void
 			e_not_void: e /= Void
 		do
 			from_part := f
@@ -26,16 +30,14 @@ feature {AST_FACTORY} -- Initialization
 			variant_part := v
 			stop := s
 			compound := c
-			location := l.twin
-			end_location := e.twin
+			end_keyword := e
 		ensure
 			from_part_set: from_part = f
 			invariant_part_set: invariant_part = i
 			variant_part_set: variant_part = v
 			stop_set: stop = s
 			compound_set: compound = c
-			location_set: location.is_equal (l)
-			end_location_set: end_location.is_equal (e)
+			end_keyword_set: end_keyword = e
 		end
 
 feature -- Visitor
@@ -63,8 +65,58 @@ feature -- Attributes
 	compound: EIFFEL_LIST [INSTRUCTION_AS]
 			-- Loop compound
 
-	end_location: like location
+	end_keyword: LOCATION_AS
 			-- Line number where `end' keyword is located
+
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			if from_part /= Void then
+				Result := from_part.start_location
+			elseif invariant_part /= Void then
+				Result := invariant_part.start_location
+			elseif variant_part /= Void then
+				Result := variant_part.start_location
+			else
+				Result := stop.start_location
+			end
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			Result := end_keyword
+		end
+
+feature -- Access
+
+	number_of_breakpoint_slots: INTEGER is
+			-- Number of stop points for AST
+		do
+				-- "from" part
+			if from_part /= Void then
+				Result := Result + from_part.number_of_breakpoint_slots
+			end
+
+				-- "invariant" part
+			if invariant_part /= Void then
+				Result := Result + invariant_part.number_of_breakpoint_slots
+			end
+				-- "variant" part
+			if variant_part /= Void then
+				Result := Result + variant_part.number_of_breakpoint_slots
+			end
+
+				-- "until" part
+			Result := Result + 1
+
+				-- "loop" part
+			if compound /= Void then
+				Result := Result + compound.number_of_breakpoint_slots
+			end
+		end
 
 feature -- Comparison
 
@@ -78,87 +130,7 @@ feature -- Comparison
 				equivalent (variant_part, other.variant_part)
 		end
 
---feature {AST_EIFFEL} -- Output
---
---	simple_format (ctxt: FORMAT_CONTEXT) is
---			-- Reconstitute text.
---		do
---			ctxt.put_breakable;
---			ctxt.put_text_item (ti_From_keyword);
---			ctxt.set_separator (ti_Semi_colon);
---			ctxt.set_new_line_between_tokens;
---			if from_part /= Void then
---				ctxt.indent;
---				ctxt.put_new_line;
---				ctxt.format_ast (from_part);
---				ctxt.put_new_line;
---				ctxt.exdent
---			else
---				ctxt.put_new_line
---			end
---			ctxt.put_breakable;
---			if invariant_part /= Void then
---				ctxt.put_text_item (ti_Invariant_keyword);
---				ctxt.indent;
---				ctxt.put_new_line;
---				ctxt.format_ast (invariant_part);
---				ctxt.put_new_line;
---				ctxt.exdent;
---			end
---			if variant_part /= Void then
---				ctxt.put_text_item (ti_Variant_keyword);
---				ctxt.indent;
---				ctxt.put_new_line;
---				ctxt.format_ast (variant_part);
---				ctxt.put_new_line;
---				ctxt.exdent;
---			end
---			ctxt.put_text_item (ti_Until_keyword);
---			ctxt.indent;
---			ctxt.put_new_line;
---			ctxt.new_expression
---			ctxt.format_ast (stop);
---			ctxt.exdent;
---			ctxt.put_new_line;
---			ctxt.put_text_item (ti_Loop_keyword);
---			if compound /= Void then
---				ctxt.indent;
---				ctxt.put_new_line;
---				ctxt.format_ast (compound);
---				ctxt.exdent;
---			end
---			ctxt.put_new_line;
---			ctxt.put_breakable;
---			ctxt.put_text_item (ti_End_keyword);
---		end
-
-feature {LOOP_AS} -- Replication
-
-	set_from_part (f: like from_part) is
-		do
-			from_part := f
-		end
-
-	set_invariant_part (i: like invariant_part) is
-		do
-			invariant_part := i
-		end
-
-	set_variant_part (v: like variant_part) is
-		do
-			variant_part := v
-		end
-
-	set_stop (s: like stop) is
-		require
-			valid_s: s /= Void
-		do
-			stop := s
-		end
-
-	set_compound (c: like compound) is
-		do
-			compound := c
-		end
+invariant
+	stop_not_void: stop /= Void 
 			
 end -- class LOOP_AS

@@ -1,11 +1,9 @@
 indexing
-	description: 
-		"AST representation of unary expression."
+	description: "Abstract class for unary expression, Bench version"
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class 
-	UNARY_AS
+deferred class UNARY_AS
 	
 inherit
 	EXPR_AS
@@ -13,11 +11,9 @@ inherit
 	SYNTAX_STRINGS
 		export
 			{NONE} all
-		undefine
-			is_equal
 		end
 
-feature {AST_FACTORY} -- Initialization
+feature {NONE} -- Initialization
 
 	initialize (e: like expr) is
 			-- Create a new UNARY AST node.
@@ -34,23 +30,42 @@ feature -- Attributes
 	expr: EXPR_AS
 			-- Expression
 
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Start location of Current
+		do
+			Result := expr.start_location
+		end
+		
+	end_location: LOCATION_AS is
+			-- End location of Current
+		do
+			Result := expr.end_location
+		end
+		
+	operator_location: LOCATION_AS is
+			-- Location of operator
+		do
+			fixme ("Need to store operator location")
+			Result := start_location
+		end
+
+feature -- Properties
+
 	prefix_feature_name: STRING is
 			-- Internal name of the prefixed feature
-		deferred
+		do
+			Result := Prefix_str + operator_name + Quote_str
 		end
 
 	operator_name: STRING is
 		deferred
 		end
-	
-	operator_is_special: BOOLEAN is
+		
+	is_minus: BOOLEAN is
+			-- Is Current prefix "-"?
 		do
-			Result := true
-		end
-	
-	operator_is_keyword: BOOLEAN is 
-		do
-			Result := false
 		end
 
 feature -- Comparison
@@ -61,24 +76,20 @@ feature -- Comparison
 			Result := equivalent (expr, other.expr)
 		end
 
---feature {AST_EIFFEL} -- Output
---
---	simple_format (ctxt: FORMAT_CONTEXT) is
---			-- Reconstitute text.
---		do
---			ctxt.prepare_for_prefix (prefix_feature_name);
---			ctxt.put_prefix_feature;
---			ctxt.put_space;
---			expr.simple_format (ctxt);
---		end
-
 feature {UNARY_AS} -- Replication
 
 	set_expr (e: like expr) is
+			-- Set `expr' with `e'.
 		require
 			valid_arg: e /= Void
 		do
 			expr := e
+		ensure
+			expr_set: expr = e
 		end
 
-end -- class UNARY_AS
+invariant
+	expr_not_void: expr /= Void
+
+end
+

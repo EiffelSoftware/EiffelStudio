@@ -1,31 +1,29 @@
 indexing
-	description: 
-		"AST representation of an assignment"
+	description: "Abstract description of an assignment."
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	ASSIGN_AS
+class ASSIGN_AS
 
 inherit
 	INSTRUCTION_AS
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
 
-	initialize (t: like target; s: like source; loc: like location) is
+feature {NONE} -- Initialization
+
+	initialize (t: like target; s: like source) is
 			-- Create a new ASSIGN AST node.
 		require
 			t_not_void: t /= Void
 			s_not_void: s /= Void
-			non_void_loc: loc /= Void
 		do
 			target := t
 			source := s
-			location := loc
 		ensure
 			target_set: target = t
 			source_set: source = s
-			location_set: location = loc
 		end
 
 feature -- Visitor
@@ -38,11 +36,25 @@ feature -- Visitor
 
 feature -- Attributes
 
-	target: ACCESS_AS;
+	target: ACCESS_AS
 			-- Target of the assignment
 
-	source: EXPR_AS;
+	source: EXPR_AS
 			-- Source of the assignment
+
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			Result := target.start_location
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			Result := source.end_location
+		end
 
 feature -- Comparison
 
@@ -53,21 +65,6 @@ feature -- Comparison
 				equivalent (target, other.target)
 		end
 
---feature {AST_EIFFEL} -- Output
---
---	simple_format (ctxt: FORMAT_CONTEXT) is
---			-- Reconstitute text.
---		do
---			ctxt.put_breakable;
---			ctxt.new_expression;
---			ctxt.format_ast (target);
---			ctxt.put_space;
---			ctxt.put_text_item_without_tabs (assign_symbol);
---			ctxt.put_space;
---			ctxt.new_expression;
---			ctxt.format_ast (source);
---		end
-	
 feature {ASSIGN_AS}	-- Replication
 		
 	set_target (t: like target) is
@@ -83,5 +80,9 @@ feature {ASSIGN_AS}	-- Replication
 		do
 			source := s
 		end
+
+invariant
+	target_not_void: target /= Void
+	source_not_void: source /= Void
 
 end -- class ASSIGN_AS

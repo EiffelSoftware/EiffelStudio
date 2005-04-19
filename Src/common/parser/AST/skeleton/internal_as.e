@@ -1,17 +1,16 @@
 indexing
-	description: 
-		"Abstract class representing routines that have a body."
-	date: "$Date$"
-	revision: "$Revision $"
+	description	: "Abstract class representing routines that have a body."
+	date		: "$Date$"
+	revision	: "$Revision$"
 
-deferred class
-	INTERNAL_AS
+deferred class INTERNAL_AS
 
 inherit
 	ROUT_BODY_AS
 		redefine
+			is_empty,
 			has_instruction, index_of_instruction,
-			is_equivalent
+			number_of_breakpoint_slots, is_equivalent
 		end
 
 feature {AST_FACTORY} -- Initialization
@@ -26,8 +25,37 @@ feature {AST_FACTORY} -- Initialization
 
 feature -- Attributes
 
-	compound: EIFFEL_LIST [INSTRUCTION_AS];
+	compound: EIFFEL_LIST [INSTRUCTION_AS]
 			-- Compound
+
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			if compound /= Void then
+				Result := compound.start_location
+			else
+				Result := null_location
+			end
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			if compound /= Void then
+				Result := compound.end_location
+			else
+				Result := null_location
+			end
+		end
+
+feature -- test for empty body
+
+	is_empty : BOOLEAN is
+		do
+			Result := (compound = Void) or else (compound.is_empty)
+		end
 
 feature -- Comparison
 
@@ -38,6 +66,14 @@ feature -- Comparison
 		end
 
 feature -- Access
+
+	number_of_breakpoint_slots: INTEGER is
+			-- Number of stop points for AST
+		do
+			if compound /= Void then
+				Result := compound.number_of_breakpoint_slots
+			end
+		end
 
 	has_instruction (i: INSTRUCTION_AS): BOOLEAN is
 			-- Does the current routine body has instruction `i'?
@@ -70,28 +106,11 @@ feature -- Access
 			end
 		end
 
---feature {AST_EIFFEL} -- Output
---
---	simple_format (ctxt: FORMAT_CONTEXT) is
---			-- Reconstitute text.
---		do
---			ctxt.put_text_item (begin_keyword);
---			ctxt.put_new_line;
---			if compound /= Void then
---				ctxt.indent
---				ctxt.set_new_line_between_tokens;
---				compound.simple_format (ctxt);
---				ctxt.put_new_line;
---				ctxt.exdent
---			end
---			ctxt.put_breakable;
---		end
-
-feature {INTERNAL_AS} -- Replication
+feature {INTERNAL_AS, CMD, USER_CMD, INTERNAL_MERGER} -- Replication
 	
 	set_compound (c: like compound) is
 		do
-			compound := c;
-		end	
-
+			compound := c
+		end;	
+	
 end -- class INTERNAL_AS

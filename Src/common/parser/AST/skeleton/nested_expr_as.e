@@ -1,20 +1,22 @@
 indexing
 	description:
-		"AST representation of a nested call `target.message' where %
-		%the target is a parenthesized expression."
+			"Abstract description of a nested call `target.message' where %
+			%the target is a parenthesized expression. Version for Bench."
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	NESTED_EXPR_AS
+class NESTED_EXPR_AS
 
 inherit
 	CALL_AS
 		redefine
-			is_equivalent
+			is_equivalent, start_location, end_location
 		end
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (t: like target; m: like message) is
 			-- Create a new NESTED CALL AST node.
@@ -39,11 +41,25 @@ feature -- Visitor
 
 feature -- Attributes
 
-	target: EXPR_AS;
+	target: EXPR_AS
 			-- Target of the call
 
-	message: CALL_AS;
+	message: CALL_AS
 			-- Message send to the target
+
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Start location of Current
+		do
+			Result := target.start_location
+		end
+
+	end_location: LOCATION_AS is
+			-- End location of Current
+		do
+			Result := message.end_location
+		end
 
 feature -- Comparison
 
@@ -54,39 +70,8 @@ feature -- Comparison
 				equivalent (target, other.target)
 		end
 
---feature {AST_EIFFEL} -- Output
---
---	simple_format (ctxt: FORMAT_CONTEXT) is
---			-- Reconstitute text.
---		local
---			paran_as: PARAN_AS
---		do
---			paran_as ?= target
---			if paran_as = Void then
---				ctxt.put_text_item (ti_L_parenthesis);
---			end
---			target.simple_format (ctxt);
---			if paran_as = Void then
---				ctxt.put_text_item_without_tabs (ti_R_parenthesis);
---			end
---			ctxt.need_dot;
---			message.simple_format (ctxt);
---		end
-
-feature {NESTED_EXPR_AS} -- Replication
-
-	set_target (t: like target) is
-		require
-			valid_arg: t /= Void
-		do
-			target := t;
-		end
-
-	set_message (m: like message) is
-		require
-			valid_arg: m /= Void
-		do
-			message := m;
-		end
+invariant
+	message_not_void: message /= Void
+	target_not_void: target /= Void
 
 end -- class NESTED_EXPR_AS

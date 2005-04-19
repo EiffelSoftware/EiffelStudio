@@ -1,23 +1,35 @@
 indexing
-	description: 
-		"AST representation of a class invariant."
+
+	description: "Description of class invariant. Version for Bench."
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	INVARIANT_AS
+class INVARIANT_AS
 
 inherit
 	AST_EIFFEL
 
-feature {AST_FACTORY} -- Initialization
+	IDABLE
+		rename
+			id as class_id,
+			set_id as set_class_id
+		end
 
-	initialize (a: like assertion_list) is
+create
+	initialize
+
+feature {NONE} -- Initialization
+
+	initialize (a: like assertion_list; oms_count: like once_manifest_string_count) is
 			-- Create a new INVARIANT AST node.
+		require
+			valid_oms_count: oms_count >= 0
 		do
 			assertion_list := a
+			once_manifest_string_count := oms_count
 		ensure
 			assertion_list_set: assertion_list = a
+			once_manifest_string_count_set: once_manifest_string_count = oms_count
 		end
 
 feature -- Visitor
@@ -28,10 +40,35 @@ feature -- Visitor
 			v.process_invariant_as (Current)
 		end
 
-feature -- Attributes
+feature -- Attribute
 
 	assertion_list: EIFFEL_LIST [TAGGED_AS]
 			-- Assertion list
+
+	once_manifest_string_count: INTEGER
+			-- Number of once manifest strings
+
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			if assertion_list /= Void then
+				Result := assertion_list.start_location
+			else
+				Result := null_location
+			end
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			if assertion_list /= Void then
+				Result := assertion_list.end_location
+			else
+				Result := null_location
+			end
+		end
 
 feature -- Comparison
 
@@ -42,49 +79,7 @@ feature -- Comparison
 			Result := equivalent (assertion_list, other.assertion_list)
 		end
 
---feature {AST_EIFFEL} -- Output
---
---	simple_format (ctxt: FORMAT_CONTEXT) is
---			-- Reconstitute text.
---		do
---			ctxt.put_text_item (ti_Invariant_keyword);
---			ctxt.indent;
---			ctxt.put_new_line;
---			ctxt.set_separator (ti_Semi_colon);
---			ctxt.set_new_line_between_tokens;
---			if assertion_list /= Void then
---				simple_format_assertions (ctxt);
---				ctxt.put_new_line;
---				ctxt.put_new_line;
---			end
---			ctxt.exdent;
---		end
---
---	simple_format_assertions (ctxt: FORMAT_CONTEXT) is
---			-- Format assertions of this invariant.
---		local
---			i, l_count: INTEGER;
---			not_first: BOOLEAN
---		do
---			ctxt.begin;
---			from
---				i := 1;
---				l_count := assertion_list.count;
---			until
---				i > l_count
---			loop
---				if not_first then
---					ctxt.put_separator;
---				end
---				ctxt.new_expression;
---				assertion_list.i_th(i).simple_format(ctxt);
---				not_first := True
---				i := i + 1
---			end
---			ctxt.commit;
---		end
-
-feature	-- Duplication
+feature {COMPILER_EXPORTER}
 
 	set_assertion_list (a: like assertion_list) is
 		do

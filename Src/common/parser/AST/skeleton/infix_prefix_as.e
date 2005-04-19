@@ -1,17 +1,15 @@
 indexing
-	description: 
-		"AST representation of an Eiffel infixed feature name."
+	description: "Abstract description of an Eiffel infixed or prefixed feature name."
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	INFIX_PREFIX_AS
+class INFIX_PREFIX_AS
 
 inherit
 	FEATURE_NAME
 		redefine
-			is_infix, is_prefix, is_valid, offset, end_offset,
-			visual_name, is_equivalent
+			is_infix, is_prefix, is_valid, visual_name,
+			is_equivalent
 		end
 
 	SYNTAX_STRINGS
@@ -24,7 +22,7 @@ inherit
 create
 	initialize
 
-feature {AST_FACTORY} -- Initialization
+feature {NONE} -- Initialization
 
 	initialize (op: STRING_AS; b: BOOLEAN; inf: BOOLEAN) is
 			-- Create a new INFIX AST node.
@@ -32,9 +30,15 @@ feature {AST_FACTORY} -- Initialization
 		require
 			op_not_void: op /= Void
 		do
---			is_infix := inf
+			is_infix := inf
 			is_frozen := b
-			set_name (op.value)
+			visual_name := op.value
+			if is_infix then
+				create internal_name.initialize (infix_str + visual_name + quote_str)
+			else
+				create internal_name.initialize (prefix_str + visual_name + quote_str)
+			end
+			internal_name.set_position (op.line, op.column, op.position, internal_name.count)
 		ensure
 			is_frozen_set: is_frozen = b
 		end
@@ -47,6 +51,29 @@ feature -- Visitor
 			v.process_infix_prefix_as (Current)
 		end
 
+feature -- Properties
+
+	is_infix: BOOLEAN
+			-- is the feature name an infixed notation ?
+
+	is_prefix: BOOLEAN is
+			-- Is the feature a prefix notation?
+		do
+			Result := not is_infix
+		end
+
+	is_valid: BOOLEAN is
+			-- Is the fix notation valid ?
+		do
+			Result := sc.is_valid_operator (visual_name)
+		end
+
+	is_free: BOOLEAN is
+			-- Is the fix notation a free notation ?
+		do
+			Result := sc.is_valid_free_operator (visual_name)
+		end
+
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is
@@ -57,20 +84,6 @@ feature -- Comparison
 				is_frozen = other.is_frozen
 		end
 
-feature -- Properties
-
-	is_infix: BOOLEAN is
-			-- is the feature name an infixed notation ?
-		do
-			Result := True
-		end
-
-	is_prefix: BOOLEAN is
-			-- Is the feature a prefix notation?
-		do
-			Result := not is_infix
-		end
-
 feature -- Access
 
 	visual_name: STRING
@@ -79,41 +92,12 @@ feature -- Access
 	internal_name: ID_AS
 			-- Internal name used by the compiler
 
-	is_valid: BOOLEAN is
-			-- Is the fix notation valid ?
-		do
---			Result := sc.is_valid_operator (visual_name)
-		end
-
-	is_free: BOOLEAN is
-			-- Is the fix notation a free notation ?
-		do
---			Result := sc.is_valid_free_operator (visual_name)
-		end
-
-	offset: INTEGER is
-		do
-			if is_frozen then
-				Result := frozen_str.count
-			end
-			if is_prefix then
-				Result := Result + prefix_str.count
-			else
-				Result := Result + infix_str.count
-			end
-		end
-
-	end_offset: INTEGER is
-		once
-			Result := Quote_str.count
-		end
-
 feature -- Conveniences
 
 	infix "<" (other: FEATURE_NAME): BOOLEAN is
 		local
-			infix_feature: INFIX_PREFIX_AS;
-			normal_feature: FEAT_NAME_ID_AS;
+			infix_feature: INFIX_PREFIX_AS
+			normal_feature: FEAT_NAME_ID_AS
 		do
 			normal_feature ?= other
 			infix_feature ?= other
@@ -130,41 +114,12 @@ feature -- Conveniences
 			end
 		end
 
---feature {AST_EIFFEL} -- Output
---
---	simple_format (ctxt: FORMAT_CONTEXT) is
---			-- Reconstitute text.
---		do
---			if is_frozen then
---				ctxt.put_text_item (ti_Frozen_keyword);
---				ctxt.put_space
---			end
---			if is_infix then
---				ctxt.put_text_item (ti_Infix_keyword);
---				ctxt.put_space;
---				ctxt.put_text_item_without_tabs (ti_Double_quote);
---				ctxt.prepare_for_infix (internal_name, void);
---				ctxt.put_infix_feature
---			else
---				ctxt.put_text_item (ti_Prefix_keyword);
---				ctxt.put_space;
---				ctxt.put_text_item_without_tabs (ti_Double_quote);
---				ctxt.prepare_for_prefix (internal_name);
---				ctxt.put_prefix_feature
---			end
---			ctxt.put_text_item_without_tabs (ti_Double_quote);
---		end
+feature {NONE} -- Implementation
 
-feature
-
-	set_name (s: STRING) is
-		do
-			visual_name := s
-			if is_infix then
-				create internal_name.initialize (infix_str + s + quote_str)
-			else
-				create internal_name.initialize (prefix_str + s + quote_str)
-			end
+	sc: EIFFEL_SYNTAX_CHECKER is
+			-- Tool that checks the validity of feature names.
+		once
+			create Result
 		end
 
 end -- class INFIX_PREFIX_AS

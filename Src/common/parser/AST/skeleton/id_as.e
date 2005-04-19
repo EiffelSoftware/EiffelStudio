@@ -1,12 +1,16 @@
 indexing
-    description: "Node for id."
+    description: "Node for id. Version for Bench."
     date: "$Date$"
     revision: "$Revision$"
 
-class
-	ID_AS
+class ID_AS
 
 inherit
+	LEAF_AS
+		undefine
+			copy, out, is_equal
+		end
+
 	ATOMIC_AS
 		undefine
 			copy, out, is_equal
@@ -24,7 +28,7 @@ inherit
 create
 	make, initialize
 
-feature {AST_FACTORY} -- Initialization
+feature {NONE} -- Initialization
 
 	initialize (s: STRING) is
 			-- Create a new ID AST node made up
@@ -32,9 +36,13 @@ feature {AST_FACTORY} -- Initialization
 		require
 			s_not_void: s /= Void
 			s_not_empty: not s.is_empty
+		local
+			l_int: INTEGER
 		do
 			make (s.count)
-			append_string (s)
+			append (s)
+				-- Force computation of `hash_code' so that it gets stored in AST.
+			l_int := hash_code
 		end
 
 feature -- Visitor
@@ -58,21 +66,7 @@ feature -- Comparison
 			Result := is_equal (other)
 		end
 
-feature {FEAT_NAME_ID_AS, ROUTINE_AS} -- Conveniences
-
-	load (s: STRING) is
-		do
-			wipe_out
-			append (s)
-		end
-
-feature -- {AST_EIFFEL, AST_VISITOR} -- Output
-
---	simple_format (ctxt: FORMAT_CONTEXT) is
---			-- Reconstitute text.
---		do
---			ctxt.put_string (Current)
---		end
+feature {AST_EIFFEL} -- Output
 
 	string_value: STRING is
 		do

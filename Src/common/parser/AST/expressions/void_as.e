@@ -8,6 +8,11 @@ class
 	
 inherit
 	EXPR_AS
+		
+	LEAF_AS
+		
+create
+	make_with_location
 
 feature -- Comparison
 
@@ -16,7 +21,7 @@ feature -- Comparison
 		do
 			Result := True
 		end
-		
+
 feature -- Visitor
 
 	process (v: AST_VISITOR) is

@@ -10,7 +10,10 @@ class
 inherit
 	EXPR_AS
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (c: like class_type; t: like target; e: like expression) is
 			-- Create a new OPERAND AST node.
@@ -22,16 +25,6 @@ feature {AST_FACTORY} -- Initialization
 			class_type_set: class_type = c
 			target_set: target = t
 			expression_set: expression = e
-		end
-
-	initialize_result is
-			-- Create a new OPERAND_AST node on `Result'
-		require
-			not_is_result: not is_result
-		do
-			is_result := True
-		ensure
-			is_resul_set: is_result
 		end
 
 feature -- Visitor
@@ -47,14 +40,41 @@ feature -- Attributes
 	class_type: TYPE_AS
 			-- Type from which the feature comes if specified
 
-	target : ID_AS
+	target : ACCESS_AS
 			-- Name of target of delayed call
-
-	is_result: BOOLEAN
-			-- Is operand `Result'
 
 	expression: EXPR_AS
 			-- Object expression given at routine object evaluation
+
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			if class_type /= Void then
+				Result := class_type.start_location
+			elseif target /= Void then
+				Result := target.start_location
+			elseif expression /= Void then
+				Result := expression.start_location
+			else
+				Result := null_location
+			end
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			if class_type /= Void then
+				Result := class_type.end_location
+			elseif target /= Void then
+				Result := target.end_location
+			elseif expression /= Void then
+				Result := expression.end_location
+			else
+				Result := null_location
+			end
+		end
 
 feature -- Comparison
 
@@ -71,33 +91,10 @@ feature
 	is_open : BOOLEAN is
 			-- Is it an open operand?
 		do
-			--| FIXME ... and "not Result" ?
 			Result := (expression = Void) and then (target = Void)
 		ensure
 			Result = (expression = Void) and then (target = Void)
 		end
-
-feature {OPERAND_AS} -- Duplication
-
-	set_target (t : like target) is
-			-- Set `target' to `t'.
-		do
-			target := t
-		end
-
-	set_expression (e : like expression) is
-			-- Set `expression' to `e'.
-		do
-			expression := e
-		end
-
---feature {AST_EIFFEL} -- Output
---
---	simple_format (ctxt: FORMAT_CONTEXT) is
---			-- Reconstitute text.
---		do
---			-- FIXME
---		end
 
 end -- class OPERAND_AS
 

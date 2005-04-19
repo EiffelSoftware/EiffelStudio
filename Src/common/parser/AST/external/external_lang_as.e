@@ -9,25 +9,25 @@ class
 inherit
 	AST_EIFFEL
 		redefine
-			is_equivalent, location
+			is_equivalent
 		end
+
+	LEAF_AS
 
 create
 	initialize
 
 feature {AST_FACTORY} -- Initialization
 
-	initialize (l: like language_name; loc: like location) is
+	initialize (l: like language_name) is
 			-- Create a new EXTERNAL_LANGUAGE AST node.
 		require
 			l_not_void: l /= Void
 		do
 			language_name := l
-			location := loc
 			parse
 		ensure
 			language_name_set: language_name = l
-			location_set: location = loc
 		end
 
 feature -- Visitor
@@ -46,9 +46,6 @@ feature -- Attributes
 
 	extension: EXTERNAL_EXTENSION_AS
 			-- Parsed external extension
-
-	location: TOKEN_LOCATION
-			-- Location of AST
 
 feature -- Comparison
 

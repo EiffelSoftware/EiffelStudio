@@ -1,20 +1,21 @@
 indexing
-	description: 
-		"AST representation of a renaming pair."
+
+	description: "Abstract description of a renaming pair. Version for Bench."
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	RENAME_AS
+class RENAME_AS
 
 inherit
-
 	AST_EIFFEL
 		redefine
 			is_equivalent
 		end
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (o: like old_name; n: like new_name) is
 			-- Create a new RENAME_PAIR AST node.
@@ -45,6 +46,20 @@ feature -- Attributes
 	new_name: FEATURE_NAME
 			-- New name
 
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			Result := old_name.start_location
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			Result := new_name.end_location
+		end
+
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is
@@ -54,28 +69,8 @@ feature -- Comparison
 				equivalent (new_name, other.new_name)
 		end
 
---feature {AST_EIFFEL} -- Output
---
---	simple_format (ctxt: FORMAT_CONTEXT) is
---			-- Reconstitute text.
---		do
---			ctxt.format_ast (old_name);
---			ctxt.put_space;
---			ctxt.put_text_item_without_tabs (ti_As_keyword);
---			ctxt.put_space;
---			ctxt.format_ast (new_name);
---		end
+invariant
+	old_name_not_void: old_name /= Void
+	new_name_not_void: new_name /= Void
 
-feature {COMPILER_EXPORTER} -- Replication
-
-	set_old_name (o: like old_name) is
-		do
-			old_name := o
-		end
-
-	set_new_name (n: like new_name) is
-		do
-			new_name := n
-		end
-	
 end -- class RENAME_AS

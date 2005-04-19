@@ -1,19 +1,20 @@
 indexing
-	description: 
-		"AST representation of Eiffel feature name."
+	description: "Node for Eiffel feature name. Version for Bench."
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	FEAT_NAME_ID_AS
+class FEAT_NAME_ID_AS
 
 inherit
 	FEATURE_NAME
-		redefine
-			is_equivalent
+		rename
+			internal_name as feature_name
 		end
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (f: like feature_name; b: BOOLEAN) is
 			-- Create a new FEAT_NAME_ID AST node.
@@ -37,16 +38,8 @@ feature -- Visitor
 
 feature -- Attributes
 
-	feature_name: ID_AS;
+	feature_name: ID_AS
 			-- Feature name
-
-feature -- Conveniences
-
-	internal_name: ID_AS is
-			-- Internal name used by the compiler
-		do
-			Result := feature_name
-		end
 
 feature -- Comparison
 
@@ -80,12 +73,7 @@ feature -- Comparison
 			end
 		end
 
-feature {COMPILER_EXPORTER}
-
-	set_name (s: STRING) is
-		do
-			create feature_name.make (0);
-			feature_name.load (s);
-		end
+invariant
+	feature_name_not_void: feature_name /= Void
 
 end -- class FEAT_NAME_ID_AS

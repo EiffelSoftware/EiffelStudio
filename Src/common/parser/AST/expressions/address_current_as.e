@@ -1,8 +1,7 @@
 indexing
-	description: 
-		"AST representation of an Eiffel function pointer for Current."
-	date: "$Date$"
-	revision: "$Revision $"
+	description: "AST representation of an Eiffel function pointer for Current.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class
 	ADDRESS_CURRENT_AS
@@ -10,13 +9,10 @@ class
 inherit
 	EXPR_AS
 
-feature {AST_FACTORY} -- Initialization
+	LEAF_AS
 
-	initialize is
-			-- Create a new ADDRESS_CURRENT AST node.
-		do
-			-- Do nothing.
-		end
+create
+	make_from_other
 
 feature -- Visitor
 
@@ -33,14 +29,5 @@ feature -- Comparison
 		do
 			Result := True
 		end
-
---feature {AST_EIFFEL} -- Output
---
---	simple_format (ctxt: FORMAT_CONTEXT) is
---			-- Reconstitute text.
---		do
---			ctxt.put_text_item_without_tabs (ti_Dollar);
---			ctxt.put_text_item_without_tabs (ti_Current)
---		end
 
 end -- class ADDRESS_CURRENT_AS

@@ -3,8 +3,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	UN_FREE_AS
+class UN_FREE_AS
 
 inherit
 	UNARY_AS
@@ -16,7 +15,10 @@ inherit
 
 	PREFIX_INFIX_NAMES
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (op: like op_name; e: like expr) is
 			-- Create a new UN_FREE AST node.
@@ -31,6 +33,11 @@ feature {AST_FACTORY} -- Initialization
 			expr_set: expr = e
 		end
 
+feature -- Attributes
+
+	op_name: ID_AS
+			-- Operator name
+
 feature -- Visitor
 
 	process (v: AST_VISITOR) is
@@ -38,11 +45,6 @@ feature -- Visitor
 		do
 			v.process_un_free_as (Current)
 		end
-
-feature -- Attributes
-
-	op_name: ID_AS
-			-- Operator name
 
 feature -- Properties
 
@@ -66,7 +68,7 @@ feature -- Comparison
 				equivalent (expr, other.expr)
 		end
 
-feature {UNARY_AS} -- Replication
+feature {UNARY_AS}	-- Replication
 
 	set_prefix_feature_name (p: like prefix_feature_name) is
 		do

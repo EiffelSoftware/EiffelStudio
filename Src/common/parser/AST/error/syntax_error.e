@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (s, e: INTEGER; f: STRING; c: INTEGER; m: STRING; u: BOOLEAN) is
+	make (s, e: INTEGER; f: STRING; m: STRING; u: BOOLEAN) is
 			-- Create a new SYNTAX_ERROR.
 		require
 			f_not_void: f /= Void

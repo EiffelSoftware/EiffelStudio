@@ -1,28 +1,24 @@
 indexing
-	description: "Abstract syntax tree node."
+	description: "Abstract node produce by yacc. Version for Bench."
 	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class AST_EIFFEL
 
--- inherit
--- 	AST_YACC
- 
+inherit
+	ANY
+
+	REFACTORING_HELPER
+		export
+			{NONE} all
+		end
+
 feature -- Visitor
 
 	process (v: AST_VISITOR) is
-			-- process current element.
-		require
-			v_not_void: v /= Void
-		deferred			
+			-- Visitor feature.
+		deferred
 		end
-
---feature {AST_EIFFEL, COMPILER_EXPORTER} -- Output
---
---	simple_format (ctxt: FORMAT_CONTEXT) is
---			-- Reconsitute text according to context.
---		deferred
---		end
 
 feature -- Comparison
 
@@ -48,56 +44,57 @@ feature -- Comparison
 			end
 		end
 
-feature -- Location of Node
+feature -- Access
 
-	frozen start_position: INTEGER is
-			-- Start position of the item in text
+	number_of_breakpoint_slots: INTEGER is
+			-- Number of stop points for AST (body only)
+		do
+			-- Return 0 by default
+		end
+
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		deferred
+		ensure
+			start_location_not_void: Result /= Void
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		deferred
+		ensure
+			end_location_not_void: Result /= Void
+		end
+
+	start_position: INTEGER is
+			-- Starting position for current construct.
+		do
+			Result := start_location.position
+		ensure
+			start_position_non_negative: Result >= 0
+		end
+
+	end_position: INTEGER is
+			-- End position for current construct
 		local
-			l: like location
+			l_location: like end_location
 		do
-			l := location
-			if l /= Void then
-				Result := l.start_position
-			else
-					-- Return -1 which refers to an unknown value.
-				Result := -1
-			end
+			l_location := end_location
+			Result := l_location.position + l_location.location_count
+		ensure
+			end_position_non_negative: Result >= 0
 		end
+		
+feature {NONE} -- Constants
 
-	frozen end_position: INTEGER is
-			-- End position of the item in text
-		local
-			l: like location
-		do
-			l := location
-			if l /= Void then
-				Result := l.end_position
-			else
-					-- Return -1 which refers to an unknown value.
-				Result := -1
-			end
+	null_location: LOCATION_AS is
+			-- Null location
+		once
+			create Result.make_null
+		ensure
+			null_location_not_void: Result /= Void and then Result.is_null
 		end
-
-	frozen line_number : INTEGER is
-			-- line of the item in the source text
-		local
-			l: like location
-		do
-			l := location
-			if l /= Void then
-				Result := l.line_number
-			else
-					-- Return -1 which refers to an unknown value.
-				Result := -1
-			end
-		end
-
-feature {AST_FACTORY} -- Location
-
-	location: TOKEN_LOCATION is
-			-- location of the item in the source text
-		do
-			-- Not used by default.
-		end
-
-end -- class AST_EIFFEL
+		
+end

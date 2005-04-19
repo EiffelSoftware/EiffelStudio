@@ -2,7 +2,7 @@ indexing
 	description: 
 		"AST representation of an Eiffel function pointer."
 	date: "$Date$"
-	revision: "Revision $"
+	revision: "$Revision$"
 
 class
 	ADDRESS_AS
@@ -10,7 +10,10 @@ class
 inherit
 	EXPR_AS
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (f: like feature_name) is
 			-- Create a new ADDRESS AST node.
@@ -30,10 +33,24 @@ feature -- Visitor
 			v.process_address_as (Current)
 		end
 
-feature -- Attributes
+feature -- Attribute
 
 	feature_name: FEATURE_NAME
 			-- Feature name to address
+
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			Result := feature_name.start_location
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			Result := feature_name.end_location
+		end
 
 feature -- Comparison
 
@@ -42,15 +59,5 @@ feature -- Comparison
 		do
 			Result := equivalent (feature_name, other.feature_name)
 		end
-
---feature {AST_EIFFEL} -- Output
---
---	simple_format (ctxt: FORMAT_CONTEXT) is
---			-- Reconstitute text.
---		do
---			ctxt.prepare_for_feature (feature_name.internal_name, void);
---			ctxt.put_text_item_without_tabs (ti_Dollar);
---			ctxt.put_normal_feature;
---		end
 
 end -- class ADDRESS_AS

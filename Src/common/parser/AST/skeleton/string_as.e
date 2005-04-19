@@ -1,28 +1,36 @@
 indexing
-	description: 
-		"AST representation for string constants."
+
+	description: "Node for string constants. Version for Bench."
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	STRING_AS
+class STRING_AS
 
 inherit
-	PART_COMPARABLE;
 	ATOMIC_AS
 		redefine
 			is_equivalent
 		end
+	
+	LEAF_AS
+	
 	CHARACTER_ROUTINES
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
 
-	initialize (s: STRING) is
+feature {NONE} -- Initialization
+
+	initialize (s: STRING; l, c, p: INTEGER) is
 			-- Create a new STRING AST node.
 		require
 			s_not_void: s /= Void
+			l_non_negative: l >= 0
+			c_non_negative: c >= 0
+			p_non_negative: p >= 0
 		do
 			value := s
+			set_position (l, c, p, s.count)
 		ensure
 			value_set: value = s
 		end
@@ -35,11 +43,11 @@ feature -- Visitor
 			v.process_string_as (Current)
 		end
 
-feature -- Attributes
+feature -- Properties
 
-	value: STRING;
-			-- Integer value
-
+	value: STRING
+			-- Real string value.
+			
 	is_once_string: BOOLEAN
 			-- Is current preceded by `once' keyword?
 
@@ -55,40 +63,31 @@ feature -- Settings
 
 feature -- Comparison
 
-	infix "<" (other: like Current): BOOLEAN is
-		do
-			Result := value < other.value
-		end
-
 	is_equivalent (other: like Current): BOOLEAN is
 			-- Is `other' equivalent to the current object ?
 		do
 				-- `value' cannot be Void
-			Result := value.is_equal (other.value)
+			Result := is_once_string = other.is_once_string and then value.is_equal (other.value)
 		end
 
 feature -- Output
 
 	string_value: STRING is
+			-- Formatted value.
 		do
 			Result := eiffel_string (value)
+			Result.precede ('"')
+			Result.extend ('"')
 		end
 
---feature {AST_EIFFEL} -- Output
---
---	simple_format (ctxt: FORMAT_CONTEXT) is
---			-- Reconstitute text.
---		do
---			ctxt.put_text_item (ti_Double_quote);
---			ctxt.put_string (eiffel_string (value));
---			ctxt.put_text_item_without_tabs (ti_Double_quote);
---		end
-
-feature {INFIX_PREFIX_AS} 
+feature {INFIX_PREFIX_AS, DOCUMENTATION_ROUTINES} -- Status setting
 
 	set_value (s: STRING) is
 		do
-			value := s;
+			value := s
 		end
+
+invariant
+	value_not_void: value /= Void
 
 end -- class STRING_AS

@@ -1,25 +1,20 @@
 indexing
-	description: 
-		"AST representation for `like Current' type."
+	description: "Node for `like Current' type."
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	LIKE_CUR_AS
+class LIKE_CUR_AS
 
 inherit
 	TYPE_AS
 		redefine
-			has_like--, simple_format
+			has_like, is_loose
 		end
+		
+	LEAF_AS
 
-feature {AST_FACTORY} -- Initialization
-
-	initialize is
-			-- Create a new LIKE_CURRENT AST node.
-		do
-			-- Do nothing.
-		end
+create
+	make_from_other
 
 feature -- Visitor
 
@@ -39,22 +34,15 @@ feature -- Comparison
 
 feature -- Properties
 
-	has_like: BOOLEAN is True;
+	has_like: BOOLEAN is True
 			-- Does the type have anchor in its definition ?
+
+	is_loose: BOOLEAN is True
+			-- Does type depend on formal generic parameters and/or anchors?
 
 feature -- Output
 
 	dump: STRING is "like Current"
 			-- Dump trace
-
---feature {AST_EIFFEL} -- Output
---
---	simple_format (ctxt: FORMAT_CONTEXT) is
---			-- Reconstitute text.
---		do
---			ctxt.put_text_item_without_tabs (ti_Like_keyword);
---			ctxt.put_space;
---			ctxt.put_text_item_without_tabs (ti_Current)
---		end
 
 end -- class LIKE_CUR_AS

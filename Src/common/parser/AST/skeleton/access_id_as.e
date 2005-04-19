@@ -5,14 +5,16 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	ACCESS_ID_AS
+class ACCESS_ID_AS
 
 inherit
 	ACCESS_INV_AS
 		redefine
 			process
 		end
+
+create
+	initialize
 
 feature -- Visitor
 

@@ -1,11 +1,9 @@
 indexing
-	description: 
-		"Abstract notion of a routine body."
+	description: "Abstract notion of a routine body."
 	date: "$Date$"
-	revision: "$Revision $"
+	revision: "$Revision$"
 
-deferred class
-	ROUT_BODY_AS
+deferred class ROUT_BODY_AS
 
 inherit
 	AST_EIFFEL

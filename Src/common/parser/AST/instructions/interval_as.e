@@ -1,19 +1,23 @@
 indexing
-	description: 
-		"AST representation for alternative values of a multi-branch instruction."
+
+	description:
+			"Abstract node for alternative values of a multi-branch %
+			%instruction. Version for Bench."
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	INTERVAL_AS
+class INTERVAL_AS
 
 inherit
 	AST_EIFFEL
 		redefine
-			is_equivalent
+			is_equivalent, start_location, end_location
 		end
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (l: like lower; u: like upper) is
 			-- Create a new INTERVAL AST node.
@@ -35,6 +39,33 @@ feature -- Visitor
 			v.process_interval_as (Current)
 		end
 
+feature -- Attributes
+
+	lower: ATOMIC_AS
+			-- Lower bound
+
+	upper: ATOMIC_AS
+			-- Upper bound
+			-- Void if constant rather than interval
+
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			Result := lower.start_location
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			if upper /= Void then
+				Result := upper.end_location
+			else
+				Result := lower.end_location
+			end
+		end
+			
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is
@@ -44,59 +75,23 @@ feature -- Comparison
 				equivalent (upper, other.upper)
 		end
 
-feature -- Properties
-
-	lower: ATOMIC_AS;
-			-- Lower bound
-
-	upper: ATOMIC_AS;
-			-- Upper bound
-			-- void if constant rather than interval
-
-feature {COMPILER_EXPORTER} -- Access
-
-	good_integer_interval: BOOLEAN is
-			-- Is the current interval a good integer interval ?
-		do
-			Result := 	lower.good_integer
-						and then
-						(upper = Void or else upper.good_integer)
-		end
-
-	good_character_interval: BOOLEAN is
-			-- Is the current interval a good character interval ?
-		do
-			Result := 	lower.good_character
-						and then
-						(upper = Void or else upper.good_character)
-		end
-
---feature {AST_EIFFEL} -- Output
---
---	simple_format (ctxt: FORMAT_CONTEXT) is
---			-- Reconstitute text.
---		do
---			ctxt.format_ast (lower);
---			if upper /= void then
---				ctxt.put_text_item_without_tabs (ti_Dotdot);
---				ctxt.format_ast (upper);
---			end
---		end
-
 feature {INTERVAL_AS} -- Replication
 
 	set_lower (l: like lower) is
 			-- Set `lower' to `l'.
+		require
+			l_not_void: l /= Void
 		do
 			lower := l
 		end
 
 	set_upper (u: like upper) is
 			-- Set `upper' to `u'.
-		require
-			valid_arg: u /= Void
 		do
 			upper := u
 		end
+
+invariant
+	lower_not_void: lower /= Void
 
 end -- class INTERVAL_AS

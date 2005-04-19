@@ -1,24 +1,22 @@
 indexing
-	description: "AST representation to access to `Current'."
+	description:
+		"Abstract description to access to `Current'. %
+		%Version for Bench."
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	CURRENT_AS
+class CURRENT_AS
 
 inherit
 	ACCESS_AS
 		redefine
 			is_equivalent
 		end
-
-feature {AST_FACTORY} -- Initialization
-
-	initialize is
-			-- Create a new CURRENT AST node.
-		do
-			-- Do nothing.
-		end
+		
+	LEAF_AS
+		
+create
+	make_with_location
 
 feature -- Visitor
 
@@ -40,13 +38,9 @@ feature -- Properties
 
 	access_name: STRING is "Current"
 
---feature {AST_EIFFEL} -- Output
---
---	simple_format (ctxt: FORMAT_CONTEXT) is
---			-- Reconstitute text.
---		do
---			ctxt.prepare_for_current;
---			ctxt.put_text_item (ti_Current)
---		end
+	parameters: EIFFEL_LIST [EXPR_AS] is
+			-- No parameters for Current
+		do
+		end
 
 end -- class CURRENT_AS

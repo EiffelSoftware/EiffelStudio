@@ -10,7 +10,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (s, e: INTEGER; f: STRING; c: INTEGER; m: STRING) is
+	make (s, e: INTEGER; f: STRING; m: STRING) is
 			-- Create a new SYNTAX_WARNING instance.
 		do
 		end

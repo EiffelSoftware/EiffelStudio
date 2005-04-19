@@ -12,7 +12,6 @@ deferred class
 	
 inherit
 	GB_CONSTANTS
-		end
 		
 	GB_XML_UTILITIES
 		export

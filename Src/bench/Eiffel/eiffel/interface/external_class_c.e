@@ -1320,8 +1320,7 @@ feature {NONE} -- Implementation
 				create l_char_value.make (a_value.item (1))
 				l_value := l_char_value
 			elseif a_external_type.associated_class.lace_class = System.system_string_class then
-				create l_string_value
-				l_string_value.set_system_string_value (a_value)
+				create l_string_value.make (a_value, True)
 				l_value := l_string_value
 			end
 			a_constant.set_value (l_value)

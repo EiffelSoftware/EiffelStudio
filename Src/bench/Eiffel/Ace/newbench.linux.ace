@@ -117,24 +117,12 @@ cluster
 
 	compiler_support:		"$EIFFEL_SRC/Eiffel/support"
 
-	common:		"$EIFFEL_SRC/Eiffel/common"
-
-	common_parser (common):		"$/parser"
-
-	ast_visitor(common_parser):	"$/AST/visitor"
-
-	common_eiffel_parser (common_parser):		"$/parser"
-
-	old_resources (common):		"$/resources"
-
-	flat_short (common_parser):		"$/flat_short"
-		exclude
-			"format_context.e"; "local_format.e"; 
-		end
+	all common:             "$EIFFEL_SRC/Eiffel/common"
+         exclude
+                 "CVS"; "external"; "compiler_override"; "error"; "types";
+         end
 
 	flat_short_b:		"$EIFFEL_SRC/Eiffel/flat_short/bench"
-
-	yacc:		"$EIFFEL_SRC/Eiffel/yacc"
 
 	observer:		"$EIFFEL_SRC/library/patterns/observer"
 

@@ -12,11 +12,6 @@ inherit
 		redefine
 			has_formal_generic, is_loose
 		end
-		
-	CLICKABLE_AST
-		redefine
-			is_class, associated_eiffel_class
-		end
 
 create
 	initialize
@@ -60,9 +55,6 @@ feature -- Properties
 	is_expanded: BOOLEAN
 			-- Is Current formal to be always instantiated as an expanded type?
 
-	is_class: BOOLEAN is True
-			-- Does the Current AST represent a class?
-
 	has_formal_generic: BOOLEAN is True
 			-- Has type a formal generic parameter?
 
@@ -92,33 +84,6 @@ feature -- Comparison
 				and then is_expanded = other.is_expanded
 		end
 
-feature
-
-	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): FORMAL_A is
-			-- Calculated type in function of the feature `f' which has
-			-- the type Current and the feautre table `feat_table'
-		do
-			Result := actual_type
-		end
-
-	actual_type: FORMAL_A is
-			-- Actual type for formal generic
-		do
-			create Result.make (is_reference, is_expanded, position)
-		end
-
-feature -- Stoning
-
-	associated_eiffel_class (ref_class: CLASS_I): CLASS_I is
-		local
-			l_class: CLASS_C
-		do  
-			l_class := actual_type.associated_class
-			if l_class /= Void then
-				Result := l_class.lace_class
-			end
-		end
-
 feature -- Output
 
 	dump: STRING is
@@ -134,6 +99,21 @@ feature {COMPILER_EXPORTER}
 			-- Assign `i' to `position'.
 		do
 			position := i
+		end
+
+feature -- Type checking
+
+	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): FORMAL_A is
+			-- Calculated type in function of the feature `f' which has
+			-- the type Current and the feautre table `feat_table'
+		do
+			Result := actual_type
+		end
+
+	actual_type: FORMAL_A is
+			-- Actual type for formal generic
+		do
+			create Result.make (is_reference, is_expanded, position)
 		end
 
 end -- class FORMAL_AS

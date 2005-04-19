@@ -6,11 +6,9 @@ indexing
 class BITS_AS
 
 inherit
-	BASIC_TYPE
-		rename
-			initialize as initialize_basic_type
+	TYPE_AS
 		redefine
-			is_equivalent
+			append_to
 		end
 
 create
@@ -49,7 +47,7 @@ feature -- Visitor
 
 feature -- Attributes
 
-	bits_value: INTEGER_CONSTANT
+	bits_value: INTEGER_AS
 			-- Bits value
 
 feature -- Location
@@ -75,6 +73,11 @@ feature -- Comparison
 		end
 
 feature -- Type evaluation
+
+	append_to (st: STRUCTURED_TEXT) is
+		do
+			actual_type.append_to (st)
+		end
 
 	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): BITS_A is
 			-- Calculated type in function of the feature `f' which has

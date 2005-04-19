@@ -9,19 +9,26 @@ inherit
 			is_hector, inlined_byte_code, pre_inlined_code, size,
 			optimized_byte_node, is_unsafe, calls_special_features
 		end;
-	
+
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make (e: EXPR_B) is
+			-- Set `expr' to `e'
+		require
+			e_not_void: e /= Void
+		do
+			expr := e
+		ensure
+			expr_set: expr = e
+		end
+
 feature -- Attributes
 
 	expr: EXPR_B;
 		-- Expression to address
-
-feature  -- Initialization
-
-	set_expr (e: EXPR_B) is
-			-- Set `expr' to `e'
-		do
-			expr := e;
-		end
 
 feature
 
@@ -34,8 +41,7 @@ feature
 	enlarged: EXPR_ADDRESS_BL is
 			-- Enlarge the expression
 		do
-			create Result;
-			Result.set_expr (expr.enlarged)
+			create Result.make (expr.enlarged)
 		end;
 
 	is_hector: BOOLEAN is True;
@@ -140,5 +146,8 @@ feature -- Inlining
 			Result := Current
 			expr := expr.inlined_byte_code
 		end
- 
+
+invariant
+	expr_not_void: expr /= Void
+
 end

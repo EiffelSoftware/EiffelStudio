@@ -12,18 +12,27 @@ inherit
 			calls_special_features, size,
 			pre_inlined_code, inlined_byte_code,
 			generate_il
-		end;
-	
-feature 
+		end
+
+create
+	make
+
+feature {NONE} -- Initialize
+
+	make (e: EXPR_B) is
+			-- Set `expr' to `e'
+		require
+			e_not_void: e /= Void
+		do
+			expr := e
+		ensure
+			expr_set: expr = e
+		end
+
+feature
 
 	expr: EXPR_B;
 			-- The expression in parenthesis
-	
-	set_expr (e: EXPR_B) is
-			-- Set `expr' to `e'
-		do
-			expr := e;
-		end;
 
 	type: TYPE_I is
 			-- Expression type
@@ -167,5 +176,8 @@ feature -- Inlining
 			Result := Current
 			expr := expr.inlined_byte_code
 		end
+
+invariant
+	expr_not_void: expr /= Void
 
 end

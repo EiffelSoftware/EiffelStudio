@@ -8,7 +8,9 @@ inherit
 			generate, unanalyze, free_register,
 			register
 		end;
-	
+create
+	make
+
 feature
 
 	register: REGISTER;

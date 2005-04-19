@@ -10,7 +10,25 @@ inherit
 			is_unsafe, optimized_byte_node, calls_special_features,
 			size, inlined_byte_code, pre_inlined_code, generate_il
 		end
-	
+
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make (c: like call; l: like line_number) is
+			-- New instance of INSTR_CALL_B initialized with `c' and `l'.
+		require
+			c_not_void: c /= Void
+			l_positive: l > 0
+		do
+			call := c
+			line_number := l
+		ensure
+			call_set: call = c
+			line_number_set: line_number = l
+		end
+		
 feature 
 
 	enlarge_tree is
@@ -21,12 +39,6 @@ feature
 
 	call: CALL_B;
 			-- Instruction call
-	
-	set_call (c: like call) is
-			-- Assign `c' to `call'.
-		do
-			call := c;
-		end;
 
 	analyze is
 			-- Analyze the call
@@ -96,5 +108,8 @@ feature -- Inlining
 			Result := Current
 			call := call.inlined_byte_code
 		end
+
+invariant
+	call_not_void: call /= Void
 
 end

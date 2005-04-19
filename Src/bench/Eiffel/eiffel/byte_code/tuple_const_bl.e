@@ -14,7 +14,10 @@ inherit
 		end;
 	SHARED_TABLE
 	SHARED_DECLARATIONS
-	
+
+create
+	make
+
 feature 
 
 	register: REGISTRABLE

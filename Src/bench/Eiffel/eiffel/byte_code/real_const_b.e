@@ -12,7 +12,24 @@ inherit
 			is_simple_expr, is_predefined, generate_il,
 			is_fast_as_local
 		end
-	
+
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make (v: STRING) is
+			-- Assign `v' to `value'.
+			-- Remove the '_' signs in the real number.
+		require
+			v_not_void: v /= Void
+			no_undescores_in_v: not v.has ('_')
+		do
+			value := v
+		ensure
+			value_set: value = v
+		end
+
 feature -- Access
 
 	value: STRING
@@ -38,20 +55,6 @@ feature -- Status report
 			-- Float type
 		once
 			Result := real64_c_type
-		end
-
-feature -- Settings
-
-	set_value (v: STRING) is
-			-- Assign `v' to `value'.
-			-- Remove the '_' signs in the real number.
-		require
-			v_not_void: v /= Void
-			no_undescores_in_v: not v.has ('_')
-		do
-			value := v
-		ensure
-			value_set: value = v
 		end
 
 feature -- C code generation
@@ -87,5 +90,9 @@ feature -- Byte code generation
 			ba.append (Bc_real64)
 			ba.append_double (value.to_double)
 		end
+
+invariant
+	value_not_void: value /= Void
+	value_has_no_undescores: not value.has ('_')
 
 end

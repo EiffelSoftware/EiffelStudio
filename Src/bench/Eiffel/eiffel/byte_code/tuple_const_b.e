@@ -19,6 +19,24 @@ inherit
 			{NONE} all
 		end
 
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make (e: like expressions; t: like type) is
+			-- New instance of TUPLE_CONST_B
+		require
+			e_not_void: e /= Void
+			t_not_void: t /= Void
+		do
+			expressions := e
+			type := t
+		ensure
+			expressions_set: expressions = e
+			type_set: type = t
+		end
+
 feature -- Access
 
 	expressions: BYTE_LIST [BYTE_NODE];
@@ -78,10 +96,8 @@ feature -- Code generation
 	enlarged: TUPLE_CONST_BL is
 			-- Enlarge node
 		do
-			create Result;
-			Result.set_expressions (expressions);
-			Result.set_type (type);
-			Result.enlarge_tree;
+			create Result.make (expressions, type)
+			Result.enlarge_tree
 		end;
 
 feature -- IL generation
@@ -231,5 +247,9 @@ feature -- Inlining
 			Result := Current
 			expressions := expressions.inlined_byte_code
 		end
+
+invariant
+	expressions_not_void: expressions /= Void
+	type_not_void: type /= Void
 
 end

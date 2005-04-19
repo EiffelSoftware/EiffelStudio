@@ -15,17 +15,17 @@ feature -- Access
 	feature_name (a_feature: FEATURE_AS): STRING is
 			-- Return name of `a_feature' (i.e. "feature_name")
 		require
-			a_feature_not_Void: a_feature /= Void
+			a_feature_not_void: a_feature /= Void
 		do
 			Result := a_feature.feature_name.twin
 		ensure
-			Result_not_Void: Result /= Void
+			Result_not_void: Result /= Void
 		end
 		
 	feature_names (a_feature: FEATURE_AS): LIST [STRING] is
 			-- Return all names of `a_feature'.
 		require
-			a_feature_not_Void: a_feature /= Void
+			a_feature_not_void: a_feature /= Void
 		local
 			l_feature_names: EIFFEL_LIST [FEATURE_NAME]
 			str: STRING
@@ -47,13 +47,13 @@ feature -- Access
 				end
 			end
 		ensure
-			Result_not_Void: Result /= Void
+			Result_not_void: Result /= Void
 		end
 
 	full_signature_compiled (a_feature: E_FEATURE): STRING is
 			-- Parameter of `a_feature'. (i.e. (foo: LIST [BAR], bar: BAR): INTEGER
 		require
-			a_feature_not_Void: a_feature /= Void
+			a_feature_not_void: a_feature /= Void
 		local
 			l_st: STRUCTURED_TEXT
 		do
@@ -61,31 +61,31 @@ feature -- Access
 			a_feature.append_just_signature (l_st)
 			Result := l_st.image
 		ensure
-			Result_not_Void: Result /= Void
+			Result_not_void: Result /= Void
 		end
 		
 	full_name_compiled (a_feature: E_FEATURE): STRING is
 			-- Full name of `a_feature' (i.e. "feature_name (foo: FOO): LIST [FOO, BAR [FOO2]]")
 		require
-			a_feature_not_Void: a_feature /= Void
+			a_feature_not_void: a_feature /= Void
 		do
 			Result := feature_name (a_feature.ast) + full_signature_compiled (a_feature)
 		ensure
-			Result_not_Void: Result /= Void
+			Result_not_void: Result /= Void
 		end
 
 	full_name (a_feature: FEATURE_AS): STRING is
 			-- Full name of `a_feature' (i.e. "feature_name: LIST [FOO, BAR [FOO2]]")
 			-- without parameters.
 		require
-			a_feature_not_Void: a_feature /= Void
+			a_feature_not_void: a_feature /= Void
 		do
 			Result := feature_name (a_feature) + full_signature (a_feature)
 			if a_feature.body.content /= Void and then a_feature.is_deferred then
 				Result.append ("*")
 			end
 		ensure
-			Result_not_Void: Result /= Void
+			Result_not_void: Result /= Void
 		end
 		
 	full_signature (a_feature: FEATURE_AS): STRING is
@@ -100,7 +100,7 @@ feature -- Access
 				Result.replace_substring_all ("[ ", "[")
 			end
 		ensure
-			Result_not_Void: Result /= Void
+			Result_not_void: Result /= Void
 		end
 		
 
@@ -110,7 +110,7 @@ feature {NONE} -- Implementation
 			-- Try to extract as good as possible all supplier names
 			-- from `a_type'
 		require
-			a_type_not_Void: a_type /= Void
+			a_type_not_void: a_type /= Void
 		local
 			l_generics: ARRAY [TYPE_A]
 			i, nb: INTEGER
@@ -146,10 +146,9 @@ feature {NONE} -- Implementation
 			-- Try to extract as good as possible all supplier names
 			-- from `a_type'
 		require
-			a_type_not_Void: a_type /= Void
+			a_type_not_void: a_type /= Void
 		local
 			ct: CLASS_TYPE_AS
-			bt: BASIC_TYPE
 			g: EIFFEL_LIST [TYPE_AS]
 		do
 			Result := ""
@@ -172,55 +171,11 @@ feature {NONE} -- Implementation
 					end
 					Result.append ("]")
 				end
-			else
-				bt ?= a_type
-				if bt /= Void then
-					Result.append (supplier_name (bt.actual_type.associated_class.lace_class))
-				end
 			end
 		ensure
 			Result_not_void: Result /= Void
 		end
 			
-	
---	suppliers_name (a_type: TYPE_AS): STRING is
---			-- Try to extract as good as possible all supplier names
---			-- from `a_type'
---		local
---			ct: CLASS_TYPE_AS
---			bt: BASIC_TYPE
---			g: EIFFEL_LIST [TYPE_AS]
---		do
---			Result := ""
---			ct ?= a_type
---			if ct /= Void then
---				Result.append (supplier_name (class_i_by_name (ct.class_name)))
---				g := ct.generics
---				if g /= Void then
---					Result.append (" [ ")
---					from
---						g.start
---					until
---						g.after
---					loop
---						if not g.isfirst then
---							Result.append (", ")
---						end
---						Result.append (suppliers_name (g.item))
---						g.forth
---					end
---					Result.append ("]")
---				end
---			else
---				bt ?= a_type
---				if bt /= Void then
---					Result.append (supplier_name (bt.actual_type.associated_class.lace_class))
---				end
---			end
---		ensure
---			Result_not_void: Result /= Void
---		end
---			
 	supplier_name (sup: CLASS_I): STRING is
 			-- Name of `sup'.
 		do

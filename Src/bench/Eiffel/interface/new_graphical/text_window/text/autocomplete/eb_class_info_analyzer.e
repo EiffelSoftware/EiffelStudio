@@ -30,7 +30,7 @@ inherit
 			{NONE} all
 		end
 
-	SHARED_EVALUATOR
+	SHARED_STATELESS_VISITOR
 		export
 			{NONE} all
 		end
@@ -220,13 +220,13 @@ feature {NONE} -- Click ast exploration
 						a_click_ast := ast_list.i_th (pos)
 						clickable := a_click_ast.node
 						if clickable.is_class or else clickable.is_precursor then
-							a_class := clickable.associated_eiffel_class (current_class_i)
+							a_class := clickable_info.associated_eiffel_class (current_class_i, clickable)
 							if a_class /= Void then
 								create clickable_position.make (a_click_ast.start_position, a_click_ast.end_position)
 								clickable_position.set_class (a_class.name)
 								prov_list.extend (clickable_position)
 							end
-						else
+						elseif clickable.is_feature then
 							f_name ?= clickable
 							class_name := Void
 							if f_name /= Void and has_parents then
@@ -240,7 +240,8 @@ feature {NONE} -- Click ast exploration
 										j := j + 1
 									end
 									if j /= 1 and then pos_in_txt < inherit_clauses @ j then
-										a_class := parents.i_th (j - 1).associated_class (current_class_i)
+										a_class := clickable_info.
+											associated_eiffel_class (current_class_i, parents.i_th (j - 1).type)
 										if a_class /= Void then
 											class_name := a_class.name
 										else
@@ -253,7 +254,7 @@ feature {NONE} -- Click ast exploration
 								class_name := current_class_name
 							end
 							create clickable_position.make (a_click_ast.start_position, a_click_ast.end_position)
-							clickable_position.set_feature (class_name, clickable.associated_feature_name)
+							clickable_position.set_feature (class_name, clickable.feature_name)
 							prov_list.extend (clickable_position)
 						end
 						pos := pos + 1
@@ -1240,9 +1241,8 @@ feature {NONE}-- Implementation
 				end
 				error_handler.mark
 				l_feat := a_current_class.feature_named (a_feature_name)
-				Local_evaluator.set_local_name (a_local_name_id)
-				Result := Local_evaluator.evaluated_type (a_type,
-					a_current_class.feature_table, l_feat)
+				type_checker.init (l_feat, a_current_class)
+				Result := type_checker.solved_type (a_type)
 			end
 				-- After a crash or after the end of a normal execution
 				-- we need to restore compiler context.

@@ -821,17 +821,18 @@ feature {NONE} -- Implementation
 					ctxt.put_text_item (ti_l_curly)
 					l_operand.class_type.process (Current)
 					ctxt.put_text_item (ti_r_curly)
-					ctxt.put_space
-					ctxt.put_text_item (ti_question)
+					ctxt.need_dot
 				elseif l_operand.expression /= Void then
 					l_operand.expression.process (Current)
+					ctxt.need_dot
 				elseif l_operand.target /= Void then
 					l_operand.target.process (Current)
+					ctxt.need_dot
 				end
 			else
 				ctxt.put_text_item (ti_question)
+				ctxt.need_dot
 			end
-			ctxt.need_dot
 			create dummy_call.initialize (l_as.feature_name, l_as.operands)
 			dummy_call.process (Current)
 		end
@@ -1827,12 +1828,13 @@ feature {NONE} -- Implementation
 			l_as.expr.process (Current)
 			ctxt.put_space
 			ctxt.put_text_item_without_tabs (ti_then_keyword)
-			ctxt.indent
-			ctxt.set_separator (ti_semi_colon)
-			ctxt.set_new_line_between_tokens
 			ctxt.put_new_line
-			safe_process (l_as.compound)
-			ctxt.put_new_line
+			if l_as.compound /= Void then
+				ctxt.indent
+				format_compound (l_as.compound)
+				ctxt.put_new_line
+				ctxt.exdent
+			end
 		end
 
 	process_create_as (l_as: CREATE_AS) is
@@ -1953,9 +1955,7 @@ feature {NONE} -- Implementation
 			ctxt.put_new_line
 			if l_as.compound /= Void then
 				ctxt.indent
-				ctxt.set_separator (ti_semi_colon)
-				ctxt.set_new_line_between_tokens
-				l_as.compound.process (Current)
+				format_compound (l_as.compound)
 				ctxt.put_new_line
 				ctxt.exdent
 			end

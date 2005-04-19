@@ -237,7 +237,7 @@ feature -- Status report
 		end
 		
 	is_selected: BOOLEAN is
-			-- Is objects state set to selected.
+			-- Is objects state set to selected?
 		do
 			Result := selected_item_count > 0 and then selected_item_count = count		
 		end
@@ -314,32 +314,29 @@ feature {EV_GRID_I} -- Implementation
 	enable_select is
 			-- Select `Current' in `parent_i'.
 		do
-			remove_selection_from_children
-			selected_item_count := count
-			parent_i.redraw_client_area
-			fixme ("EV_GRID_COLUMN_I:enable_select - Perform a more optimal redraw when available")	
-		end
-
-	remove_selection_from_children is
-			-- Remove the selection from children in current.
-		local
-			sel_items: ARRAYED_LIST [EV_GRID_ITEM]
-		do
-			sel_items := parent_i.selected_items
-			from
-				sel_items.start
-			until
-				sel_items.after
-			loop
-				if sel_items.item.column = interface then
-						sel_items.item.disable_select
-				end
-				sel_items.forth
+			if not is_selected then
+				remove_selection_from_children
+					-- Set the column to be selected
+				selected_item_count := count - 1
+				increase_selected_item_count
+				parent_i.redraw_client_area
+				fixme ("EV_GRID_COLUMN_I:enable_select - Perform a more optimal redraw when available")				
 			end
 		end
 
 	disable_select is
 			-- Deselect `Current' from `parent_i'.
+		do
+			if is_selected then
+				decrease_selected_item_count
+			end
+			disable_select_internal
+			parent_i.redraw_client_area
+			fixme ("EV_GRID_COLUMN_I:disable_select - Perform a more optimal redraw when available")	
+		end
+
+	disable_select_internal is
+			-- Deselect the object.
 		local
 			i: INTEGER
 			a_item: EV_GRID_ITEM_I
@@ -354,10 +351,28 @@ feature {EV_GRID_I} -- Implementation
 					a_item.disable_select_internal
 				end
 				i := i + 1
-			end
+			end	
 			selected_item_count := 0
-			parent_i.redraw_client_area
-			fixme ("EV_GRID_COLUMN_I:disable_select - Perform a more optimal redraw when available")	
+		end
+
+	remove_selection_from_children is
+			-- Remove the selection from children in current.
+		local
+			sel_items: ARRAYED_LIST [EV_GRID_ITEM]
+			a_sel_item: EV_GRID_ITEM_I
+		do
+			sel_items := parent_i.selected_items
+			from
+				sel_items.start
+			until
+				sel_items.after
+			loop
+				if sel_items.item.column = interface then
+					a_sel_item ?= sel_items.item.implementation
+					a_sel_item.disable_select_internal
+				end
+				sel_items.forth
+			end
 		end
 
 	destroy is
@@ -382,6 +397,11 @@ feature {EV_GRID_ITEM_I} -- Implementation
 			selected_item_count_less_than_count: selected_item_count < count
 		do
 			selected_item_count := selected_item_count + 1
+			if is_selected then
+				if parent_i.column_select_actions_internal /= Void then
+					parent_i.column_select_actions_internal.call ([interface])
+				end
+			end
 		ensure
 			selected_item_count_increased: selected_item_count = old selected_item_count + 1
 		end
@@ -390,8 +410,16 @@ feature {EV_GRID_ITEM_I} -- Implementation
 			-- Decrease `selected_item_count' by 1.
 		require
 			selected_item_count_greater_than_zero: selected_item_count > 0
+		local
+			has_previous_selection: BOOLEAN
 		do
+			has_previous_selection := is_selected
 			selected_item_count := selected_item_count - 1
+			if has_previous_selection then
+				if parent_i.column_deselect_actions_internal /= Void then
+					parent_i.column_deselect_actions_internal.call ([interface])
+				end
+			end	
 		ensure
 			selected_item_count_decreased: selected_item_count = old selected_item_count - 1
 			selected_item_count_not_negative: selected_item_count >= 0

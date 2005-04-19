@@ -21,7 +21,7 @@ inherit
 	
 feature -- Access
 
-	parameters: BYTE_LIST [EXPR_B] is
+	parameters: BYTE_LIST [PARAMETER_B] is
 		do
 			-- no parameters
 		end

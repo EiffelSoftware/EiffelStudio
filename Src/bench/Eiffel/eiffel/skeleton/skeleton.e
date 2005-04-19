@@ -1035,7 +1035,7 @@ feature -- Skeleton byte code
 				i > nb
 			loop
 				buffer.put_character ('"');
-				buffer.put_string (current_area.item (i).attribute_name);
+				buffer.escape_string (current_area.item (i).attribute_name);
 				buffer.put_string ("%",%N");
 				i := i + 1;
 			end;

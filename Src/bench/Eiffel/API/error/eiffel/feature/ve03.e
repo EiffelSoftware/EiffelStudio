@@ -6,15 +6,13 @@ indexing
 	date: "$Date$";
 	revision: "$Revision $"
 
-class VE03 obsolete "NOT IN THE BOOK"
-
+class VE03
 inherit
-
 	FEATURE_ERROR
 		redefine
 			build_explain
 		end
-	
+
 feature
 
 	target: ACCESS_AS;

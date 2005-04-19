@@ -41,7 +41,7 @@ feature -- Output
 			st.add_new_line
 		end
 
-feature {ACCESS_AS} -- Setting
+feature -- Setting
 
 	set_called_feature (f: FEATURE_I; class_id: INTEGER) is
 		require

@@ -31,10 +31,12 @@ feature -- Output
 
 	print_name (st: STRUCTURED_TEXT) is
 		do
-			st.add_string ("Creation of: ");
-			st.add_string (target_name);
-			st.add_new_line;
-			st.add_string ("Target type: ");
+			if target_name /= Void then
+				st.add_string ("Creation of: ");
+				st.add_string (target_name);
+				st.add_new_line;
+			end
+			st.add_string ("Creation type: ");
 			if is_symbol then
 				st.add_string (symbol_name)
 			else

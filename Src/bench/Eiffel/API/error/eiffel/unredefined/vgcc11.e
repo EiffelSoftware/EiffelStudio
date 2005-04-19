@@ -26,9 +26,11 @@ feature -- Output
 	build_explain (st: STRUCTURED_TEXT) is
 			-- Build the error message
 		do
-			st.add_string ("Creation of: ");
-			st.add_string (target_name);
-			st.add_new_line;
+			if target_name /= Void then
+				st.add_string ("Creation of: ");
+				st.add_string (target_name);
+				st.add_new_line;
+			end
 			st.add_string ("Feature name: ");
 			if creation_feature /= Void then
 				creation_feature.append_signature (st);

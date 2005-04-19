@@ -1,22 +1,18 @@
 indexing
-
-	description: 
-		"The target of a creation instruction can only be an attribute, %
-		%a local variable of a Result.";
+	description: "Target of a creation instruction can only be an attribute, a local or Result.";
 	date: "$Date$";
-	revision: "$Revision $"
+	revision: "$Revision$"
 
-class VGCC7 obsolete "NOT IN THE BOOK"
+class VGCC7
 
 inherit
-
 	VGCC
 		redefine
 			subcode
-		end;
+		end
 
 feature -- Properties
 
-	subcode: INTEGER is 7;
+	subcode: INTEGER is 7
 
 end -- class VGCC7

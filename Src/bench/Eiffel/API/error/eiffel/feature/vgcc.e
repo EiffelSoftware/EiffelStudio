@@ -22,15 +22,19 @@ feature -- Properties
 	code: STRING is "VGCC";
 			-- Error code
 
-	target_name: STRING;
+	target_name: STRING
+			-- If not Void target of creation instruction, otherwise it is an error
+			-- in a creation expression.
 
 feature -- Output
 
 	print_name (st: STRUCTURED_TEXT) is
 		do
-			st.add_string ("Creation of: ");
-			st.add_string (target_name);
-			st.add_new_line;
+			if target_name /= Void then
+				st.add_string ("Creation of: ");
+				st.add_string (target_name);
+				st.add_new_line;
+			end
 			st.add_string ("Target type: ");
 			type.append_to (st);
 			st.add_new_line;

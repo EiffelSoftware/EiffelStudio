@@ -1744,12 +1744,12 @@ feature -- Constants generation
 
 	put_natural_8_constant,
 	put_natural_16_constant,
-	put_natural_32_constant (i: INTEGER) is
+	put_natural_32_constant (i: NATURAL_32) is
 			-- Put `i' as NATURAL_8, NATURAL_16, NATURAL on IL stack
 		do
 		end
 
-	put_natural_64_constant (i: INTEGER_64) is
+	put_natural_64_constant (i: NATURAL_64) is
 			-- Put `i' as NATURAL_64 on IL stack
 		do
 		end

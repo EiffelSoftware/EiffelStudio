@@ -1466,6 +1466,11 @@ feature {NONE} -- Implementation
 		end
 
 	process_class_as (l_as: CLASS_AS) is
+		local
+			l_creators: EIFFEL_LIST [CREATE_AS]
+			l_create: CREATE_AS
+			l_features: EIFFEL_LIST [FEATURE_NAME]
+			l_feat: FEATURE_I
 		do
 			if is_simple_formatting then
 				format_indexes (l_as.top_indexes)
@@ -1505,12 +1510,26 @@ feature {NONE} -- Implementation
 					ctxt.exdent
 				end
 				ctxt.put_new_line
-				if l_as.creators /= Void then
+
+				l_creators := l_as.creators
+				if l_creators = Void and then ctxt.class_c.has_feature_table then
+					l_feat := ctxt.class_c.default_create_feature
+					if l_feat /= Void then
+						create l_creators.make (1)
+						create l_features.make (1)
+						l_features.extend (create {FEAT_NAME_ID_AS}.initialize (
+							create {ID_AS}.initialize (l_feat.feature_name), False))
+						create l_create.initialize (Void, l_features)
+						l_creators.extend (l_create)
+					end
+				end
+				if l_creators /= Void then
 					ctxt.set_separator (ti_empty)
 					ctxt.set_new_line_between_tokens
-					l_as.creators.process (Current)
+					l_creators.process (Current)
 					ctxt.put_new_line
 				end
+
 				format_convert_clause (l_as.convertors)
 				if l_as.features /= Void then
 					ctxt.set_new_line_between_tokens
@@ -1554,12 +1573,25 @@ feature {NONE} -- Implementation
 					ctxt.exdent
 				end
 				ctxt.put_new_line
-				if l_as.creators /= Void then
+
+				l_creators := l_as.creators
+				if l_creators = Void and then ctxt.class_c.has_feature_table then
+					l_feat := ctxt.class_c.default_create_feature
+					if l_feat /= Void then
+						create l_creators.make (1)
+						create l_features.make (1)
+						l_features.extend (create {FEAT_NAME_ID_AS}.initialize (
+							create {ID_AS}.initialize (l_feat.feature_name), False))
+						create l_create.initialize (Void, l_features)
+						l_creators.extend (l_create)
+					end
+				end
+				if l_creators /= Void then
 					ctxt.put_text_item (ti_before_creators)
 					ctxt.continue_on_failure
 					ctxt.set_separator (ti_empty)
 					ctxt.set_new_line_between_tokens
-					l_as.creators.process (Current)
+					l_creators.process (Current)
 					if not ctxt.last_was_printed then
 						ctxt.put_text_item (ti_create_keyword)
 						ctxt.put_new_line
@@ -1871,13 +1903,9 @@ feature {NONE} -- Implementation
 						ctxt.put_new_line
 						ctxt.set_new_line_between_tokens
 						ctxt.set_classes (ctxt.class_c, ctxt.class_c)
-						if ctxt.is_flat_short then
-							format_features (l_as.feature_list)
-						else
-							ctxt.set_separator (ti_comma)
-							l_as.feature_list.process (Current)
-							ctxt.put_new_line
-						end
+						ctxt.set_separator (ti_comma)
+						l_as.feature_list.process (Current)
+						ctxt.put_new_line
 					end
 					ctxt.commit
 				end
@@ -2434,35 +2462,6 @@ feature {NONE} -- Implementation: helpers
 			end
 			if l_count > 0 then
 				ctxt.put_new_line
-			end
-			ctxt.commit
-		end
-
-	format_features (list: EIFFEL_LIST [FEATURE_NAME]) is
-			-- Format the features in the creation clause,
-			-- including header comment and contracts.
-		require
-			list_not_void: list /= Void
-		local
-			i, l_count: INTEGER
-			item: FEATURE_NAME
-			creators: HASH_TABLE [FEATURE_ADAPTER, STRING]
-			feat_adapter: FEATURE_ADAPTER
-		do
-			ctxt.begin
-			creators := ctxt.format_registration.creation_table
-			from
-				i := 1
-				l_count := list.count
-			until
-				i > l_count
-			loop
-				item := list.i_th (i)
-				feat_adapter := creators.item (item.internal_name)
-				if feat_adapter /= Void then
-					feat_adapter.format (ctxt)
-				end
-				i := i + 1
 			end
 			ctxt.commit
 		end

@@ -9,8 +9,6 @@ indexing
 class LOCAL_FEAT_ADAPTATION 
 
 inherit
-
-	SHARED_OPERATOR_TABLE;
 	SHARED_SERVER;
 	SHARED_FORMAT_INFO;
 	SHARED_INST_CONTEXT;
@@ -479,7 +477,6 @@ feature {NONE} -- Implementation
 				Result := last_constrained.generics.item (formal_type.position)
 				Inst_context.set_cluster (old_cluster);
 			end;
-			Result := Result.conformance_type;
 				-- Do not forget to call `actual_type' on `last_type' because
 				-- `last_type' is not enough by itself:
 				-- For example when `last_type' in an anchored type we

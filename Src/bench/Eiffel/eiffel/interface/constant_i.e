@@ -12,7 +12,7 @@ inherit
 			equiv as basic_equiv
 		redefine
 			transfer_to, access_for_feature, melt, generate,
-			is_once, in_pass3, redefinable, is_constant,
+			is_once, redefinable, is_constant,
 			set_type, type, generate_il, to_generate_in,
 			new_rout_entry
 		end
@@ -20,7 +20,7 @@ inherit
 	ENCAPSULATED_I
 		redefine
 			transfer_to, check_types, access_for_feature, equiv,
-			melt, generate, is_once, in_pass3, redefinable, is_constant,
+			melt, generate, is_once, redefinable, is_constant,
 			set_type, type, generate_il, to_generate_in,
 			new_rout_entry
 		select
@@ -58,7 +58,7 @@ feature
 	value: VALUE_I
 			-- Constant value
 
-	set_type (t: TYPE_AS) is
+	set_type (t: like type) is
 			-- Assign `t' to `type'.
 		do
 			type := t
@@ -77,12 +77,6 @@ feature
 
 	redefinable: BOOLEAN is False
 			-- Is a constant redefinable ?
-
-	in_pass3: BOOLEAN is
-			-- Does a constant support the type check ?
-		do
-			-- Do nothing
-		end
 
 	check_types (feat_tbl: FEATURE_TABLE) is
 			-- Check Result and argument types 

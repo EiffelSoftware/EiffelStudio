@@ -10,7 +10,7 @@ inherit
 		redefine
 			transfer_to, unselected, extension,
 			new_rout_entry, melt, access_for_feature, generate, new_rout_id,
-			in_pass3, set_type, type, is_attribute,
+			set_type, type, is_attribute,
 			undefinable, check_expanded
 		end
 
@@ -78,16 +78,10 @@ feature -- Element Change
 			extension_set: extension = an_extension
 		end
 
-	set_type (t: TYPE_AS) is
+	set_type (t: like type) is
 			-- Assign `t' to `type'.
 		do
 			type := t
-		end
-
-	in_pass3: BOOLEAN is
-			-- Does an attribute support the type check ?
-		do
-			-- Do nothing
 		end
 
 	new_rout_id: INTEGER is

@@ -152,9 +152,8 @@ feature -- Settings
 		end
 
 	set_call (c: like call) is
-			-- Assign `c' to `call'.
-		require
-			c_not_void: c /= Void
+			-- Assign `c' to `call'. `c' maybe Void in case of call
+			-- to `default_create' from ANY.
 		do
 			call := c
 		ensure

@@ -229,20 +229,6 @@ feature {NONE} -- Error handling
 			Error_handler.raise_error
 		end
 
-feature {NONE} -- Constants
-
-	Dummy_clickable_ast: CLICKABLE_AST is
-			-- Dummy CLICKABLE_AST used to temporarily
-			-- fill `node' in CLICK_AST
-		local
-			af: AST_FACTORY
-		once
-			create af
-			Result := af.new_none_type_as
-		ensure
-			dummy_clicable_as_not_void: Result /= Void
-		end
-
 invariant
 
 	click_list_not_void: click_list /= Void

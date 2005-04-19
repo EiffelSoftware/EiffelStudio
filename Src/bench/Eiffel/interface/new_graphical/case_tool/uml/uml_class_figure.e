@@ -43,6 +43,13 @@ inherit
 			default_create
 		end
 		
+	SHARED_STATELESS_VISITOR
+		export
+			{NONE} all
+		undefine
+			default_create
+		end
+
 	EB_SHARED_PREFERENCES
 		undefine
 			default_create
@@ -748,7 +755,8 @@ feature {NONE} -- Implementation
 							name := l_item.comment (class_text)
 							name.right_adjust
 							create l_section.make (name, features, compiled_class)
-							l_export_status := l_item.export_status
+							l_export_status := export_status_generator.
+								feature_clause_export_status (compiled_class, l_item)
 							if l_export_status = Void then
 								l_section.enable_is_none
 							elseif l_export_status.is_none then
@@ -772,9 +780,11 @@ feature {NONE} -- Implementation
 							end
 							features := fcl.item.features
 							create l_section.make ("", features, compiled_class)
-							if fcl.item.export_status.is_none then
+							l_export_status := export_status_generator.
+								feature_clause_export_status (compiled_class, fcl.item)
+							if l_export_status.is_none then
 								l_section.enable_is_none
-							elseif fcl.item.export_status.is_set then
+							elseif l_export_status.is_set then
 								l_section.enable_is_some
 							else
 								l_section.enable_is_any

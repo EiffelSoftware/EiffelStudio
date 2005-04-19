@@ -544,19 +544,23 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 	enable_select is
 			-- Select the object.
 		do
-			selected_item_count := count
-			parent_i.update_row_selection_status (Current)
-			parent_i.redraw_client_area
-			fixme ("EV_GRID_ROW_I:enable_select - Perform a more optimal redraw when available")	
+			if not is_selected then
+				selected_item_count := count
+				parent_i.update_row_selection_status (Current)
+				parent_i.redraw_client_area
+				fixme ("EV_GRID_ROW_I:enable_select - Perform a more optimal redraw when available")				
+			end
 		end
 
 	disable_select is
 			-- Deselect the object.
 		do
-			disable_select_internal
-			parent_i.update_row_selection_status (Current)
-			parent_i.redraw_client_area
-			fixme ("EV_GRID_ROW_I:disable_select - Perform a more optimal redraw when available")	
+			if is_selected then
+				disable_select_internal
+				parent_i.update_row_selection_status (Current)
+				parent_i.redraw_client_area
+				fixme ("EV_GRID_ROW_I:disable_select - Perform a more optimal redraw when available")					
+			end
 		end
 
 	destroy is

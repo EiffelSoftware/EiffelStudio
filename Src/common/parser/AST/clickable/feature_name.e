@@ -1,27 +1,28 @@
 indexing
+
 	description:
-		"AST representation for an Eiffel feature name: id or %
+		"Abstract class for an Eiffel feature name: id or %
 		%infix/prefix notation."
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
-	FEATURE_NAME
+deferred class FEATURE_NAME
 
 inherit
 	AST_EIFFEL
-        undefine
-            is_equal
+		undefine
+			is_equal
 		end
 
 	COMPARABLE
 
 	CLICKABLE_AST
+		rename
+			feature_name as internal_name
 		undefine
-			is_equal
+			is_equal, internal_name
 		redefine
-			is_feature,
-			associated_feature_name
+			is_feature
 		end
 
 	SHARED_NAMES_HEAP
@@ -34,7 +35,7 @@ inherit
 -- Undefined is_equal of AST_EIFFEL and CLICKABLE_AST because these are
 -- not consistent with infix < operator
 -- < is defined by the terms of < of feature name and is_equal 
--- (from general is c_standard_is_equal)
+-- (from ANY is c_standard_is_equal)
 
 feature -- Stoning
 
@@ -53,15 +54,18 @@ feature -- Stoning
 		deferred
 		end
 
-	temp_name: ID_AS is
-			-- Buffer for internal name evaluation.
-		once
-			create Result.make (45)
-		end
- 
-	associated_feature_name: STRING is
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
 		do
-			Result := internal_name
+			Result := internal_name.start_location
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			Result := internal_name.end_location
 		end
 
 feature -- Properties
@@ -100,71 +104,11 @@ feature -- Comparison
 		deferred
 		end
 
---feature {AST_EIFFEL} -- Output
---
---	simple_format (ctxt: FORMAT_CONTEXT) is
---			-- Reconstitute text.
---		do
---			if is_frozen then
---				ctxt.put_text_item (ti_Frozen_keyword);
---				ctxt.put_space
---			end
---			ctxt.prepare_for_feature (internal_name, void);
---			ctxt.put_normal_feature;
---		end
-
-feature
-
-	set_name (s: STRING) is
-		require
-			s /= void
-		deferred
-		end
+feature {COMPILER_EXPORTER}
 
 	set_is_frozen (b: BOOLEAN) is
 		do
 			is_frozen := b
-		end
-
-feature {FEATURE_AS} -- Formatting
-
-	offset: INTEGER is
-		do
-			if is_frozen then
-					--| offset for frozen routines
-				Result := 7
-			end
-		end
-
-	end_offset: INTEGER is
-		do
-			Result := 0
-		end
-
-feature {NONE} -- Implementation
-
-	code_table: HASH_TABLE [STRING, STRING] is
-			-- Corrsepondance table for infix/prefix notation
-		once
-			create Result.make (20)
-			Result.put ("plus", "+")
-			Result.put ("minus", "-")
-			Result.put ("star", "*")
-			Result.put ("slash", "/")
-			Result.put ("lt", "<")
-			Result.put ("gt", ">")
-			Result.put ("le", "<=")
-			Result.put ("ge", ">=")
-			Result.put ("and", "and")
-			Result.put ("or", "or")
-			Result.put ("implies", "implies")
-			Result.put ("xor", "xor")
-			Result.put ("not", "not")
-			Result.put ("mod", "\\")
-			Result.put ("div", "//")
-			Result.put ("power", "^")
-			Result.put ("and_then", "and then")
-			Result.put ("or_else", "or else")
 		end
 
 end -- class FEATURE_NAME

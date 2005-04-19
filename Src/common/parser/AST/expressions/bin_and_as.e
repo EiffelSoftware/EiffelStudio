@@ -8,25 +8,13 @@ class
 
 inherit
 	BINARY_AS
-		redefine
-			bit_balanced
-		end
 
 	PREFIX_INFIX_NAMES
 
-feature -- Visitor
-
-	process (v: AST_VISITOR) is
-			-- process current element.
-		do
-			v.process_bin_and_as (Current)
-		end
+create
+	initialize
 
 feature -- Properties
-
-	bit_balanced: BOOLEAN is True
-			-- Is the current binary operation subject to the
-			-- balancing rule proper to bit types ?
 
 	infix_function_name: STRING is
 			-- Qualified name with the infix keyword.
@@ -36,5 +24,13 @@ feature -- Properties
 
 	op_name: STRING is "and"
 			-- Name without the infix keyword.
+
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_bin_and_as (Current)
+		end
 
 end -- class BIN_AND_AS

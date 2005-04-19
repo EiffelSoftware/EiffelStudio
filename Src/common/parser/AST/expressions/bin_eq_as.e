@@ -11,6 +11,9 @@ inherit
 
 	PREFIX_INFIX_NAMES
 
+create
+	initialize
+
 feature -- Visitor
 
 	process (v: AST_VISITOR) is
@@ -19,7 +22,7 @@ feature -- Visitor
 			v.process_bin_eq_as (Current)
 		end
 
-feature -- Properties
+feature -- Type check, byte code and dead code removal
 
 	infix_function_name: STRING is
 			-- Qualified name with the infix keyword.

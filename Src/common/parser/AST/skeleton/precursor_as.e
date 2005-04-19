@@ -1,8 +1,7 @@
 indexing
-
 	description:
-		"AST representation of an access to the precursor of%
-		%an Eiffel feature."
+		"Abstract description of an access to the precursor of%
+		%an Eiffel feature. Version for Bench."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -19,18 +18,26 @@ inherit
 			is_precursor
 		end
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
 
-	initialize (n: like parent_name; p: like parameters) is
+feature {NONE} -- Initialization
+
+	initialize (pk: like precursor_keyword; n: like parent_base_class; p: like parameters) is
 			-- Create a new PRECURSOR AST node.
+		require
+			pk_not_void: pk /= Void
+			valid_n: n /= Void implies n.generics = Void
 		do
-			parent_name := n
+			precursor_keyword := pk
+			parent_base_class := n
 			parameters := p
 			if parameters /= Void then
 				parameters.start
 			end
 		ensure
-			parent_name_set: parent_name = n
+			precursor_keyword_set: precursor_keyword = pk
+			parent_base_class_set: parent_base_class = n
 			parameters_set: parameters = p
 		end
 
@@ -44,8 +51,11 @@ feature -- Visitor
 
 feature -- Attributes
 
-	parent_name: ID_AS
-			-- Optional parent qualification
+	precursor_keyword: LOCATION_AS
+			-- Position of Precursor keyword
+
+	parent_base_class: CLASS_TYPE_AS
+			-- Optional name of the parent
 
 	parameters: EIFFEL_LIST [EXPR_AS]
 			-- List of parameters
@@ -67,54 +77,37 @@ feature -- Attributes
 	is_precursor: BOOLEAN is True
 			-- Precursor makes reference to a class
 
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			Result := precursor_keyword
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			if parameters /= Void then
+				Result := parameters.end_location
+			elseif parent_base_class /= Void then
+				Result := parent_base_class.start_location
+			else
+				Result := precursor_keyword
+			end
+		end
+
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is
 			-- Is `other' equivalent to the current object ?
 		do
-			Result := equivalent (parent_name, other.parent_name) and
+			Result := equivalent (parent_base_class, other.parent_base_class) and
 				equivalent (parameters, other.parameters)
 		end
 
---feature {AST_EIFFEL} -- Output
---
---	simple_format (ctxt: FORMAT_CONTEXT) is
---			-- Reconstitute text.
---		local
---			p_name : STRING
---		do
---			ctxt.begin
---
---			if parent_name /= Void then
---				p_name := Clone (parent_name.string_value)
---				p_name.to_upper
---				ctxt.put_text_item (ti_L_curly)
---				ctxt.put_class_name (p_name)
---				ctxt.put_text_item (ti_R_curly)
---			end
---
---			ctxt.put_text_item (ti_space)
---			ctxt.put_text_item (ti_Precursor_keyword)
---
---				-- We simply use an empty feature name.
---			ctxt.prepare_for_feature ("", parameters)
---			ctxt.put_current_feature
---
---			ctxt.commit
---		end
-
-feature {COMPILER_EXPORTER} -- Replication {PRECURSOR_AS, USER_CMD, CMD}
-
-	set_parent_name (name: like parent_name) is
-		require
-			valid_arg: name /= Void
-		do
-			parent_name := name
-		end
-
-	set_parameters (p: like parameters) is
-		do
-			parameters := p
-		end
+invariant
+	precursor_keyword_not_void: precursor_keyword /= Void
+	valid_parent_base_class: parent_base_class /= Void implies parent_base_class.generics = Void
 
 end -- class PRECURSOR_AS

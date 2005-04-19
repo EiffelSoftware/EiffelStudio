@@ -1,21 +1,20 @@
 indexing
-	description: 
-		"AST representation of a formal generic type."
+	description: "Abstract description for formal generic type."
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	FORMAL_AS
+class FORMAL_AS
 
 inherit
 	TYPE_AS
-
-	CLICKABLE_AST
 		redefine
-			is_class
+			has_formal_generic, is_loose
 		end
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (n: ID_AS; is_ref, is_exp: BOOLEAN) is
 			-- Create a new FORMAL AST node.
@@ -41,21 +40,38 @@ feature -- Visitor
 
 feature -- Properties
 
-	is_reference: BOOLEAN
-			-- Is Current formal to be always instantiated as a reference type?
-			
-	is_expanded: BOOLEAN
-			-- Is Current formal to be always instantiated as an expanded type?
-
 	name: ID_AS
 			-- Formal generic parameter name
 
 	position: INTEGER
 			-- Position of the formal parameter in the declaration
 			-- array
+			
+	is_reference: BOOLEAN
+			-- Is Current formal to be always instantiated as a reference type?
+			
+	is_expanded: BOOLEAN
+			-- Is Current formal to be always instantiated as an expanded type?
 
-	is_class: BOOLEAN is True
-			-- Does the Current AST represent a class?
+	has_formal_generic: BOOLEAN is True
+			-- Has type a formal generic parameter?
+
+	is_loose: BOOLEAN is True
+			-- Does type depend on formal generic parameters and/or anchors?
+
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			Result := name.start_location
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			Result := name.end_location
+		end
 
 feature -- Comparison
 
@@ -70,25 +86,17 @@ feature -- Output
 
 	dump: STRING is
 		do
-			create Result.make (12);
-			Result.append ("Generic #");
-			Result.append_integer (position);
+			create Result.make (12)
+			Result.append ("Generic #")
+			Result.append_integer (position)
 		end
 
---feature {AST_EIFFEL} -- Output
---
---	simple_format (ctxt: FORMAT_CONTEXT) is
---			-- Reconstitute text.
---		do
---			ctxt.put_string (ctxt.formal_name (position))
---		end
-
-feature -- Setting
+feature {COMPILER_EXPORTER}
 
 	set_position (i: INTEGER) is
 			-- Assign `i' to `position'.
 		do
-			position := i;
+			position := i
 		end
 
 end -- class FORMAL_AS

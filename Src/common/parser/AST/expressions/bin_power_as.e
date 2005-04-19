@@ -8,24 +8,13 @@ class
 
 inherit
 	ARITHMETIC_AS
-		redefine
-			balanced
-		end
 
 	PREFIX_INFIX_NAMES
 
-feature -- Visitor
-
-	process (v: AST_VISITOR) is
-			-- process current element.
-		do
-			v.process_bin_power_as (Current)
-		end
+create
+	initialize
 
 feature -- Properties
-
-	balanced: BOOLEAN is False
-			-- Is the operation balanced ?
 
 	infix_function_name: STRING is
 			-- Qualified name with the infix keyword.
@@ -35,5 +24,13 @@ feature -- Properties
 
 	op_name: STRING is "^"
 			-- Name without the infix keyword.
+
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_bin_power_as (Current)
+		end
 
 end -- class BIN_POWER_AS

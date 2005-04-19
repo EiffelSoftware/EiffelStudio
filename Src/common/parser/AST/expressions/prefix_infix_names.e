@@ -8,7 +8,7 @@ class PREFIX_INFIX_NAMES
 inherit
 	SYNTAX_STRINGS
 		export
-			{NONE} all
+			{NONE} frozen_str, infix_str, prefix_str, quote_str
 		end
 
 feature -- Basic operations

@@ -1,25 +1,21 @@
 indexing
-	description: 
-		"AST representation of a unique value."
+
+	description: "Description of a unique value. Version for Bench."
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	UNIQUE_AS
+class UNIQUE_AS
 
 inherit
 	ATOMIC_AS
 		redefine
 			is_unique, is_equivalent
 		end
+		
+	LEAF_AS
 
-feature {AST_FACTORY} -- Initialization
-
-	initialize is
-			-- Create a new UNIQUE AST node.
-		do
-			-- Do nothing.
-		end
+create
+	make_with_location
 
 feature -- Visitor
 
@@ -45,13 +41,5 @@ feature -- Properties
 feature -- Output
 
 	string_value: STRING is ""
-
---feature {AST_EIFFEL} -- Output
---
---	simple_format (ctxt: FORMAT_CONTEXT) is
---			-- Reconstitute text.
---		do
---			ctxt.put_text_item_without_tabs (ti_Unique_keyword);
---		end
 
 end -- class UNIQUE_AS

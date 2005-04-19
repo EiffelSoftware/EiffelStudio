@@ -1,32 +1,31 @@
 indexing
-	description: 
-		"AST representation of an item in the class indexing list."
-	date: "$Date$"
-	revision: "$Revision$"
 
-class
-	INDEX_AS
+	 description:
+			"Abstract description of an item in the class indexing list. %
+			%Version for Bench."
+	 date: "$Date$"
+	 revision: "$Revision$"
+
+class INDEX_AS
 
 inherit
 	AST_EIFFEL
-		redefine
-			is_equivalent, location
-		end
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
 
-	initialize (t: like tag; i: like index_list; l: like location) is
+feature {NONE} -- Initialization
+
+	initialize (t: like tag; i: like index_list) is
 			-- Create a new INDEX AST node.
 		require
 			i_not_void: i /= Void
 		do
 			tag := t
 			index_list := i
-			location := l
 		ensure
 			tag_set: tag = t
 			index_list_set: index_list = i
-			location_set: location = l
 		end
 
 feature -- Visitor
@@ -39,15 +38,26 @@ feature -- Visitor
 
 feature -- Attributes
 
-	tag: ID_AS;
+	tag: ID_AS
 			-- Tag of the index list
 
-	index_list: EIFFEL_LIST [ATOMIC_AS];
+	index_list: EIFFEL_LIST [ATOMIC_AS]
 			-- Indexes
 
-	location: TOKEN_LOCATION
-			-- Location where clause starts
+feature -- Location
 
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			Result := tag.start_location
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			Result := index_list.end_location
+		end
+			
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is
@@ -63,20 +73,29 @@ feature -- Comparison
 						equivalent (index_list, other.index_list)
 		end
 
---feature {AST_EIFFEL} -- Output
---
---	simple_format (ctxt: FORMAT_CONTEXT) is
---			-- Reconstitute text.
---		do
---			if tag /= Void then
---				ctxt.format_ast (tag);
---				ctxt.put_text_item_without_tabs (ti_Colon);
---				ctxt.put_space
---			end
---
---			ctxt.set_space_between_tokens;
---			ctxt.set_separator (ti_Comma);
---			ctxt.format_ast (index_list);
---		end
-	
+feature {DOCUMENTATION_ROUTINES} -- Access
+
+	content_as_string: STRING is
+			-- Merge content into a single string.
+		local
+			il: like index_list
+		do
+			create Result.make (20)
+			il := index_list
+			from
+				il.start
+			until
+				il.after
+			loop
+				Result.append (il.item.string_value)
+				il.forth
+				if not il.after then
+					Result.append (", ")
+				end
+			end
+		end
+
+invariant
+	index_list_not_void: index_list /= Void
+
 end -- class INDEX_AS

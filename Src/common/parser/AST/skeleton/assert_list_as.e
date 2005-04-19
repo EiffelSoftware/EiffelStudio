@@ -1,19 +1,18 @@
 indexing
-	description: 
-		"AST representation list of tagged_as structures."
-	date: "$Date$"
-	revision: "$Revision $"
+	description	: "Abstract description of an Eiffel list of assertions%
+				  %Version for Bench."
+	date		: "$Date$"
+	revision	: "$Revision$"
 
-class
-	ASSERT_LIST_AS
+deferred class ASSERT_LIST_AS
 
 inherit
 	AST_EIFFEL
 		redefine
-			is_equivalent
+			number_of_breakpoint_slots
 		end
 
-feature {AST_FACTORY} -- Initialization
+feature {NONE} -- Initialization
 
 	initialize (a: like assertions) is
 			-- Create a new ASSERTION_LIST AST node.
@@ -23,18 +22,42 @@ feature {AST_FACTORY} -- Initialization
 			assertions_set: assertions = a
 		end
 
-feature -- Visitor
+feature -- Access
 
-	process (v: AST_VISITOR) is
-			-- process current element.
+	number_of_breakpoint_slots: INTEGER is
+			-- Number of stop points for AST
 		do
-			v.process_assert_list_as (Current)
+			if assertions /= Void then
+				Result := assertions.number_of_breakpoint_slots
+			end
 		end
 
 feature -- Attributes
 
-	assertions: EIFFEL_LIST [TAGGED_AS];
+	assertions: EIFFEL_LIST [TAGGED_AS]
 			-- Assertion list
+
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			if assertions /= Void then
+				Result := assertions.start_location
+			else
+				Result := null_location
+			end
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			if assertions /= Void then
+				Result := assertions.end_location
+			else
+				Result := null_location
+			end
+		end
 
 feature -- Comparison
 
@@ -65,55 +88,11 @@ feature -- Access
 			assertions.go_to (cur)
 		end
 
---feature {AST_EIFFEL} -- Output
---
---	simple_format (ctxt: FORMAT_CONTEXT) is
---			-- Reconstitute text.
---		do
---			if assertions /= void then
---				simple_put_clause_keywords (ctxt);
---				ctxt.put_new_line;
---				ctxt.set_new_line_between_tokens;
---				ctxt.indent;
---				simple_format_assertions (ctxt);
---				ctxt.exdent;
---			end
---		end
-
---	simple_format_assertions (ctxt: FORMAT_CONTEXT) is
---			-- Format assertions.
---		local
---			i, l_count: INTEGER;
---			not_first: BOOLEAN
---		do
---			ctxt.begin;
---			from
---				i := 1;
---				l_count := assertions.count;
---			until
---				i > l_count
---			loop
---				if not_first then
---					ctxt.put_separator;
---				end
---				ctxt.new_expression;
---				ctxt.begin;
---				assertions.i_th (i).simple_format(ctxt);
---				ctxt.commit;
---				not_first := True
---				i := i + 1
---			end
---			if l_count > 0 then
---				ctxt.put_new_line
---			end
---			ctxt.commit;
---		end
-
 feature {ASSERT_LIST_AS} -- Replication
 
 	set_assertions (l: like assertions) is
 		do
 			assertions := l
 		end
-
+	
 end -- class ASSERT_LIST_AS

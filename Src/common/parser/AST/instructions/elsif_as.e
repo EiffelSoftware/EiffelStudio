@@ -1,32 +1,34 @@
 indexing
-	description: 
-		"AST representation of a elsif clause of a condition instruction"
+	description:
+			"Abstract description of a elsif clause of a condition %
+			%instruction. Version for Bench."
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	ELSIF_AS
+class ELSIF_AS
 
 inherit
 	AST_EIFFEL
 		redefine
-			is_equivalent, location
+			number_of_breakpoint_slots,
+			is_equivalent
 		end
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
 
-	initialize (e: like expr; c: like compound; l: like location) is
+feature {NONE} -- Initialization
+
+	initialize (e: like expr; c: like compound) is
 			-- Create a new ELSIF AST node.
 		require
 			e_not_void: e /= Void
 		do
 			expr := e
 			compound := c
-			location := l
 		ensure
 			expr_set: expr = e
 			compound_set: compound = c
-			location_set: location = l
 		end
 
 feature -- Visitor
@@ -45,6 +47,24 @@ feature -- Attributes
 	compound: EIFFEL_LIST [INSTRUCTION_AS]
 			-- Compound
 
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			Result := expr.start_location
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			if compound /= Void then
+				Result := compound.end_location
+			else
+				Result := expr.end_location
+			end
+		end
+
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is
@@ -56,30 +76,14 @@ feature -- Comparison
 
 feature -- Access
 
-	location: TOKEN_LOCATION
-			-- Location of Current AST
-
---feature {AST_EIFFEL} -- Output
---
---	simple_format (ctxt: FORMAT_CONTEXT) is
---			-- Reconstitute text.
---		do
---			ctxt.put_text_item (ti_Elseif_keyword);
---			ctxt.put_space;
---			ctxt.new_expression;
---			ctxt.format_ast (expr);
---			ctxt.put_space;
---			ctxt.put_text_item_without_tabs (ti_Then_keyword);
---			ctxt.indent;
----			ctxt.set_separator (ti_Semi_colon);
---			ctxt.set_new_line_between_tokens;
---			ctxt.put_new_line;
---			if compound /= Void then
---				ctxt.format_ast (compound);
---			end
---			ctxt.put_new_line;
---			ctxt.put_breakable;
---		end
+	number_of_breakpoint_slots: INTEGER is
+			-- Number of stop points for AST
+		do
+			Result := 1 -- condition test
+			if compound /= Void then
+				Result := Result + compound.number_of_breakpoint_slots
+			end
+		end
 
 feature {ELSIF_AS} -- Replication
 
@@ -94,5 +98,8 @@ feature {ELSIF_AS} -- Replication
 		do
 			compound := c
 		end
+
+invariant
+	expr_not_void: expr /= Void
 
 end -- class ELSIF_AS

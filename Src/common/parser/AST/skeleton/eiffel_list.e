@@ -1,18 +1,17 @@
 indexing
-	description: 
-		"List used in abstract syntax trees."
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "List used in abstract syntax trees. Version for Bench."
+	date		: "$Date$"
+	revision	: "$Revision$"
 
-class
-	EIFFEL_LIST [T->AST_EIFFEL]
+class EIFFEL_LIST [reference T -> AST_EIFFEL]
 
 inherit
 	AST_EIFFEL
 		undefine
 			copy, is_equal
 		redefine
-			is_equivalent
+			number_of_breakpoint_slots, is_equivalent,
+			start_location, end_location
 		end
 
 	CONSTRUCT_LIST [T]
@@ -22,7 +21,7 @@ inherit
 			make, make_filled
 		end
 
-create {ARRAY_AS, TUPLE_AS, PARENT_AS, UN_STRIP_AS, FEATURE_CLAUSE_AS, AST_FACTORY, INDEXING_CLAUSE_AS, ROUTINE_AS}
+create
 	make, make_filled
 
 feature {NONE} -- Initialization
@@ -45,19 +44,76 @@ feature -- Visitor
 
 	process (v: AST_VISITOR) is
 			-- process current element.
-		local
-			l_cursor: CURSOR
 		do
-			l_cursor := cursor
-			from
-				start
-			until
-				after
-			loop
-				item.process (v)
-				forth
+			v.process_eiffel_list (Current)
+		end
+
+feature -- Access
+
+	start_location: LOCATION_AS is
+			-- 
+		do
+			if not is_empty then
+				Result := area.item (0).start_location
+			else
+				Result := null_location
 			end
-			go_to (l_cursor)
+		end
+		
+	end_location: LOCATION_AS is
+			-- 
+		do
+			if not is_empty then
+				Result := area.item (count - 1).end_location
+			else
+				Result := null_location
+			end
+		end
+
+	number_of_breakpoint_slots: INTEGER is
+			-- Number of stop points for AST
+		local
+			i, nb: INTEGER
+			l_area: SPECIAL [T]
+		do
+			from
+				l_area := area
+				nb := count
+			until
+				i = nb
+			loop
+				Result := Result + l_area.item (i).number_of_breakpoint_slots
+				i := i + 1
+			end
+		end
+
+feature -- Element change
+
+	merge_after_position (p: INTEGER; other: LIST [T]) is
+			-- Merge `other' after position `p', i.e. replace
+			-- items after `p' with items from `other'.
+		require
+			other_fits: other.count <= count - p
+		local
+			i, max: INTEGER
+			cur: CURSOR
+			l_area: SPECIAL [T]
+		do
+			from
+				l_area := area
+				i := p
+				max := p + other.count 
+				cur := other.cursor
+				other.start
+			until
+				i = max
+			loop
+				l_area.put (other.item, i)
+				other.forth
+				i := i + 1
+			end
+
+			other.go_to (cur)
 		end
 
 feature -- Comparison
@@ -83,53 +139,4 @@ feature -- Comparison
 			end
 		end
 
---feature -- Comparison
---
---	is_equivalent (other: like Current): BOOLEAN is
---			-- Is `other' equivalent to the current object ?
---		local
---			i, nb: INTEGER
---		do
---			nb := other.count
---			if count = nb then
---				from
---					i := 1
---					Result := True
---				until
---					not Result or else i > nb
---				loop
---					Result := equivalent (i_th (i),
---						other.i_th (i))
---					i := i + 1
---				end
---			end
---		end
-
---feature {AST_EIFFEL} -- Output
---
---	simple_format (ctxt: FORMAT_CONTEXT) is
---			-- Reconstitute text.
---		local
---			i, l_count: INTEGER;
---		do
---			ctxt.begin;
---			from
---				i := 1;
---				l_count := count;
---			until
---				i > l_count
---			loop
---				if i > 1 then
---					ctxt.put_separator;
---				end
---				ctxt.new_expression;
---				ctxt.begin;
---				i_th (i).simple_format (ctxt);
---				ctxt.commit;
---				i := i + 1
---			end
---			ctxt.commit;
---		end
-
 end -- class EIFFEL_LIST
-

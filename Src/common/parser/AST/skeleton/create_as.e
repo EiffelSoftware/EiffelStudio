@@ -1,11 +1,4 @@
-indexing
-	description: 
-		"AST representation of creation routines."
-	date: "$Date$"
-	revision: "$Revision $"
-
-class
-	CREATE_AS
+class CREATE_AS
 
 inherit
 	AST_EIFFEL
@@ -13,7 +6,10 @@ inherit
 			is_equivalent
 		end
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (c: like clients; f: like feature_list) is
 			-- Create a new CREATION clause AST node.
@@ -40,6 +36,32 @@ feature -- Attributes
 
 	feature_list: EIFFEL_LIST [FEATURE_NAME]
 			-- Feature list
+
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			if clients /= Void then
+				Result := clients.start_location
+			elseif feature_list /= Void then
+				Result := feature_list.start_location
+			else
+				Result := null_location
+			end
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			if feature_list /= Void then
+				Result := feature_list.end_location
+			elseif clients /= Void then
+				Result := clients.end_location
+			else
+				Result := null_location
+			end
+		end
 
 feature -- Comparison
 
@@ -71,26 +93,6 @@ feature -- Access
 			feature_list.go_to (cur)
 		end
 
---feature {AST_EIFFEL} -- Output
---
---	simple_format (ctxt: FORMAT_CONTEXT) is
---			-- Reconstitute text.
---		do
---			ctxt.put_text_item (ti_Create_keyword);
---			ctxt.put_space;
---			if clients /= void then
---				clients.simple_format (ctxt);
---			end
---			if feature_list /= Void then
---				ctxt.indent;
---				ctxt.put_new_line;
---				ctxt.set_separator (ti_Comma);
---				ctxt.set_new_line_between_tokens;
---				feature_list.simple_format (ctxt);
---				ctxt.put_new_line;
---			end
---		end
-			
 feature {COMPILER_EXPORTER} -- Convenience
 
 	set_feature_list (f: like feature_list) is

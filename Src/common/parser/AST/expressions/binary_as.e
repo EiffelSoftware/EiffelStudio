@@ -1,6 +1,5 @@
 indexing
-	description: 
-		"AST representation for binary expression nodes."
+	description: "Abstract class for binary expression nodes, Bench version"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -8,8 +7,11 @@ deferred class BINARY_AS
 
 inherit
 	EXPR_AS
+		redefine
+			start_location, end_location
+		end
 
-feature {AST_FACTORY} -- Initialization
+feature {NONE} -- Initialization
 
 	initialize (l: like left; r: like right) is
 			-- Create a new BINARY AST node.
@@ -26,27 +28,34 @@ feature {AST_FACTORY} -- Initialization
 
 feature -- Attributes
 
-	left: EXPR_AS;
+	left: EXPR_AS
 			-- Left operand
 
-	right: EXPR_AS;
-			-- Right operand
+	right: EXPR_AS
+			-- Right opernad
+
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Start location of Current
+		do
+			Result := left.start_location
+		end
+
+	end_location: LOCATION_AS is
+			-- End location of Current
+		do
+			Result := right.end_location
+		end
+		
+	operator_location: LOCATION_AS is
+			-- Location of operator
+		do
+			fixme ("This is not precise enough, we ought to have the precise location.")
+			Result := left.end_location
+		end
 
 feature -- Properties
-
-	balanced: BOOLEAN is
-			-- Is the current binary operation subject to the balancing
-			-- rule proper to simple numeric types ?
-		do
-			-- Do nothing
-		end
-
-	bit_balanced: BOOLEAN is
-			-- Is the current binary operation subject to the
-			-- balancing rule proper to bit types ?
-		do
-			-- Do nothing
-		end
 
 	infix_function_name: STRING is
 			-- Internal name of the infix feature associated to the
@@ -73,30 +82,9 @@ feature -- Comparison
 				equivalent (right, other.right)
 		end
 
---feature {AST_EIFFEL} -- Output
---
---	simple_format (ctxt: FORMAT_CONTEXT) is
---			-- Reconstitute text.
---		do
---			left.simple_format (ctxt);
---			ctxt.prepare_for_infix (operator_name, right);
---			ctxt.put_infix_feature;
---		end
-
-feature {BINARY_AS}	-- Replication
-
-	set_left (l: like left) is
-		require
-			valid_arg: l /= Void
-		do
-			left := l
-		end
-
-	set_right (l: like right) is
-		require
-			valid_arg: l /= Void
-		do
-			right := l
-		end
+invariant
+	left_not_void: left /= Void
+	right_not_void: right /= Void
 
 end -- class BINARY_AS
+

@@ -1,11 +1,4 @@
-indexing
-	description: 
-		"AST representation of an export item."
-	date: "$Date$"
-	revision: "$Revision $"
-
-class
-	EXPORT_ITEM_AS
+class EXPORT_ITEM_AS
 
 inherit
 	AST_EIFFEL
@@ -13,7 +6,10 @@ inherit
 			is_equivalent
 		end
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (c: like clients; f: like features) is
 			-- Create a new EXPORT_ITEM AST node.
@@ -38,11 +34,25 @@ feature -- Visitor
 
 feature -- Attributes
 
-	clients: CLIENT_AS;
+	clients: CLIENT_AS
 			-- Client list
 
-	features: FEATURE_SET_AS;
+	features: FEATURE_SET_AS
 			-- Feature set
+
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			Result := clients.start_location
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			Result := features.end_location
+		end
 
 feature -- Comparison
 
@@ -53,18 +63,8 @@ feature -- Comparison
 				equivalent (features, other.features)
 		end
 
---feature {AST_EIFFEL} -- Output
---
---	simple_format (ctxt: FORMAT_CONTEXT) is
---			-- Reconstitute text.
---		do
---			if clients /= Void then
---				ctxt.set_separator (ti_Comma);
---				ctxt.set_space_between_tokens;
---				ctxt.format_ast (clients);
---				ctxt.put_space
---			end
---			ctxt.format_ast (features);
---		end
+invariant
+	clients_not_void: clients /= Void
+	features_not_void: features /= Void
 
 end -- class EXPORT_ITEM_AS

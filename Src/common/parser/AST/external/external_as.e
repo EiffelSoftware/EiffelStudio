@@ -3,8 +3,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	EXTERNAL_AS
+class EXTERNAL_AS
 
 inherit
 	ROUT_BODY_AS
@@ -17,7 +16,10 @@ inherit
 			{NONE} all
 		end
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (l: like language_name; a: STRING_AS) is
 			-- Create a new EXTERNAL AST node.
@@ -38,6 +40,7 @@ feature -- Visitor
 	process (v: AST_VISITOR) is
 			-- process current element.
 		do
+			v.process_external_as (Current)
 		end
 
 feature -- Attributes
@@ -49,18 +52,24 @@ feature -- Attributes
 	alias_name_id: INTEGER
 			-- Alias name ID in NAMES_HEAP.
 
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			Result := language_name.start_location
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			Result := language_name.end_location
+		end
+
 feature -- Properties
 
 	is_external: BOOLEAN is True
 			-- Is the current routine body an external one ?
-
-	external_name: STRING is
-			-- Alias name: Void if none
-		do
-			if alias_name_id > 0 then
-				Result := Names_heap.item (alias_name_id)
-			end
-		end; -- external_name
 
 feature -- Comparison
 
@@ -70,5 +79,8 @@ feature -- Comparison
 			Result := alias_name_id = other.alias_name_id and then
 				equivalent (language_name, other.language_name)
 		end
+
+invariant
+	language_name_not_void: language_name /= Void
 
 end -- class EXTERNAL_AS

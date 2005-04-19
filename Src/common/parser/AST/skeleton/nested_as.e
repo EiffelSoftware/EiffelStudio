@@ -1,19 +1,22 @@
 indexing
-	description: 
-		"AST representation of a nested call `target.message'"
+	description:
+			"Abstract description of a nested call `target.message' %
+			%Version for Bench."
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	NESTED_AS
+class NESTED_AS
 
 inherit
 	CALL_AS
 		redefine
-			is_equivalent
+			is_equivalent, start_location, end_location
 		end
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (t: like target; m: like message) is
 			-- Create a new NESTED CALL AST node.
@@ -38,11 +41,25 @@ feature -- Visitor
 
 feature -- Attributes
 
-	target: ACCESS_AS;
+	target: ACCESS_AS
 			-- Target of the call
 
-	message: CALL_AS;
+	message: CALL_AS
 			-- Message send to the target
+
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Start location of Current
+		do
+			Result := target.start_location
+		end
+
+	end_location: LOCATION_AS is
+			-- End location of Current
+		do
+			Result := message.end_location
+		end
 
 feature -- Comparison
 
@@ -53,30 +70,24 @@ feature -- Comparison
 				equivalent (target, other.target)
 		end
 
---feature {AST_EIFFEL} -- Output
---
---	simple_format (ctxt: FORMAT_CONTEXT) is
---			-- Reconstitute text.
---		do
---			target.simple_format (ctxt);
---			ctxt.need_dot;
---			message.simple_format (ctxt);
---		end
-
 feature {NESTED_AS} -- Replication
 
 	set_target (t: like target) is
 		require
 			valid_arg: t /= Void 
 		do
-			target := t;
+			target := t
 		end
 
 	set_message (m: like message) is
 		require
 			valid_arg: m /= Void 
 		do
-			message := m;
+			message := m
 		end
+
+invariant
+	message_not_void: message /= Void
+	target_not_void: target /= Void
 						
 end -- class NESTED_AS

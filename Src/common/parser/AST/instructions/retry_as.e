@@ -1,26 +1,20 @@
 indexing
-	description: 
-		"AST representation of retry instruction"
+
+	description:
+			"Abstract description of an Eiffel retry instruction. %
+			%Version for Bench."
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	RETRY_AS
+class RETRY_AS
 
 inherit
 	INSTRUCTION_AS
+		
+	LEAF_AS
 
-feature {AST_FACTORY} -- Initialization
-
-	initialize (l: like location) is
-			-- Create a new RETRY AST node.
-		require
-			l_not_void: l /= Void
-		do
-			location := l.twin
-		ensure
-			location_set: location.is_equal (l)			
-		end
+create
+	make_with_location
 
 feature -- Visitor
 
@@ -37,14 +31,5 @@ feature -- Comparison
 		do
 			Result := True
 		end
-
---feature {AST_EIFFEL} -- Output
---
---	simple_format (ctxt: FORMAT_CONTEXT) is
---			-- Reconstitute text.
---		do
---			ctxt.put_breakable
---			ctxt.put_text_item (ti_Retry_keyword)
---		end
 
 end -- class RETRY_AS

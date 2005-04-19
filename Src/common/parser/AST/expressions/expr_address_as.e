@@ -1,8 +1,9 @@
 indexing
-	description: 
-		"AST representation of an Eiffel expression pointer."
+	description:
+		"Abstract description of an Eiffel expression pointer. %
+		%Version for Bench"
 	date: "$Date$"
-	revision: "Revision $"
+	revision: "$Revision$"
 
 class
 	EXPR_ADDRESS_AS
@@ -10,7 +11,10 @@ class
 inherit
 	EXPR_AS
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (e: like expr) is
 			-- Create a new EXPR_ADDRESS AST node.
@@ -30,10 +34,24 @@ feature -- Visitor
 			v.process_expr_address_as (Current)
 		end
 
-feature -- Attributes
+feature -- Properties
 
 	expr: EXPR_AS
 			-- Expression to address
+
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			Result := expr.start_location
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			Result := expr.end_location
+		end
 
 feature -- Comparison
 
@@ -42,16 +60,8 @@ feature -- Comparison
 		do
 			Result := equivalent (expr, other.expr)
 		end
+		
+invariant
+	expr_not_void: expr /= Void
 
---feature {AST_EIFFEL} -- Output
---
---	simple_format (ctxt: FORMAT_CONTEXT) is
---			-- Reconstitute text.
---		do
---			ctxt.put_text_item (ti_Dollar);
---			ctxt.put_text_item_without_tabs (ti_L_parenthesis);
---			ctxt.format_ast (expr);
---			ctxt.put_text_item_without_tabs (ti_R_parenthesis);
---		end
-
-end -- class ADDRESS_AS
+end -- class EXPR_ADDRESS_AS

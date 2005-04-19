@@ -1,6 +1,7 @@
 indexing
 	description:
-			"Abstract description of the content of a"
+			"Abstract description of the content of a %
+			%feature. Version for Bench."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -80,11 +81,18 @@ feature -- Access
 		deferred
 		end
 
-feature {BODY_AS} -- Type check and byte code
-
-	check_local_names is
-			-- Check conflicts between local names and feature names
+	number_of_precondition_slots: INTEGER is
+			-- Number of postconditions
+			-- (inherited assertions are not taken into account)
 		do
+			-- Return 0
+		end
+
+	number_of_postcondition_slots: INTEGER is
+			-- Number of preconditions
+			-- (inherited assertions are not taken into account)
+		do
+			-- Return 0
 		end
 
 feature -- test for empty body

@@ -10,47 +10,26 @@ class
 inherit
 	EXPR_AS
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
 
-	initialize (t: like target; f: like feature_name; o: like operands; has_target: BOOLEAN) is
+feature {NONE} -- Initialization
+
+	initialize (t: like target; f: like feature_name; o: like operands; ht: BOOLEAN) is
 			-- Create a new ROUTINE_CREATION AST node.
+			-- When `t' is Void it means it is a question mark.
 		require
 			f_not_void: f /= Void
-		local
-			access_id_as: ACCESS_ID_AS
 		do
 			target := t
 			feature_name := f
 			operands := o
-			if target /= Void then
-				if target.target /= Void then
-						-- Target is an entity
-					create access_id_as
-					access_id_as.set_feature_name (target.target)
-					target_ast := access_id_as
-				else
-					if target.expression /= Void then
-							-- Target is an expression
-						target_ast := target.expression
-					else
-						if target.class_type = Void then
-							if target.is_result then
-									-- Target is Result
-								create {RESULT_AS} target_ast
-							else
-									-- Target is Current
-								create {CURRENT_AS} target_ast
-							end
-						end
-					end
-				end
-			end
-
-			create call_ast.make (feature_name, operands, has_target)
+			has_target := ht
 		ensure
 			target_set: target = t
 			feature_name_set: feature_name = f
 			operands_set: operands = o
+			has_target_set: has_target = ht
 		end
 
 feature -- Visitor
@@ -64,19 +43,38 @@ feature -- Visitor
 feature -- Attributes
 
 	target: OPERAND_AS
-			-- Target operand used when the feature will be called
+			-- Target operand used when the feature will be called.
 
 	feature_name: ID_AS
-			-- Feature name
+			-- Feature name.
 
 	operands : EIFFEL_LIST [OPERAND_AS]
 			-- List of operands used by the feature when called.
 
-	target_ast: AST_EIFFEL
-			-- Ast created for target during type checking.
+	has_target: BOOLEAN
+			-- Does Current has a target?
 
-	call_ast: DELAYED_ACCESS_FEAT_AS
-			-- Ast created for delayed call during type checking.
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			if target /= Void then
+				Result := target.start_location
+			else
+				Result := feature_name.start_location
+			end
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			if operands /= Void then
+				Result := operands.end_location
+			else
+				Result := feature_name.end_location
+			end
+		end
 
 feature -- Comparison
 
@@ -85,47 +83,13 @@ feature -- Comparison
 		do
 			Result := equivalent (feature_name, other.feature_name) and then
 					  equivalent (operands, other.operands) and then
-					  equivalent (target, other.target)
+					  equivalent (target, other.target) and then
+					  has_target = other.has_target
 		end
 
---feature {AST_EIFFEL} -- Output
---
---	simple_format (ctxt: FORMAT_CONTEXT) is
---			-- Reconstitute text.
---		do
---			-- FIXME
---		end
-
-feature {ROUTINE_CREATION_AS}
-
-	set_target (t : like target) is
-			-- Set `target' to `t'.
-		do
-			target := t
-		end
-
-	set_target_ast (t : like target_ast) is
-			-- Set `target_ast' to `t'.
-		do
-			target_ast := t
-		end
-
-	set_feature_name (f : like feature_name) is
-			-- Set `feature_name' to `f'.
-		do
-			feature_name := f
-		end
-
-	set_operands (o : like operands) is
-			-- Set `operands' to `o'.
-		do
-			operands := o
-		end
-
-	set_call_ast (c : like call_ast) is
-			-- Set `call_ast' to `c'.
-		do
-			call_ast := c
-		end
+invariant
+	feature_name_not_void: feature_name /= Void
 
 end -- class ROUTINE_CREATION_AS
+
+

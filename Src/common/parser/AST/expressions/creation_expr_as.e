@@ -1,5 +1,5 @@
 indexing
-	description: ""
+	description: "Abstract description of an Eiffel creation expression call."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -9,27 +9,24 @@ class
 inherit
 	CALL_AS
 		redefine
-			is_equivalent, location
+			is_equivalent, start_location, end_location
 		end
-		
+
 create
 	initialize
 
-feature {AST_FACTORY} -- Initialization
+feature {NONE} -- Initialization
 
-	initialize (t: like type; c: like call; l: like location) is
+	initialize (t: like type; c: like call) is
 			-- Create a new CREATION_EXPR AST node.
 		require
 			t_not_void: t /= Void
-			l_not_void: l /= Void
 		do
 			type := t
 			call := c
-			location := l.twin
 		ensure
 			type_set: type = t
 			call_set: call = c
-			location_set: location.is_equal (l)
 		end
 
 feature -- Visitor
@@ -40,10 +37,7 @@ feature -- Visitor
 			v.process_creation_expr_as (Current)
 		end
 
-feature -- Attributes
-
-	location: TOKEN_LOCATION
-			-- Location of current.
+feature -- Access
 
 	type: TYPE_AS
 			-- Creation Type.
@@ -53,6 +47,24 @@ feature -- Attributes
 			-- only procedure and functions are valid and no export validation
 			-- is made.
 
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Start location of Current
+		do
+			Result := type.start_location
+		end
+
+	end_location: LOCATION_AS is
+			-- End location of Current
+		do
+			if call /= Void then
+				Result := call.end_location
+			else
+				Result := type.end_location
+			end
+		end
+
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is
@@ -61,13 +73,6 @@ feature -- Comparison
 			Result := equivalent (call, other.call) and then
 				equivalent (type, other.type)
 		end
-
---feature {AST_EIFFEL} -- Output
---
---	simple_format (ctxt: FORMAT_CONTEXT) is
---			-- Reconstitute text.
---		do
---		end
 
 invariant
 		-- A creation expression contains its type

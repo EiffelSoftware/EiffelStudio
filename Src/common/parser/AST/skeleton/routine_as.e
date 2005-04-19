@@ -1,47 +1,56 @@
 indexing
-	description: 
-		"AST representation of the content of a standard feature."
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "Abstract description of the content of a standard %
+				  %feature. Version for Bench."
+	date		: "$Date$"
+	revision	: "$Revision$"
 
-class
-	ROUTINE_AS
+class ROUTINE_AS
 
 inherit
 	CONTENT_AS
 		redefine
-			is_require_else, is_ensure_then, has_rescue,
-			has_precondition, has_postcondition, is_empty,--create_default_rescue,
-			is_equivalent
+			is_require_else, is_ensure_then,
+			has_rescue, has_precondition, has_postcondition,
+			create_default_rescue, is_empty,
+			number_of_precondition_slots,
+			number_of_postcondition_slots,
+			number_of_breakpoint_slots
 		end
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (o: like obsolete_message; pr: like precondition;
 		l: like locals; b: like routine_body; po: like postcondition;
-		r: like rescue_clauses; p: INTEGER; end_pos: like location) is
+		r: like rescue_clause; p: INTEGER; ek: like end_keyword;
+		oms_count: like once_manifest_string_count) is
 			-- Create a new ROUTINE AST node.
 		require
 			b_not_void: b /= Void
-			end_pos_not_void: end_pos /= Void
+			ek_not_void: ek /= Void
+			valid_oms_count: oms_count >= 0
 		do
 			obsolete_message := o
 			precondition := pr
 			locals := l
 			routine_body := b
 			postcondition := po
-			rescue_clauses := r
+			rescue_clause := r
 			body_start_position := p
-			end_location := end_pos.twin
+			end_keyword := ek
+			once_manifest_string_count := oms_count
 		ensure
 			obsolete_message_set: obsolete_message = o
 			precondition_set: precondition = pr
 			locals_set: locals = l
 			routine_body_set: routine_body = b
 			postcondition_set: postcondition = po
-			rescue_clauses_set: rescue_clauses = r
+			rescue_clause_set: rescue_clause = r
 			body_start_position_set: body_start_position = p
-			body_end_location_set: end_location.is_equal (end_pos)
+			end_keyword_set: end_keyword = ek
+			once_manifest_string_count_set: once_manifest_string_count = oms_count
 		end
 
 feature -- Visitor
@@ -57,9 +66,6 @@ feature -- Attributes
 	body_start_position: INTEGER
 			-- Position at the start of the main body (after the comments)
 			
-	end_location: like location
-			-- Line number where `end' keyword is located
-
 	obsolete_message: STRING_AS
 			-- Obsolete clause message
 			-- (Void if was not present)
@@ -76,8 +82,40 @@ feature -- Attributes
 	postcondition: ENSURE_AS
 			-- Routine postconditions
 
-	rescue_clauses: EIFFEL_LIST [INSTRUCTION_AS]
+	rescue_clause: EIFFEL_LIST [INSTRUCTION_AS]
 			-- Rescue compound
+
+	once_manifest_string_count: INTEGER
+			-- Number of once manifest strings in precondition,
+			-- body, postcondition and rescue clause
+
+	end_keyword: LOCATION_AS
+			-- Location for `end' keyword
+
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			if obsolete_message /= Void then
+				Result := obsolete_message.start_location
+			elseif precondition /= Void then
+				Result := precondition.start_location
+			elseif locals /= Void then
+				Result := locals.start_location
+			else
+				Result := routine_body.start_location
+				if Result.is_null then
+					Result := end_keyword
+				end
+			end
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			Result := end_keyword
+		end
 
 feature -- Properties
 
@@ -118,8 +156,8 @@ feature -- Properties
 	has_rescue: BOOLEAN is
 			-- Has the routine a non-empty rescue clause ?
 		do
-			Result := (rescue_clauses /= Void) and then
-					  not rescue_clauses.is_empty
+			Result := (rescue_clause /= Void) and then
+					  not rescue_clause.is_empty
 		end
 
 	is_deferred: BOOLEAN is
@@ -141,6 +179,46 @@ feature -- Properties
 		end
 
 feature -- Access
+
+	number_of_breakpoint_slots: INTEGER is
+			-- Number of stop points for AST (pre/post condition
+			-- included but the ones inherited)
+		do
+				-- At least one stoppoint, the one corresponding
+				-- to the feature end.
+			Result := 1 
+
+				-- Add the body stop points
+			if routine_body /= Void then
+				Result := Result + routine_body.number_of_breakpoint_slots
+			end
+
+				-- Add the rescue stop points
+			if has_rescue then
+				Result := Result + rescue_clause.number_of_breakpoint_slots
+			end
+
+				-- Add the pre/postconditions slots
+			Result := Result + number_of_precondition_slots + number_of_postcondition_slots
+		end
+
+	number_of_precondition_slots: INTEGER is
+			-- Number of preconditions
+			-- (inherited assertions are not taken into account)
+		do
+			if has_precondition then
+				Result := precondition.number_of_breakpoint_slots
+			end
+		end
+
+	number_of_postcondition_slots: INTEGER is
+			-- Number of postconditions
+			-- (inherited assertions are not taken into account)
+		do
+			if has_postcondition then
+				Result := postcondition.number_of_breakpoint_slots
+			end
+		end
 
 	has_instruction (i: INSTRUCTION_AS): BOOLEAN is
 			-- Does this routine has instruction `i'?
@@ -167,7 +245,7 @@ feature -- Comparison
 		do
 			Result := equivalent (routine_body, other.routine_body) and then
 				equivalent (locals, other.locals) and then
-				equivalent (rescue_clauses, other.rescue_clauses) and then
+				equivalent (rescue_clause, other.rescue_clause) and then
 				equivalent (obsolete_message, other.obsolete_message)
 		end
  
@@ -187,121 +265,28 @@ feature -- test for empty body
 			Result := (routine_body = Void) or else (routine_body.is_empty)
 		end
 
---feature -- default rescue
---
---	create_default_rescue (def_resc_name : STRING) is
---		local
---			def_resc_id   : ID_AS
---			def_resc_call : ACCESS_ID_AS
---			def_resc_instr: INSTR_CALL_AS
---		do
---			if rescue_clause = Void and then
---			   not (routine_body.is_deferred or routine_body.is_external) then
---				create def_resc_id.make (1)
---				def_resc_id.load (def_resc_name)
---				create def_resc_call
---				def_resc_call.set_feature_name (def_resc_id)
---				create def_resc_instr
---				def_resc_instr.set_call (def_resc_call)
---				create rescue_clause.make (1)
---				rescue_clause.extend (def_resc_instr)
---			end
---		end
+feature -- default rescue
 
---feature {AST_EIFFEL} -- Output
---
---	simple_format (ctxt: FORMAT_CONTEXT) is
---			-- Reconstitute text.
---		local
---			comments: EIFFEL_COMMENTS
---		do
---			ctxt.put_space
---			ctxt.put_text_item_without_tabs (ti_Is_keyword)
---			ctxt.put_new_line
---
---			if obsolete_message /= Void then
---				ctxt.indent
---				ctxt.put_text_item (ti_Obsolete_keyword)
---				ctxt.put_space
---				obsolete_message.simple_format (ctxt)
---				ctxt.put_new_line
---				ctxt.exdent
---			end
---
---			comments := ctxt.feature_comments;
---			if comments /= Void then
---				ctxt.indent
---				ctxt.indent
---				ctxt.put_comments (comments)
---				ctxt.exdent
---				ctxt.exdent
---			end
---
---			ctxt.indent;
---			if precondition /= Void then
---				precondition.simple_format (ctxt);
---			end
---			if locals /= Void then
---				ctxt.put_text_item (ti_Local_keyword)
---				ctxt.set_separator (ti_Empty)
---				ctxt.indent
---				ctxt.set_new_line_between_tokens
---				ctxt.put_new_line
---				locals.simple_format (ctxt)
---				ctxt.put_new_line;
---				ctxt.exdent
---			end
---			if routine_body /= Void then
---				routine_body.simple_format (ctxt)
---			end
---			if postcondition /= Void then
---				postcondition.simple_format (ctxt);
---			end
---			if rescue_clause /= Void then
---				ctxt.put_text_item (ti_Rescue_keyword)
---				ctxt.indent
---				ctxt.put_new_line
---				rescue_clause.simple_format (ctxt)
---				ctxt.put_new_line
---				ctxt.exdent;
---				ctxt.put_breakable;
---			end
---			ctxt.put_text_item (ti_End_keyword)
---			ctxt.exdent
---		end
-
-feature	{ROUTINE_AS, FEATURE_AS} -- Replication and for flattening of a routine
-
-	set_precondition (p: like precondition) is
+	create_default_rescue (def_resc_name : STRING) is
+		local
+			def_resc_id   : ID_AS
+			def_resc_call : ACCESS_ID_AS
+			def_resc_instr: INSTR_CALL_AS
 		do
-			precondition := p
+			if rescue_clause = Void and then
+			   not (routine_body.is_deferred or routine_body.is_external) then
+				create def_resc_id.initialize (def_resc_name)
+				def_resc_id.set_position (end_keyword.line, end_keyword.column, 
+					end_keyword.position, end_keyword.location_count)				
+				create def_resc_call.initialize (def_resc_id, Void)
+				create def_resc_instr.initialize (def_resc_call)
+				create rescue_clause.make (1)
+				rescue_clause.extend (def_resc_instr)
+			end
 		end
 
-	set_locals (l: like locals) is
-		do
-			locals := l
-		end
-
-	set_routine_body (r: like routine_body) is
-		require
-			valid_arg: r /= Void
-		do
-			routine_body := r
-		end
-
-	set_postcondition (p: like postcondition) is
-		do
-			postcondition := p
-		end
-
-	set_rescue_clauses (r: like rescue_clauses) is
-		do	
-			rescue_clauses := r
-		end
-
-	set_obsolete_message (m: like obsolete_message) is
-		do	
-			obsolete_message := m
-		end
+invariant
+	routine_body_not_void: routine_body /= Void
+	end_keyword_not_void: end_keyword /= Void
 
 end -- class ROUTINE_AS

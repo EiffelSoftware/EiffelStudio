@@ -1,35 +1,37 @@
 indexing
-	description: 
-		"AST representation of a multi_branch instruction"
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "Abstract description of a multi_branch instruction, %
+				  %Version for Bench."
+	date		: "$Date$"
+	revision	: "$Revision$"
 
-class
-	INSPECT_AS
+class INSPECT_AS
 
 inherit
 	INSTRUCTION_AS
+		redefine
+			number_of_breakpoint_slots
+		end
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
 
-	initialize (s: like switch; c: like case_list; e: like else_part; l, el: like location) is
+feature {NONE} -- Initialization
+
+	initialize (s: like switch; c: like case_list; e: like else_part; el: like end_keyword) is
 			-- Create a new INSPECT AST node.
 		require
 			s_not_void: s /= Void
-			l_not_void: l /= Void
 			el_not_void: el /= Void
 		do
 			switch := s
 			case_list := c
 			else_part := e
-			location := l.twin
-			end_location := el.twin
+			end_keyword := el
 		ensure
 			switch_set: switch = s
 			case_list_set: case_list = c
 			else_part_set: else_part = e
-			location_set: location.is_equal (l)
-			end_location_set: end_location.is_equal (el)
+			end_keyword_set: end_keyword = el
 		end
 
 feature -- Visitor
@@ -51,8 +53,36 @@ feature -- Attributes
 	else_part: EIFFEL_LIST [INSTRUCTION_AS]
 			-- Else part
 
-	end_location: like location
+	end_keyword: LOCATION_AS
 			-- Line number where `end' keyword is located
+
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			Result := switch.start_location
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			Result := end_keyword
+		end
+
+feature -- Access
+
+	number_of_breakpoint_slots: INTEGER is
+			-- Number of stop points for AST
+		do
+			Result := 1 -- "inspect cond" line
+			if case_list /= Void then
+				Result := Result + case_list.number_of_breakpoint_slots
+			end
+			if else_part /= Void then
+				Result := Result + else_part.number_of_breakpoint_slots
+			end
+		end
 
 feature -- Comparison
 
@@ -64,57 +94,8 @@ feature -- Comparison
 				equivalent (switch, other.switch)
 		end
 
---feature {AST_EIFFEL} -- Output
---
---	simple_format (ctxt: FORMAT_CONTEXT) is
---			-- Reconstitute text.
---		do
---			ctxt.put_breakable;
---			ctxt.put_text_item (ti_Inspect_keyword);
---			ctxt.put_space;
---			ctxt.indent;
---			ctxt.format_ast (switch);
---			ctxt.exdent;
---			ctxt.put_new_line;
---			if case_list /= void then
---				ctxt.set_separator (ti_Empty);
---				ctxt.set_no_new_line_between_tokens;
---				ctxt.reversed_format_list (case_list);
---			end
---			if else_part /= void then
---				ctxt.put_text_item (ti_Else_keyword);
---				ctxt.indent;
---				ctxt.put_new_line;
---				ctxt.set_separator (ti_Semi_colon);
---				ctxt.set_new_line_between_tokens;
---				ctxt.reversed_format_list (else_part);
---				ctxt.put_new_line;
---				ctxt.exdent;
---				ctxt.put_breakable;
---			end
---			ctxt.put_text_item (ti_End_keyword);
---		end
-
-feature {INSPECT_AS} -- Replication
-
-	set_switch (s: like switch) is
-			-- Set `switch' to `s'.
-		require
-			valid_arg: s /= Void
-		do
-			switch := s
-		end
-
-	set_case_list (c: like case_list) is
-			-- Set `case_list' to `c'.
-		do
-			case_list := c
-		end
-
-	set_else_part (e: like else_part) is
-			-- Set `else_part' to `e'.
-		do
-			else_part := e
-		end
+invariant
+	switch_not_void: switch /= Void
+	end_keyword_not_void: end_keyword /= Void	
 
 end -- class INSPECT_AS

@@ -1,24 +1,28 @@
 indexing
-	description: 
-		"AST representation of a boolean constant."
-	date: "$Date$"
-	revision: "$Revision$"
 
-class
-	BOOL_AS
+	description: "Node for boolean constant. Version for Bench."
+	date: "$Date$"; revision: "$Revision$"
+
+class BOOL_AS
 
 inherit
 	ATOMIC_AS
 		redefine
 			is_equivalent
 		end
+		
+	LEAF_AS
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
 
-	initialize (b: BOOLEAN) is
+feature {NONE} -- Initialization
+
+	initialize (b: BOOLEAN; l, c, p, s: INTEGER) is
 			-- Create a new BOOLEAN AST node.
 		do
 			value := b
+			set_position (l, c, p, s)
 		ensure
 			value_set: value = b
 		end
@@ -31,7 +35,7 @@ feature -- Visitor
 			v.process_bool_as (Current)
 		end
 
-feature -- Attributes
+feature -- Properties
 
 	value: BOOLEAN
 			-- Integer value
@@ -50,17 +54,5 @@ feature -- Output
 		do
 			Result := value.out
 		end
-
---feature {AST_EIFFEL} -- Output
---
---	simple_format (ctxt: FORMAT_CONTEXT) is
---			-- Reconstitute text.
---		do
---			if value then
---				ctxt.put_text_item (ti_True_keyword)
---			else
---				ctxt.put_text_item (ti_False_keyword)
---			end
---		end
 
 end -- class BOOL_AS

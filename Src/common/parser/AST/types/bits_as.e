@@ -1,21 +1,17 @@
 indexing
-	description: 
-		"AST representation of BIT types."
+	description: "Representation of a BIT type."
 	date: "$Date$"
-	revision: "$Revision $"
+	revision: "$Revision$"
 
-class
-	BITS_AS
+class BITS_AS
 
 inherit
-	BASIC_TYPE
-		rename
-			initialize as initialize_basic_type
-		redefine
-			is_equivalent
-		end
+	TYPE_AS
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (v: like bits_value) is
 			-- Create a new BITS AST node.
@@ -37,8 +33,22 @@ feature -- Visitor
 
 feature -- Attributes
 
-	bits_value: INTEGER_CONSTANT
+	bits_value: INTEGER_AS
 			-- Bits value
+
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			Result := bits_value.start_location
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			Result := bits_value.end_location
+		end
 
 feature -- Comparison
 
@@ -55,7 +65,7 @@ feature -- Output
 		do
 			create Result.make (10)
 			Result.append ("BIT ")
-			Result.append (bits_value.string_value)
+			Result.append_integer (bits_value.integer_32_value)
 		end
 
 end -- class BITS_AS

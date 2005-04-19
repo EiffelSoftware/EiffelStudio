@@ -1,17 +1,19 @@
 indexing
 	description: "AST represenation of a require else construct."
 	date: "$Date$"
-	revision: "$Revision $"
+	revision: "$Revision$"
 
-class
-	REQUIRE_ELSE_AS
+class REQUIRE_ELSE_AS
 
 inherit
 	REQUIRE_AS
 		redefine
-			is_else,
-			process
+			process,
+			is_else
 		end
+
+create
+	initialize
 
 feature -- Visitor
 
@@ -24,6 +26,6 @@ feature -- Visitor
 feature -- Properties
 
 	is_else: BOOLEAN is True
-			-- Is the assertion list a require else ?
+			-- Is the assertion list a require else?
 
 end -- class REQUIRE_ELSE_AS

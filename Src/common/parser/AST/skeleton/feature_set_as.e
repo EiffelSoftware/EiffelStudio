@@ -1,11 +1,9 @@
 indexing
-	description: 
-		"Abstract notion of a set of features."
+	description: "Abstract notion of a set of features."
 	date: "$Date$"
-	revision: "$Revision $"
+	revision: "$Revision$"
 
-deferred class
-	FEATURE_SET_AS
+deferred class FEATURE_SET_AS
 
 inherit
 	AST_EIFFEL

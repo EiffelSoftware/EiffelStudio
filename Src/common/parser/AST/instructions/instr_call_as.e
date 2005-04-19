@@ -1,6 +1,6 @@
 indexing
-	description: 
-		"AST representation of a call as an instruction"
+	description: "Abstract description of a call as an instruction, %
+				%Version for Bench."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -9,20 +9,23 @@ class
 
 inherit
 	INSTRUCTION_AS
+		redefine
+			starts_with_parenthesis
+		end
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
 
-	initialize (c: like call; l: like location) is
+feature {NONE} -- Initialization
+
+	initialize (c: like call) is
 			-- Create a new INSTR_CALL AST node.
 		require
 			c_not_void: c /= Void
-			l_not_void: l /= Void
 		do
 			call := c
-			location := l.twin
 		ensure
 			call_set: call = c
-			location_set: location.is_equal (l)
 		end
 
 feature -- Visitor
@@ -38,6 +41,20 @@ feature -- Attributes
 	call: CALL_AS
 			-- Call instruction
 
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Start location of Current
+		do
+			Result := call.start_location
+		end
+		
+	end_location: LOCATION_AS is
+			-- End location of Current
+		do
+			Result := call.end_location
+		end
+
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is
@@ -46,23 +63,19 @@ feature -- Comparison
 			Result := equivalent (call, other.call)
 		end
 
---feature {AST_EIFFEL} -- Output
---
---	simple_format (ctxt: FORMAT_CONTEXT) is
---			-- Reconstitute text.
---		do
---			ctxt.put_breakable;
---			ctxt.format_ast (call)
---		end
+feature {INTERNAL_AS} -- Status report
 
-feature {INSTR_CALL_AS, ROUTINE_AS} -- Replication
-
-	set_call (c: like call) is
-			-- Set `call' to `c'.
-		require
-			valid_arg: c /= Void
+	starts_with_parenthesis: BOOLEAN is
+			-- Is the first format item a "(".
+			-- See: AST_FORMATTER_VISITOR.format_compound.
+		local
+			nested: NESTED_EXPR_AS
 		do
-			call := c;
+			nested ?= call
+			Result := nested /= Void
 		end
+
+invariant
+	call_not_void: call /= Void
 
 end -- class INSTR_CALL_AS

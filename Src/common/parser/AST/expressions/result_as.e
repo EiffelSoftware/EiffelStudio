@@ -1,5 +1,6 @@
 indexing
-	description: "AST representation to access to `Result'."
+	description:"Abstract description to access to `Result'. %
+				%Version for Bench."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -11,14 +12,11 @@ inherit
 		redefine
 			is_equivalent
 		end
+		
+	LEAF_AS
 
-feature {AST_FACTORY} -- Initialization
-
-	initialize is
-			-- Create a new RESULT AST node.
-		do
-			-- Do nothing.
-		end
+create
+	make_with_location
 
 feature -- Visitor
 
@@ -28,9 +26,14 @@ feature -- Visitor
 			v.process_result_as (Current)
 		end
 
-feature -- Attributes
+feature -- Properties
 
 	access_name: STRING is "Result"
+
+	parameters: EIFFEL_LIST [EXPR_AS] is
+			-- No parameters for Result
+		do
+		end
 
 feature -- Comparison
 
@@ -39,14 +42,5 @@ feature -- Comparison
 		do
 			Result := True
 		end
-
---feature {AST_EIFFEL} -- Output
---
---	simple_format (ctxt: FORMAT_CONTEXT) is
---			-- Reconstitute text.
---		do
---			ctxt.prepare_for_result
---			ctxt.put_text_item (ti_Result)
---		end
 
 end -- class RESULT_AS

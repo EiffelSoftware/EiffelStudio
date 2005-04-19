@@ -1,31 +1,36 @@
 indexing
-	description: 
-		"AST represenation of an Eiffel feature."
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "Abstract class for abstract description of Eiffel features."
+	date		: "$Date$"
+	revision	: "$Revision$"
 
-class
-	FEATURE_AS
-
+class FEATURE_AS
+		
 inherit
 	AST_EIFFEL
 		redefine
-			is_equivalent, location
+			number_of_breakpoint_slots
 		end
+
 	COMPARABLE
 		undefine
 			is_equal
 		end
+
+	IDABLE
+
 	CLICKABLE_AST
 		undefine
 			is_equal
 		redefine
-			is_feature
+			is_feature, feature_name
 		end
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
 
-	initialize (f: like feature_names; b: like body; i: like indexes; l, s, e: INTEGER) is
+feature {NONE} -- Initialization
+
+	initialize (f: like feature_names; b: like body; i: like indexes; an_id: like id) is
 			-- Create a new FEATURE AST node.
 		require
 			f_not_void: f /= Void
@@ -36,20 +41,12 @@ feature {AST_FACTORY} -- Initialization
 			feature_names := f
 			body := b
 			indexes := i
---			id := System.feature_as_counter.next_id
---			if body.is_unique then
---				System.current_class.set_has_unique
---			end
-			create location.reset
-			location.set_line_number (l)
-			location.set_start_position (s)
-			location.set_end_position (e)
-			set_start_position
-			set_end_position
+			id := an_id
 		ensure
 			feature_names_set: feature_names = f
 			body_set: body = b
 			indexes_set: indexes = i
+			id_set: id = an_id
 		end
 
 feature -- Visitor
@@ -60,29 +57,10 @@ feature -- Visitor
 			v.process_feature_as (Current)
 		end
 
-feature {NONE} -- Initialization
- 
-	set_start_position is
-		do
-			--| No need to test whether feature_names is empty, because the class is
-			--| FEATURE_AS and there is allwas at least one feature name
-			location.set_start_position (location.start_position - feature_names.first.offset)
-		end
-
-	set_end_position is
-		do
-			--| No need to test whether feature_names is empty, because the class is
-			--| FEATURE_AS and there is allwas at least one feature name
-			location.set_end_position (location.end_position + feature_names.first.end_offset)
-		end
-
 feature -- Access
 
 	feature_names: EIFFEL_LIST [FEATURE_NAME]
 			-- Names of feature
-
-	location: TOKEN_LOCATION
-			-- Location of current feature.
 
 	body: BODY_AS
 			-- Feature body: this attribute will be compared during
@@ -92,18 +70,30 @@ feature -- Access
 	indexes: INDEXING_CLAUSE_AS
 			-- Indexing clause for IL to specify `custom attributes' and `alias' name.
 
---	id: INTEGER
---			-- Id of the current instance used by the temporary AST server
---
---	external_name: STRING is
---			-- External name if any of current feature.
---		require
-----			il_generation: System.il_generation
---		do
---			if indexes /= Void then
---				Result := indexes.external_name
---			end
---		end
+	external_name: STRING is
+			-- External name if any of current feature.
+		do
+			if indexes /= Void then
+				Result := indexes.external_name
+			end
+		end
+
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			Result := feature_names.start_location
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			Result := body.end_location
+			if Result.is_null then
+				Result := feature_names.end_location
+			end
+		end
 		
 feature -- Property
 
@@ -139,27 +129,55 @@ feature -- Property
 			end
 		end
 
---feature -- Setting
---
---	set_id (i: like id) is
---			-- Set `id' to `i'.
---		do
---			id := i
---		end
+feature {COMPILER_EXPORTER} -- Setting
+
+	set_feature_names (f: like feature_names) is
+			-- Set `feature_names' to `f'
+		require
+			f_not_void: f /= Void
+			f_not_empty: not f.is_empty
+		do
+			feature_names := f
+		ensure
+			feature_names_set: feature_names = f
+		end
 
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is
 			-- Is `other' equivalent to the current object ?
 		do
--- FIXME: see is_equiv
 			Result := equivalent (body, other.body) and
 				equivalent (feature_names, other.feature_names)
 		end
 
 feature -- Access
 
-	feature_name: STRING is
+	number_of_breakpoint_slots: INTEGER is
+			-- Number of stop points for AST (inherited pre/postconditions
+			-- are not taken into account)
+		do
+				-- Traverse tree to get the number of slots
+			Result := body.number_of_breakpoint_slots
+		end
+
+	number_of_precondition_slots: INTEGER is
+			-- Number of preconditions
+			-- (inherited assertions are not taken into account)
+		do
+				-- Traverse tree
+			Result := body.number_of_precondition_slots
+		end
+
+	number_of_postcondition_slots: INTEGER is
+			-- Number of postconditions
+			-- (inherited assertions are not taken into account)
+		do
+				-- Traverse tree
+			Result := body.number_of_postcondition_slots
+		end
+
+	feature_name: ID_AS is
 			-- Feature name representing AST 
 		do
 			Result := feature_names.first.internal_name
@@ -248,6 +266,23 @@ feature -- Access
 			end
 		end
 
+feature -- Update
+
+	assign_unique_values (counter: COUNTER; values: HASH_TABLE [INTEGER, STRING]) is
+			-- Assign values to Unique features defined in the current class
+		do
+			if body.is_unique then
+				from
+					feature_names.start
+				until
+					feature_names.after
+				loop
+					values.put (counter.next, feature_names.item.internal_name)
+					feature_names.forth
+				end
+			end
+		end
+
 feature -- empty body
 
 	is_empty : BOOLEAN is
@@ -256,102 +291,19 @@ feature -- empty body
 			Result := (body = Void) or else (body.is_empty)
 		end
 
-feature {NONE} -- Implementation
+feature -- default rescue
 
-	is_body_equiv (other: like Current): BOOLEAN is
-			-- Is the current feature equivalent to `other' ?
+	create_default_rescue (def_resc_name : STRING) is
+				-- Create default rescue if necessary
 		require
-			valid_body: body /= Void
+			valid_feature_name : def_resc_name /= Void
 		do
-			Result := body.is_body_equiv (other.body)
+			if body /= Void then
+				body.create_default_rescue (def_resc_name)
+			end
 		end
 
-	is_assertion_equiv (other: like Current): BOOLEAN is
-			-- Is the current feature equivalent to `other' ?
-		require
-			valid_body: body /= Void
-		do
-			Result := body.is_assertion_equiv (other.body)
-		end
-
---feature -- default rescue
---
---	create_default_rescue (def_resc_name : STRING) is
---				-- Create default rescue if necessary
---		require
---			valid_feature_name : def_resc_name /= Void
---		do
---			if body /= Void then
---				body.create_default_rescue (def_resc_name)
---			end
---		end
-
---feature {COMPILER_EXPORTER, AST_EIFFEL} -- Output
---
---	simple_format (ctxt: FORMAT_CONTEXT) is
---			-- Reconstitute text.
---		local
---			c: EIFFEL_COMMENTS;
---			cont: CONTENT_AS;
---			is_const_or_att: BOOLEAN	
---		do
---			c := ctxt.eiffel_file.current_feature_comments;
---			ctxt.set_feature_comments (c);
---			if feature_names /= Void then
---				ctxt.set_separator (ti_Comma);
---				ctxt.set_space_between_tokens;
---				feature_names.simple_format (ctxt)
---			end
---			body.simple_format (ctxt);
---			cont := body.content;
---			is_const_or_att := cont = Void or else cont.is_constant;
---			if is_const_or_att and then c /= Void then
---				ctxt.put_new_line;
---				ctxt.indent;
---				ctxt.indent;
---				ctxt.put_comments (c);
---				ctxt.exdent;
---				ctxt.exdent;
---			else
---				ctxt.put_new_line;
---			end
---		end
-
---feature {COMPILER_EXPORTER} -- Initialization
--- 
---	set_names (names: like feature_names) is
---		do
---			feature_names := names;
---		end
---
---	set_content (other: like Current) is
---		require
---			good_argument: other /= void
---		do
---			body := other.body;
---			start_position := other.start_position;
---			end_position := other.end_position
---		end
---
---	trace is
---		do
---			io.error.put_string ("FEATURE_AS");
---			io.error.put_integer (end_position);
---			io.error.put_new_line;
---			io.error.put_integer (start_position);
---			io.error.put_new_line;
---			io.error.put_string (feature_names.first.internal_name);
---			io.error.put_new_line
---		end
---
---feature {COMPILER_EXPORTER} -- Conveniences
---
---	is_feature_obj: BOOLEAN is True
---			-- Is the current object an instance of FEATURE_AS ?
---
-
-
-feature
+feature {COMPILER_EXPORTER} -- Conveniences
 
 	infix "<" (other: like Current): BOOLEAN is
 		do	
@@ -360,70 +312,44 @@ feature
 			elseif other.feature_names = Void then
 				Result := True
 			else
-				Result := feature_names.first < other.feature_names.first;
+				Result := feature_names.first < other.feature_names.first
 			end
 		end
---
---feature {COMPILER_EXPORTER} -- Incrementality
---
---	is_body_equiv (other: like Current): BOOLEAN is
---			-- Is the current feature equivalent to `other' ?
---		require
---			valid_body: body /= Void
---		do
---			Result := body.is_body_equiv (other.body);
---		end
--- 
---	is_assertion_equiv (other: like Current): BOOLEAN is
---			-- Is the current feature equivalent to `other' ?
---		require
---			valid_body: body /= Void
---		do
---			Result := body.is_assertion_equiv (other.body);
---		end
---
---	check_local_names is
---			-- Check the name conflicts between local variables and
---			-- feature names
---		do
---			body.check_local_names
---		end
---
---feature --{COMPILER_EXPORTER} -- Setting
---
---	set_feature_names (f: like feature_names) is
---			-- Set `feature_names' to `f'
---		do
---			feature_names := f
---		end
---
---	set_body (b: like body) is
---			-- Set `body' to `b'
---		do
---			body := b
---		end				
---
---	update_positions (sp: like start_position; ep: like end_position) is
---			-- Set `start_position' to `sp' and `end_position' to `ep'
---		do
---			start_position := sp
---			end_position := ep
---		ensure
---			start_position_set: start_position = sp
---			end_position_set: end_position = ep
---		end
---
---	update_positions_with_offset (offset: INTEGER) is
---			-- Add `offset' to `start_position' and `end_position'
---			-- reflect the fact that current feature is not at the 
---			-- same position in the source file.
---			--| `offset' may be positive as well as negative.
---		do
---			start_position := start_position + offset
---			end_position := end_position + offset
---		ensure
---			start_position_set: start_position = old start_position + offset
---			end_position_set: end_position = old end_position + offset
---		end
+
+feature {COMPILER_EXPORTER} -- Incrementality
+
+	is_body_equiv (other: like Current): BOOLEAN is
+			-- Is the current feature equivalent to `other' ?
+		require
+			valid_body: body /= Void
+		local
+			is_process_context: BOOLEAN
+			other_is_process_context: BOOLEAN
+		do
+			Result := body.is_body_equiv (other.body)
+			if Result then
+				if indexes /= Void then
+					is_process_context := indexes.has_global_once
+				end
+				if other.indexes /= Void then
+					other_is_process_context := other.indexes.has_global_once
+				end
+				Result := is_process_context = other_is_process_context
+			end
+		end
+ 
+	is_assertion_equiv (other: like Current): BOOLEAN is
+			-- Is the current feature equivalent to `other' ?
+		require
+			valid_body: body /= Void
+		do
+			Result := body.is_assertion_equiv (other.body)
+		end
+
+invariant
+	feature_names_not_void: feature_names /= Void
+	feature_names_not_empty: not feature_names.is_empty
+	body_not_void: body /= Void
+	can_have_indexing_clause: indexes /= Void implies feature_names.count = 1
 
 end -- class FEATURE_AS

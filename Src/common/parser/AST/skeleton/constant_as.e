@@ -1,23 +1,24 @@
 indexing
-	description: "AST representation of a the content of an Eiffel constant."
+	description:
+		"Abstract description of a the content of an Eiffel %
+		%constant. Version for Bench."
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	CONSTANT_AS
+class CONSTANT_AS
 
 inherit
 	CONTENT_AS
 		redefine
-			is_unique, is_constant, is_equivalent
+			is_constant, is_unique
 		end
 
 create
-	make
+	initialize
 
 feature {NONE} -- Initialization
 
-	make (v: like value) is
+	initialize (v: like value) is
 			-- Create a new CONSTANT AST node.
 		require
 			v_not_void: v /= Void
@@ -35,10 +36,24 @@ feature -- Visitor
 			v.process_constant_as (Current)
 		end
 
-feature -- Attribute
+feature -- Attributes
 
-	value: EXPR_AS;
+	value: ATOMIC_AS
 			-- Constant value
+
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			Result := value.start_location
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			Result := value.end_location
+		end
 
 feature -- Properties
 
@@ -47,13 +62,8 @@ feature -- Properties
 
 	is_unique: BOOLEAN is
 			-- Is the content a unique ?
-		local
-			a_value: VALUE_AS;
 		do
-			a_value ?= value;
-			if a_value /= Void then
-				Result := a_value.terminal.is_unique;
-			end
+			Result := value.is_unique
 		end
 
 feature -- Comparison
@@ -85,22 +95,14 @@ feature -- Access
 			Result := 0
 		end
 
---feature {AST_EIFFEL} -- Output
---
---	simple_format (ctxt: FORMAT_CONTEXT) is
---			-- Reconstitute text.
---		do
---			ctxt.put_space;
---			ctxt.put_text_item_without_tabs (ti_Is_keyword);
---			ctxt.put_space;
---			ctxt.format_ast (value)
---		end
-
 feature {CONSTANT_AS} -- Replication
 
 	set_value (v: like value) is
 		do
 			value := v
 		end
+		
+invariant
+	value_not_void: value /= Void
 
 end -- class CONSTANT_AS

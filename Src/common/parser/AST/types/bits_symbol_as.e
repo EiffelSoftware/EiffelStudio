@@ -1,21 +1,17 @@
 indexing
-	description: 
-		"AST representation of bit symbols."
+	description: "AST representation of bit symbols."
 	date: "$Date$"
-	revision: "$Revision $"
+	revision: "$Revision$"
 
-class
-	BITS_SYMBOL_AS
+class BITS_SYMBOL_AS
 
 inherit
-	BASIC_TYPE
-		rename
-			initialize as initialize_basic_type
-		redefine
-			is_equivalent
-		end
+	TYPE_AS
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (s: like bits_symbol) is
 			-- Create a new BITS_SYMBOL AST node.
@@ -37,8 +33,22 @@ feature -- Visitor
 
 feature -- Attributes
 
-	bits_symbol: ID_AS;
+	bits_symbol: ID_AS
 			-- Bits value
+
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			Result := bits_symbol.start_location
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			Result := bits_symbol.end_location
+		end
 
 feature -- Comparison
 
@@ -53,9 +63,12 @@ feature -- Output
 	dump: STRING is
 			-- Debug purpose
 		do
-			create Result.make (5 + bits_symbol.count);
-			Result.append ("BIT ");
-			Result.append (bits_symbol);
+			create Result.make (5 + bits_symbol.count)
+			Result.append ("BIT ")
+			Result.append (bits_symbol)
    		end
+
+invariant
+	bits_symbol_not_void: bits_symbol /= Void
 
 end -- class BITS_SYMBOL_AS

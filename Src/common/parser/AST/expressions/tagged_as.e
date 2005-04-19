@@ -1,32 +1,33 @@
 indexing
-	description: 
-		"AST representation of a tagged expression."
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "Abstract description of a tagged expression. %
+				  %Version for Bench."
+	date		: "$Date$"
+	revision	: "$Revision$"
 
-class 
+class
 	TAGGED_AS
 
 inherit
 	EXPR_AS
 		redefine
-			location
+			number_of_breakpoint_slots
 		end
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
 
-	initialize (t: like tag; e: like expr; l: like location) is
+feature {NONE} -- Initialization
+
+	initialize (t: like tag; e: like expr) is
 			-- Create a new TAGGED AST node.
 		require
 			e_not_void: e /= Void
 		do
 			tag := t
 			expr := e
-			location := l
 		ensure
 			tag_set: tag = t
 			expr_set: expr = e
-			location_set: location = l
 		end
 
 feature -- Visitor
@@ -37,6 +38,11 @@ feature -- Visitor
 			v.process_tagged_as (Current)
 		end
 
+feature -- Access
+
+	number_of_breakpoint_slots: INTEGER is 1
+			-- Number of stop points for AST
+
 feature -- Attributes
 
 	tag: ID_AS
@@ -45,11 +51,24 @@ feature -- Attributes
 	expr: EXPR_AS
 			-- Expression
 
-feature -- Access
+feature -- Location
 
-    location: TOKEN_LOCATION
-			-- Location of AST
+	start_location: LOCATION_AS is
+			-- Start location of Current
+		do
+			if tag /= Void then
+				Result := tag.start_location
+			else
+				Result := expr.start_location
+			end
+		end
 
+	end_location: LOCATION_AS is
+			-- End location of Current
+		do
+			Result := expr.end_location
+		end
+		
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is
@@ -63,29 +82,9 @@ feature -- Comparison
 			-- Is `other' tagged as equivalent to Current?
 		do
 			Result := equivalent (tag, other.tag) and then equivalent (expr, other.expr)
-		end	
+		end;	
 
---feature {AST_EIFFEL} -- Output
---
---	simple_format (ctxt: FORMAT_CONTEXT) is
---			-- Reconstitute text.
---		do
---			if tag /= Void then
---				ctxt.put_string (tag);
---				ctxt.put_text_item_without_tabs (ti_Colon);
---				ctxt.put_space
---			end
---			ctxt.new_expression;
---			ctxt.format_ast (expr);
---		end
-
-feature {TAGGED_AS}	-- Replication
-
-	set_expr (e: like expr) is
-		require
-			valid_arg: e /= Void
-		do
-			expr := e
-		end
+invariant
+	expr_not_void: expr /= Void
 
 end -- class TAGGED_AS

@@ -1,13 +1,12 @@
 indexing
 	description:
-		"AST representation of an access to an Eiffel feature (note %
+		"Abstract description of an access to an Eiffel feature (note %
 		%that this access cannot be the first call of a nested %
 		%expression)."
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	ACCESS_FEAT_AS
+class ACCESS_FEAT_AS
 
 inherit
 	ACCESS_AS
@@ -15,7 +14,10 @@ inherit
 			is_equivalent
 		end
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (f: like feature_name; p: like parameters) is
 			-- Create a new FEATURE_ACCESS AST node.
@@ -24,8 +26,8 @@ feature {AST_FACTORY} -- Initialization
 		do
 			feature_name := f
 			parameters := p
-			if parameters /= Void then
-				parameters.start
+			if p /= Void then
+				p.start
 			end
 		ensure
 			feature_name_set: feature_name = f
@@ -42,23 +44,41 @@ feature -- Visitor
 
 feature -- Attributes
 
-	feature_name: ID_AS;
+	feature_name: ID_AS
 			-- Name of the feature called
 
-	parameters: EIFFEL_LIST [EXPR_AS];
+	parameters: EIFFEL_LIST [EXPR_AS]
 			-- List of parameters
 
 	parameter_count: INTEGER is
 			-- Count of parameters
 		do
 			if parameters /= Void then
-				Result := parameters.count;
+				Result := parameters.count
 			end
 		end
 
 	access_name: STRING is
 		do
 			Result := feature_name
+		end
+
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Start location of Current
+		do
+			Result := feature_name.start_location
+		end
+
+	end_location: LOCATION_AS is
+			-- End location of Current
+		do
+			if parameters /= Void then
+				Result := parameters.end_location
+			else
+				Result := feature_name.end_location
+			end
 		end
 
 feature -- Delayed calls
@@ -75,25 +95,17 @@ feature -- Comparison
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := equivalent (feature_name, other.feature_name) and
-				equivalent (parameters, other.parameters)
+				equivalent (parameters, other.parameters) and
+				is_delayed = other.is_delayed
 		end
 
---feature {AST_EIFFEL} -- Output
-
---	simple_format (ctxt: FORMAT_CONTEXT) is
---			-- Reconstitute text.
---		do
---			ctxt.prepare_for_feature (feature_name, parameters);
---			ctxt.put_current_feature;
---		end
-
-feature {CREATION_EXPR_AS, CREATION_AS, ROUTINE_AS, ROUTINE_CREATION_AS} -- Replication
+feature -- Setting
 
 	set_feature_name (name: like feature_name) is
 		require
 			valid_arg: name /= Void
 		do
-			feature_name := name;
+			feature_name := name
 		end
 
 	set_parameters (p: like parameters) is

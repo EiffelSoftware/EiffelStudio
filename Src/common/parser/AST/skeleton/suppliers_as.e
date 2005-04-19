@@ -1,27 +1,15 @@
 indexing
+
 	description:
 			"Abstract description for the supplier type set of a %
 			%class. Version for Bench."
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	SUPPLIERS_AS
-
-inherit
-	AST_EIFFEL
+class SUPPLIERS_AS
 
 create
-	make, initialize
-
-feature {AST_FACTORY} -- Initialization
-
-	initialize is
-			-- Create a new SUPPLIERS AST node.
-		do
-			create supplier_ids.make
-			supplier_ids.compare_objects
-		end
+	make
 
 feature {NONE} -- Initialization
 
@@ -29,14 +17,6 @@ feature {NONE} -- Initialization
 		do
 			create supplier_ids.make
 			supplier_ids.compare_objects
-		end
-
-feature -- Visitor
-
-	process (v: AST_VISITOR) is
-			-- process current element.
-		do
-			v.process_suppliers_as (Current)
 		end
 
 feature -- Attributes
@@ -51,7 +31,7 @@ feature -- Attributes
 			good_argument: id /= Void
 		do
 			supplier_ids.extend (id)
-		end 
+		end; 
 
 feature -- Comparison
 
@@ -66,12 +46,5 @@ feature -- Comparison
 				Result := supplier_ids.is_subset (o_supplier_ids)
 			end
 		end
-
---feature {AST_EIFFEL} -- Output
---
---	simple_format (ctxt: FORMAT_CONTEXT) is
---			-- Do nothing.
---		do
---		end
 
 end -- class SUPPLIERS_AS

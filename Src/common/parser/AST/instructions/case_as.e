@@ -1,32 +1,32 @@
 indexing
-	description: 
-		"AST representation ao an alternative of a multi_branch instruction"
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "Abstract description ao an alternative of a multi_branch %
+				  %instruction. Version for Bench."
+	date		: "$Date$"
+	revision	: "$Revision$"
 
-class
-	CASE_AS
+class CASE_AS
 
 inherit
 	AST_EIFFEL
 		redefine
-			is_equivalent, location
+			number_of_breakpoint_slots, is_equivalent
 		end
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
 
-	initialize (i: like interval; c: like compound; l: like location) is
+feature {NONE} -- Initialization
+
+	initialize (i: like interval; c: like compound) is
 			-- Create a new WHEN AST node.
 		require
 			i_not_void: i /= Void
 		do
 			interval := i
 			compound := c
-			location := l
 		ensure
 			interval_set: interval = i
 			compound_set: compound = c
-			location_set: location = l
 		end
 
 feature -- Visitor
@@ -39,11 +39,29 @@ feature -- Visitor
 
 feature -- Attributes
 
-	interval: EIFFEL_LIST [INTERVAL_AS];
+	interval: EIFFEL_LIST [INTERVAL_AS]
 			-- Interval of the alternative
 
-	compound: EIFFEL_LIST [INSTRUCTION_AS];
+	compound: EIFFEL_LIST [INSTRUCTION_AS]
 			-- Compound
+
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			Result := interval.start_location
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			if compound /= Void then
+				Result := compound.end_location
+			else
+				Result := interval.end_location
+			end
+		end
 
 feature -- Comparison
 
@@ -54,34 +72,15 @@ feature -- Comparison
 				equivalent (interval, other.interval)
 		end
 
-feature {AST_FACTORY} -- Access
+feature -- Access
 
-	location: TOKEN_LOCATION
-
---feature {AST_EIFFEL} -- Output
---
---	simple_format (ctxt: FORMAT_CONTEXT) is
---			-- Reconstitute text.
---		do
---			ctxt.put_text_item (ti_When_keyword);
---			ctxt.put_space;
---			ctxt.set_separator (ti_Comma);
---			ctxt.set_no_new_line_between_tokens;
---			ctxt.format_ast (interval);
---			ctxt.put_space;
---			ctxt.put_text_item_without_tabs (ti_Then_keyword);
---			ctxt.put_space;
---			ctxt.put_new_line;
---			if compound /= void then
---				ctxt.indent;
---				ctxt.set_separator (ti_Semi_colon);
---				ctxt.set_new_line_between_tokens;
---				ctxt.format_ast (compound);
---				ctxt.put_new_line;
---				ctxt.exdent;
---			end
---			ctxt.put_breakable;
---		end
+	number_of_breakpoint_slots: INTEGER is
+			-- Number of stop points
+		do
+			if compound /= Void then
+				Result := compound.number_of_breakpoint_slots
+			end
+		end
 
 feature {CASE_AS} -- Replication
 
@@ -96,5 +95,8 @@ feature {CASE_AS} -- Replication
 		do
 			compound := c
 		end
+
+invariant
+	interval_not_void: interval /= Void
 
 end -- class CASE_AS

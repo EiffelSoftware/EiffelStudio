@@ -34,6 +34,13 @@ inherit
 			default_create, is_equal, copy
 		end
 
+	SHARED_STATELESS_VISITOR
+		export
+			{NONE} all
+		undefine
+			default_create, is_equal, copy
+		end
+
 create
 	make
 
@@ -114,6 +121,7 @@ feature {EB_FEATURES_TOOL} -- Implementation
 			class_text: STRING
 			retried: BOOLEAN
 			l_class: CLASS_C
+			l_export_status: EXPORT_I
 		do
 			if not retried then
 				expand_tree := preferences.feature_tool_data.expand_feature_tree
@@ -138,9 +146,11 @@ feature {EB_FEATURES_TOOL} -- Implementation
 								name.right_adjust
 							end
 							tree_item := build_tree_folder (name, features, l_class)
-							if fcl.item.export_status.is_none then
+							l_export_status := export_status_generator.
+								feature_clause_export_status (l_class, fcl.item)
+							if l_export_status.is_none then
 								tree_item.set_pixmap (Pixmaps.Icon_feature_clause_none)
-							elseif fcl.item.export_status.is_set then
+							elseif l_export_status.is_set then
 								tree_item.set_pixmap (Pixmaps.Icon_feature_clause_some)
 							else
 								tree_item.set_pixmap (Pixmaps.Icon_feature_clause_any)
@@ -211,8 +221,6 @@ feature {EB_FEATURES_TOOL} -- Implementation
 						tree_item := build_tree_folder_for_external (name, l_clauses.item)
 						if not l_clauses.item.is_exported then
 							tree_item.set_pixmap (Pixmaps.Icon_feature_clause_none)
---						elseif l_clauses.item.export_status.is_set then
---							tree_item.set_pixmap (Pixmaps.Icon_feature_clause_some)
 						else
 							tree_item.set_pixmap (Pixmaps.Icon_feature_clause_any)
 						end

@@ -25,6 +25,23 @@ inherit
 			{NONE} all
 		end
 
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make (s: STRING; is_dotnet: BOOLEAN) is
+			-- Set `string_value' with `s'.
+			-- Set `is_dotnet_string' with `is_dotnet'.
+		require
+			s_not_void: s /= Void
+		do
+			string_value := s
+		ensure
+			string_value_set: string_value = s
+			is_dotnet_string_set: is_dotnet_string = is_dotnet
+		end
+
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is
@@ -72,29 +89,6 @@ feature -- Status Report
 		end
 
 feature -- Settings
-
-	set_string_value (s: STRING) is
-			-- Set `string_value' with `s'.
-		require
-			s_not_void: s /= Void
-		do
-			string_value := s
-		ensure
-			string_value_set: string_value = s
-		end
-
-	set_system_string_value (s: STRING) is
-			-- Set `string_value' with `s' and
-			-- set `is_dotnet_string' to True.
-		require
-			s_not_void: s /= Void
-		do
-			is_dotnet_string := True
-			string_value := s
-		ensure
-			is_dotnet_string: is_dotnet_string
-			string_value_set: string_value = s
-		end
 
 	set_real_type (t: CL_TYPE_A) is
 			-- Extract type and set `is_dotnet_string' accordingly.

@@ -566,7 +566,7 @@ feature {NONE} -- Type factory
 
 feature {NONE} -- Basic type factory
 
-	new_integer_value (is_signed: BOOLEAN; sign_symbol: CHARACTER; a_type: TYPE_AS; buffer: STRING): INTEGER_CONSTANT is
+	new_integer_value (is_signed: BOOLEAN; sign_symbol: CHARACTER; a_type: TYPE_AS; buffer: STRING): INTEGER_AS is
 			-- Create a new integer constant value
 		require
 			buffer_not_void: buffer /= Void
@@ -583,18 +583,18 @@ feature {NONE} -- Basic type factory
 			end
 			if buffer.is_integer then
 				if is_signed then
-					create Result.make_from_string (l_type, sign_symbol = '-', buffer)
+					Result := ast_factory.new_integer_as (l_type, sign_symbol = '-', buffer)
 				else
-					create Result.make_from_string (l_type, False, buffer)
+					Result := ast_factory.new_integer_as (l_type, False, buffer)
 				end
 			elseif
 				buffer.item (1) = '0' and then
 				buffer.item (2).lower = 'x'
 			then
 				if is_signed then
-					create Result.make_from_hexa_string (l_type, sign_symbol, buffer)
+					Result := ast_factory.new_integer_hexa_as (l_type, sign_symbol, buffer)
 				else
-					create Result.make_from_hexa_string (l_type, '%U', buffer)
+					Result := ast_factory.new_integer_hexa_as (l_type, '%U', buffer)
 				end
 			else
 				if is_signed and sign_symbol = '-' then
@@ -603,7 +603,7 @@ feature {NONE} -- Basic type factory
 				end
 				report_integer_too_large_error (buffer)
 					-- Dummy code (for error recovery) follows:
-				create Result.make_from_string (l_type, False, "0")
+				Result := ast_factory.new_integer_as (l_type, False, "0")
 			end
 			if not Result.is_initialized then
 				report_integer_too_large_error (buffer)
@@ -629,7 +629,7 @@ feature {NONE} -- Basic type factory
 			if is_signed and sign_symbol = '-' then
 				buffer.precede ('-')
 			end
-			create Result.make (l_type, buffer)
+			Result := ast_factory.new_real_as (l_type, buffer)
 			Result.set_position (line, column, position, buffer.count)
 		end
 		

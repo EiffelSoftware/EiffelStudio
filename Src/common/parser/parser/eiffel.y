@@ -113,7 +113,7 @@ create
 %type <INSPECT_AS>			Multi_branch
 %type <INSTR_CALL_AS>		Call
 %type <INSTRUCTION_AS>		Instruction Instruction_impl
-%type <INTEGER_CONSTANT>	Integer_constant Signed_integer Nosigned_integer Typed_integer Typed_nosigned_integer Typed_signed_integer
+%type <INTEGER_AS>	Integer_constant Signed_integer Nosigned_integer Typed_integer Typed_nosigned_integer Typed_signed_integer
 %type <INTERNAL_AS>			Internal
 %type <INTERVAL_AS>			Choice
 %type <INVARIANT_AS>		Class_invariant
@@ -238,26 +238,24 @@ Class_declaration:
 		Creators							-- $10
 		Convert_clause						-- $11
 		Features End_features_pos			-- $12 $13
-		Class_invariant End_invariant_pos	-- $14 $15
-		Indexing							-- $16
-		TE_END								-- $17
+		Class_invariant 					-- $14
+		Indexing							-- $15
+		TE_END								-- $16
 			{
 				root_node := new_class_description ($4, $6,
 					is_deferred, is_expanded, is_separate, is_frozen_class, is_external_class,
-					$1, $16, $5, $8, $10, $11, $12, $14, suppliers, $7, $17)
+					$1, $15, $5, $8, $10, $11, $12, $14, suppliers, $7, $16)
 				if root_node /= Void then
 					root_node.set_text_positions (
 						formal_generics_end_position,
 						inheritance_end_position,
-						features_end_position,
-						invariant_end_position)
+						features_end_position)
 				end
 			}
 	;
 
 End_inheritance_pos: { inheritance_end_position := position } ;
 End_features_pos: { features_end_position := position } ;
-End_invariant_pos: { invariant_end_position := position } ;
 
 -- Indexing
 
@@ -655,7 +653,14 @@ Constant_attribute: Manifest_constant
 Inheritance: -- Empty
 			-- { $$ := Void }
 	|	TE_INHERIT ASemi
-			{ $$ := ast_factory.new_eiffel_list_parent_as (0) }
+			{
+				if has_syntax_warning then
+					Error_handler.insert_warning (
+						create {SYNTAX_WARNING}.make (line, column, filename,
+						"Use `inherit ANY' or do not specify an empty inherit clause"))
+				end
+				$$ := Void
+			}
 	|	TE_INHERIT { add_counter } Parent_list
 			{
 				$$ := $3

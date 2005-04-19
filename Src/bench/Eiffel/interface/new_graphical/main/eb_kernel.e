@@ -62,6 +62,7 @@ feature {NONE} -- Initialization
 			pref_strs: PREFERENCE_CONSTANTS
 			fn: FILE_NAME	
 			preference_access: PREFERENCES
+			l_app: EV_APPLICATION
 			--| uncomment the following line when profiling 
 			--prof_setting: PROFILING_SETTING
 		do
@@ -89,12 +90,13 @@ feature {NONE} -- Initialization
 			pref_strs.Pixmaps_path_cell.put (fn)
 
 
+				-- Create EV_APPLICATION object even if running in batch mode as it is required
+				-- for preference initialization
+			create l_app
+
 				-- Initialization of compiler resources.
 			create preference_access.make_with_default_values_and_location (system_general, eiffel_preferences)
 			initialize_preferences (preference_access)
-			
-				-- Initialize command-line only preferences
-			preferences.initialize_ec_preferences (preference_access)
 
 			create new_resources.initialize
 			if not new_resources.error_occurred then
@@ -113,14 +115,11 @@ feature {NONE} -- Initialization
 
 						-- Formatting includes breakpoints
 					set_is_with_breakable
-	
-					create graphic_compiler.make
-					
-						-- Initialize GUI preferences
-					preferences.initialize_gui_preferences (preference_access)
+
+					create graphic_compiler.make (l_app)
 
 						-- Launch graphical compiler
-					graphic_compiler.launch
+					l_app.launch
 				else
 					Eiffel_project.set_batch_mode (True)
 					if

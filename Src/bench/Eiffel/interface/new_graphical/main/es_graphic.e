@@ -7,70 +7,37 @@ class
 	ES_GRAPHIC
 
 inherit
-	EV_APPLICATION
-
 	EB_SHARED_INTERFACE_TOOLS
-		undefine
-			default_create,
-			copy
-		end
 
 	SHARED_EIFFEL_PROJECT
-		undefine
-			default_create,
-			copy
-		end
 
 	SHARED_APPLICATION_EXECUTION
-		undefine
-			default_create,
-			copy
-		end
 
 	ARGUMENTS
-		undefine
-			default_create,
-			copy
-		end
 
 	EB_SHARED_PREFERENCES
 		export
 			{NONE} all
-		undefine
-			default_create,
-			copy
 		end
-		
+
 	EXCEPTIONS
 		export
 			{NONE} all
-		undefine
-			default_create,
-			copy
 		end
 
 	SHARED_CONFIGURE_RESOURCES
 		export
 			{NONE} all
-		undefine
-			default_create,
-			copy
 		end
 
 	EB_CONSTANTS
 		export
 			{NONE} all
-		undefine
-			default_create,
-			copy
 		end
 
 	SHARED_LICENSE
 		export
 			{NONE} all
-		undefine
-			default_create,
-			copy
 		end
 
 create
@@ -78,23 +45,27 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make (an_app: EV_APPLICATION) is
 			-- Make and initialize graphical compiler
+		require
+			an_app_not_void: an_app /= Void
 		do
-			default_create
 			license.check_license
 			if license.is_licensed then
-				post_launch_actions.extend (agent prepare)
+				an_app.post_launch_actions.extend (agent prepare (an_app))
 			else
-				post_launch_actions.extend (agent license.check_activation_while_running (agent prepare))
+				an_app.post_launch_actions.extend (agent license.check_activation_while_running (agent prepare (an_app)))
 			end
 				-- Make sure any uncaught exceptions are handled
-			uncaught_exception_actions.extend (agent handle_exception)
+			an_app.uncaught_exception_actions.extend (agent handle_exception)
 		end
 
 feature {NONE} -- Implementation (preparation of all widgets)
 		
-	prepare is
+	prepare (an_app: EV_APPLICATION) is
+			-- Build graphical compiler
+		require
+			an_app_not_void: an_app /= Void
 		local
 			project_index: INTEGER
 			create_project_index: INTEGER
@@ -158,7 +129,7 @@ feature {NONE} -- Implementation (preparation of all widgets)
 				end
 				
 					-- Register help engine
-				set_help_engine (create {EB_HELP_ENGINE}.make)
+				an_app.set_help_engine (create {EB_HELP_ENGINE}.make)
 			end
 		end
 

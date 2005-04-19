@@ -110,24 +110,34 @@ feature -- Element change
 		local
 			pixmap_imp: EV_PIXMAP_IMP
 			pixmap_filename: STRING
+			l_id: INTEGER
 		do
 			pixmap_imp ?= a_pixmap.implementation
 			if pixmap_imp /= Void then  
 				pixmap_filename := pixmap_imp.pixmap_filename
-				if pixmap_filename /= Void and then 
-				   filenames_index.has (pixmap_filename)
-				then
-					last_position := filenames_index.item (pixmap_filename)
-				elseif pixmap_imp.private_bitmap /= Void and then
-					bitmap_ids_index.has (pixmap_imp.private_bitmap.object_id)
-				then
-					last_position := bitmap_ids_index.item (pixmap_imp.private_bitmap.object_id)
-				else
-					internal_add_pixmap (a_pixmap)
-					if pixmap_filename /= Void then
-						filenames_index.put (last_position, pixmap_filename)
+				if pixmap_filename /= Void then
+					if filenames_index.has (pixmap_filename) then
+						last_position := filenames_index.item (pixmap_filename)
+					elseif pixmap_imp.private_bitmap /= Void then
+						l_id := pixmap_imp.private_bitmap.object_id
+						if bitmap_ids_index.has (l_id) then
+							last_position := bitmap_ids_index.item (l_id)
+						else
+							internal_add_pixmap (a_pixmap)
+							bitmap_ids_index.put (last_position, l_id)
+							filenames_index.put (last_position, pixmap_filename)
+						end
 					else
-						bitmap_ids_index.put (last_position, pixmap_imp.private_bitmap.object_id)
+						internal_add_pixmap (a_pixmap)
+						filenames_index.put (last_position, pixmap_filename)
+					end
+				elseif pixmap_imp.private_bitmap /= Void then
+					l_id := pixmap_imp.private_bitmap.object_id
+					if bitmap_ids_index.has (l_id) then
+						last_position := bitmap_ids_index.item (l_id)
+					else
+						internal_add_pixmap (a_pixmap)
+						bitmap_ids_index.put (last_position, l_id)
 					end
 				end
 			else

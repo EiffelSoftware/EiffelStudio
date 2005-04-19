@@ -32,7 +32,7 @@ feature
 	type: TYPE_I;
 			-- Type of the call
 
-	parameters: BYTE_LIST [EXPR_B];
+	parameters: BYTE_LIST [PARAMETER_B];
 			-- Feature parameters: can be Void
 
 feature -- Attributes for externals

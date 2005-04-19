@@ -31,7 +31,7 @@ feature {AST_EIFFEL} -- Skeleton Visitors
 		deferred
 		end
 
-	process_integer_constant_as (l_as: INTEGER_CONSTANT) is
+	process_integer_as (l_as: INTEGER_AS) is
 			-- Process `l_as'.
 		require
 			non_void_as: l_as /= Void
@@ -402,20 +402,6 @@ feature {AST_EIFFEL} -- Skeleton Visitors
 		deferred
 		end
 
-	process_delayed_access_feat_as (l_as: DELAYED_ACCESS_FEAT_AS) is
-			-- Process `l_as'.
-		require
-			non_void_as: l_as /= Void
-		deferred
-		end
-
-	process_access_address_as (l_as: ACCESS_ADDRESS_AS) is
-			-- Process `l_as'.
-		require
-			non_void_as: l_as /= Void
-		deferred
-		end
-
 feature {AST_EIFFEL} -- Expressions visitors
 
 	process_tagged_as (l_as: TAGGED_AS) is
@@ -475,6 +461,13 @@ feature {AST_EIFFEL} -- Expressions visitors
 		end
 
 	process_address_as (l_as: ADDRESS_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
+	process_type_expr_as (l_as: TYPE_EXPR_AS) is
 			-- Process `l_as'.
 		require
 			non_void_as: l_as /= Void
@@ -670,13 +663,6 @@ feature {AST_EIFFEL} -- Expressions visitors
 		deferred
 		end
 
-	process_expr_addresse_as (l_as: EXPR_ADDRESS_AS) is
-			-- Process `l_as'.
-		require
-			non_void_as: l_as /= Void
-		deferred
-		end
-		
 	process_void_as (l_as: VOID_AS) is
 			-- Process `l_as'.
 		require
@@ -828,6 +814,15 @@ feature {AST_EIFFEL} -- Clickable visitor
 		require
 			non_void_as: l_as /= Void
 		deferred
+		end
+
+feature {AST_EIFFEL} -- COmpiled type
+
+	process_type_a (a_type: TYPE_A) is
+		require
+			a_type_not_void: a_type /= Void
+		do
+			-- Doesn't do anything by default because it is not part of the AST node.
 		end
 
 end -- AST_VISITOR

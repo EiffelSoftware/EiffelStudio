@@ -73,8 +73,8 @@ feature -- Access
 			Result := item.to_character
 		end
 
-	Min_value: NATURAL_16 is {NATURAL_16} 0
-	Max_value: NATURAL_16 is {NATURAL_16} 65535
+	Min_value: NATURAL_16 is 0
+	Max_value: NATURAL_16 is 65535
 			-- Minimum and Maximum value hold in `item'.
 
 feature -- Comparison

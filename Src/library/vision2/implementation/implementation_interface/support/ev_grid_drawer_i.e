@@ -332,6 +332,7 @@ feature -- Basic operations
 			loop_current_row, loop_parent_row: EV_GRID_ROW_I
 			are_tree_node_connectors_shown: BOOLEAN
 			current_physical_column_index: INTEGER
+			translated_parent_x_indent_position: INTEGER
 		do
 			dynamic_content_function := grid.dynamic_content_function
 			
@@ -460,7 +461,7 @@ feature -- Basic operations
 										-- in order to connect the lines correctly.
 									parent_subrow_indent := grid.item_indent (grid.item (current_row.parent_row_i.index_of_first_item, current_row.parent_row_i.index).implementation) + ((node_pixmap_width + 1) // 2)
 									parent_x_indent_position := (column_offsets @ (parent_node_index)) - (internal_client_x - horizontal_buffer_offset)
-									parent_x_indent_position := parent_x_indent_position + parent_subrow_indent - 1
+									parent_x_indent_position := parent_x_indent_position + parent_subrow_indent
 								end
 							else
 								node_index := 1
@@ -678,6 +679,11 @@ feature -- Basic operations
 									grid_item.redraw (current_tree_adjusted_item_x_position, current_item_y_position, current_tree_adjusted_column_width, current_row_height, grid.drawable)
 								end
 							else
+									-- Calculate a translated parent x indent to include the subrow indent of
+									-- the tree.
+								translated_parent_x_indent_position := parent_x_indent_position + grid.subrow_indent - 1
+								
+								
 									-- As there is no current item, we must now fill the background with the
 									-- parent background color.
 								grid.drawable.set_foreground_color (grid.background_color)
@@ -688,7 +694,7 @@ feature -- Basic operations
 										-- at this location in the grid, a tree line may cross it horizontally.
 										
 									grid.drawable.set_foreground_color (black)
-									grid.drawable.draw_segment (current_item_x_position.max (parent_x_indent_position), row_vertical_center, current_item_x_position + current_column_width, row_vertical_center)
+									grid.drawable.draw_segment (current_item_x_position.max (translated_parent_x_indent_position), row_vertical_center, current_item_x_position + current_column_width, row_vertical_center)
 										-- The background area for the tree node must always be refreshed, even if the node is not visible.
 										-- We draw no wider than `current_column_width' to ensure this.
 									
@@ -701,12 +707,12 @@ feature -- Basic operations
 										if parent_row_i.subrow_count > (current_row.index - parent_row_i.index) then
 												-- In this case, there are more subrows of `parent_row_i' to be drawn,
 												-- so the vertical line is drawn to span the complete height of the current row.
-											grid.drawable.draw_segment (parent_x_indent_position, row_vertical_bottom, parent_x_indent_position, current_item_y_position)
+											grid.drawable.draw_segment (translated_parent_x_indent_position, row_vertical_bottom, translated_parent_x_indent_position, current_item_y_position)
 											
 										else
 												-- There are no subsequent rows for `parent_row_i' so we must draw the vertical line
 												-- from the start of the current row to the center only.
-											grid.drawable.draw_segment (parent_x_indent_position, row_vertical_center, parent_x_indent_position, current_item_y_position)
+											grid.drawable.draw_segment (translated_parent_x_indent_position, row_vertical_center, translated_parent_x_indent_position, current_item_y_position)
 										end
 										
 									end

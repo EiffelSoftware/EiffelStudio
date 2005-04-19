@@ -415,7 +415,7 @@ feature -- Modification (Add/Remove feature)
 							until
 								f_name /= Void or else names.after
 							loop
-								if names.item.associated_feature_name.is_equal (l_item.feature_name) then
+								if names.item.internal_name.is_equal (l_item.feature_name) then
 									f_name := names.item
 								else
 									name_index := name_index + 1
@@ -632,7 +632,7 @@ feature -- Modification (Add/Remove feature)
 					if valid_syntax then
 						inv := fcw.invariant_part
 						if inv /= Void then
-							extend_invariant ("%T" + inv + "%N")
+							extend_invariant (inv)
 							reparse
 						end
 						set_position_by_feature_clause (fcw.clause_export, fcw.clause_comment)
@@ -1020,7 +1020,7 @@ feature {NONE} -- Implementation
 	feature_insert_position (f: FEATURE_CLAUSE_AS): INTEGER is
 			-- Insertion position for `f'.
 		do
-			Result := f.end_position
+			Result := f.feature_location.final_position
 			Result := index_of ('%N', Result) + 1
 			Result := index_of ('%N', Result) + 1
 		end
@@ -1077,7 +1077,7 @@ feature {NONE} -- Implementation
 						c := l.item.comment (text)
 						c.prune_all_trailing ('%R')
 						if not lcs.has (c) then
-							insertion_position := text.last_index_of ('%N', l.item.end_position) + 1
+							insertion_position := l.item.feature_location.position
 						end
 						l.forth
 					end
@@ -1273,15 +1273,7 @@ feature {NONE} -- Implementation
 					if valid_syntax then
 						inv := fcw.invariant_part
 						if inv /= Void then
-							
-							insertion_position := class_as.invariant_insertion_position
-							if class_as.invariant_part = Void and not class_as.has_empty_invariant then
-								--last_added_code.put_front (["%Ninvariant%N", insertion_position])
-								insert_code ("%Ninvariant%N")
-							end
-							--last_added_code.put_front (["%T" + inv + "%N", insertion_position])
-							insert_code ("%T" + inv + "%N")
-							
+							extend_invariant (inv)
 							reparse
 						end	
 						if not valid_syntax then
@@ -1327,9 +1319,13 @@ feature {NONE} -- Implementation
 		do
 			insertion_position := class_as.invariant_insertion_position
 			if class_as.invariant_part = Void and not class_as.has_empty_invariant then
-				insert_code ("%Ninvariant%N")
+				insert_code ("invariant%N%T")
+				insert_code (a_inv)
+				insert_code ("%N%N")
+			else
+				insert_code ("%N%T")
+				insert_code (a_inv)
 			end
-			insert_code (a_inv)
 		end
 		
 	put_class_modified_outside_diagram_warning is

@@ -51,7 +51,6 @@ feature -- Initialization
 			create categories.make;
 			create invariant_server.make;
 			create current_category.make;
-			create creation_table.make (2);
 		end;
 
 feature -- Properties
@@ -70,9 +69,6 @@ feature -- Properties
 
 	current_feature_table: FEATURE_TABLE;
 			-- Feature table for for current_ast structure
-
-	creation_table: HASH_TABLE [FEATURE_ADAPTER, STRING];
-			-- Table of feature adapter for a given feature name
 
 	categories:	PART_SORTED_TWO_WAY_LIST [CATEGORY];
 			-- Categories for class_c
@@ -257,24 +253,6 @@ end;
 			end
 		end
 
-	record_creation_feature (feat_adapter: FEATURE_ADAPTER) is
-			-- Record adapter feature `feat' if it is
-			-- a creation routine.
-		require
-			valid_feat_adapter: feat_adapter /= Void
-		local
-			target_feature: FEATURE_I;
-			tmp_creators: like creators
-		do
-			tmp_creators := creators;
-			if tmp_creators /= Void then
-				target_feature := feat_adapter.target_feature;
-				if tmp_creators.has (target_feature.feature_name) then
-					creation_table.put (feat_adapter, target_feature.feature_name)
-				end
-			end
-		end;
-
 	register_feature (feature_as: FEATURE_AS) is
 			-- Register feature `feature_as' for format
 			-- processing
@@ -359,7 +337,6 @@ feature -- Removal
 			categories.wipe_out;
 			current_category.wipe_out;
 			assert_server := Void;
-			creation_table := Void;
 			class_comments := Void;
 			target_replicated_feature_table := Void;
 		end;

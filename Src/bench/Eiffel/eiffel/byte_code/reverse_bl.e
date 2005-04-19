@@ -55,6 +55,7 @@ feature
 				-- expression splitting).
 			target.set_register (No_register);
 			target.analyze;
+			info.analyze
 			if target.is_predefined then
 				register := target;
 			else

@@ -12,18 +12,23 @@ inherit
 			enlarged, make_byte_code, generate_il, is_simple_expr, allocates_memory
 		end
 
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make (v: STRING) is
+			-- Assign `v' to `value'.
+		do
+			value := v
+		ensure
+			value_set: value = v
+		end
+
 feature -- Access
 
 	value: STRING;
 			-- Bit value (sequence of 0 and 1)
-
-feature -- Settings
-
-	set_value (v: STRING) is
-			-- Assign `v' to `value'.
-		do
-			value := v;
-		end;
 
 feature -- Status report
 
@@ -43,8 +48,7 @@ feature -- Status report
 	enlarged: BIT_CONST_BL is
 			-- Enlarged node
 		do
-			create Result;
-			Result.set_value (value)
+			create Result.make (value)
 		end;
 
 	used (r: REGISTRABLE): BOOLEAN is

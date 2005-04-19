@@ -5,10 +5,15 @@ class RETRY_B
 inherit
 
 	INSTR_B
+		rename
+			set_line_number as make
 		redefine
 			generate, make_byte_code, generate_il
 		end
-	
+
+create
+	make
+
 feature -- C code generation
 
 	generate is

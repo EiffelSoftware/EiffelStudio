@@ -12,7 +12,20 @@ inherit
 			is_simple_expr, is_predefined, generate_il,
 			is_fast_as_local
 		end
-	
+
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make (v: CHARACTER) is
+			-- Assign `v' to `value'.
+		do
+			value := v
+		ensure
+			value_set: value = v
+		end
+
 feature -- Access
 
 	value: CHARACTER
@@ -38,14 +51,6 @@ feature -- Status report
 			-- Expression type
 		once
 			Result := Char_c_type
-		end
-
-feature -- Settings
-
-	set_value (v: CHARACTER) is
-			-- Assign `v' to `value'.
-		do
-			value := v
 		end
 
 feature -- C code generation

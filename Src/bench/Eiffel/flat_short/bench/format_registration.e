@@ -21,8 +21,7 @@ inherit
 	COMPILER_EXPORTER
 
 create
-
-	make, initialize
+	make
 
 feature -- Initialization
 
@@ -613,7 +612,7 @@ end
 					eiffel_file := Void
 				end
 			end;
-			current_ast.register (Current);
+			register_class (current_ast)
 		ensure
 			consistency: (eiffel_file = Void) = (class_comments /= Void)
 		end;

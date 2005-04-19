@@ -24,6 +24,11 @@ inherit
 			default_create
 		end
 		
+	SHARED_STATELESS_VISITOR
+		undefine
+			default_create
+		end
+
 	SHARED_EIFFEL_PROJECT
 		undefine
 			default_create
@@ -466,7 +471,7 @@ feature -- Element change
 								until
 									b or l.after
 								loop
-									l_class := l.item.associated_class (c.lace_class)
+									l_class := clickable_info.associated_eiffel_class (c.lace_class, l.item.type)
 									b := (l_class /= Void and then l_class.is_compiled and then
 										l_class.compiled_class.is_deferred) or else l.item.is_effecting
 									l.forth
@@ -580,10 +585,8 @@ feature {NONE} -- Implementation
 			-- Add suppliers of `a_type' to `suppliers'.
 		local
 			ct: CLASS_TYPE_AS
-			bt: BASIC_TYPE
 			g: EIFFEL_LIST [TYPE_AS]
 			l_class_i: CLASS_I
-			cc: CLASS_C
 		do
 			ct ?= a_type
 			if ct /= Void then
@@ -600,19 +603,6 @@ feature {NONE} -- Implementation
 					loop
 						add_suppliers (g.item)
 						g.forth
-					end
-				end
-			else
-				bt ?= a_type
-				if bt /= Void then
-					cc := bt.actual_type.associated_class
-					if cc /= Void then
-						l_class_i := cc.lace_class
-						if l_class_i /= Void then
-							if not suppliers.has (l_class_i.name) then
-								suppliers.put (l_class_i, l_class_i.name)
-							end
-						end
 					end
 				end
 			end
@@ -635,7 +625,6 @@ feature {NONE} -- Implementation
 			-- Does `a_type' have `a_class' as supplier?
 		local
 			ct: CLASS_TYPE_AS
-			bt: BASIC_TYPE
 			g: EIFFEL_LIST [TYPE_AS]
 		do
 			ct ?= a_type
@@ -653,11 +642,6 @@ feature {NONE} -- Implementation
 							g.forth
 						end
 					end
-				end
-			else
-				bt ?= a_type
-				if bt /= Void then
-					Result := bt.actual_type.associated_class.lace_class = a_class
 				end
 			end
 		end

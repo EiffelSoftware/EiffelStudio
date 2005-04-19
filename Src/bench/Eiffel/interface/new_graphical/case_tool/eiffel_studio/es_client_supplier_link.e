@@ -35,7 +35,14 @@ inherit
 		undefine
 			default_create
 		end
-		
+	
+	SHARED_STATELESS_VISITOR
+		export
+			{NONE} all
+		undefine
+			default_create
+		end
+
 	REFACTORING_HELPER
 		undefine
 			default_create
@@ -106,20 +113,14 @@ feature {NONE} -- Implementation
 	is_expanded (a_feature: FEATURE_AS): BOOLEAN is
 			-- Is `a_feature' declared `expanded'?
 		local
-			bt: BASIC_TYPE
 			ct: CLASS_TYPE_AS
 			type_as_class: CLASS_I
-			l_body: BODY_AS
 		do
-			l_body := a_feature.body
-			if l_body /= Void then
-				bt ?= l_body.type
-				ct ?= l_body.type
-			end
-			Result := (bt /= Void) or (ct /= Void and then ct.is_expanded)
+			ct ?= a_feature.body.type
+			Result := ct /= Void and then ct.is_expanded
 			if not Result and then ct /= Void then
 				fixme ("Remove usage of `System.any_class' to search for ct's base class.")
-				type_as_class := ct.associated_eiffel_class (System.any_class)
+				type_as_class := clickable_info.associated_eiffel_class (System.any_class, ct)
 				if type_as_class /= Void and then type_as_class.is_compiled then
 					Result := type_as_class.compiled_class.is_expanded
 				end

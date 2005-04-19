@@ -697,12 +697,12 @@ feature -- Basic operations
 										-- at this location in the grid, a tree line may cross it horizontally.
 									
 									grid.drawable.set_foreground_color (black)
-									grid.drawable.draw_segment (translated_parent_x_indent_position, row_vertical_center, current_item_x_position + current_column_width, row_vertical_center)
+									grid.drawable.draw_segment (translated_parent_x_indent_position.min (current_item_x_position + current_column_width), row_vertical_center, current_item_x_position + current_column_width, row_vertical_center)
 										-- The background area for the tree node must always be refreshed, even if the node is not visible.
 										-- We draw no wider than `current_column_width' to ensure this.
 									
 									
-									if parent_node_index = current_column_index then
+									if (parent_node_index = current_column_index) and (translated_parent_x_indent_position < current_item_x_position + current_column_width) then
 											-- If the grid column being drawn matches that in which the
 											-- node of `parent_row_i' is contained, then vertical lines must be drawn
 											-- to connect the lines.

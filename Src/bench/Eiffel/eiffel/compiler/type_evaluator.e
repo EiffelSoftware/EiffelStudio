@@ -25,7 +25,7 @@ feature
 			error_msg: like new_error
 		do
 				-- Wipe out the like controler
-			Like_control.wipe_out
+			Like_control.turn_off
 			Result := type.solved_type (feat_table, f)
 		rescue
 			if Rescue_status.is_like_exception then
@@ -60,7 +60,7 @@ feature
 				Rescue_status.set_is_like_exception (False)
 			else
 					-- Wipe out the like controler
-				Like_control.wipe_out
+				Like_control.turn_off
 				Result := type.solved_type_for_format (feat_table, f)
 			end
 		rescue

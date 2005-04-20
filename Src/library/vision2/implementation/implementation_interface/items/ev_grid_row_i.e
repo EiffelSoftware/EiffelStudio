@@ -456,9 +456,11 @@ feature -- Status setting
 		end
 		
 	ensure_expandable is
-			-- Ensure `Current' displays an expand pixmap, simulating a `row_count' greater than 0
-			-- until `Current' is next expanded.
-			-- May be used for dynamic behavior by filling subrows upon firing of `expand_actions'.
+			-- Ensure `Current' displays an expand pixmap to simulate a `row_count' greater than 0.
+			-- May be used for dynamic behavior by filling subrows upon firing of `grid.row_expand_actions'.
+			-- If no items are added to `Current' during the firing of `grid.row_expand_actions' then
+			-- `Current' is no longer expandable. This may be re-instated by calling `ensure_expandable' again
+			-- from `grid.row_expand_actions'.
 		do
 			is_ensured_expandable := True
 			parent_i.redraw_from_row_to_end (Current)

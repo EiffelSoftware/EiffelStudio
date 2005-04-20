@@ -273,7 +273,10 @@ feature -- Status setting
 		
 	ensure_expandable is
 			-- Ensure `Current' displays an expand pixmap to simulate a `row_count' greater than 0.
-			-- May be used for dynamic behavior by filling subrows upon firing of `expand_actions'.
+			-- May be used for dynamic behavior by filling subrows upon firing of `grid.row_expand_actions'.
+			-- If no items are added to `Current' during the firing of `grid.row_expand_actions' then
+			-- `Current' is no longer expandable. This may be re-instated by calling `ensure_expandable' again
+			-- from `grid.row_expand_actions'.
 		require
 			not_destroyed: not is_destroyed
 		do

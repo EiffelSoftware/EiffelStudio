@@ -58,8 +58,9 @@ feature -- Settings
 							-- that represent the custom attribute
 						l_class_c := cil_generator.current_class_type.associated_class
 						Inst_context.set_cluster (l_class_c.cluster)
+						context.initialize (l_class_c, l_class_c.actual_type, l_class_c.feature_table)
 						feature_checker.init (context)
-						feature_checker.process_eiffel_list (attributes)
+						feature_checker.custom_attributes_type_check_and_code (a_feature, attributes)
 						l_attributes ?= feature_checker.last_byte_node
 					end
 				end

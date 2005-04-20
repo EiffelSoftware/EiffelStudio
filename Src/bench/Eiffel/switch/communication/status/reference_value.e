@@ -69,14 +69,6 @@ feature {NONE} -- Initialization
 			is_null := (address = Void)
 		end;
 
---feature -- Properties
---
---	address: STRING;
---			-- Address of referenced object (Void if no object)
---
---	string_value: STRING;
---			-- Value if the reference object is a STRING
-
 feature -- Access
 
 	dynamic_class: CLASS_C is

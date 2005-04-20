@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 					fixme ("JFIAT: update the runtime to avoid evaluate the once")
 					
 					if flist.item.argument_count > 0 then
-						create l_item.default_create
+						create l_item
 						l_item.set_pixmap (pixmaps.icon_dbg_error)
 						l_item.set_text (flist.item.name + " could not evaluate once with arguments...")
 					else
@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 						if odv /= Void then
 							l_item := debug_value_to_tree_item (odv)
 						else
-							create l_item.default_create
+							create l_item
 							l_item.set_pixmap (pixmaps.icon_dbg_error)
 							l_item.set_text (flist.item.name + " : unable to get value !")
 						end

@@ -568,10 +568,16 @@ feature -- Basic operations
 											-- We adjust the horizontal position and width of the current item by the space required
 											-- for the tree node.
 										
-										grid.drawable.set_foreground_color (grid.background_color)
-										grid.drawable.fill_rectangle (current_item_x_position, current_item_y_position, current_subrow_indent.max (current_column_width), current_row_height)
-											-- The background area for the tree node must always be refreshed, even if the node is not visible.
-											-- We draw no wider than `current_column_width' to ensure this.
+											grid.drawable.set_foreground_color (grid.background_color)
+											
+												-- The background area for the tree node must always be refreshed, even if the node is not visible.
+												-- We draw no wider than `current_column_width' to ensure this. The item background is re-drawn by the
+												-- item itself.
+											if current_column_width - current_subrow_indent > 0 then
+												grid.drawable.fill_rectangle (current_item_x_position, current_item_y_position, current_column_width - (current_column_width - current_subrow_indent), current_row_height)
+											else
+												grid.drawable.fill_rectangle (current_item_x_position, current_item_y_position, current_column_width, current_row_height)
+											end
 
 											-- If the indent of the tree is less than `current_column_width', it must be visible so draw it.
 										if current_row.subrow_count > 0 and not row_node_clipped then
@@ -609,8 +615,11 @@ feature -- Basic operations
 														l_x_end := current_item_x_position
 													end
 												end
+												grid.drawable.set_foreground_color (black)
 												if l_x_start < current_item_x_position + current_column_width then
-													grid.drawable.set_foreground_color (black)
+														-- If the edge of the horizontal line from the left edge of the item is within the position
+														-- of the column, we must draw it, otherwise it is clipped below in the "elseif"
+													
 													grid.drawable.draw_segment (l_x_start, row_vertical_center, l_x_end, row_vertical_center)
 														-- Draw a horizontal line from the left edge of the item to the either the node horizontal offset or the edge of the actual item position
 													 	-- if the node to which we are connected is within a different column.
@@ -620,6 +629,9 @@ feature -- Basic operations
 													 		-- the grid cell as the horizontal line spans into other grid cells.
 													 	grid.drawable.draw_segment (current_item_x_position, row_vertical_center, horizontal_node_pixmap_left_offset, row_vertical_center)
 													 end
+												elseif l_x_end.min (current_item_x_position + current_column_width) /= current_item_x_position + current_column_width then
+														-- Now we must clip the segment and draw.
+													grid.drawable.draw_segment (l_x_end.min (current_item_x_position + current_column_width), row_vertical_center, current_item_x_position + current_column_width, row_vertical_center)
 												end	
 											end
 											 

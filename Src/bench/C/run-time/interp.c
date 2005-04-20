@@ -4476,9 +4476,20 @@ rt_private int get_creation_type (void)
 		type = get_compound_id(MTC icurrent->it_ref,(short)type);
 		break;
 	case BC_CARG:				/* Like argument creation type */
-		type = get_int16(&IC);		/* Default creation type if void arg.  */
-/* GENERIC CONFORMANCE */
-		type = get_compound_id(MTC icurrent->it_ref,(short)type);
+		if (*IC++ == BC_GEN_PARAM_CREATE) {
+				/* Anchor is based on a formal generic parameter. */
+			short current_type;
+			int32 formal_position;
+
+			current_type = get_int16(&IC);		/* Get static type of caller */
+			formal_position = get_int32(&IC);	/* Get position of formal generic
+											   we want to create */
+			type = (int) RTGPTID(current_type, icurrent->it_ref, formal_position);
+		} else {
+				/* Anchor is based on a class type. */
+			type = get_int16(&IC);		/* Default creation type if void arg.  */
+			type = get_compound_id(MTC icurrent->it_ref,(short)type);
+		}	
 		code = get_int16(&IC);		/* Argument position */
 		type = RTCA(arg(code)->it_ref, type);
 		break;

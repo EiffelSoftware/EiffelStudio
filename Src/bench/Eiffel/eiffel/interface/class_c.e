@@ -1277,29 +1277,33 @@ feature -- Third pass: byte code production and type check
 			l_ast: like most_recent_ast
 			l_ca_feature: INVARIANT_FEAT_I
 		do
+				-- No need to initialize `context' because we are called from `pass3' which already
+				-- initializes it.
 			l_ast := most_recent_ast
 			if
 				l_ast.custom_attributes /= Void or l_ast.interface_custom_attributes /= Void or
 				l_ast.class_custom_attributes /= Void or l_ast.assembly_custom_attributes /= Void
 			then
 				create l_ca_feature.make (Current)
+				l_ca_feature.set_feature_name ("class_custom_attributes")
 				feature_checker.init (ast_context)
 			end
 			if l_ast.custom_attributes /= Void then
 
-				feature_checker.process_eiffel_list (l_ast.custom_attributes)
+				feature_checker.custom_attributes_type_check_and_code (l_ca_feature, l_ast.custom_attributes)
 				custom_attributes ?= feature_checker.last_byte_node
 			else
 				custom_attributes := Void
 			end
 			if l_ast.interface_custom_attributes /= Void then
-				feature_checker.process_eiffel_list (l_ast.interface_custom_attributes)
+				feature_checker.custom_attributes_type_check_and_code (l_ca_feature, l_ast.interface_custom_attributes)
 				interface_custom_attributes ?= feature_checker.last_byte_node
 			else
 				interface_custom_attributes := Void
 			end
 			if l_ast.class_custom_attributes /= Void then
-				feature_checker.process_eiffel_list (l_ast.class_custom_attributes)
+				feature_checker.custom_attributes_type_check_and_code (l_ca_feature,
+					l_ast.class_custom_attributes)
 				class_custom_attributes ?= feature_checker.last_byte_node
 			else
 				class_custom_attributes := Void
@@ -1308,7 +1312,8 @@ feature -- Third pass: byte code production and type check
 					-- We are processing the root class, let's figure out if there are some
 					-- assembly custom attributes.
 				if l_ast.assembly_custom_attributes /= Void then
-					feature_checker.process_eiffel_list (l_ast.assembly_custom_attributes)
+					feature_checker.custom_attributes_type_check_and_code (l_ca_feature,
+						l_ast.assembly_custom_attributes)
 					assembly_custom_attributes ?= feature_checker.last_byte_node
 				end
 			else

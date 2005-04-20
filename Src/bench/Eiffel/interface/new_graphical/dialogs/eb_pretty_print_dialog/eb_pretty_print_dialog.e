@@ -55,6 +55,7 @@ feature {NONE} -- Initialization
 			slice_min_ref := 0
 			slice_max_ref := default_slice_max_value
 			default_create
+			dialog.set_default_cancel_button (close_button)
 		end
 
 	default_create is
@@ -162,15 +163,15 @@ feature -- Status setting
 		require
 			stone_valid: is_stone_valid (st)
 		local
-			l_tree_item: EV_TREE_ITEM
+			l_item: EV_ANY
 			l_dv: ABSTRACT_DEBUG_VALUE
 		do
 			current_dump_value := Void
 			current_object := st
 			
-			l_tree_item := st.tree_item
-			if l_tree_item /= Void then
-				l_dv ?= l_tree_item.data
+			l_item := st.ev_item
+			if l_item /= Void then
+				l_dv ?= l_item.data
 				if l_dv /= Void then
 					current_dump_value := l_dv.dump_value
 				end

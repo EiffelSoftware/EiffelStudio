@@ -131,17 +131,17 @@ feature -- Basic operations
 			nat_dv: EIFNET_DEBUG_NATIVE_ARRAY_VALUE
 			
 			dobj: DEBUGGED_OBJECT
-			item: EV_TREE_ITEM
+			l_item: EV_ANY
 			l_addr: STRING
 		do
 			if for_tool then
 				conv_obj ?= st
 				l_addr := conv_obj.object_address
 				if conv_obj /= Void then
-					item := conv_obj.tree_item 
-					if item /= Void then
-						spec_dv ?= item.data
-						nat_dv ?= item.data
+					l_item := conv_obj.ev_item 
+					if l_item /= Void then
+						spec_dv ?= l_item.data
+						nat_dv ?= l_item.data
 					end
 					if spec_dv /= Void or nat_dv /= Void then
 						Result := True
@@ -395,7 +395,8 @@ feature {NONE} -- Implementation
 			nat_arr_dv: EIFNET_DEBUG_NATIVE_ARRAY_VALUE
 			dobj: DEBUGGED_OBJECT
 			parent: EV_TREE_NODE_LIST
-			item, item2: EV_TREE_ITEM
+			l_item: EV_ANY
+			tree_item, item2: EV_TREE_ITEM
 			l_st_addr: STRING
 		do
 			debug ("DEBUGGER_INTERFACE")
@@ -403,9 +404,9 @@ feature {NONE} -- Implementation
 			end
 
 			l_st_addr := st.object_address
-			item := st.tree_item 
-			if item /= Void then
-				abs_spec_dv ?= item.data
+			l_item := st.ev_item 
+			if l_item /= Void then
+				abs_spec_dv ?= l_item.data
 			end
 			if abs_spec_dv /= Void then
 				debug ("DEBUGGER_INTERFACE")
@@ -433,10 +434,14 @@ feature {NONE} -- Implementation
 						end
 					end
 					
-					parent ?= item.parent
+					tree_item ?= l_item
+					check
+						tree_item /= Void 
+					end
+					parent ?= tree_item.parent
 					if parent /= Void then
 						parent.start
-						parent.search (item)
+						parent.search (tree_item)
 						parent.remove
 						item2 := tool.debug_value_to_tree_item (abs_spec_dv)
 						parent.put_left (item2)

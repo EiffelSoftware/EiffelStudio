@@ -123,6 +123,7 @@ feature -- Primitives
 			origin_table: HASH_TABLE [FEATURE_I, INTEGER]
 			anchor_feature, orig_feat: FEATURE_I
 			anchor_type: TYPE_AS
+			l_controler_state: BOOLEAN
 		do
 			if not (System.current_class.class_id = class_id) then
 				debug
@@ -162,18 +163,30 @@ feature -- Primitives
 				end
 			end
 			anchor_type := anchor_feature.type
-			Like_control.on
-			if Like_control.has (routine_id) or else anchor_type.is_void then
-				Like_control.raise_error
+			l_controler_state := like_control.is_on
+			if
+				anchor_type.is_void or
+				(l_controler_state and like_control.has_routine_id (routine_id))
+			then
+				like_control.raise_error
 			else
+				if not l_controler_state then
+						-- Enable like controler only if not already enabled.
+					like_control.turn_on
+				end
 					-- Update anchored type controler
-				Like_control.put (routine_id)
+				like_control.put_routine_id (routine_id)
 					-- Re-processing of the anchored type
 				Result := twin
 				Result.set_actual_type
 					(anchor_type.solved_type (feat_table, anchor_feature).actual_type)
 				check
 					Result_actual_type_exists: Result.actual_type /= Void
+				end
+				if not l_controler_state then
+						-- Disable like controler only if it was not enabled before
+						-- entering current routine.
+					like_control.turn_off
 				end
 			end
 		end

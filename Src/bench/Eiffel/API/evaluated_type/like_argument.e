@@ -87,18 +87,29 @@ feature {COMPILER_EXPORTER} -- Primitives
 			-- Check if the anchored type is still a non like type and
 			-- update `actual_type'.
 		local
-			argument_type: TYPE_AS
+			l_argument_type: TYPE_AS
+			l_controler_state: BOOLEAN
 		do
-			if Like_control.is_on then
-				Like_control.raise_error
+			l_controler_state := like_control.is_on
+			if l_controler_state and like_control.has_argument (position) then
+				like_control.raise_error
 			else
-				argument_type := f.arguments.i_th (position)
+				if not l_controler_state then
+						-- Enable like controler only if not already enabled.
+					like_control.turn_on
+				end
+				l_argument_type := f.arguments.i_th (position)
 				Result := twin
 					-- Recalculation of the anchor
 				Result.set_actual_type 
-					(argument_type.solved_type (feat_table, f).actual_type)
+					(l_argument_type.solved_type (feat_table, f).actual_type)
 				check
 					Result_actual_type_exists: Result.actual_type /= Void
+				end
+				if not l_controler_state then
+						-- Disable like controler only if it was not enabled before
+						-- entering current routine.
+					like_control.turn_off
 				end
 			end
 		end

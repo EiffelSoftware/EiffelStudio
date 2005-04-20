@@ -153,18 +153,16 @@ feature -- Measurement
 		local
 			i: INTEGER
 		do
-			if object_comparison then
-				if v /= Void then
-					from
-						i := lower
-					until
-						i > upper
-					loop
-						if item (i) /= Void and then v.is_equal (item (i)) then
-							Result := Result + 1
-						end
-						i := i + 1
+			if object_comparison and then v /= Void then
+				from
+					i := lower
+				until
+					i > upper
+				loop
+					if item (i) /= Void and then v.is_equal (item (i)) then
+						Result := Result + 1
 					end
+					i := i + 1
 				end
 			else
 				from
@@ -197,8 +195,11 @@ feature -- Comparison
 		local
 			i: INTEGER
 		do
-			if lower = other.lower and then upper = other.upper and then
-				object_comparison = other.object_comparison then
+			if other = Current then
+				Result := True
+			elseif lower = other.lower and then upper = other.upper and then
+				object_comparison = other.object_comparison
+			then
 				if object_comparison then
 					from 
 						Result := True

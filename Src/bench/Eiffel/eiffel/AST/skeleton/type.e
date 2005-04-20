@@ -103,7 +103,12 @@ feature -- Type checking
 		require
 			feat_table_not_void: feat_table /= Void
 			f_not_void: f /= Void
-		deferred
+		local
+			l_type_checker: AST_TYPE_CHECKER
+		do
+			create l_type_checker
+			l_type_checker.init_with_feature_table (f, feat_table)
+			Result := l_type_checker.nested_solved_type (Current)
 		ensure
 			result_not_void: Result /= Void
 		end

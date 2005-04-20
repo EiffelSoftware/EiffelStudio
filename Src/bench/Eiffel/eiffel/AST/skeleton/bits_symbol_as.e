@@ -61,58 +61,7 @@ feature -- Comparison
 			Result := equivalent (bits_symbol, other.bits_symbol)
 		end
 
-feature 
-
-	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): BITS_SYMBOL_A is
-		local
-			vtbt: VTBT
-			veen: VEEN
-			constant: CONSTANT_I
-			bits_value: INTEGER
-			error: BOOLEAN
-			int_value: INTEGER_CONSTANT
-			depend_unit: DEPEND_UNIT
-		do
-			if not feat_table.has (bits_symbol) then
-				create veen
-				veen.set_class (feat_table.associated_class)
-				veen.set_feature (f)
-				veen.set_identifier (bits_symbol)
-				veen.set_location (bits_symbol)
-				Error_handler.insert_error (veen)
-				Error_handler.raise_error
-			end
-			constant ?= feat_table.item (bits_symbol)
-			error := constant = Void
-			if not error then
-				int_value ?= constant.value
-				error := int_value = Void
-				if not error then
-					bits_value := int_value.integer_32_value
-					error :=
-						bits_value <= 0 or else
-						bits_value > {EIFFEL_SCANNER_SKELETON}.Maximum_bit_constant
-				end
-			end
-			if error then
-				create vtbt
-				vtbt.set_class (feat_table.associated_class)
-				vtbt.set_feature (f)
-				vtbt.set_value (bits_value)
-				vtbt.set_location (bits_symbol)
-				Error_handler.insert_error (vtbt)
-					-- Cannot go on here
-				Error_handler.raise_error
-			end
-			check
-				positive_bits_value: bits_value > 0
-			end
-			create Result.make (constant, bits_value)
-			if System.in_pass3 then
-				create depend_unit.make (context.current_class.class_id, constant)
-				context.supplier_ids.extend (depend_unit)
-			end
-		end; -- solved_type
+feature
 
 	actual_type: BITS_A is
 			-- Actual bits type

@@ -176,13 +176,16 @@ feature -- Comparison
 		local
 			i: INTEGER
 		do
-			if lower = other.lower and then upper = other.upper and then
-				object_comparison = other.object_comparison then
+			if other = Current then
+				Result := True
+			elseif lower = other.lower and then upper = other.upper and then
+				object_comparison = other.object_comparison
+			then
 				if object_comparison then
-					from 
+					from
 						Result := True
 						i := lower
-					until 
+					until
 						not Result or i > upper 
 					loop
 						Result := equal (item (i), other.item (i))

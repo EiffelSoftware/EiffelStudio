@@ -1124,6 +1124,7 @@ feature {NONE} -- Implementation
 			-- compute expression_byte_node from EXPR_AS `exp'
 		require
 			exp_not_void: exp /= Void
+			context_feature_not_void: context_feature /= Void
 		local
 			retried: BOOLEAN
 			type_check_succeed: BOOLEAN
@@ -1134,7 +1135,7 @@ feature {NONE} -- Implementation
 				error_handler.wipe_out
 				Ast_context.set_is_ignoring_export (True)
 				feature_checker.init (ast_context)
-				exp.process (feature_checker)
+				feature_checker.expression_type_check_and_code (context_feature.associated_feature_i, exp)
 				Ast_context.set_is_ignoring_export (False)
 				
 				if error_handler.has_error then

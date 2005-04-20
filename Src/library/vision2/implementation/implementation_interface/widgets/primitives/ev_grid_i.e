@@ -978,6 +978,19 @@ feature -- Status setting
 		ensure
 			virtual_position_set: virtual_x_position = virtual_x and virtual_y_position = virtual_y
 		end
+		
+	set_tree_node_connector_color (a_color: EV_COLOR) is
+			-- Set `a_color' as `tree_node_connector_color'.
+		require
+			a_color_not_void: a_color /= Void
+		do
+			tree_node_connector_color := a_color
+			if is_tree_enabled then
+				redraw_client_area
+			end
+		ensure
+			tree_node_connector_color_set: tree_node_connector_color = a_color
+		end
 
 feature -- Status report
 
@@ -1027,7 +1040,10 @@ feature -- Status report
 			not_empty_implies_result_positive: row_count > 0 implies result > 0
 			empty_implies_result_zero: row_count = 0 implies result = 0
 		end
-
+		
+	tree_node_connector_color: EV_COLOR
+			-- Color of connectors drawn between tree nodes within `Current'.
+			
 feature -- Element change
 
 	insert_new_row (i: INTEGER) is
@@ -1715,9 +1731,10 @@ feature {EV_GRID_DRAWER_I, EV_GRID_COLUMN_I, EV_GRID_ROW_I, EV_GRID_ITEM_I, EV_G
 			expand_node_pixmap.set_size (tree_node_button_dimension, tree_node_button_dimension)
 			expand_node_pixmap.set_foreground_color (white)
 			expand_node_pixmap.clear
-			expand_node_pixmap.set_foreground_color (black)
+			expand_node_pixmap.set_foreground_color (tree_node_connector_color)
 			expand_node_pixmap.draw_rectangle (0, 0, tree_node_button_dimension, tree_node_button_dimension)
 			expand_node_pixmap.draw_segment (start_offset, middle_offset, end_offset, middle_offset)
+			expand_node_pixmap.set_foreground_color (black)
 			expand_node_pixmap.draw_segment (middle_offset, start_offset, middle_offset, end_offset)
 		ensure
 			expand_node_pixmap_not_void: expand_node_pixmap /= Void
@@ -1735,8 +1752,9 @@ feature {EV_GRID_DRAWER_I, EV_GRID_COLUMN_I, EV_GRID_ROW_I, EV_GRID_ITEM_I, EV_G
 			collapse_node_pixmap.set_size (tree_node_button_dimension, tree_node_button_dimension)
 			collapse_node_pixmap.set_foreground_color (white)
 			collapse_node_pixmap.clear
-			collapse_node_pixmap.set_foreground_color (black)
+			collapse_node_pixmap.set_foreground_color (tree_node_connector_color)
 			collapse_node_pixmap.draw_rectangle (0, 0, tree_node_button_dimension, tree_node_button_dimension)
+			collapse_node_pixmap.set_foreground_color (black)
 			collapse_node_pixmap.draw_segment (start_offset, middle_offset, end_offset, middle_offset)
 		ensure
 			collapse_node_pixmap_not_void: collapse_node_pixmap /= Void	
@@ -1930,6 +1948,7 @@ feature {NONE} -- Drawing implementation
 			viewport_x_offset := 0
 			viewport_y_offset := 0
 			are_tree_node_connectors_shown := True
+			create tree_node_connector_color.make_with_8_bit_rgb (150, 150, 150)
 			build_expand_node_pixmap
 			build_collapse_node_pixmap
 			invalid_row_index := invalid_row_index.max_value
@@ -3016,6 +3035,7 @@ invariant
 	hidden_node_count_no_greated_than_rows_less_one: is_tree_enabled and row_count > 0 implies hidden_node_count <= row_count - 1
 	tree_disabled_implies_visible_rows_equal_hidden_rows: not is_tree_enabled implies row_count = visible_row_count
 	internal_viewport_positions_equal_to_viewports: viewport.x_offset = viewable_x_offset and viewport.y_offset = viewport_y_offset
+	tree_node_connector_color_not_void: tree_node_connector_color /= Void
 end
 
 --|----------------------------------------------------------------

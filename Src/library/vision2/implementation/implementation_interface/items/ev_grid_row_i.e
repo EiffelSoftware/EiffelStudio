@@ -232,6 +232,14 @@ feature -- Access
 			parent_void_implies_result_zero: parent = Void implies Result = 0
 			to_implement_assertion ("valid_result: Result >= 0 and Result <= virtual_height - viewable_height")
 		end
+		
+	is_expandable: BOOLEAN is
+			-- May `Current' be expanded?
+		require
+			is_parented: parent /= Void
+		do
+			Result := parent /= Void and (subrow_count > 0 or is_ensured_expandable)
+		end
 
 feature -- Status report
 
@@ -309,19 +317,23 @@ feature -- Status setting
 	expand is
 			-- Display all subrows of `Current'.
 		require
-			has_subrows: subrow_count > 0
 			is_parented: parent /= Void
+			is_expandable: is_expandable
 		do
 			if not is_expanded then
 				is_expanded := True
-					
-				update_parent_expanded_node_counts_recursively (contained_expanded_items_recursive)
-					-- Update the expanded node counts for `Current' and all parent nodes.
-			
-				if displayed_in_grid_tree then
-						-- Only recompute the row offsets if `Current' is visible
-						-- otherwise the row offsets are already correct.
-					parent_i.set_vertical_computation_required (index)
+				if not is_ensured_expandable then
+						-- If `Current' has been forced to be expandable, then
+						-- we do nothing yet.
+	
+					update_parent_expanded_node_counts_recursively (contained_expanded_items_recursive)
+						-- Update the expanded node counts for `Current' and all parent nodes.
+				
+					if displayed_in_grid_tree then
+							-- Only recompute the row offsets if `Current' is visible
+							-- otherwise the row offsets are already correct.
+						parent_i.set_vertical_computation_required (index)
+					end
 				end
 			
 				if parent_i.row_expand_actions_internal /= Void then
@@ -331,10 +343,15 @@ feature -- Status setting
 					parent_i.row_expand_actions_internal.call ([interface])
 				end
 				
+				if is_ensured_expandable then
+					is_ensured_expandable := False
+					is_expanded := subrow_count > 0
+				end
+				
 				parent_i.redraw_from_row_to_end (Current)
 			end
 		ensure
-			is_expanded: is_expanded
+			is_expanded: is_expanded or subrow_count = 0
 			node_counts_correct: node_counts_correct
 		end
 	
@@ -437,6 +454,20 @@ feature -- Status setting
 			row_visible_when_heights_fixed_in_parent: parent.is_row_height_fixed implies  virtual_y_position >= parent.virtual_y_position and virtual_y_position + parent.row_height <= parent.virtual_y_position + (parent.viewable_height).max (parent.row_height)
 			row_visible_when_heights_not_fixed_in_parent: not parent.is_row_height_fixed implies virtual_y_position >= parent.virtual_y_position and virtual_y_position + height <= parent.virtual_y_position + (parent.viewable_height).max (height)
 		end
+		
+	ensure_expandable is
+			-- Ensure `Current' displays an expand pixmap, simulating a `row_count' greater than 0
+			-- until `Current' is next expanded.
+			-- May be used for dynamic behavior by filling subrows upon firing of `expand_actions'.
+		do
+			is_ensured_expandable := True
+			parent_i.redraw_from_row_to_end (Current)
+		ensure
+			is_expandable: is_expandable
+		end
+		
+	is_ensured_expandable: BOOLEAN
+			-- May current be expanded even through it is empty?
 
 feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 

@@ -95,6 +95,55 @@ feature -- Type checking
 			a_feature.body.process (Current)
 		end
 
+	expression_type_check_and_code (a_feature: FEATURE_I; an_exp: EXPR_AS) is
+			-- Type check `an_exp' in the context of `a_feature'.
+		require
+			a_feature_not_void: a_feature /= Void
+			an_exp_not_void: an_exp /= Void
+		do
+			type_checker.init (a_feature, context.current_class)
+			is_byte_node_enabled := True
+			current_feature := a_feature
+			reset
+			an_exp.process (Current)
+		end
+
+	invariant_type_check_and_code (a_feature: FEATURE_I; a_clause: INVARIANT_AS) is
+			-- Type check `a_feature'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_clause_not_void: a_clause /= Void
+		local
+			l_list: BYTE_LIST [BYTE_NODE]
+			l_invariant: INVARIANT_B
+		do
+			type_checker.init (a_feature, context.current_class)
+			is_byte_node_enabled := True
+			current_feature := a_feature
+			reset
+			a_clause.process (Current)
+			l_list ?= last_byte_node
+			create l_invariant
+			l_invariant.set_class_id (context.current_class.class_id)
+			l_invariant.set_byte_list (l_list)
+			l_invariant.set_once_manifest_string_count (a_clause.once_manifest_string_count)
+			last_byte_node := l_invariant
+		end
+
+	custom_attributes_type_check_and_code (a_feature: FEATURE_I; a_cas: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]) is
+			-- Type check `a_cas' for `a_feature'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_cas_not_void: a_cas /= Void
+		do
+			type_checker.init (a_feature, context.current_class)
+			is_byte_node_enabled := True
+			current_feature := a_feature
+			reset
+			a_cas.process (Current)
+		end
+
+
 	check_local_names (a_procedure: PROCEDURE_I; a_node: FEATURE_AS) is
 			-- Check validity of the names of the locals of `a_procedure'.
 			-- Useful when a feature has been added, we need to make sure that
@@ -140,28 +189,6 @@ feature -- Type checking
 					end
 				end
 			end
-		end
-
-	invariant_type_check_and_code (a_feature: FEATURE_I; a_clause: INVARIANT_AS) is
-			-- Type check `a_feature'.
-		require
-			a_feature_not_void: a_feature /= Void
-			a_clause_not_void: a_clause /= Void
-		local
-			l_list: BYTE_LIST [BYTE_NODE]
-			l_invariant: INVARIANT_B
-		do
-			type_checker.init (a_feature, context.current_class)
-			is_byte_node_enabled := True
-			current_feature := a_feature
-			reset
-			a_clause.process (Current)
-			l_list ?= last_byte_node
-			create l_invariant
-			l_invariant.set_class_id (context.current_class.class_id)
-			l_invariant.set_byte_list (l_list)
-			l_invariant.set_once_manifest_string_count (a_clause.once_manifest_string_count)
-			last_byte_node := l_invariant
 		end
 
 feature -- Status report

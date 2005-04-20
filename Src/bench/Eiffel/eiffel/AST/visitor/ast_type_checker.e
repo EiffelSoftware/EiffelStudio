@@ -66,10 +66,21 @@ feature -- Status report
 		require
 			a_type_not_void: a_type /= Void
 		do
+			like_control.turn_off
 			Result := internal_solved_type (a_type)
 			error_handler.checksum
 		end
 
+	nested_solved_type (a_type: TYPE_AS): TYPE_A is
+			-- 	Solved type of `a_type' in current context, called from within a call to `solved_type'
+			-- from Current or TYPE_AS. Thus does not reset state of `like_control'.
+		require
+			a_type_not_void: a_type /= Void
+		do
+			Result := internal_solved_type (a_type)
+			error_handler.checksum
+		end
+		
 feature {NONE} -- Status report
 
 	internal_solved_type (a_type: TYPE_AS): TYPE_A is
@@ -80,7 +91,6 @@ feature {NONE} -- Status report
 		local
 			l_vtat1: VTAT1
 		do
-			like_control.wipe_out
 			parent_type := a_type
 			a_type.process (Current)
 			Result := last_type
@@ -90,7 +100,7 @@ feature {NONE} -- Status report
 			if Rescue_status.is_like_exception then
 					-- Cycle in anchored type or unvalid anchor: the
 					-- exception is raised in routine `solved_type' of
-					-- classes LIKE_ID_AS, LIKE_FEATURE and LIKE_ARGUMENT
+					-- classes LIKE_FEATURE and LIKE_ARGUMENT
 					-- which we unfortunately still supports.
 				Rescue_status.set_is_like_exception (False)
 				create l_vtat1
@@ -349,6 +359,7 @@ feature {NONE} -- Visitor implementation
 			l_depend_unit: DEPEND_UNIT
 			l_veen: VEEN
 			l_vtat1: VTAT1
+			l_controler_state: BOOLEAN
 		do
 			l_anchor_feature := current_feature_table.item (l_as.anchor)
 			if l_anchor_feature /= Void then
@@ -357,18 +368,24 @@ feature {NONE} -- Visitor implementation
 				l_anchor_type := l_anchor_feature.type
 				l_rout_id := l_anchor_feature.rout_id_set.first
 
-					-- Set the like controler on
-				Like_control.on
+				l_controler_state := like_control.is_on
 					-- Check if there is a cycle
-				if Like_control.has (l_rout_id) or else l_anchor_type.is_void then
+				if
+					l_anchor_type.is_void or
+					(l_controler_state and like_control.has_routine_id (l_rout_id)) 
+				then
 						-- Error because of cycle
 					create l_vtat1.make (parent_type, l_as)
 					l_vtat1.set_class (current_class)
 					l_vtat1.set_feature (current_feature)
 					Error_handler.insert_error (l_vtat1)
 				else
+					if not l_controler_state then
+							-- Enable like controler only if not already enabled.
+						like_control.turn_on
+					end
 						-- Update anchored type controler
-					Like_control.put (l_rout_id)
+					like_control.put_routine_id (l_rout_id)
 						-- Create instance of LIKE_FEATURE
 					create l_like_feature.make (l_anchor_feature)
 					l_like_feature.set_actual_type (
@@ -382,27 +399,26 @@ feature {NONE} -- Visitor implementation
 						create l_depend_unit.make (current_class.class_id, l_anchor_feature)
 						context.supplier_ids.extend (l_depend_unit)
 					end
+					if not l_controler_state then
+							-- Disable like controler only if it was not enabled before
+							-- entering current routine.
+						like_control.turn_off
+					end
 				end
-				like_control.wipe_out
 			else
 				l_argument_position := current_feature.argument_position (l_as.anchor)
 				if l_argument_position /= 0 then
 						-- Found argument
-					if Like_control.is_on then
-							-- There cannot be any like argument targeted
-							-- direclty or indirectly by a type anchored on a
-							-- feature
-						Like_control.raise_error
+					l_controler_state := like_control.is_on
+					if l_controler_state and like_control.has_argument (l_argument_position) then
+							-- Cycle involving anchors on arguments
+						like_control.raise_error
 					else
-							-- Set the like controler on
-						Like_control.on
-						if
-							Like_control.arguments.has (l_argument_position)
-						then
-								-- Cycle involving anchors on arguments
-							Like_control.raise_error
+						if not l_controler_state then
+								-- Enable like controler only if not already enabled.
+							like_control.turn_on
 						end
-						Like_control.arguments.put (l_argument_position)	
+						like_control.put_argument (l_argument_position)	
 						l_anchor_type := current_feature.arguments.i_th (l_argument_position)
 						create l_like_argument
 						l_like_argument.set_position (l_argument_position)
@@ -410,7 +426,11 @@ feature {NONE} -- Visitor implementation
 							(l_anchor_type.solved_type (current_feature_table,
 								current_feature).actual_type)
 						last_type := l_like_argument
-						like_control.wipe_out
+						if not l_controler_state then
+								-- Disable like controler only if it was not enabled before
+								-- entering current routine.
+							like_control.turn_off
+						end
 					end
 				else
 					create l_veen

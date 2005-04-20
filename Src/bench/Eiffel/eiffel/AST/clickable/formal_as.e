@@ -103,13 +103,6 @@ feature {COMPILER_EXPORTER}
 
 feature -- Type checking
 
-	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): FORMAL_A is
-			-- Calculated type in function of the feature `f' which has
-			-- the type Current and the feautre table `feat_table'
-		do
-			Result := actual_type
-		end
-
 	actual_type: FORMAL_A is
 			-- Actual type for formal generic
 		do

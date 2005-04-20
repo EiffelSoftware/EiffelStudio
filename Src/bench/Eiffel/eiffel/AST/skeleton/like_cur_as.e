@@ -51,13 +51,6 @@ feature
 			create {UNEVALUATED_LIKE_TYPE} Result.make_current
 		end
 
-	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): LIKE_CURRENT is
-		   -- Calcutate the effective type
-		do
-			create Result
-			Result.set_actual_type (feat_table.associated_class.actual_type)
-		end
-
 feature -- Output
 
 	dump: STRING is "like Current"

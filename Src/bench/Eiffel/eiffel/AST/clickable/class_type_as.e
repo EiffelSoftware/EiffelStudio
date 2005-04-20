@@ -188,44 +188,6 @@ feature -- Conveniences
 			end
 		end
 
-	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): CL_TYPE_A is
-			-- Track expanded classes
-		local
-			l_class: CLASS_C
-			actual_generic: ARRAY [TYPE_A]
-			i, count: INTEGER
-		do
-				-- Lookup class in universe, it should be present.
-			check
-				class_found: Universe.class_named (class_name, Inst_context.cluster) /= Void
-			end
-			l_class := Universe.class_named (class_name, Inst_context.cluster).compiled_class
-
-			check
-				class_found_is_compiled: l_class /= Void
-			end
-
-			if generics /= Void then
-				from
-					i := 1
-					count := generics.count
-					create actual_generic.make (1, count)
-					Result := l_class.partial_actual_type (actual_generic, is_expanded, is_separate)
-				until
-					i > count
-				loop
-					actual_generic.put (generics.i_th (i).solved_type (feat_table, f), i)
-					i := i + 1
-				end
-			else
-				Result := l_class.partial_actual_type (Void, is_expanded, is_separate)
-			end
-			if Result.is_expanded and not Result.is_basic then
-					-- Only record when necessary.
-				record_exp_dependance (l_class)
-			end
-		end
-
 	actual_type: CL_TYPE_A is
 			-- Actual class type without processing like types
 		local

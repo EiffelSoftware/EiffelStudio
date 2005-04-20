@@ -311,6 +311,10 @@ feature {NONE} -- Implementation: Access
 	last_access_constant: BOOLEAN
 			-- Is last ACCESS_AS a constant?
 
+	last_feature_name: STRING
+			-- Actual name of last ACCESS_AS (might be different from original name
+			-- in case an overloading resolution took place)
+
 feature -- Settings
 
 	reset is
@@ -327,6 +331,7 @@ feature -- Settings
 			depend_unit_level := 0
 			last_access_writable := False
 			last_access_constant := False
+			last_feature_name := Void
 		end
 
 	reset_types is
@@ -887,6 +892,7 @@ feature -- Implementation
 				last_type := l_result_type
 				last_access_writable := l_feature.is_attribute
 				last_access_constant := l_feature.is_constant
+				last_feature_name := l_feature.feature_name
 			else
 					-- `l_feature' was not valid for current, report
 					-- corresponding error.
@@ -2886,7 +2892,6 @@ feature -- Implementation
 			l_is_formal_creation, l_is_default_creation: BOOLEAN
 			l_dcr_feat: FEATURE_I
 			l_orig_call, l_call: ACCESS_INV_AS
-			l_feature_name: ID_AS
 			l_vgcc1: VGCC1
 			l_vgcc11: VGCC11
 			l_vgcc2: VGCC2
@@ -2973,30 +2978,29 @@ feature -- Implementation
 				if l_needs_byte_node and then l_orig_call /= Void then
 					l_call_access ?= last_byte_node
 				end
-				l_feature_name := l_call.feature_name
 
 				if not l_is_formal_creation then
 						-- Check if creation routine is non-once procedure
 					if
-						not l_creation_class.valid_creation_procedure (l_feature_name)
+						not l_creation_class.valid_creation_procedure (last_feature_name)
 					then
 						create l_vgcc5
 						context.init_error (l_vgcc5)
 						l_vgcc5.set_target_name (a_name)
 						l_vgcc5.set_type (a_creation_type)
-						l_vgcc5.set_creation_feature (l_creation_class.feature_table.item (l_feature_name))
-						l_vgcc5.set_location (l_feature_name)
+						l_vgcc5.set_creation_feature (l_creation_class.feature_table.item (last_feature_name))
+						l_vgcc5.set_location (l_call.feature_name)
 						error_handler.insert_error (l_vgcc5)
 					elseif l_creators /= Void then
-						if not l_creators.item (l_feature_name).valid_for (context.current_class) then
+						if not l_creators.item (last_feature_name).valid_for (context.current_class) then
 								-- Creation procedure is not exported
 							create l_vgcc5
 							context.init_error (l_vgcc5)
 							l_vgcc5.set_target_name (a_name)
 							l_vgcc5.set_type (a_creation_type)
 							l_vgcc5.set_creation_feature (
-								l_creation_class.feature_table.item (l_feature_name))
-							l_vgcc5.set_location (l_feature_name)
+								l_creation_class.feature_table.item (last_feature_name))
+							l_vgcc5.set_location (l_call.feature_name)
 							error_handler.insert_error (l_vgcc5)
 						end
 					end
@@ -3004,12 +3008,12 @@ feature -- Implementation
 						-- Check that the creation feature used for creating the generic
 						-- parameter has been listed in the constraint for the generic
 						-- parameter.
-					if not l_formal_dec.has_creation_feature_name (l_feature_name) then
+					if not l_formal_dec.has_creation_feature_name (last_feature_name) then
 						create l_vgcc11
 						context.init_error (l_vgcc11)
 						l_vgcc11.set_target_name (a_name)
-						l_vgcc11.set_creation_feature (l_creation_class.feature_table.item (l_feature_name))
-						l_vgcc11.set_location (l_feature_name)
+						l_vgcc11.set_creation_feature (l_creation_class.feature_table.item (last_feature_name))
+						l_vgcc11.set_location (l_call.feature_name)
 						error_handler.insert_error (l_vgcc11)
 					end
 				end
@@ -4352,6 +4356,7 @@ feature {NONE} -- Implementation: overloading
 					-- Corresponds to second point of C# spec 14.4.2.1
 				from
 					Result.start
+					count := count + 1
 				until
 					Result.after
 				loop
@@ -4361,7 +4366,6 @@ feature {NONE} -- Implementation: overloading
 					from
 						l_done := False
 						i := 1
-						count := count + 1
 					until
 						i = count or l_done
 					loop

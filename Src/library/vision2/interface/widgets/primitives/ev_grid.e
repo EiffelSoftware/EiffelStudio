@@ -796,6 +796,17 @@ feature -- Status setting
 		ensure
 			virtual_position_set: virtual_x_position = virtual_x and virtual_y_position = virtual_y
 		end
+		
+	set_tree_node_connector_color (a_color: EV_COLOR) is
+			-- Set `a_color' as `tree_node_connector_color'.
+		require
+			not_destroyed: not is_destroyed
+			a_color_not_void: a_color /= Void
+		do
+			implementation.set_tree_node_connector_color (a_color)
+		ensure
+			tree_node_connector_color_set: tree_node_connector_color = a_color
+		end
 
 feature -- Status report
 
@@ -888,6 +899,16 @@ feature -- Status report
 		ensure
 			not_empty_implies_result_positive: row_count > 0 implies result > 0
 			empty_implies_result_zero: row_count = 0 implies result = 0
+		end
+		
+	tree_node_connector_color: EV_COLOR is
+			-- Color of connectors drawn between tree nodes within `Current'.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.tree_node_connector_color
+		ensure
+			result_not_void: Result /= Void
 		end
 
 feature -- Element change

@@ -422,8 +422,8 @@ feature -- Basic operations
 						
 							drawing_subrow := parent_row_i /= Void
 								-- Are we drawing a subrow of the tree?
-								
-							drawing_parentrow := current_row.subrow_count > 0
+
+							drawing_parentrow := current_row.is_expandable
 								-- Are we drawing a row that is a parent of other rows?
 							
 							if drawing_subrow or drawing_parentrow then
@@ -580,7 +580,7 @@ feature -- Basic operations
 											end
 
 											-- If the indent of the tree is less than `current_column_width', it must be visible so draw it.
-										if current_row.subrow_count > 0 and not row_node_clipped then
+										if current_row.is_expandable and not row_node_clipped then
 												-- Note we add 1 to account for rounding errors when odd values.
 											if current_row.is_expanded then
 												l_pixmap := collapse_pixmap
@@ -606,7 +606,7 @@ feature -- Basic operations
 												--l_x_start := current_item_x_position.max (parent_x_indent_position)
 												--l_x_start := horizontal_node_pixmap_left_offset - 4
 												l_x_start := current_item_x_position + current_subrow_indent
-												if current_row.subrow_count > 0 then
+												if current_row.is_expandable then
 													l_x_end := horizontal_node_pixmap_left_offset + node_pixmap_width
 												else
 													if parent_node_index = node_index then
@@ -624,7 +624,7 @@ feature -- Basic operations
 														-- Draw a horizontal line from the left edge of the item to the either the node horizontal offset or the edge of the actual item position
 													 	-- if the node to which we are connected is within a different column.
 													 	
-													 if parent_node_index /= node_index and current_row.subrow_count > 0 then
+													 if parent_node_index /= node_index and current_row.is_expandable then
 													 		-- Draw the horizontal line from the left edge of the expand icon to the start of
 													 		-- the grid cell as the horizontal line spans into other grid cells.
 													 	grid.drawable.draw_segment (current_item_x_position, row_vertical_center, horizontal_node_pixmap_left_offset, row_vertical_center)
@@ -642,14 +642,14 @@ feature -- Basic operations
 													grid.drawable.set_foreground_color (black)
 													if current_horizontal_pos < column_offsets @ (node_index + 1) then
 														if parent_row_i.subnode_count_recursive > ((current_row.index + current_row.subnode_count_recursive) - parent_row_i.index) then
-															if current_row.subrow_count > 0 then
+															if current_row.is_expandable then
 																grid.drawable.draw_segment (node_pixmap_vertical_center, vertical_node_pixmap_top_offset, node_pixmap_vertical_center, current_item_y_position)
 																grid.drawable.draw_segment (node_pixmap_vertical_center, vertical_node_pixmap_bottom_offset, node_pixmap_vertical_center, row_vertical_bottom)
 															else
 																grid.drawable.draw_segment (node_pixmap_vertical_center, current_item_y_position, node_pixmap_vertical_center, row_vertical_bottom)
 															end
 														else
-															if current_row.subrow_count > 0 then
+															if current_row.is_expandable then
 																grid.drawable.draw_segment (node_pixmap_vertical_center, vertical_node_pixmap_top_offset, node_pixmap_vertical_center, current_item_y_position)
 															else
 																grid.drawable.draw_segment (node_pixmap_vertical_center, row_vertical_center, node_pixmap_vertical_center, current_item_y_position)

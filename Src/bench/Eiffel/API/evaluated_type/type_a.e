@@ -8,7 +8,7 @@ deferred class TYPE_A
 inherit
 	TYPE_AS
 		redefine
-			is_solved, same_as, append_to
+			is_solved, same_as, append_to, solved_type
 		end
 
 	SHARED_TEXT_ITEMS

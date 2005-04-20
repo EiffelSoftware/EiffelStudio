@@ -356,6 +356,7 @@ feature -- Accelerator, focus label and menu name
 	f_Undo: STRING is					"Undo (Ctrl+Z)"
 	m_Unindent: STRING is				"&Unindent selection%TShift+Tab"
 	m_Windows_tool: STRING is			"&Windows"
+	m_Watch_tool: STRING is				"Watch tool"
 	m_Wizard_precompile: STRING is 		"Precompilation &Wizard..."
 	f_Wizard_precompile: STRING is		"Wizard to precompile libraries"
 
@@ -596,6 +597,7 @@ feature -- Label texts
 	l_Toolbar_select_text_position: STRING is "Text option: "
 	l_Toolbar_select_has_gray_icons: STRING is "Icon option: "
 	l_Top_level: STRING is				"Top-level"
+	l_Type: STRING is					"Type"
 	l_Unknown_status: STRING is			"Unknown application status"
 	l_Unknown_class_name: STRING is		"Unknown class name"
 	l_Use_existing_ace: STRING is		"Open existing Ace (control file)"
@@ -635,6 +637,7 @@ feature -- Title part
 	t_Context_tool: STRING is					"Context"
 	t_Creation_routine: STRING is				"Creation procedure"
 	t_Customize_toolbar_text: STRING is 		"Customize toolbar"
+	t_Debugging_tool: STRING is					"Debugging"
 	t_Default_print_job_name: STRING is
 		once
 			Result := "From " + Workbench_name
@@ -688,6 +691,7 @@ feature -- Title part
 	t_Slice_limits: STRING is					"Choose new slice limits for special objects"
 	t_System: STRING is							"Project configuration"
 	t_Windows_tool: STRING is					"Windows"
+	t_Watch_tool: STRING is						"Watch"
 	t_Features_tool: STRING is					"Features"
 	t_Empty_development_window: STRING is 		"Empty development tool"
 	t_Autocomplete_window: STRING is			"Auto-complete"

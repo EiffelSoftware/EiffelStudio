@@ -91,8 +91,9 @@ feature {NONE}-- Initialization
 			create l_ev_frame_4
 			create l_ev_vertical_box_4
 			create l_ev_horizontal_box_6
-			create set_background_color_button
-			create l_ev_label_3
+			create l_ev_vertical_box_5
+			create set_background_of_selection_button
+			create set_tree_node_connector_button
 			create set_background_color_combo
 			
 				-- Build_widget_structure.
@@ -148,8 +149,9 @@ feature {NONE}-- Initialization
 			l_ev_notebook_1.extend (l_ev_frame_4)
 			l_ev_frame_4.extend (l_ev_vertical_box_4)
 			l_ev_vertical_box_4.extend (l_ev_horizontal_box_6)
-			l_ev_horizontal_box_6.extend (set_background_color_button)
-			l_ev_horizontal_box_6.extend (l_ev_label_3)
+			l_ev_horizontal_box_6.extend (l_ev_vertical_box_5)
+			l_ev_vertical_box_5.extend (set_background_of_selection_button)
+			l_ev_vertical_box_5.extend (set_tree_node_connector_button)
 			l_ev_horizontal_box_6.extend (set_background_color_combo)
 			
 			is_header_displayed_button.enable_select
@@ -265,9 +267,9 @@ feature {NONE}-- Initialization
 			collapse_all_button.set_text ("Collapse all")
 			draw_tree_check_button.set_text ("Draw New Tree Nodes")
 			l_ev_vertical_box_4.disable_item_expand (l_ev_horizontal_box_6)
-			set_background_color_button.set_text ("Set Background Color")
-			set_background_color_button.hide
-			l_ev_label_3.set_text ("Set background of selection to")
+			l_ev_vertical_box_5.disable_item_expand (set_background_of_selection_button)
+			set_background_of_selection_button.set_text ("Set Background of Selection To")
+			set_tree_node_connector_button.set_text ("Set Tree Node Connectors To")
 			set_padding_width (box_padding)
 			set_border_width (box_padding)
 			disable_item_expand (is_header_displayed_button)
@@ -318,7 +320,6 @@ feature {NONE}-- Initialization
 			expand_all_button.select_actions.extend (agent expand_all_button_selected)
 			collapse_all_button.select_actions.extend (agent collapse_all_button_selected)
 			draw_tree_check_button.select_actions.extend (agent draw_tree_check_button_selected)
-			set_background_color_button.select_actions.extend (agent set_background_color_button_selected)
 			set_background_color_combo.select_actions.extend (agent set_background_color_combo_selected)
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.
@@ -338,25 +339,25 @@ feature -- Access
 	selection_on_click, is_tree_enabled_button, tree_lines_enabled, draw_tree_check_button: EV_CHECK_BUTTON
 	is_vertical_divider_dashed_button,
 	is_vertical_divider_solid_button, single_item_selection_button, single_row_selection_button,
-	multiple_item_selection_button, multiple_row_selection_button: EV_RADIO_BUTTON
-	subnode_pixmaps_combo,
-	set_background_color_combo: EV_COMBO_BOX
-	resize_columns_to_box, resize_rows_to_box: EV_HORIZONTAL_BOX
-	new_label_button,
-	misc_button, custom_button, clear_selection_button, select_row_button, select_column_button,
-	select_item_button, selected_items_button, selected_rows_button, set_selected_row_as_subnode_button,
-	expand_all_button, collapse_all_button, set_background_color_button: EV_BUTTON
+	multiple_item_selection_button, multiple_row_selection_button, set_background_of_selection_button,
+	set_tree_node_connector_button: EV_RADIO_BUTTON
+	subnode_pixmaps_combo, set_background_color_combo: EV_COMBO_BOX
+	resize_columns_to_box,
+	resize_rows_to_box: EV_HORIZONTAL_BOX
+	new_label_button, misc_button, custom_button, clear_selection_button,
+	select_row_button, select_column_button, select_item_button, selected_items_button,
+	selected_rows_button, set_selected_row_as_subnode_button, expand_all_button, collapse_all_button: EV_BUTTON
 
 feature {NONE} -- Implementation
 
 	l_ev_notebook_1: EV_NOTEBOOK
 	l_ev_table_1: EV_TABLE
 	l_ev_vertical_box_1, l_ev_vertical_box_2, l_ev_vertical_box_3,
-	l_ev_vertical_box_4: EV_VERTICAL_BOX
-	l_ev_horizontal_box_1, l_ev_horizontal_box_2, l_ev_horizontal_box_3,
-	l_ev_horizontal_box_4, l_ev_horizontal_box_5, l_ev_horizontal_box_6: EV_HORIZONTAL_BOX
+	l_ev_vertical_box_4, l_ev_vertical_box_5: EV_VERTICAL_BOX
+	l_ev_horizontal_box_1, l_ev_horizontal_box_2,
+	l_ev_horizontal_box_3, l_ev_horizontal_box_4, l_ev_horizontal_box_5, l_ev_horizontal_box_6: EV_HORIZONTAL_BOX
 	l_ev_label_1,
-	l_ev_label_2, l_ev_label_3: EV_LABEL
+	l_ev_label_2: EV_LABEL
 	l_ev_frame_1, l_ev_frame_2, l_ev_frame_3, l_ev_frame_4: EV_FRAME
 
 feature {NONE} -- Implementation
@@ -551,11 +552,6 @@ feature {NONE} -- Implementation
 	
 	draw_tree_check_button_selected is
 			-- Called by `select_actions' of `draw_tree_check_button'.
-		deferred
-		end
-	
-	set_background_color_button_selected is
-			-- Called by `select_actions' of `set_background_color_button'.
 		deferred
 		end
 	

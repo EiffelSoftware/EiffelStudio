@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 			l_item: EV_TREE_ITEM
 			flist: LIST [E_FEATURE]
 
-			item_dv: ABSTRACT_DEBUG_VALUE
+			odv: ABSTRACT_DEBUG_VALUE
 			l_abs_value: ABSTRACT_DEBUG_VALUE
 
 			l_dotnet_ref_value: EIFNET_DEBUG_REFERENCE_VALUE
@@ -50,9 +50,9 @@ feature {NONE} -- Initialization
 					flist.after
 				loop
 					l_feat := flist.item
-					item_dv := l_dotnet_ref_value.once_function_value (l_feat)
-					if item_dv /= Void then
-						l_item := debug_value_to_tree_item (item_dv)
+					odv := l_dotnet_ref_value.once_function_value (l_feat)
+					if odv /= Void then
+						l_item := debug_value_to_tree_item (odv)
 					else
 						create l_item
 						l_item.set_pixmap (Pixmaps.Icon_void_object)

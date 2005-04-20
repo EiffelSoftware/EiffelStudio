@@ -75,7 +75,7 @@ feature -- C Code generation
 		local
 			debug_level: DEBUG_I
 		do
-			Result := context.workbench_mode
+			Result := context.workbench_mode and not system.il_generation
 			if not Result then
 				debug_level := context.current_type.base_class.debug_level
 				if keys = Void then

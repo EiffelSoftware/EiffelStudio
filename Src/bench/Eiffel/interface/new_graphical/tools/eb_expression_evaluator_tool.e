@@ -60,7 +60,7 @@ feature {NONE} -- Initialization
 			ev_list.set_column_titles (<<Interface_names.l_Context,
 										Interface_names.l_Expression,
 										Interface_names.l_Value,
-										"Type"										
+										Interface_names.l_Type
 										>>)
 			ev_list.set_column_widths (<<70, 120, 100>>)
 			ev_list.drop_actions.extend (agent on_element_drop)

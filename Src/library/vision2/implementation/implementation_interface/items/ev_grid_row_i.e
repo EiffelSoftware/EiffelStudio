@@ -331,7 +331,7 @@ feature -- Status setting
 					parent_i.row_expand_actions_internal.call ([interface])
 				end
 				
-				parent_i.redraw_client_area
+				parent_i.redraw_from_row_to_end (Current)
 			end
 		ensure
 			is_expanded: is_expanded
@@ -362,7 +362,7 @@ feature -- Status setting
 					parent_i.row_collapse_actions_internal.call ([interface])
 				end
 				
-				parent_i.redraw_client_area
+				parent_i.redraw_from_row_to_end (Current)
 			end
 		ensure
 			not_is_expanded: not is_expanded

@@ -333,6 +333,7 @@ feature -- Basic operations
 			are_tree_node_connectors_shown: BOOLEAN
 			current_physical_column_index: INTEGER
 			translated_parent_x_indent_position: INTEGER
+			tree_node_connector_color: EV_COLOR
 		do
 			dynamic_content_function := grid.dynamic_content_function
 			
@@ -348,6 +349,7 @@ feature -- Basic operations
 			collapse_pixmap := grid.collapse_node_pixmap
 
 			are_tree_node_connectors_shown := grid.are_tree_node_connectors_shown
+			tree_node_connector_color := grid.tree_node_connector_color
 			
 			tree_node_spacing := grid.tree_node_spacing
 				-- Retrieve the spacing around each node.
@@ -615,7 +617,7 @@ feature -- Basic operations
 														l_x_end := current_item_x_position
 													end
 												end
-												grid.drawable.set_foreground_color (black)
+												grid.drawable.set_foreground_color (tree_node_connector_color)
 												if l_x_start < current_item_x_position + current_column_width then
 														-- If the edge of the horizontal line from the left edge of the item is within the position
 														-- of the column, we must draw it, otherwise it is clipped below in the "elseif"
@@ -639,7 +641,7 @@ feature -- Basic operations
 												
 												current_horizontal_pos := node_pixmap_vertical_center
 												if are_tree_node_connectors_shown then
-													grid.drawable.set_foreground_color (black)
+													grid.drawable.set_foreground_color (tree_node_connector_color)
 													if current_horizontal_pos < column_offsets @ (node_index + 1) then
 														if parent_row_i.subnode_count_recursive > ((current_row.index + current_row.subnode_count_recursive) - parent_row_i.index) then
 															if current_row.is_expandable then
@@ -711,7 +713,7 @@ feature -- Basic operations
 										-- We must now draw the lines for the tree structure, as although there is no item
 										-- at this location in the grid, a tree line may cross it horizontally.
 									
-									grid.drawable.set_foreground_color (black)
+									grid.drawable.set_foreground_color (tree_node_connector_color)
 									grid.drawable.draw_segment (translated_parent_x_indent_position.min (current_item_x_position + current_column_width), row_vertical_center, current_item_x_position + current_column_width, row_vertical_center)
 										-- The background area for the tree node must always be refreshed, even if the node is not visible.
 										-- We draw no wider than `current_column_width' to ensure this.

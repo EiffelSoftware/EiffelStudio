@@ -44,6 +44,8 @@ feature -- C code generation
 			if is_generic then
 				context.mark_current_used
 				context.add_dftype_current
+			elseif is_formal then
+				context.mark_current_used
 			end
 		end
 
@@ -62,6 +64,8 @@ feature -- C code generation
 
 			if gen_type_i /= Void then
 				buffer.put_string ("typres")
+			elseif is_formal then
+				create_formal_type.generate_type_id (buffer, final_mode)
 			else
 				if context.workbench_mode then
 					buffer.put_string ("RTUD(")
@@ -79,57 +83,57 @@ feature -- IL code generation
 	generate_il is
 			-- Generate creation type. Take the dynamic type of the argument
 			-- if possible, otherwise take its static type.
-		local
-			cl_type: CL_TYPE_I
-			creation_label, end_label: IL_LABEL
 		do
-			cl_type := type_to_create
-			creation_label := Il_label_factory.new_label
-			end_label := Il_label_factory.new_label
-			
-			il_generator.generate_argument (position)
-			il_generator.put_default_value (cl_type)
-			il_generator.generate_binary_operator ({IL_CONST}.il_eq)
-			il_generator.branch_on_false (creation_label)
-			
-				-- Object is null, we are therefore creating an object of
-				-- the declared type.
-			(create {CREATE_TYPE}.make (cl_type)).generate_il
-			il_generator.branch_to (end_label)
-			
-			il_generator.mark_label (creation_label)
-			
-				-- Object is not null, so we put it on top of stack and call
-				-- the runtime feature that knows how to create an object
-				-- of the same type as another object.
-			il_generator.generate_argument (position)
-			il_generator.create_like_object
-
-			il_generator.mark_label (end_label)
-			
-			il_generator.generate_check_cast (Void, cl_type)
+			internal_generate_il (False)
 		end
-
+	
 	generate_il_type is
 			-- Generate IL code to load type of argument creation type.
 			-- Take the dynamic type of the argument if possible,
 			-- otherwise take its static type.
-		local
-			cl_type: CL_TYPE_I
-			creation_label, end_label: IL_LABEL
 		do
-			cl_type := type_to_create
+			internal_generate_il (True)
+		end
+
+feature {NONE} -- IL code generation
+
+	internal_generate_il (a_is_for_type: BOOLEAN) is
+		local
+			l_type: TYPE_I
+			creation_label, end_label: IL_LABEL
+			l_is_formal: BOOLEAN
+			l_formal_info: CREATE_FORMAL_TYPE
+		do
+			l_is_formal := is_formal
+			if l_is_formal then
+				l_formal_info := create_formal_type	
+				l_type := l_formal_info.type
+			else
+				l_type := type_to_create
+			end
 			creation_label := Il_label_factory.new_label
 			end_label := Il_label_factory.new_label
 			
 			il_generator.generate_argument (position)
-			il_generator.put_default_value (cl_type)
+			il_generator.put_default_value (l_type)
 			il_generator.generate_binary_operator ({IL_CONST}.il_eq)
 			il_generator.branch_on_false (creation_label)
 			
 				-- Object is null, we are therefore creating an object of
 				-- the declared type.
-			(create {CREATE_TYPE}.make (cl_type)).generate_il_type
+			if a_is_for_type then
+				if l_is_formal then
+					l_formal_info.generate_il_type
+				else
+					(create {CREATE_TYPE}.make (l_type)).generate_il_type
+				end
+			else
+				if l_is_formal then
+					l_formal_info.generate_il
+				else
+					(create {CREATE_TYPE}.make (l_type)).generate_il
+				end
+			end
 			il_generator.branch_to (end_label)
 			
 			il_generator.mark_label (creation_label)
@@ -138,9 +142,17 @@ feature -- IL code generation
 				-- the runtime feature that knows how to create an object
 				-- of the same type as another object.
 			il_generator.generate_argument (position)
-			il_generator.load_type
+			if a_is_for_type then
+				il_generator.load_type
+			else
+				il_generator.create_like_object
+			end
 
-			il_generator.mark_label (end_label)	
+			il_generator.mark_label (end_label)
+			
+			if not a_is_for_type then
+				il_generator.generate_check_cast (Void, l_type)
+			end
 		end
 
 feature -- Byte code generation
@@ -155,14 +167,19 @@ feature -- Byte code generation
 			cl_type_i := type_to_create
 			gen_type  ?= cl_type_i
 
-				-- Default creation type
-			ba.append_short_integer (cl_type_i.generated_id (False))
-				-- Generics (if any)
-			if gen_type /= Void then
-				ba.append_short_integer (context.current_type.generated_id (False))
-				gen_type.make_gen_type_byte_code (ba, True)
+			if is_formal then
+				create_formal_type.make_byte_code (ba)
+			else
+				ba.append ('%U')
+					-- Default creation type
+				ba.append_short_integer (cl_type_i.type_id - 1)
+					-- Generics (if any)
+				if gen_type /= Void then
+					ba.append_short_integer (context.current_type.generated_id (False))
+					gen_type.make_gen_type_byte_code (ba, True)
+				end
+				ba.append_short_integer (-1)
 			end
-			ba.append_short_integer (-1)
 				-- Argument position
 			ba.append_short_integer (position)
 		end
@@ -225,12 +242,29 @@ feature -- Generic conformance
 		end
 
 	type_to_create : CL_TYPE_I is
-
 		local
 			type_i : TYPE_I
 		do
 			type_i := context.byte_code.arguments.item (position)
 			Result ?= context.creation_type (type_i)
+		end
+
+	is_formal: BOOLEAN is
+		local
+			l_formal: FORMAL_I
+		do
+			l_formal ?= context.creation_type (context.byte_code.arguments.item (position))
+			Result := l_formal /= Void
+		end
+
+	create_formal_type: CREATE_FORMAL_TYPE is
+		require
+			is_formal: is_formal
+		local
+			l_formal: FORMAL_I
+		do
+			l_formal ?= context.creation_type (context.byte_code.arguments.item (position))
+			create Result.make (l_formal)
 		end
 
 end -- class CREATE_ARG

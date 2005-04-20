@@ -162,6 +162,15 @@ feature -- Access
 		ensure
 			valid_result: Result >= 0 and Result <= count
 		end
+		
+	is_expandable: BOOLEAN is
+			-- May `Current' be expanded?
+		require
+			not_destroyed: not is_destroyed
+			is_parented: parent /= Void
+		do
+			Result := implementation.is_expandable
+		end
 
 feature -- Status report
 
@@ -218,12 +227,12 @@ feature -- Status setting
 			-- Display all subrows of `Current'.
 		require
 			not_destroyed: not is_destroyed
-			has_subrows: subrow_count > 0
 			is_parented: parent /= Void
+			is_expandable: is_expandable
 		do
 			implementation.expand
 		ensure
-			is_expanded: is_expanded
+			is_expanded: is_expanded or subrow_count = 0
 		end
 		
 	collapse is
@@ -260,6 +269,17 @@ feature -- Status setting
 			to_implement_assertion ("old_is_visible_implies_vertical_position_not_changed")
 			row_visible_when_heights_fixed_in_parent: parent.is_row_height_fixed implies  virtual_y_position >= parent.virtual_y_position and virtual_y_position + parent.row_height <= parent.virtual_y_position + (parent.viewable_height).max (parent.row_height)
 			row_visible_when_heights_not_fixed_in_parent: not parent.is_row_height_fixed implies virtual_y_position >= parent.virtual_y_position and virtual_y_position + height <= parent.virtual_y_position + (parent.viewable_height).max (height)
+		end
+		
+	ensure_expandable is
+			-- Ensure `Current' displays an expand pixmap to simulate a `row_count' greater than 0.
+			-- May be used for dynamic behavior by filling subrows upon firing of `expand_actions'.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.ensure_expandable
+		ensure
+			is_expandable: is_expandable
 		end
 
 feature -- Element change

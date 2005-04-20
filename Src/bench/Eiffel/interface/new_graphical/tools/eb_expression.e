@@ -199,7 +199,7 @@ feature {EB_EXPRESSION_DEFINITION_DIALOG, EB_EXPRESSION_EVALUATOR} -- Restricted
 			internal_evaluator := Void
 		end
 
-feature {EB_EXPRESSION_EVALUATOR_TOOL, EB_EXPRESSION_DEFINITION_DIALOG} -- Status report: Propagate the context and the results.
+feature {ES_WATCH_TOOL, EB_EXPRESSION_EVALUATOR_TOOL, EB_EXPRESSION_DEFINITION_DIALOG} -- Status report: Propagate the context and the results.
 
 	on_object: BOOLEAN
 			-- Is the expression relative to an object?

@@ -91,10 +91,10 @@ feature -- Access
 
 feature -- Status setting
 
-	set_associated_tree_item (item: EV_TREE_ITEM) is
+	set_associated_ev_item (item: EV_ANY) is
 			-- Associate `Current' with a tree item in the object tree.
 		do
-			tree_item := item
+			ev_item := item
 		end
 
 feature -- Status report
@@ -122,9 +122,16 @@ feature -- Status report
 					Application.is_valid_object_address (object_address)
 		end
 
-	tree_item: EV_TREE_ITEM
+	ev_item: EV_ANY
+			-- Graphical item representing `Current'
+			-- May be Void, even if `Current' is represented in an container widget.
+
+	tree_item: EV_TREE_ITEM is
 			-- Tree item representing `Current' in the object tree.
 			-- May be Void, even if `Current' is represented in the object tree.
+		do
+			Result ?= ev_item
+		end
 			
 invariant
 

@@ -155,7 +155,7 @@ feature -- Transformation
 			if has_attributes or dtype.is_special or dtype.is_tuple or is_special or dtype.is_external then
 				create attr_item.make_with_text (Interface_names.l_Object_attributes)
 				attr_item.set_pixmap (Pixmaps.Icon_attributes)
-				ost.set_associated_tree_item (attr_item)
+				ost.set_associated_ev_item (attr_item)
 				main_item.extend (attr_item)
 				attr_item.extend (create {EV_TREE_ITEM}.make_with_text (Interface_names.l_Dummy))
 				attr_item.expand_actions.extend (agent on_expand (attributes_id))

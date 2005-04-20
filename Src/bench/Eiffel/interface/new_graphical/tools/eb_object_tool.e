@@ -8,6 +8,7 @@ class
 	EB_OBJECT_TOOL
 
 inherit
+
 	EB_TOOL
 		redefine
 			menu_name,
@@ -98,7 +99,7 @@ feature {NONE} -- Initialization
 			expand_locals := True
 			widget := split
 			
-			create_update_on_idle_agent			
+			create_update_on_idle_agent
 		end
 
 	build_mini_toolbar is
@@ -172,6 +173,8 @@ feature -- Access
 
 	debugger_manager: EB_DEBUGGER_MANAGER
 			-- Manager in charge of all debugging operations.
+
+feature -- Query
 
 	get_object_display_parameters (addr: STRING): EB_OBJECT_DISPLAY_PARAMETERS is
 			-- Return managed object located at address `addr'.
@@ -252,7 +255,7 @@ feature -- Status setting
 			abstract_value: ABSTRACT_DEBUG_VALUE			
 			
 			exists: BOOLEAN
-			tree_item: EV_TREE_ITEM
+			l_item: EV_ANY
 		do
 			debug ("debug_recv")
 				print ("EB_OBJECT_TOOL.refresh%N")
@@ -267,10 +270,10 @@ feature -- Status setting
 				displayed_objects.forth
 			end
 			if not exists then
-				tree_item := a_stone.tree_item
+				l_item := a_stone.ev_item
 				if Application.is_dotnet then
-					if tree_item /= Void then
-						abstract_value ?= tree_item.data
+					if l_item /= Void then
+						abstract_value ?= l_item.data
 					end
 					if abstract_value /= Void then
 						create {EB_OBJECT_DISPLAY_PARAMETERS_DOTNET} n_obj.make_from_debug_value (Current, abstract_value)
@@ -283,8 +286,8 @@ feature -- Status setting
 					
 					n_obj.build_and_attach_to_parent (objects_tree)
 				else
-					if tree_item /= Void then
-						conv_spec ?= tree_item.data
+					if l_item /= Void then
+						conv_spec ?= l_item.data
 						if conv_spec /= Void then
 							create {EB_OBJECT_DISPLAY_PARAMETERS_CLASSIC} n_obj.make_from_debug_value (Current, conv_spec)
 						end

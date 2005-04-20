@@ -80,7 +80,7 @@ feature -- Change
 				if dv.address /= Void then
 						--| For now we don't support this for external type
 					create ost.make (dv.address, dv.name, dv.dynamic_class)
-					ost.set_associated_tree_item (Current)
+					ost.set_associated_ev_item (Current)
 					set_pebble (ost)
 					set_accept_cursor (ost.stone_cursor)
 					set_deny_cursor (ost.X_stone_cursor)
@@ -277,71 +277,7 @@ feature {NONE} -- Filling Implementation
 
 	fill_onces_with_list (a_parent: EV_TREE_NODE_LIST; a_once_list: LIST [E_FEATURE]; dv: ABSTRACT_DEBUG_VALUE) is
 			-- Fill `a_parent' with the once functions of the debug_value it is in.
---		local
---			once_r: ONCE_REQUEST
---			l_item: EV_TREE_ITEM
---			flist: LIST [E_FEATURE]
---			dv: ABSTRACT_DEBUG_VALUE
---
---			item_dv: ABSTRACT_DEBUG_VALUE
---			l_dotnet_ref_value: EIFNET_DEBUG_REFERENCE_VALUE
---			l_feat: E_FEATURE
 		deferred
---			dv ?= a_parent.data
---			a_parent.expand_actions.wipe_out
---			if dv /= Void then
---				flist := dv.dynamic_class.once_functions
---				if Application.is_dotnet then
---					l_dotnet_ref_value ?= dv
---					check
---						dotnet_ref_value: l_dotnet_ref_value /= Void
---					end
---					
---					--| Eiffel dotnet |--
---					from
---						flist.start
---					until
---						flist.after
---					loop
---						l_feat := flist.item				
---						item_dv := l_dotnet_ref_value.once_function_value (l_feat)
---						if item_dv /= Void then
---							l_item := debug_value_to_tree_item (item_dv)						
---						else
---							create l_item
---							l_item.set_pixmap (Pixmaps.Icon_void_object)
---							l_item.set_text (l_feat.name + Interface_names.l_Not_yet_called)
---						end						
---						a_parent.extend (l_item)
---
---						flist.forth
---					end
---				else 
---					--| Classic Eiffel |--
---					once_r := Application.debug_info.Once_request
---
---					from
---						flist.start
---					until
---						flist.after
---					loop
---						l_feat := flist.item
---						
---						if once_r.already_called (l_feat) then
---							l_item := debug_value_to_tree_item (once_r.once_result (l_feat))
---						else
---							create l_item
---							l_item.set_pixmap (Pixmaps.Icon_void_object)
---							l_item.set_text (l_feat.name + Interface_names.l_Not_yet_called)
---						end
---						a_parent.extend (l_item)
---						flist.forth
---					end
---				end
---			end
---				-- We remove the dummy item.
---			a_parent.start
---			a_parent.remove
 		end
 
 	debug_value_to_tree_item (dv: ABSTRACT_DEBUG_VALUE): EB_OBJECT_TREE_ITEM is

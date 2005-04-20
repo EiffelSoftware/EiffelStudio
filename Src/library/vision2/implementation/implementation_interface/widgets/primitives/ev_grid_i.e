@@ -2338,10 +2338,15 @@ feature {NONE} -- Event handling
 				node_pixmap_width := expand_node_pixmap.width
 				current_subrow_indent := item_indent (pointed_item)
 				current_item_x_position := (column_offsets @ (pointed_item.column.index)) - (internal_client_x - viewport_x_offset)
-				node_x_position_click_edge := current_subrow_indent - node_pixmap_width - 3 * tree_node_spacing + current_item_x_position
+				node_x_position_click_edge := current_subrow_indent + current_item_x_position
+				if pointed_row_i.subrow_count /= 0 or pointed_row_i.is_ensured_expandable then
+						-- We only include the dimensions of the node pixmap for our calculations if
+						-- one is displayed.
+					 node_x_position_click_edge := node_pixmap_width - (3 * tree_node_spacing)
+				end
 				
 				if a_button = 1 and a_x >= node_x_position_click_edge then
-					if pointed_row_i.subrow_count >0 and then current_subrow_indent > 0 and a_x < current_subrow_indent + current_item_x_position then		
+					if (pointed_row_i.subrow_count > 0 or pointed_row_i.is_ensured_expandable) and then current_subrow_indent > 0 and a_x < current_subrow_indent + current_item_x_position then		
 
 						if pointed_row_i.is_expanded then
 							pointed_row_i.collapse

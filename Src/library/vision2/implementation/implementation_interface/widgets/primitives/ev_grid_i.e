@@ -1571,6 +1571,19 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			drawable.redraw
 		end
 		
+	redraw_from_row_to_end (a_row: EV_GRID_ROW_I) is
+			-- Redraw client area from `virtual_x_position' of `a_row' down to the bottom of the client
+			-- area (As virtual position of a row is at its top, `a_row' is invalidated).
+			-- Complete width of client area is invalidated.
+		require
+			a_row_not_void: a_row /= Void
+		local
+			a2: INTEGER
+		do
+			a2 := a_row.virtual_y_position - (internal_client_y - viewport_y_offset)
+			drawable.redraw_rectangle (viewport_x_offset, a2, viewport.width, viewport.height + internal_client_y - a_row.virtual_y_position)
+		end
+
 	item_indent (an_item: EV_GRID_ITEM_I): INTEGER is
 			-- `Result' is indent of `an_item' in pixels.
 			-- May be 0 for items that are not tree nodes.

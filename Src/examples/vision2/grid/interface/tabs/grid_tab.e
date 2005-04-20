@@ -68,10 +68,10 @@ feature {NONE} -- Initialization
 			collapse3.set_with_named_file (f_name)
 			
 			
-			create list_item.make_with_text ("16x16")
+			create list_item.make_with_text ("9x9")
 			list_item.set_pixmap (expand1)
 			subnode_pixmaps_combo.extend (list_item)
-			create list_item.make_with_text ("16x16")
+			create list_item.make_with_text ("12x12")
 			list_item.set_pixmap (expand2)
 			subnode_pixmaps_combo.extend (list_item)
 			create list_item.make_with_text ("32x32")
@@ -280,6 +280,7 @@ feature {NONE} -- Implementation
 			counter: INTEGER
 			counter2: INTEGER
 			time1, time2: DATE_TIME
+			grid_label_item: EV_GRID_LABEL_ITEM
 		do
 			create time1.make_now
 			add_items (5, 400)			
@@ -405,6 +406,17 @@ feature {NONE} -- Implementation
 			end
 			create time2.make_now
 			set_status_message (("Items added in : " + ((time2.fine_second - time1.fine_second).out)))
+			from
+				counter := 1
+			until
+				counter > grid.row_count
+			loop
+				grid_label_item ?= grid.item (1, counter)
+				if grid_label_item /= Void then
+					grid_label_item.set_background_color (red)
+				end
+				counter := counter + 1				
+			end
 		end
 		
 	compute_item (an_x, a_y: INTEGER): EV_GRID_ITEM is
@@ -610,15 +622,19 @@ feature {NONE} -- Implementation
 			color: EV_COLOR
 		do
 			color ?= set_background_color_combo.selected_item.data
-			selected_items := grid.selected_items
-			if not selected_items.is_empty then
-				from
-					selected_items.start
-				until
-					selected_items.off
-				loop
-					selected_items.item.set_background_color (color)
-					selected_items.forth
+			if set_tree_node_connector_button.is_selected then
+				grid.set_tree_node_connector_color (color)
+			elseif set_background_of_selection_button.is_selected then
+				selected_items := grid.selected_items
+				if not selected_items.is_empty then
+					from
+						selected_items.start
+					until
+						selected_items.off
+					loop
+						selected_items.item.set_background_color (color)
+						selected_items.forth
+					end
 				end
 			end
 		end
@@ -722,7 +738,7 @@ feature {NONE} -- Implementation
 			grid_label_item: EV_GRID_LABEL_ITEM
 			counter: INTEGER
 		do
-			l_item := grid.item_at_virtual_position (200, 16)
+--			l_item := grid.item_at_virtual_position (200, 16)
 --			misc_button_selected
 --			grid.column (3).set_width (200)
 --			grid.column (4).set_width (200)
@@ -761,22 +777,50 @@ feature {NONE} -- Implementation
 --			grid.column (4).set_item (4, create {EV_GRID_LABEL_ITEM}.make_with_text ("New item"))
 
 
-			grid.set_item (1, 1, create {EV_GRID_LABEL_ITEM}.make_with_text ("Top level 1"))
-			from
-				counter := 2
-			until
-				counter > 5
-			loop
-				grid.set_item (1, counter, create {EV_GRID_LABEL_ITEM}.make_with_text ("Sub row " + counter.out))
-				grid.row (counter - 1).add_subrow (grid.row (counter))
-				counter := counter + 1
-			end
-			grid.set_item (1, 6, create {EV_GRID_LABEL_ITEM}.make_with_text ("New Row 6"))
-			grid.set_item (2, 6, create {EV_GRID_LABEL_ITEM}.make_with_text ("New Row 6"))
+--			-- Test 3
+--			grid.set_item (1, 1, create {EV_GRID_LABEL_ITEM}.make_with_text ("Top level 1"))
+--			from
+--				counter := 2
+--			until
+--				counter > 5
+--			loop
+--				grid.set_item (1, counter, create {EV_GRID_LABEL_ITEM}.make_with_text ("Sub row " + counter.out))
+--				grid.row (counter - 1).add_subrow (grid.row (counter))
+--				counter := counter + 1
+--			end
+--			grid.set_item (1, 6, create {EV_GRID_LABEL_ITEM}.make_with_text ("New Row 6"))
+--			grid.set_item (2, 6, create {EV_GRID_LABEL_ITEM}.make_with_text ("New Row 6"))
+--			grid.remove_row (5)
 
---			grid.row (3).add_subrow (grid.row (4))
-			grid.remove_row (5)
+--			--Test 4
+			grid.set_item (1, 1, create {EV_GRID_LABEL_ITEM}.make_with_text ("Top level 1"))
+			grid.row (1).ensure_expandable
+			grid.row_expand_actions.extend (agent expand_row)
 		end
+		
+	expand_row (a_row: EV_GRID_ROW) is
+			--
+		local
+			counter: INTEGER
+			l_item: EV_GRID_LABEL_ITEM
+			new_row: EV_GRID_ROW
+		do
+			if a_row.subrow_count = 0 then
+				from
+					counter := 1
+				until
+					counter > 20
+				loop
+					create l_item.make_with_text ("Item " + counter.out)
+					grid.insert_new_row_parented (a_row.index + a_row.subrow_count + 1, a_row)
+					new_row := grid.row (a_row.index + a_row.subrow_count)
+					new_row.set_item (1, l_item)
+					new_row.ensure_expandable
+					counter := counter + 1
+				end
+			end
+		end
+		
 		
 	draw_tree_check_button_selected is
 			-- Called by `select_actions' of `draw_tree_check_button'.
@@ -933,6 +977,12 @@ feature {NONE} -- Implementation
 					max_set := item_index.max (item_index)
 				end
 			end
+		end
+		
+	red: EV_COLOR is
+			--
+		once
+			Result := (create {EV_STOCK_COLORS}).red
 		end
 		
 

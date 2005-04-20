@@ -2904,6 +2904,10 @@ feature -- Implementation
 					l_check.set_end_location (l_as.end_keyword)
 					last_byte_node := l_check
 				end
+			elseif is_byte_node_enabled then
+				create l_check
+				l_check.set_end_location (l_as.end_keyword)
+				last_byte_node := l_check
 			end
 		end
 

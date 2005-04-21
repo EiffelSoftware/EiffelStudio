@@ -64,7 +64,7 @@ feature -- Status Report
 	type: CODE_TYPE_REFERENCE is
 			-- Type
 		local
-			l_type: SYSTEM_TYPE
+			l_type: TYPE
 			l_members: ARRAY [MEMBER_INFO]
 			i, j, l_count, l_par_count: INTEGER
 			l_parameters: ARRAY [PARAMETER_INFO]

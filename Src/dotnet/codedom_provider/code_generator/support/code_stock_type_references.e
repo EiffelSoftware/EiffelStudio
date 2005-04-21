@@ -17,31 +17,31 @@ feature -- Access
 	None_type_reference: CODE_TYPE_REFERENCE is
 			-- Reference to NONE
 		once
-			Result := Type_reference_factory.type_reference_from_type (feature {SYSTEM_TYPE}.get_type ("System.Void"))
+			Result := Type_reference_factory.type_reference_from_type (feature {TYPE}.get_type ("System.Void"))
 		end
 
 	Object_type_reference: CODE_TYPE_REFERENCE is
 			-- Reference to NONE
 		once
-			Result := Type_reference_factory.type_reference_from_type (feature {SYSTEM_TYPE}.get_type ("System.Object"))
+			Result := Type_reference_factory.type_reference_from_type (feature {TYPE}.get_type ("System.Object"))
 		end
 
 	Boolean_type_reference: CODE_TYPE_REFERENCE is
 			-- Reference to BOOLEAN
 		once
-			Result := Type_reference_factory.type_reference_from_type (feature {SYSTEM_TYPE}.get_type ("System.Boolean"))
+			Result := Type_reference_factory.type_reference_from_type (feature {TYPE}.get_type ("System.Boolean"))
 		end
 
 	Double_type_reference: CODE_TYPE_REFERENCE is
 			-- Reference to System.Double
 		once
-			Result := Type_reference_factory.type_reference_from_type (feature {SYSTEM_TYPE}.get_type ("System.Double"))
+			Result := Type_reference_factory.type_reference_from_type (feature {TYPE}.get_type ("System.Double"))
 		end
 
 	Type_type_reference: CODE_TYPE_REFERENCE is
-			-- Reference to SYSTEM_TYPE
+			-- Reference to TYPE
 		once
-			Result := Type_reference_factory.type_reference_from_type (feature {SYSTEM_TYPE}.get_type ("System.Type"))
+			Result := Type_reference_factory.type_reference_from_type (feature {TYPE}.get_type ("System.Type"))
 		end
 		
 end -- class CODE_STOCK_TYPE_REFERENCES

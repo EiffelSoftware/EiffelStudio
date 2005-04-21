@@ -123,12 +123,12 @@ feature -- Factory
 			non_void_type_reference: Result /= Void
 		end
 	
-	type_reference_from_type (a_type: SYSTEM_TYPE): CODE_TYPE_REFERENCE is
+	type_reference_from_type (a_type: TYPE): CODE_TYPE_REFERENCE is
 			-- Initialize instance from `a_type'.
 		require
 			non_void_type: a_type /= Void
 		local
-			l_element_type: SYSTEM_TYPE
+			l_element_type: TYPE
 			l_reference_element_type: CODE_TYPE_REFERENCE
 		do
 			l_element_type := a_type.get_element_type
@@ -157,7 +157,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	type_reference (a_name: STRING; a_eiffel_name: STRING; a_type: SYSTEM_TYPE; a_element_type: CODE_TYPE_REFERENCE; a_search_for_type, a_search_for_element_type, a_is_initialized: BOOLEAN): CODE_TYPE_REFERENCE is
+	type_reference (a_name: STRING; a_eiffel_name: STRING; a_type: TYPE; a_element_type: CODE_TYPE_REFERENCE; a_search_for_type, a_search_for_element_type, a_is_initialized: BOOLEAN): CODE_TYPE_REFERENCE is
 			-- Type reference with .NET name `a_name'
 		require
 			non_void_name: a_name /= Void

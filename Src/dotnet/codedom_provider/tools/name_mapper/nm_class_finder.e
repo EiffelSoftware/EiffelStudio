@@ -76,7 +76,7 @@ feature -- Basic Operation
 			non_void_dotnet_type_name: a_dotnet_type_name /= Void
 		local
 			l_type_ref: CODE_TYPE_REFERENCE
-			l_type: SYSTEM_TYPE
+			l_type: TYPE
 			l_dotnet_names: DS_ARRAYED_LIST [STRING]
 			l_features: LIST [LIST [CODE_MEMBER_REFERENCE]]
 			l_members_mapping: like members_mapping
@@ -128,10 +128,10 @@ feature {NONE} -- Private Access
 	worker_thread: WORKER_THREAD
 			-- Worker thread
 
-	Thread_abort_exception_type: SYSTEM_TYPE is
+	Thread_abort_exception_type: TYPE is
 			-- Type of .NET type ThreadAbortException
 		once
-			Result := feature {SYSTEM_TYPE}.get_type_string ("ThreadAbortException")
+			Result := feature {TYPE}.get_type_string ("ThreadAbortException")
 		end
 
 	internal_found: BOOLEAN

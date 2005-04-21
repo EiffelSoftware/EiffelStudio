@@ -40,12 +40,12 @@ feature -- Access
 			-- Type of expression target
 			
 	code: STRING is
-			-- | Result := "feature {SYSTEM_TYPE}.get_type_string (type)"
+			-- | Result := "feature {TYPE}.get_type_string (type)"
 			-- | Result C# := "typeof(`type_name')"
 			-- Eiffel code of `type of' expression
 		do
 			create Result.make (120)
-			Result.append ("feature {SYSTEM_TYPE}.get_type (%"")
+			Result.append ("feature {TYPE}.get_type (%"")
 			if not Resolver.is_generated (target) then
 				Result.append (target.dotnet_type.full_name)
 			else

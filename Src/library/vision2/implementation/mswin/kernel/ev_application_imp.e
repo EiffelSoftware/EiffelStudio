@@ -20,7 +20,6 @@ inherit
 		redefine
 			init_application,
 			message_loop,
-			create_dispatcher,
 			run
  		end
 
@@ -74,8 +73,9 @@ feature {NONE} -- Initialization
 				-- Initialize the theme drawer to the correct version for
 				-- the current platform.
 			update_theme_drawer
+			dispatcher.set_exception_callback (agent on_exception_action)
 		end
-
+		
 	launch  is
 			-- Start the event loop.
 		do
@@ -506,6 +506,21 @@ feature {NONE} -- WEL Implemenation
 			create rich_edit_dll.make
 		end
 
+feature {NONE} -- Exceptions
+
+	in_exception_processing: BOOLEAN
+			-- Are we already called by `on_exception_action'?
+
+	on_exception_action (an_exception: EXCEPTION) is
+			-- Call `uncaught_exception_actions' if set when an exception occurs in the event loop.
+		do
+			if uncaught_exception_actions_internal /= Void and not in_exception_processing then
+				in_exception_processing := True
+				uncaught_exception_actions_internal.call ([an_exception])
+				in_exception_processing := False
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	blocking_windows_stack: ARRAYED_STACK [EV_WINDOW_IMP]
@@ -646,17 +661,6 @@ feature {NONE} -- Implementation
 			create Result.make ("ev_stop_processing_requested")
 		end
 		
-feature {NONE} -- Blocking Dispatcher
-
-	create_dispatcher is
-			-- Create the `dispatcher'.
-		local
-			blocking_dispatcher: WEL_DISPATCHER
-		do
-			create blocking_dispatcher.make
-			dispatcher := blocking_dispatcher
-		end
-
 feature {NONE} -- Externals
 
 	cwin_disable_xp_ghosting is

@@ -308,7 +308,7 @@ feature -- Basic operations
 			current_subrow_indent: INTEGER
 			visible_column_indexes: ARRAYED_LIST [INTEGER]
 			visible_row_indexes: ARRAYED_LIST [INTEGER]
-			subrow_indent: INTEGER
+			standard_subrow_indent: INTEGER
 			drawing_subrow, drawing_parentrow: BOOLEAN
 			node_index, parent_node_index: INTEGER
 			counter: INTEGER
@@ -361,7 +361,7 @@ feature -- Basic operations
 			node_pixmap_width := expand_pixmap.width
 			node_pixmap_height := expand_pixmap.height
 			
-			subrow_indent := (tree_node_spacing * 2) + node_pixmap_width + grid.subrow_indent
+			standard_subrow_indent := (tree_node_spacing * 2) + node_pixmap_width + grid.subrow_indent
 				
 			total_tree_node_width := node_pixmap_width + 2 * tree_node_spacing
 			
@@ -488,14 +488,7 @@ feature -- Basic operations
 							vertical_node_pixmap_bottom_offset := vertical_node_pixmap_top_offset + node_pixmap_height
 							
 							if drawing_parentrow or (drawing_subrow) then
-								if current_row.index_of_first_item = 0 then
-										-- In this case the subrow has no first item, so we set the indent
-										-- to one large enough to show the horizontal lines all the way off to the
-										-- right hand side of the grid.
-									current_subrow_indent := grid.viewable_width + 100
-								else	
-									current_subrow_indent := grid.item_indent (grid.item (current_row.index_of_first_item, current_row.index).implementation)
-								end
+								current_subrow_indent := subrow_indent (current_row)
 							else
 								current_subrow_indent := 0
 							end
@@ -550,12 +543,30 @@ feature -- Basic operations
 									grid.set_item (visible_column_indexes.item, visible_row_indexes.item, grid_item.interface)
 									grid_item_exists := True
 								end
+									-- Now if in dynamic mode, we must recompute `current_subrow_indent' as
+									-- the originally computed version is probably incorrect.
+									-- This is due to the fact that the row may well have been empty up until this point
+									-- and it is only now that we are filling the row.
+								if drawing_parentrow or (drawing_subrow) then
+									current_subrow_indent := subrow_indent (current_row)
+								
+--									if current_row.index_of_first_item = 0 then
+--											-- In this case the subrow has no first item, so we set the indent
+--											-- to one large enough to show the horizontal lines all the way off to the
+--											-- right hand side of the grid.
+--										current_subrow_indent := grid.viewable_width + 100
+--									else	
+--										current_subrow_indent := grid.item_indent (grid.item (current_row.index_of_first_item, current_row.index).implementation)
+--									end
+								else
+									current_subrow_indent := 0
+								end
 							end
 							
 							if grid_item_exists then
 									-- An item has been retrieved for the current drawing position so draw it.
 									
-							row_node_clipped := current_subrow_indent - subrow_indent > column_offsets @ (node_index + 1)
+							row_node_clipped := current_subrow_indent - standard_subrow_indent > column_offsets @ (node_index + 1)
 								-- Has the node of `Current' been clipped?
 									
 								if current_column_index = 1 then
@@ -694,7 +705,7 @@ feature -- Basic operations
 													until
 														current_horizontal_pos < current_item_x_position or loop_parent_row = Void
 													loop
-														current_horizontal_pos := current_horizontal_pos - subrow_indent
+														current_horizontal_pos := current_horizontal_pos - standard_subrow_indent
 														if current_horizontal_pos < current_item_x_position + current_column_width then
 																-- It is possible that the current vertical line segment that we must draw is outside the right hand
 																-- edge of the item. In this case, we simply do not draw it. This reduces flicker and time spent
@@ -802,6 +813,23 @@ feature -- Basic operations
 			end
 		end
 		
+	subrow_indent (current_row: EV_GRID_ROW_I): INTEGER is
+			-- `Result' is indent of `current_row'.
+		require
+			current_row_not_void: current_row /= Void
+		do
+			if current_row.index_of_first_item = 0 then
+					-- In this case the subrow has no first item, so we set the indent
+					-- to one large enough to show the horizontal lines all the way off to the
+					-- right hand side of the grid.
+				Result := grid.viewable_width + 100
+			else	
+				Result := grid.item_indent (grid.item (current_row.index_of_first_item, current_row.index).implementation)
+			end
+		ensure
+			result_non_negative: Result >= 0
+		end
+
 	white: EV_COLOR is
 			-- Once access to the color white.
 		once

@@ -6,108 +6,100 @@ REM *********************************************
 ECHO Checking out source files...
 CD checkout
 REM in checkout
-MKDIR head
-MKDIR compiler
-CD head
-REM in checkout\head
-cvs -z3 export -rHEAD -d library.net Src/library.net
-cvs -z3 export -rHEAD -d eclop free_add_ons/eclop
-cvs -z3 export -rHEAD -d run-time Src/bench/Eiffel/eiffel/com_il_generation/Core/run-time
+ECHO Exporting library.net (%RELEASE%) in checkout...
+cvs -z3 -Q export -r%RELEASE% -d library.net Src/library.net
+ECHO Exporting eclop (HEAD) in checkout...
+cvs -z3 -Q export -r%HEAD -d eclop free_add_ons/eclop
+ECHO Exporting Eiffel (%COMPILER_RELEASE%) in checkout...
+cvs -z3 -Q export -r%COMPILER_RELEASE% Eiffel
+ECHO Exporting runtime (%RELEASE%) in checkout...
+cvs -z3 -Q export -r%RELEASE% runtime
+ECHO Exporting library.net (%RELEASE%) in checkout...
+cvs -z3 -Q export -r%RELEASE% -d library.net Src/library.net
+ECHO Exporting studio (%RELEASE%) in checkout...
+cvs -z3 -Q export -r%RELEASE% -d compiler_delivery Delivery/studio
+ECHO Exporting eifinit (%RELEASE%) in checkout...
+cvs -z3 -Q export -r%RELEASE% -d eifinit_delivery Delivery/eifinit
+ECHO Exporting precomp (%RELEASE%) in checkout...
+cvs -z3 -Q export -r%RELEASE% -d precomp_delivery Delivery/precomp
 
-CD ..\compiler
-REM in checkout\compiler
-cvs -z3 export -r%COMPILER_RELEASE% Eiffel
-cvs -z3 export -r%RELEASE% runtime
-cvs -z3 export -r%RELEASE% -d library.net Src/library.net
-cvs -z3 export -r%RELEASE% -d compiler_delivery Delivery/studio
-cvs -z3 export -r%RELEASE% -d eifinit_delivery Delivery/eifinit
-cvs -z3 export -r%RELEASE% -d precomp_delivery Delivery/precomp
-
-CD ..\head
-REM in checkout\head
 MKDIR tools
 CD tools
 REM in checkout\tools
-cvs -z3 export -rHEAD -d silent_launcher Src/tools/silent_launcher
+ECHO Exporting silent_launcher (%CODEDOM_RELEASE%) in checkout\tools...
+cvs -z3 -Q export -r%CODEDOM_RELEASE% -d silent_launcher Src/tools/silent_launcher
 CD ..
-REM in checkout\head
+REM in checkout
 
 MKDIR C_library
 CD C_library
-REM in checkout\head\C_library
-cvs -z3 export -rHEAD -d libpng Src/C_library/libpng
-cvs -z3 export -rHEAD -d zlib Src/C_library/zlib
-CD ..\..\compiler
-REM in checkout\compiler
-MKDIR C_library
-CD C_library
-REM in checkout\compiler\C_library
-cvs -z3 export -r%RELEASE% -d libpng Src/C_library/libpng
-cvs -z3 export -r%RELEASE% -d zlib Src/C_library/zlib
+REM in checkout\C_library
+ECHO Exporting libpng (%COMPILER_RELEASE%) in checkout\C_library...
+cvs -z3 -Q export -r%COMPILER_RELEASE% -d libpng Src/C_library/libpng
+ECHO Exporting zlib (%COMPILER_RELEASE%) in checkout\C_library...
+cvs -z3 -Q export -r%COMPILER_RELEASE% -d zlib Src/C_library/zlib
 
-CD ..\..\head
-REM in checkout\head
-cvs -z3 export -rHEAD -d library free_add_ons/gobo
+CD ..\
+REM in checkout
+MKDIR library
 CD library
-REM in checkout\head\library
-tar -xzf gobo_33_win.tgz
-cvs -z3 export -rHEAD -d base Src/library/base
-cvs -z3 export -rHEAD -d wel Src/library/wel
-cvs -z3 export -rHEAD -d vision2 Src/library/vision2
-cvs -z3 export -rHEAD -d vision2_extension Src/library/vision2_extension
-cvs -z3 export -rHEAD -d thread Src/library/thread
-cvs -z3 export -rHEAD -d helpers Src/library/helpers
-CD ..\..\compiler
-REM in checkout\compiler
-cvs -z3 export -r%RELEASE% -d library free_add_ons/gobo
-CD library
-REM in checkout\compiler\library
-tar -xzf gobo_33_win.tgz
-cvs -z3 export -r%RELEASE% -d base Src/library/base
-cvs -z3 export -r%RELEASE% -d wel Src/library/wel
-cvs -z3 export -r%COMPILER_RELEASE% -d vision2 Src/library/vision2
-cvs -z3 export -r%RELEASE% -d time Src/library/time
-cvs -z3 export -r%RELEASE% -d helpers Src/library/helpers
-cvs -z3 export -r%RELEASE% -d keygen Src/library/keygen
-cvs -z3 export -r%RELEASE% -d preferences Src/library/preferences
+REM in checkout\library
+ECHO Copying GOBO
+XCOPY /Q /S %GOBO_SRC% gobo\
+ECHO Exporting base (%RELEASE%) in checkout\library...
+cvs -z3 -Q export -r%RELEASE% -d base Src/library/base
+ECHO Exporting wel (%RELEASE%) in checkout\library...
+cvs -z3 -Q export -r%RELEASE% -d wel Src/library/wel
+ECHO Exporting vision2 (%COMPILER_RELEASE%) in checkout\library...
+cvs -z3 -Q export -r%COMPILER_RELEASE% -d vision2 Src/library/vision2
+ECHO Exporting vision2_extension (%RELEASE%) in checkout\library...
+cvs -z3 -Q export -r%RELEASE% -d vision2_extension Src/library/vision2_extension
+ECHO Exporting thread (%RELEASE%) in checkout\library...
+cvs -z3 -Q export -r%RELEASE% -d thread Src/library/thread
+ECHO Exporting helpers (%RELEASE%) in checkout\library...
+cvs -z3 -Q export -r%RELEASE% -d helpers Src/library/helpers
+ECHO Exporting time (%RELEASE%) in checkout\library...
+cvs -z3 -Q export -r%RELEASE% -d time Src/library/time
+ECHO Exporting keygen (%RELEASE%) in checkout\library...
+cvs -z3 -Q export -r%RELEASE% -d keygen Src/library/keygen
+ECHO Exporting preferences (%RELEASE%) in checkout\library...
+cvs -z3 -Q export -r%RELEASE% -d preferences Src/library/preferences
 CD ..
-REM in checkout\compiler
+REM in checkout
 
 MKDIR dotnet
 CD dotnet
-REM in checkout\compiler\dotnet
-cvs -z3 export -r%COMPILER_RELEASE% -d consumer Src/dotnet/consumer
-cvs -z3 export -r%COMPILER_RELEASE% -d helpers Src/dotnet/helpers
-cvs -z3 export -r%RELEASE% -d eac_browser Src/dotnet/eac_browser
-MKDIR VisualStudio\tools
-CD VisualStudio\tools\
-REM in checkout\compiler\dotnet\VisualStudio\tools
-cvs -z3 export -rHEAD -d documentation_manager Src/dotnet/VisualStudio/tools/documentation_manager/
-
-CD ..\..\..\..\head
-REM in checkout\head
-MKDIR dotnet
-CD dotnet
-REM in checkout\head\dotnet
-cvs -z3 export -r%CODEDOM_RELEASE% -d codedom_provider Src/dotnet/codedom_provider
-cvs -z3 export -r%CODEDOM_RELEASE% -d consumer Src/dotnet/consumer
-cvs -z3 export -r%CODEDOM_RELEASE% -d helpers Src/dotnet/helpers
+REM in checkout\dotnet
+ECHO Exporting consumer (%COMPILER_RELEASE%) in checkout\dotnet...
+cvs -z3 -Q export -r%COMPILER_RELEASE% -d consumer Src/dotnet/consumer
+ECHO Exporting helpers (%COMPILER_RELEASE%) in checkout\dotnet...
+cvs -z3 -Q export -r%COMPILER_RELEASE% -d helpers Src/dotnet/helpers
+ECHO Exporting eac_browser (%RELEASE%) in checkout\dotnet...
+cvs -z3 -Q export -r%RELEASE% -d eac_browser Src/dotnet/eac_browser
+ECHO Exporting codedom_provider (%CODEDOM_RELEASE%) in checkout\dotnet...
+cvs -z3 -Q export -r%CODEDOM_RELEASE% -d codedom_provider Src/dotnet/codedom_provider
 
 CD..
-REM in checkout\head
+REM in checkout
 MKDIR Eiffel\common\parser
 CD Eiffel\common\parser
-REM in checkout\head\Eiffel\common\parser
-cvs -z3 export -r%COMPILER_RELEASE% -d parser Src/common/parser/parser
-cvs -z3 export -r%COMPILER_RELEASE% -d ast Src/common/parser/AST
+REM in checkout\Eiffel\common\parser
+ECHO Exporting parser (%COMPILER_RELEASE%) in checkout\Eiffel\common\parser...
+cvs -z3 -Q export -r%COMPILER_RELEASE% -d parser Src/common/parser/parser
+ECHO Exporting AST (%COMPILER_RELEASE%) in checkout\Eiffel\common\parser...
+cvs -z3 -Q export -r%COMPILER_RELEASE% -d ast Src/common/parser/AST
 CD ..\..
-REM in checkout\head\Eiffel
-cvs -z3 export -r%COMPILER_RELEASE% -d API Src/bench/Eiffel/API
-cvs -z3 export -r%COMPILER_RELEASE% -d yacc Src/bench/Eiffel/yacc
+REM in checkout\Eiffel
+ECHO Exporting API (%COMPILER_RELEASE%) in checkout\Eiffel...
+cvs -z3 -Q export -r%COMPILER_RELEASE% -d API Src/bench/Eiffel/API
+ECHO Exporting yacc (%COMPILER_RELEASE%) in checkout\Eiffel...
+cvs -z3 -Q export -r%COMPILER_RELEASE% -d yacc Src/bench/Eiffel/yacc
 MKDIR eiffel
 CD eiffel
-REM in checkout\head\Eiffel\eiffel
-cvs -z3 export -r%COMPILER_RELEASE% -d structures Src/bench/Eiffel/eiffel/structures
-cvs -z3 export -r%COMPILER_RELEASE% -d const Src/bench/Eiffel/eiffel/const
+REM in checkout\Eiffel\eiffel
+ECHO Exporting structures (%COMPILER_RELEASE%) in checkout\Eiffel\eiffel...
+cvs -z3 -Q export -r%COMPILER_RELEASE% -d structures Src/bench/Eiffel/eiffel/structures
+ECHO Exporting const (%COMPILER_RELEASE%) in checkout\Eiffel\eiffel...
+cvs -z3 -Q export -r%COMPILER_RELEASE% -d const Src/bench/Eiffel/eiffel/const
 
-CD ..\..\..\..
+CD ..\..\..

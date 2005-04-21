@@ -138,8 +138,28 @@ feature -- Access
 		
 	selected_rows: ARRAYED_LIST [EV_GRID_ROW] is
 			-- All rows selected in `Current'.
+		local
+			i: INTEGER
+			a_count: INTEGER
+			a_row: EV_GRID_ROW
 		do
-			Result := internal_selected_rows.twin
+			if is_row_selection_enabled then
+				Result := internal_selected_rows.twin
+			else
+				create Result.make (0)	
+				from
+					i := 1
+					a_count := row_count
+				until
+					i > a_count
+				loop
+					a_row := row (i)
+					if a_row.is_selected then
+						Result.extend (a_row)
+					end
+					i := i + 1
+				end
+			end
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -149,14 +169,16 @@ feature -- Access
 		local
 			i: INTEGER
 			sel_rows: like selected_rows
+			a_count: INTEGER
 		do
-			if is_single_row_selection_enabled or else is_multiple_row_selection_enabled then
+			if is_row_selection_enabled then
 				create Result.make (0)
 				from
 					sel_rows := selected_rows
+					a_count := sel_rows.count
 					i := 1
 				until
-					i > sel_rows.count
+					i > a_count
 				loop
 					Result.append (sel_rows.i_th (i).selected_items)
 					i := i + 1
@@ -173,43 +195,27 @@ feature -- Access
 		local
 			sel_rows: like selected_rows
 			sel_items: like selected_items
-			sel_columns: like selected_columns
 		do
-			if is_single_item_selection_enabled or else is_multiple_item_selection_enabled then
-					sel_items := internal_selected_items
-					from
-						sel_items.start
-					until
-						sel_items.after
-					loop
-						sel_items.item.implementation.disable_select_internal
-						if item_deselect_actions_internal /= Void then
-							item_deselect_actions_internal.call ([sel_items.item])
-						end
-						sel_items.remove
-					end				
-			end
-			sel_rows := internal_selected_rows
-			from
-				sel_rows.start
-			until
-				sel_rows.after
-			loop
-				sel_rows.item.implementation.disable_select_internal
-				if row_deselect_actions_internal /= Void then
-					row_deselect_actions_internal.call ([sel_rows.item])
+			if is_row_selection_enabled then
+				sel_rows := selected_rows
+				from
+					sel_rows.start
+				until
+					sel_rows.after
+				loop
+					sel_rows.item.disable_select
+					sel_rows.forth
+				end				
+			else
+				sel_items := selected_items
+				from
+					sel_items.start
+				until
+					sel_items.after
+				loop
+					sel_items.item.disable_select
+					sel_items.forth
 				end
-				sel_rows.remove
-			end
-
-			sel_columns := selected_columns
-			from
-				sel_columns.start
-			until
-				sel_columns.after
-			loop
-				sel_columns.item.disable_select
-				sel_columns.remove
 			end
 			fixme ("Remove this full redraw and only redraw those items that have actually changed.")
 			--redraw_client_area
@@ -613,7 +619,7 @@ feature -- Status setting
 			is_multiple_item_selection_enabled := False
 			is_multiple_row_selection_enabled := False
 			is_single_row_selection_enabled := False
-			
+
 			if not sel_items.is_empty then
 				sel_items.first.enable_select
 			end
@@ -1015,7 +1021,19 @@ feature -- Status report
 			a_col_i := column (a_column).implementation
 			Result := a_col_i.is_visible
 		end
-		
+
+	is_row_selection_enabled: BOOLEAN is
+			-- Is `Current' in either single or multiple row selection mode?
+		do
+			Result := is_single_row_selection_enabled or else is_multiple_row_selection_enabled
+		end
+
+	is_multiple_selection_enabled: BOOLEAN is
+			-- Is `Current' in either multiple item or row selection mode?
+		do
+			Result := is_multiple_item_selection_enabled or else is_multiple_row_selection_enabled
+		end
+
 	is_single_row_selection_enabled: BOOLEAN
 			-- Does clicking an item select the whole row, unselecting
 			-- any previous rows?
@@ -2543,11 +2561,9 @@ feature {NONE} -- Event handling
 			prev_sel_item, a_sel_item: EV_GRID_ITEM
 			a_sel_row: EV_GRID_ROW
 			sel_items: like selected_items
-			in_row_selection: BOOLEAN
 		do
 				-- Handle the selection events
 			sel_items := selected_items
-			in_row_selection := is_single_row_selection_enabled or else is_multiple_row_selection_enabled
 					-- We always want to find an item above or below for row selection
 			if not sel_items.is_empty then
 				prev_sel_item := sel_items.last
@@ -2555,16 +2571,16 @@ feature {NONE} -- Event handling
 				inspect
 					a_key.code
 				when {EV_KEY_CONSTANTS}.Key_down then
-					a_sel_item := find_next_item_in_column (prev_sel_item.column, prev_sel_item.row.index, True, in_row_selection or else a_sel_row.subrow_count > 0 or else a_sel_row.parent_row /= Void)
+					a_sel_item := find_next_item_in_column (prev_sel_item.column, prev_sel_item.row.index, True, is_row_selection_enabled or else a_sel_row.subrow_count > 0 or else a_sel_row.parent_row /= Void)
 				when {EV_KEY_CONSTANTS}.Key_up then
-					a_sel_item := find_next_item_in_column (prev_sel_item.column, prev_sel_item.row.index, False, in_row_selection or else a_sel_row.subrow_count > 0 or else a_sel_row.parent_row /= Void)
+					a_sel_item := find_next_item_in_column (prev_sel_item.column, prev_sel_item.row.index, False, is_row_selection_enabled or else a_sel_row.subrow_count > 0 or else a_sel_row.parent_row /= Void)
 				when {EV_KEY_CONSTANTS}.Key_right then
-					if not in_row_selection then
+					if not is_row_selection_enabled then
 							-- Key right shouldn't affect row selection
 						a_sel_item := find_next_item_in_row (prev_sel_item.row, prev_sel_item.column.index, True)
 					end
 				when {EV_KEY_CONSTANTS}.Key_left then
-					if not in_row_selection then
+					if not is_row_selection_enabled then
 							-- Key left shouldn't affect row selection
 						a_sel_item := find_next_item_in_row (prev_sel_item.row, prev_sel_item.column.index, False)
 					end
@@ -2613,9 +2629,12 @@ feature {NONE} -- Event handling
 				internal_selected_items.prune_all (start_item)
 				internal_selected_items.extend (start_item)
 				end
-			elseif not (create {EV_ENVIRONMENT}).application.ctrl_pressed then
-					-- If the ctrl key is not pressed then we remove selection
-				remove_selection
+			elseif (create {EV_ENVIRONMENT}).application.ctrl_pressed and then (is_multiple_item_selection_enabled or is_multiple_row_selection_enabled) then
+					-- If the ctrl key is pressed and we are in a multiple selection mode then we do nothing.
+			else
+				if not a_item.is_selected or (not is_row_selection_enabled and then selected_items.count > 1) or (is_row_selection_enabled and then selected_rows.count > 1) then
+					remove_selection
+				end
 			end
 			a_item.enable_select
 			
@@ -2873,7 +2892,7 @@ feature {NONE} -- Implementation
 	physical_column_indexes_internal: SPECIAL [INTEGER]
 		-- Internal storage for `physical_column_indexes' to avoid unnecessary recalculation on each query.
 
-feature {EV_GRID_ROW_I} -- Implementation
+feature {EV_GRID_ROW_I, EV_GRID_ITEM_I} -- Implementation
 
 	internal_selected_rows: ARRAYED_LIST [EV_GRID_ROW]
 		-- List of selected rows.
@@ -2881,66 +2900,59 @@ feature {EV_GRID_ROW_I} -- Implementation
 	internal_selected_items: ARRAYED_LIST [EV_GRID_ITEM]
 		-- List of selected items, only used when in item selection modes.
 
-feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- Implementation
+feature {EV_GRID_ROW_I} -- Implementation
 
-	update_row_selection_status (a_row_i: EV_GRID_ROW_I) is
-			-- Update the selection status for `a_row' in `Current'.
-		local
-			row_deselected: BOOLEAN
-			row_previously_selected: BOOLEAN
-			row_interface: EV_GRID_ROW
-		do
-			row_interface := a_row_i.interface
-			
-			if internal_selected_rows.has (row_interface) then
-				row_deselected := not a_row_i.is_selected
-				row_previously_selected := True
-				internal_selected_rows.prune_all (row_interface)
-			end
-			if is_single_row_selection_enabled then
-					-- Deselect existing rows and then remove from list
-				remove_selection			
-			end
-
-			if not row_deselected then
-					-- Add to last position in grid's selected rows
-				internal_selected_rows.extend (row_interface)				
-			end
-
-			if row_select_actions_internal /= Void and then not row_previously_selected then
-					-- Call `row_select_actions' if newly selected
-				row_select_actions_internal.call ([row_interface])
-			end
-			if row_deselect_actions_internal /= Void and then row_deselected then
-					-- Call `row_deselect_actions' if deselected
-				row_deselect_actions_internal.call ([row_interface])
-			end
-		end
-
-	update_item_selection_status (a_item_i: EV_GRID_ITEM_I) is
-			-- Update the selection status for `a_item_i' in `Current'.
+	add_row_to_selected_rows (a_row: EV_GRID_ROW_I) is
+			-- Add `a_row' to `internal_selected_rows'.
 		require
-			a_item_i_not_void: a_item_i /= Void
-		local
-			item_has_selection: BOOLEAN
-			item_interface: EV_GRID_ITEM
+			a_row_not_void: a_row /= Void
+			not_has_a_row: not internal_selected_rows.has (a_row.interface)
+			row_selected: a_row.internal_is_selected
 		do
-			item_interface := a_item_i.interface
-			if internal_selected_items.has (item_interface) then
-				internal_selected_items.prune_all (item_interface)
-				item_has_selection := True
-			end
-			if is_single_item_selection_enabled then
-					-- Deselect existing items and then remove from list
-				remove_selection			
-			end
-				-- Add to last position in grid's selected items
-			internal_selected_items.extend (item_interface)
-
-			if item_select_actions_internal /= Void and then not item_has_selection then
-				item_select_actions_internal.call ([item_interface])
-			end
+			internal_selected_rows.extend (a_row.interface)
+		ensure
+			row_added: internal_selected_rows.has (a_row.interface)
 		end
+
+	remove_row_from_selected_rows (a_row: EV_GRID_ROW_I) is
+			-- Remove`a_row' from `internal_selected_rows'.
+		require
+			a_row_not_void: a_row /= Void
+			has_a_row: internal_selected_rows.has (a_row.interface)
+			row_deselected: not a_row.internal_is_selected
+		do
+			internal_selected_rows.prune_all (a_row.interface)
+		ensure
+			row_removed: not internal_selected_rows.has (a_row.interface)
+		end
+
+feature {EV_GRID_ITEM_I} -- Implementation
+
+	add_item_to_selected_items (a_item: EV_GRID_ITEM_I) is
+			-- Add `a_item' to `internal_selected_items'.
+		require
+			a_item_not_void: a_item /= Void
+			not_has_a_item: not internal_selected_items.has (a_item.interface)
+			item_selected: a_item.internal_is_selected
+		do
+			internal_selected_items.extend (a_item.interface)
+		ensure
+			item_added: internal_selected_items.has (a_item.interface)
+		end
+
+	remove_item_from_selected_items (a_item: EV_GRID_ITEM_I) is
+			-- Remove`a_item' from `internal_selected_items'.
+		require
+			a_item_not_void: a_item /= Void
+			has_a_item: internal_selected_items.has (a_item.interface)
+			item_deselected: not a_item.internal_is_selected
+		do
+			internal_selected_items.prune_all (a_item.interface)
+		ensure
+			item_removed: not internal_selected_items.has (a_item.interface)
+		end
+
+feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- Implementation
 
 	internal_set_item (a_column, a_row: INTEGER; a_item: EV_GRID_ITEM) is
 			-- Replace grid item at position (`a_column', `a_row') with `a_item', `a_item' may be Void, as called by `remove_item'.

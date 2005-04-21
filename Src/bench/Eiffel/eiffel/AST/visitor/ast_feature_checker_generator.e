@@ -335,9 +335,6 @@ feature {NONE} -- Implementation: Access
 	last_access_writable: BOOLEAN
 			-- Is last ACCESS_AS node creatable?
 
-	last_access_constant: BOOLEAN
-			-- Is last ACCESS_AS a constant?
-
 	last_feature_name: STRING
 			-- Actual name of last ACCESS_AS (might be different from original name
 			-- in case an overloading resolution took place)
@@ -357,7 +354,6 @@ feature -- Settings
 			check_for_vaol := False
 			depend_unit_level := 0
 			last_access_writable := False
-			last_access_constant := False
 			last_feature_name := Void
 		end
 
@@ -918,7 +914,6 @@ feature -- Implementation
 				end
 				last_type := l_result_type
 				last_access_writable := l_feature.is_attribute
-				last_access_constant := l_feature.is_constant
 				last_feature_name := l_feature.feature_name
 			else
 					-- `l_feature' was not valid for current, report
@@ -3365,21 +3360,13 @@ feature -- Implementation
 				l_inspect.set_switch (l_expr)
 			end
 
-				-- Initialization of the multi-branch controler
-			create l_controler.make
-			inspect_controlers.put_front (l_controler)
-			l_controler.set_node (l_as)
-			l_controler.set_feature_table (context.current_class.feature_table)
-
 				-- Type check if it is an expression conform either to
 				-- and integer or to a character
 			l_constrained_type := constrained_type (last_type.actual_type)
 			if
-				l_constrained_type.is_integer or else l_constrained_type.is_character or else
-				l_constrained_type.is_natural
+				not l_constrained_type.is_integer and then not l_constrained_type.is_character and then
+				not l_constrained_type.is_natural
 			then
-				l_controler.set_type (l_constrained_type)
-			else
 					-- Error
 				create l_vomb1
 				context.init_error (l_vomb1)
@@ -3389,6 +3376,10 @@ feature -- Implementation
 					-- Cannot go on here
 				error_handler.raise_error
 			end
+
+				-- Initialization of the multi-branch controler
+			create l_controler.make (l_constrained_type)
+			inspect_controlers.put_front (l_controler)
 
 			if l_as.case_list /= Void then
 				l_as.case_list.process (Current)
@@ -3674,24 +3665,10 @@ feature -- Implementation
 		end
 
 	process_interval_as (l_as: INTERVAL_AS) is
-		local
-			l_vomb2: VOMB2
 		do
-			check_atomic_for_veen (l_as.lower)
-			check_atomic_for_veen (l_as.upper)
-			error_handler.checksum
-			inspect_control.set_interval (l_as)
-			if inspect_control.is_good_interval (l_as) then
-				inspect_control.record_dependances (l_as)
-				if is_byte_node_enabled then
-					last_byte_node := inspect_control.interval_byte_node
-				end
-			else
-				create l_vomb2
-				context.init_error (l_vomb2)
-				l_vomb2.set_type (inspect_control.type)
-				l_vomb2.set_location (l_as.start_location)
-				error_handler.insert_error (l_vomb2)
+			inspect_control.process_interval (l_as)
+			if is_byte_node_enabled then
+				last_byte_node := inspect_control.last_interval_byte_node
 			end
 		end
 
@@ -4105,53 +4082,6 @@ feature {NONE} -- Implementation
 				l_vuex.set_exported_feature (a_feat)
 				l_vuex.set_location (a_name)
 				error_handler.insert_error (l_vuex)
-			end
-		end
-
-	check_atomic_for_veen (at_as: ATOMIC_AS) is
-			-- Check validity of `at_as'.
-		local
-			l_id_as: ID_AS
-			l_static: STATIC_ACCESS_AS
-			l_veen: VEEN
-			l_vomb2: VOMB2
-			l_vomb6: VOMB6
-			l_feat: FEATURE_I
-		do
-			l_id_as ?= at_as
-			if (l_id_as /= Void) then
-				if
-					current_feature.argument_position (l_id_as) /= 0
-					or else context.locals.item (l_id_as) /= Void
-				then
-					create l_vomb2
-					context.init_error (l_vomb2)
-					l_vomb2.set_type (Inspect_control.type)
-					l_vomb2.set_location (l_id_as)
-					error_handler.insert_error (l_vomb2)
-				elseif not context.current_class.feature_table.has (l_id_as) then
-					create l_veen
-					context.init_error (l_veen)
-					l_veen.set_identifier (l_id_as)
-					l_veen.set_location (l_id_as)
-					error_handler.insert_error (l_veen)
-				end
-			else
-				l_static ?= at_as
-				if l_static /= Void then
-					last_access_constant := False
-					l_static.process (Current)
-					error_handler.checksum
-					if not last_access_constant then
-							-- Not a valid constant
-						create l_vomb6
-						context.init_error (l_vomb6)
-						l_vomb6.set_unique_feature (l_feat)
-						l_vomb6.set_written_class (l_feat.written_class)
-						l_vomb6.set_location (l_static.start_location)
-						error_handler.insert_error (l_vomb6)
-					end
-				end
 			end
 		end
 

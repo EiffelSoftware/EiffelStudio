@@ -16,7 +16,8 @@ inherit
 	
 	EV_DESELECTABLE_I
 		redefine
-			interface
+			interface,
+			is_selectable
 		end
 
 create
@@ -214,6 +215,12 @@ feature -- Access
 					Result := internal_are_all_non_void_items_selected
 				end
 			end
+		end
+
+	is_selectable: BOOLEAN is
+			-- May the object be selected?
+		do
+			Result := parent_i /= Void
 		end
 
 	internal_is_selected: BOOLEAN

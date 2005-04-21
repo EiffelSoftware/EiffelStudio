@@ -454,6 +454,8 @@ feature -- Status setting
 
 	enable_tree is
 			-- Enable tree functionality for `Current'.
+		require
+			not_is_content_completely_dynamic: not is_content_completely_dynamic
 		do
 			is_tree_enabled := True
 				
@@ -801,6 +803,8 @@ feature -- Status setting
 			-- Ensure contents of `Current' must be retrieved when required via
 			-- `content_requested_actions'. Contents are requested each time they
 			-- are displayed even if already contained in `Current'.
+		require
+			not_is_tree_enabled: not is_tree_enabled
 		do
 			is_content_completely_dynamic := True
 			is_content_partially_dynamic := False

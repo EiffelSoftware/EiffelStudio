@@ -176,6 +176,7 @@ feature -- Basic operations
 			d: EV_DIALOG
 			okb, cancelb: EV_BUTTON
 			tf: EV_TEXT_FIELD
+			lab: EV_LABEL
 			fr: EV_FRAME
 			vb: EV_VERTICAL_BOX
 			hb: EV_HORIZONTAL_BOX
@@ -194,6 +195,7 @@ feature -- Basic operations
 			Layout_constants.set_default_size_for_button (okb)
 			Layout_constants.set_default_size_for_button (cancelb)
 			create tf
+			create lab
 			
 				-- Layout all widgets
 			hb.extend (create {EV_CELL})
@@ -203,12 +205,13 @@ feature -- Basic operations
 			hb.disable_item_expand (cancelb)
 			fr.extend (tf)
 			vb.extend (fr)
+			vb.extend (lab)
 			vb.extend (hb)
 			d.extend (vb)
 			d.set_maximum_height (d.minimum_height)
 			
 				-- Set up actions
-			okb.select_actions.extend (agent create_conditional_breakpoint (f, pos, d, tf))
+			okb.select_actions.extend (agent create_conditional_breakpoint (f, pos, d, tf, lab))
 			cancelb.select_actions.extend (agent d.destroy)
 			d.set_default_push_button (okb)
 			d.set_default_cancel_button (cancelb)
@@ -222,6 +225,7 @@ feature -- Basic operations
 			d: EV_DIALOG
 			okb, removeb, cancelb: EV_BUTTON
 			tf: EV_TEXT_FIELD
+			lab: EV_LABEL
 			fr: EV_FRAME
 			vb: EV_VERTICAL_BOX
 			hb: EV_HORIZONTAL_BOX
@@ -243,6 +247,7 @@ feature -- Basic operations
 			Layout_constants.set_default_size_for_button (removeb)
 			Layout_constants.set_default_size_for_button (cancelb)
 			create tf
+			create lab
 			
 				-- Update widgets.
 			expr := Application.condition (f, pos)
@@ -260,12 +265,13 @@ feature -- Basic operations
 			hb.disable_item_expand (cancelb)
 			fr.extend (tf)
 			vb.extend (fr)
+			vb.extend (lab)
 			vb.extend (hb)
 			d.extend (vb)
 			d.set_maximum_height (d.minimum_height)
 			
 				-- Set up actions
-			okb.select_actions.extend (agent create_conditional_breakpoint (f, pos, d, tf))
+			okb.select_actions.extend (agent create_conditional_breakpoint (f, pos, d, tf, lab))
 			removeb.select_actions.extend (agent Application.remove_condition (f, pos))
 			removeb.select_actions.extend (agent d.destroy)
 			cancelb.select_actions.extend (agent d.destroy)
@@ -275,12 +281,12 @@ feature -- Basic operations
 			d.show_modal_to_window (Window_manager.last_focused_window.window)
 		end
 
-	create_conditional_breakpoint (f: E_FEATURE; pos: INTEGER; d: EV_DIALOG; tf: EV_TEXT_FIELD) is
+	create_conditional_breakpoint (f: E_FEATURE; pos: INTEGER; d: EV_DIALOG; a_input, a_output: EV_TEXTABLE) is
 			-- Attempt to create a conditional breakpoint.
 		local
 			expr: EB_EXPRESSION
 		do
-			create expr.make_for_context (tf.text)
+			create expr.make_for_context (a_input.text)
 			if not expr.syntax_error_occurred then
 				if expr.is_condition (f) then
 					if not Application.is_breakpoint_set (f, pos) then
@@ -291,10 +297,10 @@ feature -- Basic operations
 					window_manager.quick_refresh_all
 					d.destroy
 				else
-					tf.set_text (Warning_messages.w_not_a_condition (tf.text))
+					a_output.set_text (Warning_messages.w_not_a_condition (a_input.text))
 				end
 			else
-				tf.set_text (Warning_messages.w_syntax_error_in_expression (tf.text)) 
+				a_output.set_text (Warning_messages.w_syntax_error_in_expression (a_input.text)) 
 			end
 		end
 

@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			valid_name: not a_name.is_empty
 			valid_direction: a_direction = inbound or a_direction = outbound or a_direction = duplex
 		local
-			l_handle: INTEGER
+			l_handle: POINTER
 			l_connected: BOOLEAN
 			ws: WEL_STRING
 		do
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 			output_closed := True
 			
 			l_handle := cwin_create_named_pipe (ws.item, a_direction, 0, 255, max_pipe_buffer_length, max_pipe_buffer_length, 0, default_pointer)
-			if l_handle /= -1 then
+			if l_handle /= invalid_handle_value then
 				if a_direction = inbound or a_direction = duplex then
 					output_handle := l_handle
 					output_closed := False
@@ -72,7 +72,7 @@ feature {NONE} -- Initialization
 			valid_name: not a_name.is_empty
 			valid_direction: a_direction = inbound or a_direction = outbound or a_direction = duplex
 		local
-			l_handle: INTEGER
+			l_handle: POINTER
 			l_create_mode: INTEGER
 			ws: WEL_STRING
 		do
@@ -100,7 +100,7 @@ feature {NONE} -- Initialization
 					l_create_mode := generic_read.bit_or (generic_write)
 				end
 				l_handle := cwin_create_file (ws.item, l_create_mode, 0x0, default_pointer, 0x4, 0x100, 0)
-				if l_handle /= -1 then
+				if l_handle /= invalid_handle_value then
 					if a_direction = inbound or a_direction = duplex then
 						output_handle := l_handle
 						output_closed := False
@@ -129,10 +129,10 @@ feature -- Status Report
 	exists: BOOLEAN
 			-- Does pipe exist?
 
-	output_handle: INTEGER
+	output_handle: POINTER
 			-- Pipe input handle
 
-	input_handle: INTEGER
+	input_handle: POINTER
 			-- Pipe output handle
 
 	input_closed: BOOLEAN
@@ -313,7 +313,7 @@ feature {NONE} -- Externals
 			"CreatePipe"
 		end
 
-	cwin_close_handle (a_handle: INTEGER): BOOLEAN is
+	cwin_close_handle (a_handle: POINTER): BOOLEAN is
 			-- SDK CloseHandle
 		external
 			"C [macro <winbase.h>] (HANDLE): BOOL"
@@ -328,6 +328,14 @@ feature {NONE} -- Externals
 		alias
 			"Sleep"
 		end
+
+	invalid_handle_value: POINTER is
+		external
+			"C inline use <winbase.h>"
+		alias
+			"INVALID_HANDLE_VALUE"
+		end
+		
 
 end -- class WIZARD_PIPE
 

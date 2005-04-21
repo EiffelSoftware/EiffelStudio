@@ -15,13 +15,13 @@ create
 
 feature -- Access
 
-	process_handle: INTEGER is
+	process_handle: POINTER is
 			-- Handle to process
 		do
 			Result := cwel_process_info_get_process_handle (item)
 		end
 
-	thread_handle: INTEGER is
+	thread_handle: POINTER is
 			-- Handle to thread
 		do
 			Result := cwel_process_info_get_thread_handle (item)
@@ -44,7 +44,7 @@ feature -- Element Settings
 	set_process_handle (a_handle: like process_handle) is
 			-- Set `process_handle' with `a_handle'.
 		require
-			valid_handle: a_handle > 0
+			valid_handle: a_handle /= default_pointer
 		do
 			cwel_process_info_set_process_handle (item, a_handle)
 		ensure
@@ -54,7 +54,7 @@ feature -- Element Settings
 	set_thread_handle (a_handle: like thread_handle) is
 			-- Set `thread_handle' with `a_handle'.
 		require
-			valid_handle: a_handle > 0
+			valid_handle: a_handle /= default_pointer
 		do
 			cwel_process_info_set_thread_handle (item, a_handle)
 		ensure
@@ -98,32 +98,32 @@ feature {NONE} -- Externals
 			"sizeof (PROCESS_INFORMATION)"
 		end
 
-	cwel_process_info_get_process_handle (ptr: POINTER): INTEGER is
+	cwel_process_info_get_process_handle (ptr: POINTER): POINTER is
 		external
-			"C [macro %"wel_process_info.h%"] (PROCESS_INFORMATION*): EIF_INTEGER"
+			"C [macro %"wel_process_info.h%"] (PROCESS_INFORMATION*): HANDLE"
 		end
 
-	cwel_process_info_get_thread_handle (ptr: POINTER): INTEGER is
+	cwel_process_info_get_thread_handle (ptr: POINTER): POINTER is
 		external
-			"C [macro %"wel_process_info.h%"] (PROCESS_INFORMATION*): EIF_INTEGER"
+			"C [macro %"wel_process_info.h%"] (PROCESS_INFORMATION*): HANDLE"
 		end
 
 	cwel_process_info_get_process_id (ptr: POINTER): INTEGER is
 		external
-			"C [macro %"wel_process_info.h%"] (PROCESS_INFORMATION*): EIF_INTEGER"
+			"C [macro %"wel_process_info.h%"] (PROCESS_INFORMATION*): DWORD"
 		end
 
 	cwel_process_info_get_thread_id (ptr: POINTER): INTEGER is
 		external
-			"C [macro %"wel_process_info.h%"] (PROCESS_INFORMATION*): EIF_INTEGER"
+			"C [macro %"wel_process_info.h%"] (PROCESS_INFORMATION*): DWORD"
 		end
 
-	cwel_process_info_set_process_handle (ptr: POINTER; a_handle: INTEGER) is
+	cwel_process_info_set_process_handle (ptr: POINTER; a_handle: POINTER) is
 		external
 			"C [macro %"wel_process_info.h%"] (PROCESS_INFORMATION*, HANDLE)"
 		end
 
-	cwel_process_info_set_thread_handle (ptr: POINTER; a_handle: INTEGER) is
+	cwel_process_info_set_thread_handle (ptr: POINTER; a_handle: POINTER) is
 		external
 			"C [macro %"wel_process_info.h%"] (PROCESS_INFORMATION*, HANDLE)"
 		end

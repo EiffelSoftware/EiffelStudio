@@ -129,7 +129,7 @@ feature -- Access
 			Result := cwel_startup_info_show_command (item)
 		end
 
-	std_input: INTEGER is
+	std_input: POINTER is
 			-- Standard input process handle
 		require
 			flag_has_startf_use_std_handles: flag_set (flags, Startf_use_std_handles)
@@ -137,7 +137,7 @@ feature -- Access
 			Result := cwel_startup_info_std_input (item)
 		end
 	
-	std_output: INTEGER is
+	std_output: POINTER is
 			-- Standard output process handle
 		require
 			flag_has_startf_use_std_handles: flag_set (flags, Startf_use_std_handles)
@@ -145,7 +145,7 @@ feature -- Access
 			Result := cwel_startup_info_std_output (item)
 		end
 
-	std_error: INTEGER is
+	std_error: POINTER is
 			-- Standard error output process handle
 		require
 			flag_has_startf_use_std_handles: flag_set (flags, Startf_use_std_handles)
@@ -273,7 +273,7 @@ feature -- Element Change
 			show_command_set: show_command = a_command
 		end
 	
-	set_std_input (an_input: INTEGER) is
+	set_std_input (an_input: POINTER) is
 			-- Set `std_input' with `an_input'.
 		do
 			cwel_startup_info_set_std_input (item, an_input)
@@ -281,7 +281,7 @@ feature -- Element Change
 			std_input_set: std_input = an_input
 		end
 	
-	set_std_output (an_output: INTEGER) is
+	set_std_output (an_output: POINTER) is
 			-- Set `std_output' with `an_output'.
 		do
 			cwel_startup_info_set_std_output (item, an_output)
@@ -289,7 +289,7 @@ feature -- Element Change
 			std_output_set: std_output = an_output
 		end
 	
-	set_std_error (an_error_output: INTEGER) is
+	set_std_error (an_error_output: POINTER) is
 			-- Set `std_error' with `an_error_output'.
 		do
 			cwel_startup_info_set_std_error (item, an_error_output)
@@ -377,19 +377,19 @@ feature {NONE} -- Externals
 			"C [macro %"wel_startup_info.h%"] (LPSTARTUPINFO): EIF_INTEGER"
 		end
 
-	cwel_startup_info_std_input (ptr: POINTER): INTEGER is
+	cwel_startup_info_std_input (ptr: POINTER): POINTER is
 		external
-			"C [macro %"wel_startup_info.h%"] (LPSTARTUPINFO): EIF_INTEGER"
+			"C [macro %"wel_startup_info.h%"] (LPSTARTUPINFO): HANDLE"
 		end
 
-	cwel_startup_info_std_output (ptr: POINTER): INTEGER is
+	cwel_startup_info_std_output (ptr: POINTER): POINTER is
 		external
-			"C [macro %"wel_startup_info.h%"] (LPSTARTUPINFO): EIF_INTEGER"
+			"C [macro %"wel_startup_info.h%"] (LPSTARTUPINFO): HANDLE"
 		end
 
-	cwel_startup_info_std_error (ptr: POINTER): INTEGER is
+	cwel_startup_info_std_error (ptr: POINTER): POINTER is
 		external
-			"C [macro %"wel_startup_info.h%"] (LPSTARTUPINFO): EIF_INTEGER"
+			"C [macro %"wel_startup_info.h%"] (LPSTARTUPINFO): HANDLE"
 		end
 
 	cwel_startup_info_set_title (ptr, a_title: POINTER) is
@@ -442,19 +442,19 @@ feature {NONE} -- Externals
 			"C [macro %"wel_startup_info.h%"] (LPSTARTUPINFO, DWORD)"
 		end
 
-	cwel_startup_info_set_std_input (ptr: POINTER; an_integer: INTEGER) is
+	cwel_startup_info_set_std_input (ptr: POINTER; an_integer: POINTER) is
 		external
-			"C [macro %"wel_startup_info.h%"] (LPSTARTUPINFO, DWORD)"
+			"C [macro %"wel_startup_info.h%"] (LPSTARTUPINFO, HANDLE)"
 		end
 
-	cwel_startup_info_set_std_output (ptr: POINTER; an_integer: INTEGER) is
+	cwel_startup_info_set_std_output (ptr: POINTER; an_integer: POINTER) is
 		external
-			"C [macro %"wel_startup_info.h%"] (LPSTARTUPINFO, DWORD)"
+			"C [macro %"wel_startup_info.h%"] (LPSTARTUPINFO, HANDLE)"
 		end
 
-	cwel_startup_info_set_std_error (ptr: POINTER; an_integer: INTEGER) is
+	cwel_startup_info_set_std_error (ptr: POINTER; an_integer: POINTER) is
 		external
-			"C [macro %"wel_startup_info.h%"] (LPSTARTUPINFO, DWORD)"
+			"C [macro %"wel_startup_info.h%"] (LPSTARTUPINFO, HANDLE)"
 		end
 
 end -- class WEL_STARTUP_INFO

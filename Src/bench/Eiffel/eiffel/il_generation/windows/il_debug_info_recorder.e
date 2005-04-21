@@ -1231,7 +1231,7 @@ feature {NONE}-- Implementation for save and load task
 								--| First, we check if the project didn't moved to a new location
 							if 
 								l_dbg_info_project_path /= Void and then 
-								not l_dbg_info_project_path.same_string (l_current_project_path)
+								not l_dbg_info_project_path.is_equal (l_current_project_path)
 							then
 									--| This is the current project, since it is not a precompilation
 									--| We need to update these data, since the location changed

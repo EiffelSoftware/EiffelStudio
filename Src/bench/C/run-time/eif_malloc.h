@@ -55,12 +55,21 @@ extern "C" {
 /*
  * Masks used on the ovs_size field.
  */
+#ifdef EIF_64_BITS
+#define B_SIZE		RTU64C(0x07ffffffffffffff)			/* Get the size of the block */
+#define B_BUSY		RTU64C(0x8000000000000000)			/* Block is not free */
+#define B_C			RTU64C(0x4000000000000000)			/* Block is a C block */
+#define B_LAST		RTU64C(0x2000000000000000)			/* Block is the last one in chunk */
+#define B_FWD		RTU64C(0x1000000000000000)			/* Forwarded Eiffel object */
+#define B_CTYPE		RTU64C(0x0800000000000000)			/* Block belongs to a C type chunk */
+#else
 #define B_SIZE		0x07ffffff			/* Get the size of the block */
 #define B_BUSY		0x80000000			/* Block is not free */
 #define B_C			0x40000000			/* Block is a C block */
 #define B_LAST		0x20000000			/* Block is the last one in chunk */
 #define B_FWD		0x10000000			/* Forwarded Eiffel object */
 #define B_CTYPE		0x08000000			/* Block belongs to a C type chunk */
+#endif
 #define B_NEW		(B_BUSY | B_C)		/* For newly created blocks */
 
 /*
@@ -81,7 +90,7 @@ RT_LNK EIF_REFERENCE special_malloc (uint32 flags, EIF_INTEGER nb, uint32 elemen
 RT_LNK EIF_REFERENCE tuple_malloc (uint32 ftype);	/* Allocated tuple object */
 RT_LNK EIF_REFERENCE tuple_malloc_specific (uint32 ftype, uint32 count, EIF_BOOLEAN atomic);	/* Allocated tuple object */
 RT_LNK EIF_REFERENCE smart_emalloc (uint32 ftype);
-RT_LNK EIF_REFERENCE spmalloc(unsigned int nbytes, EIF_BOOLEAN atomic);			/* Allocate an Eiffel special object */
+RT_LNK EIF_REFERENCE spmalloc(rt_uint_ptr nbytes, EIF_BOOLEAN atomic);			/* Allocate an Eiffel special object */
 RT_LNK EIF_REFERENCE sp_init (EIF_REFERENCE obj, uint32 dftype, EIF_INTEGER lower, EIF_INTEGER upper);	/* Initialize special object of expanded */
 
 RT_LNK EIF_REFERENCE strmalloc(unsigned int nbytes);		/* Allocate a string. */

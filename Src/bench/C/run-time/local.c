@@ -287,7 +287,7 @@ rt_private int extend(struct stack *stk)
 	 * made to get one from the urgent storage.
 	 */
 	RT_GET_CONTEXT
-	int size = STACK_CHUNK;	/* Size of new chunk to be added */
+	rt_uint_ptr size = STACK_CHUNK;	/* Size of new chunk to be added */
 	char **arena;				/* Address for the arena */
 	struct stchunk *chunk;	/* Address of the chunk */
 

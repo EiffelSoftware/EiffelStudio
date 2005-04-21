@@ -54,9 +54,9 @@ rt_private struct hash hclone;			/* Cloning hash table */
 #endif
 
 /* Function declarations */
-rt_private void rdeepclone(EIF_REFERENCE source, EIF_REFERENCE enclosing, int offset);			/* Recursive cloning */
+rt_private void rdeepclone(EIF_REFERENCE source, EIF_REFERENCE enclosing, rt_uint_ptr offset);			/* Recursive cloning */
 rt_private void expanded_update(EIF_REFERENCE source, EIF_REFERENCE target, int shallow_or_deep);		/* Expanded reference update */
-rt_private EIF_REFERENCE duplicate(EIF_REFERENCE source, EIF_REFERENCE enclosing, int offset);			/* Duplication with aging tests */
+rt_private EIF_REFERENCE duplicate(EIF_REFERENCE source, EIF_REFERENCE enclosing, rt_uint_ptr offset);			/* Duplication with aging tests */
 rt_private EIF_REFERENCE spclone(register EIF_REFERENCE source);/* Clone for special object */
 rt_private void spcopy(register EIF_REFERENCE source, register EIF_REFERENCE target);
 rt_private void tuple_copy(register EIF_REFERENCE source, register EIF_REFERENCE target);
@@ -121,7 +121,7 @@ rt_private EIF_REFERENCE spclone(EIF_REFERENCE source)
 	EIF_REFERENCE result;		/* Clone pointer */
 	union overhead *zone;		/* Pointer on source header */
 	uint32 flags;				/* Source object flags */
-	uint32 size;				/* Source object size */
+	rt_uint_ptr size;				/* Source object size */
 	EIF_REFERENCE s_ref, r_ref;
 
 	if ((EIF_REFERENCE) 0 == source)
@@ -274,7 +274,7 @@ rt_public EIF_REFERENCE rtclone(EIF_REFERENCE source)
 	return result;					/* Pointer to the cloned object */
 }
 
-rt_private EIF_REFERENCE duplicate(EIF_REFERENCE source, EIF_REFERENCE enclosing, int offset)
+rt_private EIF_REFERENCE duplicate(EIF_REFERENCE source, EIF_REFERENCE enclosing, rt_uint_ptr offset)
 			 		/* Object to be duplicated */
 					/* Object where attachment is made */
 		   			/* Offset within enclosing where attachment is made */
@@ -287,7 +287,7 @@ rt_private EIF_REFERENCE duplicate(EIF_REFERENCE source, EIF_REFERENCE enclosing
 	RT_GET_CONTEXT
 	union overhead *zone;			/* Malloc info zone */
 	uint32 flags;					/* Object's flags */
-	uint32 size;					/* Object's size */
+	rt_uint_ptr size;					/* Object's size */
 	EIF_REFERENCE *hash_zone;				/* Hash table entry recording duplication */
 	EIF_REFERENCE clone;					/* Where clone is allocated */
 
@@ -340,7 +340,7 @@ rt_private EIF_REFERENCE duplicate(EIF_REFERENCE source, EIF_REFERENCE enclosing
 	return clone;
 }
 
-rt_private void rdeepclone (EIF_REFERENCE source, EIF_REFERENCE enclosing, int offset)
+rt_private void rdeepclone (EIF_REFERENCE source, EIF_REFERENCE enclosing, rt_uint_ptr offset)
 			 			/* Source object to be cloned */
 						/* Object receiving clone */
 		   				/* Offset within enclosing where attachment is made */
@@ -521,7 +521,7 @@ rt_public void eif_std_ref_copy(register EIF_REFERENCE source, register EIF_REFE
 	union overhead *s_zone;	/* Source object header */
 	union overhead *t_zone;	/* Target object header */
 	EIF_REFERENCE enclosing;					/* Enclosing target object */
-	uint32 size;
+	rt_uint_ptr size;
 
 	s_zone = HEADER(source);
 	s_flags = s_zone->ov_flags;
@@ -577,7 +577,7 @@ rt_private void spcopy(register EIF_REFERENCE source, register EIF_REFERENCE tar
 	 * than count of `source'.
 	 */
 
-	uint32 field_size;
+	rt_uint_ptr field_size;
 #ifdef ISE_GC
 	uint32 flags;
 #endif
@@ -620,7 +620,7 @@ rt_private void tuple_copy(register EIF_REFERENCE source, register EIF_REFERENCE
 	 * as count of `source'.
 	 */
 
-	uint32 field_size;
+	rt_uint_ptr field_size;
 #ifdef ISE_GC
 	uint32 flags;
 #endif
@@ -677,12 +677,12 @@ rt_private void expanded_update(EIF_REFERENCE source, EIF_REFERENCE target, int 
 	EIF_REFERENCE s_reference;			/* Source reference */
 	EIF_REFERENCE t_enclosing;						/* Enclosing object */
 	EIF_REFERENCE s_enclosing;						/* Enclosing object */
-	int t_offset = 0;						/* Offset within target */
-	int s_offset = 0;						/* Offset within target */
-	int temp_offset = 0;					/* Offset within target */
-	int s_sub_offset = 0;					/* Subobject offset */
-	int offset1 = 0;						/* Offset within target */
-	int offset2 = 0;						/* Offset within target */
+	rt_uint_ptr t_offset = 0;						/* Offset within target */
+	rt_uint_ptr s_offset = 0;						/* Offset within target */
+	rt_uint_ptr temp_offset = 0;					/* Offset within target */
+	rt_uint_ptr s_sub_offset = 0;					/* Subobject offset */
+	rt_uint_ptr offset1 = 0;						/* Offset within target */
+	rt_uint_ptr offset2 = 0;						/* Offset within target */
 	EIF_REFERENCE t_expanded;
 	EIF_REFERENCE s_expanded;
 

@@ -249,7 +249,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	cwin_close_handle (a_handle: INTEGER) is
+	cwin_close_handle (a_handle: POINTER) is
 			-- SDK CloseHandle
 		external
 			"C [macro <winbase.h>] (HANDLE)"
@@ -267,14 +267,14 @@ feature {NONE} -- Externals
 			"CreateProcess"
 		end
 
-	cwin_wait_for_single_object (handle, type: INTEGER): INTEGER is
+	cwin_wait_for_single_object (handle: POINTER; type: INTEGER): INTEGER is
 		external
 			"C blocking macro signature (HANDLE, DWORD): EIF_INTEGER use <windows.h>"
 		alias
 			"WaitForSingleObject"
 		end
 		
-	cwin_exit_code_process (handle: INTEGER; ptr: POINTER): BOOLEAN is
+	cwin_exit_code_process (handle: POINTER; ptr: POINTER): BOOLEAN is
 		external
 			"C [macro <winbase.h>] (HANDLE, LPDWORD): EIF_BOOLEAN"
 		alias
@@ -297,7 +297,7 @@ feature {NONE} -- Externals
 			"INFINITE"
 		end
 
-	cwin_terminate_process (handle, exit_code: INTEGER): BOOLEAN is
+	cwin_terminate_process (handle: POINTER; exit_code: INTEGER): BOOLEAN is
 			-- SDK TerminateProcess
 		external
 			"C [macro <winbase.h>] (HANDLE, DWORD): EIF_BOOLEAN"

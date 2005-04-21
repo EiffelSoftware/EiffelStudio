@@ -377,6 +377,7 @@ feature -- Status setting
 			-- Enable tree functionality for `Current'.
 		require
 			not_destroyed: not is_destroyed
+			not_is_content_completely_dynamic: not is_content_completely_dynamic
 		do
 			implementation.enable_tree
 		ensure
@@ -655,6 +656,7 @@ feature -- Status setting
 			-- are displayed even if already contained in `Current'.
 		require
 			not_destroyed: not is_destroyed
+			not_is_tree_enabled: not is_tree_enabled
 		do
 			implementation.enable_complete_dynamic_content
 		ensure

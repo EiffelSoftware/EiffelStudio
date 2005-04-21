@@ -754,8 +754,8 @@
 								<File Id="eg_spring_energy_e" Name="EG_SPR~1.E" LongName="eg_spring_energy.e" />
 								<File Id="eg_spring_particle.e" Name="EG_SRI~1.E" LongName="eg_spring_particle.e" />
 								<File Id="particle_simulation_e" Name="PARTIC~1.E" LongName="particle_simulation.e" />
-								<File Id="vector_e" Name="vector.e" />
-								<File Id="vector2d_e" Name="vector2d.e" />
+								<File Id="eg_vector_e" Name="EG_VEC~1.E" LongName="eg_vector.e" />
+								<File Id="eg_vector2d_e" Name="EG_VEC~2.E" LongName="eg_vector2d.e" />
 							</Component>
 						</Directory>
 						<Directory Id="view" Name="view">
@@ -1510,6 +1510,12 @@
 							</Directory>
 							<Directory Id="items" Name="items">
 								<Component Id="ev_dynamic_tree_item.e" Guid="30D7A7BB-627D-4331-AA07-D61443405073">
+									<File Id="ev_drawable_grid_item_e" Name="EV_DRA~1.E" LongName="ev_drawable_grid_item.e" />
+									<File Id="ev_grid_column_e" Name="EV_GRI~1.E" LongName="ev_grid_column.e" />
+									<File Id="ev_grid_editable_item_e" Name="EV1ADD~1.E" LongName="ev_grid_editable_item.e" />
+									<File Id="ev_grid_item_e" Name="EV_GRI~2.E" LongName="ev_grid_item.e" />
+									<File Id="ev_grid_label_item_e" Name="EV_GRI~3.E" LongName="ev_grid_label_item.e" />
+									<File Id="ev_grid_row_e" Name="EV_GRI~4.E" LongName="ev_grid_row.e" />
 									<File Id="ev_dynamic_tree_item.e" Name="EV_DYN~1.E" LongName="ev_dynamic_tree_item.e" KeyPath="yes" />
 									<File Id="ev_tool_bar_separator.e" Name="EV_TOO~4.E" LongName="ev_tool_bar_separator.e" />
 									<File Id="ev_item.e" Name="ev_item.e" />
@@ -1628,6 +1634,11 @@
 							</Directory>
 							<Directory Id="events" Name="events">
 								<Component Id="V74" Guid="84A837D8-CA2B-4DD0-805C-16087257B979">
+									<File Id="ev_drawable_item_action_sequence_e" Name="EV_DRA~1.E" LongName="ev_drawable_item_action_sequence.e" />
+									<File Id="ev_grid_action_sequences_e" Name="EV_GRI~1.E" LongName="ev_grid_action_sequences.e" />
+									<File Id="ev_grid_item_action_sequence_e" Name="EV_GRI~2.E" LongName="ev_grid_item_action_sequence.e" />
+									<File Id="ev_grid_row_action_sequence_e" Name="EV_GRI~3.E" LongName="ev_grid_row_action_sequence.e" />
+									<File Id="ev_grid_row_action_sequences_e" Name="EV_GRI~4.E" LongName="ev_grid_row_action_sequences.e" />
 									<File Id="V74" Name="EV_STA~1.E" LongName="ev_standard_dialog_action_sequences.e" KeyPath="yes" />
 									<File Id="ev_application_action_sequences.e" Name="EV_APP~1.E" LongName="ev_application_action_sequences.e" />
 									<File Id="ev_combo_box_action_sequences.e" Name="EV_COM~1.E" LongName="ev_combo_box_action_sequences.e" />
@@ -1781,6 +1792,7 @@
 										<File Id="ev_vertical_separator.e" Name="EV_VER~4.E" LongName="ev_vertical_separator.e" KeyPath="yes" />
 										<File Id="ev_progress_bar.e" Name="EV_PRO~1.E" LongName="ev_progress_bar.e" />
 										<File Id="ev_gauge.e" Name="ev_gauge.e" />
+										<File Id="ev_grid.e" Name="ev_grid.e" />
 										<File Id="ev_combo_box.e" Name="EV_COM~2.E" LongName="ev_combo_box.e" />
 										<File Id="ev_vertical_scroll_bar.e" Name="EV_VER~6.E" LongName="ev_vertical_scroll_bar.e" />
 										<File Id="ev_toggle_button.e" Name="EV_TOG~1.E" LongName="ev_toggle_button.e" />
@@ -1979,6 +1991,7 @@
 									</Component>
 									<Directory Id="primitives" Name="PRIMIT~1" LongName="primitives">
 										<Component Id="ev_vertical_scroll_bar_imp.e" Guid="0214ED8B-48C9-4C4F-BB15-48BEB342621B">
+											<File Id="ev_grid_imp_e" Name="EV_GRI~1.E" LongName="ev_grid_imp.e" />
 											<File Id="ev_vertical_scroll_bar_imp.e" Name="EV_VER~3.E" LongName="ev_vertical_scroll_bar_imp.e" KeyPath="yes" />
 											<File Id="ev_primitive_imp.e" Name="EV_PRI~1.E" LongName="ev_primitive_imp.e" />
 											<File Id="ev_multi_column_list_imp.e" Name="EV_MUL~1.E" LongName="ev_multi_column_list_imp.e" />
@@ -2062,7 +2075,9 @@
 							<Directory Id="implementation_interface" Name="IMPLEM~4" LongName="implementation_interface">
 								<Directory Id="support29" Name="support">
 									<Component Id="ev_radio_peer_i.e" Guid="61129521-DECE-4CDF-B192-68A44AFA6C54">
-										<File Id="ev_radio_peer_i.e" Name="EV_RAD~2.E" LongName="ev_radio_peer_i.e" KeyPath="yes" />
+										<File Id="ev_grid_arrayed_list_e" Name="EV_GRI~1.E" LongName="ev_grid_arrayed_list.e" />
+										<File Id="ev_grid_drawer_i_e" Name="EV_GRI~2.E" LongName="ev_grid_drawer_i.e" />
+										<File Id="ev_radio_peer_i.e" Name="EV_RAD~2.E" LongName="ev_radio_peer_i.e" />
 										<File Id="ev_model_print_projector_i.e" Name="EV_MOD~1.E" LongName="ev_model_print_projector_i.e" />
 										<File Id="ev_tree_node_list_i.e" Name="EV_TRE~7.E" LongName="ev_tree_node_list_i.e" />
 										<File Id="ev_dynamic_list_i.e" Name="EV_DYN~5.E" LongName="ev_dynamic_list_i.e" />
@@ -2077,6 +2092,11 @@
 								</Directory>
 								<Directory Id="items30" Name="items">
 									<Component Id="ev_tree_node_i.e" Guid="9A970CF0-59DC-47BF-9C7B-4AB1D7380A03">
+										<File Id="ev_drawable_grid_item_i_e" Name="EV_DRA~1.E" LongName="ev_drawable_grid_item_i.e" />
+										<File Id="ev_grid_column_i_e" Name="EV_GRI~1.E" LongName="ev_grid_column_i.e" />
+										<File Id="ev_grid_item_i_e" Name="EV_GRI~2.E" LongName="ev_grid_item_i.e" />
+										<File Id="ev_grid_label_item_i_e" Name="EV_GRI~3.E" LongName="ev_grid_label_item_i.e" />
+										<File Id="ev_grid_row_i_e" Name="EV_GRI~4.E" LongName="ev_grid_row_i.e" />
 										<File Id="ev_tree_node_i.e" Name="EV_TRE~4.E" LongName="ev_tree_node_i.e" KeyPath="yes" />
 										<File Id="ev_simple_item_i.e" Name="EV_SIM~1.E" LongName="ev_simple_item_i.e" />
 										<File Id="ev_menu_bar_i.e" Name="EV_MEN~1.E" LongName="ev_menu_bar_i.e" />
@@ -2174,6 +2194,7 @@
 									</Component>
 									<Directory Id="primitives26" Name="PRIMIT~2" LongName="primitives">
 										<Component Id="ev_text_component_i.e" Guid="2C2428E0-BFAC-4356-9843-13581D99D264">
+											<File Id="ev_grid_i_e" Name="EV_GRI~1.E" LongName="ev_grid_i.e" />
 											<File Id="ev_text_component_i.e" Name="EV_TEX~1.E" LongName="ev_text_component_i.e" KeyPath="yes" />
 											<File Id="ev_password_field_i.e" Name="EV_PAS~1.E" LongName="ev_password_field_i.e" />
 											<File Id="ev_gauge_i.e" Name="EV_GAU~2.E" LongName="ev_gauge_i.e" />
@@ -2314,6 +2335,7 @@
 								</Component>
 							</Directory>
 							<Component Id="wel_system_parameters_info.e" Guid="BC44338C-CBE7-4DF8-A3C6-8BAFA5824038">
+								<File Id="wel_abstract_dispatcher_e" Name="WEL_AB~1.E" LongName="wel_abstract_dispatcher.e" />
 								<File Id="wel_c_externals.e" Name="WEL_C_~1.E" LongName="wel_c_externals.e" />
 								<File Id="wel_system_parameters_info.e" Name="WEL_SY~2.E" LongName="wel_system_parameters_info.e" KeyPath="yes" />
 								<File Id="wel_data_type.e" Name="WEL_DA~1.E" LongName="wel_data_type.e" />

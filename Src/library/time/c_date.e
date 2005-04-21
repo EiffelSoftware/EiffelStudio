@@ -44,29 +44,31 @@ feature -- Update
 	update is
 			-- Pointer to `struct tm' area.
 		local
-			l_timeb, l_tm: POINTER
-			l_time: INTEGER
+			l_timeb, l_tm, l_time: POINTER
+			l_milli: INTEGER
 		do
 			l_timeb := l_timeb.memory_alloc (timeb_structure_size)
+			l_time := l_time.memory_alloc (time_t_structure_size)
 			ftime (l_timeb)
-			l_time := get_time (l_timeb)
+			get_time (l_timeb, l_time)
 			if is_utc then
-				l_tm := gmtime ($l_time)
+				l_tm := gmtime (l_time)
 			else
-				l_tm := localtime ($l_time)
+				l_tm := localtime (l_time)
 			end
 			create internal_item.make_from_pointer (l_tm, tm_structure_size)
 			
-			l_time := get_millitm (l_timeb)
-			if l_time < 0 or l_time > 999 then
+			l_milli := get_millitm (l_timeb)
+			if l_milli < 0 or l_milli > 999 then
 				millisecond_now := 0
 			else
-				millisecond_now := l_time
+				millisecond_now := l_milli
 			end
 			
 			l_timeb.memory_free
+			l_time.memory_free
 		end
-		
+
 feature -- Status
 
 	year_now: INTEGER is
@@ -140,8 +142,16 @@ feature {NONE} -- `struct timeb' encapsulation
 			"C macro use <sys/timeb.h>"
 		alias
 			"sizeof(struct timeb)"
+		end	
+
+	time_t_structure_size: INTEGER is
+			-- Size of `struct timeb'.
+		external
+			"C macro use <time.h>"
+		alias
+			"sizeof(time_t)"
 		end
-		
+
 	tm_structure_size: INTEGER is
 			-- Size of `struct tm'.
 		external
@@ -156,10 +166,12 @@ feature {NONE} -- `struct timeb' encapsulation
 			"C struct struct timeb access millitm use <sys/timeb.h>"
 		end
 
-	get_time (p: POINTER): INTEGER is
+	get_time (p, t: POINTER) is
 			-- Get `p->time'.
 		external
-			"C struct struct timeb access time use <sys/timeb.h>"
+			"C inline use <sys/timeb.h>, <time.h>"
+		alias
+			"*(time_t *) $t = (((struct timeb *)$p)->time);"
 		end
 		
 feature {NONE} -- `struct tm' encapsulation
@@ -167,20 +179,20 @@ feature {NONE} -- `struct tm' encapsulation
 	internal_item: MANAGED_POINTER
 			-- Pointer to `struct tm' area.
 	
-	localtime (i: TYPED_POINTER [INTEGER]): POINTER is
+	localtime (t: POINTER): POINTER is
 			-- Pointer to `struct tm' area.
 		external
-			"C macro signature (time_t *): struct tm * use <time.h>"
+			"C inline use <time.h>"
 		alias
-			"localtime"
+			"localtime ((time_t *) $t)"
 		end
-
-	gmtime (i: TYPED_POINTER [INTEGER]): POINTER is
+		
+	gmtime (t: POINTER): POINTER is
 			-- Pointer to `struct tm' area in UTC.
 		external
-			"C macro signature (time_t *): struct tm * use <time.h>"
+			"C inline use <time.h>"
 		alias
-			"gmtime"
+			"gmtime ((time_t *) $t)"
 		end
 		
 	get_tm_year (p: POINTER): INTEGER is

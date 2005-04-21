@@ -330,7 +330,6 @@ feature -- Basic operations
 			vertical_node_pixmap_bottom_offset: INTEGER
 			horizontal_node_pixmap_left_offset: INTEGER
 			node_pixmap_vertical_center: INTEGER
-			row_node_clipped: BOOLEAN
 			l_x_start, l_x_end: INTEGER
 			current_horizontal_pos: INTEGER
 			loop_current_row, loop_parent_row: EV_GRID_ROW_I
@@ -549,15 +548,6 @@ feature -- Basic operations
 									-- and it is only now that we are filling the row.
 								if drawing_parentrow or (drawing_subrow) then
 									current_subrow_indent := subrow_indent (current_row)
-								
---									if current_row.index_of_first_item = 0 then
---											-- In this case the subrow has no first item, so we set the indent
---											-- to one large enough to show the horizontal lines all the way off to the
---											-- right hand side of the grid.
---										current_subrow_indent := grid.viewable_width + 100
---									else	
---										current_subrow_indent := grid.item_indent (grid.item (current_row.index_of_first_item, current_row.index).implementation)
---									end
 								else
 									current_subrow_indent := 0
 								end
@@ -565,9 +555,6 @@ feature -- Basic operations
 							
 							if grid_item_exists then
 									-- An item has been retrieved for the current drawing position so draw it.
-									
-							row_node_clipped := current_subrow_indent - standard_subrow_indent > column_offsets @ (node_index + 1)
-								-- Has the node of `Current' been clipped?
 									
 								if current_column_index = 1 then
 										-- If we are drawing the first row then we must ensure that
@@ -609,7 +596,7 @@ feature -- Basic operations
 											end
 
 											-- If the indent of the tree is less than `current_column_width', it must be visible so draw it.
-										if current_row.is_expandable and not row_node_clipped then
+										if current_row.is_expandable then
 												-- Note we add 1 to account for rounding errors when odd values.
 											if current_row.is_expanded then
 												l_pixmap := collapse_pixmap

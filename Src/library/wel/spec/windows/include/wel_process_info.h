@@ -14,10 +14,10 @@ extern "C" {
 #define cwel_process_info_set_process_id(_ptr_, _value_) (((PROCESS_INFORMATION *) _ptr_)->dwProcessId = (DWORD) (_value_))
 #define cwel_process_info_set_thread_id(_ptr_, _value_) (((PROCESS_INFORMATION *) _ptr_)->dwThreadId = (DWORD) (_value_))
 
-#define cwel_process_info_get_process_handle(_ptr_) ((EIF_INTEGER)(((PROCESS_INFORMATION *) _ptr_)->hProcess))
-#define cwel_process_info_get_thread_handle(_ptr_) ((EIF_INTEGER)(((PROCESS_INFORMATION *) _ptr_)->hThread))
-#define cwel_process_info_get_process_id(_ptr_) ((EIF_INTEGER)(((PROCESS_INFORMATION *) _ptr_)->dwProcessId))
-#define cwel_process_info_get_thread_id(_ptr_) ((EIF_INTEGER)(((PROCESS_INFORMATION *) _ptr_)->dwThreadId))
+#define cwel_process_info_get_process_handle(_ptr_) (((PROCESS_INFORMATION *) _ptr_)->hProcess)
+#define cwel_process_info_get_thread_handle(_ptr_) (((PROCESS_INFORMATION *) _ptr_)->hThread)
+#define cwel_process_info_get_process_id(_ptr_) (((PROCESS_INFORMATION *) _ptr_)->dwProcessId)
+#define cwel_process_info_get_thread_id(_ptr_) (((PROCESS_INFORMATION *) _ptr_)->dwThreadId)
 
 #ifdef __cplusplus
 }

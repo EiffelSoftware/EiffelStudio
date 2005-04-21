@@ -435,21 +435,9 @@ feature -- Basic operations
 							if drawing_subrow or drawing_parentrow then
 								-- We are now about to draw a row that is a subrow of another row, so
 								-- perform any calculations required.
-								if current_row_list.count /= 0 then
-									from
-										counter := 0
-										node_index := 0
-									until
-										node_index > 0
-									loop
-										if current_row_list @ counter /= Void then
-											node_index := counter + 1
-										end
-										counter := counter + 1
-									end
-								else
-									node_index := 1
-								end
+								
+								node_index := retrieve_node_index (current_row_list)
+								
 								if drawing_subrow then
 									parent_row_list := grid.row_list @ (current_row.parent_row_i.index - 1)
 									
@@ -542,6 +530,12 @@ feature -- Basic operations
 									grid.set_item (visible_column_indexes.item, visible_row_indexes.item, grid_item.interface)
 									grid_item_exists := True
 								end
+								
+								
+									-- We now recompute settings that are dependent on the items in the
+									-- row. As we are in dynamic mode, we perform certain recomputation
+									-- as the items contained may have changed/just been added for the first time.
+								
 									-- Now if in dynamic mode, we must recompute `current_subrow_indent' as
 									-- the originally computed version is probably incorrect.
 									-- This is due to the fact that the row may well have been empty up until this point
@@ -550,6 +544,20 @@ feature -- Basic operations
 									current_subrow_indent := subrow_indent (current_row)
 								else
 									current_subrow_indent := 0
+								end
+									-- Now calculate the index of the first item in the row.
+								if drawing_subrow or drawing_parentrow then
+									-- We are now about to draw a row that is a subrow of another row, so
+									-- perform any calculations required.
+									
+									-- We must retrieve `current_row_list' as the process of inserting the
+									-- item into the structure causes the obejcts to change.
+									-- See the implementation of `internal_set_item' from EV_GRID_I which
+									-- calls `enlarge_row'.
+									current_row_list := grid.row_list @ (current_row_index - 1)	
+									
+										-- Now retrieve the new node index.
+									node_index := retrieve_node_index (current_row_list)
 								end
 							end
 							
@@ -732,7 +740,7 @@ feature -- Basic operations
 									-- parent background color.
 								grid.drawable.set_foreground_color (grid.background_color)
 								grid.drawable.fill_rectangle (current_item_x_position, current_item_y_position, current_column_width, current_row_height)
-								if are_tree_node_connectors_shown and (drawing_subrow or drawing_parentrow) and current_column_index < node_index and current_column_index >= parent_node_index then
+								if are_tree_node_connectors_shown and (drawing_subrow or drawing_parentrow) and current_column_index <= node_index and current_column_index >= parent_node_index then
 									
 										-- We must now draw the lines for the tree structure, as although there is no item
 										-- at this location in the grid, a tree line may cross it horizontally.
@@ -816,6 +824,35 @@ feature -- Basic operations
 		ensure
 			result_non_negative: Result >= 0
 		end
+		
+	retrieve_node_index (current_row_list: SPECIAL [EV_GRID_ITEM_I]): INTEGER is
+			-- `Result' is index of first non-`Void' item within `current_row_list'
+			-- or `grid.column_count' if none.
+		require
+			current_row_list_not_void: current_row_list /= Void
+		local
+			counter: INTEGER
+		do
+			if current_row_list.count /= 0 then
+				from
+					counter := 0
+					Result := 0
+				until
+					Result > 0
+				loop
+					if current_row_list @ counter /= Void then
+						Result := counter + 1
+					end
+					counter := counter + 1
+				end
+			else
+				Result := grid.column_count
+			end
+		ensure
+			result_positive: Result > 0
+			result_set_to_count_if_row_list_empty: current_row_list.count = 0 implies Result = grid.column_count
+		end
+		
 
 	white: EV_COLOR is
 			-- Once access to the color white.

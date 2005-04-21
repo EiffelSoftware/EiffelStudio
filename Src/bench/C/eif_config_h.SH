@@ -666,5 +666,8 @@ $inttypes_include
 /* Is Solaris platform? */
 #$eif_solaris	EIF_SOLARIS		/* NC */
 
+/* Is 64 bits platform? */
+#$eif_64_bits	EIF_64_BITS		/* NC */
+
 #endif
 !GROK!THIS!

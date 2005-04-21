@@ -291,7 +291,7 @@ feature -- Debugging session Termination ...
 			is_debugging: is_debugging
 		local
 			l_controller: ICOR_DEBUG_CONTROLLER
-			l_pro_hdl: INTEGER
+			l_pro_hdl: POINTER
 			l_success: BOOLEAN
 		do
 			eif_debug_display ("[EIFDBG] terminate debugging")

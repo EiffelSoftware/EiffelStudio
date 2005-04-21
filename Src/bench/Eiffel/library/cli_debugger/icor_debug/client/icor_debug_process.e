@@ -26,7 +26,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
-	get_handle: INTEGER is
+	get_handle: POINTER is
 			-- GetHandle returns a handle to the process
 		do
 			last_call_success := cpp_get_handle (item, $Result)

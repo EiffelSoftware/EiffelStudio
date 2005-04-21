@@ -49,7 +49,7 @@ feature -- dispose
 		
 feature -- Enumerating collections
 
-	close_enum (a_enum_hdl: INTEGER) is
+	close_enum (a_enum_hdl: POINTER) is
 			-- Frees the memory previously allocated for the enumeration.
 			-- Note that the hEnum argument is that obtained from a previous
 			-- EnumXXX call (for example, EnumTypeDefs) 
@@ -57,7 +57,7 @@ feature -- Enumerating collections
 			cpp_close_enum (item, a_enum_hdl)
 		end
 
-	count_enum (a_enum_hdl: INTEGER): INTEGER is
+	count_enum (a_enum_hdl: POINTER): INTEGER is
 			-- Returns the number of items in the enumeration. 
 			-- Note that the hEnum argument is that obtained from a previous
 			-- EnumXXX call (for example, EnumTypeDefs). 
@@ -65,7 +65,7 @@ feature -- Enumerating collections
 			last_call_success := cpp_count_enum (item, a_enum_hdl, $Result)
 		end	
 		
-	reset_enum (a_enum_hdl: INTEGER; a_pos: INTEGER) is
+	reset_enum (a_enum_hdl: POINTER; a_pos: INTEGER) is
 			-- Nb: 
 			-- Reset the enumeration to the position specified by pulCount.
 			-- So, if you reset the enumeration to the value 5, say,
@@ -77,7 +77,7 @@ feature -- Enumerating collections
 			last_call_success := cpp_reset_enum (item, a_enum_hdl, a_pos)
 		end
 
-	enum_type_defs (a_enum_hdl: TYPED_POINTER [INTEGER]; a_typedef: INTEGER; a_max_count: INTEGER): ARRAY [INTEGER] is
+	enum_type_defs (a_enum_hdl: TYPED_POINTER [POINTER]; a_typedef: INTEGER; a_max_count: INTEGER): ARRAY [INTEGER] is
 			-- Enumerates all TypedDefs within the current scope.  
 			-- Note: the collection will contain Classes, Interfaces, etc,
 			-- as well as any TypeDefs added via an extensibility mechanism.
@@ -98,7 +98,7 @@ feature -- Enumerating collections
 			end
 		end
 		
-	enum_interface_impls (a_enum_hdl: TYPED_POINTER [INTEGER]; a_typedef: INTEGER; a_size: INTEGER): ARRAY [INTEGER] is
+	enum_interface_impls (a_enum_hdl: TYPED_POINTER [POINTER]; a_typedef: INTEGER; a_size: INTEGER): ARRAY [INTEGER] is
 			-- Enumerates all interfaces implemented by the specified TypeDef.  
 			-- Tokens will be returned in the order the interfaces were specified 
 			-- (through DefineTypeDef or SetTypeDefProps).
@@ -120,7 +120,7 @@ feature -- Enumerating collections
 			end
 		end
 		
-	enum_members (a_enum_hdl: TYPED_POINTER [INTEGER]; a_typedef: INTEGER; a_max_count: INTEGER): ARRAY [INTEGER] is
+	enum_members (a_enum_hdl: TYPED_POINTER [POINTER]; a_typedef: INTEGER; a_max_count: INTEGER): ARRAY [INTEGER] is
 			-- Enumerates all members (fields and methods, but not properties or events)
 			-- defined by the class specified by cl.  
 			-- This does not include any members inherited by that class;
@@ -142,7 +142,7 @@ feature -- Enumerating collections
 			end
 		end
 
-	enum_methods (a_enum_hdl: TYPED_POINTER [INTEGER]; a_typedef: INTEGER; a_max_count: INTEGER): ARRAY [INTEGER] is
+	enum_methods (a_enum_hdl: TYPED_POINTER [POINTER]; a_typedef: INTEGER; a_max_count: INTEGER): ARRAY [INTEGER] is
 			-- Enumerates all methods defined by the specified TypeDef.  
 			-- Tokens are returned in the same order they were emitted.  
 			-- If you supply a nil token for the cl argument the method will enumerate
@@ -164,7 +164,7 @@ feature -- Enumerating collections
 			end
 		end
 
-	enum_fields (a_enum_hdl: TYPED_POINTER [INTEGER]; a_typedef: INTEGER; a_max_count: INTEGER): ARRAY [INTEGER] is
+	enum_fields (a_enum_hdl: TYPED_POINTER [POINTER]; a_typedef: INTEGER; a_max_count: INTEGER): ARRAY [INTEGER] is
 			-- Enumerates all fields defined on a specified TypeDef.  
 			-- The tokens are returned in the same order as originally emitted into metadata.
 			-- If you specify cl as nil, the method will enumerate all the global
@@ -187,7 +187,7 @@ feature -- Enumerating collections
 			end
 		end
 
-	enum_params (a_enum_hdl: TYPED_POINTER [INTEGER]; a_typedef: INTEGER; a_max_count: INTEGER): ARRAY [INTEGER] is
+	enum_params (a_enum_hdl: TYPED_POINTER [POINTER]; a_typedef: INTEGER; a_max_count: INTEGER): ARRAY [INTEGER] is
 			-- Enumerates all attributed parameters for the method specified by md.  
 			-- By attributed parameters, we mean those parameters of a method 
 			-- which have been explicitly defined via a call to DefineParam
@@ -381,7 +381,7 @@ feature -- Status
 
 feature {NONE} -- Implementation Enum...
 
-	frozen cpp_close_enum (obj: POINTER; a_enum_hdl: INTEGER) is
+	frozen cpp_close_enum (obj: POINTER; a_enum_hdl: POINTER) is
 		external
 			"[
 				C++ IMetaDataImport signature(HCORENUM) 
@@ -391,7 +391,7 @@ feature {NONE} -- Implementation Enum...
 			"CloseEnum"
 		end	
 
-	frozen cpp_count_enum (obj: POINTER; a_enum_hdl: INTEGER; r_count: TYPED_POINTER [INTEGER]): INTEGER is
+	frozen cpp_count_enum (obj: POINTER; a_enum_hdl: POINTER; r_count: TYPED_POINTER [INTEGER]): INTEGER is
 		external
 			"[
 				C++ IMetaDataImport signature(HCORENUM, ULONG*): EIF_INTEGER 
@@ -401,7 +401,7 @@ feature {NONE} -- Implementation Enum...
 			"CountEnum"
 		end		
 
-	frozen cpp_reset_enum (obj: POINTER; a_enum_hdl: INTEGER; a_pos: INTEGER): INTEGER is
+	frozen cpp_reset_enum (obj: POINTER; a_enum_hdl: POINTER; a_pos: INTEGER): INTEGER is
 		external
 			"[
 				C++ IMetaDataImport signature(HCORENUM, ULONG): EIF_INTEGER 
@@ -411,7 +411,7 @@ feature {NONE} -- Implementation Enum...
 			"ResetEnum"
 		end	
 
-	frozen cpp_enum_type_defs (obj: POINTER; a_enum_hdl_p: TYPED_POINTER [INTEGER]; r_typedefs: POINTER; a_max: INTEGER; r_typedefs_count: POINTER): INTEGER is
+	frozen cpp_enum_type_defs (obj: POINTER; a_enum_hdl_p: TYPED_POINTER [POINTER]; r_typedefs: POINTER; a_max: INTEGER; r_typedefs_count: POINTER): INTEGER is
 		external
 			"[
 				C++ IMetaDataImport signature(HCORENUM*, mdTypeDef*, ULONG, ULONG*): EIF_INTEGER 
@@ -421,7 +421,7 @@ feature {NONE} -- Implementation Enum...
 			"EnumTypeDefs"
 		end	
 
-	frozen cpp_enum_interface_impls (obj: POINTER; a_enum_hdl_p: TYPED_POINTER [INTEGER]; a_typedef: INTEGER; r_tokens: POINTER; a_tokens_size: INTEGER; r_tokens_count: TYPED_POINTER [INTEGER]): INTEGER is
+	frozen cpp_enum_interface_impls (obj: POINTER; a_enum_hdl_p: TYPED_POINTER [POINTER]; a_typedef: INTEGER; r_tokens: POINTER; a_tokens_size: INTEGER; r_tokens_count: TYPED_POINTER [INTEGER]): INTEGER is
 		external
 			"[
 				C++ IMetaDataImport signature(HCORENUM*, mdTypeDef, mdInterfaceImpl*, ULONG, ULONG*): EIF_INTEGER 
@@ -431,7 +431,7 @@ feature {NONE} -- Implementation Enum...
 			"EnumInterfaceImpls"
 		end	
 
-	frozen cpp_enum_members (obj: POINTER; a_enum_hdl_p: TYPED_POINTER [INTEGER]; a_typedef: INTEGER; r_tokens: POINTER; a_max: INTEGER; r_tokens_count: TYPED_POINTER [INTEGER]): INTEGER is
+	frozen cpp_enum_members (obj: POINTER; a_enum_hdl_p: TYPED_POINTER [POINTER]; a_typedef: INTEGER; r_tokens: POINTER; a_max: INTEGER; r_tokens_count: TYPED_POINTER [INTEGER]): INTEGER is
 		external
 			"[
 				C++ IMetaDataImport signature(HCORENUM*, mdTypeDef, mdToken*, ULONG, ULONG*): EIF_INTEGER 
@@ -441,7 +441,7 @@ feature {NONE} -- Implementation Enum...
 			"EnumMembers"
 		end	
 
-	frozen cpp_enum_methods (obj: POINTER; a_enum_hdl_p: TYPED_POINTER [INTEGER]; a_typedef: INTEGER; r_methods: POINTER; a_max: INTEGER; r_tokens_count: TYPED_POINTER [INTEGER]): INTEGER is
+	frozen cpp_enum_methods (obj: POINTER; a_enum_hdl_p: TYPED_POINTER [POINTER]; a_typedef: INTEGER; r_methods: POINTER; a_max: INTEGER; r_tokens_count: TYPED_POINTER [INTEGER]): INTEGER is
 		external
 			"[
 				C++ IMetaDataImport signature(HCORENUM*, mdTypeDef, mdMethodDef*, ULONG, ULONG*): EIF_INTEGER 
@@ -451,7 +451,7 @@ feature {NONE} -- Implementation Enum...
 			"EnumMethods"
 		end	
 
-	frozen cpp_enum_fields (obj: POINTER; a_enum_hdl_p: TYPED_POINTER [INTEGER]; a_typedef: INTEGER; r_fields: POINTER; a_max: INTEGER; r_tokens_count: TYPED_POINTER [INTEGER]): INTEGER is
+	frozen cpp_enum_fields (obj: POINTER; a_enum_hdl_p: TYPED_POINTER [POINTER]; a_typedef: INTEGER; r_fields: POINTER; a_max: INTEGER; r_tokens_count: TYPED_POINTER [INTEGER]): INTEGER is
 		external
 			"[
 				C++ IMetaDataImport signature(HCORENUM*, mdTypeDef, mdFieldDef*, ULONG, ULONG*): EIF_INTEGER 
@@ -461,7 +461,7 @@ feature {NONE} -- Implementation Enum...
 			"EnumFields"
 		end	
 
-	frozen cpp_enum_params (obj: POINTER; a_enum_hdl_p: TYPED_POINTER [INTEGER]; a_typedef: INTEGER; r_params: POINTER; a_max: INTEGER; r_tokens_count: TYPED_POINTER [INTEGER]): INTEGER is
+	frozen cpp_enum_params (obj: POINTER; a_enum_hdl_p: TYPED_POINTER [POINTER]; a_typedef: INTEGER; r_params: POINTER; a_max: INTEGER; r_tokens_count: TYPED_POINTER [INTEGER]): INTEGER is
 		external
 			"[
 				C++ IMetaDataImport signature(HCORENUM*, mdMethodDef, mdParamDef*, ULONG, ULONG*): EIF_INTEGER 

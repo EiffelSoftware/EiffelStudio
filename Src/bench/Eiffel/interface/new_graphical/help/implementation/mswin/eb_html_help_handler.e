@@ -6,7 +6,7 @@ class
 
 feature -- Access
 
-	help_window_handle: INTEGER
+	help_window_handle: POINTER
 			-- Handle to help window
 
 feature -- Status Report
@@ -20,7 +20,7 @@ feature -- Status Report
 	last_show_successful: BOOLEAN is
 			-- Was last call to `show' successful?
 		do
-			Result := help_window_handle /= 0
+			Result := help_window_handle /= default_pointer
 		end
 
 feature -- Basic Operations
@@ -35,10 +35,10 @@ feature -- Basic Operations
 
 feature {NONE} -- Externals
 
-	cwin_html_help (hwnd, pszFile: POINTER; command: INTEGER; data: POINTER): INTEGER is
+	cwin_html_help (hwnd, pszFile: POINTER; command: INTEGER; data: POINTER): POINTER is
 			-- Help Workshop `HtmlHelp' API.
 		external
-			"C [macro %"Htmlhelp.h%"] (HWND, LPCSTR, UINT, DWORD): EIF_INTEGER"
+			"C [macro %"Htmlhelp.h%"] (HWND, LPCSTR, UINT, DWORD_PTR): HWND"
 		alias
 			"HtmlHelp"
 		end

@@ -80,7 +80,7 @@ feature {ICOR_EXPORTER} -- Access
 				l_hr := {ICOR_DEBUG_PROCESS}.cpp_get_handle (icordebug_process, $last_icor_debug_process_handle)
 			else
 				last_icor_debug_process_id     := 0
-				last_icor_debug_process_handle := 0
+				last_icor_debug_process_handle := default_pointer
 			end
 		end
 
@@ -236,7 +236,7 @@ feature { EIFNET_DEBUGGER} -- Implementation exported to EIFNET_DEBUGGER
 
 feature -- ICorDebugProcess handle
 
-	last_icor_debug_process_handle: INTEGER
+	last_icor_debug_process_handle: POINTER
 			-- Handle on the process debugged
 
 	last_icor_debug_process_id: INTEGER

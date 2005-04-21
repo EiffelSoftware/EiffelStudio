@@ -86,7 +86,7 @@ feature -- Evaluation
 				--| Compute and get `expression_byte_node'
 			get_expression_byte_node
 
-			l_error_occurred := error_occurred
+			l_error_occurred := error_occurred or expression_byte_node = Void
 				--| FIXME jfiat 2004-12-09 : check if this is a true error or not ..
 				-- and if this is handle later or not
 			if on_context then
@@ -906,14 +906,19 @@ feature -- Context
 
 	dbg_expression: DBG_EXPRESSION_B
 
-	context_feature: E_FEATURE
+	context_feature: FEATURE_I
+
+	Default_context_feature: FEATURE_I is
+		once
+			Result := System.Any_class.compiled_class.feature_named ("default_create")
+		end
 	
 feature -- Change Context
 
 	init_context_with_current_callstack is
 		local
 			cse: EIFFEL_CALL_STACK_ELEMENT
-			cf: E_FEATURE
+			cf: FEATURE_I
 		do
 			cse ?= Application.status.current_call_stack_element
 			if cse = Void then
@@ -921,7 +926,7 @@ feature -- Change Context
 					False -- Shouldn't occur.
 				end
 			else
-				cf := cse.routine
+				cf := cse.routine.associated_feature_i
 				set_context_data (cf, cse.dynamic_class, cse.dynamic_type)
 				context_address := cse.object_address
 			end
@@ -933,23 +938,19 @@ feature -- Change Context
 --			c_not_void: c /= Void
 		local
 			l_reset_byte_node: BOOLEAN
-			f_i: FEATURE_I
-			c_f_i: FEATURE_I
 			c_c_t: CLASS_TYPE
 		do
 			if c /= Void then
-				if f /= Void then
-					f_i := f.associated_feature_i
-				end
-				if context_feature /= Void then
-					c_f_i := context_feature.associated_feature_i
-				end
 				if 
-					f_i /= c_f_i
+					f /= context_feature
 				then
 					context_feature := f
 					l_reset_byte_node := True
 				end
+				if context_feature = Void then
+					context_feature := Default_context_feature
+				end
+
 				if not equal (context_class, c) then
 					context_class := c
 					l_reset_byte_node := True
@@ -981,7 +982,7 @@ feature -- Access
 			end
 		end
 
-	is_condition (f: E_FEATURE): BOOLEAN is
+	is_condition (f: FEATURE_I): BOOLEAN is
 			-- Is `Current' a condition (boolean query) in the context of `f'?
 		local
 			old_context_feature: like context_feature
@@ -996,9 +997,12 @@ feature -- Access
 			old_context_class_type := context_class_type			
 			old_int_expression_byte_note := internal_expression_byte_node
 			
+				--| Removed any potential error due to previous evaluation
+			error_handler.wipe_out
+
 				--| prepare context
 				--| this may reset the `expression_byte_node' value
-			set_context_data (f, f.associated_class, Void)
+			set_context_data (f, f.written_class, Void)
 
 				--| Get expression_byte_node
 			get_expression_byte_node
@@ -1046,7 +1050,6 @@ feature {NONE} -- Implementation
 			
 			l_ct_locals: HASH_TABLE [LOCAL_INFO, STRING]
 			f_as: FEATURE_AS
-			l_fi: FEATURE_I
 			l_byte_code: BYTE_CODE
 			l_ta: CL_TYPE_A
 			bak_byte_code: BYTE_CODE
@@ -1065,7 +1068,7 @@ feature {NONE} -- Implementation
 							print ("%T%T context_address : " + context_address.out +"%N")						
 						end
 						if context_feature /= Void then
-							print ("%T%T context_feature : " + context_feature.name +"%N")
+							print ("%T%T context_feature : " + context_feature.feature_name +"%N")
 						end
 					end
 						--| If we want to recompute the `expression_byte_node', 
@@ -1086,19 +1089,16 @@ feature {NONE} -- Implementation
 			
 						if on_context and then context_feature /= Void then
 								--| Locals
-							f_as := context_feature.ast
-							l_fi := context_feature.associated_feature_i
+							f_as := context_feature.body
 
-							Ast_context.set_current_feature (l_fi)
+							Ast_context.set_current_feature (context_feature)
 			
 								--| FIXME jfiat [2004/10/16] : Seems pretty heavy computing ..
-							l_byte_code := l_fi.byte_server.item (context_feature.body_index)
+							l_byte_code := context_feature.byte_server.item (context_feature.body_index)
 							Byte_context.set_byte_code (l_byte_code)
 							
-							if l_fi /= Void then
-								l_ct_locals := locals_builder.local_table (l_fi, f_as)
-								Ast_context.set_locals (l_ct_locals)
-							end
+							l_ct_locals := locals_builder.local_table (context_feature, f_as)
+							Ast_context.set_locals (l_ct_locals)
 						end
 							--| Compute and get `expression_byte_node'
 						internal_expression_byte_node := expression_byte_node_from_ast (dbg_expression.expression_ast)
@@ -1135,7 +1135,7 @@ feature {NONE} -- Implementation
 				error_handler.wipe_out
 				Ast_context.set_is_ignoring_export (True)
 				feature_checker.init (ast_context)
-				feature_checker.expression_type_check_and_code (context_feature.associated_feature_i, exp)
+				feature_checker.expression_type_check_and_code (context_feature, exp)
 				Ast_context.set_is_ignoring_export (False)
 				
 				if error_handler.has_error then

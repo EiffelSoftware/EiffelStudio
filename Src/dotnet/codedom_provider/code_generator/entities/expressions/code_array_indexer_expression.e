@@ -68,7 +68,7 @@ feature -- Status Report
 	type: CODE_TYPE_REFERENCE is
 			-- Type
 		local
-			l_type: SYSTEM_TYPE
+			l_type: TYPE
 		do
 			l_type := target.type.dotnet_type
 			if l_type /= Void then

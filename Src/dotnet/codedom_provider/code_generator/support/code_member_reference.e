@@ -120,7 +120,7 @@ feature -- Access
 		require
 			is_external: not Resolver.is_generated (implementing_type)
 		local
-			l_type: SYSTEM_TYPE
+			l_type: TYPE
 		do
 			l_type := implementing_type.dotnet_type
 			if l_type /= Void then
@@ -136,7 +136,7 @@ feature -- Access
 		require
 			initialized: is_initialized
 		local
-			l_type: SYSTEM_TYPE
+			l_type: TYPE
 		do
 			if internal_eiffel_name = Void then
 				if Resolver.is_generated (implementing_type) then
@@ -170,7 +170,7 @@ feature -- Access
 			initialized: is_initialized
 		local
 			l_features: HASH_TABLE [CODE_FEATURE, STRING]
-			l_type: SYSTEM_TYPE
+			l_type: TYPE
 		do
 			if internal_result_type = Void then
 				Resolver.search (implementing_type)
@@ -281,7 +281,7 @@ feature {NONE} -- Implementation
 		local
 			l_features: HASH_TABLE [LIST [CODE_FEATURE], STRING]
 			l_found_features: LIST [CODE_FEATURE]
-			l_type: SYSTEM_TYPE
+			l_type: TYPE
 			l_parents: HASH_TABLE [CODE_PARENT, STRING]
 			l_parent_type: CODE_TYPE_REFERENCE
 		do
@@ -341,14 +341,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	parent_in_dotnet_type (a_type: SYSTEM_TYPE): CODE_MEMBER_REFERENCE is
+	parent_in_dotnet_type (a_type: TYPE): CODE_MEMBER_REFERENCE is
 			-- Parent feature in `a_type' and parents of `a_type'
 		require
 			non_void_type: a_type /= Void
 			initialized: is_initialized
 		local
-			l_interfaces: NATIVE_ARRAY [SYSTEM_TYPE]
-			l_base_type: SYSTEM_TYPE
+			l_interfaces: NATIVE_ARRAY [TYPE]
+			l_base_type: TYPE
 			i, l_count: INTEGER
 		do
 			l_base_type := a_type.base_type
@@ -387,7 +387,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	parent_feature_from_dotnet_type (a_type: SYSTEM_TYPE): CODE_MEMBER_REFERENCE is
+	parent_feature_from_dotnet_type (a_type: TYPE): CODE_MEMBER_REFERENCE is
 			-- Feature with same .NET name and same arguments as `Current' in `a_type' if any
 		require
 			non_void_type: a_type /= Void
@@ -432,7 +432,7 @@ feature {NONE} -- Implementation
 			end
 		end
 	
-	native_arguments: NATIVE_ARRAY [SYSTEM_TYPE] is
+	native_arguments: NATIVE_ARRAY [TYPE] is
 			-- Arguments types
 		require
 			is_dotnet: not Resolver.is_generated (implementing_type)

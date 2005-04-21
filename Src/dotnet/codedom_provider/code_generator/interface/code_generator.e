@@ -301,11 +301,11 @@ feature -- Interface
 	get_type_output (a_type: SYSTEM_DLL_CODE_TYPE_REFERENCE): SYSTEM_STRING is
 			-- Get the type indicated by the specified `type'.
 		local
-			l_type: SYSTEM_TYPE
+			l_type: TYPE
 			l_type_name: STRING
 		do
 			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeGenerator.GetTypeOutput"])
-			l_type := feature {SYSTEM_TYPE}.get_type (a_type.base_type)
+			l_type := feature {TYPE}.get_type (a_type.base_type)
 			if l_type /= Void then
 				l_type_name := cache_reflection.type_name (l_type)
 				if l_type_name /= Void then

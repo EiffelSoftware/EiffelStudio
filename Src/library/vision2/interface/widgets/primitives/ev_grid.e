@@ -492,7 +492,7 @@ feature -- Status setting
 		
 	enable_multiple_row_selection is
 			-- Set user selection mode so that clicking an item selects the whole row.
-			-- Multiple rows may be selected.
+			-- Multiple rows may be selected via keyboard with Ctrl and Shift keys.
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -514,7 +514,7 @@ feature -- Status setting
 		
 	enable_multiple_item_selection is
 			-- Set user selection mode so that clicking an item selects the item.
-			-- Multiple items may be selected.
+			-- Multiple items may be selected via keyboard with Ctrl and Shift keys.
 		require
 			not_destroyed: not is_destroyed
 		do

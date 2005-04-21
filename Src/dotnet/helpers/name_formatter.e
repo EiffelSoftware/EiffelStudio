@@ -521,6 +521,7 @@ feature {NONE} -- Implementation
 			Result.put ("SYSTEM_TYPE", "System.Type")
 			Result.put ("SYSTEM_VOID", "System.Void")
 			Result.put ("SYSTEM_ATTRIBUTE", "System.Attribute")
+			Result.put ("MSCORLIB_EXCEPTION", "System.Exception")
 			
 				-- Threading conflicts
 			Result.put ("SYSTEM_THREAD", "System.Threading.Thread")

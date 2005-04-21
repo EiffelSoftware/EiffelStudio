@@ -311,7 +311,6 @@ feature -- Basic operations
 			standard_subrow_indent: INTEGER
 			drawing_subrow, drawing_parentrow: BOOLEAN
 			node_index, parent_node_index: INTEGER
-			counter: INTEGER
 			parent_row_list: SPECIAL [EV_GRID_ITEM_I]
 			parent_subrow_indent: INTEGER
 			parent_x_indent_position: INTEGER
@@ -441,18 +440,7 @@ feature -- Basic operations
 								if drawing_subrow then
 									parent_row_list := grid.row_list @ (current_row.parent_row_i.index - 1)
 									
-									from
-										counter := 0
-										parent_node_index := 0
-									until
-										parent_node_index > 0
-									loop
-										if parent_row_list @ counter /= Void then
-											parent_node_index := counter + 1
-										end
-										counter := counter + 1
-									end
-									
+									parent_node_index := retrieve_node_index (parent_row_list)									
 										
 										-- Now calculate information regarding the parent of the current subrow
 										-- which is required for the drawing. We must know where the parent is positioned

@@ -31,10 +31,11 @@
 					<Directory Id="com" Name="com">
 						<Directory Id="Support" Name="Support">
 							<Component Id="Support" Guid="30F7852F-D092-43F3-8643-DFFF0AE3BCE6">
-								<File Id="ecom_routines.e" Name="ECOM_R~1.E" LongName="ecom_routines.e" />
-								<File Id="ecom_wrapper.e" Name="ECOM_W~1.E" LongName="ecom_wrapper.e" KeyPath="yes" />
 								<File Id="ecom_cookie_generator.e" Name="ECOM_C~2.E" LongName="ecom_cookie_generator.e" />
 								<File Id="ecom_guid_routines.e" Name="ECOM_G~2.E" LongName="ecom_guid_routines.e" />
+								<File Id="ecom_routines.e" Name="ECOM_R~1.E" LongName="ecom_routines.e" />
+								<File Id="ecom_variant_access_e" Name="ECOM_V~1.E" LongName="ecom_variant_access.e" />
+								<File Id="ecom_wrapper.e" Name="ECOM_W~1.E" LongName="ecom_wrapper.e" />
 							</Component>
 						</Directory>
 						<Directory Id="Interfaces" Name="INTERF~1" LongName="Interfaces">

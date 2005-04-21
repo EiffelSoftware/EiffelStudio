@@ -55,7 +55,6 @@
 								<Component Id="windows_comp" Guid="2FEFF63A-7841-4A85-AABF-5A093566E8C4">
 									<File Id="culture" Name="culture" KeyPath="yes" />
 									<File Id="default.xml" Name="default.xml" />
-									<File Id="default_recent_projects.xml" Name="DEFAUL~1.XML" LongName="default_recent_projects.xml" />
 									<File Id="general" Name="general" />
 									<File Id="general.cfg" Name="general.cfg" />
 								</Component>
@@ -558,6 +557,7 @@
 									<File Id="NO_LICENSE2" Name="NO_LIC~1" LongName="NO_LICENSE" />
 									<File Id="Obsolete" Name="Obsolete" />
 									<File Id="Obsolete_call" Name="OBSOLE~1" LongName="Obsolete_call" />
+									<File Id="once_in_generic_warning" Name="ONCE_I~1" LongName="once_in_generic_warning" />
 									<File Id="OBS_CALL" Name="OBS_CALL" />
 									<File Id="OBS_CLASS" Name="OBS_CL~1" LongName="OBS_CLASS" />
 									<File Id="RE_INT2" Name="RE_INT" />

@@ -1654,7 +1654,8 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			check
 				result_zero_when_item_not_in_subrow_or_first: an_item.row_i.parent_row_i = Void and node_index > pointed_row_i.index_of_first_item implies Result = 0
 				result_positive_when_in_subrow: an_item.row_i.parent_row_i /= Void implies Result >= 0
-				result_is_first_indent_when_node_index_differs_from_parent: an_item.row_i.parent_row_i /= Void and an_item.row_i.index_of_first_item /= an_item.row_i.parent_row_i.index_of_first_item and an_item.row_i.subrow_count = 0 implies Result = first_tree_node_indent
+				result_is_first_indent_when_node_index_differs_from_parent_and_item_is_first: an_item.row_i.parent_row_i /= Void and (an_item.row_i.index_of_first_item /= an_item.row_i.parent_row_i.index_of_first_item) and (an_item.row_i.index_of_first_item = an_item.column.index) and an_item.row_i.subrow_count = 0 implies Result = first_tree_node_indent
+				result_is_zero_when_node_index_differs_from_parent_and_item_is_not_first: an_item.row_i.parent_row_i /= Void and (an_item.row_i.index_of_first_item /= an_item.row_i.parent_row_i.index_of_first_item) and (an_item.row_i.index_of_first_item /= an_item.column.index) and an_item.row_i.subrow_count = 0 implies Result = 0
 			end
 		end
 
@@ -2981,13 +2982,16 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- I
 				if a_grid_row_i.parent_row_i /= Void then
 						-- The row in which we are setting an item is already a subrow of another
 						-- row, so we must update the internal settings for the tree.
-						-- fixme ("EV_GRID_I.internal_set_item Should refactor `internal_set_parent_row' so that the parent row is not set and only the calculations are performed.)
+						 fixme ("EV_GRID_I.internal_set_item Should refactor `internal_set_parent_row' so that the parent row is not set and only the calculations are performed.")
 					a_grid_row_i.internal_set_parent_row (a_grid_row_i.parent_row_i)
 				end
 			else
 				internal_row_data.i_th (a_row).put (Void, a_grid_col_i.physical_index)
+					-- Update the row for the removal.
+				a_grid_row_i.update_for_item_removal (a_row)
 			end
 			
+			fixme ("EV_GRID_I.internal_set_item Adding or removing items may require the complete row to be redrawn if the row is a subrow.")
 			if a_item /= Void then
 				redraw_item (a_item.implementation)
 			else

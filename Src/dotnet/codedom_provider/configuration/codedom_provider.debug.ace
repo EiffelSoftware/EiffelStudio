@@ -5,7 +5,7 @@ root
 	CODE_DOM_PROVIDER: default_create
 
 default
-	multithreaded (yes)
+	multithreaded (no)
 
 --  FIXME: For now don't use precompile because of bug in compiler that produces wrong
 --  assembly metadata (peverify fails) if used.

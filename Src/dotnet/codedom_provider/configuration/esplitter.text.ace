@@ -5,7 +5,7 @@ root
 	CODE_ES_APPLICATION: make
 
 default
-	multithreaded (yes)
+	multithreaded (no)
 	assertion (no)
 	msil_generation (yes)
 	line_generation (no)

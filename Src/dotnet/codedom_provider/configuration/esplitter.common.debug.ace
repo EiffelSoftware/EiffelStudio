@@ -5,7 +5,7 @@ root
 	EIFFEL_PARSER: make
 
 default
-	multithreaded (yes)
+	multithreaded (no)
 	assertion (all)
 	msil_generation (yes)
 	line_generation (yes)

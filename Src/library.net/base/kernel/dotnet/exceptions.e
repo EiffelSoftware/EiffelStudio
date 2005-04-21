@@ -84,7 +84,7 @@ feature -- Status report
 			-- Tag of last violated assertion clause
 		local
 			conv_fl: EIFFEL_EXCEPTION
-			le: EXCEPTION
+			le: MSCORLIB_EXCEPTION
 		do
 			le := {ISE_RUNTIME}.last_exception
 			if le /= Void then
@@ -103,7 +103,7 @@ feature -- Status report
 			-- Name of the routine whose execution was
 			-- interrupted by last exception
 		local
-			le: EXCEPTION
+			le: MSCORLIB_EXCEPTION
 		do
 			le := {ISE_RUNTIME}.last_exception
 			if le /= Void then
@@ -117,7 +117,7 @@ feature -- Status report
 			-- Name of the class that includes the recipient
 			-- of original form of last exception
 		local
-			le: EXCEPTION
+			le: MSCORLIB_EXCEPTION
 		do
 			le := {ISE_RUNTIME}.last_exception
 			if le /= Void then
@@ -130,7 +130,7 @@ feature -- Status report
 	exception: INTEGER is
 			-- Code of last exception that occurred
 		local
-			le: EXCEPTION
+			le: MSCORLIB_EXCEPTION
 		do
 			le := {ISE_RUNTIME}.last_exception
 			if le /= Void then
@@ -143,7 +143,7 @@ feature -- Status report
 	exception_trace: STRING is
 			-- String representation of the exception trace
 		local
-			le: EXCEPTION
+			le: MSCORLIB_EXCEPTION
 		do
 			le := {ISE_RUNTIME}.last_exception
 			if le /= Void then
@@ -158,7 +158,7 @@ feature -- Status report
 			-- assertion violation.
 		local
 			conv_fl: EIFFEL_EXCEPTION
-			le: EXCEPTION
+			le: MSCORLIB_EXCEPTION
 		do
 			le := {ISE_RUNTIME}.last_exception
 			if le /= Void then
@@ -180,7 +180,7 @@ feature -- Status report
 			-- Original code of last exception that triggered
 			-- current exception
 		local
-			le: EXCEPTION
+			le: MSCORLIB_EXCEPTION
 		do
 			le := {ISE_RUNTIME}.last_exception
 			if le /= Void then
@@ -197,7 +197,7 @@ feature -- Status report
 			-- Name of the routine whose execution was
 			-- interrupted by original form of last exception
 		local
-			le: EXCEPTION
+			le: MSCORLIB_EXCEPTION
 		do
 			le := {ISE_RUNTIME}.last_exception
 			if le /= Void then
@@ -214,7 +214,7 @@ feature -- Status report
 			-- Name of the class that includes the recipient
 			-- of original form of last exception
 		local
-			le: EXCEPTION
+			le: MSCORLIB_EXCEPTION
 		do
 			le := {ISE_RUNTIME}.last_exception
 			if le /= Void then
@@ -304,7 +304,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	exception_to_code (ex: EXCEPTION): INTEGER is
+	exception_to_code (ex: MSCORLIB_EXCEPTION): INTEGER is
 			-- Return the Eiffel code corresponding to exception `ex'.
 		require
 			valid_ex: ex /= Void

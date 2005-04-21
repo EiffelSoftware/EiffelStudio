@@ -148,7 +148,7 @@ feature {NONE} -- External
 			-- The mouse_event function synthesizes mouse motion and button 
 			-- clicks.
 		external
-			"C [macro %"wel.h%"] (DWORD, DWORD, DWORD, DWORD, DWORD)"
+			"C [macro %"wel.h%"] (DWORD, DWORD, DWORD, DWORD, ULONG_PTR)"
 		alias
 			"mouse_event"
 		end
@@ -164,7 +164,7 @@ feature {NONE} -- External
 			-- WM_KEYDOWN message. The keyboard driver's interrupt handler 
 			-- calls the keybd_event function. 
 		external
-			"C [macro %"wel.h%"] (BYTE, BYTE, DWORD, DWORD)"
+			"C [macro %"wel.h%"] (BYTE, BYTE, DWORD, ULONG_PTR)"
 		alias
 			"keybd_event"
 		end

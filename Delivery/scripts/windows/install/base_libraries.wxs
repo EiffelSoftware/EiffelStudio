@@ -730,6 +730,11 @@
 								<File Id="to_special.e" Name="TO_SPE~1.E" LongName="to_special.e" />
 								<File Id="typed_pointer_e" Name="TYPED_~1.E" LongName="typed_pointer.e" />
 							</Component>
+							<Directory Id="exceptions" Name="EXCEPT~1" LongName="exceptions">
+								<Component Id="exceptions" Guid="1EBF9024-74C3-4ab2-8454-3C82E4DADCBC">
+									<File Id="exception_e" Name="EXCEPT~1.E" LongName="exception.e" />
+								</Component>
+							</Directory>
 							<Directory Id="classic1" Name="classic">
 								<Component Id="classic1" Guid="5428EF01-4C20-4B89-91D3-AC8BFC9A9EFB">
 									<File Id="unix_signals.e" Name="UNIX_S~1.E" LongName="unix_signals.e" KeyPath="yes" />

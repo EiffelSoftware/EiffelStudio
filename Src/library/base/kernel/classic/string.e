@@ -460,17 +460,34 @@ feature -- Comparison
 			if other = Current then
 				Result := True
 			elseif other.count = count then
-				from
-					i := 0
-					nb := count - 1
-					l_area := area
-					l_other_area := other.area
-					Result := True
-				until
-					i > nb or not Result
-				loop
-					Result := l_area.item (i) = l_other_area.item (i)
-					i := i + 1
+				Result := True
+				nb := count
+				if same_type (other) then
+					from
+						l_area := area
+						l_other_area := other.area
+					until
+						i = nb
+					loop
+						if l_area.item (i) /= l_other_area.item (i) then
+							Result := False
+							i := nb -- Jump out of the loop.
+						else
+							i := i + 1
+						end
+					end
+				else
+					from
+					until
+						i = nb
+					loop
+						if item (i) /= other.item (i) then
+							Result := False
+							i := nb -- Jump out of the loop.
+						else
+							i := i + 1
+						end
+					end
 				end
 			end
 		ensure

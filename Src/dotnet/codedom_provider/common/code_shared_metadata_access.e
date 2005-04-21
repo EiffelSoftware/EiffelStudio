@@ -18,9 +18,9 @@ feature -- Access
 			-- Access to Eiffel assemblies cache
 		once
 			if metadata_cache /= Void and then not metadata_cache.is_empty then
-				create Result.make_with_path (metadata_cache)
+				create Result.make_with_path (metadata_cache, feature {RUNTIME_ENVIRONMENT}.get_system_version)
 			else
-				create Result.make
+				create Result.make (feature {RUNTIME_ENVIRONMENT}.get_system_version)
 			end
 		end
 

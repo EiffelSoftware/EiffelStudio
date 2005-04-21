@@ -29,7 +29,7 @@ feature -- Attachement
 		require
 			attached: explorer_bar_item /= Void
 		do
-			if not explorer_bar_item.is_visible then
+			if explorer_bar_item.is_visible then
 				explorer_bar_item.close
 			end
 			explorer_bar_item.recycle
@@ -43,8 +43,10 @@ feature -- Attachement
 			a_bar_exists: a_bar /= Void
 			attached: explorer_bar_item /= Void
 		do
-			unattach_from_explorer_bar
-			attach_to_explorer_bar (a_bar)
+			if a_bar /= explorer_bar_item.parent then
+				unattach_from_explorer_bar
+				attach_to_explorer_bar (a_bar)
+			end
 		end
 
 	set_explorer_bar (a_bar: EB_EXPLORER_BAR) is

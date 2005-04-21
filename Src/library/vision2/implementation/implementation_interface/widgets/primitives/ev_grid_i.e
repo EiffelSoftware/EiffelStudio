@@ -1753,8 +1753,8 @@ feature {EV_GRID_DRAWER_I, EV_GRID_COLUMN_I, EV_GRID_ROW_I, EV_GRID_ITEM_I, EV_G
 			expand_node_pixmap.clear
 			expand_node_pixmap.set_foreground_color (tree_node_connector_color)
 			expand_node_pixmap.draw_rectangle (0, 0, tree_node_button_dimension, tree_node_button_dimension)
-			expand_node_pixmap.draw_segment (start_offset, middle_offset, end_offset, middle_offset)
 			expand_node_pixmap.set_foreground_color (black)
+			expand_node_pixmap.draw_segment (start_offset, middle_offset, end_offset, middle_offset)
 			expand_node_pixmap.draw_segment (middle_offset, start_offset, middle_offset, end_offset)
 		ensure
 			expand_node_pixmap_not_void: expand_node_pixmap /= Void

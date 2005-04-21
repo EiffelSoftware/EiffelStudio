@@ -243,6 +243,7 @@ feature -- Status report
 			a_item: EV_GRID_ITEM
 			i: INTEGER
 			a_count: INTEGER
+			non_void_item_found: BOOLEAN
 		do
 			from
 				i := 1
@@ -253,9 +254,14 @@ feature -- Status report
 			loop
 				a_item := item (i)
 				if a_item /= Void then
+					non_void_item_found := True
 					Result := a_item.is_selected
 				end
 				i := i + 1
+			end
+			if not non_void_item_found then
+					-- If no non-void items are present then we cannot be selected
+				Result := False
 			end
 		end
 

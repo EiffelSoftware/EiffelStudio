@@ -244,10 +244,12 @@ feature -- Access
 
 	internal_are_all_non_void_items_selected: BOOLEAN is
 			-- Are all the non void items in `Current' selected?
+			-- False if no non void items are present.
 		local
 			a_item: EV_GRID_ITEM
 			i: INTEGER
 			a_count: INTEGER
+			non_void_item_found: BOOLEAN
 		do
 			from
 				i := 1
@@ -258,9 +260,14 @@ feature -- Access
 			loop
 				a_item := item (i)
 				if a_item /= Void then
+					non_void_item_found := True
 					Result := a_item.is_selected
 				end
 				i := i + 1
+			end
+			if not non_void_item_found then
+					-- If there are no non-void items in row then it cannot be selected
+				Result := False
 			end
 		end
 		

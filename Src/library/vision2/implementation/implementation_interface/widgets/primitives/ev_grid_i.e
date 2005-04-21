@@ -220,8 +220,8 @@ feature -- Access
 			fixme ("Remove this full redraw and only redraw those items that have actually changed.")
 			--redraw_client_area
 		ensure
-			selected_items_empty: selected_items.is_empty
-			selected_rows_empty: selected_rows.is_empty
+			selected_items_empty: not is_row_selection_enabled implies selected_items.is_empty
+			selected_rows_empty: is_row_selection_enabled implies selected_rows.is_empty
 		end
 		
 	is_header_displayed: BOOLEAN

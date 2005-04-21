@@ -139,18 +139,26 @@ feature {NONE} -- Implementation
 			create time1.make
 			create time2.make
 			if (a_creation_time /= Void) then
-				cwel_get_file_time (a_file.descriptor, a_creation_time.item,
+				cwel_get_file_time (handle_from_file_descriptor(a_file.descriptor), a_creation_time.item,
 						time1.item, time2.item)
 			elseif (a_modification_time /= Void) then
-				cwel_get_file_time (a_file.descriptor, time1.item,
+				cwel_get_file_time (handle_from_file_descriptor (a_file.descriptor), time1.item,
 						time2.item, a_modification_time.item)
 			else
-				cwel_get_file_time (a_file.descriptor, time1.item,
+				cwel_get_file_time (handle_from_file_descriptor (a_file.descriptor), time1.item,
 						an_access_time.item, time2.item)
 			end
 		end
 
 feature {NONE} -- Externals
+
+	handle_from_file_descriptor (a_fd: INTEGER): POINTER is
+			-- Associated handle of `a_fd'.
+		external
+			"C inline use <io.h>"
+		alias
+			"_get_osfhandle($a_fd)"
+		end
 
 	c_size_of_file_time: INTEGER is
 		external 
@@ -179,7 +187,7 @@ feature {NONE} -- Externals
 			"C [macro %"wel_time.h%"]"
 		end
 
-	cwel_get_file_time (file_handle: INTEGER; cft, aft, mft: POINTER) is
+	cwel_get_file_time (file_handle, cft, aft, mft: POINTER) is
 		external 
 			"C [macro %"wel_time.h%"]"
 		end

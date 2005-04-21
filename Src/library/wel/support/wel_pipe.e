@@ -99,7 +99,7 @@ feature {NONE} -- Initialization
 				when Duplex then
 					l_create_mode := generic_read.bit_or (generic_write)
 				end
-				l_handle := cwin_create_file (ws.item, l_create_mode, 0x0, default_pointer, 0x4, 0x100, 0)
+				l_handle := cwin_create_file (ws.item, l_create_mode, 0x0, default_pointer, 0x4, 0x100, default_pointer)
 				if l_handle /= invalid_handle_value then
 					if a_direction = inbound or a_direction = duplex then
 						output_handle := l_handle
@@ -265,7 +265,7 @@ feature {NONE} -- Externals
 			"CreateNamedPipe"
 		end
 		
-	cwin_create_file (a_name: POINTER; an_integer, an_integer2: INTEGER; a_pointer: POINTER; an_integer3, an_integer4: INTEGER; a_handle: INTEGER): like input_handle is
+	cwin_create_file (a_name: POINTER; an_integer, an_integer2: INTEGER; a_pointer: POINTER; an_integer3, an_integer4: INTEGER; a_handle: POINTER): like input_handle is
 			-- SDK CreateFile
 		external
 			"C [macro <winbase.h>] (LPCTSTR, DWORD, DWORD, LPSECURITY_ATTRIBUTES, DWORD, DWORD, HANDLE): HANDLE"

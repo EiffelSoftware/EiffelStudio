@@ -169,7 +169,7 @@ feature -- Access
 			Result := error < 0
 		end		
 	
-	is_condition (f: E_FEATURE): BOOLEAN is
+	is_condition (f: FEATURE_I): BOOLEAN is
 			-- is feature `f' a condition ?
 		require
 			valid_f: f /= Void

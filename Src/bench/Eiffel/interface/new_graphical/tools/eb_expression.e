@@ -18,6 +18,13 @@ inherit
 			{NONE} all
 		end
 
+	COMPILER_EXPORTER
+			--| Just to be able to access E_FEATURE::associated_feature_i :(
+			--| and other expression evaluation purpose
+		export
+			{NONE} all
+		end		
+
 create
 	make_with_class,
 	make_with_object,
@@ -119,7 +126,7 @@ feature -- Status report
 			no_error: not dbg_expression.syntax_error
 			good_state: f.written_class /= Void and then f.written_class.has_feature_table
 		do
-			Result := expression_evaluator.is_condition (f)
+			Result := expression_evaluator.is_condition (f.associated_feature_i )
 		end
 
 	is_still_valid: BOOLEAN is

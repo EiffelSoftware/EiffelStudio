@@ -218,14 +218,14 @@ rt_public char *ei_exp_type(long i, EIF_REFERENCE object)
 	return makestr(s,strlen(s));
 }
 
-rt_public long ei_bit_size(long i, EIF_REFERENCE object)
+rt_public rt_uint_ptr ei_bit_size(long i, EIF_REFERENCE object)
 {
 	/* Returns the size (in bit) of the i-the bit field of `object'. */
 
 	return (long) (System(Dtype(object)).cn_types[i] - SK_BIT);
 }
 	
-rt_public long ei_size(EIF_REFERENCE object)
+rt_public rt_uint_ptr ei_size(EIF_REFERENCE object)
 {
 	/* Returns physical size occupied by `object'. */
 

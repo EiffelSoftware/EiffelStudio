@@ -1370,7 +1370,7 @@ rt_public EIF_REFERENCE rt_nmake(long int objectCount)
 	 */
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
-	long nb_byte;
+	rt_uint_ptr nb_byte;
 	EIF_REFERENCE oldadd;
 	volatile EIF_REFERENCE newadd = (EIF_REFERENCE) 0;
 	EIF_OBJECT new_hector;
@@ -2232,7 +2232,7 @@ rt_private void rt_update2(EIF_REFERENCE old, EIF_REFERENCE new_obj, EIF_REFEREN
 	EIF_REFERENCE reference, addr;
 	union overhead *zone = HEADER(new_obj);
 	int nb_attr = 0;
-	long size;				/* New object size */
+	rt_uint_ptr size;				/* New object size */
 	/* struct rt_struct *rt_info;*/ /* %%ss unused */
 
 #ifndef NDEBUG

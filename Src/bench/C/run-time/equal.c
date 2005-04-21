@@ -114,8 +114,8 @@ rt_public EIF_BOOLEAN eequal(register EIF_REFERENCE target, register EIF_REFEREN
 				*/
 			EIF_REFERENCE s_ref;
 			EIF_REFERENCE t_ref;
-			uint32 s_size = (HEADER(source)->ov_size) & B_SIZE; /* Size of source special */
-			uint32 t_size = (HEADER(target)->ov_size) & B_SIZE; /* Size of target special */
+			rt_uint_ptr s_size = (HEADER(source)->ov_size) & B_SIZE; /* Size of source special */
+			rt_uint_ptr t_size = (HEADER(target)->ov_size) & B_SIZE; /* Size of target special */
 		
 				/* First condition: same count */
 			s_ref = (EIF_REFERENCE) (source + s_size - LNGPAD_2);
@@ -201,8 +201,8 @@ rt_public EIF_BOOLEAN spiso(register EIF_REFERENCE target, register EIF_REFERENC
 	union overhead *t_zone;				/* Target header */
 	uint32 s_flags;						/* Source flags */
 	/*uint32 t_flags;*/					/* Target flags */
-	uint32 s_size;						/* Source size */
-	uint32 t_size;						/* Target size */
+	rt_uint_ptr s_size;						/* Source size */
+	rt_uint_ptr t_size;						/* Target size */
 	EIF_REFERENCE s_ref;
 	EIF_REFERENCE t_ref;
 	EIF_INTEGER count;				/* Common count */

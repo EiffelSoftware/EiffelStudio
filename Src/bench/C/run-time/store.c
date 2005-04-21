@@ -942,7 +942,7 @@ rt_public void st_write(EIF_REFERENCE object, uint32 fflags)
 
 	union overhead *zone;
 	uint32 flags;
-	uint32 nb_char;
+	rt_uint_ptr nb_char;
 
 	flags = Mapped_flags(fflags);
 

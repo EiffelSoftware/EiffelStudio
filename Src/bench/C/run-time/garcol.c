@@ -478,14 +478,14 @@ doc:	</attribute>
 rt_private uint32 age_table[TENURE_MAX];		/* Number of objects/age */ 
 
 /*
-doc:	<attribute name="size_table" return_type="uint32 [TENURE_MAX]" export="private">
+doc:	<attribute name="size_table" return_type="rt_uint_ptr [TENURE_MAX]" export="private">
 doc:		<summary>Array used to store the size of objects used, indexed by object's age. This is used when computing the demographic feedback-mediated tenuring threshold for the next step (generation collection) and by the generation scavenging algorithm.</summary>
 doc:		<indexing>age</indexing>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>eif_gc_mutex</synchronization>
 doc:	</attribute>
 */
-rt_private uint32 size_table[TENURE_MAX];		/* Amount of bytes/age */ 
+rt_private rt_uint_ptr size_table[TENURE_MAX];		/* Amount of bytes/age */ 
 
 /*
 doc:	<attribute name="tenure" return_type="int" export="shared">
@@ -1770,7 +1770,7 @@ rt_private EIF_REFERENCE mark_expanded(EIF_REFERENCE root, MARKER marker)
 
 	EIF_REFERENCE enclosing;	/* Address of the enclosing object */
 	EIF_REFERENCE new;			/* New address of the enclosing object */
-	long offset;		/* Offset of the expanded object within enclosing one */
+	rt_uint_ptr offset;		/* Offset of the expanded object within enclosing one */
 	union overhead *zone;
 
 	if (root == (EIF_REFERENCE) 0)
@@ -2103,7 +2103,7 @@ rt_private EIF_REFERENCE hybrid_mark(EIF_REFERENCE *a_root)
 	union overhead *zone;		/* Malloc info zone fields */
 	uint32 flags;				/* Eiffel flags */
 	long offset;				/* Reference's offset */
-	uint32 size;				/* Size of an item (for array of expanded) */
+	rt_uint_ptr size;				/* Size of an item (for array of expanded) */
 	EIF_REFERENCE *object;				/* Sub-objects scanned */
 	EIF_REFERENCE current;				/* Object currently inspected */
 	EIF_REFERENCE *prev;				/* Holder of current (for update) */
@@ -2369,7 +2369,7 @@ rt_private void full_sweep(void)
 	 * 'to' space are unmarked but alive...).
 	 */
 	union overhead *zone;		/* Malloc info zone */
-	uint32 size;				/* Object's size in bytes */
+	rt_uint_ptr size;				/* Object's size in bytes */
 	EIF_REFERENCE end;				/* First address beyond chunk */
 	uint32 flags;				/* Eiffel flags */
 	struct chunk *chunk;		/* Current chunk */
@@ -2734,7 +2734,7 @@ rt_private void split_to_block(void)
 	 */
 	union overhead *base;	/* Base address */
 	rt_uint_ptr size;			/* Amount of bytes used (malloc point's of view) */
-	uint32 old_size;		/* To save the old size for the leading object */
+	rt_uint_ptr old_size;		/* To save the old size for the leading object */
 
 	base = (union overhead *) ps_to.sc_arena;
 	size = ps_to.sc_top - (EIF_REFERENCE) base;	/* Plus overhead for first block */
@@ -2808,11 +2808,11 @@ rt_private int sweep_from_space(void)
 	 */
 	union overhead *zone;		/* Currently inspected block */
 	union overhead *next;		/* Address of next block */
-	uint32 flags;				/* Malloc flags and size infos */
+	rt_uint_ptr flags;				/* Malloc flags and size infos */
 	EIF_REFERENCE end;				/* First address beyond from space */
 	uint32 dtype;				/* Dynamic type of object */
 	EIF_REFERENCE base;							/* First address of 'from' space */
-	int size;							/* Size of current object */
+	rt_uint_ptr size;							/* Size of current object */
 	char gc_status;						/* Saved GC status */
 
 	base = ps_from.sc_arena;
@@ -3245,7 +3245,7 @@ rt_private void find_to_space(struct sc_zone *to)
 	 */
 	size_t std_size = eif_chunk_size - sizeof(struct chunk);
 	struct chunk *cur;	/* Current chunk we are considering */
-	uint32 flags = 0;		/* Malloc info flags */
+	rt_uint_ptr flags = 0;		/* Malloc info flags */
 	EIF_REFERENCE arena = (EIF_REFERENCE) 0;	/* Where chunk's arena starts */
 
 	for (cur = cklst.eck_tail; cur != (struct chunk *) 0; cur = cur->ck_lprev) {
@@ -3328,7 +3328,7 @@ rt_private EIF_REFERENCE scavenge(register EIF_REFERENCE root, struct sc_zone *t
 	 * pointer to the new object's location, in the 'to' space.
 	 */
 	union overhead *zone;	/* Malloc info header */
-	int length;						/* Length of scavenged object */
+	rt_uint_ptr length;						/* Length of scavenged object */
 
 	REQUIRE ("Algorithm moves objects",
 			rt_g_data.status & (GC_GEN | GC_PART) || rt_g_data.status & GC_FAST);
@@ -3517,7 +3517,7 @@ rt_private int generational_collect(void)
 	 * 1 - most of the time `eif_tenure_max == TENURE_MAX'
 	 * 2 - can be optimized better by C compiler.
 	 */
-	memset (size_table, 0, TENURE_MAX * sizeof (uint32));
+	memset (size_table, 0, TENURE_MAX * sizeof (rt_uint_ptr));
 	memset (age_table, 0, TENURE_MAX * sizeof (uint32));
 
 	mark_new_generation(MTC_NOARG);		/* Mark all new reachable objects */
@@ -3882,7 +3882,7 @@ rt_private EIF_REFERENCE gscavenge(EIF_REFERENCE root)
 	int age;				/* Object's age */
 	uint32 flags;				/* Eiffel flags */
 	EIF_REFERENCE new;							/* Address of new object (tenured) */ 
-	int size;							/* Size of scavenged object */
+	rt_uint_ptr size;							/* Size of scavenged object */
 	int ret;							/* status returned by "epush" */
 
 	zone = HEADER(root);				/* Info header */

@@ -145,21 +145,21 @@ extern char *crealloc(char *ptr, size_t nbytes);			/* Reallocate a C object */
 extern EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, size_t nbytes, int gc_flag);			/* Reallocate with GC turned on/off */
 
 #ifdef ISE_GC
-extern EIF_REFERENCE malloc_from_eiffel_list_no_gc (unsigned int nbytes);				/* Garbage collector's allocation */
+extern EIF_REFERENCE malloc_from_eiffel_list_no_gc (rt_uint_ptr nbytes);				/* Garbage collector's allocation */
 extern struct emallinfo *meminfo(int type);	/* Memory statistics */
 
 /*
  * Shared routines
  */
-extern int eif_rt_split_block(register union overhead *selected, register rt_uint_ptr nbytes);			/* Block spliting */
+extern rt_uint_ptr eif_rt_split_block(register union overhead *selected, register rt_uint_ptr nbytes);			/* Block spliting */
 extern void lxtract(union overhead *next);				/* Extraction from free list */
 extern void rel_core(void);				/* Give memory back to kernel */
-extern int chunk_coalesc(struct chunk *c);			/* Coalescing to reduce fragmentation */
+extern rt_uint_ptr chunk_coalesc(struct chunk *c);			/* Coalescing to reduce fragmentation */
 extern EIF_REFERENCE get_to_from_core(size_t nbytes);	/* Get to_space from core for partial scavenging */
 extern void memck(unsigned int max_dt);
 
 extern void mem_diagnose(int sig);			/* Memory usage dump */
-extern int full_coalesc(int chunk_type);			/* Perform free blocks coalescing */
+extern rt_uint_ptr full_coalesc(int chunk_type);			/* Perform free blocks coalescing */
 extern void create_scavenge_zones(void);
 extern void sc_stop(void);
 

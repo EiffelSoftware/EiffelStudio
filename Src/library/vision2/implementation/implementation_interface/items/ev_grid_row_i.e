@@ -384,9 +384,11 @@ feature -- Status setting
 		do
 			if not is_expanded then
 				is_expanded := True
-				if not is_ensured_expandable then
-						-- If `Current' has been forced to be expandable, then
-						-- we do nothing yet.
+				
+				if subrow_count > 0 then
+						-- If `Current' has children then compute and redraw.
+						-- If `is_ensured_expandable' then it is possible that there
+						-- are no children, so do not perform the calculations.
 	
 					update_parent_expanded_node_counts_recursively (contained_expanded_items_recursive)
 						-- Update the expanded node counts for `Current' and all parent nodes.

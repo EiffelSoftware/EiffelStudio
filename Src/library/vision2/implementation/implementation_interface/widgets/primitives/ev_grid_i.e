@@ -1460,14 +1460,12 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 				vertical_computation_required := False
 				if row_count > 0 then
 						-- Do nothing if `Current' is empty.
-					recompute_row_offsets (invalid_row_index)
+					recompute_row_offsets (invalid_row_index.min (row_count))
 						-- Restore to an arbitarily large index.
 					invalid_row_index := invalid_row_index.max_value;
 					((create {EV_ENVIRONMENT}).application).do_once_on_idle (agent recompute_vertical_scroll_bar)
 				end
 			end
-		ensure
-			vertical_computation_not_required: not vertical_computation_required
 		end
 
 	recompute_row_offsets (an_index: INTEGER) is
@@ -1539,7 +1537,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 							-- Use the default height here.
 						i := i + row_height
 					end
-					if current_item.subrow_count > 0 and not current_item.is_expanded then
+					if current_item /= Void and then current_item.subrow_count > 0 and not current_item.is_expanded then
 						from
 							j := row_index + 1
 							k := j + current_item.subnode_count_recursive
@@ -2672,7 +2670,72 @@ feature {NONE} -- Event handling
 			to_implement ("EV_GRID_I.resize_received")
 		end
 
+feature {EV_GRID_DRAWER_I} -- Implementation
+
+	row_internal (a_row: INTEGER): EV_GRID_ROW_I is
+			-- Row `a_row', creates a new one if it doesn't exist.
+		require
+			a_row_positive: a_row > 0
+		local
+			temp_rows: like rows
+		do
+			temp_rows := rows
+			if a_row <= temp_rows.count then
+				Result := temp_rows @ a_row
+			end
+			if Result = Void then
+				add_row_at (a_row, True)
+				Result := temp_rows @ a_row
+			end
+		ensure
+			row_not_void: Result /= Void
+		end
+
 feature {NONE} -- Implementation
+
+	add_row_at (a_index: INTEGER; replace_existing_item: BOOLEAN) is
+			-- Add a new row at index `a_index'.
+			-- If `replace_existing_item' then replace value at `a_index', else insert at `a_index'.
+		require
+			i_positive: a_index > 0
+		local
+			row_i, replaced_row: EV_GRID_ROW_I
+			a_row_data: SPECIAL [EV_GRID_ITEM_I]
+		do
+			row_i := (create {EV_GRID_ROW}).implementation
+			
+			create a_row_data.make (0)
+			if a_index > row_count then
+				if replace_existing_item then
+						-- We are inserting at a certain value so we resize to one less
+					resize_row_lists (a_index)
+				else
+					resize_row_lists (a_index - 1)
+				end
+			end
+
+			rows.go_i_th (a_index)
+			internal_row_data.go_i_th (a_index)
+			if replace_existing_item then
+				internal_row_data.replace (a_row_data)
+				replaced_row := rows.item
+				if replaced_row /= Void then
+					replaced_row.update_for_removal
+				end
+				rows.replace (row_i)
+				row_i.set_internal_index (a_index)
+			else
+				internal_row_data.put_left (a_row_data)
+				rows.put_left (row_i)
+					-- Update the index of `row_i' and subsequent rows in `rows'
+				update_grid_row_indices (a_index)
+			end
+
+				-- Set grid of `grid_row' to `Current'
+			row_i.set_parent_i (Current)
+
+			set_vertical_computation_required (a_index)
+		end
 
 	add_column_at (a_index: INTEGER; replace_existing_item: BOOLEAN) is
 			-- Add a new column at index `a_index'.
@@ -2719,50 +2782,6 @@ feature {NONE} -- Implementation
 			header_item_resize_ended (header.last)
 		ensure
 			column_count_set: not replace_existing_item implies ((a_index < old column_count implies (column_count = old column_count + 1)) or column_count = a_index)
-		end
-
-	add_row_at (a_index: INTEGER; replace_existing_item: BOOLEAN) is
-			-- Add a new row at index `a_index'.
-			-- If `replace_existing_item' then replace value at `a_index', else insert at `a_index'.
-		require
-			i_positive: a_index > 0
-		local
-			row_i, replaced_row: EV_GRID_ROW_I
-			a_row_data: SPECIAL [EV_GRID_ITEM_I]
-		do
-			row_i := (create {EV_GRID_ROW}).implementation
-			
-			create a_row_data.make (0)
-			if a_index > row_count then
-				if replace_existing_item then
-						-- We are inserting at a certain value so we resize to one less
-					resize_row_lists (a_index)
-				else
-					resize_row_lists (a_index - 1)
-				end
-			end
-
-			rows.go_i_th (a_index)
-			internal_row_data.go_i_th (a_index)
-			if replace_existing_item then
-				internal_row_data.replace (a_row_data)
-				replaced_row := rows.item
-				if replaced_row /= Void then
-					replaced_row.update_for_removal
-				end
-				rows.replace (row_i)
-				row_i.set_internal_index (a_index)
-			else
-				internal_row_data.put_left (a_row_data)
-				rows.put_left (row_i)
-					-- Update the index of `row_i' and subsequent rows in `rows'
-				update_grid_row_indices (a_index)
-			end
-
-				-- Set grid of `grid_row' to `Current'
-			row_i.set_parent_i (Current)
-
-			set_vertical_computation_required (a_index)
 		end
 
 	update_grid_row_indices (a_index: INTEGER) is
@@ -2865,25 +2884,6 @@ feature {NONE} -- Implementation
 			Result := temp_columns @ a_column
 		ensure
 			column_not_void: Result /= Void
-		end
-
-	row_internal (a_row: INTEGER): EV_GRID_ROW_I is
-			-- Row `a_row', creates a new one if it doesn't exist.
-		require
-			a_row_positive: a_row > 0
-		local
-			temp_rows: like rows
-		do
-			temp_rows := rows
-			if a_row <= temp_rows.count then
-				Result := temp_rows @ a_row
-			end
-			if Result = Void then
-				add_row_at (a_row, True)
-				Result := temp_rows @ a_row
-			end
-		ensure
-			row_not_void: Result /= Void
 		end
 
 	physical_column_indexes_dirty: BOOLEAN

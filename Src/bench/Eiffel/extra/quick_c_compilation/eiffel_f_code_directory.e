@@ -43,7 +43,7 @@ feature
 			big_file_name_prefix := big_file_prefix + tag
 
 			directory_make (a_path)
-			object_extension := clone (extension_type)
+			object_extension := extension_type.twin
 
 				-- Check if we modified something in the directory
 				-- True if the file `finished' does not exist.
@@ -93,7 +93,10 @@ feature
 				then
 					l_fname := path (l_files.item)
 			   		create l_file.make (l_fname)
-			   		if l_file.is_directory then
+			   		if	 
+			   			l_file.is_directory and then 
+			   			(l_fname.count < 2 or else not l_fname.substring (l_fname.count -1, l_fname.count).is_equal (once "E1")) 
+			   		then
 						create l_directory.make (l_fname, extension_type, False)
 						directories.extend (l_directory)
 						directories.forth
@@ -215,7 +218,7 @@ feature
 
 	path (a_name: STRING): STRING is
 		do
-			Result := clone (name)
+			Result := name.twin
 			Result.append_character (Directory_separator)
 			Result.append (a_name)
 		end
@@ -319,7 +322,7 @@ feature {NONE} -- Implementation
 		do
 			if not l_files.is_empty then 
 				input_string := buffered_input_string
-				l_big_file_name := clone (name)
+				l_big_file_name := name.twin
 				l_big_file_name.append_character (Directory_separator)
 				l_big_file_name.append (l_output_name)
 				create l_big_file.make_open_write (l_big_file_name)

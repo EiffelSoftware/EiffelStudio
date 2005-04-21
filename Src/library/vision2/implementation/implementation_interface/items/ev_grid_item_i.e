@@ -154,41 +154,38 @@ feature -- Status setting
 
 	enable_select is
 			-- Set `is_selected' `True'.
-		local
-			row_previously_selected: BOOLEAN
 		do
-			if parent_i.is_single_row_selection_enabled or else parent_i.is_multiple_row_selection_enabled then
-					-- We are in row selection mode so we manipulate the parent row directly
-				row_i.enable_select
-			else
-				row_previously_selected := row_i.is_selected
-				if not is_selected then
-					enable_select_internal
-				end
-				if not row_previously_selected and then row_i.is_selected then
-					parent_i.update_row_selection_status (row_i)
-				end
-				parent_i.update_item_selection_status (Current)
+			if not is_selected then
+				if parent_i.is_row_selection_enabled then
+						-- We are in row selection mode so we manipulate the parent row directly
+					row_i.enable_select
+				else
+					internal_is_selected := True
+					parent_i.add_item_to_selected_items (Current)
+					if parent_i.item_select_actions_internal /= Void then
+						parent_i.item_select_actions_internal.call ([interface])
+					end
+					parent_i.redraw_item (Current)
+						-- Call item events before row events
+				end				
 			end
 		end
 
 	disable_select is
 			-- Set `is_selected' `False'.
-		local
-			row_previously_selected: BOOLEAN
 		do
-			if parent_i.is_single_row_selection_enabled or else parent_i.is_multiple_row_selection_enabled then
-					-- We are in row selection mode so we manipulate the parent row directly
-				row_i.disable_select
-			else
-				row_previously_selected := row_i.is_selected
-				if is_selected then
-					disable_select_internal
-				end
-				if row_previously_selected then
-					parent_i.update_row_selection_status (row_i)
-				end
-				parent_i.update_item_selection_status (Current)
+			if is_selected then
+				if parent_i.is_row_selection_enabled then
+						-- We are in row selection mode so we manipulate the parent row directly
+					row_i.disable_select
+				else
+					internal_is_selected := False
+					parent_i.remove_item_from_selected_items (Current)
+					if parent_i.item_deselect_actions_internal /= Void then
+						parent_i.item_deselect_actions_internal.call ([interface])
+					end
+					parent_i.redraw_item (Current)
+				end				
 			end
 		end
 		
@@ -217,8 +214,8 @@ feature -- Status report
 	is_selected: BOOLEAN is
 			-- Is `Current' selected?
 		do
-			if row_i.is_selected or else column_i.is_selected then
-				Result := True
+			if parent_i.is_row_selection_enabled then
+				Result := row_i.is_selected
 			else
 				Result := internal_is_selected
 			end
@@ -237,32 +234,8 @@ feature -- Element change
 		do
 			internal_background_color := a_color.twin
 		end
-		
-feature {EV_GRID_I, EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implementation
 
-	enable_select_internal is
-			-- Set up internal data to signify `Current' has been selected
-		require
-			item_is_not_selected: not is_selected
-		do
-			internal_is_selected := True
-			row_i.increase_selected_item_count
-			column_i.increase_selected_item_count				
-			parent_i.redraw_item (Current)
-		end
-
-	disable_select_internal is
-			-- Set up internal data to signify that `Current' has been deselected
-		require
-			item_is_selected: is_selected
-		do
-			row_i.decrease_selected_item_count
-			column_i.decrease_selected_item_count
-			internal_is_selected := False
-			parent_i.redraw_item (Current)
-		end
-
-feature {EV_GRID_I, EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implementation
+feature {EV_GRID_I, EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I} -- Implementation
 
 	internal_is_selected: BOOLEAN
 		-- Has `enable_select' been called on `Current'

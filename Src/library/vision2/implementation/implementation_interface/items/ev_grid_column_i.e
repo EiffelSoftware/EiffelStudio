@@ -11,7 +11,8 @@ inherit
 	
 	EV_DESELECTABLE_I
 		redefine
-			interface
+			interface,
+			is_selectable
 		end
 	
 create
@@ -238,8 +239,30 @@ feature -- Status report
 		
 	is_selected: BOOLEAN is
 			-- Is objects state set to selected?
+		local
+			a_item: EV_GRID_ITEM
+			i: INTEGER
+			a_count: INTEGER
 		do
-			Result := selected_item_count > 0 and then selected_item_count = count		
+			from
+				i := 1
+				Result := True
+				a_count := count
+			until
+				not Result or else i > a_count
+			loop
+				a_item := item (i)
+				if a_item /= Void then
+					Result := a_item.is_selected
+				end
+				i := i + 1
+			end
+		end
+
+	is_selectable: BOOLEAN is
+			-- May the object be selected.
+		do
+			Result := parent_i /= Void
 		end
 			
 feature -- Element change
@@ -314,65 +337,13 @@ feature {EV_GRID_I} -- Implementation
 	enable_select is
 			-- Select `Current' in `parent_i'.
 		do
-			if not is_selected then
-				remove_selection_from_children
-					-- Set the column to be selected
-				selected_item_count := count - 1
-				increase_selected_item_count
-				parent_i.redraw_client_area
-				fixme ("EV_GRID_COLUMN_I:enable_select - Perform a more optimal redraw when available")				
-			end
+			internal_update_selection (True)			
 		end
 
 	disable_select is
 			-- Deselect `Current' from `parent_i'.
 		do
-			if is_selected then
-				decrease_selected_item_count
-			end
-			disable_select_internal
-			parent_i.redraw_client_area
-			fixme ("EV_GRID_COLUMN_I:disable_select - Perform a more optimal redraw when available")	
-		end
-
-	disable_select_internal is
-			-- Deselect the object.
-		local
-			i: INTEGER
-			a_item: EV_GRID_ITEM_I
-		do
-			from
-				i := 1
-			until
-				i > count
-			loop
-				a_item := parent_i.item_internal (index, i)
-				if a_item /= Void and then a_item.internal_is_selected then
-					a_item.disable_select_internal
-				end
-				i := i + 1
-			end	
-			selected_item_count := 0
-		end
-
-	remove_selection_from_children is
-			-- Remove the selection from children in current.
-		local
-			sel_items: ARRAYED_LIST [EV_GRID_ITEM]
-			a_sel_item: EV_GRID_ITEM_I
-		do
-			sel_items := parent_i.selected_items
-			from
-				sel_items.start
-			until
-				sel_items.after
-			loop
-				if sel_items.item.column = interface then
-					a_sel_item ?= sel_items.item.implementation
-					a_sel_item.disable_select_internal
-				end
-				sel_items.forth
-			end
+			internal_update_selection (False)
 		end
 
 	destroy is
@@ -427,6 +398,31 @@ feature {EV_GRID_ITEM_I} -- Implementation
 
 	selected_item_count: INTEGER
 		-- Number of selected items in `Current'.
+
+feature {NONE} -- Implementation
+
+	internal_update_selection (a_selection_state: BOOLEAN) is
+			-- Set the selection state of all non void items in `Current' to `a_selection_state'.
+		local
+			a_item: EV_GRID_ITEM
+			i: INTEGER
+		do
+			from
+				i := 1
+			until
+				i > count
+			loop
+				a_item := item (i)
+				if a_item /= Void then
+					if a_selection_state then
+						a_item.enable_select
+					else
+						a_item.disable_select
+					end		
+				end
+				i := i + 1
+			end
+		end
 
 feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_COLUMN, EV_GRID_COLUMN_I} -- Implementation
 

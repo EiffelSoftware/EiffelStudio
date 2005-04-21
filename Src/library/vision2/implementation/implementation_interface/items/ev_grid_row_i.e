@@ -160,16 +160,17 @@ feature -- Access
 		require
 			is_parented: parent /= Void
 		local
-			i: INTEGER
+			i, a_count: INTEGER
 			a_item: EV_GRID_ITEM_I
 			temp_parent_i: like parent_i
 		do
 			from
 				i := 1
-				create Result.make (count)
+				a_count := count
+				create Result.make (a_count)
 				temp_parent_i := parent_i
 			until
-				i > count
+				i > a_count
 			loop
 					-- If `is_selected' then we need to make sure there are no Void items contained within `Current'
 				a_item := temp_parent_i.item_internal (i, index)
@@ -206,7 +207,61 @@ feature -- Access
 	is_selected: BOOLEAN is
 			-- Is objects state set to selected.
 		do
-			Result := selected_item_count > 0 and then selected_item_count = count
+			if parent_i /= Void then 
+				if parent_i.is_row_selection_enabled then
+					Result := internal_is_selected
+				else
+					Result := internal_are_all_non_void_items_selected
+				end
+			end
+		end
+
+	internal_is_selected: BOOLEAN
+		-- Is `Current' selected in either row selection mode?
+
+	internal_update_selection (a_selection_state: BOOLEAN) is
+			-- Set the selection state of all non void items in `Current' to `a_selection_state'.
+		local
+			a_item: EV_GRID_ITEM
+			i: INTEGER
+		do
+			from
+				i := 1
+			until
+				i > count
+			loop
+				a_item := item (i)
+				if a_item /= Void then
+					if a_selection_state then
+						a_item.enable_select
+					else
+						a_item.disable_select
+					end		
+				end
+				i := i + 1
+			end
+		end
+
+	internal_are_all_non_void_items_selected: BOOLEAN is
+			-- Are all the non void items in `Current' selected?
+		local
+			a_item: EV_GRID_ITEM
+			i: INTEGER
+			a_count: INTEGER
+		do
+			from
+				i := 1
+				Result := True
+				a_count := count
+			until
+				not Result or else i > a_count
+			loop
+				a_item := item (i)
+				if a_item /= Void then
+					Result := a_item.is_selected
+				end
+				i := i + 1
+			end
 		end
 		
 	virtual_y_position: INTEGER is
@@ -561,13 +616,17 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			a_color_not_void: a_color /= Void
 		local
 			item_index: INTEGER
+			a_item: EV_GRID_ITEM
 		do
 			from
 				item_index := 1
 			until
 				item_index > count
 			loop
-				item (item_index).set_background_color (a_color)
+				a_item := item (item_index)
+				if a_item /= Void then
+					a_item.set_background_color (a_color)
+				end
 				item_index := item_index + 1
 			end
 		ensure
@@ -578,22 +637,36 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			-- Select the object.
 		do
 			if not is_selected then
-				selected_item_count := count
-				parent_i.update_row_selection_status (Current)
-				parent_i.redraw_client_area
-				fixme ("EV_GRID_ROW_I:enable_select - Perform a more optimal redraw when available")				
+				if parent_i.is_row_selection_enabled then
+					internal_is_selected := True
+					parent_i.add_row_to_selected_rows (Current)
+					if parent_i.row_select_actions_internal /= Void then
+						parent_i.row_select_actions_internal.call ([interface])
+					end
+					parent_i.redraw_client_area
+					fixme ("EV_GRID_ROW_I:enable_select - Perform a more optimal redraw when available")
+				else
+					internal_update_selection (True)
+				end				
 			end
 		end
 
 	disable_select is
 			-- Deselect the object.
 		do
-			if is_selected then
-				disable_select_internal
-				parent_i.update_row_selection_status (Current)
-				parent_i.redraw_client_area
-				fixme ("EV_GRID_ROW_I:disable_select - Perform a more optimal redraw when available")					
-			end
+			if parent_i.is_row_selection_enabled then
+				if internal_is_selected then
+					internal_is_selected := False
+					parent_i.remove_row_from_selected_rows (Current)
+					if parent_i.row_deselect_actions_internal /= Void then
+						parent_i.row_deselect_actions_internal.call ([interface])
+					end
+					parent_i.redraw_client_area
+					fixme ("EV_GRID_ROW_I:disable_select - Perform a more optimal redraw when available")					
+				end
+			else
+				internal_update_selection (False)
+			end				
 		end
 
 	destroy is
@@ -674,56 +747,9 @@ feature {EV_GRID_ROW_I, EV_GRID_I} -- Implementation
 		end
 
 feature {EV_GRID_ITEM_I} -- Implementation
-
-	increase_selected_item_count is
-			-- Increase `selected_item_count' by 1.
-		require
-			selected_item_count_less_than_count: selected_item_count < count
-		do
-			selected_item_count := selected_item_count + 1
-		ensure
-			selected_item_count_increased: selected_item_count = old selected_item_count + 1
-		end
-
-	decrease_selected_item_count is
-			-- Decrease selected_item_count by 1.
-		require
-			selected_item_count_greater_than_zero: selected_item_count > 0
-		do
-			selected_item_count := selected_item_count - 1
-		ensure
-			selected_item_count_decreased: selected_item_count = old selected_item_count - 1
-			selected_item_count_not_negative: selected_item_count >= 0
-		end
-
-	selected_item_count: INTEGER
-		-- Number of selected items in `Current'.
 		
 	subrows: EV_GRID_ARRAYED_LIST [EV_GRID_ROW_I]
 		-- All subrows of `Current'.
-
-feature {EV_GRID_I} -- Implementation
-		
-	disable_select_internal is
-			-- Set internal data to signify that `Current' is unselected.
-		local
-			i: INTEGER
-			a_item: EV_GRID_ITEM_I
-		do
-			from
-				i := 1
-			until
-				i > count
-			loop
-				a_item := parent_i.item_internal (i, index)
-				if a_item /= Void and then a_item.internal_is_selected then
-					a_item.disable_select_internal
-				end
-				i := i + 1
-			end
-				-- Set selected item count to zero
-			selected_item_count := 0			
-		end
 
 feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I} -- Implementation
 
@@ -891,7 +917,6 @@ feature {EV_ANY_I, EV_GRID_ROW} -- Implementation
 			
 invariant
 	no_subrows_implies_not_expanded: parent /= Void and then subrow_count = 0 implies not is_expanded
-	selected_item_count_valid: is_initialized implies selected_item_count >= 0 and then selected_item_count <= count
 	subrows_not_void: is_initialized implies subrows /= Void
 end
 

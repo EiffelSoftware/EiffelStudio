@@ -220,7 +220,7 @@ feature -- Access status
 
 feature {ICOR_EXPORTER} -- Implementation
 
-	frozen cwin_close_handle (a_hdl: INTEGER): INTEGER is
+	frozen cwin_close_handle (a_hdl: POINTER): INTEGER is
 				-- CloseHandle (HANDLE)
 		external
 			"[

@@ -46,8 +46,6 @@ cluster
 				end
 			ceiffel_compiler_coclass_imp
 				end
-			ceiffel_html_documentation_generator_coclass_imp
-				end
 			ieiffel_project_impl_stub
 				end
 			ieiffel_compiler_impl_stub
@@ -64,13 +62,15 @@ cluster
 				end
 			ieiffel_cluster_properties_impl_stub
 				end
-			ieiffel_html_documentation_generator_impl_stub
+			ieiffel_html_documentation_generator_impl_proxy
 				end
 			ieiffel_system_externals_impl_stub
 				end
 			ieiffel_system_assemblies_impl_stub
 				end
 			ieiffel_assembly_properties_impl_stub
+				end
+			ieiffel_html_documentation_generator_impl_stub
 				end
 			ieiffel_exception_impl_stub
 				end

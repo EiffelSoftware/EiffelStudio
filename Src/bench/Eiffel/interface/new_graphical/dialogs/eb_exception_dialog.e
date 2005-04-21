@@ -37,6 +37,7 @@ feature {NONE} -- Initialization
 			buttons_box: EV_HORIZONTAL_BOX
 			error_box: EV_HORIZONTAL_BOX
 			main_box: EV_VERTICAL_BOX
+			ignore_button: EV_BUTTON
 			quit_button: EV_BUTTON
 			restart_button: EV_BUTTON
 			exception_frame: EV_FRAME
@@ -50,14 +51,16 @@ feature {NONE} -- Initialization
 			set_title ("Internal Error")
 			set_size (600, 440)
 
-			create error_label.make_with_text (Warning_messages.w_Internal_error)
+			create error_label.make_with_text (Warning_messages.w_internal_error)
 			error_label.align_text_left
 			error_pixmap := Pixmaps.error_pixmap.twin
 			error_pixmap.set_minimum_size (error_pixmap.width, error_pixmap.height)
 			
+			create ignore_button.make_with_text_and_action ("Ignore", agent destroy)
 			create quit_button.make_with_text_and_action ("Quit now!", agent execute_die)
 			create restart_button.make_with_text_and_action ("Restart now!", agent restart)
 			create save_button.make_with_text_and_action ("Save", agent save_exeption_trace)
+			Layout_constants.set_default_size_for_button (ignore_button)
 			Layout_constants.set_default_size_for_button (quit_button)
 			Layout_constants.set_default_size_for_button (restart_button)
 			Layout_constants.set_default_size_for_button (save_button)
@@ -85,6 +88,8 @@ feature {NONE} -- Initialization
 			create buttons_box
 			buttons_box.set_padding (Layout_constants.Default_padding_size)
 			buttons_box.extend (create {EV_CELL})
+			buttons_box.extend (ignore_button)
+			buttons_box.disable_item_expand (ignore_button)
 			buttons_box.extend (quit_button)
 			buttons_box.disable_item_expand (quit_button)
 			buttons_box.extend (restart_button)
@@ -103,8 +108,8 @@ feature {NONE} -- Initialization
 			main_box.disable_item_expand (buttons_box)
 			
 			extend (main_box)
-			set_default_push_button (restart_button)
-			set_default_cancel_button (quit_button)
+			set_default_push_button (ignore_button)
+			set_default_cancel_button (ignore_button)
 		end
 		
 feature {NONE} -- Implementation

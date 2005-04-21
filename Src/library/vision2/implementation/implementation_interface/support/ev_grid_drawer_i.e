@@ -188,11 +188,15 @@ feature -- Basic operations
 							last_row_index := row_counter
 							last_row_index_set := True
 						end
-						if current_row.subrow_count > 0 and not current_row.is_expanded then
-							if not first_row_index_set then
-								skipped_rows := skipped_rows + current_row.subnode_count_recursive	
+						if current_row /= Void then
+								-- If the mode is partially dynamic and a tree is enabled, it
+								-- is possible that the current row may not exist.
+							if current_row.subrow_count > 0 and not current_row.is_expanded then
+								if not first_row_index_set then
+									skipped_rows := skipped_rows + current_row.subnode_count_recursive	
+								end
+								row_counter := row_counter + current_row.subnode_count_recursive
 							end
-							row_counter := row_counter + current_row.subnode_count_recursive
 						end
 						row_counter := row_counter + 1
 					end
@@ -400,10 +404,9 @@ feature -- Basic operations
 					loop						
 						current_row_index := visible_row_indexes.item
 							-- Retrieve information regarding the rows that we must draw.
+						current_row := grid.row_internal (current_row_index)
 						current_row_list := grid.row_list @ (current_row_index - 1)
-						current_row := grid.rows @ current_row_index
-	
-						
+				
 						if grid.is_row_height_fixed and not grid.is_tree_enabled then
 							current_item_y_position := (grid.row_height * (current_row_index - 1)) - (internal_client_y - vertical_buffer_offset)
 							current_row_height := grid.row_height
@@ -419,6 +422,8 @@ feature -- Basic operations
 						if grid.is_tree_enabled then
 							-- Only perform the following calculations if the tree is enabled
 							-- as otherwise, they are not required.
+							-- Note that `current_row' may be Void if we are in partially dynamic mode
+							-- and a tree is enabled. If subrows were set, it is not possible for `current_row' to be Void.
 						
 							parent_row_i := current_row.parent_row_i
 						
@@ -431,16 +436,20 @@ feature -- Basic operations
 							if drawing_subrow or drawing_parentrow then
 								-- We are now about to draw a row that is a subrow of another row, so
 								-- perform any calculations required.
-								from
-									counter := 0
-									node_index := 0
-								until
-									node_index > 0
-								loop
-									if current_row_list @ counter /= Void then
-										node_index := counter + 1
+								if current_row_list.count /= 0 then
+									from
+										counter := 0
+										node_index := 0
+									until
+										node_index > 0
+									loop
+										if current_row_list @ counter /= Void then
+											node_index := counter + 1
+										end
+										counter := counter + 1
 									end
-									counter := counter + 1
+								else
+									node_index := 1
 								end
 								if drawing_subrow then
 									parent_row_list := grid.row_list @ (current_row.parent_row_i.index - 1)
@@ -479,7 +488,14 @@ feature -- Basic operations
 							vertical_node_pixmap_bottom_offset := vertical_node_pixmap_top_offset + node_pixmap_height
 							
 							if drawing_parentrow or (drawing_subrow) then
-								current_subrow_indent := grid.item_indent (grid.item (current_row.index_of_first_item, current_row.index).implementation)
+								if current_row.index_of_first_item = 0 then
+										-- In this case the subrow has no first item, so we set the indent
+										-- to one large enough to show the horizontal lines all the way off to the
+										-- right hand side of the grid.
+									current_subrow_indent := grid.viewable_width + 100
+								else	
+									current_subrow_indent := grid.item_indent (grid.item (current_row.index_of_first_item, current_row.index).implementation)
+								end
 							else
 								current_subrow_indent := 0
 							end
@@ -632,7 +648,7 @@ feature -- Basic operations
 													 	grid.drawable.draw_segment (current_item_x_position, row_vertical_center, horizontal_node_pixmap_left_offset, row_vertical_center)
 													 end
 												elseif l_x_end.min (current_item_x_position + current_column_width) /= current_item_x_position + current_column_width then
-														-- Now we must clip the segment and draw.
+														-- Now we must clip the horizontal segment and draw.
 													grid.drawable.draw_segment (l_x_end.min (current_item_x_position + current_column_width), row_vertical_center, current_item_x_position + current_column_width, row_vertical_center)
 												end	
 											end
@@ -643,17 +659,27 @@ feature -- Basic operations
 												if are_tree_node_connectors_shown then
 													grid.drawable.set_foreground_color (tree_node_connector_color)
 													if current_horizontal_pos < column_offsets @ (node_index + 1) then
+															-- Draw the vertical line at the node, connecting the top and bottom
+															-- of the tree row.
 														if parent_row_i.subnode_count_recursive > ((current_row.index + current_row.subnode_count_recursive) - parent_row_i.index) then
+																-- In this case we are not the final row in the parents structure, so we must draw from the top of
+																-- the row to the bottom.
 															if current_row.is_expandable then
-																grid.drawable.draw_segment (node_pixmap_vertical_center, vertical_node_pixmap_top_offset, node_pixmap_vertical_center, current_item_y_position)
+																	-- The row displays an expand or collapse pixmap, so draw the lines above and below. Subtract one as we
+																	-- do not want to overwrite the first line of the pixmap.
+																grid.drawable.draw_segment (node_pixmap_vertical_center, vertical_node_pixmap_top_offset - 1, node_pixmap_vertical_center, current_item_y_position)
 																grid.drawable.draw_segment (node_pixmap_vertical_center, vertical_node_pixmap_bottom_offset, node_pixmap_vertical_center, row_vertical_bottom)
 															else
+																	-- Draw a single line from top to bottom.
 																grid.drawable.draw_segment (node_pixmap_vertical_center, current_item_y_position, node_pixmap_vertical_center, row_vertical_bottom)
 															end
 														else
+																-- We are the final row in the parents structure, so we draw from the center of the row to the top.
 															if current_row.is_expandable then
-																grid.drawable.draw_segment (node_pixmap_vertical_center, vertical_node_pixmap_top_offset, node_pixmap_vertical_center, current_item_y_position)
+																	-- Draw from the top of the node. Subtract one as we do not want to overwrite the first line of the pixmap.
+																grid.drawable.draw_segment (node_pixmap_vertical_center, vertical_node_pixmap_top_offset - 1, node_pixmap_vertical_center, current_item_y_position)
 															else
+																	-- Draw from the center of the row as no node pixmap is displayed.
 																grid.drawable.draw_segment (node_pixmap_vertical_center, row_vertical_center, node_pixmap_vertical_center, current_item_y_position)
 															end
 														end

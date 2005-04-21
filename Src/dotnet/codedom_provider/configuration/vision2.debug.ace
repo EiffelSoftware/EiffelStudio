@@ -5,7 +5,7 @@ root
 	ANY
 
 default
-	multithreaded (yes)
+	multithreaded (no)
  	assertion (require)
  	msil_generation (yes)
  	msil_key_file_name ("$EIFFEL_SRC\dotnet\helpers\isekey.snk")

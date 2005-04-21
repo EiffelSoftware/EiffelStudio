@@ -5,7 +5,7 @@ root
 	NM_APPLICATION: make_and_launch
 
 default
-	multithreaded (yes)
+	multithreaded (no)
 	assertion (all)
 	msil_generation (yes)
 	line_generation (yes)

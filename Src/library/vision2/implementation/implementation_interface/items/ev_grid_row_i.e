@@ -693,6 +693,19 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 
 feature {EV_GRID_I, EV_GRID_ROW_I} -- Implementation
 
+	update_for_item_removal (item_index: INTEGER) is
+			-- Update `Current' to reflect the fact that item at position
+			-- `item_index' has been removed.
+		require
+			valid_item_index: item_index >= 1 and item_index <= count
+		do
+			if parent_i.is_tree_enabled and parent_row_i /= Void then
+					-- Check and update `indent_depth_in_tree'.
+				fixme ("EV_GRID.update_for_item_removal Possibly refactor `intermal_set_parent_row' as we do not need to change the parent here.")
+				internal_set_parent_row (parent_row_i)
+			end	
+		end
+
 	update_for_removal is
 			-- Update settings in `Current' to reflact the fact that
 			-- it is being removed from `parent_i'.

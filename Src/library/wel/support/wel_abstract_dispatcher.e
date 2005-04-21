@@ -26,6 +26,21 @@ inherit
 	WEL_EN_CONSTANTS	
 		-- debug
 
+feature -- Settings
+
+	set_exception_callback (an_action: like exception_callback) is
+			-- Set `exception_callback' with `an_action'.
+		do
+			exception_callback := an_action
+		ensure
+			excetption_callback_set: exception_callback = an_action
+		end
+
+feature {NONE} -- Implementation: Access
+
+	exception_callback: PROCEDURE [ANY, TUPLE [EXCEPTION]]
+			-- Action being executed when an exception occurs during
+
 feature {NONE} -- Implementation
 
 	frozen window_procedure (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER is
@@ -77,10 +92,11 @@ feature {NONE} -- Implementation
 				end
 			else
 					-- Something wrong occurred here, perform default action
-				debug ("win_dispatcher")
-					display_error
-				end
 				Result := cwin_def_window_proc (hwnd, msg, wparam, lparam)
+					-- And call `exception_callback' if it is set
+				if exception_callback /= Void then
+					exception_callback.call ([new_exception])
+				end
 			end
 		rescue
 			if window /= Void and then need_decrement then
@@ -152,10 +168,11 @@ feature {NONE} -- Implementation
 				end
 			else
 					-- Something wrong occurred here, perform default action
-				debug ("win_dispatcher")
-					display_error
-				end
 				Result := to_lresult (0)
+					-- And call `exception_callback' if it is set
+				if exception_callback /= Void then
+					exception_callback.call ([new_exception])
+				end
 			end
 		rescue
 			if window /= Void and then need_decrement then
@@ -165,17 +182,27 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-feature {NONE} -- Implementation
-
-	display_error is
-			-- Display last exception in a dialog box.
+	new_exception: EXCEPTION is
+			-- New exception object representating the last exception caught in Current
 		local
 			l_exceptions: EXCEPTIONS
-			l_box: WEL_MSG_BOX
+			l_tag: STRING
+			l_trace: STRING
 		do
-			create l_box.make
 			create l_exceptions
-			l_box.error_message_box (Void, l_exceptions.exception_trace, "WEL DISPATCHER error")
+			l_tag := l_exceptions.tag_name
+			l_trace := l_exceptions.exception_trace
+			if l_tag = Void and l_trace = Void then
+				create Result.make_with_tag_and_trace ("No tag", "No trace")
+			elseif l_tag = Void then
+				create Result.make_with_tag_and_trace ("No tag", l_trace)
+			elseif l_trace = Void then
+				create Result.make_with_tag_and_trace (l_tag, "No trace")
+			else
+				create Result.make_with_tag_and_trace (l_tag, l_trace)
+			end
+		ensure
+			new_exception_not_void: Result /= Void
 		end
 
 feature {NONE} -- Externals

@@ -110,6 +110,19 @@ feature -- Access
 
 	error_message: STRING
 			-- Message explaining why `Current' could not be initialized.	
+	
+	save_defaults_to_store: BOOLEAN
+			-- Should preferences with default values be saved to the underlying data store when saving?
+
+feature -- Status Setting
+
+	set_save_defaults (a_flag: BOOLEAN) is
+			-- Set `save_defaults_to_store' with `a_flag'.
+		do
+			save_defaults_to_store := a_flag
+		ensure
+			value_set: save_defaults_to_store = a_flag
+		end		
 
 feature -- Manager
 
@@ -188,14 +201,14 @@ feature -- Resource
 		require
 			resource_not_void: a_resource /= Void
 		do
-			if not a_resource.is_default_value then
+			if save_defaults_to_store or else not a_resource.is_default_value then
 				resource_structure.save_resource (a_resource)					
 			end
 		end		
 
 	save_resources is
 			-- Commit all changes by saving the underlying data store.  Only save resources 
-			-- which are not using the default value.			
+			-- which are not using the default value.
 		do
 			from
 				resources.start

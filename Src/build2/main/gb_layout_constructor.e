@@ -251,8 +251,8 @@ feature {NONE} -- Implementation
 			if a_key.code = Key_delete and selected_item /= Void then
 					-- Only perform deletion if delete key pressed, and an
 					-- object was selected.
-				if Preferences.boolean_resource_value (preferences.show_deleting_keyboard_warning, True) then
-					create warning_dialog.make_initialized (2, preferences.show_deleting_keyboard_warning, delete_warning1 + "object" + delete_warning2, delete_do_not_show_again)
+				if preferences.dialog_data.show_deleting_keyboard_warning then
+					create warning_dialog.make_initialized (2, preferences.dialog_data.show_deleting_keyboard_warning_string, delete_warning1 + "object" + delete_warning2, delete_do_not_show_again, preferences.preferences)
 					warning_dialog.set_icon_pixmap (Icon_build_window @ 1)
 					warning_dialog.set_ok_action (agent delete_object)
 					warning_dialog.show_modal_to_window (parent_window (Current))

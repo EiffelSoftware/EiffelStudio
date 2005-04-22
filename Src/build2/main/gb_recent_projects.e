@@ -33,8 +33,8 @@ feature -- Basic operations
 			lower_location: STRING
 			l_string: STRING
 		do
-			recent_projects := preferences.array_resource_value (preferences.recent_projects_string, create {ARRAY [STRING]}.make (1, 1))
-			number_of_projects := preferences.integer_resource_value (preferences.number_of_recent_projects, 10)
+			recent_projects := preferences.global_data.recent_projects_string
+			number_of_projects := preferences.global_data.number_of_recent_projects
 			lower_location ?= system_status.current_project_settings.project_location.as_lower
 			
 				-- Determine if the project is already included in the list of recent projects.
@@ -78,8 +78,8 @@ feature -- Basic operations
 				end
 				recent_projects.put (l_string, 1)
 			end
-			preferences.set_array_resource (preferences.recent_projects_string, recent_projects)
-			preferences.save_resources
+			preferences.global_data.recent_projects_string_preference.set_value (recent_projects)
+			preferences.preferences.save_resources
 		end
 		
 	clip_recent_projects is
@@ -88,10 +88,10 @@ feature -- Basic operations
 			recent_projects: ARRAY [STRING]
 			number_of_projects: INTEGER
 		do
-			recent_projects := preferences.array_resource_value (preferences.recent_projects_string, create {ARRAY [STRING]}.make (1, 1))
-			number_of_projects := preferences.integer_resource_value (preferences.number_of_recent_projects, 10)
+			recent_projects := preferences.global_data.recent_projects_string
+			number_of_projects := preferences.global_data.number_of_recent_projects
 			if number_of_projects < recent_projects.count then
-				Preferences.set_array_resource (preferences.recent_projects_string, recent_projects.subarray (1, number_of_projects))
+				preferences.global_data.recent_projects_string_preference.set_value (recent_projects.subarray (1, number_of_projects))
 			end
 		end
 

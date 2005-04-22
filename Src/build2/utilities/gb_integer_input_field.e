@@ -302,12 +302,12 @@ feature {NONE} -- Implementation
 						remove_select_item
 					end
 				else
-					create warning_dialog.make_initialized (1, show_invalid_constant_selection_warning, constant_rejected_warning, Constants_do_not_show_again)
+					create warning_dialog.make_initialized (1, show_invalid_constant_selection_warning, constant_rejected_warning, Constants_do_not_show_again, preferences.preferences)
 					warning_dialog.set_icon_pixmap (Icon_build_window @ 1)
 					warning_dialog.set_ok_action (agent do_nothing)
 					warning_dialog.set_title ("Invalid Constant Selected")
 					warning_dialog.show_modal_to_window (parent_window (Current))
-					preferences.save_resources
+					preferences.preferences.save_resources
 					if not has_select_item then
 						add_select_item
 					end

@@ -57,6 +57,7 @@ inherit
 		export
 			{NONE} all
 			{ANY} system_status
+			{GB_PREFERENCES_WINDOW} clip_recent_projects
 		undefine
 			default_create, copy, is_equal
 		end
@@ -138,15 +139,15 @@ feature -- Basic operation
 				-- Build the tools and other widgets within `Current'.
 			build_widget_structure (Void)
 			set_minimum_size (640, 480)
-			set_width (preferences.integer_resource_value (Preferences.build_window__width, 640))
-			set_height (preferences.integer_resource_value (Preferences.build_window__height, 480))
-			set_x_position (preferences.integer_resource_value (Preferences.build_window__x_position, 200))
-			set_y_position (preferences.integer_resource_value (Preferences.build_window__y_position, 200))
+			set_width (preferences.global_data.build_window_width)
+			set_height (preferences.global_data.build_window_height)
+			set_x_position (preferences.global_data.build_window_x_position)
+			set_y_position (preferences.global_data.build_window_y_position)
 			
 				-- Register an event that clips recent projects with the preferences.
-				-- This permits the update of paticular properties in the system after a preferences
+				-- This permits the update of particular properties in the system after a preferences
 				-- value has changed.
-			Preferences.register_preference_window_post_display_event (agent clip_recent_projects)
+--			Preferences.register_preference_window_post_display_event (agent clip_recent_projects)
 			
 				-- When an attempt to close `Current' is made, call `close_requested'.
 			close_request_actions.extend (agent close_requested)
@@ -203,10 +204,10 @@ feature -- Basic operation
 			
 				-- Now restore from preferences
 			if horizontal_split_area.full then
-				set_split_position (horizontal_split_area, preferences.integer_resource_value (Preferences.main_split__position, 100))
+				set_split_position (horizontal_split_area, preferences.global_data.main_split_position)
 			end
-			initialize_tool_positions (preferences.array_resource_value (preferences.tool_order, create {ARRAY [STRING]}.make (1, 1)))
-			initialize_external_tool_positions (preferences.array_resource_value (preferences.external_tool_order, create {ARRAY [STRING]}.make (1, 1)))
+			initialize_tool_positions (preferences.global_data.tool_order)
+			initialize_external_tool_positions (preferences.global_data.external_tool_order)
 			
 				-- This will update the tool interface if `multiple_split_area' has no items contained,
 				-- effectively hiding `multiple_split_area'.
@@ -239,7 +240,7 @@ feature -- Basic operation
 			linear_rep: ARRAYED_LIST [EV_WIDGET]
 		do
 				-- Now store to preferences
-			Preferences.set_integer_resource (Preferences.main_split__position, horizontal_split_area.split_position)
+			preferences.global_data.main_split_position_preference.set_value (horizontal_split_area.split_position)
 			store_tool_positions
 			
 				-- Now unparent tools from `multiple_split_area'.
@@ -255,7 +256,7 @@ feature -- Basic operation
 			end
 
 					-- Actually save the preferences.
-			Preferences.save_resources;
+			preferences.preferences.save_resources;
 
 			lock_update
 				-- Remove the tools from `Current'.
@@ -287,7 +288,7 @@ feature -- Basic operation
 				-- Clear any existing items.
 			recent_projects_menu.wipe_out
 				-- Now make menu entries for the recent projects.
-			recent_projects := preferences.array_resource_value (preferences.recent_projects_string, create {ARRAY [STRING]}.make (1, 1))
+			recent_projects := preferences.global_data.recent_projects_string
 			from
 				counter := 1
 			until
@@ -455,7 +456,7 @@ feature {NONE} -- Implementation
 			
 			view_preferences.extend (command_handler.tools_always_on_top_command.new_menu_item)
 			create menu_item.make_with_text ("Preferences...")
-			menu_item.select_actions.extend (agent Preferences.show_preference_window)
+			menu_item.select_actions.extend (agent preferences.show_preference_window (Current))
 			view_preferences.extend (menu_item)
 
 				-- Initialize the project menu.
@@ -967,7 +968,7 @@ feature {NONE} -- Implementation
 				info.put (output, linear_rep.index)
 				linear_rep.forth
 			end
-			preferences.set_array_resource (preferences.tool_order, info)
+			preferences.global_data.tool_order_preference.set_value (info)
 			linear_rep := multiple_split_area.external_representation.twin
 			create info.make (1, linear_rep.count)
 			from	
@@ -993,7 +994,7 @@ feature {NONE} -- Implementation
 				info.put (output, linear_rep.index)
 				linear_rep.forth
 			end
-			preferences.set_array_resource (preferences.external_tool_order, info)
+			preferences.global_data.external_tool_order_preference.set_value (info)
 		end
 		
 	assign_command_accelerators_to_window is
@@ -1051,7 +1052,7 @@ feature {NONE} -- Implementation
 						-- Now store to preferences, but only if the project is open.
 						-- If it is closed, these preferences will have already been saved
 						-- at the point the project was closed, as they are subsequently hidden.
-					Preferences.set_integer_resource (Preferences.main_split__position, horizontal_split_area.split_position)
+					preferences.global_data.main_split_position_preference.set_value (horizontal_split_area.split_position)
 					store_tool_positions
 				end
 				
@@ -1059,13 +1060,13 @@ feature {NONE} -- Implementation
 				xml_handler.save_components
 				
 					-- Now store current window settings into preferences.
-				Preferences.set_integer_resource (Preferences.Build_window__width, width)
-				Preferences.set_integer_resource (Preferences.Build_window__height, height)
-				Preferences.set_integer_resource (Preferences.Build_window__x_position, x_position)
-				Preferences.set_integer_resource (Preferences.Build_window__y_position, y_position)
+				preferences.global_data.build_window_width_preference.set_value (width)
+				preferences.global_data.build_window_height_preference.set_value (height)
+				preferences.global_data.build_window_x_position_preference.set_value (x_position)
+				preferences.global_data.build_window_y_position_preference.set_value (y_position)
 
 					-- Actually save the preferences.
-				Preferences.save_resources;
+				preferences.preferences.save_resources;				
 				
 					-- Destroy the application.
 				(create {EV_ENVIRONMENT}).application.destroy

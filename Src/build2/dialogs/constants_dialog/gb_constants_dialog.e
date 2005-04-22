@@ -707,13 +707,13 @@ feature {NONE} -- Implementation
 						end
 					end
 					if not constant.referers.is_empty and not referers_dialog_already_displayed and not cross_referers_dialog_already_displayed then
-						create warning_dialog.make_initialized (2, show_constant_manifest_conversion_warning, "One or more constants are still referenced by objects in the system.%NIf you delete then, all references will be converted to manifest values.%NAre you sure you wish to perform this?", "Always convert, and do not show again.")
+						create warning_dialog.make_initialized (2, show_constant_manifest_conversion_warning, "One or more constants are still referenced by objects in the system.%NIf you delete then, all references will be converted to manifest values.%NAre you sure you wish to perform this?", "Always convert, and do not show again.", preferences.preferences)
 						warning_dialog.set_icon_pixmap (Icon_build_window @ 1)
 						warning_dialog.set_ok_action (agent do_nothing)
 						warning_dialog.set_title ("Constant still referenced")
 						warning_dialog.set_cancel_action (agent cancelled.set_item (True))
 						warning_dialog.show_modal_to_window (Current)
-						preferences.save_resources
+						preferences.preferences.save_resources
 						referers_dialog_already_displayed := True
 					end
 					ordered_selected_items.forth
@@ -750,7 +750,7 @@ feature {NONE} -- Implementation
 						end
 					end
 				if not constant.referers.is_empty and not cross_referers_dialog_already_displayed then
-					create warning_dialog.make_initialized (2, show_constant_manifest_conversion_warning, "Constant named `" + constant.name + "' is still referenced by one or more objects in the system.%NIf you delete it, all references will be converted to manifest values.%NAre you sure you wish to perform this?", "Always convert, and do not show again.")
+					create warning_dialog.make_initialized (2, show_constant_manifest_conversion_warning, "Constant named `" + constant.name + "' is still referenced by one or more objects in the system.%NIf you delete it, all references will be converted to manifest values.%NAre you sure you wish to perform this?", "Always convert, and do not show again.", preferences.preferences)
 					warning_dialog.set_icon_pixmap (Icon_build_window @ 1)
 					warning_dialog.set_ok_action (agent do_nothing)
 					warning_dialog.set_title ("Constant still referenced")

@@ -285,7 +285,7 @@ feature -- Basic operation
 										element_info := full_information @ (name_string)
 
 										parent_directories.extend (element_info.data)
-										if preferences.boolean_resource_value (Preferences.generate_empty_directories, False) then
+										if preferences.code_generation_data.generate_empty_directories then
 											create_directory_from_path (parent_directories)
 										end
 									end

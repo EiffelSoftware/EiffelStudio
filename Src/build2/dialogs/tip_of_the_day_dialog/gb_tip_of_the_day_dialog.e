@@ -41,8 +41,8 @@ feature {NONE} -- Initialization
 		do
 			set_default_cancel_button (close_button)
 			set_default_push_button (close_button)
-			tip_counter := Preferences.integer_resource_value (preferences.tip_of_day_index, 1)
-			if Preferences.boolean_resource_value (Preferences.Show_tip_of_the_day, True) then
+			tip_counter := preferences.global_data.tip_of_day_index
+			if preferences.global_data.show_tip_of_the_day then
 				show_tips_button.enable_select
 			else
 				show_tips_button.disable_select
@@ -91,9 +91,9 @@ feature {NONE} -- Implementation
 	close_button_selected is
 			-- Called by `select_actions' of `close_button'.
 		do
-			Preferences.set_boolean_resource (preferences.Show_tip_of_the_day, show_tips_button.is_selected)
-			Preferences.set_integer_resource (preferences.tip_of_day_index, get_next_tip_index (tip_counter))
-			Preferences.save_resources
+			preferences.global_data.show_tip_of_the_day_preference.set_value (show_tips_button.is_selected)
+			preferences.global_data.tip_of_day_index_preference.set_value (get_next_tip_index (tip_counter))
+			preferences.preferences.save_resources
 			destroy
 		end
 		

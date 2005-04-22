@@ -636,9 +636,9 @@ feature {NONE} -- Implementation
 			warning_dialog: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
 		do
 				-- Warn user if the file already exists.
-			if Preferences.boolean_resource_value (preferences.show_changing_client_type_warning, True) then
+			if preferences.dialog_data.show_changing_client_type_warning then
 				if object.window_selector_item.file_exists then
-					create warning_dialog.make_initialized (2, preferences.show_changing_client_type_warning, changing_client_warning, "Do not show again")
+					create warning_dialog.make_initialized (2, preferences.dialog_data.show_changing_client_type_warning_string, changing_client_warning, "Do not show again", preferences.preferences)
 					warning_dialog.set_icon_pixmap (Icon_build_window @ 1)
 					warning_dialog.set_cancel_action (agent undo_client_change)
 					warning_dialog.set_ok_action (agent internal_update_client_setting)

@@ -368,6 +368,91 @@ feature -- Access
 
 feature -- Status setting
 
+	internal_item_veto_pebble_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM, ANY], BOOLEAN]
+		-- User item veto function.
+
+	set_item_veto_pebble_function (a_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM, ANY], BOOLEAN]) is
+			-- Assign `a_function' to `item_veto_pebble_function'.
+		require
+			a_function_not_void: a_function /= Void
+		do
+			internal_item_veto_pebble_function := a_function
+			drawable.drop_actions.set_veto_pebble_function (agent user_item_veto_pebble_function_intermediary)
+			drawable.drop_actions.extend (agent item_drop_action)
+		end
+
+	internal_item_drop_actions: ACTION_SEQUENCE [TUPLE [EV_GRID_ITEM, ANY]]
+
+	item_drop_action (a_pebble: ANY) is
+			-- A PND drop has occured on a grid item
+		do
+			
+		end
+
+	item_target: EV_GRID_ITEM is
+			-- Item currently at pointer position.
+		local
+			a_pointer_position: EV_COORDINATE
+			a_x, a_y: INTEGER
+			a_item: EV_GRID_ITEM_I
+		do
+			a_pointer_position := (create {EV_SCREEN}).pointer_position
+			a_x := a_pointer_position.x - drawable.screen_x
+			a_y := a_pointer_position.y - drawable.screen_y
+			if a_x > 0 and then a_y > 0 then
+				a_item := drawer.item_at_position_strict (a_x, a_y)
+				if a_item /= Void then
+					Result := a_item.interface
+				end
+			end
+		end
+
+	user_item_veto_pebble_function_intermediary (a_pebble: ANY): BOOLEAN is
+			-- Intermediary function used for grid item pebble vetoing.
+		do
+			if internal_item_veto_pebble_function /= Void then
+				Result := internal_item_veto_pebble_function.item ([item_target, a_pebble])
+			end
+		end
+
+	set_item_pebble_function (a_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], ANY]) is
+			-- Set `a_function' to compute `pebble'.
+			-- It will be called once each time a pick on an EV_GRID_ITEM occurs, the result
+			-- will be assigned to `pebble' for the duration of transport.
+			-- When a pick occurs on an item, the item itself is passed
+			-- To handle this data use `a_function' of type
+			-- FUNCTION [ANY, TUPLE [EV_GRID_ITEM], ANY] and return the
+			-- pebble as a function of EV_GRID_ITEM.
+		do
+			if internal_item_pebble_function = Void then
+					-- Intermediary only needs to be set once
+				drawable.set_pebble_function (agent user_pebble_function_intermediary)
+			end
+			internal_item_pebble_function := a_function
+		end
+
+	user_pebble_function_intermediary (a_x, a_y: INTEGER): ANY is
+			-- Intermediary function used for grid item pick and drop.
+		local
+			item_imp: EV_GRID_ITEM_I
+			item_int: EV_GRID_ITEM
+		do
+				-- Find item if any at (a_x, a_y) then call user pebble function.
+			if a_x >= 0 and then a_y >= 0 then
+				item_imp := drawer.item_at_position_strict (a_x, a_y)
+				if item_imp /= Void then
+					item_int := item_imp.interface
+				end
+			end
+				-- Call user pebble agent passing in grid item if found
+			if internal_item_pebble_function /= Void then
+				Result := internal_item_pebble_function.item ([item_int])
+			end
+		end
+
+	internal_item_pebble_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], ANY]
+		-- User pebble function
+
 	activate_window: EV_WINDOW
 		-- Window used to edit grid item contents on `activate'.
 
@@ -1221,6 +1306,7 @@ feature -- Removal
 			a_physical_index: INTEGER
 		do
 			a_col_i := column_internal (a_column)
+			a_col_i.disable_select
 			a_physical_index := a_col_i.physical_index
 			
 				-- Remove association of column with `Current'
@@ -1565,11 +1651,11 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			else
 				row_offsets := Void
 			end
-			
+
 		ensure
 			offsets_consistent_when_not_fixed: not is_row_height_fixed implies row_offsets.count = rows.count + 1
 		end
-		
+
 	total_row_height: INTEGER is
 			-- `Result' is total height of all rows contained in `Current'.
 		do
@@ -1647,6 +1733,17 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 		do
 			drawable.redraw
 		end
+
+	redraw_row (a_row: EV_GRID_ROW_I) is
+			-- Redraw area of `a_row' if visible.
+		require
+			a_row_not_void: a_row /= Void
+		local
+			row_y1: INTEGER
+		do
+			row_y1 := a_row.virtual_y_position - (internal_client_y - viewport_y_offset)
+			drawable.redraw_rectangle (viewport_x_offset, row_y1, viewport.width, a_row.height)
+		end
 		
 	redraw_from_row_to_end (a_row: EV_GRID_ROW_I) is
 			-- Redraw client area from `virtual_x_position' of `a_row' down to the bottom of the client
@@ -1660,6 +1757,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			a2 := a_row.virtual_y_position - (internal_client_y - viewport_y_offset)
 			drawable.redraw_rectangle (viewport_x_offset, a2, viewport.width, viewport.height + internal_client_y - a_row.virtual_y_position)
 		end
+
 
 feature {EV_GRID_DRAWER_I, EV_GRID_COLUMN_I, EV_GRID_ROW_I, EV_GRID_ITEM_I, EV_GRID} -- Implementation
 
@@ -2605,6 +2703,7 @@ feature {NONE} -- Event handling
 			start_row_index, end_row_index, start_column_index, end_column_index: INTEGER
 			col_counter, row_counter: INTEGER
 			current_item: EV_GRID_ITEM
+			a_cursor: ARRAYED_LIST_CURSOR
 		do
 			if (create {EV_ENVIRONMENT}).application.shift_pressed and then is_multiple_item_selection_enabled then
 				start_item := selected_items.last
@@ -2631,8 +2730,11 @@ feature {NONE} -- Event handling
 						end
 						col_counter := col_counter + 1
 					end
-				internal_selected_items.prune_all (start_item)
-				internal_selected_items.extend (start_item)
+					a_cursor := internal_selected_items.cursor
+					internal_selected_items.start
+					internal_selected_items.prune (start_item)
+					internal_selected_items.extend (start_item)
+					internal_selected_items.go_to (a_cursor)
 				end
 			elseif (create {EV_ENVIRONMENT}).application.ctrl_pressed and then (is_multiple_item_selection_enabled or is_multiple_row_selection_enabled) then
 					-- If the ctrl key is pressed and we are in a multiple selection mode then we do nothing.
@@ -2927,8 +3029,13 @@ feature {EV_GRID_ROW_I} -- Implementation
 			a_row_not_void: a_row /= Void
 			has_a_row: internal_selected_rows.has (a_row.interface)
 			row_deselected: not a_row.internal_is_selected
+		local
+			a_cursor: ARRAYED_LIST_CURSOR
 		do
-			internal_selected_rows.prune_all (a_row.interface)
+			a_cursor := internal_selected_rows.cursor
+			internal_selected_rows.start
+			internal_selected_rows.prune (a_row.interface)
+			internal_selected_rows.go_to (a_cursor)
 		ensure
 			row_removed: not internal_selected_rows.has (a_row.interface)
 		end
@@ -2953,8 +3060,13 @@ feature {EV_GRID_ITEM_I} -- Implementation
 			a_item_not_void: a_item /= Void
 			has_a_item: internal_selected_items.has (a_item.interface)
 			item_deselected: not a_item.internal_is_selected
+		local
+			a_cursor: ARRAYED_LIST_CURSOR
 		do
-			internal_selected_items.prune_all (a_item.interface)
+			a_cursor := internal_selected_items.cursor
+			internal_selected_items.start
+			internal_selected_items.prune (a_item.interface)
+			internal_selected_items.go_to (a_cursor)
 		ensure
 			item_removed: not internal_selected_items.has (a_item.interface)
 		end
@@ -2970,12 +3082,22 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- I
 			a_grid_col_i: EV_GRID_COLUMN_I
 			a_grid_row_i: EV_GRID_ROW_I
 			a_row_data: SPECIAL [EV_GRID_ITEM_I]
+			a_existing_item: EV_GRID_ITEM_I
+			col_index: INTEGER
 		do
 			a_grid_col_i := column_internal (a_column)
 			a_grid_row_i := row_internal (a_row)
 			a_row_data := internal_row_data @ a_row
-			if a_row_data.count < a_grid_col_i.physical_index + 1 then
+			col_index := a_grid_col_i.physical_index
+			if a_row_data.count < col_index + 1 then
 				enlarge_row (a_row, a_grid_col_i.physical_index + 1)
+			else
+					-- There is an item already present, if non void then mark it as removed from grid
+				a_existing_item := a_row_data @ col_index
+				if a_existing_item /= Void then
+					a_existing_item.disable_select
+					a_existing_item.on_removed_from_grid
+				end
 			end
 			
 			if a_item /= Void then

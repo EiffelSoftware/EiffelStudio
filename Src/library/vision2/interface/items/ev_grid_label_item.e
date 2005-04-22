@@ -39,8 +39,14 @@ feature -- Status Setting
 			not_destroyed: not is_destroyed
 			a_text_not_void: a_text /= Void
 			no_carriage_returns: not a_text.has ('%R')
+		local
+			parent_i: EV_GRID_I
 		do
 			text := a_text
+			parent_i := parent.implementation
+			if parent_i /= Void then
+				parent_i.redraw_item (implementation)
+			end
 		ensure
 			text_set: text = a_text
 		end
@@ -60,8 +66,14 @@ feature -- Status Setting
 		require
 			not_destroyed: not is_destroyed
 			a_font_not_void: a_font /= Void
+		local
+			parent_i: EV_GRID_I
 		do
 			font := a_font
+			parent_i := parent.implementation
+			if parent_i /= Void then
+				parent_i.redraw_item (implementation)
+			end
 		ensure
 			font_assigned: font = a_font
 		end
@@ -71,8 +83,14 @@ feature -- Status Setting
 		require
 			not_destroyed: not is_destroyed
 			pixmap_not_void: a_pixmap /= Void
+		local
+			parent_i: EV_GRID_I
 		do
 			pixmap := a_pixmap
+			parent_i := parent.implementation
+			if parent_i /= Void then
+				parent_i.redraw_item (implementation)
+			end
 		ensure
 			pixmap_set: pixmap = a_pixmap
 		end

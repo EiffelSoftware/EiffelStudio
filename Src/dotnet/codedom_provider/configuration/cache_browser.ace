@@ -6,7 +6,7 @@ root
 
 default
 	multithreaded (no)
-	precompiled ("$EIFFEL_SRC\dotnet\codedom_provider\build_studio\EiffelSoftware.CodeDom.CacheBrowser")
+	precompiled ("$EIFFEL_SRC\dotnet\codedom_provider\build_studio\EiffelSoftware.CodeDom.Base")
  	assertion (no)
  	msil_generation (yes)
  	il_verifiable (yes)

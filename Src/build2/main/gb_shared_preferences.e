@@ -45,7 +45,7 @@ feature -- Access
 			create Result.make_from_string (Eiffel_installation_dir_name)
 			Result.extend ("build")
 			Result.extend ("config")
-			Result.extend ("newdefault.xml")			
+			Result.extend ("default.xml")			
 		ensure
 			result_not_empty: Result /= Void
 		end

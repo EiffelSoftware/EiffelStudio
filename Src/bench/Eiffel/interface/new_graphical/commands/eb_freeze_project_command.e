@@ -39,7 +39,8 @@ feature {NONE} -- Implementation
 		do
 			create cd.make_initialized (
 				3, preferences.dialog_data.confirm_freeze_string,
-				Warning_messages.w_Freeze_warning, Interface_names.l_Discard_freeze_dialog
+				Warning_messages.w_Freeze_warning, Interface_names.l_Discard_freeze_dialog,
+				preferences.preferences
 			)
 			cd.set_ok_action (agent set_c_compilation_and_compile (True))
 			cd.set_no_action (agent set_c_compilation_and_compile (False))

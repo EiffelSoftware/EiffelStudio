@@ -217,7 +217,8 @@ feature {NONE} -- Project Initialization
 							2, preferences.dialog_data.confirm_convert_project_string,
 							Warning_messages.w_Project_incompatible_version (project_dir.name, version_number, 
 								Eiffel_project.incompatible_version_number),
-							Interface_names.l_Discard_convert_project_dialog
+							Interface_names.l_Discard_convert_project_dialog,
+							preferences.preferences
 						)
 						cd.set_ok_action (agent recompile_project (project_dir.name, Eiffel_project.ace_file_path))
 						cd.show_modal_to_window (parent_window)

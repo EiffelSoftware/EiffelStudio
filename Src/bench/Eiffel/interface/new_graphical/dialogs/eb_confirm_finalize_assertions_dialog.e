@@ -24,6 +24,15 @@ inherit
 		undefine
 			default_create, copy
 		end
+		
+	EB_SHARED_PREFERENCES
+		rename 
+			preferences as studio_preferences
+		export
+			{NONE} all		
+		undefine
+			default_create, copy		
+		end		
 
 create
 	default_create
@@ -66,13 +75,13 @@ feature {NONE} -- Deferred Implementation
 	assume_ok: BOOLEAN is
 			-- Should Discard assertions be assumed as selected?
 		do
-			Result := not preferences.dialog_data.confirm_finalize_assertions
+			Result := not studio_preferences.dialog_data.confirm_finalize_assertions
 		end
 
 	save_check_button_state (check_button_checked: BOOLEAN)is
 			-- Save the preferences according to the state of the check button.
 		do
-			preferences.dialog_data.confirm_finalize_assertions_preference.set_value (not check_button_checked)
+			studio_preferences.dialog_data.confirm_finalize_assertions_preference.set_value (not check_button_checked)
 		end
 
 end -- class EB_CONFIRM_FINALIZE_ASSERTIONS_DIALOG

@@ -33,6 +33,8 @@ feature -- Commands
 					-- Retrieve from saved values.
 				l_value := preferences.session_values.item (l_fullname)
 				create Result.make_from_string_value (a_manager, a_name, l_value)					
+				l_hidden ?= preferences.default_values.item (l_fullname).item (3)
+				Result.set_hidden (l_hidden.item)
 			elseif preferences.default_values.has (l_fullname) then
 					-- Retrieve from default values.
 				l_value ?= preferences.default_values.item (l_fullname).item (2)

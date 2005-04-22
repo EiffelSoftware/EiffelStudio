@@ -352,7 +352,8 @@ feature -- Execution
 								if Application.has_breakpoints and then Application.is_ignoring_stop_points then
 									create ignore_all_breakpoints_confirmation_dialog.make_initialized (
 										2, preferences.dialog_data.confirm_ignore_all_breakpoints_string,
-										Warning_messages.w_Ignoring_all_stop_points, Interface_names.l_Do_not_show_again
+										Warning_messages.w_Ignoring_all_stop_points, Interface_names.l_Do_not_show_again,
+										preferences.preferences
 									)
 									ignore_all_breakpoints_confirmation_dialog.set_ok_action (agent start_program)
 									ignore_all_breakpoints_confirmation_dialog.show_modal_to_window (window_manager.last_focused_development_window.window)

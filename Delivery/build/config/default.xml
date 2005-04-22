@@ -1,47 +1,25 @@
 <EIFFEL_DOCUMENT>
-<TOPIC TOPIC_ID="EiffelBuild_preferences" ICON="icon_preferences_root">
-	<HEAD>EiffelBuild Resources</HEAD>
-	<TOPIC TOPIC_ID="Global_preferences" ICON="icon_preferences_folder">
-		<HEAD>Global preferences</HEAD>
-		<TEXT DESCRIPTION="Show tip of the day at start up">show_tip_of_the_day<BOOLEAN>True</BOOLEAN></TEXT>
-		<TEXT DESCRIPTION="Number of projects kept in the recent project list" IMMEDIATE_EFFECT="yes">number_of_recent_projects<INTEGER>10</INTEGER></TEXT>
-	</TOPIC>
-	
-	<TOPIC TOPIC_ID="Graphics" ICON="icon_preferences_folder">
-		<HEAD>Graphical Elements</HEAD>
-		<TOPIC TOPIC_ID="Dialogs" ICON="icon_preferences_folder">
-			<HEAD>Dialogs</HEAD>
-			<TEXT DESCRIPTION="Display warning when adding repeated absolute pixmap">show_repeated_absolute_constant_warning<BOOLEAN>True</BOOLEAN></TEXT>
-			<TEXT DESCRIPTION="Display warning create a new relative pixmap constant with a directory constant that does not already exist">show_create_new_directory_constant_warning<BOOLEAN>True</BOOLEAN></TEXT>
-			<TEXT DESCRIPTION="Display warning when a constant selection has been rejected due to an out of bounds value">show_invalid_constant_selection_warning<BOOLEAN>True</BOOLEAN></TEXT>
-			<TEXT DESCRIPTION="Display warning when converting a deleted constant reference to a manifest value">show_constant_manifest_conversion_warning<BOOLEAN>True</BOOLEAN></TEXT>
-			<TEXT DESCRIPTION="Display warning when project location changed">show_project_location_changed_warning<BOOLEAN>True</BOOLEAN></TEXT>
-			<TEXT DESCRIPTION="Display warning when deleting via the keyboard">show_deleting_keyboard_warning<BOOLEAN>True</BOOLEAN></TEXT>
-			<TEXT DESCRIPTION="Display warning when deleting a directory containing one or more windows">show_deleting_directories_warning<BOOLEAN>True</BOOLEAN></TEXT>
-			<TEXT DESCRIPTION="Display warning when deleting final directory containing root window">show_deleting_final_directory_warning<BOOLEAN>True</BOOLEAN></TEXT>
-			<TEXT DESCRIPTION="Display warning when adding a directory that already exists on the disk">show_adding_existing_directory_warning<BOOLEAN>True</BOOLEAN></TEXT>
-			<TEXT DESCRIPTION="Display warning when changing client status of already generated window">show_changing_client_type_warning<BOOLEAN>True</BOOLEAN></TEXT>
-		</TOPIC>
-	</TOPIC>
-	<TOPIC TOPIC_ID="Dynamic_data" ICON="icon_preferences_folder" VISIBILITY="hidden">
-			<HEAD>Dynamic data</HEAD>
-			<TEXT>build_window__width<INTEGER>640</INTEGER></TEXT>
-			<TEXT>build_window__height<INTEGER>480</INTEGER></TEXT>
-			<TEXT>build_window__x_position<INTEGER>200</INTEGER></TEXT>
-			<TEXT>build_window__y_position<INTEGER>200</INTEGER></TEXT>
-			<TEXT>main_split__position<INTEGER>100</INTEGER></TEXT>
-			<TEXT>tool_order<LIST_STRING>typeselector_normal_100_100;componentselector_normal_100_100;windowselector_normal_100_100</LIST_STRING></TEXT>
-			<TEXT>external_tool_order<LIST_STRING></LIST_STRING></TEXT>
-			<TEXT>tip_of_day_index<INTEGER>1</INTEGER></TEXT>
-			<TEXT>recent_projects<LIST_STRING></LIST_STRING></TEXT>
-			<TEXT>tools_on_top<BOOLEAN>True</BOOLEAN></TEXT>
-			<TEXT>type_selector_classic_mode<BOOLEAN>True</BOOLEAN></TEXT>
+
+	<PREF NAME="global_preferences.show_tip_of_the_day" DESCRIPTION="Show tip of the day at start up"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="global_preferences.number_of_recent_projects" DESCRIPTION="Number of projects kept in the recent project list" IMMEDIATE_EFFECT="yes"><INTEGER>10</INTEGER></PREF>
+
+	<PREF NAME="graphical_elements.dialogs.show_deleting_keyboard_warning" DESCRIPTION="Display warning when deleting via the keyboard"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="graphical_elements.dialogs.show_deleting_directories_warning" DESCRIPTION="Display warning when deleting a directory containing one or more windows"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="graphical_elements.dialogs.show_deleting_final_directory_warning" DESCRIPTION="Display warning when deleting final directory containing root window"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="graphical_elements.dialogs.show_changing_client_type_warning" DESCRIPTION="Display warning when changing client status of already generated window"><BOOLEAN>True</BOOLEAN></PREF>
+
+	<PREF NAME="global_preferences.build_window_width" HIDDEN="true"><INTEGER>640</INTEGER></PREF>
+	<PREF NAME="global_preferences.build_window_height" HIDDEN="true"><INTEGER>480</INTEGER></PREF>
+	<PREF NAME="global_preferences.build_window_x_position" HIDDEN="true"><INTEGER>200</INTEGER></PREF>
+	<PREF NAME="global_preferences.build_window_y_position" HIDDEN="true"><INTEGER>200</INTEGER></PREF>
+	<PREF NAME="global_preferences.main_split_position" HIDDEN="true"><INTEGER>100</INTEGER></PREF>
+	<PREF NAME="global_preferences.tool_order" HIDDEN="true"><LIST>typeselector_normal_100_100;componentselector_normal_100_100;windowselector_normal_100_100</LIST></PREF>
+	<PREF NAME="global_preferences.external_tool_order" HIDDEN="true"><LIST></LIST></PREF>
+	<PREF NAME="global_preferences.tip_of_day_index" HIDDEN="true"><INTEGER>1</INTEGER></PREF>
+	<PREF NAME="global_preferences.recent_projects" HIDDEN="true"><LIST></LIST></PREF>
+	<PREF NAME="global_preferences.tools_on_top" HIDDEN="true"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="global_preferences.type_selector_classic_mode" HIDDEN="true"><BOOLEAN>True</BOOLEAN></PREF>
 			
-	</TOPIC>
-	<TOPIC TOPIC_ID="Code_generation" ICON="icon_preferences_folder">
-	<HEAD>Code Generation</HEAD>
-		<TEXT DESCRIPTION="Generate empty directories to disk">generate_empty_directories<BOOLEAN>False</BOOLEAN></TEXT>
-	</TOPIC>
-		
-</TOPIC>
+	<PREF NAME="code_generation.generate_empty_directories" DESCRIPTION="Generate empty directories to disk"><BOOLEAN>False</BOOLEAN></PREF>
+
 </EIFFEL_DOCUMENT>

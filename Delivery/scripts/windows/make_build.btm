@@ -12,8 +12,9 @@ cleanup_eiffel build.exe
 iff not exist build.exe then
 	remtrace Could not finalize a new EiffelBuild
 	CANCEL
+else
+	move build.exe %INSTALL_DIR\releases\enterprise\
 endiff
-move build.exe %INSTALL_DIR\releases\enterprise\
 
 iff not defined BUILD_ENTERPRISE_ONLY then
 	remtrace Free version of EiffelBuild
@@ -25,6 +26,7 @@ iff not defined BUILD_ENTERPRISE_ONLY then
 	iff not exist build.exe then
 		remtrace Could not finalize a new EiffelBuild
 		CANCEL
+	else
+		move build.exe %INSTALL_DIR\releases\free_version
 	endiff
-	move build.exe %INSTALL_DIR\releases\free_version
 endiff

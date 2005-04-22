@@ -601,18 +601,31 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			same_parent: a_row.parent = parent
 			parent_enabled_as_tree: parent.is_tree_enabled
 			row_is_final_subrow_in_tree_structure:
-				a_row.index = parent_row_root.index + parent_row_root.subrow_count_recursive	
+				a_row.index + a_row.subrow_count_recursive = parent_row_root.index + parent_row_root.subrow_count_recursive	
 		local
 			row_imp: EV_GRID_ROW_I
+			i, last_changed_subrow_index: INTEGER
 		do
 			row_imp := a_row.implementation
 			subrows.go_i_th (subrow_count)
 			subrows.remove
 			row_imp.internal_set_parent_row (Void)
 			
+				-- Now update the depth properties for each subrow of `a_row'.
+				-- `a_row' was already handled by the call to `internal_set_parent_row'.
+			from
+				i := row_imp.index + 1
+				last_changed_subrow_index := row_imp.index + row_imp.subrow_count_recursive + 1
+			until
+				i > last_changed_subrow_index
+			loop
+				parent_i.rows.i_th (i).update_depths_in_tree
+				i := i + 1
+			end
+			
 				-- Decrease the node count for `Current' and all parents by 1 + the node count
 				-- for the added subrow as this may also be a tree structure.
-			update_parent_node_counts_recursively (row_imp.subnode_count_recursive - 1)
+			update_parent_node_counts_recursively (- (row_imp.subnode_count_recursive + 1))
 			
 				-- If `Current' is expanded then we must also decrease the expanded node count by
 				-- 1 + the node count of the added subrow as this may also be a tree structure.
@@ -749,8 +762,7 @@ feature {EV_GRID_I, EV_GRID_ROW_I} -- Implementation
 		do
 			if parent_i.is_tree_enabled and parent_row_i /= Void then
 					-- Check and update `indent_depth_in_tree'.
-				fixme ("EV_GRID.update_for_item_removal Possibly refactor `intermal_set_parent_row' as we do not need to change the parent here.")
-				internal_set_parent_row (parent_row_i)
+				update_depths_in_tree
 			end	
 		end
 
@@ -813,16 +825,25 @@ feature {EV_GRID_ROW_I, EV_GRID_I} -- Implementation
 			-- Set the `parent_row' of `Current'
 		do
 			parent_row_i := a_parent_row
+			update_depths_in_tree
+		end
+		
+	update_depths_in_tree is
+			-- Update `depth_in_tree' and `indent_depth_in_tree' based
+			-- on `Current' `Parent_row_i'.
+		do
 			if parent_row_i /= Void then
-				depth_in_tree := a_parent_row.depth_in_tree + 1
-				indent_depth_in_tree := a_parent_row.indent_depth_in_tree + 1
+				depth_in_tree := parent_row_i.depth_in_tree + 1
+				indent_depth_in_tree := parent_row_i.indent_depth_in_tree + 1
 				if parent_row_i.index_of_first_item /= index_of_first_item then
 					indent_depth_in_tree := 1
 				end				
 			else
-				depth_in_tree := 0
-				indent_depth_in_tree := 0
+				depth_in_tree := 1
+				indent_depth_in_tree := 1
 			end
+		ensure
+			no_parent_implies_depths_set_to_one: parent_row_i = Void implies depth_in_tree = 1 and indent_depth_in_tree = 1
 		end
 
 feature {EV_GRID_ITEM_I} -- Implementation
@@ -873,7 +894,6 @@ feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I} -- Implementation
 			-- For `Current' and all parent nodes of `Current' recursively, update their
 			-- `subnode_count_recursive' by `adjustment_value'.
 		require
-			has_subrows: subrow_count > 0
 			adjustment_value_not_zero: adjustment_value /= 0
 		local
 			parent_row_imp: EV_GRID_ROW_I
@@ -892,7 +912,6 @@ feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I} -- Implementation
 			-- For `Current' and all parent nodes of `Current' recursively, update their
 			-- `subnode_count_recursive' by `adjustment_value'.
 		require
-			has_subrows: subrow_count > 0
 			adjustment_value_not_zero: adjustment_value /= 0
 		local
 			parent_row_imp: EV_GRID_ROW_I

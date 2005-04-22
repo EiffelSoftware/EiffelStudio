@@ -361,9 +361,12 @@ typedef struct tag_EIF_once_value_t {
 		EIF_REAL_64     EIF_REAL_64_result;
 		EIF_REFERENCE * EIF_REFERENCE_result;
 		EIF_POINTER     EIF_POINTER_result;
-	} result;               /* Result of a once function (if any) */
-	unsigned char   failed; /* Associated exception code (if any) */
-	EIF_BOOLEAN     done;   /* Can result be used?                */
+	} result;                  /* Result of a once function (if any) */
+	unsigned char   failed;    /* Associated exception code (if any) */
+	EIF_BOOLEAN     done;      /* Can result be used?                */
+#ifndef WORKBENCH
+	EIF_BOOLEAN     succeeded; /* Is feature succesfully evaluated?  */
+#endif
 } EIF_once_value_t;
 
 #ifdef EIF_THREADS
@@ -390,14 +393,10 @@ typedef struct tag_EIF_process_once_value_t {
 #define MTOI(index) (EIF_once_values+(index))
 #define MTOD(item)  ((item)->done)
 #define MTOR(result_type,item) ((item)->result.CAT2(result_type,_result))
-#define MTOP(result_type,item,value) ((item)->result.CAT2(result_type,_result)) = value
+#define MTOP(result_type,item,value) ((item)->result.CAT2(result_type,_result)) = (value)
 #define MTOM(item)      (item)->done = EIF_TRUE
 #define MTOE(item,code) (item)->failed = (code)
 #define MTOF(item)      (item)->failed
-
-// TODO: remove these macros as soon as compiler is bootstrapped
-#define MTOG(result_type,item,presult) (presult = result_type (item).result.EIF_REFERENCE_result)
-#define MTOS(item,presult) ((item).result.EIF_REFERENCE_result = (EIF_REFERENCE *) presult)
 
 #ifdef __cplusplus
 }

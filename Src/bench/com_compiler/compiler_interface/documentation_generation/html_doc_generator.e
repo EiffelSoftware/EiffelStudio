@@ -132,46 +132,46 @@ feature -- Basic operations
 			l_cluster: CLUSTER_I
 			retried: BOOLEAN
 		do
-			if not retried then
-				create doc_generator.make
-				create du.make
-				doc_generator.set_filter ("html-stylesheet")
-				doc_generator.set_directory (create {DIRECTORY}.make (generation_path))
-				doc_generator.set_cluster_formats (true, false)
-				doc_generator.set_system_formats (true, true, true)
-				doc_generator.set_class_formats (false, false, false, true, false, false)
-				
+			create doc_generator.make
+			create du.make
+
 				-- set the included clusters
-				from
-					included_clusters.start
-				until
-					included_clusters.after
-				loop
-					l_cluster := doc_generator.Universe.cluster_of_name (included_clusters.item)
-					if l_cluster /= Void then
-						du.include_cluster (l_cluster, true)
-					end
-					included_clusters.forth
+			from
+				included_clusters.start
+			until
+				included_clusters.after
+			loop
+				l_cluster := doc_generator.Universe.cluster_of_name (included_clusters.item)
+				if l_cluster /= Void then
+					du.include_cluster (l_cluster, true)
 				end
-				doc_generator.set_universe (du)
-				
-				doc_generator.set_excluded_indexing_items (create {LINKED_LIST[STRING]}.make)
-				
-				set_html_document_generator (Current)
-				main_window.process_generate_message
-			else
-				output.put_string ("Unable to complete generation of documentation")
+				included_clusters.forth
 			end
-		rescue
-			retried := True
-			Retry
+			doc_generator.set_universe (du)
+
+			doc_generator.set_filter ("html-stylesheet")
+			doc_generator.set_directory (create {DIRECTORY}.make (generation_path))
+			doc_generator.set_cluster_formats (true, false)
+			doc_generator.set_system_formats (true, true, true)
+			doc_generator.set_class_formats (false, false, false, true, false, false)			
+			doc_generator.set_excluded_indexing_items (create {LINKED_LIST[STRING]}.make)
+			
+			set_html_document_generator (Current)
+			generate_docs
 		end
 		
 	generate_docs is
 			-- generate the documentation
+		local
+			retried: BOOLEAN
 		do
-			-- generate the output
-			doc_generator.generate (output)	
+			if not retried then
+					-- generate the output
+				doc_generator.generate (output)
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 feature {NONE} -- Implementation

@@ -14,7 +14,6 @@ inherit
 		end
 
 	SHARED_DECLARATIONS
-	REFACTORING_HELPER
 
 feature 
 
@@ -192,8 +191,8 @@ end
 			buf: GENERATION_BUFFER
 		do
 			is_direct_once.set_item (False)
-			generate_access_on_type (gen_reg, class_type);
-			buf := buffer;
+			generate_access_on_type (gen_reg, class_type)
+			buf := buffer
 			if is_direct_once.item then
 				buf.put_character (',')
 				buf.put_character ('(')
@@ -207,7 +206,7 @@ end
 				gen_reg.print_register
 				if parameters /= Void then
 					generate_parameters_list
-				end;
+				end
 			end
 			buf.put_character (')')
 		end
@@ -272,29 +271,11 @@ end
 					internal_name := rout_table.feature_name
 					type_c := real_type (type).c_type
 
-					if 
-						is_once and then not System.has_multithreaded and then 
-						typ.base_class.assertion_level.level & ({ASSERTION_I}.Ck_require | {ASSERTION_I}.Ck_ensure | {ASSERTION_I}.Ck_invariant) = 0
-					then
+					if is_once and then context.is_once_call_optimized then
 							-- Routine contracts (require, ensure, invariant) should not be checked
 							-- and value of already called once routine can be retrieved from memory
-						fixme ("[
-							1. Similar optimization can be done in multithreaded mode, but we need to distinguish between
-							   process-relative and thread-relative once routines.
-							2. Even with precondition and postcondition checks turned on there is a possibility that
-							   routine has no preconditions and postconditions. Then if class invariants are not checked
-							   the optimization is still applicable.
-						]")
 						is_direct_once.set_item (True)
-						if type_c.is_void then
-								-- It is a once procedure
-							buf.put_string ("RTOVP(")
-						else
-								-- It is a once function
-							buf.put_string ("RTOVF(")
-						end
-						buf.put_integer (body_index)
-						buf.put_character (',')
+						context.generate_once_optimized_call_start (type_c, body_index, is_process_relative, buf)
 					end
 
 					local_argument_types := argument_types
@@ -304,8 +285,8 @@ end
 							-- Remember extern routine declaration
 						Extern_declarations.add_routine_with_signature (type_c,
 								internal_name, local_argument_types)
-						if is_once and then not System.has_multithreaded and then context.final_mode then
-							Extern_declarations.add_once (type_c, body_index)
+						if is_once and then context.is_once_call_optimized then
+							Extern_declarations.add_once (type_c, body_index, is_process_relative)
 						end
 					end
 
@@ -363,6 +344,7 @@ end
 			routine_id := f.routine_id
 			body_index := f.body_index
 			is_once := f.is_once
+			is_process_relative := f.is_process_relative
 			enlarge_parameters
 		end
 

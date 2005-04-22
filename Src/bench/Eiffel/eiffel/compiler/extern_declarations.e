@@ -45,12 +45,14 @@ feature -- Settings
 			attribute_tables.put (attr_table.twin)
 		end
 
-	add_once (type: TYPE_C; code_index: INTEGER) is
+	add_once (type: TYPE_C; code_index: INTEGER; is_process_relative: BOOLEAN) is
 			-- Add `once_name' to current extern declarations.
 		require
 			type__not_void: type /= Void
 		do
-			onces_table.put (type, code_index)
+			if not system.has_multithreaded or else is_process_relative then
+				onces_table.put (type, code_index)
+			end
 		end
 
 	add_type_table (type_table: STRING) is
@@ -156,6 +158,7 @@ feature -- Settings
 			local_attribute_tables: SEARCH_TABLE [STRING]
 			local_type_tables: SEARCH_TABLE [STRING]
 			local_onces: like onces_table
+			local_once_prefix: STRING
 		do
 			from
 				local_routines := routines
@@ -170,15 +173,23 @@ feature -- Settings
 			end
 
 			from
+				if system.has_multithreaded then
+						-- Process-relative once
+					local_once_prefix := "RTOPH"
+				else
+						-- Single-threaded application
+					local_once_prefix := "RTOSH"
+				end
 				local_onces := onces_table
 				local_onces.start
 			until
 				local_onces.after
 			loop
+				buffer.put_string (local_once_prefix)
 				if local_onces.item_for_iteration.is_void then
-					buffer.put_string ("RTOSHP(")
+					buffer.put_string ("P(")
 				else
-					buffer.put_string ("RTOSHF(")
+					buffer.put_string ("F(")
 					buffer.put_string (local_onces.item_for_iteration.c_string)
 					buffer.put_character (',')
 				end

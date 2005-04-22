@@ -10,78 +10,29 @@ inherit
 	EV_GRID_ITEM_I
 		redefine
 			interface,
-			redraw
-		end
-		
-	EV_FONTABLE_I
-		redefine
-			interface
-		end
-
-	EV_TEXTABLE_I
-		redefine
-			interface
+			redraw,
+			initialize
 		end
 
 create
 	make
+	
+feature {NONE} -- Initialization
 
-feature -- Access
-
-	text: STRING is
-			-- Text displayed in textable.
+	initialize is
+			-- Initialize `Current'.
 		do
-			if internal_text /= Void then
-				Result := internal_text.twin
-			else
-				Result := ""
-			end
-		end
-		
-	font: EV_FONT is
-			-- Font used in `Current'.
-		do
-			if internal_font /= Void then
-				Result := internal_font.twin
-			else
-				create Result
-			end
-		end
-
-feature -- Element change
-
-	set_text (a_text: STRING) is
-			-- Assign `a_text' to `text'.
-		do
-			internal_text := a_text
-			if parent_i /= Void then
-				parent_i.redraw_item (Current)
-			end
-		end
-		
-	set_font (ft: EV_FONT) is
-			-- Make `ft' new font of `Current'.
-		do
-			internal_font := ft
-			if parent_i /= Void then
-				parent_i.redraw_item (Current)
-			end
+			Precursor {EV_GRID_ITEM_I}
+			interface.set_text ("")
 		end
 
 feature {EV_GRID_DRAWER_I} -- Implementation
-
-	internal_text: STRING
-		-- Text displayed
-
-	internal_font: EV_FONT
-		-- Font used to display `text' on screen
 		
 	internal_default_font: EV_FONT is
-			--
+			-- Default font used for `Current'.
 		once
 			create Result
 		end
-		
 		
 	redraw (an_x, a_y, a_width, a_height: INTEGER; drawable: EV_DRAWABLE) is
 			-- Redraw `Current'.
@@ -107,13 +58,13 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 			end
 			
 			drawable.set_copy_mode
-			if internal_font /= Void then
-				drawable.set_font (internal_font)
+			if interface.font /= Void then
+				drawable.set_font (interface.font)
 			else
 				drawable.set_font (internal_default_font)
 			end
-			if internal_text /= Void then
-				drawable.draw_ellipsed_text_top_left (an_x, a_y, internal_text, a_width)
+			if interface.text /= Void then
+				drawable.draw_ellipsed_text_top_left (an_x, a_y, interface.text, a_width)
 			end
 		end
 

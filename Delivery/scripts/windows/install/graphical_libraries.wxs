@@ -2155,6 +2155,7 @@
 								</Directory>
 								<Directory Id="events37" Name="events">
 									<Component Id="ev_item_action_sequences_i.e" Guid="ABF859C0-2F16-4222-9779-86C1EA3FD95A">
+										<File Id="ev_grid_action_sequences_i_e" Name="EV_GRI~1.E" LongName="ev_grid_action_sequences_i.e" />
 										<File Id="ev_application_action_sequences_i.e" Name="EV_APP~5.E" LongName="ev_application_action_sequences_i.e" />
 										<File Id="ev_button_action_sequences_i.e" Name="EV_BUT~1.E" LongName="ev_button_action_sequences_i.e" />
 										<File Id="ev_combo_box_action_sequences_i.e" Name="EV_COM~1.E" LongName="ev_combo_box_action_sequences_i.e" />

@@ -61,7 +61,6 @@ feature -- Start output features
 			put_string ("Starting Documentation")
 			total_number := total_num
 		end
-		
 
 	put_initializing_documentation is
 			-- output initializing message
@@ -71,8 +70,17 @@ feature -- Start output features
 		
 	put_class_document_message (c: CLASS_C) is
 			-- Put the class name to the output
+		local
+			l_continue: BOOLEAN_REF
 		do
-			callback.event_notify_percentage_complete (((processed * 100) / (total_number)).floor)	
+			processed := processed + 1
+			callback.event_output_class_document_message ("Creating documentation for '" + c.name + "'")
+			create l_continue
+			callback.event_should_continue (l_continue)
+			if not l_continue.item then
+				interrupt
+			end
+			callback.event_notify_percentage_complete (((processed * 100) / (total_number)).floor)
 		end
 		
 	put_case_class_message (c: CLASS_C) is

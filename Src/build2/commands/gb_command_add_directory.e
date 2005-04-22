@@ -132,7 +132,7 @@ feature -- Basic Operation
 					-- undoing or redoing.
 				if not warnings_supressed then
 					create directory_exists_dialog.make_initialized (2, show_adding_existing_directory_warning,
-									"The directory already exists on the disk. Do you wish to include it in the project?", "Always include, and do not show this warning again.")
+									"The directory already exists on the disk. Do you wish to include it in the project?", "Always include, and do not show this warning again.", preferences.preferences)
 					directory_exists_dialog.set_icon_pixmap (Icon_build_window @ 1)
 					directory_exists_dialog.set_ok_action (agent set_directory_added_succesfully)
 					directory_exists_dialog.show_modal_to_window (main_window)

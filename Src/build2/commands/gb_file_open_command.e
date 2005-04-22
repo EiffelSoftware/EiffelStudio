@@ -133,7 +133,8 @@ feature -- Basic operations
 						if not directory_of_file (file_name).is_equal (project_settings.project_location) then								
 							create discardable_error_dialog.make_initialized (1, show_project_location_changed_warning,
 								"The location of the .bpr file has changed from " + project_settings.project_location + " to " + directory_of_file (file_name) + ".%N%NPlease ensure that the file `system_interface.xml' has also been relocated to this new directory%NEiffelBuild will now attempt to load `system_interface.xml'.",
-								"Do not show again and always check for `system_interface.xml' in the current directory")
+								"Do not show again and always check for `system_interface.xml' in the current directory",
+								preferences.preferences)
 							discardable_error_dialog.set_icon_pixmap (Icon_build_window @ 1)
 							discardable_error_dialog.set_ok_action (agent update_location (directory_of_file (file_name)))
 							discardable_error_dialog.show_modal_to_window (main_window)
@@ -231,7 +232,8 @@ feature -- Basic operations
 								if not dialog.file_path.is_equal (project_settings.project_location) then								
 									create discardable_error_dialog.make_initialized (1, show_project_location_changed_warning,
 										"The location of the .bpr file has changed from " + project_settings.project_location + " to " + dialog.file_path + ".%N%NPlease ensure that the file `system_interface.xml' has also been relocated to this new directory%NEiffelBuild will now attempt to load `system_interface.xml'.",
-										"Do not show again and always check for `system_interface.xml' in the current directory")
+										"Do not show again and always check for `system_interface.xml' in the current directory",
+										preferences.preferences)
 									discardable_error_dialog.set_icon_pixmap (Icon_build_window @ 1)
 									discardable_error_dialog.set_ok_action (agent update_location (dialog.file_path))
 									discardable_error_dialog.show_modal_to_window (main_window)

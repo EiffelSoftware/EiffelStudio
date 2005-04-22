@@ -3180,7 +3180,7 @@ rt_private void interpret(int flag, int where)
 				create_expanded_locals (scur, stop);
 					/* Initialize permanent storage */
 				put_once_result (iresult, rtype, OResult);
-					/* FIXME: register process-relative onces. *
+					/* FIXME: register process-relative onces. */
 					/* Mark this once routine as executed. */
 				onceadd(body_id);
 					/* Register rescue handler (if any). */

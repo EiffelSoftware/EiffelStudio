@@ -92,7 +92,8 @@ feature {NONE} -- Implementation
 			cd: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
 		do
 			create cd.make_initialized (2, preferences.dialog_data.confirm_kill_string, 
-					Interface_names.l_Confirm_kill, Interface_names.l_Do_not_show_again)
+					Interface_names.l_Confirm_kill, Interface_names.l_Do_not_show_again,
+					preferences.preferences)
 			cd.set_ok_action (agent kill)
 			cd.show_modal_to_window (window_manager.last_focused_development_window.window)
 			window_manager.last_focused_window.raise

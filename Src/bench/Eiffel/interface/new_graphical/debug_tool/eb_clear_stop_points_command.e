@@ -146,7 +146,8 @@ feature -- Execution
 			if Application.has_breakpoints then
 				create cd.make_initialized (
 					2, preferences.dialog_data.confirm_clear_breakpoints_string,
-					Warning_messages.w_Clear_breakpoints, Interface_names.l_Dont_ask_me_again
+					Warning_messages.w_Clear_breakpoints, Interface_names.l_Dont_ask_me_again,
+					preferences.preferences
 				)
 				cd.set_ok_action (agent clear_breakpoints)
 				cd.show_modal_to_window (window_manager.last_focused_development_window.window)

@@ -39,6 +39,7 @@ feature {NONE} -- Initialization
 			body_index := f.body_index
 			routine_id := f.rout_id_set.first
 			is_once := f.is_once
+			is_process_relative := f.is_process_relative
 			precursor_type := p_type
 			type := t
 			if System.il_generation then
@@ -80,13 +81,16 @@ feature -- Access
 			-- Body Index of the feature
 
 	is_once: BOOLEAN
-			-- Is the current feature a once function
+			-- Is the current feature a once feature?
 			--| Used when inlining is turned on in final mode, because we are not
 			--| allowed to inline once routines
 
+	is_process_relative: BOOLEAN
+			-- Is current feature process-relative?
+
 	parameters: BYTE_LIST [PARAMETER_B]
 			-- Feature parameters: can be Void
-		
+
 	set_parameters (p: like parameters) is
 			-- Assign `p' to `parameters'.
 		do

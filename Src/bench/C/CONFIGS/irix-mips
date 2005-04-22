@@ -151,6 +151,7 @@ eif_sgi='define'
 eif_solaris='undef'
 eif_win32='undef'
 eif_windows='undef'
+eif_64_bits='undef'
 Mcc='Mcc'
 #Check value for next 2
 mtccflags="$ccflags -DEIF_THREADS -DEIF_POSIX_THREADS"

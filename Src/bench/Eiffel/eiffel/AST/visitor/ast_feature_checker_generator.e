@@ -1045,8 +1045,10 @@ feature -- Implementation
 						l_element_type := l_last_types.item (i)
 						if not l_element_type.conform_to (l_type_a) then
 							if l_element_type.convert_to (context.current_class, l_type_a) then
-								l_list.put_i_th (context.last_conversion_info.byte_node (
-									l_list.i_th (i)), i)
+								if is_byte_node_enabled then
+									l_list.put_i_th (context.last_conversion_info.byte_node (
+										l_list.i_th (i)), i)
+								end
 							else
 								l_has_error := True
 								i := nb + 1	-- Exit the loop

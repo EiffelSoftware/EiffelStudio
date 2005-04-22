@@ -120,6 +120,12 @@ feature {NONE} -- Implementation
 		do
 			grid.remove_row (current_row_index)			
 		end
+		
+	unparent_row_button_selected is
+			-- Called by `select_actions' of `unparent_row_button'.
+		do
+			grid.row (current_row_index).parent_row.remove_subrow (grid.row (current_row_index))
+		end
 
 end -- class ROW_TAB
 

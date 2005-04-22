@@ -229,15 +229,21 @@ feature -- Access
 	internal_update_selection (a_selection_state: BOOLEAN) is
 			-- Set the selection state of all non void items in `Current' to `a_selection_state'.
 		local
-			a_item: EV_GRID_ITEM
+			a_item: EV_GRID_ITEM_I
 			i: INTEGER
+			a_count: INTEGER
+			a_internal_index: INTEGER
+			a_parent_i: EV_GRID_I
 		do
 			from
 				i := 1
+				a_internal_index := internal_index
+				a_parent_i := parent_i
+				a_count := count
 			until
-				i > count
+				i > a_count
 			loop
-				a_item := item (i)
+				a_item := a_parent_i.item_internal (i, a_internal_index)
 				if a_item /= Void then
 					if a_selection_state then
 						a_item.enable_select
@@ -253,19 +259,23 @@ feature -- Access
 			-- Are all the non void items in `Current' selected?
 			-- False if no non void items are present.
 		local
-			a_item: EV_GRID_ITEM
+			a_item: EV_GRID_ITEM_I
 			i: INTEGER
 			a_count: INTEGER
 			non_void_item_found: BOOLEAN
+			a_internal_index: INTEGER
+			a_parent_i: EV_GRID_I
 		do
 			from
 				i := 1
 				Result := True
 				a_count := count
+				a_internal_index := internal_index
+				a_parent_i := parent_i
 			until
 				not Result or else i > a_count
 			loop
-				a_item := item (i)
+				a_item := parent_i.item_internal (i, a_internal_index)
 				if a_item /= Void then
 					non_void_item_found := True
 					Result := a_item.is_selected
@@ -699,8 +709,7 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 					if parent_i.row_select_actions_internal /= Void then
 						parent_i.row_select_actions_internal.call ([interface])
 					end
-					parent_i.redraw_client_area
-					fixme ("EV_GRID_ROW_I:enable_select - Perform a more optimal redraw when available")
+					parent_i.redraw_row (Current)
 				else
 					internal_update_selection (True)
 				end				
@@ -717,8 +726,7 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 					if parent_i.row_deselect_actions_internal /= Void then
 						parent_i.row_deselect_actions_internal.call ([interface])
 					end
-					parent_i.redraw_client_area
-					fixme ("EV_GRID_ROW_I:disable_select - Perform a more optimal redraw when available")					
+					parent_i.redraw_row (Current)		
 				end
 			else
 				internal_update_selection (False)
@@ -752,6 +760,8 @@ feature {EV_GRID_I, EV_GRID_ROW_I} -- Implementation
 		require
 			is_parented: parent /= Void
 		do
+				-- Make sure row is unselected from grid before removal
+			disable_select
 			if parent_row_i /= Void then
 				parent_row_i.update_for_subrow_removal (Current)
 			end

@@ -79,7 +79,7 @@ feature -- Status setting
 		require
 			a_function_not_void: a_function /= Void
 			a_function_takes_two_integer_open_operands:
-				a_function.valid_operands ([(1).to_integer, (1).to_integer])
+				a_function.valid_operands ([1, 1])
 				-- Note that `a_function' with no operands or one integer
 				-- operand meets this criteria.
 		deferred

@@ -219,39 +219,15 @@ feature -- C code generation
 						buffer.put_string (internal_name)
 						buffer.put_character (',')
 						buffer.put_integer (real_body_id)
-						buffer.put_character (',')
-						value.generate (buffer)
 					elseif System.has_multithreaded then
 						buffer.put_string ("RTOUC (")
 						buffer.put_integer (local_byte_context.thread_relative_once_index (body_index))
-						buffer.put_character (',')
-						value.generate (buffer)
 					else
-						buffer.put_string ("if (!RTOFN (")
-						buffer.put_integer (body_index)
-						buffer.put_string (",_succeeded)) {")
-						buffer.put_new_line
-						buffer.indent
-						buffer.put_string ("RTOFN (")
-						buffer.put_integer (body_index)
-						buffer.put_string (",_succeeded) = EIF_TRUE;")
-						buffer.put_new_line
-						buffer.put_string ("RTOC_NEW (RTOSR (")
-						buffer.put_integer (body_index)
-						buffer.put_string ("));")
-						buffer.put_new_line
-						buffer.put_string ("RTOSR (")
-						buffer.put_integer (body_index)
-						buffer.put_string (") = ")
-						value.generate (buffer)
-						buffer.put_character (';')
-						buffer.exdent
-						buffer.put_new_line
-						buffer.put_character ('}')
-						buffer.put_new_line
-						buffer.put_string ("return RTOSR(")
+						buffer.put_string ("RTOSC (")
 						buffer.put_integer (body_index)
 					end
+					buffer.put_character (',')
+					value.generate (buffer)
 					buffer.put_character (')')
 				else
 					buffer.put_string ("return ")

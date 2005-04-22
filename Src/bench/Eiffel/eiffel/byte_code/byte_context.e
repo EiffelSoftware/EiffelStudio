@@ -12,6 +12,7 @@ inherit
 	SHARED_SERVER
 	SHARED_GENERATION
 	COMPILER_EXPORTER
+	REFACTORING_HELPER
 
 create
 	make, make_from_context
@@ -246,9 +247,8 @@ feature {NONE} -- Once features: implementation
 
 feature -- C code generation: once features
 
-	is_once_twofold: BOOLEAN
-			-- Is once routine generated in two functions to avoid
-			-- overhead caused by exception interception?
+	is_once_call_optimized: BOOLEAN
+			-- Can call to a once routine be optimized by direct loading of its result from memory?
 
 	add_thread_relative_once (type: TYPE_C; code_index: INTEGER) is
 			-- Register thread-relative once routine identified by its `code_index' with result type `type'.
@@ -281,6 +281,52 @@ feature -- C code generation: once features
 			has: has_thread_relative_once (code_index)
 		do
 			Result := onces.item (code_index).second
+		end
+
+	generate_once_optimized_call_start (type_c: TYPE_C; code_index: INTEGER; is_process_relative: BOOLEAN; buf: like buffer) is
+			-- Generate beginning of optimized direct call to once routine of type `type_c' with given `code_index'
+		require
+			is_once_call_optimized: is_once_call_optimized
+			type_not_void: type_c /= Void
+			buffer_not_void: buf /= Void
+		do
+			if not System.has_multithreaded then
+				if type_c.is_void then
+						-- It is a once procedure
+					buf.put_string ("RTOSCP(")
+				else
+						-- It is a once function
+					buf.put_string ("RTOSCF(")
+				end
+				buf.put_integer (code_index)
+			elseif is_process_relative then
+				if type_c.is_void then
+						-- It is a once procedure
+					buf.put_string ("RTOPCP(")
+				else
+						-- It is a once function
+					buf.put_string ("RTOPCF(")
+				end
+				buf.put_integer (code_index)
+			else
+				if type_c.is_void then
+						-- It is a once procedure
+					buf.put_string ("RTOUCP(")
+				elseif type_c.is_pointer then
+						-- It is a once function returning reference
+					buf.put_string ("RTOUCR(")
+				else
+						-- It is a once function returning basic type
+					buf.put_string ("RTOUCB(")
+					buf.put_string (type_c.c_string)
+					buf.put_character (',')
+				end
+					-- Once routine might be not registered yet
+					-- Let's do it now
+				add_thread_relative_once (type_c, code_index)
+				buf.put_integer (thread_relative_once_index (code_index))
+			end
+			buf.put_character (',')
 		end
 
 	generate_once_data_definition (buf: like buffer) is
@@ -830,17 +876,20 @@ feature -- Access
 		do
 			class_type := t
 			current_type := t.type
-				-- Decide whether once routines should be generated as two functions
-				-- to avoid performance penalty caused by inefficient code generated
-				-- for functions with exception handling
+				-- Decide whether once routines can be optimized so that their results 
+				-- can be retrieved directly from memory without making actual calls.
 			if
-				workbench_mode or else system.has_multithreaded or else
-				assertion_level.check_precond or else
+				workbench_mode or else assertion_level.check_precond or else
 				assertion_level.check_invariant or else assertion_level.check_postcond
 			then
-				is_once_twofold := False
+				fixme ("[
+					Even with precondition and postcondition checks turned on there is a possibility that
+					routine has no preconditions and postconditions. Then if class invariants are not checked
+					the optimization is still applicable.
+				]")
+				is_once_call_optimized := False
 			else
-				is_once_twofold := True
+				is_once_call_optimized := True
 			end
 		end
 

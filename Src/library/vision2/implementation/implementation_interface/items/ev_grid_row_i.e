@@ -580,6 +580,46 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			node_counts_correct: node_counts_correct
 		end
 		
+	remove_subrow (a_row: EV_GRID_ROW) is
+			-- Ensure that `a_row' is no longer a child row of `Current'
+		require
+			is_parented: parent /= Void
+			a_row_not_void: a_row /= Void
+			a_row_is_parented: a_row.parent /= Void
+			a_row_is_not_current: a_row /= interface
+			a_row_is_a_subrow: a_row.parent_row = interface
+			same_parent: a_row.parent = parent
+			parent_enabled_as_tree: parent.is_tree_enabled
+			row_is_final_subrow_in_tree_structure:
+				a_row.index = parent_row_root.index + parent_row_root.subrow_count_recursive	
+		local
+			row_imp: EV_GRID_ROW_I
+		do
+			row_imp := a_row.implementation
+			subrows.go_i_th (subrow_count)
+			subrows.remove
+			row_imp.internal_set_parent_row (Void)
+			
+				-- Decrease the node count for `Current' and all parents by 1 + the node count
+				-- for the added subrow as this may also be a tree structure.
+			update_parent_node_counts_recursively (row_imp.subnode_count_recursive - 1)
+			
+				-- If `Current' is expanded then we must also decrease the expanded node count by
+				-- 1 + the node count of the added subrow as this may also be a tree structure.
+			if is_expanded then
+				update_parent_expanded_node_counts_recursively ( - (row_imp.expanded_subnode_count_recursive + 1))
+			end
+			
+				-- Update the hidden node count in the parent grid.
+			parent_i.adjust_hidden_node_count ( - ((row_imp.subnode_count_recursive + 1) - row_imp.expanded_subnode_count_recursive))
+			
+			parent_i.set_vertical_computation_required (index)
+			parent_i.redraw_client_area
+		ensure
+			removed: a_row.parent_row = Void
+			subrow_count_decreased: subrow_count = old subrow_count - 1
+		end
+		
 	add_subrow_internal (a_row: EV_GRID_ROW; inserting_within_tree_structure: BOOLEAN) is
 			-- Make `a_row' a child of Current. `inserting_within_tree_structure' determines
 			-- if `a_row' is to be added within an existing tree structure and is used to

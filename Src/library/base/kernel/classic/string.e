@@ -478,8 +478,9 @@ feature -- Comparison
 					end
 				else
 					from
+						i := 1
 					until
-						i = nb
+						i > nb
 					loop
 						if item (i) /= other.item (i) then
 							Result := False

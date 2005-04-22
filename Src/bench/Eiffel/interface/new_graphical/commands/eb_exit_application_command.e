@@ -70,7 +70,8 @@ feature {EB_WINDOW_MANAGER} -- Exit methods.
 				already_confirmed := True
 				create exit_confirmation_dialog.make_initialized (
 					2, preferences.dialog_data.confirm_on_exit_string,
-					Interface_names.l_Exit_application, Interface_names.l_Dont_ask_me_again
+					Interface_names.l_Exit_application, Interface_names.l_Dont_ask_me_again,
+					preferences.preferences
 				)
 				exit_confirmation_dialog.set_ok_action (agent exit_application)
 				exit_confirmation_dialog.show_modal_to_window (window_manager.last_focused_window.window)

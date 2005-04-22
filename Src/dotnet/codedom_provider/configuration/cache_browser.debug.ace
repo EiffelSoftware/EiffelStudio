@@ -6,11 +6,7 @@ root
 
 default
 	multithreaded (no)
-
---  FIXME: For now don't use precompile because of bug in compiler that produces wrong
---  assembly metadata (peverify fails) if used.
---	precompiled ("$EIFFEL_SRC\dotnet\codedom_provider\build_studio\EiffelSoftware.CodeDom.CacheBrowser")
-
+	precompiled ("$EIFFEL_SRC\dotnet\codedom_provider\build_studio\EiffelSoftware.CodeDom.CacheBrowser")
  	assertion (require)
  	msil_generation (yes)
  	il_verifiable (yes)
@@ -48,31 +44,7 @@ cluster
  			namespace ("EiffelSoftware.Library.Helpers")
  		end
  
- 	library base_net:		"$EIFFEL_SRC\library.net\base"
- 		default
- 			namespace ("EiffelSoftware.Library.BaseNet")
- 		end
-
- 	library base:		"$EIFFEL_SRC\library\base"
-		exclude
- 			"table_eiffel3"; "desc"; "classic";
- 		default
-			namespace ("EiffelSoftware.Library.Base")
- 		end
- 
 assembly
-	mscorlib:   "$ISE_DOTNET_FRAMEWORK\mscorlib.dll"
-
-	system_:    "$ISE_DOTNET_FRAMEWORK\system.dll"
-		prefix
-			"SYSTEM_DLL_"
-		end
-
-	system_xml: "$ISE_DOTNET_FRAMEWORK\system.xml.dll"
-		prefix
-			"XML_"
-		end
-
 	"System.Configuration.Install":	"$ISE_DOTNET_FRAMEWORK\System.Configuration.Install.dll"
 		prefix
 			"CONFIG_INSTALL_"

@@ -258,14 +258,22 @@ feature {EV_GRID_I} -- Implementation
 			row_i_set: row_i = a_row_i
 		end
 
-	set_created_from_grid is
-			-- Flag `Current' as `created_from_grid' to signify that `Current' hasn't been set by user
+	on_removed_from_grid is
+			-- Mark item as removed from grid
+		require
+			parent_i_not_void: parent_i /= Void
+			column_i_not_void: column_i /= Void
+			row_i_not_void: row_i /= Void
 		do
-			created_from_grid := True
+			parent_i := Void
+			column_i := Void
+			row_i := Void
+		ensure
+			parent_i_unset: parent_i = Void
+			column_i_unset: column_i = Void
+			row_i_unset: row_i = Void			
 		end
-
-	created_from_grid: BOOLEAN
-		-- Was `Current' create from `parent_i'
+			
 		
 feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_ITEM_I} -- Implementation
 

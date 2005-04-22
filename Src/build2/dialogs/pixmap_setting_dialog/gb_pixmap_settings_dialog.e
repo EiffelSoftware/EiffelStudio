@@ -105,6 +105,13 @@ inherit
 			default_create, copy, is_equal
 		end
 		
+	GB_SHARED_PREFERENCES
+		export
+			{NONE} all
+		undefine
+			default_create, copy, is_equal
+		end
+		
 create
 	default_create,
 	make_in_modify_mode
@@ -295,7 +302,8 @@ feature {NONE} -- Implementation
 								if constant_matching_absolute /= Void then
 										-- If an absolute constant already exists, warn for duplication
 									create confirmation_dialog.make_initialized (2, show_repeated_absolute_constant_warning, "An absolute pixmap constant named %"" +
-										constant_matching_absolute + "%" already references this image file.%NAre you sure you wish to add another?", "Do not show this dialog again, and always add.")
+										constant_matching_absolute + "%" already references this image file.%NAre you sure you wish to add another?", "Do not show this dialog again, and always add.",
+										preferences.preferences)
 									confirmation_dialog.set_icon_pixmap (Icon_build_window @ 1)
 									confirmation_dialog.set_ok_action (agent add_absolute_constant)
 									confirmation_dialog.show_modal_to_window (Current)

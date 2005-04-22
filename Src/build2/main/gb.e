@@ -90,18 +90,19 @@ feature {NONE} -- Initialization
 			-- line for different launches. Each starts with a check to ensure that the
 			-- system never gets compiled with more than one command option available.
 		local
-			shared_preferences: GB_SHARED_PREFERENCES
-			preferences_initialized: BOOLEAN
 			environment_dialog: INVALID_ENVIRONMENT_DIALOG
+			preference_access: PREFERENCES
 		do
 			default_create
 				-- Ensure that the preferences are initialized correctly.
 			if environment_variables_warning = Void then
 					-- Only launch EiffelBuild if the required environment variables are
 					-- available, otherwise we must display a fatal error message.
+				
+					-- Initialization of preferences.
+				create preference_access.make_with_default_values_and_location (default_xml_file, eiffel_preferences)
+				initialize_preferences (preference_access)
 			
-				create shared_preferences
-				preferences_initialized := preferences.initialized
 				if command_line.argument_array.count = 1 then
 						-- If `argument_array' has one element,
 						-- then no argument was specified, only the
@@ -206,7 +207,7 @@ feature {NONE} -- Implementation
 	display_tip_of_the_day is
 			-- Display a tip of the day dialog if not disabled from preferences.
 		do
-			if preferences.boolean_resource_value (Preferences.Show_tip_of_the_day, True) then
+			if preferences.global_data.show_tip_of_the_day then
 				(create {GB_TIP_OF_THE_DAY_DIALOG}).show_modal_and_centered_to_window (main_window)
 			end
 		end

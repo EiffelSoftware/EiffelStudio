@@ -80,13 +80,14 @@ feature {NONE} -- Initialization
 			-- Fill with supported Widgets.
 		do
 			Precursor {EV_CELL}
-			if preferences.boolean_resource_value (preferences.type_selector_classic_mode, True) then
+			if preferences.global_data.type_selector_classic_mode then
 				build_classic_view
 				extend (tree)
 			else
 				build_icon_view
 				view_mode_button.enable_select
 				extend (drawing_area)
+				
 			end
 		end
 		
@@ -313,8 +314,8 @@ feature {NONE} -- Implementation
 				wipe_out
 				extend (tree)
 			end
-			preferences.set_boolean_resource (preferences.type_selector_classic_mode, not view_mode_button.is_selected)
-			preferences.save_resources
+			preferences.global_data.type_selector_classic_mode_preference.set_value (not view_mode_button.is_selected)
+			preferences.preferences.save_resource (preferences.global_data.type_selector_classic_mode_preference)
 		ensure
 			mode_toggled: is_in_classic_view_mode = not old is_in_classic_view_mode
 		end

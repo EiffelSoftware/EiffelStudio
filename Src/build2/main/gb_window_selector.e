@@ -270,20 +270,20 @@ feature {GB_DELETE_OBJECT_COMMAND} -- Basic operation
 					a_directory.recursive_do_all (agent flatten_associated_instances)
 					actual_delete_directory (a_directory)
 				end
-			elseif all_objects.count = a_directory.count and then Preferences.boolean_resource_value (preferences.Show_deleting_final_directory_warning, True) then
+			elseif all_objects.count = a_directory.count and then preferences.dialog_data.show_deleting_final_directory_warning then
 					-- If all of the objects in `Current' are contained in `a_directory' then prompt the user
 					-- that the root window will be moved out of the directory, as you may not delete the
 					-- root window.
-				create warning_dialog.make_initialized (2, preferences.Show_deleting_final_directory_warning, "The directory contains the root window which will be moved from the directory.%NOther windows will be deleted. Are you sure that you wish to remove this directory?", "Do not show again, and always move root window from directory.")
+				create warning_dialog.make_initialized (2, preferences.dialog_data.show_deleting_final_directory_warning_string, "The directory contains the root window which will be moved from the directory.%NOther windows will be deleted. Are you sure that you wish to remove this directory?", "Do not show again, and always move root window from directory.", preferences.preferences)
 				warning_dialog.set_icon_pixmap (Icon_build_window @ 1)
 				warning_dialog.set_ok_action (agent actual_delete_directory (a_directory))
 				warning_dialog.show_modal_to_window (parent_window (widget))
 
-			elseif a_directory.count > 0 and then Preferences.boolean_resource_value (preferences.Show_deleting_directories_warning , True) then
+			elseif a_directory.count > 0 and then preferences.dialog_data.show_deleting_directories_warning then
 					-- If the directory is not empty, then it does not matter if the root window is contained,
 					-- as if we are here, we know that there are other window objects not contained in the directory,
 					-- so just before the deletion, we can set one of these to be the root window.
-				create warning_dialog.make_initialized (2, preferences.Show_deleting_directories_warning, "The directory %"" + a_directory.name + "%" contains one or more windows.%NAre you sure that you wish these windows to be deleted with the dialog?", "do not show again, and always delete windows contained.")
+				create warning_dialog.make_initialized (2, preferences.dialog_data.show_deleting_directories_warning_string, "The directory %"" + a_directory.name + "%" contains one or more windows.%NAre you sure that you wish these windows to be deleted with the dialog?", "do not show again, and always delete windows contained.", preferences.preferences)
 				warning_dialog.set_icon_pixmap (Icon_build_window @ 1)
 				warning_dialog.set_ok_action (agent actual_delete_directory (a_directory))
 				warning_dialog.show_modal_to_window (parent_window (widget))
@@ -1177,8 +1177,8 @@ feature {NONE} -- Implementation
 				if selected_window /= Void then
 						-- Only perform deletion if delete key pressed, and a
 						-- window object was selected.
-					if Preferences.boolean_resource_value (preferences.show_deleting_keyboard_warning, True) then
-						create warning_dialog.make_initialized (2, preferences.show_deleting_keyboard_warning, delete_warning1 + "window object" + delete_warning2, delete_do_not_show_again)
+					if preferences.dialog_data.show_deleting_keyboard_warning then
+						create warning_dialog.make_initialized (2, preferences.dialog_data.show_deleting_keyboard_warning_string, delete_warning1 + "window object" + delete_warning2, delete_do_not_show_again, preferences.preferences)
 						warning_dialog.set_icon_pixmap (Icon_build_window @ 1)
 						warning_dialog.set_ok_action (agent delete_object (selected_window.object))
 						warning_dialog.show_modal_to_window (parent_window (widget))
@@ -1191,8 +1191,8 @@ feature {NONE} -- Implementation
 						-- when deleting non empty directories. Julian. This seems a real pain, and I do not believe anybody will
 						-- ever notice this, as why would they remove the others, but not this one which is the first.
 					if selected_directory.count = 0 then
-						if Preferences.boolean_resource_value (preferences.Show_deleting_keyboard_warning, True) then
-							create warning_dialog.make_initialized (2, preferences.show_deleting_keyboard_warning, delete_warning1 + "directory object" + delete_warning2, delete_do_not_show_again)
+						if preferences.dialog_data.show_deleting_keyboard_warning then
+							create warning_dialog.make_initialized (2, preferences.dialog_data.show_deleting_keyboard_warning_string, delete_warning1 + "directory object" + delete_warning2, delete_do_not_show_again, preferences.preferences)
 							warning_dialog.set_icon_pixmap (Icon_build_window @ 1)
 							warning_dialog.set_ok_action (agent remove_directory (selected_directory))
 							warning_dialog.show_modal_to_window (parent_window (widget))

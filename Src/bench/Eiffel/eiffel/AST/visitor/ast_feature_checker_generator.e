@@ -246,7 +246,7 @@ feature {NONE} -- Implementation: State
 			-- on CREATION_EXPR_AS will report a not sufficiently
 			-- exported creation routine.
 			
-	is_in_creation_call: BOOLEAN
+	is_target_of_creation_instruction: BOOLEAN
 			-- Are we type checking the call to the creation routine?
 
 	check_for_vaol: BOOLEAN
@@ -350,7 +350,7 @@ feature -- Settings
 			once_manifest_string_index := 0
 			is_in_rescue := False
 			is_in_creation_expression := False
-			is_in_creation_call := False
+			is_target_of_creation_instruction := False
 			check_for_vaol := False
 			depend_unit_level := 0
 			last_access_writable := False
@@ -540,7 +540,7 @@ feature -- Implementation
 			l_vape: VAPE
 			l_formal_type: FORMAL_A
 			l_open_type: OPEN_TYPE_A
-			l_is_in_creation_expression, l_is_in_creation_call: BOOLEAN
+			l_is_in_creation_expression, l_is_target_of_creation_instruction: BOOLEAN
 			l_feature_name: ID_AS
 			l_parameters: EIFFEL_LIST [EXPR_AS]
 			l_needs_byte_node: BOOLEAN
@@ -561,9 +561,9 @@ feature -- Implementation
 				-- of the creation routine is also a creation expression we perform
 				-- a correct type checking of the VAPE errors.
 			l_is_in_creation_expression := is_in_creation_expression
-			l_is_in_creation_call := is_in_creation_call
+			l_is_target_of_creation_instruction := is_target_of_creation_instruction
 			is_in_creation_expression := False
-			is_in_creation_call := False
+			is_target_of_creation_instruction := False
 
 			l_feature_name := a_name
 
@@ -885,7 +885,7 @@ feature -- Implementation
 				end
 
 					-- Supplier dependances update
-				if l_is_in_creation_call then
+				if l_is_target_of_creation_instruction then
 					create l_depend_unit.make_with_level (l_last_id, l_feature,
 						{DEPEND_UNIT}.is_in_creation_flag | depend_unit_level)
 				else
@@ -2993,10 +2993,6 @@ feature -- Implementation
 			l_creators := l_creation_class.creators
 
 			if l_call /= Void then
-					-- Set flag so that depend_unit knows it is used as a creation routine
-					-- not just a normal feature call. It is reset as soon as it is processed.
-				is_in_creation_call := True
-
 					-- Type check the call: as if it was an unqualified call (as export checking
 					-- is done later below)
 				process_call (last_type, Void, l_call.feature_name, Void, l_call.parameters, False, False, False, False)
@@ -3097,6 +3093,9 @@ feature -- Implementation
 			l_needs_byte_node := is_byte_node_enabled
 			reset_for_unqualified_call_checking
 
+				-- Set flag so that depend_unit knows it is used as a creation routine
+				-- not just a normal feature call. It is reset as soon as it is processed.
+			is_target_of_creation_instruction := True
 			last_access_writable := False
 			l_as.target.process (Current)
 			l_target_type := last_type

@@ -92,14 +92,22 @@ doc:<file name="malloc.c" header="eif_malloc.h" version="$Id$" summary="Memory a
  * with their own padding which is a multiple of ALIGNMAX
  * have their own entry in the `hlist'.
  *  E.g.: 0, 8, 16, ...., 512 in case where ALIGNMAX = 8
- * Above `HLIST_SIZE_LIMIT', the corresponding entry `i' has
+ * Above `HLIST_SIZE_LIMIT', the corresponding entry `i' (i > 8) has
  * the sizes between 2^i and (2^(i+1) - 1).
  *
  * In `compute_hlist_index' we decided to shift by default by 8 since the minimum
- * of ALIGNMAX is 4 which gives us 19 more possibilities in addition to the 64
- * of HLIST_INDEX_LIMIT. Resulting in a value of 83 for NBLOCKS defined in
- * `include/rt_malloc.h'
+ * of ALIGNMAX is 4.
+ * Because the maximum size we can allocate is either 2^27 or 2^59 (depending or not
+ * you are running 64 bits) this gives us 19 or 51 more possibilities in addition to the 64
+ * of HLIST_INDEX_LIMIT. Resulting in a value of 83 or 115 for NBLOCKS (See below).
  */
+
+#ifdef EIF_64_BITS
+#define NBLOCKS				115
+#else
+#define NBLOCKS				83
+#endif
+
 #define HLIST_INDEX_LIMIT	64
 #define HLIST_DEFAULT_SHIFT 8
 #define HLIST_SIZE_LIMIT	HLIST_INDEX_LIMIT * ALIGNMAX
@@ -921,7 +929,7 @@ rt_public EIF_REFERENCE special_malloc (uint32 flags, EIF_INTEGER nb, uint32 ele
 	EIF_REFERENCE offset;
 	union overhead *zone;
 
-	result = spmalloc (CHRPAD(nb * element_size) + LNGPAD(2), atomic);
+	result = spmalloc (CHRPAD((rt_uint_ptr) nb * (rt_uint_ptr) element_size) + LNGPAD(2), atomic);
 
 		/* At this stage we are garanteed to have an initialized object, otherwise an
 		 * exception would have been thrown by the call to `spmalloc'. */
@@ -2085,7 +2093,7 @@ rt_private union overhead *add_core(size_t nbytes, int type)
 	 * because of the tiny fit). Otherwise, we decrease the amount of requested
 	 * bytes as long as there are enough for our current need.
 	 */
-	for (; asked >= (int32) nbytes; asked -= PAGESIZE_VALUE) {
+	for (; asked >= nbytes; asked -= PAGESIZE_VALUE) {
 
 #ifdef DEBUG
 		dprintf(2)("add_core: requesting for %d bytes\n", asked);

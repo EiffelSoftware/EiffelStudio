@@ -66,6 +66,15 @@ feature {NONE} -- Initialization
 			f_name.extend ("large_collapse.png")
 			create collapse3
 			collapse3.set_with_named_file (f_name)
+			create f_name.make_from_string (current_working_directory)
+			f_name.extend ("icon_clipboard_color.png")
+			create pixmap1
+			pixmap1.set_with_named_file (f_name.out)
+			create f_name.make_from_string (current_working_directory)
+			f_name.extend ("icon_cluster_symbol_color.png")
+			create pixmap2
+			pixmap2.set_with_named_file (f_name.out)
+			
 			
 			
 			create list_item.make_with_text ("9x9")
@@ -79,7 +88,7 @@ feature {NONE} -- Initialization
 			subnode_pixmaps_combo.extend (list_item)
 		end
 		
-	expand1, expand2, expand3, collapse1, collapse2, collapse3: EV_PIXMAP
+	expand1, expand2, expand3, collapse1, collapse2, collapse3, pixmap1, pixmap2: EV_PIXMAP
 
 feature {NONE} -- Implementation
 
@@ -302,9 +311,17 @@ feature {NONE} -- Implementation
 			from
 				counter := 11
 			until
-				counter > 30
+				counter > 26
 			loop
 				grid.row (1).add_subrow (grid.row (counter))
+				counter := counter + 1
+			end
+			from
+				counter := 27
+			until
+				counter > 31
+			loop
+				grid.row (counter - 1).add_subrow (grid.row (counter))
 				counter := counter + 1
 			end
 --			grid.insert_new_row_parented (33, grid.row (32))
@@ -416,6 +433,22 @@ feature {NONE} -- Implementation
 					grid_label_item.set_background_color (red)
 				end
 				counter := counter + 1				
+			end
+			from
+				counter := 1
+			until
+				counter > grid.row_count
+			loop
+				grid_label_item ?= grid.item (1, counter)
+				if grid_label_item /= Void then
+					grid_label_item.set_pixmap (pixmap1)
+				end
+				
+				grid_label_item ?= grid.item (4, counter)
+				if grid_label_item /= Void then
+					grid_label_item.set_pixmap (pixmap2)
+				end
+				counter := counter + 1
 			end
 		end
 		
@@ -792,11 +825,85 @@ feature {NONE} -- Implementation
 --			grid.set_item (2, 6, create {EV_GRID_LABEL_ITEM}.make_with_text ("New Row 6"))
 --			grid.remove_row (5)
 
---			--Test 4
+			--Test 4
+--			grid.set_item (1, 1, create {EV_GRID_LABEL_ITEM}.make_with_text ("Top level 1"))
+--			grid.row (1).ensure_expandable
+--			grid.row_expand_actions.extend (agent expand_row)
+
+
+--			-- Test 5
+--				grid.enable_tree
+--            grid.enable_partial_dynamic_content
+--            grid.set_column_count_to (3)
+--            grid.set_dynamic_content_function (agent compute_grid_item (grid, ?, ?))
+--            grid.set_row_count_to (10)
+
+--			-- Test 6
+--			grid.enable_tree
+--            grid.enable_partial_dynamic_content
+--            grid.set_column_count_to (3)
+--            grid.set_dynamic_content_function (agent compute_grid_item (grid, ?, ?))
+--            grid.set_row_count_to (1)
+--            create grid_label_item.make_with_text ("Root dynamic node")
+--            grid.set_item (1, 1, grid_label_item)
+--			grid.row (1).ensure_expandable
+--            grid.row_expand_actions.extend (agent add_subrows)
+
+
+--			-- Test 7
+--			grid.enable_tree
+--			grid.set_item (1, 1, create {EV_GRID_LABEL_ITEM}.make_with_text ("Top level 1"))
+
+			-- Test 8
+--			grid.enable_tree
+--			grid.set_item (1, 1, create {EV_GRID_LABEL_ITEM}.make_with_text ("Top level 1"))
+--			grid.set_item (1, 2, create {EV_GRID_LABEL_ITEM}.make_with_text ("Subrow"))
+--			grid.row (1).add_subrow (grid.row (2))
+--			grid.row (1).ensure_expandable
+
+--			-- Test 9
+--			grid.enable_tree
+--			grid.set_item (1, 1, create {EV_GRID_LABEL_ITEM}.make_with_text ("Top level 1"))
+--			grid.set_item (3, 1, create {EV_GRID_LABEL_ITEM}.make_with_text ("Top level 1"))
+--			grid.insert_new_row_parented (2, grid.row (1))
+
+			-- Test 9
+--			create grid_label_item
+--			grid_label_item.set_text ("A text")
+
+			-- Test 10
+			grid.enable_tree
 			grid.set_item (1, 1, create {EV_GRID_LABEL_ITEM}.make_with_text ("Top level 1"))
-			grid.row (1).ensure_expandable
-			grid.row_expand_actions.extend (agent expand_row)
+			grid.set_item (3, 1, create {EV_GRID_LABEL_ITEM}.make_with_text ("Top level 1"))
+			grid.insert_new_row_parented (2, grid.row (1))
 		end
+		
+	add_subrows (a_row: EV_GRID_ROW) is
+			--
+		local
+			counter: INTEGER
+		do
+			from
+				counter := 1
+			until
+				counter > 200
+			loop
+				grid.insert_new_row_parented (a_row.index + a_row.subrow_count + 1, a_row)
+				counter := counter + 1
+			end
+		end
+		
+		
+	compute_grid_item (g: EV_GRID; c,r: INTEGER): EV_GRID_ITEM is
+		local
+			label_item: EV_GRID_LABEL_ITEM
+			time: DATE_TIME
+	    do
+	    	create time.make_now
+	 		create label_item.make_with_text (time.out)
+	    	Result := label_item
+	    end
+
 		
 	expand_row (a_row: EV_GRID_ROW) is
 			--

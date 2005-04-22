@@ -332,11 +332,16 @@ RT_LNK int fcount;
 /* Macro used to record once functions:
  *  RTOC calls onceset to record the address of Result (static variable)
  */
-#define RTOC(x)			onceset();
+#define RTOC(x)			onceset()
 #define RTOC_NEW(x)		new_onceset((EIF_REFERENCE) &x);
 #define RTOC_GLOBAL(x)	globalonceset((EIF_REFERENCE) &x);
-#define RTOVP(n,c,a)	if (RTOFN(n,_succeeded)) { (void) a; } else { c a; }
-#define RTOVF(n,c,a)	(RTOFN(n,_succeeded)? ((void) a, RTOFN(n,_result)) : c a)
+
+/* Macros for optimized access to once feature:
+ * RTO_CP - access to once procedure
+ * RTO_CF - access to once function
+ */
+#define RTO_CP(succeeded,c,a)		if (succeeded) { (void) a; } else { c a; }
+#define RTO_CF(succeeded,result,c,a)	((succeeded)? ((void) a, result) : c a)
 
 /* Service macros for once routines:
  * RTO_TRY - try to excute routine body
@@ -394,10 +399,13 @@ RT_LNK int fcount;
 
 /* Macros for single-threaded once routines:
  * RTOSR - result field name (for once functions)
- * RTOSHP - declaration of variables for a single-threaded once procedure
- * RTOSHF - declaration of variables for a single-threaded once function
- * RTOSDP - definition of variables for a single-threaded once procedure
- * RTOSDF - definition of variables for a single-threaded once function
+ * RTOSHP - declaration of variables for procedure
+ * RTOSHF - declaration of variables for function
+ * RTOSDP - definition of variables for procedure
+ * RTOSDF - definition of variables for function
+ * RTOSC - implementation of a constant attribute body
+ * RTOSCP - optimized direct call to procedure
+ * RTOSCF - optimized direct call to function
  * RTOSP - prologue for a single-threaded once routine
  * RTOSE - epilogue for a single-threaded once routine
  */
@@ -422,6 +430,9 @@ RT_LNK int fcount;
 #define RTOSDF(type, code_index)                                             \
 	RTOSDP(code_index)                                                   \
 	type RTOSR(code_index) = (type) 0;
+
+#define RTOSCP(n,c,a)	RTO_CP(RTOFN(n,_succeeded),c,a)
+#define RTOSCF(n,c,a)	RTO_CF(RTOFN(n,_succeeded),RTOFN(n,_result),c,a)
 
 #define RTOSP(code_index)                                                    \
 		/* Check if evaluation has succeeded. */                     \
@@ -451,14 +462,26 @@ RT_LNK int fcount;
 		}                                                            \
 	}
 
+#define RTOSC(code_index, value)                                             \
+	if (!RTOFN (code_index,_succeeded)) {                                \
+		RTOC_NEW (RTOSR (code_index));                               \
+		RTOSR (code_index) = (value);                                \
+		RTOFN (code_index,_succeeded) = EIF_TRUE;                    \
+	}                                                                    \
+	return RTOSR (code_index);
+
 /* Macros for thread-relative once routines:
  * RTOTS - stores index of a once routine into index variable given its code index
- * RTOTDB - declaration and initialization of variables for once function returning basic type
- * RTOTDR - declaration and initialization of variables for once function returning reference
- * RTOTDV - declaration and initialization of variables for once procedure
+ * RTOTDB, RTOUDB - declaration and initialization of variables for once function returning basic type
+ * RTOTDR, RTOUDR - declaration and initialization of variables for once function returning reference
+ * RTOTDV, RTOUDV - declaration and initialization of variables for once procedure
  * RTOTW - stores in a list the body id of the just called once routine
  * RTOTRB - declaration of a result macro for once function returning basic type
  * RTOTRR - declaration of a result macro for once function returning reference
+ * RTOUC - implementation of a constant attribute
+ * RTOUCP - optimized direct call to procedure
+ * RTOUCB - optimized direct call to function returning basic type
+ * RTOUCR - optimized direct call to function returning reference type
  * RTOTP - prologue for a thread-relative once routine
  * RTOTE - epilogue for a thread-relative once routine
  */
@@ -496,7 +519,15 @@ RT_LNK int fcount;
 	RTWO(body_id);                                                       \
 	return RTOTRR = value;
 
+#define RTOTOK
+
 #elif defined EIF_THREADS
+
+#define RTOTOK OResult->succeeded = EIF_TRUE;
+
+#define RTOUCP(once_index,c,a)		RTO_CP(MTOI(once_index)->succeeded,c,a)
+#define RTOUCB(type,once_index,c,a)	RTO_CF(MTOI(once_index)->succeeded,MTOR(type,MTOI(once_index)),c,a)
+#define RTOUCR(once_index,c,a)		RTO_CF(MTOI(once_index)->succeeded,*MTOR(EIF_REFERENCE,MTOI(once_index)),c,a)
 
 #define RTOUDV(once_index)                                                   \
 	MTOT OResult = (MTOT) MTOI(once_index);
@@ -515,13 +546,20 @@ RT_LNK int fcount;
 
 #define RTOUC(once_index, value)                                             \
 	RTOUDV(once_index)                                                   \
+	EIF_REFERENCE Result;                                                \
 	EIF_REFERENCE * PResult = MTOR(EIF_REFERENCE,OResult);               \
 	if (PResult) {                                                       \
-		return *PResult;                                             \
+		Result = *PResult;                                           \
 	}                                                                    \
-	MTOP(EIF_REFERENCE, OResult, RTOC(0));                               \
-	MTOM(OResult);                                                       \
-	return RTOTRR = value;
+	else {                                                               \
+		PResult = RTOC(0);                                           \
+		MTOP(EIF_REFERENCE,OResult,PResult);                         \
+		Result = (value);                                            \
+		*PResult = Result;                                           \
+		MTOM(OResult);                                               \
+		RTOTOK                                                       \
+	}                                                                    \
+	return Result;
 
 #endif /* WORKBENCH */
 
@@ -539,6 +577,8 @@ RT_LNK int fcount;
 		RTO_TRY
 
 #define RTOTE                                                                \
+			/* Record that execution completed successfully */   \
+		RTOTOK                                                       \
 			/* Catch exception. */                               \
 		RTO_EXCEPT                                                   \
 			/* Handle exception. */                              \
@@ -775,6 +815,32 @@ RT_LNK int fcount;
 		RTOFN(code_index,_mutex),                                    \
 		RTOFN(code_index,_thread_id)                                 \
 	)
+
+#ifdef EIF_HAS_MEMORY_BARRIER
+
+#define RTOPCP(code_index,c,a)                                               \
+	EIF_MEMORY_READ_BARRIER;                                             \
+	RTO_CP(                                                              \
+		RTOFN(code_index,_completed) && !RTOFN(code_index,_failed),  \
+		c,                                                           \
+		a                                                            \
+	)
+
+#define RTOPCF(code_index,c,a)                                               \
+	((void) EIF_MEMORY_READ_BARRIER,                                     \
+	RTO_CF(                                                              \
+		RTOFN(code_index,_completed) && !RTOFN(code_index,_failed),  \
+		RTOPR(code_index),                                           \
+		c,                                                           \
+		a                                                            \
+	))
+
+#else
+
+#define RTOPCP(code_index,c,a) {c a;}
+#define RTOPCF(code_index,c,a) (c a)
+
+#endif /* EIF_HAS_MEMORY_BARRIER */
 
 #endif /* WORKBENCH */
 

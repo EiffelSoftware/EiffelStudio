@@ -383,7 +383,11 @@ rt_public void once_init (void)
 
 	ALLOC_ONCE_INDEXES; 	/* Allocate array of once indexes. */
 	egc_system_mod_init (); /* Assign once indexes. */
-	FREE_ONCE_INDEXES;	/* Free once indexes. */
+	if (!debug_mode) {
+			/* Once indexes could be used by debugger,
+			 * but we are not under debugger at the moment. */
+		FREE_ONCE_INDEXES;	/* Free once indexes. */
+	}
 
 	/* Allocate room for once manifest strings array. */
 	ALLOC_OMS (EIF_oms);

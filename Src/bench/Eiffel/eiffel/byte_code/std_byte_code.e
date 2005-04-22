@@ -224,6 +224,7 @@ feature -- Analyzis
 			type_c: TYPE_C
 			internal_name: STRING
 			name: STRING
+			extern: BOOLEAN
 			buf: GENERATION_BUFFER
 			l_is_once: BOOLEAN
 			args: like argument_names
@@ -257,8 +258,9 @@ feature -- Analyzis
 			end
 
 				-- Generate function signature
+			extern := True
 			name := internal_name
-			if l_is_once and then context.is_once_twofold then
+			if l_is_once and then context.is_once_call_optimized then
 					-- Once routines should be protected against exceptions.
 					-- C compiler generates inefficient code for functions that catch exceptions.
 					-- Therefore two functions are generated instead of one
@@ -267,12 +269,13 @@ feature -- Analyzis
 					-- other one either returns the result if it is ready
 					-- or calls the first one to evaluate it:
 					-- 	RESULT_TYPE aaa_body (arguments) {...}
-					--  RESULT_TYPE aaa (arguments) { return RTOVF (aaa, aaa_body, (arguments));}
+					--  RESULT_TYPE aaa (arguments) { return RTOxCy (aaa, aaa_body, (arguments));}
 				name := internal_name + "_body"
+				extern := False
 			end
 			args := argument_names
 			buf.generate_function_signature
-				(type_c.c_string, name, True,
+				(type_c.c_string, name, extern,
 				 Context.header_buffer, args, argument_types)
 
 				-- Starting body of C routine
@@ -404,21 +407,18 @@ feature -- Analyzis
 				buf.put_new_line
 			end
 
-			if l_is_once and then context.is_once_twofold then
+			if l_is_once and then context.is_once_call_optimized then
 					-- Generate optimized stub for once routine.
 				buf.generate_function_signature
 					(type_c.c_string, internal_name, True,
-					 Context.header_buffer, argument_names, argument_types)
+					 Context.header_buffer, args, argument_types)
 				buf.indent
-				if type_c.is_void then
-					buf.put_string ("RTOVP (")
-				else
-					buf.put_string ("return RTOVF (")
+				if not type_c.is_void then
+					buf.put_string ("return ")
 				end
-				buf.put_integer (body_index)
-				buf.put_character (',')
-				buf.put_string (internal_name)
-				buf.put_string ("_body,(")
+				context.generate_once_optimized_call_start (type_c, body_index, is_global_once, buf)
+				buf.put_string (name)
+				buf.put_string (",(")
 				from
 					i := 1
 				until

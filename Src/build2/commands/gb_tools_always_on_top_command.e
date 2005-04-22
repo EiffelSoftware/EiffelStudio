@@ -63,7 +63,7 @@ feature {NONE} -- Initialization
 		do
 			enable_sensitive
 				-- Enable/disable the setting, based on the current preferences.
-			if Preferences.boolean_resource_value (Preferences.Tools_on_top, True) then
+			if preferences.global_data.tools_on_top then
 				enable_selected
 				System_status.enable_tools_always_on_top
 			else
@@ -123,8 +123,8 @@ feature -- Execution
 				update_tool (parent_dialog (floating_object_editors @ counter))
 				counter := counter + 1
 			end
-			preferences.set_boolean_resource (Preferences.Tools_on_top, is_selected)
-			preferences.save_resources
+			preferences.global_data.tools_on_top_preference.set_value (is_selected)
+			preferences.preferences.save_resource (preferences.global_data.tools_on_top_preference)
 		end		
 				
 	update_tool (tool_window: EV_DIALOG) is

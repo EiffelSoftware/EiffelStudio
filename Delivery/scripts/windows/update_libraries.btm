@@ -8,6 +8,9 @@ safe_md %EIFFEL_SRC\library
 cdd %EIFFEL_SRC
 exprt -r %DEFAULT_CVS_TAG -d C_library "Src/C_library"
 
+cdd %EIFFEL_SRC
+exprt -r %DEFAULT_CVS_TAG free_add_ons/eclop
+
 cdd %EIFFEL_SRC\library
 remtrace base
 exprt -r %DEFAULT_CVS_TAG -d base "Src/library/base"
@@ -17,6 +20,8 @@ remtrace Eiffel2Java
 exprt -r %DEFAULT_CVS_TAG -d Eiffel2Java "Src/library/Eiffel2Java"
 remtrace encryption
 exprt -r %DEFAULT_CVS_TAG -d encryption "Src/library/encryption"
+remtrace editor
+exprt -r %DEFAULT_CVS_TAG -d editor "Src/library/editor"
 remtrace event
 exprt -r %DEFAULT_CVS_TAG -d event "Src/library/event"
 remtrace gobo
@@ -53,6 +58,8 @@ remtrace vision2
 exprt -r %DEFAULT_CVS_TAG -d vision2 "Src/library/vision2"
 fullrd vision2\implementation\gtk
 fullrd vision2\implementation\gtk2
+remtrace vision2_extension
+exprt -r %DEFAULT_CVS_TAG -d vision2_extension "Src/library/vision2_extension"
 remtrace wizard
 exprt -r %DEFAULT_CVS_TAG -d wizard "Src/library/wizard"
 remtrace Dotnet libraries

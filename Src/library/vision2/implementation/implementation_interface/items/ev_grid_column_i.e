@@ -240,19 +240,23 @@ feature -- Status report
 	is_selected: BOOLEAN is
 			-- Is objects state set to selected?
 		local
-			a_item: EV_GRID_ITEM
+			a_item: EV_GRID_ITEM_I
 			i: INTEGER
 			a_count: INTEGER
 			non_void_item_found: BOOLEAN
+			a_parent_i: EV_GRID_I
+			a_internal_index: INTEGER
 		do
 			from
 				i := 1
 				Result := True
 				a_count := count
+				a_parent_i := parent_i
+				a_internal_index := internal_index
 			until
 				not Result or else i > a_count
 			loop
-				a_item := item (i)
+				a_item := a_parent_i.item_internal (a_internal_index, i)
 				if a_item /= Void then
 					non_void_item_found := True
 					Result := a_item.is_selected
@@ -303,13 +307,17 @@ feature -- Element change
 			is_parented: parent /= Void
 		local
 			item_index: INTEGER
+			a_item: EV_GRID_ITEM
 		do
 			from
 				item_index := 1
 			until
 				item_index > count
 			loop
-				item (item_index).set_background_color (a_color)
+				a_item := item (item_index)
+				if a_item /= Void then
+					a_item.set_background_color (a_color)
+				end
 				item_index := item_index + 1
 			end
 		ensure
@@ -410,15 +418,21 @@ feature {NONE} -- Implementation
 	internal_update_selection (a_selection_state: BOOLEAN) is
 			-- Set the selection state of all non void items in `Current' to `a_selection_state'.
 		local
-			a_item: EV_GRID_ITEM
+			a_item: EV_GRID_ITEM_I
 			i: INTEGER
+			a_count: INTEGER
+			a_parent_i: EV_GRID_I
+			a_internal_index: INTEGER
 		do
 			from
 				i := 1
+				a_count := count
+				a_parent_i := parent_i
+				a_internal_index := internal_index
 			until
-				i > count
+				i > a_count
 			loop
-				a_item := item (i)
+				a_item := a_parent_i.item_internal (a_internal_index, i)
 				if a_item /= Void then
 					if a_selection_state then
 						a_item.enable_select

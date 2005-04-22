@@ -335,10 +335,12 @@ feature -- Element change
 			a_row_is_a_subrow: a_row.parent_row = Current
 			same_parent: a_row.parent = parent
 			parent_enabled_as_tree: parent.is_tree_enabled
+--			row_is_final_subrow_in_tree_structure:
+--				a_row.index = index + subrow_count_recursive
 			row_is_final_subrow_in_tree_structure:
-				a_row.index = index + subrow_count_recursive
+				a_row.index = parent_row_root.index + parent_row_root.subrow_count_recursive				
 		do
-			to_implement ("EV_GRID_ROW.remove_subrow")
+			implementation.remove_subrow (a_row)
 		ensure
 			removed: a_row.parent_row = Void
 			subrow_count_decreased: subrow_count = old subrow_count - 1

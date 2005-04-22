@@ -604,7 +604,7 @@ rt_private EIF_REFERENCE new_spref (int count)
 {
 	static EIF_TYPE_ID spref_type;		/* dynamic type of SPECIAL [ANY] */
 	EIF_REFERENCE result = spmalloc (
-			CHRPAD (count * sizeof (EIF_REFERENCE)) + LNGPAD (2), FALSE);
+		CHRPAD ((rt_uint_ptr) count * (rt_uint_ptr) sizeof (EIF_REFERENCE)) + LNGPAD (2), FALSE);
 	union overhead *zone = HEADER (result);
 	EIF_INTEGER *spec_size_info = (EIF_INTEGER *)
 			((char *) result + (zone->ov_size & B_SIZE) - LNGPAD (2));
@@ -1543,7 +1543,7 @@ rt_public EIF_REFERENCE grt_nmake(long int objectCount)
 		/* Read a possible size */
 		if (flags & EO_SPEC) {
 			uint32 count, elm_size;
-			long nb_byte;
+			rt_uint_ptr nb_byte;
 			if (flags & EO_TUPLE) {
 				spec_size = sizeof(EIF_TYPED_ELEMENT);
 			} else {
@@ -1588,7 +1588,7 @@ rt_public EIF_REFERENCE grt_nmake(long int objectCount)
 				}
 			}
 			buffer_read((char *) &count, sizeof(uint32));
-			nb_byte = CHRPAD(count * spec_size ) + LNGPAD_2;
+			nb_byte = CHRPAD((rt_uint_ptr) count * (rt_uint_ptr) spec_size ) + LNGPAD_2;
 			buffer_read((char *) &elm_size, sizeof(uint32));
 
 #if DEBUG & 1
@@ -1677,7 +1677,7 @@ rt_public EIF_REFERENCE irt_nmake(long int objectCount)
 	 */
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
-	long nb_byte;
+	rt_uint_ptr nb_byte;
 	char *oldadd;
 	char * volatile newadd = NULL;
 	EIF_OBJECT new_hector;
@@ -1762,7 +1762,7 @@ rt_public EIF_REFERENCE irt_nmake(long int objectCount)
 				}
 			}
 			ridr_norm_int (&count);
-			nb_byte = CHRPAD(count * spec_size ) + LNGPAD_2;
+			nb_byte = CHRPAD((rt_uint_ptr) count * (rt_uint_ptr) spec_size ) + LNGPAD_2;
 			ridr_norm_int (&elm_size);
 
 #if DEBUG & 1
@@ -1885,7 +1885,7 @@ rt_private void rt_dropped (register EIF_REFERENCE old, int16 old_type)
 rt_private EIF_REFERENCE new_special_object (int new_type, uint32 crflags, uint32 count)
 {
 	EIF_REFERENCE result;
-	long nb_byte;
+	rt_uint_ptr nb_byte;
 	uint32 spec_size = 0;
 	uint32 dgen = special_generic_type (new_type);
 
@@ -1924,7 +1924,7 @@ rt_private EIF_REFERENCE new_special_object (int new_type, uint32 crflags, uint3
 				eise_io ("Independent retrieve: not an Eiffel object.");
 		}
 	}
-	nb_byte = CHRPAD (count * spec_size) + LNGPAD_2;
+	nb_byte = CHRPAD ((rt_uint_ptr) count * (rt_uint_ptr) spec_size) + LNGPAD_2;
 	result = spmalloc (nb_byte, EIF_TEST(!(crflags & EO_REF)));
 	if (result != NULL) {
 		EIF_REFERENCE o_ref = RT_SPECIAL_INFO (result);

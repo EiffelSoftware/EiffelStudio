@@ -671,7 +671,7 @@ rt_private EIF_REFERENCE matching (void (*action_fnptr) (EIF_REFERENCE, EIF_REFE
 		 * SPECIAL objects of type `result_type' that we will return.
 		 * We turn off GC since we do not want objects to be moved. */
 	gc_stop();
-	Result = spmalloc (CHRPAD (l_found.count * sizeof (EIF_REFERENCE)) + LNGPAD(2), EIF_FALSE);
+	Result = spmalloc (CHRPAD ((rt_uint_ptr) l_found.count * (rt_uint_ptr) sizeof (EIF_REFERENCE)) + LNGPAD(2), EIF_FALSE);
 	zone = HEADER (Result);
 	ref = Result + (zone->ov_size & B_SIZE) - LNGPAD (2);
 	zone->ov_flags |= result_type | EO_REF;

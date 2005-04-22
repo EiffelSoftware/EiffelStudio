@@ -57,8 +57,6 @@ extern "C" {
 #define M_EIFFEL	1				/* Ask for Eiffel chunk statistics */
 #define M_C			2				/* Ask for C chunk statistics */
 
-#define NBLOCKS			83		/* Number of block lists */
-
 /*
  * Generation scavenging parameters
  */

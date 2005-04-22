@@ -38,9 +38,12 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 			-- Redraw `Current'.
 		local
 			back_color: EV_COLOR
+			l_pixmap: EV_PIXMAP
+			pixmap_width: INTEGER
 		do
 			fixme ("Correctly handle selection colors and inversion")
-			
+			l_pixmap := interface.pixmap
+
 			
 			back_color := internal_background_color
 			if back_color = Void then
@@ -58,13 +61,21 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 			end
 			
 			drawable.set_copy_mode
+			
+			if l_pixmap /= Void then
+					-- Now blit the pixmap
+				drawable.draw_pixmap (an_x, a_y, l_pixmap)
+				pixmap_width := l_pixmap.width
+			end
+
+			
 			if interface.font /= Void then
 				drawable.set_font (interface.font)
 			else
 				drawable.set_font (internal_default_font)
 			end
-			if interface.text /= Void then
-				drawable.draw_ellipsed_text_top_left (an_x, a_y, interface.text, a_width)
+			if interface.text /= Void and a_width - pixmap_width > 0 then
+				drawable.draw_ellipsed_text_top_left (an_x + pixmap_width, a_y, interface.text, a_width - pixmap_width)
 			end
 		end
 

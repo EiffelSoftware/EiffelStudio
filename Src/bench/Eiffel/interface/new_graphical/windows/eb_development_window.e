@@ -1718,7 +1718,7 @@ feature -- Stone process
 						-- We're not editing the class in another window.
 					set_stone_after_first_check (a_stone)
 				else
-					create cd.make_initialized (2, preferences.dialog_data.already_editing_class_string, warning_messages.w_Class_already_edited, Interface_names.L_do_not_show_again)
+					create cd.make_initialized (2, preferences.dialog_data.already_editing_class_string, warning_messages.w_Class_already_edited, Interface_names.L_do_not_show_again, preferences.preferences)
 					cd.set_ok_action (agent set_stone_after_first_check (a_stone))
 					cd.show_modal_to_window (window)
 				end
@@ -2579,7 +2579,7 @@ set_stone_after_check (a_stone: STONE) is
 					end
 				end
 			else
-					-- not a class text : cannot be edited
+					-- not a class text : cannot be edited	
 				editor_tool.text_area.disable_editable
 				address_manager.disable_formatters
 

@@ -1581,44 +1581,6 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 		ensure
 			result_positive: result >= 0
 		end
-		
-	redraw_item (an_item: EV_GRID_ITEM_I) is
-			-- Redraw area of `an_item' if visible.
-		require
-			an_item_not_void: an_item /= Void
-		local
-			a1, a2: INTEGER
-			item_height: INTEGER
-		do
-			fixme ("Do we need to check if item is visible? There may be no effect to simply invalidate the area...")
-			a1 := an_item.virtual_x_position - (internal_client_x - viewport_x_offset)
-			a2 := an_item.virtual_y_position - (internal_client_y - viewport_y_offset)
-			if is_row_height_fixed then
-				item_height := row_height
-			else
-				item_height := an_item.row.height
-			end
-			drawable.redraw_rectangle (a1, a2, an_item.column.width, item_height)
-		end
-
-	redraw_client_area is
-			-- Redraw complete visible client area of `Current'.
-		do
-			drawable.redraw
-		end
-		
-	redraw_from_row_to_end (a_row: EV_GRID_ROW_I) is
-			-- Redraw client area from `virtual_x_position' of `a_row' down to the bottom of the client
-			-- area (As virtual position of a row is at its top, `a_row' is invalidated).
-			-- Complete width of client area is invalidated.
-		require
-			a_row_not_void: a_row /= Void
-		local
-			a2: INTEGER
-		do
-			a2 := a_row.virtual_y_position - (internal_client_y - viewport_y_offset)
-			drawable.redraw_rectangle (viewport_x_offset, a2, viewport.width, viewport.height + internal_client_y - a_row.virtual_y_position)
-		end
 
 	item_indent (an_item: EV_GRID_ITEM_I): INTEGER is
 			-- `Result' is indent of `an_item' in pixels.
@@ -1657,6 +1619,46 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 				result_is_first_indent_when_node_index_differs_from_parent_and_item_is_first: an_item.row_i.parent_row_i /= Void and (an_item.row_i.index_of_first_item /= an_item.row_i.parent_row_i.index_of_first_item) and (an_item.row_i.index_of_first_item = an_item.column.index) and an_item.row_i.subrow_count = 0 implies Result = first_tree_node_indent
 				result_is_zero_when_node_index_differs_from_parent_and_item_is_not_first: an_item.row_i.parent_row_i /= Void and (an_item.row_i.index_of_first_item /= an_item.row_i.parent_row_i.index_of_first_item) and (an_item.row_i.index_of_first_item /= an_item.column.index) and an_item.row_i.subrow_count = 0 implies Result = 0
 			end
+		end
+		
+feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_ITEM_I, EV_GRID_ITEM} -- Implementation
+		
+	redraw_item (an_item: EV_GRID_ITEM_I) is
+			-- Redraw area of `an_item' if visible.
+		require
+			an_item_not_void: an_item /= Void
+		local
+			a1, a2: INTEGER
+			item_height: INTEGER
+		do
+			fixme ("Do we need to check if item is visible? There may be no effect to simply invalidate the area...")
+			a1 := an_item.virtual_x_position - (internal_client_x - viewport_x_offset)
+			a2 := an_item.virtual_y_position - (internal_client_y - viewport_y_offset)
+			if is_row_height_fixed then
+				item_height := row_height
+			else
+				item_height := an_item.row.height
+			end
+			drawable.redraw_rectangle (a1, a2, an_item.column.width, item_height)
+		end
+
+	redraw_client_area is
+			-- Redraw complete visible client area of `Current'.
+		do
+			drawable.redraw
+		end
+		
+	redraw_from_row_to_end (a_row: EV_GRID_ROW_I) is
+			-- Redraw client area from `virtual_x_position' of `a_row' down to the bottom of the client
+			-- area (As virtual position of a row is at its top, `a_row' is invalidated).
+			-- Complete width of client area is invalidated.
+		require
+			a_row_not_void: a_row /= Void
+		local
+			a2: INTEGER
+		do
+			a2 := a_row.virtual_y_position - (internal_client_y - viewport_y_offset)
+			drawable.redraw_rectangle (viewport_x_offset, a2, viewport.width, viewport.height + internal_client_y - a_row.virtual_y_position)
 		end
 
 feature {EV_GRID_DRAWER_I, EV_GRID_COLUMN_I, EV_GRID_ROW_I, EV_GRID_ITEM_I, EV_GRID} -- Implementation
@@ -2988,7 +2990,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- I
 			else
 				internal_row_data.i_th (a_row).put (Void, a_grid_col_i.physical_index)
 					-- Update the row for the removal.
-				a_grid_row_i.update_for_item_removal (a_row)
+				a_grid_row_i.update_for_item_removal (a_column)
 			end
 			
 			fixme ("EV_GRID_I.internal_set_item Adding or removing items may require the complete row to be redrawn if the row is a subrow.")

@@ -273,7 +273,8 @@ feature {NONE} -- Execution
 					create cd.make_initialized (
 						3, preferences.dialog_data.confirm_save_before_compile_string,
 						Warning_messages.w_Files_not_saved_before_compiling,
-						Interface_names.l_Discard_save_before_compile_dialog
+						Interface_names.l_Discard_save_before_compile_dialog,
+						preferences.preferences
 					)
 					cd.set_ok_action (agent save_and_compile)
 					cd.set_no_action (agent compile_no_save)
@@ -316,7 +317,7 @@ feature {NONE} -- Execution
 			then
 				compile_and_run
 			else
-				create cd.make_initialized (2, preferences.dialog_data.stop_execution_when_compiling_string, "Recompiling project will end current run.", Interface_names.L_do_not_show_again)
+				create cd.make_initialized (2, preferences.dialog_data.stop_execution_when_compiling_string, "Recompiling project will end current run.", Interface_names.L_do_not_show_again, preferences.preferences)
 				cd.set_ok_action (agent compile_and_run)
 				cd.show_modal_to_window (window_manager.last_focused_development_window.window)
 			end

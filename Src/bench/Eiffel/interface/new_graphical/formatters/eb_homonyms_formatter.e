@@ -64,7 +64,7 @@ feature {NONE} -- Implementation
 			cf: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
 		do
 			confirmed := False
-			create cf.make_initialized (2, preferences.dialog_data.generate_homonyms_string, Interface_names.l_homonym_confirmation, Interface_names.L_do_not_show_again)
+			create cf.make_initialized (2, preferences.dialog_data.generate_homonyms_string, Interface_names.l_homonym_confirmation, Interface_names.L_do_not_show_again, preferences.preferences)
 			cf.set_ok_action (agent confirm_generate)
 			cf.show_modal_to_window (Window_manager.last_focused_development_window.window)
 			if confirmed then

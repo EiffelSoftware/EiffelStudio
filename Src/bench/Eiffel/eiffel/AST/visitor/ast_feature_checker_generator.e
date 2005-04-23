@@ -957,8 +957,7 @@ feature -- Implementation
 			reset_for_unqualified_call_checking
 
 				-- Type check expression list
-			current_target_type := Void
-			process_expressions_list (l_as.expressions)
+			process_expressions_list_for_tuple (l_as.expressions)
 
 				-- Update type stack
 			create l_tuple_type.make (system.tuple_id, last_expressions_type)
@@ -1019,12 +1018,17 @@ feature -- Implementation
 				-- Get target for manifest array creation (either through assignment or
 				-- argument passing).
 			l_gen_type ?= current_target_type
+				-- Let's try to find the type of the manifest array.
+			if l_gen_type /= Void and then l_gen_type.class_id = system.array_id then
+					-- Check that expressions' type matches element's type of `l_gen_type' array.
+				l_element_type := l_gen_type.generics.item (1).actual_type
+			end
 
 				-- Type check expression list
 				-- If there is a manifest array within a manifest array, we consider there is
 				-- no target type specified.
 			nb := l_as.expressions.count
-			current_target_type := Void
+			current_target_type := l_element_type
 			process_expressions_list (l_as.expressions)
 			l_last_types := last_expressions_type
 
@@ -1035,7 +1039,7 @@ feature -- Implementation
 				-- Let's try to find the type of the manifest array.
 			if l_gen_type /= Void and then l_gen_type.class_id = system.array_id then
 					-- Check that expressions' type matches element's type of `l_gen_type' array.
-				l_type_a := l_gen_type.generics.item (1).actual_type
+				l_type_a := l_element_type
 				if nb > 0 then
 					from
 						i := 1
@@ -2927,13 +2931,15 @@ feature -- Implementation
 			l_vgcc5: VGCC5
 			l_creators: HASH_TABLE [EXPORT_I, STRING]
 			l_needs_byte_node: BOOLEAN
+			l_actual_creation_type: TYPE_A
 		do
 			l_needs_byte_node := is_byte_node_enabled
 			l_orig_call := a_call
+			l_actual_creation_type := a_creation_type.actual_type
 
-			if a_creation_type.is_formal then
+			if l_actual_creation_type.is_formal then
 					-- Cannot be Void
-				l_formal_type ?= a_creation_type
+				l_formal_type ?= l_actual_creation_type
 					-- Get the corresponding constraint type of the current class
 				l_formal_dec := context.current_class.generics.i_th (l_formal_type.position)
 				if
@@ -2954,7 +2960,7 @@ feature -- Implementation
 
 			error_handler.checksum
 
-			l_creation_class := constrained_type (a_creation_type.actual_type).associated_class
+			l_creation_class := constrained_type (l_actual_creation_type).associated_class
 			if l_creation_class.is_deferred and then not l_is_formal_creation then
 					-- Associated class cannot be deferred
 				create l_vgcc2
@@ -3942,6 +3948,81 @@ feature {NONE} -- Implementation
 				((old last_byte_node /= last_byte_node) and then last_byte_node /= Void)
 		end
 		
+	process_expressions_list_for_tuple (l_as: EIFFEL_LIST [EXPR_AS]) is
+			-- Process `l_as' as an EIFFEL_LIST but also set `last_expressions_type' accordingly.
+			-- Use `current_target_type' for proper evaluation of manifest arrays.
+		require
+			l_as_not_void: l_as /= Void
+		local
+			l_cursor: INTEGER
+			l_list: BYTE_LIST [EXPR_B]
+			l_expr: EXPR_B
+			l_type_list: like last_expressions_type
+			i, nb: INTEGER
+			l_tuple_type: TUPLE_TYPE_A
+			l_types: ARRAY [TYPE_A]
+		do
+			l_cursor := l_as.index
+			l_as.start
+			i := 1
+			nb := l_as.count
+			create l_type_list.make (1, nb)
+			l_tuple_type ?= current_target_type
+			if l_tuple_type /= Void then
+				l_types := l_tuple_type.generics
+			end
+			if is_byte_node_enabled then
+				from
+					create l_list.make (nb)
+					nb := nb + 1 -- for speeding up loop stop test.
+				until
+					i = nb
+				loop
+					reset_for_unqualified_call_checking
+					if l_types /= Void and then l_types.valid_index (i) then
+						current_target_type := l_types.item (i)
+					else
+						current_target_type := Void
+					end
+					l_as.item.process (Current)
+					l_expr ?= last_byte_node
+					check
+						l_expr_not_void: l_expr /= Void
+					end
+					l_list.extend (l_expr)
+					l_type_list.put (last_type, i)
+					i := i + 1
+					l_as.forth
+				end
+				last_byte_node := l_list
+			else
+				from
+					nb := nb + 1 -- for speeding up loop stop test.
+				until
+					i = nb
+				loop
+					reset_for_unqualified_call_checking
+					if l_types /= Void and then l_types.valid_index (i) then
+						current_target_type := l_types.item (i)
+					else
+						current_target_type := Void
+					end
+					l_as.item.process (Current)
+					l_type_list.put (last_type, i)
+					i := i + 1
+					l_as.forth
+				end
+			end
+			last_expressions_type := l_type_list
+			l_as.go_i_th (l_cursor)
+		ensure
+			last_expressions_type_not_void: last_expressions_type /= Void
+			last_expressions_type_computed: old last_expressions_type /= last_expressions_type
+			last_expressions_type_valid_count: last_expressions_type.count = l_as.count
+			last_byte_node_valid: is_byte_node_enabled implies
+				((old last_byte_node /= last_byte_node) and then last_byte_node /= Void)
+		end
+		
 	check_tuple_validity_for_ca (a_creation_type: CL_TYPE_A; a_tuple: TUPLE_AS) is
 			-- Check validity of `a_tuple' in context of Current.
 			-- i.e. it should be a tuple of tuple whose elements are
@@ -4631,6 +4712,7 @@ feature {NONE} -- Agents
 			l_void: VOID_B
 			l_operand_node: OPERAND_B
 			l_cl_type: CL_TYPE_I
+			l_actual_target_type: TYPE_A
 		do
 
 			if a_feature.is_function then
@@ -4644,6 +4726,7 @@ feature {NONE} -- Agents
 				create l_result_type.make (System.procedure_class_id, l_generics)
 			end
 
+			l_actual_target_type := a_target_type.actual_type
 			l_generics.put (a_target_type, 1)
 
 			l_feat_args := a_feature.arguments
@@ -4748,7 +4831,7 @@ feature {NONE} -- Agents
 					end
 
 						-- Evaluate type of operand in current context
-					l_arg_type := l_arg_type.instantiation_in (a_target_type, cid).deep_actual_type
+					l_arg_type := l_arg_type.instantiation_in (l_actual_target_type, cid).deep_actual_type
 
 						-- If it is open insert it in `l_oargtypes' and insert
 						-- position in `l_last_open_positions'.

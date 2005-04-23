@@ -144,7 +144,7 @@ feature -- Access
 			a_row: EV_GRID_ROW
 		do
 			if is_row_selection_enabled then
-				Result := internal_selected_rows.twin
+				Result := internal_selected_rows.linear_representation
 			else
 				create Result.make (0)	
 				from
@@ -184,7 +184,7 @@ feature -- Access
 					i := i + 1
 				end
 			else
-				Result := internal_selected_items.twin
+				Result := internal_selected_items.linear_representation
 			end
 		ensure
 			result_not_void: Result /= Void
@@ -2150,6 +2150,9 @@ feature {NONE} -- Drawing implementation
 			
 			enable_selection_on_click
 			enable_single_item_selection
+
+			item_counter := 1
+			row_counter := 1
 		end
 		
 	recompute_column_offsets is
@@ -2701,9 +2704,8 @@ feature {NONE} -- Event handling
 		local
 			start_item: EV_GRID_ITEM
 			start_row_index, end_row_index, start_column_index, end_column_index: INTEGER
-			col_counter, row_counter: INTEGER
+			a_col_counter, a_row_counter: INTEGER
 			current_item: EV_GRID_ITEM
-			a_cursor: ARRAYED_LIST_CURSOR
 		do
 			if (create {EV_ENVIRONMENT}).application.shift_pressed and then is_multiple_item_selection_enabled then
 				start_item := selected_items.last
@@ -2713,28 +2715,23 @@ feature {NONE} -- Event handling
 					start_column_index := start_item.column.index
 					end_column_index := a_item.column.index
 					from
-						col_counter := start_column_index.min (end_column_index)
+						a_col_counter := start_column_index.min (end_column_index)
 					until
-						col_counter > start_column_index.max (end_column_index)
+						a_col_counter > start_column_index.max (end_column_index)
 					loop
 						from
-							row_counter := start_row_index.min (end_row_index)
+							a_row_counter := start_row_index.min (end_row_index)
 						until
-							row_counter > start_row_index.max (end_row_index)
+							a_row_counter > start_row_index.max (end_row_index)
 						loop
-							current_item := item (col_counter, row_counter)
+							current_item := item (a_col_counter, a_row_counter)
 							if current_item /= Void then
 								current_item.enable_select
 							end
-							row_counter := row_counter + 1
+							a_row_counter := a_row_counter + 1
 						end
-						col_counter := col_counter + 1
+						a_col_counter := a_col_counter + 1
 					end
-					a_cursor := internal_selected_items.cursor
-					internal_selected_items.start
-					internal_selected_items.prune (start_item)
-					internal_selected_items.extend (start_item)
-					internal_selected_items.go_to (a_cursor)
 				end
 			elseif (create {EV_ENVIRONMENT}).application.ctrl_pressed and then (is_multiple_item_selection_enabled or is_multiple_row_selection_enabled) then
 					-- If the ctrl key is pressed and we are in a multiple selection mode then we do nothing.
@@ -2841,7 +2838,7 @@ feature {NONE} -- Implementation
 			end
 
 				-- Set grid of `grid_row' to `Current'
-			row_i.set_parent_i (Current)
+			row_i.set_parent_i (Current, row_counter)
 
 			set_vertical_computation_required (a_index)
 		end
@@ -3003,11 +3000,11 @@ feature {NONE} -- Implementation
 
 feature {EV_GRID_ROW_I, EV_GRID_ITEM_I} -- Implementation
 
-	internal_selected_rows: ARRAYED_LIST [EV_GRID_ROW]
-		-- List of selected rows.
+	internal_selected_rows: HASH_TABLE [EV_GRID_ROW, EV_GRID_ROW_I]
+		-- Hash table of selected rows.
 
-	internal_selected_items: ARRAYED_LIST [EV_GRID_ITEM]
-		-- List of selected items, only used when in item selection modes.
+	internal_selected_items: HASH_TABLE [EV_GRID_ITEM, EV_GRID_ITEM_I]
+		-- Hash table of selected items.
 
 feature {EV_GRID_ROW_I} -- Implementation
 
@@ -3015,29 +3012,24 @@ feature {EV_GRID_ROW_I} -- Implementation
 			-- Add `a_row' to `internal_selected_rows'.
 		require
 			a_row_not_void: a_row /= Void
-			not_has_a_row: not internal_selected_rows.has (a_row.interface)
+			not_has_a_row: not internal_selected_rows.has (a_row)
 			row_selected: a_row.internal_is_selected
 		do
-			internal_selected_rows.extend (a_row.interface)
+			internal_selected_rows.extend (a_row.interface, a_row)
 		ensure
-			row_added: internal_selected_rows.has (a_row.interface)
+			row_added: internal_selected_rows.has (a_row)
 		end
 
 	remove_row_from_selected_rows (a_row: EV_GRID_ROW_I) is
 			-- Remove`a_row' from `internal_selected_rows'.
 		require
 			a_row_not_void: a_row /= Void
-			has_a_row: internal_selected_rows.has (a_row.interface)
+			has_a_row: internal_selected_rows.has (a_row)
 			row_deselected: not a_row.internal_is_selected
-		local
-			a_cursor: ARRAYED_LIST_CURSOR
 		do
-			a_cursor := internal_selected_rows.cursor
-			internal_selected_rows.start
-			internal_selected_rows.prune (a_row.interface)
-			internal_selected_rows.go_to (a_cursor)
+			internal_selected_rows.remove (a_row)
 		ensure
-			row_removed: not internal_selected_rows.has (a_row.interface)
+			row_removed: not internal_selected_rows.has (a_row)
 		end
 
 feature {EV_GRID_ITEM_I} -- Implementation
@@ -3046,32 +3038,33 @@ feature {EV_GRID_ITEM_I} -- Implementation
 			-- Add `a_item' to `internal_selected_items'.
 		require
 			a_item_not_void: a_item /= Void
-			not_has_a_item: not internal_selected_items.has (a_item.interface)
+			not_has_a_item: not internal_selected_items.has (a_item)
 			item_selected: a_item.internal_is_selected
 		do
-			internal_selected_items.extend (a_item.interface)
+			internal_selected_items.put (a_item.interface, a_item)
 		ensure
-			item_added: internal_selected_items.has (a_item.interface)
+			item_added: internal_selected_items.has (a_item)
 		end
 
 	remove_item_from_selected_items (a_item: EV_GRID_ITEM_I) is
 			-- Remove`a_item' from `internal_selected_items'.
 		require
 			a_item_not_void: a_item /= Void
-			has_a_item: internal_selected_items.has (a_item.interface)
+			has_a_item: internal_selected_items.has (a_item)
 			item_deselected: not a_item.internal_is_selected
-		local
-			a_cursor: ARRAYED_LIST_CURSOR
 		do
-			a_cursor := internal_selected_items.cursor
-			internal_selected_items.start
-			internal_selected_items.prune (a_item.interface)
-			internal_selected_items.go_to (a_cursor)
+			internal_selected_items.remove (a_item)
 		ensure
-			item_removed: not internal_selected_items.has (a_item.interface)
+			item_removed: not internal_selected_items.has (a_item)
 		end
 
 feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- Implementation
+
+	item_counter: INTEGER
+		-- Item counter used to identify individual items for hashing.
+
+	row_counter: INTEGER
+		-- Row counter used to identify individual rows for hashing.
 
 	internal_set_item (a_column, a_row: INTEGER; a_item: EV_GRID_ITEM) is
 			-- Replace grid item at position (`a_column', `a_row') with `a_item', `a_item' may be Void, as called by `remove_item'.
@@ -3096,12 +3089,14 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- I
 				a_existing_item := a_row_data @ col_index
 				if a_existing_item /= Void then
 					a_existing_item.disable_select
-					a_existing_item.on_removed_from_grid
+					a_existing_item.update_for_removal
 				end
 			end
 			
 			if a_item /= Void then
-				a_item.implementation.set_parents (Current, a_grid_col_i, a_grid_row_i)
+				a_item.implementation.set_parents (Current, a_grid_col_i, a_grid_row_i, item_counter)
+					-- Increase item counter
+				item_counter := item_counter + 1
 				internal_row_data.i_th (a_row).put (a_item.implementation, a_grid_col_i.physical_index)
 				if a_grid_row_i.parent_row_i /= Void then
 						-- The row in which we are setting an item is already a subrow of another

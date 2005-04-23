@@ -27,6 +27,8 @@ inherit
 			interface
 		end
 
+	HASHABLE
+
 create
 	make
 
@@ -41,6 +43,7 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Initialize `Current'.
 		do
+			item_id := -1
 			is_initialized := True
 		end
 
@@ -242,24 +245,28 @@ feature {EV_GRID_I, EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I} -- Implemen
 
 feature {EV_GRID_I} -- Implementation
 
-	set_parents (a_parent_i: EV_GRID_I; a_column_i: EV_GRID_COLUMN_I; a_row_i: EV_GRID_ROW_I) is
+	set_parents (a_parent_i: EV_GRID_I; a_column_i: EV_GRID_COLUMN_I; a_row_i: EV_GRID_ROW_I; a_item_id: INTEGER) is
 			-- Set the appropriate grid, column and row parents
 		require
 			a_parent_i_not_void: a_parent_i /= Void
 			a_column_i_not_void: a_column_i /= Void
 			a_row_i_not_void: a_row_i /= Void
+			a_item_id_valid: a_item_id > 0
 		do
 			parent_i := a_parent_i
 			column_i := a_column_i
 			row_i := a_row_i
+			item_id := a_item_id
 		ensure
 			parent_i_set: parent_i = a_parent_i
 			column_i_set: column_i = a_column_i
 			row_i_set: row_i = a_row_i
+			item_id_set: item_id = a_item_id
 		end
 
-	on_removed_from_grid is
-			-- Mark item as removed from grid
+	update_for_removal is
+			-- Update settings in `Current' to reflect the fact that
+			-- it is being removed from `parent_i'.
 		require
 			parent_i_not_void: parent_i /= Void
 			column_i_not_void: column_i /= Void
@@ -268,6 +275,7 @@ feature {EV_GRID_I} -- Implementation
 			parent_i := Void
 			column_i := Void
 			row_i := Void
+			item_id := -1
 		ensure
 			parent_i_unset: parent_i = Void
 			column_i_unset: column_i = Void
@@ -276,6 +284,9 @@ feature {EV_GRID_I} -- Implementation
 			
 		
 feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_ITEM_I} -- Implementation
+
+	item_id: INTEGER
+		-- Number to uniquely identify grid item within `parent_i'
 
 	parent_i: EV_GRID_I
 		-- Grid that `Current' resides in if any.
@@ -309,6 +320,12 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 		end
 
 feature {NONE} -- Implementation
+
+	hash_code: INTEGER is
+			-- Hash code value
+		do
+			Result := item_id
+		end
 
 	set_default_colors is
 			-- Reset the colors used to display `Current'

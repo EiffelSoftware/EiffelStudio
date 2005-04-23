@@ -1694,12 +1694,10 @@ feature {NONE} -- Class initialization
 			set_obsolete_message (obs_msg)
 			old_parents := parents_classes
 
-				-- We reset computed information about `parents'
-				-- that will be later computed in `fill_parents'.
-				-- We do not reset `parent_classes' as the previous value is
-				-- used in `fill_parents'.
-			parents := Void
-			computed_parents := Void
+				-- We set `need_new_parents' so that we trigger a
+				-- recomputation of `parents' and `computed_parents' in
+				-- `fill_parents'.
+			need_new_parents := True
 
 			if old_parents /= Void then
 					-- Class was compiled before so we have to update
@@ -2291,6 +2289,7 @@ feature -- Parent checking
 			-- corresponding to the parents of the current class are
 			-- in the system (even if a parent is not already parsed).
 		require
+			need_new_parents: need_new_parents
 			a_class_info_not_void: a_class_info /= Void
 		local
 			l_parents_as: EIFFEL_LIST [PARENT_AS]
@@ -2306,6 +2305,10 @@ feature -- Parent checking
 			l_tuple: TUPLE [BOOLEAN, BOOLEAN]
 			l_compiled_parent_generator: AST_PARENT_C_GENERATOR
 		do
+				-- Reset flag
+			need_new_parents := False
+			
+				-- Initialize context
 			Inst_context.set_cluster (cluster)
 			l_parents_as := a_class_info.parents
 			l_ancestor_id := System.any_id
@@ -2419,6 +2422,7 @@ feature -- Parent checking
 				System.set_update_sort (True)
 			end
 		ensure
+			not_need_new_parents: not need_new_parents
 			parents_not_void: parents /= Void
 			parents_classes_not_void: parents_classes /= Void
 			computed_parents_not_void: computed_parents /= Void
@@ -3612,6 +3616,9 @@ feature -- Properties
 
 	parents_classes: FIXED_LIST [CLASS_C]
 			-- Parent classes
+
+	need_new_parents: BOOLEAN
+			-- Does Current need to recompute `parents' and `computed_parents'?
 
 	parents: FIXED_LIST [CL_TYPE_A]
 			-- Parent class types

@@ -95,7 +95,7 @@ feature -- Processing
 				a_class := classes.item (i)
 					-- Perform processing only on classes still in system.
 				if a_class /= Void and then (l_removed_classes = Void or else not l_removed_classes.has (a_class)) then
-					if a_class.parents = Void then
+					if a_class.need_new_parents then
 						System.set_current_class (a_class)
 						Error_handler.mark
 						if class_info_server.server_has (a_class.class_id) then

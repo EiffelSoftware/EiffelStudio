@@ -14,7 +14,7 @@ inherit
 			actual_type, has_like, is_loose, is_like, is_external,
 			is_basic, instantiated_in, meta_type,
 			has_associated_class,
-			is_reference, is_expanded, is_none
+			is_reference, is_expanded, is_none, convert_to
 		end
 
 	SHARED_LIKE_CONTROLER
@@ -119,6 +119,13 @@ feature -- Primitives
 			-- Does `actual_type' conform to `other'?
 		do
 			Result := actual_type.conform_to (other.actual_type)
+		end
+
+	convert_to (a_context_class: CLASS_C; a_target_type: TYPE_A): BOOLEAN is
+			-- Does current convert to `a_target_type' in `a_context_class'?
+			-- Update `last_conversion_info' of AST_CONTEXT.
+		do
+			Result := actual_type.convert_to (a_context_class, a_target_type)		
 		end
 
 	type_i: TYPE_I is

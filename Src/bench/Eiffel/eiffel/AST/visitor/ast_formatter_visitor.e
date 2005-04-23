@@ -230,9 +230,13 @@ feature {NONE} -- Implementation
 	process_array_as (l_as: ARRAY_AS) is
 		do
 			ctxt.put_text_item (ti_l_array)
-			ctxt.set_separator (ti_comma)
-			ctxt.set_space_between_tokens
-			l_as.expressions.process (Current)
+			ctxt.put_space
+			if not l_as.expressions.is_empty then
+				ctxt.set_separator (ti_comma)
+				ctxt.set_space_between_tokens
+				l_as.expressions.process (Current)
+				ctxt.put_space
+			end
 			ctxt.put_text_item_without_tabs (ti_r_array)
 		end
 

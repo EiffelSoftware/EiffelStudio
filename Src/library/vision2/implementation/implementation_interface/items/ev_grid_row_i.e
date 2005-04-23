@@ -20,6 +20,8 @@ inherit
 			is_selectable
 		end
 
+	HASHABLE
+
 create
 	make
 
@@ -41,6 +43,7 @@ feature {NONE} -- Initialization
 			subnode_count_recursive := 0
 			expanded_subnode_count_recursive := 0
 			is_expanded := False
+			row_id := -1
 			is_initialized := True
 		end
 
@@ -55,17 +58,22 @@ feature {EV_GRID_I, EV_GRID_ROW_I} -- Initialization
 			a_index_greater_than_zero: a_index > 0
 		do
 			internal_index := a_index
+		ensure
+			index_set: internal_index = a_index
 		end
 
-	set_parent_i (a_grid_i: EV_GRID_I) is
+	set_parent_i (a_grid_i: EV_GRID_I; a_row_id: INTEGER) is
 			-- Make `Current' associated with `a_grid_i'.
 		require
 			a_grid_i_not_void: a_grid_i /= Void
 			grid_not_already_set: parent_i = Void
+			a_row_id_valid: a_row_id > 0
 		do
 			parent_i := a_grid_i
+			row_id := a_row_id
 		ensure
-			parent_i = a_grid_i
+			parent_set: parent_i = a_grid_i
+			row_id_set: row_id = a_row_id
 		end
 
 feature -- Access
@@ -767,7 +775,7 @@ feature {EV_GRID_I, EV_GRID_ROW_I} -- Implementation
 		end
 
 	update_for_removal is
-			-- Update settings in `Current' to reflact the fact that
+			-- Update settings in `Current' to reflect the fact that
 			-- it is being removed from `parent_i'.
 		require
 			is_parented: parent /= Void
@@ -778,6 +786,7 @@ feature {EV_GRID_I, EV_GRID_ROW_I} -- Implementation
 				parent_row_i.update_for_subrow_removal (Current)
 			end
 			
+			row_id := -1
 			parent_i := Void
 			parent_row_i := Void
 			internal_index := 0
@@ -961,6 +970,15 @@ feature {EV_ANY_I} -- Contract support
 		end	
 	
 feature {NONE} -- Implementation
+
+	hash_code: INTEGER is
+			-- Hash code value
+		do
+			Result := row_id
+		end
+
+	row_id: INTEGER
+		-- Number to uniquely identify grid row within `parent_i'.
 		
 	contained_expanded_items_recursive: INTEGER is
 			-- `Result' is sum of of expanded nodes for each of the child rows

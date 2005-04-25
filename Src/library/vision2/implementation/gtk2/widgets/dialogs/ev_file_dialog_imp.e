@@ -65,7 +65,6 @@ feature {NONE} -- Initialization
 			)
 			enable_closeable
 			set_start_directory (App_implementation.current_working_directory)
-			set_filter ("*.*")
 			is_initialized := True
 		end
 
@@ -196,8 +195,8 @@ feature -- Element change
 			a_cs: EV_GTK_C_STRING
 		do
 			start_directory := a_path.twin
-			create a_cs.make (start_directory + "/.")
-			{EV_GTK_EXTERNALS}.gtk_file_chooser_set_filename (
+			create a_cs.make (start_directory + "/")
+			{EV_GTK_EXTERNALS}.gtk_file_chooser_set_current_folder (
 				c_object,
 				a_cs.item
 			)

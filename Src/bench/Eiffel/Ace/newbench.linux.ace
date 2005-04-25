@@ -115,6 +115,11 @@ cluster
 
 	beurk:		"$EIFFEL_SRC/Eiffel/beurk"
 
+	all editor:		"$EIFFEL_SRC/library/editor"
+		exclude
+			"CVS"; "eiffel"; "text_formatter.e"; "structured_text.e"; 
+		end
+
 	compiler_support:		"$EIFFEL_SRC/Eiffel/support"
 
 	all common:             "$EIFFEL_SRC/Eiffel/common"
@@ -177,6 +182,8 @@ cluster
 
 	io_watcher (communications):		"$/spec/gtk"
 
+	all lex:		"$ISE_EIFFEL/library/lex"
+
 	all interface:		"$EIFFEL_SRC/Eiffel/interface"
 		exclude
 			"CVS"; "graphical"; "win32"; "mswin"; "new_tty"; 
@@ -188,9 +195,9 @@ cluster
 			"CVS"; "registry_implementation"; 
 		end
 
-	tty (interface):		"$/tty"
+	all tty (interface):		"$/tty"
 		exclude
-			"output_window.e"; "tty_resources.e"; "eb_diagram_html_generator.e"; 
+			"output_window.e"; "tty_resources.e"; "eb_diagram_html_generator.e"; "eb_gui_preferences.e"
 		end
 
 	new_tty (interface):		"$/new_tty"

@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 	make (an_interface: like interface) is
 			-- Create the vertical range.
 		do
-			Precursor (an_interface)
+			Precursor {EV_RANGE_IMP} (an_interface)
 			set_c_object ({EV_GTK_EXTERNALS}.gtk_vscale_new (adjustment))
 		end
 

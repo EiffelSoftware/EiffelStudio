@@ -24,7 +24,7 @@ feature {NONE} -- Implementation
 	make (an_interface: like interface) is
 			-- Create the progress bar.
 		do
-			Precursor (an_interface)
+			Precursor {EV_GAUGE_IMP} (an_interface)
 			set_c_object ({EV_GTK_EXTERNALS}.gtk_progress_bar_new_with_adjustment (adjustment))
 			gtk_progress_bar := c_object
 			enable_segmentation

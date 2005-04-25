@@ -25,8 +25,9 @@ create
 feature {NONE} -- Initialization
 
 	initialize is
+			-- Initialize `Current'.
 		do
-			Precursor
+			Precursor {EV_PROGRESS_BAR_IMP}
 			{EV_GTK_EXTERNALS}.gtk_progress_bar_set_orientation (gtk_progress_bar, gtk_progress_bottom_to_top_enum)
 		end
 			

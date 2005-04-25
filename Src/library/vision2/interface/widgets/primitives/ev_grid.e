@@ -373,6 +373,30 @@ feature -- Access
 
 feature -- Status setting
 
+	set_item_veto_pebble_function (a_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM, ANY], BOOLEAN]) is
+			-- Assign `a_function' to `item_veto_pebble_function'.
+		require
+			not_destroyed: not is_destroyed
+			a_function_not_void: a_function /= Void
+		do
+			implementation.set_item_veto_pebble_function (a_function)
+		end
+
+	set_item_pebble_function (a_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], ANY]) is
+			-- Set `a_function' to compute `pebble'.
+			-- It will be called once each time a pick on an EV_GRID_ITEM occurs, the result
+			-- will be assigned to `pebble' for the duration of transport.
+			-- When a pick occurs on an item, the item itself is passed
+			-- To handle this data use `a_function' of type
+			-- FUNCTION [ANY, TUPLE [EV_GRID_ITEM], ANY] and return the
+			-- pebble as a function of EV_GRID_ITEM.
+		require
+			not_destroyed: not is_destroyed
+			a_function_not_void: a_function /= Void
+		do
+			implementation.set_item_pebble_function (a_function)
+		end
+
 	enable_tree is
 			-- Enable tree functionality for `Current'.
 		require

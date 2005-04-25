@@ -1014,6 +1014,17 @@ feature -- Element change
 			item_removed: item (a_column, a_row) = Void
 		end
 
+	clear is
+			-- Remove all items from `Current'.
+		require
+			not_destroyed: not is_destroyed
+			is_parented: parent /= Void
+		do
+			implementation.clear
+		ensure
+			to_implement_assertion ("EV_GRID.clear - All items positions return `Void'.")
+		end
+
 feature -- Removal
 
 	remove_column (a_column: INTEGER) is

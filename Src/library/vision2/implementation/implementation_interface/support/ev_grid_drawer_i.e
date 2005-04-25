@@ -336,6 +336,7 @@ feature -- Basic operations
 			current_physical_column_index: INTEGER
 			translated_parent_x_indent_position: INTEGER
 			tree_node_connector_color: EV_COLOR
+			grid_rows_data_list: EV_GRID_ARRAYED_LIST [SPECIAL [EV_GRID_ITEM_I]]
 		do
 			dynamic_content_function := grid.dynamic_content_function
 			
@@ -397,13 +398,14 @@ feature -- Basic operations
 	
 					from
 						visible_row_indexes.start
+						grid_rows_data_list := grid.internal_row_data
 					until
 						visible_row_indexes.off
 					loop						
 						current_row_index := visible_row_indexes.item
 							-- Retrieve information regarding the rows that we must draw.
 						current_row := grid.row_internal (current_row_index)
-						current_row_list := grid.row_list @ (current_row_index - 1)
+						current_row_list := grid_rows_data_list @ (current_row_index)
 				
 						if grid.is_row_height_fixed and not grid.is_tree_enabled then
 							current_item_y_position := (grid.row_height * (current_row_index - 1)) - (internal_client_y - vertical_buffer_offset)
@@ -438,7 +440,7 @@ feature -- Basic operations
 								node_index := retrieve_node_index (current_row_list)
 								
 								if drawing_subrow then
-									parent_row_list := grid.row_list @ (current_row.parent_row_i.index - 1)
+									parent_row_list := grid_rows_data_list @ current_row.parent_row_i.index
 									
 									parent_node_index := retrieve_node_index (parent_row_list)									
 										
@@ -542,7 +544,7 @@ feature -- Basic operations
 									-- item into the structure causes the obejcts to change.
 									-- See the implementation of `internal_set_item' from EV_GRID_I which
 									-- calls `enlarge_row'.
-									current_row_list := grid.row_list @ (current_row_index - 1)	
+									current_row_list := grid_rows_data_list @ current_row_index
 									
 										-- Now retrieve the new node index.
 									node_index := retrieve_node_index (current_row_list)

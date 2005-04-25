@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 
 	initialize is
 		do
-			Precursor
+			Precursor {EV_FILE_DIALOG_IMP}
 			set_title ("Save As")
 		end
 

@@ -8,6 +8,18 @@ class
 
 feature -- Externals
 
+	frozen gtk_entry_set_has_frame (a_entry: POINTER; has_frame: BOOLEAN) is
+		external
+			"C signature (GtkEntry*, gboolean) use <gtk/gtk.h>"
+		end
+
+	frozen gtk_file_chooser_set_current_folder (a_dialog: POINTER; a_folder: POINTER) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"gtk_file_chooser_set_current_folder ((GtkFileChooser*) $a_dialog, (gchar*) $a_folder)"
+		end
+
 	frozen gtk_icon_theme_get_default: POINTER is
 		external
 			"C signature (): GtkIconTheme* use <gtk/gtk.h>"

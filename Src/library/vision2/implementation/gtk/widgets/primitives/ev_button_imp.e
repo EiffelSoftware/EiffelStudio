@@ -23,9 +23,7 @@ inherit
 			set_foreground_color,
 			foreground_color_pointer,
 			on_focus_changed,
-			needs_event_box,
-			event_widget,
-			enable_sensitive
+			needs_event_box
 		end
  
 	EV_PIXMAPABLE_IMP
@@ -53,8 +51,6 @@ inherit
 	EV_BUTTON_ACTION_SEQUENCES_IMP
 		export
 			{EV_INTERMEDIARY_ROUTINES} select_actions_internal
-		undefine
-			visual_widget
 		redefine
 			interface
 		end
@@ -65,19 +61,7 @@ create
 feature {NONE} -- Initialization
 
 	needs_event_box: BOOLEAN is True
-
-	enable_sensitive is
-			-- Enable sensitivity of button
-		do
-			Precursor {EV_PRIMITIVE_IMP}
-			{EV_GTK_EXTERNALS}.gtk_button_set_relief (visual_widget, {EV_GTK_EXTERNALS}.gtk_relief_normal_enum)
-		end
-
-	event_widget: POINTER is
-			-- Pointer to the GtkWidget that handles the widget events
-		do
-			Result := visual_widget
-		end
+		-- Make sure `Current' is placed within a GtkEventBox.
 
 	make (an_interface: like interface) is
 			-- Connect interface and initialize `c_object'.

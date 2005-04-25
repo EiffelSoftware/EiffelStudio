@@ -464,7 +464,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_COLUMN, EV_GRID_COLUMN_I} -- Implementation
+feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_COLUMN, EV_GRID_COLUMN_I, EV_GRID_ITEM_I} -- Implementation
 
 	set_internal_index (a_index: INTEGER) is
 			-- Set the internal index of row

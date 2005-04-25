@@ -379,12 +379,15 @@ feature -- Status setting
 			drawable.drop_actions.extend (agent item_drop_action)
 		end
 
-	internal_item_drop_actions: ACTION_SEQUENCE [TUPLE [EV_GRID_ITEM, ANY]]
-
 	item_drop_action (a_pebble: ANY) is
 			-- A PND drop has occured on a grid item
+		local
+			a_item: EV_GRID_ITEM
 		do
-			
+			a_item := item_target
+			if item_drop_actions_internal /= Void then
+				item_drop_actions_internal.call ([a_item, a_pebble])
+			end
 		end
 
 	item_target: EV_GRID_ITEM is

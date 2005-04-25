@@ -356,6 +356,17 @@ feature -- Element change
 		ensure
 			--color_set: forall (item(i).background_color  = a_color)
 		end
+
+	clear is
+			-- Remove all items from `Current'.
+		require
+			not_destroyed: not is_destroyed
+			is_parented: parent /= Void
+		do
+			implementation.clear
+		ensure
+			to_implement_assertion ("EV_GRID_ROW.clear - All items positions return `Void'.")
+		end
 		
 feature {EV_ANY, EV_ANY_I} -- Implementation
 

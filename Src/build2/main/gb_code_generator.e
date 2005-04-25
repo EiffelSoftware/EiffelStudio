@@ -923,7 +923,7 @@ feature {NONE} -- Implementation
 				else
 					if constants.all_constants.is_empty then
 							-- As there are no constants, we do not generate the inheritence from the constants class.
-						temp_string := window_inheritance_no_constant
+						temp_string := window_inheritance_no_constant.twin
 					else
 						temp_string := Window_inheritance_part1.twin + project_settings.constants_class_name.as_upper + Window_inheritance_part2.twin
 					end

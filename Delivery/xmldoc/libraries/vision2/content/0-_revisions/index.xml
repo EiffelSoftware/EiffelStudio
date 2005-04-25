@@ -16,10 +16,10 @@
 		</paragraph>
 		<list ordered="false">
 			<item>
-				<bold>EV_APPLICATION</bold> - Added 'uncaught_exception_actions' which is called whenever an action sequence called from the underlying toolkit fails to deal with any exceptions raised
+				<bold>EV_APPLICATION</bold> - Added 'uncaught_exception_actions' which is called whenever an action sequence called from the underlying toolkit fails to deal with any exceptions raised.
 			</item>
 			<item>
-				<bold>EV_CLIPBOARD</bold> - Added 'has_text' so that the clipboard can be queried without retrieving the entire contents
+				<bold>EV_CLIPBOARD</bold> - Added 'has_text' so that the clipboard can be queried without retrieving the entire contents.
 			</item>
 			<item>
 				<bold>EV_CHECKABLE_TREE</bold> - A new widget that inherits EV_TREE, providing similar functionality but for each item contained a check box is displayed.
@@ -158,7 +158,11 @@
 						<bold>EV_PRIMITIVE</bold> - Fixed bug which affected all primitives that hold items. Calling `destroy' on the primitive and then calling `destroy' on one of the items caused precondition violations internally. The bug was that the call to `destroy' on the primitive did not call `wipe_out' to remove all of the contents and the item was still attempting to access its `parent' which should have been `Void'.
 					</item>
 					<item>
-						<bold>EV_WIDGET</bold> - Fixed two bugs with `key_press_string_actions'. The first was that the action sequence was fired when Escape or Backspace was pressed. As these are not displayable characters, the `key_press_string_actions' are no longer fired for these keys. The second is that pressing Enter was passing the the string "%R" which is the Windows specific newline character. We now pass "%N" when the Enter key is pressed.
+						<bold>EV_WIDGET</bold> 
+						<list ordered="false">
+							<item>Fixed two bugs with `key_press_string_actions'. The first was that the action sequence was fired when Escape or Backspace was pressed. As these are not displayable characters, the `key_press_string_actions' are no longer fired for these keys. The second is that pressing Enter was passing the the string "%R" which is the Windows specific newline character. We now pass "%N" when the Enter key is pressed.</item>
+							<item>Fixed bug in `pointer_motion_actions'. In some uncommon situations, it was possible to receive the motion event multiple times with the same position.</item>
+						</list>
 					</item>
 					<item>
 						<bold>EV_TEXT</bold> - Fixed bug where `caret_position' was returning an incorrect value if it the text had word wrapping enabled and one or more lines in the text were currently word wrapped.

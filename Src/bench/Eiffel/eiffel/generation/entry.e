@@ -103,10 +103,10 @@ feature -- previously in POLY_UNIT
 			good_argument: class_type /= Void
 		do
 			Result := type_a.actual_type.type_i
-			if Result.has_formal then
-				Result := Result.instantiation_in (class_type);
-			end;
-		end;
+			if not Result.is_formal and Result.has_formal then
+				Result := Result.instantiation_in (class_type)
+			end
+		end
 
 feature -- updates
 
@@ -179,7 +179,7 @@ feature -- from ENTRY
 			gtype : GEN_TYPE_I
 		do
 			gtype ?= type;
-			Result := (gtype /= Void)
+			Result := (gtype /= Void) or type.is_formal
 		end;
 
 	generate_cid (buffer: GENERATION_BUFFER; final_mode: BOOLEAN) is

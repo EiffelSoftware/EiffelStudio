@@ -21,13 +21,6 @@ feature -- Transformation
 		do
 		end
 
-feature {EB_SET_SLICE_SIZE_CMD} -- Refreshing
-
-	refresh is
-			-- Reload attributes (useful if `Current' represents a special object)
-		do
-		end
-
 feature {NONE} -- Facade
 
 	fill_onces_with_list (parent: EV_TREE_NODE_LIST; a_once_list: LIST [E_FEATURE]; dv: ABSTRACT_DEBUG_VALUE) is
@@ -35,8 +28,13 @@ feature {NONE} -- Facade
 		do
 		end
 
-	load_attributes_under (parent: EV_TREE_NODE_LIST) is
-			-- Fill in `parent' with the associated attributes object.
+	refreshed_sorted_children: DS_LIST [ABSTRACT_DEBUG_VALUE] is
+			-- Sorted children used by refresh
+			-- set `is_sorted_children_about_special' attribute
+		do
+		end
+
+	sorted_attributes: DS_LIST [ABSTRACT_DEBUG_VALUE] is
 		do
 		end
 

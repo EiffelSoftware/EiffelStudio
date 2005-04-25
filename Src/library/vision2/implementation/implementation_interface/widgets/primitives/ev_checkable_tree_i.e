@@ -34,7 +34,7 @@ feature -- Access
 	is_item_checked (tree_item: EV_TREE_NODE): BOOLEAN is
 			-- Is `tree_item' currently checked?
 		require
-			has_an_item: has_recursively (tree_item)
+		--	has_an_item: has_recursively (tree_item)
 		deferred
 		end
 
@@ -44,7 +44,7 @@ feature -- Status setting
 			-- Ensure check associated with `tree_item' is
 			-- checked.
 		require
-			has_an_item: has_recursively (tree_item)
+--			has_an_item: has_recursively (tree_item)
 		deferred
 		ensure
 			item_is_checked: is_item_checked (tree_item)
@@ -55,7 +55,7 @@ feature -- Status setting
 			-- Ensure check associated with `tree_item' is
 			-- unchecked.
 		require
-			has_an_item: has_recursively (tree_item)
+--			has_an_item: has_recursively (tree_item)
 		deferred
 		ensure
 			not_item_is_checked: not is_item_checked (tree_item)

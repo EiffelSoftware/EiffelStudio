@@ -11,6 +11,17 @@ inherit
 
 feature -- Event handling
 
+	item_drop_actions: ACTION_SEQUENCE [TUPLE [EV_GRID_ITEM, ANY]] is
+			-- Actions to be performed when a pebble is dropped here.
+		do
+			if item_drop_actions_internal = Void then
+				create item_drop_actions_internal
+			end
+			Result := item_drop_actions_internal
+		ensure
+			not_void: Result /= Void
+		end
+
 	item_deactivate_actions: EV_GRID_ITEM_ACTION_SEQUENCE is
 			-- Actions to be performed when an item is deactivated.
 		do
@@ -229,6 +240,9 @@ feature -- Event handling
 		end
 
 feature {EV_ANY_I} -- Implementation
+
+	item_drop_actions_internal: ACTION_SEQUENCE [TUPLE [EV_GRID_ITEM, ANY]]
+			-- Implementation of once per object  `item_drop_actions'
 
 	item_deactivate_actions_internal: EV_GRID_ITEM_ACTION_SEQUENCE
 			-- Implementation of once per object `item_deactivate_actions'.

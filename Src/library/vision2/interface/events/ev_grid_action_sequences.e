@@ -8,6 +8,12 @@ class
 
 feature -- Access
 
+	item_drop_actions: ACTION_SEQUENCE [TUPLE [EV_GRID_ITEM, ANY]] is
+			-- Actions to be performed when a pebble is dropped on an item.
+		do
+			Result := implementation.item_drop_actions
+		end
+
 	active_item_setup_actions: ACTION_SEQUENCE [TUPLE [EV_GRID_ITEM, EV_WINDOW]] is
 			-- Actions to be performed to setup an item that is currently activated.
 			-- Overrides default setup of activatable items.

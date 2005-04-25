@@ -381,19 +381,21 @@ feature -- Status report
 			counter: INTEGER
 			current_row_list: SPECIAL [EV_GRID_ITEM_I]
 			current_row_count: INTEGER
+			a_item: EV_GRID_ITEM_I
 		do
 			fixme ("EV_GRID_ROW_I.index_of_first_item convert into an attrbute for speed.")
-			current_row_list := parent_i.row_list @ (index - 1)
+			current_row_list := parent_i.internal_row_data @ internal_index
 			current_row_count := current_row_list.count
 			from
 				counter := 0
 			until
-				counter = current_row_count or Result > 0
+				a_item /= Void or else counter = current_row_count
 			loop
-				if current_row_list.item (counter) /= Void then
-					Result := counter + 1
-				end
+				a_item := current_row_list @ counter
 				counter := counter + 1
+			end
+			if a_item /= Void then
+				Result := a_item.column_i.index
 			end
 		ensure
 			valid_result: Result >= 0 and Result <= count

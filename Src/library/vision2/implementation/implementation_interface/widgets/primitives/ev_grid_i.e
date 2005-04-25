@@ -1276,7 +1276,8 @@ feature -- Element change
 		require
 			a_column_positive: a_column > 0
 			a_row_positive: a_row > 0
-			valid_tree_structure: is_tree_enabled and row (a_row).parent_row /= Void implies a_column >= row (a_row).parent_row.index_of_first_item
+			valid_tree_structure_on_item_insertion: a_item /= Void and is_tree_enabled and row (a_row).parent_row /= Void implies a_column >= row (a_row).parent_row.index_of_first_item
+			to_implement_assertion	("Add preconditions for subnode handling of `Void' items.")
 		do
 			internal_set_item (a_column, a_row, a_item)
 		ensure
@@ -1383,7 +1384,25 @@ feature -- Removal
 		ensure
 			node_counts_correct_in_parent: old (a_row.parent_row_i) /= Void implies (old a_row.parent_row_i).node_counts_correct
 		end
-		
+
+	clear is
+			-- Remove all items from `Current'.
+		require
+			is_parented: parent /= Void
+		local
+			i: INTEGER
+		do
+			from
+				i := 1
+			until
+				i > row_count
+			loop
+				rows.i_th (i).clear
+				i := i + 1
+			end
+		ensure
+			to_implement_assertion ("EV_GRID_ROW_I.clear - All items positions return `Void'.")
+		end
 
 feature -- Measurements
 

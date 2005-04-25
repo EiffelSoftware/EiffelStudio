@@ -289,12 +289,13 @@ feature -- Element change
 
 	set_item (i: INTEGER; a_item: EV_GRID_ITEM) is
 			-- Set item at `i'-th column to be `a_item'.
+			-- If `a_item' is `Void', the current item (if any) is removed.
 		require
 			not_destroyed: not is_destroyed
 			i_positive: i > 0
-			a_item_not_void: a_item /= Void
 			is_parented: parent /= Void
-			valid_tree_structure: parent.is_tree_enabled and parent_row /= Void implies i >= parent_row.index_of_first_item
+			valid_tree_structure: a_item /= Void and parent.is_tree_enabled and parent_row /= Void implies i >= parent_row.index_of_first_item
+			to_implement_assertion	("Add preconditions for subnode handling of `Void' items.")
 		do
 			implementation.set_item (i, a_item)
 		ensure

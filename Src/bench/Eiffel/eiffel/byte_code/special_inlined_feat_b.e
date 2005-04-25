@@ -23,7 +23,7 @@ feature -- Generation
 			inspect feature_name_id
 			when {PREDEFINED_NAMES}.put_name_id then
 				generate_put (gen_reg)
-			when {PREDEFINED_NAMES}.item_name_id then
+			when {PREDEFINED_NAMES}.item_name_id, {PREDEFINED_NAMES}.infix_at_name_id then
 				generate_item (gen_reg)
 			when {PREDEFINED_NAMES}.base_address_name_id then
 				buf := buffer

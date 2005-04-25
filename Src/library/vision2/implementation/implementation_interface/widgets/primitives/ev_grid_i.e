@@ -1272,26 +1272,15 @@ feature -- Element change
 
 	set_item (a_column, a_row: INTEGER; a_item: EV_GRID_ITEM) is
 			-- Set grid item at position (`a_column', `a_row') to `a_item'.
+			-- If `a_item' is `Void', the current item (if any) is removed.
 		require
 			a_column_positive: a_column > 0
 			a_row_positive: a_row > 0
-			a_item_not_void: a_item /= Void
 			valid_tree_structure: is_tree_enabled and row (a_row).parent_row /= Void implies a_column >= row (a_row).parent_row.index_of_first_item
 		do
 			internal_set_item (a_column, a_row, a_item)
 		ensure
-			inserted: item (a_column, a_row) = a_item
-		end
-
-	remove_item (a_column, a_row: INTEGER) is
-			-- Remove grid item at position (`a_column', `a_row').
-		require
-			a_column_positive: a_column > 0
-			a_row_positive: a_row > 0
-		do
-			internal_set_item (a_column, a_row, Void)
-		ensure
-			item_removed: item (a_column, a_row) = Void
+			item_set: item (a_column, a_row) = a_item
 		end
 
 feature -- Removal

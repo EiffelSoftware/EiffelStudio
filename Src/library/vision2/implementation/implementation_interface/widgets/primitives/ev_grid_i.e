@@ -217,8 +217,6 @@ feature -- Access
 					sel_items.forth
 				end
 			end
-			fixme ("Remove this full redraw and only redraw those items that have actually changed.")
-			--redraw_client_area
 		ensure
 			selected_items_empty: not is_row_selection_enabled implies selected_items.is_empty
 			selected_rows_empty: is_row_selection_enabled implies selected_rows.is_empty
@@ -1433,27 +1431,19 @@ feature -- Measurements
 			Result := row_count - hidden_node_count
 		end
 
-feature {NONE} -- Implementation
+feature {EV_GRID_DRAWER_I, EV_GRID_ROW_I} -- Implementation
 
 	internal_row_data: EV_GRID_ARRAYED_LIST [SPECIAL [EV_GRID_ITEM_I]]
 		-- Array of individual row's data, row by row
 		-- The row data returned from `row_list' @ i may be Void for optimization purposes
 		-- If the row data returned is not Void, some of the contents of this returned row data may be Void
 		-- The row data stored in `row_list' @ i may not necessarily be in the order of logical columns
-		-- The actual ordering is queried from `visible_physical_column_indexes'
+		-- The actual ordering is queried from `visible_physical_column_indexes'.
+		-- IMPORTANT: When an individual row's data is resized, the SPECIAL object corresponding to the data may be changed
+		-- and so locals to the special should always reset themselves to the new object should any operations be
+		-- performed on to the row that could trigger a resize.
 
 feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_ITEM_I} -- Implementation
-
-	row_list: SPECIAL [SPECIAL [EV_GRID_ITEM_I]] is
-		-- Memory Array of individual row's data, row by row
-		-- The row data returned from `row_list' @ i may be Void for optimization purposes
-		-- If the row data returned is not Void, some of the contents of this returned row data may be Void
-		-- The row data stored in `row_list' @ i may not necessarily be in the order of logical columns
-		-- The actual ordering is queried from `visible_physical_column_indexes'
-		do
-			fixme ("Remove me and have `area' called directly from grid drawer ")
-			Result := internal_row_data.area
-		end
 
 	physical_column_indexes: SPECIAL [INTEGER] is
 			-- Zero-based physical data indexes of the columns needed for `row_data' lookup whilst rendering cells
@@ -3068,17 +3058,9 @@ feature {EV_GRID_ITEM_I} -- Implementation
 
 feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- Implementation
 
-	item_counter: INTEGER
-		-- Item counter used to identify individual items for hashing.
-
-	row_counter: INTEGER
-		-- Row counter used to identify individual rows for hashing.
-
 	internal_set_item (a_column, a_row: INTEGER; a_item: EV_GRID_ITEM) is
-			-- Replace grid item at position (`a_column', `a_row') with `a_item', `a_item' may be Void, as called by `remove_item'.
-		require
-			a_column_positive: a_column > 0
-			a_row_positive: a_row > 0
+			-- Set grid item at position (`a_column', `a_row') to `a_item'.
+			-- If `a_item' is `Void', the current item (if any) is removed.
 		local
 			a_grid_col_i: EV_GRID_COLUMN_I
 			a_grid_row_i: EV_GRID_ROW_I
@@ -3100,7 +3082,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- I
 					a_existing_item.update_for_removal
 				end
 			end
-			
+
 			if a_item /= Void then
 				a_item.implementation.set_parents (Current, a_grid_col_i, a_grid_row_i, item_counter)
 					-- Increase item counter
@@ -3117,7 +3099,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- I
 					-- Update the row for the removal.
 				a_grid_row_i.update_for_item_removal (a_column)
 			end
-			
+
 			fixme ("EV_GRID_I.internal_set_item Adding or removing items may require the complete row to be redrawn if the row is a subrow.")
 			if a_item /= Void then
 				redraw_item (a_item.implementation)
@@ -3126,6 +3108,13 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- I
 				drawable.redraw_rectangle (a_grid_col_i.virtual_x_position - (internal_client_x - viewport_x_offset), a_grid_row_i.virtual_y_position - (internal_client_y - viewport_y_offset), a_grid_col_i.width, a_grid_row_i.height)
 			end
 		end
+
+
+	item_counter: INTEGER
+		-- Item counter used to identify individual items for hashing.
+
+	row_counter: INTEGER
+		-- Row counter used to identify individual rows for hashing.
 
 	item_internal (a_column: INTEGER; a_row: INTEGER): EV_GRID_ITEM_I is
 			-- Cell at `a_row' and `a_column' position, if `create_item_if_void' then a new item will be created if Void.

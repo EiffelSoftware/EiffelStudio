@@ -19,7 +19,8 @@ inherit
 	
 	EV_DESELECTABLE_I
 		redefine
-			interface
+			interface,
+			is_selectable
 		end
 
 	EV_COLORIZABLE_I
@@ -222,6 +223,12 @@ feature -- Status report
 			else
 				Result := internal_is_selected
 			end
+		end
+
+	is_selectable: BOOLEAN is
+			-- Is `Current' selectable?
+		do
+			Result := parent_i /= Void
 		end
 
 feature -- Element change

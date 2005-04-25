@@ -185,7 +185,7 @@ cluster
 
 	all preferences:		"$EIFFEL_SRC/library/preferences"
 		exclude
-			"CVS"; "registry"; 
+			"CVS"; "registry_implementation"; 
 		end
 
 	tty (interface):		"$/tty"

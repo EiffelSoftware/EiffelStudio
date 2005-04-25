@@ -761,6 +761,25 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			to_implement ("EV_GRID_ROW_I.destroy")
 		end
 
+	clear is
+			-- Remove all items from `Current'.
+		require
+			is_parented: parent /= Void
+		local
+			i: INTEGER
+		do
+			from
+				i := 1
+			until
+				i > count
+			loop
+				set_item (i, Void)
+				i := i + 1
+			end
+		ensure
+			to_implement_assertion ("EV_GRID_ROW_I.clear - All items positions return `Void'.")
+		end
+
 feature {EV_GRID_I, EV_GRID_ROW_I} -- Implementation
 
 	update_for_item_removal (item_index: INTEGER) is

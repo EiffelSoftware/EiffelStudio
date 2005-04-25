@@ -337,6 +337,25 @@ feature -- Element change
 			width_set: width = a_width
 		end
 
+	clear is
+			-- Remove all items from `Current'.
+		require
+			is_parented: parent /= Void
+		local
+			i: INTEGER
+		do
+			from
+				i := 1
+			until
+				i > count
+			loop
+				set_item (i, Void)
+				i := i + 1
+			end
+		ensure
+			to_implement_assertion ("EV_GRID_COLUMN_I.clear - All items positions return `Void'.")
+		end
+
 feature {EV_GRID_I} -- Implementation
 
 	remove_parent_i is

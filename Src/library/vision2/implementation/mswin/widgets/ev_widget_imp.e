@@ -758,15 +758,21 @@ feature {NONE} -- Implementation
 				if t = Void then
 					t := translate_coordinates (x_pos, y_pos)
 				end
-				pointer_motion_actions_internal.call ([
-					t.integer_item (1),
-					t.integer_item (2),
-					0.0, 0.0, 0.0,
-					t.integer_item (3),
-					t.integer_item (4)
-				])
+				if last_x /= t.integer_item (1) or last_y /= t.integer_item (2) then
+					pointer_motion_actions_internal.call ([
+						t.integer_item (1),
+						t.integer_item (2),
+						0.0, 0.0, 0.0,
+						t.integer_item (3),
+						t.integer_item (4)
+					])
+					last_x := t.integer_item (1)
+					last_y := t.integer_item (2)
+				end
 			end
 		end
+		
+	last_x, last_y: INTEGER
 
 	on_mouse_enter is
 			-- Called when the mouse enters `Current'.

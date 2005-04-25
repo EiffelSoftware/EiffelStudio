@@ -988,16 +988,17 @@ feature -- Element change
 
 	set_item (a_column, a_row: INTEGER; a_item: EV_GRID_ITEM) is
 			-- Set grid item at position (`a_column', `a_row') to `a_item'.
+			-- If `a_item' is `Void', the current item (if any) is removed.
 		require
 			not_destroyed: not is_destroyed
 			a_column_positive: a_column > 0
 			a_row_positive: a_row > 0
-			a_item_not_void: a_item /= Void
-			valid_tree_structure: is_tree_enabled and row (a_row).parent_row /= Void implies a_column >= row (a_row).parent_row.index_of_first_item
+			valid_tree_structure_on_item_insertion: a_item /= Void and is_tree_enabled and row (a_row).parent_row /= Void implies a_column >= row (a_row).parent_row.index_of_first_item
+			to_implement_assertion	("Add preconditions for subnode handling of `Void' items.")		
 		do
 			implementation.set_item (a_column, a_row, a_item)
 		ensure
-			inserted: item (a_column, a_row) = a_item
+			item_set: item (a_column, a_row) = a_item
 		end
 
 	remove_item (a_column, a_row: INTEGER) is
@@ -1008,7 +1009,7 @@ feature -- Element change
 			a_row_positive: a_row > 0
 			to_implement_assertion ("Add preconditions for subnode handling")
 		do
-			implementation.remove_item (a_column, a_row)
+			set_item (a_column, a_row, Void)
 		ensure
 			item_removed: item (a_column, a_row) = Void
 		end

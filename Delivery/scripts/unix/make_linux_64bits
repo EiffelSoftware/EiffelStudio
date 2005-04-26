@@ -1,0 +1,32 @@
+#!/bin/sh
+
+if [ "$1" == "local" ]; then
+	echo $1
+	export REMOTE=madrid.ise
+	cp -f make_linux_64bits ~/
+	# Launch platform specific scripts
+	rsh $REMOTE "cd local/TEST_DELIV ; mv -f ~/make_linux_64bits ."
+	rsh $REMOTE "cd local/TEST_DELIV ; ./make_linux_64bits"
+
+ftp -n << EOF 
+verbose 
+open madrid.ise 
+user manus manus 
+binary
+get local/TEST_DELIV/PorterPackage/Eiffel56_enterprise.tgz Eiffel56_64bits.tgz
+get local/TEST_DELIV/PorterPackage/Eiffel56_free.tgz Eiffel56_free_64bits.tgz
+get local/TEST_DELIV/PorterPackage/Eiffel56_enterprise.iso.gz Eiffel56_enterprise_64bits.iso.gz
+get local/TEST_DELIV/PorterPackage/Eiffel56_university.iso.gz Eiffel56_university_64bits.iso.gz
+get local/TEST_DELIV/PorterPackage/Eiffel56_free.iso.gz Eiffel56_free_64bits.iso.gz
+close 
+EOF
+
+	echo Linux for Fedora Core 2 compilation done
+else
+	rm -rf PorterPackage
+	tar xvf ~/PorterPackage_all.tar
+	cd PorterPackage
+	export ISE_PLATFORM=linux-x86-64
+	compile_exes
+	make_images
+fi

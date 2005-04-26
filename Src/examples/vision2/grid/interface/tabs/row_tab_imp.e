@@ -45,6 +45,7 @@ feature {NONE}-- Initialization
 			create swap_row_button
 			create remove_row_button
 			create unparent_row_button
+			create clear_row_button
 			
 				-- Build_widget_structure.
 			extend (l_ev_horizontal_box_1)
@@ -57,6 +58,7 @@ feature {NONE}-- Initialization
 			extend (swap_row_button)
 			extend (remove_row_button)
 			extend (unparent_row_button)
+			extend (clear_row_button)
 			
 			row_properties_frame.set_text ("Row Properties")
 			l_ev_vertical_box_1.set_padding_width (box_padding)
@@ -82,11 +84,15 @@ feature {NONE}-- Initialization
 			swap_row_button.set_text ("Move first selected row past second")
 			remove_row_button.set_text ("Remove Row")
 			unparent_row_button.set_text ("Unparent Row")
+			clear_row_button.set_text ("Clear Row")
+			set_padding_width (box_padding)
+			set_border_width (box_padding)
 			disable_item_expand (l_ev_horizontal_box_1)
 			disable_item_expand (row_properties_frame)
 			disable_item_expand (swap_row_button)
 			disable_item_expand (remove_row_button)
 			disable_item_expand (unparent_row_button)
+			disable_item_expand (clear_row_button)
 			
 				--Connect events.
 			row_index_entry.change_actions.extend (agent row_index_entry_changed (?))
@@ -95,6 +101,7 @@ feature {NONE}-- Initialization
 			swap_row_button.select_actions.extend (agent swap_row_button_selected)
 			remove_row_button.select_actions.extend (agent remove_row_button_selected)
 			unparent_row_button.select_actions.extend (agent unparent_row_button_selected)
+			clear_row_button.select_actions.extend (agent clear_row_button_selected)
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.
 
@@ -108,7 +115,7 @@ feature -- Access
 	row_selected_button: EV_CHECK_BUTTON
 	row_finder: GRID_ITEM_FINDER
 	swap_row_button,
-	remove_row_button, unparent_row_button: EV_BUTTON
+	remove_row_button, unparent_row_button, clear_row_button: EV_BUTTON
 	row_properties_frame: EV_FRAME
 
 feature {NONE} -- Implementation
@@ -161,6 +168,11 @@ feature {NONE} -- Implementation
 	
 	unparent_row_button_selected is
 			-- Called by `select_actions' of `unparent_row_button'.
+		deferred
+		end
+	
+	clear_row_button_selected is
+			-- Called by `select_actions' of `clear_row_button'.
 		deferred
 		end
 	

@@ -45,6 +45,7 @@ feature {NONE}-- Initialization
 			create column_selected_button
 			create column_visible_button
 			create swap_column_button
+			create clear_column_button
 			
 				-- Build_widget_structure.
 			extend (l_ev_horizontal_box_1)
@@ -55,6 +56,7 @@ feature {NONE}-- Initialization
 			l_ev_vertical_box_1.extend (column_selected_button)
 			l_ev_vertical_box_1.extend (column_visible_button)
 			extend (swap_column_button)
+			extend (clear_column_button)
 			
 			l_ev_vertical_box_1.set_border_width (box_padding)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_table_1)
@@ -79,11 +81,13 @@ feature {NONE}-- Initialization
 			column_selected_button.set_text ("Is Column Selected?")
 			column_visible_button.set_text ("Is Column Visible?")
 			swap_column_button.set_text ("Move first selected column past second")
+			clear_column_button.set_text ("Clear Column")
 			set_padding_width (box_padding)
 			set_border_width (box_padding)
 			disable_item_expand (l_ev_horizontal_box_1)
 			disable_item_expand (column_properties_frame)
 			disable_item_expand (swap_column_button)
+			disable_item_expand (clear_column_button)
 			
 				--Connect events.
 			column_index.change_actions.extend (agent column_index_changed (?))
@@ -92,6 +96,7 @@ feature {NONE}-- Initialization
 			column_selected_button.select_actions.extend (agent column_selected_button_selected)
 			column_visible_button.select_actions.extend (agent column_visible_button_selected)
 			swap_column_button.select_actions.extend (agent swap_column_button_selected)
+			clear_column_button.select_actions.extend (agent clear_column_button_selected)
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.
 
@@ -105,7 +110,8 @@ feature -- Access
 	column_selected_button, column_visible_button: EV_CHECK_BUTTON
 	column_finder: GRID_ITEM_FINDER
 	column_title_entry: EV_TEXT_FIELD
-	swap_column_button: EV_BUTTON
+	swap_column_button,
+	clear_column_button: EV_BUTTON
 	column_properties_frame: EV_FRAME
 
 feature {NONE} -- Implementation
@@ -157,6 +163,11 @@ feature {NONE} -- Implementation
 	
 	swap_column_button_selected is
 			-- Called by `select_actions' of `swap_column_button'.
+		deferred
+		end
+	
+	clear_column_button_selected is
+			-- Called by `select_actions' of `clear_column_button'.
 		deferred
 		end
 	

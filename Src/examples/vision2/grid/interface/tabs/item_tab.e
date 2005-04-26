@@ -127,7 +127,7 @@ feature {NONE} -- Implementation
 			deselectable ?= found_item
 			if deselectable /= Void then
 				if deselectable.is_selected then
-					deselectable.enable_select
+					deselectable.disable_select
 				else
 					deselectable.enable_select
 				end

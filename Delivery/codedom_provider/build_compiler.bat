@@ -7,8 +7,10 @@ CD checkout
 REM in "checkout"
 SET ISE_EIFFEL=%1
 SET PATH=%INIT_PATH%;"%1\studio\spec\windows\bin"
+ECHO Registering initial compiler's metadata consumer
+regasm %ISE_EIFFEL%\studio\spec\windows\bin\EiffelSoftware.MetadataConsumer.dll
 
-ECHO Compiling Compiler
+REM ECHO Compiling Compiler
 CD Eiffel\ace
 REM in "checkout\Eiffel\ace"
 IF EXIST ecdpc.epr DEL ecdpc.epr
@@ -19,13 +21,13 @@ IF NOT EXIST EIFGEN\F_Code\ecdpc.exe GOTO END
 
 CD ..\..\
 REM in "checkout"
-IF EXIST C:\ecdpc RD /Q /S c:\ecdpc
-IF EXIST C:\ecdpc ECHO Could not cleanup C:\ecpdc
+IF EXIST c:\ecdpc RD /Q /S C:\ecdpc
+IF EXIST C:\ecdpc ECHO Could not cleanup c:\ecpdc
 IF EXIST C:\ecdpc GOTO END
-MKDIR c:\ecdpc
-
+MKDIR C:\ecdpc
 COPY Eiffel\ace\EIFGEN\F_Code\ecdpc.exe C:\ecdpc
-SET PATH=%PATH%;C:\ecdpc
+SET PATH=%PATH%;c:\ecdpc
+
 ECHO Compiling Metadata consumer
 CD dotnet\consumer\ace
 REM in "checkout\dotnet\consumer\ace"
@@ -34,10 +36,13 @@ RD /q /s EIFGEN
 ec -finalize -batch -c_compile -ace metadata_consumer.ace
 IF NOT EXIST EIFGEN\F_code\EiffelSoftware.MetadataConsumer.dll GOTO END
 COPY EIFGEN\F_code\EiffelSoftware.MetadataConsumer.dll c:\ecdpc
-COPY %ISE_EIFFEL%\studio\spec\windows\bin\EiffelSoftware.Runtime.dll c:\ecdpc
+
 CD ..\..\..
 REM in "checkout"
-ECHO Registering initial metadata consumer
+COPY %ISE_EIFFEL%\studio\spec\windows\bin\EiffelSoftware.Runtime.dll c:\ecdpc
+ECHO Unregistering initial compiler's metadata consumer
+regasm /unregister %ISE_EIFFEL%\studio\spec\windows\bin\EiffelSoftware.MetadataConsumer.dll
+ECHO Registering metadata consumer compiled with initial compiler
 regasm c:\ecdpc\EiffelSoftware.MetadataConsumer.dll
 
 CD dotnet\consumer\ace
@@ -46,18 +51,18 @@ DEL *.epr
 RD /q /s EIFGEN
 ecdpc -finalize -batch -c_compile -ace metadata_consumer.ace
 IF NOT EXIST EIFGEN\F_code\EiffelSoftware.MetadataConsumer.dll GOTO END
-COPY /Y EIFGEN\F_code\EiffelSoftware.MetadataConsumer.dll ..\..\..
+ECHO Unregistering initial metadata consumer
+regasm /unregister c:\ecdpc\EiffelSoftware.MetadataConsumer.dll
+COPY /Y EIFGEN\F_code\EiffelSoftware.MetadataConsumer.dll c:\ecdpc
 ECHO Compiling Runtime
 CD ..\..\..\Eiffel\eiffel\com_il_generation\Core\run-time
 REM in "checkout\Eiffel\eiffel\com_il_generation\Core\run-time"
 CALL nmake
-COPY /Y EiffelSoftware.Runtime.dll ..\..\..\..\..
+COPY /Y EiffelSoftware.Runtime.dll c:\ecdpc
 CD ..\..\..\..\..
 REM in "checkout"
-ECHO Unregistering initial metadata consumer
-regasm /unregister c:\ecdpc\EiffelSoftware.MetadataConsumer.dll
 ECHO Registering bootstrapped metadata consumer
-regasm EiffelSoftware.MetadataConsumer.dll
+regasm c:\ecdpc\EiffelSoftware.MetadataConsumer.dll
 RD /Q /S %ISE_EIFFEL%\dotnet\assemblies
 
 ECHO Setting up folders

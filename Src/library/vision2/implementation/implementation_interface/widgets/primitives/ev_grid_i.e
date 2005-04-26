@@ -366,7 +366,7 @@ feature -- Access
 
 feature -- Status setting
 
-	internal_item_veto_pebble_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM, ANY], BOOLEAN]
+	item_veto_pebble_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM, ANY], BOOLEAN]
 		-- User item veto function.
 
 	set_item_veto_pebble_function (a_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM, ANY], BOOLEAN]) is
@@ -374,7 +374,7 @@ feature -- Status setting
 		require
 			a_function_not_void: a_function /= Void
 		do
-			internal_item_veto_pebble_function := a_function
+			item_veto_pebble_function := a_function
 			drawable.drop_actions.set_veto_pebble_function (agent user_item_veto_pebble_function_intermediary)
 			drawable.drop_actions.extend (agent item_drop_action)
 		end
@@ -411,25 +411,26 @@ feature -- Status setting
 	user_item_veto_pebble_function_intermediary (a_pebble: ANY): BOOLEAN is
 			-- Intermediary function used for grid item pebble vetoing.
 		do
-			if internal_item_veto_pebble_function /= Void then
-				Result := internal_item_veto_pebble_function.item ([item_target, a_pebble])
+			if item_veto_pebble_function /= Void then
+				Result := item_veto_pebble_function.item ([item_target, a_pebble])
 			end
 		end
 
 	set_item_pebble_function (a_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], ANY]) is
 			-- Set `a_function' to compute `pebble'.
-			-- It will be called once each time a pick on an EV_GRID_ITEM occurs, the result
+			-- It will be called once each time a pick on the item area of the grid occurs, the result
 			-- will be assigned to `pebble' for the duration of transport.
-			-- When a pick occurs on an item, the item itself is passed
+			-- When a pick occurs on an item, the item itself is passed.
+			-- If a pick occurs and no item is present, then Void is passed.
 			-- To handle this data use `a_function' of type
 			-- FUNCTION [ANY, TUPLE [EV_GRID_ITEM], ANY] and return the
 			-- pebble as a function of EV_GRID_ITEM.
 		do
-			if internal_item_pebble_function = Void then
+			if item_pebble_function = Void then
 					-- Intermediary only needs to be set once
 				drawable.set_pebble_function (agent user_pebble_function_intermediary)
 			end
-			internal_item_pebble_function := a_function
+			item_pebble_function := a_function
 		end
 
 	user_pebble_function_intermediary (a_x, a_y: INTEGER): ANY is
@@ -446,12 +447,12 @@ feature -- Status setting
 				end
 			end
 				-- Call user pebble agent passing in grid item if found
-			if internal_item_pebble_function /= Void then
-				Result := internal_item_pebble_function.item ([item_int])
+			if item_pebble_function /= Void then
+				Result := item_pebble_function.item ([item_int])
 			end
 		end
 
-	internal_item_pebble_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], ANY]
+	item_pebble_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], ANY]
 		-- User pebble function
 
 	activate_window: EV_WINDOW

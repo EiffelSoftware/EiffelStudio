@@ -1,4 +1,10 @@
-Windows Registry Editor Version 5.00
+REGEDIT4
+
+[HKEY_CLASSES_ROOT\EiffelSoftware.MetadataConsumer.Interop.Impl.COM_CACHE_MANAGER]
+@="EiffelSoftware.MetadataConsumer.Interop.Impl.COM_CACHE_MANAGER"
+
+[HKEY_CLASSES_ROOT\EiffelSoftware.MetadataConsumer.Interop.Impl.COM_CACHE_MANAGER\CLSID]
+@="{E1FFE19B-24F2-4523-A7D0-5ADF4D2B8146}"
 
 [HKEY_CLASSES_ROOT\CLSID\{E1FFE19B-24F2-4523-A7D0-5ADF4D2B8146}]
 @="EiffelSoftware.MetadataConsumer.Interop.Impl.COM_CACHE_MANAGER"
@@ -7,8 +13,15 @@ Windows Registry Editor Version 5.00
 @="mscoree.dll"
 "ThreadingModel"="Both"
 "Class"="EiffelSoftware.MetadataConsumer.Interop.Impl.COM_CACHE_MANAGER"
-"Assembly"="EiffelSoftware.MetadataConsumer, Version=5.5.1210.0, Culture=neutral, PublicKeyToken=def26f296efef469"
+"Assembly"="EiffelSoftware.MetadataConsumer, Version=5.5.1515.0, Culture=neutral, PublicKeyToken=def26f296efef469"
+"RuntimeVersion"="v1.0.3705"
+
+[HKEY_CLASSES_ROOT\CLSID\{E1FFE19B-24F2-4523-A7D0-5ADF4D2B8146}\InprocServer32\5.5.1515.0]
+"Class"="EiffelSoftware.MetadataConsumer.Interop.Impl.COM_CACHE_MANAGER"
+"Assembly"="EiffelSoftware.MetadataConsumer, Version=5.5.1515.0, Culture=neutral, PublicKeyToken=def26f296efef469"
 "RuntimeVersion"="v1.0.3705"
 
 [HKEY_CLASSES_ROOT\CLSID\{E1FFE19B-24F2-4523-A7D0-5ADF4D2B8146}\ProgId]
 @="EiffelSoftware.MetadataConsumer.Interop.Impl.COM_CACHE_MANAGER"
+
+[HKEY_CLASSES_ROOT\CLSID\{E1FFE19B-24F2-4523-A7D0-5ADF4D2B8146}\Implemented Categories\{62C8FE65-4EBB-45E7-B440-6E39B2CDBF29}]

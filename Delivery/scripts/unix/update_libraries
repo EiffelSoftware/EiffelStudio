@@ -12,10 +12,10 @@ remtrace base
 exprt -r $DEFAULT_CVS_TAG -d base "Src/library/base"
 remtrace encryption
 exprt -r $DEFAULT_CVS_TAG -d encryption "Src/library/encryption"
+remtrace editor
+exprt -r $DEFAULT_CVS_TAG -d editor "Src/library/editor"
 remtrace event
 exprt -r $DEFAULT_CVS_TAG -d event "Src/library/event"
-remtrace exml
-exprt -r $DEFAULT_CVS_TAG -d exml "Src/library/exml"
 remtrace gobo
 exprt -r $DEFAULT_CVS_TAG -d free_add_ons free_add_ons/gobo
 gunzip -c free_add_ons/gobo_33_unix.tgz | tar -xf -

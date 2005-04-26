@@ -94,6 +94,7 @@ feature {NONE} -- Initialization
 			Precursor {EV_ITEM_LIST_IMP}
 			Precursor {EV_PRIMITIVE_IMP}
 			Precursor {EV_MULTI_COLUMN_LIST_I}
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_set_enable_search (tree_view, False)
 			resize_model_if_needed (25)
 				-- Create our model with 25 columns to avoid recomputation each time the column count increases
 			create_list (2)

@@ -872,11 +872,56 @@ feature {NONE} -- Implementation
 --			grid_label_item.set_text ("A text")
 
 			-- Test 10
-			grid.enable_tree
-			grid.set_item (1, 1, create {EV_GRID_LABEL_ITEM}.make_with_text ("Top level 1"))
-			grid.set_item (3, 1, create {EV_GRID_LABEL_ITEM}.make_with_text ("Top level 1"))
-			grid.insert_new_row_parented (2, grid.row (1))
+--			grid.enable_tree
+--			grid.set_item (1, 1, create {EV_GRID_LABEL_ITEM}.make_with_text ("Top level 1"))
+--			grid.set_item (3, 1, create {EV_GRID_LABEL_ITEM}.make_with_text ("Top level 1"))
+--			grid.insert_new_row_parented (2, grid.row (1))
+
+			-- Test 11
+--			add_items (10, 10)
+--			grid.set_item (3, 3, Void)
+--			grid.column (5).set_item (5, Void)
+--			grid.row (7).set_item (7, Void)
+--			grid.row (7).clear
+--			grid.column (5).clear
+--			grid.clear
+
+			-- Test 12
+			add_items (10, 10)
+			grid.insert_new_row_parented (6, grid.row (5))
+			grid.row (6).set_item (3, create {EV_GRID_LABEL_ITEM}.make_with_text ("An item"))
+			grid.row (6).insert_subrow (1)
+			grid.row (6).subrow (1).set_item (3, create {EV_GRID_LABEL_ITEM}.make_with_text ("Second item"))
+			grid.row (6).insert_subrow (1)
+			grid.row (6).subrow (1).set_item (3, create {EV_GRID_LABEL_ITEM}.make_with_text ("First item"))
+			grid.row (6).insert_subrow (3)
+			grid.row (6).subrow (3).set_item (3, create {EV_GRID_LABEL_ITEM}.make_with_text ("Third item"))
+			grid.row (6).insert_subrow (4)
+			grid.row (6).subrow (4).set_item (3, create {EV_GRID_LABEL_ITEM}.make_with_text ("Fourth item"))
+			grid.row (6).insert_subrow (1)
+			grid.row (6).subrow (1).set_item (3, create {EV_GRID_LABEL_ITEM}.make_with_text ("Sneaky Final first item"))
+			grid.row (6).subrow (1).ensure_expandable
+			grid.row_expand_actions.extend (agent expand_row2)
 		end
+
+	expand_row2 (a_row: EV_GRID_ROW) is
+			--
+		local
+			counter: INTEGER
+		do
+			if a_row.index = 7 then
+				from
+					counter := 1
+				until
+					counter = 100
+				loop
+					grid.row (7).insert_subrow (1)
+					grid.row (7).subrow (1).set_item (3, create {EV_GRID_LABEL_ITEM}.make_with_text ("counter " + counter.out))
+					counter := counter + 1
+				end
+			end
+		end
+		
 		
 	add_subrows (a_row: EV_GRID_ROW) is
 			--

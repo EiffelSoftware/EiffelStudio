@@ -292,13 +292,13 @@ feature {EV_ANY_IMP} -- Pick and Drop intermediary agent routines
 			a_pick_and_dropable_imp.end_transport (a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 		end
 		
-	temp_execute_intermediary (a_c_object: POINTER; a_x, a_y: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+	execute_intermediary (a_c_object: POINTER; a_x, a_y: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 			-- Executed when pebble is being moved
 		local
 			a_pick_and_dropable_imp: EV_PICK_AND_DROPABLE_IMP
 		do
 			a_pick_and_dropable_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			a_pick_and_dropable_imp.temp_execute (a_x, a_y, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
+			a_pick_and_dropable_imp.execute (a_x, a_y, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 		end
 		
 	signal_emit_stop_intermediary (a_object_id: INTEGER; a_c_object: POINTER; signal: STRING) is

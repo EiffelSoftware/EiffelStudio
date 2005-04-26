@@ -67,8 +67,8 @@ feature {NONE} -- Initialization
 			pixmapable_imp_initialize
 			{EV_GTK_EXTERNALS}.gtk_tool_button_set_icon_widget (visual_widget, pixmap_box)
 			
-			Precursor {EV_ITEM_IMP}
-			initialize_events
+				-- Initialize gtk events
+			{EV_GTK_EXTERNALS}.gtk_widget_add_events (visual_widget, gdk_events_mask)
 
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tool_item_set_is_important (visual_widget, True)
 

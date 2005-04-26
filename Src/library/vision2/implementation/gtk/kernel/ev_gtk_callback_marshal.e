@@ -300,21 +300,25 @@ feature {NONE} -- Implementation
 		local
 			retried: BOOLEAN
 			l_exception: EXCEPTION
-			ev_app: EV_APPLICATION
 		do
 			if not retried then
 					integer_pointer_tuple.put (n_args, 1)
 					integer_pointer_tuple.put (args, 2)
 					action.call (integer_pointer_tuple)
-			else
-				ev_app ?= (create {EV_ENVIRONMENT}).application
+			elseif not uncaught_exception_actions_called then
 				create l_exception.make_with_tag_and_trace (tag_name, exception_trace)
-				ev_app.uncaught_exception_actions.call ([l_exception])
+				uncaught_exception_actions_called := True
+				(create {EV_ENVIRONMENT}).application.uncaught_exception_actions.call ([l_exception])
+				uncaught_exception_actions_called := False
 			end
 		rescue
 			retried := True
 			retry
 		end
+
+	uncaught_exception_actions_called: BOOLEAN
+		-- Are the `uncaught_exceptions_actions' currently being called?
+		-- This is used to prevent infinite looping should an exception be raised as part of calling `uncaught_exception_actions'.
 
 feature {EV_ANY_IMP} -- Tuple optimizations.
 

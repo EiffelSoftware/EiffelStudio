@@ -1,6 +1,5 @@
 indexing
-	description: "Array list for EV_GRID that allows insertion to any position"
-	author: ""
+	description: "Array list for EV_GRID that allows insertion to any position."
 	date: "$Date$"
 	revision: "$Revision$"
 

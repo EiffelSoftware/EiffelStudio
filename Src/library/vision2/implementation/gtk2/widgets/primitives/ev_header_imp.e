@@ -109,9 +109,9 @@ feature
 					-- We are taking the dummy right column in to account
 			end
 			item_imp ?= v.implementation
-			item_imp.set_parent_imp (Current)
 			child_array.go_i_th (i)
 			child_array.put_left (v)
+			item_imp.set_parent_imp (Current)
 			 {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_insert_column (visual_widget, item_imp.c_object, i - 1)
 		end
 
@@ -122,8 +122,9 @@ feature
 		do
 			child_array.go_i_th (a_position)
 			item_imp ?=item.implementation
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_remove_column (visual_widget, item_imp.c_object)
 			item_imp.set_parent_imp (Void)
+			{EV_GTK_DEPENDENT_EXTERNALS}.object_ref (item_imp.c_object)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_remove_column (visual_widget, item_imp.c_object)
 			child_array.remove
 		end
 

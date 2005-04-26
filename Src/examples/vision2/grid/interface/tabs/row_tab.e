@@ -127,5 +127,11 @@ feature {NONE} -- Implementation
 			grid.row (current_row_index).parent_row.remove_subrow (grid.row (current_row_index))
 		end
 
+	clear_row_button_selected is
+			-- Called by `select_actions' of `clear_row_button'.
+		do
+			grid.row (current_row_index).clear
+		end
+
 end -- class ROW_TAB
 

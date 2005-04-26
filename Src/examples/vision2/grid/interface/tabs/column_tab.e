@@ -130,7 +130,12 @@ feature {NONE} -- Implementation
 				grid.hide_column (current_column_index)
 			end
 		end
-		
+
+	clear_column_button_selected is
+			-- Called by `select_actions' of `clear_column_button'.
+		do
+			grid.column (current_column_index).clear
+		end
 
 end -- class COLUMN_TAB
 

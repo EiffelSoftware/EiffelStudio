@@ -371,6 +371,19 @@ feature -- Access
 			viewable_y_offset_valid: Result >=0 and Result <= height
 		end
 
+	item_pebble_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], ANY] is
+			-- Returns data to be transported by pick and drop mechanism.
+			-- See `set_item_pebble_function' for more information.
+		do
+			Result := implementation.item_pebble_function
+		end
+
+	item_veto_pebble_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM, ANY], BOOLEAN] is
+			-- Function used to determing whether dropping is allowed on a particular item.
+		do
+			Result := implementation.item_veto_pebble_function
+		end
+
 feature -- Status setting
 
 	set_item_veto_pebble_function (a_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM, ANY], BOOLEAN]) is
@@ -380,13 +393,16 @@ feature -- Status setting
 			a_function_not_void: a_function /= Void
 		do
 			implementation.set_item_veto_pebble_function (a_function)
+		ensure
+			item_veto_pebble_function_set: item_veto_pebble_function = a_function
 		end
 
 	set_item_pebble_function (a_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], ANY]) is
 			-- Set `a_function' to compute `pebble'.
-			-- It will be called once each time a pick on an EV_GRID_ITEM occurs, the result
+			-- It will be called once each time a pick on the item area of the grid occurs, the result
 			-- will be assigned to `pebble' for the duration of transport.
-			-- When a pick occurs on an item, the item itself is passed
+			-- When a pick occurs on an item, the item itself is passed.
+			-- If a pick occurs and no item is present, then Void is passed.
 			-- To handle this data use `a_function' of type
 			-- FUNCTION [ANY, TUPLE [EV_GRID_ITEM], ANY] and return the
 			-- pebble as a function of EV_GRID_ITEM.
@@ -395,6 +411,8 @@ feature -- Status setting
 			a_function_not_void: a_function /= Void
 		do
 			implementation.set_item_pebble_function (a_function)
+		ensure
+			item_pebble_function_set: item_pebble_function = a_function
 		end
 
 	enable_tree is

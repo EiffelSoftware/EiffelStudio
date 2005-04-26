@@ -324,7 +324,22 @@ feature -- Element change
 			added: a_row.parent_row = Current
 			subrow (subrow_count) = a_row
 		end
-		
+
+	insert_subrow (subrow_index: INTEGER) is
+			-- Add a new row to `parent' as a subrow of `Current'
+			-- with index in subrows of `Current' given by `subrow_index'.
+		require
+			not_destroyed: not is_destroyed
+			is_parented: parent /= Void
+			parent_enabled_as_tree: parent.is_tree_enabled
+			valid_subrow_index: subrow_index >= 1 and subrow_index <= subrow_count + 1
+		do
+			implementation.insert_subrow (subrow_index)
+		ensure
+			subrow_count_increased: subrow_count = old subrow_count + 1
+			parent_row_count_increased: parent.row_count = old parent.row_count + 1
+		end
+
 	remove_subrow (a_row: EV_GRID_ROW) is
 			-- Ensure that `a_row' is no longer a child row of `Current'
 		require

@@ -676,14 +676,16 @@ feature {DUMP_VALUE} -- string_representation Implementation
 				if application.is_dotnet then
 					if dynamic_class_type /= Void then
 						l_icdov := new_value_object_dotnet
-						Result := Application.imp_dotnet.eifnet_debugger.generating_type_value_from_object_value (
-									value_frame_dotnet, 
-									value_dotnet,
-									l_icdov,
-									dynamic_class_type,
-									l_feat
-								)
-						l_icdov.clean_on_dispose
+						if l_icdov /= Void then
+							Result := Application.imp_dotnet.eifnet_debugger.generating_type_value_from_object_value (
+										value_frame_dotnet,
+										value_dotnet,
+										l_icdov,
+										dynamic_class_type,
+										l_feat
+									)
+							l_icdov.clean_on_dispose
+						end
 					end
 				else
 					l_final_result_value := classic_feature_result_value_on_current (l_feat, dynamic_class)

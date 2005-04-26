@@ -2679,9 +2679,9 @@ feature {NONE} -- Event handling
 				inspect
 					a_key.code
 				when {EV_KEY_CONSTANTS}.Key_down then
-					a_sel_item := find_next_item_in_column (prev_sel_item.column, prev_sel_item.row.index, True, is_row_selection_enabled or else a_sel_row.subrow_count > 0 or else a_sel_row.parent_row /= Void)
+					a_sel_item := find_next_item_in_column (prev_sel_item.column, prev_sel_item.row.index, True, is_row_selection_enabled or else ((a_sel_row.subrow_count > 0 or else a_sel_row.parent_row /= Void) and then a_sel_row.index_of_first_item = prev_sel_item.column.index))
 				when {EV_KEY_CONSTANTS}.Key_up then
-					a_sel_item := find_next_item_in_column (prev_sel_item.column, prev_sel_item.row.index, False, is_row_selection_enabled or else a_sel_row.subrow_count > 0 or else a_sel_row.parent_row /= Void)
+					a_sel_item := find_next_item_in_column (prev_sel_item.column, prev_sel_item.row.index, False, is_row_selection_enabled or else ((a_sel_row.subrow_count > 0 or else a_sel_row.parent_row /= Void) and then a_sel_row.index_of_first_item = prev_sel_item.column.index))
 				when {EV_KEY_CONSTANTS}.Key_right then
 					if not is_row_selection_enabled then
 							-- Key right shouldn't affect row selection

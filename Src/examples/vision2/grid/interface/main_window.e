@@ -47,5 +47,15 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	view_tools_menu_item_selected is
+			-- Called by `select_actions' of `view_tools_menu_item'.
+		do
+			if view_tools_menu_item.is_selected then
+				tools_notebook.show
+			else
+				tools_notebook.hide
+			end
+		end
+
 end -- class MAIN_WINDOW
 

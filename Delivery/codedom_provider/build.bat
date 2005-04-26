@@ -23,11 +23,11 @@ SET CODEDOM_RELEASE=%1
 ECHO CODEDOM_RELEASE=%CODEDOM_RELEASE%
 SET GOBO_SRC=\\mahogany\e$\gobo_ise
 ECHO GOBO_SRC=%GOBO_SRC%
-SET EIFFEL_SRC=%CD%\checkout\compiler
+SET EIFFEL_SRC=%CD%\checkout
 ECHO EIFFEL_SRC=%EIFFEL_SRC%
-SET GOBO=%CD%\checkout\head\library\gobo
+SET GOBO=%CD%\checkout\library\gobo
 ECHO GOBO=%GOBO%
-SET ECLOP=%CD%\checkout\head\eclop
+SET ECLOP=%CD%\checkout\eclop
 ECHO ECLOP=%ECLOP%
 ECHO ***********************************
 
@@ -57,7 +57,7 @@ SET ISE_CFLAGS=-D WINVER=0x500
 "%3\studio\spec\windows\bin\ec" -finalize -c_compile -ace ace.codedom.ace
 IF NOT EXIST EIFGEN\F_Code\installer.exe ECHO Build failed, could not find EIFGEN\F_Code\installer.exe!!
 IF NOT EXIST EIFGEN\F_Code\installer.exe GOTO END
-COPY EIFGEN\F_Code\installer.exe ..\..\..\..\delivery
+COPY EIFGEN\F_Code\installer.exe ..\..\..\delivery
 
 CD ..\..\..\..
 GOTO END

@@ -5,9 +5,9 @@ REM *********************************************
 
 ECHO Building Codedom files
 
-SET EIFFEL_SRC=%CD%\checkout\head
+SET EIFFEL_SRC=%CD%\checkout
 SET ISE_EIFFEL=%1
-SET PATH=%INIT_PATH%;"%1\studio\spec\windows\bin"
+SET PATH=%INIT_PATH%;C:\ecdpc
 
 CD checkout\dotnet\codedom_provider
 REM in checkout\dotnet\codedom_provider

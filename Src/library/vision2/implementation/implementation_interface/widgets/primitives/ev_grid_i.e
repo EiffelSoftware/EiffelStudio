@@ -1315,8 +1315,13 @@ feature -- Removal
 
 				-- Flag `physical_column_indexes' for recalculation
 			physical_column_indexes_dirty := True
-			
-			to_implement ("EV_GRID_I:remove_column removal of header, redraw and blanking of items")
+
+			header.go_i_th (a_column)
+			header.remove
+
+			recompute_column_offsets
+			recompute_horizontal_scroll_bar
+			redraw_client_area
 		ensure
 			column_count_updated: column_count = old column_count - 1
 			old_column_removed: (old column (a_column)).parent = Void
@@ -1365,7 +1370,9 @@ feature -- Removal
 		end
 		
 	internal_remove_row (a_row: EV_GRID_ROW_I) is
-			--
+			-- Perform internal settings required for removal of `a_row'.
+			require
+			a_row_not_void: a_row /= Void
 		local
 			removed_row: EV_GRID_ROW_I
 			l_row_index: INTEGER

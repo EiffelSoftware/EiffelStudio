@@ -66,8 +66,12 @@ feature {NONE} -- Initialization
 		local
 			connect_button_press_switch_agent: PROCEDURE [EV_GTK_CALLBACK_MARSHAL, TUPLE[]]
 			on_key_event_intermediary_agent: PROCEDURE [EV_GTK_CALLBACK_MARSHAL, TUPLE [EV_KEY, STRING, BOOLEAN]]
+			a_event_widget: POINTER
+			a_c_object: POINTER
 		do
 			Precursor {EV_PICK_AND_DROPABLE_IMP}
+			a_event_widget := event_widget
+			a_c_object := c_object
 			
 				-- Reset the initial internal sizes, once set they should not be reset to -1
 			internal_minimum_width := -1
@@ -77,18 +81,18 @@ feature {NONE} -- Initialization
 				--| "configure-event" only happens for windows,
 				--| so we connect to the "size-allocate" function.
 			if not is_parentable then
-				real_signal_connect_after (c_object, "configure-event", agent (App_implementation.gtk_marshal).on_size_allocate_intermediate (internal_id, ?, ?, ?, ?), configure_translate_agent)
+				real_signal_connect_after (a_c_object, "configure-event", agent (App_implementation.gtk_marshal).on_size_allocate_intermediate (internal_id, ?, ?, ?, ?), configure_translate_agent)
 			end
 	
-			on_key_event_intermediary_agent := agent (App_implementation.gtk_marshal).on_key_event_intermediary (c_object, ?, ?, ?)
-			real_signal_connect (event_widget, "key_press_event", on_key_event_intermediary_agent, key_event_translate_agent)
-			real_signal_connect (event_widget, "key_release_event", on_key_event_intermediary_agent, key_event_translate_agent)
+			on_key_event_intermediary_agent := agent (App_implementation.gtk_marshal).on_key_event_intermediary (a_c_object, ?, ?, ?)
+			real_signal_connect (a_event_widget, "key_press_event", on_key_event_intermediary_agent, key_event_translate_agent)
+			real_signal_connect (a_event_widget, "key_release_event", on_key_event_intermediary_agent, key_event_translate_agent)
 				--| "button-press-event" is a special case, see below.
 				
-			real_signal_connect_after (event_widget, "focus-in-event", agent (App_implementation.gtk_marshal).widget_focus_in_intermediary (c_object), Void)
-			real_signal_connect_after  (event_widget, "focus-out-event", agent (App_implementation.gtk_marshal).widget_focus_out_intermediary (c_object), Void)
+			real_signal_connect_after (a_event_widget, "focus-in-event", agent (App_implementation.gtk_marshal).widget_focus_in_intermediary (a_c_object), Void)
+			real_signal_connect_after  (a_event_widget, "focus-out-event", agent (App_implementation.gtk_marshal).widget_focus_out_intermediary (a_c_object), Void)
 				
-			connect_button_press_switch_agent := agent (App_implementation.gtk_marshal).connect_button_press_switch_intermediary (c_object)
+			connect_button_press_switch_agent := agent (App_implementation.gtk_marshal).connect_button_press_switch_intermediary (a_c_object)
 			pointer_button_press_actions.not_empty_actions.extend (connect_button_press_switch_agent)
 			pointer_double_press_actions.not_empty_actions.extend (connect_button_press_switch_agent)
 			if not pointer_button_press_actions.is_empty or not pointer_double_press_actions.is_empty then

@@ -58,7 +58,7 @@ feature {NONE} -- Initialization
 			box: POINTER
 		do
 			Precursor {EV_ITEM_IMP}
-			real_signal_connect (visual_widget, "activate", agent (App_implementation.gtk_marshal).menu_item_activate_intermediary (c_object), Void)
+			real_signal_connect_after (visual_widget, "activate", agent (App_implementation.gtk_marshal).menu_item_activate_intermediary (c_object), Void)
 			textable_imp_initialize
 
 			box := {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)

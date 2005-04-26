@@ -4,7 +4,7 @@ inherit
 	RESULT_B
 		redefine
 			enlarged, propagate, free_register, print_register, type,
-			Current_register, is_result, generate, is_predefined
+			Current_register, is_result, generate
 		end
 
 feature
@@ -13,9 +13,6 @@ feature
 		do
 			Result := Current
 		end
-
-	is_predefined: BOOLEAN is True
-			-- Predefined as results is store in a register.
 
 	is_result: BOOLEAN is
 		do

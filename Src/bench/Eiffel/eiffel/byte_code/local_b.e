@@ -18,7 +18,7 @@ inherit
 			bit_assign_code, assigns_to, array_descriptor,
 			pre_inlined_code, generate_il_call_access,
 			generate_il_address,
-			is_fast_as_local
+			is_fast_as_local, is_predefined
 		end
 	
 feature 
@@ -35,6 +35,9 @@ feature
 		do
 			Result := context.byte_code.locals.item (position)
 		end
+
+	is_predefined: BOOLEAN is True
+			-- Is Current a predefined entity ?
 
 	is_local: BOOLEAN is
 			-- Is Current an access to a local variable ?

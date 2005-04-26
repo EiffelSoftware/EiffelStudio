@@ -12,6 +12,11 @@ feature
 
 	type: TYPE_I;
 
+feature -- Status report
+
+	is_local: BOOLEAN is False
+		-- Not really a local.
+
 feature
 
 	fill_from (l: LOCAL_B) is
@@ -24,10 +29,6 @@ feature
 	enlarged: INLINED_LOCAL_B is
 		do
 			Result := Current
-		end
-
-	is_local: BOOLEAN is
-		do
 		end
 
 feature -- Register and code generation

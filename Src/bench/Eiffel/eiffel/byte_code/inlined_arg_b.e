@@ -5,20 +5,32 @@ inherit
 		redefine
 			enlarged, propagate, analyze, generate,
 			free_register, print_register, type,
-			current_register
+			current_register, is_argument
 		end
 
-feature
+feature -- Access
 
-	fill_from (a: ARGUMENT_B) is
+	type: TYPE_I is
 		do
-			parent := a.parent;
-			position := a.position
+			Result := System.remover.inliner.inlined_feature.argument_type (position)
 		end
 
 	enlarged: INLINED_ARG_B is
 		do
 			Result := Current
+		end
+
+feature -- Status report
+
+	is_argument: BOOLEAN is False
+			-- Current should not be considered as an actual argument
+
+feature -- Settings
+
+	fill_from (a: ARGUMENT_B) is
+		do
+			parent := a.parent;
+			position := a.position
 		end
 
 feature -- Register and code generation
@@ -71,12 +83,5 @@ feature -- Register and code generation
 			Context.set_class_type (current_type)
 			Context.set_inlined_current_register (current_reg)
 		end;
-
-feature
-
-	type: TYPE_I is
-		do
-			Result := System.remover.inliner.inlined_feature.argument_type (position)
-		end
 
 end

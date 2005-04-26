@@ -53,39 +53,24 @@ feature -- Initialization
 
 				-- Set the default width to 80 pixels wide
 			set_width (80)
+
+			real_signal_connect (c_object, "notify::width", agent handle_resize, Void)
 			
 			pixmapable_imp_initialize
 			textable_imp_initialize
-			initialize_box
+			
+			box := {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
+			{EV_GTK_EXTERNALS}.gtk_widget_show (box)
+			{EV_GTK_EXTERNALS}.gtk_container_add (box, pixmap_box)
+			{EV_GTK_EXTERNALS}.gtk_container_add (box, text_label)
 
-			real_signal_connect ({EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_get_widget (c_object),  "realize", agent setup_events, Void)
 			is_initialized := True
 		end
-
-	setup_events is
-			--
-		local
-			item_box: POINTER
-			box_parent: POINTER
-		do
-			if not events_set then
-					-- Go up through widget ancestry to find the GtkButton that represents the column
-				item_box := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_get_widget (c_object)
-				box_parent := {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (item_box)
-				box_parent := {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (box_parent)
-				box_parent := {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (box_parent)
-				real_signal_connect (box_parent, "size-allocate", agent handle_resize, Void)
-			end
-			events_set := True
-		end
-		
-	events_set: BOOLEAN
 
 	handle_resize is
 			-- Call the appropriate actions for the header item resize
 		do
-			if width /= old_width and then parent_imp /= Void and then parent_imp.item_resize_actions_internal /= Void then
-				print ("column resize%N")
+			if parent_imp /= Void and then parent_imp.item_resize_actions_internal /= Void and then width /= old_width then
 				parent_imp.item_resize_actions_internal.call ([interface])
 				parent_imp.item_resize_end_actions_internal.call ([interface])
 			end
@@ -94,18 +79,6 @@ feature -- Initialization
 
 	old_width: INTEGER
 		-- Previous width of `Current', used to prevent multiple calls to resize actions when the item hasn't actually resized
-
-	initialize_box is
-			-- Create and initialize box.
-		local
-			box: POINTER
-		do
-			box := {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
-			{EV_GTK_EXTERNALS}.gtk_widget_show (box)
-			{EV_GTK_EXTERNALS}.gtk_container_add (box, pixmap_box)
-			{EV_GTK_EXTERNALS}.gtk_container_add (box, text_label)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_widget (c_object, box)
-		end
 
 feature -- Access
 
@@ -206,14 +179,27 @@ feature -- PND
 			end
 		end
 
-feature
+feature {EV_HEADER_IMP} -- Implementation
 
 	set_parent_imp (par_imp: like parent_imp) is
+			-- Set `parent_imp' to `par_imp'
 		do
 			parent_imp := par_imp
+			if par_imp /= Void then
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_widget (c_object, box)
+			else
+				{EV_GTK_EXTERNALS}.object_ref (box)
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_widget (c_object, {EV_GTK_EXTERNALS}.gtk_label_new (default_pointer))
+			end
 		end
 
 	parent_imp: EV_HEADER_IMP
+		-- Parent of `Current'
+
+feature {NONE} -- Implementation
+
+	box: POINTER
+		-- Box to hold column text and pixmap.
 	
 	create_drop_actions: EV_PND_ACTION_SEQUENCE is
 			-- Create a drop action sequence.

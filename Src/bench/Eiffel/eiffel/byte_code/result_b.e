@@ -12,7 +12,7 @@ inherit
 			assign_code, expanded_assign_code, reverse_code,
 			assigns_to, pre_inlined_code, generate_il_call_access,
 			generate_il_address,
-			is_fast_as_local
+			is_fast_as_local, is_predefined
 		end
 
 feature 
@@ -25,6 +25,9 @@ feature
 		do
 			Result := context.byte_code.result_type;
 		end;
+
+	is_predefined: BOOLEAN is True
+			-- Predefined as results is store in a register.
 
 	is_result: BOOLEAN is
 			-- Access is result

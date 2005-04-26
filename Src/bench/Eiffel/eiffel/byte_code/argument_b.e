@@ -10,7 +10,7 @@ inherit
 			make_byte_code, register_name, array_descriptor,
 			pre_inlined_code, print_register, generate_il_call_access,
 			generate_il_address,
-			is_fast_as_local
+			is_fast_as_local, is_predefined
 		end;
 	
 feature 
@@ -30,8 +30,14 @@ feature
 			Result := context.byte_code.arguments.item (position);
 		end;
 
-	is_argument: BOOLEAN is True;
+	is_predefined: BOOLEAN is True
+			-- Is Current a predefined entity ?
+
+	is_argument: BOOLEAN is
 			-- Is Current an access to an argument ?
+		do
+			Result := True
+		end
 
 	is_local: BOOLEAN is False;
 			-- Is Current an access to a local variable ?

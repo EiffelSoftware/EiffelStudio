@@ -21,6 +21,9 @@ create
 	make
 	
 feature {NONE} -- Initialization
+
+	gtk_is_launchable: BOOLEAN
+		-- Is Gtk launchable?
 	
 	make (an_interface: like interface) is
 			-- Set up the callback marshal and initialize GTK+.
@@ -34,28 +37,35 @@ feature {NONE} -- Initialization
 			
 			create locale_str.make_from_c ({EV_GTK_EXTERNALS}.gtk_set_locale)
 			
-			gtk_init
-			gtk_dependent_initialize
+			gtk_is_launchable := gtk_init_check
+			if
+				gtk_is_launchable
+			then
+				gtk_dependent_initialize
+				
+				enable_ev_gtk_log (0)
+					-- 0 = No messages, 1 = Gtk Log Messages, 2 = Gtk Log Messages with Eiffel exception.
+				{EV_GTK_EXTERNALS}.gdk_set_show_events (False)
 			
-			enable_ev_gtk_log (0)
-				-- 0 = No messages, 1 = Gtk Log Messages, 2 = Gtk Log Messages with Eiffel exception.
-			{EV_GTK_EXTERNALS}.gdk_set_show_events (False)
-		
-			{EV_GTK_EXTERNALS}.gtk_widget_set_default_colormap ({EV_GTK_EXTERNALS}.gdk_rgb_get_cmap)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_default_visual ({EV_GTK_EXTERNALS}.gdk_rgb_get_visual)
-
-			tooltips := {EV_GTK_EXTERNALS}.gtk_tooltips_new
-			set_tooltip_delay (500)
-			create window_oids.make
-			
-				-- Initialize the marshal object.
-			create gtk_marshal
-			
-				-- Initialize the dependent routines object
-			create gtk_dependent_routines
-				-- Uncomment for Gtk 2.x only
-			--feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_set_debug_updates (True)
-
+				{EV_GTK_EXTERNALS}.gtk_widget_set_default_colormap ({EV_GTK_EXTERNALS}.gdk_rgb_get_cmap)
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_default_visual ({EV_GTK_EXTERNALS}.gdk_rgb_get_visual)
+	
+				tooltips := {EV_GTK_EXTERNALS}.gtk_tooltips_new
+				set_tooltip_delay (500)
+				create window_oids.make
+				
+					-- Initialize the marshal object.
+				create gtk_marshal
+				
+					-- Initialize the dependent routines object
+				create gtk_dependent_routines
+					-- Uncomment for Gtk 2.x only
+				--feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_set_debug_updates (True)		
+			else
+				-- We are unable to launch the gtk toolkit, probably due to a DISPLAY issue.
+				print ("EiffelVision application could not launch, check DISPLAY environment variable%N")
+				(create {EXCEPTIONS}).die (0)
+			end
 		end
 
 	launch is
@@ -65,7 +75,7 @@ feature {NONE} -- Initialization
 			gtk_dependent_launch_initialize
 			main_loop			
 				-- Unhook marshal object.
-			gtk_marshal.destroy
+			gtk_marshal.destroy				
 		end	
 		
 	main_loop is
@@ -252,7 +262,9 @@ feature -- Status setting
 			-- Set `tooltip_delay' to `a_delay'.
 		do
 			tooltip_delay := a_delay
-			{EV_GTK_EXTERNALS}.gtk_tooltips_set_delay (tooltips, a_delay)
+			if gtk_is_launchable then
+				{EV_GTK_EXTERNALS}.gtk_tooltips_set_delay (tooltips, a_delay)
+			end		
 		end
 
 feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
@@ -453,7 +465,14 @@ feature {NONE} -- External implementation
 		external
 			"C [macro <gtk/gtk.h>] | %"eif_argv.h%""
 		alias
-    		"gtk_init (&eif_argc, &eif_argv)"
+    			"gtk_init (&eif_argc, &eif_argv)"
+		end
+
+	gtk_init_check: BOOLEAN is
+		external
+			"C [macro <gtk/gtk.h>] | %"eif_argv.h%""
+		alias
+    			"gtk_init_check (&eif_argc, &eif_argv)"
 		end
 
 invariant

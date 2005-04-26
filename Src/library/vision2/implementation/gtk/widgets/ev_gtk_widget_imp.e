@@ -39,7 +39,6 @@ feature {NONE} -- Implementation
 		once
 			Result := {EV_GTK_EXTERNALS}.GDK_EXPOSURE_MASK_ENUM |
 			{EV_GTK_EXTERNALS}.GDK_POINTER_MOTION_MASK_ENUM |
-			{EV_GTK_EXTERNALS}.GDK_POINTER_MOTION_HINT_MASK_ENUM |
 			{EV_GTK_EXTERNALS}.GDK_BUTTON_PRESS_MASK_ENUM |
 			{EV_GTK_EXTERNALS}.GDK_BUTTON_RELEASE_MASK_ENUM |
 			{EV_GTK_EXTERNALS}.GDK_KEY_PRESS_MASK_ENUM |
@@ -50,20 +49,10 @@ feature {NONE} -- Implementation
 			{EV_GTK_EXTERNALS}.GDK_VISIBILITY_NOTIFY_MASK_ENUM
 		end
 
-	initialize_events is
-			-- Initialize gtk events of `c_object'
-		do
-			if needs_event_box then
-				{EV_GTK_EXTERNALS}.gtk_widget_set_events (c_object, gdk_events_mask)
-			elseif not {EV_GTK_EXTERNALS}.gtk_widget_no_window (visual_widget) then
-				{EV_GTK_EXTERNALS}.gtk_widget_add_events (visual_widget, gdk_events_mask)
-			end
-		end
-
 	initialize is
 			-- Initialize `c_object'
 		do
-			initialize_events
+			{EV_GTK_EXTERNALS}.gtk_widget_add_events (visual_widget, gdk_events_mask)
 			if is_parentable then
 				{EV_GTK_EXTERNALS}.gtk_widget_show (c_object)
 			else
@@ -183,7 +172,6 @@ feature {EV_ANY_I} -- Implementation
 
 	has_struct_flag (a_gtk_object: POINTER; a_flag: INTEGER): BOOLEAN is
 			-- Has this widget the flag `a_flag' in struct_flags?
-			-- (export status {NONE})
 		do
 			Result := {EV_GTK_EXTERNALS}.gtk_object_struct_flags (a_gtk_object) & (a_flag) /= 0
 		end

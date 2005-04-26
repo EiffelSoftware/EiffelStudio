@@ -205,7 +205,7 @@ feature {EV_ANY_I} -- Implementation
 		end
 
 	on_pnd_deferred_item_parent_selection_change (a_object_id: INTEGER) is
-			-- 
+			-- A selection event has occurred on a PND deferred item parent.
 		local
 			a_pnd_widget: EV_PND_DEFERRED_ITEM_PARENT
 		do

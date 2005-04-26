@@ -91,8 +91,8 @@ feature -- Default cursors
 			-- Standard arrow and small hourglass
 		local
 			pixmap_imp: EV_PIXMAP_IMP
-			a_pix, a_mask: POINTER
-			pix_array, mask_array: MANAGED_POINTER
+--			a_pix, a_mask: POINTER
+--			pix_array, mask_array: MANAGED_POINTER
 		do
 			create Result
 			pixmap_imp ?= Result.implementation
@@ -286,11 +286,19 @@ feature {NONE} -- Implementation
 		local
 			a_cs: EV_GTK_C_STRING
 			pixmap_imp: EV_PIXMAP_IMP
+			retried: BOOLEAN
 		do
-			a_cs := a_stock_id
-			create Result
-			pixmap_imp ?= Result.implementation
-			pixmap_imp.set_from_stock_id (a_cs.item)
+			if not retried then
+				a_cs := a_stock_id
+				create Result
+				pixmap_imp ?= Result.implementation
+				pixmap_imp.set_from_stock_id (a_cs.item)				
+			else
+				create Result
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 feature {EV_GTK_DEPENDENT_APPLICATION_IMP} -- Externals

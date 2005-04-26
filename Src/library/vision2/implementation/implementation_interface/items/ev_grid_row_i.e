@@ -594,13 +594,46 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			row_not_empty_implies_row_index_of_first_item_greater_or_equal_to_index_of_first_item:
 				a_row.index_of_first_item > 0 implies a_row.index_of_first_item >= index_of_first_item
 		do
-			add_subrow_internal (a_row, False)
+			add_subrow_internal (a_row, subrow_count + 1, False)
 		ensure
 			added: a_row.parent_row = interface
 			subrow (subrow_count) = a_row
 			node_counts_correct: node_counts_correct
 		end
-		
+
+	insert_subrow (subrow_index: INTEGER) is
+			-- Add a new row to `parent' as a subrow of `Current'
+			-- with index in subrows of `Current' given by `subrow_index'.
+		require
+			is_parented: parent /= Void
+			parent_enabled_as_tree: parent.is_tree_enabled
+			valid_subrow_index: subrow_index >= 1 and subrow_index <= subrow_count + 1
+		local
+			l_subrow: EV_GRID_ROW_I
+			l_index: INTEGER
+		do
+			if subrow_count = 0 then
+					-- There are no subrows, so simply perform a standard subrow addition.
+				parent_i.insert_new_row_parented (index + 1, interface)
+			elseif subrow_index = 1 then
+					-- There is no subrow before the current insert index so
+					-- add at a position in `parent_i' based on `Current'.
+				parent_i.add_row_at (index + 1, False)
+				add_subrow_internal (parent_i.row (index + 1), subrow_index, True)
+			else
+					-- There is a subrow before the current insert index so
+					-- add at a position in `parent_i' based on the item before the insert
+					-- As this item may have rows of it's own the subrow count recursive must also be added.
+				l_subrow := subrows.i_th (subrow_index - 1)
+				l_index := l_subrow.index + l_subrow.subrow_count_recursive + 1
+				parent_i.add_row_at (l_index, False)
+				add_subrow_internal (parent_i.row (l_index), subrow_index, True)
+			end
+		ensure
+			subrow_count_increased: subrow_count = old subrow_count + 1
+			parent_row_count_increased: parent.row_count = old parent.row_count + 1
+		end
+
 	remove_subrow (a_row: EV_GRID_ROW) is
 			-- Ensure that `a_row' is no longer a child row of `Current'
 		require
@@ -654,7 +687,7 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			subrow_count_decreased: subrow_count = old subrow_count - 1
 		end
 		
-	add_subrow_internal (a_row: EV_GRID_ROW; inserting_within_tree_structure: BOOLEAN) is
+	add_subrow_internal (a_row: EV_GRID_ROW; subrow_index: INTEGER; inserting_within_tree_structure: BOOLEAN) is
 			-- Make `a_row' a child of Current. `inserting_within_tree_structure' determines
 			-- if `a_row' is to be added within an existing tree structure and is used to
 			-- relax the preconditions that determine if a row may be added.
@@ -675,7 +708,8 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			row_imp: EV_GRID_ROW_I
 		do
 			row_imp := a_row.implementation
-			subrows.extend (row_imp)
+			subrows.go_i_th (subrow_index)
+			subrows.put_left (row_imp)
 			row_imp.internal_set_parent_row (Current)
 			
 				-- Increase the node count for `Current' and all parents by 1 + the node count
@@ -695,7 +729,7 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			parent_i.redraw_client_area
 		ensure
 			added: a_row.parent_row = interface
-			subrow (subrow_count) = a_row
+			subrow (subrow_index) = a_row
 			node_counts_correct: node_counts_correct
 		end
 

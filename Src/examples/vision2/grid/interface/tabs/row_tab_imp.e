@@ -35,14 +35,23 @@ feature {NONE}-- Initialization
 			create row_finder
 			create row_properties_frame
 			create l_ev_vertical_box_1
+			create l_ev_horizontal_box_2
 			create l_ev_table_1
 			create l_ev_label_1
 			create row_index_entry
 			create l_ev_label_2
 			create row_height_entry
-			create l_ev_horizontal_box_2
+			create l_ev_horizontal_box_3
 			create row_selected_button
+			create row_operations_frame
+			create l_ev_vertical_box_2
+			create l_ev_horizontal_box_4
+			create l_ev_vertical_box_3
+			create l_ev_cell_1
 			create swap_row_button
+			create l_ev_cell_2
+			create move_to_row_finder
+			create l_ev_table_2
 			create remove_row_button
 			create unparent_row_button
 			create clear_row_button
@@ -52,21 +61,29 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_1.extend (row_finder)
 			extend (row_properties_frame)
 			row_properties_frame.extend (l_ev_vertical_box_1)
-			l_ev_vertical_box_1.extend (l_ev_table_1)
 			l_ev_vertical_box_1.extend (l_ev_horizontal_box_2)
-			l_ev_horizontal_box_2.extend (row_selected_button)
-			extend (swap_row_button)
-			extend (remove_row_button)
-			extend (unparent_row_button)
-			extend (clear_row_button)
+			l_ev_horizontal_box_2.extend (l_ev_table_1)
+			l_ev_vertical_box_1.extend (l_ev_horizontal_box_3)
+			l_ev_horizontal_box_3.extend (row_selected_button)
+			extend (row_operations_frame)
+			row_operations_frame.extend (l_ev_vertical_box_2)
+			l_ev_vertical_box_2.extend (l_ev_horizontal_box_4)
+			l_ev_horizontal_box_4.extend (l_ev_vertical_box_3)
+			l_ev_vertical_box_3.extend (l_ev_cell_1)
+			l_ev_vertical_box_3.extend (swap_row_button)
+			l_ev_vertical_box_3.extend (l_ev_cell_2)
+			l_ev_horizontal_box_4.extend (move_to_row_finder)
+			l_ev_vertical_box_2.extend (l_ev_table_2)
 			
+			row_properties_frame.disable_sensitive
 			row_properties_frame.set_text ("Row Properties")
 			l_ev_vertical_box_1.set_padding_width (box_padding)
 			l_ev_vertical_box_1.set_border_width (box_padding)
-			l_ev_vertical_box_1.disable_item_expand (l_ev_table_1)
-			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_2)
+			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_3)
+			l_ev_horizontal_box_2.disable_item_expand (l_ev_table_1)
 			l_ev_table_1.resize (2, 3)
 			l_ev_table_1.set_row_spacing (box_padding)
+			l_ev_table_1.set_column_spacing (box_padding)
 				-- Insert and position all children of `l_ev_table_1'.
 			l_ev_table_1.put_at_position (l_ev_label_1, 1, 1, 1, 1)
 			l_ev_table_1.put_at_position (row_index_entry, 2, 1, 1, 1)
@@ -81,7 +98,24 @@ feature {NONE}-- Initialization
 			row_height_entry.value_range.adapt (create {INTEGER_INTERVAL}.make (1, 10000))
 			row_height_entry.set_value (100)
 			row_selected_button.set_text ("Is Row Selected?")
-			swap_row_button.set_text ("Move first selected row past second")
+			row_operations_frame.disable_sensitive
+			row_operations_frame.set_text ("Row Operations")
+			l_ev_vertical_box_2.set_padding_width (box_padding)
+			l_ev_vertical_box_2.set_border_width (box_padding)
+			l_ev_vertical_box_2.disable_item_expand (l_ev_horizontal_box_4)
+			l_ev_vertical_box_2.disable_item_expand (l_ev_table_2)
+			l_ev_horizontal_box_4.set_padding_width (box_padding)
+			l_ev_horizontal_box_4.disable_item_expand (l_ev_vertical_box_3)
+			l_ev_horizontal_box_4.disable_item_expand (move_to_row_finder)
+			l_ev_vertical_box_3.disable_item_expand (swap_row_button)
+			swap_row_button.set_text ("Move Row ? past Row ?")
+			l_ev_table_2.resize (3, 2)
+			l_ev_table_2.set_row_spacing (box_padding)
+			l_ev_table_2.set_column_spacing (box_padding)
+				-- Insert and position all children of `l_ev_table_2'.
+			l_ev_table_2.put_at_position (remove_row_button, 2, 1, 1, 1)
+			l_ev_table_2.put_at_position (unparent_row_button, 3, 1, 1, 1)
+			l_ev_table_2.put_at_position (clear_row_button, 1, 1, 1, 1)
 			remove_row_button.set_text ("Remove Row")
 			unparent_row_button.set_text ("Unparent Row")
 			clear_row_button.set_text ("Clear Row")
@@ -89,10 +123,6 @@ feature {NONE}-- Initialization
 			set_border_width (box_padding)
 			disable_item_expand (l_ev_horizontal_box_1)
 			disable_item_expand (row_properties_frame)
-			disable_item_expand (swap_row_button)
-			disable_item_expand (remove_row_button)
-			disable_item_expand (unparent_row_button)
-			disable_item_expand (clear_row_button)
 			
 				--Connect events.
 			row_index_entry.change_actions.extend (agent row_index_entry_changed (?))
@@ -113,18 +143,20 @@ feature -- Access
 
 	row_index_entry, row_height_entry: EV_SPIN_BUTTON
 	row_selected_button: EV_CHECK_BUTTON
-	row_finder: GRID_ITEM_FINDER
+	row_finder, move_to_row_finder: GRID_ITEM_FINDER
 	swap_row_button,
 	remove_row_button, unparent_row_button, clear_row_button: EV_BUTTON
-	row_properties_frame: EV_FRAME
+	row_properties_frame, row_operations_frame: EV_FRAME
 
 feature {NONE} -- Implementation
 
-	l_ev_vertical_box_1: EV_VERTICAL_BOX
-	l_ev_horizontal_box_1, l_ev_horizontal_box_2: EV_HORIZONTAL_BOX
+	l_ev_vertical_box_1, l_ev_vertical_box_2, l_ev_vertical_box_3: EV_VERTICAL_BOX
+	l_ev_horizontal_box_1,
+	l_ev_horizontal_box_2, l_ev_horizontal_box_3, l_ev_horizontal_box_4: EV_HORIZONTAL_BOX
 	l_ev_label_1,
 	l_ev_label_2: EV_LABEL
-	l_ev_table_1: EV_TABLE
+	l_ev_table_1, l_ev_table_2: EV_TABLE
+	l_ev_cell_1, l_ev_cell_2: EV_CELL
 
 feature {NONE} -- Implementation
 

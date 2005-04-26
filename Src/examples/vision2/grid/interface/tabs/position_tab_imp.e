@@ -34,8 +34,6 @@ feature {NONE}-- Initialization
 			create l_ev_frame_1
 			create drawable
 			create l_ev_horizontal_box_1
-			create update_position_button
-			create l_ev_horizontal_box_2
 			create l_ev_label_1
 			create virtual_x_position
 			create l_ev_label_2
@@ -45,20 +43,19 @@ feature {NONE}-- Initialization
 			extend (l_ev_frame_1)
 			l_ev_frame_1.extend (drawable)
 			extend (l_ev_horizontal_box_1)
-			l_ev_horizontal_box_1.extend (update_position_button)
-			extend (l_ev_horizontal_box_2)
-			l_ev_horizontal_box_2.extend (l_ev_label_1)
-			l_ev_horizontal_box_2.extend (virtual_x_position)
-			l_ev_horizontal_box_2.extend (l_ev_label_2)
-			l_ev_horizontal_box_2.extend (virtual_y_position)
+			l_ev_horizontal_box_1.extend (l_ev_label_1)
+			l_ev_horizontal_box_1.extend (virtual_x_position)
+			l_ev_horizontal_box_1.extend (l_ev_label_2)
+			l_ev_horizontal_box_1.extend (virtual_y_position)
 			
-			update_position_button.set_text ("Refresh")
-			l_ev_horizontal_box_2.disable_item_expand (l_ev_label_1)
-			l_ev_horizontal_box_2.disable_item_expand (l_ev_label_2)
+			l_ev_horizontal_box_1.set_padding_width (box_padding)
+			l_ev_horizontal_box_1.disable_item_expand (l_ev_label_1)
+			l_ev_horizontal_box_1.disable_item_expand (l_ev_label_2)
 			l_ev_label_1.set_text ("Virtual X : ")
 			l_ev_label_2.set_text ("Virtual Y : ")
+			set_padding_width (box_padding)
+			set_border_width (box_padding)
 			disable_item_expand (l_ev_horizontal_box_1)
-			disable_item_expand (l_ev_horizontal_box_2)
 			
 				--Connect events.
 			drawable.expose_actions.extend (agent drawable_exposed (?, ?, ?, ?))
@@ -66,7 +63,6 @@ feature {NONE}-- Initialization
 			drawable.pointer_button_press_actions.extend (agent button_pressed_on_drawable (?, ?, ?, ?, ?, ?, ?, ?))
 			drawable.pointer_button_release_actions.extend (agent button_released_on_drawable (?, ?, ?, ?, ?, ?, ?, ?))
 			drawable.resize_actions.extend (agent drawable_resized (?, ?, ?, ?))
-			update_position_button.select_actions.extend (agent update_position_button_selected)
 			virtual_x_position.change_actions.extend (agent virtual_x_position_changed (?))
 			virtual_y_position.change_actions.extend (agent virtual_y_position_changed (?))
 				-- Close the application when an interface close
@@ -79,12 +75,11 @@ feature {NONE}-- Initialization
 feature -- Access
 
 	virtual_x_position, virtual_y_position: EV_SPIN_BUTTON
-	update_position_button: EV_BUTTON
 	drawable: EV_DRAWING_AREA
 
 feature {NONE} -- Implementation
 
-	l_ev_horizontal_box_1, l_ev_horizontal_box_2: EV_HORIZONTAL_BOX
+	l_ev_horizontal_box_1: EV_HORIZONTAL_BOX
 	l_ev_label_1, l_ev_label_2: EV_LABEL
 	l_ev_frame_1: EV_FRAME
 
@@ -125,11 +120,6 @@ feature {NONE} -- Implementation
 	
 	drawable_resized (a_x, a_y, a_width, a_height: INTEGER) is
 			-- Called by `resize_actions' of `drawable'.
-		deferred
-		end
-	
-	update_position_button_selected is
-			-- Called by `select_actions' of `update_position_button'.
 		deferred
 		end
 	

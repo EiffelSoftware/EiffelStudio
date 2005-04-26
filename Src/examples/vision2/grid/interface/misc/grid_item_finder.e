@@ -46,7 +46,6 @@ feature -- Access
 		do
 			prompt_label.set_text (a_prompt)	
 		end
-		
 
 feature {NONE} -- Implementation
 

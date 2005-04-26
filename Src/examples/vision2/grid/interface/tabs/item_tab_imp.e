@@ -41,9 +41,12 @@ feature {NONE}-- Initialization
 			create item_y_index
 			create l_ev_horizontal_box_2
 			create textable_frame
+			create l_ev_label_3
 			create textable_entry
 			create selectable_frame
 			create is_selected
+			create item_operations_frame
+			create l_ev_vertical_box_1
 			create remove_item_button
 			
 				-- Build_widget_structure.
@@ -57,11 +60,15 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_1.extend (item_y_index)
 			main_box.extend (l_ev_horizontal_box_2)
 			main_box.extend (textable_frame)
+			textable_frame.extend (l_ev_label_3)
 			textable_frame.extend (textable_entry)
 			main_box.extend (selectable_frame)
 			selectable_frame.extend (is_selected)
-			main_box.extend (remove_item_button)
+			extend (item_operations_frame)
+			item_operations_frame.extend (l_ev_vertical_box_1)
+			l_ev_vertical_box_1.extend (remove_item_button)
 			
+			item_frame.disable_sensitive
 			item_frame.set_text ("Item Properties")
 			main_box.set_padding_width (box_padding)
 			main_box.set_border_width (box_padding)
@@ -69,7 +76,6 @@ feature {NONE}-- Initialization
 			main_box.disable_item_expand (l_ev_horizontal_box_2)
 			main_box.disable_item_expand (textable_frame)
 			main_box.disable_item_expand (selectable_frame)
-			main_box.disable_item_expand (remove_item_button)
 			l_ev_horizontal_box_1.set_padding_width (box_padding)
 			l_ev_horizontal_box_1.disable_item_expand (l_ev_label_1)
 			l_ev_horizontal_box_1.disable_item_expand (l_ev_label_2)
@@ -78,12 +84,19 @@ feature {NONE}-- Initialization
 			item_x_index.value_range.adapt (create {INTEGER_INTERVAL}.make (0, 1000000))
 			l_ev_label_2.set_text ("Y Index")
 			item_y_index.value_range.adapt (create {INTEGER_INTERVAL}.make (0, 1000000))
-			textable_frame.set_text ("Textable")
-			selectable_frame.set_text ("Selectable")
+			textable_frame.disable_item_expand (l_ev_label_3)
+			l_ev_label_3.set_text ("Text : ")
+			textable_entry.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (212, 208, 200))
 			is_selected.set_text ("is_selected")
-			remove_item_button.set_text ("Remove Item from Grid")
+			item_operations_frame.set_text ("Item Operations")
+			l_ev_vertical_box_1.set_padding_width (box_padding)
+			l_ev_vertical_box_1.set_border_width (box_padding)
+			l_ev_vertical_box_1.disable_item_expand (remove_item_button)
+			remove_item_button.set_text ("Remove Item")
 			set_border_width (box_padding)
 			disable_item_expand (item_finder)
+			disable_item_expand (item_frame)
+			disable_item_expand (item_operations_frame)
 			
 				--Connect events.
 			item_x_index.change_actions.extend (agent item_x_index_changed (?))
@@ -104,15 +117,19 @@ feature -- Access
 	is_selected: EV_CHECK_BUTTON
 	item_x_index, item_y_index: EV_SPIN_BUTTON
 	item_finder: GRID_ITEM_FINDER
-	textable_entry: EV_TEXT_FIELD
+	textable_frame: EV_HORIZONTAL_BOX
 	remove_item_button: EV_BUTTON
 	item_frame,
-	textable_frame, selectable_frame: EV_FRAME
+	item_operations_frame: EV_FRAME
+	selectable_frame: EV_CELL
+	textable_entry: EV_TEXT_FIELD
 
 feature {NONE} -- Implementation
 
+	l_ev_vertical_box_1: EV_VERTICAL_BOX
 	l_ev_horizontal_box_1, l_ev_horizontal_box_2: EV_HORIZONTAL_BOX
-	l_ev_label_1, l_ev_label_2: EV_LABEL
+	l_ev_label_1,
+	l_ev_label_2, l_ev_label_3: EV_LABEL
 
 feature {NONE} -- Implementation
 

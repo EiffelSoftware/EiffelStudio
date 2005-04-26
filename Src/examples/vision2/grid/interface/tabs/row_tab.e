@@ -27,22 +27,43 @@ feature {NONE} -- Initialization
 			current_row_index := 1
 			row_finder.set_prompt ("Row Finder : ")
 			row_finder.motion_actions.extend (agent row_motion)
+			move_to_row_finder.motion_actions.extend (agent move_to_row_motion)
+			move_to_row_finder.set_prompt ("Locate Row : ")
 		end
 
 feature {NONE} -- Implementation
 
 	current_row_index: INTEGER
 			-- Current index of row for property change.
+
+	move_to_row_motion (an_item: EV_GRID_ITEM) is
+			--
+		do
+			fixme ("ROW_TAB.move_to_row_motion Must add preconditions based on those of `move_row'.")
+			if an_item /= Void then
+				current_move_to_row_index := an_item.row.index
+			else
+				current_move_to_row_index := 0
+			end
+			swap_row_button.set_text ("Move Row " + current_row_index.out + " past Row " + current_past_row)
+		end
+
+	current_move_to_row_index: INTEGER
+			-- Currently selected row index for the move row button.
 		
 	row_motion (an_item: EV_GRID_ITEM) is
 			--
+		local
+			l_row: EV_GRID_ROW
 		do
 			if an_item /= Void then
+				l_row := an_item.row
 				row_properties_frame.enable_sensitive
+				row_operations_frame.enable_sensitive
 				row_index_entry.change_actions.block
 				row_index_entry.set_value (an_item.row.index)
 				row_index_entry.change_actions.resume
-				current_row_index := an_item.row.index
+				current_row_index := l_row.index
 				if grid.is_row_height_fixed then
 					row_height_entry.disable_sensitive
 					row_height_entry.change_actions.block
@@ -61,8 +82,18 @@ feature {NONE} -- Implementation
 					row_selected_button.disable_select
 				end
 				row_selected_button.select_actions.resume
+				swap_row_button.set_text ("Move Row " + l_row.index.out + " past Row " + current_past_row)
+				if l_row.parent_row /= Void and l_row.index + l_row.subrow_count_recursive = l_row.parent_row_root.index + l_row.parent_row_root.subrow_count_recursive then
+						-- We check that the row may actually be removed. Note the you may not unparent a row within the
+						-- middle of a tree structure.
+					unparent_row_button.enable_sensitive
+				else
+					unparent_row_button.disable_sensitive
+				end
 			else
 				row_properties_frame.disable_sensitive
+				row_operations_frame.disable_sensitive
+				swap_row_button.set_text ("Move Row ? past Row " + current_past_row)
 			end
 		end
 		
@@ -91,28 +122,23 @@ feature {NONE} -- Implementation
 				grid.row (current_row_index).disable_select
 			end
 		end
+
+	current_past_row: STRING is
+			-- Return a string indicating the selected row to move past.
+		do
+			if current_move_to_row_index = 0 then
+				Result := "?"
+			else
+				Result := current_move_to_row_index.out
+			end
+		ensure
+			result_not_void: Result /= Void
+		end
 		
 	swap_row_button_selected is
 			-- Called by `select_actions' of `swap_row_button'.
-		local
-			row_counter: INTEGER
-			first_selected, second_selected: INTEGER
 		do
-			from
-				row_counter := 1
-			until
-				row_counter > grid.row_count or second_selected > 0
-			loop
-				if grid.row (row_counter).is_selected then
-					if first_selected = 0 then
-						first_selected := row_counter
-					else
-						second_selected := row_counter
-					end
-				end
-				row_counter := row_counter + 1
-			end
-			grid.move_row (first_selected, second_selected)
+			grid.move_row (current_row_index, current_move_to_row_index)
 		end
 		
 	remove_row_button_selected is
@@ -125,6 +151,7 @@ feature {NONE} -- Implementation
 			-- Called by `select_actions' of `unparent_row_button'.
 		do
 			grid.row (current_row_index).parent_row.remove_subrow (grid.row (current_row_index))
+			unparent_row_button.disable_sensitive
 		end
 
 	clear_row_button_selected is

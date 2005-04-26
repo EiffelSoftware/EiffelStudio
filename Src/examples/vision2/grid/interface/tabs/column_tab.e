@@ -28,6 +28,8 @@ feature {NONE} -- Initialization
 			current_column_index := 1
 			column_finder.set_prompt ("Column Finder : ")
 			column_finder.motion_actions.extend (agent column_motion)
+			move_to_column_finder.motion_actions.extend (agent move_to_column_motion)
+			move_to_column_finder.set_prompt ("Locate Column : ")
 		end
 
 feature {NONE} -- Implementation
@@ -47,12 +49,28 @@ feature {NONE} -- Implementation
 		do
 			grid.column (current_column_index).set_width (a_value)
 		end
-		
+
+	move_to_column_motion (an_item: EV_GRID_ITEM) is
+			--
+		do
+			fixme ("COLUMN_TAB.move_to_column_motion Must add preconditions based on those of `move_column'.")
+			if an_item /= Void then
+				current_move_to_column_index := an_item.column.index
+			else
+				current_move_to_column_index := 0
+			end
+			swap_column_button.set_text ("Move Column " + current_column_index.out + " past Column " + current_past_column)
+		end
+
+	current_move_to_column_index: INTEGER
+			-- Currently selected column index for the move column button.
+
 	column_motion (an_item: EV_GRID_ITEM) is
 			--
 		do
 			if an_item /= Void then
 				column_properties_frame.enable_sensitive
+				column_operations_frame.enable_sensitive
 				column_index.change_actions.block
 				column_index.set_value (an_item.column.index)
 				current_column_index := an_item.column.index
@@ -77,10 +95,26 @@ feature {NONE} -- Implementation
 					column_visible_button.disable_select
 				end
 				column_visible_button.select_actions.resume
+				swap_column_button.set_text ("Move Column " + an_item.column.index.out + " past Column " + current_past_column)
 			else
 				column_properties_frame.disable_sensitive
+				column_operations_frame.disable_sensitive
+				swap_column_button.set_text ("Move Column ? past Column " + current_past_column)
 			end
 		end
+
+	current_past_column: STRING is
+			-- Return a string indicating the selected column to move past.
+		do
+			if current_move_to_column_index = 0 then
+				Result := "?"
+			else
+				Result := current_move_to_column_index.out
+			end
+		ensure
+			result_not_void: Result /= Void
+		end
+		
 		
 	column_selected_button_selected is
 			-- Called by `select_actions' of `column_selected_button'.
@@ -100,25 +134,8 @@ feature {NONE} -- Implementation
 		
 	swap_column_button_selected is
 			-- Called by `select_actions' of `swap_column_button'.
-		local
-			column_counter: INTEGER
-			first_selected, second_selected: INTEGER
 		do
-			from
-				column_counter := 1
-			until
-				column_counter > grid.column_count or second_selected > 0
-			loop
-				if grid.column (column_counter).is_selected then
-					if first_selected = 0 then
-						first_selected := column_counter
-					else
-						second_selected := column_counter
-					end
-				end
-				column_counter := column_counter + 1
-			end
-			grid.move_column (first_selected, second_selected)
+			grid.move_column (current_column_index, current_move_to_column_index)
 		end
 		
 	column_visible_button_selected is
@@ -135,6 +152,12 @@ feature {NONE} -- Implementation
 			-- Called by `select_actions' of `clear_column_button'.
 		do
 			grid.column (current_column_index).clear
+		end
+
+	remove_column_button_selected is
+			-- Called by `select_actions' of `remove_column_button'.
+		do
+			grid.remove_column (current_column_index)
 		end
 
 end -- class COLUMN_TAB

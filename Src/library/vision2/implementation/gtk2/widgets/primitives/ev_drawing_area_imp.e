@@ -29,12 +29,15 @@ inherit
 			default_key_processing_blocked,
 			dispose,
 			destroy,
-			on_focus_changed
+			on_focus_changed,
+			needs_event_box,
+			gdk_events_mask
 		end
 
 	EV_DRAWING_AREA_ACTION_SEQUENCES_IMP
 		redefine
-			interface
+			interface,
+			needs_event_box
 		end
 
 create
@@ -42,17 +45,29 @@ create
 
 feature {NONE} -- Initialization
 
+	needs_event_box: BOOLEAN is True
+		-- Place drawing area inside an event box.
+
 	make (an_interface: like interface) is
 			-- Create an empty drawing area.
 		do
 			base_make (an_interface)
 			set_c_object ({EV_GTK_EXTERNALS}.gtk_drawing_area_new)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_redraw_on_allocate (c_object, False)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_redraw_on_allocate (visual_widget, False)
 				-- This means that when the drawing area is resized, only the new portions are redrawn
 			gc := {EV_GTK_EXTERNALS}.gdk_gc_new (App_implementation.default_gdk_window)
-			{EV_GTK_EXTERNALS}.GTK_WIDGET_SET_FLAGS (c_object, {EV_GTK_EXTERNALS}.GTK_CAN_FOCUS_ENUM)
+			{EV_GTK_EXTERNALS}.GTK_WIDGET_SET_FLAGS (visual_widget, {EV_GTK_EXTERNALS}.GTK_CAN_FOCUS_ENUM)
 			init_default_values
-			{EV_GTK_EXTERNALS}.gtk_widget_set_double_buffered (c_object, False)
+			{EV_GTK_EXTERNALS}.gtk_widget_set_double_buffered (visual_widget, False)
+		end
+
+	Gdk_events_mask: INTEGER is
+			-- Mask of all the gdk events the gdkwindow shall receive.
+		once
+			Result := Precursor {EV_PRIMITIVE_IMP} |
+			{EV_GTK_EXTERNALS}.GDK_POINTER_MOTION_HINT_MASK_ENUM
+				-- We only want motion events when we query for them.
+				-- Setting this flag on other gtk widgets such as GtkTreeView causes problems with the implementation
 		end
 
 feature {NONE} -- Implementation

@@ -63,7 +63,7 @@ EIF_INTEGER eif_date(char *path)
 			memcpy (&epoch_date, &epoch_file, sizeof (ULARGE_INTEGER));
 		}
 		memcpy (&l_date, &(l_find_data.ftLastWriteTime), sizeof (ULARGE_INTEGER));
-		return (EIF_INTEGER) ((l_date.QuadPart - epoch_date.QuadPart) / 10000000i64);
+		return (EIF_INTEGER) ((l_date.QuadPart - epoch_date.QuadPart) / RTI64C(10000000));
 	}
 #else
 	static struct stat info;

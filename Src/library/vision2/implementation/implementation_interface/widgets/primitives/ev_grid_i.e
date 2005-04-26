@@ -1176,7 +1176,7 @@ feature -- Element change
 			to_implement_assertion ("Ensure `i' is a valid row index to be inserted within `a_parent_row'.")
 		do
 			add_row_at (i, False)
-			a_parent_row.implementation.add_subrow_internal (row (i), True)
+			a_parent_row.implementation.add_subrow_internal (row (i), a_parent_row.subrow_count + 1,True)
 		ensure
 			row_count_set: row_count = old row_count + 1
 			subrow_count_set: a_parent_row.subrow_count = old a_parent_row.subrow_count + 1
@@ -2798,7 +2798,7 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 			row_not_void: Result /= Void
 		end
 
-feature {NONE} -- Implementation
+feature {EV_GRID_ROW_I} -- Implementation
 
 	add_row_at (a_index: INTEGER; replace_existing_item: BOOLEAN) is
 			-- Add a new row at index `a_index'.
@@ -2843,6 +2843,8 @@ feature {NONE} -- Implementation
 
 			set_vertical_computation_required (a_index)
 		end
+
+feature {NONE} -- Implementation
 
 	add_column_at (a_index: INTEGER; replace_existing_item: BOOLEAN) is
 			-- Add a new column at index `a_index'.

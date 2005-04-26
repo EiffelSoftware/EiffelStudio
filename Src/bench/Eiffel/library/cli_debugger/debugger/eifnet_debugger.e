@@ -1739,7 +1739,9 @@ feature -- Specific function evaluation
  	generating_type_value_from_object_value (a_frame: ICOR_DEBUG_FRAME; a_icd: ICOR_DEBUG_VALUE; 
  				a_icd_obj: ICOR_DEBUG_OBJECT_VALUE;
  				a_class_type: CLASS_TYPE; a_feat: FEATURE_I): STRING is
-			-- ANY.generating_)type: STRING evaluation result
+			-- ANY.generating_type: STRING evaluation result
+		require
+			icor_debug_object_value_not_void: a_icd_obj /= Void
 		local
 			l_icd: ICOR_DEBUG_VALUE
 			l_icdov: ICOR_DEBUG_OBJECT_VALUE
@@ -1760,9 +1762,9 @@ feature -- Specific function evaluation
 -- FIXME jfiat [2004/07/20] : why do we use a_icd as l_icd if failed ?
 --			l_icd := a_icd
 			l_class_type := a_class_type
-			
+
 			l_icd_class := a_icd_obj.get_class
-			l_icd_module := l_icd_class.get_module		
+			l_icd_module := l_icd_class.get_module
 			l_feature_token := l_icd_module.md_feature_token (l_icd_class.get_token, a_feat.feature_name) -- resolved {ANY}.generating_type
 			l_func := l_icd_module.get_function_from_token (l_feature_token)
 
@@ -1773,23 +1775,22 @@ feature -- Specific function evaluation
 					l_icdov := l_value_info.interface_debug_object_value
 					Result := string_value_from_string_class_object_value (l_icdov, 0, -1)
 					l_icdov.clean_on_dispose
-					l_value_info.icd_prepared_value.clean_on_dispose					
+					l_value_info.icd_prepared_value.clean_on_dispose
 					l_value_info.clean
 					l_icd.clean_on_dispose
 				else
-					Result := Void -- "WARNING: Could not evaluate output"	
+					Result := Void -- "WARNING: Could not evaluate output"
 				end
 			else
 				debug ("DEBUGGER_TRACE_EVAL")
 					l_module_name := l_icd_module.get_name
-				
+
 					print ("EIFNET_DEBUGGER.generating_type_.. :: Unable to retrieve ICorDebugFunction %N")
 					print ("                                :: class name    = [" + l_class_type.full_il_type_name + "]%N")
 					print ("                                :: module_name   = %"" + l_module_name + "%"%N")
 					print ("                                :: feature_token = 0x" + l_feature_token.to_hex_string + " %N")
 				end
 			end
-
 			debug ("debugger_trace_eval")
 				if Result = Void then
 					print (l_class_type.full_il_type_name + ".generating_type.. :: Error ! %N")

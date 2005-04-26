@@ -16,6 +16,9 @@ inherit
 		end
 
 	EV_PICK_AND_DROPABLE_I
+		export
+			{EV_INTERMEDIARY_ROUTINES}
+				execute
 		redefine
 			interface
 		end
@@ -87,35 +90,6 @@ feature {NONE} -- Implementation
 		end
 
 feature -- Implementation
-
---| FIXME IEK Remove this when cursor setting is fixed on Windows.
-	temp_execute (
-			a_x, a_y: INTEGER;
-			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
-			a_screen_x, a_screen_y: INTEGER)
-		is
-			-- Executed when `pebble' is being moved.
-			-- Draw a rubber band from pick position to pointer position.
-		local
-			target: EV_ABSTRACT_PICK_AND_DROPABLE
-			real_target: EV_PICK_AND_DROPABLE
-		do
-			draw_rubber_band
-			pointer_x := a_screen_x
-			pointer_y := a_screen_y
-			
-			target := pointed_target
-			real_target ?= target
-			if target /= last_pointed_target then
-				update_pointer_style (target)
-			end
-
-			if App_implementation.pnd_motion_actions_internal /= Void then
-				App_implementation.pnd_motion_actions_internal.call ([a_x, a_y, real_target])
-			end
-			
-			last_pointed_target := target
-		end
 
 	enable_transport is
 			-- Activate pick/drag and drop mechanism.
@@ -301,7 +275,7 @@ feature -- Implementation
 					real_signal_connect (
 						event_widget,
 						"motion-notify-event",
-						agent (App_implementation.gtk_marshal).temp_execute_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?),
+						agent (App_implementation.gtk_marshal).execute_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?),
 						App_implementation.default_translate
 					)
 					motion_notify_connection_id := last_signal_connection_id

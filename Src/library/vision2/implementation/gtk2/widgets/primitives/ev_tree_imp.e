@@ -640,11 +640,17 @@ feature {EV_TREE_NODE_IMP} -- Implementation
 			-- Retrieve cell text from `a_tree_node_imp`
 		local
 			a_g_value_string_struct: POINTER
+			a_string: POINTER
 		do
 			a_g_value_string_struct := g_value_string_struct
 			{EV_GTK_DEPENDENT_EXTERNALS}.g_value_unset (a_g_value_string_struct)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_value (tree_store, a_tree_node_imp.list_iter.item, 1, a_g_value_string_struct)
-			create Result.make_from_c ({EV_GTK_DEPENDENT_EXTERNALS}.g_value_get_string (a_g_value_string_struct))
+			a_string := {EV_GTK_DEPENDENT_EXTERNALS}.g_value_get_string (a_g_value_string_struct)
+			if a_string /= default_pointer then
+				create Result.make_from_c ({EV_GTK_DEPENDENT_EXTERNALS}.g_value_get_string (a_g_value_string_struct))
+			else
+				Result := ""
+			end
 		end
 
 	set_text_on_position (a_tree_node_imp: EV_TREE_NODE_IMP; a_text: STRING) is

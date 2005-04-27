@@ -26,7 +26,8 @@ inherit
 			pointer_button_release_actions_internal as cell_pointer_button_release_actions_internal,
 			pointer_leave_actions_internal as cell_pointer_leave_actions_internal
 		redefine
-			interface
+			interface,
+			drop_actions
 		end
 
 	EV_GRID_ACTION_SEQUENCES_I
@@ -34,6 +35,12 @@ inherit
 	REFACTORING_HELPER
 
 feature -- Access
+
+	drop_actions: EV_PND_ACTION_SEQUENCE is
+			-- Actions to be performed when a pebble is dropped here.
+		do
+			Result := drawable.drop_actions
+		end
 
 	row (a_row: INTEGER): EV_GRID_ROW is
 			-- Row `a_row'.
@@ -3135,7 +3142,7 @@ feature {EV_GRID_ITEM_I} -- Implementation
 			not_has_a_item: not internal_selected_items.has (a_item)
 			item_selected: a_item.internal_is_selected
 		do
-			internal_selected_items.put (a_item.interface, a_item)
+			internal_selected_items.extend (a_item.interface, a_item)
 		ensure
 			item_added: internal_selected_items.has (a_item)
 		end

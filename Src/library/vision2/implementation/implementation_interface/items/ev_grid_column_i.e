@@ -136,7 +136,10 @@ feature -- Access
 		do
 			if parent_i /= Void then
 					-- If there is no parent then return 0.
-					
+
+				parent_i.perform_horizontal_computation
+					-- Recompute horizontally if required.
+
 				Result := parent_i.column_offsets @ (index)
 			end
 		ensure

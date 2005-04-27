@@ -127,6 +127,45 @@ feature -- Status Setting
 			spacing_set: spacing = a_spacing
 		end
 
+	align_text_center is
+			-- Display `text' centered.
+		require
+			not_destroyed: not is_destroyed
+		do
+			text_alignment := {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_center
+			if parent /= Void then
+				parent.implementation.redraw_item (implementation)
+			end
+		ensure
+			alignment_set: is_center_aligned
+		end
+
+	align_text_right is
+			-- Display `text' right aligned.
+		require
+			not_destroyed: not is_destroyed
+		do
+			text_alignment := {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_right
+			if parent /= Void then
+				parent.implementation.redraw_item (implementation)
+			end
+		ensure
+			alignment_set: is_right_aligned
+		end
+        
+	align_text_left is
+			-- Display `text' left aligned.
+		require
+			not_destroyed: not is_destroyed
+		do
+			text_alignment := {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_left
+			if parent /= Void then
+				parent.implementation.redraw_item (implementation)
+			end
+		ensure
+			alignment_set: is_left_aligned
+		end
+
 feature -- Measurement
 
 	left_border: INTEGER
@@ -146,14 +185,43 @@ feature -- Status report
 			
 	pixmap: EV_PIXMAP
 		-- Image displayed to left of `text'.
-	
+
+	text_alignment: INTEGER
+			-- Current alignment.
+			-- See class EV_TEXT_ALIGNABLE_CONSTANTS for
+			-- possible values.
+
+	is_left_aligned: BOOLEAN is
+			-- Is `Current' left aligned?
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := text_alignment = {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_left
+		end
+		
+	is_center_aligned: BOOLEAN is
+			-- Is `Current' center aligned?
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := text_alignment = {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_center
+		end
+
+	is_right_aligned: BOOLEAN is
+			-- Is `Current' right aligned?
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := text_alignment = {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_right
+		end
+
 feature {NONE} -- Contract support
 
 	is_in_default_state: BOOLEAN is
 			-- Is `Current' in its default state?
 		do
 			Result := Precursor {EV_GRID_ITEM} and text.is_empty and pixmap = Void and
-				left_border = 2 and spacing = 2
+				left_border = 2 and spacing = 2 and is_left_aligned
 		end
 
 feature {EV_ANY, EV_ANY_I, EV_GRID_DRAWER_I} -- Implementation

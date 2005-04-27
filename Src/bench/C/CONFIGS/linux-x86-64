@@ -153,6 +153,7 @@ eif_solaris='undef'
 eif_windows='undef'
 eif_64_bits='define'
 Mcc='Mcc'
+d_tls='undef'
 #Check value for next 2
 mtccflags="$ccflags -DEIF_THREADS -DEIF_LINUXTHREADS"
 mtcppflags="$cppflags -DEIF_THREADS -DEIF_LINUXTHREADS"

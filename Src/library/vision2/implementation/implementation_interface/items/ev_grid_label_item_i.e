@@ -26,6 +26,8 @@ feature {NONE} -- Initialization
 			interface.set_text ("")
 			interface.set_left_border (2)
 			interface.set_spacing (2)
+			interface.align_text_left
+			must_recompute_text_dimensions := True
 		end
 
 feature {EV_GRID_DRAWER_I} -- Implementation
@@ -35,6 +37,31 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 		once
 			create Result
 		end
+
+	internal_text_width: INTEGER
+
+	must_recompute_text_dimensions: BOOLEAN
+		-- Must the dimensions of `interface.text' be re-computed
+		-- before drawing.
+
+	recompute_text_dimensions is
+			--
+		local
+			dimensions: TUPLE [INTEGER, INTEGER, INTEGER, INTEGER]
+		do
+			if must_recompute_text_dimensions then
+				if interface.font /= Void then
+					dimensions := interface.font.string_size (interface.text)
+				else
+					dimensions := internal_default_font.string_size (interface.text)
+				end
+				internal_text_width := dimensions.integer_item (1) - dimensions.integer_item (3) + dimensions.integer_item (4)
+			end
+			must_recompute_text_dimensions := False
+		ensure	
+			dimensions_recomputed: must_recompute_text_dimensions = False
+		end
+		
 		
 	redraw (an_x, a_y, a_width, a_height: INTEGER; drawable: EV_DRAWABLE) is
 			-- Redraw `Current'.
@@ -44,8 +71,14 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 			pixmap_width: INTEGER
 			left_border, spacing_used: INTEGER
 			space_remaining_for_text: INTEGER
+			text_offset_into_available_space: INTEGER
+			text_alignment: INTEGER
 		do
+			recompute_text_dimensions
+				-- Update the dimensions of the text if required.
+
 			fixme ("Correctly handle selection colors and inversion")
+			text_alignment := interface.text_alignment
 			l_pixmap := interface.pixmap
 			left_border := interface.left_border
 			spacing_used := interface.spacing
@@ -82,7 +115,18 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 			end
 			space_remaining_for_text := a_width - pixmap_width - left_border - spacing_used
 			if interface.text /= Void and space_remaining_for_text > 0 then
-				drawable.draw_ellipsed_text_top_left (an_x + pixmap_width + spacing_used + left_border, a_y, interface.text, space_remaining_for_text)
+				inspect text_alignment
+				when {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_left then
+					text_offset_into_available_space := 0
+				when {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_right then
+					text_offset_into_available_space := space_remaining_for_text - internal_text_width
+				else
+					text_offset_into_available_space := space_remaining_for_text - internal_text_width
+					if text_offset_into_available_space /= 0 then
+						text_offset_into_available_space := text_offset_into_available_space // 2
+					end
+				end
+				drawable.draw_ellipsed_text_top_left (an_x + pixmap_width + spacing_used + left_border + text_offset_into_available_space, a_y, interface.text, space_remaining_for_text)
 			end
 		end
 

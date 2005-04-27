@@ -22,8 +22,7 @@ inherit
 			prunable,
 			readable,
 			writable,
-			is_in_default_state,
-			drop_actions
+			is_in_default_state
 		end
 	
 	EV_GRID_ACTION_SEQUENCES
@@ -39,12 +38,6 @@ inherit
 		end
 
 feature -- Access
-
-	drop_actions: EV_PND_ACTION_SEQUENCE is
-			-- Actions to be performed when a pebble is dropped here.
-		do
-			Result := implementation.drop_actions
-		end
 
 	row (a_row: INTEGER): EV_GRID_ROW is
 			-- Row `a_row'.

@@ -239,6 +239,32 @@ feature -- Event handling
 			result_not_void: Result /= Void
 		end
 
+	virtual_position_changed_actions: ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER]] is
+			-- Actions to be performed upon next idle after `virtual_x_position' or `virtual_y_position' changed in grid.
+			-- Arguments (with names for clarity)
+			--
+			-- a_virtual_x_position: INTEGER -- New `virtual_x_position' of grid.
+			-- a_virtual_y_position: INTEGER -- New `virtual_y_position' of grid.
+		do
+			if virtual_position_changed_actions_internal = Void then
+				create virtual_position_changed_actions_internal
+			end
+			Result := virtual_position_changed_actions_internal
+		end
+
+	virtual_size_changed_actions: ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER]] is
+			-- Actions to be performed upon next idle after `virtual_width' or `virtual_height' changed in grid.
+			-- Arguments (with names for clarity)
+			--
+			-- a_virtual_width: INTEGER -- New `virtual_width' of grid.
+			-- a_virtual_height: INTEGER -- New `virtual_height' of grid.
+		do
+			if virtual_size_changed_actions_internal = Void then
+				create virtual_size_changed_actions_internal
+			end
+			Result := virtual_size_changed_actions_internal
+		end
+
 feature {EV_ANY_I} -- Implementation
 
 	item_drop_actions_internal: ACTION_SEQUENCE [TUPLE [EV_GRID_ITEM, ANY]]
@@ -291,6 +317,12 @@ feature {EV_ANY_I} -- Implementation
 			
 	row_collapse_actions_internal: EV_GRID_ROW_ACTION_SEQUENCE
 			-- Implementation of once per object `row_collapse_actions_internal'.
+
+	virtual_position_changed_actions_internal: ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER]]
+			-- Implementation of once per object `virtual_position_changed_actions'.
+
+	virtual_size_changed_actions_internal: ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER]]
+			-- Implementation of once per object `virtual_size_changed_actions'.
 
 end
 

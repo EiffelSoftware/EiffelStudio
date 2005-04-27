@@ -185,6 +185,26 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
+
+	virtual_position_changed_actions: ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER]] is
+			-- Actions to be performed upon next idle after `virtual_x_position' or `virtual_y_position' changed in grid.
+			-- Arguments (with names for clarity)
+			--
+			-- a_virtual_x_position: INTEGER -- New `virtual_x_position' of grid.
+			-- a_virtual_y_position: INTEGER -- New `virtual_y_position' of grid.
+		do
+			Result := implementation.virtual_position_changed_actions
+		end
+
+	virtual_size_changed_actions: ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER]] is
+			-- Actions to be performed upon next idle after `virtual_width' or `virtual_height' changed in grid.
+			-- Arguments (with names for clarity)
+			--
+			-- a_virtual_width: INTEGER -- New `virtual_width' of grid.
+			-- a_virtual_height: INTEGER -- New `virtual_height' of grid.
+		do
+			Result := implementation.virtual_size_changed_actions
+		end
 		
 feature {NONE} -- Implementation
 

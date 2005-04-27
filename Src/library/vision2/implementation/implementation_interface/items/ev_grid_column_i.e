@@ -200,7 +200,7 @@ feature -- Status setting
 					end
 					extra_width := parent_i.column (i + 1).width + extra_width
 				end
-				if l_width >= parent_i.viewable_height then
+				if l_width >= parent_i.viewable_width then
 						-- In this case, the width of the column is greater than the viewable width
 						-- so we simply set it to the left of the viewable area.
 					parent_i.set_virtual_position (virtual_x, parent_i.virtual_y_position)

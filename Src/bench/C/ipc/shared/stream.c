@@ -26,7 +26,7 @@
 #include "eif_config.h"
 #include "eif_portable.h"
 #include "stream.h"
-#ifndef EIF_WIN32
+#ifndef EIF_WINDOWS
 #include <unistd.h>
 #ifdef EIF_VMS
 #include "ipcvms.h"		/* only affects VMS */
@@ -39,11 +39,11 @@
  * to map an file descriptor to its associated stream structure.
  */
 
-#ifndef EIF_WIN32
+#ifndef EIF_WINDOWS
 rt_public STREAM *stream_by_fd [MAX_FILE_DESC];
 #endif
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 rt_public STREAM *new_stream(HANDLE read_fd, HANDLE write_fd, HANDLE er, HANDLE ew)
 #else
 rt_public STREAM *new_stream(int read_fd, int write_fd)
@@ -62,7 +62,7 @@ rt_public STREAM *new_stream(int read_fd, int write_fd)
 	sp->sr = read_fd;				/* File descriptor used for reading */
 	sp->sw = write_fd;				/* File descriptor used for writing */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	sp->er = er;				/* Handle for event monitor - read ok */
 	sp->ew = ew;				/* Handle for event monitor - write done */
 #else
@@ -80,7 +80,7 @@ rt_public void close_stream(STREAM *sp)
 {
 	/* Close the stream connection */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	CloseHandle(readfd(sp));
 	CloseHandle(writefd(sp));
 	CloseHandle(writeev(sp));

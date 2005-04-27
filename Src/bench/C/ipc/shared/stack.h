@@ -18,7 +18,7 @@
 #include "eif_interp.h"
 
 /* Unified (Windows/Unix) Stream declaration */
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 #include "stream.h"
 typedef STREAM *eif_stream;
 #else

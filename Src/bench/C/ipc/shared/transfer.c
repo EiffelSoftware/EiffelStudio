@@ -23,7 +23,7 @@
 #include <string.h>
 #include "rt_assert.h"
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 rt_shared STREAM *sp;				/* Stream used for communications */
 #else
 rt_private STREAM *sp;				/* Stream used for communications */
@@ -60,7 +60,7 @@ rt_public char *tread(int *size)
 	Request_Clean (rqst);
 #ifdef DEBUG
 #ifdef USE_ADD_LOG
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	add_log(20, "waiting for leading request on #%d", sp);
 #else
 	add_log(20, "waiting for leading request on #%d", readfd(sp));
@@ -69,7 +69,7 @@ rt_public char *tread(int *size)
 #endif
 
 	/* The first request gives us the amount of bytes we have to expect */
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	if (-1 == recv_packet(sp, &rqst, TRUE)) {
 #else
 	if (-1 == recv_packet(readfd(sp), &rqst)) {
@@ -100,7 +100,7 @@ rt_public char *tread(int *size)
 #ifdef USE_ADD_LOG
 		add_log(1, "ERROR cannot allocate %d bytes", rqst.rq_ack.ak_type);
 #endif
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 		swallow(sp, rqst.rq_ack.ak_type);
 #else
 		swallow(readfd(sp), rqst.rq_ack.ak_type);
@@ -110,7 +110,7 @@ rt_public char *tread(int *size)
 		return (char *) 0;
 	}
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 #ifdef USE_ADD_LOG
 	add_log(9, "expecting %d bytes from remote process", rqst.rq_ack.ak_type);
 #endif
@@ -155,7 +155,7 @@ rt_public int twrite(void *buffer, size_t size)
 #endif
 #endif
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	send_packet(sp, &rqst);
 #else
 	send_packet(writefd(sp), &rqst);
@@ -167,7 +167,7 @@ rt_public int twrite(void *buffer, size_t size)
 #endif
 #endif
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	t = net_send(sp, buffer, size);
 #ifdef USE_ADD_LOG
 	add_log(20, "net_send was %d", t);
@@ -180,7 +180,7 @@ rt_public int twrite(void *buffer, size_t size)
 	return (int) t;
 }
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 rt_public void swallow(STREAM *fd, size_t size)
 #else
 rt_public void swallow(int fd, size_t size)
@@ -197,7 +197,7 @@ rt_public void swallow(int fd, size_t size)
 		amount = size;
 		if (amount > BUFSIZ)
 			amount = BUFSIZ;
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 		if (-1 == net_recv(fd, buf, amount, TRUE))
 #else
 		if (-1 == net_recv(fd, buf, amount))

@@ -119,7 +119,7 @@ extern int eif_is_synchronized (void);
 #define EIF_COND_WAIT(pcond, pmutex, msg) \
     if (pthread_cond_wait (pcond, pmutex)) eraise (msg, EN_EXT)
 
-#ifdef EIF_WIN32 
+#ifdef EIF_WINDOWS 
 #define EIF_COND_WAIT_WITH_TIMEOUT(result_success, pcond, pmutex, timeout, msg) \
 	{ \
 		int res = 0; \
@@ -350,7 +350,7 @@ extern int eif_is_synchronized (void);
 #define EIF_THR_SELF	pthread_self()	/* Return a pthread_t */
 
 
-#elif defined EIF_WIN32
+#elif defined EIF_WINDOWS
 /*-------------------------------*/
 /*---  WINDOWS 95/NT Threads  ---*/
 /*-------------------------------*/
@@ -616,7 +616,7 @@ extern int eif_is_synchronized (void);
 #endif	/* end of POSIX, WIN32, SOLARIS_THREADS, VXWORKS... */
 
 /* Let's define low level efficient mutexes */
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 /* Although we support Win98/Me/NT/2k/XP this API is not defined
  * by default since it requires _WIN32_WINNT >= 0x403 which we
  * don't know how to get. So this code is taken from WinBase.h.

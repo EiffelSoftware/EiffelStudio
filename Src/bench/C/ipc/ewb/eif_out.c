@@ -16,7 +16,7 @@
 
 #include "stack.h"
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 #include "stream.h"
 extern STREAM *sp;
 extern void start_timer(void);			/* Starts the timer for communication */
@@ -30,7 +30,7 @@ rt_private void send_dmpitem_request(struct item *ip);
 rt_public void send_rqst_0 (long int code)
 {
 	Request rqst;
-#ifndef EIF_WIN32
+#ifndef EIF_WINDOWS
 	STREAM *sp = stream_by_fd[EWBOUT];
 #endif
 
@@ -38,7 +38,7 @@ rt_public void send_rqst_0 (long int code)
     add_log(100, "sending request 0: %ld from ec", code);
 #endif
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	if (code == APPLICATION)
 		start_timer();
 #endif
@@ -46,7 +46,7 @@ rt_public void send_rqst_0 (long int code)
 	Request_Clean (rqst);
 	rqst.rq_type = (int) code;
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	send_packet(sp, &rqst);
 #else
 	send_packet(writefd(sp), &rqst);
@@ -56,7 +56,7 @@ rt_public void send_rqst_0 (long int code)
 rt_public void send_rqst_1 (long int code, long int info1)
 {
 	Request rqst;
-#ifndef EIF_WIN32
+#ifndef EIF_WINDOWS
 	STREAM *sp = stream_by_fd[EWBOUT];
 #endif
 
@@ -67,7 +67,7 @@ rt_public void send_rqst_1 (long int code, long int info1)
 	rqst.rq_type = (int) code;
 	rqst.rq_opaque.op_first = (int) info1;
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	send_packet(sp, &rqst);
 #else
 	send_packet(writefd(sp), &rqst);
@@ -77,7 +77,7 @@ rt_public void send_rqst_1 (long int code, long int info1)
 rt_public void send_rqst_2 (long int code, long int info1, long int info2)
 {
 	Request rqst;
-#ifndef EIF_WIN32
+#ifndef EIF_WINDOWS
 	STREAM *sp = stream_by_fd[EWBOUT];
 #endif
 
@@ -90,7 +90,7 @@ rt_public void send_rqst_2 (long int code, long int info1, long int info2)
 	rqst.rq_opaque.op_first = (int) info1;
 	rqst.rq_opaque.op_second = (int) info2;
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	send_packet(sp, &rqst);
 #else
 	send_packet(writefd(sp), &rqst);
@@ -100,7 +100,7 @@ rt_public void send_rqst_2 (long int code, long int info1, long int info2)
 rt_public void send_rqst_3 (long int code, long int info1, long int info2, rt_uint_ptr info3)
 {
 	Request rqst;
-#ifndef EIF_WIN32
+#ifndef EIF_WINDOWS
 	STREAM *sp = stream_by_fd[EWBOUT];
 #endif
 
@@ -114,7 +114,7 @@ rt_public void send_rqst_3 (long int code, long int info1, long int info2, rt_ui
 	rqst.rq_opaque.op_second = (int) info2;
 	rqst.rq_opaque.op_third = info3;
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	send_packet(sp, &rqst);
 #else
 	send_packet(writefd(sp), &rqst);
@@ -124,7 +124,7 @@ rt_public void send_rqst_3 (long int code, long int info1, long int info2, rt_ui
 rt_private void send_dmpitem_request(struct item *ip)
 {
 	Request rqst;
-#ifndef EIF_WIN32
+#ifndef EIF_WINDOWS
 	STREAM *sp = stream_by_fd[EWBOUT];
 #endif
 
@@ -139,7 +139,7 @@ rt_private void send_dmpitem_request(struct item *ip)
 	rqst.rq_dump.dmp_item = ip;
 
 	/* send the request */
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	send_packet(sp, &rqst);
 #else
 	send_packet(writefd(sp), &rqst);
@@ -289,12 +289,12 @@ rt_public void send_bit_value(char *value)
 rt_public EIF_BOOLEAN recv_ack (void)
 {
 	Request pack;
-#ifndef EIF_WIN32
+#ifndef EIF_WINDOWS
 	STREAM *sp = stream_by_fd[EWBOUT];
 #endif
 
 	Request_Clean (pack);
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	if (-1 == recv_packet(sp, &pack, TRUE))
 #else
 	if (-1 == recv_packet(readfd(sp), &pack))
@@ -330,12 +330,12 @@ rt_public EIF_BOOLEAN recv_dead (void)
 		/* Wait for a message saying that the application is dead */
 
 	Request pack;
-#ifndef EIF_WIN32
+#ifndef EIF_WINDOWS
 	STREAM *sp = stream_by_fd[EWBOUT];
 #endif
 
 	Request_Clean (pack);
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	if (-1 == recv_packet(sp, &pack, TRUE))
 #else
 	if (-1 == recv_packet(readfd(sp), &pack))
@@ -346,7 +346,7 @@ rt_public EIF_BOOLEAN recv_dead (void)
     add_log(100, "receiving request : %ld for ec", pack.rq_type);
 #endif
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	stop_timer ();
 #endif
 
@@ -360,7 +360,7 @@ rt_public EIF_BOOLEAN recv_dead (void)
 
 rt_public void c_send_str (char *s)
 {
-#ifndef EIF_WIN32
+#ifndef EIF_WINDOWS
 	STREAM *sp = stream_by_fd[EWBOUT];
 #endif
 
@@ -384,7 +384,7 @@ EIF_REFERENCE c_tread (void)
 	return e_str;
 }
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 rt_public void send_simple_request(long code)
 {
 	/* Send the simple request specified by code */
@@ -411,14 +411,14 @@ rt_public void send_run_request(long int code, char *buf, long int len)
 {
 /*
 	Request rqst;
-#ifndef EIF_WIN32
+#ifndef EIF_WINDOWS
 	STREAM *sp = stream_by_fd[EWBOUT];
 #endif
 
 	Request_Clean (rqst);
 	rqst.rq_type = code;
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	if (-1 == send_packet (sp, &rqst))
 #else
 	if (-1 == send_packet (writefd(sp), &rqst))

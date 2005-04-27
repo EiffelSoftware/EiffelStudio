@@ -4,7 +4,7 @@
 #include "ewb.h"
 #include <string.h>
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 extern STREAM *sp;
 #endif
 
@@ -50,12 +50,12 @@ EIF_REFERENCE request_handler (void)
 	 */
 
 	Request rqst;
-#ifndef EIF_WIN32
+#ifndef EIF_WINDOWS
 	STREAM *sp = stream_by_fd[EWBOUT];
 #endif
 	Request_Clean (rqst);
 		/* ensure Request is all 0 (recognized as non initialized) -- Didier */
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	recv_packet (sp, &rqst, FALSE);
 #else
 	recv_packet (readfd(sp), &rqst);
@@ -128,7 +128,7 @@ rt_public void send_byte_code (EIF_INTEGER real_body_index, BODY_INDEX real_body
 	rqst.rq_opaque.op_first = (int) real_body_index;
 	rqst.rq_opaque.op_second = (int) real_body_id;
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	if (-1 == send_packet (sp, &rqst))
 #else
 	if (-1 == send_packet (writefd(sp), &rqst))
@@ -138,7 +138,7 @@ rt_public void send_byte_code (EIF_INTEGER real_body_index, BODY_INDEX real_body
 	if (-1 == twrite (byte_array, size))
 			printf ("error\n");
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	if (-1 == recv_packet (sp, &rqst))
 #else
 	if (-1 == recv_packet (readfd(sp), &rqst))
@@ -164,7 +164,7 @@ rt_public void send_breakpoint (BODY_INDEX real_body_id, long int offset, EIF_BO
 	rqst.rq_opaque.op_second = (int) real_body_id;
 	rqst.rq_opaque.op_third = offset;
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	if (-1 == send_packet (sp, &rqst))
 #else
 	if (-1 == send_packet (writefd(sp), &rqst))
@@ -181,7 +181,7 @@ rt_public void send_ack_end (void)
 /*
 	STREAM *sp = stream_by_fd [EWBOUT];
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	send_ack (sp, AK_OK);
 #else
 	send_ack (writefd(sp), AK_OK);

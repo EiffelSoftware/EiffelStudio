@@ -23,7 +23,7 @@
 #include "listen.h"
 #include "eif_logfile.h"
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 extern STREAM *sp;
 extern HANDLE global_ewbin, global_ewbout, global_event_r, global_event_w;
 #else
@@ -40,7 +40,7 @@ rt_public void wide_listen(void)
 	 * routine whenever data is available there.
 	 */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	if (-1 == add_input(sp, (HANDLE_FN) arqsthandle)) {
 #else
 	if (-1 == add_input(EWBIN, arqsthandle)) {
@@ -61,7 +61,7 @@ rt_public void wide_listen(void)
 	 * we are exiting immediately.
 	 */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 
 	while (0 <= do_select(0)) {
 #ifdef USE_ADD_LOG

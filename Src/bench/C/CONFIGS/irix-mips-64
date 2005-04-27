@@ -149,7 +149,6 @@ defvoidused='15'
 #Check value for next 4
 eif_sgi='define'
 eif_solaris='undef'
-eif_win32='undef'
 eif_windows='undef'
 eif_64_bits='define'
 Mcc='Mcc'

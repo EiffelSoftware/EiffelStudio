@@ -17,7 +17,7 @@
 #include <sys/timeb.h>
 #include <time.h>
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 /*#define NOGDI*/
 #include <windows.h>
 #endif
@@ -25,7 +25,7 @@
 EIF_INTEGER eif_date(char *path)
 	/* Return last modification time of file of path `path' */
 {
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 		/* On NTFS file system, windows store UTC file stamps in 100 of nanoseconds
 		 * starting from January 1st 0. Converted in seconds, this time is greater
 		 * than 2^32 therefore we substract the EPOCH date January 1st 1970 to get

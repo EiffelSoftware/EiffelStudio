@@ -38,7 +38,7 @@ doc:<file name="except.c" header="eif_except.c" version="$Id$" summary="Exceptio
 #include "rt_assert.h"
 #include "rt_globals.h"
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 #include "eif_console.h"
 #include <winbase.h>	/* To call `ExitProcess' */
 #endif
@@ -772,7 +772,7 @@ rt_public struct ex_vect * extrl(void)
 }
 
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 rt_private LONG WINAPI windows_exception_filter (LPEXCEPTION_POINTERS an_exception)
 {
 		/* In order to be able to catch exceptions that cannot be caught by
@@ -1967,7 +1967,7 @@ rt_public void esfail(void)
 	(void) backtrack();			/* Unwind the whole stack */
 	dump_trace_stack();			/* Print the stack */
 	EIF_EXCEPT_UNLOCK
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	eif_console_cleanup(EIF_TRUE);
 #endif
 }

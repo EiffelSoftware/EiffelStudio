@@ -129,7 +129,7 @@ rt_private eif_global_context_t * eif_pthread_getspecific (EIF_TSD_TYPE global_k
 #define EIF_GET_CONTEXT \
 	eif_global_context_t * EIF_VOLATILE eif_globals = eif_global_key;
 
-#elif defined EIF_WIN32			/* Windows Threads */
+#elif defined EIF_WINDOWS			/* Windows Threads */
 #define EIF_GET_CONTEXT \
 	eif_global_context_t * EIF_VOLATILE eif_globals = \
 		(eif_global_context_t *) TlsGetValue (eif_global_key);

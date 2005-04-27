@@ -29,7 +29,7 @@
 #include "rt_globals.h"
 #include "rt_assert.h"
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 #include <io.h>
 #else
 #include "unistd.h"

@@ -38,7 +38,7 @@ doc:<file name="dir.c" header="eif_dir.h" version="$Id$" summary="Externals for 
 
 #include <sys/types.h>
 #include <sys/stat.h>
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 #include <io.h>			/* %%ss added for access */
 #include <direct.h>		/* %%ss added for (ch|rm)dir */
 #else
@@ -61,7 +61,7 @@ doc:<file name="dir.c" header="eif_dir.h" version="$Id$" summary="Externals for 
 
 #define ST_MODE     0x0fff      /* Keep only permission mode */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 typedef struct tagEIF_WIN_DIRENT {
 	char	name [MAX_PATH];
 	HANDLE	handle;
@@ -75,7 +75,7 @@ typedef struct tagEIF_WIN_DIRENT {
 rt_public EIF_POINTER dir_open(char *name)
 {
 	/* Open directory `name' for reading (can't do much else on UNIX) */
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	EIF_WIN_DIRENT *c;
 
 	c = (EIF_WIN_DIRENT *) eif_malloc (sizeof(EIF_WIN_DIRENT));
@@ -100,7 +100,7 @@ rt_public EIF_POINTER dir_open(char *name)
 
 rt_public void dir_close(EIF_POINTER d)
 {
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	EIF_WIN_DIRENT *dirp = (EIF_WIN_DIRENT *) d;
 	if (dirp->handle != NULL)
 		FindClose (dirp->handle);
@@ -117,7 +117,7 @@ rt_public void dir_close(EIF_POINTER d)
 
 rt_public void dir_rewind(EIF_POINTER d)
 {
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	EIF_WIN_DIRENT *dirp = (EIF_WIN_DIRENT *) d;
 	if (dirp->handle != NULL)
 		FindClose(dirp->handle);
@@ -137,7 +137,7 @@ rt_public EIF_POINTER dir_search(EIF_POINTER d, char *name)
           		/* Directory where search is made */
            		/* Entry we are looking for */
 {
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	EIF_WIN_DIRENT *dirp = (EIF_WIN_DIRENT *) d;
 	HANDLE h;
 	WIN32_FIND_DATA wfd;
@@ -195,7 +195,7 @@ rt_public EIF_REFERENCE dir_next(EIF_POINTER d)
 	 * null pointer if we reached the end of the directory.
 	 */
 {
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	EIF_WIN_DIRENT *dirp = (EIF_WIN_DIRENT *) d;
 	HANDLE h;
 	WIN32_FIND_DATA wfd;
@@ -272,7 +272,7 @@ rt_public EIF_REFERENCE dir_current(void)
 
 rt_public EIF_CHARACTER eif_dir_separator (void)
 {
-#if defined EIF_WIN32
+#if defined EIF_WINDOWS
 	return '\\';
 #elif defined EIF_VMS_V6_ONLY
 	/** return '.'; **/	/* should cause error (no return) */
@@ -378,7 +378,7 @@ rt_public EIF_BOOLEAN eif_dir_exists(char *name)
 	return ( ( (status==RMS$_FNF) && (name[strlen(name)-1]==']') )
 		||(status==RMS$_NORMAL) /* incase subdir.dir */ );
 
-/*#elif defined EIF_WIN32	*/	
+/*#elif defined EIF_WINDOWS	*/	
 					/* ifdef VMS */
 
 /*	return (EIF_BOOLEAN) (access(name,0) != -1 ); */
@@ -421,7 +421,7 @@ rt_public EIF_BOOLEAN eif_dir_is_readable(char *name)
 	int result = access(eifrt_vms_directory_file_name (name, vms_path), R_OK);
 	return (EIF_BOOLEAN) (result != -1);
 
-#elif defined EIF_WIN32
+#elif defined EIF_WINDOWS
 
 	return (EIF_BOOLEAN) (access (name, 04) != -1);
 
@@ -480,7 +480,7 @@ rt_public EIF_BOOLEAN eif_dir_is_writable(char *name)
 	int result = access(eifrt_vms_directory_file_name (name, vms_path), W_OK);
 	return (EIF_BOOLEAN) (result != -1);
 
-#elif defined EIF_WIN32
+#elif defined EIF_WINDOWS
 
 	return (EIF_BOOLEAN) (access (name, 02) != -1);
 
@@ -541,7 +541,7 @@ rt_public EIF_BOOLEAN eif_dir_is_executable(char *name)
 	int result = access(eifrt_vms_directory_file_name (name, vms_path), X_OK);
 	return (EIF_BOOLEAN) (result != -1);
 
-#elif defined EIF_WIN32
+#elif defined EIF_WINDOWS
 	return (EIF_BOOLEAN) (access (name, 0) != -1);
 #else
 #ifdef HAS_GETEUID

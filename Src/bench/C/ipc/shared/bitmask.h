@@ -32,7 +32,7 @@
 #endif
 
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 
 /* Usually, the following macros are defined in <sys/types.h> or <sys/select.h>,
  * but I define mine there to ensure a wider portability. This means this file

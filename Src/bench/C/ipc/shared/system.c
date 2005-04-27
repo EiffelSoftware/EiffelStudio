@@ -27,7 +27,7 @@
 #include <fcntl.h>
 #endif
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 #include <windows.h>
 #endif
 
@@ -67,7 +67,7 @@ rt_public int dup2(int old, int new)
 #endif
 
 #ifndef HAS_USLEEP
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 
 rt_public int usleep (int usec)
 {
@@ -92,7 +92,7 @@ rt_public int usleep(int usec)
 #define HAS_USLEEP
 #endif
 
-#ifndef EIF_WIN32
+#ifndef EIF_WINDOWS
 rt_public char *str_save(char *s)
 {
 	/* Save string 's' somewhere in memory */

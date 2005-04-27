@@ -142,7 +142,7 @@ rt_public void update(char ignore_updt)
 #endif /* EIF_VMS */
 
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	strcat(filename, "\\");
 #else
 #ifdef EIF_VMS	/* append path separator only if necessary */
@@ -166,7 +166,7 @@ rt_public void update(char ignore_updt)
 		print_err_msg(stderr, "Error could not open Eiffel update file %s\n", filename);
 		print_err_msg(stderr, "From directory %s\n", getcwd(NULL, PATH_MAX));
 		print_err_msg(stderr, "Error %d: %s\n", err, error_tag(err));
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 		eif_console_cleanup(EIF_TRUE);
 #endif
 		exit(1);

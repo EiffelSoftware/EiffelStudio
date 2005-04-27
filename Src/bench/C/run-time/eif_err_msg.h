@@ -32,7 +32,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 extern int print_err_msg(FILE *err, char *StrFmt, ...);
 extern char *exception_trace_string;
 #else

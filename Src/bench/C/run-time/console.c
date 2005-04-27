@@ -25,7 +25,7 @@ rt_public EIF_POINTER console_def (EIF_INTEGER file)
 	case 1:
 			/* Output is set to only have line buffered. Meaning that
 			 * each displayed %N will flush the buffer. */
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 			/* Per Microsoft documentation, it has to be at least 2 for buffer size
 			 * in case of _IOLBF. */
 	  	setvbuf(stdout, NULL, _IOLBF, 2);
@@ -86,7 +86,7 @@ rt_private void flush_buffer (FILE *fp)
 
 rt_public EIF_BOOLEAN console_eof(FILE *fp)
 {
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	eif_show_console ();
 #endif
 	return file_feof(fp);
@@ -98,7 +98,7 @@ rt_public EIF_BOOLEAN console_eof(FILE *fp)
 
 rt_public void console_pi(FILE *f, EIF_INTEGER number)
 {
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	eif_show_console ();
 #endif
 	file_pi (f, number);
@@ -107,7 +107,7 @@ rt_public void console_pi(FILE *f, EIF_INTEGER number)
 
 rt_public void console_pr(FILE *f, EIF_REAL_32 number)
 {
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	eif_show_console ();
 #endif
 	file_pr (f, number);	
@@ -116,7 +116,7 @@ rt_public void console_pr(FILE *f, EIF_REAL_32 number)
 
 rt_public void console_ps(FILE *f, char *str, EIF_INTEGER len)
 {
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	eif_show_console ();
 #endif
 	file_ps (f, str, len);
@@ -125,7 +125,7 @@ rt_public void console_ps(FILE *f, char *str, EIF_INTEGER len)
 
 rt_public void console_pc(FILE *f, EIF_CHARACTER c)
 {
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	eif_show_console ();
 #endif
 	file_pc (f, c);
@@ -133,7 +133,7 @@ rt_public void console_pc(FILE *f, EIF_CHARACTER c)
 
 rt_public void console_pd(FILE *f, EIF_REAL_64 val)
 {
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	eif_show_console ();
 #endif
 	file_pd (f, val);
@@ -151,7 +151,7 @@ rt_public void console_tnwl(FILE *f)
 
 rt_public void console_next_line(FILE *f)
 {
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	eif_show_console ();
 #endif
 	file_tnil (f);
@@ -160,7 +160,7 @@ rt_public void console_next_line(FILE *f)
 
 rt_public EIF_INTEGER console_readint(FILE *f)
 {
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	eif_show_console ();
 #endif
 	return file_gi (f);
@@ -168,7 +168,7 @@ rt_public EIF_INTEGER console_readint(FILE *f)
 
 rt_public EIF_REAL_32 console_readreal(FILE *f)
 {
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	eif_show_console ();
 #endif
 	return file_gr (f);
@@ -176,14 +176,14 @@ rt_public EIF_REAL_32 console_readreal(FILE *f)
 
 rt_public EIF_REAL_64 console_readdouble(FILE *f)
 {
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	eif_show_console ();
 #endif
 	return file_gd(f);
 }
 rt_public EIF_CHARACTER console_readchar(FILE *f)
 {
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	eif_show_console ();
 #endif
 	return file_gc (f);
@@ -195,7 +195,7 @@ rt_public EIF_INTEGER console_readline(FILE *f, char *s, EIF_INTEGER bound, EIF_
                   		/* Size of the target buffer */
                   		/* Amount of characters already held in buffer */
 {
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	eif_show_console ();
 #endif
 	return file_gs (f, s, bound, start);
@@ -206,7 +206,7 @@ rt_public EIF_INTEGER console_readstream(FILE *f, char *s, EIF_INTEGER bound)
         		/* Target buffer where read characters are written */
                   		/* Size of the target buffer */
 {
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	eif_show_console ();
 #endif
 	return file_gss (f, s, bound);
@@ -218,7 +218,7 @@ rt_public EIF_INTEGER console_readword(FILE *f, char *s, EIF_INTEGER bound, EIF_
                   		/* Size of the target buffer */
                   		/* Amount of characters already held in buffer */
 {
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	eif_show_console ();
 #endif
 	return file_gw (f, s, bound, start);
@@ -226,7 +226,7 @@ rt_public EIF_INTEGER console_readword(FILE *f, char *s, EIF_INTEGER bound, EIF_
 
 rt_public EIF_CHARACTER console_separator(FILE *f)
 {
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	eif_show_console ();
 #endif
 	return file_lh (f);
@@ -234,7 +234,7 @@ rt_public EIF_CHARACTER console_separator(FILE *f)
 
 rt_public void console_file_close (FILE *f)
 {
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	eif_show_console ();
 #endif
 	file_close (f);

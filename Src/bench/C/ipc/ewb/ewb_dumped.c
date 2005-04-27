@@ -44,7 +44,7 @@ EIF_PROC set_bits;
 EIF_PROC set_error;
 EIF_PROC set_void;
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 extern STREAM *sp;
 #endif
 
@@ -62,7 +62,7 @@ rt_public void c_recv_rout_info (EIF_OBJ target)
 {
 	EIF_GET_CONTEXT
 	Request pack;
-#ifndef EIF_WIN32
+#ifndef EIF_WINDOWS
 	STREAM *sp = stream_by_fd [EWBOUT];
 #endif
 	Dump dump;
@@ -74,7 +74,7 @@ rt_public void c_recv_rout_info (EIF_OBJ target)
 	int line_number;	/* line number (i.e. break index) where application is stopped within feature */
 
 	Request_Clean (pack);
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	if (-1 != recv_packet (sp, &pack, TRUE)){ /* else send error */
 #else
 	if (-1 != recv_packet (readfd (sp), &pack)){ /* else send error */
@@ -148,14 +148,14 @@ rt_public void c_recv_value (EIF_OBJ target)
  */
 {
 	Request pack;
-#ifndef EIF_WIN32
+#ifndef EIF_WINDOWS
 	STREAM *sp = stream_by_fd [EWBOUT];
 #endif
 	struct  item item;
 	uint32  type_flag;
 
 	Request_Clean (pack);
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	if (-1 != recv_packet (sp, &pack, TRUE)) {
 #else
 	if (-1 != recv_packet (readfd (sp), &pack)) {

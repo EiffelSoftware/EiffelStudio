@@ -32,7 +32,7 @@
 #include "select.h"
 #include "string.h"
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 #include "eif_logfile.h"
 #ifndef NOFILE
 #define NOFILE VAL_NOFILE	/* File descriptor limit */
@@ -44,7 +44,7 @@
 #ifdef EIF_VMS
 #include "ipcvms.h"		/* only affects VMS */
 #endif /* EIF_VMS */
-#endif /* (not) EIF_WIN32 */
+#endif /* (not) EIF_WINDOWS */
 
 #define TMP_TIMEOUT	200000	/* Number of micro-seconds for temporary select */
 
@@ -55,7 +55,7 @@
  * Call backs should not return any status, because how can we imagine which is
  * the best in case of failure?
  */
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 rt_private STREAM *callback_handles [NOFILE];		/* Call backs on a per-fd basis */
 rt_private HANDLE_FN callback_array[NOFILE];		/* Call backs on a per-fd basis */
 
@@ -73,7 +73,7 @@ rt_private void (*callback[NOFILE])();		/* Call backs on a per-fd basis */
 
 rt_private int nfds = 0;					/* Number of fd to be selected */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 rt_private HANDLE rd_mask [NOFILE] = {0};		/* Read mask */
 rt_private HANDLE rd_tmask [NOFILE] = {0};		/* Temporary mask */
 rt_private HANDLE read_mask [NOFILE] = {0};		/* Mask used for select */
@@ -109,7 +109,7 @@ rt_private char *s_nerrlist[] = {			/* Symbolic codes for errors */
 };
 rt_private int s_nerr = sizeof(s_errlist);	/* Number of error messages */
 
-#ifndef EIF_WIN32
+#ifndef EIF_WINDOWS
 extern int errno;						/* System call error status */
 #endif
 
@@ -117,7 +117,7 @@ extern int errno;						/* System call error status */
  * Setting the parameters.
  */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 rt_public int add_input(STREAM *sp, HANDLE_FN call)
 		/* `sp': Stream on which select must be done */
 		/* `call': Function to be called when input is available */
@@ -132,7 +132,7 @@ rt_public int add_input(int fd, void (*call) (/* ??? */))
 	 * The function returns 0 if ok, -1 otherwise (call back pointer void or
 	 * file descriptor invalid) and sets 's_errno'
 	 */
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	if (nfds >= NOFILE) {					/* File descriptor out of range */
 #else
 	if (fd < 0 || fd >= NOFILE) {			/* File descriptor out of range */
@@ -141,7 +141,7 @@ rt_public int add_input(int fd, void (*call) (/* ??? */))
 		return -1;
 	}
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	if (call == NULL) {						/* Null pointer for callback */
 #else
 	if (call == (void (*)()) 0) {			/* Null pointer for callback */
@@ -150,7 +150,7 @@ rt_public int add_input(int fd, void (*call) (/* ??? */))
 		return -1;
 	}
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	if (callback(sp) != NULL) {				/* Callback already set */
 #else
 	if (callback[fd] != (void (*)()) 0) {	/* Callback already set */
@@ -159,7 +159,7 @@ rt_public int add_input(int fd, void (*call) (/* ??? */))
 		return -1;
 	}
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	set_callback(sp, call);				/* Record callback */
 	set_multiple_mask(sp, rd_mask);		/* Select will monitor this fd */
 	set_multiple_mask(sp, rd_tmask);	/* Also set temporary mask */
@@ -173,7 +173,7 @@ rt_public int add_input(int fd, void (*call) (/* ??? */))
 	return 0;			/* Ok status */
 }
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 rt_public int tmp_input(STREAM *sp)
 #else
 rt_public int tmp_input(int fd)
@@ -185,7 +185,7 @@ rt_public int tmp_input(int fd)
 	 * input to eat all our CPU resources.
 	 */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
  	if (callback(sp) == NULL) {				/* No current selection */
 #else
 	if (fd < 0 || fd >= NOFILE) {			/* File descriptor out of range */
@@ -199,7 +199,7 @@ rt_public int tmp_input(int fd)
 		return -1;
 	}
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	unset_multiple_mask(sp, rd_tmask);					/* Clear only temporary mask */
 #else
  	FD_CLR(fd, &rd_tmask);					/* Clear only temporary mask */
@@ -208,7 +208,7 @@ rt_public int tmp_input(int fd)
 	return 0;
 }
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 rt_public HANDLE_FN new_callback(STREAM *sp, HANDLE_FN call)
 		/* `sp': STREAM on which select must be done */
 		/* `call': New function to be called when input is available */
@@ -223,7 +223,7 @@ rt_public void (*new_callback(int fd, void (*call) (/* ??? */)))(void)
 	 * it is an error and a null pointer is returned.
 	 */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	HANDLE_FN old_call;					/* The old call back set for that fd */
 
 	if (call == NULL) {					/* Null pointer for callback */
@@ -260,7 +260,7 @@ rt_public void (*new_callback(int fd, void (*call) (/* ??? */)))(void)
 	return old_call;	/* Success: return old value (cannot be null) */
 }
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 rt_public HANDLE_FN rem_input(STREAM *sp)
 		/* `sp': Stream on which no select is to be done */
 #else
@@ -272,7 +272,7 @@ rt_public void (*rem_input(int fd))(void)
 	 * returns the old callback value.
 	 */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	HANDLE_FN old_call;					/* The old call back set for that fd */
 
 	old_call = callback(sp);		/* Save previous callback value */
@@ -328,7 +328,7 @@ rt_public void (*rem_input(int fd))(void)
 	return old_call;	/* Success: return old value (cannot be null) */
 }
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 rt_public int has_input(STREAM *sp)
 #else
 rt_public int has_input(int fd)
@@ -338,7 +338,7 @@ rt_public int has_input(int fd)
 	 * the file is not selected, and -1 in case of error.
 	 */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	if (callback(sp) != NULL)
 		return 1;
 #else
@@ -382,7 +382,7 @@ rt_public char *s_strname(void)
  * Altering the result from select
  */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 rt_public void clear_fd(STREAM *sp)
 #else
 rt_public void clear_fd(int f)
@@ -402,7 +402,7 @@ rt_public void clear_fd(int f)
 #endif
 #endif
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	unset_multiple_mask(sp, read_mask);			/* Remove active input on the file */
 #else
 	FD_CLR(f, &read_mask);			/* Remove active input on the file */
@@ -413,7 +413,7 @@ rt_public void clear_fd(int f)
  * Perform select system call.
  */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 rt_public int do_select(DWORD timeout)
 #else
 rt_public int do_select(struct timeval *timeout)
@@ -428,7 +428,7 @@ rt_public int do_select(struct timeval *timeout)
 	 * restarted automatically.
 	 */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	DWORD first_timeout;			/* Timeout used for first select */
 	DWORD nfd;						/* Status reported by select */
 	HANDLE fd;						/* To loop over file descriptors */
@@ -470,7 +470,7 @@ rt_public int do_select(struct timeval *timeout)
 		 * the chance of having the remote end of a stream clear to send the
 		 * next time those files are selected.
 		 */
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 #ifdef USE_ADD_LOG
 	add_log(20, "Selecting on count %d", nfds);
 	{
@@ -481,7 +481,7 @@ rt_public int do_select(struct timeval *timeout)
 #endif
 #endif
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 		if (isfirst) {
 			if (timeout == 0) {
 				first_timeout = TMP_TIMEOUT;
@@ -546,7 +546,7 @@ rt_public int do_select(struct timeval *timeout)
 	 * of ready file descriptors.
 	 */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	if (nfd == WAIT_TIMEOUT)			/* Select timed out */
 		return 0;						/* Propagate status */
 #else
@@ -554,12 +554,12 @@ rt_public int do_select(struct timeval *timeout)
 		return 0;						/* Propagate status */
 #endif
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	fd = callback_handles [nfd - WAIT_OBJECT_0];
 #endif
 
 #ifdef DEBUG
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 #ifdef USE_ADD_LOG
 			add_log(20, "file descriptor #%d is ready", fd);
 #endif
@@ -576,7 +576,7 @@ rt_public int do_select(struct timeval *timeout)
 	 * as ready for reading.
 	 */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	callback_array [nfd - WAIT_OBJECT_0](fd);	/* Wake up associated callback */
 #else
 	for (fd = 0; fd < nfds; fd++)
@@ -590,14 +590,14 @@ rt_public int do_select(struct timeval *timeout)
 #endif
 #endif
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	return 1;				/* Number of files processed */
 #else
 	return nfd;				/* Number of files processed */
 #endif
 }
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 HANDLE_FN callback(STREAM *h)
 {
 	int i;

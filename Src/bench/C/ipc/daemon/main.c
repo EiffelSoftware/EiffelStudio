@@ -13,7 +13,7 @@
 #include "eif_config.h"
 #include "eif_portable.h"
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 #define print_err_msg fprintf
 #else
 #include "rt_err_msg.h"
@@ -35,7 +35,7 @@
 #include "child.h"
 #include <stdlib.h>
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 #include <windows.h>
 #define EWB		"\\bin\\ec.exe -bench"	/* Ewb process within Eiffel dir */
 #elif defined EIF_VMS
@@ -47,7 +47,7 @@
 
 #ifdef EIF_ASSERTIONS
 #include <stdarg.h>
-#if defined(EIF_WIN32) && defined (_DEBUG)
+#if defined(EIF_WINDOWS) && defined (_DEBUG)
 #include <crtdbg.h>
 #endif
 #endif
@@ -58,7 +58,7 @@ rt_private Signal_t handler(int sig);	/* Signal handler */
 rt_private void set_signal(void);	/* Set up the signal handler */
 rt_private void process_name (char *);	/* Compute the name of Eiffel Compiler */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 extern char *win_eif_getenv(char *k, char *app);	/* Get environment variable value */
 rt_private void display_splash(void);
 #else
@@ -74,7 +74,7 @@ rt_public struct d_flags daemon_data = {	/* Internal daemon's flags */
 	(STREAM *) 0,		/* d_as */
 };
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 #ifndef USE_ADD_LOG
 rt_public char progname[30];	/* Otherwise defined in logfile.c */
 #endif
@@ -87,7 +87,7 @@ rt_public char *progname;	/* Otherwise defined in logfile.c */
 rt_public void init_bench(int argc, char **argv)
 {
 	STREAM *sp;			/* Stream used to talk to the child */
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	HANDLE pid;			/* Pid of the spawned child */
 #else
 	Pid_t pid;			/* Pid of the spawned child */
@@ -103,7 +103,7 @@ rt_public void init_bench(int argc, char **argv)
 	 * environment variable
 	 */
 	
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	eif_timeout = win_eif_getenv ("ISE_TIMEOUT", "ec");
 #else
 	eif_timeout = getenv ("ISE_TIMEOUT");
@@ -117,7 +117,7 @@ rt_public void init_bench(int argc, char **argv)
 	/* Compute program name, removing any leading path to keep only the name
 	 * of the executable file.
 	 */
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 /*	progname = rindex(argv[0], '\\');	*//* Only last name if '\' found */
 /*	if (progname++ == (char *) 0)		*//* There were no '\' */
 /*	strcpy (progname,"estudio.exe");		*//* This must be the filename then */
@@ -131,7 +131,7 @@ rt_public void init_bench(int argc, char **argv)
 
 #ifdef USE_ADD_LOG
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	/* Open a logfile in /tmp */
 	(void) open_log("\\tmp\\ised.log");
 /*	set_loglvl(LOGGING_LEVEL);			*//* Set debug level */
@@ -150,7 +150,7 @@ rt_public void init_bench(int argc, char **argv)
 
 	set_signal();						/* Set up signal handler */
 	signal (SIGABRT ,exit);
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 #ifdef SIGQUIT
 	signal (SIGQUIT, exit);
 #endif
@@ -168,7 +168,7 @@ rt_public void init_bench(int argc, char **argv)
 	 * the /usr/lib/Eiffel4 path is used when the ISE_EIFFEL variable is not set.
 	 */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	eiffel5 = win_eif_getenv("ISE_EIFFEL", "ec");		/* Installation directory */
 	if ((eiffel5 == (char *) 0) || (strlen (eiffel5) == 0)) {	/* Environment variable not set */
 		MessageBox (NULL, "The ISE_EIFFEL registry key is not set.\nYou should probably reinstall the software.",
@@ -194,14 +194,14 @@ rt_public void init_bench(int argc, char **argv)
 	strcpy(ewb_path, "ISE_EIFFEL:[studio.spec.");	/* VMS system will translate base name */
 #else
 	strcpy(ewb_path, eiffel5);			/* Base name */
-#if defined EIF_WIN32
+#if defined EIF_WINDOWS
 	strcat(ewb_path, "\\studio\\spec\\");
 #else
 	strcat(ewb_path, "/studio/spec/");
-#endif /* (not) EIF_WIN32 */
+#endif /* (not) EIF_WINDOWS */
 #endif /* (not) EIF_VMS */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	platform = win_eif_getenv ("ISE_PLATFORM", "ec");
 	if ((platform == (char *) 0) || (strlen(platform) == 0)){		/* Environment variable not set */
 		MessageBox (NULL, "The ISE_PLATFORM registry key is not set.\nYou should probably reinstall the software.",
@@ -242,7 +242,7 @@ rt_public void init_bench(int argc, char **argv)
 		strcat (ewb_path, " -compile");
 	}
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 		/* First argument is 1 because we are launching the Eiffel compiler here. */
 	sp = spawn_child(1, ewb_path, NULL, 0, &pid, NULL);	/* Bring workbench to life */
 #else
@@ -250,7 +250,7 @@ rt_public void init_bench(int argc, char **argv)
 #endif
 
 	if (sp == (STREAM *) 0)	{			/* Could not do it */
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 		MessageBox (NULL, "The program ec.exe cannot be launched",
 							"Execution terminated", MB_OK + MB_ICONERROR + MB_TASKMODAL + MB_TOPMOST);
 		InvalidateRect (NULL, NULL, FALSE);
@@ -262,7 +262,7 @@ rt_public void init_bench(int argc, char **argv)
 	}
 
 	daemon_data.d_cs = sp;				/* Record workbench stream */
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	daemon_data.d_ewb = (HANDLE) pid;		/* And keep track of the child pid */
 #else
 	daemon_data.d_ewb = (int) pid;			/* And keep track of the child pid */
@@ -271,7 +271,7 @@ rt_public void init_bench(int argc, char **argv)
 
 	free (ewb_path);
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	InvalidateRect (NULL, NULL, FALSE);
 #endif
 
@@ -322,7 +322,7 @@ rt_public void dexit(int code)
 #ifdef USE_ADD_LOG
 	add_log(12, "exiting with status %d", code);
 #endif
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	if (daemon_data.d_as) {
 		close_stream (daemon_data.d_as);
 		free (daemon_data.d_as);
@@ -363,7 +363,7 @@ rt_private void process_name (char *ewb_path)
 #else
 			/* else its the name in the bench ewb bin/ directory */
 			local = (char *) malloc (50 * sizeof (char));
-#ifndef EIF_WIN32
+#ifndef EIF_WINDOWS
 			strcpy (local, "/bin/");
 			strcat (local, ec_name);
 			strcat (local, " -bench");
@@ -383,7 +383,7 @@ rt_public int main (int argc, char **argv)
 {
 	/* This is the main entry point for the ISE daemon */
 #ifdef EIF_ASSERTIONS
-#if defined(EIF_WIN32) && defined(_DEBUG)
+#if defined(EIF_WINDOWS) && defined(_DEBUG)
 	int tmpDbgFlag = 0;
 	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
 	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDOUT);
@@ -405,7 +405,7 @@ rt_public int main (int argc, char **argv)
 	return 0L;
 }
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 
 char szAppName [] = "estudio";		/* Window class name for temporary estudio window */
 HANDLE hInst;				/* Application main instance			 */

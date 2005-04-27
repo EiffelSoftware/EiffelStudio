@@ -20,7 +20,7 @@
 #include "eif_network.h"
 #include "eif_logfile.h"
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 #include "eif_argcargv.h"
 #include "stream.h"
 #endif
@@ -33,7 +33,7 @@ rt_private IDRF idrf;			/* IDR filter for serializations */
  * IDR protocol initialization.
  */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 rt_public void prt_destroy(EIF_BOOLEAN t)
 {
 	idrf_destroy (&idrf);
@@ -44,7 +44,7 @@ rt_public void prt_init(void)
 {
 	if (-1 == idrf_create(&idrf, IDRF_SIZE))
 		fatal_error("cannot initialize streams");		/* Run-time routine */
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	eif_register_cleanup (prt_destroy);
 #endif
 }
@@ -53,7 +53,7 @@ rt_public void prt_init(void)
  * Sending requests - Receiving answers
  */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 rt_public void send_packet(STREAM *s, Request *rqst)
 #else
 rt_public void send_packet(int s, Request *rqst)
@@ -87,7 +87,7 @@ rt_public void send_packet(int s, Request *rqst)
 #endif
 }
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 rt_public int recv_packet(STREAM *s, Request *dans, BOOL reset)
 #else
 rt_public int recv_packet(int s, Request *dans)
@@ -103,7 +103,7 @@ rt_public int recv_packet(int s, Request *dans)
 	idrf_reset_pos(&idrf);	/* Reposition IDR streams */
 
 	/* Wait for request */
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	if (-1 == net_recv(s, idrs_buf(&idrf.i_decode), IDRF_SIZE, reset)) {
 #else
 	if (-1 == net_recv(s, idrs_buf(&idrf.i_decode), IDRF_SIZE)) {

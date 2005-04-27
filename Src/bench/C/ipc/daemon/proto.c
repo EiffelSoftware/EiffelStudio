@@ -13,7 +13,7 @@
 #include "eif_config.h"
 #include "eif_portable.h"
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 #include "eif_file.h"
 #define print_err_msg fprintf
 #else
@@ -23,7 +23,7 @@
 
 #include <sys/types.h>
 
-#ifndef EIF_WIN32
+#ifndef EIF_WINDOWS
 #include <sys/wait.h>
 #endif
 
@@ -48,7 +48,7 @@
 #include "ipcvms.h"	/* for IPCVMS_WAKE_EWB */
 #endif /* EIF_VMS */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 #define OTHER(x) ((x) == daemon_data.d_cs ? daemon_data.d_as : daemon_data.d_cs)
 #else
 #define OTHER(x) ((x) == readfd(daemon_data.d_cs) ? daemon_data.d_as : daemon_data.d_cs)
@@ -59,7 +59,7 @@
 rt_private void write_application_interruption_flag(unsigned char value); 	/* write `value' in the interruption flag
 																			 * inside application memory space */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 rt_public void drqsthandle(EIF_LPSTREAM);							/* General request processor */
 rt_public void send_packet(STREAM *s, Request *dans);				/* Send an asnwer to client */
 rt_public int recv_packet(STREAM *s, Request *rqst, BOOL reset);	/* Request reception */
@@ -106,14 +106,14 @@ rt_public void prt_init(void)
 	}
 }
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 rt_public void prt_destroy (void)
 {
 	idrf_destroy (&idrf);
 }
 #endif
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 rt_public void drqsthandle(STREAM *s)
 #else
 rt_public void drqsthandle(int s)
@@ -123,7 +123,7 @@ rt_public void drqsthandle(int s)
 	Request rqst;			/* The request we are waiting for */
 	Request_Clean (rqst);	/* recognized as non initialized -- Didier */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	if (-1 == recv_packet(s, &rqst, FALSE))		/* Get request */
 #else
 	if (-1 == recv_packet(s, &rqst))		/* Get request */
@@ -133,7 +133,7 @@ rt_public void drqsthandle(int s)
 	dprocess_request(s, &rqst);		/* Process the received request */
 }
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 rt_private void dprocess_request(STREAM *s, Request *rqst)
 #else
 rt_private void dprocess_request(int s, Request *rqst)
@@ -175,7 +175,7 @@ rt_private void dprocess_request(int s, Request *rqst)
 	case KILL:				/* Kill application asynchronously */
 		kill_app();
 		break;
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	case APP_INTERRUPT_FLAG:	/* Get the address of the interrupt flag within application space */
 		daemon_data.d_interrupt_flag = get_interrupt_flag(s,rqst);
 		break;
@@ -183,13 +183,13 @@ rt_private void dprocess_request(int s, Request *rqst)
 	case EWB_NEWBREAKPOINT:		/* Estudio signals the user has added new breakpoints */
 		write_application_interruption_flag(NEW_BREAKPOINT_ADDED);
 		break;
-#endif	/* EIF_WIN32 */
+#endif	/* EIF_WINDOWS */
 
 	case EWB_INTERRUPT:		/* Debugger asking to interrupt application */
 		interrupted = TRUE;
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 		write_application_interruption_flag(INTERRUPT_APPLICATION);
-#else	/* EIF_WIN32 */
+#else	/* EIF_WINDOWS */
 #ifdef USE_SIGNAL
 #ifdef USE_ADD_LOG
 		add_log(20, "sending interrupt request/signal to process %d\n", daemon_data.d_app);
@@ -202,17 +202,17 @@ rt_private void dprocess_request(int s, Request *rqst)
 			kill(daemon_data.d_app, SIGTRAP);	/* send a SIGTRAP signal to the application */
 		}
 #endif 	/* USE_SIGNAL */
-#endif	/* EIF_WIN32 */
+#endif	/* EIF_WINDOWS */
 		break;
 	case APP_INTERRUPT:		/* Application wondering if it has to stop */
 		if (interrupted)
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 			send_info(daemon_data.d_as, INTERRUPT_OK);
 #else
 			send_info(writefd(daemon_data.d_as), INTERRUPT_OK);
 #endif
 		else
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 			send_info(daemon_data.d_as, INTERRUPT_NO);
 #else
 			send_info(writefd(daemon_data.d_as), INTERRUPT_NO);
@@ -232,7 +232,7 @@ rt_private void dprocess_request(int s, Request *rqst)
 		interrupted = FALSE;
 		/* Fall through */	/* i.e. send the request to application */
 	default:
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 		send_packet(OTHER(s), rqst);
 #else
 		send_packet(writefd(OTHER(s)), rqst);
@@ -247,7 +247,7 @@ rt_private void write_application_interruption_flag(unsigned char value)
 	 *	- the memory of the application (WIN32)
 	 *	- the file called /tmp/estudioXXXX where XXXX is the PID of the application (UNIX)
 	 */
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	/* retrieve the handle of the Application (opened for writing) */
 	/* we can't use the handle we get from CreateProcess because it's not open for writing -- ARNAUD */
 	HANDLE 			hProcess;
@@ -284,7 +284,7 @@ rt_private void write_application_interruption_flag(unsigned char value)
 #endif
 	}
 	
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 rt_private LPVOID get_interrupt_flag(STREAM *sp, Request *rqst)
 {
 	LPVOID pFlagAddress;
@@ -299,7 +299,7 @@ rt_private LPVOID get_interrupt_flag(STREAM *sp, Request *rqst)
  * Sending/receiving packets.
  */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 rt_public int recv_packet(STREAM *s, Request *rqst, BOOL reset)
 #else
 rt_public int recv_packet(int s, Request *rqst)
@@ -316,7 +316,7 @@ rt_public int recv_packet(int s, Request *rqst)
 	 */
 
 	/* If we cannot receive data, then the connection is surely broken */
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
  	if (-1 == net_recv(s, idrs_buf(&idrf.i_decode), IDRF_SIZE, reset)) {
 #else
 	if (-1 == net_recv(s, idrs_buf(&idrf.i_decode), IDRF_SIZE)) {
@@ -350,7 +350,7 @@ rt_public int recv_packet(int s, Request *rqst)
 	return 0;
 }
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 rt_public void send_packet(STREAM *s, Request *dans)
 #else
 rt_public void send_packet(int s, Request *dans)
@@ -366,7 +366,7 @@ rt_public void send_packet(int s, Request *dans)
 	 * support though, simply add a few XDR calls here or there--RAM.
 	 */
 
-#ifndef EIF_WIN32
+#ifndef EIF_WINDOWS
 	STREAM *sp = stream_by_fd[s];
 #endif
 
@@ -391,13 +391,13 @@ rt_public void send_packet(int s, Request *dans)
 		add_log(1, "SYSERR send: %m (%e)");
 		add_log(2, "ERROR while sending answer %d", dans->rq_type);
 #endif
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 		if (s == daemon_data.d_cs)	/* Talking to the workbench? */
 #else
 		if (s == writefd(daemon_data.d_cs))	/* Talking to the workbench? */
 #endif
 			dexit(1);					/* Can't allow this stream to break */
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 		(void) rem_input(s);	/* Stop listening to that channel */
 #else
 		(void) rem_input(readfd(sp));	/* Stop listening to that channel */
@@ -413,7 +413,7 @@ rt_public void send_packet(int s, Request *dans)
  * Protocol handling.
  */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 rt_private void transfer(STREAM *s, Request *rqst)
 #else
 rt_private void transfer(int s, Request *rqst)
@@ -449,7 +449,7 @@ rt_private void transfer(int s, Request *rqst)
 	 * then simply commute the first.
 	 */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	send_packet(sp, rqst);
 	commute(s, sp, rqst->rq_ack.ak_type);
 #else
@@ -458,7 +458,7 @@ rt_private void transfer(int s, Request *rqst)
 #endif
 }
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 rt_private void commute(STREAM *from, STREAM *to, int size)
 #else
 rt_private void commute(int from, int to, int size)
@@ -475,7 +475,7 @@ rt_private void commute(int from, int to, int size)
 	add_log(12, "commuting %d bytes from #%d to #%d", size, from, to);
 #endif
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	if (-1 == net_recv(from, buf, size, TRUE)) {
 #else
 	if (-1 == net_recv(from, buf, size))  {
@@ -492,7 +492,7 @@ rt_private void commute(int from, int to, int size)
 	free(buf);
 }
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 rt_private void run_command(STREAM *sp)
 #else
 rt_private void run_command(int s)
@@ -505,7 +505,7 @@ rt_private void run_command(int s)
 	char *cmd;			/* Command to be run */
 	int status;			/* Command status, as returned by system() */
 	char *meltpath, *appname, *envstring;	/* set MELT_PATH */
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	STARTUPINFO				siStartInfo;
 	PROCESS_INFORMATION		procinfo;
 	char 					*current_dir;
@@ -556,7 +556,7 @@ rt_private void run_command(int s)
 	signal (SIGCLD, SIG_DFL);
 #endif
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	current_dir = (char *) getcwd(NULL, PATH_MAX);
 
 	memset (&siStartInfo, 0, sizeof(STARTUPINFO));
@@ -604,7 +604,7 @@ rt_private void run_command(int s)
 
 	free(cmd);
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	if (status == 0)
 		send_ack(sp, AK_OK);		/* Command completed sucessfully */
 	else
@@ -617,7 +617,7 @@ rt_private void run_command(int s)
 #endif
 }
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 rt_private void run_asynchronous(STREAM *sp, Request *rqst)
 #else
 rt_private void run_asynchronous(int s, Request *rqst)
@@ -634,7 +634,7 @@ rt_private void run_asynchronous(int s, Request *rqst)
 	char *cmd;			/* Command to be run */
 	int jobnum;			/* Job number assigned to comamnd */
 	Request dans;		/* Answer (status of comamnd) */
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	STARTUPINFO				siStartInfo;
 	PROCESS_INFORMATION		procinfo;
 	char 					*current_dir;
@@ -655,7 +655,7 @@ rt_private void run_asynchronous(int s, Request *rqst)
 	jobnum = rqst->rq_opaque.op_first;	/* Job number assigned by client */
 	dans.rq_opaque.op_first = jobnum;	/* Anwser is tagged with job number */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	current_dir = (char *) getcwd(NULL, PATH_MAX);
 
 	memset (&siStartInfo, 0, sizeof(STARTUPINFO));
@@ -795,17 +795,17 @@ rt_private void run_asynchronous(int s, Request *rqst)
 #endif
 	exit(0);							/* Child is exiting properly */
 #endif /* EIF_VMS */
-#endif /* EIF_WIN32 */
+#endif /* EIF_WINDOWS */
 	/* NOTREACHED */
 }
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 rt_private void get_application_cwd (STREAM *sp)
 #else
 rt_private void get_application_cwd (int s)
 #endif
 {
-#ifndef EIF_WIN32
+#ifndef EIF_WINDOWS
 	STREAM *sp;			/* Stream to be used for communications */
 
 	sp = stream_by_fd[s];				/* Fetch associated stream */
@@ -823,7 +823,7 @@ rt_private void get_application_cwd (int s)
 	}
 }
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 rt_private void start_app(STREAM *sp)
 #else
 rt_private void start_app(int s)
@@ -835,7 +835,7 @@ rt_private void start_app(int s)
 
 	char *cmd;			/* Aplication to be run */
 	STREAM *cp;			/* Child stream */
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	HANDLE process_handle;	/* Child process handle */
 	DWORD process_id;		/* Child process id */
 #else
@@ -850,7 +850,7 @@ rt_private void start_app(int s)
 	add_log(12, "starting app \n");
 #endif
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 		/* First argument is 0 because we are not launching the compiler, but
 		 * an application being debugged by the Eiffel debugger. */
 	cp = spawn_child(0, cmd, current_directory, 1, &process_handle, &process_id);	/* Start up children */
@@ -865,7 +865,7 @@ rt_private void start_app(int s)
 		current_directory = NULL;
 	}
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	if (cp != (STREAM *) 0) {
 		daemon_data.d_app = process_handle;			/* Record its process handle */
 		daemon_data.d_app_id = process_id;			/* Record its process id */
@@ -888,7 +888,7 @@ rt_private void start_app(int s)
 #endif
 		send_ack(sp, AK_ERROR);	/* Could not start application */
 
-#else /* #ifdef EIF_WIN32 */
+#else /* #ifdef EIF_WINDOWS */
 	if (cp != (STREAM *) 0) {
 		daemon_data.d_app = (int) pid;			/* Record its pid */
 		daemon_data.d_as = cp;					/* Set-up stream to talk to child */
@@ -922,7 +922,7 @@ rt_private void kill_app (void)
 	add_log(8, "killing application process %d", daemon_data.d_app);
 #endif
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	{
 		TerminateProcess (daemon_data.d_app, 0);
 		rem_input (daemon_data.d_as);
@@ -947,7 +947,7 @@ rt_public void dead_app(void)
 	 */
 
 	Request rqst;					/* Request to send */
-#ifndef EIF_WIN32
+#ifndef EIF_WINDOWS
 	int status;						/* Exit status of the application */
 	Pid_t child_pid;				/* pid of the dead application */
 #endif
@@ -963,12 +963,12 @@ rt_public void dead_app(void)
 	 * of `waitpid' to be suspended if the child process is still
 	 * running (just in case!)).
 	 */
-#if !defined (EIF_WIN32) && !defined (EIF_VMS)
+#if !defined (EIF_WINDOWS) && !defined (EIF_VMS)
 	child_pid = waitpid((Pid_t) daemon_data.d_app, &status, WNOHANG);
 #endif
 
 	rqst.rq_type = DEAD;			/* Application is dead */
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	send_packet(daemon_data.d_cs, &rqst);			/* Notify workbench */
 #else
 	send_packet(writefd(daemon_data.d_cs), &rqst);			/* Notify workbench */

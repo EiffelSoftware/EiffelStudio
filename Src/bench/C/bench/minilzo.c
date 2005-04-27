@@ -395,7 +395,7 @@ extern "C" {
 #  if defined(LZO_HAVE_CONFIG_H) || defined(SIZEOF_CHAR_P)
 #    error "no suitable type for lzo_ptr_t"
 #  else
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 #ifdef _WIN64
      typedef uintptr_t      lzo_ptr_t;
      typedef intptr_t       lzo_sptr_t;

@@ -30,7 +30,7 @@
 #include "rt_main.h"	/* for TIMEOUT */
 #include "rt_assert.h"
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 #include <windows.h>
 #include "stream.h"
 #else
@@ -42,7 +42,7 @@
 #endif  /* EIF_VMS */
 
 
-#ifndef EIF_WIN32
+#ifndef EIF_WINDOWS
 
 #ifdef ETIMEDOUT
 #define NET_TIMEOUT ETIMEDOUT	/* Try to return a meaningful error code */
@@ -60,7 +60,7 @@
 
 rt_private jmp_buf env;		/* Environment saving for longjmp() */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 rt_private void CALLBACK timeout(HWND, UINT, UINT, DWORD);	/* Signal handler for read timeouts */
 #else
 rt_private Signal_t broken(void);	/* Signal handler for SIGPIPE */
@@ -70,7 +70,7 @@ extern int errno;	/* shouldn't this be #include <errno.h> for all platforms??? *
 #endif
 #endif
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 rt_public int net_recv(STREAM *cs, char *buf, size_t size, BOOL reset)
 			/* The connected socket descriptor */
 			/* Where data are to be stored */
@@ -87,7 +87,7 @@ rt_public int net_recv(int cs, char *buf, size_t size)
 
 	volatile size_t len = 0;		/* Total amount of bytes read */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	DWORD length;			/* Amount read by last system call */
 	UINT_PTR timer = 0;
 	BOOL fSuccess;
@@ -101,7 +101,7 @@ rt_public int net_recv(int cs, char *buf, size_t size)
 
 	REQUIRE("Valid size", size <= INT32_MAX);
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	if (0 != setjmp(env)) {
 		KillTimer (NULL, timer);        /* Stop alarm clock */
 		errno = EPIPE;                          /* Signal timeout on read */
@@ -211,7 +211,7 @@ closed:
 #endif
 }
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 rt_public int net_send(STREAM *cs, char *buf, size_t size)
 #else
 rt_public int net_send(int cs, char *buf, size_t size)
@@ -224,7 +224,7 @@ rt_public int net_send(int cs, char *buf, size_t size)
 
 	size_t amount;
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	DWORD error;
 	size_t length;
 	BOOL fSuccess;
@@ -240,7 +240,7 @@ rt_public int net_send(int cs, char *buf, size_t size)
 
 	REQUIRE("Valid size", size <= INT32_MAX);
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	if (0 != setjmp(env)) {
 		errno = EPIPE;
 		fprintf (stderr, "net_send: setjmp /= 0\n");
@@ -259,7 +259,7 @@ rt_public int net_send(int cs, char *buf, size_t size)
 		}
 	}
 
-#else  /* (not) EIF_WIN32 */
+#else  /* (not) EIF_WINDOWS */
 
 	oldpipe = signal(SIGPIPE, (void (*)(int)) broken);	/* Trap SIGPIPE within this function */
 	if (0 != setjmp(env)) {
@@ -292,11 +292,11 @@ rt_public int net_send(int cs, char *buf, size_t size)
 
 	signal(SIGPIPE, oldpipe);	/* restore default handler */
 
-#endif /* EIF_WIN32 */
+#endif /* EIF_WINDOWS */
 	return 0;
 }
 
-#ifndef EIF_WIN32
+#ifndef EIF_WINDOWS
 rt_private Signal_t broken(void)
 {
 #ifdef USE_ADD_LOG
@@ -307,7 +307,7 @@ rt_private Signal_t broken(void)
 }
 #endif
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 rt_private void CALLBACK timeout(HWND hwnd, UINT msg, UINT id, DWORD time)
 #else
 rt_private Signal_t timeout(void)

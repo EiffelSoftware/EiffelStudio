@@ -26,7 +26,7 @@
 #include "rqst_const.h"
 #include "server.h"
 
-#ifndef EIF_WIN32
+#ifndef EIF_WINDOWS
 #include <unistd.h>
 #endif
 
@@ -34,7 +34,7 @@
 rt_public unsigned char interrupt_flag = 0;	/* 1=interrupt asked by user, 2=new breakpoint added while runnning */
 #endif
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 extern STREAM *sp;
 extern HANDLE global_ewbin, global_ewbout, global_event_r, global_event_w;
 #else
@@ -57,7 +57,7 @@ rt_shared void dserver(void)
 	add_log(9, "STOPPED");
 #endif
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	stop_rqst(sp);		/* Notify workbench we stopped */
 							/* was ifdef NEVER */
 #else
@@ -71,7 +71,7 @@ rt_shared void dserver(void)
 }
 
 #ifdef WORKBENCH
-#ifndef EIF_WIN32
+#ifndef EIF_WINDOWS
 #ifdef USE_SIGNAL
 void sigtrap_handler (int sig)
 	{
@@ -95,7 +95,7 @@ void sigtrap_handler (int sig)
 		}
 	}
 #endif	/* USE_SIGNAL */
-#endif	/* EIF_WIN32 */
+#endif	/* EIF_WINDOWS */
 #endif	/* WORKBENCH */
 
 rt_shared char dinterrupt(void)
@@ -112,7 +112,7 @@ rt_shared char dinterrupt(void)
 		return result;			/* Resume execution immediately */
 	
 #ifdef WORKBENCH
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	if (interrupt_flag!=0)
 		{
 		switch (interrupt_flag)
@@ -131,7 +131,7 @@ rt_shared char dinterrupt(void)
 			}
 		interrupt_flag = 0;	/* reset the flag for further use */
 		}
-#else	/* EIF_WIN32 */
+#else	/* EIF_WINDOWS */
 #ifdef USE_SIGNAL
 	if (interrupt_flag)
 		{
@@ -144,7 +144,7 @@ rt_shared char dinterrupt(void)
 	wide_listen();			/* Listen on the socket, waiting for the answer */
 	result = 1;
 #endif	/* USE_SIGNAL */
-#endif	/* EIF_WIN32 */
+#endif	/* EIF_WINDOWS */
 #endif	/* WORKBENCH */
 	return result;
 }
@@ -156,24 +156,24 @@ rt_shared void winit(void)
 	 * in the process execution by main().
 	 */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	LPVOID pFlagAddress;
-#else	/* EIF_WIN32 */
+#else	/* EIF_WINDOWS */
 	STREAM *sp;					/* Stream used to talk to ised */
 #ifdef USE_SIGNAL
 	sigset_t	mask_set;
 	struct sigaction new_action;
 #endif
-#endif	/* EIF_WIN32 */
+#endif	/* EIF_WINDOWS */
 
 #ifdef USE_ADD_LOG
-#ifndef EIF_WIN32
+#ifndef EIF_WINDOWS
 	progpid = getpid();					/* Program's PID */
 #endif
 	progname = egc_system_name;					/* Computed by Eiffel run-time */
 
 	/* Open a logfile in /tmp */
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	(void) open_log("\\tmp\\ised.log");
 #else
 	(void) open_log("/tmp/ised.log");
@@ -194,7 +194,7 @@ rt_shared void winit(void)
 	 * a two-way stream, unlike a socket which is already a two-way stream).
 	 */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	sp = new_stream(global_ewbin, global_ewbout, global_event_r, global_event_w);
 #else
 	sp = new_stream(EWBIN, EWBOUT);
@@ -210,12 +210,12 @@ rt_shared void winit(void)
 	add_log(7, "application started in debug mode");
 #endif
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	/* send the address of the flag */
 	pFlagAddress = (LPVOID) (&interrupt_flag);
 	send_info(sp, APP_INTERRUPT_FLAG);
 	net_send(sp, (char *)&pFlagAddress, sizeof(LPVOID));
-#else	/* EIF_WIN32 */
+#else	/* EIF_WINDOWS */
 #ifdef USE_SIGNAL
 	/* install the new handler for SIGTRAP */
 	sigemptyset(&mask_set);
@@ -228,7 +228,7 @@ rt_shared void winit(void)
 	
 	sigaction(SIGTRAP, &new_action, NULL);
 #endif	/* USE_SIGNAL */
-#endif	/* EIF_WIN32 */
+#endif	/* EIF_WINDOWS */
 
 	wide_listen();				/* Listen to incoming request from ewb */
 }

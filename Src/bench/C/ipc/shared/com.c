@@ -27,7 +27,7 @@
 #include <string.h>
 #include "rt_assert.h"
 
-#ifndef EIF_WIN32
+#ifndef EIF_WINDOWS
 #include <unistd.h>
 #endif
 
@@ -35,7 +35,7 @@
 #define MAX_STRING	512	/* Maximum string length for log messages */
 
 /* VARARGS2 */
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 rt_public void send_bye(STREAM *s, int code)
 #else
 rt_public void send_bye(int s, int code)
@@ -48,7 +48,7 @@ rt_public void send_bye(int s, int code)
 	 */
 
 	send_ack(s, code);			/* Send error message back */
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	Sleep (GRACETIME * 1000);			/* Ensure client receives message */
 #else
 	sleep(GRACETIME);			/* Ensure client receives message */
@@ -57,7 +57,7 @@ rt_public void send_bye(int s, int code)
 }
 
 /* VARARGS2 */
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 rt_public void send_ack(STREAM *s, int code)
 #else
 rt_public void send_ack(int s, int code)
@@ -77,7 +77,7 @@ rt_public void send_ack(int s, int code)
 	pack.rq_ack.ak_type = code;			/* Report code */
 
 #ifdef USE_ADD_LOG
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	add_log(100, "sending ack %d on pipe %d", code, writefd (s));
 #else
 	add_log(100, "sending ack %d on pipe %d", code, s);
@@ -86,7 +86,7 @@ rt_public void send_ack(int s, int code)
 	send_packet(s, &pack);
 }
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 rt_public void send_info(STREAM *s, int code)
 #else
 rt_public void send_info(int s, int code)
@@ -133,7 +133,7 @@ rt_public int send_str(STREAM *sp, char *buffer)
         add_log(100, "sending string of size %d", size);
 #endif
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	send_packet(sp, &pack);	/* Send the length */
 #else
 	send_packet(writefd(sp), &pack);	/* Send the length */
@@ -143,7 +143,7 @@ rt_public int send_str(STREAM *sp, char *buffer)
 		return 0;
 
 	/* Wait for the acknowledgment */
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	if (-1 == recv_packet(sp, &pack, TRUE))
 		return -1;
 #else
@@ -172,7 +172,7 @@ rt_public int send_str(STREAM *sp, char *buffer)
 	 * for another acknowledgment.
 	 */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	if (-1 == net_send(sp, buffer, size))
 		return -1;
 #else
@@ -200,7 +200,7 @@ rt_public char *recv_str(STREAM *sp, size_t *sizeptr)
 	/* The protocol used here is the symetric of the one used by send_str() */
 
 	Request_Clean (pack);
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	if (-1 == recv_packet(sp, &pack, TRUE))	/* Wait for length */
 		return (char *) 0;
 #else
@@ -220,21 +220,21 @@ rt_public char *recv_str(STREAM *sp, size_t *sizeptr)
 
 	buffer = (char *) malloc(size + 1);		/* Null byte not included */
 	if (buffer == (char *) 0) {				/* Unable to allocate memory */
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 		send_ack(sp, AK_ERROR);	/* Signal error to remote process */
 #else
 		send_ack(writefd(sp), AK_ERROR);	/* Signal error to remote process */
 #endif
 		return (char *) 0;
 	} else {
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 		send_ack(sp, AK_OK);		/* Ready to get string */
 #else
 		send_ack(writefd(sp), AK_OK);		/* Ready to get string */
 #endif
 	}
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	if (-1 == net_recv(sp, buffer, size, TRUE)) {	/* Cannot receive string */
 #else
 	if (-1 == net_recv(readfd(sp), buffer, size)) {	/* Cannot receive string */
@@ -275,7 +275,7 @@ rt_public void trace_request(char *status, Request *rqst)
 		sprintf(buf, "ACKNLGE [%s]", message);
 		break;
 	default:
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 		sprintf(buf, "default %d", rqst->rq_type);
 #else
 		sprintf(buf, "default");

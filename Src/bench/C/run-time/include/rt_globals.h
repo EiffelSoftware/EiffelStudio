@@ -229,7 +229,7 @@ typedef struct tag_rt_globals
 	struct 	prof_rusage	*init_date_cx;
 #elif defined(HAS_TIMES)
 	double 	       init_date_cx;
-#elif defined(EIF_WIN32)
+#elif defined(EIF_WINDOWS)
 	SYSTEMTIME 	*init_date_cx;
 #endif  /* HAS_GERUSAGE */
 
@@ -267,7 +267,7 @@ rt_private rt_global_context_t * eif_pthread_getspecific (EIF_TSD_TYPE global_ke
 #define RT_GET_CONTEXT \
 	rt_global_context_t * EIF_VOLATILE rt_globals = rt_global_key;
 
-#elif defined EIF_WIN32			/* Windows Threads */
+#elif defined EIF_WINDOWS			/* Windows Threads */
 #define RT_GET_CONTEXT \
 	rt_global_context_t * EIF_VOLATILE rt_globals = \
 		(rt_global_context_t *) TlsGetValue (rt_global_key);

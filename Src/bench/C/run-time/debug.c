@@ -47,7 +47,7 @@ doc:<file name="debug.c" header="eif_debug.h" version="$Id$" summary="Routines u
 #include <stdio.h>
 #include <string.h>
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 #include "eif_console.h"
 #include <winbase.h>	/* To call `ExitProcess' */
 #endif

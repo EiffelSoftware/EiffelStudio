@@ -72,7 +72,7 @@ extern void print_object (EIF_REFERENCE object);
 #endif
 #endif
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 #include <io.h>
 #endif
 

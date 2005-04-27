@@ -35,7 +35,7 @@ rt_private int locked = 0;					/* Did we lock successfully? */
 
 rt_private void check_lock(char *file);				/* Make sure lockfile is not too old */
 
-#ifndef EIF_WIN32
+#ifndef EIF_WINDOWS
 #include <unistd.h>
 extern int errno;						/* System error status */
 #else

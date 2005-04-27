@@ -1,7 +1,7 @@
 /* ...C/platform/names.c */
 /* $Id$ */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 #include <windows.h>
 #endif
 

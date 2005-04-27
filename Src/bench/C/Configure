@@ -6640,7 +6640,6 @@ defvoidused='$defvoidused'
 #Check value for next 4
 eif_sgi='$eif_sgi'
 eif_solaris='$eif_solaris'
-eif_win32='$eif_win32'
 eif_windows='$eif_windows'
 Mcc='$Mcc'
 #Check value for next 2

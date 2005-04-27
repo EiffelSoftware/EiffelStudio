@@ -35,7 +35,7 @@ extern "C" {
 extern struct xstack eif_trace;       /* Unsolved exception trace */
 #endif
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 extern void set_windows_exception_filter(void);
 #endif
 

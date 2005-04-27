@@ -1022,7 +1022,7 @@ rt_public EIF_BOOLEAN file_eaccess(struct stat *buf, int op)
 
     switch (op) {
 	case 0: /* Is file readable */
-#if defined EIF_WIN32 || defined EIF_OS2
+#if defined EIF_WINDOWS || defined EIF_OS2
 	return (EIF_BOOLEAN)((mode && S_IREAD) ? '\01' : '\0');
 #elif defined HAS_GETEUID
 		euid = geteuid();
@@ -1042,7 +1042,7 @@ rt_public EIF_BOOLEAN file_eaccess(struct stat *buf, int op)
 #endif
 			return (EIF_BOOLEAN) ((mode & S_IROTH) ? '\01' : '\0');
 	case 1: /* Is file writable */
-#if defined EIF_WIN32 || defined EIF_OS2
+#if defined EIF_WINDOWS || defined EIF_OS2
 	return (EIF_BOOLEAN) ((mode & S_IWRITE) ? '\01' : '\0');
 #elif defined HAS_GETEUID
 		euid = geteuid();
@@ -1062,7 +1062,7 @@ rt_public EIF_BOOLEAN file_eaccess(struct stat *buf, int op)
 #endif
 			return (EIF_BOOLEAN) ((mode & S_IWOTH) ? '\01' : '\0');
 	case 2: /* Is file executable */
-#if defined EIF_WIN32 || defined EIF_OS2
+#if defined EIF_WINDOWS || defined EIF_OS2
 	return (EIF_BOOLEAN) '\01';
 #elif defined HAS_GETEUID
 		euid = geteuid();
@@ -1082,19 +1082,19 @@ rt_public EIF_BOOLEAN file_eaccess(struct stat *buf, int op)
 #endif
 			return (EIF_BOOLEAN) ((mode & S_IXOTH) ? '\01' : '\0');
 	case 3: /* Is file setuid */
-#if defined EIF_WIN32 || defined EIF_OS2
+#if defined EIF_WINDOWS || defined EIF_OS2
 		return (EIF_BOOLEAN) ('\0');
 #else
 		return (EIF_BOOLEAN) ((mode & S_ISUID) ? '\01' : '\0');
 #endif
 	case 4: /* Is file setgid */
-#if defined EIF_WIN32 || defined EIF_OS2
+#if defined EIF_WINDOWS || defined EIF_OS2
 		return (EIF_BOOLEAN) ('\0');
 #else
 		return (EIF_BOOLEAN) ((mode & S_ISGID) ? '\01' : '\0');
 #endif
 	case 5: /* Is file sticky */
-#if defined EIF_WIN32 || defined EIF_OS2 || defined VXWORKS
+#if defined EIF_WINDOWS || defined EIF_OS2 || defined VXWORKS
 		return (EIF_BOOLEAN) ('\0');
 #else
 		return (EIF_BOOLEAN) ((mode & S_ISVTX) ? '\01' : '\0');
@@ -1283,7 +1283,7 @@ rt_public void file_mkdir(char *path)
 		errno = 0;			/* Reset error condition */
 #ifdef EIF_OS2 
 		status = mkdir(path);		/* Create directory `path' */
-#elif defined EIF_WIN32 || defined VXWORKS
+#elif defined EIF_WINDOWS || defined VXWORKS
 		status = mkdir(path);		/* Create directory `path' */ /* %%ss above line added */
 #else
 		status = mkdir(path, 0777);	/* Create directory `path' */
@@ -1427,7 +1427,7 @@ rt_public void file_perm(char *name, char *who, char *what, int flag)
 	case 'u':
 		while (*what)
 			switch (*what++) {
-#if defined EIF_WIN32
+#if defined EIF_WINDOWS
 			case 's': break;
 			case 'r': break;
 			case 'w': break;
@@ -1459,7 +1459,7 @@ rt_public void file_perm(char *name, char *who, char *what, int flag)
 		while (*what)
 			switch (*what++) {
 			case 's':
-#if defined EIF_WIN32 || defined EIF_OS2
+#if defined EIF_WINDOWS || defined EIF_OS2
 #else
 				if (flag) fmode |= S_ISGID; else fmode &= ~S_ISGID;
 #endif
@@ -1481,7 +1481,7 @@ rt_public void file_perm(char *name, char *who, char *what, int flag)
 		while (*what)
 			switch (*what++) {
 			case 't':
-#if defined EIF_WIN32 || defined EIF_OS2 || defined VXWORKS
+#if defined EIF_WINDOWS || defined EIF_OS2 || defined VXWORKS
 #else
 				if (flag) fmode |= S_ISVTX; else fmode &= ~S_ISVTX;
 #endif

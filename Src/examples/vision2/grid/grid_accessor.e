@@ -10,6 +10,12 @@ class
 inherit
 	REFACTORING_HELPER
 
+	EXECUTION_ENVIRONMENT
+		rename
+			put as execution_environment_put
+		end
+
+
 feature -- Access
 
 	grid: EV_GRID is
@@ -75,5 +81,60 @@ feature -- Access
 		do
 			profile_cell.put (False)
 		end
-		
+
+	image1: EV_PIXMAP is
+			--
+		local
+			f_name: FILE_NAME
+		once
+			create f_name.make_from_string (current_working_directory)
+			f_name.extend ("image1.png")
+			create Result
+			Result.set_with_named_file (f_name.out)
+		end
+
+	image2: EV_PIXMAP is
+			--
+		local
+			f_name: FILE_NAME
+		once
+			create f_name.make_from_string (current_working_directory)
+			f_name.extend ("image2.png")
+			create Result
+			Result.set_with_named_file (f_name.out)
+		end
+
+	image3: EV_PIXMAP is
+			--
+		local
+			f_name: FILE_NAME
+		once
+			create f_name.make_from_string (current_working_directory)
+			f_name.extend ("image3.png")
+			create Result
+			Result.set_with_named_file (f_name.out)
+		end
+
+	image4: EV_PIXMAP is
+			--
+		local
+			f_name: FILE_NAME
+		once
+			create f_name.make_from_string (current_working_directory)
+			f_name.extend ("image4.png")
+			create Result
+			Result.set_with_named_file (f_name.out)
+		end
+
+	image5: EV_PIXMAP is
+			--
+		local
+			f_name: FILE_NAME
+		once
+			create f_name.make_from_string (current_working_directory)
+			f_name.extend ("image5.png")
+			create Result
+			Result.set_with_named_file (f_name.out)
+		end
+
 end

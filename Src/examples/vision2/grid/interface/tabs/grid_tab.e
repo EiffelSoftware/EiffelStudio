@@ -15,13 +15,6 @@ inherit
 			copy, default_create, is_equal
 		end
 		
-	EXECUTION_ENVIRONMENT
-		rename
-			put as execution_environment_put
-		undefine
-			copy, default_create, is_equal
-		end
-				
 	PROFILING_SETTING
 		undefine
 			copy, default_create, is_equal
@@ -66,16 +59,6 @@ feature {NONE} -- Initialization
 			f_name.extend ("large_collapse.png")
 			create collapse3
 			collapse3.set_with_named_file (f_name)
-			create f_name.make_from_string (current_working_directory)
-			f_name.extend ("icon_clipboard_color.png")
-			create pixmap1
-			pixmap1.set_with_named_file (f_name.out)
-			create f_name.make_from_string (current_working_directory)
-			f_name.extend ("icon_cluster_symbol_color.png")
-			create pixmap2
-			pixmap2.set_with_named_file (f_name.out)
-			
-			
 			
 			create list_item.make_with_text ("9x9")
 			list_item.set_pixmap (expand1)
@@ -88,7 +71,7 @@ feature {NONE} -- Initialization
 			subnode_pixmaps_combo.extend (list_item)
 		end
 		
-	expand1, expand2, expand3, collapse1, collapse2, collapse3, pixmap1, pixmap2: EV_PIXMAP
+	expand1, expand2, expand3, collapse1, collapse2, collapse3: EV_PIXMAP
 
 feature {NONE} -- Implementation
 
@@ -437,12 +420,12 @@ feature {NONE} -- Implementation
 			loop
 				grid_label_item ?= grid.item (1, counter)
 				if grid_label_item /= Void then
-					grid_label_item.set_pixmap (pixmap1)
+					grid_label_item.set_pixmap (image1)
 				end
-				
+
 				grid_label_item ?= grid.item (4, counter)
 				if grid_label_item /= Void then
-					grid_label_item.set_pixmap (pixmap2)
+					grid_label_item.set_pixmap (image2)
 				end
 				counter := counter + 1
 			end

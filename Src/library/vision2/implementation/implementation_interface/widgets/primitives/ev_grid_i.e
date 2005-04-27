@@ -295,7 +295,11 @@ feature -- Access
 	virtual_width: INTEGER is
 			-- Width of virtual area in pixels.
 		do
-			Result := total_header_width.max (viewable_width)
+			perform_horizontal_computation
+			Result := column_offsets.last.max (viewable_width)
+			if is_horizontal_scrolling_per_item then
+				Result := Result + viewable_width - columns.i_th (column_count).width
+			end
 		ensure
 			result_greater_or_equal_to_viewable_width: Result >= viewable_width
 		end
@@ -313,7 +317,7 @@ feature -- Access
 					if is_row_height_fixed then
 						final_row_height := row_height
 					else
-						final_row_height := rows.i_th (rows.count).height
+						final_row_height := rows.i_th (row_count).height
 					end
 					Result := total_row_height + viewable_height - final_row_height
 				end
@@ -583,7 +587,7 @@ feature -- Status setting
 				header.go_i_th (previous_visible_column_from_index (a_col_i.index))
 				header.put_right (a_col_i.header_item)
 				
-				recompute_column_offsets
+				set_horizontal_computation_required (a_column)
 				redraw_client_area
 			end
 		ensure
@@ -605,7 +609,7 @@ feature -- Status setting
 					-- Now hide the header
 				header.prune_all (a_col_i.header_item)
 			
-				recompute_column_offsets
+				set_horizontal_computation_required (a_column)
 				redraw_client_area
 			end
 		ensure
@@ -1039,6 +1043,7 @@ feature -- Status setting
 			visible_row_index: INTEGER
 			items: ARRAYED_LIST [INTEGER]
 		do
+			perform_horizontal_computation
 			perform_vertical_computation
 			internal_set_virtual_y_position (virtual_y)
 			internal_set_virtual_x_position (virtual_x)
@@ -1261,7 +1266,7 @@ feature -- Element change
 				-- Flag `physical_column_indexes' for recalculation
 			physical_column_indexes_dirty := True
 			
-			recompute_column_offsets
+			set_horizontal_computation_required (i)
 			redraw_client_area
 			
 				-- Now actually move the header items.
@@ -1321,7 +1326,7 @@ feature -- Removal
 			header.go_i_th (a_column)
 			header.remove
 
-			recompute_column_offsets
+			set_horizontal_computation_required (a_column)
 			recompute_horizontal_scroll_bar
 			redraw_client_area
 		ensure
@@ -1531,12 +1536,21 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 	vertical_computation_required: BOOLEAN
 		-- Do the row offsets and vertical scroll bar position need to
 		-- be re-computed before the next drawing cycle?
+
+	horizontal_computation_required: BOOLEAN
+		-- Do the column offsets and horizontal scroll bar position need to be
+		-- re-computed before the next drawing cycle?
 		
 	invalid_row_index: INTEGER
 		-- Index of invalid row from which vertical row computation
 		-- must begin. This is used by `perform_vertical_computation' to ensure
 		-- that we only recompute those rows that are strictly necessary.
-		
+
+	invalid_column_index: INTEGER
+		-- Index of invalid column from which horizontal column computation
+		-- must begin. This is used by `perform_horizontal_computation' to ensure
+		-- that we only recompute those columns that are strictly necessary.
+
 	set_vertical_computation_required (an_invalid_row_index: INTEGER) is
 			-- Assign `True' to `vertical_computation_required'.
 			-- `an_invalid_row_index' specifies the index from which the computation
@@ -1551,6 +1565,22 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 		ensure
 			vertical_computation_required: vertical_computation_required
 			invalid_row_index_set: invalid_row_index = invalid_row_index.min (old invalid_row_index)
+		end
+
+	set_horizontal_computation_required (an_invalid_column_index: INTEGER) is
+			-- Assign `True' to `horizontal_computation_required'.
+			-- `an_invalid_row_index' specifies the index from which the computation
+			-- is to be performed when actually performed. It may be `column_count' + 1 to
+			-- handle the case where the grid is empty and an operation is performed
+			-- that requires a later recompute.
+		require
+			valid_column_index: an_invalid_column_index >= 1 and an_invalid_column_index <= column_count + 1
+		do
+			horizontal_computation_required := True
+			invalid_column_index := invalid_column_index.min (an_invalid_column_index)
+		ensure
+			horizontal_computation_required: horizontal_computation_required
+			invalid_column_index_set: invalid_column_index = invalid_column_index.min (old invalid_column_index)
 		end
 		
 	perform_vertical_computation is
@@ -1569,6 +1599,55 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			end
 		end
 
+	perform_horizontal_computation is
+			-- Recompute horizontal column offsets and other
+			-- such values required before drawing may be performed, only if required.
+		do
+			if horizontal_computation_required then
+				horizontal_computation_required := False
+				if column_count > 0 then
+						-- Do nothing if `Current' is empty.
+					recompute_column_offsets (invalid_column_index.min (column_count))
+						-- Restore to an arbitarily large index.
+					invalid_column_index := invalid_column_index.max_value;
+					((create {EV_ENVIRONMENT}).application).do_once_on_idle (agent recompute_horizontal_scroll_bar)
+				end
+			end
+		end
+
+	recompute_column_offsets (an_index: INTEGER) is
+			-- Recompute contents of `column_offsets' from column index
+			-- `an_index' to `column_count'.
+		require
+			an_index_valid: an_index >= 0 and an_index <= column_count
+		local
+			i: INTEGER
+			temp_columns: like columns
+			column_index: INTEGER
+			l_column_count: INTEGER
+		do
+			temp_columns := columns
+			create column_offsets.make (column_count)
+			column_offsets.extend (0)
+			l_column_count := temp_columns.count
+			from
+				column_index := 1
+			until
+				column_index > l_column_count
+			loop
+				if column_displayed (column_index) then
+					i := i + temp_columns.i_th (column_index).width
+				end
+				column_offsets.extend (i)
+				column_index := column_index + 1
+			end
+			if virtual_size_changed_actions_internal /= Void then
+				virtual_size_changed_actions_internal.call ([virtual_width, virtual_height])
+			end
+		ensure
+			counts_equal: column_offsets.count = column_count + 1
+		end
+
 	recompute_row_offsets (an_index: INTEGER) is
 			-- Recompute contents of `row_offsets' from row index
 			-- `an_index' to `row_count'.
@@ -1584,7 +1663,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			row_index: INTEGER
 			l_row_count: INTEGER
 			l_parent_row_i: EV_GRID_ROW_I
-		do			
+		do
 			if not is_tree_enabled then
 				internal_index := an_index
 			else
@@ -1600,7 +1679,6 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 					l_parent_row_i := l_parent_row_i.parent_row_i
 				end
 				internal_index := l_parent_row_i.index
-				internal_index := 1
 			end
 			if not is_row_height_fixed or is_tree_enabled then
 					-- Only perform recomputation if the rows do not all have the same height
@@ -2167,36 +2245,6 @@ feature {NONE} -- Drawing implementation
 			item_counter := 1
 			row_counter := 1
 		end
-		
-	recompute_column_offsets is
-			-- Recompute contents of `column_offsets'.
-		local
-			i: INTEGER
-			temp_columns: like columns
-			column_index: INTEGER
-			l_column_count: INTEGER
-		do
-			temp_columns := columns
-			create column_offsets.make (column_count)
-			column_offsets.extend (0)
-			l_column_count := temp_columns.count
-			from
-				column_index := 1
-			until
-				column_index > l_column_count
-			loop
-				if column_displayed (column_index) then
-					i := i + temp_columns.i_th (column_index).width
-				end
-				column_offsets.extend (i)
-				column_index := column_index + 1
-			end
-			if virtual_size_changed_actions_internal /= Void then
-				virtual_size_changed_actions_internal.call ([virtual_width, virtual_height])
-			end
-		ensure
-			counts_equal: column_offsets.count = column_count + 1
-		end
 
 	header_item_resizing (header_item: EV_HEADER_ITEM) is
 			-- Respond to `header_item' being resized.
@@ -2231,7 +2279,7 @@ feature {NONE} -- Drawing implementation
 				remove_resizing_line
 			end
 			fixme ("Only invalidate to the right hand side of the resized header item")
-			recompute_column_offsets
+			set_horizontal_computation_required (header.index_of (header_item, 1))
 			redraw_client_area
 		end
 		

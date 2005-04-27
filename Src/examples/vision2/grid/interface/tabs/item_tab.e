@@ -129,10 +129,25 @@ feature {NONE} -- Implementation
 						pixmap_holder.i_th (6).enable_select
 					end
 					pixmap_holder.select_actions.resume
+					alignment_container.enable_sensitive
+					if label_item.is_left_aligned then
+						alignment_combo.i_th (1).select_actions.block
+						alignment_combo.i_th (1).enable_select
+						alignment_combo.i_th (1).select_actions.resume
+					elseif label_item.is_center_aligned then
+						alignment_combo.i_th (2).select_actions.block
+						alignment_combo.i_th (2).enable_select
+						alignment_combo.i_th (2).select_actions.resume
+					elseif label_item.is_right_aligned then
+						alignment_combo.i_th (3).select_actions.block
+						alignment_combo.i_th (3).enable_select
+						alignment_combo.i_th (3).select_actions.resume
+					end
 				else
 					textable_container.disable_sensitive
 					left_border_container.disable_sensitive
 					spacing_container.disable_sensitive
+					alignment_container.disable_sensitive
 				end
 				deselectable ?= found_item
 				if deselectable /= Void then
@@ -234,6 +249,245 @@ feature {NONE} -- Implementation
 						invalid_index: False
 					end
 				end
+			end
+		end
+
+	left_alignment_item_selected is
+			-- Called by `select_actions' of `left_alignment_item'.
+		local
+			label_item: EV_GRID_LABEL_ITEM
+		do
+			label_item ?= found_item
+			if label_item /= Void then
+				label_item.align_text_left
+			end
+		end
+	
+	center_alignment_item_selected is
+			-- Called by `select_actions' of `center_alignment_item'.
+		local
+			label_item: EV_GRID_LABEL_ITEM
+		do
+			label_item ?= found_item
+			if label_item /= Void then
+				label_item.align_text_center
+			end
+		end
+	
+	right_alignment_item_selected is
+			-- Called by `select_actions' of `right_alignment_item'.
+		local
+			label_item: EV_GRID_LABEL_ITEM
+		do
+			label_item ?= found_item
+			if label_item /= Void then
+				label_item.align_text_right
+			end
+		end
+
+	apply_pixmap_row_button_selected is
+			-- Called by `select_actions' of `apply_pixmap_row_button'.
+		local
+			counter: INTEGER
+			original_item, label_item: EV_GRID_LABEL_ITEM
+			row: INTEGER
+			original_pixmap: EV_PIXMAP
+		do
+			from
+				counter := 1
+				row := found_item.row.index
+				original_item ?= found_item
+				original_pixmap := original_item.pixmap
+			until
+				counter > grid.column_count
+			loop
+				label_item ?= grid.item (counter, row)
+				if label_item /= Void then
+					label_item.set_pixmap (original_pixmap)
+				end
+				counter := counter + 1
+			end
+		end
+	
+	apply_pixmap_column_selected is
+			-- Called by `select_actions' of `apply_pixmap_column_button'.
+		local
+			counter: INTEGER
+			original_item, label_item: EV_GRID_LABEL_ITEM
+			column: INTEGER
+			original_pixmap: EV_PIXMAP
+		do
+			from
+				counter := 1
+				column := found_item.column.index
+				original_item ?= found_item
+				original_pixmap := original_item.pixmap
+			until
+				counter > grid.row_count
+			loop
+				label_item ?= grid.item (column, counter)
+				if label_item /= Void then
+					label_item.set_pixmap (original_pixmap)
+				end
+				counter := counter + 1
+			end
+		end
+	
+	apply_alignment_row_button_selected is
+			-- Called by `select_actions' of `apply_alignment_row_button'.
+		local
+			counter: INTEGER
+			original_item, label_item: EV_GRID_LABEL_ITEM
+			row: INTEGER
+			original_alignment: INTEGER
+		do
+			from
+				counter := 1
+				row := found_item.row.index
+				original_item ?= found_item
+				original_alignment := original_item.text_alignment
+			until
+				counter > grid.column_count
+			loop
+				label_item ?= grid.item (counter, row)
+				if label_item /= Void then
+					if original_alignment = {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_left then
+						label_item.align_text_left
+					elseif original_alignment = {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_center then
+						label_item.align_text_center
+					else
+						label_item.align_text_right
+					end
+					label_item.set_pixmap (original_item.pixmap)
+				end
+				counter := counter + 1
+			end
+		end
+	
+	apply_alignment_column_button_selected is
+			-- Called by `select_actions' of `apply_alignment_column_button'.
+		local
+			counter: INTEGER
+			original_item, label_item: EV_GRID_LABEL_ITEM
+			column: INTEGER
+			original_alignment: INTEGER
+		do
+			from
+				counter := 1
+				column := found_item.column.index
+				original_item ?= found_item
+				original_alignment := original_item.text_alignment
+			until
+				counter > grid.row_count
+			loop
+				label_item ?= grid.item (column, counter)
+				if label_item /= Void then
+					if original_alignment = {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_left then
+						label_item.align_text_left
+					elseif original_alignment = {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_center then
+						label_item.align_text_center
+					else
+						label_item.align_text_right
+					end
+					label_item.set_pixmap (original_item.pixmap)
+				end
+				counter := counter + 1
+			end
+		end
+	
+	apply_left_border_row_button_selected is
+			-- Called by `select_actions' of `apply_left_border_row_button'.
+		local
+			counter: INTEGER
+			original_item, label_item: EV_GRID_LABEL_ITEM
+			row: INTEGER
+			original_left_border: INTEGER
+		do
+			from
+				counter := 1
+				row := found_item.row.index
+				original_item ?= found_item
+				original_left_border := original_item.left_border
+			until
+				counter > grid.column_count
+			loop
+				label_item ?= grid.item (counter, row)
+				if label_item /= Void then
+					label_item.set_left_border (original_left_border)
+				end
+				counter := counter + 1
+			end
+		end
+	
+	apply_left_border_column_button_selected is
+			-- Called by `select_actions' of `apply_left_border_column_button'.
+		local
+			counter: INTEGER
+			original_item, label_item: EV_GRID_LABEL_ITEM
+			column: INTEGER
+			original_left_border: INTEGER
+		do
+			from
+				counter := 1
+				column := found_item.column.index
+				original_item ?= found_item
+				original_left_border := original_item.left_border
+			until
+				counter > grid.row_count
+			loop
+				label_item ?= grid.item (column, counter)
+				if label_item /= Void then
+					label_item.set_left_border (original_left_border)
+				end
+				counter := counter + 1
+			end
+		end
+	
+	apply_spacing_row_button_selected is
+			-- Called by `select_actions' of `apply_spacing_row_button'.
+		local
+			counter: INTEGER
+			original_item, label_item: EV_GRID_LABEL_ITEM
+			row: INTEGER
+			original_spacing: INTEGER
+		do
+			from
+				counter := 1
+				row := found_item.row.index
+				original_item ?= found_item
+				original_spacing := original_item.spacing
+			until
+				counter > grid.column_count
+			loop
+				label_item ?= grid.item (counter, row)
+				if label_item /= Void then
+					label_item.set_spacing (original_spacing)
+				end
+				counter := counter + 1
+			end
+		end
+	
+	apply_spacing_column_button_selected is
+			-- Called by `select_actions' of `apply_spacing_column_button'.
+		local
+			counter: INTEGER
+			original_item, label_item: EV_GRID_LABEL_ITEM
+			column: INTEGER
+			original_spacing: INTEGER
+		do
+			from
+				counter := 1
+				column := found_item.column.index
+				original_item ?= found_item
+				original_spacing := original_item.spacing
+			until
+				counter > grid.row_count
+			loop
+				label_item ?= grid.item (column, counter)
+				if label_item /= Void then
+					label_item.set_spacing (original_spacing)
+				end
+				counter := counter + 1
 			end
 		end
 

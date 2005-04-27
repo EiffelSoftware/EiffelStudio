@@ -169,7 +169,7 @@
 		</Padding>
 	<Border><Constant>box_padding</Constant>
 		</Border>
-	<Is_item_expanded>1111001</Is_item_expanded>
+	<Is_item_expanded>0000001</Is_item_expanded>
 	</EV_BOX>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
@@ -4485,7 +4485,7 @@
 		</Padding>
 	<Border><Constant>box_padding</Constant>
 		</Border>
-	<Is_item_expanded>11111</Is_item_expanded>
+	<Is_item_expanded>00000</Is_item_expanded>
 	</EV_BOX>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>

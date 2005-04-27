@@ -242,6 +242,11 @@ feature {NONE}-- Initialization
 			enable_pick_and_drop_button.set_text ("Enable pick and drop on all items")
 			set_padding_width (box_padding)
 			set_border_width (box_padding)
+			disable_item_expand (addition_frame)
+			disable_item_expand (display_frame)
+			disable_item_expand (divider_frame)
+			disable_item_expand (scrolling_frame)
+			disable_item_expand (l_ev_notebook_1)
 			
 				--Connect events.
 			new_label_button.select_actions.extend (agent new_label_button_selected)

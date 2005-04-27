@@ -85,7 +85,7 @@ feature {NONE}-- Initialization
 			grid_cell.set_minimum_width (500)
 			grid_cell.set_minimum_height (400)
 			tools_notebook.set_minimum_width (400)
-			tools_notebook.set_item_text (l_ev_vertical_box_2, "Grid")
+			tools_notebook.set_item_text (l_ev_vertical_box_2, "General")
 			tools_notebook.set_item_text (l_ev_vertical_box_3, "Column")
 			tools_notebook.set_item_text (l_ev_vertical_box_4, "Row")
 			tools_notebook.set_item_text (l_ev_vertical_box_5, "Item")

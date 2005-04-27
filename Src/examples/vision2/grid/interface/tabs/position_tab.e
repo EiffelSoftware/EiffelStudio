@@ -24,6 +24,8 @@ feature {NONE} -- Initialization
 			-- (due to regeneration of implementation class)
 			-- can be added here.
 		do
+			grid.virtual_position_changed_actions.extend (agent virtual_position_changed)
+			grid.virtual_size_changed_actions.extend (agent virtual_size_changed)
 		end
 
 feature {NONE} -- Implementation
@@ -34,11 +36,30 @@ feature {NONE} -- Implementation
 		do
 		end
 
+	virtual_position_changed (a_x, a_y: INTEGER) is
+			-- Virtual position of `grid' has changed.
+		do
+			drawable.redraw
+			virtual_x_position.change_actions.block
+			virtual_x_position.set_value (a_x)
+			virtual_x_position.change_actions.resume
+			virtual_y_position.change_actions.block
+			virtual_y_position.set_value (a_y)
+			virtual_y_position.change_actions.resume
+		end
 
+	virtual_size_changed (a_width, a_height: INTEGER) is
+			-- Virtual size of `grid' has changed.
+		do
+			drawable.redraw
+		end
+		
 	virtual_x_position_changed (a_value: INTEGER) is
 			-- Called by `change_actions' of `virtual_x_position'.
 		do
+			grid.virtual_position_changed_actions.block
 			grid.set_virtual_position (a_value, grid.virtual_y_position)
+			grid.virtual_position_changed_actions.resume
 			drawable.redraw
 		end
 
@@ -46,7 +67,9 @@ feature {NONE} -- Implementation
 	virtual_y_position_changed (a_value: INTEGER) is
 			-- Called by `change_actions' of `virtual_y_position'.
 		do
+			grid.virtual_position_changed_actions.block
 			grid.set_virtual_position (grid.virtual_x_position, a_value)
+			grid.virtual_position_changed_actions.resume
 			drawable.redraw
 		end
 		

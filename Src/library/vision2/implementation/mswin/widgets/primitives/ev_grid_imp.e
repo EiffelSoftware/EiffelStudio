@@ -28,6 +28,8 @@ inherit
 			pointer_button_press_actions_internal as cell_pointer_button_press_actions_internal,
 			pointer_button_release_actions_internal as cell_pointer_button_release_actions_internal,
 			pointer_leave_actions_internal as cell_pointer_leave_actions_internal
+		undefine
+			drop_actions
 		redefine
 			initialize,
 			destroy

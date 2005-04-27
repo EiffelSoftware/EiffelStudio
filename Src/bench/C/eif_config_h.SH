@@ -640,6 +640,12 @@ sed <<!GROK!THIS! >eif_config.h -e 's!^#undef\(.*\)/\*!/\*#define \1 \*/ /\*!' -
 
 #$d_bsdsig USE_BSD_SIGNALS	/* NC */
 
+/* USE_TLS:
+ *	This symbol, if defined, indicates that thread-local storage specifier
+ *	can be used to access thread-local variables.
+ */
+#$d_tls USE_TLS	/* NC */
+
 /* INTEGER_64 display format:
  * 	This symbol is used in printf and others to display 64 bits signed
  *	integers.

@@ -6642,6 +6642,7 @@ eif_sgi='$eif_sgi'
 eif_solaris='$eif_solaris'
 eif_windows='$eif_windows'
 Mcc='$Mcc'
+d_tls='$d_tls'
 #Check value for next 2
 mtccflags="\$ccflags -DEIF_THREADS -DEIF_POSIX_THREADS"
 mtcppflags="\$cppflags -DEIF_THREADS -DEIF_POSIX_THREADS"

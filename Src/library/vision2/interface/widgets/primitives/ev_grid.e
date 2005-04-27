@@ -374,12 +374,16 @@ feature -- Access
 	item_pebble_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], ANY] is
 			-- Returns data to be transported by pick and drop mechanism.
 			-- See `set_item_pebble_function' for more information.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.item_pebble_function
 		end
 
 	item_veto_pebble_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM, ANY], BOOLEAN] is
 			-- Function used to determing whether dropping is allowed on a particular item.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.item_veto_pebble_function
 		end

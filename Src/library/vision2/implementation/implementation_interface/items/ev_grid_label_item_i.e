@@ -24,10 +24,12 @@ feature {NONE} -- Initialization
 		do
 			Precursor {EV_GRID_ITEM_I}
 			interface.set_text ("")
+			interface.set_left_border (2)
+			interface.set_spacing (2)
 		end
 
 feature {EV_GRID_DRAWER_I} -- Implementation
-		
+
 	internal_default_font: EV_FONT is
 			-- Default font used for `Current'.
 		once
@@ -40,11 +42,14 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 			back_color: EV_COLOR
 			l_pixmap: EV_PIXMAP
 			pixmap_width: INTEGER
+			left_border, spacing_used: INTEGER
+			space_remaining_for_text: INTEGER
 		do
 			fixme ("Correctly handle selection colors and inversion")
 			l_pixmap := interface.pixmap
+			left_border := interface.left_border
+			spacing_used := interface.spacing
 
-			
 			back_color := internal_background_color
 			if back_color = Void then
 				back_color := parent_i.background_color
@@ -64,18 +69,20 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 			
 			if l_pixmap /= Void then
 					-- Now blit the pixmap
-				drawable.draw_pixmap (an_x, a_y, l_pixmap)
+				drawable.draw_pixmap (an_x + left_border, a_y, l_pixmap)
 				pixmap_width := l_pixmap.width
+			else
+				spacing_used := 0
 			end
 
-			
 			if interface.font /= Void then
 				drawable.set_font (interface.font)
 			else
 				drawable.set_font (internal_default_font)
 			end
-			if interface.text /= Void and a_width - pixmap_width > 0 then
-				drawable.draw_ellipsed_text_top_left (an_x + pixmap_width, a_y, interface.text, a_width - pixmap_width)
+			space_remaining_for_text := a_width - pixmap_width - left_border - spacing_used
+			if interface.text /= Void and space_remaining_for_text > 0 then
+				drawable.draw_ellipsed_text_top_left (an_x + pixmap_width + spacing_used + left_border, a_y, interface.text, space_remaining_for_text)
 			end
 		end
 

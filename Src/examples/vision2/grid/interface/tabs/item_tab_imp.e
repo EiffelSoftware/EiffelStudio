@@ -39,12 +39,20 @@ feature {NONE}-- Initialization
 			create item_x_index
 			create l_ev_label_2
 			create item_y_index
-			create l_ev_horizontal_box_2
-			create textable_frame
+			create l_ev_table_1
+			create textable_container
 			create l_ev_label_3
 			create textable_entry
-			create selectable_frame
 			create is_selected
+			create pixmapable_container
+			create l_ev_label_4
+			create pixmap_holder
+			create left_border_container
+			create l_ev_label_5
+			create left_border_spin_button
+			create spacing_container
+			create l_ev_label_6
+			create spacing_spin_button
 			create item_operations_frame
 			create l_ev_vertical_box_1
 			create remove_item_button
@@ -58,12 +66,15 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_1.extend (item_x_index)
 			l_ev_horizontal_box_1.extend (l_ev_label_2)
 			l_ev_horizontal_box_1.extend (item_y_index)
-			main_box.extend (l_ev_horizontal_box_2)
-			main_box.extend (textable_frame)
-			textable_frame.extend (l_ev_label_3)
-			textable_frame.extend (textable_entry)
-			main_box.extend (selectable_frame)
-			selectable_frame.extend (is_selected)
+			main_box.extend (l_ev_table_1)
+			textable_container.extend (l_ev_label_3)
+			textable_container.extend (textable_entry)
+			pixmapable_container.extend (l_ev_label_4)
+			pixmapable_container.extend (pixmap_holder)
+			left_border_container.extend (l_ev_label_5)
+			left_border_container.extend (left_border_spin_button)
+			spacing_container.extend (l_ev_label_6)
+			spacing_container.extend (spacing_spin_button)
 			extend (item_operations_frame)
 			item_operations_frame.extend (l_ev_vertical_box_1)
 			l_ev_vertical_box_1.extend (remove_item_button)
@@ -73,9 +84,6 @@ feature {NONE}-- Initialization
 			main_box.set_padding_width (box_padding)
 			main_box.set_border_width (box_padding)
 			main_box.disable_item_expand (l_ev_horizontal_box_1)
-			main_box.disable_item_expand (l_ev_horizontal_box_2)
-			main_box.disable_item_expand (textable_frame)
-			main_box.disable_item_expand (selectable_frame)
 			l_ev_horizontal_box_1.set_padding_width (box_padding)
 			l_ev_horizontal_box_1.disable_item_expand (l_ev_label_1)
 			l_ev_horizontal_box_1.disable_item_expand (l_ev_label_2)
@@ -84,10 +92,27 @@ feature {NONE}-- Initialization
 			item_x_index.value_range.adapt (create {INTEGER_INTERVAL}.make (0, 1000000))
 			l_ev_label_2.set_text ("Y Index")
 			item_y_index.value_range.adapt (create {INTEGER_INTERVAL}.make (0, 1000000))
-			textable_frame.disable_item_expand (l_ev_label_3)
+			l_ev_table_1.resize (2, 3)
+			l_ev_table_1.set_row_spacing (box_padding)
+			l_ev_table_1.set_column_spacing (box_padding)
+			l_ev_table_1.set_border_width (box_padding)
+				-- Insert and position all children of `l_ev_table_1'.
+			l_ev_table_1.put_at_position (textable_container, 1, 1, 1, 1)
+			l_ev_table_1.put_at_position (is_selected, 2, 1, 1, 1)
+			l_ev_table_1.put_at_position (pixmapable_container, 1, 2, 1, 1)
+			l_ev_table_1.put_at_position (left_border_container, 2, 3, 1, 1)
+			l_ev_table_1.put_at_position (spacing_container, 1, 3, 1, 1)
+			textable_container.disable_item_expand (l_ev_label_3)
 			l_ev_label_3.set_text ("Text : ")
 			textable_entry.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (212, 208, 200))
 			is_selected.set_text ("is_selected")
+			pixmapable_container.disable_item_expand (l_ev_label_4)
+			l_ev_label_4.set_text ("Pixmap : ")
+			left_border_container.disable_item_expand (l_ev_label_5)
+			l_ev_label_5.set_text ("Left Border : ")
+			spacing_container.disable_item_expand (l_ev_label_6)
+			l_ev_label_6.set_text ("Spacing : ")
+			item_operations_frame.disable_sensitive
 			item_operations_frame.set_text ("Item Operations")
 			l_ev_vertical_box_1.set_padding_width (box_padding)
 			l_ev_vertical_box_1.set_border_width (box_padding)
@@ -103,6 +128,9 @@ feature {NONE}-- Initialization
 			item_y_index.change_actions.extend (agent item_y_index_changed (?))
 			textable_entry.change_actions.extend (agent textable_entry_changed)
 			is_selected.select_actions.extend (agent is_selected_selected)
+			pixmap_holder.select_actions.extend (agent pixmap_holder_item_selected)
+			left_border_spin_button.change_actions.extend (agent left_border_spin_button_changed (?))
+			spacing_spin_button.change_actions.extend (agent spacing_spin_button_changed (?))
 			remove_item_button.select_actions.extend (agent remove_item_button_selected)
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.
@@ -115,21 +143,23 @@ feature -- Access
 
 	main_box: EV_VERTICAL_BOX
 	is_selected: EV_CHECK_BUTTON
-	item_x_index, item_y_index: EV_SPIN_BUTTON
+	item_x_index, item_y_index, left_border_spin_button, spacing_spin_button: EV_SPIN_BUTTON
 	item_finder: GRID_ITEM_FINDER
-	textable_frame: EV_HORIZONTAL_BOX
+	textable_container,
+	pixmapable_container, left_border_container, spacing_container: EV_HORIZONTAL_BOX
 	remove_item_button: EV_BUTTON
 	item_frame,
 	item_operations_frame: EV_FRAME
-	selectable_frame: EV_CELL
+	pixmap_holder: EV_COMBO_BOX
 	textable_entry: EV_TEXT_FIELD
 
 feature {NONE} -- Implementation
 
 	l_ev_vertical_box_1: EV_VERTICAL_BOX
-	l_ev_horizontal_box_1, l_ev_horizontal_box_2: EV_HORIZONTAL_BOX
-	l_ev_label_1,
-	l_ev_label_2, l_ev_label_3: EV_LABEL
+	l_ev_horizontal_box_1: EV_HORIZONTAL_BOX
+	l_ev_label_1, l_ev_label_2, l_ev_label_3,
+	l_ev_label_4, l_ev_label_5, l_ev_label_6: EV_LABEL
+	l_ev_table_1: EV_TABLE
 
 feature {NONE} -- Implementation
 
@@ -163,6 +193,21 @@ feature {NONE} -- Implementation
 	
 	is_selected_selected is
 			-- Called by `select_actions' of `is_selected'.
+		deferred
+		end
+	
+	pixmap_holder_item_selected is
+			-- Called by `select_actions' of `pixmap_holder'.
+		deferred
+		end
+	
+	left_border_spin_button_changed (a_value: INTEGER) is
+			-- Called by `change_actions' of `left_border_spin_button'.
+		deferred
+		end
+	
+	spacing_spin_button_changed (a_value: INTEGER) is
+			-- Called by `change_actions' of `spacing_spin_button'.
 		deferred
 		end
 	

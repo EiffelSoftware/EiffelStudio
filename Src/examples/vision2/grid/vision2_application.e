@@ -11,6 +11,8 @@ inherit
 	EV_APPLICATION
 	
 	GRID_ACCESSOR
+		rename
+			launch as environment_launch
 		undefine
 			default_create, is_equal, copy
 		end

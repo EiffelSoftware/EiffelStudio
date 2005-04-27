@@ -23,9 +23,28 @@ feature {NONE} -- Initialization
 			-- could not be performed in `initialize',
 			-- (due to regeneration of implementation class)
 			-- can be added here.
+		local
+			list_item: EV_LIST_ITEM
 		do
 			item_finder.set_prompt ("Item Finder : ")
 			item_finder.motion_actions.extend (agent finding_item)
+			create list_item.make_with_text ("None")
+			pixmap_holder.extend (list_item)
+			create list_item
+			list_item.set_pixmap (image1)
+			pixmap_holder.extend (list_item)
+			create list_item
+			list_item.set_pixmap (image2)
+			pixmap_holder.extend (list_item)
+			create list_item
+			list_item.set_pixmap (image3)
+			pixmap_holder.extend (list_item)
+			create list_item
+			list_item.set_pixmap (image4)
+			pixmap_holder.extend (list_item)
+			create list_item
+			list_item.set_pixmap (image5)
+			pixmap_holder.extend (list_item)
 		end
 
 feature {NONE} -- Implementation
@@ -38,9 +57,8 @@ feature {NONE} -- Implementation
 			row_index, column_index: INTEGER
 		do
 			if an_item /= Void then
-				if not item_frame.is_sensitive then
-					item_frame.enable_sensitive
-				end
+				item_frame.enable_sensitive
+				item_operations_frame.enable_sensitive
 				found_item := an_item
 				row_index := found_item.row.index
 				column_index := found_item.column.index
@@ -55,6 +73,7 @@ feature {NONE} -- Implementation
 				found_item := Void
 				if item_frame.is_sensitive then
 					item_frame.disable_sensitive
+					item_operations_frame.disable_sensitive
 				end
 			end
 		end
@@ -76,23 +95,48 @@ feature {NONE} -- Implementation
 	update_item_data (an_x, ay: INTEGER) is
 			-- Display data for item at grid position `an_x', `a_y'.
 		local
-			textable: EV_TEXTABLE
+			label_item: EV_GRID_LABEL_ITEM
 			deselectable: EV_DESELECTABLE
 		do
 			if found_item /= Void then
 				main_box.enable_sensitive
-				textable ?= found_item
-				if textable /= Void then
-					textable_frame.enable_sensitive
+				label_item ?= found_item
+				if label_item /= Void then
+					textable_container.enable_sensitive
 					textable_entry.change_actions.block
-					textable_entry.set_text (textable.text)
+					textable_entry.set_text (label_item.text)
 					textable_entry.change_actions.resume
+					left_border_container.enable_sensitive
+					left_border_spin_button.change_actions.block
+					left_border_spin_button.set_value (label_item.left_border)
+					left_border_spin_button.change_actions.resume
+					spacing_container.enable_sensitive
+					spacing_spin_button.change_actions.block
+					spacing_spin_button.set_value (label_item.spacing)
+					spacing_spin_button.change_actions.resume
+					pixmap_holder.select_actions.block
+					if label_item.pixmap = Void then
+						pixmap_holder.first.enable_select
+					elseif label_item.pixmap = image1 then
+						pixmap_holder.i_th (2).enable_select
+					elseif label_item.pixmap = image2 then
+						pixmap_holder.i_th (3).enable_select
+					elseif label_item.pixmap = image3 then
+						pixmap_holder.i_th (4).enable_select
+					elseif label_item.pixmap = image4 then
+						pixmap_holder.i_th (5).enable_select
+					elseif label_item.pixmap = image5 then
+						pixmap_holder.i_th (6).enable_select
+					end
+					pixmap_holder.select_actions.resume
 				else
-					textable_frame.disable_sensitive
+					textable_container.disable_sensitive
+					left_border_container.disable_sensitive
+					spacing_container.disable_sensitive
 				end
 				deselectable ?= found_item
 				if deselectable /= Void then
-					selectable_frame.enable_sensitive
+					is_selected.enable_sensitive
 					is_selected.select_actions.block
 					if deselectable.is_selected then
 						is_selected.enable_select
@@ -101,7 +145,7 @@ feature {NONE} -- Implementation
 					end
 					is_selected.select_actions.resume
 				else
-					selectable_frame.disable_sensitive
+					is_selected.disable_sensitive
 				end
 			else
 				main_box.disable_sensitive
@@ -133,12 +177,64 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	remove_item_button_selected is
 			-- Called by `select_actions' of `remove_item_button'.
 		do
 			grid.remove_item (found_item.column.index, found_item.row.index)
 			update_item_data (item_x_index.value, item_y_index.value)
+		end
+
+	left_border_spin_button_changed (a_value: INTEGER) is
+			-- Called by `change_actions' of `left_border_spin_button'.
+		local
+			label_item: EV_GRID_LABEL_ITEM
+		do
+			label_item ?= found_item
+			if label_item /= Void then
+				label_item.set_left_border (a_value)
+			end
+		end
+
+	spacing_spin_button_changed (a_value: INTEGER) is
+			-- Called by `change_actions' of `spacing_spin_button'.
+		local
+			label_item: EV_GRID_LABEL_ITEM
+		do
+			label_item ?= found_item
+			if label_item /= Void then
+				label_item.set_spacing (a_value)
+			end
+		end
+
+	pixmap_holder_item_selected is
+			-- Called by `select_actions' of `pixmap_holder'.			
+		local
+			selected_item_index: INTEGER
+			label_item: EV_GRID_LABEL_ITEM
+		do
+			label_item ?= found_item
+			if label_item /= Void then
+				selected_item_index := pixmap_holder.index_of (pixmap_holder.selected_item, 1)
+				inspect selected_item_index
+				when 1 then
+					label_item.remove_pixmap
+				when 2 then
+					label_item.set_pixmap (image1)
+				when 3 then
+					label_item.set_pixmap (image2)
+				when 4 then
+					label_item.set_pixmap (image3)
+				when 5 then
+					label_item.set_pixmap (image4)
+				when 6 then
+					label_item.set_pixmap (image5)
+				else
+					check
+						invalid_index: False
+					end
+				end
+			end
 		end
 
 end -- class ITEM_TAB

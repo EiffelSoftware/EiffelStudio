@@ -51,7 +51,7 @@ doc:<file name="retrieve.c" header="eif_retrieve.h" version="$Id$" summary="Retr
 
 #include <string.h>
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 #include <io.h>		/* %%ss added for read */
 #include <winsock.h>
 #endif

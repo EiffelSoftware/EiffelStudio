@@ -23,7 +23,7 @@
 #include <string.h>
 #include <signal.h>
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 #define ACTIVE_TM	1		/* Active checks performed every 1 seconds */
 #elif defined EIF_VMS
 #define ACTIVE_TM	5		/* Active checks performed every 5 seconds */
@@ -35,7 +35,7 @@
 #endif
 
 #ifndef EOFPIPE
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 rt_private int active_check(STREAM *sp, HANDLE pid);	/* Monitor connection to detect child death */
 #else
 rt_private int active_check(STREAM *sp, int pid);	/* Monitor connection to detect child death */
@@ -54,7 +54,7 @@ rt_public void dwide_listen(void)
 	 */
 
 #ifndef EOFPIPE
-#ifndef EIF_WIN32
+#ifndef EIF_WINDOWS
 	struct timeval tm;		/* Selection time out */
 	struct timeval tmu;		/* Timeout structure used (may be modified) */
 #endif
@@ -65,7 +65,7 @@ rt_public void dwide_listen(void)
 	 * routine whenever data is available there.
 	 */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
  	if (-1 == add_input(daemon_data.d_cs, (HANDLE_FN) drqsthandle)) {
 #else
 	if (-1 == add_input(readfd(daemon_data.d_cs), drqsthandle)) {
@@ -82,7 +82,7 @@ rt_public void dwide_listen(void)
 	 * a problem. We simply set up a timeout on the selection, and we will run
 	 * some checks if nothing has happened during that period.
 	 */
-#ifndef EIF_WIN32
+#ifndef EIF_WINDOWS
 	tm.tv_sec = ACTIVE_TM;
 	tm.tv_usec = 0;
 #endif
@@ -92,7 +92,7 @@ rt_public void dwide_listen(void)
 	 * has been removed from the selection process. If at least one is missing,
 	 * we are exiting immediately.
 	 */
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 #ifdef USE_ADD_LOG
 		add_log(12, "In dwide listen");
 		close_log();
@@ -101,14 +101,14 @@ rt_public void dwide_listen(void)
 #endif
 
 #ifdef EOFPIPE
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	while (0 < do_select((char *) 0))
 #else
 	while (0 < do_select((struct timeval *) 0))
 #endif
 
 #else
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	for (;0 <= (nfd = do_select(ACTIVE_TM));)
 #else
 	for (
@@ -124,7 +124,7 @@ rt_public void dwide_listen(void)
 		 * checks on the file descriptors, to make sure no I/O error was
 		 * detected (in which case the input is removed).
 		 */
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 #ifdef USE_ADD_LOG
 		add_log(12, "selected");
 #endif
@@ -162,12 +162,12 @@ rt_public void dwide_listen(void)
 				return;				/* This ends the listening */
 			}
 			if (0 != active_check(daemon_data.d_as, daemon_data.d_app)) {
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 				CloseHandle (daemon_data.d_app);
 				daemon_data.d_app = NULL;
 #endif
 				daemon_data.d_app = 0;
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 				(void) rem_input(daemon_data.d_as);
 #endif
 				close_stream(daemon_data.d_as);
@@ -197,7 +197,7 @@ rt_public void dwide_listen(void)
 #include "request.h"
 #endif
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 rt_private int active_check(STREAM *sp, HANDLE pid)
 #else
 rt_private int active_check(STREAM *sp, int pid)
@@ -211,7 +211,7 @@ rt_private int active_check(STREAM *sp, int pid)
 	 * is dead, then we'll get a SIGPIPE signal (which is trapped by the
 	 * sending routine).
 	 */
-#ifndef EIF_WIN32
+#ifndef EIF_WINDOWS
 #ifndef PIDCHECK
 	Request rqst;
 #endif
@@ -220,7 +220,7 @@ rt_private int active_check(STREAM *sp, int pid)
 	if (pid == 0)				/* No application recorded */
 		return 0;				/* Nothing to check */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	if (WaitForSingleObject (pid, 0) == WAIT_OBJECT_0)
   		return 1;
 #elif defined EIF_VMS

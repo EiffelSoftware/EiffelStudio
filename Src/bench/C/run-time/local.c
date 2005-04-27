@@ -41,7 +41,7 @@ doc:<file name="local.c" header="eif_local.h" version="$Id$" summary="Handling o
 #include <stdio.h>
 
 #ifdef EIF_ASSERTIONS
-#if defined(EIF_WIN32) && defined (_DEBUG)
+#if defined(EIF_WINDOWS) && defined (_DEBUG)
 #include <crtdbg.h>
 #endif
 #endif
@@ -316,7 +316,7 @@ rt_private int extend(struct stack *stk)
 	return 0;			/* Everything is ok */
 }
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 #ifdef EIF_ASSERTIONS
 	/* This code is commented because it only exists with the latest Microsoft CRT runtime.
 	 * Uncomment if you need to catch CRT raised exception when passing incorrect arguments
@@ -350,7 +350,7 @@ rt_shared void initstk(void)
 	char **top;
 #endif
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 #ifdef EIF_ASSERTIONS
 	/* This code is commented because it only exists with the latest Microsoft CRT runtime.
 	 * Uncomment if you need to catch CRT raised exception when passing incorrect arguments
@@ -360,7 +360,7 @@ rt_shared void initstk(void)
 #endif
 
 #ifdef EIF_ASSERTIONS
-#if defined(EIF_WIN32) && defined(_DEBUG)
+#if defined(EIF_WINDOWS) && defined(_DEBUG)
 	int tmpDbgFlag = 0;
 	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
 	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDOUT);

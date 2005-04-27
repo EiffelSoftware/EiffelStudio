@@ -13,7 +13,7 @@
 #ifndef _select_h_
 #define _select_h_
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 #include "stream.h"
 #else
 #include "timehdr.h"
@@ -31,7 +31,7 @@
 
 extern int s_errno;					/* Error number */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 
 /* Type definition for functions that take a HANDLE as only argument and return void */
 typedef void(*HANDLE_FN)(HANDLE);

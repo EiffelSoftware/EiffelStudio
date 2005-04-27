@@ -31,7 +31,7 @@
 #include <dirent.h>
 #endif
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 #include <time.h>
 #ifndef PATH_MAX
 #define PATH_MAX 260	/* Maximum length of full path name */

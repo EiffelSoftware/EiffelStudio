@@ -39,12 +39,12 @@
 #include <descrip.h>
 #include "eif_vmsdirent.h"		/* local to run-time */
 #define DIRENTRY struct dirent
-#elif defined EIF_WIN32
+#elif defined EIF_WINDOWS
 #else
 	Sorry! You have to find a directory package...
 #endif
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 #include <windows.h>
 #include <direct.h>	/* In order to use chdir and getcwd */
 #else

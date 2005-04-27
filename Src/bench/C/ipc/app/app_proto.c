@@ -48,7 +48,7 @@ This module should not be compiled in non-workbench mode
 #endif
 
 /* Unified (Windows/Unix) Stream declaration */
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 extern STREAM *sp;
 #endif
 
@@ -56,7 +56,7 @@ rt_public int rqstcnt = 0;			/* Request count */
 rt_private char gc_stopped;
 rt_private IDRF app_idrf;				/* IDR filter for serialize communications */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 rt_private void adopt(EIF_LPSTREAM s, Opaque *what);
 #else
 rt_private void adopt(int s, Opaque *what);
@@ -122,7 +122,7 @@ rt_public void arqsthandle(eif_stream s)
 
 	Request_Clean (rqst); /* zero recognized as non initialized -- Didier */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	recv_packet(s, &rqst, FALSE);		/* Get request */
 #else
 	recv_packet(s, &rqst);		/* Get request */
@@ -141,7 +141,7 @@ rt_private void process_request(eif_stream s, Request *rqst)
 {
 	/* Process the received request */
 
-#ifndef EIF_WIN32
+#ifndef EIF_WINDOWS
 	STREAM *sp = stream_by_fd[s];
 #endif
 
@@ -157,7 +157,7 @@ static int curr_modify = NO_CURRMODIF;
 
 	switch (rqst->rq_type) {
 	case INSPECT:					/* Object inspection */
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 		inspect(sp, &rqst->rq_opaque);
 #else
 		inspect(writefd(sp), &rqst->rq_opaque);
@@ -171,21 +171,21 @@ static int curr_modify = NO_CURRMODIF;
 		metamorphose_top();
 		break;
 	case DUMP_VARIABLES:
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 		send_stack_variables(sp, arg_1);
 #else
 		send_stack_variables(writefd (sp), arg_1);
 #endif
 		break;
 	case DUMP:						/* General stack dump request */
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 		send_stack(sp, (uint32) arg_1); /* Since we convert int -> uint32, passing -1 will inspect the whole stack. */
 #else
 		send_stack(writefd (sp), (uint32) arg_1);
 #endif
 		break;
 	case DYNAMIC_EVAL: /* arg_1 = feature_id / arg2=static_type / arg3=is_external / arg4=is_precompiled / arg5=is_basic_type*/
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 		dynamic_evaluation(sp, arg_1, arg_2, (arg_3 >> 1) & 1, (arg_3 >> 2) & 1);
 #else
 		dynamic_evaluation(writefd (sp), arg_1, arg_2, (arg_3 >> 1) & 1, (arg_3 >> 2) & 1);
@@ -225,7 +225,7 @@ static int curr_modify = NO_CURRMODIF;
 		critical_stack_depth = (uint32) arg_3;
 		dstatus(arg_1);				/* Debugger status (DX_STEP, DX_NEXT,..) */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 #ifdef USE_ADD_LOG
 		add_log(9, "RESUME");
 		if ((void (*)()) 0 == rem_input(sp))
@@ -246,7 +246,7 @@ static int curr_modify = NO_CURRMODIF;
 	case QUIT:						/* Die, immediately */
 		esdie(0);
 	case HELLO:							/* Initial handshake */
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 		send_ack(sp, AK_OK);	/* Ok, we're up */
 #else
 		send_ack(writefd(sp), AK_OK);	/* Ok, we're up */
@@ -258,35 +258,35 @@ static int curr_modify = NO_CURRMODIF;
 		load_bc(arg_1, arg_2);
 		break;
 	case ADOPT:						/* Adopt object */
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 		adopt(sp, &rqst->rq_opaque);
 #else
 		adopt(writefd(sp), &rqst->rq_opaque);
 #endif
 		break;
 	case ACCESS:					/* Access object through hector */
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 		ipc_access(sp, &rqst->rq_opaque);
 #else
 		ipc_access(writefd(sp), &rqst->rq_opaque);
 #endif
 		break;
 	case WEAN:						/* Wean adopted object */
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 		wean(sp, &rqst->rq_opaque);
 #else
 		wean(writefd(sp), &rqst->rq_opaque);
 #endif
 		break;
 	case ONCE:						/* Once routines inspection */
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 		once_inspect(sp, &rqst->rq_opaque);
 #else
 		once_inspect(writefd(sp), &rqst->rq_opaque);
 #endif
 		break;
 	case INTERRUPT_OK:				/* Stop execution and send call stack */
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 		(void) rem_input(sp);		/* exit listening loop */
 #else
 		(void) rem_input(s);		/* exit listening loop */
@@ -294,7 +294,7 @@ static int curr_modify = NO_CURRMODIF;
 		dbreak(PG_INTERRUPT);
 		break;
 	case INTERRUPT_NO:				/* Resume execution with no further ado */
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 		(void) rem_input(sp);		/* exit listening loop */
 #else
 		(void) rem_input(s);		/* exit listening loop */
@@ -315,7 +315,7 @@ static int curr_modify = NO_CURRMODIF;
  * Sending requests - Receiving answers
  */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 rt_public void send_packet(STREAM *s, Request *rqst)
 #else
 rt_public void send_packet(int s, Request *rqst)
@@ -355,7 +355,7 @@ rt_public void send_packet(int s, Request *rqst)
 #endif
 }
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 rt_public int recv_packet(STREAM *s, Request *dans, BOOL reset)
 #else
 rt_public int recv_packet(int s, Request *dans)
@@ -371,7 +371,7 @@ rt_public int recv_packet(int s, Request *dans)
 	 */
 
 	/* Wait for request */
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	if (-1 == net_recv(s, idrs_buf(&app_idrf.i_decode), IDRF_SIZE, reset))
 #else
 	if (-1 == net_recv(s, idrs_buf(&app_idrf.i_decode), IDRF_SIZE))
@@ -395,7 +395,7 @@ rt_public int recv_packet(int s, Request *dans)
  * Protocol specific routines
  */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 rt_public void stop_rqst(STREAM *s)
 #else
 rt_public void stop_rqst(int s)
@@ -463,7 +463,7 @@ rt_public void stop_rqst(int s)
 /* Encapsulate the 'modify_local' function */
 rt_private void modify_local_variable(long arg_stack_depth, long arg_loc_type, long arg_loc_number, struct item *ip)
 {
-#ifndef EIF_WIN32
+#ifndef EIF_WINDOWS
 	STREAM *sp = stream_by_fd[EWBOUT];
 #endif
 		
@@ -482,7 +482,7 @@ rt_private void modify_local_variable(long arg_stack_depth, long arg_loc_type, l
 		result = modify_local(stack_depth, loc_type, loc_number, ip);
 		
 		/* send the acknowledgement */
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 		send_ack(sp, result);
 #else
 		send_ack(writefd(sp), result);
@@ -498,7 +498,7 @@ rt_private void modify_local_variable(long arg_stack_depth, long arg_loc_type, l
 /* Encapsulate the 'modify_attr' function */
 rt_private void modify_object_attribute(rt_int_ptr arg_addr, long arg_attr_number, struct item *new_value)
 {
-#ifndef EIF_WIN32
+#ifndef EIF_WINDOWS
 	STREAM *sp = stream_by_fd[EWBOUT];
 #endif
 
@@ -515,7 +515,7 @@ rt_private void modify_object_attribute(rt_int_ptr arg_addr, long arg_attr_numbe
 		result = modify_attr(object, attr_number, new_value);
 		
 		/* send the acknowledgement */
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 		send_ack(sp, result);
 #else
 		send_ack(writefd(sp), result);
@@ -527,7 +527,7 @@ rt_private void modify_object_attribute(rt_int_ptr arg_addr, long arg_attr_numbe
 	}
 }
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 rt_private void inspect(STREAM *s, Opaque *what)
 #else
 rt_private void inspect(int s, Opaque *what)
@@ -588,7 +588,7 @@ rt_private void inspect(int s, Opaque *what)
 	free(out);
 }
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 rt_private void once_inspect(EIF_LPSTREAM s, Opaque *what)
 #else
 rt_private void once_inspect(int s, Opaque *what)
@@ -619,7 +619,7 @@ rt_private void once_inspect(int s, Opaque *what)
 	}
 }
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 rt_private void adopt(EIF_LPSTREAM s, Opaque *what)
 #else
 rt_private void adopt(int s, Opaque *what)
@@ -640,7 +640,7 @@ rt_private void adopt(int s, Opaque *what)
 	twrite(hector_addr, strlen(hector_addr));
 }
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 rt_private void ipc_access(EIF_LPSTREAM s, Opaque *what)
 #else
 rt_private void ipc_access(int s, Opaque *what)
@@ -663,7 +663,7 @@ rt_private void ipc_access(int s, Opaque *what)
 	twrite(physical_addr, strlen(physical_addr));
 }
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 rt_private void wean(EIF_LPSTREAM s, Opaque *what)
 #else
 rt_private void wean(int s, Opaque *what)
@@ -696,7 +696,7 @@ rt_private void load_bc(int slots, int amount)
 	 * error, of course.
 	 */
 
-#ifndef EIF_WIN32
+#ifndef EIF_WINDOWS
 	STREAM *sp = stream_by_fd[EWBOUT];
 	int s = writefd(sp);		/* Writing "socket" */
 	int r = readfd(sp);			/* Reading "socket" */
@@ -711,7 +711,7 @@ rt_private void load_bc(int slots, int amount)
 #endif
 
 	Request_Clean (rqst);
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	send_ack(sp, AK_OK);				/* Extension succeeded */
 #else
 	send_ack(s, AK_OK);				/* Extension succeeded */
@@ -733,7 +733,7 @@ rt_private void load_bc(int slots, int amount)
 #ifdef USE_ADD_LOG
 		add_log(9, "in load_bc loop");
 #endif
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 		recv_packet(sp, &rqst, TRUE);			/* Read BYTECODE request */
 		if (rqst.rq_type != BYTECODE) {	/* Wrong request */
 			send_ack(sp, AK_PROTO);		/* Protocol error */
@@ -1471,7 +1471,7 @@ rt_private void opush_dmpitem(struct item *item)
 	opush(item);
 	}
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 rt_private void dynamic_evaluation(STREAM *s, int fid, int stype, int is_precompiled, int is_basic_type)
 #else
 rt_private void dynamic_evaluation(int s, int fid, int stype, int is_precompiled, int is_basic_type)

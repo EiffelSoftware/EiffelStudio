@@ -119,7 +119,7 @@ doc:	</attribute>
 */
 rt_public int volatile eif_is_gc_collecting = 0;
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 /*
 doc:	<attribute name="yield_address" return_type="FARPROC" export="private">
 doc:		<summary>Address of `yield' routine for Windows. Only implemented on Windows NT and above.</summary>
@@ -188,7 +188,7 @@ rt_public void eif_thr_init_root(void)
 #ifdef ISE_GC
 	create_scavenge_zones();
 #endif
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	{
 		HMODULE kernel_module = LoadLibrary("kernel32.dll");
 		yield_address = GetProcAddress (kernel_module, "SwitchToThread");
@@ -289,7 +289,7 @@ rt_public unsigned int eif_thr_is_initialized()
 	eif_global_context_t *x;
 #endif
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	/* On windows, GetLastError() yields NO_ERROR if such key was initialized */
 	EIF_TSD_GET0 ((eif_global_context_t *),eif_global_key,x);
 	return (GetLastError() == NO_ERROR);
@@ -477,7 +477,7 @@ rt_public void eif_thr_create_with_args (EIF_OBJECT thr_root_obj,
 	EIF_MUTEX_UNLOCK(eif_children_mutex, "Couldn't unlock children mutex");
 	LAUNCH_MUTEX_LOCK;
 	if (detach != (EIF_BOOLEAN) 5) {
-#ifndef EIF_WIN32
+#ifndef EIF_WINDOWS
 		EIF_THR_ATTR_TYPE attr;
 #endif
 		EIF_THR_ATTR_INIT(attr,priority,policy,detach);
@@ -559,7 +559,7 @@ rt_private EIF_THR_ENTRY_TYPE eif_thr_entry (EIF_THR_ENTRY_ARG_TYPE arg)
 		exok();
 	}
 	eif_thr_exit ();
-#if (!defined SOLARIS_THREADS && !defined EIF_WIN32)
+#if (!defined SOLARIS_THREADS && !defined EIF_WINDOWS)
 	return (EIF_THR_ENTRY_TYPE) 0;	/* 	NOTREACHED. */
 #else
 	/* On solaris, EIF_ENTRY_TYPE is void: there is no Null void. */

@@ -58,7 +58,7 @@ rt_public void dexit(int);
 
 rt_public char *progname = "ram";	/* Program name */
 
-#ifndef EIF_WIN32
+#ifndef EIF_WINDOWS
 rt_public Pid_t progpid = 0;		/* Program PID */
 extern int errno;				/* System error report variable */
 #endif
@@ -74,7 +74,7 @@ rt_public void dexit(int status)
 }
 
 /* VARARGS2 */
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 rt_public void add_log(int level, char *format, int arg1, HANDLE arg2, HANDLE arg3, HANDLE arg4, HANDLE arg5)
 #else
 rt_public void add_log(int level, char *format, int arg1, int arg2, int arg3, int arg4, int arg5)
@@ -112,7 +112,7 @@ rt_public void add_log(int level, char *format, int arg1, int arg2, int arg3, in
 	sprintf(buffer, "%d/%.2d/%.2d %.2d:%.2d:%.2d %s[%d]: %s\n",
 		ct->tm_year, ct->tm_mon + 1, ct->tm_mday,
 		ct->tm_hour, ct->tm_min, ct->tm_sec,
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 		progname, 0, message);
 #else
 		progname, progpid, message);

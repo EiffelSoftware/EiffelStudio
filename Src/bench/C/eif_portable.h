@@ -144,7 +144,7 @@ typedef unsigned int uint32;
 #endif
 
 /* Portable integer pointers */
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 
 #ifndef _INTPTR_T_DEFINED
 #define _INTPTR_T_DEFINED
@@ -226,7 +226,7 @@ typedef signed char		EIF_INTEGER_8;
 typedef int16			EIF_INTEGER_16;
 typedef int32			EIF_INTEGER;
 typedef int32			EIF_INTEGER_32;
-#if defined(EIF_WIN32) && !defined(CYGWIN)	/* or whatever they actually are */
+#if defined(EIF_WINDOWS) && !defined(CYGWIN)	/* or whatever they actually are */
 typedef __int64			EIF_INTEGER_64;
 #elif defined(EIF_VMS)
 typedef long long int		EIF_INTEGER_64;
@@ -237,7 +237,7 @@ typedef unsigned char	EIF_NATURAL_8;
 typedef uint16			EIF_NATURAL_16;
 typedef uint32			EIF_NATURAL;
 typedef uint32			EIF_NATURAL_32;
-#if defined(EIF_WIN32) && !defined(CYGWIN)	/* or whatever they actually are */
+#if defined(EIF_WINDOWS) && !defined(CYGWIN)	/* or whatever they actually are */
 typedef unsigned __int64			EIF_NATURAL_64;
 #elif defined(EIF_VMS)
 typedef unsigned long long int		EIF_NATURAL_64;

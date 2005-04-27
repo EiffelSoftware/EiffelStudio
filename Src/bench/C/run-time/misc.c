@@ -19,7 +19,7 @@ doc:<file name="misc.c" header="eif_misc.h" version="$Id$" summary="Miscellenaou
 #ifdef VXWORKS
 #include <envLib.h>
 #endif
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <eif_file.h>
@@ -117,7 +117,7 @@ rt_public void eif_system_asynchronous (char *cmd)
 	 * number.
 	 */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	STARTUPINFO				siStartInfo;
 	PROCESS_INFORMATION		procinfo;
 	char 					*current_dir;
@@ -127,7 +127,7 @@ rt_public void eif_system_asynchronous (char *cmd)
 	char *meltpath, *appname, *envstring;	/* set MELT_PATH */
 #endif
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	current_dir = (char *) getcwd(NULL, PATH_MAX);
 
 	memset (&siStartInfo, 0, sizeof(STARTUPINFO));
@@ -223,14 +223,14 @@ rt_public void eif_system_asynchronous (char *cmd)
 
 	_exit(0);							/* Child is exiting properly */
 #endif /* EIF_VMS */
-#endif /* EIF_WIN32 */
+#endif /* EIF_WINDOWS */
 	/* NOTREACHED */
 
 }
 
 rt_public char * eif_getenv (char * k)
 {
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	char *result = getenv (k);
 
 	if (result)

@@ -16,7 +16,7 @@
 #include "stream.h" 	/* %%ss added */
 #include "request.h" 	/* %%ss added */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 extern void send_bye(STREAM *s, int code);				/* Send final acknowledgment */
 extern void send_ack(STREAM *s, int code);				/* Send acknowledgment */
 extern void send_info(STREAM *s, int code);			/* Send information */

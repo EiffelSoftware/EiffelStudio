@@ -44,7 +44,7 @@ extern char *starting_working_directory;
 RT_LNK int debug_mode;
 RT_LNK unsigned TIMEOUT;		/* Time out on reads */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 /* Console management for Windows */
 extern void eif_console_cleanup (EIF_BOOLEAN);
 extern void eif_show_console (void);					/* Show the DOS console if needed */

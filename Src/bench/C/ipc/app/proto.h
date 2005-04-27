@@ -17,7 +17,7 @@
 
 extern int rqstcnt;				/* Request count (number of requests sent) */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 extern void arqsthandle(STREAM *);		/* General request handler */
 extern void stop_rqst(STREAM *);		/* Stop notification to workbench */
 extern int recv_packet(STREAM *, Request *, BOOL); /* Receive IDR packet from ised */

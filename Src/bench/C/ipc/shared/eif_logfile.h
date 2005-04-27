@@ -20,7 +20,7 @@ extern void dexit(int);				/* Exit from the program by adding a log */
 #include "eif_config.h"
 
 /* Routine defined by logging package */
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 extern void add_log(int level, char *format, int arg1, HANDLE arg2, HANDLE arg3, HANDLE arg4, HANDLE arg5);
 #else
 extern void add_log(int level, char *format, int arg1, int arg2, int arg3, int arg4, int arg5);			/* Add logging message */
@@ -33,7 +33,7 @@ extern int reopen_log(void);		/* Re-open same logfile */
 
 /* The following need to be provided externally */
 extern char *progname;			/* Program name */
-#ifndef EIF_WIN32
+#ifndef EIF_WINDOWS
 extern Pid_t progpid;			/* Program PID */
 #endif
 

@@ -16,7 +16,7 @@
 
 #include "eif_portable.h"
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 #include "stream.h"
 #endif
 
@@ -24,7 +24,7 @@
 extern "C" {
 #endif
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 extern int net_send(STREAM *cs, char *buffer, size_t size);
 extern int net_recv(STREAM *cs, char *buf, size_t size, BOOL reset);
 #else

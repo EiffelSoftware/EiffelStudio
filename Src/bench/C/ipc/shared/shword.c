@@ -45,7 +45,7 @@ rt_private char *add_argv(char *word);		/* Append one word to the argv[] array *
 rt_public void shfree(void);			/* Free structure used by argv[] */
 rt_public char **shword(char *cmd);			/* Parse command string and split into words */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 rt_private char *str_save(char *s);		/* Save string somewhere in memory */
 #else
 extern char *str_save(char *s);			/* Save string somewhere in memory */
@@ -200,7 +200,7 @@ rt_public char **shword(char *cmd)
 			if (!in_simple)
 				in_quote = 1;			/* Entering double quote */
 			else
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 				if (!in_quote)
 					word[pos++] = c;		/* Must have been escaped */
 				else {
@@ -234,7 +234,7 @@ rt_public char **shword(char *cmd)
 	return argv;				/* Pointer to argument word array */
 }
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 rt_private char *str_save(char *s)
 {
 	/* Save string 's' somewhere in memory */

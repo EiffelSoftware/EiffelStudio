@@ -33,11 +33,11 @@ extern "C" {
 	/*---------*/
 /* Make sure EIF_NSIG is defined. If not, set it to 32 (cross your fingers)--RAM */
 #ifndef NSIG
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 #define EIF_NSIG 23
-#else	/* EIF_WIN32 */
+#else	/* EIF_WINDOWS */
 #define EIF_NSIG 32		/* Number of signals (access from 1 to EIF_NSIG-1) */
-#endif /* EIF_WIN32 */
+#endif /* EIF_WINDOWS */
 #else	/* !NSIG */
 
 #ifdef EIF_LINUXTHREADS

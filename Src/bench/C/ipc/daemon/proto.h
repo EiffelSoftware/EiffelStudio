@@ -24,7 +24,7 @@ struct d_flags {				/* Daemon flags (protocol with client) */
 	unsigned int d_sent;		/* Number of requests sent */
 	STREAM *d_cs;				/* Connected stream with ewb */
 	STREAM *d_as;				/* Connected stream with application */
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	HANDLE d_ewb;				/* Workbench pid */
 	HANDLE d_app;				/* Application process handle */
 	DWORD d_app_id;				/* Application process id */
@@ -41,7 +41,7 @@ struct d_flags {				/* Daemon flags (protocol with client) */
 extern struct d_flags daemon_data;	/* Global daemon's status */
 
 /* Routine declarations */
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 extern void drqsthandle(EIF_LPSTREAM);	/* General request processor */
 extern void send_packet(STREAM *s, Request *dans);
 extern int recv_packet(STREAM *s, Request *rqst, BOOL reset);

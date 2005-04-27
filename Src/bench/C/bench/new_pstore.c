@@ -21,7 +21,7 @@
 #include "rt_except.h"
 #include "rt_gen_conf.h"
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 #include <io.h>
 #else
 #include "unistd.h"

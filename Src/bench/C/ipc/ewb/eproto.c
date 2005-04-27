@@ -26,7 +26,7 @@
 #include "transfer.h"
 #include <string.h>
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 extern STREAM *sp;
 #endif
 
@@ -41,7 +41,7 @@ rt_public int shell(char *cmd)
 	 */
 
 	Request rqst;
-#ifndef EIF_WIN32
+#ifndef EIF_WINDOWS
 	STREAM *sp = stream_by_fd[EWBOUT];
 #endif
 
@@ -49,7 +49,7 @@ rt_public int shell(char *cmd)
 
 	rqst.rq_type = CMD;					/* Command will be run in foreground */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	send_packet(sp, &rqst);	/* Processing done by ised */
 #else
 	send_packet(writefd(sp), &rqst);	/* Processing done by ised */
@@ -62,7 +62,7 @@ rt_public int shell(char *cmd)
 		return 1;
 	}
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	recv_packet(sp, &rqst, TRUE);
 #else
 	recv_packet(readfd(sp), &rqst);
@@ -81,7 +81,7 @@ rt_public int background(char *cmd)
 	 */
 
 	Request rqst;
-#ifndef EIF_WIN32
+#ifndef EIF_WINDOWS
 	STREAM *sp = stream_by_fd[EWBOUT];
 #endif
 
@@ -89,7 +89,7 @@ rt_public int background(char *cmd)
 	rqst.rq_type = ASYNCMD;				/* Daemon will run it in background */
 	rqst.rq_opaque.op_first = rqstcnt;	/* Use request count as job number */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	send_packet(sp, &rqst);	/* Processing done by ised */
 #else
 	send_packet(writefd(sp), &rqst);	/* Processing done by ised */
@@ -113,14 +113,14 @@ rt_public int app_start(char *cmd)
 	 */
 
 	Request rqst;
-#ifndef EIF_WIN32
+#ifndef EIF_WINDOWS
 	STREAM *sp = stream_by_fd[EWBOUT];
 #endif
 
 	Request_Clean (rqst);
 	rqst.rq_type = APPLICATION;			/* Request application start-up */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	send_packet(sp, &rqst);	/* Send request for ised processing */
 #else
 	send_packet(writefd(sp), &rqst);	/* Send request for ised processing */
@@ -133,7 +133,7 @@ rt_public int app_start(char *cmd)
 		return -1;
 	}
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	recv_packet(sp, &rqst, TRUE);		/* Acknowledgment */
 #else
 	recv_packet(readfd(sp), &rqst);		/* Acknowledgment */

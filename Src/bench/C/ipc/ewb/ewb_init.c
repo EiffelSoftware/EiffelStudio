@@ -26,7 +26,7 @@
 
 extern int identify(void);		/* Make sure we are started via the wrapper */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 extern HANDLE global_ewbin, global_ewbout, global_event_r, global_event_w;
 #endif
 
@@ -49,7 +49,7 @@ rt_public void init_connect(void)
 	 * opened with the parent. The STREAM provides a bidrectional abstraction.
 	 */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	sp = new_stream(global_ewbin, global_ewbout, global_event_r, global_event_w);
 #else
 	sp = new_stream(EWBIN, EWBOUT);
@@ -71,7 +71,7 @@ rt_public void init_connect(void)
 #endif
 }
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 /* C routines for the communications of debugged application and debugger. */
 
 extern STREAM *sp;

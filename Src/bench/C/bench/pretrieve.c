@@ -24,7 +24,7 @@
 #include "minilzo.h"
 #include <string.h>
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 #include <io.h>
 #else
 #include "unistd.h"

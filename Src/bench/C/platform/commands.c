@@ -26,7 +26,7 @@
 #include "eif_path_name.h"  /* for eifrt_vms_filespec() */
 #include "eif_commands.h"
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 #include <windows.h>
 #include "..\ipc\shared\stream.h"
 #endif
@@ -40,13 +40,13 @@ rt_private fnptr send_proc;
 
 extern EIF_INTEGER eif_system(char *);
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 extern char *eif_getenv (char *);
 #endif
 
 void eif_beep (void)
 {
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	MessageBeep (MB_ICONEXCLAMATION);
 #else
 	fprintf (stderr, "\07");
@@ -62,7 +62,7 @@ void async_shell_pass_address(fnptr send_address, fnptr set_address)
 
 void eif_link_driver (EIF_OBJECT c_code_dir, EIF_OBJECT system_name, EIF_OBJECT prelink_command_name, EIF_OBJECT driver_name)
 {
-#if defined EIF_WIN32 || defined EIF_OS2
+#if defined EIF_WINDOWS || defined EIF_OS2
 	char *source_exe, *target_exe;
 	FILE *fi, *fo;
 	char buffer[4096];
@@ -136,7 +136,7 @@ void eif_link_driver (EIF_OBJECT c_code_dir, EIF_OBJECT system_name, EIF_OBJECT 
 
 void eif_gr_link_driver (EIF_OBJECT request, EIF_OBJECT c_code_dir, EIF_OBJECT system_name, EIF_OBJECT prelink_command_name, EIF_OBJECT driver_name)
 {
-#if defined EIF_WIN32 || defined EIF_OS2 || defined EIF_VMS
+#if defined EIF_WINDOWS || defined EIF_OS2 || defined EIF_VMS
 	eif_link_driver(c_code_dir, system_name, prelink_command_name, driver_name);
 #else
 	char *cmd;

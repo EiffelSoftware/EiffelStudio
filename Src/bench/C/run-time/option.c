@@ -108,7 +108,7 @@ doc:	</attribute>
 rt_private struct 	prof_rusage	*init_date;
 #elif defined(HAS_TIMES)
 rt_private double 	       init_date;
-#elif defined(EIF_WIN32)
+#elif defined(EIF_WINDOWS)
 rt_private SYSTEMTIME 	*init_date;
 #endif  /* HAS_GERUSAGE */
 
@@ -144,7 +144,7 @@ struct prof_rusage
 	time_struct system_time;
 };
 
-#elif defined (EIF_WIN32)
+#elif defined (EIF_WINDOWS)
 
 #include <windows.h>
 
@@ -168,7 +168,7 @@ struct prof_info {
 											/* (summarized) */
 				double	descendent_time;	/* Time spent in the */
 											/* descendents */
-#elif defined(EIF_WIN32)
+#elif defined(EIF_WINDOWS)
 	SYSTEMTIME	*this_total_time;
 	SYSTEMTIME	*all_total_time;
 	SYSTEMTIME	*descendent_time;
@@ -261,7 +261,7 @@ struct prof_info {
 								}\
 							}
 
-#elif defined(EIF_WIN32)
+#elif defined(EIF_WINDOWS)
 #define real_time(x)		((x)->wHour*3600 + (x)->wMinute*60 + (x)->wSecond + (x)->wMilliseconds / 1000.)
 #define record_time(x)	{\
 							prof_time(x);\
@@ -418,7 +418,7 @@ void prof_stack_init(void);					/* Initialize stack */
 void prof_time(struct prof_rusage *a_time);						/* Get time */
 #elif defined(HAS_TIMES)
 void prof_time(double *usertime, double *systime);
-#elif defined(EIF_WIN32)
+#elif defined(EIF_WINDOWS)
 void prof_time(SYSTEMTIME *a_time);
 #endif
 struct prof_info* prof_stack_top(void);		/* Top the stack */
@@ -562,7 +562,7 @@ void initprf(void)
 		init_date = (struct prof_rusage *) eif_malloc (sizeof (struct prof_rusage));
 #elif defined(HAS_TIMES)
 		
-#elif defined(EIF_WIN32)
+#elif defined(EIF_WINDOWS)
 		init_date = (SYSTEMTIME *) eif_malloc (sizeof (SYSTEMTIME));
 #endif  /* HAS_GERUSAGE */
 
@@ -588,7 +588,7 @@ void exitprf(void)
 		struct prof_rusage *execution_time;
 #elif defined(HAS_TIMES)
 		double execution_time;
-#elif defined(EIF_WIN32)
+#elif defined(EIF_WINDOWS)
 		SYSTEMTIME *execution_time;
 #endif  /* HAS_GERUSAGE */
 
@@ -632,7 +632,7 @@ void exitprf(void)
 		execution_time = (struct prof_rusage *) eif_malloc (sizeof (struct prof_rusage));
 #elif defined(HAS_TIMES)
 		
-#elif defined(EIF_WIN32)
+#elif defined(EIF_WINDOWS)
 		execution_time = (SYSTEMTIME *) eif_malloc (sizeof (SYSTEMTIME));
 #endif  /* HAS_GERUSAGE */
 
@@ -658,7 +658,7 @@ void exitprf(void)
 		subtract_time (execution_time, execution_time, init_date);
 #elif defined(HAS_TIMES)
 		execution_time = execution_time - init_date;
-#elif defined(EIF_WIN32)
+#elif defined(EIF_WINDOWS)
 		subtract_time (execution_time, execution_time, init_date);
 #endif 
 
@@ -683,7 +683,7 @@ void exitprf(void)
 						percentage = 100.0 * compute_percentage (real_time(features[j].all_total_time), real_time(execution_time)); 
 #elif defined(HAS_TIMES)
 						percentage = 100.0 * compute_percentage (features[j].all_total_time, execution_time);
-#elif defined(EIF_WIN32)
+#elif defined(EIF_WINDOWS)
 						percentage = 100.0 * compute_percentage (real_time(features[j].all_total_time), real_time(execution_time)); 
 #endif
 						
@@ -694,7 +694,7 @@ void exitprf(void)
 #elif defined(HAS_TIMES)
 								features[j].all_total_time / (double)HZ,
 								features[j].descendent_time / (double)HZ,
-#elif defined(EIF_WIN32)
+#elif defined(EIF_WINDOWS)
 								real_time(features[j].all_total_time),
 								real_time(features[j].descendent_time),
 #endif /* HAS_GETRUSAGE */
@@ -713,7 +713,7 @@ void exitprf(void)
 		eif_free (execution_time);
 #elif defined(HAS_TIMES)
 
-#elif defined(EIF_WIN32)
+#elif defined(EIF_WINDOWS)
 		eif_free (init_date);
 		eif_free (execution_time);
 #endif
@@ -1203,7 +1203,7 @@ void prof_time(double *usertime, double *systime)
 	*systime = (double)time.tms_stime;
 }
 
-#elif defined(EIF_WIN32)
+#elif defined(EIF_WINDOWS)
 
 void prof_time(SYSTEMTIME *a_time)
 

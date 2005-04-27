@@ -26,9 +26,9 @@
 
 #include "eif_cecil.h"
 #include "eif_portable.h"
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 #include <stdlib.h>
-#endif	/* EIF_WIN32 */
+#endif	/* EIF_WINDOWS */
 #ifdef EIF_WINDOWS
 #include <windows.h> /* DLL declarations */
 #endif

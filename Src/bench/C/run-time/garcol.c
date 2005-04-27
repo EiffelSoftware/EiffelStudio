@@ -68,7 +68,7 @@ doc:<file name="garcol.c" header="eif_garcol.h" version="$Id$" summary="Garbage 
 extern "C" {
 #endif
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 extern void eif_cleanup(void); /* %%ss added. In extra/win32/console/argcargv.c */
 #endif
 
@@ -1304,10 +1304,10 @@ rt_public void reclaim(void)
 
 			eif_free (starting_working_directory);
 			eif_gen_conf_cleanup ();
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 			eif_cleanup(); 
 			eif_free_dlls();
-#endif /* EIF_WIN32 */
+#endif /* EIF_WINDOWS */
 
 #ifdef EIF_THREADS 
 			CHECK ("Root thread", eif_thr_is_root ());

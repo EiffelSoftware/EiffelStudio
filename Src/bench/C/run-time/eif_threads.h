@@ -77,7 +77,7 @@
 #define EIF_NO_POSIX_SEM 	/* This can change if VxWorks compiled with option POSIX_SEM */
 #endif
 
-#ifdef EIF_WIN32			/* Tuning for Windows */
+#ifdef EIF_WINDOWS			/* Tuning for Windows */
 #define EIF_NO_POSIX_SEM
 #endif
 
@@ -114,7 +114,7 @@
 #include <synch.h>
 #endif
 
-#elif defined EIF_WIN32
+#elif defined EIF_WINDOWS
 #include <windows.h>
 #include <process.h>
 #include "eif_cond_var.h"
@@ -150,7 +150,7 @@ extern "C" {
 #define EIF_MUTEX_TYPE          pthread_mutex_t
 #define EIF_TSD_TYPE            pthread_key_t
 
-#elif defined(EIF_WIN32)
+#elif defined(EIF_WINDOWS)
 #define EIF_THR_ENTRY_TYPE      void
 #define EIF_THR_ENTRY_ARG_TYPE  void *
 #define EIF_THR_ATTR_TYPE       unsigned char

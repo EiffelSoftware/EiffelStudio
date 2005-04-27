@@ -23,7 +23,7 @@
 #include "eif_portable.h"
 #include "eif_globals.h"
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 #include <windows.h>
 #endif
 
@@ -46,7 +46,7 @@ RT_LNK long EIF_process_once_count;		/* Nr. of process-relative once routines */
 RT_LNK int scount;					/* Maximum dtype */
 RT_LNK void eif_alloc_init(void);
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 RT_LNK void get_argcargv (int *argc, char ***argv);
 RT_LNK void free_argv (char ***argv);
 RT_LNK HANDLE ghInstance;

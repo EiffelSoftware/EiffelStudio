@@ -26,7 +26,7 @@
 #include "ewbio.h"
 #include "child.h"
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include "uu.h"
@@ -62,20 +62,20 @@ extern void dexit (int);
 
 /* To fight SIGPIPE signals */
 rt_private jmp_buf env;		/* Environment saving for longjmp() */
-#ifndef EIF_WIN32
+#ifndef EIF_WINDOWS
 rt_private Signal_t broken(void);	/* Signal handler for SIGPIPE */
 #endif
 
 /* Function declaration */
 rt_private int comfort_child(STREAM *sp);	/* Reassure child, make him confident */
-#ifndef EIF_WIN32
+#ifndef EIF_WINDOWS
 extern char **shword(char *cmd);			/* Shell word parsing of command string */
 rt_private void close_on_exec(int fd);	/* Ensure this file will be closed by exec */
 #else
 rt_private void create_dummy_window (void);
 #endif
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 rt_public STREAM *spawn_child(int is_ec, char *cmd, char *cwd, int handle_meltpath, HANDLE *child_process_handle, DWORD *child_process_id)
 #else
 rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, Pid_t *child_pid)
@@ -89,7 +89,7 @@ rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, Pid_t *
 	 * returns in the parent process.
 	 */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	HANDLE pdn[2];						/* The opened downwards file descriptors */
 	HANDLE pup[2];						/* The opened upwards file descriptors */
 	HANDLE child_event_r;				/* Event for signalling readability */
@@ -119,7 +119,7 @@ rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, Pid_t *
 	char **argv;				/* Argument vector */
 #endif
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 		/* We encode 2 pointers, plus "? and ?" plus a space and a null terminating character. */
 	uu_buffer_size = uuencode_buffer_size(2) + 6;
 
@@ -160,7 +160,7 @@ rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, Pid_t *
 		size_t dirname_size;
 #endif
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 		meltpath = (char *) (strdup (cmd2));
 #else
 		meltpath = (char *) (strdup (argv [0]));
@@ -181,7 +181,7 @@ rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, Pid_t *
 			meltpath[--dirname_size] = '\0';
 		else
 			strcpy (meltpath, "[]");
-#elif defined(EIF_WIN32)
+#elif defined(EIF_WINDOWS)
 		appname = strrchr (meltpath, '\\');
 		if (appname)
 			*appname = 0;
@@ -215,7 +215,7 @@ rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, Pid_t *
 		if (appname) {
 			*(appname - 1) = (char) 0;
 			chdir (meltpath);
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 			startpath = strdup (meltpath);
 #endif
 		}
@@ -226,7 +226,7 @@ rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, Pid_t *
 	 * upwards (ewb -> ised).
 	 */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	/* Standard pipe oeratons for Windows
 		DuplicateHandle is called to set correct permisions.
 	*/
@@ -247,7 +247,7 @@ rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, Pid_t *
 		dexit(1);
 	}
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	if (!CreatePipe (&(pdn[PIPE_READ]), &(pipe_to_dup), &saAttr, 0)) {
 #else
 	if (-1 == pipe(pdn)) {
@@ -259,7 +259,7 @@ rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, Pid_t *
 		perror("pipe down");
 		dexit(1);
 	}
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 #ifdef USE_ADD_LOG
 	add_log(12, "opened pipes as pup(%d, %d), pdn(%d, %d)",
 		pup[PIPE_READ], pup[PIPE_WRITE], pdn[PIPE_READ], pipe_to_dup);
@@ -272,7 +272,7 @@ rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, Pid_t *
 #endif
 
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	if (!DuplicateHandle (GetCurrentProcess(), pipe_to_dup,
 		GetCurrentProcess(), &(pdn[PIPE_WRITE]), 0,
 		FALSE, DUPLICATE_SAME_ACCESS)) {
@@ -385,7 +385,7 @@ rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, Pid_t *
 #endif
 	}
 
-#else	/* (not) EIF_WIN32 -- UNIX, VMS */
+#else	/* (not) EIF_WINDOWS -- UNIX, VMS */
 
 #ifdef EIF_VMS
     /* VMS has no fork(). It does have vfork, which sets up the context	*/
@@ -558,7 +558,7 @@ rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, Pid_t *
 	 * interface will remain unchanged.
 	 */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	sprintf (event_str, "eif_event_r%x", piProcInfo.dwProcessId);
 	child_event_r = CreateSemaphore (NULL, 0, 32767, event_str);
 	sprintf (event_str, "eif_event_w%x", piProcInfo.dwProcessId);
@@ -574,7 +574,7 @@ rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, Pid_t *
 	pup[PIPE_WRITE] = NULL;
 	pdn[PIPE_READ] = NULL;
 
-#else /* EIF_WIN32 */
+#else /* EIF_WINDOWS */
 	sp = new_stream(pup[PIPE_READ], pdn[PIPE_WRITE]);
 
 #ifdef EIF_VMS
@@ -587,7 +587,7 @@ rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, Pid_t *
 #endif
 #endif /* EIF_VMS */
 
-#endif /* (not) EIF_WIN32 */
+#endif /* (not) EIF_WINDOWS */
 
 	/* Makes sure the child started correctly, and let him know we started him
 	 * from here, and that it is not a normal user invocation.
@@ -605,7 +605,7 @@ rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, Pid_t *
 	 * or to send some signals, or whatever...
 	 */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	if (child_process_handle != NULL) {
 		*child_process_handle = piProcInfo.hProcess;
 		if (child_process_id!=NULL)
@@ -631,7 +631,7 @@ rt_private int comfort_child(STREAM *sp)
 	 * child echoes ^A.
 	 */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	/* See identfy.c for the flip side of this */
 	DWORD wait, count;
 #else
@@ -640,7 +640,7 @@ rt_private int comfort_child(STREAM *sp)
 #endif
 	char c = '\0';
 
-#ifndef EIF_WIN32
+#ifndef EIF_WINDOWS
 	Signal_t (*oldpipe)();
 
 	FD_ZERO(&mask);
@@ -676,7 +676,7 @@ rt_private int comfort_child(STREAM *sp)
 	}
 #endif
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	if (! WriteFile (writefd(sp), &c, 1, &count, NULL)) {
 #ifdef USE_ADD_LOG
 		add_log(1, "SYSERR write: %m (%e)");
@@ -699,7 +699,7 @@ rt_private int comfort_child(STREAM *sp)
 
 	/* Now wait for the acknowledgment -- no SIGPIPE to be feared */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 #ifdef USE_ADD_LOG
 	add_log(12, "Waiting %d", readev(sp));
 #endif
@@ -719,7 +719,7 @@ rt_private int comfort_child(STREAM *sp)
 		return -1;
 	}
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	if (wait != WAIT_OBJECT_0) {
 #else
  	if (!FD_ISSET(readfd(sp), &mask)) {
@@ -730,7 +730,7 @@ rt_private int comfort_child(STREAM *sp)
 		return -1;
 	}
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	if (!ReadFile (readfd(sp), &c, 1, &count, NULL)) {
 #else
 	if (-1 == read(readfd(sp), &c, 1)) {
@@ -756,7 +756,7 @@ rt_private int comfort_child(STREAM *sp)
 	return 0;
 }
 
-#ifndef EIF_WIN32
+#ifndef EIF_WINDOWS
 rt_private void close_on_exec(int fd)
 {
 	/* Set the close on exec flag for file descriptor 'fd' */
@@ -837,4 +837,4 @@ void create_dummy_window (void)
 	}
 }
 
-#endif /* EIF_WIN32 */
+#endif /* EIF_WINDOWS */

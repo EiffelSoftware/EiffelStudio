@@ -36,7 +36,7 @@
 #include "identify.h"
 #include <stdio.h>
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 #include "uu.h"
 #include <windows.h>
 HANDLE global_ewbin, global_ewbout, global_event_r, global_event_w;
@@ -44,7 +44,7 @@ HANDLE global_ewbin, global_ewbout, global_event_r, global_event_w;
 #include <unistd.h>
 #endif
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 rt_public int identify()
 {
 	/* Identification protocol, to make sure we have been started via the

@@ -24,11 +24,11 @@
 #ifndef _stream_h_
 #define _stream_h_
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 #include <windows.h>
 #endif
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 typedef struct stream {
 	HANDLE sr;                      /* Reading stream */
 	HANDLE sw;                      /* Writing stream */
@@ -55,7 +55,7 @@ typedef struct stream {
  * to keep a constant interface should the STREAM structure evolve over time.
  */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 extern STREAM *new_stream(HANDLE read_fd, HANDLE write_fd, HANDLE er, HANDLE ew);
 extern int net_recv(STREAM *, char *, size_t, BOOL);
 extern int net_send(STREAM *, char *, size_t);

@@ -172,7 +172,7 @@ rt_public EIF_BOOLEAN eif_is_directory_valid(EIF_CHARACTER *p)
 
 rt_public EIF_BOOLEAN eif_is_volume_name_valid (EIF_CHARACTER *p)
 {
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	char rootpath[4];
 		/* Test to see if `p' is a valid volume name */
 	if (p)
@@ -432,7 +432,7 @@ rt_public void eif_set_directory(EIF_REFERENCE string, EIF_CHARACTER *p, EIF_CHA
 	if (!IS_VMS_FILESPEC(v) && *p != '\0' && *v != '/')
 	    strcat ((char*)p, "/");
 	strcat ((char*)p, (char*)v);
-#elif defined EIF_WIN32 || defined EIF_OS2
+#elif defined EIF_WINDOWS || defined EIF_OS2
 	strcat ((char *)p, (char *)v);
 #else	/* Unix */
 	if (*((char*)v) != '/' )
@@ -500,7 +500,7 @@ rt_public EIF_REFERENCE eif_current_dir_representation(void)
 rt_public EIF_BOOLEAN eif_home_dir_supported(void)
 {
 		/* Is the notion of $HOME supported */
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	return EIF_FALSE;
 #else
 	return EIF_TRUE;
@@ -520,7 +520,7 @@ rt_public EIF_BOOLEAN eif_root_dir_supported(void)
 rt_public EIF_REFERENCE eif_home_directory_name(void)
 {
 		/* String representation of $HOME */
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	return NULL;
 #elif defined (EIF_VMS)
 	return RTMS(getenv("SYS$LOGIN"));

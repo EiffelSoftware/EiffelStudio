@@ -657,7 +657,6 @@ $inttypes_include
 #define RTU64C(x)	$eif_natural_64_constant
 
 /* Is windows platform? */
-#$eif_win32	EIF_WIN32	/* NC */
 #$eif_windows EIF_WINDOWS	/* NC */
 
 /* Is SGI platform? */

@@ -89,16 +89,16 @@ doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None</synchronization>
 doc:	</attribute>
 */
-rt_public EIF_TSD_TYPE eif_global_key;
+rt_public EIF_TLS EIF_TSD_TYPE eif_global_key;
 
 /*
-doc:	<attribute name="rt_global_key" return_type="EIF_TSD_TYPE" export="shared">
+doc:	<attribute name="rt_global_key" return_type="RT_TSD_TYPE" export="shared">
 doc:		<summary>Key used to access private per thread data.</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None</synchronization>
 doc:	</attribute>
 */
-rt_shared EIF_TSD_TYPE rt_global_key;
+rt_shared EIF_TLS RT_TSD_TYPE rt_global_key;
 
 /*
 doc:	<attribute name="eif_thread_launch_mutex" return_type="EIF_LW_MUTEX_TYPE *" export="private">
@@ -285,19 +285,19 @@ rt_public unsigned int eif_thr_is_initialized()
 	 * Eiffel, null otherwise.
 	 */
 
-#ifndef VXWORKS
+#if !defined(VXWORKS) && !defined(EIF_HAS_TLS)
 	eif_global_context_t *x;
 #endif
 
-#ifdef EIF_WINDOWS
+#if defined(EIF_HAS_TLS) || defined(VXWORKS)
+	/* With thread-local-storage and on VXWORKS,
+	   eif_global_key holds a pointer to eif_globals. If the
+	   thread isn't initialized, eif_global_key == 0 */
+	return (eif_global_key != (EIF_TSD_TYPE) 0);
+#elif defined EIF_WINDOWS
 	/* On windows, GetLastError() yields NO_ERROR if such key was initialized */
 	EIF_TSD_GET0 ((eif_global_context_t *),eif_global_key,x);
 	return (GetLastError() == NO_ERROR);
-
-#elif defined VXWORKS
-	/* On VXWORKS, eif_global_key holds a pointer to eif_globals. If the
-	 thread isn't initialized, eif_global_key == 0 */
-	return (eif_global_key != (EIF_TSD_TYPE) 0);
 
 #elif defined EIF_POSIX_THREADS
 #ifdef EIF_NONPOSIX_TSD

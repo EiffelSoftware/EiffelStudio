@@ -161,6 +161,70 @@ extern int eif_is_synchronized (void);
 
 
 /* --------------------------------------- */
+/* --- Thread Specific Data management --- */
+/* --------------------------------------- */
+
+#ifdef EIF_HAS_TLS
+#	define EIF_TSD_CREATE(key,msg)
+#	define EIF_TSD_SET(key,val,msg) key = val
+#	define EIF_TSD_GET0(val_type,key,val)
+#	define EIF_TSD_GET(val_type,key,val,msg) val = key
+#	define EIF_TSD_DESTROY(key,msg)
+#elif defined EIF_POSIX_THREADS
+#	define EIF_TSD_CREATE(key,msg)             \
+	    if (pthread_key_create(&(key),NULL))    \
+	        eraise(msg, EN_EXT)
+#	define EIF_TSD_SET(key,val,msg)            \
+	    if (pthread_setspecific ((key), (EIF_TSD_VAL_TYPE)(val))) \
+	        eraise(msg, EN_EXT)
+#	if defined  EIF_NONPOSIX_TSD || defined POSIX_10034A
+#		define EIF_TSD_GET0(val_type,key,val) \
+		    pthread_getspecific((key), (void *)&(val))
+#		define EIF_TSD_GET(val_type,key,val,msg) \
+		    if (EIF_TSD_GET0(val_type,key,val)) eraise(msg, EN_EXT)
+#	else
+#		define EIF_TSD_GET0(foo,key,val) (val = pthread_getspecific(key))
+#		define EIF_TSD_GET(val_type,key,val,msg) \
+		    if (EIF_TSD_GET0(val_type,key,val) == (void *) 0) eraise(msg, EN_EXT)
+#	endif
+#	ifdef POSIX_10034A
+#		define EIF_TSD_DESTROY(key,msg) 
+#	else	/* POSIX_10034A */
+#		define EIF_TSD_DESTROY(key,msg) if (pthread_key_delete(key)) eraise(msg, EN_EXT)
+#	endif	/* POSIX_10034A */
+#elif defined EIF_WINDOWS
+#	define EIF_TSD_CREATE(key,msg) \
+	    if ((key=TlsAlloc())==0xFFFFFFFF) eraise(msg, EN_EXT)
+#	define EIF_TSD_SET(key,val,msg) \
+	    if (!TlsSetValue((key),(EIF_TSD_VAL_TYPE)(val))) eraise(msg, EN_EXT)
+#	define EIF_TSD_GET0(val_type,key,val) \
+	    val=val_type TlsGetValue(key)
+#	define EIF_TSD_GET(val_type,key,val,msg) \
+	    EIF_TSD_GET0(val_type,key,val); \
+	    if (GetLastError() != NO_ERROR) eraise(msg, EN_EXT)
+#	define EIF_TSD_DESTROY(key,msg) \
+	    if (!TlsFree(key)) eraise(msg, EN_EXT)
+#elif defined SOLARIS_THREADS
+#	define EIF_TSD_CREATE(key,msg) \
+	    if (thr_keycreate(&(key),NULL)) eraise(msg, EN_EXT)
+#	define EIF_TSD_SET(key,val,msg) \
+	    if (thr_setspecific((key),(EIF_TSD_VAL_TYPE)(val))) eraise(msg, EN_EXT)
+#	define EIF_TSD_GET0(val_type,key,val) \
+	    thr_getspecific(key,(void **)&(val))
+#	define EIF_TSD_GET(val_type,key,val,msg) \
+	    if (EIF_TSD_GET0(val_type,key,val)) eraise(msg, EN_EXT)
+#	define EIF_TSD_DESTROY(key,msg)
+#elif defined VXWORKS
+#	define EIF_TSD_CREATE(key,msg)
+#	define EIF_TSD_SET(key,val,msg)        \
+	    if (taskVarAdd (taskIdSelf(), (int *)&(key)) != OK) eraise(msg, EN_EXT); \
+	    key = val
+#	define EIF_TSD_GET0(val_type,key,val)
+#	define EIF_TSD_GET(val_type,key,val,msg) val = key
+#	define EIF_TSD_DESTROY(key,msg)
+#endif
+
+/* --------------------------------------- */
 
 #ifdef EIF_POSIX_THREADS
 /*-----------------------*/
@@ -271,32 +335,6 @@ extern int eif_is_synchronized (void);
 #define EIF_THR_SET_PRIORITY(tid,prio)
 #define EIF_THR_GET_PRIORITY(tid,prio)
 
-
-
-#define EIF_TSD_CREATE(key,msg)             \
-    if (pthread_key_create(&(key),NULL))    \
-        eraise(msg, EN_EXT)
-#define EIF_TSD_SET(key,val,msg)            \
-    if (pthread_setspecific ((key), (EIF_TSD_VAL_TYPE)(val))) \
-        eraise(msg, EN_EXT)
-
-/* Thread Specific Data management */
-#if defined  EIF_NONPOSIX_TSD || defined POSIX_10034A
-#define EIF_TSD_GET0(val_type,key,val) \
-    pthread_getspecific((key), (void *)&(val))
-#define EIF_TSD_GET(val_type,key,val,msg) \
-    if (EIF_TSD_GET0(val_type,key,val)) eraise(msg, EN_EXT)
-#else
-#define EIF_TSD_GET0(foo,key,val) (val = pthread_getspecific(key))
-#define EIF_TSD_GET(val_type,key,val,msg) \
-    if (EIF_TSD_GET0(val_type,key,val) == (void *) 0) eraise(msg, EN_EXT)
-#endif
-#ifdef POSIX_10034A
-#define EIF_TSD_DESTROY(key,msg) 
-#else	/* POSIX_10034A */
-#define EIF_TSD_DESTROY(key,msg) if (pthread_key_delete(key)) eraise(msg, EN_EXT)
-#endif	/* POSIX_10034A */
-
 /*
  * Posix 1003.1b signals
  */
@@ -401,19 +439,6 @@ extern int eif_is_synchronized (void);
 #define EIF_SEM_DESTROY(sem,msg) \
         if (!CloseHandle(sem)) eraise (msg, EN_EXT)
 
-/* Thread Specific Data management */
-#define EIF_TSD_CREATE(key,msg) \
-    if ((key=TlsAlloc())==0xFFFFFFFF) eraise(msg, EN_EXT)
-#define EIF_TSD_SET(key,val,msg) \
-    if (!TlsSetValue((key),(EIF_TSD_VAL_TYPE)(val))) eraise(msg, EN_EXT)
-#define EIF_TSD_GET0(val_type,key,val) \
-    val=val_type TlsGetValue(key)
-#define EIF_TSD_GET(val_type,key,val,msg) \
-    EIF_TSD_GET0(val_type,key,val); \
-    if (GetLastError() != NO_ERROR) eraise(msg, EN_EXT)
-#define EIF_TSD_DESTROY(key,msg) \
-    if (!TlsFree(key)) eraise(msg, EN_EXT)
-
 /* Mutex management */
 #define EIF_MUTEX_CREATE(m,msg) \
         m = CreateMutex(NULL,FALSE,NULL); \
@@ -486,18 +511,6 @@ extern int eif_is_synchronized (void);
 #define EIF_THR_YIELD               thr_yield()
 #define EIF_THR_SET_PRIORITY(tid,prio) thr_setprio(tid,prio)
 #define EIF_THR_GET_PRIORITY(tid,prio) thr_setprio(tid,&(prio))
-
-/* Thread Specific Data management */
-#define EIF_TSD_CREATE(key,msg) \
-    if (thr_keycreate(&(key),NULL)) eraise(msg, EN_EXT)
-#define EIF_TSD_SET(key,val,msg) \
-    if (thr_setspecific((key),(EIF_TSD_VAL_TYPE)(val))) eraise(msg, EN_EXT)
-#define EIF_TSD_GET0(val_type,key,val) \
-    thr_getspecific(key,(void **)&(val))
-#define EIF_TSD_GET(val_type,key,val,msg) \
-    if (EIF_TSD_GET0(val_type,key,val)) eraise(msg, EN_EXT)
-
-#define EIF_TSD_DESTROY(key,msg)
 
 /* Mutex management */
 
@@ -599,15 +612,6 @@ extern int eif_is_synchronized (void);
 #define EIF_SEM_DESTROY(sem,msg) \
     if (semDelete (sem) != OK) eraise (msg, EN_EXT)
 #endif
-
-/* Thread Specific Data management */
-#define EIF_TSD_CREATE(key,msg)
-#define EIF_TSD_SET(key,val,msg)        \
-    if (taskVarAdd (taskIdSelf(), (int *)&(key)) != OK) eraise(msg, EN_EXT); \
-    key = val
-#define EIF_TSD_GET0(val_type,key,val)
-#define EIF_TSD_GET(val_type,key,val,msg) val = key
-#define EIF_TSD_DESTROY(key,msg)
 
 #else	/* Not a supported platform */
 

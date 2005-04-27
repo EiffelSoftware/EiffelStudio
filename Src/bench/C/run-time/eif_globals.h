@@ -111,7 +111,11 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 	 * variables declarations.
 	 */
 
-#if defined EIF_POSIX_THREADS	/* POSIX Threads */
+#if defined EIF_HAS_TLS /* Thread-local storage is supported */
+#define EIF_GET_CONTEXT \
+	eif_global_context_t * EIF_VOLATILE eif_globals = eif_global_key;
+
+#elif defined EIF_POSIX_THREADS	/* POSIX Threads */
 #if defined EIF_NONPOSIX_TSD || defined POSIX_10034A
 rt_private eif_global_context_t * eif_pthread_getspecific (EIF_TSD_TYPE global_key) {
 	eif_global_context_t * Result;
@@ -188,7 +192,7 @@ rt_private eif_global_context_t * eif_thr_getspecific (EIF_TSD_TYPE global_key) 
 
 #define socket_fides		(eif_globals->socket_fides_cx)
 
-RT_LNK EIF_TSD_TYPE eif_global_key;
+RT_LNK EIF_TLS EIF_TSD_TYPE eif_global_key;
 
 #endif	/* EIF_THREADS */
 

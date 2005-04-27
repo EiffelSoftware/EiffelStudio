@@ -138,6 +138,44 @@ extern "C" {
 #endif
 
 /*------------------------------*/
+/*----  Thread-local storage ---*/
+/*------------------------------*/
+
+#ifdef USE_TLS
+#	ifdef EIF_WINDOWS
+#		define EIF_TLS __declspec (thread)
+#	elif defined(__GNUC__) && (__GNUC__ * 100 + __GNUC_MINOR__ >= 303)
+#		define EIF_TLS __thread
+#	else
+#		warning "USE_TLS macro is defined, but compiler does not support thread-local storage specifier."
+#	endif
+#endif
+
+#ifdef EIF_TLS
+#	define EIF_HAS_TLS
+#else
+#	undef EIF_HAS_TLS
+#	define EIF_TLS
+#endif
+
+#ifdef EIF_HAS_TLS
+#	define EIF_TSD_VAL_TYPE        eif_global_context_t *
+#	define EIF_TSD_TYPE            eif_global_context_t *
+#elif defined EIF_POSIX_THREADS
+#	define EIF_TSD_VAL_TYPE        void *
+#	define EIF_TSD_TYPE            pthread_key_t
+#elif defined EIF_WINDOWS
+#	define EIF_TSD_VAL_TYPE        LPVOID
+#	define EIF_TSD_TYPE            DWORD
+#elif defined SOLARIS_THREADS
+#	define EIF_TSD_VAL_TYPE        void *
+#	define EIF_TSD_TYPE            thread_key_t
+#elif defined VXWORKS
+#	define EIF_TSD_VAL_TYPE        eif_global_context_t *
+#	define EIF_TSD_TYPE            eif_global_context_t *
+#endif
+
+/*------------------------------*/
 /*-----  Type definitions  -----*/
 /*------------------------------*/
 
@@ -145,20 +183,16 @@ extern "C" {
 #define EIF_THR_ENTRY_TYPE      void *
 #define EIF_THR_ENTRY_ARG_TYPE  void *
 #define EIF_THR_ATTR_TYPE       pthread_attr_t
-#define EIF_TSD_VAL_TYPE        void *
 #define EIF_THR_TYPE            pthread_t
 #define EIF_MUTEX_TYPE          pthread_mutex_t
-#define EIF_TSD_TYPE            pthread_key_t
 
 #elif defined(EIF_WINDOWS)
 #define EIF_THR_ENTRY_TYPE      void
 #define EIF_THR_ENTRY_ARG_TYPE  void *
 #define EIF_THR_ATTR_TYPE       unsigned char
-#define EIF_TSD_VAL_TYPE        LPVOID
 #define EIF_SEM_TYPE            HANDLE
 #define EIF_THR_TYPE            unsigned long
 #define EIF_MUTEX_TYPE          HANDLE
-#define EIF_TSD_TYPE            DWORD
 
 #elif defined SOLARIS_THREADS
 rt_public typedef struct {
@@ -169,10 +203,8 @@ rt_public typedef struct {
 #define EIF_THR_ENTRY_TYPE      void
 #define EIF_THR_ENTRY_ARG_TYPE  void *
 #define EIF_THR_ATTR_TYPE       eif_thr_attr_t
-#define EIF_TSD_VAL_TYPE        void *
 #define EIF_THR_TYPE            thread_t
 #define EIF_MUTEX_TYPE          mutex_t
-#define EIF_TSD_TYPE            thread_key_t
 #ifndef EIF_NO_CONDVAR
 #define pthread_cond_t			cond_t
 #endif
@@ -183,14 +215,12 @@ rt_public typedef struct {
 #define EIF_THR_ATTR_TYPE       int
 #define EIF_THR_TYPE            int
 #define EIF_THR_ATTR_TYPE       int
-#define EIF_TSD_TYPE            eif_global_context_t *
 
 /* For consistency with the other platforms, EIF_MUTEX_TYPE shouldn't
    be a pointer, that's why we use struct semaphore instead of SEM_ID
    because SEM_ID is equivalent to (struct semaphore *)
    */
 #define EIF_MUTEX_TYPE			struct semaphore
-#define EIF_TSD_VAL_TYPE        eif_global_context_t * 
 
 #ifdef EIF_NO_POSIX_SEM
 #define EIF_SEM_TYPE            struct semaphore

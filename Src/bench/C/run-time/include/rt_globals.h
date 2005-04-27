@@ -242,16 +242,26 @@ typedef struct tag_rt_globals
 } rt_global_context_t;
 
 	/*
-	 * Definition of the macros EIF_GET_CONTEXT
+	 * Definition of the macros RT_GET_CONTEXT
 	 *
-	 * EIF_GET_CONTEXT used to contain an opening curly brace `{'. It is
+	 * RT_GET_CONTEXT used to contain an opening curly brace `{'. It is
 	 * now changed in order not to need it anymore: it is part of the local
 	 * variables declarations.
 	 */
 
-#if defined EIF_POSIX_THREADS	/* POSIX Threads */
+#if defined EIF_HAS_TLS
+#	define RT_TSD_TYPE rt_global_context_t *
+#else
+#	define RT_TSD_TYPE EIF_TSD_TYPE
+#endif
+
+#if defined EIF_HAS_TLS /* Thread-local storage is supported */
+#	define RT_GET_CONTEXT \
+		rt_global_context_t * EIF_VOLATILE rt_globals = rt_global_key;
+
+#elif defined EIF_POSIX_THREADS	/* POSIX Threads */
 #if defined EIF_NONPOSIX_TSD || defined POSIX_10034A
-rt_private rt_global_context_t * eif_pthread_getspecific (EIF_TSD_TYPE global_key) {
+rt_private rt_global_context_t * eif_pthread_getspecific (RT_TSD_TYPE global_key) {
 	rt_global_context_t * Result;
 	(void) pthread_getspecific(global_key,(void **)&Result);
 	return Result;
@@ -273,7 +283,7 @@ rt_private rt_global_context_t * eif_pthread_getspecific (EIF_TSD_TYPE global_ke
 		(rt_global_context_t *) TlsGetValue (rt_global_key);
 
 #elif defined SOLARIS_THREADS	/* Solaris Threads */
-rt_private rt_global_context_t * rt_thr_getspecific (EIF_TSD_TYPE global_key) {
+rt_private rt_global_context_t * rt_thr_getspecific (RT_TSD_TYPE global_key) {
 	void * Result;
 	(void) thr_getspecific(global_key, &Result);
 	return Result;
@@ -444,7 +454,7 @@ rt_private rt_global_context_t * rt_thr_getspecific (EIF_TSD_TYPE global_key) {
 		/* file.c */
 #define file_type			(rt_globals->file_type_cx)
 
-RT_LNK EIF_TSD_TYPE rt_global_key;
+RT_LNK EIF_TLS RT_TSD_TYPE rt_global_key;
 
 #endif
 

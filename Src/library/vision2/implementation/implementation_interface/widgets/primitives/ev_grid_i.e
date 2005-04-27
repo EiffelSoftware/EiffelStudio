@@ -2600,18 +2600,20 @@ feature {NONE} -- Event handling
 		local
 			item_offset: INTEGER
 			item_index: INTEGER
-
+			last_index: INTEGER
 		do
 			if look_right then
 				item_offset := 1
+				last_index := grid_row.count + 1
 			else
 				item_offset := -1
+				last_index := 0
 			end
 
 			from
 				item_index := starting_index + item_offset
 			until
-				Result /= Void or else item_index = 0 or else item_index > grid_row.count
+				Result /= Void or else item_index = last_index
 			loop
 				Result := grid_row.item (item_index)
 				item_index := item_index + item_offset
@@ -2630,17 +2632,20 @@ feature {NONE} -- Event handling
 			item_index: INTEGER
 			is_viewable: BOOLEAN
 			a_parent_row: EV_GRID_ROW
+			last_index: INTEGER
 		do
 			if look_down then
 				item_offset := 1
+				last_index := grid_column.count + 1
 			else
 				item_offset := -1
+				last_index := 0
 			end
 
 			from
 				item_index := starting_index + item_offset
 			until
-				Result /= Void or else item_index = 0 or else item_index > grid_column.count
+				Result /= Void or else item_index = last_index
 			loop
 				Result := grid_column.item (item_index)
 				if Result = Void and then look_left_right_if_void then
@@ -2676,6 +2681,7 @@ feature {NONE} -- Event handling
 			prev_sel_item, a_sel_item: EV_GRID_ITEM
 			a_sel_row: EV_GRID_ROW
 			sel_items: like selected_items
+			items_spanning: ARRAYED_LIST [INTEGER]
 		do
 				-- Handle the selection events
 			sel_items := selected_items
@@ -2693,11 +2699,21 @@ feature {NONE} -- Event handling
 					if not is_row_selection_enabled then
 							-- Key right shouldn't affect row selection
 						a_sel_item := find_next_item_in_row (prev_sel_item.row, prev_sel_item.column.index, True)
+					else
+						items_spanning := drawer.items_spanning_horizontal_span (virtual_x_position + width, 0)
+						if not items_spanning.is_empty then
+							column (items_spanning @ 1).ensure_visible
+						end
 					end
 				when {EV_KEY_CONSTANTS}.Key_left then
 					if not is_row_selection_enabled then
 							-- Key left shouldn't affect row selection
 						a_sel_item := find_next_item_in_row (prev_sel_item.row, prev_sel_item.column.index, False)
+					else
+						items_spanning := drawer.items_spanning_horizontal_span (virtual_x_position.max (1) - 1, 0)
+						if not items_spanning.is_empty then
+							column (items_spanning @ 1).ensure_visible	
+						end
 					end
 				else
 					-- Do nothing
@@ -2716,7 +2732,7 @@ feature {NONE} -- Event handling
 			a_col_counter, a_row_counter: INTEGER
 			current_item: EV_GRID_ITEM
 		do
-			if (create {EV_ENVIRONMENT}).application.shift_pressed and then is_multiple_item_selection_enabled then
+			if  is_multiple_item_selection_enabled and then (create {EV_ENVIRONMENT}).application.shift_pressed then
 				start_item := selected_items.last
 				if start_item /= Void and then start_item /= a_item then
 					start_row_index := start_item.row.index
@@ -2742,17 +2758,23 @@ feature {NONE} -- Event handling
 						a_col_counter := a_col_counter + 1
 					end
 				end
-			elseif (create {EV_ENVIRONMENT}).application.ctrl_pressed and then (is_multiple_item_selection_enabled or is_multiple_row_selection_enabled) then
-					-- If the ctrl key is pressed and we are in a multiple selection mode then we do nothing.
+			elseif (is_multiple_item_selection_enabled or is_multiple_row_selection_enabled)  and then (create {EV_ENVIRONMENT}).application.ctrl_pressed then
+				-- If the ctrl key is pressed and we are in a multiple selection mode then we do nothing.
 			else
 				if not a_item.is_selected or (not is_row_selection_enabled and then selected_items.count > 1) or (is_row_selection_enabled and then selected_rows.count > 1) then
 					remove_selection
 				end
 			end
+			
 			a_item.enable_select
 			
 			fixme ("When in per row selection mode, this appears to always force the last column to be visible.")
-			a_item.ensure_visible
+			if is_row_selection_enabled then
+				a_item.row.ensure_visible
+			else
+				a_item.ensure_visible
+			end
+
 		end
 
 	key_press_string_received (a_keystring: STRING) is

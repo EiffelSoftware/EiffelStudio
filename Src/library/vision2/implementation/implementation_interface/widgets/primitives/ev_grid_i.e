@@ -1071,7 +1071,9 @@ feature -- Status setting
 				horizontal_scroll_bar.set_value (virtual_x)
 				horizontal_scroll_bar.change_actions.resume
 			end
---			set_vertical_computation_required
+			if virtual_position_changed_actions_internal /= Void then
+				virtual_position_changed_actions_internal.call ([virtual_x_position, virtual_y_position])
+			end
 		ensure
 			virtual_position_set: virtual_x_position = virtual_x and virtual_y_position = virtual_y
 		end
@@ -1660,7 +1662,9 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			else
 				row_offsets := Void
 			end
-
+			if virtual_size_changed_actions_internal /= Void then
+				virtual_size_changed_actions_internal.call ([virtual_width, virtual_height])
+			end
 		ensure
 			offsets_consistent_when_not_fixed: not is_row_height_fixed implies row_offsets.count = rows.count + 1
 		end
@@ -2187,6 +2191,9 @@ feature {NONE} -- Drawing implementation
 				column_offsets.extend (i)
 				column_index := column_index + 1
 			end
+			if virtual_size_changed_actions_internal /= Void then
+				virtual_size_changed_actions_internal.call ([virtual_width, virtual_height])
+			end
 		ensure
 			counts_equal: column_offsets.count = column_count + 1
 		end
@@ -2294,6 +2301,9 @@ feature {NONE} -- Drawing implementation
 			else
 				internal_set_virtual_y_position (a_value)
 			end
+			if virtual_position_changed_actions_internal /= Void then
+				virtual_position_changed_actions_internal.call ([virtual_x_position, virtual_y_position])
+			end
 		end
 		
 	horizontal_scroll_bar_changed (a_value: INTEGER) is
@@ -2305,6 +2315,9 @@ feature {NONE} -- Drawing implementation
 				internal_set_virtual_x_position (column_offsets.i_th (a_value + 1))
 			else
 				internal_set_virtual_x_position (a_value)
+			end
+			if virtual_position_changed_actions_internal /= Void then
+				virtual_position_changed_actions_internal.call ([virtual_x_position, virtual_y_position])
 			end
 		end
 		

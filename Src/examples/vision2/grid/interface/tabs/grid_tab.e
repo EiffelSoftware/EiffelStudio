@@ -409,7 +409,7 @@ feature {NONE} -- Implementation
 			loop
 				grid_label_item ?= grid.item (1, counter)
 				if grid_label_item /= Void then
-					grid_label_item.set_background_color (red)
+					grid_label_item.set_background_color (light_red)
 				end
 				counter := counter + 1				
 			end
@@ -974,6 +974,25 @@ feature {NONE} -- Implementation
 		once
 			Result := (create {EV_STOCK_COLORS}).red
 		end
+
+	light_red: EV_COLOR is
+			--
+		once
+			create Result.make_with_8_bit_rgb (255, 230, 230)
+		end
+
+	light_blue: EV_COLOR is
+			--
+		once
+			create Result.make_with_8_bit_rgb (230, 230, 255)
+		end
+
+	light_green: EV_COLOR is
+			--
+		once
+			create Result.make_with_8_bit_rgb (230, 255, 230)
+		end
+		
 
 	enable_pick_and_drop_button_selected is
 			-- Called by `select_actions' of `enable_pick_and_drop_button'.

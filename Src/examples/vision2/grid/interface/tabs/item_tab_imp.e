@@ -53,6 +53,20 @@ feature {NONE}-- Initialization
 			create spacing_container
 			create l_ev_label_6
 			create spacing_spin_button
+			create alignment_container
+			create l_ev_label_7
+			create alignment_combo
+			create left_alignment_item
+			create center_alignment_item
+			create right_alignment_item
+			create apply_pixmap_row_button
+			create apply_pixmap_column_button
+			create apply_alignment_row_button
+			create apply_alignment_column_button
+			create apply_left_border_row_button
+			create apply_left_border_column_button
+			create apply_spacing_row_button
+			create apply_spacing_column_button
 			create item_operations_frame
 			create l_ev_vertical_box_1
 			create remove_item_button
@@ -75,6 +89,11 @@ feature {NONE}-- Initialization
 			left_border_container.extend (left_border_spin_button)
 			spacing_container.extend (l_ev_label_6)
 			spacing_container.extend (spacing_spin_button)
+			alignment_container.extend (l_ev_label_7)
+			alignment_container.extend (alignment_combo)
+			alignment_combo.extend (left_alignment_item)
+			alignment_combo.extend (center_alignment_item)
+			alignment_combo.extend (right_alignment_item)
 			extend (item_operations_frame)
 			item_operations_frame.extend (l_ev_vertical_box_1)
 			l_ev_vertical_box_1.extend (remove_item_button)
@@ -92,16 +111,25 @@ feature {NONE}-- Initialization
 			item_x_index.value_range.adapt (create {INTEGER_INTERVAL}.make (0, 1000000))
 			l_ev_label_2.set_text ("Y Index")
 			item_y_index.value_range.adapt (create {INTEGER_INTERVAL}.make (0, 1000000))
-			l_ev_table_1.resize (2, 3)
+			l_ev_table_1.resize (3, 7)
 			l_ev_table_1.set_row_spacing (box_padding)
 			l_ev_table_1.set_column_spacing (box_padding)
 			l_ev_table_1.set_border_width (box_padding)
 				-- Insert and position all children of `l_ev_table_1'.
 			l_ev_table_1.put_at_position (textable_container, 1, 1, 1, 1)
-			l_ev_table_1.put_at_position (is_selected, 2, 1, 1, 1)
+			l_ev_table_1.put_at_position (is_selected, 1, 6, 1, 1)
 			l_ev_table_1.put_at_position (pixmapable_container, 1, 2, 1, 1)
-			l_ev_table_1.put_at_position (left_border_container, 2, 3, 1, 1)
-			l_ev_table_1.put_at_position (spacing_container, 1, 3, 1, 1)
+			l_ev_table_1.put_at_position (left_border_container, 1, 4, 1, 1)
+			l_ev_table_1.put_at_position (spacing_container, 1, 5, 1, 1)
+			l_ev_table_1.put_at_position (alignment_container, 1, 3, 1, 1)
+			l_ev_table_1.put_at_position (apply_pixmap_row_button, 2, 2, 1, 1)
+			l_ev_table_1.put_at_position (apply_pixmap_column_button, 3, 2, 1, 1)
+			l_ev_table_1.put_at_position (apply_alignment_row_button, 2, 3, 1, 1)
+			l_ev_table_1.put_at_position (apply_alignment_column_button, 3, 3, 1, 1)
+			l_ev_table_1.put_at_position (apply_left_border_row_button, 2, 4, 1, 1)
+			l_ev_table_1.put_at_position (apply_left_border_column_button, 3, 4, 1, 1)
+			l_ev_table_1.put_at_position (apply_spacing_row_button, 2, 5, 1, 1)
+			l_ev_table_1.put_at_position (apply_spacing_column_button, 3, 5, 1, 1)
 			textable_container.disable_item_expand (l_ev_label_3)
 			l_ev_label_3.set_text ("Text : ")
 			textable_entry.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (212, 208, 200))
@@ -112,6 +140,21 @@ feature {NONE}-- Initialization
 			l_ev_label_5.set_text ("Left Border : ")
 			spacing_container.disable_item_expand (l_ev_label_6)
 			l_ev_label_6.set_text ("Spacing : ")
+			alignment_container.disable_item_expand (l_ev_label_7)
+			l_ev_label_7.set_text ("Alignment : ")
+			l_ev_label_7.align_text_left
+			alignment_combo.set_text ("Left")
+			left_alignment_item.set_text ("Left")
+			center_alignment_item.set_text ("Center")
+			right_alignment_item.set_text ("Right")
+			apply_pixmap_row_button.set_text ("Apply Row")
+			apply_pixmap_column_button.set_text ("Apply Column")
+			apply_alignment_row_button.set_text ("Apply Row")
+			apply_alignment_column_button.set_text ("Apply Column")
+			apply_left_border_row_button.set_text ("Apply Row")
+			apply_left_border_column_button.set_text ("Apply Column")
+			apply_spacing_row_button.set_text ("Apply Row")
+			apply_spacing_column_button.set_text ("Apply Column")
 			item_operations_frame.disable_sensitive
 			item_operations_frame.set_text ("Item Operations")
 			l_ev_vertical_box_1.set_padding_width (box_padding)
@@ -131,6 +174,17 @@ feature {NONE}-- Initialization
 			pixmap_holder.select_actions.extend (agent pixmap_holder_item_selected)
 			left_border_spin_button.change_actions.extend (agent left_border_spin_button_changed (?))
 			spacing_spin_button.change_actions.extend (agent spacing_spin_button_changed (?))
+			left_alignment_item.select_actions.extend (agent left_alignment_item_selected)
+			center_alignment_item.select_actions.extend (agent center_alignment_item_selected)
+			right_alignment_item.select_actions.extend (agent right_alignment_item_selected)
+			apply_pixmap_row_button.select_actions.extend (agent apply_pixmap_row_button_selected)
+			apply_pixmap_column_button.select_actions.extend (agent apply_pixmap_column_selected)
+			apply_alignment_row_button.select_actions.extend (agent apply_alignment_row_button_selected)
+			apply_alignment_column_button.select_actions.extend (agent apply_alignment_column_button_selected)
+			apply_left_border_row_button.select_actions.extend (agent apply_left_border_row_button_selected)
+			apply_left_border_column_button.select_actions.extend (agent apply_left_border_column_button_selected)
+			apply_spacing_row_button.select_actions.extend (agent apply_spacing_row_button_selected)
+			apply_spacing_column_button.select_actions.extend (agent apply_spacing_column_button_selected)
 			remove_item_button.select_actions.extend (agent remove_item_button_selected)
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.
@@ -146,19 +200,23 @@ feature -- Access
 	item_x_index, item_y_index, left_border_spin_button, spacing_spin_button: EV_SPIN_BUTTON
 	item_finder: GRID_ITEM_FINDER
 	textable_container,
-	pixmapable_container, left_border_container, spacing_container: EV_HORIZONTAL_BOX
-	remove_item_button: EV_BUTTON
-	item_frame,
-	item_operations_frame: EV_FRAME
-	pixmap_holder: EV_COMBO_BOX
+	pixmapable_container, left_border_container, spacing_container, alignment_container: EV_HORIZONTAL_BOX
+	apply_pixmap_row_button,
+	apply_pixmap_column_button, apply_alignment_row_button, apply_alignment_column_button,
+	apply_left_border_row_button, apply_left_border_column_button, apply_spacing_row_button,
+	apply_spacing_column_button, remove_item_button: EV_BUTTON
+	item_frame, item_operations_frame: EV_FRAME
+	pixmap_holder,
+	alignment_combo: EV_COMBO_BOX
 	textable_entry: EV_TEXT_FIELD
+	left_alignment_item, center_alignment_item, right_alignment_item: EV_LIST_ITEM
 
 feature {NONE} -- Implementation
 
 	l_ev_vertical_box_1: EV_VERTICAL_BOX
 	l_ev_horizontal_box_1: EV_HORIZONTAL_BOX
 	l_ev_label_1, l_ev_label_2, l_ev_label_3,
-	l_ev_label_4, l_ev_label_5, l_ev_label_6: EV_LABEL
+	l_ev_label_4, l_ev_label_5, l_ev_label_6, l_ev_label_7: EV_LABEL
 	l_ev_table_1: EV_TABLE
 
 feature {NONE} -- Implementation
@@ -208,6 +266,61 @@ feature {NONE} -- Implementation
 	
 	spacing_spin_button_changed (a_value: INTEGER) is
 			-- Called by `change_actions' of `spacing_spin_button'.
+		deferred
+		end
+	
+	left_alignment_item_selected is
+			-- Called by `select_actions' of `left_alignment_item'.
+		deferred
+		end
+	
+	center_alignment_item_selected is
+			-- Called by `select_actions' of `center_alignment_item'.
+		deferred
+		end
+	
+	right_alignment_item_selected is
+			-- Called by `select_actions' of `right_alignment_item'.
+		deferred
+		end
+	
+	apply_pixmap_row_button_selected is
+			-- Called by `select_actions' of `apply_pixmap_row_button'.
+		deferred
+		end
+	
+	apply_pixmap_column_selected is
+			-- Called by `select_actions' of `apply_pixmap_column_button'.
+		deferred
+		end
+	
+	apply_alignment_row_button_selected is
+			-- Called by `select_actions' of `apply_alignment_row_button'.
+		deferred
+		end
+	
+	apply_alignment_column_button_selected is
+			-- Called by `select_actions' of `apply_alignment_column_button'.
+		deferred
+		end
+	
+	apply_left_border_row_button_selected is
+			-- Called by `select_actions' of `apply_left_border_row_button'.
+		deferred
+		end
+	
+	apply_left_border_column_button_selected is
+			-- Called by `select_actions' of `apply_left_border_column_button'.
+		deferred
+		end
+	
+	apply_spacing_row_button_selected is
+			-- Called by `select_actions' of `apply_spacing_row_button'.
+		deferred
+		end
+	
+	apply_spacing_column_button_selected is
+			-- Called by `select_actions' of `apply_spacing_column_button'.
 		deferred
 		end
 	

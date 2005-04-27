@@ -384,9 +384,6 @@ feature -- Access
 			-- will be assigned to `pebble' for the duration of transport.
 			-- When a pick occurs on an item, the item itself is passed.
 			-- If a pick occurs and no item is present, then Void is passed.
-			-- To handle this data use `a_function' of type
-			-- FUNCTION [ANY, TUPLE [EV_GRID_ITEM], ANY] and return the
-			-- pebble as a function of EV_GRID_ITEM.
 		require
 			not_destroyed: not is_destroyed
 		do

@@ -190,15 +190,13 @@ feature {NONE} -- Implementation
 		do
 			if is_partially_dynamic.is_selected then
 				grid.enable_partial_dynamic_content
-				resize_columns_to_box.enable_sensitive
-				resize_rows_to_box.enable_sensitive
+				resize_rows_columns_box.enable_sensitive
 				is_completely_dynamic.select_actions.block
 				is_completely_dynamic.disable_select
 				is_completely_dynamic.select_actions.resume
 			else
 				if not is_completely_dynamic.is_selected then
-					resize_columns_to_box.disable_sensitive
-					resize_rows_to_box.disable_sensitive
+					resize_rows_columns_box.disable_sensitive
 					grid.disable_dynamic_content
 				end
 			end
@@ -209,20 +207,18 @@ feature {NONE} -- Implementation
 		do
 			if is_completely_dynamic.is_selected then
 				grid.enable_complete_dynamic_content
-				resize_columns_to_box.enable_sensitive
-				resize_rows_to_box.enable_sensitive
+				resize_rows_columns_box.enable_sensitive
 				is_partially_dynamic.select_actions.block
 				is_partially_dynamic.disable_select
 				is_partially_dynamic.select_actions.resume
 			else
 				if not is_partially_dynamic.is_selected then
-					resize_columns_to_box.disable_sensitive
-					resize_rows_to_box.disable_sensitive
+					resize_rows_columns_box.disable_sensitive
 					grid.disable_dynamic_content
 				end
 			end
 		end
-	
+
 	resize_columns_to_button_selected is
 			-- Called by `select_actions' of `resize_columns_to_button'.
 		do

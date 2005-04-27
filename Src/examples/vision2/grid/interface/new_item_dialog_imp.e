@@ -94,6 +94,8 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_4.extend (add_button)
 			l_ev_horizontal_box_4.extend (close_button)
 			
+			l_ev_vertical_box_1.set_padding_width (box_padding)
+			l_ev_vertical_box_1.set_border_width (box_padding)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_frame_1)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_frame_2)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_4)

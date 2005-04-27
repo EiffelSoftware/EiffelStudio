@@ -230,6 +230,7 @@ feature -- Basic operations
 		local
 			horizontal_span_items, vertical_span_items: ARRAYED_LIST [INTEGER]
 		do
+			grid.perform_horizontal_computation
 			grid.perform_vertical_computation
 				-- Recompute vertical row heights and scroll bar positions before
 				-- querying the item positions
@@ -251,6 +252,7 @@ feature -- Basic operations
 			horizontal_span_items, vertical_span_items: ARRAYED_LIST [INTEGER]
 			item_indent: INTEGER
 		do
+			grid.perform_horizontal_computation
 			grid.perform_vertical_computation
 				-- Recompute vertical row heights and scroll bar positions before
 				-- querying the item positions
@@ -340,6 +342,7 @@ feature -- Basic operations
 		do
 			dynamic_content_function := grid.dynamic_content_function
 			
+			grid.perform_horizontal_computation
 			grid.perform_vertical_computation
 				-- Recompute vertical row heights and scroll bar positions before
 				-- calculating the draw positions. The recomputation is only

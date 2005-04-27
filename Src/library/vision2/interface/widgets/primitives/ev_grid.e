@@ -22,7 +22,8 @@ inherit
 			prunable,
 			readable,
 			writable,
-			is_in_default_state
+			is_in_default_state,
+			drop_actions
 		end
 	
 	EV_GRID_ACTION_SEQUENCES
@@ -38,6 +39,12 @@ inherit
 		end
 
 feature -- Access
+
+	drop_actions: EV_PND_ACTION_SEQUENCE is
+			-- Actions to be performed when a pebble is dropped here.
+		do
+			Result := implementation.drop_actions
+		end
 
 	row (a_row: INTEGER): EV_GRID_ROW is
 			-- Row `a_row'.
@@ -373,7 +380,13 @@ feature -- Access
 
 	item_pebble_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], ANY] is
 			-- Returns data to be transported by pick and drop mechanism.
-			-- See `set_item_pebble_function' for more information.
+			-- It will be called once each time a pick on the item area of the grid occurs, the result
+			-- will be assigned to `pebble' for the duration of transport.
+			-- When a pick occurs on an item, the item itself is passed.
+			-- If a pick occurs and no item is present, then Void is passed.
+			-- To handle this data use `a_function' of type
+			-- FUNCTION [ANY, TUPLE [EV_GRID_ITEM], ANY] and return the
+			-- pebble as a function of EV_GRID_ITEM.
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -381,7 +394,11 @@ feature -- Access
 		end
 
 	item_veto_pebble_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM, ANY], BOOLEAN] is
-			-- Function used to determing whether dropping is allowed on a particular item.
+			-- Function used to determine whether dropping is allowed on a particular item.
+			-- When called during PND transport, the grid item currently under the pebble
+			-- and the pebble itself are passed to the function.  A return value of True means
+			-- that the pebble is allowed to be dropped onto the item, a return value of False
+			-- disallows any PND transport.
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -402,14 +419,7 @@ feature -- Status setting
 		end
 
 	set_item_pebble_function (a_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], ANY]) is
-			-- Set `a_function' to compute `pebble'.
-			-- It will be called once each time a pick on the item area of the grid occurs, the result
-			-- will be assigned to `pebble' for the duration of transport.
-			-- When a pick occurs on an item, the item itself is passed.
-			-- If a pick occurs and no item is present, then Void is passed.
-			-- To handle this data use `a_function' of type
-			-- FUNCTION [ANY, TUPLE [EV_GRID_ITEM], ANY] and return the
-			-- pebble as a function of EV_GRID_ITEM.
+			-- Assign `a_function' to `item_pebble_function'.
 		require
 			not_destroyed: not is_destroyed
 			a_function_not_void: a_function /= Void

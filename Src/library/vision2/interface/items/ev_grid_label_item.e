@@ -13,11 +13,11 @@ inherit
 			implementation,
 			create_implementation
 		end
-	
+
 create
 	default_create,
 	make_with_text
-	
+
 feature {NONE} -- Initialization
 
 	make_with_text (a_text: STRING) is
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 		ensure
 			text_assigned: text = a_text
 		end
-		
+
 feature -- Status Setting
 	
 	set_text (a_text: STRING) is
@@ -99,6 +99,43 @@ feature -- Status Setting
 			pixmap_removed: pixmap = Void
 		end
 
+	set_left_border (a_left_border: INTEGER) is
+			-- Assign `a_left_border' to `left_border'.
+		require
+			not_destroyed: not is_destroyed
+			a_left_border_non_negative: a_left_border >= 0
+		do
+			left_border := a_left_border
+			if parent /= Void then
+				parent.implementation.redraw_item (implementation)
+			end
+		ensure
+			left_border_set: left_border = a_left_border
+		end
+
+	set_spacing (a_spacing: INTEGER) is
+			-- Assign `a_spacing' to `spacing'.
+		require
+			not_destroyed: not is_destroyed
+			a_spacing_non_negative: a_spacing >= 0
+		do
+			spacing := a_spacing
+			if parent /= Void then
+				parent.implementation.redraw_item (implementation)
+			end
+		ensure
+			spacing_set: spacing = a_spacing
+		end
+
+feature -- Measurement
+
+	left_border: INTEGER
+			-- Spacing between the contents of `Current' and the left edge of `Current' in pixels.
+
+	spacing: INTEGER
+			-- Spacing between `text' and `pixmap' in pixels.
+			-- If both are not visible, this value does not affect appearance of `Current'.
+
 feature -- Status report
 
 	text: STRING
@@ -115,7 +152,8 @@ feature {NONE} -- Contract support
 	is_in_default_state: BOOLEAN is
 			-- Is `Current' in its default state?
 		do
-			Result := Precursor {EV_GRID_ITEM} and text.is_empty and pixmap = Void
+			Result := Precursor {EV_GRID_ITEM} and text.is_empty and pixmap = Void and
+				left_border = 2 and spacing = 2
 		end
 
 feature {EV_ANY, EV_ANY_I, EV_GRID_DRAWER_I} -- Implementation

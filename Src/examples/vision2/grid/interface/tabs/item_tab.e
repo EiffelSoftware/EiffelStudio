@@ -132,6 +132,18 @@ feature {NONE} -- Implementation
 					left_border_spin_button.change_actions.block
 					left_border_spin_button.set_value (label_item.left_border)
 					left_border_spin_button.change_actions.resume
+					right_border_container.enable_sensitive
+					right_border_spin_button.change_actions.block
+					right_border_spin_button.set_value (label_item.right_border)
+					right_border_spin_button.change_actions.resume
+					top_border_container.enable_sensitive
+					top_border_spin_button.change_actions.block
+					top_border_spin_button.set_value (label_item.top_border)
+					top_border_spin_button.change_actions.resume
+					bottom_border_container.enable_sensitive
+					bottom_border_spin_button.change_actions.block
+					bottom_border_spin_button.set_value (label_item.bottom_border)
+					bottom_border_spin_button.change_actions.resume
 					spacing_container.enable_sensitive
 					spacing_spin_button.change_actions.block
 					spacing_spin_button.set_value (label_item.spacing)
@@ -196,6 +208,9 @@ feature {NONE} -- Implementation
 					left_border_container.disable_sensitive
 					spacing_container.disable_sensitive
 					alignment_container.disable_sensitive
+					bottom_border_container.disable_sensitive
+					top_border_container.disable_sensitive
+					right_border_container.disable_sensitive
 				end
 				deselectable ?= found_item
 				if deselectable /= Void then
@@ -714,6 +729,183 @@ feature {NONE} -- Implementation
 					label_item.set_foreground_color (original_color)
 				end
 				counter := counter + 1
+			end
+		end
+
+	apply_bottom_border_row_button_selected is
+			-- Called by `select_actions' of `apply_bottom_border_row_button'.
+		local
+			counter: INTEGER
+			original_item, label_item: EV_GRID_LABEL_ITEM
+			row: INTEGER
+			original_bottom_border: INTEGER
+		do
+			from
+				counter := 1
+				row := found_item.row.index
+				original_item ?= found_item
+				original_bottom_border := original_item.bottom_border
+			until
+				counter > grid.column_count
+			loop
+				label_item ?= grid.item (counter, row)
+				if label_item /= Void then
+					label_item.set_bottom_border (original_bottom_border)
+				end
+				counter := counter + 1
+			end
+		end
+	
+	apply_bottom_border_column_button_selected is
+			-- Called by `select_actions' of `apply_bottom_border_column_button'.
+		local
+			counter: INTEGER
+			original_item, label_item: EV_GRID_LABEL_ITEM
+			column: INTEGER
+			original_bottom_border: INTEGER
+		do
+			from
+				counter := 1
+				column := found_item.column.index
+				original_item ?= found_item
+				original_bottom_border := original_item.bottom_border
+			until
+				counter > grid.row_count
+			loop
+				label_item ?= grid.item (column, counter)
+				if label_item /= Void then
+					label_item.set_bottom_border (original_bottom_border)
+				end
+				counter := counter + 1
+			end
+		end
+	
+	apply_right_border_row_button_selected is
+			-- Called by `select_actions' of `apply_right_border_row_button'.
+		local
+			counter: INTEGER
+			original_item, label_item: EV_GRID_LABEL_ITEM
+			row: INTEGER
+			original_right_border: INTEGER
+		do
+			from
+				counter := 1
+				row := found_item.row.index
+				original_item ?= found_item
+				original_right_border := original_item.right_border
+			until
+				counter > grid.column_count
+			loop
+				label_item ?= grid.item (counter, row)
+				if label_item /= Void then
+					label_item.set_right_border (original_right_border)
+				end
+				counter := counter + 1
+			end
+		end
+	
+	apply_right_border_column_button_selected is
+			-- Called by `select_actions' of `apply_right_border_column_button'.
+		local
+			counter: INTEGER
+			original_item, label_item: EV_GRID_LABEL_ITEM
+			column: INTEGER
+			original_right_border: INTEGER
+		do
+			from
+				counter := 1
+				column := found_item.column.index
+				original_item ?= found_item
+				original_right_border := original_item.right_border
+			until
+				counter > grid.row_count
+			loop
+				label_item ?= grid.item (column, counter)
+				if label_item /= Void then
+					label_item.set_right_border (original_right_border)
+				end
+				counter := counter + 1
+			end
+		end
+	
+	apply_top_border_row_button_selected is
+			-- Called by `select_actions' of `apply_top_border_row_button'.
+		local
+			counter: INTEGER
+			original_item, label_item: EV_GRID_LABEL_ITEM
+			row: INTEGER
+			original_top_border: INTEGER
+		do
+			from
+				counter := 1
+				row := found_item.row.index
+				original_item ?= found_item
+				original_top_border := original_item.top_border
+			until
+				counter > grid.column_count
+			loop
+				label_item ?= grid.item (counter, row)
+				if label_item /= Void then
+					label_item.set_top_border (original_top_border)
+				end
+				counter := counter + 1
+			end
+		end
+	
+	apply_top_border_column_button_selected is
+			-- Called by `select_actions' of `apply_top_border_column_button'.
+		local
+			counter: INTEGER
+			original_item, label_item: EV_GRID_LABEL_ITEM
+			column: INTEGER
+			original_top_border: INTEGER
+		do
+			from
+				counter := 1
+				column := found_item.column.index
+				original_item ?= found_item
+				original_top_border := original_item.top_border
+			until
+				counter > grid.row_count
+			loop
+				label_item ?= grid.item (column, counter)
+				if label_item /= Void then
+					label_item.set_top_border (original_top_border)
+				end
+				counter := counter + 1
+			end
+		end
+
+	top_border_spin_button_changed (a_value: INTEGER) is
+			-- Called by `change_actions' of `top_border_spin_button'.
+		local
+			label_item: EV_GRID_LABEL_ITEM
+		do
+			label_item ?= found_item
+			if label_item /= Void then
+				label_item.set_top_border (a_value)
+			end
+		end
+	
+	bottom_border_spin_button_changed (a_value: INTEGER) is
+			-- Called by `change_actions' of `bottom_border_spin_button'.
+		local
+			label_item: EV_GRID_LABEL_ITEM
+		do
+			label_item ?= found_item
+			if label_item /= Void then
+				label_item.set_bottom_border (a_value)
+			end
+		end
+	
+	right_border_spin_button_changed (a_value: INTEGER) is
+			-- Called by `change_actions' of `right_border_spin_button'.
+		local
+			label_item: EV_GRID_LABEL_ITEM
+		do
+			label_item ?= found_item
+			if label_item /= Void then
+				label_item.set_right_border (a_value)
 			end
 		end
 

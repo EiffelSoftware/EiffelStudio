@@ -397,45 +397,6 @@ feature {EV_GRID_I} -- Implementation
 			is_visible_set: is_visible = a_visible
 		end
 
-feature {EV_GRID_ITEM_I} -- Implementation
-
-	increase_selected_item_count is
-			-- Increase `selected_item_count' by 1.
-		require
-			selected_item_count_less_than_count: selected_item_count < count
-		do
-			selected_item_count := selected_item_count + 1
-			if is_selected then
-				if parent_i.column_select_actions_internal /= Void then
-					parent_i.column_select_actions_internal.call ([interface])
-				end
-			end
-		ensure
-			selected_item_count_increased: selected_item_count = old selected_item_count + 1
-		end
-
-	decrease_selected_item_count is
-			-- Decrease `selected_item_count' by 1.
-		require
-			selected_item_count_greater_than_zero: selected_item_count > 0
-		local
-			has_previous_selection: BOOLEAN
-		do
-			has_previous_selection := is_selected
-			selected_item_count := selected_item_count - 1
-			if has_previous_selection then
-				if parent_i.column_deselect_actions_internal /= Void then
-					parent_i.column_deselect_actions_internal.call ([interface])
-				end
-			end	
-		ensure
-			selected_item_count_decreased: selected_item_count = old selected_item_count - 1
-			selected_item_count_not_negative: selected_item_count >= 0
-		end
-
-	selected_item_count: INTEGER
-		-- Number of selected items in `Current'.
-
 feature {NONE} -- Implementation
 
 	internal_update_selection (a_selection_state: BOOLEAN) is
@@ -500,8 +461,7 @@ feature {EV_ANY_I} -- Implementation
 			
 invariant
 	header_item_not_void: is_initialized implies header_item /= Void
-	selected_item_count_within_bounds: parent /= Void implies selected_item_count >= 0 and then selected_item_count <= selected_items.count
-	is_selected_implies_selected_item_count_equals_count: (is_selectable and is_selected) implies selected_item_count = count
+	is_selected_implies_selected_item_count_equals_count: (is_selectable and is_selected) implies selected_items.count = count
 	physical_index_set: parent /= Void implies physical_index >= 0
 
 end

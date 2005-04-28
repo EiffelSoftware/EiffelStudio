@@ -283,7 +283,7 @@ feature {NONE} -- Contract support
 			-- Is `Current' in its default state?
 		do
 			Result := Precursor {EV_GRID_ITEM} and text.is_empty and pixmap = Void and
-				left_border = 2 and right_border = 0 and top_border = 2 and bottom_border = 0
+				left_border = 2 and right_border = 0 and top_border = 0 and bottom_border = 0
 				and spacing = 2 and is_left_aligned
 		end
 

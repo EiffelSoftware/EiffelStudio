@@ -22,13 +22,8 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Initialize `Current'.
 		do
-			Precursor {EV_GRID_ITEM_I}
-			interface.set_text ("")
-			interface.set_left_border (2)
-			interface.set_spacing (2)
-			interface.set_top_border (2)
-			interface.align_text_left
 			must_recompute_text_dimensions := True
+			Precursor {EV_GRID_ITEM_I}
 		end
 
 feature {EV_GRID_DRAWER_I} -- Implementation

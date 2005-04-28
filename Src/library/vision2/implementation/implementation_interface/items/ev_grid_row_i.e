@@ -254,9 +254,9 @@ feature -- Access
 				a_item := a_parent_i.item_internal (i, a_internal_index)
 				if a_item /= Void then
 					if a_selection_state then
-						a_item.enable_select
+						a_item.enable_select_internal
 					else
-						a_item.disable_select
+						a_item.disable_select_internal
 					end		
 				end
 				i := i + 1
@@ -767,10 +767,11 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 					if parent_i.row_select_actions_internal /= Void then
 						parent_i.row_select_actions_internal.call ([interface])
 					end
-					parent_i.redraw_row (Current)
 				else
 					internal_update_selection (True)
 				end				
+				parent_i.redraw_row (Current)
+				parent_i.drawable.flush
 			end
 		end
 
@@ -784,11 +785,12 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 					if parent_i.row_deselect_actions_internal /= Void then
 						parent_i.row_deselect_actions_internal.call ([interface])
 					end
-					parent_i.redraw_row (Current)		
 				end
 			else
 				internal_update_selection (False)
-			end				
+			end			
+			parent_i.redraw_row (Current)
+			parent_i.drawable.flush
 		end
 
 	destroy is

@@ -3253,8 +3253,6 @@ feature {EV_ANY_I, EV_GRID_ROW, EV_GRID_COLUMN, EV_GRID} -- Implementation
 			-- functionality implemented by `Current'.
 			
 invariant
-	row_count_non_negative: row_count >= 0
-	column_count_non_negative: column_count >= 0
 	drawer_not_void: is_initialized implies drawer /= Void
 	drawable_not_void: is_initialized implies drawable /= Void
 	header_positioned_corrently: is_initialized implies header_viewport.x_offset >= 0 and header_viewport.y_offset = 0
@@ -3265,9 +3263,6 @@ invariant
 	row_heights_fixed_implies_row_offsets_void: is_row_height_fixed and not is_tree_enabled implies row_offsets = Void
 	row_lists_count_equal: is_initialized implies internal_row_data.count = rows.count
 	dynamic_modes_mutually_exclusive: not (is_content_completely_dynamic and is_content_partially_dynamic)
-	single_item_selection_enabled_implies_only_single_item_selected: is_single_item_selection_enabled implies selected_items.count <= 1
-	single_item_selected_enabled_implies_no_rows_selected: is_single_item_selection_enabled implies selected_rows.count = 0
-	single_row_selection_enabled_implies_only_single_row_selected: is_single_row_selection_enabled implies selected_rows.count <= 1
 	visible_column_count_not_greater_than_column_count: visible_column_count <= column_count
 	hidden_node_count_zero_when_tree_disabled: not is_tree_enabled implies hidden_node_count = 0
 	hidden_node_count_positive_when_tree_enabled: is_tree_enabled implies hidden_node_count >= 0

@@ -11,7 +11,8 @@ inherit
 		redefine
 			is_in_default_state,
 			implementation,
-			create_implementation
+			create_implementation,
+			initialize
 		end
 
 create
@@ -29,6 +30,16 @@ feature {NONE} -- Initialization
 			set_text (a_text)
 		ensure
 			text_assigned: text = a_text
+		end
+
+	initialize is
+			-- Mark `Current' as initialized.
+		do
+			set_text ("")
+			set_left_border (2)
+			set_spacing (2)
+			align_text_left
+			Precursor {EV_GRID_ITEM}
 		end
 
 feature -- Status Setting

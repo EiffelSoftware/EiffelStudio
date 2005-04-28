@@ -345,21 +345,24 @@ feature -- Status setting
 			end
 		end
 
+	selected_object_address: STRING is
+		local
+			item: EV_TREE_NODE
+		do
+			item := objects_tree.selected_item
+			if item /= Void and then item.parent = item.parent_tree then
+				Result ?= item.data
+			end
+		end		
+
 	remove_selected_object is
 			-- Remove the selected top-level item of the object tree, if any.
 		local
 			str: STRING
-			item: EV_TREE_NODE
 		do
-			item := objects_tree.selected_item
-			if
-				item /= Void and then
-				item.parent = item.parent_tree
-			then
-				str ?= item.data
-				if str /= Void then
-					remove_object (str)
-				end
+			str := selected_object_address
+			if str /= Void then
+				remove_object (str)
 			end
 		end
 
@@ -504,15 +507,9 @@ feature -- Status report
 			str: STRING
 			item: EV_TREE_NODE
 		do
-			item := objects_tree.selected_item
-			if
-				item /= Void and then
-				item.parent = item.parent_tree
-			then
-				str ?= item.data
-				if str /= Void then
-					Result := is_removable (str)
-				end
+			str := selected_object_address
+			if str /= Void then
+				Result := is_removable (str)
 			end
 		end
 

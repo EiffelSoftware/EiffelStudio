@@ -160,6 +160,11 @@ feature -- Output
 			end
 		end
 
+	get_items (a_min, a_max: INTEGER) is
+		do
+			fill_items (a_min, a_max)
+		end
+
 	fill_items (a_slice_min, a_slice_max: INTEGER) is
 			-- Get Items for attributes
 		require

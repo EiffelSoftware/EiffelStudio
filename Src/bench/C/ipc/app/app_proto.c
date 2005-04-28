@@ -540,6 +540,7 @@ rt_private void inspect(int s, Opaque *what)
 	 * sending the information referred to by this pointer).
 	 */
 
+
 	char *out = NULL;				/* Buffer where out form is stored */
 	struct item *val = NULL;		/* Value in operational stack */
 	char *addr;				/* Address of EIF_OBJ */
@@ -789,7 +790,7 @@ rt_private void load_bc(int slots, int amount)
 
 
 rt_private void rec_inspect(EIF_REFERENCE object);
-rt_private void rec_sinspect(EIF_REFERENCE object);
+rt_private void rec_sinspect(EIF_REFERENCE object, BOOL skip_items);
 rt_private void rec_tinspect(EIF_REFERENCE object);
 
 rt_private void obj_inspect(EIF_OBJ object)
@@ -813,7 +814,7 @@ rt_private void obj_inspect(EIF_OBJ object)
 		if (is_tuple) {
 			rec_tinspect(ref);
 		} else {
-			rec_sinspect(ref);
+			rec_sinspect(ref, FALSE);
 		}
 	} else {
 			/* Inspect recursively `object' */
@@ -916,7 +917,7 @@ rt_private void rec_inspect(EIF_REFERENCE object)
 								twrite (&dtype, sizeof(int32));
 								twrite (&reference, sizeof(EIF_POINTER));
 							} else {
-								rec_sinspect (reference);
+								rec_sinspect (reference, TRUE);
 							}
 						} else {
 							twrite (&is_special, sizeof(EIF_BOOLEAN));
@@ -936,7 +937,7 @@ rt_private void rec_inspect(EIF_REFERENCE object)
 	}
 }
 
-rt_private void rec_sinspect(EIF_REFERENCE object)
+rt_private void rec_sinspect(EIF_REFERENCE object, BOOL skip_items)
 {
 	/* Inspect special object */
 
@@ -965,138 +966,140 @@ rt_private void rec_sinspect(EIF_REFERENCE object)
 		/* Send the capacity of the special object */
 	twrite (&count, sizeof(int32));
 
-	/* Compute the number of items within the bounds */
-	if (sp_upper < 0)				/* A negative `sp_upper' means `count' */
-		sp_end = count - 1;
-	else if (count > sp_upper + 1)	/* Must be truncated */
-		sp_end = sp_upper;
-	else							/* No need to truncate */
-		sp_end = count - 1;
-	if (sp_lower <= 0)				/* A negative `sp_lower' means 0 */
-		sp_start = 0;
-	else if (sp_lower > 0)			/* Must be truncated */
-		sp_start = sp_lower;
+	if (!skip_items) {
+		/* Compute the number of items within the bounds */
+		if (sp_upper < 0)				/* A negative `sp_upper' means `count' */
+			sp_end = count - 1;
+		else if (count > sp_upper + 1)	/* Must be truncated */
+			sp_end = sp_upper;
+		else							/* No need to truncate */
+			sp_end = count - 1;
+		if (sp_lower <= 0)				/* A negative `sp_lower' means 0 */
+			sp_start = 0;
+		else if (sp_lower > 0)			/* Must be truncated */
+			sp_start = sp_lower;
 
-		/* Compute number of items that will be inspected */
-	if (sp_start > sp_end)
-		nb_attr = 0;
-	else
-		nb_attr = sp_end - sp_start + 1;
+			/* Compute number of items that will be inspected */
+		if (sp_start > sp_end)
+			nb_attr = 0;
+		else
+			nb_attr = sp_end - sp_start + 1;
 	  
-		/* Send the number of items to be inspected */
-	twrite (&nb_attr, sizeof(uint32));
+			/* Send the number of items to be inspected */
+		twrite (&nb_attr, sizeof(uint32));
 
-		/* Send the items within the bounds */
-	if (nb_attr > 0) {
-		if (flags & EO_COMP) {
-				/* Special of expanded object. */
-			for (o_ref = object + OVERHEAD + (sp_start * elem_size),
-								sp_index = sp_start; sp_index <= sp_end;
-								sp_index++, o_ref += elem_size) {
-				sprintf(buffer, "%ld", sp_index);
-				twrite (buffer, strlen(buffer));
-				sk_type = SK_EXP;
-				twrite (&sk_type, sizeof(uint32));
-				dtype = Dtype(o_ref);
-				twrite (&dtype, sizeof(int32));
-				rec_inspect(o_ref);
-			}
-		} else if (!(flags & EO_REF)) {
-				/* Special of basic types. */
-			if (dtype == egc_sp_char)
-				sk_type = SK_CHAR;
-			else if (dtype == egc_sp_wchar)
-				sk_type = SK_WCHAR;
-			else if (dtype == egc_sp_uint8)
-				sk_type = SK_UINT8;
-			else if (dtype == egc_sp_uint16)
-				sk_type = SK_UINT16;
-			else if (dtype == egc_sp_uint32)
-				sk_type = SK_UINT32;
-			else if (dtype == egc_sp_uint64)
-				sk_type = SK_UINT64;
-			else if (dtype == egc_sp_int8)
-				sk_type = SK_INT8;
-			else if (dtype == egc_sp_int16)
-				sk_type = SK_INT16;
-			else if (dtype == egc_sp_int32)
-				sk_type = SK_INT32;
-			else if (dtype == egc_sp_int64)
-				sk_type = SK_INT64;
-			else if (dtype == egc_sp_bool)
-				sk_type = SK_BOOL;
-			else if (dtype == egc_sp_real32)
-				sk_type = SK_REAL32;
-			else if (dtype == egc_sp_real64)
-				sk_type = SK_REAL64;
-			else if (dtype == egc_sp_pointer)
-				sk_type = SK_POINTER;
-			else {
-				CHECK("Must be a bit", 1);	/* We cannot check that at the moment */
-				sk_type = SK_BIT;
-			}
-
-			for (o_ref = object + (sp_start * elem_size),
-								sp_index = sp_start; sp_index <= sp_end;
-								sp_index++, o_ref += elem_size) {
-				sprintf(buffer, "%ld", sp_index);
-				twrite (buffer, strlen(buffer));
-
-				twrite (&sk_type, sizeof(uint32));
-
-				switch(sk_type) {
-				case SK_POINTER: twrite (o_ref, sizeof(EIF_POINTER)); break;
-				case SK_BOOL: twrite (o_ref, sizeof(EIF_BOOLEAN)); break;
-				case SK_CHAR: twrite (o_ref, sizeof(EIF_CHARACTER)); break;
-				case SK_WCHAR: twrite (o_ref, sizeof(EIF_WIDE_CHAR)); break;
-				case SK_UINT8: twrite (o_ref, sizeof(EIF_NATURAL_8)); break;
-				case SK_UINT16: twrite (o_ref, sizeof(EIF_NATURAL_16)); break;
-				case SK_UINT32: twrite (o_ref, sizeof(EIF_NATURAL_32)); break;
-				case SK_UINT64: twrite (o_ref, sizeof(EIF_NATURAL_64)); break;
-				case SK_INT8: twrite (o_ref, sizeof(EIF_INTEGER_8)); break;
-				case SK_INT16: twrite (o_ref, sizeof(EIF_INTEGER_16)); break;
-				case SK_INT32: twrite (o_ref, sizeof(EIF_INTEGER_32)); break;
-				case SK_INT64: twrite (o_ref, sizeof(EIF_INTEGER_64)); break;
-				case SK_REAL32: twrite (o_ref, sizeof(EIF_REAL_32)); break;
-				case SK_REAL64: twrite (o_ref, sizeof (EIF_REAL_64)); break;
-				case SK_BIT:
-					{
-						char *buf = b_out (*(EIF_REFERENCE *) o_ref);
-						twrite (buf, strlen(buf));
-						eif_rt_xfree(buf);
-					}
-					break;
-				}
-			}
-		} else {
-				/* Special of reference. */
-			EIF_BOOLEAN is_void = EIF_FALSE;
-			EIF_BOOLEAN is_special = EIF_FALSE;
-			uint32 sk_type = SK_REF;
-			for (o_ref = (char *) ((char **)object + sp_start),
-						sp_index = sp_start; sp_index <= sp_end; sp_index++,
-						o_ref = (char *) ((char **)o_ref + 1)) {
-				sprintf(buffer, "%ld", sp_index);
-				twrite (buffer, strlen(buffer));
-				reference = *(char **)o_ref;
-				if (!reference) {
-					is_void = EIF_TRUE;
+			/* Send the items within the bounds */
+		if (nb_attr > 0) {
+			if (flags & EO_COMP) {
+					/* Special of expanded object. */
+				for (o_ref = object + OVERHEAD + (sp_start * elem_size),
+									sp_index = sp_start; sp_index <= sp_end;
+									sp_index++, o_ref += elem_size) {
+					sprintf(buffer, "%ld", sp_index);
+					twrite (buffer, strlen(buffer));
+					sk_type = SK_EXP;
 					twrite (&sk_type, sizeof(uint32));
-					twrite (&is_special, sizeof(EIF_BOOLEAN));
-					twrite (&is_void, sizeof(EIF_BOOLEAN));
-					is_void = EIF_FALSE;
-				} else if (HEADER(reference)->ov_flags & EO_C) {
-					sk_type = SK_POINTER;
-					twrite (&sk_type, sizeof(uint32));
-					twrite (&reference, sizeof(EIF_POINTER));
-					sk_type = SK_REF;
-				} else {
-					dtype = Dtype(reference);
-					twrite (&sk_type, sizeof(uint32));
-					twrite (&is_special, sizeof(EIF_BOOLEAN));
-					twrite (&is_void, sizeof(EIF_BOOLEAN));
+					dtype = Dtype(o_ref);
 					twrite (&dtype, sizeof(int32));
-					twrite (&reference, sizeof(EIF_POINTER));
+					rec_inspect(o_ref);
+				}
+			} else if (!(flags & EO_REF)) {
+					/* Special of basic types. */
+				if (dtype == egc_sp_char)
+					sk_type = SK_CHAR;
+				else if (dtype == egc_sp_wchar)
+					sk_type = SK_WCHAR;
+				else if (dtype == egc_sp_uint8)
+					sk_type = SK_UINT8;
+				else if (dtype == egc_sp_uint16)
+					sk_type = SK_UINT16;
+				else if (dtype == egc_sp_uint32)
+					sk_type = SK_UINT32;
+				else if (dtype == egc_sp_uint64)
+					sk_type = SK_UINT64;
+				else if (dtype == egc_sp_int8)
+					sk_type = SK_INT8;
+				else if (dtype == egc_sp_int16)
+					sk_type = SK_INT16;
+				else if (dtype == egc_sp_int32)
+					sk_type = SK_INT32;
+				else if (dtype == egc_sp_int64)
+					sk_type = SK_INT64;
+				else if (dtype == egc_sp_bool)
+					sk_type = SK_BOOL;
+				else if (dtype == egc_sp_real32)
+					sk_type = SK_REAL32;
+				else if (dtype == egc_sp_real64)
+					sk_type = SK_REAL64;
+				else if (dtype == egc_sp_pointer)
+					sk_type = SK_POINTER;
+				else {
+					CHECK("Must be a bit", 1);	/* We cannot check that at the moment */
+					sk_type = SK_BIT;
+				}
+
+				for (o_ref = object + (sp_start * elem_size),
+									sp_index = sp_start; sp_index <= sp_end;
+									sp_index++, o_ref += elem_size) {
+					sprintf(buffer, "%ld", sp_index);
+					twrite (buffer, strlen(buffer));
+
+					twrite (&sk_type, sizeof(uint32));
+
+					switch(sk_type) {
+					case SK_POINTER: twrite (o_ref, sizeof(EIF_POINTER)); break;
+					case SK_BOOL: twrite (o_ref, sizeof(EIF_BOOLEAN)); break;
+					case SK_CHAR: twrite (o_ref, sizeof(EIF_CHARACTER)); break;
+					case SK_WCHAR: twrite (o_ref, sizeof(EIF_WIDE_CHAR)); break;
+					case SK_UINT8: twrite (o_ref, sizeof(EIF_NATURAL_8)); break;
+					case SK_UINT16: twrite (o_ref, sizeof(EIF_NATURAL_16)); break;
+					case SK_UINT32: twrite (o_ref, sizeof(EIF_NATURAL_32)); break;
+					case SK_UINT64: twrite (o_ref, sizeof(EIF_NATURAL_64)); break;
+					case SK_INT8: twrite (o_ref, sizeof(EIF_INTEGER_8)); break;
+					case SK_INT16: twrite (o_ref, sizeof(EIF_INTEGER_16)); break;
+					case SK_INT32: twrite (o_ref, sizeof(EIF_INTEGER_32)); break;
+					case SK_INT64: twrite (o_ref, sizeof(EIF_INTEGER_64)); break;
+					case SK_REAL32: twrite (o_ref, sizeof(EIF_REAL_32)); break;
+					case SK_REAL64: twrite (o_ref, sizeof (EIF_REAL_64)); break;
+					case SK_BIT:
+						{
+							char *buf = b_out (*(EIF_REFERENCE *) o_ref);
+							twrite (buf, strlen(buf));
+							eif_rt_xfree(buf);
+						}
+						break;
+					}
+				}
+			} else {
+					/* Special of reference. */
+				EIF_BOOLEAN is_void = EIF_FALSE;
+				EIF_BOOLEAN is_special = EIF_FALSE;
+				uint32 sk_type = SK_REF;
+				for (o_ref = (char *) ((char **)object + sp_start),
+							sp_index = sp_start; sp_index <= sp_end; sp_index++,
+							o_ref = (char *) ((char **)o_ref + 1)) {
+					sprintf(buffer, "%ld", sp_index);
+					twrite (buffer, strlen(buffer));
+					reference = *(char **)o_ref;
+					if (!reference) {
+						is_void = EIF_TRUE;
+						twrite (&sk_type, sizeof(uint32));
+						twrite (&is_special, sizeof(EIF_BOOLEAN));
+						twrite (&is_void, sizeof(EIF_BOOLEAN));
+						is_void = EIF_FALSE;
+					} else if (HEADER(reference)->ov_flags & EO_C) {
+						sk_type = SK_POINTER;
+						twrite (&sk_type, sizeof(uint32));
+						twrite (&reference, sizeof(EIF_POINTER));
+						sk_type = SK_REF;
+					} else {
+						dtype = Dtype(reference);
+						twrite (&sk_type, sizeof(uint32));
+						twrite (&is_special, sizeof(EIF_BOOLEAN));
+						twrite (&is_void, sizeof(EIF_BOOLEAN));
+						twrite (&dtype, sizeof(int32));
+						twrite (&reference, sizeof(EIF_POINTER));
+					}
 				}
 			}
 		}
@@ -1221,7 +1224,7 @@ rt_private void rec_tinspect(EIF_REFERENCE object)
 									twrite (&dtype, sizeof(int32));
 									twrite (&reference, sizeof(EIF_POINTER));
 								} else {
-									rec_sinspect (reference);
+									rec_sinspect (reference, TRUE);
 								}
 							} else {
 								twrite (&is_special, sizeof(EIF_BOOLEAN));

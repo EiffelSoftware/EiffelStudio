@@ -390,7 +390,6 @@ feature {NONE} -- Implementation
 			obj: EB_OBJECT_DISPLAY_PARAMETERS
 			abs_dv: ABSTRACT_DEBUG_VALUE
 			abs_spec_dv: ABSTRACT_SPECIAL_VALUE
-			spec_dv: SPECIAL_VALUE
 			str_dv: EIFNET_DEBUG_STRING_VALUE
 			nat_arr_dv: EIFNET_DEBUG_NATIVE_ARRAY_VALUE
 			dobj: DEBUGGED_OBJECT
@@ -421,19 +420,8 @@ feature {NONE} -- Implementation
 
 						--| wipe_out or create an empty list for `abs_spec_dv.items'
 					abs_spec_dv.reset_items
-					abs_spec_dv.set_sp_bounds (slice_min, slice_max)
+					abs_spec_dv.get_items (slice_min, slice_max)
 
-					spec_dv ?= abs_spec_dv
-					if spec_dv /= Void then --| SPECIAL_VALUE						
-						create {DEBUGGED_OBJECT_CLASSIC} dobj.make (l_st_addr, slice_min, slice_max)
-						spec_dv.items.append_last (dobj.attributes)
-					else
-						nat_arr_dv ?= abs_spec_dv
-						if nat_arr_dv /= Void then
-							nat_arr_dv.fill_items (slice_min, slice_max)
-						end
-					end
-					
 					tree_item ?= l_item
 					check
 						tree_item /= Void 

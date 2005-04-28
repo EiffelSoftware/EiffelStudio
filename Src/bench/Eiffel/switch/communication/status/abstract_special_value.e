@@ -23,6 +23,12 @@ inherit
 		
 feature -- Items
 
+	get_items (a_min, a_max: INTEGER) is
+		require
+			items /= Void
+		deferred
+		end
+
 	reset_items is
 		do
 			if items /= Void then

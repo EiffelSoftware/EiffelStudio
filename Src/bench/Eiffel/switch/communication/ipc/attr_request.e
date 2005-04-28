@@ -159,6 +159,7 @@ feature {NONE} -- Implementation
 			exp_attr: EXPANDED_VALUE;
 			spec_attr: SPECIAL_VALUE;
 			type_id: INTEGER;
+			p: POINTER			
 		do
 			attr_nb := to_integer (c_tread)
 			if attr_list.capacity <= attr_nb then
@@ -240,7 +241,8 @@ feature {NONE} -- Implementation
 							debug("DEBUG_RECV")
 								io.error.put_string ("Creating special object.%N")
 							end
-							create spec_attr.make_attribute (attr_name, e_class, to_pointer (c_tread).out, to_integer (c_tread))
+							p := to_pointer (c_tread)
+							create spec_attr.make_attribute (attr_name, e_class, p.out, to_integer (c_tread))
 							debug("DEBUG_RECV")
 								io.error.put_string ("Attribute name: ");
 								io.error.put_string (attr_name);
@@ -256,13 +258,7 @@ feature {NONE} -- Implementation
 							end;
 							max_capacity := max_capacity.max (spec_attr.capacity);
 							attr := spec_attr;
-							debug("DEBUG_RECV")
-								io.error.put_string ("Receiving attributes in the special object.%N")
-							end;
-							recv_attributes (spec_attr.items, Void);
-							debug("DEBUG_RECV")
-								io.error.put_string ("Done receiving attributes in the special object.%N")
-							end
+								-- We don't get anymore the special items at this step
 						end
 					else
 							-- Is this a void object?

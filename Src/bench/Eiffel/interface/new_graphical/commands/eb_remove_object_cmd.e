@@ -92,7 +92,7 @@ feature -- Execution
 			wd: EV_WARNING_DIALOG
 		do
 			if tool.is_selected_removable then
-				tool.remove_selected_object
+				tool.remove_object (tool.selected_object_address)
 			else
 				create wd.make_with_text (Warning_messages.w_Select_object_to_remove)
 				wd.show_modal_to_window (tool.debugger_manager.debugging_window.window)

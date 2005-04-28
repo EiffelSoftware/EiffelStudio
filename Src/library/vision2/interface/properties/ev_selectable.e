@@ -18,7 +18,7 @@ inherit
 feature -- Status report
 
 	is_selected: BOOLEAN is
-			-- Is selected.
+			-- Is selected?
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -30,7 +30,7 @@ feature -- Status report
 		end
 
 	is_selectable: BOOLEAN is
-			-- May `enable_select' be called.
+			-- May `enable_select' be called?
 		require
 			not_destroyed: not is_destroyed
 		do

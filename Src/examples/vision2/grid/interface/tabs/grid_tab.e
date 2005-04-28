@@ -960,9 +960,17 @@ feature {NONE} -- Implementation
 	enable_pick_and_drop_button_selected is
 			-- Called by `select_actions' of `enable_pick_and_drop_button'.
 		do
-			grid.set_item_pebble_function (agent item_pebble_function)
-			grid.set_item_veto_pebble_function (agent item_veto_pebble_function)
-			grid.item_drop_actions.extend (agent item_drop_actions)
+			if enable_pick_and_drop_button.is_selected then
+					-- Enable grid item PND
+				grid.set_item_pebble_function (agent item_pebble_function)
+				grid.set_item_veto_pebble_function (agent item_veto_pebble_function)
+				grid.item_drop_actions.extend (agent item_drop_actions)				
+			else
+					-- Disable grid item PND
+				grid.remove_item_pebble_function
+				grid.set_item_veto_pebble_function (Void)
+				grid.item_drop_actions.wipe_out
+			end
 		end
 
 	item_pebble_function (a_item: EV_GRID_ITEM): ANY is

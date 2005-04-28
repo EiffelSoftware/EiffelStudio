@@ -45,6 +45,27 @@ feature {NONE} -- Initialization
 			create list_item
 			list_item.set_pixmap (image5)
 			pixmap_holder.extend (list_item)
+			add_color_to_combo (light_green, foreground_color_combo)
+			add_color_to_combo (light_red, foreground_color_combo)
+			add_color_to_combo (light_blue, foreground_color_combo)
+			add_color_to_combo ((create {EV_STOCK_COLORS}).red, foreground_color_combo)
+			add_color_to_combo ((create {EV_STOCK_COLORS}).green, foreground_color_combo)
+			add_color_to_combo ((create {EV_STOCK_COLORS}).white, foreground_color_combo)
+			add_color_to_combo ((create {EV_STOCK_COLORS}).yellow, foreground_color_combo)
+			add_color_to_combo ((create {EV_STOCK_COLORS}).gray, foreground_color_combo)
+			add_color_to_combo ((create {EV_STOCK_COLORS}).black, foreground_color_combo)
+			add_color_to_combo ((create {EV_STOCK_COLORS}).blue, foreground_color_combo)
+
+			add_color_to_combo (light_green, background_color_combo)
+			add_color_to_combo (light_red, background_color_combo)
+			add_color_to_combo (light_blue, background_color_combo)
+			add_color_to_combo ((create {EV_STOCK_COLORS}).red, background_color_combo)
+			add_color_to_combo ((create {EV_STOCK_COLORS}).green, background_color_combo)
+			add_color_to_combo ((create {EV_STOCK_COLORS}).white, background_color_combo)
+			add_color_to_combo ((create {EV_STOCK_COLORS}).yellow, background_color_combo)
+			add_color_to_combo ((create {EV_STOCK_COLORS}).gray, background_color_combo)
+			add_color_to_combo ((create {EV_STOCK_COLORS}).black, background_color_combo)
+			add_color_to_combo ((create {EV_STOCK_COLORS}).blue, background_color_combo)
 		end
 
 feature {NONE} -- Implementation
@@ -273,6 +294,32 @@ feature {NONE} -- Implementation
 				label_item.align_text_center
 			end
 		end
+
+	foreground_color_combo_selected is
+			-- Called by `select_actions' of `foreground_color_combo'.
+		local
+			label_item: EV_GRID_LABEL_ITEM
+			color: EV_COLOR
+		do
+			label_item ?= found_item
+			if label_item /= Void then
+				color ?= foreground_color_combo.selected_item.data
+				label_item.set_foreground_color (color)
+			end
+		end
+	
+	background_color_combo_selected is
+			-- Called by `select_actions' of `background_color_combo'.
+		local
+			label_item: EV_GRID_LABEL_ITEM
+			color: EV_COLOR
+		do
+			label_item ?= found_item
+			if label_item /= Void then
+				color ?= background_color_combo.selected_item.data
+				label_item.set_background_color (color)
+			end
+		end
 	
 	right_alignment_item_selected is
 			-- Called by `select_actions' of `right_alignment_item'.
@@ -486,6 +533,158 @@ feature {NONE} -- Implementation
 				label_item ?= grid.item (column, counter)
 				if label_item /= Void then
 					label_item.set_spacing (original_spacing)
+				end
+				counter := counter + 1
+			end
+		end
+
+	apply_background_row_button_selected is
+			-- Called by `select_actions' of `apply_background_row_button'.
+		local
+			counter: INTEGER
+			original_item, label_item: EV_GRID_LABEL_ITEM
+			row: INTEGER
+			original_color: EV_COLOR
+		do
+			from
+				counter := 1
+				row := found_item.row.index
+				original_item ?= found_item
+				original_color := original_item.background_color
+			until
+				counter > grid.column_count
+			loop
+				label_item ?= grid.item (counter, row)
+				if label_item /= Void then
+					label_item.set_background_color (original_color)
+				end
+				counter := counter + 1
+			end
+		end
+	
+	apply_background_column_button_selected is
+			-- Called by `select_actions' of `apply_background_column_button'.
+		local
+			counter: INTEGER
+			original_item, label_item: EV_GRID_LABEL_ITEM
+			column: INTEGER
+			original_color: EV_COLOR
+		do
+			from
+				counter := 1
+				column := found_item.column.index
+				original_item ?= found_item
+				original_color := original_item.background_color
+			until
+				counter > grid.row_count
+			loop
+				label_item ?= grid.item (column, counter)
+				if label_item /= Void then
+					label_item.set_background_color (original_color)
+				end
+				counter := counter + 1
+			end
+		end
+	
+	apply_selection_row_selected_button is
+			-- Called by `select_actions' of `apply_selection_row_button'.
+		local
+			counter: INTEGER
+			original_item, label_item: EV_GRID_LABEL_ITEM
+			row: INTEGER
+			original_selected: BOOLEAN
+		do
+			from
+				counter := 1
+				row := found_item.row.index
+				original_item ?= found_item
+				original_selected := original_item.is_selected
+			until
+				counter > grid.column_count
+			loop
+				label_item ?= grid.item (counter, row)
+				if label_item /= Void then
+					if original_selected then
+						label_item.enable_select	
+					else
+						label_item.disable_select
+					end
+				end
+				counter := counter + 1
+			end
+		end
+	
+	apply_selection_column_button_selected is
+			-- Called by `select_actions' of `apply_selection_column_button'.
+		local
+			counter: INTEGER
+			original_item, label_item: EV_GRID_LABEL_ITEM
+			column: INTEGER
+			original_selected: BOOLEAN
+		do
+			from
+				counter := 1
+				column := found_item.column.index
+				original_item ?= found_item
+				original_selected := original_item.is_selected
+			until
+				counter > grid.row_count
+			loop
+				label_item ?= grid.item (column, counter)
+				if label_item /= Void then
+					if original_selected then
+						label_item.enable_select	
+					else
+						label_item.disable_select
+					end
+				end
+				counter := counter + 1
+			end
+		end
+	
+	apply_foreground_row_button_selected is
+			-- Called by `select_actions' of `apply_foreground_row_button'.
+		local
+			counter: INTEGER
+			original_item, label_item: EV_GRID_LABEL_ITEM
+			row: INTEGER
+			original_color: EV_COLOR
+		do
+			from
+				counter := 1
+				row := found_item.row.index
+				original_item ?= found_item
+				original_color := original_item.foreground_color
+			until
+				counter > grid.column_count
+			loop
+				label_item ?= grid.item (counter, row)
+				if label_item /= Void then
+					label_item.set_foreground_color (original_color)
+				end
+				counter := counter + 1
+			end
+		end
+	
+	apply_foreground_column_button_selected is
+			-- Called by `select_actions' of `apply_foreground_column_button'.
+		local
+			counter: INTEGER
+			original_item, label_item: EV_GRID_LABEL_ITEM
+			column: INTEGER
+			original_color: EV_COLOR
+		do
+			from
+				counter := 1
+				column := found_item.column.index
+				original_item ?= found_item
+				original_color := original_item.foreground_color
+			until
+				counter > grid.row_count
+			loop
+				label_item ?= grid.item (column, counter)
+				if label_item /= Void then
+					label_item.set_foreground_color (original_color)
 				end
 				counter := counter + 1
 			end

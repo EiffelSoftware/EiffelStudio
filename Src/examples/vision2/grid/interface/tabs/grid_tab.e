@@ -33,11 +33,11 @@ feature {NONE} -- Initialization
 			list_item: EV_LIST_ITEM
 		do
 			grid.set_dynamic_content_function (agent compute_item)
-			add_color_to_background_color_combo ((create {EV_STOCK_COLORS}).red)
-			add_color_to_background_color_combo ((create {EV_STOCK_COLORS}).green)
-			add_color_to_background_color_combo ((create {EV_STOCK_COLORS}).blue)
-			add_color_to_background_color_combo ((create {EV_STOCK_COLORS}).yellow)
-			add_color_to_background_color_combo ((create {EV_STOCK_COLORS}).white)
+			add_color_to_combo ((create {EV_STOCK_COLORS}).red, set_background_color_combo)
+			add_color_to_combo ((create {EV_STOCK_COLORS}).green, set_background_color_combo)
+			add_color_to_combo ((create {EV_STOCK_COLORS}).blue, set_background_color_combo)
+			add_color_to_combo ((create {EV_STOCK_COLORS}).yellow, set_background_color_combo)
+			add_color_to_combo ((create {EV_STOCK_COLORS}).white, set_background_color_combo)
 			
 				-- Now load pixmaps for exapnd/collapse nodes.
 			expand1 := grid.expand_node_pixmap
@@ -520,24 +520,6 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	add_color_to_background_color_combo (a_color: EV_COLOR) is
-			-- Add `a_color' to `background_color_combo'.
-		local
-			pixmap: EV_PIXMAP
-			list_item: EV_LIST_ITEM
-		do
-			create pixmap
-			pixmap.set_size (16, 16)
-			pixmap.set_foreground_color (a_color)
-			pixmap.fill_rectangle (0, 0, 16, 16)
-			pixmap.set_foreground_color ((create {EV_STOCK_COLORS}).black)
-			pixmap.draw_rectangle (0, 0, 16, 16)
-			create list_item
-			list_item.set_pixmap (pixmap)
-			list_item.set_data (a_color)
-			set_background_color_combo.extend (list_item)
-		end
-		
 	subnode_pixmaps_combo_selected is
 			-- Called by `select_actions' of `subnode_pixmaps_combo'.
 		local
@@ -974,26 +956,7 @@ feature {NONE} -- Implementation
 		once
 			Result := (create {EV_STOCK_COLORS}).red
 		end
-
-	light_red: EV_COLOR is
-			--
-		once
-			create Result.make_with_8_bit_rgb (255, 230, 230)
-		end
-
-	light_blue: EV_COLOR is
-			--
-		once
-			create Result.make_with_8_bit_rgb (230, 230, 255)
-		end
-
-	light_green: EV_COLOR is
-			--
-		once
-			create Result.make_with_8_bit_rgb (230, 255, 230)
-		end
 		
-
 	enable_pick_and_drop_button_selected is
 			-- Called by `select_actions' of `enable_pick_and_drop_button'.
 		do

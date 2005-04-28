@@ -419,8 +419,6 @@ feature -- Status setting
 
 	set_item_veto_pebble_function (a_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM, ANY], BOOLEAN]) is
 			-- Assign `a_function' to `item_veto_pebble_function'.
-		require
-			a_function_not_void: a_function /= Void
 		do
 			item_veto_pebble_function := a_function
 		end
@@ -480,6 +478,15 @@ feature -- Status setting
 				drawable.set_pebble_function (agent user_pebble_function_intermediary)
 			end
 			item_pebble_function := a_function
+		end
+
+	remove_item_pebble_function is
+			-- Make `item_pebble_function' Void
+		do
+			drawable.remove_pebble
+			item_pebble_function := Void
+		ensure
+			item_pebble_function_removed: item_pebble_function = Void
 		end
 
 	user_pebble_function_intermediary (a_x, a_y: INTEGER): ANY is

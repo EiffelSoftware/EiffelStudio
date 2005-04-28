@@ -162,15 +162,7 @@ feature {NONE} -- Implementation
 			-- Code to initialize excepinfo
 		do
 			create Result.make (400)
-			Result.append ("%Texcepinfo->wCode = 0;%N%T")
-			Result.append ("excepinfo->wReserved = 0;%N%T")
-			Result.append ("excepinfo->bstrSource = NULL;%N%T")
-			Result.append ("excepinfo->bstrDescription = NULL;%N%T")
-			Result.append ("excepinfo->bstrHelpFile = NULL;%N%T")
-			Result.append ("excepinfo->dwHelpContext = 0;%N%T")
-			Result.append ("excepinfo->pvReserved = NULL;%N%T")
-			Result.append ("excepinfo->pfnDeferredFillIn = NULL;%N%T")
-			Result.append ("excepinfo->scode = 0;%N%T")
+			Result.append ("%Tmemset(&excepinfo, 0, sizeof(excepinfo));%N%T")
 		end
 
 	retval_return_value_set_up (visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
@@ -201,6 +193,12 @@ feature {NONE} -- Implementation
 
 			elseif type = Vt_void or is_hresult (type) or is_error (type) then 
 				Result := (" ")
+			elseif is_variant (type) then
+				Result.append ("VARIANT* pVar = (VARIANT*)CoTaskMemAlloc (sizeof (VARIANT));%N%T")
+				Result.append ("VariantInit (pVar);%N%T")
+				Result.append ("VariantCopy (pVar, &pResult);%N%T")
+				Result.append ("EIF_REFERENCE result = rt_ce.ccom_ce_pointed_variant (pVar);%N%T")
+				Result.append ("VariantClear (&pResult);%N%T")
 			else
 				Result.append ("EIF_REFERENCE result = ")
 				if visitor.need_generate_ce then
@@ -209,11 +207,7 @@ feature {NONE} -- Implementation
 					Result.append ("rt_ce")
 				end
 				Result.append (".")
-				if is_variant (type) then
-					Result.append ("ccom_ce_pointed_variant")
-				else
-					Result.append (visitor.ce_function_name)
-				end
+				Result.append (visitor.ce_function_name)
 				Result.append (" (")
 				if visitor.is_interface or visitor.is_interface_pointer then
 					Result.append ("(")
@@ -221,7 +215,6 @@ feature {NONE} -- Implementation
 					Result.append (")")
 				end
 				Result.append (retval_value_set_up (vartype_namer.variant_field_name (visitor)))
-
 				if visitor.writable then
 					Result.append (", NULL")
 				end

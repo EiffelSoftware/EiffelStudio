@@ -18,13 +18,13 @@ inherit
 feature -- Status report
 
 	is_selectable: BOOLEAN is
-			-- May the object be selected.
+			-- May the object be selected?
 		do
 			Result := True
 		end
 
 	is_selected: BOOLEAN is
-			-- Is objects state set to selected.
+			-- Is objects state set to selected?
 		deferred
 		end
 

@@ -39,7 +39,10 @@ feature -- Access
 	drop_actions: EV_PND_ACTION_SEQUENCE is
 			-- Actions to be performed when a pebble is dropped here.
 		do
-			Result := drawable.drop_actions
+			if drop_actions_internal = Void then
+				create drop_actions_internal
+			end
+			Result := drop_actions_internal
 		end
 
 	row (a_row: INTEGER): EV_GRID_ROW is
@@ -225,8 +228,9 @@ feature -- Access
 				end
 			end
 		ensure
-			selected_items_empty: not is_row_selection_enabled implies selected_items.is_empty
-			selected_rows_empty: is_row_selection_enabled implies selected_rows.is_empty
+			selected_items_empty: selected_items.is_empty
+			selected_rows_empty: selected_rows.is_empty
+			selected_columns_empty: selected_columns.is_empty
 		end
 		
 	is_header_displayed: BOOLEAN
@@ -377,6 +381,39 @@ feature -- Access
 
 feature -- Status setting
 
+	item_accepts_pebble (a_item: EV_GRID_ITEM; a_pebble: ANY): BOOLEAN is
+			-- Do any actions accept `a_pebble' for `a_item'.
+		require
+			a_pebble_not_void: a_pebble /= Void
+		local
+			cur: CURSOR
+			a_tuple: TUPLE [EV_GRID_ITEM, ANY]
+			a_action: like item_drop_actions
+		do
+			if item_drop_actions_internal /= Void then
+				from
+					a_action := item_drop_actions_internal
+					cur := a_action.cursor
+					a_tuple := [a_item, a_pebble]
+					a_action.start
+				until
+					a_action.after or Result
+				loop
+					Result := a_action.item.valid_operands (a_tuple)
+					if
+						Result and then
+						item_veto_pebble_function /= Void and then
+						item_veto_pebble_function.valid_operands (a_tuple)
+					then
+						item_veto_pebble_function.call (a_tuple)
+						Result := Result and then item_veto_pebble_function.last_result
+					end
+					a_action.forth
+				end
+				a_action.go_to (cur)
+			end
+		end
+
 	item_veto_pebble_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM, ANY], BOOLEAN]
 		-- User item veto function.
 
@@ -386,18 +423,20 @@ feature -- Status setting
 			a_function_not_void: a_function /= Void
 		do
 			item_veto_pebble_function := a_function
-			drawable.drop_actions.set_veto_pebble_function (agent user_item_veto_pebble_function_intermediary)
-			drawable.drop_actions.extend (agent item_drop_action)
 		end
 
-	item_drop_action (a_pebble: ANY) is
-			-- A PND drop has occured on a grid item
+	drop_action_intermediary (a_pebble: ANY) is
+			-- A PND drop has occured on a grid item.
 		local
 			a_item: EV_GRID_ITEM
 		do
 			a_item := item_target
-			if item_drop_actions_internal /= Void then
+			if item_accepts_pebble (a_item, a_pebble) then
 				item_drop_actions_internal.call ([a_item, a_pebble])
+			end
+
+			if drop_actions_internal /= Void and then drop_actions_internal.accepts_pebble (a_pebble) then
+				drop_actions_internal.call ([a_pebble])
 			end
 		end
 
@@ -408,7 +447,7 @@ feature -- Status setting
 			a_x, a_y: INTEGER
 			a_item: EV_GRID_ITEM_I
 		do
-			a_pointer_position := (create {EV_SCREEN}).pointer_position
+			a_pointer_position := internal_screen.pointer_position
 			a_x := a_pointer_position.x - drawable.screen_x
 			a_y := a_pointer_position.y - drawable.screen_y
 			if a_x > 0 and then a_y > 0 then
@@ -419,12 +458,11 @@ feature -- Status setting
 			end
 		end
 
-	user_item_veto_pebble_function_intermediary (a_pebble: ANY): BOOLEAN is
-			-- Intermediary function used for grid item pebble vetoing.
+	veto_pebble_function_intermediary (a_pebble: ANY): BOOLEAN is
+			-- Intermediary function used for pebble vetoing.
 		do
-			if item_veto_pebble_function /= Void then
-				Result := item_veto_pebble_function.item ([item_target, a_pebble])
-			end
+			Result := (drop_actions_internal /= Void and then drop_actions_internal.accepts_pebble (a_pebble)) or else 
+				(item_drop_actions_internal /= Void and then item_accepts_pebble (item_target, a_pebble))
 		end
 
 	set_item_pebble_function (a_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], ANY]) is
@@ -2248,6 +2286,10 @@ feature {NONE} -- Drawing implementation
 			
 			enable_selection_on_click
 			enable_single_item_selection
+
+				-- Enable PND
+			drawable.drop_actions.set_veto_pebble_function (agent veto_pebble_function_intermediary)
+			drawable.drop_actions.extend (agent drop_action_intermediary)
 
 			item_counter := 1
 			row_counter := 1

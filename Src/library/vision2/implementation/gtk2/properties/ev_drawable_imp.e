@@ -377,6 +377,7 @@ feature -- Drawing operations
 			a_cs: EV_GTK_C_STRING
 			a_pango_layout: POINTER
 			a_y, a_text_count: INTEGER
+			a_clip_area: EV_RECTANGLE
 		do
 			if drawable /= default_pointer then
 				if draw_from_baseline then
@@ -392,17 +393,32 @@ feature -- Drawing operations
 					-- Replace when we have UTF16 support
 				a_pango_layout := App_implementation.pango_layout
 				a_text_count := a_text.count				
-				if a_width /= -1 then
-						-- We need to perform ellipsizing on text
-					{EV_GTK_EXTERNALS}.pango_layout_set_ellipsize (a_pango_layout, 3) -- PangoEllipsizeEnd
-					{EV_GTK_EXTERNALS}.pango_layout_set_width (a_pango_layout, a_width * {EV_GTK_EXTERNALS}.pango_scale)
-				end
+
 				{EV_GTK_EXTERNALS}.pango_layout_set_text (a_pango_layout, a_cs.item, a_cs.string_length)
 				if internal_font_imp /= Void then
 					{EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_font_description (a_pango_layout, internal_font_imp.font_description)
 				end
 
+				if a_width /= -1 then
+						-- We need to perform ellipsizing on text
+				--	{EV_GTK_EXTERNALS}.pango_layout_set_ellipsize (a_pango_layout, 3) -- PangoEllipsizeEnd
+
+				a_clip_area := gc_clip_area
+
+				set_clip_area (create {EV_RECTANGLE}.make (x, y, a_width, 10000))
+				--	{EV_GTK_EXTERNALS}.pango_layout_set_width (a_pango_layout, a_width * {EV_GTK_EXTERNALS}.pango_scale)
+				end
+
 				{EV_GTK_EXTERNALS}.gdk_draw_layout (drawable, gc, x, a_y, a_pango_layout)
+
+				if a_width /= -1 then
+						-- Restore clip area
+					if a_clip_area /= Void then
+						set_clip_area (a_clip_area)
+					else
+						remove_clip_area
+					end
+				end
 				
 				{EV_GTK_EXTERNALS}.pango_layout_set_width (a_pango_layout, -1)
 				{EV_GTK_EXTERNALS}.pango_layout_set_font_description (a_pango_layout, default_pointer)

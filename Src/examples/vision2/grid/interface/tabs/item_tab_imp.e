@@ -79,6 +79,21 @@ feature {NONE}-- Initialization
 			create apply_selection_column_button
 			create apply_foreground_row_button
 			create apply_foreground_column_button
+			create top_border_container
+			create l_ev_label_10
+			create top_border_spin_button
+			create bottom_border_container
+			create l_ev_label_11
+			create bottom_border_spin_button
+			create right_border_container
+			create l_ev_label_12
+			create right_border_spin_button
+			create apply_bottom_border_row_button
+			create apply_bottom_border_column_button
+			create apply_right_border_row_button
+			create apply_right_border_column_button
+			create apply_top_border_row_button
+			create apply_top_border_column_button
 			create item_operations_frame
 			create l_ev_vertical_box_1
 			create remove_item_button
@@ -110,6 +125,12 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_2.extend (foreground_color_combo)
 			l_ev_horizontal_box_3.extend (l_ev_label_9)
 			l_ev_horizontal_box_3.extend (background_color_combo)
+			top_border_container.extend (l_ev_label_10)
+			top_border_container.extend (top_border_spin_button)
+			bottom_border_container.extend (l_ev_label_11)
+			bottom_border_container.extend (bottom_border_spin_button)
+			right_border_container.extend (l_ev_label_12)
+			right_border_container.extend (right_border_spin_button)
 			extend (item_operations_frame)
 			item_operations_frame.extend (l_ev_vertical_box_1)
 			l_ev_vertical_box_1.extend (remove_item_button)
@@ -127,16 +148,16 @@ feature {NONE}-- Initialization
 			item_x_index.value_range.adapt (create {INTEGER_INTERVAL}.make (0, 1000000))
 			l_ev_label_2.set_text ("Y Index")
 			item_y_index.value_range.adapt (create {INTEGER_INTERVAL}.make (0, 1000000))
-			l_ev_table_1.resize (3, 8)
+			l_ev_table_1.resize (3, 11)
 			l_ev_table_1.set_row_spacing (box_padding)
 			l_ev_table_1.set_column_spacing (box_padding)
 			l_ev_table_1.set_border_width (box_padding)
 				-- Insert and position all children of `l_ev_table_1'.
 			l_ev_table_1.put_at_position (textable_container, 1, 1, 1, 1)
-			l_ev_table_1.put_at_position (is_selected, 1, 6, 1, 1)
+			l_ev_table_1.put_at_position (is_selected, 1, 9, 1, 1)
 			l_ev_table_1.put_at_position (pixmapable_container, 1, 2, 1, 1)
 			l_ev_table_1.put_at_position (left_border_container, 1, 4, 1, 1)
-			l_ev_table_1.put_at_position (spacing_container, 1, 5, 1, 1)
+			l_ev_table_1.put_at_position (spacing_container, 1, 8, 1, 1)
 			l_ev_table_1.put_at_position (alignment_container, 1, 3, 1, 1)
 			l_ev_table_1.put_at_position (apply_pixmap_row_button, 2, 2, 1, 1)
 			l_ev_table_1.put_at_position (apply_pixmap_column_button, 3, 2, 1, 1)
@@ -144,16 +165,25 @@ feature {NONE}-- Initialization
 			l_ev_table_1.put_at_position (apply_alignment_column_button, 3, 3, 1, 1)
 			l_ev_table_1.put_at_position (apply_left_border_row_button, 2, 4, 1, 1)
 			l_ev_table_1.put_at_position (apply_left_border_column_button, 3, 4, 1, 1)
-			l_ev_table_1.put_at_position (apply_spacing_row_button, 2, 5, 1, 1)
-			l_ev_table_1.put_at_position (apply_spacing_column_button, 3, 5, 1, 1)
-			l_ev_table_1.put_at_position (l_ev_horizontal_box_2, 1, 7, 1, 1)
-			l_ev_table_1.put_at_position (l_ev_horizontal_box_3, 1, 8, 1, 1)
-			l_ev_table_1.put_at_position (apply_background_row_button, 2, 8, 1, 1)
-			l_ev_table_1.put_at_position (apply_background_column_button, 3, 8, 1, 1)
-			l_ev_table_1.put_at_position (apply_selection_row_button, 2, 6, 1, 1)
-			l_ev_table_1.put_at_position (apply_selection_column_button, 3, 6, 1, 1)
-			l_ev_table_1.put_at_position (apply_foreground_row_button, 2, 7, 1, 1)
-			l_ev_table_1.put_at_position (apply_foreground_column_button, 3, 7, 1, 1)
+			l_ev_table_1.put_at_position (apply_spacing_row_button, 2, 8, 1, 1)
+			l_ev_table_1.put_at_position (apply_spacing_column_button, 3, 8, 1, 1)
+			l_ev_table_1.put_at_position (l_ev_horizontal_box_2, 1, 10, 1, 1)
+			l_ev_table_1.put_at_position (l_ev_horizontal_box_3, 1, 11, 1, 1)
+			l_ev_table_1.put_at_position (apply_background_row_button, 2, 11, 1, 1)
+			l_ev_table_1.put_at_position (apply_background_column_button, 3, 11, 1, 1)
+			l_ev_table_1.put_at_position (apply_selection_row_button, 2, 9, 1, 1)
+			l_ev_table_1.put_at_position (apply_selection_column_button, 3, 9, 1, 1)
+			l_ev_table_1.put_at_position (apply_foreground_row_button, 2, 10, 1, 1)
+			l_ev_table_1.put_at_position (apply_foreground_column_button, 3, 10, 1, 1)
+			l_ev_table_1.put_at_position (top_border_container, 1, 6, 1, 1)
+			l_ev_table_1.put_at_position (bottom_border_container, 1, 7, 1, 1)
+			l_ev_table_1.put_at_position (right_border_container, 1, 5, 1, 1)
+			l_ev_table_1.put_at_position (apply_bottom_border_row_button, 2, 7, 1, 1)
+			l_ev_table_1.put_at_position (apply_bottom_border_column_button, 3, 7, 1, 1)
+			l_ev_table_1.put_at_position (apply_right_border_row_button, 2, 5, 1, 1)
+			l_ev_table_1.put_at_position (apply_right_border_column_button, 3, 5, 1, 1)
+			l_ev_table_1.put_at_position (apply_top_border_row_button, 2, 6, 1, 1)
+			l_ev_table_1.put_at_position (apply_top_border_column_button, 3, 6, 1, 1)
 			textable_container.disable_item_expand (l_ev_label_3)
 			l_ev_label_3.set_text ("Text : ")
 			textable_entry.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (212, 208, 200))
@@ -189,6 +219,18 @@ feature {NONE}-- Initialization
 			apply_selection_column_button.set_text ("Apply Column")
 			apply_foreground_row_button.set_text ("Apply Row")
 			apply_foreground_column_button.set_text ("Apply Column")
+			top_border_container.disable_item_expand (l_ev_label_10)
+			l_ev_label_10.set_text ("Top Border : ")
+			bottom_border_container.disable_item_expand (l_ev_label_11)
+			l_ev_label_11.set_text ("Bottom Border : ")
+			right_border_container.disable_item_expand (l_ev_label_12)
+			l_ev_label_12.set_text ("Right Border : ")
+			apply_bottom_border_row_button.set_text ("Apply Row")
+			apply_bottom_border_column_button.set_text ("Apply Column")
+			apply_right_border_row_button.set_text ("Apply Row")
+			apply_right_border_column_button.set_text ("Apply Column")
+			apply_top_border_row_button.set_text ("Apply Row")
+			apply_top_border_column_button.set_text ("Apply Column")
 			item_operations_frame.disable_sensitive
 			item_operations_frame.set_text ("Item Operations")
 			l_ev_vertical_box_1.set_padding_width (box_padding)
@@ -227,6 +269,15 @@ feature {NONE}-- Initialization
 			apply_selection_column_button.select_actions.extend (agent apply_selection_column_button_selected)
 			apply_foreground_row_button.select_actions.extend (agent apply_foreground_row_button_selected)
 			apply_foreground_column_button.select_actions.extend (agent apply_foreground_column_button_selected)
+			top_border_spin_button.change_actions.extend (agent top_border_spin_button_changed (?))
+			bottom_border_spin_button.change_actions.extend (agent bottom_border_spin_button_changed (?))
+			right_border_spin_button.change_actions.extend (agent right_border_spin_button_changed (?))
+			apply_bottom_border_row_button.select_actions.extend (agent apply_bottom_border_row_button_selected)
+			apply_bottom_border_column_button.select_actions.extend (agent apply_bottom_border_column_button_selected)
+			apply_right_border_row_button.select_actions.extend (agent apply_right_border_row_button_selected)
+			apply_right_border_column_button.select_actions.extend (agent apply_right_border_column_button_selected)
+			apply_top_border_row_button.select_actions.extend (agent apply_top_border_row_button_selected)
+			apply_top_border_column_button.select_actions.extend (agent apply_top_border_column_button_selected)
 			remove_item_button.select_actions.extend (agent remove_item_button_selected)
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.
@@ -239,16 +290,20 @@ feature -- Access
 
 	main_box: EV_VERTICAL_BOX
 	is_selected: EV_CHECK_BUTTON
-	item_x_index, item_y_index, left_border_spin_button, spacing_spin_button: EV_SPIN_BUTTON
+	item_x_index, item_y_index, left_border_spin_button, spacing_spin_button,
+	top_border_spin_button, bottom_border_spin_button, right_border_spin_button: EV_SPIN_BUTTON
 	item_finder: GRID_ITEM_FINDER
 	textable_container,
-	pixmapable_container, left_border_container, spacing_container, alignment_container: EV_HORIZONTAL_BOX
+	pixmapable_container, left_border_container, spacing_container, alignment_container,
+	top_border_container, bottom_border_container, right_border_container: EV_HORIZONTAL_BOX
 	apply_pixmap_row_button,
 	apply_pixmap_column_button, apply_alignment_row_button, apply_alignment_column_button,
 	apply_left_border_row_button, apply_left_border_column_button, apply_spacing_row_button,
 	apply_spacing_column_button, apply_background_row_button, apply_background_column_button,
 	apply_selection_row_button, apply_selection_column_button, apply_foreground_row_button,
-	apply_foreground_column_button, remove_item_button: EV_BUTTON
+	apply_foreground_column_button, apply_bottom_border_row_button, apply_bottom_border_column_button,
+	apply_right_border_row_button, apply_right_border_column_button, apply_top_border_row_button,
+	apply_top_border_column_button, remove_item_button: EV_BUTTON
 	item_frame, item_operations_frame: EV_FRAME
 	pixmap_holder,
 	alignment_combo, foreground_color_combo, background_color_combo: EV_COMBO_BOX
@@ -262,7 +317,7 @@ feature {NONE} -- Implementation
 	l_ev_horizontal_box_1, l_ev_horizontal_box_2, l_ev_horizontal_box_3: EV_HORIZONTAL_BOX
 	l_ev_label_1,
 	l_ev_label_2, l_ev_label_3, l_ev_label_4, l_ev_label_5, l_ev_label_6, l_ev_label_7,
-	l_ev_label_8, l_ev_label_9: EV_LABEL
+	l_ev_label_8, l_ev_label_9, l_ev_label_10, l_ev_label_11, l_ev_label_12: EV_LABEL
 	l_ev_table_1: EV_TABLE
 
 feature {NONE} -- Implementation
@@ -407,6 +462,51 @@ feature {NONE} -- Implementation
 	
 	apply_foreground_column_button_selected is
 			-- Called by `select_actions' of `apply_foreground_column_button'.
+		deferred
+		end
+	
+	top_border_spin_button_changed (a_value: INTEGER) is
+			-- Called by `change_actions' of `top_border_spin_button'.
+		deferred
+		end
+	
+	bottom_border_spin_button_changed (a_value: INTEGER) is
+			-- Called by `change_actions' of `bottom_border_spin_button'.
+		deferred
+		end
+	
+	right_border_spin_button_changed (a_value: INTEGER) is
+			-- Called by `change_actions' of `right_border_spin_button'.
+		deferred
+		end
+	
+	apply_bottom_border_row_button_selected is
+			-- Called by `select_actions' of `apply_bottom_border_row_button'.
+		deferred
+		end
+	
+	apply_bottom_border_column_button_selected is
+			-- Called by `select_actions' of `apply_bottom_border_column_button'.
+		deferred
+		end
+	
+	apply_right_border_row_button_selected is
+			-- Called by `select_actions' of `apply_right_border_row_button'.
+		deferred
+		end
+	
+	apply_right_border_column_button_selected is
+			-- Called by `select_actions' of `apply_right_border_column_button'.
+		deferred
+		end
+	
+	apply_top_border_row_button_selected is
+			-- Called by `select_actions' of `apply_top_border_row_button'.
+		deferred
+		end
+	
+	apply_top_border_column_button_selected is
+			-- Called by `select_actions' of `apply_top_border_column_button'.
 		deferred
 		end
 	

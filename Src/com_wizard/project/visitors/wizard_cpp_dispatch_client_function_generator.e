@@ -96,7 +96,7 @@ feature {NONE} -- Implementation
 			l_return_value, l_invoke_flag: STRING
 			l_visitor: WIZARD_DATA_TYPE_VISITOR
 			l_is_out: BOOLEAN
-			l_counter, l_type_id: INTEGER
+			l_counter, l_type_id, l_count: INTEGER
 			l_type: WIZARD_DATA_TYPE_DESCRIPTOR
 		do
 			create {ARRAYED_LIST [STRING]} free_arguments.make (20)
@@ -108,24 +108,24 @@ feature {NONE} -- Implementation
 			Result.append_integer (func_desc.member_id)
 			Result.append (";%N%TLCID lcid = (LCID) ")
 			Result.append_integer (a_lcid)
-			Result.append (";%N%TDISPPARAMS args = {NULL, NULL, 0, 0};%N%TVARIANT pResult; %N%TVariantInit (&pResult);%N%T%N")
+			Result.append (";%N%TDISPPARAMS dispparams;%N%Tmemset(&dispparams, 0, sizeof(dispparams));%N%T")
+			Result.append ("VARIANT pResult; %N%TVariantInit (&pResult);%N%T%N")
 			Result.append (initialize_excepinfo)
 			Result.append ("%N%Tunsigned int nArgErr;%N%T")
 
 			-- Set up arguments
-			if (func_desc.argument_count > 0) then
-				Result.append ("args.cArgs = ")
-				Result.append_integer (func_desc.argument_count)
-				Result.append (";%N%TVARIANTARG *arguments;%N%T")
-				free_arguments.put_front ("arguments")
-				Result.append ("arguments = (VARIANTARG *)CoTaskMemAlloc (")
-				Result.append_integer (func_desc.argument_count)
-				Result.append (" * sizeof (VARIANTARG));%N%T")
+			l_count := func_desc.argument_count
+			if l_count > 0 then
+				Result.append ("dispparams.cArgs = ")
+				Result.append_integer (l_count)
+				Result.append (";%N%TVARIANTARG args[")
+				Result.append_integer (l_count)
+				Result.append ("];%N%T")
 
 				l_arguments := func_desc.arguments
 				from
 					l_arguments.start
-					l_counter := func_desc.argument_count - 1
+					l_counter := l_count - 1
 				until
 					l_arguments.after or else l_counter = -1
 				loop
@@ -159,7 +159,7 @@ feature {NONE} -- Implementation
 					l_counter := l_counter - 1			
 				end
 
-				Result.append ("%N%Targs.rgvarg = arguments;")
+				Result.append ("%N%Tdispparams.rgvarg = args;")
 			end
 
 			Result.append ("%N%N%Thr = ")
@@ -179,7 +179,7 @@ feature {NONE} -- Implementation
 			end
 			Result.append ("->Invoke (disp, IID_NULL, lcid, ")
 			Result.append (l_invoke_flag)
-			Result.append (", &args, &pResult, excepinfo, &nArgErr);%N%T")
+			Result.append (", &dispparams, &pResult, excepinfo, &nArgErr);%N%T")
 
 			-- if argument error
 			Result.append (examine_parameter_error ("hr"))
@@ -191,17 +191,26 @@ feature {NONE} -- Implementation
 				Result.append (l_return_value)
 			end
 
-			if not free_arguments.is_empty then
-				from
-					free_arguments.start
-				until
-					free_arguments.off
-				loop
-					Result.append ("%N%TCoTaskMemFree ((void *)")
-					Result.append (free_arguments.item)
-					Result.append (");")
-					free_arguments.forth
-				end
+			from
+				l_counter := 0
+			until
+				l_counter = l_count
+			loop
+				Result.append ("%N%TVariantClear(&args[")
+				Result.append_integer (l_counter)
+				Result.append ("]);")
+				l_counter := l_counter + 1
+			end
+
+			from
+				free_arguments.start
+			until
+				free_arguments.after
+			loop
+				Result.append ("%N%TCoTaskMemFree ((void *)")
+				Result.append (free_arguments.item)
+				Result.append (");")
+				free_arguments.forth
 			end
 
 			Result.append ("%N%T")
@@ -331,10 +340,13 @@ feature {NONE} -- Implementation
 			l_type := visitor.vt_type
 			create Result.make (1000)
 
+			Result.append ("%N%TVariantInit(&args[")
+			Result.append_integer (position)
+			Result.append ("]);%N%T")
+
 			if not (is_variant (l_type) and visitor.is_structure) then
-				-- We are assigning variants directly into the `arguments' array
+				-- We are assigning variants directly into the `args' array
 				-- so there is no need to setup the type
-				Result.append ("%N%T")
 				Result.append (argument_type_set_up (position, l_type))
 			end
 			
@@ -377,12 +389,11 @@ feature {NONE} -- Implementation
 				Result.append (argument_value_set_up (position,  vartype_namer.variant_field_name (visitor), l_value, visitor))
 
 			elseif is_variant (l_type) and visitor.is_structure then
-				Result.append ("%N%T")
-				Result.append ("arguments [")
+				Result.append ("%N%TVariantCopy(&args[")
 				Result.append_integer (position)
-				Result.append ("] = *")
+				Result.append ("], ")
 				Result.append (name)
-				Result.append (";%N%T")
+				Result.append (");%N%T")
 
 			elseif visitor.is_array_basic_type or visitor.is_structure_pointer then
 				Result.append ("%N%T")
@@ -400,7 +411,7 @@ feature {NONE} -- Implementation
 					Result.append ("VarCyFromDec (")
 					Result.append (name)
 					Result.append (", &tmp_cy);%N%T")
-					Result.append ("VarDecFromCy (tmp_cy, &(arguments[")
+					Result.append ("VarDecFromCy (tmp_cy, &(args[")
 					Result.append_integer (position)
 					Result.append ("].decVal));")
 				else
@@ -461,7 +472,7 @@ feature {NONE} -- Implementation
 			valid_name: not attribute_name.is_empty
 		do
 			create Result.make (100)
-			Result.append ("arguments [")
+			Result.append ("args [")
 			Result.append_integer (position)
 			Result.append ("].")
 			Result.append (attribute_name)
@@ -473,7 +484,7 @@ feature {NONE} -- Implementation
 			valid_position: position >= 0
 		do
 			create Result.make (100)
-			Result.append ("arguments [")
+			Result.append ("args [")
 			Result.append_integer (position)
 			Result.append ("].vt = ")
 			Result.append_integer (type)

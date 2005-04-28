@@ -528,8 +528,8 @@ feature -- Status setting
 		end
 
 	enable_single_row_selection is
-			-- Set user selection mode so that clicking an item selects the whole row,
-			-- unselecting any previous rows.
+			-- Set selection handling so that clicking an item or navigating using the keyboard arrow keys selects a row.
+			-- whilst unselecting any previously selected rows.
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -539,7 +539,7 @@ feature -- Status setting
 		end
 		
 	enable_multiple_row_selection is
-			-- Set user selection mode so that clicking an item selects the whole row.
+			-- Set selection handling so that clicking an item or navigating using the keyboard arrow keys selects a row.
 			-- Multiple rows may be selected via keyboard with Ctrl and Shift keys.
 		require
 			not_destroyed: not is_destroyed
@@ -550,8 +550,8 @@ feature -- Status setting
 		end
 		
 	enable_single_item_selection is
-			-- Set user selection mode so that clicking an item selects the item,
-			-- unselecting any previous items.
+			-- Set selection handling so that clicking an item or navigating using the keyboard arrow keys selects the item,
+			-- whilst unselecting any previously selected items.
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -561,7 +561,8 @@ feature -- Status setting
 		end
 		
 	enable_multiple_item_selection is
-			-- Set user selection mode so that clicking an item selects the item.
+			-- Set selection handling so that clicking an item or navigating using the keyboard arrow keys selects the item,
+			-- whilst unselecting any previously selected items.
 			-- Multiple items may be selected via keyboard with Ctrl and Shift keys.
 		require
 			not_destroyed: not is_destroyed
@@ -889,7 +890,7 @@ feature -- Status report
 		
 	is_single_row_selection_enabled: BOOLEAN is
 			-- Does clicking an item select the whole row, unselecting
-			-- any previous rows?
+			-- any previously rows?
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -906,8 +907,8 @@ feature -- Status report
 		end
 		
 	is_single_item_selection_enabled: BOOLEAN is
-			-- Does clicking an item select the item, unselecting
-			-- any previous items?
+			-- Does clicking or keyboard navigating via arrow keys select an item, unselecting
+			-- any previously selected items?
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -915,8 +916,8 @@ feature -- Status report
 		end
 
 	is_multiple_item_selection_enabled: BOOLEAN is
-			-- Does clicking an item select the item, with multiple
-			-- item selection permitted?
+			-- Does clicking or keyboard navigating via arrow keys select an item, with multiple
+			-- item selection permitted via the use of Ctrl and Shift keys?
 		require
 			not_destroyed: not is_destroyed
 		do

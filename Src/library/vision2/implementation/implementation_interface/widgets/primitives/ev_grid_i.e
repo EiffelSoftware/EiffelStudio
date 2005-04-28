@@ -684,8 +684,8 @@ feature -- Status setting
 		end
 		
 	enable_single_row_selection is
-			-- Set user selection mode so that clicking an item selects the whole row,
-			-- unselecting any previous rows.
+			-- Set selection handling so that clicking an item or navigating using the keyboard arrow keys selects a row.
+			-- whilst unselecting any previously selected rows..
 		local
 			a_row: EV_GRID_ROW_I
 			sel_rows: like selected_rows
@@ -719,7 +719,7 @@ feature -- Status setting
 		end
 		
 	enable_multiple_row_selection is
-			-- Set user selection mode so that clicking an item selects the whole row.
+			-- Set selection handling so that clicking an item or navigating using the keyboard arrow keys selects a row.
 			-- Multiple rows may be selected via keyboard with Ctrl and Shift keys.
 		local
 			sel_items: like selected_items
@@ -745,8 +745,8 @@ feature -- Status setting
 		end
 		
 	enable_single_item_selection is
-			-- Set user selection mode so that clicking an item selects the item,
-			-- unselecting any previous items.
+			-- Set selection handling so that clicking an item or navigating using the keyboard arrow keys selects the item,
+			-- whilst unselecting any previously selected items.
 		local
 			sel_items: like selected_items
 		do
@@ -766,7 +766,8 @@ feature -- Status setting
 		end
 		
 	enable_multiple_item_selection is
-			-- Set user selection mode so that clicking an item selects the item.
+			-- Set selection handling so that clicking an item or navigating using the keyboard arrow keys selects the item,
+			-- whilst unselecting any previously selected items.
 			-- Multiple items may be selected via keyboard with Ctrl and Shift keys.
 		local
 			sel_items: like selected_items
@@ -1178,20 +1179,20 @@ feature -- Status report
 		end
 
 	is_single_row_selection_enabled: BOOLEAN
-			-- Does clicking an item select the whole row, unselecting
-			-- any previous rows?
+			-- Does clicking or keyboard navigating via arrow keys select a row, unselecting
+			-- any previously selected row?
 
 	is_multiple_row_selection_enabled: BOOLEAN
-			-- Does clicking an item select the whole row, with multiple
-			-- row selection permitted?
+			-- Does clicking or keyboard navigating via arrow keys select a row, with multiple
+			-- row selection permitted via the use of Ctrl and Shift keys?
 		
 	is_single_item_selection_enabled: BOOLEAN
-			-- Does clicking an item select the item, unselecting
-			-- any previous items?
+			-- Does clicking or keyboard navigating via arrow keys select an item, unselecting
+			-- any previously selected items?
 
 	is_multiple_item_selection_enabled: BOOLEAN
-			-- Does clicking an item select the item, with multiple
-			-- item selection permitted?
+			-- Does clicking or keyboard navigating via arrow keys select an item, with multiple
+			-- item selection permitted via the use of Ctrl and Shift keys?
 		
 	first_visible_row: INTEGER is
 			-- Index of first row visible in `Current' or 0 if `row_count' = 0.

@@ -960,8 +960,38 @@ feature {NONE} -- Implementation
 	enable_pick_and_drop_button_selected is
 			-- Called by `select_actions' of `enable_pick_and_drop_button'.
 		do
+			grid.set_item_pebble_function (agent item_pebble_function)
+			grid.set_item_veto_pebble_function (agent item_veto_pebble_function)
+			grid.item_drop_actions.extend (agent item_drop_actions)
+		end
+
+	item_pebble_function (a_item: EV_GRID_ITEM): ANY is
+			-- Return the text of `a_item' as pebble for Pick And Drop if `a_item' is an EV_GRID_LABEL_ITEM .
+		local
+			lab_item: EV_GRID_LABEL_ITEM
+		do
+			lab_item ?= a_item
+			if lab_item /= Void then
+				Result := lab_item.text
+			end
+		end
+
+	item_veto_pebble_function (a_item: EV_GRID_ITEM; a_pebble: ANY): BOOLEAN is
+			-- Only allow drops on EV_GRID_LABEL_ITEMS.
+		local
+			lab_item: EV_GRID_LABEL_ITEM
+		do
+			lab_item ?= a_item
+			Result := lab_item /= Void
+		end
+
+	item_drop_actions (a_item: EV_GRID_LABEL_ITEM; a_pebble: STRING) is
+			-- Set the text to `a_pebble'  if indeed `a_item' is an EV_GRID_ITEM
+		do
+			if a_item /= Void then
+				a_item.set_text (a_pebble)
+			end
 		end
 		
-
 end -- class GRID_TAB
 

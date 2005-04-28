@@ -137,4 +137,45 @@ feature -- Access
 			Result.set_with_named_file (f_name.out)
 		end
 
+	add_color_to_combo (a_color: EV_COLOR; a_combo: EV_COMBO_BOX) is
+			-- Add `a_color' to `background_color_combo'.
+		require
+			a_color_not_void: a_color /= Void
+			a_combo_not_void: a_combo /= Void
+		local
+			pixmap: EV_PIXMAP
+			list_item: EV_LIST_ITEM
+		do
+			create pixmap
+			pixmap.set_size (16, 16)
+			pixmap.set_foreground_color (a_color)
+			pixmap.fill_rectangle (0, 0, 16, 16)
+			pixmap.set_foreground_color ((create {EV_STOCK_COLORS}).black)
+			pixmap.draw_rectangle (0, 0, 16, 16)
+			create list_item
+			list_item.set_pixmap (pixmap)
+			list_item.set_data (a_color)
+			a_combo.extend (list_item)
+		ensure
+			count_increased: a_combo.count = old a_combo.count + 1
+		end
+
+	light_red: EV_COLOR is
+			--
+		once
+			create Result.make_with_8_bit_rgb (255, 230, 230)
+		end
+
+	light_blue: EV_COLOR is
+			--
+		once
+			create Result.make_with_8_bit_rgb (230, 230, 255)
+		end
+
+	light_green: EV_COLOR is
+			--
+		once
+			create Result.make_with_8_bit_rgb (230, 255, 230)
+		end
+
 end

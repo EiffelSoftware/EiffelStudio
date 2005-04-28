@@ -67,6 +67,18 @@ feature {NONE}-- Initialization
 			create apply_left_border_column_button
 			create apply_spacing_row_button
 			create apply_spacing_column_button
+			create l_ev_horizontal_box_2
+			create l_ev_label_8
+			create foreground_color_combo
+			create l_ev_horizontal_box_3
+			create l_ev_label_9
+			create background_color_combo
+			create apply_background_row_button
+			create apply_background_column_button
+			create apply_selection_row_button
+			create apply_selection_column_button
+			create apply_foreground_row_button
+			create apply_foreground_column_button
 			create item_operations_frame
 			create l_ev_vertical_box_1
 			create remove_item_button
@@ -94,6 +106,10 @@ feature {NONE}-- Initialization
 			alignment_combo.extend (left_alignment_item)
 			alignment_combo.extend (center_alignment_item)
 			alignment_combo.extend (right_alignment_item)
+			l_ev_horizontal_box_2.extend (l_ev_label_8)
+			l_ev_horizontal_box_2.extend (foreground_color_combo)
+			l_ev_horizontal_box_3.extend (l_ev_label_9)
+			l_ev_horizontal_box_3.extend (background_color_combo)
 			extend (item_operations_frame)
 			item_operations_frame.extend (l_ev_vertical_box_1)
 			l_ev_vertical_box_1.extend (remove_item_button)
@@ -111,7 +127,7 @@ feature {NONE}-- Initialization
 			item_x_index.value_range.adapt (create {INTEGER_INTERVAL}.make (0, 1000000))
 			l_ev_label_2.set_text ("Y Index")
 			item_y_index.value_range.adapt (create {INTEGER_INTERVAL}.make (0, 1000000))
-			l_ev_table_1.resize (3, 7)
+			l_ev_table_1.resize (3, 8)
 			l_ev_table_1.set_row_spacing (box_padding)
 			l_ev_table_1.set_column_spacing (box_padding)
 			l_ev_table_1.set_border_width (box_padding)
@@ -130,6 +146,14 @@ feature {NONE}-- Initialization
 			l_ev_table_1.put_at_position (apply_left_border_column_button, 3, 4, 1, 1)
 			l_ev_table_1.put_at_position (apply_spacing_row_button, 2, 5, 1, 1)
 			l_ev_table_1.put_at_position (apply_spacing_column_button, 3, 5, 1, 1)
+			l_ev_table_1.put_at_position (l_ev_horizontal_box_2, 1, 7, 1, 1)
+			l_ev_table_1.put_at_position (l_ev_horizontal_box_3, 1, 8, 1, 1)
+			l_ev_table_1.put_at_position (apply_background_row_button, 2, 8, 1, 1)
+			l_ev_table_1.put_at_position (apply_background_column_button, 3, 8, 1, 1)
+			l_ev_table_1.put_at_position (apply_selection_row_button, 2, 6, 1, 1)
+			l_ev_table_1.put_at_position (apply_selection_column_button, 3, 6, 1, 1)
+			l_ev_table_1.put_at_position (apply_foreground_row_button, 2, 7, 1, 1)
+			l_ev_table_1.put_at_position (apply_foreground_column_button, 3, 7, 1, 1)
 			textable_container.disable_item_expand (l_ev_label_3)
 			l_ev_label_3.set_text ("Text : ")
 			textable_entry.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (212, 208, 200))
@@ -155,6 +179,16 @@ feature {NONE}-- Initialization
 			apply_left_border_column_button.set_text ("Apply Column")
 			apply_spacing_row_button.set_text ("Apply Row")
 			apply_spacing_column_button.set_text ("Apply Column")
+			l_ev_horizontal_box_2.disable_item_expand (l_ev_label_8)
+			l_ev_label_8.set_text ("Foreground Color : ")
+			l_ev_horizontal_box_3.disable_item_expand (l_ev_label_9)
+			l_ev_label_9.set_text ("Background Color : ")
+			apply_background_row_button.set_text ("Apply Row")
+			apply_background_column_button.set_text ("Apply Column")
+			apply_selection_row_button.set_text ("Apply Row")
+			apply_selection_column_button.set_text ("Apply Column")
+			apply_foreground_row_button.set_text ("Apply Row")
+			apply_foreground_column_button.set_text ("Apply Column")
 			item_operations_frame.disable_sensitive
 			item_operations_frame.set_text ("Item Operations")
 			l_ev_vertical_box_1.set_padding_width (box_padding)
@@ -185,6 +219,14 @@ feature {NONE}-- Initialization
 			apply_left_border_column_button.select_actions.extend (agent apply_left_border_column_button_selected)
 			apply_spacing_row_button.select_actions.extend (agent apply_spacing_row_button_selected)
 			apply_spacing_column_button.select_actions.extend (agent apply_spacing_column_button_selected)
+			foreground_color_combo.select_actions.extend (agent foreground_color_combo_selected)
+			background_color_combo.select_actions.extend (agent background_color_combo_selected)
+			apply_background_row_button.select_actions.extend (agent apply_background_row_button_selected)
+			apply_background_column_button.select_actions.extend (agent apply_background_column_button_selected)
+			apply_selection_row_button.select_actions.extend (agent apply_selection_row_selected_button)
+			apply_selection_column_button.select_actions.extend (agent apply_selection_column_button_selected)
+			apply_foreground_row_button.select_actions.extend (agent apply_foreground_row_button_selected)
+			apply_foreground_column_button.select_actions.extend (agent apply_foreground_column_button_selected)
 			remove_item_button.select_actions.extend (agent remove_item_button_selected)
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.
@@ -204,19 +246,23 @@ feature -- Access
 	apply_pixmap_row_button,
 	apply_pixmap_column_button, apply_alignment_row_button, apply_alignment_column_button,
 	apply_left_border_row_button, apply_left_border_column_button, apply_spacing_row_button,
-	apply_spacing_column_button, remove_item_button: EV_BUTTON
+	apply_spacing_column_button, apply_background_row_button, apply_background_column_button,
+	apply_selection_row_button, apply_selection_column_button, apply_foreground_row_button,
+	apply_foreground_column_button, remove_item_button: EV_BUTTON
 	item_frame, item_operations_frame: EV_FRAME
 	pixmap_holder,
-	alignment_combo: EV_COMBO_BOX
+	alignment_combo, foreground_color_combo, background_color_combo: EV_COMBO_BOX
 	textable_entry: EV_TEXT_FIELD
-	left_alignment_item, center_alignment_item, right_alignment_item: EV_LIST_ITEM
+	left_alignment_item,
+	center_alignment_item, right_alignment_item: EV_LIST_ITEM
 
 feature {NONE} -- Implementation
 
 	l_ev_vertical_box_1: EV_VERTICAL_BOX
-	l_ev_horizontal_box_1: EV_HORIZONTAL_BOX
-	l_ev_label_1, l_ev_label_2, l_ev_label_3,
-	l_ev_label_4, l_ev_label_5, l_ev_label_6, l_ev_label_7: EV_LABEL
+	l_ev_horizontal_box_1, l_ev_horizontal_box_2, l_ev_horizontal_box_3: EV_HORIZONTAL_BOX
+	l_ev_label_1,
+	l_ev_label_2, l_ev_label_3, l_ev_label_4, l_ev_label_5, l_ev_label_6, l_ev_label_7,
+	l_ev_label_8, l_ev_label_9: EV_LABEL
 	l_ev_table_1: EV_TABLE
 
 feature {NONE} -- Implementation
@@ -321,6 +367,46 @@ feature {NONE} -- Implementation
 	
 	apply_spacing_column_button_selected is
 			-- Called by `select_actions' of `apply_spacing_column_button'.
+		deferred
+		end
+	
+	foreground_color_combo_selected is
+			-- Called by `select_actions' of `foreground_color_combo'.
+		deferred
+		end
+	
+	background_color_combo_selected is
+			-- Called by `select_actions' of `background_color_combo'.
+		deferred
+		end
+	
+	apply_background_row_button_selected is
+			-- Called by `select_actions' of `apply_background_row_button'.
+		deferred
+		end
+	
+	apply_background_column_button_selected is
+			-- Called by `select_actions' of `apply_background_column_button'.
+		deferred
+		end
+	
+	apply_selection_row_selected_button is
+			-- Called by `select_actions' of `apply_selection_row_button'.
+		deferred
+		end
+	
+	apply_selection_column_button_selected is
+			-- Called by `select_actions' of `apply_selection_column_button'.
+		deferred
+		end
+	
+	apply_foreground_row_button_selected is
+			-- Called by `select_actions' of `apply_foreground_row_button'.
+		deferred
+		end
+	
+	apply_foreground_column_button_selected is
+			-- Called by `select_actions' of `apply_foreground_column_button'.
 		deferred
 		end
 	

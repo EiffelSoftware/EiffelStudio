@@ -1878,6 +1878,17 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			drawable.redraw
 		end
 
+	redraw_column (a_column: EV_GRID_COLUMN_I) is
+			-- Redraw area of `a_column' if visible.
+		require
+			a_column_not_void: a_column /= Void
+		local
+			col_x1: INTEGER
+		do
+			col_x1 := a_column.virtual_x_position 
+			drawable.redraw_rectangle (col_x1, 0, a_column.width, drawable.height)
+		end
+
 	redraw_row (a_row: EV_GRID_ROW_I) is
 			-- Redraw area of `a_row' if visible.
 		require

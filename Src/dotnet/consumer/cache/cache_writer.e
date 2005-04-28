@@ -411,13 +411,13 @@ feature -- Basic Operations
 				l_id := feature {GUID}.new_guid.to_string
 				l_id.to_upper
 				Result := create_consumed_assembly_from_path (l_id, a_path)
-				l_info := cache_reader.info
-				l_info.add_assembly (Result)
-				update_info (l_info)
+				if Result /= Void then
+					l_info := cache_reader.info
+					l_info.add_assembly (Result)
+					update_info (l_info)
+				end
 			end
 			guard.unlock
-		ensure
-			result_not_void: Result /= Void
 		end
 		
 	update_info (a_info: CACHE_INFO) is

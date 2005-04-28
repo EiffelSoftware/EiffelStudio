@@ -2632,22 +2632,14 @@ feature {NONE} -- Event handling
 		
 	client_x_to_virtual_x (client_x: INTEGER): INTEGER is
 			-- Convert `client_x' in client coordinates to a virtual grid coordinate.
-		require
-			client_x_positive: client_x >= 0
 		do
 			Result := client_x + internal_client_x - viewport_x_offset
-		ensure
-			result_positive: Result >= 0
 		end
 		
 	client_y_to_virtual_y (client_y: INTEGER): INTEGER is
 			-- Convert `client_y' in client coordinates to a virtual grid coordinate.
-		require
-			client_y_positive: client_y >= 0
 		do
 			Result := client_y + internal_client_y - viewport_y_offset
-		ensure
-			result_positive: Result >= 0
 		end
 
 	pointer_motion_received (a_x, a_y: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is

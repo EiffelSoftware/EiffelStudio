@@ -501,7 +501,7 @@ feature {EV_ANY_I} -- Implementation
 invariant
 	header_item_not_void: is_initialized implies header_item /= Void
 	selected_item_count_within_bounds: parent /= Void implies selected_item_count >= 0 and then selected_item_count <= selected_items.count
-	is_selected_implies_selected_item_count_equals_count: is_selected implies selected_item_count = count
+	is_selected_implies_selected_item_count_equals_count: (is_selectable and is_selected) implies selected_item_count = count
 	physical_index_set: parent /= Void implies physical_index >= 0
 
 end

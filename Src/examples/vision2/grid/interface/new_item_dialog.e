@@ -134,7 +134,9 @@ feature {NONE} -- Implementation
 	activate_item (a_x, a_y, a_button: INTEGER; a_item: EV_GRID_ITEM) is
 			-- 
 		do
-			a_item.activate
+			if a_item /= Void then
+				a_item.activate
+			end	
 		end
 		
 		

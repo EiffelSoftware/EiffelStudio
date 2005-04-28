@@ -2100,10 +2100,10 @@ feature -- Externals
 			"C signature (PangoLayout*, int) use <gtk/gtk.h>"
 		end
 
-	frozen pango_layout_set_ellipsize (a_layout: POINTER; a_mode: INTEGER) is
-		external
-			"C signature (PangoLayout*, PangoEllipsizeMode) use <gtk/gtk.h>"
-		end
+--	frozen pango_layout_set_ellipsize (a_layout: POINTER; a_mode: INTEGER) is
+--		external
+--			"C signature (PangoLayout*, PangoEllipsizeMode) use <gtk/gtk.h>"
+--		end
 
 	frozen pango_layout_get_pixel_size (a_layout: POINTER; a_width, a_height: TYPED_POINTER [INTEGER]) is
 		external

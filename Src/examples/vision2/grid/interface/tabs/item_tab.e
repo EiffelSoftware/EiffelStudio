@@ -118,6 +118,7 @@ feature {NONE} -- Implementation
 		local
 			label_item: EV_GRID_LABEL_ITEM
 			deselectable: EV_DESELECTABLE
+			l_color: EV_COLOR
 		do
 			if found_item /= Void then
 				main_box.enable_sensitive
@@ -164,6 +165,32 @@ feature {NONE} -- Implementation
 						alignment_combo.i_th (3).enable_select
 						alignment_combo.i_th (3).select_actions.resume
 					end
+					background_color_combo.select_actions.block
+					from
+						background_color_combo.start
+					until
+						background_color_combo.off
+					loop
+						l_color ?= background_color_combo.item.data
+						if l_color.is_equal (label_item.background_color) then
+							background_color_combo.item.enable_select
+						end
+						background_color_combo.forth
+					end
+					background_color_combo.select_actions.resume
+					foreground_color_combo.select_actions.block
+					from
+						foreground_color_combo.start
+					until
+						foreground_color_combo.off
+					loop
+						l_color ?= foreground_color_combo.item.data
+						if l_color.is_equal (label_item.foreground_color) then
+							foreground_color_combo.item.enable_select
+						end
+						foreground_color_combo.forth
+					end
+					foreground_color_combo.select_actions.resume
 				else
 					textable_container.disable_sensitive
 					left_border_container.disable_sensitive

@@ -139,6 +139,7 @@ feature -- Access
 		ensure
 			selected_items_empty: selected_items.is_empty
 			selected_rows_empty: selected_rows.is_empty
+			selected_columns_empty: selected_columns.is_empty
 		end
 
 	is_header_displayed: BOOLEAN is

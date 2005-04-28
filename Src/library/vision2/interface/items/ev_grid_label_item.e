@@ -113,6 +113,48 @@ feature -- Status Setting
 			left_border_set: left_border = a_left_border
 		end
 
+	set_right_border (a_right_border: INTEGER) is
+			-- Assign `a_right_border' to `right_border'.
+		require
+			not_destroyed: not is_destroyed
+			a_right_border_non_negative: a_right_border >= 0
+		do
+			right_border := a_right_border
+			if parent /= Void then
+				parent.implementation.redraw_item (implementation)
+			end
+		ensure
+			right_border_set: right_border = a_right_border
+		end
+
+	set_top_border (a_top_border: INTEGER) is
+			-- Assign `a_top_border' to `top_border'.
+		require
+			not_destroyed: not is_destroyed
+			a_top_border_non_negative: a_top_border >= 0
+		do
+			top_border := a_top_border
+			if parent /= Void then
+				parent.implementation.redraw_item (implementation)
+			end
+		ensure
+			top_border_set: top_border = a_top_border
+		end
+
+	set_bottom_border (a_bottom_border: INTEGER) is
+			-- Assign `a_bottom_border' to `bottom_border'.
+		require
+			not_destroyed: not is_destroyed
+			a_bottom_border_non_negative: a_bottom_border >= 0
+		do
+			bottom_border := a_bottom_border
+			if parent /= Void then
+				parent.implementation.redraw_item (implementation)
+			end
+		ensure
+			bottom_border_set: bottom_border = a_bottom_border
+		end
+
 	set_spacing (a_spacing: INTEGER) is
 			-- Assign `a_spacing' to `spacing'.
 		require
@@ -171,6 +213,15 @@ feature -- Measurement
 	left_border: INTEGER
 			-- Spacing between the contents of `Current' and the left edge of `Current' in pixels.
 
+	right_border: INTEGER
+			-- Spacing between the contents of `Current' and the right edge of `Current' in pixels.
+
+	top_border: INTEGER
+			-- Spacing between the contents of `Current' and the top edge of `Current' in pixels.
+
+	bottom_border: INTEGER
+			-- Spacing between the contents of `Current' and the bottom edge of `Current' in pixels.
+
 	spacing: INTEGER
 			-- Spacing between `text' and `pixmap' in pixels.
 			-- If both are not visible, this value does not affect appearance of `Current'.
@@ -221,7 +272,8 @@ feature {NONE} -- Contract support
 			-- Is `Current' in its default state?
 		do
 			Result := Precursor {EV_GRID_ITEM} and text.is_empty and pixmap = Void and
-				left_border = 2 and spacing = 2 and is_left_aligned
+				left_border = 2 and right_border = 0 and top_border = 2 and bottom_border = 0
+				and spacing = 2 and is_left_aligned
 		end
 
 feature {EV_ANY, EV_ANY_I, EV_GRID_DRAWER_I} -- Implementation

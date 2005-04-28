@@ -1026,6 +1026,7 @@ feature -- Element change
 			j_positive: j > 0
 			i_less_than_column_count: i <= column_count
 			j_less_than_column_count: j <= column_count
+			to_implement_assertion ("Add preconditions for subnode handling")
 		do
 			implementation.move_column (i, j)
 		ensure
@@ -1171,14 +1172,7 @@ feature {NONE} -- Implementation
 		end
 
 invariant
-	row_count_non_negative: row_count >= 0
-	column_count_non_negative: column_count >= 0
 	dynamic_modes_mutually_exclusive: not (is_content_completely_dynamic and is_content_partially_dynamic)
-	selected_columns_not_void: selected_columns /= Void
-	selected_rows_not_void: selected_rows /= Void
-	selected_items_not_void: selected_items /= Void
-	single_row_selection_enabled_implies_selected_count_no_more_than_one: is_single_row_selection_enabled implies selected_rows.count <= 1
-	single_item_selection_enabled_implies_selected_count_no_more_than_one: is_single_item_selection_enabled implies selected_rows.count <= 1
 end
 
 --|----------------------------------------------------------------

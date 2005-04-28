@@ -159,38 +159,17 @@ feature -- Status setting
 	enable_select is
 			-- Set `is_selected' `True'.
 		do
-			if not is_selected then
-				if parent_i.is_row_selection_enabled then
-						-- We are in row selection mode so we manipulate the parent row directly
-					row_i.enable_select
-				else
-					internal_is_selected := True
-					parent_i.add_item_to_selected_items (Current)
-					if parent_i.item_select_actions_internal /= Void then
-						parent_i.item_select_actions_internal.call ([interface])
-					end
-					parent_i.redraw_item (Current)
-						-- Call item events before row events
-				end				
-			end
+			enable_select_internal
+			parent_i.redraw_item (Current)
+			parent_i.drawable.flush
 		end
 
 	disable_select is
 			-- Set `is_selected' `False'.
 		do
-			if is_selected then
-				if parent_i.is_row_selection_enabled then
-						-- We are in row selection mode so we manipulate the parent row directly
-					row_i.disable_select
-				else
-					internal_is_selected := False
-					parent_i.remove_item_from_selected_items (Current)
-					if parent_i.item_deselect_actions_internal /= Void then
-						parent_i.item_deselect_actions_internal.call ([interface])
-					end
-					parent_i.redraw_item (Current)
-				end				
-			end
+			disable_select_internal
+			parent_i.redraw_item (Current)
+			parent_i.drawable.flush
 		end
 		
 	ensure_visible is
@@ -252,6 +231,40 @@ feature -- Element change
 		end
 
 feature {EV_GRID_I, EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I} -- Implementation
+
+	enable_select_internal is
+			-- Set `is_selected' to True.
+		do
+			if not is_selected then
+				if parent_i.is_row_selection_enabled then
+						-- We are in row selection mode so we manipulate the parent row directly
+					row_i.enable_select
+				else
+					internal_is_selected := True
+					parent_i.add_item_to_selected_items (Current)
+					if parent_i.item_select_actions_internal /= Void then
+						parent_i.item_select_actions_internal.call ([interface])
+					end
+				end				
+			end
+		end
+
+	disable_select_internal is
+			-- Set `is_selected' `False'.
+		do
+			if is_selected then
+				if parent_i.is_row_selection_enabled then
+						-- We are in row selection mode so we manipulate the parent row directly
+					row_i.disable_select
+				else
+					internal_is_selected := False
+					parent_i.remove_item_from_selected_items (Current)
+					if parent_i.item_deselect_actions_internal /= Void then
+						parent_i.item_deselect_actions_internal.call ([interface])
+					end
+				end				
+			end
+		end
 
 	internal_is_selected: BOOLEAN
 		-- Has `enable_select' been called on `Current'

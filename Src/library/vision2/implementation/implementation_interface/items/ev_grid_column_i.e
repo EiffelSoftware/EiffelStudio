@@ -419,13 +419,15 @@ feature {NONE} -- Implementation
 				a_item := a_parent_i.item_internal (a_internal_index, i)
 				if a_item /= Void then
 					if a_selection_state then
-						a_item.enable_select
+						a_item.enable_select_internal
 					else
-						a_item.disable_select
+						a_item.disable_select_internal
 					end		
 				end
 				i := i + 1
 			end
+			parent_i.redraw_column (Current)
+			parent_i.drawable.flush
 		end
 
 feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_COLUMN, EV_GRID_COLUMN_I, EV_GRID_ITEM_I} -- Implementation

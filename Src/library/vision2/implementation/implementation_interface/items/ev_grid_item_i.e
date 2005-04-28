@@ -237,12 +237,18 @@ feature -- Element change
 			-- Set `foreground_color' with `a_color'
 		do
 			internal_foreground_color := a_color.twin
+			if parent /= Void then
+				parent.implementation.redraw_item (Current)
+			end
 		end
 
 	set_background_color (a_color: like background_color) is
 			-- Set `background_color' with `a_color'
 		do
 			internal_background_color := a_color.twin
+			if parent /= Void then
+				parent.implementation.redraw_item (Current)
+			end
 		end
 
 feature {EV_GRID_I, EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I} -- Implementation

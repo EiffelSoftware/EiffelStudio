@@ -26,6 +26,7 @@ feature {NONE} -- Initialization
 			interface.set_text ("")
 			interface.set_left_border (2)
 			interface.set_spacing (2)
+			interface.set_top_border (2)
 			interface.align_text_left
 			must_recompute_text_dimensions := True
 		end
@@ -69,19 +70,36 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 			back_color: EV_COLOR
 			l_pixmap: EV_PIXMAP
 			pixmap_width: INTEGER
-			left_border, spacing_used: INTEGER
+			left_border, right_border, top_border, bottom_border, spacing_used: INTEGER
 			space_remaining_for_text: INTEGER
 			text_offset_into_available_space: INTEGER
 			text_alignment: INTEGER
+			client_x, client_y, client_width, client_height: INTEGER
 		do
+			fixme ("Correctly handle selection colors and inversion")
 			recompute_text_dimensions
 				-- Update the dimensions of the text if required.
 
-			fixme ("Correctly handle selection colors and inversion")
+				-- Retrieve properties from interface.
 			text_alignment := interface.text_alignment
 			l_pixmap := interface.pixmap
 			left_border := interface.left_border
+			right_border := interface.right_border
+			top_border := interface.top_border
+			bottom_border := interface.bottom_border
 			spacing_used := interface.spacing
+
+				-- Now calculate the area to be used for displaying the text and pixmap
+				-- by subtracting the borders from the complete area.
+			client_x := an_x + left_border
+			client_y := a_y + top_border
+			client_width := a_width - left_border - right_border
+			client_height := a_height - top_border - bottom_border
+
+
+
+
+			
 
 			back_color := internal_background_color
 			if back_color = Void then
@@ -102,7 +120,7 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 			
 			if l_pixmap /= Void then
 					-- Now blit the pixmap
-				drawable.draw_pixmap (an_x + left_border, a_y, l_pixmap)
+				drawable.draw_pixmap (client_x, client_y, l_pixmap)
 				pixmap_width := l_pixmap.width
 			else
 				spacing_used := 0
@@ -113,7 +131,9 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 			else
 				drawable.set_font (internal_default_font)
 			end
-			space_remaining_for_text := a_width - pixmap_width - left_border - spacing_used
+
+			space_remaining_for_text := client_width - pixmap_width - spacing_used
+
 			if interface.text /= Void and space_remaining_for_text > 0 then
 				inspect text_alignment
 				when {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_left then
@@ -126,7 +146,7 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 						text_offset_into_available_space := text_offset_into_available_space // 2
 					end
 				end
-				drawable.draw_ellipsed_text_top_left (an_x + pixmap_width + spacing_used + left_border + text_offset_into_available_space, a_y, interface.text, space_remaining_for_text)
+				drawable.draw_ellipsed_text_top_left (client_x + pixmap_width + spacing_used + text_offset_into_available_space, client_y, interface.text, space_remaining_for_text)
 			end
 		end
 

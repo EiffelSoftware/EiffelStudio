@@ -590,9 +590,7 @@ feature {DUMP_VALUE} -- string_representation Implementation
 						l_slice_max := max.min (l_count)
 					end
 					area_attribute.reset_items
-					area_attribute.set_sp_bounds (min, l_slice_max)
-					create obj.make (area_attribute.address, min, l_slice_max)
-					area_attribute.items.append_last (obj.attributes)
+					area_attribute.get_items (min, l_slice_max)
 					Result := area_attribute.truncated_raw_string_value (l_count)
 				end
 				
@@ -948,7 +946,7 @@ feature -- Access
 			Result := not is_type_object and type /= Type_string and type /= Type_string_dotnet
 		end
 
-feature {DUMP_VALUE, EB_OBJECT_TREE_ITEM, ES_OBJECTS_TOOL_ITEM, EIFNET_EXPORTER, DBG_EXPRESSION_EVALUATOR} -- Internal data
+feature {DUMP_VALUE, EB_OBJECT_TREE_ITEM, ES_OBJECTS_GRID_ITEM, EIFNET_EXPORTER, DBG_EXPRESSION_EVALUATOR} -- Internal data
 
 	value_boolean	: BOOLEAN
 	value_character	: CHARACTER

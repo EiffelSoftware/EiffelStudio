@@ -64,7 +64,7 @@ feature {NONE} -- Refreshing Implementation
 				if conv_nat_value /= Void then -- NativeArray (.NET)
 						--| wipe_out or create an empty list for `conv_nat_values.items'
 					conv_nat_value.reset_items
-					conv_nat_value.fill_items (spec_lower, spec_higher)
+					conv_nat_value.get_items (spec_lower, spec_higher)
 				end
 
 				conv_abs_spec ?= dv

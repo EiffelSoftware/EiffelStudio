@@ -66,11 +66,13 @@ feature -- Access
 			-- Else return Void.
 		local
 			char_value: CHARACTER_VALUE
+			l_children: like children
 		do
-			if items.count /= 0 then
-				char_value ?= items.first
+			l_children := children
+			if l_children.count /= 0 then
+				char_value ?= l_children.first
 				if char_value /= Void then
-					create Result.make (items.count + 8)
+					create Result.make (l_children.count + 8)
 					if sp_lower > 0 then
 						Result.append ("...")
 					end
@@ -122,13 +124,15 @@ feature -- Access
 		local
 			char_value: CHARACTER_VALUE
 			l_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
+			l_children: like children
 		do
-			if items.count /= 0 then
-				char_value ?= items.first
+			l_children := children
+			if l_children.count /= 0 then
+				char_value ?= l_children.first
 				if char_value /= Void then
-					create Result.make (items.count + 4)
+					create Result.make (l_children.count + 4)
 					from
-						l_cursor := items.new_cursor
+						l_cursor := l_children.new_cursor
 						l_cursor.start
 					until
 						l_cursor.after
@@ -186,6 +190,7 @@ feature {NONE} -- Output
 			is_special_of_char: BOOLEAN
 			char_value: CHARACTER_VALUE
 			l_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
+			l_children: like children
 		do
 			st.add_string ("-- begin special object --");
 			st.add_new_line;
@@ -194,8 +199,9 @@ feature {NONE} -- Output
 				st.add_string ("... Items skipped ...");
 				st.add_new_line
 			end
-			l_cursor := items.new_cursor
-			if items.count /= 0 then
+			l_children := children
+			l_cursor := l_children.new_cursor
+			if l_children.count /= 0 then
 				l_cursor.start
 				char_value ?= l_cursor.item
 				is_special_of_char := char_value /= Void
@@ -234,13 +240,34 @@ feature {NONE} -- Output
 			st.add_new_line
 		end;
 
+
+feature -- Items
+
+	get_items (a_min, a_max: INTEGER) is
+		local
+			rqst: ATTR_REQUEST
+		do
+			set_sp_bounds (a_min, a_max)
+			create rqst.make (address)
+			rqst.set_sp_bounds (sp_lower, sp_upper)
+			rqst.send
+			items.append_last (rqst.attributes)
+		end
+
 feature -- Output
 
 	children: DS_LIST [ABSTRACT_DEBUG_VALUE] is
 			-- List of all sub-items of `Current'. May be void if there are no children.
 			-- Generated on demand.
 		do
+			debug ("debug_recv")
+				print (generator + ".children%N")
+			end
 			Result := items
+			if Result = Void then
+				get_items (sp_lower, sp_upper)
+				Result := items
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -255,7 +282,7 @@ feature {NONE} -- Implementation
 			address := hector_addr (address);
 			is_null := (address = Void)
 			from
-				l_cursor := items.new_cursor
+				l_cursor := children.new_cursor
 				l_cursor.start
 			until
 				l_cursor.after

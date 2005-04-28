@@ -1861,7 +1861,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			else
 				item_height := an_item.row.height
 			end
-			drawable.redraw_rectangle (a1, a2, an_item.column.width, item_height)
+			drawable.redraw_rectangle (a1, a2, an_item.column.width - item_indent (an_item) , item_height)
 		end
 
 	redraw_client_area is

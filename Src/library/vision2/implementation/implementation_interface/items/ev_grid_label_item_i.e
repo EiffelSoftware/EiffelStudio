@@ -36,6 +36,8 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 
 	internal_text_width: INTEGER
 
+	internal_text_height: INTEGER
+
 	must_recompute_text_dimensions: BOOLEAN
 		-- Must the dimensions of `interface.text' be re-computed
 		-- before drawing.
@@ -52,6 +54,7 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 					dimensions := internal_default_font.string_size (interface.text)
 				end
 				internal_text_width := dimensions.integer_item (1) - dimensions.integer_item (3) + dimensions.integer_item (4)
+				internal_text_height := dimensions.integer_item (2)
 			end
 			must_recompute_text_dimensions := False
 		ensure	
@@ -65,6 +68,7 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 			back_color: EV_COLOR
 			l_pixmap: EV_PIXMAP
 			pixmap_width: INTEGER
+			pixmap_height: INTEGER
 			left_border, right_border, top_border, bottom_border, spacing_used: INTEGER
 			space_remaining_for_text: INTEGER
 			text_offset_into_available_space: INTEGER
@@ -91,7 +95,9 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 			client_width := a_width - left_border - right_border
 			client_height := a_height - top_border - bottom_border
 
-
+			if buffer_pixmap.width < a_width or buffer_pixmap.height < a_height then
+				buffer_pixmap.set_size (a_width, a_height)
+			end
 
 
 			
@@ -100,31 +106,32 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 			if back_color = Void then
 				back_color := parent_i.background_color
 			end
-			drawable.set_foreground_color (back_color)
-			drawable.fill_rectangle (an_x, a_y, a_width, a_height)
+			buffer_pixmap.set_foreground_color (back_color)
+			buffer_pixmap.fill_rectangle (0, 0, a_width, a_height)
 			if is_selected then
-				drawable.set_foreground_color (parent_i.selection_color)
-				drawable.set_and_mode
-				drawable.fill_rectangle (an_x, a_y, a_width, a_height)
-				drawable.set_foreground_color ((create {EV_STOCK_COLORS}).white)
+				buffer_pixmap.set_foreground_color (parent_i.selection_color)
+				buffer_pixmap.set_and_mode
+				buffer_pixmap.fill_rectangle (0, 0, a_width, a_height)
+				buffer_pixmap.set_foreground_color ((create {EV_STOCK_COLORS}).white)
 			else
-				drawable.set_foreground_color (foreground_color)
+				buffer_pixmap.set_foreground_color (foreground_color)
 			end
 			
-			drawable.set_copy_mode
+			buffer_pixmap.set_copy_mode
 			
 			if l_pixmap /= Void then
 					-- Now blit the pixmap
-				drawable.draw_pixmap (client_x, client_y, l_pixmap)
+				buffer_pixmap.draw_pixmap (left_border, top_border , l_pixmap)
 				pixmap_width := l_pixmap.width
+				pixmap_height := l_pixmap.height
 			else
 				spacing_used := 0
 			end
 
 			if interface.font /= Void then
-				drawable.set_font (interface.font)
+				buffer_pixmap.set_font (interface.font)
 			else
-				drawable.set_font (internal_default_font)
+				buffer_pixmap.set_font (internal_default_font)
 			end
 
 			space_remaining_for_text := client_width - pixmap_width - spacing_used
@@ -141,9 +148,28 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 						text_offset_into_available_space := text_offset_into_available_space // 2
 					end
 				end
-				drawable.draw_ellipsed_text_top_left (client_x + pixmap_width + spacing_used + text_offset_into_available_space, client_y, interface.text, space_remaining_for_text)
+				buffer_pixmap.draw_ellipsed_text_top_left (left_border + pixmap_width + spacing_used + text_offset_into_available_space, top_border, interface.text, space_remaining_for_text)
 			end
+			if (a_height - bottom_border < pixmap_height) or (a_height - bottom_border < internal_text_height) then
+				buffer_pixmap.set_foreground_color (back_color)
+				buffer_pixmap.fill_rectangle (0, a_height - bottom_border, a_width, a_height)
+
+				if is_selected then
+					buffer_pixmap.set_foreground_color (parent_i.selection_color)
+					buffer_pixmap.set_and_mode
+					buffer_pixmap.fill_rectangle (0, a_height - bottom_border, a_width, a_height)
+				end
+			end
+			drawable.draw_sub_pixmap (an_x, a_y, buffer_pixmap, create {EV_RECTANGLE}.make (0, 0, a_width, a_height))
 		end
+
+	buffer_pixmap: EV_PIXMAP is
+			--
+		once
+			create Result
+			Result.set_size (100, 16)
+		end
+		
 
 feature {EV_ANY_I} -- Implementation
 

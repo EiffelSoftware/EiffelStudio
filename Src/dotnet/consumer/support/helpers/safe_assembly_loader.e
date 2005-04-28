@@ -28,7 +28,9 @@ feature -- Basic Operations
 				Result := assembly_table.item (l_path)
 				if Result = Void then
 					Result := feature {ASSEMBLY}.load_from (l_path)
-					assembly_table.put (Result, l_path)
+					if Result /= Void then
+						assembly_table.put (Result, l_path)
+					end
 				end
 			end
 		rescue

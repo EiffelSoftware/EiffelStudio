@@ -30,10 +30,10 @@ feature {NONE} -- Initialization
 			----------------------------
 			-- Vision2 initialisation --
 			----------------------------
-			editor_area.pointer_button_press_actions.extend (agent on_mouse_button_down)
-			editor_area.pointer_double_press_actions.extend (agent on_double_click)
-			editor_area.pointer_button_release_actions.extend (agent on_mouse_button_up)
-			editor_area.pointer_motion_actions.extend (agent on_mouse_move)
+			editor_drawing_area.pointer_button_press_actions.extend (agent on_mouse_button_down)
+			editor_drawing_area.pointer_double_press_actions.extend (agent on_double_click)
+			editor_drawing_area.pointer_button_release_actions.extend (agent on_mouse_button_up)
+			editor_drawing_area.pointer_motion_actions.extend (agent on_mouse_move)
 
 			create click_delay.make_with_interval (0)
 			click_delay.actions.wipe_out
@@ -45,19 +45,13 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Process Vision2 events
 
-	on_mouse_button_down (abs_x_pos, y_pos, button: INTEGER; unused1,unused2,unused3: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+	on_mouse_button_down (abs_x_pos, abs_y_pos, button: INTEGER; unused1,unused2,unused3: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 			-- Process single click on mouse buttons.
-		local
-			x_pos: INTEGER
 		do
 			if not text_displayed.is_empty then
-				editor_x := editor_area.screen_x
-				editor_y := editor_area.screen_y
-
-				if abs_x_pos >= 0 and then y_pos > 0 and then y_pos <= editor_area.height then
-					x_pos := abs_x_pos + offset 
-					if abs_x_pos <= editor_area.width then
-						on_click_in_text (x_pos - left_margin_width, y_pos, button, a_screen_x, a_screen_y)
+				if abs_x_pos >= 0 and then abs_y_pos > 0 and then abs_y_pos <= editor_drawing_area.height then
+					if abs_x_pos <= editor_drawing_area.width then
+						on_click_in_text (abs_x_pos - left_margin_width, abs_y_pos, button, a_screen_x, a_screen_y)
 					end
 				end
 			end
@@ -67,9 +61,7 @@ feature {NONE} -- Process Vision2 events
 			-- Process double clicks on mouse buttons 
 		do
 			if not text_displayed.is_empty then
-				editor_x := editor_area.screen_x
-				editor_y := editor_area.screen_y
-				if 
+				if
 					button = 1 
 						and then
 					not shifted_key
@@ -80,9 +72,9 @@ feature {NONE} -- Process Vision2 events
 						and then
 					y_pos >= 0
 						and then
-					y_pos <= editor_area.height
+					y_pos <= editor_drawing_area.height
 				then
-					process_left_click (abs_x_pos + offset - left_margin_width, y_pos, a_screen_x, a_screen_y)
+					process_left_click (abs_x_pos - left_margin_width, y_pos - editor_viewport.y_offset, a_screen_x, a_screen_y)
 				end
 			end
 		end
@@ -91,7 +83,7 @@ feature {NONE} -- Process Vision2 events
 			-- Process events related to mouse pointer moves.
 		do
 			if (not text_displayed.is_empty) and then click_count < 4 and then mouse_left_button_down then				
-				scroll_and_select (abs_x_pos, abs_y_pos,a_screen_x, a_screen_y)
+				scroll_and_select (abs_x_pos - left_margin_width, abs_y_pos, a_screen_x, a_screen_y)
 			end
 		end
 
@@ -100,8 +92,8 @@ feature {NONE} -- Process Vision2 events
 		do
 			if button = 1 then
 				mouse_left_button_down := False
-				if editor_area.has_capture then
-					editor_area.disable_capture
+				if editor_drawing_area.has_capture then
+					editor_drawing_area.disable_capture
 				end
 			elseif button = 3 then
 				mouse_right_button_down := False
@@ -118,7 +110,7 @@ feature {NONE} -- Scroll Management
 		do
 			if scroll_horizontal then
 				if scroll_right then
-					set_offset ((offset + 10).min (editor_width - editor_area.width).max (0))
+					set_offset ((offset + 10).min (editor_width - editor_viewport.width).max (0))
 				else
 					set_offset ((offset - 10).max (0))
 				end
@@ -130,7 +122,6 @@ feature {NONE} -- Scroll Management
 					set_first_line_displayed ((first_line_displayed + 1).min (maximum_top_line_index), False)
 				end
 			else
-				update_display
 			end
 			if current_mouse_coordinates /= Void then
 				check
@@ -146,10 +137,7 @@ feature {NONE} -- Handle mouse clicks
 
 	on_click_in_text (x_pos, y_pos, button: INTEGER; a_screen_x, a_screen_y: INTEGER) is
 			-- Process click on the text. `x_pos' and `y_pos' are coordinates relative to the upper left
-			-- left corner of the text, i.e. margin width and offset have already been added/subtracted to them.
-			-- `a_screen_x' and `a_screen_y' are the mouse pointer absolute coordinates on the screen.
-		require
-			in_window: y_pos > 0 and then (y_pos // line_height) <= number_of_lines_displayed + first_line_displayed
+			-- left corner of the drawing area.
 		local
 			l_number: INTEGER
 			old_l_number: INTEGER
@@ -177,15 +165,15 @@ feature {NONE} -- Handle mouse clicks
 							end
 						end
 					end
-					process_left_click (x_pos.max (1), y_pos, a_screen_x, a_screen_y)
+					process_left_click (x_pos.max (1), y_pos - editor_viewport.y_offset, a_screen_x, a_screen_y)
 					if shifted_key then
 							-- Look if we have to perform a deselection.
 						if text_displayed.cursor.is_equal (text_displayed.selection_cursor) then
 								-- The selection has to be forgotten.
 							text_displayed.disable_selection
-							invalidate_block (text_displayed.selection_start.y_in_lines, text_displayed.selection_end.y_in_lines)
+							invalidate_block (text_displayed.selection_start.y_in_lines, text_displayed.selection_end.y_in_lines, True)
 						else
-							invalidate_block (old_l_number.min (l_number), l_number.max (old_l_number))
+							invalidate_block (old_l_number.min (l_number), l_number.max (old_l_number), True)
 						end
 					end
 				end
@@ -194,8 +182,7 @@ feature {NONE} -- Handle mouse clicks
 
 	process_left_click (x_pos, y_pos: INTEGER; a_screen_x, a_screen_y: INTEGER) is
 			-- Process click with mouse left button. `x_pos' and `y_pos' are coordinates relative to the upper left
-			-- left corner of the text, i.e. margin width and offset have already been added/substracted to them.
-			-- `a_screen_x' and `a_screen_y' are the mouse pointer absolute coordinates on the screen.
+			-- left corner of the drawing area.
 		require
 			text_displayed /= Void
 			x_valid: x_pos > 0
@@ -208,13 +195,16 @@ feature {NONE} -- Handle mouse clicks
 			old_l_number := l_cursor.y_in_lines
 			mouse_left_button_down := True
 			if not shifted_key then --and then text_displayed.has_selection then
-					-- The selection has to be forgotten.
+					-- The selection has to be forgotten.				
+				if text_displayed.has_selection then
+					text_displayed.disable_selection
+					invalidate_block (text_displayed.selection_start.y_in_lines, text_displayed.selection_end.y_in_lines, True)
+				end								
 				text_displayed.disable_selection
-				invalidate_block (text_displayed.selection_start.y_in_lines, text_displayed.selection_end.y_in_lines)
 			end
 
-			if not editor_area.has_capture then
-				editor_area.enable_capture
+			if not editor_drawing_area.has_capture then
+				editor_drawing_area.enable_capture
 			end			
 			position_cursor (l_cursor, x_pos + font.width // 3, y_pos)
 			former_pointed_line := l_cursor.y_in_lines
@@ -258,7 +248,7 @@ feature {NONE} -- Handle mouse clicks
 						text_displayed.set_selection_cursor (l_cursor)
 						l_cursor.go_end_line
 						text_displayed.enable_selection
-						invalidate_block (text_displayed.selection_start.y_in_lines, text_displayed.selection_end.y_in_lines)
+						invalidate_block (text_displayed.selection_start.y_in_lines, text_displayed.selection_end.y_in_lines, True)
 					end
 				end
 			end
@@ -302,8 +292,7 @@ feature {NONE} -- Handle mouse clicks
 					l_cursor := text_displayed.cursor
 					if l_cursor.token /= Void then
 						l_num := l_cursor.y_in_lines
-						l_cursor.make_from_character_pos (l_cursor.x_in_characters, l_num, text_displayed)
-						invalidate_line (l_num, False)
+						l_cursor.make_from_character_pos (l_cursor.x_in_characters, l_num, text_displayed)						
 						invalidate_line (l_cursor.y_in_lines, True)
 						if l_click_count < 4 then			
 								-- If the click count is greater than 3 don't move the cursor to the bottom of the screen
@@ -325,16 +314,16 @@ feature {NONE} -- Handle mouse clicks
 			-- to position cursor, begin automatic scroll if necessary and update selection.
 			-- Part of mouse pointer moves event processing.
 		local
-			x_pos		: INTEGER
+			x_pos,
 			y_pos		: INTEGER
 			i		: INTEGER
-			editr_height	: INTEGER
+			bottom_pos	: INTEGER
 			x_computed	: BOOLEAN
 			stop_scrolling	: BOOLEAN
 		do
-			editr_height := editor_area.height
-			y_pos := abs_y_pos.max (1)
-			x_pos := (abs_x_pos - left_margin_width + offset).max (1)
+			bottom_pos := editor_y + viewable_height
+			y_pos := (abs_y_pos - editor_viewport.y_offset).max (1)
+			x_pos := abs_x_pos.max (1)
 			scroll_horizontal := false
 			scroll_vertical := false
 			stop_scrolling := true
@@ -345,8 +334,8 @@ feature {NONE} -- Handle mouse clicks
 
 			if a_screen_x <= editor_x + left_margin_width then
 					-- cursor on the left of the text
-					-- launch horizontal scroll if necessary
-				if editor_area.width < editor_width then	
+					-- launch horizontal scroll if necessary				
+				if editor_viewport.width < editor_width then	
 					stop_scrolling := False
 					scroll_horizontal := true
 					scroll_right := false
@@ -357,18 +346,18 @@ feature {NONE} -- Handle mouse clicks
 				x_pos := offset + 1
 				x_computed := true
 
-			elseif a_screen_x >= editor_x + editor_area.width then
+			elseif a_screen_x >= editor_x + editor_viewport.width then
 					-- cursor on the right of the text
-					-- launch horizontal scroll if necessary
-				if editor_area.width < editor_width then	
+					-- launch horizontal scroll if necessary				
+				if editor_viewport.width < editor_width then	
 					stop_scrolling := False
 					scroll_horizontal := true
 					scroll_right := true
-					i := a_screen_x - editor_x - editor_area.width
+					i := a_screen_x - editor_x - editor_viewport.width
 					autoscroll.set_interval (2000 // (5 + i.min (95)))
 					y_pos := (former_y + a_screen_y - former_mouse_y).max (1)
 				end
-				x_pos := offset + editor_area.width - left_margin_width
+				x_pos := offset + editor_viewport.width - left_margin_width
 				x_computed := True
 			end
 
@@ -387,16 +376,16 @@ feature {NONE} -- Handle mouse clicks
 					x_pos := former_x + a_screen_x - former_mouse_x
 				end
 
-			elseif a_screen_y >= editor_y + editr_height then
+			elseif a_screen_y >= bottom_pos then
 					-- cursor below the text
 					-- launch vertical scroll if necessary
 				if number_of_lines > number_of_lines_displayed then
 					stop_scrolling := false
 					scroll_vertical := true
 					scroll_up := false
-					i := i.max (a_screen_y - editor_y - editr_height)
+					i := i.max (a_screen_y - editor_y - viewable_height)
 					autoscroll.set_interval (2000 // (5 + i.min (95)))
-					y_pos := editr_height - 1
+					y_pos := viewable_height - 1
 				end
 				if not x_computed then
 					x_pos := former_x + a_screen_x - former_mouse_x
@@ -412,7 +401,7 @@ feature {NONE} -- Handle mouse clicks
 			former_x := x_pos
 			former_mouse_y := a_screen_y
 			former_mouse_x := a_screen_x
-			if not scroll_only then				
+			if not scroll_only then
 				perform_selection (x_pos, y_pos, a_screen_x, a_screen_y)
 			end
 		end
@@ -526,12 +515,12 @@ feature {NONE} -- Handle mouse clicks
 						selection_cursor.go_start_line
 						l_cursor.go_end_line
 						l_cursor.go_right_char
-						invalidate_block (i.min (l_number), i.max (l_number))
+						invalidate_block (i.min (l_number), i.max (l_number), True)
 					else
 						selection_cursor.go_end_line
 						selection_cursor.go_right_char
 						l_cursor.go_start_line
-						invalidate_block (l_number.min (i), i.max (l_number))
+						invalidate_block (l_number.min (i), i.max (l_number), True)
 					end
 				else
 					position_cursor(l_cursor, x_pos, y_pos)
@@ -540,15 +529,14 @@ feature {NONE} -- Handle mouse clicks
 						selection_cursor.go_start_line
 						l_cursor.go_end_line
 						l_cursor.go_right_char
-						invalidate_block (i, l_number)
+						invalidate_block (i, l_number, True)
 					else
 						selection_cursor.go_start_line
 						l_cursor.go_start_line
-						invalidate_block (l_number.min (i), i.max (l_number))
+						invalidate_block (l_number.min (i), i.max (l_number), True)
 					end
 				end
 			else
-			
 				position_cursor (l_cursor, x_pos, y_pos)
 			end
 

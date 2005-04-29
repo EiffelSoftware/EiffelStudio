@@ -348,15 +348,17 @@ feature -- Element change
 			i: INTEGER
 			a_count: INTEGER
 			a_parent_i: EV_GRID_I
+			a_internal_index: INTEGER
 		do
 			from
 				i := 1
 				a_count := count
 				a_parent_i := parent_i
+				a_internal_index := internal_index
 			until
 				i > a_count
 			loop
-				a_parent_i.internal_set_item (internal_index, i, Void)
+				a_parent_i.internal_set_item (a_internal_index, i, Void)
 				i := i + 1
 			end
 		ensure

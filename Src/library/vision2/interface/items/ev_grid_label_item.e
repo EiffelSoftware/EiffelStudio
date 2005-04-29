@@ -219,6 +219,14 @@ feature -- Status Setting
 			alignment_set: is_left_aligned
 		end
 
+	set_layout_procedure (a_layout_procedure: PROCEDURE [ANY, TUPLE [EV_GRID_LABEL_ITEM, INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, EV_GRID_LABEL_ITEM_LAYOUT]]) is
+			-- Assign `a_layout_procedure' to `layout_procedure'.
+		do
+			layout_procedure := a_layout_procedure
+		ensure	
+			layout_procedure_set: layout_procedure = a_layout_procedure
+		end
+			
 feature -- Measurement
 
 	left_border: INTEGER
@@ -276,6 +284,24 @@ feature -- Status report
 		do
 			Result := text_alignment = {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_right
 		end
+
+	layout_procedure: PROCEDURE [ANY, TUPLE [EV_GRID_LABEL_ITEM, INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, EV_GRID_LABEL_ITEM_LAYOUT]]
+			-- Procedure which may be used to calculate the position of `text' and `pixmap' relative to `Current',
+			-- ready for the drawing implementation.
+			-- This procedure is fired each time that `Current' must be re-drawn and by filling the passed EV_GRID_LABEL_ITEM_LAYOUT object, the
+			-- position relative to the top left of `Current' at which `text' and `pixmap' is to be drawn may be set explicitly.
+			-- The properties set into EV_GRID_LABEL_ITEM override any other positional settings such as `alignment' within this class.
+			-- The dimension arguments passed should be used for speed as querying font sizes is slow and the implementation
+			-- optimizes this by only recomputing as required.
+			-- Arguments (from left to right):
+			-- label_item: EV_GRID_LABEL_ITEM - `Current' to which the settings apply.
+			-- width: INTEGER - Width of `label_item'.
+			-- height: INTEGER - Height of `label_item'.
+			-- pixmap_width: INTEGER - width of `pixmap' or 0 if none set.
+			-- pixmap_height: INTEGER - height of `pixmap' of 0 if none set.
+			-- text_width: INTEGER - width of `text'.
+			-- text_height: INTEGER - height of `text'.
+			-- label_item_layout: EV_GRID_LABEL_ITEM_LAYOUT - Object into which desired positioning information must be set.
 
 feature {NONE} -- Contract support
 

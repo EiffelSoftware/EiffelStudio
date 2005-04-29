@@ -19,9 +19,11 @@ feature -- Status Report
 
 	replace_substring_user_precondition (s: STRING; start_pos: INTEGER; end_pos: INTEGER): BOOLEAN is
 			-- User-defined preconditions for `replace_substring'.
+			-- Uncomment the last line to test precondition violations in the server.
 		do
 			Result := start_pos <= end_pos and
 					start_pos > 0
+			-- Result := True
 		end
 
 end -- MY_STRING_MANIPULATOR

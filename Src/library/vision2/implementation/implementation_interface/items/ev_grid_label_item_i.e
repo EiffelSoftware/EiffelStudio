@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 			Precursor {EV_GRID_ITEM_I}
 		end
 
-feature {EV_ANY_I} -- Status Report
+feature {EV_GRID_LABEL_ITEM} -- Status Report
 
 	text_width: INTEGER is
 			-- `Result' is width required to fully display `text' in `pixels'.

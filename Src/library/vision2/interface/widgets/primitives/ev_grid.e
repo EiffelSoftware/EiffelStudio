@@ -412,21 +412,10 @@ feature -- Status setting
 			-- Assign `a_function' to `item_pebble_function'.
 		require
 			not_destroyed: not is_destroyed
-			a_function_not_void: a_function /= Void
 		do
 			implementation.set_item_pebble_function (a_function)
 		ensure
 			item_pebble_function_set: item_pebble_function = a_function
-		end
-
-	remove_item_pebble_function is
-			-- Make `item_pebble_function' Void
-		require
-			not_destroyed: not is_destroyed
-		do
-			implementation.remove_item_pebble_function
-		ensure
-			item_pebble_function_removed: item_pebble_function = Void
 		end
 
 	enable_tree is

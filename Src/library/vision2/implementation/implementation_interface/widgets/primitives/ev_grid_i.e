@@ -484,15 +484,6 @@ feature -- Status setting
 			item_pebble_function := a_function
 		end
 
-	remove_item_pebble_function is
-			-- Make `item_pebble_function' Void
-		do
-			drawable.remove_pebble
-			item_pebble_function := Void
-		ensure
-			item_pebble_function_removed: item_pebble_function = Void
-		end
-
 	user_pebble_function_intermediary (a_x, a_y: INTEGER): ANY is
 			-- Intermediary function used for grid item pick and drop.
 		local

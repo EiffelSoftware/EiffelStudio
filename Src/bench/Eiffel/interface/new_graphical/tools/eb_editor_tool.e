@@ -59,12 +59,6 @@ feature -- Status Report
 			Result := text_area.file_is_up_to_date
 		end
 
-	file_date_already_checked: BOOLEAN is
-			-- has the date of the file already been checked ?
-		do	
-			Result := text_area.file_date_already_checked
-		end
-
 feature -- Status setting
 
 	set_changed (value: BOOLEAN) is

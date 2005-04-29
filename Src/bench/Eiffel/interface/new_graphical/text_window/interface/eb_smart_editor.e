@@ -31,7 +31,8 @@ inherit
 			file_loading_setup,
 			key_not_handled_action,
 			on_text_saved,
-			on_text_back_to_its_last_saved_state			
+			on_text_back_to_its_last_saved_state,
+			on_key_down
 		end	
 
 create
@@ -142,6 +143,7 @@ feature {EB_COMMAND, EB_DEVELOPMENT_WINDOW} -- Commands
 		local
 			add_point: BOOLEAN
 		do
+			completion_timeout.actions.block
 			if click_and_complete_is_active and then not has_selection then
 				text_displayed.prepare_auto_complete (add_point)
 				if text_displayed.completion_possibilities /= Void then
@@ -203,6 +205,13 @@ feature -- Autocomplete
 			choices.set_position (calculate_completion_list_x_position, calculate_completion_list_y_position)
 		end		
 
+	completion_timeout: EV_TIMEOUT is
+			-- Timeout for showing completion list
+		once
+			create Result.make_with_interval (1500)
+			Result.actions.extend (agent complete_feature_name)
+		end		
+
 feature {NONE} -- Text loading
 
 	string_loading_setup, file_loading_setup is
@@ -212,7 +221,6 @@ feature {NONE} -- Text loading
 			text_displayed.setup_click_tool (dev_window.stone, not is_unix_file)
 			process_click_tool_error
 		end
-
 
 	reset is
 			-- Make the editor ready to load a new content.
@@ -247,7 +255,7 @@ feature {NONE} -- Process Vision2 events
 			Precursor {EB_CLICKABLE_EDITOR} (abs_x_pos, y_pos, button, unused1, unused2, unused3, a_screen_x, a_screen_y)
 		end
 
-feature {EB_COMPLETION_CHOICE_WINDOW}-- Process Vision2 Events
+feature {EB_COMPLETION_CHOICE_WINDOW} -- Process Vision2 Events
 
 	handle_character (c: CHARACTER) is
  			-- Process the push on a character key.
@@ -375,10 +383,11 @@ feature {EB_COMPLETION_CHOICE_WINDOW}-- Process Vision2 Events
 					display_not_editable_warning_message
 				end
 			elseif code = key_period then
-					-- case: .
+					-- case: .				
 				Precursor (ev_key)
-				if auto_complete_after_dot then				   	
-					complete_feature_name 
+				if auto_complete_after_dot and then not shifted_key then				   	
+					completion_timeout.reset_count
+					completion_timeout.actions.resume
 				end
 			else
 				if completion_mode > 0 then
@@ -501,7 +510,7 @@ feature {EB_COMPLETION_CHOICE_WINDOW} -- automatic completion
 			completion_mode := (completion_mode - 1).max (0)
 		end
 
-	complete_feature_from_window (cmp: STRING; is_feature_signature: BOOLEAN; appended_character: CHARACTER) is
+	complete_feature_from_window (cmp: STRING; is_feature_signature: BOOLEAN; appended_character: CHARACTER; remainder: INTEGER) is
 			-- Insert `cmp' in the editor and switch to completion mode.
 			-- If `is_feature_signature' then try to complete arguments and remove the type.
 			-- `appended_character' is a character that should be appended after the feature. '%U' if none.
@@ -528,7 +537,7 @@ feature {EB_COMPLETION_CHOICE_WINDOW} -- automatic completion
 				end
 				--history.unbind_current_item_to_next
 			else
-				text_displayed.complete_feature_call (completed, is_feature_signature, appended_character)
+				text_displayed.complete_feature_call (completed, is_feature_signature, appended_character, remainder)
 				if is_feature_signature then
 					if completed.last_index_of (')',completed.count) = completed.count then
 						tab_action
@@ -550,9 +559,21 @@ feature {EB_COMPLETION_CHOICE_WINDOW} -- automatic completion
 			refresh
 		end
 
-	complete_class_from_window (completed: STRING; appended_character: CHARACTER) is
+	complete_class_from_window (completed: STRING; appended_character: CHARACTER; remainder: INTEGER) is
 			-- Insert `completed' in the editor.
+		local
+			i: INTEGER
 		do
+			if remainder > 0 then
+				from
+					i := 0
+				until
+					i = remainder
+				loop
+					text_displayed.delete_char
+					i := i + 1
+				end
+			end
 			if not completed.is_empty then
 				text_displayed.insert_string (completed)
 			end
@@ -739,15 +760,31 @@ feature {EB_COMPLETION_CHOICE_WINDOW} -- automatic completion
 
 feature {NONE} -- Autocomplete implementation
 
-	show_completion_list (feature_completion: BOOLEAN) is
+	on_key_down (ev_key: EV_KEY)is
+		do
+			completion_timeout.actions.block
+			Precursor (ev_key)
+		end
+
+	show_completion_list (is_feature: BOOLEAN) is
 			-- Show list of possible features after a point.
 		do
-			if feature_completion then
+			if is_feature then
 				choices.initialize_for_features 
-					(Current, text_displayed.feature_name_part_to_be_completed, text_displayed.completion_possibilities)
+					(
+						Current, 
+						text_displayed.feature_name_part_to_be_completed, 
+						text_displayed.feature_name_part_to_be_completed_remainder, 
+						text_displayed.completion_possibilities
+					)
 			else
 				choices.initialize_for_classes 
-					(Current, text_displayed.feature_name_part_to_be_completed, text_displayed.class_completion_possibilities)
+					(
+						Current, 
+						text_displayed.feature_name_part_to_be_completed, 
+						text_displayed.feature_name_part_to_be_completed_remainder,	
+						text_displayed.class_completion_possibilities
+					)
 			end
 			choices.hide
 			if choices.show_needed then			
@@ -944,7 +981,7 @@ feature {NONE} -- Implementation
 		do
 			if syntax_error_dialog = Void or else syntax_error_dialog.is_destroyed then
 				create syntax_error_dialog.make_with_text (Warning_messages.w_Syntax_error)
-				syntax_error_dialog.show_relative_to_window (internal_reference_window)
+				syntax_error_dialog.show_relative_to_window (reference_window)
 			end
 		end
 		

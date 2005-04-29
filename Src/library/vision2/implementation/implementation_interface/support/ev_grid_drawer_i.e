@@ -224,9 +224,6 @@ feature -- Basic operations
 			-- `Result' is item at position `an_x', `a_y' relative to the top left corner
 			-- of the `grid.drawable' in which the grid is displayed. The bounded item
 			-- incorporates the tree node if any.
-		require
-			an_x_positive: an_x >= 0
-			a_y_positive: a_y >= 0
 		local
 			horizontal_span_items, vertical_span_items: ARRAYED_LIST [INTEGER]
 		do
@@ -245,9 +242,6 @@ feature -- Basic operations
 			-- `Result' is item at position `an_x', `a_y' relative to the top left corner
 			-- of the `grid.drawable' in which the grid is displayed. This version
 			-- returns `Void' if the pointed_part of the item is part of a tree node.
-		require
-			an_x_positive: an_x >= 0
-			a_y_positive: a_y >= 0
 		local
 			horizontal_span_items, vertical_span_items: ARRAYED_LIST [INTEGER]
 			item_indent: INTEGER

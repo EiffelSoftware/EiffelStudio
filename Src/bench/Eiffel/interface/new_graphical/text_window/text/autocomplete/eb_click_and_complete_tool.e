@@ -56,7 +56,7 @@ feature -- Analysis preparation
 			is_ready := True
 		end
 
-	setup_line (a_line: EDITOR_LINE) is
+	setup_line (a_line: EIFFEL_EDITOR_LINE) is
 			-- set the `pos_in_text' attribute of interesting tokens.
 		require
 			class_as_already_built: current_class_as /= Void
@@ -65,7 +65,7 @@ feature -- Analysis preparation
 		local
 			token, prev, next: EDITOR_TOKEN
 			tfs: EDITOR_TOKEN_FEATURE_START
-			line: EDITOR_LINE			
+			line: EIFFEL_EDITOR_LINE			
 		do
 			from
 				line := a_line
@@ -105,6 +105,8 @@ feature -- Analysis preparation
 								end
 								tfs.set_previous_token (prev)
 								tfs.set_next_token (next)
+								tfs.update_position
+								tfs.update_width
 								if next /= Void then
 									next.set_previous_token (tfs)
 								end
@@ -361,6 +363,8 @@ feature -- Click list update
 							end
 							tfs.set_previous_token (prev)
 							tfs.set_next_token (next)
+							tfs.update_position
+							tfs.update_width
 							if next /= Void then
 								next.set_previous_token (tfs)
 							end
@@ -427,8 +431,7 @@ feature -- Basic Operations
 				l_current_class_c := current_class_i.compiled_class
 				token := cursor.token
 				if token /= Void then
-					
-					cls_c := class_c_to_complete_from (token, cursor, l_current_class_c)
+					cls_c := class_c_to_complete_from (token, cursor, l_current_class_c, False, False)
 					if exploring_current_class then
 						local_analyzer.build_entities_list (cursor.line, token)
 						add_names_to_completion_list (Local_analyzer.found_names)
@@ -514,12 +517,12 @@ feature -- Basic Operations
 			feat		: E_FEATURE
 			a_position	: INTEGER
 			token		: EDITOR_TOKEN
-			line		: EDITOR_LINE
+			line		: EIFFEL_EDITOR_LINE
 		do
 			initialize_context
 			if current_class_i /= Void then
 				token := cursor.token
-				line := cursor.line
+				line ?= cursor.line
 				a_position := token.pos_in_text
 				Result := stone_in_click_ast (a_position)
 				if Result = Void and then (a_position >= features_index or else token_image_is_same_as_word (token, "precursor")) then
@@ -548,12 +551,13 @@ feature -- Basic Operations
 			reset_after_search
 		end
 
-	class_c_to_complete_from (token: EDITOR_TOKEN; cursor: TEXT_CURSOR; a_compiled_class: CLASS_C): CLASS_C is
+	class_c_to_complete_from (token: EDITOR_TOKEN; cursor: TEXT_CURSOR; a_compiled_class: CLASS_C; recurse, two_back: BOOLEAN): CLASS_C is
 			-- Class type to complete on from `token'
 		local
 			prev_token			: EDITOR_TOKEN			
 			type				: TYPE_A		
 			eol 				: EDITOR_TOKEN_EOL
+			gone_back_two: BOOLEAN
 		do			
 			exploring_current_class := False				
 			if can_attempt_auto_complete_from_token (token) then
@@ -567,31 +571,20 @@ feature -- Basic Operations
 							is_static := static_call_before_position (cursor.line, prev_token)
 							is_parenthesized := parenthesized_before_position (cursor.line, prev_token, cursor)
 						elseif token_image_is_in_array (prev_token, Feature_call_separators) then
-							Result := class_c_to_complete_from (prev_token, cursor, a_compiled_class)	
+							Result := class_c_to_complete_from (prev_token, cursor, a_compiled_class, True, two_back)	
+						elseif prev_token.is_text and not two_back then
+							gone_back_two := True
+							Result := class_c_to_complete_from (prev_token, cursor, a_compiled_class, True, True)
 						else
 							exploring_current_class := True
 						end
 					end
 				else
-						-- The token is not text but we can try to autocomplete.  If it is an end of line token we
-						-- go the previous token to determine context, otherwise we assume current class.
-					if token.previous /= Void then
-						eol ?= token
-						if eol/= Void then							
-							Result := class_c_to_complete_from (token.previous, cursor, a_compiled_class)
-						else
-							exploring_current_class := True
-						end
-					else					
-							-- Context unknown, assume current class
-						exploring_current_class := True
-					end
-					
-						-- The token is not text but we can try to autocomplete.  
+						-- The token is not text but we can try to autocomplete.
 						-- It must be a space, or tab or end of line something like that so take the previous
 						-- token to determine context
 					if token.previous /= Void then
-						Result := class_c_to_complete_from (token.previous, cursor, a_compiled_class)
+						Result := class_c_to_complete_from (token.previous, cursor, a_compiled_class, True, True)
 					else
 							-- Context unknown, assume current class
 						exploring_current_class := True
@@ -602,7 +595,7 @@ feature -- Basic Operations
 			if Result = Void then
 				if exploring_current_class then								
 					Result := a_compiled_class
-				elseif prev_token /= Void and not is_create and not is_static and not is_parenthesized then
+				elseif prev_token /= Void and not is_static and not is_parenthesized then
 					current_feature_as := feature_containing (prev_token, cursor.line)
 					type := type_from (prev_token, cursor.line)
 					if type /= Void then
@@ -612,14 +605,46 @@ feature -- Basic Operations
 					Result := found_class
 				end					
 			end
-			if not token_image_is_in_array (token, Feature_call_separators) and then token.is_text then
-				if cursor.token = token then
+			if not recurse then
+				calculate_insertion (cursor, token)
+			end
+		end
+
+calculate_insertion (cursor: TEXT_CURSOR; token: EDITOR_TOKEN) is
+		--
+	local
+		prev_token: EDITOR_TOKEN	
+	do
+		insertion_remainder := 0
+		if can_attempt_auto_complete_from_token (token) then
+			if token.is_text then
+					-- The cursor is in a text token so we complete based upon the previous token unless the cursor
+					-- is somewhere inside this token..
+				if cursor.pos_in_token > 1 then
 					insertion.put (token.image.substring (1, cursor.pos_in_token - 1))
+						insertion_remainder := token.length - (cursor.pos_in_token - 1)
 				else
-					insertion.put (token.image)
+					prev_token := token.previous
+					if prev_token /= Void then
+						if token_image_is_in_array (token, Feature_call_separators) then
+								-- Token is dot or tilda.  Do nothing.
+						elseif token_image_is_in_array (prev_token, Feature_call_separators) then
+								-- Previous token is a dot or tilda so use thie token for insertion
+							insertion.put (token.image.substring (1, cursor.pos_in_token - 1))
+							insertion_remainder := token.length - cursor.pos_in_token
+						elseif prev_token.is_text then
+							insertion.put (prev_token.image)
+						end
+					end
+				end
+			else
+					-- The token is not text so the insertion must be taken from the previous token IF that is text
+				if token.previous /= Void and then token.previous.is_text and then not token_image_is_in_array (token.previous, feature_call_separators) then
+					insertion.put (token.previous.image)
 				end
 			end
 		end
+	end
 
 feature -- Class names completion
 
@@ -723,6 +748,7 @@ feature -- Class names completion
 					class_completion_possibilities.sort
 				end
 				reset_after_search
+				calculate_insertion (cursor, cursor.token)
 		end
 
 	class_completion_possibilities: SORTABLE_ARRAY [EB_NAME_FOR_COMPLETION]
@@ -757,8 +783,12 @@ feature -- Completion access
 			insertion_not_void: insertion /= Void
 			feature_name_exists: not insertion.item.is_empty
 		do
-			Result := insertion.item.count 
+			Result := insertion.item.count
 		end
+	
+	insertion_remainder: INTEGER
+			-- The number of characters in the insertion remaining from the cursor position to the
+			-- end of the token
 
 	exploring_current_class: BOOLEAN
 			-- was automatic completion called after a blank space ?
@@ -1131,8 +1161,9 @@ feature {EB_ADDRESS_MANAGER}-- Implementation
 			current_line := a_line
 			token := current_token
 			current_token := a_token
+			go_to_previous_token
 			Result := token_image_is_same_as_word (current_token, Create_word)
-			if not Result and then token_image_is_same_as_word (current_token, Closing_brace) then
+			if not Result and then token_image_is_same_as_word (a_token, Closing_brace) then
 				from
 					par_cnt := 1
 				until

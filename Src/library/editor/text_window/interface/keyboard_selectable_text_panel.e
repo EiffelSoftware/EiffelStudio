@@ -15,10 +15,10 @@ deferred class
 inherit
 	TEXT_PANEL
 		redefine
-			display_line, 
+			draw_line_to_buffered_line, 
+			update_lines,
 			text_displayed,
 			user_initialization, 
-			load_text,
 			set_first_line_displayed,
 			recycle,
 			on_vertical_scroll
@@ -42,14 +42,14 @@ feature {NONE} -- Initialization
 			Precursor {TEXT_PANEL}
 	
 			create blinking_timeout
-			editor_area.key_press_actions.extend (agent on_key_down)
+			editor_drawing_area.key_press_actions.extend (agent on_key_down)
 			create key_action_timer.make_with_interval (0)
-			editor_area.key_release_actions.extend (agent on_key_up)
+			editor_drawing_area.key_release_actions.extend (agent on_key_up)
 
-			editor_area.focus_in_actions.extend (agent gain_focus)
-			editor_area.focus_out_actions.extend (agent lose_focus)
+			editor_drawing_area.focus_in_actions.extend (agent gain_focus)
+			editor_drawing_area.focus_out_actions.extend (agent lose_focus)
 
-			editor_area.enable_sensitive
+			editor_drawing_area.enable_sensitive
 		end
 
 feature -- Access
@@ -125,12 +125,12 @@ feature -- Cursor Management
 			pointed_line	: EDITOR_LINE
 			pointed_token	: EDITOR_TOKEN
 			tw				: INTEGER
-		do
+		do			
 				-- Compute the line number pointed by the mouse cursor
 				-- and adjust it if its over the number of lines in the text.
-			l_number := (y_pos // line_height) + first_line_displayed
+			l_number := (y_pos + (first_line_displayed * line_height)) // line_height
 			nol := text_displayed.number_of_lines
-			
+					
 			if
 				l_number > nol
 			then
@@ -191,9 +191,9 @@ feature -- Text Selection
 			end
 			if  start_pos < offset then
 					set_offset (start_pos)
-			elseif end_pos >= (offset + editor_area.width - left_margin_width - 30) then
-					if editor_width > editor_area.width then
-						set_offset (end_pos - editor_area.width + left_margin_width + 30)
+			elseif end_pos >= (offset + editor_drawing_area.width - left_margin_width - 30) then
+					if editor_width > editor_drawing_area.width then
+						set_offset (end_pos - editor_drawing_area.width + left_margin_width + 30)
 					end
 			end
 		end
@@ -216,7 +216,7 @@ feature -- Text Selection
 				sel_start := text_displayed.selection_start.y_in_lines
 				sel_end := text_displayed.selection_end.y_in_lines
 				text_displayed.disable_selection
-				invalidate_block (sel_start, sel_end)
+				invalidate_block (sel_start, sel_end, True)
 			end
 		end
 
@@ -228,7 +228,7 @@ feature -- Text Selection
 			if has_selection then
 				sel_start := text_displayed.selection_start.y_in_lines
 				sel_end := text_displayed.selection_end.y_in_lines				
-				invalidate_block (sel_start, sel_end)
+				invalidate_block (sel_start, sel_end, True)
 			end
 		end
 
@@ -256,14 +256,13 @@ feature -- Text Selection
 			text_displayed.select_region (start_pos, end_pos)
 			if text_displayed.has_selection then
 				if had_selection then
--- possible improvement
-					invalidate_block (old_sel_s.min (text_displayed.selection_start.y_in_lines), old_l_number.max (text_displayed.selection_end.y_in_lines))
+					invalidate_block (old_sel_s.min (text_displayed.selection_start.y_in_lines), old_l_number.max (text_displayed.selection_end.y_in_lines), True)
 				else
 					invalidate_line (old_l_number, False)
-					invalidate_block (text_displayed.selection_start.y_in_lines, text_displayed.selection_end.y_in_lines)
+					invalidate_block (text_displayed.selection_start.y_in_lines, text_displayed.selection_end.y_in_lines, True)
 				end
 			elseif had_selection then
-				invalidate_block (old_sel_s, old_l_number)
+				invalidate_block (old_sel_s, old_l_number, False)
 				invalidate_line (text_displayed.cursor.y_in_lines, True)
 			else
 				invalidate_line (text_displayed.cursor.y_in_lines, False)
@@ -303,11 +302,8 @@ feature -- Status Setting
 				y_offset := diff * line_height
 					-- we wipe out the partially displayed line at the bottom of the panel if the cursor is there.
 					-- it ensures that the cursor display will not be messed up by scrolling.
-				buffered_screen.clear_rectangle (0, (number_of_lines_displayed) * line_height, buffered_screen.width, y_offset)
+				buffered_line.clear_rectangle (0, (number_of_lines_displayed) * line_height, buffered_line.width, y_offset)
 			end
---			if text_displayed.has_selection then
---				text_displayed.disable_selection
---			end
 			Precursor (fld, refresh_if_necessary)
 		end
 
@@ -376,8 +372,7 @@ feature {NONE} -- Process Vision2 events
 			if has_selection then
 				sel_start := text_displayed.selection_start.y_in_lines
 				sel_end := text_displayed.selection_end.y_in_lines
-				invalidate_block (sel_start, sel_end)
-				update_buffered_screen (sel_start * line_height, sel_end * line_height)
+				invalidate_block (sel_start, sel_end, True)
 			end
 		end
 
@@ -626,7 +621,7 @@ feature {NONE} -- Cursor Management
 				if old_line /= new_line then
 						-- redraw all lines between old and new cursor position (new position excluded)
 					 	-- cursor position will be redrawn in handle_extended_key 
-					invalidate_block (old_line.min (new_line + 1), old_line.max (new_line - 1))
+					invalidate_block (old_line.min (new_line + 1), old_line.max (new_line - 1), True)
 				end
 			elseif text_displayed.has_selection then
 					-- There was a selection, but we destroy it.
@@ -634,7 +629,7 @@ feature {NONE} -- Cursor Management
 				action.call (Void)
 				text_displayed.disable_selection
 				invalidate_line (old_line, False)
-				invalidate_block (text_displayed.selection_start.y_in_lines, text_displayed.selection_end.y_in_lines)
+				invalidate_block (text_displayed.selection_start.y_in_lines, text_displayed.selection_end.y_in_lines, True)
 			else
 					-- There is no selection. Normal move.
 				old_line := l_cursor.y_in_lines
@@ -652,11 +647,7 @@ feature {NONE} -- Cursor Management
 			-- Set the line where the cursor is situated to be redrawn
 			-- Redraw immediately if `flush' is set.
 		do
-			if text_displayed.cursor /= Void then
-				invalidate_line (text_displayed.cursor.y_in_lines, flush_screen)
-			elseif flush_screen then
-				editor_area.flush
-			end
+			invalidate_line (text_displayed.cursor.y_in_lines, flush_screen)		
 		end
 
 	draw_cursor (media: EV_DRAWABLE; x, y, width: INTEGER) is
@@ -667,7 +658,7 @@ feature {NONE} -- Cursor Management
 			cursor_has_token: text_displayed.cursor.token /= Void
 		do		
 						-- Draw the cursor
-			internal_draw_cursor (buffered_screen, x, y, width, line_height, show_cursor)				 					
+			internal_draw_cursor (buffered_line, x, y, width, line_height, show_cursor)				 					
 			blinking_timeout.actions.wipe_out
 			if editor_preferences.blinking_cursor and has_focus then				
 					-- Set up a timeout to be called to make the cursor blink
@@ -684,7 +675,7 @@ feature {NONE} -- Cursor Management
 			x_pos_valid: x >= 0
 			width_valid: width_cursor > 0
 		do		
-			if not updating_screen then				
+			if not updating_line then				
 				blink_on := not blink_on
 				invalidate_cursor_rect (True)
 			end
@@ -717,14 +708,6 @@ feature {NONE} -- Cursor Management
 			positive_position: Result >= 0
 		end
 
-feature -- Text Loading
-
-	load_text (s: STRING) is
-			-- Display `s' in the Editor
-		do
-			Precursor (s)
-		end
-
 feature {NONE} -- Implementation
 
 	shifted_key: BOOLEAN is
@@ -748,7 +731,7 @@ feature {NONE} -- Implementation
 	ignore_keyboard_input: BOOLEAN is
 			-- Ignore keyboard events?
 		do
-			Result := text_displayed.is_empty or else editor_area.pebble /= Void
+			Result := text_displayed.is_empty or else editor_drawing_area.pebble /= Void
 		end		
 		
 	check_position (a_cursor: TEXT_CURSOR) is
@@ -757,30 +740,28 @@ feature {NONE} -- Implementation
 			cursor_not_void: a_cursor /= Void
 		local
 			cur_pos: INTEGER
+			l_int: INTEGER
 		do
-				-- Scroll vertically if cursor is line above or below those visible in the editor
 			cur_pos := a_cursor.y_in_lines
 			if cur_pos < first_line_displayed then
 				set_first_line_displayed (cur_pos, False) 
 			elseif cur_pos >= (first_line_displayed + number_of_lines_displayed) then
 				set_first_line_displayed (cur_pos - number_of_lines_displayed + 1, False)
 			end
-			
-				-- Scroll horizontally if cursor is outside the left or right side of the visible editor area
 			cur_pos := x_position_of_cursor (a_cursor)
+			l_int := offset + editor_viewport.width - 30
 			if cur_pos < offset then
 				set_offset (cur_pos.max (0))
-			elseif cur_pos >= (offset + editor_area.width - left_margin_width - 10) then
-				if editor_width > editor_area.width then
-					set_offset (cur_pos - editor_area.width + left_margin_width + 30)
+			elseif cur_pos >= (l_int) then
+				if editor_width > editor_viewport.width then
+					set_offset (cur_pos - editor_viewport.width + 30)
 				end
 			end
 		end
 
-	display_line (xline: INTEGER; a_line: EDITOR_LINE) is
+	draw_line_to_buffered_line (xline: INTEGER; a_line: EDITOR_LINE) is
  			-- Display `a_line' on the buffered screen.
 		local
- 			curr_y 					: INTEGER
  			cursor_line				: BOOLEAN -- Is the cursor present in the current line?
  			curr_token				: EDITOR_TOKEN
  			width_cursor			: INTEGER
@@ -795,19 +776,18 @@ feature {NONE} -- Implementation
 			l_cursor				: TEXT_CURSOR
 			selection_present		: BOOLEAN
  		do
+ 			buffered_line.clear
 			l_cursor := text_displayed.cursor
- 			curr_y := (xline - first_line_displayed) * line_height
 			if l_cursor /= Void then
 	 			cursor_line := (xline = l_cursor.y_in_lines)
 			else
 				cursor_line := False
 			end
  			selection_present := text_displayed.has_selection
+ 			local_selection_start := text_displayed.selection_start
+ 			local_selection_end := text_displayed.selection_end
  			if selection_present then
  					-- Compute optimisations
- 				local_selection_start := text_displayed.selection_start
- 				local_selection_end := text_displayed.selection_end
- 
  				if (xline > local_selection_start.y_in_lines) and (xline < local_selection_end.y_in_lines) then
  					selected_line := True
  				end
@@ -815,7 +795,7 @@ feature {NONE} -- Implementation
  					not_selected_line := True
  				end
  			end
-			
+ 						
  			from
 						-- Do not display the margin tokens
 				from
@@ -889,22 +869,19 @@ feature {NONE} -- Implementation
  				inspect token_selection
  				when Token_not_selected then
  						-- Normally Display the token.
- 					curr_token.display (curr_y, buffered_screen, Current)
+ 					curr_token.display (0, buffered_line, Current)
  				when Token_selected then			
-	 				curr_token.display_selected (curr_y, buffered_screen, Current) 					
+	 				curr_token.display_selected (0, buffered_line, Current) 					
  				when Token_half_selected then 											
-	 				curr_token.display_half_selected (curr_y, token_selection_start, token_selection_end, buffered_screen, Current)		
+	 				curr_token.display_half_selected (0, token_selection_start, token_selection_end, buffered_line, Current)		
  				else
  					-- Unexpected value, do nothing
  				end
  
 					-- Display the cursor (if needed).
- 				if
-					cursor_line and then (l_cursor.token = curr_token)
-				then
+ 				if cursor_line and then (l_cursor.token = curr_token) then
  						-- Compute the start pixel of the cursor.
- 					start_cursor := curr_token.position +
-							curr_token.get_substring_width (l_cursor.pos_in_token - 1)
+ 					start_cursor := curr_token.position + curr_token.get_substring_width (l_cursor.pos_in_token - 1)
 
  						-- Compute the width of the current character (used to display plain cursor)
  					width_cursor := curr_token.get_substring_width (l_cursor.pos_in_token) -
@@ -912,7 +889,7 @@ feature {NONE} -- Implementation
  					width_cursor := width_cursor.max (cursor_width)
 
  						-- Draw the cursor
-					draw_cursor (buffered_screen, current_cursor_position, curr_y, cursor_width)
+					draw_cursor (buffered_line, current_cursor_position, 0, cursor_width)
 				end
  
  					-- Prepare next iteration
@@ -927,27 +904,81 @@ feature {NONE} -- Implementation
 	 			if
 					selection_present 
 				and then
-					 (local_selection_start.y_in_lines /= local_selection_end.y_in_lines) 
+					 (local_selection_start.y_in_lines /= local_selection_end.y_in_lines)
 				and then 
 	 			   (selected_line or else (xline = local_selection_start.y_in_lines)) 
 	 			and then
 	 			   has_focus
 				then 
-	 				a_line.eol_token.display_end_token_selected (curr_y, buffered_screen,
-						buffered_screen.width, Current)
+	 				a_line.eol_token.display_end_token_selected (0, buffered_line,
+						buffered_line.width, Current)
 	 			else
-	 				a_line.eol_token.display_end_token_normal (curr_y, buffered_screen,
-						buffered_screen.width, Current)
+	 				a_line.eol_token.display_end_token_normal (0, buffered_line,
+						buffered_line.width, Current)
 	 			end
  			end
  
  				-- Display the cursor (if its on the current end of line).
  			if cursor_line and then (l_cursor.token = curr_token) then				
-				draw_cursor (buffered_screen, current_cursor_position, curr_y, cursor_width)
+				draw_cursor (buffered_line, current_cursor_position, 0, cursor_width)
 			end
  		end
 
-feature {NONE} -- Scrol bars management
+	update_lines (first, last: INTEGER; buffered: BOOLEAN) is
+			-- Draw the lines `first' to `'last'.
+		local
+ 			curr_line,
+ 			y_offset: INTEGER
+		do  	
+			updating_line := True
+			text_displayed.go_i_th (first)
+			
+			if buffered then				
+				buffered_line.set_background_color (editor_preferences.normal_background_color)
+				buffered_line.clear
+			end		
+			
+			from
+ 				curr_line := first
+ 			until
+ 				curr_line > last or else text_displayed.after
+ 			loop
+ 				y_offset := editor_viewport.y_offset + ((curr_line - first_line_displayed) * line_height)
+
+				if buffered or line_is_not_empty (curr_line) then
+ 					draw_line_to_buffered_line (curr_line, text_displayed.current_line)
+					draw_buffered_line_to_screen (0, y_offset)
+				else
+					draw_line_to_screen (0, y_offset, text_displayed.line (curr_line))
+				end			
+ 				curr_line := curr_line + 1
+				y_offset := y_offset + line_height
+ 				text_displayed.forth
+ 			end
+			
+ 			updating_line := False
+		end
+
+	line_is_not_empty (a_line: INTEGER): BOOLEAN is
+			-- Does `a_line' have either the cursor or some part of the text selected?
+		local
+			l_cursor: TEXT_CURSOR
+		do
+			l_cursor := text_displayed.cursor
+			if l_cursor /= Void then
+	 			Result := (a_line = l_cursor.y_in_lines)			
+			end
+			
+			if not Result then		
+	 			if text_displayed.has_selection then
+	 				if (a_line >= text_displayed.selection_start.y_in_lines) and (a_line <= text_displayed.selection_end.y_in_lines) then
+	 					Result := True
+	 				end
+	 			end	
+	 		end
+		end		
+
+feature {NONE} -- Scroll bars management
 
 	on_vertical_scroll (vscroll_pos: INTEGER) is
  			-- Process vertical scroll event. `vertical_scrollbar.value' has changed.
@@ -957,7 +988,7 @@ feature {NONE} -- Scrol bars management
  				-- If the cursor is blinking here we must wipe out the previous action because they draw onto the wrong line
  			if blinking_timeout /= Void and then text_displayed.cursor /= Void then
 				blinking_timeout.actions.wipe_out	
-				draw_cursor (buffered_screen, current_cursor_position, (text_displayed.cursor.y_in_lines - first_line_displayed) * line_height, cursor_width)	
+				draw_cursor (buffered_line, current_cursor_position, (text_displayed.cursor.y_in_lines - first_line_displayed) * line_height, cursor_width)	
  			end				
  		end
 

@@ -315,8 +315,6 @@ feature {NONE} -- Initialization
 			create show_tool_commands.make (7)
 			create show_toolbar_commands.make (3)
 
-			window.focus_in_actions.extend(agent on_focus)
-
 			new_feature_cmd.disable_sensitive
 			toggle_feature_signature_cmd.disable_sensitive
 
@@ -2911,12 +2909,12 @@ on_forth is
 		if context_tool_has_focus then
 			if context_tool.history_manager.is_forth_possible then
 				context_tool.history_manager.forth_command.execute
-				editor_tool.text_area.editor_area.enable_sensitive
+				editor_tool.text_area.editor_viewport.enable_sensitive
 				editor_tool.text_area.set_focus
 			end
 		elseif history_manager.is_forth_possible then
 			history_manager.forth_command.execute
-			editor_tool.text_area.editor_area.enable_sensitive
+			editor_tool.text_area.editor_viewport.enable_sensitive
 			editor_tool.text_area.set_focus
 		end
 	end
@@ -3384,41 +3382,6 @@ window_moved (x_pos, y_pos: INTEGER) is
 		end			
 	end
 	
-feature {NONE} -- external edition handling
-
-on_focus is
-		-- check if the text has not been modified by an external editor
-	local
-		dialog: EV_INFORMATION_DIALOG
-		button_labels: ARRAY [STRING]
-		actions: ARRAY [PROCEDURE [ANY, TUPLE]]
-	do
-		debug ("DEBUGGER_INTERFACE")
-			io.put_string ("Took focus!%N")
-		end
-		if not editor_tool.edited_file_is_up_to_date then
-			if not editor_tool.file_date_already_checked then
-				if not editor_tool.changed and preferences.editor_data.automatic_update
-				then
-					editor_tool.reload
-				else
-					create dialog.make_with_text (warning_messages.w_file_modified_by_another_editor)
-					create button_labels.make (1, 2)
-					create actions.make (1, 2)
-					button_labels.put (interface_names.b_Reload, 1)
-					actions.put (agent editor_tool.reload, 1)
-					button_labels.put (interface_names.b_Continue_anyway, 2)
-					actions.put (agent editor_tool.set_changed (True), 2)
-					dialog.set_buttons_and_actions (button_labels,actions)
-					dialog.set_default_push_button (dialog.button (button_labels @ 1))
-					dialog.set_default_cancel_button (dialog.button (button_labels @ 2))
-					dialog.set_title (interface_names.t_External_edition)
-					dialog.show_modal_to_window (window)
-				end
-			end
-		end
-	end
-
 feature {NONE} -- Execution
 
 Kcst: EV_KEY_CONSTANTS is

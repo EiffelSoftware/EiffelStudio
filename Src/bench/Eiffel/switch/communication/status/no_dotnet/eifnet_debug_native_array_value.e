@@ -43,6 +43,11 @@ feature -- Output
 		do
 		end
 
+	get_items (a_slice_min, a_slice_max: INTEGER) is
+			-- Get Items for attributes
+		do
+		end
+
 	fill_items (a_slice_min, a_slice_max: INTEGER) is
 			-- Get Items for attributes
 		do

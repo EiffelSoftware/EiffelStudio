@@ -58,7 +58,9 @@ feature {NONE} -- Initialization
 			paste_tb.select_actions.extend (agent text_panel.paste)
 			editable_check.select_actions.extend (agent toggle_editable)
 			line_number_check.select_actions.extend (agent toggle_show_line_numbers)
-			invisible_symbol_check.select_actions.extend (agent toggle_invisible_symbols)
+			invisible_symbol_check.select_actions.extend (agent toggle_invisible_symbols)		
+			text_panel.vertical_scrollbar.change_actions.extend (agent on_vertical_scroll)
+			text_panel.horizontal_scrollbar.change_actions.extend (agent on_horizontal_scroll)
 		end
 
 	add_header is
@@ -68,7 +70,8 @@ feature {NONE} -- Initialization
 			editor_container.extend (header.container)
 			editor_container.disable_item_expand (header.container)	
 			header.selection_actions.extend (agent on_document_change)
-			header.open_document (create {TEXT_PANEL_HEADER_ITEM}.make ("C:\test.e"))
+--			header.open_document (create {TEXT_PANEL_HEADER_ITEM}.make ("C:\Eiffel56\library\base\kernel\classic\string.e"))
+			header.open_document (create {TEXT_PANEL_HEADER_ITEM}.make ("C:\test.txt"))
 		end	
 		
 	header: TEXT_PANEL_HEADER
@@ -132,7 +135,9 @@ feature {NONE} -- Events
 	goto_line is
 			-- 
 		do
-			text_panel.display_line_with_context (goto_line_text.text.to_integer)
+			text_panel.set_first_line_displayed (goto_line_text.text.to_integer, False)
+--			text_panel.position_cursor (text_panel.text_displayed.cursor, 1, (goto_line_text.text.to_integer * text_panel.line_height) - text_panel.editor_viewport.y_offset - 2)
+			text_panel.set_focus
 		end
 	
 	select_chars is
@@ -145,6 +150,8 @@ feature {NONE} -- Events
 			-- 
 		do
 			text_panel.select_lines (select_line_start_text.text.to_integer, select_line_end_text.text.to_integer)
+			text_panel.set_first_line_displayed (select_line_start_text.text.to_integer.min (select_line_end_text.text.to_integer), False)
+			text_panel.set_focus
 		end
 
 feature {NONE} -- Implementation
@@ -272,9 +279,10 @@ feature {NONE} -- Observation
 			create internal	
 			
 				-- Cursor information
-			cursor_text_position.set_text ("Position: " + text_panel.text_displayed.cursor.pos_in_characters.out)	
-			line_number.set_text ("Line number: " + text_panel.text_displayed.current_line_number.out)
-			cursor_line_pos.set_text ("Line position: " + text_panel.text_displayed.cursor.x_in_characters.out)				
+			cursor_text_position.set_text (text_panel.text_displayed.cursor.pos_in_characters.out)	
+			cursor_line_number.set_text (text_panel.text_displayed.current_line_number.out)
+			cursor_line_pos.set_text (text_panel.text_displayed.cursor.x_in_characters.out)
+			line_width_label.set_text (text_panel.text_displayed.cursor.line.width.out)
 			if text_panel.has_selection then				
 				status_label.set_text ("Selected text (" + text_panel.text_displayed.selection_cursor.pos_in_text.out + " - " + 
 					text_panel.text_displayed.cursor.pos_in_text.out + ")")		
@@ -337,6 +345,23 @@ feature {NONE} -- Observation
 			select_line_start_text.value_range.resize_exactly (1, l_line_count)
 			select_line_end_text.value_range.resize_exactly (1, l_line_count)
 		end			
+	
+	on_vertical_scroll (vscroll_pos: INTEGER) is
+ 			-- Process vertical scroll event. `vertical_scrollbar.value' has changed.
+ 		do 	
+ 			first_line_displayed_label.set_text (text_panel.first_line_displayed.out)
+ 			last_line_displayed_label.set_text ((text_panel.first_line_displayed + (text_panel.viewable_height // text_panel.line_height)).out)
+ 			buff_screen_size_label.set_text (text_panel.buffered_drawable_width.out + " x " + text_panel.buffered_drawable_height.out)
+ 			flip_count_label.set_text (text_panel.flip_count.out)
+ 			viewport_offset_label.set_text (text_panel.editor_viewport.y_offset.out)
+ 		end
+ 		
+ 	on_horizontal_scroll (hscroll_pos: INTEGER) is
+ 			-- Process vertical scroll event. `vertical_scrollbar.value' has changed.
+ 		do
+		end
+	
+--	tmp: EV_GRID
 	
 end -- class EDITOR_WINDOW
 

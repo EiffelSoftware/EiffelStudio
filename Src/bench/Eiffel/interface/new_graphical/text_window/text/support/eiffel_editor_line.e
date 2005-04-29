@@ -37,6 +37,7 @@ feature -- Initialisation
 
 			eol_token := t_eol
 			real_first_token := t_begin
+			update_token_information
 		end
 
 	make_from_lexer (lexer: EDITOR_SCANNER) is
@@ -71,7 +72,7 @@ feature -- Initialisation
 			end
 			real_first_token := t_begin
 			eol_token := t_eol
-			set_width (eol_token.position)			
+			update_token_information
 		end
 
 feature -- Access

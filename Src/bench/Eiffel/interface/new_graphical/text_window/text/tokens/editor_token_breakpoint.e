@@ -98,6 +98,11 @@ feature -- Miscellaneous
 			end
 		end
 
+	display_with_offset (x_offset, d_y: INTEGER; device: EV_DRAWABLE; panel: TEXT_PANEL) is
+			-- Display the current token on device context `dc' at the coordinates (`position + x_offset',`d_y')
+		do
+		end
+
 	hide is
 			-- Hide Current
 		do

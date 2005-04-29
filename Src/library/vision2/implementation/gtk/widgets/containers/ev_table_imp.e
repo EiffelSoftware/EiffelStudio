@@ -120,7 +120,7 @@ feature -- Status settings
 		do
 			Precursor {EV_TABLE_I} (v, a_column, a_row, column_span, row_span)
 			item_imp ?= v.implementation
-			item_imp.set_parent_imp (Current)
+			on_new_item (item_imp)
 			{EV_GTK_EXTERNALS}.gtk_table_attach_defaults (
 					container_widget,
 					item_imp.c_object,
@@ -138,7 +138,7 @@ feature -- Status settings
 		do
 			Precursor {EV_TABLE_I} (v)
 			item_imp ?= v.implementation
-			item_imp.set_parent_imp (Void)
+			on_removed_item (item_imp)
 			{EV_GTK_DEPENDENT_EXTERNALS}.object_ref (item_imp.c_object)
 			{EV_GTK_EXTERNALS}.gtk_container_remove (container_widget, item_imp.c_object)
 		end

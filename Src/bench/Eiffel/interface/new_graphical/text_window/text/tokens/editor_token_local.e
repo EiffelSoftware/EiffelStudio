@@ -26,9 +26,6 @@ feature -- Visitor
 			a_token_visitor.process_local_token (image)
 		end
 
-feature -- Access
-
-
 feature {NONE} -- Implementation
 	
 	text_color: EV_COLOR is

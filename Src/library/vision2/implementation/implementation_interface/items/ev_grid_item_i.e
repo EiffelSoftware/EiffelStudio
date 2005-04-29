@@ -253,6 +253,7 @@ feature {EV_GRID_I, EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I} -- Implemen
 
 	enable_select_internal is
 			-- Set `is_selected' to True.
+			-- Does not ask the grid to be redrawn.
 		do
 			if not is_selected then
 				if parent_i.is_row_selection_enabled then
@@ -270,6 +271,7 @@ feature {EV_GRID_I, EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I} -- Implemen
 
 	disable_select_internal is
 			-- Set `is_selected' `False'.
+			-- Does not ask the grid to be redrawn.
 		do
 			if is_selected then
 				if parent_i.is_row_selection_enabled then

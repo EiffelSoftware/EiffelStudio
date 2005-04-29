@@ -84,11 +84,7 @@ feature -- Formatting
 						end						
 						editor.process_text (formatted_text)
 					end
-					if editable then
-						editor.enable_editable
-					else
-						editor.disable_editable
-					end
+					editor.set_read_only (not editable)
 				else
 					editor.clear_window
 					editor.display_message (Warning_messages.w_Formatter_failed)

@@ -77,7 +77,6 @@ feature {NONE} -- Initialization
 	 		-- Register known document types with this editor
 	 	do
 	 		register_document ("e", eiffel_class)
-	 	   	register_document ("xml", xml_class)
 	 	end	 	
 	 	
 	 eiffel_class: DOCUMENT_CLASS is
@@ -86,16 +85,6 @@ feature {NONE} -- Initialization
 			create Result.make ("eiffel", "e", Void)
 	   	    Result.set_scanner (create {EDITOR_EIFFEL_SCANNER}.make)
 	   	end
-	 
-	 xml_class: DOCUMENT_CLASS is
-	         -- XML class
-	    local
-	    	l_loc: FILE_NAME
-	   	once
-	   		create l_loc.make_from_string (syntax_files_path)
-	   		l_loc.extend ("xml.syn")
-	   	    create Result.make ("xml", "xml", l_loc.string)
-	   	end	
 		
 feature -- Warning messages display
 
@@ -108,7 +97,7 @@ feature -- Warning messages display
 			if text_displayed /= Void then
 				if open_backup then
 					show_warning_message (Warning_messages.w_Backup_file_not_editable)
-				elseif not allow_edition then
+				elseif is_read_only and then not allow_edition then
 					if not_editable_warning_message = Void or else not_editable_warning_message.is_empty then
 						wm := Warning_messages.w_Text_not_editable
 					else
@@ -202,7 +191,8 @@ feature {NONE} -- Implementation
 					Result := dev_window.window
 				else
 					Result := Window_manager.last_focused_window.window
-				end		
+				end
+				internal_reference_window := Result
 			end
 		end	
 			

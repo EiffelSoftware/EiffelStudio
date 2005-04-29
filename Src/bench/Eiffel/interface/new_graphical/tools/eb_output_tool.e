@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			stone_manager := m
 
 				-- Output text is not editable
-			text_area.disable_editable
+			text_area.set_read_only (True)
 		end
 
 feature -- Clean up

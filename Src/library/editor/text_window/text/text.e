@@ -57,7 +57,10 @@ feature -- Content Change
 		require
 			string_not_void: a_string /= Void
 			text_has_been_reinitialized: is_empty
+		local
+			time: TIME
 		do
+			create time.make_now
 			current_string := a_string
 			start_reading_string
 		ensure
@@ -227,19 +230,9 @@ feature -- Element Change
 			line_index_valid: a_line > 0 and a_line <= number_of_lines
 		local
 			l_line: EDITOR_LINE
-			t: EDITOR_TOKEN
 		do			
 			l_line := line (a_line)			
---			from
---				t := l_line.first_token
---			until
---				t = l_line.eol_token
---			loop				
---				t.update_position
---				t := t.next
---			end
-			l_line.first_token.update_position		
-			l_line.set_width (l_line.eol_token.position)
+			l_line.update_token_information
 		end		
 
 feature -- Status report
@@ -449,7 +442,10 @@ feature {NONE} -- Text Loading
 
 	after_reading_idle_action is
 			-- action performed on idle when text reading is finished.
+		local
+			time: TIME
 		do
+			create time.make_now
 			ev_application.idle_actions.prune_all (finish_reading_string_agent)
 			text_being_processed := False
 			on_text_fully_loaded

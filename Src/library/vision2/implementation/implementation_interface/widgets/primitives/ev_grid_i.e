@@ -2840,9 +2840,11 @@ feature {NONE} -- Event handling
 							-- Key left shouldn't affect row selection
 						a_sel_item := find_next_item_in_row (prev_sel_item.row, prev_sel_item.column.index, False)
 					else
-						items_spanning := drawer.items_spanning_horizontal_span (virtual_x_position.max (1) - 1, 0)
-						if not items_spanning.is_empty then
-							column (items_spanning @ 1).ensure_visible	
+						if virtual_x_position > 0 then
+							items_spanning := drawer.items_spanning_horizontal_span (virtual_x_position - 1, 0)
+							if not items_spanning.is_empty then
+								column (items_spanning @ 1).ensure_visible	
+							end							
 						end
 					end
 				else

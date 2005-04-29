@@ -9,7 +9,7 @@ root
 
 default
 	assertion (all)
-	precompiled ("$ISE_EIFFEL\examples\com\wizard\string_manipulator\client\generated\client")
+	precompiled ("$ISE_EIFFEL\examples\com\wizard\string_manipulator\generated\client\client")
 
 cluster
 	root_cluster: "$ISE_EIFFEL\examples\com\wizard\string_manipulator\client";
@@ -29,11 +29,11 @@ cluster
 external
 	include_path:	"$ISE_EIFFEL\library\wel\spec\windows\include",
 				"$ISE_EIFFEL\library\com\spec\windows\include",
-				"$ISE_EIFFEL\examples\com\wizard\string_manipulator\client\generated\Client\Include",
-				"$ISE_EIFFEL\examples\com\wizard\string_manipulator\client\generated\Common\Include";
+				"$ISE_EIFFEL\examples\com\wizard\string_manipulator\generated\client\Client\Include",
+				"$ISE_EIFFEL\examples\com\wizard\string_manipulator\generated\client\Common\Include";
 
 	object:	 	"$(ISE_EIFFEL)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
 				"$(ISE_EIFFEL)\library\com\spec\msc\lib\com.lib",
 				"$(ISE_EIFFEL)\library\com\spec\msc\lib\com_runtime.lib",
-				"$(ISE_EIFFEL)\examples\com\wizard\string_manipulator\client\generated\Client\Clib\$(ISE_C_COMPILER)\ecom.lib";
+				"$(ISE_EIFFEL)\examples\com\wizard\string_manipulator\generated\client\Client\Clib\$(ISE_C_COMPILER)\ecom.lib";
 end

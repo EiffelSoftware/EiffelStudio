@@ -771,7 +771,6 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 					internal_update_selection (True)
 				end				
 				parent_i.redraw_row (Current)
-				parent_i.drawable.flush
 			end
 		end
 
@@ -790,7 +789,6 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 				internal_update_selection (False)
 			end			
 			parent_i.redraw_row (Current)
-			parent_i.drawable.flush
 		end
 
 	destroy is
@@ -805,13 +803,18 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			is_parented: parent /= Void
 		local
 			i: INTEGER
+			a_count: INTEGER
+			a_parent_i: EV_GRID_I
 		do
 			from
 				i := 1
+				a_count := count
+				a_parent_i := parent_i
 			until
-				i > count
+				i > a_count
 			loop
 				set_item (i, Void)
+				a_parent_i.internal_set_item (i, internal_index, Void)
 				i := i + 1
 			end
 		ensure

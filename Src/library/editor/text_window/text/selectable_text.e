@@ -51,7 +51,7 @@ feature -- Access
 		end
 
 	selection_start: like cursor is
-			-- Begining of the selection (always < than
+			-- Beginning of the selection (always < than
 			-- `selection_end').
 		require
 			text_is_not_empty: not is_empty
@@ -309,35 +309,36 @@ feature {NONE} -- Implementation
 						Result := t.image.substring (start_sel.pos_in_token, t.image.count)
 						t := t.next
 					end
-				until
-					t = t2
-				loop
-					if t = ln.eol_token then
-						Result.extend ('%N')
-						ln := ln.next
-						if ln = Void then
-							check
-								never_reached: False
+					until
+						t = t2 or t = end_sel.line.eol_token
+					loop
+						if t = Void or else t = ln.eol_token then
+							Result.extend ('%N')
+							ln := ln.next							
+							if ln = Void then
+								check
+									never_reached: False
+								end
+							else
+								t := ln.first_token
 							end
-						else
-							t := ln.first_token
+						else	
+							Result.append (t.image)
+							t := t.next
 						end
-					else
-						Result.append (t.image)
-						t := t.next
 					end
+					check
+						good_line: ln = end_sel.line
+					end
+					Result.append (t2.image.substring (1, end_sel.pos_in_token -1))
 				end
-				check
-					good_line: ln = end_sel.line
-				end
-				Result.append (t2.image.substring (1, end_sel.pos_in_token -1))
 			end
-		end
-
+	
 invariant
 	valid_selection: has_selection implies selection_cursor /= Void
 --	cursor_exists: not is_empty implies cursor /= Void
-	selection_cursor_exists: not is_empty implies selection_cursor /= Void
+--	selection_cursor_exists: not is_empty implies selection_cursor /= Void
 	no_cursor_when_empty: is_empty implies cursor = Void and then selection_cursor = Void
-
+	
 end -- class SELECTABLE_TEXT
+	

@@ -22,9 +22,7 @@ inherit
 			cursor,
 			set_changed
 		end
-		
-		
-	
+
 create
 
 	make
@@ -304,7 +302,7 @@ feature -- Basic Operations
 			
 				-- Retrieve the string representation of the line
 			if not line_image.is_empty then
-				on_text_edited (True)
+--				on_text_edited (True)
 				lexer.set_tab_size (editor_preferences.tabulation_spaces)				
 
 				from
@@ -314,7 +312,7 @@ feature -- Basic Operations
 					not is_blank (char) or cnt = 0
 				loop						
 					line_image.remove (cnt)					
-					line_modified := True
+					line_modified := True					
 					cnt := cnt - 1
 					if cnt > 0 then						
 						char := line_image.item (cnt)	
@@ -322,7 +320,8 @@ feature -- Basic Operations
 				end
 				
 				if line_modified then
-						-- Trailing character were removed so rebuild line from lexer and let editor known of changes							
+						-- Trailing character were removed so rebuild line from lexer and let editor known of changes	
+					on_text_edited (True)
 					record_modified_line (ln)
 					lexer.set_in_verbatim_string (ln.part_of_verbatim_string)
 					if line_image.is_empty then
@@ -635,7 +634,7 @@ feature {UNDO_CMD} -- Operations on selected text
 				ln := start_selection.line
 				y_line := start_selection.y_in_lines
 			until
-				ln = end_selection.line
+				ln = end_selection.line or ln.index = end_selection.y_in_lines
 			loop
 				record_modified_line (ln)
 
@@ -744,8 +743,8 @@ feature {UNDO_CMD} -- Operations on selected text
 			from
 				ln := start_selection.line
 			until
-				ln = end_selection.line
-			loop
+				ln = end_selection.line or ln.index = end_selection.y_in_lines
+			loop				
 					-- Retrieve the string representation of the line
 				line_image := ln.image
 
@@ -1747,6 +1746,6 @@ on_cursor_move (cur: EDITOR_CURSOR) is
 	end
 
 invariant
-changed = undo_is_possible
+	changed = undo_is_possible
 
 end -- class EDITABLE_TEXT

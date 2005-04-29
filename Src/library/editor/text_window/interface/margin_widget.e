@@ -58,13 +58,7 @@ feature -- Initialization
 	user_initialization is
 			-- 
 		do			
-			margin_area.expose_actions.extend (agent on_repaint)
-			margin_area.resize_actions.extend (agent on_size)	
-
-				-- Set up the screen.			
-			create buffered_screen  --.make_with_size (margin_area.width, text_panel.editor_area.height)
-			buffered_screen.set_background_color (editor_preferences.margin_background_color)			
---			hide_line_numbers
+			margin_area.expose_actions.extend (agent on_repaint)					
 		end
 
 	set_text_panel (a_text_panel: TEXT_PANEL) is
@@ -75,6 +69,7 @@ feature -- Initialization
 			text_panel := a_text_panel
 			a_text_panel.text_displayed.add_lines_observer (Current)
 			a_text_panel.text_displayed.add_edition_observer (Current)
+			margin_area.set_minimum_size (buffered_drawable_width, buffered_drawable_height)
 		end	
 
 feature -- Access
@@ -100,48 +95,21 @@ feature -- Status setting
 			-- If `a_width' is greater than `width', assign `a_width' to `width'
 			-- update display if necessary.
 		do
-			widget.set_minimum_width (a_width)
-			buffered_screen.set_size (a_width, margin_area.height)
-			update_buffered_screen (0, margin_area.height)												
-			update_display
-		end
-		
-	synchronize_with_text_panel (old_line: INTEGER)is
-			-- Synchronize with text panel
-		require
-			old_line_large_enough: old_line > 0
-		local
-			diff, y_offset: INTEGER
-			zone: EV_RECTANGLE
-		do
-			diff := first_line_displayed - old_line
-			if diff /= 0 then				
-				if diff.abs < text_panel.number_of_lines_displayed then
-					if diff < 0 then
-						y_offset := (buffered_screen.height + diff * text_panel.line_height).abs
-						create zone.make (0, 0, buffered_screen.width, y_offset)
-						buffered_screen.draw_sub_pixmap (0, - diff * text_panel.line_height, buffered_screen, zone)
-						update_buffered_screen (0, - diff * text_panel.line_height)
-					elseif diff > 0 then
-						y_offset := diff * text_panel.line_height
-						create zone.make (0, y_offset, buffered_screen.width, buffered_screen.height)
-						buffered_screen.draw_sub_pixmap (0, 0, buffered_screen, zone)
-						update_buffered_screen (buffered_screen.height - y_offset, buffered_screen.height)
-					end
-					update_display
-				else
-					margin_area.redraw
-				end
-			end
+			widget.set_minimum_width (a_width)						
 		end
 
+	synch_with_panel is
+			-- 
+		do			
+ 			margin_viewport.set_y_offset (text_panel.editor_viewport.y_offset)
+ 			flip_count := text_panel.flip_count
+ 			last_vertical_scroll_bar_value := text_panel.last_vertical_scroll_bar_value 			
+		end
+		
 feature -- Graphical Interface
 
 	text_panel: TEXT_PANEL
-			-- The text panel/editor to which Current is anchored
-
-	buffered_screen: EDITOR_BUFFERED_SCREEN
-			-- Buffer containing the current displayed margin.		
+			-- The text panel/editor to which Current is anchored	
 
 feature {NONE} -- Text Loading
 
@@ -234,6 +202,32 @@ feature {NONE} -- Implementation
 			end
 		end		
 
+	viewable_height: INTEGER is
+			-- Height of `Current' available to view displayed items. Does
+			-- not include width of any displayed scroll bars and/or header if shown.
+		do
+			Result := margin_viewport.height
+		end
+
+	updating_line: BOOLEAN
+			-- Is line updating?
+
+	in_scroll: BOOLEAN
+
+	last_vertical_scroll_bar_value: INTEGER
+		-- Last value of `vertical_scroll_bar' used within `vertical_scroll_bar_changed'. See
+		-- comment of `last_horizontal_scroll_bar_value' for details of it's use.
+
+	flip_count: INTEGER
+
+	buffered_drawable_width: INTEGER is 500
+
+	buffered_drawable_height: INTEGER is
+			-- Default size of `drawable' used for scrolling purposes.
+		once
+			Result := text_panel.buffered_drawable_height
+		end
+
 feature {TEXT_PANEL} -- Display functions
 
 	on_repaint (x, y, a_width, a_height: INTEGER) is
@@ -241,130 +235,132 @@ feature {TEXT_PANEL} -- Display functions
 			-- (`x', `y') and (`x' + `a_width', `y' + `a_height').
 			--| Actually, rectangle defined by (0, y) -> (margin_area.width, y + height) is redrawn.
 		do
+			on_paint := True
 			if a_width /= 0 and a_height /= 0 then
-				update_buffered_screen (y, y + a_height)
-				update_display
+				update_area (y, y + a_height, False)
 			end
+			on_paint := False
 		end
 
-	update_buffered_screen (top: INTEGER; bottom: INTEGER) is
+	update_area (top: INTEGER; bottom: INTEGER; buffered: BOOLEAN) is
  			-- Update buffered pixmap between lines number `top' and `bottom'.
- 		local
- 			curr_line			: INTEGER
+ 		require
+ 			in_synch_with_panel: margin_viewport.y_offset = text_panel.editor_viewport.y_offset
+	 		on_paint: on_paint
+ 		local 			
  			first_line_to_draw	: INTEGER
- 			last_line_to_draw	: INTEGER
- 			curr_y				: INTEGER
+ 			last_line_to_draw	: INTEGER 			
+ 			view_y_offset		: INTEGER
+ 			y_offset: INTEGER
  		do
- 			if text_panel.line_numbers_visible then
-				buffered_screen.set_background_color (editor_preferences.margin_background_color)
-			else
-				buffered_screen.set_background_color (editor_preferences.normal_background_color)
-			end
-			buffered_screen.clear_rectangle (0, top, buffered_screen.width, bottom - top)
---			set_margin_width (width)
+			view_y_offset := margin_viewport.y_offset
 
  				-- Draw all lines
- 			first_line_to_draw := (text_panel.first_line_displayed + top // text_panel.line_height ).max (1)
- 			last_line_to_draw := (text_panel.first_line_displayed + (bottom - 1) // text_panel.line_height).min (text_panel.text_displayed.number_of_lines)
- 			curr_y := top
+ 			first_line_to_draw := (first_line_displayed + (top - view_y_offset) // text_panel.line_height).max (1)
+ 			last_line_to_draw := ((first_line_displayed + (bottom - view_y_offset) // text_panel.line_height).min (text_panel.text_displayed.number_of_lines)).max (1)
+
+			check 
+				not_too_many_lines: (bottom = top) implies first_line_to_draw = last_line_to_draw
+				lines_valid: first_line_to_draw <= last_line_to_draw or last_line_to_draw = text_panel.text_displayed.number_of_lines or text_panel.text_displayed.number_of_lines = 0
+				first_line_valid: first_line_to_draw >= 1
+				last_line_valid: last_line_to_draw >= 1
+			end
  
- 			if first_line_to_draw <= last_line_to_draw then
- 				text_panel.text_displayed.go_i_th (first_line_to_draw)
- 				from
- 					curr_line := first_line_to_draw
- 				until
- 					curr_line > last_line_to_draw or else text_panel.text_displayed.after
- 				loop
- 					display_line (curr_line, text_panel.text_displayed.current_line)
- 					curr_line := curr_line + 1
- 					text_panel.text_displayed.forth
- 				end
- 
- 				curr_y := (curr_line - text_panel.first_line_displayed) * text_panel.line_height
- 			end
- 			if curr_y < bottom then
- 				-- The file is too small for the screen, so we fill in the
- 				-- last portion of the screen.
- 				if text_panel.display_margin then
-					buffered_screen.set_background_color (editor_preferences.margin_background_color)
+ 			if text_panel.text_displayed.number_of_lines > 0 then
+				if first_line_to_draw > last_line_to_draw then
+					update_lines (last_line_to_draw, last_line_to_draw, buffered)
 				else
-					buffered_screen.set_background_color (editor_preferences.normal_background_color)
+					update_lines (first_line_to_draw, last_line_to_draw, buffered)	
+				end			
+			end
+
+ 			if last_line_to_draw = text_panel.text_displayed.number_of_lines or text_panel.text_displayed.number_of_lines = 0 then 				
+	 				-- The file is too small for the screen, so we fill in the last portion of the screen.
+	 			y_offset := margin_viewport.y_offset + ((last_line_to_draw - first_line_displayed + (text_panel.text_displayed.number_of_lines.min (1))) * text_panel.line_height)
+				margin_area.set_background_color (editor_preferences.margin_background_color)
+				debug ("editor")
+					draw_flash (0, y_offset, width, (viewable_height - (y_offset - view_y_offset)).abs, False)					
 				end
-				buffered_screen.set_background_color (editor_preferences.normal_background_color)
-				buffered_screen.clear_rectangle (0, curr_y, width, bottom - curr_y)
- 			end
+				margin_area.clear_rectangle (0, y_offset, width, y_offset + viewable_height - (y_offset - view_y_offset))
+ 			end 	
+ 			in_scroll := False
  		end
 
-	update_display is
-			-- Update display by drawing the buffered pixmap on `margin_area'.
-		do
-			margin_area.draw_sub_pixmap (0,	0, buffered_screen, create {EV_RECTANGLE}.make (0, 0, width, buffered_screen.height))					
-		end
-
-	on_size (a_x, a_y: INTEGER; a_width, a_height: INTEGER) is
-			-- Refresh the panel after it has been resized (and moved) to new coordinates (`a_x', `a_y') and
-			-- new size (`a_width', `a_height'). 
-			--| Note: This feature is called during the creation of the window
+	update_lines (first, last: INTEGER; buffered: BOOLEAN) is
+			-- Update the lines from `first' to `last'.  If `buffered' then draw to `buffered_line'
+ 			-- before drawing to screen, otherwise draw straight to screen.
+		require
+			lines_valid: first <= last
+			first_line_valid: first >= 1
+			last_line_valie: last >= 1
 		local
-			old_height: INTEGER
-			w,h: INTEGER
-		do
-				-- Resize & redraw the buffered screen.
-			if buffered_screen /= Void then -- System initialized.
-				in_resize := True				
-
-				if buffered_screen.width < a_width then
-					w := width.max (a_width)
-					h := a_height.max (1)
-					buffered_screen.set_size (w, h)
-					update_buffered_screen (0, h)
+ 			curr_line,
+ 			y_offset: INTEGER
+		do  	
+			updating_line := True
+			text_panel.text_displayed.go_i_th (first)
+			
+			from
+ 				curr_line := first
+ 			until
+ 				curr_line > last or else text_panel.text_displayed.after
+ 			loop
+ 				y_offset := margin_viewport.y_offset + ((curr_line - first_line_displayed) * text_panel.line_height)
+ 				if buffered then 	
+ 					-- We do not currently buffer for the margin
 				else
-					old_height := buffered_screen.height
-					w := width.max (margin_area.width)
-					h := a_height.max (1)
-					buffered_screen.set_size (w, h)
-					if old_height < a_height then
-						update_buffered_screen (old_height - 1, h)
-					end
-				end
-				in_resize := False
-			end
-		end
-
-	display_line (xline: INTEGER; a_line: EDITOR_LINE) is
- 			-- Display `a_line' on the buffered screen.
- 		local
- 			line_token			: EDITOR_TOKEN_LINE_NUMBER
- 			curr_token			: EDITOR_TOKEN
- 			curr_y, max_chars	: INTEGER
- 			spacer_text			: STRING
- 		do
+					draw_line_to_screen (0, y_offset, text_panel.text_displayed.line (curr_line), curr_line)
+				end			
+ 				curr_line := curr_line + 1
+				y_offset := y_offset + text_panel.line_height
+ 				text_panel.text_displayed.forth
+ 			end
+			
+ 			updating_line := False
+		end		
+		
+	draw_line_to_screen (x, y: INTEGER; a_line: EDITOR_LINE; xline: INTEGER) is
+			-- Update display by drawing `line' onto the `editor_drawing_area' directly at co-ordinates x,y.
+		local
+ 			curr_token	: EDITOR_TOKEN
+ 			line_token  : EDITOR_TOKEN_LINE_NUMBER
+ 			spacer_text: STRING
+ 			max_chars: INTEGER
+ 		do 	 				
  			if text_panel.text_displayed.number_of_lines > 99999 then 				
 	 			max_chars := text_panel.number_of_lines.out.count		
  			else 				
 	 			max_chars := default_width
  			end
- 			
  			create spacer_text.make_filled ('0', max_chars - xline.out.count)
  			
  				-- Set the correct image for line number
- 			line_token ?= text_panel.text_displayed.line (xline).number_token
+ 			line_token ?= a_line.number_token
 			if line_token /= Void then
 				line_token.set_internal_image (spacer_text + xline.out)
 			end
  			
-   			curr_y := (xline - text_panel.first_line_displayed) * text_panel.line_height
   			from
 					-- Display the first applicable token in the margin
 				a_line.start
 				curr_token := a_line.item
+				margin_area.set_background_color (editor_preferences.margin_background_color)
+				debug ("editor")
+					draw_flash (x, y, width, text_panel.line_height, False)
+				end	
+				margin_area.clear_rectangle (
+						x,
+						y,
+						width,
+						text_panel.line_height
+					)
  			until
  				a_line.after or else not curr_token.is_margin_token
  			loop 						
 				if curr_token.is_margin_token then
 					line_token ?= curr_token
 					if line_token /= Void and then line_numbers_visible then
-						line_token.display (curr_y, buffered_screen, text_panel) 	
+						line_token.display (y, margin_area, text_panel) 	
 					elseif line_token /= Void then						
 						line_token.hide
 					end
@@ -373,5 +369,26 @@ feature {TEXT_PANEL} -- Display functions
 				curr_token := a_line.item
 			end
 		end
+ 
+ 	draw_flash (x, y, a_width, height: INTEGER; buffered: BOOLEAN) is
+ 			-- 
+ 		do
+ 			if buffered then
+ 				margin_area.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (200, 20, 20))
+ 			else
+ 				margin_area.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (20, 20, 200))
+ 			end 			
+ 			margin_area.clear_rectangle (x, y, 1000, height)	
+ 			ev_application.sleep (50)
+ 			margin_area.set_background_color (editor_preferences.margin_background_color)
+ 		end 		
+
+	ev_application: EV_APPLICATION is
+			-- Current application.
+		once
+			Result := (create {EV_ENVIRONMENT}).application
+		end
+		
+	on_paint: BOOLEAN
 
 end -- class MARGIN_WIDGET

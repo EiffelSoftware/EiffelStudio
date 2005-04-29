@@ -27,11 +27,17 @@ feature {NONE}-- Initialization
 			initialize_constants
 			
 				-- Create all widgets.
+			create l_ev_vertical_box_1
+			create margin_viewport
 			create margin_area
 			
 				-- Build_widget_structure.
-			widget.extend (margin_area)
+			widget.extend (l_ev_vertical_box_1)
+			l_ev_vertical_box_1.extend (margin_viewport)
+			margin_viewport.extend (margin_area)
 			
+			margin_viewport.set_item_width (279)
+			margin_viewport.set_item_height (83)
 			margin_area.set_minimum_width (1)
 			margin_area.set_minimum_height (1)
 			
@@ -53,6 +59,8 @@ feature -- Basic operation
 
 feature -- Access
 
+	l_ev_vertical_box_1: EV_VERTICAL_BOX
+	margin_viewport: EV_VIEWPORT
 	margin_area: EV_DRAWING_AREA
 
 feature {NONE} -- Implementation

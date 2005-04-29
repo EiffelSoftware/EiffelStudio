@@ -35,5 +35,5 @@ external
 	object:	 	"$(ISE_EIFFEL)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
 				"$(ISE_EIFFEL)\library\com\spec\msc\lib\com.lib",
 				"$(ISE_EIFFEL)\library\com\spec\msc\lib\com_runtime.lib",
-				"$(ISE_EIFFEL)\examples\com\wizard\string_manipulator\client\generated\Client\Clib\ecom.lib";
+				"$(ISE_EIFFEL)\examples\com\wizard\string_manipulator\client\generated\Client\Clib\$(ISE_C_COMPILER)\ecom.lib";
 end

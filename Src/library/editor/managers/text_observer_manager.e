@@ -1,5 +1,5 @@
 indexing
-	description	: "Observer manager for EB_EDITOR"
+	description	: "Observer manager for TEXT_PANEL"
 	author		: "Etienne Amodeo"
 	date		: "$Date$"
 	revision	: "$Revision$"
@@ -399,7 +399,7 @@ feature -- Memory management
 			lines_observer_list := Void
 		end
 
-feature {NONE} -- Implementation
+feature {TEXT_PANEL} -- Implementation
 
 	edition_observer_list: ARRAYED_LIST [TEXT_OBSERVER]
 		-- List of editor observers.

@@ -116,13 +116,11 @@ feature -- Execution
 								to_write.prune_all ('%R')
 								if preferences.misc_data.text_mode_is_windows then
 									to_write.replace_substring_all ("%N", "%R%N")
-									tmp_file.put_string (to_write)
-								else
-									tmp_file.put_string (to_write)
-									if to_write.item (to_write.count) /= '%N' then 
+								end
+								tmp_file.put_string (to_write)
+								if to_write.item (to_write.count) /= '%N' then 
 										-- Add a carriage return like `vi' if there's none at the end 
-										tmp_file.put_new_line
-									end
+										tmp_file.put_new_line								
 								end
 							end
 							tmp_file.close

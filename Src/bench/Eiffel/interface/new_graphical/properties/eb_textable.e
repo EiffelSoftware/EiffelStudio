@@ -27,39 +27,11 @@ feature -- Access
 
 feature -- Status report
 
-	is_editable: BOOLEAN is
-			-- Does Current tool have an editable text area?
-			-- False by default.
-		do
-			Result := text_area.is_editable
-		end
-
-	able_to_edit: BOOLEAN is
-			-- Are we able to edit the text?
-			-- False by default
-		do
-		end
-
 	changed: BOOLEAN is
 			-- As the text changed since last save?
 			-- False by default.
 		do
 			Result := text_area.changed
-		end
-
-feature -- Status setting
-
-	enable_editable is
-			-- Set edit mode for text modification.	
-			-- (By default it is set to read only)
-		do
-			text_area.enable_editable
-		end
-
-	disable_editable is
-			-- Set edit mode to Read-only (Default).	
-		do
-			text_area.disable_editable
 		end
 
 feature -- Basic operations

@@ -65,7 +65,9 @@ feature -- Basic Operations
 				if found_local_keyword then
 					look_for_locals := True
 					l_local_string := local_string
-					entity_declaration_parser.parse_from_string (l_local_string)
+					if not l_local_string.is_empty then						
+						entity_declaration_parser.parse_from_string (l_local_string)	
+					end
 					found_locals := entity_declaration_parser.entity_declaration_node
 				else
 					internal_token := token.previous
@@ -92,7 +94,9 @@ feature -- Basic Operations
 				if found_arguments then
 					look_for_locals := False
 					l_arguments_string := arguments_string
-					entity_declaration_parser.parse_from_string (l_arguments_string)
+					if not l_arguments_string.is_empty then
+						entity_declaration_parser.parse_from_string (l_arguments_string)	
+					end					
 					found_arguments_list := entity_declaration_parser.entity_declaration_node
 				else
 					internal_token := token.previous

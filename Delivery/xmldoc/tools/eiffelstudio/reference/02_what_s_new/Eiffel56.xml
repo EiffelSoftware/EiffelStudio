@@ -67,12 +67,15 @@
 					<item>Changed signature of <feature_name>subarray</feature_name> to match ELKS specification. It now returns an <class_name>ARRAY [G]</class_name> instead of <code><keyword>like Current</keyword></code>.</item>
 					<item>Fixed <feature_name>has</feature_name> to return <code><keyword>True</keyword></code> when searching for <code><keyword>Void</keyword></code> when comparing objects in an array containing a <code><keyword>Void</keyword></code> element.</item>
 					<item>Fixed issue on .NET with <feature_name>clone</feature_name>/<feature_name>copy</feature_name> which were not really duplicating the internal of the array, and therefore enabling aliasing of its content by more than one array.</item>
+					<item>Fixed a bug in feature <code><feature_name>occurences </feature_name></code> that returned <code><number>0</number></code> when called with <code><keyword>void</keyword></code> argument and <code><feature_name>object_comparision</feature_name></code> is <code><keyword>true</keyword></code>.</item>
+					<item>Fixed a bug in feature <code><feature_name>is_equal</feature_name></code> that caused stack overflow when some array item is the array itself and <code><feature_name>object_comparision</feature_name></code> is <code><keyword>true</keyword></code>.</item>
 				</list>
 			</item>
 			<item><class_name>STRING</class_name>:
 				<list ordered="false">
 					<item>Changed signature of <feature_name>infix "+"</feature_name> to match ELKS specification. It now returns <code><keyword>like Current</keyword></code> instead of <class_name>STRING</class_name>.</item>
 					<item>Added implementation query <feature_name>new_string</feature_name>. Descendants of <class_name>STRING</class_name> may need to update their inheritance clause.</item>
+					<item>Fixed a bug in .NET implementation of feature <code><feature_name>replace_substring</feature_name></code> that might produce incorrect result when argument and target of the call is the same object.</item>
 				</list>
 			</item>
 			<item><class_name>ARRAYED_LIST</class_name>:
@@ -105,7 +108,8 @@ list.<feature_name>put_i_th</feature_name> (3, 3)</code_block></item>
 		</list>
 		<heading><size>3</size>EiffelThread</heading>
 		<list ordered="false">
-			<item></item>
+			<item>Added feature <code><feature_name>sleep</feature_name></code> to class <code><class_name>THREAD_CONTROL</class_name></code>.</item>
+			<item>Provided inheritance link between classes <code><class_name>THREAD</class_name></code> and <code><class_name>THREAD_CONTROL</class_name></code> on all platforms.</item>
 		</list>
 		<heading><size>3</size>EiffelVision2</heading>
 		<list ordered="false">

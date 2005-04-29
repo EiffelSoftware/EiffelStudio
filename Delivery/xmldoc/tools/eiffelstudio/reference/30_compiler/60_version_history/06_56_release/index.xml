@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="us-ascii"?>
 <document output="studio" title="Major changes between ISE Eiffel 5.5 and ISE Eiffel 5.6">
 	<meta_data></meta_data>
 	<paragraph>
@@ -18,6 +17,11 @@
 		<heading><size>2</size>Improvements</heading>
 		<list ordered="false">
 			<item>Optimized .NET code generated for <keyword>inspect</keyword> instruction.</item>
+			<item>Optimized access to process-relative once routines to avoid heavy-weight synchronization primitives when possible.</item>
+			<item>Speed-up access to once routines in finalized multi-threaded applications.</item>
+			<item>Improved some error messages to be more precise.</item>
+			<item>Removed the requirement to freeze code that declares process-relative once routine.</item>
+			<item>Improved multi-threaded application performance in classic mode by using built-in support for thread-local storage provided by some <italic>C</italic> compilers.</item>
 		</list>
 		<heading>
 			<size>2</size>Changes
@@ -35,6 +39,8 @@
 			</item>
 			<item>In .NET, all usage of <class_name>INTEGER_8</class_name> from .NET libraries have been changed to <class_name>NATURAL_8</class_name>.</item>
 			<item>In .NET, renamed <class_name>TYPE</class_name>, <class_name>ATTRIBUTE_</class_name> and <class_name>VOID_</class_name> from the mscorlib assembly into <class_name>SYSTEM_TYPE</class_name>, <class_name>SYSTEM_ATTRIBUTE</class_name> and <class_name>SYSTEM_VOID</class_name>.</item>
+			<item>Changed exception handling for once routines so that exception raised during the first call is raised during any subsequent call to this routine.</item>
+			<item>Introduced upper limit for value of integer constant used in <code><class_name>BIT</class_name></code> type declaration and extended <code><compiler_error>VTBT</compiler_error></code> rule to cover this change.</item>
 		</list>
 		<heading>
 			<size>2</size>Bug fixes
@@ -76,6 +82,10 @@
 				</table>
 			</item>
 			<item>Excluded nonsignificant leading zeroes from determination of allowed integer constant type, so that <code><number>00000000000000123</number></code> is now a valid <class_name>INTEGER_8</class_name> value.</item>
+			<item>Shared the same data accross once routines and string constant attributes from different generic derivations of the same class. Added a warning for once routines that appear in a generic class to notify about this change in semantics.</item>
+			<item>Correctly supported replication of once features when compiling for .NET.</item>
+			<item>Changed order of evaluation of once routines to check precondition with class invariant even when once routine has already been called.</item>
+			<item>Added a check that length of identifier, manifest string and free_operator does not exceed a maximum value of 32767 bytes.</item>
 		</list>
 		<heading>
 			<size>3</size>Compiler issues
@@ -87,6 +97,15 @@
 			<item>Fixed some cases where project could be corrupted after a recompilation.</item>
 			<item>Now compiler reports VTCT errors at the end of degree 5, rather than during degree 5, so that you can collect all the VTCT errors at once.</item>
 			<item>Thanks to the improvement in VTCT errors reporting, now compiler will not generate an incorrect VTCT errors during an incremental recompilation for a class which has actually been removed from the system.</item>
+			<item>Supported recompilation of once routines when their status is changed from "process-relative" to "thread-relative" or back.</item>
+			<item>Supported output of multi-line obsolete messages.</item>
+			<item>Fixed a recompilation bug that resulted in incorrect (or even, in case of .NET, in invalid) generated code when incrementally finalizing a system without explicitly specified root creation procedure.</item>
+			<item>Fixed a bug with resolving some generic-like types (i.e., types that are processed in a special way: tuple, native array, typed pointer) that depend on anchored types: before they were converted to "normal" generic types thus loosing their special properties.</item>
+			<item>Fixed a bug that caused compiler to crash when finalizing a code that looks like 
+<code_block><keyword>if</keyword> <keyword>true</keyword> <keyword>then</keyword> [<keyword>else</keyword>(<keyword>if</keyword>) ...] <keyword>end</keyword></code_block>
+i.e. has empty compound for a primary condition which is a constant <code><keyword>true</keyword></code>.</item>
+			<item>Fixed a bug in processing <code>Ace</code> option <code><keyword>precompiled</keyword></code> that caused a compiler to crash when no option value was provided.</item>
+			<item>Fixed a bug in incremental recompilation when multi-branch validity rules are violated in one class because constant attribute used in the multi-branch instruction is changed in another class, that declares them, into a non-constant feature.</item>
 		</list>
 		<heading>
 			<size>3</size>Runtime/code generation issues
@@ -97,6 +116,17 @@
 			<item>Fixed incorrect C and IL code generation for <class_name>INTEGER_8</class_name> and <class_name>INTEGER_16</class_name> arithmetic and shift operations that might produce incorrect result when combined in two or more operations in a row. For example,
 				<code_block><local_variable>i</local_variable> <symbol>:=</symbol> <symbol>(</symbol><local_variable>i</local_variable> <symbol>+</symbol> <local_variable>i</local_variable><symbol>)</symbol> <symbol>|&gt;&gt;</symbol> <number>1</number></code_block>
 				assigned <number>-128</number> to <local_variable>i</local_variable> of type <class_name>INTEGER_8</class_name> if the initial value of <local_variable>i</local_variable> was <number>-128</number>. Now this instruction assigns <number>0</number>.</item>
+			<item>Synchronized access to data of process-relative once routines to avoid race conditions when two or more threads simultaneously access the same once routine.</item>
+			<item>Avoided permanent blocking of a thread accessing process-relative once routine when this routine is concurrently evaluated in some other thread and raises an exception.</item>
+			<item>Fixed bugs in memory allocation in C code for result of a once function that returns basic type:
+				<list ordered="false">
+					<item>it might cause memory corruption when memory size required to store the result is greater than size of a pointer;</item>
+					<item>there was a memory leak.</item>
+				</list>
+			</item>
+			<item>Fixed a bug in classic mode that caused last exception to be cleared after returning from a routine that has a rescue clause but returns normally.</item>
+			<item>Fixed several bugs related to handling of nested exceptions in classic mode.</item>
+			<item>Changed a limit of maximum class name length in melted byte code from 256 bytes to 32767 bytes.</item>
 		</list>
 		<heading>
 			<size>3</size>.NET issues
@@ -108,6 +138,8 @@
 			<item>Fixed issue where assigning a .NET expanded type to an entity of type <class_name>ANY</class_name> would be rejected by the compiler.</item>
 			<item>Fixed a crash in the compiler when generating the code for a class which inherits from a .NET class and from an Eiffel class which has some anchored types.</item>
 			<item>Fixed a bug where calls to <feature_name>standard_is_equal</feature_name> from <class_name>ANY</class_name> on objects whose type is generic would yield <keyword>False</keyword> where it should have been <keyword>True</keyword> in classic Eiffel.</item>
+			<item>Fixed a bug in assertion monitoring that could lead to wrong monitoring of assertions that are evaluated concurrently in different threads.</item>
+			<item>Fixed a bug in code generation for entry point of executable when root procedure is a redeclaration of a deferred feature that caused an exception <code><class_name>MissingMethodException</class_name></code> to be raised on startup of such an application.</item>
 		</list>
 		<heading>
 			<size>3</size>Store/Retrieve issues

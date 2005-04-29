@@ -54,7 +54,7 @@ feature -- Basic Operations
 				current_text.forth
 				after := current_text.after
 			end
-			last_line.set_width (last_line.eol_token.position)
+			last_line.update_token_information
 		end
 
 feature -- Text processing

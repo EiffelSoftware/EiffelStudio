@@ -57,7 +57,7 @@
 				Make sure both <bold>Compile C code</bold> and <bold>Compile Eiffel code</bold> are checked.
 			</item>
 			<item>
-				Make sure <bold>Clean destination folder prior to generation</bold> is selected.
+				Select <bold>Overwrite existing files</bold>.
 			</item>
 			<item>
 				Click <bold>Generate</bold>.

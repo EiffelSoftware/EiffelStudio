@@ -106,7 +106,7 @@ cd ..\..
 rem
 rem Call make
 rem
-if exist make.bat del make.bat
+echo @echo off > make.bat
 echo cd console>> make.bat
 echo call make>> make.bat
 echo cd ..\idrs>> make.bat

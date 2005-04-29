@@ -37,6 +37,7 @@ feature {NONE} -- Initialization
 			s_not_void: s /= Void
 		do
 			string_value := s
+			is_dotnet_string := is_dotnet
 		ensure
 			string_value_set: string_value = s
 			is_dotnet_string_set: is_dotnet_string = is_dotnet

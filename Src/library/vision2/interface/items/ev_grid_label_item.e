@@ -264,7 +264,7 @@ feature -- Measurement
 		require
 			not_destroyed: not is_destroyed
 		do
-			Result := implementation.text_width
+			Result := implementation.text_height
 		ensure		
 			result_non_negative: result >= 0
 		end

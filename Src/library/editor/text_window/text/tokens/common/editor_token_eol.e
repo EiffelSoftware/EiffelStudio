@@ -52,6 +52,12 @@ feature -- Display
 		do
 			-- Do nothing.
 		end
+		
+	display_with_offset (x_offset, d_y: INTEGER; device: EV_DRAWABLE; panel: TEXT_PANEL) is
+			-- Display the current token on device context `dc' at the coordinates (`position + x_offset',`d_y')
+		do
+			-- Do nothing
+		end
 
 feature -- Width & height
 
@@ -99,13 +105,13 @@ feature {NONE} -- Implementation
 
 	 				-- Fill the end of the line with the specified background brush.
 				a_device.set_background_color(selected_background_color)
- 				a_device.clear_rectangle(position, d_y, 10, height)
+ 				a_device.clear_rectangle(position, d_y, a_width, d_y + height)
  			else
  				the_text_color := text_color
 
 	 				-- Fill the end of the line with the specified background brush.
 				a_device.set_background_color(editor_preferences.normal_background_color)
- 				a_device.clear_rectangle(position, d_y, a_width - position, height)
+ 				a_device.clear_rectangle(position, d_y, a_width, d_y + height)
  
 			end
 

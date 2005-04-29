@@ -106,6 +106,20 @@ feature -- Miscellaneous
 			end
 		end
 
+	display_with_offset (x_offset, d_y: INTEGER; device: EV_DRAWABLE; panel: TEXT_PANEL) is
+			-- Display the current token on device context `dc'
+			-- at the coordinates (`position',`d_y')
+		do
+			from
+				internal_representation.start
+			until
+				internal_representation.after
+			loop
+				internal_representation.item.display (d_y, device, panel)
+				internal_representation.forth
+			end
+		end
+
 	tab_size_cell: CELL [INTEGER]
 	
 	tabulation_width: INTEGER is

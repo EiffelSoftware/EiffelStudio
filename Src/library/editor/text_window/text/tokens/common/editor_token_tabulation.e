@@ -31,7 +31,7 @@ feature -- Initialisation
 			number_valid: number > 0
 		do
 			length := number
-			create image.make(number)
+			create image.make (number)
 			image.fill_character('%T')
 		ensure
 			image_not_void: image /= Void
@@ -80,23 +80,9 @@ feature -- Width & Height
 			end
 		end
 
-feature -- Status Setting
-
-	set_length (a_length: INTEGER) is
-			-- Set `length'
-		require
-			length_valid: a_length >= 0
-		do
-			length := a_length
-			create image.make (a_length)
-			image.fill_character ('%T')
-		ensure
-			length_set: length = a_length
-		end
-
 feature {NONE} -- Implementation
 
-	display_blanks (d_x, d_y: INTEGER; device: EV_PIXMAP; selected: BOOLEAN; start_tab, end_tab: INTEGER; panel: TEXT_PANEL): INTEGER is
+	display_blanks (d_x, d_y: INTEGER; device: EV_DRAWABLE; selected: BOOLEAN; start_tab, end_tab: INTEGER; panel: TEXT_PANEL): INTEGER is
 		local
 			the_text_color: EV_COLOR
 			the_background_color: EV_COLOR
@@ -157,9 +143,9 @@ feature {NONE} -- Implementation
  					-- update the local position & prepare next iteration
  				local_position := local_position + local_width
  				i := i + 1
+ 				
+ 				Result := local_position
  			end
- 
- 			Result := local_position
 		end
 
 feature {NONE} -- Private characteristics & constants
@@ -168,7 +154,7 @@ feature {NONE} -- Private characteristics & constants
 			-- Compute the number of pixels represented by a tabulation based on
 			-- user preferences number of spaces per tabulation.
 		do
-			Result := editor_preferences.tab_size_cell.item * font.string_width (" ")
+			Result := editor_preferences.tabulation_spaces * font.string_width (" ")
 		end
 
 	tabulation_symbol_width: INTEGER is

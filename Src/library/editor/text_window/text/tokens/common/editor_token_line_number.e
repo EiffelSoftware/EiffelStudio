@@ -85,11 +85,6 @@ feature -- Miscellaneous
 			end
 
 			update_width
-
-				-- Update position of linked tokens
-			if next /= Void then
-				next.update_position
-			end
 		end
 
 	display (d_y: INTEGER; device: EV_DRAWABLE; panel: TEXT_PANEL) is
@@ -98,9 +93,7 @@ feature -- Miscellaneous
 		do		
 			update_width
 		
-				-- Display the image
-			device.set_background_color (background_color)
-			device.clear_rectangle (position, d_y, width, height)		
+				-- Display the image	
 			if panel.text_is_fully_loaded then
 				display_with_colors (d_y, text_color, background_color, device)
 			else
@@ -109,7 +102,14 @@ feature -- Miscellaneous
 			
 				-- Display the separator
 			device.set_background_color (separator_color)
-			device.clear_rectangle (position + (width - separator_width) + 1, d_y, separator_width, height)		
+			device.clear_rectangle (position + (width - separator_width) + 1, d_y, separator_width, height)
+			device.set_background_color (background_color)
+		end
+		
+	display_with_offset (x_offset, d_y: INTEGER; device: EV_DRAWABLE; panel: TEXT_PANEL) is
+			-- Display the current token on device context `dc' at the coordinates (`position + x_offset',`d_y')
+		do
+			-- Do nothing
 		end
 
 	hide is
@@ -146,9 +146,7 @@ feature {MARGIN_WIDGET} -- Implementation
 		local
 			text_to_be_drawn: like image
 			l_pos: INTEGER
-		do			
-			update_position
-			
+		do						
  				-- Change drawing style here.
 			if a_background_color /= Void then
 				device.set_background_color (a_background_color)

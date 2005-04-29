@@ -23,7 +23,7 @@
 		<paragraph>The second tutorial describes creating a COM component from an Eiffel system. The tutorial example 
 			<class_name>String</class_name> is almost identical to 
 			<class_name>StringManipulator</class_name> of the previous tutorial. In the 
-			<class_name>StringManipulator</class_name> example the wizard starts from IDL file and builds an Eiffel System; in contrast, the 
+			<class_name>StringManipulator</class_name> example the wizard starts from an IDL file and builds an Eiffel System; in contrast, the 
 			<class_name>String</class_name> example takes an Eiffel system and generates an IDL file and the required plumbing code to make 
 			the Eiffel project accessible to COM.
 		</paragraph>
@@ -86,8 +86,24 @@
 		</list>
 		<heading>
 			<size>2</size> First look at the generated code
-		</heading>The only generated Eiffel class is 
-		<class_name>COM_&amp;lt;Name_of_system&amp;gt;_REGISTRATION</class_name>. You do not need to modify or implement any classes. The wizard produces a ready-to-use component.
+		</heading>
+		 <paragraph>
+		 	The generated Eiffel classes include:
+		 	<list ordered="false">
+		 		<item>
+		 			<class_name>ISTRING_MANIPULATOR_INTERFACE</class_name>: This class represents the only interface exposed by the COM 
+		 			component.
+		 		</item>
+		 		<item>
+		 			<class_name>STRING_MANIPULATOR_PROXY_IMP</class_name>: This class implements the coclass, it inherits from the interface 
+		 			and implements its members.
+		 		</item>
+		 		<item>
+		 			<class_name></class_name>: This class contains the code required to register the component.
+		 		</item>
+		 	</list>
+			You do not need to modify or implement any classes. The wizard produces a ready-to-use component.
+		</paragraph>		
 		<tip>
 			<bold>Tip</bold>:
 			<line_break/>In most Eiffel systems functionality is spread out throughout the system. No single class exposes the full functionality 

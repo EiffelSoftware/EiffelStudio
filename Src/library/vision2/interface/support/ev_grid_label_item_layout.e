@@ -1,0 +1,98 @@
+indexing
+	description: "[
+		Objects that permit custom positioning of a `text' and `pixmap' within an EV_GRID_LABEL_ITEM.
+		You may not create these objects. To use, connect an agent to `layout_procedure' of EV_GRID_LABEL_ITEM
+		and an instance of this class is passed as an argument when the action sequence is fired. Fill in the
+		attributes as required and the `text' and `pixmap' of the EV_GRID_LABEL_ITEM are positioned accordingly.
+		]"
+	date: "$Date$"
+	revision: "$Revision$"
+
+class
+	EV_GRID_LABEL_ITEM_LAYOUT
+
+feature {EV_GRID_LABEL_ITEM_I}
+
+	make_with_grid_label_item (a_grid_label_item: EV_GRID_LABEL_ITEM) is
+			-- Create `Current' and assign `a_grid_label_item' to `grid_label_item'.
+		require
+			a_grid_label_item_not_void: a_grid_label_item /= Void
+		do
+			grid_label_item := a_grid_label_item
+		ensure			
+			grid_label_item_set: grid_label_item = a_grid_label_item
+		end
+		
+feature -- Access
+
+	grid_label_item: EV_GRID_LABEL_ITEM
+		-- Associated EV_GRID_LABEL_ITEM to which the properties of `Current' are applied.
+
+	pixmap_x: INTEGER
+		-- Horizontal position to be used for drawing `grid_label_item.pixmap', relative
+		-- to the left edge of `grid_label_item'.
+
+	pixmap_y: INTEGER
+		-- Vertical position to be used for frawing `grid_label_item.pixmap', relative
+		-- to the top edge of `grid_label_item'.
+
+	text_x: INTEGER
+		-- Horizontal position to be used for drawing `grid_label_item.text', relative
+		-- to the left edge of `grid_label_item'.
+
+	text_y: INTEGER
+		-- Vertical position to be used for drawing `grid_label_item.text', relative
+		-- to the top edge of `grid_label_item'.
+
+feature -- Status Setting
+
+	set_pixmap_x (a_pixmap_x: INTEGER) is
+			-- Assign `a_pixmap_x' to `pixmap_x'.
+		do
+			pixmap_x := a_pixmap_x
+		ensure
+			pixmap_x_set: pixmap_x = a_pixmap_x
+		end
+
+	set_pixmap_y (a_pixmap_y: INTEGER) is
+			-- Assign `a_pixmap_y' to `pixmap_y'.
+		do
+			pixmap_y := a_pixmap_y
+		ensure
+			pixmap_y_set: pixmap_y = a_pixmap_y
+		end
+
+	set_text_x (a_text_x: INTEGER) is
+			-- Assign `a_text_x' to `text_x'.
+		do
+			text_x := a_text_x
+		ensure
+			text_x_set: text_x = a_text_x
+		end
+
+	set_text_y (a_text_y: INTEGER) is
+			-- Assign `a_text_y' to `text_y'.
+		do
+			text_y := a_text_y
+		ensure
+			text_y_set: text_y = a_text_y
+		end
+		
+end
+
+--|----------------------------------------------------------------
+--| EiffelVision2: library of reusable components for ISE Eiffel.
+--| Copyright (C) 1985-2004 Eiffel Software. All rights reserved.
+--| Duplication and distribution prohibited.  May be used only with
+--| ISE Eiffel, under terms of user license.
+--| Contact Eiffel Software for any other use.
+--|
+--| Interactive Software Engineering Inc.
+--| dba Eiffel Software
+--| 356 Storke Road, Goleta, CA 93117 USA
+--| Telephone 805-685-1006, Fax 805-685-6869
+--| Contact us at: http://www.eiffel.com/general/email.html
+--| Customer support: http://support.eiffel.com
+--| For latest info on our award winning products, visit:
+--|	http://www.eiffel.com
+--|----------------------------------------------------------------

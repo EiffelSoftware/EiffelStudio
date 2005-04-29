@@ -101,25 +101,25 @@ feature -- Access
 	virtual_x_position: INTEGER is
 			-- Horizontal offset of `Current' in relation to the
 			-- the virtual area of `parent' grid in pixels.
-			-- `Result' is 0 if `parent' is `Void'.
+		require
+			parented: parent /= Void
 		do
 			Result := column_i.virtual_x_position
 			if parent_i /= Void then
 				Result := Result + parent_i.item_indent (Current)
 			end
 		ensure
-			parent_void_implies_result_zero: parent = Void implies Result = 0
 			valid_result: parent /= Void implies Result >= 0 and Result <= parent.virtual_width - column.width + horizontal_indent
 		end
 		
 	virtual_y_position: INTEGER is
 			-- Vertical offset of `Current' in relation to the
 			-- the virtual area of `parent' grid in pixels.
-			-- `Result' is 0 if `parent' is `Void'.
+		require
+			parented: parent /= Void
 		do
 			Result := row_i.virtual_y_position
 		ensure
-			parent_void_implies_result_zero: parent = Void implies Result = 0
 			valid_result_when_parent_row_height_fixed: parent /= Void implies Result >= 0 and Result <= parent.virtual_height - parent.row_height
 			valid_result_when_parent_row_height_not_fixed: parent /= Void implies Result >= 0 and Result <= parent.virtual_height - row.height
 		end
@@ -128,14 +128,35 @@ feature -- Access
 			-- Horizontal distance in pixels from left edge of `Current' to left edge of `column'.
 			-- This may not be set, but the value is determined by the current tree structure
 			-- of `parent' and `row'.
+		require
+			parented: parent /= Void
 		do
 			if parent_i /= Void then
 				Result := parent_i.item_indent (Current)
 			end
 		ensure
-			not_parented_implies_result_zero: parent = Void implies Result = 0
 			not_parent_tree_enabled_implies_result_zero: not parent.is_tree_enabled implies Result = 0
 			parent_tree_enabled_implies_result_greater_or_equal_to_zero: parent.is_tree_enabled implies Result >= 0
+		end
+
+	width: INTEGER is
+			-- Width of `Current' in pixels.
+		require
+			parented: is_parented
+		do
+			Result := column_i.width - horizontal_indent
+		ensure
+			Result_non_negative: Result >= 0
+		end
+
+	height: INTEGER is
+			-- Height of `Current' in pixels.
+		require
+			parented: is_parented
+		do
+			Result := row_i.height
+		ensure
+			Result_non_negative: Result >= 0
 		end
 
 feature -- Status setting
@@ -304,6 +325,12 @@ feature {EV_GRID_I} -- Implementation
 			parent_i_unset: parent_i = Void
 			column_i_unset: column_i = Void
 			row_i_unset: row_i = Void			
+		end
+
+	refresh is
+			--
+		do
+			parent_i.redraw_item (Current)
 		end
 			
 		

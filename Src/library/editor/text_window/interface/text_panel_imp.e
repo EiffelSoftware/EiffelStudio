@@ -29,8 +29,9 @@ feature {NONE}-- Initialization
 				-- Create all widgets.
 			create main_vbox
 			create inner_hbox
-			create margin_cell
-			create editor_area
+			create margin_container
+			create editor_viewport
+			create editor_drawing_area
 			create horizontal_scrollbar
 			create scroll_vbox
 			create vertical_scrollbar
@@ -39,23 +40,25 @@ feature {NONE}-- Initialization
 				-- Build_widget_structure.
 			widget.extend (main_vbox)
 			main_vbox.extend (inner_hbox)
-			inner_hbox.extend (margin_cell)
-			inner_hbox.extend (editor_area)
+			inner_hbox.extend (margin_container)
+			inner_hbox.extend (editor_viewport)
+			editor_viewport.extend (editor_drawing_area)
 			main_vbox.extend (horizontal_scrollbar)
 			widget.extend (scroll_vbox)
 			scroll_vbox.extend (vertical_scrollbar)
 			scroll_vbox.extend (scroll_cell)
 			
 			main_vbox.disable_item_expand (horizontal_scrollbar)
-			inner_hbox.disable_item_expand (margin_cell)
-			editor_area.set_minimum_width (1)
-			editor_area.set_minimum_height (1)
+			inner_hbox.disable_item_expand (margin_container)
+			editor_viewport.set_item_width (10)
+			editor_viewport.set_item_height (10)
+			editor_drawing_area.set_minimum_width (10)
+			editor_drawing_area.set_minimum_height (10)
 			horizontal_scrollbar.value_range.adapt (create {INTEGER_INTERVAL}.make (0, 1))
 			horizontal_scrollbar.set_step (5)
 			scroll_vbox.disable_item_expand (scroll_cell)
 			vertical_scrollbar.disable_sensitive
-			vertical_scrollbar.value_range.adapt (create {INTEGER_INTERVAL}.make (0, 1))			
-			
+			vertical_scrollbar.value_range.adapt (create {INTEGER_INTERVAL}.make (0, 1))
 			widget.disable_item_expand (scroll_vbox)
 			
 				--Connect events.
@@ -81,9 +84,10 @@ feature -- Access
 	main_vbox: EV_VERTICAL_BOX
 	scroll_vbox: EV_VERTICAL_BOX
 	inner_hbox: EV_HORIZONTAL_BOX
-	margin_cell: EV_CELL
+	margin_container: EV_CELL
 	scroll_cell: EV_CELL
-	editor_area: EV_DRAWING_AREA
+	editor_viewport: EV_VIEWPORT
+	editor_drawing_area: EV_DRAWING_AREA
 
 feature {NONE} -- Implementation
 

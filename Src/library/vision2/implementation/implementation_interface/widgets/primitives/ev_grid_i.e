@@ -1459,14 +1459,17 @@ feature -- Removal
 		require
 			is_parented: parent /= Void
 		local
-			i: INTEGER
+			i, a_row_count: INTEGER
+			temp_rows: like rows
 		do
 			from
 				i := 1
+				a_row_count := row_count
+				temp_rows := rows
 			until
-				i > row_count
+				i > a_row_count
 			loop
-				rows.i_th (i).clear
+				temp_rows.i_th (i).clear
 				i := i + 1
 			end
 		ensure
@@ -3234,7 +3237,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- I
 					-- There is an item already present, if non void then mark it as removed from grid
 				a_existing_item := a_row_data @ col_index
 				if a_existing_item /= Void then
-					a_existing_item.disable_select
+					a_existing_item.disable_select_internal
 					a_existing_item.update_for_removal
 				end
 			end

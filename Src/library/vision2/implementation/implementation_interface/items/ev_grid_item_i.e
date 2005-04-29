@@ -161,7 +161,6 @@ feature -- Status setting
 		do
 			enable_select_internal
 			parent_i.redraw_item (Current)
-			parent_i.drawable.flush
 		end
 
 	disable_select is
@@ -169,7 +168,6 @@ feature -- Status setting
 		do
 			disable_select_internal
 			parent_i.redraw_item (Current)
-			parent_i.drawable.flush
 		end
 		
 	ensure_visible is

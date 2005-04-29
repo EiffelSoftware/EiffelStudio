@@ -113,11 +113,7 @@ feature -- Formatting
 						end
 						editor.refresh
 					end
-					if editable then
-						editor.enable_editable
-					else
-						editor.disable_editable
-					end
+					editor.set_read_only (not editable)
 				else
 						-- An error occurred while generating the text.
 					editor.clear_window

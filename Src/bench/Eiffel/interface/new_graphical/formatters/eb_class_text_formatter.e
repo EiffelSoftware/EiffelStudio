@@ -72,11 +72,7 @@ feature -- Formatting
 					else
 						editor.disable_has_breakable_slots
 					end
-					if editable then
-						editor.enable_editable
-					else
-						editor.disable_editable
-					end
+					editor.set_read_only (not editable)
 				else
 					editor.clear_window
 					editor.display_message (Warning_messages.w_Formatter_failed)

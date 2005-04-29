@@ -92,11 +92,7 @@ feature -- Formatting
 							not classi.is_read_only and
 							(class_file.exists and then class_file.is_writable) and
 							not editor.load_file_error
-				if editable then
-					editor.enable_editable
-				else
-					editor.disable_editable
-				end
+				editor.set_read_only (not editable)
 				if has_breakpoints then
 					editor.enable_has_breakable_slots
 				else

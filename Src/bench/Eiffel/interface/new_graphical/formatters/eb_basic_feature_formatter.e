@@ -79,12 +79,8 @@ feature -- Formatting
 					editor.enable_has_breakable_slots
 				else
 					editor.disable_has_breakable_slots
-				end
-				if editable then
-					editor.enable_editable
-				else
-					editor.disable_editable
-				end
+				end				
+				editor.set_read_only (not editable)				
 				must_format := False
 				display_header
 			end

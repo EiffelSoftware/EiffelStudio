@@ -65,28 +65,24 @@ feature -- Access
 	virtual_x_position: INTEGER is
 			-- Horizontal offset of `Current' in relation to the
 			-- the virtual area of `parent' grid in pixels.
-			-- `Result' is 0 if `parent' is `Void'.
 		require
 			not_destroyed: not is_destroyed
 			parented: is_parented
 		do
 			Result := implementation.virtual_x_position
 		ensure
-			parent_void_implies_result_zero: parent = Void implies Result = 0
 			valid_result: parent /= Void implies Result >= 0 and Result <= parent.virtual_width - column.width + horizontal_indent
 		end
 		
 	virtual_y_position: INTEGER is
 			-- Vertical offset of `Current' in relation to the
 			-- the virtual area of `parent' grid in pixels.
-			-- `Result' is 0 if `parent' is `Void'.
 		require
 			not_destroyed: not is_destroyed
 			parented: is_parented
 		do
 			Result := implementation.virtual_y_position
 		ensure
-			parent_void_implies_result_zero: parent = Void implies Result = 0
 			valid_result_when_parent_row_height_fixed: parent /= Void implies Result >= 0 and Result <= parent.virtual_height - parent.row_height
 			valid_result_when_parent_row_height_not_fixed: parent /= Void implies Result >= 0 and Result <= parent.virtual_height - row.height
 		end
@@ -101,9 +97,30 @@ feature -- Access
 		do
 			Result := implementation.horizontal_indent
 		ensure
-			not_parented_implies_result_zero: parent = Void implies Result = 0
 			not_parent_tree_enabled_implies_result_zero: not parent.is_tree_enabled implies Result = 0
 			parent_tree_enabled_implies_result_greater_or_equal_to_zero: parent.is_tree_enabled implies Result >= 0
+		end
+
+	width: INTEGER is
+			-- Width of `Current' in pixels.
+		require
+			not_destroyed: not is_destroyed
+			parented: is_parented
+		do
+			Result := implementation.width
+		ensure
+			Result_non_negative: Result >= 0
+		end
+
+	height: INTEGER is
+			-- Height of `Current' in pixels.
+		require
+			not_destroyed: not is_destroyed
+			parented: is_parented
+		do
+			Result := implementation.height
+		ensure
+			Result_non_negative: Result >= 0
 		end
 		
 feature -- Status setting
@@ -121,7 +138,7 @@ feature -- Status setting
 			row_visible_when_heights_not_fixed_in_parent: not parent.is_row_height_fixed implies row.virtual_y_position >= parent.virtual_y_position and virtual_y_position + row.height <= parent.virtual_y_position + (parent.viewable_height).max (row.height)
 			column_visible: column.virtual_x_position >= parent.virtual_x_position and column.virtual_x_position + column.width <= parent.virtual_x_position + (parent.viewable_width).max (column.width)
 		end
-
+		
 feature -- Actions
 
 	activate is
@@ -141,6 +158,13 @@ feature -- Actions
 		do
 			implementation.deactivate
 		end
+
+	refresh is
+			--
+		do
+			implementation.refresh
+		end
+		
 
 feature -- Status report
 
@@ -175,6 +199,11 @@ feature {NONE} -- Implementation
 		do
 			create {EV_GRID_ITEM_I} implementation.make (Current)
 		end
+
+invariant
+	parented_implies_height_equals_row_height: parent /= Void implies height = row.height
+	parented_and_parent_has_no_tree_implies_width_equals_column_width: parent /= Void and then not parent.is_tree_enabled implies width = column.width
+	parented_and_row_is_subrow_implies_width_equals_column_width_less_indent: parent /= Void and row.parent_row /= Void implies width = column.width - horizontal_indent
 
 end
 

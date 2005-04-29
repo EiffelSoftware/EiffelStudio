@@ -64,8 +64,8 @@ feature {NONE}-- Initialization
 			initialize_customizable_commands	
 			
 			make_editor
-			editor_area.set_pebble_function (agent pebble_from_x_y)
-			editor_area.enable_pebble_positioning			
+			editor_drawing_area.set_pebble_function (agent pebble_from_x_y)
+			editor_drawing_area.enable_pebble_positioning			
 		end
 
 	initialize_customizable_commands is
@@ -132,7 +132,7 @@ feature -- Content Change
 		local
 			local_str_text: like str_text
 		do
-			editor_area.disable_sensitive
+			editor_viewport.disable_sensitive
 
 				-- Reset the editor state
 			reset
@@ -150,7 +150,7 @@ feature -- Content Change
 				-- Setup the editor (scrollbar, ...)
 			setup_editor (1)
 
-			editor_area.enable_sensitive
+			editor_viewport.enable_sensitive
 
 		end
 
@@ -160,14 +160,9 @@ feature -- Status setting
 			-- Set `has_breakable_slots' to `True' and update display.
 		do			
 			margin.show_breakpoints
-			if margin_cell.is_empty then
-				margin_cell.put (margin.widget)
-			end
-
-				-- Update display
-			left_margin_buffered_screen.set_size (left_margin_width, editor_area.height)
-			update_buffered_screen (0, editor_area.height)
-			update_display		
+			if margin_container.is_empty then
+				margin_container.put (margin.widget)
+			end	
 			margin.refresh_now
 		end	
 
@@ -175,14 +170,9 @@ feature -- Status setting
 			-- Set `has_breakable_slots' to `False' and update display.
 		do
 			margin.hide_breakpoints
-			if not line_numbers_visible and then not margin_cell.is_empty then
-				margin_cell.prune (margin.widget)
+			if not line_numbers_visible and then not margin_container.is_empty then
+				margin_container.prune (margin.widget)
 			end
-
-				-- Update display
-			left_margin_buffered_screen.set_size (left_margin_width, editor_area.height)
-			update_buffered_screen (0, editor_area.height)
-			update_display
 			margin.refresh_now
 		end
 
@@ -360,17 +350,6 @@ feature -- Search commands
 			end
 		end
 
---	goto is
---			-- Display goto dialog.
---		do
---			if search_tool /= Void then
---				if not search_tool.mode_is_search then
---					search_tool.set_mode_is_search (True)
---				end
---				prepare_search_tool
---			end
---		end
-
 	replace is
 			-- Display search tool (with Replace field) if necessary.
 		do
@@ -434,7 +413,7 @@ feature {EB_CLICKABLE_MARGIN}-- Process Vision2 Events
 			-- `a_screen_x' and `a_screen_y' are the mouse pointer absolute coordinates on the screen.
 		local
 			l_number: INTEGER
-			ln: EDITOR_LINE
+			ln: EIFFEL_EDITOR_LINE
 			stone: STONE
 			bkstn: BREAKABLE_STONE
 			cur: EDITOR_CURSOR
@@ -445,16 +424,16 @@ feature {EB_CLICKABLE_MARGIN}-- Process Vision2 Events
 			elseif button = 3 then
 				mouse_right_button_down := True
 				if x_pos <= 0 then
-					l_number := (y_pos // line_height) + first_line_displayed
+					l_number := (y_pos - editor_viewport.y_offset // line_height) + first_line_displayed
 					if text_displayed.number_of_lines >= l_number then
-						ln := text_displayed.line (l_number)
+						ln ?= text_displayed.line (l_number)
 						bkstn ?= ln.real_first_token.pebble
 					end
 					create cur.make_from_character_pos (1, 1, text_displayed)
-					position_cursor (cur, 1, y_pos)
+					position_cursor (cur, 1, y_pos - editor_viewport.y_offset)
 				else
 					create cur.make_from_character_pos (1, 1, text_displayed)
-					position_cursor (cur, x_pos, y_pos)
+					position_cursor (cur, x_pos, y_pos - editor_viewport.y_offset)
 					bkstn ?= cur.token.pebble
 				end
 				if bkstn = Void then
@@ -526,12 +505,13 @@ feature {EB_CLICKABLE_MARGIN}-- Process Vision2 Events
 
 feature {EB_CLICKABLE_MARGIN} -- Pick and drop
 
-	pebble_from_x_y (x_pos_with_margin, y_pos: INTEGER): STONE is
+	pebble_from_x_y (x_pos_with_margin, abs_y_pos: INTEGER): STONE is
 			-- Stone on (`x_pos', `y_pos').
 		local
-			cur		: EDITOR_CURSOR
+			cur			: EDITOR_CURSOR
 			l_number	: INTEGER
-			x_pos		: INTEGER
+			x_pos,
+			y_pos		: INTEGER
 			token_pos	: INTEGER
 			bkst		: BREAKABLE_STONE
 			old_offset	: INTEGER
@@ -539,15 +519,16 @@ feature {EB_CLICKABLE_MARGIN} -- Pick and drop
 			if not (ctrled_key or else mouse_copy_cut) then
 				if not text_displayed.is_empty then					
 					x_pos := x_pos_with_margin - left_margin_width + offset
+					y_pos := abs_y_pos - editor_viewport.y_offset
 
 						-- Compute the line number pointed by the mouse cursor
-						-- and asdjust it if its over the number of lines in the text.
+						-- and adjust it if its over the number of lines in the text.
 					l_number := (y_pos // line_height) + first_line_displayed
 					if
 						l_number > 0 and then
 						l_number <= number_of_lines and then
 						x_pos >= -left_margin_width + offset and then
-						x_pos < editor_area.width + offset
+						x_pos < editor_viewport.width + offset
 					then
 						create cur.make_from_character_pos (1, 1, text_displayed)
 						position_cursor (cur, x_pos, y_pos)
@@ -559,7 +540,7 @@ feature {EB_CLICKABLE_MARGIN} -- Pick and drop
 								token_pos := cur.token.position
 								if text_displayed.has_selection then
 									text_displayed.disable_selection
-									invalidate_block (text_displayed.selection_start.y_in_lines, text_displayed.selection_end.y_in_lines)
+									invalidate_block (text_displayed.selection_start.y_in_lines, text_displayed.selection_end.y_in_lines, True)
 								else
 									invalidate_line (text_displayed.cursor.y_in_lines, False)
 								end
@@ -569,12 +550,12 @@ feature {EB_CLICKABLE_MARGIN} -- Pick and drop
 								text_displayed.enable_selection
 								old_offset := offset
 								check_cursor_position
-								editor_area.set_pebble_position (token_pos + left_margin_width - offset, (l_number - first_line_displayed)*line_height + line_height//2)
+								editor_drawing_area.set_pebble_position (token_pos + left_margin_width - offset, (l_number - first_line_displayed)*line_height + line_height//2 + editor_viewport.y_offset)
 								if Result.stone_cursor /= Void then
-									editor_area.set_accept_cursor (Result.stone_cursor)
+									editor_drawing_area.set_accept_cursor (Result.stone_cursor)
 								end
 								if Result.x_stone_cursor /= Void then
-									editor_area.set_deny_cursor (Result.x_stone_cursor)
+									editor_drawing_area.set_deny_cursor (Result.x_stone_cursor)
 								end
 								set_pick_and_drop_status (pnd_pick)								
 								
@@ -723,12 +704,12 @@ feature {NONE} -- Implementation
 			bp_number_is_valid: bp_number > 0
 			text_completely_loaded: text_is_fully_loaded
 		local
-			ln: EDITOR_LINE
+			ln: EIFFEL_EDITOR_LINE
 			bp_count, line_index: INTEGER
 			bp_token: EDITOR_TOKEN_BREAKPOINT
 		do
 			from
-				ln := text_displayed.first_line
+				ln ?= text_displayed.first_line
 			until
 				ln = Void or else bp_count = bp_number
 			loop

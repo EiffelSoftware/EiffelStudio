@@ -61,61 +61,74 @@ feature {NONE} -- Initialization
 							print (l_cls.program_usage (exe_name) + "%N")
 							print ("Use -h/--help for more help." + "%N")
 						else
-							l_valid_options.search ("-a")
-							if l_valid_options.found then
-								environment.set_ace_file_name (l_valid_options.found_item.first.twin)
-							end
-							environment.set_backup (l_valid_options.has ("-b"))
-							l_valid_options.search ("-u")
-							if l_valid_options.found then
-								environment.set_class_cluster_name (l_valid_options.found_item.first.twin)
-							end
-							environment.set_compile_c (l_valid_options.has ("-i") or l_valid_options.has ("-l"))
-							environment.set_compile_eiffel (l_valid_options.has ("-l"))
-							l_valid_options.search ("-d")
-							if l_valid_options.found then
-								environment.set_destination_folder (l_valid_options.found_item.first.twin)
+							if l_valid_options.has ("-m") and not l_valid_options.has ("-s") then
+								print ("Option '-s' required by option '-m'.")
+								print (l_cls.program_usage (exe_name) + "%N")
+								print ("Use -h/--help for more help." + "%N")
 							else
-								environment.set_destination_folder ((create {EXECUTION_ENVIRONMENT}).current_working_directory)
-							end
-							l_valid_options.search ("-f")
-							if l_valid_options.found then
-								environment.set_eiffel_class_name (l_valid_options.found_item.first.twin)
-							end
-							l_valid_options.search ("-e")
-							if l_valid_options.found then	
-								l_text := l_valid_options.found_item.first.twin
-								environment.set_is_eiffel_interface
-								environment.set_eiffel_project (l_text)
-								environment.set_project_name (l_text.substring (l_text.last_index_of ('\', l_text.count) + 1, l_text.count))
-							end
-							l_valid_options.search ("-c")
-							if l_valid_options.found then
-								l_definition_file := l_valid_options.found_item.first.as_lower
-								environment.set_is_client
-							end
-							l_valid_options.search ("-s")
-							if l_valid_options.found then
-								l_definition_file := l_valid_options.found_item.first.as_lower
-								environment.set_is_new_component
-							end
-							if l_valid_options.has ("-o") then
-								environment.set_is_out_of_process
-							else
-								environment.set_is_in_process
-							end
-							environment.set_cleanup (l_valid_options.has ("-p"))
-							if l_definition_file /= Void then
-								if l_definition_file.substring_index (".idl", l_definition_file.count - 3) = l_definition_file.count - 3 then
-									environment.set_idl_file_name (l_definition_file)
-								else
-									environment.set_type_library_file_name (l_definition_file)
-									environment.set_idl (False)
+								l_valid_options.search ("-a")
+								if l_valid_options.found then
+									environment.set_ace_file_name (l_valid_options.found_item.first.twin)
 								end
-								environment.set_project_name (l_definition_file.substring (l_definition_file.last_index_of ('\', l_definition_file.count) + 1, l_definition_file.count))
+								environment.set_backup (l_valid_options.has ("-b"))
+								l_valid_options.search ("-u")
+								if l_valid_options.found then
+									environment.set_class_cluster_name (l_valid_options.found_item.first.twin)
+								end
+								environment.set_compile_c (l_valid_options.has ("-i") or l_valid_options.has ("-l"))
+								environment.set_compile_eiffel (l_valid_options.has ("-l"))
+								l_valid_options.search ("-d")
+								if l_valid_options.found then
+									environment.set_destination_folder (l_valid_options.found_item.first.twin)
+								else
+									environment.set_destination_folder ((create {EXECUTION_ENVIRONMENT}).current_working_directory)
+								end
+								l_valid_options.search ("-f")
+								if l_valid_options.found then
+									environment.set_eiffel_class_name (l_valid_options.found_item.first.twin)
+								end
+								l_valid_options.search ("-e")
+								if l_valid_options.found then	
+									l_text := l_valid_options.found_item.first.twin
+									environment.set_is_eiffel_interface
+									environment.set_eiffel_project (l_text)
+									environment.set_project_name (l_text.substring (l_text.last_index_of ('\', l_text.count) + 1, l_text.count))
+								end
+								l_valid_options.search ("-c")
+								if l_valid_options.found then
+									l_definition_file := l_valid_options.found_item.first.as_lower
+									environment.set_is_client
+								end
+								l_valid_options.search ("-s")
+								if l_valid_options.found then
+									l_definition_file := l_valid_options.found_item.first.as_lower
+									environment.set_is_new_component
+									if l_valid_options.has ("-m") then
+										if l_definition_file.count > 4 and then l_definition_file.substring (l_definition_file.count - 3, l_definition_file.count).is_equal (".idl") then
+											environment.set_marshaller_generated (True)
+										else
+											print ("%NWARNING: Option -m ignored because definition file is not an IDL file%N")
+										end
+									end
+								end
+								if l_valid_options.has ("-o") then
+									environment.set_is_out_of_process
+								else
+									environment.set_is_in_process
+								end
+								environment.set_cleanup (l_valid_options.has ("-p"))
+								if l_definition_file /= Void then
+									if l_definition_file.substring_index (".idl", l_definition_file.count - 3) = l_definition_file.count - 3 then
+										environment.set_idl_file_name (l_definition_file)
+									else
+										environment.set_type_library_file_name (l_definition_file)
+										environment.set_idl (False)
+									end
+									environment.set_project_name (l_definition_file.substring (l_definition_file.last_index_of ('\', l_definition_file.count) + 1, l_definition_file.count))
+								end
+								no_logo := l_valid_options.has ("-n")
+								generate
 							end
-							no_logo := l_valid_options.has ("-n")
-							generate
 						end
 					end
 				end
@@ -218,7 +231,7 @@ feature {NONE} -- Private Access
 				    "-a,--ace=ACE_FILE!#Path to ace file of Eiffel project PROJECT_FILE. Use with '-e'.",
 				    "-f,--facade=FACADE_CLASS!#Expose features from FACADE_CLASS to COM. Use with '-e'.",
 				    "-u,--cluster=CLUSTER!#Cluster containing FACADE_CLASS given with option '-f'.",
-				    "-m,--marshaller#Build marshaller DLL, can only be used with '--client' and if definition file is an IDL file.",
+				    "-m,--marshaller#Build marshaller DLL, can only be used with '--server' and if definition file is an IDL file.",
 				    "-d,--destination=DESTINATION!#Generate files in DESTINATION folder. By default files are generated in current folder.",
 				    "-o,--outofprocess#Access or build out of process component. By default access or build in-process component (DLL).",
 				    "-i,--compilec#Compile generated C code.",

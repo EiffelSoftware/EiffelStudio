@@ -78,21 +78,21 @@ feature -- Behavior
 			if not retried then
 				-- Set string
 				if control = set_string_button then
-					if set_string_edit.text /= Void and then not set_string_edit.text.empty then
+					if set_string_edit.text /= Void and then not set_string_edit.text.is_empty then
 						string_manipulator_proxy.set_string (set_string_edit.text)
 					end
 			
 				-- Prune all
 				elseif control = prune_button then
-					if prune_all_edit.text /= Void and then not prune_all_edit.text.empty then
+					if prune_all_edit.text /= Void and then not prune_all_edit.text.is_empty then
 						string_manipulator_proxy.prune_all (prune_all_edit.text.item (1))
 					end
 
 				-- Replace substring
 				elseif control = replace_substring_button then
-					if replace_substring_edit.text /= Void and then not replace_substring_edit.text.empty and
-						replace_substring_index_1_edit.text /= Void and then not replace_substring_index_1_edit.text.empty and
-						replace_substring_index_2_edit.text /= Void and then not replace_substring_index_2_edit.text.empty then
+					if replace_substring_edit.text /= Void and then not replace_substring_edit.text.is_empty and
+						replace_substring_index_1_edit.text /= Void and then not replace_substring_index_1_edit.text.is_empty and
+						replace_substring_index_2_edit.text /= Void and then not replace_substring_index_2_edit.text.is_empty then
 						string_manipulator_proxy.replace_substring (replace_substring_edit.text, replace_substring_index_1_edit.text.to_integer, replace_substring_index_2_edit.text.to_integer)
 					end
 				end

@@ -35,7 +35,8 @@ inherit
 			load_string,
 			editor_preferences,
 			abort_idle_processing,
-			after_reading_idle_action
+			after_reading_idle_action,
+			new_line_from_lexer
 		end
 
 	SHARED_WORKBENCH
@@ -67,7 +68,7 @@ feature -- Access
 	structured_text: STRUCTURED_TEXT is
 			-- Structured text that corresponds to `Current'
 		local
-			ln: EDITOR_LINE
+			ln: EIFFEL_EDITOR_LINE
 			tok: EDITOR_TOKEN
 			visitor: EIFFEL_TOKEN_VISITOR
 		do
@@ -75,7 +76,7 @@ feature -- Access
 			if not is_empty then
 				from
 					create visitor
-					ln := first_line
+					ln ?= first_line
 				until
 					ln = Void
 				loop
@@ -302,6 +303,17 @@ feature {NONE} -- Load Text handling
 		do
 			Precursor {EDITABLE_TEXT}
 			ev_application.idle_actions.prune_all (finish_reading_text_agent)
+		end
+
+	new_line_from_lexer (line_image: STRING): EIFFEL_EDITOR_LINE is
+			-- create a new EIFFEL_EDITOR_LINE from `line_image' using `lexer'.
+		do
+			if line_image.is_empty then
+				create Result.make_empty_line
+			else
+				lexer.execute (line_image)
+				create Result.make_from_lexer (lexer)
+			end
 		end
 
 feature {NONE} -- Implementation

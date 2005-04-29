@@ -49,9 +49,9 @@ feature -- Initialization
 				t_eol.set_previous_token (t_begin)
 			end			
 			real_first_token := t_begin
-			eol_token := t_eol
-			set_width (eol_token.position)
+			eol_token := t_eol			
 			set_part_of_verbatim_string (lexer.in_verbatim_string)
+			update_token_information
 		end
 
 feature -- Transformation
@@ -78,6 +78,7 @@ feature -- Transformation
 				t_before.set_next_token (t_after)
 				t_after.set_previous_token (t_before)
 			end
+			update_token_information
 		end
 
 --| FIXME
@@ -102,6 +103,7 @@ feature -- Transformation
 				real_first_token := t_after
 			end
 			t_after.set_previous_token (t)
+			update_token_information
 		end
 
 	rebuild_from_lexer (lexer: EDITOR_SCANNER; in_v_string: BOOLEAN) is
@@ -194,31 +196,6 @@ feature -- Status Setting
 		ensure
 			value_set: auto_indented = a_flag
 		end
-		
-	remove_auto_indenting is
-			-- Removed auto-indenting characters
-		require
-			is_auto_indented: auto_indented
-		local
-			tab_token: EDITOR_TOKEN_TABULATION
-			text: STRING
-		do
-			text := image
-			text.prune_all ('%T')
-			if text.is_empty then
-				from
-					start
-				until
-					tab_token /= Void or after
-				loop
-					tab_token ?= item
-					if tab_token /= Void then
-						tab_token.set_length (0)
-					end
-					forth
-				end
-			end
-		end		
 		
 	set_part_of_verbatim_string (a_flag: BOOLEAN) is
 			-- Set `part_of_verbatim_string' to `a_flag'

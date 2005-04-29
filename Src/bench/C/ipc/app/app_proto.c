@@ -790,7 +790,7 @@ rt_private void load_bc(int slots, int amount)
 
 
 rt_private void rec_inspect(EIF_REFERENCE object);
-rt_private void rec_sinspect(EIF_REFERENCE object, BOOL skip_items);
+rt_private void rec_sinspect(EIF_REFERENCE object, EIF_BOOLEAN skip_items);
 rt_private void rec_tinspect(EIF_REFERENCE object);
 
 rt_private void obj_inspect(EIF_OBJ object)
@@ -814,7 +814,7 @@ rt_private void obj_inspect(EIF_OBJ object)
 		if (is_tuple) {
 			rec_tinspect(ref);
 		} else {
-			rec_sinspect(ref, FALSE);
+			rec_sinspect(ref, EIF_FALSE);
 		}
 	} else {
 			/* Inspect recursively `object' */
@@ -917,7 +917,7 @@ rt_private void rec_inspect(EIF_REFERENCE object)
 								twrite (&dtype, sizeof(int32));
 								twrite (&reference, sizeof(EIF_POINTER));
 							} else {
-								rec_sinspect (reference, TRUE);
+								rec_sinspect (reference, EIF_TRUE);
 							}
 						} else {
 							twrite (&is_special, sizeof(EIF_BOOLEAN));
@@ -937,7 +937,7 @@ rt_private void rec_inspect(EIF_REFERENCE object)
 	}
 }
 
-rt_private void rec_sinspect(EIF_REFERENCE object, BOOL skip_items)
+rt_private void rec_sinspect(EIF_REFERENCE object, EIF_BOOLEAN skip_items)
 {
 	/* Inspect special object */
 
@@ -966,7 +966,7 @@ rt_private void rec_sinspect(EIF_REFERENCE object, BOOL skip_items)
 		/* Send the capacity of the special object */
 	twrite (&count, sizeof(int32));
 
-	if (!skip_items) {
+	if (skip_items == EIF_FALSE) {
 		/* Compute the number of items within the bounds */
 		if (sp_upper < 0)				/* A negative `sp_upper' means `count' */
 			sp_end = count - 1;
@@ -1224,7 +1224,7 @@ rt_private void rec_tinspect(EIF_REFERENCE object)
 									twrite (&dtype, sizeof(int32));
 									twrite (&reference, sizeof(EIF_POINTER));
 								} else {
-									rec_sinspect (reference, TRUE);
+									rec_sinspect (reference, EIF_TRUE);
 								}
 							} else {
 								twrite (&is_special, sizeof(EIF_BOOLEAN));

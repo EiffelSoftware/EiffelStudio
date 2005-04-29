@@ -205,6 +205,12 @@ feature -- Status setting
 			column_visible: column.virtual_x_position >= parent.virtual_x_position and column.virtual_x_position + column.width <= parent.virtual_x_position + (parent.viewable_width).max (column.width)
 		end
 
+	refresh is
+			--
+		do
+			parent_i.redraw_item (Current)
+		end
+
 feature -- Status report
 
 	is_parented: BOOLEAN is
@@ -327,14 +333,7 @@ feature {EV_GRID_I} -- Implementation
 			parent_i_unset: parent_i = Void
 			column_i_unset: column_i = Void
 			row_i_unset: row_i = Void			
-		end
-
-	refresh is
-			--
-		do
-			parent_i.redraw_item (Current)
-		end
-			
+		end	
 		
 feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_ITEM_I} -- Implementation
 

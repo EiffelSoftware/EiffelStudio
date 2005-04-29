@@ -110,29 +110,10 @@ feature -- Element change
 	  	    type_not_known: not known_filetype (a_type)
 	  	end	
 
-feature -- Removal
-
-feature -- Resizing
-
-feature -- Transformation
-
-feature -- Conversion
-
-feature -- Duplication
-
-feature -- Miscellaneous
-
-feature -- Basic operations
-
-feature -- Obsolete
-
-feature -- Inapplicable
-
 feature {NONE} -- Parsing
 
 	parse_syntax_file (a_syn_file: STRING): BOOLEAN is
 	        -- To implement.  Return True if there is an error.
-	   	require
 	   	local
 	   	    l_syntax: EDITOR_SYNTAX_SCANNER
    	 	do
@@ -155,6 +136,5 @@ feature {NONE} -- Implementation
 
 invariant
 	has_at_least_one_filetype: not filetypes.is_empty
-	has_scanner: scanner /= Void
 
 end -- class DOCUMENT_CLASS

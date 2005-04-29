@@ -81,14 +81,16 @@ feature -- Basic Operations
 			update_list_order (item)
 			update_items
 			
+			index := index.min (count)
+			
 			l_type := a_doc.document_type
 			if l_type /= Void and then panel.known_document_type (l_type) then
-				panel.set_current_document_class (panel.registered_document_types.item (l_type))				
+				panel.set_current_document_class (panel.registered_document_types.item (l_type))	
 			end
 			
 				-- Update editor panel				
 			if item.data /= Void then
-				panel.set_text (item.data)	
+				panel.set_text (item.data, a_doc.name)
 				if item.cursor_line > 0 then
 					panel.setup_editor (item.cursor_line)										
 				else					
@@ -98,7 +100,7 @@ feature -- Basic Operations
 				close_button.disable_sensitive
 				l_text := panel.new_text_displayed
 				l_text.add_edition_observer (Current)
-				panel.set_text (l_text)
+				panel.set_text (l_text, a_doc.name)
 				panel.load_file (item.name)
 				item.set_data (l_text)
 			end		
@@ -106,9 +108,9 @@ feature -- Basic Operations
 			update_buffered_screen
 			update_display			
 			panel.refresh_now			
-			if panel.editor_area.is_sensitive then
-				panel.set_focus
-			end
+--			if panel.editor_drawing_area.is_sensitive then
+--				panel.set_focus
+--			end
 
 			index := index_of (item, 1)
 			selection_actions.call ([Current])
@@ -125,8 +127,6 @@ feature -- Basic Operations
 			end
 			Precursor
 			update_items			
-		ensure then
-			index: index <= old index
 		end
 
 feature -- Access
@@ -339,7 +339,7 @@ feature {NONE} -- Display functions
 				width := width + item.width
 				l_prev_item := item
 				forth
-			end	
+			end
 			go_i_th (l_index)
 		end		
 

@@ -85,7 +85,7 @@
 			<item>Shared the same data accross once routines and string constant attributes from different generic derivations of the same class. Added a warning for once routines that appear in a generic class to notify about this change in semantics.</item>
 			<item>Correctly supported replication of once features when compiling for .NET.</item>
 			<item>Changed order of evaluation of once routines to check precondition with class invariant even when once routine has already been called.</item>
-			<item>Added a check that length of identifier, manifest string and free_operator does not exceed a maximum value of 32767 bytes.</item>
+			<item>Added a check that length of identifier, manifest string and free operator does not exceed a maximum value of 32767 bytes.</item>
 		</list>
 		<heading>
 			<size>3</size>Compiler issues

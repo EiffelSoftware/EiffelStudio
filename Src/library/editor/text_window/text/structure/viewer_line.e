@@ -29,6 +29,8 @@ feature -- Initialisation
 
 			eol_token := t_eol
 			real_first_token := t_begin
+			
+			update_token_information
 		end
 
 feature -- Access
@@ -98,6 +100,24 @@ feature -- Status Setting
 				item.set_highlighted (a_flag)
 				forth
 			end
+		end
+
+	update_token_information is
+			-- 
+		local
+			t: like item
+		do
+			from
+				t := first_token
+			until
+				t = eol_token
+			loop				
+				t.update_width
+				t.update_position			
+				t := t.next
+			end	
+			t.update_position
+			set_width (eol_token.position)	
 		end
 
 feature -- Status Report
@@ -224,7 +244,9 @@ feature -- Status Report
 			-- string representation of the line.
 		local
 			t: EDITOR_TOKEN
+			prev_token: EDITOR_TOKEN
 		do
+			prev_token := item
 			create Result.make (50) -- 50 = average number of characters per line
 			from
 				t := first_token
@@ -234,6 +256,7 @@ feature -- Status Report
 				Result.append (t.image)
 				t := t.next
 			end
+			curr_token := prev_token
 		ensure
 			Result_not_void: Result /= Void
 		end

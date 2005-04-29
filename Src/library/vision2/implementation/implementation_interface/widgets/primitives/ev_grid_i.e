@@ -2751,8 +2751,6 @@ feature {NONE} -- Event handling
 		local
 			item_offset: INTEGER
 			item_index: INTEGER
-			is_viewable: BOOLEAN
-			a_parent_row: EV_GRID_ROW
 			last_index: INTEGER
 		do
 			if look_down then
@@ -2777,24 +2775,31 @@ feature {NONE} -- Event handling
 					end
 				end
 				if Result /= Void then
-					from
-						is_viewable := True
-						a_parent_row := Result.row.parent_row
-					until
-						a_parent_row = Void or else not is_viewable
-					loop
-						if not a_parent_row.is_expanded then
-							is_viewable := False
-						end
-						a_parent_row := a_parent_row.parent_row
-					end
-					if not is_viewable then
+					if not is_item_navigatable_to (Result) then
 						Result := Void
 					end
 				end
 				item_index := item_index + item_offset
 			end
-		end		
+		end	
+
+	is_item_navigatable_to (a_item: EV_GRID_ITEM): BOOLEAN is
+			-- Is `a_item' currently navigatable via the keyboard?
+		local
+			a_parent_row: EV_GRID_ROW
+		do
+			from
+				Result := True
+				a_parent_row := a_item.row.parent_row
+			until
+				a_parent_row = Void or else not Result
+			loop
+				if not a_parent_row.is_expanded then
+					Result := False
+				end
+				a_parent_row := a_parent_row.parent_row
+			end		
+		end
 
 	key_press_received (a_key: EV_KEY) is
 			-- Called by `key_press_actions' of `drawable'.
@@ -2819,7 +2824,11 @@ feature {NONE} -- Event handling
 				when {EV_KEY_CONSTANTS}.Key_right then
 					if not is_row_selection_enabled then
 							-- Key right shouldn't affect row selection
-						a_sel_item := find_next_item_in_row (prev_sel_item.row, prev_sel_item.column.index, True)
+						if prev_sel_item /= Void and then not is_item_navigatable_to (prev_sel_item) then
+							a_sel_item := find_next_item_in_column (prev_sel_item.column, prev_sel_item.row.index, False, True)
+						else
+							a_sel_item := find_next_item_in_row (prev_sel_item.row, prev_sel_item.column.index, True)
+						end
 					else
 						items_spanning := drawer.items_spanning_horizontal_span (virtual_x_position + width, 0)
 						if not items_spanning.is_empty then
@@ -2829,7 +2838,12 @@ feature {NONE} -- Event handling
 				when {EV_KEY_CONSTANTS}.Key_left then
 					if not is_row_selection_enabled then
 							-- Key left shouldn't affect row selection
-						a_sel_item := find_next_item_in_row (prev_sel_item.row, prev_sel_item.column.index, False)
+						if prev_sel_item /= Void and then not is_item_navigatable_to (prev_sel_item) then
+							a_sel_item := find_next_item_in_column (prev_sel_item.column, prev_sel_item.row.index, False, True)
+						else
+							a_sel_item := find_next_item_in_row (prev_sel_item.row, prev_sel_item.column.index, False)
+						end
+
 					else
 						if virtual_x_position > 0 then
 							items_spanning := drawer.items_spanning_horizontal_span (virtual_x_position - 1, 0)
@@ -2891,7 +2905,6 @@ feature {NONE} -- Event handling
 			
 			a_item.enable_select
 			
-			fixme ("When in per row selection mode, this appears to always force the last column to be visible.")
 			if is_row_selection_enabled then
 				a_item.row.ensure_visible
 			else

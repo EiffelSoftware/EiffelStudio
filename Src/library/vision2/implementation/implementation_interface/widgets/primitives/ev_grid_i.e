@@ -306,10 +306,14 @@ feature -- Access
 	virtual_width: INTEGER is
 			-- Width of virtual area in pixels.
 		do
-			perform_horizontal_computation
-			Result := column_offsets.last.max (viewable_width)
-			if is_horizontal_scrolling_per_item then
-				Result := Result + viewable_width - columns.i_th (column_count).width
+			if column_count > 0 then
+				perform_horizontal_computation
+				Result := column_offsets.last.max (viewable_width)
+				if is_horizontal_scrolling_per_item then
+					Result := Result + viewable_width - columns.i_th (column_count).width
+				end
+			else
+				Result := viewable_width
 			end
 		ensure
 			result_greater_or_equal_to_viewable_width: Result >= viewable_width
@@ -320,22 +324,22 @@ feature -- Access
 		local
 			final_row_height: INTEGER
 		do
-			perform_vertical_computation
-			if is_vertical_scrolling_per_item then
-				if rows.is_empty then
-					Result := viewable_height
-				else
+			if row_count > 0 then
+				perform_vertical_computation
+				if is_vertical_scrolling_per_item then
 					if is_row_height_fixed then
 						final_row_height := row_height
 					else
 						final_row_height := rows.i_th (row_count).height
 					end
 					Result := total_row_height + viewable_height - final_row_height
+				else
+					Result := total_row_height
 				end
+				Result := Result.max (viewable_height)
 			else
-				Result := total_row_height
+				Result := viewable_height
 			end
-			Result := Result.max (viewable_height)
 		ensure
 			result_greater_or_equal_to_viewable_height: Result >= viewable_height
 		end
@@ -1806,10 +1810,12 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 	total_row_height: INTEGER is
 			-- `Result' is total height of all rows contained in `Current'.
 		do
-			if is_row_height_fixed and not is_tree_enabled then
-				Result := row_count * row_height
-			else
-				Result := row_offsets.i_th (row_count + 1)
+			if row_count > 0 then
+				if is_row_height_fixed and not is_tree_enabled then
+					Result := row_count * row_height
+				else
+					Result := row_offsets.i_th (row_count + 1)
+				end
 			end
 		ensure
 			result_positive: result >= 0

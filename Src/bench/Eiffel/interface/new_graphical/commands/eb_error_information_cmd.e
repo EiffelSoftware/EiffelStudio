@@ -144,7 +144,7 @@ feature {NONE} -- Implementation
 			current_dialog.set_default_cancel_button (but)
 			but.select_actions.extend (agent current_dialog.destroy)
 			current_editor.drop_actions.extend (agent set_stone (current_editor, ?))
-			current_editor.disable_editable
+			current_editor.set_read_only (True)
 			create scr
 				--| + 1 to make sure there is enough room.
 			ft := (create {SHARED_EDITOR_FONT}).font

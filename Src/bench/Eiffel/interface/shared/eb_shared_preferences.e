@@ -36,9 +36,6 @@ feature -- Access
 			Result := preferences_cell.item
 		end
 		
-	text_on_selected_icons: BOOLEAN
-			-- Should we display a text alongside some selected icons?
-
 feature -- Query
 
 	preferences_initialized: BOOLEAN is

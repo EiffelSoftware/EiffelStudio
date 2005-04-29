@@ -187,13 +187,13 @@ feature -- Basic Operations
 			cursors_in_the_right_order: start_cursor < end_cursor
 			cursors_on_different_lines: start_cursor.line /= end_cursor.line
 		local
-			ln, r_ln: EDITOR_LINE
+			ln, r_ln: EIFFEL_EDITOR_LINE
 			blnk: EDITOR_TOKEN_BLANK
 			tok: EDITOR_TOKEN
 			pos: INTEGER
 		do
 			from
-				ln := start_cursor.line
+				ln ?= start_cursor.line
 				r_ln := ln
 				from
 					tok := ln.first_token
@@ -244,7 +244,7 @@ feature -- Search
 			text_loaded: reading_text_finished
 		local
 			tok: EDITOR_TOKEN
-			ln: EDITOR_LINE
+			ln: EIFFEL_EDITOR_LINE
 			low, low2: STRING
 		do
 			found_feature := False
@@ -254,7 +254,7 @@ feature -- Search
 			if click_and_complete_is_active and then click_tool.is_ready then
 				low := a_name.as_lower
 				from
-					ln := first_line
+					ln ?= first_line
 					tok := ln.first_token
 				until
 					tok = Void or found_feature
@@ -432,13 +432,22 @@ feature -- Completion-clickable initialization / update
 			end
 		end
 
-	complete_feature_call (completed: STRING; is_feature_signature: BOOLEAN; appended_character: CHARACTER) is
+	feature_name_part_to_be_completed_remainder: INTEGER is
+			-- Number of characters past the cursor on the token currenly being completed.
+		do
+			if click_tool /= Void and then auto_complete_possible then
+				Result := click_tool.insertion_remainder
+			end
+		end
+
+	complete_feature_call (completed: STRING; is_feature_signature: BOOLEAN; appended_character: CHARACTER; remainder: INTEGER) is
  			-- Finish completion process by inserting the completed expression.
 		require
 			completion_proposals_found: auto_complete_possible
 		local
-			x: INTEGER
-			y: INTEGER
+			x,
+			y,
+			i: INTEGER
 		do
 			if click_tool.insertion.item /= Void and then not click_tool.insertion.item.is_empty then --  valid_index (1) and then not click_tool.insertion.item (1).is_empty then
 				if completed.item (1) = ' ' then
@@ -448,6 +457,16 @@ feature -- Completion-clickable initialization / update
 			end
 			x := cursor.x_in_characters
 			y := cursor.y_in_lines
+			if remainder > 0 then
+				from
+					i := 0
+				until
+					i = remainder
+				loop
+					delete_char
+					i := i + 1
+				end
+			end
 			insert_string (completed)
 
 			if appended_character /= '%U' then
@@ -562,7 +581,7 @@ feature -- Syntax completion
 				end
 
 				char_nb := cursor.x_in_characters - 1
-				ln := cursor.line
+				ln ?= cursor.line
 				record_modified_line (ln)
 				bt := begin_line_tokens
 				et := end_line_tokens
@@ -704,11 +723,11 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	new_line_from_lexer (line_image: STRING): EDITOR_LINE is
-			-- Create new EDITOR_LINE with `lexer'.
+	new_line_from_lexer (line_image: STRING): EIFFEL_EDITOR_LINE is
+			-- Create new EIFFEL_EDITOR_LINE with `lexer'.
 			-- let `click_tool' add hidden information on tokens.
 		do
-			Result := Precursor {CLICKABLE_TEXT} (line_image)
+			Result ?= Precursor {CLICKABLE_TEXT} (line_image)
 			if current_class_is_clickable then
 				click_tool.setup_line (Result)
 			end

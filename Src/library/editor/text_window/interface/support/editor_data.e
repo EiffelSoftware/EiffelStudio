@@ -71,7 +71,7 @@ feature -- Value
 		end	
 		
 	tabulation_spaces: INTEGER is
-			-- Number of spaces characters in a tabulation.  
+			-- Number of space characters in a tabulation.  
 			-- TODO: neilc.  Make sure user does not enter 0 for this.
 		do
 			Result := tabulation_spaces_preference.value
@@ -364,14 +364,7 @@ feature {NONE} -- Preferences
 	quadruple_click_enabled_preference: BOOLEAN_PREFERENCE
 			-- is quadruple click (select all) enabled ?
 
-feature -- Misc
-
-	tab_size_cell: CELL [INTEGER] is
-	        -- Temporary, dont make as once
-	   	once
-	   	    create Result
-	   	    Result.put (tabulation_spaces)
-	   	end		
+feature -- Misc	
 
 	plain_white: EV_COLOR is
 		once
@@ -461,7 +454,7 @@ feature {NONE} -- Preference Strings
 	smart_identation_string: STRING is "editor.smart_identation"
 			-- Is smart identation enabled?	
 
-	quadruple_click_enabled_string: STRING is "editor.eiffel.quadruple_click_enabled" 
+	quadruple_click_enabled_string: STRING is "editor.quadruple_click_enabled" 
 			-- is quadruple click (select all) enabled ?
 
 feature {NONE} -- Implementation

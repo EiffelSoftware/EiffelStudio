@@ -346,13 +346,17 @@ feature -- Element change
 			is_parented: parent /= Void
 		local
 			i: INTEGER
+			a_count: INTEGER
+			a_parent_i: EV_GRID_I
 		do
 			from
 				i := 1
+				a_count := count
+				a_parent_i := parent_i
 			until
-				i > count
+				i > a_count
 			loop
-				set_item (i, Void)
+				a_parent_i.internal_set_item (internal_index, i, Void)
 				i := i + 1
 			end
 		ensure
@@ -427,7 +431,6 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 			parent_i.redraw_column (Current)
-			parent_i.drawable.flush
 		end
 
 feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_COLUMN, EV_GRID_COLUMN_I, EV_GRID_ITEM_I} -- Implementation

@@ -27,7 +27,7 @@ feature -- Initialisation
 
 	make (text: STRING) is
 		require
---			no_eol_in_text: not text.has ('%N')
+			no_eol_in_text: not text.has ('%N')
 		do
 			image := text
 			length := text.count
@@ -39,16 +39,10 @@ feature -- Initialisation
 feature -- Miscellaneous
 
 	width: INTEGER
-			-- Width in pixel of the entire token.
+			-- Width in pixel of the entire token.	
 
-	tab_size: INTEGER is
-			-- Tab size
-		do
-			Result := editor_preferences.tab_size_cell.item	
-		end		
-
-	get_substring_width(n: INTEGER): INTEGER is
-			-- Conpute the width in pixels of the first
+	get_substring_width (n: INTEGER): INTEGER is
+			-- Compute the width in pixels of the first
 			-- `n' characters of the current string.
 		local
 			i: INTEGER
@@ -124,6 +118,17 @@ feature -- Miscellaneous
 				display_with_colors (d_y, text_color , background_color, device)
 			else
 				display_with_colors (d_y, gray_text_color , background_color, device)
+			end
+		end
+		
+	display_with_offset (x_offset, d_y: INTEGER; device: EV_DRAWABLE; panel: TEXT_PANEL) is
+			-- Display the current token on device context `dc'
+			-- at the coordinates (`position',`d_y')
+		do
+			if panel.text_is_fully_loaded then
+				display_with_colors_offset (x_offset, d_y, text_color , background_color, device)
+			else
+				display_with_colors_offset (x_offset, d_y, gray_text_color , background_color, device)
 			end
 		end
 
@@ -266,15 +271,11 @@ feature -- Miscellaneous
 
 feature -- Status Setting
 
-	set_tab_size_cell (a_value: INTEGER) is
-			-- Set `tab_size_cell' to `a_value'
-		require
-			valid_value: a_value >= 0
+	update_width is
+			-- update value of `width'
 		do
-			editor_preferences.tab_size_cell.put (a_value)
-		ensure
-			value_set: editor_preferences.tab_size_cell.item = a_value
-		end		
+			width := get_substring_width (image.count)
+		end
 
 feature {EB_CLASS_INFO_ANALYZER} -- implementation of clickable and editable text
 
@@ -314,14 +315,31 @@ feature {NONE} -- Implementation
  				-- Display the text.
  			draw_text_top_left (position, d_y, text_to_be_drawn, device)
 		end
+		
+	display_with_colors_offset (x_offset, d_y: INTEGER; a_text_color: EV_COLOR; a_background_color: EV_COLOR; device: EV_DRAWABLE) is
+		local
+			text_to_be_drawn: STRING
+		do		
+			if image.has ('%T') then
+				text_to_be_drawn := expanded_image_substring (1, image.count)
+			else
+				text_to_be_drawn := image
+			end
+
+ 				-- Change drawing style here.
+ 			device.set_font (font)
+			device.set_foreground_color (a_text_color)
+
+			if a_background_color /= Void then
+				device.set_background_color (a_background_color)
+				device.clear_rectangle (position + x_offset, d_y, get_substring_width (image.count), height)
+			end
+			
+ 				-- Display the text.
+ 			draw_text_top_left (position + x_offset, d_y, text_to_be_drawn, device)
+		end
 
 feature {NONE} -- Implementation
-
-	update_width is
-			-- update value of `width'
-		do
-			width := get_substring_width (image.count)
-		end
 
 	expanded_image_substring (n1, n2: INTEGER): STRING is
 		local
@@ -355,7 +373,7 @@ feature {NONE} -- Implementation
 		do
 				-- Compute the number of pixels represented by a tabulation based on
 				-- user preferences number of spaces per tabulation.
-			Result := editor_preferences.tab_size_cell.item * font.string_width(" ")
+			Result := editor_preferences.tabulation_spaces * font.string_width(" ")
 		end
 
 	gray_text_color: EV_COLOR is
@@ -365,7 +383,5 @@ feature {NONE} -- Implementation
 			lightness := sqrt (text_color.lightness)
 			create Result.make_with_rgb (lightness, lightness, lightness)
 		end			
-
---	tab_size_cell: CELL [INTEGER]
 
 end -- class EDITOR_TOKEN

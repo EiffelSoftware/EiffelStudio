@@ -96,7 +96,6 @@ feature -- Linkable functions
 			-- be Void if there are no next token.
 		do
 			next := next_token
-			update_position
 		end
 
 	set_previous_token (previous_token: EDITOR_TOKEN) is
@@ -104,11 +103,10 @@ feature -- Linkable functions
 			-- be Void if there are no next token.
 		do
 			previous := previous_token
-			update_position
 		end
 
 	update_position is
-			-- Update the value of `po
+			-- Update the value of `position'.
 		do
 				-- Update current position
 			if previous /= Void then
@@ -118,20 +116,18 @@ feature -- Linkable functions
 			else
 				position := 0
 			end
-
-			update_width
-
-				-- Update position of linked tokens
-			if next /= Void then
-				next.update_position
-			end
 		end
 
 feature -- Display
 
-	display(d_y: INTEGER; device: EV_DRAWABLE; panel: TEXT_PANEL) is
+	display (d_y: INTEGER; device: EV_DRAWABLE; panel: TEXT_PANEL) is
 			-- Display the current token on device context `dc'
 			-- at the coordinates (`position',`d_y')
+		deferred
+		end
+		
+	display_with_offset (x_offset, d_y: INTEGER; device: EV_DRAWABLE; panel: TEXT_PANEL) is
+			-- Display the current token on device context `dc' at the coordinates (`position + x_offset',`d_y')
 		deferred
 		end
 

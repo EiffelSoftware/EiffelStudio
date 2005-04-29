@@ -63,7 +63,7 @@ feature -- Width & Height
 	
 feature {NONE} -- Implementation
 
-	display_blanks (d_x, d_y: INTEGER; device: EV_PIXMAP; selected: BOOLEAN; char_start, char_end: INTEGER; panel: TEXT_PANEL): INTEGER is
+	display_blanks (d_x, d_y: INTEGER; device: EV_DRAWABLE; selected: BOOLEAN; char_start, char_end: INTEGER; panel: TEXT_PANEL): INTEGER is
 		local
 			the_text_color		: EV_COLOR
 			the_background_color: EV_COLOR
@@ -98,7 +98,7 @@ feature {NONE} -- Implementation
 			end
 
  				-- Display the text.
- 			device.draw_text_top_left (d_x, d_y, the_text)
+ 			device.draw_text_top_left (d_x, d_y, the_text) 			
 		end
 
 feature {NONE} -- Private Constants

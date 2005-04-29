@@ -26,8 +26,16 @@ feature -- Display
 		do
 			useless := display_blanks (position, d_y, a_device, False, 1, length, panel)
 		end
+		
+	display_with_offset (x_offset, d_y: INTEGER; device: EV_DRAWABLE; panel: TEXT_PANEL) is
+			-- Display the current token on device context `dc' at the coordinates (`position + x_offset',`d_y')
+		local
+			useless: INTEGER
+		do
+			useless := display_blanks (position + x_offset, d_y, device, False, 1, length, panel)
+		end
 
-	display_selected (d_y: INTEGER; a_device: EV_PIXMAP; panel: TEXT_PANEL) is
+	display_selected (d_y: INTEGER; a_device: EV_DRAWABLE; panel: TEXT_PANEL) is
 			-- Display the current token on device context `dc'
 			-- at the coordinates (`position',`d_y') with its
 			-- selected state.
@@ -37,7 +45,7 @@ feature -- Display
 			useless := display_blanks (position, d_y, a_device, True, 1, length, panel)
 		end
 
-	display_half_selected (d_y: INTEGER; start_selection, end_selection: INTEGER; a_device: EV_PIXMAP; panel: TEXT_PANEL) is
+	display_half_selected (d_y: INTEGER; start_selection, end_selection: INTEGER; a_device: EV_DRAWABLE; panel: TEXT_PANEL) is
 			-- Display the current token on device context `dc'
 			-- at the coordinates (`position',`d_y') with its
 			-- selected state from beggining to `pivot'

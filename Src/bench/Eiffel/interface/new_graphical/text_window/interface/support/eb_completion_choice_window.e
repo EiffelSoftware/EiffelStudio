@@ -65,23 +65,25 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	initialize_for_features (an_editor: EB_SMART_EDITOR; feature_name: STRING; completion_possibilities: SORTABLE_ARRAY [EB_NAME_FOR_COMPLETION]) is
+	initialize_for_features (an_editor: EB_SMART_EDITOR; feature_name: STRING; a_remainder: INTEGER; completion_possibilities: SORTABLE_ARRAY [EB_NAME_FOR_COMPLETION]) is
 			-- Initialize to to complete for `feature_name' in `an_editor'.
 		do
 			feature_mode := True
 			editor := an_editor
 			before_complete := feature_name
 			sorted_names := completion_possibilities
+			remainder := a_remainder
 			common_initialization
 		end
 
-	initialize_for_classes (an_editor: EB_SMART_EDITOR; class_name: STRING; completion_possibilities: SORTABLE_ARRAY [EB_NAME_FOR_COMPLETION]) is
+	initialize_for_classes (an_editor: EB_SMART_EDITOR; class_name: STRING; a_remainder: INTEGER; completion_possibilities: SORTABLE_ARRAY [EB_NAME_FOR_COMPLETION]) is
 			-- Initialize to to complete for `class_name' in `an_editor'.
 		do
 			feature_mode := False
 			editor := an_editor
 			before_complete := class_name
 			sorted_names := completion_possibilities
+			remainder := a_remainder
 			common_initialization
 		end
 
@@ -121,6 +123,10 @@ feature -- Access
 			-- list of possible feature names sorted alphabetically
 
 	before_complete: STRING
+			-- Insertion string
+
+	remainder: INTEGER
+			-- Number chars to remove on completeion
 
 feature -- Status report
 
@@ -383,9 +389,9 @@ feature {NONE} -- Implementation
 				end
 				ix := choice_list.index_of (choice_list.selected_item,1) + index_offset
 				if sorted_names.item (ix).has_dot then
-					editor.complete_feature_from_window (sorted_names.item (ix).full_insert_name, True, character_to_append)
+					editor.complete_feature_from_window (sorted_names.item (ix).full_insert_name, True, character_to_append, remainder)
 				else
-					editor.complete_feature_from_window (" " + sorted_names.item (ix).full_insert_name, True, character_to_append)
+					editor.complete_feature_from_window (" " + sorted_names.item (ix).full_insert_name, True, character_to_append, remainder)
 				end
 				last_completed_feature_had_arguments := sorted_names.item (ix).has_arguments
 			end
@@ -398,10 +404,10 @@ feature {NONE} -- Implementation
 		do
 			if choice_list.selected_item /= Void then
 				ix:= choice_list.index_of (choice_list.selected_item, 1) + index_offset
-				editor.complete_class_from_window (sorted_names.item (ix), '%U')
+				editor.complete_class_from_window (sorted_names.item (ix), '%U', remainder)
 			else
 				if not buffered_input.is_empty then
-					editor.complete_class_from_window (buffered_input, character_to_append)
+					editor.complete_class_from_window (buffered_input, character_to_append, remainder)
 				end
 			end
 		end

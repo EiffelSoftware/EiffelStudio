@@ -967,7 +967,7 @@ feature {NONE} -- Implementation
 				grid.item_drop_actions.extend (agent item_drop_actions)				
 			else
 					-- Disable grid item PND
-				grid.remove_item_pebble_function
+				grid.set_item_pebble_function (Void)
 				grid.set_item_veto_pebble_function (Void)
 				grid.item_drop_actions.wipe_out
 			end

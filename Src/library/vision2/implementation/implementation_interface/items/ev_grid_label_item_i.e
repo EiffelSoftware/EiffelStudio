@@ -109,6 +109,12 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 				buffer_pixmap.set_size (a_width, a_height)
 			end
 
+				-- Retrieve properties from interface
+			left_border := interface.left_border
+			right_border := interface.right_border
+			top_border := interface.top_border
+			bottom_border := interface.bottom_border
+
 			if interface.layout_procedure /= Void then
 				grid_label_item_layout.set_pixmap_x (0)
 				grid_label_item_layout.set_pixmap_y (0)
@@ -126,17 +132,11 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 				pixmap_x := grid_label_item_layout.pixmap_x
 				pixmap_y := grid_label_item_layout.pixmap_y
 				
-
-				fixme ("")
 				space_remaining_for_text := grid_label_item_layout.grid_label_item.width - text_x
 			else
 					-- Retrieve properties from interface.
 				text_alignment := interface.text_alignment
 				l_pixmap := interface.pixmap
-				left_border := interface.left_border
-				right_border := interface.right_border
-				top_border := interface.top_border
-				bottom_border := interface.bottom_border
 				spacing_used := interface.spacing
 	
 					-- Now calculate the area to be used for displaying the text and pixmap
@@ -173,7 +173,8 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 				pixmap_x := left_border
 				pixmap_y := right_border
 			end
-			
+
+			buffer_pixmap.set_copy_mode
 			back_color := internal_background_color
 			if back_color = Void then
 				back_color := parent_i.background_color
@@ -185,12 +186,11 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 				buffer_pixmap.set_and_mode
 				buffer_pixmap.fill_rectangle (0, 0, a_width, a_height)
 				buffer_pixmap.set_foreground_color ((create {EV_STOCK_COLORS}).white)
+				buffer_pixmap.set_copy_mode
 			else
 				buffer_pixmap.set_foreground_color (foreground_color)
 			end
-			
-			buffer_pixmap.set_copy_mode
-			
+					
 			if l_pixmap /= Void then
 					-- Now blit the pixmap
 				buffer_pixmap.draw_pixmap (pixmap_x, pixmap_y, l_pixmap)
@@ -205,16 +205,42 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 			if interface.text /= Void and space_remaining_for_text > 0 then
 				buffer_pixmap.draw_ellipsed_text_top_left (text_x, text_y, interface.text, space_remaining_for_text)
 			end
-			if (a_height - bottom_border < pixmap_height) or (a_height - bottom_border < internal_text_height) then
-				buffer_pixmap.set_foreground_color (back_color)
-				buffer_pixmap.fill_rectangle (0, a_height - bottom_border, a_width, a_height)
 
-				if is_selected then
-					buffer_pixmap.set_foreground_color (parent_i.selection_color)
-					buffer_pixmap.set_and_mode
+				-- Now handle the border clipping.
+
+				-- First draw the border in the standard background color
+			buffer_pixmap.set_foreground_color (back_color)
+			if bottom_border > 0 then
+				buffer_pixmap.fill_rectangle (0, a_height - bottom_border, a_width, a_height)
+			end
+			if top_border > 0 then
+				buffer_pixmap.fill_rectangle (0, 0, a_width, top_border)
+			end
+			if left_border > 0 then
+				buffer_pixmap.fill_rectangle (0, 0, left_border, a_height)
+			end
+			if right_border > 0 then
+				buffer_pixmap.fill_rectangle (a_width - right_border, 0, a_width, a_height)
+			end
+
+			if is_selected then
+					-- Now, if `Current' is selected, highlight the border.
+				buffer_pixmap.set_foreground_color (parent_i.selection_color)
+				buffer_pixmap.set_and_mode
+				if bottom_border > 0 then
 					buffer_pixmap.fill_rectangle (0, a_height - bottom_border, a_width, a_height)
 				end
+				if top_border > 0 then
+					buffer_pixmap.fill_rectangle (0, 0, a_width, top_border)
+				end
+				if left_border > 0 then
+					buffer_pixmap.fill_rectangle (0, 0, left_border, a_height)
+				end
+				if right_border > 0 then
+					buffer_pixmap.fill_rectangle (a_width - right_border, 0, a_width, a_height)
+				end	
 			end
+
 			drawable.draw_sub_pixmap (an_x, a_y, buffer_pixmap, create {EV_RECTANGLE}.make (0, 0, a_width, a_height))
 		end
 

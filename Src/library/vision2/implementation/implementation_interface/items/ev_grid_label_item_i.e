@@ -135,7 +135,6 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 				space_remaining_for_text := grid_label_item_layout.grid_label_item.width - text_x
 			else
 					-- Retrieve properties from interface.
-				text_alignment := interface.text_alignment
 				l_pixmap := interface.pixmap
 				spacing_used := interface.spacing
 	
@@ -156,10 +155,9 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 				space_remaining_for_text := client_width - pixmap_width - spacing_used
 
 				if interface.text /= Void and space_remaining_for_text > 0 then
-					inspect text_alignment
-					when {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_left then
+					if interface.is_left_aligned then
 						text_offset_into_available_space := 0
-					when {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_right then
+					elseif interface.is_right_aligned then
 						text_offset_into_available_space := space_remaining_for_text - internal_text_width
 					else
 						text_offset_into_available_space := space_remaining_for_text - internal_text_width

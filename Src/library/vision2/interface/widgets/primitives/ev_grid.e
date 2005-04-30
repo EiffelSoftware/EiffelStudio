@@ -396,6 +396,20 @@ feature -- Access
 			Result := implementation.item_veto_pebble_function
 		end
 
+	item_accept_cursor_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], EV_CURSOR] is
+			-- Function used to retrieve the PND accept cursor for a particular item.
+			-- Called directly after `item_pebble_function' has executed.
+		do
+			Result := implementation.item_accept_cursor_function
+		end
+
+	item_deny_cursor_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], EV_CURSOR] is
+			-- Function used to retrieve the PND deny cursor for a particular item.
+			-- Called directly after `item_pebble_function' has executed.
+		do
+			Result := implementation.item_deny_cursor_function
+		end
+
 feature -- Status setting
 
 	set_item_veto_pebble_function (a_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM, ANY], BOOLEAN]) is
@@ -416,6 +430,22 @@ feature -- Status setting
 			implementation.set_item_pebble_function (a_function)
 		ensure
 			item_pebble_function_set: item_pebble_function = a_function
+		end
+
+	set_item_accept_cursor_function (a_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], EV_CURSOR]) is
+			-- Assign `a_function' to `item_accept_cursor_function'.
+		do
+			implementation.set_item_accept_cursor_function (a_function)
+		ensure
+			item_accept_cursor_function_set: item_accept_cursor_function = a_function
+		end
+
+	set_item_deny_cursor_function (a_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], EV_CURSOR]) is
+			-- Assign `a_function' to `item_deny_cursor_function'.
+		do
+			implementation.set_item_deny_cursor_function (a_function)
+		ensure
+			item_deny_cursor_function_set: item_deny_cursor_function = a_function
 		end
 
 	enable_tree is

@@ -185,7 +185,9 @@ feature -- Status Setting
 		require
 			not_destroyed: not is_destroyed
 		do
-			text_alignment := {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_center
+			text_alignment := text_alignment.set_bit (False, 1)
+			text_alignment := text_alignment.set_bit (True, 2)
+			text_alignment := text_alignment.set_bit (False, 3)
 			if parent /= Void then
 				parent.implementation.redraw_item (implementation)
 			end
@@ -198,7 +200,9 @@ feature -- Status Setting
 		require
 			not_destroyed: not is_destroyed
 		do
-			text_alignment := {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_right
+			text_alignment := text_alignment.set_bit (False, 1)
+			text_alignment := text_alignment.set_bit (False, 2)
+			text_alignment := text_alignment.set_bit (True, 3)
 			if parent /= Void then
 				parent.implementation.redraw_item (implementation)
 			end
@@ -211,12 +215,59 @@ feature -- Status Setting
 		require
 			not_destroyed: not is_destroyed
 		do
-			text_alignment := {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_left
+			text_alignment := text_alignment.set_bit (True, 1)
+			text_alignment := text_alignment.set_bit (False, 2)
+			text_alignment := text_alignment.set_bit (False, 3)
 			if parent /= Void then
 				parent.implementation.redraw_item (implementation)
 			end
 		ensure
 			alignment_set: is_left_aligned
+		end
+
+	align_text_vertically_center is
+			-- Display `text' centered vertically.
+		require
+			not_destroyed: not is_destroyed
+		do
+			text_alignment := text_alignment.set_bit (False, 4)
+			text_alignment := text_alignment.set_bit (True, 5)
+			text_alignment := text_alignment.set_bit (False, 6)
+			if parent /= Void then
+				parent.implementation.redraw_item (implementation)
+			end
+		ensure
+			alignment_set: is_vertically_center_aligned
+		end
+
+	align_text_top is
+			-- Display `text' top aligned.
+		require
+			not_destroyed: not is_destroyed
+		do
+			text_alignment := text_alignment.set_bit (True, 4)
+			text_alignment := text_alignment.set_bit (False, 5)
+			text_alignment := text_alignment.set_bit (False, 6)
+			if parent /= Void then
+				parent.implementation.redraw_item (implementation)
+			end
+		ensure
+			alignment_set: is_top_aligned
+		end
+
+	align_text_bottom is
+			-- Display `text' bottom aligned.
+		require
+			not_destroyed: not is_destroyed
+		do
+			text_alignment := text_alignment.set_bit (False, 4)
+			text_alignment := text_alignment.set_bit (False, 5)
+			text_alignment := text_alignment.set_bit (True, 6)
+			if parent /= Void then
+				parent.implementation.redraw_item (implementation)
+			end
+		ensure
+			alignment_set: is_bottom_aligned
 		end
 
 	set_layout_procedure (a_layout_procedure: PROCEDURE [ANY, TUPLE [EV_GRID_LABEL_ITEM, EV_GRID_LABEL_ITEM_LAYOUT]]) is
@@ -280,33 +331,52 @@ feature -- Status report
 	pixmap: EV_PIXMAP
 		-- Image displayed to left of `text'.
 
-	text_alignment: INTEGER
-			-- Current alignment.
-			-- See class EV_TEXT_ALIGNABLE_CONSTANTS for
-			-- possible values.
-
 	is_left_aligned: BOOLEAN is
-			-- Is `Current' left aligned?
+			-- Is `text' of `Current' left aligned?
 		require
 			not_destroyed: not is_destroyed
 		do
-			Result := text_alignment = {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_left
+			Result := text_alignment.bit_test (1) = True
 		end
 		
 	is_center_aligned: BOOLEAN is
-			-- Is `Current' center aligned?
+			-- Is `text' of `Current' center aligned?
 		require
 			not_destroyed: not is_destroyed
 		do
-			Result := text_alignment = {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_center
+			Result := text_alignment.bit_test (2) = True
 		end
 
 	is_right_aligned: BOOLEAN is
-			-- Is `Current' right aligned?
+			-- Is `text' of `Current' right aligned?
 		require
 			not_destroyed: not is_destroyed
 		do
-			Result := text_alignment = {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_right
+			Result := text_alignment.bit_test (3) = True
+		end
+
+	is_top_aligned: BOOLEAN is
+			-- Is `text' of `Current' top aligned?
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := text_alignment.bit_test (4) = True
+		end
+		
+	is_vertically_center_aligned: BOOLEAN is
+			-- Is `text' of `Current' vertically center aligned?
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := text_alignment.bit_test (5) = True
+		end
+
+	is_bottom_aligned: BOOLEAN is
+			-- Is `text' of `Current' bottom aligned?
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := text_alignment.bit_test (6) = True
 		end
 
 	layout_procedure: PROCEDURE [ANY, TUPLE [EV_GRID_LABEL_ITEM, EV_GRID_LABEL_ITEM_LAYOUT]]
@@ -336,6 +406,15 @@ feature {EV_ANY, EV_ANY_I, EV_GRID_DRAWER_I} -- Implementation
 
 	implementation: EV_GRID_LABEL_ITEM_I
 			-- Responsible for interaction with native graphics toolkit.
+
+	text_alignment: INTEGER
+			-- Current alignment for internal use only.
+			-- Bit 1 set to 1 if left aligned
+			-- Bit 2 set to 1 if center aligned
+			-- Bit 3 set to 1 if right aligned
+			-- Bit 4 set to 1 if top aligned
+			-- Bit 5 set to 1 if vertically center aligned
+			-- Bit 6 set to 1 if bottom aligned
 			
 feature {NONE} -- Implementation
 

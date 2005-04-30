@@ -383,7 +383,7 @@ feature -- Access
 			viewable_y_offset_valid: Result >=0 and Result <= height
 		end
 
-feature -- Status setting
+feature -- Pick and Drop
 
 	item_accepts_pebble (a_item: EV_GRID_ITEM; a_pebble: ANY): BOOLEAN is
 			-- Do any actions accept `a_pebble' for `a_item'.
@@ -425,7 +425,31 @@ feature -- Status setting
 			-- Assign `a_function' to `item_veto_pebble_function'.
 		do
 			item_veto_pebble_function := a_function
+		ensure
+			item_veto_pebble_function_set: item_veto_pebble_function = a_function
 		end
+
+	set_item_accept_cursor_function (a_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], EV_CURSOR]) is
+			-- Assign `a_function' to `item_accept_cursor_function'.
+		do
+			item_accept_cursor_function := a_function
+		ensure
+			item_accept_cursor_function_set: item_accept_cursor_function = a_function
+		end
+
+	item_accept_cursor_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], EV_CURSOR]
+			-- Function used to retrieve the PND accept cursor for a particular item.
+
+	set_item_deny_cursor_function (a_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], EV_CURSOR]) is
+			-- Assign `a_function' to `item_deny_cursor_function'.
+		do
+			item_deny_cursor_function := a_function
+		ensure
+			item_deny_cursor_function_set: item_deny_cursor_function = a_function
+		end
+
+	item_deny_cursor_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], EV_CURSOR]
+			-- Function used to retrieve the PND deny cursor for a particular item.
 
 	drop_action_intermediary (a_pebble: ANY) is
 			-- A PND drop has occured on a grid item.
@@ -489,6 +513,7 @@ feature -- Status setting
 		local
 			item_imp: EV_GRID_ITEM_I
 			item_int: EV_GRID_ITEM
+			a_cursor: EV_CURSOR
 		do
 				-- Find item if any at (a_x, a_y) then call user pebble function.
 			if a_x >= 0 and then a_y >= 0 then
@@ -501,7 +526,24 @@ feature -- Status setting
 			if item_pebble_function /= Void then
 				Result := item_pebble_function.item ([item_int])
 			end
+
+			if Result /= Void then
+				if item_accept_cursor_function /= Void then
+					a_cursor := item_accept_cursor_function.item ([item_int])
+					if a_cursor /= Void then
+						drawable.set_accept_cursor (a_cursor)
+					end
+				end
+				if item_deny_cursor_function /= Void then
+					a_cursor := item_deny_cursor_function.item ([item_int])
+					if a_cursor /= Void then
+						drawable.set_deny_cursor (a_cursor)
+					end
+				end
+			end
 		end
+
+feature -- Status setting
 
 	item_pebble_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], ANY]
 		-- User pebble function

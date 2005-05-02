@@ -155,23 +155,26 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 				space_remaining_for_text := client_width - pixmap_width - spacing_used
 				space_remaining_for_text_vertical := client_height
 
+					-- Note in the following text positioning calculations, we subtract 1 from
+					-- the calculation as this accounts for the 0-based drawing positions.
 				if interface.text /= Void and space_remaining_for_text > 0 then
 					if interface.is_left_aligned then
 						text_offset_into_available_space := 0
 					elseif interface.is_right_aligned then
-						text_offset_into_available_space := space_remaining_for_text - internal_text_width
+						text_offset_into_available_space := space_remaining_for_text - internal_text_width - 1
 					else
-						text_offset_into_available_space := space_remaining_for_text - internal_text_width
+						text_offset_into_available_space := space_remaining_for_text - internal_text_width - 1
 						if text_offset_into_available_space /= 0 then
 							text_offset_into_available_space := text_offset_into_available_space // 2
 						end
 					end
+					print ("internal_text_width : " + internal_text_width.out)
 					if interface.is_top_aligned then
 						vertical_text_offset_into_available_space := 0
 					elseif interface.is_bottom_aligned then
-						vertical_text_offset_into_available_space := space_remaining_for_text_vertical - internal_text_height
+						vertical_text_offset_into_available_space := space_remaining_for_text_vertical - internal_text_height - 1
 					else
-						vertical_text_offset_into_available_space := space_remaining_for_text_vertical - internal_text_height
+						vertical_text_offset_into_available_space := space_remaining_for_text_vertical - internal_text_height - 1
 						if vertical_text_offset_into_available_space /= 0 then
 							vertical_text_offset_into_available_space := vertical_text_offset_into_available_space // 2
 						end

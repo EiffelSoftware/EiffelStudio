@@ -57,6 +57,7 @@ feature {NONE} -- Initialization
 			set_left_border (2)
 			set_spacing (2)
 			align_text_left
+			align_text_vertically_center
 			Precursor {EV_GRID_ITEM}
 		end
 
@@ -423,7 +424,7 @@ feature {NONE} -- Contract support
 		do
 			Result := Precursor {EV_GRID_ITEM} and text.is_empty and pixmap = Void and
 				left_border = 2 and right_border = 0 and top_border = 0 and bottom_border = 0
-				and spacing = 2 and is_left_aligned
+				and spacing = 2 and is_left_aligned and is_vertically_center_aligned
 		end
 
 feature {EV_ANY, EV_ANY_I, EV_GRID_DRAWER_I} -- Implementation

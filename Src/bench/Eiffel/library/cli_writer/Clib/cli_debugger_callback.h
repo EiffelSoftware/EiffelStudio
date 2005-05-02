@@ -96,6 +96,10 @@ EXTERN_C const IID IID_ICorDebugManagedCallback2;
             /* [in] */ ICorDebugAppDomain *pAppDomain,
             /* [in] */ ICorDebugThread *pThread,
             /* [in] */ ICorDebugFunction *pFunction) = 0;
+        virtual HRESULT STDMETHODCALLTYPE MDANotification( 
+            /* [in] */ ICorDebugController *pController,
+            /* [in] */ ICorDebugThread *pThread,
+            /* [in] */ ICorDebugMDA *pMDA) = 0;
         
     };
 
@@ -304,6 +308,11 @@ public:
     COM_METHOD FunctionRemapComplete(ICorDebugAppDomain *pAppDomain,
                                      ICorDebugThread *pThread,
                                      ICorDebugFunction *pFunction);
+
+
+	COM_METHOD MDANotification(/* [in] */ ICorDebugController *pController,
+								/* [in] */ ICorDebugThread *pThread,
+								/* [in] */ ICorDebugMDA *pMDA);
 
 protected:
     long        m_refCount;

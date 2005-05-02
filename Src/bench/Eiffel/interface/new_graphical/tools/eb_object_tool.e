@@ -505,7 +505,6 @@ feature -- Status report
 			-- I.e. is the selected object, if any, a top-level object different from the current object?
 		local
 			str: STRING
-			item: EV_TREE_NODE
 		do
 			str := selected_object_address
 			if str /= Void then

@@ -94,9 +94,8 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 			pixmap_width: INTEGER
 			pixmap_height: INTEGER
 			left_border, right_border, top_border, bottom_border, spacing_used: INTEGER
-			space_remaining_for_text: INTEGER
-			text_offset_into_available_space: INTEGER
-			text_alignment: INTEGER
+			space_remaining_for_text, space_remaining_for_text_vertical: INTEGER
+			text_offset_into_available_space, vertical_text_offset_into_available_space: INTEGER
 			client_x, client_y, client_width, client_height: INTEGER
 			text_x, text_y: INTEGER
 			pixmap_x, pixmap_y: INTEGER
@@ -133,6 +132,7 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 				pixmap_y := grid_label_item_layout.pixmap_y
 				
 				space_remaining_for_text := grid_label_item_layout.grid_label_item.width - text_x
+				space_remaining_for_text_vertical := grid_label_item_layout.grid_label_item.height - text_y
 			else
 					-- Retrieve properties from interface.
 				l_pixmap := interface.pixmap
@@ -153,6 +153,7 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 				end
 	
 				space_remaining_for_text := client_width - pixmap_width - spacing_used
+				space_remaining_for_text_vertical := client_height
 
 				if interface.text /= Void and space_remaining_for_text > 0 then
 					if interface.is_left_aligned then
@@ -165,11 +166,21 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 							text_offset_into_available_space := text_offset_into_available_space // 2
 						end
 					end
+					if interface.is_top_aligned then
+						vertical_text_offset_into_available_space := 0
+					elseif interface.is_bottom_aligned then
+						vertical_text_offset_into_available_space := space_remaining_for_text_vertical - internal_text_height
+					else
+						vertical_text_offset_into_available_space := space_remaining_for_text_vertical - internal_text_height
+						if vertical_text_offset_into_available_space /= 0 then
+							vertical_text_offset_into_available_space := vertical_text_offset_into_available_space // 2
+						end
+					end
 				end
 				text_x := left_border + pixmap_width + spacing_used + text_offset_into_available_space
-				text_y := top_border
+				text_y := top_border + vertical_text_offset_into_available_space
 				pixmap_x := left_border
-				pixmap_y := right_border
+				pixmap_y := top_border + (client_height - pixmap_height) // 2
 			end
 
 			buffer_pixmap.set_copy_mode

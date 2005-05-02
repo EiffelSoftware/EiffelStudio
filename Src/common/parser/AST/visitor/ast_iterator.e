@@ -401,6 +401,12 @@ feature {NONE} -- Implementation
 				-- Nothing to be done
 		end
 
+	process_feature_name_alias_as (l_as: FEATURE_NAME_ALIAS_AS) is
+			-- Process `l_as'.
+		do
+				-- Nothing to be done.
+		end
+
 	process_feature_list_as (l_as: FEATURE_LIST_AS) is
 		do
 			l_as.features.process (Current)

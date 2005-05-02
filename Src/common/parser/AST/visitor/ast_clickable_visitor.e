@@ -13,6 +13,7 @@ inherit
 			process_feature_as,
 			process_infix_prefix_as,
 			process_feat_name_id_as,
+			process_feature_name_alias_as,
 			process_class_as,
 			process_class_type_as,
 			process_rename_as,
@@ -89,6 +90,14 @@ feature {NONE} -- Implementation
 		end
 
 	process_feat_name_id_as (l_as: FEAT_NAME_ID_AS) is
+		local
+			l_click_ast: CLICK_AST
+		do
+			create l_click_ast.initialize (l_as, l_as)
+			internal_click_list.extend (l_click_ast)
+		end
+
+	process_feature_name_alias_as (l_as: FEATURE_NAME_ALIAS_AS) is
 		local
 			l_click_ast: CLICK_AST
 		do

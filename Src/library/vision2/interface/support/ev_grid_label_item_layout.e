@@ -11,17 +11,8 @@ indexing
 class
 	EV_GRID_LABEL_ITEM_LAYOUT
 
-feature {EV_GRID_LABEL_ITEM_I}
-
-	make_with_grid_label_item (a_grid_label_item: EV_GRID_LABEL_ITEM) is
-			-- Create `Current' and assign `a_grid_label_item' to `grid_label_item'.
-		require
-			a_grid_label_item_not_void: a_grid_label_item /= Void
-		do
-			grid_label_item := a_grid_label_item
-		ensure			
-			grid_label_item_set: grid_label_item = a_grid_label_item
-		end
+create {EV_ANY_I}
+	default_create
 		
 feature -- Access
 
@@ -76,6 +67,16 @@ feature -- Status Setting
 			text_y := a_text_y
 		ensure
 			text_y_set: text_y = a_text_y
+		end
+
+feature {EV_ANY_I} -- Implementation
+
+	set_grid_label_item (a_grid_label_item: EV_GRID_LABEL_ITEM) is
+			-- Assign `a_grid_label_item' to `grid_label_item'.
+		do
+			grid_label_item := a_grid_label_item
+		ensure
+			grid_label_item_set: grid_label_item =  a_grid_label_item
 		end
 		
 end

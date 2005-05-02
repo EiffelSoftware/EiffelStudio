@@ -554,9 +554,8 @@ feature -- Basic Operations
 	class_c_to_complete_from (token: EDITOR_TOKEN; cursor: TEXT_CURSOR; a_compiled_class: CLASS_C; recurse, two_back: BOOLEAN): CLASS_C is
 			-- Class type to complete on from `token'
 		local
-			prev_token			: EDITOR_TOKEN			
-			type				: TYPE_A		
-			eol 				: EDITOR_TOKEN_EOL
+			prev_token: EDITOR_TOKEN
+			type: TYPE_A
 			gone_back_two: BOOLEAN
 		do			
 			exploring_current_class := False				
@@ -610,41 +609,41 @@ feature -- Basic Operations
 			end
 		end
 
-calculate_insertion (cursor: TEXT_CURSOR; token: EDITOR_TOKEN) is
-		--
-	local
-		prev_token: EDITOR_TOKEN	
-	do
-		insertion_remainder := 0
-		if can_attempt_auto_complete_from_token (token) then
-			if token.is_text then
-					-- The cursor is in a text token so we complete based upon the previous token unless the cursor
-					-- is somewhere inside this token..
-				if cursor.pos_in_token > 1 then
-					insertion.put (token.image.substring (1, cursor.pos_in_token - 1))
-						insertion_remainder := token.length - (cursor.pos_in_token - 1)
-				else
-					prev_token := token.previous
-					if prev_token /= Void then
-						if token_image_is_in_array (token, Feature_call_separators) then
-								-- Token is dot or tilda.  Do nothing.
-						elseif token_image_is_in_array (prev_token, Feature_call_separators) then
-								-- Previous token is a dot or tilda so use thie token for insertion
-							insertion.put (token.image.substring (1, cursor.pos_in_token - 1))
-							insertion_remainder := token.length - cursor.pos_in_token
-						elseif prev_token.is_text then
-							insertion.put (prev_token.image)
+	calculate_insertion (cursor: TEXT_CURSOR; token: EDITOR_TOKEN) is
+			--
+		local
+			prev_token: EDITOR_TOKEN	
+		do
+			insertion_remainder := 0
+			if can_attempt_auto_complete_from_token (token) then
+				if token.is_text then
+						-- The cursor is in a text token so we complete based upon the previous token unless the cursor
+						-- is somewhere inside this token..
+					if cursor.pos_in_token > 1 then
+						insertion.put (token.image.substring (1, cursor.pos_in_token - 1))
+							insertion_remainder := token.length - (cursor.pos_in_token - 1)
+					else
+						prev_token := token.previous
+						if prev_token /= Void then
+							if token_image_is_in_array (token, Feature_call_separators) then
+									-- Token is dot or tilda.  Do nothing.
+							elseif token_image_is_in_array (prev_token, Feature_call_separators) then
+									-- Previous token is a dot or tilda so use thie token for insertion
+								insertion.put (token.image.substring (1, cursor.pos_in_token - 1))
+								insertion_remainder := token.length - cursor.pos_in_token
+							elseif prev_token.is_text then
+								insertion.put (prev_token.image)
+							end
 						end
 					end
-				end
-			else
-					-- The token is not text so the insertion must be taken from the previous token IF that is text
-				if token.previous /= Void and then token.previous.is_text and then not token_image_is_in_array (token.previous, feature_call_separators) then
-					insertion.put (token.previous.image)
+				else
+						-- The token is not text so the insertion must be taken from the previous token IF that is text
+					if token.previous /= Void and then token.previous.is_text and then not token_image_is_in_array (token.previous, feature_call_separators) then
+						insertion.put (token.previous.image)
+					end
 				end
 			end
 		end
-	end
 
 feature -- Class names completion
 

@@ -623,6 +623,9 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 \""\\\\"\"	{
 				last_token := TE_STR_MOD
 			}
+\""[]"\"	{
+				last_token := TE_STR_BRACKET
+			}
 \"[aA][nN][dD]\"	{
 				token_buffer.clear_all
 				append_text_substring_to_string (2, 4, token_buffer)

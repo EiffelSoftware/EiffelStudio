@@ -74,7 +74,7 @@ create
 %token		TE_STR_PLUS TE_STR_STAR TE_STR_SLASH TE_STR_MOD
 %token		TE_STR_DIV TE_STR_POWER TE_STR_AND TE_STR_AND_THEN
 %token		TE_STR_IMPLIES TE_STR_OR TE_STR_OR_ELSE TE_STR_XOR
-%token		TE_STR_NOT TE_STR_FREE
+%token		TE_STR_NOT TE_STR_FREE TE_STR_BRACKET
 
 %type <ACCESS_AS>			Creation_target A_feature
 %type <ACCESS_FEAT_AS>		Feature_access
@@ -133,13 +133,13 @@ create
 %type <ROUTINE_AS>			Routine
 %type <ROUTINE_CREATION_AS>	Agent_call
 %type <PAIR[ROUTINE_CREATION_AS, LOCATION_AS]> Tilda_agent_call
-%type <STRING_AS>			Obsolete Manifest_string External_name Non_empty_string Default_manifest_string Typed_manifest_string Infix_operator Prefix_operator
+%type <STRING_AS>			Obsolete Manifest_string External_name Non_empty_string Default_manifest_string Typed_manifest_string Infix_operator Prefix_operator Alias Alias_name
 %type <TAGGED_AS>			Assertion_clause
 %type <TUPLE_AS>			Manifest_tuple
 %type <TYPE_AS>				Type Class_type Creation_type Non_class_type Typed
 %type <TYPE_DEC_AS>			Entity_declaration_group
 %type <VARIANT_AS>			Variant
-%type <FEATURE_NAME>		Infix Prefix Feature_name New_feature
+%type <FEATURE_NAME>		Infix Prefix Feature_name Extended_feature_name New_feature
 
 %type <EIFFEL_LIST [ATOMIC_AS]>			Index_terms
 %type <EIFFEL_LIST [CASE_AS]>			When_part_list_opt When_part_list
@@ -171,7 +171,7 @@ create
 
 %type <PAIR [TYPE_AS, EIFFEL_LIST [FEATURE_NAME]]>	Constraint
 
-%expect 97
+%expect 98
 
 %%
 
@@ -576,7 +576,7 @@ New_feature_list: New_feature
 			}
 	;
 
-New_feature: Feature_name_mark Feature_name
+New_feature: Feature_name_mark Extended_feature_name
 			{ $$ := $2 }
 	;
 
@@ -584,6 +584,12 @@ Feature_name_mark: -- Empty
 			{ is_frozen := False }
 	|	TE_FROZEN
 			{ is_frozen := True }
+	;
+
+Extended_feature_name: Feature_name
+			{ $$ := $1 }
+	|	Identifier_as_lower Alias
+			{ $$ := ast_factory.new_feature_name_alias_as ($1, $2, is_frozen, has_convert_mark) }
 	;
 
 Feature_name: Identifier_as_lower
@@ -601,6 +607,26 @@ Infix: TE_INFIX Infix_operator
 
 Prefix: TE_PREFIX Prefix_operator
 			{ $$ := ast_factory.new_prefix_as ($2, is_frozen) }
+	;
+
+Alias: TE_ALIAS Alias_name Alias_mark
+			{
+				$$ := $2
+			}
+	;
+
+Alias_name: Infix_operator
+			{ $$ := $1 }
+	|	TE_STR_NOT
+			{ $$ := new_not_string }
+	|	TE_STR_BRACKET
+			{ $$ := new_bracket_string }
+	;
+
+Alias_mark: -- Empty
+			{ has_convert_mark := False }
+	|	TE_CONVERT
+			{ has_convert_mark := True }
 	;
 
 Declaration_body: TE_COLON Type Dotnet_indexing
@@ -2312,6 +2338,8 @@ Non_empty_string: TE_STRING
 			{ $$ := new_div_string }
 	|	TE_STR_POWER
 			{ $$ := new_power_string }
+	|	TE_STR_BRACKET
+			{ $$ := new_bracket_string }
 	|	TE_STR_AND
 			{ $$ := new_string (cloned_string (token_buffer)) }
 	|	TE_STR_AND_THEN

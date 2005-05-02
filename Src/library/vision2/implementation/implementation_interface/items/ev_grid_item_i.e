@@ -29,6 +29,9 @@ inherit
 		end
 
 	HASHABLE
+		rename
+			hash_code as item_id
+		end
 
 create
 	make
@@ -51,27 +54,29 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	background_color: EV_COLOR is
-			-- Background color of current item
+			-- Background color of current item.
 		do
+			fixme ("Update to not create new objects when no color is set")
 			if internal_background_color /= Void then
-				Result := internal_background_color.twin
-			else
-				create Result
+				Result := internal_background_color
+			else	
+				create Result.make_with_rgb (1.0, 1.0, 1.0)
 			end
 		end
 
 	foreground_color: EV_COLOR is
-			-- Foreground color of current item
+			-- Foreground color of current item.
 		do
+			fixme ("Update to not create new objects when no color is set")
 			if internal_foreground_color /= Void then
-				Result := internal_foreground_color.twin
+				Result := internal_foreground_color
 			else
 				create Result
 			end
 		end
 
 	column: EV_GRID_COLUMN is
-			-- Column to which current item belongs
+			-- Column to which current item belongs.
 		require
 			is_parented: is_parented
 		do
@@ -81,7 +86,7 @@ feature -- Access
 		end
 
 	parent: EV_GRID is
-			-- Grid to which `Current' is displayed in
+			-- Grid to which `Current' is displayed in.
 		do
 			if parent_i /= Void then
 				Result := parent_i.interface
@@ -89,7 +94,7 @@ feature -- Access
 		end
 
 	row: EV_GRID_ROW is
-			-- Row to which current item belongs
+			-- Row to which current item belongs.
 		require
 			parented: is_parented
 		do
@@ -162,7 +167,7 @@ feature -- Access
 feature -- Status setting
 
 	activate is
-			-- Setup `Current' for user interactive editing
+			-- Setup `Current' for user interactive editing.
 		require
 			parented: is_parented
 		do
@@ -170,7 +175,7 @@ feature -- Status setting
 		end
 
 	deactivate is
-			-- Cleanup from previous call to `activate'
+			-- Cleanup from previous call to `activate'.
 		require
 			parented: is_parented
 		do
@@ -181,6 +186,7 @@ feature -- Status setting
 			-- Set `is_selected' `True'.
 		do
 			enable_select_internal
+				-- Request that `Current' be redrawn
 			parent_i.redraw_item (Current)
 		end
 
@@ -188,6 +194,7 @@ feature -- Status setting
 			-- Set `is_selected' `False'.
 		do
 			disable_select_internal
+				-- Request that `Current' be redrawn
 			parent_i.redraw_item (Current)
 		end
 		
@@ -232,13 +239,13 @@ feature -- Status report
 	is_selectable: BOOLEAN is
 			-- Is `Current' selectable?
 		do
-			Result := parent_i /= Void
+			Result := is_parented
 		end
 
 feature -- Element change
 
 	set_foreground_color (a_color: like foreground_color) is
-			-- Set `foreground_color' with `a_color'
+			-- Set `foreground_color' with `a_color'.
 		do
 			internal_foreground_color := a_color.twin
 			if parent /= Void then
@@ -247,7 +254,7 @@ feature -- Element change
 		end
 
 	set_background_color (a_color: like background_color) is
-			-- Set `background_color' with `a_color'
+			-- Set `background_color' with `a_color'.
 		do
 			internal_background_color := a_color.twin
 			if parent /= Void then
@@ -299,7 +306,7 @@ feature {EV_GRID_I, EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I} -- Implemen
 feature {EV_GRID_I} -- Implementation
 
 	set_parents (a_parent_i: EV_GRID_I; a_column_i: EV_GRID_COLUMN_I; a_row_i: EV_GRID_ROW_I; a_item_id: INTEGER) is
-			-- Set the appropriate grid, column and row parents
+			-- Set the appropriate grid, column and row parents along with item_id to identify `Current' within grid.
 		require
 			a_parent_i_not_void: a_parent_i /= Void
 			a_column_i_not_void: a_column_i /= Void
@@ -338,16 +345,17 @@ feature {EV_GRID_I} -- Implementation
 feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_ITEM_I} -- Implementation
 
 	item_id: INTEGER
-		-- Number to uniquely identify grid item within `parent_i'
+		-- Number used for hashing to uniquely identify grid item within `parent_i'.
+		-- Should be set to -1 if `Current' is not parented.
 
 	parent_i: EV_GRID_I
 		-- Grid that `Current' resides in if any.
 
 	column_i: EV_GRID_COLUMN_I
-		-- Grid column that `Current' resides in if any
+		-- Grid column that `Current' resides in if any.
 
 	row_i: EV_GRID_ROW_I
-		-- Grid row that `Current' resides in if any
+		-- Grid row that `Current' resides in if any.
 		
 feature {NONE} -- Implementation
 
@@ -360,10 +368,10 @@ feature {NONE} -- Implementation
 feature {EV_GRID_DRAWER_I} -- Implementation
 
 	internal_background_color: EV_COLOR
-		-- Foreground color used for `Current'
+		-- Foreground color used for `Current'.
 	
 	internal_foreground_color: EV_COLOR
-		-- Background color used for `Current'
+		-- Background color used for `Current'.
 		
 	perform_redraw (an_x, a_y, a_width, a_height: INTEGER; drawable: EV_DRAWABLE) is
 			-- Redraw `Current'.
@@ -373,14 +381,8 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	hash_code: INTEGER is
-			-- Hash code value
-		do
-			Result := item_id
-		end
-
 	set_default_colors is
-			-- Reset the colors used to display `Current'
+			-- Reset the colors used to display `Current'.
 		do
 			internal_background_color := Void
 			internal_foreground_color := Void
@@ -395,7 +397,8 @@ feature {EV_ANY_I, EV_GRID_DRAWER_I} -- Implementation
 invariant
 	is_parented_implies_parents_set: is_parented implies parent_i /= Void and then column_i /= Void and then row_i /= Void
 	not_is_parented_implies_parents_not_set: not is_parented implies parent_i = Void and then column_i = Void and then row_i = Void
-			
+	not_is_parented_implies_item_id_is_minus_1: is_initialized and then not is_parented implies item_id = -1
+
 end
 
 --|----------------------------------------------------------------

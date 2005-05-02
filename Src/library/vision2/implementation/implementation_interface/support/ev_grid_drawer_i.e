@@ -712,7 +712,7 @@ feature -- Basic operations
 									end
 								end
 								if current_tree_adjusted_item_x_position - current_item_x_position < current_column_width then
-									grid_item.redraw (current_tree_adjusted_item_x_position, current_item_y_position, current_tree_adjusted_column_width, current_row_height, grid.drawable)
+									grid_item.perform_redraw (current_tree_adjusted_item_x_position, current_item_y_position, current_tree_adjusted_column_width, current_row_height, grid.drawable)
 								end
 							else
 									-- Calculate a translated parent x indent to include the subrow indent of

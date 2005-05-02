@@ -1720,840 +1720,853 @@ feature -- Stone process
 					cd.set_ok_action (agent set_stone_after_first_check (a_stone))
 					cd.show_modal_to_window (window)
 				end
+			else
+				set_stone_after_first_check (a_stone)
 			end
 		end
 
-set_stone_after_first_check (a_stone: STONE) is
-		-- Display text associated with `a_stone', if any and if possible
-	local
-		feature_stone: FEATURE_STONE
-		old_class_stone: CLASSI_STONE
-		test_stone: CLASSI_STONE
-		same_class: BOOLEAN
-		conv_ferrst: FEATURE_ERROR_STONE
-		ef_stone: EXTERNAL_FILE_STONE
-	do
-		old_class_stone ?= stone
-		feature_stone ?= a_stone
-		ef_stone ?= a_stone
-		if old_class_stone /= Void then
-			create test_stone.make (old_class_stone.class_i)
-			same_class := test_stone.same_as (a_stone)
-				-- We need to compare classes. If `old_class_stone' is a FEATURE_STONE
-				-- `same_as' will compare features. Therefore, we need `test_stone' to be sure
-				-- we have a CLASSI_STONE.
-			if same_class and then feature_stone /= Void then
-				same_class := False
-					-- if the stone corresponding to a feature of currently opened class is dropped
-					-- we attempt to scroll to the feature without asking to save the file
-					-- except if it is during a resynchronization, in which case we do not scroll at all.
-				if editor_tool.text_area.text_is_fully_loaded then
-					if not during_synchronization then
-						editor_tool.text_area.find_feature_named (feature_stone.feature_name)
-						feature_stone_already_processed := editor_tool.text_area.found_feature
-					else
-						feature_stone_already_processed := True
-					end
-					conv_ferrst ?= feature_stone
-					if feature_stone_already_processed and conv_ferrst /= Void then
-							-- Scroll to the line of the error.
+	set_stone_after_first_check (a_stone: STONE) is
+			-- Display text associated with `a_stone', if any and if possible
+		local
+			feature_stone: FEATURE_STONE
+			old_class_stone: CLASSI_STONE
+			test_stone: CLASSI_STONE
+			same_class: BOOLEAN
+			conv_ferrst: FEATURE_ERROR_STONE
+			ef_stone: EXTERNAL_FILE_STONE
+		do
+			old_class_stone ?= stone
+			feature_stone ?= a_stone
+			ef_stone ?= a_stone
+			if old_class_stone /= Void then
+				create test_stone.make (old_class_stone.class_i)
+				same_class := test_stone.same_as (a_stone)
+					-- We need to compare classes. If `old_class_stone' is a FEATURE_STONE
+					-- `same_as' will compare features. Therefore, we need `test_stone' to be sure
+					-- we have a CLASSI_STONE.
+				if same_class and then feature_stone /= Void then
+					same_class := False
+						-- if the stone corresponding to a feature of currently opened class is dropped
+						-- we attempt to scroll to the feature without asking to save the file
+						-- except if it is during a resynchronization, in which case we do not scroll at all.
+					if editor_tool.text_area.text_is_fully_loaded then
 						if not during_synchronization then
-							editor_tool.text_area.display_line_when_ready (conv_ferrst.line_number, True)
+							editor_tool.text_area.find_feature_named (feature_stone.feature_name)
+							feature_stone_already_processed := editor_tool.text_area.found_feature
+						else
+							feature_stone_already_processed := True
+						end
+						conv_ferrst ?= feature_stone
+						if feature_stone_already_processed and conv_ferrst /= Void then
+								-- Scroll to the line of the error.
+							if not during_synchronization then
+								editor_tool.text_area.display_line_when_ready (conv_ferrst.line_number, True)
+							end
 						end
 					end
 				end
+			elseif ef_stone /= Void then
+				
+				
 			end
-		elseif ef_stone /= Void then
 			
-			
-		end
-		
-			-- first, let's check if there is already something in this window
-			-- if there's nothing, there's no need to save anything...
-		if stone = Void or else not changed or else feature_stone_already_processed or else same_class then
-			set_stone_after_check (a_stone)
-			feature_stone_already_processed := False
-		else
-				-- there is something to be saved
-				-- if user chooses to save, current file will be parsed
-				-- if there is a syntax_error, new file is not loaded 
-			save_and (agent set_stone_after_check (a_stone))
-			if text_saved and then not syntax_is_correct then
-				text_saved := False
-				during_synchronization := True
-				set_stone_after_check (stone)
-				during_synchronization := False
-				address_manager.refresh
+				-- first, let's check if there is already something in this window
+				-- if there's nothing, there's no need to save anything...
+			if stone = Void or else not changed or else feature_stone_already_processed or else same_class then
+				set_stone_after_check (a_stone)
+				feature_stone_already_processed := False
+			else
+					-- there is something to be saved
+					-- if user chooses to save, current file will be parsed
+					-- if there is a syntax_error, new file is not loaded 
+				save_and (agent set_stone_after_check (a_stone))
+				if text_saved and then not syntax_is_correct then
+					text_saved := False
+					during_synchronization := True
+					set_stone_after_check (stone)
+					during_synchronization := False
+					address_manager.refresh
+				end
 			end
 		end
-	end
 
-force_stone (s: STONE) is
-		-- make `s' the new value of `stone', and
-		-- change the display accordingly. Try to
-		-- extract a class from `s' whenever possible.
-	do
-		if s.is_storable then
+	force_stone (s: STONE) is
+			-- make `s' the new value of `stone', and
+			-- change the display accordingly. Try to
+			-- extract a class from `s' whenever possible.
+		do
+			if s.is_storable then
+				set_stone (s)
+				if not unified_stone then
+					context_tool.advanced_set_stone (s)
+				end
+			end
+		end
+
+	process_class (s: CLASSI_STONE) is
+			-- Process class stone
+		do
 			set_stone (s)
-			if not unified_stone then
-				context_tool.advanced_set_stone (s)
+		end
+	 
+	process_feature_error (s: FEATURE_ERROR_STONE) is
+			-- Process feature error stone.
+		local
+			cl_stone: CLASSC_STONE
+			e_class: CLASS_C
+		do
+			set_default_format
+			e_class := s.e_feature.written_class
+			create cl_stone.make (e_class)
+			set_stone (cl_stone)
+			editor_tool.text_area.deselect_all
+			if s.line_number > 0 then
+				editor_tool.text_area.highlight_selected (s.line_number, s.line_number)
 			end
 		end
-	end
 
-process_class (s: CLASSI_STONE) is
-		-- Process class stone
-	do
-		set_stone (s)
-	end
- 
-process_feature_error (s: FEATURE_ERROR_STONE) is
-		-- Process feature error stone.
-	local
-		cl_stone: CLASSC_STONE
-		e_class: CLASS_C
-	do
-		set_default_format
-		e_class := s.e_feature.written_class
-		create cl_stone.make (e_class)
-		set_stone (cl_stone)
-		editor_tool.text_area.deselect_all
-		if s.line_number > 0 then
-			editor_tool.text_area.highlight_selected (s.line_number, s.line_number)
+
+	process_class_syntax (s: CL_SYNTAX_STONE) is
+			-- Process class syntax.
+		local
+			cl_stone: CLASSC_STONE
+		do
+				-- call set_stone to ensure the proper class is displayed
+			create cl_stone.make (s.e_class)
+			set_stone (cl_stone)
+			editor_tool.text_area.deselect_all
+			editor_tool.text_area.highlight_when_ready (s.line, s.line)
 		end
-	end
-
-
-process_class_syntax (s: CL_SYNTAX_STONE) is
-		-- Process class syntax.
-	local
-		cl_stone: CLASSC_STONE
-	do
-			-- call set_stone to ensure the proper class is displayed
-		create cl_stone.make (s.e_class)
-		set_stone (cl_stone)
-		editor_tool.text_area.deselect_all
-		editor_tool.text_area.highlight_when_ready (s.line, s.line)
-	end
- 
-refresh is
-		-- Synchronize clickable elements with text, if possible.
-	do
---| FIXME ARNAUD
---			synchronise_stone
---| END FIXME
---| FIXME XR: Refresh current display in the editor.
-		editor_tool.text_area.update_click_list (False)
-		update_save_symbol
-		address_manager.refresh
-			-- The cluster manager should already be refreshed by the window manager.
---			cluster_manager.refresh
---			context_tool.refresh
-	end
-
-quick_refresh is
-		-- Redraw the main editor's drawing area.
-	do
-		editor_tool.text_area.refresh
-		context_tool.quick_refresh
-	end
-
-set_default_format is
-		-- Default format of windows.
---| FIXME ARNAUD: To be implemented.
---		local
---			f: EB_FORMATTER
-	do
---			if stone /= Void then
---				if stone.class_i.hide_implementation then
---					f := format_list.precompiled_default_format
---				else
---					f := format_list.default_format
---				end
---			else
---				f := format_list.default_format
---			end
---			set_last_format (f)
---| END FIXME
-	end
-
-feature -- Resource Update
-
-update is
-		-- Update Current with the registered resources.
-	do
-		lock_update
-			-- Show/hide general toolbar
-		if preferences.development_window_data.show_general_toolbar then
-			show_general_toolbar_command.enable_visible
-		else
-			show_general_toolbar_command.disable_visible
+	 
+	refresh is
+			-- Synchronize clickable elements with text, if possible.
+		do
+	--| FIXME ARNAUD
+	--			synchronise_stone
+	--| END FIXME
+	--| FIXME XR: Refresh current display in the editor.
+			editor_tool.text_area.update_click_list (False)
+			update_save_symbol
+			address_manager.refresh
+				-- The cluster manager should already be refreshed by the window manager.
+	--			cluster_manager.refresh
+	--			context_tool.refresh
 		end
 
-			-- Show/hide address toolbar
-		if preferences.development_window_data.show_address_toolbar then
-			show_address_toolbar_command.enable_visible
-		else
-			show_address_toolbar_command.disable_visible
+	quick_refresh is
+			-- Redraw the main editor's drawing area.
+		do
+			editor_tool.text_area.refresh
+			context_tool.quick_refresh
 		end
 
-			-- Show/hide project toolbar
-		if preferences.development_window_data.show_project_toolbar then
-			show_project_toolbar_command.enable_visible
-		else
-			show_project_toolbar_command.disable_visible
+	set_default_format is
+			-- Default format of windows.
+	--| FIXME ARNAUD: To be implemented.
+	--		local
+	--			f: EB_FORMATTER
+		do
+	--			if stone /= Void then
+	--				if stone.class_i.hide_implementation then
+	--					f := format_list.precompiled_default_format
+	--				else
+	--					f := format_list.default_format
+	--				end
+	--			else
+	--				f := format_list.default_format
+	--			end
+	--			set_last_format (f)
+	--| END FIXME
 		end
 
-		left_panel.load_from_resource (preferences.development_window_data.left_panel_layout)
-		right_panel.load_from_resource (preferences.development_window_data.right_panel_layout)
-		splitter_position := preferences.development_window_data.left_panel_width
-		update_splitters
-		unlock_update
-	end
+	feature -- Resource Update
 
-update_splitters is
-		-- Refresh the position of the splitter on screen according to 
-		-- our internal values.
-	do
-			-- Set the interior layout
-		if panel.full then
-			panel.set_split_position (splitter_position.max (panel.minimum_split_position))
+	update is
+			-- Update Current with the registered resources.
+		do
+			lock_update
+				-- Show/hide general toolbar
+			if preferences.development_window_data.show_general_toolbar then
+				show_general_toolbar_command.enable_visible
+			else
+				show_general_toolbar_command.disable_visible
+			end
+
+				-- Show/hide address toolbar
+			if preferences.development_window_data.show_address_toolbar then
+				show_address_toolbar_command.enable_visible
+			else
+				show_address_toolbar_command.disable_visible
+			end
+
+				-- Show/hide project toolbar
+			if preferences.development_window_data.show_project_toolbar then
+				show_project_toolbar_command.enable_visible
+			else
+				show_project_toolbar_command.disable_visible
+			end
+
+			left_panel.load_from_resource (preferences.development_window_data.left_panel_layout)
+			right_panel.load_from_resource (preferences.development_window_data.right_panel_layout)
+			splitter_position := preferences.development_window_data.left_panel_width
+			update_splitters
+			unlock_update
 		end
-	end
 
-register is
-		-- Register to preferences we want notification of.
-	do
-	end
-
-unregister is
-		-- unregister to preferences we want notification of.
-	do
-	end
-
-reset is
-		-- Reset the window contents
-	do
-		Precursor
-		address_manager.reset
-
---| FIXME ARNAUD, multiformat not yet implemented.
---			format_list.enable_imp_formats_sensitive
---| END FIXME
-	end
-
-rebuild_tools_menu is
-		-- Refresh the list of external commands.
-	local
-		ms: LIST [EB_COMMAND_MENU_ITEM]
-	do
-			-- Remove all the external commands, which are at the end of the menu.
-		from
-			tools_menu.go_i_th (tools_menu.count + 1 - number_of_displayed_external_commands)
-		until
-			tools_menu.after
-		loop
-			tools_menu.remove
-		end
-		ms := Edit_external_commands_cmd.menus
-		number_of_displayed_external_commands := ms.count
-		from
-			ms.start
-		until
-			ms.after
-		loop
-			tools_menu.extend (ms.item)
-			add_recyclable (ms.item)
-			ms.forth
-		end
-	end
-
-syntax_is_correct: BOOLEAN is
-		-- file was successfully parsed.
-	do
-		Result := editor_tool.text_area.syntax_is_correct
-	end
-
-on_project_created is
-		-- Inform tools that the current project has been loaded or re-loaded.
-	do
-		build_menu_bar
-		enable_commands_on_project_created
-		context_tool.on_project_created
-		address_manager.on_project_created
-		if has_dll_generation then
-			show_dynamic_lib_tool.enable_sensitive
-		end
-		if has_profiler then
-			show_profiler.enable_sensitive
-		end
-	end
-
-on_project_loaded is
-		-- Inform tools that the current project has been loaded or re-loaded.
-	do
---			cluster_manager.on_project_loaded
-		enable_commands_on_project_loaded
-		cluster_tool.on_project_loaded
-		context_tool.on_project_loaded
-	end
-
-on_project_unloaded is
-		-- Inform tools that the current project will soon been unloaded.
-	do
---			cluster_manager.on_project_unloaded
-		disable_commands_on_project_unloaded
-		cluster_tool.on_project_unloaded
-		context_tool.on_project_unloaded
-		address_manager.on_project_unloaded
-		build_menu_bar
-		if has_dll_generation then
-			show_dynamic_lib_tool.disable_sensitive
-		end
-		if has_profiler then
-			show_profiler.disable_sensitive
-		end
-	end
-
-save_before_compiling is
-		-- save the text but do not update clickable positions
-	do
-		save_only := True
-		save_text
-	end
-
-perform_check_before_save is
-		-- Perform any pre-save operations/checks
-	local
-		dial: EV_CONFIRMATION_DIALOG
-	do
-		debug ("EDITOR")
-			if editor_tool.text_area.current_text /= Void and then changed then
-				io.error.put_string ("%N Warning: Attempting to save a non editable format%N")
+	update_splitters is
+			-- Refresh the position of the splitter on screen according to 
+			-- our internal values.
+		do
+				-- Set the interior layout
+			if panel.full then
+				panel.set_split_position (splitter_position.max (panel.minimum_split_position))
 			end
 		end
-		if changed then
-			editor_tool.text_area.strip_unwanted_indentation
+
+	register is
+			-- Register to preferences we want notification of.
+		do
 		end
-		if editor_tool.text_area.open_backup then
-			create dial.make_with_text(Warning_messages.w_Save_backup)
-			dial.set_buttons_and_actions(<<"Continue", "Cancel">>, <<agent continue_save, agent cancel_save>>)
-			dial.set_default_push_button(dial.button("Continue"))
-			dial.set_default_cancel_button(dial.button("Cancel"))
-			dial.set_title ("Save Backup")
-			dial.show_modal_to_window (window)
-		else
+
+	unregister is
+			-- unregister to preferences we want notification of.
+		do
+		end
+
+	reset is
+			-- Reset the window contents
+		do
+			Precursor
+			address_manager.reset
+
+	--| FIXME ARNAUD, multiformat not yet implemented.
+	--			format_list.enable_imp_formats_sensitive
+	--| END FIXME
+		end
+
+	rebuild_tools_menu is
+			-- Refresh the list of external commands.
+		local
+			ms: LIST [EB_COMMAND_MENU_ITEM]
+		do
+				-- Remove all the external commands, which are at the end of the menu.
+			from
+				tools_menu.go_i_th (tools_menu.count + 1 - number_of_displayed_external_commands)
+			until
+				tools_menu.after
+			loop
+				tools_menu.remove
+			end
+			ms := Edit_external_commands_cmd.menus
+			number_of_displayed_external_commands := ms.count
+			from
+				ms.start
+			until
+				ms.after
+			loop
+				tools_menu.extend (ms.item)
+				add_recyclable (ms.item)
+				ms.forth
+			end
+		end
+
+	syntax_is_correct: BOOLEAN is
+			-- file was successfully parsed.
+		do
+			Result := editor_tool.text_area.syntax_is_correct
+		end
+
+	on_project_created is
+			-- Inform tools that the current project has been loaded or re-loaded.
+		do
+			build_menu_bar
+			enable_commands_on_project_created
+			context_tool.on_project_created
+			address_manager.on_project_created
+			if has_dll_generation then
+				show_dynamic_lib_tool.enable_sensitive
+			end
+			if has_profiler then
+				show_profiler.enable_sensitive
+			end
+		end
+
+	on_project_loaded is
+			-- Inform tools that the current project has been loaded or re-loaded.
+		do
+	--			cluster_manager.on_project_loaded
+			enable_commands_on_project_loaded
+			cluster_tool.on_project_loaded
+			context_tool.on_project_loaded
+		end
+
+	on_project_unloaded is
+			-- Inform tools that the current project will soon been unloaded.
+		do
+	--			cluster_manager.on_project_unloaded
+			disable_commands_on_project_unloaded
+			cluster_tool.on_project_unloaded
+			context_tool.on_project_unloaded
+			address_manager.on_project_unloaded
+			build_menu_bar
+			if has_dll_generation then
+				show_dynamic_lib_tool.disable_sensitive
+			end
+			if has_profiler then
+				show_profiler.disable_sensitive
+			end
+		end
+
+	save_before_compiling is
+			-- save the text but do not update clickable positions
+		do
+			save_only := True
+			save_text
+		end
+
+	perform_check_before_save is
+			-- Perform any pre-save operations/checks
+		local
+			dial: EV_CONFIRMATION_DIALOG
+		do
+			debug ("EDITOR")
+				if editor_tool.text_area.current_text /= Void and then changed then
+					io.error.put_string ("%N Warning: Attempting to save a non editable format%N")
+				end
+			end
+			if changed then
+				editor_tool.text_area.strip_unwanted_indentation
+			end
+			if editor_tool.text_area.open_backup then
+				create dial.make_with_text(Warning_messages.w_Save_backup)
+				dial.set_buttons_and_actions(<<"Continue", "Cancel">>, <<agent continue_save, agent cancel_save>>)
+				dial.set_default_push_button(dial.button("Continue"))
+				dial.set_default_cancel_button(dial.button("Cancel"))
+				dial.set_title ("Save Backup")
+				dial.show_modal_to_window (window)
+			else
+				check_passed := True
+			end
+		end
+
+	continue_save is
+			-- continue saving
+		do
 			check_passed := True
 		end
-	end
 
-continue_save is
-		-- continue saving
-	do
-		check_passed := True
-	end
-
-cancel_save is
-		-- cancel saving
-	do
-		check_passed := False
-	end
-
-process is
-		-- process the user entry in the address bar
-	do
-		save_canceled := False
-	end
-
-on_text_saved is
-		-- Notify the editor that the text has been saved
-	local
-		str: STRING
-	do
-		Precursor
-		editor_tool.on_text_saved
-		text_saved := True
-		if not save_only then
-			editor_tool.text_area.update_click_list (True)
+	cancel_save is
+			-- cancel saving
+		do
+			check_passed := False
 		end
-		save_only := False
-		str := title.twin
-		if str @ 1 = '*' then
-			str.keep_tail (str.count - 2)
-			set_title (str)
+
+	process is
+			-- process the user entry in the address bar
+		do
+			save_canceled := False
 		end
-		update_formatters
-		if editor_tool.text_area.syntax_is_correct then
-			status_bar.display_message ("")
-		else
-			status_bar.display_message (Interface_names.L_syntax_error)
-		end
-		text_edited := False
-	end
 
-save_and (an_action: PROCEDURE [ANY, TUPLE]) is
-	local
-		save_dialog: EB_CONFIRM_SAVE_DIALOG
-	do
-		save_canceled := True
-		text_saved := False
-		create save_dialog.make_and_launch (Current,Current)
-		if not save_canceled and then syntax_is_correct then
-			an_action.call(Void)
-		end
-	end
-
-feature -- Window management
-
-show_window is
-		-- Show the window
-	do
-		show
-	end
-
-raise_window is
-		-- Show the window and set the focus to it.
-	do
-		show
-		--| FIXME, set the focus.
-	end
-
-hide_window is
-		-- Hide the window
-	do
-		hide
-	end
-
-destroy_window is
-		-- Destroy the window.
-	do
-		destroy
-	end
-
-give_focus is
-		-- Give the focus to the address manager.
-	do
-		address_manager.set_focus
-	end
-	
-save_layout is
-		-- Store layout of `current'.
-	do
-			-- Now save the windows's layout, but only if the
-			-- debugger is not displayed in `Current'. By saving the layout,
-			-- we ensure that future windows may use exactly the same layout.
-			-- If the debugger is displayed, the previopus layout is already saved,
-			-- and this is the one that must be used, as only one debugger is ever displayed.
-		if (Application.is_running and debugger_manager.debugging_window /= Current) or not application.is_running then
-			preferences.development_window_data.save_left_panel_layout (left_panel.save_to_resource)
-			preferences.development_window_data.save_right_panel_layout (right_panel.save_to_resource)
-			preferences.development_window_data.save_left_panel_width (panel.split_position)
-				-- Save width & height.
-			preferences.development_window_data.save_size (window.width, window.height, window.is_maximized)
-		end
-		preferences.development_window_data.save_search_tool_options (search_tool)
-			-- Commit saves
---			save_resources
-	end
-
-feature -- Tools & Controls
-
-editor_tool: EB_EDITOR_TOOL
-
-favorites_tool: EB_FAVORITES_TOOL
-
-cluster_tool: EB_CLUSTER_TOOL
-
-search_tool: EB_SEARCH_TOOL
-
-features_tool: EB_FEATURES_TOOL
-
-windows_tool: EB_WINDOWS_TOOL
-
-context_tool: EB_CONTEXT_TOOL
-		-- Context explorer for current class and system.
-
-address_manager: EB_ADDRESS_MANAGER
-		-- Text field in the toolbar
-		-- Allow user to enter the name
-		-- of the class he wants to edit.
-
-project_manager: EB_PROJECT_MANAGER is
-		-- Project manager associated to the project the user is working on.
-	do
-		Result := Eiffel_project.manager
-	end
-
-managed_class_formatters: ARRAYED_LIST [EB_CLASS_INFO_FORMATTER]
-		-- All formatters that operate on a class.
-
-managed_feature_formatters: ARRAYED_LIST [EB_FEATURE_INFO_FORMATTER]
-		-- All formatters that operate on a class.
-
-managed_main_formatters: ARRAYED_LIST [EB_CLASS_TEXT_FORMATTER]
-		-- All formatters that can be displayed in the main editor frame.
-
-unified_stone: BOOLEAN
-		-- Is the stone common with the context tool or not?
-		
-arguments_dialog: EB_ARGUMENT_DIALOG
-		-- The arguments dialog for current, if any
-		
-goto_dialog: EB_GOTO_DIALOG
-		-- The goto dialog for line number access
-
-feature -- Multiple editor management
-
-add_editor_to_list (an_editor: EB_EDITOR) is
-		-- adds `an_editor' to `editors'
-	do
-		editors.extend (an_editor)
-	end
-
-current_editor: EB_EDITOR is
-		-- current editor, if none, main editor
-	do
-		if current_editor_index /= 0 then
-			Result := editors @ current_editor_index
-		else
-			Result := editors.first
-		end
-	end
-	
-set_current_editor (an_editor: EB_EDITOR) is
-		-- set `an_editor' as main editor
-	local
-		old_index: INTEGER
-		new_index: INTEGER
-	do
-		old_index := current_editor_index
-		new_index := editors.index_of (an_editor, 1)
-		if
-			editors.valid_index (new_index) and
-			old_index /= new_index
-		then
-			current_editor_index := new_index
-			from
-				editors.start
-			until
-				editors.after
-			loop
-				if editors.index /= current_editor_index and then editors.item.has_selection then
-					editors.item.disable_selection
-				end
-				editors.forth
+	on_text_saved is
+			-- Notify the editor that the text has been saved
+		local
+			str: STRING
+		do
+			Precursor
+			editor_tool.on_text_saved
+			text_saved := True
+			if not save_only then
+				editor_tool.text_area.update_click_list (True)
 			end
-			update_paste_cmd
-				-- Last thing, update the menu entry for the formatting marks.
-			if current_editor.view_invisible_symbols then
-				formatting_marks_command_menu_item.set_text (Interface_names.m_Hide_formatting_marks)
-			else
-				formatting_marks_command_menu_item.set_text(Interface_names.m_Show_formatting_marks)
+			save_only := False
+			str := title.twin
+			if str @ 1 = '*' then
+				str.keep_tail (str.count - 2)
+				set_title (str)
 			end
-			command_controller.set_current_editor (an_editor)
-		end
-	end
-
-update_paste_cmd is
-		-- Update `editor_paste_cmd'. To be performed when an editor grabs the focus.
-	do
-		if
-			not current_editor.is_empty and then
-			current_editor.is_editable and then
-			current_editor.clipboard.has_text
-		then
-			editor_paste_cmd.enable_sensitive
-		else
-			editor_paste_cmd.disable_sensitive
-		end
-	end
-			
-feature {NONE} -- Multiple editor management
-
-editors: ARRAYED_LIST [EB_EDITOR]
-		-- editor contained in `Current'
-
-current_editor_index: INTEGER
-		-- Index in `editors' of the editor that has the focus.
-		
-feature {EB_FEATURES_TOOL, EB_FEATURES_TREE, DOTNET_CLASS_AS, DOTNET_CLASS_CONTEXT} -- Feature Clauses
-		
-set_feature_clauses (a_features: ARRAYED_LIST [DOTNET_FEATURE_CLAUSE_AS [CONSUMED_ENTITY]]; a_type: STRING) is
-		-- Set 'features' to 'a_features' and store in hash table with key 'a_type' denoting name of consumed
-		-- type pertinent to 'a_features'.
-	require
-		a_features_not_void: a_features /= Void
-	do
-		if feature_clauses = Void then
-			create feature_clauses.make (5)
-		end
-		feature_clauses.put (a_features, a_type)
-	end
-		
-get_feature_clauses (a_type: STRING): ARRAYED_LIST [DOTNET_FEATURE_CLAUSE_AS [CONSUMED_ENTITY]] is
-		-- Get list of feature clauses relevant to .NET type with name 'a_type'.
-	require
-		a_type_not_void: a_type /= Void
-		has_type_clauses: feature_clauses.has (a_type)
-	do
-		Result := feature_clauses.item (a_type)
-	ensure
-		result_not_void: Result /= Void
-	end
-		
-feature_clauses: HASH_TABLE [ARRAYED_LIST [DOTNET_FEATURE_CLAUSE_AS [CONSUMED_ENTITY]], STRING]
-		-- List of features clauses for Current window hashed by the .NET name of the consumed_type.
-		
-feature_positions: HASH_TABLE [INTEGER, E_FEATURE]
-		-- Features indexed by line position in class text (for .NET features).
-
-feature {EB_WINDOW_MANAGER} -- Window management / Implementation	
-
-destroy_imp is
-		-- Destroy window.
-	do
-			-- To avoid reentrance
-		if not is_destroying then
-			is_destroying := True
-				-- If a launched application is still running, kill it.
-			if Application.is_running and then debugger_manager.debugging_window = Current then
-				Application.kill
+			update_formatters
+			if editor_tool.text_area.syntax_is_correct then
+				status_bar.display_message ("")
 			else
+				status_bar.display_message (Interface_names.L_syntax_error)
+			end
+			text_edited := False
+		end
+
+	save_and (an_action: PROCEDURE [ANY, TUPLE]) is
+		local
+			save_dialog: EB_CONFIRM_SAVE_DIALOG
+		do
+			save_canceled := True
+			text_saved := False
+			create save_dialog.make_and_launch (Current,Current)
+			if not save_canceled and then syntax_is_correct then
+				an_action.call(Void)
+			end
+		end
+
+	feature -- Window management
+
+	show_window is
+			-- Show the window
+		do
+			show
+		end
+
+	raise_window is
+			-- Show the window and set the focus to it.
+		do
+			show
+			--| FIXME, set the focus.
+		end
+
+	hide_window is
+			-- Hide the window
+		do
+			hide
+		end
+
+	destroy_window is
+			-- Destroy the window.
+		do
+			destroy
+		end
+
+	give_focus is
+			-- Give the focus to the address manager.
+		do
+			address_manager.set_focus
+		end
+		
+	save_layout is
+			-- Store layout of `current'.
+		do
+				-- Now save the windows's layout, but only if the
+				-- debugger is not displayed in `Current'. By saving the layout,
+				-- we ensure that future windows may use exactly the same layout.
+				-- If the debugger is displayed, the previopus layout is already saved,
+				-- and this is the one that must be used, as only one debugger is ever displayed.
+			if (Application.is_running and debugger_manager.debugging_window /= Current) or not application.is_running then
 				preferences.development_window_data.save_left_panel_layout (left_panel.save_to_resource)
 				preferences.development_window_data.save_right_panel_layout (right_panel.save_to_resource)
+				preferences.development_window_data.save_left_panel_width (panel.split_position)
+					-- Save width & height.
+				preferences.development_window_data.save_size (window.width, window.height, window.is_maximized)
 			end
-			preferences.development_window_data.save_left_panel_width (panel.split_position)
-				-- Save width & height.
-			preferences.development_window_data.save_size (window.width, window.height, window.is_maximized)
-			left_panel.wipe_out
-			right_panel.wipe_out
 			preferences.development_window_data.save_search_tool_options (search_tool)
-			hide
-
 				-- Commit saves
---				save_resources
-
-			toolbars_area.wipe_out
-			address_manager.recycle
-			project_customizable_toolbar.recycle
-			Precursor {EB_TOOL_MANAGER}
-
-			managed_class_formatters.wipe_out
-			managed_feature_formatters.wipe_out
-			managed_main_formatters.wipe_out
-			toolbarable_commands.wipe_out
-			editors.wipe_out
-			stone := Void
-		end
-	end
-
-feature {NONE} -- Implementation
-
-set_stone_after_check (a_stone: STONE) is
-	local
-		old_stone: STONE
-		new_class_stone: CLASSI_STONE
-		old_class_stone: CLASSI_STONE
-		conv_classc: CLASSC_STONE
-		conv_brkstone: BREAKABLE_STONE
-		cluster_st: CLUSTER_STONE
-		feature_stone: FEATURE_STONE
-		conv_ferrst: FEATURE_ERROR_STONE
-		
-		ef_stone: EXTERNAL_FILE_STONE
-		f: FILE
-		
-		l_format_context: FORMAT_CONTEXT
-		l_indexes: EIFFEL_LIST [INDEX_AS]
-		conv_errst: ERROR_STONE
-		class_file: RAW_FILE
-		class_text_exists: BOOLEAN
-		same_class: BOOLEAN
-		test_stone: CLASSI_STONE
-		conv_ace: ACE_SYNTAX_STONE
-		externali: EXTERNAL_CLASS_I
-		l_reader: EIFFEL_XML_DESERIALIZER
-		external_cons: CONSUMED_TYPE
-		str: STRING
-		dotnet_class: BOOLEAN
-		l_short_formatter: EB_SHORT_FORMATTER
-		l_flat_formatter: EB_FLAT_SHORT_FORMATTER
-	do
-			-- the text does not change if the text was saved with syntax errors
-		cur_wid := window
-		if cur_wid = Void then
-			--| Do nothing.
-		else
-			if old_cur = Void then
-				old_cur := cur_wid.pointer_style
-			end
---				cur_wid.enable_capture
-			cur_wid.set_pointer_style (Wait_cursor)
+	--			save_resources
 		end
 
-		conv_brkstone ?= a_stone
-		conv_errst ?= a_stone
-		conv_ace ?= a_stone
-		ef_stone ?= a_stone
-		if conv_brkstone /= Void then
-			if Application.is_breakpoint_enabled (conv_brkstone.routine, conv_brkstone.index) then
-				Application.remove_breakpoint (conv_brkstone.routine, conv_brkstone.index)
-			else
-				Application.set_breakpoint (conv_brkstone.routine, conv_brkstone.index)
-			end
-			output_manager.display_stop_points
-			window_manager.quick_refresh_all
-		elseif conv_errst /= Void then
-			display_error_help_cmd.execute_with_stone (conv_errst)
-		elseif conv_ace /= Void then
-			--| FIXME XR: What should we do?!
-		elseif ef_stone /= Void then
-			f := ef_stone.file
-			f.make_open_read (f.name)
-			f.read_stream (f.count)
-			f.close
-			editor_tool.text_area.load_text (f.last_string)
-		else
-			
-				-- Remember previous stone.
-			old_stone := stone
-			old_class_stone ?= stone
-	
-				-- New stone properties
-			new_class_stone ?= a_stone
+	feature -- Tools & Controls
 
-				-- Set the stone.
-			old_set_stone (a_stone)
-			cluster_st ?= a_stone
-			
-			new_feature_cmd.disable_sensitive
-			toggle_feature_signature_cmd.disable_sensitive
-			
-				-- We update the state of the `Add to Favorites' command.
-			if new_class_stone /= Void then
-				favorites_menu.first.enable_sensitive
-			else
-				favorites_menu.first.disable_sensitive
-			end
+	editor_tool: EB_EDITOR_TOOL
 
-				-- Update the history.
+	favorites_tool: EB_FAVORITES_TOOL
+
+	cluster_tool: EB_CLUSTER_TOOL
+
+	search_tool: EB_SEARCH_TOOL
+
+	features_tool: EB_FEATURES_TOOL
+
+	windows_tool: EB_WINDOWS_TOOL
+
+	context_tool: EB_CONTEXT_TOOL
+			-- Context explorer for current class and system.
+
+	address_manager: EB_ADDRESS_MANAGER
+			-- Text field in the toolbar
+			-- Allow user to enter the name
+			-- of the class he wants to edit.
+
+	project_manager: EB_PROJECT_MANAGER is
+			-- Project manager associated to the project the user is working on.
+		do
+			Result := Eiffel_project.manager
+		end
+
+	managed_class_formatters: ARRAYED_LIST [EB_CLASS_INFO_FORMATTER]
+			-- All formatters that operate on a class.
+
+	managed_feature_formatters: ARRAYED_LIST [EB_FEATURE_INFO_FORMATTER]
+			-- All formatters that operate on a class.
+
+	managed_main_formatters: ARRAYED_LIST [EB_CLASS_TEXT_FORMATTER]
+			-- All formatters that can be displayed in the main editor frame.
+
+	unified_stone: BOOLEAN
+			-- Is the stone common with the context tool or not?
+			
+	arguments_dialog: EB_ARGUMENT_DIALOG
+			-- The arguments dialog for current, if any
+			
+	goto_dialog: EB_GOTO_DIALOG
+			-- The goto dialog for line number access
+
+	feature -- Multiple editor management
+
+	add_editor_to_list (an_editor: EB_EDITOR) is
+			-- adds `an_editor' to `editors'
+		do
+			editors.extend (an_editor)
+		end
+
+	current_editor: EB_EDITOR is
+			-- current editor, if none, main editor
+		do
+			if current_editor_index /= 0 then
+				Result := editors @ current_editor_index
+			else
+				Result := editors.first
+			end
+		end
+		
+	set_current_editor (an_editor: EB_EDITOR) is
+			-- set `an_editor' as main editor
+		local
+			old_index: INTEGER
+			new_index: INTEGER
+		do
+			old_index := current_editor_index
+			new_index := editors.index_of (an_editor, 1)
 			if
-				new_class_stone /= Void
+				editors.valid_index (new_index) and
+				old_index /= new_index
 			then
-				history_manager.extend (new_class_stone)
-			elseif
-				cluster_st /= Void
-			then
-				history_manager.extend (cluster_st)
-			end
-				-- Update the address manager if needed.
-			address_manager.refresh
-			if new_class_stone /= Void then
-					-- class stone was dropped
-				create class_file.make (new_class_stone.class_i.file_name)
-				class_text_exists := class_file.exists
-				feature_stone ?= a_stone
-					--| We have to create a classi_stone to check whether the stones are really similar.
-					--| Otherwise a redefinition of same_as may be called.
-				create test_stone.make (new_class_stone.class_i)
-				if test_stone.same_as (old_class_stone) then
-					same_class := True
-				end
-				if not feature_stone_already_processed then
-					if 
-						same_class and then text_saved						
-					then
-							-- nothing changed in the editor
-							-- we only have to update click_list
-						if editor_tool.text_area.is_editable then
-							editor_tool.text_area.update_click_list (False)
-						end
-					else
-						if changed then
-								-- user has already chosen not to save the file
-								-- do not ask again
-							Feature_positions.wipe_out
-							editor_tool.text_area.no_save_before_next_load
-						end
+				current_editor_index := new_index
+				from
+					editors.start
+				until
+					editors.after
+				loop
+					if editors.index /= current_editor_index and then editors.item.has_selection then
+						editors.item.disable_selection
 					end
+					editors.forth
 				end
-
-				conv_classc ?= new_class_stone
-				if conv_classc = Void or else
-					conv_classc.e_class.is_external or else
-					feature_stone /= Void and not 
-					feature_stone_already_processed and not
-					(same_class and context_tool.sending_stone) then
-						-- If a classi_stone or a feature_stone or a external call
-						-- has been dropped, check to see if a .NET class.
-					if class_text_exists then
-						if new_class_stone.class_i.is_external_class then
-							create l_reader
-							externali ?= new_class_stone.class_i
-							external_cons ?= l_reader.new_object_from_file (externali.file_name)
-							if external_cons /= Void then
-								-- A .NET class.
-								dotnet_class := True
-								l_short_formatter ?= managed_main_formatters.i_th (4)
-								l_flat_formatter ?= managed_main_formatters.i_th (5)
-								if l_short_formatter /= Void then
-									l_short_formatter.set_dotnet_mode (True)
-								end
-								if l_flat_formatter /= Void then
-									l_flat_formatter.set_dotnet_mode (True)
-								end
-							end								
-						else
-							managed_main_formatters.first.set_stone (new_class_stone)
-							managed_main_formatters.first.execute
-						end
-					else
-						editor_tool.text_area.clear_window
-						editor_tool.text_area.display_message (
-							Warning_messages.w_file_not_exist (
-								new_class_stone.class_i.file_name))
-					end
-				end
-				if conv_classc = Void then
-						--| The dropped class is not compiled.
-						--| Display only the textual formatter.
-					if dotnet_class then
-						managed_main_formatters.i_th (4).set_stone (new_class_stone)
-						managed_main_formatters.i_th (5).set_stone (new_class_stone)
-						managed_main_formatters.i_th (4).execute				
-					end
-					address_manager.disable_formatters
+				update_paste_cmd
+					-- Last thing, update the menu entry for the formatting marks.
+				if current_editor.view_invisible_symbols then
+					formatting_marks_command_menu_item.set_text (Interface_names.m_Hide_formatting_marks)
 				else
-						--| We have a compiled class.
-					if
-						class_text_exists and then
-						Eiffel_project.Workbench.last_reached_degree <= 2
-					then
-						new_feature_cmd.enable_sensitive
-						toggle_feature_signature_cmd.enable_sensitive
+					formatting_marks_command_menu_item.set_text(Interface_names.m_Show_formatting_marks)
+				end
+				command_controller.set_current_editor (an_editor)
+			end
+		end
+
+	update_paste_cmd is
+			-- Update `editor_paste_cmd'. To be performed when an editor grabs the focus.
+		do
+			if
+				not current_editor.is_empty and then
+				current_editor.is_editable and then
+				current_editor.clipboard.has_text
+			then
+				editor_paste_cmd.enable_sensitive
+			else
+				editor_paste_cmd.disable_sensitive
+			end
+		end
+				
+	feature {NONE} -- Multiple editor management
+
+	editors: ARRAYED_LIST [EB_EDITOR]
+			-- editor contained in `Current'
+
+	current_editor_index: INTEGER
+			-- Index in `editors' of the editor that has the focus.
+			
+	feature {EB_FEATURES_TOOL, EB_FEATURES_TREE, DOTNET_CLASS_AS, DOTNET_CLASS_CONTEXT} -- Feature Clauses
+			
+	set_feature_clauses (a_features: ARRAYED_LIST [DOTNET_FEATURE_CLAUSE_AS [CONSUMED_ENTITY]]; a_type: STRING) is
+			-- Set 'features' to 'a_features' and store in hash table with key 'a_type' denoting name of consumed
+			-- type pertinent to 'a_features'.
+		require
+			a_features_not_void: a_features /= Void
+		do
+			if feature_clauses = Void then
+				create feature_clauses.make (5)
+			end
+			feature_clauses.put (a_features, a_type)
+		end
+			
+	get_feature_clauses (a_type: STRING): ARRAYED_LIST [DOTNET_FEATURE_CLAUSE_AS [CONSUMED_ENTITY]] is
+			-- Get list of feature clauses relevant to .NET type with name 'a_type'.
+		require
+			a_type_not_void: a_type /= Void
+			has_type_clauses: feature_clauses.has (a_type)
+		do
+			Result := feature_clauses.item (a_type)
+		ensure
+			result_not_void: Result /= Void
+		end
+			
+	feature_clauses: HASH_TABLE [ARRAYED_LIST [DOTNET_FEATURE_CLAUSE_AS [CONSUMED_ENTITY]], STRING]
+			-- List of features clauses for Current window hashed by the .NET name of the consumed_type.
+			
+	feature_positions: HASH_TABLE [INTEGER, E_FEATURE]
+			-- Features indexed by line position in class text (for .NET features).
+
+	feature {EB_WINDOW_MANAGER} -- Window management / Implementation	
+
+	destroy_imp is
+			-- Destroy window.
+		do
+				-- To avoid reentrance
+			if not is_destroying then
+				is_destroying := True
+					-- If a launched application is still running, kill it.
+				if Application.is_running and then debugger_manager.debugging_window = Current then
+					Application.kill
+				else
+					preferences.development_window_data.save_left_panel_layout (left_panel.save_to_resource)
+					preferences.development_window_data.save_right_panel_layout (right_panel.save_to_resource)
+				end
+				preferences.development_window_data.save_left_panel_width (panel.split_position)
+					-- Save width & height.
+				preferences.development_window_data.save_size (window.width, window.height, window.is_maximized)
+				left_panel.wipe_out
+				right_panel.wipe_out
+				preferences.development_window_data.save_search_tool_options (search_tool)
+				hide
+
+					-- Commit saves
+	--				save_resources
+
+				toolbars_area.wipe_out
+				address_manager.recycle
+				project_customizable_toolbar.recycle
+				Precursor {EB_TOOL_MANAGER}
+
+				managed_class_formatters.wipe_out
+				managed_feature_formatters.wipe_out
+				managed_main_formatters.wipe_out
+				toolbarable_commands.wipe_out
+				editors.wipe_out
+				stone := Void
+			end
+		end
+
+	feature {NONE} -- Implementation
+
+	set_stone_after_check (a_stone: STONE) is
+		local
+			old_stone: STONE
+			new_class_stone: CLASSI_STONE
+			old_class_stone: CLASSI_STONE
+			conv_classc: CLASSC_STONE
+			conv_brkstone: BREAKABLE_STONE
+			cluster_st: CLUSTER_STONE
+			feature_stone: FEATURE_STONE
+			conv_ferrst: FEATURE_ERROR_STONE
+			
+			ef_stone: EXTERNAL_FILE_STONE
+			f: FILE
+			
+			l_format_context: FORMAT_CONTEXT
+			l_indexes: EIFFEL_LIST [INDEX_AS]
+			conv_errst: ERROR_STONE
+			class_file: RAW_FILE
+			class_text_exists: BOOLEAN
+			same_class: BOOLEAN
+			test_stone: CLASSI_STONE
+			conv_ace: ACE_SYNTAX_STONE
+			externali: EXTERNAL_CLASS_I
+			l_reader: EIFFEL_XML_DESERIALIZER
+			external_cons: CONSUMED_TYPE
+			str: STRING
+			dotnet_class: BOOLEAN
+			l_short_formatter: EB_SHORT_FORMATTER
+			l_flat_formatter: EB_FLAT_SHORT_FORMATTER
+		do
+				-- the text does not change if the text was saved with syntax errors
+			cur_wid := window
+			if cur_wid = Void then
+				--| Do nothing.
+			else
+				if old_cur = Void then
+					old_cur := cur_wid.pointer_style
+				end
+	--				cur_wid.enable_capture
+				cur_wid.set_pointer_style (Wait_cursor)
+			end
+
+			conv_brkstone ?= a_stone
+			conv_errst ?= a_stone
+			conv_ace ?= a_stone
+			ef_stone ?= a_stone
+			if conv_brkstone /= Void then
+				if Application.is_breakpoint_enabled (conv_brkstone.routine, conv_brkstone.index) then
+					Application.remove_breakpoint (conv_brkstone.routine, conv_brkstone.index)
+				else
+					Application.set_breakpoint (conv_brkstone.routine, conv_brkstone.index)
+				end
+				output_manager.display_stop_points
+				window_manager.quick_refresh_all
+			elseif conv_errst /= Void then
+				display_error_help_cmd.execute_with_stone (conv_errst)
+			elseif conv_ace /= Void then
+				--| FIXME XR: What should we do?!
+			elseif ef_stone /= Void then
+				f := ef_stone.file
+				f.make_open_read (f.name)
+				f.read_stream (f.count)
+				f.close
+				editor_tool.text_area.load_text (f.last_string)
+			else
+				
+					-- Remember previous stone.
+				old_stone := stone
+				old_class_stone ?= stone
+		
+					-- New stone properties
+				new_class_stone ?= a_stone
+
+					-- Set the stone.
+				old_set_stone (a_stone)
+				cluster_st ?= a_stone
+				
+				new_feature_cmd.disable_sensitive
+				toggle_feature_signature_cmd.disable_sensitive
+				
+					-- We update the state of the `Add to Favorites' command.
+				if new_class_stone /= Void then
+					favorites_menu.first.enable_sensitive
+				else
+					favorites_menu.first.disable_sensitive
+				end
+
+					-- Update the history.
+				if
+					new_class_stone /= Void
+				then
+					history_manager.extend (new_class_stone)
+				elseif
+					cluster_st /= Void
+				then
+					history_manager.extend (cluster_st)
+				end
+					-- Update the address manager if needed.
+				address_manager.refresh
+				if new_class_stone /= Void then
+						-- class stone was dropped
+					create class_file.make (new_class_stone.class_i.file_name)
+					class_text_exists := class_file.exists
+					feature_stone ?= a_stone
+						--| We have to create a classi_stone to check whether the stones are really similar.
+						--| Otherwise a redefinition of same_as may be called.
+					create test_stone.make (new_class_stone.class_i)
+					if test_stone.same_as (old_class_stone) then
+						same_class := True
+					end
+					if not feature_stone_already_processed then
+						if 
+							same_class and then text_saved						
+						then
+								-- nothing changed in the editor
+								-- we only have to update click_list
+							if editor_tool.text_area.is_editable then
+								editor_tool.text_area.update_click_list (False)
+							end
+						else
+							if changed then
+									-- user has already chosen not to save the file
+									-- do not ask again
+								Feature_positions.wipe_out
+								editor_tool.text_area.no_save_before_next_load
+							end
+						end
 					end
 
-					--address_manager.enable_formatters
-					update_formatters
-					if not class_text_exists then
-							--| Disable the textual formatter.
-						managed_main_formatters.first.disable_sensitive
-						from
-							managed_main_formatters.start
-						until
-							managed_main_formatters.after
-						loop
-							managed_main_formatters.item.set_stone (new_class_stone)
-							managed_main_formatters.forth
+					conv_classc ?= new_class_stone
+					if conv_classc = Void or else
+						conv_classc.e_class.is_external or else
+						feature_stone /= Void and not 
+						feature_stone_already_processed and not
+						(same_class and context_tool.sending_stone) then
+							-- If a classi_stone or a feature_stone or a external call
+							-- has been dropped, check to see if a .NET class.
+						if class_text_exists then
+							if new_class_stone.class_i.is_external_class then
+								create l_reader
+								externali ?= new_class_stone.class_i
+								external_cons ?= l_reader.new_object_from_file (externali.file_name)
+								if external_cons /= Void then
+									-- A .NET class.
+									dotnet_class := True
+									l_short_formatter ?= managed_main_formatters.i_th (4)
+									l_flat_formatter ?= managed_main_formatters.i_th (5)
+									if l_short_formatter /= Void then
+										l_short_formatter.set_dotnet_mode (True)
+									end
+									if l_flat_formatter /= Void then
+										l_flat_formatter.set_dotnet_mode (True)
+									end
+								end								
+							else
+								managed_main_formatters.first.set_stone (new_class_stone)
+								managed_main_formatters.first.execute
+							end
+						else
+							editor_tool.text_area.clear_window
+							editor_tool.text_area.display_message (
+								Warning_messages.w_file_not_exist (
+									new_class_stone.class_i.file_name))
 						end
-						managed_main_formatters.i_th (2).execute
+					end
+					if conv_classc = Void then
+							--| The dropped class is not compiled.
+							--| Display only the textual formatter.
+						if dotnet_class then
+							managed_main_formatters.i_th (4).set_stone (new_class_stone)
+							managed_main_formatters.i_th (5).set_stone (new_class_stone)
+							managed_main_formatters.i_th (4).execute				
+						end
+						address_manager.disable_formatters
 					else
-						if not changed or not same_class then
-								--| Enable all formatters.
-							if
-								not feature_stone_already_processed or
-								not managed_main_formatters.first.selected
-							then
+							--| We have a compiled class.
+						if
+							class_text_exists and then
+							Eiffel_project.Workbench.last_reached_degree <= 2
+						then
+							new_feature_cmd.enable_sensitive
+							toggle_feature_signature_cmd.enable_sensitive
+						end
+
+						--address_manager.enable_formatters
+						update_formatters
+						if not class_text_exists then
+								--| Disable the textual formatter.
+							managed_main_formatters.first.disable_sensitive
+							from
+								managed_main_formatters.start
+							until
+								managed_main_formatters.after
+							loop
+								managed_main_formatters.item.set_stone (new_class_stone)
+								managed_main_formatters.forth
+							end
+							managed_main_formatters.i_th (2).execute
+						else
+							if not changed or not same_class then
+									--| Enable all formatters.
+								if
+									not feature_stone_already_processed or
+									not managed_main_formatters.first.selected
+								then
+									from
+										managed_main_formatters.start
+									until
+										managed_main_formatters.after
+									loop
+										managed_main_formatters.item.set_stone (new_class_stone)
+										managed_main_formatters.forth
+									end
+								end
+							else
+								address_manager.disable_formatters
 								from
 									managed_main_formatters.start
 								until
@@ -2563,902 +2576,891 @@ set_stone_after_check (a_stone: STONE) is
 									managed_main_formatters.forth
 								end
 							end
-						else
-							address_manager.disable_formatters
-							from
-								managed_main_formatters.start
-							until
-								managed_main_formatters.after
-							loop
-								managed_main_formatters.item.set_stone (new_class_stone)
-								managed_main_formatters.forth
-							end
+						end
+					end
+				else
+						-- not a class text : cannot be edited	
+					editor_tool.text_area.disable_editable
+					address_manager.disable_formatters
+
+						--| Disable all formatters.
+					from
+						managed_main_formatters.start
+					until
+						managed_main_formatters.after
+					loop
+						managed_main_formatters.item.set_stone (Void)
+						managed_main_formatters.forth
+					end
+					if cluster_st /= Void then
+	--| FIXME XR: Really manage cluster display in the main editor
+						create l_format_context.make_for_case
+						l_format_context.put_text_item (ti_indexing_keyword)
+						l_format_context.put_new_line
+						l_format_context.indent
+						l_format_context.put_text_item (create {INDEXING_TAG_TEXT}.make ("cluster"))
+						l_format_context.put_text_item_without_tabs (ti_colon)
+						l_format_context.put_space
+						l_format_context.put_string ("%"" + cluster_st.cluster_i.cluster_name + "%"")
+						l_format_context.put_new_line
+						l_format_context.put_text_item (create {INDEXING_TAG_TEXT}.make ("cluster_path"))
+						l_format_context.put_text_item_without_tabs (ti_colon)
+						l_format_context.put_space
+						l_format_context.put_string ("%"" + cluster_st.cluster_i.path + "%"")
+						l_format_context.put_new_line
+						l_indexes := cluster_st.cluster_i.indexes
+						if l_indexes /= Void then
+							l_format_context.set_new_line_between_tokens
+							l_format_context.format_ast (l_indexes)
+							l_format_context.exdent
+						end
+						l_format_context.put_new_line
+						editor_tool.text_area.process_text (l_format_context.text)
+	--| END FIXME
+					end
+				end
+				if feature_stone /= Void and class_text_exists and not feature_stone_already_processed and not (same_class and context_tool.sending_stone) then
+					conv_ferrst ?= feature_stone
+					if conv_ferrst /= Void then
+							-- Scroll to the line of the error.
+						editor_tool.text_area.display_line_when_ready (conv_ferrst.line_number, True)
+					else
+							-- if a feature_stone has been dropped
+							-- scroll to the corresponding feature in the basic text format
+						if not during_synchronization then
+							scroll_to_feature (feature_stone.e_feature, new_class_stone.class_i)
 						end
 					end
 				end
-			else
-					-- not a class text : cannot be edited	
-				editor_tool.text_area.disable_editable
-				address_manager.disable_formatters
+					-- Update the title of the window
+				if a_stone /= Void then
+					if changed then
+						str := a_stone.header.twin
+						str.prepend ("* ")
+						set_title (str)
+					else
+						set_title (a_stone.header)
+					end
+				else
+					set_title (Interface_names.t_Empty_development_window)
+				end
 
-					--| Disable all formatters.
-				from
-					managed_main_formatters.start
-				until
-					managed_main_formatters.after
-				loop
-					managed_main_formatters.item.set_stone (Void)
-					managed_main_formatters.forth
+					-- Refresh the tools.
+				features_tool.set_stone (a_stone)
+				cluster_tool.set_stone (a_stone)
+					-- Update the context tool.
+				if unified_stone then
+					context_tool.set_stone (a_stone)
 				end
-				if cluster_st /= Void then
---| FIXME XR: Really manage cluster display in the main editor
-					create l_format_context.make_for_case
-					l_format_context.put_text_item (ti_indexing_keyword)
-					l_format_context.put_new_line
-					l_format_context.indent
-					l_format_context.put_text_item (create {INDEXING_TAG_TEXT}.make ("cluster"))
-					l_format_context.put_text_item_without_tabs (ti_colon)
-					l_format_context.put_space
-					l_format_context.put_string ("%"" + cluster_st.cluster_i.cluster_name + "%"")
-					l_format_context.put_new_line
-					l_format_context.put_text_item (create {INDEXING_TAG_TEXT}.make ("cluster_path"))
-					l_format_context.put_text_item_without_tabs (ti_colon)
-					l_format_context.put_space
-					l_format_context.put_string ("%"" + cluster_st.cluster_i.path + "%"")
-					l_format_context.put_new_line
-					l_indexes := cluster_st.cluster_i.indexes
-					if l_indexes /= Void then
-						l_format_context.set_new_line_between_tokens
-						l_format_context.format_ast (l_indexes)
-						l_format_context.exdent
-					end
-					l_format_context.put_new_line
-					editor_tool.text_area.process_text (l_format_context.text)
---| END FIXME
-				end
+
 			end
-			if feature_stone /= Void and class_text_exists and not feature_stone_already_processed and not (same_class and context_tool.sending_stone) then
-				conv_ferrst ?= feature_stone
-				if conv_ferrst /= Void then
-						-- Scroll to the line of the error.
-					editor_tool.text_area.display_line_when_ready (conv_ferrst.line_number, True)
-				else
-						-- if a feature_stone has been dropped
-						-- scroll to the corresponding feature in the basic text format
-					if not during_synchronization then
-						scroll_to_feature (feature_stone.e_feature, new_class_stone.class_i)
-					end
-				end
+			if
+				stone /= Void and then
+				not unified_stone
+			then
+				send_stone_to_context_cmd.enable_sensitive
+			else
+				send_stone_to_context_cmd.disable_sensitive
 			end
-				-- Update the title of the window
-			if a_stone /= Void then
-				if changed then
-					str := a_stone.header.twin
-					str.prepend ("* ")
-					set_title (str)
-				else
-					set_title (a_stone.header)
+			if cur_wid = Void then
+				--| Do nothing.
+			else		
+				cur_wid.set_pointer_style (old_cur)
+				old_cur := Void
+	--					cur_wid.disable_capture
+				cur_wid := Void
+			end
+		end
+
+	scroll_to_feature (feat_as: E_FEATURE; displayed_class: CLASS_I) is
+			-- highlight the feature correspnding to `feat_as' in the class represented by `displayed_class'
+		require
+			class_is_not_void: displayed_class /= Void
+			feat_as_is_not_void: feat_as /= Void
+		local
+			begin_index, offset: INTEGER
+			tmp_text: STRING
+		do
+			if not feat_as.is_il_external then
+				if feat_as.ast /= Void then
+					begin_index := feat_as.ast.start_position
+					if platform_constants.is_windows then
+						tmp_text := displayed_class.text.substring (1, begin_index)
+						offset := tmp_text.occurrences('%R')
+					end
+					editor_tool.text_area.scroll_to_when_ready (begin_index.item - offset)
 				end
 			else
-				set_title (Interface_names.t_Empty_development_window)
-			end
-
-				-- Refresh the tools.
-			features_tool.set_stone (a_stone)
-			cluster_tool.set_stone (a_stone)
-				-- Update the context tool.
-			if unified_stone then
-				context_tool.set_stone (a_stone)
-			end
-
-		end
-		if
-			stone /= Void and then
-			not unified_stone
-		then
-			send_stone_to_context_cmd.enable_sensitive
-		else
-			send_stone_to_context_cmd.disable_sensitive
-		end
-		if cur_wid = Void then
-			--| Do nothing.
-		else		
-			cur_wid.set_pointer_style (old_cur)
-			old_cur := Void
---					cur_wid.disable_capture
-			cur_wid := Void
-		end
-	end
-
-scroll_to_feature (feat_as: E_FEATURE; displayed_class: CLASS_I) is
-		-- highlight the feature correspnding to `feat_as' in the class represented by `displayed_class'
-	require
-		class_is_not_void: displayed_class /= Void
-		feat_as_is_not_void: feat_as /= Void
-	local
-		begin_index, offset: INTEGER
-		tmp_text: STRING
-	do
-		if not feat_as.is_il_external then
-			if feat_as.ast /= Void then
-				begin_index := feat_as.ast.start_position
+					-- FIXME NC: Doesn't work properly for .NET features
+					-- .NET formatted feature.
+				begin_index := feature_positions.item (feat_as)
 				if platform_constants.is_windows then
 					tmp_text := displayed_class.text.substring (1, begin_index)
-					offset := tmp_text.occurrences('%R')
+					offset := tmp_text.occurrences('%N')
 				end
-				editor_tool.text_area.scroll_to_when_ready (begin_index.item - offset)
+				editor_tool.text_area.scroll_to_when_ready (begin_index // 2) -- - offset)
 			end
-		else
-				-- FIXME NC: Doesn't work properly for .NET features
-				-- .NET formatted feature.
-			begin_index := feature_positions.item (feat_as)
-			if platform_constants.is_windows then
-				tmp_text := displayed_class.text.substring (1, begin_index)
-				offset := tmp_text.occurrences('%N')
+		end
+
+	check_passed: BOOLEAN
+
+	save_canceled: BOOLEAN
+		-- did user cancel save ?
+
+	save_only: BOOLEAN
+		-- skip parse and update after save ?
+
+	text_saved: BOOLEAN
+			-- has the user chosen to save the file
+
+	is_destroying: BOOLEAN
+			-- Is `current' being currently destroyed?
+
+	feature_stone_already_processed: BOOLEAN
+			-- Is the processed stone a feature stone and has it
+			-- been already processed by the editor ?
+
+	feature {NONE} -- Implementation
+
+	update_save_symbol is
+		do
+			Precursor {EB_FILEABLE}
+			if changed then
+				save_cmd.enable_sensitive
+				address_manager.disable_formatters
+			else
+				save_cmd.disable_sensitive
+				update_formatters
 			end
-			editor_tool.text_area.scroll_to_when_ready (begin_index // 2) -- - offset)
+			if is_empty then
+				print_cmd.disable_sensitive
+				save_as_cmd.disable_sensitive
+			else
+				print_cmd.enable_sensitive
+				save_as_cmd.enable_sensitive
+			end
 		end
-	end
 
-check_passed: BOOLEAN
+	is_stone_external: BOOLEAN
+			-- Does 'stone' contain a .NET consumed type?
 
-save_canceled: BOOLEAN
-	-- did user cancel save ?
+	update_formatters is
+			-- Give a correct sensitivity to formatters.
+		local
+			cist: CLASSI_STONE
+			cst: CLASSC_STONE
+			type_changed: BOOLEAN
+		do
+			cst ?= stone
+			cist ?= stone
+			-- Check to if formatting context has changed.
+			if cst /= Void then
+				type_changed := (cst.e_class.is_true_external and not is_stone_external) or
+					(not cst.e_class.is_true_external and is_stone_external)
+			elseif cist /= Void then
+				type_changed := (cist.class_i.is_external_class and not is_stone_external) or
+					(not cist.class_i.is_external_class and is_stone_external)
+			end
+			
+			if type_changed then
+					-- Toggle stone flag.
+				is_stone_external := not is_stone_external
+			end 
 
-save_only: BOOLEAN
-	-- skip parse and update after save ?
-
-text_saved: BOOLEAN
-		-- has the user chosen to save the file
-
-is_destroying: BOOLEAN
-		-- Is `current' being currently destroyed?
-
-feature_stone_already_processed: BOOLEAN
-		-- Is the processed stone a feature stone and has it
-		-- been already processed by the editor ?
-
-feature {NONE} -- Implementation
-
-update_save_symbol is
-	do
-		Precursor {EB_FILEABLE}
-		if changed then
-			save_cmd.enable_sensitive
-			address_manager.disable_formatters
-		else
-			save_cmd.disable_sensitive
-			update_formatters
-		end
-		if is_empty then
-			print_cmd.disable_sensitive
-			save_as_cmd.disable_sensitive
-		else
-			print_cmd.enable_sensitive
-			save_as_cmd.enable_sensitive
-		end
-	end
-
-is_stone_external: BOOLEAN
-		-- Does 'stone' contain a .NET consumed type?
-
-update_formatters is
-		-- Give a correct sensitivity to formatters.
-	local
-		cist: CLASSI_STONE
-		cst: CLASSC_STONE
-		type_changed: BOOLEAN
-	do
-		cst ?= stone
-		cist ?= stone
-		-- Check to if formatting context has changed.
-		if cst /= Void then
-			type_changed := (cst.e_class.is_true_external and not is_stone_external) or
-				(not cst.e_class.is_true_external and is_stone_external)
-		elseif cist /= Void then
-			type_changed := (cist.class_i.is_external_class and not is_stone_external) or
-				(not cist.class_i.is_external_class and is_stone_external)
-		end
-		
-		if type_changed then
-				-- Toggle stone flag.
-			is_stone_external := not is_stone_external
-		end 
-
-		if cst /= Void then
-			address_manager.enable_formatters
-			if is_stone_external then
+			if cst /= Void then
+				address_manager.enable_formatters
+				if is_stone_external then
+						-- Change formatters to .NET sensitivity (from normal).
+					enable_dotnet_formatters
+					if type_changed then
+						managed_main_formatters.i_th (4).enable_select
+					end
+				else
+					if changed then
+						address_manager.disable_formatters 
+					else
+						--managed_main_formatters.first.disable_sensitive
+					end
+				end
+			elseif cist /= Void and is_stone_external then
 					-- Change formatters to .NET sensitivity (from normal).
 				enable_dotnet_formatters
 				if type_changed then
 					managed_main_formatters.i_th (4).enable_select
 				end
 			else
-				if changed then
-					address_manager.disable_formatters 
-				else
-					--managed_main_formatters.first.disable_sensitive
+				address_manager.disable_formatters
+				if cist /= stone then
+					managed_main_formatters.first.execute
 				end
 			end
-		elseif cist /= Void and is_stone_external then
-				-- Change formatters to .NET sensitivity (from normal).
-			enable_dotnet_formatters
-			if type_changed then
-				managed_main_formatters.i_th (4).enable_select
+		end
+
+	enable_dotnet_formatters is
+			-- Enable only the .NET class text formatters.
+		do
+			from
+				managed_main_formatters.start
+			until
+				managed_main_formatters.after
+			loop
+				if managed_main_formatters.item.is_dotnet_formatter then
+					managed_main_formatters.item.enable_sensitive
+				else
+					managed_main_formatters.item.disable_sensitive
+				end
+				managed_main_formatters.forth
 			end
-		else
-			address_manager.disable_formatters
-			if cist /= stone then
-				managed_main_formatters.first.execute
-			end
 		end
-	end
+		
 
-enable_dotnet_formatters is
-		-- Enable only the .NET class text formatters.
-	do
-		from
-			managed_main_formatters.start
-		until
-			managed_main_formatters.after
-		loop
-			if managed_main_formatters.item.is_dotnet_formatter then
-				managed_main_formatters.item.enable_sensitive
-			else
-				managed_main_formatters.item.disable_sensitive
-			end
-			managed_main_formatters.forth
-		end
-	end
-	
-
-on_text_reset is
-		-- The main editor has just been wiped out
-		-- before loading a new file.
-	local
-		str: STRING
-	do
-		str := title.twin
-		if str @ 1 = '*' then
-			str.keep_tail (str.count - 2)
-			set_title (str)
-		end
-		address_manager.disable_formatters
-		status_bar.display_message ("")
-		status_bar.remove_cursor_position
-		text_edited := False
-	end
-
-on_cursor_moved is
-		-- The cursor has moved, reflect the change in the status bar.
-	do
-		refresh_cursor_position
-	end
-
-on_text_fully_loaded is
-		-- The main editor has just been reloaded.
-	do
-		update_paste_cmd
-		update_formatters
-		if editor_tool.text_area.syntax_is_correct then
-			status_bar.display_message ("")
-		else
-			status_bar.display_message (Interface_names.L_syntax_error)
-		end
-		refresh_cursor_position
-		text_edited := False
-	end
-
-on_text_back_to_its_last_saved_state is
-	local
-		str: STRING
-	do
-		str := title.twin
-		if str @ 1 = '*' then
-			str.keep_tail (str.count - 2)
-			set_title (str)
-		end
-		update_formatters
-		text_edited := False
-	end			
-
-text_edited: BOOLEAN
-		-- Do we know that the text was edited?
-		-- If so, no need to update the display each time it is edited.
-
-on_text_edited (unused: BOOLEAN) is
-		-- The text in the editor is modified, add the '*' in the title.
-		-- Gray out the formatters.
-	local
-		str: STRING
-		cst: CLASSI_STONE
-	do
-		if not text_edited then
+	on_text_reset is
+			-- The main editor has just been wiped out
+			-- before loading a new file.
+		local
+			str: STRING
+		do
 			str := title.twin
-			if str @ 1 /= '*' then
-				str.prepend ("* ")
+			if str @ 1 = '*' then
+				str.keep_tail (str.count - 2)
 				set_title (str)
 			end
 			address_manager.disable_formatters
-			cst ?= stone
-			if cst /= Void then
-				Eiffel_project.Manager.class_is_edited (cst.class_i)
-			end
-			text_edited := True
+			status_bar.display_message ("")
+			status_bar.remove_cursor_position
+			text_edited := False
 		end
-		status_bar.display_message ("")
-	end
 
-on_back is
-		-- User pressed Alt+left.
-		-- Go back in the history (or the context history).
-	do
-		if context_tool_has_focus then
-			if context_tool.history_manager.is_back_possible then
-				context_tool.history_manager.back_command.execute
-			end
-		elseif history_manager.is_back_possible then
-			history_manager.back_command.execute		
+	on_cursor_moved is
+			-- The cursor has moved, reflect the change in the status bar.
+		do
+			refresh_cursor_position
 		end
-	end
 
-on_forth is
-		-- User pressed Alt+right.
-		-- Go forth in the history (or the context history).
-	do
-		if context_tool_has_focus then
-			if context_tool.history_manager.is_forth_possible then
-				context_tool.history_manager.forth_command.execute
+	on_text_fully_loaded is
+			-- The main editor has just been reloaded.
+		do
+			update_paste_cmd
+			update_formatters
+			if editor_tool.text_area.syntax_is_correct then
+				status_bar.display_message ("")
+			else
+				status_bar.display_message (Interface_names.L_syntax_error)
+			end
+			refresh_cursor_position
+			text_edited := False
+		end
+
+	on_text_back_to_its_last_saved_state is
+		local
+			str: STRING
+		do
+			str := title.twin
+			if str @ 1 = '*' then
+				str.keep_tail (str.count - 2)
+				set_title (str)
+			end
+			update_formatters
+			text_edited := False
+		end			
+
+	text_edited: BOOLEAN
+			-- Do we know that the text was edited?
+			-- If so, no need to update the display each time it is edited.
+
+	on_text_edited (unused: BOOLEAN) is
+			-- The text in the editor is modified, add the '*' in the title.
+			-- Gray out the formatters.
+		local
+			str: STRING
+			cst: CLASSI_STONE
+		do
+			if not text_edited then
+				str := title.twin
+				if str @ 1 /= '*' then
+					str.prepend ("* ")
+					set_title (str)
+				end
+				address_manager.disable_formatters
+				cst ?= stone
+				if cst /= Void then
+					Eiffel_project.Manager.class_is_edited (cst.class_i)
+				end
+				text_edited := True
+			end
+			status_bar.display_message ("")
+		end
+
+	on_back is
+			-- User pressed Alt+left.
+			-- Go back in the history (or the context history).
+		do
+			if context_tool_has_focus then
+				if context_tool.history_manager.is_back_possible then
+					context_tool.history_manager.back_command.execute
+				end
+			elseif history_manager.is_back_possible then
+				history_manager.back_command.execute		
+			end
+		end
+
+	on_forth is
+			-- User pressed Alt+right.
+			-- Go forth in the history (or the context history).
+		do
+			if context_tool_has_focus then
+				if context_tool.history_manager.is_forth_possible then
+					context_tool.history_manager.forth_command.execute
+					editor_tool.text_area.editor_viewport.enable_sensitive
+					editor_tool.text_area.set_focus
+				end
+			elseif history_manager.is_forth_possible then
+				history_manager.forth_command.execute
 				editor_tool.text_area.editor_viewport.enable_sensitive
 				editor_tool.text_area.set_focus
 			end
-		elseif history_manager.is_forth_possible then
-			history_manager.forth_command.execute
-			editor_tool.text_area.editor_viewport.enable_sensitive
-			editor_tool.text_area.set_focus
 		end
-	end
 
-context_tool_has_focus: BOOLEAN is
-		-- Does the context tool or one of its children has the focus?
-	local
-		fw: EV_WIDGET
-		cont: EV_CONTAINER
-		wid: EV_WIDGET
-	do
-		fw := (create {EV_ENVIRONMENT}).application.focused_widget
-		wid := context_tool.explorer_bar_item.widget
-		if wid = fw then
-			Result := True
-		elseif fw = Void then
-			Result := False
-		else
-			from
-				cont := fw.parent
-			until
-				cont = wid or cont = Void
-			loop
-				cont := cont.parent
-			end
-			if cont = wid then
+	context_tool_has_focus: BOOLEAN is
+			-- Does the context tool or one of its children has the focus?
+		local
+			fw: EV_WIDGET
+			cont: EV_CONTAINER
+			wid: EV_WIDGET
+		do
+			fw := (create {EV_ENVIRONMENT}).application.focused_widget
+			wid := context_tool.explorer_bar_item.widget
+			if wid = fw then
 				Result := True
-			end
-		end
-	end
-
-saved_cursor: CURSOR
-		-- Saved cursor position for displaying the stack.
-
-can_drop (st: ANY): BOOLEAN is
-		-- Can the user drop the stone `st'?
-	local
-		conv_ace: ACE_SYNTAX_STONE
-	do
-		conv_ace ?= st
-		Result := conv_ace = Void
-	end
-
-quick_refresh_on_class_drop (unused: CLASSI_STONE) is
-		-- Quick refresh all windows.
-	do
-		window_manager.quick_refresh_all
-	end
-
-quick_refresh_on_brk_drop (unused: BREAKABLE_STONE) is
-		-- Quick refresh all windows.
-	do
-		window_manager.quick_refresh_all
-	end
-
-send_stone_to_context is
-		-- Send current stone to the context tool.
-		-- Used by `send_stone_to_context_cmd'.
-	do
-		if stone /= Void then
-			context_tool.set_stone (stone)
-		end
-	end
-
-destroy is 
-		-- check if current text has been saved and destroy
-	local
-		dialog_w: EB_WARNING_DIALOG
-	do
-		if editor_tool /= Void and then editor_tool.text_area /= Void and then changed and then not confirmed then
-			if Window_manager.development_windows_count > 1 then
-				create dialog_w.make_with_text (Warning_messages.w_Save_before_closing)
-				dialog_w.set_buttons_and_actions (<<"Yes", "No", "Cancel">>, <<agent save_and_destroy, agent force_destroy, agent do_nothing>>)
-				dialog_w.set_default_push_button (dialog_w.button("Yes"))
-				dialog_w.set_default_cancel_button (dialog_w.button("Cancel"))
-				dialog_w.show_modal_to_window (window)
+			elseif fw = Void then
+				Result := False
 			else
-					-- We let the window manager handle the saving, along with other windows
-					-- (not development windows)
-				force_destroy
-			end
-		else
-			Precursor {EB_TOOL_MANAGER}
-		end
-	end
-
-save_and_destroy is
-	do
-		save_text
-		destroy
-	end
-
-force_destroy is
-		-- Destroy without asking.
-	do
-		confirmed := True
-		destroy
-		confirmed := False
-	end
-
-confirmed: BOOLEAN
-		-- Did the user say he wanted to exit?
-
-show_dynamic_library_dialog is
-		-- Create a new dynamic library window and display it.
-	do
-		Window_manager.create_dynamic_lib_window
-	end
-
-recycle is
-		-- Call the precursors.
-	do
-		Precursor {EB_TOOL_MANAGER}
-		command_controller.recycle
-	end
-
-feature {NONE} -- Implementation: Editor commands
-
-refresh_cursor_position is
-		-- Display the current cursor position in the status bar.
-	require
-		text_loaded: not is_empty
-	local
-		l, c: INTEGER
-	do
-		l := editor_tool.text_area.cursor_y_position
-		c := editor_tool.text_area.cursor_x_position
-		status_bar.set_cursor_position (l, c)
-	end
-
-select_all is
-		-- Select the whole text in the focused editor.
-	do
-		current_editor.select_all
-	end
-
-search is
-		-- Search some text in the focused editor.
-	local
-		cv_ced: EB_CLICKABLE_EDITOR
-	do
-		cv_ced ?= current_editor
-		if cv_ced /= Void then
-			cv_ced.search
-		end
-	end
-
-goto is
-		-- Display a dialog to select a line to go to in the editor.
-	local
-		ed: EB_EDITOR
-	do
-		ed ?= current_editor
-		if ed /= Void then
-			create goto_dialog.make (ed)
-			goto_dialog.show_modal_to_window (Current.window)
-		end
-	end
-
-toggle_line_number_display is
-		-- Toggle line number display on/off in editor
-	local
-		ed: EB_EDITOR
-	do
-		ed ?= current_editor
-		if ed /= Void then
-			ed.toggle_line_number_display
-		end
-	end
-
-find_next is
-		-- Find the next occurrence of the search text.
-	local
-		cv_ced: EB_CLICKABLE_EDITOR
-	do
-		if search_tool.currently_searched /= Void then
-			cv_ced ?= current_editor
-			if cv_ced /= Void then
-				cv_ced.find_next
-			end
-		else
-			search_tool.show_and_set_focus
-		end
-	end
-
-find_previous is
-		-- Find the previous occurrence of the search text.
-	local
-		cv_ced: EB_CLICKABLE_EDITOR
-	do
-		if search_tool.currently_searched /= Void then
-			cv_ced ?= current_editor
-			if cv_ced /= Void then
-				cv_ced.find_previous
-			end
-		else
-			search_tool.show_and_set_focus
-		end
-	end
-
-find_selection is
-		-- Find the next occurrence of the selection.
-	local
-		cv_ced: EB_CLICKABLE_EDITOR
-	do
-		cv_ced ?= current_editor
-		if cv_ced /= Void then
-			cv_ced.find_selection
-		end
-	end
-
-cut_selection is
-		-- Cut the selection in the current editor.
-	do
-		current_editor.cut_selection
-	end
-
-copy_selection is
-		-- Cut the selection in the current editor.
-	do
-		current_editor.copy_selection
-	end
-
-toggle_formatting_marks is
-		-- Show/Hide formatting marks in the editor and update related menu item.
-	do
-		current_editor.toggle_view_invisible_symbols
-		if current_editor.view_invisible_symbols then
-			formatting_marks_command_menu_item.set_text (Interface_names.m_Hide_formatting_marks)
-		else
-			formatting_marks_command_menu_item.set_text(Interface_names.m_Show_formatting_marks)
-		end
-	end
-
-feature {NONE} -- Implementation / Menus
-
-number_of_displayed_external_commands: INTEGER
-		-- Number of external commands in the tools menu.
-
-old_cur: EV_CURSOR
-		-- Cursor saved while displaying the hourglass cursor.
-
-cur_wid: EV_WIDGET
-		-- Widget on which the hourglass cursor was set.
-
-project_menu: EV_MENU
-		-- Menu for entries relative to the Project.
-
-recent_projects_menu: EB_RECENT_PROJECTS_MANAGER_MENU
-		-- SubMenu for recent projects.
-
-during_synchronization: BOOLEAN
-		-- Are we during a resynchronization?
-
-formatting_marks_command_menu_item: EB_COMMAND_MENU_ITEM
-		-- Menu item used to shw/hide formatting marks.
-
-undo_accelerator: EV_ACCELERATOR
-		-- Accelerator for Ctrl+Z
-
-redo_accelerator: EV_ACCELERATOR
-		-- Accelerator for Ctrl+Y
-
-feature {EB_TOOL} -- Implementation / Commands
-
-shell_cmd: EB_OPEN_SHELL_COMMAND
-		-- Command to use an external editor.
-
-undo_cmd: EB_UNDO_COMMAND
-		-- Command to undo in the editor.
-
-redo_cmd: EB_REDO_COMMAND
-		-- Command to redo in the editor.
-
-editor_cut_cmd: EB_ON_SELECTION_COMMAND
-		-- Command to cut text in the editor.
-
-editor_copy_cmd: EB_ON_SELECTION_COMMAND
-		-- Command to copy text in the editor.
-
-editor_paste_cmd: EB_EDITOR_PASTE_COMMAND
-		-- Command to paste text in the editor.
-
-melt_cmd: EB_MELT_PROJECT_COMMAND
-		-- Command to start compilation.
-
-freeze_cmd: EB_FREEZE_PROJECT_COMMAND
-		-- Command to Freeze the project.
-
-finalize_cmd: EB_FINALIZE_PROJECT_COMMAND
-		-- Command to Finalize the project.
-
-c_workbench_compilation_cmd: EB_C_COMPILATION_COMMAND
-		-- Command to compile the workbench C code.
-
-c_finalized_compilation_cmd: EB_C_COMPILATION_COMMAND
-		-- Command to compile the finalized C code.
-
-new_cluster_cmd: EB_NEW_CLUSTER_COMMAND
-		-- Command to create a new cluster.
-
-new_class_cmd: EB_NEW_CLASS_COMMAND
-		-- Command to create a new class.
-
-new_feature_cmd: EB_NEW_FEATURE_COMMAND
-		-- Command to execute the feature wizard.
-		
-toggle_feature_signature_cmd: EB_TOGGLE_FEATURE_SIGNATURE_COMMAND
-		-- Show/Hide signature of feature node in eb_feature_tool
-
-toggle_stone_cmd: EB_UNIFY_STONE_CMD
-		-- Command to toggle between the stone management modes.
-
-delete_class_cluster_cmd: EB_DELETE_CLASS_CLUSTER_COMMAND
-		-- Command to remove a class or a cluster from the system
-		-- (permanent deletion).
-
-show_profiler: EB_SHOW_PROFILE_TOOL
-		-- What allows us to display the profiler window.
-
-toolbarable_commands: ARRAYED_LIST [EB_TOOLBARABLE_COMMAND]
-		-- All commands that can be put in a toolbar.
-
-command_controller: EB_EDITOR_COMMAND_CONTROLLER
-		-- Object that takes care of updating the sensitivity of all editor commands.
-
-save_as_cmd: EB_SAVE_FILE_AS_COMMAND
-		-- Command to save a class with a different file name.
-
-Edit_external_commands_cmd: EB_EXTERNAL_COMMANDS_EDITOR is
-		-- Command that lets the user add new external commands to the tools menu.
-	once
-		create Result.make
-		Result.enable_sensitive
-	end
-
-system_info_cmd: EB_STANDARD_CMD is
-		-- Command to display information about the system (root class,...)
-	do
-		Result := debugger_manager.system_info_cmd
-	end
-
-display_error_help_cmd: EB_ERROR_INFORMATION_CMD is
-		-- Command to pop up a dialog giving help on compilation errors.
-	do
-		Result := debugger_manager.display_error_help_cmd
-	end
-
-send_stone_to_context_cmd: EB_STANDARD_CMD
-		-- Command to send the current stone to the context tool.
-
-print_cmd: EB_PRINT_COMMAND
-		-- Command to print the content of editor with focus
-
-eac_browser_cmd: EB_OPEN_EAC_BROWSER_CMD is
-		-- Command to display the eac browser
-	do
-		Result := Debugger_manager.eac_browser_cmd
-	end		
-
-show_favorites_menu_item: EV_MENU_ITEM
-		-- Show/Hide favorites menu item.
-
-update_show_favorites_menu_item is
-		-- Update `show_favorites_menu_item' menu label.
-	do
-		if favorites_tool.shown then
-			show_favorites_menu_item.set_text (Interface_names.m_Hide_favorites)
-		else
-			show_favorites_menu_item.set_text (Interface_names.m_Show_favorites)
-		end
-	end
-
-execute_show_favorites is
-		-- Show `favorites_tool' if it is closed, close
-		-- it in the opposite case.
-	do
-		update_show_favorites_menu_item
-		if favorites_tool.shown then
-			favorites_tool.close
-		else
-			favorites_tool.show
-		end
-	end
-	
-feature {EB_TOOL_WINDOW, EB_EXPLORER_BAR, EB_DEBUGGER_MANAGER} -- Floating tool handling
-
-all_tool_windows: ARRAYED_LIST [EB_TOOL_WINDOW]
-	-- All tool windows under the control of `Current'.
-
-add_tool_window (a_tool_window: EB_TOOL_WINDOW) is
-		-- Add `a_tool_window' to `all_tool_windows', ensuring it is
-		-- then under the control of `Current'.
-	require
-		a_tool_window_not_void: a_tool_window /= Void
-	do
-		if all_tool_windows = Void then
-			create all_tool_windows.make (2)
-		end
-		all_tool_windows.extend (a_tool_window)
-	ensure
-		extended: all_tool_windows.has (a_tool_window)
-	end
-	
-remove_tool_window (a_widget: EV_WIDGET) is
-		-- Remove tool window associate with `a_widget'.
-	require
-		a_widget_not_void: a_widget /= Void
-	do
-		if all_tool_windows /= Void then
-			from
-				all_tool_windows.start
-			until
-				all_tool_windows.off
-			loop
-				if all_tool_windows.item.tool = a_widget then
-					all_tool_windows.remove
-					all_tool_windows.finish
+				from
+					cont := fw.parent
+				until
+					cont = wid or cont = Void
+				loop
+					cont := cont.parent
 				end
-				all_tool_windows.forth
+				if cont = wid then
+					Result := True
+				end
 			end
 		end
-	end
-	
-remove_all_tool_windows is
-		-- Ensure `all_tool_windows' is empty if non Void.
-	do
-		if all_tool_windows /= Void then
-			all_tool_windows.wipe_out
+
+	saved_cursor: CURSOR
+			-- Saved cursor position for displaying the stack.
+
+	can_drop (st: ANY): BOOLEAN is
+			-- Can the user drop the stone `st'?
+		local
+			conv_ace: ACE_SYNTAX_STONE
+		do
+			conv_ace ?= st
+			Result := conv_ace = Void
 		end
-	ensure
-		tool_windows_empty: all_tool_windows /= Void implies all_tool_windows.is_empty
-	end
-	
-	
-window_moved (x_pos, y_pos: INTEGER) is
-		-- `Current' has been moved, so move all associated tool windows within `all_tool_windows'.
-	local
-		tool_window: EB_TOOL_WINDOW
-	do
-		if all_tool_windows /= Void then
-			from
-				all_tool_windows.start
-			until
-				all_tool_windows.off
-			loop
-				tool_window := all_tool_windows.item
-				check
-					not_destroyed: not tool_window.window.is_destroyed
-				end
-				if preferences.browsing_data.dock_tracking then
-					tool_window.window.move_actions.block
-					tool_window.window.set_x_position (x_pos + tool_window.x_position)
-					tool_window.window.set_y_position (y_pos + tool_window.y_position)
-					tool_window.window.move_actions.resume
+
+	quick_refresh_on_class_drop (unused: CLASSI_STONE) is
+			-- Quick refresh all windows.
+		do
+			window_manager.quick_refresh_all
+		end
+
+	quick_refresh_on_brk_drop (unused: BREAKABLE_STONE) is
+			-- Quick refresh all windows.
+		do
+			window_manager.quick_refresh_all
+		end
+
+	send_stone_to_context is
+			-- Send current stone to the context tool.
+			-- Used by `send_stone_to_context_cmd'.
+		do
+			if stone /= Void then
+				context_tool.set_stone (stone)
+			end
+		end
+
+	destroy is 
+			-- check if current text has been saved and destroy
+		local
+			dialog_w: EB_WARNING_DIALOG
+		do
+			if editor_tool /= Void and then editor_tool.text_area /= Void and then changed and then not confirmed then
+				if Window_manager.development_windows_count > 1 then
+					create dialog_w.make_with_text (Warning_messages.w_Save_before_closing)
+					dialog_w.set_buttons_and_actions (<<"Yes", "No", "Cancel">>, <<agent save_and_destroy, agent force_destroy, agent do_nothing>>)
+					dialog_w.set_default_push_button (dialog_w.button("Yes"))
+					dialog_w.set_default_cancel_button (dialog_w.button("Cancel"))
+					dialog_w.show_modal_to_window (window)
 				else
-						-- If we are not performing dock tracking, we must update the relative position
-						-- of the tool window, so that if dock tracking is enabled, the relative
-						-- positions are correct.
-					tool_window.set_x_position ( tool_window.window.screen_x - x_pos)
-					tool_window.set_y_position ( tool_window.window.screen_y - y_pos)
+						-- We let the window manager handle the saving, along with other windows
+						-- (not development windows)
+					force_destroy
 				end
-				all_tool_windows.forth
+			else
+				Precursor {EB_TOOL_MANAGER}
 			end
-		end			
-	end
-	
-feature {NONE} -- Execution
+		end
 
-Kcst: EV_KEY_CONSTANTS is
-		-- A way to access key constants.
-	once
-		create Result
-	end
+	save_and_destroy is
+		do
+			save_text
+			destroy
+		end
 
-toolbar_right_click_action (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
-		-- Action called when the user right-click in the toolbar.
-		-- Display a popup menu to show/hide toolbars and customize the general toolbar.
-	local
-		popup_menu: EV_MENU
-	do
-		if a_button = 3 then
-			popup_menu := build_toolbar_menu
-			popup_menu.show
+	force_destroy is
+			-- Destroy without asking.
+		do
+			confirmed := True
+			destroy
+			confirmed := False
 		end
-	end
 
-enable_commands_on_project_created is
-		-- Enable commands when a new project has been created (not yet compiled)
-	do
-		system_info_cmd.enable_sensitive
-		if
-			stone /= Void and then
-			not unified_stone
-		then
-			send_stone_to_context_cmd.enable_sensitive
-		end
-	end
+	confirmed: BOOLEAN
+			-- Did the user say he wanted to exit?
 
-enable_commands_on_project_loaded is
-		-- Enable commands when a new project has been created and compiled
-	do
-		if has_profiler then
-			show_profiler.enable_sensitive
+	show_dynamic_library_dialog is
+			-- Create a new dynamic library window and display it.
+		do
+			Window_manager.create_dynamic_lib_window
 		end
-		if has_dll_generation then
-			show_dynamic_lib_tool.enable_sensitive
-		end
-		open_cmd.enable_sensitive
-		new_class_cmd.enable_sensitive
-		new_cluster_cmd.enable_sensitive
-		system_info_cmd.enable_sensitive
-		if unified_stone then
-			send_stone_to_context_cmd.disable_sensitive
-		elseif stone /= Void then
-			send_stone_to_context_cmd.enable_sensitive
-		end
-		new_class_cmd.enable_sensitive
-		new_cluster_cmd.enable_sensitive
-		delete_class_cluster_cmd.enable_sensitive
-		c_workbench_compilation_cmd.enable_sensitive
-		c_finalized_compilation_cmd.enable_sensitive
-	end
 
-disable_commands_on_project_unloaded is
-		-- Enable commands when a project has been closed.
-	do
-		if has_dll_generation then
-			show_dynamic_lib_tool.disable_sensitive
+	recycle is
+			-- Call the precursors.
+		do
+			Precursor {EB_TOOL_MANAGER}
+			command_controller.recycle
 		end
-		if has_profiler then
-			show_profiler.disable_sensitive
+
+	feature {NONE} -- Implementation: Editor commands
+
+	refresh_cursor_position is
+			-- Display the current cursor position in the status bar.
+		require
+			text_loaded: not is_empty
+		local
+			l, c: INTEGER
+		do
+			l := editor_tool.text_area.cursor_y_position
+			c := editor_tool.text_area.cursor_x_position
+			status_bar.set_cursor_position (l, c)
 		end
-		open_cmd.disable_sensitive
-		new_class_cmd.disable_sensitive
-		new_cluster_cmd.disable_sensitive
-		if not project_manager.is_created then
-			system_info_cmd.disable_sensitive
-			send_stone_to_context_cmd.disable_sensitive
+
+	select_all is
+			-- Select the whole text in the focused editor.
+		do
+			current_editor.select_all
 		end
-		delete_class_cluster_cmd.disable_sensitive
-		c_workbench_compilation_cmd.disable_sensitive
-		c_finalized_compilation_cmd.disable_sensitive
-	end
+
+	search is
+			-- Search some text in the focused editor.
+		local
+			cv_ced: EB_CLICKABLE_EDITOR
+		do
+			cv_ced ?= current_editor
+			if cv_ced /= Void then
+				cv_ced.search
+			end
+		end
+
+	goto is
+			-- Display a dialog to select a line to go to in the editor.
+		local
+			ed: EB_EDITOR
+		do
+			ed ?= current_editor
+			if ed /= Void then
+				create goto_dialog.make (ed)
+				goto_dialog.show_modal_to_window (Current.window)
+			end
+		end
+
+	toggle_line_number_display is
+			-- Toggle line number display on/off in editor
+		local
+			ed: EB_EDITOR
+		do
+			ed ?= current_editor
+			if ed /= Void then
+				ed.toggle_line_number_display
+			end
+		end
+
+	find_next is
+			-- Find the next occurrence of the search text.
+		local
+			cv_ced: EB_CLICKABLE_EDITOR
+		do
+			if search_tool.currently_searched /= Void then
+				cv_ced ?= current_editor
+				if cv_ced /= Void then
+					cv_ced.find_next
+				end
+			else
+				search_tool.show_and_set_focus
+			end
+		end
+
+	find_previous is
+			-- Find the previous occurrence of the search text.
+		local
+			cv_ced: EB_CLICKABLE_EDITOR
+		do
+			if search_tool.currently_searched /= Void then
+				cv_ced ?= current_editor
+				if cv_ced /= Void then
+					cv_ced.find_previous
+				end
+			else
+				search_tool.show_and_set_focus
+			end
+		end
+
+	find_selection is
+			-- Find the next occurrence of the selection.
+		local
+			cv_ced: EB_CLICKABLE_EDITOR
+		do
+			cv_ced ?= current_editor
+			if cv_ced /= Void then
+				cv_ced.find_selection
+			end
+		end
+
+	cut_selection is
+			-- Cut the selection in the current editor.
+		do
+			current_editor.cut_selection
+		end
+
+	copy_selection is
+			-- Cut the selection in the current editor.
+		do
+			current_editor.copy_selection
+		end
+
+	toggle_formatting_marks is
+			-- Show/Hide formatting marks in the editor and update related menu item.
+		do
+			current_editor.toggle_view_invisible_symbols
+			if current_editor.view_invisible_symbols then
+				formatting_marks_command_menu_item.set_text (Interface_names.m_Hide_formatting_marks)
+			else
+				formatting_marks_command_menu_item.set_text(Interface_names.m_Show_formatting_marks)
+			end
+		end
+
+	feature {NONE} -- Implementation / Menus
+
+	number_of_displayed_external_commands: INTEGER
+			-- Number of external commands in the tools menu.
+
+	old_cur: EV_CURSOR
+			-- Cursor saved while displaying the hourglass cursor.
+
+	cur_wid: EV_WIDGET
+			-- Widget on which the hourglass cursor was set.
+
+	project_menu: EV_MENU
+			-- Menu for entries relative to the Project.
+
+	recent_projects_menu: EB_RECENT_PROJECTS_MANAGER_MENU
+			-- SubMenu for recent projects.
+
+	during_synchronization: BOOLEAN
+			-- Are we during a resynchronization?
+
+	formatting_marks_command_menu_item: EB_COMMAND_MENU_ITEM
+			-- Menu item used to shw/hide formatting marks.
+
+	undo_accelerator: EV_ACCELERATOR
+			-- Accelerator for Ctrl+Z
+
+	redo_accelerator: EV_ACCELERATOR
+			-- Accelerator for Ctrl+Y
+
+	feature {EB_TOOL} -- Implementation / Commands
+
+	shell_cmd: EB_OPEN_SHELL_COMMAND
+			-- Command to use an external editor.
+
+	undo_cmd: EB_UNDO_COMMAND
+			-- Command to undo in the editor.
+
+	redo_cmd: EB_REDO_COMMAND
+			-- Command to redo in the editor.
+
+	editor_cut_cmd: EB_ON_SELECTION_COMMAND
+			-- Command to cut text in the editor.
+
+	editor_copy_cmd: EB_ON_SELECTION_COMMAND
+			-- Command to copy text in the editor.
+
+	editor_paste_cmd: EB_EDITOR_PASTE_COMMAND
+			-- Command to paste text in the editor.
+
+	melt_cmd: EB_MELT_PROJECT_COMMAND
+			-- Command to start compilation.
+
+	freeze_cmd: EB_FREEZE_PROJECT_COMMAND
+			-- Command to Freeze the project.
+
+	finalize_cmd: EB_FINALIZE_PROJECT_COMMAND
+			-- Command to Finalize the project.
+
+	c_workbench_compilation_cmd: EB_C_COMPILATION_COMMAND
+			-- Command to compile the workbench C code.
+
+	c_finalized_compilation_cmd: EB_C_COMPILATION_COMMAND
+			-- Command to compile the finalized C code.
+
+	new_cluster_cmd: EB_NEW_CLUSTER_COMMAND
+			-- Command to create a new cluster.
+
+	new_class_cmd: EB_NEW_CLASS_COMMAND
+			-- Command to create a new class.
+
+	new_feature_cmd: EB_NEW_FEATURE_COMMAND
+			-- Command to execute the feature wizard.
+			
+	toggle_feature_signature_cmd: EB_TOGGLE_FEATURE_SIGNATURE_COMMAND
+			-- Show/Hide signature of feature node in eb_feature_tool
+
+	toggle_stone_cmd: EB_UNIFY_STONE_CMD
+			-- Command to toggle between the stone management modes.
+
+	delete_class_cluster_cmd: EB_DELETE_CLASS_CLUSTER_COMMAND
+			-- Command to remove a class or a cluster from the system
+			-- (permanent deletion).
+
+	show_profiler: EB_SHOW_PROFILE_TOOL
+			-- What allows us to display the profiler window.
+
+	toolbarable_commands: ARRAYED_LIST [EB_TOOLBARABLE_COMMAND]
+			-- All commands that can be put in a toolbar.
+
+	command_controller: EB_EDITOR_COMMAND_CONTROLLER
+			-- Object that takes care of updating the sensitivity of all editor commands.
+
+	save_as_cmd: EB_SAVE_FILE_AS_COMMAND
+			-- Command to save a class with a different file name.
+
+	Edit_external_commands_cmd: EB_EXTERNAL_COMMANDS_EDITOR is
+			-- Command that lets the user add new external commands to the tools menu.
+		once
+			create Result.make
+			Result.enable_sensitive
+		end
+
+	system_info_cmd: EB_STANDARD_CMD is
+			-- Command to display information about the system (root class,...)
+		do
+			Result := debugger_manager.system_info_cmd
+		end
+
+	display_error_help_cmd: EB_ERROR_INFORMATION_CMD is
+			-- Command to pop up a dialog giving help on compilation errors.
+		do
+			Result := debugger_manager.display_error_help_cmd
+		end
+
+	send_stone_to_context_cmd: EB_STANDARD_CMD
+			-- Command to send the current stone to the context tool.
+
+	print_cmd: EB_PRINT_COMMAND
+			-- Command to print the content of editor with focus
+
+	eac_browser_cmd: EB_OPEN_EAC_BROWSER_CMD is
+			-- Command to display the eac browser
+		do
+			Result := Debugger_manager.eac_browser_cmd
+		end		
+
+	show_favorites_menu_item: EV_MENU_ITEM
+			-- Show/Hide favorites menu item.
+
+	update_show_favorites_menu_item is
+			-- Update `show_favorites_menu_item' menu label.
+		do
+			if favorites_tool.shown then
+				show_favorites_menu_item.set_text (Interface_names.m_Hide_favorites)
+			else
+				show_favorites_menu_item.set_text (Interface_names.m_Show_favorites)
+			end
+		end
+
+	execute_show_favorites is
+			-- Show `favorites_tool' if it is closed, close
+			-- it in the opposite case.
+		do
+			update_show_favorites_menu_item
+			if favorites_tool.shown then
+				favorites_tool.close
+			else
+				favorites_tool.show
+			end
+		end
+		
+	feature {EB_TOOL_WINDOW, EB_EXPLORER_BAR, EB_DEBUGGER_MANAGER} -- Floating tool handling
+
+	all_tool_windows: ARRAYED_LIST [EB_TOOL_WINDOW]
+		-- All tool windows under the control of `Current'.
+
+	add_tool_window (a_tool_window: EB_TOOL_WINDOW) is
+			-- Add `a_tool_window' to `all_tool_windows', ensuring it is
+			-- then under the control of `Current'.
+		require
+			a_tool_window_not_void: a_tool_window /= Void
+		do
+			if all_tool_windows = Void then
+				create all_tool_windows.make (2)
+			end
+			all_tool_windows.extend (a_tool_window)
+		ensure
+			extended: all_tool_windows.has (a_tool_window)
+		end
+		
+	remove_tool_window (a_widget: EV_WIDGET) is
+			-- Remove tool window associate with `a_widget'.
+		require
+			a_widget_not_void: a_widget /= Void
+		do
+			if all_tool_windows /= Void then
+				from
+					all_tool_windows.start
+				until
+					all_tool_windows.off
+				loop
+					if all_tool_windows.item.tool = a_widget then
+						all_tool_windows.remove
+						all_tool_windows.finish
+					end
+					all_tool_windows.forth
+				end
+			end
+		end
+		
+	remove_all_tool_windows is
+			-- Ensure `all_tool_windows' is empty if non Void.
+		do
+			if all_tool_windows /= Void then
+				all_tool_windows.wipe_out
+			end
+		ensure
+			tool_windows_empty: all_tool_windows /= Void implies all_tool_windows.is_empty
+		end
+		
+		
+	window_moved (x_pos, y_pos: INTEGER) is
+			-- `Current' has been moved, so move all associated tool windows within `all_tool_windows'.
+		local
+			tool_window: EB_TOOL_WINDOW
+		do
+			if all_tool_windows /= Void then
+				from
+					all_tool_windows.start
+				until
+					all_tool_windows.off
+				loop
+					tool_window := all_tool_windows.item
+					check
+						not_destroyed: not tool_window.window.is_destroyed
+					end
+					if preferences.browsing_data.dock_tracking then
+						tool_window.window.move_actions.block
+						tool_window.window.set_x_position (x_pos + tool_window.x_position)
+						tool_window.window.set_y_position (y_pos + tool_window.y_position)
+						tool_window.window.move_actions.resume
+					else
+							-- If we are not performing dock tracking, we must update the relative position
+							-- of the tool window, so that if dock tracking is enabled, the relative
+							-- positions are correct.
+						tool_window.set_x_position ( tool_window.window.screen_x - x_pos)
+						tool_window.set_y_position ( tool_window.window.screen_y - y_pos)
+					end
+					all_tool_windows.forth
+				end
+			end			
+		end
+		
+	feature {NONE} -- Execution
+
+	Kcst: EV_KEY_CONSTANTS is
+			-- A way to access key constants.
+		once
+			create Result
+		end
+
+	toolbar_right_click_action (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+			-- Action called when the user right-click in the toolbar.
+			-- Display a popup menu to show/hide toolbars and customize the general toolbar.
+		local
+			popup_menu: EV_MENU
+		do
+			if a_button = 3 then
+				popup_menu := build_toolbar_menu
+				popup_menu.show
+			end
+		end
+
+	enable_commands_on_project_created is
+			-- Enable commands when a new project has been created (not yet compiled)
+		do
+			system_info_cmd.enable_sensitive
+			if
+				stone /= Void and then
+				not unified_stone
+			then
+				send_stone_to_context_cmd.enable_sensitive
+			end
+		end
+
+	enable_commands_on_project_loaded is
+			-- Enable commands when a new project has been created and compiled
+		do
+			if has_profiler then
+				show_profiler.enable_sensitive
+			end
+			if has_dll_generation then
+				show_dynamic_lib_tool.enable_sensitive
+			end
+			open_cmd.enable_sensitive
+			new_class_cmd.enable_sensitive
+			new_cluster_cmd.enable_sensitive
+			system_info_cmd.enable_sensitive
+			if unified_stone then
+				send_stone_to_context_cmd.disable_sensitive
+			elseif stone /= Void then
+				send_stone_to_context_cmd.enable_sensitive
+			end
+			new_class_cmd.enable_sensitive
+			new_cluster_cmd.enable_sensitive
+			delete_class_cluster_cmd.enable_sensitive
+			c_workbench_compilation_cmd.enable_sensitive
+			c_finalized_compilation_cmd.enable_sensitive
+		end
+
+	disable_commands_on_project_unloaded is
+			-- Enable commands when a project has been closed.
+		do
+			if has_dll_generation then
+				show_dynamic_lib_tool.disable_sensitive
+			end
+			if has_profiler then
+				show_profiler.disable_sensitive
+			end
+			open_cmd.disable_sensitive
+			new_class_cmd.disable_sensitive
+			new_cluster_cmd.disable_sensitive
+			if not project_manager.is_created then
+				system_info_cmd.disable_sensitive
+				send_stone_to_context_cmd.disable_sensitive
+			end
+			delete_class_cluster_cmd.disable_sensitive
+			c_workbench_compilation_cmd.disable_sensitive
+			c_finalized_compilation_cmd.disable_sensitive
+		end
 
 end -- class EB_DEVELOPMENT_WINDOW
 

@@ -269,6 +269,7 @@ feature {NONE} -- Implementation
 			counter2: INTEGER
 			time1, time2: DATE_TIME
 			grid_label_item: EV_GRID_LABEL_ITEM
+			grid_editable_item: EV_GRID_EDITABLE_ITEM
 		do
 			create time1.make_now
 			add_items (5, 400)			
@@ -305,7 +306,7 @@ feature {NONE} -- Implementation
 			end
 
 			from
-				counter := 35
+				counter := 50
 			until
 				counter = 100
 			loop
@@ -444,7 +445,36 @@ feature {NONE} -- Implementation
 			grid.row (33).set_height (100)
 			grid.column (1).set_width (200)
 			grid.pointer_motion_actions.extend (agent motion_on_grid)
+			grid.row (34).clear
+			grid.row (34).set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("Show Editable Items"))
+			grid.row (34).add_subrow (grid.row (35))
+			grid.row (35).clear
+			from
+				counter := 1
+			until
+				counter > 5
+			loop
+				create grid_editable_item.make_with_text ("Edit Me")
+				if counter > 1 then
+					grid_editable_item.set_pixmap (image3)
+				end
+				grid.row (35).set_item (counter, grid_editable_item)
+				counter := counter + 1
+			end
+			grid.pointer_double_press_actions.extend (agent pointer_double_press_received_on_grid)
 		end
+
+	pointer_double_press_received_on_grid (an_x, a_y, button: INTEGER; grid_item: EV_GRID_ITEM) is
+			--
+		local
+			editable_item: EV_GRID_EDITABLE_ITEM
+		do
+			editable_item ?= grid_item
+			if editable_item /= Void then
+				editable_item.activate
+			end
+		end
+		
 
 	animate is
 			--
@@ -480,7 +510,7 @@ feature {NONE} -- Implementation
 	redraw is
 			--
 		do
-			grid.item (1, 33).refresh
+			grid.item (1, 33).redraw
 		end
 
 	layout_procedure (an_item: EV_GRID_LABEL_ITEM; layout: EV_GRID_LABEL_ITEM_LAYOUT) is
@@ -849,14 +879,6 @@ feature {NONE} -- Implementation
 --			grid.pointer_motion_actions.extend (agent motion_on_item)
 --			grid_label_item.set_layout_procedure (agent layout_called)
 
-		end
-
-	motion_on_item (an_x, a_y: INTEGER; an_item: EV_GRID_ITEM) is
-			--
-		do
-			if an_item /= Void then
-				an_item.refresh
-			end
 		end
 
 	layout_called (an_item: EV_GRID_LABEL_ITEM; label_item_layout: EV_GRID_LABEL_ITEM_LAYOUT) is

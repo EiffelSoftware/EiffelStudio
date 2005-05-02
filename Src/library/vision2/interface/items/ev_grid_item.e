@@ -159,13 +159,12 @@ feature -- Actions
 			implementation.deactivate
 		end
 
-	refresh is
-			--
+	redraw is
+			-- Force `Current' to be re-drawn when next idle.
 		do
-			implementation.refresh
+			implementation.redraw
 		end
 		
-
 feature -- Status report
 
 	is_parented: BOOLEAN is

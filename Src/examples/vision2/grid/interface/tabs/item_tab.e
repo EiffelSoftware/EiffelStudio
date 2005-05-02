@@ -177,6 +177,19 @@ feature {NONE} -- Implementation
 						alignment_combo.i_th (3).enable_select
 						alignment_combo.i_th (3).select_actions.resume
 					end
+					if label_item.is_top_aligned then
+						vertical_alignment_combo.i_th (1).select_actions.block
+						vertical_alignment_combo.i_th (1).enable_select
+						vertical_alignment_combo.i_th (1).select_actions.resume
+					elseif label_item.is_vertically_center_aligned then
+						vertical_alignment_combo.i_th (2).select_actions.block
+						vertical_alignment_combo.i_th (2).enable_select
+						vertical_alignment_combo.i_th (2).select_actions.resume
+					elseif label_item.is_bottom_aligned then
+						vertical_alignment_combo.i_th (3).select_actions.block
+						vertical_alignment_combo.i_th (3).enable_select
+						vertical_alignment_combo.i_th (3).select_actions.resume
+					end
 					background_color_combo.select_actions.block
 					from
 						background_color_combo.start
@@ -428,26 +441,23 @@ feature {NONE} -- Implementation
 			counter: INTEGER
 			original_item, label_item: EV_GRID_LABEL_ITEM
 			row: INTEGER
-			original_alignment: INTEGER
 		do
 			from
 				counter := 1
 				row := found_item.row.index
 				original_item ?= found_item
-				original_alignment := original_item.text_alignment
 			until
 				counter > grid.column_count
 			loop
 				label_item ?= grid.item (counter, row)
 				if label_item /= Void then
-					if original_alignment = {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_left then
+					if original_item.is_left_aligned then
 						label_item.align_text_left
-					elseif original_alignment = {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_center then
+					elseif original_item.is_center_aligned then
 						label_item.align_text_center
 					else
 						label_item.align_text_right
 					end
-					label_item.set_pixmap (original_item.pixmap)
 				end
 				counter := counter + 1
 			end
@@ -459,26 +469,23 @@ feature {NONE} -- Implementation
 			counter: INTEGER
 			original_item, label_item: EV_GRID_LABEL_ITEM
 			column: INTEGER
-			original_alignment: INTEGER
 		do
 			from
 				counter := 1
 				column := found_item.column.index
 				original_item ?= found_item
-				original_alignment := original_item.text_alignment
 			until
 				counter > grid.row_count
 			loop
 				label_item ?= grid.item (column, counter)
 				if label_item /= Void then
-					if original_alignment = {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_left then
+					if original_item.is_left_aligned then
 						label_item.align_text_left
-					elseif original_alignment = {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_center then
+					elseif original_item.is_center_aligned then
 						label_item.align_text_center
 					else
 						label_item.align_text_right
 					end
-					label_item.set_pixmap (original_item.pixmap)
 				end
 				counter := counter + 1
 			end
@@ -906,6 +913,95 @@ feature {NONE} -- Implementation
 			label_item ?= found_item
 			if label_item /= Void then
 				label_item.set_right_border (a_value)
+			end
+		end
+
+	top_alignment_item_selected is
+			-- Called by `select_actions' of `top_alignment_item'.
+		local
+			label_item: EV_GRID_LABEL_ITEM
+		do
+			label_item ?= found_item
+			if label_item /= Void then
+				label_item.align_text_top
+			end
+		end
+	
+	vertically_center_item_selected is
+			-- Called by `select_actions' of `vertically_center_item'.
+		local
+			label_item: EV_GRID_LABEL_ITEM
+		do
+			label_item ?= found_item
+			if label_item /= Void then
+				label_item.align_text_vertically_center
+			end
+		end
+	
+	bottom_alignment_item_selected is
+			-- Called by `select_actions' of `bottom_alignment_item'.
+		local
+			label_item: EV_GRID_LABEL_ITEM
+		do
+			label_item ?= found_item
+			if label_item /= Void then
+				label_item.align_text_bottom
+			end
+		end
+	
+	apply_vertical_alignment_column_button_selected is
+			-- Called by `select_actions' of `apply_vertical_selection_column_button'.
+		local
+			counter: INTEGER
+			original_item, label_item: EV_GRID_LABEL_ITEM
+			column: INTEGER
+		do
+			from
+				counter := 1
+				column := found_item.column.index
+				original_item ?= found_item
+			until
+				counter > grid.row_count
+			loop
+				label_item ?= grid.item (column, counter)
+				if label_item /= Void then
+					if original_item.is_top_aligned then
+						label_item.align_text_top
+					elseif original_item.is_vertically_center_aligned then
+						label_item.align_text_vertically_center
+					else
+						label_item.align_text_bottom
+					end
+				end
+				counter := counter + 1
+			end
+		end
+	
+	apply_vertical_alignment_row_button_selected is
+			-- Called by `select_actions' of `apply_vertical_selection_row_button'.
+		local
+			counter: INTEGER
+			original_item, label_item: EV_GRID_LABEL_ITEM
+			row: INTEGER
+		do
+			from
+				counter := 1
+				row := found_item.row.index
+				original_item ?= found_item
+			until
+				counter > grid.column_count
+			loop
+				label_item ?= grid.item (counter, row)
+				if label_item /= Void then
+					if original_item.is_top_aligned then
+						label_item.align_text_top
+					elseif original_item.is_vertically_center_aligned then
+						label_item.align_text_vertically_center
+					else
+						label_item.align_text_bottom
+					end
+				end
+				counter := counter + 1
 			end
 		end
 

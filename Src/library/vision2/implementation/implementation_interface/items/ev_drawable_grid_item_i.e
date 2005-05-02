@@ -12,7 +12,7 @@ inherit
 	EV_GRID_ITEM_I
 		redefine
 			interface,
-			redraw
+			perform_redraw
 		end
 
 create
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Implementation
 
-	redraw (an_x, a_y, a_width, a_height: INTEGER; drawable: EV_DRAWABLE) is
+	perform_redraw (an_x, a_y, a_width, a_height: INTEGER; drawable: EV_DRAWABLE) is
 			-- Redraw `Current'.
 		do
 			if expose_actions_internal /= Void then

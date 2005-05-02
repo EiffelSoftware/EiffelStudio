@@ -1128,11 +1128,11 @@ feature {NONE} -- Implementation
 
 	process_infix_prefix_as (l_as: INFIX_PREFIX_AS) is
 		do
+			if l_as.is_frozen then
+				ctxt.put_text_item (ti_frozen_keyword)
+				ctxt.put_space
+			end
 			if is_simple_formatting then
-				if l_as.is_frozen then
-					ctxt.put_text_item (ti_frozen_keyword)
-					ctxt.put_space
-				end
 				if l_as.is_infix then
 					ctxt.put_text_item (ti_infix_keyword)
 					ctxt.put_space
@@ -1148,17 +1148,13 @@ feature {NONE} -- Implementation
 				end
 				ctxt.put_text_item_without_tabs (ti_double_quote)
 			else
-				if l_as.is_frozen then
-					ctxt.put_text_item (ti_frozen_keyword)
-					ctxt.put_space
-				end
 				ctxt.local_adapt.set_evaluated_type
 				if l_as.is_infix then
 					ctxt.prepare_for_infix (l_as.internal_name, l_as.visual_name, Void)
 				else
 					ctxt.prepare_for_prefix (l_as.internal_name, l_as.visual_name)
 				end
-				adapt_main_feature				
+				adapt_main_feature
 			end
 		end
 
@@ -1174,7 +1170,32 @@ feature {NONE} -- Implementation
 			else
 				ctxt.local_adapt.set_evaluated_type
 				ctxt.prepare_for_feature (l_as.feature_name, Void)
-				adapt_main_feature				
+				adapt_main_feature
+			end
+		end
+
+	process_feature_name_alias_as (l_as: FEATURE_NAME_ALIAS_AS) is
+		do
+			if l_as.is_frozen then
+				ctxt.put_text_item (ti_frozen_keyword)
+				ctxt.put_space
+			end
+			if is_simple_formatting then
+				ctxt.prepare_for_feature (l_as.feature_name, Void)
+				ctxt.put_normal_feature
+			else
+				ctxt.local_adapt.set_evaluated_type
+				ctxt.prepare_for_feature (l_as.feature_name, Void)
+				adapt_main_feature
+			end
+			ctxt.put_text_item (ti_alias_keyword)
+			ctxt.put_space
+			ctxt.put_text_item_without_tabs (ti_double_quote)
+			ctxt.put_quoted_string_item (l_as.alias_name.value)
+			ctxt.put_text_item_without_tabs (ti_double_quote)
+			if l_as.has_convert_mark then
+				ctxt.put_space
+				ctxt.put_text_item (ti_convert_keyword)
 			end
 		end
 

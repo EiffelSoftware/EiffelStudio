@@ -741,6 +741,14 @@ feature -- Access
 			end
 		end
 
+	new_feature_name_alias_as (feature_name: ID_AS; alias_name: STRING_AS; is_frozen: BOOLEAN; has_convert_mark: BOOLEAN): FEATURE_NAME_ALIAS_AS is
+			-- New FEATURE_NAME_ALIAS AST node
+		do
+			if feature_name /= Void and then alias_name /= Void then
+				create Result.initialize (feature_name, alias_name, is_frozen, has_convert_mark)
+			end
+		end
+
 	new_feature_name_id_as (f: ID_AS; b: BOOLEAN): FEAT_NAME_ID_AS is
 			-- New FEAT_NAME_ID AST node
 		do

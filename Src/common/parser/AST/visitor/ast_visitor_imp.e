@@ -289,6 +289,10 @@ feature -- Implementation
 		do
 		end
 
+	process_feature_name_alias_as (l_as: FEATURE_NAME_ALIAS_AS) is
+		do
+		end
+
 	process_feature_list_as (l_as: FEATURE_LIST_AS) is
 		do
 		end

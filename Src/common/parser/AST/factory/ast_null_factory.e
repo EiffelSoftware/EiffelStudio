@@ -30,7 +30,7 @@ inherit
 			new_eiffel_list_type_dec_as, new_elseif_as, new_ensure_as, new_ensure_then_as,
 			new_export_item_as, new_expr_address_as, new_expr_call_as, new_external_as,
 			new_external_lang_as, new_feature_as, new_feature_clause_as, new_feature_list_as,
-			new_feature_name_id_as, new_formal_as, new_formal_dec_as, new_filled_id_as,
+			new_feature_name_alias_as, new_feature_name_id_as, new_formal_as, new_formal_dec_as, new_filled_id_as,
 			new_identifier_list, new_if_as, new_index_as, new_infix_as, new_inspect_as,
 			new_instr_call_as, new_integer_as, new_integer_hexa_as, new_interval_as, new_invariant_as,
 			new_like_id_as, new_like_current_as, new_location_as, new_loop_as, new_nested_as,
@@ -475,6 +475,11 @@ feature -- Access
 
 	new_feature_list_as (f: EIFFEL_LIST [FEATURE_NAME]): FEATURE_LIST_AS is
 			-- New FEATURE_LIST AST node
+		do
+		end
+
+	new_feature_name_alias_as (feature_name: ID_AS; alias_name: STRING_AS; is_frozen: BOOLEAN; has_convert_mark: BOOLEAN): FEATURE_NAME_ALIAS_AS is
+			-- New FEATURE_NAME_ALIAS AST node
 		do
 		end
 

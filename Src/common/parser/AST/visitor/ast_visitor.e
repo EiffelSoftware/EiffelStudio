@@ -234,6 +234,13 @@ feature {AST_EIFFEL} -- Skeleton Visitors
 		deferred
 		end
 
+	process_feature_name_alias_as (l_as: FEATURE_NAME_ALIAS_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
 	process_feature_list_as (l_as: FEATURE_LIST_AS) is
 			-- Process `l_as'.
 		require

@@ -52,7 +52,7 @@ feature -- Comparison
 
 	infix "<" (other: FEATURE_NAME): BOOLEAN is
 		local
-			normal_feature: like Current
+			normal_feature: FEAT_NAME_ID_AS
 			infix_feature: INFIX_PREFIX_AS
 		do
 			normal_feature ?= other
@@ -63,10 +63,6 @@ feature -- Comparison
 			end
 
 			if infix_feature /= Void then
-				Result := True
-			elseif feature_name = Void then
-				Result := False
-			elseif normal_feature.feature_name = Void then
 				Result := True
 			else
 				Result := feature_name < normal_feature.feature_name

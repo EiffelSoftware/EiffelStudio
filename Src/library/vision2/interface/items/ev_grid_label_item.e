@@ -1,5 +1,23 @@
 indexing
-	description: "Cell consisting of a text label with optional pixmap"
+	description: "[
+		Cell consisting of a text label with optional pixmap.
+		The rules governing the position of `text' and `pixmap' in relation to `Current' are as follows:
+
+		Both `text' and `pixmap' are always drawn completely within the area goverened by `left_border', `right_border',
+		`top_border' and `bottom_border', which will be referred to as the "redraw_client_area" in this description.
+		Note that `text' may be automatically ellipsized (clipped with three dots) to ensure this.
+
+		`pixmap' is always displayed to the very left edge of "redraw_client_area" and centered vertically. The only method
+		of overriding this behavior is to set a custom `layout_procedure'.
+
+		`text' may be aligned within "redraw_client_area" via the following features: 'align_text_left', `align_text_center',
+		`align_text_right', `align_text_top', `align_text_vertically_center' and `align_text_bottom'. Note that the text
+		alignment has no effect on the position of the pixmap which follows the rules listed above.
+
+		A `layout_procedure' may be set which permits you to override the position of `text' and `pixmap' by computing the redraw
+		positions manually. The drawing is clipped to "redraw_client_area' although there is no restriction on the positions that
+		may be set for `text' and `pixmap'.
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -333,6 +351,7 @@ feature -- Status report
 
 	is_left_aligned: BOOLEAN is
 			-- Is `text' of `Current' left aligned?
+			-- Ignored during re-draw if `layout_procedure' /= Void.
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -341,6 +360,7 @@ feature -- Status report
 		
 	is_center_aligned: BOOLEAN is
 			-- Is `text' of `Current' center aligned?
+			-- Ignored during re-draw if `layout_procedure' /= Void.
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -349,6 +369,7 @@ feature -- Status report
 
 	is_right_aligned: BOOLEAN is
 			-- Is `text' of `Current' right aligned?
+			-- Ignored during re-draw if `layout_procedure' /= Void.
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -357,6 +378,7 @@ feature -- Status report
 
 	is_top_aligned: BOOLEAN is
 			-- Is `text' of `Current' top aligned?
+			-- Ignored during re-draw if `layout_procedure' /= Void.
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -365,6 +387,7 @@ feature -- Status report
 		
 	is_vertically_center_aligned: BOOLEAN is
 			-- Is `text' of `Current' vertically center aligned?
+			-- Ignored during re-draw if `layout_procedure' /= Void.
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -373,6 +396,7 @@ feature -- Status report
 
 	is_bottom_aligned: BOOLEAN is
 			-- Is `text' of `Current' bottom aligned?
+			-- Ignored during re-draw if `layout_procedure' /= Void.
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -384,7 +408,7 @@ feature -- Status report
 			-- ready for the drawing implementation.
 			-- This procedure is fired each time that `Current' must be re-drawn and by filling the passed EV_GRID_LABEL_ITEM_LAYOUT object, the
 			-- position relative to the top left of `Current' at which `text' and `pixmap' is to be drawn may be set explicitly.
-			-- The properties set into EV_GRID_LABEL_ITEM override any other positional settings such as `alignment' within `Current'.
+			-- The properties set into EV_GRID_LABEL_ITEM override any other positional settings such as the text alignment within `Current'.
 			-- Be sure to query the width and height of `text' from the label item directly via `text_width' and `text_height' as
 			-- this is optimized and quicker than `font.string_size' for repeated calls.
 

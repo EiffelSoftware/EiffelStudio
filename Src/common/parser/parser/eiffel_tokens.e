@@ -286,6 +286,8 @@ feature -- Access
 				Result := "TE_STR_NOT"
 			when TE_STR_FREE then
 				Result := "TE_STR_FREE"
+			when TE_STR_BRACKET then
+				Result := "TE_STR_BRACKET"
 			else
 				Result := yy_character_token_name (a_token)
 			end
@@ -420,5 +422,6 @@ feature -- Token codes
 	TE_STR_XOR: INTEGER is 382
 	TE_STR_NOT: INTEGER is 383
 	TE_STR_FREE: INTEGER is 384
+	TE_STR_BRACKET: INTEGER is 385
 
 end

@@ -205,8 +205,8 @@ feature -- Status setting
 			column_visible: column.virtual_x_position >= parent.virtual_x_position and column.virtual_x_position + column.width <= parent.virtual_x_position + (parent.viewable_width).max (column.width)
 		end
 
-	refresh is
-			--
+	redraw is
+			-- Force `Current' to be re-drawn when next idle.
 		do
 			parent_i.redraw_item (Current)
 		end
@@ -365,7 +365,7 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 	internal_foreground_color: EV_COLOR
 		-- Background color used for `Current'
 		
-	redraw (an_x, a_y, a_width, a_height: INTEGER; drawable: EV_DRAWABLE) is
+	perform_redraw (an_x, a_y, a_width, a_height: INTEGER; drawable: EV_DRAWABLE) is
 			-- Redraw `Current'.
 		do
 			-- Nothing to do here as this is the dummy item.

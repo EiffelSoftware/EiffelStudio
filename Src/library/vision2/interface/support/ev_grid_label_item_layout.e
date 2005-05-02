@@ -4,6 +4,7 @@ indexing
 		You may not create these objects. To use, connect an agent to `layout_procedure' of EV_GRID_LABEL_ITEM
 		and an instance of this class is passed as an argument when the action sequence is fired. Fill in the
 		attributes as required and the `text' and `pixmap' of the EV_GRID_LABEL_ITEM are positioned accordingly.
+		All coordinates are 0 based.
 		]"
 	date: "$Date$"
 	revision: "$Revision$"

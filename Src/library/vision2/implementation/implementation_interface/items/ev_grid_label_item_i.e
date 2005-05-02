@@ -10,7 +10,7 @@ inherit
 	EV_GRID_ITEM_I
 		redefine
 			interface,
-			redraw,
+			perform_redraw,
 			initialize
 		end
 
@@ -86,7 +86,7 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 		end
 		
 		
-	redraw (an_x, a_y, a_width, a_height: INTEGER; drawable: EV_DRAWABLE) is
+	perform_redraw (an_x, a_y, a_width, a_height: INTEGER; drawable: EV_DRAWABLE) is
 			-- Redraw `Current'.
 		local
 			back_color: EV_COLOR

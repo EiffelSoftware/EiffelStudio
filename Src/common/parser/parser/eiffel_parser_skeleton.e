@@ -298,6 +298,9 @@ feature {NONE} -- Implementation
 	is_frozen: BOOLEAN
 			-- Boolean mark for frozen feature names
 
+	has_convert_mark: BOOLEAN
+			-- Boolean mark for alias names with convert mark
+
 	initial_has_old_verbatim_strings_warning: BOOLEAN
 			-- Value of `has_old_verbatim_strings_warning' when parser was started
 
@@ -470,6 +473,12 @@ feature {NONE} -- String factory
 			-- New string AST node for "\\"
 		do
 			Result := new_string ("\\")
+		end
+
+	new_bracket_string: STRING_AS is
+			-- New string AST node for "[]"
+		do
+			Result := new_string ("[]")
 		end
 
 	new_and_string: STRING_AS is

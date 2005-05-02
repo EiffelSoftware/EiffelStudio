@@ -1956,6 +1956,9 @@
 		<Item_text29></Item_text29>
 		<Item_text30></Item_text30>
 		<Item_text31></Item_text31>
+		<Item_text32></Item_text32>
+		<Item_text33></Item_text33>
+		<Item_text34></Item_text34>
 		</Item_texts>
 	<Item_pixmaps></Item_pixmaps>
 	</EV_NOTEBOOK>
@@ -2655,6 +2658,102 @@
 </item>
 <item type="EV_BUTTON"><Internal_properties>
 	<id>523</id>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_FONTABLE></EV_FONTABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_TEXTABLE><Text>Apply Column</Text>
+	</EV_TEXTABLE>
+<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_WIDGET></EV_WIDGET>
+<EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+</item>
+<item type="EV_HORIZONTAL_BOX"><Internal_properties>
+	<id>530</id>
+	<Expanded>1</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_WIDGET></EV_WIDGET>
+<EV_BOX><Is_item_expanded>01</Is_item_expanded>
+	</EV_BOX>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<EV_CONTAINER></EV_CONTAINER>
+<item type="EV_LABEL"><Internal_properties>
+	<id>531</id>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_FONTABLE></EV_FONTABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_TEXTABLE><Text>V. Alignment : </Text>
+	</EV_TEXTABLE>
+<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_WIDGET></EV_WIDGET>
+<EV_TEXT_ALIGNABLE><Text_alignment>Left</Text_alignment>
+	</EV_TEXT_ALIGNABLE>
+</item>
+<item type="EV_COMBO_BOX"><Internal_properties>
+	<id>532</id>
+	<Expanded>1</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_FONTABLE></EV_FONTABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_TEXTABLE></EV_TEXTABLE>
+<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_WIDGET></EV_WIDGET>
+<EV_TEXT_COMPONENT></EV_TEXT_COMPONENT>
+<item type="EV_LIST_ITEM"><Internal_properties>
+	<id>533</id>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_DESELECTABLE></EV_DESELECTABLE>
+<EV_TEXTABLE><Text>Top</Text>
+	</EV_TEXTABLE>
+<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+</item>
+<item type="EV_LIST_ITEM"><Internal_properties>
+	<id>534</id>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_DESELECTABLE></EV_DESELECTABLE>
+<EV_TEXTABLE><Text>Center</Text>
+	</EV_TEXTABLE>
+<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+</item>
+<item type="EV_LIST_ITEM"><Internal_properties>
+	<id>535</id>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_DESELECTABLE></EV_DESELECTABLE>
+<EV_TEXTABLE><Text>Bottom</Text>
+	</EV_TEXTABLE>
+<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+</item>
+</item>
+</item>
+<item type="EV_BUTTON"><Internal_properties>
+	<id>537</id>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_FONTABLE></EV_FONTABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_TEXTABLE><Text>Apply Column</Text>
+	</EV_TEXTABLE>
+<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_WIDGET></EV_WIDGET>
+<EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+</item>
+<item type="EV_BUTTON"><Internal_properties>
+	<id>539</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -6116,17 +6215,17 @@
 <EV_WIDGET></EV_WIDGET>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_TABLE><Columns>3</Columns>
-	<Rows>11</Rows>
+	<Rows>12</Rows>
 	<Column_spacing><Constant>box_padding</Constant>
 		</Column_spacing>
 	<Row_spacing><Constant>box_padding</Constant>
 		</Row_spacing>
 	<Border_width><Constant>box_padding</Constant>
 		</Border_width>
-	<Column_positions>0001000100010001000100010002000300020003000200030002000300010001000200030002000300020003000100010001000200030002000300020003</Column_positions>
-	<Row_positions>0001000900020004000800030002000200030003000400040008000800100011001100110009000900100010000600070005000700070005000500060006</Row_positions>
-	<Column_spans>0001000100010001000100010001000100010001000100010001000100010001000100010001000100010001000100010001000100010001000100010001</Column_spans>
-	<Row_spans>0001000100010001000100010001000100010001000100010001000100010001000100010001000100010001000100010001000100010001000100010001</Row_spans>
+	<Column_positions>0001000100010001000100010002000300020003000200030002000300010001000200030002000300020003000100010001000200030002000300020003000100030002</Column_positions>
+	<Row_positions>0001001000020005000900030002000200030003000500050009000900110012001200120010001000110011000700080006000800080006000600070007000400040004</Row_positions>
+	<Column_spans>0001000100010001000100010001000100010001000100010001000100010001000100010001000100010001000100010001000100010001000100010001000100010001</Column_spans>
+	<Row_spans>0001000100010001000100010001000100010001000100010001000100010001000100010001000100010001000100010001000100010001000100010001000100010001</Row_spans>
 	</EV_TABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
@@ -6938,6 +7037,119 @@
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <Events><Event>select_actions EV_BUTTON_ACTION_SEQUENCES apply_top_border_column_button_selected</Event>
+	</Events>
+</item>
+<item type="EV_HORIZONTAL_BOX"><Internal_properties>
+	<id>529</id>
+	<name>vertical_alignment_container</name>
+	<Expanded>1</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_WIDGET></EV_WIDGET>
+<EV_BOX><Is_item_expanded>01</Is_item_expanded>
+	</EV_BOX>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<EV_CONTAINER></EV_CONTAINER>
+<item type="EV_LABEL"><Internal_properties>
+	<id>524</id>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_FONTABLE></EV_FONTABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_TEXTABLE><Text>V. Alignment : </Text>
+	</EV_TEXTABLE>
+<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_WIDGET></EV_WIDGET>
+<EV_TEXT_ALIGNABLE><Text_alignment>Left</Text_alignment>
+	</EV_TEXT_ALIGNABLE>
+</item>
+<item type="EV_COMBO_BOX"><Internal_properties>
+	<id>525</id>
+	<name>vertical_alignment_combo</name>
+	<Expanded>1</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_FONTABLE></EV_FONTABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_TEXTABLE></EV_TEXTABLE>
+<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_WIDGET></EV_WIDGET>
+<EV_TEXT_COMPONENT></EV_TEXT_COMPONENT>
+<item type="EV_LIST_ITEM"><Internal_properties>
+	<id>526</id>
+	<name>top_alignment_item</name>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_DESELECTABLE></EV_DESELECTABLE>
+<EV_TEXTABLE><Text>Top</Text>
+	</EV_TEXTABLE>
+<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<Events><Event>select_actions EV_LIST_ITEM_ACTION_SEQUENCES top_alignment_item_selected</Event>
+	</Events>
+</item>
+<item type="EV_LIST_ITEM"><Internal_properties>
+	<id>527</id>
+	<name>vertically_center_item</name>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_DESELECTABLE></EV_DESELECTABLE>
+<EV_TEXTABLE><Text>Center</Text>
+	</EV_TEXTABLE>
+<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<Events><Event>select_actions EV_LIST_ITEM_ACTION_SEQUENCES vertically_center_item_selected</Event>
+	</Events>
+</item>
+<item type="EV_LIST_ITEM"><Internal_properties>
+	<id>528</id>
+	<name>bottom_alignment_item</name>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_DESELECTABLE></EV_DESELECTABLE>
+<EV_TEXTABLE><Text>Bottom</Text>
+	</EV_TEXTABLE>
+<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<Events><Event>select_actions EV_LIST_ITEM_ACTION_SEQUENCES bottom_alignment_item_selected</Event>
+	</Events>
+</item>
+</item>
+</item>
+<item type="EV_BUTTON"><Internal_properties>
+	<id>536</id>
+	<name>apply_vertical_alignment_column_button</name>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_FONTABLE></EV_FONTABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_TEXTABLE><Text>Apply Column</Text>
+	</EV_TEXTABLE>
+<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_WIDGET></EV_WIDGET>
+<EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<Events><Event>select_actions EV_BUTTON_ACTION_SEQUENCES apply_vertical_alignment_column_button_selected</Event>
+	</Events>
+</item>
+<item type="EV_BUTTON"><Internal_properties>
+	<id>538</id>
+	<name>apply_vertical_alignment_row_button</name>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_FONTABLE></EV_FONTABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_TEXTABLE><Text>Apply Column</Text>
+	</EV_TEXTABLE>
+<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_WIDGET></EV_WIDGET>
+<EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<Events><Event>select_actions EV_BUTTON_ACTION_SEQUENCES apply_vertical_alignment_row_button_selected</Event>
 	</Events>
 </item>
 </item>

@@ -22,11 +22,48 @@ extern EIF_POINTER new_cordebug_managed_callback ();
 
 #ifdef __cplusplus
 
+#ifndef __ICorDebugMDA_INTERFACE_DEFINED__
+#define __ICorDebugMDA_INTERFACE_DEFINED__
+typedef 
+enum CorDebugMDAFlags
+    {	MDA_FLAG_SLIP	= 0x2
+    } 	CorDebugMDAFlags;
+
+
+EXTERN_C const IID IID_ICorDebugMDA;
+class ICorDebugMDA : public IUnknown
+    {
+    public:
+        virtual HRESULT STDMETHODCALLTYPE GetName( 
+            /* [in] */ ULONG32 cchName,
+            /* [out] */ ULONG32 *pcchName,
+            /* [length_is][size_is][out] */ WCHAR szName[  ]) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE GetDescription( 
+            /* [in] */ ULONG32 cchName,
+            /* [out] */ ULONG32 *pcchName,
+            /* [length_is][size_is][out] */ WCHAR szName[  ]) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE GetXML( 
+            /* [in] */ ULONG32 cchName,
+            /* [out] */ ULONG32 *pcchName,
+            /* [length_is][size_is][out] */ WCHAR szName[  ]) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE GetFlags( 
+            /* [in] */ CorDebugMDAFlags *pFlags) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE GetOSThreadId( 
+            /* [out] */ DWORD *pOsTid) = 0;
+        
+    };
+#endif
+
 /* ------------------------------------------------------------------------- *
  * DebuggerUnmanagedCallback2
  * ------------------------------------------------------------------------- */
 
 #ifndef __ICorDebugManagedCallback2_INTERFACE_DEFINED__
+#define __ICorDebugManagedCallback2_INTERFACE_DEFINED__
 typedef enum CorDebugExceptionCallbackType
 {
 	DEBUG_EXCEPTION_FIRST_CHANCE = 1,        /* Fired when exception thrown */

@@ -14,12 +14,15 @@ inherit
 			deactivate
 		end
 
+create
+	default_create,
+	make_with_text
+
 feature -- Element change
 	
 	set_text_validation_agent (a_validation_agent: FUNCTION [ANY, TUPLE [STRING], BOOLEAN]) is
 			-- Set the agent that validates the text of `text_field' on `deactivate'.
-		require
-			validation_agent_not_void: a_validation_agent /= Void
+			-- If `a_validation_agent' is Void then no validation is performed before setting `text'.
 		do
 			validation_agent := a_validation_agent
 		ensure
@@ -42,19 +45,19 @@ feature {NONE} -- Implementation
 			create text_field
 			text_field.set_text (text)
 			popup_window.extend (text_field)
-			text_field.return_actions.extend (agent deactivate)
-			text_field.focus_out_actions.extend (agent deactivate)
 			popup_window.show
 			text_field.set_focus
 			text_field.select_all
+			text_field.return_actions.extend (agent deactivate)
+			text_field.focus_out_actions.extend (agent deactivate)
 		end
 
 	deactivate is
 			-- Cleanup from previous call to activate.
 		do
-			text_field.focus_out_actions.wipe_out
-			Precursor {EV_GRID_LABEL_ITEM}
 			if text_field /= Void then
+				text_field.focus_out_actions.wipe_out
+				Precursor {EV_GRID_LABEL_ITEM}
 				if validation_agent = Void or else validation_agent.item ([text_field.text]) then
 					set_text (text_field.text)
 				end
@@ -64,3 +67,20 @@ feature {NONE} -- Implementation
 		end
 
 end
+
+--|----------------------------------------------------------------
+--| EiffelVision2: library of reusable components for ISE Eiffel.
+--| Copyright (C) 1985-2004 Eiffel Software. All rights reserved.
+--| Duplication and distribution prohibited.  May be used only with
+--| ISE Eiffel, under terms of user license.
+--| Contact Eiffel Software for any other use.
+--|
+--| Interactive Software Engineering Inc.
+--| dba Eiffel Software
+--| 356 Storke Road, Goleta, CA 93117 USA
+--| Telephone 805-685-1006, Fax 805-685-6869
+--| Contact us at: http://www.eiffel.com/general/email.html
+--| Customer support: http://support.eiffel.com
+--| For latest info on our award winning products, visit:
+--|	http://www.eiffel.com
+--|----------------------------------------------------------------

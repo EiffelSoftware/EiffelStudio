@@ -303,7 +303,7 @@ feature {NONE} -- Implementation
 				grid.row (counter - 1).add_subrow (grid.row (counter))
 				counter := counter + 1
 			end
---			grid.insert_new_row_parented (33, grid.row (32))
+
 			from
 				counter := 35
 			until
@@ -428,6 +428,101 @@ feature {NONE} -- Implementation
 					grid_label_item.set_pixmap (image2)
 				end
 				counter := counter + 1
+			end
+
+			grid.disable_row_height_fixed
+			grid.row (3).set_height (100)
+
+
+			grid.row (32).clear
+			grid.row (32).set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("Expand Me"))
+			grid.row (32).add_subrow (grid.row (33))
+			grid.row (33).clear
+			grid.row (33).set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("Move Over Me"))
+			grid_label_item ?=  grid.row (33).item (1)
+			grid_label_item.set_pixmap (image5)
+			grid.row (33).set_height (100)
+			grid.column (1).set_width (200)
+			grid.pointer_motion_actions.extend (agent motion_on_grid)
+		end
+
+	animate is
+			--
+		local
+			label_item: EV_GRID_LABEL_ITEM
+		do
+			label_item ?= grid.item (1, 33)
+			if x < 0 or x > label_item.column.width - label_item.text_width - label_item.pixmap.width - label_item.spacing - label_item.horizontal_indent - x_vel  then
+				x_vel := 0 - x_vel
+			end
+			if y < 0 or y > label_item.row.height - label_item.text_height - y_vel- label_item.pixmap.height then
+				y_vel := 0 - y_vel
+			end
+			x := x + x_vel
+			y := y + y_vel
+			if y_vel > 0 then
+				y_vel := y_vel - 0.04
+			else
+				y_vel := y_vel + 0.04
+			end
+			if x_vel > 0 then
+				x_vel := x_vel - 0.04
+			else
+				x_vel := x_vel + 0.04
+			end
+			if x_vel.abs < 0.04 and y_vel.abs < 0.04 then
+				animating := False
+				animation_timer.destroy
+				redraw_timer.destroy
+			end
+		end
+
+	redraw is
+			--
+		do
+			grid.item (1, 33).refresh
+		end
+
+	layout_procedure (an_item: EV_GRID_LABEL_ITEM; layout: EV_GRID_LABEL_ITEM_LAYOUT) is
+			--
+		do
+			layout.set_pixmap_x (x.truncated_to_integer + an_item.text_width // 2 - an_item.pixmap.width // 2)
+			layout.set_pixmap_y (y.truncated_to_integer)
+			layout.set_text_x (x.truncated_to_integer)
+			layout.set_text_y (y.truncated_to_integer + an_item.pixmap.height)
+		end
+		
+
+	x, y: REAL
+
+	x_vel, y_vel: REAL
+
+	animating: BOOLEAN
+		
+
+	start_animation is
+			--
+		do
+			create animation_timer.make_with_interval (10)
+			animation_timer.actions.extend (agent animate)
+			create redraw_timer.make_with_interval (20)
+			redraw_timer.actions.extend (agent redraw)
+			x_vel := 6
+			y_vel := 8
+			animating := True
+		end
+		
+	animation_timer, redraw_timer: EV_TIMEOUT
+
+	motion_on_grid (an_x, a_y: INTEGER; an_item: EV_GRID_ITEM) is
+			--
+		local
+			label_item: EV_GRID_LABEL_ITEM
+		do
+			if an_item /= Void and then an_item.row.index = 33 and an_item.column.index = 1 and not animating then
+				label_item ?= an_item
+				label_item.set_layout_procedure (agent layout_procedure)
+				start_animation
 			end
 		end
 		
@@ -615,7 +710,7 @@ feature {NONE} -- Implementation
 --			grid.insert_new_row (r.index + 2)
 			
 --			r.add_subrow (row)  
-			grid.enable_tree
+--			grid.enable_tree
 --			grid.set_item (8, 1, create {EV_GRID_LABEL_ITEM}.make_with_text ("Sub Sub row"))
 --			grid.set_item (1, 2, create {EV_GRID_LABEL_ITEM}.make_with_text ("Parent Row"))
 --			grid.set_item (4, 3, create {EV_GRID_LABEL_ITEM}.make_with_text ("Sub row"))
@@ -706,23 +801,75 @@ feature {NONE} -- Implementation
 --			grid.column (5).clear
 --			grid.clear
 
-			-- Test 12
-			add_items (10, 10)
-			grid.insert_new_row_parented (6, grid.row (5))
-			grid.row (6).set_item (3, create {EV_GRID_LABEL_ITEM}.make_with_text ("An item"))
-			grid.row (6).insert_subrow (1)
-			grid.row (6).subrow (1).set_item (3, create {EV_GRID_LABEL_ITEM}.make_with_text ("Second item"))
-			grid.row (6).insert_subrow (1)
-			grid.row (6).subrow (1).set_item (3, create {EV_GRID_LABEL_ITEM}.make_with_text ("First item"))
-			grid.row (6).insert_subrow (3)
-			grid.row (6).subrow (3).set_item (3, create {EV_GRID_LABEL_ITEM}.make_with_text ("Third item"))
-			grid.row (6).insert_subrow (4)
-			grid.row (6).subrow (4).set_item (3, create {EV_GRID_LABEL_ITEM}.make_with_text ("Fourth item"))
-			grid.row (6).insert_subrow (1)
-			grid.row (6).subrow (1).set_item (3, create {EV_GRID_LABEL_ITEM}.make_with_text ("Sneaky Final first item"))
-			grid.row (6).subrow (1).ensure_expandable
-			grid.row_expand_actions.extend (agent expand_row2)
+--			-- Test 12
+--			add_items (10, 10)
+--			grid.insert_new_row_parented (6, grid.row (5))
+--			grid.row (6).set_item (3, create {EV_GRID_LABEL_ITEM}.make_with_text ("An item"))
+--			grid.row (6).insert_subrow (1)
+--			grid.row (6).subrow (1).set_item (3, create {EV_GRID_LABEL_ITEM}.make_with_text ("Second item"))
+--			grid.row (6).insert_subrow (1)
+--			grid.row (6).subrow (1).set_item (3, create {EV_GRID_LABEL_ITEM}.make_with_text ("First item"))
+--			grid.row (6).insert_subrow (3)
+--			grid.row (6).subrow (3).set_item (3, create {EV_GRID_LABEL_ITEM}.make_with_text ("Third item"))
+--			grid.row (6).insert_subrow (4)
+--			grid.row (6).subrow (4).set_item (3, create {EV_GRID_LABEL_ITEM}.make_with_text ("Fourth item"))
+--			grid.row (6).insert_subrow (1)
+--			grid.row (6).subrow (1).set_item (3, create {EV_GRID_LABEL_ITEM}.make_with_text ("Sneaky Final first item"))
+--			grid.row (6).subrow (1).ensure_expandable
+--			grid.row_expand_actions.extend (agent expand_row2)
+
+--			-- Test 13
+--			grid_label_item ?= grid.item (1, 102)
+--			from
+--				counter := 1
+--			until
+--				counter > 10000
+--			loop
+--				grid_label_item.set_text (counter.out)
+--				((create {EV_ENVIRONMENT}).application).process_events
+--				counter := counter + 1
+--			end
+
+--			-- Test 14
+--			add_items (10, 10)
+--			grid.enable_single_row_selection
+--			grid.row (5).enable_select
+--			from
+--			until
+--				grid.row_count = 0
+--			loop
+--				grid.remove_row (grid.row_count)
+--			end
+
+			-- Test 15
+--			create grid_label_item.make_with_text ("A text")
+--			GRID.set_item (1, 1, grid_label_item)
+--			GRID.set_row_height (50)
+--			GRID.column (1).set_width (50)
+--			grid.pointer_motion_actions.extend (agent motion_on_item)
+--			grid_label_item.set_layout_procedure (agent layout_called)
+
 		end
+
+	motion_on_item (an_x, a_y: INTEGER; an_item: EV_GRID_ITEM) is
+			--
+		do
+			if an_item /= Void then
+				an_item.refresh
+			end
+		end
+
+	layout_called (an_item: EV_GRID_LABEL_ITEM; label_item_layout: EV_GRID_LABEL_ITEM_LAYOUT) is
+			--
+		do
+			ii := ii + 1
+			if ii > an_item.width then
+				ii := 0
+			end
+			label_item_layout.set_text_x (ii)
+		end
+		
+	ii: INTEGER
 
 	expand_row2 (a_row: EV_GRID_ROW) is
 			--

@@ -168,7 +168,10 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 							text_offset_into_available_space := text_offset_into_available_space // 2
 						end
 					end
-					print ("internal_text_width : " + internal_text_width.out)
+						-- Ensure that the text always respect the edge of the pixmap + the spacing in all alignment modes
+						-- when the width of the column is not enough to display all of the contents
+					text_offset_into_available_space := text_offset_into_available_space.max (0)
+
 					if interface.is_top_aligned then
 						vertical_text_offset_into_available_space := 0
 					elseif interface.is_bottom_aligned then
@@ -179,6 +182,10 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 							vertical_text_offset_into_available_space := vertical_text_offset_into_available_space // 2
 						end
 					end
+
+						-- Ensure that the text always respects the top edge of the row in all alignment modes
+						-- when the height of the row is not enough to display the text fully.
+					vertical_text_offset_into_available_space := vertical_text_offset_into_available_space.max (0)
 				end
 				text_x := left_border + pixmap_width + spacing_used + text_offset_into_available_space
 				text_y := top_border + vertical_text_offset_into_available_space

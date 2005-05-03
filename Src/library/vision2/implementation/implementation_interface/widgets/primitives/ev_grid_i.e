@@ -1841,7 +1841,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			end
 			rows.go_i_th (original_row_index)
 		ensure
-			offsets_consistent_when_not_fixed: not is_row_height_fixed implies row_offsets.count = rows.count + 1
+			offsets_consistent_when_not_fixed: not is_row_height_fixed implies row_offsets.count >= rows.count + 1
 			row_index_not_changed: old rows.index = rows.index
 		end
 
@@ -1973,6 +1973,8 @@ feature {EV_GRID_DRAWER_I, EV_GRID_COLUMN_I, EV_GRID_ROW_I, EV_GRID_ITEM_I, EV_G
 		-- For example, if there are 5 rows, each with a height of 16 pixels,
 		-- `row_offsets' contains 0, 16, 32, 48, 64, 80 (Note this is 6 items)
 		-- For non-expanded tree node rows (which are therefore hidden), the offset is the same as the parent offset.
+		-- Note that we do not reduce `row_offsets' so you should always use `row_count' + 1 to access the final
+		-- current element, instead of `row_offsets.count'.
 		
 	row_indexes_to_visible_indexes: EV_GRID_ARRAYED_LIST [INTEGER]
 		-- Visible index of a row, based on its row index.

@@ -29,9 +29,6 @@ inherit
 		end
 
 	HASHABLE
-		rename
-			hash_code as item_id
-		end
 
 create
 	make
@@ -47,7 +44,7 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Initialize `Current'.
 		do
-			item_id := -1
+			hash_code := -1
 			is_initialized := True
 		end
 
@@ -316,12 +313,12 @@ feature {EV_GRID_I} -- Implementation
 			parent_i := a_parent_i
 			column_i := a_column_i
 			row_i := a_row_i
-			item_id := a_item_id
+			hash_code := a_item_id
 		ensure
 			parent_i_set: parent_i = a_parent_i
 			column_i_set: column_i = a_column_i
 			row_i_set: row_i = a_row_i
-			item_id_set: item_id = a_item_id
+			item_id_set: hash_code = a_item_id
 		end
 
 	update_for_removal is
@@ -335,7 +332,7 @@ feature {EV_GRID_I} -- Implementation
 			parent_i := Void
 			column_i := Void
 			row_i := Void
-			item_id := -1
+			hash_code := -1
 		ensure
 			parent_i_unset: parent_i = Void
 			column_i_unset: column_i = Void
@@ -344,8 +341,8 @@ feature {EV_GRID_I} -- Implementation
 		
 feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_ITEM_I} -- Implementation
 
-	item_id: INTEGER
-		-- Number used for hashing to uniquely identify grid item within `parent_i'.
+	hash_code: INTEGER
+		-- Used to uniquely identify grid item within `parent_i'.
 		-- Should be set to -1 if `Current' is not parented.
 
 	parent_i: EV_GRID_I
@@ -397,7 +394,8 @@ feature {EV_ANY_I, EV_GRID_DRAWER_I} -- Implementation
 invariant
 	is_parented_implies_parents_set: is_parented implies parent_i /= Void and then column_i /= Void and then row_i /= Void
 	not_is_parented_implies_parents_not_set: not is_parented implies parent_i = Void and then column_i = Void and then row_i = Void
-	not_is_parented_implies_item_id_is_minus_1: is_initialized and then not is_parented implies item_id = -1
+	hash_code_valid: is_initialized implies ((not is_parented and hash_code = -1) or (is_parented and then hash_code > 0))
+
 
 end
 

@@ -597,6 +597,12 @@ HRESULT DebuggerManagedCallback::FunctionRemapComplete(ICorDebugAppDomain *pAppD
 }
 
 
+HRESULT DebuggerManagedCallback::MDANotification(ICorDebugController *pController,
+                                     ICorDebugThread *pThread,
+                                     ICorDebugMDA *pMDA)
+{
+	return S_OK;
+}
 
 /* ///////////////////////////////////
  * // UnManaged ...                 //

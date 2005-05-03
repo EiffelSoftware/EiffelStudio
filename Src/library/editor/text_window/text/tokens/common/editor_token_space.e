@@ -38,7 +38,7 @@ feature -- Width & Height
 
 	width: INTEGER
 
-	get_substring_width(n: INTEGER): INTEGER is
+	get_substring_width (n: INTEGER): INTEGER is
 			-- Conpute the width in pixels of the first
 			-- `n' characters of the current string.
 		do
@@ -58,7 +58,7 @@ feature -- Width & Height
 			-- update value of `width'
 		do
 			-- FIXME: take into account if invisible symbols are displayed or not to compute the correct width
-			width := get_substring_width (image.count)
+			width := get_substring_width (length)
 		end
 	
 feature {NONE} -- Implementation
@@ -69,13 +69,6 @@ feature {NONE} -- Implementation
 			the_background_color: EV_COLOR
 			the_text			: STRING
 		do
- 				-- Select the drawing style we will use.
- 			if panel.view_invisible_symbols then
- 				the_text := alternate_image.substring(char_start, char_end)
- 			else
- 				the_text := image.substring(char_start, char_end)
- 			end
- 
  			if selected then
  				the_text_color := selected_text_color
  				the_background_color := selected_background_color
@@ -89,7 +82,7 @@ feature {NONE} -- Implementation
  			device.set_font(font)
  
 				-- Compute the width of the string. 
- 			Result := d_x + font.string_width(the_text)
+ 			Result := d_x + (char_end - char_start + 1) * space_width
 
 				-- Fill the rectangle occupied by the tabulation
 			if the_background_color /= Void then
@@ -97,15 +90,27 @@ feature {NONE} -- Implementation
  				device.clear_rectangle(d_x, d_y, Result - d_x, height)
 			end
 
- 				-- Display the text.
- 			device.draw_text_top_left (d_x, d_y, the_text) 			
+ 				-- Display the text with the selected drawing style.
+			if panel.view_invisible_symbols then
+ 				device.draw_text_top_left (d_x, d_y, alternate_image.substring (char_start, char_end))
+			else
+				if length < 11 then
+					device.draw_text_top_left (d_x, d_y, space_image_hash.item (char_end - char_start + 1))
+				else
+					device.draw_text_top_left (d_x, d_y, image.substring (char_start, char_end))
+				end
+			end
 		end
 
 feature {NONE} -- Private Constants
 
 	space_width: INTEGER is
 		do
-			Result := font.string_width(" ")
+			if is_fixed_width then
+				Result := font_width
+			else
+				Result := font.string_width (once " ")
+			end
 		end
 
 	space_symbol: CHARACTER is
@@ -117,5 +122,21 @@ feature {NONE} -- Private Constants
 			-- String representation of what is displayed
 			-- when the "invisible" symbols (spaces, end of lines
 			-- & tabulations) are set to be visible.
+
+	space_image_hash: HASH_TABLE [STRING, INTEGER] is
+			-- Hash of images for quick look up when count is 10 or less
+		once
+			create Result.make (10)
+			Result.put (" ", 1)
+			Result.put ("  ", 2)
+			Result.put ("   ", 3)
+			Result.put ("    ", 4)
+			Result.put ("     ", 5)
+			Result.put ("      ", 6)
+			Result.put ("       ", 7)
+			Result.put ("        ", 8)
+			Result.put ("         ", 9)
+			Result.put ("          ", 10)
+		end
 
 end -- class EDITOR_TOKEN_SPACE

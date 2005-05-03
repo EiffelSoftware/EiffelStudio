@@ -50,6 +50,17 @@ feature {EV_GRID_LABEL_ITEM} -- Status Report
 			result_non_negative: result >= 0
 		end
 
+feature {EV_GRID_LABEL_ITEM} -- Implementation
+
+	string_size_changed is
+			-- Respond to the changing of an `interface' property which
+			-- affects the size of `text'
+		do
+			must_recompute_text_dimensions := True
+		ensure
+			must_recompute_text_dimensions: must_recompute_text_dimensions
+		end
+
 feature {EV_GRID_DRAWER_I} -- Implementation
 
 	internal_default_font: EV_FONT is
@@ -59,15 +70,17 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 		end
 
 	internal_text_width: INTEGER
+		-- Last computed width of `text' within `interface'.
 
 	internal_text_height: INTEGER
+		-- Last computed height of `text' within `interface'.
 
 	must_recompute_text_dimensions: BOOLEAN
 		-- Must the dimensions of `interface.text' be re-computed
 		-- before drawing.
 
 	recompute_text_dimensions is
-			--
+			-- Recompute `internal_text_width' and `internal_text_height'.
 		local
 			dimensions: TUPLE [INTEGER, INTEGER, INTEGER, INTEGER]
 		do

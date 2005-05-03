@@ -160,7 +160,7 @@ feature -- Status report
 		do
 			Result := implementation.count
 		ensure
-			count_positive: Result > 0
+			count_not_negative: count >= 0
 		end
 			
 feature -- Element change

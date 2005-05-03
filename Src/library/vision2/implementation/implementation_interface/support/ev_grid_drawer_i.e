@@ -819,18 +819,23 @@ feature -- Basic operations
 			current_row_list_not_void: current_row_list /= Void
 		local
 			counter: INTEGER
+			current_row_list_count: INTEGER
 		do
-			if current_row_list.count /= 0 then
+			current_row_list_count := current_row_list.count
+			if current_row_list_count /= 0 then
 				from
 					counter := 0
 					Result := 0
 				until
-					Result > 0
+					Result > 0 or counter = current_row_list_count
 				loop
 					if current_row_list @ counter /= Void then
 						Result := counter + 1
 					end
 					counter := counter + 1
+				end
+				if counter = current_row_list_count then
+					Result := grid.column_count
 				end
 			else
 				Result := grid.column_count

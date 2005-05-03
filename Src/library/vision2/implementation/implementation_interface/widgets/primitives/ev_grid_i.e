@@ -1471,20 +1471,18 @@ feature -- Removal
 			require
 			a_row_not_void: a_row /= Void
 		local
-			removed_row: EV_GRID_ROW_I
 			l_row_index: INTEGER
 		do
-				-- Remove row and its corresponding data from `rows' and `internal_row_data'
+				-- Remove row and its corresponding data from `rows' and `internal_row_data'				
 			l_row_index := a_row.index
+
+				-- Unset internal data.
+			a_row.update_for_removal
 			rows.go_i_th (l_row_index)
-			removed_row := rows.item
-			if removed_row /= Void then
-				removed_row.update_for_removal
-			end
 			rows.remove
 			internal_row_data.go_i_th (l_row_index)
 			internal_row_data.remove
-			
+
 			update_grid_row_indices (l_row_index)
 		ensure
 			node_counts_correct_in_parent: old (a_row.parent_row_i) /= Void implies (old a_row.parent_row_i).node_counts_correct
@@ -2092,14 +2090,14 @@ feature {EV_GRID_DRAWER_I, EV_GRID_COLUMN_I, EV_GRID_ROW_I, EV_GRID_ITEM_I, EV_G
 		
 	white: EV_COLOR is
 			-- Once access to the color white.
-		do
-			Result := (create {EV_STOCK_COLORS}).white
+		once
+			Result := (create {EV_STOCK_COLORS}).white.twin
 		end
 		
 	black: EV_COLOR is
 			-- Once acces to the color black.
-		do
-			Result := (create {EV_STOCK_COLORS}).black
+		once
+			Result := (create {EV_STOCK_COLORS}).black.twin
 		end
 
 feature {EV_GRID_ITEM_I} -- Implementation

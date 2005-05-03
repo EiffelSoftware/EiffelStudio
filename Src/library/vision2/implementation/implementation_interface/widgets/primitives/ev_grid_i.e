@@ -569,12 +569,10 @@ feature -- Status setting
 			create activate_window
 			x_coord := screen_x - virtual_x_position + a_item.virtual_x_position
 			y_coord := screen_y - virtual_y_position + a_item.virtual_y_position + viewable_y_offset
+
+				-- Set default size and position
 			activate_window.set_position (x_coord, y_coord)
-
-			activate_window.set_minimum_size (a_item.column.width -  a_item.horizontal_indent, a_item.row.height)
-
-				-- Prevent the popup window from being resized
-			activate_window.disable_user_resize
+			activate_window.set_size (a_item.column.width -  a_item.horizontal_indent, a_item.row.height)
 			
 			if active_item_setup_actions_internal /= Void and then not active_item_setup_actions_internal.is_empty then
 					-- The user has requested to setup all activatable items themselves

@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 			subnode_count_recursive := 0
 			expanded_subnode_count_recursive := 0
 			is_expanded := False
-			row_id := -1
+			hash_code := -1
 			is_initialized := True
 		end
 
@@ -70,10 +70,10 @@ feature {EV_GRID_I, EV_GRID_ROW_I} -- Initialization
 			a_row_id_valid: a_row_id > 0
 		do
 			parent_i := a_grid_i
-			row_id := a_row_id
+			hash_code := a_row_id
 		ensure
 			parent_set: parent_i = a_grid_i
-			row_id_set: row_id = a_row_id
+			row_id_set: hash_code = a_row_id
 		end
 
 feature -- Access
@@ -848,7 +848,7 @@ feature {EV_GRID_I, EV_GRID_ROW_I} -- Implementation
 				parent_row_i.update_for_subrow_removal (Current)
 			end
 			
-			row_id := -1
+			hash_code := -1
 			parent_i := Void
 			parent_row_i := Void
 			internal_index := 0
@@ -1033,14 +1033,8 @@ feature {EV_ANY_I} -- Contract support
 	
 feature {NONE} -- Implementation
 
-	hash_code: INTEGER is
-			-- Hash code value
-		do
-			Result := row_id
-		end
-
-	row_id: INTEGER
-		-- Number to uniquely identify grid row within `parent_i'.
+	hash_code: INTEGER
+			-- Number to uniquely identify grid row within `parent_i'.
 		
 	contained_expanded_items_recursive: INTEGER is
 			-- `Result' is sum of of expanded nodes for each of the child rows
@@ -1096,6 +1090,7 @@ feature {EV_ANY_I, EV_GRID_ROW} -- Implementation
 invariant
 	no_subrows_implies_not_expanded: parent /= Void and then subrow_count = 0 implies not is_expanded
 	subrows_not_void: is_initialized implies subrows /= Void
+	hash_code_valid: is_initialized implies ((parent = Void and then hash_code = -1) or else (parent /= Void and then hash_code > 0))
 end
 
 --|----------------------------------------------------------------

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><application xmlns="" xmlns:ns1="" xsi="http://www.w3.org/1999/XMLSchema-instance">
+<?xml version="1.0" encoding="UTF-8"?><application xsi="http://www.w3.org/1999/XMLSchema-instance">
 <item type="Constants"></item>
 <item type="EV_TITLED_WINDOW"><Internal_properties>
 	<id>1</id>
@@ -11,7 +11,7 @@
 <EV_WIDGET><Minimum_width>640</Minimum_width>
 	<Minimum_height>480</Minimum_height>
 	</EV_WIDGET>
-<EV_WINDOW><Title><![CDATA[Preferences]]></Title>
+<EV_WINDOW><Title>Preferences</Title>
 	</EV_WINDOW>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
@@ -28,7 +28,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_HORIZONTAL_SPLIT_AREA"><Internal_properties>
-	<id>38</id>
+	<id>19</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -56,8 +56,17 @@
 <EV_WIDGET></EV_WIDGET>
 <EV_BOX><Padding>5</Padding>
 	<Border>5</Border>
-	<Is_item_expanded>10</Is_item_expanded>
+	<Is_item_expanded>1</Is_item_expanded>
 	</EV_BOX>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<EV_CONTAINER></EV_CONTAINER>
+<item type="EV_VERTICAL_SPLIT_AREA"><Internal_properties>
+	<id>20</id>
+	<Expanded>1</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_WIDGET></EV_WIDGET>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_MULTI_COLUMN_LIST"><Internal_properties>
@@ -79,7 +88,7 @@
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Details]]></Text>
+<EV_TEXTABLE><Text>Details</Text>
 	</EV_TEXTABLE>
 <EV_WIDGET></EV_WIDGET>
 <EV_FRAME></EV_FRAME>
@@ -102,7 +111,7 @@
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
 	<id>7</id>
 	<name>resource_container</name>
-	<Expanded>1</Expanded>
+	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
@@ -125,23 +134,6 @@
 <EV_CONTAINER></EV_CONTAINER>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>37</id>
-	<name>set_default_button</name>
-	<Expanded>0</Expanded>
-	</Internal_properties>
-<EV_COLORIZABLE></EV_COLORIZABLE>
-<EV_FONTABLE></EV_FONTABLE>
-<EV_SENSITIVE><Is_sensitive>False</Is_sensitive>
-	</EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Set default]]></Text>
-	</EV_TEXTABLE>
-<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
-<EV_WIDGET><Minimum_width>80</Minimum_width>
-	</EV_WIDGET>
-<EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
-<EV_PIXMAPABLE></EV_PIXMAPABLE>
-</item>
-<item type="EV_BUTTON"><Internal_properties>
 	<id>8</id>
 	<name>set_button</name>
 	<Expanded>0</Expanded>
@@ -150,10 +142,27 @@
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE><Is_sensitive>False</Is_sensitive>
 	</EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Set]]></Text>
+<EV_TEXTABLE><Text>Set</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET><Minimum_width>80</Minimum_width>
+	</EV_WIDGET>
+<EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+</item>
+<item type="EV_BUTTON"><Internal_properties>
+	<id>18</id>
+	<name>set_default_button</name>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_FONTABLE></EV_FONTABLE>
+<EV_SENSITIVE><Is_sensitive>False</Is_sensitive>
+	</EV_SENSITIVE>
+<EV_TEXTABLE><Text>Restore default</Text>
+	</EV_TEXTABLE>
+<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_WIDGET><Minimum_width>90</Minimum_width>
 	</EV_WIDGET>
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
@@ -178,6 +187,7 @@
 </item>
 </item>
 </item>
+</item>
 <item type="EV_HORIZONTAL_SEPARATOR"><Internal_properties>
 	<id>10</id>
 	<Expanded>0</Expanded>
@@ -189,7 +199,7 @@
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
 	<id>11</id>
-	<Expanded>0</Expanded>
+	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
@@ -208,7 +218,7 @@
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Restore Defaults]]></Text>
+<EV_TEXTABLE><Text>Restore Defaults</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET><Minimum_width>90</Minimum_width>
@@ -227,14 +237,14 @@
 <EV_CONTAINER></EV_CONTAINER>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>14</id>
-	<name>cancel_button</name>
+	<id>15</id>
+	<name>ok_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Cancel]]></Text>
+<EV_TEXTABLE><Text>OK</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET><Minimum_width>80</Minimum_width>
@@ -243,14 +253,14 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>15</id>
-	<name>ok_button</name>
+	<id>14</id>
+	<name>cancel_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[OK]]></Text>
+<EV_TEXTABLE><Text>Cancel</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET><Minimum_width>80</Minimum_width>

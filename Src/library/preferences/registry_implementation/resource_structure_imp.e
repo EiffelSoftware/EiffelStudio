@@ -110,6 +110,18 @@ feature {PREFERENCE_STRUCTURE} -- Resource Management
 			close_key (l_parent_key)
 		end		
 
+	remove_resource (a_resource: PREFERENCE) is
+			-- Remove `resource' from storage device.
+		local
+			l_parent_key: POINTER
+			l_registry_resource_name: STRING
+		do
+			l_registry_resource_name := a_resource.string_type + "_" + a_resource.name
+			l_parent_key := open_key_with_access (location, key_write)
+			delete_value (l_parent_key, l_registry_resource_name)
+			close_key (l_parent_key)
+		end	
+
 	save (resources: ARRAYED_LIST [PREFERENCE]) is
 			-- Save all resources.			
 		do			

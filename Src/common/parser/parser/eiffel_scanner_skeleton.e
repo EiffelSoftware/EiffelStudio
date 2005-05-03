@@ -410,26 +410,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	append_without_underscores (source_string, dest_string: STRING) is
-			-- Append all characters of `source_string' but underscores
-			-- to `dest_string'.
-		require
-			source_string_not_void: source_string /= Void
-			dest_string_not_void: dest_string /= Void
-		local
-			i, nb: INTEGER
-			char: CHARACTER
-		do
-			nb := source_string.count
-			from i := 1 until i > nb loop
-				char := source_string.item (i)
-				if char /= '_' then
-					dest_string.append_character (char)
-				end
-				i := i + 1
-			end
-		end
-
 	cloned_string (a_string: STRING): STRING is
 			-- Clone of `a_string'
 			-- (Reduce memory storage if possible.)

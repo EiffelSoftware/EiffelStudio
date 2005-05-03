@@ -8,6 +8,9 @@ class
 
 inherit
 	AST_VISITOR
+		redefine
+			process_type_a
+		end
 	
 	COMPILER_EXPORTER
 		export
@@ -2060,6 +2063,11 @@ feature {NONE} -- Implementation
 	process_void_as (l_as: VOID_AS) is
 		do
 			ctxt.put_text_item (ti_void)
+		end
+
+	process_type_a (a_type: TYPE_A) is
+		do
+			a_type.append_to (ctxt.text)
 		end
 
 feature {NONE} -- Implementation: helpers

@@ -12,11 +12,6 @@ inherit
 			make_from_text as make_from_node
 		end
 
-	ANY
-		rename
-			clone as any_clone
-		end
-
 create
 	make_from_text
 

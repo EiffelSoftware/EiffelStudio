@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			cl_make (associated_class.class_id)
 		ensure
 			size_set: size = 64
-			is_convertible_to_integer_64: convertible_to_integer_64
+			is_convertible_to_integer_64_set: is_convertible_to_integer_64 = convertible_to_integer_64
 		end
 
 feature -- Property

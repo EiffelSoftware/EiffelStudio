@@ -65,17 +65,21 @@ feature {NONE} -- Command
 		local
 			int: INTEGER_PREFERENCE
 			str: STRING_PREFERENCE
+			list: ARRAY_PREFERENCE
 		do
 			int ?= resource
 			str ?= resource
+			list ?= resource
 			if int /= Void then
 				if not change_item_widget.text.is_empty and then change_item_widget.text.is_integer then
 						int.set_value (change_item_widget.text.to_integer)
 				else
-					int.set_value (0)					
+					int.set_value (0)
 				end
 			elseif str /= Void then
 				str.set_value (change_item_widget.text)
+			elseif list /= Void then
+				list.set_value_from_string (change_item_widget.text)
 			end		
 		end		
 

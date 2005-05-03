@@ -83,6 +83,16 @@ feature {PREFERENCES} -- Resource Management
 			resource_saved: has_resource (a_resource.string_type + "_" + a_resource.name)
 		end		
 
+	remove_resource (a_resource: PREFERENCE) is
+			-- Remove `resource' from storage device.
+		require		
+			resource_not_void: a_resource /= Void
+		do
+			implementation.remove_resource (a_resource)
+		ensure
+			resource_saved: not has_resource (a_resource.string_type + "_" + a_resource.name)
+		end	
+
 feature {PREFERENCES} -- Saving
 
 	save (resources: ARRAYED_LIST [PREFERENCE]) is

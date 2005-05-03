@@ -72,6 +72,13 @@ feature -- Save
 			resource_saved: True
 		end	
 
+	remove_resource (a_resource: PREFERENCE) is
+			-- Remove `resource' from storage device.
+		require		
+			resource_not_void: a_resource /= Void
+		deferred
+		end	
+
 invariant
 	has_location: location /= Void
 

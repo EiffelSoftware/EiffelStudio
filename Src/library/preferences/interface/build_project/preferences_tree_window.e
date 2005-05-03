@@ -222,7 +222,7 @@ feature {NONE} -- Events
 		end		
 
 	on_item_selected (a_pref: PREFERENCE) is
-			-- 
+			-- Preference was selected in list
 		do
 			show_resource_in_edit_widget (a_pref)		
 		end	
@@ -275,6 +275,7 @@ feature {NONE} -- Implementation
 				if root_icon /= Void then
 					it.set_pixmap (root_icon)
 				end
+				it.select_actions.extend (agent clear_edit_widget)
 				it.select_actions.extend (agent fill_right_list (root_node_text))
 				l_pref_hash.put (it, root_node_text)
 				left_list.extend (it)
@@ -310,6 +311,7 @@ feature {NONE} -- Implementation
 								if folder_icon /= Void then
 									l_parent.set_pixmap (folder_icon)
 								end								
+								l_parent.select_actions.extend (agent clear_edit_widget)
 								l_parent.select_actions.extend (agent fill_right_list (l_pref_parent_name.twin))
 								if not l_pref_hash.has (l_pref_parent_name) then
 									l_pref_hash.put (l_parent, l_pref_parent_name.twin)	
@@ -326,9 +328,10 @@ feature {NONE} -- Implementation
 								-- We reach the end of building parent, so here we build 'a'.
 							if not l_pref_hash.has (l_pref_parent_full_name) then
 								create l_parent.make_with_text (formatted_name (l_pref_parent_full_name))
-									if folder_icon /= Void then
-										l_parent.set_pixmap (folder_icon)
-									end
+								if folder_icon /= Void then
+									l_parent.set_pixmap (folder_icon)
+								end
+								l_parent.select_actions.extend (agent clear_edit_widget)
 								l_parent.select_actions.extend (agent fill_right_list (l_pref_parent_full_name.twin))
 								l_pref_hash.put (l_parent, l_pref_parent_full_name.twin)						
 								l_pref_hash.item (root_node_text).put_front (l_parent)
@@ -341,6 +344,7 @@ feature {NONE} -- Implementation
 						if folder_icon /= Void then
 							it.set_pixmap (folder_icon)
 						end
+						it.select_actions.extend (agent clear_edit_widget)
 						it.select_actions.extend (agent fill_right_list (l_pref_name.twin))
 						l_pref_hash.item (root_node_text).put_front (it)
 					end
@@ -407,6 +411,9 @@ feature {NONE} -- Implementation
 				l_names.forth
 			end
 			right_list.resize_column_to_content (1)
+			if not right_list.is_empty then
+				right_list.first.enable_select
+			end
 		end
 
 	should_display_preference (a_pref_name, b_pref_name: STRING): BOOLEAN is
@@ -471,6 +478,14 @@ feature {NONE} -- Implementation
 				set_default_button.disable_sensitive
 			end
 		end		
+
+	clear_edit_widget is
+			-- Clear the edit widget
+		do
+			resource_cell.wipe_out
+			resource_cell.set_data (Void)
+			description_text.set_text ("")
+		end
 	
 	focus_edit_widget (a_timeout: EV_TIMEOUT) is
 			-- Set focus into editable portion of editing widget, if applicable.

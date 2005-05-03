@@ -2219,13 +2219,13 @@ Integer_constant:
 	;
 
 Signed_integer: TE_PLUS TE_INTEGER
-			{ $$ := new_integer_value (True, '+', Void, token_buffer) }
+			{ $$ := new_integer_value ('+', Void, token_buffer) }
 	|	TE_MINUS TE_INTEGER
-			{ $$ := new_integer_value (True, '-', Void, token_buffer) }
+			{ $$ := new_integer_value ('-', Void, token_buffer) }
 	;
 
 Nosigned_integer: TE_INTEGER
-			{ $$ := new_integer_value (False, '%U', Void, token_buffer) }
+			{ $$ := new_integer_value ('%U', Void, token_buffer) }
 	;
 
 Typed_integer: Typed_nosigned_integer
@@ -2235,13 +2235,13 @@ Typed_integer: Typed_nosigned_integer
 	;
 
 Typed_nosigned_integer: Typed TE_INTEGER
-			{ $$ := new_integer_value (False, '%U', $1, token_buffer) }
+			{ $$ := new_integer_value ('%U', $1, token_buffer) }
 	;
 
 Typed_signed_integer:	Typed TE_PLUS TE_INTEGER
-			{ $$ := new_integer_value (True, '+', $1, token_buffer) }
+			{ $$ := new_integer_value ('+', $1, token_buffer) }
 	|	Typed TE_MINUS TE_INTEGER
-			{ $$ := new_integer_value (True, '-', $1, token_buffer) }
+			{ $$ := new_integer_value ('-', $1, token_buffer) }
 	;
 
 --###################################################################

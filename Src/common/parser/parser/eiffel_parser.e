@@ -18365,7 +18365,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval46 := new_integer_value (True, '+', Void, token_buffer) 
+yyval46 := new_integer_value ('+', Void, token_buffer) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
 	yyvsp46 := yyvsp46 + 1
@@ -18400,7 +18400,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval46 := new_integer_value (True, '-', Void, token_buffer) 
+yyval46 := new_integer_value ('-', Void, token_buffer) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
 	yyvsp46 := yyvsp46 + 1
@@ -18435,7 +18435,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval46 := new_integer_value (False, '%U', Void, token_buffer) 
+yyval46 := new_integer_value ('%U', Void, token_buffer) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
 	yyvsp46 := yyvsp46 + 1
@@ -18504,7 +18504,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval46 := new_integer_value (False, '%U', yyvs68.item (yyvsp68), token_buffer) 
+yyval46 := new_integer_value ('%U', yyvs68.item (yyvsp68), token_buffer) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
 	yyvsp46 := yyvsp46 + 1
@@ -18540,7 +18540,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval46 := new_integer_value (True, '+', yyvs68.item (yyvsp68), token_buffer) 
+yyval46 := new_integer_value ('+', yyvs68.item (yyvsp68), token_buffer) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
 	yyvsp46 := yyvsp46 + 1
@@ -18576,7 +18576,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval46 := new_integer_value (True, '-', yyvs68.item (yyvsp68), token_buffer) 
+yyval46 := new_integer_value ('-', yyvs68.item (yyvsp68), token_buffer) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
 	yyvsp46 := yyvsp46 + 1

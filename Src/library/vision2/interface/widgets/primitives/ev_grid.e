@@ -917,7 +917,7 @@ feature -- Status report
 		end
 		
 	is_single_row_selection_enabled: BOOLEAN is
-			-- Does clicking an item select the whole row, unselecting
+			-- Does clicking or keyboard navigating via arrow keys select the whole row, unselecting
 			-- any previously rows?
 		require
 			not_destroyed: not is_destroyed
@@ -926,8 +926,8 @@ feature -- Status report
 		end
 
 	is_multiple_row_selection_enabled: BOOLEAN is
-			-- Does clicking an item select the whole row, with multiple
-			-- row selection permitted?
+			-- Does clicking or keyboard navigating via arrow keys select the whole row, with multiple
+			-- row selection permitted via the use of Ctrl and Shift keys?
 		require
 			not_destroyed: not is_destroyed
 		do

@@ -132,16 +132,14 @@ regsvr32 string_manipulator.dll</code_block>
 			<bold>Tip</bold>:
 			<line_break/>
 			In development mode, the Eiffel compiler generates byte code that is required by the Eiffel runtime 
-			in order to run the compiled system. The Eiffel runtime looks in the working directory for the byte code and, 
-			if not there, then in the directory pointed to by the <code>MELT_PATH</code> environment variable 
-			if it is set. Since the client loads the EiffelCOM COM component from its current location, the 
+			in order to run the compiled system. The Eiffel runtime looks in the working directory for the byte code. 
+			Since the client loads the EiffelCOM COM component from its current location, the 
 			working directory will not contain the server's byte code. As a consequence when testing EiffelCOM COM components 
-			the environment variable <code>MELT_PATH</code> must be defined and must point to the directory containing 
-			the server byte code (the EIFGEN\W_Code folder in the project's folder).<line_break/> 
-			For the <class_name>StringManipulator</class_name> component, the MELT_PATH environment variable must be set to: 
-			<italic>$ISE_EIFFEL\examples\com\wizard\string_manipulator\generated\component\server\EIFGEN\W_Code</italic>.<line_break/>
-			Defining the <code>MELT_PATH</code> environment variable is not necessary for a finalized system since it doesn't use 
-			any byte code.	
+			the server's byte code must be copied to the working directory of the client.<line_break/> 
+			For the <class_name>StringManipulator</class_name> component, the file 
+			<italic>$ISE_EIFFEL\examples\com\wizard\string_manipulator\generated\component\server\EIFGEN\W_Code\string_manipulator.melted</italic> 
+			must be copied to 
+			<italic>$ISE_EIFFEL\examples\com\wizard\string_manipulator\client</italic>.
 		</tip>
 		<seealso>
 			<bold>See Also</bold>

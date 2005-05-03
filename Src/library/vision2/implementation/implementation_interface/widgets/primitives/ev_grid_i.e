@@ -1482,7 +1482,6 @@ feature -- Removal
 				removed_row.update_for_removal
 			end
 			rows.remove
-			
 			internal_row_data.go_i_th (l_row_index)
 			internal_row_data.remove
 			
@@ -1756,7 +1755,10 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			row_index: INTEGER
 			l_row_count: INTEGER
 			l_parent_row_i: EV_GRID_ROW_I
+			just_looped: BOOLEAN
+			original_row_index: INTEGER
 		do
+			original_row_index := rows.index
 			if not is_tree_enabled then
 				internal_index := an_index
 			else
@@ -1788,8 +1790,8 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 					rows.go_i_th (internal_index)
 					row_indexes_to_visible_indexes.go_i_th (internal_index)
 					visible_indexes_to_row_indexes.go_i_th (internal_index)
+					visible_count := row_indexes_to_visible_indexes.i_th (internal_index)
 				end
-				
 				if row_offsets.count < rows.count + 1 then
 					row_offsets.resize (rows.count + 1)
 					row_indexes_to_visible_indexes.resize (rows.count + 1)
@@ -1802,12 +1804,17 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 					row_index > l_row_count
 				loop
 					current_item := rows.i_th (row_index)
-					old_i := i
-					if current_item /= Void and not is_row_height_fixed then
-						i := i + current_item.height
+		
+					if not just_looped then
+						old_i := i
+						if current_item /= Void and not is_row_height_fixed then
+							i := i + current_item.height
+						else
+								-- Use the default height here.
+							i := i + row_height
+						end
 					else
-							-- Use the default height here.
-						i := i + row_height
+						just_looped := False
 					end
 					if current_item /= Void and then current_item.subrow_count > 0 and not current_item.is_expanded then
 						from
@@ -1821,7 +1828,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 						end
 						row_indexes_to_visible_indexes.put_i_th (visible_count, row_index)
 						row_index := (k - 1)
-						i := old_i
+						just_looped := True
 					else
 						row_offsets.put_i_th (i, row_index + 1)
 						row_indexes_to_visible_indexes.put_i_th (visible_count, row_index)
@@ -1836,8 +1843,10 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			if virtual_size_changed_actions_internal /= Void then
 				virtual_size_changed_actions_internal.call ([virtual_width, virtual_height])
 			end
+			rows.go_i_th (original_row_index)
 		ensure
 			offsets_consistent_when_not_fixed: not is_row_height_fixed implies row_offsets.count = rows.count + 1
+			row_index_not_changed: old rows.index = rows.index
 		end
 
 	total_row_height: INTEGER is

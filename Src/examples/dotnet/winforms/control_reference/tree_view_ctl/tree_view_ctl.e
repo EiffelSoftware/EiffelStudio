@@ -151,13 +151,14 @@ feature {NONE} -- Implementation
 			l_size.make (120, 20)
 			indent_up_down.set_size (l_size)
 			tool_tip.set_tool_tip (indent_up_down, "The indentation width of a child node in pixels.")
+			indent_up_down.add_value_changed (create {EVENT_HANDLER}.make (Current, $indent_up_down_value_changed))
 
 			image_list_2.set_transparent_color ({DRAWING_COLOR}.transparent)
-			l_bitmap := loaded_bitmap ("diamond")
+			l_bitmap := loaded_bitmap ("club")
 			if l_bitmap /= Void then
 				image_list_2.images.add (l_bitmap)
 			end
-			l_bitmap := loaded_bitmap ("club")
+			l_bitmap := loaded_bitmap ("diamond")
 			if l_bitmap /= Void then
 				image_list_2.images.add (l_bitmap)
 			end
@@ -301,18 +302,14 @@ feature {NONE} -- Implementation
 
 	dispose_boolean (a_disposing: BOOLEAN) is
 			-- method called when form is disposed.
-		local
-			retried: BOOLEAN
 		do
-			if not retried then
+			if a_disposing then
 				if components /= Void then
-					components.dispose	
+					components.dispose
+					components := Void
 				end
 			end
 			Precursor {WINFORMS_FORM}(a_disposing)
-		rescue
-			retried := true
-			retry
 		end
 
 	loaded_bitmap (a_bitmap_name: STRING): DRAWING_BITMAP is
@@ -511,6 +508,13 @@ feature {NONE} -- Implementation
 			-- Event to disable showing of selection when tree loses focus
 		do
 			directory_tree.set_hide_selection (check_box_7.checked)
+		end
+
+	indent_up_down_value_changed (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
+			-- Event when indent is changed
+		do
+			directory_tree.set_indent (
+				{DECIMAL}.to_integer_32 (indent_up_down.value))
 		end
 
 	Drive_fixed: INTEGER is 3

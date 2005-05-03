@@ -437,11 +437,12 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 
 ({U}(_{T})*)	{
 				token_buffer.clear_all
-				append_without_underscores (text, token_buffer)
+				append_text_to_string (token_buffer)
 				last_token := TE_INTEGER
 			}
 
-[0][xX]{H}+	{		-- Recognizes hexadecimal integer numbers.
+0[xX]{H}	|
+0[xX]{H}({H}|_)*{H}	{		-- Recognizes hexadecimal integer numbers.
 				token_buffer.clear_all
 				append_text_to_string (token_buffer)
 				last_token := TE_INTEGER

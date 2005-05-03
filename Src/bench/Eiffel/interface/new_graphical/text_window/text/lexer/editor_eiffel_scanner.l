@@ -19,6 +19,8 @@ create
 
 %option outfile="editor_eiffel_scanner.e"
 
+H		([0-9A-Fa-f])
+
 %%
 
 ----------/** Separators **/----------------------------------------------------
@@ -375,7 +377,9 @@ create
 ----------/** Eiffel integers **/-----------------------------------------------
 
 [0-9]+					|
-[0-9]{1,3}(_[0-9]{3})+	{
+[0-9]{1,3}(_[0-9]{3})+			|
+0[xX]{H}				|
+0[xX]{H}({H}|_)*{H}	{
 						-- Eiffel Integer
 						if not in_comments then
 							if not in_verbatim_string then

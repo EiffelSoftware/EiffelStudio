@@ -62,7 +62,7 @@ feature {PREFERENCES} -- Access
 			Result := "TEXT"
 		end
 
-feature {NONE} -- Implementation
+feature {STRING_PREFERENCE_WIDGET} -- Implementation
 
 	set_value_from_string (a_value: STRING) is
 			-- Parse the string value `a_value' and set `value'.

@@ -41,22 +41,28 @@ feature {NONE} -- Implementation
 
 	activate_action (popup_window: EV_WINDOW) is
 			-- `Current' has been requested to be updated via `popup_window'.
+		local
+			x_offset: INTEGER
 		do
+				-- Account for position of text relative to pixmap.
+			if pixmap /= Void then
+				x_offset := left_border + pixmap.width
+			end
+			popup_window.set_x_position (popup_window.x_position + x_offset)
+			popup_window.set_width (popup_window.width - x_offset)
+
+
 			create text_field
 			if font /= Void then
 				text_field.set_font (font)
 			end
 			fixme ("Add handling for Void colors and potential column, row and grid colors")
-			text_field.set_background_color (background_color)
-			text_field.set_foreground_color (foreground_color)
+			--text_field.set_background_color (background_color)
+			--text_field.set_foreground_color (foreground_color)
 			text_field.set_text (text)
 			popup_window.extend (text_field)
 			popup_window.show
 			text_field.set_focus
-
-			if not text.is_empty then
-				text_field.select_all
-			end
 			text_field.return_actions.extend (agent deactivate)
 			text_field.focus_out_actions.extend (agent deactivate)
 		end

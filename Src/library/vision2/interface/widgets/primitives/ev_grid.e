@@ -408,7 +408,7 @@ feature -- Access
 			-- Called directly after `item_pebble_function' has executed.
 		do
 			Result := implementation.item_deny_cursor_function
-		end
+		end		
 
 feature -- Status setting
 
@@ -1182,7 +1182,7 @@ feature {NONE} -- Contract support
 	is_in_default_state: BOOLEAN is
 			-- Is `Current' in its default state?
 		do
-			Result := not is_horizontal_scrolling_per_item and
+			Result := row_count = 0 and column_count = 0 and not is_horizontal_scrolling_per_item and
 				is_vertical_scrolling_per_item and is_header_displayed and
 				is_row_height_fixed and subrow_indent = 0 and is_single_item_selection_enabled and is_selection_on_click_enabled and
 				are_tree_node_connectors_shown

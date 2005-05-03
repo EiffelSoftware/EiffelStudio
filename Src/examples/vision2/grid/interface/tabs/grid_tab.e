@@ -270,6 +270,9 @@ feature {NONE} -- Implementation
 			time1, time2: DATE_TIME
 			grid_label_item: EV_GRID_LABEL_ITEM
 			grid_editable_item: EV_GRID_EDITABLE_ITEM
+			grid_combo_item: EV_GRID_COMBO_ITEM
+			current_row: EV_GRID_ROW
+			font: EV_FONT
 		do
 			create time1.make_now
 			add_items (5, 400)			
@@ -403,33 +406,6 @@ feature {NONE} -- Implementation
 			end
 			create time2.make_now
 			set_status_message (("Items added in : " + ((time2.fine_second - time1.fine_second).out)))
-			from
-				counter := 1
-			until
-				counter > grid.row_count
-			loop
-				grid_label_item ?= grid.item (1, counter)
-				if grid_label_item /= Void then
-					grid_label_item.set_background_color (light_red)
-				end
-				counter := counter + 1				
-			end
-			from
-				counter := 1
-			until
-				counter > grid.row_count
-			loop
-				grid_label_item ?= grid.item (1, counter)
-				if grid_label_item /= Void then
-					grid_label_item.set_pixmap (image1)
-				end
-
-				grid_label_item ?= grid.item (4, counter)
-				if grid_label_item /= Void then
-					grid_label_item.set_pixmap (image2)
-				end
-				counter := counter + 1
-			end
 
 			grid.disable_row_height_fixed
 			grid.row (3).set_height (100)
@@ -461,17 +437,89 @@ feature {NONE} -- Implementation
 				grid.row (35).set_item (counter, grid_editable_item)
 				counter := counter + 1
 			end
+			grid.row (36).clear
+			grid.row (36).set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("Show Editable Combo Items"))
+			grid.row (36).add_subrow (grid.row (37))
+			grid.row (37).clear
+			from
+				counter := 1
+			until
+				counter > 5
+			loop
+				create grid_combo_item.make_with_text ("Edit Me")
+				if counter > 1 then
+					grid_combo_item.set_pixmap (image3)
+				end
+				grid.row (37).set_item (counter, grid_combo_item)
+				counter := counter + 1
+			end
 			grid.pointer_double_press_actions.extend (agent pointer_double_press_received_on_grid)
+			current_row := grid.row (38)
+			current_row.clear
+			current_row.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("Show Font Sizes"))
+			from
+				counter := 1
+			until
+				counter = 16
+			loop
+				current_row.insert_subrow (counter)
+				create grid_label_item.make_with_text ("Font Height : " + ((counter + 3) * 2).out)
+				current_row.subrow (counter).set_item (1, grid_label_item)
+				create font
+				font.set_height ((counter + 3) * 2)
+				grid_label_item.set_font (font)
+				current_row.subrow (counter).set_height (grid_label_item.text_height)
+				counter := counter + 1
+			end
+
+
+
+
+
+
+			from
+				counter := 1
+			until
+				counter > grid.row_count
+			loop
+				grid_label_item ?= grid.item (1, counter)
+				if grid_label_item /= Void then
+					grid_label_item.set_background_color (light_red)
+				end
+				counter := counter + 1				
+			end
+			from
+				counter := 1
+			until
+				counter > grid.row_count
+			loop
+				grid_label_item ?= grid.item (1, counter)
+				if grid_label_item /= Void then
+					grid_label_item.set_pixmap (image1)
+				end
+
+				grid_label_item ?= grid.item (4, counter)
+				if grid_label_item /= Void then
+					grid_label_item.set_pixmap (image2)
+				end
+				counter := counter + 1
+			end
+
 		end
 
 	pointer_double_press_received_on_grid (an_x, a_y, button: INTEGER; grid_item: EV_GRID_ITEM) is
 			--
 		local
 			editable_item: EV_GRID_EDITABLE_ITEM
+			combo_item: EV_GRID_COMBO_ITEM
 		do
 			editable_item ?= grid_item
 			if editable_item /= Void then
 				editable_item.activate
+			end
+			combo_item ?= grid_item
+			if combo_item /= Void then
+				combo_item.activate
 			end
 		end
 		
@@ -879,6 +927,75 @@ feature {NONE} -- Implementation
 --			grid.pointer_motion_actions.extend (agent motion_on_item)
 --			grid_label_item.set_layout_procedure (agent layout_called)
 
+			-- Test 16
+			grid.enable_tree
+			clean_grid
+			fill_grid
+			clean_grid
+			fill_grid
+
+--			-- Test 17
+--			grid.enable_tree
+--			grid.insert_new_row (1)
+--			grid.insert_new_row (2)
+--			grid.row ((2)).insert_subrow (1)
+--
+--			GRID.ROW (1).SET_DATA (1)
+--			GRID.ROW (2).SET_DATA (2)
+--			GRID.ROW (3).SET_DATA (3)
+----			grid.row ((2)).insert_subrow (2)
+--			from
+--			until
+--				grid.row_count = 0
+--			loop
+--				grid.remove_row (1)
+--			end
+		end
+
+	clean_grid is
+		do
+			from
+			until
+				grid.row_count = 0
+			loop
+				grid.remove_row (1)
+			end
+		ensure
+			grid.row_count = 0
+		end
+		
+
+	fill_grid is
+		do
+			add_row (1)
+			add_row (2)
+			add_subrow (grid.row ((2)), 1)
+			add_subrow (grid.row ((2)), 2)
+			grid.row (2).expand
+			add_row (5)
+			grid.row (3).enable_select
+		end
+
+	add_subrow (r: EV_GRID_ROW; i: INTEGER) is
+		local
+		do
+			r.insert_subrow (i)
+			grid.set_item (1, r.index + i, label ((1).out + ":" + (r.index + i).out))
+			grid.set_item (2, r.index + i, label ((2).out + ":" + (r.index + i).out))		
+			grid.set_item (3, r.index + i, label ((3).out + ":" + (r.index + i).out))			
+		end
+
+	add_row (r: INTEGER) is
+		do
+			grid.insert_new_row (r)
+			grid.set_item (1, r, label ((1).out + ":" + r.out))
+			grid.set_item (2, r, label ((2).out + ":" + r.out))		
+			grid.set_item (3, r, label ((3).out + ":" + r.out))			
+		end
+	
+	label (s: STRING): EV_GRID_LABEL_ITEM is
+		do
+			create Result.make_with_text (s)
 		end
 
 	layout_called (an_item: EV_GRID_LABEL_ITEM; label_item_layout: EV_GRID_LABEL_ITEM_LAYOUT) is

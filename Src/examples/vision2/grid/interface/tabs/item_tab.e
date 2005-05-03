@@ -25,6 +25,8 @@ feature {NONE} -- Initialization
 			-- can be added here.
 		local
 			list_item: EV_LIST_ITEM
+			font_families: LINEAR [STRING]
+			counter: INTEGER
 		do
 			item_finder.set_prompt ("Item Finder : ")
 			item_finder.motion_actions.extend (agent finding_item)
@@ -66,6 +68,22 @@ feature {NONE} -- Initialization
 			add_color_to_combo ((create {EV_STOCK_COLORS}).gray, background_color_combo)
 			add_color_to_combo ((create {EV_STOCK_COLORS}).black, background_color_combo)
 			add_color_to_combo ((create {EV_STOCK_COLORS}).blue, background_color_combo)
+
+				-- Now Build default Fonts
+			font_families ?= (create {EV_ENVIRONMENT}).font_families
+			create list_item.make_with_text ("")
+			font_combo.extend (list_item)
+			from
+				font_families.start
+			until
+				font_families.after
+			loop
+				create list_item.make_with_text (font_families.item)
+				font_combo.extend (list_item)
+				font_families.forth
+			end
+--			font_combo.disable_edit
+--			font_size_combo.disable_edit
 		end
 
 feature {NONE} -- Implementation
@@ -119,6 +137,9 @@ feature {NONE} -- Implementation
 			label_item: EV_GRID_LABEL_ITEM
 			deselectable: EV_DESELECTABLE
 			l_color: EV_COLOR
+			font_name: STRING
+			font_height: INTEGER
+			set: BOOLEAN
 		do
 			if found_item /= Void then
 				main_box.enable_sensitive
@@ -216,6 +237,52 @@ feature {NONE} -- Implementation
 						foreground_color_combo.forth
 					end
 					foreground_color_combo.select_actions.resume
+					font_container.enable_sensitive
+					if label_item.font /= Void then
+						if label_item.font.preferred_families.is_empty then
+							font_name := ""
+						else
+							font_name := label_item.font.preferred_families.i_th (1)
+						end
+						font_combo.select_actions.block
+						from
+							font_combo.go_i_th (2)
+						until
+							font_combo.off or set
+						loop
+							if font_combo.item.text.is_equal ("font_name") then
+								set := True								
+								font_combo.item.enable_select
+							end
+							if not set then
+								font_combo.forth
+							end
+						end
+						if font_combo.after then
+							font_combo.i_th (1).enable_select
+						end
+						font_combo.select_actions.resume
+						font_height := label_item.font.height_in_points
+						font_size_combo.select_actions.block
+						set := False
+						from
+							font_size_combo.go_i_th (2)
+						until
+							font_size_combo.off or set
+						loop
+							if font_size_combo.item.text.to_integer = font_height then
+								set := True								
+								font_size_combo.item.enable_select
+							end
+							if not set then
+								font_size_combo.forth
+							end
+						end
+						if font_size_combo.after then
+							font_size_combo.i_th (1).enable_select
+						end
+						font_size_combo.select_actions.resume
+					end
 				else
 					textable_container.disable_sensitive
 					left_border_container.disable_sensitive
@@ -224,6 +291,7 @@ feature {NONE} -- Implementation
 					bottom_border_container.disable_sensitive
 					top_border_container.disable_sensitive
 					right_border_container.disable_sensitive
+					font_container.disable_sensitive
 				end
 				deselectable ?= found_item
 				if deselectable /= Void then
@@ -1000,6 +1068,98 @@ feature {NONE} -- Implementation
 					else
 						label_item.align_text_bottom
 					end
+				end
+				counter := counter + 1
+			end
+		end
+
+	font_size_combo_selected is
+			-- Called by `select_actions' of `font_size_combo'.
+		local
+			font: EV_FONT
+			label_item: EV_GRID_LABEL_ITEM
+		do
+			if font_combo.index_of (font_combo.selected_item, 1) > 1 and				
+				font_size_combo.index_of (font_size_combo.selected_item, 1) > 1 then
+
+				label_item ?= found_item
+				if label_item /= Void then
+					if label_item.font /= Void then
+						font := label_item.font.twin					
+					else
+						create font
+						font.preferred_families.extend (font_combo.selected_item.text)
+					end
+					font.set_height_in_points (font_size_combo.selected_item.text.to_integer)
+					label_item.set_font (font)
+				end
+			end
+		end
+
+	font_combo_selected is
+			-- Called by `select_actions' of `font_combo'.
+		local
+			font: EV_FONT
+			label_item: EV_GRID_LABEL_ITEM
+		do
+			if font_combo.index_of (font_combo.selected_item, 1) > 1 and				
+			font_size_combo.index_of (font_size_combo.selected_item, 1) > 1 then
+
+				label_item ?= found_item
+				if label_item /= Void then
+					if label_item.font /= Void then
+						font := label_item.font.twin
+						font.preferred_families.wipe_out
+					else
+						create font
+						font.set_height_in_points (font_size_combo.selected_item.text.to_integer)
+					end
+					font.preferred_families.extend (font_combo.selected_item.text)
+	
+					label_item.set_font (font)
+				end
+			end
+		end
+
+	apply_font_row_button_selected is
+			-- Called by `select_actions' of `apply_font_row_button'.
+		local
+			counter: INTEGER
+			original_item, label_item: EV_GRID_LABEL_ITEM
+			row: INTEGER
+		do
+			from
+				counter := 1
+				row := found_item.row.index
+				original_item ?= found_item
+			until
+				counter > grid.column_count
+			loop
+				label_item ?= grid.item (counter, row)
+				if label_item /= Void then
+					label_item.set_font (original_item.font)
+				end
+				counter := counter + 1
+			end
+		end
+
+	apply_font_column_button_selected is
+			-- Called by `select_actions' of `apply_font_column_button'.
+		local
+			counter: INTEGER
+			original_item, label_item: EV_GRID_LABEL_ITEM
+			column: INTEGER
+		do
+			from
+				counter := 1
+				column := found_item.column.index
+				original_item ?= found_item
+			until
+				counter > grid.row_count
+			loop
+				label_item ?= grid.item (column, counter)
+				if label_item /= Void then
+					label_item.set_font (original_item.font)
 				end
 				counter := counter + 1
 			end

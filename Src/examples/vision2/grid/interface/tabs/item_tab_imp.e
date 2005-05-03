@@ -102,6 +102,24 @@ feature {NONE}-- Initialization
 			create bottom_alignment_item
 			create apply_vertical_alignment_column_button
 			create apply_vertical_alignment_row_button
+			create font_container
+			create l_ev_label_14
+			create font_combo
+			create l_ev_cell_1
+			create font_size_combo
+			create l_ev_list_item_1
+			create l_ev_list_item_2
+			create l_ev_list_item_3
+			create l_ev_list_item_4
+			create l_ev_list_item_5
+			create l_ev_list_item_6
+			create l_ev_list_item_7
+			create l_ev_list_item_8
+			create l_ev_list_item_9
+			create l_ev_list_item_10
+			create l_ev_list_item_11
+			create apply_font_row_button
+			create apply_font_column_button
 			create item_operations_frame
 			create l_ev_vertical_box_1
 			create remove_item_button
@@ -144,6 +162,21 @@ feature {NONE}-- Initialization
 			vertical_alignment_combo.extend (top_alignment_item)
 			vertical_alignment_combo.extend (vertically_center_item)
 			vertical_alignment_combo.extend (bottom_alignment_item)
+			font_container.extend (l_ev_label_14)
+			font_container.extend (font_combo)
+			font_container.extend (l_ev_cell_1)
+			font_container.extend (font_size_combo)
+			font_size_combo.extend (l_ev_list_item_1)
+			font_size_combo.extend (l_ev_list_item_2)
+			font_size_combo.extend (l_ev_list_item_3)
+			font_size_combo.extend (l_ev_list_item_4)
+			font_size_combo.extend (l_ev_list_item_5)
+			font_size_combo.extend (l_ev_list_item_6)
+			font_size_combo.extend (l_ev_list_item_7)
+			font_size_combo.extend (l_ev_list_item_8)
+			font_size_combo.extend (l_ev_list_item_9)
+			font_size_combo.extend (l_ev_list_item_10)
+			font_size_combo.extend (l_ev_list_item_11)
 			extend (item_operations_frame)
 			item_operations_frame.extend (l_ev_vertical_box_1)
 			l_ev_vertical_box_1.extend (remove_item_button)
@@ -161,7 +194,7 @@ feature {NONE}-- Initialization
 			item_x_index.value_range.adapt (create {INTEGER_INTERVAL}.make (0, 1000000))
 			l_ev_label_2.set_text ("Y Index")
 			item_y_index.value_range.adapt (create {INTEGER_INTERVAL}.make (0, 1000000))
-			l_ev_table_1.resize (3, 12)
+			l_ev_table_1.resize (3, 13)
 			l_ev_table_1.set_row_spacing (box_padding)
 			l_ev_table_1.set_column_spacing (box_padding)
 			l_ev_table_1.set_border_width (box_padding)
@@ -200,6 +233,9 @@ feature {NONE}-- Initialization
 			l_ev_table_1.put_at_position (vertical_alignment_container, 1, 4, 1, 1)
 			l_ev_table_1.put_at_position (apply_vertical_alignment_column_button, 3, 4, 1, 1)
 			l_ev_table_1.put_at_position (apply_vertical_alignment_row_button, 2, 4, 1, 1)
+			l_ev_table_1.put_at_position (font_container, 1, 13, 1, 1)
+			l_ev_table_1.put_at_position (apply_font_row_button, 2, 13, 1, 1)
+			l_ev_table_1.put_at_position (apply_font_column_button, 3, 13, 1, 1)
 			textable_container.disable_item_expand (l_ev_label_3)
 			l_ev_label_3.set_text ("Text : ")
 			textable_entry.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (212, 208, 200))
@@ -255,6 +291,24 @@ feature {NONE}-- Initialization
 			bottom_alignment_item.set_text ("Bottom")
 			apply_vertical_alignment_column_button.set_text ("Apply Column")
 			apply_vertical_alignment_row_button.set_text ("Apply Column")
+			font_container.disable_item_expand (l_ev_label_14)
+			font_container.disable_item_expand (l_ev_cell_1)
+			font_container.disable_item_expand (font_size_combo)
+			l_ev_label_14.set_text ("Font : ")
+			font_size_combo.set_text ("6")
+			font_size_combo.set_minimum_width (50)
+			l_ev_list_item_2.set_text ("6")
+			l_ev_list_item_3.set_text ("8")
+			l_ev_list_item_4.set_text ("10")
+			l_ev_list_item_5.set_text ("12")
+			l_ev_list_item_6.set_text ("14")
+			l_ev_list_item_7.set_text ("18")
+			l_ev_list_item_8.set_text ("24")
+			l_ev_list_item_9.set_text ("36")
+			l_ev_list_item_10.set_text ("48")
+			l_ev_list_item_11.set_text ("72")
+			apply_font_row_button.set_text ("Apply Row")
+			apply_font_column_button.set_text ("Apply Column")
 			item_operations_frame.disable_sensitive
 			item_operations_frame.set_text ("Item Operations")
 			l_ev_vertical_box_1.set_padding_width (box_padding)
@@ -307,6 +361,10 @@ feature {NONE}-- Initialization
 			bottom_alignment_item.select_actions.extend (agent bottom_alignment_item_selected)
 			apply_vertical_alignment_column_button.select_actions.extend (agent apply_vertical_alignment_column_button_selected)
 			apply_vertical_alignment_row_button.select_actions.extend (agent apply_vertical_alignment_row_button_selected)
+			font_combo.select_actions.extend (agent font_combo_selected)
+			font_size_combo.select_actions.extend (agent font_size_combo_selected)
+			apply_font_row_button.select_actions.extend (agent apply_font_row_button_selected)
+			apply_font_column_button.select_actions.extend (agent apply_font_column_button_selected)
 			remove_item_button.select_actions.extend (agent remove_item_button_selected)
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.
@@ -324,32 +382,38 @@ feature -- Access
 	item_finder: GRID_ITEM_FINDER
 	textable_container,
 	pixmapable_container, left_border_container, spacing_container, alignment_container,
-	top_border_container, bottom_border_container, right_border_container, vertical_alignment_container: EV_HORIZONTAL_BOX
-	apply_pixmap_row_button,
-	apply_pixmap_column_button, apply_alignment_row_button, apply_alignment_column_button,
-	apply_left_border_row_button, apply_left_border_column_button, apply_spacing_row_button,
-	apply_spacing_column_button, apply_background_row_button, apply_background_column_button,
-	apply_selection_row_button, apply_selection_column_button, apply_foreground_row_button,
-	apply_foreground_column_button, apply_bottom_border_row_button, apply_bottom_border_column_button,
-	apply_right_border_row_button, apply_right_border_column_button, apply_top_border_row_button,
-	apply_top_border_column_button, apply_vertical_alignment_column_button, apply_vertical_alignment_row_button,
+	top_border_container, bottom_border_container, right_border_container, vertical_alignment_container,
+	font_container: EV_HORIZONTAL_BOX
+	apply_pixmap_row_button, apply_pixmap_column_button, apply_alignment_row_button,
+	apply_alignment_column_button, apply_left_border_row_button, apply_left_border_column_button,
+	apply_spacing_row_button, apply_spacing_column_button, apply_background_row_button,
+	apply_background_column_button, apply_selection_row_button, apply_selection_column_button,
+	apply_foreground_row_button, apply_foreground_column_button, apply_bottom_border_row_button,
+	apply_bottom_border_column_button, apply_right_border_row_button, apply_right_border_column_button,
+	apply_top_border_row_button, apply_top_border_column_button, apply_vertical_alignment_column_button,
+	apply_vertical_alignment_row_button, apply_font_row_button, apply_font_column_button,
 	remove_item_button: EV_BUTTON
 	item_frame, item_operations_frame: EV_FRAME
 	pixmap_holder, alignment_combo,
-	foreground_color_combo, background_color_combo, vertical_alignment_combo: EV_COMBO_BOX
+	foreground_color_combo, background_color_combo, vertical_alignment_combo, font_combo,
+	font_size_combo: EV_COMBO_BOX
 	textable_entry: EV_TEXT_FIELD
-	left_alignment_item,
-	center_alignment_item, right_alignment_item, top_alignment_item, vertically_center_item,
-	bottom_alignment_item: EV_LIST_ITEM
+	left_alignment_item, center_alignment_item, right_alignment_item,
+	top_alignment_item, vertically_center_item, bottom_alignment_item: EV_LIST_ITEM
 
 feature {NONE} -- Implementation
 
+	l_ev_list_item_1, l_ev_list_item_2, l_ev_list_item_3, l_ev_list_item_4, l_ev_list_item_5,
+	l_ev_list_item_6, l_ev_list_item_7, l_ev_list_item_8, l_ev_list_item_9, l_ev_list_item_10,
+	l_ev_list_item_11: EV_LIST_ITEM
 	l_ev_vertical_box_1: EV_VERTICAL_BOX
-	l_ev_horizontal_box_1, l_ev_horizontal_box_2, l_ev_horizontal_box_3: EV_HORIZONTAL_BOX
-	l_ev_label_1,
-	l_ev_label_2, l_ev_label_3, l_ev_label_4, l_ev_label_5, l_ev_label_6, l_ev_label_7,
-	l_ev_label_8, l_ev_label_9, l_ev_label_10, l_ev_label_11, l_ev_label_12, l_ev_label_13: EV_LABEL
+	l_ev_horizontal_box_1, l_ev_horizontal_box_2,
+	l_ev_horizontal_box_3: EV_HORIZONTAL_BOX
+	l_ev_label_1, l_ev_label_2, l_ev_label_3, l_ev_label_4, l_ev_label_5,
+	l_ev_label_6, l_ev_label_7, l_ev_label_8, l_ev_label_9, l_ev_label_10, l_ev_label_11,
+	l_ev_label_12, l_ev_label_13, l_ev_label_14: EV_LABEL
 	l_ev_table_1: EV_TABLE
+	l_ev_cell_1: EV_CELL
 
 feature {NONE} -- Implementation
 
@@ -563,6 +627,26 @@ feature {NONE} -- Implementation
 	
 	apply_vertical_alignment_row_button_selected is
 			-- Called by `select_actions' of `apply_vertical_alignment_row_button'.
+		deferred
+		end
+	
+	font_combo_selected is
+			-- Called by `select_actions' of `font_combo'.
+		deferred
+		end
+	
+	font_size_combo_selected is
+			-- Called by `select_actions' of `font_size_combo'.
+		deferred
+		end
+	
+	apply_font_row_button_selected is
+			-- Called by `select_actions' of `apply_font_row_button'.
+		deferred
+		end
+	
+	apply_font_column_button_selected is
+			-- Called by `select_actions' of `apply_font_column_button'.
 		deferred
 		end
 	

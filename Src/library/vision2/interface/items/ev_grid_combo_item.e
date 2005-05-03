@@ -13,6 +13,10 @@ inherit
 			deactivate
 		end
 
+create
+	default_create,
+	make_with_text
+
 feature -- Element change
 	
 	set_item_strings (a_string_array: INDEXABLE [STRING, INTEGER]) is

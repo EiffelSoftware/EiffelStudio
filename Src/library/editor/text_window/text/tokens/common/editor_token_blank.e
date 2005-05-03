@@ -48,7 +48,7 @@ feature -- Display
 	display_half_selected (d_y: INTEGER; start_selection, end_selection: INTEGER; a_device: EV_DRAWABLE; panel: TEXT_PANEL) is
 			-- Display the current token on device context `dc'
 			-- at the coordinates (`position',`d_y') with its
-			-- selected state from beggining to `pivot'
+			-- selected state from begining to `pivot'
 		local
 			local_position: INTEGER
 		do

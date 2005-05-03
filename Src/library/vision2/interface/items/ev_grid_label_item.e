@@ -71,6 +71,7 @@ feature -- Status Setting
 			no_carriage_returns: not a_text.has ('%R')
 		do
 			text := a_text
+			implementation.string_size_changed
 			if parent /= Void then
 				parent.implementation.redraw_item (implementation)
 			end
@@ -95,6 +96,7 @@ feature -- Status Setting
 			a_font_not_void: a_font /= Void
 		do
 			font := a_font
+			implementation.string_size_changed
 			if parent /= Void then
 				parent.implementation.redraw_item (implementation)
 			end

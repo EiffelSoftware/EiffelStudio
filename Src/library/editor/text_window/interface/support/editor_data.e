@@ -49,6 +49,9 @@ feature {EB_PREFERENCES} -- Initialization
 		do
 			line_height_cell.put (calculate_line_height)
 			font_offset_cell.put (calculate_font_offset)
+			is_fixed_width_cell.put (not font.is_proportional)
+			font_width_cell.put (font.width)
+
 			from
 				panel_manager.panels.start
 			until
@@ -482,7 +485,8 @@ feature {NONE} -- Implementation
 			automatic_update_preference := l_manager.new_boolean_resource_value (l_manager, automatic_update_string, True)	
 			
 			editor_font_preference := l_manager.new_font_resource_value (l_manager, editor_font_string, create {EV_FONT})	
-			font_cell.put (editor_font_preference)			
+			font_cell.put (editor_font_preference)		
+			is_fixed_width_cell.put (not editor_font_preference.value.is_proportional)
 			header_font_preference := l_manager.new_font_resource_value (l_manager, header_font_string, create {EV_FONT})
 			header_font_cell.put (header_font_preference)
 			keyword_font_preference := l_manager.new_font_resource_value (l_manager, keyword_font_string, create {EV_FONT})	

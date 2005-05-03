@@ -50,6 +50,8 @@ feature -- Miscellaneous
 		do
 			if n = 0 then
 				Result := 0
+			elseif is_fixed_width then
+				Result := font_width * n			
 			else
 				if image.has ('%T') then
 					from
@@ -64,7 +66,7 @@ feature -- Miscellaneous
 							l_string.put (image.item (i), 1)
 							Result := Result + font.string_width (l_string)
 						end
-						i := i + 1 
+						i := i + 1
 					end
 				else
 					Result := font.string_width (image.substring (1, n.min (image.count)))

@@ -42,26 +42,34 @@ feature -- Width & Height
 
 	width: INTEGER is
 			-- Width in pixel of the entire token.
+		local
+			l_tab_width: INTEGER
 		do
+			l_tab_width := tabulation_width
+
 				-- Width of first tabulation.
-			Result := ((position // tabulation_width) + 1 ) * tabulation_width - position
+			Result := (((position // l_tab_width) + 1 ) * l_tab_width) - position
 
 				-- Handle next tabulations.
-			Result := Result + tabulation_width * (length - 1)
+			Result := Result + l_tab_width * (length - 1)
 		end
 
 	get_substring_width (n: INTEGER): INTEGER is
 			-- Conpute the width in pixels of the first
 			-- `n' characters of the current string.
+		local
+			l_tab_width: INTEGER
 		do
 			if n = 0 then
 				Result := 0
 			else
+				l_tab_width := tabulation_width
+
 					-- Width of first tabulation.
-				Result := (((position // tabulation_width) + 1 ) * tabulation_width ) - position
+				Result := (((position // l_tab_width) + 1 ) * l_tab_width) - position
 
 					-- Handle next tabulations.
-				Result := Result + tabulation_width * (n - 1)
+				Result := Result + l_tab_width * (n - 1)
 			end
 		end
 
@@ -70,13 +78,15 @@ feature -- Width & Height
 			-- pixel.
 		local
 			width_first_tab: INTEGER
+			l_tab_width: INTEGER
 		do
-			width_first_tab := (((position // tabulation_width) + 1 ) * tabulation_width ) - position
+			l_tab_width := tabulation_width
+			width_first_tab := (((position // l_tab_width) + 1 ) * l_tab_width ) - position
 
 			if a_width < width_first_tab then
 				Result := 1
 			else
-				Result := 2 + (a_width - width_first_tab) // tabulation_width
+				Result := 2 + (a_width - width_first_tab) // l_tab_width
 			end
 		end
 
@@ -154,7 +164,11 @@ feature {NONE} -- Private characteristics & constants
 			-- Compute the number of pixels represented by a tabulation based on
 			-- user preferences number of spaces per tabulation.
 		do
-			Result := editor_preferences.tabulation_spaces * font.string_width (" ")
+			if is_fixed_width then
+				Result := editor_preferences.tabulation_spaces * font_width
+			else
+				Result := editor_preferences.tabulation_spaces * font.string_width (once " ")
+			end
 		end
 
 	tabulation_symbol_width: INTEGER is

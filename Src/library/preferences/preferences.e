@@ -201,8 +201,14 @@ feature -- Resource
 		require
 			resource_not_void: a_resource /= Void
 		do
-			if save_defaults_to_store or else not a_resource.is_default_value then
-				resource_structure.save_resource (a_resource)					
+			if save_defaults_to_store then
+				resource_structure.save_resource (a_resource)
+			else
+				if not a_resource.is_default_value then
+					resource_structure.save_resource (a_resource)
+				else
+					resource_structure.remove_resource (a_resource)
+				end
 			end
 		end		
 
@@ -299,6 +305,7 @@ feature {NONE} -- Implementation
 			create l_tree_pipe.make
 			create l_concat_filter.make_null
 			parser.set_callbacks (standard_callbacks_pipe (<<l_concat_filter, l_tree_pipe.start>>))
+			parser.set_string_mode_ascii
 			
 			create l_file.make (defaults_file_name)
 			l_file.open_read

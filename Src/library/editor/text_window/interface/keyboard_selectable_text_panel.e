@@ -647,7 +647,9 @@ feature {NONE} -- Cursor Management
 			-- Set the line where the cursor is situated to be redrawn
 			-- Redraw immediately if `flush' is set.
 		do
-			invalidate_line (text_displayed.cursor.y_in_lines, flush_screen)		
+			if text_displayed.cursor /= Void then
+				invalidate_line (text_displayed.cursor.y_in_lines, flush_screen)	
+			end				
 		end
 
 	draw_cursor (media: EV_DRAWABLE; x, y, width: INTEGER) is

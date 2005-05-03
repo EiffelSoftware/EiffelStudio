@@ -30,7 +30,7 @@ feature -- Access
 			Result := window_of_item (cwel_nmhdr_get_hwndfrom (item))
 		end
 
-	id_from: POINTER is
+	id_from: INTEGER is
 			-- Identifier of control sending message
 		do
 			Result := cwel_nmhdr_get_idfrom (item)
@@ -64,7 +64,7 @@ feature {NONE} -- Externals
 			"C [macro <nmhdr.h>] (NMHDR*): EIF_POINTER"
 		end
 
-	cwel_nmhdr_get_idfrom (ptr: POINTER): POINTER is
+	cwel_nmhdr_get_idfrom (ptr: POINTER): INTEGER is
 		external
 			"C [macro <nmhdr.h>]"
 		end

@@ -695,7 +695,7 @@ feature {NONE} -- Error handling
 			an_error: SYNTAX_ERROR
 		do
 			fixme ("Change plain syntax error to Integer_too_large error when the corresponding validity rule is available.")
-			create an_error.make (line, column, filename, "", False)
+			create an_error.make (line, column, filename, "Integer value " + an_int + " is too large for any integer type.", False)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
 		end
@@ -709,7 +709,7 @@ feature {NONE} -- Error handling
 			an_error: SYNTAX_ERROR
 		do
 			fixme ("Change plain syntax error to Integer_too_small error when the corresponding validity rule is available.")
-			create an_error.make (line, column, filename, "", False)
+			create an_error.make (line, column, filename, "Integer value " + an_int + " is too small for any integer type.", False)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
 		end

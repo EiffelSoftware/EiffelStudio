@@ -43,11 +43,19 @@ feature {NONE} -- Implementation
 			-- `Current' has been requested to be updated via `popup_window'.
 		do
 			create text_field
+			if font /= Void then
+				text_field.set_font (font)
+			end
+			text_field.set_background_color (background_color)
+			text_field.set_foreground_color (foreground_color)
 			text_field.set_text (text)
 			popup_window.extend (text_field)
 			popup_window.show
 			text_field.set_focus
-			text_field.select_all
+
+			if not text.is_empty then
+				text_field.select_all
+			end
 			text_field.return_actions.extend (agent deactivate)
 			text_field.focus_out_actions.extend (agent deactivate)
 		end

@@ -41,8 +41,16 @@ feature -- Access
 
 	font_width: INTEGER is
 			-- Width of character in the editor.
+		require
+			is_fixed_width: is_fixed_width
 		do
 			Result := font_width_cell.item
+		end
+
+	is_fixed_width: BOOLEAN is
+			-- Is `font' a fixed-width font?
+		do
+			Result := is_fixed_width_cell.item
 		end
 	
 feature {EDITOR_DATA} -- Implementation
@@ -72,6 +80,14 @@ feature {EDITOR_DATA} -- Implementation
 		once
 			loc_font_width := font.width
 			create Result.put (loc_font_width)
+		end
+
+	is_fixed_width_cell: CELL [BOOLEAN] is
+			-- Cached version of `is_fixed_width'
+		once
+			create Result.put (False)
+		ensure
+			is_fixed_width_cell_not_void: Result /= Void
 		end
 
 	line_height_font: EV_FONT is

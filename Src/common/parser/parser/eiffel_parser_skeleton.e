@@ -575,12 +575,14 @@ feature {NONE} -- Type factory
 
 feature {NONE} -- Basic type factory
 
-	new_integer_value (is_signed: BOOLEAN; sign_symbol: CHARACTER; a_type: TYPE_AS; buffer: STRING): INTEGER_AS is
+	new_integer_value (sign_symbol: CHARACTER; a_type: TYPE_AS; buffer: STRING): INTEGER_AS is
 			-- Create a new integer constant value
 		require
 			buffer_not_void: buffer /= Void
+			valid_sign: ("%U+-").has (sign_symbol)
 		local
 			l_type: TYPE_A
+			token_value: STRING
 		do
 			if a_type /= Void then
 				l_type := a_type.actual_type
@@ -590,32 +592,32 @@ feature {NONE} -- Basic type factory
 					report_invalid_type_for_integer_error (a_type, buffer)
 				end
 			end
-			if buffer.is_integer then
-				if is_signed then
-					Result := ast_factory.new_integer_as (l_type, sign_symbol = '-', buffer)
-				else
-					Result := ast_factory.new_integer_as (l_type, False, buffer)
-				end
+				-- Remember original token
+			token_value := buffer
+				-- Remove underscores (if any) without breaking
+				-- original token
+			if token_value.has ('_') then
+				token_value := token_value.twin
+				token_value.prune_all ('_')
+			end
+			if token_value.is_integer then
+				Result := ast_factory.new_integer_as (l_type, sign_symbol = '-', token_value)
 			elseif
-				buffer.item (1) = '0' and then
-				buffer.item (2).lower = 'x'
+				token_value.item (1) = '0' and then
+				token_value.item (2).lower = 'x'
 			then
-				if is_signed then
-					Result := ast_factory.new_integer_hexa_as (l_type, sign_symbol, buffer)
-				else
-					Result := ast_factory.new_integer_hexa_as (l_type, '%U', buffer)
-				end
-			else
-				if is_signed and sign_symbol = '-' then
+				Result := ast_factory.new_integer_hexa_as (l_type, sign_symbol, token_value)
+			end
+			if Result = Void or else not Result.is_initialized then
+				if sign_symbol = '-' then
 						-- Add `-' for a better reporting.
 					buffer.precede ('-')
+					report_integer_too_small_error (buffer)
+				else
+					report_integer_too_large_error (buffer)
 				end
-				report_integer_too_large_error (buffer)
 					-- Dummy code (for error recovery) follows:
 				Result := ast_factory.new_integer_as (l_type, False, "0")
-			end
-			if not Result.is_initialized then
-				report_integer_too_large_error (buffer)
 			end
 			Result.set_position (line, column, position, buffer.count)
 		end

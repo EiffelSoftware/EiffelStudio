@@ -207,18 +207,19 @@ feature {NONE} -- Implementation
 
 	dispose_boolean (a_disposing: BOOLEAN) is
 			-- method called when form is disposed.
-		local
-			retried: BOOLEAN
 		do
-			if not retried then
+			if timed_progress /= Void then
+				timed_progress.interrupt
+				timed_progress := Void
+			end			
+
+			if a_disposing then
 				if components /= Void then
-					components.dispose	
+					components.dispose
+					components := Void
 				end
 			end
 			Precursor {WINFORMS_FORM}(a_disposing)
-		rescue
-			retried := true
-			retry
 		end
 
 	on_load (e: EVENT_ARGS) is
@@ -260,7 +261,6 @@ feature {NONE} -- Implementation
 			stop: BOOLEAN
 			rescued: BOOLEAN
 			l_mi: WINFORMS_METHOD_INVOKER
-			sleep_time: INTEGER
 			res: SYSTEM_OBJECT
 		do
 			if not rescued then
@@ -270,8 +270,7 @@ feature {NONE} -- Implementation
 					stop
 				loop
 					res := invoke (l_mi)
-					sleep_time := 100
-					{SYSTEM_THREAD}.sleep_integer (i_sleep_time)
+					{SYSTEM_THREAD}.sleep (i_sleep_time)
 				end
 			end
 		rescue
@@ -282,15 +281,19 @@ feature {NONE} -- Implementation
 	get_sleep_time: INTEGER is
 			-- Property controlling the progress of the progress bar - used by the background thread
 		do
+			{MONITOR}.enter (Current)
 			Result := i_sleep_time
+			{MONITOR}.exit (Current)
 		end
-		
+
 	set_sleep_time (a_value: INTEGER) is
 			-- Property controlling the progress of the progress bar - used by the background thread
 		require
 			positive_value: a_value > 0
 		do
+			{MONITOR}.enter (Current)
 			i_sleep_time := a_value
+			{MONITOR}.exit (Current)
 		ensure
 			i_sleep_time_set: i_sleep_time = a_value	
 		end
@@ -299,7 +302,7 @@ feature {NONE} -- Implementation
 			-- Feature performed when speed scroll is moved.
 		require
 			non_void_sender: sender /= Void
-			non_void_args: args /= void
+			non_void_args: args /= Void
 		local
 			tb: WINFORMS_TRACK_BAR
 			time: INTEGER
@@ -315,7 +318,7 @@ feature {NONE} -- Implementation
 			-- Feature performed when step selected change.
 		require
 			non_void_sender: sender /= Void
-			non_void_args: args /= void
+			non_void_args: args /= Void
 		local
 			l_selected_item: SYSTEM_STRING
 			l_step_string: STRING

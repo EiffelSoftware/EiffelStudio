@@ -11,19 +11,19 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>A system with a certain static structure describes a set of possible executions.  The run-time model governs the structure of the data (
+		<paragraph>A system with a certain static structure describes a set of possible executions. The run-time model governs the structure of the data (
 			<code>
 				<string>objects</string>
 			</code>) created during such executions.
 		</paragraph>
-		<paragraph>The properties of the run-time model are not just of interest to implementers; they also involve concepts directly relevant to the needs of system modelers and analysts at the most abstract levels.  </paragraph>
+		<paragraph>The properties of the run-time model are not just of interest to implementers; they also involve concepts directly relevant to the needs of system modelers and analysts at the most abstract levels.</paragraph>
 		<heading>
 			<size>2</size>
 			<content>Objects, fields, values and references</content>
 		</heading>
-		<paragraph>A class was defined as the static description of a type of run-time data structures.  The data structures described by a ca class are called 
+		<paragraph>A class was defined as the static description of a type of run-time data structures. The data structures described by a class are called 
 			<bold>instances</bold> of the class, which in turn is called their 
-			<bold>generating class</bold> (or just "generator").  An instance of 
+			<bold>generating class</bold> (or just "generator"). An instance of 
 			<code>
 				<class_name>ACCOUNT</class_name>
 			</code> is a data structure representing a bank account; an instance of 
@@ -34,7 +34,7 @@
 		<paragraph>An 
 			<bold>object</bold>, as may be created during the execution of a system, is an instance of some class of the system.
 		</paragraph>
-		<paragraph>Classes and objects belong to different worlds: a class is an element of the software text; an object is a data structure created during execution.  Although is possible to define a class whose instances represent classes, this does not eliminate the distinction between a static, compile-time notion, class, and a dynamic, run-time notion, object.
+		<paragraph>Classes and objects belong to different worlds: a class is an element of the software text; an object is a data structure created during execution. Although is possible to define a class whose instances represent classes, this does not eliminate the distinction between a static, compile-time notion, class, and a dynamic, run-time notion, object.
 		</paragraph>
 		<paragraph>An object is either an atomic object (integer, real, boolean, double) or a composite object made of a number of 
 			<bold>fields</bold>, represented by adjacent rectangles on the conventional run-time diagrams:
@@ -43,15 +43,15 @@
 			<url>tutorial-5.png</url>
 		</image>
 		<paragraph>Each field is a 
-			<bold>value</bold>.  A value can be either an object or an object reference:
+			<bold>value</bold>. A value can be either an object or an object reference:
 		<line_break/>
 		<list ordered="false">
-			<item> When a field is an object, it will in most cases be an atomic object, as on the figure where the first field from the top is an integer and the third a character.  But a field can also be a composite object, in which case it is called a 
+			<item> When a field is an object, it will in most cases be an atomic object, as on the figure where the first field from the top is an integer and the third a character. But a field can also be a composite object, in which case it is called a 
 				<bold>subobject</bold>.
 			</item>
 			<item> A 
 				<bold>reference</bold> is either void or uniquely identifies an object, to which it is said to be 
-				<bold>attached</bold>.  In the preceding figure the second field from the top is a reference -- attached in this case, as represented by the arrow, to the enclosing object itself.  The bottom field is a void reference.
+				<bold>attached</bold>. In the preceding figure the second field from the top is a reference -- attached in this case, as represented by the arrow, to the enclosing object itself. The bottom field is a void reference.
 			</item>
 		</list>
 		</paragraph>
@@ -62,13 +62,13 @@
 		<image>
 			<url>tutorial-6.png</url>
 		</image>
-		<paragraph>A feature, as noted, is an operation available on instances of a class.  A feature can be either an 
+		<paragraph>A feature, as noted, is an operation available on instances of a class. A feature can be either an 
 			<bold>attribute</bold> or a 
-			<bold>routine</bold>.  This classification, which you can follow by starting from the 
+			<bold>routine</bold>. This classification, which you can follow by starting from the 
 			right on the figure above, is based on implementation considerations:
 		</paragraph>
 		<list ordered="false">
-			<item> An attribute is a feature implemented through memory: it describes a field that will be found in all instances of the class.  For example class 
+			<item> An attribute is a feature implemented through memory: it describes a field that will be found in all instances of the class. For example class 
 				<code>
 					<class_name>ACCOUNT</class_name>
 				</code> may have an attribute 
@@ -86,7 +86,7 @@
 			</item>
 			<item> Routines are further classified into 
 				<bold>functions</bold>, which will return a result, and 
-				<bold>procedures</bold>, which will not.  Routine 
+				<bold>procedures</bold>, which will not. Routine 
 				<code>
 					<string>withdraw</string>
 				</code> will be a procedure; an example of function may be 
@@ -101,10 +101,10 @@
 		</paragraph>
 		<list ordered="false">
 			<item>
-				<bold>Commands</bold> have no result, and may modify an object.  They may only be procedures.
+				<bold>Commands</bold> have no result, and may modify an object. They may only be procedures.
 			</item>
 			<item>
-				<bold>Queries</bold> have a result: they return information about an object.  You may implement a query as either an attribute (by reserving space for the corresponding information in each instance of the class, a memory-based solution) or a function (a computation-based solution).  An attribute is only possible for a query without argument, such as 
+				<bold>Queries</bold> have a result: they return information about an object. You may implement a query as either an attribute (by reserving space for the corresponding information in each instance of the class, a memory-based solution) or a function (a computation-based solution). An attribute is only possible for a query without argument, such as 
 				<code>
 					<feature_name>balance</feature_name>
 				</code>; a query with arguments, such as 
@@ -131,13 +131,13 @@
 			</code>. In the implementation suggested above, 
 			<code>
 				<local_variable>a</local_variable>
-			</code> is an attribute, so that the notation denotes an access to the corresponding object field.  But it is also possible to implement 
+			</code> is an attribute, so that the notation denotes an access to the corresponding object field. But it is also possible to implement 
 			<code>
 				<local_variable>a</local_variable>
-			</code> as a function, whose algorithm will explore the lists of deposits and withdrawals and compute their accumulated value.  To the clients of the class, and in the official class documentation as produced by the environment tools, the difference is not visible.
+			</code> as a function, whose algorithm will explore the lists of deposits and withdrawals and compute their accumulated value. To the clients of the class, and in the official class documentation as produced by the environment tools, the difference is not visible.
 		</paragraph>
 		<paragraph>This principle of 
-			<bold>Uniform Access</bold> is central to Eiffel's goals of extendibility, reusability and maintainability: you can change the implementation without affecting clients; and you can reuse a class without having to know the details of its features' implementations.  Most object-oriented languages force clients to use a different notation for a function call and an attribute access.  This violates Uniform Access and is an impediment to software evolution, turning internal representation changes into interface changes that may disrupt large parts of a system.
+			<bold>Uniform Access</bold> is central to Eiffel's goals of extendibility, reusability and maintainability: you can change the implementation without affecting clients; and you can reuse a class without having to know the details of its features' implementations. Most object-oriented languages force clients to use a different notation for a function call and an attribute access. This violates Uniform Access and is an impediment to software evolution, turning internal representation changes into interface changes that may disrupt large parts of a system.
 		</paragraph>
 		<heading>
 			<size>2</size>
@@ -146,7 +146,7 @@
 		<paragraph>The following simple class text illustrates the preceding concepts</paragraph>
 		<code_block>
 <keyword>indexing</keyword>
-    description<symbol>:</symbol> <string>"Simple bank accounts"</string>
+	description<symbol>:</symbol> <string>"Simple bank accounts"</string>
 
 <keyword>class</keyword>
 	<class_name>ACCOUNT</class_name>
@@ -207,7 +207,7 @@
 				<class_name>DEPOSIT_LIST</class_name>
 			</code> refers to another class, which can be written separately using library classes.)
 		</paragraph>
-		<paragraph>It's easy to deduce, from a feature's syntactic appearance, the category to which it belongs.  Here:</paragraph>
+		<paragraph>It's easy to deduce, from a feature's syntactic appearance, the category to which it belongs. Here:</paragraph>
 		<list ordered="false">
 			<item> Only 
 				<code>
@@ -226,7 +226,7 @@
 				</code> and 
 				<code>
 					<feature_name>all_deposits</feature_name>
-				</code>, which are simply declared with a type, are attributes.  Note that even for attributes it is recommended to have a header comment.
+				</code>, which are simply declared with a type, are attributes. Note that even for attributes it is recommended to have a header comment.
 			</item>
 			<item> Routine 
 				<code>
@@ -234,7 +234,7 @@
 				</code> is declared as returning a result (of type 
 				<code>
 					<class_name>INTEGER</class_name>
-				</code>); so it is a function.  Routine 
+				</code>); so it is a function. Routine 
 				<code>
 					<feature_name>deposit</feature_name>
 				</code> has no such result and hence is a procedure.
@@ -244,7 +244,7 @@
 			<size>2</size>
 			<content>Creating and initializing objects</content>
 		</heading>
-		<paragraph>Classes, as noted, are a static notion.  Objects appear at run time; they are created explicitly.  Here is the basic instruction to create an object of type 
+		<paragraph>Classes, as noted, are a static notion. Objects appear at run time; they are created explicitly. Here is the basic instruction to create an object of type 
 			<code>
 				<class_name>ACCOUNT</class_name>
 			</code> and attach it to 
@@ -267,7 +267,7 @@
 			</code>; initialize its fields to default values; and attach the value of 
 			<code>
 				<local_variable>x</local_variable>
-			</code> to it.  Here the object will have two fields corresponding to the two attributes of the generating class: an integer for 
+			</code> to it. Here the object will have two fields corresponding to the two attributes of the generating class: an integer for 
 			<code>
 				<feature_name>balance</feature_name>
 			</code>, which will be initialized to 0, and a reference for 
@@ -316,7 +316,7 @@
 		<paragraph>It is possible to override the initialization values by providing -- as in the earlier example of class 
 			<code>
 				<class_name>HELLO</class_name>
-			</code> -- one or more creation procedures.  For example we might change 
+			</code> -- one or more creation procedures. For example we might change 
 			<code>
 				<class_name>ACCOUNT</class_name>
 			</code> to make sure that every account is created with an initial deposit:
@@ -334,7 +334,7 @@
 <keyword>feature</keyword> <comment>-- Initialization</comment>
 
 	<feature_name>make</feature_name> <symbol>(</symbol><local_variable>sum</local_variable><symbol>:</symbol> <class_name>INTEGER</class_name><symbol>)</symbol> <keyword>is</keyword>
-			<comment>-- Initialize account with `sum' .</comment>
+			<comment>-- Initialize account with `sum'.</comment>
 		<keyword>do</keyword>
 			<feature_name>deposit</feature_name> <symbol>(</symbol><local_variable>sum</local_variable><symbol>)</symbol>
 		<keyword>end</keyword>
@@ -372,7 +372,7 @@
 		</paragraph>
 		<code_block>
 <keyword>create</keyword> <feature_name>x</feature_name>.<feature_name>make</feature_name> (2000)</code_block>
-		<paragraph>known as a creation call.  Such a creation call will have the same effect as the original form -- creation, initialization, attachment to -- 
+		<paragraph>known as a creation call. Such a creation call will have the same effect as the original form -- creation, initialization, attachment to -- 
 			<code>
 				<local_variable>x</local_variable>
 			</code> followed by the effect of calling the selected creation procedure, which here will call 
@@ -398,7 +398,7 @@
 			</code>, elevating 
 			<code>
 				<feature_name>deposit</feature_name>
-			</code> to the status of creation procedure.  Then a creation call would be of the form 
+			</code> to the status of creation procedure. Then a creation call would be of the form 
 			<code>
 				<keyword>create</keyword>
 			</code> 
@@ -418,7 +418,7 @@
 				<symbol>)</symbol>
 			</code>.
 		</paragraph>
-		<info>Some variants of the basic creation instruction will be reviewed later: instruction with an explicit type; creation expressions.  See 
+		<info>Some variants of the basic creation instruction will be reviewed later: instruction with an explicit type; creation expressions. See 
 			<link>
 				<url>tutorial-11.xml</url><anchor_name>28280</anchor_name>
 				<label>Chapter 10, "Other Mechanisms"</label>
@@ -437,11 +437,11 @@
 			</code> (or 
 			<code>
 				<class_name>ACCOUNT1</class_name>
-			</code>).  Such an 
+			</code>). Such an 
 			<code>
 				<local_variable>x</local_variable>
 			</code> is an example of 
-			<bold>entity</bold>, a notion generalizing the well-known concept of variable.  An entity is a name that appears in a class text to represent possible run-time values (a value being, as defined earlier, an object or a reference).  An entity is one of the following:
+			<bold>entity</bold>, a notion generalizing the well-known concept of variable. An entity is a name that appears in a class text to represent possible run-time values (a value being, as defined earlier, an object or a reference). An entity is one of the following:
 		<line_break/>
 		<list ordered="false">
 			<item> An attribute of the enclosing class, such as 
@@ -463,7 +463,7 @@
 					<feature_name>make</feature_name>
 				</code>.
 			</item>
-			<item> A local entity declared for the internal needs of a routine.  </item>
+			<item> A local entity declared for the internal needs of a routine. </item>
 			<item> The special entity 
 				<code>
 					<keyword>Result</keyword>
@@ -471,7 +471,7 @@
 			</item>
 		</list>
 		</paragraph>
-		<paragraph>The third case, local entities, arises when a routine needs some auxiliary values for its computation.  Here is an example of the syntax:</paragraph>
+		<paragraph>The third case, local entities, arises when a routine needs some auxiliary values for its computation. Here is an example of the syntax:</paragraph>
 <code_block>
 <feature_name>deposit</feature_name> <symbol>(</symbol><local_variable>sum</local_variable><symbol>:</symbol> <class_name>INTEGER</class_name><symbol>)</symbol> <keyword>is</keyword>
 		<comment>-- Add sum to account.</comment>
@@ -495,7 +495,7 @@
 			</code> are no longer just integers, but objects, instances of a new class, 
 			<code>
 				<class_name>AMOUNT</class_name>
-			</code>. Such an object will contain an integer value, but possibly other information as well.  So for the purpose of procedure 
+			</code>. Such an object will contain an integer value, but possibly other information as well. So for the purpose of procedure 
 			<code>
 				<feature_name>deposit</feature_name>
 			</code> we create an instance of 
@@ -515,7 +515,7 @@
 		<paragraph>The last case of entity, 
 			<code>
 				<keyword>Result</keyword>
-			</code>, serves to denote, within the body of a function, the final result to be returned by that function.  This was illustrated by the function 
+			</code>, serves to denote, within the body of a function, the final result to be returned by that function. This was illustrated by the function 
 			<code>
 				<feature_name>deposit_count</feature_name>
 			</code>, which read
@@ -549,7 +549,7 @@
 		<paragraph>The default initialization rules seen earlier for attributes also serves to initialize local entities and 
 			<code>
 				<keyword>Result</keyword>
-			</code> on routine entry.  So in the last example, if 
+			</code> on routine entry. So in the last example, if 
 			<code>
 				<feature_name>all_deposits</feature_name>
 			</code> is void (as in the case on initialization with the class as given so far), 
@@ -561,7 +561,7 @@
 			<size>2</size>
 			<content>Calls</content>
 		</heading>
-		<paragraph>Apart from object creation, the basic computational mechanism, in the object-oriented style of computation represented by Eiffel, is feature call.  In its basic form, it appears as</paragraph>
+		<paragraph>Apart from object creation, the basic computational mechanism, in the object-oriented style of computation represented by Eiffel, is feature call. In its basic form, it appears as</paragraph>
 		<code_block>
 <feature_name>target</feature_name>.<feature_name>feature</feature_name> <symbol>(</symbol><local_variable>argument1</local_variable>, ...<symbol>)</symbol>
 </code_block>
@@ -574,12 +574,12 @@
 			</code> is a feature name, and there may be zero or more 
 			<code>
 				<local_variable>argument</local_variable>
-			</code> expressions.  In the absence of any 
+			</code> expressions. In the absence of any 
 			<code>
 				<local_variable>argument</local_variable>
 			</code> the part in parentheses should be removed.
 		</paragraph>
-		<paragraph>We have already seen such calls.  If the 
+		<paragraph>We have already seen such calls. If the 
 			<code>
 				<keyword>feature</keyword>
 			</code> denotes a procedure, the call is an instruction, as in
@@ -595,7 +595,7 @@
 		<code_block>
 <keyword>Result</keyword> <symbol>:=</symbol> <feature_name>all_deposits</feature_name>.<feature_name>count</feature_name>
 </code_block>
-		<paragraph>Following the principle of Uniform Access, this form is the same for calls to attributes and to functions without arguments.  In this example, feature 
+		<paragraph>Following the principle of Uniform Access, this form is the same for calls to attributes and to functions without arguments. In this example, feature 
 			<code>
 				<string>count</string>
 			</code> from class 
@@ -659,7 +659,7 @@
 			</code> instead of the usual 
 			<code>
 				<local_variable>i</local_variable> <symbol>+</symbol> <local_variable>j</local_variable>
-			</code>. This would be awkward.  Infix and prefix features solve the problem, reconciling the object-oriented view of computation with common notational practices of mathematics.  The addition function is declared in class 
+			</code>. This would be awkward. Infix and prefix features solve the problem, reconciling the object-oriented view of computation with common notational practices of mathematics. The addition function is declared in class 
 			<code>
 				<class_name>INTEGER</class_name>
 			</code> as
@@ -679,7 +679,7 @@
 			</code>
 			<code>
 				<local_variable>j</local_variable>
-			</code>, rather than using dot notation.  An infix feature must be a function, and take exactly one argument.  Similarly, a function can be declared as 
+			</code>, rather than using dot notation. An infix feature must be a function, and take exactly one argument. Similarly, a function can be declared as 
 			<code>
 				<keyword>prefix</keyword>
 			</code>
@@ -720,9 +720,9 @@
 			</code> are known to the Eiffel compiler, so that a call of the form 
 			<code>
 				<local_variable>j</local_variable> <symbol>+</symbol> <local_variable>i</local_variable>
-			</code>, although conceptually equivalent to a routine call, can be processed just as efficiently as the corresponding arithmetic expression in an ordinary programming language.  This brings the best of both worlds: conceptual simplicity, enabling Eiffel developers, when they want to, to think of integers and the like as objects; and efficiency as good as in lower-level approaches.
+			</code>, although conceptually equivalent to a routine call, can be processed just as efficiently as the corresponding arithmetic expression in an ordinary programming language. This brings the best of both worlds: conceptual simplicity, enabling Eiffel developers, when they want to, to think of integers and the like as objects; and efficiency as good as in lower-level approaches.
 		</paragraph>
-		<paragraph>Infix and prefix features are available to any class, not just the basic types' predefined classes.  For example a graphics class could use the name 
+		<paragraph>Infix and prefix features are available to any class, not just the basic types' predefined classes. For example a graphics class could use the name 
 			<code>
 				<keyword>infix</keyword> 
 				<string>"</string><symbol>|-|</symbol><string>"</string>
@@ -741,7 +741,7 @@
 		<code_block>
 <feature_name>entity_name</feature_name><symbol>:</symbol> <class_name>TYPE_NAME</class_name>
 </code_block>
-		<paragraph>This applies to attributes, formal arguments of routines and local entities.  You will also declare the result type for a function, as in the earlier example</paragraph>
+		<paragraph>This applies to attributes, formal arguments of routines and local entities. You will also declare the result type for a function, as in the earlier example</paragraph>
 		<code_block>
 <feature_name>deposit_count</feature_name><symbol>:</symbol> <class_name>INTEGER</class_name> <keyword>is</keyword> ...
 </code_block>
@@ -778,9 +778,9 @@
 			<link>
 				<url>tutorial-10.xml</url><anchor_name>46019</anchor_name>
 				<label>Chapter 9, "Inheritance"</label>
-			</link>) -- will generalize the notion of type slightly.  But they do not change the fundamental property that 
+			</link>) -- will generalize the notion of type slightly. But they do not change the fundamental property that 
 			<bold>every type is based on a class</bold>, called the type's 
-			<bold>base class</bold>.  In the examples seen so far, each type 
+			<bold>base class</bold>. In the examples seen so far, each type 
 			is a class, serving as its own base class.
 		</paragraph>
 		<paragraph>An instance of a class 
@@ -795,12 +795,12 @@
 			<size>2</size>
 			<content>Type categories</content>
 		</heading>
-		<paragraph>It was noted above that a value is either an object or a reference.  This corresponds to two kinds of type: reference types and expanded types.  </paragraph>
+		<paragraph>It was noted above that a value is either an object or a reference. This corresponds to two kinds of type: reference types and expanded types.</paragraph>
 		<paragraph>If a class is declared as just</paragraph>
 		<code_block>
 <keyword>class</keyword> <class_name>CLASS_NAME</class_name> ...
 </code_block>
-		<paragraph>it defines a reference type.  The entities declared of that type will denote references.  So in the declaration</paragraph>
+		<paragraph>it defines a reference type. The entities declared of that type will denote references. So in the declaration</paragraph>
 		<code_block>
 <local_variable>x</local_variable><symbol>:</symbol> <class_name>ACCOUNT</class_name>
 </code_block>
@@ -856,7 +856,7 @@
 			</code> will be objects of type 
 			<code>
 				<class_name>C</class_name>
-			</code>, rather than references to such objects.  This is our first example of a type -- 
+			</code>, rather than references to such objects. This is our first example of a type -- 
 			<code>
 				<keyword>expanded</keyword>
 			</code> 
@@ -870,7 +870,7 @@
 				<class_name>C</class_name>
 			</code>.
 		</paragraph>
-		<paragraph>Note that the value of an entity of an expanded type can never be void; only a reference can.  Extending the earlier terminology, an expanded entity is always 
+		<paragraph>Note that the value of an entity of an expanded type can never be void; only a reference can. Extending the earlier terminology, an expanded entity is always 
 			<bold>attached to</bold> an object, atomic (as in the case of 
 			<code>
 				<local_variable>n</local_variable>
@@ -908,19 +908,19 @@
 		<image>
 			<url>tutorial-8.png</url>
 		</image>
-		<paragraph>This example also illustrates that the distinction between expanded and reference types is important not just for system implementation purposes but for high-level system modeling as well.  Consider the example of a class covering the notion of car.  Many cars share the same 
+		<paragraph>This example also illustrates that the distinction between expanded and reference types is important not just for system implementation purposes but for high-level system modeling as well. Consider the example of a class covering the notion of car. Many cars share the same 
 			<code>
 				<string>originating_plant</string>
 			</code>, but an 
 			<code>
 				<feature_name>engine</feature_name>
-			</code> belongs to just one car.   References represent the modeling relation "knows about"; subobjects, as permitted by expanded types, represent the relation "has part", also known as aggregation.  The key difference is that sharing is possible in the former case but not in the latter.
+			</code> belongs to just one car. References represent the modeling relation "knows about"; subobjects, as permitted by expanded types, represent the relation "has part", also known as aggregation. The key difference is that sharing is possible in the former case but not in the latter.
 		</paragraph>
 		<heading>
 			<size>2</size>
 			<content>Basic operations</content>
 		</heading>
-		<paragraph>To assign, copy and compare values, you can rely on a number of mechanisms.  Two of them, assignment and equality testing, are language constructs; the others are library features, coming from the top-level class 
+		<paragraph>To assign, copy and compare values, you can rely on a number of mechanisms. Two of them, assignment and equality testing, are language constructs; the others are library features, coming from the top-level class 
 			<code>
 				<class_name>ANY</class_name>
 			</code> seen earlier (see 
@@ -1023,7 +1023,7 @@
 			</code>'s attached object onto those of 
 			<code>
 				<local_variable>x</local_variable>
-			</code>'s.  For expanded entities the effect is the same as that the of the assignment 
+			</code>'s. For expanded entities the effect is the same as that the of the assignment 
 			<code>
 				<local_variable>x</local_variable> 
 				<symbol>:=</symbol> 
@@ -1054,10 +1054,10 @@
 			</code>, or a void value if 
 			<code>
 				<local_variable>y</local_variable>
-			</code> itself is void.  For a reference type (the only interesting case) the returned result for non-void is
+			</code> itself is void. For a reference type (the only interesting case) the returned result for non-void is
 			<code>
 				<local_variable>y</local_variable>
-			</code> a reference to the new object.  This means we may view 
+			</code> a reference to the new object. This means we may view 
 			<code>
 				<feature_name>clone</feature_name>
 			</code> as a function that performs
@@ -1135,7 +1135,7 @@
 			</code> and 
 			<code>
 				<local_variable>y</local_variable>
-			</code> are both non-void and attached to field-by-field identical objects.  This can be true even when 
+			</code> are both non-void and attached to field-by-field identical objects. This can be true even when 
 			<code>
 				<local_variable>x</local_variable>
 			</code>
@@ -1158,7 +1158,7 @@
 			</code>, 
 			<code>
 				<local_variable>y</local_variable>
-			</code>).  This is always defined, even if 
+			</code>). This is always defined, even if 
 			<code>
 				<local_variable>x</local_variable>
 			</code> is void, returning true whenever 
@@ -1170,7 +1170,7 @@
 			</code> and 
 			<code>
 				<local_variable>y</local_variable>
-			</code> are both void.  (In contrast, 
+			</code> are both void. (In contrast, 
 			<code>
 				<local_variable>x</local_variable>
 			</code>.
@@ -1191,7 +1191,7 @@
 		<paragraph>
 			<code>
 				<keyword>Void</keyword>
-			</code> denotes a void reference.  So you can make 
+			</code> denotes a void reference. So you can make 
 			<code>
 				<local_variable>x</local_variable>
 			</code> void through the assignment 
@@ -1212,7 +1212,7 @@
 				<keyword>then</keyword>
 			</code> ...
 		</paragraph>
-		<paragraph>Where assignment  
+		<paragraph>Where assignment 
 			<code>
 				<symbol>:=</symbol>
 			</code> and the equality operators 
@@ -1258,7 +1258,7 @@
 			</code> and 
 			<code>
 				<feature_name>is_equal</feature_name>
-			</code> to cover specific notions of copy and equality.  The assertions will ensure that the two remain compatible: after 
+			</code> to cover specific notions of copy and equality. The assertions will ensure that the two remain compatible: after 
 			<code>
 				<local_variable>x</local_variable>
 			</code>.
@@ -1276,7 +1276,7 @@
 			</code> (
 			<code>
 				<local_variable>y</local_variable>
-			</code>) must always be true.  The effect of 
+			</code>) must always be true. The effect of 
 			<code>
 				<feature_name>clone</feature_name>
 			</code> will automatically follow a redefinition of 
@@ -1311,9 +1311,9 @@
 		<paragraph>Feature 
 			<code>
 				<feature_name>clone</feature_name>
-			</code> only duplicates one object.  If some of the object's fields are references to other objects, the references themselves will be copied, not those other objects.
+			</code> only duplicates one object. If some of the object's fields are references to other objects, the references themselves will be copied, not those other objects.
 		</paragraph>
-		<paragraph>It is useful, in some cases, to duplicate not just one object but an entire object structure.  The expression 
+		<paragraph>It is useful, in some cases, to duplicate not just one object but an entire object structure. The expression 
 			<code>
 				<feature_name>deep_clone</feature_name>
 			</code>
@@ -1331,7 +1331,7 @@
 			</code>, it will produce a duplicate not just of the object attached to 
 			<code>
 				<local_variable>y</local_variable>
-			</code> but of the entire object structure starting at that object.  The mechanism respects all the possible details of that structure, such as cyclic reference chains.  Like the preceding features, 
+			</code> but of the entire object structure starting at that object. The mechanism respects all the possible details of that structure, such as cyclic reference chains. Like the preceding features, 
 			<code>
 				<feature_name>deep_clone</feature_name>
 			</code> comes from class 
@@ -1340,7 +1340,7 @@
 			</code>.
 		</paragraph>
 		<paragraph>A related mechanism provides a powerful 
-			<bold>persistence</bold> facility.  A call of the form
+			<bold>persistence</bold> facility. A call of the form
 		</paragraph>
 		<code_block>
 <feature_name>x</feature_name>.<feature_name>store</feature_name> <symbol>(</symbol>Some_file_or_network_connection<symbol>)</symbol>
@@ -1348,13 +1348,13 @@
 		<paragraph>will store a copy of the entire object structure starting at 
 			<code>
 				<local_variable>x</local_variable>
-			</code>, under a suitable representation.  Like 
+			</code>, under a suitable representation. Like 
 			<code>
 				<feature_name>deep_clone</feature_name>
 			</code>, procedure 
 			<code>
 				<string>store</string>
-			</code> will follow all references to the end and maintain the properties of the structure.  The function 
+			</code> will follow all references to the end and maintain the properties of the structure. The function 
 			<code>
 				<feature_name>retrieved</feature_name>
 			</code> can then be used -- in the same system, or another -- to recreate the structure from the stored version.
@@ -1384,7 +1384,7 @@
 			<link>
 				<url>tutorial-00.xml</url><anchor_name>35291</anchor_name>
 				<label>28</label>
-			</link> can cause objects to become unreachable.  This is the case for the object identified as OBJ2 on that figure (the object to which 
+			</link> can cause objects to become unreachable. This is the case for the object identified as OBJ2 on that figure (the object to which 
 			<code>
 				<local_variable>x</local_variable>
 			</code> was attached before the assignment) if no other reference was attached to it.
@@ -1406,13 +1406,13 @@
 			</code> and C/C++'s 
 			<code>
 				<feature_name>free</feature_name>
-			</code>).  The arguments for this view are:
+			</code>). The arguments for this view are:
 		</paragraph>
 		<paragraph>
-			<bold>Simplicity</bold> : handling memory reclamation manually can add enormous complication to the software, especially when -- as is often the case in object-oriented development -- the system manipulates complex run-time data structures with many links and cycles.
+			<bold>Simplicity</bold>: handling memory reclamation manually can add enormous complication to the software, especially when -- as is often the case in object-oriented development -- the system manipulates complex run-time data structures with many links and cycles.
 		</paragraph>
 		<paragraph>
-			<bold>Reliability</bold> : memory management errors, such as the incorrect reclamation of an object that is still referenced by a distant part of the structure, are a notorious source of dangerous and hard-to-correct bugs.
+			<bold>Reliability</bold>: memory management errors, such as the incorrect reclamation of an object that is still referenced by a distant part of the structure, are a notorious source of dangerous and hard-to-correct bugs.
 		</paragraph>
 		<paragraph>The Eiffel Software's implementation of Eiffel provides a sophisticated 
 			<bold>garbage collector</bold> which efficiently handles the automatic reclamation process, while causing no visible degradation of a system's performance and response time.
@@ -1439,7 +1439,7 @@
 			</code> denotes a feature of the generating class of the object to which 
 			<code>
 				<local_variable>target</local_variable>
-			</code> (assumed to be non-void) is attached.  The precise rule is the following:
+			</code> (assumed to be non-void) is attached. The precise rule is the following:
 		</paragraph>
 		<note>Feature Call rule A call of the form target.feature (...) appearing in a class C is only valid if feature is a feature of the base class of target 's type, and is available to C.</note>
 		<paragraph>The first condition simply expresses that if 
@@ -1460,7 +1460,7 @@
 			</code> must be the name of one of the features of 
 			<code>
 				<class_name>A</class_name>
-			</code>. The second condition reflects Eiffel's application of the principles of information hiding.  A 
+			</code>. The second condition reflects Eiffel's application of the principles of information hiding. A 
 			<code>
 				<keyword>feature</keyword>
 			</code> clause, introducing one or more feature declarations, may appear not only as
@@ -1501,7 +1501,7 @@
 			<comment>-- List of deposits since account's opening.</comment>
 </code_block>
 		<paragraph>This form indicates that the features appearing in that clause are only 
-			<bold>available</bold> -- in the sense of available for calls, as used in the Feature Call rule -- to the classes listed.  In the example feature 
+			<bold>available</bold> -- in the sense of available for calls, as used in the Feature Call rule -- to the classes listed. In the example feature 
 			<code>
 				<feature_name>all_deposits</feature_name>
 			</code> is only available to 
@@ -1528,7 +1528,7 @@
 		<paragraph>With this specification a class text including the declaration 
 			<code>
 				<string>acc</string>
-			</code> : 
+			</code>: 
 			<code>
 				<class_name>ACCOUNT</class_name>
 			</code> and a call of the form
@@ -1536,7 +1536,7 @@
 		<code_block>
 <feature_name>acc</feature_name>.<feature_name>all_deposits</feature_name>
 </code_block>
-		<paragraph>violates the Feature Call rule and will be rejected by the EiffelStudio compiler.  </paragraph>
+		<paragraph>violates the Feature Call rule and will be rejected by the EiffelStudio compiler.</paragraph>
 		<paragraph>Besides fully exported features (introduced by 
 			<code>
 				<keyword>feature ...</keyword>
@@ -1564,7 +1564,7 @@
 			</code>), it is possible to export features selectively to some specified classes, using the specification
 		</paragraph>
 		<code_block>
-<keyword>feature</keyword> <symbol>{</symbol><class_name>A</class_name>, <class_name>B</class_name>,  ...<symbol>}</symbol>
+<keyword>feature</keyword> <symbol>{</symbol><class_name>A</class_name>, <class_name>B</class_name>, ...<symbol>}</symbol>
 </code_block>
 		<paragraph>for arbitrary classes 
 			<code>
@@ -1584,7 +1584,7 @@
 			</code>, 
 			<code>
 				<class_name>B</class_name>
-			</code>, ... also makes them available to the descendants of these classes.  So a feature clause beginning with just 
+			</code>, ... also makes them available to the descendants of these classes. So a feature clause beginning with just 
 			<code>
 				<keyword>feature</keyword>
 			</code> is equivalent to one starting with 
@@ -1601,7 +1601,7 @@
 				<symbol>}</symbol>
 			</code>.
 		</paragraph>
-		<paragraph>These rules enable successive feature clauses to specify exports to different clients.  In addition, the recommended style, illustrated in the examples of this chapter, suggests writing separate feature clauses -- regardless of their use for specifying export privileges -- to group features into separate categories.  The standard style rules define a number of fundamental categories and the order in which they should appear; they include: 
+		<paragraph>These rules enable successive feature clauses to specify exports to different clients. In addition, the recommended style, illustrated in the examples of this chapter, suggests writing separate feature clauses -- regardless of their use for specifying export privileges -- to group features into separate categories. The standard style rules define a number of fundamental categories and the order in which they should appear; they include: 
 			<code>
 				<comment>Initialization</comment>
 			</code> for creation procedures, 
@@ -1619,19 +1619,19 @@
 			</code>, 
 			<code>
 				<comment>Implementation</comment>
-			</code> (for selectively exported or secret features.  Every feature in the EiffelBase library classes belongs to one of the predefined categories.
+			</code> (for selectively exported or secret features. Every feature in the EiffelBase library classes belongs to one of the predefined categories.
 		</paragraph>
 		<paragraph>The Feature Call rule is the first of the rules that make Eiffel a 
-			<bold>statically typed</bold> approach, where the applicability of operations to objects is verified at compile time rather than during execution.  Static typing is one of the principal components of Eiffel's support for reliability in software development.
+			<bold>statically typed</bold> approach, where the applicability of operations to objects is verified at compile time rather than during execution. Static typing is one of the principal components of Eiffel's support for reliability in software development.
 		</paragraph>
 		<heading>
 			<size>2</size>
 			<content>Execution scenario</content>
 		</heading>
-		<paragraph>The preceding elements make it possible to understand the overall scheme of an Eiffel system's execution.  </paragraph>
+		<paragraph>The preceding elements make it possible to understand the overall scheme of an Eiffel system's execution.</paragraph>
 		<paragraph>At any time during the execution of a system, one object is the 
 			<bold>current object</bold> of the execution, and one of the routines of the system, the 
-			<bold>current routine</bold>, is being executed, with the current object as its target.  (We will see below how the current object and current routine are determined.) The text of a class, in particular its routines, make constant implicit references to the current object.  For example in the instruction
+			<bold>current routine</bold>, is being executed, with the current object as its target. (We will see below how the current object and current routine are determined.) The text of a class, in particular its routines, make constant implicit references to the current object. For example in the instruction
 		</paragraph>
 		<code_block>
 <feature_name>balance</feature_name> <symbol>:=</symbol> <feature_name>balance </feature_name><symbol>+</symbol> <feature_name>sum</feature_name>
@@ -1661,7 +1661,7 @@
 		</paragraph>
 		<code_block>
 <feature_name>make</feature_name> <symbol>(</symbol><local_variable>sum</local_variable><symbol>:</symbol> <class_name>INTEGER</class_name><symbol>)</symbol> <keyword>is</keyword>
-			<comment>-- Initialize account with sum .</comment>
+			<comment>-- Initialize account with sum.</comment>
 		<keyword>do</keyword>
 			<feature_name>deposit</feature_name> <symbol>(</symbol><local_variable>sum</local_variable><symbol>)</symbol>
 		<keyword>end</keyword>
@@ -1691,10 +1691,10 @@
 			<bold>unqualified</bold>; those using dot notations are 
 			<bold>qualified</bold> calls.
 		</paragraph>
-		<paragraph>Although most uses of the current object are implicit, a class may need to name it explicitly.  The predefined expression 
+		<paragraph>Although most uses of the current object are implicit, a class may need to name it explicitly. The predefined expression 
 			<code>
 				<keyword>Current</keyword>
-			</code> is available for that purpose.  A typical use, in a routine 
+			</code> is available for that purpose. A typical use, in a routine 
 			<code>
 				<feature_name>merge</feature_name>
 			</code> 
@@ -1703,7 +1703,7 @@
 			</code>
 			<code>
 				<local_variable>other</local_variable>
-			</code> : 
+			</code>: 
 			<code>
 				<class_name>ACCOUNT</class_name>
 			</code>
@@ -1722,8 +1722,8 @@
 <keyword>end</keyword>
 </code_block>
 		<paragraph>With these notions it is not hard to define precisely the overall scenario of a system execution by defining which object and routine will, at each instant, be the current object and the current routine:</paragraph>
-		<paragraph> Starting a system execution, as we have seen, consists in creating an instance of the root class, the root object, and executing a designated creation procedure, the root procedure, with the root object as its target.  The root object is the initial current object, and the root procedure is the initial current procedure.  </paragraph>
-		<paragraph> From then on only two events can change the current object and current procedure: a qualified routine call; and the termination of a routine.  </paragraph>
+		<paragraph> Starting a system execution, as we have seen, consists in creating an instance of the root class, the root object, and executing a designated creation procedure, the root procedure, with the root object as its target. The root object is the initial current object, and the root procedure is the initial current procedure.</paragraph>
+		<paragraph> From then on only two events can change the current object and current procedure: a qualified routine call; and the termination of a routine.</paragraph>
 		<paragraph> In a call of the form 
 			<code>
 				<local_variable>target</local_variable>
@@ -1739,7 +1739,7 @@
 			</code>, 
 			<code>
 				<local_variable>target</local_variable>
-			</code>denotes a certain object TC.  (If not, that is to say, if the value of target is void, attempting to execute the call will trigger an exception, as studied below.) The generating class of TC must, as per the Feature Call rule, contain a routine of name 
+			</code>denotes a certain object TC. (If not, that is to say, if the value of target is void, attempting to execute the call will trigger an exception, as studied below.) The generating class of TC must, as per the Feature Call rule, contain a routine of name 
 			<code>
 				<feature_name>routine</feature_name>
 			</code>. As the call starts, TC becomes the new current object and 
@@ -1747,8 +1747,8 @@
 				<feature_name>routine</feature_name>
 			</code> becomes the new current routine.
 		</paragraph>
-		<paragraph> When a routine execution terminates, the target object and routine of the most recent non-terminated call -- which, just before just before the terminated call, were the current object and the current routine -- assume again the role of current object and current routine.  </paragraph>
-		<paragraph> The only exception to the last rule is termination of the original root procedure call; in this case the entire execution terminates.  </paragraph>
+		<paragraph> When a routine execution terminates, the target object and routine of the most recent non-terminated call -- which, just before just before the terminated call, were the current object and the current routine -- assume again the role of current object and current routine.</paragraph>
+		<paragraph> The only exception to the last rule is termination of the original root procedure call; in this case the entire execution terminates.</paragraph>
 		<heading>
 			<size>2</size>
 			<content>Abstraction</content>
@@ -1761,8 +1761,8 @@
 			</code> the target 
 			<code>
 				<local_variable>x</local_variable>
-			</code> must be an entity.  More precisely it must be a 
-			<bold>writable</bold> entity.  This notion excludes formal routine arguments: as noted, a routine 
+			</code> must be an entity. More precisely it must be a 
+			<bold>writable</bold> entity. This notion excludes formal routine arguments: as noted, a routine 
 			<code>
 				<feature_name>r</feature_name>
 			</code>
@@ -1841,7 +1841,7 @@
 			<feature_name>attribute</feature_name> <symbol>:=</symbol> <local_variable>v</local_variable>
 		<keyword>end</keyword>
 </code_block>
-		<paragraph>This rule is essential to enforcing the method.  Permitting direct assignments to an object's fields -- as in C++ and Java -- would violate all the tenets of information hiding by letting clients circumvent the interface carefully crafted by the author of a supplier class.  It is the responsibility of each class author to define the exact privileges that the class gives to each of its clients, in particular field modification rights.  Building a class is like building a machine: you design the internals, to give yourself the appropriate mechanisms; and you design the control panel, letting users (clients) access the desired subset of these mechanisms, safely and conveniently.  </paragraph>
+		<paragraph>This rule is essential to enforcing the method. Permitting direct assignments to an object's fields -- as in C++ and Java -- would violate all the tenets of information hiding by letting clients circumvent the interface carefully crafted by the author of a supplier class. It is the responsibility of each class author to define the exact privileges that the class gives to each of its clients, in particular field modification rights. Building a class is like building a machine: you design the internals, to give yourself the appropriate mechanisms; and you design the control panel, letting users (clients) access the desired subset of these mechanisms, safely and conveniently.</paragraph>
 		<paragraph>The levels of privilege available to the class author include, for any field:</paragraph>
 		<list ordered="false">
 			<item>Hide the field completely from clients, by exporting the corresponding attribute to 
@@ -1849,7 +1849,7 @@
 					<class_name>NONE</class_name>
 				</code>.
 			</item>
-			<item>Export it, but in read-only mode, by not exporting any procedure that modifies it.  </item>
+			<item>Export it, but in read-only mode, by not exporting any procedure that modifies it.</item>
 			<item>Export it for free read and write by any client, by also exporting a procedure of the 
 				<code>
 					<feature_name>set_attribute</feature_name>
@@ -1868,19 +1868,19 @@
 				</code> field, rather than directly setting the balance.
 			</item>
 		</list>
-		<paragraph>The last case is particularly interesting is that it allows the class designer to set the precise way in which clients will manipulate the class instances, respecting the properties of the class and its integrity.  The exported routines may, through the Design by Contract mechanism reviewed later (
+		<paragraph>The last case is particularly interesting is that it allows the class designer to set the precise way in which clients will manipulate the class instances, respecting the properties of the class and its integrity. The exported routines may, through the Design by Contract mechanism reviewed later (
 			<link>
 				<url>tutorial-09.xml</url><anchor_name>30455</anchor_name>
 				<label>8</label>
 			</link>), place some further restrictions on the permitted modifications, for example by requiring the withdrawn amount to be positive.
 		</paragraph>
-		<paragraph>These rules follow directly from the more general goals (reusability, extendibility, reliability) and principles (Uniform Access, information hiding) underlying Eiffel software design.  They reflect a view that each class must denote a well-understood abstraction, defined by a set of exported features chosen by the class designer -- the "control panel".  </paragraph>
+		<paragraph>These rules follow directly from the more general goals (reusability, extendibility, reliability) and principles (Uniform Access, information hiding) underlying Eiffel software design. They reflect a view that each class must denote a well-understood abstraction, defined by a set of exported features chosen by the class designer -- the "control panel".</paragraph>
 		<paragraph>The class documentation (the 
 			contract form, see 
 			<link>
 				<url>tutorial-09.xml</url><anchor_name>78482</anchor_name>
 				<label></label>
-			</link>) makes this view clear to client authors; no violation of that interface is permitted.  This approach also paves the way for future 
+			</link>) makes this view clear to client authors; no violation of that interface is permitted. This approach also paves the way for future 
 			<bold>generalization</bold> -- the final step of the cluster lifecycle, seen earlier in 
 			<link>
 				<url>tutorial-04.xml</url><anchor_name>10958</anchor_name>

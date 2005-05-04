@@ -1073,6 +1073,24 @@ feature -- Element change
 			end
 		end
 
+	put_managed_pointer (p: MANAGED_POINTER; nb_bytes: INTEGER) is
+			-- Put data of length `nb_bytes' pointed by `p' at
+			-- current position.
+		local
+			i: INTEGER
+			l_stream: SYSTEM_STREAM
+		do
+			from
+				i := 0
+				l_stream := writer.base_stream
+			until
+				i = nb_bytes
+			loop
+				l_stream.write_byte (p.read_natural_8 (i))
+				i := i + 1
+			end
+		end
+
 	put_character, putchar (c: CHARACTER) is
 			-- Write `c' at current position.
 		do
@@ -1377,6 +1395,29 @@ feature -- Input
 			internal_end_of_file := reader.peek = -1
 		end
 
+	read_to_managed_pointer (p: MANAGED_POINTER; nb_bytes: INTEGER) is
+			-- Read at most `nb_bytes' bound bytes and make result
+			-- available in `p'.
+		require else
+			p_not_void: p /= Void
+			p_large_enough: p.count >= nb_bytes
+			is_readable: file_readable
+		local
+			i: INTEGER
+			l_stream: SYSTEM_STREAM
+		do
+			from
+				i := 0
+				l_stream := reader.base_stream
+			until
+				i = nb_bytes
+			loop
+				p.put_natural_8 (l_stream.read_byte.as_natural_8, i)
+				i := i + 1
+			end
+			internal_end_of_file := reader.peek = -1
+		end
+
 	read_word, readword is
 			-- Read a string, excluding white space and stripping
 			-- leading white space.
@@ -1494,7 +1535,7 @@ feature {FILE} -- Implementation
 	internal_end_of_file: BOOLEAN
 			-- Did last call to `reader.read' reach end of file?
 
-	reader: TEXT_READER is
+	reader: STREAM_READER is
 			-- Stream reader used to read in `Current' (if possible).
 		do
 			if internal_sread = Void and internal_stream.can_read then
@@ -1504,7 +1545,7 @@ feature {FILE} -- Implementation
 			Result := internal_sread
 		end
 
-	writer: TEXT_WRITER is
+	writer: STREAM_WRITER is
 			-- Stream writer used to write in `Current' (if possible).
 		do
 			if internal_swrite = Void and internal_stream.can_write then
@@ -1550,10 +1591,10 @@ feature {NONE} -- Implementation
 			character_read: not end_of_file implies Result > 0
 		end
 
-	internal_sread: TEXT_READER
+	internal_sread: STREAM_READER
 			-- Stream reader used to read in `Current' (if any).
 
-	internal_swrite: TEXT_WRITER
+	internal_swrite: STREAM_WRITER
 			-- Stream writer used to write in `Current' (if any).
 
 	true_string: STRING is

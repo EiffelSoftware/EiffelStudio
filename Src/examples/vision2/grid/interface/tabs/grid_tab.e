@@ -479,17 +479,18 @@ feature {NONE} -- Implementation
 
 
 
-			from
-				counter := 1
-			until
-				counter > grid.row_count
-			loop
-				grid_label_item ?= grid.item (1, counter)
-				if grid_label_item /= Void then
-					grid_label_item.set_background_color (light_red)
-				end
-				counter := counter + 1				
-			end
+--			from
+--				counter := 1
+--			until
+--				counter > grid.row_count
+--			loop
+--				grid_label_item ?= grid.item (1, counter)
+--				if grid_label_item /= Void then
+--					grid_label_item.set_background_color (light_red)
+--				end
+--				counter := counter + 1				
+--			end
+			grid.column (1).set_background_color (light_red)
 			from
 				counter := 1
 			until
@@ -930,11 +931,11 @@ feature {NONE} -- Implementation
 --			grid_label_item.set_layout_procedure (agent layout_called)
 
 			-- Test 16
-			grid.enable_tree
-			clean_grid
-			fill_grid
-			clean_grid
-			fill_grid
+--			grid.enable_tree
+--			clean_grid
+--			fill_grid
+--			clean_grid
+--			fill_grid
 
 --			-- Test 17
 --			grid.enable_tree
@@ -952,6 +953,14 @@ feature {NONE} -- Implementation
 --			loop
 --				grid.remove_row (1)
 --			end
+
+			-- Test 18
+			grid.set_item (1, 1, create {EV_GRID_LABEL_ITEM}.make_with_text ("An item"))
+			grid.set_item (2, 1, create {EV_GRID_LABEL_ITEM}.make_with_text ("An item"))
+			grid.remove_row (1)
+			grid.remove_column (2)
+			grid.remove_column (1)
+			grid.set_item (1, 1, create {EV_GRID_LABEL_ITEM}.make_with_text ("An item"))
 		end
 
 	clean_grid is
@@ -1325,7 +1334,7 @@ feature {NONE} -- Implementation
 				from	
 					a_y :=1
 				until
-					a_y > 50
+					a_y > 200
 				loop
 					create grid_label_item.make_with_text ("Item " + a_x.out + ",  " + a_y.out)
 					grid_label_item.set_pixmap (pixmaps.item)
@@ -1342,6 +1351,7 @@ feature {NONE} -- Implementation
 			end
 			grid.set_row_height (grid.column (1).width)
 			grid.pointer_double_press_actions.extend (agent pointer_double_press_received_on_grid)
+			grid.resize_actions.force_extend (agent move_items)
 		end
 
 	icon_item_layout (an_item: EV_GRID_LABEL_ITEM; layout: EV_GRID_LABEL_ITEM_LAYOUT) is
@@ -1355,7 +1365,62 @@ feature {NONE} -- Implementation
 			layout.set_text_x ((an_item.width - an_item.text_width) // 2)
 			layout.set_text_y (layout.pixmap_y + an_item.pixmap.height + an_item.spacing)
 		end
-		
+
+	move_items is
+			--
+		local
+			l_width: INTEGER
+			an_x, a_y: INTEGER
+			items: ARRAYED_LIST [EV_GRID_ITEM]
+		do
+			create items.make (10)
+			l_width := grid.width
+			from
+				an_x := 1
+			until
+				an_x > grid.row_count
+			loop
+				from
+					a_y := 1
+				until
+					a_y > grid.column_count
+				loop
+					if grid.item (a_y, an_x) /= Void then
+						items.extend (grid.item (a_y, an_x))
+						grid.set_item (a_y, an_x, Void)
+					end
+					a_y := a_y + 1
+				end
+				an_x := an_x + 1
+			end
+			an_x := 1
+			a_y := 1
+			from
+				items.start
+			until
+				items.off
+			loop
+				grid.set_item (an_x, a_y, items.item)
+				an_x := an_x + 1
+				if an_x * 80 > l_width - 20 then
+					from
+					until
+						grid.column_count < an_x
+					loop
+						grid.remove_column (grid.column_count)
+					end
+					an_x := 1
+					a_y := a_y + 1
+				end
+				items.forth
+			end
+			from
+			until
+				grid.row_count < a_y
+			loop
+				grid.remove_row (grid.row_count)
+			end
+		end
 		
 end -- class GRID_TAB
 

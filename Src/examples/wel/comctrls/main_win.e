@@ -76,7 +76,7 @@ feature {NONE} -- Initialization
 			create rich_edit.make (Current, "", 5, 150, 200, 150, -1)
 			create char_format.make
 			char_format.set_face_name ("Arial")
-			char_format.set_height (12)
+			char_format.set_height_in_points (12)
 			char_format.unset_bold
 			rich_edit.set_character_format_all (char_format)
 			rich_edit.set_text ("Rich edit control")

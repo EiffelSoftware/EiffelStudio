@@ -20,7 +20,7 @@
 			</class_name>
 			and has a deferred feature per each interface function. Both effective classes, or implemented 
 			interfaces, inherit from the deferred class and implement its functions. The functions of the 
-			interface proxy calls an underlying C layer, which in turn calls the COM component while 
+			interface proxy calls the underlying C layer, which in turn calls the COM component while 
 			the functions of the interface stub implement the component functionality.
 		</paragraph>
 		<paragraph>
@@ -28,7 +28,7 @@
 				<url>../reference/Interfaces/ecom_interface_chart.xml</url>
 				<label>ECOM_INTERFACE</label>
 			</link> 
-			holds a pointer to the underlining COM interface.
+			holds a pointer to the underlying COM interface.
 		</paragraph>
 		<heading>
 			<size>2</size>ECOM_QUERIABLE
@@ -39,22 +39,24 @@
 			the <feature_name>QueryInterface</feature_name> function which allows clients to query the COM 
 			component for a pointer to another interface. Querying a component for an interface pointer is 
 			similar to using an assignment attempt in Eiffel. The Eiffel implementation of the assignment 
-			attempt relies on the runtime data. Since we could not change the Eiffel runtime and the 
-			implementation of the assignment attempt, we have created a library class 
+			attempt relies on the runtime data. Since changing the Eiffel runtime and the 
+			implementation of the assignment attempt was not an option, EiffelCOM introduces a library class 
 			<link>
 					<label>ECOM_QUERIABLE</label>
 					<url>../reference/Interfaces/ecom_queriable_chart.xml</url>					
 			</link>
-			, which has a creation routine
+			, which has the creation routine
 		</paragraph>
 		<code_block>
 			<feature_name>make_from_other</feature_name> <symbol>(</symbol>other<symbol>:</symbol> <class_name>ECOM_INTERFACE</class_name><symbol>)</symbol></code_block>
 		<paragraph>
-			that queries a COM component internally. Every interface proxy class inherits from 
+			which queries a COM component internally. Every interface proxy class inherits from 
 			<link>
 					<label>ECOM_QUERIABLE</label>
 					<url>../reference/Interfaces/ecom_queriable_chart.xml</url>					
-			</link>
+			</link>. 
+			The one difference between this mechanism versus using assignment attempt is that upon failure an 
+			exception will be raised. An assignment attempt that fails simply returns <keyword>Void</keyword>.
 		</paragraph>
 		<heading>
 			<size>2</size>ECOM_STUB

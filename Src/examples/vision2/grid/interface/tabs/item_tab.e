@@ -211,6 +211,13 @@ feature {NONE} -- Implementation
 						vertical_alignment_combo.i_th (3).enable_select
 						vertical_alignment_combo.i_th (3).select_actions.resume
 					end
+					is_full_select_button.select_actions.block
+					if label_item.is_full_select_enabled then
+						is_full_select_button.enable_select
+					else
+						is_full_select_button.disable_select
+					end
+					is_full_select_button.select_actions.resume
 					background_color_combo.select_actions.block
 					from
 						background_color_combo.start

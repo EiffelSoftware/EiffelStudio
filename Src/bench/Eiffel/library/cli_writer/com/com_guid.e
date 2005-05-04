@@ -12,7 +12,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make (data1: INTEGER; data2, data3: INTEGER_16; data4: ARRAY [INTEGER_8]) is
+	make (data1: INTEGER; data2, data3: INTEGER_16; data4: ARRAY [NATURAL_8]) is
 			-- Create Current using provided above information.
 		require
 			data4_not_void: data4 /= Void

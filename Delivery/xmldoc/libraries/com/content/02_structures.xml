@@ -101,8 +101,8 @@
 			ECOM_VARIANT is a wrapper of the VARIANT structure. VARIANT is the Visual Basic equivalent to 
 			Eiffel's <class_name>ANY</class_name>. In Visual Basic all variable types conform to VARIANT. 
 			Since the semantics and runtime architecture of Visual Basic are different from those of Eiffel, 
-			there is no simple way to map VARIANT to ANY. Instead, we created a simple wrapper of the VARIANT 
-			structure.
+			there is no simple way to map VARIANT to ANY. Instead, EiffelCOM provides an Eiffel wrapper around 
+			the VARIANT structure.
 		</paragraph>
 		<paragraph>
 			This wrapper exposes the feature
@@ -112,7 +112,7 @@
         	<comment>-- Variable type. See class ECOM_VAR_TYPE for possible values. </comment>
 		</code_block>
 		<paragraph> 
-			which specifies the actual type of the variant. The class has multiple feature for typed access 
+			which specifies the actual type of the variant. The class has multiple features for typed access 
 			and setting of variables. 
 		</paragraph>
 		<heading>

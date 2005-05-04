@@ -7,7 +7,7 @@
 				<label>Help reading this manual</label>
 			</link>
 		</paragraph>
-		<paragraph>Along with compilation from within EiffelStudio, it is possible to start compilation from a command line (shell).  This is useful in particular to recompile your system automatically as part of a script.  </paragraph>
+		<paragraph>Along with compilation from within EiffelStudio, it is possible to start compilation from a command line (shell). This is useful in particular to recompile your system automatically as part of a script.</paragraph>
 		<paragraph>To use the command-line compiler -- 
 			<code>
 				<keyword>ec</keyword>
@@ -22,13 +22,13 @@
 			</code> and 
 			<code>
 				<string>feature_name</string>
-			</code> only if you wish to produce information about a class or a feature.  Otherwise 
+			</code> only if you wish to produce information about a class or a feature. Otherwise 
 			<code>
 				<keyword>ec</keyword>
 			</code> will compile a system according to each specified 
 			<code>
 				<string>option</string>
-			</code>.  <link><url>../../../tools/eiffelstudio/reference/30_compiler/20_command_line/10_command_line_options.xml</url><label>Click here to see the set of supported options.</label></link>
+			</code>. <link><url>../../../tools/eiffelstudio/reference/30_compiler/20_command_line/10_command_line_options.xml</url><label>Click here to see the set of supported options.</label></link>
 		</paragraph>
 		<paragraph>
 			<link>

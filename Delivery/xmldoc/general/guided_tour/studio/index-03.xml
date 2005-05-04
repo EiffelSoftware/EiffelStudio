@@ -7,7 +7,7 @@
 				<label>Help reading this manual</label>
 			</link>
 		</paragraph>
-		<note>If you are using Eiffel on a personal computer under Windows, you can work directly on the installation directory and don't need to make copies of files as per the present section.   Skip directly to the next section, 3.   Do read the present section and apply its instructions if you work under Unix, or may have to share the Eiffel installation with other users, do not have write permissions on the installation, or want to keep the installation unchanged.</note>
+		<note>If you are using Eiffel on a personal computer under Windows, you can work directly on the installation directory and don't need to make copies of files as per the present section. Skip directly to the next section, 3. Do read the present section and apply its instructions if you work under Unix, or may have to share the Eiffel installation with other users, do not have write permissions on the installation, or want to keep the installation unchanged.</note>
 		<paragraph>If you are going to work on a copy, choose or create a directory of your own; let's call it 
 			<code>
 				<string>YOURDIR</string>
@@ -42,7 +42,7 @@
 		<paragraph>The final executable generated through "
 			<italic>finalization</italic>" (optimized compilation) will take only about 300 kilobytes.
 		</paragraph>
-		<paragraph>Without precompiled EiffelBase you would need about 3.  5 megabytes, plus about 25 megabytes of generated C code and auxiliary files.  The executable in that case will take up about 250 kilobytes. </paragraph>
+		<paragraph>Without precompiled EiffelBase you would need about 3.5 megabytes, plus about 25 megabytes of generated C code and auxiliary files. The executable in that case will take up about 250 kilobytes. </paragraph>
 		<paragraph>
 			<link>
 				<url>index-02.xml</url>

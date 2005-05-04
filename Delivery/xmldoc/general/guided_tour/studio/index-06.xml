@@ -7,8 +7,8 @@
 				<label>Help reading this manual</label>
 			</link>
 		</paragraph>
-		<paragraph>Before we proceed with the facilities of the environment, let's take a look at the way EiffelStudio organizes project files.  </paragraph>
-		<paragraph>With EiffelStudio, you build projects.  Most projects yield an executable system, although you can also build a project just to define a library for use by such systems.  </paragraph>
+		<paragraph>Before we proceed with the facilities of the environment, let's take a look at the way EiffelStudio organizes project files.</paragraph>
+		<paragraph>With EiffelStudio, you build projects. Most projects yield an executable system, although you can also build a project just to define a library for use by such systems.</paragraph>
 		<paragraph>Every session is relative to a project; you can start a new project from within EiffelStudio by going to the 
 			<code>
 				<keyword>File</keyword>
@@ -19,10 +19,10 @@
 			<code>
 				<keyword>Project New</keyword>
 			</code> menu, but please 
-			<bold>don't select that menu entry now</bold> as we have many more things to do with our current project first.  
+			<bold>don't select that menu entry now</bold> as we have many more things to do with our current project first.
 		</paragraph>
 		<paragraph>Every project has a 
-			<bold>project directory</bold> which will contain the files generated and managed by EiffelStudio.  The project directory may also host some of the source files containing your Eiffel classes, the Ace (control file), and external software written in other languages, but that is not required; the source files may reside anywhere.  Some users, in fact, like to put nothing else than the EiffelStudio-generated files in the project directory; this separates user-managed and system-managed files, and can facilitate configuration management, backups and porting.  
+			<bold>project directory</bold> which will contain the files generated and managed by EiffelStudio. The project directory may also host some of the source files containing your Eiffel classes, the Ace (control file), and external software written in other languages, but that is not required; the source files may reside anywhere. Some users, in fact, like to put nothing else than the EiffelStudio-generated files in the project directory; this separates user-managed and system-managed files, and can facilitate configuration management, backups and porting.
 		</paragraph>
 		<paragraph>In this simple Tour, things have been set up so that all the files of interest, source texts as well as generated ones, will appear in the project directory 
 			<code>
@@ -30,7 +30,7 @@
 			</code> (either 
 			<code>
 				<keyword>$ISE_EIFFEL\examples\studio\tour</keyword>
-			</code> or the copy that you have made).  Go to that project directory using the Windows explorer or a 
+			</code> or the copy that you have made). Go to that project directory using the Windows explorer or a 
 			<code>
 				<keyword>cd</keyword>
 			</code> command, and look at its contents (using 
@@ -64,7 +64,7 @@
 				</code>, 
 				<code>
 					<keyword>invalid.e</keyword>
-				</code> and others.  These are the Eiffel source files, each containing one class.  The recommended convention is to store a class of name 
+				</code> and others. These are the Eiffel source files, each containing one class. The recommended convention is to store a class of name 
 				<code>
 					<string>CLASS_NAME</string>
 				</code> into a file of name 
@@ -85,47 +85,47 @@
 				</code> contains the class 
 				<code>
 					<keyword>HEIR</keyword>
-				</code> and so on.  As you may remember, Eiffel is case-insensitive, but the standard convention for class names is to write them in all upper case.  Calling the file 
+				</code> and so on. As you may remember, Eiffel is case-insensitive, but the standard convention for class names is to write them in all upper case. Calling the file 
 				<code>
 					<string>class_name</string>
 				</code>
 				<code>
 					<keyword>.e</keyword>
 				</code> is only a recommendation, not an obligation; but you 
-				<span>are</span> required to store one class per file.  This keeps things simple and facilitates project and configuration management.  
+				<span>are</span> required to store one class per file. This keeps things simple and facilitates project and configuration management.
 			</item>
 			<item>You also notice two files with an 
 				<code>
 					<keyword>ace</keyword>
-				</code> extension.  These are the compilation control files.  The reason there are two is that this example has a Windows version and a Unix/Linux version.  As you remember, the Ace files for this example were available as part of the delivery; we used them to compile the project.  In most practical cases, however, you won't need to build an Ace; if you use the "
+				</code> extension. These are the compilation control files. The reason there are two is that this example has a Windows version and a Unix/Linux version. As you remember, the Ace files for this example were available as part of the delivery; we used them to compile the project. In most practical cases, however, you won't need to build an Ace; if you use the "
 				<code>
 					<keyword>Create a new project</keyword>
 				</code>" option of EiffelStudio (remember the first screen 
 				<link>
 					<label>here</label>
 					<url>index.xml</url><anchor_name>PROJECT START SCREEN</anchor_name>
-				</link> ), EiffelStudio will build the Ace for you; if you change the Preferences during a session, EiffelStudio will update the Ace.  When you become an experienced Eiffel developer you can also edit the Ace file directly; Aces are written in a simple Eiffel-like notation called 
-				<bold>Lace</bold> (Language for Assembling Classes in Eiffel).  If you like you can take a peek at Lace by opening the relevant 
+				</link> ), EiffelStudio will build the Ace for you; if you change the Preferences during a session, EiffelStudio will update the Ace. When you become an experienced Eiffel developer you can also edit the Ace file directly; Aces are written in a simple Eiffel-like notation called 
+				<bold>Lace</bold> (Language for Assembling Classes in Eiffel). If you like you can take a peek at Lace by opening the relevant 
 				<code>
 					<keyword>.ace</keyword>
-				</code> file with a text viewer or editor now (but don't make any change, it shouldn't be hard to understand what it's all about.  But that's not really necessary at this stage.  
+				</code> file with a text viewer or editor now (but don't make any change, it shouldn't be hard to understand what it's all about. But that's not really necessary at this stage.
 			</item> 
 			<item>Next you see a file called 
 				<code>
 					<keyword>simple.epr</keyword>
-				</code>.  This is the Eiffel Project Repository, hence the extension.  Any successful compilation of a project will produce a project of this kind, 
+				</code>. This is the Eiffel Project Repository, hence the extension. Any successful compilation of a project will produce a project of this kind, 
 				<code>
 					<string>system_name</string>
 				</code>
 				<code>
 					<keyword>.epr</keyword>
-				</code> .  To open an existing project when you start EiffelStudio (this was the option " 
+				</code>. To open an existing project when you start EiffelStudio (this was the option " 
 				<code>
 					<keyword>Open compiled project</keyword>
 				</code> " on the initial screen), you will just select the corresponding 
 				<code>
 					<keyword>.epr</keyword>
-				</code> file.  
+				</code> file.
 			</item>
 			<item>Finally you will notice a subdirectory called 
 				<code>
@@ -136,10 +136,10 @@
 				</code> fel 
 				<code>
 					<keyword>GEN</keyword>
-				</code> eration".  
+				</code> eration".
 				<code>
 					<keyword>EIFGEN</keyword>
-				</code> is created and maintained by the compiler to store information about your project, including generated code for execution.  EiffelStudio manages your project in such a way that 
+				</code> is created and maintained by the compiler to store information about your project, including generated code for execution. EiffelStudio manages your project in such a way that 
 				<code>
 					<keyword>EIFGEN</keyword>
 				</code> can always be re-generated if need be; this means in particular that if things go wrong for any reason and you want to make a fresh start you can always delete this directory and the 
@@ -148,10 +148,10 @@
 				</code> file and recompile your system, recreating a new 
 				<code>
 					<keyword>EIFGEN</keyword>
-				</code> in the process.  This also means that you should not add any files into this directory, or modify any of its files, since a later compilation is free to change or regenerate whatever it chooses in 
+				</code> in the process. This also means that you should not add any files into this directory, or modify any of its files, since a later compilation is free to change or regenerate whatever it chooses in 
 				<code>
 					<keyword>EIFGEN</keyword>
-				</code> .  
+				</code>.
 			</item>
 		</list>
 		<paragraph>Later on, we will see that EiffelStudio may generate three more subdirectories of the project directory: 
@@ -163,7 +163,7 @@
 			</code>, if you request system documentation, for example HTML; and 
 			<code>
 				<keyword>Metrics</keyword>
-			</code>, if you perform measurements on your system.  Other than these directories, 
+			</code>, if you perform measurements on your system. Other than these directories, 
 			<code>
 				<keyword>EIFGEN</keyword>
 			</code>, and 
@@ -172,12 +172,12 @@
 			</code>
 			<code>
 				<keyword>.epr</keyword>
-			</code>, EiffelStudio will not touch anything in the project directory, so you may safely add and change whatever files and subdirectories you like.  
+			</code>, EiffelStudio will not touch anything in the project directory, so you may safely add and change whatever files and subdirectories you like.
 		</paragraph>
 		<paragraph>You seldom need to look into 
 			<code>
 				<keyword>EIFGEN</keyword>
-			</code>, although you should know that it's there.  Right now if you check the contents of the project directory 
+			</code>, although you should know that it's there. Right now if you check the contents of the project directory 
 			<code>
 				<string>YOURDIR</string>
 			</code> (using the Windows Explorer on Windows, the 
@@ -192,9 +192,9 @@
 			</code> which contains the generated code (
 			<code>
 				<keyword>W</keyword>
-			</code> for "Workbench" -- we'll see the reason later).  Feel free to browse through it if you like, but don't change anything.  
+			</code> for "Workbench" -- we'll see the reason later). Feel free to browse through it if you like, but don't change anything.
 		</paragraph>
-		<paragraph>By the way, we are now done with any platform-specific instructions.  Everything in the rest of this Tour, other than the graphical look-and-feel, will work the same across all EiffelStudio platforms.  </paragraph>
+		<paragraph>By the way, we are now done with any platform-specific instructions. Everything in the rest of this Tour, other than the graphical look-and-feel, will work the same across all EiffelStudio platforms.</paragraph>
 <paragraph>
 			<link>
 				<url>index-05.xml</url>

@@ -15,14 +15,14 @@
 				<size>2</size>
 				<content>Arguments</content>
 			</heading>
-			<paragraph>Our example system is very simple and has no need for execution arguments.  In more advanced cases you may want to pass values to the execution, such as a numeric parameter or a file name, so that you can have different executions without changing and recompiling the software.  </paragraph>
+			<paragraph>Our example system is very simple and has no need for execution arguments. In more advanced cases you may want to pass values to the execution, such as a numeric parameter or a file name, so that you can have different executions without changing and recompiling the software.</paragraph>
 			<paragraph>In the Eiffel text, you can access such run-time arguments through the Kernel Library class 
 				<code>
 					<string>ARGUMENTS</string>
-				</code> .  There is another technique -- using the arguments to the root creation procedure -- but using 
+				</code>. There is another technique -- using the arguments to the root creation procedure -- but using 
 				<code>
 					<string>ARGUMENTS</string>
-				</code> is the most general way.  Any class of your system can inherit from 
+				</code> is the most general way. Any class of your system can inherit from 
 				<code>
 					<string>ARGUMENTS</string>
 				</code> and use queries 
@@ -43,18 +43,18 @@
 				</code>, for 
 				<code>
 					<string>i</string>
-				</code>  between 1 and 
+				</code> between 1 and 
 				<code>
 					<string>argument_count</string>
 				</code> to access the 
 				<code>
 					<string>i</string>
-				</code> -th element.  Class 
+				</code> -th element. Class 
 				<code>
 					<string>ARGUMENTS</string>
 				</code> has more features; since you have Eiffelstudio up, you can check the details if you wish (use the contract form).
 			</paragraph>
-			<paragraph>There are 2 ways to specify execution arguments from within EiffelStudio.  The first is through the 
+			<paragraph>There are 2 ways to specify execution arguments from within EiffelStudio. The first is through the 
 				<code>
 					<keyword>Project</keyword>
 				</code>
@@ -75,7 +75,7 @@
 				</code>
 				<code>
 					<keyword>Program Execution</keyword>
-				</code> tab.  The second is through the argument dialog which can be opened by right-clicking on any of the debugging or program execution buttons on the main toolbar.  The latter is more convenient for quick and easy access to execution arguments.
+				</code> tab. The second is through the argument dialog which can be opened by right-clicking on any of the debugging or program execution buttons on the main toolbar. The latter is more convenient for quick and easy access to execution arguments.
 			</paragraph>
 		</div>
 		<div>
@@ -83,19 +83,19 @@
 				<size>2</size>
 				<content>Executing from EiffelStudio</content>
 			</heading>
-			<paragraph>We have seen how to execute a compiled system from within EiffelStudio: choose one of the appropriate execution buttons, with or without breakpoints.  </paragraph>
+			<paragraph>We have seen how to execute a compiled system from within EiffelStudio: choose one of the appropriate execution buttons, with or without breakpoints.</paragraph>
 		</div>
 		<div>
 			<heading>
 				<size>2</size>
 				<content>Executing a finalized system outside of EiffelStudio</content>
 			</heading>
-			<paragraph>A finalized system can be executed on any computer of the appropriate platform; it doesn't need EiffelStudio.  The executable version is in the directory</paragraph>
+			<paragraph>A finalized system can be executed on any computer of the appropriate platform; it doesn't need EiffelStudio. The executable version is in the directory</paragraph>
 			<code_block>	project_directory<keyword>/EIFGEN/F_code</keyword></code_block>
 			<paragraph>where 
 				<code>
 					<string>project_directory</string>
-				</code> is the project's directory.  The name of the executable file is 
+				</code> is the project's directory. The name of the executable file is 
 				<code>
 					<string>system_name</string>
 				</code>
@@ -127,14 +127,14 @@
 				</code> doesn't), you will provide the appropriate arguments after the command name:
 			</paragraph>
 			<code_block>	system_name.<keyword>exe</keyword> ... arg ...</code_block>
-			<paragraph>Because various platforms have different conventions, "relative paths" referenced in your system will mean something different under Unix/Linux, where they relate to the directory from which the command is launched, and under Windows, where they relate to the application's directory.  </paragraph>
+			<paragraph>Because various platforms have different conventions, "relative paths" referenced in your system will mean something different under Unix/Linux, where they relate to the directory from which the command is launched, and under Windows, where they relate to the application's directory.</paragraph>
 		</div>
 		<div>
 			<heading>
 				<size>2</size>
 				<content>Executing a frozen or melted system outside of EiffelStudio</content>
 			</heading>
-			<paragraph>A system compiled in "Workbench mode" -- frozen or melted -- is normally meant for execution within EiffelStudio, not for outside delivery, since it is not optimized.  If you need to execute it outside of EiffelStudio, make sure that you have access to the 
+			<paragraph>A system compiled in "Workbench mode" -- frozen or melted -- is normally meant for execution within EiffelStudio, not for outside delivery, since it is not optimized. If you need to execute it outside of EiffelStudio, make sure that you have access to the 
 				<code>
 					<string>system_name</string>
 				</code>
@@ -147,7 +147,7 @@
 				</code>
 				<code>
 					<keyword>/EIFGEN/W_code</keyword>
-				</code> .
+				</code>.
 			</paragraph>
 		</div>
 		<div>
@@ -155,7 +155,7 @@
 				<size>2</size>
 				<content>Moving on</content>
 			</heading>
-			<paragraph>With this discussion of compilation and execution we have finished our review of the key capabilities of EiffelStudio.  Not everything has been covered, but you are now familiar with the essentials and ready to discover the rest by yourself, both by trying out various capabilities -- most of which should be self-explanatory -- and examining the extensive online documentation that accompanies the product.  </paragraph>
+			<paragraph>With this discussion of compilation and execution we have finished our review of the key capabilities of EiffelStudio. Not everything has been covered, but you are now familiar with the essentials and ready to discover the rest by yourself, both by trying out various capabilities -- most of which should be self-explanatory -- and examining the extensive online documentation that accompanies the product. </paragraph>
 		</div>
 		<paragraph>
 			<link>

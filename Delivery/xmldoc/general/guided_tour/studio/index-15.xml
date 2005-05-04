@@ -7,28 +7,28 @@
 				<label>Help reading this manual</label>
 			</link>
 		</paragraph>
-		<paragraph>In earlier sections we saw how EiffelStudio provides extensive documentation on your systems.  That information was qualitative.  Project managers and developers will also be interested in 
-			<span>quantitative</span> information about their projects.  You can get such information through the 
+		<paragraph>In earlier sections we saw how EiffelStudio provides extensive documentation on your systems. That information was qualitative. Project managers and developers will also be interested in 
+			<span>quantitative</span> information about their projects. You can get such information through the 
 			<code>
 				<keyword>Metrics</keyword>
 			</code> Tab of the Context Tool, which enables you to perform a number of operations, detailed over the next few pages:
 		</paragraph>
 		<list ordered="false">
-			<item>Apply predefined metrics -- number of classes, number of invariants, number of features, number of compilations so far and many others -- to components of a system at various levels including feature, class, cluster, entire system.  </item>
-			<item>Define new metrics, through mathematical formulae or boolean selection, and apply them to your project.  </item>
-			<item>Store measurement results, as well as metric definitions, into an XML archive that can be stored locally or made available on the Web for future reference.  </item>
-			<item>Compare the measurements on a system to those on record locally or on a Web site.   Eiffel Software  has released on its own site an archive recording the metric properties of its basic libraries, available to any other project for comparison.  </item>
+			<item>Apply predefined metrics -- number of classes, number of invariants, number of features, number of compilations so far and many others -- to components of a system at various levels including feature, class, cluster, entire system.</item>
+			<item>Define new metrics, through mathematical formulae or boolean selection, and apply them to your project.</item>
+			<item>Store measurement results, as well as metric definitions, into an XML archive that can be stored locally or made available on the Web for future reference.</item>
+			<item>Compare the measurements on a system to those on record locally or on a Web site. Eiffel Software has released on its own site an archive recording the metric properties of its basic libraries, available to any other project for comparison.</item>
 		</list>
 		<div>
 			<heading>
 				<size>2</size>
 				<content>Methodological observations</content>
 			</heading>
-			<paragraph>Although the field of software metrics is a rich one with an abundant literature, its methodological basis is sometimes subject to question.  One should resist the tendency to believe numbers just because they are numbers ("lies, damn lies, and metrics").  </paragraph>
-			<paragraph>Software engineers and their managers expect, however, to reap at least some of the benefits that precise quantification has brought to other engineering fields.  Such is the purpose of software metrics, defined as 
-				<bold>quantitative estimates of product and project properties</bold> .  Object-oriented development, with the rich software structures that it induces, is a particularly amenable to metric analysis.  Even when some of the measures do not seem to bring much by themselves, comparing them to those of other projects may reveal significant peculiarities of a system or of some of its parts.
+			<paragraph>Although the field of software metrics is a rich one with an abundant literature, its methodological basis is sometimes subject to question. One should resist the tendency to believe numbers just because they are numbers ("lies, damn lies, and metrics").</paragraph>
+			<paragraph>Software engineers and their managers expect, however, to reap at least some of the benefits that precise quantification has brought to other engineering fields. Such is the purpose of software metrics, defined as 
+				<bold>quantitative estimates of product and project properties</bold>. Object-oriented development, with the rich software structures that it induces, is a particularly amenable to metric analysis. Even when some of the measures do not seem to bring much by themselves, comparing them to those of other projects may reveal significant peculiarities of a system or of some of its parts.
 			</paragraph>
-			<paragraph>The metrics capabilities of EiffelStudio were designed with these observations in mind.  They result from a conservative approach, where no metric is provided without a credible assumption that it reflects some meaningful project or product attribute.  For example, you will find a way to define a new metric as a 
+			<paragraph>The metrics capabilities of EiffelStudio were designed with these observations in mind. They result from a conservative approach, where no metric is provided without a credible assumption that it reflects some meaningful project or product attribute. For example, you will find a way to define a new metric as a 
 				<span>linear combination</span> of existing ones, but not a way to compute arbitrary arithmetic operations, since it isn't clear that -- say -- 
 				<span>multiplying</span> two metrics ever makes sense.
 			</paragraph>
@@ -38,35 +38,35 @@
 				<size>2</size>
 				<content>Metric terminology</content>
 			</heading>
-			<paragraph>The following terms are used in the presentation of EiffelStudio metric mechanisms.  </paragraph>
+			<paragraph>The following terms are used in the presentation of EiffelStudio metric mechanisms.</paragraph>
 			<paragraph>A 
-				<bold>metric</bold> -- not to be confused with a measure -- is a quantitative property of software products or processes whose possible values are numbers.  A 
+				<bold>metric</bold> -- not to be confused with a measure -- is a quantitative property of software products or processes whose possible values are numbers. A 
 				<bold>measure</bold> is the value of a metric for a certain product or process.
 			</paragraph>
 			<paragraph>For example, we can evaluate the metric "number of classes in the system", called just 
 				<code>
 					<string>Classes</string>
-				</code>, by counting the classes in our system.  This yields a measure.
+				</code>, by counting the classes in our system. This yields a measure.
 			</paragraph>
 			<paragraph>We may distinguish between 
 				<bold>product</bold>
 				<bold> metrics</bold>, which measure properties of the elements being turned out (code, designs, documentation, bug reports...) and 
 				<bold>process</bold>
-				<bold> metrics</bold>, which measure properties of the process used to turn them out (salaries, expenses, time spent, delays...).  The current metric facilities of EiffelStudio are primarily product-oriented but include a process metric: "number of compilations".
+				<bold> metrics</bold>, which measure properties of the process used to turn them out (salaries, expenses, time spent, delays...). The current metric facilities of EiffelStudio are primarily product-oriented but include a process metric: "number of compilations".
 			</paragraph>
 			<paragraph>Any metric should be relevant: related to some interesting property of the processes or products being measured, such as cost, estimated number of bugs, ease of maintenance...A 
-				<bold>metric theory</bold> is a set of metric definitions accompanied with a set of convincing arguments to show that the metrics are relevant.  Neither EiffelStudio nor this manual provide a metric theory.
+				<bold>metric theory</bold> is a set of metric definitions accompanied with a set of convincing arguments to show that the metrics are relevant. Neither EiffelStudio nor this manual provide a metric theory.
 			</paragraph>
-			<paragraph>The numbers yielded by measures are meaningless unless we describe what they refer to.  Every metric is relative to a certain 
-				<bold>unit</bold>, specified as part of its definition.  For example the unit for a metric that counts classes, such as 
+			<paragraph>The numbers yielded by measures are meaningless unless we describe what they refer to. Every metric is relative to a certain 
+				<bold>unit</bold>, specified as part of its definition. For example the unit for a metric that counts classes, such as 
 				<code>
 					<string>Classes</string>
 				</code>, is called 
 				<code>
 					<string>CLASS</string>
-				</code> .
+				</code>.
 			</paragraph>
-			<paragraph>EiffelStudio provides a set of predefined units.  Some simply serve to count occurrences of certain construct specimens in the software; examples include 
+			<paragraph>EiffelStudio provides a set of predefined units. Some simply serve to count occurrences of certain construct specimens in the software; examples include 
 				<code>
 					<string>CLASS</string>
 				</code>, 
@@ -85,7 +85,7 @@
 				</code> describes metrics whose values are divisions, for example "average number of classes per cluster", obtained by dividing the number of classes by the number of classes.
 			</paragraph>
 			<paragraph>Any metric applies over one or more 
-				<bold>scope types</bold>.  A scope type is a type of product or process over which the metric is measured; for product metric, examples include 
+				<bold>scope types</bold>. A scope type is a type of product or process over which the metric is measured; for product metric, examples include 
 				<code>
 					<string>feature</string>
 				</code> (meaning that we will compute a metric over a single feature), 
@@ -97,15 +97,15 @@
 				</code>, 
 				<code>
 					<string>system</string>
-				</code>.  They obey an order relation corresponding to containment order: a feature belongs to a class, a class to a cluster and so on.
+				</code>. They obey an order relation corresponding to containment order: a feature belongs to a class, a class to a cluster and so on.
 			</paragraph>
 			<paragraph>A 
-				<bold>scope</bold> is an instance of a scope type.  For example a given cluster is an instance of the scope type 
+				<bold>scope</bold> is an instance of a scope type. For example a given cluster is an instance of the scope type 
 				<code>
 					<string>cluster</string>
 				</code>.
 			</paragraph>
-			<paragraph>To compute a measure is to apply a certain metric over a certain scope of an applicable scope type.  For example we may compute the value of the metric 
+			<paragraph>To compute a measure is to apply a certain metric over a certain scope of an applicable scope type. For example we may compute the value of the metric 
 				<code>
 					<string>Classes</string>
 				</code> over a certain system.
@@ -120,39 +120,39 @@
 		</div>
 		<paragraph>Metrics are divided into elementary and composite:</paragraph>
 		<list ordered="false">
-			<item>An elementary metric measures the number of occurrences of a certain pattern in the product or process.  An example is the number of precondition clauses in a class.  </item>
-			<item>A composite metric, defined by a user of EiffelStudio, applies a mathematical or logical formula involving other metrics (elementary or previously defined metrics).  </item>
+			<item>An elementary metric measures the number of occurrences of a certain pattern in the product or process. An example is the number of precondition clauses in a class.</item>
+			<item>A composite metric, defined by a user of EiffelStudio, applies a mathematical or logical formula involving other metrics (elementary or previously defined metrics).</item>
 		</list>
 		<paragraph>Among elementary metrics, we make a further distinction between raw and derived:</paragraph>
 		<list ordered="false">
-			<item>Raw metrics are simple counts, built-in into EiffelStudio, of occurrences of certain basic elements.  For example 
+			<item>Raw metrics are simple counts, built-in into EiffelStudio, of occurrences of certain basic elements. For example 
 				<code>
 					<string>Classes</string>
 				</code>, the number of classes, is raw.
 			</item>
 			<item>It is often useful to define a new metric by subjecting a raw metric to one or more 
-				<bold>selection criteria</bold>.  For example a class may be either deferred (abstract) or effective (concrete, i.e.  fully implemented).  This is a selection criterion.  Separately, a class may have an invariant, or not; this is another selection criterion, 
+				<bold>selection criteria</bold>. For example a class may be either deferred (abstract) or effective (concrete, i.e. fully implemented). This is a selection criterion. Separately, a class may have an invariant, or not; this is another selection criterion, 
 				<code>
 					<string>Invariant_equipped</string>
-				</code>.  You might want to know the number of classes that are deferred and have no invariant clause; if so, you may define a derived metric by submitting the raw metric 
+				</code>. You might want to know the number of classes that are deferred and have no invariant clause; if so, you may define a derived metric by submitting the raw metric 
 				<code>
 					<string>Classes</string>
 				</code> to both of these criteria connected by an "and".
 			</item>
 		</list>
 		<paragraph>The precise definition of 
-			<span>selection criterion</span> for a raw metric is: a property with a fixed set of possible values (two or more) characterizing the patterns being counted by the metric.  Without the notions of selection criteria and derived metrics, EiffelStudio would need to have predefined (raw) metrics including all possible combinations, such as "deferred and no invariant".  This would quickly grow out of hand.
+			<span>selection criterion</span> for a raw metric is: a property with a fixed set of possible values (two or more) characterizing the patterns being counted by the metric. Without the notions of selection criteria and derived metrics, EiffelStudio would need to have predefined (raw) metrics including all possible combinations, such as "deferred and no invariant". This would quickly grow out of hand.
 		</paragraph>
 		<div>
 			<heading>
 				<size>2</size>
 				<content>Defining a derived metric</content>
 			</heading>
-			<paragraph>Note: The metric features of EiffelStudio are not available in the free edition.  </paragraph>
-			<paragraph>Let us define a new derived metric.  In the Context Tool, choose the 
+			<paragraph>Note: The metric features of EiffelStudio are not available in the free edition.</paragraph>
+			<paragraph>Let us define a new derived metric. In the Context Tool, choose the 
 				<code>
 					<keyword>Metrics</keyword>
-				</code> Tab.  Click the 
+				</code> Tab. Click the 
 				<code>
 					<keyword>Define new metric </keyword>
 				</code>button:
@@ -170,7 +170,7 @@
 			<paragraph>In the dialog that comes up, the first tab, selected by default, is the one we want, 
 				<code>
 					<keyword>Derived</keyword>
-				</code> :
+				</code>:
 			</paragraph>
 			<div>
 				<image_link>
@@ -191,7 +191,7 @@
 				</code>, bring up the menu and select 
 				<code>
 					<string>Features</string>
-				</code>.  Note the large number of selection criteria applicable to the raw metric 
+				</code>. Note the large number of selection criteria applicable to the raw metric 
 				<code>
 					<string>Features</string>
 				</code> (number of features), reflecting the many angles under which it is possible to classify features:
@@ -209,7 +209,7 @@
 			<paragraph>Assume you want a metric called 
 				<code>
 					<string>Public_functions_full_contracts</string>
-				</code> that counts the number of features that are functions, are exported, and have both a precondition and a postcondition.  Enter its name and check the selected criteria:
+				</code> that counts the number of features that are functions, are exported, and have both a precondition and a postcondition. Enter its name and check the selected criteria:
 			</paragraph>
 			<div>
 				<image_link>
@@ -224,7 +224,7 @@
 			<paragraph>Click 
 				<code>
 					<keyword>OK</keyword>
-				</code> to add this new metric to the set of available metrics.  It's actually been entered as the default metric to be computed, although we'll compute it only in a short while:
+				</code> to add this new metric to the set of available metrics. It's actually been entered as the default metric to be computed, although we'll compute it only in a short while:
 			</paragraph>
 			<div>
 				<image_link>
@@ -253,7 +253,7 @@
 				<size>2</size>
 				<content>Composite metrics</content>
 			</heading>
-			<paragraph>A composite metrics applies one or more mathematical operators to a set of metrics, themselves either elementary (raw or derived) or already composite.  In line with the conservative approach mentioned earlier, EiffelStudio permits only three kinds of mathematical operators:</paragraph>
+			<paragraph>A composite metrics applies one or more mathematical operators to a set of metrics, themselves either elementary (raw or derived) or already composite. In line with the conservative approach mentioned earlier, EiffelStudio permits only three kinds of mathematical operators:</paragraph>
 			<list ordered="false">
 				<item>
 					<bold>Linear</bold> metrics of the form 
@@ -281,10 +281,10 @@
 					<sub_script>i</sub_script> existing metrics (either elementary or basic) with the same unit, other than 
 					<code>
 						<string>RATIO</string>
-					</code>.  (It would be improper to add two 
+					</code>. (It would be improper to add two 
 					<code>
 						<string>RATIO</string>
-					</code> values since they might be ratios of incompatible things.  )
+					</code> values since they might be ratios of incompatible things.)
 				</item>
 				<item>
 					<bold>Ratio</bold> metrics of the form 
@@ -308,25 +308,25 @@
 					</code> (again because 
 					<code>
 						<string>RATIO</string>
-					</code> is a catch-all category for all divisions, so you can't divide further without courting incoherence).  The resulting unit is 
+					</code> is a catch-all category for all divisions, so you can't divide further without courting incoherence). The resulting unit is 
 					<code>
 						<string>RATIO</string>
 					</code>.
 				</item>
 				<item>
-					<bold>Scope comparison</bold> metrics that measure the ratio of the value of a given non-ratio metric over two different scope types.  For example by choosing the metric Classes and the scope types "cluster" and "system" we can measure the proportion of classes in a system that belong to the current cluster.
+					<bold>Scope comparison</bold> metrics that measure the ratio of the value of a given non-ratio metric over two different scope types. For example by choosing the metric Classes and the scope types "cluster" and "system" we can measure the proportion of classes in a system that belong to the current cluster.
 				</item>
 			</list>
 			<paragraph>Let's define a linear metric 
 				<code>
 					<string>Direct_dependents</string>
-				</code> that counts heirs (direct descendants) and direct clients of a class.  Click 
+				</code> that counts heirs (direct descendants) and direct clients of a class. Click 
 				<code>
 					<keyword>Define new metric</keyword>
 				</code> again and choose the tab 
 				<code>
 					<keyword>Linear</keyword>
-				</code>.  Bring up the 
+				</code>. Bring up the 
 				<code>
 					<keyword>Metric</keyword>
 				</code> menu:
@@ -344,14 +344,14 @@
 			<paragraph>To define the first term of the sum, select 
 				<code>
 					<string>Clients</string>
-				</code>.  Do 
+				</code>. Do 
 				<bold>not</bold> click the button marked OK (we are not done yet as we need a second term) but instead click the 
 				<code>
 					<keyword>+</keyword>
 				</code> button next to 
 				<code>
 					<keyword>Metric</keyword>
-				</code> :
+				</code>:
 			</paragraph>
 			<div>
 				<image_link>
@@ -366,7 +366,7 @@
 			<paragraph>The field at the bottom reflects the current state of the linear combination, which only includes the term 
 				<code>
 					<string>Clients</string>
-				</code>, with the default coefficient 1.  Now bring up the 
+				</code>, with the default coefficient 1. Now bring up the 
 				<code>
 					<keyword>Metric</keyword>
 				</code> menu again, choose 
@@ -375,7 +375,7 @@
 				</code> this time, and click 
 				<code>
 					<keyword>+</keyword>
-				</code> again.  The expression for the sum appears in the bottom field:
+				</code> again. The expression for the sum appears in the bottom field:
 			</paragraph>
 			<div>
 				<image_link>
@@ -390,27 +390,27 @@
 			<paragraph>The name of our new linear metric will be 
 				<code>
 					<string>Direct_dependents</string>
-				</code>.  Enter it into the top field, 
+				</code>. Enter it into the top field, 
 				<code>
 					<keyword>New_metric_name</keyword>
 				</code> (if you forget, you will be reminded), and click 
 				<code>
 					<keyword>OK</keyword>
-				</code>.  The name of the new metric and its unit become the defaults in the corresponding fields of the Context Tool.
+				</code>. The name of the new metric and its unit become the defaults in the corresponding fields of the Context Tool.
 			</paragraph>
-			<paragraph>Let's define one more metric, this time a ratio.  We want to know the "branching factor": average number of heirs per class.  It will be the ratio of metrics 
+			<paragraph>Let's define one more metric, this time a ratio. We want to know the "branching factor": average number of heirs per class. It will be the ratio of metrics 
 				<code>
 					<string>Heirs</string>
 				</code> and 
 				<code>
 					<string>Classes</string>
-				</code>.  Click 
+				</code>. Click 
 				<code>
 					<keyword>Define new metric</keyword>
 				</code> then 
 				<code>
 					<keyword>Metric ratio</keyword>
-				</code> :
+				</code>:
 			</paragraph>
 			<div>
 				<image_link>
@@ -441,7 +441,7 @@
 				</code>, more clear than "branching factor", in the field at the top, and click 
 				<code>
 					<keyword>OK</keyword>
-				</code>.  You now have three user-defined metrics available in addition to predefined metrics, as you can check by bringing up the 
+				</code>. You now have three user-defined metrics available in addition to predefined metrics, as you can check by bringing up the 
 				<code>
 					<keyword>Metric</keyword>
 				</code> menu on the Context Tool:
@@ -465,13 +465,13 @@
 			<paragraph>The reason 
 				<code>
 					<string>Average_heirs</string>
-				</code> is grayed out on the last figure is that it's not applicable to the current scope.  Each metric indeed has a minimum "applicable scope type"; for example it doesn't make sense to compute the number of attributes in a feature, since the smallest construct in which attributes appear is a class, bigger than a feature.  Similarly, the minimum scope type for 
+				</code> is grayed out on the last figure is that it's not applicable to the current scope. Each metric indeed has a minimum "applicable scope type"; for example it doesn't make sense to compute the number of attributes in a feature, since the smallest construct in which attributes appear is a class, bigger than a feature. Similarly, the minimum scope type for 
 				<code>
 					<string>Classes</string>
 				</code> (the denominator of 
 				<code>
 					<string>Average_heirs</string>
-				</code> ) is 
+				</code>) is 
 				<code>
 					<string>Cluster</string>
 				</code>, since we can only start counting classes at that level.
@@ -482,7 +482,7 @@
 				<size>2</size>
 				<content>Computing measures</content>
 			</heading>
-			<paragraph>Let's now compute a few measures.  These will all be relative to the entire system, so the first thing to do is to change the 
+			<paragraph>Let's now compute a few measures. These will all be relative to the entire system, so the first thing to do is to change the 
 				<code>
 					<keyword>Scope</keyword>
 				</code> field of the Context Tool (the second field from the left at the top on the preceding figure) to 
@@ -490,8 +490,8 @@
 					<string>System</string>
 				</code>, the next-to-last entry on the corresponding menu.
 			</paragraph>
-			<paragraph>The measures that you get should be identical or very close to those shown next.  Differences, if any, may result from changes in the EiffelStudio delivery, especially EiffelBase, or operations that you have performed on the Guided Tour system.  </paragraph>
-			<paragraph>First let's use a predefined metric to compute the number of classes in our system.  In the 
+			<paragraph>The measures that you get should be identical or very close to those shown next. Differences, if any, may result from changes in the EiffelStudio delivery, especially EiffelBase, or operations that you have performed on the Guided Tour system.</paragraph>
+			<paragraph>First let's use a predefined metric to compute the number of classes in our system. In the 
 				<code>
 					<keyword>Metrics</keyword>
 				</code> field bring up the menu and choose 
@@ -503,7 +503,7 @@
 				</code>
 				<code>
 					<keyword>All</keyword>
-				</code>.  The 
+				</code>. The 
 				<code>
 					<keyword>Unit</keyword>
 				</code> field is updated to the unit of that metric:
@@ -524,10 +524,10 @@
 				</code>, to 
 				<code>
 					<string>Class_count</string>
-				</code>.  Now compute that measure by clicking the 
+				</code>. Now compute that measure by clicking the 
 				<code>
 					<keyword>Calculate metric</keyword>
-				</code> button, at the place shown on the above figure.  This displays the resulting measure in the field just below:
+				</code> button, at the place shown on the above figure. This displays the resulting measure in the field just below:
 			</paragraph>
 			<div>
 				<image_link>
@@ -539,14 +539,14 @@
 					</image>
 				</image_link>
 			</div>
-			<paragraph>As you see, our system has 183 classes.  Refining the measure -- for example by restricting the scope to certain clusters -- would show that all but a handful belong to the EiffelBase library.  But you already know this, so don't perform these measures yet (you can do them later).  </paragraph>
+			<paragraph>As you see, our system has 183 classes. Refining the measure -- for example by restricting the scope to certain clusters -- would show that all but a handful belong to the EiffelBase library. But you already know this, so don't perform these measures yet (you can do them later).</paragraph>
 		</div>
 		<div>
 			<heading>
 				<size>2</size>
 				<content>Saving measures</content>
 			</heading>
-			<paragraph>When you compute a measure, it's not kept anywhere, and the next measure will displace it.  To keep the one you just made, click the button labeled 
+			<paragraph>When you compute a measure, it's not kept anywhere, and the next measure will displace it. To keep the one you just made, click the button labeled 
 				<code>
 					<keyword> Add measure to the list and save it</keyword>
 				</code> on the last figure:
@@ -563,7 +563,7 @@
 			</div>
 			<paragraph>The operation has had two effects:</paragraph>
 			<list ordered="false">
-				<item>It has added the latest measure to the table of currently displayed measure.  </item>
+				<item>It has added the latest measure to the table of currently displayed measure.</item>
 				<item>The first time around, as here, it creates a metrics file; a messages tells us this:</item>
 			</list>
 			<div>
@@ -579,14 +579,14 @@
 			<paragraph>Metric information will be kept in the subdirectory 
 				<code>
 					<keyword>Metrics</keyword>
-				</code> of the project directory.  The generated 
+				</code> of the project directory. The generated 
 				<code>
 					<keyword>metric_file.xml</keyword>
-				</code> file contains both the metrics you have defined, and the measures you have performed.  This makes it possible to use it both for:
+				</code> file contains both the metrics you have defined, and the measures you have performed. This makes it possible to use it both for:
 			</paragraph>
 			<list ordered="false">
-				<item>Applying to a new project the metrics that you have defined for an existing one (so that, as you go, you can accumulate a portfolio of useful metrics).  </item>
-				<item>Using existing measures as a comparison for new projects.  </item>
+				<item>Applying to a new project the metrics that you have defined for an existing one (so that, as you go, you can accumulate a portfolio of useful metrics).</item>
+				<item>Using existing measures as a comparison for new projects.</item>
 			</list>
 			<paragraph>To obtain more measures, apply the three metrics that you defined earlier -- with names 
 				<code>
@@ -597,7 +597,7 @@
 				</code> and 
 				<code>
 					<string>Average_heirs</string>
-				</code> -- to the entire system and save the corresponding measures.  You can use appropriate names for the results or use the EiffelStudio defaults.  The result will be as follows:
+				</code> -- to the entire system and save the corresponding measures. You can use appropriate names for the results or use the EiffelStudio defaults. The result will be as follows:
 			</paragraph>
 			<div>
 				<image_link>
@@ -618,7 +618,7 @@
 			<paragraph>Click the button labeled 
 				<code>
 					<keyword>Reorder, delete and import metrics</keyword>
-				</code> on the last figure.  This brings up the metric management dialog:
+				</code> on the last figure. This brings up the metric management dialog:
 			</paragraph>
 			<div>
 				<image_link>
@@ -636,10 +636,10 @@
 				</code> or 
 				<code>
 					<keyword>Down</keyword>
-				</code> ) and delete any of them.  The 
+				</code>) and delete any of them. The 
 				<code>
 					<keyword>Formula</keyword>
-				</code> field shows the definition -- arithmetic, or boolean -- of the selected metric.  The 
+				</code> field shows the definition -- arithmetic, or boolean -- of the selected metric. The 
 				<code>
 					<keyword>Import</keyword>
 				</code> button will let you, if you have defined metrics in another project, select the corresponding XML file to add them to those of your current project.
@@ -655,22 +655,22 @@
 				<size>2</size>
 				<content>Metric archives</content>
 			</heading>
-			<paragraph>What does a measure mean? You don't necessarily know in the absolute, but you might want to compare your results to those of other projects.  For example, if you have measured the average number of invariants in classes of your system, you might be curious to know how this compares to the EiffelBase library.  </paragraph>
-			<paragraph>The notion of metric archive addresses this need.  You may:</paragraph>
+			<paragraph>What does a measure mean? You don't necessarily know in the absolute, but you might want to compare your results to those of other projects. For example, if you have measured the average number of invariants in classes of your system, you might be curious to know how this compares to the EiffelBase library.</paragraph>
+			<paragraph>The notion of metric archive addresses this need. You may:</paragraph>
 			<list ordered="false">
-				<item>As noted above, archive all current measures into an XML file, called a measurement archive.  </item>
-				<item>Make this measurement archive available in a shared directory, or as a URL on the Internet.  </item>
+				<item>As noted above, archive all current measures into an XML file, called a measurement archive.</item>
+				<item>Make this measurement archive available in a shared directory, or as a URL on the Internet.</item>
 			</list>
-			<paragraph>At any time in a project, select any measurement archive, local or at a URL, as the reference archive; in that case all the measures you perform will be compared to those of the reference archive.  You may select various comparison formats: percentage (the default), difference percentage, plain value.  </paragraph>
+			<paragraph>At any time in a project, select any measurement archive, local or at a URL, as the reference archive; in that case all the measures you perform will be compared to those of the reference archive. You may select various comparison formats: percentage (the default), difference percentage, plain value.</paragraph>
 			<paragraph> Eiffel Software has established a Web site, 
 				<span>
 					<link>
 						<url>http://metrics.eiffel.com</url>
 						<label>http://metrics.eiffel.com</label>
 					</link>
-				</span>, as a publicly available reference for metric collections on Eiffel Software's own libraries (EiffelBase, EiffelVision, ...).  This provides an invaluable source of comparisons for other projects within and without Eiffel Software.
+				</span>, as a publicly available reference for metric collections on Eiffel Software's own libraries (EiffelBase, EiffelVision, ...). This provides an invaluable source of comparisons for other projects within and without Eiffel Software.
 			</paragraph>
-			<paragraph>Let's see how this works.  We'll compare the number of classes in our system to the number of classes in EiffelVision.  Click the last button, 
+			<paragraph>Let's see how this works. We'll compare the number of classes in our system to the number of classes in EiffelVision. Click the last button, 
 				<code>
 					<keyword>Compare to archive</keyword>
 				</code>, in the Context Tool:
@@ -730,7 +730,7 @@
 			<paragraph>Click 
 				<code>
 					<keyword>Close</keyword>
-				</code>.  This updates the display of computed measures as shown by the following figure.  All future measures that you perform will be immediately compared to the values in the selected archive if the metric is available on both sides.
+				</code>. This updates the display of computed measures as shown by the following figure. All future measures that you perform will be immediately compared to the values in the selected archive if the metric is available on both sides.
 			</paragraph>
 			<div>
 				<image_link>
@@ -748,9 +748,9 @@
 				</code> dialog enables you to define an existing archive as reference for your current and future measurements.
 			</paragraph>
 			<paragraph>The other two self-explanatory options, shown in the picture of the dialog on the previous page, enable you to 
-				<bold>create</bold> your own archive, and to update an existing one.  You can then make this archive available, in a local file or on the Web, for other projects to perform comparisons.
+				<bold>create</bold> your own archive, and to update an existing one. You can then make this archive available, in a local file or on the Web, for other projects to perform comparisons.
 			</paragraph>
-			<paragraph>An archive, stored as an XML file, includes both the project metrics and its current measures.  The metrics will be made available for import to projects selecting the archive for comparison.  </paragraph>
+			<paragraph>An archive, stored as an XML file, includes both the project metrics and its current measures. The metrics will be made available for import to projects selecting the archive for comparison.</paragraph>
 		</div>
 		<paragraph>
 			<link>

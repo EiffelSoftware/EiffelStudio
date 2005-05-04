@@ -1648,23 +1648,23 @@ feature {NONE} -- Implementation
 			ctxt.set_classes (Void, ctxt.class_c)
 			l_as.type.process (Current)
 			if l_as.renaming /= Void then
-				format_clause (ti_rename_keyword, l_as.renaming)
+				format_clause (ti_rename_keyword, l_as.renaming, True)
 				end_to_print := True
 			end
 			if l_as.exports /= Void then
-				format_clause (ti_export_keyword, l_as.exports)
+				format_clause (ti_export_keyword, l_as.exports, False)
 				end_to_print := True
 			end
 			if l_as.undefining /= Void then
-				format_clause (ti_undefine_keyword, l_as.undefining)
+				format_clause (ti_undefine_keyword, l_as.undefining, True)
 				end_to_print := True
 			end
 			if l_as.redefining /= Void then
-				format_clause (ti_redefine_keyword, l_as.redefining)
+				format_clause (ti_redefine_keyword, l_as.redefining, True)
 				end_to_print := True
 			end
 			if l_as.selecting /= Void then
-				format_clause (ti_select_keyword, l_as.selecting)
+				format_clause (ti_select_keyword, l_as.selecting, True)
 				end_to_print := True
 			end
 			if end_to_print then
@@ -2313,7 +2313,7 @@ feature {NONE} -- Implementation: helpers
 			ctxt.commit
 		end
 		
-	format_clause (a_keyword: KEYWORD_TEXT; a_clause: EIFFEL_LIST [AST_EIFFEL]) is
+	format_clause (a_keyword: KEYWORD_TEXT; a_clause: EIFFEL_LIST [AST_EIFFEL]; has_separator: BOOLEAN) is
 			-- Format one of rename, export, undefine, redefine or select clauses.
 		require
 			a_keyword_not_void: a_keyword /= Void
@@ -2324,8 +2324,12 @@ feature {NONE} -- Implementation: helpers
 			ctxt.put_text_item (a_keyword)
 			ctxt.indent
 			ctxt.put_new_line
-			ctxt.set_separator (ti_comma)
 			ctxt.set_new_line_between_tokens
+			if has_separator then
+				ctxt.set_separator (ti_comma)
+			else
+				ctxt.set_separator (ti_empty)
+			end
 			a_clause.process (Current)
 			ctxt.exdent
 			ctxt.exdent

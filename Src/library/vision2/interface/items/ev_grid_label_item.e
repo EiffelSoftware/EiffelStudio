@@ -58,6 +58,7 @@ feature {NONE} -- Initialization
 			set_spacing (2)
 			align_text_left
 			align_text_vertically_center
+			enable_full_select
 			Precursor {EV_GRID_ITEM}
 		end
 
@@ -206,9 +207,9 @@ feature -- Status Setting
 		require
 			not_destroyed: not is_destroyed
 		do
-			text_alignment := text_alignment.set_bit (False, 1)
-			text_alignment := text_alignment.set_bit (True, 2)
-			text_alignment := text_alignment.set_bit (False, 3)
+			boolean_flags := boolean_flags.set_bit (False, 1)
+			boolean_flags := boolean_flags.set_bit (True, 2)
+			boolean_flags := boolean_flags.set_bit (False, 3)
 			if parent /= Void then
 				parent.implementation.redraw_item (implementation)
 			end
@@ -221,9 +222,9 @@ feature -- Status Setting
 		require
 			not_destroyed: not is_destroyed
 		do
-			text_alignment := text_alignment.set_bit (False, 1)
-			text_alignment := text_alignment.set_bit (False, 2)
-			text_alignment := text_alignment.set_bit (True, 3)
+			boolean_flags := boolean_flags.set_bit (False, 1)
+			boolean_flags := boolean_flags.set_bit (False, 2)
+			boolean_flags := boolean_flags.set_bit (True, 3)
 			if parent /= Void then
 				parent.implementation.redraw_item (implementation)
 			end
@@ -236,9 +237,9 @@ feature -- Status Setting
 		require
 			not_destroyed: not is_destroyed
 		do
-			text_alignment := text_alignment.set_bit (True, 1)
-			text_alignment := text_alignment.set_bit (False, 2)
-			text_alignment := text_alignment.set_bit (False, 3)
+			boolean_flags := boolean_flags.set_bit (True, 1)
+			boolean_flags := boolean_flags.set_bit (False, 2)
+			boolean_flags := boolean_flags.set_bit (False, 3)
 			if parent /= Void then
 				parent.implementation.redraw_item (implementation)
 			end
@@ -251,9 +252,9 @@ feature -- Status Setting
 		require
 			not_destroyed: not is_destroyed
 		do
-			text_alignment := text_alignment.set_bit (False, 4)
-			text_alignment := text_alignment.set_bit (True, 5)
-			text_alignment := text_alignment.set_bit (False, 6)
+			boolean_flags := boolean_flags.set_bit (False, 4)
+			boolean_flags := boolean_flags.set_bit (True, 5)
+			boolean_flags := boolean_flags.set_bit (False, 6)
 			if parent /= Void then
 				parent.implementation.redraw_item (implementation)
 			end
@@ -266,9 +267,9 @@ feature -- Status Setting
 		require
 			not_destroyed: not is_destroyed
 		do
-			text_alignment := text_alignment.set_bit (True, 4)
-			text_alignment := text_alignment.set_bit (False, 5)
-			text_alignment := text_alignment.set_bit (False, 6)
+			boolean_flags := boolean_flags.set_bit (True, 4)
+			boolean_flags := boolean_flags.set_bit (False, 5)
+			boolean_flags := boolean_flags.set_bit (False, 6)
 			if parent /= Void then
 				parent.implementation.redraw_item (implementation)
 			end
@@ -281,9 +282,9 @@ feature -- Status Setting
 		require
 			not_destroyed: not is_destroyed
 		do
-			text_alignment := text_alignment.set_bit (False, 4)
-			text_alignment := text_alignment.set_bit (False, 5)
-			text_alignment := text_alignment.set_bit (True, 6)
+			boolean_flags := boolean_flags.set_bit (False, 4)
+			boolean_flags := boolean_flags.set_bit (False, 5)
+			boolean_flags := boolean_flags.set_bit (True, 6)
 			if parent /= Void then
 				parent.implementation.redraw_item (implementation)
 			end
@@ -297,6 +298,32 @@ feature -- Status Setting
 			layout_procedure := a_layout_procedure
 		ensure	
 			layout_procedure_set: layout_procedure = a_layout_procedure
+		end
+
+	enable_full_select is
+			-- Ensure `is_full_select_enabled' is `True'.
+		require
+			not_destroyed: not is_destroyed
+		do
+			boolean_flags := boolean_flags.set_bit (True, 7)
+			if parent /= Void then
+				parent.implementation.redraw_item (implementation)
+			end
+		ensure
+			full_select_enabled: is_full_select_enabled
+		end
+
+	disable_full_select is
+			-- Ensure `is_full_select_enabled' is `False'.
+		require
+			not_destroyed: not is_destroyed
+		do
+			boolean_flags := boolean_flags.set_bit (False, 7)
+			if parent /= Void then
+				parent.implementation.redraw_item (implementation)
+			end
+		ensure
+			full_select_disabled: not is_full_select_enabled
 		end
 			
 feature -- Measurement
@@ -358,7 +385,7 @@ feature -- Status report
 		require
 			not_destroyed: not is_destroyed
 		do
-			Result := text_alignment.bit_test (1) = True
+			Result := boolean_flags.bit_test (1) = True
 		end
 		
 	is_center_aligned: BOOLEAN is
@@ -367,7 +394,7 @@ feature -- Status report
 		require
 			not_destroyed: not is_destroyed
 		do
-			Result := text_alignment.bit_test (2) = True
+			Result := boolean_flags.bit_test (2) = True
 		end
 
 	is_right_aligned: BOOLEAN is
@@ -376,7 +403,7 @@ feature -- Status report
 		require
 			not_destroyed: not is_destroyed
 		do
-			Result := text_alignment.bit_test (3) = True
+			Result := boolean_flags.bit_test (3) = True
 		end
 
 	is_top_aligned: BOOLEAN is
@@ -385,7 +412,7 @@ feature -- Status report
 		require
 			not_destroyed: not is_destroyed
 		do
-			Result := text_alignment.bit_test (4) = True
+			Result := boolean_flags.bit_test (4) = True
 		end
 		
 	is_vertically_center_aligned: BOOLEAN is
@@ -394,7 +421,7 @@ feature -- Status report
 		require
 			not_destroyed: not is_destroyed
 		do
-			Result := text_alignment.bit_test (5) = True
+			Result := boolean_flags.bit_test (5) = True
 		end
 
 	is_bottom_aligned: BOOLEAN is
@@ -403,7 +430,7 @@ feature -- Status report
 		require
 			not_destroyed: not is_destroyed
 		do
-			Result := text_alignment.bit_test (6) = True
+			Result := boolean_flags.bit_test (6) = True
 		end
 
 	layout_procedure: PROCEDURE [ANY, TUPLE [EV_GRID_LABEL_ITEM, EV_GRID_LABEL_ITEM_LAYOUT]]
@@ -419,6 +446,15 @@ feature -- Status report
 			-- label_item: EV_GRID_LABEL_ITEM - `Current' to which the settings apply.
 			-- label_item_layout: EV_GRID_LABEL_ITEM_LAYOUT - Object into which desired positioning information must be set.
 
+	is_full_select_enabled: BOOLEAN is
+			-- Does selection highlighting fill complete area of `Current'?
+			-- If `False', highlighting is only applied to area of `text'.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := boolean_flags.bit_test (7) = True
+		end
+
 feature {NONE} -- Contract support
 
 	is_in_default_state: BOOLEAN is
@@ -426,7 +462,7 @@ feature {NONE} -- Contract support
 		do
 			Result := Precursor {EV_GRID_ITEM} and text.is_empty and pixmap = Void and
 				left_border = 2 and right_border = 0 and top_border = 0 and bottom_border = 0
-				and spacing = 2 and is_left_aligned and is_vertically_center_aligned
+				and spacing = 2 and is_left_aligned and is_vertically_center_aligned and is_full_select_enabled
 		end
 
 feature {EV_ANY, EV_ANY_I, EV_GRID_DRAWER_I} -- Implementation
@@ -434,14 +470,15 @@ feature {EV_ANY, EV_ANY_I, EV_GRID_DRAWER_I} -- Implementation
 	implementation: EV_GRID_LABEL_ITEM_I
 			-- Responsible for interaction with native graphics toolkit.
 
-	text_alignment: INTEGER
-			-- Current alignment for internal use only.
+	boolean_flags: INTEGER_8
+			-- Current boolean flags for internal use only.
 			-- Bit 1 set to 1 if left aligned
 			-- Bit 2 set to 1 if center aligned
 			-- Bit 3 set to 1 if right aligned
 			-- Bit 4 set to 1 if top aligned
 			-- Bit 5 set to 1 if vertically center aligned
 			-- Bit 6 set to 1 if bottom aligned
+			-- Bit 7 set to 1 if `is_full_select_enabled'.
 			
 feature {NONE} -- Implementation
 

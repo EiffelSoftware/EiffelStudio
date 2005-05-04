@@ -60,7 +60,7 @@
 		<code_block>
 	<keyword>feature</keyword> <symbol>{</symbol><class_name>WINFORMS_APPLICATION</class_name><symbol>}</symbol><feature_name></feature_name>.<feature_name></feature_name><feature_name>run_form</feature_name> <symbol>(</symbol><keyword>Current</keyword><symbol>)</symbol><feature_name></feature_name>.
 </code_block>
-		<paragraph>This sample contains the following class:</paragraph>
+		<paragraph>This sample contains the following classes:</paragraph>
 		<list ordered="false">
 			<item>
 				<span><class_name>FORM</class_name></span>

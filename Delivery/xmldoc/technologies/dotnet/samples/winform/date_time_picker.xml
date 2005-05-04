@@ -84,7 +84,7 @@
 		<paragraph>When the entry in the 
 			<span><class_name>COMBO_BOX</class_name></span> format changes, an event is launched and modify the format of the displayed date.
 		</paragraph>
-		<paragraph>This sample contains the following class:</paragraph>
+		<paragraph>This sample contains the following classes:</paragraph>
 		<list ordered="false">
 			<item>
 				<span><class_name>CALENDAR</class_name></span>

@@ -62,7 +62,7 @@
 				<alt_text>Local assemblies</alt_text>
 			</image>
 		</paragraph>
-		<paragraph>This sample contains the following class:</paragraph>
+		<paragraph>This sample contains the following classes:</paragraph>
 		<list ordered="false">
 			<item>
 				<span><class_name>FORM</class_name></span>

@@ -691,6 +691,8 @@ feature -- Marking
 			object_not_void: obj /= Void
 		do
 			c_mark ($obj)
+		ensure
+			is_marked: is_marked (obj)
 		end
 
 	unmark (obj: ANY) is
@@ -699,6 +701,8 @@ feature -- Marking
 			object_not_void: obj /= Void
 		do
 			c_unmark ($obj)
+		ensure
+			is_not_marked: not is_marked (obj)
 		end
 
 feature {NONE} -- Cached data

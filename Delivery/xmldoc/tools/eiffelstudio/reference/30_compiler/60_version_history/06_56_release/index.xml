@@ -11,7 +11,7 @@
 				Once manifest strings are not created every time they are accessed. Instead one instance is created at the first access and then it is reused for subsequent accesses. In multithreaded application one instance is created for one thread.</item>
 			<item>Supported aligned and non-aligned verbatim strings. Aligned verbatim strings use characters <code><character>[</character></code> and <code><character>]</character></code> in opening and closing sequence respectively, non-aligned verbatim strings use <code><character>{</character></code> and <code><character>}</character></code>.</item>
 			<item>Added support for manifest type expression "{<class_name>MY_TYPE</class_name>}" which gives an instance of <feature_name>TYPE</feature_name> [<feature_name>MY_TYPE</feature_name>].</item>
-			<item>New syntax for manifest constants, now they can be preceeded by a manifest type expression. For example <number>1</number> is of type <class_name>INTEGER</class_name>, whereas {<class_name>INTEGER_8</class_name>} 1 is of type <class_name>INTEGER_8</class_name>.</item>
+			<item>New syntax for manifest constants. Now they can be preceeded by a manifest type expression. For example <number>1</number> is of type <class_name>INTEGER</class_name>, whereas {<class_name>INTEGER_8</class_name>} 1 is of type <class_name>INTEGER_8</class_name>.</item>
 			<item>Support for <class_name>NATURAL_XX</class_name> types which are unsigned integers.</item>
 		</list>
 		<heading><size>2</size>Improvements</heading>
@@ -133,7 +133,7 @@ i.e. has empty compound for a primary condition which is a constant <code><keywo
 		</heading>
 		<list ordered="false">
 			<item>Corrected processing of literal floating point fields from external assemblies (such as <cluster_name>System</cluster_name><code><symbol>.</symbol></code><class_name>Math</class_name><code><symbol>.</symbol></code><feature_name>PI</feature_name>) to obtain proper values.</item>
-			<item>Fixed a bug where the value -1 was actuall 255 on .NET.</item>
+			<item>Fixed a bug where the value -1 was actually 255 on .NET.</item>
 			<item>Fixed issue where declaring a <class_name>NATIVE_ARRAY</class_name> of a .NET expanded type would be rejected by the compiler.</item>
 			<item>Fixed issue where assigning a .NET expanded type to an entity of type <class_name>ANY</class_name> would be rejected by the compiler.</item>
 			<item>Fixed a crash in the compiler when generating the code for a class which inherits from a .NET class and from an Eiffel class which has some anchored types.</item>

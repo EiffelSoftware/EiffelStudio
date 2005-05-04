@@ -9,9 +9,10 @@
 			following the option with a space or a <code>=</code> sign in between the option name and the argument as in:
 		</paragraph>
 		<code_block>
---ace=<string>"ace.ace"</string></code_block>, this option is equivalent to:
+--ace=<string>"ace.ace"</string></code_block>
+		this option is equivalent to:
 		<code_block>
--a "ace.ace"</code_block>.
+-a "ace.ace"</code_block>
 		<paragraph>
 			The list of options is the following:
 		</paragraph>
@@ -44,7 +45,7 @@
 				<bold>--compileeiffel, -l</bold>: Compile generated Eiffel code. Implies '--compilec'.
 			</item>
 			<item>
-				<bold>--marshaller, -m</bold>: Build marshaller DLL, can only be used with '--client' and if definition file is an IDL file.
+				<bold>--marshaller, -m</bold>: Build marshaller DLL, can only be used with '--server' and if definition file is an IDL file.
 			</item>
 			<item>
 				<bold>--destination, -d</bold> &lt;DESTINATION&gt;: Generate files in &lt;DESTINATION&gt; folder. By default files are generated in current folder.
@@ -72,10 +73,9 @@
 			<bold>See Also</bold>: <link><url>10_how_wizard_works.xml</url><label>How the EiffelCOM Wizard Works</label></link>, 
 			<link><url>20_generated_files.xml</url><label>Generated Files</label></link>, 
 			<link><url>30_class_hierarchy.xml</url><label>Class Hierarchy</label></link>, 
-			<link><url>40_eiffel_project.xml</url><label>Adding a COM Interface to an Eiffel Project</label></link>,
-			<link><url>50_accessing.xml</url><label>Accessing a COM Component</label></link>,
-			<link><url>60_reusing.xml</url><label>Reusing a COM Component</label></link>,
-			<link><url>70_options.xml</url><label>Command Line Options</label></link>
+			<link><url>40_eiffel_project.xml</url><label>Adding a COM Interface to an Eiffel Project</label></link>, 
+			<link><url>50_reusing.xml</url><label>Accessing a COM Component</label></link>, 
+			<link><url>60_building.xml</url><label>Building a COM Component</label></link>
 		</seealso>
 	</paragraph>
 </document>

@@ -37,6 +37,14 @@ feature -- Platform
 			"EIF_IS_VMS"
 		end
 
+	is_little_endian: BOOLEAN is
+			-- Is current platform a little endian one?
+		external
+			"C inline"
+		alias
+			"EIF_TEST(BYTEORDER == 0x1234)"
+		end
+
 feature -- Access bytes size
 
 	Boolean_bytes: INTEGER is
@@ -227,7 +235,7 @@ feature -- Access bits size
 			"esint64_size"
 		end
 
-	Real_bits: INTEGER is
+	Real_32_bits, Real_bits: INTEGER is
 			-- Number of bits in a value of type `REAL'
 		external
 			"C macro use %"eif_misc.h%""
@@ -235,7 +243,7 @@ feature -- Access bits size
 			"esreal32_size"
 		end
 
-	Double_bits: INTEGER is
+	Real_64_bits, Double_bits: INTEGER is
 			-- Number of bits in a value of type `DOUBLE'
 		external
 			"C macro use %"eif_misc.h%""

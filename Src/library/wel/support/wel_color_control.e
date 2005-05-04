@@ -20,7 +20,7 @@ feature -- Access
 			exists: exists
 		deferred
 		ensure
-			color_not_void: foreground_color /= Void
+			foreground_color_not_void: Result /= Void
 		end
 
 	background_color: WEL_COLOR_REF is
@@ -30,7 +30,7 @@ feature -- Access
 			exists: exists
 		deferred
 		ensure
-			color_not_void: background_color /= Void
+			background_color_not_void: Result /= Void
 		end
 
 feature -- Status report

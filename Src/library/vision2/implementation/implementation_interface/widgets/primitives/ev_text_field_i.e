@@ -37,6 +37,11 @@ feature -- Status setting
 		deferred
 		end
 
+	hide_border is
+			-- Hide the border of `Current'.
+		deferred
+		end
+
 feature {EV_TEXT_FIELD_I} -- Implementation
 
 	interface: EV_TEXT_FIELD

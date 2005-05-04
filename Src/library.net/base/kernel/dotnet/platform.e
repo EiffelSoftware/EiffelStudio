@@ -37,6 +37,12 @@ feature -- Platform
 			"EIF_IS_VMS"
 		end
 
+	is_little_endian: BOOLEAN is
+			-- Is current platform a little endian one?
+		once
+			Result := {BIT_CONVERTER}.is_little_endian
+		end
+
 feature -- Access bytes size
 
 	Boolean_bytes: INTEGER is
@@ -99,13 +105,13 @@ feature -- Access bytes size
 			Result := {MARSHAL}.size_of_object ((64).to_integer_64)
 		end
 
-	Real_bytes: INTEGER is
+	Real_32_bytes, Real_bytes: INTEGER is
 			-- Number of bytes in a value of type `REAL'
 		do
 			Result := {MARSHAL}.size_of_object ((0.0).truncated_to_real)
 		end
 
-	Double_bytes: INTEGER is
+	Real_64_bytes, Double_bytes: INTEGER is
 			-- Number of bytes in a value of type `DOUBLE'
 		do
 			Result := {MARSHAL}.size_of_object (0.0)
@@ -179,13 +185,13 @@ feature -- Access bits size
 			Result := Integer_64_bytes * 8
 		end
 
-	Real_bits: INTEGER is
+	Real_32_bits, Real_bits: INTEGER is
 			-- Number of bits in a value of type `REAL'
 		do
 			Result := Real_bytes * 8
 		end
 
-	Double_bits: INTEGER is
+	Real_64_bits, Double_bits: INTEGER is
 			-- Number of bits in a value of type `DOUBLE'
 		do
 			Result := Double_bytes * 8

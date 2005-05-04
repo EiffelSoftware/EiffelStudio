@@ -157,7 +157,12 @@ feature -- Control
 				feat_tbl.after
 			loop
 				feat := feat_tbl.item_for_iteration
-				compare_with_parent (feat, par_feats)
+				if not class_c.is_external or else feat.written_in /= system.any_id then
+						-- Do not add features of ANY that were artificially added to external
+						-- classes as if they really need to be processed, it will be done in
+						-- eiffel classes that inherit from external classes.
+					compare_with_parent (feat, par_feats)
+				end
 				feat_tbl.forth
 			end
 		end

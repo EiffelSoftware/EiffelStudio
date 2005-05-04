@@ -164,7 +164,7 @@ feature {NONE} -- Windows message handling
 			end
 		end
 
-	on_wm_paint (wparam: INTEGER) is
+	on_wm_paint (wparam: POINTER) is
 			-- Wm_paint message handling
 			-- A WEL_DC and WEL_PAINT_STRUCT are created and
 			-- passed to the `on_paint' routine.
@@ -173,7 +173,7 @@ feature {NONE} -- Windows message handling
 		local
 			paint_dc: WEL_PAINT_DC
 		do
-			create paint_dc.make_by_pointer (Current, cwel_integer_to_pointer(wparam))
+			create paint_dc.make_by_pointer (Current, wparam)
 			paint_dc.get
 				-- We draw here the splitter. Add your code here to improve the
 				-- look of the splitter
@@ -181,7 +181,7 @@ feature {NONE} -- Windows message handling
 			paint_dc.release
 		end
 
-	default_process_message (msg, wparam, lparam: INTEGER) is
+	default_process_message (msg: INTEGER; wparam, lparam: POINTER) is
 			-- Process `msg' which has not been processed by
 			-- `process_message'.
 		do

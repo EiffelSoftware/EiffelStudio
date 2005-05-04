@@ -811,7 +811,7 @@ feature -- Basic operations
 		ensure
 			result_non_negative: Result >= 0
 		end
-		
+
 	retrieve_node_index (current_row_list: SPECIAL [EV_GRID_ITEM_I]): INTEGER is
 			-- `Result' is index of first non-`Void' item within `current_row_list'
 			-- or `grid.column_count' if none.
@@ -819,23 +819,18 @@ feature -- Basic operations
 			current_row_list_not_void: current_row_list /= Void
 		local
 			counter: INTEGER
-			current_row_list_count: INTEGER
 		do
-			current_row_list_count := current_row_list.count
-			if current_row_list_count /= 0 then
+			if current_row_list.count /= 0 then
 				from
 					counter := 0
 					Result := 0
 				until
-					Result > 0 or counter = current_row_list_count
+					Result > 0
 				loop
 					if current_row_list @ counter /= Void then
 						Result := counter + 1
 					end
 					counter := counter + 1
-				end
-				if counter = current_row_list_count then
-					Result := grid.column_count
 				end
 			else
 				Result := grid.column_count
@@ -844,7 +839,6 @@ feature -- Basic operations
 			result_positive: Result > 0
 			result_set_to_count_if_row_list_empty: current_row_list.count = 0 implies Result = grid.column_count
 		end
-		
 
 	white: EV_COLOR is
 			-- Once access to the color white.

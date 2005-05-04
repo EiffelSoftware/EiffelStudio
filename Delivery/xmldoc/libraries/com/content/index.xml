@@ -6,14 +6,17 @@
 				<item>A 
 					<link>
 						<url>../reference/Constants/index.xml</url>
-						<label>Constants</label>
-					</link>         cluster provides standard COM constants and enumerations.
+						<label>Constants</label> 
+					</link>
+					cluster provides standard COM constants and enumerations.
 				</item>
 				<item>A 
 					<link>
 						<url>01_interfaces.xml</url>
 						<label>Interfaces</label>
-					</link>         cluster includes wrappers for standard interfaces that the         EiffelCOM wizard does not generate and deferred classes: 
+					</link> 
+					cluster includes wrappers for standard interfaces that the EiffelCOM wizard 
+					does not generate and deferred classes: 
 					<link>
 						<url>../reference/Interfaces/ecom_interface_chart.xml</url>
 						<label>ECOM_INTERFACE</label>
@@ -31,13 +34,16 @@
 					<link>
 						<url>02_structures.xml</url>
 						<label>Structures</label>
-					</link>         cluster includes wrappers for COM structures and additional         data structures.
+					</link> 
+					cluster includes wrappers for COM structures and additional 
+					data structures.
 				</item>
 				<item>A 
 					<link>
 						<url>../reference/Support/index.xml</url>
 						<label>Support</label>
-					</link>         cluster provides access to helper classes.
+					</link> 
+					cluster provides access to helper classes.
 				</item>
 			</list>
 			<seealso>
@@ -45,13 +51,14 @@
 				<line_break/>
 				<link>
 					<url>/technologies/com/index.xml</url>
-					<label>The    Component Object Model</label>
+					<label>The Component Object Model</label>
 				</link>
 				<line_break/>
 				<link>
 					<url>../../../tools/wizards/com/index.xml</url>
-					<label>EiffelCOM    wizard</label>
+					<label>EiffelCOM wizard</label>
 				</link>
 			</seealso>
 		</paragraph>
-	</paragraph></document>
+	</paragraph>
+</document>

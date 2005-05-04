@@ -8,7 +8,7 @@
 			<size>2</size> Using the Generated Code
 		</heading>
 		<paragraph>
-			If the project consits of adding a COM interface to an existing Eiffel project then the wizard will generate (and optionally compile) everything required to 
+			If the project consists of adding a COM interface to an existing Eiffel project then the wizard will generate (and optionally compile) everything required to 
 			implement the COM component. No extra work is required.
 		</paragraph>
 		<paragraph>
@@ -24,7 +24,7 @@
 			Unlike the code generated to access an existing component, the code generated to implement a new COM component will differ for an in-process or an 
 			out-of-process component. The difference lies in the component activation code in the class 
 			<class_name>ECOM_&lt;Name_of_system&gt;_REGISTRATION</class_name>. If the component is in-process then this class includes the four functions 
-			that need to be exported from an in-process COM component ( 
+			that need to be exported from an in-process COM component (
 			<feature_name>DllRegisterServer</feature_name>, 
 			<feature_name>DllUnregisterServer</feature_name>, 
 			<feature_name>DllGetClassObject</feature_name>, and 
@@ -46,13 +46,13 @@
 			In the case of an out-of-process server, the component might need a Graphical User Interface. There are two different scenarios in which the 
 			component can be activated: either its user launched it explicitly (e.g. by double clicking the executable icon) or it was launched by the COM runtime to satisfy a client 
 			request. In some cases it might be required for the component to have a different behavior in these two cases (for example the GUI could only be necessary when 
-			the component was launched explicitely by the user but should be hidden when launched by the COM runtime). The generated registration class for an out-of-process 
+			the component was launched explicitly by the user but should be hidden when launched by the COM runtime). The generated registration class for an out-of-process 
 			server includes the feature:
 		</paragraph>
 		<code_block>
 <feature_name>main_window</feature_name><symbol>:</symbol> <class_name>WEL_FRAME_WINDOW</class_name></code_block>
 		<paragraph>
-			This feature is a <keyword>once</keyword> function that can return the class corresponding to the component window. By default, This window is displayed only if 
+			This feature is a <keyword>once</keyword> function that can return the class corresponding to the component window. By default, this window is displayed only if 
 			COM does not start the component. When COM loads an out-of-process component, it appends the command line parameter "-embedding" to the executable. The 
 			generated registration class looks for this option and if it is part of the process argument list then it sets the default window appearance to hidden. Of course this 
 			default implementation may be modified if needed.
@@ -66,7 +66,7 @@
 			value. Such behavior goes against the Command Query Separation Principle in Eiffel. The EiffelCOM generated system should use exceptions instead of returning 
 			<class_name>HRESULT</class_name> values to the client. By default the EiffelCOM runtime will always return <feature_name>S_OK</feature_name> meaning that the 
 			routine succeeded. To notify the client of a problem (e.g. invalid argument value), the EiffelCOM component should raise the corresponding exception from class 
-			<class_name>ECOM_EXCEPTION</class_name> using the feature <feature_name>trigget</feature_name> from the same class. The EiffelCOM runtime will catch the 
+			<class_name>ECOM_EXCEPTION</class_name> using the feature <feature_name>trigger</feature_name> from the same class. The EiffelCOM runtime will catch the 
 			exception and send the corresponding <class_name>HRESULT</class_name> back to the client. Here is what the Eiffel code for a COM component should look like:
 		</paragraph>
 		<code_block>
@@ -115,9 +115,8 @@
 			<bold>See Also</bold>: <link><url>10_how_wizard_works.xml</url><label>How the EiffelCOM Wizard Works</label></link>, 
 			<link><url>20_generated_files.xml</url><label>Generated Files</label></link>, 
 			<link><url>30_class_hierarchy.xml</url><label>Class Hierarchy</label></link>, 
-			<link><url>40_eiffel_project.xml</url><label>Adding a COM Interface to an Eiffel Project</label></link>,
-			<link><url>50_accessing.xml</url><label>Accessing a COM Component</label></link>,
-			<link><url>60_reusing.xml</url><label>Reusing a COM Component</label></link>,
+			<link><url>40_eiffel_project.xml</url><label>Adding a COM Interface to an Eiffel Project</label></link>, 
+			<link><url>50_reusing.xml</url><label>Accessing a COM Component</label></link>, 
 			<link><url>70_options.xml</url><label>Command Line Options</label></link>
 		</seealso>
 		</paragraph>

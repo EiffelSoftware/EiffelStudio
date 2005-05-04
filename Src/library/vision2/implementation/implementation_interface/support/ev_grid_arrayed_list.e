@@ -41,7 +41,7 @@ feature {EV_GRID_I} -- Implementation
 		local
 			temp_array: ARRAY [G]
 		do
-			if new_capacity > count then
+			if new_capacity > capacity then
 				conservative_resize (lower, upper + new_capacity - capacity)
 				set_count (capacity)				
 			elseif count > 0 then
@@ -50,8 +50,10 @@ feature {EV_GRID_I} -- Implementation
 				make_from_array (temp_array)
 			else
 				arrayed_list_make (new_capacity)
+				set_count (new_capacity)
 			end
 		ensure
+			count_set: count = new_capacity
 			capacity_set: capacity = new_capacity
 		end
 

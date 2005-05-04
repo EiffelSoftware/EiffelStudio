@@ -14,7 +14,7 @@ inherit
 		rename
 			index as position
 		redefine
-			file_reopen, file_open, file_dopen
+			file_reopen, file_open, file_dopen, read_to_managed_pointer
 		end
 
 create
@@ -61,8 +61,11 @@ feature -- Output
 	put_data (p: POINTER; size: INTEGER) is
 			-- Put `data' of length `size' pointed by `p' at
 			-- current position.
+		obsolete
+			"Use put_managed_pointer instead."
 		require
 			p_not_null: p /= default_pointer
+			extendible: extendible
 		do
 			file_ps (file_pointer, p, size)
 		end
@@ -95,10 +98,24 @@ feature -- Input
 			-- Read a string of at most `nb_bytes' bound bytes
 			-- or until end of file.
 			-- Make result available in `p'.
+		obsolete
+			"Use read_to_managed_pointer instead."
+		require
+			p_not_null: p /= default_pointer
+			is_readable: file_readable
 		local
 			new_count: INTEGER
 		do
 			new_count := file_fread (p, 1, nb_bytes, file_pointer)
+		end
+
+	read_to_managed_pointer (p: MANAGED_POINTER; nb_bytes: INTEGER) is
+			-- Read at most `nb_bytes' bound bytes and make result
+			-- available in `p'.
+		local
+			l_read: INTEGER
+		do
+			l_read := file_fread (p.item, 1, nb_bytes, file_pointer)
 		end
 
 feature {NONE} -- Implementation

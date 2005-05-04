@@ -1011,6 +1011,13 @@ feature -- Element change
 			end
 		end
 
+	put_managed_pointer (p: MANAGED_POINTER; nb_bytes: INTEGER) is
+			-- Put data of length `nb_bytes' pointed by `p' at
+			-- current position.
+		do
+			file_ps (file_pointer, p.item, nb_bytes)
+		end
+
 	put_character, putchar (c: CHARACTER) is
 			-- Write `c' at current position.
 		do
@@ -1348,6 +1355,19 @@ feature -- Input
 			str_area := last_string.area
 			new_count := file_gss (file_pointer, $str_area, nb_char)
 			last_string.set_count (new_count)
+		end
+
+	read_to_managed_pointer (p: MANAGED_POINTER; nb_bytes: INTEGER) is
+			-- Read at most `nb_bytes' bound bytes and make result
+			-- available in `p'.
+		require else
+			p_not_void: p /= Void
+			p_large_enough: p.count >= nb_bytes
+			is_readable: file_readable
+		local
+			l_read: INTEGER
+		do
+			l_read := file_gss (file_pointer, p.item, nb_bytes)
 		end
 
 	read_word, readword is

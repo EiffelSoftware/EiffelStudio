@@ -113,7 +113,7 @@ feature {NONE} -- Inapplicable
 			-- Useless for CONSOLE class.
 			--| `empty' is false not to invalidate invariant clauses.
 
-	writer: TEXT_WRITER is
+	writer: STREAM_WRITER is
 			-- Stream writer used to write in `Current' (if possible).
 		local
 			l_stream: STREAM_WRITER

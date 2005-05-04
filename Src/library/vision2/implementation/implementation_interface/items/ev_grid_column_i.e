@@ -237,7 +237,7 @@ feature -- Status report
 		do
 			Result := parent_i.row_count
 		ensure
-			count_positive: Result > 0
+			count_not_negative: count >= 0
 		end
 		
 	is_selected: BOOLEAN is

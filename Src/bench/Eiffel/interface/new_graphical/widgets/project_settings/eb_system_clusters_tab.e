@@ -733,6 +733,7 @@ feature {NONE} -- Initialization
 				-- Cluster type
 			disable_select (library_check)
 			disable_select (all_check)
+			disable_select (override_cluster_check)
 
 				-- Cluster assertion
 			disable_select (override_default_assertions)

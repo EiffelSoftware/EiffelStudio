@@ -16,6 +16,9 @@
 		</paragraph>
 		<list ordered="false">
 			<item>
+				<bold>EV_POPUP_WINDOW</bold> - A new window type which inherits EV_WINDOW with two differences: It does not display a border of any sorts and is not displayed in the task bar. This is especially useful for simulating tooltips and other such pop-ups.
+			</item>
+			<item>
 				<bold>EV_APPLICATION</bold> - Added 'uncaught_exception_actions' which is called whenever an action sequence called from the underlying toolkit fails to deal with any exceptions raised.
 			</item>
 			<item>

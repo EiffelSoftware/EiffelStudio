@@ -54,16 +54,18 @@ feature -- Display
 		do
 			local_position := position
 
-				-- if the selection do not start at the beginning of the token,
+				-- if the selection does not start at the beginning of the token,
 				-- display the first 'non selected' area
 			if start_selection /= 1 then
 				local_position := display_blanks (local_position, d_y, a_device, False, 1, start_selection - 1, panel)
 			end
 
-				-- Display the 'selected' area
-			local_position := display_blanks (local_position, d_y, a_device, True, start_selection, end_selection - 1, panel)
+			if start_selection < end_selection then
+					-- Display the 'selected' area
+				local_position := display_blanks (local_position, d_y, a_device, True, start_selection, end_selection - 1, panel)
+			end
 
-				-- if the selection do not end at the end of the token,
+				-- if the selection does not end at the end of the token,
 				-- Display the last 'non selected' area
 			if end_selection <= length then
 				local_position := display_blanks (local_position, d_y, a_device, False, end_selection,length, panel)
@@ -73,6 +75,8 @@ feature -- Display
 feature {NONE} -- Implementation
 
 	display_blanks (d_x, d_y: INTEGER; device: EV_DRAWABLE; selected: BOOLEAN; start_tab, end_tab: INTEGER; panel: TEXT_PANEL): INTEGER is
+		require
+			valid_selection: start_tab <= end_tab
 		deferred
 		end
 

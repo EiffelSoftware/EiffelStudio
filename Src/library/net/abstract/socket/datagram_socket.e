@@ -21,7 +21,7 @@ inherit
 			send,
 			put_character, putchar, put_string, putstring,
 			put_integer, putint, put_boolean, putbool,
-			put_real, putreal, put_double, putdouble
+			put_real, putreal, put_double, putdouble, put_managed_pointer
 		end
 
 feature -- Creation
@@ -135,6 +135,20 @@ feature -- Output
 			c_send_stream_to (descriptor, ext.item, s.count, 0,
 				peer_address.socket_address.item, peer_address.count)
 		end;
+
+	put_managed_pointer (p: MANAGED_POINTER; nb_bytes: INTEGER) is
+			-- Put data of length `nb_bytes' pointed by `p' at
+			-- current position.
+		require else
+			p_not_void: p /= Void
+			p_large_enough: p.count >= nb_bytes
+			socket_exists: exists;
+			opened_for_write: is_open_write;
+			valid_peer: peer_address /= Void
+		do
+			c_send_stream_to (descriptor, p.item, nb_bytes, 0,
+				peer_address.socket_address.item, peer_address.count)
+		end
 
 	put_character, putchar (c: CHARACTER) is
 			-- Send character `c' through socket.

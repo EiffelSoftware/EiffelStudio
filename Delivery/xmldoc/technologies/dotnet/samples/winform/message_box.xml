@@ -89,7 +89,7 @@
 			<span><feature_name>my_text_field</feature_name></span>. 
 			<span><feature_name>text</feature_name></span>).
 		</paragraph>
-		<paragraph>This sample contains the following class:</paragraph>
+		<paragraph>This sample contains the following classes:</paragraph>
 		<list ordered="false">
 			<item>
 				<span><class_name>FORM</class_name></span>

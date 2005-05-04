@@ -60,7 +60,7 @@
 		<paragraph>The application shows how to use a 
 			<span><class_name>TREE_VIEW</class_name></span> and what are all its different configurations.
 		</paragraph>
-		<paragraph>This sample contains the following class:</paragraph>
+		<paragraph>This sample contains the following classes:</paragraph>
 		<list ordered="false">
 			<item>
 				<span><class_name>TREE_VIEW</class_name></span>

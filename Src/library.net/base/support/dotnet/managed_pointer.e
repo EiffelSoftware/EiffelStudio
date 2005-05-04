@@ -254,7 +254,17 @@ feature -- Access: Platform specific
 		end		
 
 	read_real (pos: INTEGER): REAL is
-			-- Read REAL at position `pos'.
+			-- Read REAL_32 at position `pos'.
+		obsolete "Use read_real_32 instead."
+		require
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + Real_bytes) <= count
+		do
+			Result := read_real_32 (pos)
+		end
+
+	read_real_32 (pos: INTEGER): REAL is
+			-- Read REAL_32 at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + Real_bytes) <= count
@@ -267,7 +277,17 @@ feature -- Access: Platform specific
 		end
 
 	read_double (pos: INTEGER): DOUBLE is
-			-- Read DOUBLE at position `pos'.
+			-- Read REAL_64 at position `pos'.
+		obsolete "Use read_real_64 instead."
+		require
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + Double_bytes) <= count
+		do
+			Result := read_real_64 (pos)
+		end
+
+	read_real_64 (pos: INTEGER): DOUBLE is
+			-- Read REAL_64 at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + Double_bytes) <= count
@@ -312,6 +332,39 @@ feature -- Element change: Platform specific
 			{MARSHAL}.write_byte (item + pos, i)
 		ensure
 			inserted: i = read_natural_8 (pos)
+		end
+
+	put_natural_16 (i: NATURAL_16; pos: INTEGER) is
+			-- Insert `i' at position `pos'.
+		require
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + natural_16_bytes) <= count
+		do
+			{MARSHAL}.write_int_16 (item + pos, i.as_integer_16)
+		ensure
+			inserted: i = read_natural_16 (pos)
+		end
+
+	put_natural_32 (i: NATURAL_32; pos: INTEGER) is
+			-- Insert `i' at position `pos'.
+		require
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + natural_32_bytes) <= count
+		do
+			{MARSHAL}.write_int_32 (item + pos, i.as_integer_32)
+		ensure
+			inserted: i = read_natural_32 (pos)
+		end
+
+	put_natural_64 (i: NATURAL_64; pos: INTEGER) is
+			-- Insert `i' at position `pos'.
+		require
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + natural_64_bytes) <= count
+		do
+			{MARSHAL}.write_int_64 (item + pos, i.as_integer_64)
+		ensure
+			inserted: i = read_natural_64 (pos)
 		end
 
 	put_integer_8 (i: INTEGER_8; pos: INTEGER) is
@@ -401,6 +454,18 @@ feature -- Element change: Platform specific
 
 	put_real (r: REAL; pos: INTEGER) is
 			-- Insert `r' at position `pos'.
+		obsolete "Use put_real_32 instead."
+		require
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + Real_bytes) <= count
+		do
+			put_real_32 (r, pos)
+		ensure
+			inserted: r = read_real_32 (pos)
+		end
+
+	put_real_32 (r: REAL; pos: INTEGER) is
+			-- Insert `r' at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + Real_bytes) <= count
@@ -411,10 +476,22 @@ feature -- Element change: Platform specific
 			l_source.put (0, r)
 			{MARSHAL}.copy (l_source, 0, item + pos, 1)
 		ensure
-			inserted: r = read_real (pos)
+			inserted: r = read_real_32 (pos)
 		end
 
 	put_double (d: DOUBLE; pos: INTEGER) is
+			-- Insert `d' at position `pos'.
+		obsolete "Use put_real_64 instead."
+		require
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + Double_bytes) <= count
+		do
+			put_real_64 (d, pos)
+		ensure
+			inserted: d = read_real_64 (pos)
+		end
+
+	put_real_64 (d: DOUBLE; pos: INTEGER) is
 			-- Insert `d' at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
@@ -426,7 +503,7 @@ feature -- Element change: Platform specific
 			l_source.put (0, d)
 			{MARSHAL}.copy (l_source, 0, item + pos, 1)
 		ensure
-			inserted: d = read_double (pos)
+			inserted: d = read_real_64 (pos)
 		end
 
 	put_array (data: ARRAY [NATURAL_8]; pos: INTEGER) is
@@ -443,13 +520,73 @@ feature -- Element change: Platform specific
 
 feature -- Access: Little-endian format
 
+	read_natural_8_le (pos: INTEGER): NATURAL_8 is
+			-- Read NATURAL_8 at position `pos'.
+		require
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + natural_8_bytes) <= count
+		do
+			Result := read_natural_8 (pos)
+		end
+
+	read_natural_16_le (pos: INTEGER): NATURAL_16 is
+			-- Read NATURAL_16 at position `pos'.
+		require
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + natural_16_bytes) <= count
+		local
+			l_high, l_low: NATURAL_16
+		do
+			if is_little_endian then
+				Result := read_natural_16 (pos)
+			else
+				l_low := {NATURAL_16} 0x00FF & read_natural_8 (pos)
+				l_high := read_natural_8 (pos + natural_8_bytes)
+				Result := (l_high.to_natural_16 |<< 8) | l_low
+			end
+		end
+
+	read_natural_32_le (pos: INTEGER): NATURAL_32 is
+			-- Read NATURAL_32 at position `pos'.
+		require
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + natural_32_bytes) <= count
+		local
+			l_high, l_low: NATURAL_32
+		do
+			if is_little_endian then
+				Result := read_natural_32 (pos)
+			else
+				l_low := {NATURAL_32} 0x0000FFFF & read_natural_16_le (pos)
+				l_high := read_natural_16_le (pos + natural_16_bytes)
+				Result := (l_high.to_natural_32 |<< 16) | l_low
+			end
+		end
+
+	read_natural_64_le (pos: INTEGER): NATURAL_64 is
+			-- Read NATURAL_64 at position `pos'.
+		require
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + natural_64_bytes) <= count
+		local
+			l_high, l_low: NATURAL_64
+		do
+			if is_little_endian then
+				Result := read_natural_64 (pos)
+			else
+				l_low := {NATURAL_64} 0x00000000FFFFFFFF & read_natural_32_le (pos)
+				l_high := read_natural_32_le (pos + natural_32_bytes)
+				Result := (l_high.to_natural_64 |<< 32) | l_low
+			end
+		end
+
 	read_integer_8_le (pos: INTEGER): INTEGER_8 is
 			-- Read INTEGER_8 at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + integer_8_bytes) <= count
 		do
-			Result := read_integer_8 (pos)
+			Result := read_natural_8_le (pos).as_integer_8
 		end
 
 	read_integer_16_le (pos: INTEGER): INTEGER_16 is
@@ -457,12 +594,8 @@ feature -- Access: Little-endian format
 		require
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + integer_16_bytes) <= count
-		local
-			l_high, l_low: INTEGER_16
 		do
-			l_low := (0x00FF).to_integer_16 & read_integer_8 (pos)
-			l_high := read_integer_8 (pos + integer_8_bytes)
-			Result := (l_high.to_integer_16 |<< 8) | l_low
+			Result := read_natural_16_le (pos).as_integer_16
 		end
 
 	read_integer_32_le (pos: INTEGER): INTEGER is
@@ -470,28 +603,81 @@ feature -- Access: Little-endian format
 		require
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + integer_32_bytes) <= count
-		local
-			l_high, l_low: INTEGER
 		do
-			l_low := 0x0000FFFF & read_integer_16_le (pos)
-			l_high := read_integer_16_le (pos + integer_16_bytes)
-			Result := (l_high.to_integer_32 |<< 16) | l_low
-		end		
+			Result := read_natural_32_le (pos).as_integer_32
+		end
 
 	read_integer_64_le (pos: INTEGER): INTEGER_64 is
 			-- Read INTEGER_64 at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + integer_64_bytes) <= count
-		local
-			l_high, l_low: INTEGER_64
 		do
-			l_low := 0x00000000FFFFFFFF & read_integer_32_le (pos)
-			l_high := read_integer_32_le (pos + integer_32_bytes)
-			Result := (l_high.to_integer_64 |<< 32) | l_low
+			Result := read_natural_64_le (pos).as_integer_64
 		end
 
 feature -- Element change: Little-endian format
+
+	put_natural_8_le (i: NATURAL_8; pos: INTEGER) is
+			-- Insert `i' at position `pos' in big-endian format.
+		require
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + natural_8_bytes) <= count
+		do
+			put_natural_8 (i, pos)
+		ensure
+			inserted: i = read_natural_8_le (pos)
+		end
+		
+	put_natural_16_le (i: NATURAL_16; pos: INTEGER) is
+			-- Insert `i' at position `pos' in big-endian format.
+		require
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + natural_16_bytes) <= count
+		do
+			if is_little_endian then
+				put_natural_16 (i, pos)
+			else
+				put_natural_8 ((i & 0x00FF).to_natural_8, pos)
+				put_natural_8 ((((i & 0xFF00) |>> 8) & 0x00FF).to_natural_8, pos + natural_8_bytes)
+			end
+		ensure
+			inserted: i = read_natural_16_le (pos)
+		end
+
+	put_natural_32_le (i: NATURAL_32; pos: INTEGER) is
+			-- Insert `i' at position `pos' in big-endian format.
+		require
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + natural_32_bytes) <= count
+		do
+			if is_little_endian then
+				put_natural_32 (i, pos)
+			else
+				put_natural_16_le ((i & 0x0000FFFF).to_natural_16, pos)
+				put_natural_16_le ((((i & 0xFFFF0000) |>> 16) & 0x0000FFFF).to_natural_16, pos + natural_16_bytes)
+			end
+		ensure
+			inserted: i = read_natural_32_le (pos)
+		end
+
+	put_natural_64_le (i: NATURAL_64; pos: INTEGER) is
+			-- Insert `i' at position `pos' in big-endian format.
+		require
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + natural_64_bytes) <= count
+		do
+			if is_little_endian then
+				put_natural_64 (i, pos)
+			else
+				put_natural_32_le ((i & 0x00000000FFFFFFFF).to_natural_32, pos)
+				put_natural_32_le (
+					(((i & 0xFFFFFFFF00000000) |>> 32) & 0x00000000FFFFFFFF).to_natural_32,
+					pos+ natural_32_bytes)
+			end
+		ensure
+			inserted: i = read_natural_64_le (pos)
+		end
 
 	put_integer_8_le (i: INTEGER_8; pos: INTEGER) is
 			-- Insert `i' at position `pos' in big-endian format.
@@ -499,7 +685,7 @@ feature -- Element change: Little-endian format
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + integer_8_bytes) <= count
 		do
-			put_integer_8 (i, pos)
+			put_natural_8_le (i.as_natural_8, pos)
 		ensure
 			inserted: i = read_integer_8_le (pos)
 		end
@@ -510,8 +696,7 @@ feature -- Element change: Little-endian format
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + integer_16_bytes) <= count
 		do
-			put_integer_8 ((i & 0x00FF).to_integer_8, pos)
-			put_integer_8 ((((i & 0xFF00) |>> 8) & 0x00FF).to_integer_8, pos + integer_8_bytes)
+			put_natural_16_le (i.as_natural_16, pos)
 		ensure
 			inserted: i = read_integer_16_le (pos)
 		end
@@ -522,8 +707,7 @@ feature -- Element change: Little-endian format
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + integer_32_bytes) <= count
 		do
-			put_integer_16_le ((i & 0x0000FFFF).to_integer_16, pos)
-			put_integer_16_le ((((i & 0xFFFF0000) |>> 16) & 0x0000FFFF).to_integer_16, pos + integer_16_bytes)
+			put_natural_32_le (i.as_natural_32, pos)
 		ensure
 			inserted: i = read_integer_32_le (pos)
 		end
@@ -534,15 +718,72 @@ feature -- Element change: Little-endian format
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + integer_64_bytes) <= count
 		do
-			put_integer_32_le ((i & 0x00000000FFFFFFFF).to_integer_32, pos)
-			put_integer_32_le (
-				(((i & 0xFFFFFFFF00000000) |>> 32) & 0x00000000FFFFFFFF).to_integer_32,
-				pos+ integer_32_bytes)
+			put_natural_64_le (i.as_natural_64, pos)
 		ensure
 			inserted: i = read_integer_64_le (pos)
 		end
 
 feature -- Access: Big-endian format
+
+	read_natural_8_be (pos: INTEGER): NATURAL_8 is
+			-- Read NATURAL_8 at position `pos'.
+		require
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + natural_8_bytes) <= count
+		do
+			Result := read_natural_8 (pos)
+		end
+
+	read_natural_16_be (pos: INTEGER): NATURAL_16 is
+			-- Read NATURAL_16 at position `pos'.
+		require
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + natural_16_bytes) <= count
+		local
+			l_high, l_low: NATURAL_16
+		do
+			if is_little_endian then
+				l_high := read_natural_8 (pos)
+				l_low := (0x00FF).to_natural_16 & read_natural_8 (pos + natural_8_bytes)
+				Result := (l_high.to_natural_16 |<< 8) | l_low
+			else
+				Result := read_natural_16 (pos)
+			end
+		end
+
+	read_natural_32_be (pos: INTEGER): NATURAL_32 is
+			-- Read NATURAL_32 at position `pos'.
+		require
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + natural_32_bytes) <= count
+		local
+			l_high, l_low: NATURAL_32
+		do
+			if is_little_endian then
+				l_high := read_natural_16_be (pos)
+				l_low := (0x0000FFFF).to_natural_32 & read_natural_16_be (pos + natural_16_bytes)
+				Result := (l_high.to_natural_32 |<< 16) | l_low
+			else
+				Result := read_natural_32 (pos)
+			end
+		end		
+
+	read_natural_64_be (pos: INTEGER): NATURAL_64 is
+			-- Read NATURAL_64 at position `pos'.
+		require
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + natural_64_bytes) <= count
+		local
+			l_high, l_low: NATURAL_64
+		do
+			if is_little_endian then
+				l_high := read_natural_32_be (pos)
+				l_low := {NATURAL_64} 0x00000000FFFFFFFF & read_natural_32_be (pos + natural_32_bytes)
+				Result := (l_high.to_natural_64 |<< 32) | l_low
+			else
+				Result := read_natural_64 (pos)
+			end
+		end
 
 	read_integer_8_be (pos: INTEGER): INTEGER_8 is
 			-- Read INTEGER_8 at position `pos'.
@@ -550,7 +791,7 @@ feature -- Access: Big-endian format
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + integer_8_bytes) <= count
 		do
-			Result := read_integer_8 (pos)
+			Result := read_natural_8_be (pos).as_integer_8
 		end
 
 	read_integer_16_be (pos: INTEGER): INTEGER_16 is
@@ -558,12 +799,8 @@ feature -- Access: Big-endian format
 		require
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + integer_16_bytes) <= count
-		local
-			l_high, l_low: INTEGER_16
 		do
-			l_high := read_integer_8 (pos)
-			l_low := (0x00FF).to_integer_16 & read_integer_8 (pos + integer_8_bytes)
-			Result := (l_high.to_integer_16 |<< 8) | l_low
+			Result := read_natural_16_be (pos).as_integer_16
 		end
 
 	read_integer_32_be (pos: INTEGER): INTEGER is
@@ -571,12 +808,8 @@ feature -- Access: Big-endian format
 		require
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + integer_32_bytes) <= count
-		local
-			l_high, l_low: INTEGER
 		do
-			l_high := read_integer_16_be (pos)
-			l_low := 0x0000FFFF & read_integer_16_be (pos + integer_16_bytes)
-			Result := (l_high.to_integer_32 |<< 16) | l_low
+			Result := read_natural_32_be (pos).as_integer_32
 		end		
 
 	read_integer_64_be (pos: INTEGER): INTEGER_64 is
@@ -584,15 +817,72 @@ feature -- Access: Big-endian format
 		require
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + integer_64_bytes) <= count
-		local
-			l_high, l_low: INTEGER_64
 		do
-			l_high := read_integer_32_be (pos)
-			l_low := 0x00000000FFFFFFFF & read_integer_32_be (pos + integer_32_bytes)
-			Result := (l_high.to_integer_64 |<< 32) | l_low
+			Result := read_natural_64_be (pos).as_integer_64
 		end
 
 feature -- Element change: Big-endian format
+
+	put_natural_8_be (i: NATURAL_8; pos: INTEGER) is
+			-- Insert `i' at position `pos' in big-endian format.
+		require
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + natural_8_bytes) <= count
+		do
+			put_natural_8 (i, pos)
+		ensure
+			inserted: i = read_natural_8_be (pos)
+		end
+		
+	put_natural_16_be (i: NATURAL_16; pos: INTEGER) is
+			-- Insert `i' at position `pos' in big-endian format.
+		require
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + natural_16_bytes) <= count
+		do
+			if is_little_endian then
+				put_natural_8 ((((i & 0xFF00) |>> 8) & 0x00FF).to_natural_8, pos)
+				put_natural_8 ((i & 0x00FF).to_natural_8, pos + natural_8_bytes)
+			else
+				put_natural_16 (i, pos)
+			end
+		ensure
+			inserted: i = read_natural_16_be (pos)
+		end
+
+	put_natural_32_be (i: NATURAL_32; pos: INTEGER) is
+			-- Insert `i' at position `pos' in big-endian format.
+		require
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + natural_32_bytes) <= count
+		do
+			if is_little_endian then
+				put_natural_16_be ((((i & 0xFFFF0000) |>> 16) & 0x0000FFFF).to_natural_16, pos)
+				put_natural_16_be ((i & 0x0000FFFF).to_natural_16, pos + natural_16_bytes)
+			else
+				put_natural_32 (i, pos)
+			end
+		ensure
+			inserted: i = read_natural_32_be (pos)
+		end
+
+	put_natural_64_be (i: NATURAL_64; pos: INTEGER) is
+			-- Insert `i' at position `pos' in big-endian format.
+		require
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + natural_64_bytes) <= count
+		do
+			if is_little_endian then
+				put_natural_32_be (
+					(((i & 0xFFFFFFFF00000000) |>> 32) & 0x00000000FFFFFFFF).to_natural_32, pos)
+				put_natural_32_be ((i & 0x00000000FFFFFFFF).to_natural_32,
+					pos + natural_32_bytes)
+			else
+				put_natural_64 (i, pos)
+			end
+		ensure
+			inserted: i = read_natural_64_be (pos)
+		end
 
 	put_integer_8_be (i: INTEGER_8; pos: INTEGER) is
 			-- Insert `i' at position `pos' in big-endian format.
@@ -600,19 +890,18 @@ feature -- Element change: Big-endian format
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + integer_8_bytes) <= count
 		do
-			put_integer_8 (i, pos)
+			put_natural_8_be (i.as_natural_8, pos)
 		ensure
 			inserted: i = read_integer_8_be (pos)
 		end
-	
+		
 	put_integer_16_be (i: INTEGER_16; pos: INTEGER) is
 			-- Insert `i' at position `pos' in big-endian format.
 		require
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + integer_16_bytes) <= count
 		do
-			put_integer_8 ((((i & 0xFF00) |>> 8) & 0x00FF).to_integer_8, pos)
-			put_integer_8 ((i & 0x00FF).to_integer_8, pos + integer_8_bytes)
+			put_natural_16_be (i.as_natural_16, pos)
 		ensure
 			inserted: i = read_integer_16_be (pos)
 		end
@@ -623,8 +912,7 @@ feature -- Element change: Big-endian format
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + integer_32_bytes) <= count
 		do
-			put_integer_16_be ((((i & 0xFFFF0000) |>> 16) & 0x0000FFFF).to_integer_16, pos)
-			put_integer_16_be ((i & 0x0000FFFF).to_integer_16, pos + integer_16_bytes)
+			put_natural_32_be (i.as_natural_32, pos)
 		ensure
 			inserted: i = read_integer_32_be (pos)
 		end
@@ -635,10 +923,7 @@ feature -- Element change: Big-endian format
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + integer_64_bytes) <= count
 		do
-			put_integer_32_be (
-				(((i & 0xFFFFFFFF00000000) |>> 32) & 0x00000000FFFFFFFF).to_integer_32, pos)
-			put_integer_32_be ((i & 0x00000000FFFFFFFF).to_integer_32,
-				pos + integer_32_bytes)
+			put_natural_64_be (i.as_natural_64, pos)
 		ensure
 			inserted: i = read_integer_64_be (pos)
 		end

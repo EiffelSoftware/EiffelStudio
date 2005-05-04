@@ -1250,8 +1250,13 @@ feature -- Metadata description
 				if not l_has_an_eiffel_parent then
 						-- We do not explicitely inherit from an Eiffel type, thus we
 						-- need inheritance to ANY to let the runtime know that we are
-						-- an Eiffel type
-					l_parents.force (actual_class_type_token (any_type_id), i)
+						-- an Eiffel type on the interface, and the implementation should
+						-- inherit the associated interface type which inherits from ANY.
+					if for_interface then
+						l_parents.force (actual_class_type_token (any_type_id), i)
+					else
+						l_parents.force (actual_class_type_token (class_type.static_type_id), i)
+					end
 					i := i + 1
 				else
 					if not for_interface then

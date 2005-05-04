@@ -182,6 +182,12 @@ feature -- Status report
 
 feature -- status settings
 
+	hide_border is
+			-- Hide the border of `Current'.
+		do
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_entry_set_has_frame (entry_widget, False)
+		end	
+
 	set_editable (flag: BOOLEAN) is
 			-- `flag' true make the component read-write and
 			-- `flag' false make the component read-only.

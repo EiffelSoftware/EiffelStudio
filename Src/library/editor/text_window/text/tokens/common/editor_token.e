@@ -126,8 +126,8 @@ feature -- Display
 		deferred
 		end
 		
-	display_with_offset (x_offset, d_y: INTEGER; device: EV_DRAWABLE; panel: TEXT_PANEL) is
-			-- Display the current token on device context `dc' at the coordinates (`position + x_offset',`d_y')
+	display_with_offset (x, d_y: INTEGER; device: EV_DRAWABLE; panel: TEXT_PANEL) is
+			-- Display the current token on device context `dc' at the coordinates (`x',`d_y')
 		deferred
 		end
 

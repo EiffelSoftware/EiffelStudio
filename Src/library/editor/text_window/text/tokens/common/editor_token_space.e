@@ -93,7 +93,7 @@ feature {NONE} -- Implementation
 			if panel.view_invisible_symbols then
  				device.draw_text_top_left (d_x, d_y, alternate_image.substring (char_start, char_end))
 			else
-				if length < 11 then
+				if length < 11 and then (char_end - char_start + 1) > 0 then
 					device.draw_text_top_left (d_x, d_y, space_image_hash.item (char_end - char_start + 1))
 				else
 					device.draw_text_top_left (d_x, d_y, image.substring (char_start, char_end))

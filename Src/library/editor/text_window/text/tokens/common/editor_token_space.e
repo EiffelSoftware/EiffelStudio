@@ -67,7 +67,6 @@ feature {NONE} -- Implementation
 		local
 			the_text_color		: EV_COLOR
 			the_background_color: EV_COLOR
-			the_text			: STRING
 		do
  			if selected then
  				the_text_color := selected_text_color

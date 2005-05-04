@@ -69,9 +69,11 @@ feature {NONE} -- Initialization
 			create list_item.make_with_text ("32x32")
 			list_item.set_pixmap (expand3)
 			subnode_pixmaps_combo.extend (list_item)
+
 		end
 		
 	expand1, expand2, expand3, collapse1, collapse2, collapse3: EV_PIXMAP
+		-- Pixmaps used for expand/collapse nodes
 
 feature {NONE} -- Implementation
 
@@ -1286,6 +1288,74 @@ feature {NONE} -- Implementation
 				a_item.set_text (a_pebble)
 			end
 		end
+
+	icon_view_button_selected is
+			-- Called by `select_actions' of `icon_view_button'.
+		local
+			a_x, a_y: INTEGER
+			grid_label_item: EV_GRID_EDITABLE_ITEM--LABEL_ITEM
+			pixmaps: ARRAYED_LIST [EV_PIXMAP]
+			stock_pixmaps: EV_STOCK_PIXMAPS
+		do
+			create pixmaps.make (4)
+			create stock_pixmaps
+			pixmaps.extend (stock_pixmaps.error_pixmap.twin)
+			pixmaps.extend (stock_pixmaps.information_pixmap.twin)
+			pixmaps.extend (stock_pixmaps.question_pixmap.twin)
+			pixmaps.extend (stock_pixmaps.warning_pixmap.twin)
+			from
+				pixmaps.start
+			until
+				grid.row_count = 0
+			loop
+				grid.remove_row (grid.row_count)
+			end
+			from
+			until
+				grid.column_count = 0
+			loop
+				grid.remove_column (grid.column_count)
+			end
+			grid.hide_header
+			from
+				a_x := 1
+			until
+				a_x > 5
+			loop
+				from	
+					a_y :=1
+				until
+					a_y > 50
+				loop
+					create grid_label_item.make_with_text ("Item " + a_x.out + ",  " + a_y.out)
+					grid_label_item.set_pixmap (pixmaps.item)
+					grid_label_item.disable_full_select
+					grid_label_item.set_layout_procedure (agent icon_item_layout)
+					grid.set_item (a_x, a_y, grid_label_item)
+					pixmaps.forth
+					if pixmaps.off then
+						pixmaps.start
+					end
+					a_y := a_y + 1
+				end
+				a_x := a_x + 1
+			end
+			grid.set_row_height (grid.column (1).width)
+			grid.pointer_double_press_actions.extend (agent pointer_double_press_received_on_grid)
+		end
+
+	icon_item_layout (an_item: EV_GRID_LABEL_ITEM; layout: EV_GRID_LABEL_ITEM_LAYOUT) is
+			--
+		local
+			total_heights: INTEGER
+		do
+			total_heights := an_item.pixmap.height + an_item.text_height + an_item.spacing
+			layout.set_pixmap_x ((an_item.width - an_item.pixmap.width) // 2)
+			layout.set_pixmap_y ((an_item.height - total_heights) // 2)
+			layout.set_text_x ((an_item.width - an_item.text_width) // 2)
+			layout.set_text_y (layout.pixmap_y + an_item.pixmap.height + an_item.spacing)
+		end
+		
 		
 end -- class GRID_TAB
 

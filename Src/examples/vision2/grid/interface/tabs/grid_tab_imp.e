@@ -37,6 +37,7 @@ feature {NONE}-- Initialization
 			create new_label_button
 			create misc_button
 			create custom_button
+			create icon_view_button
 			create display_frame
 			create l_ev_vertical_box_2
 			create is_header_displayed_button
@@ -148,9 +149,11 @@ feature {NONE}-- Initialization
 			l_ev_table_1.put_at_position (new_label_button, 1, 1, 1, 1)
 			l_ev_table_1.put_at_position (misc_button, 2, 1, 1, 1)
 			l_ev_table_1.put_at_position (custom_button, 1, 2, 1, 1)
+			l_ev_table_1.put_at_position (icon_view_button, 2, 2, 1, 1)
 			new_label_button.set_text ("Add New Items")
 			misc_button.set_text ("Build Default Item Structure")
 			custom_button.set_text ("Custom Function")
+			icon_view_button.set_text ("Build Icon View Structure")
 			display_frame.set_text ("Display Properties")
 			l_ev_vertical_box_2.disable_item_expand (is_header_displayed_button)
 			l_ev_vertical_box_2.disable_item_expand (l_ev_horizontal_box_1)
@@ -252,6 +255,7 @@ feature {NONE}-- Initialization
 			new_label_button.select_actions.extend (agent new_label_button_selected)
 			misc_button.select_actions.extend (agent misc_button_selected)
 			custom_button.select_actions.extend (agent custom_button_selected)
+			icon_view_button.select_actions.extend (agent icon_view_button_selected)
 			is_header_displayed_button.select_actions.extend (agent is_header_displayed_button_selected)
 			is_row_height_fixed.select_actions.extend (agent is_row_height_fixed_selected)
 			fixed_row_height_spin_button.change_actions.extend (agent fixed_row_height_spin_button_changed (?))
@@ -297,9 +301,9 @@ feature -- Access
 	set_background_color_combo: EV_COMBO_BOX
 	resize_rows_columns_box: EV_HORIZONTAL_BOX
 	new_label_button, misc_button,
-	custom_button, set_selected_row_as_subnode_button, expand_all_button, collapse_all_button: EV_BUTTON
-	addition_frame,
-	display_frame, divider_frame, scrolling_frame: EV_FRAME
+	custom_button, icon_view_button, set_selected_row_as_subnode_button, expand_all_button,
+	collapse_all_button: EV_BUTTON
+	addition_frame, display_frame, divider_frame, scrolling_frame: EV_FRAME
 
 feature {NONE} -- Implementation
 
@@ -340,6 +344,11 @@ feature {NONE} -- Implementation
 	
 	custom_button_selected is
 			-- Called by `select_actions' of `custom_button'.
+		deferred
+		end
+	
+	icon_view_button_selected is
+			-- Called by `select_actions' of `icon_view_button'.
 		deferred
 		end
 	

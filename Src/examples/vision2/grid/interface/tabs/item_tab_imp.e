@@ -120,6 +120,11 @@ feature {NONE}-- Initialization
 			create l_ev_list_item_11
 			create apply_font_row_button
 			create apply_font_column_button
+			create is_full_select_button
+			create apply_full_select_row_button
+			create apply_full_select_column_button
+			create apply_text_row_button
+			create apply_text_column_button
 			create item_operations_frame
 			create l_ev_vertical_box_1
 			create remove_item_button
@@ -194,7 +199,7 @@ feature {NONE}-- Initialization
 			item_x_index.value_range.adapt (create {INTEGER_INTERVAL}.make (0, 1000000))
 			l_ev_label_2.set_text ("Y Index")
 			item_y_index.value_range.adapt (create {INTEGER_INTERVAL}.make (0, 1000000))
-			l_ev_table_1.resize (3, 13)
+			l_ev_table_1.resize (3, 14)
 			l_ev_table_1.set_row_spacing (box_padding)
 			l_ev_table_1.set_column_spacing (box_padding)
 			l_ev_table_1.set_border_width (box_padding)
@@ -236,6 +241,11 @@ feature {NONE}-- Initialization
 			l_ev_table_1.put_at_position (font_container, 1, 13, 1, 1)
 			l_ev_table_1.put_at_position (apply_font_row_button, 2, 13, 1, 1)
 			l_ev_table_1.put_at_position (apply_font_column_button, 3, 13, 1, 1)
+			l_ev_table_1.put_at_position (is_full_select_button, 1, 14, 1, 1)
+			l_ev_table_1.put_at_position (apply_full_select_row_button, 3, 14, 1, 1)
+			l_ev_table_1.put_at_position (apply_full_select_column_button, 2, 14, 1, 1)
+			l_ev_table_1.put_at_position (apply_text_row_button, 2, 1, 1, 1)
+			l_ev_table_1.put_at_position (apply_text_column_button, 3, 1, 1, 1)
 			textable_container.disable_item_expand (l_ev_label_3)
 			l_ev_label_3.set_text ("Text : ")
 			textable_entry.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (212, 208, 200))
@@ -286,6 +296,7 @@ feature {NONE}-- Initialization
 			vertical_alignment_container.disable_item_expand (l_ev_label_13)
 			l_ev_label_13.set_text ("V. Alignment : ")
 			l_ev_label_13.align_text_left
+			vertical_alignment_combo.set_text ("Top")
 			top_alignment_item.set_text ("Top")
 			vertically_center_item.set_text ("Center")
 			bottom_alignment_item.set_text ("Bottom")
@@ -295,7 +306,6 @@ feature {NONE}-- Initialization
 			font_container.disable_item_expand (l_ev_cell_1)
 			font_container.disable_item_expand (font_size_combo)
 			l_ev_label_14.set_text ("Font : ")
-			font_size_combo.set_text ("6")
 			font_size_combo.set_minimum_width (50)
 			l_ev_list_item_2.set_text ("6")
 			l_ev_list_item_3.set_text ("8")
@@ -309,6 +319,11 @@ feature {NONE}-- Initialization
 			l_ev_list_item_11.set_text ("72")
 			apply_font_row_button.set_text ("Apply Row")
 			apply_font_column_button.set_text ("Apply Column")
+			is_full_select_button.set_text ("is_full_select_enabled")
+			apply_full_select_row_button.set_text ("Apply Column")
+			apply_full_select_column_button.set_text ("Apply_Row")
+			apply_text_row_button.set_text ("Apply Row")
+			apply_text_column_button.set_text ("Apply Column")
 			item_operations_frame.disable_sensitive
 			item_operations_frame.set_text ("Item Operations")
 			l_ev_vertical_box_1.set_padding_width (box_padding)
@@ -365,6 +380,11 @@ feature {NONE}-- Initialization
 			font_size_combo.select_actions.extend (agent font_size_combo_selected)
 			apply_font_row_button.select_actions.extend (agent apply_font_row_button_selected)
 			apply_font_column_button.select_actions.extend (agent apply_font_column_button_selected)
+			is_full_select_button.select_actions.extend (agent is_full_select_button_selected)
+			apply_full_select_row_button.select_actions.extend (agent apply_full_select_row_button_selected)
+			apply_full_select_column_button.select_actions.extend (agent apply_full_select_column_button_selected)
+			apply_text_row_button.select_actions.extend (agent apply_text_row_button_selected)
+			apply_text_column_button.select_actions.extend (agent apply_text_column_button_selected)
 			remove_item_button.select_actions.extend (agent remove_item_button_selected)
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.
@@ -376,9 +396,9 @@ feature {NONE}-- Initialization
 feature -- Access
 
 	main_box: EV_VERTICAL_BOX
-	is_selected: EV_CHECK_BUTTON
-	item_x_index, item_y_index, left_border_spin_button, spacing_spin_button,
-	top_border_spin_button, bottom_border_spin_button, right_border_spin_button: EV_SPIN_BUTTON
+	is_selected, is_full_select_button: EV_CHECK_BUTTON
+	item_x_index, item_y_index, left_border_spin_button,
+	spacing_spin_button, top_border_spin_button, bottom_border_spin_button, right_border_spin_button: EV_SPIN_BUTTON
 	item_finder: GRID_ITEM_FINDER
 	textable_container,
 	pixmapable_container, left_border_container, spacing_container, alignment_container,
@@ -392,14 +412,15 @@ feature -- Access
 	apply_bottom_border_column_button, apply_right_border_row_button, apply_right_border_column_button,
 	apply_top_border_row_button, apply_top_border_column_button, apply_vertical_alignment_column_button,
 	apply_vertical_alignment_row_button, apply_font_row_button, apply_font_column_button,
-	remove_item_button: EV_BUTTON
+	apply_full_select_row_button, apply_full_select_column_button, apply_text_row_button,
+	apply_text_column_button, remove_item_button: EV_BUTTON
 	item_frame, item_operations_frame: EV_FRAME
-	pixmap_holder, alignment_combo,
-	foreground_color_combo, background_color_combo, vertical_alignment_combo, font_combo,
-	font_size_combo: EV_COMBO_BOX
+	pixmap_holder,
+	alignment_combo, foreground_color_combo, background_color_combo, vertical_alignment_combo,
+	font_combo, font_size_combo: EV_COMBO_BOX
 	textable_entry: EV_TEXT_FIELD
-	left_alignment_item, center_alignment_item, right_alignment_item,
-	top_alignment_item, vertically_center_item, bottom_alignment_item: EV_LIST_ITEM
+	left_alignment_item, center_alignment_item,
+	right_alignment_item, top_alignment_item, vertically_center_item, bottom_alignment_item: EV_LIST_ITEM
 
 feature {NONE} -- Implementation
 
@@ -647,6 +668,31 @@ feature {NONE} -- Implementation
 	
 	apply_font_column_button_selected is
 			-- Called by `select_actions' of `apply_font_column_button'.
+		deferred
+		end
+	
+	is_full_select_button_selected is
+			-- Called by `select_actions' of `is_full_select_button'.
+		deferred
+		end
+	
+	apply_full_select_row_button_selected is
+			-- Called by `select_actions' of `apply_full_select_row_button'.
+		deferred
+		end
+	
+	apply_full_select_column_button_selected is
+			-- Called by `select_actions' of `apply_full_select_column_button'.
+		deferred
+		end
+	
+	apply_text_row_button_selected is
+			-- Called by `select_actions' of `apply_text_row_button'.
+		deferred
+		end
+	
+	apply_text_column_button_selected is
+			-- Called by `select_actions' of `apply_text_column_button'.
 		deferred
 		end
 	

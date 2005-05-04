@@ -7,33 +7,33 @@
 				<label>Help reading this manual</label>
 			</link>
 		</paragraph>
-		<paragraph>Software development is, most of the time, cooperative work.  You must tell the rest of the team what you're up to, and find out what they can offer you.  Bring in distributed development -- increasingly common these days, with some people working at headquarters, others at home, others traveling, an offshore team half a world away 
+		<paragraph>Software development is, most of the time, cooperative work. You must tell the rest of the team what you're up to, and find out what they can offer you. Bring in distributed development -- increasingly common these days, with some people working at headquarters, others at home, others traveling, an offshore team half a world away 
 			<span>...</span> -- and the problem becomes even more critical.
 		</paragraph>
-		<paragraph>EiffelStudio provides unique facilities to make such distributed development possible in a safe, effective, harmonious way.  Some of the key criteria are:</paragraph>
+		<paragraph>EiffelStudio provides unique facilities to make such distributed development possible in a safe, effective, harmonious way. Some of the key criteria are:</paragraph>
 		<list ordered="false">
-			<item>You must be able to export the information easily to the World-Wide Web, the most general and widely available interaction mechanism.  </item>
+			<item>You must be able to export the information easily to the World-Wide Web, the most general and widely available interaction mechanism. </item>
 			<item>The documentation must be 
-				<span>faithful</span> to the software.  Because of the ever-changing nature of software, this goal is impossible to satisfy unless the documentation is 
+				<span>faithful</span> to the software. Because of the ever-changing nature of software, this goal is impossible to satisfy unless the documentation is 
 				<span>extracted</span> from the software -- as opposed to the traditional approach, still perpetuated by many CASE tools, of treating the two as separate.
 			</item>
-			<item>The task of updating the documentation after a software change must be straightforward and automatic.  </item>
-			<item>It's not enough to support HTML; many other formats are useful too.  </item>
+			<item>The task of updating the documentation after a software change must be straightforward and automatic.</item>
+			<item>It's not enough to support HTML; many other formats are useful too.</item>
 			<item>Users must have the ability to adapt the mechanism to support 
 				<span>new</span> formats.
 			</item>
-			<item>For existing formats, they must have a way to tune the output easily to any specific style standards, company policies, local variants.  </item>
+			<item>For existing formats, they must have a way to tune the output easily to any specific style standards, company policies, local variants.</item>
 		</list>
-		<paragraph>EiffelStudio's documentation generation satisfies all these requirements.  </paragraph>
+		<paragraph>EiffelStudio's documentation generation satisfies all these requirements.</paragraph>
 		<heading>
 			<size>2</size>
 			<content>Documentation filters</content>
 		</heading>
-		<note>Note: Exporting documentation is not possible if you are using the free version of EiffelStudio.  </note>
-		<paragraph>Let's see how documentation works by starting to generate it for our Guided Tour system -- which really means for EiffelBase, since that's what it mostly consists of.  The HTML result is available as part of the present documentation (we'll tell you where in just a minute), so you don't have to regenerate it unless you want to.  Indeed we'll show you when to click 
+		<note>Note: Exporting documentation is not possible if you are using the free version of EiffelStudio.</note>
+		<paragraph>Let's see how documentation works by starting to generate it for our Guided Tour system -- which really means for EiffelBase, since that's what it mostly consists of. The HTML result is available as part of the present documentation (we'll tell you where in just a minute), so you don't have to regenerate it unless you want to. Indeed we'll show you when to click 
 			<code>
 				<keyword>Cancel</keyword>
-			</code> if you are happy with the pre-generated version.  But let's get started anyway to understand the principles and possibilities.
+			</code> if you are happy with the pre-generated version. But let's get started anyway to understand the principles and possibilities.
 		</paragraph>
 		<paragraph>Click the following menu entry, used to generate documentation:</paragraph>
 		<code_block>
@@ -42,11 +42,11 @@
 		<paragraph>This is the next-to-last entry in the 
 			<code>
 				<keyword>Project</keyword>
-			</code> menu.  The last one, by the way, 
+			</code> menu. The last one, by the way, 
 			<code>
 				<keyword>XMI Export</keyword>
 			</code>
-			<span>...</span>, is directly relevant too: it will make it possible to export information in the standard XML representation for UML, for consumption by third-party products such as Rational Rose.  But for the moment we choose the 
+			<span>...</span>, is directly relevant too: it will make it possible to export information in the standard XML representation for UML, for consumption by third-party products such as Rational Rose. But for the moment we choose the 
 			<code>
 				<keyword>Documentation</keyword>
 			</code> entry to start the Eiffel Documentation Wizard.
@@ -64,7 +64,7 @@
 				</image>
 			</image_link>
 		</div>
-		<paragraph>The filter names correspond to major documentation formats which EiffelStudio supports by default.  Among the most important, listed here in rough order of appearance in the list:</paragraph>
+		<paragraph>The filter names correspond to major documentation formats which EiffelStudio supports by default. Among the most important, listed here in rough order of appearance in the list:</paragraph>
 		<list ordered="false">
 			<item>
 				<code>
@@ -107,24 +107,24 @@
 			<item>
 				<code>
 					<keyword>troff</keyword>
-				</code> : if you already know what this is, congratulations (or condolences), you've been around the industry for a while.  This is a traditional text-processing format available on Unix systems.  Also works for the 
+				</code> : if you already know what this is, congratulations (or condolences), you've been around the industry for a while. This is a traditional text-processing format available on Unix systems. Also works for the 
 				<span>gtroff</span> variant.
 			</item>
 			<item>
 				<code>
 					<keyword>html-classic</keyword>
-				</code> : HTML, no style sheets.  The next variant, 
+				</code> : HTML, no style sheets. The next variant, 
 				<span>with</span> style sheets, is strongly recommended unless your colleagues will be reading your documentation with Mosaic 1, vintage 1993, or Netscape 2, Vintage 1995.
 			</item>
 			<item>
 				<code>
 					<keyword>html-stylesheet</keyword>
-				</code> : HTML with style sheets.  This is particularly attractive for Web publishing not only because the output makes full use of style sheet capabilities (fonts, colors, layout, formatting) but also because it becomes trivial to change the look-and-feel to support any style you or your users like, even 
+				</code> : HTML with style sheets. This is particularly attractive for Web publishing not only because the output makes full use of style sheet capabilities (fonts, colors, layout, formatting) but also because it becomes trivial to change the look-and-feel to support any style you or your users like, even 
 				<span>after</span> generation, simply by editing the style sheet file.
 			</item>
 		</list>
 		<paragraph>Not only do these predefined filters provide support for a number of important industry formats; better yet, if you want 
-			<span>another</span> format not represented on the list, or would like to adapt an existing format to your own style preferences, it's easy to define a new filter.  The list that EiffelStudio displays comes from the files with a 
+			<span>another</span> format not represented on the list, or would like to adapt an existing format to your own style preferences, it's easy to define a new filter. The list that EiffelStudio displays comes from the files with a 
 			<span>.</span>
 			<code>
 				<keyword>fil</keyword>
@@ -133,24 +133,24 @@
 		<code_block>
 			<keyword>$ISE_EIFFEL/examples/studio/filters</keyword>
 		</code_block>
-		<paragraph>To define a new filter, simply add a file to this directory.  Filters are expressed in a simple notation called EFF ( 
-			<span>Eiffel Filter Format</span> ), general enough to support a wide variety of tools for text processing, project management, Web publishing etc.  The best way to define a new filter is usually to start from an existing one and adapt it.  You will find the specification of EFF at the end of this manual, 
+		<paragraph>To define a new filter, simply add a file to this directory. Filters are expressed in a simple notation called EFF ( 
+			<span>Eiffel Filter Format</span> ), general enough to support a wide variety of tools for text processing, project management, Web publishing etc. The best way to define a new filter is usually to start from an existing one and adapt it. You will find the specification of EFF at the end of this manual, 
 			<link>
 				<label>here</label>
 				<url>index-20.xml</url><anchor_name>35873</anchor_name>
-			</link> .
+			</link>.
 		</paragraph>
 		<heading>
 			<size>2</size>
 			<content>Generating an HTML record of your project</content>
 		</heading>
-		<paragraph>Let's select the most obviously attractive of the predefined filters: HTML with stylesheets.  Click the line 
+		<paragraph>Let's select the most obviously attractive of the predefined filters: HTML with stylesheets. Click the line 
 			<code>
 				<keyword>html-stylesheet</keyword>
 			</code> in the list to make it active, then click 
 			<code>
 				<keyword>Next</keyword>
-			</code> at the bottom of the Documentation Wizard window.  The next window appears:
+			</code> at the bottom of the Documentation Wizard window. The next window appears:
 		</paragraph>
 		<div>
 			<image_link>
@@ -162,7 +162,7 @@
 				</image>
 			</image_link>
 		</div>
-		<paragraph>This is to let you decide which clusters of your system the documentation will include.  Initially all clusters -- down to the level of nested subclusters, for example 
+		<paragraph>This is to let you decide which clusters of your system the documentation will include. Initially all clusters -- down to the level of nested subclusters, for example 
 			<code>
 				<keyword>base.structures.list</keyword>
 			</code> -- appear in the 
@@ -170,11 +170,11 @@
 				<keyword>Include</keyword>
 			</code> list on the right; but you might want to exclude some standard libraries or other clusters from the documentation.
 		</paragraph>
-		<paragraph>To move a cluster from the right column to the left one, click it to select it, and click the left arrow button; for the reverse, use the right arrow.  </paragraph>
-		<paragraph>You can play with moving a couple of clusters back and forth, but for this Tour we'll want to generate everything, including EiffelBase, so make sure that in the end all clusters appear in the right column, as on the last figure.  Then click 
+		<paragraph>To move a cluster from the right column to the left one, click it to select it, and click the left arrow button; for the reverse, use the right arrow.</paragraph>
+		<paragraph>You can play with moving a couple of clusters back and forth, but for this Tour we'll want to generate everything, including EiffelBase, so make sure that in the end all clusters appear in the right column, as on the last figure. Then click 
 			<code>
 				<keyword>Next</keyword>
-			</code> .
+			</code>.
 		</paragraph>
 		<heading>
 			<size>2</size>
@@ -194,13 +194,13 @@
 		<paragraph>Eiffel classes, as you know, may start with an 
 			<code>
 				<syntax>Indexing</syntax>
-			</code> entry that enables class authors to include documentary information in any category they like.  It is standard (and part of the official style guidelines) to include at the very least an entry of the form 
+			</code> entry that enables class authors to include documentary information in any category they like. It is standard (and part of the official style guidelines) to include at the very least an entry of the form 
 			<code>
 				<keyword>description:</keyword>
 			</code> 
 			<code>
 				<string>Descriptive text</string>
-			</code> in every class.  The earlier displays of class 
+			</code> in every class. The earlier displays of class 
 			<code>
 				<string>LIST</string>
 			</code> showed that entry, which read "
@@ -212,18 +212,18 @@
 			<code>
 				<syntax>Indexing</syntax>
 			</code> clauses is, conceptually, similar to that of 
-			<bold>metatags</bold> in HTML.  Metatags carry information which Web page visitors do not normally see in the browser; this information is available, however, to search engines and other tools that explore and classify Web pages.  So it seems quite appropriate to generate metatags from 
+			<bold>metatags</bold> in HTML. Metatags carry information which Web page visitors do not normally see in the browser; this information is available, however, to search engines and other tools that explore and classify Web pages. So it seems quite appropriate to generate metatags from 
 			<code>
 				<syntax>Indexing</syntax>
 			</code> entries.
 		</paragraph>
-		<paragraph>The dialog illustrated in the last figure lets you select the entries you wish to transform into metatags.  It appears only if you have selected an HTML filter.  It lists all the 
+		<paragraph>The dialog illustrated in the last figure lets you select the entries you wish to transform into metatags. It appears only if you have selected an HTML filter. It lists all the 
 			<code>
 				<syntax>Indexing</syntax>
-			</code> tags found anywhere in the system; those on the right will be retained for metatags.  Initially the 
+			</code> tags found anywhere in the system; those on the right will be retained for metatags. Initially the 
 			<code>
 				<keyword>Exclude</keyword>
-			</code> list on the left contains three tags conventionally used -- at Eiffel Software  and other Eiffel sites -- for interfacing with configuration management tools, and hence of internal interest only.
+			</code> list on the left contains three tags conventionally used -- at Eiffel Software and other Eiffel sites -- for interfacing with configuration management tools, and hence of internal interest only.
 		</paragraph>
 		<paragraph>There is no need to change the default selection, so just click 
 			<code>
@@ -251,18 +251,18 @@
 				<span>everything</span>, source included, for example on your Intranet for a group of developers working closely together on the same classes, or on the Internet for open-source software.
 			</item>
 			<item>You may want to publish only the 
-				<span>interfaces</span> (Contract or Flat-Contract views).  This is not necessarily to protect proprietary information; even if you don't care about showing your source code, it is usually too detailed for client programmers, especially in the case of libraries.  If various teams work on separate parts of a project, what each releases to the other should usually be the specification, not the implementation.
+				<span>interfaces</span> (Contract or Flat-Contract views). This is not necessarily to protect proprietary information; even if you don't care about showing your source code, it is usually too detailed for client programmers, especially in the case of libraries. If various teams work on separate parts of a project, what each releases to the other should usually be the specification, not the implementation.
 			</item>
 			<item>You may of course want to publish 
 				<span>both</span> the text and the interface, and let the recipients use the version that best suits their needs for each use.
 			</item>
 			<item>You may want to publish the 
-				<span>diagrams</span>, showing the structure in graphical form.  Note the warning -- which we are about to ignore -- telling us this may take a while.
+				<span>diagrams</span>, showing the structure in graphical form. Note the warning -- which we are about to ignore -- telling us this may take a while.
 			</item>
-			<item>The class list, cluster list, cluster hierarchy view, cluster chart (following the conventions of BON) are also optional.  </item>
+			<item>The class list, cluster list, cluster hierarchy view, cluster chart (following the conventions of BON) are also optional.</item>
 		</list>
-		<paragraph>The dialog shown on the last figure lets you specify the exact combination you wish.  The figure indicates the default options.  </paragraph>
-		<paragraph>This time, if we generate anything, we'll generate everything.  Please check 
+		<paragraph>The dialog shown on the last figure lets you specify the exact combination you wish. The figure indicates the default options.</paragraph>
+		<paragraph>This time, if we generate anything, we'll generate everything. Please check 
 			<bold>all</bold> the boxes (the generation won't occur until the last step) and click 
 			<code>
 				<keyword>Next</keyword>
@@ -283,11 +283,11 @@
 				</image>
 			</image_link>
 		</div>
-		<paragraph>Although we didn't use this possibility yet, the Diagram view lets you define different subviews of any cluster.  One view might show inheritance only, the other client links only; one might include all classes, the other hide some library classes.  The last dialog shown will allow you, for any cluster, to select a subview other than the default for the generated diagram.  </paragraph>
+		<paragraph>Although we didn't use this possibility yet, the Diagram view lets you define different subviews of any cluster. One view might show inheritance only, the other client links only; one might include all classes, the other hide some library classes. The last dialog shown will allow you, for any cluster, to select a subview other than the default for the generated diagram.</paragraph>
 		<paragraph>Here we only have the default view, so just click 
 			<code>
 				<keyword>Next</keyword>
-			</code> .
+			</code>.
 		</paragraph>
 		<heading>
 			<size>2</size>
@@ -308,26 +308,26 @@
 		<code_block>
 	Project_directory /<keyword>Documentation</keyword>
 		</code_block>
-		<paragraph>You may, however, select any other location you like.  In the case of HTML generation, as here, EiffelStudio takes great care to use only 
+		<paragraph>You may, however, select any other location you like. In the case of HTML generation, as here, EiffelStudio takes great care to use only 
 			<bold>relative hyperlinks</bold> so that you can move the 
 			<code>
 				<keyword>Documentation</keyword>
 			</code> directory around, for use either on a file system or on your Web site, with the guarantee that the hyperlinks will work -- as long as you move the entire directory together.
 		</paragraph>
 		<paragraph>To continue the Guided Tour, you do 
-			<bold>not</bold> need to complete the generation now unless you want to.  If you are happy to continue without generating the documentation at the moment then click 
+			<bold>not</bold> need to complete the generation now unless you want to. If you are happy to continue without generating the documentation at the moment then click 
 			<code>
 				<keyword>Cancel</keyword>
 			</code> on the last dialog.
 		</paragraph>
 		<note>
-			<italic>If you prefer to produce your own, click "Finish".  For our example system the process takes 7 minutes on the Thinkpad configuration mentioned earlier, and generates a 48 megabyte documentation directory.  </italic>
+			<italic>If you prefer to produce your own, click "Finish". For our example system the process takes 7 minutes on the Thinkpad configuration mentioned earlier, and generates a 48 megabyte documentation directory.</italic>
 		</note>
 		<heading>
 			<size>2</size>
 			<content>Browsing generated documentation</content>
 		</heading>
-		<paragraph>Let's take a look at the generated documentation.  We start with the root of the generated documentation, 
+		<paragraph>Let's take a look at the generated documentation. We start with the root of the generated documentation, 
 			<code>
 				<keyword>index-09A/index.xml</keyword>
 			</code> :
@@ -342,10 +342,10 @@
 				</image>
 			</image_link>
 		</div>
-		<paragraph>This root page shows overall information about the system.  The top set of links, repeated at the bottom, enables you to browse the system from its list of classes, its list of clusters, or the cluster hierarchy; note the box labeled 
+		<paragraph>This root page shows overall information about the system. The top set of links, repeated at the bottom, enables you to browse the system from its list of classes, its list of clusters, or the cluster hierarchy; note the box labeled 
 			<code>
 				<keyword>to Go</keyword>
-			</code>, which provides a built-in search engine, enabling you to type any class list and go directly to the corresponding page.  Let's look at the class list: click the box 
+			</code>, which provides a built-in search engine, enabling you to type any class list and go directly to the corresponding page. Let's look at the class list: click the box 
 			<code>
 				<keyword>Classes</keyword>
 			</code> at the top left.
@@ -360,7 +360,7 @@
 				</image>
 			</image_link>
 		</div>
-		<paragraph>This shows the beginning of the list of classes, alphabetically sorted.  You could click any class to get the corresponding information, but wait; we'll look at individual classes in a moment.  Instead, click 
+		<paragraph>This shows the beginning of the list of classes, alphabetically sorted. You could click any class to get the corresponding information, but wait; we'll look at individual classes in a moment. Instead, click 
 			<code>
 				<keyword>Cluster hierarchy</keyword>
 			</code> to see the overall organization of the system into clusters:
@@ -383,8 +383,8 @@
 				<keyword>BASE.STRUCTURES</keyword>
 			</code>, 
 			<code>
-				<keyword>BASE.  STRUCTURES.  LIST</keyword>
-			</code> .  Click 
+				<keyword>BASE.STRUCTURES.LIST</keyword>
+			</code>. Click 
 			<code>
 				<keyword>BASE.STRUCTURES.LIST</keyword>
 			</code> to see details of the List cluster of EiffelBase where (under EiffelStudio) we had found the class 
@@ -402,13 +402,13 @@
 				</image>
 			</image_link>
 		</div>
-		<paragraph>This indicates the relations of the cluster to others in the hierarchy, and its list of classes.  Again you could click any class name but instead note the mention 
+		<paragraph>This indicates the relations of the cluster to others in the hierarchy, and its list of classes. Again you could click any class name but instead note the mention 
 			<code>
 				<keyword>(diagram)</keyword>
-			</code> next to the cluster name near the top.  Remember that when generating the documentation we elected to generate everything, diagrams included.  Hadn't we checked the corresponding check box, the 
+			</code> next to the cluster name near the top. Remember that when generating the documentation we elected to generate everything, diagrams included. Hadn't we checked the corresponding check box, the 
 			<code>
 				<keyword>(diagram)</keyword>
-			</code> link wouldn't be there.  Click it now to get the generated diagrams:
+			</code> link wouldn't be there. Click it now to get the generated diagrams:
 		</paragraph>
 		<div>
 			<image_link>
@@ -420,10 +420,10 @@
 				</image>
 			</image_link>
 		</div>
-		<paragraph>The output is a diagram showing graphically the classes of the cluster and their inheritance relations.  All EiffelStudio-generated HTML diagrams use the PNG graphics format ( 
+		<paragraph>The output is a diagram showing graphically the classes of the cluster and their inheritance relations. All EiffelStudio-generated HTML diagrams use the PNG graphics format ( 
 			<span>Portable Network Graphics</span> ), supported by all recent browsers.
 		</paragraph>
-		<paragraph>The class bubbles in a diagram are all hyperlinks.  To see the HTML documentation for our old friend the class 
+		<paragraph>The class bubbles in a diagram are all hyperlinks. To see the HTML documentation for our old friend the class 
 			<code>
 				<string>LIST</string>
 			</code> -- which you could also obtain by clicking its name on one of the preceding diagrams, or typing it in the 
@@ -447,7 +447,7 @@
 			</code> (shown in part on the figure) and 
 			<code>
 				<keyword>Commands</keyword>
-			</code> .  Note that all class names and feature names are hyperlinks, which would lead you to the appropriate place in a class text.
+			</code>. Note that all class names and feature names are hyperlinks, which would lead you to the appropriate place in a class text.
 		</paragraph>
 		<paragraph>The top row of hyperlinks now includes class formats corresponding to those we discovered under EiffelStudio (
 			<link>
@@ -465,7 +465,7 @@
 			</code>, 
 			<code>
 				<keyword>Flat contracts</keyword>
-			</code> .  Click 
+			</code>. Click 
 			<code>
 				<keyword>Flat contracts</keyword>
 			</code> to see the full interface of the class:
@@ -480,7 +480,7 @@
 				</image>
 			</image_link>
 		</div>
-		<paragraph>We'll stop this brief review here but you may continue browsing through the HTML pages if you like.  Note how closely the appearance of the class texts, flat forms, contract forms, diagrams and other forms of documentation matches the corresponding formats under EiffelStudio.  </paragraph>
+		<paragraph>We'll stop this brief review here but you may continue browsing through the HTML pages if you like. Note how closely the appearance of the class texts, flat forms, contract forms, diagrams and other forms of documentation matches the corresponding formats under EiffelStudio.</paragraph>
 		<paragraph>Although we suggest staying with the standard, you can easily change any convention that doesn't match your own preferences:</paragraph>
 		<list ordered="false">
 			<item>For the EiffelStudio appearance, use 
@@ -497,13 +497,13 @@
 			<item>For the HTML appearance, if you know about Cascading Style Sheets (CSS) for HTML, edit the style sheet 
 				<code>
 					<keyword>default.css</keyword>
-				</code> .  You will find this file in the generated documentation directory; alternatively, to ensure the changes are applicable to the generated documentation of all future projects, edit 
+				</code>. You will find this file in the generated documentation directory; alternatively, to ensure the changes are applicable to the generated documentation of all future projects, edit 
 				<code>
 					<keyword>defaults.css</keyword>
-				</code> in the directory after backing it up.  For more profound changes in the structure of the generated HTML, you may also backup and edit the Eiffel Filter Format file 
+				</code> in the directory after backing it up. For more profound changes in the structure of the generated HTML, you may also backup and edit the Eiffel Filter Format file 
 				<code>
 					<keyword>html-stylesheet.fil</keyword>
-				</code> in the same directory.  EFF is described in 
+				</code> in the same directory. EFF is described in 
 				<link>
 					<url>index-20.xml</url><anchor_name>35873</anchor_name>
 					<label> Chapter 19, "Appendix"</label>
@@ -513,7 +513,7 @@
 				</code_block>
 			</item>
 		</list>
-		<paragraph>The documentation generation mechanisms, using HTML or other formats, let you publish your designs, at the level of detail you desire, on an Intranet, the Internet, or as part of documents you release.  They are an important part of the power of EiffelStudio for quality software development.</paragraph>
+		<paragraph>The documentation generation mechanisms, using HTML or other formats, let you publish your designs, at the level of detail you desire, on an Intranet, the Internet, or as part of documents you release. They are an important part of the power of EiffelStudio for quality software development.</paragraph>
 		<paragraph>
 			<link>
 				<url>index-08.xml</url>

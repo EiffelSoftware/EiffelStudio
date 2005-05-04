@@ -7,13 +7,13 @@
 				<label>Help reading this manual</label>
 			</link>
 		</paragraph>
-		<paragraph>So far we have relied on existing class texts.  Fascinating as it may be to explore excellent software such as EiffelBase, you probably want to write your own too (with the help of the reusable components in the Eiffel libraries).  EiffelStudio provides a built-in editor -- as well as the ability to use some other editor if you prefer -- and sophisticated compilation mechanisms.  </paragraph>
+		<paragraph>So far we have relied on existing class texts. Fascinating as it may be to explore excellent software such as EiffelBase, you probably want to write your own too (with the help of the reusable components in the Eiffel libraries). EiffelStudio provides a built-in editor -- as well as the ability to use some other editor if you prefer -- and sophisticated compilation mechanisms.</paragraph>
 		<div>
 			<heading>
 				<size>2</size>
 				<content>Recompiling</content>
 			</heading>
-			<paragraph>When we started, we compiled the example system.  Let's recompile it, just to see.  We'll see compilation entries in the 
+			<paragraph>When we started, we compiled the example system. Let's recompile it, just to see. We'll see compilation entries in the 
 				<code>
 					<keyword>Project</keyword>
 				</code> menu, but the easiest for the moment is to use the compilation button in the Project toolbar, the lower toolbar in the Development Window:
@@ -29,13 +29,13 @@
 				</image_link>
 			</div>
 		</div>
-		<paragraph>Click this button.  You haven't changed anything in the project since it was compiled (you were not supposed to!), so EiffelStudio will very quickly detect this and finish compilation.  On our test platform this takes less than a second.  Now of course we should see what happens if you do change something.  </paragraph>
+		<paragraph>Click this button. You haven't changed anything in the project since it was compiled (you were not supposed to!), so EiffelStudio will very quickly detect this and finish compilation. On our test platform this takes less than a second. Now of course we should see what happens if you do change something.</paragraph>
 		<div>
 			<heading>
 				<size>2</size>
 				<content>Editing</content>
 			</heading>
-			<paragraph>We don't want to touch EiffelBase classes (and in fact can't, since it is used in precompiled form), so let's focus on classes of our small root cluster.  In the Cluster tree on the left, expand cluster 
+			<paragraph>We don't want to touch EiffelBase classes (and in fact can't, since it is used in precompiled form), so let's focus on classes of our small root cluster. In the Cluster tree on the left, expand cluster 
 				<code>
 					<keyword>root_cluster</keyword>
 				</code> and click class 
@@ -54,10 +54,10 @@
 					</image>
 				</image_link>
 			</div>
-			<paragraph>The Editing Tool hosts a text editor which you can use to change the class text.  Here the routine 
+			<paragraph>The Editing Tool hosts a text editor which you can use to change the class text. Here the routine 
 				<code>
 					<string>display</string>
-				</code> starts by outputting a simple message; let's precede it by another line of display to check that we affected the outcome.  We'll want to add the following two lines just after the 
+				</code> starts by outputting a simple message; let's precede it by another line of display to check that we affected the outcome. We'll want to add the following two lines just after the 
 				<code>
 					<keyword>do</keyword>
 				</code>, before the first two instructions of the routine:
@@ -87,10 +87,10 @@
 				</code> from the 
 				<code>
 					<keyword>Edit</keyword>
-				</code> menu).  Add or remove tabs to align with the rest of the routine, and change the string to 
+				</code> menu). Add or remove tabs to align with the rest of the routine, and change the string to 
 				<code>
 					<string>THIS IS SOME ADDED TEXT</string>
-				</code> so that the result will look like what's shown on the next figure.  This is all there is to change; the second line remains untouched.  Please check the result and be careful not to introduce any mistakes; in the next section we'll study how EiffelStudio will report syntax and other errors, but right now we want to see what happens when everything is right!
+				</code> so that the result will look like what's shown on the next figure. This is all there is to change; the second line remains untouched. Please check the result and be careful not to introduce any mistakes; in the next section we'll study how EiffelStudio will report syntax and other errors, but right now we want to see what happens when everything is right!
 			</paragraph>
 			<div>
 				<image_link>
@@ -111,7 +111,7 @@
 				</code> entry from the 
 				<code>
 					<keyword>Edit</keyword>
-				</code> menu, or the Save button highlighted on the figure.  (If you forget to save, the next compilation will tell you so, and ask you if from now on you want all non-saved class edits to be saved automatically.  )
+				</code> menu, or the Save button highlighted on the figure. (If you forget to save, the next compilation will tell you so, and ask you if from now on you want all non-saved class edits to be saved automatically.)
 			</paragraph>
 		</div>
 		<div>
@@ -119,9 +119,9 @@
 				<size>2</size>
 				<content>Recompiling and executing after a change</content>
 			</heading>
-			<paragraph>Next compile again, using the Compilation button.  Some "degree" messages appear quickly; EiffelStudio has found out what class has changed and deduced what exactly to recompile -- only a subset of the whole system.  So this again will proceed very quickly.
+			<paragraph>Next compile again, using the Compilation button. Some "degree" messages appear quickly; EiffelStudio has found out what class has changed and deduced what exactly to recompile -- only a subset of the whole system. So this again will proceed very quickly.
 			</paragraph>
-			<paragraph>Execute the system again now, using one of the execution buttons, with or without breakpoints, on the right in the bottom Project toolbar.  You will see that the message output by the execution has changed to include the added string.
+			<paragraph>Execute the system again now, using one of the execution buttons, with or without breakpoints, on the right in the bottom Project toolbar. You will see that the message output by the execution has changed to include the added string.
 			</paragraph>
 		</div>
 		<div>
@@ -129,7 +129,7 @@
 				<size>2</size>
 				<content>Views in the Editing Tool</content>
 			</heading>
-			<paragraph>In studying the Context Tool we discovered a number of views of a class text.  For convenience, you can also display a number of these views in the Editing Tool, although only the basic Text view is editable.  A row of buttons next to the Class and Feature fields lets you choose between them:
+			<paragraph>In studying the Context Tool we discovered a number of views of a class text. For convenience, you can also display a number of these views in the Editing Tool, although only the basic Text view is editable. A row of buttons next to the Class and Feature fields lets you choose between them:
 			</paragraph>
 			<div>
 				<image_link>
@@ -144,7 +144,7 @@
 			<paragraph>You can try some of these view now, although there is nothing exciting to show about class 
 				<code>
 					<string>PARENT</string>
-				</code> .  Make sure to come back to the 
+				</code>. Make sure to come back to the 
 				<code>
 					<keyword>Text</keyword>
 				</code> view -- through the leftmost of these buttons -- so that we can continue exploring the editing facilities.
@@ -155,10 +155,10 @@
 				<size>2</size>
 				<content>Basic editing facilities</content>
 			</heading>
-			<paragraph>The editing facilities in the Editing Tool are provided by the EiffelStudio Editor, a specialized tool supporting the development and update of Eiffel texts.  As we'll see next, if you have a preferred editor you can use it instead, but the EiffelStudio Editor is worth knowing.  </paragraph>
-			<paragraph>The online documentation provides many more details about editing functions.  Here are the essentials.  </paragraph>
+			<paragraph>The editing facilities in the Editing Tool are provided by the EiffelStudio Editor, a specialized tool supporting the development and update of Eiffel texts. As we'll see next, if you have a preferred editor you can use it instead, but the EiffelStudio Editor is worth knowing.</paragraph>
+			<paragraph>The online documentation provides many more details about editing functions. Here are the essentials.</paragraph>
 			<paragraph>First, the key property of any interactive system: 
-				<bold>Undo</bold> .  You can cancel the latest editing command, or any earlier one performed during the current session, by choosing 
+				<bold>Undo</bold>. You can cancel the latest editing command, or any earlier one performed during the current session, by choosing 
 				<code>
 					<keyword>Undo</keyword>
 				</code> from the 
@@ -167,7 +167,7 @@
 				</code> menu, or typing CTRL- 
 				<code>
 					<keyword>Z</keyword>
-				</code> .  To cancel more than one command, apply Undo repetitively; there is no limit to the number of undoable commands within a session.  (When you exit EiffelStudio, however, the editing history is lost.  ) To redo an undone command, use 
+				</code>. To cancel more than one command, apply Undo repetitively; there is no limit to the number of undoable commands within a session. (When you exit EiffelStudio, however, the editing history is lost.) To redo an undone command, use 
 				<code>
 					<keyword>Redo</keyword>
 				</code> from the 
@@ -176,12 +176,12 @@
 				</code> menu or CTRL- 
 				<code>
 					<keyword>Y</keyword>
-				</code> .
+				</code>.
 			</paragraph>
 			<note>Since right now we don't need to do any actual editing to continue this Guided Tour, we suggest that you don't change the text of class 
 				<code>
 					<keyword>PARENT</keyword>
-				</code> but simply look up the menu entries described next, without actually selecting them.  If you do make a change, voluntary or not, you should at the end of this editor discussion perform enough Undo commands to get the text of class 
+				</code> but simply look up the menu entries described next, without actually selecting them. If you do make a change, voluntary or not, you should at the end of this editor discussion perform enough Undo commands to get the text of class 
 				<code>
 					<keyword>PARENT</keyword>
 				</code> back to its original state.
@@ -201,10 +201,10 @@
 				</code> and CTRL- 
 				<code>
 					<keyword>V</keyword>
-				</code> .
+				</code>.
 			</paragraph>
 			<paragraph>When you edit text, it will be automatically 
-				<bold>indented</bold> according to standard Eiffel style rules.  If you prefer to remain in charge of your own indenting, you can disable this facility through 
+				<bold>indented</bold> according to standard Eiffel style rules. If you prefer to remain in charge of your own indenting, you can disable this facility through 
 				<code>
 					<keyword>Tools</keyword>
 				</code>
@@ -219,7 +219,7 @@
 				</code>
 				<code>
 					<keyword>Editor</keyword>
-				</code> .
+				</code>.
 			</paragraph>
 			<paragraph>To indent a sequence of lines, select the lines, then use 
 				<code>
@@ -236,7 +236,7 @@
 				</code>
 				<code>
 					<keyword>Indent selection</keyword>
-				</code> .  You can also use the Tab key, but only if the selection consists of one or more entire lines; otherwise typing Tab will simply replace the selected text with a Tab character.  Shift-Tab will similarly decrease indentation by one step.
+				</code>. You can also use the Tab key, but only if the selection consists of one or more entire lines; otherwise typing Tab will simply replace the selected text with a Tab character. Shift-Tab will similarly decrease indentation by one step.
 			</paragraph>
 			<paragraph>To 
 				<bold>comment out</bold> a sequence of lines, select them and use 
@@ -257,10 +257,10 @@
 				</code> or CTRL- 
 				<code>
 					<keyword>K</keyword>
-				</code> .  Conversely, CTRL-Shift- 
+				</code>. Conversely, CTRL-Shift- 
 				<code>
 					<keyword>K</keyword>
-				</code> will uncomment.  Also in the 
+				</code> will uncomment. Also in the 
 				<code>
 					<keyword>Edit</keyword>
 				</code>
@@ -318,7 +318,7 @@
 					<size>2</size>
 					<content>Search and replace</content>
 				</heading>
-				<paragraph>The editor lets you search for text and replace occurrences, individually or globally.  We assume you have seen a text search facility before, so we'll just emphasize some of the less obvious features.  </paragraph>
+				<paragraph>The editor lets you search for text and replace occurrences, individually or globally. We assume you have seen a text search facility before, so we'll just emphasize some of the less obvious features.</paragraph>
 				<paragraph>To start a search, make sure the Search Tool is active by clicking the Search button in the top toolbar (this one we'll let you find), using the 
 					<code>
 						<keyword>Edit</keyword>
@@ -334,7 +334,7 @@
 					</code> in a Text or Context Tool.
 				</paragraph>
 				<note>
-					<italic>Note that although we are studying Search as part of the Editor, this function also applies to any textual form displayed in the Context Tool; make sure to start a Search from the tool that you want to search.  </italic>
+					<italic>Note that although we are studying Search as part of the Editor, this function also applies to any textual form displayed in the Context Tool; make sure to start a Search from the tool that you want to search.</italic>
 				</note>
 				<paragraph>The Search Tool presents a number of self-explanatory options:</paragraph>
 				<div>
@@ -376,7 +376,7 @@
 						</image>
 					</image_link>
 				</div>
-				<paragraph>Having filled the two fields, you can elect to replace the last found occurrence, or all occurrences at once.  </paragraph>
+				<paragraph>Having filled the two fields, you can elect to replace the last found occurrence, or all occurrences at once.</paragraph>
 				<paragraph>The 
 					<code>
 						<keyword>Search for</keyword>
@@ -389,8 +389,8 @@
 					<content>Let the editor do the typing</content>
 				</heading>
 				<paragraph>Particularly interesting are the editor's 
-					<bold>automatic completion</bold> facilities.  Well, particularly interesting for 
-					<span>most</span> people: maybe you like your editor to do the grunt work for you, or maybe you don't.  In the latter case -- if you prefer to be in control of all the details -- don't worry: through 
+					<bold>automatic completion</bold> facilities. Well, particularly interesting for 
+					<span>most</span> people: maybe you like your editor to do the grunt work for you, or maybe you don't. In the latter case -- if you prefer to be in control of all the details -- don't worry: through 
 					<code>
 						<keyword>Tools</keyword>
 					</code>
@@ -405,16 +405,16 @@
 					</code>
 					<code>
 						<keyword>Editor</keyword>
-					</code> you can easily disable any facility that you don't like.  The behavior described here is the default.
+					</code> you can easily disable any facility that you don't like. The behavior described here is the default.
 				</paragraph>
-				<paragraph>The EiffelStudio Editor knows about Eiffel syntax and will recognize syntactic elements as you type them.  It will color them according to standard conventions: basic elements in black, keywords in blue, comments in dark red.  You can change these conventions through Preferences.  </paragraph>
+				<paragraph>The EiffelStudio Editor knows about Eiffel syntax and will recognize syntactic elements as you type them. It will color them according to standard conventions: basic elements in black, keywords in blue, comments in dark red. You can change these conventions through Preferences.</paragraph>
 				<paragraph>If you start typing a control structure through its opening keyword, such as 
 					<code>
 						<keyword>if</keyword>
 					</code>, or 
 					<code>
 						<keyword>from</keyword>
-					</code> for a loop, the editor will automatically display the structure of the whole construct.  Here for example is the result if you type the 
+					</code> for a loop, the editor will automatically display the structure of the whole construct. Here for example is the result if you type the 
 					<code>
 						<keyword>from</keyword>
 					</code> followed by Return/Enter at the beginning of our example routine:
@@ -444,10 +444,10 @@
 					<span>...</span>
 					<code>
 						<keyword>end</keyword>
-					</code> .  You can then fill in the blanks with the appropriate expression and instructions.  The generated lines start with the appropriate number of Tab characters to support the standard Eiffel indenting conventions.  If you want a more compact style, follow the 
+					</code>. You can then fill in the blanks with the appropriate expression and instructions. The generated lines start with the appropriate number of Tab characters to support the standard Eiffel indenting conventions. If you want a more compact style, follow the 
 					<code>
 						<keyword>from</keyword>
-					</code> with a space rather than Return.  Typing 
+					</code> with a space rather than Return. Typing 
 					<code>
 						<keyword>if</keyword>
 					</code> followed by Return or a space will similarly produce the outline of a conditional instruction.
@@ -455,7 +455,7 @@
 				<paragraph>To start a routine, type the routine name followed by the keyword 
 					<code>
 						<keyword>is</keyword>
-					</code> and a Return.  The editor generates the basic structure of a routine text:
+					</code> and a Return. The editor generates the basic structure of a routine text:
 				</paragraph>
 				<div>
 					<image_link>
@@ -468,7 +468,7 @@
 					</image_link>
 				</div>
 				<paragraph>This prompts you to enter the header comment (no self-respecting Eiffel developer even 
-					<span>thinks</span> of writing a feature without a header comment).  At the end of the header comment, type Return if the header comment continues, otherwise type a down arrow to continue with the indentation for the beginning of the routine, with one of the keywords 
+					<span>thinks</span> of writing a feature without a header comment). At the end of the header comment, type Return if the header comment continues, otherwise type a down arrow to continue with the indentation for the beginning of the routine, with one of the keywords 
 					<code>
 						<keyword>require</keyword>
 					</code>, 
@@ -483,28 +483,28 @@
 					</code>, 
 					<code>
 						<keyword>once</keyword>
-					</code> .  Once you type 
+					</code>. Once you type 
 					<code>
 						<keyword>do</keyword>
 					</code>, followed by a Return or space, the completion mechanism will insert the appropriate 
 					<code>
 						<keyword>end</keyword>
-					</code>, but other than that it doesn't try to produce an entire routine structure because there are too many syntactical choices (precondition or not, postcondition or not, locals or not etc.  ).
+					</code>, but other than that it doesn't try to produce an entire routine structure because there are too many syntactical choices (precondition or not, postcondition or not, locals or not etc.).
 				</paragraph>
 				<paragraph>Also interesting is 
 					<bold>feature completion</bold>, using the 
-					<bold>CTRL-SPACE</bold> key.  It works at two levels:
+					<bold>CTRL-SPACE</bold> key. It works at two levels:
 				</paragraph>
 				<list ordered="false">
-					<item>You can type the beginning of the name of a feature of the current class, then CTRL-SPACE to get possible completions.  </item>
-					<item>Once you have typed the name of a query (attribute or function), either all by yourself or aided by the previous completion technique, you can type a period followed by CTRL-SPACE to get the list of possible features to be applied, deduced from the list of features in the corresponding class (the type of the query).  </item>
+					<item>You can type the beginning of the name of a feature of the current class, then CTRL-SPACE to get possible completions.</item>
+					<item>Once you have typed the name of a query (attribute or function), either all by yourself or aided by the previous completion technique, you can type a period followed by CTRL-SPACE to get the list of possible features to be applied, deduced from the list of features in the corresponding class (the type of the query).</item>
 				</list>
-				<paragraph>In both cases, if more than one completion is possible, you will get a menu of the possibilities.  You can scroll through it with the up and down arrow keys, or the mouse, and select one through Enter or double-click.  You can also or give up through the Escape key.  </paragraph>
+				<paragraph>In both cases, if more than one completion is possible, you will get a menu of the possibilities. You can scroll through it with the up and down arrow keys, or the mouse, and select one through Enter or double-click. You can also or give up through the Escape key.</paragraph>
 				<paragraph>Here for example is the menu you will see in the body of our example routine if you type 
 					<code>
 						<string>io</string>
 					</code>
-					<span>.  </span> followed by CTRL-SPACE, where 
+					<span>. </span> followed by CTRL-SPACE, where 
 					<code>
 						<string>io</string>
 					</code> is the feature, coming from class 
@@ -524,14 +524,14 @@
 				</div>
 				<paragraph>The following properties enhance the convenience of the completion mechanisms:</paragraph>
 				<list ordered="false">
-					<item>If only one completion is possible, no menu appears; the completion is selected.  </item>
-					<item>If the cursor is just after the name of a query (which you have fully typed, or obtained through completion), typing CTRL-SPACE once more will produce a period, as if you had typed it.  </item>
-					<item>When a menu of possible completions is displayed, typing CTRL-SPACE will select the first of them.  </item>
+					<item>If only one completion is possible, no menu appears; the completion is selected.</item>
+					<item>If the cursor is just after the name of a query (which you have fully typed, or obtained through completion), typing CTRL-SPACE once more will produce a period, as if you had typed it.</item>
+					<item>When a menu of possible completions is displayed, typing CTRL-SPACE will select the first of them.</item>
 				</list>
-				<paragraph>The combination of these facilities means that you can often obtain what you want simply by typing CTRL-SPACE repeatedly.  </paragraph>
+				<paragraph>The combination of these facilities means that you can often obtain what you want simply by typing CTRL-SPACE repeatedly.</paragraph>
 				<paragraph>Also note the following properties of automatic feature completion:</paragraph>
 				<list ordered="false">
-					<item>The mechanism will only work for queries that were present at the time of the last successful compilation.  So if you add an attribute, say 
+					<item>The mechanism will only work for queries that were present at the time of the last successful compilation. So if you add an attribute, say 
 						<code>
 							<string>attr</string>
 						</code>, to the current class, and do not recompile, typing 
@@ -540,25 +540,25 @@
 						</code> -CTRL-SPACE will not display 
 						<code>
 							<string>attr</string>
-						</code> .  To make sure that it's included in completion proposals, save and recompile.  (Remember, incremental compilation is fast in EiffelStudio, so there is nothing wrong in compiling early and often.  ) The same rule holds for features of 
+						</code>. To make sure that it's included in completion proposals, save and recompile. (Remember, incremental compilation is fast in EiffelStudio, so there is nothing wrong in compiling early and often.) The same rule holds for features of 
 						<span>other</span> classes, those that will appear in proposed completions after a period.
 					</item>
-					<item>Automatic completion is applicable to features, not local entities or formal arguments.  </item>
+					<item>Automatic completion is applicable to features, not local entities or formal arguments.</item>
 					<item>The features proposed for automatic completion include all features of the class: those declared in the class itself, or 
 						<span>immediate</span> features, and those 
 						<span>inherited</span> from proper ancestors, direct or indirect, with one exception: by default the list will not include features from the universal class 
 						<code>
 							<string>ANY</string>
-						</code>, which serves as ancestor to all classes and provides many features for comparison, copying, input-output, reflection etc.  Including 
+						</code>, which serves as ancestor to all classes and provides many features for comparison, copying, input-output, reflection etc. Including 
 						<code>
 							<string>ANY's</string>
-						</code> features would clutter all menus with too many features.  So for example typing 
+						</code> features would clutter all menus with too many features. So for example typing 
 						<code>
 							<string>i</string>
 						</code> followed by CTRL-SPACE will not suggest 
 						<code>
 							<string>io</string>
-						</code> among the possible completions.  You can change this policy through Preferences.  The policy does not apply to remote feature completion for an entity 
+						</code> among the possible completions. You can change this policy through Preferences. The policy does not apply to remote feature completion for an entity 
 						<code>
 							<string>x</string>
 						</code> declared of type 
@@ -568,7 +568,7 @@
 						<code>
 							<string>x</string>
 						</code>
-						<span>.  </span> will produce the list of 
+						<span>. </span> will produce the list of 
 						<code>
 							<string>ANY</string>
 						</code> 's features.
@@ -578,8 +578,8 @@
 					<size>2</size>
 					<content>Using your own editor</content>
 				</heading>
-				<paragraph>You may have a favorite editor and prefer to use it, at least in some cases.  The EiffelStudio incremental compilation mechanism, to be studied shortly, recognizes that files have been modified outside of EiffelStudio (by checking their time stamps) and will without any fuss take their modified versions into account.  </paragraph>
-				<paragraph>You can also call an outside editor on a class from within EiffelStudio.  Just use 
+				<paragraph>You may have a favorite editor and prefer to use it, at least in some cases. The EiffelStudio incremental compilation mechanism, to be studied shortly, recognizes that files have been modified outside of EiffelStudio (by checking their time stamps) and will without any fuss take their modified versions into account. </paragraph>
+				<paragraph>You can also call an outside editor on a class from within EiffelStudio. Just use 
 					<code>
 						<keyword>File</keyword>
 					</code>
@@ -604,7 +604,7 @@
 						</image>
 					</image_link>
 				</div>
-				<paragraph>This will call the editor of your choice.  The default is Notepad on Windows and Vi on Unix and Linux.  You can easily change this to any editor by entering the desired editor command in 
+				<paragraph>This will call the editor of your choice. The default is Notepad on Windows and Vi on Unix and Linux. You can easily change this to any editor by entering the desired editor command in 
 					<code>
 						<keyword>Tools</keyword>
 					</code>
@@ -619,7 +619,7 @@
 					</code>
 					<code>
 						<keyword>Global Preferences</keyword>
-					</code> .  In this command text you can use the two special notations 
+					</code>. In this command text you can use the two special notations 
 					<code>
 						<keyword>$target</keyword>
 					</code> and 
@@ -631,7 +631,7 @@
 					</code> by the name of the file where the current class resides, and 
 					<code>
 						<keyword>$line</keyword>
-					</code> by the line number at which the Editing Tool is currently scrolled.  If you include one or both of these markers at the appropriate argument positions for the command, this will enable you -- assuming the editor supports the appropriate options -- to make sure it starts at exactly the right place.  For example the default editor command under Unix is
+					</code> by the line number at which the Editing Tool is currently scrolled. If you include one or both of these markers at the appropriate argument positions for the command, this will enable you -- assuming the editor supports the appropriate options -- to make sure it starts at exactly the right place. For example the default editor command under Unix is
 				</paragraph>
 				<code_block>
 <keyword>vi +$line $target</keyword></code_block>
@@ -652,9 +652,9 @@
 						<string>line_number</string>
 					</code> ).
 				</paragraph>
-				<paragraph>If you start an external editor on a class, then exit the editor after possibly making changes, EiffelStudio will immediately update the class text in the Editing Tool.  More generally, note that EiffelStudio will detect changes made separately on the same class, and warn you of possible conflicts.  </paragraph>
+				<paragraph>If you start an external editor on a class, then exit the editor after possibly making changes, EiffelStudio will immediately update the class text in the Editing Tool. More generally, note that EiffelStudio will detect changes made separately on the same class, and warn you of possible conflicts. </paragraph>
 				<paragraph>Several important text editors from various providers have 
-					<bold>Eiffel modes</bold>, which support the syntax-directed editing of Eiffel texts.  They include:
+					<bold>Eiffel modes</bold>, which support the syntax-directed editing of Eiffel texts. They include:
 				</paragraph>
 				<list ordered="false">
 					<item>

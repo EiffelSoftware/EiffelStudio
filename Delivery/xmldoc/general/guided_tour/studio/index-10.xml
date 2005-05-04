@@ -1,12 +1,12 @@
 <document title="9 BROWSING FEATURES" output="studio">
 	<meta_data></meta_data>
 	<paragraph>
-		<paragraph>Let us get back to EiffelStudio.  We won't need a browser any more for this Tour, so you may close any browser window (other than the 
-			<span>current</span> window if you are reading this in HTML!) opened to look up the generated documentation in the previous section.  
+		<paragraph>Let us get back to EiffelStudio. We won't need a browser any more for this Tour, so you may close any browser window (other than the 
+			<span>current</span> window if you are reading this in HTML!) opened to look up the generated documentation in the previous section.
 		</paragraph>
 		<paragraph>Before studying the documentation generation we saw how to display properties of 
-			<span>classes</span> .  It's also interesting to explore the properties of 
-			<span>features</span>.  Let's look at this now, through the Feature View.  
+			<span>classes</span>. It's also interesting to explore the properties of 
+			<span>features</span>. Let's look at this now, through the Feature View.
 		</paragraph>
 		<paragraph>Your Development Window should still be targeted to class 
 			<code>
@@ -14,7 +14,7 @@
 			</code>, from the last view, 
 			<code>
 				<keyword>Routines</keyword>
-			</code>, that you displayed on it.  If you've lost it, just retarget a Development Window to this class.  
+			</code>, that you displayed on it. If you've lost it, just retarget a Development Window to this class.
 		</paragraph>
 		<paragraph>If the Features Tool is not visible, bring it back by clicking the 
 			<code>
@@ -63,10 +63,10 @@
 				</image>
 			</image_link>
 		</div>
-		<paragraph>The class only has a few immediate features because most of its interesting features are inherited.  Make sure the Editing Tool is tall enough (as on the above figure) and click the feature 
+		<paragraph>The class only has a few immediate features because most of its interesting features are inherited. Make sure the Editing Tool is tall enough (as on the above figure) and click the feature 
 			<code>
 				<string>forth</string>
-			</code>, the last one, in the Feature Tree on the left.  This makes the feature the Editing Tool's current target, and scrolls the text to its declaration:
+			</code>, the last one, in the Feature Tree on the left. This makes the feature the Editing Tool's current target, and scrolls the text to its declaration:
 		</paragraph>
 		<div>
 			<image_link>
@@ -84,13 +84,13 @@
 			</code>, and the second one shows the target feature, 
 			<code>
 				<string>forth</string>
-			</code> .  
+			</code>.
 		</paragraph>
 		<heading>
 			<size>2</size>
 			<content>Basic feature information</content>
 		</heading>
-		<paragraph>Now let's look at the feature views.  Click the Feature Tab at the bottom of the Context Tool:</paragraph>
+		<paragraph>Now let's look at the feature views. Click the Feature Tab at the bottom of the Context Tool:</paragraph>
 		<div>
 			<image_link>
 				<url>index-53.png</url>
@@ -115,16 +115,16 @@
 		<paragraph>The bottom Context Tool shows one of the Feature views, by default 
 			<code>
 				<keyword>Flat</keyword>
-			</code>.  The flat view of a feature, similar in concept to the flat view of a class, gives the full text of a feature, taking into account any inherited precondition or postcondition clauses.  Here the feature as declared in the class appears in the top Editing Tool, with no precondition and an 
+			</code>. The flat view of a feature, similar in concept to the flat view of a class, gives the full text of a feature, taking into account any inherited precondition or postcondition clauses. Here the feature as declared in the class appears in the top Editing Tool, with no precondition and an 
 			<code>
 				<keyword>ensure then</keyword>
-			</code> postcondition clause.  But it's a redefinition of an inherited feature; the flat view in the bottom Context Tool shows the full precondition, inherited from the ancestor 
+			</code> postcondition clause. But it's a redefinition of an inherited feature; the flat view in the bottom Context Tool shows the full precondition, inherited from the ancestor 
 			<code>
 				<string>LINEAR</string>
 			</code>, as well as the postcondition from 
 			<code>
 				<string>LIST</string>
-			</code>.  
+			</code>.
 		</paragraph>
 		<paragraph>
 			<code>
@@ -144,7 +144,7 @@
 		<paragraph>
 			<code>
 				<keyword>Text</keyword>
-			</code> gives the feature text, fully clickable.  
+			</code> gives the feature text, fully clickable.
 		</paragraph>
 		<div>
 			<heading>
@@ -157,7 +157,7 @@
 				</code> is 
 				<code>
 					<keyword>Callers</keyword>
-				</code> .  Try it now by clicking the corresponding button (the following figure and the next only show the Context Tool, where the views appear):
+				</code>. Try it now by clicking the corresponding button (the following figure and the next only show the Context Tool, where the views appear):
 			</paragraph>
 			<div>
 				<image_link>
@@ -169,13 +169,13 @@
 					</image>
 				</image_link>
 			</div>
-			<paragraph>This view shows all the places in the system that call the routine, or one of its redefinitions.  Such information can be invaluable for debugging in particular.  The successive paragraphs correspond to the various versions of 
+			<paragraph>This view shows all the places in the system that call the routine, or one of its redefinitions. Such information can be invaluable for debugging in particular. The successive paragraphs correspond to the various versions of 
 				<code>
 					<string>forth</string>
 				</code> in class 
 				<code>
 					<string>LIST</string>
-				</code>, its ancestors and its descendants.  Reading from the top we see that:
+				</code>, its ancestors and its descendants. Reading from the top we see that:
 			</paragraph>
 			<list ordered="false">
 				<item>The version from 
@@ -187,7 +187,7 @@
 					</code> itself by the function 
 					<code>
 						<string>is_equal</string>
-					</code> .  
+					</code>.
 				</item>
 				<item>The version from 
 					<code>
@@ -202,7 +202,7 @@
 					</code> but dynamically attached to an instance of 
 					<code>
 						<string>ARRAYED_CIRCULAR</string>
-					</code> ).  
+					</code>).
 				</item>
 				<item>About 60% down, 
 					<code>
@@ -222,7 +222,7 @@
 					</code>, and two routines of 
 					<code>
 						<string>MULTI_ARRAY_LIST</string>
-					</code> .  
+					</code>.
 				</item>
 				<item>Also note, in the following entry, that after renaming 
 					<code>
@@ -233,7 +233,7 @@
 					</code> in the descendant 
 					<code>
 						<string>ARRAYED_STACK</string>
-					</code> .  
+					</code>.
 				</item>
 			</list>
 			<heading>
@@ -264,22 +264,22 @@
 				</code>, including the original introduction of this feature in 
 				<code>
 					<string>LINEAR</string>
-				</code> and subsequent redeclarations (redefinitions or effectings).  The mention 
+				</code> and subsequent redeclarations (redefinitions or effectings). The mention 
 				<code>
 					<keyword>(from version)</keyword>
 				</code> signals the version applicable to the current class, here 
 				<code>
 					<string>LIST</string>
-				</code> .  
+				</code>.
 			</paragraph>
 			<paragraph>Since all class and feature names on these views are hyperlinks, you can display any of the listed versions in a new Development Window by control-right-clicking it (we will see shortly how to display it in the 
-				<span>same</span> tool).  Control-right-click on the feature name 
+				<span>same</span> tool). Control-right-click on the feature name 
 				<code>
 					<string>forth</string>
 				</code> on the line that reads 
 				<code>
 					<string>forth MULTI_ARRAY_LIST</string>
-				</code> (line 4).  This brings up a tool targeted to the routine 
+				</code> (line 4). This brings up a tool targeted to the routine 
 				<code>
 					<string>forth</string>
 				</code> from 
@@ -303,7 +303,7 @@
 				</code> and 
 				<code>
 					<keyword>Descendant versions</keyword>
-				</code> .  Click the first of these to obtain the ancestor versions of 
+				</code>. Click the first of these to obtain the ancestor versions of 
 				<code>
 					<string>forth</string>
 				</code> from 
@@ -333,17 +333,17 @@
 				</code> feature, it indicates the name of that feature -- which could be something else than 
 				<code>
 					<string>forth</string>
-				</code> as a result of renaming, although here this happens only in descendants, not ancestors -- and the version of the feature applicable to the given class.  
+				</code> as a result of renaming, although here this happens only in descendants, not ancestors -- and the version of the feature applicable to the given class.
 			</paragraph>
 			<paragraph>The list is labeled 
 				<code>
 					<keyword>History branch #1</keyword>
-				</code> because in the case of feature merging (combining several features inherited from different parents, in conformance with the rules of the language) there could be more than one history branch.  
+				</code> because in the case of feature merging (combining several features inherited from different parents, in conformance with the rules of the language) there could be more than one history branch.
 			</paragraph>
 			<paragraph>The next button, 
 				<code>
 					<keyword>Descendant versions</keyword>
-				</code>, similarly tells you all that happens to a feature in the descendants of the current class.  
+				</code>, similarly tells you all that happens to a feature in the descendants of the current class.
 			</paragraph>
 		</div>
 		<div>
@@ -354,9 +354,9 @@
 			<paragraph>The last button, 
 				<code>
 					<keyword>Homonyms</keyword>
-				</code>, displays all the features of the system which, related or not to the current feature by redeclaration, have the same name.  You can then explore any such feature to see if the relationship is more than casual.  
+				</code>, displays all the features of the system which, related or not to the current feature by redeclaration, have the same name. You can then explore any such feature to see if the relationship is more than casual.
 			</paragraph>
-			<paragraph>In any system or library that takes advantage of inheritance and its associated mechanisms -- renaming, redefinition, effecting, undefinition, multiple and repeated inheritance, polymorphism, dynamic binding -- the feature browsing facilities that we have just explored are invaluable to track what happens to features.  What makes them even more precious is their connection with the rest of the browsing and documentation capabilities, especially the pick-and-drop which we will now study.  </paragraph>
+			<paragraph>In any system or library that takes advantage of inheritance and its associated mechanisms -- renaming, redefinition, effecting, undefinition, multiple and repeated inheritance, polymorphism, dynamic binding -- the feature browsing facilities that we have just explored are invaluable to track what happens to features. What makes them even more precious is their connection with the rest of the browsing and documentation capabilities, especially the pick-and-drop which we will now study.</paragraph>
 		</div>
 		<paragraph>
 			<link>

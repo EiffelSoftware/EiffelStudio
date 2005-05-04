@@ -8,12 +8,12 @@
 			</link>
 		</paragraph>
 		<paragraph>We haven't even looked at a class text yet, but it's important anyway to see how EiffelStudio provides you with numerous, complementary 
-			<span>views</span> of your software.  The Context Tool is the primary place to look for such views.
+			<span>views</span> of your software. The Context Tool is the primary place to look for such views.
 		</paragraph>
 		<paragraph>We'll need just one Development Window for the moment, the one that was targeted to 
 			<code>
 				<string>LIST</string>
-			</code>.  You can get rid of the others by closing their windows (through the top right cross mark on Windows and the equivalent in other window managers), or through 
+			</code>. You can get rid of the others by closing their windows (through the top right cross mark on Windows and the equivalent in other window managers), or through 
 			<code>
 				<keyword>File</keyword>
 			</code>
@@ -29,9 +29,9 @@
 			<code>
 				<string>LIST</string>
 			</code>
-			<italic>, just retarget one, as you know how to do this now, for example by typing the name followed by Enter in the Class Field at the top left.   </italic>
+			<italic>, just retarget one, as you know how to do this now, for example by typing the name followed by Enter in the Class Field at the top left.</italic>
 		</note>
-		<paragraph>First let's give ourselves more space.  Right now we don't need the Cluster Tree and Feature Tree panes.  Get rid of them by clicking the corresponding buttons on the top toolbar:</paragraph>
+		<paragraph>First let's give ourselves more space. Right now we don't need the Cluster Tree and Feature Tree panes. Get rid of them by clicking the corresponding buttons on the top toolbar:</paragraph>
 		<div>
 			<image_link>
 				<url>index-25.png</url>
@@ -42,11 +42,11 @@
 				</image>
 			</image_link>
 		</div>
-		<paragraph>You can get these panes back later by clicking the same buttons again.  </paragraph>
+		<paragraph>You can get these panes back later by clicking the same buttons again.</paragraph>
 		<note>
-			<italic>Another way to hide a pane is to click its Close icon, the little cross mark highlighted (for the Features Tree pane) on the left in the last figure.   </italic>
+			<italic>Another way to hide a pane is to click its Close icon, the little cross mark highlighted (for the Features Tree pane) on the left in the last figure.</italic>
 		</note>
-		<paragraph>Two panes remain, showing the Editing Tool and the Context Tool.  </paragraph>
+		<paragraph>Two panes remain, showing the Editing Tool and the Context Tool.</paragraph>
 		<div>
 			<image_link>
 				<url>index-26.png</url>
@@ -57,21 +57,21 @@
 				</image>
 			</image_link>
 		</div>
-		<paragraph>Make sure the Context Tool pane is large enough; you can resize the window and, if necessary, narrow down the Editing Tool pane since we don't need it for the moment.  Don't worry, though, if the Context Tool shows only part of the diagram, as it does on the last figure, since we will now use the Context Tool to display information other than the diagram, by selecting the corresponding tabs.  </paragraph>
+		<paragraph>Make sure the Context Tool pane is large enough; you can resize the window and, if necessary, narrow down the Editing Tool pane since we don't need it for the moment. Don't worry, though, if the Context Tool shows only part of the diagram, as it does on the last figure, since we will now use the Context Tool to display information other than the diagram, by selecting the corresponding tabs.</paragraph>
 		<heading>
 			<size>2</size>
 			<content>The Class Tab</content>
 		</heading>
-		<paragraph>Note: The diagram and metrics tool is unavailable in the free version of EiffelStudio.  </paragraph>
-		<paragraph>The first tab we'll look at is the Class Tab.  You'll find it at the bottom of the Context Tool:</paragraph>
+		<paragraph>Note: The diagram and metrics tool is unavailable in the free version of EiffelStudio.</paragraph>
+		<paragraph>The first tab we'll look at is the Class Tab. You'll find it at the bottom of the Context Tool:</paragraph>
 		<image>
 			<url>index-27.png</url>
 		</image>
-		<paragraph>This gives you access to many forms of information about the current class -- the target of the Development Window.  A set of buttons at the top of the Context Tool enables you to display a number of 
-			<bold>views</bold> of the class.  The currently highlighted button indicates the default view: 
+		<paragraph>This gives you access to many forms of information about the current class -- the target of the Development Window. A set of buttons at the top of the Context Tool enables you to display a number of 
+			<bold>views</bold> of the class. The currently highlighted button indicates the default view: 
 			<code>
 				<keyword>Ancestors</keyword>
-			</code>.  You can see the others' names by moving the cursor over the various view icons, 
+			</code>. You can see the others' names by moving the cursor over the various view icons, 
 			<bold>without clicking</bold>, and reading the tooltips.
 		</paragraph>
 		<div>
@@ -118,7 +118,7 @@
 			<span>repeated</span> inheritance -- 
 			<code>
 				<string>SEQUENCE</string>
-			</code>.  If, because of direct or indirect repeated inheritance, a class appears more than once, the display doesn't repeat its ancestry the second and subsequent times; the omitted repetition appears as just three dots, 
+			</code>. If, because of direct or indirect repeated inheritance, a class appears more than once, the display doesn't repeat its ancestry the second and subsequent times; the omitted repetition appears as just three dots, 
 			<bold>...</bold>, as illustrated here for the second occurrences of 
 			<code>
 				<string>BAG</string>
@@ -127,7 +127,7 @@
 				<string>ACTIVE</string>
 			</code> and others.
 		</paragraph>
-		<paragraph>As you may have guessed, all the class names that appear on this display, by default in blue, can function as hyperlinks: you can use any one of them to retarget the Development Window to the corresponding class.  This will be another major retargeting mechanism.  But let's not pursue it for the moment and instead continue looking at the documentation views.  </paragraph>
+		<paragraph>As you may have guessed, all the class names that appear on this display, by default in blue, can function as hyperlinks: you can use any one of them to retarget the Development Window to the corresponding class. This will be another major retargeting mechanism. But let's not pursue it for the moment and instead continue looking at the documentation views.</paragraph>
 		<paragraph>Next to 
 			<code>
 				<keyword>Ancestors</keyword>
@@ -149,13 +149,13 @@
 				<string>LIST</string>
 			</code>, as you can see, is just as impressive as its ancestry.
 		</paragraph>
-		<paragraph>Let's now look at the other formats, starting from the left.  The first button, 
+		<paragraph>Let's now look at the other formats, starting from the left. The first button, 
 			<code>
 				<keyword>Clickable</keyword>
-			</code>, gives the class text.  It's essentially the same information as appears in the top Editing Tool (whose pane was reduced to its bare minimum in the last few pictures, showing only the first three lines or so), but with some differences:
+			</code>, gives the class text. It's essentially the same information as appears in the top Editing Tool (whose pane was reduced to its bare minimum in the last few pictures, showing only the first three lines or so), but with some differences:
 		</paragraph>
 		<list ordered="false">
-			<item>The top Text view is editable.  In fact it's EiffelStudio's primary tool for entering software texts.  The bottom 
+			<item>The top Text view is editable. In fact it's EiffelStudio's primary tool for entering software texts. The bottom 
 				<code>
 					<keyword>Clickable</keyword>
 				</code> view is just a view; you can't change it.
@@ -179,7 +179,7 @@
 			<item>As part of the pretty-printing, the 
 				<code>
 					<keyword>Clickable</keyword>
-				</code> view uses colors and fonts to distinguish keywords, identifiers, comments and other syntactical elements.  You can change the fonts and colors, like many other elements of the interface, through 
+				</code> view uses colors and fonts to distinguish keywords, identifiers, comments and other syntactical elements. You can change the fonts and colors, like many other elements of the interface, through 
 				<code>
 					<keyword>Tools</keyword>
 				</code>
@@ -188,10 +188,10 @@
 				</code>
 				<code>
 					<keyword>Preferences</keyword>
-				</code>.  (Now is not the time.  )
+				</code>. (Now is not the time.)
 			</item>
 		</list>
-		<paragraph>This view is called "clickable" because, as we'll see later, every syntactical element on it is a hyperlink, which you can use for browsing.  Here is the beginning of the 
+		<paragraph>This view is called "clickable" because, as we'll see later, every syntactical element on it is a hyperlink, which you can use for browsing. Here is the beginning of the 
 			<code>
 				<string>LIST</string>
 			</code> class text in 
@@ -215,7 +215,7 @@
 			</code> comes the 
 			<code>
 				<keyword>Flat</keyword>
-			</code> view button.  The layout of the result is similar:
+			</code> view button. The layout of the result is similar:
 		</paragraph>
 		<div>
 			<image_link>
@@ -227,19 +227,19 @@
 				</image>
 			</image_link>
 		</div>
-		<paragraph>The flat form of a class is the reconstructed class text including not only what's declared in the class itself but also everything that it inherits from its ancestors, direct or indirect.  This applies to the flat form's features, which include ancestor features, but also to contracts: the flat form's invariant includes all clauses from ancestors' invariants, and the preconditions are expanded to take 
+		<paragraph>The flat form of a class is the reconstructed class text including not only what's declared in the class itself but also everything that it inherits from its ancestors, direct or indirect. This applies to the flat form's features, which include ancestor features, but also to contracts: the flat form's invariant includes all clauses from ancestors' invariants, and the preconditions are expanded to take 
 			<code>
 				<keyword>require else</keyword>
 			</code> and 
 			<code>
 				<keyword>ensure then</keyword>
-			</code> clauses into consideration.  (The 
+			</code> clauses into consideration. (The 
 			<span>
 				<link>
 					<url>../language/tutorial-00.xml</url>
 					<label>Eiffel Tutorial</label>
 				</link>
-			</span> explains these notions in detail.  )
+			</span> explains these notions in detail.)
 		</paragraph>
 		<paragraph>As a result, the 
 			<code>
@@ -256,13 +256,13 @@
 			</code>, are indeed inherited from ancestors, rather than declared in 
 			<code>
 				<string>LIST</string>
-			</code> itself.  Note how EiffelStudio, when producing the flat form, adds a line of the form
+			</code> itself. Note how EiffelStudio, when producing the flat form, adds a line of the form
 		</paragraph>
 		<code_block>
 	<comment>-- (From CLASS_OF_ORIGIN)</comment>
 </code_block>
-		<paragraph>to the header comments of inherited routines, to document where they come from.  </paragraph>
-		<paragraph>The flat form is an important notion of object technology, making it possible to understand a class by itself, regardless of the possibly rich inheritance structure that led to it.  Looking at the Flat view of 
+		<paragraph>to the header comments of inherited routines, to document where they come from.</paragraph>
+		<paragraph>The flat form is an important notion of object technology, making it possible to understand a class by itself, regardless of the possibly rich inheritance structure that led to it. Looking at the Flat view of 
 			<code>
 				<string>LIST</string>
 			</code>, you may note how few of its properties come from the class itself; most of the interesting work has been done in ancestors, and 
@@ -294,7 +294,7 @@
 			</code> and 
 			<code>
 				<keyword>Flat Contract</keyword>
-			</code>.  Based on Eiffel's principles of Design by Contract, they document the interface properties of a class.  Unlike the previous two, they do not show actual Eiffel texts, but information useful for client classes.
+			</code>. Based on Eiffel's principles of Design by Contract, they document the interface properties of a class. Unlike the previous two, they do not show actual Eiffel texts, but information useful for client classes.
 		</paragraph>
 		<paragraph>Here is the beginning of the 
 			<code>
@@ -315,7 +315,7 @@
 			</image_link>
 		</div>
 		<paragraph>The contract form (also known as the 
-			<bold>short form</bold> of a class) is the class text deprived of any internal detail to retain interface information only.  It discards any feature that's not exported (available to all clients); for the retained features, it discards the implementation -- 
+			<bold>short form</bold> of a class) is the class text deprived of any internal detail to retain interface information only. It discards any feature that's not exported (available to all clients); for the retained features, it discards the implementation -- 
 			<code>
 				<keyword>do</keyword>
 			</code> or 
@@ -338,10 +338,10 @@
 			</code> view, the next one, 
 			<code>
 				<keyword>Flat Contract</keyword>
-			</code>, also known as "flat-short form" and "interface form", which applies the same rules to the flat form rather than to the original class.  This means it shows information on all the features of the class, immediate (defined in the class itself) as well as inherited, whereas the short form, non-flat, only considers immediate features.  The 
+			</code>, also known as "flat-short form" and "interface form", which applies the same rules to the flat form rather than to the original class. This means it shows information on all the features of the class, immediate (defined in the class itself) as well as inherited, whereas the short form, non-flat, only considers immediate features. The 
 			<code>
 				<keyword>Flat Contract</keyword>
-			</code> view provides the complete interface information for the class.  Try it now on class 
+			</code> view provides the complete interface information for the class. Try it now on class 
 			<code>
 				<string>LIST</string>
 			</code>.
@@ -352,13 +352,13 @@
 			</code> and 
 			<code>
 				<keyword>Descendants</keyword>
-			</code> views, which we have already seen, showing classes connected with the target through one of the two inter-class relations, inheritance.  After them come 
+			</code> views, which we have already seen, showing classes connected with the target through one of the two inter-class relations, inheritance. After them come 
 			<code>
 				<keyword>Clients</keyword>
 			</code> and 
 			<code>
 				<keyword>Suppliers</keyword>
-			</code>, to  list the classes connected through the other relation, client.  Clicking the 
+			</code>, to list the classes connected through the other relation, client. Clicking the 
 			<code>
 				<keyword>Clients</keyword>
 			</code> button shows the (empty) list of clients of 
@@ -382,7 +382,7 @@
 			</code> as client, although some use its descendant 
 			<code>
 				<string>ARRAYED_LIST</string>
-			</code>.  Now click the next button to see the 
+			</code>. Now click the next button to see the 
 			<code>
 				<keyword>Suppliers</keyword>
 			</code> of 
@@ -409,7 +409,7 @@
 			</code> and 
 			<code>
 				<string>INTEGER</string>
-			</code>.  In Eiffel, as you may remember, all types are defined by classes, even those describing such elementary values as integers and booleans.
+			</code>. In Eiffel, as you may remember, all types are defined by classes, even those describing such elementary values as integers and booleans.
 		</paragraph>
 		<heading>
 			<size>2</size>
@@ -421,17 +421,17 @@
 			</code> and 
 			<code>
 				<string>BOOLEAN</string>
-			</code> look like, and instead continue our survey of views.  The remaining views will all display information about the 
-			<bold>features</bold> of the class.  The first of them, 
+			</code> look like, and instead continue our survey of views. The remaining views will all display information about the 
+			<bold>features</bold> of the class. The first of them, 
 			<code>
 				<keyword>Attributes</keyword>
-			</code>, lists the attributes.  It's not very interesting for 
+			</code>, lists the attributes. It's not very interesting for 
 			<code>
 				<string>LIST</string>
 			</code>, a deferred class with only one attribute -- you can check this for yourself by clicking the 
 			<code>
 				<keyword>Attributes</keyword>
-			</code> button -- so let's look at the next one.  Click the 
+			</code> button -- so let's look at the next one. Click the 
 			<code>
 				<keyword>Routines</keyword>
 			</code> button now to display information about the routines of class 
@@ -467,14 +467,14 @@
 			</code> from 
 			<code>
 				<string>BAG</string>
-			</code>.  Much of the benefit of this display comes from its support for browsing: all the colored elements, representing classes and features, will be "clickable" hyperlinks.
+			</code>. Much of the benefit of this display comes from its support for browsing: all the colored elements, representing classes and features, will be "clickable" hyperlinks.
 		</paragraph>
-		<paragraph>The remaining Class View buttons all display information in the same format.  Each selects a specific subset of the target class's features.  The last two selected attributes and routines.  You can now try any of the others by clicking the corresponding button:</paragraph>
+		<paragraph>The remaining Class View buttons all display information in the same format. Each selects a specific subset of the target class's features. The last two selected attributes and routines. You can now try any of the others by clicking the corresponding button:</paragraph>
 		<list ordered="false">
 			<item>
 				<code>
 					<keyword>Deferred</keyword>
-				</code> features: abstract features which don't have an implementation in the current class, only in eventual descendants.  Try this for 
+				</code> features: abstract features which don't have an implementation in the current class, only in eventual descendants. Try this for 
 				<code>
 					<string>LIST</string>
 				</code> ; you'll see that this deferred class indeed has a number of deferred features.

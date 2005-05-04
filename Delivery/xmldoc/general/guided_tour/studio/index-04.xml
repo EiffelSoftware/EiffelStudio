@@ -13,7 +13,7 @@
 			</code> denotes the directory where the example resides (the original, 
 			<code>
 				<keyword>$ISE_EIFFEL/examples/studio/tour</keyword>
-			</code>, or a copy).  Launching will use the operating system's mechanism for starting a program, so we look separately at Windows and at Unix/VMS.
+			</code>, or a copy). Launching will use the operating system's mechanism for starting a program, so we look separately at Windows and at Unix/VMS.
 		</paragraph>
 		<heading>
 			<size>2</size>
@@ -22,13 +22,13 @@
 		<paragraph>On Windows, you can launch EiffelStudio from the Start Menu under</paragraph>
 		<code_block>	<keyword>Programs --&gt; EiffelStudio Version --&gt; EiffelStudio</keyword></code_block>
 		<paragraph>where 
-			<span>Version</span> is the version number, e.g. 5.0.  Alternatively, you can double-click the icon that the installation procedure will have added to your desktop (if you have selected that option during installation).
+			<span>Version</span> is the version number, e.g. 5.0. Alternatively, you can double-click the icon that the installation procedure will have added to your desktop (if you have selected that option during installation).
 		</paragraph>
-		<paragraph>If this is the first time you are using EiffelStudio, you may get a dialog asking for an unlock code or inviting you to register the product.  Please 
+		<paragraph>If this is the first time you are using EiffelStudio, you may get a dialog asking for an unlock code or inviting you to register the product. Please 
 			<span>
 				<link>
 					<url>mailto:sales@eiffel.com</url>
-					<label>contact  Eiffel Software </label>
+					<label>contact Eiffel Software </label>
 				</link>
 			</span> for registration and purchase information.
 		</paragraph>
@@ -49,7 +49,7 @@
 			</code> command from 
 			<code>
 				<string>YOURDIR</string>
-			</code> .  (This will allow us to use relative rather than absolute names for some of the files involved.  )
+			</code>. (This will allow us to use relative rather than absolute names for some of the files involved.)
 		</paragraph>
 		<paragraph>
 			<link>

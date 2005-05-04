@@ -12,7 +12,7 @@ create
 	
 feature {NONE} -- Initialize
 
-	make_from_array (data: ARRAY [INTEGER_8]) is
+	make_from_array (data: ARRAY [NATURAL_8]) is
 			-- Initialize `item' with content of `data'.
 		require
 			data_not_void: data /= Void
@@ -26,7 +26,7 @@ feature {NONE} -- Initialize
 			data_not_void: data /= Void
 			valid_count: data.count \\ 2 = 0
 		local
-			l_data: ARRAY [INTEGER_8]
+			l_data: ARRAY [NATURAL_8]
 			l_byte: STRING
 			i, nb: INTEGER
 		do
@@ -38,7 +38,7 @@ feature {NONE} -- Initialize
 				i > nb
 			loop
 				l_byte := data.substring (i, i + 1)
-				l_data.put (read_hexa_value (l_byte).to_integer.to_integer_8, i // 2 + 1)
+				l_data.put (read_hexa_value (l_byte).to_natural_8, i // 2 + 1)
 				i := i + 2
 			end
 			make_from_array (l_data)

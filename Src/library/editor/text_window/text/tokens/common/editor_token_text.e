@@ -125,7 +125,7 @@ feature -- Miscellaneous
 		
 	display_with_offset (x_offset, d_y: INTEGER; device: EV_DRAWABLE; panel: TEXT_PANEL) is
 			-- Display the current token on device context `dc'
-			-- at the coordinates (`position',`d_y')
+			-- at the coordinates (`x_offset',`d_y')
 		do
 			if panel.text_is_fully_loaded then
 				display_with_colors_offset (x_offset, d_y, text_color , background_color, device)
@@ -334,11 +334,11 @@ feature {NONE} -- Implementation
 
 			if a_background_color /= Void then
 				device.set_background_color (a_background_color)
-				device.clear_rectangle (position + x_offset, d_y, get_substring_width (image.count), height)
+				device.clear_rectangle (x_offset, d_y, get_substring_width (image.count), height)
 			end
 			
  				-- Display the text.
- 			draw_text_top_left (position + x_offset, d_y, text_to_be_drawn, device)
+ 			draw_text_top_left (x_offset, d_y, text_to_be_drawn, device)
 		end
 
 feature {NONE} -- Implementation

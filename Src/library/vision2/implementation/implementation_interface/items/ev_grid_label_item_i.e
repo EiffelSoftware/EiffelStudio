@@ -112,6 +112,8 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 			client_x, client_y, client_width, client_height: INTEGER
 			text_x, text_y: INTEGER
 			pixmap_x, pixmap_y: INTEGER
+			content_left_edge, content_right_edge, content_top_edge, content_bottom_edge: INTEGER
+			selection_x, selection_y, selection_width, selection_height: INTEGER
 		do
 			fixme ("Correctly handle selection colors and inversion")
 			recompute_text_dimensions
@@ -216,7 +218,21 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 			if is_selected then
 				buffer_pixmap.set_foreground_color (parent_i.selection_color)
 				buffer_pixmap.set_and_mode
-				buffer_pixmap.fill_rectangle (0, 0, a_width, a_height)
+
+					-- Calculate the area that must be selected in `Current'.
+				if interface.is_full_select_enabled then
+					selection_x := 0
+					selection_width := a_width
+					selection_y := 0
+					selection_height := a_height					
+				else
+					selection_x := text_x
+					selection_width := text_width + 2
+					selection_y := text_y
+					selection_height := text_height
+				end
+
+				buffer_pixmap.fill_rectangle (selection_x, selection_y, selection_width, selection_height)
 				buffer_pixmap.set_foreground_color ((create {EV_STOCK_COLORS}).white)
 				buffer_pixmap.set_copy_mode
 			else
@@ -238,39 +254,56 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 				buffer_pixmap.draw_ellipsed_text_top_left (text_x, text_y, interface.text, space_remaining_for_text)
 			end
 
-				-- Now handle the border clipping.
+				-- Now handle the border clipping. We simply draw the border back over the top of the
+				-- text and pixmap. First we calculate the area occupied by the contents and only perform
+				-- the overdraw if it intersects with this.
+
+			content_left_edge := text_x.min (pixmap_x)
+			content_right_edge := (text_x + text_width + 2).max (pixmap_x + pixmap_width)
+			content_top_edge := text_y.min (pixmap_y)
+			content_bottom_edge := (text_y + text_height).max (pixmap_y + pixmap_height)
 
 				-- First draw the border in the standard background color
 			buffer_pixmap.set_foreground_color (back_color)
-			if bottom_border > 0 then
-				buffer_pixmap.fill_rectangle (0, a_height - bottom_border, a_width, a_height)
+			if bottom_border > a_height - content_bottom_edge then
+				buffer_pixmap.fill_rectangle (content_left_edge, (a_height - bottom_border).max (content_top_edge), content_right_edge - content_left_edge, content_bottom_edge - ((a_height - bottom_border).max (content_top_edge)))
 			end
-			if top_border > 0 then
-				buffer_pixmap.fill_rectangle (0, 0, a_width, top_border)
+			if top_border > content_top_edge then
+				buffer_pixmap.fill_rectangle (content_left_edge, content_top_edge, content_right_edge - content_left_edge, top_border.min (content_bottom_edge) - content_top_edge)
 			end
-			if left_border > 0 then
-				buffer_pixmap.fill_rectangle (0, 0, left_border, a_height)
+			if left_border > content_left_edge then
+				buffer_pixmap.fill_rectangle (content_left_edge, content_top_edge, left_border.min (content_right_edge) - content_left_edge, content_bottom_edge - content_top_edge)
 			end
-			if right_border > 0 then
-				buffer_pixmap.fill_rectangle (a_width - right_border, 0, a_width, a_height)
+			if right_border > a_width - content_right_edge then
+				buffer_pixmap.fill_rectangle ((a_width - right_border).max (content_left_edge), content_top_edge, content_right_edge - ((a_width - right_border).max (content_left_edge)), content_bottom_edge - content_top_edge)
 			end
-
 			if is_selected then
 					-- Now, if `Current' is selected, highlight the border.
-				buffer_pixmap.set_foreground_color (parent_i.selection_color)
-				buffer_pixmap.set_and_mode
-				if bottom_border > 0 then
-					buffer_pixmap.fill_rectangle (0, a_height - bottom_border, a_width, a_height)
+					-- We must take into account whether `interface.is_full_select_enabled' and only re-draw
+					-- the correct area if so.
+
+				if interface.is_full_select_enabled then
+					
+						-- If we are not in `full_select_mode', there is nothing to do here
+						-- as the selection is clipped with the text. In `full_select_mode', the selection
+						-- always occupies the complete client area of `Current' so we must draw it in.
+
+					buffer_pixmap.set_foreground_color (parent_i.selection_color)
+					buffer_pixmap.set_and_mode
+
+					if bottom_border > a_height - content_bottom_edge then
+						buffer_pixmap.fill_rectangle (content_left_edge, (a_height - bottom_border).max (content_top_edge), content_right_edge - content_left_edge, content_bottom_edge - ((a_height - bottom_border).max (content_top_edge)))
+					end
+					if top_border > content_top_edge then
+						buffer_pixmap.fill_rectangle (content_left_edge, content_top_edge, content_right_edge - content_left_edge, top_border.min (content_bottom_edge) - content_top_edge)
+					end
+					if left_border > content_left_edge then
+						buffer_pixmap.fill_rectangle (content_left_edge, content_top_edge, left_border.min (content_right_edge) - content_left_edge, content_bottom_edge - content_top_edge)
+					end
+					if right_border > a_width - content_right_edge then
+						buffer_pixmap.fill_rectangle ((a_width - right_border).max (content_left_edge), content_top_edge, content_right_edge - ((a_width - right_border).max (content_left_edge)), content_bottom_edge - content_top_edge)
+					end
 				end
-				if top_border > 0 then
-					buffer_pixmap.fill_rectangle (0, 0, a_width, top_border)
-				end
-				if left_border > 0 then
-					buffer_pixmap.fill_rectangle (0, 0, left_border, a_height)
-				end
-				if right_border > 0 then
-					buffer_pixmap.fill_rectangle (a_width - right_border, 0, a_width, a_height)
-				end	
 			end
 
 			drawable.draw_sub_pixmap (an_x, a_y, buffer_pixmap, create {EV_RECTANGLE}.make (0, 0, a_width, a_height))
@@ -289,8 +322,6 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 			create Result
 		end
 		
-		
-
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_GRID_LABEL_ITEM

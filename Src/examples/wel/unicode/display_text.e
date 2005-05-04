@@ -1,16 +1,17 @@
 indexing
-	description: "Objects that ..."
+	description: "Display text with a special color"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
 	DISPLAY_TEXT
 
-inherit WEL_STATIC
-	redefine
-		background_color,
-		foreground_color
-	end
+inherit
+	WEL_STATIC
+		redefine
+			background_color,
+			foreground_color
+		end
 
 create
 	make
@@ -23,8 +24,6 @@ feature
 			-- Can be redefined by the user
 		do
 			create Result.make 
-		ensure
-			result_not_void: Result /= Void
 		end
 			
 	foreground_color: WEL_COLOR_REF is
@@ -33,8 +32,6 @@ feature
 			-- Can be redefined by the user
 		do
 			create Result.make
-		ensure
-			result_not_void: Result /= Void
 		end
 
 end --class DISPLAY_TEXT

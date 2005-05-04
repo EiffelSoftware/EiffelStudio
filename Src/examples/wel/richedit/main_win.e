@@ -149,13 +149,13 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	default_process_message (msg, wparam, lparam: INTEGER) is
+	default_process_message (msg: INTEGER; wparam, lparam: POINTER) is
 			-- Draw the tooltips.
 		local
 			tt: WEL_TOOLTIP_TEXT
 		do
 			if msg = Wm_notify then
-				create tt.make_by_pointer (cwel_integer_to_pointer (lparam))
+				create tt.make_by_pointer (lparam)
 				if tt.hdr.code = Ttn_needtext then
 					-- Set resource string id.
 					tt.set_text_id (tt.hdr.id_from)

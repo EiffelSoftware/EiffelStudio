@@ -120,14 +120,14 @@ feature {NONE} -- Implementation
 	item_x_index_changed (a_value: INTEGER) is
 			-- Called by `change_actions' of `item_x_index'.
 		do
-			--found_item := grid.item (a_value, item_y_index.value)
+			found_item := grid.item (a_value, item_y_index.value)
 			update_item_data (a_value, item_y_index.value)
 		end
 	
 	item_y_index_changed (a_value: INTEGER) is
 			-- Called by `change_actions' of `item_y_index'.
 		do
-			--found_item := grid.item (item_x_index.value, a_value)
+			found_item := grid.item (item_x_index.value, a_value)
 			update_item_data (item_x_index.value, a_value)
 		end
 		
@@ -1160,6 +1160,117 @@ feature {NONE} -- Implementation
 				label_item ?= grid.item (column, counter)
 				if label_item /= Void then
 					label_item.set_font (original_item.font)
+				end
+				counter := counter + 1
+			end
+		end
+
+	is_full_select_button_selected is
+			-- Called by `select_actions' of `is_full_select_button'.
+		local
+			label_item: EV_GRID_LABEL_ITEM
+		do
+			label_item ?= found_item
+			if label_item /= Void then
+				if is_full_select_button.is_selected then
+					label_item.enable_full_select
+				else
+					label_item.disable_full_select
+				end
+			end
+		end
+	
+	apply_full_select_column_button_selected is
+			-- Called by `select_actions' of `apply_full_select_column_button'.
+		local
+			counter: INTEGER
+			original_item, label_item: EV_GRID_LABEL_ITEM
+			row: INTEGER
+		do
+			from
+				counter := 1
+				row := found_item.row.index
+				original_item ?= found_item
+			until
+				counter > grid.column_count
+			loop
+				label_item ?= grid.item (counter, row)
+				if label_item /= Void then
+					if original_item.is_full_select_enabled then
+						label_item.enable_full_select
+					else
+						label_item.disable_full_select
+					end
+				end
+				counter := counter + 1
+			end
+		end
+	
+	apply_full_select_row_button_selected is
+			-- Called by `select_actions' of `apply_full_select_row_button'.
+		local
+			counter: INTEGER
+			original_item, label_item: EV_GRID_LABEL_ITEM
+			column: INTEGER
+		do
+			from
+				counter := 1
+				column := found_item.column.index
+				original_item ?= found_item
+			until
+				counter > grid.row_count
+			loop
+				label_item ?= grid.item (column, counter)
+				if label_item /= Void then
+					if original_item.is_full_select_enabled then
+						label_item.enable_full_select
+					else
+						label_item.disable_full_select
+					end
+				end
+				counter := counter + 1
+			end
+		end
+	
+	apply_text_row_button_selected is
+			-- Called by `select_actions' of `apply_text_row_button'.
+		local
+			counter: INTEGER
+			original_item, label_item: EV_GRID_LABEL_ITEM
+			row: INTEGER
+		do
+			from
+				counter := 1
+				row := found_item.row.index
+				original_item ?= found_item
+			until
+				counter > grid.column_count
+			loop
+				label_item ?= grid.item (counter, row)
+				if label_item /= Void then
+					label_item.set_text (original_item.text)
+				end
+				counter := counter + 1
+			end
+		end
+	
+	apply_text_column_button_selected is
+			-- Called by `select_actions' of `apply_text_column_button'.
+		local
+			counter: INTEGER
+			original_item, label_item: EV_GRID_LABEL_ITEM
+			column: INTEGER
+		do
+			from
+				counter := 1
+				column := found_item.column.index
+				original_item ?= found_item
+			until
+				counter > grid.row_count
+			loop
+				label_item ?= grid.item (column, counter)
+				if label_item /= Void then
+					label_item.set_text (original_item.text)
 				end
 				counter := counter + 1
 			end

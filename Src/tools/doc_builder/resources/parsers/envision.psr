@@ -85,7 +85,7 @@ src="([^"]*)" || <url>\1\</url>
 </url>> || </url></image>
 <meta_data/></LINK> || <meta_data/>
 <table><row><cell>Eiffel ENViSioN!</cell></row><row><cell>[^<]*</cell></row></TABLE> ||
-<table><row><cell>© 2003-2004 Eiffel Software. All rights reserved.</cell></row></TABLE> ||
+<table><row><cell>© 2003-2005 Eiffel Software. All rights reserved.</cell></row></TABLE> ||
 </LINK></LINK></LINK> ||
 <item><paragraph> || <item>
 <item> || </item><item>

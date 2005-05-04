@@ -9,7 +9,7 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>We have now studied the constituents of Eiffel software.  It remains to see how you can combine these elements into executable 
+		<paragraph>We have now studied the constituents of Eiffel software. It remains to see how you can combine these elements into executable 
 			<bold>systems</bold> -- the Eiffel concept closest to the traditional notion of program -- and libraries.
 		</paragraph>
 		<paragraph>How do you get an executable system? All you need is to
@@ -18,7 +18,7 @@
 			<item>Provide a set of classes, called a 
 				<bold>universe</bold>.
 			</item>
-			<item>Designate of these classes as the 
+			<item>Designate one of these classes as the 
 				<bold>root class</bold>.
 			</item>
 			<item>Designate one of its creation procedures as the 
@@ -26,25 +26,25 @@
 			</item>
 		</list></paragraph>
 		<paragraph>This defines what it means to execute the system: create one direct instance of the root class (the execution's 
-			<bold>root object</bold>); and call the root procedure on it.  That's all.
+			<bold>root object</bold>); and call the root procedure on it. That's all.
 		</paragraph>
-		<paragraph>In any practical case, the root procedure will create other objects, call other routines on them, leading to further creations and calls.  </paragraph>
-		<paragraph>For the system to be valid, it must include all the classes which the  root 
+		<paragraph>In any practical case, the root procedure will create other objects, call other routines on them, leading to further creations and calls.</paragraph>
+		<paragraph>For the system to be valid, it must include all the classes which the root 
 			<bold>needs</bold> directly or indirectly; a class "needs" another if it is one of its heirs or clients.
 		</paragraph>
 		<paragraph>We can generalize these notions to encompass a library rather than an executable system, by accepting 
 			<code>
 				<class_name>NONE</class_name>
-			</code> as root class.  Since 
+			</code> as root class. Since 
 			<code>
 				<class_name>NONE</class_name>
 			</code> inherits from all other classes, it needs all the classes in the universe; compiling with 
 			<code>
 				<class_name>NONE</class_name>
-			</code> as root will compile all classes.  In this case you don't specify a root procedure, and the result is not executable.
+			</code> as root will compile all classes. In this case you don't specify a root procedure, and the result is not executable.
 		</paragraph>
 		<paragraph>The Eiffel method suggests grouping related classes -- typically 5 to 40 classes -- into collections called 
-			<bold>clusters</bold>.  A universe is then a set of clusters.  For example the EiffelBase library is divided into clusters corresponding each to a major category of data structure: 
+			<bold>clusters</bold>. A universe is then a set of clusters. For example the EiffelBase library is divided into clusters corresponding each to a major category of data structure: 
 			<code>
 				<string>lists</string>
 			</code>, 
@@ -53,9 +53,9 @@
 			</code>, 
 			<code>
 				<string>iteration</string>
-			</code> and so on.  You can nest clusters, using for example EiffelBase, with its own subclusters as listed, as a cluster of your system.
+			</code> and so on. You can nest clusters, using for example EiffelBase, with its own subclusters as listed, as a cluster of your system.
 		</paragraph>
-		<paragraph>How will you specify a universe? Any Eiffel implementation can use its own conventions.  EiffelStudio applies a simple policy:
+		<paragraph>How will you specify a universe? Any Eiffel implementation can use its own conventions. EiffelStudio applies a simple policy:
 		<line_break/>
 		<list ordered="false">
 			<item>Store each class in a single file, called its class file, with a name of the form 
@@ -65,28 +65,30 @@
 				.
 				<code>
 					<keyword>e</keyword>
-				</code>.  For clarity, 
+				</code>. For clarity, 
 				<code>
 					<string>name</string>
 				</code> should be the lower-case version of the class name, although this is a style rule, not a requirement.
 			</item>
 			<item>Put all the class files of a cluster into a single directory (folder on Windows), called its cluster directory.
-			<note>It is desirable for clarity, as a style rule, to separate clusters that directly contain classes ("terminal clusters") from those that have subclusters.  Cluster directories will then contain class files or cluster subdirectories, but not both.  </note>
+			<note>It is desirable for clarity, as a style rule, to separate clusters that directly contain classes ("terminal clusters") from those that have subclusters. Cluster directories will then contain class files or cluster subdirectories, but not both. </note>
 			</item>
-			<item>To specify a system, it suffices to provide a list of cluster directories, along with the name of the root class and root procedure.  The universe consists of the classes contained in all the class files in the listed cluster directories.  </item>
+			<item>To specify a system, it suffices to provide a list of cluster directories, along with the name of the root class and root procedure. The universe consists of the classes contained in all the class files in the listed cluster directories.</item>
 		</list>
 		</paragraph>
-		<paragraph>Here is an example of such a system specification.  It's 
-			not written in Eiffel, although it definitely has an Eiffel-like flavor.  It is called an 
-			<bold>Ace</bold>  (Assembly of Classes in Eiffel) and written in the Eiffel-like 
-			<bold>Lace</bold> notation (Language for the Assembly of Classes in Eiffel).  The backward slash 
+		<paragraph>Here is an example of such a system specification. It's 
+			not written in Eiffel, although it definitely has an Eiffel-like flavor. It is called an 
+			<bold>Ace</bold> (Assembly of Classes in Eiffel) and written in the Eiffel-like 
+			<bold>Lace</bold> notation (Language for the Assembly of Classes in Eiffel).
+		</paragraph>
+		<note>The path names in this example use the Windows path separator, a backward slash 
 			<code>
 				<keyword>\</keyword>
-			</code> is the Windows path separator; Unix uses a forward slash 
+			</code>. Unix uses a forward slash 
 			<code>
 				<keyword>/</keyword>
-			</code> for the same purpose (EiffelStudio will accept both on Windows).
-		</paragraph>
+			</code> (also acceptable on Windows) for the same purpose.
+		</note>
 		<code_block>
 <keyword>system</keyword>
 	example
@@ -103,11 +105,11 @@
 	<cluster_name>her_cluster2</cluster_name>: <string>"herdir\project2\subdir1\subdir2"</string>
 <keyword>end</keyword>
 </code_block>
-		<paragraph>With EiffelStudio you don't have to write the Ace yourself; just specify the information interactively through the Preferences dialog and EiffelStudio will generate the Ace.  You can also reuse and adapt one of the many example Aces in the delivery.  </paragraph>
-		<paragraph>So you don't need to learn the syntax of Lace, although as the example shows it is straightforward.  The Ace first gives the system a name, 
+		<paragraph>With EiffelStudio you don't have to write the Ace yourself; just specify the information interactively through the Preferences dialog and EiffelStudio will generate the Ace. You can also reuse and adapt one of the many example Aces in the delivery.</paragraph>
+		<paragraph>So you don't need to learn the syntax of Lace, although as the example shows it is straightforward. The Ace first gives the system a name, 
 			<code>
 				<string>example</string>
-			</code>, which will also serve as the name of the generated executable.  It then specifies the root class, its cluster (optional), and the root procedure.  Next, in the 
+			</code>, which will also serve as the name of the generated executable. It then specifies the root class, its cluster (optional), and the root procedure. Next, in the 
 			<code>
 				<keyword>default </keyword>
 			</code>clause, come compilation options; you can specify assertion monitoring, with choices that include 
@@ -122,28 +124,20 @@
 			</code> (preconditions and postconditions, as here) and 
 			<code>
 				<keyword>invariant</keyword>
-			</code> (the previous two plus class invariants).  You can also specify various levels of assertion monitoring separately for a cluster, or for a specific class.  The 
+			</code> (the previous two plus class invariants). You can also specify various levels of assertion monitoring separately for a cluster, or for a specific class. The 
 			<code>
 				<keyword>precompiled</keyword>
-			</code> option specifies use of a precompiled library, EiffelBase, at the path given.  The Ace ends with a list of clusters, other than those of EiffelBase, specifying for a cluster name, such as 
+			</code> option specifies use of a precompiled library, EiffelBase, at the path given. The Ace ends with a list of clusters, other than those of EiffelBase, specifying for a cluster name, such as 
 			<code>
 				<string>my_cluster1</string>
 			</code>, and the directory where it resides.
 		</paragraph>
-		<info>The path names in this example use the Windows path separator, a backward slash 
-			<code>
-				<keyword>\</keyword>
-			</code>.  Unix uses a forward slash 
-			<code>
-				<keyword>/</keyword>
-			</code> (also acceptable on Windows) for the same purpose.
-		</info>
-		<paragraph>This Ace is from an example in the delivery.  If you compile and execute it, it will create an instance of class 
+		<paragraph>This Ace is from an example in the delivery. If you compile and execute it, it will create an instance of class 
 			<code>
 				<class_name>CALCULATOR</class_name>
 			</code> and call its 
 			<code>
 				<feature_name>make</feature_name>
-			</code> procedure.  This starts a small interactive calculator, illustrating some of the simple mechanisms of EiffelBase.
+			</code> procedure. This starts a small interactive calculator, illustrating some of the simple mechanisms of EiffelBase.
 		</paragraph>
 	</paragraph></document>

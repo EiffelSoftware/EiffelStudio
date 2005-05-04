@@ -156,7 +156,11 @@ feature -- Access
 		require
 			parented: is_parented
 		do
-			Result := row_i.height
+			if parent_i.is_row_height_fixed then
+				Result := parent_i.row_height
+			else						
+				Result := row_i.height
+			end
 		ensure
 			Result_non_negative: Result >= 0
 		end

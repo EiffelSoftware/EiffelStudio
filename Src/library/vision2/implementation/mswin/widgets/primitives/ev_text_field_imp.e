@@ -128,6 +128,14 @@ feature {EV_ANY_I} -- Status report
 			Result := wel_text
 		end
 
+feature {EV_ANY_I} -- Status setting
+
+	hide_border is
+			-- Ensure that `Current' is displayed with no border.
+		do
+			set_ex_style (0)
+		end
+
 feature {NONE} -- WEL Implementation
 
 	default_style: INTEGER is

@@ -137,7 +137,7 @@ feature -- Event handling
 			result_not_void: Result /= Void
 		end
 
-	active_item_setup_actions: ACTION_SEQUENCE [TUPLE [EV_GRID_ITEM, EV_WINDOW]] is
+	active_item_setup_actions: ACTION_SEQUENCE [TUPLE [EV_GRID_ITEM, EV_POPUP_WINDOW]] is
 			-- Actions to be performed to setup an item that is currently activated.
 			-- Overrides default setup of activatable items.
 			-- Arguments of TUPLE (with names for clarity):
@@ -294,7 +294,7 @@ feature {EV_ANY_I} -- Implementation
 	pointer_motion_actions_internal: ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, EV_GRID_ITEM]]
 			-- Implementation of once per object `motion_actions_internal'.
 
-	active_item_setup_actions_internal: ACTION_SEQUENCE [TUPLE [EV_GRID_ITEM, EV_WINDOW]]
+	active_item_setup_actions_internal: ACTION_SEQUENCE [TUPLE [EV_GRID_ITEM, EV_POPUP_WINDOW]]
 			-- Implementation of once per object `active_item_setup_actions'
 			
 	pointer_double_press_actions_internal: ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, INTEGER, EV_GRID_ITEM]]

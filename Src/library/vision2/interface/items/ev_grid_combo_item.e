@@ -55,8 +55,7 @@ feature {NONE} -- Implementation
 			end
 			combo_box.set_text (text)
 			popup_window.extend (combo_box)
-			popup_window.show
-			combo_box.set_focus
+			popup_window.show_actions.extend (agent combo_box.set_focus)
 			combo_box.select_actions.extend (agent deactivate)
 			combo_box.return_actions.extend (agent deactivate)
 			popup_window.focus_out_actions.extend (agent deactivate)

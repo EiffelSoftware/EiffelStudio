@@ -173,7 +173,13 @@ feature -- Status setting
 feature -- Actions
 
 	activate is
-			-- Setup `Current' for user interactive editing.
+			-- Setup `Current' for interactive in-place editing of `Current'.
+			-- Activation is usually achieved by connecting an agent  to 
+			-- {EV_GRID}.pointer_double_press_actions' that calls `activate'.
+			-- Will call `activate_action' of `Current' to setup the in-place editing.
+			-- The default behavior of the activation can be overriden in {EV_GRID_ITEM}.item_activate_actions,
+			-- this is useful for repositioning the popup window used editing `Current'.
+			-- See {EV_GRID_EDITABLE_ITEM}.activate_action for an example of what happens on activation.
 		require
 			not_destroyed: not is_destroyed
 			parented: is_parented
@@ -226,11 +232,17 @@ feature {EV_GRID_I} -- Implementation
 
 	activate_action (popup_window: EV_POPUP_WINDOW) is
 			-- `Current' has been requested to be updated via `popup_window'.
+			-- Used for initializing `popup_window' for in-place editing.
+			-- `popup_window' will be shown after `activate_action' has executed.
 		require
 			parented: is_parented
 			popup_window_not_void: popup_window /= Void
 			popup_window_not_destroyed: not popup_window.is_destroyed	
 		do
+			-- By default do nothing, redefined by descendants.
+		ensure
+			popup_window_not_destroyed: not popup_window.is_destroyed
+			popup_window_not_shown: not popup_window.is_show_requested
 		end
 
 feature {NONE} -- Implementation

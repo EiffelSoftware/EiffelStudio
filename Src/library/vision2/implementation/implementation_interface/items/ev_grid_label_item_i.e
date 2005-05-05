@@ -209,10 +209,7 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 			end
 
 			buffer_pixmap.set_copy_mode
-			back_color := internal_background_color
-			if back_color = Void then
-				back_color := parent_i.background_color
-			end
+			back_color := displayed_background_color
 			buffer_pixmap.set_foreground_color (back_color)
 			buffer_pixmap.fill_rectangle (0, 0, a_width, a_height)
 			if is_selected then
@@ -236,7 +233,7 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 				buffer_pixmap.set_foreground_color ((create {EV_STOCK_COLORS}).white)
 				buffer_pixmap.set_copy_mode
 			else
-				buffer_pixmap.set_foreground_color (foreground_color)
+				buffer_pixmap.set_foreground_color (displayed_foreground_color)
 			end
 					
 			if l_pixmap /= Void then
@@ -310,14 +307,14 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 		end
 
 	buffer_pixmap: EV_PIXMAP is
-			--
+			-- Once access to a pixmap used for buffering the drawing to prevent flicker.
 		once
 			create Result
 			Result.set_size (100, 16)
 		end
 
 	grid_label_item_layout: EV_GRID_LABEL_ITEM_LAYOUT is
-			--
+			-- Once access to a layout structure used by `layout_procedure'.
 		once
 			create Result
 		end

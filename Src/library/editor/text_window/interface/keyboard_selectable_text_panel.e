@@ -781,7 +781,6 @@ feature {NONE} -- Implementation
 			token_end_position		: INTEGER
 			l_text: 				like text_displayed
 			l_buffered_line: 		like buffered_line
-			redraw_token			: BOOLEAN
  		do
  			
 	 			-- Cache values into locals

@@ -988,7 +988,6 @@ feature {NONE} -- Display functions
 			on_paint: on_paint
 		local
 			curr_token: EDITOR_TOKEN
-			x_pos: INTEGER
 			da: EV_DRAWING_AREA
 			redraw_token: BOOLEAN
 			token_start_pos,

@@ -1,5 +1,22 @@
 indexing
-	description: "Widget which is a combination of an EV_TREE and an EV_MULTI_COLUMN_LIST"
+	description: "[
+		Widget which is a combination of an EV_TREE and an EV_MULTI_COLUMN_LIST.
+
+
+		Color Handling: Colors applied to items within `Current' are determined on a three level basis.
+		The base level is `Current' whose `foreground_color' and `background_color' may never be Void.
+		The second level are the columns and rows of `Current' whose `foreground_color' and `background_color' are `Void' by default.
+		The final level is comprised of the items of `Current' themselves whose `foreground_color' and `background_color' are `Void' by default.
+		As `Current' performs a  re-draw of an item "cell" contained within, the following rules are applied in order to determine the displayed colors:
+		1. If there is an item in the "cell" which has a non-Void `foreground_color' or `background_color' then these colors are applied to the
+		contents of that "cell", otherwise, step 2 is applied.
+		2. If the column or row at that position has non-Void `foreground_color' or `background_color' then these colors are applied to the contents
+		of that "cell", otherwise step 3 is applied.
+		3. As the colors of the item, row and column were all `Void', the `foreground' and `background_color' of `Current' is applied to the contents
+		of that "cell".
+		Note that for areas of an items "cell" that are not filled by item item itself, such as the area of a tree structure, step 1 is ignored and
+		the color calculations begin at step 2.
+			]"
 	date: "$Date$"
 	revision: "$Revision$"
 

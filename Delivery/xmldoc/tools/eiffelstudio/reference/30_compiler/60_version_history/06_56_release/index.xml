@@ -41,6 +41,7 @@
 			<item>In .NET, renamed <class_name>TYPE</class_name>, <class_name>ATTRIBUTE_</class_name> and <class_name>VOID_</class_name> from the mscorlib assembly into <class_name>SYSTEM_TYPE</class_name>, <class_name>SYSTEM_ATTRIBUTE</class_name> and <class_name>SYSTEM_VOID</class_name>.</item>
 			<item>Changed exception handling for once routines so that exception raised during the first call is raised during any subsequent call to this routine.</item>
 			<item>Introduced upper limit for value of integer constant used in <code><class_name>BIT</class_name></code> type declaration and extended <code><compiler_error>VTBT</compiler_error></code> rule to cover this change.</item>
+			<item>To evaluate the type of a manifest array we now use the first item of the manifest array instead of the last one as a first guessed type.</item>
 		</list>
 		<heading>
 			<size>2</size>Bug fixes
@@ -140,6 +141,8 @@ i.e. has empty compound for a primary condition which is a constant <code><keywo
 			<item>Fixed a bug where calls to <feature_name>standard_is_equal</feature_name> from <class_name>ANY</class_name> on objects whose type is generic would yield <keyword>False</keyword> where it should have been <keyword>True</keyword> in classic Eiffel.</item>
 			<item>Fixed a bug in assertion monitoring that could lead to wrong monitoring of assertions that are evaluated concurrently in different threads.</item>
 			<item>Fixed a bug in code generation for entry point of executable when root procedure is a redeclaration of a deferred feature that caused an exception <code><class_name>MissingMethodException</class_name></code> to be raised on startup of such an application.</item>
+			<item>Fixed a bug in code generation when solely inheriting from a .NET interface.</item>
+			<item>Fixed a bug in code generation when inheriting from a .NET class which has a routine whose name is identical to one of the routine of <class_name>ANY</class_name>.</item>
 		</list>
 		<heading>
 			<size>3</size>Store/Retrieve issues

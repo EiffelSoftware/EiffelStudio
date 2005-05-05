@@ -90,8 +90,9 @@ feature {NONE} -- Initialization
 				-- Viewport Events
 			editor_drawing_area.expose_actions.extend (agent on_repaint)
 			editor_drawing_area.resize_actions.extend (agent on_size)
-			editor_drawing_area.mouse_wheel_actions.extend (agent on_mouse_wheel)
+		--	editor_drawing_area.mouse_wheel_actions.extend (agent on_mouse_wheel)
 			editor_drawing_area.focus_in_actions.extend (agent on_focus)	
+			editor_viewport.resize_actions.extend (agent on_viewport_size)
 				
 				-- Scrollbar Events		
 			vertical_scrollbar.change_actions.extend (agent on_vertical_scroll)
@@ -101,9 +102,8 @@ feature {NONE} -- Initialization
 			last_vertical_scroll_bar_value := 1
 
 				-- Set up the screen.
-			create buffered_line.make_with_size (buffered_drawable_width, line_height)
-			buffered_line.set_background_color (editor_preferences.normal_background_color)		
---			create left_margin_buffered_line.make_with_size (left_margin_width, editor_drawing_area.height)
+			create buffered_line.make_with_size (1, line_height)
+			buffered_line.set_background_color (editor_preferences.normal_background_color)	
 		end
 
 	initialize_editor_context is
@@ -798,7 +798,7 @@ feature {NONE} -- Scroll bars Management
  		do
  			in_scroll := True
 			set_offset (scroll_pos)
-			editor_drawing_area.redraw_rectangle (0, editor_viewport.y_offset, buffered_drawable_width, viewable_height)
+			buffered_line.set_size (viewable_width + offset, line_height)
 		end
 		
 	on_mouse_wheel (delta: INTEGER) is
@@ -838,7 +838,7 @@ feature {NONE} -- Display functions
 		do	
 			on_paint := True
 			if a_width /= 0 and a_height /= 0 then
-				update_area (y, y + a_height, not in_scroll)
+				update_area (x, y, a_width, y + a_height, x, not in_scroll)
 			end
 			on_paint := False
 		end
@@ -852,8 +852,16 @@ feature {NONE} -- Display functions
 			update_horizontal_scrollbar
 		end	
 
-	update_area (top: INTEGER; bottom: INTEGER; buffered: BOOLEAN) is
- 			-- Update drawing area between `top' and `bottom'.  If `buffered' then draw to `buffered_line'
+	on_viewport_size (a_x, a_y: INTEGER; a_width, a_height: INTEGER) is
+			-- Viewport was resized.
+		do
+			buffered_line.set_size (a_width + offset, line_height)
+			update_vertical_scrollbar
+			update_horizontal_scrollbar
+		end	
+
+	update_area (x_pos, top, a_width, bottom: INTEGER; x: INTEGER; buffered: BOOLEAN) is
+ 			-- Update drawing area between `top' and `bottom' and `x' and `a_width'.  If `buffered' then draw to `buffered_line'
  			-- before drawing to screen, otherwise draw straight to screen.
  		require
  			range_valid: bottom >= top 			
@@ -879,9 +887,9 @@ feature {NONE} -- Display functions
 			
 			if text_displayed.number_of_lines > 0 then
 				if first_line_to_draw > last_line_to_draw then
-					update_lines (last_line_to_draw, last_line_to_draw, buffered)
+					update_lines (last_line_to_draw, last_line_to_draw, x_pos, a_width, buffered)
 				else
-					update_lines (first_line_to_draw, last_line_to_draw, buffered)	
+					update_lines (first_line_to_draw, last_line_to_draw, x_pos, a_width, buffered)	
 				end			
 			end
 
@@ -899,8 +907,8 @@ feature {NONE} -- Display functions
  			in_scroll := False
  		end		
 
-	update_lines (first, last: INTEGER; buffered: BOOLEAN) is
-			-- Draw the lines `first' to `'last'.
+	update_lines (first, last, start_pos, end_pos: INTEGER; buffered: BOOLEAN) is
+			-- Draw the lines `first' to `'last' between `start_pos' and `end_pos'.
 		require
 			lines_valid: first <= last
 			first_line_valid: first >= 1
@@ -910,7 +918,7 @@ feature {NONE} -- Display functions
  			curr_line,
  			y_offset: INTEGER
  			l_text: TEXT
-		do  	
+		do
 			updating_line := True
 			l_text := text_displayed
 			l_text.go_i_th (first)
@@ -927,10 +935,10 @@ feature {NONE} -- Display functions
  				y_offset := editor_viewport.y_offset + ((curr_line - first_line_displayed) * line_height)
 
 				if buffered then
- 					draw_line_to_buffered_line (curr_line, l_text.current_line)
-					draw_buffered_line_to_screen (0, y_offset)
+ 		--			draw_line_to_buffered_line (curr_line, l_text.current_line)
+		--			draw_buffered_line_to_screen (0, y_offset)
 				else
-					draw_line_to_screen (0, y_offset, l_text.line (curr_line))
+					draw_line_to_screen (start_pos, end_pos, y_offset, l_text.line (curr_line))
 				end
  				curr_line := curr_line + 1
 				y_offset := y_offset + line_height
@@ -959,43 +967,54 @@ feature {NONE} -- Display functions
 			end
 		end		
 		
-	draw_buffered_line_to_screen (x, y: INTEGER) is
-			-- Draw `buffered_line' to screen at `x' and `y'.
+	draw_buffered_line_to_screen (start_pos, end_pos, x, y: INTEGER) is
+			-- Draw to the screen the data in `buffered_line' between `start_pos' x-coordinate and `end_pos' x-coordinate.
+			-- Draw to y position `y' in the drawing area and x position `x'.
 		require
 			on_paint: on_paint
 		do
 			draw_margin (y)				
 			debug ("editor")
-				draw_flash (offset - left_margin_width, y, editor_drawing_area.width, line_height, True)
+				draw_flash (x, y, end_pos - start_pos, line_height, True)
 			end
-			editor_drawing_area.draw_sub_pixmap (left_margin_width, y, buffered_line, create {EV_RECTANGLE}.make (0, 0, editor_drawing_area.width, line_height))
+			editor_drawing_area.draw_sub_pixmap (x, y, buffered_line, create {EV_RECTANGLE}.make (start_pos, 0, end_pos - start_pos, line_height))
 		end
 		
-	draw_line_to_screen (x, y: INTEGER; a_line: EDITOR_LINE) is
-			-- Draw to the screen `a_line' at `x' and `y'.
+	draw_line_to_screen (start_pos, end_pos, y: INTEGER; a_line: EDITOR_LINE) is
+			-- Draw to the screen the tokens in the line that are between `start_pos' and `end_pos'. 
+			-- Draw to y position `y' in the drawing area and draw from x position `start_pos + left_margin_width' in the 
+			-- drawing area.
 		require
 			on_paint: on_paint
 		local
 			curr_token: EDITOR_TOKEN
 			x_pos: INTEGER
 			da: EV_DRAWING_AREA
+			redraw_token: BOOLEAN
+			token_start_pos,
+			token_end_position: INTEGER
 		do
 			from
-				draw_margin (y)
+				if offset < left_margin_width then
+					draw_margin (y)
+				end
 				a_line.start
 				da := editor_drawing_area
 				curr_token := a_line.item
-				x_pos := x + left_margin_width
 				da.set_background_color (editor_preferences.normal_background_color)
-				debug ("editor")
-					draw_flash (offset - left_margin_width, y, da.width, line_height, False)
-				end
-				da.clear_rectangle (x_pos, y, da.width, line_height)
 			until
-				a_line.after or else curr_token = a_line.eol_token or else curr_token.position > editor_width
+				a_line.after or else curr_token = a_line.eol_token or else token_start_pos > editor_width
 			loop
-				if not curr_token.is_margin_token then
-					curr_token.display_with_offset (x_pos, y, da, Current)
+				token_start_pos := curr_token.position
+				token_end_position := token_start_pos + curr_token.width
+				redraw_token := not curr_token.is_margin_token and then
+					(
+						(token_start_pos >= start_pos and token_start_pos <= end_pos) or
+						(token_end_position >= start_pos and token_end_position <= end_pos) or
+						(token_start_pos <= start_pos and token_end_position >= end_pos)
+					)
+				if redraw_token then
+					curr_token.display_with_offset (token_start_pos + left_margin_width, y, da, Current)
 				end
 				a_line.forth
 				curr_token := a_line.item
@@ -1006,7 +1025,7 @@ feature {NONE} -- Display functions
  			-- Draw the left margin space (not the line margin)
  		do
  			debug ("editor")
-				draw_flash (0, y, left_margin_width - offset, line_height, True)
+				draw_flash (0, y, left_margin_width, line_height, False)
 			end
 			editor_drawing_area.set_background_color (editor_preferences.normal_background_color)
 			editor_drawing_area.clear_rectangle (0, y, left_margin_width, line_height)
@@ -1026,7 +1045,7 @@ feature {NONE} -- Display functions
  		end 		
  
  	draw_line_to_buffered_line (xline: INTEGER; a_line: EDITOR_LINE) is
- 			-- Draw `a_line' onto the `buffered_line' ready for blitting.  Do not update drawing area.
+			-- Draw onto the buffered line the tokens in `a_line'.
 		require
 			text_is_not_empty: not text_displayed.is_empty
 			on_paint: on_paint

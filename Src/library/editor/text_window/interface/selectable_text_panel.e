@@ -551,7 +551,7 @@ feature {NONE} -- Handle mouse clicks
 				until
 					i = l_number.max (former_pointed_line)
 				loop
-					invalidate_line (i,false)
+					invalidate_line (i,true)
 					i := i + 1
 				end
 				invalidate_line (i,true)
@@ -560,7 +560,7 @@ feature {NONE} -- Handle mouse clicks
 				invalidate_line (l_number,true)
 				former_pointed_char := l_cursor.x_in_characters
 			end
-			
+				
 		end
 
 feature {NONE} -- Private Characteristics of the window

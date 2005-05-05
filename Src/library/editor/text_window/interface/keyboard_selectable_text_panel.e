@@ -762,7 +762,7 @@ feature {NONE} -- Implementation
 		end
 
 	draw_line_to_buffered_line (xline: INTEGER; a_line: EDITOR_LINE) is
- 			-- Display `a_line' on the buffered screen.
+ 			-- Draw onto the buffered line the tokens in `a_line' the between `start_pos' and `end_pos'.
 		local
  			cursor_line				: BOOLEAN -- Is the cursor present in the current line?
  			curr_token				: EDITOR_TOKEN
@@ -777,13 +777,14 @@ feature {NONE} -- Implementation
  			local_selection_end		: TEXT_CURSOR -- cache of the value of selection_end
 			l_cursor				: TEXT_CURSOR
 			selection_present		: BOOLEAN
-			l_token_pos: INTEGER
-			l_text: like text_displayed
-			l_buffered_line: like buffered_line
+			token_start_pos,
+			token_end_position		: INTEGER
+			l_text: 				like text_displayed
+			l_buffered_line: 		like buffered_line
+			redraw_token			: BOOLEAN
  		do
- 			buffered_line.clear
- 				
- 				-- Cache values into locals
+ 			
+	 			-- Cache values into locals
  			l_text := text_displayed
 			l_cursor := l_text.cursor
 			l_buffered_line :=  buffered_line
@@ -796,7 +797,7 @@ feature {NONE} -- Implementation
 			else
 				cursor_line := False
 			end
- 			
+
  			if selection_present then
  					-- Compute optimisations
  				if (xline > local_selection_start.y_in_lines) and (xline < local_selection_end.y_in_lines) then
@@ -806,7 +807,7 @@ feature {NONE} -- Implementation
  					not_selected_line := True
  				end
  			end
- 						
+
  			from
 						-- Do not display the margin tokens
 				from
@@ -821,153 +822,187 @@ feature {NONE} -- Implementation
  			until
  				a_line.after or else curr_token = a_line.eol_token or else curr_token.position > editor_width
  			loop
- 				if selection_present then
- 					-- The text contains a selection, we may have to display this token
- 					-- in its selected state.
+ 				token_start_pos := curr_token.position
+				token_end_position := token_start_pos + curr_token.width
 
- 						-- Initialise the token state.
- 					token_selection := Token_not_selected
-
- 						-- Entire line selected
- 					if selected_line then
- 						token_selection := Token_selected
- 						
- 					l_token_pos := curr_token.position
-  
- 						-- Some tokens in the line are selected, and the selection starts and ends on the same line
- 					elseif (xline = local_selection_start.y_in_lines) and then (xline = local_selection_end.y_in_lines) then
- 						if (l_token_pos > local_selection_start.token.position) and then (l_token_pos < local_selection_end.token.position) then
- 							token_selection := Token_selected
- 						elseif (l_token_pos < local_selection_start.token.position) or else (l_token_pos > local_selection_end.token.position) then
- 							token_selection := Token_not_selected
- 						else
- 							token_selection_start := 1
- 							token_selection_end := curr_token.length + 1
- 							if (l_token_pos = local_selection_start.token.position) then
- 								token_selection := Token_half_selected
- 								token_selection_start := local_selection_start.pos_in_token
- 							end
- 							if (l_token_pos = local_selection_end.token.position) then
- 								token_selection := Token_half_selected
- 								token_selection_end := local_selection_end.pos_in_token
- 							end
- 						end
+	 				if selection_present then
+	 					-- The text contains a selection, we may have to display this token
+	 					-- in its selected state.
+	
+	 						-- Initialise the token state.
+	 					token_selection := Token_not_selected
+	
+	 						-- Entire line selected
+	 					if selected_line then
+	 						token_selection := Token_selected
+	 						
+	 					token_start_pos := curr_token.position
+	  
+	 						-- Some tokens in the line are selected, and the selection starts and ends on the same line
+	 					elseif (xline = local_selection_start.y_in_lines) and then (xline = local_selection_end.y_in_lines) then
+	 						if (token_start_pos > local_selection_start.token.position) and then (token_start_pos < local_selection_end.token.position) then
+	 							token_selection := Token_selected
+	 						elseif (token_start_pos < local_selection_start.token.position) or else (token_start_pos > local_selection_end.token.position) then
+	 							token_selection := Token_not_selected
+	 						else
+	 							token_selection_start := 1
+	 							token_selection_end := curr_token.length + 1
+	 							if (token_start_pos = local_selection_start.token.position) then
+	 								token_selection := Token_half_selected
+	 								token_selection_start := local_selection_start.pos_in_token
+	 							end
+	 							if (token_start_pos = local_selection_end.token.position) then
+	 								token_selection := Token_half_selected
+	 								token_selection_end := local_selection_end.pos_in_token
+	 							end
+	 						end
+	 
+	 						-- Some tokens in the line are selected (first selected line)
+	 					elseif (xline = local_selection_start.y_in_lines) then
+	 						if (token_start_pos > local_selection_start.token.position) then
+	 							token_selection := Token_selected
+	 						elseif (token_start_pos = local_selection_start.token.position) then
+	 							token_selection := Token_half_selected
+	 							token_selection_start := local_selection_start.pos_in_token
+	 							token_selection_end := curr_token.length + 1
+	 						end
+	 
+	 						-- Some tokens in the line are selected (last selected line)
+	 					elseif (xline = local_selection_end.y_in_lines) then
+	 						if (token_start_pos < local_selection_end.token.position) then
+	 							token_selection := Token_selected
+	 						elseif (token_start_pos = local_selection_end.token.position) then
+	 							token_selection := Token_half_selected
+	 							token_selection_start := 1
+	 							token_selection_end := local_selection_end.pos_in_token
+	 						end
+	 
+	 						-- No token in the line are selected
+	 					elseif not_selected_line then
+	 						token_selection := Token_not_selected
+	 					end
+	 				end
+	 				
+	 				inspect token_selection
+	 				when Token_not_selected then
+	 						-- Normally Display the token.
+	 					curr_token.display (0, l_buffered_line, Current)
+	 				when Token_selected then
+		 				curr_token.display_selected (0, l_buffered_line, Current)
+	 				when Token_half_selected then
+		 				curr_token.display_half_selected (0, token_selection_start, token_selection_end, l_buffered_line, Current)		
+	 				else
+	 					-- Unexpected value, do nothing
+	 				end
  
- 						-- Some tokens in the line are selected (first selected line)
- 					elseif (xline = local_selection_start.y_in_lines) then
- 						if (l_token_pos > local_selection_start.token.position) then
- 							token_selection := Token_selected
- 						elseif (l_token_pos = local_selection_start.token.position) then
- 							token_selection := Token_half_selected
- 							token_selection_start := local_selection_start.pos_in_token
- 							token_selection_end := curr_token.length + 1
- 						end
- 
- 						-- Some tokens in the line are selected (last selected line)
- 					elseif (xline = local_selection_end.y_in_lines) then
- 						if (l_token_pos < local_selection_end.token.position) then
- 							token_selection := Token_selected
- 						elseif (l_token_pos = local_selection_end.token.position) then
- 							token_selection := Token_half_selected
- 							token_selection_start := 1
- 							token_selection_end := local_selection_end.pos_in_token
- 						end
- 
- 						-- No token in the line are selected
- 					elseif not_selected_line then
- 						token_selection := Token_not_selected
- 					end
+						-- Display the cursor (if needed).
+	 				if cursor_line and then (l_cursor.token = curr_token) then
+	 						-- Compute the start pixel of the cursor.
+	 					start_cursor := token_start_pos + curr_token.get_substring_width (l_cursor.pos_in_token - 1)
+	
+	 						-- Compute the width of the current character (used to display plain cursor)
+	 					width_cursor := curr_token.get_substring_width (l_cursor.pos_in_token) -
+									curr_token.get_substring_width (l_cursor.pos_in_token - 1)
+	 					width_cursor := width_cursor.max (cursor_width)
+	
+	 						-- Draw the cursor
+						draw_cursor (l_buffered_line, current_cursor_position, 0, cursor_width)
+					end
+	 
+	 					-- Prepare next iteration
+	 				a_line.forth
+	 				curr_token := a_line.item
  				end
- 				
- 				inspect token_selection
- 				when Token_not_selected then
- 						-- Normally Display the token.
- 					curr_token.display (0, l_buffered_line, Current)
- 				when Token_selected then			
-	 				curr_token.display_selected (0, l_buffered_line, Current) 					
- 				when Token_half_selected then 											
-	 				curr_token.display_half_selected (0, token_selection_start, token_selection_end, l_buffered_line, Current)		
- 				else
- 					-- Unexpected value, do nothing
- 				end
- 
-					-- Display the cursor (if needed).
- 				if cursor_line and then (l_cursor.token = curr_token) then
- 						-- Compute the start pixel of the cursor.
- 					start_cursor := l_token_pos + curr_token.get_substring_width (l_cursor.pos_in_token - 1)
-
- 						-- Compute the width of the current character (used to display plain cursor)
- 					width_cursor := curr_token.get_substring_width (l_cursor.pos_in_token) -
-								curr_token.get_substring_width (l_cursor.pos_in_token - 1)
- 					width_cursor := width_cursor.max (cursor_width)
-
- 						-- Draw the cursor
-					draw_cursor (l_buffered_line, current_cursor_position, 0, cursor_width)
-				end
- 
- 					-- Prepare next iteration
- 				a_line.forth
- 				curr_token := a_line.item
- 			end
 		
- 			if l_token_pos < editor_width then
-
-					-- Display the end token
-	 			curr_token := a_line.eol_token
-	 			if
-					selection_present 
-				and then
-					 (local_selection_start.y_in_lines /= local_selection_end.y_in_lines)
-				and then 
-	 			   (selected_line or else (xline = local_selection_start.y_in_lines)) 
-	 			and then
-	 			   has_focus
-				then 
-	 				a_line.eol_token.display_end_token_selected (0, l_buffered_line,
-						buffered_line.width, Current)
-	 			else
-	 				a_line.eol_token.display_end_token_normal (0, l_buffered_line,
-						buffered_line.width, Current)
+	 			if token_start_pos < editor_width then
+	
+						-- Display the end token
+		 			curr_token := a_line.eol_token
+		 			if
+						selection_present 
+					and then
+						 (local_selection_start.y_in_lines /= local_selection_end.y_in_lines)
+					and then 
+		 			   (selected_line or else (xline = local_selection_start.y_in_lines)) 
+		 			and then
+		 			   has_focus
+					then 
+		 				a_line.eol_token.display_end_token_selected (0, l_buffered_line,
+							buffered_line.width, Current)
+		 			else
+		 				a_line.eol_token.display_end_token_normal (0, l_buffered_line,
+							buffered_line.width, Current)
+		 			end
 	 			end
- 			end
  
- 				-- Display the cursor (if its on the current end of line).
- 			if cursor_line and then (l_cursor.token = curr_token) then				
-				draw_cursor (buffered_line, current_cursor_position, 0, cursor_width)
-			end
+	 				-- Display the cursor (if its on the current end of line).
+	 			if cursor_line and then (l_cursor.token = curr_token) then				
+					draw_cursor (buffered_line, current_cursor_position, 0, cursor_width)
+				end
+		
  		end
 
-	update_lines (first, last: INTEGER; buffered: BOOLEAN) is
-			-- Draw the lines `first' to `'last'.
+	update_lines (first, last, x_offset, a_width: INTEGER; buffered: BOOLEAN) is
+			-- Draw the lines `first' to `last' between `x_offset' and `a_width'.
 		local
  			curr_line,
- 			y_offset: INTEGER
+ 			y_offset,
+ 			l_line_height,
+ 			l_line_width,
+ 			l_start_clear,
+ 			l_x_offset,
+ 			l_margin_width: INTEGER
  			l_text: TEXT
- 			l_line_height: INTEGER
+ 			l_buffered,
+ 			l_has_data: BOOLEAN
 		do
 			updating_line := True
 			l_text := text_displayed
 			l_text.go_i_th (first)
 			l_line_height := line_height
-			
-			if buffered then				
+			l_x_offset := x_offset
+			l_margin_width := left_margin_width
+
+			if buffered then
 				buffered_line.set_background_color (editor_preferences.normal_background_color)
-	--			buffered_line.clear
-			end		
-			
+			end
+
 			from
  				curr_line := first
  			until
  				curr_line > last or else l_text.after
  			loop
  				y_offset := editor_viewport.y_offset + ((curr_line - first_line_displayed) * l_line_height)
+				
+				l_x_offset := x_offset
+				l_has_data := line_has_cursor_or_selection (curr_line)
+				if ((l_text.line (curr_line).width + l_margin_width) > l_x_offset) or l_buffered then
+						-- Only iterate the line if at least some or part of it is in view AND needs redrawing.
+						-- Lines with cursor or selection in them ALWAYS need redrawing.
+					if l_has_data then
+	 					draw_line_to_buffered_line (curr_line, l_text.current_line)
+						draw_buffered_line_to_screen (l_x_offset - l_margin_width, l_x_offset + a_width - l_margin_width, l_x_offset, y_offset)
+					else
+						draw_line_to_screen ((l_x_offset - l_margin_width).max (0), l_x_offset + a_width - l_margin_width, y_offset, l_text.line (curr_line))
+					end
+					l_x_offset := l_x_offset + l_text.line (curr_line).width
+				end
 
-				if buffered or line_is_not_empty (curr_line) then
- 					draw_line_to_buffered_line (curr_line, l_text.current_line)
-					draw_buffered_line_to_screen (0, y_offset)
-				else
-					draw_line_to_screen (0, y_offset, l_text.line (curr_line))
-				end			
+				if l_x_offset >= l_text.line (curr_line).width and not l_has_data then
+						-- Some (or all) of the line ends in the viewable area.  So we must clear from the end of
+						-- the line to the edge of the viewport in the background color.
+					l_line_width := l_text.line (curr_line).width
+					l_start_clear := l_line_width.max (offset) + l_margin_width
+
+					if l_start_clear >= x_offset and l_start_clear <= (x_offset + a_width) then
+						debug ("editor")
+							draw_flash (l_start_clear, y_offset, x_offset + a_width - l_start_clear, l_line_height, False)
+						end
+						editor_drawing_area.set_background_color (editor_preferences.normal_background_color)
+						editor_drawing_area.clear_rectangle (l_start_clear, y_offset, x_offset + a_width - l_start_clear, l_line_height)
+					end
+				end
+
  				curr_line := curr_line + 1
 				y_offset := y_offset + l_line_height
  				l_text.forth
@@ -976,7 +1011,7 @@ feature {NONE} -- Implementation
  			updating_line := False
 		end
 
-	line_is_not_empty (a_line: INTEGER): BOOLEAN is
+	line_has_cursor_or_selection (a_line: INTEGER): BOOLEAN is
 			-- Does `a_line' have either the cursor or some part of the text selected?
 		local
 			l_cursor: TEXT_CURSOR

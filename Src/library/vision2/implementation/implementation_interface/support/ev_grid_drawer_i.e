@@ -723,7 +723,7 @@ feature -- Basic operations
 								
 									-- As there is no current item, we must now fill the background with the
 									-- parent background color.
-								grid.drawable.set_foreground_color (grid.background_color)
+								grid.drawable.set_foreground_color (grid.displayed_background_color (current_column_index, current_row_index))
 								grid.drawable.fill_rectangle (current_item_x_position, current_item_y_position, current_column_width, current_row_height)
 								if are_tree_node_connectors_shown and (drawing_subrow or drawing_parentrow) and current_column_index <= node_index and current_column_index >= parent_node_index then
 									

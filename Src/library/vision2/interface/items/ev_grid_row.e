@@ -172,6 +172,26 @@ feature -- Access
 			Result := implementation.is_expandable
 		end
 
+	background_color: EV_COLOR is
+			-- Color displayed as background of `Current' except where there are items contained that
+			-- have a non-`Void' `background_color'. If `Void', `background_color' of `parent' is displayed.
+			-- See header of `EV_GRID' for a description of this behavior.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.background_color
+		end
+
+	foreground_color: EV_COLOR is
+			-- Color displayed for foreground features of `Current' except where there are items contained that
+			-- have a non-`Void' `foreground_color'. If `Void', `foreground_color' of `parent' is displayed.
+			-- See header of `EV_GRID' for a description of this behavior.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.foreground_color
+		end
+
 feature -- Status report
 
 	subrow_count: INTEGER is
@@ -285,6 +305,30 @@ feature -- Status setting
 			is_expandable: is_expandable
 		end
 
+	set_background_color (a_color: EV_COLOR) is
+			-- Set `background_color' with `a_color'.
+		require
+			not_destroyed: not is_destroyed
+			a_color_not_void: a_color /= Void
+			is_parented: parent /= Void
+		do
+			implementation.set_background_color (a_color)
+		ensure
+			background_color_set: background_color = a_color
+		end
+
+	set_foreground_color (a_color: EV_COLOR) is
+			-- Set `foreground_color' with `a_color'.
+		require
+			not_destroyed: not is_destroyed
+			a_color_not_void: a_color /= Void
+			is_parented: parent /= Void
+		do
+			implementation.set_foreground_color (a_color)
+		ensure
+			foreground_color_set: foreground_color = a_color
+		end
+
 feature -- Element change
 
 	set_item (i: INTEGER; a_item: EV_GRID_ITEM) is
@@ -358,18 +402,6 @@ feature -- Element change
 		ensure
 			removed: a_row.parent_row = Void
 			subrow_count_decreased: subrow_count = old subrow_count - 1
-		end
-
-	set_background_color (a_color: EV_COLOR) is
-			-- Set `a_color' to all items in Current.
-		require
-			not_destroyed: not is_destroyed
-			is_parented: parent /= Void
-			a_color_not_void: a_color /= Void
-		do
-			implementation.set_background_color (a_color)
-		ensure
-			--color_set: forall (item(i).background_color  = a_color)
 		end
 
 	clear is

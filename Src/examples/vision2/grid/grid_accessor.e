@@ -15,7 +15,6 @@ inherit
 			put as execution_environment_put
 		end
 
-
 feature -- Access
 
 	grid: EV_GRID is
@@ -160,20 +159,27 @@ feature -- Access
 			count_increased: a_combo.count = old a_combo.count + 1
 		end
 
+	stock_colors: EV_STOCK_COLORS is
+			-- Once access to EiffelVision2 stock colors
+		once
+			create Result
+		end
+		
+
 	light_red: EV_COLOR is
-			--
+			-- Color light red.
 		once
 			create Result.make_with_8_bit_rgb (255, 230, 230)
 		end
 
 	light_blue: EV_COLOR is
-			--
+			-- Color light blue.
 		once
 			create Result.make_with_8_bit_rgb (230, 230, 255)
 		end
 
 	light_green: EV_COLOR is
-			--
+			-- Color light green.
 		once
 			create Result.make_with_8_bit_rgb (230, 255, 230)
 		end

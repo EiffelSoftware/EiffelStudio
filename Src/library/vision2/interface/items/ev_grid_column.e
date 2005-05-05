@@ -215,7 +215,6 @@ feature -- Element change
 			-- Set `background_color' with `a_color'.
 		require
 			not_destroyed: not is_destroyed
-			a_color_not_void: a_color /= Void
 			is_parented: parent /= Void
 		do
 			implementation.set_background_color (a_color)
@@ -227,7 +226,6 @@ feature -- Element change
 			-- Set `foreground_color' with `a_color'.
 		require
 			not_destroyed: not is_destroyed
-			a_color_not_void: a_color /= Void
 			is_parented: parent /= Void
 		do
 			implementation.set_foreground_color (a_color)

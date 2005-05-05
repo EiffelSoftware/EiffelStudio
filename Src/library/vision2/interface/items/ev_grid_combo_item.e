@@ -39,7 +39,7 @@ feature {NONE} -- Implementation
 	combo_box: EV_COMBO_BOX
 		-- Text field used to edit `Current' on `activate'.
 
-	activate_action (popup_window: EV_WINDOW) is
+	activate_action (popup_window: EV_POPUP_WINDOW) is
 			-- `Current' has been requested to be updated via `popup_window'.
 		local
 			x_offset: INTEGER

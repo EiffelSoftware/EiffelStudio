@@ -14,15 +14,15 @@ feature -- Access
 			Result := implementation.item_drop_actions
 		end
 
-	active_item_setup_actions: ACTION_SEQUENCE [TUPLE [EV_GRID_ITEM, EV_POPUP_WINDOW]] is
-			-- Actions to be performed to setup an item that is currently activated.
-			-- Overrides default setup of activatable items.
+	item_activate_actions: ACTION_SEQUENCE [TUPLE [EV_GRID_ITEM, EV_POPUP_WINDOW]] is
+			-- Actions to be performed to override the default `activate' setup of an item, see {EV_GRID_EDITABLE_ITEM}.activate_action.
+			-- Useful for repositioning `popup_window', which will then be shown automatically by the grid.
 			-- Arguments of TUPLE (with names for clarity):
 			--
 			-- activate_item: EV_GRID_ITEM -- The item that is currently activated.
-			-- popup_window: EV_WINDOW -- The popup window used to interactively edit `activate_item', window has already been sized and positioned.
+			-- popup_window: EV_POPUP_WINDOW -- The popup window used to interactively edit `activate_item', window has already been sized and positioned.
 		do
-			Result := implementation.active_item_setup_actions
+			Result := implementation.item_activate_actions
 		ensure
 			result_not_void: Result /= Void
 		end

@@ -9,7 +9,8 @@ class
 inherit
 	EV_CONTAINABLE
 		redefine
-			implementation
+			implementation,
+			is_in_default_state
 		end
 	
 	REFACTORING_HELPER
@@ -18,15 +19,9 @@ inherit
 		end
 	
 	EV_DESELECTABLE
-		undefine
+		redefine
+			implementation,
 			is_in_default_state
-		redefine
-			implementation
-		end
-
-	EV_COLORIZABLE
-		redefine
-			implementation
 		end
 
 create
@@ -122,6 +117,22 @@ feature -- Access
 		ensure
 			Result_non_negative: Result >= 0
 		end
+
+	foreground_color: EV_COLOR is
+			-- Color of foreground features like text.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.foreground_color
+		end
+
+	background_color: EV_COLOR is
+			-- Color displayed behind foreground features.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.background_color
+		end
 		
 feature -- Status setting
 
@@ -137,6 +148,26 @@ feature -- Status setting
 			row_visible_when_heights_fixed_in_parent: parent.is_row_height_fixed implies row.virtual_y_position >= parent.virtual_y_position and virtual_y_position + parent.row_height <= parent.virtual_y_position + (parent.viewable_height).max (parent.row_height)
 			row_visible_when_heights_not_fixed_in_parent: not parent.is_row_height_fixed implies row.virtual_y_position >= parent.virtual_y_position and virtual_y_position + row.height <= parent.virtual_y_position + (parent.viewable_height).max (row.height)
 			column_visible: column.virtual_x_position >= parent.virtual_x_position and column.virtual_x_position + column.width <= parent.virtual_x_position + (parent.viewable_width).max (column.width)
+		end
+
+	set_foreground_color (a_color: like foreground_color) is
+			-- Assign `a_color' to `foreground_color'.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.set_foreground_color (a_color)
+		ensure
+			foreground_color_assigned: foreground_color = a_color
+		end
+
+	set_background_color (a_color: like background_color) is
+			-- Assign `a_color' to `background_color'.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.set_background_color (a_color)
+		ensure
+			background_color_assigned: background_color = a_color
 		end
 		
 feature -- Actions
@@ -175,6 +206,17 @@ feature -- Status report
 			Result := implementation.is_parented
 		end
 
+feature {NONE} -- Contract Support
+
+	is_in_default_state: BOOLEAN is
+			-- Is `Current' in its default state?
+			-- (from EV_ANY)
+			-- (export status {NONE})
+		do
+			Result := Precursor {EV_CONTAINABLE} and Precursor {EV_DESELECTABLE} and
+				foreground_color = Void and background_color = Void
+		end
+
 feature {EV_ANY_I, EV_GRID_DRAWER_I} -- Implementation
 
 	implementation: EV_GRID_ITEM_I
@@ -182,7 +224,7 @@ feature {EV_ANY_I, EV_GRID_DRAWER_I} -- Implementation
 
 feature {EV_GRID_I} -- Implementation
 
-	activate_action (popup_window: EV_WINDOW) is
+	activate_action (popup_window: EV_POPUP_WINDOW) is
 			-- `Current' has been requested to be updated via `popup_window'.
 		require
 			parented: is_parented

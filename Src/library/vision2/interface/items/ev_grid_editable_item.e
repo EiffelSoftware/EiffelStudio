@@ -39,7 +39,7 @@ feature {NONE} -- Implementation
 	text_field: EV_TEXT_FIELD
 		-- Text field used to edit `Current' on `activate'.
 
-	activate_action (popup_window: EV_WINDOW) is
+	activate_action (popup_window: EV_POPUP_WINDOW) is
 			-- `Current' has been requested to be updated via `popup_window'.
 		local
 			x_offset: INTEGER
@@ -61,6 +61,7 @@ feature {NONE} -- Implementation
 			--text_field.set_foreground_color (foreground_color)
 			text_field.set_text (text)
 			popup_window.extend (text_field)
+
 			popup_window.show
 			text_field.set_focus
 			text_field.return_actions.extend (agent deactivate)

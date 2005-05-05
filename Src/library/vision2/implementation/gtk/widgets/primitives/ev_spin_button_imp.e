@@ -9,6 +9,8 @@ class
 
 inherit
 	EV_SPIN_BUTTON_I
+		undefine
+			hide_border
 		redefine
 			interface
 		end

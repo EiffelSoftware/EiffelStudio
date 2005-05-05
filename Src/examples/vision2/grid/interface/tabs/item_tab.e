@@ -26,7 +26,6 @@ feature {NONE} -- Initialization
 		local
 			list_item: EV_LIST_ITEM
 			font_families: LINEAR [STRING]
-			counter: INTEGER
 		do
 			item_finder.set_prompt ("Item Finder : ")
 			item_finder.motion_actions.extend (agent finding_item)

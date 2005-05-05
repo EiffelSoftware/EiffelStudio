@@ -689,7 +689,7 @@ feature -- Title part
 			Result := Workbench_name
 		end
 	t_Slice_limits: STRING is					"Choose new slice limits for special objects"
-	t_System: STRING is							"Project configuration"
+	t_System: STRING is							"Project settings"
 	t_Windows_tool: STRING is					"Windows"
 	t_Watch_tool: STRING is						"Watch"
 	t_Features_tool: STRING is					"Features"

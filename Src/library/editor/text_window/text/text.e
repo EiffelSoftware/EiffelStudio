@@ -228,11 +228,8 @@ feature -- Element Change
 			-- Update line tokens
 		require
 			line_index_valid: a_line > 0 and a_line <= number_of_lines
-		local
-			l_line: EDITOR_LINE
 		do			
-			l_line := line (a_line)			
-			l_line.update_token_information
+			line (a_line).update_token_information
 		end		
 
 feature -- Status report

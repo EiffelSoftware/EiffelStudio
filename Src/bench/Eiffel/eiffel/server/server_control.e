@@ -103,8 +103,10 @@ feature -- File operations
 			files.remove (f.file_id)
 			removed_files.put (f, f.file_id)
 
-				-- Remove file from the disk
-			f.delete
+				-- Remove file from the disk if not already deleted
+			if f.exists then
+				f.delete
+			end
 		end
 
 	remove_useless_files is

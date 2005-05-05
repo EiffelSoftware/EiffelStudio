@@ -333,6 +333,7 @@ feature -- Basic operations
 			translated_parent_x_indent_position: INTEGER
 			tree_node_connector_color: EV_COLOR
 			grid_rows_data_list: EV_GRID_ARRAYED_LIST [SPECIAL [EV_GRID_ITEM_I]]
+			current_column: EV_GRID_COLUMN
 		do
 			dynamic_content_function := grid.dynamic_content_function
 			
@@ -479,6 +480,7 @@ feature -- Basic operations
 								lists_valid_lengths: physical_column_indexes.count >= visible_column_indexes.count
 							end
 							current_column_index := visible_column_indexes.item
+							current_column := grid.column (current_column_index)
 							current_physical_column_index := physical_column_indexes.item (visible_column_indexes.item - 1)
 							
 							
@@ -561,7 +563,7 @@ feature -- Basic operations
 								if drawing_parentrow then
 									horizontal_node_pixmap_left_offset := current_item_x_position + current_subrow_indent - (tree_node_spacing * 2) - node_pixmap_width
 								elseif drawing_subrow then
-									horizontal_node_pixmap_left_offset := current_item_x_position + current_subrow_indent -- - (tree_node_spacing * 2) - node_pixmap_width
+									horizontal_node_pixmap_left_offset := current_item_x_position + current_subrow_indent
 								else
 									horizontal_node_pixmap_left_offset := current_item_x_position + current_column_width
 								end
@@ -579,16 +581,12 @@ feature -- Basic operations
 											-- We adjust the horizontal position and width of the current item by the space required
 											-- for the tree node.
 										
-											grid.drawable.set_foreground_color (grid.background_color)
-											
-												-- The background area for the tree node must always be refreshed, even if the node is not visible.
-												-- We draw no wider than `current_column_width' to ensure this. The item background is re-drawn by the
-												-- item itself.
-											if current_column_width - current_subrow_indent > 0 then
-												grid.drawable.fill_rectangle (current_item_x_position, current_item_y_position, current_column_width - (current_column_width - current_subrow_indent), current_row_height)
-											else
-												grid.drawable.fill_rectangle (current_item_x_position, current_item_y_position, current_column_width, current_row_height)
-											end
+									grid.drawable.set_foreground_color (grid.displayed_background_color (current_column_index, current_row_index))
+										
+											-- The background area for the tree node must always be refreshed, even if the node is not visible.
+											-- We draw no wider than `current_column_width' to ensure this. The item background is re-drawn by the
+											-- item itself.
+										grid.drawable.fill_rectangle (current_item_x_position, current_item_y_position, current_column_width - ((current_column_width - current_subrow_indent).max (0)), current_row_height)
 
 											-- If the indent of the tree is less than `current_column_width', it must be visible so draw it.
 										if current_row.is_expandable then

@@ -63,9 +63,9 @@ feature -- Access
 		-- May `Current' be displayed when its `parent' is?
 		-- Will return False if `hide' has been called on `Current'.
 		-- A column that `is_displayed' does not necessarily have to be visible on screen at that particular time.
-	do
-		Result := is_visible
-	end
+		do
+			Result := is_visible
+		end
 
 	title: STRING is
 			-- Title of Current column. Empty if none.
@@ -146,6 +146,14 @@ feature -- Access
 			parent_void_implies_result_zero: parent = Void implies Result = 0
 			to_implement_assertion ("valid_result: Result >= 0 and Result <= virtual_width - viewable_width")
 		end
+
+	background_color: EV_COLOR
+			-- Color displayed as background of `Current' except where there are items contained that
+			-- have a non-`Void' `background_color'. If `Void', `background_color' of `parent' is displayed..
+
+	foreground_color: EV_COLOR
+			-- Color displayed for foreground features of `Current' except where there are items contained that
+			-- have a non-`Void' `foreground_color'. If `Void', `foreground_color' of `parent' is displayed.
 
 feature -- Status setting
 
@@ -309,23 +317,21 @@ feature -- Element change
 		require
 			a_color_not_void: a_color /= Void
 			is_parented: parent /= Void
-		local
-			item_index: INTEGER
-			a_item: EV_GRID_ITEM
 		do
-			from
-				item_index := 1
-			until
-				item_index > count
-			loop
-				a_item := item (item_index)
-				if a_item /= Void then
-					a_item.set_background_color (a_color)
-				end
-				item_index := item_index + 1
-			end
+			background_color := a_color
 		ensure
-			--background_color_set: forall (item(j).background_color = a_color)
+			background_color_set: background_color = a_color
+		end
+
+	set_foreground_color (a_color: EV_COLOR) is
+			-- Set `foreground_color' with `a_color'.
+		require
+			a_color_not_void: a_color /= Void
+			is_parented: parent /= Void
+		do
+			foreground_color := a_color
+		ensure
+			foreground_color_set: foreground_color = a_color
 		end
 		
 	set_width (a_width: INTEGER) is

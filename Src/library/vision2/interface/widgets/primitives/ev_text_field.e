@@ -59,9 +59,11 @@ feature -- Element change
 		do
 			implementation.set_capacity (a_capacity)
 		end
+
+feature -- Status report
 		
 	is_in_default_state: BOOLEAN is
-			--
+			-- Is `Current' in a correct default state?
 		do
 			Result := Precursor {EV_TEXT_COMPONENT} and Precursor {EV_FONTABLE}
 		end

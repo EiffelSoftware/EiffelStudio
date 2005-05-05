@@ -67,6 +67,7 @@ feature {NONE} -- Implementation
 		local
 			the_text_color		: EV_COLOR
 			the_background_color: EV_COLOR
+			l_count: INTEGER
 		do
  			if selected then
  				the_text_color := selected_text_color
@@ -81,7 +82,8 @@ feature {NONE} -- Implementation
  			device.set_font(font)
  
 				-- Compute the width of the string. 
- 			Result := d_x + (char_end - char_start + 1) * space_width
+			l_count := char_end - char_start + 1
+ 			Result := d_x + l_count * space_width
 
 				-- Fill the rectangle occupied by the tabulation
 			if the_background_color /= Void then
@@ -89,12 +91,12 @@ feature {NONE} -- Implementation
  				device.clear_rectangle(d_x, d_y, Result - d_x, height)
 			end
 
- 				-- Display the text with the selected drawing style.
-			if panel.view_invisible_symbols then
- 				device.draw_text_top_left (d_x, d_y, alternate_image.substring (char_start, char_end))
-			else
-				if length < 11 and then (char_end - char_start + 1) > 0 then
-					device.draw_text_top_left (d_x, d_y, space_image_hash.item (char_end - char_start + 1))
+ 				-- Display the text with the selected drawing style if needed.
+			if l_count > 0 then
+				if panel.view_invisible_symbols then
+					device.draw_text_top_left (d_x, d_y, alternate_image.substring (char_start, char_end))
+				elseif length < 11 then
+					device.draw_text_top_left (d_x, d_y, space_images.item (l_count))
 				else
 					device.draw_text_top_left (d_x, d_y, image.substring (char_start, char_end))
 				end
@@ -122,10 +124,10 @@ feature {NONE} -- Private Constants
 			-- when the "invisible" symbols (spaces, end of lines
 			-- & tabulations) are set to be visible.
 
-	space_image_hash: HASH_TABLE [STRING, INTEGER] is
-			-- Hash of images for quick look up when count is 10 or less
+	space_images: SPECIAL [STRING] is
+			-- Quick look up for `image' when count is 10 or less
 		once
-			create Result.make (10)
+			create Result.make (11)
 			Result.put (" ", 1)
 			Result.put ("  ", 2)
 			Result.put ("   ", 3)

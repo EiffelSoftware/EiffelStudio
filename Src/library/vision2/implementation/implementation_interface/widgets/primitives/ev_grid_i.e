@@ -548,7 +548,7 @@ feature -- Status setting
 	item_pebble_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], ANY]
 		-- User pebble function
 
-	activate_window: EV_WINDOW
+	activate_window: EV_POPUP_WINDOW
 		-- Window used to edit grid item contents on `activate'.
 
 	currently_active_item: EV_GRID_ITEM
@@ -1247,7 +1247,26 @@ feature -- Status report
 		
 	tree_node_connector_color: EV_COLOR
 			-- Color of connectors drawn between tree nodes within `Current'.
-			
+
+	displayed_background_color (a_column, a_row: INTEGER): EV_COLOR is
+			-- `Result' is background color to be displayed for item at position `a_column', `a_row'
+			-- on parts of the cell space in which the item is not displayed. i.e. for the background
+			-- area of a tree structure.
+		require
+			valid_column: a_column >= 1 and a_column <= column_count
+			valid_row: a_row >= 1 and a_row <= row_count
+		do
+			Result := column (a_column).background_color
+			if Result = Void then
+				Result := row (a_row).background_color
+				if result = Void then
+					Result := background_color
+				end
+			end
+		ensure	
+			result_not_void: Result /= Void
+		end
+				
 feature -- Element change
 
 	insert_new_row (i: INTEGER) is

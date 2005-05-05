@@ -28,6 +28,7 @@
 			<heading><size>3</size>Bug fixes</heading>
 			<list ordered="false">
 				<item>Fixed infinite loop in finish_freezing which could use all the available memory.</item>
+				<item>Fixed some issues with formatting of agent using expressions as target, and display of character and string constants in context tool.</item>
 			</list>
 		<heading><size>2</size>Debugger</heading>
 			<list ordered="false">

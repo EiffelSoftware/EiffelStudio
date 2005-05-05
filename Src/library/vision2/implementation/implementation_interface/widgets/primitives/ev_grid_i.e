@@ -1197,6 +1197,24 @@ feature -- Status setting
 			tree_node_connector_color_set: tree_node_connector_color = a_color
 		end
 
+	enable_columns_drawn_above_rows is
+			-- Ensure `are_columns_drawn_above_rows' is `True'.
+		do
+			are_columns_drawn_above_rows := True
+			redraw_client_area
+		ensure	
+			columns_drawn_above_rows: are_columns_drawn_above_rows
+		end
+		
+	disable_columns_drawn_above_rows is
+			-- Ensure `are_columns_drawn_above_rows' is `False'.
+		do
+			are_columns_drawn_above_rows := False
+			redraw_client_area
+		ensure	
+			columns_drawn_below_rows: not are_columns_drawn_above_rows
+		end
+
 feature -- Status report
 
 	is_selection_on_click_enabled: BOOLEAN
@@ -1279,6 +1297,12 @@ feature -- Status report
 		ensure	
 			result_not_void: Result /= Void
 		end
+
+	are_columns_drawn_above_rows: BOOLEAN
+			-- For drawing purposes, are columns drawn above rows?
+			-- If `True', for all cells within `Current' whose `column' and `row' have non-Void
+			-- foreground or background colors, the column colors are given priority.
+			-- If `False', the colors of the row are given priority.
 				
 feature -- Element change
 
@@ -2305,6 +2329,7 @@ feature {NONE} -- Drawing implementation
 			viewport_x_offset := 0
 			viewport_y_offset := 0
 			are_tree_node_connectors_shown := True
+			are_columns_drawn_above_rows := True
 			create tree_node_connector_color.make_with_8_bit_rgb (150, 150, 150)
 			build_expand_node_pixmap
 			build_collapse_node_pixmap
@@ -2997,7 +3022,7 @@ feature {NONE} -- Event handling
 					a_item.row.ensure_visible
 				else
 					a_item.ensure_visible
-				end				
+				end							
 			else
 				remove_selection
 			end

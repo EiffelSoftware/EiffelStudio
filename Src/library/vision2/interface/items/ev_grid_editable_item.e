@@ -64,12 +64,8 @@ feature {NONE} -- Implementation
 				text_field.set_font (font)
 			end
 			fixme ("Add handling for Void colors and potential column, row and grid colors")
-			if background_color /= Void then
-				text_field.set_background_color (background_color)
-			end	
-			if foreground_color /= Void then
-				text_field.set_foreground_color (foreground_color)
-			end
+			text_field.set_background_color (implementation.displayed_background_color)
+			text_field.set_foreground_color (implementation.displayed_foreground_color)
 			text_field.set_text (text)
 			popup_window.extend (text_field)
 			popup_window.show_actions.extend (agent text_field.set_focus)

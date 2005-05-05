@@ -907,6 +907,28 @@ feature -- Status setting
 			tree_node_connector_color_set: tree_node_connector_color = a_color
 		end
 
+	enable_columns_drawn_above_rows is
+			-- Ensure `are_columns_drawn_above_rows' is `True'.
+			
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.enable_columns_drawn_above_rows
+		ensure	
+			columns_drawn_above_rows: are_columns_drawn_above_rows
+		end
+
+	disable_columns_drawn_above_rows is
+			-- Ensure `are_columns_drawn_above_rows' is `False'.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.disable_columns_drawn_above_rows
+		ensure	
+			columns_drawn_below_rows: not are_columns_drawn_above_rows
+		end
+		
+
 feature -- Status report
 
 	prunable: BOOLEAN is False
@@ -1008,6 +1030,17 @@ feature -- Status report
 			Result := implementation.tree_node_connector_color
 		ensure
 			result_not_void: Result /= Void
+		end
+
+	are_columns_drawn_above_rows: BOOLEAN is
+			-- For drawing purposes, are columns drawn above rows?
+			-- If `True', for all cells within `Current' whose `column' and `row' have non-Void
+			-- foreground or background colors, the column colors are given priority.
+			-- If `False', the colors of the row are given priority.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.are_columns_drawn_above_rows
 		end
 
 feature -- Element change
@@ -1206,7 +1239,7 @@ feature {NONE} -- Contract support
 			Result := row_count = 0 and column_count = 0 and not is_horizontal_scrolling_per_item and
 				is_vertical_scrolling_per_item and is_header_displayed and
 				is_row_height_fixed and subrow_indent = 0 and is_single_item_selection_enabled and is_selection_on_click_enabled and
-				are_tree_node_connectors_shown
+				are_tree_node_connectors_shown and are_columns_drawn_above_rows
 		end
 			
 feature {EV_ANY, EV_ANY_I} -- Implementation

@@ -43,27 +43,36 @@ feature {NONE} -- Implementation
 			-- `Current' has been requested to be updated via `popup_window'.
 		local
 			x_offset: INTEGER
+			a_width: INTEGER
 		do
 				-- Account for position of text relative to pixmap.
+			x_offset := left_border
 			if pixmap /= Void then
-				x_offset := left_border + pixmap.width
+				x_offset := x_offset + pixmap.width + spacing
 			end
-			popup_window.set_x_position (popup_window.x_position + x_offset)
-			popup_window.set_width (popup_window.width - x_offset)
+			a_width := popup_window.width - x_offset
+
+			popup_window.set_width (a_width)
+			popup_window.set_x_position (x_offset + popup_window.x_position)
+			popup_window.set_height (text_height)
 
 
 			create text_field
+				-- Hide the border of the text field.
+			text_field.implementation.hide_border
 			if font /= Void then
 				text_field.set_font (font)
 			end
 			fixme ("Add handling for Void colors and potential column, row and grid colors")
-			--text_field.set_background_color (background_color)
-			--text_field.set_foreground_color (foreground_color)
+			if background_color /= Void then
+				text_field.set_background_color (background_color)
+			end	
+			if foreground_color /= Void then
+				text_field.set_foreground_color (foreground_color)
+			end
 			text_field.set_text (text)
 			popup_window.extend (text_field)
-
-			popup_window.show
-			text_field.set_focus
+			popup_window.show_actions.extend (agent text_field.set_focus)
 			text_field.return_actions.extend (agent deactivate)
 			text_field.focus_out_actions.extend (agent deactivate)
 		end

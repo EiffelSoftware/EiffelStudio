@@ -106,6 +106,7 @@ feature -- IL code generation
 			local_number: INTEGER
 			l_type: TYPE_I
 			l_need_attribute_to_be_assigned_back: BOOLEAN
+			l_external: EXTERNAL_B
 		do
 			can_discard_target := not message.need_target
 
@@ -145,12 +146,23 @@ feature -- IL code generation
 				end
 			end
 
+			l_call_access ?= message
+
 			if can_discard_target and is_target_generated then
 				il_generator.pop
+				l_external ?= l_call_access
+				if l_external /= Void then
+						-- Modify call so that we do it as if it was a static call.
+						-- This is ok because eventhough the code looks like:
+						-- f.static_external (args) where f is of type A
+						-- it should have been written as:
+						-- {A}.static_external (args)
+					l_external.enable_static_call
+					l_external.set_parent (Void)
+				end
 			end
 
 				-- Generate call
-			l_call_access ?= message
 			if l_call_access /= Void then
 				l_call_access.generate_il_call (True)
 			else

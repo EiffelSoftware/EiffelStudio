@@ -8,6 +8,16 @@ class
 
 feature -- Externals
 
+	frozen gtk_window_set_skip_taskbar_hint (a_window: POINTER; a_setting: BOOLEAN) is
+		external
+			"C signature (GtkWindow*, gboolean) use <gtk/gtk.h>"
+		end
+
+	frozen gtk_window_set_skip_pager_hint (a_window: POINTER; a_setting: BOOLEAN) is
+		external
+			"C signature (GtkWindow*, gboolean) use <gtk/gtk.h>"
+		end
+
 	frozen gtk_entry_set_has_frame (a_entry: POINTER; has_frame: BOOLEAN) is
 		external
 			"C signature (GtkEntry*, gboolean) use <gtk/gtk.h>"

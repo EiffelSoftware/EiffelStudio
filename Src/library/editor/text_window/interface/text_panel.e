@@ -90,7 +90,7 @@ feature {NONE} -- Initialization
 				-- Viewport Events
 			editor_drawing_area.expose_actions.extend (agent on_repaint)
 			editor_drawing_area.resize_actions.extend (agent on_size)
-		--	editor_drawing_area.mouse_wheel_actions.extend (agent on_mouse_wheel)
+			editor_drawing_area.mouse_wheel_actions.extend (agent on_mouse_wheel)
 			editor_drawing_area.focus_in_actions.extend (agent on_focus)	
 			editor_viewport.resize_actions.extend (agent on_viewport_size)
 				

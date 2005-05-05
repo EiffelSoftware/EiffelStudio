@@ -560,9 +560,10 @@ feature -- Status setting
 			a_item_not_void: a_item /= Void
 		local
 			x_coord, y_coord: INTEGER
+			item_height: INTEGER
 		do
 			if currently_active_item /= Void then
-					-- If an item is currently active then deactivate it
+					-- If an item is currently active then deactivate it.
 				deactivate_item (currently_active_item)
 			end
 			currently_active_item := a_item
@@ -570,16 +571,27 @@ feature -- Status setting
 			x_coord := screen_x - virtual_x_position + a_item.virtual_x_position
 			y_coord := screen_y - virtual_y_position + a_item.virtual_y_position + viewable_y_offset
 
-				-- Set default size and position
-			activate_window.set_position (x_coord, y_coord)
-			activate_window.set_size (a_item.column.width -  a_item.horizontal_indent, a_item.row.height)
-			
-			if active_item_setup_actions_internal /= Void and then not active_item_setup_actions_internal.is_empty then
-					-- The user has requested to setup all activatable items themselves
-				active_item_setup_actions_internal.call ([a_item, activate_window])
+			if is_row_height_fixed then
+				item_height := row_height
 			else
-					-- If the active setup action sequence is empty then we call setup on the item itself
-				a_item.activate_action (activate_window)
+				item_height := a_item.row.height
+			end
+
+				-- Set default size and position.
+			activate_window.set_position (x_coord, y_coord)
+			activate_window.set_size (a_item.column.width -  a_item.horizontal_indent, item_height)
+
+				-- Call the `activate_action' on the item to initialize `activate_action'
+			a_item.activate_action (activate_window)
+			
+			if item_activate_actions_internal /= Void and then not item_activate_actions_internal.is_empty then
+					-- The user has requested to override the default `activate' behavior for `a_item'.
+				item_activate_actions_internal.call ([a_item, activate_window])
+			end
+
+			if not activate_window.is_destroyed and then not activate_window.is_empty and then not activate_window.is_show_requested then
+				-- If some processing has been performed on `activate_window' then show it.
+				activate_window.show	
 			end
 		end
 
@@ -594,6 +606,7 @@ feature -- Status setting
 			if item_deactivate_actions_internal /= Void then
 				item_deactivate_actions_internal.call ([a_item])
 			end
+			a_item.redraw
 			activate_window := Void
 			currently_active_item := Void
 		end
@@ -2668,6 +2681,8 @@ feature {NONE} -- Event handling
 			node_x_position_click_edge: INTEGER
 			pointed_row_i: EV_GRID_ROW_I
 			pointed_item_interface: EV_GRID_ITEM
+			ignore_selection_handling: BOOLEAN
+			a_sel_item: EV_GRID_ITEM
 		do
 			drawable.set_focus
 			pointed_item := drawer.item_at_position_strict (a_x, a_y)
@@ -2696,16 +2711,20 @@ feature {NONE} -- Event handling
 				
 				if a_button = 1 and a_x >= node_x_position_click_edge then
 					if (pointed_row_i.subrow_count > 0 or pointed_row_i.is_ensured_expandable) and then current_subrow_indent > 0 and a_x < current_subrow_indent + current_item_x_position then		
-
+						ignore_selection_handling := True
 						if pointed_row_i.is_expanded then
 							pointed_row_i.collapse
 						else
 							pointed_row_i.expand
 						end
 					elseif is_selection_on_click_enabled then
-						handle_newly_selected_item (pointed_item.interface)
+						a_sel_item := pointed_item.interface
+						
 					end
 				end
+			end
+			if not ignore_selection_handling and then is_selection_on_click_enabled then
+				handle_newly_selected_item (a_sel_item)
 			end
 		end
 		
@@ -2923,9 +2942,10 @@ feature {NONE} -- Event handling
 				else
 					-- Do nothing
 				end
+
 				if a_sel_item /= Void then
 					handle_newly_selected_item (a_sel_item)
-				end	
+				end
 			end
 		end
 
@@ -2937,9 +2957,9 @@ feature {NONE} -- Event handling
 			a_col_counter, a_row_counter: INTEGER
 			current_item: EV_GRID_ITEM
 		do
-			if  is_multiple_item_selection_enabled and then (create {EV_ENVIRONMENT}).application.shift_pressed then
+			if  is_multiple_selection_enabled and then (create {EV_ENVIRONMENT}).application.shift_pressed then
 				start_item := selected_items.last
-				if start_item /= Void and then start_item /= a_item then
+				if a_item /= Void and then start_item /= Void and then start_item /= a_item then
 					start_row_index := start_item.row.index
 					end_row_index := a_item.row.index
 					start_column_index := start_item.column.index
@@ -2963,22 +2983,24 @@ feature {NONE} -- Event handling
 						a_col_counter := a_col_counter + 1
 					end
 				end
-			elseif (is_multiple_item_selection_enabled or is_multiple_row_selection_enabled)  and then (create {EV_ENVIRONMENT}).application.ctrl_pressed then
+			elseif (is_multiple_selection_enabled)  and then (create {EV_ENVIRONMENT}).application.ctrl_pressed then
 				-- If the ctrl key is pressed and we are in a multiple selection mode then we do nothing.
 			else
-				if not a_item.is_selected or (not is_row_selection_enabled and then selected_items.count > 1) or (is_row_selection_enabled and then selected_rows.count > 1) then
+				if a_item /= Void and then not a_item.is_selected or (not is_row_selection_enabled and then selected_items.count > 1) or (is_row_selection_enabled and then selected_rows.count > 1) then
 					remove_selection
 				end
 			end
 			
-			a_item.enable_select
-			
-			if is_row_selection_enabled then
-				a_item.row.ensure_visible
+			if a_item /= Void then
+				a_item.enable_select
+				if is_row_selection_enabled then
+					a_item.row.ensure_visible
+				else
+					a_item.ensure_visible
+				end				
 			else
-				a_item.ensure_visible
+				remove_selection
 			end
-
 		end
 
 	key_press_string_received (a_keystring: STRING) is
@@ -3130,7 +3152,7 @@ feature {NONE} -- Implementation
 	update_grid_row_indices (a_index: INTEGER) is
 			-- Recalculate subsequent row indexes starting from `a_index'.
 		require
-			valid_index: to_implement_assertion ("Add assertion for `a_index' values.")
+			valid_index: a_index > 0 and then a_index <= row_count + 1
 		local
 			i, a_row_count: INTEGER
 			row_i: EV_GRID_ROW_I
@@ -3155,7 +3177,7 @@ feature {NONE} -- Implementation
 	update_grid_column_indices (a_index: INTEGER) is
 			-- Recalculate subsequent column indexes starting from `a_index'.
 		require
-			valid_index: to_implement_assertion ("Add assertion for `a_index' values.")
+			valid_index: a_index > 0 and then a_index <= column_count + 1
 		local
 			i, a_column_count: INTEGER
 			column_i: EV_GRID_COLUMN_I

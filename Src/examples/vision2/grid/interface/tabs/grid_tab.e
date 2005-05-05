@@ -1421,6 +1421,61 @@ feature {NONE} -- Implementation
 				grid.remove_row (grid.row_count)
 			end
 		end
+
+	colored_button_selected is
+			-- Called by `select_actions' of `colored_button'.
+		local
+			i: INTEGER
+		do
+			grid.enable_tree
+			add_items (5, 500)
+			grid.column (1).set_background_color (light_blue)
+			grid.column (2).set_background_color (light_red)
+			grid.set_background_color (light_green)
+			from
+				i := 5
+			until
+				i > 10
+			loop
+				grid.row (i).add_subrow (grid.row (i + 1))
+				grid.row (i).expand
+				i := i + 1
+			end
+			grid.column (1).set_width (200)
+			from
+				i := 1
+			until
+				i > grid.row_count
+			loop
+				if i \\ 2 = 1 then
+					grid.item (4, i).set_background_color (stock_colors.white)
+				else
+					grid.item (4, i).set_background_color (light_blue)
+				end
+				i := i + 1
+			end
+			from
+				i := 15
+			until
+				i = 20
+			loop
+				grid.row (i).set_background_color (stock_colors.yellow)
+				grid.row (i).set_item (2, Void)
+				i := i + 1
+			end
+			grid.row (7).set_background_color (stock_colors.yellow)
+			grid.row (8).set_background_color (stock_colors.yellow)
+		end
+
+	columns_drawn_above_rows_button_selected is
+			-- Called by `select_actions' of `columns_drawn_above_rows_button'.
+		do
+			if columns_drawn_above_rows_button.is_selected then
+				grid.enable_columns_drawn_above_rows
+			else
+				grid.disable_columns_drawn_above_rows
+			end
+		end
 		
 end -- class GRID_TAB
 

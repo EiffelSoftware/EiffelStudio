@@ -38,6 +38,7 @@ feature {NONE}-- Initialization
 			create misc_button
 			create custom_button
 			create icon_view_button
+			create colored_button
 			create display_frame
 			create l_ev_vertical_box_2
 			create is_header_displayed_button
@@ -79,12 +80,16 @@ feature {NONE}-- Initialization
 			create collapse_all_button
 			create draw_tree_check_button
 			create l_ev_vertical_box_7
+			create l_ev_frame_1
 			create l_ev_horizontal_box_7
 			create l_ev_vertical_box_8
 			create set_background_of_selection_button
 			create set_tree_node_connector_button
 			create set_background_color_combo
+			create l_ev_frame_2
 			create l_ev_vertical_box_9
+			create columns_drawn_above_rows_button
+			create l_ev_vertical_box_10
 			create enable_pick_and_drop_button
 			
 				-- Build_widget_structure.
@@ -132,16 +137,20 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_6.extend (collapse_all_button)
 			l_ev_vertical_box_6.extend (draw_tree_check_button)
 			l_ev_notebook_1.extend (l_ev_vertical_box_7)
-			l_ev_vertical_box_7.extend (l_ev_horizontal_box_7)
+			l_ev_vertical_box_7.extend (l_ev_frame_1)
+			l_ev_frame_1.extend (l_ev_horizontal_box_7)
 			l_ev_horizontal_box_7.extend (l_ev_vertical_box_8)
 			l_ev_vertical_box_8.extend (set_background_of_selection_button)
 			l_ev_vertical_box_8.extend (set_tree_node_connector_button)
 			l_ev_horizontal_box_7.extend (set_background_color_combo)
-			l_ev_notebook_1.extend (l_ev_vertical_box_9)
-			l_ev_vertical_box_9.extend (enable_pick_and_drop_button)
+			l_ev_vertical_box_7.extend (l_ev_frame_2)
+			l_ev_frame_2.extend (l_ev_vertical_box_9)
+			l_ev_vertical_box_9.extend (columns_drawn_above_rows_button)
+			l_ev_notebook_1.extend (l_ev_vertical_box_10)
+			l_ev_vertical_box_10.extend (enable_pick_and_drop_button)
 			
 			addition_frame.set_text ("Addition")
-			l_ev_table_1.resize (2, 2)
+			l_ev_table_1.resize (2, 3)
 			l_ev_table_1.set_row_spacing (box_padding)
 			l_ev_table_1.set_column_spacing (box_padding)
 			l_ev_table_1.set_border_width (box_padding)
@@ -150,10 +159,12 @@ feature {NONE}-- Initialization
 			l_ev_table_1.put_at_position (misc_button, 2, 1, 1, 1)
 			l_ev_table_1.put_at_position (custom_button, 1, 2, 1, 1)
 			l_ev_table_1.put_at_position (icon_view_button, 2, 2, 1, 1)
+			l_ev_table_1.put_at_position (colored_button, 1, 3, 1, 1)
 			new_label_button.set_text ("Add New Items")
 			misc_button.set_text ("Build Default Item Structure")
 			custom_button.set_text ("Custom Function")
 			icon_view_button.set_text ("Build Icon View Structure")
+			colored_button.set_text ("Build Colored Structure")
 			display_frame.set_text ("Display Properties")
 			l_ev_vertical_box_2.disable_item_expand (is_header_displayed_button)
 			l_ev_vertical_box_2.disable_item_expand (l_ev_horizontal_box_1)
@@ -188,7 +199,7 @@ feature {NONE}-- Initialization
 			l_ev_notebook_1.set_item_text (l_ev_vertical_box_5, "Dynamic")
 			l_ev_notebook_1.set_item_text (l_ev_vertical_box_6, "Tree")
 			l_ev_notebook_1.set_item_text (l_ev_vertical_box_7, "Misc")
-			l_ev_notebook_1.set_item_text (l_ev_vertical_box_9, "P'n'D")
+			l_ev_notebook_1.set_item_text (l_ev_vertical_box_10, "P'n'D")
 			l_ev_vertical_box_5.set_padding_width (box_padding)
 			l_ev_vertical_box_5.set_border_width (box_padding)
 			l_ev_vertical_box_5.disable_item_expand (l_ev_horizontal_box_3)
@@ -237,11 +248,16 @@ feature {NONE}-- Initialization
 			expand_all_button.set_text ("Expand all")
 			collapse_all_button.set_text ("Collapse all")
 			draw_tree_check_button.set_text ("Draw New Tree Nodes")
-			l_ev_vertical_box_7.disable_item_expand (l_ev_horizontal_box_7)
+			l_ev_vertical_box_7.disable_item_expand (l_ev_frame_1)
+			l_ev_vertical_box_7.disable_item_expand (l_ev_frame_2)
+			l_ev_frame_1.set_text ("Colors")
 			l_ev_vertical_box_8.disable_item_expand (set_background_of_selection_button)
 			set_background_of_selection_button.set_text ("Set Background of Selection To")
 			set_tree_node_connector_button.set_text ("Set Tree Node Connectors To")
-			l_ev_vertical_box_9.disable_item_expand (enable_pick_and_drop_button)
+			l_ev_frame_2.set_text ("Column Drawing")
+			columns_drawn_above_rows_button.enable_select
+			columns_drawn_above_rows_button.set_text ("Columns Drawn Above Rows")
+			l_ev_vertical_box_10.disable_item_expand (enable_pick_and_drop_button)
 			enable_pick_and_drop_button.set_text ("Enable pick and drop on all items")
 			set_padding_width (box_padding)
 			set_border_width (box_padding)
@@ -256,6 +272,7 @@ feature {NONE}-- Initialization
 			misc_button.select_actions.extend (agent misc_button_selected)
 			custom_button.select_actions.extend (agent custom_button_selected)
 			icon_view_button.select_actions.extend (agent icon_view_button_selected)
+			colored_button.select_actions.extend (agent colored_button_selected)
 			is_header_displayed_button.select_actions.extend (agent is_header_displayed_button_selected)
 			is_row_height_fixed.select_actions.extend (agent is_row_height_fixed_selected)
 			fixed_row_height_spin_button.change_actions.extend (agent fixed_row_height_spin_button_changed (?))
@@ -279,6 +296,7 @@ feature {NONE}-- Initialization
 			collapse_all_button.select_actions.extend (agent collapse_all_button_selected)
 			draw_tree_check_button.select_actions.extend (agent draw_tree_check_button_selected)
 			set_background_color_combo.select_actions.extend (agent set_background_color_combo_selected)
+			columns_drawn_above_rows_button.select_actions.extend (agent columns_drawn_above_rows_button_selected)
 			enable_pick_and_drop_button.select_actions.extend (agent enable_pick_and_drop_button_selected)
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.
@@ -294,27 +312,29 @@ feature -- Access
 	is_row_height_fixed, is_vertical_divider_displayed_button, is_horizontal_scrolling_per_item,
 	is_vertical_scrolling_per_item, is_partially_dynamic, is_completely_dynamic, resize_columns_to_button,
 	resize_rows_to_button, is_tree_enabled_button, tree_lines_enabled, draw_tree_check_button,
-	enable_pick_and_drop_button: EV_CHECK_BUTTON
-	is_vertical_divider_dashed_button, is_vertical_divider_solid_button,
-	set_background_of_selection_button, set_tree_node_connector_button: EV_RADIO_BUTTON
+	columns_drawn_above_rows_button, enable_pick_and_drop_button: EV_CHECK_BUTTON
+	is_vertical_divider_dashed_button,
+	is_vertical_divider_solid_button, set_background_of_selection_button, set_tree_node_connector_button: EV_RADIO_BUTTON
 	subnode_pixmaps_combo,
 	set_background_color_combo: EV_COMBO_BOX
 	resize_rows_columns_box: EV_HORIZONTAL_BOX
 	new_label_button, misc_button,
-	custom_button, icon_view_button, set_selected_row_as_subnode_button, expand_all_button,
-	collapse_all_button: EV_BUTTON
-	addition_frame, display_frame, divider_frame, scrolling_frame: EV_FRAME
+	custom_button, icon_view_button, colored_button, set_selected_row_as_subnode_button,
+	expand_all_button, collapse_all_button: EV_BUTTON
+	addition_frame, display_frame, divider_frame,
+	scrolling_frame: EV_FRAME
 
 feature {NONE} -- Implementation
 
 	l_ev_notebook_1: EV_NOTEBOOK
-	l_ev_vertical_box_1, l_ev_vertical_box_2, l_ev_vertical_box_3, l_ev_vertical_box_4,
-	l_ev_vertical_box_5, l_ev_vertical_box_6, l_ev_vertical_box_7, l_ev_vertical_box_8,
-	l_ev_vertical_box_9: EV_VERTICAL_BOX
-	l_ev_horizontal_box_1, l_ev_horizontal_box_2, l_ev_horizontal_box_3,
-	l_ev_horizontal_box_4, l_ev_horizontal_box_5, l_ev_horizontal_box_6, l_ev_horizontal_box_7: EV_HORIZONTAL_BOX
-	l_ev_label_1,
-	l_ev_label_2: EV_LABEL
+	l_ev_frame_1, l_ev_frame_2: EV_FRAME
+	l_ev_vertical_box_1, l_ev_vertical_box_2,
+	l_ev_vertical_box_3, l_ev_vertical_box_4, l_ev_vertical_box_5, l_ev_vertical_box_6,
+	l_ev_vertical_box_7, l_ev_vertical_box_8, l_ev_vertical_box_9, l_ev_vertical_box_10: EV_VERTICAL_BOX
+	l_ev_horizontal_box_1,
+	l_ev_horizontal_box_2, l_ev_horizontal_box_3, l_ev_horizontal_box_4, l_ev_horizontal_box_5,
+	l_ev_horizontal_box_6, l_ev_horizontal_box_7: EV_HORIZONTAL_BOX
+	l_ev_label_1, l_ev_label_2: EV_LABEL
 	l_ev_table_1: EV_TABLE
 
 feature {NONE} -- Implementation
@@ -349,6 +369,11 @@ feature {NONE} -- Implementation
 	
 	icon_view_button_selected is
 			-- Called by `select_actions' of `icon_view_button'.
+		deferred
+		end
+	
+	colored_button_selected is
+			-- Called by `select_actions' of `colored_button'.
 		deferred
 		end
 	
@@ -464,6 +489,11 @@ feature {NONE} -- Implementation
 	
 	set_background_color_combo_selected is
 			-- Called by `select_actions' of `set_background_color_combo'.
+		deferred
+		end
+	
+	columns_drawn_above_rows_button_selected is
+			-- Called by `select_actions' of `columns_drawn_above_rows_button'.
 		deferred
 		end
 	

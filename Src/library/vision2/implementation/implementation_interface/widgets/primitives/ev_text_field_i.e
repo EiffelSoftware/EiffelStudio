@@ -39,7 +39,8 @@ feature -- Status setting
 
 	hide_border is
 			-- Hide the border of `Current'.
-		deferred
+		do
+			-- Redefined in EV_TEXT_FIELD_IMP as it is not needed by all EV_TEXT_FIELD_I descendents.
 		end
 
 feature {EV_TEXT_FIELD_I} -- Implementation

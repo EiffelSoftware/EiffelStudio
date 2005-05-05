@@ -99,6 +99,26 @@ feature -- Access
 			to_implement_assertion ("valid_result: Result >= 0 and Result <= virtual_width - viewable_width")
 		end
 
+	background_color: EV_COLOR is
+			-- Color displayed as background of `Current' except where there are items contained that
+			-- have a non-`Void' `background_color'. If `Void', `background_color' of `parent' is displayed.
+			-- See header of `EV_GRID' for a description of this behavior.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.background_color
+		end
+
+	foreground_color: EV_COLOR is
+			-- Color displayed for foreground features of `Current' except where there are items contained that
+			-- have a non-`Void' `foreground_color'. If `Void', `foreground_color' of `parent' is displayed.
+			-- See header of `EV_GRID' for a description of this behavior.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.foreground_color
+		end
+
 feature -- Status setting
 
 	hide is
@@ -200,7 +220,19 @@ feature -- Element change
 		do
 			implementation.set_background_color (a_color)
 		ensure
-			--background_color_set: forall (item(j).background_color = a_color)
+			background_color_set: background_color = a_color
+		end
+
+	set_foreground_color (a_color: EV_COLOR) is
+			-- Set `foreground_color' with `a_color'.
+		require
+			not_destroyed: not is_destroyed
+			a_color_not_void: a_color /= Void
+			is_parented: parent /= Void
+		do
+			implementation.set_foreground_color (a_color)
+		ensure
+			foreground_color_set: foreground_color = a_color
 		end
 		
 	set_width (a_width: INTEGER) is

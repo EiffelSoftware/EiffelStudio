@@ -830,7 +830,9 @@ feature {NONE} -- Implementation
 					ctxt.put_text_item (ti_r_curly)
 					ctxt.need_dot
 				elseif l_operand.expression /= Void then
+					ctxt.put_text_item (ti_l_parenthesis)
 					l_operand.expression.process (Current)
+					ctxt.put_text_item (ti_r_parenthesis)
 					ctxt.need_dot
 				elseif l_operand.target /= Void then
 					l_operand.target.process (Current)

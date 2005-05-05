@@ -32,17 +32,19 @@ feature -- Output
 	display_feature (f: E_FEATURE; st: STRUCTURED_TEXT) is
 		local
 			const: E_CONSTANT;
-			ec: CLASS_C;
+			ec: CLASS_I;
 			str: STRING
 		do
 			f.append_signature (st);
 			if f.is_constant then
-				st.add_string (" is ");
+				st.add_space
+				st.add (ti_is_keyword)
+				st.add_space
 				const ?= f;	--| Cannot fail
-				ec := const.type.associated_class;
-				if equal (ec.name, "character") then
+				ec := const.type.associated_class.lace_class
+				if ec = eiffel_system.character_class then
 					str := "'"
-				elseif equal (ec.name, "string") then
+				elseif ec = eiffel_system.string_class then
 					str := "%""
 				else
 					str := ""

@@ -347,7 +347,7 @@ feature {NONE} -- Implementation
 			to_implement ("EV_GRID_ITEM_I.destroy")
 		end
 
-feature {EV_GRID_DRAWER_I} -- Implementation
+feature {EV_GRID_DRAWER_I, EV_GRID_ITEM} -- Implementation
 		
 	perform_redraw (an_x, a_y, a_width, a_height: INTEGER; drawable: EV_DRAWABLE) is
 			-- Redraw `Current'.

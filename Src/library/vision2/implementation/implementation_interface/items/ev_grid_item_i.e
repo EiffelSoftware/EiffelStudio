@@ -23,11 +23,6 @@ inherit
 			is_selectable
 		end
 
-	EV_COLORIZABLE_I
-		redefine
-			interface
-		end
-
 	HASHABLE
 
 create
@@ -49,28 +44,6 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-
-	background_color: EV_COLOR is
-			-- Background color of current item.
-		do
-			fixme ("Update to not create new objects when no color is set")
-			if internal_background_color /= Void then
-				Result := internal_background_color
-			else	
-				create Result.make_with_rgb (1.0, 1.0, 1.0)
-			end
-		end
-
-	foreground_color: EV_COLOR is
-			-- Foreground color of current item.
-		do
-			fixme ("Update to not create new objects when no color is set")
-			if internal_foreground_color /= Void then
-				Result := internal_foreground_color
-			else
-				create Result
-			end
-		end
 
 	column: EV_GRID_COLUMN is
 			-- Column to which current item belongs.
@@ -165,6 +138,12 @@ feature -- Access
 			Result_non_negative: Result >= 0
 		end
 
+	foreground_color: EV_COLOR
+			-- Color of foreground features like text.
+
+	background_color: EV_COLOR
+			-- Color displayed behind foreground features.
+
 feature -- Status setting
 
 	activate is
@@ -248,16 +227,18 @@ feature -- Element change
 	set_foreground_color (a_color: like foreground_color) is
 			-- Set `foreground_color' with `a_color'.
 		do
-			internal_foreground_color := a_color.twin
+			foreground_color := a_color
 			if parent /= Void then
 				parent.implementation.redraw_item (Current)
 			end
+		ensure
+			foreground_color_assigned: foreground_color = a_color
 		end
 
 	set_background_color (a_color: like background_color) is
 			-- Set `background_color' with `a_color'.
 		do
-			internal_background_color := a_color.twin
+			background_color := a_color
 			if parent /= Void then
 				parent.implementation.redraw_item (Current)
 			end
@@ -367,12 +348,6 @@ feature {NONE} -- Implementation
 		end
 
 feature {EV_GRID_DRAWER_I} -- Implementation
-
-	internal_background_color: EV_COLOR
-		-- Foreground color used for `Current'.
-	
-	internal_foreground_color: EV_COLOR
-		-- Background color used for `Current'.
 		
 	perform_redraw (an_x, a_y, a_width, a_height: INTEGER; drawable: EV_DRAWABLE) is
 			-- Redraw `Current'.
@@ -380,13 +355,36 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 			-- Nothing to do here as this is the dummy item.
 		end
 
-feature {NONE} -- Implementation
-
-	set_default_colors is
-			-- Reset the colors used to display `Current'.
+	displayed_background_color: EV_COLOR is
+			-- `Result' is the background color in which `Current'
+			-- should be displayed. Based on the `Void' status of
+			-- `background_color', `row_i.background_color' and `parent_i.background_color'.
 		do
-			internal_background_color := Void
-			internal_foreground_color := Void
+			Result := background_color
+			if Result = Void then
+				Result := column_i.background_color
+				if Result = Void then
+					Result := parent_i.background_color
+				end
+			end
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	displayed_foreground_color: EV_COLOR is
+			-- `Result' is the foreground color in which `Current'
+			-- should be displayed. Based on the `Void'/ non `Void' status of
+			-- `foreground_color', `row_i.foreground_color' and `parent_i.foreground_color'.
+		do
+			Result := foreground_color
+			if Result = Void then
+				Result := column_i.foreground_color
+				if Result = Void then
+					Result := parent_i.foreground_color
+				end
+			end
+		ensure
+			result_not_void: Result /= Void
 		end
 
 feature {EV_ANY_I, EV_GRID_DRAWER_I} -- Implementation

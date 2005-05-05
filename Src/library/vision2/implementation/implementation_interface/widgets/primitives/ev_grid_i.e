@@ -1287,11 +1287,21 @@ feature -- Status report
 			valid_column: a_column >= 1 and a_column <= column_count
 			valid_row: a_row >= 1 and a_row <= row_count
 		do
-			Result := column (a_column).background_color
-			if Result = Void then
+			if are_columns_drawn_above_rows then
+				Result := column (a_column).background_color
+				if Result = Void then
+					Result := row (a_row).background_color
+					if result = Void then
+						Result := background_color
+					end
+				end
+			else
 				Result := row (a_row).background_color
-				if result = Void then
-					Result := background_color
+				if Result = Void then
+					Result := column (a_column).background_color
+					if result = Void then
+						Result := background_color
+					end
 				end
 			end
 		ensure	

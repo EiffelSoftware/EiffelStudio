@@ -78,11 +78,8 @@ feature -- Location
 
 	end_position: INTEGER is
 			-- End position for current construct
-		local
-			l_location: like end_location
 		do
-			l_location := end_location
-			Result := l_location.position + l_location.location_count
+			Result := end_location.final_position
 		ensure
 			end_position_non_negative: Result >= 0
 		end

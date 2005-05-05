@@ -1,9 +1,8 @@
 indexing
 	description:
 		"[
-			Popup Window. Contains a single widget.
-			`title' is not displayed and window doesn't appear in taskbar.
-			Useful for things such as tooltips and in-place editing.
+			A borderless window which does not appear in the task bar.
+			Useful for simulation of graphical elements such as tooltips and in-place editing.
 		]"
 	date: "$Date$"
 	revision: "$Revision$"

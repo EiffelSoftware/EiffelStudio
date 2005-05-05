@@ -1,7 +1,7 @@
 indexing
 	description: "[
 		Widget which is a combination of an EV_TREE and an EV_MULTI_COLUMN_LIST.
-		MSWindows implementation.
+		GTK implementation.
 			]"
 	date: "$Date$"
 	revision: "$Revision$"

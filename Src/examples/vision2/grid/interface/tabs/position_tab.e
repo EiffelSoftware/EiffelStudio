@@ -156,11 +156,5 @@ feature {NONE} -- Implementation
 	
 	press_x, press_y: INTEGER
 
-	stock_colors: EV_STOCK_COLORS is
-			--
-		once
-			create Result
-		end
-
 end -- class POSITION_TAB
 

@@ -14,7 +14,7 @@ feature -- Access
 			Result := implementation.item_drop_actions
 		end
 
-	active_item_setup_actions: ACTION_SEQUENCE [TUPLE [EV_GRID_ITEM, EV_WINDOW]] is
+	active_item_setup_actions: ACTION_SEQUENCE [TUPLE [EV_GRID_ITEM, EV_POPUP_WINDOW]] is
 			-- Actions to be performed to setup an item that is currently activated.
 			-- Overrides default setup of activatable items.
 			-- Arguments of TUPLE (with names for clarity):

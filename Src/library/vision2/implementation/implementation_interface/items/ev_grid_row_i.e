@@ -400,6 +400,14 @@ feature -- Status report
 		ensure
 			valid_result: Result >= 0 and Result <= count
 		end
+
+	background_color: EV_COLOR
+			-- Color displayed as background of `Current' except where there are items contained that
+			-- have a non-`Void' `background_color'. If `Void', `background_color' of `parent' is displayed..
+
+	foreground_color: EV_COLOR
+			-- Color displayed for foreground features of `Current' except where there are items contained that
+			-- have a non-`Void' `foreground_color'. If `Void', `foreground_color' of `parent' is displayed.
 		
 feature -- Status setting
 
@@ -544,6 +552,28 @@ feature -- Status setting
 			to_implement_assertion ("old_is_visible_implies_vertical_position_not_changed")
 			row_visible_when_heights_fixed_in_parent: parent.is_row_height_fixed implies  virtual_y_position >= parent.virtual_y_position and virtual_y_position + parent.row_height <= parent.virtual_y_position + (parent.viewable_height).max (parent.row_height)
 			row_visible_when_heights_not_fixed_in_parent: not parent.is_row_height_fixed implies virtual_y_position >= parent.virtual_y_position and virtual_y_position + height <= parent.virtual_y_position + (parent.viewable_height).max (height)
+		end
+
+	set_background_color (a_color: EV_COLOR) is
+			-- Set `background_color' with `a_color'.
+		require
+			a_color_not_void: a_color /= Void
+			is_parented: parent /= Void
+		do
+			background_color := a_color
+		ensure
+			background_color_set: background_color = a_color
+		end
+
+	set_foreground_color (a_color: EV_COLOR) is
+			-- Set `foreground_color' with `a_color'.
+		require
+			a_color_not_void: a_color /= Void
+			is_parented: parent /= Void
+		do
+			foreground_color := a_color
+		ensure
+			foreground_color_set: foreground_color = a_color
 		end
 		
 	ensure_expandable is
@@ -731,30 +761,6 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			added: a_row.parent_row = interface
 			subrow (subrow_index) = a_row
 			node_counts_correct: node_counts_correct
-		end
-
-	set_background_color (a_color: EV_COLOR) is
-			-- Set `a_color' to all items in Current.
-		require
-			is_parented: parent /= Void
-			a_color_not_void: a_color /= Void
-		local
-			item_index: INTEGER
-			a_item: EV_GRID_ITEM
-		do
-			from
-				item_index := 1
-			until
-				item_index > count
-			loop
-				a_item := item (item_index)
-				if a_item /= Void then
-					a_item.set_background_color (a_color)
-				end
-				item_index := item_index + 1
-			end
-		ensure
-			--color_set: forall (item(i).background_color  = a_color)
 		end
 		
 	enable_select is

@@ -40,13 +40,16 @@ feature {EV_GRID_I} -- Implementation
 			new_capacity_not_negative: new_capacity >= 0
 		local
 			temp_array: ARRAY [G]
+			l_count: INTEGER
 		do
-			if new_capacity > capacity then
-				conservative_resize (lower, upper + new_capacity - capacity)
-				set_count (capacity)				
-			elseif count > 0 then
+			l_count := count
+				-- List is always 1 based so 
+			if new_capacity > l_count then
+				conservative_resize (1, new_capacity)
+				set_count (new_capacity)				
+			elseif l_count > 0 then
 					-- Shrink existing array only losing items with index greater than `new_capacity'
-				temp_array := subarray (lower, upper + new_capacity - capacity)
+				temp_array := subarray (1, new_capacity)
 				make_from_array (temp_array)
 			else
 				arrayed_list_make (new_capacity)
@@ -54,7 +57,6 @@ feature {EV_GRID_I} -- Implementation
 			end
 		ensure
 			count_set: count = new_capacity
-			capacity_set: capacity = new_capacity
 		end
 
 feature {NONE} -- Implementation

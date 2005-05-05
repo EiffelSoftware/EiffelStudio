@@ -451,6 +451,8 @@ feature -- Status setting
 
 	set_item_accept_cursor_function (a_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], EV_CURSOR]) is
 			-- Assign `a_function' to `item_accept_cursor_function'.
+		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.set_item_accept_cursor_function (a_function)
 		ensure
@@ -459,6 +461,8 @@ feature -- Status setting
 
 	set_item_deny_cursor_function (a_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], EV_CURSOR]) is
 			-- Assign `a_function' to `item_deny_cursor_function'.
+		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.set_item_deny_cursor_function (a_function)
 		ensure

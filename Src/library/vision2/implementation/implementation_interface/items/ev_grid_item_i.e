@@ -362,9 +362,22 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 		do
 			Result := background_color
 			if Result = Void then
-				Result := column_i.background_color
-				if Result = Void then
-					Result := parent_i.background_color
+				if parent_i.are_columns_drawn_above_rows then
+					Result := column_i.background_color
+					if Result = Void then
+						Result := row_i.background_color
+						if Result = Void then
+							Result := parent_i.background_color
+						end
+					end
+				else
+					Result := row_i.background_color
+					if Result = Void then
+						Result := column_i.background_color
+						if Result = Void then
+							Result := parent_i.background_color
+						end
+					end
 				end
 			end
 		ensure
@@ -378,9 +391,22 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 		do
 			Result := foreground_color
 			if Result = Void then
-				Result := column_i.foreground_color
-				if Result = Void then
-					Result := parent_i.foreground_color
+				if parent_i.are_columns_drawn_above_rows then
+					Result := column_i.foreground_color
+					if Result = Void then
+						Result := row_i.foreground_color
+						if Result = Void then
+							Result := parent_i.foreground_color
+						end
+					end
+				else
+					Result := row_i.foreground_color
+					if Result = Void then
+						Result := column_i.foreground_color
+						if Result = Void then
+							Result := parent_i.foreground_color
+						end
+					end
 				end
 			end
 		ensure

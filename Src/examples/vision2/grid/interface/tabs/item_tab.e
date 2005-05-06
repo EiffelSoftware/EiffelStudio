@@ -46,27 +46,10 @@ feature {NONE} -- Initialization
 			create list_item
 			list_item.set_pixmap (image5)
 			pixmap_holder.extend (list_item)
-			add_color_to_combo (light_green, foreground_color_combo)
-			add_color_to_combo (light_red, foreground_color_combo)
-			add_color_to_combo (light_blue, foreground_color_combo)
-			add_color_to_combo ((create {EV_STOCK_COLORS}).red, foreground_color_combo)
-			add_color_to_combo ((create {EV_STOCK_COLORS}).green, foreground_color_combo)
-			add_color_to_combo ((create {EV_STOCK_COLORS}).white, foreground_color_combo)
-			add_color_to_combo ((create {EV_STOCK_COLORS}).yellow, foreground_color_combo)
-			add_color_to_combo ((create {EV_STOCK_COLORS}).gray, foreground_color_combo)
-			add_color_to_combo ((create {EV_STOCK_COLORS}).black, foreground_color_combo)
-			add_color_to_combo ((create {EV_STOCK_COLORS}).blue, foreground_color_combo)
 
-			add_color_to_combo (light_green, background_color_combo)
-			add_color_to_combo (light_red, background_color_combo)
-			add_color_to_combo (light_blue, background_color_combo)
-			add_color_to_combo ((create {EV_STOCK_COLORS}).red, background_color_combo)
-			add_color_to_combo ((create {EV_STOCK_COLORS}).green, background_color_combo)
-			add_color_to_combo ((create {EV_STOCK_COLORS}).white, background_color_combo)
-			add_color_to_combo ((create {EV_STOCK_COLORS}).yellow, background_color_combo)
-			add_color_to_combo ((create {EV_STOCK_COLORS}).gray, background_color_combo)
-			add_color_to_combo ((create {EV_STOCK_COLORS}).black, background_color_combo)
-			add_color_to_combo ((create {EV_STOCK_COLORS}).blue, background_color_combo)
+
+			add_default_colors_to_combo (foreground_color_combo)
+			add_default_colors_to_combo (background_color_combo)
 
 				-- Now Build default Fonts
 			font_families ?= (create {EV_ENVIRONMENT}).font_families
@@ -218,29 +201,39 @@ feature {NONE} -- Implementation
 					end
 					is_full_select_button.select_actions.resume
 					background_color_combo.select_actions.block
-					from
-						background_color_combo.start
-					until
-						background_color_combo.off
-					loop
-						l_color ?= background_color_combo.item.data
-						if l_color.is_equal (label_item.background_color) then
-							background_color_combo.item.enable_select
+					if label_item.background_color /= Void then
+						from
+							background_color_combo.start
+						until
+							background_color_combo.off
+						loop
+							l_color ?= background_color_combo.item.data		
+							if l_color /= Void and then l_color.is_equal (label_item.background_color) then
+								background_color_combo.item.enable_select
+								background_color_combo.go_i_th (background_color_combo.count)
+							end
+							background_color_combo.forth
 						end
-						background_color_combo.forth
+					else
+						background_color_combo.first.enable_select
 					end
 					background_color_combo.select_actions.resume
 					foreground_color_combo.select_actions.block
-					from
-						foreground_color_combo.start
-					until
-						foreground_color_combo.off
-					loop
-						l_color ?= foreground_color_combo.item.data
-						if l_color.is_equal (label_item.foreground_color) then
-							foreground_color_combo.item.enable_select
+					if label_item.foreground_color /= Void then
+						from
+							foreground_color_combo.start
+						until
+							foreground_color_combo.off
+						loop
+							l_color ?= foreground_color_combo.item.data		
+							if l_color /= Void and then l_color.is_equal (label_item.foreground_color) then
+								foreground_color_combo.item.enable_select
+								foreground_color_combo.go_i_th (foreground_color_combo.count)
+							end
+							foreground_color_combo.forth
 						end
-						foreground_color_combo.forth
+					else
+						foreground_color_combo.first.enable_select
 					end
 					foreground_color_combo.select_actions.resume
 					font_container.enable_sensitive
@@ -443,6 +436,7 @@ feature {NONE} -- Implementation
 			label_item: EV_GRID_LABEL_ITEM
 			color: EV_COLOR
 		do
+			print ("sdfsdf")
 			label_item ?= found_item
 			if label_item /= Void then
 				color ?= background_color_combo.selected_item.data

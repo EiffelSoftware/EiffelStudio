@@ -424,7 +424,7 @@ feature {EB_CLICKABLE_MARGIN}-- Process Vision2 Events
 			elseif button = 3 then
 				mouse_right_button_down := True
 				if x_pos <= 0 then
-					l_number := (y_pos - editor_viewport.y_offset // line_height) + first_line_displayed
+					l_number := ((y_pos - editor_viewport.y_offset) // line_height) + first_line_displayed
 					if text_displayed.number_of_lines >= l_number then
 						ln ?= text_displayed.line (l_number)
 						bkstn ?= ln.real_first_token.pebble
@@ -465,8 +465,8 @@ feature {EB_CLICKABLE_MARGIN}-- Process Vision2 Events
 			until
 				index.after or executed_command
 			loop
-				if customizable_commands.valid_index (index.item - 1) then
-					(customizable_commands @ (index.item - 1)).apply
+				if customizable_commands.valid_index (index.item) then
+					(customizable_commands @ (index.item)).apply
 					executed_command := True
 				end
 				index.forth
@@ -490,8 +490,8 @@ feature {EB_CLICKABLE_MARGIN}-- Process Vision2 Events
 			until
 				index.after or executed_command
 			loop
-				if customizable_commands.valid_index (index.item - 1) then
-					(customizable_commands @ (index.item - 1)).apply
+				if customizable_commands.valid_index (index.item) then
+					(customizable_commands @ (index.item)).apply
 					executed_command := True
 				end
 				index.forth

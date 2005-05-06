@@ -436,7 +436,6 @@ feature {NONE} -- Implementation
 			label_item: EV_GRID_LABEL_ITEM
 			color: EV_COLOR
 		do
-			print ("sdfsdf")
 			label_item ?= found_item
 			if label_item /= Void then
 				color ?= background_color_combo.selected_item.data

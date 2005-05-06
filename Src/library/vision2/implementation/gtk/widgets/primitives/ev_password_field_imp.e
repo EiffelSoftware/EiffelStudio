@@ -10,6 +10,8 @@ class
 
 inherit
 	EV_PASSWORD_FIELD_I
+		undefine
+			hide_border
 		redefine
 			interface
 		end

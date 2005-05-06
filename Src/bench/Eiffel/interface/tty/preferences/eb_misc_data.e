@@ -157,6 +157,12 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := i_th_external_preference (i).value
 		end
 
+	i_th_external_preference_string (i: INTEGER): STRING is
+			-- 
+		do
+			Result := i_th_external_preference (i).name
+		end
+
 	editor_left_side: BOOLEAN is 
 		do
 			Result := editor_left_side_preference.value
@@ -254,23 +260,23 @@ feature {NONE} -- Implementation
 			external_command_0_preference := l_manager.new_string_resource_value (l_manager, external_command_0_string, "")
 			external_commands.put (external_command_0_preference, 0)
 			external_command_1_preference := l_manager.new_string_resource_value (l_manager, external_command_1_string, "")
-			external_commands.put (external_command_0_preference, 1)
+			external_commands.put (external_command_1_preference, 1)
 			external_command_2_preference := l_manager.new_string_resource_value (l_manager, external_command_2_string, "")
-			external_commands.put (external_command_0_preference, 2)
+			external_commands.put (external_command_2_preference, 2)
 			external_command_3_preference := l_manager.new_string_resource_value (l_manager, external_command_3_string, "")
-			external_commands.put (external_command_0_preference, 3)
+			external_commands.put (external_command_3_preference, 3)
 			external_command_4_preference := l_manager.new_string_resource_value (l_manager, external_command_4_string, "")
-			external_commands.put (external_command_0_preference, 4)
+			external_commands.put (external_command_4_preference, 4)
 			external_command_5_preference := l_manager.new_string_resource_value (l_manager, external_command_5_string, "")
-			external_commands.put (external_command_0_preference, 5)
+			external_commands.put (external_command_5_preference, 5)
 			external_command_6_preference := l_manager.new_string_resource_value (l_manager, external_command_6_string, "")
-			external_commands.put (external_command_0_preference, 6)
+			external_commands.put (external_command_6_preference, 6)
 			external_command_7_preference := l_manager.new_string_resource_value (l_manager, external_command_7_string, "")
-			external_commands.put (external_command_0_preference, 7)
+			external_commands.put (external_command_7_preference, 7)
 			external_command_8_preference := l_manager.new_string_resource_value (l_manager, external_command_8_string, "")
-			external_commands.put (external_command_0_preference, 8)
+			external_commands.put (external_command_8_preference, 8)
 			external_command_9_preference := l_manager.new_string_resource_value (l_manager, external_command_9_string, "")
-			external_commands.put (external_command_0_preference, 9)
+			external_commands.put (external_command_9_preference, 9)
 
 			acrobat_reader_preference := l_manager.new_string_resource_value (l_manager, acrobat_reader_string, "acrobat")
 			text_mode_is_windows_preference := l_manager.new_boolean_resource_value (l_manager, text_mode_is_windows_string, (create {PLATFORM_CONSTANTS}).is_windows)						

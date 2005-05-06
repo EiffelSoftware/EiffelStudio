@@ -102,7 +102,6 @@ feature {NONE} -- Initialization
 			last_vertical_scroll_bar_value := 1
 
 				-- Set up the screen.
-			create buffered_line.make_with_size (1, line_height)
 			buffered_line.set_background_color (editor_preferences.normal_background_color)	
 		end
 
@@ -855,7 +854,10 @@ feature {NONE} -- Display functions
 	on_viewport_size (a_x, a_y: INTEGER; a_width, a_height: INTEGER) is
 			-- Viewport was resized.
 		do
-			buffered_line.set_size (a_width + offset, line_height)
+				-- Do not ever make the buffered line smaller, only larger.
+			if (a_width + offset) > buffered_line.width then
+				buffered_line.set_size (a_width + offset, line_height)
+			end
 			update_vertical_scrollbar
 			update_horizontal_scrollbar
 		end	
@@ -899,9 +901,9 @@ feature {NONE} -- Display functions
 	 			if (editor_viewport.y_offset + viewable_height) > y_offset then
 					editor_drawing_area.set_background_color (editor_preferences.normal_background_color)
 					debug ("editor")
-						draw_flash (0, y_offset, viewable_width, (editor_viewport.y_offset + viewable_height) - y_offset, False)					
+						draw_flash (x_pos, y_offset, viewable_width, (editor_viewport.y_offset + viewable_height) - y_offset, False)
 					end
-					editor_drawing_area.clear_rectangle (0, y_offset, viewable_width, (editor_viewport.y_offset + viewable_height) - y_offset)
+					editor_drawing_area.clear_rectangle (x_pos, y_offset, viewable_width, (editor_viewport.y_offset + viewable_height) - y_offset)
 				end
  			end	
  			in_scroll := False
@@ -1225,8 +1227,11 @@ feature -- Memory management
 
 feature -- Implementation
 
-	buffered_line: EV_PIXMAP
+	buffered_line: EV_PIXMAP is
 			-- Buffer large enough to hold line information.
+		once
+			create Result.make_with_size (1, line_height)
+		end
 
 	buffered_drawable_width: INTEGER is 32000
 

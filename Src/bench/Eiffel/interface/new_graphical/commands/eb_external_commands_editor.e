@@ -40,7 +40,12 @@ feature {NONE} -- Initialization
 				loop
 					s := preferences.misc_data.i_th_external_preference_value (i)
 					if not s.is_empty and not s.is_equal (" ") then
-						create c.make_from_resource (s)
+						create c.make_from_string 
+						(
+							preferences.misc_data.i_th_external_preference_value (i), 
+							i,
+							preferences.misc_data.i_th_external_preference_string (i)
+						)						
 					end
 					i := i + 1
 				end

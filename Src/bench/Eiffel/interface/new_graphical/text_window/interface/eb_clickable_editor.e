@@ -465,8 +465,8 @@ feature {EB_CLICKABLE_MARGIN}-- Process Vision2 Events
 			until
 				index.after or executed_command
 			loop
-				if customizable_commands.valid_index (index.item) then
-					(customizable_commands @ index.item).apply
+				if customizable_commands.valid_index (index.item - 1) then
+					(customizable_commands @ (index.item - 1)).apply
 					executed_command := True
 				end
 				index.forth
@@ -490,8 +490,8 @@ feature {EB_CLICKABLE_MARGIN}-- Process Vision2 Events
 			until
 				index.after or executed_command
 			loop
-				if customizable_commands.valid_index (index.item) then
-					(customizable_commands @ index.item).apply
+				if customizable_commands.valid_index (index.item - 1) then
+					(customizable_commands @ (index.item - 1)).apply
 					executed_command := True
 				end
 				index.forth
@@ -659,7 +659,7 @@ feature {NONE} -- Implementation
 			-- Are brekpoints hidden ?
 
 	index_of_customizable_commands (key_code: INTEGER; ctrl, alt, shift: BOOLEAN): LINKED_LIST[INTEGER] is
-			-- List of indeces in `customizable_commands' of commands that correspond to the shortcut
+			-- List of indexes in `customizable_commands' of commands that correspond to the shortcut
 			-- defined by key of code `key_code' and Ctrl if `ctrl', Shift if `shift' and Alt if `alt'.
 		local
 			index, i: INTEGER

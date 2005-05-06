@@ -22,7 +22,7 @@ create
 
 feature {PREFERENCE_STRUCTURE} -- Initialization
 	
-	make_empty is
+	make_empty (a_resources: PREFERENCES) is
 			-- Create resource structure in XML file.  File will be created based on name of application.
 			-- For operating systems which support it it will stored in the users home directory.  For operating
 			-- systems that do not support home directories it will be stored in the current working directory.
@@ -31,6 +31,7 @@ feature {PREFERENCE_STRUCTURE} -- Initialization
 			l_exec: EXECUTION_ENVIRONMENT
 			l_op: OPERATING_ENVIRONMENT
 		do			
+			resources := a_resources
 			create l_exec
 			l_op := l_exec.operating_environment
 			
@@ -41,15 +42,16 @@ feature {PREFERENCE_STRUCTURE} -- Initialization
 			end			
 			l_loc.append_character (l_op.directory_separator)
 			l_loc.append ("stored_preferences.xml")
-			make_with_location (l_loc)
+			make_with_location (a_resources, l_loc)
 		end
 
-	make_with_location (a_location: STRING) is
+	make_with_location (a_resources: PREFERENCES; a_location: STRING) is
 			-- Create resource structure in the XML file at location `a_location'.
 			-- If file does not exist create new one.
 		local
 			l_file: KL_TEXT_OUTPUT_FILE
 		do			
+			resources := a_resources
 			create session_values.make (5)
 			create xml_structure.make_with_root_named ("EIFFEL_DOCUMENT", create {XM_NAMESPACE}.make_default)
 			location := a_location
@@ -75,10 +77,11 @@ feature {PREFERENCE_STRUCTURE} -- Resource Management
 	save_resource (a_resource: PREFERENCE) is
 			-- Save `a_resource' to the file on disk.
 		do
-			-- TODO: neilc
+			-- TODO: neilc.  How to save only a single resource to the file?
+			save (resources.resources.linear_representation)
 		end		
 
-	save (resources: ARRAYED_LIST [PREFERENCE]) is
+	save (a_resources: ARRAYED_LIST [PREFERENCE]) is
 			-- Save contents of structure.
 		local
 			l_resource: PREFERENCE
@@ -89,18 +92,18 @@ feature {PREFERENCE_STRUCTURE} -- Resource Management
 			if l_file.is_open_write then
 				l_file.put_string ("<EIFFEL_DOCUMENT>")
 				from
-					resources.start
+					a_resources.start
 				until
-					resources.after
+					a_resources.after
 				loop			
-					l_resource := resources.item
+					l_resource := a_resources.item
 					if not l_resource.is_default_value then
 						l_file.put_string ("%N%T<PREFERENCE ")
 						l_file.put_string ("NAME=%"" + l_resource.name + "%" ")
 						l_file.put_string ("VALUE=%"" + l_resource.string_value + "%" ")
 						l_file.put_string ("/>")
 					end
-					resources.forth
+					a_resources.forth
 				end			
 				l_file.put_string ("</EIFFEL_DOCUMENT>")
 				l_file.close
@@ -108,6 +111,14 @@ feature {PREFERENCE_STRUCTURE} -- Resource Management
 				fixme ("Add code to let callers that `resources' could not be saved")
 			end
 		end
+
+	remove_resource (a_resource: PREFERENCE) is
+			-- Remove `resource' from storage device.
+		do
+			if resources.resources.has (a_resource.name) then
+				resources.resources.remove (a_resource.name)	
+			end
+		end	
 
 feature {NONE} -- Implementation
 

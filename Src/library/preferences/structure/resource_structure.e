@@ -12,28 +12,32 @@ create
 
 feature {PREFERENCES} -- Initialization	
 	
-	make_empty is
+	make_empty (a_resources: PREFERENCES) is
 			-- Make a new underlying data store based upon the name of the application.
+		require
+			resources_not_void: a_resources /= Void
 		local
 			imp: PREFERENCE_STRUCTURE_IMP
 		do
 			default_create
-			create imp.make_empty
+			resources := a_resources
+			create imp.make_empty (a_resources)
 			implementation := imp	
 		ensure
 			has_implementation: implementation /= Void
 		end
 	
-	make_with_location (a_location: STRING) is
+	make_with_location (a_resources: PREFERENCES; a_location: STRING) is
 			-- Access underlying data store at `a_location'.
 		require
-			location_not_void: a_location /= Void
+			resources_not_void: a_resources /= Void
 			location_not_empty: not a_location.is_empty
 		local
 			imp: PREFERENCE_STRUCTURE_IMP
 		do
 			default_create
-			create imp.make_with_location (a_location)
+			resources := a_resources
+			create imp.make_with_location (a_resources, a_location)
 			implementation := imp	
 		ensure
 			has_implementation: implementation /= Void
@@ -95,18 +99,21 @@ feature {PREFERENCES} -- Resource Management
 
 feature {PREFERENCES} -- Saving
 
-	save (resources: ARRAYED_LIST [PREFERENCE]) is
+	save (a_resources: ARRAYED_LIST [PREFERENCE]) is
 			-- Save all resources.
 		require
-			resources_not_void: resources /= Void
+			resources_not_void: a_resources /= Void
 		do
-			implementation.save (resources)
+			implementation.save (a_resources)
 		end
 
 feature {NONE} -- Implementation
 
 	implementation: PREFERENCE_STRUCTURE_I
 			-- Structure interface.
+
+	resources: PREFERENCES
+			-- Actual Preferences
 
 invariant
 	has_implementation: implementation /= Void

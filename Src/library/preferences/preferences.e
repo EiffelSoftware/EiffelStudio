@@ -60,7 +60,7 @@ feature {NONE} -- Initialization
 			-- care exactly where the preferences are stored and have no file containing default values for the
 			-- application preferences.
 		do	
-			create resource_structure.make_empty
+			create resource_structure.make_empty (Current)
 			session_values := resource_structure.session_values
 		ensure
 			has_session_values: session_values /= Void
@@ -77,7 +77,7 @@ feature {NONE} -- Initialization
 			location_not_void: a_location /= Void
 			location_not_empty: not a_location.is_empty
 		do				
-			create resource_structure.make_with_location (a_location)
+			create resource_structure.make_with_location (Current, a_location)
 			session_values := resource_structure.session_values
 		ensure
 			has_session_values: session_values /= Void
@@ -99,7 +99,7 @@ feature {NONE} -- Initialization
 		do
 			defaults_file_name := a_defaults_file_name
 			extract_default_values
-			create resource_structure.make_with_location (a_location)	
+			create resource_structure.make_with_location (Current, a_location)	
 			session_values := resource_structure.session_values
 		ensure
 			has_session_values: session_values /= Void
@@ -247,7 +247,7 @@ feature -- Resource
 			all_resources_default: True
 		end		
 		
-feature {PREFERENCE_FACTORY, PREFERENCE_MANAGER, PREFERENCE_VIEW} -- Implementation
+feature {PREFERENCE_FACTORY, PREFERENCE_MANAGER, PREFERENCE_VIEW, PREFERENCE_STRUCTURE_IMP} -- Implementation
 
 	default_values: HASH_TABLE [TUPLE [STRING, STRING, BOOLEAN], STRING] is
 			-- Hash table of known preference default values.  [[Description, Value, Hidden], Name].

@@ -27,7 +27,6 @@ feature {NONE} -- Initialization
 		require
 			valid_preferences: app_prefs /= Void
 			valid_button_count: button_count > 0 and button_count < 4
-			valid_preference: is_boolean_resource (res_name)
 			valid_confirmation_text: confirmation_text /= Void
 			valid_check_label: check_label /= Void
 		do

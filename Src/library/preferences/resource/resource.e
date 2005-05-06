@@ -95,14 +95,14 @@ feature -- Access
 			-- String description of this resource type.
 		deferred
 		ensure
-			string_type_not_void: string_type /= Void
+			string_type_not_void: Result /= Void
 		end		
 
 	generating_resource_type: STRING is
 			-- The generating type of the resource for graphical representation.
 		deferred
 		ensure
-			generating_resource_type_not_void: generating_resource_type /= Void
+			generating_resource_type_not_void: Result /= Void
 		end	
 
 	manager: PREFERENCE_MANAGER

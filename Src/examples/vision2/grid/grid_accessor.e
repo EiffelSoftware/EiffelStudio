@@ -159,6 +159,28 @@ feature -- Access
 			count_increased: a_combo.count = old a_combo.count + 1
 		end
 
+	add_default_colors_to_combo (a_combo: EV_COMBO_BOX) is
+			-- Add a set of default colors to `a_combo'.
+		require
+			a_combo_not_void: a_combo /= Void
+		local
+			list_item: EV_LIST_ITEM
+		do
+			create list_item.make_with_text ("Void")
+			a_combo.extend (list_item)
+			add_color_to_combo (light_green, a_combo)
+			add_color_to_combo (light_red, a_combo)
+			add_color_to_combo (light_blue, a_combo)
+			add_color_to_combo ((create {EV_STOCK_COLORS}).red, a_combo)
+			add_color_to_combo ((create {EV_STOCK_COLORS}).green, a_combo)
+			add_color_to_combo ((create {EV_STOCK_COLORS}).white, a_combo)
+			add_color_to_combo ((create {EV_STOCK_COLORS}).yellow, a_combo)
+			add_color_to_combo ((create {EV_STOCK_COLORS}).gray, a_combo)
+			add_color_to_combo ((create {EV_STOCK_COLORS}).black, a_combo)
+			add_color_to_combo ((create {EV_STOCK_COLORS}).blue, a_combo)
+		end
+		
+
 	stock_colors: EV_STOCK_COLORS is
 			-- Once access to EiffelVision2 stock colors
 		once

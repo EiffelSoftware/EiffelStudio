@@ -7,8 +7,6 @@ class
 	MARSHAL_CACHE_MANAGER
 
 inherit
-	ANY
-
 	MARSHAL_BY_REF_OBJECT
 
 feature -- Access

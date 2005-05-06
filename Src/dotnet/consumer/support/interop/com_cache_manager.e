@@ -168,6 +168,7 @@ feature {NONE} -- Implementation
 			l_full_name: SYSTEM_STRING
 			l_subscription: AR_RESOLVE_SUBSCRIBER
 			l_resolver: AR_RESOLVER
+			l_type: SYSTEM_TYPE
 		do
 			if internal_marshalled_cache_manager = Void then
 				check
@@ -176,10 +177,15 @@ feature {NONE} -- Implementation
 				app_domain := feature {APP_DOMAIN}.create_domain ("EiffelSoftware.MetadataConsumer" + feature {GUID}.new_guid.to_string, Void, Void)
 				
 					-- ensure that no decendant is mistaken by creating an instance of `COM_CACHE_MANAGER'.
-				l_location := (create {COM_CACHE_MANAGER}).to_dotnet.get_type.assembly.location
-				l_full_name := (create {MARSHAL_CACHE_MANAGER}).to_dotnet.get_type.full_name
+				l_type := {COM_CACHE_MANAGER}
+				l_location := l_type.assembly.location
+					-- Watch out here, we create a .NET type of an Eiffel type, usually it is the interface type
+					-- that we get, but in this case, MARSHAL_CACHE_MANAGER inheriting from a .NET type, interface
+					-- and implementation are actually the same type.
+				l_type := {MARSHAL_CACHE_MANAGER}
+				l_full_name := l_type.full_name
 				l_inst_obj_handle ?= app_domain.create_instance_from (l_location, l_full_name)
-					
+
 				check
 					created_new_cache_manager: l_inst_obj_handle /= Void
 				end

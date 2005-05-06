@@ -751,8 +751,7 @@ feature -- Keybord shortcuts Customization
 				"show_search_and_replace_panel", 
 				"search_selection", 
 				"search_last", 
-				"search_backward", 
-				"show_goto_dialog",
+				"search_backward",
 				"customized_insertion_1", 
 				"customized_insertion_2", 
 				"customized_insertion_3"

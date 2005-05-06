@@ -30,6 +30,8 @@ feature {NONE} -- Initialization
 			column_finder.motion_actions.extend (agent column_motion)
 			move_to_column_finder.motion_actions.extend (agent move_to_column_motion)
 			move_to_column_finder.set_prompt ("Locate Column : ")
+			add_default_colors_to_combo (foreground_color_combo)
+			add_default_colors_to_combo (background_color_combo)
 		end
 
 feature {NONE} -- Implementation
@@ -67,35 +69,75 @@ feature {NONE} -- Implementation
 
 	column_motion (an_item: EV_GRID_ITEM) is
 			--
+		local
+			l_column: EV_GRID_COLUMN
+			l_color: EV_COLOR
 		do
+			l_column := grid.column (current_column_index)
 			if an_item /= Void then
 				column_properties_frame.enable_sensitive
 				column_operations_frame.enable_sensitive
 				column_index.change_actions.block
-				column_index.set_value (an_item.column.index)
-				current_column_index := an_item.column.index
+				column_index.set_value (l_column.index)
+				current_column_index := l_column.index
 				column_index.change_actions.resume
 				column_width.change_actions.block
-				column_width.set_value (an_item.column.width)
+				column_width.set_value (l_column.width)
 				column_width.change_actions.resume
 				column_title_entry.change_actions.block
-				column_title_entry.set_text (an_item.column.title)
+				column_title_entry.set_text (l_column.title)
 				column_title_entry.change_actions.resume
 				column_selected_button.select_actions.block
-				if an_item.column.is_selected then
+				if l_column.is_selected then
 					column_selected_button.enable_select
 				else
 					column_selected_button.disable_select
 				end
 				column_selected_button.select_actions.resume
 				column_visible_button.select_actions.block
-				if grid.column_displayed (an_item.column.index) then
+				if grid.column_displayed (l_column.index) then
 					column_visible_button.enable_select
 				else
 					column_visible_button.disable_select
 				end
 				column_visible_button.select_actions.resume
-				swap_column_button.set_text ("Move Column " + an_item.column.index.out + " past Column " + current_past_column)
+				swap_column_button.set_text ("Move Column " + l_column.index.out + " past Column " + current_past_column)
+				background_color_combo.select_actions.block
+				if l_column.background_color /= Void then
+					from
+						background_color_combo.start
+					until
+						background_color_combo.off
+					loop
+						l_color ?= background_color_combo.item.data		
+						if l_color /= Void and then l_color.is_equal (l_column.background_color) then
+							background_color_combo.item.enable_select
+							background_color_combo.go_i_th (background_color_combo.count)
+						end
+						background_color_combo.forth
+					end
+				else
+					background_color_combo.first.enable_select
+				end
+				background_color_combo.select_actions.resume
+				foreground_color_combo.select_actions.block
+				if l_column.foreground_color /= Void then
+					from
+						foreground_color_combo.start
+					until
+						foreground_color_combo.off
+					loop
+						l_color ?= foreground_color_combo.item.data		
+						if l_color /= Void and then l_color.is_equal (l_column.foreground_color) then
+							foreground_color_combo.item.enable_select
+							foreground_color_combo.go_i_th (foreground_color_combo.count)
+						end
+						foreground_color_combo.forth
+					end
+				else
+					foreground_color_combo.first.enable_select
+				end
+				foreground_color_combo.select_actions.resume
 			else
 				column_properties_frame.disable_sensitive
 				column_operations_frame.disable_sensitive
@@ -158,6 +200,36 @@ feature {NONE} -- Implementation
 			-- Called by `select_actions' of `remove_column_button'.
 		do
 			grid.remove_column (current_column_index)
+		end
+
+	foreground_color_combo_selected is
+			-- Called by `select_actions' of `foreground_color_combo'.
+		local
+			column: EV_GRID_COLUMN
+			color: EV_COLOR
+		do
+			if current_column_index < grid.column_count then
+				column := grid.column (current_column_index)
+				if column /= Void then
+					color ?= foreground_color_combo.selected_item.data
+					column.set_foreground_color (color)
+				end
+			end
+		end
+	
+	background_color_combo_selected is
+			-- Called by `select_actions' of `background_color_combo'.
+		local
+			column: EV_GRID_COLUMN
+			color: EV_COLOR
+		do
+			if current_column_index < grid.column_count then
+				column := grid.column (current_column_index)
+				if column /= Void then
+					color ?= background_color_combo.selected_item.data
+					column.set_background_color (color)
+				end
+			end
 		end
 
 end -- class COLUMN_TAB

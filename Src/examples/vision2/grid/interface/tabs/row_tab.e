@@ -29,6 +29,8 @@ feature {NONE} -- Initialization
 			row_finder.motion_actions.extend (agent row_motion)
 			move_to_row_finder.motion_actions.extend (agent move_to_row_motion)
 			move_to_row_finder.set_prompt ("Locate Row : ")
+			add_default_colors_to_combo (foreground_color_combo)
+			add_default_colors_to_combo (background_color_combo)
 		end
 
 feature {NONE} -- Implementation
@@ -55,6 +57,7 @@ feature {NONE} -- Implementation
 			--
 		local
 			l_row: EV_GRID_ROW
+			l_color: EV_COLOR
 		do
 			if an_item /= Void then
 				l_row := an_item.row
@@ -90,6 +93,42 @@ feature {NONE} -- Implementation
 				else
 					unparent_row_button.disable_sensitive
 				end
+				background_color_combo.select_actions.block
+				if l_row.background_color /= Void then
+					from
+						background_color_combo.start
+					until
+						background_color_combo.off
+					loop
+						l_color ?= background_color_combo.item.data		
+						if l_color /= Void and then l_color.is_equal (l_row.background_color) then
+							background_color_combo.item.enable_select
+							background_color_combo.go_i_th (background_color_combo.count)
+						end
+						background_color_combo.forth
+					end
+				else
+					background_color_combo.first.enable_select
+				end
+				background_color_combo.select_actions.resume
+				foreground_color_combo.select_actions.block
+				if l_row.foreground_color /= Void then
+					from
+						foreground_color_combo.start
+					until
+						foreground_color_combo.off
+					loop
+						l_color ?= foreground_color_combo.item.data		
+						if l_color /= Void and then l_color.is_equal (l_row.foreground_color) then
+							foreground_color_combo.item.enable_select
+							foreground_color_combo.go_i_th (foreground_color_combo.count)
+						end
+						foreground_color_combo.forth
+					end
+				else
+					foreground_color_combo.first.enable_select
+				end
+				foreground_color_combo.select_actions.resume
 			else
 				row_properties_frame.disable_sensitive
 				row_operations_frame.disable_sensitive
@@ -158,6 +197,36 @@ feature {NONE} -- Implementation
 			-- Called by `select_actions' of `clear_row_button'.
 		do
 			grid.row (current_row_index).clear
+		end
+
+	foreground_color_combo_selected is
+			-- Called by `select_actions' of `foreground_color_combo'.
+		local
+			row: EV_GRID_ROW
+			color: EV_COLOR
+		do
+			if current_row_index < grid.row_count then
+				row := grid.row (current_row_index)
+				if row /= Void then
+					color ?= foreground_color_combo.selected_item.data
+					row.set_foreground_color (color)
+				end
+			end
+		end
+	
+	background_color_combo_selected is
+			-- Called by `select_actions' of `background_color_combo'.
+		local
+			row: EV_GRID_ROW
+			color: EV_COLOR
+		do
+			if current_row_index < grid.row_count then
+				row := grid.row (current_row_index)
+				if row /= Void then
+					color ?= background_color_combo.selected_item.data
+					row.set_background_color (color)
+				end
+			end
 		end
 
 end -- class ROW_TAB

@@ -31,6 +31,7 @@ feature {NONE} -- Initialization
 		local
 			f_name: FILE_NAME
 			list_item: EV_LIST_ITEM
+			l_color: EV_COLOR
 		do
 			grid.set_dynamic_content_function (agent compute_item)
 			add_color_to_combo ((create {EV_STOCK_COLORS}).red, set_background_color_combo)
@@ -70,6 +71,44 @@ feature {NONE} -- Initialization
 			list_item.set_pixmap (expand3)
 			subnode_pixmaps_combo.extend (list_item)
 
+			add_default_colors_to_combo (foreground_color_combo)
+			add_default_colors_to_combo (background_color_combo)
+			background_color_combo.select_actions.block
+				if grid.background_color /= Void then
+					from
+						background_color_combo.start
+					until
+						background_color_combo.off
+					loop
+						l_color ?= background_color_combo.item.data		
+						if l_color /= Void and then l_color.is_equal (grid.background_color) then
+							background_color_combo.item.enable_select
+							background_color_combo.go_i_th (background_color_combo.count)
+						end
+						background_color_combo.forth
+					end
+				else
+					background_color_combo.first.enable_select
+				end
+				background_color_combo.select_actions.resume
+				foreground_color_combo.select_actions.block
+				if foreground_color /= Void then
+					from
+						foreground_color_combo.start
+					until
+						foreground_color_combo.off
+					loop
+						l_color ?= foreground_color_combo.item.data		
+						if l_color /= Void and then l_color.is_equal (grid.foreground_color) then
+							foreground_color_combo.item.enable_select
+							foreground_color_combo.go_i_th (foreground_color_combo.count)
+						end
+						foreground_color_combo.forth
+					end
+				else
+					foreground_color_combo.first.enable_select
+				end
+				foreground_color_combo.select_actions.resume
 		end
 		
 	expand1, expand2, expand3, collapse1, collapse2, collapse3: EV_PIXMAP
@@ -242,7 +281,7 @@ feature {NONE} -- Implementation
 			--
 		local
 			l_ycount, l_xcount: INTEGER
-			grid_label_item: EV_GRID_LABEL_ITEM
+			grid_label_item: EV_GRID_EDITABLE_ITEM
 		do
 			from
 				l_ycount := 1
@@ -1465,7 +1504,20 @@ feature {NONE} -- Implementation
 			end
 			grid.row (7).set_background_color (stock_colors.yellow)
 			grid.row (8).set_background_color (stock_colors.yellow)
+			grid.pointer_double_press_actions.extend (agent item_double_pressed)
 		end
+
+	item_double_pressed (an_x, a_y, a_button: INTEGER; an_item: EV_GRID_ITEM) is
+			--
+		local
+			editable_item: EV_GRID_EDITABLE_ITEM
+		do
+			editable_item ?= an_item
+			if editable_item /= Void then
+				editable_item.activate
+			end
+		end
+		
 
 	columns_drawn_above_rows_button_selected is
 			-- Called by `select_actions' of `columns_drawn_above_rows_button'.
@@ -1474,6 +1526,28 @@ feature {NONE} -- Implementation
 				grid.enable_columns_drawn_above_rows
 			else
 				grid.disable_columns_drawn_above_rows
+			end
+		end
+
+	foreground_color_combo_selected is
+			-- Called by `select_actions' of `foreground_color_combo'.
+		local
+			color: EV_COLOR
+		do
+			color ?= foreground_color_combo.selected_item.data
+			if color /= Void then
+				grid.set_foreground_color (color)
+			end
+		end
+	
+	background_color_combo_selected is
+			-- Called by `select_actions' of `background_color_combo'.
+		local
+			color: EV_COLOR
+		do
+			color ?= background_color_combo.selected_item.data
+			if color /= Void then
+				grid.set_background_color (color)
 			end
 		end
 		

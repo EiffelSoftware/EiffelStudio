@@ -136,17 +136,17 @@ feature -- Output
 				peer_address.socket_address.item, peer_address.count)
 		end;
 
-	put_managed_pointer (p: MANAGED_POINTER; nb_bytes: INTEGER) is
-			-- Put data of length `nb_bytes' pointed by `p' at
+	put_managed_pointer (p: MANAGED_POINTER; start_pos, nb_bytes: INTEGER) is
+			-- Put data of length `nb_bytes' pointed by `start_pos' index in `p' at
 			-- current position.
 		require else
 			p_not_void: p /= Void
-			p_large_enough: p.count >= nb_bytes
+			p_large_enough: p.count >= nb_bytes + start_pos			
 			socket_exists: exists;
 			opened_for_write: is_open_write;
 			valid_peer: peer_address /= Void
 		do
-			c_send_stream_to (descriptor, p.item, nb_bytes, 0,
+			c_send_stream_to (descriptor, p.item + start_pos, nb_bytes, 0,
 				peer_address.socket_address.item, peer_address.count)
 		end
 

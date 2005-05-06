@@ -62,7 +62,7 @@ feature -- Output
 			-- Put `data' of length `size' pointed by `p' at
 			-- current position.
 		obsolete
-			"Use put_managed_pointer instead."
+			"Use `put_managed_pointer' instead."
 		require
 			p_not_null: p /= default_pointer
 			extendible: extendible
@@ -78,7 +78,6 @@ feature -- Input
 		do
 			last_integer := file_gib (file_pointer)
 		end
-
 
 	read_real, readreal is
 			-- Read the binary representation of a new real
@@ -99,7 +98,7 @@ feature -- Input
 			-- or until end of file.
 			-- Make result available in `p'.
 		obsolete
-			"Use read_to_managed_pointer instead."
+			"Use `read_to_managed_pointer' instead."
 		require
 			p_not_null: p /= default_pointer
 			is_readable: file_readable
@@ -109,13 +108,13 @@ feature -- Input
 			new_count := file_fread (p, 1, nb_bytes, file_pointer)
 		end
 
-	read_to_managed_pointer (p: MANAGED_POINTER; nb_bytes: INTEGER) is
+	read_to_managed_pointer (p: MANAGED_POINTER; start_pos, nb_bytes: INTEGER) is
 			-- Read at most `nb_bytes' bound bytes and make result
-			-- available in `p'.
+			-- available in `p' at position `start_pos'.
 		local
 			l_read: INTEGER
 		do
-			l_read := file_fread (p.item, 1, nb_bytes, file_pointer)
+			l_read := file_fread (p.item + start_pos, 1, nb_bytes, file_pointer)
 		end
 
 feature {NONE} -- Implementation

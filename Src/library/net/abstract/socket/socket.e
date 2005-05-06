@@ -316,16 +316,16 @@ feature -- Output
 			c_put_stream (descriptor, ext.item, s.count)
 		end;
 
-	put_managed_pointer (p: MANAGED_POINTER; nb_bytes: INTEGER) is
-			-- Put data of length `nb_bytes' pointed by `p' at
+	put_managed_pointer (p: MANAGED_POINTER; start_pos, nb_bytes: INTEGER) is
+			-- Put data of length `nb_bytes' pointed by `start_pos' index in `p' at
 			-- current position.
 		require else
 			p_not_void: p /= Void
-			p_large_enough: p.count >= nb_bytes
+			p_large_enough: p.count >= nb_bytes + start_pos
 			socket_exists: exists
 			opened_for_write: is_open_write
 		do
-			c_put_stream (descriptor, p.item, nb_bytes)
+			c_put_stream (descriptor, p.item + start_pos, nb_bytes)
 		end
 
 	put_character, putchar (c: CHARACTER) is
@@ -552,18 +552,18 @@ feature -- Input
 			end
 		end;
 
-	read_to_managed_pointer (p: MANAGED_POINTER; nb_bytes: INTEGER) is
+	read_to_managed_pointer (p: MANAGED_POINTER; start_pos, nb_bytes: INTEGER) is
 			-- Read at most `nb_bytes' bound bytes and make result
-			-- available in `p'.
+			-- available in `p' at position `start_pos'.
 		require else
 			p_not_void: p /= Void
-			p_large_enough: p.count >= nb_bytes
+			p_large_enough: p.count >= nb_bytes + start_pos
 			socket_exists: exists
 			opened_for_read: is_open_read
 		local
 			return_val: INTEGER
 		do
-			return_val := c_read_stream (descriptor, nb_bytes, p.item);
+			return_val := c_read_stream (descriptor, nb_bytes, p.item + start_pos);
 		end
 
 	read_line, readline is

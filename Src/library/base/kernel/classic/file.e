@@ -1011,11 +1011,11 @@ feature -- Element change
 			end
 		end
 
-	put_managed_pointer (p: MANAGED_POINTER; nb_bytes: INTEGER) is
-			-- Put data of length `nb_bytes' pointed by `p' at
+	put_managed_pointer (p: MANAGED_POINTER; start_pos, nb_bytes: INTEGER) is
+			-- Put data of length `nb_bytes' pointed by `start_pos' index in `p' at
 			-- current position.
 		do
-			file_ps (file_pointer, p.item, nb_bytes)
+			file_ps (file_pointer, p.item + start_pos, nb_bytes)
 		end
 
 	put_character, putchar (c: CHARACTER) is
@@ -1357,17 +1357,17 @@ feature -- Input
 			last_string.set_count (new_count)
 		end
 
-	read_to_managed_pointer (p: MANAGED_POINTER; nb_bytes: INTEGER) is
+	read_to_managed_pointer (p: MANAGED_POINTER; start_pos, nb_bytes: INTEGER) is
 			-- Read at most `nb_bytes' bound bytes and make result
-			-- available in `p'.
+			-- available in `p' at position `start_pos'.
 		require else
 			p_not_void: p /= Void
-			p_large_enough: p.count >= nb_bytes
+			p_large_enough: p.count >= nb_bytes + start_pos
 			is_readable: file_readable
 		local
 			l_read: INTEGER
 		do
-			l_read := file_gss (file_pointer, p.item, nb_bytes)
+			l_read := file_gss (file_pointer, p.item + start_pos, nb_bytes)
 		end
 
 	read_word, readword is

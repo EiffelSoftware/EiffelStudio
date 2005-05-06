@@ -25,7 +25,8 @@ inherit
 			needs_event_box,
 			pre_pick_steps,
 			call_pebble_function,
-			enable_transport
+			enable_transport,
+			hide_border
 		redefine
 			initialize,
 			make,
@@ -75,6 +76,8 @@ feature {NONE} -- Initialization
 			{EV_GTK_EXTERNALS}.gtk_widget_show (container_widget)
 			{EV_GTK_EXTERNALS}.gtk_box_pack_start (a_vbox, container_widget, False, False, 0)
 			entry_widget := {EV_GTK_EXTERNALS}.gtk_combo_box_get_entry (container_widget)
+				-- Set the minimum size of the entry widget to avoid unnecessarily large default size
+			{EV_GTK_EXTERNALS}.gtk_widget_set_usize (entry_widget, 1, -1)
 		end
 
 	call_selection_action_sequences is
@@ -156,7 +159,7 @@ feature {NONE} -- Initialization
 			-- Insert `v' at position `i'.
 		do
 			Precursor {EV_LIST_ITEM_LIST_IMP} (v, i)
-			if count = 1 then
+			if count = 1 and then v.is_selectable then
 				v.enable_select
 			end
 		end

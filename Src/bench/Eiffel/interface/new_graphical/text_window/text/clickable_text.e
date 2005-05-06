@@ -36,7 +36,8 @@ inherit
 			editor_preferences,
 			abort_idle_processing,
 			after_reading_idle_action,
-			new_line_from_lexer
+			new_line_from_lexer,
+			first_line
 		end
 
 	SHARED_WORKBENCH
@@ -65,10 +66,12 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	first_line: EIFFEL_EDITOR_LINE
+
 	structured_text: STRUCTURED_TEXT is
 			-- Structured text that corresponds to `Current'
 		local
-			ln: EIFFEL_EDITOR_LINE
+			ln: like line
 			tok: EDITOR_TOKEN
 			visitor: EIFFEL_TOKEN_VISITOR
 		do
@@ -305,8 +308,8 @@ feature {NONE} -- Load Text handling
 			ev_application.idle_actions.prune_all (finish_reading_text_agent)
 		end
 
-	new_line_from_lexer (line_image: STRING): EIFFEL_EDITOR_LINE is
-			-- create a new EIFFEL_EDITOR_LINE from `line_image' using `lexer'.
+	new_line_from_lexer (line_image: STRING): like line is
+			-- create a new like line from `line_image' using `lexer'.
 		do
 			if line_image.is_empty then
 				create Result.make_empty_line
@@ -324,7 +327,7 @@ feature {NONE} -- Implementation
 	current_cursor: CURSOR
 			-- Cursor pointing position where to resume current structured loading.
 
-	last_processed_line: EIFFEL_EDITOR_LINE
+	last_processed_line: like line
 			-- last line processed while reading a STRUCTURED_TEXT
 
 	editor_preferences: EB_EDITOR_DATA is

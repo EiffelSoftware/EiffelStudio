@@ -241,12 +241,12 @@ feature -- Output
 		deferred
 		end
 
-	put_managed_pointer (p: MANAGED_POINTER; nb_bytes: INTEGER) is
-			-- Put data of length `nb_bytes' pointed by `p' at
+	put_managed_pointer (p: MANAGED_POINTER; start_pos, nb_bytes: INTEGER) is
+			-- Put data of length `nb_bytes' pointed by `start_pos' index in `p' at
 			-- current position.
 		require
 			p_not_void: p /= Void
-			p_large_enough: p.count >= nb_bytes
+			p_large_enough: p.count >= nb_bytes + start_pos
 			extendible: extendible
 		deferred
 		end
@@ -303,12 +303,12 @@ feature -- Input
 		deferred
 		end
 
-	read_to_managed_pointer (p: MANAGED_POINTER; nb_bytes: INTEGER) is
+	read_to_managed_pointer (p: MANAGED_POINTER; start_pos, nb_bytes: INTEGER) is
 			-- Read at most `nb_bytes' bound bytes and make result
-			-- available in `p'.
+			-- available in `p' at position `start_pos'.
 		require
 			p_not_void: p /= Void
-			p_large_enough: p.count >= nb_bytes
+			p_large_enough: p.count >= nb_bytes + start_pos
 			is_readable: readable
 		deferred
 		end

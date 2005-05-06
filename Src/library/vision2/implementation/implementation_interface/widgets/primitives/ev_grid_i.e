@@ -2329,7 +2329,6 @@ feature {NONE} -- Drawing implementation
 			horizontal_box: EV_HORIZONTAL_BOX
 		do
 			set_minimum_size (default_minimum_size, default_minimum_size)
-			set_background_color ((create {EV_STOCK_COLORS}).white)
 			is_horizontal_scrolling_per_item := False
 			is_vertical_scrolling_per_item := True
 			is_header_displayed := True
@@ -2428,6 +2427,8 @@ feature {NONE} -- Drawing implementation
 
 			item_counter := 1
 			row_counter := 1
+			set_background_color ((create {EV_STOCK_COLORS}).white.twin)
+			set_foreground_color ((create {EV_STOCK_COLORS}).black.twin)
 		end
 
 	header_item_resizing (header_item: EV_HEADER_ITEM) is

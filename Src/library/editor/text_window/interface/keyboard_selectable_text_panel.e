@@ -972,10 +972,11 @@ feature {NONE} -- Implementation
  				curr_line > last or else l_text.after
  			loop
  				y_offset := editor_viewport.y_offset + ((curr_line - first_line_displayed) * l_line_height)
-				
 				l_x_offset := x_offset
 				l_has_data := line_has_cursor_or_selection (curr_line)
-				if ((l_text.line (curr_line).width + l_margin_width) > l_x_offset) or l_buffered then
+				l_line_width := l_text.line (curr_line).width
+
+				if (l_line_width + l_margin_width) > l_x_offset or l_buffered then
 						-- Only iterate the line if at least some or part of it is in view AND needs redrawing.
 						-- Lines with cursor or selection in them ALWAYS need redrawing.
 					if l_has_data then
@@ -984,16 +985,19 @@ feature {NONE} -- Implementation
 					else
 						draw_line_to_screen ((l_x_offset - l_margin_width).max (0), l_x_offset + a_width - l_margin_width, y_offset, l_text.line (curr_line))
 					end
-					l_x_offset := l_x_offset + l_text.line (curr_line).width
+					l_x_offset := l_x_offset + l_line_width
 				end
 
-				if l_x_offset >= l_text.line (curr_line).width and not l_has_data then
+				if l_x_offset >= l_line_width and not l_has_data then
 						-- Some (or all) of the line ends in the viewable area.  So we must clear from the end of
 						-- the line to the edge of the viewport in the background color.
-					l_line_width := l_text.line (curr_line).width
-					l_start_clear := l_line_width.max (offset) + l_margin_width
+						if l_line_width <= offset then
+							l_start_clear := l_line_width.max (offset) + (l_margin_width - offset).max (0)
+						else
+							l_start_clear := l_line_width.max (offset) + l_margin_width
+						end
 
-					if l_start_clear >= x_offset and l_start_clear <= (x_offset + a_width) then
+					if l_line_width < x_offset or (l_start_clear >= x_offset and l_start_clear <= (x_offset + a_width)) then
 						debug ("editor")
 							draw_flash (l_start_clear, y_offset, x_offset + a_width - l_start_clear, l_line_height, False)
 						end

@@ -1183,7 +1183,7 @@ feature {NONE}-- Implementation
 						current_feature_as.feature_name)
 					if current_feature /= Void then
 						Result := current_feature.type
-						if Result.is_formal then
+						if Result /= Void and then Result.is_formal then
 							formal ?= Result
 							Result := l_current_class_c.constraint (formal.position)
 						end

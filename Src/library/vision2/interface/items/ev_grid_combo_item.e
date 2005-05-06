@@ -58,15 +58,15 @@ feature {NONE} -- Implementation
 			popup_window.show_actions.extend (agent combo_box.set_focus)
 			combo_box.select_actions.extend (agent deactivate)
 			combo_box.return_actions.extend (agent deactivate)
-			popup_window.focus_out_actions.extend (agent deactivate)
+			combo_box.focus_out_actions.extend (agent deactivate)
 		end
 
 	deactivate is
 			-- Cleanup from previous call to activate.
 		do
 			if combo_box /= Void then
-				Precursor {EV_GRID_LABEL_ITEM}
 				combo_box.focus_out_actions.wipe_out
+				Precursor {EV_GRID_LABEL_ITEM}
 				set_text (combo_box.text)
 				combo_box := Void
 			end

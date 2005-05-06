@@ -875,14 +875,14 @@ feature {NONE} -- Display functions
  			view_y_offset := editor_viewport.y_offset
 
  				-- Draw all lines
- 			first_line_to_draw := (first_line_displayed + (top - view_y_offset) // line_height).max (1)
- 			last_line_to_draw := ((first_line_displayed + (bottom - view_y_offset) // line_height).min (text_displayed.number_of_lines)).max (1)
+ 			first_line_to_draw := (first_line_displayed + (top - view_y_offset) // line_height)--.max (1)
+ 			last_line_to_draw := ((first_line_displayed + (bottom - view_y_offset) // line_height).min (text_displayed.number_of_lines))--.max (1)
 
 			check 
 				not_too_many_lines: (bottom = top) implies first_line_to_draw = last_line_to_draw
-				lines_valid: first_line_to_draw <= last_line_to_draw or last_line_to_draw = text_displayed.number_of_lines or text_displayed.number_of_lines = 0
-				first_line_valid: first_line_to_draw >= 1
-				last_line_valid: last_line_to_draw >= 1
+				lines_valid: first_line_to_draw <= last_line_to_draw or last_line_to_draw = text_displayed.number_of_lines --or text_displayed.number_of_lines = 0
+				--first_line_valid: first_line_to_draw >= 1
+				--last_line_valid: last_line_to_draw >= 1
 			end
 			
 			if text_displayed.number_of_lines > 0 then
@@ -895,7 +895,7 @@ feature {NONE} -- Display functions
 
  			if last_line_to_draw = text_displayed.number_of_lines or text_displayed.number_of_lines = 0 then 				
 	 				-- The file is too small for the screen, so we fill in the last portion of the screen.
-	 			y_offset := editor_viewport.y_offset + ((last_line_to_draw - first_line_displayed) * line_height)
+	 			y_offset := editor_viewport.y_offset + (((last_line_to_draw + 1) - first_line_displayed) * line_height)
 	 			if (editor_viewport.y_offset + viewable_height) > y_offset then
 					editor_drawing_area.set_background_color (editor_preferences.normal_background_color)
 					debug ("editor")
@@ -903,7 +903,7 @@ feature {NONE} -- Display functions
 					end
 					editor_drawing_area.clear_rectangle (0, y_offset, viewable_width, (editor_viewport.y_offset + viewable_height) - y_offset)
 				end
- 			end 	
+ 			end	
  			in_scroll := False
  		end		
 

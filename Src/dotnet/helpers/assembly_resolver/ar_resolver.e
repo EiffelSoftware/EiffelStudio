@@ -420,8 +420,10 @@ feature {NONE} -- Implementation
 			-- Adds `Cuurent's contained assembly path to `resolver_paths'
 		local
 			l_file: FILE_INFO
+			l_type: SYSTEM_TYPE
 		do
-			create l_file.make (to_dotnet.get_type.assembly.location)
+			l_type := {AR_RESOLVER}
+			create l_file.make (l_type.assembly.location)
 			add_resolve_path (l_file.directory_name)
 		end
 			

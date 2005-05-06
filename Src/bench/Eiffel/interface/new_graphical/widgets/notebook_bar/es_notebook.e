@@ -46,6 +46,7 @@ feature -- Drop action
 			i := notebook.pointed_tab_index
 			if notebook.valid_index (i) then
 				pointed_w := notebook.i_th (i)
+				notebook.item_tab (pointed_w).enable_select
 				t := item (i) -- maybe index can change ??
 				t.drop_actions.call ([a_data])
 			end

@@ -128,6 +128,7 @@ feature -- Current CallStack
 	init_current_callstack is
 			-- Initialize current callback information
 		local
+			l_thread: ICOR_DEBUG_THREAD
 			l_frame: ICOR_DEBUG_FRAME
 			l_chain: ICOR_DEBUG_CHAIN
 			l_frames: ICOR_DEBUG_FRAME_ENUM
@@ -151,11 +152,14 @@ feature -- Current CallStack
 				debug ("debugger_trace_eifnet")
 					io.error.put_string ("[!] Initialize Current Stack in EIFNET_DEBUGGER_INFO.%N")
 				end
-				if 
-					last_p_icd_controller /= Default_pointer 
+				if
+					last_p_icd_controller /= Default_pointer
 					and then last_icd_thread_id > 0
 				then
-					l_frame := icd_thread.get_active_frame
+					l_thread := icd_thread
+					if l_thread /= Void then
+						l_frame := l_thread.get_active_frame
+					end
 					if l_frame = Void then
 						debug ("DEBUGGER_TRACE_SYNCHRO")
 							io.error.put_string ("[ERROR] Debugger not synchronized%N")
@@ -825,6 +829,9 @@ feature -- JIT Thread
 			end
 			if edti /= Void then
 				Result := edti.icd_thread
+				check
+					Result /= Void
+				end
 			end
 		end
 		

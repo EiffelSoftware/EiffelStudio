@@ -73,6 +73,8 @@ feature -- Access
 				opo_icd_thread.add_ref
 				Result := opo_icd_thread
 			end
+		ensure
+			result_not_void: Result /= Void
 		end
 		
 	new_stepper: ICOR_DEBUG_STEPPER is

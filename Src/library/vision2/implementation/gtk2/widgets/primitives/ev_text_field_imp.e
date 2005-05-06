@@ -10,7 +10,8 @@ class
 inherit
 	EV_TEXT_FIELD_I
 		redefine
-			interface
+			interface,
+			hide_border
 		end
 	
 	EV_TEXT_COMPONENT_IMP

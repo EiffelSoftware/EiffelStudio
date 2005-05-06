@@ -9,19 +9,22 @@ deferred class
 
 feature -- Initialization
 
-	make_empty is
+	make_empty (a_resources: PREFERENCES) is
 			-- Create resource structure.  Location to store preferencec will be generated based on name of application.
+		require
+			resources_not_void: a_resources /= Void
 		deferred
 		ensure
 			has_location: location /= Void
 		end
 
-	make_with_location (a_location: STRING) is
+	make_with_location (a_resources: PREFERENCES; a_location: STRING) is
 			-- Create resource structure in the at location `a_location'.
 			-- Try to read resource at `a_location' if it exists, if not create new one.
 		require
 		    location_not_void: a_location /= Void 
 		    location_not_empty: not a_location.is_empty
+			resources_not_void: a_resources /= Void
 	   	deferred
 	   	ensure
 	   		has_location: location /= Void
@@ -54,12 +57,15 @@ feature -- Access
 	session_values: HASH_TABLE [STRING, STRING]
 			-- Hash of user-defined values which have been loaded.
 
+	resources: PREFERENCES
+			-- Actual preferences
+
 feature -- Save
 
-	save (resources: ARRAYED_LIST [PREFERENCE]) is
+	save (a_resources: ARRAYED_LIST [PREFERENCE]) is
 			-- Save contents of structure.
 		require
-			resources_not_void: resources /= Void
+			resources_not_void: a_resources /= Void
 		deferred
 		end
 

@@ -15,13 +15,14 @@ create
 
 feature {PREFERENCE_STRUCTURE} -- Initialization
 	
-	make_empty is
+	make_empty (a_resources: PREFERENCES) is
 			-- Create resource structure in the registry.  Registry key created base on name of application 
 			-- in `HKEY_CURRENT_USER\Software\'.  So location will be `HKEY_CURRENT_USER\Software\APPLICATION_NAME_HERE'
 		local
 			l_loc, l_prog: STRING
 			l_exec: EXECUTION_ENVIRONMENT
 		do			
+			resources := a_resources
 			create l_exec
 			l_loc := "HKEY_CURRENT_USER\Software\"
 			l_prog := l_exec.command_line.argument (0)
@@ -31,10 +32,10 @@ feature {PREFERENCE_STRUCTURE} -- Initialization
 				l_prog := "\"
 			end
 			l_loc.append (l_prog)			
-			make_with_location (l_loc)
+			make_with_location (a_resources, l_loc)
 		end
 
-	make_with_location (a_location: STRING) is
+	make_with_location (a_resources: PREFERENCES; a_location: STRING) is
 			-- Create resource structure in the registry at location `a_location'.
 			-- Try to read key at `a_location' if it exists, if not create new one.
 	   	local
@@ -43,6 +44,7 @@ feature {PREFERENCE_STRUCTURE} -- Initialization
 			l_value: STRING
 			l_key_values: LINKED_LIST [STRING]
 		do			
+			resources := a_resources
 			create session_values.make (5)
 			location := a_location
 			l_keyp := open_key_with_access (location, key_read)
@@ -122,16 +124,16 @@ feature {PREFERENCE_STRUCTURE} -- Resource Management
 			close_key (l_parent_key)
 		end	
 
-	save (resources: ARRAYED_LIST [PREFERENCE]) is
+	save (a_resources: ARRAYED_LIST [PREFERENCE]) is
 			-- Save all resources.			
 		do			
 			from
-				resources.start
+				a_resources.start
 			until
-				resources.after
+				a_resources.after
 			loop
-				save_resource (resources.item)
-				resources.forth
+				save_resource (a_resources.item)
+				a_resources.forth
 			end
 		end		
 

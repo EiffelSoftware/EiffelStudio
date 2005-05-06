@@ -315,10 +315,10 @@ feature -- Element change
 	set_background_color (a_color: EV_COLOR) is
 			-- Set `background_color' with `a_color'.
 		require
-			a_color_not_void: a_color /= Void
 			is_parented: parent /= Void
 		do
 			background_color := a_color
+			parent_i.redraw_column (Current)
 		ensure
 			background_color_set: background_color = a_color
 		end
@@ -326,10 +326,10 @@ feature -- Element change
 	set_foreground_color (a_color: EV_COLOR) is
 			-- Set `foreground_color' with `a_color'.
 		require
-			a_color_not_void: a_color /= Void
 			is_parented: parent /= Void
 		do
 			foreground_color := a_color
+			parent_i.redraw_column (Current)
 		ensure
 			foreground_color_set: foreground_color = a_color
 		end

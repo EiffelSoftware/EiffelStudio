@@ -279,6 +279,12 @@ feature -- Output
 		do
 		end
 
+	put_managed_pointer (p: MANAGED_POINTER; start_pos, nb_bytes: INTEGER) is
+			-- Put data of length `nb_bytes' pointed by `start_pos' index in `p' at
+			-- current position.
+		do
+		end
+
 feature -- Input
 
 	read_real, readreal is
@@ -316,6 +322,12 @@ feature -- Input
 			-- Read characters until a new line or
 			-- end of medium.
 			-- Make result available in `last_string'.
+		do
+		end
+
+	read_to_managed_pointer (p: MANAGED_POINTER; start_pos, nb_bytes: INTEGER) is
+			-- Read at most `nb_bytes' bound bytes and make result
+			-- available in `p' at position `start_pos'.
 		do
 		end
 

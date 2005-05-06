@@ -360,7 +360,7 @@ feature {NONE} -- Implementation
 				not visitor.is_array_basic_type and 
 				not visitor.is_structure_pointer and 
 				not visitor.is_interface_pointer and
-				not (is_void (visitor.vt_type) or is_byref (visitor.vt_type))
+				not is_void (visitor.vt_type)
 			then
 				if visitor.is_interface_pointer_pointer or visitor.is_coclass_pointer_pointer then
 					Result.append ("%N%Tif (*" + arg_name + " != NULL)%N%T%T(*")

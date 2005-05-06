@@ -42,17 +42,24 @@ feature -- Status report
 			-- of `other' (as per Eiffel: The Language, chapter 13)?
 		require
 			other_not_void: other /= Void
+		local
+			l_cur: SYSTEM_OBJECT
 		do
-			Result := to_dotnet.get_type.is_instance_of_type (other)
+			l_cur := Current
+			Result := l_cur.get_type.is_instance_of_type (other)
 		end
 
 	frozen same_type (other: ANY): BOOLEAN is
 			-- Is type of current object identical to type of `other'?
 		require
 			other_not_void: other /= Void
+		local
+			l_cur, l_other: SYSTEM_OBJECT
 		do
-			Result := to_dotnet.get_type.is_instance_of_type (other) and then
-				other.to_dotnet.get_type.is_instance_of_type (Current)
+			l_cur := Current
+			l_other := other
+			Result := l_cur.get_type.is_instance_of_type (other) and then
+				l_other.get_type.is_instance_of_type (Current)
 		ensure
 			definition: Result = (conforms_to (other) and
 										other.conforms_to (Current))
@@ -343,18 +350,6 @@ feature -- Basic operations
 		ensure
 			-- Result = Result.default
 		end
-
-feature -- Conversion
-
-	to_dotnet: SYSTEM_OBJECT is
-		require
-			is_dotnet: is_running_on_dotnet
-		do
-			Result := Current
-		end
-
-	is_running_on_dotnet: BOOLEAN is True
-			-- Platform is .NET
 
 invariant
 	reflexive_equality: standard_is_equal (Current)

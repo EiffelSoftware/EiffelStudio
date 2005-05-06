@@ -983,7 +983,7 @@ feature -- Implementation
 				last_type := l_as.constant_type
 			end
 			if is_byte_node_enabled then
-				create {REAL_CONST_B} last_byte_node.make (l_as.value)
+				create {REAL_CONST_B} last_byte_node.make (l_as.value, last_type)
 			end
 		end
 

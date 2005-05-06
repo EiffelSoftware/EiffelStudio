@@ -63,7 +63,6 @@ feature {NONE} -- Implementation
 			if font /= Void then
 				text_field.set_font (font)
 			end
-			fixme ("Add handling for Void colors and potential column, row and grid colors")
 			text_field.set_background_color (implementation.displayed_background_color)
 			text_field.set_foreground_color (implementation.displayed_foreground_color)
 			text_field.set_text (text)

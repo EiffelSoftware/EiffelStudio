@@ -564,7 +564,7 @@ feature {NONE} -- Initialization
 					l_b_pref := l_manager.new_boolean_resource_value (l_manager, id, True)
 					l_b_pref.change_actions.extend (agent update)
 					meta.put (l_b_pref.value, 1)
-					id := "editor.eiffel.keyboard_shortcuts." +action_name + "_shortcut_alt"
+					id := "editor.eiffel.keyboard_shortcuts." + action_name + "_shortcut_alt"
 					l_b_pref := l_manager.new_boolean_resource_value (l_manager, id, True)
 					l_b_pref.change_actions.extend (agent update)
 					meta.put (l_b_pref.value, 2)

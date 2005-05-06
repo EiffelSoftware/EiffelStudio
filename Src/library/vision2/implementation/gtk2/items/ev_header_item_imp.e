@@ -51,8 +51,7 @@ feature -- Initialization
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_min_width (c_object, 0)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_sizing (c_object, {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_fixed_enum)
 
-				-- Set the default width to 80 pixels wide
-			set_width (80)
+
 
 			real_signal_connect (c_object, "notify::width", agent handle_resize, Void)
 			
@@ -64,40 +63,39 @@ feature -- Initialization
 			{EV_GTK_EXTERNALS}.gtk_container_add (box, pixmap_box)
 			{EV_GTK_EXTERNALS}.gtk_container_add (box, text_label)
 
+				-- Set the default width to 80 pixels wide
+			set_width (80)
+
 			is_initialized := True
 		end
 
 	handle_resize is
 			-- Call the appropriate actions for the header item resize
+		local
+			a_width: INTEGER
 		do
-			if parent_imp /= Void and then parent_imp.item_resize_actions_internal /= Void and then width /= old_width then
-				parent_imp.item_resize_actions_internal.call ([interface])
-				parent_imp.item_resize_end_actions_internal.call ([interface])
-			end
-			old_width := width
-		end
+			a_width := width_internal
+			if a_width /= width then
+				width := a_width
+				if parent_imp /= Void then
+					parent_imp.item_resize_actions.call ([interface])
 
-	old_width: INTEGER
-		-- Previous width of `Current', used to prevent multiple calls to resize actions when the item hasn't actually resized
+					parent_imp.item_resize_end_actions.call ([interface])
+				end
+			end
+		end
 
 feature -- Access
 
-	width: INTEGER is
-			-- `Result' is width of `Current' used
-			-- while parented.
-		do
-			if parent_imp /= Void and then parent_imp.is_displayed then
-				Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_get_width (c_object)
-			else
-				Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_get_fixed_width (c_object)
-			end
-		end
+	width: INTEGER
+		-- Width of `Current' in pixels.
 
 feature -- Status setting
 
 	set_width (a_width: INTEGER) is
 			-- Assign `a_width' to `width'.
 		do
+			width := a_width
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_fixed_width (c_object, a_width)
 		end
 		
@@ -197,6 +195,13 @@ feature {EV_HEADER_IMP} -- Implementation
 		-- Parent of `Current'
 
 feature {NONE} -- Implementation
+
+	width_internal: INTEGER is
+			-- `Result' is width of `Current' used
+			-- while parented.
+		do
+			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_get_width (c_object)
+		end
 
 	box: POINTER
 		-- Box to hold column text and pixmap.

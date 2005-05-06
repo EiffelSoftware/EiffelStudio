@@ -38,7 +38,8 @@ feature {NONE} -- Execution
 			preference_window.set_size (preferences.misc_data.preference_window_width, preferences.misc_data.preference_window_height)
 			preference_window.set_show_hidden_preferences (preferences.misc_data.show_hidden_preferences)
 			preference_window.left_list.first.expand
-			preference_window.raise	
+			preference_window.raise
+			preference_window.left_list.set_focus
 		end
 
 feature -- Properties

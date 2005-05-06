@@ -32,7 +32,8 @@ inherit
 			drop_actions
 		redefine
 			initialize,
-			destroy
+			destroy,
+			set_background_color, set_foreground_color
 		end
 	
 	EV_GRID_I
@@ -53,6 +54,22 @@ feature {NONE} -- Initialization
 			Precursor {EV_CELL_IMP}
 			initialize_grid
 			is_initialized := True
+		end
+
+feature {NONE} -- Status setting
+
+	set_background_color (color: EV_COLOR) is
+			-- Make `color' the new `background_color'
+		do
+			background_color_imp ?= color.implementation
+			redraw_client_area
+		end
+
+	set_foreground_color (color: EV_COLOR) is
+			-- Make `color' the new `foreground_color'
+		do
+			foreground_color_imp ?= color.implementation
+			redraw_client_area
 		end
 		
 feature {NONE} -- Implementation

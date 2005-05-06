@@ -37,7 +37,7 @@ inherit
 
 create
 	make,
-	make_from_resource
+	make_from_string
 
 feature {NONE} -- Initialization
 
@@ -68,26 +68,17 @@ feature {NONE} -- Initialization
 			enable_sensitive
 		end
 
-	make_from_resource (r: STRING) is
-			-- Load `Current' from its resource representation `r'.
-			-- May set the `error' flag if the resource is invalid.
+	make_from_string (a_command: STRING; a_index: INTEGER; a_name: STRING) is
+			-- Create with `a_command'
 		require
-			r_not_void: r /= Void
-			valid_resource: valid_resource (r)
+			command_not_void: a_command /= Void
 		local
 			tok: STRING
 			i, i1: INTEGER
 		do
-			i := r.index_of (separator, 1)
-			name := r.substring (1, i - 1)
-			i1 := r.index_of (separator, i + 1)
-			tok := r.substring (i + 1, i1 - 1)
-			if tok.is_integer then
-				index := tok.to_integer
-			else
-				index := -1
-			end
-			external_command := r.substring (i1 + 1, r.count)
+			name := a_name
+			index := a_index
+			external_command := a_command
 			
 				-- Check validity before inserting.
 				-- This is a bit redundant with the precondition, but

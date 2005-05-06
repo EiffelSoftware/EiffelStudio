@@ -72,9 +72,6 @@ feature {NONE} -- Initialization
 			-- Create with `a_command'
 		require
 			command_not_void: a_command /= Void
-		local
-			tok: STRING
-			i, i1: INTEGER
 		do
 			name := a_name
 			index := a_index

@@ -416,6 +416,8 @@ feature -- Access
 	item_accept_cursor_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], EV_CURSOR] is
 			-- Function used to retrieve the PND accept cursor for a particular item.
 			-- Called directly after `item_pebble_function' has executed.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.item_accept_cursor_function
 		end
@@ -423,6 +425,8 @@ feature -- Access
 	item_deny_cursor_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], EV_CURSOR] is
 			-- Function used to retrieve the PND deny cursor for a particular item.
 			-- Called directly after `item_pebble_function' has executed.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.item_deny_cursor_function
 		end		

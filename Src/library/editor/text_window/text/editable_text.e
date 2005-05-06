@@ -919,7 +919,7 @@ feature {UNDO_CMD} -- Basic Text changes
 			t_before, t_after: EDITOR_TOKEN
 			s: STRING
 			char_pos: INTEGER
-			ln: EDITOR_LINE
+			ln: like line
 			tok: EDITOR_TOKEN
 		do
 			on_text_edited (True)
@@ -994,10 +994,10 @@ feature {UNDO_CMD} -- Basic Text changes
 		local
 			first_image, last_image, aux: STRING
 			t: EDITOR_TOKEN
-			cline, new_line: EDITOR_LINE
+			cline, new_line: like line
 			i,j : INTEGER
 			end_pos: INTEGER
-			ln: EDITOR_LINE
+			ln: like line
 			tok: EDITOR_TOKEN
 		do
 			on_text_edited (True)
@@ -1121,7 +1121,7 @@ feature {UNDO_CMD} -- Basic Text changes
 			first_image, last_image, aux: STRING
 			t: EDITOR_TOKEN
 			end_pos: INTEGER
-			ln: EDITOR_LINE
+			ln: like line
 			tokens_group: EDITOR_TOKEN_GROUP
 			tok: EDITOR_TOKEN
 		do
@@ -1195,7 +1195,7 @@ feature {UNDO_CMD} -- Basic Text changes
 		local
 			t_before, t_after: EDITOR_TOKEN
 			s: STRING
-			ln: EDITOR_LINE
+			ln: like line
 			tok: EDITOR_TOKEN
 			char_pos: INTEGER
 		do
@@ -1278,10 +1278,10 @@ feature {UNDO_CMD} -- Basic Text changes
 			n_big_enough: n > 0
 		local
 			s: STRING
-			cline: EDITOR_LINE
+			cline: like line
 			t: EDITOR_TOKEN
 			pos: INTEGER
-			ln: EDITOR_LINE
+			ln: like line
 			tok: EDITOR_TOKEN
 			char_pos: INTEGER
 		do
@@ -1390,7 +1390,7 @@ feature {UNDO_CMD} -- Basic Text changes
 		local
 			s: STRING
 			t_before, t_after: EDITOR_TOKEN
-			ln: EDITOR_LINE
+			ln: like line
 			tok: EDITOR_TOKEN
 			char_pos: INTEGER
 		do
@@ -1473,9 +1473,9 @@ insert_eol_at_cursor_pos is
 	local
 		aux, s: STRING
 		i_t: EDITOR_TOKEN
-		new_line : EDITOR_LINE
+		new_line : like line
 		new_pos: INTEGER
-		ln: EDITOR_LINE
+		ln: like line
 		tok: EDITOR_TOKEN
 	do
 		on_text_edited (True)
@@ -1559,7 +1559,7 @@ delete_after_cursor is
 	local
 		t: EDITOR_TOKEN
 		s: STRING
-		ln: EDITOR_LINE
+		ln: like line
 		tok: EDITOR_TOKEN
 		char_pos: INTEGER
 	do
@@ -1638,7 +1638,7 @@ begin_line_tokens: LINKED_LIST[EDITOR_TOKEN]
 
 end_line_tokens: LINKED_LIST[EDITOR_TOKEN]
 
-record_first_modified_line (ln: EDITOR_LINE; modified_token: EDITOR_TOKEN) is
+record_first_modified_line (ln: like line; modified_token: EDITOR_TOKEN) is
 		-- store token reference before new line with new tokens is created
 		-- this information will be used by `restore_tokens_properties' to restore
 		-- some token properties (position, beginning of a feature)
@@ -1659,7 +1659,7 @@ record_first_modified_line (ln: EDITOR_LINE; modified_token: EDITOR_TOKEN) is
 		end
 	end
 
-record_last_modified_line (ln: EDITOR_LINE; modified_token: EDITOR_TOKEN) is
+record_last_modified_line (ln: like line; modified_token: EDITOR_TOKEN) is
 		-- store token reference before new line with new tokens is created
 		-- this information will be used by `restore_tokens_properties' to restore
 		-- some token properties (position, beginning of a feature)
@@ -1682,7 +1682,7 @@ record_last_modified_line (ln: EDITOR_LINE; modified_token: EDITOR_TOKEN) is
 		end
 	end
 
-record_modified_line (ln: EDITOR_LINE) is							
+record_modified_line (ln: like line) is							
 		-- store token reference before new line with new tokens is created
 		-- this information will be used by `restore_tokens_properties' to restore
 		-- some token properties (position, beginning of a feature)
@@ -1703,7 +1703,7 @@ record_modified_line (ln: EDITOR_LINE) is
 		end_line_tokens.put_front(tok)
 	end
 
-restore_tokens_properties (begin_line, end_line: EDITOR_LINE) is
+restore_tokens_properties (begin_line, end_line: like line) is
 		-- restore some token properties (position, beginning of a feature)
 		-- using lists crated by `record...' procedures above
 	require
@@ -1714,7 +1714,7 @@ restore_tokens_properties (begin_line, end_line: EDITOR_LINE) is
 	do
 	end
 
-restore_tokens_properties_one_line (begin_line: EDITOR_LINE) is
+restore_tokens_properties_one_line (begin_line: like line) is
 	require
 		begin_line_not_void: begin_line /= Void
 		begin_line_tokens_not_void: begin_line_tokens /= Void

@@ -50,8 +50,6 @@ feature -- Miscellaneous
 		do
 			if n = 0 then
 				Result := 0
-			elseif is_fixed_width then
-				Result := font_width * n			
 			else
 				if image.has ('%T') then
 					from

@@ -187,7 +187,7 @@ feature -- Basic Operations
 			cursors_in_the_right_order: start_cursor < end_cursor
 			cursors_on_different_lines: start_cursor.line /= end_cursor.line
 		local
-			ln, r_ln: EIFFEL_EDITOR_LINE
+			ln, r_ln: like line
 			blnk: EDITOR_TOKEN_BLANK
 			tok: EDITOR_TOKEN
 			pos: INTEGER
@@ -244,7 +244,7 @@ feature -- Search
 			text_loaded: reading_text_finished
 		local
 			tok: EDITOR_TOKEN
-			ln: EIFFEL_EDITOR_LINE
+			ln: like line
 			low, low2: STRING
 		do
 			found_feature := False
@@ -542,7 +542,7 @@ feature -- Syntax completion
 			indent: STRING
 			char_nb, line_nb, char_offset, i: INTEGER
 			et, bt: like begin_line_tokens
-			ln: EDITOR_LINE
+			ln: like line
 		do
 			if expr /= Void and then not expr.is_empty then
 				if has_selection and then not cursor.is_equal (selection_cursor) then
@@ -634,7 +634,7 @@ feature -- Syntax completion
 			
 feature {NONE}-- click information update
 
-	restore_tokens_properties (begin_line, end_line: EDITOR_LINE) is
+	restore_tokens_properties (begin_line, end_line: like line) is
 			-- Restore some token properties (position, beginning of a feature)
 			-- using lists crated by `record...modified_line' procedures.
 		local
@@ -704,7 +704,7 @@ feature {NONE}-- click information update
 			end
 		end
 
-	restore_tokens_properties_one_line (begin_line: EDITOR_LINE) is
+	restore_tokens_properties_one_line (begin_line: like line) is
 			-- Restore some token properties (position, beginning of a feature)
 			-- using lists crated by `record...modified_line' procedures.
 		do
@@ -723,7 +723,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	new_line_from_lexer (line_image: STRING): EIFFEL_EDITOR_LINE is
+	new_line_from_lexer (line_image: STRING): like line is
 			-- Create new EIFFEL_EDITOR_LINE with `lexer'.
 			-- let `click_tool' add hidden information on tokens.
 		do

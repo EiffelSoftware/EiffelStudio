@@ -31,7 +31,9 @@ inherit
 			interface,
 			initialize,
 			make,
-			needs_event_box
+			needs_event_box,
+			set_background_color,
+			set_foreground_color
 		end
 	
 	EV_GRID_I
@@ -63,6 +65,22 @@ feature {NONE} -- Initialization
 			Precursor {EV_CELL_IMP}
 			initialize_grid
 			is_initialized := True
+		end
+
+feature -- Element change
+
+	set_background_color (a_color: EV_COLOR) is
+			-- Assign `a_color' to `background_color'
+		do
+			Precursor {EV_CELL_IMP} (a_color)
+			redraw_client_area
+		end
+
+	set_foreground_color (a_color: EV_COLOR) is
+			-- Assign `a_color' to `foreground_color'
+		do
+			Precursor {EV_CELL_IMP} (a_color)
+			redraw_client_area
 		end
 
 feature {EV_ANY_I} -- Implementation

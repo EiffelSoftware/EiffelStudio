@@ -57,10 +57,7 @@ feature -- Content Change
 		require
 			string_not_void: a_string /= Void
 			text_has_been_reinitialized: is_empty
-		local
-			time: TIME
 		do
-			create time.make_now
 			current_string := a_string
 			start_reading_string
 		ensure
@@ -83,7 +80,7 @@ feature -- Reinitialization
 
 feature -- Access
 
-	current_line: EDITOR_LINE
+	current_line: like line
 		-- current line
 
 	text: STRING is
@@ -164,7 +161,7 @@ feature -- Query
 			Result := text.count
 		end
 
-	first_non_blank_token (a_line: EDITOR_LINE): EDITOR_TOKEN is
+	first_non_blank_token (a_line: like line): EDITOR_TOKEN is
 			-- First non blank token in `a_line'.
 		local
 			blnk: EDITOR_TOKEN_BLANK
@@ -180,7 +177,7 @@ feature -- Query
 			end
 		end
 
-	line_pos_in_chars (a_line: EDITOR_LINE): INTEGER is
+	line_pos_in_chars (a_line: like line): INTEGER is
 			-- Position in chars of start of `a_line'.
 		require
 			line_not_void: a_line /= Void
@@ -415,7 +412,7 @@ feature {NONE} -- Text Loading
 			end
 		end
 
-	new_line_from_lexer (line_image: STRING): EDITOR_LINE is
+	new_line_from_lexer (line_image: STRING): like line is
 			-- create a new EDITOR_LINE from `line_image' using
 			-- `lexer'.
 		require
@@ -439,10 +436,7 @@ feature {NONE} -- Text Loading
 
 	after_reading_idle_action is
 			-- action performed on idle when text reading is finished.
-		local
-			time: TIME
 		do
-			create time.make_now
 			ev_application.idle_actions.prune_all (finish_reading_string_agent)
 			text_being_processed := False
 			on_text_fully_loaded

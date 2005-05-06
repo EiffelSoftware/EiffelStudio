@@ -706,8 +706,8 @@ feature {EV_TREE_NODE_IMP} -- Implementation
 			a_column_ptr: POINTER
 			a_x, a_y, a_width, a_height: INTEGER
 		do
-			a_column_ptr := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_column (tree_view, 0)
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_cell_get_size (a_column_ptr, NULL, $a_x, $a_y, $a_width, $a_height)
+			a_column_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_column (tree_view, 0)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_cell_get_size (a_column_ptr, NULL, $a_x, $a_y, $a_width, $a_height)
 			Result := a_height
 		end
 

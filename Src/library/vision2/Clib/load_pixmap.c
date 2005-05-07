@@ -9,7 +9,7 @@
 /*       Level 4 without issuing any warning message                         */
 /*****************************************************************************/
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 #include <windows.h>
 #include "png.h"
 #else
@@ -116,7 +116,7 @@ unsigned char	c_ev_is_ppm_file(BufferedFile *pBufFile);
 unsigned char	c_ev_read_n_bytes(unsigned long, BufferedFile *);
 void			c_ev_set_bit( unsigned char bit, unsigned char *pData, long iData);
 void 			c_ev_load_png_file(LoadPixmapCtx *pCtx);
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 void 			c_ev_load_windows_file( unsigned int nWindowsType, LoadPixmapCtx *pCtx);
 #endif
 
@@ -589,7 +589,7 @@ void c_ev_load_pixmap(
 
 	if (pszFileName == NULL) {
 			/* Load the default Vision2 icon */
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 		char szTempDir[TEMP_PATH_MAX_LENGTH];
 		char szPrefix[TEMP_PATH_MAX_LENGTH];
 		if (GetTempPath(TEMP_PATH_MAX_LENGTH, szTempDir) == 0) {
@@ -642,7 +642,7 @@ void c_ev_load_pixmap(
 #else
 		pFile = tmpfile(); /* create a temporary file */
 		fwrite (default_vision2_icon, 1, sizeof (default_vision2_icon), pFile);
-#endif /* EIF_WIN32 */
+#endif /* EIF_WINDOWS */
 		fseek (pFile, 0, SEEK_SET);
 	} else {
 			/* Open the file */
@@ -696,7 +696,7 @@ void c_ev_load_pixmap(
 				/* Windows ICO file format */
 				/* close the graphical file or the temporary file */
 			fclose (pFile);
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 			stCtx.LoadPixmapUpdateObject = LoadPixmapUpdateObject;
 #ifndef EIF_IL_DLL
 			stCtx.pCurrObject = pCurrObject;
@@ -727,7 +727,7 @@ void c_ev_load_pixmap(
 				/* Windows BMP file format */
 				/* close the graphical file or the temporary file */
 			fclose (pFile);
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 			stCtx.LoadPixmapUpdateObject = LoadPixmapUpdateObject;
 #ifndef EIF_IL_DLL
 			stCtx.pCurrObject = pCurrObject;
@@ -839,7 +839,7 @@ unsigned char c_ev_read_n_bytes( unsigned long nRequestedBufferSize, BufferedFil
 }
 
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 /*---------------------------------------------------------------------------*/
 /* FUNC: c_ev_load_windows_file                                              */
 /* ARGS: - nWindowsType: IMAGE_ICON or IMAGE_BITMAP                          */
@@ -1182,7 +1182,7 @@ unsigned char c_ev_is_ppm_file(BufferedFile *pBufFile)
 void c_ev_set_bit(unsigned char bit, unsigned char *pData, long iData)
 {
 	long iOff = iData / 8;	/* Offset of the bit in byte */
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	long iBitPos = 7 - (iData % 8);		/* Position of the bit within the byte */
 #else
 	long iBitPos = iData % 8;		/* Position of the bit within the byte */
@@ -1190,7 +1190,7 @@ void c_ev_set_bit(unsigned char bit, unsigned char *pData, long iData)
 	unsigned char bitValue;
 
 	bitValue = (unsigned char)(1 << iBitPos);
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	if (bit == 0) {
 #else
 	if (bit == 1) {
@@ -1229,7 +1229,7 @@ void c_ev_load_png_file(LoadPixmapCtx *pCtx)
 	unsigned char 	*pAlphaImage;	/* Pointer on a DIB structure */
 	volatile unsigned char	bAlphaImage = FALSE;/* Is there a mask for this image? */
 	volatile unsigned long 	iAlphaData = 0;
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	unsigned long 	iData;
 #endif
 	unsigned long 	sRowSize;		/* Size in bytes of a scan line */
@@ -1346,7 +1346,7 @@ void c_ev_load_png_file(LoadPixmapCtx *pCtx)
 		/* clean up after the read, and free any memory allocated - REQUIRED */
 	png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	sRowSize = 4 * ((width * 24 + 31) / 32);
 	pImage = (unsigned char *) malloc(sRowSize * height + 40);
 	pData = pImage;
@@ -1463,7 +1463,7 @@ void c_ev_load_png_file(LoadPixmapCtx *pCtx)
 		}
 	}
 
-#endif /* EIF_WIN32 */
+#endif /* EIF_WINDOWS */
 
 		/* The mast is empty, remove it */
 	if (bAlphaImage == FALSE) {

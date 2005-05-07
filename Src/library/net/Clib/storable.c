@@ -12,7 +12,7 @@
 #include "eif_error.h"    	/* for eio() */
 #include "eif_traverse.h"
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 #include "winsock.h"
 #define GET_SOCKET_ERROR WSAGetLastError()
 #define EWOULDBLOCK WSAEWOULDBLOCK
@@ -81,7 +81,7 @@ int net_char_read(char *pointer, int size)
 	int i;
 
 retry:
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	i = recv(socket_fides, pointer, size, 0);
 #else
 	i = read(socket_fides, pointer, size);
@@ -143,7 +143,7 @@ rt_private int write2(int fd, char* pointer, int size)
 {
 	int i;
 retry:
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	i = send(fd, pointer, size, 0);
 #else
 	i = write(fd, pointer, size);

@@ -5,7 +5,7 @@
 #include "eif_config.h"
 #include "eif_size.h" /* for LNGSIZ */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 #define WIN32_LEAN_AND_MEAN
 #include <winsock.h>
 #define EWOULDBLOCK WSAEWOULDBLOCK
@@ -13,13 +13,13 @@
 #include <stdio.h>
 #endif
 
-#ifndef EIF_WIN32
+#ifndef EIF_WINDOWS
 #include <sys/time.h>
 #endif
 
 #include <sys/types.h>
 
-#ifndef EIF_WIN32
+#ifndef EIF_WINDOWS
 #include <unistd.h>
 #endif
 
@@ -29,7 +29,7 @@
 #define BSD_COMP
 #endif
 
-#ifndef EIF_WIN32
+#ifndef EIF_WINDOWS
 #include <sys/ioctl.h>
 #endif
 
@@ -143,7 +143,7 @@ EIF_INTEGER c_is_blocking(EIF_INTEGER fd)
 	/*x attempt to get blocking status of socket */
 	/*x BIG BUG UNDER HP-UX !!! => couldn't get actual blocking status */
 {
-#if defined EIF_WIN32 || EIF_OS2 || EIF_VMS
+#if defined EIF_WINDOWS || EIF_OS2 || EIF_VMS
 	return 0;
 #else
 	return (EIF_INTEGER) fcntl((int) fd, (int) F_GETFL, (int) FNDELAY);

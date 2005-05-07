@@ -141,13 +141,17 @@ extern "C" {
 /*----  Thread-local storage ---*/
 /*------------------------------*/
 
-#ifdef USE_TLS
+#if defined(USE_TLS)
 #	ifdef EIF_WINDOWS
-#		define EIF_TLS __declspec (thread)
-#	elif defined(__GNUC__) && (__GNUC__ * 100 + __GNUC_MINOR__ >= 303)
-#		define EIF_TLS __thread
+#		if !defined(EIF_MAKE_DLL) && !defined(EIF_USE_DLL)
+#			define EIF_TLS __declspec (thread)
+#		endif
 #	else
-#		warning "USE_TLS macro is defined, but compiler does not support thread-local storage specifier."
+#		if defined(__GNUC__) && (__GNUC__ * 100 + __GNUC_MINOR__ >= 303)
+#			define EIF_TLS __thread
+#		else
+#			warning "USE_TLS macro is defined, but compiler does not support thread-local storage specifier."
+#		endif
 #	endif
 #endif
 

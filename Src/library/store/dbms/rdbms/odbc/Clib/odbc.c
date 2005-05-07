@@ -23,7 +23,7 @@
 
 #include "eif_eiffel.h"
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 #include <windows.h>
 #else
 #define UNIX

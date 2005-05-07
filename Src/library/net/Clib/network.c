@@ -7,7 +7,7 @@
 #pragma module NET_NETWORK
 #endif /* __VMS */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 #define FD_SETSIZE 256
 #endif
 
@@ -17,7 +17,7 @@
 #include "eif_size.h"     	/* for LNGSIZ */
 #include "eif_error.h"    	/* for eio() */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 #define WIN32_LEAN_AND_MEAN
 #include <winsock.h>
 #define EWOULDBLOCK WSAEWOULDBLOCK
@@ -32,7 +32,7 @@
 #include <io.h>
 #endif
 
-#ifndef EIF_WIN32
+#ifndef EIF_WINDOWS
 #include <sys/time.h>
 #endif
 
@@ -42,7 +42,7 @@
 #include <sys/types.h>
 #endif
 
-#ifndef EIF_WIN32
+#ifndef EIF_WINDOWS
 #include <unistd.h>
 #endif
 
@@ -52,7 +52,7 @@
 #define BSD_COMP
 #endif
 
-#ifndef EIF_WIN32
+#ifndef EIF_WINDOWS
 #include <sys/ioctl.h>
 #endif
 
@@ -75,7 +75,7 @@
 #include <sys/in.h>
 #endif
 
-#if defined EIF_WIN32 || defined EIF_OS2 || defined EIF_VMS
+#if defined EIF_WINDOWS || defined EIF_OS2 || defined EIF_VMS
 #else
 #include <sys/un.h>
 #include <arpa/inet.h>
@@ -86,7 +86,7 @@
 
 #include "bitmask.h"
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 #define EIFNET_ERROR_HAPPENED SOCKET_ERROR
 	/* Clean up function */
 typedef void (* EIF_CLEANUP)(EIF_BOOLEAN);
@@ -102,7 +102,7 @@ extern void eif_register_cleanup(EIF_CLEANUP f);
 void eif_net_check (int retcode) {
 	/* Check the return code of connect(), recv(), send(), ... */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	char buf[80]="Net error #";
 	int errcode;
 	if (retcode == SOCKET_ERROR) {
@@ -142,7 +142,7 @@ void eif_net_check (int retcode) {
 void eif_net_check_recv (int r) {
 	/* Check the value returned returned by recv() */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	if (r == SOCKET_ERROR) {
 		eif_net_check(r);
 	} else if (r == 0) {
@@ -169,7 +169,7 @@ rt_shared void do_init(void)
 #endif
 
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 
 void eif_winsock_cleanup(EIF_BOOLEAN f)
 {
@@ -343,7 +343,7 @@ void host_address_from_name (EIF_POINTER addr, EIF_POINTER name)
 {
 	struct hostent *hp;
 
-#if defined EIF_WIN32 || defined EIF_OS2
+#if defined EIF_WINDOWS || defined EIF_OS2
 	do_init();
 #endif
 
@@ -360,7 +360,7 @@ EIF_INTEGER get_servent_port(EIF_POINTER name, EIF_POINTER proto)
 {
 	struct servent *sp;
 
-#if defined EIF_WIN32 || defined EIF_OS2
+#if defined EIF_WINDOWS || defined EIF_OS2
 	do_init();
 #endif
 
@@ -480,12 +480,12 @@ EIF_INTEGER c_socket(EIF_INTEGER add_f, EIF_INTEGER typ, EIF_INTEGER prot)
 {
 	int result;
 
-#if defined EIF_WIN32 || defined EIF_OS2
+#if defined EIF_WINDOWS || defined EIF_OS2
 	do_init();
 #endif
 
 	result = socket((int) add_f, (int) typ, (int) prot);
-#if defined EIF_WIN32 || defined EIF_OS2
+#if defined EIF_WINDOWS || defined EIF_OS2
 	if (result == INVALID_SOCKET)
 		eio();
 #else
@@ -498,7 +498,7 @@ EIF_INTEGER c_socket(EIF_INTEGER add_f, EIF_INTEGER typ, EIF_INTEGER prot)
 void c_close_socket(EIF_INTEGER s)
 	/*x close socket descriptor s */
 {
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	closesocket((SOCKET)s);
 #elif defined EIF_OS2
 	soclose((int) s);
@@ -511,7 +511,7 @@ void c_bind(EIF_INTEGER s, EIF_POINTER add, EIF_INTEGER length)
 	/*x bind socket descriptor s to socket address address (of length
 	    length */
 {
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	do_init();
 	eif_net_check (bind((SOCKET) s, (struct sockaddr *) add, (int) length));
 #elif defined EIF_OS2
@@ -532,7 +532,7 @@ EIF_INTEGER c_accept(EIF_INTEGER s, EIF_POINTER add, EIF_INTEGER length)
 	int a_length = length;
 #endif
 
-#if defined EIF_WIN32
+#if defined EIF_WINDOWS
 
 	SOCKET result;
 
@@ -563,7 +563,7 @@ EIF_INTEGER c_accept(EIF_INTEGER s, EIF_POINTER add, EIF_INTEGER length)
 void c_listen(EIF_INTEGER s, EIF_INTEGER backlog)
 	/*x listen up to backlog connexions on socket descriptor s */
 {
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	do_init();
 	eif_net_check (listen((SOCKET) s, (int) backlog));
 #elif defined EIF_OS2
@@ -577,7 +577,7 @@ void c_listen(EIF_INTEGER s, EIF_INTEGER backlog)
 void c_connect(EIF_INTEGER s, EIF_POINTER add, EIF_INTEGER length)
 	/*x connect socket s to socket address add of length length */
 {
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	do_init();
 	eif_net_check (connect((SOCKET) s, (struct sockaddr *) add, (int) length));
 #elif defined EIF_OS2
@@ -594,7 +594,7 @@ EIF_INTEGER c_select(EIF_INTEGER nfds, EIF_POINTER rmask, EIF_POINTER wmask, EIF
 	struct timeval t;
 	int result;
 
-#if defined EIF_WIN32 || defined EIF_OS2
+#if defined EIF_WINDOWS || defined EIF_OS2
 	do_init();
 	if (!rmask && !wmask && !emask) {
 		if (timeout != -1) 
@@ -603,7 +603,7 @@ EIF_INTEGER c_select(EIF_INTEGER nfds, EIF_POINTER rmask, EIF_POINTER wmask, EIF
 	}
 #endif
 	if (timeout == -1) {
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 		eif_net_check (result = select((int) nfds, (fd_set *) rmask, (fd_set *) wmask, (fd_set *) emask, (struct timeval *) NULL));
 #elif defined EIF_OS2
 		eif_net_check (result = select((int) nfds, (fd_set *) rmask, (fd_set *) wmask, (fd_set *) emask, (struct timeval *) NULL));
@@ -616,7 +616,7 @@ EIF_INTEGER c_select(EIF_INTEGER nfds, EIF_POINTER rmask, EIF_POINTER wmask, EIF
 	t.tv_sec = timeout;
 	t.tv_usec = timeoutm;
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	eif_net_check (result = select((int) nfds, (fd_set *) rmask, (fd_set *) wmask, (fd_set *) emask, &t));
 #elif defined EIF_OS2
 	eif_net_check (result = select((int) nfds, (fd_set *) rmask, (fd_set *) wmask, (fd_set *) emask, &t));
@@ -636,7 +636,7 @@ void c_sock_name(EIF_INTEGER s, EIF_POINTER addr, EIF_INTEGER length)
 	int a_length, result;
 #endif
 
-#if defined EIF_WIN32 || defined EIF_OS2
+#if defined EIF_WINDOWS || defined EIF_OS2
 	do_init();
 #endif
 
@@ -657,7 +657,7 @@ EIF_INTEGER c_peer_name(EIF_INTEGER s, EIF_POINTER addr, EIF_INTEGER length)
 	int a_length, result;
 #endif
 
-#if defined EIF_WIN32 || defined EIF_OS2
+#if defined EIF_WINDOWS || defined EIF_OS2
 	do_init();
 #endif
 
@@ -673,7 +673,7 @@ EIF_INTEGER c_peer_name(EIF_INTEGER s, EIF_POINTER addr, EIF_INTEGER length)
 
 /*x basic types sending TO (macro) */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 #define CSENDXTO(descriptor,element_pointer,sizeofelement, flags, addr_pointer, sizeofaddr) \
 	eif_net_check (sendto (descriptor, element_pointer, sizeofelement, flags, addr_pointer, sizeofaddr));
 #elif defined EIF_OS2
@@ -730,7 +730,7 @@ void c_send_stream_to(EIF_INTEGER fd, EIF_POINTER stream_pointer, EIF_INTEGER le
 
 /*x basic types sending (macro) */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 #define CPUTX(descriptor,element_pointer,sizeofelement) \
 	eif_net_check (send (descriptor, element_pointer, sizeofelement, 0));
 #elif defined EIF_OS2
@@ -787,7 +787,7 @@ void c_put_stream(EIF_INTEGER fd, EIF_POINTER stream_pointer, EIF_INTEGER length
 
 	/*x basic types receiving (macro) */
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 #define CREADX(descriptor, element_pointer, sizeofelement) \
 	eif_net_check_recv (recv((int) descriptor, (char *) element_pointer, sizeofelement, 0));
 #elif defined EIF_OS2
@@ -841,7 +841,7 @@ EIF_INTEGER c_read_stream(EIF_INTEGER fd, EIF_INTEGER len, EIF_POINTER buf)
 {
         int nr;
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	eif_net_check (nr = recv(fd, (char *) buf, (int) len, 0));
 #elif defined EIF_OS2
 	if ((nr = recv(fd, (char *) buf, (int) len, 0)) == -1)
@@ -863,7 +863,7 @@ EIF_INTEGER c_receive(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len, EIF_INTE
 	int result;
 
 	result = recv((int) fd, (char *) buf, (int) len, (int) flags);
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	eif_net_check (result);
 #elif defined EIF_OS2
 	if (result == -1)
@@ -889,7 +889,7 @@ EIF_INTEGER c_rcv_from(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len, EIF_INT
 	result = recvfrom ((int) fd, (char *) buf, (int) len, (int) flags, (struct sockaddr *) addr, (int *) addr_len);
 #endif
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	eif_net_check (result);
 #elif defined EIF_OS2
 	if (result == -1)
@@ -908,7 +908,7 @@ EIF_INTEGER c_write(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER l)
 	    return number of actually sent bytes */
 {
 	int result;
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	result = send(fd, (char *) buf, (int) l, 0);
 	eif_net_check (result);
 #elif defined EIF_OS2
@@ -946,7 +946,7 @@ EIF_INTEGER c_send_to (EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len, EIF_INT
 {
 	int result;
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	eif_net_check (result = sendto((int) fd, (char *) buf, (int) len, (int) flags, (struct sockaddr *) addr, (int) addr_len));
 #elif defined EIF_OS2
 	if ((result = sendto((int) fd, (char *) buf, (int) len, (int) flags, (struct sockaddr *) addr, (int) addr_len)) < 0)
@@ -977,7 +977,7 @@ EIF_INTEGER c_get_sock_opt_int(EIF_INTEGER fd, EIF_INTEGER level, EIF_INTEGER op
 #endif
 
 	asize = sizeof(arg);
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	if (getsockopt((int) fd, (int) level, (int) opt, (char *) &arg, &asize) == SOCKET_ERROR)
 #elif defined EIF_OS2
 	if (getsockopt((int) fd, (int) level, (int) opt, (char *) &arg, &asize) == -1)
@@ -999,7 +999,7 @@ EIF_BOOLEAN c_is_linger_on(EIF_INTEGER fd)
 #endif
 	asize = sizeof(arg);
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	if (getsockopt((int) fd, SOL_SOCKET, SO_LINGER, (char *) &arg, &asize) == SOCKET_ERROR)
 #elif defined EIF_OS2
 	if (getsockopt((int) fd, SOL_SOCKET, SO_LINGER, (char *) &arg, &asize) == -1)
@@ -1022,7 +1022,7 @@ EIF_INTEGER c_linger_time(EIF_INTEGER fd)
 
 	asize = sizeof(arg);
 
-#ifdef EIF_WIN32
+#ifdef EIF_WINDOWS
 	if (getsockopt((int) fd, SOL_SOCKET, SO_LINGER, (char *) &arg, &asize) == SOCKET_ERROR)
 #elif defined EIF_OS2
 	if (getsockopt((int) fd, SOL_SOCKET, SO_LINGER, (char *) &arg, &asize) == -1)
@@ -1047,7 +1047,7 @@ EIF_INTEGER c_set_sock_opt_linger(EIF_INTEGER fd, EIF_BOOLEAN flag, EIF_INTEGER 
 EIF_INTEGER c_fcntl(EIF_INTEGER fd, EIF_INTEGER cmd, EIF_INTEGER arg)
 	/*x set possibly open fd socket options */
 {
-#if defined EIF_WIN32 || defined EIF_OS2
+#if defined EIF_WINDOWS || defined EIF_OS2
 	return 0;
 #elif defined EIF_VMS
 #  ifdef DEBUG
@@ -1065,7 +1065,7 @@ void c_set_blocking(EIF_INTEGER fd)
 #ifdef EIF_OS2
 	int arg = 0;
 	ioctl((int) fd, FIONBIO, (char *) &arg, sizeof(arg));
-#elif defined EIF_WIN32
+#elif defined EIF_WINDOWS
 	u_long arg = 0;
 	ioctlsocket((int) fd, FIONBIO, &arg);
 #else
@@ -1081,7 +1081,7 @@ void c_set_non_blocking(EIF_INTEGER fd)
 #ifdef EIF_OS2
 	int arg = 1;
 	ioctl ((int) fd, FIONBIO, (char *) &arg, sizeof(arg));
-#elif defined EIF_WIN32
+#elif defined EIF_WINDOWS
 	u_long arg = 1;
 	ioctlsocket((int) fd, FIONBIO, &arg);
 #else

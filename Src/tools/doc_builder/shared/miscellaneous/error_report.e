@@ -13,8 +13,6 @@ feature -- Status Setting
 
 	set_error (a_error: ERROR) is
 			-- Set error
-		require
-			error_not_void: a_error /= Void
 		do
 			error := a_error
 		ensure

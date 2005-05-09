@@ -9,6 +9,8 @@ class
 inherit
 	EXECUTION_ENVIRONMENT
 
+	SHARED_OBJECTS
+
 feature -- Directory Paths
 
 	application_root_directory: DIRECTORY_NAME is
@@ -16,14 +18,14 @@ feature -- Directory Paths
 		local
 			l_path: STRING
 		once
---			l_path := get ("EIFFEL_SRC")
--- 			if l_path /= Void then
---          		create Result.make_from_string (l_path)		
---           		Result.extend ("tools")
---             	Result.extend ("doc_builder")						
---          	else
+			l_path := get ("EIFFEL_SRC")
+ 			if l_path /= Void then
+          		create Result.make_from_string (l_path)	
+           		Result.extend ("tools")
+             	Result.extend ("doc_builder")						
+          	else
 				create Result.make_from_string ((create {EXECUTION_ENVIRONMENT}).current_working_directory)
---			end
+			end
 		end
 
 	resources_directory: DIRECTORY_NAME is
@@ -86,37 +88,27 @@ feature -- Directory Paths
 			-- Directory for temporary file generation
 		local
 			l_dir: DIRECTORY
-		once
-			if (create {PLATFORM}).is_windows then				
-				create Result.make_from_string ("C:")
-				Result.extend ("doc")
-			else
-				Result := application_root_directory.twin
-				Result.extend ("temp")
-				create l_dir.make (Result.string)
-				if not l_dir.exists then
-					l_dir.create_dir
-				end
-			end
+		do
+			create Result.make_from_string (shared_preferences.tool_data.output_directory)
 		end
 		
 	temporary_html_directory: DIRECTORY_NAME is
 			-- Directory location for temporary HTML
-		once
+		do
 			create Result.make_from_string (Temporary_directory)
 			Result.extend ("HTML")
 		end
 		
 	temporary_xml_directory: DIRECTORY_NAME is
 			-- Directory location for temporary XML
-		once
+		do
 			create Result.make_from_string (Temporary_directory)
 			Result.extend ("XML")
 		end
 		
 	temporary_help_directory: DIRECTORY_NAME is
 			-- Directory location for temporary help files
-		once
+		do
 			create Result.make_from_string (Temporary_directory)
 			Result.extend ("Help")
 		end	

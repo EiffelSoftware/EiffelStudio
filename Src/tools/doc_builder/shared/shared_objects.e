@@ -28,16 +28,16 @@ feature -- Once objects
 			create Result
 		end
 
-	Shared_document_editor: DOCUMENT_EDITOR is
+	Shared_document_editor_commands: DOCUMENT_EDITOR_COMMANDS is
 			-- Document Editor
 		once
-			create Result.make
+			create Result
 		end
 
 	Shared_search_control: SEARCH_CONTROL is
 			-- Editor search control
 		once
-			create Result.make_with_panel (Shared_document_editor)
+			create Result.make
 		end
 
 	Shared_document_manager: DOCUMENT_MANAGER is

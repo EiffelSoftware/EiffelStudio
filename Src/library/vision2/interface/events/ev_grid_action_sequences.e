@@ -12,6 +12,8 @@ feature -- Access
 			-- Actions to be performed when a pebble is dropped on an item.
 		do
 			Result := implementation.item_drop_actions
+		ensure
+			result_not_void: Result /= Void
 		end
 
 	item_activate_actions: ACTION_SEQUENCE [TUPLE [EV_GRID_ITEM, EV_POPUP_WINDOW]] is
@@ -194,6 +196,8 @@ feature -- Access
 			-- a_virtual_y_position: INTEGER -- New `virtual_y_position' of grid.
 		do
 			Result := implementation.virtual_position_changed_actions
+		ensure
+			result_not_void: Result /= Void
 		end
 
 	virtual_size_changed_actions: ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER]] is
@@ -204,6 +208,8 @@ feature -- Access
 			-- a_virtual_height: INTEGER -- New `virtual_height' of grid.
 		do
 			Result := implementation.virtual_size_changed_actions
+		ensure
+			result_not_void: Result /= Void
 		end
 		
 feature {NONE} -- Implementation

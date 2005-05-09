@@ -25,12 +25,14 @@ feature -- Access
 			end			
 			create preferences.make_with_default_values_and_location (l_loc.string, "HKEY_CURRENT_USER\EiffelDoc")
 			create editor_data.make (preferences)
-		end	
-		
+			create tool_data.make (preferences)
+		end		
 	
 	editor_data: EDITOR_DATA	
 		
-	preferences: PREFERENCES	
+	tool_data: TOOL_DATA
+
+	preferences: PREFERENCES
 		
 feature -- Commands		
 		

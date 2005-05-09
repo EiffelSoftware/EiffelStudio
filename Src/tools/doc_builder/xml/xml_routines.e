@@ -25,7 +25,7 @@ feature -- Access
 			doc_not_void: a_doc /= Void
 		local
 			retried: BOOLEAN
-			l_formatter: XM_ESCAPED_FORMATTER
+			l_formatter: XM_FORMATTER
 			l_output: KL_STRING_OUTPUT_STREAM
 		do				
 			if not retried then
@@ -52,6 +52,7 @@ feature -- Access
 			if not retried then		
 				create Result.make_empty
 				create l_parser.make
+				l_parser.set_string_mode_ascii
 				pretty_formatter.format (Result)
 				l_parser.set_callbacks (standard_callbacks_pipe (<<pretty_formatter>>))
 				l_parser.parse_from_string (a_xml)
@@ -352,7 +353,7 @@ feature -- Commands
 			l_xm_concatenator: DOCUMENT_XML_READER
 		do
 			create l_parser.make
-			l_parser.set_string_mode_mixed
+			l_parser.set_string_mode_ascii
 			create l_tree_pipe.make
 			create l_xm_concatenator.make_null
 			l_parser.set_callbacks (standard_callbacks_pipe (<<l_xm_concatenator, l_tree_pipe.start>>))			
@@ -418,7 +419,8 @@ feature -- Storage
 			doc_name_not_void: a_doc_name /= Void
 		local
 			retried: BOOLEAN
-			l_formatter: XM_ESCAPED_FORMATTER
+--			l_formatter: XM_ESCAPED_FORMATTER
+			l_formatter: XM_FORMATTER
 			l_output_file: KL_TEXT_OUTPUT_FILE
 		do
 			if not retried then

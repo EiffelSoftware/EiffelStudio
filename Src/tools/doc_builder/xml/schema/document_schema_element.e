@@ -310,7 +310,7 @@ feature -- Elements
 			l_name := type_name
 			if not type_name.is_empty and then schema_document.has_type (type_name) then
 				create elem.make_from_type (schema_document.get_type_by_name (type_name), schema_document)
-				Result.append (clone (elem.children))
+				Result.append (elem.children.twin)
 			end			
 		end	
 	

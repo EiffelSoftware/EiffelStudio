@@ -99,7 +99,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 		
-	pointer_motion_actions: ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, EV_GRID_ITEM]] is
+	pointer_motion_item_actions: ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, EV_GRID_ITEM]] is
 			-- Actions to be performed when a screen pointer moves over a grid.
 			-- Arguments (with names for clarity):
 			--
@@ -107,12 +107,12 @@ feature -- Access
 			-- y_pos: INTEGER -- The y position of the motion in grid virtual coordinates.
 			-- item: EV_GRID_ITEM -- If the motion occurred above an item, this is the pointed item, otherwise argument is set to `Void'.
 		do
-			Result := implementation.pointer_motion_actions
+			Result := implementation.pointer_motion_item_actions
 		ensure
 			result_not_void: Result /= Void
 		end
 		
-	pointer_button_press_actions: ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, INTEGER, EV_GRID_ITEM]] is
+	pointer_button_press_item_actions: ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, INTEGER, EV_GRID_ITEM]] is
 			-- Actions to be performed when a pointer press event is received by a grid.
 			-- Arguments (with names for clarity):
 			--
@@ -121,12 +121,12 @@ feature -- Access
 			-- a_button: INTEGER -- The index of the pressed button.
 			-- item: EV_GRID_ITEM -- If the press occurred above an item, this is the pointed item, otherwise argument is set to `Void'.
 		do
-			Result := implementation.pointer_button_press_actions
+			Result := implementation.pointer_button_press_item_actions
 		ensure
 			result_not_void: Result /= Void
 		end
 		
-	pointer_double_press_actions: ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, INTEGER, EV_GRID_ITEM]] is
+	pointer_double_press_item_actions: ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, INTEGER, EV_GRID_ITEM]] is
 			-- Actions to be performed when a pointer double press event is received by a grid.
 			-- Arguments (with names for clarity):
 			--
@@ -135,12 +135,12 @@ feature -- Access
 			-- a_button: INTEGER -- The index of the pressed button.
 			-- item: EV_GRID_ITEM -- If the double press occurred above an item, this is the pointed item, otherwise argument is set to `Void'.
 		do
-			Result := implementation.pointer_double_press_actions
+			Result := implementation.pointer_double_press_item_actions
 		ensure
 			result_not_void: Result /= Void
 		end
 		
-	pointer_button_release_actions: ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, INTEGER, EV_GRID_ITEM]] is
+	pointer_button_release_item_actions: ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, INTEGER, EV_GRID_ITEM]] is
 			-- Actions to be performed when a pointer release event is received by a grid.
 			-- Arguments (with names for clarity):
 			--
@@ -149,12 +149,12 @@ feature -- Access
 			-- a_button: INTEGER -- The index of the released button.
 			-- item: EV_GRID_ITEM -- If the release occurred above an item, this is the pointed item, otherwise argument is set to `Void'.
 		do
-			Result := implementation.pointer_button_release_actions
+			Result := implementation.pointer_button_release_item_actions
 		ensure
 			result_not_void: Result /= Void
 		end
 		
-	pointer_enter_actions: ACTION_SEQUENCE [TUPLE [BOOLEAN, EV_GRID_ITEM]] is
+	pointer_enter_item_actions: ACTION_SEQUENCE [TUPLE [BOOLEAN, EV_GRID_ITEM]] is
 			-- Actions to be performed when a pointer enter event is received by a grid or grid item
 			-- Arguments (with names for clarity):
 			--
@@ -165,12 +165,12 @@ feature -- Access
 			-- in the case where the pointer enters a grid at a location where there
 			-- is an item contained.
 		do
-			Result := implementation.pointer_enter_actions
+			Result := implementation.pointer_enter_item_actions
 		ensure
 			result_not_void: Result /= Void
 		end
 		
-	pointer_leave_actions: ACTION_SEQUENCE [TUPLE [BOOLEAN, EV_GRID_ITEM]] is
+	pointer_leave_item_actions: ACTION_SEQUENCE [TUPLE [BOOLEAN, EV_GRID_ITEM]] is
 			-- Actions to be performed when a pointer leave event is received by a grid or grid item
 			-- Arguments (with names for clarity):
 			--
@@ -181,7 +181,7 @@ feature -- Access
 			-- in the case where the pointer leaves a grid from a location where there
 			-- was an item contained.
 		do
-			Result := implementation.pointer_enter_actions
+			Result := implementation.pointer_leave_item_actions
 		ensure
 			result_not_void: Result /= Void
 		end

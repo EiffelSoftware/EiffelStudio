@@ -24,38 +24,19 @@ feature {NONE} -- Initialization
 			-- (due to regeneration of implementation class)
 			-- can be added here.
 		do
-			grid.pointer_motion_item_actions.extend (agent motion_event)
-			grid.pointer_double_press_item_actions.extend (agent double_press_event)
-			grid.pointer_button_press_item_actions.extend (agent press_event)
-			grid.pointer_button_release_item_actions.extend (agent release_event)
-			grid.pointer_enter_item_actions.extend (agent pointer_enter_event)
-			grid.pointer_leave_item_actions.extend (agent pointer_leave_event)
-			grid.mouse_wheel_actions.extend (agent mouse_wheel_event)
-			grid.key_press_actions.extend (agent key_press_event)
-			grid.key_press_string_actions.extend (agent key_press_string_event)
-			grid.key_release_actions.extend (agent key_release_event)
-			grid.focus_in_actions.extend (agent focus_in_event)
-			grid.focus_out_actions.extend (agent focus_out_event)
-			grid.resize_actions.extend (agent resize_event)
-			grid.row_expand_actions.extend (agent row_expanded)
-			grid.row_collapse_actions.extend (agent row_collapsed)
-			grid.item_select_actions.extend (agent item_selected)
-			fixme ("Uncomment following selection events when implemented in EV_GRID")
-			grid.item_deselect_actions.extend (agent item_deselected)
-			grid.row_select_actions.extend (agent row_selected)
-			grid.row_deselect_actions.extend (agent row_deselected)
-			grid.column_select_actions.extend (agent column_selected)
-			grid.column_deselect_actions.extend (agent column_deselected)
+			no_events_button.select_actions.block
+			no_events_button.enable_select
+			no_events_button.select_actions.resume
 		end
 		
 feature -- Events
 
-	motion_event (an_x, a_y: INTEGER; an_item: EV_GRID_ITEM) is
-			--
+	motion_item_event (an_x, a_y: INTEGER; an_item: EV_GRID_ITEM) is
+			-- Respond to a pointer motion at the grid level.
 		local
 			l_string: STRING
 		do
-			l_string := "Motion : " + an_x.out + ", " +a_y.out
+			l_string := "Pointer_motion_item_actions : " + an_x.out + ", " +a_y.out
 			if an_item /= Void then
 				l_string.append (". Item : " + an_item.column.index.out + ", " + an_item.row.index.out)
 			else
@@ -63,13 +44,32 @@ feature -- Events
 			end
 			add_event_item_to_list (l_string)
 		end
-		
-	double_press_event (an_x, a_y, a_button: INTEGER; an_item: EV_GRID_ITEM) is
-			--
+
+	motion_event (an_x, a_y: INTEGER) is
+			-- Respond to a pointer motion at the widget level.
 		local
 			l_string: STRING
 		do
-			l_string := "Double Press : " + an_x.out + ", " +a_y.out + " Button : " + a_button.out
+			l_string := "Pointer_motion_actions : " + an_x.out + ", " + a_y.out
+			add_event_item_to_list (l_string)
+		end
+
+	item_motion_event (an_x, a_y: INTEGER) is
+			-- Respond to a pointer motion at the item level.
+		local
+			l_string: STRING
+		do
+			l_string := "Item.pointer_motion_actions : " + an_x.out + ", " + a_y.out
+			add_event_item_to_list (l_string)
+		end
+
+
+	press_item_event (an_x, a_y, a_button: INTEGER; an_item: EV_GRID_ITEM) is
+			-- Respond to a pointer press at the grid level.
+		local
+			l_string: STRING
+		do
+			l_string := "Pointer_button_press_item_actions : " + an_x.out + ", " +a_y.out + " Button : " + a_button.out
 			if an_item /= Void then
 				l_string.append (". Item : " + an_item.column.index.out + ", " + an_item.row.index.out)
 			else
@@ -77,12 +77,31 @@ feature -- Events
 			end
 			add_event_item_to_list (l_string)
 		end
-		
-	press_event (an_x, a_y, a_button: INTEGER; an_item: EV_GRID_ITEM) is
+
+	press_event (an_x, a_y, a_button: INTEGER) is
+			-- Respond to a pointer press at the widget level.
 		local
 			l_string: STRING
 		do
-			l_string := "Press : " + an_x.out + ", " +a_y.out + " Button : " + a_button.out
+			l_string := "Pointer_button_press_actions : " + an_x.out + ", " +a_y.out + " Button : " + a_button.out
+			add_event_item_to_list (l_string)
+		end
+
+	item_press_event (an_x, a_y, a_button: INTEGER) is
+			-- Respond to a pointer press at the item level.
+		local
+			l_string: STRING
+		do
+			l_string := "Item.pointer_button_press_actions : " + an_x.out + ", " +a_y.out + " Button : " + a_button.out
+			add_event_item_to_list (l_string)
+		end
+		
+	double_press_item_event (an_x, a_y, a_button: INTEGER; an_item: EV_GRID_ITEM) is
+			-- Respond to a pointer double press at the grid level.
+		local
+			l_string: STRING
+		do
+			l_string := "Pointer_button_press_item_actions : " + an_x.out + ", " +a_y.out + " Button : " + a_button.out
 			if an_item /= Void then
 				l_string.append (". Item : " + an_item.column.index.out + ", " + an_item.row.index.out)
 			else
@@ -90,17 +109,54 @@ feature -- Events
 			end
 			add_event_item_to_list (l_string)
 		end
-		
-	release_event (an_x, a_y, a_button: INTEGER; an_item: EV_GRID_ITEM) is
+
+	double_press_event (an_x, a_y, a_button: INTEGER) is
+			-- Respond to a pointer double press at the widget level.
 		local
 			l_string: STRING
 		do
-			l_string := "Release : " + an_x.out + ", " +a_y.out + " Button : " + a_button.out
+			l_string := "Pointer_double_press_actions : " + an_x.out + ", " +a_y.out + " Button : " + a_button.out
+			add_event_item_to_list (l_string)
+		end
+
+	item_double_press_event (an_x, a_y, a_button: INTEGER) is
+			-- Respond to a pointer double_press at the item level.
+		local
+			l_string: STRING
+		do
+			l_string := "Item.pointer_double_press_actions : " + an_x.out + ", " +a_y.out + " Button : " + a_button.out
+			add_event_item_to_list (l_string)
+		end
+
+	release_item_event (an_x, a_y, a_button: INTEGER; an_item: EV_GRID_ITEM) is
+			-- Respond to a pointer release at the grid level.
+		local
+			l_string: STRING
+		do
+			l_string := "Pointer_release_item_actions : " + an_x.out + ", " +a_y.out + " Button : " + a_button.out
 			if an_item /= Void then
 				l_string.append (". Item : " + an_item.column.index.out + ", " + an_item.row.index.out)
 			else
 				l_string.append (". No item")
 			end
+			add_event_item_to_list (l_string)
+		end
+
+	release_event (an_x, a_y, a_button: INTEGER) is
+			-- Respond to a pointer release at the widget level.
+		local
+			l_string: STRING
+		do
+			l_string := "Pointer_release_actions : " + an_x.out + ", " +a_y.out + " Button : " + a_button.out
+			add_event_item_to_list (l_string)
+		end
+
+	item_release_event (an_x, a_y, a_button: INTEGER) is
+			-- Respond to a pointer release at the item level.
+		local
+			l_string: STRING
+		do
+			l_string := "Item.pointer_release_actions : " + an_x.out + ", " +a_y.out + " Button : " + a_button.out
 			add_event_item_to_list (l_string)
 		end
 	
@@ -263,20 +319,97 @@ feature {NONE} -- Implementation
 	highlight_items_on_motion_selected is
 			-- Called by `select_item_actions' of `highlight_items_on_motion'.
 		do
-			grid.pointer_motion_item_actions.wipe_out
-			grid.pointer_motion_item_actions.extend (agent motion_event)
-			if highlight_items_on_motion.is_selected then
-				grid.pointer_motion_item_actions.extend (agent motion_highlight_event)
-			end
+			event_list.disable_sensitive
+--			grid.pointer_motion_item_actions.wipe_out
+--			grid.pointer_motion_item_actions.extend (agent motion_event)
+--			if highlight_items_on_motion.is_selected then
+--				grid.pointer_motion_item_actions.extend (agent motion_highlight_event)
+--			end
 		end
 	
 	show_events_in_items_selected is
 			-- Called by `select_item_actions' of `show_events_in_items'.
 		do
-			grid.pointer_motion_item_actions.wipe_out
-			grid.pointer_motion_item_actions.extend (agent motion_event)
-			if show_events_in_items.is_selected then
-				grid.pointer_motion_item_actions.extend (agent motion_event_in_item)
+			event_list.disable_sensitive
+--			grid.pointer_motion_item_actions.wipe_out
+--			grid.pointer_motion_item_actions.extend (agent motion_event)
+--			if show_events_in_items.is_selected then
+--				grid.pointer_motion_item_actions.extend (agent motion_event_in_item)
+--			end
+		end
+
+	no_events_button_selected is
+			-- Called by `select_actions' of `no_events_button'.
+		do
+			event_list.disable_sensitive
+		end
+
+	enable_event_tracking_selected is
+			-- Called by `select_actions' of `enable_event_tracking'.
+		local
+			l_x, l_y: INTEGER
+			current_item: EV_GRID_ITEM
+		do
+			event_list.enable_sensitive
+
+				-- Now connect all events
+			grid.pointer_motion_item_actions.extend (agent motion_item_event)
+			grid.pointer_motion_actions.force_extend (agent motion_event)
+
+			grid.pointer_button_press_item_actions.extend (agent press_item_event)
+			grid.pointer_button_press_actions.force_extend (agent press_event)
+
+			grid.pointer_double_press_item_actions.extend (agent double_press_item_event)
+			grid.pointer_double_press_actions.force_extend (agent double_press_event)
+			
+			grid.pointer_button_release_item_actions.extend (agent release_item_event)
+			grid.pointer_button_release_actions.force_extend (agent release_event)
+
+
+
+
+
+
+			grid.pointer_enter_item_actions.extend (agent pointer_enter_event)
+			grid.pointer_leave_item_actions.extend (agent pointer_leave_event)
+			grid.mouse_wheel_actions.extend (agent mouse_wheel_event)
+			grid.key_press_actions.extend (agent key_press_event)
+			grid.key_press_string_actions.extend (agent key_press_string_event)
+			grid.key_release_actions.extend (agent key_release_event)
+			grid.focus_in_actions.extend (agent focus_in_event)
+			grid.focus_out_actions.extend (agent focus_out_event)
+			grid.resize_actions.extend (agent resize_event)
+			grid.row_expand_actions.extend (agent row_expanded)
+			grid.row_collapse_actions.extend (agent row_collapsed)
+			grid.item_select_actions.extend (agent item_selected)
+			fixme ("Uncomment following selection events when implemented in EV_GRID")
+			grid.item_deselect_actions.extend (agent item_deselected)
+			grid.row_select_actions.extend (agent row_selected)
+			grid.row_deselect_actions.extend (agent row_deselected)
+			grid.column_select_actions.extend (agent column_selected)
+			grid.column_deselect_actions.extend (agent column_deselected)
+
+			from
+				l_x := 1
+			until
+				l_x > grid.column_count
+			loop
+				from
+					l_y := 1
+				until
+					l_y > grid.row_count
+				loop
+					current_item := grid.item (l_x, l_y)
+					if current_item /= Void then
+						current_item.pointer_motion_actions.force_extend (agent item_motion_event)
+						current_item.pointer_button_press_actions.force_extend (agent item_press_event)
+						current_item.pointer_double_press_actions.force_extend (agent item_double_press_event)
+						current_item.pointer_button_release_actions.force_extend (agent item_release_event)
+
+					end
+					l_y := l_y + 1
+				end
+				l_x := l_x + 1
 			end
 		end
 		

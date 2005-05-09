@@ -37,7 +37,9 @@ Formatter::~Formatter()
 
 EIF_REFERENCE Formatter::ccom_format_message( EIF_INTEGER Code )
 { 
-  return makestr( ( char* )c_format_message ((long) Code), strlen( (char *)string_buffer ));
+	char* szMessage = c_format_message ((long) Code);
+	int i = strlen ((char *)string_buffer);
+	return makestr (szMessage, i);
 };
 //--------------------------------------------------------------------------------
 
@@ -56,7 +58,7 @@ char* Formatter::c_format_message( long Code )
           0,
           NULL ) != 0)
   {
-    strcat (string_buffer,( char* )szErrorMessage);
+    strcat (string_buffer, (char*)szErrorMessage);
     string_buffer [499] = '\0';
     
     LocalFree(szErrorMessage);

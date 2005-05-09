@@ -149,12 +149,17 @@ feature {NONE}-- Initialization
 feature -- Access
 
 	l_ev_fixed_1: EV_FIXED
-	sample, empty_file, project: EV_PIXMAP
+	sample: EV_PIXMAP
+	empty_file: EV_PIXMAP
+	project: EV_PIXMAP
 	l_ev_vertical_box_1: EV_VERTICAL_BOX
-	l_ev_horizontal_box_1,
+	l_ev_horizontal_box_1: EV_HORIZONTAL_BOX
 	l_ev_horizontal_box_2: EV_HORIZONTAL_BOX
-	empty_label, sample_label, project_label, template_description: EV_LABEL
-	ok_button,
+	empty_label: EV_LABEL
+	sample_label: EV_LABEL
+	project_label: EV_LABEL
+	template_description: EV_LABEL
+	ok_button: EV_BUTTON
 	cancel_button: EV_BUTTON
 	l_ev_frame_1: EV_FRAME
 	l_ev_cell_1: EV_CELL

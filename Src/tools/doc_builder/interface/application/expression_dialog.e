@@ -421,11 +421,11 @@ feature {NONE} -- Implementation
 			end
 			if all_project then
 				run_on_directory (create {DIRECTORY}.make (Shared_project.root_directory))
-			elseif shared_document_editor.has_open_document then
+			elseif shared_document_manager.has_open_document then
 				if all_documents then
 --					run_on_documents (Shared_document_editor.documents)
 				else
-					run_on_document (Shared_document_editor.current_document)
+					run_on_document (Shared_document_manager.current_document)
 				end
 			end
 		end		

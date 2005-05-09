@@ -69,6 +69,7 @@ feature {NONE} -- Query
 			-- Are options valid?
 		do
 			Result := True
+			shared_error_reporter.set_error (Void)
 			
 				-- Test for output directory
 			if location_text.text.is_empty then

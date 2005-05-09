@@ -84,8 +84,11 @@ feature {NONE}-- Initialization
 feature -- Access
 
 	progress_bar: EV_HORIZONTAL_PROGRESS_BAR
-	cancel_button, l_ev_vertical_box_1, l_ev_vertical_box_2, l_ev_vertical_box_3: EV_VERTICAL_BOX
-	heading_label,
+	cancel_button: EV_VERTICAL_BOX
+	l_ev_vertical_box_1: EV_VERTICAL_BOX
+	l_ev_vertical_box_2: EV_VERTICAL_BOX
+	l_ev_vertical_box_3: EV_VERTICAL_BOX
+	heading_label: EV_LABEL
 	status_label: EV_LABEL
 
 feature {NONE} -- Implementation

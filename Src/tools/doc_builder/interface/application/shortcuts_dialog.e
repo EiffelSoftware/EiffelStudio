@@ -60,13 +60,21 @@ feature {NONE} -- Implementation
 					l_key := l_ev_key_constants.key_strings.item (l_keys.key_for_iteration)
 					create l_list_row
 					l_list_row.extend (l_key)
-					l_list_row.extend (l_tag)					
+					l_list_row.extend (unescape_content (l_tag))
 					accelerator_list.extend (l_list_row)
 				end
 				l_keys.forth
 			end
 		end
 		
+	unescape_content (a_content: STRING): STRING is
+			-- Content unescaped.
+		do
+			Result := a_content.twin
+			Result.replace_substring_all ("&lt;", "<")
+			Result.replace_substring_all ("&gt;", ">")
+		end	
+
 	populate_keys_combo is
 			-- Populate keys combo
 		local
@@ -126,10 +134,10 @@ feature {NONE} -- Implementation
 			end
 		end		
 
-	accelerator_target: DOCUMENT_EDITOR is
+	accelerator_target: DOC_BUILDER_WINDOW is
 			-- Target for accelerators
 		once
-			Result := (create {SHARED_OBJECTS}).shared_document_editor
+			Result := (create {SHARED_OBJECTS}).application_window
 		end
 
 feature {NONE} -- Events

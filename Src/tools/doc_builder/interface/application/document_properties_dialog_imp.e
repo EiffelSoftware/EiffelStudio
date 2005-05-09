@@ -262,28 +262,63 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	override_12_check, override_20_check: EV_CHECK_BUTTON
+	override_12_check: EV_CHECK_BUTTON
+	override_20_check: EV_CHECK_BUTTON
 	l_ev_notebook_1: EV_NOTEBOOK
-	l_ev_horizontal_separator_1,
+	l_ev_horizontal_separator_1: EV_HORIZONTAL_SEPARATOR
 	l_ev_horizontal_separator_2: EV_HORIZONTAL_SEPARATOR
-	l_ev_vertical_box_1, l_ev_vertical_box_2, l_ev_vertical_box_3,
-	l_ev_vertical_box_4, l_ev_vertical_box_5, l_ev_vertical_box_6, l_ev_vertical_box_7: EV_VERTICAL_BOX
-	l_ev_horizontal_box_1,
-	l_ev_horizontal_box_2, l_ev_horizontal_box_3, l_ev_horizontal_box_4, l_ev_horizontal_box_5,
-	l_ev_horizontal_box_6, toc_12_title_box, toc_12_location_box, toc_12_pseudo_box,
-	l_ev_horizontal_box_7, toc_20_title_box, toc_20_location_box, toc_20_pseudo_box,
-	l_ev_horizontal_box_8, l_ev_horizontal_box_9, l_ev_horizontal_box_10: EV_HORIZONTAL_BOX
-	l_ev_label_1,
-	l_ev_label_2, location_label, l_ev_label_3, l_ev_label_4, l_ev_label_5, l_ev_label_6,
-	l_ev_label_7, l_ev_label_8, l_ev_label_9, l_ev_label_10, l_ev_label_11, l_ev_label_12: EV_LABEL
-	apply_button,
-	okay_button, cancel_button: EV_BUTTON
-	l_ev_frame_1, l_ev_frame_2: EV_FRAME
-	l_ev_cell_1, l_ev_cell_2: EV_CELL
+	l_ev_vertical_box_1: EV_VERTICAL_BOX
+	l_ev_vertical_box_2: EV_VERTICAL_BOX
+	l_ev_vertical_box_3: EV_VERTICAL_BOX
+	l_ev_vertical_box_4: EV_VERTICAL_BOX
+	l_ev_vertical_box_5: EV_VERTICAL_BOX
+	l_ev_vertical_box_6: EV_VERTICAL_BOX
+	l_ev_vertical_box_7: EV_VERTICAL_BOX
+	l_ev_horizontal_box_1: EV_HORIZONTAL_BOX
+	l_ev_horizontal_box_2: EV_HORIZONTAL_BOX
+	l_ev_horizontal_box_3: EV_HORIZONTAL_BOX
+	l_ev_horizontal_box_4: EV_HORIZONTAL_BOX
+	l_ev_horizontal_box_5: EV_HORIZONTAL_BOX
+	l_ev_horizontal_box_6: EV_HORIZONTAL_BOX
+	toc_12_title_box: EV_HORIZONTAL_BOX
+	toc_12_location_box: EV_HORIZONTAL_BOX
+	toc_12_pseudo_box: EV_HORIZONTAL_BOX
+	l_ev_horizontal_box_7: EV_HORIZONTAL_BOX
+	toc_20_title_box: EV_HORIZONTAL_BOX
+	toc_20_location_box: EV_HORIZONTAL_BOX
+	toc_20_pseudo_box: EV_HORIZONTAL_BOX
+	l_ev_horizontal_box_8: EV_HORIZONTAL_BOX
+	l_ev_horizontal_box_9: EV_HORIZONTAL_BOX
+	l_ev_horizontal_box_10: EV_HORIZONTAL_BOX
+	l_ev_label_1: EV_LABEL
+	l_ev_label_2: EV_LABEL
+	location_label: EV_LABEL
+	l_ev_label_3: EV_LABEL
+	l_ev_label_4: EV_LABEL
+	l_ev_label_5: EV_LABEL
+	l_ev_label_6: EV_LABEL
+	l_ev_label_7: EV_LABEL
+	l_ev_label_8: EV_LABEL
+	l_ev_label_9: EV_LABEL
+	l_ev_label_10: EV_LABEL
+	l_ev_label_11: EV_LABEL
+	l_ev_label_12: EV_LABEL
+	apply_button: EV_BUTTON
+	okay_button: EV_BUTTON
+	cancel_button: EV_BUTTON
+	l_ev_frame_1: EV_FRAME
+	l_ev_frame_2: EV_FRAME
+	l_ev_cell_1: EV_CELL
+	l_ev_cell_2: EV_CELL
 	output_combo: EV_COMBO_BOX
-	name_text,
-	toc_title_text, toc_12_title_text, toc_12_location_text, toc_12_pseudo_text, toc_20_title_text,
-	toc_20_location_text, toc_20_pseudo_text: EV_TEXT_FIELD
+	name_text: EV_TEXT_FIELD
+	toc_title_text: EV_TEXT_FIELD
+	toc_12_title_text: EV_TEXT_FIELD
+	toc_12_location_text: EV_TEXT_FIELD
+	toc_12_pseudo_text: EV_TEXT_FIELD
+	toc_20_title_text: EV_TEXT_FIELD
+	toc_20_location_text: EV_TEXT_FIELD
+	toc_20_pseudo_text: EV_TEXT_FIELD
 
 feature {NONE} -- Implementation
 

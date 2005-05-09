@@ -81,8 +81,11 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	back_button, forward_button, refresh_button: EV_TOOL_BAR_BUTTON
-	toolbar_box, browser_container: EV_VERTICAL_BOX
+	back_button: EV_TOOL_BAR_BUTTON
+	forward_button: EV_TOOL_BAR_BUTTON
+	refresh_button: EV_TOOL_BAR_BUTTON
+	toolbar_box: EV_VERTICAL_BOX
+	browser_container: EV_VERTICAL_BOX
 	l_ev_horizontal_box_1: EV_HORIZONTAL_BOX
 	l_ev_label_1: EV_LABEL
 	address_bar: EV_COMBO_BOX

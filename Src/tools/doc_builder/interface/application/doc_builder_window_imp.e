@@ -66,6 +66,7 @@ feature {NONE}-- Initialization
 			create character_menu_item
 			create shortcuts_menu_item
 			create help_menu
+			create about_menu_item
 			create help_menu_item
 			create l_ev_vertical_box_1
 			create l_ev_frame_1
@@ -116,6 +117,8 @@ feature {NONE}-- Initialization
 			create toc_new_heading
 			create toc_new_page
 			create toc_remove_topic
+			create toc_move_up_button
+			create toc_move_down_button
 			create l_ev_cell_5
 			create toc_list_button
 			create toc_merge_button
@@ -165,6 +168,7 @@ feature {NONE}-- Initialization
 			create l_ev_vertical_split_area_4
 			create document_area
 			create editor_container
+			create editor_notebook
 			create document_status_bar
 			create l_ev_frame_6
 			create search_control_container
@@ -215,6 +219,7 @@ feature {NONE}-- Initialization
 			tool_menu.extend (character_menu_item)
 			tool_menu.extend (shortcuts_menu_item)
 			l_ev_menu_bar_1.extend (help_menu)
+			help_menu.extend (about_menu_item)
 			help_menu.extend (help_menu_item)
 			extend (l_ev_vertical_box_1)
 			l_ev_vertical_box_1.extend (l_ev_frame_1)
@@ -265,6 +270,8 @@ feature {NONE}-- Initialization
 			toc_vertical_toolbar.extend (toc_new_heading)
 			toc_vertical_toolbar.extend (toc_new_page)
 			toc_vertical_toolbar.extend (toc_remove_topic)
+			toc_vertical_toolbar.extend (toc_move_up_button)
+			toc_vertical_toolbar.extend (toc_move_down_button)
 			toc_vertical_toolbar.extend (l_ev_cell_5)
 			toc_vertical_toolbar.extend (toc_list_button)
 			toc_vertical_toolbar.extend (toc_merge_button)
@@ -314,6 +321,7 @@ feature {NONE}-- Initialization
 			l_ev_vertical_box_6.extend (l_ev_vertical_split_area_4)
 			l_ev_vertical_split_area_4.extend (document_area)
 			document_area.extend (editor_container)
+			editor_container.extend (editor_notebook)
 			document_area.extend (document_status_bar)
 			document_status_bar.extend (l_ev_frame_6)
 			l_ev_frame_6.extend (search_control_container)
@@ -371,6 +379,7 @@ feature {NONE}-- Initialization
 			character_menu_item.set_text ("Character Codes..")
 			shortcuts_menu_item.set_text ("Shortcuts..")
 			help_menu.set_text ("Help")
+			about_menu_item.set_text ("About...")
 			help_menu_item.set_text ("Contents")
 			l_ev_vertical_box_1.set_padding_width (2)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_frame_1)
@@ -450,6 +459,8 @@ feature {NONE}-- Initialization
 			toc_vertical_toolbar.disable_item_expand (toc_new_heading)
 			toc_vertical_toolbar.disable_item_expand (toc_new_page)
 			toc_vertical_toolbar.disable_item_expand (toc_remove_topic)
+			toc_vertical_toolbar.disable_item_expand (toc_move_up_button)
+			toc_vertical_toolbar.disable_item_expand (toc_move_down_button)
 			toc_vertical_toolbar.disable_item_expand (l_ev_cell_5)
 			toc_vertical_toolbar.disable_item_expand (toc_list_button)
 			toc_vertical_toolbar.disable_item_expand (toc_merge_button)
@@ -469,6 +480,8 @@ feature {NONE}-- Initialization
 			toc_new_page.set_pixmap (icon_format_text_color_ico)
 			toc_remove_topic.set_tooltip ("Delete Topic")
 			toc_remove_topic.set_pixmap (icon_file_close_ico)
+			toc_move_up_button.set_pixmap (uparrow_png)
+			toc_move_down_button.set_pixmap (downarrow_png)
 			l_ev_cell_5.set_minimum_height (20)
 			toc_list_button.set_tooltip ("Loaded Table of Contents")
 			toc_list_button.set_pixmap (icon_down_triangle_ico)
@@ -526,6 +539,7 @@ feature {NONE}-- Initialization
 			sub_element_close.set_pixmap (icon_close_color_ico)
 			editor_tool.set_style (1)
 			document_area.disable_item_expand (document_status_bar)
+			editor_notebook.set_minimum_height (300)
 			document_status_bar.set_padding_width (2)
 			document_status_bar.set_border_width (2)
 			document_status_bar.disable_item_expand (l_ev_frame_7)
@@ -550,54 +564,157 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	node_properties_list, attribute_list: EV_MULTI_COLUMN_LIST
-	new_menu_item, open_menu_item, open_project_menu_item,
-	close_file_menu_item, save_menu_item, exit_menu_item, cut_menu_item, copy_menu_item,
-	paste_menu_item, parser_menu_item, search_menu_item, preferences_menu_item, settings_menu_item,
-	validator_menu_item, gen_menu_item, expression_menu_item, character_menu_item, shortcuts_menu_item,
+	node_properties_list: EV_MULTI_COLUMN_LIST
+	attribute_list: EV_MULTI_COLUMN_LIST
+	new_menu_item: EV_MENU_ITEM
+	open_menu_item: EV_MENU_ITEM
+	open_project_menu_item: EV_MENU_ITEM
+	close_file_menu_item: EV_MENU_ITEM
+	save_menu_item: EV_MENU_ITEM
+	exit_menu_item: EV_MENU_ITEM
+	cut_menu_item: EV_MENU_ITEM
+	copy_menu_item: EV_MENU_ITEM
+	paste_menu_item: EV_MENU_ITEM
+	parser_menu_item: EV_MENU_ITEM
+	search_menu_item: EV_MENU_ITEM
+	preferences_menu_item: EV_MENU_ITEM
+	settings_menu_item: EV_MENU_ITEM
+	validator_menu_item: EV_MENU_ITEM
+	gen_menu_item: EV_MENU_ITEM
+	expression_menu_item: EV_MENU_ITEM
+	character_menu_item: EV_MENU_ITEM
+	shortcuts_menu_item: EV_MENU_ITEM
+	about_menu_item: EV_MENU_ITEM
 	help_menu_item: EV_MENU_ITEM
-	toolbar_new, toolbar_open, toolbar_save, toolbar_cut, toolbar_copy,
-	toolbar_paste, toolbar_xml_format, toolbar_code_format, toolbar_validate, toolbar_properties,
-	toolbar_link_check, main_close, node_properties_close, attribute_list_close, sub_element_close: EV_TOOL_BAR_BUTTON
-	element_selector_menu,
-	types_selector_menu, doc_selector_menu, attribute_selector_menu, sub_element_menu: EV_CHECK_MENU_ITEM
-	document_selector,
-	document_toc, element_selector, type_selector: EV_TREE
-	l_ev_cell_1, l_ev_cell_2, l_ev_cell_3,
-	l_ev_cell_4, l_ev_cell_5, l_ev_cell_6, l_ev_cell_7, l_ev_cell_8, l_ev_cell_9, l_ev_cell_10,
-	l_ev_cell_11, l_ev_cell_12: EV_CELL
+	toolbar_new: EV_TOOL_BAR_BUTTON
+	toolbar_open: EV_TOOL_BAR_BUTTON
+	toolbar_save: EV_TOOL_BAR_BUTTON
+	toolbar_cut: EV_TOOL_BAR_BUTTON
+	toolbar_copy: EV_TOOL_BAR_BUTTON
+	toolbar_paste: EV_TOOL_BAR_BUTTON
+	toolbar_xml_format: EV_TOOL_BAR_BUTTON
+	toolbar_code_format: EV_TOOL_BAR_BUTTON
+	toolbar_validate: EV_TOOL_BAR_BUTTON
+	toolbar_properties: EV_TOOL_BAR_BUTTON
+	toolbar_link_check: EV_TOOL_BAR_BUTTON
+	main_close: EV_TOOL_BAR_BUTTON
+	node_properties_close: EV_TOOL_BAR_BUTTON
+	attribute_list_close: EV_TOOL_BAR_BUTTON
+	sub_element_close: EV_TOOL_BAR_BUTTON
+	element_selector_menu: EV_CHECK_MENU_ITEM
+	types_selector_menu: EV_CHECK_MENU_ITEM
+	doc_selector_menu: EV_CHECK_MENU_ITEM
+	attribute_selector_menu: EV_CHECK_MENU_ITEM
+	sub_element_menu: EV_CHECK_MENU_ITEM
+	document_selector: EV_TREE
+	document_toc: EV_TREE
+	element_selector: EV_TREE
+	type_selector: EV_TREE
+	l_ev_cell_1: EV_CELL
+	l_ev_cell_2: EV_CELL
+	l_ev_cell_3: EV_CELL
+	l_ev_cell_4: EV_CELL
+	l_ev_cell_5: EV_CELL
+	l_ev_cell_6: EV_CELL
+	l_ev_cell_7: EV_CELL
+	l_ev_cell_8: EV_CELL
+	l_ev_cell_9: EV_CELL
+	l_ev_cell_10: EV_CELL
+	l_ev_cell_11: EV_CELL
+	l_ev_cell_12: EV_CELL
 	l_ev_horizontal_split_area_1: EV_HORIZONTAL_SPLIT_AREA
-	l_ev_vertical_split_area_1,
-	l_ev_vertical_split_area_2, l_ev_vertical_split_area_3, element_split_area, l_ev_vertical_split_area_4: EV_VERTICAL_SPLIT_AREA
-	file_menu,
-	document_menu, view_menu, project_menu, tool_menu, help_menu: EV_MENU
+	l_ev_vertical_split_area_1: EV_VERTICAL_SPLIT_AREA
+	l_ev_vertical_split_area_2: EV_VERTICAL_SPLIT_AREA
+	l_ev_vertical_split_area_3: EV_VERTICAL_SPLIT_AREA
+	element_split_area: EV_VERTICAL_SPLIT_AREA
+	l_ev_vertical_split_area_4: EV_VERTICAL_SPLIT_AREA
+	file_menu: EV_MENU
+	document_menu: EV_MENU
+	view_menu: EV_MENU
+	project_menu: EV_MENU
+	tool_menu: EV_MENU
+	help_menu: EV_MENU
 	l_ev_menu_bar_1: EV_MENU_BAR
-	l_ev_vertical_box_1,
-	l_ev_vertical_box_2, documentation_area, toc_container, l_ev_vertical_box_3, toc_vertical_toolbar,
-	node_properties_area, element_area, l_ev_vertical_box_4, type_area, l_ev_vertical_box_5,
-	l_ev_vertical_box_6, document_area, editor_container, browser_container: EV_VERTICAL_BOX
-	l_ev_horizontal_box_1,
-	l_ev_horizontal_box_2, toc_area, toc_status_bar, l_ev_horizontal_box_3, l_ev_horizontal_box_4,
-	l_ev_horizontal_box_5, document_status_bar, search_control_container, l_ev_horizontal_box_6,
-	l_ev_horizontal_box_7, l_ev_horizontal_box_8, l_ev_horizontal_box_9: EV_HORIZONTAL_BOX
-	toc_new_button,
-	toc_open_button, toc_save_button, toc_new_heading, toc_new_page, toc_remove_topic,
-	toc_list_button, toc_merge_button, toc_sort_button: EV_BUTTON
-	l_ev_label_1, l_ev_label_2, toc_status_report_label,
-	l_ev_label_3, l_ev_label_4, title_label, report_label, line_number, cursor_text_position,
+	l_ev_vertical_box_1: EV_VERTICAL_BOX
+	l_ev_vertical_box_2: EV_VERTICAL_BOX
+	documentation_area: EV_VERTICAL_BOX
+	toc_container: EV_VERTICAL_BOX
+	l_ev_vertical_box_3: EV_VERTICAL_BOX
+	toc_vertical_toolbar: EV_VERTICAL_BOX
+	node_properties_area: EV_VERTICAL_BOX
+	element_area: EV_VERTICAL_BOX
+	l_ev_vertical_box_4: EV_VERTICAL_BOX
+	type_area: EV_VERTICAL_BOX
+	l_ev_vertical_box_5: EV_VERTICAL_BOX
+	l_ev_vertical_box_6: EV_VERTICAL_BOX
+	document_area: EV_VERTICAL_BOX
+	editor_container: EV_VERTICAL_BOX
+	browser_container: EV_VERTICAL_BOX
+	l_ev_horizontal_box_1: EV_HORIZONTAL_BOX
+	l_ev_horizontal_box_2: EV_HORIZONTAL_BOX
+	toc_area: EV_HORIZONTAL_BOX
+	toc_status_bar: EV_HORIZONTAL_BOX
+	l_ev_horizontal_box_3: EV_HORIZONTAL_BOX
+	l_ev_horizontal_box_4: EV_HORIZONTAL_BOX
+	l_ev_horizontal_box_5: EV_HORIZONTAL_BOX
+	document_status_bar: EV_HORIZONTAL_BOX
+	search_control_container: EV_HORIZONTAL_BOX
+	l_ev_horizontal_box_6: EV_HORIZONTAL_BOX
+	l_ev_horizontal_box_7: EV_HORIZONTAL_BOX
+	l_ev_horizontal_box_8: EV_HORIZONTAL_BOX
+	l_ev_horizontal_box_9: EV_HORIZONTAL_BOX
+	toc_new_button: EV_BUTTON
+	toc_open_button: EV_BUTTON
+	toc_save_button: EV_BUTTON
+	toc_new_heading: EV_BUTTON
+	toc_new_page: EV_BUTTON
+	toc_remove_topic: EV_BUTTON
+	toc_move_up_button: EV_BUTTON
+	toc_move_down_button: EV_BUTTON
+	toc_list_button: EV_BUTTON
+	toc_merge_button: EV_BUTTON
+	toc_sort_button: EV_BUTTON
+	l_ev_label_1: EV_LABEL
+	l_ev_label_2: EV_LABEL
+	toc_status_report_label: EV_LABEL
+	l_ev_label_3: EV_LABEL
+	l_ev_label_4: EV_LABEL
+	title_label: EV_LABEL
+	report_label: EV_LABEL
+	line_number: EV_LABEL
+	cursor_text_position: EV_LABEL
 	cursor_line_pos: EV_LABEL
-	l_ev_menu_separator_1, l_ev_menu_separator_2, l_ev_menu_separator_3,
-	l_ev_menu_separator_4, l_ev_menu_separator_5: EV_MENU_SEPARATOR
-	l_ev_frame_1, left_tool, main_tool,
-	l_ev_frame_2, node_properties_tool, l_ev_frame_3, attribute_list_tool, l_ev_frame_4,
-	sub_element_tool, l_ev_frame_5, editor_tool, l_ev_frame_6, l_ev_frame_7: EV_FRAME
-	l_ev_tool_bar_separator_1,
-	l_ev_tool_bar_separator_2, l_ev_tool_bar_separator_3, l_ev_tool_bar_separator_4: EV_TOOL_BAR_SEPARATOR
+	l_ev_menu_separator_1: EV_MENU_SEPARATOR
+	l_ev_menu_separator_2: EV_MENU_SEPARATOR
+	l_ev_menu_separator_3: EV_MENU_SEPARATOR
+	l_ev_menu_separator_4: EV_MENU_SEPARATOR
+	l_ev_menu_separator_5: EV_MENU_SEPARATOR
+	l_ev_frame_1: EV_FRAME
+	left_tool: EV_FRAME
+	main_tool: EV_FRAME
+	l_ev_frame_2: EV_FRAME
+	node_properties_tool: EV_FRAME
+	l_ev_frame_3: EV_FRAME
+	attribute_list_tool: EV_FRAME
+	l_ev_frame_4: EV_FRAME
+	sub_element_tool: EV_FRAME
+	l_ev_frame_5: EV_FRAME
+	editor_tool: EV_FRAME
+	l_ev_frame_6: EV_FRAME
+	l_ev_frame_7: EV_FRAME
+	l_ev_tool_bar_separator_1: EV_TOOL_BAR_SEPARATOR
+	l_ev_tool_bar_separator_2: EV_TOOL_BAR_SEPARATOR
+	l_ev_tool_bar_separator_3: EV_TOOL_BAR_SEPARATOR
+	l_ev_tool_bar_separator_4: EV_TOOL_BAR_SEPARATOR
 	output_combo: EV_COMBO_BOX
-	main_toolbar,
-	l_ev_tool_bar_5, l_ev_tool_bar_6, l_ev_tool_bar_7, l_ev_tool_bar_8: EV_TOOL_BAR
+	main_toolbar: EV_TOOL_BAR
+	l_ev_tool_bar_5: EV_TOOL_BAR
+	l_ev_tool_bar_6: EV_TOOL_BAR
+	l_ev_tool_bar_7: EV_TOOL_BAR
+	l_ev_tool_bar_8: EV_TOOL_BAR
 	sub_elements_list: EV_LIST
 	selector: EV_NOTEBOOK
+	editor_notebook: EV_NOTEBOOK
 
 feature {NONE} -- Implementation
 

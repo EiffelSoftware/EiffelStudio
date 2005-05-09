@@ -31,12 +31,38 @@ feature {NONE}-- Initialization
 			initialize_constants
 			
 				-- Create all widgets.
+			create l_ev_vertical_box_1
 			create l_ev_horizontal_box_1
+			create l_ev_label_1
+			create l_ev_horizontal_box_2
+			create l_ev_label_2
+			create l_ev_horizontal_box_3
+			create l_ev_cell_1
+			create ok_button
+			create l_ev_cell_2
 			
 				-- Build_widget_structure.
-			extend (l_ev_horizontal_box_1)
+			extend (l_ev_vertical_box_1)
+			l_ev_vertical_box_1.extend (l_ev_horizontal_box_1)
+			l_ev_horizontal_box_1.extend (l_ev_label_1)
+			l_ev_vertical_box_1.extend (l_ev_horizontal_box_2)
+			l_ev_horizontal_box_2.extend (l_ev_label_2)
+			l_ev_vertical_box_1.extend (l_ev_horizontal_box_3)
+			l_ev_horizontal_box_3.extend (l_ev_cell_1)
+			l_ev_horizontal_box_3.extend (ok_button)
+			l_ev_horizontal_box_3.extend (l_ev_cell_2)
 			
-			set_title ("Document Builder")
+			l_ev_vertical_box_1.set_padding_width (box_padding_width)
+			l_ev_vertical_box_1.set_border_width (inner_border_width)
+			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_1)
+			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_2)
+			l_ev_label_1.set_text ("EiffelDoc (1.0.0)")
+			l_ev_label_2.set_text ("Copyright (C) Eiffel Software Inc. 1985-2005 All Rights Reserved")
+			l_ev_horizontal_box_3.disable_item_expand (ok_button)
+			ok_button.set_text ("OK")
+			ok_button.set_minimum_width (button_width)
+			set_minimum_height (100)
+			set_title ("About EiffelDoc...")
 			
 				--Connect events.
 				-- Close the application when an interface close
@@ -48,7 +74,15 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
+	l_ev_vertical_box_1: EV_VERTICAL_BOX
 	l_ev_horizontal_box_1: EV_HORIZONTAL_BOX
+	l_ev_horizontal_box_2: EV_HORIZONTAL_BOX
+	l_ev_horizontal_box_3: EV_HORIZONTAL_BOX
+	l_ev_label_1: EV_LABEL
+	l_ev_label_2: EV_LABEL
+	ok_button: EV_BUTTON
+	l_ev_cell_1: EV_CELL
+	l_ev_cell_2: EV_CELL
 
 feature {NONE} -- Implementation
 

@@ -48,9 +48,6 @@ feature {NONE} -- Initialization
 			create internal_selector_widgets.make (4)
 			
 				-- Editor			
-			editor_container.extend (shared_document_Editor.header.container)
-			editor_container.disable_item_expand (shared_document_editor.header.container)
-			editor_container.extend (shared_document_editor.widget)
 			search_control_container.put_front (shared_search_control)
 			search_control_container.disable_item_expand (shared_search_control)
 			
@@ -58,14 +55,15 @@ feature {NONE} -- Initialization
 			new_menu_item.select_actions.extend 			(agent open_template_dialog)
 			open_menu_item.select_actions.extend 			(agent Shared_document_manager.open_document)
 			open_project_menu_item.select_actions.extend 	(agent Shared_project.open)
-			save_menu_item.select_actions.extend 			(agent Shared_document_editor.save_document)
+			save_menu_item.select_actions.extend 			(agent Shared_document_manager.save_document)
+			close_file_menu_item.select_actions.extend 		(agent shared_document_manager.close_document)
 			exit_menu_item.select_actions.extend 			(agent close_application)
 			
 					-- Edit Menu
-			cut_menu_item.select_actions.extend				(agent Shared_document_editor.cut_selection)
-			copy_menu_item.select_actions.extend 			(agent Shared_document_editor.copy_selection)
-			paste_menu_item.select_actions.extend 			(agent Shared_document_editor.paste)
-			search_menu_item.select_actions.extend 			(agent Shared_document_editor.open_search_dialog)
+			cut_menu_item.select_actions.extend				(agent Shared_document_editor_commands.cut_selection)
+			copy_menu_item.select_actions.extend 			(agent Shared_document_editor_commands.copy_selection)
+			paste_menu_item.select_actions.extend 			(agent Shared_document_editor_commands.paste)
+			search_menu_item.select_actions.extend 			(agent Shared_document_editor_commands.open_search_dialog)
 			parser_menu_item.select_actions.extend 			(agent open_expression_dialog)
 			preferences_menu_item.select_actions.extend 	(agent open_preferences_window)
 			
@@ -92,19 +90,20 @@ feature {NONE} -- Initialization
 			shortcuts_menu_item.select_actions.extend 		(agent open_shortcuts_dialog)
 			
 					-- Help Menu
+			about_menu_item.select_actions.extend 			(agent display_about)
 			help_menu_item.select_actions.extend 			(agent display_help)
 		
 					-- Toolbar Events
-			toolbar_cut.select_actions.extend 				(agent Shared_document_editor.cut_selection)
-			toolbar_copy.select_actions.extend 				(agent Shared_document_editor.copy_selection)
-			toolbar_paste.select_actions.extend 			(agent Shared_document_editor.paste)			
-			toolbar_xml_format.select_actions.extend		(agent Shared_document_editor.pretty_print_text)
-			toolbar_code_format.select_actions.extend 		(agent shared_document_editor.pretty_format_code_text)
+			toolbar_cut.select_actions.extend 				(agent Shared_document_editor_commands.cut_selection)
+			toolbar_copy.select_actions.extend 				(agent Shared_document_editor_commands.copy_selection)
+			toolbar_paste.select_actions.extend 			(agent Shared_document_editor_commands.paste)			
+			toolbar_xml_format.select_actions.extend		(agent Shared_document_editor_commands.pretty_print_text)
+			toolbar_code_format.select_actions.extend 		(agent Shared_document_editor_commands.pretty_format_code_text)
 			toolbar_new.select_actions.extend 				(agent Shared_document_manager.create_document)
 			toolbar_open.select_actions.extend 				(agent Shared_document_manager.open_document)
-			toolbar_save.select_actions.extend 				(agent Shared_document_editor.save_document)
-			toolbar_validate.select_actions.extend 			(agent Shared_document_editor.validate_document)
-			toolbar_link_check.select_actions.extend		(agent shared_document_editor.validate_document_links)
+			toolbar_save.select_actions.extend 				(agent Shared_document_manager.save_document)
+			toolbar_validate.select_actions.extend 			(agent Shared_document_editor_commands.validate_document)
+			toolbar_link_check.select_actions.extend		(agent Shared_document_editor_commands.validate_document_links)
 			toolbar_properties.select_actions.extend 		(agent open_document_properties_dialog)
 			output_combo.select_actions.extend 				(agent update_output_filter)
 											
@@ -117,6 +116,8 @@ feature {NONE} -- Initialization
 			toc_new_heading.select_actions.extend 			(agent Shared_toc_manager.new_node (True))
 			toc_new_page.select_actions.extend 				(agent Shared_toc_manager.new_node (False))
 			toc_remove_topic.select_actions.extend 			(agent Shared_toc_manager.remove_node)
+			toc_move_up_button.select_actions.extend 		(agent Shared_toc_manager.move_node (True))
+			toc_move_down_button.select_actions.extend 		(agent Shared_toc_manager.move_node (False))
 			toc_merge_button.select_actions.extend 			(agent open_toc_merge_dialog)
 				
 					-- Misc Interface Events
@@ -129,9 +130,6 @@ feature {NONE} -- Initialization
 
 				-- Initial setup
 			browser_container.extend (shared_web_browser)
-			shared_document_editor.add_edition_observer (Current)
-			shared_document_editor.add_selection_observer (Current)
-			shared_document_editor.add_cursor_observer (Current)
 			output_combo.disable_edit
 			output_combo.change_actions.extend (agent update_output_filter)					
 			update			
@@ -214,14 +212,14 @@ feature -- Interface Events
 				toggle_sensitivity (toolbar_new, False)
 				toggle_sensitivity (toolbar_open, False)
 			end
-			if shared_document_editor.has_open_document then
-				l_text := shared_document_editor.text_displayed
-				l_curr_doc := Shared_document_editor.current_document
+			if shared_document_manager.has_open_document then
+				l_text := shared_document_manager.current_editor.text_displayed
+				l_curr_doc := shared_document_manager.current_document
 				
 						-- Document
 				toggle_sensitivity (toolbar_copy, l_text.has_selection)
 				toggle_sensitivity (toolbar_cut, l_text.has_selection)
-				toggle_sensitivity (toolbar_paste, not shared_document_editor.clipboard_empty)					
+				toggle_sensitivity (toolbar_paste, not shared_document_manager.current_editor.clipboard_empty)					
 				toggle_sensitivity (toolbar_xml_format, True)
 				toggle_sensitivity (toolbar_code_format, l_text.has_selection)				
 				toggle_sensitivity (toolbar_link_check, True)
@@ -276,9 +274,9 @@ feature -- Interface Events
 				toggle_sensitivity (tool_menu, False)
 				toggle_sensitivity (open_menu_item, False)
 			end
-			if Shared_document_editor.has_open_document then
-				l_curr_doc := shared_document_editor.current_document
-				l_text := shared_document_editor.text_displayed
+			if shared_document_manager.has_open_document then
+				l_curr_doc := shared_document_manager.current_document
+				l_text := shared_document_manager.current_editor.text_displayed
 
 						-- Title bar
 				if l_curr_doc = Void then
@@ -296,7 +294,7 @@ feature -- Interface Events
 				toggle_sensitivity (document_menu, True)
 				toggle_sensitivity (copy_menu_item, l_text.has_selection)
 				toggle_sensitivity (cut_menu_item, l_text.has_selection)
-				toggle_sensitivity (paste_menu_item, not shared_document_editor.clipboard_empty)										
+				toggle_sensitivity (paste_menu_item, not shared_document_manager.current_editor.clipboard_empty)										
 			else
 						-- File menu
 				toggle_sensitivity (save_menu_item , False)
@@ -363,7 +361,7 @@ feature -- GUI Updating
 						list.after
 					loop					
 						create l_row.make_with_text (list.item)
-						l_row.pointer_double_press_actions.force_extend (agent shared_document_editor.tag_selection (list.item))
+						l_row.pointer_double_press_actions.force_extend (agent shared_document_editor_commands.tag_selection (list.item))
 						sub_elements_list.extend (l_row)
 						list.forth
 					end
@@ -376,7 +374,7 @@ feature -- GUI Updating
 		require
 			message_not_void: message /= Void
 		do
-			if Shared_document_editor.has_open_document then
+			if shared_document_manager.has_open_document then
 				report_label.set_text (message)
 				report_label.set_tooltip (message)
 				if is_error then
@@ -395,7 +393,7 @@ feature -- GUI Updating
 		do
 			l_filter ?= Shared_project.filter_manager.filter_by_description (output_combo.selected_item.text)
 			shared_project.filter_manager.set_filter (l_filter)
-			l_curr_doc := shared_document_editor.current_document
+			l_curr_doc := shared_document_manager.current_document
 			if l_curr_doc /= Void then				
 				shared_web_browser.set_document (l_curr_doc)
 			end
@@ -442,16 +440,15 @@ feature -- GUI Updating
 			update_menus
 			
 				-- Positional information
-			cursor_text_position.set_text ("Pos: " + shared_document_editor.text_displayed.cursor.x_in_characters.out)	
-			line_number.set_text ("Line:" + shared_document_editor.text_displayed.current_line_number.out)
-			cursor_line_pos.set_text ("Byte: " + shared_document_editor.text_displayed.cursor.pos_in_characters.out)	
+			cursor_text_position.set_text ("Pos: " + shared_document_manager.current_editor.text_displayed.cursor.x_in_characters.out)	
+			line_number.set_text ("Line:" + shared_document_manager.current_editor.text_displayed.current_line_number.out)
+			cursor_line_pos.set_text ("Byte: " + shared_document_manager.current_editor.text_displayed.cursor.pos_in_characters.out)	
 		end
 		
 	on_selection_finished is
 			-- Update `Current' when the text has been completely loaded.
 			-- Observer must be registered as "edition_observer" for this feature to be called.
 		do
-			print ("selection finished%N")
 			update_toolbar
 			update_menus
 		end
@@ -467,6 +464,9 @@ feature -- Status Setting
 				a_toc.extend (create {EV_TREE_ITEM}.make_with_text ("Empty TOC"))
 			end
 			toc_area.go_i_th (2)
+			if a_toc.parent /= Void then
+				a_toc.parent.prune (a_toc)
+			end
 			toc_area.replace (a_toc)
 			toc_status_report_label.set_text (a_toc.toc.name)
 		end
@@ -547,6 +547,72 @@ feature {NONE} -- Implementation
 	internal_selector_widgets: HASH_TABLE [EV_WIDGET, STRING]
 			-- Internal widgets for memory persistence when removed from interface view selector
 
+feature -- Accelerators
+
+	add_tag_accelerator (a_accelerator: EV_ACCELERATOR; a_tag_text: STRING) is
+			-- Add an accelerator to Current
+		require
+			accelerator_not_void: a_accelerator /= Void
+			tag_text_not_void: a_tag_text /= Void
+		local
+			l_accelerator: EV_ACCELERATOR
+		do		
+			l_accelerator := a_accelerator
+			if accelerators.has (l_accelerator) then
+				accelerators.start
+				accelerators.search (l_accelerator)
+				if not accelerators.exhausted then					
+					l_accelerator := accelerators.item
+					l_accelerator.actions.wipe_out
+				end
+			else
+				accelerators.extend (l_accelerator)
+			end
+			l_accelerator.actions.extend (agent shared_document_editor_commands.tag_selection (a_tag_text))
+			tag_accelerators.replace (a_tag_text, a_accelerator.key.code)
+		end
+
+	feature -- Shortcuts
+
+		tag_accelerators: HASH_TABLE [STRING, INTEGER] is
+				-- List of keyboard keys which are acceptable for tag accelerators
+				-- hashed by key code
+			local
+				l_key_constants: EV_KEY_CONSTANTS
+			once
+				create l_key_constants
+				create Result.make (10)
+				Result.compare_objects
+				Result.extend ("", l_key_constants.key_q)
+				Result.extend ("", l_key_constants.key_w)
+				Result.extend ("", l_key_constants.key_e)
+				Result.extend ("", l_key_constants.key_r)
+				Result.extend ("", l_key_constants.key_t)
+				Result.extend ("", l_key_constants.key_y)
+				Result.extend ("", l_key_constants.key_u)
+				Result.extend ("", l_key_constants.key_b)
+				Result.extend ("", l_key_constants.key_i)
+				Result.extend ("", l_key_constants.key_o)
+				Result.extend ("", l_key_constants.key_p)
+				Result.extend ("", l_key_constants.key_d)
+				Result.extend ("", l_key_constants.key_g)
+				Result.extend ("", l_key_constants.key_h)
+				Result.extend ("", l_key_constants.key_j)
+				Result.extend ("", l_key_constants.key_k)
+				Result.extend ("", l_key_constants.key_n)
+				Result.extend ("", l_key_constants.key_m)
+				Result.extend ("", l_key_constants.key_0)
+				Result.extend ("", l_key_constants.key_1)
+				Result.extend ("", l_key_constants.key_2)
+				Result.extend ("", l_key_constants.key_3)
+				Result.extend ("", l_key_constants.key_4)
+				Result.extend ("", l_key_constants.key_5)
+				Result.extend ("", l_key_constants.key_6)
+				Result.extend ("", l_key_constants.key_7)
+				Result.extend ("", l_key_constants.key_8)
+				Result.extend ("", l_key_constants.key_9)
+			end
+		
 feature {NONE} -- Dialog
 
 	open_template_dialog is
@@ -597,7 +663,7 @@ feature {NONE} -- Dialog
 			l_doc: DOCUMENT
 		do
 			if Shared_document_manager.has_schema then
-				l_doc := Shared_document_editor.current_document
+				l_doc := shared_document_manager.current_document
 				if l_doc.is_valid_to_schema then
 					l_doc.properties.show_modal_to_window (Current)
 				else
@@ -638,6 +704,15 @@ feature {NONE} -- Dialog
 				shared_error_reporter.set_error (create {ERROR}.make ("Unable to initialize help"))
 				shared_error_reporter.show
 			end	
+		end		
+		
+	display_about is
+			-- Display about
+		local
+			l_about: ABOUT_DIALOG
+		do
+			create l_about
+			l_about.show_modal_to_window (Current)
 		end		
 
 	close_application is

@@ -116,13 +116,20 @@ feature {NONE}-- Initialization
 feature -- Access
 
 	excpt_trace_text: EV_TEXT
-	l_ev_vertical_box_1, l_ev_vertical_box_2: EV_VERTICAL_BOX
-	l_ev_horizontal_box_1,
-	l_ev_horizontal_box_2, l_ev_horizontal_box_3, l_ev_horizontal_box_4: EV_HORIZONTAL_BOX
-	l_ev_label_1,
-	l_ev_label_2, summary_label, l_ev_label_3, excpt_type_label, l_ev_label_4: EV_LABEL
+	l_ev_vertical_box_1: EV_VERTICAL_BOX
+	l_ev_vertical_box_2: EV_VERTICAL_BOX
+	l_ev_horizontal_box_1: EV_HORIZONTAL_BOX
+	l_ev_horizontal_box_2: EV_HORIZONTAL_BOX
+	l_ev_horizontal_box_3: EV_HORIZONTAL_BOX
+	l_ev_horizontal_box_4: EV_HORIZONTAL_BOX
+	l_ev_label_1: EV_LABEL
+	l_ev_label_2: EV_LABEL
+	summary_label: EV_LABEL
+	l_ev_label_3: EV_LABEL
+	excpt_type_label: EV_LABEL
+	l_ev_label_4: EV_LABEL
 	okay_button: EV_BUTTON
-	l_ev_cell_1,
+	l_ev_cell_1: EV_CELL
 	l_ev_cell_2: EV_CELL
 
 feature {NONE} -- Implementation

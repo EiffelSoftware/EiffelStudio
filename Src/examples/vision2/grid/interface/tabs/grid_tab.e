@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			l_color: EV_COLOR
 		do
 			grid.set_dynamic_content_function (agent compute_item)
-			grid.hide
+--			grid.hide
 			add_color_to_combo ((create {EV_STOCK_COLORS}).red, set_background_color_combo)
 			add_color_to_combo ((create {EV_STOCK_COLORS}).green, set_background_color_combo)
 			add_color_to_combo ((create {EV_STOCK_COLORS}).blue, set_background_color_combo)

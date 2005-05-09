@@ -9,11 +9,10 @@ indexing
 		those inherited from EV_CELL use client coordinates as for any other EV_WIDGET. The order of event execution for multiple action sequences that
 		may be triggered by a single event are as follows:
 		1. The standard inherited widget events are fired. i.e. "grid.pointer_button_press_actions"
-			The x and y coordinate event data is relative to the upper left corner of `Current' and are not fired while
-			over the scroll bars.
+			The x and y coordinate event data is relative to the upper left corner of `Current'.
 		2. The grid item specific versions of these events are fired. i.e. "grid.pointer_button_press_item_actions"
-			The x and y coordinate event data is relative to the upper left corner of the virtual client area of `Current' and are not fired
-			while over the scroll bars or header.
+			The x and y coordinate event data is relative to the upper left corner of the "item" area of `Current', in virtual grid
+			coordinates. These events are only fired while the mouse pointer is above the "item" area (does not include header and scroll bars).
 		3. The events are fired on the item themselves. i.e. "item.pointer_button_press_actions"
 			The x and y coordinate event data is relative to the upper left corner of the item.
 

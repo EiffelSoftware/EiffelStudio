@@ -175,7 +175,7 @@ feature -- Events
 	mouse_wheel_event (a_value: INTEGER) is
 			--
 		do
-			to_implement ("EVENTS_TAB.mouse_wheel_event")
+			add_event_item_to_list ("Mouse_wheel_actions " + a_value.out)
 		end
 		
 	key_press_event (a_key: EV_KEY) is
@@ -364,11 +364,6 @@ feature {NONE} -- Implementation
 			
 			grid.pointer_button_release_item_actions.extend (agent release_item_event)
 			grid.pointer_button_release_actions.force_extend (agent release_event)
-
-
-
-
-
 
 			grid.pointer_enter_item_actions.extend (agent pointer_enter_event)
 			grid.pointer_leave_item_actions.extend (agent pointer_leave_event)

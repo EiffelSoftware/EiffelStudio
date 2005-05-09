@@ -8,9 +8,15 @@ indexing
 		applicable item (if any). The coordinates of the item specific versions use virtual coordinates of `Current' as their coordinate information, wheras
 		those inherited from EV_CELL use client coordinates as for any other EV_WIDGET. The order of event execution for multiple action sequences that
 		may be triggered by a single event are as follows:
-		1. The standard inherited widget events are fired.
-		2. The grid item specific versions of these events are fired.
-		3. The events are fired on the item themselves.
+		1. The standard inherited widget events are fired. i.e. "grid.pointer_button_press_actions"
+			The x and y coordinate event data is relative to the upper left corner of `Current' and are not fired while
+			over the scroll bars.
+		2. The grid item specific versions of these events are fired. i.e. "grid.pointer_button_press_item_actions"
+			The x and y coordinate event data is relative to the upper left corner of the virtual client area of `Current' and are not fired
+			while over the scroll bars or header.
+		3. The events are fired on the item themselves. i.e. "item.pointer_button_press_actions"
+			The x and y coordinate event data is relative to the upper left corner of the item.
+
 
 		Color Handling: Colors applied to items within `Current' are determined on a three level basis.
 		The base level is `Current' whose `foreground_color' and `background_color' may never be Void.

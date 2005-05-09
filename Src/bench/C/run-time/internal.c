@@ -236,20 +236,6 @@ rt_public rt_uint_ptr ei_size(EIF_REFERENCE object)
 		return (long) EIF_Size(Dtype(object));
 }
 
-rt_public EIF_BOOLEAN ei_special(EIF_REFERENCE object)
-	/* Is `object' a special one ? */
-{
-	uint32 flags = HEADER(object)->ov_flags;
-	return EIF_TEST((flags & EO_SPEC) && !(flags & EO_TUPLE));
-}
-
-rt_public EIF_BOOLEAN eif_special_any_type (EIF_INTEGER dftype)
-	/* Does `dtype' represent a SPECIAL [ANY]? */
-{
-	uint32 dtype = Deif_bid(dftype);
-	return EIF_TEST(dtype == (uint32) egc_sp_ref);
-}
-
 rt_public EIF_BOOLEAN eif_is_special_type (EIF_INTEGER dftype)
 	/* Does `dtype' represent a SPECIAL [XX] where XX can be a basic type
 	 * or a reference type? */

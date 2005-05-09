@@ -112,13 +112,20 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	xml_radio, schema_radio, link_radio, spell_check_button: EV_RADIO_BUTTON
-	l_ev_vertical_box_1, l_ev_vertical_box_2,
-	l_ev_vertical_box_3, link_radio_box, document_tree_box: EV_VERTICAL_BOX
+	xml_radio: EV_RADIO_BUTTON
+	schema_radio: EV_RADIO_BUTTON
+	link_radio: EV_RADIO_BUTTON
+	spell_check_button: EV_RADIO_BUTTON
+	l_ev_vertical_box_1: EV_VERTICAL_BOX
+	l_ev_vertical_box_2: EV_VERTICAL_BOX
+	l_ev_vertical_box_3: EV_VERTICAL_BOX
+	link_radio_box: EV_VERTICAL_BOX
+	document_tree_box: EV_VERTICAL_BOX
 	l_ev_horizontal_box_1: EV_HORIZONTAL_BOX
 	l_ev_label_1: EV_LABEL
-	apply_bt,
-	okay_bt, cancel_bt: EV_BUTTON
+	apply_bt: EV_BUTTON
+	okay_bt: EV_BUTTON
+	cancel_bt: EV_BUTTON
 	l_ev_cell_1: EV_CELL
 
 feature {NONE} -- Implementation

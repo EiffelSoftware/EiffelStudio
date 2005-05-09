@@ -39,6 +39,9 @@ feature {NONE}-- Initialization
 			create l_ev_vertical_box_2
 			create project_radio
 			create empty_radio
+			create dir_radio
+			create custom_radio
+			create tree_container
 			create l_ev_cell_1
 			create l_ev_horizontal_box_2
 			create l_ev_cell_2
@@ -55,6 +58,9 @@ feature {NONE}-- Initialization
 			l_ev_vertical_box_1.extend (l_ev_vertical_box_2)
 			l_ev_vertical_box_2.extend (project_radio)
 			l_ev_vertical_box_2.extend (empty_radio)
+			l_ev_vertical_box_2.extend (dir_radio)
+			l_ev_vertical_box_2.extend (custom_radio)
+			l_ev_vertical_box_2.extend (tree_container)
 			l_ev_vertical_box_1.extend (l_ev_cell_1)
 			l_ev_vertical_box_1.extend (l_ev_horizontal_box_2)
 			l_ev_horizontal_box_2.extend (l_ev_cell_2)
@@ -66,7 +72,7 @@ feature {NONE}-- Initialization
 			l_ev_vertical_box_1.set_border_width (2)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_label_1)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_1)
-			l_ev_vertical_box_1.disable_item_expand (l_ev_vertical_box_2)
+			l_ev_vertical_box_1.disable_item_expand (l_ev_cell_1)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_2)
 			l_ev_label_1.set_text ("A new Table of Contents may be generated from the project directory%Nstructure, or may be created empty.")
 			l_ev_label_1.align_text_left
@@ -77,8 +83,15 @@ feature {NONE}-- Initialization
 			l_ev_label_2.align_text_left
 			l_ev_vertical_box_2.set_padding_width (5)
 			l_ev_vertical_box_2.set_border_width (2)
-			project_radio.set_text ("Make as copy of project directory structure")
-			empty_radio.set_text ("Make empty ")
+			l_ev_vertical_box_2.disable_item_expand (project_radio)
+			l_ev_vertical_box_2.disable_item_expand (empty_radio)
+			l_ev_vertical_box_2.disable_item_expand (dir_radio)
+			l_ev_vertical_box_2.disable_item_expand (custom_radio)
+			project_radio.set_text ("Make as copy of project directory structure (include everything)")
+			empty_radio.set_text ("Make empty (include nothing)")
+			dir_radio.set_text ("Make from project settings (include folders specified in project file)")
+			custom_radio.set_text ("Make from folders below:")
+			tree_container.set_minimum_height (100)
 			l_ev_horizontal_box_2.set_padding_width (5)
 			l_ev_horizontal_box_2.set_border_width (2)
 			l_ev_horizontal_box_2.disable_item_expand (okay_button)
@@ -87,8 +100,10 @@ feature {NONE}-- Initialization
 			okay_button.set_minimum_width (button_width)
 			cancel_button.set_text ("Cancel")
 			cancel_button.set_minimum_width (button_width)
-			set_maximum_width (dialog_width)
-			set_maximum_height (dialog_medium_height)
+			set_minimum_width (dialog_tall_height)
+			set_minimum_height (dialog_wide_width)
+			set_maximum_width (3000)
+			set_maximum_height (3000)
 			set_title ("New Table of Contents")
 			
 				--Connect events.
@@ -101,14 +116,22 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	project_radio, empty_radio: EV_RADIO_BUTTON
-	l_ev_vertical_box_1, l_ev_vertical_box_2: EV_VERTICAL_BOX
-	l_ev_horizontal_box_1,
+	project_radio: EV_RADIO_BUTTON
+	empty_radio: EV_RADIO_BUTTON
+	dir_radio: EV_RADIO_BUTTON
+	custom_radio: EV_RADIO_BUTTON
+	l_ev_vertical_box_1: EV_VERTICAL_BOX
+	l_ev_vertical_box_2: EV_VERTICAL_BOX
+	tree_container: EV_VERTICAL_BOX
+	l_ev_horizontal_box_1: EV_HORIZONTAL_BOX
 	l_ev_horizontal_box_2: EV_HORIZONTAL_BOX
-	l_ev_label_1, l_ev_label_2: EV_LABEL
-	okay_button, cancel_button: EV_BUTTON
-	l_ev_cell_1,
-	l_ev_cell_2, l_ev_cell_3: EV_CELL
+	l_ev_label_1: EV_LABEL
+	l_ev_label_2: EV_LABEL
+	okay_button: EV_BUTTON
+	cancel_button: EV_BUTTON
+	l_ev_cell_1: EV_CELL
+	l_ev_cell_2: EV_CELL
+	l_ev_cell_3: EV_CELL
 	toc_name_text: EV_TEXT_FIELD
 
 feature {NONE} -- Implementation

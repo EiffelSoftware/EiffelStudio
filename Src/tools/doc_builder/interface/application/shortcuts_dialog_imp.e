@@ -71,7 +71,7 @@ feature {NONE}-- Initialization
 			dummy_cancel_button.set_minimum_width (0)
 			dummy_cancel_button.set_minimum_height (0)
 			set_minimum_width (dialog_width)
-			set_minimum_height (dialog_short_height)
+			set_minimum_height (dialog_height)
 			set_title ("Shortcut Configuration")
 			
 				--Connect events.
@@ -88,9 +88,10 @@ feature -- Access
 	accelerator_list: EV_MULTI_COLUMN_LIST
 	l_ev_vertical_box_1: EV_VERTICAL_BOX
 	l_ev_horizontal_box_1: EV_HORIZONTAL_BOX
-	l_ev_label_1,
+	l_ev_label_1: EV_LABEL
 	l_ev_label_2: EV_LABEL
-	add_button, dummy_cancel_button: EV_BUTTON
+	add_button: EV_BUTTON
+	dummy_cancel_button: EV_BUTTON
 	keys_combo: EV_COMBO_BOX
 	tag_text_field: EV_TEXT_FIELD
 

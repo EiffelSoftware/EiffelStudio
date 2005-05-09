@@ -77,7 +77,7 @@ feature {NONE} -- Implementation
 		local
 			l_editor: DOCUMENT_EDITOR
 		do
-			l_editor := (create {SHARED_OBJECTS}).shared_document_editor
+			l_editor := (create {SHARED_OBJECTS}).shared_document_manager.current_editor
 			if l_editor.current_document /= Void then
 				l_editor.text_displayed.insert_string (a_code)
 			end

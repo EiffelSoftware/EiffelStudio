@@ -86,7 +86,7 @@ feature -- Commands
 		do
 			if document /= Void then
 				--document.set_text (document.widget.internal_edit_widget.text)
-				shared_document_editor.save_document
+				shared_document_manager.save_document
 				load_url (generated_document)
 			else
 				Internal_browser.refresh
@@ -223,8 +223,8 @@ feature {NONE} -- Implementation
 			l_consts: SHARED_OBJECTS
 		do
 			create l_consts
-			if  l_consts.shared_document_editor.current_document /= Void then
-				set_document (l_consts.shared_document_editor.current_document)
+			if  l_consts.shared_document_manager.current_document /= Void then
+				set_document (l_consts.shared_document_manager.current_document)
 			end			
 		end
 

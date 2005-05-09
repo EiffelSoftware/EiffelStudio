@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 			filters_list.select_actions.extend (agent filter_selected)
 			add_description_button.select_actions.extend (agent add_filter)
 			add_tag_button.select_actions.extend (agent add_filter_tag)
-			color_button.select_actions.extend (agent change_filter_color)
+			color_button.select_actions.extend (agent change_filter_color)			
 			
 			get_settings
 		end
@@ -92,9 +92,14 @@ feature {NONE} -- Commands
 				footer_file_radio.enable_select
 			else	
 				footer_generate_check.enable_select
-			end			
+			end					
 			
 			populate_filter_list
+			
+				-- Toc folders
+			create check_tree
+			tree_container.extend (check_tree)
+			create dir_tree.make_with_data (shared_project.root_directory, check_tree, shared_project.preferences.toc_folders)				
 		end
 
 	set_settings is
@@ -138,7 +143,9 @@ feature {NONE} -- Commands
 			project_preferences.set_use_header_file (header_file_radio.is_selected)
 			project_preferences.set_use_footer_file (footer_file_radio.is_selected)
 			project_preferences.set_generate_feature_nodes (generate_feature_nodes_check.is_selected)
-				
+			
+			project_preferences.set_toc_folders (selected_tree_directories)
+							
 			project_preferences.write
 			
 			if shared_project.is_valid then			
@@ -197,6 +204,10 @@ feature {NONE} -- Implementation
 			end
 		end
 	
+	check_tree: EV_CHECKABLE_TREE	
+
+	dir_tree: CHECKABLE_DIRECTORY_SELECTOR
+	
 feature {NONE} -- Initialization
 
 	initialize_schema is
@@ -223,7 +234,7 @@ feature {NONE} -- Initialization
 			l_stylesheet_file := browse_file (Void)
 			if l_stylesheet_file /= Void then			
 				Shared_document_manager.initialize_stylesheet (l_stylesheet_file)
-				css_loc_text.set_text (l_stylesheet_file)		
+				css_loc_text.set_text (l_stylesheet_file)
 				Shared_project.preferences.write
 				copy_stylesheet (Shared_constants.Application_constants.Temporary_html_directory)
 			end
@@ -405,6 +416,29 @@ feature {NONE} -- Query
 				a_button.enable_select
 			else				
 				a_button.disable_select
+			end
+		end		
+
+	selected_tree_directories: ARRAYED_LIST [STRING] is
+			-- 
+		require
+			item_checked: not check_tree.checked_items.is_empty
+		local
+			l_dir_name: STRING
+			l_checked_items: DYNAMIC_LIST [EV_TREE_NODE]
+		do
+			create Result.make (check_tree.checked_items.count)
+			l_checked_items := check_tree.checked_items
+			from
+				l_checked_items.start
+			until
+				l_checked_items.after
+			loop
+				l_dir_name ?= l_checked_items.item.data
+				if l_dir_name /= Void then
+					Result.extend (l_dir_name)
+				end
+				l_checked_items.forth
 			end
 		end		
 

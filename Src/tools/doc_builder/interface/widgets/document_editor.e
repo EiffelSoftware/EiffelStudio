@@ -38,12 +38,10 @@ feature -- Initialization
 		do
 			default_create
 			register_document ("xml", xml_class)
-			register_document ("java", java_class)
-			create header.make_with_panel (Current)
-			header.selection_actions.extend (agent on_document_change (?))
-			editor_area.pointer_button_release_actions.force_extend (agent pointer_released)
-			editor_area.pointer_button_press_actions.extend (agent pointer_pressed (?,?,?,?,?,?,?,?))		
-			editor_area.drop_actions.extend (agent pebble_dropped)
+--			register_document ("java", java_class)
+			editor_drawing_area.pointer_button_release_actions.force_extend (agent pointer_released)
+			editor_drawing_area.pointer_button_press_actions.extend (agent pointer_pressed (?,?,?,?,?,?,?,?))		
+			editor_drawing_area.drop_actions.extend (agent pebble_dropped)
 		end
 		
 	update_observers is
@@ -60,11 +58,11 @@ feature -- Initialization
 				ev_key.code
 				
 			when Key_s then
-					-- Ctrl-S (cut)
-				save_document
+					-- Ctrl-S (save)
+				shared_document_manager.save_document
 
 			when Key_f then
-					-- Ctrl-C (copy)
+					-- Ctrl-F (search)
 				open_search_dialog
 			else
 				Precursor (ev_key)
@@ -78,10 +76,6 @@ feature -- Initialization
 			cursors.set_editor_installation_dir_name (shared_constants.application_constants.cursor_resources_directory)			
 			icons.set_editor_installation_dir_name (shared_constants.application_constants.icon_resources_directory)			
 		end		
-		
-feature -- Access
-
-	header: TEXT_PANEL_HEADER
 		
 feature -- Editing		
 		
@@ -118,36 +112,7 @@ feature -- Editing
 			Result := application_window
 		end		
 
-feature -- Query
-
-	has_open_document: BOOLEAN is
-			-- 
-		do
-			Result := not header.is_empty
-		end		
-
 feature -- Commands
-	
-	load_document (a_doc: DOCUMENT) is
-			-- Load document
-		require
-			a_doc_not_void: a_doc /= Void
-		local
-			l_widget: TEXT_PANEL_HEADER_ITEM
-		do
-			create l_widget.make (a_doc.name)
-			header.open_document (l_widget)
-			a_doc.set_widget (l_widget)
-			documents.put (a_doc, header.index)
-			on_document_change (header)
-		end	
-
-	save_document is
-			-- Called by `select_actions' of `save_xml_menu_item'.
-		do
-			current_document.set_text (text)
-			current_document.save
-		end				
 		
 	update_date (a_date: INTEGER) is
 			-- 
@@ -157,11 +122,9 @@ feature -- Commands
 		
 	validate_document is
 			-- Validate current document to loaded schema
-		local
-			l_error: BOOLEAN
 		do
 			if Shared_document_manager.has_schema then 
-				if has_open_document then					
+				if Shared_document_manager.has_open_document then					
 					if not current_document.is_valid_xml (text) then
 						shared_error_reporter.show
 					elseif not current_document.is_valid_to_schema then
@@ -217,9 +180,8 @@ feature -- Commands
 	open_search_dialog is
 			-- Open the search dialog for text searching
 		do
-			if has_open_document then
---				Shared_dialogs.search_dialog.set_widget (current_widget.internal_edit_widget)
---				Shared_dialogs.search_dialog.show_relative_to_window (application_window)
+			if Shared_document_manager.has_open_document then
+				shared_search_control.search_text.set_focus
 			end			
 		end
 
@@ -244,9 +206,9 @@ feature -- Commands
 				end				
 				l_text.append ("</" + a_tag + ">")								
 			end
+			l_text := unescape_content (l_text)
 			clipboard.set_text (l_text)
-			paste
-			
+			paste			
 --			if l_selected then
 --				select_region (caret_position + (a_tag.count + 2), caret_position + (l_text.count - 1) - (a_tag.count + 3))
 --			else
@@ -262,89 +224,22 @@ feature -- Query
 			Result := clipboard.text.is_empty
 		end			
 
-feature -- Status Setting
-
-	add_tag_accelerator (a_accelerator: EV_ACCELERATOR; a_tag_text: STRING) is
-			-- Add an accelerator to Current
-		require
-			accelerator_not_void: a_accelerator /= Void
-			tag_text_not_void: a_tag_text /= Void
-		local
-			l_accelerator: EV_ACCELERATOR
-		do		
-			l_accelerator := a_accelerator
-			if application_window.accelerators.has (l_accelerator) then
-				application_window.accelerators.start
-				application_window.accelerators.search (l_accelerator)
-				if not application_window.accelerators.exhausted then					
-					l_accelerator := application_window.accelerators.item
-					l_accelerator.actions.wipe_out
-				end
-			else
-				application_window.accelerators.extend (l_accelerator)
-			end
-			l_accelerator.actions.extend (agent tag_selection (a_tag_text))
-			tag_accelerators.replace (a_tag_text, a_accelerator.key.code)
-		end		
-
 feature -- Access
 
 	current_document: DOCUMENT is
 			-- Currently open document
 		do
-			Result := documents.item (header.index)
+				-- TODO: Remove, make all call direct to manager
+			Result := shared_document_manager.current_document
 		end	
-		
-feature -- Shortcuts
-
-	tag_accelerators: HASH_TABLE [STRING, INTEGER] is
-			-- List of keyboard keys which are acceptable for tag accelerators
-			-- hashed by key code
-		local
-			l_key_constants: EV_KEY_CONSTANTS
-		once
-			create l_key_constants
-			create Result.make (10)
-			Result.compare_objects
-			Result.extend ("", l_key_constants.key_q)
-			Result.extend ("", l_key_constants.key_w)
-			Result.extend ("", l_key_constants.key_e)
-			Result.extend ("", l_key_constants.key_r)
-			Result.extend ("", l_key_constants.key_t)
-			Result.extend ("", l_key_constants.key_y)
-			Result.extend ("", l_key_constants.key_u)
-			Result.extend ("", l_key_constants.key_b)
-			Result.extend ("", l_key_constants.key_i)
-			Result.extend ("", l_key_constants.key_o)
-			Result.extend ("", l_key_constants.key_p)
-			Result.extend ("", l_key_constants.key_d)
-			Result.extend ("", l_key_constants.key_g)
-			Result.extend ("", l_key_constants.key_h)
-			Result.extend ("", l_key_constants.key_j)
-			Result.extend ("", l_key_constants.key_k)
-			Result.extend ("", l_key_constants.key_l)
-			Result.extend ("", l_key_constants.key_n)
-			Result.extend ("", l_key_constants.key_m)
-			Result.extend ("", l_key_constants.key_0)
-			Result.extend ("", l_key_constants.key_1)
-			Result.extend ("", l_key_constants.key_2)
-			Result.extend ("", l_key_constants.key_3)
-			Result.extend ("", l_key_constants.key_4)
-			Result.extend ("", l_key_constants.key_5)
-			Result.extend ("", l_key_constants.key_6)
-			Result.extend ("", l_key_constants.key_7)
-			Result.extend ("", l_key_constants.key_8)
-			Result.extend ("", l_key_constants.key_9)
-		end
-		
 
 feature {NONE} -- Implementation
 
-	documents: HASH_TABLE [DOCUMENT, INTEGER] is
-			-- Opened documents
-		once
-			create Result.make (2)
-		end		
+--	documents: HASH_TABLE [DOCUMENT, INTEGER] is
+--			-- Opened documents
+--		once
+--			create Result.make (2)
+--		end		
 
 	xml_class: DOCUMENT_CLASS is
 			--
@@ -375,6 +270,14 @@ feature {NONE} -- Implementation
 --			create Result.make ("eiffel", "e", Void)
 --			Result.set_scanner (create {EDITOR_EIFFEL_SCANNER}.make)
 --		end
+
+	unescape_content (a_content: STRING): STRING is
+			-- Content unescaped.
+		do
+			Result := a_content.twin
+			Result.replace_substring_all ("&lt;", "<")
+			Result.replace_substring_all ("&gt;", ">")
+		end
 
 feature {NONE} -- Events
 	
@@ -545,15 +448,6 @@ feature {NONE} -- Events
 				end
 				text_displayed.insert_string (l_url)
 				select_region (l_start_pos, l_end_pos)
-			end
-		end		
-
-	on_document_change (a_header: TEXT_PANEL_HEADER) is
-			-- Document was changed
-		do		
-			update_observers
-			if current_document /= Void then
-				shared_web_browser.set_document (current_document)		
 			end
 		end		
 

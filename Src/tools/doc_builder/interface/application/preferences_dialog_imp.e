@@ -116,6 +116,9 @@ feature {NONE}-- Initialization
 			create color_button
 			create l_ev_cell_2
 			create l_ev_cell_3
+			create l_ev_vertical_box_15
+			create l_ev_label_9
+			create tree_container
 			create l_ev_horizontal_box_23
 			create l_ev_cell_4
 			create apply_bt
@@ -208,6 +211,9 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_22.extend (color_button)
 			l_ev_horizontal_box_22.extend (l_ev_cell_2)
 			l_ev_vertical_box_12.extend (l_ev_cell_3)
+			l_ev_notebook_1.extend (l_ev_vertical_box_15)
+			l_ev_vertical_box_15.extend (l_ev_label_9)
+			l_ev_vertical_box_15.extend (tree_container)
 			l_ev_vertical_box_2.extend (l_ev_horizontal_box_23)
 			l_ev_horizontal_box_23.extend (l_ev_cell_4)
 			l_ev_horizontal_box_23.extend (apply_bt)
@@ -226,6 +232,7 @@ feature {NONE}-- Initialization
 			l_ev_notebook_1.set_item_text (l_ev_vertical_box_6, "Includes")
 			l_ev_notebook_1.set_item_text (l_ev_vertical_box_7, "Conversion")
 			l_ev_notebook_1.set_item_text (l_ev_vertical_box_12, "Filters")
+			l_ev_notebook_1.set_item_text (l_ev_vertical_box_15, "TOC Generation")
 			l_ev_vertical_box_3.set_padding_width (5)
 			l_ev_vertical_box_3.set_border_width (2)
 			l_ev_vertical_box_3.disable_item_expand (l_ev_horizontal_box_1)
@@ -377,6 +384,11 @@ feature {NONE}-- Initialization
 			color_label.set_minimum_height (20)
 			color_button.set_text ("Select..")
 			color_button.set_minimum_width (button_width)
+			l_ev_vertical_box_15.set_padding_width (inner_border_width)
+			l_ev_vertical_box_15.set_border_width (inner_border_width)
+			l_ev_vertical_box_15.disable_item_expand (l_ev_label_9)
+			l_ev_label_9.set_text ("When generating a table of contents include the following folders:")
+			l_ev_label_9.align_text_left
 			l_ev_horizontal_box_23.set_padding_width (5)
 			l_ev_horizontal_box_23.set_border_width (2)
 			l_ev_horizontal_box_23.disable_item_expand (apply_bt)
@@ -388,7 +400,7 @@ feature {NONE}-- Initialization
 			okay_bt.set_minimum_width (button_width)
 			cancel_bt.set_text (button_cancel_text)
 			cancel_bt.set_minimum_width (button_width)
-			set_minimum_width (dialog_width)
+			set_minimum_width (dialog_wide_width)
 			set_minimum_height (dialog_height)
 			set_title ("Project Settings")
 			
@@ -402,37 +414,98 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	header_override_check, footer_override_check, use_include_tags, header_include_check,
-	footer_include_check, html_stylesheet_check, nav_links_check, dhtml_filter_check,
+	header_override_check: EV_CHECK_BUTTON
+	footer_override_check: EV_CHECK_BUTTON
+	use_include_tags: EV_CHECK_BUTTON
+	header_include_check: EV_CHECK_BUTTON
+	footer_include_check: EV_CHECK_BUTTON
+	html_stylesheet_check: EV_CHECK_BUTTON
+	nav_links_check: EV_CHECK_BUTTON
+	dhtml_filter_check: EV_CHECK_BUTTON
 	generate_feature_nodes_check: EV_CHECK_BUTTON
 	l_ev_notebook_1: EV_NOTEBOOK
-	l_ev_horizontal_separator_1, l_ev_horizontal_separator_2,
-	l_ev_horizontal_separator_3, l_ev_horizontal_separator_4, l_ev_horizontal_separator_5,
+	l_ev_horizontal_separator_1: EV_HORIZONTAL_SEPARATOR
+	l_ev_horizontal_separator_2: EV_HORIZONTAL_SEPARATOR
+	l_ev_horizontal_separator_3: EV_HORIZONTAL_SEPARATOR
+	l_ev_horizontal_separator_4: EV_HORIZONTAL_SEPARATOR
+	l_ev_horizontal_separator_5: EV_HORIZONTAL_SEPARATOR
 	l_ev_horizontal_separator_6: EV_HORIZONTAL_SEPARATOR
-	header_file_radio, header_generate_check, footer_file_radio,
+	header_file_radio: EV_RADIO_BUTTON
+	header_generate_check: EV_RADIO_BUTTON
+	footer_file_radio: EV_RADIO_BUTTON
 	footer_generate_check: EV_RADIO_BUTTON
-	l_ev_vertical_box_1, l_ev_vertical_box_2, l_ev_vertical_box_3,
-	l_ev_vertical_box_4, l_ev_vertical_box_5, l_ev_vertical_box_6, l_ev_vertical_box_7,
-	l_ev_vertical_box_8, l_ev_vertical_box_9, l_ev_vertical_box_10, l_ev_vertical_box_11,
-	l_ev_vertical_box_12, l_ev_vertical_box_13, l_ev_vertical_box_14: EV_VERTICAL_BOX
-	l_ev_horizontal_box_1,
-	l_ev_horizontal_box_2, l_ev_horizontal_box_3, l_ev_horizontal_box_4, l_ev_horizontal_box_5,
-	l_ev_horizontal_box_6, l_ev_horizontal_box_7, l_ev_horizontal_box_8, l_ev_horizontal_box_9,
-	l_ev_horizontal_box_10, l_ev_horizontal_box_11, l_ev_horizontal_box_12, l_ev_horizontal_box_13,
-	l_ev_horizontal_box_14, l_ev_horizontal_box_15, l_ev_horizontal_box_16, l_ev_horizontal_box_17,
-	l_ev_horizontal_box_18, l_ev_horizontal_box_19, l_ev_horizontal_box_20, l_ev_horizontal_box_21,
-	l_ev_horizontal_box_22, l_ev_horizontal_box_23: EV_HORIZONTAL_BOX
-	filters_list, tags_list: EV_LIST
-	l_ev_label_1,
-	l_ev_label_2, l_ev_label_3, l_ev_label_4, l_ev_label_5, l_ev_label_6, l_ev_label_7,
-	l_ev_label_8, color_label: EV_LABEL
-	browse_schema_bt, browse_css_bt, browse_header_button,
-	browse_footer_button, add_description_button, add_tag_button, color_button, apply_bt,
-	okay_bt, cancel_bt: EV_BUTTON
+	l_ev_vertical_box_1: EV_VERTICAL_BOX
+	l_ev_vertical_box_2: EV_VERTICAL_BOX
+	l_ev_vertical_box_3: EV_VERTICAL_BOX
+	l_ev_vertical_box_4: EV_VERTICAL_BOX
+	l_ev_vertical_box_5: EV_VERTICAL_BOX
+	l_ev_vertical_box_6: EV_VERTICAL_BOX
+	l_ev_vertical_box_7: EV_VERTICAL_BOX
+	l_ev_vertical_box_8: EV_VERTICAL_BOX
+	l_ev_vertical_box_9: EV_VERTICAL_BOX
+	l_ev_vertical_box_10: EV_VERTICAL_BOX
+	l_ev_vertical_box_11: EV_VERTICAL_BOX
+	l_ev_vertical_box_12: EV_VERTICAL_BOX
+	l_ev_vertical_box_13: EV_VERTICAL_BOX
+	l_ev_vertical_box_14: EV_VERTICAL_BOX
+	l_ev_vertical_box_15: EV_VERTICAL_BOX
+	tree_container: EV_VERTICAL_BOX
+	l_ev_horizontal_box_1: EV_HORIZONTAL_BOX
+	l_ev_horizontal_box_2: EV_HORIZONTAL_BOX
+	l_ev_horizontal_box_3: EV_HORIZONTAL_BOX
+	l_ev_horizontal_box_4: EV_HORIZONTAL_BOX
+	l_ev_horizontal_box_5: EV_HORIZONTAL_BOX
+	l_ev_horizontal_box_6: EV_HORIZONTAL_BOX
+	l_ev_horizontal_box_7: EV_HORIZONTAL_BOX
+	l_ev_horizontal_box_8: EV_HORIZONTAL_BOX
+	l_ev_horizontal_box_9: EV_HORIZONTAL_BOX
+	l_ev_horizontal_box_10: EV_HORIZONTAL_BOX
+	l_ev_horizontal_box_11: EV_HORIZONTAL_BOX
+	l_ev_horizontal_box_12: EV_HORIZONTAL_BOX
+	l_ev_horizontal_box_13: EV_HORIZONTAL_BOX
+	l_ev_horizontal_box_14: EV_HORIZONTAL_BOX
+	l_ev_horizontal_box_15: EV_HORIZONTAL_BOX
+	l_ev_horizontal_box_16: EV_HORIZONTAL_BOX
+	l_ev_horizontal_box_17: EV_HORIZONTAL_BOX
+	l_ev_horizontal_box_18: EV_HORIZONTAL_BOX
+	l_ev_horizontal_box_19: EV_HORIZONTAL_BOX
+	l_ev_horizontal_box_20: EV_HORIZONTAL_BOX
+	l_ev_horizontal_box_21: EV_HORIZONTAL_BOX
+	l_ev_horizontal_box_22: EV_HORIZONTAL_BOX
+	l_ev_horizontal_box_23: EV_HORIZONTAL_BOX
+	filters_list: EV_LIST
+	tags_list: EV_LIST
+	l_ev_label_1: EV_LABEL
+	l_ev_label_2: EV_LABEL
+	l_ev_label_3: EV_LABEL
+	l_ev_label_4: EV_LABEL
+	l_ev_label_5: EV_LABEL
+	l_ev_label_6: EV_LABEL
+	l_ev_label_7: EV_LABEL
+	l_ev_label_8: EV_LABEL
+	color_label: EV_LABEL
+	l_ev_label_9: EV_LABEL
+	browse_schema_bt: EV_BUTTON
+	browse_css_bt: EV_BUTTON
+	browse_header_button: EV_BUTTON
+	browse_footer_button: EV_BUTTON
+	add_description_button: EV_BUTTON
+	add_tag_button: EV_BUTTON
+	color_button: EV_BUTTON
+	apply_bt: EV_BUTTON
+	okay_bt: EV_BUTTON
+	cancel_bt: EV_BUTTON
 	l_ev_frame_1: EV_FRAME
-	l_ev_cell_1, l_ev_cell_2, l_ev_cell_3, l_ev_cell_4: EV_CELL
-	name_text,
-	schema_loc_text, css_loc_text, header_loc_text, footer_loc_text, filter_description_text,
+	l_ev_cell_1: EV_CELL
+	l_ev_cell_2: EV_CELL
+	l_ev_cell_3: EV_CELL
+	l_ev_cell_4: EV_CELL
+	name_text: EV_TEXT_FIELD
+	schema_loc_text: EV_TEXT_FIELD
+	css_loc_text: EV_TEXT_FIELD
+	header_loc_text: EV_TEXT_FIELD
+	footer_loc_text: EV_TEXT_FIELD
+	filter_description_text: EV_TEXT_FIELD
 	filter_tag_name_text: EV_TEXT_FIELD
 
 feature {NONE} -- Implementation

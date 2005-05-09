@@ -31,6 +31,9 @@ feature {NONE} -- Initialization
 		do
 			okay_button.select_actions.extend (agent okay)
 			cancel_button.select_actions.extend (agent hide)
+			create check_tree
+			tree_container.extend (check_tree)
+			create dir_tree.make (shared_project.root_directory, check_tree)			
 		end
 		
 feature -- Display
@@ -48,6 +51,10 @@ feature -- Display
 
 feature {NONE} -- Implementation
 
+	check_tree: EV_CHECKABLE_TREE	
+
+	dir_tree: CHECKABLE_DIRECTORY_SELECTOR
+
 	okay is
 			-- Okay pressed
 		local
@@ -55,15 +62,47 @@ feature {NONE} -- Implementation
 		do
 			if not toc_name_text.text.is_empty then
 				if project_radio.is_selected then
+						-- Make from project root
 					create l_dir.make (Shared_project.root_directory)
 					Shared_toc_manager.build_toc (toc_name_text.text, l_dir)
-				else
+				elseif dir_radio.is_selected then
+						-- Make from project settings
+					create l_dir.make (shared_project.root_directory)
+					Shared_toc_manager.build_toc_sub_dirs (toc_name_text.text, l_dir, shared_project.preferences.toc_folders)
+				elseif custom_radio.is_selected then
+						-- Make from custom selections
+					create l_dir.make (Shared_project.root_directory)
+					Shared_toc_manager.build_toc_sub_dirs (toc_name_text.text, l_dir, selected_tree_directories)
+				else	
+						-- Make empty
 					Shared_toc_manager.new_toc (toc_name_text.text)
 				end
 				hide
 			end			
 		end
 		
+	selected_tree_directories: ARRAYED_LIST [STRING] is
+			-- 
+		require
+			item_checked: not check_tree.checked_items.is_empty
+		local
+			l_dir_name: STRING
+			l_checked_items: DYNAMIC_LIST [EV_TREE_NODE]
+		do
+			create Result.make (check_tree.checked_items.count)
+			l_checked_items := check_tree.checked_items
+			from
+				l_checked_items.start
+			until
+				l_checked_items.after
+			loop
+				l_dir_name ?= l_checked_items.item.data
+				if l_dir_name /= Void then
+					Result.extend (l_dir_name)
+				end
+				l_checked_items.forth
+			end
+		end	
 
 end -- class TOC_NEW_DIALOG
 

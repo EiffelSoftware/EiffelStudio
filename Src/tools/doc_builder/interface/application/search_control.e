@@ -10,16 +10,20 @@ class
 inherit
 	SEARCH_CONTROL_IMP
 
+	SHARED_OBJECTS
+		undefine
+			copy, is_equal, default_create
+		end
+
 create
-	make_with_panel
+	make
 
 feature {NONE} -- Initialization
 
-	make_with_panel (a_panel: SELECTABLE_TEXT_PANEL) is
+	make is
 			-- 
 		do
 			default_create
-			panel := a_panel
 		end		
 
 	user_initialization is
@@ -30,12 +34,16 @@ feature {NONE} -- Initialization
 			-- can be added here.
 		do
 			search_button.select_actions.extend (agent search_panel_text)
+			search_text.key_press_actions.extend (agent key_pressed)
 		end
 
 feature {NONE} -- Implementation
 
-	panel: SELECTABLE_TEXT_PANEL
-		-- Panel
+	panel: SELECTABLE_TEXT_PANEL is
+			-- Panel
+		do
+			Result := shared_document_manager.current_editor
+		end
 
 	search_panel_text is
 			-- 
@@ -43,27 +51,29 @@ feature {NONE} -- Implementation
 			l_pos, 
 			l_line: INTEGER
 			l_text: SELECTABLE_TEXT
+			l_panel: like panel
 		do
-			if not panel.text.is_empty and then not search_text.text.is_empty then
-				l_text := panel.text_displayed
+			l_panel := panel
+			if l_panel /= Void and not l_panel.text.is_empty and then not search_text.text.is_empty then
+				l_text := l_panel.text_displayed
 				l_text.search_string_from_cursor (search_text.text)
 				if l_text.successful_search then
 						-- Highlight found text	
 					l_pos := l_text.found_string_total_character_position	
 					l_line := l_text.found_string_line
-					panel.select_region (l_pos, l_pos + search_text.text.count)
+					l_panel.set_first_line_displayed (l_line, True)
+					l_panel.select_region (l_pos, l_pos + search_text.text.count)
 				end
 			end			
 		end		
---
---	start_position: INTEGER is
---			-- Position from which to start search
---		do
-----			Result := panel.cur caret_position
-----			if Result = 0 then
-----				Result := 1
-----			end
---		end
+
+	key_pressed (a_key: EV_KEY) is
+			-- Key pressed event
+		do
+			if a_key.code = (create {EV_KEY_CONSTANTS}).key_enter then
+				search_panel_text
+			end
+		end		
 
 end -- class SEARCH_CONTROL
 

@@ -90,11 +90,11 @@ feature {NONE} -- Implementation
 			inspect label_number
 			when empty_val then
 				shared_document_manager.create_document
-				l_document := shared_document_editor.current_document
+				l_document := Shared_document_manager.current_document
 				l_document.set_text (empty_tmp.content)
 			when sample_val then
 				shared_document_manager.create_document
-				l_document := shared_document_editor.current_document
+				l_document := Shared_document_manager.current_document
 				l_document.set_text (sample_tmp.content)		
 			when project_val then
 				Shared_project.create_new

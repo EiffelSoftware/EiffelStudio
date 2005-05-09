@@ -18,6 +18,7 @@ feature {NONE} -- Initialization
 			-- (due to regeneration of implementation class)
 			-- can be added here.
 		do
+			ok_button.select_actions.extend (agent destroy)
 		end
 
 feature {NONE} -- Implementation

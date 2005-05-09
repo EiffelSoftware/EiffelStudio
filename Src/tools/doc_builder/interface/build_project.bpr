@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?><Project_settings xsi="http://www.w3.org/1999/XMLSchema-instance">
 <Project_type>54818384</Project_type>
-<Project_name>&gt;</Project_name>
+<Project_name>doc_builder_interface</Project_name>
 <Project_location>D:\Src\tools\doc_builder\interface</Project_location>
 <Main_window_class_name>&gt;</Main_window_class_name>
-<Application_class_name>&gt;</Application_class_name>
+<Application_class_name>DOC_BUILDER</Application_class_name>
 <Complete_project>False</Complete_project>
 <Group_locals>False</Group_locals>
 <Generate_debugging_output>False</Generate_debugging_output>
-<Attributes_local>&gt;</Attributes_local>
+<Attributes_local>False</Attributes_local>
 <Rebuild_ace_file>False</Rebuild_ace_file>
 <Load_constants_from_file>False</Load_constants_from_file>
-<Constants_class_name>&gt;</Constants_class_name>
+<Constants_class_name>CONSTANTS</Constants_class_name>
 </Project_settings>

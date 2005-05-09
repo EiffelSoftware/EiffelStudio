@@ -181,19 +181,19 @@ feature -- Events
 	key_press_event (a_key: EV_KEY) is
 			--
 		do
-			to_implement ("EVENTS_TAB.key_press_event")
+			add_event_item_to_list ("Key_press_actions " + a_key.code.out)
 		end
 		
 	key_press_string_event (a_key: STRING) is
 			--
 		do
-			to_implement ("EVENTS_TAB.key_press_string_event")
+			add_event_item_to_list ("Key_press_string_actions " + a_key.out)
 		end
 		
 	key_release_event (a_key: EV_KEY) is
 			--
 		do
-			to_implement ("EVENTS_TAB.key_release_event")
+			add_event_item_to_list ("Key_release_actions " + a_key.out)
 		end
 		
 	focus_in_event is

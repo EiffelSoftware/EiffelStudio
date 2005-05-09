@@ -12,19 +12,7 @@ deferred class
 inherit
 	EV_CELL_I
 		rename
-			item as cell_item,
-			pointer_motion_actions as cell_pointer_motion_actions,
-			pointer_motion_actions_internal as cell_pointer_motion_actions_internal,
-			pointer_double_press_actions as cell_pointer_double_press_actions,
-			pointer_double_press_actions_internal as cell_pointer_double_press_actions_internal,
-			pointer_enter_actions as cell_pointer_enter_actions,
-			pointer_button_press_actions as cell_pointer_button_press_actions,
-			pointer_button_release_actions as cell_pointer_button_release_actions,
-			pointer_leave_actions as cell_pointer_leave_actions,
-			pointer_enter_actions_internal as cell_pointer_enter_actions_internal,
-			pointer_button_press_actions_internal as cell_pointer_button_press_actions_internal,
-			pointer_button_release_actions_internal as cell_pointer_button_release_actions_internal,
-			pointer_leave_actions_internal as cell_pointer_leave_actions_internal
+			item as cell_item
 		redefine
 			interface,
 			drop_actions
@@ -2729,7 +2717,7 @@ feature {NONE} -- Event handling
 				if pointed_item /= Void then
 					pointed_item_interface := pointed_item.interface
 				end
-				pointer_button_press_actions_internal.call ([client_x_to_virtual_x(a_x), client_y_to_virtual_y (a_y), a_button, pointed_item_interface])
+				pointer_button_press_item_actions_internal.call ([client_x_to_virtual_x(a_x), client_y_to_virtual_y (a_y), a_button, pointed_item_interface])
 			end
 
 			pointed_item := drawer.item_at_position (a_x, a_y)
@@ -2789,7 +2777,7 @@ feature {NONE} -- Event handling
 				if pointed_item /= Void then
 					pointed_item_interface := pointed_item.interface
 				end
-				pointer_motion_actions_internal.call ([client_x_to_virtual_x(a_x), client_y_to_virtual_y (a_y), pointed_item_interface])
+				pointer_motion_item_actions_internal.call ([client_x_to_virtual_x(a_x), client_y_to_virtual_y (a_y), pointed_item_interface])
 			end
 		end
 
@@ -2804,7 +2792,7 @@ feature {NONE} -- Event handling
 				if pointed_item /= Void then
 					pointed_item_interface := pointed_item.interface
 				end
-				pointer_double_press_actions_internal.call ([client_x_to_virtual_x(a_x), client_y_to_virtual_y (a_y), a_button, pointed_item_interface])
+				pointer_double_press_item_actions_internal.call ([client_x_to_virtual_x(a_x), client_y_to_virtual_y (a_y), a_button, pointed_item_interface])
 			end
 		end
 
@@ -2819,7 +2807,7 @@ feature {NONE} -- Event handling
 				if pointed_item /= Void then
 					pointed_item_interface := pointed_item.interface
 				end
-				pointer_button_release_actions_internal.call ([client_x_to_virtual_x(a_x), client_y_to_virtual_y (a_y), a_button, pointed_item_interface])
+				pointer_button_release_item_actions_internal.call ([client_x_to_virtual_x(a_x), client_y_to_virtual_y (a_y), a_button, pointed_item_interface])
 			end
 		end
 

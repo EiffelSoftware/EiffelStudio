@@ -2400,7 +2400,8 @@ feature {NONE} -- Drawing implementation
 			drawable.key_release_actions.extend (agent key_release_received (?))
 			drawable.focus_in_actions.extend (agent focus_in_received)
 			drawable.focus_out_actions.extend (agent focus_out_received)
-			drawable.resize_actions.extend (agent resize_received (?, ?, ?, ?))
+			drawable.resize_actions.extend (agent resize_received)
+			drawable.mouse_wheel_actions.extend (agent mouse_wheel_received)
 
 
 				-- Events must be connected to all widgets that comprise `Current' in order to propagate the events correctly.
@@ -3256,6 +3257,14 @@ feature {NONE} -- Event handling
 			to_implement ("EV_GRID_I.resize_received")
 		end
 
+	mouse_wheel_received (a_value: INTEGER) is
+			-- Called by `mouse_wheel_actions' of `drawable'.
+		do
+			if mouse_wheel_actions_internal /= Void and then not mouse_wheel_actions_internal.is_empty then
+				mouse_wheel_actions_internal.call ([a_value])
+			end
+		end
+		
 feature {EV_GRID_DRAWER_I} -- Implementation
 
 	row_internal (a_row: INTEGER): EV_GRID_ROW_I is

@@ -113,6 +113,9 @@ feature {NONE} -- Implementation
 					end
 					grid.row (grid.row_count).set_height ((16 + (l_ycount // 2)).min (40))
 					l_ycount := l_ycount + 1
+					if l_ycount \\ 1000 = 0 then
+						print (l_ycount.out + "%N")
+					end
 				end
 			from
 				l_xcount := 0
@@ -126,9 +129,9 @@ feature {NONE} -- Implementation
 				stop_profiling
 			end
 			create time2.make_now
-			set_status_message (((l_xcount * l_ycount).out + " Items added in : " + ((time2.fine_second - time1.fine_second).out)))
+			set_status_message (((l_xcount * l_ycount).out + " Items added in : " + ((time2.relative_duration (time1).fine_seconds_count).out)))
 			grid.pointer_double_press_actions.wipe_out
-			grid.pointer_double_press_actions.extend (agent activate_item)
+			grid.pointer_double_press_item_actions.extend (agent activate_item)
 		end
 
 	activate_item (a_x, a_y, a_button: INTEGER; a_item: EV_GRID_ITEM) is

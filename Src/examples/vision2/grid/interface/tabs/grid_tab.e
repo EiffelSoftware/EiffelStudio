@@ -34,6 +34,7 @@ feature {NONE} -- Initialization
 			l_color: EV_COLOR
 		do
 			grid.set_dynamic_content_function (agent compute_item)
+			grid.hide
 			add_color_to_combo ((create {EV_STOCK_COLORS}).red, set_background_color_combo)
 			add_color_to_combo ((create {EV_STOCK_COLORS}).green, set_background_color_combo)
 			add_color_to_combo ((create {EV_STOCK_COLORS}).blue, set_background_color_combo)
@@ -281,7 +282,7 @@ feature {NONE} -- Implementation
 			--
 		local
 			l_ycount, l_xcount: INTEGER
-			grid_label_item: EV_GRID_EDITABLE_ITEM
+			grid_label_item: EV_GRID_COMBO_ITEM -- EDITABLE_ITEM
 		do
 			from
 				l_ycount := 1
@@ -461,7 +462,7 @@ feature {NONE} -- Implementation
 			grid_label_item.set_pixmap (image5)
 			grid.row (33).set_height (100)
 			grid.column (1).set_width (200)
-			grid.pointer_motion_actions.extend (agent motion_on_grid)
+			grid.pointer_motion_item_actions.extend (agent motion_on_grid)
 			grid.row (34).clear
 			grid.row (34).set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("Show Editable Items"))
 			grid.row (34).add_subrow (grid.row (35))
@@ -494,7 +495,7 @@ feature {NONE} -- Implementation
 				grid.row (37).set_item (counter, grid_combo_item)
 				counter := counter + 1
 			end
-			grid.pointer_double_press_actions.extend (agent pointer_double_press_received_on_grid)
+			grid.pointer_double_press_item_actions.extend (agent pointer_double_press_received_on_grid)
 			current_row := grid.row (38)
 			current_row.clear
 			current_row.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("Show Font Sizes"))
@@ -1000,7 +1001,7 @@ feature {NONE} -- Implementation
 			grid.remove_column (2)
 			grid.remove_column (1)
 			grid.set_item (1, 1, create {EV_GRID_LABEL_ITEM}.make_with_text ("An item"))
-		end
+			end
 
 	clean_grid is
 		do
@@ -1135,17 +1136,17 @@ feature {NONE} -- Implementation
 		do
 			if draw_tree_check_button.is_selected then
 				grid.disable_selection_on_click
-				grid.pointer_motion_actions.wipe_out
-				grid.pointer_button_press_actions.wipe_out
-				grid.pointer_button_release_actions.wipe_out
-				grid.pointer_button_press_actions.extend (agent draw_tree_item_press)
-				grid.pointer_button_release_actions.extend (agent draw_tree_item_release)
-				grid.pointer_motion_actions.extend (agent draw_tree_item_motion)
+				grid.pointer_motion_item_actions.wipe_out
+				grid.pointer_button_press_item_actions.wipe_out
+				grid.pointer_button_release_item_actions.wipe_out
+				grid.pointer_button_press_item_actions.extend (agent draw_tree_item_press)
+				grid.pointer_button_release_item_actions.extend (agent draw_tree_item_release)
+				grid.pointer_motion_item_actions.extend (agent draw_tree_item_motion)
 			else
 				grid.enable_selection_on_click
-				grid.pointer_motion_actions.wipe_out
-				grid.pointer_button_press_actions.wipe_out
-				grid.pointer_button_release_actions.wipe_out
+				grid.pointer_motion_item_actions.wipe_out
+				grid.pointer_button_press_item_actions.wipe_out
+				grid.pointer_button_release_item_actions.wipe_out
 			end
 		end
 		
@@ -1389,7 +1390,7 @@ feature {NONE} -- Implementation
 				a_x := a_x + 1
 			end
 			grid.set_row_height (grid.column (1).width)
-			grid.pointer_double_press_actions.extend (agent pointer_double_press_received_on_grid)
+			grid.pointer_double_press_item_actions.extend (agent pointer_double_press_received_on_grid)
 			grid.resize_actions.force_extend (agent move_items)
 		end
 
@@ -1467,7 +1468,7 @@ feature {NONE} -- Implementation
 			i: INTEGER
 		do
 			grid.enable_tree
-			add_items (5, 500)
+			add_items (5, 100)--500)
 			grid.column (1).set_background_color (light_blue)
 			grid.column (2).set_background_color (light_red)
 			grid.set_background_color (light_green)
@@ -1504,13 +1505,13 @@ feature {NONE} -- Implementation
 			end
 			grid.row (7).set_background_color (stock_colors.yellow)
 			grid.row (8).set_background_color (stock_colors.yellow)
-			grid.pointer_double_press_actions.extend (agent item_double_pressed)
+			grid.pointer_double_press_item_actions.extend (agent item_double_pressed)
 		end
 
 	item_double_pressed (an_x, a_y, a_button: INTEGER; an_item: EV_GRID_ITEM) is
 			--
 		local
-			editable_item: EV_GRID_EDITABLE_ITEM
+			editable_item: EV_GRID_COMBO_ITEM
 		do
 			editable_item ?= an_item
 			if editable_item /= Void then

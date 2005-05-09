@@ -24,12 +24,12 @@ feature {NONE} -- Initialization
 			-- (due to regeneration of implementation class)
 			-- can be added here.
 		do
-			grid.pointer_motion_actions.extend (agent motion_event)
-			grid.pointer_double_press_actions.extend (agent double_press_event)
-			grid.pointer_button_press_actions.extend (agent press_event)
-			grid.pointer_button_release_actions.extend (agent release_event)
-			grid.pointer_enter_actions.extend (agent pointer_enter_event)
-			grid.pointer_leave_actions.extend (agent pointer_leave_event)
+			grid.pointer_motion_item_actions.extend (agent motion_event)
+			grid.pointer_double_press_item_actions.extend (agent double_press_event)
+			grid.pointer_button_press_item_actions.extend (agent press_event)
+			grid.pointer_button_release_item_actions.extend (agent release_event)
+			grid.pointer_enter_item_actions.extend (agent pointer_enter_event)
+			grid.pointer_leave_item_actions.extend (agent pointer_leave_event)
 			grid.mouse_wheel_actions.extend (agent mouse_wheel_event)
 			grid.key_press_actions.extend (agent key_press_event)
 			grid.key_press_string_actions.extend (agent key_press_string_event)
@@ -261,22 +261,22 @@ feature {NONE} -- Implementation
 
 	
 	highlight_items_on_motion_selected is
-			-- Called by `select_actions' of `highlight_items_on_motion'.
+			-- Called by `select_item_actions' of `highlight_items_on_motion'.
 		do
-			grid.pointer_motion_actions.wipe_out
-			grid.pointer_motion_actions.extend (agent motion_event)
+			grid.pointer_motion_item_actions.wipe_out
+			grid.pointer_motion_item_actions.extend (agent motion_event)
 			if highlight_items_on_motion.is_selected then
-				grid.pointer_motion_actions.extend (agent motion_highlight_event)
+				grid.pointer_motion_item_actions.extend (agent motion_highlight_event)
 			end
 		end
 	
 	show_events_in_items_selected is
-			-- Called by `select_actions' of `show_events_in_items'.
+			-- Called by `select_item_actions' of `show_events_in_items'.
 		do
-			grid.pointer_motion_actions.wipe_out
-			grid.pointer_motion_actions.extend (agent motion_event)
+			grid.pointer_motion_item_actions.wipe_out
+			grid.pointer_motion_item_actions.extend (agent motion_event)
 			if show_events_in_items.is_selected then
-				grid.pointer_motion_actions.extend (agent motion_event_in_item)
+				grid.pointer_motion_item_actions.extend (agent motion_event_in_item)
 			end
 		end
 		

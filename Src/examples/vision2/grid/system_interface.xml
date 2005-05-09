@@ -4410,7 +4410,7 @@
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
 <EV_GAUGE><Lower>0</Lower>
-	<Upper>100000</Upper>
+	<Upper>1000000</Upper>
 	</EV_GAUGE>
 <EV_TEXT_COMPONENT></EV_TEXT_COMPONENT>
 </item>
@@ -4438,7 +4438,7 @@
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
 <EV_GAUGE><Lower>0</Lower>
-	<Upper>100000</Upper>
+	<Upper>1000000</Upper>
 	</EV_GAUGE>
 <EV_TEXT_COMPONENT></EV_TEXT_COMPONENT>
 </item>
@@ -5224,7 +5224,7 @@
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
 <EV_GAUGE><Lower>0</Lower>
-	<Upper>100000</Upper>
+	<Upper>1000000</Upper>
 	</EV_GAUGE>
 <EV_TEXT_COMPONENT></EV_TEXT_COMPONENT>
 <Events><Event>change_actions EV_GAUGE_ACTION_SEQUENCES virtual_x_position_changed</Event>
@@ -5255,7 +5255,7 @@
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
 <EV_GAUGE><Lower>0</Lower>
-	<Upper>100000</Upper>
+	<Upper>1000000</Upper>
 	</EV_GAUGE>
 <EV_TEXT_COMPONENT></EV_TEXT_COMPONENT>
 <Events><Event>change_actions EV_GAUGE_ACTION_SEQUENCES virtual_y_position_changed</Event>

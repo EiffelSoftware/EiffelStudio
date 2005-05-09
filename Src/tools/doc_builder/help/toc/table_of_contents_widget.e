@@ -76,6 +76,7 @@ feature -- Element Change
 			node_not_void: a_node /= Void
 		local
 			l_node: EV_TREE_NODE_LIST
+			l_toc_node: TABLE_OF_CONTENTS_WIDGET_NODE
 		do
 			l_node ?= selected_item
 			if l_node /= Void then
@@ -96,6 +97,8 @@ feature -- Element Change
 			end
 			
 			l_node.extend (a_node)
+			l_toc_node ?= l_node
+			l_toc_node.node.add_node (a_node.node)
 			a_node.enable_select
 			set_modified (True)
 		end		
@@ -104,9 +107,15 @@ feature -- Element Change
 			-- Removed selected node
 		require
 			has_selected_item: selected_item /= Void
+		local
+			l_node: TABLE_OF_CONTENTS_WIDGET_NODE
 		do
-			selected_item.parent.prune (selected_item)
-			set_modified (True)
+			l_node ?= selected_item
+			if l_node /= Void then
+				l_node.parent.prune (l_node)
+				l_node.node.parent.delete_node (l_node.node.id)
+				set_modified (True)
+			end						
 		end		
 
 end -- class TABLE_OF_CONTENTS_WIDGET

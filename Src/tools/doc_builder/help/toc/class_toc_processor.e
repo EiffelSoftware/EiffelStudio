@@ -149,6 +149,7 @@ feature {NONE} -- Implementation
 				if not l_string.is_empty then					
 					create l_xml_reader.make
 					create l_parser.make
+					l_parser.set_string_mode_ascii
 					l_parser.set_callbacks (l_xml_reader)
 					l_parser.parse_from_string (l_string)
 					check

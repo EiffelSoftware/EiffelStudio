@@ -257,9 +257,11 @@ feature -- Query
 			-- Does element contain a child file node?  Not recursive.
 		local
 			l_el: like Current
+			l_index: INTEGER
 		do
 			if has_child then
 				from				
+					l_index := children.index
 					children.start
 				until
 					children.after or Result
@@ -268,6 +270,7 @@ feature -- Query
 					Result := l_el.url_is_file
 					children.forth
 				end
+				children.go_i_th (l_index)
 			end				
 		end
 		
@@ -275,9 +278,11 @@ feature -- Query
 			-- Does element contain a child index node?
 		local
 			l_el: like Current
-		do
-			if has_child then
+			l_index: INTEGER				
+		do			
+			if has_child then				
 				from 
+					l_index := children.index
 					children.start
 				until
 					children.after or Result
@@ -285,8 +290,9 @@ feature -- Query
 					l_el := children.item
 					Result := l_el.is_index
 					children.forth
-				end	
-			end			
+				end
+				children.go_i_th (l_index)
+			end					
 		end	
 		
 	has_parent: BOOLEAN is

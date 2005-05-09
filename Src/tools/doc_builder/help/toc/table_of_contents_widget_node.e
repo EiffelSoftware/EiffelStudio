@@ -23,6 +23,7 @@ inherit
 			is_equal
 		end
 
+
 create
 	make,
 	make_from_node
@@ -56,9 +57,9 @@ feature -- Creation
 			set_text (a_title)			
 			
 					-- Pick and drop
-			set_pebble (Current)
-			drop_actions.extend (agent move_node)
-			drop_actions.set_veto_pebble_function (agent can_insert_node)			
+--			set_pebble (Current)
+--			drop_actions.extend (agent move_node)
+--			drop_actions.set_veto_pebble_function (agent can_insert_or_move_node)			
 			
 					-- Gui Agents
 			pointer_double_press_actions.force_extend (agent open_file)			
@@ -108,21 +109,62 @@ feature -- Access
 
 feature -- Actions
 
-	move_node (a_node: like Current) is
-			-- Move `a_node' into Current
-		require
-			insertable: can_insert_node (a_node)
-		do
-			a_node.parent.prune (a_node)
-			extend (a_node)
-			a_node.enable_select
-			parent_widget.set_modified (True)
-		end		
+--	move_node (a_node: like Current) is
+--			-- Move `a_node' into Current
+--		require
+--			insertable: can_insert_or_move_node (a_node)
+--		do
+--			if not (a_node = Current) then
+--					-- Remove actual node from its parent
+--				a_node.node.parent.delete_node (a_node.node.id)
+--					--Remove graphical node from it's parent
+--				a_node.parent.prune (a_node)
+--					-- Add actual node to Current
+--				node.add_node (a_node.node)
+--				
+--				if not application.shift_pressed then
+--					extend (a_node)
+--				else
+--					parent.go_i_th (parent.index_of (Current, 1))
+--					parent.put_right (a_node)
+--				end
+--				
+--				a_node.enable_select
+--				parent_widget.set_modified (True)
+--			end
+--		end		
+		
+	move_node (up: BOOLEAN) is
+			-- Move `a_node'.  If up move `up' if not, move down.
+		local
+			l_index: INTEGER
+			l_parent: like parent			
+		do					
+			if up then
+				l_index := node.parent.children.index_of (node, 1)
+				if l_index = 1 and then node.parent.parent /= Void then
+					node.parent.delete_node (node.id)
+					node.parent.parent.add_node (node)
+					
+					parent.prune (Current)
+					l_parent ?= parent.parent
+					l_parent.extend (Current)
+				else											
+					node.parent.delete_node (node.id)
+					node.parent.children.put_i_th (node, l_index - 1)
+				end
+			else
+				
+			end
+			
+			Current.enable_select
+			parent_widget.set_modified (True)		
+		end	
 
-	can_insert_node (a_node: like Current): BOOLEAN is
+	can_insert_or_move_node (a_node: like Current): BOOLEAN is
 			-- Can `a_node' be added into Current?
 		do
-			Result := is_heading and then a_node /= Current
+			Result := a_node /= Current
 		end
 
 	open_file is
@@ -160,23 +202,27 @@ feature {NONE} -- Implementation
 		local
 			l_node: TABLE_OF_CONTENTS_NODE
 			l_widget_node: TABLE_OF_CONTENTS_WIDGET_NODE
-			l_is_heading: BOOLEAN
-		do
+		do			
 			create Result.make (5)
-			if node /= Void and then node.has_child then				
-				from
-					node.children.start				
-				until
-					node.children.after
-				loop
-					l_node := node.children.item
-					l_is_heading := l_node.url_is_directory or l_node.has_child
-					create l_widget_node.make_from_node (l_node)					
-					Result.extend (l_widget_node)
-					node.children.forth
-				end
+			if not is_currently_populating then
+				is_currently_populating := True
+				if node /= Void and then node.has_child then				
+					from
+						node.children.start				
+					until
+						node.children.after
+					loop
+						l_node := node.children.item
+						create l_widget_node.make_from_node (l_node)					
+						Result.extend (l_widget_node)
+						node.children.forth
+					end				
+				end		
 			end
+			is_currently_populating := False
 		end	
+		
+	is_currently_populating: BOOLEAN
 
 	toggle_expand (on: BOOLEAN) is
 			-- Toggle expansion
@@ -238,6 +284,11 @@ feature {NONE} -- Properties Widget
 			set_text (properties_widget.i_th (1).i_th (2))
 			file_url := properties_widget.i_th (2).i_th (2)
 		end		
+
+	application: EV_APPLICATION is 
+		once
+			create Result
+		end
 
 invariant
 	has_title: title /= Void

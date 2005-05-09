@@ -29,6 +29,7 @@ create
 	make,
 	make_empty,
 	make_from_directory,
+	make_from_directory_sub_dirs,
 	make_from_tree,
 	make_from_toc
 
@@ -50,6 +51,17 @@ feature -- Creation
 			build_from_directory (a_directory, Current)
 			build_code_toc
 		end	
+		
+	make_from_directory_sub_dirs (a_directory: DIRECTORY; include_dirs: ARRAYED_LIST [STRING]) is
+			-- Make with `a_directory' as top node.  During generation use only files in include dirs
+		require
+			has_root: a_directory /= Void
+			has_include_dirs: include_dirs /= Void
+			include_dirs_valid: not include_dirs.is_empty
+		do
+			make_empty
+			build_from_directory_sub_dirs (a_directory, include_dirs, Current)
+		end
 		
 	make_from_tree (a_tree: EV_TREE) is
 			-- Initialize based on structure of `a_toc'
@@ -260,6 +272,68 @@ feature {NONE} -- Initialization
 								sort_excluded.extend (l_node.id)
 							else
 								build_from_directory (l_dir, l_node)
+							end
+						end			
+					end				
+				end
+				cnt := cnt + 1
+			end			
+		end
+
+	build_from_directory_sub_dirs (root_dir: DIRECTORY; include_dirs: ARRAYED_LIST [STRING]; a_parent: TABLE_OF_CONTENTS_NODE) is
+			-- Starting from `root_dir' build a TOC that contains nodes for
+			-- files recursively from `root_dir' and which are in `include_dirs'.
+		require
+			dir_not_void: root_dir /= Void
+			parent_not_void: a_parent /= Void
+		local
+			l_node: TABLE_OF_CONTENTS_NODE
+			l_dir: DIRECTORY
+			cnt, l_id, l_dir_cnt: INTEGER
+			l_item, l_extension: STRING
+			l_url: FILE_NAME
+			l_make_node: BOOLEAN
+		do			
+			from
+				cnt := 0
+				root_dir.open_read
+				root_dir.start
+				l_dir_cnt := root_dir.count
+			until
+				cnt = l_dir_cnt
+			loop
+				root_dir.readentry
+				l_item := root_dir.lastentry						
+				if l_item /= Void and then not l_item.is_equal (".") and then not l_item.is_equal ("..") then 
+							-- Make url from name of directory entry
+					create l_url.make_from_string (root_dir.name)					
+					l_url.extend (l_item)
+					create l_dir.make (l_url.string)
+					l_make_node := l_dir.exists and then is_parent_dir_include_dir (l_dir, include_dirs)
+					
+					if not l_make_node then
+						l_extension := l_item.substring (l_item.last_index_of ('.', l_item.count) + 1, l_item.count)
+						if l_extension /= Void then
+							l_extension.to_lower
+							l_make_node := file_types.has (l_extension) and then file_in_dir (root_dir.name, include_dirs)
+						end
+					end
+					
+					if l_make_node then									
+					
+								-- Create new node and append to `a_parent'
+						l_id := next_id
+						create l_node.make (l_id, a_parent, l_url.string, l_item)
+						a_parent.add_node (l_node)
+						
+								-- Check if new current item is a folder and if so process children
+						if l_dir.exists then
+							if Manager.Shared_constants.Application_constants.Code_directories.has (l_dir.name.string) then
+									-- This is a marked code directory.  Therefore do not include it.
+								code_nodes.extend (l_node, l_dir.name.string)
+								sort_excluded.extend (l_node.id)
+							else
+								build_from_directory_sub_dirs (l_dir, include_dirs, l_node)
 							end
 						end			
 					end				
@@ -486,6 +560,42 @@ feature {NONE} -- Implementation
 		do
 			create l_xml.make_from_toc (Current, name)			 
 		end
+		
+	is_parent_dir_include_dir (a_dir: DIRECTORY; include_dirs: ARRAYED_LIST [STRING]): BOOLEAN is
+			-- Is a_dir a parent of, or equal to, any of include_dirs?
+		local
+			l_dir,
+			l_dir2: STRING
+		do
+			from
+				include_dirs.start
+				l_dir2 := a_dir.name
+				l_dir2.replace_substring_all ("\", "/")
+			until
+				include_dirs.after or Result
+			loop		
+				l_dir := include_dirs.item
+				l_dir.replace_substring_all ("\", "/")
+				Result := l_dir.substring (1, l_dir2.count).is_equal (l_dir2)
+				include_dirs.forth
+			end
+		end
+		
+	file_in_dir (a_path: STRING; include_dirs: ARRAYED_LIST [STRING]): BOOLEAN is
+			-- Is a_path equal to ora sub path of any of include_dirs?
+		local
+			path_count: INTEGER
+		do
+			from
+				path_count := a_path.count
+				include_dirs.start
+			until
+				include_dirs.after or Result
+			loop		
+				Result := (path_count >= include_dirs.item.count) and then include_dirs.item.substring (1, path_count).is_equal (a_path)
+				include_dirs.forth
+			end
+		end
 
 feature {NONE} -- Sorting
 
@@ -655,7 +765,7 @@ feature {NONE} -- Sorting
 							l_children_clone.extend (l_child)
 						end
 						
-						a_node.children.forth
+						a_node.children.forth						
 					end
 						-- Replace the old children with the new sorted ones
 					a_node.set_children (l_children_clone)
@@ -777,6 +887,7 @@ feature {NONE} -- Sorting
 			l_temp_hash: HASH_TABLE [TABLE_OF_CONTENTS_NODE, STRING]
 			l_doc: DOCUMENT
 			l_filtered_doc: FILTERED_DOCUMENT
+			l_cnt: INTEGER
 		do
 			if a_node /= Void and then a_node.has_child and then not Sort_excluded.has (a_node.id) then								
 						-- Extract name information from sub-nodes
@@ -787,7 +898,8 @@ feature {NONE} -- Sorting
 					create l_temp_hash.make (l_children.count)
 					l_temp_hash.compare_objects
 					l_children.start
-				until
+					l_cnt := 1
+				until 
 					l_children.after
 				loop
 					l_node ?= l_children.item
@@ -803,7 +915,7 @@ feature {NONE} -- Sorting
 								end																															
 							end
 						end						
-					end							
+					end	
 					
 					if l_name = Void then						
 						if l_node.is_index then	
@@ -816,14 +928,24 @@ feature {NONE} -- Sorting
 						end				
 					end
 					
-					l_sorted_list.extend (l_name)
-					l_temp_hash.extend (l_node, l_name)
+					check
+						name_not_void: l_name /= Void
+					end
+					
+					if not l_temp_hash.has (l_name) then		
+						check
+							node_not_void: l_node /= Void
+						end
+						l_sorted_list.extend (l_name + l_cnt.out)
+						l_temp_hash.extend (l_node, l_name + l_cnt.out)	
+					end
 					l_children.forth
 					
 							-- Process sub node if there are any
 					if l_node.has_child then
 						sort_node_alphabetically (l_node)
 					end	
+					l_cnt := l_cnt + 1
 				end
 										-- Sort the extracted names in the list alphabetically
 				l_sorted_list.sort
@@ -835,6 +957,9 @@ feature {NONE} -- Sorting
 					l_sorted_list.after
 				loop
 					l_node ?= l_temp_hash.item (l_sorted_list.item)
+					check
+						not_not_void: l_node /= Void
+					end
 					l_sorted_node_list.extend (l_node)
 					l_sorted_list.forth
 				end
@@ -913,6 +1038,7 @@ feature {NONE} -- Sorting
 		local
 			l_ids,
 			l_removable: ARRAYED_LIST [INTEGER]
+			l_item: TABLE_OF_CONTENTS_NODE
 		do
 			if a_node.has_child then
 				create l_ids.make (a_node.children.count)
@@ -921,18 +1047,21 @@ feature {NONE} -- Sorting
 				until
 					a_node.children.after
 				loop					
-					if a_node.children.item.has_child then
-						remove_duplicate_nodes (a_node.children.item)
-					end
-					
-					if l_ids.has (a_node.children.item.id) then
-						if l_removable = Void then
-							create l_removable.make (1)							
+					l_item := a_node.children.item
+					if l_item /=  Void then
+						if l_item.has_child then
+							remove_duplicate_nodes (l_item)
 						end
-						l_removable.extend (a_node.children.item.id)
-					else
-						l_ids.extend (a_node.children.item.id)
-					end					
+					
+						if l_ids.has (l_item.id) then
+							if l_removable = Void then
+								create l_removable.make (1)							
+							end
+							l_removable.extend (l_item.id)
+						else
+							l_ids.extend (l_item.id)
+						end		
+					end
 					a_node.children.forth
 				end
 				

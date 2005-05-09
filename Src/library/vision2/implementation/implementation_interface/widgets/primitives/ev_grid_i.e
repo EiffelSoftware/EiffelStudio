@@ -3112,6 +3112,9 @@ feature {NONE} -- Event handling
 			sel_items: like selected_items
 			items_spanning: ARRAYED_LIST [INTEGER]
 		do
+			if key_press_actions_internal /= Void and then not key_press_actions_internal.is_empty then
+				key_press_actions_internal.call ([a_key])
+			end
 				-- Handle the selection events
 			sel_items := selected_items
 					-- We always want to find an item above or below for row selection
@@ -3222,13 +3225,17 @@ feature {NONE} -- Event handling
 	key_press_string_received (a_keystring: STRING) is
 			-- Called by `key_press_string_actions' of `drawable'.
 		do
-			to_implement ("EV_GRID_I.key_press_string_received")
+			if key_press_string_actions_internal /= Void and then not key_press_string_actions_internal.is_empty then
+				key_press_string_actions_internal.call ([a_keystring])
+			end
 		end
 
 	key_release_received (a_key: EV_KEY) is
 			-- Called by `key_release_actions' of `drawable'.
 		do
-			to_implement ("EV_GRID_I.key_release_received")
+			if key_release_actions_internal /= Void and then not key_release_actions_internal.is_empty then
+				key_release_actions_internal.call ([a_key])
+			end
 		end
 
 	focus_in_received is

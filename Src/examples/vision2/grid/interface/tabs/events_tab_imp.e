@@ -31,24 +31,41 @@ feature {NONE}-- Initialization
 			initialize_constants
 			
 				-- Create all widgets.
+			create no_events_button
+			create enable_event_tracking
 			create event_list
 			create l_ev_table_1
 			create highlight_items_on_motion
 			create show_events_in_items
 			
 				-- Build_widget_structure.
+			extend (no_events_button)
+			extend (enable_event_tracking)
 			extend (event_list)
 			extend (l_ev_table_1)
 			
+			no_events_button.set_text ("No Event Connection")
+			enable_event_tracking.set_text ("Enable Event Tracking")
+			event_list.disable_sensitive
 			l_ev_table_1.resize (1, 2)
+			l_ev_table_1.set_row_spacing (box_padding)
+			l_ev_table_1.set_column_spacing (box_padding)
 				-- Insert and position all children of `l_ev_table_1'.
 			l_ev_table_1.put_at_position (highlight_items_on_motion, 1, 1, 1, 1)
 			l_ev_table_1.put_at_position (show_events_in_items, 1, 2, 1, 1)
-			highlight_items_on_motion.set_text ("Highlight items on Motion ")
-			show_events_in_items.set_text ("Show events in Items")
+			l_ev_table_1.merge_radio_button_groups (Current)
+			highlight_items_on_motion.set_text ("Highlight Items on Motion")
+			show_events_in_items.set_text ("Show Events in Items")
+			set_padding_width (box_padding)
+			set_border_width (box_padding)
+			disable_item_expand (no_events_button)
+			disable_item_expand (enable_event_tracking)
 			disable_item_expand (l_ev_table_1)
+			merge_radio_button_groups (l_ev_table_1)
 			
 				--Connect events.
+			no_events_button.select_actions.extend (agent no_events_button_selected)
+			enable_event_tracking.select_actions.extend (agent enable_event_tracking_selected)
 			highlight_items_on_motion.select_actions.extend (agent highlight_items_on_motion_selected)
 			show_events_in_items.select_actions.extend (agent show_events_in_items_selected)
 				-- Close the application when an interface close
@@ -60,7 +77,7 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	highlight_items_on_motion, show_events_in_items: EV_CHECK_BUTTON
+	no_events_button, enable_event_tracking, highlight_items_on_motion, show_events_in_items: EV_RADIO_BUTTON
 	event_list: EV_LIST
 
 feature {NONE} -- Implementation
@@ -79,6 +96,16 @@ feature {NONE} -- Implementation
 	
 	user_initialization is
 			-- Feature for custom initialization, called at end of `initialize'.
+		deferred
+		end
+	
+	no_events_button_selected is
+			-- Called by `select_actions' of `no_events_button'.
+		deferred
+		end
+	
+	enable_event_tracking_selected is
+			-- Called by `select_actions' of `enable_event_tracking'.
 		deferred
 		end
 	

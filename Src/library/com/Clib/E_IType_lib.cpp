@@ -6,7 +6,7 @@
 //  File:   E_ITypeLib.cpp
 //
 //  Contents:   ITypeLib interface implementation class.
-//        
+//
 //--------------------------------------------------------------------------
 
 #include "E_ITypeLib.h"
@@ -100,7 +100,7 @@ EIF_REFERENCE E_IType_Lib::ccom_find_name (OLECHAR * szName, EIF_INTEGER count)
   for (i = 0; i < cFound; i++)
   {
     eif_put_member_ids (eif_access (Result), (EIF_INTEGER)rgMemId [i], i + 1);
-    
+
     type_info = eif_create (type_id_type_info);
     eif_type_info_make (eif_access (type_info), ppTInfo [i]);
     eif_put_type_info (eif_access (Result), eif_access (type_info), i + 1);
@@ -148,28 +148,27 @@ EIF_REFERENCE E_IType_Lib::ccom_get_documentation (EIF_INTEGER index)
     SysFreeString (BstrName);
     BstrName = NULL;
   }
-  
+
   doc_string = bstr_to_eif_obj (BstrDocString);
   if (BstrDocString != NULL)
   {
     SysFreeString (BstrDocString);
     BstrDocString = NULL;
   }
-  
+
   help_file = bstr_to_eif_obj (BstrHelpFile);
   if (BstrHelpFile != NULL)
   {
     SysFreeString (BstrHelpFile);
     BstrHelpFile = NULL;
   }
-  
+
   eif_doc_id = eif_type_id ("ECOM_DOCUMENTATION");
   put_name = eif_proc ("set_name", eif_doc_id);
   put_doc_string = eif_proc ("set_doc_string", eif_doc_id);
   put_help_file = eif_proc ("set_help_file", eif_doc_id);
   put_context = eif_proc ("set_context_id", eif_doc_id);
 
-  nstcall = 0;
   Result = eif_create (eif_doc_id);
   put_name (eif_access (Result), eif_access (name));
   put_doc_string (eif_access (Result), eif_access (doc_string));
@@ -226,7 +225,7 @@ ITypeInfo * E_IType_Lib::ccom_get_type_info (int index)
 {
   HRESULT hr = 0;
   ITypeInfo * p_type_info = NULL;
-  
+
   hr = pTypeLib->GetTypeInfo (index, &p_type_info);
   if (hr != S_OK)
   {
@@ -252,7 +251,7 @@ ITypeInfo * E_IType_Lib::ccom_get_type_info_of_guid (EIF_POINTER a_guid)
   ITypeInfo * p_type_info = NULL;
   GUID * guid = NULL;
   guid = (GUID *)a_guid;
-  
+
   hr = pTypeLib->GetTypeInfoOfGuid (*guid, &p_type_info);
   if (hr != S_OK)
   {
@@ -280,12 +279,12 @@ EIF_INTEGER E_IType_Lib::ccom_get_type_info_type (int index)
 
 EIF_BOOLEAN E_IType_Lib::ccom_is_name (OLECHAR * szName)
 
-// Indicates whether a passed-in string contains name of type 
+// Indicates whether a passed-in string contains name of type
 // or member described in library.
 {
   HRESULT hr;
   BOOL local_b;
-  
+
   hr = pTypeLib->IsName (szName, 0, &local_b);
   if (hr != S_OK)
   {
@@ -302,13 +301,13 @@ void E_IType_Lib::ccom_release_tlib_attr (TLIBATTR * p_tlib_attr)
 
 // Releases specified TLIBATTR.
 {
-  
+
   //pTypeLib->ReleaseTLibAttr (p_tlib_attr);
-  
+
   // Causes random crash.
   // Access violation in oleaut32.dll or ntdll.dll
   //structure is overwritten and freed (?) before.
-  
+
 };
 //-----------------------------------------------------------------
 

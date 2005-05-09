@@ -121,7 +121,7 @@ feature -- Event handling
 			result_not_void: Result /= Void
 		end
 		
-	pointer_motion_actions: ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, EV_GRID_ITEM]] is
+	pointer_motion_item_actions: ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, EV_GRID_ITEM]] is
 			-- Actions to be performed when a screen pointer moves over a grid.
 			-- Arguments (with names for clarity):
 			--
@@ -129,10 +129,10 @@ feature -- Event handling
 			-- y_pos: INTEGER -- The y position of the motion in grid virtual coordinates.
 			-- item: EV_GRID_ITEM -- If the motion occurred above an item, this is the pointed item, otherwise argument is set to `Void'.
 		do
-			if pointer_motion_actions_internal = Void then
-				create pointer_motion_actions_internal
+			if pointer_motion_item_actions_internal = Void then
+				create pointer_motion_item_actions_internal
 			end
-			Result := pointer_motion_actions_internal
+			Result := pointer_motion_item_actions_internal
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -151,7 +151,7 @@ feature -- Event handling
 			Result := item_activate_actions_internal
 		end
 		
-	pointer_button_press_actions: ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, INTEGER, EV_GRID_ITEM]] is
+	pointer_button_press_item_actions: ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, INTEGER, EV_GRID_ITEM]] is
 			-- Actions to be performed when a pointer press event is received by a grid.
 			-- Arguments (with names for clarity):
 			--
@@ -160,15 +160,15 @@ feature -- Event handling
 			-- a_button: INTEGER -- The index of the pressed button.
 			-- item: EV_GRID_ITEM -- If the press occurred above an item, this is the pointed item, otherwise argument is set to `Void'.
 		do
-			if pointer_button_press_actions_internal = Void then
-				create pointer_button_press_actions_internal
+			if pointer_button_press_item_actions_internal = Void then
+				create pointer_button_press_item_actions_internal
 			end
-			Result := pointer_button_press_actions_internal
+			Result := pointer_button_press_item_actions_internal
 		ensure
 			result_not_void: Result /= Void
 		end
 		
-	pointer_double_press_actions: ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, INTEGER, EV_GRID_ITEM]] is
+	pointer_double_press_item_actions: ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, INTEGER, EV_GRID_ITEM]] is
 			-- Actions to be performed when a pointer double press event is received by a grid.
 			-- Arguments (with names for clarity):
 			--
@@ -177,15 +177,15 @@ feature -- Event handling
 			-- a_button: INTEGER -- The index of the pressed button.
 			-- item: EV_GRID_ITEM -- If the double press occurred above an item, this is the pointed item, otherwise argument is set to `Void'.
 		do
-			if pointer_double_press_actions_internal = Void then
-				create pointer_double_press_actions_internal
+			if pointer_double_press_item_actions_internal = Void then
+				create pointer_double_press_item_actions_internal
 			end
-			Result := pointer_double_press_actions_internal
+			Result := pointer_double_press_item_actions_internal
 		ensure
 			result_not_void: Result /= Void
 		end
 		
-	pointer_button_release_actions: ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, INTEGER, EV_GRID_ITEM]] is
+	pointer_button_release_item_actions: ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, INTEGER, EV_GRID_ITEM]] is
 			-- Actions to be performed when a pointer release event is received by a grid.
 			-- Arguments (with names for clarity):
 			--
@@ -194,15 +194,15 @@ feature -- Event handling
 			-- a_button: INTEGER -- The index of the released button.
 			-- item: EV_GRID_ITEM -- If the release occurred above an item, this is the pointed item, otherwise argument is set to `Void'.
 		do
-			if pointer_button_release_actions_internal = Void then
-				create pointer_button_release_actions_internal
+			if pointer_button_release_item_actions_internal = Void then
+				create pointer_button_release_item_actions_internal
 			end
-			Result := pointer_button_release_actions_internal
+			Result := pointer_button_release_item_actions_internal
 		ensure
 			result_not_void: Result /= Void
 		end
 		
-	pointer_enter_actions: ACTION_SEQUENCE [TUPLE [BOOLEAN, EV_GRID_ITEM]] is
+	pointer_enter_item_actions: ACTION_SEQUENCE [TUPLE [BOOLEAN, EV_GRID_ITEM]] is
 			-- Actions to be performed when a pointer enter event is received by a grid or grid item
 			-- Arguments (with names for clarity):
 			--
@@ -213,15 +213,15 @@ feature -- Event handling
 			-- in the case where the pointer enters a grid at a location where there
 			-- is an item contained.
 		do
-			if pointer_enter_actions_internal = Void then
-				create pointer_enter_actions_internal
+			if pointer_enter_item_actions_internal = Void then
+				create pointer_enter_item_actions_internal
 			end
-			Result := pointer_enter_actions_internal
+			Result := pointer_enter_item_actions_internal
 		ensure
 			result_not_void: Result /= Void
 		end
 		
-	pointer_leave_actions: ACTION_SEQUENCE [TUPLE [BOOLEAN, EV_GRID_ITEM]] is
+	pointer_leave_item_actions: ACTION_SEQUENCE [TUPLE [BOOLEAN, EV_GRID_ITEM]] is
 			-- Actions to be performed when a pointer leave event is received by a grid or grid item
 			-- Arguments (with names for clarity):
 			--
@@ -231,10 +231,10 @@ feature -- Event handling
 			-- Note that `on_grid' may be set to `True' and `item' may be non-Void
 			-- in the case where the pointer leaves a grid from a location where there.
 		do
-			if pointer_leave_actions_internal = Void then
-				create pointer_leave_actions_internal
+			if pointer_leave_item_actions_internal = Void then
+				create pointer_leave_item_actions_internal
 			end
-			Result := pointer_leave_actions_internal
+			Result := pointer_leave_item_actions_internal
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -294,23 +294,23 @@ feature {EV_ANY_I} -- Implementation
 	column_deselect_actions_internal: ACTION_SEQUENCE [TUPLE [EV_GRID_COLUMN]]
 			-- Implementation of once per object `column_deselect_actions'.
 			
-	pointer_motion_actions_internal: ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, EV_GRID_ITEM]]
+	pointer_motion_item_actions_internal: ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, EV_GRID_ITEM]]
 			-- Implementation of once per object `motion_actions_internal'.
 			
-	pointer_double_press_actions_internal: ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, INTEGER, EV_GRID_ITEM]]
+	pointer_double_press_item_actions_internal: ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, INTEGER, EV_GRID_ITEM]]
 			-- Implementation of once per object `double_press_actions_internal'.
 		
-	pointer_leave_actions_internal: ACTION_SEQUENCE [TUPLE [BOOLEAN, EV_GRID_ITEM]]	
-			-- Implementation of once per object `pointer_leave_actions_internal'.
+	pointer_leave_item_actions_internal: ACTION_SEQUENCE [TUPLE [BOOLEAN, EV_GRID_ITEM]]	
+			-- Implementation of once per object `pointer_leave_item_actions_internal'.
 	
-	pointer_enter_actions_internal: ACTION_SEQUENCE [TUPLE [BOOLEAN, EV_GRID_ITEM]]	
-			-- Implementation of once per object `pointer_enter_actions_internal'.
+	pointer_enter_item_actions_internal: ACTION_SEQUENCE [TUPLE [BOOLEAN, EV_GRID_ITEM]]	
+			-- Implementation of once per object `pointer_enter_item_actions_internal'.
 		
-	pointer_button_press_actions_internal: ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, INTEGER, EV_GRID_ITEM]]
-			-- Implementation of once per object `pointer_button_press_actions_internal'.
+	pointer_button_press_item_actions_internal: ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, INTEGER, EV_GRID_ITEM]]
+			-- Implementation of once per object `pointer_button_press_item_actions_internal'.
 		
-	pointer_button_release_actions_internal: ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, INTEGER, EV_GRID_ITEM]]
-			-- Implementation of once per object `pointer_button_release_actions_internal'.
+	pointer_button_release_item_actions_internal: ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, INTEGER, EV_GRID_ITEM]]
+			-- Implementation of once per object `pointer_button_release_item_actions_internal'.
 			
 	row_expand_actions_internal: EV_GRID_ROW_ACTION_SEQUENCE
 			-- Implementation of once per object `row_expand_actions_internal'.

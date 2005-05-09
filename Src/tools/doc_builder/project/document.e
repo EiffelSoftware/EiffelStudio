@@ -258,9 +258,14 @@ feature {NONE} -- Implementation
 			persisted: is_persisted
 		do			
 			file.open_read
-			file.read_stream (file.count)
-			saved_text := file.last_string
-			set_text (file.last_string)
+			if not file.is_empty then
+				file.read_stream (file.count)
+				saved_text := file.last_string
+				set_text (saved_text)
+			else
+				saved_text := ""
+				set_text (saved_text)
+			end					
 			file.close			
 		end
 
@@ -298,7 +303,7 @@ feature {NONE} -- Implementation
 					text.append_character ('%N')
 				end
 				file.putstring (text)
-				shared_document_editor.update_date (file.date)
+				Shared_document_manager.current_editor.update_date (file.date)
 				file.flush
 				file.close
 				saved_text := text

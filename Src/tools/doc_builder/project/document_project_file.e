@@ -45,6 +45,7 @@ feature -- Initialization
 			generate_dhtml_filter := True
 			process_html_stylesheet := True
 			generate_feature_nodes := True
+			toc_folders.wipe_out
 		end			
 
 feature -- Access
@@ -174,6 +175,7 @@ feature -- Basic operations
 			
 			write_filters (l_root)
 			write_shortcuts (l_root)
+			write_toc_folders (l_root)
 				
 			l_text := pretty_xml (document_text (document))
 			create l_file.make_open_write (project.file.name)
@@ -252,6 +254,36 @@ feature -- Basic operations
 			end
 		end
 		
+	write_toc_folders (root: XM_ELEMENT) is
+			-- Write toc folder preferences to disk
+		local
+			l_element,
+			l_child: XM_ELEMENT
+			l_ns: XM_NAMESPACE
+		do			
+			create l_ns.make_default			
+			if not toc_folders.is_empty then
+					
+					-- Write '<toc_folders>'
+				create l_element.make (root, "toc_folders", l_ns)
+				root.put_last (l_element)
+				
+				from
+					toc_folders.start
+				until
+					toc_folders.after
+				loop					
+					if toc_folders.item /= Void then
+							-- Write '<folders>'
+						create l_child.make (l_element, toc_folder_tag, l_ns)
+						l_child.put_first (create {XM_CHARACTER_DATA}.make (l_child, toc_folders.item))
+						l_element.put_last (l_child)						
+					end
+					toc_folders.forth
+				end				
+			end
+		end	
+	
 	write_shortcuts (root: XM_ELEMENT) is
 			-- Write shortcut preferences to disk
 		local
@@ -261,7 +293,7 @@ feature -- Basic operations
 			l_accelerators: HASH_TABLE [STRING, INTEGER]
 		do
 			create l_ns.make_default
-			l_accelerators := project.shared_document_editor.tag_accelerators
+			l_accelerators := project.application_window.tag_accelerators
 			from
 				l_accelerators.start
 			until
@@ -324,6 +356,13 @@ feature -- Access
 	
 	generate_dhtml_filter: BOOLEAN
 			-- Should DHTML filter combo be generated for web based outputting?
+	
+	toc_folders: ARRAYED_LIST [STRING] is
+			-- Toc folders
+		once
+			create Result.make (1)
+			Result.comparE_objects
+		end
 	
 feature {PREFERENCES_DIALOG} -- Status Setting	
 	
@@ -433,6 +472,15 @@ feature {PREFERENCES_DIALOG} -- Status Setting
 			flag_set: generate_feature_nodes = a_flag
 		end	
 	
+	set_toc_folders (a_folder_list: ARRAYED_LIST [STRING]) is
+			-- Add a toc folder
+		require
+			folder_not_void: a_folder_list /= Void
+		do
+			toc_folders.wipe_out
+			toc_folders.append (a_folder_list)
+		end		
+	
 feature {NONE} -- Implementation
 
 	process_element (e: XM_ELEMENT) is
@@ -443,8 +491,9 @@ feature {NONE} -- Implementation
 			l_elements: DS_LIST [XM_ELEMENT]
 			l_value: STRING			
 		do			
-			if e.text /= Void then				
-				l_value :=  unescaped_string (e.text)	
+			if e.text /= Void then
+--				l_value :=  unescaped_string (e.text)	
+				l_value := e.text.twin
 			end
 			
 				-- Name
@@ -464,6 +513,7 @@ feature {NONE} -- Implementation
 			end
 				--Schema file
 			if e.name.is_equal (schema_file_tag) then
+				l_value := interpreted_path_data (l_value)
 				if old_root /= Void and l_value.has_substring (old_root) then
 					l_value.replace_substring_all (old_root, project.root_directory)
 				end
@@ -479,6 +529,7 @@ feature {NONE} -- Implementation
 			end			
 				-- Stylesheet file
 			if e.name.is_equal (html_stylesheet_file_tag) then
+				l_value := interpreted_path_data (l_value)
 				if old_root /= Void and l_value.has_substring (old_root) then
 					l_value.replace_substring_all (old_root, project.root_directory)
 				end
@@ -607,8 +658,12 @@ feature {NONE} -- Implementation
 				end	
 				
 				if e.name.is_equal (shortcut_value_tag) then
-					project.shared_document_editor.add_tag_accelerator (tag_shortcut, l_value)
+					project.application_window.add_tag_accelerator (tag_shortcut, l_value)
 				end				
+			end
+			
+			if e.name.is_equal (toc_folder_tag) then
+				toc_folders.extend (l_value)
 			end
 			
 				-- Process sub_elements

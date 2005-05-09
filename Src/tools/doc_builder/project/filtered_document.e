@@ -109,7 +109,7 @@ feature {NONE} -- Commands
 					filter.clear
 					create l_parser.make					
 					l_parser.set_callbacks (standard_callbacks_pipe (<<filter>>))
-					l_parser.set_string_mode_mixed
+					l_parser.set_string_mode_ascii
 					l_parser.parse_from_string (text)
 					check
 						ok_parsing: l_parser.is_correct

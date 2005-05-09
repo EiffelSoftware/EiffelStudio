@@ -22,6 +22,7 @@ feature -- Creation
 			create modified_documents.make (5)
 			modified_documents.compare_objects
 			counter := 1
+			create editor_panels.make (2)
 		end
 
 feature -- Schema	
@@ -102,7 +103,6 @@ feature -- Document Manipulation
 		do
 			create document.make_new (new_name)
 			add_document (document)
-			editor.load_document (document)
 		end		
 
 	open_document is
@@ -115,6 +115,24 @@ feature -- Document Manipulation
 			if l_open_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_open) then
 				load_document_from_file (l_open_dialog.file_name)
 			end
+		end	
+
+	close_document is
+			-- 
+		local
+			l_dlg: EV_QUESTION_DIALOG
+			l_doc_name: STRING
+		do
+			create l_dlg
+			l_dlg.set_text ("Would you like to save this document?")
+			l_dlg.show_modal_to_window (application_window)
+			if l_dlg.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_yes) then
+				save_document
+			end
+			l_doc_name ?= notebook.selected_item.data
+			documents.remove (l_doc_name)
+			notebook.prune (current_editor.widget)
+			editor_panels.remove (l_doc_name)
 		end	
 
 	load_document_from_file (a_filename: STRING) is
@@ -151,16 +169,15 @@ feature -- Document Manipulation
 		do
 			if documents.has (a_filename) then
 				document := documents.item (a_filename)
+				notebook.select_item (editor_panels.item (document.name).widget)
 			else
 				create file.make (a_filename)
 				if file /= Void and then file.exists then
 					create document.make_from_file (file)
 					add_document (document)
+					current_editor.load_text (document.text)
 				end
 			end
-			if document /= Void then
-				editor.load_document (document)
-			end		
 		end
 		
 	load_image_document (a_filename: STRING) is
@@ -168,6 +185,55 @@ feature -- Document Manipulation
 		local
 		do
 			--not implemented
+		end
+
+	save_document is
+			-- Called by `select_actions' of `save_xml_menu_item'.
+		do
+			current_document.set_text (current_editor.text)
+			current_document.save
+		end				
+		
+	save_all is
+			-- Save all opened documents
+		do
+--			from
+--				notebook.start
+--			until
+--				notebook.after
+--			loop
+--				if current_document = documents.item_for_iteration  then
+--					documents.item_for_iteration.set_text (text)
+--				end
+--				documents.item_for_iteration.save
+--				documents.forth
+--			end
+		end		
+
+	current_editor: DOCUMENT_EDITOR is
+			--
+		local
+			l_doc_name: STRING
+		do
+			if has_open_document then
+				l_doc_name ?= notebook.selected_item.data
+				if l_doc_name /= Void then
+					Result := editor_panels.item (l_doc_name)
+				end			
+			end
+		end	
+
+	current_document: DOCUMENT is
+			-- Currently open document in notebook
+		local
+			l_doc_name: STRING
+		do
+			if has_open_document then
+				l_doc_name ?= notebook.selected_item.data
+				if l_doc_name /= Void then
+					Result := documents.item (l_doc_name)
+				end
+			end
 		end
 
 feature {DOCUMENT_PROJECT, XML_TABLE_OF_CONTENTS, DOCUMENT_EDITOR, TABLE_OF_CONTENTS} -- Document Manipulation
@@ -178,11 +244,23 @@ feature {DOCUMENT_PROJECT, XML_TABLE_OF_CONTENTS, DOCUMENT_EDITOR, TABLE_OF_CONT
 			a_doc_not_void: a_doc /= Void
 		local
 			l_string: STRING
+			l_editor: DOCUMENT_EDITOR
 		do
 			if not documents.has (a_doc.name) then
 				l_string := a_doc.name
 				l_string.replace_substring_all ("\", "/")
 				documents.extend (a_doc, l_string)
+				create l_editor.make
+				l_editor.add_cursor_observer (application_window)
+				l_editor.add_edition_observer (application_window)
+				l_editor.add_selection_observer (application_window)
+				editor_panels.extend (l_editor, l_string)
+				notebook.extend (l_editor.widget)
+				notebook.set_item_text (l_editor.widget, a_doc.short_name (l_string))
+				l_editor.widget.set_data (l_string)
+				notebook.select_item (l_editor.widget)
+			else
+
 			end			
 		end
 
@@ -198,9 +276,19 @@ feature {DOCUMENT_PROJECT, XML_TABLE_OF_CONTENTS, DOCUMENT_EDITOR, TABLE_OF_CONT
 	
 feature -- Access
 
+	notebook: EV_NOTEBOOK is
+			-- 
+		once
+			Result := application_window.editor_notebook
+			Result.selection_actions.extend (agent on_document_selected)
+		end
+
 	documents: HASH_TABLE [DOCUMENT, STRING]
 			-- Loaded documents		
 			
+	editor_panels: HASH_TABLE [DOCUMENT_EDITOR, STRING]
+			-- Loaded document editor panels
+
 	synchronizer: DOCUMENT_SYNCHRONIZER is
 			-- Used to synchronize documents between views
 		once
@@ -226,6 +314,12 @@ feature -- Query
 			end
 		end	
 
+	has_open_document: BOOLEAN is
+			-- 
+		do
+			Result := not notebook.is_empty
+		end	
+
 feature -- Status Setting	
 	
 	add_modified_document (a_doc: DOCUMENT) is
@@ -236,6 +330,19 @@ feature -- Status Setting
 			if not modified_documents.has (a_doc) then
 				modified_documents.extend (a_doc)
 				has_modified := True
+			end
+		end
+
+feature -- Events
+
+	on_document_selected is
+			-- Document was changed
+		do		
+			if has_open_document then
+				application_window.set_title (current_document.name)
+				if current_document /= Void then
+					shared_web_browser.set_document (current_document)
+				end
 			end
 		end
 
@@ -253,12 +360,6 @@ feature {NONE} -- Implementation
 		once
 			Result := Application_window
 		end		
-
-	editor: DOCUMENT_EDITOR is
-			-- Editor
-		once
-			Result := Shared_document_editor
-		end
 
 	counter: INTEGER
 			-- Rolling counter for creating new documents

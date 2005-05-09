@@ -604,24 +604,30 @@ feature {NONE} -- Implementation: Deep equality
 
 				if 
 					((source_array.Rank == 1) && 
-					(source_array.Rank == target_array.Rank) &&
+					(source_array.Rank == target_array.Rank) && 
+					(source_array.Length == target_array.Length) &&
 					(source_array.GetLowerBound (0) == target_array.GetLowerBound (0)) &&
 					(source_array.GetUpperBound (0) == target_array.GetUpperBound (0)))
 				{
-					for
-						(i = source_array.GetLowerBound (0);
-						i > source_array.GetUpperBound (0);
-						i++)
-					{
-						source_attribute = source_array.GetValue (i);
-						target_attribute = target_array.GetValue (i);
+					if (source_array.Length == 0) {
+							// Nothing to compare so they are equal.
+						Result = true;
+					} else {
+						for
+							(i = source_array.GetLowerBound (0);
+							i > source_array.GetUpperBound (0);
+							i++)
+						{
+							source_attribute = source_array.GetValue (i);
+							target_attribute = target_array.GetValue (i);
 
-						Result = sub_internal_deep_equal (
-							source_attribute, target_attribute, traversed_objects);
+							Result = sub_internal_deep_equal (
+								source_attribute, target_attribute, traversed_objects);
 
-						if (!Result) {
-								// Force exit from loop as objects are not identical.
-							return Result;
+							if (!Result) {
+									// Force exit from loop as objects are not identical.
+								return Result;
+							}
 						}
 					}
 				} else {
@@ -636,12 +642,20 @@ feature {NONE} -- Implementation: Deep equality
 					source_attribute = attribute.GetValue (source);
 					target_attribute = attribute.GetValue (target);
 
-					Result = sub_internal_deep_equal (
-						source_attribute, target_attribute, traversed_objects);
+						// Do not compare the ____type field which is of type RT_TYPE.
+						// The reason is that it may fail on instances of `RT_GEN_TYPE'
+						// where `has_formal_flag' is different because it has not yet been
+						// evaluated (for example objects created via INTERNAL).
+						// FIXME: we should store a `type_id' instead in the object for which
+						// comparison will always make sense.
+					if (!(source_attribute is RT_TYPE)) {
+						Result = sub_internal_deep_equal (
+							source_attribute, target_attribute, traversed_objects);
 
-					if (!Result) {
-							// Force exit from loop as objects are not identical.
-						return Result;
+						if (!Result) {
+								// Force exit from loop as objects are not identical.
+							return Result;
+						}
 					}
 				}
 			} else {

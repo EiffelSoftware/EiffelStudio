@@ -27,7 +27,7 @@ feature -- Creation
 			default_create
 		end		
 
-feature -- Statuse Setting
+feature -- Status Setting
 
 	set_document (a_doc: DOCUMENT) is
 			-- Set `document'		

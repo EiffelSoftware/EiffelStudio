@@ -2,6 +2,15 @@ indexing
 	description: "[
 		Widget which is a combination of an EV_TREE and an EV_MULTI_COLUMN_LIST.
 
+		Event Handling: The standard set of widget events are inherited from EV_CELL with an additional set of events that are applicable to both
+		`Current' and the items contained are inherited from EV_GRID_ACTION_SEQUENCES. For example, `pointer_button_press_actions' is inherited from
+		EV_CELL, while `pointer_button_press_item_actions' is inherited from EV_GRID_ACTION_SEQUENCES and has an EV_GRID_ITEM as event data specifying the
+		applicable item (if any). The coordinates of the item specific versions use virtual coordinates of `Current' as their coordinate information, wheras
+		those inherited from EV_CELL use client coordinates as for any other EV_WIDGET. The order of event execution for multiple action sequences that
+		may be triggered by a single event are as follows:
+		1. The standard inherited widget events are fired.
+		2. The grid item specific versions of these events are fired.
+		3. The events are fired on the item themselves.
 
 		Color Handling: Colors applied to items within `Current' are determined on a three level basis.
 		The base level is `Current' whose `foreground_color' and `background_color' may never be Void.
@@ -26,13 +35,7 @@ class
 inherit
 	EV_CELL
 		rename
-			item as cell_item,
-			pointer_motion_actions as cell_pointer_motion_actions,
-			pointer_double_press_actions as cell_pointer_double_press_actions,
-			pointer_enter_actions as cell_pointer_enter_actions,
-			pointer_button_press_actions as cell_pointer_button_press_actions,
-			pointer_button_release_actions as cell_pointer_button_release_actions,
-			pointer_leave_actions as cell_pointer_leave_actions
+			item as cell_item
 		redefine
 			implementation,
 			create_implementation,

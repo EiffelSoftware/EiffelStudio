@@ -23,6 +23,8 @@ inherit
 			is_selectable
 		end
 
+	EV_GRID_ITEM_ACTION_SEQUENCES_I
+
 	HASHABLE
 
 create

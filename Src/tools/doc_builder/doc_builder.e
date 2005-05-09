@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 			thread_start: THREAD_START
 			thread: SYSTEM_THREAD
 			l_args: ARGUMENTS_PARSER
-		do	
+		do
 			debug ("trace")
 				print ("system launched%N")
 			end
@@ -62,10 +62,17 @@ feature {NONE} -- Initialization
 				default_create
 					-- create and initialize the first window.
 				prepare
-				if interface_initialized then					
+				if interface_initialized then
 					launch
-				end	
-			end
+				end
+			else
+				is_launched := False				
+				show_exception_dialog
+				shared_document_manager.save_all
+			end	
+		rescue
+			retried := True
+			retry
 		end
 
 	prepare is
@@ -143,7 +150,7 @@ feature {NONE} -- Initialization
 		do
 			create l_exceptions
 			create l_dialog
-			l_dialog.set_summary (l_exceptions.recipient_name + " in class " + l_exceptions.original_class_name)
+			l_dialog.set_summary ("There has been an unexpected error.")
 			l_dialog.set_exception_type (l_exceptions.meaning (l_exceptions.exception))
 			l_dialog.set_exception_trace (l_exceptions.exception_trace)
 			l_dialog.show_modal_to_window (interface)

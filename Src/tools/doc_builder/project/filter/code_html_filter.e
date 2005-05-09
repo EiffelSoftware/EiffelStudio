@@ -52,6 +52,7 @@ feature -- Generation
 				if not l_string.is_empty then					
 					xml_reader.make (a_file)
 					create l_parser.make
+					l_parser.set_string_mode_ascii
 					l_parser.set_callbacks (xml_reader)
 					l_parser.parse_from_string (l_string)
 					check

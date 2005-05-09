@@ -114,6 +114,7 @@ feature -- Tag
 				write := True
 				l_prev := Previous_elements.item
 				l_content := cleaned_content (a_content)
+--				l_content := a_content.twin
 					-- Headings
 				if l_prev.is_equal ("size") then
 					l_tag := ""

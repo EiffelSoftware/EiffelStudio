@@ -67,6 +67,15 @@ feature -- TOC Management
 			load_toc (loaded_toc.name)
 		end	
 		
+	build_toc_sub_dirs (a_name: STRING; a_dir: DIRECTORY; include_dirs: ARRAYED_LIST [STRING]) is
+			-- Build toc from contents of `a_dir'
+		do
+			create loaded_toc.make_from_directory_sub_dirs (a_dir, include_dirs)
+			loaded_toc.set_name (a_name)
+			add_toc (loaded_toc)
+			load_toc (loaded_toc.name)
+		end	
+		
 	load_toc (a_name: STRING) is
 			-- Load a toc from `a_name'
 		require
@@ -148,8 +157,19 @@ feature -- Node
 		do
 			if displayed_toc.selected_item /= Void then
 				displayed_toc.remove_node
-			end	
-		end		
+			end
+		end
+		
+	move_node (up: BOOLEAN) is
+			-- 
+		local
+			l_item: TABLE_OF_CONTENTS_WIDGET_NODE
+		do	
+			l_item ?= displayed_toc.selected_item
+			if l_item /= Void then
+				l_item.move_node (up)
+			end
+		end	
 		
 feature -- Commands		
 		

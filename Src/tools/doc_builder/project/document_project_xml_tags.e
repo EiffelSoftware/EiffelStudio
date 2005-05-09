@@ -65,5 +65,7 @@ feature {DOCUMENT_PROJECT_PREFERENCES} -- Access
 	shortcut_key_tag: STRING is "shortcut_key"
 	
 	shortcut_value_tag: STRING is "shortcut_value"
+	
+	toc_folder_tag: STRING is "folder"
 
 end -- class DOCUMENT_PROJECT_XML_TAGS

@@ -24,6 +24,11 @@ inherit
 			is_in_default_state
 		end
 
+	EV_GRID_ITEM_ACTION_SEQUENCES
+		redefine
+			implementation
+		end
+
 create
 	default_create
 

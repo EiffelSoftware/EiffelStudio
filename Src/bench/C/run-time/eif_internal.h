@@ -42,11 +42,15 @@ RT_LNK long ei_field_static_type_of_type(long i, EIF_INTEGER type_id);
 RT_LNK char *ei_exp_type(long i, EIF_REFERENCE object);
 RT_LNK rt_uint_ptr ei_bit_size(long i, EIF_REFERENCE object);
 RT_LNK rt_uint_ptr ei_size(EIF_REFERENCE object);
-RT_LNK EIF_BOOLEAN ei_special(EIF_REFERENCE object);
 RT_LNK void *ei_oref(long, EIF_REFERENCE);
 RT_LNK EIF_BOOLEAN eif_special_any_type (EIF_INTEGER dftype);
 RT_LNK void eif_set_dynamic_type (EIF_REFERENCE object, EIF_INTEGER dtype);
 RT_LNK EIF_BOOLEAN eif_is_special_type (EIF_INTEGER dftype);
+
+#define ei_special(obj)	(EIF_TEST(HEADER(obj)->ov_flags & (EO_SPEC | EO_TUPLE) == EO_SPEC))
+#define ei_tuple(obj)	(EIF_TEST(HEADER(obj)->ov_flags & (EO_SPEC | EO_TUPLE) == (EO_SPEC | EO_TUPLE)))
+
+#define eif_special_any_type(dftype) (EIF_TEST((uint32) Deif_bid(dftype) == (uint32) egc_sp_ref))
 
 #define	ei_offset(i,object)			(EIF_INTEGER) ((EIF_REFERENCE) ei_oref(i, (EIF_REFERENCE) (object)) - (EIF_REFERENCE) (object))
 

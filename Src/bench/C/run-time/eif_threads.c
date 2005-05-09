@@ -82,15 +82,58 @@ rt_private void load_stack_in_gc (struct stack_list *, void *);
 rt_private void remove_data_from_gc (struct stack_list *, void *);
 rt_private void eif_stack_free (void *stack);
 
+#ifdef EIF_TLS_WRAP
 /*
-doc:	<attribute name="eif_global_key" return_type="EIF_TSD_TYPE" export="public">
+doc:	<function name="eif_global_key" return_type="EIF_TSD_TYPE" export="private">
+doc:		<summary>Key used to access per thread data.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:	</function>
+*/
+rt_private EIF_TLS_DECL EIF_TSD_TYPE eif_global_key;
+/*
+doc:	<routine name="eif_global_key_get" return_type="EIF_TSD_TYPE" export="public">
+doc:		<summary>Key used to access per thread data.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:	</routine>
+*/
+rt_public EIF_TSD_TYPE eif_global_key_get (void)
+{
+	return eif_global_key;
+}
+#else
+/*
+doc:	<attribute name="eif_global_key" return_type="EIF_TSD_TYPE" export="public/private">
 doc:		<summary>Key used to access per thread data.</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None</synchronization>
 doc:	</attribute>
 */
 rt_public EIF_TLS EIF_TSD_TYPE eif_global_key;
+#endif
 
+#ifdef EIF_TLS_WRAP
+/*
+doc:	<attribute name="rt_global_key" return_type="RT_TSD_TYPE" export="private">
+doc:		<summary>Key used to access private per thread data.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:	</attribute>
+*/
+rt_private EIF_TLS_DECL RT_TSD_TYPE rt_global_key;
+/*
+doc:	<routine name="rt_global_key_get" return_type="RT_TSD_TYPE" export="shared">
+doc:		<summary>Key used to access private per thread data.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:	</routine>
+*/
+rt_shared RT_TSD_TYPE rt_global_key_get (void)
+{
+	return rt_global_key;
+}
+#else
 /*
 doc:	<attribute name="rt_global_key" return_type="RT_TSD_TYPE" export="shared">
 doc:		<summary>Key used to access private per thread data.</summary>
@@ -99,6 +142,7 @@ doc:		<synchronization>None</synchronization>
 doc:	</attribute>
 */
 rt_shared EIF_TLS RT_TSD_TYPE rt_global_key;
+#endif
 
 /*
 doc:	<attribute name="eif_thread_launch_mutex" return_type="EIF_LW_MUTEX_TYPE *" export="private">

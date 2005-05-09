@@ -255,7 +255,11 @@ typedef struct tag_rt_globals
 #	define RT_TSD_TYPE EIF_TSD_TYPE
 #endif
 
-#if defined EIF_HAS_TLS /* Thread-local storage is supported */
+#if defined EIF_TLS_WRAP /* Wrapped thread-local storage is supported */
+#	define RT_GET_CONTEXT \
+		rt_global_context_t * EIF_VOLATILE rt_globals = rt_global_key_get ();
+
+#elif defined EIF_HAS_TLS /* Thread-local storage is supported */
 #	define RT_GET_CONTEXT \
 		rt_global_context_t * EIF_VOLATILE rt_globals = rt_global_key;
 
@@ -454,7 +458,11 @@ rt_private rt_global_context_t * rt_thr_getspecific (RT_TSD_TYPE global_key) {
 		/* file.c */
 #define file_type			(rt_globals->file_type_cx)
 
+#ifdef EIF_TLS_WRAP
+RT_LNK RT_TSD_TYPE rt_global_key_get (void);
+#else
 RT_LNK EIF_TLS RT_TSD_TYPE rt_global_key;
+#endif
 
 #endif
 

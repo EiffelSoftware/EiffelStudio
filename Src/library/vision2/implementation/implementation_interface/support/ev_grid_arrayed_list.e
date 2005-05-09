@@ -39,22 +39,31 @@ feature {EV_GRID_I} -- Implementation
 		require
 			new_capacity_not_negative: new_capacity >= 0
 		local
-			temp_array: ARRAY [G]
-			l_count: INTEGER
+			i, internal_new_capacity: INTEGER
 		do
-			l_count := count
-				-- List is always 1 based so 
-			if new_capacity > l_count then
-				conservative_resize (1, new_capacity)
-				set_count (new_capacity)				
-			elseif l_count > 0 then
-					-- Shrink existing array only losing items with index greater than `new_capacity'
-				temp_array := subarray (1, new_capacity)
-				make_from_array (temp_array)
-			else
-				arrayed_list_make (new_capacity)
-				set_count (new_capacity)
+			if new_capacity > upper then
+					-- Resize by 50% to prevent the need for resizing continuously
+					-- if `new_capacity' is increased by a small number each time in a loop.
+				internal_new_capacity := new_capacity.max (upper + 1 + upper // 2)
+				conservative_resize (1, internal_new_capacity)
+			elseif new_capacity < count then
+					-- Note that we do not reduce the memory footprint, simply
+					-- remove the items and update `count'. This is for speed at the sake of
+					-- memory usage.
+
+					--Remove all items so that they can be garbage collected.
+				from	
+					i := upper
+				until
+					i = new_capacity
+				loop
+					put_i_th (Void, i)
+					i := i - 1
+				end					
 			end
+				-- Now always set the `count' to `new_capacity' although
+				-- the actual area allocated may not equal `new_capacity'.
+			set_count (new_capacity)
 		ensure
 			count_set: count = new_capacity
 		end

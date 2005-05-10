@@ -23,10 +23,15 @@ inherit
 		
 feature -- Items
 
+	items_computed: BOOLEAN
+			-- `items' already computed in this context ?
+
 	get_items (a_min, a_max: INTEGER) is
 		require
-			items /= Void
+			items_not_void: items /= Void
 		deferred
+		ensure
+			items_computed
 		end
 
 	reset_items is
@@ -36,6 +41,9 @@ feature -- Items
 			else
 				create items.make (0)
 			end
+			items_computed := False
+		ensure
+			not items_computed		
 		end
 
 feature -- Properties

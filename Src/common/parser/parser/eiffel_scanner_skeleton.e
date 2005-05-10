@@ -82,6 +82,9 @@ feature -- Access
 	token_buffer: STRING
 			-- Buffer for lexial tokens
 
+	string_position: INTEGER
+			-- Start position of a string token
+
 	verbatim_marker: STRING
 			-- Sequence of characters between " and [
 			-- in Verbatim_string_opener

@@ -421,12 +421,15 @@ feature {NONE} -- Implementation
 			a_count: INTEGER
 			a_parent_i: EV_GRID_I
 			a_internal_index: INTEGER
+			call_events: BOOLEAN
+			l_is_selected: BOOLEAN
 		do
 			from
 				i := 1
 				a_count := count
 				a_parent_i := parent_i
 				a_internal_index := internal_index
+				l_is_selected := is_selected
 			until
 				i > a_count
 			loop
@@ -440,10 +443,20 @@ feature {NONE} -- Implementation
 				end
 				i := i + 1
 			end
+				-- Call the grid column events.
+			if a_selection_state and not l_is_selected then
+				if parent_i.column_select_actions_internal /= Void then
+					parent_i.column_select_actions_internal.call ([interface])
+				end
+			elseif l_is_selected then
+				if parent_i.column_deselect_actions_internal /= Void  then
+					parent_i.column_deselect_actions_internal.call ([interface])
+				end
+			end
 			parent_i.redraw_column (Current)
 		end
 
-feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_COLUMN, EV_GRID_COLUMN_I, EV_GRID_ITEM_I} -- Implementation
+feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_COLUMN, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_ROW_I} -- Implementation
 
 	set_internal_index (a_index: INTEGER) is
 			-- Set the internal index of row

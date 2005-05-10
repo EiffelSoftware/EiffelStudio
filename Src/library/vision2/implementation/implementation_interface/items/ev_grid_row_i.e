@@ -49,6 +49,23 @@ feature {NONE} -- Initialization
 
 feature {EV_GRID_I, EV_GRID_ROW_I} -- Initialization
 
+	index_of_first_item_dirty: BOOLEAN
+		-- Should `index_of_first_item' be recalculated.
+
+	flag_index_of_first_item_dirty_if_needed (a_column_index: INTEGER) is
+			-- Flag `index_of_first_item' to be recalculated on next call if needed based on `a_column_index'.
+		require
+			a_column_index_valid: a_column_index > 0 and then a_column_index <= count + 1
+		do
+			if not index_of_first_item_dirty then
+					-- We do not want to reset if already True.
+				index_of_first_item_dirty := a_column_index <= index_of_first_item_internal  or else index_of_first_item_internal = 0
+			end
+		end
+
+	index_of_first_item_internal: INTEGER
+		-- Previous result of call to `index_of_first_item'.
+
 	internal_index: INTEGER
 			-- Index of `Current' in parent grid.
 
@@ -217,7 +234,7 @@ feature -- Access
 			-- Is objects state set to selected.
 		do
 			if parent_i /= Void then 
-				if parent_i.is_row_selection_enabled then
+				if parent_i.is_row_selection_enabled or else index_of_first_item = 0 then
 					Result := internal_is_selected
 				else
 					Result := internal_are_all_non_void_items_selected
@@ -373,29 +390,50 @@ feature -- Status report
 		ensure
 			count_not_negative: count >= 0
 		end
-		
+
 	index_of_first_item: INTEGER is
+			-- Return the index of the first non `Void' item within `Current'
+			-- or 0 if none.
+		do
+			if index_of_first_item_dirty then
+				index_of_first_item_internal := index_of_first_item_value
+				index_of_first_item_dirty := False
+			end
+			Result := index_of_first_item_internal
+		ensure
+			valid_result: Result >= 0 and Result <= count
+			value_valid: index_of_first_item_internal = index_of_first_item_value
+		end
+		
+	index_of_first_item_value: INTEGER is
 			-- Return the index of the first non `Void' item within `Current'
 			-- or 0 if none.
 		local
 			counter: INTEGER
 			current_row_list: SPECIAL [EV_GRID_ITEM_I]
-			current_row_count: INTEGER
+			current_row_list_count: INTEGER
 			a_item: EV_GRID_ITEM_I
+			column_list_area: SPECIAL [EV_GRID_COLUMN_I]
+			a_physical_index: INTEGER
+			row_count: INTEGER
 		do
-			fixme ("EV_GRID_ROW_I.index_of_first_item convert into an attrbute for speed.")
 			current_row_list := parent_i.internal_row_data @ internal_index
-			current_row_count := current_row_list.count
+			column_list_area := parent_i.columns.area
+			current_row_list_count := current_row_list.count
+			row_count := count
 			from
 				counter := 0
 			until
-				a_item /= Void or else counter = current_row_count
+				a_item /= Void or else counter = row_count
 			loop
-				a_item := current_row_list @ counter
+				a_physical_index := (column_list_area @ counter).physical_index
+				if a_physical_index < current_row_list_count then
+					a_item := current_row_list @ a_physical_index
+				end
 				counter := counter + 1
 			end
 			if a_item /= Void then
-				Result := a_item.column_i.index
+				Result := counter
 			end
 		ensure
 			valid_result: Result >= 0 and Result <= count
@@ -773,7 +811,7 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			-- Select the object.
 		do
 			if not is_selected then
-				if parent_i.is_row_selection_enabled then
+				if parent_i.is_row_selection_enabled or else index_of_first_item = 0 then
 					internal_is_selected := True
 					parent_i.add_row_to_selected_rows (Current)
 					if parent_i.row_select_actions_internal /= Void then
@@ -792,7 +830,7 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 	disable_select is
 			-- Deselect the object.
 		do
-			if parent_i.is_row_selection_enabled then
+			if parent_i.is_row_selection_enabled or else index_of_first_item = 0 then
 				if internal_is_selected then
 					internal_is_selected := False
 					parent_i.remove_row_from_selected_rows (Current)

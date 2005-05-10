@@ -2156,10 +2156,24 @@ feature {EV_GRID_DRAWER_I, EV_GRID_COLUMN_I, EV_GRID_ROW_I, EV_GRID_ITEM_I, EV_G
 
 feature {EV_GRID_ITEM_I} -- Implementation
 
-	selection_color: EV_COLOR is
-			-- Color used for selected items.
-		once
-			create Result.make_with_8_bit_rgb (0, 0, 128)
+	focused_selection_color: EV_COLOR is
+			-- Color used for selected items while focused.
+		deferred
+		end
+
+	focused_selection_text_color: EV_COLOR is
+			-- Color used for text of selected items while focused.
+		deferred
+		end
+
+	non_focused_selection_color: EV_COLOR is
+			-- Color used for selected items while not focused.
+		deferred
+		end
+
+	non_focused_selection_text_color: EV_COLOR is
+			-- Color used for text of selected items while not focused.
+		deferred
 		end
 		
 feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implementation

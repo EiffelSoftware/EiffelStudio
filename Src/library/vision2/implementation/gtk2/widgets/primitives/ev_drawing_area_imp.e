@@ -45,6 +45,40 @@ create
 
 feature {NONE} -- Initialization
 
+feature -- Status report
+
+	is_tabable_to: BOOLEAN is
+			-- Is Current able to be tabbed to?
+		do
+		end
+
+	is_tabable_from: BOOLEAN is
+			-- Is Current able to be tabbed from?
+		do
+		end
+
+feature -- Status setting
+
+	enable_tabable_to is
+			-- Make `is_tabable_to' `True'.
+		do
+		end
+
+	disable_tabable_to is
+			-- Make `is_tabable_to' `False'.
+		do
+		end
+
+	enable_tabable_from is
+			-- Make `is_tabable_from' `True'.
+		do
+		end
+
+	disable_tabable_from is
+			-- Make `is_tabable_from' `False'.
+		do
+		end
+
 	needs_event_box: BOOLEAN is True
 		-- Place drawing area inside an event box.
 

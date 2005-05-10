@@ -32,10 +32,6 @@ feature {NONE} -- Initialization
 
 feature {AST_YACC} -- Initialization
 
-	process_access_address_as (l_as: ACCESS_ADDRESS_AS) is
-		do
-		end
-
 	process_internal_as (l_as: INTERNAL_AS) is
 		do
 		end

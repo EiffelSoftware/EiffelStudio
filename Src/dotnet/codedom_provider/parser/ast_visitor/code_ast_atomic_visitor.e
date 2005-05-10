@@ -43,7 +43,7 @@ feature {AST_YACC} -- Implementation
 		do
 		end
 
-	process_integer_constant_as (l_as: INTEGER_CONSTANT) is
+	process_integer_constant_as (l_as: INTEGER_AS) is
 			-- Process `l_as'.
 		local
 			l_snippet_expression: SYSTEM_DLL_CODE_PRIMITIVE_EXPRESSION

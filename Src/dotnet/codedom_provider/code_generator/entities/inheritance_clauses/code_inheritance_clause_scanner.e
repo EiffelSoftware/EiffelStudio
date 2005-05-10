@@ -35,13 +35,13 @@ feature {NONE} -- Implementation
 	yy_build_tables is
 			-- Build scanner tables.
 		do
-			yy_nxt ?= yy_nxt_template
-			yy_chk ?= yy_chk_template
-			yy_base ?= yy_base_template
-			yy_def ?= yy_def_template
-			yy_ec ?= yy_ec_template
-			yy_meta ?= yy_meta_template
-			yy_accept ?= yy_accept_template
+			yy_nxt := yy_nxt_template
+			yy_chk := yy_chk_template
+			yy_base := yy_base_template
+			yy_def := yy_def_template
+			yy_ec := yy_ec_template
+			yy_meta := yy_meta_template
+			yy_accept := yy_accept_template
 		end
 
 	yy_execute_action (yy_act: INTEGER) is
@@ -57,13 +57,13 @@ if yy_act = 1 then
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 35")
 end
-current_position.go_to (text_count)
+
 else
 --|#line 36 "inheritance_clause.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 36")
 end
-current_position.go_to (text_count)
+
 end
 else
 --|#line 40 "inheritance_clause.l"
@@ -71,38 +71,34 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 40")
 end
 
-				current_position.go_to (1)
 				last_token := TE_COMMA
 			
 end
 else
 if yy_act <= 5 then
 if yy_act = 4 then
---|#line 44 "inheritance_clause.l"
+--|#line 43 "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 44")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 43")
 end
 
-				current_position.go_to (1)
 				last_token := TE_SEMICOLON
 			
 else
---|#line 48 "inheritance_clause.l"
+--|#line 46 "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 48")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 46")
 end
 
-				current_position.go_to (1)
 				last_token := TE_LCURLY
 			
 end
 else
---|#line 52 "inheritance_clause.l"
+--|#line 49 "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 52")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 49")
 end
 
-				current_position.go_to (1)
 				last_token := TE_RCURLY
 			
 end
@@ -111,62 +107,56 @@ else
 if yy_act <= 9 then
 if yy_act <= 8 then
 if yy_act = 7 then
---|#line 56 "inheritance_clause.l"
+--|#line 52 "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 56")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 52")
 end
 
-				current_position.go_to (1)
 				last_token := TE_LSQURE
 			
 else
---|#line 60 "inheritance_clause.l"
+--|#line 55 "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 60")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 55")
 end
 
-				current_position.go_to (1)
 				last_token := TE_RSQURE
 			
 end
 else
---|#line 64 "inheritance_clause.l"
+--|#line 58 "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 64")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 58")
 end
 
-				current_position.go_to (1)
 				last_token := TE_PLUS
 			
 end
 else
 if yy_act <= 11 then
 if yy_act = 10 then
---|#line 68 "inheritance_clause.l"
+--|#line 61 "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 68")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 61")
 end
 
-				current_position.go_to (1)
 				last_token := TE_MINUS
 			
 else
---|#line 74 "inheritance_clause.l"
+--|#line 66 "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 74")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 66")
 end
 
-				current_position.go_to (3)
 				last_token := TE_ALL
 			
 end
 else
---|#line 78 "inheritance_clause.l"
+--|#line 69 "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 78")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 69")
 end
 
-				current_position.go_to (2)
 				last_token := TE_AS
 			
 end
@@ -177,62 +167,56 @@ if yy_act <= 18 then
 if yy_act <= 15 then
 if yy_act <= 14 then
 if yy_act = 13 then
---|#line 82 "inheritance_clause.l"
+--|#line 72 "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 82")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 72")
 end
 
-				current_position.go_to (3)
 				last_token := TE_BIT
 			
 else
---|#line 86 "inheritance_clause.l"
+--|#line 75 "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 86")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 75")
 end
 
-				current_position.go_to (7)
 				last_token := TE_CURRENT
 			
 end
 else
---|#line 90 "inheritance_clause.l"
+--|#line 78 "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 90")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 78")
 end
 
-				current_position.go_to (3)
 				last_token := TE_END
 			
 end
 else
 if yy_act <= 17 then
 if yy_act = 16 then
---|#line 94 "inheritance_clause.l"
+--|#line 81 "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 94")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 81")
 end
 
-				current_position.go_to (6)
 				last_token := TE_EXPORT
 			
 else
---|#line 98 "inheritance_clause.l"
+--|#line 84 "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 98")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 84")
 end
 
-				current_position.go_to (5)
 				last_token := TE_INFIX
 			
 end
 else
---|#line 102 "inheritance_clause.l"
+--|#line 87 "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 102")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 87")
 end
 
-				current_position.go_to (7)
 				last_token := TE_INHERIT
 			
 end
@@ -241,62 +225,56 @@ else
 if yy_act <= 21 then
 if yy_act <= 20 then
 if yy_act = 19 then
---|#line 106 "inheritance_clause.l"
+--|#line 90 "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 106")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 90")
 end
 
-				current_position.go_to (4)
 				last_token := TE_LIKE
 			
 else
---|#line 110 "inheritance_clause.l"
+--|#line 93 "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 110")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 93")
 end
 
-				current_position.go_to (6)
 				last_token := TE_PREFIX
 			
 end
 else
---|#line 114 "inheritance_clause.l"
+--|#line 96 "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 114")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 96")
 end
 
-				current_position.go_to (8)
 				last_token := TE_REDEFINE
 			
 end
 else
 if yy_act <= 23 then
 if yy_act = 22 then
---|#line 118 "inheritance_clause.l"
+--|#line 99 "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 118")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 99")
 end
 
-				current_position.go_to (6)
 				last_token := TE_RENAME
 			
 else
---|#line 122 "inheritance_clause.l"
+--|#line 102 "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 122")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 102")
 end
 
-				current_position.go_to (6)
 				last_token := TE_SELECT
 			
 end
 else
---|#line 126 "inheritance_clause.l"
+--|#line 105 "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 126")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 105")
 end
 
-				current_position.go_to (8)
 				last_token := TE_SEPARATE
 			
 end
@@ -309,65 +287,59 @@ if yy_act <= 30 then
 if yy_act <= 27 then
 if yy_act <= 26 then
 if yy_act = 25 then
---|#line 130 "inheritance_clause.l"
+--|#line 108 "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 130")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 108")
 end
 
-				current_position.go_to (8)
 				last_token := TE_UNDEFINE
 			
 else
---|#line 137 "inheritance_clause.l"
+--|#line 114 "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 137")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 114")
 end
 
 					-- Note: Identifiers are converted to lower-case.
 				token_buffer.clear_all
 				append_text_to_string (token_buffer)
-				current_position.go_to (token_buffer.count)
 				last_token := TE_ID
 			
 end
 else
---|#line 147 "inheritance_clause.l"
+--|#line 123 "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 147")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 123")
 end
 
-				current_position.go_to (3)
 				last_token := TE_STR_LT
 			
 end
 else
 if yy_act <= 29 then
 if yy_act = 28 then
---|#line 151 "inheritance_clause.l"
+--|#line 126 "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 151")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 126")
 end
 
-				current_position.go_to (3)
 				last_token := TE_STR_GT
 			
 else
---|#line 155 "inheritance_clause.l"
+--|#line 129 "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 155")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 129")
 end
 
-				current_position.go_to (4)
 				last_token := TE_STR_LE
 			
 end
 else
---|#line 159 "inheritance_clause.l"
+--|#line 132 "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 159")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 132")
 end
 
-				current_position.go_to (4)
 				last_token := TE_STR_GE
 			
 end
@@ -376,62 +348,56 @@ else
 if yy_act <= 33 then
 if yy_act <= 32 then
 if yy_act = 31 then
---|#line 163 "inheritance_clause.l"
+--|#line 135 "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 163")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 135")
 end
 
-				current_position.go_to (3)
 				last_token := TE_STR_PLUS
 			
 else
---|#line 167 "inheritance_clause.l"
+--|#line 138 "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 167")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 138")
 end
 
-				current_position.go_to (3)
 				last_token := TE_STR_MINUS
 			
 end
 else
---|#line 171 "inheritance_clause.l"
+--|#line 141 "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 171")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 141")
 end
 
-				current_position.go_to (3)
 				last_token := TE_STR_STAR
 			
 end
 else
 if yy_act <= 35 then
 if yy_act = 34 then
---|#line 175 "inheritance_clause.l"
+--|#line 144 "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 175")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 144")
 end
 
-				current_position.go_to (3)
 				last_token := TE_STR_SLASH
 			
 else
---|#line 179 "inheritance_clause.l"
+--|#line 147 "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 179")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 147")
 end
 
-				current_position.go_to (3)
 				last_token := TE_STR_POWER
 			
 end
 else
---|#line 183 "inheritance_clause.l"
+--|#line 150 "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 183")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 150")
 end
 
-				current_position.go_to (4)
 				last_token := TE_STR_DIV
 			
 end
@@ -442,72 +408,66 @@ if yy_act <= 42 then
 if yy_act <= 39 then
 if yy_act <= 38 then
 if yy_act = 37 then
---|#line 187 "inheritance_clause.l"
+--|#line 153 "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 187")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 153")
 end
 
-				current_position.go_to (4)
 				last_token := TE_STR_MOD
 			
 else
---|#line 191 "inheritance_clause.l"
+--|#line 156 "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 191")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 156")
 end
 
 				token_buffer.clear_all
 				append_text_substring_to_string (2, 4, token_buffer)
-				current_position.go_to (5)
 				last_token := TE_STR_AND
 			
 end
 else
---|#line 197 "inheritance_clause.l"
+--|#line 161 "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 197")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 161")
 end
 
 				token_buffer.clear_all
 				append_text_substring_to_string (2, 9, token_buffer)
-				current_position.go_to (10)
 				last_token := TE_STR_AND_THEN
 			
 end
 else
 if yy_act <= 41 then
 if yy_act = 40 then
---|#line 203 "inheritance_clause.l"
+--|#line 166 "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 203")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 166")
 end
 
 				token_buffer.clear_all
 				append_text_substring_to_string (2, 8, token_buffer)
-				current_position.go_to (9)
 				last_token := TE_STR_IMPLIES
 			
 else
---|#line 209 "inheritance_clause.l"
+--|#line 171 "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 209")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 171")
 end
 
 				token_buffer.clear_all
 				append_text_substring_to_string (2, 4, token_buffer)
-				current_position.go_to (5)
 				last_token := TE_STR_NOT
 			
 end
 else
---|#line 215 "inheritance_clause.l"
+--|#line 176 "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 215")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 176")
 end
 
 				token_buffer.clear_all
 				append_text_substring_to_string (2, 3, token_buffer)
-				current_position.go_to (4)
 				last_token := TE_STR_OR
 			
 end
@@ -516,48 +476,44 @@ else
 if yy_act <= 45 then
 if yy_act <= 44 then
 if yy_act = 43 then
---|#line 221 "inheritance_clause.l"
+--|#line 181 "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 221")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 181")
 end
 
 				token_buffer.clear_all
 				append_text_substring_to_string (2, 8, token_buffer)
-				current_position.go_to (9)
 				last_token := TE_STR_OR_ELSE
 			
 else
---|#line 227 "inheritance_clause.l"
+--|#line 186 "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 227")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 186")
 end
 
 				token_buffer.clear_all
 				append_text_substring_to_string (2, 4, token_buffer)
-				current_position.go_to (5)
 				last_token := TE_STR_XOR
 			
 end
 else
---|#line 233 "inheritance_clause.l"
+--|#line 191 "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 233")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 191")
 end
 
 				token_buffer.clear_all
 				append_text_substring_to_string (2, text_count - 1, token_buffer)
-				current_position.go_to (text_count)
 				last_token := TE_STR_FREE
 			
 end
 else
 if yy_act = 46 then
---|#line 240 "inheritance_clause.l"
+--|#line 197 "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 240")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 197")
 end
 
-				current_position.go_to (1)
 			
 else
 --|#line 0 "inheritance_clause.l"
@@ -581,9 +537,7 @@ end
 
 feature {NONE} -- Table templates
 
-	yy_nxt_template: ANY is
-			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
-			-- but once functions cannot be declared with anchored types.
+	yy_nxt_template: SPECIAL [INTEGER] is
 		once
 			Result := yy_fixed_array (<<
 			    0,    4,    5,    6,    5,    4,    7,    4,    4,    4,
@@ -626,12 +580,10 @@ feature {NONE} -- Table templates
 			  154,  154,  154,  154,  154,  154,  154,  154,  154,  154,
 			  154,  154,  154,  154,  154,  154,  154,  154,  154,  154,
 			  154,  154,  154,  154,  154,  154,  154,  154,  154,  154,
-			  154,  154,  154,  154,  154,  154,  154>>)
+			  154,  154,  154,  154,  154,  154,  154, yy_Dummy>>)
 		end
 
-	yy_chk_template: ANY is
-			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
-			-- but once functions cannot be declared with anchored types.
+	yy_chk_template: SPECIAL [INTEGER] is
 		once
 			Result := yy_fixed_array (<<
 			    0,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -674,12 +626,10 @@ feature {NONE} -- Table templates
 			  154,  154,  154,  154,  154,  154,  154,  154,  154,  154,
 			  154,  154,  154,  154,  154,  154,  154,  154,  154,  154,
 			  154,  154,  154,  154,  154,  154,  154,  154,  154,  154,
-			  154,  154,  154,  154,  154,  154,  154>>)
+			  154,  154,  154,  154,  154,  154,  154, yy_Dummy>>)
 		end
 
-	yy_base_template: ANY is
-			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
-			-- but once functions cannot be declared with anchored types.
+	yy_base_template: SPECIAL [INTEGER] is
 		once
 			Result := yy_fixed_array (<<
 			    0,    0,    0,  308,  309,   66,  304,   64,  309,  309,
@@ -698,12 +648,10 @@ feature {NONE} -- Table templates
 			  208,  196,  214,  207,  209,  214,  204,  204,    0,  205,
 			    0,  211,    0,    0,  207,  213,  222,  211,  224,    0,
 			    0,  225,  229,  231,  224,  256,  141,    0,    0,    0,
-			   72,  309,  309,  309,  309,  279,  288>>)
+			   72,  309,  309,  309,  309,  279,  288, yy_Dummy>>)
 		end
 
-	yy_def_template: ANY is
-			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
-			-- but once functions cannot be declared with anchored types.
+	yy_def_template: SPECIAL [INTEGER] is
 		once
 			Result := yy_fixed_array (<<
 			    0,  154,    1,  154,  154,  154,  154,  154,  154,  154,
@@ -722,12 +670,10 @@ feature {NONE} -- Table templates
 			  155,  155,  155,  155,  154,  154,  154,  155,  155,  155,
 			  155,  155,  155,  155,  155,  155,  154,  154,  154,  155,
 			  155,  155,  155,  155,  154,  154,  154,  155,  155,  155,
-			  154,  154,  154,  154,    0,  154,  154>>)
+			  154,  154,  154,  154,    0,  154,  154, yy_Dummy>>)
 		end
 
-	yy_ec_template: ANY is
-			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
-			-- but once functions cannot be declared with anchored types.
+	yy_ec_template: SPECIAL [INTEGER] is
 		once
 			Result := yy_fixed_array (<<
 			    0,    1,    1,    1,    1,    1,    1,    1,    1,    2,
@@ -757,12 +703,10 @@ feature {NONE} -- Table templates
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-			    1,    1,    1,    1,    1,    1,    1>>)
+			    1,    1,    1,    1,    1,    1,    1, yy_Dummy>>)
 		end
 
-	yy_meta_template: ANY is
-			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
-			-- but once functions cannot be declared with anchored types.
+	yy_meta_template: SPECIAL [INTEGER] is
 		once
 			Result := yy_fixed_array (<<
 			    0,    1,    1,    1,    1,    2,    2,    2,    2,    2,
@@ -771,12 +715,10 @@ feature {NONE} -- Table templates
 			    3,    3,    3,    3,    3,    3,    4,    5,    6,    7,
 			    2,    2,    2,    2,    3,    3,    3,    3,    3,    3,
 			    3,    3,    3,    3,    3,    3,    3,    3,    3,    3,
-			    3,    8,    9,   10,    3,    2,    2,    2>>)
+			    3,    8,    9,   10,    3,    2,    2,    2, yy_Dummy>>)
 		end
 
-	yy_accept_template: ANY is
-			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
-			-- but once functions cannot be declared with anchored types.
+	yy_accept_template: SPECIAL [INTEGER] is
 		once
 			Result := yy_fixed_array (<<
 			    0,    0,    0,   48,   46,    1,    2,   46,    9,    3,
@@ -795,7 +737,7 @@ feature {NONE} -- Table templates
 			   26,   26,   26,   26,    0,    0,    0,   26,   16,   26,
 			   20,   26,   22,   23,   26,   26,    0,    0,    0,   14,
 			   18,   26,   26,   26,    0,    0,    0,   21,   24,   25,
-			    0,   40,   43,   39,    0>>)
+			    0,   40,   43,   39,    0, yy_Dummy>>)
 		end
 
 feature {NONE} -- Constants
@@ -851,8 +793,7 @@ feature {NONE} -- Initialization
 			-- Create a new external scanner.
 		do
 			make_with_buffer (Empty_buffer)
-			!! token_buffer.make (Initial_buffer_size)
-			!! current_position.reset
+			create token_buffer.make (Initial_buffer_size)
 		end
 
 feature -- Initialization
@@ -864,16 +805,12 @@ feature -- Initialization
 		do
 			Precursor
 			token_buffer.clear_all
-			current_position.reset
 		end
 
 feature -- Access
 
 	token_buffer: STRING
 			-- Buffer for lexial tokens
-
-	current_position: TOKEN_LOCATION
-			-- Position of last token read
 	
 	last_value: ANY
 			-- Semantic value to be passed to the parser
@@ -885,7 +822,6 @@ feature {NONE} -- Constants
 
 invariant
 	token_buffer_not_void: token_buffer /= Void
-	current_position_not_void: current_position /= Void
 
 end -- class CODE_INHERITANCE_CLAUSE_SCANNER
 

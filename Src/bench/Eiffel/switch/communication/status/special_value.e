@@ -48,7 +48,6 @@ feature {NONE} -- Initialization
 			address := addr;
 			is_null := (address = Void)
 			capacity := cap;
-			reset_items
 				--| No need to preallocate area, since the fill_items or similar
 				--| will change the capacity if needed
 				--| We require only to get a non Void list
@@ -252,6 +251,7 @@ feature -- Items
 			rqst.set_sp_bounds (sp_lower, sp_upper)
 			rqst.send
 			items.append_last (rqst.attributes)
+			items_computed := True
 		end
 
 feature -- Output
@@ -263,8 +263,10 @@ feature -- Output
 			debug ("debug_recv")
 				print (generator + ".children%N")
 			end
-			Result := items
-			if Result = Void then
+			if items_computed then
+				Result := items
+			else	
+				reset_items
 				get_items (sp_lower, sp_upper)
 				Result := items
 			end
@@ -281,16 +283,7 @@ feature {NONE} -- Implementation
 		do
 			address := hector_addr (address);
 			is_null := (address = Void)
-			from
-				l_cursor := children.new_cursor
-				l_cursor.start
-			until
-				l_cursor.after
-			loop
-				l_cursor.item.set_hector_addr;
-				l_cursor.forth
-			end
-		end;
+		end
 
 invariant
  

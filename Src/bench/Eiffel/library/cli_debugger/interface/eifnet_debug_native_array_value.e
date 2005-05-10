@@ -155,20 +155,14 @@ feature -- Output
 			Result := items
 			if Result = Void then
 				reset_items -- the size will be set by fill_items
-				fill_items (Min_slice_ref.item, Max_slice_ref.item)
+				get_items (Min_slice_ref.item, Max_slice_ref.item)
 				Result := items
 			end
 		end
 
-	get_items (a_min, a_max: INTEGER) is
-		do
-			fill_items (a_min, a_max)
-		end
-
-	fill_items (a_slice_min, a_slice_max: INTEGER) is
+	get_items (a_slice_min, a_slice_max: INTEGER) is
 			-- Get Items for attributes
-		require
-			items_not_void: items /= Void
+		require else
 			slice_valid: a_slice_min <= a_slice_max
 		local
 			l_elt: ICOR_DEBUG_VALUE
@@ -200,6 +194,7 @@ feature -- Output
 					release_array_value
 				end
 			end
+			items_computed := True			
 		end
 
 end -- class EIFNET_DEBUG_NATIVE_ARRAY_VALUE

@@ -15,8 +15,7 @@ feature -- Event handling
 			-- Actions to be performed when screen pointer moves.
 		do
 			if pointer_motion_actions_internal = Void then
-				pointer_motion_actions_internal :=
-					 create_pointer_motion_actions
+				create pointer_motion_actions_internal
 			end
 			Result := pointer_motion_actions_internal
 		ensure
@@ -24,12 +23,6 @@ feature -- Event handling
 		end
 
 feature {EV_ANY_I} -- Implementation
-
-	create_pointer_motion_actions: EV_POINTER_MOTION_ACTION_SEQUENCE is
-			-- Create a pointer_motion action sequence.
-		do
-			create Result
-		end
 
 	pointer_motion_actions_internal: EV_POINTER_MOTION_ACTION_SEQUENCE
 			-- Implementation of once per object `pointer_motion_actions'.
@@ -41,8 +34,7 @@ feature -- Event handling
 			-- Actions to be performed when screen pointer button is pressed.
 		do
 			if pointer_button_press_actions_internal = Void then
-				pointer_button_press_actions_internal :=
-					 create_pointer_button_press_actions
+				create pointer_button_press_actions_internal
 			end
 			Result := pointer_button_press_actions_internal
 		ensure
@@ -50,12 +42,6 @@ feature -- Event handling
 		end
 
 feature {EV_ANY_I} -- Implementation
-
-	create_pointer_button_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE is
-			-- Create a pointer_button_press action sequence.
-		do
-			create Result
-		end
 
 	pointer_button_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE
 			-- Implementation of once per object `pointer_button_press_actions'.
@@ -67,8 +53,7 @@ feature -- Event handling
 			-- Actions to be performed when screen pointer is double clicked.
 		do
 			if pointer_double_press_actions_internal = Void then
-				pointer_double_press_actions_internal :=
-					 create_pointer_double_press_actions
+				create pointer_double_press_actions_internal
 			end
 			Result := pointer_double_press_actions_internal
 		ensure
@@ -76,12 +61,6 @@ feature -- Event handling
 		end
 
 feature {EV_ANY_I} -- Implementation
-
-	create_pointer_double_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE is
-			-- Create a pointer_double_press action sequence.
-		do
-			create Result
-		end
 
 	pointer_double_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE
 			-- Implementation of once per object `pointer_double_press_actions'.
@@ -93,8 +72,7 @@ feature -- Event handling
 			-- Actions to be performed when screen pointer button is released.
 		do
 			if pointer_button_release_actions_internal = Void then
-				pointer_button_release_actions_internal :=
-					 create_pointer_button_release_actions
+				create pointer_button_release_actions_internal
 			end
 			Result := pointer_button_release_actions_internal
 		ensure
@@ -102,12 +80,6 @@ feature -- Event handling
 		end
 
 feature {EV_ANY_I} -- Implementation
-
-	create_pointer_button_release_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE is
-			-- Create a pointer_button_release action sequence.
-		do
-			create Result
-		end
 
 	pointer_button_release_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE
 			-- Implementation of once per object `pointer_button_release_actions'.
@@ -119,8 +91,7 @@ feature -- Event handling
 			-- Actions to be performed when screen pointer enters widget.
 		do
 			if pointer_enter_actions_internal = Void then
-				pointer_enter_actions_internal :=
-					 create_pointer_enter_actions
+				create pointer_enter_actions_internal
 			end
 			Result := pointer_enter_actions_internal
 		ensure
@@ -128,12 +99,6 @@ feature -- Event handling
 		end
 
 feature {EV_ANY_I} -- Implementation
-
-	create_pointer_enter_actions: EV_NOTIFY_ACTION_SEQUENCE is
-			-- Create a pointer_enter action sequence.
-		do
-			create Result
-		end
 
 	pointer_enter_actions_internal: EV_NOTIFY_ACTION_SEQUENCE
 			-- Implementation of once per object `pointer_enter_actions'.
@@ -144,8 +109,7 @@ feature -- Event handling
 			-- Actions to be performed when screen pointer leaves widget.
 		do
 			if pointer_leave_actions_internal = Void then
-				pointer_leave_actions_internal :=
-					 create_pointer_leave_actions
+				create pointer_leave_actions_internal
 			end
 			Result := pointer_leave_actions_internal
 		ensure
@@ -154,14 +118,40 @@ feature -- Event handling
 
 feature {EV_ANY_I} -- Implementation
 
-	create_pointer_leave_actions: EV_NOTIFY_ACTION_SEQUENCE is
-			-- Create a pointer_leave action sequence.
-		do
-			create Result
-		end
-
 	pointer_leave_actions_internal: EV_NOTIFY_ACTION_SEQUENCE
 			-- Implementation of once per object `pointer_leave_actions'.
+
+feature -- Event handling
+
+	select_actions: EV_NOTIFY_ACTION_SEQUENCE is
+			-- Actions to be performed when an item is selected.
+		do
+			if select_actions_internal = Void then
+				create select_actions_internal
+			end
+			Result := select_actions_internal
+		ensure
+			result_not_void: Result /= Void
+		end
+		
+	deselect_actions: EV_NOTIFY_ACTION_SEQUENCE is
+			-- Actions to be performed when an item is deselected.
+		do
+			if deselect_actions_internal = Void then
+				create deselect_actions_internal
+			end
+			Result := deselect_actions_internal
+		ensure
+			result_not_void: Result /= Void
+		end
+
+feature {EV_ANY_I} -- Implementation
+
+	select_actions_internal: EV_NOTIFY_ACTION_SEQUENCE
+			-- Implementation of once per object `select_actions'.
+
+	deselect_actions_internal: EV_NOTIFY_ACTION_SEQUENCE
+			-- Implementation of once per object `deselect_actions'.
 
 end
 

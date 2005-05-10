@@ -19,1465 +19,477 @@ feature {NONE} -- Implementation
 	yy_build_parser_tables is
 			-- Build parser tables.
 		do
-			yytranslate ?= yytranslate_template
-			yyr1 ?= yyr1_template
-			yytypes1 ?= yytypes1_template
-			yytypes2 ?= yytypes2_template
-			yydefact ?= yydefact_template
-			yydefgoto ?= yydefgoto_template
-			yypact ?= yypact_template
-			yypgoto ?= yypgoto_template
-			yytable ?= yytable_template
-			yycheck ?= yycheck_template
+			yytranslate := yytranslate_template
+			yyr1 := yyr1_template
+			yytypes1 := yytypes1_template
+			yytypes2 := yytypes2_template
+			yydefact := yydefact_template
+			yydefgoto := yydefgoto_template
+			yypact := yypact_template
+			yypgoto := yypgoto_template
+			yytable := yytable_template
+			yycheck := yycheck_template
+		end
+
+	yy_create_value_stacks is
+			-- Create value stacks.
+		do
+		end
+
+	yy_init_value_stacks is
+			-- Initialize value stacks.
+		do
+			yyvsp1 := -1
+			yyvsp2 := -1
+			yyvsp3 := -1
+			yyvsp4 := -1
+			yyvsp5 := -1
+			yyvsp6 := -1
+			yyvsp7 := -1
+			yyvsp8 := -1
+			yyvsp9 := -1
+			yyvsp10 := -1
+			yyvsp11 := -1
+			yyvsp12 := -1
+			yyvsp13 := -1
+			yyvsp14 := -1
+			yyvsp15 := -1
+		end
+
+	yy_clear_value_stacks is
+			-- Clear objects in semantic value stacks so that
+			-- they can be collected by the garbage collector.
+		do
+			if yyvs1 /= Void then
+				yyvs1.clear_all
+			end
+			if yyvs2 /= Void then
+				yyvs2.clear_all
+			end
+			if yyvs3 /= Void then
+				yyvs3.clear_all
+			end
+			if yyvs4 /= Void then
+				yyvs4.clear_all
+			end
+			if yyvs5 /= Void then
+				yyvs5.clear_all
+			end
+			if yyvs6 /= Void then
+				yyvs6.clear_all
+			end
+			if yyvs7 /= Void then
+				yyvs7.clear_all
+			end
+			if yyvs8 /= Void then
+				yyvs8.clear_all
+			end
+			if yyvs9 /= Void then
+				yyvs9.clear_all
+			end
+			if yyvs10 /= Void then
+				yyvs10.clear_all
+			end
+			if yyvs11 /= Void then
+				yyvs11.clear_all
+			end
+			if yyvs12 /= Void then
+				yyvs12.clear_all
+			end
+			if yyvs13 /= Void then
+				yyvs13.clear_all
+			end
+			if yyvs14 /= Void then
+				yyvs14.clear_all
+			end
+			if yyvs15 /= Void then
+				yyvs15.clear_all
+			end
+		end
+
+	yy_push_last_value (yychar1: INTEGER) is
+			-- Push semantic value associated with token `last_token'
+			-- (with internal id `yychar1') on top of corresponding
+			-- value stack.
+		do
+			yyvsp1 := yyvsp1 + 1
+			if yyvsp1 >= yyvsc1 then
+				if yyvs1 = Void then
+					debug ("GEYACC")
+						std.error.put_line ("Create yyvs1")
+					end
+					create yyspecial_routines1
+					yyvsc1 := yyInitial_yyvs_size
+					yyvs1 := yyspecial_routines1.make (yyvsc1)
+				else
+					debug ("GEYACC")
+						std.error.put_line ("Resize yyvs1")
+					end
+					yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+					yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+				end
+			end
+			yyvs1.put (last_any_value, yyvsp1)
+		end
+
+	yy_push_error_value is
+			-- Push semantic value associated with token 'error'
+			-- on top of corresponding value stack.
+		local
+			yyval1: ANY
+		do
+			yyvsp1 := yyvsp1 + 1
+			if yyvsp1 >= yyvsc1 then
+				if yyvs1 = Void then
+					debug ("GEYACC")
+						std.error.put_line ("Create yyvs1")
+					end
+					create yyspecial_routines1
+					yyvsc1 := yyInitial_yyvs_size
+					yyvs1 := yyspecial_routines1.make (yyvsc1)
+				else
+					debug ("GEYACC")
+						std.error.put_line ("Resize yyvs1")
+					end
+					yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+					yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+				end
+			end
+			yyvs1.put (yyval1, yyvsp1)
+		end
+
+	yy_pop_last_value (yystate: INTEGER) is
+			-- Pop semantic value from stack when in state `yystate'.
+		local
+			yy_type_id: INTEGER
+		do
+			yy_type_id := yytypes1.item (yystate)
+			inspect yy_type_id
+			when 1 then
+				yyvsp1 := yyvsp1 - 1
+			when 2 then
+				yyvsp2 := yyvsp2 - 1
+			when 3 then
+				yyvsp3 := yyvsp3 - 1
+			when 4 then
+				yyvsp4 := yyvsp4 - 1
+			when 5 then
+				yyvsp5 := yyvsp5 - 1
+			when 6 then
+				yyvsp6 := yyvsp6 - 1
+			when 7 then
+				yyvsp7 := yyvsp7 - 1
+			when 8 then
+				yyvsp8 := yyvsp8 - 1
+			when 9 then
+				yyvsp9 := yyvsp9 - 1
+			when 10 then
+				yyvsp10 := yyvsp10 - 1
+			when 11 then
+				yyvsp11 := yyvsp11 - 1
+			when 12 then
+				yyvsp12 := yyvsp12 - 1
+			when 13 then
+				yyvsp13 := yyvsp13 - 1
+			when 14 then
+				yyvsp14 := yyvsp14 - 1
+			when 15 then
+				yyvsp15 := yyvsp15 - 1
+			else
+				debug ("GEYACC")
+					std.error.put_string ("Error in parser: unknown type id: ")
+					std.error.put_integer (yy_type_id)
+					std.error.put_new_line
+				end
+				abort
+			end
 		end
 
 feature {NONE} -- Semantic actions
 
 	yy_do_action (yy_act: INTEGER) is
 			-- Execute semantic action.
-		local
-			yyval3: LIST [CODE_SNIPPET_PARENT]
-			yyval2: CODE_SNIPPET_PARENT
-			yyval4: STRING
-			yyval5: LIST [STRING]
-			yyval7: LIST [CODE_SNIPPET_RENAME_CLAUSE]
-			yyval6: CODE_SNIPPET_RENAME_CLAUSE
-			yyval9: LIST [CODE_SNIPPET_EXPORT_CLAUSE]
-			yyval11: LIST [CODE_SNIPPET_UNDEFINE_CLAUSE]
-			yyval13: LIST [CODE_SNIPPET_REDEFINE_CLAUSE]
-			yyval15: LIST [CODE_SNIPPET_SELECT_CLAUSE]
 		do
 			inspect yy_act
-when 1 then
---|#line 48 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 48")
-end
-
-			yyval := yyval_default;
-parents := yytype3 (yyvs.item (yyvsp)) 
-
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 2 then
---|#line 51 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 51")
-end
-
-			yyval := yyval_default;
-parents := create {ARRAYED_LIST [CODE_SNIPPET_PARENT]}.make (0) 
-
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 3 then
---|#line 55 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 55")
-end
-
-
-				yyval3 := create {ARRAYED_LIST [CODE_SNIPPET_PARENT]}.make (Initial_parent_list_size)
-				yyval3.extend (yytype2 (yyvs.item (yyvsp)))
-			
-			yyval := yyval3
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 4 then
---|#line 60 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 60")
-end
-
-
-				yyval3 := yytype3 (yyvs.item (yyvsp - 1))
-				yyval3.extend (yytype2 (yyvs.item (yyvsp)))
-			
-			yyval := yyval3
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 5 then
---|#line 67 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 67")
-end
-
-
-yyval2 := yytype2 (yyvs.item (yyvsp)) 
-			yyval := yyval2
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 6 then
---|#line 69 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 69")
-end
-
-
-yyval2 := yytype2 (yyvs.item (yyvsp - 1)) 
-			yyval := yyval2
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 7 then
---|#line 73 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 73")
-end
-
-
-				yyval2 := create {CODE_SNIPPET_PARENT}.make (yytype4 (yyvs.item (yyvsp - 1)), yytype4 (yyvs.item (yyvsp)), Void, Void, Void, Void, Void)
-			
-			yyval := yyval2
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 8 then
---|#line 77 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 77")
-end
-
-
-				yyval2 := create {CODE_SNIPPET_PARENT}.make (yytype4 (yyvs.item (yyvsp - 7)), yytype4 (yyvs.item (yyvsp - 6)), yytype7 (yyvs.item (yyvsp - 5)), yytype9 (yyvs.item (yyvsp - 4)), yytype11 (yyvs.item (yyvsp - 3)), yytype13 (yyvs.item (yyvsp - 2)), yytype15 (yyvs.item (yyvsp - 1)))
-			
-			yyval := yyval2
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 8
-	yyvsp := yyvsp - 7
-	yyvs.put (yyval, yyvsp)
-end
-when 9 then
---|#line 81 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 81")
-end
-
-
-				yyval2 := create {CODE_SNIPPET_PARENT}.make (yytype4 (yyvs.item (yyvsp - 6)), yytype4 (yyvs.item (yyvsp - 5)), Void, yytype9 (yyvs.item (yyvsp - 4)), yytype11 (yyvs.item (yyvsp - 3)), yytype13 (yyvs.item (yyvsp - 2)), yytype15 (yyvs.item (yyvsp - 1)))
-			
-			yyval := yyval2
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 7
-	yyvsp := yyvsp - 6
-	yyvs.put (yyval, yyvsp)
-end
-when 10 then
---|#line 85 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 85")
-end
-
-
-				yyval2 := create {CODE_SNIPPET_PARENT}.make (yytype4 (yyvs.item (yyvsp - 5)), yytype4 (yyvs.item (yyvsp - 4)), Void, Void, yytype11 (yyvs.item (yyvsp - 3)), yytype13 (yyvs.item (yyvsp - 2)), yytype15 (yyvs.item (yyvsp - 1)))
-			
-			yyval := yyval2
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 6
-	yyvsp := yyvsp - 5
-	yyvs.put (yyval, yyvsp)
-end
-when 11 then
---|#line 89 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 89")
-end
-
-
-				yyval2 := create {CODE_SNIPPET_PARENT}.make (yytype4 (yyvs.item (yyvsp - 4)), yytype4 (yyvs.item (yyvsp - 3)), Void, Void, Void, yytype13 (yyvs.item (yyvsp - 2)), yytype15 (yyvs.item (yyvsp - 1)))
-			
-			yyval := yyval2
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 5
-	yyvsp := yyvsp - 4
-	yyvs.put (yyval, yyvsp)
-end
-when 12 then
---|#line 93 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 93")
-end
-
-
-				yyval2 := create {CODE_SNIPPET_PARENT}.make (yytype4 (yyvs.item (yyvsp - 3)), yytype4 (yyvs.item (yyvsp - 2)), Void, Void, Void, Void, yytype15 (yyvs.item (yyvsp - 1)))
-			
-			yyval := yyval2
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 4
-	yyvsp := yyvsp - 3
-	yyvs.put (yyval, yyvsp)
-end
-when 13 then
---|#line 97 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 97")
-end
-
-
-				yyval2 := create {CODE_SNIPPET_PARENT}.make (yytype4 (yyvs.item (yyvsp - 2)), yytype4 (yyvs.item (yyvsp - 1)), Void, Void, Void, Void, Void)
-			
-			yyval := yyval2
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
-end
-when 14 then
---|#line 103 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 103")
-end
-
-
-yyval4 := yytype4 (yyvs.item (yyvsp)) 
-			yyval := yyval4
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 15 then
---|#line 105 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 105")
-end
-
-
-yyval4 := yytype4 (yyvs.item (yyvsp)) 
-			yyval := yyval4
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 16 then
---|#line 109 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 109")
-end
-
-
-				yyval4 := create {STRING}.make (64)
-				yyval4.append ("expanded ")
-				yyval4.append (yytype4 (yyvs.item (yyvsp - 1)))
-				if yytype4 (yyvs.item (yyvsp)) /= Void then
-					yyval4.append (yytype4 (yyvs.item (yyvsp)))
-				end
-			
-			yyval := yyval4
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
-end
-when 17 then
---|#line 118 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 118")
-end
-
-
-				yyval4 := create {STRING}.make (64)
-				yyval4.append ("separate ")
-				yyval4.append (yytype4 (yyvs.item (yyvsp - 1)))
-				if yytype4 (yyvs.item (yyvsp)) /= Void then
-					yyval4.append (yytype4 (yyvs.item (yyvsp)))
-				end
-			
-			yyval := yyval4
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
-end
-when 18 then
---|#line 127 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 127")
-end
-
-
-				yyval4 := create {STRING}.make (yytype4 (yyvs.item (yyvsp)).count + 4)
-				yyval4.append ("BIT ")
-				yyval4.append (yytype4 (yyvs.item (yyvsp)))
-			
-			yyval := yyval4
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 19 then
---|#line 133 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 133")
-end
-
-
-				yyval4 := create {STRING}.make (yytype4 (yyvs.item (yyvsp)).count + 4)
-				yyval4.append ("BIT ")
-				yyval4.append (yytype4 (yyvs.item (yyvsp)))
-			
-			yyval := yyval4
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 20 then
---|#line 139 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 139")
-end
-
-
-				yyval4 := create {STRING}.make (yytype4 (yyvs.item (yyvsp)).count + 5)
-				yyval4.append ("like ")
-				yyval4.append (yytype4 (yyvs.item (yyvsp)))
-			
-			yyval := yyval4
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 21 then
---|#line 145 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 145")
-end
-
-
-yyval4 := "like Current" 
-			yyval := yyval4
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 22 then
---|#line 149 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 149")
-end
-
-
-				yyval4 := yytype4 (yyvs.item (yyvsp - 1))
-				if yytype4 (yyvs.item (yyvsp)) /= Void then
-					yyval4.append (yytype4 (yyvs.item (yyvsp)))
-				end
-			
-			yyval := yyval4
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 23 then
---|#line 158 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 158")
-end
-
-
-
-			yyval := yyval4
-if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
-		end
-	end
-	yyvs.put (yyval, yyvsp)
-end
-when 24 then
---|#line 160 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 160")
-end
-
-
-
-			yyval := yyval4
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 25 then
---|#line 162 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 162")
-end
-
-
-				yyval4 := create {STRING}.make (yytype4 (yyvs.item (yyvsp - 1)).count + 2)
-				yyval4.append_character ('[')
-				yyval4.append (yytype4 (yyvs.item (yyvsp - 1)))
-				yyval4.append_character (']')
-			
-			yyval := yyval4
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
-end
-when 26 then
---|#line 171 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 171")
-end
-
-
-yyval4 := yytype4 (yyvs.item (yyvsp)) 
-			yyval := yyval4
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 27 then
---|#line 173 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 173")
-end
-
-
-				yyval4 := yytype4 (yyvs.item (yyvsp - 2))
-				yyval4.append (", ")
-				yyval4.append (yytype4 (yyvs.item (yyvsp)))
-			
-			yyval := yyval4
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
-end
-when 28 then
---|#line 181 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 181")
-end
-
-
-				yyval5 := create {ARRAYED_LIST [STRING]}.make (1)
-				yyval5.extend ("{NONE}")
-			
-			yyval := yyval5
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 29 then
---|#line 186 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 186")
-end
-
-
-yyval5 := yytype5 (yyvs.item (yyvsp - 1)) 
-			yyval := yyval5
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
-end
-when 30 then
---|#line 190 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 190")
-end
-
-
-				yyval5 := create {ARRAYED_LIST [STRING]}.make (1)
-				yyval5.extend (yytype4 (yyvs.item (yyvsp)))
-			
-			yyval := yyval5
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 31 then
---|#line 195 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 195")
-end
-
-
-				yyval5 := yytype5 (yyvs.item (yyvsp - 2))
-				yyval5.extend (yytype4 (yyvs.item (yyvsp)))
-			
-			yyval := yyval5
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
-end
-when 32 then
---|#line 202 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 202")
-end
-
-
-
-			yyval := yyval7
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 33 then
---|#line 204 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 204")
-end
-
-
-yyval7 := yytype7 (yyvs.item (yyvsp)) 
-			yyval := yyval7
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 34 then
---|#line 208 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 208")
-end
-
-
-				yyval7 := create {ARRAYED_LIST [CODE_SNIPPET_RENAME_CLAUSE]}.make (Initial_clause_list_size)
-				yyval7.extend (yytype6 (yyvs.item (yyvsp)))
-			
-			yyval := yyval7
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 35 then
---|#line 213 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 213")
-end
-
-
-				yyval7 := yytype7 (yyvs.item (yyvsp - 2))
-				yyval7.extend (yytype6 (yyvs.item (yyvsp)))
-			
-			yyval := yyval7
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
-end
-when 36 then
---|#line 220 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 220")
-end
-
-
-				yyval6 := create {CODE_SNIPPET_RENAME_CLAUSE}.make (yytype4 (yyvs.item (yyvsp - 2)), yytype4 (yyvs.item (yyvsp)))
-			
-			yyval := yyval6
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
-end
-when 37 then
---|#line 226 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 226")
-end
-
-
-
-			yyval := yyval9
-if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
-		end
-	end
-	yyvs.put (yyval, yyvsp)
-end
-when 38 then
---|#line 228 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 228")
-end
-
-
-yyval9 := yytype9 (yyvs.item (yyvsp)) 
-			yyval := yyval9
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 39 then
---|#line 232 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 232")
-end
-
-
-				if yytype9 (yyvs.item (yyvsp)) /= Void or else yytype9 (yyvs.item (yyvsp)).is_empty then
-					yyval9 := Void
-				else
-					yyval9 := yytype9 (yyvs.item (yyvsp))
-				end
-			
-			yyval := yyval9
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 40 then
---|#line 240 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 240")
-end
-
-
-
-			yyval := yyval9
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 41 then
---|#line 244 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 244")
-end
-
-
-				yyval9 := yytype9 (yyvs.item (yyvsp))
-			
-			yyval := yyval9
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 42 then
---|#line 248 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 248")
-end
-
-
-				yyval9 := yytype9 (yyvs.item (yyvsp - 1))
-				if yytype9 (yyvs.item (yyvsp - 1)) /= Void and yytype9 (yyvs.item (yyvsp)) /= Void then
-					yyval9.append (yytype9 (yyvs.item (yyvsp)))
-				end
-			
-			yyval := yyval9
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 43 then
---|#line 257 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 257")
-end
-
-
-				if yytype5 (yyvs.item (yyvsp - 1)) /= Void then
-					yyval9 := create {ARRAYED_LIST [CODE_SNIPPET_EXPORT_CLAUSE]}.make (yytype5 (yyvs.item (yyvsp - 2)).count)
-					from
-						yytype5 (yyvs.item (yyvsp - 2)).start
-					until
-						yytype5 (yyvs.item (yyvsp - 2)).after
-					loop
-						yyval9.extend (create {CODE_SNIPPET_EXPORT_CLAUSE}.make (yytype5 (yyvs.item (yyvsp - 2)).item, yytype5 (yyvs.item (yyvsp - 1))))
-						yytype5 (yyvs.item (yyvsp - 2)).forth
-					end
-				end
-			
-			yyval := yyval9
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
-end
-when 44 then
---|#line 273 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 273")
-end
-
-
-
-			yyval := yyval5
-if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
-		end
-	end
-	yyvs.put (yyval, yyvsp)
-end
-when 45 then
---|#line 275 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 275")
-end
-
-
-				yyval5 := create {ARRAYED_LIST [STRING]}.make (1)
-				yyval5.extend ("all")
-			
-			yyval := yyval5
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 46 then
---|#line 280 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 280")
-end
-
-
-yyval5 := yytype5 (yyvs.item (yyvsp)) 
-			yyval := yyval5
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 47 then
---|#line 284 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 284")
-end
-
-
-				yyval5 := create {ARRAYED_LIST [STRING]}.make (Initial_feature_list_size)
-				yyval5.extend (yytype4 (yyvs.item (yyvsp)))
-			
-			yyval := yyval5
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 48 then
---|#line 289 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 289")
-end
-
-
-				yyval5 := yytype5 (yyvs.item (yyvsp - 2))
-				yyval5.extend (yytype4 (yyvs.item (yyvsp)))
-			
-			yyval := yyval5
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
-end
-when 49 then
---|#line 296 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 296")
-end
-
-
-
-			yyval := yyval11
-if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
-		end
-	end
-	yyvs.put (yyval, yyvsp)
-end
-when 50 then
---|#line 298 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 298")
-end
-
-
-yyval11 := yytype11 (yyvs.item (yyvsp)) 
-			yyval := yyval11
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 51 then
---|#line 302 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 302")
-end
-
-
-
-			yyval := yyval11
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 52 then
---|#line 304 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 304")
-end
-
-
-				yyval11 := create {ARRAYED_LIST [CODE_SNIPPET_UNDEFINE_CLAUSE]}.make (yytype5 (yyvs.item (yyvsp)).count)
-				from
-					yytype5 (yyvs.item (yyvsp)).start
-				until
-					yytype5 (yyvs.item (yyvsp)).after
-				loop
-					yyval11.extend (create {CODE_SNIPPET_UNDEFINE_CLAUSE}.make (yytype5 (yyvs.item (yyvsp)).item))
-					yytype5 (yyvs.item (yyvsp)).forth
-				end
-			
-			yyval := yyval11
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 53 then
---|#line 318 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 318")
-end
-
-
-
-			yyval := yyval13
-if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
-		end
-	end
-	yyvs.put (yyval, yyvsp)
-end
-when 54 then
---|#line 320 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 320")
-end
-
-
-yyval13 := yytype13 (yyvs.item (yyvsp)) 
-			yyval := yyval13
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 55 then
---|#line 324 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 324")
-end
-
-
-
-			yyval := yyval13
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 56 then
---|#line 326 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 326")
-end
-
-
-				yyval13 := create {ARRAYED_LIST [CODE_SNIPPET_REDEFINE_CLAUSE]}.make (yytype5 (yyvs.item (yyvsp)).count)
-				from
-					yytype5 (yyvs.item (yyvsp)).start
-				until
-					yytype5 (yyvs.item (yyvsp)).after
-				loop
-					yyval13.extend (create {CODE_SNIPPET_REDEFINE_CLAUSE}.make (yytype5 (yyvs.item (yyvsp)).item))
-					yytype5 (yyvs.item (yyvsp)).forth
-				end
-			
-			yyval := yyval13
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 57 then
---|#line 340 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 340")
-end
-
-
-
-			yyval := yyval15
-if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
-		end
-	end
-	yyvs.put (yyval, yyvsp)
-end
-when 58 then
---|#line 342 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 342")
-end
-
-
-yyval15 := yytype15 (yyvs.item (yyvsp)) 
-			yyval := yyval15
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 59 then
---|#line 346 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 346")
-end
-
-
-
-			yyval := yyval15
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 60 then
---|#line 348 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 348")
-end
-
-
-				yyval15 := create {ARRAYED_LIST [CODE_SNIPPET_SELECT_CLAUSE]}.make (yytype5 (yyvs.item (yyvsp)).count)
-				from
-					yytype5 (yyvs.item (yyvsp)).start
-				until
-					yytype5 (yyvs.item (yyvsp)).after
-				loop
-					yyval15.extend (create {CODE_SNIPPET_SELECT_CLAUSE}.make (yytype5 (yyvs.item (yyvsp)).item))
-					yytype5 (yyvs.item (yyvsp)).forth
-				end
-			
-			yyval := yyval15
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 61 then
---|#line 362 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 362")
-end
-
-
-yyval4 := yytype4 (yyvs.item (yyvsp)) 
-			yyval := yyval4
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 62 then
---|#line 364 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 364")
-end
-
-
-yyval4 := yytype4 (yyvs.item (yyvsp)) 
-			yyval := yyval4
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 63 then
---|#line 366 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 366")
-end
-
-
-yyval4 := yytype4 (yyvs.item (yyvsp)) 
-			yyval := yyval4
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 64 then
---|#line 370 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 370")
-end
-
-
-yyval4 := yytype4 (yyvs.item (yyvsp)) 
-			yyval := yyval4
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 65 then
---|#line 375 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 375")
-end
-
-
-yyval4 := yytype4 (yyvs.item (yyvsp)) 
-			yyval := yyval4
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 66 then
---|#line 379 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 379")
-end
-
-
-yyval4 := "prefix %"-%"" 
-			yyval := yyval4
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 67 then
---|#line 381 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 381")
-end
-
-
-yyval4 := "prefix %"+%"" 
-			yyval := yyval4
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 68 then
---|#line 383 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 383")
-end
-
-
-yyval4 := "prefix %"not%"" 
-			yyval := yyval4
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 69 then
---|#line 385 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 385")
-end
-
-
-				yyval4 := create {STRING}.make (9 + token_buffer.count)
-				yyval4.append ("prefix %"")
-				yyval4.append (token_buffer.as_lower)
-				yyval4.append_character ('"')
-			
-			yyval := yyval4
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 70 then
---|#line 394 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 394")
-end
-
-
-yyval4 := "infix %"<%"" 
-			yyval := yyval4
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 71 then
---|#line 396 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 396")
-end
-
-
-yyval4 := "infix %"<=%"" 
-			yyval := yyval4
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 72 then
---|#line 398 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 398")
-end
-
-
-yyval4 := "infix %">%"" 
-			yyval := yyval4
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 73 then
---|#line 400 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 400")
-end
-
-
-yyval4 := "infix %">=%"" 
-			yyval := yyval4
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 74 then
---|#line 402 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 402")
-end
-
-
-yyval4 := "infix %"-%"" 
-			yyval := yyval4
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 75 then
---|#line 404 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 404")
-end
-
-
-yyval4 := "infix %"+%"" 
-			yyval := yyval4
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 76 then
---|#line 406 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 406")
-end
-
-
-yyval4 := "infix %"*%"" 
-			yyval := yyval4
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 77 then
---|#line 408 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 408")
-end
-
-
-yyval4 := "infix %"/%"" 
-			yyval := yyval4
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 78 then
---|#line 410 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 410")
-end
-
-
-yyval4 := "infix %"\\%"" 
-			yyval := yyval4
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 79 then
---|#line 412 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 412")
-end
-
-
-yyval4 := "infix %"//%"" 
-			yyval := yyval4
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 80 then
---|#line 414 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 414")
-end
-
-
-yyval4 := "infix %"^%"" 
-			yyval := yyval4
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 81 then
---|#line 416 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 416")
-end
-
-
-yyval4 := "infix %"and%"" 
-			yyval := yyval4
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 82 then
---|#line 418 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 418")
-end
-
-
-yyval4 := "infix %"and then%"" 
-			yyval := yyval4
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 83 then
---|#line 420 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 420")
-end
-
-
-yyval4 := "infix %"implies%"" 
-			yyval := yyval4
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 84 then
---|#line 422 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 422")
-end
-
-
-yyval4 := "infix %"or%"" 
-			yyval := yyval4
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 85 then
---|#line 424 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 424")
-end
-
-
-yyval4 := "infix %"or else%"" 
-			yyval := yyval4
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 86 then
---|#line 426 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 426")
-end
-
-
-yyval4 := "infix %"xor%"" 
-			yyval := yyval4
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 87 then
---|#line 428 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 428")
-end
-
-
-				yyval4 := create {STRING}.make (8 + token_buffer.count)
-				yyval4.append ("infix %"")
-				yyval4.append (token_buffer.as_lower)
-				yyval4.append_character ('"')
-			
-			yyval := yyval4
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 88 then
---|#line 437 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 437")
-end
-
-
-				yyval4 := token_buffer.twin
-			
-			yyval := yyval4
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 89 then
---|#line 441 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 441")
-end
-
-
-				yyval4 := token_buffer.twin
-			
-			yyval := yyval4
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 90 then
---|#line 445 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 445")
-end
-
-
-				yyval4 := token_buffer.twin
-			
-			yyval := yyval4
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 91 then
---|#line 451 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 451")
-end
-
-
-yyval4 := token_buffer.twin 
-			yyval := yyval4
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
-end
-when 92 then
---|#line 455 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 455")
-end
-
-			yyval := yyval_default;
-
-
-if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
-		end
-	end
-	yyvs.put (yyval, yyvsp)
-end
-when 93 then
---|#line 456 "inheritance_clause.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line 456")
-end
-
-			yyval := yyval_default;
-
-
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
-end
+			when 1 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_1
+			when 2 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_2
+			when 3 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_3
+			when 4 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_4
+			when 5 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_5
+			when 6 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_6
+			when 7 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_7
+			when 8 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_8
+			when 9 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_9
+			when 10 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_10
+			when 11 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_11
+			when 12 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_12
+			when 13 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_13
+			when 14 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_14
+			when 15 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_15
+			when 16 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_16
+			when 17 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_17
+			when 18 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_18
+			when 19 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_19
+			when 20 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_20
+			when 21 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_21
+			when 22 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_22
+			when 23 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_23
+			when 24 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_24
+			when 25 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_25
+			when 26 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_26
+			when 27 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_27
+			when 28 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_28
+			when 29 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_29
+			when 30 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_30
+			when 31 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_31
+			when 32 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_32
+			when 33 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_33
+			when 34 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_34
+			when 35 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_35
+			when 36 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_36
+			when 37 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_37
+			when 38 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_38
+			when 39 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_39
+			when 40 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_40
+			when 41 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_41
+			when 42 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_42
+			when 43 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_43
+			when 44 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_44
+			when 45 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_45
+			when 46 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_46
+			when 47 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_47
+			when 48 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_48
+			when 49 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_49
+			when 50 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_50
+			when 51 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_51
+			when 52 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_52
+			when 53 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_53
+			when 54 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_54
+			when 55 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_55
+			when 56 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_56
+			when 57 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_57
+			when 58 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_58
+			when 59 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_59
+			when 60 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_60
+			when 61 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_61
+			when 62 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_62
+			when 63 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_63
+			when 64 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_64
+			when 65 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_65
+			when 66 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_66
+			when 67 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_67
+			when 68 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_68
+			when 69 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_69
+			when 70 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_70
+			when 71 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_71
+			when 72 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_72
+			when 73 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_73
+			when 74 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_74
+			when 75 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_75
+			when 76 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_76
+			when 77 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_77
+			when 78 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_78
+			when 79 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_79
+			when 80 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_80
+			when 81 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_81
+			when 82 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_82
+			when 83 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_83
+			when 84 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_84
+			when 85 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_85
+			when 86 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_86
+			when 87 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_87
+			when 88 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_88
+			when 89 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_89
+			when 90 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_90
+			when 91 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_91
+			when 92 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_92
+			when 93 then
+					--|#line <not available> "inheritance_clause.y"
+				yy_do_action_93
 			else
 				debug ("GEYACC")
 					std.error.put_string ("Error in parser: unknown rule id: ")
@@ -1486,6 +498,2795 @@ end
 				end
 				abort
 			end
+		end
+
+	yy_do_action_1 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval1: ANY
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+parents := yyvs3.item (yyvsp3) 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 2
+	yyvsp3 := yyvsp3 -1
+	yyvs1.put (yyval1, yyvsp1)
+end
+		end
+
+	yy_do_action_2 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval1: ANY
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+parents := create {ARRAYED_LIST [CODE_SNIPPET_PARENT]}.make (0) 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 2
+	yyvsp1 := yyvsp1 -1
+	yyvs1.put (yyval1, yyvsp1)
+end
+		end
+
+	yy_do_action_3 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval3: LIST [CODE_SNIPPET_PARENT]
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+				yyval3 := create {ARRAYED_LIST [CODE_SNIPPET_PARENT]}.make (Initial_parent_list_size)
+				yyval3.extend (yyvs2.item (yyvsp2))
+			
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvsp3 := yyvsp3 + 1
+	yyvsp2 := yyvsp2 -1
+	if yyvsp3 >= yyvsc3 then
+		if yyvs3 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs3")
+			end
+			create yyspecial_routines3
+			yyvsc3 := yyInitial_yyvs_size
+			yyvs3 := yyspecial_routines3.make (yyvsc3)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs3")
+			end
+			yyvsc3 := yyvsc3 + yyInitial_yyvs_size
+			yyvs3 := yyspecial_routines3.resize (yyvs3, yyvsc3)
+		end
+	end
+	yyvs3.put (yyval3, yyvsp3)
+end
+		end
+
+	yy_do_action_4 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval3: LIST [CODE_SNIPPET_PARENT]
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+				yyval3 := yyvs3.item (yyvsp3)
+				yyval3.extend (yyvs2.item (yyvsp2))
+			
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 2
+	yyvsp2 := yyvsp2 -1
+	yyvs3.put (yyval3, yyvsp3)
+end
+		end
+
+	yy_do_action_5 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval2: CODE_SNIPPET_PARENT
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+yyval2 := yyvs2.item (yyvsp2) 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvs2.put (yyval2, yyvsp2)
+end
+		end
+
+	yy_do_action_6 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval2: CODE_SNIPPET_PARENT
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+yyval2 := yyvs2.item (yyvsp2) 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 2
+	yyvsp1 := yyvsp1 -1
+	yyvs2.put (yyval2, yyvsp2)
+end
+		end
+
+	yy_do_action_7 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval2: CODE_SNIPPET_PARENT
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+				yyval2 := create {CODE_SNIPPET_PARENT}.make (yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4), Void, Void, Void, Void, Void)
+			
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 2
+	yyvsp2 := yyvsp2 + 1
+	yyvsp4 := yyvsp4 -2
+	if yyvsp2 >= yyvsc2 then
+		if yyvs2 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs2")
+			end
+			create yyspecial_routines2
+			yyvsc2 := yyInitial_yyvs_size
+			yyvs2 := yyspecial_routines2.make (yyvsc2)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs2")
+			end
+			yyvsc2 := yyvsc2 + yyInitial_yyvs_size
+			yyvs2 := yyspecial_routines2.resize (yyvs2, yyvsc2)
+		end
+	end
+	yyvs2.put (yyval2, yyvsp2)
+end
+		end
+
+	yy_do_action_8 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval2: CODE_SNIPPET_PARENT
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+				yyval2 := create {CODE_SNIPPET_PARENT}.make (yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4), yyvs7.item (yyvsp7), yyvs9.item (yyvsp9), yyvs11.item (yyvsp11), yyvs13.item (yyvsp13), yyvs15.item (yyvsp15))
+			
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 8
+	yyvsp2 := yyvsp2 + 1
+	yyvsp4 := yyvsp4 -2
+	yyvsp7 := yyvsp7 -1
+	yyvsp9 := yyvsp9 -1
+	yyvsp11 := yyvsp11 -1
+	yyvsp13 := yyvsp13 -1
+	yyvsp15 := yyvsp15 -1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp2 >= yyvsc2 then
+		if yyvs2 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs2")
+			end
+			create yyspecial_routines2
+			yyvsc2 := yyInitial_yyvs_size
+			yyvs2 := yyspecial_routines2.make (yyvsc2)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs2")
+			end
+			yyvsc2 := yyvsc2 + yyInitial_yyvs_size
+			yyvs2 := yyspecial_routines2.resize (yyvs2, yyvsc2)
+		end
+	end
+	yyvs2.put (yyval2, yyvsp2)
+end
+		end
+
+	yy_do_action_9 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval2: CODE_SNIPPET_PARENT
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+				yyval2 := create {CODE_SNIPPET_PARENT}.make (yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4), Void, yyvs9.item (yyvsp9), yyvs11.item (yyvsp11), yyvs13.item (yyvsp13), yyvs15.item (yyvsp15))
+			
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 7
+	yyvsp2 := yyvsp2 + 1
+	yyvsp4 := yyvsp4 -2
+	yyvsp9 := yyvsp9 -1
+	yyvsp11 := yyvsp11 -1
+	yyvsp13 := yyvsp13 -1
+	yyvsp15 := yyvsp15 -1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp2 >= yyvsc2 then
+		if yyvs2 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs2")
+			end
+			create yyspecial_routines2
+			yyvsc2 := yyInitial_yyvs_size
+			yyvs2 := yyspecial_routines2.make (yyvsc2)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs2")
+			end
+			yyvsc2 := yyvsc2 + yyInitial_yyvs_size
+			yyvs2 := yyspecial_routines2.resize (yyvs2, yyvsc2)
+		end
+	end
+	yyvs2.put (yyval2, yyvsp2)
+end
+		end
+
+	yy_do_action_10 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval2: CODE_SNIPPET_PARENT
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+				yyval2 := create {CODE_SNIPPET_PARENT}.make (yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4), Void, Void, yyvs11.item (yyvsp11), yyvs13.item (yyvsp13), yyvs15.item (yyvsp15))
+			
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 6
+	yyvsp2 := yyvsp2 + 1
+	yyvsp4 := yyvsp4 -2
+	yyvsp11 := yyvsp11 -1
+	yyvsp13 := yyvsp13 -1
+	yyvsp15 := yyvsp15 -1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp2 >= yyvsc2 then
+		if yyvs2 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs2")
+			end
+			create yyspecial_routines2
+			yyvsc2 := yyInitial_yyvs_size
+			yyvs2 := yyspecial_routines2.make (yyvsc2)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs2")
+			end
+			yyvsc2 := yyvsc2 + yyInitial_yyvs_size
+			yyvs2 := yyspecial_routines2.resize (yyvs2, yyvsc2)
+		end
+	end
+	yyvs2.put (yyval2, yyvsp2)
+end
+		end
+
+	yy_do_action_11 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval2: CODE_SNIPPET_PARENT
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+				yyval2 := create {CODE_SNIPPET_PARENT}.make (yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4), Void, Void, Void, yyvs13.item (yyvsp13), yyvs15.item (yyvsp15))
+			
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 5
+	yyvsp2 := yyvsp2 + 1
+	yyvsp4 := yyvsp4 -2
+	yyvsp13 := yyvsp13 -1
+	yyvsp15 := yyvsp15 -1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp2 >= yyvsc2 then
+		if yyvs2 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs2")
+			end
+			create yyspecial_routines2
+			yyvsc2 := yyInitial_yyvs_size
+			yyvs2 := yyspecial_routines2.make (yyvsc2)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs2")
+			end
+			yyvsc2 := yyvsc2 + yyInitial_yyvs_size
+			yyvs2 := yyspecial_routines2.resize (yyvs2, yyvsc2)
+		end
+	end
+	yyvs2.put (yyval2, yyvsp2)
+end
+		end
+
+	yy_do_action_12 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval2: CODE_SNIPPET_PARENT
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+				yyval2 := create {CODE_SNIPPET_PARENT}.make (yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4), Void, Void, Void, Void, yyvs15.item (yyvsp15))
+			
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 4
+	yyvsp2 := yyvsp2 + 1
+	yyvsp4 := yyvsp4 -2
+	yyvsp15 := yyvsp15 -1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp2 >= yyvsc2 then
+		if yyvs2 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs2")
+			end
+			create yyspecial_routines2
+			yyvsc2 := yyInitial_yyvs_size
+			yyvs2 := yyspecial_routines2.make (yyvsc2)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs2")
+			end
+			yyvsc2 := yyvsc2 + yyInitial_yyvs_size
+			yyvs2 := yyspecial_routines2.resize (yyvs2, yyvsc2)
+		end
+	end
+	yyvs2.put (yyval2, yyvsp2)
+end
+		end
+
+	yy_do_action_13 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval2: CODE_SNIPPET_PARENT
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+				yyval2 := create {CODE_SNIPPET_PARENT}.make (yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4), Void, Void, Void, Void, Void)
+			
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 3
+	yyvsp2 := yyvsp2 + 1
+	yyvsp4 := yyvsp4 -2
+	yyvsp1 := yyvsp1 -1
+	if yyvsp2 >= yyvsc2 then
+		if yyvs2 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs2")
+			end
+			create yyspecial_routines2
+			yyvsc2 := yyInitial_yyvs_size
+			yyvs2 := yyspecial_routines2.make (yyvsc2)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs2")
+			end
+			yyvsc2 := yyvsc2 + yyInitial_yyvs_size
+			yyvs2 := yyspecial_routines2.resize (yyvs2, yyvsc2)
+		end
+	end
+	yyvs2.put (yyval2, yyvsp2)
+end
+		end
+
+	yy_do_action_14 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval4: STRING
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+yyval4 := yyvs4.item (yyvsp4) 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvs4.put (yyval4, yyvsp4)
+end
+		end
+
+	yy_do_action_15 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval4: STRING
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+yyval4 := yyvs4.item (yyvsp4) 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvs4.put (yyval4, yyvsp4)
+end
+		end
+
+	yy_do_action_16 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval4: STRING
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+				yyval4 := create {STRING}.make (64)
+				yyval4.append ("expanded ")
+				yyval4.append (yyvs4.item (yyvsp4 - 1))
+				if yyvs4.item (yyvsp4) /= Void then
+					yyval4.append (yyvs4.item (yyvsp4))
+				end
+			
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 3
+	yyvsp4 := yyvsp4 -1
+	yyvsp1 := yyvsp1 -1
+	yyvs4.put (yyval4, yyvsp4)
+end
+		end
+
+	yy_do_action_17 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval4: STRING
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+				yyval4 := create {STRING}.make (64)
+				yyval4.append ("separate ")
+				yyval4.append (yyvs4.item (yyvsp4 - 1))
+				if yyvs4.item (yyvsp4) /= Void then
+					yyval4.append (yyvs4.item (yyvsp4))
+				end
+			
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 3
+	yyvsp4 := yyvsp4 -1
+	yyvsp1 := yyvsp1 -1
+	yyvs4.put (yyval4, yyvsp4)
+end
+		end
+
+	yy_do_action_18 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval4: STRING
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+				yyval4 := create {STRING}.make (yyvs4.item (yyvsp4).count + 4)
+				yyval4.append ("BIT ")
+				yyval4.append (yyvs4.item (yyvsp4))
+			
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 2
+	yyvsp1 := yyvsp1 -1
+	yyvs4.put (yyval4, yyvsp4)
+end
+		end
+
+	yy_do_action_19 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval4: STRING
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+				yyval4 := create {STRING}.make (yyvs4.item (yyvsp4).count + 4)
+				yyval4.append ("BIT ")
+				yyval4.append (yyvs4.item (yyvsp4))
+			
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 2
+	yyvsp1 := yyvsp1 -1
+	yyvs4.put (yyval4, yyvsp4)
+end
+		end
+
+	yy_do_action_20 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval4: STRING
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+				yyval4 := create {STRING}.make (yyvs4.item (yyvsp4).count + 5)
+				yyval4.append ("like ")
+				yyval4.append (yyvs4.item (yyvsp4))
+			
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 2
+	yyvsp1 := yyvsp1 -1
+	yyvs4.put (yyval4, yyvsp4)
+end
+		end
+
+	yy_do_action_21 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval4: STRING
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+yyval4 := "like Current" 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 2
+	yyvsp4 := yyvsp4 + 1
+	yyvsp1 := yyvsp1 -2
+	if yyvsp4 >= yyvsc4 then
+		if yyvs4 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs4")
+			end
+			create yyspecial_routines4
+			yyvsc4 := yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.make (yyvsc4)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs4")
+			end
+			yyvsc4 := yyvsc4 + yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
+		end
+	end
+	yyvs4.put (yyval4, yyvsp4)
+end
+		end
+
+	yy_do_action_22 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval4: STRING
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+				yyval4 := yyvs4.item (yyvsp4 - 1)
+				if yyvs4.item (yyvsp4) /= Void then
+					yyval4.append (yyvs4.item (yyvsp4))
+				end
+			
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 2
+	yyvsp4 := yyvsp4 -1
+	yyvs4.put (yyval4, yyvsp4)
+end
+		end
+
+	yy_do_action_23 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval4: STRING
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 0
+	yyvsp4 := yyvsp4 + 1
+	if yyvsp4 >= yyvsc4 then
+		if yyvs4 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs4")
+			end
+			create yyspecial_routines4
+			yyvsc4 := yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.make (yyvsc4)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs4")
+			end
+			yyvsc4 := yyvsc4 + yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
+		end
+	end
+	yyvs4.put (yyval4, yyvsp4)
+end
+		end
+
+	yy_do_action_24 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval4: STRING
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 2
+	yyvsp4 := yyvsp4 + 1
+	yyvsp1 := yyvsp1 -2
+	if yyvsp4 >= yyvsc4 then
+		if yyvs4 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs4")
+			end
+			create yyspecial_routines4
+			yyvsc4 := yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.make (yyvsc4)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs4")
+			end
+			yyvsc4 := yyvsc4 + yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
+		end
+	end
+	yyvs4.put (yyval4, yyvsp4)
+end
+		end
+
+	yy_do_action_25 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval4: STRING
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+				yyval4 := create {STRING}.make (yyvs4.item (yyvsp4).count + 2)
+				yyval4.append_character ('[')
+				yyval4.append (yyvs4.item (yyvsp4))
+				yyval4.append_character (']')
+			
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 3
+	yyvsp1 := yyvsp1 -2
+	yyvs4.put (yyval4, yyvsp4)
+end
+		end
+
+	yy_do_action_26 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval4: STRING
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+yyval4 := yyvs4.item (yyvsp4) 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvs4.put (yyval4, yyvsp4)
+end
+		end
+
+	yy_do_action_27 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval4: STRING
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+				yyval4 := yyvs4.item (yyvsp4 - 1)
+				yyval4.append (", ")
+				yyval4.append (yyvs4.item (yyvsp4))
+			
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 3
+	yyvsp4 := yyvsp4 -1
+	yyvsp1 := yyvsp1 -1
+	yyvs4.put (yyval4, yyvsp4)
+end
+		end
+
+	yy_do_action_28 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval5: LIST [STRING]
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+				yyval5 := create {ARRAYED_LIST [STRING]}.make (1)
+				yyval5.extend ("{NONE}")
+			
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 2
+	yyvsp5 := yyvsp5 + 1
+	yyvsp1 := yyvsp1 -2
+	if yyvsp5 >= yyvsc5 then
+		if yyvs5 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs5")
+			end
+			create yyspecial_routines5
+			yyvsc5 := yyInitial_yyvs_size
+			yyvs5 := yyspecial_routines5.make (yyvsc5)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs5")
+			end
+			yyvsc5 := yyvsc5 + yyInitial_yyvs_size
+			yyvs5 := yyspecial_routines5.resize (yyvs5, yyvsc5)
+		end
+	end
+	yyvs5.put (yyval5, yyvsp5)
+end
+		end
+
+	yy_do_action_29 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval5: LIST [STRING]
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+yyval5 := yyvs5.item (yyvsp5) 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 3
+	yyvsp1 := yyvsp1 -2
+	yyvs5.put (yyval5, yyvsp5)
+end
+		end
+
+	yy_do_action_30 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval5: LIST [STRING]
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+				yyval5 := create {ARRAYED_LIST [STRING]}.make (1)
+				yyval5.extend (yyvs4.item (yyvsp4))
+			
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvsp5 := yyvsp5 + 1
+	yyvsp4 := yyvsp4 -1
+	if yyvsp5 >= yyvsc5 then
+		if yyvs5 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs5")
+			end
+			create yyspecial_routines5
+			yyvsc5 := yyInitial_yyvs_size
+			yyvs5 := yyspecial_routines5.make (yyvsc5)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs5")
+			end
+			yyvsc5 := yyvsc5 + yyInitial_yyvs_size
+			yyvs5 := yyspecial_routines5.resize (yyvs5, yyvsc5)
+		end
+	end
+	yyvs5.put (yyval5, yyvsp5)
+end
+		end
+
+	yy_do_action_31 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval5: LIST [STRING]
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+				yyval5 := yyvs5.item (yyvsp5)
+				yyval5.extend (yyvs4.item (yyvsp4))
+			
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 3
+	yyvsp1 := yyvsp1 -1
+	yyvsp4 := yyvsp4 -1
+	yyvs5.put (yyval5, yyvsp5)
+end
+		end
+
+	yy_do_action_32 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval7: LIST [CODE_SNIPPET_RENAME_CLAUSE]
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvsp7 := yyvsp7 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp7 >= yyvsc7 then
+		if yyvs7 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs7")
+			end
+			create yyspecial_routines7
+			yyvsc7 := yyInitial_yyvs_size
+			yyvs7 := yyspecial_routines7.make (yyvsc7)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs7")
+			end
+			yyvsc7 := yyvsc7 + yyInitial_yyvs_size
+			yyvs7 := yyspecial_routines7.resize (yyvs7, yyvsc7)
+		end
+	end
+	yyvs7.put (yyval7, yyvsp7)
+end
+		end
+
+	yy_do_action_33 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval7: LIST [CODE_SNIPPET_RENAME_CLAUSE]
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+yyval7 := yyvs7.item (yyvsp7) 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 2
+	yyvsp1 := yyvsp1 -1
+	yyvs7.put (yyval7, yyvsp7)
+end
+		end
+
+	yy_do_action_34 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval7: LIST [CODE_SNIPPET_RENAME_CLAUSE]
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+				yyval7 := create {ARRAYED_LIST [CODE_SNIPPET_RENAME_CLAUSE]}.make (Initial_clause_list_size)
+				yyval7.extend (yyvs6.item (yyvsp6))
+			
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvsp7 := yyvsp7 + 1
+	yyvsp6 := yyvsp6 -1
+	if yyvsp7 >= yyvsc7 then
+		if yyvs7 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs7")
+			end
+			create yyspecial_routines7
+			yyvsc7 := yyInitial_yyvs_size
+			yyvs7 := yyspecial_routines7.make (yyvsc7)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs7")
+			end
+			yyvsc7 := yyvsc7 + yyInitial_yyvs_size
+			yyvs7 := yyspecial_routines7.resize (yyvs7, yyvsc7)
+		end
+	end
+	yyvs7.put (yyval7, yyvsp7)
+end
+		end
+
+	yy_do_action_35 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval7: LIST [CODE_SNIPPET_RENAME_CLAUSE]
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+				yyval7 := yyvs7.item (yyvsp7)
+				yyval7.extend (yyvs6.item (yyvsp6))
+			
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 3
+	yyvsp1 := yyvsp1 -1
+	yyvsp6 := yyvsp6 -1
+	yyvs7.put (yyval7, yyvsp7)
+end
+		end
+
+	yy_do_action_36 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval6: CODE_SNIPPET_RENAME_CLAUSE
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+				yyval6 := create {CODE_SNIPPET_RENAME_CLAUSE}.make (yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4))
+			
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 3
+	yyvsp6 := yyvsp6 + 1
+	yyvsp4 := yyvsp4 -2
+	yyvsp1 := yyvsp1 -1
+	if yyvsp6 >= yyvsc6 then
+		if yyvs6 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs6")
+			end
+			create yyspecial_routines6
+			yyvsc6 := yyInitial_yyvs_size
+			yyvs6 := yyspecial_routines6.make (yyvsc6)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs6")
+			end
+			yyvsc6 := yyvsc6 + yyInitial_yyvs_size
+			yyvs6 := yyspecial_routines6.resize (yyvs6, yyvsc6)
+		end
+	end
+	yyvs6.put (yyval6, yyvsp6)
+end
+		end
+
+	yy_do_action_37 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval9: LIST [CODE_SNIPPET_EXPORT_CLAUSE]
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 0
+	yyvsp9 := yyvsp9 + 1
+	if yyvsp9 >= yyvsc9 then
+		if yyvs9 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs9")
+			end
+			create yyspecial_routines9
+			yyvsc9 := yyInitial_yyvs_size
+			yyvs9 := yyspecial_routines9.make (yyvsc9)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs9")
+			end
+			yyvsc9 := yyvsc9 + yyInitial_yyvs_size
+			yyvs9 := yyspecial_routines9.resize (yyvs9, yyvsc9)
+		end
+	end
+	yyvs9.put (yyval9, yyvsp9)
+end
+		end
+
+	yy_do_action_38 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval9: LIST [CODE_SNIPPET_EXPORT_CLAUSE]
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+yyval9 := yyvs9.item (yyvsp9) 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvs9.put (yyval9, yyvsp9)
+end
+		end
+
+	yy_do_action_39 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval9: LIST [CODE_SNIPPET_EXPORT_CLAUSE]
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+				if yyvs9.item (yyvsp9) = Void or else yyvs9.item (yyvsp9).is_empty then
+					yyval9 := Void
+				else
+					yyval9 := yyvs9.item (yyvsp9)
+				end
+			
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 2
+	yyvsp1 := yyvsp1 -1
+	yyvs9.put (yyval9, yyvsp9)
+end
+		end
+
+	yy_do_action_40 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval9: LIST [CODE_SNIPPET_EXPORT_CLAUSE]
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 2
+	yyvsp9 := yyvsp9 + 1
+	yyvsp1 := yyvsp1 -2
+	if yyvsp9 >= yyvsc9 then
+		if yyvs9 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs9")
+			end
+			create yyspecial_routines9
+			yyvsc9 := yyInitial_yyvs_size
+			yyvs9 := yyspecial_routines9.make (yyvsc9)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs9")
+			end
+			yyvsc9 := yyvsc9 + yyInitial_yyvs_size
+			yyvs9 := yyspecial_routines9.resize (yyvs9, yyvsc9)
+		end
+	end
+	yyvs9.put (yyval9, yyvsp9)
+end
+		end
+
+	yy_do_action_41 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval9: LIST [CODE_SNIPPET_EXPORT_CLAUSE]
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+yyval9 := yyvs9.item (yyvsp9) 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvs9.put (yyval9, yyvsp9)
+end
+		end
+
+	yy_do_action_42 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval9: LIST [CODE_SNIPPET_EXPORT_CLAUSE]
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+				yyval9 := yyvs9.item (yyvsp9 - 1)
+				if yyvs9.item (yyvsp9 - 1) /= Void and yyvs9.item (yyvsp9) /= Void then
+					yyval9.append (yyvs9.item (yyvsp9))
+				end
+			
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 2
+	yyvsp9 := yyvsp9 -1
+	yyvs9.put (yyval9, yyvsp9)
+end
+		end
+
+	yy_do_action_43 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval9: LIST [CODE_SNIPPET_EXPORT_CLAUSE]
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+				if yyvs5.item (yyvsp5) /= Void then
+					yyval9 := create {ARRAYED_LIST [CODE_SNIPPET_EXPORT_CLAUSE]}.make (yyvs5.item (yyvsp5 - 1).count)
+					from
+						yyvs5.item (yyvsp5 - 1).start
+					until
+						yyvs5.item (yyvsp5 - 1).after
+					loop
+						yyval9.extend (create {CODE_SNIPPET_EXPORT_CLAUSE}.make (yyvs5.item (yyvsp5 - 1).item, yyvs5.item (yyvsp5)))
+						yyvs5.item (yyvsp5 - 1).forth
+					end
+				end
+			
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 3
+	yyvsp9 := yyvsp9 + 1
+	yyvsp5 := yyvsp5 -2
+	yyvsp1 := yyvsp1 -1
+	if yyvsp9 >= yyvsc9 then
+		if yyvs9 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs9")
+			end
+			create yyspecial_routines9
+			yyvsc9 := yyInitial_yyvs_size
+			yyvs9 := yyspecial_routines9.make (yyvsc9)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs9")
+			end
+			yyvsc9 := yyvsc9 + yyInitial_yyvs_size
+			yyvs9 := yyspecial_routines9.resize (yyvs9, yyvsc9)
+		end
+	end
+	yyvs9.put (yyval9, yyvsp9)
+end
+		end
+
+	yy_do_action_44 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval5: LIST [STRING]
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 0
+	yyvsp5 := yyvsp5 + 1
+	if yyvsp5 >= yyvsc5 then
+		if yyvs5 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs5")
+			end
+			create yyspecial_routines5
+			yyvsc5 := yyInitial_yyvs_size
+			yyvs5 := yyspecial_routines5.make (yyvsc5)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs5")
+			end
+			yyvsc5 := yyvsc5 + yyInitial_yyvs_size
+			yyvs5 := yyspecial_routines5.resize (yyvs5, yyvsc5)
+		end
+	end
+	yyvs5.put (yyval5, yyvsp5)
+end
+		end
+
+	yy_do_action_45 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval5: LIST [STRING]
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+				yyval5 := create {ARRAYED_LIST [STRING]}.make (1)
+				yyval5.extend ("all")
+			
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvsp5 := yyvsp5 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp5 >= yyvsc5 then
+		if yyvs5 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs5")
+			end
+			create yyspecial_routines5
+			yyvsc5 := yyInitial_yyvs_size
+			yyvs5 := yyspecial_routines5.make (yyvsc5)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs5")
+			end
+			yyvsc5 := yyvsc5 + yyInitial_yyvs_size
+			yyvs5 := yyspecial_routines5.resize (yyvs5, yyvsc5)
+		end
+	end
+	yyvs5.put (yyval5, yyvsp5)
+end
+		end
+
+	yy_do_action_46 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval5: LIST [STRING]
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+yyval5 := yyvs5.item (yyvsp5) 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvs5.put (yyval5, yyvsp5)
+end
+		end
+
+	yy_do_action_47 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval5: LIST [STRING]
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+				yyval5 := create {ARRAYED_LIST [STRING]}.make (Initial_feature_list_size)
+				yyval5.extend (yyvs4.item (yyvsp4))
+			
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvsp5 := yyvsp5 + 1
+	yyvsp4 := yyvsp4 -1
+	if yyvsp5 >= yyvsc5 then
+		if yyvs5 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs5")
+			end
+			create yyspecial_routines5
+			yyvsc5 := yyInitial_yyvs_size
+			yyvs5 := yyspecial_routines5.make (yyvsc5)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs5")
+			end
+			yyvsc5 := yyvsc5 + yyInitial_yyvs_size
+			yyvs5 := yyspecial_routines5.resize (yyvs5, yyvsc5)
+		end
+	end
+	yyvs5.put (yyval5, yyvsp5)
+end
+		end
+
+	yy_do_action_48 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval5: LIST [STRING]
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+				yyval5 := yyvs5.item (yyvsp5)
+				yyval5.extend (yyvs4.item (yyvsp4))
+			
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 3
+	yyvsp1 := yyvsp1 -1
+	yyvsp4 := yyvsp4 -1
+	yyvs5.put (yyval5, yyvsp5)
+end
+		end
+
+	yy_do_action_49 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval11: LIST [CODE_SNIPPET_UNDEFINE_CLAUSE]
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 0
+	yyvsp11 := yyvsp11 + 1
+	if yyvsp11 >= yyvsc11 then
+		if yyvs11 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs11")
+			end
+			create yyspecial_routines11
+			yyvsc11 := yyInitial_yyvs_size
+			yyvs11 := yyspecial_routines11.make (yyvsc11)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs11")
+			end
+			yyvsc11 := yyvsc11 + yyInitial_yyvs_size
+			yyvs11 := yyspecial_routines11.resize (yyvs11, yyvsc11)
+		end
+	end
+	yyvs11.put (yyval11, yyvsp11)
+end
+		end
+
+	yy_do_action_50 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval11: LIST [CODE_SNIPPET_UNDEFINE_CLAUSE]
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+yyval11 := yyvs11.item (yyvsp11) 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvs11.put (yyval11, yyvsp11)
+end
+		end
+
+	yy_do_action_51 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval11: LIST [CODE_SNIPPET_UNDEFINE_CLAUSE]
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvsp11 := yyvsp11 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp11 >= yyvsc11 then
+		if yyvs11 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs11")
+			end
+			create yyspecial_routines11
+			yyvsc11 := yyInitial_yyvs_size
+			yyvs11 := yyspecial_routines11.make (yyvsc11)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs11")
+			end
+			yyvsc11 := yyvsc11 + yyInitial_yyvs_size
+			yyvs11 := yyspecial_routines11.resize (yyvs11, yyvsc11)
+		end
+	end
+	yyvs11.put (yyval11, yyvsp11)
+end
+		end
+
+	yy_do_action_52 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval11: LIST [CODE_SNIPPET_UNDEFINE_CLAUSE]
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+				yyval11 := create {ARRAYED_LIST [CODE_SNIPPET_UNDEFINE_CLAUSE]}.make (yyvs5.item (yyvsp5).count)
+				from
+					yyvs5.item (yyvsp5).start
+				until
+					yyvs5.item (yyvsp5).after
+				loop
+					yyval11.extend (create {CODE_SNIPPET_UNDEFINE_CLAUSE}.make (yyvs5.item (yyvsp5).item))
+					yyvs5.item (yyvsp5).forth
+				end
+			
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 2
+	yyvsp11 := yyvsp11 + 1
+	yyvsp1 := yyvsp1 -1
+	yyvsp5 := yyvsp5 -1
+	if yyvsp11 >= yyvsc11 then
+		if yyvs11 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs11")
+			end
+			create yyspecial_routines11
+			yyvsc11 := yyInitial_yyvs_size
+			yyvs11 := yyspecial_routines11.make (yyvsc11)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs11")
+			end
+			yyvsc11 := yyvsc11 + yyInitial_yyvs_size
+			yyvs11 := yyspecial_routines11.resize (yyvs11, yyvsc11)
+		end
+	end
+	yyvs11.put (yyval11, yyvsp11)
+end
+		end
+
+	yy_do_action_53 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval13: LIST [CODE_SNIPPET_REDEFINE_CLAUSE]
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 0
+	yyvsp13 := yyvsp13 + 1
+	if yyvsp13 >= yyvsc13 then
+		if yyvs13 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs13")
+			end
+			create yyspecial_routines13
+			yyvsc13 := yyInitial_yyvs_size
+			yyvs13 := yyspecial_routines13.make (yyvsc13)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs13")
+			end
+			yyvsc13 := yyvsc13 + yyInitial_yyvs_size
+			yyvs13 := yyspecial_routines13.resize (yyvs13, yyvsc13)
+		end
+	end
+	yyvs13.put (yyval13, yyvsp13)
+end
+		end
+
+	yy_do_action_54 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval13: LIST [CODE_SNIPPET_REDEFINE_CLAUSE]
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+yyval13 := yyvs13.item (yyvsp13) 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvs13.put (yyval13, yyvsp13)
+end
+		end
+
+	yy_do_action_55 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval13: LIST [CODE_SNIPPET_REDEFINE_CLAUSE]
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvsp13 := yyvsp13 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp13 >= yyvsc13 then
+		if yyvs13 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs13")
+			end
+			create yyspecial_routines13
+			yyvsc13 := yyInitial_yyvs_size
+			yyvs13 := yyspecial_routines13.make (yyvsc13)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs13")
+			end
+			yyvsc13 := yyvsc13 + yyInitial_yyvs_size
+			yyvs13 := yyspecial_routines13.resize (yyvs13, yyvsc13)
+		end
+	end
+	yyvs13.put (yyval13, yyvsp13)
+end
+		end
+
+	yy_do_action_56 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval13: LIST [CODE_SNIPPET_REDEFINE_CLAUSE]
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+				yyval13 := create {ARRAYED_LIST [CODE_SNIPPET_REDEFINE_CLAUSE]}.make (yyvs5.item (yyvsp5).count)
+				from
+					yyvs5.item (yyvsp5).start
+				until
+					yyvs5.item (yyvsp5).after
+				loop
+					yyval13.extend (create {CODE_SNIPPET_REDEFINE_CLAUSE}.make (yyvs5.item (yyvsp5).item))
+					yyvs5.item (yyvsp5).forth
+				end
+			
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 2
+	yyvsp13 := yyvsp13 + 1
+	yyvsp1 := yyvsp1 -1
+	yyvsp5 := yyvsp5 -1
+	if yyvsp13 >= yyvsc13 then
+		if yyvs13 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs13")
+			end
+			create yyspecial_routines13
+			yyvsc13 := yyInitial_yyvs_size
+			yyvs13 := yyspecial_routines13.make (yyvsc13)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs13")
+			end
+			yyvsc13 := yyvsc13 + yyInitial_yyvs_size
+			yyvs13 := yyspecial_routines13.resize (yyvs13, yyvsc13)
+		end
+	end
+	yyvs13.put (yyval13, yyvsp13)
+end
+		end
+
+	yy_do_action_57 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval15: LIST [CODE_SNIPPET_SELECT_CLAUSE]
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 0
+	yyvsp15 := yyvsp15 + 1
+	if yyvsp15 >= yyvsc15 then
+		if yyvs15 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs15")
+			end
+			create yyspecial_routines15
+			yyvsc15 := yyInitial_yyvs_size
+			yyvs15 := yyspecial_routines15.make (yyvsc15)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs15")
+			end
+			yyvsc15 := yyvsc15 + yyInitial_yyvs_size
+			yyvs15 := yyspecial_routines15.resize (yyvs15, yyvsc15)
+		end
+	end
+	yyvs15.put (yyval15, yyvsp15)
+end
+		end
+
+	yy_do_action_58 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval15: LIST [CODE_SNIPPET_SELECT_CLAUSE]
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+yyval15 := yyvs15.item (yyvsp15) 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvs15.put (yyval15, yyvsp15)
+end
+		end
+
+	yy_do_action_59 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval15: LIST [CODE_SNIPPET_SELECT_CLAUSE]
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvsp15 := yyvsp15 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp15 >= yyvsc15 then
+		if yyvs15 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs15")
+			end
+			create yyspecial_routines15
+			yyvsc15 := yyInitial_yyvs_size
+			yyvs15 := yyspecial_routines15.make (yyvsc15)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs15")
+			end
+			yyvsc15 := yyvsc15 + yyInitial_yyvs_size
+			yyvs15 := yyspecial_routines15.resize (yyvs15, yyvsc15)
+		end
+	end
+	yyvs15.put (yyval15, yyvsp15)
+end
+		end
+
+	yy_do_action_60 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval15: LIST [CODE_SNIPPET_SELECT_CLAUSE]
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+				yyval15 := create {ARRAYED_LIST [CODE_SNIPPET_SELECT_CLAUSE]}.make (yyvs5.item (yyvsp5).count)
+				from
+					yyvs5.item (yyvsp5).start
+				until
+					yyvs5.item (yyvsp5).after
+				loop
+					yyval15.extend (create {CODE_SNIPPET_SELECT_CLAUSE}.make (yyvs5.item (yyvsp5).item))
+					yyvs5.item (yyvsp5).forth
+				end
+			
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 2
+	yyvsp15 := yyvsp15 + 1
+	yyvsp1 := yyvsp1 -1
+	yyvsp5 := yyvsp5 -1
+	if yyvsp15 >= yyvsc15 then
+		if yyvs15 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs15")
+			end
+			create yyspecial_routines15
+			yyvsc15 := yyInitial_yyvs_size
+			yyvs15 := yyspecial_routines15.make (yyvsc15)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs15")
+			end
+			yyvsc15 := yyvsc15 + yyInitial_yyvs_size
+			yyvs15 := yyspecial_routines15.resize (yyvs15, yyvsc15)
+		end
+	end
+	yyvs15.put (yyval15, yyvsp15)
+end
+		end
+
+	yy_do_action_61 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval4: STRING
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+yyval4 := yyvs4.item (yyvsp4) 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvs4.put (yyval4, yyvsp4)
+end
+		end
+
+	yy_do_action_62 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval4: STRING
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+yyval4 := yyvs4.item (yyvsp4) 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvs4.put (yyval4, yyvsp4)
+end
+		end
+
+	yy_do_action_63 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval4: STRING
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+yyval4 := yyvs4.item (yyvsp4) 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvs4.put (yyval4, yyvsp4)
+end
+		end
+
+	yy_do_action_64 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval4: STRING
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+yyval4 := yyvs4.item (yyvsp4) 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 2
+	yyvsp1 := yyvsp1 -1
+	yyvs4.put (yyval4, yyvsp4)
+end
+		end
+
+	yy_do_action_65 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval4: STRING
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+yyval4 := yyvs4.item (yyvsp4) 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 2
+	yyvsp1 := yyvsp1 -1
+	yyvs4.put (yyval4, yyvsp4)
+end
+		end
+
+	yy_do_action_66 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval4: STRING
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+yyval4 := "prefix %"-%"" 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvsp4 := yyvsp4 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp4 >= yyvsc4 then
+		if yyvs4 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs4")
+			end
+			create yyspecial_routines4
+			yyvsc4 := yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.make (yyvsc4)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs4")
+			end
+			yyvsc4 := yyvsc4 + yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
+		end
+	end
+	yyvs4.put (yyval4, yyvsp4)
+end
+		end
+
+	yy_do_action_67 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval4: STRING
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+yyval4 := "prefix %"+%"" 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvsp4 := yyvsp4 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp4 >= yyvsc4 then
+		if yyvs4 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs4")
+			end
+			create yyspecial_routines4
+			yyvsc4 := yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.make (yyvsc4)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs4")
+			end
+			yyvsc4 := yyvsc4 + yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
+		end
+	end
+	yyvs4.put (yyval4, yyvsp4)
+end
+		end
+
+	yy_do_action_68 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval4: STRING
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+yyval4 := "prefix %"not%"" 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvsp4 := yyvsp4 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp4 >= yyvsc4 then
+		if yyvs4 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs4")
+			end
+			create yyspecial_routines4
+			yyvsc4 := yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.make (yyvsc4)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs4")
+			end
+			yyvsc4 := yyvsc4 + yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
+		end
+	end
+	yyvs4.put (yyval4, yyvsp4)
+end
+		end
+
+	yy_do_action_69 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval4: STRING
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+				yyval4 := create {STRING}.make (9 + token_buffer.count)
+				yyval4.append ("prefix %"")
+				yyval4.append (token_buffer.as_lower)
+				yyval4.append_character ('"')
+			
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvsp4 := yyvsp4 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp4 >= yyvsc4 then
+		if yyvs4 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs4")
+			end
+			create yyspecial_routines4
+			yyvsc4 := yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.make (yyvsc4)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs4")
+			end
+			yyvsc4 := yyvsc4 + yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
+		end
+	end
+	yyvs4.put (yyval4, yyvsp4)
+end
+		end
+
+	yy_do_action_70 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval4: STRING
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+yyval4 := "infix %"<%"" 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvsp4 := yyvsp4 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp4 >= yyvsc4 then
+		if yyvs4 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs4")
+			end
+			create yyspecial_routines4
+			yyvsc4 := yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.make (yyvsc4)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs4")
+			end
+			yyvsc4 := yyvsc4 + yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
+		end
+	end
+	yyvs4.put (yyval4, yyvsp4)
+end
+		end
+
+	yy_do_action_71 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval4: STRING
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+yyval4 := "infix %"<=%"" 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvsp4 := yyvsp4 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp4 >= yyvsc4 then
+		if yyvs4 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs4")
+			end
+			create yyspecial_routines4
+			yyvsc4 := yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.make (yyvsc4)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs4")
+			end
+			yyvsc4 := yyvsc4 + yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
+		end
+	end
+	yyvs4.put (yyval4, yyvsp4)
+end
+		end
+
+	yy_do_action_72 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval4: STRING
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+yyval4 := "infix %">%"" 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvsp4 := yyvsp4 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp4 >= yyvsc4 then
+		if yyvs4 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs4")
+			end
+			create yyspecial_routines4
+			yyvsc4 := yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.make (yyvsc4)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs4")
+			end
+			yyvsc4 := yyvsc4 + yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
+		end
+	end
+	yyvs4.put (yyval4, yyvsp4)
+end
+		end
+
+	yy_do_action_73 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval4: STRING
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+yyval4 := "infix %">=%"" 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvsp4 := yyvsp4 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp4 >= yyvsc4 then
+		if yyvs4 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs4")
+			end
+			create yyspecial_routines4
+			yyvsc4 := yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.make (yyvsc4)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs4")
+			end
+			yyvsc4 := yyvsc4 + yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
+		end
+	end
+	yyvs4.put (yyval4, yyvsp4)
+end
+		end
+
+	yy_do_action_74 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval4: STRING
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+yyval4 := "infix %"-%"" 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvsp4 := yyvsp4 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp4 >= yyvsc4 then
+		if yyvs4 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs4")
+			end
+			create yyspecial_routines4
+			yyvsc4 := yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.make (yyvsc4)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs4")
+			end
+			yyvsc4 := yyvsc4 + yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
+		end
+	end
+	yyvs4.put (yyval4, yyvsp4)
+end
+		end
+
+	yy_do_action_75 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval4: STRING
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+yyval4 := "infix %"+%"" 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvsp4 := yyvsp4 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp4 >= yyvsc4 then
+		if yyvs4 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs4")
+			end
+			create yyspecial_routines4
+			yyvsc4 := yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.make (yyvsc4)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs4")
+			end
+			yyvsc4 := yyvsc4 + yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
+		end
+	end
+	yyvs4.put (yyval4, yyvsp4)
+end
+		end
+
+	yy_do_action_76 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval4: STRING
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+yyval4 := "infix %"*%"" 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvsp4 := yyvsp4 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp4 >= yyvsc4 then
+		if yyvs4 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs4")
+			end
+			create yyspecial_routines4
+			yyvsc4 := yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.make (yyvsc4)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs4")
+			end
+			yyvsc4 := yyvsc4 + yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
+		end
+	end
+	yyvs4.put (yyval4, yyvsp4)
+end
+		end
+
+	yy_do_action_77 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval4: STRING
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+yyval4 := "infix %"/%"" 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvsp4 := yyvsp4 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp4 >= yyvsc4 then
+		if yyvs4 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs4")
+			end
+			create yyspecial_routines4
+			yyvsc4 := yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.make (yyvsc4)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs4")
+			end
+			yyvsc4 := yyvsc4 + yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
+		end
+	end
+	yyvs4.put (yyval4, yyvsp4)
+end
+		end
+
+	yy_do_action_78 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval4: STRING
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+yyval4 := "infix %"\\%"" 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvsp4 := yyvsp4 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp4 >= yyvsc4 then
+		if yyvs4 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs4")
+			end
+			create yyspecial_routines4
+			yyvsc4 := yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.make (yyvsc4)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs4")
+			end
+			yyvsc4 := yyvsc4 + yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
+		end
+	end
+	yyvs4.put (yyval4, yyvsp4)
+end
+		end
+
+	yy_do_action_79 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval4: STRING
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+yyval4 := "infix %"//%"" 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvsp4 := yyvsp4 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp4 >= yyvsc4 then
+		if yyvs4 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs4")
+			end
+			create yyspecial_routines4
+			yyvsc4 := yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.make (yyvsc4)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs4")
+			end
+			yyvsc4 := yyvsc4 + yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
+		end
+	end
+	yyvs4.put (yyval4, yyvsp4)
+end
+		end
+
+	yy_do_action_80 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval4: STRING
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+yyval4 := "infix %"^%"" 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvsp4 := yyvsp4 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp4 >= yyvsc4 then
+		if yyvs4 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs4")
+			end
+			create yyspecial_routines4
+			yyvsc4 := yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.make (yyvsc4)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs4")
+			end
+			yyvsc4 := yyvsc4 + yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
+		end
+	end
+	yyvs4.put (yyval4, yyvsp4)
+end
+		end
+
+	yy_do_action_81 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval4: STRING
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+yyval4 := "infix %"and%"" 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvsp4 := yyvsp4 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp4 >= yyvsc4 then
+		if yyvs4 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs4")
+			end
+			create yyspecial_routines4
+			yyvsc4 := yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.make (yyvsc4)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs4")
+			end
+			yyvsc4 := yyvsc4 + yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
+		end
+	end
+	yyvs4.put (yyval4, yyvsp4)
+end
+		end
+
+	yy_do_action_82 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval4: STRING
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+yyval4 := "infix %"and then%"" 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvsp4 := yyvsp4 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp4 >= yyvsc4 then
+		if yyvs4 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs4")
+			end
+			create yyspecial_routines4
+			yyvsc4 := yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.make (yyvsc4)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs4")
+			end
+			yyvsc4 := yyvsc4 + yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
+		end
+	end
+	yyvs4.put (yyval4, yyvsp4)
+end
+		end
+
+	yy_do_action_83 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval4: STRING
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+yyval4 := "infix %"implies%"" 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvsp4 := yyvsp4 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp4 >= yyvsc4 then
+		if yyvs4 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs4")
+			end
+			create yyspecial_routines4
+			yyvsc4 := yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.make (yyvsc4)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs4")
+			end
+			yyvsc4 := yyvsc4 + yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
+		end
+	end
+	yyvs4.put (yyval4, yyvsp4)
+end
+		end
+
+	yy_do_action_84 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval4: STRING
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+yyval4 := "infix %"or%"" 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvsp4 := yyvsp4 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp4 >= yyvsc4 then
+		if yyvs4 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs4")
+			end
+			create yyspecial_routines4
+			yyvsc4 := yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.make (yyvsc4)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs4")
+			end
+			yyvsc4 := yyvsc4 + yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
+		end
+	end
+	yyvs4.put (yyval4, yyvsp4)
+end
+		end
+
+	yy_do_action_85 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval4: STRING
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+yyval4 := "infix %"or else%"" 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvsp4 := yyvsp4 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp4 >= yyvsc4 then
+		if yyvs4 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs4")
+			end
+			create yyspecial_routines4
+			yyvsc4 := yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.make (yyvsc4)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs4")
+			end
+			yyvsc4 := yyvsc4 + yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
+		end
+	end
+	yyvs4.put (yyval4, yyvsp4)
+end
+		end
+
+	yy_do_action_86 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval4: STRING
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+yyval4 := "infix %"xor%"" 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvsp4 := yyvsp4 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp4 >= yyvsc4 then
+		if yyvs4 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs4")
+			end
+			create yyspecial_routines4
+			yyvsc4 := yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.make (yyvsc4)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs4")
+			end
+			yyvsc4 := yyvsc4 + yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
+		end
+	end
+	yyvs4.put (yyval4, yyvsp4)
+end
+		end
+
+	yy_do_action_87 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval4: STRING
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+				yyval4 := create {STRING}.make (8 + token_buffer.count)
+				yyval4.append ("infix %"")
+				yyval4.append (token_buffer.as_lower)
+				yyval4.append_character ('"')
+			
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvsp4 := yyvsp4 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp4 >= yyvsc4 then
+		if yyvs4 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs4")
+			end
+			create yyspecial_routines4
+			yyvsc4 := yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.make (yyvsc4)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs4")
+			end
+			yyvsc4 := yyvsc4 + yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
+		end
+	end
+	yyvs4.put (yyval4, yyvsp4)
+end
+		end
+
+	yy_do_action_88 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval4: STRING
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+				yyval4 := token_buffer.twin
+			
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvsp4 := yyvsp4 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp4 >= yyvsc4 then
+		if yyvs4 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs4")
+			end
+			create yyspecial_routines4
+			yyvsc4 := yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.make (yyvsc4)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs4")
+			end
+			yyvsc4 := yyvsc4 + yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
+		end
+	end
+	yyvs4.put (yyval4, yyvsp4)
+end
+		end
+
+	yy_do_action_89 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval4: STRING
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+				yyval4 := token_buffer.twin
+			
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 2
+	yyvsp4 := yyvsp4 + 1
+	yyvsp1 := yyvsp1 -2
+	if yyvsp4 >= yyvsc4 then
+		if yyvs4 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs4")
+			end
+			create yyspecial_routines4
+			yyvsc4 := yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.make (yyvsc4)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs4")
+			end
+			yyvsc4 := yyvsc4 + yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
+		end
+	end
+	yyvs4.put (yyval4, yyvsp4)
+end
+		end
+
+	yy_do_action_90 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval4: STRING
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+				yyval4 := token_buffer.twin
+			
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 2
+	yyvsp4 := yyvsp4 + 1
+	yyvsp1 := yyvsp1 -2
+	if yyvsp4 >= yyvsc4 then
+		if yyvs4 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs4")
+			end
+			create yyspecial_routines4
+			yyvsc4 := yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.make (yyvsc4)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs4")
+			end
+			yyvsc4 := yyvsc4 + yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
+		end
+	end
+	yyvs4.put (yyval4, yyvsp4)
+end
+		end
+
+	yy_do_action_91 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval4: STRING
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+yyval4 := token_buffer.twin 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvsp4 := yyvsp4 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp4 >= yyvsc4 then
+		if yyvs4 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs4")
+			end
+			create yyspecial_routines4
+			yyvsc4 := yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.make (yyvsc4)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs4")
+			end
+			yyvsc4 := yyvsc4 + yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
+		end
+	end
+	yyvs4.put (yyval4, yyvsp4)
+end
+		end
+
+	yy_do_action_92 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval1: ANY
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 0
+	yyvsp1 := yyvsp1 + 1
+	if yyvsp1 >= yyvsc1 then
+		if yyvs1 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs1")
+			end
+			create yyspecial_routines1
+			yyvsc1 := yyInitial_yyvs_size
+			yyvs1 := yyspecial_routines1.make (yyvsc1)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs1")
+			end
+			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		end
+	end
+	yyvs1.put (yyval1, yyvsp1)
+end
+		end
+
+	yy_do_action_93 is
+			--|#line <not available> "inheritance_clause.y"
+		local
+			yyval1: ANY
+		do
+--|#line <not available> "inheritance_clause.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'inheritance_clause.y' at line <not available>")
+end
+
+
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvs1.put (yyval1, yyvsp1)
+end
 		end
 
 	yy_do_error_action (yy_act: INTEGER) is
@@ -1503,9 +3304,7 @@ end
 
 feature {NONE} -- Table templates
 
-	yytranslate_template: ANY is
-			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
-			-- but once functions cannot be declared with anchored types.
+	yytranslate_template: SPECIAL [INTEGER] is
 		once
 			Result := yyfixed_array (<<
 			    0,    2,    2,    2,    2,    2,    2,    2,    2,    2,
@@ -1541,12 +3340,10 @@ feature {NONE} -- Table templates
 			   25,   26,   27,   28,   29,   30,   31,   32,   33,   34,
 			   35,   36,   37,   38,   39,   40,   41,   42,   43,   44,
 
-			   45,   46,   47>>)
+			   45,   46,   47, yyDummy>>)
 		end
 
-	yyr1_template: ANY is
-			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
-			-- but once functions cannot be declared with anchored types.
+	yyr1_template: SPECIAL [INTEGER] is
 		once
 			Result := yyfixed_array (<<
 			    0,   80,   80,   48,   48,   49,   49,   50,   50,   50,
@@ -1558,12 +3355,10 @@ feature {NONE} -- Table templates
 			   78,   51,   51,   51,   52,   53,   55,   55,   55,   55,
 			   54,   54,   54,   54,   54,   54,   54,   54,   54,   54,
 			   54,   54,   54,   54,   54,   54,   54,   54,   56,   56,
-			   56,   62,   81,   81>>)
+			   56,   62,   81,   81, yyDummy>>)
 		end
 
-	yytypes1_template: ANY is
-			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
-			-- but once functions cannot be declared with anchored types.
+	yytypes1_template: SPECIAL [INTEGER] is
 		once
 			Result := yyfixed_array (<<
 			    1,    1,    1,    1,    3,    2,    2,    4,    1,    2,
@@ -1580,24 +3375,20 @@ feature {NONE} -- Table templates
 			    4,    1,    1,    1,    1,    4,    5,    1,    5,    5,
 			    9,   11,   13,   15,    1,    4,    4,    6,    1,    1,
 			    1,   13,   15,    1,    4,   15,    1,    1,    1,    1,
-			    1>>)
+			    1, yyDummy>>)
 		end
 
-	yytypes2_template: ANY is
-			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
-			-- but once functions cannot be declared with anchored types.
+	yytypes2_template: SPECIAL [INTEGER] is
 		once
 			Result := yyfixed_array (<<
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-			    1,    1,    1,    1,    1,    1,    1,    1>>)
+			    1,    1,    1,    1,    1,    1,    1,    1, yyDummy>>)
 		end
 
-	yydefact_template: ANY is
-			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
-			-- but once functions cannot be declared with anchored types.
+	yydefact_template: SPECIAL [INTEGER] is
 		once
 			Result := yyfixed_array (<<
 			    0,   92,   91,   93,    1,    3,    5,   23,    2,    4,
@@ -1614,23 +3405,19 @@ feature {NONE} -- Table templates
 			   64,    0,    0,    0,   28,   30,    0,   45,   92,   46,
 			   42,   53,   57,    0,   11,   48,   36,   35,   29,    0,
 			   43,   57,    0,   10,   31,    0,    9,    8,    0,    0,
-			    0>>)
+			    0, yyDummy>>)
 		end
 
-	yydefgoto_template: ANY is
-			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
-			-- but once functions cannot be declared with anchored types.
+	yydefgoto_template: SPECIAL [INTEGER] is
 		once
 			Result := yyfixed_array (<<
 			    4,    5,    6,   48,   49,   50,  100,   81,   39,   12,
 			   18,   19,   20,   21,   51,   59,  108,   52,  106,   29,
 			   55,   56,   30,   64,   60,   61,   65,   66,   67,   68,
-			   69,   70,  128,    8>>)
+			   69,   70,  128,    8, yyDummy>>)
 		end
 
-	yypact_template: ANY is
-			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
-			-- but once functions cannot be declared with anchored types.
+	yypact_template: SPECIAL [INTEGER] is
 		once
 			Result := yyfixed_array (<<
 			   97,   40, -32768, -32768,   44, -32768,  102,   89, -32768, -32768,
@@ -1647,23 +3434,19 @@ feature {NONE} -- Table templates
 			 -32768,   35,   35,   35, -32768, -32768,   34, -32768,   83,   80,
 			 -32768,   69,   31,   45, -32768, -32768, -32768, -32768, -32768,   44,
 			 -32768,   31,   41, -32768, -32768,   38, -32768, -32768,   21,   17,
-			 -32768>>)
+			 -32768, yyDummy>>)
 		end
 
-	yypgoto_template: ANY is
-			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
-			-- but once functions cannot be declared with anchored types.
+	yypgoto_template: SPECIAL [INTEGER] is
 		once
 			Result := yyfixed_array (<<
 			 -32768,  113, -32768,  -23, -32768, -32768, -32768, -32768, -32768,  -14,
 			 -32768, -32768, -32768,   75,   -1, -32768, -32768,  -17, -32768, -32768,
 			 -32768,   11,   87, -32768, -32768,   51,  103,   46,  101,  -60,
-			  100,  -63, -32768,  -26>>)
+			  100,  -63, -32768,  -26, yyDummy>>)
 		end
 
-	yytable_template: ANY is
-			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
-			-- but once functions cannot be declared with anchored types.
+	yytable_template: SPECIAL [INTEGER] is
 		once
 			Result := yyfixed_array (<<
 			    7,   62,   54,    7,    2,  113,  112,   53,   45,   57,
@@ -1678,12 +3461,10 @@ feature {NONE} -- Table templates
 			   44,  104,   27,   58,   26,   25,   78,   77,   24,   23,
 
 			   43,  103,  102,   11,   73,   71,   10,   72,    1,   27,
-			  111,  110,   33,   32,  117,   31,   63,    9,  124,   76>>)
+			  111,  110,   33,   32,  117,   31,   63,    9,  124,   76, yyDummy>>)
 		end
 
-	yycheck_template: ANY is
-			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
-			-- but once functions cannot be declared with anchored types.
+	yycheck_template: SPECIAL [INTEGER] is
 		once
 			Result := yyfixed_array (<<
 			    1,   27,   25,    4,    6,   68,   66,   24,   22,   26,
@@ -1698,181 +3479,190 @@ feature {NONE} -- Table templates
 			    5,   21,   10,   20,   12,   13,   46,   47,   16,   17,
 
 			   15,    5,    8,   14,   26,    7,    4,   26,   11,   10,
-			   64,   60,   12,   12,  103,   12,   29,    4,  119,   44>>)
+			   64,   60,   12,   12,  103,   12,   29,    4,  119,   44, yyDummy>>)
 		end
 
-feature {NONE} -- Conversion
+feature {NONE} -- Semantic value stacks
 
-	yytype2 (v: ANY): CODE_SNIPPET_PARENT is
-		require
-			valid_type: yyis_type2 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs1: SPECIAL [ANY]
+			-- Stack for semantic values of type ANY
 
-	yyis_type2 (v: ANY): BOOLEAN is
-		local
-			u: CODE_SNIPPET_PARENT
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc1: INTEGER
+			-- Capacity of semantic value stack `yyvs1'
 
-	yytype3 (v: ANY): LIST [CODE_SNIPPET_PARENT] is
-		require
-			valid_type: yyis_type3 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp1: INTEGER
+			-- Top of semantic value stack `yyvs1'
 
-	yyis_type3 (v: ANY): BOOLEAN is
-		local
-			u: LIST [CODE_SNIPPET_PARENT]
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines1: KL_SPECIAL_ROUTINES [ANY]
+			-- Routines that ought to be in SPECIAL [ANY]
 
-	yytype4 (v: ANY): STRING is
-		require
-			valid_type: yyis_type4 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs2: SPECIAL [CODE_SNIPPET_PARENT]
+			-- Stack for semantic values of type CODE_SNIPPET_PARENT
 
-	yyis_type4 (v: ANY): BOOLEAN is
-		local
-			u: STRING
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc2: INTEGER
+			-- Capacity of semantic value stack `yyvs2'
 
-	yytype5 (v: ANY): LIST [STRING] is
-		require
-			valid_type: yyis_type5 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp2: INTEGER
+			-- Top of semantic value stack `yyvs2'
 
-	yyis_type5 (v: ANY): BOOLEAN is
-		local
-			u: LIST [STRING]
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines2: KL_SPECIAL_ROUTINES [CODE_SNIPPET_PARENT]
+			-- Routines that ought to be in SPECIAL [CODE_SNIPPET_PARENT]
 
-	yytype6 (v: ANY): CODE_SNIPPET_RENAME_CLAUSE is
-		require
-			valid_type: yyis_type6 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs3: SPECIAL [LIST [CODE_SNIPPET_PARENT]]
+			-- Stack for semantic values of type LIST [CODE_SNIPPET_PARENT]
 
-	yyis_type6 (v: ANY): BOOLEAN is
-		local
-			u: CODE_SNIPPET_RENAME_CLAUSE
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc3: INTEGER
+			-- Capacity of semantic value stack `yyvs3'
 
-	yytype7 (v: ANY): LIST [CODE_SNIPPET_RENAME_CLAUSE] is
-		require
-			valid_type: yyis_type7 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp3: INTEGER
+			-- Top of semantic value stack `yyvs3'
 
-	yyis_type7 (v: ANY): BOOLEAN is
-		local
-			u: LIST [CODE_SNIPPET_RENAME_CLAUSE]
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines3: KL_SPECIAL_ROUTINES [LIST [CODE_SNIPPET_PARENT]]
+			-- Routines that ought to be in SPECIAL [LIST [CODE_SNIPPET_PARENT]]
 
-	yytype9 (v: ANY): LIST [CODE_SNIPPET_EXPORT_CLAUSE] is
-		require
-			valid_type: yyis_type9 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs4: SPECIAL [STRING]
+			-- Stack for semantic values of type STRING
 
-	yyis_type9 (v: ANY): BOOLEAN is
-		local
-			u: LIST [CODE_SNIPPET_EXPORT_CLAUSE]
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc4: INTEGER
+			-- Capacity of semantic value stack `yyvs4'
 
-	yytype11 (v: ANY): LIST [CODE_SNIPPET_UNDEFINE_CLAUSE] is
-		require
-			valid_type: yyis_type11 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp4: INTEGER
+			-- Top of semantic value stack `yyvs4'
 
-	yyis_type11 (v: ANY): BOOLEAN is
-		local
-			u: LIST [CODE_SNIPPET_UNDEFINE_CLAUSE]
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines4: KL_SPECIAL_ROUTINES [STRING]
+			-- Routines that ought to be in SPECIAL [STRING]
 
-	yytype13 (v: ANY): LIST [CODE_SNIPPET_REDEFINE_CLAUSE] is
-		require
-			valid_type: yyis_type13 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs5: SPECIAL [LIST [STRING]]
+			-- Stack for semantic values of type LIST [STRING]
 
-	yyis_type13 (v: ANY): BOOLEAN is
-		local
-			u: LIST [CODE_SNIPPET_REDEFINE_CLAUSE]
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc5: INTEGER
+			-- Capacity of semantic value stack `yyvs5'
 
-	yytype15 (v: ANY): LIST [CODE_SNIPPET_SELECT_CLAUSE] is
-		require
-			valid_type: yyis_type15 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp5: INTEGER
+			-- Top of semantic value stack `yyvs5'
 
-	yyis_type15 (v: ANY): BOOLEAN is
-		local
-			u: LIST [CODE_SNIPPET_SELECT_CLAUSE]
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines5: KL_SPECIAL_ROUTINES [LIST [STRING]]
+			-- Routines that ought to be in SPECIAL [LIST [STRING]]
 
+	yyvs6: SPECIAL [CODE_SNIPPET_RENAME_CLAUSE]
+			-- Stack for semantic values of type CODE_SNIPPET_RENAME_CLAUSE
+
+	yyvsc6: INTEGER
+			-- Capacity of semantic value stack `yyvs6'
+
+	yyvsp6: INTEGER
+			-- Top of semantic value stack `yyvs6'
+
+	yyspecial_routines6: KL_SPECIAL_ROUTINES [CODE_SNIPPET_RENAME_CLAUSE]
+			-- Routines that ought to be in SPECIAL [CODE_SNIPPET_RENAME_CLAUSE]
+
+	yyvs7: SPECIAL [LIST [CODE_SNIPPET_RENAME_CLAUSE]]
+			-- Stack for semantic values of type LIST [CODE_SNIPPET_RENAME_CLAUSE]
+
+	yyvsc7: INTEGER
+			-- Capacity of semantic value stack `yyvs7'
+
+	yyvsp7: INTEGER
+			-- Top of semantic value stack `yyvs7'
+
+	yyspecial_routines7: KL_SPECIAL_ROUTINES [LIST [CODE_SNIPPET_RENAME_CLAUSE]]
+			-- Routines that ought to be in SPECIAL [LIST [CODE_SNIPPET_RENAME_CLAUSE]]
+
+	yyvs8: SPECIAL [CODE_SNIPPET_EXPORT_CLAUSE]
+			-- Stack for semantic values of type CODE_SNIPPET_EXPORT_CLAUSE
+
+	yyvsc8: INTEGER
+			-- Capacity of semantic value stack `yyvs8'
+
+	yyvsp8: INTEGER
+			-- Top of semantic value stack `yyvs8'
+
+	yyspecial_routines8: KL_SPECIAL_ROUTINES [CODE_SNIPPET_EXPORT_CLAUSE]
+			-- Routines that ought to be in SPECIAL [CODE_SNIPPET_EXPORT_CLAUSE]
+
+	yyvs9: SPECIAL [LIST [CODE_SNIPPET_EXPORT_CLAUSE]]
+			-- Stack for semantic values of type LIST [CODE_SNIPPET_EXPORT_CLAUSE]
+
+	yyvsc9: INTEGER
+			-- Capacity of semantic value stack `yyvs9'
+
+	yyvsp9: INTEGER
+			-- Top of semantic value stack `yyvs9'
+
+	yyspecial_routines9: KL_SPECIAL_ROUTINES [LIST [CODE_SNIPPET_EXPORT_CLAUSE]]
+			-- Routines that ought to be in SPECIAL [LIST [CODE_SNIPPET_EXPORT_CLAUSE]]
+
+	yyvs10: SPECIAL [CODE_SNIPPET_UNDEFINE_CLAUSE]
+			-- Stack for semantic values of type CODE_SNIPPET_UNDEFINE_CLAUSE
+
+	yyvsc10: INTEGER
+			-- Capacity of semantic value stack `yyvs10'
+
+	yyvsp10: INTEGER
+			-- Top of semantic value stack `yyvs10'
+
+	yyspecial_routines10: KL_SPECIAL_ROUTINES [CODE_SNIPPET_UNDEFINE_CLAUSE]
+			-- Routines that ought to be in SPECIAL [CODE_SNIPPET_UNDEFINE_CLAUSE]
+
+	yyvs11: SPECIAL [LIST [CODE_SNIPPET_UNDEFINE_CLAUSE]]
+			-- Stack for semantic values of type LIST [CODE_SNIPPET_UNDEFINE_CLAUSE]
+
+	yyvsc11: INTEGER
+			-- Capacity of semantic value stack `yyvs11'
+
+	yyvsp11: INTEGER
+			-- Top of semantic value stack `yyvs11'
+
+	yyspecial_routines11: KL_SPECIAL_ROUTINES [LIST [CODE_SNIPPET_UNDEFINE_CLAUSE]]
+			-- Routines that ought to be in SPECIAL [LIST [CODE_SNIPPET_UNDEFINE_CLAUSE]]
+
+	yyvs12: SPECIAL [CODE_SNIPPET_REDEFINE_CLAUSE]
+			-- Stack for semantic values of type CODE_SNIPPET_REDEFINE_CLAUSE
+
+	yyvsc12: INTEGER
+			-- Capacity of semantic value stack `yyvs12'
+
+	yyvsp12: INTEGER
+			-- Top of semantic value stack `yyvs12'
+
+	yyspecial_routines12: KL_SPECIAL_ROUTINES [CODE_SNIPPET_REDEFINE_CLAUSE]
+			-- Routines that ought to be in SPECIAL [CODE_SNIPPET_REDEFINE_CLAUSE]
+
+	yyvs13: SPECIAL [LIST [CODE_SNIPPET_REDEFINE_CLAUSE]]
+			-- Stack for semantic values of type LIST [CODE_SNIPPET_REDEFINE_CLAUSE]
+
+	yyvsc13: INTEGER
+			-- Capacity of semantic value stack `yyvs13'
+
+	yyvsp13: INTEGER
+			-- Top of semantic value stack `yyvs13'
+
+	yyspecial_routines13: KL_SPECIAL_ROUTINES [LIST [CODE_SNIPPET_REDEFINE_CLAUSE]]
+			-- Routines that ought to be in SPECIAL [LIST [CODE_SNIPPET_REDEFINE_CLAUSE]]
+
+	yyvs14: SPECIAL [CODE_SNIPPET_SELECT_CLAUSE]
+			-- Stack for semantic values of type CODE_SNIPPET_SELECT_CLAUSE
+
+	yyvsc14: INTEGER
+			-- Capacity of semantic value stack `yyvs14'
+
+	yyvsp14: INTEGER
+			-- Top of semantic value stack `yyvs14'
+
+	yyspecial_routines14: KL_SPECIAL_ROUTINES [CODE_SNIPPET_SELECT_CLAUSE]
+			-- Routines that ought to be in SPECIAL [CODE_SNIPPET_SELECT_CLAUSE]
+
+	yyvs15: SPECIAL [LIST [CODE_SNIPPET_SELECT_CLAUSE]]
+			-- Stack for semantic values of type LIST [CODE_SNIPPET_SELECT_CLAUSE]
+
+	yyvsc15: INTEGER
+			-- Capacity of semantic value stack `yyvs15'
+
+	yyvsp15: INTEGER
+			-- Top of semantic value stack `yyvs15'
+
+	yyspecial_routines15: KL_SPECIAL_ROUTINES [LIST [CODE_SNIPPET_SELECT_CLAUSE]]
+			-- Routines that ought to be in SPECIAL [LIST [CODE_SNIPPET_SELECT_CLAUSE]]
 
 feature {NONE} -- Constants
 

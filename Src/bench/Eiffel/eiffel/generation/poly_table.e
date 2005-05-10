@@ -296,6 +296,9 @@ feature
 						and then this_type.is_identical (first_type))
 				i := i + 1
 			end
+			if Result then
+				Result := first_type.is_explicit
+			end
 		end
 
 	generate_type_table (buffer: GENERATION_BUFFER) is

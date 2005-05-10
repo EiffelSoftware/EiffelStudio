@@ -262,6 +262,9 @@ feature {EV_GRID_I, EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I} -- Implemen
 					if parent_i.item_select_actions_internal /= Void then
 						parent_i.item_select_actions_internal.call ([interface])
 					end
+					if select_actions_internal /= Void then
+						select_actions_internal.call (Void)
+					end
 				end				
 			end
 		end
@@ -279,6 +282,9 @@ feature {EV_GRID_I, EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I} -- Implemen
 					parent_i.remove_item_from_selected_items (Current)
 					if parent_i.item_deselect_actions_internal /= Void then
 						parent_i.item_deselect_actions_internal.call ([interface])
+					end
+					if deselect_actions_internal /= Void then
+						deselect_actions_internal.call (Void)
 					end
 				end				
 			end

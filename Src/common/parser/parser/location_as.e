@@ -68,9 +68,9 @@ feature -- Access
 			-- Position in file of Current
 
 	final_position: INTEGER is
-			-- Position plus count.
+			-- Ending position of Current in file
 		do
-			Result := position + internal_count.to_integer_32
+			Result := position + internal_count.to_integer_32 - 1
 		end
 
 	final_column: INTEGER is

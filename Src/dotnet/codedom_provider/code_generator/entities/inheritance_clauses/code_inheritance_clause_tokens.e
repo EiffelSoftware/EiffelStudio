@@ -9,6 +9,9 @@ inherit
 
 	YY_PARSER_TOKENS
 
+feature -- Last values
+
+	last_any_value: ANY
 
 feature -- Access
 

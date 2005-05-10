@@ -18,6 +18,11 @@ inherit
 			interface
 		end
 
+	EV_TAB_CONTROLABLE_I
+		redefine
+			interface
+		end
+
 	EV_DRAWING_AREA_ACTION_SEQUENCES_I
 
 feature -- Drawing operations

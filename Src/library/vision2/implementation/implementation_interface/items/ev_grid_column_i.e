@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 		do
 			physical_index := -1
 			create header_item
-			is_initialized := True
+			set_is_initialized (True)
 		end
 
 feature {EV_GRID_I} -- Initialization
@@ -421,7 +421,6 @@ feature {NONE} -- Implementation
 			a_count: INTEGER
 			a_parent_i: EV_GRID_I
 			a_internal_index: INTEGER
-			call_events: BOOLEAN
 			l_is_selected: BOOLEAN
 		do
 			from
@@ -448,9 +447,15 @@ feature {NONE} -- Implementation
 				if parent_i.column_select_actions_internal /= Void then
 					parent_i.column_select_actions_internal.call ([interface])
 				end
+				if select_actions_internal /= Void then
+					select_actions_internal.call (Void)
+				end
 			elseif l_is_selected then
 				if parent_i.column_deselect_actions_internal /= Void  then
 					parent_i.column_deselect_actions_internal.call ([interface])
+				end
+				if deselect_actions_internal /= Void then
+					deselect_actions_internal.call (Void)
 				end
 			end
 			parent_i.redraw_column (Current)

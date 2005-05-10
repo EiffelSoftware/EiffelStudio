@@ -59,7 +59,6 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-
 	pointer_enter_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Actions to be performed when screen pointer enters widget.
 		do
@@ -68,13 +67,28 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-
 	pointer_leave_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Actions to be performed when screen pointer leaves widget.
 		do
 			Result := implementation.pointer_leave_actions
 		ensure
 			not_void: Result /= Void
+		end
+
+	select_actions: EV_NOTIFY_ACTION_SEQUENCE is
+			-- Actions to be performed when `Current' is selected.
+		do
+			Result := implementation.select_actions
+		ensure
+			result_not_void: Result /= Void
+		end
+		
+	deselect_actions: EV_NOTIFY_ACTION_SEQUENCE is
+			-- Actions to be performed when `Current' is deselected.
+		do
+			Result := implementation.deselect_actions
+		ensure
+			result_not_void: Result /= Void
 		end
 		
 end

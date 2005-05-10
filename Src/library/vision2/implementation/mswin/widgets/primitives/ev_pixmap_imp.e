@@ -58,7 +58,7 @@ feature {NONE} -- Initialization
 			private_width := 1
 			private_height := 1
 
-			is_initialized := True
+			set_is_initialized (True)
 		end
 
 feature {EV_ANY_I, EV_STOCK_PIXMAPS_IMP} -- Loading/Saving
@@ -1099,8 +1099,8 @@ feature {EV_PIXMAP_I} -- Implementation
 			-- Destroy actual object.
 		do
 				-- Turn off invariant checking.
-			is_initialized := False
-			is_destroyed := True
+			set_is_initialized (False)
+			set_is_destroyed (True)
 
 				-- Free GDI resources.
 			reset_resource_content
@@ -1311,7 +1311,7 @@ feature {NONE} -- Implementation
 			end
 			
 				-- Enable invariant checking again
-			is_initialized := True
+			set_is_initialized (True)
 		end
 
 	new_empty_bitmap: WEL_BITMAP is
@@ -1604,7 +1604,7 @@ feature {NONE} -- Implementation
 	disable_initialized is
 			-- Ensure `is_initialized' = False.
 		do
-			is_initialized := False
+			set_is_initialized (False)
 		end
 		
 

@@ -66,7 +66,7 @@ feature {NONE} -- Initialization
 		do
 			set_width (80)
 			set_text ("")
-			is_initialized := True
+			set_is_initialized (True)
 		end
 		
 feature -- Status report

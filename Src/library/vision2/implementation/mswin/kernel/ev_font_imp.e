@@ -81,7 +81,7 @@ feature {EV_FONTABLE_IMP, EV_FONT_DIALOG_IMP} -- Initialization
 	initialize is
 			-- Initialize `Current'.
 		do
-			is_initialized := True
+			set_is_initialized (True)
 		end
 
 feature -- Access
@@ -327,7 +327,7 @@ feature {EV_ANY_I} -- Implementation
 		do
 			wel_font.delete
 			wel_font := Void
-			is_destroyed := True
+			set_is_destroyed (True)
 		end
 
 	update_preferred_faces (a_face: STRING) is

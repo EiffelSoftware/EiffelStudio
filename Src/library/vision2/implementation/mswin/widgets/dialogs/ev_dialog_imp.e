@@ -219,7 +219,7 @@ feature {EV_DIALOG_I} -- Implementation
 			app_imp.remove_root_window (Current)
 
 			wel_destroy_window
-			is_destroyed := True
+			set_is_destroyed (True)
 		end
 
 feature {NONE} -- Implementation
@@ -322,7 +322,7 @@ feature {NONE} -- Implementation
 			awaiting_movement := other_imp.awaiting_movement
 			background_color_imp := other_imp.background_color_imp
 			background_pixmap_imp := other_imp.background_pixmap_imp
-			base_make_called := other_imp.base_make_called
+			state_flags := other_imp.state_flags
 			child_cell := other_imp.child_cell
 			close_request_actions_internal := other_imp.close_request_actions_internal
 			commands := other_imp.commands
@@ -349,7 +349,7 @@ feature {NONE} -- Implementation
 			internal_title := other_imp.internal_title
 			internal_width := other_imp.internal_width
 			is_closeable := other_imp.is_closeable
-			is_destroyed := other_imp.is_destroyed
+
 			is_dnd_in_transport := other_imp.is_dnd_in_transport
 			is_in_min_height := other_imp.is_in_min_height
 			is_in_min_width := other_imp.is_in_min_width

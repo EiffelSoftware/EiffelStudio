@@ -58,7 +58,7 @@ feature {NONE} -- Initialization
 			reset_brush
 			set_line_width (1)
 
-			is_initialized := True
+			set_is_initialized (True)
 		end
 
 feature --{EV_ANY_I} -- Implementation
@@ -1112,8 +1112,8 @@ feature {EV_ANY, EV_ANY_I} -- Command
 				internal_background_brush.decrement_reference
 				internal_background_brush := Void
 			end
-
-			is_destroyed := True
+			
+			set_is_destroyed (True)
 		end
 
 feature {EV_ANY_I} -- Implementation

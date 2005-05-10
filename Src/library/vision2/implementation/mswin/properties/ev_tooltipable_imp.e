@@ -102,7 +102,7 @@ feature {NONE} -- Implementation
 				app_imp ?= envir.application.implementation
 				app_imp.all_tooltips.prune (internal_tooltip.item)
 			end
-			is_destroyed := True
+			set_is_destroyed (True)
 		end
 		
 

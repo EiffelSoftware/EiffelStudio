@@ -62,7 +62,7 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'
 			--| Currently no need to do anything here.
 		do
-			is_initialized := True
+			set_is_initialized (True)
 		end
 
 feature -- Access
@@ -97,7 +97,7 @@ feature -- Element change
 			-- Destroy `Current'.
 		do
 			destroy_item
-			is_destroyed := True
+			set_is_destroyed (True)
 		end
 
 feature {EV_ANY_I}

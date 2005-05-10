@@ -278,7 +278,7 @@ feature -- Status setting
 			if hot_imagelist /= Void then
 				destroy_toolbar_hot_imagelist (hot_imagelist)
 			end
-			is_destroyed := True
+			set_is_destroyed (True)
 		end
 
 	enable_sensitive is

@@ -77,7 +77,7 @@ feature {NONE} -- Initialization
 				--| EV_WINDOW AND EV_TITLED_WINDOW.
 				show
 			end
-			is_initialized := True
+			set_is_initialized (True)
 		end
 
 feature -- Access
@@ -314,7 +314,7 @@ feature -- Status setting
 				parent_imp.interface.prune (Current.interface)
 			end
 			wel_destroy
-			is_destroyed := True
+			set_is_destroyed (True)
 		end
 
 	show is

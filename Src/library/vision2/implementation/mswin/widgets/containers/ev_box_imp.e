@@ -63,10 +63,10 @@ feature {NONE} -- Initialization
 	initialize is
 			
 		do
-			Precursor
+			Precursor {EV_WIDGET_LIST_IMP}
 			remove_item_actions.extend (agent removed_so_update_non_expandable_children (?))
 			new_item_actions.extend (agent added_so_update_non_expandable_children (?))
-			is_initialized := True
+			set_is_initialized (True)
 		end
 feature -- Access
 

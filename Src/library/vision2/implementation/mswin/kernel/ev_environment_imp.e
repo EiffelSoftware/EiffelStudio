@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 	initialize is
 			-- No extra initialization needed.
 		do
-			is_initialized := True
+			set_is_initialized (True)
 		end
 		
 feature {NONE} -- Implementation

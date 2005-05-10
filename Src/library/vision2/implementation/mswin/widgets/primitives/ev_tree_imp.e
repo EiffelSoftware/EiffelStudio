@@ -125,7 +125,7 @@ feature {NONE} -- Initialization
 			Precursor {EV_TREE_I}
 			create all_ev_children.make (1)
 
-			is_initialized := True
+			set_is_initialized (True)
 		end
 
 feature -- Access

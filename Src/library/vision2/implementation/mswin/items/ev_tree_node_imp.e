@@ -130,7 +130,7 @@ feature {NONE} -- Initialization
 		do
 			Precursor
 			create internal_children.make (1)
-			is_initialized := True
+			set_is_initialized (True)
 		end
 
 feature {EV_ANY_I}-- Access

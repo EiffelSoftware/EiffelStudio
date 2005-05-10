@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 		do
 			create new_item_actions
 			create remove_item_actions
-			is_initialized := True
+			set_is_initialized (True)
 		end
 
 feature {NONE} -- Implementation

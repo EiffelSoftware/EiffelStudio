@@ -37,7 +37,7 @@ feature -- Initialization
 	initialize is
 			-- Initialize `Current'.
 		do
-			is_initialized := True
+			set_is_initialized (True)
 		end
 
 feature {EV_COLOR} -- Access
@@ -193,7 +193,7 @@ feature -- Status setting
 			-- Render `Current' unusable.
 			-- No externals to deallocate, just set the flags.
 		do
-			is_destroyed := True
+			set_is_destroyed (True)
 		end
 		
 feature {NONE} -- Implementation

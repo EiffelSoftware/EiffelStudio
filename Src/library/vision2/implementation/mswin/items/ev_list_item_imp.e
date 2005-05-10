@@ -73,7 +73,7 @@ feature {NONE} -- Initialization
 		do
 			create lv_item.make
 			create cb_item.make
-			is_initialized := True
+			set_is_initialized (True)
 		end
 
 feature -- Access

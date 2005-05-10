@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 		do
 			Precursor {EV_CELL_IMP}
 			initialize_grid
-			is_initialized := True
+			set_is_initialized (True)
 		end
 
 feature {EV_GRID_I} -- Access

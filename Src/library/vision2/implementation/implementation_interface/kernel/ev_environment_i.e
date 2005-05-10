@@ -98,7 +98,7 @@ feature -- Command
 	destroy is
 			-- Render current unusable.
 		do
-			is_destroyed := True
+			set_is_destroyed (True)
 		end
 
 end -- class EV_ENVIRONMENT_I

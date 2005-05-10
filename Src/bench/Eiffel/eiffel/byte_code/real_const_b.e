@@ -114,9 +114,9 @@ feature -- Byte code generation
 			-- Generate byte code for a real manifest constant.
 		do
 			if real_size = 64 then
-				ba.append (Bc_real32)
-			else
 				ba.append (Bc_real64)
+			else
+				ba.append (Bc_real32)
 			end
 			ba.append_double (value.to_double)
 		end

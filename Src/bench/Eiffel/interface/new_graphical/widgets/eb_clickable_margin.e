@@ -140,9 +140,7 @@ feature {NONE} -- Events
 			l_number: INTEGER
 			bkstn: BREAKABLE_STONE
 		do
-			if button = 1 then
---				l_number := (y_pos // text_panel.line_height) + first_line_displayed
-				
+			if button = 1 then				
 				l_number := (y_pos - margin_viewport.y_offset + (first_line_displayed * text_panel.line_height)) // text_panel.line_height
 				
 				if l_number <= text_panel.number_of_lines then

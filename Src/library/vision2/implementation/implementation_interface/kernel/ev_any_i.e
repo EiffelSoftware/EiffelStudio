@@ -33,7 +33,7 @@ feature {EV_ANY_I} -- Initialization
 			an_interface_not_void: an_interface /= Void
 			not_already_called: base_make_called = False
 		do
-			base_make_called := True
+			set_base_make_called (True)
 			interface := an_interface
 		ensure
 			interface_assigned: interface = an_interface
@@ -71,7 +71,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- Called directly from `interface'.destroy
 		do
 			if not is_in_destroy then
-				is_in_destroy := True
+				set_is_in_destroy (True)
 				destroy
 			end
 		end
@@ -98,18 +98,86 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			--| 1-1 mapping between implementation and interface
 			--| objects.
 
-	base_make_called: BOOLEAN
+	state_flags: INTEGER_8
+		-- Flags used to hold state of `base_make_called', `is_initialized', `is_destroyed' and `is_in_destroy'.
+		-- By storing them in a single INTEGER_8, space is saved.
+		-- bit_test (0) returns `base_make_called'.
+		-- bit_test (1) returns `is_initialized'.
+		-- bit_test (2) returns `is_destroyed'.
+		-- bit_test (3) returns `is_in_destroy'.
+
+	base_make_called: BOOLEAN is
 			-- Was `base_make' called?
+		do
+			Result := state_flags.bit_test (0) = True
+		end
 
-	is_initialized: BOOLEAN
+	is_initialized: BOOLEAN is
 			-- Has `Current' been initialized properly?
+		do
+			Result := state_flags.bit_test (1) = True
+		end
 
-	is_destroyed: BOOLEAN
+	is_destroyed: BOOLEAN is
 			-- Is `Current' no longer usable?
+		do
+			Result := state_flags.bit_test (2) = True
+		end
 
-	is_in_destroy: BOOLEAN
+	is_in_destroy: BOOLEAN is
 			-- Is `Current' in the process of being destroyed?
 			-- Needed for call protection when in the process of `destroy' to prevent multiple calls as a result of destruction.
+		do
+			Result := state_flags.bit_test (3) = True
+		end
+
+	set_base_make_called (flag: BOOLEAN) is
+			-- Set `base_make_called' to `flag'.
+		do
+			if flag then
+				state_flags := state_flags.set_bit (True, 0)
+			else
+				state_flags := state_flags.set_bit (False, 0)
+			end
+		ensure
+			is_base_make_called_set: base_make_called = flag
+		end
+
+	set_is_initialized (flag: BOOLEAN) is
+			-- Set `is_initialized' to `flag'.
+		do
+			if flag then
+				state_flags := state_flags.set_bit (True, 1)
+			else
+				state_flags := state_flags.set_bit (False, 1)
+			end
+		ensure
+			is_initialized_set: is_initialized = flag
+		end
+
+	set_is_destroyed (flag: BOOLEAN) is
+			-- Set `is_destroyed' to `flag'.
+		do
+			if flag then
+				state_flags := state_flags.set_bit (True, 2)
+			else
+				state_flags := state_flags.set_bit (False, 2)
+			end
+		ensure
+			is_destroyed_set: is_destroyed = flag
+		end
+
+	set_is_in_destroy (flag: BOOLEAN) is
+			-- Set `is_in_destroy' to `flag'.
+		do
+			if flag then
+				state_flags := state_flags.set_bit (True, 3)
+			else
+				state_flags := state_flags.set_bit (False, 3)
+			end
+		ensure
+			is_in_destroy_set: is_in_destroy = flag
+		end
 
 	set_interface (an_interface: like interface) is
 			-- Assign `an_interface' to `interface'. 
@@ -132,7 +200,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 				called_by_replace_implementation_only: False
 					-- replace_implementation calls turns assertions off.
 			end
-			is_initialized := True
+			set_is_initialized (True)
 		ensure
 			is_initialized: is_initialized
 		end
@@ -145,7 +213,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 				called_by_replace_implementation_only: False
 					-- replace_implementation calls turns assertions off.
 			end
-			is_initialized := False
+			set_is_initialized (False)
 		ensure
 			not_is_initialized: not is_initialized
 		end

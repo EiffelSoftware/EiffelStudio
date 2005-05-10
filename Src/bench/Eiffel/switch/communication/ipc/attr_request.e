@@ -168,7 +168,11 @@ feature {NONE} -- Implementation
 			debug("DEBUG_RECV")
 				io.error.put_string ("Getting ")
 				io.error.put_integer (attr_nb)
-				io.error.put_string (" attributes...%N")
+				io.error.put_string (" attributes ...")
+				if e_class /= Void then
+					io.error.put_string (" (related to e_class = " + e_class.name_in_upper + ") ")
+				end
+				io.error.put_new_line
 			end
 			from
 				i := 1
@@ -181,8 +185,8 @@ feature {NONE} -- Implementation
 					io.error.put_string ("Grepping attribute `");
 					io.error.put_string (attr_name);
 					io.error.put_string ("' of type ");
-					io.error.put_integer (sk_type);
-					io.error.put_string (".%N")
+					io.error.put_string ("0x" + sk_type.to_hex_string)
+					io.error.put_new_line
 				end
 				inspect
 					sk_type

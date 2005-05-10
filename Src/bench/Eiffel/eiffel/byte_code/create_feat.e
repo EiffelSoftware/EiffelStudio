@@ -107,40 +107,38 @@ feature -- C code generation
 					-- Create anything - cannot be called anyway
 
 					buffer.put_integer (0)
-				else
-					if table.has_one_type then
-							-- There is a table, but with only one type
-						gen_type ?= table.first.type
+				elseif table.has_one_type then
+						-- There is a table, but with only one type
+					gen_type ?= table.first.type
 
-						if gen_type /= Void then
-							buffer.put_string ("typres")
-						else
-							buffer.put_type_id (table.first.feature_type_id)
-						end
+					if gen_type /= Void then
+						buffer.put_string ("typres")
 					else
-							-- Attribute is polymorphic
-						table_name := Encoder.type_table_name (routine_id)
-
-						buffer.put_string ("RTFCID2(")
-						buffer.put_integer (context.current_type.generated_id (context.final_mode))
-						buffer.put_character (',')
-						buffer.put_string (table_name)
-						buffer.put_character (',')
-						buffer.put_string (table_name)
-						buffer.put_string ("_gen_type")
-						buffer.put_character (',')
-						context.generate_current_dftype
-						buffer.put_character (',')
-						buffer.put_type_id (table.min_type_id)
-						buffer.put_character (')')
-
-							-- Side effect. This is not nice but
-							-- unavoidable.
-							-- Mark routine id used
-						Eiffel_table.mark_used (routine_id)
-							-- Remember extern declaration
-						Extern_declarations.add_type_table (table_name)
+						buffer.put_type_id (table.first.feature_type_id)
 					end
+				else
+						-- Attribute is polymorphic
+					table_name := Encoder.type_table_name (routine_id)
+
+					buffer.put_string ("RTFCID2(")
+					buffer.put_integer (context.current_type.generated_id (context.final_mode))
+					buffer.put_character (',')
+					buffer.put_string (table_name)
+					buffer.put_character (',')
+					buffer.put_string (table_name)
+					buffer.put_string ("_gen_type")
+					buffer.put_character (',')
+					context.generate_current_dftype
+					buffer.put_character (',')
+					buffer.put_type_id (table.min_type_id)
+					buffer.put_character (')')
+
+						-- Side effect. This is not nice but
+						-- unavoidable.
+						-- Mark routine id used
+					Eiffel_table.mark_used (routine_id)
+						-- Remember extern declaration
+					Extern_declarations.add_type_table (table_name)
 				end
 			else
 				if
@@ -238,13 +236,7 @@ feature -- Genericity
 				if table = Void then
 					Result := True
 				else
-					-- Feature has at least one effective version
-					if table.has_one_type then
-							-- There is a table, but with only one type
-						Result := table.first.type.is_explicit
-					else
-						Result := False
-					end
+					Result := table.has_one_type
 				end
 			else
 				Result := False
@@ -282,43 +274,40 @@ feature -- Genericity
 					buffer.put_character (',')
 					buffer.put_integer (terminator_type)
 					buffer.put_character (',')
-				else
-					-- Feature has at least one effective version
-					if table.has_one_type then
-							-- There is a table, but with only one type
-						gen_type ?= table.first.type
+				elseif table.has_one_type then
+						-- There is a table, but with only one type
+					gen_type ?= table.first.type
 
-						if gen_type /= Void then
-							gen_type.generate_cid (buffer, final_mode, True)
-						else
-							buffer.put_type_id (table.first.feature_type_id)
-							buffer.put_character (',')
-						end
+					if gen_type /= Void then
+						gen_type.generate_cid (buffer, final_mode, True)
 					else
-							-- Attribute is polymorphic
-						table_name := Encoder.type_table_name (routine_id)
-
-						buffer.put_string ("RTFCID2(")
-						buffer.put_integer (context.current_type.generated_id (context.final_mode))
+						buffer.put_type_id (table.first.feature_type_id)
 						buffer.put_character (',')
-						buffer.put_string (table_name)
-						buffer.put_character (',')
-						buffer.put_string (table_name)
-						buffer.put_string ("_gen_type")
-						buffer.put_character (',')
-						context.generate_current_dftype
-						buffer.put_character (',')
-						buffer.put_type_id (table.min_type_id)
-						buffer.put_character (')')
-						buffer.put_character (',')
-
-							-- Side effect. This is not nice but
-							-- unavoidable.
-							-- Mark routine id used
-						Eiffel_table.mark_used (routine_id)
-							-- Remember extern declaration
-						Extern_declarations.add_type_table (table_name)
 					end
+				else
+						-- Attribute is polymorphic
+					table_name := Encoder.type_table_name (routine_id)
+
+					buffer.put_string ("RTFCID2(")
+					buffer.put_integer (context.current_type.generated_id (context.final_mode))
+					buffer.put_character (',')
+					buffer.put_string (table_name)
+					buffer.put_character (',')
+					buffer.put_string (table_name)
+					buffer.put_string ("_gen_type")
+					buffer.put_character (',')
+					context.generate_current_dftype
+					buffer.put_character (',')
+					buffer.put_type_id (table.min_type_id)
+					buffer.put_character (')')
+					buffer.put_character (',')
+
+						-- Side effect. This is not nice but
+						-- unavoidable.
+						-- Mark routine id used
+					Eiffel_table.mark_used (routine_id)
+						-- Remember extern declaration
+					Extern_declarations.add_type_table (table_name)
 				end
 			else
 				if
@@ -366,24 +355,21 @@ feature -- Genericity
 					buffer.put_character (',')
 					dummy := idx_cnt.next
 					dummy := idx_cnt.next
-				else
-					-- Feature has at least one effective version
-					if table.has_one_type then
-							-- There is a table, but with only one type
-						gen_type ?= table.first.type
+				elseif table.has_one_type then
+						-- There is a table, but with only one type
+					gen_type ?= table.first.type
 
-						if gen_type /= Void then
-							gen_type.generate_cid_array (buffer, 
-													final_mode, True, idx_cnt)
-						else
-							buffer.put_type_id (table.first.feature_type_id)
-							buffer.put_character (',')
-							dummy := idx_cnt.next
-						end
+					if gen_type /= Void then
+						gen_type.generate_cid_array (buffer, 
+												final_mode, True, idx_cnt)
 					else
-						buffer.put_string ("0,")
+						buffer.put_type_id (table.first.feature_type_id)
+						buffer.put_character (',')
 						dummy := idx_cnt.next
 					end
+				else
+					buffer.put_string ("0,")
+					dummy := idx_cnt.next
 				end
 			else
 				buffer.put_string ("0,")
@@ -409,45 +395,42 @@ feature -- Genericity
 						-- Create anything - cannot be called anyway
 					dummy := idx_cnt.next
 					dummy := idx_cnt.next
-				else
-					-- Feature has at least one effective version
-					if table.has_one_type then
-							-- There is a table, but with only one type
-						gen_type ?= table.first.type
+				elseif table.has_one_type then
+						-- There is a table, but with only one type
+					gen_type ?= table.first.type
 
-						if gen_type /= Void then
-							gen_type.generate_cid_init (buffer, final_mode, True, idx_cnt)
-						else
-							dummy := idx_cnt.next
-						end
+					if gen_type /= Void then
+						gen_type.generate_cid_init (buffer, final_mode, True, idx_cnt)
 					else
-							-- Attribute is polymorphic
-						table_name := Encoder.type_table_name (routine_id)
-
-						buffer.put_string ("typarr[")
-						buffer.put_integer (idx_cnt.value)
-						buffer.put_string ("] = RTFCID2(")
-						buffer.put_integer (context.current_type.generated_id (context.final_mode))
-						buffer.put_character (',')
-						buffer.put_string (table_name)
-						buffer.put_character (',')
-						buffer.put_string (table_name)
-						buffer.put_string ("_gen_type")
-						buffer.put_character (',')
-						context.generate_current_dftype
-						buffer.put_character (',')
-						buffer.put_type_id (table.min_type_id)
-						buffer.put_string (");")
-						buffer.put_new_line
 						dummy := idx_cnt.next
-						
-							-- Side effect. This is not nice but
-							-- unavoidable.
-							-- Mark routine id used
-						Eiffel_table.mark_used (routine_id)
-							-- Remember extern declaration
-						Extern_declarations.add_type_table (table_name)
 					end
+				else
+						-- Attribute is polymorphic
+					table_name := Encoder.type_table_name (routine_id)
+
+					buffer.put_string ("typarr[")
+					buffer.put_integer (idx_cnt.value)
+					buffer.put_string ("] = RTFCID2(")
+					buffer.put_integer (context.current_type.generated_id (context.final_mode))
+					buffer.put_character (',')
+					buffer.put_string (table_name)
+					buffer.put_character (',')
+					buffer.put_string (table_name)
+					buffer.put_string ("_gen_type")
+					buffer.put_character (',')
+					context.generate_current_dftype
+					buffer.put_character (',')
+					buffer.put_type_id (table.min_type_id)
+					buffer.put_string (");")
+					buffer.put_new_line
+					dummy := idx_cnt.next
+					
+						-- Side effect. This is not nice but
+						-- unavoidable.
+						-- Mark routine id used
+					Eiffel_table.mark_used (routine_id)
+						-- Remember extern declaration
+					Extern_declarations.add_type_table (table_name)
 				end
 			else
 				if

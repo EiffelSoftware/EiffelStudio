@@ -32,7 +32,7 @@ feature {AST_YACC} -- Initialization
 		do
 		end
 
-	process_integer_constant_as (l_as: INTEGER_CONSTANT) is
+	process_integer_as (l_as: INTEGER_AS) is
 		do
 		end
 
@@ -81,6 +81,10 @@ feature {AST_YACC} -- Initialization
 		do
 		end
 
+	process_eiffel_list (l_as: EIFFEL_LIST [AST_EIFFEL]) is
+		do
+		end
+
 	process_char_as (l_as: CHAR_AS) is
 		do
 		end
@@ -106,6 +110,10 @@ feature {AST_YACC} -- Initialization
 		end
 
 	process_access_feat_as (l_as: ACCESS_FEAT_AS) is
+		do
+		end
+
+	process_feature_name_alias_as (l_as: FEATURE_NAME_ALIAS_AS) is
 		do
 		end
 
@@ -161,10 +169,6 @@ feature {AST_YACC} -- Initialization
 		do
 		end
 
-	process_value_as (l_as: VALUE_AS) is
-		do
-		end
-
 	process_un_strip_as (l_as: UN_STRIP_AS) is
 		do
 		end
@@ -194,6 +198,10 @@ feature {AST_YACC} -- Initialization
 		end
 
 	process_routine_creation_as (l_as: ROUTINE_CREATION_AS) is
+		do
+		end
+
+	process_type_expr_as (l_as: TYPE_EXPR_AS) is
 		do
 		end
 
@@ -514,10 +522,6 @@ feature {AST_YACC} -- Initialization
 		end
 
 	process_convert_feat_as (l_as: CONVERT_FEAT_AS) is
-		do
-		end
-
-	process_access_address_as (l_as: ACCESS_ADDRESS_AS) is
 		do
 		end
 

@@ -31,7 +31,8 @@ feature {NONE} -- Initialization
 			regexp := a_regexp
 			destination_folder := a_destination_folder
 			process_subfolders := a_process_subfolders
-			create parser.make_il_parser
+			create parser.make
+			parser.set_il_parser
 			create generated_files.make (20)
 		ensure
 			folder_set: folder = a_folder

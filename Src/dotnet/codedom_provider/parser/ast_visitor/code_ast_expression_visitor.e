@@ -37,12 +37,6 @@ feature {AST_YACC} -- Implementation
 		do
 		end
 
-	process_value_as (l_as: VALUE_AS) is
-			-- Process `l_as'.
-		do
-			l_as.terminal.process (Visitor)
-		end
-
 	process_un_strip_as (l_as: UN_STRIP_AS) is
 			-- Process `l_as'.
 		do

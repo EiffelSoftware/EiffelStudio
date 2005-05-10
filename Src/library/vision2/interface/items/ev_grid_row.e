@@ -15,6 +15,8 @@ inherit
 	EV_GRID_ROW_ACTION_SEQUENCES
 		undefine
 			default_create, copy, is_equal
+		redefine
+			implementation
 		end
 	
 	EV_DESELECTABLE

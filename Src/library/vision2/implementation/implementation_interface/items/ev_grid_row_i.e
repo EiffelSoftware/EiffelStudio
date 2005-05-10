@@ -12,7 +12,7 @@ inherit
 			default_create, copy, is_equal
 		end
 	
-	EV_GRID_ROW_ACTION_SEQUENCES
+	EV_GRID_ROW_ACTION_SEQUENCES_I
 	
 	EV_DESELECTABLE_I
 		redefine
@@ -441,6 +441,9 @@ feature -- Status setting
 						-- they are up to date.
 					parent_i.row_expand_actions_internal.call ([interface])
 				end
+				if expand_actions_internal /= Void then
+					expand_actions_internal.call (Void)
+				end
 				
 				if is_ensured_expandable then
 					is_ensured_expandable := False
@@ -476,6 +479,9 @@ feature -- Status setting
 						-- to ensure that if you query a dimension from within the actions,
 						-- they are up to date.
 					parent_i.row_collapse_actions_internal.call ([interface])
+				end
+				if collapse_actions_internal /= Void then
+					collapse_actions_internal.call (Void)
 				end
 				
 				parent_i.redraw_from_row_to_end (Current)
@@ -773,6 +779,9 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 					if parent_i.row_select_actions_internal /= Void then
 						parent_i.row_select_actions_internal.call ([interface])
 					end
+					if select_actions_internal /= Void then
+						select_actions_internal.call ([Void])
+					end
 				else
 					internal_update_selection (True)
 				end				
@@ -789,6 +798,9 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 					parent_i.remove_row_from_selected_rows (Current)
 					if parent_i.row_deselect_actions_internal /= Void then
 						parent_i.row_deselect_actions_internal.call ([interface])
+					end
+					if deselect_actions_internal /= Void then
+						deselect_actions_internal.call ([Void])
 					end
 				end
 			else

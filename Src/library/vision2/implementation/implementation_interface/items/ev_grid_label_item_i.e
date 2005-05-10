@@ -114,6 +114,7 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 			pixmap_x, pixmap_y: INTEGER
 			content_left_edge, content_right_edge, content_top_edge, content_bottom_edge: INTEGER
 			selection_x, selection_y, selection_width, selection_height: INTEGER
+			focused: BOOLEAN
 		do
 			fixme ("Correctly handle selection colors and inversion")
 			recompute_text_dimensions
@@ -124,6 +125,7 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 			end
 
 				-- Retrieve properties from interface
+			focused := parent_i.drawable.has_focus
 			left_border := interface.left_border
 			right_border := interface.right_border
 			top_border := interface.top_border
@@ -213,8 +215,13 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 			buffer_pixmap.set_foreground_color (back_color)
 			buffer_pixmap.fill_rectangle (0, 0, a_width, a_height)
 			if is_selected then
-				buffer_pixmap.set_foreground_color (parent_i.selection_color)
-				buffer_pixmap.set_and_mode
+				if focused then
+					buffer_pixmap.set_foreground_color (parent_i.focused_selection_color)
+				else
+					buffer_pixmap.set_foreground_color (parent_i.non_focused_selection_color)
+				end
+				fixme ("EV_GRID_LABEL_ITEM.perform_redraw - For now, perform no inversion of selection.")
+--				buffer_pixmap.set_and_mode
 
 					-- Calculate the area that must be selected in `Current'.
 				if interface.is_full_select_enabled then
@@ -230,7 +237,11 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 				end
 
 				buffer_pixmap.fill_rectangle (selection_x, selection_y, selection_width, selection_height)
-				buffer_pixmap.set_foreground_color ((create {EV_STOCK_COLORS}).white)
+				if focused then
+					buffer_pixmap.set_foreground_color (parent_i.focused_selection_text_color)
+				else
+					buffer_pixmap.set_foreground_color (parent_i.non_focused_selection_text_color)
+				end
 				buffer_pixmap.set_copy_mode
 			else
 				buffer_pixmap.set_foreground_color (displayed_foreground_color)
@@ -284,8 +295,12 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 						-- If we are not in `full_select_mode', there is nothing to do here
 						-- as the selection is clipped with the text. In `full_select_mode', the selection
 						-- always occupies the complete client area of `Current' so we must draw it in.
-
-					buffer_pixmap.set_foreground_color (parent_i.selection_color)
+					
+					if focused then
+						buffer_pixmap.set_foreground_color (parent_i.focused_selection_color)
+					else
+						buffer_pixmap.set_foreground_color (parent_i.non_focused_selection_color)
+					end
 					buffer_pixmap.set_and_mode
 
 					if bottom_border > a_height - content_bottom_edge then

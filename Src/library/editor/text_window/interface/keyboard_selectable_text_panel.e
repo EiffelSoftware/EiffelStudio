@@ -659,6 +659,7 @@ feature {NONE} -- Cursor Management
 			width_valid: width > 0
 			cursor_has_token: text_displayed.cursor.token /= Void
 		do		
+			print ("draw cursor to " + x.out + ", buffered_line.width is " +  buffered_line.width.out + "%N")
 						-- Draw the cursor
 			internal_draw_cursor (buffered_line, x, y, width, line_height, show_cursor)				 					
 			blinking_timeout.actions.wipe_out
@@ -762,7 +763,7 @@ feature {NONE} -- Implementation
 		end
 
 	draw_line_to_buffered_line (xline: INTEGER; a_line: EDITOR_LINE) is
- 			-- Draw onto the buffered line the tokens in `a_line' the between `start_pos' and `end_pos'.
+ 			-- Draw onto the buffered line the tokens in `a_line'.
 		local
  			cursor_line				: BOOLEAN -- Is the cursor present in the current line?
  			curr_token				: EDITOR_TOKEN
@@ -819,7 +820,7 @@ feature {NONE} -- Implementation
 					curr_token := a_line.item
 				end
  			until
- 				a_line.after or else curr_token = a_line.eol_token or else curr_token.position > editor_width
+ 				a_line.after or else curr_token = a_line.eol_token --or else curr_token.position > editor_width
  			loop
  				token_start_pos := curr_token.position
 				token_end_position := token_start_pos + curr_token.width
@@ -981,7 +982,7 @@ feature {NONE} -- Implementation
 						-- Lines with cursor or selection in them ALWAYS need redrawing.
 					if l_has_data then
 	 					draw_line_to_buffered_line (curr_line, l_text.current_line)
-						draw_buffered_line_to_screen (l_x_offset - l_margin_width, l_x_offset + a_width - l_margin_width, l_x_offset, y_offset)
+						draw_buffered_line_to_screen (l_x_offset - l_margin_width, buffered_line.width, l_x_offset, y_offset)
 					else
 						draw_line_to_screen ((l_x_offset - l_margin_width).max (0), l_x_offset + a_width - l_margin_width, y_offset, l_text.line (curr_line))
 					end

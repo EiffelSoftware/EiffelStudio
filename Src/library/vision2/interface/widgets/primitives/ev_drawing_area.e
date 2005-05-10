@@ -31,6 +31,12 @@ inherit
 			is_in_default_state
 		end
 
+	EV_TAB_CONTROLABLE
+		redefine
+			implementation,
+			is_in_default_state
+		end
+
 	EV_DRAWING_AREA_ACTION_SEQUENCES
 		redefine
 			implementation
@@ -96,7 +102,8 @@ feature {EV_ANY} -- Contract support
 			-- Is `Current' in its default state.
 		do
 			Result := Precursor {EV_PRIMITIVE}
-				and then Precursor {EV_DRAWABLE}
+				and then Precursor {EV_DRAWABLE} and not is_tabable_to and
+				not is_tabable_from
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation

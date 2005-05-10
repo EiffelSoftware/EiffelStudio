@@ -797,7 +797,7 @@ feature {NONE} -- Scroll bars Management
  		do
  			in_scroll := True
 			set_offset (scroll_pos)
-			buffered_line.set_size (viewable_width + offset, line_height)
+			buffered_line.set_size ((viewable_width + offset).max (buffered_line.width), line_height)
 		end
 		
 	on_mouse_wheel (delta: INTEGER) is
@@ -962,7 +962,7 @@ feature {NONE} -- Display functions
 		do  	
 			if first >= first_line_displayed and then first <= first_line_displayed + number_of_lines_displayed then
 				y_pos := (first - first_line_displayed) * line_height
-				editor_drawing_area.redraw_rectangle (0, editor_viewport.y_offset + y_pos, viewable_width, (last - first + 1) * line_height)
+				editor_drawing_area.redraw_rectangle (0, editor_viewport.y_offset + y_pos, buffered_line.width, (last - first + 1) * line_height)
 			end
 			if flush_screen then
 				editor_drawing_area.flush

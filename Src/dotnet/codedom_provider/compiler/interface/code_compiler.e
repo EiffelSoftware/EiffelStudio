@@ -567,7 +567,7 @@ feature {NONE} -- Implementation
 			l_dir: DIRECTORY
 			l_files: LIST [STRING]
 			l_file_stream: FILE_STREAM
-			l_array: NATIVE_ARRAY [INTEGER_8]
+			l_array: NATIVE_ARRAY [NATURAL_8]
 			l_ass: RAW_FILE
 			l_res: SYSTEM_OBJECT
 		do

@@ -139,10 +139,14 @@ feature -- Access
 		local
 			i: INTEGER
 			a_count: INTEGER
-			a_row: EV_GRID_ROW
+			a_row: EV_GRID_ROW_I
 		do
 			if is_row_selection_enabled then
 				Result := internal_selected_rows.linear_representation
+				if last_selected_row /= Void then
+					Result.prune (last_selected_row.interface)
+					Result.extend (last_selected_row.interface)
+				end
 			else
 				create Result.make (0)	
 				from
@@ -151,9 +155,9 @@ feature -- Access
 				until
 					i > a_count
 				loop
-					a_row := row (i)
+					a_row := row_internal (i)
 					if a_row.is_selected then
-						Result.extend (a_row)
+						Result.extend (a_row.interface)
 					end
 					i := i + 1
 				end
@@ -183,6 +187,10 @@ feature -- Access
 				end
 			else
 				Result := internal_selected_items.linear_representation
+				if last_selected_item /= Void then
+					Result.prune (last_selected_item.interface)
+					Result.extend (last_selected_item.interface)
+				end
 			end
 		ensure
 			result_not_void: Result /= Void
@@ -194,26 +202,24 @@ feature -- Access
 			sel_rows: like selected_rows
 			sel_items: like selected_items
 		do
-			if is_row_selection_enabled then
-				sel_rows := selected_rows
-				from
-					sel_rows.start
-				until
-					sel_rows.after
-				loop
-					sel_rows.item.disable_select
-					sel_rows.forth
-				end				
-			else
-				sel_items := selected_items
-				from
-					sel_items.start
-				until
-					sel_items.after
-				loop
-					sel_items.item.disable_select
-					sel_items.forth
-				end
+			sel_rows := selected_rows
+			from
+				sel_rows.start
+			until
+				sel_rows.after
+			loop
+				sel_rows.item.disable_select
+				sel_rows.forth
+			end				
+
+			sel_items := selected_items
+			from
+				sel_items.start
+			until
+				sel_items.after
+			loop
+				sel_items.item.disable_select
+				sel_items.forth
 			end
 		ensure
 			selected_items_empty: selected_items.is_empty
@@ -1407,6 +1413,8 @@ feature -- Element change
 
 				-- Flag `physical_column_indexes' for recalculation
 			physical_column_indexes_dirty := True
+
+			update_index_of_first_item_dirty_row_flags (i.min (j))
 			
 			set_horizontal_computation_required (i)
 			redraw_client_area
@@ -1461,6 +1469,8 @@ feature -- Removal
 			if a_col_i.is_visible then
 				visible_column_count := visible_column_count - 1
 			end
+
+			update_index_of_first_item_dirty_row_flags (a_column)
 
 				-- Flag `physical_column_indexes' for recalculation
 			physical_column_indexes_dirty := True
@@ -3172,8 +3182,8 @@ feature {NONE} -- Event handling
 						if virtual_x_position > 0 then
 							items_spanning := drawer.items_spanning_horizontal_span (virtual_x_position - 1, 0)
 							if not items_spanning.is_empty then
-								column (items_spanning @ 1).ensure_visible	
-							end							
+								column (items_spanning @ 1).ensure_visible
+							end
 						end
 					end
 				else
@@ -3193,8 +3203,9 @@ feature {NONE} -- Event handling
 			start_row_index, end_row_index, start_column_index, end_column_index: INTEGER
 			a_col_counter, a_row_counter: INTEGER
 			current_item: EV_GRID_ITEM
+			ignore_remove_selection: BOOLEAN
 		do
-			if  is_multiple_selection_enabled and then (create {EV_ENVIRONMENT}).application.shift_pressed then
+			if is_multiple_selection_enabled and then (create {EV_ENVIRONMENT}).application.shift_pressed then
 				start_item := selected_items.last
 				if a_item /= Void and then start_item /= Void and then start_item /= a_item then
 					start_row_index := start_item.row.index
@@ -3219,9 +3230,12 @@ feature {NONE} -- Event handling
 						end
 						a_col_counter := a_col_counter + 1
 					end
+					last_selected_item := a_item.implementation
 				end
+				ignore_remove_selection := True
 			elseif (is_multiple_selection_enabled)  and then (create {EV_ENVIRONMENT}).application.ctrl_pressed then
 				-- If the ctrl key is pressed and we are in a multiple selection mode then we do nothing.
+				ignore_remove_selection := True
 			else
 				if a_item /= Void and then not a_item.is_selected or (not is_row_selection_enabled and then selected_items.count > 1) or (is_row_selection_enabled and then selected_rows.count > 1) then
 					remove_selection
@@ -3235,7 +3249,7 @@ feature {NONE} -- Event handling
 				else
 					a_item.ensure_visible
 				end							
-			else
+			elseif not ignore_remove_selection then
 				remove_selection
 			end
 		end
@@ -3391,11 +3405,32 @@ feature {NONE} -- Implementation
 				-- Flag `physical_column_indexes' for recalculation
 			physical_column_indexes_dirty := True
 
+			update_index_of_first_item_dirty_row_flags (a_index)
+
 			show_column (a_index)
 			header_item_resizing (header.last)
 			header_item_resize_ended (header.last)
 		ensure
 			column_count_set: not replace_existing_item implies ((a_index < old column_count implies (column_count = old column_count + 1)) or column_count = a_index)
+		end
+
+	update_index_of_first_item_dirty_row_flags (a_index: INTEGER) is
+			-- Update the `index_of_first_item_dirty' flags for each row in the list.
+		require
+			a_index_valid: a_index > 0 and then a_index <= column_count + 1
+		local
+			i: INTEGER
+			a_row_count: INTEGER
+		do
+			from
+				i := 1
+				a_row_count := row_count
+			until
+				i > a_row_count
+			loop
+				(rows @ i).flag_index_of_first_item_dirty_if_needed (a_index)
+				i := i + 1
+			end			
 		end
 
 	update_grid_row_indices (a_index: INTEGER) is
@@ -3524,9 +3559,13 @@ feature {EV_GRID_ROW_I} -- Implementation
 			row_selected: a_row.internal_is_selected
 		do
 			internal_selected_rows.put (a_row.interface, a_row)
+			last_selected_row := a_row
 		ensure
 			row_added: internal_selected_rows.has (a_row)
 		end
+
+	last_selected_row: EV_GRID_ROW_I
+		-- Row that was selected previously.
 
 	remove_row_from_selected_rows (a_row: EV_GRID_ROW_I) is
 			-- Remove`a_row' from `internal_selected_rows'.
@@ -3536,6 +3575,9 @@ feature {EV_GRID_ROW_I} -- Implementation
 			row_deselected: not a_row.internal_is_selected
 		do
 			internal_selected_rows.remove (a_row)
+			if a_row = last_selected_row then
+				last_selected_row := Void
+			end
 		ensure
 			row_removed: not internal_selected_rows.has (a_row)
 		end
@@ -3550,9 +3592,13 @@ feature {EV_GRID_ITEM_I} -- Implementation
 			item_selected: a_item.internal_is_selected
 		do
 			internal_selected_items.put (a_item.interface, a_item)
+			last_selected_item := a_item
 		ensure
 			item_added: internal_selected_items.has (a_item)
 		end
+
+	last_selected_item: EV_GRID_ITEM_I
+		-- Item that was previously selected by the user, used from Ctrl-Shift selection handling.
 
 	remove_item_from_selected_items (a_item: EV_GRID_ITEM_I) is
 			-- Remove`a_item' from `internal_selected_items'.
@@ -3562,6 +3608,9 @@ feature {EV_GRID_ITEM_I} -- Implementation
 			item_deselected: not a_item.internal_is_selected
 		do
 			internal_selected_items.remove (a_item)
+			if a_item = last_selected_item then
+				last_selected_item := Void
+			end
 		ensure
 			item_removed: not internal_selected_items.has (a_item)
 		end
@@ -3598,6 +3647,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- I
 					-- Increase item counter
 				item_counter := item_counter + 1
 				internal_row_data.i_th (a_row).put (a_item.implementation, a_grid_col_i.physical_index)
+				a_grid_row_i.flag_index_of_first_item_dirty_if_needed (a_column)
 				if a_grid_row_i.parent_row_i /= Void then
 						-- The row in which we are setting an item is already a subrow of another
 						-- row, so we must update the internal settings for the tree.
@@ -3606,11 +3656,13 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- I
 				end
 			else
 				internal_row_data.i_th (a_row).put (Void, a_grid_col_i.physical_index)
+				a_grid_row_i.flag_index_of_first_item_dirty_if_needed (a_column)
 					-- Update the row for the removal.
 				a_grid_row_i.update_for_item_removal (a_column)
 			end
 
 			fixme ("EV_GRID_I.internal_set_item Adding or removing items may require the complete row to be redrawn if the row is a subrow.")
+
 			if a_item /= Void then
 				redraw_item (a_item.implementation)
 			else

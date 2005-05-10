@@ -16,6 +16,13 @@ inherit
 		redefine
 			implementation
 		end
+
+	EV_GRID_COLUMN_ACTION_SEQUENCES
+		undefine
+			default_create, copy, is_equal
+		redefine
+			implementation
+		end
 		
 create
 	{EV_GRID_I} default_create

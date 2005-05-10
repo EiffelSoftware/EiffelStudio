@@ -27,7 +27,10 @@ inherit
 		redefine
 			interface, initialize, on_left_button_down, 
 			on_middle_button_down, on_right_button_down,
-			destroy
+			destroy,
+			process_tab_key,
+			tab_action,
+			on_key_down
 		end
 
 	EV_WEL_CONTROL_WINDOW
@@ -72,6 +75,7 @@ feature {NONE} -- Initialization
 			internal_paint_dc.get
 			Precursor {EV_DRAWABLE_IMP}
 			Precursor {EV_PRIMITIVE_IMP}
+			is_tabable_from := False
 		end	
 
 feature -- Access
@@ -81,6 +85,15 @@ feature -- Access
 		do
 			Result := internal_paint_dc
 		end
+
+	is_tabable_to: BOOLEAN is
+			-- May `Current' be tabbed to?
+		do
+			Result := flag_set (style, ws_tabstop)
+		end
+
+	is_tabable_from: BOOLEAN
+			-- May `Current' be tabbed from?
 
 feature {NONE} -- Implementation
 
@@ -291,6 +304,35 @@ feature {NONE} -- Implementation
 				Cs_owndc + 
 				Cs_savebits
  		end
+ 
+ 	enable_tabable_to is	
+ 			-- Ensure `is_tabable_to' is `True'.
+ 		do
+		 	set_style (style | ws_tabstop | ws_group)
+		end
+
+	disable_tabable_to is
+			-- Ensure `is_tabable_to' is `False'.
+		local
+			l_style: INTEGER
+		do
+			l_style := style
+			l_style := clear_flag (l_style, ws_tabstop)
+			l_style := clear_flag (l_style, ws_group)
+			set_style (l_style)
+		end
+
+	enable_tabable_from is	
+ 			-- Ensure `is_tabable_from' is `True'.
+ 		do
+ 			is_tabable_from := True
+		end
+
+	disable_tabable_from is
+			-- Ensure `is_tabable_from' is `False'.
+		do
+			is_tabable_from := False
+		end
 
 feature -- Commands.
 
@@ -302,26 +344,77 @@ feature -- Commands.
 			Precursor {EV_PRIMITIVE_IMP}
 		end
 
-feature {NONE} -- Feature that should be directly implemented by externals.
-
-	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
-			-- Encapsulation of the SDK GetNextDlgTabItem,
-			-- because we cannot do a deferred feature become an
-			-- external feature.
+	process_tab_key (virtual_key: INTEGER) is
+			-- Process a tab or arrow key press to give the focus to the next
+			-- widget. Need to be called in the feature on_key_down when the
+			-- control needs to process this kind of keys.
 		do
-			check
-				Never_called: False
+			fixme ("EV_DRAWING_AREA_IMP.process_tab_key - refactor all tab handling code in this class")
+			if virtual_key = ({WEL_INPUT_CONSTANTS}.Vk_tab) and then 
+				flag_set (style, {WEL_WINDOW_CONSTANTS}.Ws_tabstop)
+			then
+				tab_action (not key_down ({WEL_INPUT_CONSTANTS}.Vk_shift))
 			end
 		end
 
-	next_dlggroupitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
-			-- Encapsulation of the SDK GetNextDlgGroupItem,
-			-- because we cannot do a deferred feature become an
-			-- external feature.
+	tab_action (direction: BOOLEAN) is
+			-- Go to the next widget that takes the focus through to the tab
+			-- key. If `direction' it goes to the next widget otherwise,
+			-- it goes to the previous one.
+		local
+			l_null, hwnd: POINTER
+			window: WEL_WINDOW
+			l_top: like top_level_window_imp
 		do
-			check
-				Never_called: False
+			l_top := top_level_window_imp
+			if l_top /= Void then
+				hwnd := next_dlgtabitem (l_top.wel_item, wel_item, direction)
 			end
+			if hwnd /= l_null then
+				window := window_of_item (hwnd)
+				if window /= Void then
+					window.set_focus
+				end
+			end
+		end
+
+	on_key_down (virtual_key, key_data: INTEGER) is
+			-- Executed when a key is pressed.
+		do
+			if is_tabable_from then
+				process_tab_key (virtual_key)
+			end
+			process_standard_key_press (virtual_key)
+		end
+
+feature {NONE} -- Feature that should be directly implemented by externals.
+
+	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
+			-- Encapsulation of the SDK GetNextDlgTabItem
+		do
+			Result := cwin_get_next_dlgtabitem (hdlg, hctl, previous)
+		end
+
+	next_dlggroupitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
+			-- Encapsulation of the SDK GetNextDlgGroupItem.
+		do
+			Result := cwin_get_next_dlggroupitem (hdlg, hctl, previous)
+		end
+
+	cwin_get_next_dlggroupitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
+			-- SDK GetNextDlgGroupItem
+		external
+			"C [macro <wel.h>] (HWND, HWND, BOOL): HWND"
+		alias
+			"GetNextDlgGroupItem"
+		end
+
+	cwin_get_next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
+			-- SDK GetNextDlgGroupItem
+		external
+			"C [macro <wel.h>] (HWND, HWND, BOOL): HWND"
+		alias
+			"GetNextDlgTabItem"
 		end
 
 	show_window (hwnd: POINTER; cmd_show: INTEGER) is

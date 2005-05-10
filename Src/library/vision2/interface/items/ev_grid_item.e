@@ -182,7 +182,7 @@ feature -- Actions
 			-- Activation is usually achieved by connecting an agent  to 
 			-- {EV_GRID}.pointer_double_press_actions' that calls `activate'.
 			-- Will call `activate_action' of `Current' to setup the in-place editing.
-			-- The default behavior of the activation can be overriden in {EV_GRID_ITEM}.item_activate_actions,
+			-- The default behavior of the activation can be overriden in {EV_GRID}.item_activate_actions,
 			-- this is useful for repositioning the popup window used editing `Current'.
 			-- See {EV_GRID_EDITABLE_ITEM}.activate_action for an example of what happens on activation.
 		require

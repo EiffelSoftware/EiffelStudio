@@ -44,7 +44,7 @@ feature -- Access
 			-- Initialize `Current'.
 		do
 			wel_set_alignment (pfa_left)
-			is_initialized := True
+			set_is_initialized (True)
 		end
 		
 feature -- Status report

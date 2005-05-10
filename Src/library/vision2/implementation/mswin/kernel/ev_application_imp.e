@@ -486,7 +486,7 @@ feature -- Basic operation
 		do
 			cwin_post_quit_message (0)
 			quit_requested := True
-			is_destroyed := True
+			set_is_destroyed (True)
 			window_with_focus := Void
 		end
 

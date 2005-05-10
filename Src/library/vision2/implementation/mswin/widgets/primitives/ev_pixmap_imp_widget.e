@@ -144,7 +144,7 @@ feature {NONE} -- Initialization
 
 				-- Is_initialized should be set to True
 				-- when the bridge pattern is linked.
-			is_initialized := False
+			set_is_initialized (False)
 
 				-- Destroy `other' implementation
 			other.safe_destroy
@@ -159,7 +159,7 @@ feature {NONE} -- Initialization
 				-- Precursor has set `is_initialized' to True
 				-- but we are still in the middle of our
 				-- initialization. So we set it to False.
-			is_initialized := False
+			set_is_initialized (False)
 
 			widget_initialize
 		end

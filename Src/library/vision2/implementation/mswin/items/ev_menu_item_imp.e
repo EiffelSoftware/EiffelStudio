@@ -90,7 +90,7 @@ feature {NONE} -- Initialization
 			-- Initialize `is_sensitive' True.
 		do
 			is_sensitive := True
-			is_initialized := True
+			set_is_initialized (True)
 			set_text ("")
 		end
 

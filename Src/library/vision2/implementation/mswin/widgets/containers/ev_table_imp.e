@@ -767,7 +767,7 @@ feature {NONE} -- Implementation
 			end
 			internal_array.discard_items
 			wel_destroy
-			is_destroyed := True
+			set_is_destroyed (True)
 		end
 
 	update_for_pick_and_drop (starting: BOOLEAN) is

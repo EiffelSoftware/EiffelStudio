@@ -72,7 +72,7 @@ feature {NONE} -- Initialization
 			-- Do post creation initialization.
 		do
 			is_sensitive := True
-			is_initialized := True
+			set_is_initialized (True)
 		end
 
 	parent_imp: EV_TOOL_BAR_IMP

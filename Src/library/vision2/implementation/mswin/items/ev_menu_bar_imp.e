@@ -53,7 +53,7 @@ feature {NONE} -- Implementation
 			if parent_imp /= Void then
 				parent_imp.remove_menu_bar
 			end
-			is_destroyed := True
+			set_is_destroyed (True)
 		end
 		
 	update_parent_size is

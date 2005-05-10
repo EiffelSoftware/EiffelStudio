@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			expanded_subnode_count_recursive := 0
 			is_expanded := False
 			hash_code := -1
-			is_initialized := True
+			set_is_initialized (True)
 		end
 
 feature {EV_GRID_I, EV_GRID_ROW_I} -- Initialization

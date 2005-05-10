@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Initialize `Current'.
 		do
-			is_initialized := True
+			set_is_initialized (True)
 		end
 
 feature -- Status report

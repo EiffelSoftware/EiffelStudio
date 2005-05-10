@@ -60,7 +60,7 @@ feature {NONE} -- Initialization
 				-- See header comment of {WEL_BIF_CONSTANTS}.Bif_usenewui
 				add_flag (Bif_usenewui)
 			end
-			is_initialized := True
+			set_is_initialized (True)
 		end
 
 feature -- Access

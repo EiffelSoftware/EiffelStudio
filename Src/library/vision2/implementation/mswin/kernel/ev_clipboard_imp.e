@@ -30,13 +30,13 @@ feature {NONE}-- Initialization
 	initialize is
 			-- Initialize `Current'.
 		do
-			is_initialized := True
+			set_is_initialized (True)
 		end
 
 	destroy is
 		do
 			--| FIXME
-			is_destroyed := True
+			set_is_destroyed (True)
 		end
 
 feature -- Access

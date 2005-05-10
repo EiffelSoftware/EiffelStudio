@@ -43,7 +43,7 @@ feature {EV_APPLICATION} -- Initialization
 			create internal_idle_actions
 			create once_idle_actions
 			do_once_idle_actions_agent := agent do_once_idle_actions
-			is_initialized := True
+			set_is_initialized (True)
 		end
 
 	launch is

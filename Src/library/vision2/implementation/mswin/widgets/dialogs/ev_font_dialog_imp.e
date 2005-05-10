@@ -46,7 +46,7 @@ feature {NONE} -- Implementation
 				-- We must set the style of `Current'.
 				-- Modifying the flags changes the appearence.
 			set_flags (Cf_screenfonts + Cf_inittologfontstruct + Cf_noscriptsel)
-			is_initialized := True
+			set_is_initialized (True)
 		end
 
 feature -- Access
@@ -224,7 +224,7 @@ feature {NONE} -- Implementation
 			-- Destroy `Current'.
 		do
 			destroy_item
-			is_destroyed := True
+			set_is_destroyed (True)
 		end
 
 feature {EV_ANY_I}

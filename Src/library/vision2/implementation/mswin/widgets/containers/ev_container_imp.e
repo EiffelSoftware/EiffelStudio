@@ -181,7 +181,7 @@ feature -- Status setting
 			end
 			interface.wipe_out
 			wel_destroy
-			is_destroyed := True
+			set_is_destroyed (True)
 		end
 
 feature {NONE} -- WEL Implementation

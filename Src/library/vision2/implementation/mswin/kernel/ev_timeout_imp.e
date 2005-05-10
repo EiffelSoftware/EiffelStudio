@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 	initialize is
 		do
 			Internal_timeout.add_timeout (Current)
-			is_initialized := True
+			set_is_initialized (True)
 		end
 
 feature -- Access
@@ -57,7 +57,7 @@ feature -- Implementation
 			-- Destroy actual object.
 		do
 			internal_timeout.remove_timeout (id)
-			is_destroyed := True
+			set_is_destroyed (True)
 		end
 
 feature {NONE} -- Implementation

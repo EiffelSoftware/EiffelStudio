@@ -139,7 +139,7 @@ feature {NONE} -- Initialization
 			user_can_resize := True
 			init_bars
 			application_imp.add_root_window (Current)
-			is_initialized := True
+			set_is_initialized (True)
 		end	
 
 	init_bars is
@@ -1183,7 +1183,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 				interface.wipe_out
 	
 					-- No one should be referencing Current anymore.
-				is_destroyed := True	
+				set_is_destroyed (True)
 					
 					--| Instead of calling Precursor {WEL_COMPOSITE_WINDOW},
 					--| We do about the same except we do not quit the application

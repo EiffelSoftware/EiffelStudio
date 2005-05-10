@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'.
 		do
 			hash_code := -1
-			is_initialized := True
+			set_is_initialized (True)
 		end
 
 feature -- Access

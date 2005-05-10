@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Do post creation initialization.
 		do
-			is_initialized := True
+			set_is_initialized (True)
 		end
 
 feature {NONE} -- Implementation

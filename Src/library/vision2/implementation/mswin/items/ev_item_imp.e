@@ -33,7 +33,7 @@ feature -- Status setting
 			if parent_imp /= Void then
 				parent_imp.prune (interface)
 			end
-			is_destroyed := True
+			set_is_destroyed (True)
 		end
 
 	set_parent_imp (a_parent_imp: like parent_imp) is

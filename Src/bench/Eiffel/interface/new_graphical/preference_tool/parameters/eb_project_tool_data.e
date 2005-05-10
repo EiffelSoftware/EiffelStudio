@@ -47,9 +47,9 @@ feature {NONE} -- Preference
 		
 feature {NONE} -- Preference Strings
 
-	raise_on_error_string: STRING is "project_tool.raise_on_error"
-	context_unified_stone_string: STRING is "project_tool.unified_stone"
-	graphical_output_disabled_string: STRING is "project_tool.graphical_output_disabled"			
+	raise_on_error_string: STRING is "tools.project_tool.raise_on_error"
+	context_unified_stone_string: STRING is "tools.project_tool.unified_stone"
+	graphical_output_disabled_string: STRING is "tools.project_tool.graphical_output_disabled"			
 
 feature {NONE} -- Implementation
 

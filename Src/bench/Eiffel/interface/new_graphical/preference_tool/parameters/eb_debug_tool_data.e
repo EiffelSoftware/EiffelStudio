@@ -111,19 +111,19 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	
 feature -- Preference Strings
 
-	width_string: STRING is "debug_tool.width"
-	height_string: STRING is "debug_tool.height"
-	last_saved_stack_path_string: STRING is "debug_tool.last_saved_stack_path"
-	interrupt_every_n_instructions_string: STRING is "debug_tool.interrupt_every_n_instructions"
-	debug_output_evaluation_enabled_string: STRING is "debug_tool.debug_output_evaluation"	
-	generating_type_evaluation_enabled_string: STRING is "debug_tool.generating_type_evaluation"				
-	min_slice_string: STRING is "debug_tool.min_slice"
-	max_slice_string: STRING is "debug_tool.max_slice"
-	main_splitter_position_string: STRING is "debug_tool.main_splitter_position"
-	local_vs_object_proportion_string: STRING is "debug_tool.proportion"					
-	max_stack_depth_string: STRING is "debug_tool.default_maximum_stack_depth"	
-	left_debug_layout_string: STRING is "debug_tool.left_debug_layout"	
-	right_debug_layout_string: STRING is "debug_tool.right_debug_layout"	
+	width_string: STRING is "debugger.width"
+	height_string: STRING is "debugger.height"
+	last_saved_stack_path_string: STRING is "debugger.last_saved_stack_path"
+	interrupt_every_n_instructions_string: STRING is "debugger.interrupt_every_n_instructions"
+	debug_output_evaluation_enabled_string: STRING is "debugger.debug_output_evaluation"	
+	generating_type_evaluation_enabled_string: STRING is "debugger.generating_type_evaluation"				
+	min_slice_string: STRING is "debugger.min_slice"
+	max_slice_string: STRING is "debugger.max_slice"
+	main_splitter_position_string: STRING is "debugger.main_splitter_position"
+	local_vs_object_proportion_string: STRING is "debugger.proportion"					
+	max_stack_depth_string: STRING is "debugger.default_maximum_stack_depth"	
+	left_debug_layout_string: STRING is "debugger.left_debug_layout"	
+	right_debug_layout_string: STRING is "debugger.right_debug_layout"	
 
 feature {NONE} -- Implementation
 

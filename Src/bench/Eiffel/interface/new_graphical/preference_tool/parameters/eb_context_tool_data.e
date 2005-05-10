@@ -111,15 +111,15 @@ feature {NONE} -- Preference
 
 feature {NONE} -- Preference Strings
 
-	diagram_toolbar_layout_string: STRING is "context_tool.diagram_toolbar_layout"
-	subcluster_depth_string: STRING is "context_tool.subcluster_depth"
-	supercluster_depth_string: STRING is "context_tool.supercluster_depth"
-	client_depth_string: STRING is "context_tool.client_depth"
-	supplier_depth_string: STRING is "context_tool.supplier_depth"
-	ancestor_depth_string: STRING is "context_tool.ancestor_depth"
-	descendant_depth_string: STRING is "context_tool.descendant_depth"
-	ignore_excluded_class_figures_string: STRING is "context_tool.ignore_excluded_class_figures"		
-	excluded_class_figures_string: STRING is "context_tool.excluded_class_figures"
+	diagram_toolbar_layout_string: STRING is "tools.context_tool.diagram_toolbar_layout"
+	subcluster_depth_string: STRING is "tools.context_tool.subcluster_depth"
+	supercluster_depth_string: STRING is "tools.context_tool.supercluster_depth"
+	client_depth_string: STRING is "tools.context_tool.client_depth"
+	supplier_depth_string: STRING is "tools.context_tool.supplier_depth"
+	ancestor_depth_string: STRING is "tools.context_tool.ancestor_depth"
+	descendant_depth_string: STRING is "tools.context_tool.descendant_depth"
+	ignore_excluded_class_figures_string: STRING is "tools.context_tool.ignore_excluded_class_figures"		
+	excluded_class_figures_string: STRING is "tools.context_tool.excluded_class_figures"
 
 feature {NONE} -- Implementation
 

@@ -295,27 +295,27 @@ feature {NONE} -- Preference
 	
 feature {NONE} -- Preference Strings
 
-	assertion_tag_text_color_string: STRING is "editor.eiffel.assertion_tag_text_color" 
-	assertion_tag_background_color_string: STRING is "editor.eiffel.assertion_tag_background_color" 
-	indexing_tag_text_color_string: STRING is "editor.eiffel.indexing_tag_text_color" 
-	indexing_tag_background_color_string: STRING is "editor.eiffel.indexing_tag_background_color" 
-	reserved_text_color_string: STRING is "editor.eiffel.reserved_text_color" 
-	reserved_background_color_string: STRING is "editor.eiffel.reserved_background_color" 
-	generic_text_color_string: STRING is "editor.eiffel.generic_text_color" 
-	generic_background_color_string: STRING is "editor.eiffel.generic_background_color" 
-	local_text_color_string: STRING is "editor.eiffel.local_text_color"
-	local_background_color_string: STRING is "editor.eiffel.local_background_color" 
-	class_text_color_string: STRING is "editor.eiffel.class_text_color"
-	class_background_color_string: STRING is "editor.eiffel.class_background_color" 
-	feature_text_color_string: STRING is "editor.eiffel.feature_text_color"
-	feature_background_color_string: STRING is "editor.eiffel.feature_background_color" 
-	cluster_text_color_string :STRING is "editor.eiffel.cluster_text_color"
-	cluster_background_color_string: STRING is "editor.eiffel.cluster_background_color" 
-	error_text_color_string : STRING is "editor.eiffel.error_text_color"
-	error_background_color_string: STRING is "editor.eiffel.error_background_color" 
-	object_text_color_string: STRING is "editor.eiffel.object_text_color"
-	object_background_color_string: STRING is "editor.eiffel.object_background_color" 
-	breakpoint_background_color_string: STRING is "editor.eiffel.breakpoint_background_color"
+	assertion_tag_text_color_string: STRING is "editor.eiffel.colors.assertion_tag_text_color"
+	assertion_tag_background_color_string: STRING is "editor.eiffel.colors.assertion_tag_background_color"
+	indexing_tag_text_color_string: STRING is "editor.eiffel.colors.indexing_tag_text_color"
+	indexing_tag_background_color_string: STRING is "editor.eiffel.colors.indexing_tag_background_color"
+	reserved_text_color_string: STRING is "editor.eiffel.colors.reserved_text_color"
+	reserved_background_color_string: STRING is "editor.eiffel.colors.reserved_background_color"
+	generic_text_color_string: STRING is "editor.eiffel.colors.generic_text_color"
+	generic_background_color_string: STRING is "editor.eiffel.colors.generic_background_color"
+	local_text_color_string: STRING is "editor.eiffel.colors.local_text_color"
+	local_background_color_string: STRING is "editor.eiffel.colors.local_background_color"
+	class_text_color_string: STRING is "editor.eiffel.colors.class_text_color"
+	class_background_color_string: STRING is "editor.eiffel.colors.class_background_color"
+	feature_text_color_string: STRING is "editor.eiffel.colors.feature_text_color"
+	feature_background_color_string: STRING is "editor.eiffel.colors.feature_background_color"
+	cluster_text_color_string :STRING is "editor.eiffel.colors.cluster_text_color"
+	cluster_background_color_string: STRING is "editor.eiffel.colors.cluster_background_color"
+	error_text_color_string : STRING is "editor.eiffel.colors.error_text_color"
+	error_background_color_string: STRING is "editor.eiffel.colors.error_background_color"
+	object_text_color_string: STRING is "editor.eiffel.colors.object_text_color"
+	object_background_color_string: STRING is "editor.eiffel.colors.object_background_color"
+	breakpoint_background_color_string: STRING is "editor.eiffel.colors.breakpoint_background_color"
 
 	once_and_constant_in_upper_string: STRING is "editor.eiffel.once_and_constant_in_upper" 
 			-- Is first letter of once or constant in upper case?
@@ -475,58 +475,76 @@ feature {NONE} -- Initialization
 	initialize_autocomplete_prefs is
 		local
 			i: INTEGER
-			cnt: INTEGER
 			id: STRING
+			cnt: INTEGER
 			insert: ARRAY [STRING]
 			keyword_name: STRING
 			l_manager: EB_PREFERENCE_MANAGER
 			l_b_pref: BOOLEAN_PREFERENCE
 			l_s_pref: STRING_PREFERENCE
+			l_par_name,
+			l_child_name: STRING
+			a_list: ARRAYED_LIST [STRING]
 		do
-			create l_manager.make (preferences, "editor.eiffel.autocomplete")
-			cnt := completed_keywords.count
-			create complete_keywords.make (1, cnt)
-			create insert_after_keyword.make (1, cnt)
 			from
-				i := 1
+				create complete_keywords.make (1, 39)
+				create insert_after_keyword.make (1, 39)
+				cnt := complete_keywords.count
+				complete_keywords_names_keys.start
 			until
-				i > cnt
+				complete_keywords_names_keys.after
 			loop
-				keyword_name := completed_keywords.i_th (i)
-				if keyword_name.has (' ') then
-					keyword_name := keyword_name.twin
-					keyword_name.replace_substring_all (" ", "_")
-				end
-				id := "editor.eiffel.autocomplete.autocomplete_" + keyword_name
-				l_b_pref := l_manager.new_boolean_resource_value (l_manager, id, True)
-				l_b_pref.change_actions.extend (agent update)
-				complete_keywords.put (l_b_pref.value, i)
-				id := "editor.eiffel.autocomplete.use_default_" + keyword_name
-				if l_b_pref.value then
-					insert_after_keyword.put (default_insert @ i, i)
+				l_par_name := "editor.eiffel.autocomplete." + complete_keywords_names_keys.item
+				create l_manager.make (preferences, l_par_name)
+				a_list := complete_keywords_names.item (complete_keywords_names_keys.item)
+				from
+					a_list.start
+				until
+					a_list.after
+				loop
+					i := i + 1
+					keyword_name := a_list.item
+					if keyword_name.has (' ') then
+						keyword_name := keyword_name.twin
+						keyword_name.replace_substring_all (" ", "_")
+					end
+					id := l_par_name + "." + keyword_name
+					l_child_name := id.twin
 
-					create insert.make (1, 4)
-					id := "editor.eiffel.autocomplete.custom_" + keyword_name + "_space"
-					l_s_pref := l_manager.new_string_resource_value (l_manager, id, "")
-					l_s_pref.change_actions.extend (agent update)
-					insert.put (l_s_pref.value, 1)
-					id := "editor.eiffel.autocomplete.custom_" + keyword_name + "_return"
-					l_s_pref := l_manager.new_string_resource_value (l_manager, id, "")
-					l_s_pref.change_actions.extend (agent update)
-					insert.put (l_s_pref.value, 2)
-					id := "editor.eiffel.autocomplete.custom_" + keyword_name + "_space_later"
-					l_s_pref := l_manager.new_string_resource_value (l_manager, id, "")
-					l_s_pref.change_actions.extend (agent update)
-					insert.put (l_s_pref.value, 3)
-					id := "editor.eiffel.autocomplete.custom_" + keyword_name + "_return_later"
-					l_s_pref := l_manager.new_string_resource_value (l_manager, id, "")
-					l_s_pref.change_actions.extend (agent update)
-					insert.put (l_s_pref.value, 4)
-					insert_after_keyword.put (insert, i)
+					id := l_child_name + ".autocomplete_" + keyword_name
+					l_b_pref := l_manager.new_boolean_resource_value (l_manager, id, True)					
+					id := l_child_name + ".use_default_" + keyword_name
+					l_b_pref := l_manager.new_boolean_resource_value (l_manager, id, True)					
+
+					complete_keywords.put (l_b_pref.value, i)			
+					
+					if l_b_pref.value then
+						insert_after_keyword.put (default_insert @ i, i)
+
+						create insert.make (1, 4)
+						id := l_child_name + ".custom_" + keyword_name + "_space"
+						l_s_pref := l_manager.new_string_resource_value (l_manager, id, "")
+						l_s_pref.change_actions.extend (agent update)
+						insert.put (l_s_pref.value, 1)
+						id := l_child_name + ".custom_" + keyword_name + "_return"
+						l_s_pref := l_manager.new_string_resource_value (l_manager, id, "")
+						l_s_pref.change_actions.extend (agent update)
+						insert.put (l_s_pref.value, 2)
+						id := l_child_name + ".custom_" + keyword_name + "_space_later"
+						l_s_pref := l_manager.new_string_resource_value (l_manager, id, "")
+						l_s_pref.change_actions.extend (agent update)
+						insert.put (l_s_pref.value, 3)
+						id := l_child_name + ".custom_" + keyword_name + "_return_later"
+						l_s_pref := l_manager.new_string_resource_value (l_manager, id, "")
+						l_s_pref.change_actions.extend (agent update)
+						insert.put (l_s_pref.value, 4)
+						insert_after_keyword.put (insert, i)
+					end
+					a_list.forth
 				end
-				i := i + 1
+				complete_keywords_names_keys.forth
 			end
-		end	
+		end
 
 	initialize_shortcuts_prefs is
 		local
@@ -552,7 +570,7 @@ feature {NONE} -- Initialization
 				default_meta := default_ctrl_alt_shift.item (i)
 				action_name := customizable_shortcuts.item (i)
 
-				id := "editor.eiffel.keyboard_shortcuts." + action_name + "_shortcut_key"
+				id := "editor.eiffel.keyboard_shortcuts." + action_name + ".shortcut_key"
 				l_s_pref := l_manager.new_string_resource_value (l_manager, id, "")
 				l_s_pref.change_actions.extend (agent update)
 				key_code := key_with_name (l_s_pref.value)
@@ -560,15 +578,15 @@ feature {NONE} -- Initialization
 				if key_code >= Key_strings.lower then
 					create meta.make (1, 3)
 					key_codes_for_actions.extend (key_code)
-					id := "editor.eiffel.keyboard_shortcuts." + action_name + "_shortcut_ctrl"
+					id := "editor.eiffel.keyboard_shortcuts." + action_name + ".shortcut_ctrl"
 					l_b_pref := l_manager.new_boolean_resource_value (l_manager, id, True)
 					l_b_pref.change_actions.extend (agent update)
 					meta.put (l_b_pref.value, 1)
-					id := "editor.eiffel.keyboard_shortcuts." + action_name + "_shortcut_alt"
+					id := "editor.eiffel.keyboard_shortcuts." + action_name + ".shortcut_alt"
 					l_b_pref := l_manager.new_boolean_resource_value (l_manager, id, True)
 					l_b_pref.change_actions.extend (agent update)
 					meta.put (l_b_pref.value, 2)
-					id := "editor.eiffel.keyboard_shortcuts." + action_name + "_shortcut_shift"
+					id := "editor.eiffel.keyboard_shortcuts." + action_name + ".shortcut_shift"
 					l_b_pref := l_manager.new_boolean_resource_value (l_manager, id, True)
 					l_b_pref.change_actions.extend (agent update)
 					meta.put (l_b_pref.value, 3)
@@ -715,14 +733,47 @@ feature -- Syntax Completion Customization
 			a: ARRAY [STRING]
 		once
 			create Result.make (35)
-			a := <<
-				"indexing", "class", "inherit", "creation", "feature", 
-				"is", "require", "require else", "local", "do", "once", "deferred", "external", "rescue", "ensure", "ensure then", "alias",
-				"if", "then", "elseif", "else", "inspect", "when", "from", "variant", "until", "loop", "debug", "check", 
-				"rename", "redefine", "undefine", "select", "export",
-				"precursor", "create", "obsolete", "invariant", "end"
-				>>
-			Result.fill (a)
+			Result.append (class_completed_keywords)
+			Result.append (feature_completed_keywords)
+			Result.append (inherit_completed_keywords)
+			Result.append (control_completed_keywords)
+			Result.append (other_completed_keywords)
+			Result.compare_objects
+		end
+
+	class_completed_keywords: ARRAYED_LIST [STRING] is
+			-- list of completed keywords
+		once
+			create Result.make_from_array (<<"indexing", "class", "inherit", "creation", "feature">>)
+			Result.compare_objects
+		end
+
+	feature_completed_keywords: ARRAYED_LIST [STRING] is
+			-- list of completed keywords
+		once
+			create Result.make_from_array (<<"is", "require", "require else", "local", "do", "once", "deferred", "external", "rescue", "ensure", "ensure then", "alias">>)
+			Result.compare_objects
+		end
+
+	inherit_completed_keywords: ARRAYED_LIST [STRING] is
+			-- list of completed keywords
+		once
+			create Result.make_from_array (<<"rename", "redefine", "undefine", "select", "export">>)
+			Result.compare_objects
+		end
+
+	control_completed_keywords: ARRAYED_LIST [STRING] is
+			-- list of completed keywords
+		once
+			create Result.make_from_array (<<"if", "then", "elseif", "else", "inspect", "when", "from", "variant", "until", "loop", "debug", "check">>)
+			Result.compare_objects
+		end
+	
+	
+	other_completed_keywords: ARRAYED_LIST [STRING] is
+			-- list of completed keywords
+		once
+			create Result.make_from_array (<<"precursor", "create", "obsolete", "invariant", "end">>)
 			Result.compare_objects
 		end
 
@@ -731,6 +782,23 @@ feature -- Syntax Completion Customization
 
 	insert_after_keyword: ARRAY [ARRAY[STRING]]
 			-- strings to be inserted after keywords
+
+	complete_keywords_names: HASH_TABLE [ARRAYED_LIST[STRING], STRING] is
+			-- should the corresponding keyword in `completed_keywords' be completed ?
+		once
+			create Result.make (35)
+			Result.put (class_completed_keywords, complete_keywords_names_keys @ 1)
+			Result.put (feature_completed_keywords, complete_keywords_names_keys @ 2)
+			Result.put (inherit_completed_keywords, complete_keywords_names_keys @ 3)
+			Result.put (control_completed_keywords, complete_keywords_names_keys @ 4)
+			Result.put (other_completed_keywords, complete_keywords_names_keys @ 5)
+		end
+
+	complete_keywords_names_keys: ARRAYED_LIST [STRING] is
+			-- should the corresponding keyword in `completed_keywords' be completed ?
+		once
+			create Result.make_from_array (<<"class_structure_keywords", "feature_structure_keywords", "inherit_clauses_keywords", "control_structure_keywords", "other_keywords">>)
+		end
 
 feature -- Keybord shortcuts Customization
 
@@ -748,12 +816,12 @@ feature -- Keybord shortcuts Customization
 				"autocomplete", 
 				"class_autocomplete", 
 				"show_search_panel", 
-				"show_search_and_replace_panel", 
-				"search_selection", 
-				"search_last", 
+				"show_search_and_replace_panel",
+				"search_selection",
+				"search_last",
 				"search_backward",
-				"customized_insertion_1", 
-				"customized_insertion_2", 
+				"customized_insertion_1",
+				"customized_insertion_2",
 				"customized_insertion_3"
 					>>
 		end

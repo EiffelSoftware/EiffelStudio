@@ -68,7 +68,7 @@ feature {NONE} -- Implementation
 	chosen_receiver: STRING is
 			-- Where the stones should be sent (look up in the preferences).
 		do
-			Result := preferences.misc_data.ctrl_right_click_receiver.as_lower
+			Result := preferences.development_window_data.ctrl_right_click_receiver.as_lower
 		ensure
 			not_void: Result /= Void
 			lower_case: Result.is_equal (Result.as_lower)

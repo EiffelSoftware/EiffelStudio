@@ -46,8 +46,8 @@ feature {NONE} -- Preference
 
 feature {NONE} -- Preference Strings
 
-	expand_feature_tree_string: STRING is "feature_tool.expand_feature_tree"	
-	show_all_callers_string: STRING is "feature_tool.show_all_callers"
+	expand_feature_tree_string: STRING is "interface.development_window.expand_feature_tree"	
+	show_all_callers_string: STRING is "tools.context_tool.show_all_callers"
 
 feature {NONE} -- Implementation
 

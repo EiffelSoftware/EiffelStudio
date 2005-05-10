@@ -364,62 +364,62 @@ feature {NONE} -- Preference
 feature {NONE} -- Preference Strings
 
 	-- BON Class
-	bon_class_name_font_string: STRING is "diagram_tool.bon.bon_class_name_font"
-	bon_class_name_color_string: STRING is "diagram_tool.bon.bon_class_name_color"
-	bon_class_fill_color_string: STRING is "diagram_tool.bon.bon_class_fill_color"
-	bon_class_uncompiled_fill_color_string: STRING is "diagram_tool.bon.bon_class_uncompiled_fill_color"
-	bon_generics_font_string: STRING is "diagram_tool.bon.bon_class_generics_font"
-	bon_generics_color_string: STRING is "diagram_tool.bon.bon_class_generics_color"
+	bon_class_name_font_string: STRING is "tools.diagram_tool.bon.bon_class_name_font"
+	bon_class_name_color_string: STRING is "tools.diagram_tool.bon.bon_class_name_color"
+	bon_class_fill_color_string: STRING is "tools.diagram_tool.bon.bon_class_fill_color"
+	bon_class_uncompiled_fill_color_string: STRING is "tools.diagram_tool.bon.bon_class_uncompiled_fill_color"
+	bon_generics_font_string: STRING is "tools.diagram_tool.bon.bon_class_generics_font"
+	bon_generics_color_string: STRING is "tools.diagram_tool.bon.bon_class_generics_color"
 			
 		-- BON Client supplier link
-	bon_client_label_font_string: STRING is "diagram_tool.bon.bon_client_label_font"
-	bon_client_label_color_string: STRING is "diagram_tool.bon.bon_client_label_color"
-	bon_client_color_string: STRING is "diagram_tool.bon.bon_client_color"
-	bon_client_line_width_string: STRING is "diagram_tool.bon.bon_client_line_width"
+	bon_client_label_font_string: STRING is "tools.diagram_tool.bon.bon_client_label_font"
+	bon_client_label_color_string: STRING is "tools.diagram_tool.bon.bon_client_label_color"
+	bon_client_color_string: STRING is "tools.diagram_tool.bon.bon_client_color"
+	bon_client_line_width_string: STRING is "tools.diagram_tool.bon.bon_client_line_width"
 
 		-- BON Cluster
-	bon_cluster_line_color_string: STRING is "diagram_tool.bon.bon_cluster_line_color"
-	bon_cluster_iconified_fill_color_string: STRING is "diagram_tool.bon.bon_cluster_iconified_fill_color"
-	bon_cluster_name_area_color_string: STRING is "diagram_tool.bon.bon_cluster_name_area_color"
-	bon_cluster_name_color_string: STRING is "diagram_tool.bon.bon_cluster_name_color"
-	bon_cluster_name_font_string: STRING is "diagram_tool.bon.bon_cluster_name_font"
+	bon_cluster_line_color_string: STRING is "tools.diagram_tool.bon.bon_cluster_line_color"
+	bon_cluster_iconified_fill_color_string: STRING is "tools.diagram_tool.bon.bon_cluster_iconified_fill_color"
+	bon_cluster_name_area_color_string: STRING is "tools.diagram_tool.bon.bon_cluster_name_area_color"
+	bon_cluster_name_color_string: STRING is "tools.diagram_tool.bon.bon_cluster_name_color"
+	bon_cluster_name_font_string: STRING is "tools.diagram_tool.bon.bon_cluster_name_font"
 	
 		-- BON Inheritance link
-	bon_inheritance_color_string: STRING is "diagram_tool.bon.bon_inheritance_color"
-	bon_inheritance_line_width_string: STRING is "diagram_tool.bon.bon_inheritance_line_width"
+	bon_inheritance_color_string: STRING is "tools.diagram_tool.bon.bon_inheritance_color"
+	bon_inheritance_line_width_string: STRING is "tools.diagram_tool.bon.bon_inheritance_line_width"
 	
 		-- UML Class
-	uml_class_name_font_string: STRING is "diagram_tool.uml.uml_class_name_font"
-	uml_class_deferred_font_string: STRING is "diagram_tool.uml.uml_class_deferred_font"
-	uml_class_properties_font_string: STRING is "diagram_tool.uml.uml_class_properties_font"
-	uml_class_properties_color_string: STRING is "diagram_tool.uml.uml_class_properties_color"
-	uml_class_name_color_string: STRING is "diagram_tool.uml.uml_class_name_color"
-	uml_class_fill_color_string: STRING is "diagram_tool.uml.uml_class_fill_color"
-	uml_generics_font_string: STRING is "diagram_tool.uml.uml_generics_font"
-	uml_generics_color_string: STRING is "diagram_tool.uml.uml_generics_color"
-	uml_class_features_font_string: STRING is "diagram_tool.uml.uml_class_features_font"
-	uml_class_features_color_string: STRING is "diagram_tool.uml.uml_class_features_color"
-	uml_class_feature_section_font_string: STRING is "diagram_tool.uml.uml_class_feature_section_font"
-	uml_class_feature_section_color_string: STRING is "diagram_tool.uml.uml_class_feature_section_color"
+	uml_class_name_font_string: STRING is "tools.diagram_tool.uml.uml_class_name_font"
+	uml_class_deferred_font_string: STRING is "tools.diagram_tool.uml.uml_class_deferred_font"
+	uml_class_properties_font_string: STRING is "tools.diagram_tool.uml.uml_class_properties_font"
+	uml_class_properties_color_string: STRING is "tools.diagram_tool.uml.uml_class_properties_color"
+	uml_class_name_color_string: STRING is "tools.diagram_tool.uml.uml_class_name_color"
+	uml_class_fill_color_string: STRING is "tools.diagram_tool.uml.uml_class_fill_color"
+	uml_generics_font_string: STRING is "tools.diagram_tool.uml.uml_generics_font"
+	uml_generics_color_string: STRING is "tools.diagram_tool.uml.uml_generics_color"
+	uml_class_features_font_string: STRING is "tools.diagram_tool.uml.uml_class_features_font"
+	uml_class_features_color_string: STRING is "tools.diagram_tool.uml.uml_class_features_color"
+	uml_class_feature_section_font_string: STRING is "tools.diagram_tool.uml.uml_class_feature_section_font"
+	uml_class_feature_section_color_string: STRING is "tools.diagram_tool.uml.uml_class_feature_section_color"
 	
 		-- UML Client supplier link
-	uml_client_line_width_string: STRING is "diagram_tool.uml.uml_client_line_width"
-	uml_client_color_string: STRING is "diagram_tool.uml.uml_client_color"
-	uml_client_label_color_string: STRING is "diagram_tool.uml.uml_client_label_color"
-	uml_client_label_font_string: STRING is "diagram_tool.uml.uml_client_label_font"
+	uml_client_line_width_string: STRING is "tools.diagram_tool.uml.uml_client_line_width"
+	uml_client_color_string: STRING is "tools.diagram_tool.uml.uml_client_color"
+	uml_client_label_color_string: STRING is "tools.diagram_tool.uml.uml_client_label_color"
+	uml_client_label_font_string: STRING is "tools.diagram_tool.uml.uml_client_label_font"
 	
 		-- UML Cluster
-	uml_cluster_line_color_string: STRING is "diagram_tool.uml.uml_cluster_line_color"
-	uml_cluster_iconified_fill_color_string: STRING is "diagram_tool.uml.uml_cluster_iconified_fill_color"
-	uml_cluster_name_area_color_string: STRING is "diagram_tool.uml.uml_cluster_name_area_color"
-	uml_cluster_name_color_string: STRING is "diagram_tool.uml.uml_cluster_name_color"
-	uml_cluster_name_font_string: STRING is "diagram_tool.uml.uml_cluster_name_font"
+	uml_cluster_line_color_string: STRING is "tools.diagram_tool.uml.uml_cluster_line_color"
+	uml_cluster_iconified_fill_color_string: STRING is "tools.diagram_tool.uml.uml_cluster_iconified_fill_color"
+	uml_cluster_name_area_color_string: STRING is "tools.diagram_tool.uml.uml_cluster_name_area_color"
+	uml_cluster_name_color_string: STRING is "tools.diagram_tool.uml.uml_cluster_name_color"
+	uml_cluster_name_font_string: STRING is "tools.diagram_tool.uml.uml_cluster_name_font"
 	
 		-- UML Inheritance link
-	uml_inheritance_line_width_string: STRING is "diagram_tool.uml.uml_inheritance_line_width"
-	uml_inheritance_color_string: STRING is "diagram_tool.uml.uml_inheritance_color"
+	uml_inheritance_line_width_string: STRING is "tools.diagram_tool.uml.uml_inheritance_line_width"
+	uml_inheritance_color_string: STRING is "tools.diagram_tool.uml.uml_inheritance_color"
 
-	diagram_auto_scroll_speed_preference_string: STRING is "diagram_tool.autoscroll_speed"
+	diagram_auto_scroll_speed_preference_string: STRING is "tools.diagram_tool.autoscroll_speed"
 
 feature {NONE} -- Implementation
 

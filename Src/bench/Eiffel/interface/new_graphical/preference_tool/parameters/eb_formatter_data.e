@@ -45,29 +45,17 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := default_feature_formatter_index_preference.value
 		end
 
-	show_syntactical_suppliers: BOOLEAN is
-			-- Should the supplier formatter display syntactical suppliers
-			-- (those whose name appear in the class) or
-			-- actual ones (those of which a feature is called)?
---|FIXME XR: Not implemented.
-		do
-			Result := show_syntactical_suppliers_preference.value
-		end
-
 feature {NONE} -- Preference
 
 	editor_history_size_preference: INTEGER_PREFERENCE
 	default_class_formatter_index_preference: INTEGER_PREFERENCE
 	default_feature_formatter_index_preference: INTEGER_PREFERENCE	
-	show_syntactical_suppliers_preference: BOOLEAN_PREFERENCE
 		
 feature {NONE} -- Preference Strings
 
-	editor_history_size_string: STRING is "formatter.formatters_history_size"
-	default_class_formatter_index_string: STRING is "formatter.default_class_formatter_index"
-	default_feature_formatter_index_string: STRING is "formatter.default_feature_formatter_index"
-	
-	show_syntactical_suppliers_string: STRING is "formatter.show_syntactical_suppliers"
+	editor_history_size_string: STRING is "editor.eiffel.formatters_history_size"
+	default_class_formatter_index_string: STRING is "tools.browsing_tools.default_class_formatter_index"
+	default_feature_formatter_index_string: STRING is "tools.browsing_tools.default_feature_formatter_index"
 
 feature {NONE} -- Implementation
 
@@ -81,7 +69,6 @@ feature {NONE} -- Implementation
 			editor_history_size_preference := l_manager.new_integer_resource_value (l_manager, editor_history_size_string, 60)
 			default_class_formatter_index_preference := l_manager.new_integer_resource_value (l_manager, default_class_formatter_index_string, 5)
 			default_feature_formatter_index_preference := l_manager.new_integer_resource_value (l_manager, default_feature_formatter_index_string, 2)
-			show_syntactical_suppliers_preference := l_manager.new_boolean_resource_value (l_manager, show_syntactical_suppliers_string, False)		
 		end
 	
 	preferences: PREFERENCES
@@ -92,6 +79,5 @@ invariant
 	editor_history_size_preference_not_void: editor_history_size_preference /= Void
 	default_class_formatter_index_preference_not_void: default_class_formatter_index_preference /= Void
 	default_feature_formatter_index_preference_not_void: default_feature_formatter_index_preference /= Void
-	show_syntactical_suppliers_preference_not_void: show_syntactical_suppliers_preference /= Void
 
 end -- class EB_FORMATTER_DATA

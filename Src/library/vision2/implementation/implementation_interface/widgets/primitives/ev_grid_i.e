@@ -1308,9 +1308,9 @@ feature -- Element change
 			-- Insert a new row at index `i'.
 		require
 			i_positive: i > 0
-			not_inserting_within_existing_subrow_structure: i < row_count and
+			not_inserting_within_existing_subrow_structure: i = 1 or else (i < row_count and
 				row (i - 1).parent_row_root /= Void and row (i).parent_row_root /= Void implies
-				row (i - 1).parent_row_root /= row (i).parent_row_root
+				row (i - 1).parent_row_root /= row (i).parent_row_root)
 		do
 			add_row_at (i, False)
 		ensure

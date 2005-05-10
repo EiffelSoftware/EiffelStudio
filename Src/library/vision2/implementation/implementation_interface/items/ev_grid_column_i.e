@@ -14,6 +14,8 @@ inherit
 			interface,
 			is_selectable
 		end
+
+	EV_GRID_COLUMN_ACTION_SEQUENCES_I
 	
 create
 	make

@@ -2300,9 +2300,9 @@ Manifest_string: Default_manifest_string
 Default_manifest_string: Non_empty_string
 			{ $$ := $1 }
 	|	TE_EMPTY_STRING
-			{ $$ := ast_factory.new_string_as ("", line, column, position) }
+			{ $$ := ast_factory.new_string_as ("", line, column, string_position, position + text_count - string_position) }
 	|	TE_EMPTY_VERBATIM_STRING
-			{ $$ := ast_factory.new_verbatim_string_as ("", verbatim_marker.substring (2, verbatim_marker.count), not has_old_verbatim_strings and then verbatim_marker.item (1) = ']', line, column, position) }
+			{ $$ := ast_factory.new_verbatim_string_as ("", verbatim_marker.substring (2, verbatim_marker.count), not has_old_verbatim_strings and then verbatim_marker.item (1) = ']', line, column, string_position, position + text_count - string_position) }
 	;
 
 Typed_manifest_string: TE_RCURLY Type TE_RCURLY Default_manifest_string
@@ -2313,9 +2313,9 @@ Typed_manifest_string: TE_RCURLY Type TE_RCURLY Default_manifest_string
 	;
 
 Non_empty_string: TE_STRING
-			{ $$ := new_string (cloned_string (token_buffer)) }
+			{ $$ := ast_factory.new_string_as (cloned_string (token_buffer), line, column, string_position, position + text_count - string_position) }
 	|	TE_VERBATIM_STRING
-			{ $$ := ast_factory.new_verbatim_string_as (cloned_string (token_buffer), verbatim_marker.substring (2, verbatim_marker.count), not has_old_verbatim_strings and then verbatim_marker.item (1) = ']', line, column, position) }
+			{ $$ := ast_factory.new_verbatim_string_as (cloned_string (token_buffer), verbatim_marker.substring (2, verbatim_marker.count), not has_old_verbatim_strings and then verbatim_marker.item (1) = ']', line, column, string_position, position + text_count - string_position) }
 	|	TE_STR_LT
 			{ $$ := new_lt_string }
 	|	TE_STR_LE

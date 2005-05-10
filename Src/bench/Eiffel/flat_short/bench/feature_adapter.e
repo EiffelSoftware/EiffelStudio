@@ -112,12 +112,12 @@ feature -- Element change
 						if source_feature.is_infix then
 							create {INFIX_PREFIX_AS} f_name.initialize
 								(create {STRING_AS}.initialize (
-									extract_symbol_from_infix (source_feature.feature_name), 0, 0, 0),
+									extract_symbol_from_infix (source_feature.feature_name), 0, 0, 0, 0),
 								source_feature.is_frozen, True)
 						elseif source_feature.is_prefix then
 							create {INFIX_PREFIX_AS} f_name.initialize
 								(create {STRING_AS}.initialize (
-									extract_symbol_from_prefix (source_feature.feature_name), 0, 0, 0),
+									extract_symbol_from_prefix (source_feature.feature_name), 0, 0, 0, 0),
 								source_feature.is_frozen, False)
 						else
 							create {FEAT_NAME_ID_AS} f_name.initialize (

@@ -18996,7 +18996,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval65 := ast_factory.new_string_as ("", line, column, position) 
+yyval65 := ast_factory.new_string_as ("", line, column, string_position, position + text_count - string_position) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
 	yyvsp65 := yyvsp65 + 1
@@ -19031,7 +19031,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval65 := ast_factory.new_verbatim_string_as ("", verbatim_marker.substring (2, verbatim_marker.count), not has_old_verbatim_strings and then verbatim_marker.item (1) = ']', line, column, position) 
+yyval65 := ast_factory.new_verbatim_string_as ("", verbatim_marker.substring (2, verbatim_marker.count), not has_old_verbatim_strings and then verbatim_marker.item (1) = ']', line, column, string_position, position + text_count - string_position) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
 	yyvsp65 := yyvsp65 + 1
@@ -19087,7 +19087,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval65 := new_string (cloned_string (token_buffer)) 
+yyval65 := ast_factory.new_string_as (cloned_string (token_buffer), line, column, string_position, position + text_count - string_position) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
 	yyvsp65 := yyvsp65 + 1
@@ -19122,7 +19122,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval65 := ast_factory.new_verbatim_string_as (cloned_string (token_buffer), verbatim_marker.substring (2, verbatim_marker.count), not has_old_verbatim_strings and then verbatim_marker.item (1) = ']', line, column, position) 
+yyval65 := ast_factory.new_verbatim_string_as (cloned_string (token_buffer), verbatim_marker.substring (2, verbatim_marker.count), not has_old_verbatim_strings and then verbatim_marker.item (1) = ']', line, column, string_position, position + text_count - string_position) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
 	yyvsp65 := yyvsp65 + 1

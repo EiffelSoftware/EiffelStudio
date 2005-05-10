@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (s, marker: STRING; indentable: BOOLEAN; l, c, p: INTEGER) is
+	initialize (s, marker: STRING; indentable: BOOLEAN; l, c, p, n: INTEGER) is
 			-- Create a new Verbatim string AST node.
 		require
 			s_not_void: s /= Void
@@ -27,8 +27,9 @@ feature {NONE} -- Initialization
 			l_non_negative: l >= 0
 			c_non_negative: c >= 0
 			p_non_negative: p >= 0
+			n_non_negative: n >= 0
 		do
-			string_initialize (s, l, c, p)
+			string_initialize (s, l, c, p, n)
 			verbatim_marker := marker
 			is_indentable := indentable
 		ensure

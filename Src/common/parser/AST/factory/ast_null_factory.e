@@ -686,7 +686,7 @@ feature -- Access
 		do
 		end
 
-	new_string_as (s: STRING; l, c, p: INTEGER): STRING_AS is
+	new_string_as (s: STRING; l, c, p, n: INTEGER): STRING_AS is
 			-- New STRING AST node
 		do
 		end
@@ -751,7 +751,7 @@ feature -- Access
 		do
 		end
 
-	new_verbatim_string_as (s, marker: STRING; is_indentable: BOOLEAN; l, c, p: INTEGER): VERBATIM_STRING_AS is
+	new_verbatim_string_as (s, marker: STRING; is_indentable: BOOLEAN; l, c, p, n: INTEGER): VERBATIM_STRING_AS is
 			-- New VERBATIM_STRING AST node
 		do
 		end

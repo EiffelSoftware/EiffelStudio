@@ -1079,15 +1079,17 @@ feature -- Access
 			create Result.initialize (c, f, p)
 		end
 
-	new_string_as (s: STRING; l, c, p: INTEGER): STRING_AS is
+	new_string_as (s: STRING; l, c, p, n: INTEGER): STRING_AS is
 			-- New STRING AST node
 		require
+			s_not_void: s /= Void
 			l_non_negative: l >= 0
 			c_non_negative: c >= 0
 			p_non_negative: p >= 0
+			n_non_negative: n >= 0
 		do
 			if s /= Void then
-				create Result.initialize (s, l, c, p)
+				create Result.initialize (s, l, c, p, n)
 			end
 		end
 
@@ -1190,15 +1192,18 @@ feature -- Access
 			end
 		end
 
-	new_verbatim_string_as (s, marker: STRING; is_indentable: BOOLEAN; l, c, p: INTEGER): VERBATIM_STRING_AS is
+	new_verbatim_string_as (s, marker: STRING; is_indentable: BOOLEAN; l, c, p, n: INTEGER): VERBATIM_STRING_AS is
 			-- New VERBATIM_STRING AST node
 		require
+			s_not_void: s /= Void
+			marker_not_void: marker /= Void
 			l_non_negative: l >= 0
 			c_non_negative: c >= 0
 			p_non_negative: p >= 0
+			n_non_negative: n >= 0
 		do
 			if s /= Void and marker /= Void then
-				create Result.initialize (s, marker, is_indentable, l, c, p)
+				create Result.initialize (s, marker, is_indentable, l, c, p, n)
 			end
 		end
 

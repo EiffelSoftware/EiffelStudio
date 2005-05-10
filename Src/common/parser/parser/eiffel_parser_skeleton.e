@@ -402,11 +402,12 @@ feature {NONE} -- ID factory
 feature {NONE} -- String factory
 
 	new_string (v: STRING): STRING_AS is
-			-- New string AST node for `v'.
+			-- New string AST node for `v' which is a regular string.
 		require
 			v_not_void: v /= Void
 		do
-			Result := ast_factory.new_string_as (v, line, column, position)
+				-- Take into account surrounding quotes.
+			Result := ast_factory.new_string_as (v, line, column, position, v.count + 2)
 		end
 
 	new_lt_string: STRING_AS is

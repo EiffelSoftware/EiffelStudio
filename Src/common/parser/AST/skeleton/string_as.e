@@ -21,16 +21,17 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (s: STRING; l, c, p: INTEGER) is
+	initialize (s: STRING; l, c, p, n: INTEGER) is
 			-- Create a new STRING AST node.
 		require
 			s_not_void: s /= Void
 			l_non_negative: l >= 0
 			c_non_negative: c >= 0
 			p_non_negative: p >= 0
+			n_non_negative: n >= 0
 		do
 			value := s
-			set_position (l, c, p, s.count)
+			set_position (l, c, p, n)
 		ensure
 			value_set: value = s
 		end

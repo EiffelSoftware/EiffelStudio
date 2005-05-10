@@ -2,6 +2,16 @@ indexing
 	description: "[
 		Widget which is a combination of an EV_TREE and an EV_MULTI_COLUMN_LIST.
 
+		Item Insertion:
+
+		Dynamic Modes:
+
+		Size and Position:
+
+		Selection:
+
+		Item Activation:
+
 		Event Handling: The standard set of widget events are inherited from EV_CELL with an additional set of events that are applicable to both
 		`Current' and the items contained are inherited from EV_GRID_ACTION_SEQUENCES. For example, `pointer_button_press_actions' is inherited from
 		EV_CELL, while `pointer_button_press_item_actions' is inherited from EV_GRID_ACTION_SEQUENCES and has an EV_GRID_ITEM as event data specifying the
@@ -16,6 +26,11 @@ indexing
 		3. The events are fired on the item themselves. i.e. "item.pointer_button_press_actions"
 			The x and y coordinate event data is relative to the upper left corner of the item.
 
+		The grid specific versions of particular events permit you to perform handling for all of your items in a common place and are always fired
+		before the specific item versions. For example, if you connect to both EV_GRID.row_expand_actions and EV_GRID_ROW.expand_actions, the grid version
+		is fired first, immediately by the row version. The action sequences are fired one immediately after the other and both are always fired even 
+		if you change states of the target object within the first action sequence.
+			
 
 		Color Handling: Colors applied to items within `Current' are determined on a three level basis.
 		The base level is `Current' whose `foreground_color' and `background_color' may never be Void.

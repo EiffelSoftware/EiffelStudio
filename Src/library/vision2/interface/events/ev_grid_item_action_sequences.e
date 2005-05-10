@@ -50,7 +50,6 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-
 	pointer_button_release_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE is
 			-- Actions to be performed when screen pointer button is released.
 		do

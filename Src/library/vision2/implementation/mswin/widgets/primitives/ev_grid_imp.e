@@ -44,6 +44,48 @@ feature {NONE} -- Initialization
 			is_initialized := True
 		end
 
+feature {EV_GRID_I} -- Access
+
+	focused_selection_color: EV_COLOR is
+			-- Color used for selected items while focused.
+		local
+			color_imp: EV_COLOR_IMP
+		once
+			create Result
+			color_imp ?= Result.implementation
+			color_imp.set_with_system_id (wel_color_constants.color_highlight)
+		end
+
+	focused_selection_text_color: EV_COLOR is
+			-- Color used for text of selected items while focused.
+		local
+			color_imp: EV_COLOR_IMP
+		once
+			create Result
+			color_imp ?= Result.implementation
+			color_imp.set_with_system_id (wel_color_constants.color_highlighttext)
+		end
+
+	non_focused_selection_color: EV_COLOR is
+			-- Color used for selected items while not focused.
+		local
+			color_imp: EV_COLOR_IMP
+		once
+			create Result
+			color_imp ?= Result.implementation
+			color_imp.set_with_system_id (wel_color_constants.color_btnface)
+		end
+
+	non_focused_selection_text_color: EV_COLOR is
+			-- Color used for text of selected items while not focused.
+		local
+			color_imp: EV_COLOR_IMP
+		once
+			create Result
+			color_imp ?= Result.implementation
+			color_imp.set_with_system_id (wel_color_constants.color_btntext)
+		end
+		
 feature {NONE} -- Status setting
 
 	set_background_color (color: EV_COLOR) is

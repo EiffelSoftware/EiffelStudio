@@ -2478,7 +2478,7 @@ feature {NONE} -- Drawing implementation
 			header_item_not_void: header_item /= Void
 		do
 				-- Update horizontal scroll bar size and position.
-			recompute_horizontal_scroll_bar
+			((create {EV_ENVIRONMENT}).application).do_once_on_idle (agent recompute_horizontal_scroll_bar)
 			
 			if is_resizing_divider_enabled then
 					-- Draw a resizing line if enabled.

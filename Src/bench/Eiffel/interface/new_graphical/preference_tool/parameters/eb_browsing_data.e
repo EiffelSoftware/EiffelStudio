@@ -50,9 +50,9 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	
 feature {NONE} -- Preference Strings
 
-	class_completion_string: STRING is "browsing_tools.class_completion"
-	dock_tracking_string: STRING is "browsing_tools.dock_tracking"
-	last_browsed_cluster_directory_string: STRING is "browsing_tools.last_browsed_cluster_directory"
+	class_completion_string: STRING is "tools.browsing_tools.class_completion"
+	dock_tracking_string: STRING is "tools.browsing_tools.dock_tracking"
+	last_browsed_cluster_directory_string: STRING is "tools.browsing_tools.last_browsed_cluster_directory"
 
 feature {NONE} -- Implementation
 		

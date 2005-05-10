@@ -155,6 +155,12 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := progress_bar_color_preference.value	
 		end
 		
+	ctrl_right_click_receiver: STRING is
+			-- 
+		do
+			Result := ctrl_right_click_receiver_preference.selected_value
+		end	
+
 feature {EB_SHARED_PREFERENCES} -- Preference
 
 	width_preference: INTEGER_PREFERENCE
@@ -214,6 +220,8 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	completion_list_height_preference: INTEGER_PREFERENCE
 
 	progress_bar_color_preference: COLOR_PREFERENCE
+
+	ctrl_right_click_receiver_preference: ARRAY_PREFERENCE	
 
 feature -- Element change
 
@@ -297,27 +305,28 @@ feature -- Basic operations
 
 feature {NONE} -- Preference Strings
 
-	width_string: STRING is "development_window.width"
-	height_string: STRING is "development_window.height"
-	x_position_string: STRING is "development_window.x_position"
-	y_position_string: STRING is "development_window.y_position"
-	is_maximized_string: STRING is "development_window.is_maximized"
-	left_panel_use_explorer_style_string: STRING is "development_window.left_panel_use_explorer_style"
-	left_panel_width_string: STRING is "development_window.window_left_panel_width"
-	left_panel_layout_string: STRING is "development_window.left_panel_layout"
-	right_panel_layout_string: STRING is "development_window.right_panel_layout"
-	show_general_toolbar_string: STRING is "development_window.show_general_toolbar"
-	show_text_in_general_toolbar_string: STRING is "development_window.show_text_in_general_toolbar"
-	show_all_text_in_general_toolbar_string: STRING is "development_window.show_all_text_in_general_toolbar"
-	show_address_toolbar_string: STRING is "development_window.show_address_toolbar"
-	show_project_toolbar_string: STRING is "development_window.show_project_toolbar"
-	search_tool_show_options_string: STRING is "development_window.search_tool_show_options"
-	general_toolbar_layout_string: STRING is "development_window.general_toolbar_layout"
-	max_history_size_string: STRING is "development_window.maximum_history_size"
-	remember_completion_list_size_string: STRING is "development_window.remember_completion_list_size"
-	completion_list_width_string: STRING is "development_window.completion_list_width"
-	completion_list_height_string: STRING is "development_window.completion_list_height"
-	progress_bar_color_preference_string: STRING is "misc.progress_bar_color"
+	width_string: STRING is "interface.development_window.width"
+	height_string: STRING is "interface.development_window.height"
+	x_position_string: STRING is "interface.development_window.x_position"
+	y_position_string: STRING is "interface.development_window.y_position"
+	is_maximized_string: STRING is "interface.development_window.is_maximized"
+	left_panel_use_explorer_style_string: STRING is "interface.development_window.left_panel_use_explorer_style"
+	left_panel_width_string: STRING is "interface.development_window.window_left_panel_width"
+	left_panel_layout_string: STRING is "interface.development_window.left_panel_layout"
+	right_panel_layout_string: STRING is "interface.development_window.right_panel_layout"
+	show_general_toolbar_string: STRING is "interface.development_window.show_general_toolbar"
+	show_text_in_general_toolbar_string: STRING is "interface.development_window.show_text_in_general_toolbar"
+	show_all_text_in_general_toolbar_string: STRING is "interface.development_window.show_all_text_in_general_toolbar"
+	show_address_toolbar_string: STRING is "interface.development_window.show_address_toolbar"
+	show_project_toolbar_string: STRING is "interface.development_window.show_project_toolbar"
+	search_tool_show_options_string: STRING is "interface.development_window.search_tool_show_options"
+	general_toolbar_layout_string: STRING is "interface.development_window.general_toolbar_layout"
+	max_history_size_string: STRING is "interface.development_window.maximum_history_size"
+	remember_completion_list_size_string: STRING is "interface.development_window.remember_completion_list_size"
+	completion_list_width_string: STRING is "interface.development_window.completion_list_width"
+	completion_list_height_string: STRING is "interface.development_window.completion_list_height"
+	progress_bar_color_preference_string: STRING is "interface.development_window.progress_bar_color"
+	ctrl_right_click_receiver_string: STRING is "interface.development_window.ctrl_right_click_receiver"
 
 feature {NONE} -- Implementation
 
@@ -349,6 +358,8 @@ feature {NONE} -- Implementation
 			completion_list_height_preference := l_manager.new_integer_resource_value (l_manager, completion_list_height_string, 100)
 			completion_list_width_preference := l_manager.new_integer_resource_value (l_manager, completion_list_width_string, 80)
 			progress_bar_color_preference := l_manager.new_color_resource_value (l_manager, progress_bar_color_preference_string, create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 128))
+			ctrl_right_click_receiver_preference := l_manager.new_array_resource_value (l_manager, ctrl_right_click_receiver_string, <<"new_window">>)	
+			ctrl_right_click_receiver_preference.set_is_choice (True)
 		end
 	
 	preferences: PREFERENCES

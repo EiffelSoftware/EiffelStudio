@@ -35,12 +35,6 @@ feature {EB_SHARED_PREFERENCES} -- Value
 	use_external_editor: BOOLEAN is False
 	
 	print_shell_command: STRING is "lpr $target"
-	
-	ctrl_right_click_receiver: STRING is
-			-- 
-		do
-			Result := ctrl_right_click_receiver_preference.selected_value
-		end
 		
 	dyn_lib_window_width: INTEGER is
 			-- Initial width for the dialog.
@@ -211,8 +205,7 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	shell_editor_preference: STRING_PREFERENCE
 	internet_browser_preference: STRING_PREFERENCE
 	general_shell_command_preference: STRING_PREFERENCE
-	browsing_facilities_preference: BOOLEAN_PREFERENCE
-	ctrl_right_click_receiver_preference: ARRAY_PREFERENCE	
+	browsing_facilities_preference: BOOLEAN_PREFERENCE	
 	dyn_lib_window_width_preference: INTEGER_PREFERENCE	
 	dyn_lib_window_height_preference: INTEGER_PREFERENCE
 	preference_window_width_preference: INTEGER_PREFERENCE	
@@ -223,30 +216,29 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 
 feature {NONE} -- Preference Strings
 
-	external_command_0_string: STRING is "misc.external_command_0"
-	external_command_1_string: STRING is "misc.external_command_1"
-	external_command_2_string: STRING is "misc.external_command_2"
-	external_command_3_string: STRING is "misc.external_command_3"
-	external_command_4_string: STRING is "misc.external_command_4"
-	external_command_5_string: STRING is "misc.external_command_5"
-	external_command_6_string: STRING is "misc.external_command_6"
-	external_command_7_string: STRING is "misc.external_command_7"
-	external_command_8_string: STRING is "misc.external_command_8"
-	external_command_9_string: STRING is "misc.external_command_9"
-	acrobat_reader_string: STRING is "misc.acrobat_reader"
-	text_mode_is_windows_string: STRING is "misc.text_mode_is_windows"
-	shell_editor_string: STRING is "misc.editor"
-	internet_browser_string: STRING is "misc.internet_browser"
-	general_shell_command_string: STRING is "misc.shell_command"
-	browsing_facilities_string: STRING is "misc.highlight clickable areas"
-	editor_left_side_string: STRING is "misc.editor_left_side"
-	dyn_lib_window_width_string: STRING is "misc.dynamic_library_window_width"
-	dyn_lib_window_height_string: STRING is "misc.dynamic_library_window_height"
-	preference_window_width_string: STRING is "misc.preference_window_width"
-	preference_window_height_string: STRING is "misc.preference_window_height"
-	ctrl_right_click_receiver_string: STRING is "misc.ctrl_right_click_receiver"
-	default_displayed_string_size_string: STRING is "misc.default_displayed_string_size"
-	show_hidden_preferences_string: STRING is "misc.show_hidden_preferences"
+	external_command_0_string: STRING is "general.external_command_0"
+	external_command_1_string: STRING is "general.external_command_1"
+	external_command_2_string: STRING is "general.external_command_2"
+	external_command_3_string: STRING is "general.external_command_3"
+	external_command_4_string: STRING is "general.external_command_4"
+	external_command_5_string: STRING is "general.external_command_5"
+	external_command_6_string: STRING is "general.external_command_6"
+	external_command_7_string: STRING is "general.external_command_7"
+	external_command_8_string: STRING is "general.external_command_8"
+	external_command_9_string: STRING is "general.external_command_9"
+	acrobat_reader_string: STRING is "general.acrobat_reader"
+	text_mode_is_windows_string: STRING is "editor.eiffel.text_mode_is_windows"
+	shell_editor_string: STRING is "editor.eiffel.editor"
+	internet_browser_string: STRING is "general.internet_browser"
+	general_shell_command_string: STRING is "general.shell_command"
+	browsing_facilities_string: STRING is "general.highlight clickable areas"
+	editor_left_side_string: STRING is "interface.development_window.editor_left_side"
+	dyn_lib_window_width_string: STRING is "general.dynamic_library_window_width"
+	dyn_lib_window_height_string: STRING is "general.dynamic_library_window_height"
+	preference_window_width_string: STRING is "general.preference_window_width"
+	preference_window_height_string: STRING is "general.preference_window_height"	
+	default_displayed_string_size_string: STRING is "debugger.default_displayed_string_size"
+	show_hidden_preferences_string: STRING is "general.show_hidden_preferences"
 
 feature {NONE} -- Implementation
 
@@ -288,8 +280,7 @@ feature {NONE} -- Implementation
 			dyn_lib_window_height_preference := l_manager.new_integer_resource_value (l_manager, dyn_lib_window_height_string, 200)
 			dyn_lib_window_width_preference := l_manager.new_integer_resource_value (l_manager, dyn_lib_window_width_string, 400)	
 			preference_window_height_preference := l_manager.new_integer_resource_value (l_manager, preference_window_height_string, 200)
-			preference_window_width_preference := l_manager.new_integer_resource_value (l_manager, preference_window_width_string, 400)	
-			ctrl_right_click_receiver_preference := l_manager.new_array_resource_value (l_manager, ctrl_right_click_receiver_string, <<"new_window">>)	
+			preference_window_width_preference := l_manager.new_integer_resource_value (l_manager, preference_window_width_string, 400)				
 			default_displayed_string_size_preference := l_manager.new_integer_resource_value (l_manager, default_displayed_string_size_string, 50)
 			show_hidden_preferences_preference := l_manager.new_boolean_resource_value (l_manager, show_hidden_preferences_string, False)
 		end
@@ -313,8 +304,7 @@ invariant
 	text_mode_is_windows_preference_not_void: text_mode_is_windows_preference /= Void	
 	shell_editor_preference_not_void: shell_editor_preference /= Void
 	general_shell_command_preference_not_void: general_shell_command_preference /= Void
-	browsing_facilities_preference_not_void: browsing_facilities_preference /= Void	
-	ctrl_right_click_receiver_preference_not_void: ctrl_right_click_receiver_preference /= Void
+	browsing_facilities_preference_not_void: browsing_facilities_preference /= Void		
 	dyn_lib_window_width_preference_not_void: dyn_lib_window_width_preference /= Void
 	dyn_lib_window_height_preference_not_void: dyn_lib_window_height_preference /= Void
 	preference_window_width_preference_not_void: preference_window_width_preference /= Void

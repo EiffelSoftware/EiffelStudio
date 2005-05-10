@@ -199,19 +199,19 @@ feature -- Events
 	focus_in_event is
 			--
 		do
-			to_implement ("EVENTS_TAB.focus_in_event")
+			add_event_item_to_list ("Focus_in_actions")
 		end
 		
 	focus_out_event is
 			--
 		do
-			to_implement ("EVENTS_TAB.focus_out_event")	
+			add_event_item_to_list ("Focus_out_actions")
 		end
 		
 	resize_event (an_x, a_y, a_width, a_height: INTEGER) is
 			--
 		do
-			to_implement ("EVENTS_TAB.resize_event")
+			add_event_item_to_list ("Resize_actions " + an_x.out + " " + a_y.out + " " + a_width.out + " " + a_height.out)
 		end
 		
 	row_collapsed (a_row: EV_GRID_ROW) is

@@ -671,10 +671,12 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 			}
 \"\"		{
 					-- Empty string.
+				string_position := position
 				last_token := TE_EMPTY_STRING
 			}
 \"[^%\n"]+\" {
 					-- Regular string.
+				string_position := position
 				token_buffer.clear_all
 				append_text_substring_to_string (2, text_count - 1, token_buffer)
 				last_token := TE_STRING
@@ -684,6 +686,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 			}
 \"[^\n"]*[\[\{]/[ \t\r]*\n {
 					-- Verbatim string.
+				string_position := position
 				token_buffer.clear_all
 				verbatim_marker.clear_all
 				if text_item (text_count) = '[' then
@@ -809,6 +812,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 }
 \"[^%\n"]*	{
 					-- String with special characters.
+				string_position := position
 				token_buffer.clear_all
 				if text_count > 1 then
 					append_text_substring_to_string (2, text_count, token_buffer)

@@ -14,7 +14,7 @@ inherit
 		export
 			{NONE}
 				arrayed_list_make
-			{EV_GRID_DRAWER_I, EV_GRID_I}
+			{EV_GRID_DRAWER_I, EV_GRID_I, EV_GRID_ROW_I}
 				area
 		redefine
 			grow
@@ -51,7 +51,7 @@ feature {EV_GRID_I} -- Implementation
 					-- remove the items and update `count'. This is for speed at the sake of
 					-- memory usage.
 
-					--Remove all items so that they can be garbage collected.
+					-- Remove all items so that they can be garbage collected.
 				from	
 					i := upper
 				until

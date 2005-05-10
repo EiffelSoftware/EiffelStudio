@@ -36,7 +36,7 @@ inherit
 
 feature -- Access
 
-	type_eiffel_name (a_type: TYPE): STRING is
+	type_eiffel_name (a_type: SYSTEM_TYPE): STRING is
 			-- Eiffel class name for .NET type `a_type'
 		require
 			non_void_type: a_type /= Void
@@ -56,7 +56,7 @@ feature -- Access
 			end
 		end
 
-	feature_eiffel_name (a_name: STRING; a_arguments: NATIVE_ARRAY [TYPE]; a_type: TYPE): STRING is
+	feature_eiffel_name (a_name: STRING; a_arguments: NATIVE_ARRAY [SYSTEM_TYPE]; a_type: SYSTEM_TYPE): STRING is
 			-- Eiffel name of .NET routine `a_name' from `a_type' with arguments `a_arguments'
 		require
 			non_void_name: a_name /= Void
@@ -75,7 +75,7 @@ feature -- Access
 			non_void_eiffel_name: Result /= Void
 		end
 
-	feature_overloaded_eiffel_name (a_name: STRING; a_type: TYPE): STRING is
+	feature_overloaded_eiffel_name (a_name: STRING; a_type: SYSTEM_TYPE): STRING is
 			-- Eiffel overloaded name of .NET routine `a_name' from `a_type'
 		require
 			non_void_name: a_name /= Void
@@ -92,7 +92,7 @@ feature -- Access
 			non_void_eiffel_name: Result /= Void
 		end
 
-	feature_type (a_name: STRING; a_arguments: NATIVE_ARRAY [TYPE]; a_type: TYPE): CODE_TYPE_REFERENCE is
+	feature_type (a_name: STRING; a_arguments: NATIVE_ARRAY [SYSTEM_TYPE]; a_type: SYSTEM_TYPE): CODE_TYPE_REFERENCE is
 			-- Type of result of feature `a_name' with arguments `a_arguments' in type `a_type'.
 		require
 			non_void_name: a_name /= Void
@@ -132,7 +132,7 @@ feature -- Access
 			non_void_feature_type: Result /= Void
 		end
 
-	features (a_name: STRING; a_type: TYPE): LIST [CODE_MEMBER_REFERENCE] is
+	features (a_name: STRING; a_type: SYSTEM_TYPE): LIST [CODE_MEMBER_REFERENCE] is
 			-- Features with .NET name `a_name' in type `a_type' if any
 		require
 			non_void_name: a_name /= Void
@@ -155,7 +155,7 @@ feature -- Access
 			end
 		end
 
-	all_features (a_type: TYPE): LIST [CODE_MEMBER_REFERENCE] is
+	all_features (a_type: SYSTEM_TYPE): LIST [CODE_MEMBER_REFERENCE] is
 			-- Features in type `a_type'
 		require
 			non_void_type: a_type /= Void
@@ -185,7 +185,7 @@ feature -- Access
 			end
 		end
 
-	member (a_type: TYPE; a_name: STRING; a_arguments: NATIVE_ARRAY [TYPE]): CODE_MEMBER_REFERENCE is
+	member (a_type: SYSTEM_TYPE; a_name: STRING; a_arguments: NATIVE_ARRAY [SYSTEM_TYPE]): CODE_MEMBER_REFERENCE is
 			-- Member with name `a_name' and arguments `a_arguments' from type `a_type'
 		require
 			non_void_type: a_type /= Void
@@ -206,7 +206,7 @@ feature -- Access
 		
 feature {NONE} -- Implementation
 
-	static_arguments_types (a_caller_type: TYPE; a_dotnet_feature_name: STRING; a_arguments_types: NATIVE_ARRAY [TYPE]): NATIVE_ARRAY [TYPE] is
+	static_arguments_types (a_caller_type: SYSTEM_TYPE; a_dotnet_feature_name: STRING; a_arguments_types: NATIVE_ARRAY [SYSTEM_TYPE]): NATIVE_ARRAY [SYSTEM_TYPE] is
 			-- Static signature of `a_dotnet_feature_name' from `a_caller_type' with dynamic arguments `arguments_types'
 		require
 			non_void_type: a_caller_type /= Void
@@ -294,7 +294,7 @@ feature {NONE} -- Implementation
 			valid_static_arguments_types: Result.length = a_arguments_types.count
 		end
 
-	are_conform (a_static_type, a_dynamic_type: TYPE): BOOLEAN is
+	are_conform (a_static_type, a_dynamic_type: SYSTEM_TYPE): BOOLEAN is
 			-- Does `a_dynamic_type' conform to `a_static_type'?
 		local
 			l_static_name, l_dynamic_name: STRING
@@ -315,7 +315,7 @@ feature {NONE} -- Implementation
 			end
 		end
 	
-	check_eac_for_type (a_type: TYPE) is
+	check_eac_for_type (a_type: SYSTEM_TYPE) is
 			-- Check that assembly containing `a_type' is in EAC.
 			-- Consume it if it's not.
 		require
@@ -331,7 +331,7 @@ feature {NONE} -- Implementation
 			is_in_eac: cache_reflection.is_type_in_cache (a_type)
 		end
 
-	member_from_entity (a_entity: CONSUMED_ENTITY; a_type: TYPE): CODE_MEMBER_REFERENCE is
+	member_from_entity (a_entity: CONSUMED_ENTITY; a_type: SYSTEM_TYPE): CODE_MEMBER_REFERENCE is
 			-- Map consumed entity `a_entity' into member reference from type `a_type'
 			-- Use overloaded Eiffel name if `a_overloaded'.
 		require

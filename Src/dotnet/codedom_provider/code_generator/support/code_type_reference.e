@@ -112,7 +112,7 @@ feature -- Access
 			non_void_eiffel_name: Result /= Void
 		end
 
-	dotnet_type: TYPE is
+	dotnet_type: SYSTEM_TYPE is
 			-- Corresponding .NET type instance if any
 			-- Log error if not found.
 		require
@@ -121,7 +121,7 @@ feature -- Access
 			l_name: STRING
 		do
 			if search_for_type then
-				Result := feature {TYPE}.get_type (name)
+				Result := feature {SYSTEM_TYPE}.get_type (name)
 				if Result = Void then
 					from
 						Referenced_assemblies.start
@@ -141,7 +141,7 @@ feature -- Access
 						create l_name.make (name.count + 7)
 						l_name.append ("System.")
 						l_name.append (name)
-						Result := feature {TYPE}.get_type (l_name)
+						Result := feature {SYSTEM_TYPE}.get_type (l_name)
 					until
 						Referenced_assemblies.after or Result /= Void
 					loop
@@ -158,7 +158,7 @@ feature -- Access
 					if element_type /= Void then
 						-- Special case for arrays of generated types:
 						-- They are external types but cannot be retrieved through `get_type'.
-						Result := feature {TYPE}.get_type ("System.Object[]")
+						Result := feature {SYSTEM_TYPE}.get_type ("System.Object[]")
 					else
 						Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_type, [name])
 					end
@@ -178,7 +178,7 @@ feature -- Access
 		require
 			non_generated_type: not Resolver.is_generated (Current)
 		local
-			l_type: TYPE
+			l_type: SYSTEM_TYPE
 		do
 			if search_for_element_type then
 				if dotnet_type /= Void then
@@ -452,7 +452,7 @@ feature {NONE} -- Implementation
 			is_external: not Resolver.is_generated (Current)
 			non_void_name: a_name /= Void
 		local
-			l_native_arguments: NATIVE_ARRAY [TYPE]
+			l_native_arguments: NATIVE_ARRAY [SYSTEM_TYPE]
 			l_list: LIST [CODE_MEMBER_REFERENCE]
 		do
 			members_cache.search (a_name)
@@ -559,7 +559,7 @@ feature {NONE} -- Private Access
 	internal_eiffel_name: STRING
 			-- Cached Eiffel name
 
-	internal_type: TYPE
+	internal_type: SYSTEM_TYPE
 			-- Cached type instance
 
 	internal_element_type: CODE_TYPE_REFERENCE

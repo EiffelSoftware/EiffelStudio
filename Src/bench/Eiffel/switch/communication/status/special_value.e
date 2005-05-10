@@ -278,8 +278,6 @@ feature {NONE} -- Implementation
 			-- Convert the physical addresses received from the application
 			-- to hector addresses. (should be called only once just after
 			-- all the information has been received from the application.)
-		local
-			l_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
 		do
 			address := hector_addr (address);
 			is_null := (address = Void)

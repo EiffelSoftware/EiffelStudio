@@ -2400,7 +2400,6 @@ feature {NONE} -- Drawing implementation
 			drawable.key_release_actions.extend (agent key_release_received (?))
 			drawable.focus_in_actions.extend (agent focus_in_received)
 			drawable.focus_out_actions.extend (agent focus_out_received)
-			drawable.resize_actions.extend (agent resize_received)
 			drawable.mouse_wheel_actions.extend (agent mouse_wheel_received)
 
 
@@ -2430,6 +2429,10 @@ feature {NONE} -- Drawing implementation
 
 			
 			drawable.expose_actions.force_extend (agent drawer.redraw_area_in_drawable_coordinates)
+				-- Now ensure grid can be tabbed to as any other standard widget.
+			drawable.enable_tabable_to	
+			drawable.enable_tabable_from
+
 			update_scroll_bar_spacer
 			
 			enable_selection_on_click
@@ -3242,19 +3245,19 @@ feature {NONE} -- Event handling
 	focus_in_received is
 			-- Called by `focus_in_actions' of `drawable'.
 		do
-			to_implement ("EV_GRID_I.focus_in_received")
+			redraw_client_area
+			if focus_in_actions_internal /= Void and then not focus_in_actions_internal.is_empty then
+				focus_in_actions_internal.call (Void)
+			end
 		end
 
 	focus_out_received is
 			-- Called by `focus_out_actions' of `drawable'.
 		do
-			to_implement ("EV_GRID_I.focus_out_received")
-		end
-
-	resize_received (a_x, a_y, a_width, a_height: INTEGER) is
-			-- Called by `resize_actions' of `drawable'.
-		do
-			to_implement ("EV_GRID_I.resize_received")
+			redraw_client_area
+			if focus_out_actions_internal /= Void and then not focus_out_actions_internal.is_empty then
+				focus_out_actions_internal.call (Void)
+			end
 		end
 
 	mouse_wheel_received (a_value: INTEGER) is

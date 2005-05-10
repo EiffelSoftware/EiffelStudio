@@ -386,92 +386,92 @@ feature -- Misc
 
 feature {NONE} -- Preference Strings
 
-	tabulation_spaces_string: STRING is "editor.tab_step"
-	left_margin_width_string: STRING is "editor.left_margin_width"	
-	margin_background_color_string: STRING is "editor.margin_background_color"	
-	margin_separator_color_string: STRING is "editor.margin_separator_color"
-	line_number_text_color_string: STRING is "editor.line_number_text_color"
-	use_tab_for_indentation_string: STRING is "editor.use_tab_for_indentation"
-	mouse_wheel_scroll_full_page_string: STRING is "editor.mouse_wheel_scroll_full_page"
-	mouse_wheel_scroll_size_string: STRING is "editor.mouse_wheel_scroll_size"
-	remove_trailing_white_space_string: STRING is "editor.remove_trailing_white_space"
-	blinking_cursor_string: STRING is "editor.blinking_cursor"
-	automatic_update_string: STRING is "editor.automatic_update"
-	editor_font_string: STRING is "editor.editor_font"
-	keyword_font_string: STRING is "editor.keyword_font"
-	header_font_string: STRING is "editor.header_font"
-	highlight_document_changes_string: STRING is "editor.highlight_document_changes_between_saves"
-	
-	normal_text_color_string: STRING is "editor.normal_text_color"
+	tabulation_spaces_string: STRING is "editor.general.tab_step"
+	left_margin_width_string: STRING is "editor.general.left_margin_width"
+	margin_background_color_string: STRING is "editor.general.colors.margin_background_color"
+	margin_separator_color_string: STRING is "editor.general.colors.margin_separator_color"
+	line_number_text_color_string: STRING is "editor.general.colors.line_number_text_color"
+	use_tab_for_indentation_string: STRING is "editor.general.use_tab_for_indentation"
+	mouse_wheel_scroll_full_page_string: STRING is "editor.general.mouse_wheel_scroll_full_page"
+	mouse_wheel_scroll_size_string: STRING is "editor.general.mouse_wheel_scroll_size"
+	remove_trailing_white_space_string: STRING is "editor.general.remove_trailing_white_space"
+	blinking_cursor_string: STRING is "editor.general.blinking_cursor"
+	automatic_update_string: STRING is "editor.general.automatic_update"
+	editor_font_string: STRING is "editor.general.editor_font"
+	keyword_font_string: STRING is "editor.general.keyword_font"
+	header_font_string: STRING is "editor.general.header_font"
+	highlight_document_changes_string: STRING is "editor.general.highlight_document_changes_between_saves"
+
+	normal_text_color_string: STRING is "editor.general.colors.normal_text_color"
 			-- Color used to display normal text
 
-	normal_background_color_string: STRING is "editor.normal_background_color"
+	normal_background_color_string: STRING is "editor.general.colors.normal_background_color"
 			-- Background color used to display normal text
 
-	selection_text_color_string: STRING is "editor.selection_text_color"
+	selection_text_color_string: STRING is "editor.general.colors.selection_text_color"
 			-- Color used to display selected text
 
-	selection_background_color_string: STRING is "editor.selection_background_color"
+	selection_background_color_string: STRING is "editor.general.colors.selection_background_color"
 			-- Background color used to display selected text
 
-	string_text_color_string: STRING is "editor.string_text_color"
+	string_text_color_string: STRING is "editor.general.colors.string_text_color"
 			-- Color used to display strings
 
-	string_background_color_string: STRING is "editor.string_background_color"
+	string_background_color_string: STRING is "editor.general.colors.string_background_color"
 			-- Background color used to display strings
 
-	keyword_text_color_string: STRING is "editor.keyword_text_color"
+	keyword_text_color_string: STRING is "editor.general.colors.keyword_text_color"
 			-- Color used to display keywords
 
-	keyword_background_color_string: STRING is "editor.keyword_background_color" 
+	keyword_background_color_string: STRING is "editor.general.colors.keyword_background_color"
 			-- Background color used to display keywords
 
-	spaces_text_color_string: STRING is "editor.spaces_text_color"
+	spaces_text_color_string: STRING is "editor.general.colors.spaces_text_color"
 			-- Color used to display spaces
 
-	spaces_background_color_string: STRING is "editor.spaces_background_color" 
+	spaces_background_color_string: STRING is "editor.general.colors.spaces_background_color"
 			-- Background color used to display spaces
 
-	comments_text_color_string: STRING is "editor.comments_text_color" 
+	comments_text_color_string: STRING is "editor.general.colors.comments_text_color"
 			-- Color used to display comments
 
-	comments_background_color_string: STRING is "editor.comments_background_color" 
+	comments_background_color_string: STRING is "editor.general.colors.comments_background_color"
 			-- Background color used to display comments
 
-	number_text_color_string: STRING is "editor.number_text_color" 
+	number_text_color_string: STRING is "editor.general.colors.number_text_color"
 			-- Color used to display numbers
 
-	number_background_color_string: STRING is "editor.number_background_color" 
+	number_background_color_string: STRING is "editor.general.colors.number_background_color"
 			-- Background color used to display numbers
 
-	operator_text_color_string: STRING is "editor.operator_text_color" 
+	operator_text_color_string: STRING is "editor.general.colors.operator_text_color"
 			-- Color used to display operator
 
-	operator_background_color_string: STRING is "editor.operator_background_color" 
-			-- Background color used to display operator	
-		
-	highlight_color_string: STRING is "editor.highlight_color" 
-	
-	cursor_line_highlight_color_string: STRING is "editor.cursor_line_highlight_color" 
+	operator_background_color_string: STRING is "editor.general.colors.operator_background_color"
+			-- Background color used to display operator
 
-	smart_identation_string: STRING is "editor.smart_identation"
-			-- Is smart identation enabled?	
+	highlight_color_string: STRING is "editor.general.colors.highlight_color"
 
-	quadruple_click_enabled_string: STRING is "editor.quadruple_click_enabled" 
+	cursor_line_highlight_color_string: STRING is "editor.general.colors.cursor_line_highlight_color"
+
+	smart_identation_string: STRING is "editor.general.smart_identation"
+			-- Is smart identation enabled?
+
+	quadruple_click_enabled_string: STRING is "editor.general.quadruple_click_enabled"
 			-- is quadruple click (select all) enabled ?
 
 feature {NONE} -- Implementation
-		
+
 	initialize_preferences is
 			-- Initialize preference values.
 		local
-			l_manager: EDITOR_PREFERENCE_MANAGER		
+			l_manager: EDITOR_PREFERENCE_MANAGER
 		do
 			create l_manager.make (preferences, "editor")
-			
+
 				-- Preferences
-				
-			smart_identation_preference := l_manager.new_boolean_resource_value (l_manager, smart_identation_string, True)	
+
+			smart_identation_preference := l_manager.new_boolean_resource_value (l_manager, smart_identation_string, True)
 			tabulation_spaces_preference := l_manager.new_integer_resource_value (l_manager, tabulation_spaces_string, 4)	
 			left_margin_width_preference := l_manager.new_integer_resource_value (l_manager, left_margin_width_string, 10)		
 			margin_background_color_preference := l_manager.new_color_resource_value (l_manager, margin_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))		

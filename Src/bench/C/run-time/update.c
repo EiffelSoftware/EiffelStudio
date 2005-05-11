@@ -89,8 +89,8 @@ rt_public void update(char ignore_updt)
 	/* Update internal structures before execution */
 
 	long count;								/* New size for `esystem' */
-	BODY_INDEX body_id;						/* Last body id */
-	unsigned char *bcode;							/* Last byte code */
+	BODY_INDEX body_id, once_body_id;		/* Last body id */
+	unsigned char *bcode;					/* Last byte code */
 	long bsize;								/* Last byte code size */
 	char c;
 	char *meltpath = (char *) 0;			/* directory of .UPDT */
@@ -265,11 +265,13 @@ rt_public void update(char ignore_updt)
 				/* It's a once routine */
 				/* Assign a key to it  */
 		case ONCE_MARK_THREAD_RELATIVE:
-			write_long ((char *) (bcode + 1), once_index (*(BODY_INDEX *)(bcode + 1)));
+			memcpy (&once_body_id, (void *) (bcode + 1), sizeof(BODY_INDEX));
+			write_long ((char *) (bcode + 1), once_index (once_body_id));
 			break;
 #ifdef EIF_THREADS
 		case ONCE_MARK_PROCESS_RELATIVE:
-			write_long ((char *) (bcode + 1), process_once_index (*(BODY_INDEX *)(bcode + 1)));
+			memcpy (&once_body_id, (void *) (bcode + 1), sizeof(BODY_INDEX));
+			write_long ((char *) (bcode + 1), process_once_index (once_body_id));
 			break;
 #endif
 		default:

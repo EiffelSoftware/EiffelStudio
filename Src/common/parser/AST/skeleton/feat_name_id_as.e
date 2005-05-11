@@ -36,10 +36,23 @@ feature -- Visitor
 			v.process_feat_name_id_as (Current)
 		end
 
-feature -- Attributes
+feature -- Access
 
 	feature_name: ID_AS
 			-- Feature name
+
+	internal_alias_name: STRING is
+			-- Operator associated with the feature (if any)
+			-- augmented with information about its arity
+		do
+				-- Void here
+		end
+
+	alias_name: STRING is
+			-- Operator name associated with the feature (if any)
+		do
+				-- Void here
+		end
 
 feature -- Comparison
 

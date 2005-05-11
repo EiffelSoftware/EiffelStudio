@@ -111,9 +111,6 @@ feature {NONE} -- Implementation
 
 	build_change_item_widget is
 			-- Create and setup `change_item_widget'.
-		local
-			l_values: ARRAY [STRING]
-			cnt: INTEGER
 		do
 			create change_item_widget
 			change_item_widget.disable_edit

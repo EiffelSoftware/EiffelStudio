@@ -79,6 +79,7 @@ feature {NONE} -- Implementation
 			l_srw: STRING_PREFERENCE_WIDGET
 			l_frw: FONT_PREFERENCE_WIDGET
 			l_crw: COLOR_PREFERENCE_WIDGET
+			l_cw: CHOICE_PREFERENCE_WIDGET
 		once			
 			create Result.make (4)
 			Result.compare_objects
@@ -86,10 +87,12 @@ feature {NONE} -- Implementation
 			create l_srw.make
 			create l_frw.make
 			create l_crw.make
+			create l_cw.make
 			Result.put (l_brw, l_brw.graphical_type)
 			Result.put (l_srw, l_srw.graphical_type)
 			Result.put (l_frw, l_frw.graphical_type)
-			Result.put (l_crw, l_crw.graphical_type)
+			Result.put (l_crw, l_crw.graphical_type)			
+			Result.put (l_cw, l_cw.graphical_type)
 		ensure
 			resource_widgets_not_void: Result /= Void
 		end	

@@ -1042,6 +1042,7 @@ feature -- Status setting
 		local
 			add_columns: BOOLEAN
 		do
+			set_horizontal_computation_required (column_count)
 			from
 				add_columns := a_column_count > columns.count
 			until
@@ -1053,8 +1054,6 @@ feature -- Status setting
 					remove_column (columns.count)
 				end
 			end
-			recompute_horizontal_scroll_bar
-			redraw_client_area
 		ensure
 			column_count_set: column_count = a_column_count
 		end
@@ -1479,7 +1478,6 @@ feature -- Removal
 			header.remove
 
 			set_horizontal_computation_required (a_column)
-			recompute_horizontal_scroll_bar
 			redraw_client_area
 		ensure
 			column_count_updated: column_count = old column_count - 1
@@ -1746,6 +1744,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 					recompute_row_offsets (invalid_row_index.min (row_count))
 						-- Restore to an arbitarily large index.
 					invalid_row_index := invalid_row_index.max_value;
+					recompute_vertical_scroll_bar;
 					((create {EV_ENVIRONMENT}).application).do_once_on_idle (agent recompute_vertical_scroll_bar)
 				end
 			end
@@ -1762,6 +1761,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 					recompute_column_offsets (invalid_column_index.min (column_count))
 						-- Restore to an arbitarily large index.
 					invalid_column_index := invalid_column_index.max_value;
+					recompute_horizontal_scroll_bar;
 					((create {EV_ENVIRONMENT}).application).do_once_on_idle (agent recompute_horizontal_scroll_bar)
 				end
 			end
@@ -2479,7 +2479,11 @@ feature {NONE} -- Drawing implementation
 		do
 				-- Update horizontal scroll bar size and position.
 			recompute_horizontal_scroll_bar
-			
+
+				-- For redrawing only during resize.
+			fixme ("Uncomment to implement the redraw during column resize.")
+--			set_horizontal_computation_required (header.index_of (header_item, 1))
+--			redraw_client_area			
 			if is_resizing_divider_enabled then
 					-- Draw a resizing line if enabled.
 				draw_resizing_line (header.item_x_offset (header_item) + header_item.width)
@@ -2697,20 +2701,25 @@ feature {NONE} -- Drawing implementation
 			a_width_non_negative: a_width >= 0
 			a_height_non_negative: a_height >= 0
 		do
+			
 				-- Set the internal client dimensions for
-				-- quick retrieval later. This reduces the dependncies on
+				-- quick retrieval later. This reduces the dependencies on
 				-- `viewport' within other code.
 			internal_client_width := a_width
 			internal_client_height := a_height
 			
+			fixme ("[
+				Is there a better way to repsond to the resizing without setting the invalid row and column indexes to 1?]
+				I think it should be possible to simply update the scroll bar without modifying the indexes. Julian
+				]")
 			if not header.is_empty then
 					-- Update horizontal scroll bar size and position.
-				recompute_horizontal_scroll_bar
+				set_horizontal_computation_required (1)
 			end
 			if row_count /= 0 then
-				--recompute_vertical_scroll_bar
 				set_vertical_computation_required (1)
 			end
+			redraw_client_area
 		ensure
 			client_dimensions_set: internal_client_width = viewport.width and internal_client_height = viewport.height
 			viewport_item_at_least_as_big_as_viewport: viewport.item.width >= internal_client_width and

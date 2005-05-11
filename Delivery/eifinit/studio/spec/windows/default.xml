@@ -2,7 +2,7 @@
 
 	<PREF NAME="debugger.width" DESCRIPTION="Width of debug tool."><INTEGER>214</INTEGER></PREF>
 	<PREF NAME="debugger.height" DESCRIPTION="Height of debug tool."><INTEGER>214</INTEGER></PREF>	
-	<PREF NAME="debugger.last_saved_stack_path." DESCRIPTION="Disk location of last saved stack path information."><STRING>C:\</STRING></PREF>
+	<PREF NAME="debugger.last_saved_stack_path" DESCRIPTION="Disk location of last saved stack path information."><STRING>C:\</STRING></PREF>
 	<PREF NAME="debugger.interrupt_every_n_instructions" DESCRIPTION=""><INTEGER>1</INTEGER></PREF>
 	<PREF NAME="debugger.debug_output_evaluation"  DESCRIPTION="Display DEBUG_OUTPUT.debug_output value."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="debugger.generating_type_evaluation"  DESCRIPTION="Display ANY.generating_type value."><BOOLEAN>True</BOOLEAN></PREF>	
@@ -15,6 +15,14 @@
 	<PREF NAME="debugger.left_debug_layout" DESCRIPTION="Items/tools shown in navigation layout when in debug mode."><LIST>Features;closed;0;0;0;0;Clusters;closed;0;0;0;0;Favorites;closed;0;0;0;0;Windows;closed;0;0;0;0;Search;closed;0;0;0;0;Call stack;visible;0;0;0;38;Evaluation;visible;0;0;0;286</LIST></PREF>	
 	<PREF NAME="debugger.right_debug_layout" DESCRIPTION="Items/tools shown on editor side when in debug mode."><LIST>Editor;minimized;0;0;0;0;Context;visible;0;0;0;171;Objects;visible;0;0;0;218</LIST></PREF>
 	<PREF NAME="debugger.dotnet_debugger" DESCRIPTION="Which .NET debugger to launch."><LIST>EiffelStudio Dbg;cordbg;DbgCLR</LIST></PREF>
+	<PREF NAME="debugger.project_toolbar_layout" DESCRIPTION="Debug toolbar items and layout information."><LIST>System_tool__visible;Melt_project__visible;Quick_compile__visible;Open_help_tool__visible;System_info__visible;Separator;Enable_bkpt__visible;Disable_bkpt__visible;Clear_bkpt__visible;Bkpt_info__visible;Separator;Exec_step__visible;Exec_into__visible;Exec_out__visible;Exec_no_stop__visible;Exec_debug__visible;Separator;Exec_stop__visible;Exec_quit__visible;Run_final__hidden;Freeze_project__hidden;Finalize_project__hidden</LIST></PREF>
+	<PREF NAME="debugger.critical_stack_depth" DESCRIPTION="Depth of stack at which execution paused and a confirmation is asked to continue."><INTEGER>1000</INTEGER></PREF>
+	<PREF NAME="debugger.show_text_in_project_toolbar" DESCRIPTION="Should text be shown alongside toolbar items?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="debugger.show_all_text_in_project_toolbar" DESCRIPTION="Show all selected text in the project toolbar?"><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="debugger.display_dotnet_cmd" DESCRIPTION="Should we display the .NET command?"><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="debugger.default_expanded_view_size" DESCRIPTION="Expanded view: default display size."><INTEGER>500</INTEGER></PREF>
+	<PREF NAME="debugger.stack_element_width" DESCRIPTION="Width of stack element."><INTEGER>1000</INTEGER></PREF>
+	<PREF NAME="debugger.default_maximum_stack_depth" DESCRIPTION="Maximum stack depth."><INTEGER>100</INTEGER></PREF>
 	
 	<PREF NAME="tools.diagram_tool.bon.bon_class_name_font" DESCRIPTION="Font for class names in BON class figures."><FONT>Arial-r-regular-16-sans</FONT></PREF>
 	<PREF NAME="tools.diagram_tool.bon.bon_class_name_color" DESCRIPTION="Color for class names in BON class figures."><COLOR>0;0;160</COLOR></PREF>
@@ -58,11 +66,6 @@
 	<PREF NAME="tools.diagram_tool.uml.uml_inheritance_color" DESCRIPTION="Color for UML inheritance links."><COLOR>0;0;0</COLOR></PREF>
 	<PREF NAME="tools.diagram_tool.autoscroll_speed" DESCRIPTION="Color for UML inheritance links."><INTEGER>50</INTEGER></PREF>
 	
-	<PREF NAME="tools.browsing_tools.feature_clause_order" DESCRIPTION="Order used to sort feature clauses in formatted texts."><LIST>Initialization;Access;Measurement;Comparison;Status report;Status setting;Cursor movement;Element change;Removal;Resizing;Transformation;Conversion;Duplication;Miscellaneous;Basic operations;Obsolete;Inapplicable;Implementation;*</LIST></PREF>
-	<PREF NAME="tools.context_tool.excluded_indexing_items" DESCRIPTION="Indexing items that need not be included in formatted texts."><LIST>revision;date;status</LIST></PREF>
-	<PREF NAME="tools.browsing_tools.default_class_formatter_index" DESCRIPTION="Class format that is selected by default." HIDDEN="True"><INTEGER>5</INTEGER></PREF>
-	<PREF NAME="tools.browsing_tools.default_feature_formatter_index" DESCRIPTION="Feature format that is selected by default." HIDDEN="True"><INTEGER>2</INTEGER></PREF>	
-	
 	<PREF NAME="tools.context_tool.show_all_callers" DESCRIPTION="Show all callers (as opposed to local callers) in `callers' form."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="tools.context_tool.diagram_toolbar_layout" DESCRIPTION="The visible toolbar items for the Diagram Tool toolbar."><LIST>Center_diagram__visible;Separator;New_links__visible;Create_class__visible;Separator;Undo_command__visible;History_tool__visible;Redo_command__visible;Separator;Delete_hole__visible;Color__visible;Class_header_hole__visible;Separator;Cluster_filling__visible;Context_depth__visible;Separator;Zoom_out__visible;Fit_to_screen__visible;Zoom_in__visible;Separator;Inherit_visibility__visible;Supplier_visibility__visible;Labels_visibility__visible;Separator;Diagram_to_png__visible;Link_tool__hidden;High_quality__hidden;Force_directed__hidden;Clusters_visibility__hidden;Anchor_remove__hidden;Display_legend__hidden;UML_visibility__hidden;Force_settings__hidden;Delete_item__hidden</LIST></PREF>
 	<PREF NAME="tools.context_tool.subcluster_depth" DESCRIPTION="Show subclusters of a cluster down to a level of preference value."><INTEGER>1</INTEGER></PREF>
@@ -73,20 +76,11 @@
 	<PREF NAME="tools.context_tool.descendant_depth" DESCRIPTION="Show descendants of a class down to a level of preference value."><INTEGER>1</INTEGER></PREF>
 	<PREF NAME="tools.context_tool.ignore_excluded_class_figures" DESCRIPTION="Show ALL classes in the diagram (ignore the following list)?"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="tools.context_tool.excluded_class_figures" DESCRIPTION="Names of classes that should not appear in generated diagrams."><LIST>INTEGER;BOOLEAN;STRING;CHARACTER;REAL;DOUBLE</LIST></PREF>
-
-	<PREF NAME="tools.project_tool.raise_on_error" DESCRIPTION=""><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="tools.project_tool.unified_stone" DESCRIPTION="Link the context tool with other components by default?"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="tools.project_tool.graphical_output_disabled" DESCRIPTION="Disable graphical output."><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="tools.context_tool.excluded_indexing_items" DESCRIPTION="Indexing items that need not be included in formatted texts."><LIST>revision;date;status</LIST></PREF>
 	
-	<PREF NAME="debugger.project_toolbar_layout" DESCRIPTION="Debug toolbar items and layout information."><LIST>System_tool__visible;Melt_project__visible;Quick_compile__visible;Open_help_tool__visible;System_info__visible;Separator;Enable_bkpt__visible;Disable_bkpt__visible;Clear_bkpt__visible;Bkpt_info__visible;Separator;Exec_step__visible;Exec_into__visible;Exec_out__visible;Exec_no_stop__visible;Exec_debug__visible;Separator;Exec_stop__visible;Exec_quit__visible;Run_final__hidden;Freeze_project__hidden;Finalize_project__hidden</LIST></PREF>
-	<PREF NAME="debugger.critical_stack_depth" DESCRIPTION="Depth of stack at which execution paused and a confirmation is asked to continue."><INTEGER>1000</INTEGER></PREF>
-	<PREF NAME="debugger.show_text_in_project_toolbar" DESCRIPTION="Should text be shown alongside toolbar items?"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="debugger.show_all_text_in_project_toolbar." DESCRIPTION="Show all selected text in the project toolbar?"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="debugger.display_dotnet_cmd" DESCRIPTION="Should we display the .NET command?"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="debugger.default_expanded_view_size" DESCRIPTION="Expanded view: default display size."><INTEGER>500</INTEGER></PREF>
-	<PREF NAME="debugger.stack_element_width" DESCRIPTION="Width of stack element."><INTEGER>1000</INTEGER></PREF>
-	<PREF NAME="debugger.default_maximum_stack_depth" DESCRIPTION="Maximum stack depth."><INTEGER>100</INTEGER></PREF>
-	
+	<PREF NAME="interface.development_window.raise_on_error" DESCRIPTION=""><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="interface.development_window.unified_stone" DESCRIPTION="Link the context tool with other components by default?"><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="interface.development_window.graphical_output_disabled" DESCRIPTION="Disable graphical output."><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="interface.dialogs.confirm_on_exit" DESCRIPTION="Display confirmation dialog on exit."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.dialogs.confirm_finalize" DESCRIPTION="Display confirmation dialog for C compilation on finalize operation."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.dialogs.confirm_freeze" DESCRIPTION="Display confirmation dialog for C compilation on freeze operation."><BOOLEAN>True</BOOLEAN></PREF>
@@ -105,6 +99,9 @@
 	<PREF NAME="interface.dialogs.already_editing_class" DESCRIPTION="Display dialog when editing the same class in two development windows."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.dialogs.executing_command" DESCRIPTION="Display dialog while running an external command."><BOOLEAN>True</BOOLEAN></PREF>
 	
+	<PREF NAME="interface.development_window.feature_clause_order" DESCRIPTION="Order used to sort feature clauses in formatted texts."><LIST>Initialization;Access;Measurement;Comparison;Status report;Status setting;Cursor movement;Element change;Removal;Resizing;Transformation;Conversion;Duplication;Miscellaneous;Basic operations;Obsolete;Inapplicable;Implementation;*</LIST></PREF>
+	<PREF NAME="interface.development_window.default_class_formatter_index" DESCRIPTION="Class format that is selected by default." HIDDEN="True"><INTEGER>5</INTEGER></PREF>
+	<PREF NAME="interface.development_window.default_feature_formatter_index" DESCRIPTION="Feature format that is selected by default." HIDDEN="True"><INTEGER>2</INTEGER></PREF>	
 	<PREF NAME="interface.development_window.width" DESCRIPTION="Width of development window." HIDDEN="true"><INTEGER>800</INTEGER></PREF>
 	<PREF NAME="interface.development_window.height" DESCRIPTION="Height of development window." HIDDEN="true"><INTEGER>600</INTEGER></PREF>
 	<PREF NAME="interface.development_window.x_position" DESCRIPTION="Screen x position of development window." HIDDEN="true"><INTEGER>50</INTEGER></PREF>
@@ -129,6 +126,10 @@
 	<PREF NAME="interface.development_window.editor_left_side" DESCRIPTION="Display editor on left? (Requires restart)"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="interface.development_window.ctrl_right_click_receiver" DESCRIPTION="Receivers of control-right-click."><LIST>[new_window];editor;context;new_editor;new_context;external</LIST></PREF>
 	<PREF NAME="interface.development_window.progress_bar_color" DESCRIPTION="Color for progress bar."><COLOR>0;0;128</COLOR></PREF>
+	<PREF NAME="interface.development_window.class_completion" DESCRIPTION="Allow class name completion in the address combo boxes?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="interface.development_window.history_size" DESCRIPTION="Browsing history size."><INTEGER>10</INTEGER></PREF>
+	<PREF NAME="interface.development_window.dock_tracking" DESCRIPTION="Docked tools track main window?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="interface.development_window.last_browsed_cluster_directory" DESCRIPTION="Directory of last browsed cluster."><STRING>C:\</STRING></PREF>
 	
 	<PREF NAME="recent_projects.last_opened_projects" DESCRIPTION="List of recently opened projects."><LIST></LIST></PREF>
 	<PREF NAME="recent_projects.keep_n_projects" DESCRIPTION="Number of recent projects to keep in the list."><INTEGER>10</INTEGER></PREF>
@@ -164,6 +165,7 @@
 	<PREF NAME="editor.general.colors.number_text_color" DESCRIPTION="Color of number text."><COLOR>128;0;255</COLOR></PREF>
 	<PREF NAME="editor.general.colors.number_background_color" DESCRIPTION="Background color of number text."><COLOR>255;255;255</COLOR></PREF>
 	<PREF NAME="editor.general.smart_identation" DESCRIPTION="Should the editor auto-indent?"><BOOLEAN>True</BOOLEAN></PREF>	
+	<PREF NAME="editor.general.quadruple_click_enabled" DESCRIPTION="Quadruple click selects all?"><BOOLEAN>True</BOOLEAN></PREF>
 	
 	<PREF NAME="editor.eiffel.formatters_history_size" DESCRIPTION="Size of formatter history."><INTEGER>60</INTEGER></PREF>
 	<PREF NAME="editor.eiffel.colors.normal_text_color" DESCRIPTION="Foreground color for normal text."><COLOR>0;0;0</COLOR></PREF>
@@ -212,13 +214,12 @@
 	<PREF NAME="editor.eiffel.filter_completion_list" DESCRIPTION="Completion list entries are filtered based on matches?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.show_completion_signature" DESCRIPTION="Completion list shows feature signatures?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.show_completion_type" DESCRIPTION="Completion list shows return type?"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.syntax_complete_enabled" DESCRIPTION="Enable syntax autocomplete?"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.quadruple_click_enabled" DESCRIPTION="Quadruple click selects all?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.syntax_complete_enabled" DESCRIPTION="Enable syntax autocomplete?"><BOOLEAN>True</BOOLEAN></PREF>	
 	<PREF NAME="editor.eiffel.customized_string_1" DESCRIPTION="User customized string."><STRING></STRING></PREF>
 	<PREF NAME="editor.eiffel.customized_string_2" DESCRIPTION="User customized string."><STRING></STRING></PREF>
 	<PREF NAME="editor.eiffel.customized_string_3" DESCRIPTION="User customized string."><STRING></STRING></PREF>
 	<PREF NAME="editor.eiffel.text_mode_is_windows" DESCRIPTION="Text files format: True = Windows / False = UNIX."><BOOLEAN>True</BOOLEAN></PREF>	
-	<PREF NAME="editor.eiffel" DESCRIPTION="Command to open an external editor."><STRING>notepad</STRING></PREF>
+	<PREF NAME="editor.eiffel.editor" DESCRIPTION="Command to open an external editor."><STRING>notepad</STRING></PREF>
 
 	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.indexing.autocomplete_indexing" DESCRIPTION="Autocomplete indexing?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.indexing.use_default_indexing" DESCRIPTION="Use default autocomplete?"><BOOLEAN>True</BOOLEAN></PREF>
@@ -546,11 +547,6 @@
 	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_insertion_3.shortcut_alt" DESCRIPTION="+ Alt"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_insertion_3.shortcut_shift" DESCRIPTION="+ Shift"><BOOLEAN>True</BOOLEAN></PREF>
 	
-	<PREF NAME="browsing_tools.class_completion" DESCRIPTION="Allow class name completion in the address combo boxes?"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="browsing_tools.history_size" DESCRIPTION="Browsing history size."><INTEGER>10</INTEGER></PREF>
-	<PREF NAME="browsing_tools.dock_tracking" DESCRIPTION="Docked tools track main window?"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="browsing_tools.last_browsed_cluster_directory" DESCRIPTION="Directory of last browsed cluster."><STRING>C:\</STRING></PREF>
-	
 	<PREF NAME="general.external_command_0" DESCRIPTION="First external command." HIDDEN="True"><STRING></STRING></PREF>
 	<PREF NAME="general.external_command_1" DESCRIPTION="Second external command." HIDDEN="True"><STRING></STRING></PREF>
 	<PREF NAME="general.external_command_2" DESCRIPTION="Third external command." HIDDEN="True"><STRING></STRING></PREF>
@@ -574,5 +570,6 @@
 	<PREF NAME="general.preference_window_width" DESCRIPTION="Height of preferences window." HIDDEN="True"><INTEGER>450</INTEGER></PREF>
 	<PREF NAME="general.preference_window_height" DESCRIPTION="Width of preferences window." HIDDEN="True"><INTEGER>300</INTEGER></PREF>
 	<PREF NAME="general.show_hidden_preferences" DESCRIPTION="Show hidden preferences in preference window?" HIDDEN="True"><BOOLEAN>False</BOOLEAN></PREF>	
+	<PREF NAME="general.internet_browser" DESCRIPTION="Internet browser."><STRING>netscape $url</STRING></PREF>
 
 </EIFFEL_DOCUMENT>

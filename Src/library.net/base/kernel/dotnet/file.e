@@ -1403,7 +1403,7 @@ feature -- Input
 			p_large_enough: p.count >= nb_bytes + start_pos
 			is_readable: file_readable
 		local
-			i: INTEGER
+			i, l_byte: INTEGER
 			l_stream: SYSTEM_STREAM
 		do
 			from
@@ -1412,10 +1412,15 @@ feature -- Input
 			until
 				i = nb_bytes
 			loop
-				p.put_natural_8 (l_stream.read_byte.as_natural_8, i)
+			   	l_byte := l_stream.read_byte
+				if l_byte = -1 then
+					internal_end_of_file := True
+					i := nb_bytes - 1 -- Jump out of loop
+				else
+					p.put_natural_8 (l_byte.as_natural_8, i)
+				end
 				i := i + 1
 			end
-			internal_end_of_file := reader.peek = -1
 		end
 
 	read_word, readword is

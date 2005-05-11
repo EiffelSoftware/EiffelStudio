@@ -46,7 +46,7 @@ feature -- Access
 		do
 				-- If it is a basic type, then we need to do a promotion.
 				-- If not, then we simply get the element.
-			inspect arg_item_code (index)
+			inspect item_code (index)
 			when boolean_code then Result := boolean_item (index)
 			when character_code then Result := character_item (index)
 			when real_64_code then Result := double_item (index)
@@ -92,7 +92,7 @@ feature -- Access
 			Result ?= fast_item (index - 1)
 		end
 
-	double_item (index: INTEGER): DOUBLE is
+	real_64_item, double_item (index: INTEGER): DOUBLE is
 			-- Double item at `index'.
 		require
 			valid_index: valid_index (index)
@@ -182,7 +182,7 @@ feature -- Access
 			Result ?= fast_item (index - 1)
 		end
 
-	real_item (index: INTEGER): REAL is
+	real_32_item, real_item (index: INTEGER): REAL is
 			-- real item at `index'.
 		require
 			valid_index: valid_index (index)
@@ -277,14 +277,14 @@ feature -- Status report
 		require
 			valid_index: valid_index (index)
 		local
-			l_code, l_item_code: INTEGER_8
+			l_code, l_item_code: like item_code
 			l_int: INTERNAL
 		do
 			if v = Void then
 					-- A Void entry is always valid.
 				Result := True
 			else
-				l_code := arg_item_code (index)
+				l_code := item_code (index)
 				l_item_code ?= reverse_lookup.item (v.get_type)
 				Result := l_code = l_item_code
 				if Result and l_code = reference_code then
@@ -356,7 +356,7 @@ feature -- Element change
 			native_array.put (index - 1, v)
 		end
 		
-	put_double (v: DOUBLE; index: INTEGER) is
+	put_real_64, put_double (v: DOUBLE; index: INTEGER) is
 			-- Put `v' at position `index' in Current.
 		require
 			valid_index: valid_index (index)
@@ -365,7 +365,7 @@ feature -- Element change
 			native_array.put (index - 1, v)
 		end
 		
-	put_real (v: REAL; index: INTEGER) is
+	put_real_32, put_real (v: REAL; index: INTEGER) is
 			-- Put `v' at position `index' in Current.
 		require
 			valid_index: valid_index (index)
@@ -576,7 +576,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		local
-			tcode: INTEGER_8
+			tcode: like item_code
 		do
 			tcode := generic_typecode (index - 1)
 			inspect tcode
@@ -718,7 +718,7 @@ feature -- Type conversion queries
 			"Will be removed in future releases"
 		local
 			i, cnt: INTEGER
-			tcode: INTEGER_8
+			tcode: like item_code
 		do
 			Result := True
 			from
@@ -749,7 +749,7 @@ feature -- Type conversion queries
 			"Will be removed in future releases"
 		local
 			i, cnt: INTEGER
-			tcode: INTEGER_8
+			tcode: like item_code
 		do
 			Result := True
 			from
@@ -994,40 +994,33 @@ feature {ROUTINE} -- Fast access
 			Result := native_array.item (k)
 		end
 
-feature {ROUTINE, TUPLE}
+feature -- Access
 
-	arg_item_code (index: INTEGER): INTEGER_8 is
+	item_code (index: INTEGER): NATURAL_8 is
 			-- Type code of item at `index'. Used for
 			-- argument processing in ROUTINE
 		require
 			valid_index: valid_index (index)
 		do
-				-- FIXME
 			Result := generic_typecode (index - 1)
 		end
 
-	reference_code: INTEGER_8 is 0x00
-	boolean_code: INTEGER_8 is 0x01
-	character_code: INTEGER_8 is 0x02
-	real_64_code: INTEGER_8 is 0x03
-	real_32_code: INTEGER_8 is 0x04
-	pointer_code: INTEGER_8 is 0x05
-	integer_8_code: INTEGER_8 is 0x06
-	integer_16_code: INTEGER_8 is 0x07
-	integer_32_code: INTEGER_8 is 0x08
-	integer_64_code: INTEGER_8 is 0x09
-	natural_8_code: INTEGER_8 is 0x0A
-	natural_16_code: INTEGER_8 is 0x0B
-	natural_32_code: INTEGER_8 is 0x0C
-	natural_64_code: INTEGER_8 is 0x0D
-	any_code: INTEGER_8 is 0xFF
+	reference_code: NATURAL_8 is 0x00
+	boolean_code: NATURAL_8 is 0x01
+	character_code: NATURAL_8 is 0x02
+	real_64_code: NATURAL_8 is 0x03
+	real_32_code: NATURAL_8 is 0x04
+	pointer_code: NATURAL_8 is 0x05
+	integer_8_code: NATURAL_8 is 0x06
+	integer_16_code: NATURAL_8 is 0x07
+	integer_32_code: NATURAL_8 is 0x08
+	integer_64_code: NATURAL_8 is 0x09
+	natural_8_code: NATURAL_8 is 0x0A
+	natural_16_code: NATURAL_8 is 0x0B
+	natural_32_code: NATURAL_8 is 0x0C
+	natural_64_code: NATURAL_8 is 0x0D
+	any_code: NATURAL_8 is 0xFF
 			-- Code used to identify type in tuple.
-
-	valid_typecode (code: INTEGER_8): BOOLEAN is
-			-- Ensure that `code' is indeed a valid typecode.
-		do
-			Result := code >= 0 and code <= 9
-		end
 		
 feature {TUPLE} -- Implementation
 
@@ -1036,7 +1029,7 @@ feature {TUPLE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	is_tuple_uniform (code: INTEGER_8): BOOLEAN is
+	is_tuple_uniform (code: like item_code): BOOLEAN is
 			-- Are all items of type `code'?
 		local
 			i, nb: INTEGER
@@ -1071,7 +1064,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	generic_typecode (pos: INTEGER): INTEGER_8 is
+	generic_typecode (pos: INTEGER): NATURAL_8 is
 			-- Code for generic parameter `pos' in `obj'.
 		local
 			l_item: SYSTEM_OBJECT

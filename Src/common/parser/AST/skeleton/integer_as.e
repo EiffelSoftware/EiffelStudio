@@ -84,19 +84,12 @@ feature -- Access
 	constant_type: TYPE_AS
 			-- Type of integer constant if specified.
 
-	constant_actual_type: TYPE_A is
-			-- Actual type of integer constant.
-		require
-			has_constant_type: constant_type /= Void
+	has_constant_type: BOOLEAN is
+			-- Has constant an explicit type?
 		do
-			Result := internal_constant_actual_type
-			if Result = Void then
-				Result := constant_type.actual_type
-				internal_constant_actual_type := Result
-			end
+			Result := constant_type /= Void or else internal_constant_actual_type /= Void
 		ensure
-			constant_actual_type_not_void: Result /= Void
-			constant_actual_type_valid: Result.is_integer or Result.is_natural
+			constant_type_not_void: constant_type /= Void implies Result
 		end
 
 feature -- Properties
@@ -254,6 +247,21 @@ feature {INTEGER_AS, INSPECT_CONTROL} -- Types
 			-- (Combination of bit masks `integer_..._mask' and `natural_..._mask')
 
 feature {NONE} -- Types
+
+	constant_actual_type: TYPE_A is
+			-- Actual type of integer constant
+		require
+			has_constant_type: has_constant_type
+		do
+			Result := internal_constant_actual_type
+			if Result = Void then
+				Result := constant_type.actual_type
+				internal_constant_actual_type := Result
+			end
+		ensure
+			constant_actual_type_not_void: Result /= Void
+			constant_actual_type_valid: Result.is_integer or Result.is_natural
+		end
 
 	internal_constant_actual_type: TYPE_A
 			-- Once per object to store `actual_type' of `constant_type'.
@@ -555,7 +563,7 @@ feature {NONE} -- Translation
 			-- Set `is_initialized' to `False' otherwise.
 		require
 			is_initialized: is_initialized
-			constant_type_not_void: constant_type /= Void
+			has_constant_type: has_constant_type
 		local
 			mask: like default_type
 		do
@@ -570,7 +578,7 @@ feature {NONE} -- Translation
 		end
 
 invariant
-	constant_type_valid: constant_type /= Void implies
+	constant_type_valid: has_constant_type implies
 		(constant_actual_type.is_integer or constant_actual_type.is_natural)
 	is_initialized: is_initialized implies (default_type /= 0 and types /= 0)
 	one_default_type: default_type /= 0 implies is_one_mask (default_type)

@@ -35,7 +35,7 @@ inherit
 			new_instr_call_as, new_integer_as, new_integer_hexa_as, new_interval_as, new_invariant_as,
 			new_like_id_as, new_like_current_as, new_location_as, new_loop_as, new_nested_as,
 			new_nested_expr_as, new_none_type_as, new_once_as, new_operand_as, new_paran_as, new_parent_as,
-			new_precursor_as, new_prefix_as, new_rename_as, new_require_as, new_require_else_as,
+			new_precursor_as, new_prefix_as, new_real_as, new_rename_as, new_require_as, new_require_else_as,
 			new_result_as, new_retry_as, new_reverse_as, new_routine_as, new_routine_creation_as,
 			new_old_routine_creation_as, new_static_access_as, new_string_as, new_tagged_as,
 			new_tuple_as, new_type_dec_as, new_type_expr_as, new_un_free_as, new_un_minus_as,
@@ -538,12 +538,12 @@ feature -- Access
 		do
 		end
 
-	new_integer_as (t: TYPE_A; s: BOOLEAN; v: STRING): INTEGER_AS is
+	new_integer_as (t: TYPE_AS; s: BOOLEAN; v: STRING): INTEGER_AS is
 			-- New INTEGER_AS node
 		do
 		end
 
-	new_integer_hexa_as (t: TYPE_A; s: CHARACTER; v: STRING): INTEGER_AS is
+	new_integer_hexa_as (t: TYPE_AS; s: CHARACTER; v: STRING): INTEGER_AS is
 			-- New INTEGER_AS node
 		do
 		end
@@ -626,6 +626,11 @@ feature -- Access
 
 	new_prefix_as (op: STRING_AS; b: BOOLEAN): INFIX_PREFIX_AS is
 			-- New PREFIX AST node
+		do
+		end
+
+	new_real_as (t: TYPE_AS; v: STRING): REAL_AS is
+			-- New REAL AST node
 		do
 		end
 

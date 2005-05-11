@@ -959,11 +959,9 @@ feature {NONE} -- Display functions
 			last_line_valie: last >= 1
 		local
  			y_pos: INTEGER
-		do  	
-			if first >= first_line_displayed and then first <= first_line_displayed + number_of_lines_displayed then
-				y_pos := (first - first_line_displayed) * line_height
-				editor_drawing_area.redraw_rectangle (0, editor_viewport.y_offset + y_pos, buffered_line.width, (last - first + 1) * line_height)
-			end
+		do
+			y_pos := (first - 1) * line_height
+			editor_drawing_area.redraw_rectangle (0, y_pos, buffered_line.width, (last - first + 1) * line_height)
 			if flush_screen then
 				editor_drawing_area.flush
 			end

@@ -78,11 +78,24 @@ feature -- Status report
 			-- Is `op' a valid operator name?
 		require
 			not_void_name: op /= Void
-		local
-			lcop: STRING
 		do
-			lcop := op.as_lower
-			Result := is_valid_free_operator (op) or else basic_operators.has (lcop)
+			Result := is_valid_free_operator (op) or else basic_operators.has (op.as_lower)
+		end
+
+	is_valid_binary_operator (op: STRING): BOOLEAN is
+			-- Is `op' a valid binary operator?
+		require
+			not_void_name: op /= Void
+		do
+			Result := binary_operators.has (op.as_lower) or else is_valid_free_operator (op)
+		end
+
+	is_valid_unary_operator (op: STRING): BOOLEAN is
+			-- Is `op' a valid unary operator?
+		require
+			not_void_name: op /= Void
+		do
+			Result := unary_operators.has (op.as_lower) or else is_valid_free_operator (op)
 		end
 
 	is_valid_free_operator (op: STRING): BOOLEAN is
@@ -162,6 +175,41 @@ feature -- Status report
 			Result.extend ("and then")
 			Result.extend ("or else")
 			Result.extend ("implies")
+			Result.compare_objects
+		end
+
+	binary_operators: LIST [STRING] is
+			-- List of basic binary Eiffel operators (lower-case).
+		once
+			create {ARRAYED_LIST [STRING]} Result.make (18)
+			Result.extend ("+")
+			Result.extend ("-")
+			Result.extend ("*")
+			Result.extend ("/")
+			Result.extend ("//")
+			Result.extend ("\\")
+			Result.extend ("^")
+			Result.extend ("..")
+			Result.extend ("<")
+			Result.extend (">")
+			Result.extend ("<=")
+			Result.extend (">=")
+			Result.extend ("and")
+			Result.extend ("or")
+			Result.extend ("xor")
+			Result.extend ("and then")
+			Result.extend ("or else")
+			Result.extend ("implies")
+			Result.compare_objects
+		end
+
+	unary_operators: LIST [STRING] is
+			-- List of basic unary Eiffel operators (lower-case)
+		once
+			create {ARRAYED_LIST [STRING]} Result.make (3)
+			Result.extend ("not")
+			Result.extend ("+")
+			Result.extend ("-")
 			Result.compare_objects
 		end
 

@@ -18,15 +18,13 @@ feature {NONE} -- Initialization
 		do
 			create dialog_data.make (a_preferences)			
 			create context_tool_data.make (a_preferences)
-			create project_tool_data.make (a_preferences)
 			create debug_tool_data.make (a_preferences)
 			create diagram_tool_data.make (a_preferences)
 			create debugger_data.make (a_preferences)
 			create development_window_data.make (a_preferences)			
 			create formatter_data.make (a_preferences)
 			create recent_projects_data.make (a_preferences)
-			create editor_data.make (a_preferences)
-			create browsing_data.make (a_preferences)
+			create editor_data.make (a_preferences)			
 		end		
 
 feature -- Access
@@ -35,10 +33,7 @@ feature -- Access
 		-- Preference data for vision and custom dialogs.
 	
 	context_tool_data: EB_CONTEXT_TOOL_DATA
-		-- Preference data for the context tool.
-		
-	project_tool_data: EB_PROJECT_TOOL_DATA
-		-- Preference data for project tool.
+		-- Preference data for the context tool.		
 		
 	debug_tool_data: EB_DEBUG_TOOL_DATA
 		-- Preference data for debugger tool.
@@ -59,21 +54,16 @@ feature -- Access
 		-- Preference data for recently loaded EiffelStudio projects.	
 
 	editor_data: EB_EDITOR_DATA
-		-- Preference data for EiffelStudio editor
-		
-	browsing_data: EB_BROWSING_DATA
-		-- Preference data for browsing		
+		-- Preference data for EiffelStudio editor		
 
 invariant
 	dialog_data_not_void: dialog_data /= Void	
 	context_tool_data_not_void: context_tool_data /= Void
-	project_tool_data_not_void: project_tool_data /= Void
 	debug_tool_data_not_void: debug_tool_data /= Void
 	debugger_data_not_void: debugger_data /= Void
 	development_window_data_not_void: development_window_data /= Void	
 	formatter_data_not_void: formatter_data /= Void
 	recent_projects_data_not_void: recent_projects_data /= Void
 	editor_data_not_void: editor_data /= Void
-	browsing_data_not_void: browsing_data /= Void
 	
 end -- class EB_GUI_PREFERENCES

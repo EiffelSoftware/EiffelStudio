@@ -92,7 +92,7 @@ feature {NONE} -- Implementation (preparation of all widgets)
 				Eiffel_project.set_error_displayer (an_output_manager)
 		
 					-- Create and setup the degree output window.
-				if not preferences.project_tool_data.graphical_output_disabled then
+				if not preferences.development_window_data.graphical_output_disabled then
 					create a_progress_dialog
 					set_progress_dialog (a_progress_dialog)
 					create a_graphical_degree_output.make_with_dialog (a_progress_dialog)

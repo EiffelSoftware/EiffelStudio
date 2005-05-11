@@ -2142,19 +2142,19 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 	enable_complete: BOOLEAN is
 			-- Does the user want class names to be completed?
 		do
-			Result := preferences.browsing_data.class_completion --, True
+			Result := preferences.development_window_data.class_completion --, True
 		end
 
 	enable_feature_complete: BOOLEAN is
 			-- Does the user want feature names to be completed?
 		do
-			Result := preferences.browsing_data.class_completion --, True
+			Result := preferences.development_window_data.class_completion --, True
 		end
 
 	enable_cluster_complete: BOOLEAN is
 			-- Does the user want cluster names to be completed?
 		do
-			Result := preferences.browsing_data.class_completion --, True
+			Result := preferences.development_window_data.class_completion --, True
 		end
 
 	default_class_name: STRING is "(no_class)"

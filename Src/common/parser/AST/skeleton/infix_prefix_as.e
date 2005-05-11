@@ -7,16 +7,14 @@ class INFIX_PREFIX_AS
 
 inherit
 	FEATURE_NAME
+		rename
+			alias_name as visual_name,
+			internal_alias_name as internal_name,
+			is_binary as is_infix,
+			is_unary as is_prefix
 		redefine
-			is_infix, is_prefix, is_valid, visual_name,
+			is_infix, is_prefix, visual_name,
 			is_equivalent
-		end
-
-	SYNTAX_STRINGS
-		export
-			{NONE} all
-		undefine
-			is_equal
 		end
 
 create
@@ -33,11 +31,7 @@ feature {NONE} -- Initialization
 			is_infix := inf
 			is_frozen := b
 			visual_name := op.value
-			if is_infix then
-				create internal_name.initialize (infix_str + visual_name + quote_str)
-			else
-				create internal_name.initialize (prefix_str + visual_name + quote_str)
-			end
+			create internal_name.initialize (get_internal_alias_name)
 			internal_name.set_position (op.line, op.column, op.position, internal_name.count)
 		ensure
 			is_frozen_set: is_frozen = b
@@ -60,18 +54,6 @@ feature -- Properties
 			-- Is the feature a prefix notation?
 		do
 			Result := not is_infix
-		end
-
-	is_valid: BOOLEAN is
-			-- Is the fix notation valid ?
-		do
-			Result := sc.is_valid_operator (visual_name)
-		end
-
-	is_free: BOOLEAN is
-			-- Is the fix notation a free notation ?
-		do
-			Result := sc.is_valid_free_operator (visual_name)
 		end
 
 feature -- Comparison
@@ -112,14 +94,6 @@ feature -- Conveniences
 			else
 				Result := visual_name < infix_feature.visual_name
 			end
-		end
-
-feature {NONE} -- Implementation
-
-	sc: EIFFEL_SYNTAX_CHECKER is
-			-- Tool that checks the validity of feature names.
-		once
-			create Result
 		end
 
 end -- class INFIX_PREFIX_AS

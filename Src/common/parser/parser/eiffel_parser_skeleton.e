@@ -602,12 +602,12 @@ feature {NONE} -- Basic type factory
 				token_value.prune_all ('_')
 			end
 			if token_value.is_integer then
-				Result := ast_factory.new_integer_as (l_type, sign_symbol = '-', token_value)
+				Result := ast_factory.new_integer_as (a_type, sign_symbol = '-', token_value)
 			elseif
 				token_value.item (1) = '0' and then
 				token_value.item (2).lower = 'x'
 			then
-				Result := ast_factory.new_integer_hexa_as (l_type, sign_symbol, token_value)
+				Result := ast_factory.new_integer_hexa_as (a_type, sign_symbol, token_value)
 			end
 			if Result = Void or else not Result.is_initialized then
 				if sign_symbol = '-' then
@@ -618,7 +618,7 @@ feature {NONE} -- Basic type factory
 					report_integer_too_large_error (buffer)
 				end
 					-- Dummy code (for error recovery) follows:
-				Result := ast_factory.new_integer_as (l_type, False, "0")
+				Result := ast_factory.new_integer_as (a_type, False, "0")
 			end
 			Result.set_position (line, column, position, buffer.count)
 		end
@@ -641,7 +641,7 @@ feature {NONE} -- Basic type factory
 			if is_signed and sign_symbol = '-' then
 				buffer.precede ('-')
 			end
-			Result := ast_factory.new_real_as (l_type, buffer)
+			Result := ast_factory.new_real_as (a_type, buffer)
 			Result.set_position (line, column, position, buffer.count)
 		end
 		

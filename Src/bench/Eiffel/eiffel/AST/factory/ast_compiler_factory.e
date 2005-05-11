@@ -145,7 +145,7 @@ feature -- Access
 			end
 		end
 
-	new_integer_as (t: TYPE_A; s: BOOLEAN; v: STRING): INTEGER_CONSTANT is
+	new_integer_as (t: TYPE_AS; s: BOOLEAN; v: STRING): INTEGER_CONSTANT is
 			-- New INTEGER_AS node
 		do
 			if v /= Void then
@@ -153,7 +153,7 @@ feature -- Access
 			end
 		end
 
-	new_integer_hexa_as (t: TYPE_A; s: CHARACTER; v: STRING): INTEGER_CONSTANT is
+	new_integer_hexa_as (t: TYPE_AS; s: CHARACTER; v: STRING): INTEGER_CONSTANT is
 			-- New INTEGER_AS node
 		do
 			if v /= Void then

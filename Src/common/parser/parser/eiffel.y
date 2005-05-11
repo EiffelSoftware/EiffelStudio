@@ -555,7 +555,7 @@ Feature_declaration: { add_counter } New_feature_list { remove_counter } Declara
 				then
 					raise_error
 				end
-				$$ := ast_factory.new_feature_as ($2, $4, feature_indexes)
+				$$ := new_feature ($2, $4, feature_indexes)
 				feature_indexes := Void
 			}
 	;

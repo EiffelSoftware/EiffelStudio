@@ -388,6 +388,62 @@ feature {NONE} -- Actions
 				last_ind, g, p, c, co, f, inv, s, o, has_externals, ed)
 		end
 
+feature {NONE} -- Feature factory
+
+	new_feature (f: EIFFEL_LIST [FEATURE_NAME]; b: BODY_AS; i: INDEXING_CLAUSE_AS): FEATURE_AS is
+			-- Create a new feature AST node.
+		local
+			feature_name: FEATURE_NAME
+			is_query: BOOLEAN
+			argument_count: INTEGER
+			alias_name: STRING
+			vfav1: VFAV1_SYNTAX
+			vfav2: VFAV2_SYNTAX
+		do
+			if f /= Void and then b /= Void then
+					-- Check if there are any operator names that violate VFAV rules
+				is_query := b.type /= Void
+				if b.arguments /= Void then
+					argument_count := b.arguments.count
+				end
+				from
+					f.start
+				until
+					f.after
+				loop
+					feature_name := f.item
+					alias_name := feature_name.alias_name
+					if alias_name /= Void then
+						if feature_name.is_bracket then
+							if is_query and then argument_count >= 1 then
+									-- Bracket is a valid alias for this feature
+							else
+									-- Invalid bracket alias
+								create vfav2.make (feature_name)
+								error_handler.insert_error (vfav2)
+							end
+						elseif is_query and then (
+								(argument_count = 0 and then feature_name.is_valid_unary_operator (alias_name)) or else
+								(argument_count = 1 and then feature_name.is_valid_binary_operator (alias_name))
+							)
+						then
+							if argument_count = 0 then
+								feature_name.set_is_unary
+							else
+								feature_name.set_is_binary
+							end
+						else
+								-- Invalid operator alias
+							create vfav1.make (feature_name)
+							error_handler.insert_error (vfav1)
+						end
+					end
+					f.forth
+				end
+			end
+			Result := ast_factory.new_feature_as (f, b, i)
+		end
+
 feature {NONE} -- ID factory
 
 	new_none_id: ID_AS is

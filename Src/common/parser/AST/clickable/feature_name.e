@@ -25,7 +25,22 @@ inherit
 			is_feature
 		end
 
+	EIFFEL_SYNTAX_CHECKER
+		export
+			{NONE} all
+			{ANY} is_valid_binary_operator, is_valid_unary_operator
+		undefine
+			is_equal
+		end
+
 	SHARED_NAMES_HEAP
+		export
+			{NONE} all
+		undefine
+			is_equal
+		end
+
+	SYNTAX_STRINGS
 		export
 			{NONE} all
 		undefine
@@ -34,7 +49,7 @@ inherit
 
 -- Undefined is_equal of AST_EIFFEL and CLICKABLE_AST because these are
 -- not consistent with infix < operator
--- < is defined by the terms of < of feature name and is_equal 
+-- < is defined by the terms of < of feature name and is_equal
 -- (from ANY is c_standard_is_equal)
 
 feature -- Stoning
@@ -68,25 +83,34 @@ feature -- Location
 			Result := internal_name.end_location
 		end
 
-feature -- Properties
+feature -- Status report
 
 	is_frozen: BOOLEAN
-			-- Is the name of the feature frozen ?
+			-- Is the name of the feature frozen?
 
 	is_infix: BOOLEAN is
-			-- Is the feature name an infixed notation ?
+			-- Is the feature name an infixed notation?
 		do
 		end
 
 	is_prefix: BOOLEAN is
-			-- Is the feature name a prefixed notation ?
+			-- Is the feature name a prefixed notation?
 		do
 		end
 
-	is_valid: BOOLEAN is
-			-- is the feature name valid ?
+	is_bracket: BOOLEAN is
+			-- Is feature alias (if any) bracket?
 		do
-			Result := True
+		end
+
+	is_binary: BOOLEAN is
+			-- Is feature alias (if any) a binary operator?
+		do
+		end
+
+	is_unary: BOOLEAN is
+			-- Is feature alias (if any) an unary operator?
+		do
 		end
 
 	is_feature: BOOLEAN is True
@@ -94,8 +118,64 @@ feature -- Properties
 
 	visual_name: STRING is
 			-- Named used in Eiffel code
-		do	
+		do
 			Result := internal_name
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	internal_alias_name_id: INTEGER is
+			-- `internal_alias_name' ID in NAMES_HEAP
+		local
+			l_names_heap: like Names_heap
+		do
+			if internal_alias_name /= Void then
+				l_names_heap := Names_heap
+				l_names_heap.put (internal_alias_name)
+				Result := l_names_heap.found_item
+			end
+		ensure
+			has_alias: internal_alias_name /= Void implies Result > 0
+			has_no_alias: internal_alias_name = Void implies Result = 0
+		end
+
+	internal_alias_name: STRING is
+			-- Operator associated with the feature (if any)
+			-- augmented with information about its arity
+		deferred
+		ensure
+			consistent_result: (Result /= Void) = (alias_name /= Void)
+		end
+
+	alias_name: STRING is
+			-- Operator name associated with the feature (if any)
+		deferred
+		end
+
+feature -- Status setting
+
+	set_is_binary is
+			-- Mark alias operator as binary.
+		require
+			has_alias: alias_name /= Void
+			not_is_bracket: not is_bracket
+			not_is_prefix: not is_prefix
+			is_valid_binary: is_valid_binary_operator (alias_name)
+		do
+		ensure
+			is_binary: is_binary
+		end
+
+	set_is_unary is
+			-- Mark alias operator as unary.
+		require
+			has_alias: alias_name /= Void
+			not_is_bracket: not is_bracket
+			not_is_infix: not is_infix
+			is_valid_unary: is_valid_unary_operator (alias_name)
+		do
+		ensure
+			is_unary: is_unary
 		end
 
 feature -- Comparison
@@ -110,5 +190,27 @@ feature {COMPILER_EXPORTER}
 		do
 			is_frozen := b
 		end
+
+feature {NONE} -- Implementation: helper functions
+
+	get_internal_alias_name: STRING is
+			-- Internal alias name augmented with arity information
+			-- in the form "prefix ..." or "infix ..."
+		require
+			is_operator: is_infix or is_prefix
+			alias_name_not_void: alias_name /= Void
+		do
+			if is_infix then
+				Result := infix_str + alias_name + quote_str
+			else
+				Result := prefix_str + alias_name + quote_str
+			end
+		ensure
+			result_not_void: Result /= Void
+		end
+
+invariant
+	consistent_operator_status: not (is_bracket and is_binary) and not (is_bracket and is_unary) and not (is_binary and is_unary)
+	consistent_operator_name: (is_bracket or is_binary or is_unary) = (alias_name /= Void)
 
 end -- class FEATURE_NAME

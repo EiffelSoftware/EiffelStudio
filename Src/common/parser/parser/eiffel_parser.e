@@ -4702,7 +4702,7 @@ end
 				then
 					raise_error
 				end
-				yyval36 := ast_factory.new_feature_as (yyvs81.item (yyvsp81), yyvs18.item (yyvsp18), feature_indexes)
+				yyval36 := new_feature (yyvs81.item (yyvsp81), yyvs18.item (yyvsp18), feature_indexes)
 				feature_indexes := Void
 			
 if yy_parsing_status = yyContinue then

@@ -2793,6 +2793,8 @@ feature {NONE} -- Drawing implementation
 	buffered_drawable_size: INTEGER is 2000
 		-- Default size of `drawable' used for scrolling purposes.
 
+feature {EV_GRID_COLUMN_I} -- Implementation
+
 	is_header_item_resizing: BOOLEAN
 		-- Is a header item currently in the process of resizing?
 

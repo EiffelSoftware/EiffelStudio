@@ -131,7 +131,7 @@ feature -- Status report
 				until
 					i > open_map.count or not Result
 				loop
-					arg_type_code := args.arg_item_code (i)
+					arg_type_code := args.item_code (i)
 					Result := arg_type_code = open_type_codes.item (i + 1).code
 					if Result and then arg_type_code = {TUPLE}.reference_code then
 						arg := args.item (i)

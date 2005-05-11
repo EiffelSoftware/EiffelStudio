@@ -116,6 +116,14 @@ feature -- Status report
 			Result := c_is_special ($object)
 		end
 
+	is_tuple (object: ANY): BOOLEAN is
+			-- Is `object' a TUPLE object?
+		require
+			object_not_void: object /= Void
+		do
+			Result := c_is_tuple ($object)
+		end
+		
 	is_marked (obj: ANY): BOOLEAN is
 			-- Is `obj' marked?
 		require
@@ -453,15 +461,15 @@ feature -- Access
 			Result := c_integer_64_field (i - 1, $object)
 		end
 
-	real_field (i: INTEGER; object: ANY): REAL is
+	real_32_field, real_field (i: INTEGER; object: ANY): REAL is
 			-- Real value of `i'-th field of `object'
 		require
 			object_not_void: object /= Void
 			index_large_enough: i >= 1
 			index_small_enough: i <= field_count (object)
-			real_field: field_type (i, object) = Real_type
+			real_32_field: field_type (i, object) = real_32_type
 		do
-			Result := c_real_field (i - 1, $object)
+			Result := c_real_32_field (i - 1, $object)
 		end
 
 	pointer_field (i: INTEGER; object: ANY): POINTER is
@@ -475,15 +483,15 @@ feature -- Access
 			Result := c_pointer_field (i - 1, $object)
 		end
 
-	double_field (i: INTEGER; object: ANY): DOUBLE is
+	real_64_field, double_field (i: INTEGER; object: ANY): DOUBLE is
 			-- Double precision value of `i'-th field of `object'
 		require
 			object_not_void: object /= Void
 			index_large_enough: i >= 1
 			index_small_enough: i <= field_count (object)
-			double_field: field_type (i, object) = Double_type
+			real_64_field: field_type (i, object) = real_64_type
 		do
-			Result := c_double_field (i - 1, $object)
+			Result := c_real_64_field (i - 1, $object)
 		end
 
 feature -- Version
@@ -511,14 +519,14 @@ feature -- Element change
 			c_set_reference_field (i - 1, $object, $value)
 		end
 
-	set_double_field (i: INTEGER; object: ANY; value: DOUBLE) is
+	set_real_64_field, set_double_field (i: INTEGER; object: ANY; value: DOUBLE) is
 		require
 			object_not_void: object /= Void
 			index_large_enough: i >= 1
 			index_small_enough: i <= field_count (object)
-			double_field: field_type (i, object) = Double_type
+			real_64_field: field_type (i, object) = real_64_type
 		do
-			c_set_double_field (i - 1, $object, value)
+			c_set_real_64_field (i - 1, $object, value)
 		end
 
 	set_character_field (i: INTEGER; object: ANY; value: CHARACTER) is
@@ -622,14 +630,14 @@ feature -- Element change
 			c_set_integer_64_field (i - 1, $object, value)
 		end
 
-	set_real_field (i: INTEGER; object: ANY; value: REAL) is
+	set_real_32_field, set_real_field (i: INTEGER; object: ANY; value: REAL) is
 		require
 			object_not_void: object /= Void
 			index_large_enough: i >= 1
 			index_small_enough: i <= field_count (object)
-			real_field: field_type (i, object) = Real_type
+			real_32_field: field_type (i, object) = real_32_type
 		do
-			c_set_real_field (i - 1, $object, value)
+			c_set_real_32_field (i - 1, $object, value)
 		end
 
 	set_pointer_field (i: INTEGER; object: ANY; value: POINTER) is
@@ -689,6 +697,7 @@ feature -- Marking
 			-- Mark object `obj'
 		require
 			object_not_void: obj /= Void
+			object_not_marked: not is_marked (obj)		
 		do
 			c_mark ($obj)
 		ensure
@@ -699,6 +708,7 @@ feature -- Marking
 			-- Unmark object `obj'
 		require
 			object_not_void: obj /= Void
+			object_marked: is_marked (obj)		
 		do
 			c_unmark ($obj)
 		ensure
@@ -845,7 +855,7 @@ feature {NONE} -- Implementation
 			"ei_int_64_field"
 		end
 
-	c_real_field (i: INTEGER; object: POINTER): REAL is
+	c_real_32_field (i: INTEGER; object: POINTER): REAL is
 			-- Real value of `i'-th field of `object'
 		external
 			"C macro signature (long, EIF_REFERENCE): EIF_REAL use %"eif_internal.h%""
@@ -861,7 +871,7 @@ feature {NONE} -- Implementation
 			"ei_ptr_field"
 		end
 
-	c_double_field (i: INTEGER; object: POINTER): DOUBLE is
+	c_real_64_field (i: INTEGER; object: POINTER): DOUBLE is
 			-- Double precision value of `i'-th field of `object'
 		external
 			"C macro signature (long, EIF_REFERENCE): EIF_DOUBLE use %"eif_internal.h%""
@@ -875,6 +885,14 @@ feature {NONE} -- Implementation
 			"C (EIF_REFERENCE): EIF_BOOLEAN | %"eif_internal.h%""
 		alias
 			"ei_special"
+		end
+
+	c_is_tuple (object: POINTER): BOOLEAN is
+			-- Is `object' a TUPLE object?
+		external
+			"C (EIF_REFERENCE): EIF_BOOLEAN | %"eif_internal.h%""
+		alias
+			"ei_tuple"
 		end
 
 	c_field_offset (i: INTEGER; object: POINTER): INTEGER is
@@ -908,7 +926,7 @@ feature {NONE} -- Implementation
 			"ei_set_reference_field"
 		end
 
-	c_set_double_field (i: INTEGER; object: POINTER; value: DOUBLE) is
+	c_set_real_64_field (i: INTEGER; object: POINTER; value: DOUBLE) is
 		external
 			"C macro signature (long, EIF_REFERENCE, EIF_DOUBLE) use %"eif_internal.h%""
 		alias
@@ -985,7 +1003,7 @@ feature {NONE} -- Implementation
 			"ei_set_integer_64_field"
 		end
 
-	c_set_real_field (i: INTEGER; object: POINTER; value: REAL) is
+	c_set_real_32_field (i: INTEGER; object: POINTER; value: REAL) is
 		external
 			"C macro signature (long, EIF_REFERENCE, EIF_REAL) use %"eif_internal.h%""
 		alias
@@ -1020,7 +1038,7 @@ feature {NONE} -- Implementation
 		external
 			"C macro use %"eif_macros.h%""
 		alias
-			"RTLN"
+			"RTLNSMART"
 		end
 		
 	c_set_dynamic_type (obj: POINTER; dtype: INTEGER) is

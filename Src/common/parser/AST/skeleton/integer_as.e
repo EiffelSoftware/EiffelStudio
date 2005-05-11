@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 			-- Set `is_initialized' to true if the string denotes a value that is
 			-- within allowed integer bounds. Otherwise set `is_iniialized' to false.
 		require
-			valid_type: a_type /= Void implies (a_type.is_integer or a_type.is_natural)
+			valid_type: a_type /= Void implies (a_type.actual_type.is_integer or a_type.actual_type.is_natural)
 			s_not_void: s /= Void
 		do
 			constant_type := a_type
@@ -66,7 +66,7 @@ feature {NONE} -- Initialization
 			-- Set `is_initialized' to true if the string denotes a value that is
 			-- within allowed integer bounds. Otherwise set `is_initialized' to false.
 		require
-			valid_type: a_type /= Void implies (a_type.is_integer or a_type.is_natural)
+			valid_type: a_type /= Void implies (a_type.actual_type.is_integer or a_type.actual_type.is_natural)
 			valid_sign: ("%U+-").has (sign)
 			s_not_void: s /= Void
 			s_long_enough: s.count >= 3
@@ -81,8 +81,23 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	constant_type: TYPE_A
-			-- Actual type of integer constant if specified.
+	constant_type: TYPE_AS
+			-- Type of integer constant if specified.
+
+	constant_actual_type: TYPE_A is
+			-- Actual type of integer constant.
+		require
+			has_constant_type: constant_type /= Void
+		do
+			Result := internal_constant_actual_type
+			if Result = Void then
+				Result := constant_type.actual_type
+				internal_constant_actual_type := Result
+			end
+		ensure
+			constant_actual_type_not_void: Result /= Void
+			constant_actual_type_valid: Result.is_integer or Result.is_natural
+		end
 
 feature -- Properties
 
@@ -239,6 +254,9 @@ feature {INTEGER_AS, INSPECT_CONTROL} -- Types
 			-- (Combination of bit masks `integer_..._mask' and `natural_..._mask')
 
 feature {NONE} -- Types
+
+	internal_constant_actual_type: TYPE_A
+			-- Once per object to store `actual_type' of `constant_type'.
 
 	integer_8_mask:  INTEGER is 0x01
 			-- Bit mask for INTEGER_8
@@ -541,19 +559,19 @@ feature {NONE} -- Translation
 		local
 			mask: like default_type
 		do
-			mask := type_mask (constant_type)
+			mask := type_mask (constant_actual_type)
 			if types & mask = 0 then
 				is_initialized := False
 			else
 				default_type := mask
 			end
 		ensure
-			default_type_set: is_initialized implies default_type = type_mask (constant_type)
+			default_type_set: is_initialized implies default_type = type_mask (constant_actual_type)
 		end
 
 invariant
-
-	constant_type_valid: constant_type /= Void implies (constant_type.is_integer or constant_type.is_natural)
+	constant_type_valid: constant_type /= Void implies
+		(constant_actual_type.is_integer or constant_actual_type.is_natural)
 	is_initialized: is_initialized implies (default_type /= 0 and types /= 0)
 	one_default_type: default_type /= 0 implies is_one_mask (default_type)
 	default_type_from_types: default_type /= 0 implies types & default_type /= 0

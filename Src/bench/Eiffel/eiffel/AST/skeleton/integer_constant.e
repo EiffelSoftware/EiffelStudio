@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			-- Create an integer constant of size 32.
 		do
 			is_initialized := True
-			constant_type := Void
+			internal_constant_actual_type := Void
 			if v > 0 then
 				value := v.as_natural_64
 				has_minus := False
@@ -112,7 +112,7 @@ feature -- Access
 			compatibility_size: INTEGER_8
 		do
 			if constant_type /= Void then
-				Result := constant_type
+				Result := constant_actual_type
 			else
 				if has_integer (8) then
 					compatibility_size := 8
@@ -239,11 +239,11 @@ feature -- Settings
 			-- It will discard existing information, because it might be
 			-- possible that we entered an INTEGER_8 constant value.
 		do
-			constant_type := t
+			internal_constant_actual_type := t
 			adjust_type
 		ensure then
 			is_initialized: is_initialized
-			default_type_set: default_type = type_mask (constant_type)
+			default_type_set: default_type = type_mask (constant_actual_type)
 		end
 
 feature -- Generation

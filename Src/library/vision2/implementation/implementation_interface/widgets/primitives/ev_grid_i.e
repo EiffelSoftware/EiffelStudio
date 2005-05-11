@@ -1802,7 +1802,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			l_column_count: INTEGER
 		do
 			temp_columns := columns
-			create column_offsets.make (column_count)
+			create column_offsets.make
 			column_offsets.extend (0)
 			l_column_count := temp_columns.count
 			from
@@ -2050,7 +2050,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 
 feature {EV_GRID_DRAWER_I, EV_GRID_COLUMN_I, EV_GRID_ROW_I, EV_GRID_ITEM_I, EV_GRID} -- Implementation
 
-	column_offsets: ARRAYED_LIST [INTEGER]
+	column_offsets: EV_GRID_ARRAYED_LIST [INTEGER]
 		-- Cumulative offset of each column in pixels.
 		-- For example, if there are 5 columns, each with a width of 80 pixels,
 		-- `column_offsets' contains 0, 80, 160, 240, 320, 400 (Note this is 6 items).

@@ -980,7 +980,7 @@ feature -- Implementation
 			else
 				fixme ("We should check the `constant_type' matches the real `value' and%
 					%possibly remove `constant_type' from REAL_AS.")
-				last_type := l_as.constant_type
+				last_type := l_as.constant_type.actual_type
 			end
 			if is_byte_node_enabled then
 				create {REAL_CONST_B} last_byte_node.make (l_as.value, last_type)

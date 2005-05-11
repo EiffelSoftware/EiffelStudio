@@ -659,8 +659,7 @@ feature {NONE} -- Cursor Management
 			width_valid: width > 0
 			cursor_has_token: text_displayed.cursor.token /= Void
 		do		
-			print ("draw cursor to " + x.out + ", buffered_line.width is " +  buffered_line.width.out + "%N")
-						-- Draw the cursor
+				-- Draw the cursor
 			internal_draw_cursor (buffered_line, x, y, width, line_height, show_cursor)				 					
 			blinking_timeout.actions.wipe_out
 			if editor_preferences.blinking_cursor and has_focus then				

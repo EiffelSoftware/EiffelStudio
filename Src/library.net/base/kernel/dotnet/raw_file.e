@@ -20,12 +20,10 @@ inherit
 			readstream,
 			read_character,
 			readchar,
-			read_to_managed_pointer,
 			put_string,
 			putstring,
 			put_character,
 			putchar,
-			put_managed_pointer,
 			close
 		end
 
@@ -90,22 +88,6 @@ feature -- Output
 				i > (size - 1)
 			loop
 				writer.write ({MARSHAL}.read_byte (p + i))
-				i := i + 1
-			end
-		end
-
-	put_managed_pointer (p: MANAGED_POINTER; start_pos, nb_bytes: INTEGER) is
-			-- Put data of length `nb_bytes' pointed by `start_pos' index in `p' at
-			-- current position.
-		local
-			i: INTEGER
-		do
-			from
-				i := start_pos
-			until
-				i = nb_bytes
-			loop
-				writer.write (p.read_natural_8 (i))
 				i := i + 1
 			end
 		end
@@ -226,27 +208,6 @@ feature -- Input
 			loop
 				byte := reader.read_byte
 				{MARSHAL}.write_byte (p + i, byte)
-				i := i + 1
-			end
-			internal_end_of_file := reader.peek_char = -1
-		end
-
-	read_to_managed_pointer (p: MANAGED_POINTER; start_pos, nb_bytes: INTEGER) is
-			-- Read at most `nb_bytes' bound bytes and make result
-			-- available in `p' at position `start_pos'.
-		require else
-			p_not_void: p /= Void
-			p_large_enough: p.count >= nb_bytes + start_pos
-			is_readable: file_readable
-		local
-			i: INTEGER
-		do
-			from
-				i := start_pos
-			until
-				i = nb_bytes
-			loop
-				p.put_natural_8 (reader.read_byte, i)
 				i := i + 1
 			end
 			internal_end_of_file := reader.peek_char = -1

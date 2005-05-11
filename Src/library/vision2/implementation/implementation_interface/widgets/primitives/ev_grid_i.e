@@ -2401,6 +2401,7 @@ feature {NONE} -- Drawing implementation
 			create header
 				-- Now connect events to `header' which are used to update the "physical size" of
 				-- Current in response to their re-sizing.
+			header.item_resize_start_actions.extend (agent header_item_resize_started)
 			header.item_resize_actions.extend (agent header_item_resizing)
 			header.item_resize_end_actions.extend (agent header_item_resize_ended)
 
@@ -2476,6 +2477,7 @@ feature {NONE} -- Drawing implementation
 			-- Respond to `header_item' being resized.
 		require
 			header_item_not_void: header_item /= Void
+			is_header_item_resizing: is_header_item_resizing
 		do
 				-- Update horizontal scroll bar size and position.
 			recompute_horizontal_scroll_bar
@@ -2499,12 +2501,22 @@ feature {NONE} -- Drawing implementation
 		ensure
 			result_non_negative: Result >= 0
 		end
+
+	header_item_resize_started (header_item: EV_HEADER_ITEM) is
+			-- Resizing has started on `header_item'.
+		require
+			header_item_not_void: header_item /= Void
+		do
+			is_header_item_resizing := True	
+		end
+		
 		
 	header_item_resize_ended (header_item: EV_HEADER_ITEM) is
 			-- Resizing has completed on `header_item'.
 		require
 			header_item_not_void: header_item /= Void
 		do
+			is_header_item_resizing := False
 			if is_resizing_divider_enabled then
 				remove_resizing_line
 			end
@@ -2754,7 +2766,10 @@ feature {NONE} -- Drawing implementation
 		
 	buffered_drawable_size: INTEGER is 2000
 		-- Default size of `drawable' used for scrolling purposes.
-		
+
+	is_header_item_resizing: BOOLEAN
+		-- Is a header item currently in the process of resizing?
+
 feature {NONE} -- Event handling	
 
 		-- First we define a number of functions for conversion of coordinates.
@@ -3417,7 +3432,6 @@ feature {NONE} -- Implementation
 			update_index_of_first_item_dirty_row_flags (a_index)
 
 			show_column (a_index)
-			header_item_resizing (header.last)
 			header_item_resize_ended (header.last)
 		ensure
 			column_count_set: not replace_existing_item implies ((a_index < old column_count implies (column_count = old column_count + 1)) or column_count = a_index)

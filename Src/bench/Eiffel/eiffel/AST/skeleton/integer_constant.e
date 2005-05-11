@@ -111,7 +111,7 @@ feature -- Access
 		local
 			compatibility_size: INTEGER_8
 		do
-			if constant_type /= Void then
+			if has_constant_type then
 				Result := constant_actual_type
 			else
 				if has_integer (8) then
@@ -243,6 +243,7 @@ feature -- Settings
 			adjust_type
 		ensure then
 			is_initialized: is_initialized
+			has_constant_type: has_constant_type
 			default_type_set: default_type = type_mask (constant_actual_type)
 		end
 

@@ -41,7 +41,7 @@ feature {NONE} -- Preference
 	
 feature {NONE} -- Preference Strings
 	
-	feature_clause_order_string: STRING is "tools.browsing_tools.feature_clause_order"
+	feature_clause_order_string: STRING is "interface.development_window.feature_clause_order"
 	excluded_indexing_items_string: STRING is "tools.context_tool.excluded_indexing_items"
 
 feature {NONE} -- Defaults

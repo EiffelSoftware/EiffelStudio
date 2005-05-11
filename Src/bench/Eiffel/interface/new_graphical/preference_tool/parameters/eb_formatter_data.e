@@ -54,8 +54,8 @@ feature {NONE} -- Preference
 feature {NONE} -- Preference Strings
 
 	editor_history_size_string: STRING is "editor.eiffel.formatters_history_size"
-	default_class_formatter_index_string: STRING is "tools.browsing_tools.default_class_formatter_index"
-	default_feature_formatter_index_string: STRING is "tools.browsing_tools.default_feature_formatter_index"
+	default_class_formatter_index_string: STRING is "interface.development_window.default_class_formatter_index"
+	default_feature_formatter_index_string: STRING is "interface.development_window.default_feature_formatter_index"
 
 feature {NONE} -- Implementation
 

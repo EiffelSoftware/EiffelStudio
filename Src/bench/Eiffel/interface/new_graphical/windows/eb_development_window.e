@@ -144,7 +144,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Create a new development window.
 		do
-			unified_stone := preferences.project_tool_data.context_unified_stone
+			unified_stone := preferences.development_window_data.context_unified_stone
 				-- Build the history manager, the address manager, ...
 			create history_manager.make (Current)
 			create address_manager.make (Current, False)
@@ -3367,7 +3367,7 @@ feature -- Stone process
 					check
 						not_destroyed: not tool_window.window.is_destroyed
 					end
-					if preferences.browsing_data.dock_tracking then
+					if preferences.development_window_data.dock_tracking then
 						tool_window.window.move_actions.block
 						tool_window.window.set_x_position (x_pos + tool_window.x_position)
 						tool_window.window.set_y_position (y_pos + tool_window.y_position)

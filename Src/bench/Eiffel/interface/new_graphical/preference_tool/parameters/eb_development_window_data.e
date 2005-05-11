@@ -161,6 +161,39 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := ctrl_right_click_receiver_preference.selected_value
 		end	
 
+	class_completion: BOOLEAN is
+			-- 
+		do
+			Result := class_completion_preference.value
+		end		
+	
+	dock_tracking: BOOLEAN is
+			-- 
+		do
+			Result := dock_tracking_preference.value
+		end
+	
+	last_browsed_cluster_directory: STRING is
+			-- 
+		do
+			Result := last_browsed_cluster_directory_preference.value
+		end
+
+	raise_on_error: BOOLEAN is
+		do
+			Result := raise_on_error_preference.value
+		end
+
+	context_unified_stone: BOOLEAN is
+		do
+			Result := context_unified_stone_preference.value
+		end
+
+	graphical_output_disabled: BOOLEAN is
+		do
+			Result := graphical_output_disabled_preference.value
+		end
+
 feature {EB_SHARED_PREFERENCES} -- Preference
 
 	width_preference: INTEGER_PREFERENCE
@@ -223,6 +256,18 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 
 	ctrl_right_click_receiver_preference: ARRAY_PREFERENCE	
 
+	class_completion_preference: BOOLEAN_PREFERENCE
+
+	dock_tracking_preference: BOOLEAN_PREFERENCE
+
+	last_browsed_cluster_directory_preference: STRING_PREFERENCE	
+
+	raise_on_error_preference: BOOLEAN_PREFERENCE
+
+	context_unified_stone_preference: BOOLEAN_PREFERENCE
+
+	graphical_output_disabled_preference: BOOLEAN_PREFERENCE			
+		
 feature -- Element change
 
 	save_size (a_width, a_height: INTEGER; a_maximized: BOOLEAN) is
@@ -327,6 +372,12 @@ feature {NONE} -- Preference Strings
 	completion_list_height_string: STRING is "interface.development_window.completion_list_height"
 	progress_bar_color_preference_string: STRING is "interface.development_window.progress_bar_color"
 	ctrl_right_click_receiver_string: STRING is "interface.development_window.ctrl_right_click_receiver"
+	class_completion_string: STRING is "interface.development_window.class_completion"
+	dock_tracking_string: STRING is "interface.development_window.dock_tracking"
+	last_browsed_cluster_directory_string: STRING is "interface.development_window.last_browsed_cluster_directory"
+	raise_on_error_string: STRING is "interface.development_window.raise_on_error"
+	context_unified_stone_string: STRING is "interface.development_window.unified_stone"
+	graphical_output_disabled_string: STRING is "interface.development_window.graphical_output_disabled"	
 
 feature {NONE} -- Implementation
 
@@ -360,6 +411,12 @@ feature {NONE} -- Implementation
 			progress_bar_color_preference := l_manager.new_color_resource_value (l_manager, progress_bar_color_preference_string, create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 128))
 			ctrl_right_click_receiver_preference := l_manager.new_array_resource_value (l_manager, ctrl_right_click_receiver_string, <<"new_window">>)	
 			ctrl_right_click_receiver_preference.set_is_choice (True)
+			class_completion_preference := l_manager.new_boolean_resource_value (l_manager, class_completion_string, True)
+			dock_tracking_preference := l_manager.new_boolean_resource_value (l_manager, dock_tracking_string, True)
+			last_browsed_cluster_directory_preference := l_manager.new_string_resource_value (l_manager, last_browsed_cluster_directory_string, "")
+			raise_on_error_preference := l_manager.new_boolean_resource_value (l_manager, raise_on_error_string, True)
+			context_unified_stone_preference := l_manager.new_boolean_resource_value (l_manager, context_unified_stone_string, False)
+			graphical_output_disabled_preference := l_manager.new_boolean_resource_value (l_manager, graphical_output_disabled_string, False)			
 		end
 	
 	preferences: PREFERENCES

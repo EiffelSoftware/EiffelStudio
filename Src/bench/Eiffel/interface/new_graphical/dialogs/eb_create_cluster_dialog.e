@@ -537,7 +537,7 @@ feature {NONE} -- Implementation
 	last_browsed_directory: STRING is
 			-- What was the last browsed directory when searching for a folder?
 		do
-			Result := preferences.browsing_data.last_browsed_cluster_directory
+			Result := preferences.development_window_data.last_browsed_cluster_directory
 		end
 
 	target: EB_DEVELOPMENT_WINDOW
@@ -578,7 +578,7 @@ feature {NONE} -- Graphic interface
 		do
 			dir := bd.directory
 			folder_entry.set_text (dir)
-			preferences.browsing_data.last_browsed_cluster_directory_preference.set_value (dir)
+			preferences.development_window_data.last_browsed_cluster_directory_preference.set_value (dir)
 			if
 				(not dir.is_empty and is_default_cluster_name_set) and then
 				(cluster_name.is_equal (default_cluster_name) or cluster_name.is_empty)

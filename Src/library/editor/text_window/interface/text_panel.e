@@ -1081,9 +1081,9 @@ feature {NONE} -- Display functions
 		do
 			y_pos := (line_number - first_line_displayed )* line_height
 			if draw_immediately then
-				editor_drawing_area.expose_actions.call ([0, editor_viewport.y_offset + y_pos, viewable_width, line_height])
+				editor_drawing_area.expose_actions.call ([0, editor_viewport.y_offset + y_pos, buffered_line.width, line_height])
 			else
-				editor_drawing_area.redraw_rectangle (0, editor_viewport.y_offset + y_pos, viewable_width, line_height)
+				editor_drawing_area.redraw_rectangle (0, editor_viewport.y_offset + y_pos, buffered_line.width, line_height)
 			end
 		end
 

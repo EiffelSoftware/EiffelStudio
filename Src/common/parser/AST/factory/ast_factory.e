@@ -838,20 +838,20 @@ feature -- Access
 			end
 		end
 
-	new_integer_as (t: TYPE_A; s: BOOLEAN; v: STRING): INTEGER_AS is
+	new_integer_as (t: TYPE_AS; s: BOOLEAN; v: STRING): INTEGER_AS is
 			-- New INTEGER_AS node
 		require
-			valid_type: t /= Void implies (t.is_integer or t.is_natural)			
+			valid_type: t /= Void implies (t.actual_type.is_integer or t.actual_type.is_natural)			
 		do
 			if v /= Void then
 				create Result.make_from_string (t, s, v)
 			end
 		end
 
-	new_integer_hexa_as (t: TYPE_A; s: CHARACTER; v: STRING): INTEGER_AS is
+	new_integer_hexa_as (t: TYPE_AS; s: CHARACTER; v: STRING): INTEGER_AS is
 			-- New INTEGER_AS node
 		require
-			valid_type: t /= Void implies (t.is_integer or t.is_natural)			
+			valid_type: t /= Void implies (t.actual_type.is_integer or t.actual_type.is_natural)
 		do
 			if v /= Void then
 				create Result.make_from_hexa_string (t, s, v)
@@ -979,7 +979,7 @@ feature -- Access
 			end
 		end
 
-	new_real_as (t: TYPE_A; v: STRING): REAL_AS is
+	new_real_as (t: TYPE_AS; v: STRING): REAL_AS is
 			-- New REAL AST node
 		do
 			if v /= Void then

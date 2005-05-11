@@ -49,7 +49,7 @@ feature -- Access
 	value: STRING
 			-- Real value
 
-	constant_type: TYPE_A
+	constant_type: TYPE_AS
 			-- Actual type of real constant if specified.
 
 feature -- Comparison

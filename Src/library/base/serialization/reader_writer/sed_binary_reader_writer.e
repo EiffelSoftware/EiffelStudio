@@ -72,7 +72,7 @@ feature -- Access
 			check_buffer (natural_8_bytes)
 			l_pos := buffer_position
 			l_nat := buffer.read_natural_8 (l_pos)
-			Result := l_nat /= 0
+			Result := l_nat = 1
 			l_pos := l_pos + natural_8_bytes
 			buffer_position := l_pos
 		end

@@ -103,11 +103,18 @@ feature {NONE} -- Events
 		end 
 
 	on_cancel is
-			-- Cancel button has been pushed: retrieve previous preference values to cancel those which 
+			-- Cancel button has been pushed: retrieve previous preference values to cancel those which
 			-- were just modified.
+		local
+			l_confirmation_dialog: EV_CONFIRMATION_DIALOG
 		do
-			restore_changed_resources
-			destroy
+			create l_confirmation_dialog
+			l_confirmation_dialog.set_text ("If you have changed any values during this session and did not click the 'Set' button then closing now will discard these changes.  Close now?")
+			l_confirmation_dialog.show_modal_to_window (parent_window)
+			if l_confirmation_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
+				restore_changed_resources
+				destroy
+			end
 		end
 
 	on_set_resource is

@@ -868,7 +868,7 @@ feature {UNDO_CMD} -- Operations on selected text
 					s.append (t.image.substring (end_selection.pos_in_token, t.image.count))
 					t := t.next
 				until
-					t = ln.eol_token
+					t = ln.eol_token or t = Void
 				loop
 					s.append (t.image)
 					t := t.next

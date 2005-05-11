@@ -144,12 +144,12 @@ feature {NONE} -- Handle mouse clicks
 		do			
 			if button = 1 then
 				mouse_right_button_down := False
-				l_number := (y_pos // line_height) + first_line_displayed
+				l_number := (y_pos // line_height) + 1
 				if (click_count \\ 2) /= 1 then
 					if shifted_key then
 						if not text_displayed.has_selection then
-								-- No selection? We have to start one.						
-							text_displayed.set_selection_cursor (text_displayed.cursor.twin)
+								-- No selection? We have to start one.
+							text_displayed.set_selection_cursor (text_displayed.cursor)
 							text_displayed.enable_selection
 							old_l_number := text_displayed.cursor.y_in_lines
 						else
@@ -195,11 +195,11 @@ feature {NONE} -- Handle mouse clicks
 			old_l_number := l_cursor.y_in_lines
 			mouse_left_button_down := True
 			if not shifted_key then --and then text_displayed.has_selection then
-					-- The selection has to be forgotten.				
+					-- The selection has to be forgotten.
 				if text_displayed.has_selection then
 					text_displayed.disable_selection
 					invalidate_block (text_displayed.selection_start.y_in_lines, text_displayed.selection_end.y_in_lines, True)
-				end								
+				end
 				text_displayed.disable_selection
 			end
 

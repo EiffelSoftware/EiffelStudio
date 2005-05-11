@@ -267,6 +267,15 @@ feature -- Access
 		do
 			Result := implementation.is_row_height_fixed
 		end
+
+	is_column_resize_immediate: BOOLEAN is
+			-- Is the user resizing of a reflected immediately in `Current'?
+			-- If `False', the column width is only updated upon completion of the resize.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.is_column_resize_immediate
+		end
 		
 	row_height: INTEGER is
 			-- Height of all rows within `Current'. Only has an effect on `Current'
@@ -954,8 +963,27 @@ feature -- Status setting
 		ensure	
 			columns_drawn_below_rows: not are_columns_drawn_above_rows
 		end
-		
 
+	enable_column_resize_immediate is
+			-- Ensure `is_column_resize_immediate' is `True'.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.enable_column_resize_immediate
+		ensure
+			is_column_resize_immediate: is_column_resize_immediate
+		end
+
+	disable_column_resize_immediate is
+			-- Ensure `is_column_resize_immediate' is `False'.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.disable_column_resize_immediate
+		ensure
+			not_is_column_resize_immediate: not is_column_resize_immediate
+		end
+		
 feature -- Status report
 
 	prunable: BOOLEAN is False

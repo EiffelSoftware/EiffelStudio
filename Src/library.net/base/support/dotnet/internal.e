@@ -70,8 +70,18 @@ feature -- Creation
 		require
 			type_id_nonnegative: type_id >= 0
 			not_special_type: not is_special_type (type_id)
+		local
+			l_tuple: TUPLE
 		do
 			Result := {ISE_RUNTIME}.create_type (pure_implementation_type (type_id))
+			l_tuple ?= Result
+			if l_tuple /= Void then
+					-- Create `native_array' field from TUPLE, otherwise we would violate
+					-- TUPLE invariant.
+					-- Since TUPLE has only one attribute, thus `1' as position for `native_array'.
+				set_reference_field (1, l_tuple,
+					create {NATIVE_ARRAY [SYSTEM_OBJECT]}.make (generic_count (l_tuple)))
+			end
 		ensure
 			not_special_type: not is_special (Result)
 			dynamic_type_set: dynamic_type (Result) = type_id
@@ -124,7 +134,7 @@ feature -- Status report
 			l_gen_type: RT_GENERIC_TYPE
 		do
 			fixme ("It might return True if another class is called SPECIAL")
-			l_gen_type ?= id_to_eiffel_type.item (type_id)
+			l_gen_type ?= pure_implementation_type (type_id)
 			if l_gen_type /= Void and then l_gen_type.count = 1 then
 				Result := l_gen_type.class_name.equals (("SPECIAL").to_cil)
 			end
@@ -138,6 +148,17 @@ feature -- Status report
 			object_not_void: object /= Void
 		do
 			Result := is_special_type (dynamic_type (object))
+		end
+
+	is_tuple (object: ANY): BOOLEAN is
+			-- Is `object' a TUPLE object?
+		require
+			object_not_void: object /= Void
+		local
+			l_tuple: TUPLE
+		do
+			l_tuple ?= object
+			Result := l_tuple /= Void
 		end
 
 	is_marked (obj: ANY): BOOLEAN is
@@ -160,9 +181,9 @@ feature -- Access
 
 	Integer_type, integer_32_type: INTEGER is 4
 	
-	Real_type: INTEGER is 5
+	Real_type, real_32_type: INTEGER is 5
 
-	Double_type: INTEGER is 6
+	Double_type, real_64_type: INTEGER is 6
 
 	Expanded_type: INTEGER is 7
 
@@ -383,11 +404,11 @@ feature -- Access
 				l_int64 ?= l_obj
 				Result := l_int64
 
-			when Real_type then
+			when real_32_type then
 				l_real ?= l_obj
 				Result := l_real
 
-			when Double_type then
+			when real_64_type then
 				l_double ?= l_obj
 				Result := l_double
 			
@@ -663,13 +684,13 @@ feature -- Access
 			Result ?= internal_field (i, object, dynamic_type (object))
 		end
 
-	real_field (i: INTEGER; object: ANY): REAL is
+	real_32_field, real_field (i: INTEGER; object: ANY): REAL is
 			-- Real value of `i'-th field of `object'
 		require
 			object_not_void: object /= Void
 			index_large_enough: i >= 1
 			index_small_enough: i <= field_count (object)
-			real_field: field_type (i, object) = Real_type
+			real_32_field: field_type (i, object) = real_32_type
 		do
 			Result ?= internal_field (i, object, dynamic_type (object))
 		end
@@ -685,13 +706,13 @@ feature -- Access
 			Result ?= internal_field (i, object, dynamic_type (object))
 		end
 
-	double_field (i: INTEGER; object: ANY): DOUBLE is
+	real_64_field, double_field (i: INTEGER; object: ANY): DOUBLE is
 			-- Double precision value of `i'-th field of `object'
 		require
 			object_not_void: object /= Void
 			index_large_enough: i >= 1
 			index_small_enough: i <= field_count (object)
-			double_field: field_type (i, object) = Double_type
+			real_64_field: field_type (i, object) = real_64_type
 		do
 			Result ?= internal_field (i, object, dynamic_type (object))
 		end
@@ -719,12 +740,12 @@ feature -- Element change
 			internal_set_reference_field (i, object, value)
 		end
 
-	set_double_field (i: INTEGER; object: ANY; value: DOUBLE) is
+	set_real_64_field, set_double_field (i: INTEGER; object: ANY; value: DOUBLE) is
 		require
 			object_not_void: object /= Void
 			index_large_enough: i >= 1
 			index_small_enough: i <= field_count (object)
-			double_field: field_type (i, object) = Double_type
+			real_64_field: field_type (i, object) = real_64_type
 		do
 			internal_set_reference_field (i, object, value)
 		end
@@ -770,7 +791,7 @@ feature -- Element change
 			internal_set_reference_field (i, object, value)
 		end
 
-	set_natural_field (i: INTEGER; object: ANY; value: NATURAL_64) is
+	set_natural_32_field (i: INTEGER; object: ANY; value: NATURAL_32) is
 		require
 			object_not_void: object /= Void
 			index_large_enough: i >= 1
@@ -830,12 +851,12 @@ feature -- Element change
 			internal_set_reference_field (i, object, value)
 		end
 
-	set_real_field (i: INTEGER; object: ANY; value: REAL) is
+	set_real_32_field, set_real_field (i: INTEGER; object: ANY; value: REAL) is
 		require
 			object_not_void: object /= Void
 			index_large_enough: i >= 1
 			index_small_enough: i <= field_count (object)
-			real_field: field_type (i, object) = Real_type
+			real_32_field: field_type (i, object) = real_32_type
 		do
 			internal_set_reference_field (i, object, value)
 		end
@@ -895,6 +916,7 @@ feature -- Marking
 			-- Mark `obj'.
 		require
 			object_not_void: obj /= Void
+			object_not_marked: not is_marked (obj)
 		do
 			Marked_objects.add (obj, obj)
 		ensure
@@ -958,6 +980,7 @@ feature {NONE} -- Implementation
 			a_class_type_not_void: a_class_type /= Void
 		local
 			l_class_type: RT_CLASS_TYPE
+			l_basic_type: RT_BASIC_TYPE
 			l_gen_type, l_new_gen_type: RT_GENERIC_TYPE
 			i, nb: INTEGER
 			l_generics: NATIVE_ARRAY [RT_TYPE]
@@ -992,7 +1015,12 @@ feature {NONE} -- Implementation
 					Result := l_new_gen_type
 				end
 			else
-				create Result.make
+				l_basic_type ?= a_class_type
+				if l_basic_type /= Void then
+					create {RT_BASIC_TYPE} Result.make
+				else
+					create Result.make
+				end
 				Result.set_type (implementation_type (a_class_type.dotnet_type).type_handle)
 			end
 		end
@@ -1004,6 +1032,7 @@ feature {NONE} -- Implementation
 			a_class_type_not_void: a_class_type /= Void
 		local
 			l_gen_type, l_new_gen_type: RT_GENERIC_TYPE
+			l_basic_type: RT_BASIC_TYPE
 			i, nb: INTEGER
 			l_generics: NATIVE_ARRAY [RT_TYPE]
 			l_class_type: RT_CLASS_TYPE
@@ -1038,7 +1067,12 @@ feature {NONE} -- Implementation
 					Result := l_new_gen_type
 				end
 			else
-				create Result.make
+				l_basic_type ?= a_class_type
+				if l_basic_type /= Void then
+					create {RT_BASIC_TYPE} Result.make
+				else
+					create Result.make
+				end
 				Result.set_type (interface_type (a_class_type.dotnet_type).type_handle)
 			end
 		end
@@ -1454,8 +1488,90 @@ feature {NONE} -- Implementation
 			-- a generic class A [G], where the following generic derivation
 			-- exists in the system A [INTEGER_16], A [STRING], A [ANY], it only
 			-- contains A [INTEGER_16] and A [REFERENCE_TYPE].
+		local
+			l_basic_type: RT_BASIC_TYPE
+			l_list: ARRAYED_LIST [RT_CLASS_TYPE]
 		once
 			create Result.make (chunk_size)
+				-- Add basic type
+			create l_list.make (1)
+			create l_basic_type.make
+			l_basic_type.set_type (({NATURAL_8}).to_cil.type_handle)
+			l_list.extend (l_basic_type)
+			Result.put (l_list, "NATURAL_8")
+
+			create l_list.make (1)
+			create l_basic_type.make
+			l_basic_type.set_type (({NATURAL_16}).to_cil.type_handle)
+			l_list.extend (l_basic_type)
+			Result.put (l_list, "NATURAL_16")
+
+			create l_list.make (1)
+			create l_basic_type.make
+			l_basic_type.set_type (({NATURAL_32}).to_cil.type_handle)
+			l_list.extend (l_basic_type)
+			Result.put (l_list, "NATURAL_32")
+
+			create l_list.make (1)
+			create l_basic_type.make
+			l_basic_type.set_type (({NATURAL_64}).to_cil.type_handle)
+			l_list.extend (l_basic_type)
+			Result.put (l_list, "NATURAL_64")
+
+			create l_list.make (1)
+			create l_basic_type.make
+			l_basic_type.set_type (({INTEGER_8}).to_cil.type_handle)
+			l_list.extend (l_basic_type)
+			Result.put (l_list, "INTEGER_8")
+
+			create l_list.make (1)
+			create l_basic_type.make
+			l_basic_type.set_type (({INTEGER_16}).to_cil.type_handle)
+			l_list.extend (l_basic_type)
+			Result.put (l_list, "INTEGER_16")
+
+			create l_list.make (1)
+			create l_basic_type.make
+			l_basic_type.set_type (({INTEGER}).to_cil.type_handle)
+			l_list.extend (l_basic_type)
+			Result.put (l_list, "INTEGER")
+
+			create l_list.make (1)
+			create l_basic_type.make
+			l_basic_type.set_type (({INTEGER_64}).to_cil.type_handle)
+			l_list.extend (l_basic_type)
+			Result.put (l_list, "INTEGER_64")
+
+			create l_list.make (1)
+			create l_basic_type.make
+			l_basic_type.set_type (({POINTER}).to_cil.type_handle)
+			l_list.extend (l_basic_type)
+			Result.put (l_list, "POINTER")
+
+			create l_list.make (1)
+			create l_basic_type.make
+			l_basic_type.set_type (({CHARACTER}).to_cil.type_handle)
+			l_list.extend (l_basic_type)
+			Result.put (l_list, "CHARACTER")
+
+			create l_list.make (1)
+			create l_basic_type.make
+			l_basic_type.set_type (({REAL}).to_cil.type_handle)
+			l_list.extend (l_basic_type)
+			Result.put (l_list, "REAL")
+
+			create l_list.make (1)
+			create l_basic_type.make
+			l_basic_type.set_type (({DOUBLE}).to_cil.type_handle)
+			l_list.extend (l_basic_type)
+			Result.put (l_list, "DOUBLE")
+
+			create l_list.make (1)
+			create l_basic_type.make
+			l_basic_type.set_type (({BOOLEAN}).to_cil.type_handle)
+			l_list.extend (l_basic_type)
+			Result.put (l_list, "BOOLEAN")
+
 		ensure
 			eiffel_meta_type_mapping_not_void: Result /= Void
 		end
@@ -1485,8 +1601,8 @@ feature {NONE} -- Implementation
 			Result.set_item (({POINTER}).to_cil, Pointer_type)
 			Result.set_item (({CHARACTER}).to_cil, Character_type)
 			Result.set_item (({BOOLEAN}).to_cil, Boolean_type)
-			Result.set_item (({REAL}).to_cil, Real_type)
-			Result.set_item (({DOUBLE}).to_cil, Double_type)
+			Result.set_item (({REAL}).to_cil, real_32_type)
+			Result.set_item (({DOUBLE}).to_cil, real_64_type)
 			Result.set_item (({NATURAL_8}).to_cil, natural_8_type)
 			Result.set_item (({NATURAL_16}).to_cil, natural_16_type)
 			Result.set_item (({NATURAL_32}).to_cil, natural_32_type)

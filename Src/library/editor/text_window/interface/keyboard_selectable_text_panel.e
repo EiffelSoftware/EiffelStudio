@@ -658,7 +658,7 @@ feature {NONE} -- Cursor Management
 			x_pos_valid: x >= 0
 			width_valid: width > 0
 			cursor_has_token: text_displayed.cursor.token /= Void
-		do		
+		do
 				-- Draw the cursor
 			internal_draw_cursor (buffered_line, x, y, width, line_height, show_cursor)				 					
 			blinking_timeout.actions.wipe_out
@@ -976,7 +976,7 @@ feature {NONE} -- Implementation
 				l_has_data := line_has_cursor_or_selection (curr_line)
 				l_line_width := l_text.line (curr_line).width
 
-				if (l_line_width + l_margin_width) > l_x_offset or l_buffered then
+				if (l_line_width + l_margin_width) > l_x_offset or l_buffered or l_has_data then
 						-- Only iterate the line if at least some or part of it is in view AND needs redrawing.
 						-- Lines with cursor or selection in them ALWAYS need redrawing.
 					if l_has_data then
@@ -1002,7 +1002,7 @@ feature {NONE} -- Implementation
 							draw_flash (l_start_clear, y_offset, x_offset + a_width - l_start_clear, l_line_height, False)
 						end
 						editor_drawing_area.set_background_color (editor_preferences.normal_background_color)
-						editor_drawing_area.clear_rectangle (l_start_clear, y_offset, x_offset + a_width - l_start_clear, l_line_height)
+						editor_drawing_area.clear_rectangle (l_start_clear, y_offset, (x_offset + a_width - l_start_clear).max (0), l_line_height)
 					end
 				end
 

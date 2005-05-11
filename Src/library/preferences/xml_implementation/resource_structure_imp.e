@@ -11,7 +11,7 @@ inherit
 
 	XM_CALLBACKS_FILTER_FACTORY
 		export 		
-			{NONE} all 
+			{NONE} all
 		end
 		
 	REFACTORING_HELPER
@@ -78,34 +78,77 @@ feature {PREFERENCE_STRUCTURE} -- Resource Management
 			-- Save `a_resource' to the file on disk.
 		do
 			-- TODO: neilc.  How to save only a single resource to the file?
-			save (resources.resources.linear_representation)
-		end		
+			--save (resources.resources.linear_representation)
+			save_all_updated_resources
+		end	
+
+	save_all_updated_resources is
+			-- Save contents of structure.
+		local
+			l_resource: PREFERENCE
+			l_file: PLAIN_TEXT_FILE
+			pref_string1, pref_string2, pref_string3: STRING
+			l_resources: HASH_TABLE [PREFERENCE, STRING]
+		do
+			pref_string1 := "%N%T<PREFERENCE NAME=%""
+			pref_string2 := "%" VALUE=%""
+			pref_string3 := "%"/>"
+			l_resources := resources.resources
+			create l_file.make_open_write (location)
+			if l_file.is_open_write then
+				l_file.put_string ("<EIFFEL_DOCUMENT>")
+				from
+					l_resources.start
+				until
+					l_resources.after
+				loop
+					l_resource := l_resources.item_for_iteration
+					if not l_resource.is_default_value then
+						l_file.put_string (pref_string1)
+						l_file.put_string (l_resource.name)
+						l_file.put_string (pref_string2)
+						l_file.put_string (l_resource.string_value)
+						l_file.put_string (pref_string3)
+					end
+					l_resources.forth
+				end
+				l_file.put_string ("</EIFFEL_DOCUMENT>")
+				l_file.close
+			else
+				fixme ("Add code to let callers that `resources' could not be saved")
+			end
+		end
+		
 
 	save (a_resources: ARRAYED_LIST [PREFERENCE]) is
 			-- Save contents of structure.
 		local
 			l_resource: PREFERENCE
-			l_file: KL_TEXT_OUTPUT_FILE
+			l_file: PLAIN_TEXT_FILE
+			pref_string1, pref_string2, pref_string3: STRING
 		do
-			create l_file.make (location)
-			l_file.open_write
+			pref_string1 := "%N%T<PREFERENCE NAME=%""
+			pref_string2 := "%" VALUE=%""
+			pref_string3 := "%"/>"
+			create l_file.make_open_write (location)
 			if l_file.is_open_write then
 				l_file.put_string ("<EIFFEL_DOCUMENT>")
 				from
 					a_resources.start
 				until
 					a_resources.after
-				loop			
+				loop
 					l_resource := a_resources.item
 					if not l_resource.is_default_value then
-						l_file.put_string ("%N%T<PREFERENCE ")
-						l_file.put_string ("NAME=%"" + l_resource.name + "%" ")
-						l_file.put_string ("VALUE=%"" + l_resource.string_value + "%" ")
-						l_file.put_string ("/>")
+						l_file.put_string (pref_string1)
+						l_file.put_string (l_resource.name)
+						l_file.put_string (pref_string2)
+						l_file.put_string (l_resource.string_value)
+						l_file.put_string (pref_string3)
 					end
 					a_resources.forth
-				end			
-				l_file.put_string ("</EIFFEL_DOCUMENT>")
+				end
+				l_file.put_string ("%N</EIFFEL_DOCUMENT>")
 				l_file.close
 			else
 				fixme ("Add code to let callers that `resources' could not be saved")

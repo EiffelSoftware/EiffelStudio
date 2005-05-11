@@ -2270,7 +2270,11 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implementation
 								-- If we are just switching from per item to per pixel vertical
 								-- scrolling, we can set the position of the scroll bar exactly to match it's
 								-- previous position.
-							vertical_scroll_bar.set_value (row_offsets @ (previous_scroll_bar_value + 1))
+							if is_tree_enabled or not is_row_height_fixed then
+								vertical_scroll_bar.set_value (row_offsets @ (previous_scroll_bar_value + 1))
+							else	
+								vertical_scroll_bar.set_value (previous_scroll_bar_value * row_height)
+							end
 						end
 					end
 				else

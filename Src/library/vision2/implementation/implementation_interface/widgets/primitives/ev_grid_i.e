@@ -262,6 +262,10 @@ feature -- Access
 		
 	is_row_height_fixed: BOOLEAN
 			-- Must all rows in `Current' have the same height?
+
+	is_column_resize_immediate: BOOLEAN
+			-- Is the user resizing of a reflected immediately in `Current'?
+			-- If `False', the column width is only updated upon completion of the resize.
 		
 	row_height: INTEGER
 			-- Height of all rows within `Current'. Only has an effect on `Current'
@@ -1208,6 +1212,23 @@ feature -- Status setting
 			columns_drawn_below_rows: not are_columns_drawn_above_rows
 		end
 
+
+	enable_column_resize_immediate is
+			-- Ensure `is_column_resize_immediate' is `True'.
+		do
+			is_column_resize_immediate := True
+		ensure
+			is_column_resize_immediate: is_column_resize_immediate
+		end
+
+	disable_column_resize_immediate is
+			-- Ensure `is_column_resize_immediate' is `False'.
+		do
+			is_column_resize_immediate := False
+		ensure
+			not_is_column_resize_immediate: not is_column_resize_immediate
+		end
+
 feature -- Status report
 
 	is_selection_on_click_enabled: BOOLEAN
@@ -1758,7 +1779,9 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 				horizontal_computation_required := False
 				if column_count > 0 then
 						-- Do nothing if `Current' is empty.
-					recompute_column_offsets (invalid_column_index.min (column_count))
+					if not is_header_item_resizing or is_column_resize_immediate then
+						recompute_column_offsets (invalid_column_index.min (column_count))
+					end
 						-- Restore to an arbitarily large index.
 					invalid_column_index := invalid_column_index.max_value;
 					recompute_horizontal_scroll_bar;
@@ -2343,6 +2366,7 @@ feature {NONE} -- Drawing implementation
 			set_minimum_size (default_minimum_size, default_minimum_size)
 			is_horizontal_scrolling_per_item := False
 			is_vertical_scrolling_per_item := True
+			is_column_resize_immediate := True
 			is_header_displayed := True
 			row_height := 16
 			is_row_height_fixed := True
@@ -2482,13 +2506,15 @@ feature {NONE} -- Drawing implementation
 				-- Update horizontal scroll bar size and position.
 			recompute_horizontal_scroll_bar
 
-				-- For redrawing only during resize.
-			fixme ("Uncomment to implement the redraw during column resize.")
---			set_horizontal_computation_required (header.index_of (header_item, 1))
---			redraw_client_area			
-			if is_resizing_divider_enabled then
-					-- Draw a resizing line if enabled.
-				draw_resizing_line (header.item_x_offset (header_item) + header_item.width)
+				-- Now perform appropriate redrawing as required.
+			if is_column_resize_immediate then
+				set_horizontal_computation_required (header.index_of (header_item, 1))			
+				redraw_client_area		
+			else	
+				if is_resizing_divider_enabled then
+						-- Draw a resizing line if enabled.
+					draw_resizing_line (header.item_x_offset (header_item) + header_item.width)
+				end
 			end
 		end
 		

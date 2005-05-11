@@ -88,7 +88,7 @@ feature -- Access
 			Result := eif_wide_character_item ($Current, index)
 		end
 
-	double_item (index: INTEGER): DOUBLE is
+	real_64_item, double_item (index: INTEGER): DOUBLE is
 			-- Double item at `index'.
 		require
 			valid_index: valid_index (index)
@@ -178,7 +178,7 @@ feature -- Access
 			Result := eif_pointer_item ($Current, index)
 		end
 
-	real_item (index: INTEGER): REAL is
+	real_32_item, real_item (index: INTEGER): REAL is
 			-- real item at `index'.
 		require
 			valid_index: valid_index (index)
@@ -374,7 +374,7 @@ feature -- Element change
 			eif_put_wide_character_item ($Current, index, v)
 		end
 		
-	put_double (v: DOUBLE; index: INTEGER) is
+	put_real_64, put_double (v: DOUBLE; index: INTEGER) is
 			-- Put `v' at position `index' in Current.
 		require
 			valid_index: valid_index (index)
@@ -383,7 +383,7 @@ feature -- Element change
 			eif_put_real_64_item ($Current, index, v)
 		end
 		
-	put_real (v: REAL; index: INTEGER) is
+	put_real_32, put_real (v: REAL; index: INTEGER) is
 			-- Put `v' at position `index' in Current.
 		require
 			valid_index: valid_index (index)
@@ -602,7 +602,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		local
-			tcode: INTEGER_8
+			tcode: like item_code
 		do
 			tcode := eif_item_type ($Current, index)
 			inspect tcode
@@ -752,7 +752,7 @@ feature -- Type conversion queries
 			"Will be removed in future releases"
 		local
 			i, cnt: INTEGER
-			tcode: INTEGER_8
+			tcode: like item_code
 		do
 			Result := True
 			from
@@ -783,7 +783,7 @@ feature -- Type conversion queries
 			"Will be removed in future releases"
 		local
 			i, cnt: INTEGER
-			tcode: INTEGER_8
+			tcode: like item_code
 		do
 			Result := True
 			from
@@ -1043,9 +1043,9 @@ feature -- Retrieval
 			end
 		end
 		
-feature {ROUTINE}
+feature -- Access
 
-	arg_item_code (index: INTEGER): INTEGER_8 is
+	item_code (index: INTEGER): NATURAL_8 is
 			-- Type code of item at `index'. Used for
 			-- argument processing in ROUTINE
 		require
@@ -1054,24 +1054,22 @@ feature {ROUTINE}
 			Result := eif_item_type ($Current, index)
 		end
 
-feature {ROUTINE} -- Internal constant code
-
-	reference_code: INTEGER_8 is 0x00
-	boolean_code: INTEGER_8 is 0x01
-	character_code: INTEGER_8 is 0x02
-	real_64_code: INTEGER_8 is 0x03
-	real_32_code: INTEGER_8 is 0x04
-	pointer_code: INTEGER_8 is 0x05
-	integer_8_code: INTEGER_8 is 0x06
-	integer_16_code: INTEGER_8 is 0x07
-	integer_32_code: INTEGER_8 is 0x08
-	integer_64_code: INTEGER_8 is 0x09
-	natural_8_code: INTEGER_8 is 0x0A
-	natural_16_code: INTEGER_8 is 0x0B
-	natural_32_code: INTEGER_8 is 0x0C
-	natural_64_code: INTEGER_8 is 0x0D
-	wide_character_code: INTEGER_8 is 0x0E
-	any_code: INTEGER_8 is 0xFF
+	reference_code: NATURAL_8 is 0x00
+	boolean_code: NATURAL_8 is 0x01
+	character_code: NATURAL_8 is 0x02
+	real_64_code: NATURAL_8 is 0x03
+	real_32_code: NATURAL_8 is 0x04
+	pointer_code: NATURAL_8 is 0x05
+	integer_8_code: NATURAL_8 is 0x06
+	integer_16_code: NATURAL_8 is 0x07
+	integer_32_code: NATURAL_8 is 0x08
+	integer_64_code: NATURAL_8 is 0x09
+	natural_8_code: NATURAL_8 is 0x0A
+	natural_16_code: NATURAL_8 is 0x0B
+	natural_32_code: NATURAL_8 is 0x0C
+	natural_64_code: NATURAL_8 is 0x0D
+	wide_character_code: NATURAL_8 is 0x0E
+	any_code: NATURAL_8 is 0xFF
 			-- Code used to identify type in TUPLE.
 
 feature {NONE} -- Implementation
@@ -1079,11 +1077,11 @@ feature {NONE} -- Implementation
 	area_name: STRING is "area"
 			-- Name of attributes where TUPLE elements were stored.
 
-	is_tuple_uniform (code: INTEGER_8): BOOLEAN is
+	is_tuple_uniform (code: like item_code): BOOLEAN is
 			-- Are all items of type `code'?
 		local
 			i, nb: INTEGER
-			l_code: INTEGER_8
+			l_code: like item_code
 		do
 			Result := True
 			if count > 0 then
@@ -1115,7 +1113,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals: Access
 
-	eif_item_type (obj: POINTER; pos: INTEGER): INTEGER_8 is
+	eif_item_type (obj: POINTER; pos: INTEGER): NATURAL_8 is
 			-- Code for generic parameter `pos' in `obj'.
 		external
 			"C macro use %"eif_rout_obj.h%""

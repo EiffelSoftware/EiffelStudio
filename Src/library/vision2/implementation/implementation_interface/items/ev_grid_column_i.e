@@ -125,8 +125,18 @@ feature -- Access
 			-- `Result' is width of `Current'.		
 		require
 			is_parented: parent /= Void
+		local
+			l_offsets: EV_GRID_ARRAYED_LIST [INTEGER]
 		do
-			Result := header_item.width
+			if parent_i.is_header_item_resizing and not parent_i.is_column_resize_immediate then
+					-- In this situation, we do not want `Result'
+					-- to be the width of the header item as the width must only be updated
+					-- after the user has finished dragging the header.
+				l_offsets := parent_i.column_offsets
+				Result := l_offsets.i_th (internal_index + 1) - l_offsets.i_th (internal_index)
+			else
+				Result := header_item.width
+			end
 		ensure
 			Result_non_negative: Result >= 0
 		end

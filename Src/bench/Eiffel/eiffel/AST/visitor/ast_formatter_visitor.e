@@ -1196,7 +1196,7 @@ feature {NONE} -- Implementation
 			ctxt.put_text_item (ti_alias_keyword)
 			ctxt.put_space
 			ctxt.put_text_item_without_tabs (ti_double_quote)
-			ctxt.put_quoted_string_item (l_as.alias_name.value)
+			ctxt.put_quoted_string_item (l_as.alias_name)
 			ctxt.put_text_item_without_tabs (ti_double_quote)
 			if l_as.has_convert_mark then
 				ctxt.put_space

@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 			Precursor {WEL_STRUCTURE}
 			c_set_cb (item, structure_size)
 			c_set_major_runtime_version (item, 2)
-			c_set_minor_runtime_version (item, 0)
+			c_set_minor_runtime_version (item, 5)
 			c_set_flags (item, il_only)
 		end
 		

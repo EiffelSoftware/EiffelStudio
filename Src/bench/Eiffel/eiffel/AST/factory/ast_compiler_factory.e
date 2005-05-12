@@ -130,11 +130,57 @@ feature -- Access
 
 	new_feature_as (f: EIFFEL_LIST [FEATURE_NAME]; b: BODY_AS; i: INDEXING_CLAUSE_AS): FEATURE_AS is
 			-- New FEATURE AST node
+		local
+			feature_name: FEATURE_NAME
+			is_query: BOOLEAN
+			argument_count: INTEGER
+			alias_name: STRING
+			vfav1: VFAV1_SYNTAX
+			vfav2: VFAV2_SYNTAX
 		do
 			if
 				(f /= Void and then not f.is_empty) and b /= Void and
 				(i = Void or else f.count = 1)
 			then
+					-- Check if there are any operator names that violate VFAV rules
+				is_query := b.type /= Void
+				if b.arguments /= Void then
+					argument_count := b.arguments.count
+				end
+				from
+					f.start
+				until
+					f.after
+				loop
+					feature_name := f.item
+					alias_name := feature_name.alias_name
+					if alias_name /= Void then
+						if feature_name.is_bracket then
+							if is_query and then argument_count >= 1 then
+									-- Bracket is a valid alias for this feature
+							else
+									-- Invalid bracket alias
+								create vfav2.make (feature_name)
+								error_handler.insert_error (vfav2)
+							end
+						elseif is_query and then (
+								(argument_count = 0 and then feature_name.is_valid_unary_operator (alias_name)) or else
+								(argument_count = 1 and then feature_name.is_valid_binary_operator (alias_name))
+							)
+						then
+							if argument_count = 0 then
+								feature_name.set_is_unary
+							else
+								feature_name.set_is_binary
+							end
+						else
+								-- Invalid operator alias
+							create vfav1.make (feature_name)
+							error_handler.insert_error (vfav1)
+						end
+					end
+					f.forth
+				end
 				create Result.initialize (f, b, i, system.feature_as_counter.next_id)
 				if b.is_unique then
 					check

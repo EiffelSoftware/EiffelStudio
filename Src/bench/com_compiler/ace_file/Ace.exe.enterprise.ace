@@ -1,5 +1,5 @@
 system
-	cec
+	"cec"
 
 root
 	ECOM_EIFFEL_SOFTWARE_COMPILER_REGISTRATION: make
@@ -10,246 +10,250 @@ default
 	dotnet_naming_convention (yes)
 	msil_generation_type ("exe")
 	assertion (no)
+	disabled_debug (yes)
+	disabled_debug ("activity")
+	disabled_debug ("anchored_features")
+	disabled_debug ("check_expanded")
+	disabled_debug ("formal_generic")
+	disabled_debug ("genericity")
+	disabled_debug ("refactor_fixme")
+	disabled_debug ("remove_class")
+	debug (no)
+	line_generation (no)
+	profile (no)
+	trace (no)
+	check_vape (yes)
 	console_application (no)
+	syntax_warning (no)
+	address_expression (no)
+	array_optimization (no)
+	dead_code_removal (yes)
+	dynamic_runtime (no)
+	exception_trace (no)
+	inlining (no)
+	multithreaded (no)
+
 
 cluster
 	all com_generated:		"$EIFFEL_SRC\com_compiler"
 		exclude
 			"EIFGEN"; "to_replace"; "generated"; "cvs"; "Clib"; "ace_file"; "idl"; "Client_Only"; "generated_client"; 
 		visible
-			ieiffel_compiler_events_impl_proxy
+			IEIFFEL_COMPILER_EVENTS_IMPL_PROXY
 				end
-			ieiffel_html_documentation_events_impl_proxy
+			IEIFFEL_HTML_DOCUMENTATION_EVENTS_IMPL_PROXY
 				end
-			ieiffel_project_impl_proxy
+			IEIFFEL_PROJECT_IMPL_PROXY
 				end
-			ieiffel_compiler_impl_proxy
+			IEIFFEL_EXCEPTION_IMPL_PROXY
 				end
-			ieiffel_system_browser_impl_proxy
+			IEIFFEL_COMPILER_IMPL_PROXY
 				end
-			ieiffel_cluster_descriptor_impl_proxy
+			IEIFFEL_SYSTEM_BROWSER_IMPL_PROXY
 				end
-			ieiffel_class_descriptor_impl_proxy
+			IENUM_EIFFEL_CLASS_IMPL_PROXY
 				end
-			ieiffel_feature_descriptor_impl_proxy
+			IEIFFEL_CLASS_DESCRIPTOR_IMPL_PROXY
 				end
-			ieiffel_project_properties_impl_proxy
+			IENUM_FEATURE_IMPL_PROXY
 				end
-			ieiffel_cluster_properties_impl_proxy
+			IEIFFEL_FEATURE_DESCRIPTOR_IMPL_PROXY
 				end
-			ieiffel_html_documentation_generator_impl_proxy
+			IENUM_PARAMETER_IMPL_PROXY
 				end
-			ecom_eiffel_software_compiler_registration
+			IEIFFEL_PARAMETER_DESCRIPTOR_IMPL_PROXY
 				end
-			ceiffel_project_coclass_imp
+			IEIFFEL_ENUM_STRING_IMPL_PROXY
 				end
-			ceiffel_compiler_coclass_imp
+			IEIFFEL_CLUSTER_DESCRIPTOR_IMPL_PROXY
 				end
-			ieiffel_project_impl_stub
+			IENUM_CLUSTER_IMPL_PROXY
 				end
-			ieiffel_compiler_impl_stub
+			IENUM_ASSEMBLY_IMPL_PROXY
 				end
-			ieiffel_system_browser_impl_stub
+			IEIFFEL_ASSEMBLY_PROPERTIES_IMPL_PROXY
 				end
-			ieiffel_cluster_descriptor_impl_stub
+			IEIFFEL_PROJECT_PROPERTIES_IMPL_PROXY
 				end
-			ieiffel_class_descriptor_impl_stub
+			IEIFFEL_SYSTEM_CLUSTERS_IMPL_PROXY
 				end
-			ieiffel_feature_descriptor_impl_stub
+			IENUM_CLUSTER_PROP_IMPL_PROXY
 				end
-			ieiffel_project_properties_impl_stub
+			IEIFFEL_CLUSTER_PROPERTIES_IMPL_PROXY
 				end
-			ieiffel_cluster_properties_impl_stub
+			IEIFFEL_SYSTEM_EXTERNALS_IMPL_PROXY
 				end
-			ieiffel_html_documentation_generator_impl_proxy
+			IEIFFEL_SYSTEM_ASSEMBLIES_IMPL_PROXY
 				end
-			ieiffel_system_externals_impl_stub
+			IEIFFEL_COMPLETION_INFO_IMPL_PROXY
 				end
-			ieiffel_system_assemblies_impl_stub
+			IEIFFEL_DEFINITION_RESULT_IMPL_PROXY
 				end
-			ieiffel_assembly_properties_impl_stub
+			IEIFFEL_DEFINITION_FEATURE_RESULT_IMPL_PROXY
 				end
-			ieiffel_html_documentation_generator_impl_stub
+			IEIFFEL_HTML_DOCUMENTATION_GENERATOR_IMPL_PROXY
 				end
-			ieiffel_exception_impl_stub
+			IEIFFEL_SUPPORT_IMPL_PROXY
 				end
-			ieiffel_support_impl_stub
+			ECOM_EIFFELSOFTWARECOMPILER_REGISTRATION
 				end
-			descriptions_enumerator
+			CEIFFEL_PROJECT_COCLASS_IMP
 				end
-			class_descriptor
+			CEIFFEL_COMPILER_COCLASS_IMP
 				end
-			cluster_descriptor
+			CEIFFEL_HTML_DOCUMENTATION_GENERATOR_COCLASS_IMP
 				end
-			cluster_properties
+			CEIFFEL_COMPLETION_INFO_COCLASS_IMP
 				end
-			compiler
+			IEIFFEL_PROJECT_IMPL_STUB
 				end
-			com_degree_output
+			IEIFFEL_EXCEPTION_IMPL_STUB
 				end
-			com_error_window
+			IEIFFEL_COMPILER_IMPL_STUB
 				end
-			feature_descriptor
+			IEIFFEL_SYSTEM_BROWSER_IMPL_STUB
 				end
-			project_manager
+			IENUM_EIFFEL_CLASS_IMPL_STUB
 				end
-			project_properties
+			IEIFFEL_CLASS_DESCRIPTOR_IMPL_STUB
 				end
-			system_browser
+			IENUM_FEATURE_IMPL_STUB
 				end
-			system_clusters
+			IEIFFEL_FEATURE_DESCRIPTOR_IMPL_STUB
 				end
-			class_enumerator
+			IENUM_PARAMETER_IMPL_STUB
 				end
-			cluster_enumerator
+			IEIFFEL_PARAMETER_DESCRIPTOR_IMPL_STUB
 				end
-			feature_enumerator
+			IEIFFEL_ENUM_STRING_IMPL_STUB
 				end
-			cluster_prop_enumerator
+			IEIFFEL_CLUSTER_DESCRIPTOR_IMPL_STUB
 				end
-			assembly_enumerator
+			IENUM_CLUSTER_IMPL_STUB
 				end
-			eiffel_string_enumerator
+			IENUM_ASSEMBLY_IMPL_STUB
 				end
-			system_externals
+			IEIFFEL_ASSEMBLY_PROPERTIES_IMPL_STUB
 				end
-			system_assemblies
+			IEIFFEL_PROJECT_PROPERTIES_IMPL_STUB
 				end
-			assembly_properties
+			IEIFFEL_SYSTEM_CLUSTERS_IMPL_STUB
 				end
-			completion_information
+			IENUM_CLUSTER_PROP_IMPL_STUB
 				end
-			html_doc_generator
+			IEIFFEL_CLUSTER_PROPERTIES_IMPL_STUB
 				end
-			variable_descriptor
+			IEIFFEL_SYSTEM_EXTERNALS_IMPL_STUB
 				end
-			parameter_enumerator
+			IEIFFEL_SYSTEM_ASSEMBLIES_IMPL_STUB
 				end
-			parameter_descriptor
+			IEIFFEL_COMPLETION_INFO_IMPL_STUB
 				end
-			completion_feature
+			IEIFFEL_DEFINITION_RESULT_IMPL_STUB
 				end
-			exception
+			IEIFFEL_DEFINITION_FEATURE_RESULT_IMPL_STUB
 				end
-			ieiffel_definition_result_impl_proxy
+			IEIFFEL_HTML_DOCUMENTATION_GENERATOR_IMPL_STUB
 				end
-			ieiffel_definition_feature_result_impl_proxy
-				end
-			definition_search_result
-				end
-			definition_search_result_feature
-				end
-			com_compiler_support
+			IEIFFEL_SUPPORT_IMPL_STUB
 				end
 		end
 
-	all base:	 "$EIFFEL_SRC\library\base"
+	all base:		"$EIFFEL_SRC\library\base"
 		exclude
 			"table"; "desc"; "CVS"; 
 		visible
-			integer_ref
+			INTEGER_REF
 				end
-			character_ref
+			CHARACTER_REF
 				end
-			boolean_ref
+			BOOLEAN_REF
 				end
-			real_ref
+			REAL_REF
 				end
-			double_ref
+			DOUBLE_REF
 				end
-			cell
+			CELL
 				end
-			string
+			STRING
 				end
-			array
+			ARRAY
 				end
 		end
 
 	all wel:		"$EIFFEL_SRC\library\wel"
-	
-    all vision2:        "$EIFFEL_SRC\library\vision2"
-        exclude
-            "gtk"; "gtk2"; "EIFGEN"; "tmp"; "temp"; "release"; "obsolete"; "CVS"; 
-        end
 
-	all time:	 "$EIFFEL_SRC\library\time"
+	all vision2:		"$EIFFEL_SRC\library\vision2"
+		exclude
+			"gtk"; "gtk2"; "EIFGEN"; "tmp"; "temp"; "release"; "obsolete"; "CVS"; 
+		end
+
+	all time:		"$EIFFEL_SRC\library\time"
 		exclude
 			"french"; "german"; 
 		visible
-			date_time
+			DATE_TIME
 				end
 		end
 
-	all ecom:	 "$EIFFEL_SRC\library\com"
+	all ecom:		"$EIFFEL_SRC\library\com"
 		visible
-			ecom_decimal
+			ECOM_DECIMAL
 				end
-			ecom_currency
+			ECOM_CURRENCY
 				end
-			ecom_array
+			ECOM_ARRAY
 				end
-			ecom_variant
+			ECOM_VARIANT
 				end
-			ecom_guid
+			ECOM_GUID
 				end
-			ecom_excep_info
+			ECOM_EXCEP_INFO
 				end
-			ecom_disp_params
+			ECOM_DISP_PARAMS
 				end
-			ecom_statstg
+			ECOM_STATSTG
 				end
-			ecom_stream
+			ECOM_STREAM
 				end
-			ecom_storage
+			ECOM_STORAGE
 				end
-			ecom_root_storage
+			ECOM_ROOT_STORAGE
 				end
-			ecom_enum_statstg
+			ECOM_ENUM_STATSTG
 				end
-			ecom_hresult
+			ECOM_HRESULT
 				end
-			ecom_wide_string
+			ECOM_WIDE_STRING
 				end
-			ecom_large_integer
+			ECOM_LARGE_INTEGER
 				end
-			ecom_ularge_integer
+			ECOM_ULARGE_INTEGER
 				end
-			ecom_unknown_interface
+			ECOM_UNKNOWN_INTERFACE
 				end
-			ecom_automation_interface
+			ECOM_AUTOMATION_INTERFACE
 				end
-			ecom_stub
+			ECOM_STUB
 				end
-			ecom_queriable
+			ECOM_QUERIABLE
 				end
 		end
 
 	beurk:		"$EIFFEL_SRC\Eiffel\beurk"
 
-	compiler_support:	 "$EIFFEL_SRC\Eiffel\support"
+	compiler_support:		"$EIFFEL_SRC\Eiffel\support"
 
-	common:	 "$EIFFEL_SRC\Eiffel\common"
-
-	common_parser (common):	 "$\parser"
-
-	ast_visitor (common_parser):		"$\AST\visitor"
-
-	common_eiffel_parser (common_parser):	 "$\parser"
-
-	old_resources (common):	 "$\resources"
-
-	flat_short (common_parser):	 "$\flat_short"
+	all common:		"$EIFFEL_SRC\Eiffel\common"
 		exclude
-			"format_context.e"; "local_format.e"; 
+			"CVS"; "external"; "compiler_override"; "error"; "types"; 
 		end
 
-	flat_short_b:	 "$EIFFEL_SRC\Eiffel\flat_short\bench"
+	flat_short_b:		"$EIFFEL_SRC\Eiffel\flat_short\bench"
 
-	yacc:	 "$EIFFEL_SRC\Eiffel\yacc"
-
-	all gobo:	 "$EIFFEL_SRC\library\gobo\library"
+	all gobo:		"$gobo\library"
 		exclude
-			"hact"; "se"; "ve"; "base"; "CVS";	"EiffelBase"; "EiffelTime"
+			"hact"; "se"; "ve"; "base"; "CVS"; "other"; 
 		end
 
 	all documentation:		"$EIFFEL_SRC\Eiffel\case\documentation"
@@ -257,27 +261,32 @@ cluster
 			"CVS"; 
 		end
 
-	all lace:	 "$EIFFEL_SRC\Eiffel\lace"
+	all lace:		"$EIFFEL_SRC\Eiffel\lace"
 		exclude
 			"CVS"; 
 		end
 
-	all compiler:	 "$EIFFEL_SRC\Eiffel\eiffel"
+	all compiler:		"$EIFFEL_SRC\Eiffel\eiffel"
 		exclude
 			"CVS"; "unix"; "Clib"; "Core"; "junk"; "kernel"; 
 		end
 
-	all compiler_api:	 "$EIFFEL_SRC\Eiffel\API"
+	all compiler_api:		"$EIFFEL_SRC\Eiffel\API"
 		exclude
-			"CVS"; 
+			"CVS"; "structured_text"; "eb_preference_manager.e"; 
 		end
 
-	all helpers:		"$EIFFEL_SRC/library/helpers"
+	all eiffel_structured_text:		"$EIFFEL_SRC\Eiffel\API\structured_text"
 		exclude
-			"CVS"; 
+			"CVS"; "common"; 
 		end
 
-	switch:	 "$EIFFEL_SRC\Eiffel\switch"
+	all common_structured_text:		"$EIFFEL_SRC\library\editor\text_window\text\structure\structured_text\common"
+		exclude
+			"CVS"; "text_formatter.e"; "structured_text.e"; 
+		end
+
+	switch:		"$EIFFEL_SRC\Eiffel\switch"
 
 	interface_switch (switch):		"$\interface\batch_only"
 
@@ -291,31 +300,38 @@ cluster
 
 	interface:		"$EIFFEL_SRC\Eiffel\interface"
 
-	interface_shared (interface):	 "$\shared"
+	interface_shared (interface):		"$\shared"
 
-	tty (interface):		"$\tty"
-
-	preference_tool (interface):		"$\graphical\preference_tool"
+	all tty (interface):		"$\tty"
 		exclude
 			"eb_flat_short_data.e"; 
 		end
 
-	profile_tool (interface):	 "$\graphical\profile_tool"
+	preference_tool (interface):		"$\graphical\preference_tool"
 
-	all cli_writer:	 "$EIFFEL_SRC\Eiffel\library\cli_writer"
+	profile_tool (interface):		"$\graphical\profile_tool"
 
-	all xml_deserializer:	 "$EIFFEL_SRC\Eiffel\library\xml_deserializer"
+	all cli_writer:		"$EIFFEL_SRC\Eiffel\library\cli_writer"
 
-	all eac_components:	 "$EIFFEL_SRC\dotnet\consumer\components"
+	all xml_deserializer:		"$EIFFEL_SRC\Eiffel\library\xml_deserializer"
 
-	all activation_checker:	 "$EIFFEL_SRC\Eiffel\library\activation"
+	dotnet_helpers:		"$EIFFEL_SRC/dotnet/helpers"
+
+	all eac_components:		"$EIFFEL_SRC\dotnet\consumer\components"
+
+	all activation_checker:		"$EIFFEL_SRC\Eiffel\library\activation"
 		exclude
-			"free"; "command_line"; "unix"; "CVS"; 
+			"enterprise"; "free"; "CVS"; 
 		end
 
-	all keygen:	 "$EIFFEL_SRC\library\keygen"
+	all keygen:		"$EIFFEL_SRC\library\keygen"
 		exclude
-			"eiffel_studio_52"; "unix"; "CVS"; 
+			"eiffel_envision_10"; "unix"; "CVS"; "EIFGEN"; 
+		end
+
+	all preferences:		"$EIFFEL_SRC\library\preferences"
+		exclude
+			"xml_implementation"; "graphical"; 
 		end
 
 	all assembly_info:		"$EIFFEL_SRC\dotnet\eac_browser\src"
@@ -323,11 +339,7 @@ cluster
 			"cache.e"
 		end
 
-	dotnet_helpers:		"$EIFFEL_SRC\dotnet\helpers"
-
-	doc_manager_interface:		"$EIFFEL_SRC\dotnet\VisualStudio\tools\documentation_manager\generated\Common\Interfaces"
-
-	all doc_manager:		"$EIFFEL_SRC\dotnet\VisualStudio\tools\documentation_manager\generated\Client"
+	all doc_manager:		"$EIFFEL_SRC\dotnet\VisualStudio\tools\documentation_manager\generated"
 		exclude
 			"Include"; "Clib"; 
 		visible
@@ -351,9 +363,9 @@ external
 
 	object:
 		"$(EIFFEL_SRC)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
-        "$(EIFFEL_SRC)\library\vision2\spec\$(ISE_C_COMPILER)\lib\vision2.lib",
-        "$(EIFFEL_SRC)\library\vision2\spec\$(ISE_C_COMPILER)\lib\libpng.lib",
-        "$(EIFFEL_SRC)\library\vision2\spec\$(ISE_C_COMPILER)\lib\zlib.lib",
+		"$(EIFFEL_SRC)\library\vision2\spec\$(ISE_C_COMPILER)\lib\vision2.lib",
+		"$(EIFFEL_SRC)\library\vision2\spec\$(ISE_C_COMPILER)\lib\libpng.lib",
+		"$(EIFFEL_SRC)\library\vision2\spec\$(ISE_C_COMPILER)\lib\zlib.lib",
 		"$(EIFFEL_SRC)\library\com\spec\$(ISE_C_COMPILER)\lib\com.lib",
 		"$(EIFFEL_SRC)\library\com\spec\$(ISE_C_COMPILER)\lib\com_runtime.lib",
 		"$(EIFFEL_SRC)\com_compiler\Clib\$(ISE_C_COMPILER)\ecom_final.lib",

@@ -110,8 +110,6 @@ feature{NONE} -- Access
 				end
 				l_defaults.forth
 			end
-		ensure
-			valid_Result: Result /= Void
 		end
 		
 feature -- Access

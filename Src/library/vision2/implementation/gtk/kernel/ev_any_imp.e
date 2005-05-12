@@ -81,7 +81,7 @@ feature {EV_ANY, EV_ANY_IMP} -- Implementation
 			-- Destroy `c_object'.
 			-- Render `Current' unusable.
 		do
-			is_destroyed := True
+			set_is_destroyed (True)
 				-- Gtk representation of `Current' may only be cleaned up on dispose to prevent crashes where `Current' is
 				-- destroyed as a result of `Current's event handler being called, this causes instability within gtk
 		end
@@ -203,7 +203,7 @@ feature {NONE} -- Implementation
 			-- Render `Current' unusable.
 		do
 			c_object := NULL
-			is_destroyed := True
+			set_is_destroyed (True)
 		ensure
 			is_destroyed_set: is_destroyed
 			c_object_detached: c_object = NULL

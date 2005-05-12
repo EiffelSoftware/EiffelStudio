@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Create the linked lists.
 		do			
-			is_initialized := True
+			set_is_initialized (True)
 		end
 
 feature -- Status report
@@ -60,7 +60,7 @@ feature -- Status setting
 			if parent_imp /= Void then
 				parent_imp.interface.prune_all (interface)
 			end
-			is_destroyed := True
+			set_is_destroyed (True)
 		end
 
 	enable_select is

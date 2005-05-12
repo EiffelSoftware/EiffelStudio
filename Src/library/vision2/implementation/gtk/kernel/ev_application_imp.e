@@ -247,7 +247,7 @@ feature -- Basic operation
 	destroy is
 			-- End the application.
 		do
-			is_destroyed := True
+			set_is_destroyed (True)
 				-- This will exit our main loop
 		end
 

@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Do nothing.
 		do
-			is_initialized := True
+			set_is_initialized (True)
 		end
 
 feature -- Access
@@ -227,7 +227,7 @@ feature {EV_ANY_I} -- Command
 	destroy is
           		-- Render `Current' unusable.
 		do
-			is_destroyed := True
+			set_is_destroyed (True)
 		end
 
 feature {EV_ANY_I} -- Implementation

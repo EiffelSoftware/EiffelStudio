@@ -66,7 +66,7 @@ feature -- Initialization
 				-- Set the default width to 80 pixels wide
 			set_width (80)
 
-			is_initialized := True
+			set_is_initialized (True)
 		end
 
 	handle_resize is

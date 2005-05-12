@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 			initialize_menu_sep_box
 			create radio_group_ref
 			is_sensitive := True
-			is_initialized := True
+			set_is_initialized (True)
 		end
 
 	initialize_menu_sep_box is

@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Initialize `Current'.
 		do	
-			is_initialized := True
+			set_is_initialized (True)
 		end
 		
 	pixmap: EV_PIXMAP is
@@ -103,7 +103,7 @@ feature {NONE} -- Implementation
 			-- Any feature calls after a call to destroy are
 			-- invalid.
 		do
-			is_destroyed := True
+			set_is_destroyed (True)
 		end
 
 feature {EV_ANY_I} -- Implementation

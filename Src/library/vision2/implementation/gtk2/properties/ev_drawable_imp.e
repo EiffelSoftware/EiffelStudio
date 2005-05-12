@@ -445,8 +445,11 @@ feature -- Drawing operations
 			-- size `a_width' and `a_height'.
 			-- Start at `a_start_angle' and stop at `a_start_angle' + `an_aperture'.
 			-- Angles are measured in radians.
+		local
+			a_radians: INTEGER
 		do
 			if drawable /= default_pointer then
+				a_radians := radians_to_gdk_angle
 				{EV_GTK_EXTERNALS}.gdk_draw_arc (
 					drawable,
 					gc,
@@ -455,8 +458,8 @@ feature -- Drawing operations
 					y,
 					a_width,
 					a_height,
-					(a_start_angle * radians_to_gdk_angle).truncated_to_integer ,
-					(radians_to_gdk_angle * an_aperture).truncated_to_integer
+					(a_start_angle * a_radians + 0.5).truncated_to_integer ,
+					(an_aperture * a_radians + 0.5).truncated_to_integer
 				)
 				update_if_needed
 			end

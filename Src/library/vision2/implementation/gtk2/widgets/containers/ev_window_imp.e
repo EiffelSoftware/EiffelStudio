@@ -373,7 +373,7 @@ feature {NONE} -- Implementation
 			a_decor: INTEGER
 		do
 			Precursor {EV_CONTAINER_IMP}
-			is_initialized := False
+			set_is_initialized (False)
 			create upper_bar
 			create lower_bar
 
@@ -396,7 +396,7 @@ feature {NONE} -- Implementation
 			default_width := -1
 			
 			{EV_GTK_EXTERNALS}.gtk_window_set_default_size (c_object, 1, 1)
-			is_initialized := True
+			set_is_initialized (True)
 		end
 		
 	client_area: POINTER is

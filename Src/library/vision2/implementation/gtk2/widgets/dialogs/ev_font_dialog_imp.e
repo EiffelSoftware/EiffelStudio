@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 				Void
 			)
 			enable_closeable
-			is_initialized := True
+			set_is_initialized (True)
 		end
 
 feature -- Access

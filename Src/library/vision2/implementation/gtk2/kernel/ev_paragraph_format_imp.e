@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Do nothing
 		do
-			is_initialized := True
+			set_is_initialized (True)
 		end
 		
 feature -- Status report
@@ -186,7 +186,7 @@ feature {NONE} -- Implementation
 	destroy is
 			-- Clean up `Current'
 		do
-			is_destroyed := True
+			set_is_destroyed (True)
 		end
 
 end -- class EV_PARAGRAPH_FORMAT

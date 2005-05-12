@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			set_weight (App_implementation.default_font_weight_internal)
 			preferred_families.internal_add_actions.extend (agent update_preferred_faces)
 			preferred_families.internal_remove_actions.extend (preferred_families.internal_add_actions.first)
-			is_initialized := True
+			set_is_initialized (True)
 		end
 
 feature {EV_FONTABLE_IMP} -- Implementation
@@ -431,7 +431,7 @@ feature {EV_ANY_I} -- Implementation
 	destroy is
 			-- Flag `Current' as destroyed
 		do
-			is_destroyed := True
+			set_is_destroyed (True)
 		end
 
 	dispose is

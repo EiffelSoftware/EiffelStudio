@@ -43,7 +43,7 @@ feature {NONE}-- Initialization
 			primary := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_clipboard_get (
 							{EV_GTK_EXTERNALS}.gdk_atom_intern (cs.item, 1)
 			)
-			is_initialized := True
+			set_is_initialized (True)
 		end
 
 feature -- Access
@@ -99,7 +99,7 @@ feature {EV_ANY_I}
 	destroy is
 			-- Destroy `Current'
 		do
-			is_destroyed := True
+			set_is_destroyed (True)
 		end
 
 	interface: EV_CLIPBOARD

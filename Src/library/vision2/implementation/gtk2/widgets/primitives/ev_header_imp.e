@@ -69,7 +69,7 @@ feature -- Initialization
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_insert_column (visual_widget, dummy_imp.c_object, 0)
 			
 			set_pixmaps_size (16, 16)
-			is_initialized := True
+			set_is_initialized (True)
 		end
 
 	dummy_item: EV_HEADER_ITEM

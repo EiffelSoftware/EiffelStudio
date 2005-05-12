@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 			{EV_GTK_EXTERNALS}.gdk_window_set_decorations ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), 0)
 			{EV_GTK_EXTERNALS}.gtk_window_set_skip_pager_hint (c_object, True)
 			{EV_GTK_EXTERNALS}.gtk_window_set_skip_taskbar_hint (c_object, True)
-			is_initialized := True
+			set_is_initialized (True)
 		end
 
 feature {EV_ANY_I} -- Implementation

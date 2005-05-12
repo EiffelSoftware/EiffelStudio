@@ -20,7 +20,7 @@ feature -- Initialization
 			-- Initialize the dynamic list.
 		do
 			create child_array.make (5)
-			is_initialized := True
+			set_is_initialized (True)
 		end
 
 feature -- Access

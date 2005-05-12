@@ -624,105 +624,108 @@ rt_public void eif_thr_exit(void)
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 
-	int destroy_mutex = 0; /* If non null, we'll destroy the 'join' mutex */
+	if (!thread_exiting) {
+		int destroy_mutex = 0; /* If non null, we'll destroy the 'join' mutex */
 
-		/* We need to keep a reference to the children mutex, 
-		 * the children condition variable and parent's thread number
-		 * of children after freeing ressources */
+			/* We need to keep a reference to the children mutex, 
+			 * the children condition variable and parent's thread number
+			 * of children after freeing ressources */
 #ifndef EIF_NO_CONDVAR
-	EIF_COND_TYPE *l_chld_cond = eif_thr_context->children_cond; 
+		EIF_COND_TYPE *l_chld_cond = eif_thr_context->children_cond; 
 #endif /* EIF_NO_CONDVAR */
-	EIF_MUTEX_TYPE *l_chld_mutex = eif_thr_context->children_mutex;
-	int *l_addr_n_children = eif_thr_context->addr_n_children;
-	
-	int ret;	/* Return Status of "eifaddr_offset". */
-	EIF_INTEGER offset;	/* Location of `terminated' in `eif_thr_context->current' */
-	EIF_REFERENCE thread_object = NULL;
+		EIF_MUTEX_TYPE *l_chld_mutex = eif_thr_context->children_mutex;
+		int *l_addr_n_children = eif_thr_context->addr_n_children;
+		
+		int ret;	/* Return Status of "eifaddr_offset". */
+		EIF_INTEGER offset;	/* Location of `terminated' in `eif_thr_context->current' */
+		EIF_REFERENCE thread_object = NULL;
 
-	exitprf();
+		thread_exiting = 1;
+		exitprf();
 
-	RT_GC_PROTECT(thread_object);
-	thread_object = eif_access(eif_thr_context->current);
-	eif_wean(eif_thr_context->current);
-	offset = eifaddr_offset (thread_object, "terminated", &ret);
-	CHECK("terminated attribute exists", ret == EIF_CECIL_OK);
+		RT_GC_PROTECT(thread_object);
+		thread_object = eif_access(eif_thr_context->current);
+		eif_wean(eif_thr_context->current);
+		offset = eifaddr_offset (thread_object, "terminated", &ret);
+		CHECK("terminated attribute exists", ret == EIF_CECIL_OK);
 
-		/* Set the `terminated' field of the twin thread object to True so that
-		 * it knows the thread is terminated */
-	*(EIF_BOOLEAN *) (thread_object + offset) = EIF_TRUE;
-	RT_GC_WEAN(thread_object);
+			/* Set the `terminated' field of the twin thread object to True so that
+			 * it knows the thread is terminated */
+		*(EIF_BOOLEAN *) (thread_object + offset) = EIF_TRUE;
+		RT_GC_WEAN(thread_object);
 
-		/* Prevent other threads to wait for current thread in case 
-		 * one of the following calls is blocking. */
-	EIF_ENTER_C;
-	EIF_MUTEX_LOCK(l_chld_mutex, "Lock parent mutex");
-		/* Decrement the number of child threads of the parent */
-	*l_addr_n_children -= 1;
+			/* Prevent other threads to wait for current thread in case 
+			 * one of the following calls is blocking. */
+		EIF_ENTER_C;
+		EIF_MUTEX_LOCK(l_chld_mutex, "Lock parent mutex");
+			/* Decrement the number of child threads of the parent */
+		*l_addr_n_children -= 1;
 #ifndef EIF_NO_CONDVAR
-	EIF_COND_BROADCAST(l_chld_cond, "Pbl cond_broadcast");
+		EIF_COND_BROADCAST(l_chld_cond, "Pbl cond_broadcast");
 #endif
-	EIF_MUTEX_UNLOCK(l_chld_mutex, "Unlock parent mutex");
+		EIF_MUTEX_UNLOCK(l_chld_mutex, "Unlock parent mutex");
 
-	/* 
-	 * Every thread that has created a child thread with eif_thr_create() or
-	 * eif_thr_create_with_args() has created a mutex and a condition 
-	 * variable to be able to do a join_all (or a join). If no children are
-	 * still alive, we destroy eif_children_mutex and eif_children_cond.
-	 * If children are still alive, it is better not to remove the mutex
-	 * because it would cause a crash upon their termination. If it is the
-	 * case, no join_all has been called, which is a bit dangerous--PCV
-	 */
+		/* 
+		 * Every thread that has created a child thread with eif_thr_create() or
+		 * eif_thr_create_with_args() has created a mutex and a condition 
+		 * variable to be able to do a join_all (or a join). If no children are
+		 * still alive, we destroy eif_children_mutex and eif_children_cond.
+		 * If children are still alive, it is better not to remove the mutex
+		 * because it would cause a crash upon their termination. If it is the
+		 * case, no join_all has been called, which is a bit dangerous--PCV
+		 */
 
-	if (eif_children_mutex) {
-		EIF_MUTEX_LOCK (eif_children_mutex, "Locking problem in reclaim()");
-		if (!n_children) destroy_mutex = 1; /* No children are alive */
-		EIF_MUTEX_UNLOCK (eif_children_mutex, "Unlocking problem in reclaim()");
-	}
+		if (eif_children_mutex) {
+			EIF_MUTEX_LOCK (eif_children_mutex, "Locking problem in reclaim()");
+			if (!n_children) destroy_mutex = 1; /* No children are alive */
+			EIF_MUTEX_UNLOCK (eif_children_mutex, "Unlocking problem in reclaim()");
+		}
 
-	if (destroy_mutex) {
-	  EIF_MUTEX_DESTROY(eif_children_mutex, "Couldn't destroy join mutex.");
-	  eif_children_mutex = NULL;
+		if (destroy_mutex) {
+			EIF_MUTEX_DESTROY(eif_children_mutex, "Couldn't destroy join mutex.");
+			eif_children_mutex = NULL;
 #ifndef EIF_NO_CONDVAR
-	  EIF_COND_DESTROY(eif_children_cond, "Couldn't destroy join cond. var");
-	  eif_children_cond = NULL;
+			EIF_COND_DESTROY(eif_children_cond, "Couldn't destroy join cond. var");
+			eif_children_cond = NULL;
 #endif
-	}
-	EIF_EXIT_C;
+		}
+		EIF_EXIT_C;
 
 #ifdef ISE_GC
-		/* Destroy GC data associated with the current thread. */
-	eif_synchronize_gc (rt_globals);
-	eif_destroy_gc_stacks (rt_globals);
-	eif_unsynchronize_gc (rt_globals);
+			/* Destroy GC data associated with the current thread. */
+		eif_synchronize_gc (rt_globals);
+		eif_destroy_gc_stacks (rt_globals);
+		eif_unsynchronize_gc (rt_globals);
 #endif
 
 		/* Clean per thread data. */
 	eif_free_context (rt_globals);
 
 #ifdef LMALLOC_CHECK
-	if (eif_thr_is_root ())	{	/* Is this the root thread */
-		eif_lm_display ();
-		eif_lm_free ();
-	}
+		if (eif_thr_is_root ())	{	/* Is this the root thread */
+			eif_lm_display ();
+			eif_lm_free ();
+		}
 #endif	/* LMALLOC_CHECK */
 
 #ifdef VXWORKS
-	/* The TSD is managed in a different way under VxWorks: each thread
-	 * must call taskVarAdd upon initialization and taskVarDelete upon
-	 * termination.  It was impossible to call taskVarDelete using the same
-	 * model as on other platforms unless creating a new macro that would
-	 * be useful only for VxWorks. It is easier to do the following:
-	 */
+		/* The TSD is managed in a different way under VxWorks: each thread
+		 * must call taskVarAdd upon initialization and taskVarDelete upon
+		 * termination.  It was impossible to call taskVarDelete using the same
+		 * model as on other platforms unless creating a new macro that would
+		 * be useful only for VxWorks. It is easier to do the following:
+		 */
 
 
-	if (taskVarDelete(0,(int *)&(eif_global_key))) 
-	  eif_thr_panic("Problem with taskVarDelete\n");
-	if (taskVarDelete(0,(int *)&(rt_global_key))) 
-	  eif_thr_panic("Problem with taskVarDelete\n");
+		if (taskVarDelete(0,(int *)&(eif_global_key))) 
+		  eif_thr_panic("Problem with taskVarDelete\n");
+		if (taskVarDelete(0,(int *)&(rt_global_key))) 
+		  eif_thr_panic("Problem with taskVarDelete\n");
 #endif	/* VXWORKS */
 
 
-	EIF_THR_EXIT(0);
+		EIF_THR_EXIT(0);
+	}
 }	/* eif_thr_exit ().*/
 
 
@@ -893,6 +896,9 @@ rt_public void eif_synchronize_for_gc (void)
 		EIF_GC_MUTEX_LOCK;
 		gc_thread_status = EIF_THREAD_RUNNING;
 		EIF_GC_MUTEX_UNLOCK;
+		if (gc_stop_thread_request) {
+			eif_thr_exit();
+		}
 	}
 }
 
@@ -904,6 +910,9 @@ rt_public void eif_enter_eiffel_code()
 		 * GC cycle, the status will be reset in `eif_unsynchronize_gc'. */
 	if (gc_thread_status != EIF_THREAD_GC_RUNNING) {
 		gc_thread_status = EIF_THREAD_RUNNING;
+	}
+	if (gc_stop_thread_request) {
+		eif_thr_exit();
 	}
 }
 
@@ -1042,11 +1051,104 @@ rt_shared void eif_unsynchronize_gc (rt_global_context_t *rt_globals)
 }
 #endif
 
+/*
+doc:	<routine name="eif_terminate_all_other_threads" return_type="void" export="shared">
+doc:		<summary>Kill all running threads but Current one. Useful when performing a call to reclaim which cannot be done if we still have some Eiffel threads running.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Global synchronization.</synchronization>
+doc:	</routine>
+*/
+
+rt_shared void eif_terminate_all_other_threads (void) {
+	RT_GET_CONTEXT
+	rt_global_context_t *thread_globals;
+	int i, nb;
+	int is_main_thread_blocked = 0;
+#ifndef HAS_THREAD_CANCELLATION
+	int error;
+	struct stack_list running_thread_list = {0, 0, { NULL }};
+#endif
+
+		/* Block all running threads. */
+	eif_synchronize_gc (rt_globals);
+	nb = rt_globals_list.count;
+
+		/* We have acquired the lock, now, process all running threads and let them
+		 * know we don't want them to execute anymore code. */
+	for (i = 0; i < nb; i++) {
+		thread_globals = (rt_global_context_t *) rt_globals_list.threads.data[i];
+		if (thread_globals != rt_globals) {
+			thread_globals->gc_stop_thread_request_cx = 1;
+		}
+	}
+
+	eif_unsynchronize_gc (rt_globals);
+
+		/* Now we wait `nb' times (i.e. number of threads minus 1) for the
+		 * thread to actually exit. Most of the time all the other threads
+		 * should have finished. */
+	EIF_ENTER_C;
+	nb = nb - 1;
+	for (i = 0; i < nb; i++) {
+		EIF_THR_YIELD;
+	}
+	EIF_EXIT_C;
+
+		/* Check that there is only one more thread left. If not then we will explicitely
+		 * kill the remaining blocked threads. */
+	eif_synchronize_gc (rt_globals);
+	nb = rt_globals_list.count;
+		
+	if (nb > 1) {
+		for (i = 0; i < nb; i++) {
+			thread_globals = (rt_global_context_t *) rt_globals_list.threads.data[i];
+			if (thread_globals != rt_globals) {
+				if (thread_globals->gc_thread_status_cx == EIF_THREAD_BLOCKED) {
+						/* Worst case scenario, some threads are still running. */
+					if (thread_globals->eif_thr_id_cx) {
+
+#ifdef HAS_THREAD_CANCELLATION
+						EIF_THR_CANCEL(*thread_globals->eif_thr_id_cx);
+#else
+						load_stack_in_gc (&running_thread_list, thread_globals);
+						EIF_THR_KILL(*thread_globals->eif_thr_id_cx, error);
+#endif
+					} else {
+							/* Main thread is blocked this is bad. */
+						is_main_thread_blocked = 1;
+					}
+				}
+			}
+		}
+#ifndef HAS_THREAD_CANCELLATION
+		nb = running_thread_list.count;
+		for (i = 0; i < nb; i++) {
+			eif_destroy_gc_stacks ((rt_global_context_t *) running_thread_list.threads.data[i]);
+		}
+#endif
+	}
+
+	eif_unsynchronize_gc (rt_globals);
+
+		/* Let's wait for the termination of non-blocked thread. */
+	EIF_ENTER_C;
+	if (is_main_thread_blocked) {
+		while (rt_globals_list.count > 2) {
+			EIF_THR_YIELD;
+		}
+	} else {
+		while (rt_globals_list.count > 1) {
+			EIF_THR_YIELD;
+		}
+	}
+	EIF_EXIT_C;
+}
+
 #ifndef EIF_WINDOWS
 /*
 doc:	<routine name="eif_thread_fork" return_type="pid_t" export="shared">
 doc:		<summary>Call system fork and make sure that the GC is correctly updated in newly forked process. Made especially for EMC.</summary>
-doc:		<return>On  success, the PID of the child process is returned in the parent's thread of execution, and a 0 is returned in the child's thread of execution.  On failure, a -1 will be returned in the parent's context, no child process will be created, and errno will be set appropriately.</return>
+doc:		<return>On success, the PID of the child process is returned in the parent's thread of execution, and a 0 is returned in the child's thread of execution. On failure, a -1 will be returned in the parent's context, no child process will be created, and errno will be set appropriately.</return>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Global synchronization.</synchronization>
 doc:	</routine>
@@ -1077,28 +1179,37 @@ rt_shared pid_t eif_thread_fork(void) {
 		rt_global_context_t * l_old_rt_globals = rt_globals;
 
 			/* We are now in the child process. */
-			/* First we reinitialize all our global mutexes. */
-		eif_thr_init_global_mutexes();
+
+			/* Reinitialize our global lists to let the GC think that there
+			 * is only one running thread. */
 		memset (&rt_globals_list, 0, sizeof (struct stack_list));
+		memset (&loc_stack_list, 0, sizeof (struct stack_list));
+		memset (&loc_set_list, 0, sizeof (struct stack_list));
+		memset (&once_set_list, 0, sizeof (struct stack_list));
+		memset (&hec_stack_list, 0, sizeof (struct stack_list));
+		memset (&hec_saved_list, 0, sizeof (struct stack_list));
+		memset (&eif_stack_list, 0, sizeof (struct stack_list));
+		memset (&eif_trace_list, 0, sizeof (struct stack_list));
+#ifdef WORKBENCH
+		memset (&opstack_list, 0, sizeof (struct stack_list));
+#endif
 
-			/* Rebuild a clean thread local storage. */
-		eif_thr_register();
+		load_stack_in_gc (&rt_globals_list, rt_globals);
+		load_stack_in_gc (&loc_stack_list, &loc_stack);	
+		load_stack_in_gc (&loc_set_list, &loc_set);	
+		load_stack_in_gc (&once_set_list, &once_set);	
+		load_stack_in_gc (&hec_stack_list, &hec_stack);	
+		load_stack_in_gc (&hec_saved_list, &hec_saved);	
+		load_stack_in_gc (&eif_stack_list, &eif_stack);	
+		load_stack_in_gc (&eif_trace_list, &eif_trace);
+#ifdef WORKBENCH
+		load_stack_in_gc (&opstack_list, &op_stack);
+#endif
 
-		{
-				/* We need to get back the new values set in `eif_thr_register'
-				 * for `eif_globals' and `rt_globals'. */
-			RT_GET_CONTEXT
-			EIF_GET_CONTEXT
-
-				/* Copy data from former thread. */
-			memcpy (eif_globals, l_old_eif_globals, sizeof(eif_global_context_t));
-			memcpy (rt_globals, l_old_rt_globals, sizeof(rt_global_context_t));
-		}
 		CHECK("Only one thread", rt_globals_list.count == 1);
 	}
 
 	eif_unsynchronize_gc (rt_globals);
-
 	return result;
 }
 

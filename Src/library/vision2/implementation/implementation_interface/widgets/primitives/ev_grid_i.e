@@ -330,7 +330,11 @@ feature -- Access
 					else
 						final_row_height := rows.i_th (row_count).height
 					end
-					Result := total_row_height + viewable_height - final_row_height
+					if total_row_height < viewable_height then
+						Result := viewable_height
+					else
+						Result := (total_row_height + viewable_height - final_row_height)
+					end
 				else
 					Result := total_row_height
 				end
@@ -1816,6 +1820,10 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 				column_offsets.extend (i)
 				column_index := column_index + 1
 			end
+				-- Now move the virtual position so that it is restricted to the maximum
+				-- column position. This is used so that when removing columns, `virtual_y_position' remains valid.
+			restrict_virtual_x_position_to_maximum
+
 			if virtual_size_changed_actions_internal /= Void then
 				virtual_size_changed_actions_internal.call ([virtual_width, virtual_height])
 			end
@@ -1919,10 +1927,14 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 						row_index := row_index + 1
 						visible_count := visible_count + 1
 					end
-				end
+				end				
 			else
 				row_offsets := Void
 			end
+				-- Now move the virtual position so that it is restricted to the maximum
+				-- row position. This is used so that when removing rows,  `virtual_x_position' remains valid.
+			restrict_virtual_y_position_to_maximum
+
 			if virtual_size_changed_actions_internal /= Void then
 				virtual_size_changed_actions_internal.call ([virtual_width, virtual_height])
 			end
@@ -1932,6 +1944,28 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			row_index_not_changed: old rows.index = rows.index
 		end
 
+	restrict_virtual_y_position_to_maximum is
+			-- Ensure `virtual_y_position' is within the maximum permitted.
+			-- Useful for situations where rows are removed.
+		do
+			if internal_client_y > virtual_height - viewable_height then
+				set_virtual_position (virtual_x_position, virtual_height - viewable_height)
+			end
+		ensure
+			virtual_y_position_valid: virtual_y_position <= virtual_height - viewable_height
+		end
+
+	restrict_virtual_x_position_to_maximum is
+			-- Ensure `virtual_x_position' is within the maximum permitted.
+			-- Useful for situations where columns are removed.
+		do			
+			if internal_client_x > virtual_width - viewable_width then
+				set_virtual_position (virtual_width - viewable_width, virtual_y_position)
+			end
+		ensure
+			virtual_x_position_valid: virtual_x_position <= virtual_width - viewable_width
+		end
+		
 	total_row_height: INTEGER is
 			-- `Result' is total height of all rows contained in `Current'.
 		do
@@ -2271,7 +2305,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implementation
 								-- scrolling, we can set the position of the scroll bar exactly to match it's
 								-- previous position.
 							if is_tree_enabled or not is_row_height_fixed then
-								vertical_scroll_bar.set_value (row_offsets @ (previous_scroll_bar_value + 1))
+								vertical_scroll_bar.set_value ((row_offsets @ (previous_scroll_bar_value + 1)).min (vertical_scroll_bar.value_range.upper))
 							else
 									-- Must restrict to the maximum permitted value, as the virtual area
 									-- is smaller when per pixel scrolling is set as you cannot scroll past the final item.

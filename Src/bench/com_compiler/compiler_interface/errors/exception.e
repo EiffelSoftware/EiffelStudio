@@ -4,7 +4,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	EXCEPTION
+	COMPILER_EXCEPTION
 	
 inherit
 	ANY
@@ -43,7 +43,7 @@ feature {NONE} -- Implementation
 			exception_code_set: exception_code = a_exception_code
 		end
 		
-	make_with_child (a_message: STRING; a_exception: EXCEPTION; a_exception_code: INTEGER) is
+	make_with_child (a_message: STRING; a_exception: COMPILER_EXCEPTION; a_exception_code: INTEGER) is
 			-- create exception with inner child exception `a_exception'
 		require
 			non_void_message: a_message /= Void
@@ -61,7 +61,7 @@ feature {NONE} -- Implementation
 
 feature -- Access
 
-	inner_exception: EXCEPTION
+	inner_exception: COMPILER_EXCEPTION
 			-- child exception
 
 	message: STRING
@@ -72,7 +72,7 @@ feature -- Access
 
 feature -- Status setting
 		
-	set_inner_exception (a_exception: EXCEPTION) is
+	set_inner_exception (a_exception: COMPILER_EXCEPTION) is
 			-- set `inner_exception' to `a_exception'
 		require
 			non_void_exception: a_exception /= Void
@@ -94,4 +94,4 @@ feature -- Basic operations
 invariant
 	non_void_message: message /= Void
 
-end -- class EXCEPTION
+end -- class COMPILER_EXCEPTION

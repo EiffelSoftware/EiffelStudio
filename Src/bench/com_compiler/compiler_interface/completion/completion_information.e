@@ -153,19 +153,19 @@ feature -- Access
 					feature_name.put (l_feature.name)
 					return_types.set_string_array (l_return_types)
 					descriptions.set_string_array (l_descriptions)
-					params.set_unknown_array (l_params)
+					params.set_iunknown_array (l_params)
 				else
 					feature_name.put ("")
 	                return_types.set_string_array (create {ECOM_ARRAY [STRING]}.make_empty)
 	                descriptions.set_string_array (create {ECOM_ARRAY [STRING]}.make_empty)
-	                params.set_unknown_array (create {ECOM_ARRAY [ECOM_INTERFACE]}.make_empty)
+	                params.set_iunknown_array (create {ECOM_ARRAY [ECOM_INTERFACE]}.make_empty)
 				end
 			end
 		rescue
 			feature_name.put ("")
 			return_types.set_string_array (create {ECOM_ARRAY [STRING]}.make_empty)
 			descriptions.set_string_array (create {ECOM_ARRAY [STRING]}.make_empty)
-			params.set_unknown_array (create {ECOM_ARRAY [ECOM_INTERFACE]}.make_empty)
+			params.set_iunknown_array (create {ECOM_ARRAY [ECOM_INTERFACE]}.make_empty)
 			l_retried := True
 			retry
 		end

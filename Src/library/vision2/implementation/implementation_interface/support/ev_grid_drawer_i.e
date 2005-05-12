@@ -217,7 +217,7 @@ feature -- Basic operations
 			-- `Result' is item at virtual position `an_x', `a_y' relative to the top
 			-- left hand corner of the virtual size.
 		do
-			Result := item_at_position (an_x - grid.internal_client_x + grid.viewable_x_offset, a_y - grid.internal_client_y + grid.viewport_y_offset)
+			Result := item_at_position (an_x - grid.internal_client_x + grid.viewport_x_offset, a_y - grid.internal_client_y + grid.viewport_y_offset)
 		end
 
 	item_at_position (an_x, a_y: INTEGER): EV_GRID_ITEM_I is

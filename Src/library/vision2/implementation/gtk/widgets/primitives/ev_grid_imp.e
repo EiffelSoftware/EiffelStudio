@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 		do
 			Precursor {EV_CELL_IMP}
 			initialize_grid
-			is_initialized := True
+			set_is_initialized (True)
 		end
 
 feature -- Element change
@@ -69,6 +69,33 @@ feature -- Element change
 		do
 			Precursor {EV_CELL_IMP} (a_color)
 			redraw_client_area
+		end
+
+
+feature {EV_GRID_ITEM_I} -- Implementation
+
+	focused_selection_color: EV_COLOR is
+			-- Color used for selected items while focused.
+		do
+			create Result.make_with_8_bit_rgb (83, 85, 161)
+		end
+
+	focused_selection_text_color: EV_COLOR is
+			-- Color used for text of selected items while focused.
+		do
+			create Result.make_with_8_bit_rgb (239, 251, 254)
+		end
+
+	non_focused_selection_color: EV_COLOR is
+			-- Color used for selected items while not focused.
+		do
+			create Result.make_with_8_bit_rgb (160, 189, 238)
+		end
+
+	non_focused_selection_text_color: EV_COLOR is
+			-- Color used for text of selected items while not focused.
+		do
+			create Result.make_with_8_bit_rgb (196, 236, 253)
 		end
 
 feature {EV_ANY_I} -- Implementation

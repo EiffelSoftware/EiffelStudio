@@ -8,6 +8,21 @@ class
 
 feature -- Externals
 
+	frozen gtk_arrow_new (a_arrow_type, a_shadow_type: INTEGER): POINTER is
+		external
+			"C signature (GtkArrowType, GtkShadowType): GtkWidget* use <gtk/gtk.h>"
+		end
+
+	frozen gtk_combo_box_popup (a_combo: POINTER) is
+		external
+			"C signature (GtkComboBox*) use <gtk/gtk.h>"
+		end
+
+	frozen gtk_combo_box_popdown (a_combo: POINTER) is
+		external
+			"C signature (GtkComboBox*) use <gtk/gtk.h>"
+		end
+
 	frozen gtk_window_set_skip_taskbar_hint (a_window: POINTER; a_setting: BOOLEAN) is
 		external
 			"C signature (GtkWindow*, gboolean) use <gtk/gtk.h>"

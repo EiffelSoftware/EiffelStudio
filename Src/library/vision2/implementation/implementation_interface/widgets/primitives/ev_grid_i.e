@@ -1050,7 +1050,9 @@ feature -- Status setting
 		local
 			add_columns: BOOLEAN
 		do
-			set_horizontal_computation_required (column_count)
+				-- If `Current' currently has no columns, then `column_count' is 0
+				-- so we ensure that we pass at least 1.
+			set_horizontal_computation_required (column_count.max (1))
 			from
 				add_columns := a_column_count > columns.count
 			until

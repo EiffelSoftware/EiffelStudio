@@ -39,6 +39,7 @@ eif_integer_64_display='"lld"'
 eif_natural_64_display='"llu"'
 eif_pointer_display='"lX"'
 eif_integer_64_constant='CAT2(x,LL)'
+eif_natural_64_constant='CAT2(x,ULL)'
 d_uint64_to_real='define'
 
 #File system

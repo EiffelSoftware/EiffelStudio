@@ -96,6 +96,8 @@ typedef struct tag_rt_globals
 	int volatile gc_thread_status_cx;
 	int gc_thread_collection_count_cx;
 	int thread_can_launch_gc_cx;		/* Can we launch additional GC cycle? */
+	int gc_stop_thread_request_cx;		/* Did GC required stopping current thread. */
+	int thread_exiting_cx;			/* Has current thread already called eif_thr_exit? */
 #endif
 
 		/* except.c */
@@ -322,6 +324,8 @@ rt_private rt_global_context_t * rt_thr_getspecific (RT_TSD_TYPE global_key) {
 #define gc_thread_status	(rt_globals->gc_thread_status_cx)
 #define gc_thread_collection_count	(rt_globals->gc_thread_collection_count_cx)
 #define thread_can_launch_gc	(rt_globals->thread_can_launch_gc_cx)
+#define gc_stop_thread_request	(rt_globals->gc_stop_thread_request_cx)
+#define thread_exiting		(rt_globals->thread_exiting_cx)
 
 	/* except.c */
 #define eif_trace			(rt_globals->eif_trace_cx)	/* rt_public */

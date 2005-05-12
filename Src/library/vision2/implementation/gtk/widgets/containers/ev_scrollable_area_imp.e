@@ -29,8 +29,7 @@ inherit
 			y_offset,
 			set_x_offset,
 			set_y_offset,
-			child_has_resized,
-			needs_event_box
+			child_has_resized
 		end
 	
 create
@@ -38,10 +37,8 @@ create
 
 feature {NONE} -- Initialization
 
-	needs_event_box: BOOLEAN is False--True
-
 	make (an_interface: like interface) is
-				-- Initialize.
+			-- Create scrollable area.
 		do
 			base_make (an_interface)
 			scrolled_window := {EV_GTK_EXTERNALS}.gtk_scrolled_window_new (NULL, NULL)
@@ -52,6 +49,12 @@ feature {NONE} -- Initialization
 			{EV_GTK_EXTERNALS}.gtk_container_add (scrolled_window, viewport)
 			set_horizontal_step (10)
 			set_vertical_step (10)
+			fixed_widget := {EV_GTK_EXTERNALS}.gtk_fixed_new
+			{EV_GTK_EXTERNALS}.gtk_widget_show (fixed_widget)
+			container_widget := {EV_GTK_EXTERNALS}.gtk_hbox_new (True, 0)
+			{EV_GTK_EXTERNALS}.gtk_container_add (viewport, fixed_widget)
+			{EV_GTK_EXTERNALS}.gtk_widget_show (container_widget)
+			{EV_GTK_EXTERNALS}.gtk_container_add (fixed_widget, container_widget)
 		end
 
 feature -- Access
@@ -151,6 +154,25 @@ feature -- Element change
 		end
 
 feature {NONE} -- Implementation
+
+	fixed_widget: POINTER
+		-- Pointer to the fixed widget used for central positioning when `item' cannot be scrolled.
+
+	fixed_width: INTEGER is
+			-- Fixed Horizontal size measured in pixels.
+		do
+			Result := {EV_GTK_EXTERNALS}.gtk_allocation_struct_width (
+				{EV_GTK_EXTERNALS}.gtk_widget_struct_allocation (fixed_widget)
+			).max (0)
+		end
+
+	fixed_height: INTEGER is
+			-- Fixed Vertical size measured in pixels.
+		do
+			Result := {EV_GTK_EXTERNALS}.gtk_allocation_struct_height (
+				{EV_GTK_EXTERNALS}.gtk_widget_struct_allocation (fixed_widget)
+			).max (0)
+		end
 
 	scrolled_window: POINTER
 

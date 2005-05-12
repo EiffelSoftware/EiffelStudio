@@ -60,7 +60,7 @@ feature {NONE} -- Initialization
 		do
 			Precursor {EV_STANDARD_DIALOG_IMP}
 			set_title ("Print")
-			is_initialized := False
+			set_is_initialized (False)
 			hbox := {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
 			{EV_GTK_EXTERNALS}.gtk_widget_show (hbox)
 			{EV_GTK_EXTERNALS}.gtk_container_add (client_area_from_c_object (c_object), hbox)
@@ -195,7 +195,7 @@ feature {NONE} -- Initialization
 			minimum_from_page := 1
 			maximum_to_page := 1
 			forbid_resize
-			is_initialized := True
+			set_is_initialized (True)
 		end
 
 

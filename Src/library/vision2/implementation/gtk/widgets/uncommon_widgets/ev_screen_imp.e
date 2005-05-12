@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 			gc := {EV_GTK_EXTERNALS}.gdk_gc_new (drawable)
 			{EV_GTK_EXTERNALS}.gdk_gc_set_subwindow (gc, {EV_GTK_EXTERNALS}.gdk_include_inferiors_enum)
 			init_default_values
-			is_initialized := True
+			set_is_initialized (True)
 		end
 
 feature -- Status report
@@ -287,7 +287,7 @@ feature {NONE} -- Implementation
 	destroy is
 		do
 			{EV_GTK_EXTERNALS}.gdk_gc_unref (gc)
-			is_destroyed := True
+			set_is_destroyed (True)
 		end
 		
 	dispose is

@@ -53,8 +53,13 @@ ecom_eiffelcomcompiler_ienumfeature_impl_stub_s.obj \
 ecom_eiffelcomcompiler_ienumparameter_impl_stub_s.obj \
 ecom_eiffelcomcompiler_ieiffelexception_impl_stub_s.obj \
 ecom_eiffelcomcompiler_ieiffelsupport_impl_stub_s.obj \
+ecom_eiffelcomcompiler_ieiffelsupport_impl_proxy_s.obj \
 ecom_gce_eiffelsoftwarecompiler.obj \
+ecom_gce_eiffelsoftwarecompiler_2.obj \
+ecom_gce_eiffelsoftwarecompiler_3.obj \
+ecom_gce_eiffelsoftwarecompiler_4.obj \
 ecom_gec_eiffelsoftwarecompiler.obj \
+ecom_gec_eiffelsoftwarecompiler_2.obj \
 ecom_xcp_ieiffelcompilerevents_ceiffelcompiler.obj \
 ecom_xcp_ieiffelhtmldocumentationevents_ceiffelhtmldocumentationgenerator.obj \
 server_registration.obj 
@@ -107,7 +112,11 @@ wecom_eiffelcomcompiler_ienumparameter_impl_stub_s.obj \
 wecom_eiffelcomcompiler_ieiffelexception_impl_stub_s.obj \
 wecom_eiffelcomcompiler_ieiffelsupport_impl_stub_s.obj \
 wecom_gce_eiffelsoftwarecompiler.obj \
+wecom_gce_eiffelsoftwarecompiler_2.obj \
+wecom_gce_eiffelsoftwarecompiler_3.obj \
+wecom_gce_eiffelsoftwarecompiler_4.obj \
 wecom_gec_eiffelsoftwarecompiler.obj \
+wecom_gec_eiffelsoftwarecompiler_2.obj \
 wecom_xcp_ieiffelcompilerevents_ceiffelcompiler.obj \
 wecom_xcp_ieiffelhtmldocumentationevents_ceiffelhtmldocumentationgenerator.obj \
 wserver_registration.obj 
@@ -210,7 +219,19 @@ wecom_eiffelcomcompiler_ieiffelsystembrowser_impl_stub_s.obj: ecom_eiffelcomcomp
 wecom_gce_eiffelsoftwarecompiler.obj: ecom_gce_eiffelsoftwarecompiler.cpp
   $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
 
+wecom_gce_eiffelsoftwarecompiler_2.obj: ecom_gce_eiffelsoftwarecompiler_2.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+
+wecom_gce_eiffelsoftwarecompiler_3.obj: ecom_gce_eiffelsoftwarecompiler_3.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+
+wecom_gce_eiffelsoftwarecompiler_4.obj: ecom_gce_eiffelsoftwarecompiler_4.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+
 wecom_gec_eiffelsoftwarecompiler.obj: ecom_gec_eiffelsoftwarecompiler.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+
+wecom_gec_eiffelsoftwarecompiler_2.obj: ecom_gec_eiffelsoftwarecompiler_2.cpp
   $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
 
 wecom_xcp_ieiffelcompilerevents_ceiffelcompiler.obj: ecom_xcp_ieiffelcompilerevents_ceiffelcompiler.cpp

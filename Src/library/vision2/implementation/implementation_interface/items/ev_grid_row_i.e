@@ -709,7 +709,8 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 		end
 
 	remove_subrow (a_row: EV_GRID_ROW) is
-			-- Ensure that `a_row' is no longer a child row of `Current'
+			-- Ensure that `a_row' is no longer a child row of `Current'.
+			-- Does not remove `a_row' from `parent_i'.
 		require
 			is_parented: parent /= Void
 			a_row_not_void: a_row /= Void

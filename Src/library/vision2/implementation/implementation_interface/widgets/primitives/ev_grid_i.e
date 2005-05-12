@@ -2357,6 +2357,25 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implementation
 				header_viewport.set_x_offset ((l_total_header_width - internal_client_width).max (0))
 			end
 		end
+
+feature {EV_GRID_DRAWER_I} -- Drawing implementation
+
+	redraw_resizing_line is
+			-- Redraw resizing line drawn on `Current' at last drawn position.
+			-- This must be called at the end of a redraw from EV_GRID_DRAWER_I
+			-- as after the contents have been re-drawn the resizing line must still
+			-- be displayed as otherwise when we move and invert the old position
+			-- we will be effectively drawing a line which remains persistently in the client area.
+		do
+			if is_resizing_divider_solid then
+				drawable.disable_dashed_line_style
+			else
+				drawable.enable_dashed_line_style
+			end
+			drawable.set_invert_mode
+			drawable.draw_segment (last_dashed_line_position, resizing_line_border, last_dashed_line_position, viewport.height - resizing_line_border)
+			drawable.set_copy_mode
+		end
 	
 feature {NONE} -- Drawing implementation
 

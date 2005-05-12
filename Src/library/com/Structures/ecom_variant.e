@@ -247,7 +247,7 @@ feature -- Initialization
 			make
 			set_error_array (a_value)
 		ensure
-			error_array: error_array.is_equal (a_value)
+			error_array: arrays_equal (error_array,  a_value)
 		end
 
 	make_from_currency_array (a_value: ECOM_ARRAY [ECOM_CURRENCY]) is
@@ -256,7 +256,7 @@ feature -- Initialization
 			make
 			set_currency_array (a_value)
 		ensure
-			currency_array: currency_array.is_equal (a_value)
+			currency_array: arrays_equal (currency_array, a_value)
 		end
 
 	make_from_date_array (a_value: ECOM_ARRAY [DATE_TIME]) is
@@ -265,7 +265,7 @@ feature -- Initialization
 			make
 			set_date_array (a_value)
 		ensure
-			date_array: date_array.is_equal (a_value)
+			date_array: arrays_equal (date_array, a_value)
 		end
 
 	make_from_string_array (a_value: ECOM_ARRAY [STRING]) is
@@ -274,7 +274,7 @@ feature -- Initialization
 			make
 			set_string_array (a_value)
 		ensure
-			string_array: string_array.is_equal (a_value)
+			string_array: arrays_equal (string_array, a_value)
 		end
 
 	make_from_decimal_array (a_value: ECOM_ARRAY [ECOM_DECIMAL]) is
@@ -283,9 +283,39 @@ feature -- Initialization
 			make
 			set_decimal_array (a_value)
 		ensure
-			decimal_array: decimal_array.is_equal (a_value)
+			decimal_array: arrays_equal (decimal_array, a_value)
 		end
 
+feature -- Comparison
+
+	arrays_equal (a_array, a_other: ECOM_ARRAY [ANY]): BOOLEAN is
+			-- Are `a_array' and `a_other' equal using object comparison?
+		require
+			attached_array: a_array /= Void
+			attached_other: a_other /= Void
+		local
+			l_comp, l_other_comp: BOOLEAN
+		do
+			l_comp := a_array.object_comparison
+			l_other_comp := a_other.object_comparison
+			if not l_comp then
+				a_array.compare_objects
+			end
+			if not l_other_comp then
+				a_other.compare_objects
+			end
+			Result := a_array.is_equal (a_other)
+			if not l_comp then
+				a_array.compare_references
+			end
+			if not l_other_comp then
+				a_other.compare_references
+			end
+		ensure
+			array_comparison_unchanged: a_array.object_comparison = old a_array.object_comparison
+			other_comparison_unchanged: a_other.object_comparison = old a_other.object_comparison
+		end
+		
 feature -- Access
 
 	variable_type: INTEGER is

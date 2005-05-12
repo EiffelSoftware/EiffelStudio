@@ -96,8 +96,8 @@ feature {NONE} -- Callbacks
 			end
 
 				-- We will save all the preferences for next time we are opened
-			preferences.preferences.save_resources
 			Recent_projects_manager.save_environment
+			preferences.preferences.save_resources
 
 				-- Destroy all development windows.
 			window_manager.close_all
@@ -107,7 +107,7 @@ feature {NONE} -- Callbacks
 		end
 
 	confirm_stop_debug is
-			-- Exit application. Ask the user to kill the debugger if it is running.
+			-- Exit application. Ask the user to kill the debugger if it is running
 		local
 			cd: EV_CONFIRMATION_DIALOG
 		do

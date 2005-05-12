@@ -97,8 +97,8 @@ feature -- Access
 		do
 			Result := row_i.virtual_y_position
 		ensure
-			valid_result_when_parent_row_height_fixed: parent /= Void and parent.is_row_height_fixed implies Result >= 0 and Result <= parent.virtual_height - parent.row_height
-			valid_result_when_parent_row_height_not_fixed: parent /= Void and not parent.is_row_height_fixed implies Result >= 0 and Result <= parent.virtual_height - row.height
+			valid_result_when_parent_row_height_fixed: parent /= Void and then parent.is_row_height_fixed implies Result >= 0 and Result <= parent.virtual_height - parent.row_height
+			valid_result_when_parent_row_height_not_fixed: parent /= Void and then not parent.is_row_height_fixed implies Result >= 0 and Result <= parent.virtual_height - row.height
 		end
 		
 	horizontal_indent: INTEGER is

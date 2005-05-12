@@ -22,18 +22,20 @@ inherit
 		redefine
 			interface,
 			make,
-			initialize,
 			container_widget,
 			visual_widget,
 			on_removed_item,
 			minimum_width,
-			minimum_height
+			minimum_height,
+			needs_event_box
 		end
 	
 create
 	make
 
 feature {NONE} -- Initialization
+
+	needs_event_box: BOOLEAN is False
 
 	make (an_interface: like interface) is
 			-- Initialize. 
@@ -43,45 +45,9 @@ feature {NONE} -- Initialization
 			set_c_object (viewport)
 			{EV_GTK_EXTERNALS}.gtk_viewport_set_shadow_type (viewport, {EV_GTK_EXTERNALS}.Gtk_shadow_none_enum)
 			{EV_GTK_EXTERNALS}.gtk_widget_set_usize (viewport, 1, 1) -- Hack needed to prevent viewport resize on item resize.
-		end
-		
-	initialize is
-			-- Add a fixed to the viewport to get rid of default blackness.
-		do
-			fixed_widget := {EV_GTK_EXTERNALS}.gtk_fixed_new
-			{EV_GTK_EXTERNALS}.gtk_widget_show (fixed_widget)
 			container_widget := {EV_GTK_EXTERNALS}.gtk_hbox_new (True, 0)
-			{EV_GTK_EXTERNALS}.gtk_container_add (viewport, fixed_widget)
 			{EV_GTK_EXTERNALS}.gtk_widget_show (container_widget)
-			{EV_GTK_EXTERNALS}.gtk_container_add (fixed_widget, container_widget)
-			Precursor {EV_CELL_IMP}
-		end
-
-	container_widget: POINTER
-			-- Pointer to the event box
-			
-	fixed_widget: POINTER
-	
-	visual_widget: POINTER is
-			-- 
-		do
-			Result := fixed_widget
-		end
-		
-	fixed_width: INTEGER is
-			-- Fixed Horizontal size measured in pixels.
-		do
-			Result := {EV_GTK_EXTERNALS}.gtk_allocation_struct_width (
-				{EV_GTK_EXTERNALS}.gtk_widget_struct_allocation (fixed_widget)
-			).max (0)
-		end
-
-	fixed_height: INTEGER is
-			-- Fixed Vertical size measured in pixels.
-		do
-			Result := {EV_GTK_EXTERNALS}.gtk_allocation_struct_height (
-				{EV_GTK_EXTERNALS}.gtk_widget_struct_allocation (fixed_widget)
-			).max (0)
+			{EV_GTK_EXTERNALS}.gtk_container_add (viewport, container_widget)
 		end
 
 feature -- Access
@@ -182,24 +148,33 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
+	container_widget: POINTER
+			-- Pointer to the event box
+
+	visual_widget: POINTER is
+			--
+		do
+			Result := c_object
+		end
+
 	internal_set_item_size (a_width, a_height: INTEGER) is
 			-- Set `a_widget.width' to `a_width'.
 			-- Set `a_widget.height' to `a_height'.
 		local
-			temp_width, temp_height: INTEGER
+			item_width, item_height: INTEGER
 		do
 			if a_width > 0 then
-				temp_width := a_width
+				item_width := a_width
 			else
-				temp_width := -1
+				item_width := -1
 			end
-			
+
 			if a_height > 0 then
-				temp_height := a_height
+				item_height := a_height
 			else
-				temp_height := -1
+				item_height := -1
 			end
-			{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (container_widget, temp_width, temp_height)
+			{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (container_widget, item_width, item_height)
 		end
 
 	on_removed_item (a_widget_imp: EV_WIDGET_IMP) is

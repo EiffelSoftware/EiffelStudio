@@ -2554,13 +2554,7 @@ feature {NONE} -- Drawing implementation
 			set_horizontal_computation_required (header.index_of (header_item, 1))
 			redraw_client_area
 		end
-		
-	screen: EV_SCREEN is
-			-- Once access to object of type EV_SCREEN.
-		once
-			create Result
-		end
-		
+				
 	draw_resizing_line (position: INTEGER) is
 			-- Draw a resizing line at horizontal position relative to `drawable'.
 			-- Clip line to drawable width.
@@ -2572,16 +2566,17 @@ feature {NONE} -- Drawing implementation
 				
 					-- Draw line representing position in current divider style.
 				if is_resizing_divider_solid then
-					screen.disable_dashed_line_style
+					drawable.disable_dashed_line_style
 				else
-					screen.enable_dashed_line_style
+					drawable.enable_dashed_line_style
 				end
-				screen.set_invert_mode
-				screen.draw_segment (drawable.screen_x + position, drawable.screen_y + resizing_line_border, drawable.screen_x + position, drawable.screen_y + viewport.height - resizing_line_border)
+				drawable.set_invert_mode
+				drawable.draw_segment (position, resizing_line_border, position, viewport.height - resizing_line_border)
 				if last_dashed_line_position > 0 then
-					screen.draw_segment (last_dashed_line_position, drawable.screen_y + resizing_line_border, last_dashed_line_position, drawable.screen_y + viewport.height - resizing_line_border)
+					drawable.draw_segment (last_dashed_line_position, resizing_line_border, last_dashed_line_position, viewport.height - resizing_line_border)
 				end
-				last_dashed_line_position := drawable.screen_x + position
+				last_dashed_line_position := position
+				drawable.set_copy_mode
 			end
 		end
 		
@@ -2591,13 +2586,14 @@ feature {NONE} -- Drawing implementation
 			fixme ("Must remove resizing line if the area in which it was previously drawn has been re-drawn by `Current'")
 				-- Remove line representing position in current divider style.
 			if is_resizing_divider_solid then
-				screen.disable_dashed_line_style
+				drawable.disable_dashed_line_style
 			else
-				screen.enable_dashed_line_style
+				drawable.enable_dashed_line_style
 			end
-			screen.set_invert_mode
-			screen.draw_segment (last_dashed_line_position, drawable.screen_y + resizing_line_border, last_dashed_line_position, drawable.screen_y + viewport.height - resizing_line_border)
+			drawable.set_invert_mode
+			drawable.draw_segment (last_dashed_line_position, resizing_line_border, last_dashed_line_position, viewport.height - resizing_line_border)
 			last_dashed_line_position := - 1
+			drawable.set_copy_mode
 		ensure
 			last_position_negative: last_dashed_line_position = -1
 		end
@@ -2797,7 +2793,7 @@ feature {NONE} -- Drawing implementation
 	buffered_drawable_size: INTEGER is 2000
 		-- Default size of `drawable' used for scrolling purposes.
 
-feature {EV_GRID_COLUMN_I} -- Implementation
+feature {EV_GRID_COLUMN_I, EV_GRID_DRAWER_I} -- Implementation
 
 	is_header_item_resizing: BOOLEAN
 		-- Is a header item currently in the process of resizing?

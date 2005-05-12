@@ -198,7 +198,7 @@ feature -- Access
 		end
 		
 		
-	last_exception: EXCEPTION
+	last_exception: COMPILER_EXCEPTION
 			-- last exception to be raised
 		
 feature -- User Preconditions

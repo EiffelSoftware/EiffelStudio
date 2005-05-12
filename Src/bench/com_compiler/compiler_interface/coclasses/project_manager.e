@@ -108,7 +108,7 @@ feature -- Access
 			Result := Valid_project_ref.item
 		end
 
-	last_exception: EXCEPTION
+	last_exception: COMPILER_EXCEPTION
 			-- last exception raised
 
 	is_compiled: BOOLEAN is

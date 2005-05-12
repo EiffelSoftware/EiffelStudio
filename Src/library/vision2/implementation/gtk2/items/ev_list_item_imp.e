@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'
 		do
 			internal_text := ""
-			is_initialized := True
+			set_is_initialized (True)
 		end
 
 feature -- PND
@@ -207,7 +207,7 @@ feature {NONE} -- Implementation
 			if parent_imp /= Void then
 				parent_imp.interface.prune_all (interface)
 			end
-			is_destroyed := True
+			set_is_destroyed (True)
 			pixmap := Void
 		end
 

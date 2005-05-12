@@ -73,7 +73,7 @@ feature {NONE} -- Initialization
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tool_item_set_is_important (visual_widget, True)
 
 			create tooltip.make (0)
-			is_initialized := True
+			set_is_initialized (True)
 		end
 
 	event_widget: POINTER is

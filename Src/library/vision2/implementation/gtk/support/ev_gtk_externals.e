@@ -746,6 +746,13 @@ feature -- C enums
 			"GTK_WINDOW_TOPLEVEL"
 		end
 
+	frozen gtk_window_popup_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GTK_WINDOW_POPUP"
+		end
+
 	frozen gdk_decor_all_enum: INTEGER is
 		external
 			"C inline use <gtk/gtk.h>"

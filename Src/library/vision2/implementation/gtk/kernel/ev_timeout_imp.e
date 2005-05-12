@@ -34,7 +34,7 @@ feature -- Initialization
 
 	initialize is 
 		do 
-			is_initialized := True
+			set_is_initialized (True)
 			timeout_agent_internal := agent (App_implementation.gtk_marshal).on_timeout_intermediary (object_id)
 		end
 

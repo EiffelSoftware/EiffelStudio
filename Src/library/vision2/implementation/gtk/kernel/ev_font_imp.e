@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 		
 	initialize is 
 		do
-			is_initialized := True
+			set_is_initialized (True)
 		end
 
 feature -- Access
@@ -592,7 +592,7 @@ feature -- Obsolete
 			
 	destroy is
 		do
-			is_destroyed := True
+			set_is_destroyed (True)
 		end
 
 invariant

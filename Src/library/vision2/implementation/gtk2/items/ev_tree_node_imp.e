@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 			if parent_imp /= Void then
 				parent_imp.interface.prune_all (interface)
 			end
-			is_destroyed := True
+			set_is_destroyed (True)
 		end
 
 	make (an_interface: like interface) is

@@ -98,7 +98,7 @@ feature {NONE} -- Initialization
 			if not pointer_button_press_actions.is_empty or not pointer_double_press_actions.is_empty then
 				connect_button_press_switch
 			end
-			is_initialized := True
+			set_is_initialized (True)
 		end
 		
 feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation

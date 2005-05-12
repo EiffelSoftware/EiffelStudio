@@ -18,22 +18,15 @@ the new server_registration.cpp.
 
 #include "server_registration.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 DWORD dwRegister_CEiffelProject;
-
 
 CEiffelProject_factory CEiffelProject_cls_object;
 
 DWORD dwRegister_CEiffelCompiler;
 
-
 CEiffelCompiler_factory CEiffelCompiler_cls_object;
 
 DWORD dwRegister_CEiffelCompletionInfo;
-
 
 CEiffelCompletionInfo_factory CEiffelCompletionInfo_cls_object;
 
@@ -461,6 +454,3 @@ void ccom_cleanup_com_function()
 
 	CoUninitialize ();
 };
-#ifdef __cplusplus
-}
-#endif

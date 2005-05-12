@@ -63,6 +63,7 @@ feature -- Initialization
 		do
 			create widget
 			initialize
+			is_initialized := True
 		end		
 
 feature {NONE} -- Initialization
@@ -112,6 +113,9 @@ feature {NONE} -- Initialization
 		end		
 
 feature -- Access
+
+	is_initialized: BOOLEAN
+			-- Is current text panel properly initialized? I.e. ready for use.
 
 	new_text_displayed: like text_displayed is
 			-- New instance of `text_displayed' for Current.
@@ -854,13 +858,15 @@ feature {NONE} -- Display functions
 	on_viewport_size (a_x, a_y: INTEGER; a_width, a_height: INTEGER) is
 			-- Viewport was resized.
 		do
-				-- Do not ever make the buffered line smaller, only larger.
-			if (a_width + offset) > buffered_line.width then
-				buffered_line.set_size (a_width + offset, line_height)
+			if is_initialized then
+					-- Do not ever make the buffered line smaller, only larger.
+				if (a_width + offset) > buffered_line.width then
+					buffered_line.set_size (a_width + offset, line_height)
+				end
+				update_vertical_scrollbar
+				update_horizontal_scrollbar
 			end
-			update_vertical_scrollbar
-			update_horizontal_scrollbar
-		end	
+		end
 
 	update_area (x_pos, top, a_width, bottom: INTEGER; x: INTEGER; buffered: BOOLEAN) is
  			-- Update drawing area between `top' and `bottom' and `x' and `a_width'.  If `buffered' then draw to `buffered_line'
@@ -1193,6 +1199,9 @@ feature -- Memory management
 			-- Recycle `Current', but leave `Current' in an unstable state,
 			-- so that we know whether we're still referenced or not.
 		do
+				-- Cannot use current anymore.
+			is_initialized := False
+
 			if ev_application.idle_actions.has (update_scroll_agent) then
 				ev_application.idle_actions.prune_all (update_scroll_agent)
 			end
@@ -1210,17 +1219,20 @@ feature -- Memory management
 				scroll_cell.destroy
 				scroll_cell := Void
 			end
+			if horizontal_scrollbar /= Void then
+				horizontal_scrollbar.destroy
+				horizontal_scrollbar := Void
+			end
 			if vertical_scrollbar /= Void then
 				vertical_scrollbar.destroy
 				vertical_scrollbar := Void
-			end
-			if update_scroll_agent /= Void then
-				update_scroll_agent := Void
 			end
 			if text_displayed /= Void then
 				text_displayed.recycle
 				text_displayed := Void
 			end
+		ensure
+			not_initialized: not is_initialized
 		end
 
 feature -- Implementation

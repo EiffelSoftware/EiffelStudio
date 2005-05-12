@@ -41,8 +41,8 @@ feature {NONE} -- Initialization
 			a_ok_button, a_cancel_button: POINTER
 		do
 			Precursor {EV_STANDARD_DIALOG_IMP}
-			is_initialized := False
-			
+			set_is_initialized (False)
+
 			filter := "*.*"
 			
 			a_cancel_button := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_dialog_add_button (c_object, {EV_GTK_DEPENDENT_EXTERNALS}.gtk_stock_cancel_enum, {EV_GTK_EXTERNALS}.gtk_response_cancel_enum)
@@ -65,7 +65,7 @@ feature {NONE} -- Initialization
 			)
 			enable_closeable
 			set_start_directory (App_implementation.current_working_directory)
-			is_initialized := True
+			set_is_initialized (True)
 		end
 
 feature -- Access

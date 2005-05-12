@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Setup `Current'
 		do
-			is_initialized := True
+			set_is_initialized (True)
 		end
 
 feature {EV_TITLED_WINDOW_IMP} -- Implementation
@@ -173,7 +173,7 @@ feature {NONE} -- Implementation
 			-- Free resources of `Current'
 		do
 			key := Void
-			is_destroyed := True
+			set_is_destroyed (True)
 		end
 
 end -- class EV_ACCELERATOR_IMP

@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 					{EV_FONT_CONSTANTS}.shape_regular,
 					0
 				)
-			is_initialized := True
+			set_is_initialized (True)
 		end
 
 feature -- Access
@@ -561,7 +561,7 @@ feature {NONE} -- Implementation
 	destroy is
 			-- Clean up
 		do
-			is_destroyed := True
+			set_is_destroyed (True)
 		end
 
 end -- class EV_CHARACTER_FORMAT_IMP

@@ -12,12 +12,66 @@ default
 	assertion (no)
 	disabled_debug (yes)
 	disabled_debug ("activity")
+	disabled_debug ("actual_replication")
 	disabled_debug ("anchored_features")
+	disabled_debug ("assertion")
+	disabled_debug ("assertions")
+	disabled_debug ("byte_code")
+	disabled_debug ("c_debugger")
+	disabled_debug ("cache")
+	disabled_debug ("cache_compiler")
+	disabled_debug ("cache_research")
+	disabled_debug ("cache_server")
+	disabled_debug ("cache_stat")
+	disabled_debug ("cecil")
 	disabled_debug ("check_expanded")
+	disabled_debug ("class_of_id")
+	disabled_debug ("com_object")
+	disabled_debug ("comments")
+	disabled_debug ("count")
+	disabled_debug ("dead_code")
+	disabled_debug ("dead_code_removal")
+	disabled_debug ("debbugger_hook")
+	disabled_debug ("debugger_hook")
+	disabled_debug ("debugger_il_info_trace")
+	disabled_debug ("debugger_il_info_trace_extra")
+	disabled_debug ("disable_assertions")
+	disabled_debug ("dle topo")
+	disabled_debug ("dlg_dispatcher")
+	disabled_debug ("document")
+	disabled_debug ("dollar")
+	disabled_debug ("filters")
+	disabled_debug ("fixme")
+	disabled_debug ("flat_short")
+	disabled_debug ("flush_file")
 	disabled_debug ("formal_generic")
+	disabled_debug ("gelex")
 	disabled_debug ("genericity")
+	disabled_debug ("geyacc")
+	disabled_debug ("has_calls")
+	disabled_debug ("il_info_trace")
+	disabled_debug ("local_feat_adaptation")
+	disabled_debug ("md out-of-order")
+	disabled_debug ("optimization")
+	disabled_debug ("options")
+	disabled_debug ("parse")
+	disabled_debug ("profile_convert")
 	disabled_debug ("refactor_fixme")
 	disabled_debug ("remove_class")
+	disabled_debug ("replication")
+	disabled_debug ("resource_validate")
+	disabled_debug ("server")
+	disabled_debug ("show_prof_query")
+	disabled_debug ("timing")
+	disabled_debug ("trace_table")
+	disabled_debug ("transfer")
+	disabled_debug ("verbose")
+	disabled_debug ("wel")
+	disabled_debug ("wel_gdi_count")
+	disabled_debug ("wel_gdi_references")
+	disabled_debug ("win_dispatcher")
+	disabled_debug ("xml_input_stream")
+	disabled_debug ("xml_parser")
 	debug (no)
 	line_generation (no)
 	profile (no)
@@ -45,117 +99,123 @@ cluster
 				end
 			IEIFFEL_PROJECT_IMPL_PROXY
 				end
-			IEIFFEL_EXCEPTION_IMPL_PROXY
-				end
 			IEIFFEL_COMPILER_IMPL_PROXY
 				end
 			IEIFFEL_SYSTEM_BROWSER_IMPL_PROXY
 				end
-			IENUM_EIFFEL_CLASS_IMPL_PROXY
+			IEIFFEL_CLUSTER_DESCRIPTOR_IMPL_PROXY
 				end
 			IEIFFEL_CLASS_DESCRIPTOR_IMPL_PROXY
 				end
-			IENUM_FEATURE_IMPL_PROXY
-				end
 			IEIFFEL_FEATURE_DESCRIPTOR_IMPL_PROXY
-				end
-			IENUM_PARAMETER_IMPL_PROXY
-				end
-			IEIFFEL_PARAMETER_DESCRIPTOR_IMPL_PROXY
-				end
-			IEIFFEL_ENUM_STRING_IMPL_PROXY
-				end
-			IEIFFEL_CLUSTER_DESCRIPTOR_IMPL_PROXY
-				end
-			IENUM_CLUSTER_IMPL_PROXY
-				end
-			IENUM_ASSEMBLY_IMPL_PROXY
-				end
-			IEIFFEL_ASSEMBLY_PROPERTIES_IMPL_PROXY
 				end
 			IEIFFEL_PROJECT_PROPERTIES_IMPL_PROXY
 				end
-			IEIFFEL_SYSTEM_CLUSTERS_IMPL_PROXY
-				end
-			IENUM_CLUSTER_PROP_IMPL_PROXY
-				end
 			IEIFFEL_CLUSTER_PROPERTIES_IMPL_PROXY
-				end
-			IEIFFEL_SYSTEM_EXTERNALS_IMPL_PROXY
-				end
-			IEIFFEL_SYSTEM_ASSEMBLIES_IMPL_PROXY
-				end
-			IEIFFEL_COMPLETION_INFO_IMPL_PROXY
-				end
-			IEIFFEL_DEFINITION_RESULT_IMPL_PROXY
-				end
-			IEIFFEL_DEFINITION_FEATURE_RESULT_IMPL_PROXY
 				end
 			IEIFFEL_HTML_DOCUMENTATION_GENERATOR_IMPL_PROXY
 				end
-			IEIFFEL_SUPPORT_IMPL_PROXY
-				end
-			ECOM_EIFFELSOFTWARECOMPILER_REGISTRATION
+			ECOM_EIFFEL_SOFTWARE_COMPILER_REGISTRATION
 				end
 			CEIFFEL_PROJECT_COCLASS_IMP
 				end
 			CEIFFEL_COMPILER_COCLASS_IMP
 				end
-			CEIFFEL_HTML_DOCUMENTATION_GENERATOR_COCLASS_IMP
-				end
-			CEIFFEL_COMPLETION_INFO_COCLASS_IMP
-				end
 			IEIFFEL_PROJECT_IMPL_STUB
-				end
-			IEIFFEL_EXCEPTION_IMPL_STUB
 				end
 			IEIFFEL_COMPILER_IMPL_STUB
 				end
 			IEIFFEL_SYSTEM_BROWSER_IMPL_STUB
 				end
-			IENUM_EIFFEL_CLASS_IMPL_STUB
+			IEIFFEL_CLUSTER_DESCRIPTOR_IMPL_STUB
 				end
 			IEIFFEL_CLASS_DESCRIPTOR_IMPL_STUB
 				end
-			IENUM_FEATURE_IMPL_STUB
-				end
 			IEIFFEL_FEATURE_DESCRIPTOR_IMPL_STUB
-				end
-			IENUM_PARAMETER_IMPL_STUB
-				end
-			IEIFFEL_PARAMETER_DESCRIPTOR_IMPL_STUB
-				end
-			IEIFFEL_ENUM_STRING_IMPL_STUB
-				end
-			IEIFFEL_CLUSTER_DESCRIPTOR_IMPL_STUB
-				end
-			IENUM_CLUSTER_IMPL_STUB
-				end
-			IENUM_ASSEMBLY_IMPL_STUB
-				end
-			IEIFFEL_ASSEMBLY_PROPERTIES_IMPL_STUB
 				end
 			IEIFFEL_PROJECT_PROPERTIES_IMPL_STUB
 				end
-			IEIFFEL_SYSTEM_CLUSTERS_IMPL_STUB
-				end
-			IENUM_CLUSTER_PROP_IMPL_STUB
-				end
 			IEIFFEL_CLUSTER_PROPERTIES_IMPL_STUB
+				end
+			IEIFFEL_HTML_DOCUMENTATION_GENERATOR_IMPL_PROXY
 				end
 			IEIFFEL_SYSTEM_EXTERNALS_IMPL_STUB
 				end
 			IEIFFEL_SYSTEM_ASSEMBLIES_IMPL_STUB
 				end
-			IEIFFEL_COMPLETION_INFO_IMPL_STUB
-				end
-			IEIFFEL_DEFINITION_RESULT_IMPL_STUB
-				end
-			IEIFFEL_DEFINITION_FEATURE_RESULT_IMPL_STUB
+			IEIFFEL_ASSEMBLY_PROPERTIES_IMPL_STUB
 				end
 			IEIFFEL_HTML_DOCUMENTATION_GENERATOR_IMPL_STUB
 				end
+			IEIFFEL_EXCEPTION_IMPL_STUB
+				end
 			IEIFFEL_SUPPORT_IMPL_STUB
+				end
+			DESCRIPTIONS_ENUMERATOR
+				end
+			CLASS_DESCRIPTOR
+				end
+			CLUSTER_DESCRIPTOR
+				end
+			CLUSTER_PROPERTIES
+				end
+			COMPILER
+				end
+			COM_DEGREE_OUTPUT
+				end
+			COM_ERROR_WINDOW
+				end
+			FEATURE_DESCRIPTOR
+				end
+			PROJECT_MANAGER
+				end
+			PROJECT_PROPERTIES
+				end
+			SYSTEM_BROWSER
+				end
+			SYSTEM_CLUSTERS
+				end
+			CLASS_ENUMERATOR
+				end
+			CLUSTER_ENUMERATOR
+				end
+			FEATURE_ENUMERATOR
+				end
+			CLUSTER_PROP_ENUMERATOR
+				end
+			ASSEMBLY_ENUMERATOR
+				end
+			EIFFEL_STRING_ENUMERATOR
+				end
+			SYSTEM_EXTERNALS
+				end
+			SYSTEM_ASSEMBLIES
+				end
+			ASSEMBLY_PROPERTIES
+				end
+			COMPLETION_INFORMATION
+				end
+			HTML_DOC_GENERATOR
+				end
+			VARIABLE_DESCRIPTOR
+				end
+			PARAMETER_ENUMERATOR
+				end
+			PARAMETER_DESCRIPTOR
+				end
+			COMPLETION_FEATURE
+				end
+			COMPILER_EXCEPTION
+				end
+			IEIFFEL_DEFINITION_RESULT_IMPL_PROXY
+				end
+			IEIFFEL_DEFINITION_FEATURE_RESULT_IMPL_PROXY
+				end
+			DEFINITION_SEARCH_RESULT
+				end
+			DEFINITION_SEARCH_RESULT_FEATURE
+				end
+			COM_COMPILER_SUPPORT
 				end
 		end
 
@@ -336,14 +396,14 @@ cluster
 
 	all assembly_info:		"$EIFFEL_SRC\dotnet\eac_browser\src"
 		exclude
-			"cache.e"
+			"cache.e"; 
 		end
 
 	all doc_manager:		"$EIFFEL_SRC\dotnet\VisualStudio\tools\documentation_manager\generated"
 		exclude
 			"Include"; "Clib"; 
 		visible
-			idm_dictionary_impl_proxy
+			IDM_DICTIONARY_IMPL_PROXY
 				end
 		end
 
@@ -371,8 +431,6 @@ external
 		"$(EIFFEL_SRC)\com_compiler\Clib\$(ISE_C_COMPILER)\ecom_final.lib",
 		"$(EIFFEL_SRC)\C\bench\compiler.lib",
 		"$(EIFFEL_SRC)\C\platform\platform.lib",
-		"$(EIFFEL_SRC)\C\minilzo\minilzo.obj",
-		"$(EIFFEL_SRC)\Eiffel\interface\new_graphical\help\Clib\htmlhelp.lib",
 		"$(EIFFEL_SRC)\Eiffel\library\cli_writer\spec\msc\lib\cli_writer.lib",
 		"mscorsn.lib",
 		"$(EIFFEL_SRC)\dotnet\VisualStudio\tools\documentation_manager\generated\Client\Clib\msc\ecom.lib"

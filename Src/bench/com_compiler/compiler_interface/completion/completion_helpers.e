@@ -604,7 +604,8 @@ feature {NONE} -- Implementation
 			-- Type parser.
 			-- (from SHARED_EIFFEL_PARSER)
 		once
-			create Result.make_type_parser
+			create Result.make
+			Result.set_type_parser
 		end
 
 	resolved_type (type: TYPE_AS; feature_table: FEATURE_TABLE; fi: FEATURE_I): TYPE_A is

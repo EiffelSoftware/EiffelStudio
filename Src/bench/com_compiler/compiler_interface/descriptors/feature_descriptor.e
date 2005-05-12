@@ -777,7 +777,7 @@ feature {FEATURE_DESCRIPTOR} -- Implementation
                 clients.after
             loop
                 client := clients.item
-                list := compiler_feature.api_feature (current_class.class_id).callers (client)
+                list := compiler_feature.api_feature (current_class.class_id).callers (client, 0)
                 if list /= Void then
                     from
                         list.start

@@ -174,7 +174,7 @@ feature {NONE} -- Implementation
 			if unused_warn /= Void then
 				-- Unused local
 				file_name := unused_warn.associated_feature.associated_class.file_name
-				line_pos := unused_warn.associated_feature.ast.location.line_number
+				line_pos := unused_warn.associated_feature.ast.start_location.line
 				short_error := "Warning: '"
 				from 
 					unused_warn.unused_locals.start
@@ -203,7 +203,7 @@ feature {NONE} -- Implementation
 				if obs_feat /= Void then
 					-- Call to obsolete feature 
 					file_name := obs_feat.a_feature.written_class.file_name
-					line_pos := obs_feat.a_feature.ast.location.line_number
+					line_pos := obs_feat.a_feature.ast.start_location.line
 					short_error := "Warning: Feature '" + obs_feat.obsolete_feature.name + "' from '" +  
 						obs_feat.obsolete_feature.written_class.name + "' is obsolete: '" + 
 						obs_feat.obsolete_feature.obsolete_message + "'."
@@ -212,7 +212,7 @@ feature {NONE} -- Implementation
 					if obs_class /= Void then
 						-- Using obsolete class
 						file_name := obs_class.associated_class.file_name
-						line_pos := obs_class.associated_class.ast.line_number
+						line_pos := 1
 						short_error := "Warning: Class '" + obs_class.obsolete_class.name + "' is obsolete: '" + 
 							obs_class.obsolete_class.obsolete_message + "'."
 					else
@@ -220,7 +220,7 @@ feature {NONE} -- Implementation
 						if syn_warn /= Void then
 							-- Syntax warning
 							file_name := syn_warn.file_name
-							line_pos := syn_warn.line_number
+							line_pos := syn_warn.line
 							short_error := "Warning: " + syn_warn.warning_message
 						end
 					end
@@ -276,7 +276,7 @@ feature {NONE} -- Implementation
 				feat_err ?= err
 				if feat_err /= Void then
 						-- Feature error
-					line_pos := feat_err.line_number
+					line_pos := feat_err.line
 					if feat_err.e_feature /= Void then
 						file_name := feat_err.e_feature.written_class.file_name
 					end
@@ -295,7 +295,7 @@ feature {NONE} -- Implementation
 					if syn_err /= Void then
 						-- Syntax error
 						file_name := syn_err.file_name
-						line_pos := syn_err.line_number
+						line_pos := syn_err.line
 						if is_valid_error_string (syn_err.error_string) then
 							short_error := "Error: " + syn_err.error_message
 						end

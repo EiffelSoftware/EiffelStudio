@@ -2272,8 +2272,10 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implementation
 								-- previous position.
 							if is_tree_enabled or not is_row_height_fixed then
 								vertical_scroll_bar.set_value (row_offsets @ (previous_scroll_bar_value + 1))
-							else	
-								vertical_scroll_bar.set_value (previous_scroll_bar_value * row_height)
+							else
+									-- Must restrict to the maximum permitted value, as the virtual area
+									-- is smaller when per pixel scrolling is set as you cannot scroll past the final item.
+								vertical_scroll_bar.set_value ((previous_scroll_bar_value * row_height).min (vertical_scroll_bar.value_range.upper))
 							end
 						end
 					end
@@ -2334,13 +2336,21 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implementation
 							-- If we are just switching from per item to per pixel horizontal
 							-- scrolling, we can set the position of the scroll bar exactly to match it's
 							-- previous position.
-						horizontal_scroll_bar.set_value (column_offsets @ (previous_scroll_bar_value + 1))
+
+							-- Must restrict to the maximum permitted value, as the virtual area
+							-- is smaller when per pixel scrolling is set as you cannot scroll past the final item.
+						horizontal_scroll_bar.set_value ((column_offsets @ (previous_scroll_bar_value + 1)).min (horizontal_scroll_bar.value_range.upper))
 					end
 				end
 			else
 					-- The headers are not as wide as the visible client area.
 				if horizontal_scroll_bar.is_show_requested then
-						-- Hide `horizontal_scroll_bar' as it is not required.
+				fixme ("Must reset the viewport x offset")
+--						-- Hide `horizontal_scroll_bar' as it is not required.
+--					if viewport.x_offset /= 0 then
+--						viewport.set_x_offset (0)
+--						viewport_x_offset := 0
+--					end
 					horizontal_scroll_bar.hide
 					update_scroll_bar_spacer
 				end
@@ -2582,7 +2592,6 @@ feature {NONE} -- Drawing implementation
 				(position - viewport_x_offset < 0) then
 				remove_resizing_line
 			else
-				
 					-- Draw line representing position in current divider style.
 				if is_resizing_divider_solid then
 					drawable.disable_dashed_line_style

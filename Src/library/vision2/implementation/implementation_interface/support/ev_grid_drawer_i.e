@@ -791,6 +791,11 @@ feature -- Basic operations
 				grid.drawable.set_foreground_color (grid.background_color)
 				grid.drawable.fill_rectangle (an_x, a_y, a_width, a_height)
 			end
+			if not grid.is_column_resize_immediate and grid.is_header_item_resizing and grid.is_resizing_divider_enabled then
+					-- Put the resizing line back on the redrawn area so that it can be correctly erased
+					-- by being inverted later.
+				grid.redraw_resizing_line
+			end
 		end
 		
 	subrow_indent (current_row: EV_GRID_ROW_I): INTEGER is

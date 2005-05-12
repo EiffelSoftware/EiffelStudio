@@ -192,6 +192,8 @@ feature -- Access
 		
 	is_resizing_divider_enabled: BOOLEAN is
 			-- Is a vertical divider displayed during column resizing?
+			-- Note that if `is_column_resize_immediate' is `True', `Result'
+			-- is ignored by `Current' and no resizing divider is displayed.
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -269,7 +271,9 @@ feature -- Access
 		end
 
 	is_column_resize_immediate: BOOLEAN is
-			-- Is the user resizing of a reflected immediately in `Current'?
+			-- Is the user resizing of a column reflected immediately in `Current'?
+			-- If `True', the column width is updated continuosly and the state of `is_resizing_divider_enabled'
+			-- is ignored with no divider displayed.
 			-- If `False', the column width is only updated upon completion of the resize.
 		require
 			not_destroyed: not is_destroyed
@@ -1294,7 +1298,8 @@ feature {NONE} -- Contract support
 			Result := row_count = 0 and column_count = 0 and not is_horizontal_scrolling_per_item and
 				is_vertical_scrolling_per_item and is_header_displayed and
 				is_row_height_fixed and subrow_indent = 0 and is_single_item_selection_enabled and is_selection_on_click_enabled and
-				are_tree_node_connectors_shown and are_columns_drawn_above_rows
+				are_tree_node_connectors_shown and are_columns_drawn_above_rows and not is_resizing_divider_enabled and
+				is_column_resize_immediate
 		end
 			
 feature {EV_ANY, EV_ANY_I} -- Implementation

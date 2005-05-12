@@ -424,7 +424,7 @@ feature {
 			-- Destroy actual object.
 		do
 				-- Turn off invariant checking.
-			disable_initialized
+			set_is_initialized (False)
 			dc.decrement_reference
 			dc := Void
 			internal_bitmap.decrement_reference

@@ -28,9 +28,9 @@ feature {EB_PREFERENCES} -- Initialization
 feature -- Value
 
 	last_opened_projects: ARRAY [STRING] is
-			-- List of last opened projects
-		do			
-			Result := last_opened_projects_preference.value			
+			-- List of last opened projects	
+		do		
+			Result := last_opened_projects_preference.value
 		end
 		
 	keep_n_projects: INTEGER is
@@ -45,7 +45,7 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	
 	keep_n_projects_preference: INTEGER_PREFERENCE
 		
-feature {NONE} -- Preference Strings
+feature {EB_RECENT_PROJECTS_MANAGER} -- Preference Strings
 
 	last_opened_projects_string: STRING is "recent_projects.last_opened_projects"
 	
@@ -59,16 +59,14 @@ feature {NONE} -- Implementation
 			l_manager: EB_PREFERENCE_MANAGER	
 		do		
 			create l_manager.make (preferences, "recent_projects")	
-		
 			last_opened_projects_preference := l_manager.new_array_resource_value (l_manager, last_opened_projects_string, <<>>)
-			keep_n_projects_preference := l_manager.new_integer_resource_value (l_manager, keep_n_projectS_String, 10)
+			keep_n_projects_preference := l_manager.new_integer_resource_value (l_manager, keep_n_projects_String, 10)
 		end
-	
+
 	preferences: PREFERENCES
 			-- Preferences
-			
+
 invariant
 	preferences_not_void: preferences /= Void
-	last_opened_projects_preference_not_void: last_opened_projects_preference /= Void
 			
 end -- class EB_RECENT_PROJECTS

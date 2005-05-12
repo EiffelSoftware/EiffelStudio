@@ -9,7 +9,7 @@ class
 
 inherit
 	EB_SHARED_PREFERENCES
-	
+
 	PROJECT_CONTEXT
 
 	SHARED_EIFFEL_PROJECT
@@ -21,33 +21,14 @@ feature {NONE} -- Initialization
 
 	make is
 			-- Create a project manager.
-		local
-			projects: ARRAY [STRING]
-			i: INTEGER
 		do
-				-- Set up the recent project list from registry
+				-- Set up the recent project list from datastore
 			create recent_projects.make (10)
 			recent_projects.compare_objects
-			projects := preferences.recent_projects_data.last_opened_projects
-			if not projects.is_empty then
-				from
-					i := projects.lower
-				until
-					i > projects.upper
-				loop
---! FIXME EA: 
---	"$not_a_project_path$" is the project path in the default recent project xml file.
---	It is used on unix to create ".es5_recent_project" if it does not exist.
---	We should not have to use a default xml file with a fake project path but at the time
---	these lines are written, it is the easier way without modifying the preference library
-					if not projects.item (i).is_equal ("$not_a_project_path$") then
-						recent_projects.extend (create {FILE_NAME}.make_from_string (projects @ i))
-					end
-					i := i + 1
-				end
-			end
+			update_recent_projects_from_datastore
+			load_recent_projects (preferences.recent_projects_data.last_opened_projects)
 		end
-	
+
 feature -- Access
 
 	recent_projects: ARRAYED_LIST [FILE_NAME]
@@ -58,7 +39,7 @@ feature -- Menus handling
 
 	new_menu: EB_RECENT_PROJECTS_MANAGER_MENU is
 			-- Menu corresponding to current: This is a menu with
-			-- on entry per old project.
+			-- one entry per old project.
 			--
 			-- When this menu is not anymore needed, call `clean_up' on it.
 		do
@@ -79,16 +60,16 @@ feature -- Basic operations
 		do
 				-- We save the environment variable only once and when the system
 				-- has been compiled, otherwise we do not change anything.
-			if not saving_done
-				and then Eiffel_project.system /= Void
-				and then Eiffel_project.system.name /= Void
-			then
+			if Eiffel_project.system /= Void and then Eiffel_project.system.name /= Void then
 					-- Build the name of the entry in the recent projects list.
 				create project_file_name.make_from_string (project_directory_name)
 				project_file_name.set_file_name (eiffel_project.system.name)
 				project_file_name.add_extension (project_extension)
 
-					-- Update the list of opened projects.	
+				update_recent_projects_from_datastore
+				load_recent_projects (preferences.recent_projects_data.last_opened_projects)
+
+					-- Update the list of opened projects.
 				if recent_projects.has (project_file_name) then
 					recent_projects.prune_all (project_file_name)
 				end
@@ -108,6 +89,38 @@ feature -- Basic operations
 				end
 				preferences.recent_projects_data.last_opened_projects_preference.set_value (lop)
 				saving_done := True
+			end
+		end
+
+	update_recent_projects_from_datastore is
+			-- Get from the datastore the recent projects.
+		local
+			l_value: STRING
+		do
+			l_value := preferences.preferences.get_resource_value_direct ("LIST_" + preferences.recent_projects_data.last_opened_projects_string)
+			if l_value /= Void then
+				preferences.recent_projects_data.last_opened_projects_preference.set_value_from_string (l_value)
+			end
+		end
+
+	load_recent_projects (projects: ARRAY [STRING]) is
+			-- 
+		local
+			i: INTEGER
+			l_project_name: FILE_NAME
+		do
+			if not projects.is_empty then
+				from
+					i := projects.lower
+				until
+					i > projects.upper
+				loop
+					create l_project_name.make_from_string (projects @ i)
+					if not recent_projects.has (l_project_name) then
+						recent_projects.extend (create {FILE_NAME}.make_from_string (l_project_name))
+					end					
+					i := i + 1
+				end
 			end
 		end
 

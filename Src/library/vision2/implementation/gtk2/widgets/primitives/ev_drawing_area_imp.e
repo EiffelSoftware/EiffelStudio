@@ -45,40 +45,6 @@ create
 
 feature {NONE} -- Initialization
 
-feature -- Status report
-
-	is_tabable_to: BOOLEAN is
-			-- Is Current able to be tabbed to?
-		do
-		end
-
-	is_tabable_from: BOOLEAN is
-			-- Is Current able to be tabbed from?
-		do
-		end
-
-feature -- Status setting
-
-	enable_tabable_to is
-			-- Make `is_tabable_to' `True'.
-		do
-		end
-
-	disable_tabable_to is
-			-- Make `is_tabable_to' `False'.
-		do
-		end
-
-	enable_tabable_from is
-			-- Make `is_tabable_from' `True'.
-		do
-		end
-
-	disable_tabable_from is
-			-- Make `is_tabable_from' `False'.
-		do
-		end
-
 	needs_event_box: BOOLEAN is True
 		-- Place drawing area inside an event box.
 
@@ -90,9 +56,9 @@ feature -- Status setting
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_redraw_on_allocate (visual_widget, False)
 				-- This means that when the drawing area is resized, only the new portions are redrawn
 			gc := {EV_GTK_EXTERNALS}.gdk_gc_new (App_implementation.default_gdk_window)
-			{EV_GTK_EXTERNALS}.GTK_WIDGET_SET_FLAGS (visual_widget, {EV_GTK_EXTERNALS}.GTK_CAN_FOCUS_ENUM)
 			init_default_values
 			{EV_GTK_EXTERNALS}.gtk_widget_set_double_buffered (visual_widget, False)
+			enable_tabable_to
 		end
 
 	Gdk_events_mask: INTEGER is
@@ -104,11 +70,49 @@ feature -- Status setting
 				-- Setting this flag on other gtk widgets such as GtkTreeView causes problems with the implementation
 		end
 
+feature -- Status report
+
+	is_tabable_to: BOOLEAN
+			-- Is Current able to be tabbed to?
+
+	is_tabable_from: BOOLEAN
+			-- Is Current able to be tabbed from?
+
+feature -- Status setting
+
+	enable_tabable_to is
+			-- Make `is_tabable_to' `True'.
+		do
+			{EV_GTK_EXTERNALS}.gtk_widget_set_flags (visual_widget, {EV_GTK_EXTERNALS}.GTK_CAN_FOCUS_ENUM)
+			is_tabable_to := True
+		end
+
+	disable_tabable_to is
+			-- Make `is_tabable_to' `False'.
+		do
+			{EV_GTK_EXTERNALS}.gtk_widget_unset_flags (visual_widget, {EV_GTK_EXTERNALS}.GTK_CAN_FOCUS_ENUM)
+			is_tabable_to := False
+		end
+
+	enable_tabable_from is
+			-- Make `is_tabable_from' `True'.
+		do
+			is_tabable_from := True
+		end
+
+	disable_tabable_from is
+			-- Make `is_tabable_from' `False'.
+		do
+			is_tabable_from := False
+		end
+
+
 feature {NONE} -- Implementation
 
 	default_key_processing_blocked (a_key: EV_KEY): BOOLEAN is
 		do
-			Result := a_key.is_arrow or else a_key.code = App_implementation.Key_constants.key_tab
+			--Result := not is_tabable_from and then (a_key.is_arrow or else a_key.code = App_implementation.Key_constants.key_tab)
+			Result := a_key.is_arrow or else (not is_tabable_from and a_key.code = App_implementation.Key_constants.key_tab)
 		end
 
 	redraw is

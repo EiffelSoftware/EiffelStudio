@@ -66,7 +66,7 @@ feature -- Status setting
 
 
 	set_background_color (a_color: EV_COLOR) is
-			-- Assign `a_color' to `foreground_color'
+			-- Assign `a_color' to `background_color'
 		do
 			if needs_event_box then
 				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_event_box_set_visible_window (c_object, True)
@@ -170,7 +170,7 @@ feature -- Status setting
 		end
 
 	real_set_foreground_color (a_c_object: POINTER; a_color: EV_COLOR) is
-			-- Implementation of `set_background_color'
+			-- Implementation of `set_foreground_color'
 		local
 			color: POINTER
 		do
@@ -214,7 +214,6 @@ feature {NONE} -- Implementation
 	
 	foreground_color_imp: EV_COLOR_IMP
 		-- Color used for the foreground of `Current'
-
 
 	background_color_pointer: POINTER is
 			-- Pointer to bg color for `a_widget'.

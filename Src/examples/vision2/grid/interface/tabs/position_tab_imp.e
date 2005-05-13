@@ -33,31 +33,55 @@ feature {NONE}-- Initialization
 				-- Create all widgets.
 			create l_ev_frame_1
 			create drawable
+			create l_ev_table_1
 			create l_ev_horizontal_box_1
 			create l_ev_label_1
 			create virtual_x_position
+			create l_ev_horizontal_box_2
 			create l_ev_label_2
 			create virtual_y_position
+			create l_ev_horizontal_box_3
+			create first_visible_column_label
+			create l_ev_horizontal_box_4
+			create first_visible_row_label
+			create l_ev_horizontal_box_5
+			create last_visible_column_label
+			create l_ev_horizontal_box_6
+			create last_visible_row_label
 			
 				-- Build_widget_structure.
 			extend (l_ev_frame_1)
 			l_ev_frame_1.extend (drawable)
-			extend (l_ev_horizontal_box_1)
+			extend (l_ev_table_1)
 			l_ev_horizontal_box_1.extend (l_ev_label_1)
 			l_ev_horizontal_box_1.extend (virtual_x_position)
-			l_ev_horizontal_box_1.extend (l_ev_label_2)
-			l_ev_horizontal_box_1.extend (virtual_y_position)
+			l_ev_horizontal_box_2.extend (l_ev_label_2)
+			l_ev_horizontal_box_2.extend (virtual_y_position)
+			l_ev_horizontal_box_3.extend (first_visible_column_label)
+			l_ev_horizontal_box_4.extend (first_visible_row_label)
+			l_ev_horizontal_box_5.extend (last_visible_column_label)
+			l_ev_horizontal_box_6.extend (last_visible_row_label)
 			
-			l_ev_horizontal_box_1.set_padding_width (box_padding)
+			l_ev_table_1.resize (2, 3)
+			l_ev_table_1.set_row_spacing (box_padding)
+			l_ev_table_1.set_column_spacing (box_padding)
+				-- Insert and position all children of `l_ev_table_1'.
+			l_ev_table_1.put_at_position (l_ev_horizontal_box_1, 1, 1, 1, 1)
+			l_ev_table_1.put_at_position (l_ev_horizontal_box_2, 2, 1, 1, 1)
+			l_ev_table_1.put_at_position (l_ev_horizontal_box_3, 1, 2, 1, 1)
+			l_ev_table_1.put_at_position (l_ev_horizontal_box_4, 2, 2, 1, 1)
+			l_ev_table_1.put_at_position (l_ev_horizontal_box_5, 1, 3, 1, 1)
+			l_ev_table_1.put_at_position (l_ev_horizontal_box_6, 2, 3, 1, 1)
 			l_ev_horizontal_box_1.disable_item_expand (l_ev_label_1)
-			l_ev_horizontal_box_1.disable_item_expand (l_ev_label_2)
 			l_ev_label_1.set_text ("Virtual X : ")
 			virtual_x_position.value_range.adapt (create {INTEGER_INTERVAL}.make (0, 1000000))
+			l_ev_horizontal_box_2.set_padding_width (box_padding)
+			l_ev_horizontal_box_2.disable_item_expand (l_ev_label_2)
 			l_ev_label_2.set_text ("Virtual Y : ")
 			virtual_y_position.value_range.adapt (create {INTEGER_INTERVAL}.make (0, 1000000))
 			set_padding_width (box_padding)
 			set_border_width (box_padding)
-			disable_item_expand (l_ev_horizontal_box_1)
+			disable_item_expand (l_ev_table_1)
 			
 				--Connect events.
 			drawable.expose_actions.extend (agent drawable_exposed (?, ?, ?, ?))
@@ -77,12 +101,17 @@ feature {NONE}-- Initialization
 feature -- Access
 
 	virtual_x_position, virtual_y_position: EV_SPIN_BUTTON
+	first_visible_column_label, first_visible_row_label,
+	last_visible_column_label, last_visible_row_label: EV_LABEL
 	drawable: EV_DRAWING_AREA
 
 feature {NONE} -- Implementation
 
-	l_ev_horizontal_box_1: EV_HORIZONTAL_BOX
-	l_ev_label_1, l_ev_label_2: EV_LABEL
+	l_ev_table_1: EV_TABLE
+	l_ev_horizontal_box_1, l_ev_horizontal_box_2, l_ev_horizontal_box_3,
+	l_ev_horizontal_box_4, l_ev_horizontal_box_5, l_ev_horizontal_box_6: EV_HORIZONTAL_BOX
+	l_ev_label_1,
+	l_ev_label_2: EV_LABEL
 	l_ev_frame_1: EV_FRAME
 
 feature {NONE} -- Implementation

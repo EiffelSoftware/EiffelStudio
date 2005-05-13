@@ -1070,17 +1070,84 @@ feature -- Status report
 			Result := implementation.is_selection_keyboard_handling_enabled
 		end
 
-	first_visible_row: INTEGER is
-			-- Index of first row visible in `Current' or 0 if `row_count' = 0.
+	first_visible_row: EV_GRID_ROW is
+			-- First row visible in `Current' or Void if `row_count' = 0
+			-- If `is_vertical_scrolling_per_item', the first visible row may be only partially visible.
 		require
 			not_destroyed: not is_destroyed
+			is_displayed: is_displayed
 		do
 			Result := implementation.first_visible_row
 		ensure
-			not_empty_implies_result_positive: row_count > 0 implies result > 0
-			empty_implies_result_zero: row_count = 0 implies result = 0
+			has_rows_implies_result_not_void: row_count > 0 implies result /= Void
+			no_rows_implies_result_void: row_count = 0 implies result = Void
 		end
-		
+
+	first_visible_column: EV_GRID_COLUMN is
+			-- First column visible in `Current' or Void if `column_count' = 0
+			-- If `is_horizontal_scrolling_per_item', the first visible column may be only partially visible.
+		require
+			not_destroyed: not is_destroyed
+			is_displayed: is_displayed
+		do
+			Result := implementation.first_visible_column
+		ensure
+			has_columns_implies_result_not_void: column_count > 0 implies result /= Void
+			no_columns_implies_result_void: column_count = 0 implies result = Void
+		end
+
+	last_visible_row: EV_GRID_ROW is
+			-- Last row visible in `Current' or Void if `row_count' = 0
+			-- The last visible row may be only partially visible.
+		require
+			not_destroyed: not is_destroyed
+			is_displayed: is_displayed
+		do
+			Result := implementation.last_visible_row
+		ensure
+			has_rows_implies_result_not_void: row_count > 0 implies result /= Void
+			no_rows_implies_result_void: row_count = 0 implies result = Void
+		end
+
+	last_visible_column: EV_GRID_COLUMN is
+			-- Index of last column visible in `Current' or 0 if `column_count' = 0.
+			-- The last visible column may be only partially visible.
+		require
+			not_destroyed: not is_destroyed
+			is_displayed: is_displayed
+		do
+			Result := implementation.last_visible_column
+		ensure
+			has_columns_implies_result_not_void: column_count > 0 implies result /= Void
+			no_columns_implies_result_void: column_count = 0 implies result = Void
+		end
+
+	visible_row_indexes: ARRAYED_LIST [INTEGER] is
+			-- Indexes of all rows that are currently visible in `Current'.
+			-- `Result' may not be contiguous if `is_tree_enabled' and one or more of the
+			-- visible rows have subrows and are not expanded.
+		require
+			not_destroyed: not is_destroyed
+			is_displayed: is_displayed
+		do
+			Result := implementation.visible_row_indexes
+		ensure	
+			result_not_void: Result /= Void
+			tree_not_enabled_implies_visible_rows_contiguous: not is_tree_enabled implies Result.last - Result.first = Result.count - 1
+		end
+
+	visible_column_indexes: ARRAYED_LIST [INTEGER] is
+			-- All columns that are currently visible in `Current'.
+			-- `Result' may not be contiguous if one or more columns are hidden.
+		require
+			not_destroyed: not is_destroyed
+			is_displayed: is_displayed
+		do
+			Result := implementation.visible_column_indexes
+		ensure	
+			result_not_void: Result /= Void
+		end
+			
 	tree_node_connector_color: EV_COLOR is
 			-- Color of connectors drawn between tree nodes within `Current'.
 		require
@@ -1317,6 +1384,7 @@ feature {NONE} -- Implementation
 
 invariant
 	dynamic_modes_mutually_exclusive: not (is_content_completely_dynamic and is_content_partially_dynamic)
+
 end
 
 --|----------------------------------------------------------------

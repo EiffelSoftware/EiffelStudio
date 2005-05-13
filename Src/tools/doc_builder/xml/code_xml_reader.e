@@ -20,8 +20,6 @@ inherit
 	CODE_XML_READER_CONSTANTS
 
 	UTILITY_FUNCTIONS
-	
-	XML_ROUTINES
 
 create
 	make, make_filter
@@ -81,7 +79,7 @@ feature -- Tag
 			l_content,
 			l_tag_string: STRING
 		do		
-			l_content := output_escaped (a_content)
+			l_content := rt_output_escaped (a_content)
 			if conc_content = Void then
 				create conc_content.make_from_string (l_content)
 				Content_stack.extend (conc_content)

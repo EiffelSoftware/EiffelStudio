@@ -127,7 +127,7 @@ feature -- Conversion
 					l_html_filter.clear
 					create l_parser.make
 					l_parser.set_callbacks (l_html_filter)
-					l_parser.set_string_mode_ascii
+					--l_parser.set_string_mode_ascii
 					l_parser.parse_from_string (l_string)
 					check
 						ok_parsing: l_parser.is_correct

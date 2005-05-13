@@ -600,9 +600,7 @@ feature {NONE} -- Implementation
 				Result.prune_all_trailing ('%T')
 				Result.replace_substring_all ("amp;", "")
 			end
-			Result.replace_substring_all ("<", "&lt;")
-			Result.replace_substring_all (">", "&gt;")
-			Result.replace_substring_all ("%"", "&quot;")
+			Result := rt_output_escaped (Result)
 		end
 
 	in_pre_tag: BOOLEAN is

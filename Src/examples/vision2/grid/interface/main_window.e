@@ -15,6 +15,12 @@ inherit
 			copy, default_create, is_equal
 		end
 
+	MEMORY
+		undefine
+			copy, default_create, is_equal, dispose
+		end
+
+
 feature {NONE} -- Initialization
 
 	user_initialization is
@@ -60,6 +66,13 @@ feature {NONE} -- Implementation
 			else
 				tools_notebook.hide
 			end
+		end
+
+	full_collect_menu_item_selected is
+			-- Called by `select_actions' of `full_collect_menu_item'.
+		do
+			collect
+			full_collect
 		end
 
 end -- class MAIN_WINDOW

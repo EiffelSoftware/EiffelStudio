@@ -37,6 +37,8 @@ feature {NONE}-- Initialization
 			create view_menu
 			create view_tools_menu_item
 			create profile_menu
+			create full_collect_menu_item
+			create l_ev_menu_separator_1
 			create profiling_on_menu_item
 			create l_ev_vertical_box_1
 			create l_ev_horizontal_box_1
@@ -58,6 +60,8 @@ feature {NONE}-- Initialization
 			l_ev_menu_bar_1.extend (view_menu)
 			view_menu.extend (view_tools_menu_item)
 			l_ev_menu_bar_1.extend (profile_menu)
+			profile_menu.extend (full_collect_menu_item)
+			profile_menu.extend (l_ev_menu_separator_1)
 			profile_menu.extend (profiling_on_menu_item)
 			extend (l_ev_vertical_box_1)
 			l_ev_vertical_box_1.extend (l_ev_horizontal_box_1)
@@ -78,6 +82,7 @@ feature {NONE}-- Initialization
 			view_tools_menu_item.enable_select
 			view_tools_menu_item.set_text ("Tools Displayed")
 			profile_menu.set_text ("Profile")
+			full_collect_menu_item.set_text ("Full Memory Collect")
 			profiling_on_menu_item.set_text ("Profiling on")
 			l_ev_vertical_box_1.set_padding_width (box_padding)
 			l_ev_vertical_box_1.disable_item_expand (status_bar_frame)
@@ -98,6 +103,7 @@ feature {NONE}-- Initialization
 				--Connect events.
 			file_exit_menu_item.select_actions.extend (agent file_exit_menu_item_selected)
 			view_tools_menu_item.select_actions.extend (agent view_tools_menu_item_selected)
+			full_collect_menu_item.select_actions.extend (agent full_collect_menu_item_selected)
 			profiling_on_menu_item.select_actions.extend (agent profiling_on_menu_item_selected)
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.
@@ -108,10 +114,10 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	file_exit_menu_item: EV_MENU_ITEM
+	file_exit_menu_item, full_collect_menu_item: EV_MENU_ITEM
 	view_tools_menu_item, profiling_on_menu_item: EV_CHECK_MENU_ITEM
-	file_menu, view_menu,
-	profile_menu: EV_MENU
+	file_menu,
+	view_menu, profile_menu: EV_MENU
 	tools_notebook: EV_NOTEBOOK
 	status_bar_frame: EV_FRAME
 	grid_cell: EV_CELL
@@ -127,6 +133,7 @@ feature {NONE} -- Implementation
 	l_ev_vertical_box_1: EV_VERTICAL_BOX
 	l_ev_horizontal_box_1: EV_HORIZONTAL_BOX
 	l_ev_vertical_box_4: ROW_TAB
+	l_ev_menu_separator_1: EV_MENU_SEPARATOR
 	l_ev_vertical_box_2: GRID_TAB
 
 feature {NONE} -- Implementation
@@ -151,6 +158,11 @@ feature {NONE} -- Implementation
 	
 	view_tools_menu_item_selected is
 			-- Called by `select_actions' of `view_tools_menu_item'.
+		deferred
+		end
+	
+	full_collect_menu_item_selected is
+			-- Called by `select_actions' of `full_collect_menu_item'.
 		deferred
 		end
 	

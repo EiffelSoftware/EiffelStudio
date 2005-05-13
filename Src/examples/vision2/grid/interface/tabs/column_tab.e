@@ -73,13 +73,14 @@ feature {NONE} -- Implementation
 			l_column: EV_GRID_COLUMN
 			l_color: EV_COLOR
 		do
-			l_column := grid.column (current_column_index)
 			if an_item /= Void then
+				l_column := an_item.column
+				current_column_index := l_column.index
+
 				column_properties_frame.enable_sensitive
 				column_operations_frame.enable_sensitive
 				column_index.change_actions.block
 				column_index.set_value (l_column.index)
-				current_column_index := l_column.index
 				column_index.change_actions.resume
 				column_width.change_actions.block
 				column_width.set_value (l_column.width)

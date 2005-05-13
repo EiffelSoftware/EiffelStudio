@@ -39,8 +39,14 @@ feature {NONE}-- Initialization
 			create custom_button
 			create icon_view_button
 			create colored_button
-			create display_frame
+			create removal_frame
 			create l_ev_vertical_box_2
+			create l_ev_table_2
+			create remove_all_rows_button
+			create remove_all_columns_button
+			create display_frame
+			create l_ev_vertical_box_3
+			create is_column_resize_immediate_button
 			create is_header_displayed_button
 			create l_ev_horizontal_box_1
 			create is_row_height_fixed
@@ -52,17 +58,17 @@ feature {NONE}-- Initialization
 			create l_ev_label_2
 			create background_color_combo
 			create divider_frame
-			create l_ev_vertical_box_3
+			create l_ev_vertical_box_4
 			create is_vertical_divider_displayed_button
 			create l_ev_horizontal_box_4
 			create is_vertical_divider_dashed_button
 			create is_vertical_divider_solid_button
 			create scrolling_frame
-			create l_ev_vertical_box_4
+			create l_ev_vertical_box_5
 			create is_horizontal_scrolling_per_item
 			create is_vertical_scrolling_per_item
 			create l_ev_notebook_1
-			create l_ev_vertical_box_5
+			create l_ev_vertical_box_6
 			create l_ev_horizontal_box_5
 			create is_partially_dynamic
 			create is_completely_dynamic
@@ -71,7 +77,7 @@ feature {NONE}-- Initialization
 			create resize_columns_to_entry
 			create resize_rows_to_button
 			create resize_rows_to_entry
-			create l_ev_vertical_box_6
+			create l_ev_vertical_box_7
 			create is_tree_enabled_button
 			create tree_lines_enabled
 			create l_ev_horizontal_box_6
@@ -85,81 +91,85 @@ feature {NONE}-- Initialization
 			create expand_all_button
 			create collapse_all_button
 			create draw_tree_check_button
-			create l_ev_vertical_box_7
+			create l_ev_vertical_box_8
 			create l_ev_frame_1
 			create l_ev_horizontal_box_9
-			create l_ev_vertical_box_8
+			create l_ev_vertical_box_9
 			create set_background_of_selection_button
 			create set_tree_node_connector_button
 			create set_background_color_combo
 			create l_ev_frame_2
-			create l_ev_vertical_box_9
-			create columns_drawn_above_rows_button
 			create l_ev_vertical_box_10
+			create columns_drawn_above_rows_button
+			create l_ev_vertical_box_11
 			create enable_pick_and_drop_button
 			
 				-- Build_widget_structure.
 			extend (addition_frame)
 			addition_frame.extend (l_ev_vertical_box_1)
 			l_ev_vertical_box_1.extend (l_ev_table_1)
+			extend (removal_frame)
+			removal_frame.extend (l_ev_vertical_box_2)
+			l_ev_vertical_box_2.extend (l_ev_table_2)
 			extend (display_frame)
-			display_frame.extend (l_ev_vertical_box_2)
-			l_ev_vertical_box_2.extend (is_header_displayed_button)
-			l_ev_vertical_box_2.extend (l_ev_horizontal_box_1)
+			display_frame.extend (l_ev_vertical_box_3)
+			l_ev_vertical_box_3.extend (is_column_resize_immediate_button)
+			l_ev_vertical_box_3.extend (is_header_displayed_button)
+			l_ev_vertical_box_3.extend (l_ev_horizontal_box_1)
 			l_ev_horizontal_box_1.extend (is_row_height_fixed)
 			l_ev_horizontal_box_1.extend (fixed_row_height_spin_button)
-			l_ev_vertical_box_2.extend (l_ev_horizontal_box_2)
+			l_ev_vertical_box_3.extend (l_ev_horizontal_box_2)
 			l_ev_horizontal_box_2.extend (l_ev_label_1)
 			l_ev_horizontal_box_2.extend (foreground_color_combo)
-			l_ev_vertical_box_2.extend (l_ev_horizontal_box_3)
+			l_ev_vertical_box_3.extend (l_ev_horizontal_box_3)
 			l_ev_horizontal_box_3.extend (l_ev_label_2)
 			l_ev_horizontal_box_3.extend (background_color_combo)
 			extend (divider_frame)
-			divider_frame.extend (l_ev_vertical_box_3)
-			l_ev_vertical_box_3.extend (is_vertical_divider_displayed_button)
-			l_ev_vertical_box_3.extend (l_ev_horizontal_box_4)
+			divider_frame.extend (l_ev_vertical_box_4)
+			l_ev_vertical_box_4.extend (is_vertical_divider_displayed_button)
+			l_ev_vertical_box_4.extend (l_ev_horizontal_box_4)
 			l_ev_horizontal_box_4.extend (is_vertical_divider_dashed_button)
 			l_ev_horizontal_box_4.extend (is_vertical_divider_solid_button)
 			extend (scrolling_frame)
-			scrolling_frame.extend (l_ev_vertical_box_4)
-			l_ev_vertical_box_4.extend (is_horizontal_scrolling_per_item)
-			l_ev_vertical_box_4.extend (is_vertical_scrolling_per_item)
+			scrolling_frame.extend (l_ev_vertical_box_5)
+			l_ev_vertical_box_5.extend (is_horizontal_scrolling_per_item)
+			l_ev_vertical_box_5.extend (is_vertical_scrolling_per_item)
 			extend (l_ev_notebook_1)
-			l_ev_notebook_1.extend (l_ev_vertical_box_5)
-			l_ev_vertical_box_5.extend (l_ev_horizontal_box_5)
+			l_ev_notebook_1.extend (l_ev_vertical_box_6)
+			l_ev_vertical_box_6.extend (l_ev_horizontal_box_5)
 			l_ev_horizontal_box_5.extend (is_partially_dynamic)
 			l_ev_horizontal_box_5.extend (is_completely_dynamic)
-			l_ev_vertical_box_5.extend (resize_rows_columns_box)
+			l_ev_vertical_box_6.extend (resize_rows_columns_box)
 			resize_rows_columns_box.extend (resize_columns_to_button)
 			resize_rows_columns_box.extend (resize_columns_to_entry)
 			resize_rows_columns_box.extend (resize_rows_to_button)
 			resize_rows_columns_box.extend (resize_rows_to_entry)
-			l_ev_notebook_1.extend (l_ev_vertical_box_6)
-			l_ev_vertical_box_6.extend (is_tree_enabled_button)
-			l_ev_vertical_box_6.extend (tree_lines_enabled)
-			l_ev_vertical_box_6.extend (l_ev_horizontal_box_6)
+			l_ev_notebook_1.extend (l_ev_vertical_box_7)
+			l_ev_vertical_box_7.extend (is_tree_enabled_button)
+			l_ev_vertical_box_7.extend (tree_lines_enabled)
+			l_ev_vertical_box_7.extend (l_ev_horizontal_box_6)
 			l_ev_horizontal_box_6.extend (l_ev_label_3)
 			l_ev_horizontal_box_6.extend (subrow_indent_button)
-			l_ev_vertical_box_6.extend (l_ev_horizontal_box_7)
+			l_ev_vertical_box_7.extend (l_ev_horizontal_box_7)
 			l_ev_horizontal_box_7.extend (l_ev_label_4)
 			l_ev_horizontal_box_7.extend (subnode_pixmaps_combo)
-			l_ev_vertical_box_6.extend (set_selected_row_as_subnode_button)
-			l_ev_vertical_box_6.extend (l_ev_horizontal_box_8)
+			l_ev_vertical_box_7.extend (set_selected_row_as_subnode_button)
+			l_ev_vertical_box_7.extend (l_ev_horizontal_box_8)
 			l_ev_horizontal_box_8.extend (expand_all_button)
 			l_ev_horizontal_box_8.extend (collapse_all_button)
-			l_ev_vertical_box_6.extend (draw_tree_check_button)
-			l_ev_notebook_1.extend (l_ev_vertical_box_7)
-			l_ev_vertical_box_7.extend (l_ev_frame_1)
+			l_ev_vertical_box_7.extend (draw_tree_check_button)
+			l_ev_notebook_1.extend (l_ev_vertical_box_8)
+			l_ev_vertical_box_8.extend (l_ev_frame_1)
 			l_ev_frame_1.extend (l_ev_horizontal_box_9)
-			l_ev_horizontal_box_9.extend (l_ev_vertical_box_8)
-			l_ev_vertical_box_8.extend (set_background_of_selection_button)
-			l_ev_vertical_box_8.extend (set_tree_node_connector_button)
+			l_ev_horizontal_box_9.extend (l_ev_vertical_box_9)
+			l_ev_vertical_box_9.extend (set_background_of_selection_button)
+			l_ev_vertical_box_9.extend (set_tree_node_connector_button)
 			l_ev_horizontal_box_9.extend (set_background_color_combo)
-			l_ev_vertical_box_7.extend (l_ev_frame_2)
-			l_ev_frame_2.extend (l_ev_vertical_box_9)
-			l_ev_vertical_box_9.extend (columns_drawn_above_rows_button)
-			l_ev_notebook_1.extend (l_ev_vertical_box_10)
-			l_ev_vertical_box_10.extend (enable_pick_and_drop_button)
+			l_ev_vertical_box_8.extend (l_ev_frame_2)
+			l_ev_frame_2.extend (l_ev_vertical_box_10)
+			l_ev_vertical_box_10.extend (columns_drawn_above_rows_button)
+			l_ev_notebook_1.extend (l_ev_vertical_box_11)
+			l_ev_vertical_box_11.extend (enable_pick_and_drop_button)
 			
 			addition_frame.set_text ("Addition")
 			l_ev_table_1.resize (2, 3)
@@ -177,15 +187,27 @@ feature {NONE}-- Initialization
 			custom_button.set_text ("Custom Function")
 			icon_view_button.set_text ("Build Icon View Structure")
 			colored_button.set_text ("Build Colored Structure")
+			removal_frame.set_text ("Removal")
+			l_ev_vertical_box_2.set_border_width (box_padding)
+			l_ev_table_2.resize (2, 1)
+			l_ev_table_2.set_row_spacing (box_padding)
+			l_ev_table_2.set_column_spacing (box_padding)
+				-- Insert and position all children of `l_ev_table_2'.
+			l_ev_table_2.put_at_position (remove_all_rows_button, 1, 1, 1, 1)
+			l_ev_table_2.put_at_position (remove_all_columns_button, 2, 1, 1, 1)
+			remove_all_rows_button.set_text ("Remove All Rows")
+			remove_all_columns_button.set_text ("Remove All Columns")
 			display_frame.set_text ("Display Properties")
-			l_ev_vertical_box_2.disable_item_expand (is_header_displayed_button)
-			l_ev_vertical_box_2.disable_item_expand (l_ev_horizontal_box_1)
+			l_ev_vertical_box_3.disable_item_expand (is_header_displayed_button)
+			l_ev_vertical_box_3.disable_item_expand (l_ev_horizontal_box_1)
+			is_column_resize_immediate_button.enable_select
+			is_column_resize_immediate_button.set_text ("Is Column Resize Immediate")
 			is_header_displayed_button.enable_select
-			is_header_displayed_button.set_text ("is_header_displayed")
+			is_header_displayed_button.set_text ("Is Header Displayed")
 			l_ev_horizontal_box_1.disable_item_expand (is_row_height_fixed)
 			l_ev_horizontal_box_1.disable_item_expand (fixed_row_height_spin_button)
 			is_row_height_fixed.enable_select
-			is_row_height_fixed.set_text ("is_row_height_fixed")
+			is_row_height_fixed.set_text ("Is Row Height Fixed")
 			fixed_row_height_spin_button.set_text ("16")
 			fixed_row_height_spin_button.value_range.adapt (create {INTEGER_INTERVAL}.make (1, 1000))
 			fixed_row_height_spin_button.set_value (16)
@@ -194,64 +216,64 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_3.disable_item_expand (l_ev_label_2)
 			l_ev_label_2.set_text ("Background Color : ")
 			divider_frame.set_text ("Divider Properties")
-			l_ev_vertical_box_3.set_padding_width (box_padding)
-			l_ev_vertical_box_3.set_border_width (box_padding)
-			l_ev_vertical_box_3.disable_item_expand (is_vertical_divider_displayed_button)
-			is_vertical_divider_displayed_button.set_text ("is_vertical_divider_displayed")
+			l_ev_vertical_box_4.set_padding_width (box_padding)
+			l_ev_vertical_box_4.set_border_width (box_padding)
+			l_ev_vertical_box_4.disable_item_expand (is_vertical_divider_displayed_button)
+			is_vertical_divider_displayed_button.set_text ("Is Vertical Divider Displayed")
 			l_ev_horizontal_box_4.disable_item_expand (is_vertical_divider_dashed_button)
 			l_ev_horizontal_box_4.disable_item_expand (is_vertical_divider_solid_button)
 			is_vertical_divider_dashed_button.disable_sensitive
-			is_vertical_divider_dashed_button.set_text ("is_vertical_divider_dashed")
+			is_vertical_divider_dashed_button.set_text ("Is Vertical Divider Dashed")
 			is_vertical_divider_solid_button.disable_sensitive
-			is_vertical_divider_solid_button.set_text ("is_vertical_divider_solid")
+			is_vertical_divider_solid_button.set_text ("Is Vertical Divider Solid")
 			scrolling_frame.set_text ("Scrolling Properties")
-			l_ev_vertical_box_4.set_padding_width (box_padding)
-			l_ev_vertical_box_4.set_border_width (box_padding)
-			l_ev_vertical_box_4.disable_item_expand (is_horizontal_scrolling_per_item)
-			l_ev_vertical_box_4.disable_item_expand (is_vertical_scrolling_per_item)
-			is_horizontal_scrolling_per_item.set_text ("is_horizontal_scrolling_per_item")
-			is_vertical_scrolling_per_item.enable_select
-			is_vertical_scrolling_per_item.set_text ("is_vertical_scrolling_per_item")
-			l_ev_notebook_1.set_item_text (l_ev_vertical_box_5, "Dynamic")
-			l_ev_notebook_1.set_item_text (l_ev_vertical_box_6, "Tree")
-			l_ev_notebook_1.set_item_text (l_ev_vertical_box_7, "Misc")
-			l_ev_notebook_1.set_item_text (l_ev_vertical_box_10, "P'n'D")
 			l_ev_vertical_box_5.set_padding_width (box_padding)
 			l_ev_vertical_box_5.set_border_width (box_padding)
-			l_ev_vertical_box_5.disable_item_expand (l_ev_horizontal_box_5)
-			l_ev_vertical_box_5.disable_item_expand (resize_rows_columns_box)
+			l_ev_vertical_box_5.disable_item_expand (is_horizontal_scrolling_per_item)
+			l_ev_vertical_box_5.disable_item_expand (is_vertical_scrolling_per_item)
+			is_horizontal_scrolling_per_item.set_text ("Is Horizontal Scolling Per Item")
+			is_vertical_scrolling_per_item.enable_select
+			is_vertical_scrolling_per_item.set_text ("Is Vertical Scrolling Per Item")
+			l_ev_notebook_1.set_item_text (l_ev_vertical_box_6, "Dynamic")
+			l_ev_notebook_1.set_item_text (l_ev_vertical_box_7, "Tree")
+			l_ev_notebook_1.set_item_text (l_ev_vertical_box_8, "Misc")
+			l_ev_notebook_1.set_item_text (l_ev_vertical_box_11, "P'n'D")
+			l_ev_vertical_box_6.set_padding_width (box_padding)
+			l_ev_vertical_box_6.set_border_width (box_padding)
+			l_ev_vertical_box_6.disable_item_expand (l_ev_horizontal_box_5)
+			l_ev_vertical_box_6.disable_item_expand (resize_rows_columns_box)
 			l_ev_horizontal_box_5.disable_item_expand (is_partially_dynamic)
 			l_ev_horizontal_box_5.disable_item_expand (is_completely_dynamic)
-			is_partially_dynamic.set_text ("is_partially_dynamic")
-			is_completely_dynamic.set_text ("is_completely_dynamic")
+			is_partially_dynamic.set_text ("Is Partially Dynamic")
+			is_completely_dynamic.set_text ("Is Completely Dynamic")
 			resize_rows_columns_box.disable_sensitive
 			resize_rows_columns_box.set_padding_width (box_padding)
 			resize_rows_columns_box.disable_item_expand (resize_columns_to_button)
 			resize_rows_columns_box.disable_item_expand (resize_columns_to_entry)
 			resize_rows_columns_box.disable_item_expand (resize_rows_to_button)
 			resize_rows_columns_box.disable_item_expand (resize_rows_to_entry)
-			resize_columns_to_button.set_text ("resize_columns_to")
+			resize_columns_to_button.set_text ("Resize Columns To")
 			resize_columns_to_entry.disable_sensitive
 			resize_columns_to_entry.set_text ("1")
 			resize_columns_to_entry.value_range.adapt (create {INTEGER_INTERVAL}.make (1, 1000000))
 			resize_columns_to_entry.set_value (1)
-			resize_rows_to_button.set_text ("resize_rows_to")
+			resize_rows_to_button.set_text ("Resize Rows To")
 			resize_rows_to_entry.disable_sensitive
 			resize_rows_to_entry.set_text ("1")
 			resize_rows_to_entry.value_range.adapt (create {INTEGER_INTERVAL}.make (1, 1000000))
 			resize_rows_to_entry.set_value (1)
-			l_ev_vertical_box_6.set_padding_width (box_padding)
-			l_ev_vertical_box_6.set_border_width (box_padding)
-			l_ev_vertical_box_6.disable_item_expand (is_tree_enabled_button)
-			l_ev_vertical_box_6.disable_item_expand (tree_lines_enabled)
-			l_ev_vertical_box_6.disable_item_expand (l_ev_horizontal_box_6)
-			l_ev_vertical_box_6.disable_item_expand (l_ev_horizontal_box_7)
-			l_ev_vertical_box_6.disable_item_expand (set_selected_row_as_subnode_button)
-			l_ev_vertical_box_6.disable_item_expand (l_ev_horizontal_box_8)
-			l_ev_vertical_box_6.disable_item_expand (draw_tree_check_button)
-			is_tree_enabled_button.set_text ("is_tree_enabled")
+			l_ev_vertical_box_7.set_padding_width (box_padding)
+			l_ev_vertical_box_7.set_border_width (box_padding)
+			l_ev_vertical_box_7.disable_item_expand (is_tree_enabled_button)
+			l_ev_vertical_box_7.disable_item_expand (tree_lines_enabled)
+			l_ev_vertical_box_7.disable_item_expand (l_ev_horizontal_box_6)
+			l_ev_vertical_box_7.disable_item_expand (l_ev_horizontal_box_7)
+			l_ev_vertical_box_7.disable_item_expand (set_selected_row_as_subnode_button)
+			l_ev_vertical_box_7.disable_item_expand (l_ev_horizontal_box_8)
+			l_ev_vertical_box_7.disable_item_expand (draw_tree_check_button)
+			is_tree_enabled_button.set_text ("Is Tree Enabled")
 			tree_lines_enabled.enable_select
-			tree_lines_enabled.set_text ("tree_lines_enabled")
+			tree_lines_enabled.set_text ("Tree Lines Enabled")
 			l_ev_horizontal_box_6.disable_item_expand (l_ev_label_3)
 			l_ev_label_3.set_text ("Subrow_indent : ")
 			l_ev_label_3.align_text_left
@@ -264,20 +286,21 @@ feature {NONE}-- Initialization
 			expand_all_button.set_text ("Expand all")
 			collapse_all_button.set_text ("Collapse all")
 			draw_tree_check_button.set_text ("Draw New Tree Nodes")
-			l_ev_vertical_box_7.disable_item_expand (l_ev_frame_1)
-			l_ev_vertical_box_7.disable_item_expand (l_ev_frame_2)
+			l_ev_vertical_box_8.disable_item_expand (l_ev_frame_1)
+			l_ev_vertical_box_8.disable_item_expand (l_ev_frame_2)
 			l_ev_frame_1.set_text ("Colors")
-			l_ev_vertical_box_8.disable_item_expand (set_background_of_selection_button)
+			l_ev_vertical_box_9.disable_item_expand (set_background_of_selection_button)
 			set_background_of_selection_button.set_text ("Set Background of Selection To")
 			set_tree_node_connector_button.set_text ("Set Tree Node Connectors To")
 			l_ev_frame_2.set_text ("Column Drawing")
 			columns_drawn_above_rows_button.enable_select
 			columns_drawn_above_rows_button.set_text ("Columns Drawn Above Rows")
-			l_ev_vertical_box_10.disable_item_expand (enable_pick_and_drop_button)
+			l_ev_vertical_box_11.disable_item_expand (enable_pick_and_drop_button)
 			enable_pick_and_drop_button.set_text ("Enable pick and drop on all items")
 			set_padding_width (box_padding)
 			set_border_width (box_padding)
 			disable_item_expand (addition_frame)
+			disable_item_expand (removal_frame)
 			disable_item_expand (display_frame)
 			disable_item_expand (divider_frame)
 			disable_item_expand (scrolling_frame)
@@ -289,6 +312,9 @@ feature {NONE}-- Initialization
 			custom_button.select_actions.extend (agent custom_button_selected)
 			icon_view_button.select_actions.extend (agent icon_view_button_selected)
 			colored_button.select_actions.extend (agent colored_button_selected)
+			remove_all_rows_button.select_actions.extend (agent remove_all_row_button_selected)
+			remove_all_columns_button.select_actions.extend (agent remove_all_columns_button_selected)
+			is_column_resize_immediate_button.select_actions.extend (agent is_column_resize_immediate_button_selected)
 			is_header_displayed_button.select_actions.extend (agent is_header_displayed_button_selected)
 			is_row_height_fixed.select_actions.extend (agent is_row_height_fixed_selected)
 			fixed_row_height_spin_button.change_actions.extend (agent fixed_row_height_spin_button_changed (?))
@@ -326,20 +352,21 @@ feature {NONE}-- Initialization
 feature -- Access
 
 	fixed_row_height_spin_button, resize_columns_to_entry, resize_rows_to_entry, subrow_indent_button: EV_SPIN_BUTTON
-	is_header_displayed_button,
-	is_row_height_fixed, is_vertical_divider_displayed_button, is_horizontal_scrolling_per_item,
-	is_vertical_scrolling_per_item, is_partially_dynamic, is_completely_dynamic, resize_columns_to_button,
-	resize_rows_to_button, is_tree_enabled_button, tree_lines_enabled, draw_tree_check_button,
-	columns_drawn_above_rows_button, enable_pick_and_drop_button: EV_CHECK_BUTTON
+	is_column_resize_immediate_button,
+	is_header_displayed_button, is_row_height_fixed, is_vertical_divider_displayed_button,
+	is_horizontal_scrolling_per_item, is_vertical_scrolling_per_item, is_partially_dynamic,
+	is_completely_dynamic, resize_columns_to_button, resize_rows_to_button, is_tree_enabled_button,
+	tree_lines_enabled, draw_tree_check_button, columns_drawn_above_rows_button, enable_pick_and_drop_button: EV_CHECK_BUTTON
 	is_vertical_divider_dashed_button,
 	is_vertical_divider_solid_button, set_background_of_selection_button, set_tree_node_connector_button: EV_RADIO_BUTTON
 	foreground_color_combo,
 	background_color_combo, subnode_pixmaps_combo, set_background_color_combo: EV_COMBO_BOX
 	resize_rows_columns_box: EV_HORIZONTAL_BOX
 	new_label_button,
-	misc_button, custom_button, icon_view_button, colored_button, set_selected_row_as_subnode_button,
-	expand_all_button, collapse_all_button: EV_BUTTON
-	addition_frame, display_frame, divider_frame,
+	misc_button, custom_button, icon_view_button, colored_button, remove_all_rows_button,
+	remove_all_columns_button, set_selected_row_as_subnode_button, expand_all_button,
+	collapse_all_button: EV_BUTTON
+	addition_frame, removal_frame, display_frame, divider_frame,
 	scrolling_frame: EV_FRAME
 
 feature {NONE} -- Implementation
@@ -348,13 +375,14 @@ feature {NONE} -- Implementation
 	l_ev_frame_1, l_ev_frame_2: EV_FRAME
 	l_ev_vertical_box_1, l_ev_vertical_box_2,
 	l_ev_vertical_box_3, l_ev_vertical_box_4, l_ev_vertical_box_5, l_ev_vertical_box_6,
-	l_ev_vertical_box_7, l_ev_vertical_box_8, l_ev_vertical_box_9, l_ev_vertical_box_10: EV_VERTICAL_BOX
-	l_ev_horizontal_box_1,
-	l_ev_horizontal_box_2, l_ev_horizontal_box_3, l_ev_horizontal_box_4, l_ev_horizontal_box_5,
-	l_ev_horizontal_box_6, l_ev_horizontal_box_7, l_ev_horizontal_box_8, l_ev_horizontal_box_9: EV_HORIZONTAL_BOX
-	l_ev_label_1,
-	l_ev_label_2, l_ev_label_3, l_ev_label_4: EV_LABEL
-	l_ev_table_1: EV_TABLE
+	l_ev_vertical_box_7, l_ev_vertical_box_8, l_ev_vertical_box_9, l_ev_vertical_box_10,
+	l_ev_vertical_box_11: EV_VERTICAL_BOX
+	l_ev_horizontal_box_1, l_ev_horizontal_box_2, l_ev_horizontal_box_3,
+	l_ev_horizontal_box_4, l_ev_horizontal_box_5, l_ev_horizontal_box_6, l_ev_horizontal_box_7,
+	l_ev_horizontal_box_8, l_ev_horizontal_box_9: EV_HORIZONTAL_BOX
+	l_ev_label_1, l_ev_label_2, l_ev_label_3,
+	l_ev_label_4: EV_LABEL
+	l_ev_table_1, l_ev_table_2: EV_TABLE
 
 feature {NONE} -- Implementation
 
@@ -393,6 +421,21 @@ feature {NONE} -- Implementation
 	
 	colored_button_selected is
 			-- Called by `select_actions' of `colored_button'.
+		deferred
+		end
+	
+	remove_all_row_button_selected is
+			-- Called by `select_actions' of `remove_all_rows_button'.
+		deferred
+		end
+	
+	remove_all_columns_button_selected is
+			-- Called by `select_actions' of `remove_all_columns_button'.
+		deferred
+		end
+	
+	is_column_resize_immediate_button_selected is
+			-- Called by `select_actions' of `is_column_resize_immediate_button'.
 		deferred
 		end
 	

@@ -991,11 +991,11 @@ feature {NONE} -- Implementation
 				if l_x_offset >= l_line_width and not l_has_data then
 						-- Some (or all) of the line ends in the viewable area.  So we must clear from the end of
 						-- the line to the edge of the viewport in the background color.
-						if l_line_width <= offset then
-							l_start_clear := l_line_width.max (offset) + (l_margin_width - offset).max (0)
-						else
-							l_start_clear := l_line_width.max (offset) + l_margin_width
-						end
+					if l_line_width <= offset then
+						l_start_clear := l_line_width.max (offset) + (l_margin_width - offset).max (0)
+					else
+						l_start_clear := l_line_width.max (offset) + l_margin_width
+					end
 
 					if l_line_width < x_offset or (l_start_clear >= x_offset and l_start_clear <= (x_offset + a_width)) then
 						debug ("editor")

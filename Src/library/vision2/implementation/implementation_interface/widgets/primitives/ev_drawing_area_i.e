@@ -18,7 +18,7 @@ inherit
 			interface
 		end
 
-	EV_TAB_CONTROLABLE_I
+	EV_TAB_CONTROLLABLE_I
 		redefine
 			interface
 		end

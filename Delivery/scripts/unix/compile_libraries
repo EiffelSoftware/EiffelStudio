@@ -15,7 +15,7 @@ if echo "$ISE_PLATFORM" | grep "linux" >/dev/null 2>&1; then
 elif echo "$ISE_PLATFORM" | grep "solaris" >/dev/null 2>&1; then
 	cp scripts/makefile.solaris .
 	make -f makefile.solaris
-elif echo "$ISE_PLATFORM" | grep "sgi" >/dev/null 2>&1; then
+elif echo "$ISE_PLATFORM" | grep "irix" >/dev/null 2>&1; then
 	cp scripts/makefile.sgi .
 	make -f makefile.sgi
 elif [ "$ISE_PLATFORM" = "hpux-11" ]; then

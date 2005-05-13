@@ -841,10 +841,13 @@ feature {NONE} -- Mouse copy cut
 		local
 			x_p, y_p: INTEGER
 		do
-			y_p := (prev_y_cur - first_line_displayed) * line_height
+			y_p := (prev_y_cur - first_line_displayed) * line_height + editor_viewport.y_offset
 			if y_p >= 0 and then y_p < editor_drawing_area.height then				
 					-- Wipe the cursor out if it is at a position that is still on screen.
 				x_p := prev_x_cur - offset
+				debug ("editor")
+					draw_flash (x_p, y_p, cursor_width, line_height, False)
+				end
 				editor_drawing_area.redraw_rectangle (x_p, y_p, cursor_width, line_height)
 				editor_drawing_area.flush
 			end

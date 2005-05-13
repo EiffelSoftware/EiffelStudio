@@ -35,12 +35,24 @@ feature {NONE} -- Initialization
 			status_bar_frame.extend (status_bar)
 			create mem_short.make_with_key_combination (create {EV_KEY}.make_with_code (feature {EV_KEY_CONSTANTS}.key_1), True, False, False)
 			accelerators.extend (mem_short)
-
+			tools_notebook.selection_actions.extend (agent update_tab_information)
 		end
 
 	mem_short: EV_ACCELERATOR
 
 feature {NONE} -- Implementation
+
+	update_tab_information is
+			-- A selection has changed in `tools_notebook' so update tabs.
+
+		do
+			if tools_notebook.selected_item = position_tab then
+				position_tab.set_is_selected (True)
+			else
+				position_tab.set_is_selected (False)
+			end
+		end
+		
 
 	file_exit_menu_item_selected is
 			-- Called by `select_actions' of `file_exit_menu_item'.

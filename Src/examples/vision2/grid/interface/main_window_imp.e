@@ -44,13 +44,13 @@ feature {NONE}-- Initialization
 			create l_ev_horizontal_box_1
 			create grid_cell
 			create tools_notebook
-			create l_ev_vertical_box_2
-			create l_ev_vertical_box_3
-			create l_ev_vertical_box_4
-			create l_ev_vertical_box_5
-			create l_ev_vertical_box_6
-			create l_ev_vertical_box_7
-			create l_ev_vertical_box_8
+			create grid_tab
+			create column_tab
+			create row_tab
+			create item_tab
+			create selection_tab
+			create position_tab
+			create events_tab
 			create status_bar_frame
 			
 				-- Build_widget_structure.
@@ -67,13 +67,13 @@ feature {NONE}-- Initialization
 			l_ev_vertical_box_1.extend (l_ev_horizontal_box_1)
 			l_ev_horizontal_box_1.extend (grid_cell)
 			l_ev_horizontal_box_1.extend (tools_notebook)
-			tools_notebook.extend (l_ev_vertical_box_2)
-			tools_notebook.extend (l_ev_vertical_box_3)
-			tools_notebook.extend (l_ev_vertical_box_4)
-			tools_notebook.extend (l_ev_vertical_box_5)
-			tools_notebook.extend (l_ev_vertical_box_6)
-			tools_notebook.extend (l_ev_vertical_box_7)
-			tools_notebook.extend (l_ev_vertical_box_8)
+			tools_notebook.extend (grid_tab)
+			tools_notebook.extend (column_tab)
+			tools_notebook.extend (row_tab)
+			tools_notebook.extend (item_tab)
+			tools_notebook.extend (selection_tab)
+			tools_notebook.extend (position_tab)
+			tools_notebook.extend (events_tab)
 			l_ev_vertical_box_1.extend (status_bar_frame)
 			
 			file_menu.set_text ("File")
@@ -90,13 +90,13 @@ feature {NONE}-- Initialization
 			grid_cell.set_minimum_width (500)
 			grid_cell.set_minimum_height (400)
 			tools_notebook.set_minimum_width (400)
-			tools_notebook.set_item_text (l_ev_vertical_box_2, "General")
-			tools_notebook.set_item_text (l_ev_vertical_box_3, "Column")
-			tools_notebook.set_item_text (l_ev_vertical_box_4, "Row")
-			tools_notebook.set_item_text (l_ev_vertical_box_5, "Item")
-			tools_notebook.set_item_text (l_ev_vertical_box_6, "Selection")
-			tools_notebook.set_item_text (l_ev_vertical_box_7, "Position")
-			tools_notebook.set_item_text (l_ev_vertical_box_8, "Events")
+			tools_notebook.set_item_text (grid_tab, "General")
+			tools_notebook.set_item_text (column_tab, "Column")
+			tools_notebook.set_item_text (row_tab, "Row")
+			tools_notebook.set_item_text (item_tab, "Item")
+			tools_notebook.set_item_text (selection_tab, "Selection")
+			tools_notebook.set_item_text (position_tab, "Position")
+			tools_notebook.set_item_text (events_tab, "Events")
 			status_bar_frame.set_style (1)
 			set_title ("Grid Tester")
 			
@@ -116,25 +116,25 @@ feature -- Access
 
 	file_exit_menu_item, full_collect_menu_item: EV_MENU_ITEM
 	view_tools_menu_item, profiling_on_menu_item: EV_CHECK_MENU_ITEM
+	column_tab: COLUMN_TAB
+	events_tab: EVENTS_TAB
+	position_tab: POSITION_TAB
 	file_menu,
 	view_menu, profile_menu: EV_MENU
+	selection_tab: SELECTION_TAB
+	item_tab: ITEM_TAB
+	row_tab: ROW_TAB
 	tools_notebook: EV_NOTEBOOK
 	status_bar_frame: EV_FRAME
 	grid_cell: EV_CELL
+	grid_tab: GRID_TAB
 
 feature {NONE} -- Implementation
 
-	l_ev_vertical_box_3: COLUMN_TAB
-	l_ev_vertical_box_8: EVENTS_TAB
-	l_ev_vertical_box_7: POSITION_TAB
-	l_ev_vertical_box_6: SELECTION_TAB
 	l_ev_menu_bar_1: EV_MENU_BAR
-	l_ev_vertical_box_5: ITEM_TAB
 	l_ev_vertical_box_1: EV_VERTICAL_BOX
 	l_ev_horizontal_box_1: EV_HORIZONTAL_BOX
-	l_ev_vertical_box_4: ROW_TAB
 	l_ev_menu_separator_1: EV_MENU_SEPARATOR
-	l_ev_vertical_box_2: GRID_TAB
 
 feature {NONE} -- Implementation
 

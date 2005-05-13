@@ -315,6 +315,9 @@ feature {NONE} -- Implementation
 			current_row: EV_GRID_ROW
 			font: EV_FONT
 		do
+			if profile_cell.item then
+				start_profiling
+			end
 			create time1.make_now
 			add_items (5, 400)			
 			grid.column (1).set_title ("One")
@@ -546,7 +549,9 @@ feature {NONE} -- Implementation
 				end
 				counter := counter + 1
 			end
-
+			if profile_cell.item then
+				stop_profiling
+			end
 		end
 
 	pointer_double_press_received_on_grid (an_x, a_y, button: INTEGER; grid_item: EV_GRID_ITEM) is

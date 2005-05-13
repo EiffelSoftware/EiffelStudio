@@ -46,12 +46,20 @@ feature {NONE} -- Implementation
 			virtual_y_position.change_actions.block
 			virtual_y_position.set_value (a_y)
 			virtual_y_position.change_actions.resume
+			first_visible_row_label.set_text ("First Visible Row : " + grid.first_visible_row.index.out)
+			first_visible_column_label.set_text ("First Visible Column : " + grid.first_visible_column.index.out)
+			last_visible_row_label.set_text ("Last Visible Row : " + grid.last_visible_row.index.out)
+			last_visible_column_label.set_text ("Last Visible Column : " + grid.last_visible_column.index.out)
 		end
 
 	virtual_size_changed (a_width, a_height: INTEGER) is
 			-- Virtual size of `grid' has changed.
 		do
 			drawable.redraw
+			first_visible_row_label.set_text ("First Visible Row : " + grid.first_visible_row.index.out)
+			first_visible_column_label.set_text ("First Visible Column : " + grid.first_visible_column.index.out)
+			last_visible_row_label.set_text ("Last Visible Row : " + grid.last_visible_row.index.out)
+			last_visible_column_label.set_text ("Last Visible Column : " + grid.last_visible_column.index.out)
 		end
 		
 	virtual_x_position_changed (a_value: INTEGER) is
@@ -60,6 +68,8 @@ feature {NONE} -- Implementation
 			grid.virtual_position_changed_actions.block
 			grid.set_virtual_position (a_value, grid.virtual_y_position)
 			grid.virtual_position_changed_actions.resume
+			first_visible_column_label.set_text ("First Visible Column : " + grid.first_visible_column.index.out)
+			last_visible_column_label.set_text ("Last Visible Column : " + grid.last_visible_column.index.out)
 			drawable.redraw
 		end
 
@@ -70,6 +80,8 @@ feature {NONE} -- Implementation
 			grid.virtual_position_changed_actions.block
 			grid.set_virtual_position (grid.virtual_x_position, a_value)
 			grid.virtual_position_changed_actions.resume
+			first_visible_row_label.set_text ("First Visible Row : " + grid.first_visible_row.index.out)
+			last_visible_row_label.set_text ("Last Visible Row : " + grid.last_visible_row.index.out)
 			drawable.redraw
 		end
 		
@@ -129,7 +141,11 @@ feature {NONE} -- Implementation
 	drawable_resized (a_x, a_y, a_width, a_height: INTEGER) is
 			-- Called by `resize_actions' of `drawable'.
 		do
-			drawable.redraw	
+			drawable.redraw
+			first_visible_row_label.set_text ("First Visible Row : " + grid.first_visible_row.out)
+			first_visible_column_label.set_text ("First Visible Column : " + grid.first_visible_column.out)
+			last_visible_row_label.set_text ("Last Visible Row : " + grid.last_visible_row.out)
+			last_visible_column_label.set_text ("Last Visible Column : " + grid.last_visible_column.out)
 		end
 		
 	button_pressed_on_drawable (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is

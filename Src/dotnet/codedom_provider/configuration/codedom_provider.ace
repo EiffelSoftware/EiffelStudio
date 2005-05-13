@@ -60,13 +60,6 @@ cluster
 			namespace ("EiffelSoftware.CodeDom.Parser")
 		end
 
-	eiffel_parser:		"$EIFFEL_SRC\Eiffel\common\parser\parser"
-		exclude
-			"CVS"; "cluster_indexing_parser.e"; "external_parser_skeleton.e"; "external_parser.e"; "external_scanner.e"; "external_tokens.e"
-		default
-			namespace ("EiffelSoftware.CodeDom.Parser")
-		end
-
 	eiffel_parser_addons:	"$EIFFEL_SRC\Eiffel\API\error\common"
 		exclude
 			"CVS"; "error_handler.e"; "syntax_error.e";
@@ -91,20 +84,7 @@ cluster
 			namespace ("EiffelSoftware.Library.Gobo")
 		end
 
-	all ast:		"$EIFFEL_SRC\eiffel\common\parser\ast"
-		exclude
-			"CVS"; "il_extension_as.e"; 
-		default
-			namespace ("EiffelSoftware.Library.AST")
-		end
-
-	yacc (ast):		"$EIFFEL_SRC\eiffel\yacc"
-
-	structures (ast):		"$EIFFEL_SRC\eiffel\eiffel\structures"
-
-	const (ast):		"$EIFFEL_SRC\eiffel\eiffel\const"
-
-	eiffel_helpers (ast):		"$EIFFEL_SRC\library\helpers\eiffel"
+	all ast:		"$EIFFEL_SRC\Eiffel\common"
 
 end -- system EiffelSoftware.CodeDom
 

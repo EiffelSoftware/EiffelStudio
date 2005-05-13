@@ -3151,7 +3151,7 @@ feature {NONE} -- Event handling
 			end
 
 			pointed_item := drawer.item_at_position_strict (a_x, a_y)
-			if pointer_double_press_actions_internal /= Void and then not pointer_double_press_actions_internal.is_empty then
+			if pointer_double_press_item_actions_internal /= Void and then not pointer_double_press_item_actions_internal.is_empty then
 				if pointed_item /= Void then
 					pointed_item_interface := pointed_item.interface
 				end
@@ -3205,7 +3205,7 @@ feature {NONE} -- Event handling
 			end
 
 			pointed_item := drawer.item_at_position_strict (a_x, a_y)
-			if pointer_button_release_actions_internal /= Void and then not pointer_button_release_actions_internal.is_empty then
+			if pointer_button_release_item_actions_internal /= Void and then not pointer_button_release_item_actions_internal.is_empty then
 				if pointed_item /= Void then
 					pointed_item_interface := pointed_item.interface
 				end

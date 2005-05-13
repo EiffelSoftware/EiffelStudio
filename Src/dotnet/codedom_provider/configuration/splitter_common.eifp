@@ -2,7 +2,7 @@
 {
 "VisualStudioVer" = "7.1"
 "FileVer" = "2.5.1316.0"
-"ProjectIdGuid" = "{D8ABACA5-874D-4C90-BC06-D49A7002DD1B}"
+"ProjectIdGuid" = "{BAD8BE13-1377-4DEB-9D75-E276564832E8}"
 }
 "Configurations"
 {
@@ -12,7 +12,7 @@
 "DotnetNamingConvention" = "true"
 "ClusterNamespaceFormat" = "none"
 "TargetCLRVersion" = "default"
-"PrecompiledLibrary" = "${EIFFEL_SRC}\\dotnet\\codedom_provider\\build_envision\\EiffelSoftware.CodeDom.CacheBrowser\\obj\\Debug"
+"PrecompiledLibrary" = "${EIFFEL_SRC}\\dotnet\\codedom_provider\\build_studio_debug\\EiffelSoftware.CodeDom.CacheBrowser"
 "UseOptimizedPrecompile" = "true"
 "AssemblyTitle" = ""
 "AssemblyDescription" = ""

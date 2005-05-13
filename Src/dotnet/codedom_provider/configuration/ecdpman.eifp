@@ -2,17 +2,17 @@
 {
 "VisualStudioVer" = "7.1"
 "FileVer" = "2.5.1316.0"
-"ProjectIdGuid" = "{D37FAF55-0E77-4244-9781-328FD8C33D80}"
+"ProjectIdGuid" = "{8811B383-2AE0-44D4-ABB6-3E3DD9C9EE0D}"
 }
 "Configurations"
 {
-"AssemblyName" = "EiffelSoftware.CodeDom.CacheBrowser"
+"AssemblyName" = "ecdpman"
 "DefaultNamespace" = ""
-"OutputType" = "library"
+"OutputType" = "windows"
 "DotnetNamingConvention" = "true"
-"ClusterNamespaceFormat" = "full"
+"ClusterNamespaceFormat" = "name"
 "TargetCLRVersion" = "default"
-"PrecompiledLibrary" = "${EIFFEL_SRC}\\dotnet\\codedom_provider\\build_envision\\EiffelSoftware.CodeDom.Base\\obj\\Debug"
+"PrecompiledLibrary" = "${EIFFEL_SRC}\\dotnet\\codedom_provider\\build_studio_debug\\EiffelSoftware.CodeDom.Vision2"
 "UseOptimizedPrecompile" = "true"
 "AssemblyTitle" = ""
 "AssemblyDescription" = ""
@@ -28,8 +28,8 @@
     {
         "Debug"
         {
-        "RootClass" = "ANY"
-        "CreationRoutine" = ""
+        "RootClass" = "ECDM_APPLICATION"
+        "CreationRoutine" = "make_and_launch"
         "ConditionalCompilationSymbols" = ""
         "OptimizeCode" = "false"
         "GenerateCLSCompliantCode" = "true"
@@ -40,17 +40,17 @@
         "RegisterForCOMInterop" = "false"
         "GenerateDebugInfo" = "true"
         "EvalPreconditions" = "true"
-        "EvalPostconditions" = "false"
-        "EvalChecks" = "false"
-        "EvalLoops" = "false"
-        "EvalInvariants" = "false"
+        "EvalPostconditions" = "true"
+        "EvalChecks" = "true"
+        "EvalLoops" = "true"
+        "EvalInvariants" = "true"
         "IncludePaths" = ""
         "ObjectFiles" = ""
         }
         "Release"
         {
-        "RootClass" = "ANY"
-        "CreationRoutine" = ""
+        "RootClass" = "ECDM_APPLICATION"
+        "CreationRoutine" = "make_and_launch"
         "ConditionalCompilationSymbols" = ""
         "OptimizeCode" = "true"
         "GenerateCLSCompliantCode" = "true"
@@ -72,41 +72,6 @@
 }
 "References"
 {
-    "Assembly"
-    {
-    "Name" = "Accessibility"
-    "ClassPrefix" = ""
-    "HintPath" = "..\\..\\..\\..\\..\\WINDOWS\\Microsoft.NET\\Framework\\v1.1.4322\\Accessibility.dll"
-    "CopyLocal" = "false"
-    }
-    "Assembly"
-    {
-    "Name" = "System.Configuration.Install"
-    "ClassPrefix" = "CONFIG_INSTALL_"
-    "HintPath" = "..\\..\\..\\..\\..\\WINDOWS\\Microsoft.NET\\Framework\\v1.1.4322\\System.Configuration.Install.dll"
-    "CopyLocal" = "false"
-    }
-    "Assembly"
-    {
-    "Name" = "System.Drawing"
-    "ClassPrefix" = "DRAWING_"
-    "HintPath" = "..\\..\\..\\..\\..\\WINDOWS\\Microsoft.NET\\Framework\\v1.1.4322\\system.drawing.dll"
-    "CopyLocal" = "false"
-    }
-    "Assembly"
-    {
-    "Name" = "System.Runtime.Serialization.Formatters.Soap"
-    "ClassPrefix" = ""
-    "HintPath" = "..\\..\\..\\..\\..\\WINDOWS\\Microsoft.NET\\Framework\\v1.1.4322\\system.runtime.serialization.formatters.soap.dll"
-    "CopyLocal" = "false"
-    }
-    "Assembly"
-    {
-    "Name" = "System.Windows.Forms"
-    "ClassPrefix" = "WINFORMS_"
-    "HintPath" = "..\\..\\..\\..\\..\\WINDOWS\\Microsoft.NET\\Framework\\v1.1.4322\\system.windows.forms.dll"
-    "CopyLocal" = "false"
-    }
 }
 "ProjectCluster"
 {
@@ -123,10 +88,10 @@
 "EvalInvariants" = "false"
     "SubClusters"
     {
-        "cache_browser"
+        "root_cluster"
         {
-        "HintPath" = "${EIFFEL_SRC}\\dotnet\\codedom_provider\\cache_browser"
-        "ClusterNamespace" = ""
+        "HintPath" = "${EIFFEL_SRC}\\dotnet\\codedom_provider\\tools\\manager"
+        "ClusterNamespace" = "EiffelSoftware.CodeDom.Manager"
         "Library" = "false"
         "Recursive" = "false"
         "ExcludedItems" = ""
@@ -139,13 +104,13 @@
         "EvalChecks" = "false"
         "EvalInvariants" = "false"
         }
-        "common"
+        "tools_common"
         {
-        "HintPath" = "${EIFFEL_SRC}\\dotnet\\codedom_provider\\common"
-        "ClusterNamespace" = "EiffelSoftware.CodeDom.Support"
+        "HintPath" = "${EIFFEL_SRC}\\dotnet\\codedom_provider\\tools\\common"
+        "ClusterNamespace" = "EiffelSoftware.Library.Tools"
         "Library" = "false"
-        "Recursive" = "true"
-        "ExcludedItems" = "CVS"
+        "Recursive" = "false"
+        "ExcludedItems" = ""
         "HideFolders" = ""
         "UseDefaultAssertions" = "true"
         "DiscardAssertions" = "true"
@@ -162,29 +127,13 @@
 }
 "Clusters"
 {
-    "emitter"
+    "eclop"
     {
-    "HintPath" = "${EIFFEL_SRC}\\dotnet\\consumer"
-    "ClusterNamespace" = "EiffelSoftware.Library.Emitter"
+    "HintPath" = "${ECLOP}\\eclop"
+    "ClusterNamespace" = "Eclop"
     "Library" = "false"
     "Recursive" = "true"
-    "ExcludedItems" = "CVS"
-    "HideFolders" = ""
-    "UseDefaultAssertions" = "true"
-    "DiscardAssertions" = "true"
-    "EvalPreconditions" = "false"
-    "EvalPostconditions" = "false"
-    "EvalLoops" = "false"
-    "EvalChecks" = "false"
-    "EvalInvariants" = "false"
-    }
-    "helpers"
-    {
-    "HintPath" = "${EIFFEL_SRC}\\dotnet\\helpers"
-    "ClusterNamespace" = "EiffelSoftware.Library.Helpers"
-    "Library" = "false"
-    "Recursive" = "true"
-    "ExcludedItems" = "CVS;example"
+    "ExcludedItems" = ""
     "HideFolders" = ""
     "UseDefaultAssertions" = "true"
     "DiscardAssertions" = "true"

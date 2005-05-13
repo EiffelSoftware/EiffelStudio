@@ -6,7 +6,7 @@ root
 
 default
 	multithreaded (no)
-	precompiled ("$EIFFEL_SRC\dotnet\codedom_provider\build_studio\EiffelSoftware.CodeDom.Base")
+	precompiled ("$EIFFEL_SRC\dotnet\codedom_provider\build_studio_debug\EiffelSoftware.CodeDom.Base")
  	assertion (require)
  	msil_generation (yes)
  	il_verifiable (yes)

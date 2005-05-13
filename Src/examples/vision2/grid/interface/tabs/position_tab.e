@@ -28,61 +28,127 @@ feature {NONE} -- Initialization
 			grid.virtual_size_changed_actions.extend (agent virtual_size_changed)
 		end
 
+feature -- Access
+
+	set_is_selected (a_state: BOOLEAN) is
+			-- Assign `a_state' to `is_selected'.
+		do
+			is_selected := a_state
+		end
+
 feature {NONE} -- Implementation
 
-	
-	update_position_button_selected is
-			-- Called by `select_actions' of `update_position_button'.
-		do
-		end
+	is_selected: BOOLEAN
 
 	virtual_position_changed (a_x, a_y: INTEGER) is
 			-- Virtual position of `grid' has changed.
 		do
-			drawable.redraw
-			virtual_x_position.change_actions.block
-			virtual_x_position.set_value (a_x)
-			virtual_x_position.change_actions.resume
-			virtual_y_position.change_actions.block
-			virtual_y_position.set_value (a_y)
-			virtual_y_position.change_actions.resume
-			first_visible_row_label.set_text ("First Visible Row : " + grid.first_visible_row.index.out)
-			first_visible_column_label.set_text ("First Visible Column : " + grid.first_visible_column.index.out)
-			last_visible_row_label.set_text ("Last Visible Row : " + grid.last_visible_row.index.out)
-			last_visible_column_label.set_text ("Last Visible Column : " + grid.last_visible_column.index.out)
+			if is_selected then
+				drawable.redraw
+				virtual_x_position.change_actions.block
+				virtual_x_position.set_value (a_x)
+				virtual_x_position.change_actions.resume
+				virtual_y_position.change_actions.block
+				virtual_y_position.set_value (a_y)
+				virtual_y_position.change_actions.resume
+				display_first_visible_row
+				display_first_visible_column
+				display_last_visible_column
+				display_last_visible_row
+			end
 		end
+
+	display_first_visible_row is
+			--
+		local
+			l_row: EV_GRID_ROW
+		do
+			l_row := grid.first_visible_row
+			if l_row /= Void then
+				first_visible_row_label.set_text ("First Visible Row : " + l_row.index.out)
+			else
+				first_visible_row_label.set_text ("First Visible Row Void")
+			end
+		end
+
+	display_last_visible_row is
+			--
+		local
+			l_row: EV_GRID_ROW
+		do
+			l_row := grid.last_visible_row
+			if l_row /= Void then
+				last_visible_row_label.set_text ("Last Visible Row : " + l_row.index.out)
+			else
+				last_visible_row_label.set_text ("Last Visible Row Void")
+			end
+		end
+
+	display_first_visible_column is
+			--
+		local
+			l_column: EV_GRID_column
+		do
+			l_column := grid.first_visible_column
+			if l_column /= Void then
+				first_visible_column_label.set_text ("First Visible Column : " + l_column.index.out)
+			else
+				first_visible_column_label.set_text ("First Visible Column Void")
+			end
+		end
+
+	display_last_visible_column is
+			--
+		local
+			l_column: EV_GRID_column
+		do
+			l_column := grid.last_visible_column
+			if l_column /= Void then
+				last_visible_column_label.set_text ("Last Visible column : " + l_column.index.out)
+			else
+				last_visible_column_label.set_text ("Last Visible Column Void")
+			end
+		end
+		
 
 	virtual_size_changed (a_width, a_height: INTEGER) is
 			-- Virtual size of `grid' has changed.
 		do
-			drawable.redraw
-			first_visible_row_label.set_text ("First Visible Row : " + grid.first_visible_row.index.out)
-			first_visible_column_label.set_text ("First Visible Column : " + grid.first_visible_column.index.out)
-			last_visible_row_label.set_text ("Last Visible Row : " + grid.last_visible_row.index.out)
-			last_visible_column_label.set_text ("Last Visible Column : " + grid.last_visible_column.index.out)
+			if is_selected then
+				drawable.redraw
+				display_first_visible_row
+				display_first_visible_column
+				display_last_visible_column
+				display_last_visible_row
+			end
 		end
 		
 	virtual_x_position_changed (a_value: INTEGER) is
 			-- Called by `change_actions' of `virtual_x_position'.
 		do
-			grid.virtual_position_changed_actions.block
-			grid.set_virtual_position (a_value, grid.virtual_y_position)
-			grid.virtual_position_changed_actions.resume
-			first_visible_column_label.set_text ("First Visible Column : " + grid.first_visible_column.index.out)
-			last_visible_column_label.set_text ("Last Visible Column : " + grid.last_visible_column.index.out)
-			drawable.redraw
+			if is_selected then
+				grid.virtual_position_changed_actions.block
+				grid.set_virtual_position (a_value, grid.virtual_y_position)
+				grid.virtual_position_changed_actions.resume
+				display_first_visible_column
+				display_last_visible_column
+				drawable.redraw
+			end
 		end
+
 
 
 	virtual_y_position_changed (a_value: INTEGER) is
 			-- Called by `change_actions' of `virtual_y_position'.
 		do
-			grid.virtual_position_changed_actions.block
-			grid.set_virtual_position (grid.virtual_x_position, a_value)
-			grid.virtual_position_changed_actions.resume
-			first_visible_row_label.set_text ("First Visible Row : " + grid.first_visible_row.index.out)
-			last_visible_row_label.set_text ("Last Visible Row : " + grid.last_visible_row.index.out)
-			drawable.redraw
+			if is_selected then
+				grid.virtual_position_changed_actions.block
+				grid.set_virtual_position (grid.virtual_x_position, a_value)
+				grid.virtual_position_changed_actions.resume
+				display_first_visible_row
+				display_last_visible_row
+				drawable.redraw
+			end
 		end
 		
 	drawable_exposed (a_x, a_y, a_width, a_height: INTEGER) is
@@ -142,10 +208,10 @@ feature {NONE} -- Implementation
 			-- Called by `resize_actions' of `drawable'.
 		do
 			drawable.redraw
-			first_visible_row_label.set_text ("First Visible Row : " + grid.first_visible_row.out)
-			first_visible_column_label.set_text ("First Visible Column : " + grid.first_visible_column.out)
-			last_visible_row_label.set_text ("Last Visible Row : " + grid.last_visible_row.out)
-			last_visible_column_label.set_text ("Last Visible Column : " + grid.last_visible_column.out)
+			display_first_visible_row
+			display_first_visible_column
+			display_last_visible_column
+			display_last_visible_row
 		end
 		
 	button_pressed_on_drawable (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is

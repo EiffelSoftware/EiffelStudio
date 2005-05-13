@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 		external
 			"C inline"
 		alias
-			"(EIF_INTEGER) ($a_ptr2 - $a_ptr1)"
+			"(EIF_INTEGER) ((rt_int_ptr) $a_ptr2 - (rt_int_ptr) $a_ptr1)"
 		end
 
 feature -- Access

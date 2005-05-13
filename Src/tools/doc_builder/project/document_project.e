@@ -428,7 +428,7 @@ feature {NONE} -- Document Retrieval
 									-- Read documents
 								create doc.make_from_file (l_file)
 									-- Add to manager
-								Shared_document_manager.add_document (doc)							
+								Shared_document_manager.add_document (doc, False)							
 								progress_generator.set_status_text (doc.name)
 							end
 						end

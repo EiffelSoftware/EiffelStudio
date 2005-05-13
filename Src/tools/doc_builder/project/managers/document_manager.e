@@ -102,7 +102,7 @@ feature -- Document Manipulation
 			document: DOCUMENT
 		do
 			create document.make_new (new_name)
-			add_document (document)
+			add_document (document, True)
 		end		
 
 	open_document is
@@ -174,7 +174,7 @@ feature -- Document Manipulation
 				create file.make (a_filename)
 				if file /= Void and then file.exists then
 					create document.make_from_file (file)
-					add_document (document)
+					add_document (document, True)
 					current_editor.load_text (document.text)
 				end
 			end
@@ -238,7 +238,7 @@ feature -- Document Manipulation
 
 feature {DOCUMENT_PROJECT, XML_TABLE_OF_CONTENTS, DOCUMENT_EDITOR, TABLE_OF_CONTENTS} -- Document Manipulation
 
-	add_document (a_doc: DOCUMENT) is
+	add_document (a_doc: DOCUMENT; display: BOOLEAN) is
 			-- Add a document
 		require
 			a_doc_not_void: a_doc /= Void
@@ -250,6 +250,9 @@ feature {DOCUMENT_PROJECT, XML_TABLE_OF_CONTENTS, DOCUMENT_EDITOR, TABLE_OF_CONT
 				l_string := a_doc.name
 				l_string.replace_substring_all ("\", "/")
 				documents.extend (a_doc, l_string)
+			end
+			
+			if display then
 				create l_editor.make
 				l_editor.add_cursor_observer (application_window)
 				l_editor.add_edition_observer (application_window)
@@ -259,8 +262,7 @@ feature {DOCUMENT_PROJECT, XML_TABLE_OF_CONTENTS, DOCUMENT_EDITOR, TABLE_OF_CONT
 				notebook.set_item_text (l_editor.widget, a_doc.short_name (l_string))
 				l_editor.widget.set_data (l_string)
 				notebook.select_item (l_editor.widget)
-			else
-
+				l_editor.load_text (a_doc.text)
 			end			
 		end
 

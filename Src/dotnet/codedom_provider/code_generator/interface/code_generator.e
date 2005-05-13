@@ -58,9 +58,9 @@ feature -- Interface
 		do
 			if Access_mutex.wait_one then
 				reset
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeGenerator.GenerateCodeFromCompileUnit"])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.log, ["Starting CodeGenerator.GenerateCodeFromCompileUnit"])
 				if a_compile_unit = Void then
-					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_input, ["GenerateCodeFromCompileUnit"])
+					Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_input, ["GenerateCodeFromCompileUnit"])
 				else
 					initialize (a_text_writer, a_options)
 					set_current_state (Code_analysis)
@@ -70,7 +70,7 @@ feature -- Interface
 					output := Void
 				end
 				Type_reference_factory.reset_cache
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Ending CodeGenerator.GenerateCodeFromCompileUnit"])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.log, ["Ending CodeGenerator.GenerateCodeFromCompileUnit"])
 				Access_mutex.release_mutex
 			end
 		rescue
@@ -84,10 +84,10 @@ feature -- Interface
 		do
 			if Access_mutex.wait_one then
 				reset
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeGenerator.GenerateCodeFromNamespace"])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.log, ["Starting CodeGenerator.GenerateCodeFromNamespace"])
 				Type_reference_factory.reset_cache
 				if a_namespace = Void then
-					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_input, ["GenerateCodeFromNamespace"])
+					Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_input, ["GenerateCodeFromNamespace"])
 				else
 					initialize (a_text_writer, a_options)
 					set_current_state (Code_analysis)
@@ -97,7 +97,7 @@ feature -- Interface
 					output := Void
 				end
 				Type_reference_factory.reset_cache
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Ending CodeGenerator.GenerateCodeFromNamespace"])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.log, ["Ending CodeGenerator.GenerateCodeFromNamespace"])
 				Access_mutex.release_mutex
 			end
 		rescue
@@ -111,9 +111,9 @@ feature -- Interface
 		do
 			if Access_mutex.wait_one then
 				reset
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeGenerator.GenerateCodeFromType"])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.log, ["Starting CodeGenerator.GenerateCodeFromType"])
 				if a_type = Void then
-					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_input, ["GenerateCodeFromType"])
+					Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_input, ["GenerateCodeFromType"])
 				else
 					initialize (a_text_writer, a_options)
 					set_current_state (Code_analysis)
@@ -123,7 +123,7 @@ feature -- Interface
 					output := Void
 				end
 				Type_reference_factory.reset_cache
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Ending CodeGenerator.GenerateCodeFromType"])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.log, ["Ending CodeGenerator.GenerateCodeFromType"])
 				Access_mutex.release_mutex
 			end
 		rescue
@@ -137,9 +137,9 @@ feature -- Interface
 		do
 			if Access_mutex.wait_one then
 				reset
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeGenerator.GenerateCodeFromStatement"])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.log, ["Starting CodeGenerator.GenerateCodeFromStatement"])
 				if a_statement = Void then
-					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_input, ["GenerateCodeFromStatement"])
+					Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_input, ["GenerateCodeFromStatement"])
 				else
 					initialize (a_text_writer, a_options)
 					set_current_state (Code_analysis)
@@ -151,7 +151,7 @@ feature -- Interface
 					output := Void
 				end
 				Type_reference_factory.reset_cache
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Ending CodeGenerator.GenerateCodeFromStatement"])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.log, ["Ending CodeGenerator.GenerateCodeFromStatement"])
 				Access_mutex.release_mutex
 			end
 		rescue
@@ -165,9 +165,9 @@ feature -- Interface
 		do
 			if Access_mutex.wait_one then
 				reset
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeGenerator.GenerateCodeFromExpression"])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.log, ["Starting CodeGenerator.GenerateCodeFromExpression"])
 				if a_expression = Void then
-					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_input, ["GenerateCodeFromExpression"])
+					Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_input, ["GenerateCodeFromExpression"])
 				else
 					initialize (a_text_writer, a_options)
 					set_current_state (Code_analysis)
@@ -177,7 +177,7 @@ feature -- Interface
 					output := Void
 				end
 				Type_reference_factory.reset_cache
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Ending CodeGenerator.GenerateCodeFromExpression"])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.log, ["Ending CodeGenerator.GenerateCodeFromExpression"])
 				Access_mutex.release_mutex
 			end
 		rescue
@@ -192,9 +192,9 @@ feature -- Interface
 			i: INTEGER
 			l_result, l_escaped: STRING
 		do
-			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeGenerator.CreateEscapedIdentifier"])
+			Event_manager.raise_event ({CODE_EVENTS_IDS}.log, ["Starting CodeGenerator.CreateEscapedIdentifier"])
 			if a_value /= Void and then a_value.length > 0 then
-				 l_result := feature {SYSTEM_STRING}.copy (a_value)
+				 l_result := {SYSTEM_STRING}.copy (a_value)
 				 l_char := l_result.item (1)
 				 if not l_char.is_alpha then
 				 	l_escaped := escaped_character (l_char)
@@ -218,9 +218,9 @@ feature -- Interface
 				 end
 				 Result := l_result
 			else
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_input, ["CreateEscapedIdentifier"])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_input, ["CreateEscapedIdentifier"])
 			end
-			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Ending CodeGenerator.CreateEscapedIdentifier"])
+			Event_manager.raise_event ({CODE_EVENTS_IDS}.log, ["Ending CodeGenerator.CreateEscapedIdentifier"])
 		ensure then
 			non_void_get_type_output: Result /= Void
 		end
@@ -228,16 +228,16 @@ feature -- Interface
 	validate_identifier (a_value: SYSTEM_STRING) is
 			-- Throw exception if `a_value' is not a valid Eiffel identifier.
 		do
-			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeGenerator.ValidateIdentifier"])
+			Event_manager.raise_event ({CODE_EVENTS_IDS}.log, ["Starting CodeGenerator.ValidateIdentifier"])
 			if a_value = Void then
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_input, ["ValidateIdentifier"])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_input, ["ValidateIdentifier"])
 			else
 				if not (create {NAME_FORMATTER}).is_valid_variable_name (a_value) then
-					feature {ISE_RUNTIME}.raise (create {ARGUMENT_EXCEPTION}.make ("Invalid identifier", a_value))
-					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Invalid_identifier, [a_value])
+					{ISE_RUNTIME}.raise (create {ARGUMENT_EXCEPTION}.make ("Invalid identifier", a_value))
+					Event_manager.raise_event ({CODE_EVENTS_IDS}.Invalid_identifier, [a_value])
 				end
 			end
-			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Ending CodeGenerator.ValidateIdentifier"])
+			Event_manager.raise_event ({CODE_EVENTS_IDS}.log, ["Ending CodeGenerator.ValidateIdentifier"])
 		end
 
 	create_valid_identifier (a_value: SYSTEM_STRING): SYSTEM_STRING is
@@ -246,9 +246,9 @@ feature -- Interface
 		local
 			l_formatter: NAME_FORMATTER
 		do
-			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeGenerator.CreateValidIdentifier"])
+			Event_manager.raise_event ({CODE_EVENTS_IDS}.log, ["Starting CodeGenerator.CreateValidIdentifier"])
 			if a_value = Void then
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_input, ["CreateValidIdentifier"])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_input, ["CreateValidIdentifier"])
 			else
 				create l_formatter
 				if not l_formatter.is_valid_variable_name (a_value) then
@@ -257,45 +257,45 @@ feature -- Interface
 					Result := a_value.to_lower
 				end
 			end
-			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Ending CodeGenerator.CreateValidIdentifier"])
+			Event_manager.raise_event ({CODE_EVENTS_IDS}.log, ["Ending CodeGenerator.CreateValidIdentifier"])
 		end
 		
 	is_valid_identifier (a_value: SYSTEM_STRING): BOOLEAN is
 			-- Is `a_value' a valid identifier?
 		do
-			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeGenerator.IsValidIdentifier"])
+			Event_manager.raise_event ({CODE_EVENTS_IDS}.log, ["Starting CodeGenerator.IsValidIdentifier"])
 			if a_value /= Void then
 				Result := (create {NAME_FORMATTER}).is_valid_variable_name (a_value)
 			end
-			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Ending CodeGenerator.IsValidIdentifier"])
+			Event_manager.raise_event ({CODE_EVENTS_IDS}.log, ["Ending CodeGenerator.IsValidIdentifier"])
 		end
 
 	supports (a_flag: SYSTEM_DLL_GENERATOR_SUPPORT): BOOLEAN is
 			-- Does code_generator support construct corresponding to `a_flag'?
 		do
-			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeGenerator.Supports"])
-			Result := a_flag = feature {SYSTEM_DLL_GENERATOR_SUPPORT}.arrays_of_arrays or
-					a_flag = feature {SYSTEM_DLL_GENERATOR_SUPPORT}.assembly_attributes or
-			--		a_flag = feature {SYSTEM_DLL_GENERATOR_SUPPORT}.chained_constructor_arguments or
-					a_flag = feature {SYSTEM_DLL_GENERATOR_SUPPORT}.complex_expressions or
-			--		a_flag = feature {SYSTEM_DLL_GENERATOR_SUPPORT}.declare_delegates or
-					a_flag = feature {SYSTEM_DLL_GENERATOR_SUPPORT}.declare_enums or
-					a_flag = feature {SYSTEM_DLL_GENERATOR_SUPPORT}.declare_events or
-					a_flag = feature {SYSTEM_DLL_GENERATOR_SUPPORT}.declare_interfaces or
-					a_flag = feature {SYSTEM_DLL_GENERATOR_SUPPORT}.declare_value_types or
-					a_flag = feature {SYSTEM_DLL_GENERATOR_SUPPORT}.entry_point_method or
-			--		a_flag = feature {SYSTEM_DLL_GENERATOR_SUPPORT}.goto_statements or					No Gotos
-			--		a_flag = feature {SYSTEM_DLL_GENERATOR_SUPPORT}.multidimensional_arrays or			No multiple dimensional arrays
-					a_flag = feature {SYSTEM_DLL_GENERATOR_SUPPORT}.multiple_interface_members or
-					a_flag = feature {SYSTEM_DLL_GENERATOR_SUPPORT}.nested_types or
-			--		a_flag = feature {SYSTEM_DLL_GENERATOR_SUPPORT}.parameter_attributes or				No parameter attributes
-			--		a_flag = feature {SYSTEM_DLL_GENERATOR_SUPPORT}.public_static_members or			No static members
-					a_flag = feature {SYSTEM_DLL_GENERATOR_SUPPORT}.reference_parameters or
-			--		a_flag = feature {SYSTEM_DLL_GENERATOR_SUPPORT}.return_type_attributes or			No return type attributes
-			--		a_flag = feature {SYSTEM_DLL_GENERATOR_SUPPORT}.static_constructors or
-					a_flag = feature {SYSTEM_DLL_GENERATOR_SUPPORT}.try_catch_statements
-			--		a_flag = feature {SYSTEM_DLL_GENERATOR_SUPPORT}.win_32_resources;					No win32 resources
-			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Ending CodeGenerator.Supports"])
+			Event_manager.raise_event ({CODE_EVENTS_IDS}.log, ["Starting CodeGenerator.Supports"])
+			Result := a_flag = {SYSTEM_DLL_GENERATOR_SUPPORT}.arrays_of_arrays or
+					a_flag = {SYSTEM_DLL_GENERATOR_SUPPORT}.assembly_attributes or
+			--		a_flag = {SYSTEM_DLL_GENERATOR_SUPPORT}.chained_constructor_arguments or
+					a_flag = {SYSTEM_DLL_GENERATOR_SUPPORT}.complex_expressions or
+			--		a_flag = {SYSTEM_DLL_GENERATOR_SUPPORT}.declare_delegates or
+					a_flag = {SYSTEM_DLL_GENERATOR_SUPPORT}.declare_enums or
+					a_flag = {SYSTEM_DLL_GENERATOR_SUPPORT}.declare_events or
+					a_flag = {SYSTEM_DLL_GENERATOR_SUPPORT}.declare_interfaces or
+					a_flag = {SYSTEM_DLL_GENERATOR_SUPPORT}.declare_value_types or
+					a_flag = {SYSTEM_DLL_GENERATOR_SUPPORT}.entry_point_method or
+			--		a_flag = {SYSTEM_DLL_GENERATOR_SUPPORT}.goto_statements or					No Gotos
+			--		a_flag = {SYSTEM_DLL_GENERATOR_SUPPORT}.multidimensional_arrays or			No multiple dimensional arrays
+					a_flag = {SYSTEM_DLL_GENERATOR_SUPPORT}.multiple_interface_members or
+					a_flag = {SYSTEM_DLL_GENERATOR_SUPPORT}.nested_types or
+			--		a_flag = {SYSTEM_DLL_GENERATOR_SUPPORT}.parameter_attributes or				No parameter attributes
+			--		a_flag = {SYSTEM_DLL_GENERATOR_SUPPORT}.public_static_members or			No static members
+					a_flag = {SYSTEM_DLL_GENERATOR_SUPPORT}.reference_parameters or
+			--		a_flag = {SYSTEM_DLL_GENERATOR_SUPPORT}.return_type_attributes or			No return type attributes
+			--		a_flag = {SYSTEM_DLL_GENERATOR_SUPPORT}.static_constructors or
+					a_flag = {SYSTEM_DLL_GENERATOR_SUPPORT}.try_catch_statements
+			--		a_flag = {SYSTEM_DLL_GENERATOR_SUPPORT}.win_32_resources;					No win32 resources
+			Event_manager.raise_event ({CODE_EVENTS_IDS}.log, ["Ending CodeGenerator.Supports"])
 		end
 
 	get_type_output (a_type: SYSTEM_DLL_CODE_TYPE_REFERENCE): SYSTEM_STRING is
@@ -304,8 +304,8 @@ feature -- Interface
 			l_type: SYSTEM_TYPE
 			l_type_name: STRING
 		do
-			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeGenerator.GetTypeOutput"])
-			l_type := feature {SYSTEM_TYPE}.get_type (a_type.base_type)
+			Event_manager.raise_event ({CODE_EVENTS_IDS}.log, ["Starting CodeGenerator.GetTypeOutput"])
+			l_type := {SYSTEM_TYPE}.get_type (a_type.base_type)
 			if l_type /= Void then
 				l_type_name := cache_reflection.type_name (l_type)
 				if l_type_name /= Void then
@@ -315,7 +315,7 @@ feature -- Interface
 			if Result = Void then
 				Result := (create {NAME_FORMATTER}).full_formatted_type_name (a_type.base_type)
 			end
-			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Ending CodeGenerator.GetTypeOutput"])
+			Event_manager.raise_event ({CODE_EVENTS_IDS}.log, ["Ending CodeGenerator.GetTypeOutput"])
 		ensure then
 			non_void_get_type_output: Result /= Void
 		end
@@ -344,7 +344,7 @@ feature {NONE} -- Implementation
 				create output.make (a_text_writer)
 			elseif output = Void then
 				make_with_filename ("generated.es")
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_output, [(create {EXECUTION_ENVIRONMENT}).Current_working_directory + (create {OPERATING_ENVIRONMENT}).Directory_separator.out + "generated.es"])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_output, [(create {EXECUTION_ENVIRONMENT}).Current_working_directory + (create {OPERATING_ENVIRONMENT}).Directory_separator.out + "generated.es"])
 			end
 			if a_options /= Void then
 				set_blank_lines_between_members (a_options.blank_lines_between_members)

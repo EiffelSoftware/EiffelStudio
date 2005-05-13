@@ -15,7 +15,7 @@ feature -- Access
 			l_key: REGISTRY_KEY
 			l_path: SYSTEM_STRING
 		do
-			l_key := feature {REGISTRY}.local_machine.open_sub_key (Temp_key)
+			l_key := {REGISTRY}.local_machine.open_sub_key (Temp_key)
 			if l_key /= Void then
 				l_path ?= l_key.get_value (Serialized_path_key)
 				if l_path /= Void then
@@ -34,7 +34,7 @@ feature -- Element Settings
 		local
 			l_key: REGISTRY_KEY
 		do
-			l_key := feature {REGISTRY}.local_machine.create_sub_key (Temp_key)
+			l_key := {REGISTRY}.local_machine.create_sub_key (Temp_key)
 			if l_key /= Void then
 				l_key.set_value (Serialized_path_key, a_location.to_cil)
 			end

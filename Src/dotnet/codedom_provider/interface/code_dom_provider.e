@@ -7,7 +7,7 @@ indexing
 	metadata:
 		create {COM_VISIBLE_ATTRIBUTE}.make (True) end,
 		create {GUID_ATTRIBUTE}.make ("E1FFE191-4048-440e-A0F2-B00252DCE7F7") end,
-		create {CLASS_INTERFACE_ATTRIBUTE}.make (feature {CLASS_INTERFACE_TYPE}.none) end
+		create {CLASS_INTERFACE_ATTRIBUTE}.make ({CLASS_INTERFACE_TYPE}.none) end
 	assembly_metadata:
 		create {COM_VISIBLE_ATTRIBUTE}.make (False) end
 
@@ -41,7 +41,7 @@ feature -- Access
 	language_options: SYSTEM_DLL_LANGUAGE_OPTIONS is
 			-- Get a language features identifier.
 		once
-			Result := feature {SYSTEM_DLL_LANGUAGE_OPTIONS}.case_insensitive
+			Result := {SYSTEM_DLL_LANGUAGE_OPTIONS}.Case_insensitive
 		end
 		
 feature -- Basic Operations

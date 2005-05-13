@@ -128,7 +128,7 @@ feature {NONE} -- Implementation
 			if not member_searched then
 				internal_member := target.type.member (attribute, Void)
 				if internal_member = Void then
-					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_feature, [attribute, target.type.name])
+					Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_feature, [attribute, target.type.name])
 				end
 				member_searched := True
 			end
@@ -141,7 +141,7 @@ feature {NONE} -- Implementation
 			if not setter_searched then
 				internal_setter := target.type.member_from_name ("set_" + attribute)
 				if internal_setter = Void then
-					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_feature, ["set_" + attribute, target.type.name])
+					Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_feature, ["set_" + attribute, target.type.name])
 				end
 				setter_searched := True
 			end

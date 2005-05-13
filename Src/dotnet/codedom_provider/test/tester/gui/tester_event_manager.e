@@ -43,7 +43,7 @@ feature {NONE} -- Private Access
 		local
 			l_now: STRING
 		do
-			l_now := feature {SYSTEM_DATE_TIME}.Now.to_string
+			l_now := {SYSTEM_DATE_TIME}.Now.to_string
 			create Result.make (l_now.count + 3)
 			Result.append ("%N%N")
 			Result.append (l_now)

@@ -55,7 +55,7 @@ feature -- Initialization
 					l_file_name.append (l_item)
 					create l_file.make (l_file_name)
 					if l_file.exists then
-						Event_manager.raise_event (feature {CODE_EVENTS_IDS}.File_deletion, [l_file.name])
+						Event_manager.raise_event ({CODE_EVENTS_IDS}.File_deletion, [l_file.name])
 						l_file.delete
 					end
 				end

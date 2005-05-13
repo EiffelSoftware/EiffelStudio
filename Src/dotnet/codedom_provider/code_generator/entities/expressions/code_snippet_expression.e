@@ -47,7 +47,7 @@ feature -- Status Report
 			-- Type
 		do
 			Result := None_type_reference
-			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Incorrect_result, ["code snippet expression type"])
+			Event_manager.raise_event ({CODE_EVENTS_IDS}.Incorrect_result, ["code snippet expression type"])
 		end
 
 invariant

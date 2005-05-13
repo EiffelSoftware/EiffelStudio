@@ -100,7 +100,7 @@ feature {NONE} -- Implementation
 				member_searched := True
 				internal_member := target.type.member_from_name (routine)
 				if internal_member = Void then
-					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_feature, [routine, target.type.name])
+					Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_feature, [routine, target.type.name])
 				end
 			end
 			Result := internal_member

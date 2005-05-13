@@ -27,59 +27,59 @@ feature -- Interface
 	compile_assembly_from_dom (a_options: SYSTEM_DLL_COMPILER_PARAMETERS; a_compile_unit: SYSTEM_DLL_CODE_COMPILE_UNIT): SYSTEM_DLL_COMPILER_RESULTS is
 			-- Serialize `a_compile_unit'.
 		do
-			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeCompiler.CompileAssemblyFromDom"])
+			Event_manager.raise_event ({CODE_EVENTS_IDS}.log, ["Starting CodeCompiler.CompileAssemblyFromDom"])
 			if a_compile_unit = Void then
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_input, ["CompileAssemblyFromDom"])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_input, ["CompileAssemblyFromDom"])
 			else
 				serialize (a_compile_unit)
 			end
 			create Result.make (a_options.temp_files)
-			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Ending CodeCompiler.CompileAssemblyFromDom"])
+			Event_manager.raise_event ({CODE_EVENTS_IDS}.log, ["Ending CodeCompiler.CompileAssemblyFromDom"])
 		end
 	
 	compile_assembly_from_dom_batch (a_options: SYSTEM_DLL_COMPILER_PARAMETERS; a_compile_units: NATIVE_ARRAY [SYSTEM_DLL_CODE_COMPILE_UNIT]): SYSTEM_DLL_COMPILER_RESULTS is
 			-- Serialize `a_compile_units'.
 		do
-			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeCompiler.CompileAssemblyFromDomBatch"])
+			Event_manager.raise_event ({CODE_EVENTS_IDS}.log, ["Starting CodeCompiler.CompileAssemblyFromDomBatch"])
 			if a_compile_units = Void then
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_input, ["CompileAssemblyFromDomBatch"])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_input, ["CompileAssemblyFromDomBatch"])
 			else
 				serialize (a_compile_units)
 			end
 			create Result.make (a_options.temp_files)
-			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Ending CodeCompiler.CompileAssemblyFromDomBatch"])
+			Event_manager.raise_event ({CODE_EVENTS_IDS}.log, ["Ending CodeCompiler.CompileAssemblyFromDomBatch"])
 		end
 
 	compile_assembly_from_file (a_options: SYSTEM_DLL_COMPILER_PARAMETERS; a_file_name: SYSTEM_STRING): SYSTEM_DLL_COMPILER_RESULTS is
 			-- Do nothing.
 		do
-			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeCompiler.CompileAssemblyFromFile"])
+			Event_manager.raise_event ({CODE_EVENTS_IDS}.log, ["Starting CodeCompiler.CompileAssemblyFromFile"])
 			create Result.make (a_options.temp_files)
-			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Ending CodeCompiler.CompileAssemblyFromFile"])
+			Event_manager.raise_event ({CODE_EVENTS_IDS}.log, ["Ending CodeCompiler.CompileAssemblyFromFile"])
 		end
 
 	compile_assembly_from_file_batch (a_options: SYSTEM_DLL_COMPILER_PARAMETERS; a_file_names: NATIVE_ARRAY [SYSTEM_STRING]): SYSTEM_DLL_COMPILER_RESULTS is
 			-- Do nothing.
 		do
-			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeCompiler.CompileAssemblyFromFileBatch"])
+			Event_manager.raise_event ({CODE_EVENTS_IDS}.log, ["Starting CodeCompiler.CompileAssemblyFromFileBatch"])
 			create Result.make (a_options.temp_files)
-			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Ending CodeCompiler.CompileAssemblyFromFileBatch"])
+			Event_manager.raise_event ({CODE_EVENTS_IDS}.log, ["Ending CodeCompiler.CompileAssemblyFromFileBatch"])
 		end		
 
 	compile_assembly_from_source (a_options: SYSTEM_DLL_COMPILER_PARAMETERS; a_source: SYSTEM_STRING): SYSTEM_DLL_COMPILER_RESULTS is
 			-- Do nothing.
 		do
-			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeCompiler.CompileAssemblyFromSource"])
+			Event_manager.raise_event ({CODE_EVENTS_IDS}.log, ["Starting CodeCompiler.CompileAssemblyFromSource"])
 			create Result.make (a_options.temp_files)
-			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Ending CodeCompiler.CompileAssemblyFromSource"])
+			Event_manager.raise_event ({CODE_EVENTS_IDS}.log, ["Ending CodeCompiler.CompileAssemblyFromSource"])
 		end
 
 	compile_assembly_from_source_batch (a_options: SYSTEM_DLL_COMPILER_PARAMETERS; a_sources: NATIVE_ARRAY [SYSTEM_STRING]): SYSTEM_DLL_COMPILER_RESULTS is
 			-- Do nothing.
 		do
-			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeCompiler.CompileAssemblyFromSourceBatch"])
+			Event_manager.raise_event ({CODE_EVENTS_IDS}.log, ["Starting CodeCompiler.CompileAssemblyFromSourceBatch"])
 			create Result.make (a_options.temp_files)
-			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Ending CodeCompiler.CompileAssemblyFromSourceBatch"])
+			Event_manager.raise_event ({CODE_EVENTS_IDS}.log, ["Ending CodeCompiler.CompileAssemblyFromSourceBatch"])
 		end
 
 feature {NONE} -- Implementation
@@ -92,7 +92,7 @@ feature {NONE} -- Implementation
 			l_formatter: BINARY_FORMATTER
 			l_stream: FILE_STREAM
 		do
-			create l_stream.make (serialized_tree_location, feature {FILE_MODE}.Create_)
+			create l_stream.make (serialized_tree_location, {FILE_MODE}.Create_)
 			create l_formatter.make
 			l_formatter.serialize (l_stream, a_graph)
 			l_stream.close

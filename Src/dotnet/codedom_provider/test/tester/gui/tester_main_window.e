@@ -130,7 +130,7 @@ feature {NONE} -- Initialization
 			parse_file_text_field.set_text (text_setting (Parsed_file_key))
 			serialized_folder_text_field.set_text (text_setting (Saved_serialized_folder_key))
 			output_text.append_text ("%N%N----------------------------------------------------------%N")
-			output_text.append_text ("Tool started " + feature {SYSTEM_DATE_TIME}.now.to_string)
+			output_text.append_text ("Tool started " + {SYSTEM_DATE_TIME}.now.to_string)
 		end
 
 feature -- Access
@@ -309,7 +309,7 @@ feature {NONE} -- Events
 				l_parser := codedom_provider.create_parser
 				create l_text_reader.make_from_path (parse_file_text_field.text)
 				l_compile_unit := l_parser.parse (l_text_reader)
-				create l_stream.make (serialized_folder_text_field.text + (create {OPERATING_ENVIRONMENT}).Directory_separator.out + serialized_filename_text_field.text + serialized_file_extension, feature {FILE_MODE}.Create_)
+				create l_stream.make (serialized_folder_text_field.text + (create {OPERATING_ENVIRONMENT}).Directory_separator.out + serialized_filename_text_field.text + serialized_file_extension, {FILE_MODE}.Create_)
 				create l_formatter.make
 				l_formatter.serialize (l_stream, l_compile_unit)
 				l_stream.close
@@ -482,7 +482,7 @@ feature {NONE} -- Events
 			-- Called by `change_actions' of `source_filename_text_field'.
 			-- Check text field entry and enable `Compile' button if OK.
 		do
-			if feature {SYSTEM_FILE}.exists (source_filename_text_field.text) then
+			if {SYSTEM_FILE}.exists (source_filename_text_field.text) then
 				source_filename_text_field.set_foreground_color (Black)
 				if not compile_from_file_button.is_sensitive then
 					compile_from_file_button.enable_sensitive
@@ -541,7 +541,7 @@ feature {NONE} -- Events
 					referenced_assemblies_add_button.disable_sensitive
 				end
 			else
-				if feature {SYSTEM_FILE}.exists (new_reference_text_field.text) then
+				if {SYSTEM_FILE}.exists (new_reference_text_field.text) then
 					new_reference_text_field.set_foreground_color (Black)
 					if not referenced_assemblies_add_button.is_sensitive then
 						referenced_assemblies_add_button.enable_sensitive
@@ -685,13 +685,13 @@ feature {NONE} -- Implementation
 	check_can_generate is
 			-- Check if `Generate' button should be enabled.
 		do
-			if feature {SYSTEM_DIRECTORY}.exists (generation_path_text_field.text) then
+			if {SYSTEM_DIRECTORY}.exists (generation_path_text_field.text) then
 				generation_path_text_field.set_foreground_color (Black)
 			else
 				generation_path_text_field.set_foreground_color (Red)
 			end
 			if codedom_provider /= Void and codedoms_tree.selected_item /= Void then
-				if feature {SYSTEM_DIRECTORY}.exists (generation_path_text_field.text) then
+				if {SYSTEM_DIRECTORY}.exists (generation_path_text_field.text) then
 					if not generated_filename_text_field.text.is_empty then
 						if not generate_button.is_sensitive then
 							generate_button.enable_sensitive
@@ -712,24 +712,24 @@ feature {NONE} -- Implementation
 	check_can_parse is
 			-- Check if `Parse' button should be enabled.
 		do
-			if feature {SYSTEM_DIRECTORY}.exists (serialized_folder_text_field.text) then
+			if {SYSTEM_DIRECTORY}.exists (serialized_folder_text_field.text) then
 				serialized_folder_text_field.set_foreground_color (Black)
 			else
 				serialized_folder_text_field.set_foreground_color (Red)
 			end
-			if feature {SYSTEM_FILE}.exists (parse_file_text_field.text) then
+			if {SYSTEM_FILE}.exists (parse_file_text_field.text) then
 				parse_file_text_field.set_foreground_color (Black)
 			else
 				parse_file_text_field.set_foreground_color (Red)
 			end
-			if feature {SYSTEM_FILE}.exists (serialized_folder_text_field.text + (create {OPERATING_ENVIRONMENT}).Directory_separator.out +
+			if {SYSTEM_FILE}.exists (serialized_folder_text_field.text + (create {OPERATING_ENVIRONMENT}).Directory_separator.out +
 					serialized_filename_text_field.text + Serialized_file_extension) then
 				serialized_filename_text_field.set_foreground_color (Red)
 			else
 				serialized_filename_text_field.set_foreground_color (Black)
 			end
 			if codedom_provider /= Void and not serialized_filename_text_field.text.is_empty and
-				feature {SYSTEM_DIRECTORY}.exists (serialized_folder_text_field.text) and feature {SYSTEM_FILE}.exists (parse_file_text_field.text) then
+				{SYSTEM_DIRECTORY}.exists (serialized_folder_text_field.text) and {SYSTEM_FILE}.exists (parse_file_text_field.text) then
 					parse_button.enable_sensitive
 			else
 				parse_button.disable_sensitive
@@ -756,107 +756,107 @@ feature {NONE} -- Implementation
 			supports_list.wipe_out
 			non_supports_list.wipe_out
 			l_generator := codedom_provider.create_generator
-			if l_generator.supports (feature {SYSTEM_DLL_GENERATOR_SUPPORT}.Arrays_of_arrays) then
+			if l_generator.supports ({SYSTEM_DLL_GENERATOR_SUPPORT}.Arrays_of_arrays) then
 				supports_list.extend (create {EV_LIST_ITEM}.make_with_text ("Arrays of arrays"))
 			else
 				non_supports_list.extend (create {EV_LIST_ITEM}.make_with_text ("Arrays of arrays"))
 			end
-			if l_generator.supports (feature {SYSTEM_DLL_GENERATOR_SUPPORT}.assembly_attributes) then
+			if l_generator.supports ({SYSTEM_DLL_GENERATOR_SUPPORT}.assembly_attributes) then
 				supports_list.extend (create {EV_LIST_ITEM}.make_with_text ("Assembly attributes"))
 			else
 				non_supports_list.extend (create {EV_LIST_ITEM}.make_with_text ("Assembly attributes"))
 			end
-			if l_generator.supports (feature {SYSTEM_DLL_GENERATOR_SUPPORT}.chained_constructor_arguments) then
+			if l_generator.supports ({SYSTEM_DLL_GENERATOR_SUPPORT}.chained_constructor_arguments) then
 				supports_list.extend (create {EV_LIST_ITEM}.make_with_text ("Chained constructor arguments"))
 			else
 				non_supports_list.extend (create {EV_LIST_ITEM}.make_with_text ("Chained constructor arguments"))
 			end
-			if l_generator.supports (feature {SYSTEM_DLL_GENERATOR_SUPPORT}.complex_expressions) then
+			if l_generator.supports ({SYSTEM_DLL_GENERATOR_SUPPORT}.complex_expressions) then
 				supports_list.extend (create {EV_LIST_ITEM}.make_with_text ("Complex expressions"))
 			else
 				non_supports_list.extend (create {EV_LIST_ITEM}.make_with_text ("Complex expressions"))
 			end
-			if l_generator.supports (feature {SYSTEM_DLL_GENERATOR_SUPPORT}.declare_delegates) then
+			if l_generator.supports ({SYSTEM_DLL_GENERATOR_SUPPORT}.declare_delegates) then
 				supports_list.extend (create {EV_LIST_ITEM}.make_with_text ("Declare delegates"))
 			else
 				non_supports_list.extend (create {EV_LIST_ITEM}.make_with_text ("Declare delegates"))
 			end
-			if l_generator.supports (feature {SYSTEM_DLL_GENERATOR_SUPPORT}.declare_enums) then
+			if l_generator.supports ({SYSTEM_DLL_GENERATOR_SUPPORT}.declare_enums) then
 				supports_list.extend (create {EV_LIST_ITEM}.make_with_text ("Declare enums"))
 			else
 				non_supports_list.extend (create {EV_LIST_ITEM}.make_with_text ("Declare enums"))
 			end
-			if l_generator.supports (feature {SYSTEM_DLL_GENERATOR_SUPPORT}.declare_events) then
+			if l_generator.supports ({SYSTEM_DLL_GENERATOR_SUPPORT}.declare_events) then
 				supports_list.extend (create {EV_LIST_ITEM}.make_with_text ("Declare events"))
 			else
 				non_supports_list.extend (create {EV_LIST_ITEM}.make_with_text ("Declare events"))
 			end
-			if l_generator.supports (feature {SYSTEM_DLL_GENERATOR_SUPPORT}.declare_interfaces) then
+			if l_generator.supports ({SYSTEM_DLL_GENERATOR_SUPPORT}.declare_interfaces) then
 				supports_list.extend (create {EV_LIST_ITEM}.make_with_text ("Declare interfaces"))
 			else
 				non_supports_list.extend (create {EV_LIST_ITEM}.make_with_text ("Declare interfaces"))
 			end
-			if l_generator.supports (feature {SYSTEM_DLL_GENERATOR_SUPPORT}.declare_value_types) then
+			if l_generator.supports ({SYSTEM_DLL_GENERATOR_SUPPORT}.declare_value_types) then
 				supports_list.extend (create {EV_LIST_ITEM}.make_with_text ("Declare value types"))
 			else
 				non_supports_list.extend (create {EV_LIST_ITEM}.make_with_text ("Declare value types"))
 			end
-			if l_generator.supports (feature {SYSTEM_DLL_GENERATOR_SUPPORT}.entry_point_method) then
+			if l_generator.supports ({SYSTEM_DLL_GENERATOR_SUPPORT}.entry_point_method) then
 				supports_list.extend (create {EV_LIST_ITEM}.make_with_text ("Entry point method"))
 			else
 				non_supports_list.extend (create {EV_LIST_ITEM}.make_with_text ("Entry point method"))
 			end
-			if l_generator.supports (feature {SYSTEM_DLL_GENERATOR_SUPPORT}.goto_statements) then
+			if l_generator.supports ({SYSTEM_DLL_GENERATOR_SUPPORT}.goto_statements) then
 				supports_list.extend (create {EV_LIST_ITEM}.make_with_text ("Goto statements"))
 			else
 				non_supports_list.extend (create {EV_LIST_ITEM}.make_with_text ("Goto statements"))
 			end
-			if l_generator.supports (feature {SYSTEM_DLL_GENERATOR_SUPPORT}.multidimensional_arrays) then
+			if l_generator.supports ({SYSTEM_DLL_GENERATOR_SUPPORT}.multidimensional_arrays) then
 				supports_list.extend (create {EV_LIST_ITEM}.make_with_text ("Multidimensional arrays"))
 			else
 				non_supports_list.extend (create {EV_LIST_ITEM}.make_with_text ("Multidimensional arrays"))
 			end
-			if l_generator.supports (feature {SYSTEM_DLL_GENERATOR_SUPPORT}.multiple_interface_members) then
+			if l_generator.supports ({SYSTEM_DLL_GENERATOR_SUPPORT}.multiple_interface_members) then
 				supports_list.extend (create {EV_LIST_ITEM}.make_with_text ("Multiple interface members"))
 			else
 				non_supports_list.extend (create {EV_LIST_ITEM}.make_with_text ("Multiple interface members"))
 			end
-			if l_generator.supports (feature {SYSTEM_DLL_GENERATOR_SUPPORT}.nested_types) then
+			if l_generator.supports ({SYSTEM_DLL_GENERATOR_SUPPORT}.nested_types) then
 				supports_list.extend (create {EV_LIST_ITEM}.make_with_text ("Nested types"))
 			else
 				non_supports_list.extend (create {EV_LIST_ITEM}.make_with_text ("Nested types"))
 			end
-			if l_generator.supports (feature {SYSTEM_DLL_GENERATOR_SUPPORT}.parameter_attributes) then
+			if l_generator.supports ({SYSTEM_DLL_GENERATOR_SUPPORT}.parameter_attributes) then
 				supports_list.extend (create {EV_LIST_ITEM}.make_with_text ("Parameter attributes"))
 			else
 				non_supports_list.extend (create {EV_LIST_ITEM}.make_with_text ("Parameter attributes"))
 			end
-			if l_generator.supports (feature {SYSTEM_DLL_GENERATOR_SUPPORT}.public_static_members) then
+			if l_generator.supports ({SYSTEM_DLL_GENERATOR_SUPPORT}.public_static_members) then
 				supports_list.extend (create {EV_LIST_ITEM}.make_with_text ("Public static members"))
 			else
 				non_supports_list.extend (create {EV_LIST_ITEM}.make_with_text ("Public static members"))
 			end
-			if l_generator.supports (feature {SYSTEM_DLL_GENERATOR_SUPPORT}.reference_parameters) then
+			if l_generator.supports ({SYSTEM_DLL_GENERATOR_SUPPORT}.reference_parameters) then
 				supports_list.extend (create {EV_LIST_ITEM}.make_with_text ("Reference parameters"))
 			else
 				non_supports_list.extend (create {EV_LIST_ITEM}.make_with_text ("Reference parameters"))
 			end
-			if l_generator.supports (feature {SYSTEM_DLL_GENERATOR_SUPPORT}.return_type_attributes) then
+			if l_generator.supports ({SYSTEM_DLL_GENERATOR_SUPPORT}.return_type_attributes) then
 				supports_list.extend (create {EV_LIST_ITEM}.make_with_text ("Return type attributes"))
 			else
 				non_supports_list.extend (create {EV_LIST_ITEM}.make_with_text ("Return type attributes"))
 			end
-			if l_generator.supports (feature {SYSTEM_DLL_GENERATOR_SUPPORT}.static_constructors) then
+			if l_generator.supports ({SYSTEM_DLL_GENERATOR_SUPPORT}.static_constructors) then
 				supports_list.extend (create {EV_LIST_ITEM}.make_with_text ("Static constructors"))
 			else
 				non_supports_list.extend (create {EV_LIST_ITEM}.make_with_text ("Static constructors"))
 			end
-			if l_generator.supports (feature {SYSTEM_DLL_GENERATOR_SUPPORT}.try_catch_statements) then
+			if l_generator.supports ({SYSTEM_DLL_GENERATOR_SUPPORT}.try_catch_statements) then
 				supports_list.extend (create {EV_LIST_ITEM}.make_with_text ("Try catch statements"))
 			else
 				non_supports_list.extend (create {EV_LIST_ITEM}.make_with_text ("Try catch statements"))
 			end
-			if l_generator.supports (feature {SYSTEM_DLL_GENERATOR_SUPPORT}.win_32_resources) then
+			if l_generator.supports ({SYSTEM_DLL_GENERATOR_SUPPORT}.win_32_resources) then
 				supports_list.extend (create {EV_LIST_ITEM}.make_with_text ("Win32 resources"))
 			else
 				non_supports_list.extend (create {EV_LIST_ITEM}.make_with_text ("Win32 resources"))

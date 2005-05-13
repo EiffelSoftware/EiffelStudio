@@ -17,7 +17,7 @@ feature {NONE} -- Initialization
 			-- Set `registry_path' with `a_path'.
 		require
 			non_void_path: a_path /= Void
-			valid_path: feature {REGISTRY}.current_user.create_sub_key (a_path) /= Void
+			valid_path: {REGISTRY}.current_user.create_sub_key (a_path) /= Void
 		do
 			registry_path := a_path
 		ensure
@@ -37,7 +37,7 @@ feature -- Access
 		local
 			l_key: REGISTRY_KEY
 		do	
-			l_key := feature {REGISTRY}.current_user.open_sub_key (registry_path, False)
+			l_key := {REGISTRY}.current_user.open_sub_key (registry_path, False)
 			if l_key /= Void then
 				Result ?= l_key.get_value (a_name)
 			end
@@ -62,7 +62,7 @@ feature -- Access
 			l_key: REGISTRY_KEY
 			l_string: SYSTEM_STRING
 		do	
-			l_key := feature {REGISTRY}.current_user.open_sub_key (registry_path, False)
+			l_key := {REGISTRY}.current_user.open_sub_key (registry_path, False)
 			if l_key /= Void then
 				l_string ?= l_key.get_value (a_name)
 				if l_string /= Void then
@@ -102,9 +102,9 @@ feature -- Basic Operations
 		local
 			l_key: REGISTRY_KEY
 		do 
-			l_key := feature {REGISTRY}.current_user.open_sub_key (registry_path, True)
+			l_key := {REGISTRY}.current_user.open_sub_key (registry_path, True)
 			if l_key = Void then
-				l_key := feature {REGISTRY}.current_user.create_sub_key (registry_path)
+				l_key := {REGISTRY}.current_user.create_sub_key (registry_path)
 			end
 			l_key.set_value (a_name, a_value)
 		ensure
@@ -119,9 +119,9 @@ feature -- Basic Operations
 		local
 			l_key: REGISTRY_KEY
 		do 
-			l_key := feature {REGISTRY}.current_user.open_sub_key (registry_path, True)
+			l_key := {REGISTRY}.current_user.open_sub_key (registry_path, True)
 			if l_key = Void then
-				l_key := feature {REGISTRY}.current_user.create_sub_key (registry_path)
+				l_key := {REGISTRY}.current_user.create_sub_key (registry_path)
 			end
 			l_key.set_value (a_name, a_value.to_cil)
 		ensure

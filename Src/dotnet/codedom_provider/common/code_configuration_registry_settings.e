@@ -25,11 +25,11 @@ feature -- Access
 			l_retried: BOOLEAN
 		do
 			if not l_retried then
-				l_file_name := feature {SYSTEM_DLL_PROCESS}.get_current_process.main_module.file_name
+				l_file_name := {SYSTEM_DLL_PROCESS}.get_current_process.main_module.file_name
 				if l_file_name /= Void then
 					Result := application_config_path (l_file_name)
 				else
-					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_current_process_file_name, [])
+					Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_current_process_file_name, [])
 				end
 			end
 		rescue
@@ -105,7 +105,7 @@ feature -- Access
 			l_retried: BOOLEAN
 		do
 			if not l_retried then
-				l_key := feature {REGISTRY}.local_machine.open_sub_key (Configurations_key, False)
+				l_key := {REGISTRY}.local_machine.open_sub_key (Configurations_key, False)
 				if l_key /= Void then
 					l_value ?= l_key.get_value (Void)
 					if l_value /= Void then
@@ -114,7 +114,7 @@ feature -- Access
 					l_key.close
 				end
 				if Result = Void then
-					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_default_config, [])
+					Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_default_config, [])
 				end
 			end
 		rescue
@@ -206,9 +206,9 @@ feature -- Basic Operation
 			l_retried: BOOLEAN
 		do
 			if not l_retried then
-				l_key := feature {REGISTRY}.local_machine.open_sub_key (Configurations_key, True)
+				l_key := {REGISTRY}.local_machine.open_sub_key (Configurations_key, True)
 				if l_key = Void then
-					l_key := feature {REGISTRY}.local_machine.create_sub_key (Configurations_key)
+					l_key := {REGISTRY}.local_machine.create_sub_key (Configurations_key)
 				end
 				l_key.set_value (Void, a_config_path.to_cil)
 				l_key.close
@@ -226,7 +226,7 @@ feature -- Basic Operation
 			l_retried: BOOLEAN
 		do
 			if not l_retried then
-				l_key := feature {REGISTRY}.local_machine.open_sub_key (Configurations_key, True)
+				l_key := {REGISTRY}.local_machine.open_sub_key (Configurations_key, True)
 				if l_key /= Void then
 					l_key.delete_value (("").to_cil)
 					l_key.close

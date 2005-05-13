@@ -86,7 +86,7 @@ feature -- Factory
 			if a_declaration.name /= Void then
 				l_type_name := a_declaration.name
 			else
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_type_name, [a_namespace])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_type_name, [a_namespace])
 				l_type_name := "DEFAULT_TYPE_NAME"
 			end
 			if a_namespace /= Void and then a_namespace.count > 0 then
@@ -209,18 +209,18 @@ feature {NONE} -- Implementation
 					l_member := l_members.item (i)
 					l_method ?= l_member
 					if l_method /= Void then
-						create l_member_reference.make (l_method.name, a_type, l_method.attributes & feature {SYSTEM_DLL_MEMBER_ATTRIBUTES}.Override = feature {SYSTEM_DLL_MEMBER_ATTRIBUTES}.Override)
+						create l_member_reference.make (l_method.name, a_type, l_method.attributes & {SYSTEM_DLL_MEMBER_ATTRIBUTES}.Override = {SYSTEM_DLL_MEMBER_ATTRIBUTES}.Override)
 						a_type.add_member (l_member_reference)
 					else
 						l_property ?= l_member
 						if l_property /= Void then
 							if l_property.has_get then
-								create l_member_reference.make ("get_" + l_property.name, a_type, l_property.attributes & feature {SYSTEM_DLL_MEMBER_ATTRIBUTES}.Override = feature {SYSTEM_DLL_MEMBER_ATTRIBUTES}.Override)
+								create l_member_reference.make ("get_" + l_property.name, a_type, l_property.attributes & {SYSTEM_DLL_MEMBER_ATTRIBUTES}.Override = {SYSTEM_DLL_MEMBER_ATTRIBUTES}.Override)
 								l_member_reference.set_initialized
 								a_type.add_member (l_member_reference)
 							end
 							if l_property.has_set then
-								create l_member_reference.make ("set_" + l_property.name, a_type, l_property.attributes & feature {SYSTEM_DLL_MEMBER_ATTRIBUTES}.Override = feature {SYSTEM_DLL_MEMBER_ATTRIBUTES}.Override)
+								create l_member_reference.make ("set_" + l_property.name, a_type, l_property.attributes & {SYSTEM_DLL_MEMBER_ATTRIBUTES}.Override = {SYSTEM_DLL_MEMBER_ATTRIBUTES}.Override)
 								create l_argument.make (create {CODE_VARIABLE_REFERENCE}.make ("value", type_reference_from_reference (l_property.type), a_type), in_argument)
 								l_member_reference.add_argument (l_argument)
 								l_member_reference.set_initialized
@@ -235,13 +235,13 @@ feature {NONE} -- Implementation
 							else
 								l_event ?= l_member
 								if l_event /= Void then
-									create l_member_reference.make ("add_" + l_member.name, a_type, l_event.attributes & feature {SYSTEM_DLL_MEMBER_ATTRIBUTES}.Override = feature {SYSTEM_DLL_MEMBER_ATTRIBUTES}.Override)
+									create l_member_reference.make ("add_" + l_member.name, a_type, l_event.attributes & {SYSTEM_DLL_MEMBER_ATTRIBUTES}.Override = {SYSTEM_DLL_MEMBER_ATTRIBUTES}.Override)
 									create l_argument.make (create {CODE_VARIABLE_REFERENCE}.make ("value", type_reference_from_reference (l_event.type), a_type), in_argument)
 									l_member_reference.add_argument (l_argument)
 									l_member_reference.set_initialized
 									a_type.add_member (l_member_reference)
 									
-									create l_member_reference.make ("remove_" + l_member.name, a_type, l_event.attributes & feature {SYSTEM_DLL_MEMBER_ATTRIBUTES}.Override = feature {SYSTEM_DLL_MEMBER_ATTRIBUTES}.Override)
+									create l_member_reference.make ("remove_" + l_member.name, a_type, l_event.attributes & {SYSTEM_DLL_MEMBER_ATTRIBUTES}.Override = {SYSTEM_DLL_MEMBER_ATTRIBUTES}.Override)
 									create l_argument.make (create {CODE_VARIABLE_REFERENCE}.make ("value", type_reference_from_reference (l_event.type), a_type), in_argument)
 									l_member_reference.add_argument (l_argument)
 									l_member_reference.set_initialized

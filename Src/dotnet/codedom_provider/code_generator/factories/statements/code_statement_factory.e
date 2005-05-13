@@ -46,10 +46,10 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 					code_dom_generator.generate_expression_from_dom (a_source.right)			
 					set_last_statement (create {CODE_ASSIGN_STATEMENT}.make (l_target, last_expression, l_assignment_type))
 				else
-					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_assignment_source, [current_context])
+					Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_assignment_source, [current_context])
 				end
 			else
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_assignment_target, [current_context])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_assignment_target, [current_context])
 				set_last_statement (Void)
 			end
 		end
@@ -62,7 +62,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			if a_source.comment /= Void and then a_source.comment.text /= Void then
 				set_last_statement (create {CODE_COMMENT_STATEMENT}.make (create {CODE_COMMENT}.make (a_source.comment.text, not a_source.comment.doc_comment)))
 			else
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_comment_text, [current_context])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_comment_text, [current_context])
 				set_last_statement (Void)
 			end
 		end
@@ -79,7 +79,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 				code_dom_generator.generate_expression_from_dom (a_source.condition)
 				set_last_statement (create {CODE_CONDITION_STATEMENT}.make (last_expression, statements_from_collection (l_true_statements), statements_from_collection (a_source.false_statements)))
 			else
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_condition, [current_context])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_condition, [current_context])
 				set_last_statement (Void)
 			end
 		end
@@ -93,7 +93,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 				code_dom_generator.generate_expression_from_dom (a_source.expression)
 				set_last_statement (create {CODE_EXPRESSION_STATEMENT}.make (last_expression))
 			else
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_expression, [current_context])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_expression, [current_context])
 				set_last_statement (Void)
 			end
 		end
@@ -117,7 +117,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 				code_dom_generator.generate_expression_from_dom (a_source.test_expression)
 				set_last_statement (create {CODE_ITERATION_STATEMENT}.make (l_init_statement, last_expression, statements_from_collection (a_source.statements), l_increment_statement))
 			else
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_test_expression, [current_context])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_test_expression, [current_context])
 				set_last_statement (Void)
 			end
 		end
@@ -131,7 +131,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 				code_dom_generator.generate_expression_from_dom (a_source.expression)
 				set_last_statement (create {CODE_METHOD_RETURN_STATEMENT}.make (last_expression))
 			else
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_return_expression, [current_context])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_return_expression, [current_context])
 				set_last_statement (Void)
 			end
 		end
@@ -160,7 +160,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 					set_last_statement (create {CODE_SNIPPET_STATEMENT}.make (l_value))
 				end
 			else
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_snippet_value, [current_context])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_snippet_value, [current_context])
 			end
 		ensure
 			non_void_last_statement: last_statement /= Void

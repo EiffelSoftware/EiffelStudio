@@ -187,7 +187,7 @@ feature {NONE} -- Events Handling
 				l_dir := folders_combo_box.text
 			end
 			if not l_dir.is_empty then
-				l_res := feature {SYSTEM_DLL_PROCESS}.start_string_string ("explorer.exe", l_dir)
+				l_res := {SYSTEM_DLL_PROCESS}.start_string_string ("explorer.exe", l_dir)
 			end
 		end
 

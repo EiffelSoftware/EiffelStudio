@@ -14,11 +14,11 @@ feature -- Access
 	direction_from_dom (a_direction: SYSTEM_DLL_FIELD_DIRECTION): INTEGER is
 			-- Value corresponding to `a_direction'
 		do
-			if a_direction = feature {SYSTEM_DLL_FIELD_DIRECTION}.In then
+			if a_direction = {SYSTEM_DLL_FIELD_DIRECTION}.In then
 				Result := in_argument
-			elseif a_direction = feature {SYSTEM_DLL_FIELD_DIRECTION}.Out then
+			elseif a_direction = {SYSTEM_DLL_FIELD_DIRECTION}.Out then
 				Result := out_argument
-			elseif a_direction = feature {SYSTEM_DLL_FIELD_DIRECTION}.Ref then
+			elseif a_direction = {SYSTEM_DLL_FIELD_DIRECTION}.Ref then
 				Result := inout_argument
 			else
 				check

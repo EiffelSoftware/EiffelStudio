@@ -234,9 +234,9 @@ feature {NONE} -- Implementation
 			l_binary_operator_expression.set_right (l_expression)
 			
 			if ("|").is_equal (l_as.op_name) then
-				l_binary_operator_expression.set_operator (feature {SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.bitwise_or)
+				l_binary_operator_expression.set_operator ({SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.bitwise_or)
 			elseif ("&").is_equal (l_as.op_name) then
-				l_binary_operator_expression.set_operator (feature {SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.bitwise_and)
+				l_binary_operator_expression.set_operator ({SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.bitwise_and)
 			end
 
 			set_last_element_created (l_binary_operator_expression)

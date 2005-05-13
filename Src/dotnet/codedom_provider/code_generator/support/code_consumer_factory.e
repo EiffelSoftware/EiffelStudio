@@ -52,7 +52,7 @@ feature {CODE_GENERATOR, CODE_FACTORY, CODE_ARGUMENTS_FACTORY} -- Basic Operatio
 		do
 			l_delegate ?= a_type
 			if l_delegate /= Void then
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Not_implemented, ["delegate type generation"])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.Not_implemented, ["delegate type generation"])
 			else
 				Type_factory.generate_type (a_type)
 			end
@@ -103,7 +103,7 @@ feature {CODE_GENERATOR, CODE_FACTORY, CODE_ARGUMENTS_FACTORY} -- Basic Operatio
 									else
 										l_delegate ?= a_member
 										if l_delegate /= Void then
-											Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Not_implemented, ["delegate type generation"])
+											Event_manager.raise_event ({CODE_EVENTS_IDS}.Not_implemented, ["delegate type generation"])
 										else
 											l_type ?= a_member
 											if l_type /= Void then

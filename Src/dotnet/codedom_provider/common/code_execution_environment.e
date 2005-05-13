@@ -13,7 +13,7 @@ feature -- Access
 			-- to loaded .NET runtime.
 			-- (i.e. "v1.0.3705" or "v1.1.4322" or...)
 		do
-			Result:= feature {RUNTIME_ENVIRONMENT}.get_system_version
+			Result:= {RUNTIME_ENVIRONMENT}.get_system_version
 		ensure
 			exist: Result /= Void
 		end
@@ -22,7 +22,7 @@ feature -- Access
 			-- Path to .NET framework
 			-- (i.e. "C:\Windows\microsoft.net\framework\v1.1.4322")
 		do
-			Result := feature {RUNTIME_ENVIRONMENT}.get_runtime_directory
+			Result := {RUNTIME_ENVIRONMENT}.get_runtime_directory
 		ensure
 			exist: Result /= Void
 		end

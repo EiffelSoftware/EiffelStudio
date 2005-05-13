@@ -39,7 +39,7 @@ feature -- Access
 			Result.extend ("cscompmgd.dll")
 			Result.extend ("accessibility.dll")
 			Result.extend ("system.enterpriseservices.dll")
-			if not feature {RUNTIME_ENVIRONMENT}.get_system_version.is_equal ("v1.0.3705") then
+			if not {RUNTIME_ENVIRONMENT}.get_system_version.is_equal ("v1.0.3705") then
 				Result.extend ("system.web.mobile.dll")
 			end
 			Result.compare_objects
@@ -60,7 +60,7 @@ feature -- Status Report
 		local
 			l_framework_path: STRING
 		do
-			l_framework_path := feature {RUNTIME_ENVIRONMENT}.get_runtime_directory
+			l_framework_path := {RUNTIME_ENVIRONMENT}.get_runtime_directory
 			l_framework_path.to_lower
 			from
 				Startup_assemblies.start
@@ -87,7 +87,7 @@ feature -- Basic Operations
 			l_retried: BOOLEAN
 		do
 			if not l_retried then
-				l_key := feature {REGISTRY}.Current_user.open_sub_key (Saved_settings_key)
+				l_key := {REGISTRY}.Current_user.open_sub_key (Saved_settings_key)
 				if l_key /= Void then
 					l_value ?= l_key.get_value (Assemblies_key_name)
 					l_key.close
@@ -137,9 +137,9 @@ feature -- Basic Operations
 					l_assemblies.append (Referenced_assemblies.item.assembly.location)
 					Referenced_assemblies.forth
 				end
-				l_key := feature {REGISTRY}.Current_user.open_sub_key (Saved_settings_key, True)
+				l_key := {REGISTRY}.Current_user.open_sub_key (Saved_settings_key, True)
 				if l_key = Void then
-					l_key := feature {REGISTRY}.Current_user.create_sub_key (Saved_settings_key)
+					l_key := {REGISTRY}.Current_user.create_sub_key (Saved_settings_key)
 				end
 				l_key.set_value (Assemblies_key_name.to_cil, l_assemblies.to_cil)
 				l_key.close

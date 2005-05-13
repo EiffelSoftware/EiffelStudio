@@ -94,7 +94,7 @@ feature -- Basic Operations
 						l_abs_dir.append (root_directory)
 						l_abs_dir.append (Directory_separator.out)
 						l_abs_dir.append (l_rel_dir)
-						if feature {SYSTEM_DIRECTORY}.exists (l_abs_dir) then
+						if {SYSTEM_DIRECTORY}.exists (l_abs_dir) then
 							create l_dir_file.make (l_abs_dir)
 							if l_ace_file.change_date > l_dir_file.change_date then
 								-- Cache is obsolete
@@ -139,10 +139,10 @@ feature -- Basic Operations
 						l_abs_dir.append (Directory_separator.out)
 						l_abs_dir.append (l_rel_dir)
 						from
-							l_exists := feature {SYSTEM_DIRECTORY}.exists (l_abs_dir)
+							l_exists := {SYSTEM_DIRECTORY}.exists (l_abs_dir)
 							if l_exists then
 								l_abs_dir.append ("_2")
-								l_exists := feature {SYSTEM_DIRECTORY}.exists (l_abs_dir)
+								l_exists := {SYSTEM_DIRECTORY}.exists (l_abs_dir)
 								l_counter := 2
 							end
 						until
@@ -151,14 +151,14 @@ feature -- Basic Operations
 							l_counter := l_counter + 1
 							l_abs_dir.keep_head (l_abs_dir.last_index_of ('_', l_abs_dir.count))
 							l_abs_dir.append (l_counter.out)
-							l_exists := feature {SYSTEM_DIRECTORY}.exists (l_abs_dir)
+							l_exists := {SYSTEM_DIRECTORY}.exists (l_abs_dir)
 						end
-						l_res := feature {SYSTEM_DIRECTORY}.create_directory (l_abs_dir)
+						l_res := {SYSTEM_DIRECTORY}.create_directory (l_abs_dir)
 						
 						-- Now precompile in directory `l_abs_dir'
 						l_compiler_path := Compiler_path
 						if l_compiler_path = Void then
-							Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_compiler_path, [])
+							Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_compiler_path, [])
 						else
 							create l_start_info.make_from_file_name_and_arguments (l_compiler_path + Directory_separator.out + Compiler_file_name, "-batch -precompile -finalize -c_compile -metadata_cache_path %"" + metadata_cache + "%" -ace %"" + ace_file_name + "%"")
 							l_start_info.set_working_directory (l_abs_dir)
@@ -261,7 +261,7 @@ feature {NONE} -- Implementation
 			l_retried: BOOLEAN
 		do
 			if not l_retried then
-				precompile_assembly := feature {ASSEMBLY}.load_from (a_path)
+				precompile_assembly := {ASSEMBLY}.load_from (a_path)
 			end
 		rescue
 			precompile_assembly := Void

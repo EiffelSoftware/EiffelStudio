@@ -55,7 +55,7 @@ feature -- Access
 				arguments.forth
 			end
 			Result.append_character (')')
-			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.not_supported, ["delegate invoke expression"])
+			Event_manager.raise_event ({CODE_EVENTS_IDS}.not_supported, ["delegate invoke expression"])
 		end
 		
 feature -- Status Report

@@ -121,7 +121,7 @@ feature -- Access
 			l_name: STRING
 		do
 			if search_for_type then
-				Result := feature {SYSTEM_TYPE}.get_type (name)
+				Result := {SYSTEM_TYPE}.get_type (name)
 				if Result = Void then
 					from
 						Referenced_assemblies.start
@@ -141,7 +141,7 @@ feature -- Access
 						create l_name.make (name.count + 7)
 						l_name.append ("System.")
 						l_name.append (name)
-						Result := feature {SYSTEM_TYPE}.get_type (l_name)
+						Result := {SYSTEM_TYPE}.get_type (l_name)
 					until
 						Referenced_assemblies.after or Result /= Void
 					loop
@@ -158,9 +158,9 @@ feature -- Access
 					if element_type /= Void then
 						-- Special case for arrays of generated types:
 						-- They are external types but cannot be retrieved through `get_type'.
-						Result := feature {SYSTEM_TYPE}.get_type ("System.Object[]")
+						Result := {SYSTEM_TYPE}.get_type ("System.Object[]")
 					else
-						Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_type, [name])
+						Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_type, [name])
 					end
 				end
 
@@ -277,7 +277,7 @@ feature -- Access
 				l_features.search (a_name)
 				if l_features.found then
 					if l_features.found_item.count > 1 then
-						Event_manager.raise_event (feature {CODE_EVENTS_IDS}.ambiguous_match, [a_name, name])
+						Event_manager.raise_event ({CODE_EVENTS_IDS}.ambiguous_match, [a_name, name])
 					end
 					Result := member_from_code (l_features.found_item.first)
 				else
@@ -503,14 +503,14 @@ feature {NONE} -- Implementation
 			members_cache.search (a_name)
 			if members_cache.found then
 				if members_cache.found_item.count > 1 then
-					event_manager.raise_event (feature {CODE_EVENTS_IDS}.ambiguous_match, [a_name, name])
+					event_manager.raise_event ({CODE_EVENTS_IDS}.ambiguous_match, [a_name, name])
 				end
 				Result := members_cache.found_item.first
 			elseif dotnet_type /= Void then
 				l_features := Metadata_provider.features (a_name, dotnet_type)
 				if l_features /= Void and then l_features.count > 0 then
 					if l_features.count > 1 then
-						Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Ambiguous_match, [a_name, name])
+						Event_manager.raise_event ({CODE_EVENTS_IDS}.Ambiguous_match, [a_name, name])
 					end
 					Result := l_features.first
 					members_cache.put (l_features, a_name)
@@ -530,14 +530,14 @@ feature {NONE} -- Implementation
 			members_cache.search (a_name)
 			if members_cache.found then
 				if members_cache.found_item.count > 1 then
-					event_manager.raise_event (feature {CODE_EVENTS_IDS}.ambiguous_match, [a_name, name])
+					event_manager.raise_event ({CODE_EVENTS_IDS}.ambiguous_match, [a_name, name])
 				end
 				Result := members_cache.found_item.first
 			elseif dotnet_type /= Void then
 				l_features := Metadata_provider.features (a_name, dotnet_type)
 				if l_features /= Void and then l_features.count > 0 then
 					if l_features.count > 1 then
-						Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Ambiguous_match, [a_name, name])
+						Event_manager.raise_event ({CODE_EVENTS_IDS}.Ambiguous_match, [a_name, name])
 					end
 					Result := l_features.first
 					members_cache.put (l_features, a_name)

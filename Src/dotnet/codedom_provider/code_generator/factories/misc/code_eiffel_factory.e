@@ -48,7 +48,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 				if not Referenced_assemblies.has_file (l_referenced_assemblies.item (i)) then
 					Referenced_assemblies.extend_file (l_referenced_assemblies.item (i))
 					if not Referenced_assemblies.assembly_added then
-						Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_reference, [l_referenced_assemblies.item (i)])
+						Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_reference, [l_referenced_assemblies.item (i)])
 					end
 				end
 				i := i + 1
@@ -69,7 +69,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 				create l_compile_unit.make (l_code_namespaces)
 			else
 				create l_compile_unit.make (create {ARRAYED_LIST [CODE_NAMESPACE]}.make (0))
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_namespaces, [])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_namespaces, [])
 			end
 			set_last_compile_unit (l_compile_unit)
 		ensure
@@ -144,8 +144,8 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 				loop
 					l_type := l_types.item (i)
 					l_type_attributes := l_type.type_attributes
-					l_deferred := l_type.is_interface or (l_type_attributes & feature {TYPE_ATTRIBUTES}.Abstract = feature {TYPE_ATTRIBUTES}.Abstract)
-					l_frozen := l_type_attributes & feature {TYPE_ATTRIBUTES}.Sealed = feature {TYPE_ATTRIBUTES}.Sealed
+					l_deferred := l_type.is_interface or (l_type_attributes & {TYPE_ATTRIBUTES}.Abstract = {TYPE_ATTRIBUTES}.Abstract)
+					l_frozen := l_type_attributes & {TYPE_ATTRIBUTES}.Sealed = {TYPE_ATTRIBUTES}.Sealed
 					l_expanded := l_type.is_struct
 					l_type_reference := Type_reference_factory.type_reference_from_declaration (l_type, l_name)
 					if l_deferred then
@@ -223,7 +223,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 					l_generated_types.forth
 				end
 			else
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_types, [l_namespace.name])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_types, [l_namespace.name])
 			end
 			set_last_namespace (l_namespace)
 		ensure

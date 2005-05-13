@@ -46,10 +46,10 @@ feature -- Basic Operations
 			if not l_retried then
 				create l_config.make
 				if l_config.languages.has (a_codedom_provider) then
-					codedom_provider ?= feature {ACTIVATOR}.create_instance (feature {SYSTEM_TYPE}.get_type (l_config.language_provider (a_codedom_provider)))
+					codedom_provider ?= {ACTIVATOR}.create_instance ({SYSTEM_TYPE}.get_type (l_config.language_provider (a_codedom_provider)))
 				else
-					if feature {SYSTEM_FILE}.exists (a_codedom_provider) then
-						l_assembly := feature {ASSEMBLY}.load_from (a_codedom_provider)
+					if {SYSTEM_FILE}.exists (a_codedom_provider) then
+						l_assembly := {ASSEMBLY}.load_from (a_codedom_provider)
 						from
 							l_types := l_assembly.get_types
 						until
@@ -60,12 +60,12 @@ feature -- Basic Operations
 						end
 					end
 					if l_found then
-						codedom_provider ?= feature {ACTIVATOR}.create_instance (l_types.item (i - 1))
+						codedom_provider ?= {ACTIVATOR}.create_instance (l_types.item (i - 1))
 					end
 				end
 				if codedom_provider /= Void then
 					language_extension := codedom_provider.file_extension
-					is_case_sensitive := codedom_provider.language_options /= feature {SYSTEM_DLL_LANGUAGE_OPTIONS}.case_insensitive
+					is_case_sensitive := codedom_provider.language_options /= {SYSTEM_DLL_LANGUAGE_OPTIONS}.Case_insensitive
 					analysis_successful := True
 				end
 			end

@@ -44,8 +44,8 @@ feature {NONE} -- Implementation
 				l_browser_path := (create {EXECUTION_ENVIRONMENT}).get ("SystemDrive")
 				if l_browser_path /= Void then
 					l_browser_path.append ("\Program Files\Internet Explorer\iexplore.exe")
-					if feature {SYSTEM_FILE}.exists (l_browser_path) then
-						l_res := feature {SYSTEM_DLL_PROCESS}.start (l_browser_path, "http://www.eiffel.com")
+					if {SYSTEM_FILE}.exists (l_browser_path) then
+						l_res := {SYSTEM_DLL_PROCESS}.start (l_browser_path, "http://www.eiffel.com")
 					end
 				end
 			end

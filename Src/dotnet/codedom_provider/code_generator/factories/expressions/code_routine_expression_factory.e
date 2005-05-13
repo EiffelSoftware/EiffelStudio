@@ -31,10 +31,10 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 				if l_routine /= Void then
 					set_last_expression (create {CODE_ROUTINE_INVOKE_EXPRESSION}.make(l_routine, expressions_from_collection (a_source.parameters)))
 				else
-					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_method, ["method invoke expression"])
+					Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_method, ["method invoke expression"])
 				end
 			else
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_method, ["method invoke expression"])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_method, ["method invoke expression"])
 			end
 		ensure
 			non_void_last_expression: last_expression /= Void

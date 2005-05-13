@@ -32,13 +32,13 @@ feature -- Access
 			l_path: STRING
 		do
 			if not l_retried then
-				if feature {SYSTEM_FILE}.exists (a_file_name) then
-					Result := feature {ASSEMBLY}.load_from (a_file_name)
+				if {SYSTEM_FILE}.exists (a_file_name) then
+					Result := {ASSEMBLY}.load_from (a_file_name)
 				else
-					l_path := feature {RUNTIME_ENVIRONMENT}.get_runtime_directory
+					l_path := {RUNTIME_ENVIRONMENT}.get_runtime_directory
 					l_path.append (a_file_name)
-					if feature {SYSTEM_FILE}.exists (l_path) then
-						Result := feature {ASSEMBLY}.load_from (l_path)
+					if {SYSTEM_FILE}.exists (l_path) then
+						Result := {ASSEMBLY}.load_from (l_path)
 					end
 				end
 			end
@@ -56,7 +56,7 @@ feature -- Access
 			l_retried: BOOLEAN
 		do
 			if not l_retried then
-				Result := feature {ASSEMBLY}.load (a_name)
+				Result := {ASSEMBLY}.load (a_name)
 			end
 		rescue
 			Event_manager.process_exception
@@ -224,7 +224,7 @@ feature -- Basic Operations
 							end
 						end
 						if l_location = Void then
-							l_assembly := feature {ASSEMBLY}.load (l_name)
+							l_assembly := {ASSEMBLY}.load (l_name)
 							if l_assembly /= Void then
 								l_location := l_assembly.location
 							end

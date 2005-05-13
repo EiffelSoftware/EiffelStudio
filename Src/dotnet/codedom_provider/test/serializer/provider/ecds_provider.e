@@ -30,7 +30,7 @@ feature -- Access
 	language_options: SYSTEM_DLL_LANGUAGE_OPTIONS is
 			-- Get a language features identifier.
 		once
-			Result := feature {SYSTEM_DLL_LANGUAGE_OPTIONS}.case_insensitive
+			Result := {SYSTEM_DLL_LANGUAGE_OPTIONS}.case_insensitive
 		end
 		
 feature -- Basic Operations

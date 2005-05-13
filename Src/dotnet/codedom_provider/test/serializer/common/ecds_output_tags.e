@@ -72,7 +72,7 @@ feature -- Access
 			
 			create l_font
 			l_font.preferred_families.extend (Normal_font.preferred_families.first)
-			l_font.set_weight (feature {EV_FONT_CONSTANTS}.Weight_bold)
+			l_font.set_weight ({EV_FONT_CONSTANTS}.Weight_bold)
 			create l_format.make_with_font (l_font)
 			create l_effects
 			l_effects.enable_underlined

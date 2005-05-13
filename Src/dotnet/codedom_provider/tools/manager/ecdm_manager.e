@@ -56,7 +56,7 @@ feature -- Access
 			l_config_path: STRING
 		do
 			l_config_path := registry_settings.application_config_path (a_app_path)
-			if l_config_path /= Void and then feature {SYSTEM_FILE}.exists (l_config_path) then
+			if l_config_path /= Void and then {SYSTEM_FILE}.exists (l_config_path) then
 				create Result.load (l_config_path)
 			end
 		end
@@ -73,7 +73,7 @@ feature -- Access
 			until
 				l_configs.after
 			loop
-				if feature {SYSTEM_FILE}.exists (l_configs.item) then
+				if {SYSTEM_FILE}.exists (l_configs.item) then
 					Result.extend (create {ECDM_CONFIGURATION}.load (l_configs.item))
 				end
 				l_configs.forth
@@ -86,7 +86,7 @@ feature -- Access
 			l_path: STRING
 		once
 			l_path := registry_settings.default_config_file_path
-			if l_path /= Void and then feature {SYSTEM_FILE}.exists (l_path) then
+			if l_path /= Void and then {SYSTEM_FILE}.exists (l_path) then
 				create Result.load (l_path)
 				Result.set_folder (l_path.substring (1, l_path.last_index_of ((create {OPERATING_ENVIRONMENT}).Directory_separator, l_path.count) - 1))
 				Result.set_name ("Default")

@@ -54,7 +54,7 @@ feature -- Access
 			-- Type of expression
 		do
 			if is_byref then
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Incorrect_result, ["type from direction expression"])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.Incorrect_result, ["type from direction expression"])
 				Result := expression.type -- Should be TYPED_POINTER [expression.type]
 			else
 				Result := expression.type

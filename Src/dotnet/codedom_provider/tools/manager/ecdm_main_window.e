@@ -183,16 +183,16 @@ feature {NONE} -- Events
 		do
 			l_config := active_configuration
 			if l_config /= Void then
-				if feature {SYSTEM_FILE}.exists (l_config.path) then
+				if {SYSTEM_FILE}.exists (l_config.path) then
 					active_configuration.load (l_config.path)
 					initialize_from_configuration
 				end
 				manager.roll_back
 			end
 		ensure then
-			clean: active_configuration /= Void and then feature {SYSTEM_FILE}.exists (active_configuration.path) implies not is_dirty
-			save_button_disabled: active_configuration /= Void and then feature {SYSTEM_FILE}.exists (active_configuration.path) implies not save_button.is_sensitive
-			revert_button_disabled: active_configuration /= Void and then feature {SYSTEM_FILE}.exists (active_configuration.path) implies not revert_button.is_sensitive
+			clean: active_configuration /= Void and then {SYSTEM_FILE}.exists (active_configuration.path) implies not is_dirty
+			save_button_disabled: active_configuration /= Void and then {SYSTEM_FILE}.exists (active_configuration.path) implies not save_button.is_sensitive
+			revert_button_disabled: active_configuration /= Void and then {SYSTEM_FILE}.exists (active_configuration.path) implies not revert_button.is_sensitive
 		end
 		
 	on_config_info is
@@ -650,7 +650,7 @@ feature {NONE} -- Events
 			l_dialog.show_modal_to_window (Current)
 			l_file_name := l_dialog.file_name
 			if not l_file_name.is_empty then
-				l_runtime_dir := feature {RUNTIME_ENVIRONMENT}.get_runtime_directory
+				l_runtime_dir := {RUNTIME_ENVIRONMENT}.get_runtime_directory
 				if l_file_name.substring_index (l_runtime_dir, 1) = 1 then
 					l_file_name.keep_tail (l_file_name.count - l_runtime_dir.count)
 				end
@@ -666,7 +666,7 @@ feature {NONE} -- Events
 		do
 			if active_configuration /= Void then
 				l_file_name := assembly_file_name_text_field.text
-				l_runtime_dir := feature {RUNTIME_ENVIRONMENT}.get_runtime_directory
+				l_runtime_dir := {RUNTIME_ENVIRONMENT}.get_runtime_directory
 				if l_file_name.substring_index (l_runtime_dir, 1) = 1 then
 					l_file_name.keep_tail (l_file_name.count - l_runtime_dir.count)
 				end

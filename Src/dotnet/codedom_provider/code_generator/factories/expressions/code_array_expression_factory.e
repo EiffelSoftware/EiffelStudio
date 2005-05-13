@@ -44,10 +44,10 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 					end
 					set_last_expression (l_array_create_expression)
 				else
-					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_array_information, [current_context])
+					Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_array_information, [current_context])
 				end
 			else
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_creation_type, ["array creation expression"])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_creation_type, ["array creation expression"])
 			end
 		ensure
 			non_void_last_expression: last_expression /= Void
@@ -84,10 +84,10 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 					end
 					set_last_expression (create {CODE_ARRAY_INDEXER_EXPRESSION}.make (l_target, l_indices))
 				else
-					event_manager.raise_event (feature {CODE_EVENTS_IDS}.missing_indices, ["array indexer expression"])
+					event_manager.raise_event ({CODE_EVENTS_IDS}.missing_indices, ["array indexer expression"])
 				end
 			else
-				event_manager.raise_event (feature {CODE_EVENTS_IDS}.missing_target_object, ["array indexer expression"])
+				event_manager.raise_event ({CODE_EVENTS_IDS}.missing_target_object, ["array indexer expression"])
 			end
 		end
 

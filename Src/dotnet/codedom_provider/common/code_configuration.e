@@ -200,7 +200,7 @@ feature -- Basic Operations
 				until
 					not l_xml_reader.read					
 				loop
-					if l_xml_reader.node_type = feature {XML_XML_NODE_TYPE}.Element then
+					if l_xml_reader.node_type = {XML_XML_NODE_TYPE}.Element then
 						l_value_name := l_xml_reader.name
 						if l_value_name.is_equal ("prefixes") then
 							from
@@ -211,7 +211,7 @@ feature -- Basic Operations
 							end
 							l_value_name := l_xml_reader.name
 						end
-					elseif l_xml_reader.node_type = feature {XML_XML_NODE_TYPE}.Text then
+					elseif l_xml_reader.node_type = {XML_XML_NODE_TYPE}.Text then
 						internal_config_values.force (l_xml_reader.value, l_value_name)
 					end
 				end

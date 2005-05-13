@@ -103,7 +103,7 @@ feature -- Implementation
 						end
 						l_referenced_assemblies.forth
 					else
-						Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_consumed_assembly, [l_referenced_assemblies.item.assembly.get_name])
+						Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_consumed_assembly, [l_referenced_assemblies.item.assembly.get_name])
 					end
 				end
 

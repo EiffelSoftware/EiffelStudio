@@ -109,7 +109,7 @@ feature -- Access
 				search_for_parent := False
 				internal_parent := parent_in_type (implementing_type)
 				if internal_parent = Void then
-					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_parent, [name + " from " + implementing_type.name])
+					Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_parent, [name + " from " + implementing_type.name])
 				end
 			end
 			Result := internal_parent
@@ -180,7 +180,7 @@ feature -- Access
 					if l_features.found then
 						Result := l_features.found_item.result_type
 					else
-						Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_feature, [name, Resolver.found_type.name])
+						Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_feature, [name, Resolver.found_type.name])
 						Result := None_type_reference
 					end
 				else

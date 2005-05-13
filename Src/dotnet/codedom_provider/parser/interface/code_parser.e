@@ -29,7 +29,7 @@ feature -- Interface
 --			l_code_stream: SYSTEM_STRING
 		do
 			(create {EXCEPTIONS}).raise ("Not supported")
---			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeParser.Parse"])
+--			Event_manager.raise_event ({CODE_EVENTS_IDS}.log, ["Starting CodeParser.Parse"])
 --			if not l_retried then
 --				initialize_referenced_assemblies
 --				create l_eiffel_parser.make
@@ -47,9 +47,9 @@ feature -- Interface
 --				Result ?= l_support.last_element_created;
 --				last_compile_unit_generated := Result
 --			end
---			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Ending CodeParser.Parse"])
+--			Event_manager.raise_event ({CODE_EVENTS_IDS}.log, ["Ending CodeParser.Parse"])
 		rescue
---			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Rescued_exception, [feature {ISE_RUNTIME}.last_exception])
+--			Event_manager.raise_event ({CODE_EVENTS_IDS}.Rescued_exception, [{ISE_RUNTIME}.last_exception])
 --			l_retried := True
 --			Result := last_compile_unit_generated
 --			retry

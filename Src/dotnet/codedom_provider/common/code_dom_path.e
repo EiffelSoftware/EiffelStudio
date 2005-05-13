@@ -30,13 +30,13 @@ feature -- Access
 			l_key: REGISTRY_KEY
 			l_path: SYSTEM_STRING
 		once
-			l_key := feature {REGISTRY}.local_machine.open_sub_key (Setup_key, False)
+			l_key := {REGISTRY}.local_machine.open_sub_key (Setup_key, False)
 			if l_key = Void then
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_setup_key, [])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_setup_key, [])
 			else
 				l_path ?= l_key.get_value (Installation_dir_value)
 				if l_path = Void then
-					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_installation_directory, [])
+					Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_installation_directory, [])
 				else
 					Result := l_path
 					if Result.count > 1 and then Result.item (Result.count) = Directory_separator then
@@ -105,7 +105,7 @@ feature -- Access
 					Result := l_dir.name
 				end
 			else
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.missing_installation_directory, [])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.missing_installation_directory, [])
 			end
 		end
 		
@@ -125,13 +125,13 @@ feature -- Access
 			l_key: REGISTRY_KEY
 			l_path: SYSTEM_STRING
 		once
-			l_key := feature {REGISTRY}.local_machine.open_sub_key (Compiler_key, False)
+			l_key := {REGISTRY}.local_machine.open_sub_key (Compiler_key, False)
 			if l_key = Void then
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_compiler_key, [])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_compiler_key, [])
 			else
 				l_path ?= l_key.get_value (Ise_eiffel_value)
 				if l_path = Void then
-					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_ise_eiffel, [])
+					Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_ise_eiffel, [])
 				else
 					Result := l_path
 					if Result.item (Result.count) /= Directory_separator then

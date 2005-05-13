@@ -214,7 +214,7 @@ feature -- Element Settings
 			if l_parent /= Void then
 				l_parent.add_undefine_clause (create {CODE_UNDEFINE_CLAUSE}.make (a_routine, a_parent))
 			else
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_parent, [a_parent.eiffel_name + "(" + a_parent.name + ")", eiffel_name + "(" + name + ")"])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_parent, [a_parent.eiffel_name + "(" + a_parent.name + ")", eiffel_name + "(" + name + ")"])
 			end			
 		end
 		
@@ -230,7 +230,7 @@ feature -- Element Settings
 			if l_parent /= Void then
 				l_parent.add_redefine_clause (create {CODE_REDEFINE_CLAUSE}.make (a_routine, a_parent))
 			else
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_parent, [a_parent.eiffel_name + "(" + a_parent.name + ")", eiffel_name + "(" + name + ")"])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_parent, [a_parent.eiffel_name + "(" + a_parent.name + ")", eiffel_name + "(" + name + ")"])
 			end			
 		end
 	
@@ -247,7 +247,7 @@ feature -- Element Settings
 			if l_parent /= Void then
 				l_parent.add_rename_clause (create {CODE_RENAME_CLAUSE}.make (a_routine, a_parent, a_new_name))
 			else
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_parent, [a_parent.eiffel_name + "(" + a_parent.name + ")", eiffel_name + "(" + name + ")"])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_parent, [a_parent.eiffel_name + "(" + a_parent.name + ")", eiffel_name + "(" + name + ")"])
 			end			
 		end
 	

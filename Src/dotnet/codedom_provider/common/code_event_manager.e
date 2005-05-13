@@ -23,9 +23,9 @@ feature -- Basic Operations
 		do
 			create l_events
 			if not l_events.is_event_id (an_id) then
-				raise_event (feature {CODE_EVENTS_IDS}.Invalid_event_identifier, [an_id.out])
+				raise_event ({CODE_EVENTS_IDS}.Invalid_event_identifier, [an_id.out])
 			elseif not l_events.is_valid_context (an_id, a_context) then
-				raise_event (feature {CODE_EVENTS_IDS}.Invalid_event_context, [l_events.event_name (an_id), a_context.count.out, l_events.event_arguments_count (an_id).out])
+				raise_event ({CODE_EVENTS_IDS}.Invalid_event_context, [l_events.event_name (an_id), a_context.count.out, l_events.event_arguments_count (an_id).out])
 			else
 				create l_event.make (an_id, a_context)
 				if l_event.is_error then
@@ -50,7 +50,7 @@ feature -- Basic Operations
 			-- Log last raised exception or stop execution
 			-- depending on configuration.
 		do
-			raise_event (feature {CODE_EVENTS_IDS}.Rescued_exception, [feature {ISE_RUNTIME}.last_exception])
+			raise_event ({CODE_EVENTS_IDS}.Rescued_exception, [{ISE_RUNTIME}.last_exception])
 		end
 
 feature {NONE} -- Implementation
@@ -73,11 +73,11 @@ feature {NONE} -- Implementation
 				l_event_log.set_source (log_source_name)
 				l_event_log.set_machine_name (log_server_name)
 				if an_event.is_error then
-					l_event_type := feature {SYSTEM_DLL_EVENT_LOG_ENTRY_TYPE}.error
+					l_event_type := {SYSTEM_DLL_EVENT_LOG_ENTRY_TYPE}.error
 				elseif an_event.is_warning then
-					l_event_type := feature {SYSTEM_DLL_EVENT_LOG_ENTRY_TYPE}.warning
+					l_event_type := {SYSTEM_DLL_EVENT_LOG_ENTRY_TYPE}.warning
 				else
-					l_event_type := feature {SYSTEM_DLL_EVENT_LOG_ENTRY_TYPE}.information
+					l_event_type := {SYSTEM_DLL_EVENT_LOG_ENTRY_TYPE}.information
 				end
 				l_event_log.write_entry (an_event.message, l_event_type, an_event.id)
 				l_event_log.close
@@ -91,8 +91,8 @@ feature {NONE} -- Implementation
 		once
 			source_ready := not l_retried
 			if not l_retried then
-				if not feature {SYSTEM_DLL_EVENT_LOG}.source_exists (log_source_name) then
-					feature {SYSTEM_DLL_EVENT_LOG}.create_event_source (log_source_name, log_name)
+				if not {SYSTEM_DLL_EVENT_LOG}.source_exists (log_source_name) then
+					{SYSTEM_DLL_EVENT_LOG}.create_event_source (log_source_name, log_name)
 				end
 			end
 		rescue

@@ -81,12 +81,12 @@ feature {NONE} -- Implementation
 			l_path.append (file_title)
 			l_path.append (file_extension)
 			from
-				last_serialization_successful := feature {SYSTEM_FILE}.exists (l_path)
+				last_serialization_successful := {SYSTEM_FILE}.exists (l_path)
 			until
 				last_serialization_successful or l_seconds >= time_out
 			loop
-				l_res := l_watcher.wait_for_changed (feature {SYSTEM_DLL_WATCHER_CHANGE_TYPES}.created, 1000)
-				last_serialization_successful := not l_res.timed_out or feature {SYSTEM_FILE}.exists (l_path)
+				l_res := l_watcher.wait_for_changed ({SYSTEM_DLL_WATCHER_CHANGE_TYPES}.created, 1000)
+				last_serialization_successful := not l_res.timed_out or {SYSTEM_FILE}.exists (l_path)
 				l_seconds := l_seconds + 1
 			end
 			if not last_serialization_successful then

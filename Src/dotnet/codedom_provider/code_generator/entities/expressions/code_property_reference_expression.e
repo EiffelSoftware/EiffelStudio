@@ -126,13 +126,13 @@ feature {NONE} -- Implementation
 					l_name := "set_" + property_name
 					internal_property_accesser := target.type.member_from_name (l_name)
 					if internal_property_accesser = Void then
-						Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_feature, [l_name, target.type.name])
+						Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_feature, [l_name, target.type.name])
 					end
 				else
 					l_name := "get_" + property_name
 					internal_property_accesser := target.type.member (l_name, Void)
 					if internal_property_accesser = Void then
-						Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_feature, [l_name, target.type.name])
+						Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_feature, [l_name, target.type.name])
 					end
 				end
 			end

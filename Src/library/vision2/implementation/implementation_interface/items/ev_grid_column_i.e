@@ -61,13 +61,39 @@ feature {EV_GRID_I} -- Initialization
 
 feature -- Access
 
-	is_displayed: BOOLEAN is
+	index_of_first_item: INTEGER is
+			-- Return the index of the first non `Void' item within `Current'
+			-- or 0 if none.
+		local
+			counter: INTEGER
+			column_count: INTEGER
+			a_item: EV_GRID_ITEM_I
+			a_parent_i: EV_GRID_I
+			a_index: INTEGER
+		do
+			from
+				column_count := count
+				a_parent_i := parent_i
+				counter := 1
+				a_index := index
+			until
+				a_item /= Void or else counter = column_count
+			loop
+				a_item := a_parent_i.item_internal (a_index, counter)
+				counter := counter + 1
+			end
+			if a_item /= Void then
+				Result := counter - 1
+			end
+		ensure
+			valid_result: Result >= 0 and Result <= count
+		end
+
+
+	is_displayed: BOOLEAN
 		-- May `Current' be displayed when its `parent' is?
 		-- Will return False if `hide' has been called on `Current'.
 		-- A column that `is_displayed' does not necessarily have to be visible on screen at that particular time.
-		do
-			Result := is_visible
-		end
 
 	title: STRING is
 			-- Title of Current column. Empty if none.
@@ -282,15 +308,18 @@ feature -- Status report
 				a_item := a_parent_i.item_internal (a_internal_index, i)
 				if a_item /= Void then
 					non_void_item_found := True
+					internal_is_selected := False
 					Result := a_item.is_selected
 				end
 				i := i + 1
 			end
 			if not non_void_item_found then
 					-- If no non-void items are present then we cannot be selected
-				Result := False
+				Result := internal_is_selected
 			end
 		end
+
+	internal_is_selected: BOOLEAN
 
 	is_selectable: BOOLEAN is
 			-- May the object be selected.
@@ -391,6 +420,7 @@ feature {EV_GRID_I} -- Implementation
 			is_parented: parent /= Void
 		do
 			parent_i := Void
+			internal_is_selected := False
 		ensure
 			parent_i_unset: parent_i = Void
 		end
@@ -398,13 +428,15 @@ feature {EV_GRID_I} -- Implementation
 	enable_select is
 			-- Select `Current' in `parent_i'.
 		do
-			internal_update_selection (True)			
+			internal_update_selection (True)		
+			internal_is_selected := True
 		end
 
 	disable_select is
 			-- Deselect `Current' from `parent_i'.
 		do
 			internal_update_selection (False)
+			internal_is_selected := False
 		end
 
 	destroy is
@@ -413,12 +445,12 @@ feature {EV_GRID_I} -- Implementation
 			to_implement ("EV_GRID_COLUMN_I.destroy")
 		end
 
-	set_is_visible (a_visible: BOOLEAN) is
-			-- Set `is_visible' to `a_visible'.
+	set_is_displayed (a_displayed: BOOLEAN) is
+			-- Set `is_displayed' to `a_displayed'.
 		do
-			is_visible := a_visible
+			is_displayed := a_displayed
 		ensure
-			is_visible_set: is_visible = a_visible
+			is_displayed_set: is_displayed = a_displayed
 		end
 
 feature {NONE} -- Implementation
@@ -483,9 +515,6 @@ feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_COLUMN, EV_GRID_COLUMN_I, EV_GRID_
 
 	internal_index: INTEGER
 			-- Index of `Current' in parent grid.
-
-	is_visible: BOOLEAN
-		-- Is the column visible in the grid?
 
 	physical_index: INTEGER
 		-- Physical index of column row data stored in `parent_i'.

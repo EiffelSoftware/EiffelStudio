@@ -17,6 +17,11 @@ inherit
 			default_create, is_equal, copy
 		end
 
+	PROFILING_SETTING
+		undefine
+			default_Create, is_equal, copy
+		end
+
 create
 	make_and_launch
 	
@@ -29,6 +34,9 @@ feature {NONE} -- Initialization
 			default_create
 			main_window.show
 			launch
+			if profile_cell.item then
+				start_profiling
+			end
 		end
 
 end -- class VISION2_APPLICATION

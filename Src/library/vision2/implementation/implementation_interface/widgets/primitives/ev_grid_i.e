@@ -72,7 +72,7 @@ feature -- Access
 				visible_counter = i
 			loop
 				a_col_i := column_internal (counter)
-				if a_col_i.is_visible then
+				if a_col_i.is_displayed then
 					visible_counter := visible_counter + 1
 				end
 				counter := counter + 1
@@ -681,8 +681,8 @@ feature -- Status setting
 			a_col_i: EV_GRID_COLUMN_I
 		do
 			a_col_i := column_internal (a_column)
-			if not a_col_i.is_visible then
-				a_col_i.set_is_visible (True)
+			if not a_col_i.is_displayed then
+				a_col_i.set_is_displayed (True)
 				visible_column_count := visible_column_count + 1
 
 					-- Now show the header.
@@ -704,8 +704,8 @@ feature -- Status setting
 			a_col_i: EV_GRID_COLUMN_I
 		do
 			a_col_i := column_internal (a_column)
-			if a_col_i.is_visible then
-				a_col_i.set_is_visible (False)
+			if a_col_i.is_displayed then
+				a_col_i.set_is_displayed (False)
 				visible_column_count := visible_column_count - 1
 			
 					-- Now hide the header
@@ -1256,7 +1256,7 @@ feature -- Status report
 			a_col_i: EV_GRID_COLUMN_I
 		do
 			a_col_i := column (a_column).implementation
-			Result := a_col_i.is_visible
+			Result := a_col_i.is_displayed
 		end
 
 	is_row_selection_enabled: BOOLEAN is
@@ -1492,7 +1492,7 @@ feature -- Removal
 
 			update_grid_column_indices (a_column)
 			
-			if a_col_i.is_visible then
+			if a_col_i.is_displayed then
 				visible_column_count := visible_column_count - 1
 			end
 
@@ -1691,7 +1691,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 				found or else i = 0
 			loop
 				a_column := column (i)
-				found := a_column.implementation.is_visible
+				found := a_column.implementation.is_displayed
 				if not found then
 					i := i - 1
 				end

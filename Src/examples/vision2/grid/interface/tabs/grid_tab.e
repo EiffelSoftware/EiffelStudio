@@ -34,7 +34,6 @@ feature {NONE} -- Initialization
 			l_color: EV_COLOR
 		do
 			grid.set_dynamic_content_function (agent compute_item)
---			grid.hide
 			add_color_to_combo ((create {EV_STOCK_COLORS}).red, set_background_color_combo)
 			add_color_to_combo ((create {EV_STOCK_COLORS}).green, set_background_color_combo)
 			add_color_to_combo ((create {EV_STOCK_COLORS}).blue, set_background_color_combo)
@@ -995,12 +994,18 @@ feature {NONE} -- Implementation
 --			end
 
 			-- Test 18
-			grid.set_item (1, 1, create {EV_GRID_LABEL_ITEM}.make_with_text ("An item"))
-			grid.set_item (2, 1, create {EV_GRID_LABEL_ITEM}.make_with_text ("An item"))
-			grid.remove_row (1)
-			grid.remove_column (2)
-			grid.remove_column (1)
-			grid.set_item (1, 1, create {EV_GRID_LABEL_ITEM}.make_with_text ("An item"))
+--			grid.set_item (1, 1, create {EV_GRID_LABEL_ITEM}.make_with_text ("An item"))
+--			grid.set_item (2, 1, create {EV_GRID_LABEL_ITEM}.make_with_text ("An item"))
+--			grid.remove_row (1)
+--			grid.remove_column (2)
+--			grid.remove_column (1)
+--			grid.set_item (1, 1, create {EV_GRID_LABEL_ITEM}.make_with_text ("An item"))
+--			grid.insert_new_row (1)
+--			grid.insert_new_row (2)
+--			print (grid.row_count)
+--			row := grid.row (2)
+			grid.enable_partial_dynamic_content
+			grid.set_column_count_to (3)
 			end
 
 	clean_grid is
@@ -1549,6 +1554,38 @@ feature {NONE} -- Implementation
 			color ?= background_color_combo.selected_item.data
 			if color /= Void then
 				grid.set_background_color (color)
+			end
+		end
+
+	is_column_resize_immediate_button_selected is
+			-- Called by `select_actions' of `is_column_resize_immediate_button'.
+		do
+			if is_column_resize_immediate_button.is_selected then
+				grid.enable_column_resize_immediate
+			else
+				grid.disable_column_resize_immediate
+			end
+		end
+
+	remove_all_row_button_selected is
+			-- Called by `select_actions' of `remove_all_rows_button'.
+		do
+			from
+			until
+				grid.row_count = 0
+			loop
+				grid.remove_row (grid.row_count)
+			end
+		end
+	
+	remove_all_columns_button_selected is
+			-- Called by `select_actions' of `remove_all_columns_button'.
+		do
+			from
+			until
+				grid.column_count = 0
+			loop
+				grid.remove_column (grid.column_count)
 			end
 		end
 		

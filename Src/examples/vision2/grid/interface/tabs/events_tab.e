@@ -54,15 +54,19 @@ feature -- Events
 			add_event_item_to_list (l_string)
 		end
 
-	item_motion_event (an_x, a_y: INTEGER) is
+	item_motion_event (an_x, a_y: INTEGER; a1, a2, a3: DOUBLE; i1, i2: INTEGER; an_item: EV_GRID_ITEM) is
 			-- Respond to a pointer motion at the item level.
 		local
 			l_string: STRING
 		do
 			l_string := "Item.pointer_motion_actions : " + an_x.out + ", " + a_y.out
+			if an_item /= Void then
+				l_string.append (". Item : " + an_item.column.index.out + ", " + an_item.row.index.out)
+			else
+				l_string.append (". No item")
+			end
 			add_event_item_to_list (l_string)
 		end
-
 
 	press_item_event (an_x, a_y, a_button: INTEGER; an_item: EV_GRID_ITEM) is
 			-- Respond to a pointer press at the grid level.
@@ -237,6 +241,18 @@ feature -- Events
 		do
 			add_event_item_to_list ("Item at row " + an_item.row.index.out + ", column " + an_item.column.index.out + " deselected.")
 		end
+
+	item_activated (an_item: EV_GRID_ITEM; a_window: EV_POPUP_WINDOW) is
+			--
+		do
+			add_event_item_to_list ("Item at row " + an_item.row.index.out + ", column " + an_item.column.index.out + " activated.")
+		end
+		
+	item_deactivated (an_item: EV_GRID_ITEM; a_window: EV_POPUP_WINDOW) is
+			--
+		do
+			add_event_item_to_list ("Item at row " + an_item.row.index.out + ", column " + an_item.column.index.out + " deactivated.")
+		end		
 	
 	row_selected (a_row: EV_GRID_ROW) is
 			--
@@ -319,23 +335,26 @@ feature {NONE} -- Implementation
 	highlight_items_on_motion_selected is
 			-- Called by `select_item_actions' of `highlight_items_on_motion'.
 		do
+			disable_event_tracking
+			disable_item_event_tracking
 			event_list.disable_sensitive
---			grid.pointer_motion_item_actions.wipe_out
 --			grid.pointer_motion_item_actions.extend (agent motion_event)
---			if highlight_items_on_motion.is_selected then
---				grid.pointer_motion_item_actions.extend (agent motion_highlight_event)
---			end
+			if highlight_items_on_motion.is_selected then
+				grid.pointer_motion_item_actions.extend (agent motion_highlight_event)
+			end
 		end
 	
 	show_events_in_items_selected is
 			-- Called by `select_item_actions' of `show_events_in_items'.
 		do
+			disable_event_tracking
+			disable_item_event_tracking
 			event_list.disable_sensitive
 --			grid.pointer_motion_item_actions.wipe_out
 --			grid.pointer_motion_item_actions.extend (agent motion_event)
---			if show_events_in_items.is_selected then
---				grid.pointer_motion_item_actions.extend (agent motion_event_in_item)
---			end
+			if show_events_in_items.is_selected then
+				grid.pointer_motion_item_actions.extend (agent motion_event_in_item)
+			end
 		end
 
 	no_events_button_selected is
@@ -346,11 +365,10 @@ feature {NONE} -- Implementation
 
 	enable_event_tracking_selected is
 			-- Called by `select_actions' of `enable_event_tracking'.
-		local
-			l_x, l_y: INTEGER
-			current_item: EV_GRID_ITEM
 		do
 			event_list.enable_sensitive
+			disable_event_tracking
+			disable_item_event_tracking
 
 				-- Now connect all events
 			grid.pointer_motion_item_actions.extend (agent motion_item_event)
@@ -377,13 +395,64 @@ feature {NONE} -- Implementation
 			grid.row_expand_actions.extend (agent row_expanded)
 			grid.row_collapse_actions.extend (agent row_collapsed)
 			grid.item_select_actions.extend (agent item_selected)
-			fixme ("Uncomment following selection events when implemented in EV_GRID")
 			grid.item_deselect_actions.extend (agent item_deselected)
 			grid.row_select_actions.extend (agent row_selected)
 			grid.row_deselect_actions.extend (agent row_deselected)
 			grid.column_select_actions.extend (agent column_selected)
 			grid.column_deselect_actions.extend (agent column_deselected)
+			grid.item_activate_actions.extend (agent item_activated)
+			grid.item_deactivate_actions.extend (agent item_deactivated)			
+		end
 
+	disable_event_tracking is
+			-- Ensure no events are tracked on the grid.
+		do
+				-- Now connect all events
+			grid.pointer_motion_item_actions.wipe_out
+			grid.pointer_motion_actions.wipe_out
+
+			grid.pointer_button_press_item_actions.wipe_out
+			grid.pointer_button_press_actions.wipe_out
+
+			grid.pointer_double_press_item_actions.wipe_out
+			grid.pointer_double_press_actions.wipe_out
+			
+			grid.pointer_button_release_item_actions.wipe_out
+			grid.pointer_button_release_actions.wipe_out
+
+			grid.pointer_enter_item_actions.wipe_out
+			grid.pointer_leave_item_actions.wipe_out
+			grid.mouse_wheel_actions.wipe_out
+			grid.key_press_actions.wipe_out
+			grid.key_press_string_actions.wipe_out
+			grid.key_release_actions.wipe_out
+			grid.focus_in_actions.wipe_out
+			grid.focus_out_actions.wipe_out
+			grid.resize_actions.wipe_out
+			grid.row_expand_actions.wipe_out
+			grid.row_collapse_actions.wipe_out
+			grid.item_select_actions.wipe_out
+			grid.item_deselect_actions.wipe_out
+			grid.row_select_actions.wipe_out
+			grid.row_deselect_actions.wipe_out
+			grid.column_select_actions.wipe_out
+			grid.column_deselect_actions.wipe_out
+			grid.item_activate_actions.wipe_out
+			grid.item_deactivate_actions.wipe_out	
+		end
+
+	enable_event_tracking_item_selected is
+			-- Called by `select_actions' of `enable_event_tracking_item'.
+		local
+			l_x, l_y: INTEGER
+			current_item: EV_GRID_ITEM
+			current_row: EV_GRID_ROW
+			current_column: EV_GRID_COLUMN
+		do
+			disable_event_tracking
+			disable_item_event_tracking
+			event_list.enable_sensitive
+				-- First connect to all items.
 			from
 				l_x := 1
 			until
@@ -396,14 +465,108 @@ feature {NONE} -- Implementation
 				loop
 					current_item := grid.item (l_x, l_y)
 					if current_item /= Void then
-						current_item.pointer_motion_actions.force_extend (agent item_motion_event)
+						current_item.pointer_motion_actions.force_extend (agent item_motion_event (?, ?, ?, ?, ?, ?, ?, current_item))
 						current_item.pointer_button_press_actions.force_extend (agent item_press_event)
 						current_item.pointer_double_press_actions.force_extend (agent item_double_press_event)
 						current_item.pointer_button_release_actions.force_extend (agent item_release_event)
-
+						current_item.select_actions.extend (agent item_selected (current_item))
+						current_item.deselect_actions.extend (agent item_deselected (current_item))
+--						current_item.activate_actions.extend (agent item_activated (current_item))
+--						current_item.deactivate_actions.extend (agent item_deactivated (current_item))
 					end
 					l_y := l_y + 1
 				end
+				l_x := l_x + 1
+			end
+				-- Now conenct to all rows
+			from
+				l_y := 1
+			until
+				l_y > grid.row_count
+			loop
+				current_row := grid.row (l_y)
+				current_row.expand_actions.extend (agent row_expanded (current_row))
+				current_row.collapse_actions.extend (agent row_collapsed (current_row))
+				current_row.select_actions.extend (agent row_selected (current_row))
+				current_row.deselect_actions.extend (agent row_deselected (current_row))
+		
+				l_y := l_y + 1
+			end
+
+				-- Now conenct to all Columns
+			from
+				l_x := 1
+			until
+				l_x > grid.column_count
+			loop
+				current_column := grid.column (l_x)
+				current_column.select_actions.extend (agent column_selected (current_column))
+				current_column.deselect_actions.extend (agent column_deselected (current_column))
+		
+				l_x := l_x + 1
+			end
+		end
+
+	disable_item_event_tracking is
+			-- Ensure no events are tracked on the grid items.
+		local
+			l_x, l_y: INTEGER
+			current_item: EV_GRID_ITEM
+			current_row: EV_GRID_ROW
+			current_column: EV_GRID_COLUMN
+		do
+			event_list.enable_sensitive
+				-- First connect to all items.
+			from
+				l_x := 1
+			until
+				l_x > grid.column_count
+			loop
+				from
+					l_y := 1
+				until
+					l_y > grid.row_count
+				loop
+					current_item := grid.item (l_x, l_y)
+					if current_item /= Void then
+						current_item.pointer_motion_actions.wipe_out
+						current_item.pointer_button_press_actions.wipe_out
+						current_item.pointer_double_press_actions.wipe_out
+						current_item.pointer_button_release_actions.wipe_out
+						current_item.select_actions.wipe_out
+						current_item.deselect_actions.wipe_out
+--						current_item.activate_actions.wipe_out
+--						current_item.deactivate_actions.wipe_out
+					end
+					l_y := l_y + 1
+				end
+				l_x := l_x + 1
+			end
+				-- Now conenct to all rows
+			from
+				l_y := 1
+			until
+				l_y > grid.row_count
+			loop
+				current_row := grid.row (l_y)
+				current_row.expand_actions.wipe_out
+				current_row.collapse_actions.wipe_out
+				current_row.select_actions.wipe_out
+				current_row.deselect_actions.wipe_out
+		
+				l_y := l_y + 1
+			end
+
+				-- Now conenct to all Columns
+			from
+				l_x := 1
+			until
+				l_x > grid.column_count
+			loop
+				current_column := grid.column (l_x)
+				current_column.select_actions.wipe_out
+				current_column.deselect_actions.wipe_out
+		
 				l_x := l_x + 1
 			end
 		end

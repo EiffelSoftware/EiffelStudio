@@ -138,9 +138,12 @@ feature -- Tag
 		
 	on_content (a_content: STRING) is
 			-- Forward content.
-		do			
+		local
+			l_content: STRING
+		do
 			if can_output then
-				output_string.append (a_content)
+				l_content := rt_output_escaped (a_content)
+				output_string.append (l_content)
 			end			
 		end
 

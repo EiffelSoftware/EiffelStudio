@@ -54,7 +54,7 @@ feature -- Tag
 			l_href,
 			l_anchor: STRING
 		do
-			l_content := a_content	
+			l_content := rt_output_escaped (a_content)
 			l_anchor := l_content.substring (l_content.index_of ('#', 1), l_content.count)
 			if current_tag.is_equal (Location_tag) then
 				if l_content.occurrences ('#') > 0 then

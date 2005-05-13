@@ -15,7 +15,9 @@ inherit
 
 	EV_DRAWABLE_IMP
 		redefine
-			interface
+			interface,
+			set_background_color,
+			clear_rectangle
 		end
 
 	EV_PRIMITIVE_IMP
@@ -59,7 +61,7 @@ feature {NONE} -- Initialization
 			init_default_values
 			{EV_GTK_EXTERNALS}.gtk_widget_set_double_buffered (visual_widget, False)
 			enable_tabable_to
-		end
+		end		
 
 	Gdk_events_mask: INTEGER is
 			-- Mask of all the gdk events the gdkwindow shall receive.
@@ -106,13 +108,38 @@ feature -- Status setting
 			is_tabable_from := False
 		end
 
-
 feature {NONE} -- Implementation
 
 	default_key_processing_blocked (a_key: EV_KEY): BOOLEAN is
 		do
 			--Result := not is_tabable_from and then (a_key.is_arrow or else a_key.code = App_implementation.Key_constants.key_tab)
 			Result := a_key.is_arrow or else (not is_tabable_from and a_key.code = App_implementation.Key_constants.key_tab)
+		end
+
+	set_background_color (a_color: EV_COLOR) is
+			-- Assign `a_color' to `background_color'.
+		local
+			color_struct: POINTER
+			a_success: BOOLEAN
+		do
+			if internal_background_color /= a_color then
+				internal_background_color := a_color
+				color_struct := app_implementation.reusable_color_struct
+				{EV_GTK_EXTERNALS}.set_gdk_color_struct_red (color_struct, a_color.red_16_bit)
+				{EV_GTK_EXTERNALS}.set_gdk_color_struct_green (color_struct, a_color.green_16_bit)
+				{EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (color_struct, a_color.blue_16_bit)
+				a_success := {EV_GTK_EXTERNALS}.gdk_colormap_alloc_color ({EV_GTK_EXTERNALS}.gdk_rgb_get_cmap, color_struct, False, True)
+				{EV_GTK_EXTERNALS}.gdk_gc_set_background (gc, color_struct)
+				{EV_GTK_EXTERNALS}.gdk_window_set_background (drawable, color_struct)
+			end
+		end
+
+	clear_rectangle (x, y, a_width, a_height: INTEGER) is
+			-- Erase rectangle specified with `background_color'.
+		do
+			if drawable /= default_pointer then
+				{EV_GTK_EXTERNALS}.gdk_window_clear_area (drawable, x, y, a_width, a_height)
+			end
 		end
 
 	redraw is

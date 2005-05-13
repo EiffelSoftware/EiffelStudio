@@ -52,7 +52,7 @@ feature -- Access
 			if Result /= Void then
 				Result.prepend ((create {CODE_REFERENCED_ASSEMBLY}.make (a_type.assembly)).assembly_prefix)
 			else
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_type, [a_type.name])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_type, [a_type.name])
 			end
 		end
 
@@ -69,7 +69,7 @@ feature -- Access
 			end
 			if Result = Void then
 				Result := Name_formatter.formatted_feature_name (a_name)
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_feature, [a_name, a_type.full_name])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_feature, [a_name, a_type.full_name])
 			end
 		ensure
 			non_void_eiffel_name: Result /= Void
@@ -111,16 +111,16 @@ feature -- Access
 						if l_entity /= Void then
 							l_type := l_entity.return_type
 						else
-							Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_feature, [a_name, a_type.full_name])
+							Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_feature, [a_name, a_type.full_name])
 						end
 					else
-						Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_parameters, ["feature " + a_name + " from " + a_type.full_name])
+						Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_parameters, ["feature " + a_name + " from " + a_type.full_name])
 						l_type := l_entities.first.return_type
 					end
 				elseif l_entities.count = 1 then
 					l_type := l_entities.first.return_type
 				else
-					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_feature, [a_name, a_type.full_name])
+					Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_feature, [a_name, a_type.full_name])
 				end
 			end
 			if l_type /= Void then
@@ -224,7 +224,7 @@ feature {NONE} -- Implementation
 				if a_dotnet_feature_name.is_equal (".ctor") then
 					l_methods := a_caller_type.get_constructors
 				else
-					l_methods := a_caller_type.get_methods_binding_flags (feature {BINDING_FLAGS}.instance | feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public | feature {BINDING_FLAGS}.non_public)
+					l_methods := a_caller_type.get_methods_binding_flags ({BINDING_FLAGS}.instance | {BINDING_FLAGS}.static | {BINDING_FLAGS}.public | {BINDING_FLAGS}.non_public)
 				end
 				
 				from

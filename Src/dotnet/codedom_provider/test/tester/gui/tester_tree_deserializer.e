@@ -17,7 +17,7 @@ feature -- Access
 			-- De-serialized tree at `a_path' if any
 		require
 			non_void_path: a_path /= Void
-			valid_path: feature {SYSTEM_FILE}.exists (a_path)
+			valid_path: {SYSTEM_FILE}.exists (a_path)
 		local
 			l_formatter: BINARY_FORMATTER
 			l_stream: FILE_STREAM
@@ -25,7 +25,7 @@ feature -- Access
 		do
 			if not l_retried then
 				create l_formatter.make
-				create l_stream.make (a_path, feature {FILE_MODE}.Open, feature {FILE_ACCESS}.Read, feature {FILE_SHARE}.Read)
+				create l_stream.make (a_path, {FILE_MODE}.Open, {FILE_ACCESS}.Read, {FILE_SHARE}.Read)
 				Result ?= l_formatter.deserialize (l_stream)
 				l_stream.close
 			else
@@ -43,7 +43,7 @@ feature -- Access
 			-- De-serialized tree at `a_path' if any
 		require
 			non_void_path: a_path /= Void
-			valid_path: feature {SYSTEM_FILE}.exists (a_path)
+			valid_path: {SYSTEM_FILE}.exists (a_path)
 		local
 			l_formatter: BINARY_FORMATTER
 			l_stream: FILE_STREAM
@@ -51,7 +51,7 @@ feature -- Access
 		do
 			if not l_retried then
 				create l_formatter.make
-				create l_stream.make (a_path, feature {FILE_MODE}.Open, feature {FILE_ACCESS}.Read, feature {FILE_SHARE}.Read)
+				create l_stream.make (a_path, {FILE_MODE}.Open, {FILE_ACCESS}.Read, {FILE_SHARE}.Read)
 				Result ?= l_formatter.deserialize (l_stream)
 				l_stream.close
 			else
@@ -69,7 +69,7 @@ feature -- Access
 			-- De-serialized tree at `a_path' if any
 		require
 			non_void_path: a_path /= Void
-			valid_path: feature {SYSTEM_FILE}.exists (a_path)
+			valid_path: {SYSTEM_FILE}.exists (a_path)
 		local
 			l_formatter: BINARY_FORMATTER
 			l_stream: FILE_STREAM
@@ -77,7 +77,7 @@ feature -- Access
 		do
 			if not l_retried then
 				create l_formatter.make
-				create l_stream.make (a_path, feature {FILE_MODE}.Open, feature {FILE_ACCESS}.Read, feature {FILE_SHARE}.Read)
+				create l_stream.make (a_path, {FILE_MODE}.Open, {FILE_ACCESS}.Read, {FILE_SHARE}.Read)
 				Result ?= l_formatter.deserialize (l_stream)
 				l_stream.close
 			else
@@ -95,7 +95,7 @@ feature -- Access
 			-- De-serialized tree at `a_path' if any
 		require
 			non_void_path: a_path /= Void
-			valid_path: feature {SYSTEM_FILE}.exists (a_path)
+			valid_path: {SYSTEM_FILE}.exists (a_path)
 		local
 			l_formatter: BINARY_FORMATTER
 			l_stream: FILE_STREAM
@@ -103,7 +103,7 @@ feature -- Access
 		do
 			if not l_retried then
 				create l_formatter.make
-				create l_stream.make (a_path, feature {FILE_MODE}.Open, feature {FILE_ACCESS}.Read, feature {FILE_SHARE}.Read)
+				create l_stream.make (a_path, {FILE_MODE}.Open, {FILE_ACCESS}.Read, {FILE_SHARE}.Read)
 				Result ?= l_formatter.deserialize (l_stream)
 				l_stream.close
 			else
@@ -121,7 +121,7 @@ feature -- Access
 			-- De-serialized tree at `a_path' if any
 		require
 			non_void_path: a_path /= Void
-			valid_path: feature {SYSTEM_FILE}.exists (a_path)
+			valid_path: {SYSTEM_FILE}.exists (a_path)
 		local
 			l_formatter: BINARY_FORMATTER
 			l_stream: FILE_STREAM
@@ -129,7 +129,7 @@ feature -- Access
 		do
 			if not l_retried then
 				create l_formatter.make
-				create l_stream.make (a_path, feature {FILE_MODE}.Open, feature {FILE_ACCESS}.Read, feature {FILE_SHARE}.Read)
+				create l_stream.make (a_path, {FILE_MODE}.Open, {FILE_ACCESS}.Read, {FILE_SHARE}.Read)
 				Result ?= l_formatter.deserialize (l_stream)
 				l_stream.close
 			else
@@ -147,7 +147,7 @@ feature -- Access
 			-- Type of codedom tree stored in `a_path' if any, 0 otherwise.
 		require
 			non_void_path: a_path /= Void
-			valid_path: feature {SYSTEM_FILE}.exists (a_path)
+			valid_path: {SYSTEM_FILE}.exists (a_path)
 		local
 			l_formatter: BINARY_FORMATTER
 			l_stream: FILE_STREAM
@@ -157,7 +157,7 @@ feature -- Access
 		do
 			if not l_retried then
 				create l_formatter.make
-				create l_stream.make (a_path, feature {FILE_MODE}.Open, feature {FILE_ACCESS}.Read, feature {FILE_SHARE}.Read)
+				create l_stream.make (a_path, {FILE_MODE}.Open, {FILE_ACCESS}.Read, {FILE_SHARE}.Read)
 				l_object ?= l_formatter.deserialize (l_stream)
 				l_stream.close
 				check

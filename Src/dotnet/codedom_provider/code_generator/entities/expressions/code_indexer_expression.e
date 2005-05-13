@@ -113,7 +113,7 @@ feature -- Status Report
 				end
 			end
 			if Result = Void then
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Incorrect_result, ["type from indexer expression for indexer of " + target.type.name])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.Incorrect_result, ["type from indexer expression for indexer of " + target.type.name])
 				Result := target.type 
 			end
 		end

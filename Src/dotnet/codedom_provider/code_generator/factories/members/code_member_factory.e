@@ -16,7 +16,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 		require
 			non_void_source: a_source /= Void
 		do
-			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Not_implemented, ["member event"])
+			Event_manager.raise_event ({CODE_EVENTS_IDS}.Not_implemented, ["member event"])
 		end		
 	
 	generate_attribute (a_source: SYSTEM_DLL_CODE_MEMBER_FIELD) is
@@ -52,11 +52,11 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 					set_current_feature (Void)
 					current_type.add_feature (l_attribute)
 				else
-					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_current_type, [current_context])
+					Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_current_type, [current_context])
 					set_last_feature (Empty_attribute)
 				end
 			else
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_feature_name, [current_context])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_feature_name, [current_context])
 				set_last_feature (Empty_attribute)
 			end
 		ensure
@@ -106,7 +106,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 					set_last_feature (l_snippet_feature)
 				end
 			else
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_snippet_value, [current_context])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_snippet_value, [current_context])
 				set_last_feature (Empty_snippet_feature)
 			end
 		ensure
@@ -136,7 +136,7 @@ feature {NONE} -- Components initialization.
 				if l_comment_statement /= Void then
 					current_feature.add_comment (l_comment_statement.comment)
 				else
-					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Failed_assignment_attempt, ["CODE_STATEMENT", "CODE_COMMENT_STATEMENT", "comments generation of "])
+					Event_manager.raise_event ({CODE_EVENTS_IDS}.Failed_assignment_attempt, ["CODE_STATEMENT", "CODE_COMMENT_STATEMENT", "comments generation of "])
 				end
 				i := i + 1
 			end
@@ -152,33 +152,33 @@ feature {NONE} -- Components initialization.
 			l_routine: CODE_ROUTINE
 			l_static: BOOLEAN
 		do
-			scope_status := status_attributes & feature {SYSTEM_DLL_MEMBER_ATTRIBUTES}.scope_mask
-			access_status := status_attributes & feature {SYSTEM_DLL_MEMBER_ATTRIBUTES}.access_mask
+			scope_status := status_attributes & {SYSTEM_DLL_MEMBER_ATTRIBUTES}.scope_mask
+			access_status := status_attributes & {SYSTEM_DLL_MEMBER_ATTRIBUTES}.access_mask
 
-			current_feature.set_constant (scope_status = feature {SYSTEM_DLL_MEMBER_ATTRIBUTES}.const)
-			if scope_status = feature {SYSTEM_DLL_MEMBER_ATTRIBUTES}.abstract then
+			current_feature.set_constant (scope_status = {SYSTEM_DLL_MEMBER_ATTRIBUTES}.const)
+			if scope_status = {SYSTEM_DLL_MEMBER_ATTRIBUTES}.abstract then
 				l_routine ?= current_feature
 				if l_routine /= Void then
 					l_routine.set_deferred (True)
 				else
-					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Failed_assignment_attempt, ["CODE_FEATURE", "CODE_ROUTINE", "member status initialization"])
+					Event_manager.raise_event ({CODE_EVENTS_IDS}.Failed_assignment_attempt, ["CODE_FEATURE", "CODE_ROUTINE", "member status initialization"])
 				end
 			end
-			current_feature.set_frozen (scope_status = feature {SYSTEM_DLL_MEMBER_ATTRIBUTES}.final)
-			l_static := scope_status = feature {SYSTEM_DLL_MEMBER_ATTRIBUTES}.static
+			current_feature.set_frozen (scope_status = {SYSTEM_DLL_MEMBER_ATTRIBUTES}.final)
+			l_static := scope_status = {SYSTEM_DLL_MEMBER_ATTRIBUTES}.static
 			current_feature.set_once_routine (l_static)
 			current_feature.set_frozen (l_static)
-			current_feature.set_overloaded (scope_status & feature {SYSTEM_DLL_MEMBER_ATTRIBUTES}.overloaded = feature {SYSTEM_DLL_MEMBER_ATTRIBUTES}.overloaded)
-			if access_status = feature {SYSTEM_DLL_MEMBER_ATTRIBUTES}.private then
+			current_feature.set_overloaded (scope_status & {SYSTEM_DLL_MEMBER_ATTRIBUTES}.overloaded = {SYSTEM_DLL_MEMBER_ATTRIBUTES}.overloaded)
+			if access_status = {SYSTEM_DLL_MEMBER_ATTRIBUTES}.private then
 				current_feature.add_feature_clause (None_type_reference)
 			end
 			if 
-				access_status = feature {SYSTEM_DLL_MEMBER_ATTRIBUTES}.family
-				or access_status = feature {SYSTEM_DLL_MEMBER_ATTRIBUTES}.family_and_assembly
-				or access_status = feature {SYSTEM_DLL_MEMBER_ATTRIBUTES}.family_or_assembly
+				access_status = {SYSTEM_DLL_MEMBER_ATTRIBUTES}.family
+				or access_status = {SYSTEM_DLL_MEMBER_ATTRIBUTES}.family_and_assembly
+				or access_status = {SYSTEM_DLL_MEMBER_ATTRIBUTES}.family_or_assembly
 			then
 				if current_type = Void then
-					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.missing_current_type, ["member status initialization"])
+					Event_manager.raise_event ({CODE_EVENTS_IDS}.missing_current_type, ["member status initialization"])
 				else
 					current_feature.add_feature_clause (Type_reference_factory.type_reference_from_code (current_type))
 				end

@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 				until
 					compile_units_paths.after
 				loop
-					if feature {SYSTEM_FILE}.exists (compile_units_paths.item) then
+					if {SYSTEM_FILE}.exists (compile_units_paths.item) then
 						l_compile_unit := compile_unit_from_file (compile_units_paths.item)
 					end
 					if l_compile_unit /= Void then
@@ -70,7 +70,7 @@ feature {NONE} -- Initialization
 				until
 					namespaces_paths.after
 				loop
-					if feature {SYSTEM_FILE}.exists (namespaces_paths.item) then
+					if {SYSTEM_FILE}.exists (namespaces_paths.item) then
 						l_namespace := namespace_from_file (namespaces_paths.item)
 					end
 					if l_namespace /= Void then
@@ -95,7 +95,7 @@ feature {NONE} -- Initialization
 				until
 					types_paths.after
 				loop
-					if feature {SYSTEM_FILE}.exists (types_paths.item) then
+					if {SYSTEM_FILE}.exists (types_paths.item) then
 						l_type := type_from_file (types_paths.item)
 					end
 					if l_type /= Void then
@@ -120,7 +120,7 @@ feature {NONE} -- Initialization
 				until
 					expressions_paths.after
 				loop
-					if feature {SYSTEM_FILE}.exists (expressions_paths.item) then
+					if {SYSTEM_FILE}.exists (expressions_paths.item) then
 						l_expression := expression_from_file (expressions_paths.item)
 					end
 					if l_expression /= Void then
@@ -145,7 +145,7 @@ feature {NONE} -- Initialization
 				until
 					statements_paths.after
 				loop
-					if feature {SYSTEM_FILE}.exists (statements_paths.item) then
+					if {SYSTEM_FILE}.exists (statements_paths.item) then
 						l_statement := statement_from_file (statements_paths.item)
 					end
 					if l_statement /= Void then
@@ -285,7 +285,7 @@ feature -- Basic Operations
 		local
 			l_type: INTEGER
 		do
-			if feature {SYSTEM_FILE}.exists (a_path) then
+			if {SYSTEM_FILE}.exists (a_path) then
 				l_type := codedom_type_from_file (a_path)
 				inspect
 					l_type
@@ -305,11 +305,11 @@ feature -- Basic Operations
 				Event_manager.raise_event (create {TESTER_EVENT}.make ("Cannot add: No file at " + a_path, True))
 			end
 		ensure
-			added_if_compile_unit: feature {SYSTEM_FILE}.exists (a_path) and then codedom_type_from_file (a_path) = Codedom_compile_unit_type implies compile_units_paths.has (a_path)
-			added_if_namespace: feature {SYSTEM_FILE}.exists (a_path) and then codedom_type_from_file (a_path) = Codedom_namespace_type implies namespaces_paths.has (a_path)
-			added_if_type: feature {SYSTEM_FILE}.exists (a_path) and then codedom_type_from_file (a_path) = Codedom_type_type implies types_paths.has (a_path)
-			added_if_expression: feature {SYSTEM_FILE}.exists (a_path) and then codedom_type_from_file (a_path) = Codedom_expression_type implies expressions_paths.has (a_path)
-			added_if_statement: feature {SYSTEM_FILE}.exists (a_path) and then codedom_type_from_file (a_path) = Codedom_statement_type implies statements_paths.has (a_path)
+			added_if_compile_unit: {SYSTEM_FILE}.exists (a_path) and then codedom_type_from_file (a_path) = Codedom_compile_unit_type implies compile_units_paths.has (a_path)
+			added_if_namespace: {SYSTEM_FILE}.exists (a_path) and then codedom_type_from_file (a_path) = Codedom_namespace_type implies namespaces_paths.has (a_path)
+			added_if_type: {SYSTEM_FILE}.exists (a_path) and then codedom_type_from_file (a_path) = Codedom_type_type implies types_paths.has (a_path)
+			added_if_expression: {SYSTEM_FILE}.exists (a_path) and then codedom_type_from_file (a_path) = Codedom_expression_type implies expressions_paths.has (a_path)
+			added_if_statement: {SYSTEM_FILE}.exists (a_path) and then codedom_type_from_file (a_path) = Codedom_statement_type implies statements_paths.has (a_path)
 		end
 	
 	remove (a_path: STRING) is
@@ -345,7 +345,7 @@ feature -- Basic Operations
 			-- Extend `compile_units' with tree serialized at `a_path'.
 		require
 			non_void_path: a_path /= Void
-			valid_path: feature {SYSTEM_FILE}.exists (a_path)
+			valid_path: {SYSTEM_FILE}.exists (a_path)
 			valid_codedom_tree: compile_unit_from_file (a_path) /= Void
 		do
 			if compile_units_paths = Void then
@@ -366,7 +366,7 @@ feature -- Basic Operations
 			-- Extend `namespaces' with tree serialized at `a_path'.
 		require
 			non_void_path: a_path /= Void
-			valid_path: feature {SYSTEM_FILE}.exists (a_path)
+			valid_path: {SYSTEM_FILE}.exists (a_path)
 			valid_codedom_tree: namespace_from_file (a_path) /= Void
 		do
 			if namespaces_paths = Void then
@@ -387,7 +387,7 @@ feature -- Basic Operations
 			-- Extend `types' with tree serialized at `a_path'.
 		require
 			non_void_path: a_path /= Void
-			valid_path: feature {SYSTEM_FILE}.exists (a_path)
+			valid_path: {SYSTEM_FILE}.exists (a_path)
 			valid_codedom_tree: type_from_file (a_path) /= Void
 		do
 			if types_paths = Void then
@@ -408,7 +408,7 @@ feature -- Basic Operations
 			-- Extend `expressions' with tree serialized at `a_path'.
 		require
 			non_void_path: a_path /= Void
-			valid_path: feature {SYSTEM_FILE}.exists (a_path)
+			valid_path: {SYSTEM_FILE}.exists (a_path)
 			valid_codedom_tree: expression_from_file (a_path) /= Void
 		do
 			if expressions_paths = Void then
@@ -429,7 +429,7 @@ feature -- Basic Operations
 			-- Extend `statements' with tree serialized at `a_path'.
 		require
 			non_void_path: a_path /= Void
-			valid_path: feature {SYSTEM_FILE}.exists (a_path)
+			valid_path: {SYSTEM_FILE}.exists (a_path)
 			valid_codedom_tree: statement_from_file (a_path) /= Void
 		do
 			if statements_paths = Void then

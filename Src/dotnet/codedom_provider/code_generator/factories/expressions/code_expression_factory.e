@@ -23,7 +23,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 		local
 			a_base_reference_expression: CODE_BASE_REFERENCE_EXPRESSION
 		do
-			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Not_implemented, ["base reference expression"])
+			Event_manager.raise_event ({CODE_EVENTS_IDS}.Not_implemented, ["base reference expression"])
 			create a_base_reference_expression.make
 			set_last_expression (a_base_reference_expression)
 		ensure
@@ -48,11 +48,11 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 					code_dom_generator.generate_expression_from_dom (right_operator_expression)
 					set_last_expression (create {CODE_BINARY_OPERATOR_EXPRESSION}.make (left_operand, last_expression, a_source.operator))
 				else
-					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_right_operand, [current_context])
+					Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_right_operand, [current_context])
 					set_last_expression (Empty_expression)
 				end
 			else
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_left_operand, [current_context])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_left_operand, [current_context])
 				set_last_expression (Empty_expression)
 			end
 		ensure
@@ -69,7 +69,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 				current_routine.add_cast_local (last_expression, Type_reference_factory.type_reference_from_reference (a_source.target_type))
 				set_last_expression (create {CODE_CAST_EXPRESSION}.make (Type_reference_factory.type_reference_from_reference (a_source.target_type), current_routine.last_cast_variable))
 			else
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_current_routine, ["cast expression"])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_current_routine, ["cast expression"])
 				set_last_expression (Empty_expression)
 			end
 		ensure
@@ -114,7 +114,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 				set_last_expression (create {CODE_ATTRIBUTE_REFERENCE_EXPRESSION}.make (a_source.field_name, last_expression))
 			else
 				set_last_expression (Empty_expression)
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_target_object, ["attribute reference expression in" + current_context])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_target_object, ["attribute reference expression in" + current_context])
 			end
 		ensure
 			non_void_last_expression: last_expression /= Void
@@ -133,7 +133,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 				set_last_expression (create {CODE_INDEXER_EXPRESSION}.make (last_expression, expressions_from_collection (a_source.indices)))
 			else
 				set_last_expression (Empty_expression)
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_target_object, ["indexer expression in " + current_context])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_target_object, ["indexer expression in " + current_context])
 			end
 		ensure
 			non_void_last_expression: last_expression /= Void
@@ -150,7 +150,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			if l_type /= Void then
 				set_last_expression (create {CODE_OBJECT_CREATE_EXPRESSION}.make (Type_reference_factory.type_reference_from_reference (l_type), expressions_from_collection (a_source.parameters)))
 			else
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_creation_type, ["object create expression"])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_creation_type, ["object create expression"])
 			end
 		end	
 
@@ -185,7 +185,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 				create a_this_reference_expression.make (current_type)
 				set_last_expression (a_this_reference_expression)
 			else
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_current_type, ["This reference expression generation in " + current_context])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_current_type, ["This reference expression generation in " + current_context])
 			end
 		ensure
 			non_void_last_expression: last_expression /= Void
@@ -253,15 +253,15 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 					if l_variable /= Void then
 						set_last_expression (create {CODE_VARIABLE_REFERENCE_EXPRESSION}.make (l_variable))
 					else
-						Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_variable, [l_name, current_context])
+						Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_variable, [l_name, current_context])
 						set_last_expression (Empty_expression)
 					end
 				else
-					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Wrong_feature_kind, [current_context])
+					Event_manager.raise_event ({CODE_EVENTS_IDS}.Wrong_feature_kind, [current_context])
 					set_last_expression (Empty_expression)
 				end
 			else
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_variable_name, [current_context])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_variable_name, [current_context])
 				set_last_expression (Empty_expression)
 			end
 		ensure
@@ -288,7 +288,7 @@ feature {NONE} -- Implementation
 						code_dom_generator.generate_expression_from_dom (l_expression)
 						Result.extend (last_expression)
 					else
-						Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_expression, [current_context])
+						Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_expression, [current_context])
 					end
 					i := i + 1
 				end

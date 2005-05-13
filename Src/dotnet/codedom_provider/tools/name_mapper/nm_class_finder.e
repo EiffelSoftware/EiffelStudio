@@ -131,7 +131,7 @@ feature {NONE} -- Private Access
 	Thread_abort_exception_type: SYSTEM_TYPE is
 			-- Type of .NET type ThreadAbortException
 		once
-			Result := feature {SYSTEM_TYPE}.get_type_string ("ThreadAbortException")
+			Result := {SYSTEM_TYPE}.get_type_string ("ThreadAbortException")
 		end
 
 	internal_found: BOOLEAN

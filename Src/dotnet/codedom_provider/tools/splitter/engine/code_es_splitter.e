@@ -84,10 +84,10 @@ feature -- Basic Operation
 				split_files_in_folder (folder)
 				if file_count > 1 then
 					l_message := "%N--%NTotal number of files created: " + file_count.out + "."
-					l_severity := feature {EV_THREAD_SEVERITY_CONSTANTS}.Information
+					l_severity := {EV_THREAD_SEVERITY_CONSTANTS}.Information
 				elseif file_count > 0 then
 					l_message := "%N--%NCreated one file."
-					l_severity := feature {EV_THREAD_SEVERITY_CONSTANTS}.Information
+					l_severity := {EV_THREAD_SEVERITY_CONSTANTS}.Information
 				else
 					l_message := "%N--%NCouldn't find a file in '" + folder
 					if process_subfolders then
@@ -96,17 +96,13 @@ feature -- Basic Operation
 						l_message.append ("' ")
 					end
 					l_message.append ("that matched regular expression '" + regexp + "'")
-					l_severity := feature {EV_THREAD_SEVERITY_CONSTANTS}.Error
+					l_severity := {EV_THREAD_SEVERITY_CONSTANTS}.Error
 				end
-				raise_event (create {CODE_ES_EVENT}.make (l_message,
-															"Scan Finished",
-															l_severity))
+				raise_event (create {CODE_ES_EVENT}.make (l_message, "Scan Finished", l_severity))
 			else
-				raise_event (create {CODE_ES_EVENT}.make ("Folder '" + folder + "' does not exist!",
-															"Missing Specified Folder",
-															feature {EV_THREAD_SEVERITY_CONSTANTS}.Error))
+				raise_event (create {CODE_ES_EVENT}.make ("Folder '" + folder + "' does not exist!", "Missing Specified Folder", {EV_THREAD_SEVERITY_CONSTANTS}.Error))
 			end
-			raise_event (create {CODE_ES_EVENT}.make ("", "", feature {EV_THREAD_SEVERITY_CONSTANTS}.Stop))
+			raise_event (create {CODE_ES_EVENT}.make ("", "", {EV_THREAD_SEVERITY_CONSTANTS}.Stop))
 		end
 
 feature {NONE} -- Implementation
@@ -129,7 +125,7 @@ feature {NONE} -- Implementation
 				if l_regexp.is_compiled then
 					raise_event (create  {CODE_ES_EVENT}.make ("Scanning '" + a_folder + "'...",
 																"Folder Scan",
-																feature {EV_THREAD_SEVERITY_CONSTANTS}.Information))
+																{EV_THREAD_SEVERITY_CONSTANTS}.Information))
 					create l_dir.make (a_folder)
 					l_files := l_dir.linear_representation
 					from
@@ -157,14 +153,14 @@ feature {NONE} -- Implementation
 				else
 					raise_event (create  {CODE_ES_EVENT}.make ("Could not compile regular expression '" + regexp + "'",
 																"Invalid Regular Expression",
-																feature {EV_THREAD_SEVERITY_CONSTANTS}.Error))
+																{EV_THREAD_SEVERITY_CONSTANTS}.Error))
 				end
 			end
 		rescue
 			l_retried := True
-			raise_event (create {CODE_ES_EVENT}.make ("The following exception was raised: " + feature {ISE_RUNTIME}.last_exception.to_string,
+			raise_event (create {CODE_ES_EVENT}.make ("The following exception was raised: " + {ISE_RUNTIME}.last_exception.to_string,
 														"Exception Raised",
-														feature {EV_THREAD_SEVERITY_CONSTANTS}.Error))
+														{EV_THREAD_SEVERITY_CONSTANTS}.Error))
 			retry
 		end
 	
@@ -190,8 +186,8 @@ feature {NONE} -- Implementation
 					end
 				else
 					l_dir := destination_folder.twin
-					if not feature {SYSTEM_DIRECTORY}.exists (l_dir) then
-						l_res := feature {SYSTEM_DIRECTORY}.create_directory (l_dir)
+					if not {SYSTEM_DIRECTORY}.exists (l_dir) then
+						l_res := {SYSTEM_DIRECTORY}.create_directory (l_dir)
 					end
 					l_dir.append_character (Directory_separator)
 				end
@@ -207,7 +203,7 @@ feature {NONE} -- Implementation
 					l_file.close
 					raise_event (create {CODE_ES_EVENT}.make ("Parsing file '" + a_file_path + "'",
 																"Parsing File",
-																feature {EV_THREAD_SEVERITY_CONSTANTS}.Information))
+																{EV_THREAD_SEVERITY_CONSTANTS}.Information))
 					from
 						l_old_index := 1
 						l_index := l_content.substring_index (Class_separator, l_old_index)
@@ -224,14 +220,14 @@ feature {NONE} -- Implementation
 				else
 					raise_event (create {CODE_ES_EVENT}.make ("File '" + a_file_path + "' does not exist!",
 																"Missing specified folder",
-																feature {EV_THREAD_SEVERITY_CONSTANTS}.Error))
+																{EV_THREAD_SEVERITY_CONSTANTS}.Error))
 				end
 			end
 		rescue
 			l_retried := True
-			raise_event (create {CODE_ES_EVENT}.make ("The following exception was raised: " + feature {ISE_RUNTIME}.last_exception.to_string,
+			raise_event (create {CODE_ES_EVENT}.make ("The following exception was raised: " + {ISE_RUNTIME}.last_exception.to_string,
 														"Exception Raised",
-														feature {EV_THREAD_SEVERITY_CONSTANTS}.Error))
+														{EV_THREAD_SEVERITY_CONSTANTS}.Error))
 			retry
 		end
 	
@@ -259,7 +255,7 @@ feature {NONE} -- Implementation
 						l_file.delete
 						raise_event (create {CODE_ES_EVENT}.make ("A file with path '" + l_file.name + "' already existed and has been overwritten.",
 																	"File Overwritten",
-																	feature {EV_THREAD_SEVERITY_CONSTANTS}.Warning))
+																	{EV_THREAD_SEVERITY_CONSTANTS}.Warning))
 					end
 					l_file.open_write
 					l_file.put_string (a_class_text)
@@ -267,18 +263,18 @@ feature {NONE} -- Implementation
 					generated_files.force (l_name, l_name)
 					raise_event (create {CODE_ES_EVENT}.make ("Created file '" + l_file.name + "'",
 																"File Created",
-																feature {EV_THREAD_SEVERITY_CONSTANTS}.Information))
+																{EV_THREAD_SEVERITY_CONSTANTS}.Information))
 				else
 					raise_event (create {CODE_ES_EVENT}.make ("Could not parse class text",
 																"Parse Error",
-																feature {EV_THREAD_SEVERITY_CONSTANTS}.Error))
+																{EV_THREAD_SEVERITY_CONSTANTS}.Error))
 				end
 			end
 		rescue
 			l_retried := True
-			raise_event (create {CODE_ES_EVENT}.make ("The following exception was raised: " + feature {ISE_RUNTIME}.last_exception.to_string,
+			raise_event (create {CODE_ES_EVENT}.make ("The following exception was raised: " + {ISE_RUNTIME}.last_exception.to_string,
 														"Exception Raised",
-														feature {EV_THREAD_SEVERITY_CONSTANTS}.Error))
+														{EV_THREAD_SEVERITY_CONSTANTS}.Error))
 			retry
 		end
 		

@@ -93,7 +93,7 @@ feature {NONE} -- Type generation
 		do
 			l_members := a_source.members
 			if l_members = Void then
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_members, ["type feature initialization"])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_members, ["type feature initialization"])
 			else
 				from
 					l_count := l_members.count

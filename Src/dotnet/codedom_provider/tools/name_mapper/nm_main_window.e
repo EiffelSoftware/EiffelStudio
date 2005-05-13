@@ -283,7 +283,7 @@ feature {NONE} -- Implementation
 		do
 			if not l_retried then
 				if not Referenced_assemblies.has_file (a_assembly_path) then
-					l_asm := feature {ASSEMBLY}.load_from (a_assembly_path)
+					l_asm := {ASSEMBLY}.load_from (a_assembly_path)
 					if l_asm /= Void then
 						if a_prefix /= Void and then not a_prefix.is_empty then
 							Referenced_assemblies.extend_file_with_prefix (a_assembly_path, a_prefix)
@@ -301,7 +301,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		rescue
-			create l_error_dialog.make_with_text ("Could not add assembly reference, caught the following exception:%N%N" + feature {ISE_RUNTIME}.last_exception.message)
+			create l_error_dialog.make_with_text ("Could not add assembly reference, caught the following exception:%N%N" + {ISE_RUNTIME}.last_exception.message)
 			l_error_dialog.set_title ("Add Reference Error")
 			l_error_dialog.set_buttons (<<"Cancel">>)
 			l_error_dialog.set_pixmap (Default_pixmaps.error_pixmap)

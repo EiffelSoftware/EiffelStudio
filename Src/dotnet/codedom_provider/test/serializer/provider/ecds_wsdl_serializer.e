@@ -65,10 +65,10 @@ feature -- Basic Operation
 			l_output: STRING
 		do
 			text_output := Void
-			if not feature {SYSTEM_DIRECTORY}.exists (destination_directory) then
-				l_res := feature {SYSTEM_DIRECTORY}.create_directory (destination_directory)
+			if not {SYSTEM_DIRECTORY}.exists (destination_directory) then
+				l_res := {SYSTEM_DIRECTORY}.create_directory (destination_directory)
 			end
-			l_key := feature {REGISTRY}.local_machine.open_sub_key ("SOFTWARE\Microsoft\.NETFramework")
+			l_key := {REGISTRY}.local_machine.open_sub_key ("SOFTWARE\Microsoft\.NETFramework")
 			last_serialization_successful := False
 			if l_key /= Void then
 				l_value ?= l_key.get_value ("sdkInstallRootv1.1")
@@ -79,13 +79,13 @@ feature -- Basic Operation
 			if l_value /= Void then
 				l_path := l_value
 				l_path.append ("bin\wsdl.exe")
-				if feature {SYSTEM_FILE}.exists (l_path) then
+				if {SYSTEM_FILE}.exists (l_path) then
 					create l_process_info.make (l_path, wsdl_arguments)
 					l_process_info.set_working_directory (destination_directory)
 					l_process_info.set_redirect_standard_output (True)
 					l_process_info.set_redirect_standard_error (True)
 					l_process_info.set_use_shell_execute (False)
-					l_process_info.set_window_style (feature {SYSTEM_DLL_PROCESS_WINDOW_STYLE}.Hidden)
+					l_process_info.set_window_style ({SYSTEM_DLL_PROCESS_WINDOW_STYLE}.Hidden)
 					l_process_info.set_create_no_window (True)
 					create l_process.make
 					l_process.set_start_info (l_process_info)

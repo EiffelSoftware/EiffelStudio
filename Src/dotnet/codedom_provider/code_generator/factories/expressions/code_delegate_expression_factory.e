@@ -31,13 +31,13 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 						code_dom_generator.generate_expression_from_dom (l_target_object)
 						set_last_expression (create {CODE_DELEGATE_CREATE_EXPRESSION}.make (Type_reference_factory.type_reference_from_reference (l_delegate_type), a_source.method_name, last_expression))
 					else
-						Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_target_object, ["delegate create expression"])
+						Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_target_object, ["delegate create expression"])
 					end
 				else
-					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_delegate_type, ["delegate create expression"])
+					Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_delegate_type, ["delegate create expression"])
 				end
 			else
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_method, ["delegate create expression"])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_method, ["delegate create expression"])
 			end
 		ensure
 			non_void_last_expression: last_expression /= Void
@@ -60,7 +60,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 				code_dom_generator.generate_expression_from_dom (l_target_object)
 				set_last_expression (create {CODE_DELEGATE_INVOKE_EXPRESSION}.make (last_expression, expressions_from_collection (a_source.parameters)))
 			else
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_target_object, ["delegate invoke expression"])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_target_object, ["delegate invoke expression"])
 				set_last_expression (Empty_expression)
 			end
 		ensure

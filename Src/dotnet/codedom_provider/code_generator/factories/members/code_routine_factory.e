@@ -67,7 +67,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 				set_current_feature (Void)
 				set_last_feature (l_routine)
 			else
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_current_type, [current_context])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_current_type, [current_context])
 				set_last_feature (Empty_routine)
 			end
 		ensure
@@ -112,7 +112,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 				set_current_feature (Void)
 				set_last_feature (l_creation_routine)
 			else
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_current_type, [current_context])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_current_type, [current_context])
 				set_last_feature (Empty_routine)
 			end
 		ensure
@@ -155,7 +155,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 				Compilation_context.set_root_creation_routine_name (l_root_procedure.eiffel_name)
 				Compilation_context.set_root_class_name (current_type.eiffel_name)
 			else
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_current_type, [current_context])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_current_type, [current_context])
 				set_last_feature (Empty_routine)
 			end
 		ensure
@@ -237,11 +237,11 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 						set_current_feature (Void)
 					end
 				else
-					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_feature_name, [current_context])
+					Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_feature_name, [current_context])
 					set_last_feature (Empty_routine)
 				end
 			else
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_current_type, [current_context])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_current_type, [current_context])
 				set_last_feature (Empty_routine)
 			end
 		end
@@ -255,7 +255,7 @@ feature {NONE} -- Routine Initialization
 			non_void_property_getter: current_feature /= Void
 		do
 			if current_type = Void then
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_current_type, ["property getter initialization (" + current_context + ")"])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_current_type, ["property getter initialization (" + current_context + ")"])
 			else
 				current_feature.set_feature_kind (Get_property_string)
 
@@ -287,7 +287,7 @@ feature {NONE} -- Routine Initialization
 			non_void_routine: current_routine /= Void
 		do
 			if current_type = Void then
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_current_type, ["property setter initialization"])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_current_type, ["property setter initialization"])
 			else
 				current_feature.set_feature_kind (Set_property_string)
 
@@ -441,10 +441,10 @@ feature {NONE} -- Implementation
 						if l_argument_expression /= Void then
 							Result.extend (l_argument_expression)
 						else
-							Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Failed_assignment_attempt, ["CODE_EXPRESSION", "CODE_ARGUMENT_EXPRESSION", "arguments generation of " + current_context])
+							Event_manager.raise_event ({CODE_EVENTS_IDS}.Failed_assignment_attempt, ["CODE_EXPRESSION", "CODE_ARGUMENT_EXPRESSION", "arguments generation of " + current_context])
 						end
 					else
-						Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Void_argument, [current_context])
+						Event_manager.raise_event ({CODE_EVENTS_IDS}.Void_argument, [current_context])
 					end
 					i := i + 1
 				end

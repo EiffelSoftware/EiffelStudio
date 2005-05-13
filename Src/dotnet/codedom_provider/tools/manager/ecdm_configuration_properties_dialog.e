@@ -46,9 +46,9 @@ feature {NONE} -- Initialization
 			location_text_field.set_text (l_path)
 			location_text_field.set_focus
 			location_text_field.set_caret_position (1)
-			if feature {SYSTEM_FILE}.exists (l_path) then
-				created_label.set_text (formatted_date_time (feature {SYSTEM_FILE}.get_creation_time (l_path)))
-				modified_label.set_text (formatted_date_time (feature {SYSTEM_FILE}.get_last_write_time (l_path)))
+			if {SYSTEM_FILE}.exists (l_path) then
+				created_label.set_text (formatted_date_time ({SYSTEM_FILE}.get_creation_time (l_path)))
+				modified_label.set_text (formatted_date_time ({SYSTEM_FILE}.get_last_write_time (l_path)))
 			end
 			if default_configuration then
 				applications_box.hide

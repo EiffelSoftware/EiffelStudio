@@ -108,8 +108,8 @@ feature -- Basic Operations
 			if not l_retried then
 				last_save_successful := False
 				create l_config_file.make (path)
-				if not feature {SYSTEM_DIRECTORY}.exists (folder) then
-					l_res := feature {SYSTEM_DIRECTORY}.create_directory (folder)
+				if not {SYSTEM_DIRECTORY}.exists (folder) then
+					l_res := {SYSTEM_DIRECTORY}.create_directory (folder)
 				end
 				l_config_file.open_write
 				l_config_file.put_string ("<?xml version=%"1.0%"?>%N")

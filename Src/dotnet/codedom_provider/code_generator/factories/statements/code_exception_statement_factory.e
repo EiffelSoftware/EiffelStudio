@@ -44,7 +44,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 				current_type.add_implementation_feature (create {CODE_TRY_CATCH_IMPLEMENTATION_FEATURE}.make (l_name, current_routine, l_catch_clauses, statements_from_collection (a_source.try_statements), statements_from_collection (a_source.finally_statements)))
 				set_last_statement (create {CODE_TRY_CATCH_FINALLY_STATEMENT}.make (current_routine, l_name))
 			else
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_current_routine, ["Try/Catch statement generation in " + current_context])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_current_routine, ["Try/Catch statement generation in " + current_context])
 			end
 		ensure
 			non_void_last_statement: last_statement /= Void

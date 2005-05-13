@@ -31,7 +31,7 @@ feature -- Access
 			-- Eiffel code of base reference expression
 			-- NOT SUPPORTED YET !!!
 		do
-			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.not_supported, ["base reference expression"])
+			Event_manager.raise_event ({CODE_EVENTS_IDS}.not_supported, ["base reference expression"])
 		end
 		
 feature -- Status Report
@@ -39,7 +39,7 @@ feature -- Status Report
 	type: CODE_TYPE_REFERENCE is
 			-- Type
 		do
-			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.not_supported, ["base reference expression"])
+			Event_manager.raise_event ({CODE_EVENTS_IDS}.not_supported, ["base reference expression"])
 			Result := None_type_reference
 		end
 

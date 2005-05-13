@@ -134,22 +134,22 @@ feature -- Basic Operation
 												end
 											end
 											l_type_attributes := l_type.type_attributes
-											if l_type_attributes & feature {TYPE_ATTRIBUTES}.Nested_assembly = feature {TYPE_ATTRIBUTES}.Nested_assembly then
+											if l_type_attributes & {TYPE_ATTRIBUTES}.Nested_assembly = {TYPE_ATTRIBUTES}.Nested_assembly then
 												image_index := l_base_index + Internal_offset
 												description.prepend ("internal ")
-											elseif l_type_attributes = feature {TYPE_ATTRIBUTES}.Public or l_type_attributes = feature {TYPE_ATTRIBUTES}.Nested_public then
+											elseif l_type_attributes = {TYPE_ATTRIBUTES}.Public or l_type_attributes = {TYPE_ATTRIBUTES}.Nested_public then
 												image_index := l_base_index
 												description.prepend ("public ")
-											elseif l_type_attributes = feature {TYPE_ATTRIBUTES}.Nested_private then
+											elseif l_type_attributes = {TYPE_ATTRIBUTES}.Nested_private then
 												image_index := l_base_index + Private_offset
 												description.prepend ("private ")
-											elseif l_type_attributes = feature {TYPE_ATTRIBUTES}.Nested_family then
+											elseif l_type_attributes = {TYPE_ATTRIBUTES}.Nested_family then
 												image_index := l_base_index + Protected_offset
 												description.prepend ("protected ")
-											elseif l_type_attributes = feature {TYPE_ATTRIBUTES}.Nested_fam_and_assem then
+											elseif l_type_attributes = {TYPE_ATTRIBUTES}.Nested_fam_and_assem then
 												image_index := l_base_index + Internal_and_protected_offset
 												description.prepend ("internal and protected ")
-											elseif l_type_attributes = feature {TYPE_ATTRIBUTES}.Nested_fam_or_assem then
+											elseif l_type_attributes = {TYPE_ATTRIBUTES}.Nested_fam_or_assem then
 												image_index := l_base_index + Internal_or_protected_offset
 												description.prepend ("internal or protected ")
 											else
@@ -249,24 +249,24 @@ feature {NONE} -- Implementation
 			icon_static_offset := 0
 			static_offset_description := ""
 			offset_description := ""
-			l_attributes := a_member.attributes & feature {SYSTEM_DLL_MEMBER_ATTRIBUTES}.Access_mask
-			if l_attributes = feature {SYSTEM_DLL_MEMBER_ATTRIBUTES}.Private then
+			l_attributes := a_member.attributes & {SYSTEM_DLL_MEMBER_ATTRIBUTES}.Access_mask
+			if l_attributes = {SYSTEM_DLL_MEMBER_ATTRIBUTES}.Private then
 				icon_offset := Private_offset
 				offset_description := "private "
-			elseif l_attributes = feature {SYSTEM_DLL_MEMBER_ATTRIBUTES}.Family_and_assembly then
+			elseif l_attributes = {SYSTEM_DLL_MEMBER_ATTRIBUTES}.Family_and_assembly then
 				icon_offset := Internal_and_protected_offset
 				offset_description := "internal and protected "
-			elseif l_attributes = feature {SYSTEM_DLL_MEMBER_ATTRIBUTES}.Family_or_assembly then
+			elseif l_attributes = {SYSTEM_DLL_MEMBER_ATTRIBUTES}.Family_or_assembly then
 				icon_offset := Internal_or_protected_offset
 				offset_description := "internal or protected "
-			elseif l_attributes = feature {SYSTEM_DLL_MEMBER_ATTRIBUTES}.Family then
+			elseif l_attributes = {SYSTEM_DLL_MEMBER_ATTRIBUTES}.Family then
 				icon_offset := Protected_offset
 				offset_description := "protected "
-			elseif l_attributes = feature {SYSTEM_DLL_MEMBER_ATTRIBUTES}.Assembly then
+			elseif l_attributes = {SYSTEM_DLL_MEMBER_ATTRIBUTES}.Assembly then
 				icon_offset := Internal_offset
 				offset_description := "internal "
 			end
-			if a_member.attributes & feature {SYSTEM_DLL_MEMBER_ATTRIBUTES}.Static = feature {SYSTEM_DLL_MEMBER_ATTRIBUTES}.Static then
+			if a_member.attributes & {SYSTEM_DLL_MEMBER_ATTRIBUTES}.Static = {SYSTEM_DLL_MEMBER_ATTRIBUTES}.Static then
 				icon_static_offset := Static_offset
 				static_offset_description := "static "
 			else

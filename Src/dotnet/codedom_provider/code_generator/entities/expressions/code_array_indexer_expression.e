@@ -74,7 +74,7 @@ feature -- Status Report
 			if l_type /= Void then
 				Result := Type_reference_factory.type_reference_from_type (l_type.get_element_type)
 			else
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_type, [target.type.name])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_type, [target.type.name])
 			end
 		end
 

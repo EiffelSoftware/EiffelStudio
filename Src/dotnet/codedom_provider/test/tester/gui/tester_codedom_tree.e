@@ -1218,39 +1218,39 @@ feature -- Access
 			end
 			Result.extend (l_node)
 
-			if a_binary_operator_expression.operator = feature {SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.Add then
+			if a_binary_operator_expression.operator = {SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.Add then
 				l_operator := "+"
-			elseif a_binary_operator_expression.operator = feature {SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.Assign_ then
+			elseif a_binary_operator_expression.operator = {SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.Assign_ then
 				l_operator := ":="
-			elseif a_binary_operator_expression.operator = feature {SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.Bitwise_and then
+			elseif a_binary_operator_expression.operator = {SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.Bitwise_and then
 				l_operator := "&"
-			elseif a_binary_operator_expression.operator = feature {SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.Bitwise_or then
+			elseif a_binary_operator_expression.operator = {SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.Bitwise_or then
 				l_operator := "|"
-			elseif a_binary_operator_expression.operator = feature {SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.Boolean_and then
+			elseif a_binary_operator_expression.operator = {SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.Boolean_and then
 				l_operator := "and"
-			elseif a_binary_operator_expression.operator = feature {SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.Boolean_or then
+			elseif a_binary_operator_expression.operator = {SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.Boolean_or then
 				l_operator := "or"
-			elseif a_binary_operator_expression.operator = feature {SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.Divide then
+			elseif a_binary_operator_expression.operator = {SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.Divide then
 				l_operator := "/"
-			elseif a_binary_operator_expression.operator = feature {SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.Greater_than then
+			elseif a_binary_operator_expression.operator = {SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.Greater_than then
 				l_operator := ">"
-			elseif a_binary_operator_expression.operator = feature {SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.Greater_than_or_equal then
+			elseif a_binary_operator_expression.operator = {SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.Greater_than_or_equal then
 				l_operator := ">="
-			elseif a_binary_operator_expression.operator = feature {SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.Identity_equality then
+			elseif a_binary_operator_expression.operator = {SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.Identity_equality then
 				l_operator := "="
-			elseif a_binary_operator_expression.operator = feature {SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.Identity_inequality then
+			elseif a_binary_operator_expression.operator = {SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.Identity_inequality then
 				l_operator := "/="
-			elseif a_binary_operator_expression.operator = feature {SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.Less_than then
+			elseif a_binary_operator_expression.operator = {SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.Less_than then
 				l_operator := "<"
-			elseif a_binary_operator_expression.operator = feature {SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.Less_than_or_equal then
+			elseif a_binary_operator_expression.operator = {SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.Less_than_or_equal then
 				l_operator := "<="
-			elseif a_binary_operator_expression.operator = feature {SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.Modulus then
+			elseif a_binary_operator_expression.operator = {SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.Modulus then
 				l_operator := "\\"
-			elseif a_binary_operator_expression.operator = feature {SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.Multiply then
+			elseif a_binary_operator_expression.operator = {SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.Multiply then
 				l_operator := "*"
-			elseif a_binary_operator_expression.operator = feature {SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.Subtract then
+			elseif a_binary_operator_expression.operator = {SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.Subtract then
 				l_operator := "-"
-			elseif a_binary_operator_expression.operator = feature {SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.Value_equality then
+			elseif a_binary_operator_expression.operator = {SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.Value_equality then
 				l_operator := "is_equal"
 			else
 				l_operator := "Unknown Operator"
@@ -1411,11 +1411,11 @@ feature -- Access
 			create l_node.make_with_text ("Unknown Direction")
 			l_node.set_tooltip (a_path)
 			l_node.set_data (a_direction_expression)
-			if a_direction_expression.direction = feature {SYSTEM_DLL_FIELD_DIRECTION}.In then
+			if a_direction_expression.direction = {SYSTEM_DLL_FIELD_DIRECTION}.In then
 				l_node.set_text ("Direction: In")
-			elseif a_direction_expression.direction = feature {SYSTEM_DLL_FIELD_DIRECTION}.Out then
+			elseif a_direction_expression.direction = {SYSTEM_DLL_FIELD_DIRECTION}.Out then
 				l_node.set_text ("Direction: Out")
-			elseif a_direction_expression.direction = feature {SYSTEM_DLL_FIELD_DIRECTION}.Ref then
+			elseif a_direction_expression.direction = {SYSTEM_DLL_FIELD_DIRECTION}.Ref then
 				l_node.set_text ("Direction: Ref")
 			else
 				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_error)
@@ -1690,11 +1690,11 @@ feature -- Access
 			create l_node.make_with_text ("Unknown Direction")
 			l_node.set_tooltip (a_path)
 			l_node.set_data (a_parameter_declaration_expression)
-			if a_parameter_declaration_expression.direction = feature {SYSTEM_DLL_FIELD_DIRECTION}.In then
+			if a_parameter_declaration_expression.direction = {SYSTEM_DLL_FIELD_DIRECTION}.In then
 				l_node.set_text ("Direction: In")
-			elseif a_parameter_declaration_expression.direction = feature {SYSTEM_DLL_FIELD_DIRECTION}.Out then
+			elseif a_parameter_declaration_expression.direction = {SYSTEM_DLL_FIELD_DIRECTION}.Out then
 				l_node.set_text ("Direction: Out")
-			elseif a_parameter_declaration_expression.direction = feature {SYSTEM_DLL_FIELD_DIRECTION}.Ref then
+			elseif a_parameter_declaration_expression.direction = {SYSTEM_DLL_FIELD_DIRECTION}.Ref then
 				l_node.set_text ("Direction: Ref")
 			else
 				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_error)
@@ -2048,7 +2048,7 @@ feature {NONE} -- Implementation
 					if u = l + 1 then
 						lv := a_collection.item (l)
 						uv := a_collection.item (u)
-						if feature {SYSTEM_STRING}.compare (uv.name, lv.name) < 0 then
+						if {SYSTEM_STRING}.compare (uv.name, lv.name) < 0 then
 							a_collection.set_item (u, lv)
 							a_collection.set_item (l, uv)
 						end
@@ -2059,14 +2059,14 @@ feature {NONE} -- Implementation
 						from until l >= u loop
 							from
 							until
-								l >= u or else feature {SYSTEM_STRING}.compare (a_collection.item (l).name, pivot.name) >= 0
+								l >= u or else {SYSTEM_STRING}.compare (a_collection.item (l).name, pivot.name) >= 0
 							loop
 								l := l + 1
 							end
 							from
 								u := u - 1
 							until
-								u <= l or else feature {SYSTEM_STRING}.compare (pivot.name, a_collection.item (u).name) >= 0
+								u <= l or else {SYSTEM_STRING}.compare (pivot.name, a_collection.item (u).name) >= 0
 							loop
 								u := u - 1
 							end

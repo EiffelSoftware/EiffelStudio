@@ -44,7 +44,7 @@ feature -- Access
 		do
 			l_guid := guid_from_key (a_key)
 			if l_guid /= Void then
-				l_key := feature {REGISTRY}.current_user.open_sub_key (value_hive, False)
+				l_key := {REGISTRY}.current_user.open_sub_key (value_hive, False)
 				if l_key /= Void then
 					l_value ?= l_key.get_value (l_guid.to_cil)
 					if l_value /= Void then
@@ -65,7 +65,7 @@ feature -- Access
 			l_guids: NATIVE_ARRAY [SYSTEM_STRING]
 			l_value: SYSTEM_STRING
 		do
-			l_key := feature {REGISTRY}.current_user.open_sub_key (key_hive, False)
+			l_key := {REGISTRY}.current_user.open_sub_key (key_hive, False)
 			if l_key /= Void then
 				l_guids := l_key.get_value_names
 				from
@@ -90,7 +90,7 @@ feature -- Access
 			l_guids: NATIVE_ARRAY [SYSTEM_STRING]
 			l_value: SYSTEM_STRING
 		do
-			l_key := feature {REGISTRY}.current_user.open_sub_key (value_hive, False)
+			l_key := {REGISTRY}.current_user.open_sub_key (value_hive, False)
 			if l_key /= Void then
 				l_guids := l_key.get_value_names
 				from
@@ -138,10 +138,10 @@ feature -- Basic Operations
 			l_key: REGISTRY_KEY
 			l_guid: SYSTEM_STRING
 		do
-			l_guid := feature {GUID}.new_guid.to_string
-			l_key := feature {REGISTRY}.current_user.open_sub_key (key_hive, True)
+			l_guid := {GUID}.new_guid.to_string
+			l_key := {REGISTRY}.current_user.open_sub_key (key_hive, True)
 			if l_key = Void then
-				l_key := feature {REGISTRY}.current_user.create_sub_key (key_hive)
+				l_key := {REGISTRY}.current_user.create_sub_key (key_hive)
 			end
 			l_key.set_value (l_guid, a_key.to_cil)
 			l_key.close
@@ -159,9 +159,9 @@ feature -- Basic Operations
 			l_guid: STRING
 		do
 			l_guid := guid_from_key (a_key)
-			l_key := feature {REGISTRY}.current_user.open_sub_key (value_hive, True)
+			l_key := {REGISTRY}.current_user.open_sub_key (value_hive, True)
 			if l_key = Void then
-				l_key := feature {REGISTRY}.current_user.create_sub_key (value_hive)
+				l_key := {REGISTRY}.current_user.create_sub_key (value_hive)
 			end
 			l_key.set_value (l_guid, a_value.to_cil)
 			l_key.close
@@ -177,12 +177,12 @@ feature -- Basic Operations
 			l_guid: STRING
 		do
 			l_guid := guid_from_key (a_key)
-			l_key := feature {REGISTRY}.current_user.open_sub_key (value_hive, True)
+			l_key := {REGISTRY}.current_user.open_sub_key (value_hive, True)
 			if l_key /= Void then
 				l_key.delete_value (l_guid)
 				l_key.close
 			end
-			l_key := feature {REGISTRY}.current_user.open_sub_key (key_hive, True)
+			l_key := {REGISTRY}.current_user.open_sub_key (key_hive, True)
 			if l_key /= Void then
 				l_key.delete_value (l_guid)
 				l_key.close
@@ -201,7 +201,7 @@ feature {NONE} -- Implementation
 			i, l_count: INTEGER
 			l_value: SYSTEM_STRING
 		do
-			l_key := feature {REGISTRY}.current_user.open_sub_key (key_hive, False)
+			l_key := {REGISTRY}.current_user.open_sub_key (key_hive, False)
 			if l_key /= Void then
 				l_values := l_key.get_value_names
 				from

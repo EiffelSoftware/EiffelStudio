@@ -64,7 +64,7 @@ feature -- Access
 			if l_member /= Void then
 				Result.append (l_member.eiffel_name)
 			else
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_feature, [method, l_type.name])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_feature, [method, l_type.name])
 			end
 			Result.append_character (')')
 		end

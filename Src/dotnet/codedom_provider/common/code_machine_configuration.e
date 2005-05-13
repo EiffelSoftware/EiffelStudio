@@ -133,7 +133,7 @@ feature {NONE} -- Implementation
 	Machine_config_path: STRING is
 			-- Path to "machine.config" configuration file
 		once
-			Result := feature {RUNTIME_ENVIRONMENT}.get_runtime_directory 
+			Result := {RUNTIME_ENVIRONMENT}.get_runtime_directory 
 			Result.append ("\CONFIG\machine.config")
 		end
 
@@ -154,8 +154,8 @@ feature {NONE} -- Implementation
 					i >= l_count or l_found
 				loop
 					l_synonyms := l_compilers.item (i).attributes.item (0).value.split (<<';'>>)
-					feature {SYSTEM_ARRAY}.sort (l_synonyms)
- 					l_found := feature {SYSTEM_ARRAY}.binary_search (l_synonyms, a_language.to_cil) >= 0
+					{SYSTEM_ARRAY}.sort (l_synonyms)
+ 					l_found := {SYSTEM_ARRAY}.binary_search (l_synonyms, a_language.to_cil) >= 0
  					i := i + 1
 				end
 				if l_found then

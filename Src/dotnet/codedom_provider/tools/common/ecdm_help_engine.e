@@ -20,9 +20,9 @@ feature -- Basic Operations
 			-- Show help with context `a_help_context'.
 		do
 			if not a_help_context.is_empty then
-				feature {WINFORMS_HELP}.show_help (parent, Documentation_path, Documentation_path + "::/" + a_help_context)
+				{WINFORMS_HELP}.show_help (parent, Documentation_path, Documentation_path + "::/" + a_help_context)
 			else
-				feature {WINFORMS_HELP}.show_help (parent, Documentation_path)
+				{WINFORMS_HELP}.show_help (parent, Documentation_path)
 			end			
 		end
 

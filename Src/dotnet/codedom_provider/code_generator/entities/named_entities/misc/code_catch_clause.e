@@ -41,7 +41,7 @@ feature -- Access
 			create Result.make (120)
 			Result.append (indent_string)
 			Result.append (variable.variable.eiffel_name)
-			Result.append (" ?= feature {ISE_RUNTIME}.last_exception%N")
+			Result.append (" ?= {ISE_RUNTIME}.last_exception%N")
 			Result.append (indent_string)
 			Result.append ("if ")
 			Result.append (variable.variable.eiffel_name)

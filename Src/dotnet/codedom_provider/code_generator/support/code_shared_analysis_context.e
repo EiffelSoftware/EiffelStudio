@@ -93,11 +93,11 @@ feature -- Access
 			if current_feature /= Void then
 				Result ?= current_feature
 				if Result = Void then
-					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Failed_assignment_attempt, ["CODE_FEATURE", "CODE_ROUTINE", "access to current routine"])
+					Event_manager.raise_event ({CODE_EVENTS_IDS}.Failed_assignment_attempt, ["CODE_FEATURE", "CODE_ROUTINE", "access to current routine"])
 				end
 			end
 			if Result = Void then
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_current_routine, [current_context])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_current_routine, [current_context])
 			end
 		end
 

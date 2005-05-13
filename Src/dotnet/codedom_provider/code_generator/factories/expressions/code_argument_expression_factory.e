@@ -41,14 +41,14 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 					if l_variable /= Void then
 						set_last_expression (create {CODE_ARGUMENT_REFERENCE_EXPRESSION}.make (l_variable))
 					else
-						Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_argument, [l_name, current_context])
+						Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_argument, [l_name, current_context])
 					end
 				else
-					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Wrong_feature_kind, [current_context])
+					Event_manager.raise_event ({CODE_EVENTS_IDS}.Wrong_feature_kind, [current_context])
 					set_last_expression (Empty_expression)
 				end
 			else
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_argument_name, [current_context])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_argument_name, [current_context])
 				set_last_expression (Empty_expression)
 			end
 		ensure
@@ -67,11 +67,11 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 					create l_variable.make (a_source.name, Type_reference_factory.type_reference_from_reference (a_source.type), Type_reference_factory.type_reference_from_code (current_type))
 					set_last_expression (create {CODE_PARAMETER_DECLARATION_EXPRESSION}.make (l_variable, direction_from_dom (a_source.direction)))
 				else
-					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_argument_type, [a_source.name, current_context])
+					Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_argument_type, [a_source.name, current_context])
 					set_last_expression (Empty_expression)
 				end
 			else
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_argument_name, [current_context])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_argument_name, [current_context])
 				set_last_expression (Empty_expression)
 			end
 		ensure

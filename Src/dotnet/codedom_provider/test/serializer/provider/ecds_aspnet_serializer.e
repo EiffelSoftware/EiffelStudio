@@ -53,10 +53,10 @@ feature -- Basic Operation
 				last_error_message := "Could not find system drive."
 			else
 				l_path.append ("\Program Files\Internet Explorer\iexplore.exe")
-				if feature {SYSTEM_FILE}.exists (l_path) then
+				if {SYSTEM_FILE}.exists (l_path) then
 					create l_process.make
 					change_provider
-					l_process := feature {SYSTEM_DLL_PROCESS}.start (l_path, url)
+					l_process := {SYSTEM_DLL_PROCESS}.start (l_path, url)
 					wait_for_file
 					if last_serialization_successful then
 						l_process.kill

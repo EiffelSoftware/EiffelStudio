@@ -86,7 +86,7 @@ feature -- Element Settings
 			generated_types.force (a_type, a_type.name)
 			Type_reference_factory.type_reference_from_code (a_type).set_initialized (True)
 			if generated_types.found then
-				event_manager.raise_event (feature {CODE_EVENTS_IDS}.type_in_cache, [a_type.name])
+				event_manager.raise_event ({CODE_EVENTS_IDS}.type_in_cache, [a_type.name])
 			end
 		ensure
 			generated_types_set: generated_types.has (a_type.name)

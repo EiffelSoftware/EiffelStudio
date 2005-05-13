@@ -28,7 +28,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 				code_dom_generator.generate_expression_from_dom (l_target_object)
 				set_last_expression (create {CODE_PROPERTY_REFERENCE_EXPRESSION}.make (a_source.property_name, last_expression))
 			else
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_target_object, ["property reference expression"])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_target_object, ["property reference expression"])
 				set_last_expression (Empty_expression)
 			end
 		ensure
@@ -47,7 +47,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			if current_routine /= Void and then current_routine.arguments.count > 0 then
 				set_last_expression (create {CODE_PROPERTY_SET_VALUE_REFERENCE_EXPRESSION}.make (current_routine.arguments.first.variable.type))
 			else
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Wrong_feature_kind, [current_context])
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.Wrong_feature_kind, [current_context])
 			end
 		ensure
 			non_void_last_expression: last_expression /= Void

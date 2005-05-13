@@ -42,11 +42,7 @@ feature -- Query
 		
 	get_resource_value (a_name: STRING): STRING is
 			-- Retrieve the resource string value from the underlying store.
-		require
-			has_resource: has_resource (a_name)
 		deferred
-		ensure
-			has_result: Result /= Void
 		end	
 
 feature -- Access

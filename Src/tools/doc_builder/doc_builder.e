@@ -30,7 +30,6 @@ feature {NONE} -- Initialization
 			debug ("trace")
 				print ("system launched%N")
 			end
-			initialize_temp_directories		
 			create l_args.make
 			if l_args.is_gui then
 				debug ("trace")
@@ -87,6 +86,7 @@ feature {NONE} -- Initialization
 					print ("preparing interface for launching%N")
 				end
 				setup_preferences
+				initialize_temp_directories
 				create interface
 				interface_initialized := True
 				interface.Shared_constants.Application_constants.set_gui_mode (True)

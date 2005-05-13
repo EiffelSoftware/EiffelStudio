@@ -1287,13 +1287,94 @@ feature -- Status report
 			-- Does clicking or keyboard navigating via arrow keys select an item, with multiple
 			-- item selection permitted via the use of Ctrl and Shift keys?
 		
-	first_visible_row: INTEGER is
-			-- Index of first row visible in `Current' or 0 if `row_count' = 0.
+	first_visible_row: EV_GRID_ROW is
+			-- First row visible in `Current' or Void if `row_count' = 0
+			-- If `is_vertical_scrolling_per_item', the first visible row may be only partially visible.
+		require
+			is_displayed: is_displayed
+		local
+			l_visible_row_indexes: ARRAYED_LIST [INTEGER]
 		do
-			to_implement ("EV_GRID_I.first_visible_row")
+			l_visible_row_indexes := visible_row_indexes
+			if l_visible_row_indexes /= Void and then l_visible_row_indexes.count > 0 then
+				Result := rows.i_th (l_visible_row_indexes.first).interface
+			end
 		ensure
-			not_empty_implies_result_positive: row_count > 0 implies result > 0
-			empty_implies_result_zero: row_count = 0 implies result = 0
+			has_rows_implies_result_not_void: row_count > 0 implies result /= Void
+			no_rows_implies_result_void: row_count = 0 implies result = Void
+		end
+
+	first_visible_column: EV_GRID_COLUMN is
+			-- First column visible in `Current' or Void if `column_count' = 0
+			-- If `is_horizontal_scrolling_per_item', the first visible column may be only partially visible.
+		require
+			is_displayed: is_displayed
+		local
+			l_visible_column_indexes: ARRAYED_LIST [INTEGER]
+		do
+			l_visible_column_indexes := visible_column_indexes
+			if l_visible_column_indexes /= Void and then l_visible_column_indexes.count > 0 then
+				Result := columns.i_th (visible_column_indexes.first).interface
+			end
+		ensure
+			has_columns_implies_result_not_void: column_count > 0 implies result /= Void
+			no_columns_implies_result_void: column_count = 0 implies result = Void
+		end
+
+	last_visible_row: EV_GRID_ROW is
+			-- Last row visible in `Current' or Void if `row_count' = 0
+			-- The last visible row may be only partially visible.
+		require
+			is_displayed: is_displayed
+		local
+			l_visible_row_indexes: ARRAYED_LIST [INTEGER]
+		do
+			l_visible_row_indexes := visible_row_indexes
+			if l_visible_row_indexes /= Void and then l_visible_row_indexes.count > 0then
+				Result := rows.i_th (l_visible_row_indexes.last).interface
+			end
+		ensure
+			has_rows_implies_result_not_void: row_count > 0 implies result /= Void
+			no_rows_implies_result_void: row_count = 0 implies result = Void
+		end
+
+	last_visible_column: EV_GRID_COLUMN is
+			-- Last column visible in `Current' or Void if `column_count' = 0
+			-- The last visible column may be only partially visible.
+		require
+			is_displayed: is_displayed
+		local
+			l_visible_column_indexes: ARRAYED_LIST [INTEGER]
+		do
+			l_visible_column_indexes := visible_column_indexes
+			if l_visible_column_indexes /= Void and then l_visible_column_indexes.count > 0 then
+				Result := columns.i_th (visible_column_indexes.last).interface
+			end
+		ensure
+			has_columns_implies_result_not_void: column_count > 0 implies result /= Void
+			no_columns_implies_result_void: column_count = 0 implies result = Void
+		end
+
+	visible_row_indexes: ARRAYED_LIST [INTEGER] is
+			-- All rows that are currently visible in `Current'.
+		require
+			is_displayed: is_displayed
+		do
+			perform_vertical_computation
+			Result := drawer.items_spanning_vertical_span (virtual_y_position - internal_client_y + viewport_y_offset, viewable_height)
+		ensure	
+			result_not_void: Result /= Void
+		end
+
+	visible_column_indexes: ARRAYED_LIST [INTEGER] is
+			-- All columns that are currently visible in `Current'.
+		require
+			is_displayed: is_displayed
+		do
+			perform_horizontal_computation
+			Result := drawer.items_spanning_horizontal_span (virtual_x_position - internal_client_x + viewport_x_offset, viewable_width)
+		ensure	
+			result_not_void: Result /= Void
 		end
 		
 	tree_node_connector_color: EV_COLOR
@@ -1771,9 +1852,12 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 					recompute_row_offsets (invalid_row_index.min (row_count))
 						-- Restore to an arbitarily large index.
 					invalid_row_index := invalid_row_index.max_value;
-					recompute_vertical_scroll_bar;
+					if vertical_redraw_triggered_by_viewport_resize then
+						recompute_vertical_scroll_bar;
+					end
 					((create {EV_ENVIRONMENT}).application).do_once_on_idle (agent recompute_vertical_scroll_bar)
 				end
+				vertical_redraw_triggered_by_viewport_resize := False
 			end
 		end
 
@@ -1789,10 +1873,13 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 						recompute_column_offsets (invalid_column_index.min (column_count))
 					end
 						-- Restore to an arbitarily large index.
-					invalid_column_index := invalid_column_index.max_value;
-					recompute_horizontal_scroll_bar;
+					invalid_column_index := invalid_column_index.max_value;				
+					if horizontal_redraw_triggered_by_viewport_resize then
+						recompute_horizontal_scroll_bar;	
+					end
 					((create {EV_ENVIRONMENT}).application).do_once_on_idle (agent recompute_horizontal_scroll_bar)
 				end
+				horizontal_redraw_triggered_by_viewport_resize := False
 			end
 		end
 
@@ -2578,7 +2665,7 @@ feature {NONE} -- Drawing implementation
 				-- Now perform appropriate redrawing as required.
 			if is_column_resize_immediate then
 				set_horizontal_computation_required (header.index_of (header_item, 1))			
-				redraw_client_area		
+				redraw_client_area
 			else	
 				if is_resizing_divider_enabled then
 						-- Draw a resizing line if enabled.
@@ -2811,7 +2898,7 @@ feature {NONE} -- Drawing implementation
 			internal_client_height := a_height
 			
 			fixme ("[
-				Is there a better way to repsond to the resizing without setting the invalid row and column indexes to 1?]
+				Is there a better way to respond to the resizing without setting the invalid row and column indexes to 1?]
 				I think it should be possible to simply update the scroll bar without modifying the indexes. Julian
 				]")
 			if not header.is_empty then
@@ -2821,6 +2908,16 @@ feature {NONE} -- Drawing implementation
 			if row_count /= 0 then
 				set_vertical_computation_required (1)
 			end
+				-- Flag that we have triggered a recompute/redraw as the result of
+				-- the viewport resizing. In this situation, extra procssing is performed
+				-- to ensure that the scroll bars update correctly.
+			horizontal_redraw_triggered_by_viewport_resize := True
+			vertical_redraw_triggered_by_viewport_resize := True
+
+				-- Now flag to redraw the complete client area.
+				-- On Windows, the complete client area is redrawn each time a move occurs
+				-- and on Gtk this does not happen. By calling `redraw_client_area', we ensure the
+				-- behavior is the same on both platforms.
 			redraw_client_area
 		ensure
 			client_dimensions_set: internal_client_width = viewport.width and internal_client_height = viewport.height
@@ -2857,6 +2954,10 @@ feature {NONE} -- Drawing implementation
 	buffered_drawable_size: INTEGER is 2000
 		-- Default size of `drawable' used for scrolling purposes.
 
+	horizontal_redraw_triggered_by_viewport_resize: BOOLEAN
+
+	vertical_redraw_triggered_by_viewport_resize: BOOLEAN
+		
 feature {EV_GRID_COLUMN_I, EV_GRID_DRAWER_I} -- Implementation
 
 	is_header_item_resizing: BOOLEAN

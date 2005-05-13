@@ -203,6 +203,9 @@ feature -- Actions
 
 	redraw is
 			-- Force `Current' to be re-drawn when next idle.
+		require
+			not_destroyed: not is_destroyed
+			parented: is_parented
 		do
 			implementation.redraw
 		end

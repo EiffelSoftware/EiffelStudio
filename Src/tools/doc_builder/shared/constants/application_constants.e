@@ -242,7 +242,13 @@ feature -- Table of Contents Preferences
 			l_code_dir.extend ("thread")
 			l_code_dir.extend ("reference")
 			Result.extend (l_code_dir.string)
-		end		
+
+				-- Preferences
+			create l_code_dir.make_from_string (l_project_root.string)
+			l_code_dir.extend ("preferences")
+			l_code_dir.extend ("reference")
+			Result.extend (l_code_dir.string)
+		end
 			
 	studio_libraries: ARRAYED_LIST [STRING] is
 			-- Studio libraries
@@ -261,6 +267,7 @@ feature -- Table of Contents Preferences
 			Result.extend ("eiffel2java")
 			Result.extend ("store")
 			Result.extend ("thread")
+			Result.extend ("preferences")
 		end
 	
 	envision_libraries: ARRAYED_LIST [STRING] is

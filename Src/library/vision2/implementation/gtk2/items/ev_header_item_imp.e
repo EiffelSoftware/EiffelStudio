@@ -78,6 +78,9 @@ feature -- Initialization
 			if a_width /= width then
 				width := a_width
 				if parent_imp /= Void then
+						-- FIXME IEK Implement these properly
+					parent_imp.item_resize_start_actions.call ([interface])
+
 					parent_imp.item_resize_actions.call ([interface])
 
 					parent_imp.item_resize_end_actions.call ([interface])

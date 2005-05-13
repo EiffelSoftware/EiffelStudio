@@ -45,11 +45,9 @@ feature {NONE} -- Initialization
 			set_c_object (viewport)
 			{EV_GTK_EXTERNALS}.gtk_viewport_set_shadow_type (viewport, {EV_GTK_EXTERNALS}.Gtk_shadow_none_enum)
 			{EV_GTK_EXTERNALS}.gtk_widget_set_usize (viewport, 1, 1) -- Hack needed to prevent viewport resize on item resize.
-			container_widget := {EV_GTK_EXTERNALS}.gtk_hbox_new (True, 0)
-			{EV_GTK_EXTERNALS}.gtk_widget_show (container_widget)
-			{EV_GTK_EXTERNALS}.gtk_container_add (viewport, container_widget)
+			container_widget := viewport
 		end
-
+		
 feature -- Access
 
 	minimum_width: INTEGER is
@@ -162,6 +160,7 @@ feature {NONE} -- Implementation
 			-- Set `a_widget.height' to `a_height'.
 		local
 			item_width, item_height: INTEGER
+			w_imp: EV_WIDGET_IMP
 		do
 			if a_width > 0 then
 				item_width := a_width
@@ -174,14 +173,18 @@ feature {NONE} -- Implementation
 			else
 				item_height := -1
 			end
-			{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (container_widget, item_width, item_height)
+
+			w_imp ?= item.implementation
+			w_imp.store_minimum_size
+			{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (w_imp.c_object, item_width, item_height)
+			update_request_size
 		end
 
 	on_removed_item (a_widget_imp: EV_WIDGET_IMP) is
 			-- Reset minimum size.
 		do
 			Precursor (a_widget_imp)
-			{EV_GTK_EXTERNALS}.gtk_widget_set_usize (container_widget, -1, -1)
+			a_widget_imp.reset_minimum_size
 			set_x_offset (0)
 			set_y_offset (0)
 		end

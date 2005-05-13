@@ -61,18 +61,9 @@ cluster
 			end
 		end
 
-	all ast:		"$EIFFEL_SRC\Eiffel\common\parser\AST"
+	all ast:		"$EIFFEL_SRC\Eiffel\common"
 		default
 			namespace ("EiffelSoftware.Compiler.Parser")
 		end
 
-	yacc (ast):		"$EIFFEL_SRC\Eiffel\yacc"
-		default
-			namespace ("EiffelSoftware.Compiler.Parser")
-		end
-
-	eiffel_parser (ast):		"$EIFFEL_SRC\Eiffel\common\parser\parser"
-		default
-			namespace ("EiffelSoftware.Compiler.Parser")
-		end
 end

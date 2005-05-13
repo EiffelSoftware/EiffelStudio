@@ -1175,9 +1175,6 @@ rt_shared pid_t eif_thread_fork(void) {
 #endif
 
 	if (result == 0) {
-		eif_global_context_t * l_old_eif_globals = eif_globals;
-		rt_global_context_t * l_old_rt_globals = rt_globals;
-
 			/* We are now in the child process. */
 
 			/* Reinitialize our global lists to let the GC think that there

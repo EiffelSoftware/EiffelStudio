@@ -179,6 +179,7 @@
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
 	<id>4</id>
+	<name>grid_tab</name>
 	<Expanded>1</Expanded>
 	<reference_id>28</reference_id>
 	</Internal_properties>
@@ -1067,6 +1068,7 @@
 </item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
 	<id>26</id>
+	<name>column_tab</name>
 	<Expanded>1</Expanded>
 	<reference_id>35</reference_id>
 	</Internal_properties>
@@ -1604,6 +1606,7 @@
 </item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
 	<id>27</id>
+	<name>row_tab</name>
 	<Expanded>0</Expanded>
 	<reference_id>40</reference_id>
 	</Internal_properties>
@@ -2116,6 +2119,7 @@
 </item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
 	<id>121</id>
+	<name>item_tab</name>
 	<Expanded>0</Expanded>
 	<reference_id>122</reference_id>
 	</Internal_properties>
@@ -3409,6 +3413,7 @@
 </item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
 	<id>320</id>
+	<name>selection_tab</name>
 	<Expanded>1</Expanded>
 	<reference_id>300</reference_id>
 	</Internal_properties>
@@ -3876,6 +3881,7 @@
 </item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
 	<id>92</id>
+	<name>position_tab</name>
 	<Expanded>0</Expanded>
 	<reference_id>93</reference_id>
 	</Internal_properties>
@@ -4115,6 +4121,7 @@
 </item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
 	<id>108</id>
+	<name>events_tab</name>
 	<Expanded>0</Expanded>
 	<reference_id>109</reference_id>
 	</Internal_properties>

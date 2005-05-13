@@ -70,6 +70,10 @@ cluster
 		exclude
 			"CVS"; "EIFGEN"; "Documentation"; "libraries"
 		end
-
+		
+	all preferences:		"$EIFFEL_SRC/library/preferences"
+		exclude
+			"CVS"; "EIFGEN"; "Documentation"; "libraries"; "Clib"; "xml_implementation";
+		end
 		
 end -- system base

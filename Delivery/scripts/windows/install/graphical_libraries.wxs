@@ -1471,7 +1471,8 @@
 						<Directory Id="interface" Name="INTERF~1" LongName="interface">
 							<Directory Id="support18" Name="support">
 								<Component Id="ev_raw_image_data.e" Guid="6F468936-3B65-4C03-9535-684C501DBF17">
-									<File Id="ev_raw_image_data.e" Name="EV_RAW~1.E" LongName="ev_raw_image_data.e" KeyPath="yes" />
+									<File Id="ev_grid_label_item_layout_e" Name="EV_GRI~1.E" LongName="ev_grid_label_item_layout.e" />
+									<File Id="ev_raw_image_data.e" Name="EV_RAW~1.E" LongName="ev_raw_image_data.e" />
 									<File Id="ev_png_format.e" Name="EV_PNG~1.E" LongName="ev_png_format.e" />
 									<File Id="ev_dynamic_list_cursor.e" Name="EV_DYN~2.E" LongName="ev_dynamic_list_cursor.e" />
 									<File Id="ev_bmp_format.e" Name="EV_BMP~1.E" LongName="ev_bmp_format.e" />
@@ -1512,6 +1513,7 @@
 								<Component Id="ev_dynamic_tree_item.e" Guid="30D7A7BB-627D-4331-AA07-D61443405073">
 									<File Id="ev_drawable_grid_item_e" Name="EV_DRA~1.E" LongName="ev_drawable_grid_item.e" />
 									<File Id="ev_grid_column_e" Name="EV_GRI~1.E" LongName="ev_grid_column.e" />
+									<File Id="ev_grid_combo_item_e" Name="EVE5EA~1.E" LongName="ev_grid_combo_item.e" />
 									<File Id="ev_grid_editable_item_e" Name="EV1ADD~1.E" LongName="ev_grid_editable_item.e" />
 									<File Id="ev_grid_item_e" Name="EV_GRI~2.E" LongName="ev_grid_item.e" />
 									<File Id="ev_grid_label_item_e" Name="EV_GRI~3.E" LongName="ev_grid_label_item.e" />
@@ -1625,7 +1627,6 @@
 									<File Id="ev_model_world.e" Name="EVC78B~1.E" LongName="ev_model_world.e" />
 									<File Id="ev_model_world_cell.e" Name="EV1A19~1.E" LongName="ev_model_world_cell.e" />
 									<File Id="ev_postscript_drawable.e" Name="EV_POS~1.E" LongName="ev_postscript_drawable.e" />
-									<File Id="ev_postscript_drawable_imp.e" Name="EV_POS~2.E" LongName="ev_postscript_drawable_imp.e" />
 									<File Id="ev_scaled_font_factory.e" Name="EV_SCA~1.E" LongName="ev_scaled_font_factory.e" />
 									<File Id="ev_scaled_pixmap_factory.e" Name="EV_SCA~2.E" LongName="ev_scaled_pixmap_factory.e" />
 									<File Id="ev_shared_application.e" Name="EV_SHA~1.E" LongName="ev_shared_application.e" />
@@ -1637,8 +1638,10 @@
 									<File Id="ev_drawable_item_action_sequence_e" Name="EV_DRA~1.E" LongName="ev_drawable_item_action_sequence.e" />
 									<File Id="ev_grid_action_sequences_e" Name="EV_GRI~1.E" LongName="ev_grid_action_sequences.e" />
 									<File Id="ev_grid_item_action_sequence_e" Name="EV_GRI~2.E" LongName="ev_grid_item_action_sequence.e" />
+									<File Id="ev_grid_item_action_sequences_e" Name="EV2203~1.E" LongName="ev_grid_item_action_sequences.e" />
 									<File Id="ev_grid_row_action_sequence_e" Name="EV_GRI~3.E" LongName="ev_grid_row_action_sequence.e" />
 									<File Id="ev_grid_row_action_sequences_e" Name="EV_GRI~4.E" LongName="ev_grid_row_action_sequences.e" />
+									<File Id="ev_grid_column_action_sequences_e" Name="EV53AA~1.E" LongName="ev_grid_column_action_sequences.e" />
 									<File Id="V74" Name="EV_STA~1.E" LongName="ev_standard_dialog_action_sequences.e" KeyPath="yes" />
 									<File Id="ev_application_action_sequences.e" Name="EV_APP~1.E" LongName="ev_application_action_sequences.e" />
 									<File Id="ev_combo_box_action_sequences.e" Name="EV_COM~1.E" LongName="ev_combo_box_action_sequences.e" />
@@ -1717,7 +1720,8 @@
 							</Directory>
 							<Directory Id="properties39" Name="PROPER~3" LongName="properties">
 								<Component Id="ev_pick_and_dropable.e" Guid="D06D2119-E048-4766-B71E-8417DB9BD138">
-									<File Id="ev_pick_and_dropable.e" Name="EV_PIC~1.E" LongName="ev_pick_and_dropable.e" KeyPath="yes" />
+									<File Id="ev_tab_controlable_e" Name="EV_TAB~1.E" LongName="ev_tab_controlable.e" />
+									<File Id="ev_pick_and_dropable.e" Name="EV_PIC~1.E" LongName="ev_pick_and_dropable.e" />
 									<File Id="ev_help_contextable.e" Name="EV_HEL~1.E" LongName="ev_help_contextable.e" />
 									<File Id="ev_textable.e" Name="EV_TEX~B.E" LongName="ev_textable.e" />
 									<File Id="ev_pixmapable.e" Name="EV_PIX~3.E" LongName="ev_pixmapable.e" />
@@ -1764,7 +1768,8 @@
 								</Directory>
 								<Directory Id="containers" Name="CONTAI~1" LongName="containers">
 									<Component Id="ev_split_area.e" Guid="88DC7511-2988-4C87-B696-35F03A75967F">
-										<File Id="ev_split_area.e" Name="EV_SPL~1.E" LongName="ev_split_area.e" KeyPath="yes" />
+										<File Id="ev_popup_window_e" Name="EV_POP~1.E" LongName="ev_popup_window.e" />
+										<File Id="ev_split_area.e" Name="EV_SPL~1.E" LongName="ev_split_area.e" />
 										<File Id="ev_notebook.e" Name="EV_NOT~1.E" LongName="ev_notebook.e" />
 										<File Id="ev_vertical_split_area.e" Name="EV_VER~2.E" LongName="ev_vertical_split_area.e" />
 										<File Id="ev_frame.e" Name="ev_frame.e" />
@@ -2034,7 +2039,8 @@
 									</Directory>
 									<Directory Id="containers21" Name="CONTAI~2" LongName="containers">
 										<Component Id="ev_widget_list_imp.e" Guid="6C8D12C9-9AD3-488D-9AE3-DE8740FAE870">
-											<File Id="ev_widget_list_imp.e" Name="EV_WID~1.E" LongName="ev_widget_list_imp.e" KeyPath="yes" />
+											<File Id="ev_popup_window_imp_e" Name="EV_POP~1.E" LongName="ev_popup_window_imp.e" />
+											<File Id="ev_widget_list_imp.e" Name="EV_WID~1.E" LongName="ev_widget_list_imp.e" />
 											<File Id="ev_split_area_imp.e" Name="EV_SPL~2.E" LongName="ev_split_area_imp.e" />
 											<File Id="ev_horizontal_split_area_imp.e" Name="EV_HOR~3.E" LongName="ev_horizontal_split_area_imp.e" />
 											<File Id="ev_scrollable_area_imp.e" Name="EV_SCR~2.E" LongName="ev_scrollable_area_imp.e" />
@@ -2073,6 +2079,11 @@
 								</Directory>
 							</Directory>
 							<Directory Id="implementation_interface" Name="IMPLEM~4" LongName="implementation_interface">
+								<Directory Id="model3" Name="model">
+									<Component Id="model3" Guid="6EE85871-0897-45d2-ACC0-0F9E6DDBC3A1">
+										<File Id="ev_postscript_drawable_imp.e" Name="EV_POS~1.E" LongName="ev_postscript_drawable_imp.e" />
+									</Component>
+								</Directory>
 								<Directory Id="support29" Name="support">
 									<Component Id="ev_radio_peer_i.e" Guid="61129521-DECE-4CDF-B192-68A44AFA6C54">
 										<File Id="ev_grid_arrayed_list_e" Name="EV_GRI~1.E" LongName="ev_grid_arrayed_list.e" />
@@ -2119,7 +2130,8 @@
 								</Directory>
 								<Directory Id="properties35" Name="PROPER~2" LongName="properties">
 									<Component Id="ev_fontable_i.e" Guid="4D2BF0F2-EBDC-4324-84AF-EA80C7AD5B5E">
-										<File Id="ev_fontable_i.e" Name="EV_FON~2.E" LongName="ev_fontable_i.e" KeyPath="yes" />
+										<File Id="ev_tab_controlable_i_e" Name="EV_TAB~1.E" LongName="ev_tab_controlable_i.e" />
+										<File Id="ev_fontable_i.e" Name="EV_FON~2.E" LongName="ev_fontable_i.e" />
 										<File Id="ev_drawable_i.e" Name="EV_DRA~2.E" LongName="ev_drawable_i.e" />
 										<File Id="ev_textable_i.e" Name="EV_TEX~8.E" LongName="ev_textable_i.e" />
 										<File Id="ev_positionable_i.e" Name="EV_POS~1.E" LongName="ev_positionable_i.e" />
@@ -2156,6 +2168,9 @@
 								<Directory Id="events37" Name="events">
 									<Component Id="ev_item_action_sequences_i.e" Guid="ABF859C0-2F16-4222-9779-86C1EA3FD95A">
 										<File Id="ev_grid_action_sequences_i_e" Name="EV_GRI~1.E" LongName="ev_grid_action_sequences_i.e" />
+										<File Id="ev_grid_column_action_sequences_i_e" Name="EV_GRI~2.E" LongName="ev_grid_column_action_sequences_i.e" />
+										<File Id="ev_grid_item_action_sequences_i_e" Name="EV_GRI~3.E" LongName="ev_grid_item_action_sequences_i.e" />
+										<File Id="ev_grid_row_action_sequences_i_e" Name="EV_GRI~4.E" LongName="ev_grid_row_action_sequences_i.e" />
 										<File Id="ev_application_action_sequences_i.e" Name="EV_APP~5.E" LongName="ev_application_action_sequences_i.e" />
 										<File Id="ev_button_action_sequences_i.e" Name="EV_BUT~1.E" LongName="ev_button_action_sequences_i.e" />
 										<File Id="ev_combo_box_action_sequences_i.e" Name="EV_COM~1.E" LongName="ev_combo_box_action_sequences_i.e" />
@@ -2249,7 +2264,8 @@
 									</Directory>
 									<Directory Id="containers28" Name="CONTAI~3" LongName="containers">
 										<Component Id="ev_dynamic_table_i.e" Guid="5AFA806D-BA2D-4712-9EFB-F63566AEC97C">
-											<File Id="ev_dynamic_table_i.e" Name="EV_DYN~3.E" LongName="ev_dynamic_table_i.e" KeyPath="yes" />
+											<File Id="ev_popup_window_i_e" Name="EV_POP~1.E" LongName="ev_popup_window_i.e" />
+											<File Id="ev_dynamic_table_i.e" Name="EV_DYN~3.E" LongName="ev_dynamic_table_i.e" />
 											<File Id="ev_viewport_i.e" Name="EV_VIE~1.E" LongName="ev_viewport_i.e" />
 											<File Id="ev_horizontal_box_i.e" Name="EV_HOR~1.E" LongName="ev_horizontal_box_i.e" />
 											<File Id="ev_widget_list_i.e" Name="EV_WID~2.E" LongName="ev_widget_list_i.e" />

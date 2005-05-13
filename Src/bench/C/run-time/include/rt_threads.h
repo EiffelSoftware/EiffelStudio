@@ -518,7 +518,7 @@ extern void eif_terminate_all_other_threads(void);
         eraise(msg, EN_EXT); \
     if (!(attr.pol & THR_DETACHED)) \
         if(thr_setprio(tid,attr.prio)) eraise(msg, EN_EXT)
-#define EIF_THR_KILL(tid) \
+#define EIF_THR_KILL(tid,error) \
 	error = thr_kill(tid, 9)
 
 #define EIF_THR_EXIT(arg)           thr_exit(arg)

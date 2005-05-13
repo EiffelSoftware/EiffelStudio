@@ -1,0 +1,137 @@
+<document title="General Editor Preferences" output="studio">
+	<meta_data>
+		<help/>
+	</meta_data>
+	<paragraph>
+		<paragraph>The preferences below are for general editor preference settings such as font and tab size.</paragraph>
+		<table>
+			<row>
+				<cell>left_margin_width</cell>
+				<cell>Width of left margin in editor.  Note: this is not the breakpoint margin, but the whitespace to the left of the editor.</cell>
+			</row>
+			<row>
+				<cell>colors.margin_background_color</cell>
+				<cell>Background color of line number margin.</cell>
+			</row>
+			<row>
+				<cell>colors.margin_separator_color</cell>
+				<cell>Color of separator between line number margin and editor.</cell>
+			</row>
+			<row>
+				<cell>colors.line_number_text_color</cell>
+				<cell>Color of line number text.</cell>
+			</row>
+			<row>
+				<cell>use_tab_for_indentation</cell>
+				<cell>Should tab character be used for auto-indentation?</cell>
+			</row>
+			<row>
+				<cell>mouse_wheel_scroll_full_page</cell>
+				<cell>Mouse wheel scroll full page?</cell>
+			</row>
+			<row>
+				<cell>mouse_wheel_scroll_size</cell>
+				<cell>Mouse wheel scroll size.</cell>
+			</row>
+			<row>
+				<cell>remove_trailing_white_space</cell>
+				<cell>Automatically remove trailing white space from lines?</cell>
+			</row>
+			<row>
+				<cell>blinking_cursor</cell>
+				<cell>Does text cursor blink?</cell>
+			</row>
+			<row>
+				<cell>automatic_update</cell>
+				<cell>Automatic update when the file has not been modified.</cell>
+			</row>
+			<row>
+				<cell>editor_font</cell>
+				<cell>All-purpose editor font.</cell>
+			</row>
+			<row>
+				<cell>keyword_font</cell>
+				<cell>Keyword editor font.</cell>
+			</row>
+			<row>
+				<cell>header_font</cell>
+				<cell>Editor header font. (Requires restart)</cell>
+			</row>
+			<row>
+				<cell>tab_step</cell>
+				<cell>Tabulation size in characters.</cell>
+			</row>
+			<row>
+				<cell>colors.normal_text_color</cell>
+				<cell>Color for normal text.</cell>
+			</row>
+			<row>
+				<cell>colors.normal_background_color</cell>
+				<cell>Background color for normal text.</cell>
+			</row>
+			<row>
+				<cell>colors.selection_text_color</cell>
+				<cell>Color of selected text.</cell>
+			</row>
+			<row>
+				<cell>colors.selection_background_color</cell>
+				<cell>Background color of selected text.</cell>
+			</row>
+			<row>
+				<cell>colors.string_text_color</cell>
+				<cell>Color of string text.</cell>
+			</row>
+			<row>
+				<cell>colors.string_background_color</cell>
+				<cell>Background color of string text.</cell>
+			</row>
+			<row>
+				<cell>colors.keyword_text_color</cell>
+				<cell>Color of keyword text.</cell>
+			</row>
+			<row>
+				<cell>colors.keyword_background_color</cell>
+				<cell>Background color of keyword text.</cell>
+			</row>
+			<row>
+				<cell>colors.spaces_text_color</cell>
+				<cell>Color of space characters.</cell>
+			</row>
+			<row>
+				<cell>colors.spaces_background_color</cell>
+				<cell>Background color of space characters.</cell>
+			</row>
+			<row>
+				<cell>colors.comments_text_color</cell>
+				<cell>Color of comments text.</cell>
+			</row>
+			<row>
+				<cell>colors.comments_background_color</cell>
+				<cell>Background color of comments text.</cell>
+			</row>
+			<row>
+				<cell>colors.operator_text_color</cell>
+				<cell>Color of operator text.</cell>
+			</row>
+			<row>
+				<cell>colors.operator_background_color</cell>
+				<cell>Background color of operator text.</cell>
+			</row>
+			<row>
+				<cell>colors.number_text_color</cell>
+				<cell>Color of number text.</cell>
+			</row>
+			<row>
+				<cell>colors.number_background_color</cell>
+				<cell>Background color of number text.</cell>
+			</row>
+			<row>
+				<cell>smart_identation</cell>
+				<cell>Should the editor auto-indent?</cell>
+			</row>
+			<row>
+				<cell>quadruple_click_enabled</cell>
+				<cell>Quadruple click selects all?</cell>
+			</row>
+		</table>
+	</paragraph></document>

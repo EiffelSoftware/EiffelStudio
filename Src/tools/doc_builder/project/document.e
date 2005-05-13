@@ -33,7 +33,7 @@ feature -- Creation
 			a_name_not_void: a_name /= Void
 		do			
 			name := a_name
-			create text.make_empty
+			create text.make_from_string (" ")
 			create saved_text.make_empty
 			create schema_validator	
 		end

@@ -1,0 +1,71 @@
+<document title="Debugger Preferences" output="studio">
+	<meta_data/>
+	<paragraph>This category contains preferences that are specific to the EiffelStudio Debugger and the debugger tool. These preferences are: 
+		<line_break/>
+		<table><border>1</border>
+			<row>
+				<cell>Label in the preferences window</cell>
+				<cell>Complete Description</cell>
+			</row>
+			<row>
+				<cell>Width</cell>
+				<cell>Width of debug tool</cell>
+			</row>
+			<row>
+				<cell>Height</cell>
+				<cell>Height of debug tool</cell>
+			</row>
+			<row>
+				<cell>Last saved stack path</cell>
+				<cell>Disk location of last saved stack path information.</cell>
+			</row>
+			<row>
+				<cell>Interrupt every n instructions</cell>
+				<cell></cell>
+			</row>
+			<row>
+				<cell>Debug output evaluation</cell>
+				<cell>Display DEBUG_OUTPUT.debug_output value.</cell>
+			</row>
+			<row>
+				<cell>Generating type evaluation</cell>
+				<cell>Display ANY.generating_type value.</cell>
+			</row>
+			<row>
+				<cell>Min slice</cell>
+				<cell>Smallest number of items displayed in list data.</cell>
+			</row>
+			<row>
+				<cell>Max slice</cell>
+				<cell>Largest number of items displayed in list data.</cell>
+			</row>
+			<row>
+				<cell>Main splitter position</cell>
+				<cell>Position of main horizontal splitter bar.</cell>
+			</row>
+			<row>
+				<cell>Proportion</cell>
+				<cell>Proportion of left side of debug tool</cell>
+			</row>
+			<row>
+				<cell>Default maximum stack depth</cell>
+				<cell>Default size of maximum stack depth.</cell>
+			</row>
+			<row>
+				<cell>Default displayed string size</cell>
+				<cell>Default size of string (in characters) displayed in debug mode.</cell>
+			</row>
+			<row>
+				<cell>Left debug layout</cell>
+				<cell>Items/tools shown in navigation layout when in debug mode.</cell>
+			</row>
+			<row>
+				<cell>Right debug layout</cell>
+				<cell>Items/tools shown on editor side when in debug mode.</cell>
+			</row>
+			<row>
+				<cell>Dotnet debugger</cell>
+				<cell>Which .NET debugger to launch.</cell>
+			</row>
+		</table>
+	</paragraph></document>

@@ -1,0 +1,24 @@
+<document title="Tools" output="studio">
+	<meta_data/>
+	<paragraph>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>00_introduction.xml</url>
+					<label>Introduction</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>20_context_tools.xml</url>
+					<label>Context tools</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>30_diagram_tool.xml</url>
+					<label>Diagram Tool</label>
+				</link>
+			</item>
+		</list>
+	</paragraph></document>

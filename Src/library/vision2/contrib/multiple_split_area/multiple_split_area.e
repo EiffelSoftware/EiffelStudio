@@ -433,8 +433,7 @@ feature -- Status setting
 			added_externally: external_representation.has (widget)
 			not_in_linear_rep: not linear_representation.has (widget)
 		end
-		
-		
+
 	remove (a_widget: EV_WIDGET) is
 			-- Remove `a_widget' from `Current'
 		require
@@ -447,9 +446,9 @@ feature -- Status setting
 			locked_in_here := (create {EV_ENVIRONMENT}).application.locked_window = Void
 			if locked_in_here and parent_window (Current) /= Void then
 				parent_window (Current).lock_update	
-			end		
+			end
 			store_positions
-			
+
 				-- Now update the stored positions so that on restoration, the removed
 				-- widget position is added to the resizeable widget. This ensures that the size of
 				-- only the adjustable widget is affected
@@ -462,11 +461,14 @@ feature -- Status setting
 				stored_splitter_widths.remove
 			end
 
+			if is_item_maximized (a_widget) then
+				restore_item (a_widget)
+			end
 			remove_implementation (a_widget)
 			rebuild
 			if not is_blocked then
-				restore_stored_positions	
-			end		
+				restore_stored_positions
+			end
 			if locked_in_here and parent_window (Current) /= Void then
 				parent_window (Current).unlock_update
 			end

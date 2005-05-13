@@ -66,15 +66,12 @@ feature {PREFERENCES} -- Resource Management
 		end		
 		
 	get_resource_value (a_name: STRING): STRING is
-			-- Get resource with name of `a_name' string value .		
+			-- Get resource with name of `a_name' string value direct from underlying datastore.		
 		require
 			name_not_void: a_name /= Void
 			name_not_empty: not a_name.is_empty
-			has_resource: has_resource (a_name)
 		do
 			Result := implementation.get_resource_value (a_name)
-		ensure
-			has_result: Result /= Void
 		end
 
 	save_resource (a_resource: PREFERENCE) is

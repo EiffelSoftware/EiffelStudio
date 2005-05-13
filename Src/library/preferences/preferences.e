@@ -186,7 +186,31 @@ feature -- Resource
 			Result := resources.item (a_name)
 		ensure
 			result_not_void: Result /= Void
-		end		
+		end
+
+	get_resource_value_direct (a_name: STRING): STRING is
+			-- Fetch the resource string value with `a_name' directly from the underlying datastore.
+			-- Ignore values currently in `session_values' and `resources'.  Use this if the 
+			-- resource value has been changed externally and you need the updated value.
+			-- If you are going to do this you must prepend the resource type name to the front of the resource
+			-- since that is how it will have been saved.  Return Void if no resource found.
+		require
+			name_not_void: a_name /= Void
+			name_not_empty: not a_name.is_empty
+		do
+			Result := resource_structure.get_resource_value (a_name)
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	set_resource (a_name: STRING; a_resource: PREFERENCE) is
+			-- Override current value of resource with `a_name' in `resources'?
+		require
+			name_not_void: a_name /= Void
+			has_resource (a_name)
+		do
+			resources.replace (a_resource, a_name)
+		end
 
 	has_resource (a_name: STRING):BOOLEAN is
 			-- Does Current contain a resource with `a_name'?
@@ -194,7 +218,7 @@ feature -- Resource
 			name_not_void: a_name /= Void
 		do
 			Result := resources.has (a_name)
-		end			
+		end
 
 	save_resource (a_resource: PREFERENCE) is
 			-- Save `a_resource' to underlying data store.

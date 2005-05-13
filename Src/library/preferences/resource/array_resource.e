@@ -73,31 +73,6 @@ feature -- Status Setting
 			index_set: selected_index = a_index
 		end
 
-feature -- Query
-
-	is_choice: BOOLEAN
-			-- Is this preference a single choice or the full list?
-
-	valid_value_string (a_string: STRING): BOOLEAN is
-			-- Is `a_string' valid for this resource type to convert into a value?		
-		do
-			Result := a_string /= Void
-		end		
-
-feature {PREFERENCES} -- Access
-
-	generating_resource_type: STRING is
-			-- The generating type of the resource for graphical representation.
-		do
-			if is_choice then
-				Result := "COMBO"
-			else
-				Result := "TEXT"
-			end
-		end
-
-feature {STRING_PREFERENCE_WIDGET, CHOICE_PREFERENCE_WIDGET} -- Implementation
-
 	set_value_from_string (a_value: STRING) is
 			-- Parse the string value `a_value' and set `value'.
 		local
@@ -130,5 +105,28 @@ feature {STRING_PREFERENCE_WIDGET, CHOICE_PREFERENCE_WIDGET} -- Implementation
 			end
 			set_value (value)
 		end	
-		
+
+feature -- Query
+
+	is_choice: BOOLEAN
+			-- Is this preference a single choice or the full list?
+
+	valid_value_string (a_string: STRING): BOOLEAN is
+			-- Is `a_string' valid for this resource type to convert into a value?		
+		do
+			Result := a_string /= Void
+		end		
+
+feature {PREFERENCES} -- Access
+
+	generating_resource_type: STRING is
+			-- The generating type of the resource for graphical representation.
+		do
+			if is_choice then
+				Result := "COMBO"
+			else
+				Result := "TEXT"
+			end
+		end
+	
 end -- class ARRAY_PREFERENCE

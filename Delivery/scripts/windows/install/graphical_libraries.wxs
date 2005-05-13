@@ -1720,7 +1720,7 @@
 							</Directory>
 							<Directory Id="properties39" Name="PROPER~3" LongName="properties">
 								<Component Id="ev_pick_and_dropable.e" Guid="D06D2119-E048-4766-B71E-8417DB9BD138">
-									<File Id="ev_tab_controlable_e" Name="EV_TAB~1.E" LongName="ev_tab_controlable.e" />
+									<File Id="ev_tab_controllable_e" Name="EV_TAB~1.E" LongName="ev_tab_controllable.e" />
 									<File Id="ev_pick_and_dropable.e" Name="EV_PIC~1.E" LongName="ev_pick_and_dropable.e" />
 									<File Id="ev_help_contextable.e" Name="EV_HEL~1.E" LongName="ev_help_contextable.e" />
 									<File Id="ev_textable.e" Name="EV_TEX~B.E" LongName="ev_textable.e" />
@@ -2130,7 +2130,7 @@
 								</Directory>
 								<Directory Id="properties35" Name="PROPER~2" LongName="properties">
 									<Component Id="ev_fontable_i.e" Guid="4D2BF0F2-EBDC-4324-84AF-EA80C7AD5B5E">
-										<File Id="ev_tab_controlable_i_e" Name="EV_TAB~1.E" LongName="ev_tab_controlable_i.e" />
+										<File Id="ev_tab_controllable_i_e" Name="EV_TAB~1.E" LongName="ev_tab_controllable_i.e" />
 										<File Id="ev_fontable_i.e" Name="EV_FON~2.E" LongName="ev_fontable_i.e" />
 										<File Id="ev_drawable_i.e" Name="EV_DRA~2.E" LongName="ev_drawable_i.e" />
 										<File Id="ev_textable_i.e" Name="EV_TEX~8.E" LongName="ev_textable_i.e" />

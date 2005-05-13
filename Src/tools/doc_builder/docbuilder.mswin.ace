@@ -85,7 +85,7 @@ cluster
 			"constants.e"; "constants_imp.e"; 
 		end
 
-	all gobo:		"D:\Src\library\gobonew\library"
+	all gobo:		"$EIFFEL_SRC\library\gobo\library"
 		exclude
 			"hact"; "se"; "ve"; "base"; "CVS"; "other"; 
 		default

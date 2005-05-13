@@ -7,7 +7,7 @@ indexing
 	revision: "$Revision$"
 	
 deferred class 
-	EV_TAB_CONTROLABLE
+	EV_TAB_CONTROLLABLE
 
 inherit
 	EV_ANY
@@ -77,10 +77,10 @@ feature -- Status setting
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
 	
-	implementation: EV_TAB_CONTROLABLE_I
+	implementation: EV_TAB_CONTROLLABLE_I
 			-- Responsible for interaction with native graphics toolkit.
 
-end -- class EV_TAB_CONTROLABLE
+end -- class EV_TAB_CONTROLLABLE
 
 --|----------------------------------------------------------------
 --| EiffelVision2: library of reusable components for ISE Eiffel.

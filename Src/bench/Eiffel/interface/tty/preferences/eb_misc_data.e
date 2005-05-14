@@ -69,12 +69,7 @@ feature {EB_SHARED_PREFERENCES} -- Value
 		do
 			Result := text_mode_is_windows_preference.value
 		end
-		
-	shell_editor: STRING is
-		do
-			Result := shell_editor_preference.value
-		end
-
+	
 	general_shell_command: STRING is
 		do
 			Result := general_shell_command_preference.value
@@ -202,7 +197,6 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 
 	acrobat_reader_preference: STRING_PREFERENCE
 	text_mode_is_windows_preference: BOOLEAN_PREFERENCE
-	shell_editor_preference: STRING_PREFERENCE
 	internet_browser_preference: STRING_PREFERENCE
 	general_shell_command_preference: STRING_PREFERENCE
 	browsing_facilities_preference: BOOLEAN_PREFERENCE	
@@ -228,7 +222,6 @@ feature {NONE} -- Preference Strings
 	external_command_9_string: STRING is "general.external_command_9"
 	acrobat_reader_string: STRING is "general.acrobat_reader"
 	text_mode_is_windows_string: STRING is "editor.eiffel.text_mode_is_windows"
-	shell_editor_string: STRING is "editor.eiffel.editor"
 	internet_browser_string: STRING is "general.internet_browser"
 	general_shell_command_string: STRING is "general.shell_command"
 	browsing_facilities_string: STRING is "general.highlight clickable areas"
@@ -271,9 +264,7 @@ feature {NONE} -- Implementation
 			external_commands.put (external_command_9_preference, 9)
 
 			acrobat_reader_preference := l_manager.new_string_resource_value (l_manager, acrobat_reader_string, "acrobat")
-			text_mode_is_windows_preference := l_manager.new_boolean_resource_value (l_manager, text_mode_is_windows_string, (create {PLATFORM_CONSTANTS}).is_windows)						
-			shell_editor_preference := l_manager.new_string_resource_value (l_manager, shell_editor_string, "vi")
-			internet_browser_preference := l_manager.new_string_resource_value (l_manager, internet_browser_string, "netscape $url")
+			text_mode_is_windows_preference := l_manager.new_boolean_resource_value (l_manager, text_mode_is_windows_string, (create {PLATFORM_CONSTANTS}).is_windows)									internet_browser_preference := l_manager.new_string_resource_value (l_manager, internet_browser_string, "netscape $url")
 			general_shell_command_preference := l_manager.new_string_resource_value (l_manager, general_shell_command_string, "xterm -geometry 80x40 -e vi +$line $target")			
 			browsing_facilities_preference:= l_manager.new_boolean_resource_value (l_manager, browsing_facilities_string, True)						
 			editor_left_side_preference := l_manager.new_boolean_resource_value (l_manager, editor_left_side_string, False)
@@ -302,7 +293,6 @@ invariant
 	external_command_9_preference_not_void: external_command_9_preference /= Void
 	acrobat_reader_preference_not_void: acrobat_reader_preference /= Void
 	text_mode_is_windows_preference_not_void: text_mode_is_windows_preference /= Void	
-	shell_editor_preference_not_void: shell_editor_preference /= Void
 	general_shell_command_preference_not_void: general_shell_command_preference /= Void
 	browsing_facilities_preference_not_void: browsing_facilities_preference /= Void		
 	dyn_lib_window_width_preference_not_void: dyn_lib_window_width_preference /= Void

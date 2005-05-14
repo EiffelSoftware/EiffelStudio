@@ -166,6 +166,7 @@ feature -- Access
 									-- Invalid bracket alias
 								create vfav2.make (feature_name)
 								error_handler.insert_error (vfav2)
+								error_handler.checksum
 							end
 						elseif is_query and then (
 								(argument_count = 0 and then feature_name.is_valid_unary_operator (operator)) or else
@@ -181,6 +182,7 @@ feature -- Access
 								-- Invalid operator alias
 							create vfav1.make (feature_name)
 							error_handler.insert_error (vfav1)
+							error_handler.checksum
 						end
 					end
 					f.forth

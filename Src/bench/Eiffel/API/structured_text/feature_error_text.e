@@ -24,8 +24,11 @@ feature -- Initialization
     make (f: like e_feature; a_line: like line; t: like image) is
             -- Initialize Current with feat `f', position `p'
             -- and image `t'.
+		require
+			f_not_void: f /= Void
+			t_not_void: t /= Void
         do
-			feat_make (f, t);
+			feat_make (f, t)
 			line := a_line
         ensure
             set: image = t and then

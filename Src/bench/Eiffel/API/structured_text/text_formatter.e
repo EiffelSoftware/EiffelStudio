@@ -141,6 +141,9 @@ feature {TEXT_ITEM} -- Implementation
 
 	process_feature_error (text: FEATURE_ERROR_TEXT) is
 			-- Process error feature text.
+		require
+			text_not_void: text /= Void
+			feature_not_void: text.e_feature /= Void
 		do
 			process_feature_text (text)
 		end

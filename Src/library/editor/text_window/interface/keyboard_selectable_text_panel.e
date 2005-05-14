@@ -688,7 +688,7 @@ feature {NONE} -- Cursor Management
 				if blink_on then
 					media.set_foreground_color (editor_preferences.plain_black)
 				else
-					media.set_foreground_color (editor_preferences.plain_white)
+					media.set_foreground_color (editor_preferences.normal_background_color)
 				end
 			else
 				media.set_foreground_color (editor_preferences.plain_white)
@@ -923,8 +923,6 @@ feature {NONE} -- Implementation
 						 (local_selection_start.y_in_lines /= local_selection_end.y_in_lines)
 					and then 
 		 			   (selected_line or else (xline = local_selection_start.y_in_lines)) 
-		 			and then
-		 			   has_focus
 					then 
 		 				a_line.eol_token.display_end_token_selected (0, l_buffered_line,
 							buffered_line.width, Current)

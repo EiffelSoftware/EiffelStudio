@@ -14,7 +14,7 @@ inherit
 	
 	SHARED_TEXT_ITEMS
 
-	EB_FLAT_SHORT_DATA
+	EB_SHARED_PREFERENCES
 		export
 			{NONE} all
 		end
@@ -125,7 +125,7 @@ feature -- Execution
 				doc.set_all_universe
 				doc.set_cluster_formats (True, False)
 				doc.set_system_formats (True, True, True)
-				doc.set_excluded_indexing_items (excluded_indexing_items.linear_representation)
+				doc.set_excluded_indexing_items (preferences.flat_short_data.excluded_indexing_items.linear_representation)
 				doc.generate (generate_window)
 			end
 		rescue

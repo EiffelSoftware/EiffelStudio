@@ -2368,6 +2368,8 @@ feature -- Stone process
 			l_format_context: FORMAT_CONTEXT
 			l_indexes: EIFFEL_LIST [INDEX_AS]
 			conv_errst: ERROR_STONE
+			cl_syntax_stone: CL_SYNTAX_STONE
+			error_line: INTEGER
 			class_file: RAW_FILE
 			class_text_exists: BOOLEAN
 			same_class: BOOLEAN
@@ -2619,17 +2621,27 @@ feature -- Stone process
 	--| END FIXME
 					end
 				end
-				if feature_stone /= Void and class_text_exists and not feature_stone_already_processed and not (same_class and context_tool.sending_stone) then
-					conv_ferrst ?= feature_stone
-					if conv_ferrst /= Void then
-							-- Scroll to the line of the error.
-						editor_tool.text_area.display_line_when_ready (conv_ferrst.line_number, True)
-					else
-							-- if a feature_stone has been dropped
-							-- scroll to the corresponding feature in the basic text format
-						if not during_synchronization then
-							scroll_to_feature (feature_stone.e_feature, new_class_stone.class_i)
+				if class_text_exists then
+					if feature_stone /= Void and not feature_stone_already_processed and not (same_class and context_tool.sending_stone) then
+						conv_ferrst ?= feature_stone
+						if conv_ferrst /= Void then
+							error_line := conv_ferrst.line_number
+						else
+								-- if a feature_stone has been dropped
+								-- scroll to the corresponding feature in the basic text format
+							if not during_synchronization then
+								scroll_to_feature (feature_stone.e_feature, new_class_stone.class_i)
+							end
 						end
+					else
+						cl_syntax_stone ?= a_stone
+						if cl_syntax_stone /= Void then
+							error_line := cl_syntax_stone.line
+						end
+					end
+					if error_line > 0 then
+							-- Scroll to the line of the error.
+						editor_tool.text_area.display_line_when_ready (error_line, True)
 					end
 				end
 					-- Update the title of the window

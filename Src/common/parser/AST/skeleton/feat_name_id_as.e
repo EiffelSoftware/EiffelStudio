@@ -48,7 +48,7 @@ feature -- Access
 				-- Void here
 		end
 
-	alias_name: STRING is
+	alias_name: STRING_AS is
 			-- Operator name associated with the feature (if any)
 		do
 				-- Void here

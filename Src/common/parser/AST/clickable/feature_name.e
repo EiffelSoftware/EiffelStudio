@@ -147,7 +147,7 @@ feature -- Status report
 			consistent_result: (Result /= Void) = (alias_name /= Void)
 		end
 
-	alias_name: STRING is
+	alias_name: STRING_AS is
 			-- Operator name associated with the feature (if any)
 		deferred
 		end
@@ -160,7 +160,7 @@ feature -- Status setting
 			has_alias: alias_name /= Void
 			not_is_bracket: not is_bracket
 			not_is_prefix: not is_prefix
-			is_valid_binary: is_valid_binary_operator (alias_name)
+			is_valid_binary: is_valid_binary_operator (alias_name.value)
 		do
 		ensure
 			is_binary: is_binary
@@ -172,7 +172,7 @@ feature -- Status setting
 			has_alias: alias_name /= Void
 			not_is_bracket: not is_bracket
 			not_is_infix: not is_infix
-			is_valid_unary: is_valid_unary_operator (alias_name)
+			is_valid_unary: is_valid_unary_operator (alias_name.value)
 		do
 		ensure
 			is_unary: is_unary
@@ -201,9 +201,9 @@ feature {NONE} -- Implementation: helper functions
 			alias_name_not_void: alias_name /= Void
 		do
 			if is_infix then
-				Result := infix_str + alias_name + quote_str
+				Result := infix_str + alias_name.value + quote_str
 			else
-				Result := prefix_str + alias_name + quote_str
+				Result := prefix_str + alias_name.value + quote_str
 			end
 		ensure
 			result_not_void: Result /= Void

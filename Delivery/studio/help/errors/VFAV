@@ -1,0 +1,21 @@
+VFAV, section 8.5.25 
+
+     Alias validity
+
+     An Alias clause is alias-valid for a feature f of a
+     class C if and only if it satisfies the following
+     conditions:
+
+        1 If it lists an Operator op: f is a query; no
+          other query of C has an Operator alias using the
+          same operator and the same number of arguments;
+          and either: op is a Unary and f has no argument,
+          or op is a Binary and f has one argument.
+
+        2 If it lists a Bracket alias: f is a query with at
+          least one argument, and no other feature of C has
+          a Bracket alias.
+
+        3 If it lists one of the "semistrict" operators
+          "and then", "or else" and "implies": C is the
+          Kernel Library class BOOLEAN.

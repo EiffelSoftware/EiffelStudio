@@ -134,7 +134,8 @@ feature -- Access
 			feature_name: FEATURE_NAME
 			is_query: BOOLEAN
 			argument_count: INTEGER
-			alias_name: STRING
+			alias_name: STRING_AS
+			operator: STRING
 			vfav1: VFAV1_SYNTAX
 			vfav2: VFAV2_SYNTAX
 		do
@@ -154,7 +155,10 @@ feature -- Access
 				loop
 					feature_name := f.item
 					alias_name := feature_name.alias_name
-					if alias_name /= Void then
+					if feature_name.is_prefix or else feature_name.is_infix then
+							-- Infix and prefix features will be checked for VFFD(5,6) later
+					elseif alias_name /= Void then
+						operator := alias_name.value
 						if feature_name.is_bracket then
 							if is_query and then argument_count >= 1 then
 									-- Bracket is a valid alias for this feature
@@ -164,8 +168,8 @@ feature -- Access
 								error_handler.insert_error (vfav2)
 							end
 						elseif is_query and then (
-								(argument_count = 0 and then feature_name.is_valid_unary_operator (alias_name)) or else
-								(argument_count = 1 and then feature_name.is_valid_binary_operator (alias_name))
+								(argument_count = 0 and then feature_name.is_valid_unary_operator (operator)) or else
+								(argument_count = 1 and then feature_name.is_valid_binary_operator (operator))
 							)
 						then
 							if argument_count = 0 then

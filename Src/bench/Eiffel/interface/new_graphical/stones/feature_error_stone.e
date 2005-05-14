@@ -22,6 +22,8 @@ feature {NONE} -- Initialization
 
 	make (a_feature: E_FEATURE; a_line: INTEGER) is
 			-- Initialize stone with `a_feature' and error position `a_pos.
+		require
+			a_feature_not_void: a_feature /= Void
 		do
 			feat_make (a_feature)
 			line_number := a_line

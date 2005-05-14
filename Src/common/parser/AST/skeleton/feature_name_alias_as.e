@@ -3,7 +3,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+class 
 	FEATURE_NAME_ALIAS_AS
 
 inherit
@@ -12,6 +12,7 @@ inherit
 			initialize as initialize_id
 		redefine
 			alias_name,
+			end_location,
 			internal_alias_name,
 			is_binary,
 			is_bracket,
@@ -22,7 +23,7 @@ inherit
 			set_is_unary
 		end
 
-create
+create 
 	initialize
 
 feature {NONE} -- Creation
@@ -35,11 +36,11 @@ feature {NONE} -- Creation
 			alias_id_not_empty: not alias_id.value.is_empty
 		do
 			initialize_id (feature_id, frozen_status)
-			alias_name := alias_id.value
+			alias_name := alias_id
 			has_convert_mark := convert_status
 		ensure
 			feature_name_set: feature_name = feature_id
-			alias_name_set: alias_name = alias_id.value
+			alias_name_set: alias_name = alias_id
 			is_frozen_set: is_frozen = frozen_status
 			has_convert_mark_set: has_convert_mark = convert_status
 		end
@@ -54,7 +55,7 @@ feature -- Visitor
 
 feature -- Access
 
-	alias_name: STRING
+	alias_name: STRING_AS
 			-- Operator associated with the feature
 
 	internal_alias_name: STRING is
@@ -66,13 +67,13 @@ feature -- Access
 
 	has_convert_mark: BOOLEAN
 			-- Is operator marked with "convert"?
-
+	
 feature -- Status report
 
 	is_bracket: BOOLEAN is
 			-- Is feature alias (if any) bracket?
 		do
-			Result := alias_name.item (1) = '['
+			Result := alias_name.value.item (1) = '['
 		end
 
 	is_binary: BOOLEAN is
@@ -86,7 +87,7 @@ feature -- Status report
 		do
 			Result := not is_bracket and not internal_is_binary
 		end
-
+	
 feature -- Status setting
 
 	set_is_binary is
@@ -100,24 +101,31 @@ feature -- Status setting
 		do
 			internal_is_binary := False
 		end
+	
+feature -- Location
+
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			Result := alias_name
+		end
 
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is
 			-- Is `other' equivalent to the current object?
 		do
-			Result := Precursor (other) and then other.has_convert_mark = has_convert_mark and then
-				other.alias_name /= Void and then other.alias_name.is_equal (alias_name) and then
-				other.is_bracket = is_bracket and then other.is_binary = is_binary
+			Result := Precursor (other) and then other.has_convert_mark = has_convert_mark and then other.alias_name /= Void and then other.alias_name.is_equal (alias_name) and then other.is_bracket = is_bracket and then other.is_binary = is_binary
 		end
-
+	
 feature {NONE} -- Status
 
 	internal_is_binary: BOOLEAN
 			-- Is operator binary (unless it is bracket)?
-
+	
 invariant
-	alias_name_not_void: alias_name /= Void
-	alias_name_not_empty: not alias_name.is_empty
 
-end
+	alias_name_not_void: alias_name /= Void
+	alias_name_not_empty: not alias_name.value.is_empty
+
+end -- class FEATURE_NAME_ALIAS_AS

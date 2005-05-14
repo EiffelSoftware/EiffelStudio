@@ -8,13 +8,13 @@ class INFIX_PREFIX_AS
 inherit
 	FEATURE_NAME
 		rename
-			alias_name as visual_name,
 			internal_alias_name as internal_name,
 			is_binary as is_infix,
 			is_unary as is_prefix
 		redefine
-			is_infix, is_prefix, visual_name,
-			is_equivalent
+			alias_name,
+			is_equivalent,
+			is_infix, is_prefix, visual_name
 		end
 
 create
@@ -30,9 +30,9 @@ feature {NONE} -- Initialization
 		do
 			is_infix := inf
 			is_frozen := b
-			visual_name := op.value
+			alias_name := op
 			create internal_name.initialize (get_internal_alias_name)
-			internal_name.set_position (op.line, op.column, op.position, internal_name.count)
+			internal_name.set_position (op.line, op.column, op.position, op.location_count)
 		ensure
 			is_frozen_set: is_frozen = b
 		end
@@ -68,8 +68,14 @@ feature -- Comparison
 
 feature -- Access
 
-	visual_name: STRING
+	alias_name: STRING_AS
+			-- Operator name associated with the feature
+
+	visual_name: STRING is
 			-- Visual name of fix operator
+		do
+			Result := alias_name.value
+		end
 
 	internal_name: ID_AS
 			-- Internal name used by the compiler
@@ -96,4 +102,7 @@ feature -- Conveniences
 			end
 		end
 
-end -- class INFIX_PREFIX_AS
+invariant
+	alias_name_not_void: alias_name /= Void
+
+end

@@ -452,7 +452,7 @@ feature {ARGUMENTS_PARSER} -- Retrieval
 			create preferences.make (Current)
 			preferences.read
 			initialize
-			if preferences.is_valid then				
+			if shared_constants.application_constants.is_gui_mode and then preferences.is_valid then
 					-- Write back in case there were changes during loading
 				preferences.write	
 			end

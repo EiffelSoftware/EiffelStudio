@@ -13,7 +13,8 @@ inherit
 		redefine			
 			on_start_tag,
 			on_end_tag,
-			on_content
+			on_content,
+			on_start_tag_finish
 		end
 
 	CODE_XML_READER_CONSTANTS
@@ -39,7 +40,12 @@ feature -- Tag
 		do
 			element_stack.extend (a_local_part)					
 		end
-		
+	
+	on_start_tag_finish is
+		do
+			next.on_start_tag_finish
+		end
+
 	on_end_tag (a_namespace, a_prefix, a_local_part: STRING) is
 			-- End tag
 		do							

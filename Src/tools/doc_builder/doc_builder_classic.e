@@ -24,12 +24,15 @@ feature {NONE} -- Initialization
 			-- Initialize and launch application
 		local
 			l_args: ARGUMENTS_PARSER
+			l_app: EV_APPLICATION
 		do				
+			create l_app
 			(create {APPLICATION_CONSTANTS}).set_mode ("classic")
 			create l_args.make
 			if l_args.is_gui then
 				make_gui
-			elseif l_args.args_ok then				
+			elseif l_args.args_ok then
+				setup_preferences
 				l_args.launch_command_line
 			else
 				io.putstring (l_args.argument_error)

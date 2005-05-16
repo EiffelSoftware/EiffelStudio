@@ -99,6 +99,8 @@ feature -- Output
 			if culture /= Void then
 				Result.append (", Culture=")
 				Result.append (culture)
+			else
+				Result.append (", Culture=neutral")
 			end
 			if public_key_token /= Void then
 				Result.append (", PublicKeyToken=")

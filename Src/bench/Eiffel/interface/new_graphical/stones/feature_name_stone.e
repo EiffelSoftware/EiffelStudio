@@ -27,7 +27,9 @@ feature {NONE} -- Initialization
 		do
 			e_class := ec
 			feature_name := f_name
-			e_feature := ec.feature_with_name (f_name)
+			if ec.has_feature_table then
+				e_feature := ec.feature_with_name (f_name)
+			end
 			internal_start_position := -1
 			internal_end_position := -1
 		end

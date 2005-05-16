@@ -2584,9 +2584,9 @@ feature {NONE} -- Drawing implementation
 			header.item_resize_end_actions.extend (agent header_item_resize_ended)
 
 			header_viewport.extend (header)
-			header_viewport.set_minimum_height (default_header_height.max (header.minimum_height))
+			header_viewport.set_minimum_height (header.height)
 			header.set_minimum_width (maximum_header_width)
-			header_viewport.set_item_size (maximum_header_width, default_header_height.max (header.minimum_height))
+			header_viewport.set_item_size (maximum_header_width, header.height)
 			viewport.extend (drawable)
 			extend (horizontal_box)
 			viewport.resize_actions.extend (agent viewport_resized)

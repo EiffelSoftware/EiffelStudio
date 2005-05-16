@@ -193,6 +193,9 @@ feature -- Access
 			-- Color displayed for foreground features of `Current' except where there are items contained that
 			-- have a non-`Void' `foreground_color'. If `Void', `foreground_color' of `parent' is displayed.
 
+	pixmap: EV_PIXMAP
+		-- Pixmap display on column header to left of `title'.
+
 feature -- Status setting
 
 	hide is
@@ -410,6 +413,25 @@ feature -- Element change
 			end
 		ensure
 			to_implement_assertion ("EV_GRID_COLUMN_I.clear - All items positions return `Void'.")
+		end
+
+	set_pixmap (a_pixmap: EV_PIXMAP) is
+			-- Display image of `a_pixmap' on `Current' to left of `title'.
+		require
+			pixmap_not_void: a_pixmap /= Void
+		do
+			pixmap := a_pixmap
+			header_item.set_pixmap (pixmap)
+		ensure
+			pixmap_set: pixmap = a_pixmap
+		end
+
+	remove_pixmap is
+			-- Remove image displayed on `Current'.
+		do
+			pixmap := Void
+		ensure
+			pixmap_removed: pixmap = Void
 		end
 
 feature {EV_GRID_I} -- Implementation

@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 
 	initialize is
 		do
-			is_initialized := True
+			set_is_initialized (True)
 		end
 
 feature {EV_ANY_I} -- Access

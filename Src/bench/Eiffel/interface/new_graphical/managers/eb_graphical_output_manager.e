@@ -209,8 +209,9 @@ feature -- Basic Operations / Compiler messages
 			-- Display warnings messages from `handler'.
 		local
 			st: STRUCTURED_TEXT
+			retried_count: INTEGER
 		do
-			if not retried_display_compiler_messages then
+			if retried_count = 0 then
 				create st.make
 				display_error_list (st, handler.warning_list)
 				if handler.error_list.is_empty then
@@ -218,13 +219,22 @@ feature -- Basic Operations / Compiler messages
 						-- put a separation before the next message
 					display_separation_line (st)
 				end
+				process_text (st)
 			else
-				retried_display_compiler_messages := False
-				display_error_error (st)
+				if retried_count = 1 then
+						-- Most likely a failure in `display_error_list'.
+					display_error_error (st)
+					process_text (st)
+				else
+						-- Here most likely a failure in `process_text', so
+						-- we clear its content and only display the error message.
+					create st.make
+					display_error_error (st)
+					clear_and_process_text (st)
+				end
 			end
-			process_text (st)
 		rescue
-			retried_display_compiler_messages := True
+			retried_count := retried_count + 1
 			retry
 		end
 
@@ -232,20 +242,30 @@ feature -- Basic Operations / Compiler messages
 			-- Display error messages from `handler'.
 		local
 			st: STRUCTURED_TEXT
+			retried_count: INTEGER
 		do
-			if not retried_display_compiler_messages then
+			if retried_count = 0 then
 				create st.make
 				display_error_list (st, handler.error_list)
 				display_separation_line (st)
 				display_additional_info (st)
+				process_text (st)
 			else
-				retried_display_compiler_messages := False
-				display_error_error (st)
+				if retried_count = 1 then
+						-- Most likely a failure in `display_error_list'.
+					display_error_error (st)
+					process_text (st)
+				else
+						-- Here most likely a failure in `process_text', so
+						-- we clear its content and only display the error message.
+					create st.make
+					display_error_error (st)
+					clear_and_process_text (st)
+				end
 			end
-			process_text (st)
 			scroll_to_end
 		rescue
-			retried_display_compiler_messages := True
+			retried_count := retried_count + 1
 			retry
 		end
 
@@ -265,10 +285,6 @@ feature -- Element change
 		end
 
 feature {NONE} -- Implementation
-
-	retried_display_compiler_messages: BOOLEAN
-			-- Have we already hit a rescue clause while displaying
-			-- errors or warnings?
 
 	display_error_error (st: STRUCTURED_TEXT) is
 			-- Display a message telling that an error occurred while displaying

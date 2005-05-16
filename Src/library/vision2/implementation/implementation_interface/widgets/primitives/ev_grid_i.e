@@ -658,6 +658,7 @@ feature -- Status setting
 					-- there are no rows contained.
 				set_vertical_computation_required (1)
 			end
+			redraw_client_area
 		ensure
 			tree_enabled: is_tree_enabled
 		end	

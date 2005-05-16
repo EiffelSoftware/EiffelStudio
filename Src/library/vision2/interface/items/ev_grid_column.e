@@ -126,6 +126,14 @@ feature -- Access
 			Result := implementation.foreground_color
 		end
 
+	pixmap: EV_PIXMAP is
+			-- Pixmap display on header of `parent' to left of `title'.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.pixmap
+		end
+
 feature -- Status setting
 
 	hide is
@@ -261,6 +269,27 @@ feature -- Element change
 			implementation.clear
 		ensure
 			to_implement_assertion ("EV_GRID_COLUMN.clear - All items positions return `Void'.")
+		end
+
+	set_pixmap (a_pixmap: EV_PIXMAP) is
+			-- Display image of `a_pixmap' on `Current' to left of `title'.
+		require
+			not_destroyed: not is_destroyed
+			pixmap_not_void: a_pixmap /= Void
+		do
+			Implementation.set_pixmap (a_pixmap)
+		ensure
+			pixmap_set: pixmap = a_pixmap
+		end
+
+	remove_pixmap is
+			-- Remove image displayed on `Current'.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.remove_pixmap
+		ensure
+			pixmap_removed: pixmap = Void
 		end
 		
 feature {EV_ANY, EV_ANY_I} -- Implementation

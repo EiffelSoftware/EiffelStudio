@@ -211,7 +211,6 @@ feature -- Access
 				sel_rows.item.disable_select
 				sel_rows.forth
 			end				
-
 			sel_items := selected_items
 			from
 				sel_items.start
@@ -333,7 +332,9 @@ feature -- Access
 					if total_row_height < viewable_height then
 						Result := viewable_height
 					else
-						Result := (total_row_height + viewable_height - final_row_height)
+							-- We perform the `max' for the cass where the grid is not yet shown, has 
+							-- one or more rows and a height of 0.
+						Result := (total_row_height + viewable_height - final_row_height).max (total_row_height)
 					end
 				else
 					Result := total_row_height
@@ -1943,10 +1944,6 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			if not is_tree_enabled then
 				internal_index := an_index
 			else
-				fixme ("[
-					We always recompute from the first item for now as otherwise we must ensure that we find the top level
-					tree node that is the first expanded if the row is current hidden and start from there
-				]")
 				from
 					l_parent_row_i := row_internal (an_index)
 				until
@@ -3369,7 +3366,7 @@ feature {NONE} -- Event handling
 				a_sel_row := prev_sel_item.row
 				inspect
 					a_key.code
-				when {EV_KEY_CONSTANTS}.Key_down then
+				when {EV_KEY_CONSTANTS}.Key_down then					
 					a_sel_item := find_next_item_in_column (prev_sel_item.column, prev_sel_item.row.index, True, is_row_selection_enabled or else ((a_sel_row.subrow_count > 0 or else a_sel_row.parent_row /= Void) and then a_sel_row.index_of_first_item = prev_sel_item.column.index))
 				when {EV_KEY_CONSTANTS}.Key_up then
 					a_sel_item := find_next_item_in_column (prev_sel_item.column, prev_sel_item.row.index, False, is_row_selection_enabled or else ((a_sel_row.subrow_count > 0 or else a_sel_row.parent_row /= Void) and then a_sel_row.index_of_first_item = prev_sel_item.column.index))
@@ -3407,7 +3404,6 @@ feature {NONE} -- Event handling
 				else
 					-- Do nothing
 				end
-
 				if a_sel_item /= Void then
 					handle_newly_selected_item (a_sel_item)
 				end
@@ -3459,7 +3455,7 @@ feature {NONE} -- Event handling
 					remove_selection
 				end
 			end
-			
+		
 			if a_item /= Void then
 				a_item.enable_select
 				if is_row_selection_enabled then

@@ -129,7 +129,7 @@ feature {NONE} -- Implementation
 				{EV_GTK_EXTERNALS}.set_gdk_color_struct_green (color_struct, a_color.green_16_bit)
 				{EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (color_struct, a_color.blue_16_bit)
 				a_success := {EV_GTK_EXTERNALS}.gdk_colormap_alloc_color ({EV_GTK_EXTERNALS}.gdk_rgb_get_cmap, color_struct, False, True)
-				{EV_GTK_EXTERNALS}.gdk_gc_set_background (gc, color_struct)
+				{EV_GTK_EXTERNALS}.gdk_gc_set_rgb_bg_color (gc, color_struct)	
 				{EV_GTK_EXTERNALS}.gdk_window_set_background (drawable, color_struct)
 			end
 		end
@@ -138,7 +138,9 @@ feature {NONE} -- Implementation
 			-- Erase rectangle specified with `background_color'.
 		do
 			if drawable /= default_pointer then
-				{EV_GTK_EXTERNALS}.gdk_window_clear_area (drawable, x, y, a_width, a_height)
+				--| FIXME IEK Find a way so that gtk can do background clearing implicitly without having to repaint the background each time.
+				--{EV_GTK_EXTERNALS}.gdk_window_clear_area (drawable, x, y, a_width, a_height)
+				Precursor {EV_DRAWABLE_IMP} (x, y , a_width, a_height)
 			end
 		end
 

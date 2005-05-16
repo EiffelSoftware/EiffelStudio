@@ -120,7 +120,10 @@ feature -- Basic operations
 			dynamic_content_function: FUNCTION [ANY, TUPLE [INTEGER, INTEGER], EV_GRID_ITEM]
 			internal_client_height: INTEGER
 			skipped_rows: INTEGER
-			current_height: INTEGER
+			current_height: INTEGER			
+			l_row_count: INTEGER
+			start_pos: INTEGER
+			found: BOOLEAN
 		do
 			fixme ("Implement the dynamic mode for items when in per item scrolling")
 			dynamic_content_function := grid.dynamic_content_function
@@ -147,7 +150,7 @@ feature -- Basic operations
 					last_row_index := (((invalid_y_end) // grid.row_height) + 1).min (grid.row_count)
 					
 					if first_row_index <= grid.row_count then
-						
+						l_row_count := grid.row_count
 						from
 							i := first_row_index
 						until
@@ -162,8 +165,81 @@ feature -- Basic operations
 					end
 				else
 					row_offsets := grid.row_offsets
+
+						-- Now iterate through `row_offsets', moving `pre_search_iteration_size'
+						-- each time, to determine where we should start the detailed search from.
+						-- By performing a pre-pass this way, we can reduce the number of iterations we
+						-- perform to seach for the row index at a paticular index.
+						-- This code and the subsequent main iteration could be replaced by a binary seach if
+						-- a simple method of iteration can be found.
+						-- The problems with the binary search lie with finding offsets within
+						-- subrows of non-expanded tree items when different size rows are permissable. The initial
+						-- binary search algorithm follows:
+						-- It still has the following problems
+						-- 1. The check for "i = next_offset" uses the incorrect `current_height'. In the case that
+						-- a node has non-expanded children, we must find the height of the first parent row recursively
+						-- that is displayed and use this height. The problem is that to do this, requires processing and the
+						-- speed advantage of the binary search is compromised. It is for this reason that the current code uses
+						-- the simple pre-pass loop below + it is also far easier to maintain.
+						-- 2. The result is off by 1 in some cases.
+
+						--					from
+						--						row_counter := 1
+						--						hi := grid.row_count + 1
+						--						lo := 1
+						--						i := -1000
+						--					until
+						--						(hi - lo).abs = 1
+						--					loop
+						--						row_counter := ((hi - lo) // 2) + lo
+						--						i := row_offsets @ (row_counter)
+						--						next_offset := row_offsets @ (row_counter + 1)
+						--
+						--
+						--						current_row := grid.rows.i_th (row_counter - 1)
+						--
+						--						if grid.is_row_height_fixed then
+						--							current_height := grid.row_height
+						--						else
+						--							current_height := current_row.height
+						--						end
+						--
+						--						if (i = next_offset) and invalid_y_start <= i + current_height then
+						--							hi := row_counter
+						--						elseif invalid_y_start > i + current_height then
+						--							lo := row_counter
+						--						else	
+						--							hi := row_counter
+						--						end
+						--						if (i = next_offset) and invalid_y_start <= i + current_height then
+						--							hi := row_counter
+						--						elseif invalid_y_start > i + current_height then
+						--							lo := row_counter	
+						--						else	
+						--							hi := row_counter
+						--						end
+						--					end
 					from
-						row_counter := 1
+						i := 1
+					until
+						i > row_offsets.count or found
+					loop
+						if row_offsets @ i > invalid_y_start then
+							found := True
+						else
+							i := i + pre_search_iteration_size
+						end
+					end
+					start_pos := i - pre_search_iteration_size
+
+						-- If the starting index has fallen within a tree structure,
+						-- we must start from the beginning of the root parent.
+					if grid.row (start_pos).parent_row /= Void then
+						start_pos := grid.row (start_pos).parent_row_root.index
+					end
+
+					from
+						row_counter := start_pos
 						i := 0
 					until
 						last_row_index_set or row_counter > grid.rows.count
@@ -218,6 +294,24 @@ feature -- Basic operations
 			-- left hand corner of the virtual size.
 		do
 			Result := item_at_position (an_x - grid.internal_client_x + grid.viewport_x_offset, a_y - grid.internal_client_y + grid.viewport_y_offset)
+		end
+
+	item_coordinates_at_position (an_x, a_y: INTEGER): EV_COORDINATE is
+			-- `Result' is coordinates of item at position `an_x', `a_y' relative to the top left corner
+			-- of the `grid.drawable' in which the grid is displayed. The bounded item
+			-- incorporates the tree node if any. No checking of whether the item at this posibion is `Void'.
+		local
+			horizontal_span_items, vertical_span_items: ARRAYED_LIST [INTEGER]
+		do
+			grid.perform_horizontal_computation
+			grid.perform_vertical_computation
+				-- Recompute vertical row heights and scroll bar positions before
+				-- querying the item positions
+			horizontal_span_items := items_spanning_horizontal_span (an_x, 0)
+			vertical_span_items := items_spanning_vertical_span (a_y, 0)
+			if not horizontal_span_items.is_empty and not vertical_span_items.is_empty then
+				create Result.make (horizontal_span_items.first, vertical_span_items.first)
+			end
 		end
 
 	item_at_position (an_x, a_y: INTEGER): EV_GRID_ITEM_I is
@@ -857,6 +951,16 @@ feature -- Basic operations
 		
 	horizontal_border_width: INTEGER is 3
 		-- Border from edge of text to edge of grid items.
+
+	pre_search_iteration_size: INTEGER is 1000
+		-- When searching for an offset in `row_offsets', this is the value
+		-- user to pre-search the data when looking for the first index to start the
+		-- iteration from. By performing an intial loop, we can reduce the number of
+		-- iterations to be performed in the main loop. Together, the total
+		-- number of iterations of both loops is far less. There may be a better
+		-- value, but this should give fairly good results. 
+		-- The maximum number of iterations is given by (`row_count' / pre_search_iteration_size) + pre_search_iteration_size
+		-- Julian 05/16/05
 
 feature {NONE} -- Implementation
 

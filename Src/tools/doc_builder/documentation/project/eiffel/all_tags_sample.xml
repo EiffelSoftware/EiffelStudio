@@ -379,16 +379,16 @@
 					<cell>&lt;</cell>
 				</row>
 				<row>
-					<cell>&amp;#169;</cell>
+					<cell>&#169;</cell>
 				</row>
 				<row>
-					<cell>&amp;#064;</cell>
+					<cell>&#064;</cell>
 				</row>
 				<row>
-					<cell>&amp;#153;</cell>
+					<cell>&#153;</cell>
 				</row>
 				<row>
-					<cell>&amp;#174;</cell>
+					<cell>&#174;</cell>
 				</row>
 				<row>
 					<cell>'</cell>
@@ -397,7 +397,7 @@
 					<cell>&gt;</cell>
 				</row>
 				<row>
-					<cell>&amp;#133;</cell>
+					<cell>&#133;</cell>
 				</row>
 				<row>
 					<cell>&amp;</cell>

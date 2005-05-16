@@ -24,7 +24,6 @@ inherit
 			height,
 			destroy,
 			drawable,
-			draw_full_pixmap,
 			draw_point
 		end
 
@@ -63,8 +62,7 @@ feature {NONE} -- Initialization
 			-- Create a gtk pixmap of size (1 * 1) with no mask.
 		do
 			base_make (an_interface)
-			gtk_image := {EV_GTK_EXTERNALS}.gtk_image_new
-			set_c_object (gtk_image)
+			set_c_object ({EV_GTK_EXTERNALS}.gtk_image_new)
 		end
 
 	initialize is
@@ -80,18 +78,11 @@ feature {NONE} -- Initialization
 			set_pixmap (gdkpix, gdkmask)
 				-- Initialize the Graphical Context
 			gc := {EV_GTK_EXTERNALS}.gdk_gc_new (gdkpix)
-			initialize_graphical_context
+			{EV_GTK_EXTERNALS}.gdk_gc_set_foreground (gc, app_implementation.fg_color)
 			init_default_values			
 		end
 
-feature -- Drawing operations		
-		
-	draw_full_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP; x_src, y_src, src_width, src_height: INTEGER) is
-			-- 
-		do
-			Precursor {EV_DRAWABLE_IMP} (x, y, a_pixmap, x_src, y_src, src_width, src_height)
-			flush	
-		end
+feature -- Drawing operations
 		
 	draw_point (x, y: INTEGER) is
 			-- Draw point at (`x', `y').
@@ -110,7 +101,7 @@ feature -- Drawing operations
 	flush is
 		do
 			if is_displayed then
-				{EV_GTK_EXTERNALS}.gtk_widget_draw (gtk_image, NULL)
+				{EV_GTK_EXTERNALS}.gtk_widget_draw (visual_widget, NULL)
 			end
 		end
 
@@ -370,11 +361,6 @@ feature {EV_ANY_I} -- Implementation
 	mask: POINTER
 			-- Pointer to the GdkBitmap used for masking.
 
-feature {EV_ANY_I} -- Implementation
-
-	gtk_image: POINTER
-			-- Pointer to the gtk pixmap widget.
-
 feature {EV_GTK_DEPENDENT_APPLICATION_IMP, EV_ANY_I} -- Implementation
 
 	internal_xpm_data: POINTER
@@ -385,7 +371,7 @@ feature {EV_STOCK_PIXMAPS_IMP, EV_PIXMAPABLE_IMP} -- Implementation
 	set_pixmap (gdkpix, gdkmask: POINTER) is
 			-- Set the GtkPixmap using Gdk pixmap data and mask.
 		do
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_image_set_from_pixmap (gtk_image, gdkpix, gdkmask)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_image_set_from_pixmap (visual_widget, gdkpix, gdkmask)
 			{EV_GTK_EXTERNALS}.gdk_pixmap_unref (gdkpix)
 			drawable := gdkpix
 			mask := gdkmask
@@ -458,26 +444,6 @@ feature {NONE} -- Implementation
 				-- If Gtk cannot save the file then the default is called
 				Precursor {EV_PIXMAP_I} (a_format, a_filename)
 			end
-		end
-
-	parent_widget: POINTER
-			-- Parent widget for Current.
-
-	initialize_graphical_context is
-			-- Set the foreground color of the Graphical Context to black.
-		local
-			allocated: BOOLEAN
-			fg: POINTER
-		do
-			fg := {EV_GTK_EXTERNALS}.c_gdk_color_struct_allocate
-
-				-- Create the color black (default with calloc)
-			allocated := {EV_GTK_EXTERNALS}.gdk_colormap_alloc_color ({EV_GTK_EXTERNALS}.gdk_rgb_get_cmap, fg, False, True)
-			check
-				color_has_been_allocated: allocated = True
-			end
-			{EV_GTK_EXTERNALS}.gdk_gc_set_foreground (gc, fg)
-			fg.memory_free
 		end
 
 	destroy is

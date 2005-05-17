@@ -202,7 +202,7 @@ feature -- Access
 			sel_rows: like selected_rows
 			sel_items: like selected_items
 		do
-			sel_rows := selected_rows
+			sel_rows := internal_selected_rows.linear_representation
 			from
 				sel_rows.start
 			until
@@ -848,7 +848,25 @@ feature -- Status setting
 		ensure
 			multiple_item_selection_enabled: is_multiple_item_selection_enabled
 		end
-		
+
+	enable_item_always_selected is
+			-- Change current selection mode so that as soon as a user selects an item in the grid, an item must always be selected.
+			-- The user may only deselect an item by selecting another item.
+		do
+			is_item_always_selected := True
+		end
+
+	disable_item_always_selected is
+			-- Allow items to be deselected in current selection mode by either clicking on another item, clicking on a Void area or by Ctrl
+			-- clicking the selected item itself.
+		do
+			is_item_always_selected := False
+		end
+
+	is_item_always_selected: BOOLEAN
+			-- Is at least one item selected in the grid at all times after an initial user selection has been made.
+			-- If `True' then the user of the grid may only deselect items by selecting other items.
+
 	show_header is
 			-- Ensure header displayed.
 		do
@@ -857,7 +875,7 @@ feature -- Status setting
 		ensure
 			header_displayed: is_header_displayed
 		end
-		
+
 	hide_header is
 			-- Ensure header is hidden.
 		do
@@ -3417,54 +3435,76 @@ feature {NONE} -- Event handling
 			start_row_index, end_row_index, start_column_index, end_column_index: INTEGER
 			a_col_counter, a_row_counter: INTEGER
 			current_item: EV_GRID_ITEM
-			ignore_remove_selection: BOOLEAN
+			l_remove_selection: BOOLEAN
+			is_ctrl_pressed, is_shift_pressed: BOOLEAN
+			a_application: EV_APPLICATION
+			l_selected_items: ARRAYED_LIST [EV_GRID_ITEM]
 		do
-			if is_multiple_selection_enabled and then (create {EV_ENVIRONMENT}).application.shift_pressed then
-				start_item := selected_items.last
-				if a_item /= Void and then start_item /= Void and then start_item /= a_item then
-					start_row_index := start_item.row.index
-					end_row_index := a_item.row.index
-					start_column_index := start_item.column.index
-					end_column_index := a_item.column.index
-					from
-						a_col_counter := start_column_index.min (end_column_index)
-					until
-						a_col_counter > start_column_index.max (end_column_index)
-					loop
-						from
-							a_row_counter := start_row_index.min (end_row_index)
-						until
-							a_row_counter > start_row_index.max (end_row_index)
-						loop
-							current_item := item (a_col_counter, a_row_counter)
-							if current_item /= Void then
-								current_item.enable_select
-							end
-							a_row_counter := a_row_counter + 1
-						end
-						a_col_counter := a_col_counter + 1
+			a_application := (create {EV_ENVIRONMENT}).application
+			is_ctrl_pressed := a_application.ctrl_pressed
+			is_shift_pressed := a_application.shift_pressed
+			if not (a_item = Void and is_item_always_selected) then
+					-- If we are `is_item_always_selected' mode then clicking on Void items should have no effect
+				l_remove_selection := True
+			end
+			if is_multiple_selection_enabled then
+				if is_shift_pressed then
+					l_selected_items := selected_items
+					if not l_selected_items.is_empty then
+						start_item := l_selected_items.last
 					end
-					last_selected_item := a_item.implementation
-				end
-				ignore_remove_selection := True
-			elseif (is_multiple_selection_enabled)  and then (create {EV_ENVIRONMENT}).application.ctrl_pressed then
-				-- If the ctrl key is pressed and we are in a multiple selection mode then we do nothing.
-				ignore_remove_selection := True
-			else
-				if a_item /= Void and then not a_item.is_selected or (not is_row_selection_enabled and then selected_items.count > 1) or (is_row_selection_enabled and then selected_rows.count > 1) then
-					remove_selection
+					if a_item /= Void and then start_item /= Void and then start_item /= a_item then
+						start_row_index := start_item.row.index
+						end_row_index := a_item.row.index
+						start_column_index := start_item.column.index
+						end_column_index := a_item.column.index
+						from
+							a_col_counter := start_column_index.min (end_column_index)
+						until
+							a_col_counter > start_column_index.max (end_column_index)
+						loop
+							from
+								a_row_counter := start_row_index.min (end_row_index)
+							until
+								a_row_counter > start_row_index.max (end_row_index)
+							loop
+								current_item := item (a_col_counter, a_row_counter)
+								if current_item /= Void then
+									current_item.enable_select
+								end
+								a_row_counter := a_row_counter + 1
+							end
+							a_col_counter := a_col_counter + 1
+						end
+						last_selected_item := a_item.implementation
+					end
+					l_remove_selection := False
+				elseif is_ctrl_pressed then
+					-- If the ctrl key is pressed and we are in a multiple selection mode then we do nothing.
+					l_remove_selection := False
 				end
 			end
-		
+
+			if l_remove_selection and then
+				(a_item = Void or
+				(a_item /= Void and then not a_item.is_selected) or
+				(not is_row_selection_enabled and then selected_items.count > 1) or
+				(is_row_selection_enabled and then selected_rows.count > 1)) then
+					remove_selection
+			end
+
 			if a_item /= Void then
-				a_item.enable_select
-				if is_row_selection_enabled then
-					a_item.row.ensure_visible
-				else
-					a_item.ensure_visible
-				end							
-			elseif not ignore_remove_selection then
-				remove_selection
+				if not a_item.is_selected then
+					a_item.enable_select
+					if is_row_selection_enabled then
+						a_item.row.ensure_visible
+					else
+						a_item.ensure_visible
+					end
+				elseif is_ctrl_pressed and then not is_item_always_selected then
+						-- Allow for removal of item selection by Ctrl clicking
+					a_item.disable_select
+				end
 			end
 		end
 

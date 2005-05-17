@@ -27,6 +27,7 @@ doc:<file name="local.c" header="eif_local.h" version="$Id$" summary="Handling o
 #include "rt_debug.h"
 #endif
 #include "rt_globals.h"
+#include "rt_assert.h"
 
 #include <string.h>
 
@@ -58,74 +59,76 @@ rt_public void epop(struct stack *stk, rt_uint_ptr nb_items)
 	/* Removes 'nb_items' from the stack 'stk'. The routine is more general
 	 * than needed, but it keeps the spirit of epush().
 	 */
-	RT_GET_CONTEXT
 	char **top = stk->st_top;		/* Current top of the stack */
-	struct stchunk *s;			/* To walk through stack chunks */
-	char **arena;					/* Base address of current chunk */
 
 	/* Optimization: try to update the top, hoping it will remain in the
 	 * same chunk. This avoids pointer manipulation (walking along the stack)
 	 * which may induce swapping, who knows?
 	 */
 
-	arena = stk->st_cur->sk_arena;
 	top -= nb_items;				/* Hopefully, we remain in current chunk */
-	if (top >= arena) {
-		stk->st_top = top;			/* Yes! Update top */
-		return;						/* Done, we're lucky */
-	}
+	if (top >= stk->st_cur->sk_arena) {
+		stk->st_top = top;			/* Yes! Update top, we are lucky. */
+	} else {
+		struct stchunk *s;			/* To walk through stack chunks */
+		char **arena;					/* Base address of current chunk */
 
-	/* Normal case: we have to pop more than the number of elements in the
-	 * current chunk. Loop until we popped enough items. This is also where
-	 * we have to protect against signals or there is a risk the data structure
-	 * be corrupted.
-	 */
+		RT_GET_CONTEXT
 
-	SIGBLOCK;			/* Entering critical section */
-	
-	top = stk->st_top;
-	for (s = stk->st_cur; nb_items > 0; /* empty */) {
-		arena = s->sk_arena;
-		nb_items -= top - arena;
-		if (nb_items <= 0) {		/* We've gone too far? */
-			top = arena - nb_items;	/* Reset top correctly */
-			break;					/* Done */
+		/* Normal case: we have to pop more than the number of elements in the
+		 * current chunk. Loop until we popped enough items. This is also where
+		 * we have to protect against signals or there is a risk the data structure
+		 * be corrupted.
+		 */
+
+		SIGBLOCK;			/* Entering critical section */
+		
+		top = stk->st_top;
+		for (s = stk->st_cur; nb_items > 0; /* empty */) {
+			arena = s->sk_arena;
+			CHECK("top greater than arena", top >= arena);
+			if (nb_items <= (rt_uint_ptr) (top - arena)) {	/* We've gone too far? */
+				top -= nb_items;				/* Update `top' correctly */
+				break;							/* Done */
+			} else {
+				nb_items -= (top - arena);
+			}
+			s = s->sk_prev;				/* Look at previous chunk */
+			if (s)
+				top = s->sk_end;		/* Top at the end of previous chunk */
+			else
+				break;					/* We reached the bottom of the stack */
 		}
-		s = s->sk_prev;				/* Look at previous chunk */
-		if (s)
-			top = s->sk_end;		/* Top at the end of previous chunk */
-		else
-			break;					/* We reached the bottom of the stack */
-	}
 
 #ifdef MAY_PANIC
-	/* Now either 's' is NULL and we made a mistake because we asked for
-	 * more items than there actually were held in the stack. So eif_panic.
-	 * Otherwise 'top' is correctly set and 's' is the new current chunk.
-	 */
-	if (s == (struct stchunk *) 0)
-		eif_panic("run-time stack botched");
+		/* Now either 's' is NULL and we made a mistake because we asked for
+		 * more items than there actually were held in the stack. So eif_panic.
+		 * Otherwise 'top' is correctly set and 's' is the new current chunk.
+		 */
+		if (s == (struct stchunk *) 0)
+			eif_panic("run-time stack botched");
 #endif
 
-	/* Update stack structure */
-	stk->st_cur = s;
-	stk->st_top = top;
-	stk->st_end = s->sk_end;
+		/* Update stack structure */
+		stk->st_cur = s;
+		stk->st_top = top;
+		stk->st_end = s->sk_end;
 
-	SIGRESUME;			/* Leaving critical section */
+		SIGRESUME;			/* Leaving critical section */
 
-	/* There is not much overhead calling st_truncate(), because this is only
-	 * done when we are popping at a chunk edge. We have to make sure the
-	 * program is running though, as popping done in debugging mode is only
-	 * temporary--RAM.
-	 */
+		/* There is not much overhead calling st_truncate(), because this is only
+		 * done when we are popping at a chunk edge. We have to make sure the
+		 * program is running though, as popping done in debugging mode is only
+		 * temporary--RAM.
+		 */
 
 #ifdef WORKBENCH
-	if (d_cxt.pg_status == PG_RUN)	/* Program is running */
-		st_truncate(stk);			/* Remove unused chunks */
+		if (d_cxt.pg_status == PG_RUN)	/* Program is running */
+			st_truncate(stk);			/* Remove unused chunks */
 #else
-	st_truncate(stk);				/* Remove unused chunks */
+		st_truncate(stk);				/* Remove unused chunks */
 #endif
+	}
 }
 
 

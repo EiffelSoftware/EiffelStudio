@@ -325,58 +325,56 @@ feature -- Basic Operations
 						cluster_classes.after
 					loop
 						eiffel_class := cluster_classes.item_for_iteration
-						if eiffel_class.file_name.string.substring (eiffel_class.file_name.string.count - 1, eiffel_class.file_name.string.count).is_equal (".e") then
-							if is_substring then
-								matcher.set_text (eiffel_class.name)
-								if matcher.search_for_pattern then
-									create class_desc.make_with_class_i (eiffel_class)
-									res.extend (class_desc)
-								else
-									dotnet_class ?= eiffel_class
-									if dotnet_class /= Void then
-										if dotnet_class.is_compiled then
-											matcher.set_text (dotnet_class.compiled_class.name)
-										else
-											matcher.set_text (dotnet_class.external_name)
-										end
-										if matcher.search_for_pattern then
-											create class_desc.make_with_class_i (dotnet_class)
-											res.extend (class_desc)
-										end
-									end
-								end		
+						if is_substring then
+							matcher.set_text (eiffel_class.name)
+							if matcher.search_for_pattern then
+								create class_desc.make_with_class_i (eiffel_class)
+								res.extend (class_desc)
 							else
-								if not match_case then
-									class_name_string := eiffel_class.name.as_lower
-								else
-									class_name_string := eiffel_class.name.twin
+								dotnet_class ?= eiffel_class
+								if dotnet_class /= Void then
+									if dotnet_class.is_compiled then
+										matcher.set_text (dotnet_class.compiled_class.name)
+									else
+										matcher.set_text (dotnet_class.external_name)
+									end
+									if matcher.search_for_pattern then
+										create class_desc.make_with_class_i (dotnet_class)
+										res.extend (class_desc)
+									end
 								end
-								if is_prefix then
-									class_name_string.keep_head (string_to_match.count.min (class_name_string.count))
-								end
-								if class_name_string.is_equal (string_to_match) then
-									create class_desc.make_with_class_i (eiffel_class)
-									res.extend (class_desc)
-								else
-									dotnet_class ?= eiffel_class
-									if dotnet_class /= Void then
-										if dotnet_class.is_compiled then
-											class_name_string := dotnet_class.compiled_class.name.as_lower
-											if class_name_string.is_equal (string_to_match) then
-												create class_desc.make_with_class_i (eiffel_class)
-												res.extend (class_desc)
-											end -- if
-										else
-											class_name_string := dotnet_class.external_name.as_lower
-											if class_name_string.is_equal (string_to_match) then
-												create class_desc.make_with_class_i (eiffel_class)
-												res.extend (class_desc)
-											end -- if
+							end		
+						else
+							if not match_case then
+								class_name_string := eiffel_class.name.as_lower
+							else
+								class_name_string := eiffel_class.name.twin
+							end
+							if is_prefix then
+								class_name_string.keep_head (string_to_match.count.min (class_name_string.count))
+							end
+							if class_name_string.is_equal (string_to_match) then
+								create class_desc.make_with_class_i (eiffel_class)
+								res.extend (class_desc)
+							else
+								dotnet_class ?= eiffel_class
+								if dotnet_class /= Void then
+									if dotnet_class.is_compiled then
+										class_name_string := dotnet_class.compiled_class.name.as_lower
+										if class_name_string.is_equal (string_to_match) then
+											create class_desc.make_with_class_i (eiffel_class)
+											res.extend (class_desc)
+										end -- if
+									else
+										class_name_string := dotnet_class.external_name.as_lower
+										if class_name_string.is_equal (string_to_match) then
+											create class_desc.make_with_class_i (eiffel_class)
+											res.extend (class_desc)
 										end -- if
 									end -- if
 								end -- if
-							end -- if	
-						end
+							end -- if
+						end -- if	
 						cluster_classes.forth
 					end -- loop
 					Eiffel_universe.clusters.forth

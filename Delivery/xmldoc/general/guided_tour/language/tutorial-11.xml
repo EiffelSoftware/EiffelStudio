@@ -357,7 +357,7 @@
 				<keyword>no</keyword>
 			</code>, or an explicit debug key. The <italic>instructions</italic>will be executed if and only if the corresponding option is on. The obvious use is for instructions that should be part of the system but executed only in some circumstances, for example to provide extra debugging information.
 		</paragraph>
-		<paragraph>The final instruction is connected with Design by Contract&amp;#153;. The instruction 
+		<paragraph>The final instruction is connected with Design by Contract&#153;. The instruction 
 			<code>
 				<keyword>check</keyword>
 			</code> <italic>Assertion</italic> 

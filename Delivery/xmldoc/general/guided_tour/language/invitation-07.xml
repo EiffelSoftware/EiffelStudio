@@ -175,7 +175,7 @@
 		</paragraph>
 			<heading>
 				<size>2</size>
-				<content>Design by Contract&amp;#153;</content>
+				<content>Design by Contract&#153;</content>
 			</heading>
 			<paragraph>Syntactically, assertions are boolean expressions, with a few extensions such as the 
 				<code>
@@ -192,7 +192,7 @@
 				<bold>contract</bold>  which governs the relationship between a routine and its callers.  The precondition binds the callers; the postcondition binds the routine.
 			</paragraph>
 			<paragraph>The underlying theory of 
-				Design by Contract&amp;#153;, the centerpiece of the Eiffel method, views software construction as based on contracts between clients (callers) and suppliers (routines), relying on mutual obligations and benefits made explicit by the assertions.
+				Design by Contract&#153;, the centerpiece of the Eiffel method, views software construction as based on contracts between clients (callers) and suppliers (routines), relying on mutual obligations and benefits made explicit by the assertions.
 			</paragraph>
 			<heading>
 				<size>2</size>
@@ -259,5 +259,5 @@
 			</heading>
 			<paragraph>Under EiffelStudio you may also set up compilation options, for the whole system or specific classes only, to evaluate assertions at run time, to uncover potential errors ("bugs").  EiffelStudio provides several levels of assertion monitoring: preconditions only, postconditions etc.  When monitoring is on, an assertion which evaluates to true has no further effect on the execution.  An assertion that evaluates to false will trigger an exception, as described next; unless you have written an appropriate exception handler, the exception will cause an error message and termination with a precise message and a call trace.  </paragraph>
 			<paragraph>This ability to check assertions provides a powerful testing and debugging mechanism, in particular because the classes of the EiffelBase Libraries, widely used in Eiffel software development, are protected by carefully written assertions.  </paragraph>
-			<paragraph>Run-time monitoring, however, is only one application of assertions, whose role as design and documentation aids, as part of theory of Design by Contract&amp;#153;, exerts a pervasive influence on the Eiffel style of software development.  </paragraph>
+			<paragraph>Run-time monitoring, however, is only one application of assertions, whose role as design and documentation aids, as part of theory of Design by Contract&#153;, exerts a pervasive influence on the Eiffel style of software development.  </paragraph>
 	</paragraph></document>

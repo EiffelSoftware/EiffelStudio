@@ -61,40 +61,16 @@ feature {NONE} -- Constants
 
 	Cst_managed_cb_breakpoint_set_error: INTEGER is 26
 
-feature -- Query
+	Cst_managed_cb2_function_remap_opportunity: INTEGER is 27
+	Cst_managed_cb2_create_connection: INTEGER is 28
+	Cst_managed_cb2_change_connection: INTEGER is 29
+	Cst_managed_cb2_destroy_connection: INTEGER is 30
+	Cst_managed_cb2_exception: INTEGER is 31
+	Cst_managed_cb2_exception_unwind: INTEGER is 32
+	Cst_managed_cb2_function_remap_complete: INTEGER is 33
+	Cst_managed_cb2_mdanotification: INTEGER is 34
 
--- Not used for now
---	managed_callbacks: ARRAY[INTEGER] is
---		do
---			Result := <<
---				Cst_managed_cb_breakpoint,
---				Cst_managed_cb_step_complete,
---				Cst_managed_cb_break,
---				Cst_managed_cb_exception,
---				Cst_managed_cb_eval_complete,
---				Cst_managed_cb_eval_exception,
---				Cst_managed_cb_create_process,
---				Cst_managed_cb_exit_process,
---				Cst_managed_cb_create_thread,
---				Cst_managed_cb_exit_thread,
---				Cst_managed_cb_load_module,
---				Cst_managed_cb_unload_module,
---				Cst_managed_cb_load_class,
---				Cst_managed_cb_unload_class,
---				Cst_managed_cb_debugger_error,
---				Cst_managed_cb_log_message,
---				Cst_managed_cb_log_switch,
---				Cst_managed_cb_create_app_domain,
---				Cst_managed_cb_exit_app_domain,
---				Cst_managed_cb_load_assembly,
---				Cst_managed_cb_unload_assembly,
---				Cst_managed_cb_control_ctrap,
---				Cst_managed_cb_name_change,
---				Cst_managed_cb_update_module_symbols,
---				Cst_managed_cb_edit_and_continue_remap,
---				Cst_managed_cb_breakpoint_set_error
---			>>
---		end
+feature -- Query
 
 	value_of_cst_managed_cb (cst: INTEGER): STRING is
 		do
@@ -151,6 +127,22 @@ feature -- Query
 				Result := "edit_and_continue_remap"
 				when Cst_managed_cb_breakpoint_set_error then
 				Result := "breakpoint_set_error"
+				when Cst_managed_cb2_function_remap_opportunity then
+				Result := "function_remap_opportunity (2)"
+				when Cst_managed_cb2_create_connection then
+				Result := "create_connection (2)"
+				when Cst_managed_cb2_change_connection then
+				Result := "change_connection (2)"
+				when Cst_managed_cb2_destroy_connection then
+				Result := "destroy_connection (2)"
+				when Cst_managed_cb2_exception then
+				Result := "exception (2)"
+				when Cst_managed_cb2_exception_unwind then
+				Result := "exception_unwind (2)"
+				when Cst_managed_cb2_function_remap_complete then
+				Result := "function_remap_complete (2)"
+				when Cst_managed_cb2_mdanotification then
+				Result := "mdanotification (2)"
 				when 0 then
 				Result := "no callback"
 				else

@@ -691,6 +691,16 @@ feature {EIFNET_DEBUGGER} -- Callback notification about synchro
 					--|	p_app_domain, p_module, p_symbol_stream
 				p := dbg_cb_info_pointer_item (1) -- p_app_domain
 				set_last_controller_by_pointer (icor_debug_controller_interface (p))
+
+			when Cst_managed_cb2_function_remap_opportunity then
+			when Cst_managed_cb2_create_connection then
+			when Cst_managed_cb2_change_connection then
+			when Cst_managed_cb2_destroy_connection then
+			when Cst_managed_cb2_exception then
+			when Cst_managed_cb2_exception_unwind then
+			when Cst_managed_cb2_function_remap_complete then
+			when Cst_managed_cb2_mdanotification then
+
 			when Cst_unmanaged_debug_event then
 
 			else

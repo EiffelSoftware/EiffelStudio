@@ -43,11 +43,15 @@ rt_public void trace_event_cb_hr (char* mesg,HRESULT hr)
 #define DBGTRACE_HR(msg)
 #endif
 
-rt_private char message [1024];
-	/* Error message for exceptions */
-
 #ifdef ASSERTIONS
-rt_private void raise_error (HRESULT hr, char *msg); /* Raise error */
+	/* Error message for exceptions */
+rt_private char message [1024];
+rt_private void raise_error (HRESULT hr,char *pref, char *msg)
+	/* Raise an Eiffel exception */
+{
+	sprintf (message, "%s 0x%x: %s", pref, hr, msg);
+	eraise (message, EN_PROG);
+}
 #define CHECK(hr,msg) if (hr) raise_error (hr, "check", msg);
 #define CHECKHR(cond, hr, msg) if (cond) raise_error (hr, "check", msg);
 #define REQUIRE(cond,msg) if (!cond) raise_error (-1, "require", msg);
@@ -525,6 +529,12 @@ HRESULT DebuggerManagedCallback::FunctionRemapOpportunity(ICorDebugAppDomain *pA
                                      ICorDebugFunction *pNewFunction,
                                      ULONG32 oldILOffset)
 {
+	dbg_begin_callback (CB2_FUNCTION_REMAP_OPPORTUNITY);
+	CLEAR_DBG_CB_INFO;
+	SET_DBG_CB_INFO_CALLBACK_ID(CB2_FUNCTION_REMAP_OPPORTUNITY);
+	SET_DBG_CB_INFO_POINTER(1, pAppDomain);
+	SET_DBG_CB_INFO_POINTER(2, pThread);
+	dbg_finish_callback (CB2_FUNCTION_REMAP_OPPORTUNITY);
 	return S_OK;
 }
 
@@ -535,6 +545,11 @@ HRESULT DebuggerManagedCallback::CreateConnection(ICorDebugProcess *pProcess,
                              CONNID dwConnectionId,
                              WCHAR *pConnName)
 {
+	dbg_begin_callback (CB2_CREATE_CONNECTION);
+	CLEAR_DBG_CB_INFO;
+	SET_DBG_CB_INFO_CALLBACK_ID(CB2_CREATE_CONNECTION);
+	SET_DBG_CB_INFO_POINTER(1, pProcess);
+	dbg_finish_callback (CB2_CREATE_CONNECTION);
 	return S_OK;
 }
 
@@ -544,6 +559,11 @@ HRESULT DebuggerManagedCallback::CreateConnection(ICorDebugProcess *pProcess,
 HRESULT DebuggerManagedCallback::ChangeConnection(ICorDebugProcess *pProcess,
                              CONNID dwConnectionId ) 
 {
+	dbg_begin_callback (CB2_CHANGE_CONNECTION);
+	CLEAR_DBG_CB_INFO;
+	SET_DBG_CB_INFO_CALLBACK_ID(CB2_CHANGE_CONNECTION);
+	SET_DBG_CB_INFO_POINTER(1, pProcess);
+	dbg_finish_callback (CB2_CHANGE_CONNECTION);
 	return S_OK;
 }
 
@@ -553,6 +573,11 @@ HRESULT DebuggerManagedCallback::ChangeConnection(ICorDebugProcess *pProcess,
 HRESULT DebuggerManagedCallback::DestroyConnection(ICorDebugProcess *pProcess,
                               CONNID dwConnectionId )
 {
+	dbg_begin_callback (CB2_DESTROY_CONNECTION);
+	CLEAR_DBG_CB_INFO;
+	SET_DBG_CB_INFO_CALLBACK_ID(CB2_DESTROY_CONNECTION);
+	SET_DBG_CB_INFO_POINTER(1, pProcess);
+	dbg_finish_callback (CB2_DESTROY_CONNECTION);
 	return S_OK;
 }
 
@@ -569,6 +594,12 @@ HRESULT DebuggerManagedCallback::Exception(ICorDebugAppDomain *pAppDomain,
                        CorDebugExceptionCallbackType dwEventType,
                        DWORD dwFlags )
 {
+	dbg_begin_callback (CB2_EXCEPTION);
+	CLEAR_DBG_CB_INFO;
+	SET_DBG_CB_INFO_CALLBACK_ID(CB2_EXCEPTION);
+	SET_DBG_CB_INFO_POINTER(1, pAppDomain);
+	SET_DBG_CB_INFO_POINTER(2, pThread);
+	dbg_finish_callback (CB2_EXCEPTION);
 	return S_OK;
 }
 
@@ -581,6 +612,12 @@ HRESULT DebuggerManagedCallback::ExceptionUnwind(ICorDebugAppDomain *pAppDomain,
                              CorDebugExceptionUnwindCallbackType dwEventType,
                              DWORD dwFlags )
 {
+	dbg_begin_callback (CB2_EXCEPTION_UNWIND);
+	CLEAR_DBG_CB_INFO;
+	SET_DBG_CB_INFO_CALLBACK_ID(CB2_EXCEPTION_UNWIND);
+	SET_DBG_CB_INFO_POINTER(1, pAppDomain);
+	SET_DBG_CB_INFO_POINTER(2, pThread);
+	dbg_finish_callback (CB2_EXCEPTION);
 	return S_OK;
 }
 
@@ -593,6 +630,13 @@ HRESULT DebuggerManagedCallback::FunctionRemapComplete(ICorDebugAppDomain *pAppD
                                      ICorDebugThread *pThread,
                                      ICorDebugFunction *pFunction)
 {
+	dbg_begin_callback (CB2_FUNCTION_REMAP_COMPLETE);
+	CLEAR_DBG_CB_INFO;
+	SET_DBG_CB_INFO_CALLBACK_ID(CB2_FUNCTION_REMAP_COMPLETE);
+	SET_DBG_CB_INFO_POINTER(1, pAppDomain);
+	SET_DBG_CB_INFO_POINTER(2, pThread);
+	SET_DBG_CB_INFO_POINTER(3, pFunction);
+	dbg_finish_callback (CB2_FUNCTION_REMAP_COMPLETE);
 	return S_OK;
 }
 
@@ -601,6 +645,12 @@ HRESULT DebuggerManagedCallback::MDANotification(ICorDebugController *pControlle
                                      ICorDebugThread *pThread,
                                      ICorDebugMDA *pMDA)
 {
+	dbg_begin_callback (CB2_MDANOTIFICATION);
+	CLEAR_DBG_CB_INFO;
+	SET_DBG_CB_INFO_CALLBACK_ID(CB2_MDANOTIFICATION);
+	SET_DBG_CB_INFO_POINTER(1, pController);
+	SET_DBG_CB_INFO_POINTER(2, pThread);
+	dbg_finish_callback (CB2_MDANOTIFICATION);
 	return S_OK;
 }
 

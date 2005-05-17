@@ -107,9 +107,11 @@ feature {NONE} -- Initialization
 			class_view.set_parent_notebook (notebook)
 			feature_view.set_parent_notebook (notebook)
 			output_view.set_parent_notebook (notebook)
+			notebook.drop_actions.extend (agent on_tab_dropped)
+			notebook.drop_actions.set_veto_pebble_function (agent on_tab_droppable)
 		end
 
-		build_explorer_bar_item (explorer_bar: EB_EXPLORER_BAR) is
+	build_explorer_bar_item (explorer_bar: EB_EXPLORER_BAR) is
 			-- Build the associated explorer bar item and
 			-- Add it to `explorer_bar'
 		local
@@ -471,6 +473,46 @@ feature {NONE} -- Implementation
 				feature_view.on_deselect
 				if has_metrics then
 					metrics.on_deselect
+				end
+			end
+		end
+
+	on_tab_droppable (a_pebble: ANY): BOOLEAN is
+			-- Can be data be dropped on `notebook' for a particular notebook item?
+			-- Will be true for all tab items except `output_view' when `a_pebble' is
+			-- of type `STONE'.
+		require
+			notebook_not_void: notebook /= Void
+			notebook_not_destroyed: not notebook.is_destroyed
+		local
+			l_tab_index: INTEGER
+			l_stone: STONE
+		do
+			l_stone ?= a_pebble
+			if l_stone /= Void then
+				l_tab_index := notebook.pointed_tab_index
+				Result := l_tab_index > 0 and then notebook.i_th (l_tab_index) /= output_view.widget
+			end
+		end
+
+	on_tab_dropped (a_pebble: ANY) is
+			-- Action called when `a_pebble' is dropped on a notebook item.
+			-- It will target current to `a_pebble'.
+		require
+			notebook_not_void: notebook /= Void
+			notebook_not_destroyed: not notebook.is_destroyed
+			notebook_has_pointed_tab: notebook.pointed_tab_index > 0
+			not_output_view: notebook.i_th (notebook.pointed_tab_index) /= output_view.widget
+		local
+			l_tab_index: INTEGER
+			l_stone: STONE
+		do
+			l_stone ?= a_pebble
+			if l_stone /= Void then
+				l_tab_index := notebook.pointed_tab_index
+				if l_tab_index > 0 then
+					notebook.select_item (notebook.i_th (l_tab_index))
+					set_stone (l_stone)
 				end
 			end
 		end

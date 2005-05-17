@@ -39,6 +39,7 @@ feature {NONE}-- Initialization
 			create multiple_item_selection_button
 			create multiple_row_selection_button
 			create selection_on_click
+			create always_selected_button
 			create l_ev_frame_2
 			create l_ev_vertical_box_2
 			create l_ev_horizontal_box_1
@@ -64,7 +65,6 @@ feature {NONE}-- Initialization
 			extend (l_ev_frame_1)
 			l_ev_frame_1.extend (l_ev_vertical_box_1)
 			l_ev_vertical_box_1.extend (l_ev_table_1)
-			l_ev_vertical_box_1.extend (selection_on_click)
 			extend (l_ev_frame_2)
 			l_ev_frame_2.extend (l_ev_vertical_box_2)
 			l_ev_vertical_box_2.extend (l_ev_horizontal_box_1)
@@ -88,8 +88,7 @@ feature {NONE}-- Initialization
 			
 			l_ev_frame_1.set_text ("Selection Type")
 			l_ev_vertical_box_1.disable_item_expand (l_ev_table_1)
-			l_ev_vertical_box_1.disable_item_expand (selection_on_click)
-			l_ev_table_1.resize (2, 2)
+			l_ev_table_1.resize (2, 3)
 			l_ev_table_1.set_row_spacing (box_padding)
 			l_ev_table_1.set_column_spacing (box_padding)
 				-- Insert and position all children of `l_ev_table_1'.
@@ -97,12 +96,15 @@ feature {NONE}-- Initialization
 			l_ev_table_1.put_at_position (single_row_selection_button, 2, 1, 1, 1)
 			l_ev_table_1.put_at_position (multiple_item_selection_button, 1, 2, 1, 1)
 			l_ev_table_1.put_at_position (multiple_row_selection_button, 2, 2, 1, 1)
+			l_ev_table_1.put_at_position (selection_on_click, 1, 3, 1, 1)
+			l_ev_table_1.put_at_position (always_selected_button, 2, 3, 1, 1)
 			single_item_selection_button.set_text ("Single Item")
 			single_row_selection_button.set_text ("Single Row")
 			multiple_item_selection_button.set_text ("Multiple Item")
 			multiple_row_selection_button.set_text ("Multiple Row")
 			selection_on_click.enable_select
-			selection_on_click.set_text ("is_selection_on_click_enabled")
+			selection_on_click.set_text ("Selection On Click Enabled")
+			always_selected_button.set_text ("Always Selected")
 			l_ev_frame_2.set_text ("Selection Change")
 			l_ev_vertical_box_2.set_padding_width (box_padding)
 			l_ev_vertical_box_2.set_border_width (box_padding)
@@ -149,6 +151,7 @@ feature {NONE}-- Initialization
 			multiple_item_selection_button.select_actions.extend (agent multiple_item_selection_button_selected)
 			multiple_row_selection_button.select_actions.extend (agent multiple_row_selection_button_selected)
 			selection_on_click.select_actions.extend (agent selection_on_click_selected)
+			always_selected_button.select_actions.extend (agent always_selected_button_selected)
 			select_item_x_spin_button.change_actions.extend (agent item_x_position_changed (?))
 			select_item_y_spin_button.change_actions.extend (agent item_y_position_changed (?))
 			select_row_button.select_actions.extend (agent select_row_button_selected)
@@ -167,7 +170,7 @@ feature {NONE}-- Initialization
 feature -- Access
 
 	select_item_x_spin_button, select_item_y_spin_button: EV_SPIN_BUTTON
-	selection_on_click: EV_CHECK_BUTTON
+	selection_on_click, always_selected_button: EV_CHECK_BUTTON
 	single_item_selection_button,
 	single_row_selection_button, multiple_item_selection_button, multiple_row_selection_button: EV_RADIO_BUTTON
 	item_finder: GRID_ITEM_FINDER
@@ -222,6 +225,11 @@ feature {NONE} -- Implementation
 	
 	selection_on_click_selected is
 			-- Called by `select_actions' of `selection_on_click'.
+		deferred
+		end
+	
+	always_selected_button_selected is
+			-- Called by `select_actions' of `always_selected_button'.
 		deferred
 		end
 	

@@ -204,5 +204,15 @@ feature {NONE} -- Implementation
 			grid.enable_multiple_row_selection
 		end
 
+	always_selected_button_selected is
+			-- Called by `select_actions' of `always_selected_button'.
+		do
+			if always_selected_button.is_selected then
+				grid.enable_item_always_selected
+			else
+				grid.disable_item_always_selected
+			end
+		end
+
 end -- class SELECTION_TAB
 

@@ -552,6 +552,12 @@ feature {NONE} -- Implementation
 			if profile_cell.item then
 				stop_profiling
 			end
+
+			grid.column (1).set_pixmap (image1)
+			grid.column (2).set_pixmap (image2)
+			grid.column (3).set_pixmap (image3)
+			grid.column (4).set_pixmap (image4)
+			grid.column (5).set_pixmap (image5)
 		end
 
 	pointer_double_press_received_on_grid (an_x, a_y, button: INTEGER; grid_item: EV_GRID_ITEM) is
@@ -1009,8 +1015,21 @@ feature {NONE} -- Implementation
 --			grid.insert_new_row (2)
 --			print (grid.row_count)
 --			row := grid.row (2)
-			grid.enable_partial_dynamic_content
-			grid.set_column_count_to (3)
+--			grid.enable_partial_dynamic_content
+--			grid.set_column_count_to (3)
+			grid.set_item (1, 1, create {EV_GRID_LABEL_ITEM}.make_with_text ("An item"))
+			grid.set_item (1, 2, create {EV_GRID_LABEL_ITEM}.make_with_text ("An item"))
+			grid.set_item (1, 3, create {EV_GRID_LABEL_ITEM}.make_with_text ("An item"))
+			grid.set_item (1, 4, create {EV_GRID_LABEL_ITEM}.make_with_text ("An item"))
+			grid.set_item (1, 5, create {EV_GRID_LABEL_ITEM}.make_with_text ("An item"))
+--			grid.row (1).set_height (16)
+--			grid.row (2).set_height (32)
+--			grid.row (3).set_height (48)
+			grid.row (4).set_height (128)
+--			grid.row (5).set_height (80)
+			grid.enable_tree
+			grid.row (3).add_subrow (grid.row (4))
+			grid.disable_row_height_fixed
 			end
 
 	clean_grid is
@@ -1523,10 +1542,13 @@ feature {NONE} -- Implementation
 		local
 			editable_item: EV_GRID_COMBO_ITEM
 		do
-			editable_item ?= an_item
-			if editable_item /= Void then
-				editable_item.activate
+			if an_item /= Void then
+				an_item.activate
 			end
+			--editable_item ?= an_item
+			--if editable_item /= Void then
+		--		editable_item.activate
+		--	end
 		end
 		
 

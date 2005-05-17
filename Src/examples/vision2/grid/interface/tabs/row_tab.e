@@ -150,6 +150,7 @@ feature {NONE} -- Implementation
 				variable_row_heights: not grid.is_row_height_fixed
 			end
 			grid.row (current_row_index).set_height (a_value)
+			print (grid.row (current_row_index).item (1).virtual_y_position)
 		end
 	
 	row_selected_button_selected is

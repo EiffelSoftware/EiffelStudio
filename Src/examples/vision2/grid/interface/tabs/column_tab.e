@@ -32,6 +32,7 @@ feature {NONE} -- Initialization
 			move_to_column_finder.set_prompt ("Locate Column : ")
 			add_default_colors_to_combo (foreground_color_combo)
 			add_default_colors_to_combo (background_color_combo)
+			add_default_pixmaps_to_combo (column_pixmap_combo)
 		end
 
 feature {NONE} -- Implementation
@@ -88,6 +89,7 @@ feature {NONE} -- Implementation
 				column_title_entry.change_actions.block
 				column_title_entry.set_text (l_column.title)
 				column_title_entry.change_actions.resume
+				select_pixmap_from_combo (column_pixmap_combo, l_column.pixmap)
 				column_selected_button.select_actions.block
 				if l_column.is_selected then
 					column_selected_button.enable_select
@@ -229,6 +231,29 @@ feature {NONE} -- Implementation
 				if column /= Void then
 					color ?= background_color_combo.selected_item.data
 					column.set_background_color (color)
+				end
+			end
+		end
+
+	column_pixmap_combo_selected is
+			-- Called by `select_actions' of `column_pixmap_combo'.
+		local
+			selected_item_index: INTEGER
+			label_item: EV_GRID_LABEL_ITEM
+			column: EV_GRID_COLUMN
+			pixmap: EV_PIXMAP
+		do
+			if current_column_index < grid.column_count then
+				column := grid.column (current_column_index)
+				if column /= Void then
+					selected_item_index := column_pixmap_combo.index_of (column_pixmap_combo.selected_item, 1)
+					inspect selected_item_index
+					when 1 then
+						column.remove_pixmap
+					else
+						pixmap ?= column_pixmap_combo.selected_item.data
+						column.set_pixmap (pixmap)
+					end
 				end
 			end
 		end

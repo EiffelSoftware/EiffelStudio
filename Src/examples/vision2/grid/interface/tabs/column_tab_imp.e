@@ -43,11 +43,13 @@ feature {NONE}-- Initialization
 			create column_width
 			create l_ev_label_3
 			create column_title_entry
-			create l_ev_horizontal_box_3
 			create l_ev_label_4
+			create column_pixmap_combo
+			create l_ev_horizontal_box_3
+			create l_ev_label_5
 			create foreground_color_combo
 			create l_ev_horizontal_box_4
-			create l_ev_label_5
+			create l_ev_label_6
 			create background_color_combo
 			create column_selected_button
 			create column_visible_button
@@ -72,10 +74,10 @@ feature {NONE}-- Initialization
 			l_ev_vertical_box_1.extend (l_ev_horizontal_box_2)
 			l_ev_horizontal_box_2.extend (l_ev_table_1)
 			l_ev_vertical_box_1.extend (l_ev_horizontal_box_3)
-			l_ev_horizontal_box_3.extend (l_ev_label_4)
+			l_ev_horizontal_box_3.extend (l_ev_label_5)
 			l_ev_horizontal_box_3.extend (foreground_color_combo)
 			l_ev_vertical_box_1.extend (l_ev_horizontal_box_4)
-			l_ev_horizontal_box_4.extend (l_ev_label_5)
+			l_ev_horizontal_box_4.extend (l_ev_label_6)
 			l_ev_horizontal_box_4.extend (background_color_combo)
 			l_ev_vertical_box_1.extend (column_selected_button)
 			l_ev_vertical_box_1.extend (column_visible_button)
@@ -94,7 +96,7 @@ feature {NONE}-- Initialization
 			l_ev_vertical_box_1.set_border_width (box_padding)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_2)
 			l_ev_horizontal_box_2.disable_item_expand (l_ev_table_1)
-			l_ev_table_1.resize (2, 3)
+			l_ev_table_1.resize (2, 4)
 			l_ev_table_1.set_row_spacing (box_padding)
 			l_ev_table_1.set_column_spacing (box_padding)
 				-- Insert and position all children of `l_ev_table_1'.
@@ -104,20 +106,23 @@ feature {NONE}-- Initialization
 			l_ev_table_1.put_at_position (column_width, 2, 2, 1, 1)
 			l_ev_table_1.put_at_position (l_ev_label_3, 1, 3, 1, 1)
 			l_ev_table_1.put_at_position (column_title_entry, 2, 3, 1, 1)
-			l_ev_label_1.set_text ("Column Index")
+			l_ev_table_1.put_at_position (l_ev_label_4, 1, 4, 1, 1)
+			l_ev_table_1.put_at_position (column_pixmap_combo, 2, 4, 1, 1)
+			l_ev_label_1.set_text ("Index")
 			column_index.set_text ("1")
 			column_index.value_range.adapt (create {INTEGER_INTERVAL}.make (1, 100))
 			column_index.set_value (1)
-			l_ev_label_2.set_text ("Column Width ")
+			l_ev_label_2.set_text ("Width ")
 			column_width.set_text ("100")
 			column_width.value_range.adapt (create {INTEGER_INTERVAL}.make (1, 10000))
 			column_width.set_value (100)
-			l_ev_label_3.set_text ("Column Title")
+			l_ev_label_3.set_text ("Title")
 			column_title_entry.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (212, 208, 200))
-			l_ev_horizontal_box_3.disable_item_expand (l_ev_label_4)
-			l_ev_label_4.set_text ("Foreground Color : ")
-			l_ev_horizontal_box_4.disable_item_expand (l_ev_label_5)
-			l_ev_label_5.set_text ("Background Color : ")
+			l_ev_label_4.set_text ("Pixmap")
+			l_ev_horizontal_box_3.disable_item_expand (l_ev_label_5)
+			l_ev_label_5.set_text ("Foreground Color : ")
+			l_ev_horizontal_box_4.disable_item_expand (l_ev_label_6)
+			l_ev_label_6.set_text ("Background Color : ")
 			column_selected_button.set_text ("Is Column Selected?")
 			column_visible_button.set_text ("Is Column Visible?")
 			column_operations_frame.disable_sensitive
@@ -151,6 +156,7 @@ feature {NONE}-- Initialization
 			column_index.change_actions.extend (agent column_index_changed (?))
 			column_width.change_actions.extend (agent column_width_changed (?))
 			column_title_entry.change_actions.extend (agent column_title_entry_changed)
+			column_pixmap_combo.select_actions.extend (agent column_pixmap_combo_selected)
 			foreground_color_combo.select_actions.extend (agent foreground_color_combo_selected)
 			background_color_combo.select_actions.extend (agent background_color_combo_selected)
 			column_selected_button.select_actions.extend (agent column_selected_button_selected)
@@ -175,8 +181,8 @@ feature -- Access
 	swap_column_button, clear_column_button,
 	remove_column_button: EV_BUTTON
 	column_properties_frame, column_operations_frame: EV_FRAME
-	foreground_color_combo,
-	background_color_combo: EV_COMBO_BOX
+	column_pixmap_combo,
+	foreground_color_combo, background_color_combo: EV_COMBO_BOX
 
 feature {NONE} -- Implementation
 
@@ -184,10 +190,10 @@ feature {NONE} -- Implementation
 	l_ev_horizontal_box_1,
 	l_ev_horizontal_box_2, l_ev_horizontal_box_3, l_ev_horizontal_box_4, l_ev_horizontal_box_5: EV_HORIZONTAL_BOX
 	l_ev_label_1,
-	l_ev_label_2, l_ev_label_3, l_ev_label_4, l_ev_label_5: EV_LABEL
-	l_ev_table_1, l_ev_table_2: EV_TABLE
-	l_ev_cell_1,
-	l_ev_cell_2, l_ev_cell_3: EV_CELL
+	l_ev_label_2, l_ev_label_3, l_ev_label_4, l_ev_label_5, l_ev_label_6: EV_LABEL
+	l_ev_table_1,
+	l_ev_table_2: EV_TABLE
+	l_ev_cell_1, l_ev_cell_2, l_ev_cell_3: EV_CELL
 
 feature {NONE} -- Implementation
 
@@ -216,6 +222,11 @@ feature {NONE} -- Implementation
 	
 	column_title_entry_changed is
 			-- Called by `change_actions' of `column_title_entry'.
+		deferred
+		end
+	
+	column_pixmap_combo_selected is
+			-- Called by `select_actions' of `column_pixmap_combo'.
 		deferred
 		end
 	

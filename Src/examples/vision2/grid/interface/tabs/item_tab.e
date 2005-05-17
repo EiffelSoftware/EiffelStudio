@@ -29,24 +29,7 @@ feature {NONE} -- Initialization
 		do
 			item_finder.set_prompt ("Item Finder : ")
 			item_finder.motion_actions.extend (agent finding_item)
-			create list_item.make_with_text ("None")
-			pixmap_holder.extend (list_item)
-			create list_item
-			list_item.set_pixmap (image1)
-			pixmap_holder.extend (list_item)
-			create list_item
-			list_item.set_pixmap (image2)
-			pixmap_holder.extend (list_item)
-			create list_item
-			list_item.set_pixmap (image3)
-			pixmap_holder.extend (list_item)
-			create list_item
-			list_item.set_pixmap (image4)
-			pixmap_holder.extend (list_item)
-			create list_item
-			list_item.set_pixmap (image5)
-			pixmap_holder.extend (list_item)
-
+			
 
 			add_default_colors_to_combo (foreground_color_combo)
 			add_default_colors_to_combo (background_color_combo)
@@ -151,21 +134,7 @@ feature {NONE} -- Implementation
 					spacing_spin_button.change_actions.block
 					spacing_spin_button.set_value (label_item.spacing)
 					spacing_spin_button.change_actions.resume
-					pixmap_holder.select_actions.block
-					if label_item.pixmap = Void then
-						pixmap_holder.first.enable_select
-					elseif label_item.pixmap = image1 then
-						pixmap_holder.i_th (2).enable_select
-					elseif label_item.pixmap = image2 then
-						pixmap_holder.i_th (3).enable_select
-					elseif label_item.pixmap = image3 then
-						pixmap_holder.i_th (4).enable_select
-					elseif label_item.pixmap = image4 then
-						pixmap_holder.i_th (5).enable_select
-					elseif label_item.pixmap = image5 then
-						pixmap_holder.i_th (6).enable_select
-					end
-					pixmap_holder.select_actions.resume
+					select_pixmap_from_combo (pixmap_holder, label_item.pixmap)
 					alignment_container.enable_sensitive
 					if label_item.is_left_aligned then
 						alignment_combo.i_th (1).select_actions.block
@@ -370,6 +339,7 @@ feature {NONE} -- Implementation
 		local
 			selected_item_index: INTEGER
 			label_item: EV_GRID_LABEL_ITEM
+			pixmap: EV_PIXMAP
 		do
 			label_item ?= found_item
 			if label_item /= Void then
@@ -377,20 +347,9 @@ feature {NONE} -- Implementation
 				inspect selected_item_index
 				when 1 then
 					label_item.remove_pixmap
-				when 2 then
-					label_item.set_pixmap (image1)
-				when 3 then
-					label_item.set_pixmap (image2)
-				when 4 then
-					label_item.set_pixmap (image3)
-				when 5 then
-					label_item.set_pixmap (image4)
-				when 6 then
-					label_item.set_pixmap (image5)
 				else
-					check
-						invalid_index: False
-					end
+					pixmap ?= pixmap_holder.selected_item.data
+					label_item.set_pixmap (pixmap)
 				end
 			end
 		end

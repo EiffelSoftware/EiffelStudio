@@ -660,6 +660,37 @@ feature -- Status setting
 		ensure
 			multiple_item_selection_enabled: is_multiple_item_selection_enabled
 		end
+
+	enable_item_always_selected is
+			-- Change current selection mode so that as soon as a user selects an item in the grid, an item must always be selected.
+			-- The user may only deselect and item by selecting another item.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.enable_item_always_selected
+		ensure
+			item_is_always_selected_enabled: is_item_always_selected
+		end
+
+	disable_item_always_selected is
+			-- Allow items to be deselected in current selection mode by they user either by clicking on another item,
+			-- clicking on a Void area or by Ctrl clicking the selected item itself.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.disable_item_always_selected
+		ensure
+			not_is_item_always_selected_enabled: not is_item_always_selected
+		end
+
+	is_item_always_selected: BOOLEAN is
+			-- Is at least one item selected in the grid at all times after an initial user selection has been made.
+			-- If `True' then the user of the grid may only deselect items by selecting other items.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.is_item_always_selected
+		end
 		
 	show_header is
 			-- Ensure header displayed.

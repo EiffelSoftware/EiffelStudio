@@ -179,7 +179,57 @@ feature -- Access
 			add_color_to_combo ((create {EV_STOCK_COLORS}).black, a_combo)
 			add_color_to_combo ((create {EV_STOCK_COLORS}).blue, a_combo)
 		end
-		
+
+	add_default_pixmaps_to_combo (a_combo: EV_COMBO_BOX) is
+			-- Add a set of default pixmaps to `a_combo'.
+		require
+			a_combo_not_void: a_combo /= Void
+		local
+			list_item: EV_LIST_ITEM
+		do
+			create list_item.make_with_text ("None")
+			a_combo.extend (list_item)
+			create list_item
+			list_item.set_pixmap (image1)
+			list_item.set_data (image1)
+			a_combo.extend (list_item)
+			create list_item
+			list_item.set_pixmap (image2)
+			list_item.set_data (image2)
+			a_combo.extend (list_item)
+			create list_item
+			list_item.set_pixmap (image3)
+			list_item.set_data (image3)
+			a_combo.extend (list_item)
+			create list_item
+			list_item.set_pixmap (image4)
+			list_item.set_data (image4)
+			a_combo.extend (list_item)
+			create list_item
+			list_item.set_pixmap (image5)
+			list_item.set_data (image5)
+			a_combo.extend (list_item)
+		end
+
+	select_pixmap_from_combo (a_combo: EV_COMBO_BOX; a_pixmap: EV_PIXMAP) is
+			-- Select the item in `a_combo' which has a pixmap matching `a_pixmap'.
+		do
+			a_combo.select_actions.block
+			if a_pixmap = Void then
+				a_combo.first.enable_select
+			elseif a_pixmap = image1 then
+				a_combo.i_th (2).enable_select
+			elseif a_pixmap = image2 then
+				a_combo.i_th (3).enable_select
+			elseif a_pixmap = image3 then
+				a_combo.i_th (4).enable_select
+			elseif a_pixmap = image4 then
+				a_combo.i_th (5).enable_select
+			elseif a_pixmap = image5 then
+				a_combo.i_th (6).enable_select
+			end
+			a_combo.select_actions.resume
+		end
 
 	stock_colors: EV_STOCK_COLORS is
 			-- Once access to EiffelVision2 stock colors

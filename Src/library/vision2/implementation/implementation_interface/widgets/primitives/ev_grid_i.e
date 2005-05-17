@@ -1002,9 +1002,8 @@ feature -- Status setting
 				
 				row_height := a_row_height
 				is_item_height_changing := True
-				fixme ("Remove following line when tested as it should not be required")
---				recompute_vertical_scroll_bar
 				is_item_height_changing := False
+				restrict_virtual_y_position_to_maximum
 				set_vertical_computation_required (1)
 				redraw_client_area
 			end

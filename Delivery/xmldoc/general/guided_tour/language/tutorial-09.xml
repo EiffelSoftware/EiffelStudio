@@ -4,20 +4,20 @@
 			<toc>
 				<envision_location>Eiffel\Getting Started</envision_location>
 				<envision_pseudo_name>80</envision_pseudo_name>
-				<envision_title>Design by Contract&amp;#153;, Assertions, Exceptions</envision_title>
+				<envision_title>Design by Contract&#153;, Assertions, Exceptions</envision_title>
 				<studio_location/>
 				<studio_title/>
 			</toc>
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>Eiffel directly implements the ideas of Design by Contract&amp;#153; , which enhance software reliability and provide a sound basis for software specification, documentation and testing, as well as exception handling and the proper use of inheritance.
+		<paragraph>Eiffel directly implements the ideas of Design by Contract&#153; , which enhance software reliability and provide a sound basis for software specification, documentation and testing, as well as exception handling and the proper use of inheritance.
 		</paragraph>
 		<heading>
 			<size>2</size>
-			<content>Design by Contract&amp;#153; basics</content>
+			<content>Design by Contract&#153; basics</content>
 		</heading>
-		<paragraph>A system -- a software system in particular, but the ideas are more general -- is made of a number of cooperating components. Design by Contract&amp;#153; states that their cooperation should be based on precise specifications -- 
+		<paragraph>A system -- a software system in particular, but the ideas are more general -- is made of a number of cooperating components. Design by Contract&#153; states that their cooperation should be based on precise specifications -- 
 			contracts -- describing each party's expectations and guarantees.
 		</paragraph>
 		<paragraph>An Eiffel contract is similar to a real-life contract between two people or two companies, which it is convenient to express in the form of tables listing the expectations and guarantees. Here for example is how we could sketch the contract between a homeowner and the telephone company:</paragraph>
@@ -61,9 +61,6 @@
 					No need to provide anything if bill not paid.
 				</cell>
 			</row>
-			<!--<legend>
-				<paragraph><code><feature_name>provide_service</feature_name></code></paragraph>
-			</legend>-->
 		</table>
 		<paragraph>Note how the obligation for each of the parties maps onto a benefit for the other. This will be a general pattern. </paragraph>
 		<paragraph>The client's obligation, which protects the supplier, is called a 
@@ -170,7 +167,7 @@
 			<code>
 				<feature_name>deposit</feature_name>
 			</code> is correct if and only if the value of the argument is non-negative. The routine does not guarantee anything for a call that does not satisfy the precondition. It is in fact part of the Eiffel method that a routine body should 
-			<bold>never</bold> test for the precondition, since it is the client's responsibility to ensure it. (An apparent paradox of Design by Contract&amp;#153;, which is reflected in the bottom-right entries of the preceding and following contract tables, and should not be a paradox any more at the end of this discussion, is that one can get 
+			<bold>never</bold> test for the precondition, since it is the client's responsibility to ensure it. (An apparent paradox of Design by Contract&#153;, which is reflected in the bottom-right entries of the preceding and following contract tables, and should not be a paradox any more at the end of this discussion, is that one can get 
 			more reliable software by having 
 			fewer explicit checks in the software text.)
 		</paragraph>
@@ -225,9 +222,6 @@
 					No need to handle negative arguments.
 				</cell>
 			</row>
-			<!--<legend>
-				<paragraph><code><feature_name>deposit</feature_name></code></paragraph>
-			</legend>-->
 		</table>
 		<paragraph>The class invariant, as noted, applies to all features. It must be satisfied on exit by any creation procedure, and is implicitly added to both the precondition and postcondition of every exported routine. In this respect it is both good news and bad news for the routine implementer: good news because it guarantees that the object will initially be in a stable state, averting the need in the example to check that the total of 
 			<code>
@@ -279,7 +273,7 @@
 			<content>Using contracts for built-in reliability</content>
 		</heading>
 		<paragraph>What are contracts good for? Their first use is purely methodological. By applying a discipline of expressing, as precisely as possible, the logical assumptions behind software elements, you can write software whose reliability is built-in: software that is developed hand-in-hand with the rationale for its correctness. </paragraph>
-		<paragraph>This simple observation -- usually not clear to people until they have practiced Design by Contract&amp;#153; thoroughly on a large-scale project -- brings as much change to software practices and quality as the rest of object technology. </paragraph>
+		<paragraph>This simple observation -- usually not clear to people until they have practiced Design by Contract&#153; thoroughly on a large-scale project -- brings as much change to software practices and quality as the rest of object technology. </paragraph>
 		<heading>
 			<size>2</size>
 			<content>Run-time assertion monitoring</content>
@@ -368,7 +362,7 @@
 				<label>Chapter 3, "The Software Process in Eiffel"</label>
 			</link>, where errors are exterminated at birth. No one who has not practiced the method in a real project can imagine how many mistakes are found in this way; surprisingly often, a violation will turn out to affect an assertion that was just included for goodness' sake, the developer being convinced that it could never "possibly" fail to be satisfied.
 		</paragraph>
-		<paragraph>By providing a precise reference (the description of what the software is supposed to do) against which to assess the reality (what the software actually does), Design by Contract&amp;#153; profoundly transforms the activities of debugging, testing and quality assurance. </paragraph>
+		<paragraph>By providing a precise reference (the description of what the software is supposed to do) against which to assess the reality (what the software actually does), Design by Contract&#153; profoundly transforms the activities of debugging, testing and quality assurance. </paragraph>
 		<paragraph>When releasing the final version of a system, it is usually appropriate to turn off assertion monitoring, or bring it down to the 
 			<code>
 				<keyword>require</keyword>
@@ -502,7 +496,7 @@
 			<size>2</size>
 			<content>Exception handling</content>
 		</heading>
-		<paragraph>Another application of Design by Contract&amp;#153; governs the handling of unexpected cases. The vagueness of many discussions of this topic follows from the lack of a precise definition of terms such as "exception". With Design by Contract&amp;#153; we are in a position to be specific:
+		<paragraph>Another application of Design by Contract&#153; governs the handling of unexpected cases. The vagueness of many discussions of this topic follows from the lack of a precise definition of terms such as "exception". With Design by Contract&#153; we are in a position to be specific:
 		<line_break/>
 		<list ordered="false">
 			<item> Any routine has a contract to achieve. </item>
@@ -659,7 +653,7 @@
 			</code> (perhaps using a creation procedure, which is bound by the same formal requirement) so that it will always restore the invariant.
 		</paragraph>
 		<paragraph>Behind Eiffel's exception handling scheme lies the principle -- at first an apparent platitude, but violated by many existing mechanisms -- that a routine should 
-			<bold>either succeed or fail</bold>. This is in turn a consequence of Design by Contract&amp;#153; principles: succeeding means being able to fulfill the contract, possibly after one or more 
+			<bold>either succeed or fail</bold>. This is in turn a consequence of Design by Contract&#153; principles: succeeding means being able to fulfill the contract, possibly after one or more 
 			<code>
 				<keyword>retry</keyword>
 			</code>; failure is the other case, which must always trigger an exception in the caller. Otherwise it would be possible for a routine to miss its contract and yet return to its caller in a seemingly normal state. That is the worst possible way to handle an exception.
@@ -722,9 +716,9 @@
 		</paragraph>
 		<heading>
 			<size>2</size>
-			<content>Other applications of Design by Contract&amp;#153;</content>
+			<content>Other applications of Design by Contract&#153;</content>
 		</heading>
-		<paragraph>The Design by Contract&amp;#153; ideas pervade the Eiffel method. In addition to the applications just mentioned, they have two particularly important consequences:
+		<paragraph>The Design by Contract&#153; ideas pervade the Eiffel method. In addition to the applications just mentioned, they have two particularly important consequences:
 		<line_break/>
 		<list ordered="false">
 			<item> They make it possible to use Eiffel for analysis and design. At a high level of abstraction, it is necessary to be precise too. With the exception of BON, object-oriented analysis and design methods tend to favor abstraction over precision. Thanks to assertions, it is possible to express precise properties of a system ("At what speed should the alarm start sounding?") without making any commitment to implementation. The discussion of deferred classes (see 

@@ -72,7 +72,7 @@
 			<bold>assertions</bold> -- explained in 
 			<link>
 				<url>tutorial-09.xml</url><anchor_name>30455</anchor_name>
-				<label>Chapter 8, "Design By Contract&amp;#153; Assertions, Exceptions" </label>
+				<label>Chapter 8, "Design By Contract&#153; Assertions, Exceptions" </label>
 			</link> -- to kill the bugs while they are still larvae.  Such extensive unit and system testing, constantly interleaved with development, plays an important part in making sure that the "current demo" is trustworthy and will eventually yield a correct and robust product.
 		</paragraph>
 		<heading>

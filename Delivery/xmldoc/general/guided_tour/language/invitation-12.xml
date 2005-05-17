@@ -171,7 +171,7 @@
 				<feature_name>perimeter</feature_name>
 			</code> will not in some cases return, say, the area? Preconditions and postconditions provide the answer by limiting the amount of freedom granted to eventual redefiners.  The rule is that any redefined version must satisfy a weaker or equal precondition and ensure a stronger or equal postcondition than in the original.  This means that it must stay within the semantic boundaries set by the original assertions.
 		</paragraph>
-		<paragraph>The rules on redefinition and assertions are part of the Design by Contract&amp;#153; theory, where redefinition and dynamic binding introduce 
+		<paragraph>The rules on redefinition and assertions are part of the Design by Contract&#153; theory, where redefinition and dynamic binding introduce 
 			subcontracting. 
 			<code>
 				<class_name>POLYGON</class_name>

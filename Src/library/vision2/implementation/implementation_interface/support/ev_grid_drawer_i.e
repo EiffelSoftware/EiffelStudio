@@ -427,7 +427,7 @@ feature -- Basic operations
 			translated_parent_x_indent_position: INTEGER
 			tree_node_connector_color: EV_COLOR
 			grid_rows_data_list: EV_GRID_ARRAYED_LIST [SPECIAL [EV_GRID_ITEM_I]]
-			current_column: EV_GRID_COLUMN
+			current_column: EV_GRID_COLUMN_I
 		do
 			dynamic_content_function := grid.dynamic_content_function
 			
@@ -574,7 +574,8 @@ feature -- Basic operations
 								lists_valid_lengths: physical_column_indexes.count >= visible_column_indexes.count
 							end
 							current_column_index := visible_column_indexes.item
-							current_column := grid.column (current_column_index)
+--							current_column := grid.column (current_column_index)
+							current_column := grid.column_internal (current_column_index)
 							current_physical_column_index := physical_column_indexes.item (visible_column_indexes.item - 1)
 							
 							
@@ -806,6 +807,7 @@ feature -- Basic operations
 								if current_tree_adjusted_item_x_position - current_item_x_position < current_column_width then
 									grid_item.perform_redraw (current_tree_adjusted_item_x_position, current_item_y_position, current_tree_adjusted_column_width, current_row_height, grid.drawable)
 								end
+								draw_item_border (grid_item, current_item_x_position, current_item_y_position, current_column_width, current_row_height)
 							else
 									-- Calculate a translated parent x indent to include the subrow indent of
 									-- the tree. Must also be restricted to the edge of the current item in case the parent
@@ -848,6 +850,7 @@ feature -- Basic operations
 										
 									end
 								end
+								draw_item_border (grid_item, current_item_x_position, current_item_y_position, current_column_width, current_row_height)
 							end							
 							
 							visible_column_indexes.forth
@@ -937,6 +940,26 @@ feature -- Basic operations
 			result_set_to_count_if_row_list_empty: current_row_list.count = 0 implies Result = grid.column_count
 		end
 
+	draw_item_border (current_item: EV_GRID_ITEM_I; current_item_x_position, current_item_y_position, current_column_width, current_row_height: INTEGER) is
+			-- Draw a border for `current_item' with a position at `current_item_x_position', `current_item_y_position' and dimensions
+			-- of `current_column_width' and `current_row_height'.
+		local
+			drawable: EV_DRAWING_AREA
+		do
+			drawable := grid.drawable
+			fixme ("implement correctly as soon as interface is finished")
+			if False then
+				drawable.set_foreground_color (black)
+				if current_item.column.index > 1 then
+					drawable.draw_segment (current_item_x_position, current_item_y_position, current_item_x_position, current_item_y_position + current_row_height - 1)
+				end
+				if current_item.column.index = grid.column_count then
+					drawable.draw_segment (current_item_x_position + current_column_width - 1, current_item_y_position, current_item_x_position + current_column_width - 1, current_item_y_position + current_row_height - 1)
+				end
+				drawable.draw_segment (current_item_x_position, current_item_y_position + current_row_height - 1, current_item_x_position + current_column_width, current_item_y_position + current_row_height - 1)
+			end
+		end
+		
 	white: EV_COLOR is
 			-- Once access to the color white.
 		once

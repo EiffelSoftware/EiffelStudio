@@ -428,6 +428,10 @@ feature -- Basic operations
 			tree_node_connector_color: EV_COLOR
 			grid_rows_data_list: EV_GRID_ARRAYED_LIST [SPECIAL [EV_GRID_ITEM_I]]
 			current_column: EV_GRID_COLUMN_I
+			drawable: EV_DRAWABLE
+			row_count, row_height: INTEGER
+			is_tree_enabled, is_content_completely_dynamic, is_content_partially_dynamic : BOOLEAN
+
 		do
 			dynamic_content_function := grid.dynamic_content_function
 			
@@ -470,9 +474,15 @@ feature -- Basic operations
 			
 			vertical_buffer_offset := grid.viewport_y_offset
 			horizontal_buffer_offset := grid.viewport_x_offset
+			drawable := grid.drawable
+			row_count := grid.row_count
+			is_tree_enabled := grid.is_tree_enabled
+			is_content_completely_dynamic := grid.is_content_completely_dynamic
+			is_content_partially_dynamic := grid.is_content_partially_dynamic
+			row_height := grid.row_height
 			
 			
-			if grid.row_count > 0 and grid.column_count > 0 then
+			if row_count > 0 and grid.column_count > 0 then
 				column_offsets := grid.column_offsets
 				row_offsets := grid.row_offsets	
 					-- Note that here we need to remove 1 from `a_width' and `a_height' before
@@ -499,19 +509,19 @@ feature -- Basic operations
 						current_row := grid.row_internal (current_row_index)
 						current_row_list := grid_rows_data_list @ (current_row_index)
 				
-						if grid.is_row_height_fixed and not grid.is_tree_enabled then
-							current_item_y_position := (grid.row_height * (current_row_index - 1)) - (internal_client_y - vertical_buffer_offset)
-							current_row_height := grid.row_height
+						if grid.is_row_height_fixed and not is_tree_enabled then
+							current_item_y_position := (row_height * (current_row_index - 1)) - (internal_client_y - vertical_buffer_offset)
+							current_row_height := row_height
 						else
 							current_item_y_position := (row_offsets @ (current_row_index)) - (internal_client_y - vertical_buffer_offset)
 							if grid.is_row_height_fixed then
-								current_row_height := grid.row_height
+								current_row_height := row_height
 							else
 								current_row_height := current_row.height
 							end
 						end
 						
-						if grid.is_tree_enabled then
+						if is_tree_enabled then
 							-- Only perform the following calculations if the tree is enabled
 							-- as otherwise, they are not required.
 							-- Note that `current_row' may be Void if we are in partially dynamic mode
@@ -585,7 +595,7 @@ feature -- Basic operations
 								-- data structures. So we use a BOOLEAN to determine this instead.
 							grid_item_exists := False
 	
-							if not grid.is_content_completely_dynamic and current_row_list /= Void and then current_row_list.count > (current_column_index - 1) then
+							if not is_content_completely_dynamic and current_row_list /= Void and then current_row_list.count > (current_column_index - 1) then
 									-- If the grid is set to retrieve completely dynamic content, then we do not execute this code
 									-- as the current contents of the grid are never used. We also check that the current row and
 									-- current row position are valid.
@@ -602,7 +612,7 @@ feature -- Basic operations
 							current_item_x_position  := (column_offsets @ (current_column_index)) - (internal_client_x - horizontal_buffer_offset)
 							current_column_width := column_offsets @ (current_column_index + 1) - column_offsets @ (current_column_index)
 							
-							if (grid.is_content_partially_dynamic or grid.is_content_completely_dynamic) and then not grid_item_exists and dynamic_content_function /= Void then
+							if (is_content_partially_dynamic or is_content_completely_dynamic) and then not grid_item_exists and dynamic_content_function /= Void then
 									-- If we are dynamically computing the contents of the grid and we have not already retrieved an item for
 									-- the grid, then we execute this code.
 									
@@ -667,7 +677,7 @@ feature -- Basic operations
 								current_tree_adjusted_item_x_position := current_item_x_position
 								current_tree_adjusted_column_width := current_column_width
 
-								if grid.is_tree_enabled then
+								if is_tree_enabled then
 									
 									if current_column_index = node_index then
 										
@@ -676,12 +686,12 @@ feature -- Basic operations
 											-- We adjust the horizontal position and width of the current item by the space required
 											-- for the tree node.
 										
-									grid.drawable.set_foreground_color (grid.displayed_background_color (current_column_index, current_row_index))
+									drawable.set_foreground_color (grid.displayed_background_color (current_column_index, current_row_index))
 										
 											-- The background area for the tree node must always be refreshed, even if the node is not visible.
 											-- We draw no wider than `current_column_width' to ensure this. The item background is re-drawn by the
 											-- item itself.
-										grid.drawable.fill_rectangle (current_item_x_position, current_item_y_position, current_column_width - ((current_column_width - current_subrow_indent).max (0)), current_row_height)
+										drawable.fill_rectangle (current_item_x_position, current_item_y_position, current_column_width - ((current_column_width - current_subrow_indent).max (0)), current_row_height)
 
 											-- If the indent of the tree is less than `current_column_width', it must be visible so draw it.
 										if current_row.is_expandable then
@@ -697,9 +707,9 @@ feature -- Basic operations
 												if node_pixmap_height > current_row_height then
 														-- In this situation, the height of the expand image is greater than the current row height,
 														-- so we only draw the part that fits within the node.
-													grid.drawable.draw_sub_pixmap (horizontal_node_pixmap_left_offset, current_item_y_position, l_pixmap, create {EV_RECTANGLE}.make (0, (node_pixmap_height - current_row_height) // 2, node_pixmap_height, current_row_height))
+													drawable.draw_sub_pixmap (horizontal_node_pixmap_left_offset, current_item_y_position, l_pixmap, create {EV_RECTANGLE}.make (0, (node_pixmap_height - current_row_height) // 2, node_pixmap_height, current_row_height))
 												else
-													grid.drawable.draw_pixmap (horizontal_node_pixmap_left_offset, vertical_node_pixmap_top_offset, l_pixmap)
+													drawable.draw_pixmap (horizontal_node_pixmap_left_offset, vertical_node_pixmap_top_offset, l_pixmap)
 												end
 											end
 										end
@@ -719,23 +729,23 @@ feature -- Basic operations
 														l_x_end := current_item_x_position
 													end
 												end
-												grid.drawable.set_foreground_color (tree_node_connector_color)
+												drawable.set_foreground_color (tree_node_connector_color)
 												if l_x_start < current_item_x_position + current_column_width then
 														-- If the edge of the horizontal line from the left edge of the item is within the position
 														-- of the column, we must draw it, otherwise it is clipped below in the "elseif"
 													
-													grid.drawable.draw_segment (l_x_start, row_vertical_center, l_x_end, row_vertical_center)
+													drawable.draw_segment (l_x_start, row_vertical_center, l_x_end, row_vertical_center)
 														-- Draw a horizontal line from the left edge of the item to the either the node horizontal offset or the edge of the actual item position
 													 	-- if the node to which we are connected is within a different column.
 													 	
 													 if parent_node_index /= node_index and current_row.is_expandable then
 													 		-- Draw the horizontal line from the left edge of the expand icon to the start of
 													 		-- the grid cell as the horizontal line spans into other grid cells.
-													 	grid.drawable.draw_segment (current_item_x_position, row_vertical_center, horizontal_node_pixmap_left_offset, row_vertical_center)
+													 	drawable.draw_segment (current_item_x_position, row_vertical_center, horizontal_node_pixmap_left_offset, row_vertical_center)
 													 end
 												elseif l_x_end.min (current_item_x_position + current_column_width) /= current_item_x_position + current_column_width then
 														-- Now we must clip the horizontal segment and draw.
-													grid.drawable.draw_segment (l_x_end.min (current_item_x_position + current_column_width), row_vertical_center, current_item_x_position + current_column_width, row_vertical_center)
+													drawable.draw_segment (l_x_end.min (current_item_x_position + current_column_width), row_vertical_center, current_item_x_position + current_column_width, row_vertical_center)
 												end	
 											end
 											 
@@ -743,7 +753,7 @@ feature -- Basic operations
 												
 												current_horizontal_pos := node_pixmap_vertical_center
 												if are_tree_node_connectors_shown then
-													grid.drawable.set_foreground_color (tree_node_connector_color)
+													drawable.set_foreground_color (tree_node_connector_color)
 													if current_horizontal_pos < column_offsets @ (node_index + 1) then
 															-- Draw the vertical line at the node, connecting the top and bottom
 															-- of the tree row.
@@ -753,20 +763,20 @@ feature -- Basic operations
 															if current_row.is_expandable then
 																	-- The row displays an expand or collapse pixmap, so draw the lines above and below. Subtract one as we
 																	-- do not want to overwrite the first line of the pixmap.
-																grid.drawable.draw_segment (node_pixmap_vertical_center, vertical_node_pixmap_top_offset - 1, node_pixmap_vertical_center, current_item_y_position)
-																grid.drawable.draw_segment (node_pixmap_vertical_center, vertical_node_pixmap_bottom_offset, node_pixmap_vertical_center, row_vertical_bottom)
+																drawable.draw_segment (node_pixmap_vertical_center, vertical_node_pixmap_top_offset - 1, node_pixmap_vertical_center, current_item_y_position)
+																drawable.draw_segment (node_pixmap_vertical_center, vertical_node_pixmap_bottom_offset, node_pixmap_vertical_center, row_vertical_bottom)
 															else
 																	-- Draw a single line from top to bottom.
-																grid.drawable.draw_segment (node_pixmap_vertical_center, current_item_y_position, node_pixmap_vertical_center, row_vertical_bottom)
+																drawable.draw_segment (node_pixmap_vertical_center, current_item_y_position, node_pixmap_vertical_center, row_vertical_bottom)
 															end
 														else
 																-- We are the final row in the parents structure, so we draw from the center of the row to the top.
 															if current_row.is_expandable then
 																	-- Draw from the top of the node. Subtract one as we do not want to overwrite the first line of the pixmap.
-																grid.drawable.draw_segment (node_pixmap_vertical_center, vertical_node_pixmap_top_offset - 1, node_pixmap_vertical_center, current_item_y_position)
+																drawable.draw_segment (node_pixmap_vertical_center, vertical_node_pixmap_top_offset - 1, node_pixmap_vertical_center, current_item_y_position)
 															else
 																	-- Draw from the center of the row as no node pixmap is displayed.
-																grid.drawable.draw_segment (node_pixmap_vertical_center, row_vertical_center, node_pixmap_vertical_center, current_item_y_position)
+																drawable.draw_segment (node_pixmap_vertical_center, row_vertical_center, node_pixmap_vertical_center, current_item_y_position)
 															end
 														end
 													end
@@ -790,7 +800,7 @@ feature -- Basic operations
 																	-- If the current item is the last one contained within the parent then a line must be drawn. As this is
 																	-- computed in a nested fashion, the subnode count is used recursively.
 																	
-																grid.drawable.draw_segment (current_horizontal_pos, row_vertical_bottom, current_horizontal_pos, current_item_y_position)
+																drawable.draw_segment (current_horizontal_pos, row_vertical_bottom, current_horizontal_pos, current_item_y_position)
 																	-- Draw the vertical line from the bottom of the item to the top.
 															end
 														end
@@ -805,7 +815,7 @@ feature -- Basic operations
 									end
 								end
 								if current_tree_adjusted_item_x_position - current_item_x_position < current_column_width then
-									grid_item.perform_redraw (current_tree_adjusted_item_x_position, current_item_y_position, current_tree_adjusted_column_width, current_row_height, grid.drawable)
+									grid_item.perform_redraw (current_tree_adjusted_item_x_position, current_item_y_position, current_tree_adjusted_column_width, current_row_height, drawable)
 								end
 								draw_item_border (grid_item, current_item_x_position, current_item_y_position, current_column_width, current_row_height)
 							else
@@ -819,15 +829,15 @@ feature -- Basic operations
 								
 									-- As there is no current item, we must now fill the background with the
 									-- parent background color.
-								grid.drawable.set_foreground_color (grid.displayed_background_color (current_column_index, current_row_index))
-								grid.drawable.fill_rectangle (current_item_x_position, current_item_y_position, current_column_width, current_row_height)
+								drawable.set_foreground_color (grid.displayed_background_color (current_column_index, current_row_index))
+								drawable.fill_rectangle (current_item_x_position, current_item_y_position, current_column_width, current_row_height)
 								if are_tree_node_connectors_shown and (drawing_subrow or drawing_parentrow) and current_column_index <= node_index and current_column_index >= parent_node_index then
 									
 										-- We must now draw the lines for the tree structure, as although there is no item
 										-- at this location in the grid, a tree line may cross it horizontally.
 									
-									grid.drawable.set_foreground_color (tree_node_connector_color)
-									grid.drawable.draw_segment (translated_parent_x_indent_position.min (current_item_x_position + current_column_width), row_vertical_center, current_item_x_position + current_column_width, row_vertical_center)
+									drawable.set_foreground_color (tree_node_connector_color)
+									drawable.draw_segment (translated_parent_x_indent_position.min (current_item_x_position + current_column_width), row_vertical_center, current_item_x_position + current_column_width, row_vertical_center)
 										-- The background area for the tree node must always be refreshed, even if the node is not visible.
 										-- We draw no wider than `current_column_width' to ensure this.
 									
@@ -840,12 +850,12 @@ feature -- Basic operations
 										if parent_row_i.subrow_count > (current_row.index - parent_row_i.index) then
 												-- In this case, there are more subrows of `parent_row_i' to be drawn,
 												-- so the vertical line is drawn to span the complete height of the current row.
-											grid.drawable.draw_segment (translated_parent_x_indent_position, row_vertical_bottom, translated_parent_x_indent_position, current_item_y_position)
+											drawable.draw_segment (translated_parent_x_indent_position, row_vertical_bottom, translated_parent_x_indent_position, current_item_y_position)
 											
 										else
 												-- There are no subsequent rows for `parent_row_i' so we must draw the vertical line
 												-- from the start of the current row to the center only.
-											grid.drawable.draw_segment (translated_parent_x_indent_position, row_vertical_center, translated_parent_x_indent_position, current_item_y_position)
+											drawable.draw_segment (translated_parent_x_indent_position, row_vertical_center, translated_parent_x_indent_position, current_item_y_position)
 										end
 										
 									end
@@ -867,26 +877,26 @@ feature -- Basic operations
 				-- We compute the rectangle width based on the position of the final item within `column_offsets'.
 			if rectangle_width >= 0 then
 					-- Check to see if we must draw the background to the right of the items.
-				grid.drawable.set_foreground_color (grid.background_color)
-				grid.drawable.fill_rectangle (horizontal_buffer_offset + internal_client_width - rectangle_width, vertical_buffer_offset, rectangle_width, internal_client_height)
+				drawable.set_foreground_color (grid.background_color)
+				drawable.fill_rectangle (horizontal_buffer_offset + internal_client_width - rectangle_width, vertical_buffer_offset, rectangle_width, internal_client_height)
 			end
-			if current_row = Void or else current_row.index >= grid.row_count - grid.hidden_node_count then
-				if grid.is_row_height_fixed and not grid.is_tree_enabled then
+			if current_row = Void or else current_row.index >= row_count - grid.hidden_node_count then
+				if grid.is_row_height_fixed and not is_tree_enabled then
 						-- Special handling for fixed row heights as `row_offsets' does not exist.
-					rectangle_height := internal_client_height - ((grid.row_height * (grid.row_count)) - internal_client_y)
+					rectangle_height := internal_client_height - ((row_height * (row_count)) - internal_client_y)
 				else
-					rectangle_height := internal_client_height - (row_offsets @ (grid.row_count + 1) - internal_client_y)
+					rectangle_height := internal_client_height - (row_offsets @ (row_count + 1) - internal_client_y)
 				end
 				if rectangle_height >= 0 then
 						-- Check to see if must draw the background below the items.
-					grid.drawable.set_foreground_color (grid.background_color)
-					grid.drawable.fill_rectangle (horizontal_buffer_offset, vertical_buffer_offset + internal_client_height - rectangle_height, internal_client_width, rectangle_height)
+					drawable.set_foreground_color (grid.background_color)
+					drawable.fill_rectangle (horizontal_buffer_offset, vertical_buffer_offset + internal_client_height - rectangle_height, internal_client_width, rectangle_height)
 				end
 			end
 			else
 					-- In this situation, the grid is completely empty, so we simply fill the background color.
-				grid.drawable.set_foreground_color (grid.background_color)
-				grid.drawable.fill_rectangle (an_x, a_y, a_width, a_height)
+				drawable.set_foreground_color (grid.background_color)
+				drawable.fill_rectangle (an_x, a_y, a_width, a_height)
 			end
 			if not grid.is_column_resize_immediate and grid.is_header_item_resizing and grid.is_resizing_divider_enabled then
 					-- Put the resizing line back on the redrawn area so that it can be correctly erased

@@ -283,6 +283,9 @@ feature {NONE} -- Initialization
 			create new_feature_cmd.make (Current)
 			toolbarable_commands.extend (new_feature_cmd)
 
+			create toggle_feature_alias_cmd.make (Current)
+			toolbarable_commands.extend (toggle_feature_alias_cmd)
+
 			create toggle_feature_signature_cmd.make (Current)
 			toolbarable_commands.extend (toggle_feature_signature_cmd)
 
@@ -316,6 +319,7 @@ feature {NONE} -- Initialization
 			create show_toolbar_commands.make (3)
 
 			new_feature_cmd.disable_sensitive
+			toggle_feature_alias_cmd.disable_sensitive
 			toggle_feature_signature_cmd.disable_sensitive
 
 			create editors.make (5)
@@ -2433,6 +2437,7 @@ feature {NONE} -- Implementation
 				cluster_st ?= a_stone
 
 				new_feature_cmd.disable_sensitive
+				toggle_feature_alias_cmd.disable_sensitive
 				toggle_feature_signature_cmd.disable_sensitive
 
 					-- We update the state of the `Add to Favorites' command.
@@ -2534,6 +2539,7 @@ feature {NONE} -- Implementation
 							Eiffel_project.Workbench.last_reached_degree <= 2
 						then
 							new_feature_cmd.enable_sensitive
+							toggle_feature_alias_cmd.enable_sensitive
 							toggle_feature_signature_cmd.enable_sensitive
 						end
 
@@ -3235,6 +3241,9 @@ feature {EB_TOOL} -- Implementation / Commands
 
 	new_feature_cmd: EB_NEW_FEATURE_COMMAND
 			-- Command to execute the feature wizard.
+
+	toggle_feature_alias_cmd: EB_TOGGLE_FEATURE_ALIAS_COMMAND
+			-- Show/Hide alias name of feature node in eb_feature_tool
 
 	toggle_feature_signature_cmd: EB_TOGGLE_FEATURE_SIGNATURE_COMMAND
 			-- Show/Hide signature of feature node in eb_feature_tool

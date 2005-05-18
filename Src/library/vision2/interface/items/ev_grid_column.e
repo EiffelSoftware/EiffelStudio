@@ -29,6 +29,16 @@ create
 
 feature -- Access
 
+	header_item: EV_GRID_HEADER_ITEM is
+			-- Header item used for resizing `Current' in grid.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.header_item
+		ensure
+			result_not_void: Result /= Void
+		end
+
 	is_displayed: BOOLEAN is
 			-- May `Current' be displayed when its `parent' is?
 			-- Will return False if `hide' has been called on `Current'.

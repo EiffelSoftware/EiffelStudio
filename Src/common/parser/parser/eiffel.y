@@ -771,7 +771,7 @@ Rename_list: Rename_pair
 			}
 	;
 
-Rename_pair: Feature_name TE_AS Feature_name
+Rename_pair: Feature_name TE_AS Extended_feature_name
 			{ $$ := ast_factory.new_rename_as ($1, $3) }
 	;
 

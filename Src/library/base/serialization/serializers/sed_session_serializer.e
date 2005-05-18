@@ -1,6 +1,5 @@
 indexing
-	description: "Objects that facilitate encoding and decoding of arbitrary objects graphs."
-	author: "Stephanie Balzer/Emmanuel Stapf"
+	description: "Objects that facilitate encoding and decoding of arbitrary objects graphs within a session."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -105,7 +104,10 @@ feature -- Basic operations
 			l_list := traversable.visited_objects
 
 				-- Write number of objects we are storing
-			serializer.write_natural_32 (l_list.count.to_natural_32)
+			serializer.write_compressed_natural_32 (l_list.count.to_natural_32)
+
+				-- Write header of encoding
+			write_header (l_list)
 
 				-- Write objects
 			encode_objects (l_list)
@@ -143,6 +145,15 @@ feature {NONE} -- Implementation: Access
 
 feature {NONE} -- Implementation
 
+	write_header (a_list: ARRAYED_LIST [ANY]) is
+			-- Operation performed before `encoding_objects'.
+		require
+			a_list_not_void: a_list /= Void
+			a_list_not_empty: not a_list.is_empty
+		do
+			-- Nothing for this implementation
+		end
+
 	encode_objects (a_list: ARRAYED_LIST [ANY]) is
 			-- Encode all objects referenced in `a_list'.
 		require
@@ -172,7 +183,7 @@ feature {NONE} -- Implementation
 				l_is_tuple := l_int.is_tuple (l_obj)
 
 					-- Write object dtype.
-				l_ser.write_integer_32 (l_dtype)
+				l_ser.write_compressed_natural_32 (l_dtype.to_natural_32)
 
 					-- Write object reference ID.
 				encode_reference (l_obj)
@@ -208,9 +219,9 @@ feature {NONE} -- Implementation
 				if not l_indexes.found then
 					l_indexes.put (an_object)
 				end
-				serializer.write_natural_32 (l_indexes.found_item)
+				serializer.write_compressed_natural_32 (l_indexes.found_item)
 			else
-				serializer.write_natural_32 (0)
+				serializer.write_compressed_natural_32 (0)
 			end
 		end
 		
@@ -444,7 +455,7 @@ feature {NONE} -- Implementation
 		do
 			nb := a_spec.count
 			l_ser := serializer
-			l_ser.write_integer_32 (nb)
+			l_ser.write_compressed_natural_32 (nb.to_natural_32)
 			from
 				i := 0
 			until
@@ -465,7 +476,7 @@ feature {NONE} -- Implementation
 		do
 			nb := a_spec.count
 			l_ser := serializer
-			l_ser.write_integer_32 (nb)
+			l_ser.write_compressed_natural_32 (nb.to_natural_32)
 			from
 				i := 0
 			until
@@ -486,7 +497,7 @@ feature {NONE} -- Implementation
 		do
 			nb := a_spec.count
 			l_ser := serializer
-			l_ser.write_integer_32 (nb)
+			l_ser.write_compressed_natural_32 (nb.to_natural_32)
 			from
 				i := 0
 			until
@@ -507,7 +518,7 @@ feature {NONE} -- Implementation
 		do
 			nb := a_spec.count
 			l_ser := serializer
-			l_ser.write_integer_32 (nb)
+			l_ser.write_compressed_natural_32 (nb.to_natural_32)
 			from
 				i := 0
 			until
@@ -528,7 +539,7 @@ feature {NONE} -- Implementation
 		do
 			nb := a_spec.count
 			l_ser := serializer
-			l_ser.write_integer_32 (nb)
+			l_ser.write_compressed_natural_32 (nb.to_natural_32)
 			from
 				i := 0
 			until
@@ -549,7 +560,7 @@ feature {NONE} -- Implementation
 		do
 			nb := a_spec.count
 			l_ser := serializer
-			l_ser.write_integer_32 (nb)
+			l_ser.write_compressed_natural_32 (nb.to_natural_32)
 			from
 				i := 0
 			until
@@ -570,7 +581,7 @@ feature {NONE} -- Implementation
 		do
 			nb := a_spec.count
 			l_ser := serializer
-			l_ser.write_integer_32 (nb)
+			l_ser.write_compressed_natural_32 (nb.to_natural_32)
 			from
 				i := 0
 			until
@@ -591,7 +602,7 @@ feature {NONE} -- Implementation
 		do
 			nb := a_spec.count
 			l_ser := serializer
-			l_ser.write_integer_32 (nb)
+			l_ser.write_compressed_natural_32 (nb.to_natural_32)
 			from
 				i := 0
 			until
@@ -612,7 +623,7 @@ feature {NONE} -- Implementation
 		do
 			nb := a_spec.count
 			l_ser := serializer
-			l_ser.write_integer_32 (nb)
+			l_ser.write_compressed_natural_32 (nb.to_natural_32)
 			from
 				i := 0
 			until
@@ -633,7 +644,7 @@ feature {NONE} -- Implementation
 		do
 			nb := a_spec.count
 			l_ser := serializer
-			l_ser.write_integer_32 (nb)
+			l_ser.write_compressed_natural_32 (nb.to_natural_32)
 			from
 				i := 0
 			until
@@ -654,7 +665,7 @@ feature {NONE} -- Implementation
 		do
 			nb := a_spec.count
 			l_ser := serializer
-			l_ser.write_integer_32 (nb)
+			l_ser.write_compressed_natural_32 (nb.to_natural_32)
 			from
 				i := 0
 			until
@@ -675,7 +686,7 @@ feature {NONE} -- Implementation
 		do
 			nb := a_spec.count
 			l_ser := serializer
-			l_ser.write_integer_32 (nb)
+			l_ser.write_compressed_natural_32 (nb.to_natural_32)
 			from
 				i := 0
 			until
@@ -696,7 +707,7 @@ feature {NONE} -- Implementation
 		do
 			nb := a_spec.count
 			l_ser := serializer
-			l_ser.write_integer_32 (nb)
+			l_ser.write_compressed_natural_32 (nb.to_natural_32)
 			from
 				i := 0
 			until

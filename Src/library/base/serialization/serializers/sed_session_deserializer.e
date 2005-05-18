@@ -1,5 +1,5 @@
 indexing
-	description: "Decoding of arbitrary objects graphs."
+	description: "Decoding of arbitrary objects graphs within a session."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -45,8 +45,11 @@ feature -- Basic operations
 			l_count: NATURAL_32
 		do
 				-- Write number of objects we are storing
-			l_count := deserializer.read_natural_32
+			l_count := deserializer.read_compressed_natural_32
 			create object_references.make (l_count.to_integer_32 + 1)
+
+				-- Read header of serialized data.
+			read_header
 
 				-- Read data from `deserializer' in store it in `object_references'.
 			decode_objects (l_count)
@@ -69,6 +72,23 @@ feature {NONE} -- Implementation: Access
 			-- we store the object, the field position in this object and the reference id.
 
 feature {NONE} -- Implementation
+
+	read_header is
+			-- Read header of serialized data
+		do
+			-- Do nothing
+		end
+	
+	new_dynamic_type_id (a_old_type_id: INTEGER): INTEGER is
+			-- Given `a_old_type_id', dynamic type id in stored system, retrieve dynamic
+			-- type id in current system.
+		require
+			a_old_type_id_non_negative: a_old_type_id >= 0
+		do
+			Result := a_old_type_id
+		ensure
+			new_dynamic_type_id_non_negative: Result >= 0
+		end
 
 	decode_objects (a_count: NATURAL_32) is
 			-- Decode `a_count' object from `deserializer' and store root object in `last_decoded_object'.
@@ -109,10 +129,10 @@ feature {NONE} -- Implementation
 			l_deser := deserializer
 
 				-- Read object dynamic type
-			l_dtype := l_deser.read_integer_32
+			l_dtype := new_dynamic_type_id (l_deser.read_compressed_natural_32.to_integer_32)
 
 				-- Read reference ID.
-			l_nat32 := l_deser.read_natural_32
+			l_nat32 := l_deser.read_compressed_natural_32
 			check
 				l_nat32_valid: l_nat32 < {INTEGER}.max_value.as_natural_32
 			end
@@ -301,7 +321,7 @@ feature {NONE} -- Implementation
 			l_deser := deserializer
 			from
 				i := 0
-				nb := l_deser.read_integer_32
+				nb := l_deser.read_compressed_natural_32.to_integer_32
 				create l_spec.make (nb)
 				object_references.put (l_spec, an_index)
 				last_decoded_object := l_spec
@@ -325,7 +345,7 @@ feature {NONE} -- Implementation
 			l_deser := deserializer
 			from
 				i := 0
-				nb := l_deser.read_integer_32
+				nb := l_deser.read_compressed_natural_32.to_integer_32
 				create l_spec.make (nb)
 				object_references.put (l_spec, an_index)
 				last_decoded_object := l_spec
@@ -349,7 +369,7 @@ feature {NONE} -- Implementation
 			l_deser := deserializer
 			from
 				i := 0
-				nb := l_deser.read_integer_32
+				nb := l_deser.read_compressed_natural_32.to_integer_32
 				create l_spec.make (nb)
 				object_references.put (l_spec, an_index)
 				last_decoded_object := l_spec
@@ -373,7 +393,7 @@ feature {NONE} -- Implementation
 			l_deser := deserializer
 			from
 				i := 0
-				nb := l_deser.read_integer_32
+				nb := l_deser.read_compressed_natural_32.to_integer_32
 				create l_spec.make (nb)
 				object_references.put (l_spec, an_index)
 				last_decoded_object := l_spec
@@ -397,7 +417,7 @@ feature {NONE} -- Implementation
 			l_deser := deserializer
 			from
 				i := 0
-				nb := l_deser.read_integer_32
+				nb := l_deser.read_compressed_natural_32.to_integer_32
 				create l_spec.make (nb)
 				object_references.put (l_spec, an_index)
 				last_decoded_object := l_spec
@@ -421,7 +441,7 @@ feature {NONE} -- Implementation
 			l_deser := deserializer
 			from
 				i := 0
-				nb := l_deser.read_integer_32
+				nb := l_deser.read_compressed_natural_32.to_integer_32
 				create l_spec.make (nb)
 				object_references.put (l_spec, an_index)
 				last_decoded_object := l_spec
@@ -445,7 +465,7 @@ feature {NONE} -- Implementation
 			l_deser := deserializer
 			from
 				i := 0
-				nb := l_deser.read_integer_32
+				nb := l_deser.read_compressed_natural_32.to_integer_32
 				create l_spec.make (nb)
 				object_references.put (l_spec, an_index)
 				last_decoded_object := l_spec
@@ -469,7 +489,7 @@ feature {NONE} -- Implementation
 			l_deser := deserializer
 			from
 				i := 0
-				nb := l_deser.read_integer_32
+				nb := l_deser.read_compressed_natural_32.to_integer_32
 				create l_spec.make (nb)
 				object_references.put (l_spec, an_index)
 				last_decoded_object := l_spec
@@ -493,7 +513,7 @@ feature {NONE} -- Implementation
 			l_deser := deserializer
 			from
 				i := 0
-				nb := l_deser.read_integer_32
+				nb := l_deser.read_compressed_natural_32.to_integer_32
 				create l_spec.make (nb)
 				object_references.put (l_spec, an_index)
 				last_decoded_object := l_spec
@@ -517,7 +537,7 @@ feature {NONE} -- Implementation
 			l_deser := deserializer
 			from
 				i := 0
-				nb := l_deser.read_integer_32
+				nb := l_deser.read_compressed_natural_32.to_integer_32
 				create l_spec.make (nb)
 				object_references.put (l_spec, an_index)
 				last_decoded_object := l_spec
@@ -541,7 +561,7 @@ feature {NONE} -- Implementation
 			l_deser := deserializer
 			from
 				i := 0
-				nb := l_deser.read_integer_32
+				nb := l_deser.read_compressed_natural_32.to_integer_32
 				create l_spec.make (nb)
 				object_references.put (l_spec, an_index)
 				last_decoded_object := l_spec
@@ -565,7 +585,7 @@ feature {NONE} -- Implementation
 			l_deser := deserializer
 			from
 				i := 0
-				nb := l_deser.read_integer_32
+				nb := l_deser.read_compressed_natural_32.to_integer_32
 				create l_spec.make (nb)
 				object_references.put (l_spec, an_index)
 				last_decoded_object := l_spec
@@ -589,7 +609,7 @@ feature {NONE} -- Implementation
 			l_deser := deserializer
 			from
 				i := 0
-				nb := l_deser.read_integer_32
+				nb := l_deser.read_compressed_natural_32.to_integer_32
 				create l_spec.make (nb)
 				object_references.put (l_spec, an_index)
 				last_decoded_object := l_spec
@@ -614,7 +634,7 @@ feature {NONE} -- Implementation
 			l_deser := deserializer
 			from
 				i := 0
-				nb := l_deser.read_integer_32
+				nb := l_deser.read_compressed_natural_32.to_integer_32
 				l_spec := internal.new_special_any_instance (a_dtype, nb)
 				object_references.put (l_spec, an_index)
 				last_decoded_object := l_spec
@@ -639,7 +659,7 @@ feature {NONE} -- Implementation
 			l_index: INTEGER
 			l_sub_obj: ANY
 		do
-			l_nat32 := deserializer.read_natural_32
+			l_nat32 := deserializer.read_compressed_natural_32
 			if l_nat32 /= 0 then
 				check
 					l_nat32_valid: l_nat32 < {INTEGER}.max_value.as_natural_32

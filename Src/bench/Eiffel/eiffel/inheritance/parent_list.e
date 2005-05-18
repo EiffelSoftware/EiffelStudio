@@ -71,10 +71,10 @@ feature -- Validity
 			end
 		end
 
-	is_selecting (feature_name: STRING): BOOLEAN is
-			-- Are the parents selecting `feature_name' ?
+	is_selecting (feature_name_id: INTEGER): BOOLEAN is
+			-- Are the parents selecting `feature_name_id'?
 		require
-			good_argument: not (feature_name = Void)
+			good_argument: feature_name_id > 0
 		local
 			l_area: SPECIAL [PARENT_C]
 			i, nb: INTEGER
@@ -85,7 +85,7 @@ feature -- Validity
 			until
 				Result or else i = nb
 			loop
-				Result := l_area.item(i).is_selecting (feature_name)
+				Result := l_area.item(i).is_selecting (feature_name_id)
 				i := i + 1
 			end
 		end

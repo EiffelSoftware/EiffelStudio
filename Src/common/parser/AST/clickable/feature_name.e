@@ -33,14 +33,14 @@ inherit
 			is_equal
 		end
 
-	SHARED_NAMES_HEAP
+	PREFIX_INFIX_NAMES
 		export
 			{NONE} all
 		undefine
 			is_equal
 		end
 
-	SYNTAX_STRINGS
+	SHARED_NAMES_HEAP
 		export
 			{NONE} all
 		undefine
@@ -129,14 +129,14 @@ feature -- Status report
 		local
 			l_names_heap: like Names_heap
 		do
-			if internal_alias_name /= Void then
+			if alias_name /= Void then
 				l_names_heap := Names_heap
 				l_names_heap.put (internal_alias_name)
 				Result := l_names_heap.found_item
 			end
 		ensure
-			has_alias: internal_alias_name /= Void implies Result > 0
-			has_no_alias: internal_alias_name = Void implies Result = 0
+			has_alias: alias_name /= Void implies Result > 0
+			has_no_alias: alias_name = Void implies Result = 0
 		end
 
 	internal_alias_name: STRING is
@@ -197,13 +197,13 @@ feature {NONE} -- Implementation: helper functions
 			-- Internal alias name augmented with arity information
 			-- in the form "prefix ..." or "infix ..."
 		require
-			is_operator: is_infix or is_prefix
+			is_operator: is_binary or is_unary
 			alias_name_not_void: alias_name /= Void
 		do
-			if is_infix then
-				Result := infix_str + alias_name.value + quote_str
+			if is_binary then
+				Result := infix_feature_name_with_symbol (alias_name.value)
 			else
-				Result := prefix_str + alias_name.value + quote_str
+				Result := prefix_feature_name_with_symbol (alias_name.value)
 			end
 		ensure
 			result_not_void: Result /= Void

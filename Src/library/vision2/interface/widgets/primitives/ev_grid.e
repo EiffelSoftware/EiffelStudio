@@ -182,6 +182,16 @@ feature -- Access
 			selected_columns_empty: selected_columns.is_empty
 		end
 
+	header: EV_GRID_HEADER is
+			-- Header control used for resizing columns of `Current'.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.header
+		ensure
+			result_not_void: Result /= Void
+		end
+
 	is_header_displayed: BOOLEAN is
 			-- Is the header displayed in `Current'.
 		require
@@ -661,35 +671,34 @@ feature -- Status setting
 			multiple_item_selection_enabled: is_multiple_item_selection_enabled
 		end
 
-	enable_item_always_selected is
-			-- Change current selection mode so that as soon as a user selects an item in the grid, an item must always be selected.
-			-- The user may only deselect and item by selecting another item.
+	enable_always_selected is
+			-- Ensure that the user may not completely remove the selection from `Current'.
 		require
 			not_destroyed: not is_destroyed
 		do
-			implementation.enable_item_always_selected
+			implementation.enable_always_selected
 		ensure
-			item_is_always_selected_enabled: is_item_always_selected
+			item_is_always_selected_enabled: is_always_selected
 		end
 
-	disable_item_always_selected is
-			-- Allow items to be deselected in current selection mode by they user either by clicking on another item,
+	disable_always_selected is
+			-- Allow the user to completely remove the selection from `Current' via clicking on an item,
 			-- clicking on a Void area or by Ctrl clicking the selected item itself.
 		require
 			not_destroyed: not is_destroyed
 		do
-			implementation.disable_item_always_selected
+			implementation.disable_always_selected
 		ensure
-			not_is_item_always_selected_enabled: not is_item_always_selected
+			not_is_item_always_selected_enabled: not is_always_selected
 		end
 
-	is_item_always_selected: BOOLEAN is
-			-- Is at least one item selected in the grid at all times after an initial user selection has been made.
+	is_always_selected: BOOLEAN is
+			-- May the user completely remove the selection from the grid.
 			-- If `True' then the user of the grid may only deselect items by selecting other items.
 		require
 			not_destroyed: not is_destroyed
 		do
-			Result := implementation.is_item_always_selected
+			Result := implementation.is_always_selected
 		end
 		
 	show_header is

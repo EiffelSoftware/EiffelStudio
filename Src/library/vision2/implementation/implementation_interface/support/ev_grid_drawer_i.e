@@ -218,63 +218,68 @@ feature -- Basic operations
 						--						else	
 						--							hi := row_counter
 						--						end
-						--					end
-					from
-						i := 1
-					until
-						i > row_offsets.count or found
-					loop
-						if row_offsets @ i > invalid_y_start then
-							found := True
-						else
-							i := i + pre_search_iteration_size
-						end
-					end
-					start_pos := i - pre_search_iteration_size
-
-						-- If the starting index has fallen within a tree structure,
-						-- we must start from the beginning of the root parent.
-					if grid.row (start_pos).parent_row /= Void then
-						start_pos := grid.row (start_pos).parent_row_root.index
-					end
-
-					from
-						row_counter := start_pos
-						i := 0
-					until
-						last_row_index_set or row_counter > grid.rows.count
-					loop
-						i := row_offsets @ (row_counter)
-						current_row := grid.rows.i_th (row_counter)
-						if grid.is_row_height_fixed then
-							current_height := grid.row_height
-						else
-							current_height := current_row.height
-						end
-
-						if not first_row_index_set and then (i + current_height) > (invalid_y_start) then
-							first_row_index := row_counter
-							first_row_index_set := True
-						end
-						if first_row_index_set then
-							Result.extend (row_counter)
-						end
-
-						if not last_row_index_set and then (invalid_y_end) < i + current_height then
-							last_row_index := row_counter
-							last_row_index_set := True
-						end
-						if current_row /= Void then
-								-- If the mode is partially dynamic and a tree is enabled, it
-								-- is possible that the current row may not exist.
-							if current_row.subrow_count > 0 and not current_row.is_expanded then
-								if not first_row_index_set then
-									skipped_rows := skipped_rows + current_row.subnode_count_recursive	
-								end
-								row_counter := row_counter + current_row.subnode_count_recursive
+						--				end
+					if row_offsets.count > 1 then
+							-- Only compute the rows that span the area if there are rows
+							-- are contained in `grid'. If not, there is nothing to perform here
+							-- and `Result' is simply an empty list.
+						from
+							i := 1
+						until
+							i > row_offsets.count or found
+						loop
+							if row_offsets @ i > invalid_y_start then
+								found := True
+							else
+								i := i + pre_search_iteration_size
 							end
 						end
-						row_counter := row_counter + 1
+						start_pos := i - pre_search_iteration_size
+	
+							-- If the starting index has fallen within a tree structure,
+							-- we must start from the beginning of the root parent.
+						if grid.row (start_pos).parent_row /= Void then
+							start_pos := grid.row (start_pos).parent_row_root.index
+						end
+	
+						from
+							row_counter := start_pos
+							i := 0
+						until
+							last_row_index_set or row_counter > grid.rows.count
+						loop
+							i := row_offsets @ (row_counter)
+							current_row := grid.rows.i_th (row_counter)
+							if grid.is_row_height_fixed then
+								current_height := grid.row_height
+							else
+								current_height := current_row.height
+							end
+	
+							if not first_row_index_set and then (i + current_height) > (invalid_y_start) then
+								first_row_index := row_counter
+								first_row_index_set := True
+							end
+							if first_row_index_set then
+								Result.extend (row_counter)
+							end
+	
+							if not last_row_index_set and then (invalid_y_end) < i + current_height then
+								last_row_index := row_counter
+								last_row_index_set := True
+							end
+							if current_row /= Void then
+									-- If the mode is partially dynamic and a tree is enabled, it
+									-- is possible that the current row may not exist.
+								if current_row.subrow_count > 0 and not current_row.is_expanded then
+									if not first_row_index_set then
+										skipped_rows := skipped_rows + current_row.subnode_count_recursive	
+									end
+									row_counter := row_counter + current_row.subnode_count_recursive
+								end
+							end
+							row_counter := row_counter + 1
+						end
 					end
 				end
 				if last_row_index = 0 then

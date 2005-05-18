@@ -600,7 +600,7 @@ feature -- Basic operations
 								-- data structures. So we use a BOOLEAN to determine this instead.
 							grid_item_exists := False
 	
-							if not is_content_completely_dynamic and current_row_list /= Void and then current_row_list.count > (current_column_index - 1) then
+							if not is_content_completely_dynamic and current_row_list /= Void and then current_physical_column_index < current_row_list.count then
 									-- If the grid is set to retrieve completely dynamic content, then we do not execute this code
 									-- as the current contents of the grid are never used. We also check that the current row and
 									-- current row position are valid.
@@ -621,7 +621,7 @@ feature -- Basic operations
 									-- If we are dynamically computing the contents of the grid and we have not already retrieved an item for
 									-- the grid, then we execute this code.
 									
-								dynamic_content_function.call ([current_physical_column_index + 1, visible_row_indexes.item])
+								dynamic_content_function.call ([current_column_index, current_row_index])
 								grid_item_interface := dynamic_content_function.last_result
 								if grid_item_interface /= Void then
 									grid_item := grid_item_interface.implementation

@@ -88,7 +88,7 @@ feature -- Access
 			feature_name_not_void: Result /= Void
 			feature_name_not_empty: not Result.is_empty
 		end
-		
+
 	escaped_feature_name: STRING is
 			-- Final name of feature with escape for C code generation
 		local
@@ -101,8 +101,19 @@ feature -- Access
 			feature_name_not_empty: not Result.is_empty
 		end
 
+	alias_name: STRING is
+			-- Alias name of feature (if any).
+		do
+			if alias_name_id > 0 then
+				Result := Names_heap.item (alias_name_id)
+			end
+		end
+
 	feature_name_id: INTEGER
 			-- Id of `feature_name' in `Names_heap' table.
+
+	alias_name_id: INTEGER
+			-- Id of `alias_name' in `Names_heap' table
 
 	feature_id: INTEGER
 			-- Feature id: first key in feature call hash table
@@ -387,7 +398,7 @@ feature -- Setting
 			pattern_id := i
 		end
 
-	set_feature_name, set_renamed_name (s: STRING) is
+	set_feature_name (s: STRING) is
 			-- Assign `s' to `feature_name'.
 			-- `set_renamed_name' is needed for C external
 			-- routines that can't be renamed.
@@ -404,14 +415,17 @@ feature -- Setting
 			feature_name_set: equal (feature_name, s)
 		end
 
-	set_feature_name_id, set_renamed_name_id (id: INTEGER) is
+	set_feature_name_id, set_renamed_name_id (id: INTEGER; alias_id: INTEGER) is
 			-- Assign `id' to `feature_name_id'.
 		require
 			valid_id: Names_heap.valid_index (id)
+			valid_alias_id: Names_heap.valid_index (alias_id)
 		do
 			feature_name_id := id
+			alias_name_id := alias_id
 		ensure
 			feature_name_id_set: feature_name_id = id
+			alias_name_id_set: alias_name_id = alias_id
 		end
 
 	set_written_in (a_class_id: like written_in) is
@@ -1755,7 +1769,7 @@ feature -- Undefinition
 			Result.set_is_infix (is_infix)
 			Result.set_is_prefix (is_prefix)
 			Result.set_is_frozen (is_frozen)
-			Result.set_feature_name_id (feature_name_id)
+			Result.set_feature_name_id (feature_name_id, alias_name_id)
 			Result.set_feature_id (feature_id)
 			Result.set_pattern_id (pattern_id)
 			Result.set_is_require_else (is_require_else)
@@ -1846,7 +1860,7 @@ feature -- Replication
 			other.set_body_index (body_index)
 			other.set_export_status (export_status)
 			other.set_feature_id (feature_id)
-			other.set_feature_name_id (feature_name_id)
+			other.set_feature_name_id (feature_name_id, alias_name_id)
 			other.set_is_frozen (is_frozen)
 			other.set_is_infix (is_infix)
 			other.set_is_prefix (is_prefix)

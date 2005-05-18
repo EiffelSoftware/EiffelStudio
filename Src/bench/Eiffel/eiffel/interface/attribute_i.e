@@ -335,7 +335,7 @@ feature {NONE} -- Implementation
 			if t = Void then
 				t := type.actual_type
 			end
-			create Result.make (feature_name, feature_id)
+			create Result.make (feature_name, alias_name, feature_id)
 			Result.set_type (t)
 		end
 

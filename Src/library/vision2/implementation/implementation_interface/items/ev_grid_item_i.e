@@ -361,8 +361,36 @@ feature {EV_GRID_DRAWER_I, EV_GRID_ITEM} -- Implementation
 			-- Redraw `Current'.
 		require
 			drawable_large_enough: drawable.width >= a_width + an_indent and drawable.height >= a_height
+		local
+			back_color: EV_COLOR
+			focused: BOOLEAN
 		do
-			-- Nothing to do here as this is the dummy item.
+				-- Retrieve properties from interface
+			focused := parent_i.drawable.has_focus
+
+			drawable.set_copy_mode
+			back_color := displayed_background_color
+			drawable.set_foreground_color (back_color)
+			drawable.fill_rectangle (an_indent, 0, a_width, a_height)
+			if is_selected then
+				if focused then
+					drawable.set_foreground_color (parent_i.focused_selection_color)
+				else
+					drawable.set_foreground_color (parent_i.non_focused_selection_color)
+				end
+				fixme ("EV_GRID_LABEL.perform_redraw - For now, perform no inversion of selection.")
+--				drawable.set_and_mode
+
+				drawable.fill_rectangle (0 + an_indent, 0, a_width, a_height)
+				if focused then
+					drawable.set_foreground_color (parent_i.focused_selection_text_color)
+				else
+					drawable.set_foreground_color (parent_i.non_focused_selection_text_color)
+				end
+			else
+				drawable.set_foreground_color (displayed_foreground_color)
+			end					
+			drawable.set_copy_mode
 		end
 
 	displayed_background_color: EV_COLOR is

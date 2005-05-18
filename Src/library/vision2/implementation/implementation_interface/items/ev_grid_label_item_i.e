@@ -99,7 +99,7 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 		end
 		
 		
-	perform_redraw (an_x, a_y, a_width, a_height: INTEGER; drawable: EV_DRAWABLE) is
+	perform_redraw (an_x, a_y, a_width, a_height, an_indent: INTEGER; drawable: EV_PIXMAP) is
 			-- Redraw `Current'.
 		local
 			back_color: EV_COLOR
@@ -116,13 +116,8 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 			selection_x, selection_y, selection_width, selection_height: INTEGER
 			focused: BOOLEAN
 		do
-			fixme ("Correctly handle selection colors and inversion")
 			recompute_text_dimensions
 				-- Update the dimensions of the text if required.
-
-			if buffer_pixmap.width < a_width or buffer_pixmap.height < a_height then
-				buffer_pixmap.set_size (a_width, a_height)
-			end
 
 				-- Retrieve properties from interface
 			focused := parent_i.drawable.has_focus
@@ -210,18 +205,18 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 				pixmap_y := top_border + (client_height - pixmap_height) // 2
 			end
 
-			buffer_pixmap.set_copy_mode
+			drawable.set_copy_mode
 			back_color := displayed_background_color
-			buffer_pixmap.set_foreground_color (back_color)
-			buffer_pixmap.fill_rectangle (0, 0, a_width, a_height)
+			drawable.set_foreground_color (back_color)
+			drawable.fill_rectangle (an_indent, 0, a_width, a_height)
 			if is_selected then
 				if focused then
-					buffer_pixmap.set_foreground_color (parent_i.focused_selection_color)
+					drawable.set_foreground_color (parent_i.focused_selection_color)
 				else
-					buffer_pixmap.set_foreground_color (parent_i.non_focused_selection_color)
+					drawable.set_foreground_color (parent_i.non_focused_selection_color)
 				end
 				fixme ("EV_GRID_LABEL_ITEM.perform_redraw - For now, perform no inversion of selection.")
---				buffer_pixmap.set_and_mode
+--				drawable.set_and_mode
 
 					-- Calculate the area that must be selected in `Current'.
 				if interface.is_full_select_enabled then
@@ -236,30 +231,30 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 					selection_height := text_height
 				end
 
-				buffer_pixmap.fill_rectangle (selection_x, selection_y, selection_width, selection_height)
+				drawable.fill_rectangle (selection_x + an_indent, selection_y, selection_width, selection_height)
 				if focused then
-					buffer_pixmap.set_foreground_color (parent_i.focused_selection_text_color)
+					drawable.set_foreground_color (parent_i.focused_selection_text_color)
 				else
-					buffer_pixmap.set_foreground_color (parent_i.non_focused_selection_text_color)
+					drawable.set_foreground_color (parent_i.non_focused_selection_text_color)
 				end
-				buffer_pixmap.set_copy_mode
+				drawable.set_copy_mode
 			else
-				buffer_pixmap.set_foreground_color (displayed_foreground_color)
+				drawable.set_foreground_color (displayed_foreground_color)
 			end
 					
 			if l_pixmap /= Void then
 					-- Now blit the pixmap
-				buffer_pixmap.draw_pixmap (pixmap_x, pixmap_y, l_pixmap)
+				drawable.draw_pixmap (pixmap_x + an_indent, pixmap_y, l_pixmap)
 			end
 
 			if interface.font /= Void then
-				buffer_pixmap.set_font (interface.font)
+				drawable.set_font (interface.font)
 			else
-				buffer_pixmap.set_font (internal_default_font)
+				drawable.set_font (internal_default_font)
 			end
 
 			if interface.text /= Void and space_remaining_for_text > 0 then
-				buffer_pixmap.draw_ellipsed_text_top_left (text_x, text_y, interface.text, space_remaining_for_text)
+				drawable.draw_ellipsed_text_top_left (text_x + an_indent, text_y, interface.text, space_remaining_for_text)
 			end
 
 				-- Now handle the border clipping. We simply draw the border back over the top of the
@@ -272,18 +267,18 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 			content_bottom_edge := (text_y + text_height).max (pixmap_y + pixmap_height)
 
 				-- First draw the border in the standard background color
-			buffer_pixmap.set_foreground_color (back_color)
+			drawable.set_foreground_color (back_color)
 			if bottom_border > a_height - content_bottom_edge then
-				buffer_pixmap.fill_rectangle (content_left_edge, (a_height - bottom_border).max (content_top_edge), content_right_edge - content_left_edge, content_bottom_edge - ((a_height - bottom_border).max (content_top_edge)))
+				drawable.fill_rectangle (content_left_edge + an_indent, (a_height - bottom_border).max (content_top_edge), content_right_edge - content_left_edge, content_bottom_edge - ((a_height - bottom_border).max (content_top_edge)))
 			end
 			if top_border > content_top_edge then
-				buffer_pixmap.fill_rectangle (content_left_edge, content_top_edge, content_right_edge - content_left_edge, top_border.min (content_bottom_edge) - content_top_edge)
+				drawable.fill_rectangle (content_left_edge + an_indent, content_top_edge, content_right_edge - content_left_edge, top_border.min (content_bottom_edge) - content_top_edge)
 			end
 			if left_border > content_left_edge then
-				buffer_pixmap.fill_rectangle (content_left_edge, content_top_edge, left_border.min (content_right_edge) - content_left_edge, content_bottom_edge - content_top_edge)
+				drawable.fill_rectangle (content_left_edge + an_indent, content_top_edge, left_border.min (content_right_edge) - content_left_edge, content_bottom_edge - content_top_edge)
 			end
 			if right_border > a_width - content_right_edge then
-				buffer_pixmap.fill_rectangle ((a_width - right_border).max (content_left_edge), content_top_edge, content_right_edge - ((a_width - right_border).max (content_left_edge)), content_bottom_edge - content_top_edge)
+				drawable.fill_rectangle ((a_width - right_border).max (content_left_edge) + an_indent, content_top_edge, content_right_edge - ((a_width - right_border).max (content_left_edge)), content_bottom_edge - content_top_edge)
 			end
 			if is_selected then
 					-- Now, if `Current' is selected, highlight the border.
@@ -297,35 +292,27 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 						-- always occupies the complete client area of `Current' so we must draw it in.
 					
 					if focused then
-						buffer_pixmap.set_foreground_color (parent_i.focused_selection_color)
+						drawable.set_foreground_color (parent_i.focused_selection_color)
 					else
-						buffer_pixmap.set_foreground_color (parent_i.non_focused_selection_color)
+						drawable.set_foreground_color (parent_i.non_focused_selection_color)
 					end
-					buffer_pixmap.set_and_mode
+					drawable.set_and_mode
 
 					if bottom_border > a_height - content_bottom_edge then
-						buffer_pixmap.fill_rectangle (content_left_edge, (a_height - bottom_border).max (content_top_edge), content_right_edge - content_left_edge, content_bottom_edge - ((a_height - bottom_border).max (content_top_edge)))
+						drawable.fill_rectangle (content_left_edge + an_indent, (a_height - bottom_border).max (content_top_edge), content_right_edge - content_left_edge, content_bottom_edge - ((a_height - bottom_border).max (content_top_edge)))
 					end
 					if top_border > content_top_edge then
-						buffer_pixmap.fill_rectangle (content_left_edge, content_top_edge, content_right_edge - content_left_edge, top_border.min (content_bottom_edge) - content_top_edge)
+						drawable.fill_rectangle (content_left_edge + an_indent, content_top_edge, content_right_edge - content_left_edge, top_border.min (content_bottom_edge) - content_top_edge)
 					end
 					if left_border > content_left_edge then
-						buffer_pixmap.fill_rectangle (content_left_edge, content_top_edge, left_border.min (content_right_edge) - content_left_edge, content_bottom_edge - content_top_edge)
+						drawable.fill_rectangle (content_left_edge + an_indent, content_top_edge, left_border.min (content_right_edge) - content_left_edge, content_bottom_edge - content_top_edge)
 					end
 					if right_border > a_width - content_right_edge then
-						buffer_pixmap.fill_rectangle ((a_width - right_border).max (content_left_edge), content_top_edge, content_right_edge - ((a_width - right_border).max (content_left_edge)), content_bottom_edge - content_top_edge)
+						drawable.fill_rectangle ((a_width - right_border).max (content_left_edge) + an_indent, content_top_edge, content_right_edge - ((a_width - right_border).max (content_left_edge)), content_bottom_edge - content_top_edge)
 					end
 				end
 			end
-
-			drawable.draw_sub_pixmap (an_x, a_y, buffer_pixmap, create {EV_RECTANGLE}.make (0, 0, a_width, a_height))
-		end
-
-	buffer_pixmap: EV_PIXMAP is
-			-- Once access to a pixmap used for buffering the drawing to prevent flicker.
-		once
-			create Result
-			Result.set_size (100, 16)
+			drawable.set_copy_mode
 		end
 
 	grid_label_item_layout: EV_GRID_LABEL_ITEM_LAYOUT is

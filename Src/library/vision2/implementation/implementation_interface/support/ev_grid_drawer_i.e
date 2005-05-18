@@ -158,7 +158,7 @@ feature -- Basic operations
 
 						-- Limit the positions chacked to the virtual height if the area is intersected.
 					invalid_y_start := invalid_y_start.max (0)
-					invalid_y_end := invalid_y_end.min (grid.virtual_width)
+					invalid_y_end := invalid_y_end.min (grid.virtual_height)
 
 
 
@@ -1041,16 +1041,12 @@ feature {NONE} -- Implementation
 			-- Convert `an_x' in drawable coordinates to a virtual x coordinate.
 		do
 			Result := grid.internal_client_x + an_x - grid.viewport_x_offset
-		ensure
-			valid_result: Result >= an_x
 		end
 
 	drawable_y_to_virtual_y (a_y: INTEGER): INTEGER is
 			-- Convert `a_y' in drawable coordinates to a virtual y coordinate.
 		do
 			Result := grid.internal_client_y + a_y - grid.viewport_y_offset
-		ensure
-			valid_result: Result >= a_y
 		end
 
 invariant

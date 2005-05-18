@@ -2986,7 +2986,7 @@ feature -- IL Generation
 				Byte_context.set_class_type (current_class_type)
 
 					-- We need to restore the name right away.
-				inh_feat.set_feature_name_id (l_name_id)
+				inh_feat.set_feature_name_id (l_name_id, inh_feat.alias_name_id)
 
 				l_token := last_non_recorded_feature_token
 				start_new_body (l_token)

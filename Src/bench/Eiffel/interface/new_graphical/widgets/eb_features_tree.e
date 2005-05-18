@@ -8,6 +8,14 @@ class
 	EB_FEATURES_TREE
 
 inherit
+
+	CHARACTER_ROUTINES
+		export
+			{NONE} all
+		undefine
+			default_create, is_equal, copy
+		end
+
 	EV_TREE
 
 	EB_CONSTANTS
@@ -28,6 +36,13 @@ inherit
 		end
 
 	EB_SHARED_PREFERENCES
+		export
+			{NONE} all
+		undefine
+			default_create, is_equal, copy
+		end
+
+	PREFIX_INFIX_NAMES
 		export
 			{NONE} all
 		undefine
@@ -74,23 +89,33 @@ feature -- Access
 	toggle_signatures is
 			-- Toggle signature on/off
 		do
-			signature_enabled := not signature_enabled		
-			recursive_do_all (agent toggle_node_signature)
+			signature_enabled := not signature_enabled
+			recursive_do_all (agent update_node)
 		end
-		
-	toggle_node_signature (n: EV_TREE_NODE) is
-			-- Toggle signature mode on the tree node
+
+	toggle_alias is
+			-- Toggle alias name on/off
+		do
+			is_alias_enabled := not is_alias_enabled
+			recursive_do_all (agent update_node)
+		end
+
+	update_node (n: EV_TREE_NODE) is
+			-- Update node alias name and signature
 		local
 			ef: E_FEATURE
 		do
 			ef ?= n.data
 			if ef /= Void then
-				n.set_text (feature_name (ef))				
+				n.set_text (feature_name (ef))
 			end
 		end
-		
+
 	signature_enabled: BOOLEAN
 			-- Do we display signature of feature ?
+
+	is_alias_enabled: BOOLEAN
+			-- Is alias name shown?
 
 feature {EB_FEATURES_TOOL} -- Implementation
 
@@ -98,14 +123,23 @@ feature {EB_FEATURES_TOOL} -- Implementation
 			-- Feature name of `a_ef' depending of the signature displayed or not.
 		require
 			a_ef_not_void: a_ef /= Void
+		local
+			alias_name: STRING
 		do
-			if signature_enabled then
-				Result := a_ef.feature_signature
-				if a_ef.type /= Void then
-					Result.append (": " + a_ef.type.dump)						
+			Result := a_ef.name.twin
+			if is_alias_enabled and then not a_ef.is_prefix and then not a_ef.is_infix then
+				alias_name := a_ef.alias_name
+				if alias_name /= Void then
+					Result.append_string (" alias %"")
+					Result.append_string (eiffel_string (extract_alias_name (alias_name)))
+					Result.append_character ('%"')
 				end
-			else
-				Result := a_ef.name
+			end
+			if signature_enabled then
+				a_ef.append_arguments_to (Result)
+				if a_ef.type /= Void then
+					Result.append (": " + a_ef.type.dump)
+				end
 			end
 		end
 

@@ -652,13 +652,9 @@ feature -- Status setting
 			not_is_content_completely_dynamic: not is_content_completely_dynamic
 		do
 			is_tree_enabled := True
-				
-			if row_count > 0 then
-					-- The row offsets must always be computed when
-					-- in tree mode so when enabling it, recompute unless
-					-- there are no rows contained.
-				set_vertical_computation_required (1)
-			end
+				-- The row offsets must always be computed when
+				-- in tree mode so when enabling it, recompute.
+			set_vertical_computation_required (1)
 			redraw_client_area
 		ensure
 			tree_enabled: is_tree_enabled
@@ -1866,14 +1862,14 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 		do
 			if vertical_computation_required then
 				vertical_computation_required := False
+				recompute_row_offsets (invalid_row_index.min (row_count).max (1))
+					-- Restore to an arbitarily large index.
+				invalid_row_index := invalid_row_index.max_value;
+				if vertical_redraw_triggered_by_viewport_resize then
+					recompute_vertical_scroll_bar;
+				end
 				if row_count > 0 then
 						-- Do nothing if `Current' is empty.
-					recompute_row_offsets (invalid_row_index.min (row_count))
-						-- Restore to an arbitarily large index.
-					invalid_row_index := invalid_row_index.max_value;
-					if vertical_redraw_triggered_by_viewport_resize then
-						recompute_vertical_scroll_bar;
-					end
 					((create {EV_ENVIRONMENT}).application).do_once_on_idle (agent recompute_vertical_scroll_bar)
 				end
 				vertical_redraw_triggered_by_viewport_resize := False
@@ -1886,16 +1882,16 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 		do
 			if horizontal_computation_required then
 				horizontal_computation_required := False
+					-- Do nothing if `Current' is empty.
+				if not is_header_item_resizing or is_column_resize_immediate then
+					recompute_column_offsets (invalid_column_index.min (column_count).max (1))
+				end
+					-- Restore to an arbitarily large index.
+				invalid_column_index := invalid_column_index.max_value;				
+				if horizontal_redraw_triggered_by_viewport_resize then
+					recompute_horizontal_scroll_bar;	
+				end
 				if column_count > 0 then
-						-- Do nothing if `Current' is empty.
-					if not is_header_item_resizing or is_column_resize_immediate then
-						recompute_column_offsets (invalid_column_index.min (column_count))
-					end
-						-- Restore to an arbitarily large index.
-					invalid_column_index := invalid_column_index.max_value;				
-					if horizontal_redraw_triggered_by_viewport_resize then
-						recompute_horizontal_scroll_bar;	
-					end
 					((create {EV_ENVIRONMENT}).application).do_once_on_idle (agent recompute_horizontal_scroll_bar)
 				end
 				horizontal_redraw_triggered_by_viewport_resize := False
@@ -1906,7 +1902,8 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			-- Recompute contents of `column_offsets' from column index
 			-- `an_index' to `column_count'.
 		require
-			an_index_valid: an_index >= 0 and an_index <= column_count
+			an_index_valid_when_columns_contained: column_count > 0 implies an_index >= 1 and an_index <= column_count
+			an_index_valid_when_no_columns_contained: column_count = 0 implies an_index = 1
 		local
 			i: INTEGER
 			temp_columns: like columns
@@ -1943,8 +1940,8 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			-- Recompute contents of `row_offsets' from row index
 			-- `an_index' to `row_count'.
 		require
-			an_index_valid: an_index >= 0 and an_index <= row_count
-			pop: rows.count >= an_index
+			an_index_valid_when_rows_contained: row_count > 0 implies an_index >= 1 and an_index <= row_count
+			an_index_valid_when_no_rows_contained: row_count = 0 implies an_index = 1
 		local
 			i, j, k: INTEGER
 			current_item: EV_GRID_ROW_I
@@ -1961,14 +1958,21 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			if not is_tree_enabled then
 				internal_index := an_index
 			else
-				from
-					l_parent_row_i := row_internal (an_index)
-				until
-					l_parent_row_i.parent_row_i = Void
-				loop
-					l_parent_row_i := l_parent_row_i.parent_row_i
+				if row_count > 0 then
+						-- We only find the parent row when `Current' is
+						-- not empty.
+					from
+						l_parent_row_i := row_internal (an_index)
+					until
+						l_parent_row_i.parent_row_i = Void
+					loop
+						l_parent_row_i := l_parent_row_i.parent_row_i
+					end
+					internal_index := l_parent_row_i.index
+				else
+						-- `Current' is empty, so simply keep the same index.
+					internal_index := an_index
 				end
-				internal_index := l_parent_row_i.index
 			end
 			if not is_row_height_fixed or is_tree_enabled then
 					-- Only perform recomputation if the rows do not all have the same height

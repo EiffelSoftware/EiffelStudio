@@ -30,6 +30,7 @@ feature {NONE} -- Implementation
 
 invariant
 	grid_not_void: grid /= Void
+	grid_parented_implies_header_parented: grid.parent /= Void implies parent /= Void
 
 end
 

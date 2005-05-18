@@ -11,9 +11,9 @@ inherit
 			transfer_to, equiv, update_api,
 			generate, duplicate, extension,
 			access_for_feature, is_external,
-			set_renamed_name, set_renamed_name_id, external_name_id,
+			set_renamed_name_id, external_name_id,
 			init_arg
-		end;
+		end
 
 create
 	make
@@ -27,7 +27,7 @@ feature -- Initialization
 		do
 			Precursor {PROCEDURE_I} (argument_as)
 			if has_arguments and extension.is_inline then
-					-- In order to replace arguments specified in `alias' part of
+					-- In order to replace arguments specified in external `alias' part of
 					-- inline clause, we need to initialize `extension' with argument
 					-- names.
 				l_inline_ext ?= extension
@@ -75,7 +75,7 @@ feature -- Incrementality
 			other_ext ?= other
 			if other_ext /= Void then
 				Result := same_signature (other) and then
-					equal (alias_name, other_ext.alias_name) and then
+					equal (external_alias_name, other_ext.external_alias_name) and then
 					encapsulated = other_ext.encapsulated
 				if Result then
 					Result := equal (extension, other_ext.extension)
@@ -90,7 +90,7 @@ feature -- Incrementality
 
 feature 
 
-	alias_name_id: INTEGER is
+	external_alias_name_id: INTEGER is
 			-- Alias for the external
 		do
 			Result := extension.alias_name_id
@@ -99,22 +99,13 @@ feature
 	encapsulated: BOOLEAN;
 			-- Has the feature some assertion declared ?
 
-	set_renamed_name (s: STRING) is
-			-- Assign `s' to `featurename'.
-		do
-			if alias_name_id = 0 then
-				extension.set_alias_name_id (feature_name_id)
-			end
-			Precursor {PROCEDURE_I} (s)
-		end
-
-	set_renamed_name_id (id: INTEGER) is
+	set_renamed_name_id (id: INTEGER; alias_id: INTEGER) is
 			-- Assign `id' to `feature_name_id'.
 		do
-			if alias_name_id = 0 then
+			if external_alias_name_id = 0 then
 				extension.set_alias_name_id (feature_name_id)
 			end
-			Precursor {PROCEDURE_I} (id)
+			Precursor {PROCEDURE_I} (id, alias_id)
 		end
 
 	set_encapsulated (b: BOOLEAN) is
@@ -144,16 +135,16 @@ feature
 			Result := True;
 		end;
 
-	alias_name: STRING is
-			-- Alias name if any.
+	external_alias_name: STRING is
+			-- External alias name if any.
 		do
-			Result := Names_heap.item (alias_name_id)
+			Result := Names_heap.item (external_alias_name_id)
 		end
 
 	external_name_id: INTEGER is
 			-- External_name ID
 		do
-			Result := alias_name_id
+			Result := external_alias_name_id
 			if Result = 0 then
 				Result := feature_name_id
 			end

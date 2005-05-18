@@ -71,9 +71,7 @@ feature {NONE} -- Initialization
 			gdkpix, gdkmask: POINTER
 		do
 			Precursor {EV_PRIMITIVE_IMP}
-			width := 1
-			height := 1
-			gdkpix := {EV_GTK_EXTERNALS}.gdk_pixmap_new (App_implementation.default_gdk_window, width, height, Default_color_depth)
+			gdkpix := {EV_GTK_EXTERNALS}.gdk_pixmap_new (App_implementation.default_gdk_window, 1, 1, Default_color_depth)
 
 			set_pixmap (gdkpix, gdkmask)
 				-- Initialize the Graphical Context
@@ -113,11 +111,21 @@ feature -- Drawing operations
 
 feature -- Measurement
 
-	width: INTEGER
-			-- width of the pixmap.
+	width: INTEGER is
+			-- Width of the pixmap in pixels.
+		local
+			a_y: INTEGER
+		do
+			{EV_GTK_DEPENDENT_EXTERNALS}.gdk_drawable_get_size (drawable, $Result, $a_y)
+		end
 
-	height: INTEGER
+	height: INTEGER is
 			-- height of the pixmap.
+		local
+			a_x: INTEGER
+		do
+			{EV_GTK_DEPENDENT_EXTERNALS}.gdk_drawable_get_size (drawable, $a_x, $Result)
+		end
 
 feature -- Element change
 
@@ -136,6 +144,7 @@ feature -- Element change
 			else
 				set_pixmap_from_pixbuf (filepixbuf)
 			end
+			{EV_GTK_EXTERNALS}.object_unref (filepixbuf)
 		end
 
 	set_with_default is
@@ -148,7 +157,7 @@ feature -- Element change
 	stretch (a_x, a_y: INTEGER) is
 			-- Stretch the image to fit in size `a_x' by `a_y'.
 		local
-			a_gdkpix, a_gdkmask, a_gdkpixbuf: POINTER
+			a_gdkpix, a_gdkmask, a_gdkpixbuf, scaled_pixbuf: POINTER
 			a_scale_type: INTEGER
 		do
 			a_gdkpixbuf := pixbuf_from_drawable
@@ -160,7 +169,10 @@ feature -- Element change
 					-- For larger images this mode provides better scaling
 				a_scale_type := {EV_GTK_DEPENDENT_EXTERNALS}.gdk_interp_bilinear
 			end
-			a_gdkpixbuf := {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_scale_simple (a_gdkpixbuf, a_x, a_y, a_scale_type)
+			scaled_pixbuf := {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_scale_simple (a_gdkpixbuf, a_x, a_y, a_scale_type)
+			{EV_GTK_EXTERNALS}.object_unref (a_gdkpixbuf)
+			a_gdkpixbuf := scaled_pixbuf
+
 			{EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_render_pixmap_and_mask (a_gdkpixbuf, $a_gdkpix, $a_gdkmask, 255)
 			set_pixmap (a_gdkpix, a_gdkmask)
 			{EV_GTK_EXTERNALS}.object_unref (a_gdkpixbuf)
@@ -378,7 +390,6 @@ feature {EV_STOCK_PIXMAPS_IMP, EV_PIXMAPABLE_IMP} -- Implementation
 			if gdkmask /= NULL then
 				{EV_GTK_EXTERNALS}.gdk_pixmap_unref (gdkmask)
 			end
-			update_dimensions
 		end	
 
 	set_from_xpm_data (a_xpm_data: POINTER) is
@@ -413,16 +424,10 @@ feature {EV_STOCK_PIXMAPS_IMP, EV_PIXMAPABLE_IMP} -- Implementation
 
 feature {NONE} -- Implementation
 
-	update_dimensions is
-			-- Update `width' and `height' values
-		do
-			{EV_GTK_EXTERNALS}.gdk_window_get_size (drawable, $width, $height)
-		end
-
 	save_to_named_file (a_format: EV_GRAPHICAL_FORMAT; a_filename: FILE_NAME) is
 			-- Save `Current' in `a_format' to `a_filename'
 		local
-			a_gdkpixbuf: POINTER
+			a_gdkpixbuf, stretched_pixbuf: POINTER
 			a_gerror: POINTER
 			a_handle, a_filetype: EV_GTK_C_STRING
 		do			
@@ -432,7 +437,11 @@ feature {NONE} -- Implementation
 				a_handle := a_filename.string
 				a_filetype := a_format.file_extension
 				if a_format.scale_width > 0 and then a_format.scale_height > 0 then
-					a_gdkpixbuf := {EV_GTK_EXTERNALS}.gdk_pixbuf_scale_simple (a_gdkpixbuf, a_format.scale_width, a_format.scale_height, {EV_GTK_EXTERNALS}.gdk_interp_bilinear)
+					stretched_pixbuf := {EV_GTK_EXTERNALS}.gdk_pixbuf_scale_simple (a_gdkpixbuf, a_format.scale_width, a_format.scale_height, {EV_GTK_EXTERNALS}.gdk_interp_bilinear)
+						-- Unref original pixbuf so it gets deleted from memory
+					{EV_GTK_EXTERNALS}.object_unref (a_gdkpixbuf)
+						-- Set our scaled pixbuf to be the one that is saved
+					a_gdkpixbuf := stretched_pixbuf
 				end
 				{EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_save (a_gdkpixbuf, a_handle.item, a_filetype.item, $a_gerror)
 				if a_gerror /= default_pointer then

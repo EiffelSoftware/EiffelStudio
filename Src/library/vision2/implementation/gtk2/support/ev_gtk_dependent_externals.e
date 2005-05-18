@@ -8,6 +8,11 @@ class
 
 feature -- Externals
 
+	frozen gdk_drawable_get_size (a_drawable: POINTER; a_width, a_height: TYPED_POINTER [INTEGER]) is
+		external
+			"C signature (GdkDrawable*, gint*, gint*) use <gtk/gtk.h>"
+		end
+
 	frozen gtk_arrow_new (a_arrow_type, a_shadow_type: INTEGER): POINTER is
 		external
 			"C signature (GtkArrowType, GtkShadowType): GtkWidget* use <gtk/gtk.h>"

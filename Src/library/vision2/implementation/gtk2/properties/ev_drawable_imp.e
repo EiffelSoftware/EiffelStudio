@@ -496,10 +496,13 @@ feature -- Drawing operations
 			-- 
 		local
 			pix_imp: EV_PIXMAP_IMP
+			a_pix: POINTER
 		do
 			create Result
 			pix_imp ?= Result.implementation
-			pix_imp.set_pixmap_from_pixbuf (pixbuf_from_drawable_at_position (area.x, area.y, 0, 0, area.width, area.height))
+			a_pix := pixbuf_from_drawable_at_position (area.x, area.y, 0, 0, area.width, area.height)
+			pix_imp.set_pixmap_from_pixbuf (a_pix)
+			{EV_GTK_EXTERNALS}.object_unref (a_pix)
 		end
 
 	draw_sub_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP; area: EV_RECTANGLE) is

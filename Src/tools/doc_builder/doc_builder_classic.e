@@ -33,6 +33,7 @@ feature {NONE} -- Initialization
 				make_gui
 			elseif l_args.args_ok then
 				setup_preferences
+				initialize_temp_directories
 				l_args.launch_command_line
 			else
 				io.putstring (l_args.argument_error)

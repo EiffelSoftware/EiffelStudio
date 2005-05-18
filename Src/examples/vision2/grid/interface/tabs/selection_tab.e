@@ -208,9 +208,9 @@ feature {NONE} -- Implementation
 			-- Called by `select_actions' of `always_selected_button'.
 		do
 			if always_selected_button.is_selected then
-				grid.enable_item_always_selected
+				grid.enable_always_selected
 			else
-				grid.disable_item_always_selected
+				grid.disable_always_selected
 			end
 		end
 

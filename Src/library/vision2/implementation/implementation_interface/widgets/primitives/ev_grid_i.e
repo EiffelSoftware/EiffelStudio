@@ -460,12 +460,20 @@ feature -- Pick and Drop
 			a_item: EV_GRID_ITEM
 		do
 			a_item := item_target
+
+				-- Call appropriate drop actions for grid and item.
 			if item_accepts_pebble (a_item, a_pebble) then
 				item_drop_actions_internal.call ([a_item, a_pebble])
 			end
 
 			if drop_actions_internal /= Void and then drop_actions_internal.accepts_pebble (a_pebble) then
 				drop_actions_internal.call ([a_pebble])
+			end
+
+			if a_item /= Void then
+				if a_item.implementation.drop_actions_internal /= Void and then a_item.implementation.drop_actions_internal.accepts_pebble (a_pebble) then
+					a_item.implementation.drop_actions_internal.call ([a_pebble])
+				end
 			end
 		end
 
@@ -584,12 +592,15 @@ feature -- Status setting
 			activate_window.set_position (x_coord, y_coord)
 			activate_window.set_size (a_item.column.width -  a_item.horizontal_indent, item_height)
 
-				-- Call the `activate_action' on the item to initialize `activate_action'
+				-- Call the `activate_action' on the grid and item to initialize `activate_action'
 			a_item.activate_action (activate_window)
 			
 			if item_activate_actions_internal /= Void and then not item_activate_actions_internal.is_empty then
 					-- The user has requested to override the default `activate' behavior for `a_item'.
 				item_activate_actions_internal.call ([a_item, activate_window])
+			end
+			if a_item.implementation.activate_actions_internal /= Void then
+				a_item.implementation.activate_actions_internal.call (Void)
 			end
 
 			if not activate_window.is_destroyed and then not activate_window.is_empty and then not activate_window.is_show_requested then
@@ -609,6 +620,11 @@ feature -- Status setting
 			if item_deactivate_actions_internal /= Void then
 				item_deactivate_actions_internal.call ([a_item])
 			end
+
+			if a_item.implementation.deactivate_actions_internal /= Void then
+				a_item.implementation.deactivate_actions_internal.call (Void)
+			end
+
 			a_item.redraw
 			activate_window := Void
 			currently_active_item := Void
@@ -845,23 +861,21 @@ feature -- Status setting
 			multiple_item_selection_enabled: is_multiple_item_selection_enabled
 		end
 
-	enable_item_always_selected is
-			-- Change current selection mode so that as soon as a user selects an item in the grid, an item must always be selected.
-			-- The user may only deselect an item by selecting another item.
+	enable_always_selected is
+			-- Ensure that the user may not completely remove the selection from `Current'.
 		do
-			is_item_always_selected := True
+			is_always_selected := True
 		end
 
-	disable_item_always_selected is
-			-- Allow items to be deselected in current selection mode by either clicking on another item, clicking on a Void area or by Ctrl
-			-- clicking the selected item itself.
+	disable_always_selected is
+			-- Allow the user to completely remove the selection from the grid by clicking on an item,
+			-- clicking on a Void area or by Ctrl clicking the selected item itself.
 		do
-			is_item_always_selected := False
+			is_always_selected := False
 		end
 
-	is_item_always_selected: BOOLEAN
-			-- Is at least one item selected in the grid at all times after an initial user selection has been made.
-			-- If `True' then the user of the grid may only deselect items by selecting other items.
+	is_always_selected: BOOLEAN
+			-- Ensure that the user may not completely remove the selection from `Current'.
 
 	show_header is
 			-- Ensure header displayed.
@@ -2247,7 +2261,7 @@ feature {EV_GRID_DRAWER_I, EV_GRID_COLUMN_I, EV_GRID_ROW_I, EV_GRID_ITEM_I, EV_G
 		-- Note that when querying the current position, use `viewport_x_offset' and `viewport_y_offset'
 		-- for speed.
 		
-	header: EV_HEADER
+	header: EV_GRID_HEADER
 		-- Header displayed at top of `Current'.
 		
 	hidden_node_count: INTEGER
@@ -2598,7 +2612,7 @@ feature {NONE} -- Drawing implementation
 			create vertical_box
 			
 			
-			create header
+			create header.make_with_grid (Current)
 				-- Now connect events to `header' which are used to update the "physical size" of
 				-- Current in response to their re-sizing.
 			header.item_resize_start_actions.extend (agent header_item_resize_started)
@@ -3447,7 +3461,7 @@ feature {NONE} -- Event handling
 			a_application := (create {EV_ENVIRONMENT}).application
 			is_ctrl_pressed := a_application.ctrl_pressed
 			is_shift_pressed := a_application.shift_pressed
-			if not (a_item = Void and is_item_always_selected) then
+			if not (a_item = Void and is_always_selected) then
 					-- If we are `is_item_always_selected' mode then clicking on Void items should have no effect
 				l_remove_selection := True
 			end
@@ -3505,7 +3519,7 @@ feature {NONE} -- Event handling
 					else
 						a_item.ensure_visible
 					end
-				elseif is_ctrl_pressed and then not is_item_always_selected then
+				elseif is_ctrl_pressed and then not is_always_selected then
 						-- Allow for removal of item selection by Ctrl clicking
 					a_item.disable_select
 				end

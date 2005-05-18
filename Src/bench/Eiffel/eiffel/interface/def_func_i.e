@@ -62,7 +62,7 @@ feature {NONE} -- Implementation
 		local
 			t: TYPE_A;
 		do
-			create Result.make (feature_name, feature_id);
+			create Result.make (feature_name, alias_name, feature_id);
 			t ?= type;
 			if t = Void then
 				t := type.actual_type

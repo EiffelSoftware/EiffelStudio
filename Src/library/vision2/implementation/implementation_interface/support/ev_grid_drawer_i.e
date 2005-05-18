@@ -34,7 +34,6 @@ feature -- Basic operations
 			-- For a virtual position starting at `an_x' with a width of `a_width',
 			-- return all of the column indexes which intersect this width.
 		require
-			an_x_non_negative: an_x >=0
 			a_width_non_negative: a_width >= 0
 		local
 			internal_client_x: INTEGER
@@ -65,38 +64,46 @@ feature -- Basic operations
 					-- If the grid has no columns, then there may not be any column indexes
 					-- which span the area, so do nothing.
 
-				column_offsets := grid.column_offsets
-					-- Retriece the offsets of all columns from `grid'.
+				invalid_x_start := an_x
+				invalid_x_end := an_x + a_width
+				if invalid_x_end >= 0 and invalid_x_start <= grid.virtual_width then
+						-- There is nothing to perform if the positions to be checked
+						-- fall completely outside of the virtual width.
+
+						-- Limit the positions chacked to the virtual width if the area is intersected.
+					invalid_x_start := invalid_x_start.max (0)
+					invalid_x_end := invalid_x_end.min (grid.virtual_width)
+
+					column_offsets := grid.column_offsets
+						-- Retriece the offsets of all columns from `grid'.
+						
 					
-				
-					-- Calculate the columns that must be displayed.
-				from
-					column_offsets.start
-						-- Compute the virtual positions of the invalidated area.
-					invalid_x_start := an_x
-					invalid_x_end := an_x + a_width
-				until
-					last_column_index_set or column_offsets.off
-				loop
-					i := column_offsets.item
-					if not first_column_index_set and then i > invalid_x_start then
-						first_column_index := column_offsets.index - 1
-						first_column_index_set := True
+						-- Calculate the columns that must be displayed.
+					from
+						column_offsets.start				
+					until
+						last_column_index_set or column_offsets.off
+					loop
+						i := column_offsets.item
+						if not first_column_index_set and then i > invalid_x_start then
+							first_column_index := column_offsets.index - 1
+							first_column_index_set := True
+						end
+						if first_column_index_set and grid.column_displayed (column_offsets.index - 1) then
+							Result.extend (column_offsets.index - 1)
+						end
+						if not last_column_index_set and then invalid_x_end < i then
+							last_column_index := column_offsets.index - 1
+							last_column_index_set := True
+						end
+						column_offsets.forth
 					end
-					if first_column_index_set and grid.column_displayed (column_offsets.index - 1) then
-						Result.extend (column_offsets.index - 1)
+					if last_column_index = 0 then
+						last_column_index := grid.column_count
 					end
-					if not last_column_index_set and then invalid_x_end < i then
-						last_column_index := column_offsets.index - 1
-						last_column_index_set := True
+					if first_column_index = 0 then
+						first_column_index := grid.column_count
 					end
-					column_offsets.forth
-				end
-				if last_column_index = 0 then
-					last_column_index := grid.column_count
-				end
-				if first_column_index = 0 then
-					first_column_index := grid.column_count
 				end
 			end
 		ensure
@@ -106,6 +113,8 @@ feature -- Basic operations
 	items_spanning_vertical_span (a_y, a_height: INTEGER): ARRAYED_LIST [INTEGER] is
 			-- For a virtual position starting at `a_y' with a height of `a_height',
 			-- return all of the row indexes which intersect this width.
+		require
+			a_height_non_negative: a_height >= 0
 		local
 			internal_client_y: INTEGER
 			vertical_buffer_offset: INTEGER
@@ -142,143 +151,156 @@ feature -- Basic operations
 					-- Compute the virtual positions of the invalidated area.
 				invalid_y_start := a_y
 				invalid_y_end := a_y + a_height
-				if grid.is_row_height_fixed and not grid.is_tree_enabled then
-						-- If row heights are fixed we can calculate instead of searching.
-						-- Note that we cannot calculate if there is tree functionality enabled in
-						-- the grid as nodes may be expanded or collapsed.
-					first_row_index := (((invalid_y_start) // grid.row_height) + 1)
-					last_row_index := (((invalid_y_end) // grid.row_height) + 1).min (grid.row_count)
-					
-					if first_row_index <= grid.row_count then
-						l_row_count := grid.row_count
-						from
-							i := first_row_index
-						until
-							i > last_row_index
-						loop
-							Result.extend (i)
-							check
-								i_positive: i >= 0
-							end
-							i := i + 1
-						end
-					end
-				else
-					row_offsets := grid.row_offsets
 
-						-- Now iterate through `row_offsets', moving `pre_search_iteration_size'
-						-- each time, to determine where we should start the detailed search from.
-						-- By performing a pre-pass this way, we can reduce the number of iterations we
-						-- perform to seach for the row index at a paticular index.
-						-- This code and the subsequent main iteration could be replaced by a binary seach if
-						-- a simple method of iteration can be found.
-						-- The problems with the binary search lie with finding offsets within
-						-- subrows of non-expanded tree items when different size rows are permissable. The initial
-						-- binary search algorithm follows:
-						-- It still has the following problems
-						-- 1. The check for "i = next_offset" uses the incorrect `current_height'. In the case that
-						-- a node has non-expanded children, we must find the height of the first parent row recursively
-						-- that is displayed and use this height. The problem is that to do this, requires processing and the
-						-- speed advantage of the binary search is compromised. It is for this reason that the current code uses
-						-- the simple pre-pass loop below + it is also far easier to maintain.
-						-- 2. The result is off by 1 in some cases.
+				if invalid_y_end >= 0 and invalid_y_start <= grid.virtual_height then
+						-- There is nothing to perform if the positions to be checked
+						-- fall completely outside of the virtual height.
 
-						--					from
-						--						row_counter := 1
-						--						hi := grid.row_count + 1
-						--						lo := 1
-						--						i := -1000
-						--					until
-						--						(hi - lo).abs = 1
-						--					loop
-						--						row_counter := ((hi - lo) // 2) + lo
-						--						i := row_offsets @ (row_counter)
-						--						next_offset := row_offsets @ (row_counter + 1)
-						--
-						--
-						--						current_row := grid.rows.i_th (row_counter - 1)
-						--
-						--						if grid.is_row_height_fixed then
-						--							current_height := grid.row_height
-						--						else
-						--							current_height := current_row.height
-						--						end
-						--
-						--						if (i = next_offset) and invalid_y_start <= i + current_height then
-						--							hi := row_counter
-						--						elseif invalid_y_start > i + current_height then
-						--							lo := row_counter
-						--						else	
-						--							hi := row_counter
-						--						end
-						--						if (i = next_offset) and invalid_y_start <= i + current_height then
-						--							hi := row_counter
-						--						elseif invalid_y_start > i + current_height then
-						--							lo := row_counter	
-						--						else	
-						--							hi := row_counter
-						--						end
-						--				end
-					if row_offsets.count > 1 then
-							-- Only compute the rows that span the area if there are rows
-							-- are contained in `grid'. If not, there is nothing to perform here
-							-- and `Result' is simply an empty list.
-						from
-							i := 1
-						until
-							i > row_offsets.count or found
-						loop
-							if row_offsets @ i > invalid_y_start then
-								found := True
-							else
-								i := i + pre_search_iteration_size
+						-- Limit the positions chacked to the virtual height if the area is intersected.
+					invalid_y_start := invalid_y_start.max (0)
+					invalid_y_end := invalid_y_end.min (grid.virtual_width)
+
+
+
+
+					if grid.is_row_height_fixed and not grid.is_tree_enabled then
+							-- If row heights are fixed we can calculate instead of searching.
+							-- Note that we cannot calculate if there is tree functionality enabled in
+							-- the grid as nodes may be expanded or collapsed.
+						first_row_index := (((invalid_y_start) // grid.row_height) + 1)
+						last_row_index := (((invalid_y_end) // grid.row_height) + 1).min (grid.row_count)
+						
+						if first_row_index <= grid.row_count then
+							l_row_count := grid.row_count
+							from
+								i := first_row_index
+							until
+								i > last_row_index
+							loop
+								Result.extend (i)
+								check
+									i_positive: i >= 0
+								end
+								i := i + 1
 							end
 						end
-						start_pos := i - pre_search_iteration_size
+					else
+						row_offsets := grid.row_offsets
 	
-							-- If the starting index has fallen within a tree structure,
-							-- we must start from the beginning of the root parent.
-						if grid.row (start_pos).parent_row /= Void then
-							start_pos := grid.row (start_pos).parent_row_root.index
-						end
+							-- Now iterate through `row_offsets', moving `pre_search_iteration_size'
+							-- each time, to determine where we should start the detailed search from.
+							-- By performing a pre-pass this way, we can reduce the number of iterations we
+							-- perform to seach for the row index at a paticular index.
+							-- This code and the subsequent main iteration could be replaced by a binary seach if
+							-- a simple method of iteration can be found.
+							-- The problems with the binary search lie with finding offsets within
+							-- subrows of non-expanded tree items when different size rows are permissable. The initial
+							-- binary search algorithm follows:
+							-- It still has the following problems
+							-- 1. The check for "i = next_offset" uses the incorrect `current_height'. In the case that
+							-- a node has non-expanded children, we must find the height of the first parent row recursively
+							-- that is displayed and use this height. The problem is that to do this, requires processing and the
+							-- speed advantage of the binary search is compromised. It is for this reason that the current code uses
+							-- the simple pre-pass loop below + it is also far easier to maintain.
+							-- 2. The result is off by 1 in some cases.
 	
-						from
-							row_counter := start_pos
-							i := 0
-						until
-							last_row_index_set or row_counter > grid.rows.count
-						loop
-							i := row_offsets @ (row_counter)
-							current_row := grid.rows.i_th (row_counter)
-							if grid.is_row_height_fixed then
-								current_height := grid.row_height
-							else
-								current_height := current_row.height
-							end
-	
-							if not first_row_index_set and then (i + current_height) > (invalid_y_start) then
-								first_row_index := row_counter
-								first_row_index_set := True
-							end
-							if first_row_index_set then
-								Result.extend (row_counter)
-							end
-	
-							if not last_row_index_set and then (invalid_y_end) < i + current_height then
-								last_row_index := row_counter
-								last_row_index_set := True
-							end
-							if current_row /= Void then
-									-- If the mode is partially dynamic and a tree is enabled, it
-									-- is possible that the current row may not exist.
-								if current_row.subrow_count > 0 and not current_row.is_expanded then
-									if not first_row_index_set then
-										skipped_rows := skipped_rows + current_row.subnode_count_recursive	
-									end
-									row_counter := row_counter + current_row.subnode_count_recursive
+							--					from
+							--						row_counter := 1
+							--						hi := grid.row_count + 1
+							--						lo := 1
+							--						i := -1000
+							--					until
+							--						(hi - lo).abs = 1
+							--					loop
+							--						row_counter := ((hi - lo) // 2) + lo
+							--						i := row_offsets @ (row_counter)
+							--						next_offset := row_offsets @ (row_counter + 1)
+							--
+							--
+							--						current_row := grid.rows.i_th (row_counter - 1)
+							--
+							--						if grid.is_row_height_fixed then
+							--							current_height := grid.row_height
+							--						else
+							--							current_height := current_row.height
+							--						end
+							--
+							--						if (i = next_offset) and invalid_y_start <= i + current_height then
+							--							hi := row_counter
+							--						elseif invalid_y_start > i + current_height then
+							--							lo := row_counter
+							--						else	
+							--							hi := row_counter
+							--						end
+							--						if (i = next_offset) and invalid_y_start <= i + current_height then
+							--							hi := row_counter
+							--						elseif invalid_y_start > i + current_height then
+							--							lo := row_counter	
+							--						else	
+							--							hi := row_counter
+							--						end
+							--				end
+						if row_offsets.count > 1 then
+								-- Only compute the rows that span the area if there are rows
+								-- are contained in `grid'. If not, there is nothing to perform here
+								-- and `Result' is simply an empty list.
+							from
+								i := 1
+							until
+								i > row_offsets.count or found
+							loop
+								if row_offsets @ i > invalid_y_start then
+									found := True
+								else
+									i := i + pre_search_iteration_size
 								end
 							end
-							row_counter := row_counter + 1
+							start_pos := i - pre_search_iteration_size
+		
+								-- If the starting index has fallen within a tree structure,
+								-- we must start from the beginning of the root parent.
+							if grid.row (start_pos).parent_row /= Void then
+								start_pos := grid.row (start_pos).parent_row_root.index
+							end
+		
+							from
+								row_counter := start_pos
+								i := 0
+							until
+								last_row_index_set or row_counter > grid.rows.count
+							loop
+								i := row_offsets @ (row_counter)
+								current_row := grid.rows.i_th (row_counter)
+								if grid.is_row_height_fixed then
+									current_height := grid.row_height
+								else
+									current_height := current_row.height
+								end
+		
+								if not first_row_index_set and then (i + current_height) > (invalid_y_start) then
+									first_row_index := row_counter
+									first_row_index_set := True
+								end
+								if first_row_index_set then
+									Result.extend (row_counter)
+								end
+		
+								if not last_row_index_set and then (invalid_y_end) < i + current_height then
+									last_row_index := row_counter
+									last_row_index_set := True
+								end
+								if current_row /= Void then
+										-- If the mode is partially dynamic and a tree is enabled, it
+										-- is possible that the current row may not exist.
+									if current_row.subrow_count > 0 and not current_row.is_expanded then
+										if not first_row_index_set then
+											skipped_rows := skipped_rows + current_row.subnode_count_recursive	
+										end
+										row_counter := row_counter + current_row.subnode_count_recursive
+									end
+								end
+								row_counter := row_counter + 1
+							end
 						end
 					end
 				end

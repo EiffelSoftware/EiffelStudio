@@ -7,7 +7,7 @@ deferred class
 	DOCUMENT_FILTER
 	
 inherit
-	XM_PRETTY_PRINT_FILTER
+	XM_CALLBACKS_FILTER
 
 	XML_ROUTINES
 		rename

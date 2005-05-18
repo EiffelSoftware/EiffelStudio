@@ -48,14 +48,15 @@ feature -- Access
 		local
 			retried: BOOLEAN
 			l_parser: XM_EIFFEL_PARSER
+			l_file: KL_STRING_INPUT_STREAM
 		do
 			if not retried then		
 				create Result.make_empty
 				create l_parser.make
-				l_parser.set_string_mode_ascii
+				create l_file.make (a_xml)
 				pretty_formatter.format (Result)
 				l_parser.set_callbacks (standard_callbacks_pipe (<<pretty_formatter>>))
-				l_parser.parse_from_string (a_xml)
+				l_parser.parse_from_stream (l_file)
 				check
 					ok_parsing: l_parser.is_correct
 				end
@@ -351,13 +352,14 @@ feature -- Commands
 			l_parser: XM_EIFFEL_PARSER
 			l_tree_pipe: XM_TREE_CALLBACKS_PIPE
 			l_xm_concatenator: DOCUMENT_XML_READER
+			l_file: KL_STRING_INPUT_STREAM
 		do
 			create l_parser.make
-			l_parser.set_string_mode_ascii
 			create l_tree_pipe.make
 			create l_xm_concatenator.make_null
+			create l_file.make (a_text)
 			l_parser.set_callbacks (standard_callbacks_pipe (<<l_xm_concatenator, l_tree_pipe.start>>))			
-			l_parser.parse_from_string (a_text)
+			l_parser.parse_from_stream (l_file)
 			if l_parser.is_correct then 
 				if not l_tree_pipe.error.has_error then
 					Result := l_tree_pipe.document

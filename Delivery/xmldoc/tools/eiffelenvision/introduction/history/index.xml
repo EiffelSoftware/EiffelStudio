@@ -1,0 +1,58 @@
+<document output="envision" title="History and Known Issues">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_title>History and Known Issues</envision_title>
+				<envision_pseudo_name>30</envision_pseudo_name>
+			</toc>
+			<xml>
+				<keyword>
+					<index>K</index>
+					<term>EiffelEnvision, History and Known Issues</term>
+				</keyword>
+			</xml>
+		</help>
+	</meta_data>
+	<paragraph>
+		This section contains a EiffelEnvision's recorded history of improvements, bug fixes and known issues to date.
+		<anchor>in_this_section</anchor>
+		<heading>
+			<size>2</size>
+			<content>In This Section</content>
+		</heading>
+		<paragraph>
+			<link>
+				<url>history.xml</url>
+				<label>Version History</label>
+			</link>
+			<line_break/>
+			EiffelEnvision version history of feature additions and enhancments.
+		</paragraph>
+		<paragraph>
+			<link>
+				<url>issues.xml</url>
+				<label>Known Bugs and Other Issues</label>
+			</link>
+			<line_break/>
+			A maintained list of known EiffelEnvision bugs and other issues.
+		</paragraph>
+		<anchor>see_also</anchor>
+		<heading>
+			<size>2</size>
+			<content>Related Sections</content>
+		</heading>
+		<seealso>
+			<bold>See also</bold>:
+			<line_break/>
+			<link>
+				<url>international_bug.xml</url>
+				<label>International Versions of Microsoft's Windows XP</label>
+			</link>
+			<line_break/>
+			<link>
+				<url>url</url>
+				<label>*Eiffel Compiler Version History</label>
+			</link>
+		</seealso>
+	</paragraph>
+</document>

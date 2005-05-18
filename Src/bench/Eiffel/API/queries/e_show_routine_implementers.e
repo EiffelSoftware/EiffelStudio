@@ -69,7 +69,7 @@ feature -- Execution
 						if feat /= Void and then feat.written_in = written_in then
 							c.append_name (structured_text);
 							structured_text.add (ti_Space);
-							feat.append_name (structured_text);
+							feat.append_full_name (structured_text);
 							if c = written_cl then
 								structured_text.add_string (" (version from)");
 							end;

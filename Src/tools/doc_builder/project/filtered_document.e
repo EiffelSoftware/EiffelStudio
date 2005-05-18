@@ -101,16 +101,17 @@ feature {NONE} -- Commands
 		local
 			retried: BOOLEAN
 			l_parser: XM_EIFFEL_PARSER
+			l_file: KL_STRING_INPUT_STREAM
 		do
 			if not retried then
 				if text.is_empty then
 					-- error
 				else
+					create l_file.make (text)
 					filter.clear
-					create l_parser.make					
+					create l_parser.make
 					l_parser.set_callbacks (standard_callbacks_pipe (<<filter>>))
-					l_parser.set_string_mode_ascii
-					l_parser.parse_from_string (text)
+					l_parser.parse_from_stream (l_file)
 					check
 						ok_parsing: l_parser.is_correct
 					end

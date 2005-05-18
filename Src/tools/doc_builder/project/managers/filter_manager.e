@@ -115,20 +115,21 @@ feature -- Conversion
 			-- Convert `a_doc' to HTML.  If unsuccessful return error string.
 		local
 			retried: BOOLEAN
-			l_string: STRING
 			l_parser: XM_EIFFEL_PARSER
 			l_html_filter: HTML_FILTER
+			l_file: KL_STRING_INPUT_STREAM
+			l_string: STRING
 		do
 			if not retried then
 				l_string := a_doc.text.twin
-				if not l_string.is_empty then					
+				if not l_string.is_empty then
+					create l_file.make (l_string)
 					create l_html_filter.make
 					l_html_filter.set_filename (a_doc.name)
 					l_html_filter.clear
 					create l_parser.make
 					l_parser.set_callbacks (l_html_filter)
-					--l_parser.set_string_mode_ascii
-					l_parser.parse_from_string (l_string)
+					l_parser.parse_from_stream (l_file)
 					check
 						ok_parsing: l_parser.is_correct
 					end

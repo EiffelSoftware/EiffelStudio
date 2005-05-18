@@ -42,25 +42,23 @@ feature -- Generation
 			file_exists: a_file.exists
 		local
 			retried: BOOLEAN
-			l_string: STRING
 			l_parser: XM_EIFFEL_PARSER
-		do	
+			l_file: KL_TEXT_INPUT_FILE
+		do
 			if not retried then
-				a_file.open_read
-				a_file.readstream (a_file.count)
-				l_string := a_file.laststring
-				if not l_string.is_empty then					
+				create l_file.make (a_file.name)
+				l_file.open_read
+				if l_file.is_open_read then
 					xml_reader.make (a_file)
 					create l_parser.make
-					l_parser.set_string_mode_ascii
 					l_parser.set_callbacks (xml_reader)
-					l_parser.parse_from_string (l_string)
+					l_parser.parse_from_stream (l_file)
 					check
 						ok_parsing: l_parser.is_correct
 					end
 					Result := xml_reader.output_string
+					l_file.close
 				end
-				a_file.close
 			else
 				create Result.make_empty
 			end

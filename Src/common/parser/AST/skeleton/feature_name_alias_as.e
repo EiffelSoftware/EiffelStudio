@@ -60,9 +60,13 @@ feature -- Access
 
 	internal_alias_name: STRING is
 			-- Operator associated with the feature (if any)
-			-- augmented with information about its arity
+			-- augmented with information about its arity in case of operator alias
 		do
-			Result := get_internal_alias_name
+			if is_bracket then
+				Result := alias_name.value
+			else
+				Result := get_internal_alias_name
+			end
 		end
 
 	has_convert_mark: BOOLEAN
@@ -115,7 +119,11 @@ feature -- Comparison
 	is_equivalent (other: like Current): BOOLEAN is
 			-- Is `other' equivalent to the current object?
 		do
-			Result := Precursor (other) and then other.has_convert_mark = has_convert_mark and then other.alias_name /= Void and then other.alias_name.is_equal (alias_name) and then other.is_bracket = is_bracket and then other.is_binary = is_binary
+				-- There is no need to check whether both alias names are Bracket,
+				-- because there is a check that they have the same alias name
+			Result :=
+				Precursor (other) and then equivalent (alias_name, other.alias_name) and then 
+				other.has_convert_mark = has_convert_mark and then other.is_binary = is_binary
 		end
 	
 feature {NONE} -- Status

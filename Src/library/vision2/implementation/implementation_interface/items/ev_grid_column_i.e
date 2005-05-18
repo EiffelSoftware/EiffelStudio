@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'.
 		do
 			physical_index := -1
-			create header_item
+			create header_item.make_with_grid_column (Current)
 			set_is_initialized (True)
 		end
 
@@ -544,7 +544,7 @@ feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_COLUMN, EV_GRID_COLUMN_I, EV_GRID_
 	parent_i: EV_GRID_I
 		-- Grid that `Current' resides in.
 		
-	header_item: EV_HEADER_ITEM
+	header_item: EV_GRID_HEADER_ITEM
 		-- Header item associated with `Current'.
 		
 feature {EV_ANY_I} -- Implementation

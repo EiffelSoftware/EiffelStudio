@@ -13,8 +13,7 @@ inherit
 		redefine			
 			on_start_tag,
 			on_end_tag,
-			on_content,
-			on_start_tag_finish
+			on_content
 		end
 
 	CODE_XML_READER_CONSTANTS
@@ -41,11 +40,6 @@ feature -- Tag
 			element_stack.extend (a_local_part)					
 		end
 	
-	on_start_tag_finish is
-		do
-			next.on_start_tag_finish
-		end
-
 	on_end_tag (a_namespace, a_prefix, a_local_part: STRING) is
 			-- End tag
 		do							
@@ -71,7 +65,10 @@ feature -- Tag
 				l_title ?= l_content
 				l_href ?= Anchor.item (2)
 				if l_title /= Void and then l_href /= Void then
-					anchors.extend (l_title, l_href)	
+						-- Use `force' because it might be already present,
+						-- case of a creation routine which appears twice,
+						-- once as creation routine, once as a normal routine.
+					anchors.force (l_title, l_href)
 				end
 				in_anchor := False
 			end

@@ -209,21 +209,27 @@ feature {NONE} -- Processing
   							if l_xm_parent /= Void then
   								l_xm_parent := l_xm_parent.elements.item (1)
   								if l_xm_parent /= Void then
-  									l_xm_parent := l_xm_parent.elements.item (1)		
+  									l_xm_parent := l_xm_parent.elements.item (1)
   								end
   							end
   						end
   					end
       			end
 				if l_node /= Void and l_xm_parent /= Void then
-					
+						-- Move internal cursor of `l_xm_parent' at the end for proper additional
+						-- insertions.
+					check
+						l_xm_parent_not_empty: not l_xm_parent.is_empty
+					end
+					l_xm_parent.finish
+
 					if l_node.url /= Void then
 						create l_doc_link.make (l_node.url.twin, l_node.url.twin)
 					end					
 			
 						-- Build link information					
 					from					
-						l_separator := " &gt; "
+						l_separator := " > "
 						l_parent := l_node.parent
 					until
 						l_parent = Void
@@ -253,9 +259,9 @@ feature {NONE} -- Processing
            							l_xm_link.put_first (l_xm_url)								
            						end
            						if l_parent /= Void then								
-           							l_xm_parent.put_first (l_xm_link)	
+           							l_xm_parent.put_right (l_xm_link)
            							if l_parent.parent /= Void then
-           								l_xm_parent.put_first (create {XM_CHARACTER_DATA}.make (l_xm_parent, l_separator))
+           								l_xm_parent.put_right (create {XM_CHARACTER_DATA}.make (l_xm_parent, l_separator))
            							end
            						end
 							end
@@ -264,7 +270,7 @@ feature {NONE} -- Processing
 					
 						-- Create a default link to the root of the tree
 					if l_is_one then
-           				l_xm_parent.put_first (create {XM_CHARACTER_DATA}.make (l_xm_parent, l_separator))
+           				l_xm_parent.put_right (create {XM_CHARACTER_DATA}.make (l_xm_parent, l_separator))
            			end
 					create l_xm_link.make (l_xm_parent, "link", create {XM_NAMESPACE}.make_default)
            			create l_xm_label.make (l_xm_link, "label", create {XM_NAMESPACE}.make_default)							
@@ -277,7 +283,7 @@ feature {NONE} -- Processing
         				l_xm_url.put_first (create {XM_CHARACTER_DATA}.make (l_xm_url, "/index.html"))
         			end					
            			l_xm_link.put_first (l_xm_url)								           			
-					l_xm_parent.put_first (l_xm_link)						
+					l_xm_parent.put_right (l_xm_link)						
 				end
 			end
 		end		

@@ -187,7 +187,7 @@ feature {NONE}
 			args.put_i_th (Integer_type, 1)
 			create  Result
 			Result.set_arguments (args)
-			Result.set_feature_name_id ({PREDEFINED_NAMES}.make_name_id)
+			Result.set_feature_name_id ({PREDEFINED_NAMES}.make_name_id, 0)
 		end
 
 	count_signature: DYN_FUNC_I is
@@ -199,7 +199,7 @@ feature {NONE}
 			create Result
 			Result.set_arguments (args)
 			Result.set_type (Integer_type)
-			Result.set_feature_name_id ({PREDEFINED_NAMES}.count_name_id)
+			Result.set_feature_name_id ({PREDEFINED_NAMES}.count_name_id, 0)
 		ensure
 			item_signature_not_void: Result /= Void
 		end
@@ -216,7 +216,7 @@ feature {NONE}
 			Result.set_arguments (args)
 			create f.make (False, False, 1)
 			Result.set_type (f)
-			Result.set_feature_name_id ({PREDEFINED_NAMES}.item_name_id)
+			Result.set_feature_name_id ({PREDEFINED_NAMES}.item_name_id, 0)
 		ensure
 			item_signature_not_void: Result /= Void
 		end
@@ -233,7 +233,7 @@ feature {NONE}
 			Result.set_arguments (args)
 			create f.make (False, False, 1)
 			Result.set_type (f)
-			Result.set_feature_name_id ({PREDEFINED_NAMES}.infix_at_name_id)
+			Result.set_feature_name_id ({PREDEFINED_NAMES}.infix_at_name_id, 0)
 		ensure
 			item_signature_not_void: Result /= Void
 		end
@@ -250,7 +250,7 @@ feature {NONE}
 			args.put_i_th (f, 2)
 			create Result
 			Result.set_arguments (args)
-			Result.set_feature_name_id ({PREDEFINED_NAMES}.put_name_id)
+			Result.set_feature_name_id ({PREDEFINED_NAMES}.put_name_id, 0)
 		ensure
 			put_signature_not_void: Result /= Void
 		end

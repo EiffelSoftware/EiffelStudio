@@ -108,7 +108,7 @@ feature {NONE} -- Implementation
 			args.put_i_th (Integer_type, 1);
 			create Result;
 			Result.set_arguments (args);
-			Result.set_feature_name_id (Names_heap.make_name_id);
+			Result.set_feature_name_id (Names_heap.make_name_id, 0)
 		end;
 
 	area_type: GEN_TYPE_A is
@@ -134,7 +134,7 @@ feature {NONE} -- Implementation
 			args.put_i_th (Integer_type, 1);
 			create Result;
 			Result.set_arguments (args);
-			Result.set_feature_name_id (Names_heap.set_count_name_id);
+			Result.set_feature_name_id (Names_heap.set_count_name_id, 0)
 		end;
 
 end

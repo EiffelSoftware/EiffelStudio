@@ -234,7 +234,7 @@ feature {NONE} -- Implementation
 			args.put_i_th (Integer_type, 1)
 			create Result
 			Result.set_arguments (args)
-			Result.set_feature_name_id (Names_heap.make_name_id)
+			Result.set_feature_name_id (Names_heap.make_name_id, 0)
 		ensure
 			item_signature_not_void: Result /= Void
 		end
@@ -251,7 +251,7 @@ feature {NONE} -- Implementation
 			Result.set_arguments (args)
 			create f.make (False, False, 1)
 			Result.set_type (f)
-			Result.set_feature_name_id (Names_heap.item_name_id)
+			Result.set_feature_name_id (Names_heap.item_name_id, 0)
 		ensure
 			item_signature_not_void: Result /= Void
 		end
@@ -268,7 +268,7 @@ feature {NONE} -- Implementation
 			args.put_i_th (Integer_type, 2)
 			create Result
 			Result.set_arguments (args)
-			Result.set_feature_name_id (Names_heap.put_name_id)
+			Result.set_feature_name_id (Names_heap.put_name_id, 0)
 		ensure
 			put_signature_not_void: Result /= Void
 		end

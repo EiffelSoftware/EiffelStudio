@@ -1557,6 +1557,7 @@ feature -- Element change
 		require
 			a_column_positive: a_column > 0
 			a_row_positive: a_row > 0
+			a_item_not_parented: a_item /= Void implies a_item.parent = Void
 			valid_tree_structure_on_item_insertion: a_item /= Void and is_tree_enabled and row (a_row).parent_row /= Void implies a_column >= row (a_row).parent_row.index_of_first_item
 			to_implement_assertion	("Add preconditions for subnode handling of `Void' items.")
 		do
@@ -3943,7 +3944,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- I
 			a_column_less_than_column_count: a_column <= column_count
 		local
 			grid_row_i: EV_GRID_ROW_I
-			grid_row: SPECIAL [EV_GRID_ITEM_I]
+			row_data: SPECIAL [EV_GRID_ITEM_I]
 			a_grid_column_i: EV_GRID_COLUMN_I
 			grid_item_i: EV_GRID_ITEM_I
 			col_index: INTEGER
@@ -3952,11 +3953,17 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- I
 			a_grid_column_i := column_internal (a_column)
 			col_index := a_grid_column_i.physical_index
 			
+				-- Retrieve row to ensure that the row exists.
 			grid_row_i := row_internal (a_row)
-			grid_row :=  internal_row_data @ a_row
 
-			if col_index < grid_row.count then
-				grid_item_i := grid_row @ (col_index)
+				-- Gain access to the internal row data
+				-- for retrieval of item.
+			row_data :=  internal_row_data @ a_row
+
+				-- `row_data' may not have a count lass than
+				-- `column_count' if items are Void in this row.
+			if col_index < row_data.count then
+				grid_item_i := row_data @ (col_index)
 				Result := grid_item_i
 			end
 		end

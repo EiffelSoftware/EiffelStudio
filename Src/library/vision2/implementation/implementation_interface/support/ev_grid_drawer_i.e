@@ -73,8 +73,8 @@ feature -- Basic operations
 				from
 					column_offsets.start
 						-- Compute the virtual positions of the invalidated area.
-					invalid_x_start := internal_client_x + an_x - horizontal_buffer_offset
-					invalid_x_end := internal_client_x + an_x - horizontal_buffer_offset + a_width
+					invalid_x_start := an_x
+					invalid_x_end := an_x + a_width
 				until
 					last_column_index_set or column_offsets.off
 				loop
@@ -140,8 +140,8 @@ feature -- Basic operations
 				
 					-- Calculate the rows that must be displayed.
 					-- Compute the virtual positions of the invalidated area.
-				invalid_y_start := internal_client_y + a_y - vertical_buffer_offset
-				invalid_y_end := internal_client_y + a_y - vertical_buffer_offset + a_height
+				invalid_y_start := a_y
+				invalid_y_end := a_y + a_height
 				if grid.is_row_height_fixed and not grid.is_tree_enabled then
 						-- If row heights are fixed we can calculate instead of searching.
 						-- Note that we cannot calculate if there is tree functionality enabled in
@@ -312,8 +312,8 @@ feature -- Basic operations
 			grid.perform_vertical_computation
 				-- Recompute vertical row heights and scroll bar positions before
 				-- querying the item positions
-			horizontal_span_items := items_spanning_horizontal_span (an_x, 0)
-			vertical_span_items := items_spanning_vertical_span (a_y, 0)
+			horizontal_span_items := items_spanning_horizontal_span (drawable_x_to_virtual_x (an_x), 0)
+			vertical_span_items := items_spanning_vertical_span (drawable_y_to_virtual_y (a_y), 0)
 			if not horizontal_span_items.is_empty and not vertical_span_items.is_empty then
 				create Result.make (horizontal_span_items.first, vertical_span_items.first)
 			end
@@ -330,8 +330,8 @@ feature -- Basic operations
 			grid.perform_vertical_computation
 				-- Recompute vertical row heights and scroll bar positions before
 				-- querying the item positions
-			horizontal_span_items := items_spanning_horizontal_span (an_x, 0)
-			vertical_span_items := items_spanning_vertical_span (a_y, 0)
+			horizontal_span_items := items_spanning_horizontal_span (drawable_x_to_virtual_x (an_x), 0)
+			vertical_span_items := items_spanning_vertical_span (drawable_y_to_virtual_y (a_y), 0)
 			if not horizontal_span_items.is_empty and not vertical_span_items.is_empty then
 				Result := grid.item_internal (horizontal_span_items.first, vertical_span_items.first)
 			end
@@ -349,8 +349,8 @@ feature -- Basic operations
 			grid.perform_vertical_computation
 				-- Recompute vertical row heights and scroll bar positions before
 				-- querying the item positions
-			horizontal_span_items := items_spanning_horizontal_span (an_x, 0)
-			vertical_span_items := items_spanning_vertical_span (a_y, 0)
+			horizontal_span_items := items_spanning_horizontal_span (drawable_x_to_virtual_x (an_x), 0)
+			vertical_span_items := items_spanning_vertical_span (drawable_y_to_virtual_y (a_y), 0)
 			if not horizontal_span_items.is_empty and not vertical_span_items.is_empty then
 				Result := grid.item_internal (horizontal_span_items.first, vertical_span_items.first)
 				if Result /= Void then
@@ -494,8 +494,8 @@ feature -- Basic operations
 					-- Note that here we need to remove 1 from `a_width' and `a_height' before
 					-- calculating the visible column and row indexes, as one of the pixels
 					-- is already included within the offset pixel.
-				visible_column_indexes := items_spanning_horizontal_span (an_x, a_width - 1)
-				visible_row_indexes := items_spanning_vertical_span (a_y, a_height - 1)
+				visible_column_indexes := items_spanning_horizontal_span (drawable_x_to_virtual_x (an_x), a_width - 1)
+				visible_row_indexes := items_spanning_vertical_span (drawable_y_to_virtual_y (a_y), a_height - 1)
 				if not (visible_column_indexes.is_empty or visible_row_indexes.is_empty) then
 					first_column_index := visible_column_indexes.first
 					last_column_index := visible_column_indexes.last
@@ -1014,6 +1014,22 @@ feature -- Basic operations
 		end
 
 feature {NONE} -- Implementation
+
+	drawable_x_to_virtual_x (an_x: INTEGER): INTEGER is
+			-- Convert `an_x' in drawable coordinates to a virtual x coordinate.
+		do
+			Result := grid.internal_client_x + an_x - grid.viewport_x_offset
+		ensure
+			valid_result: Result >= an_x
+		end
+
+	drawable_y_to_virtual_y (a_y: INTEGER): INTEGER is
+			-- Convert `a_y' in drawable coordinates to a virtual y coordinate.
+		do
+			Result := grid.internal_client_y + a_y - grid.viewport_y_offset
+		ensure
+			valid_result: Result >= a_y
+		end
 
 invariant
 	grid_not_void: grid /= Void

@@ -40,7 +40,7 @@ inherit
 
 feature -- Initialization
 
-	make (n: like name; i: INTEGER) is
+	make (n: like name; a: like alias_name; i: INTEGER) is
 			-- Initialize feature with name `n' with
 			-- identification `i'.
 		require
@@ -48,15 +48,21 @@ feature -- Initialization
 			positive_i: i >= 0
 		do
 			name := n
+			alias_name := a
 			feature_id := i
 		ensure
-			set: name = n and then feature_id = i
+			name_set: name = n 
+			alias_name_set: alias_name = a
+			feature_id_set: feature_id = i
 		end
 
 feature -- Properties
 
 	name: STRING;
 			-- Final name of the feature
+
+	alias_name: STRING
+			-- Alias name of the feature (if any)
 
 	feature_id: INTEGER;
 			-- Unique identification for a feature
@@ -93,14 +99,6 @@ feature -- Properties
 	obsolete_message: STRING;
 			-- Obsolete message
 			-- (Void if Current is not obsolete)
-
-	is_normal: BOOLEAN is
-			-- Is a normal feature?
-		do
-			Result := not (is_infix or else is_prefix)
-		ensure
-			Result = not (is_infix or else is_prefix)
-		end;
 
 	is_procedure: BOOLEAN is
 			-- Is current feature a procedure ?
@@ -516,11 +514,7 @@ feature -- Output
 		require
 			non_void_st: st /= Void
 		do
-			if is_normal then
-				append_name (st)
-			else
-				append_special_name (st)
-			end
+			append_full_name (st)
 			append_just_signature (st)
 		end
 		
@@ -585,56 +579,76 @@ feature -- Output
 			if is_once or else is_constant then
 				l_name.put ((l_name @ 1).upper, 1)
 			end
-			st.add_feature (Current, l_name) 
+			st.add_feature (Current, l_name)
 		end
 
-	append_special_name (st: STRUCTURED_TEXT) is
-			-- Append formatted name of infix or prefix feature in `st'
+	append_full_name (st: STRUCTURED_TEXT) is
+			-- Append name of the feature in `st' in its complete form
+			-- (with infix and prefix keywords and alias names if any).
 		require
 			valid_st: st /= Void
-			not_normal: not is_normal
 		local
 			ot: OPERATOR_TEXT
+			a: like alias_name
 		do
 			if is_infix then
 				st.add (Ti_infix_keyword)
 				create ot.make (Current, extract_symbol_from_infix (name))
-			else
+			elseif is_prefix then
 				st.add (Ti_prefix_keyword)
 				create ot.make (Current, extract_symbol_from_prefix (name))
+			else
+				append_name (st)
+				a := alias_name
+				if a /= Void then
+					st.add_space
+					st.add (Ti_alias_keyword)
+					st.add_space
+					create ot.make (Current, extract_alias_name (a))
+				end
 			end
-			st.add_space
-			st.add (Ti_double_quote)
-			st.add (ot)
-			st.add (Ti_double_quote)
+			if ot /= Void then
+				st.add_space
+				st.add (Ti_double_quote)
+				st.add (ot)
+				st.add (Ti_double_quote)
+			end
 		end
 
 feature -- Output
 
 	feature_signature: STRING is
 			-- Signature of Current feature
-		local
-			args: like arguments
 		do
 			create Result.make (50)
 			Result.append (name)
+			append_arguments_to (Result)
+		end
+
+	append_arguments_to (s: STRING) is
+			-- Append arguments to `s'.
+		require
+			s_not_void: s /= Void
+		local
+			args: like arguments
+		do
 			args := arguments
 			if args /= Void then
-				Result.append (" (")
+				s.append (" (")
 				from
 					args.start
 				until
 					args.after
 				loop
-					Result.append (args.argument_names.i_th (args.index))
-					Result.append (": ")
-					Result.append (args.item.dump)
+					s.append (args.argument_names.i_th (args.index))
+					s.append (": ")
+					s.append (args.item.dump)
 					args.forth
 					if not args.after then
-						Result.append ("; ")
+						s.append ("; ")
 					end
 				end
-				Result.append (")")
+				s.append (")")
 			end
 		end
 

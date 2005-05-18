@@ -23,7 +23,6 @@ feature {NONE} -- Implementation
 
 feature -- Event handling
 
-
 	pointer_motion_actions: EV_POINTER_MOTION_ACTION_SEQUENCE is
 			-- Actions to be performed when screen pointer moves.
 		do
@@ -32,7 +31,6 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-
 	pointer_button_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE is
 			-- Actions to be performed when screen pointer button is pressed.
 		do
@@ -40,7 +38,6 @@ feature -- Event handling
 		ensure
 			not_void: Result /= Void
 		end
-
 
 	pointer_double_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE is
 			-- Actions to be performed when screen pointer is double clicked.
@@ -86,6 +83,34 @@ feature -- Event handling
 			-- Actions to be performed when `Current' is deselected.
 		do
 			Result := implementation.deselect_actions
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	drop_actions: EV_PND_ACTION_SEQUENCE is
+			-- Actions to be performed when a pebble is dropped here.
+		do
+			Result := implementation.drop_actions
+		ensure
+			not_void: Result /= Void
+		end
+
+	activate_actions: ACTION_SEQUENCE [TUPLE [EV_POPUP_WINDOW]] is
+			-- Actions to be performed to override the default `activate' setup of `Current', see {EV_GRID_EDITABLE_ITEM}.activate_action.
+			-- Useful for repositioning `popup_window', which will then be shown automatically by the grid.
+			-- Arguments of TUPLE (with name for clarity):
+			--
+			-- popup_window: EV_POPUP_WINDOW -- The popup window used to interactively edit `activate_item', window has already been sized and positioned.
+		do
+			Result := implementation.activate_actions
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	deactivate_actions: EV_NOTIFY_ACTION_SEQUENCE is
+			-- Actions to be performed when `Current' has been deactivated.
+		do
+			Result := implementation.deactivate_actions
 		ensure
 			result_not_void: Result /= Void
 		end

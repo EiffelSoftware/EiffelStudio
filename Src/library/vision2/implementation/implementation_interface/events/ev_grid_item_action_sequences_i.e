@@ -153,6 +153,62 @@ feature {EV_ANY_I} -- Implementation
 	deselect_actions_internal: EV_NOTIFY_ACTION_SEQUENCE
 			-- Implementation of once per object `deselect_actions'.
 
+feature -- Event handling
+
+	drop_actions: EV_PND_ACTION_SEQUENCE is
+			-- Actions to be performed when a pebble is dropped here.
+		do
+			if drop_actions_internal = Void then
+				create drop_actions_internal
+			end
+			Result := drop_actions_internal
+		ensure
+			not_void: Result /= Void
+		end
+
+feature {EV_ANY_I} -- Implementation
+
+	drop_actions_internal: EV_PND_ACTION_SEQUENCE
+			-- Implementation of once per object `drop_actions'.
+
+feature -- Event handling
+
+	activate_actions: ACTION_SEQUENCE [TUPLE [EV_POPUP_WINDOW]] is
+			-- Actions to be performed to setup `Current' for activation.
+			-- Overrides default setup of activatable items.
+			-- Arguments of TUPLE (with names for clarity):
+			--
+			-- popup_window: EV_WINDOW -- The popup window used to interactively edit `activate_item', window has already been sized and positioned.
+		do
+			if activate_actions_internal = Void then
+				create activate_actions_internal
+			end
+			Result := activate_actions_internal
+		end
+
+feature {EV_ANY_I} -- Implementation
+
+	activate_actions_internal: ACTION_SEQUENCE [TUPLE [EV_POPUP_WINDOW]]
+			-- Implementation of once per object `activate_actions'.
+
+feature -- Event handling
+
+	deactivate_actions: EV_NOTIFY_ACTION_SEQUENCE is
+			-- Actions to be performed when `Current' is deactivated.
+		do
+			if deactivate_actions_internal = Void then
+				create deactivate_actions_internal
+			end
+			Result := deactivate_actions_internal
+		ensure
+			result_not_void: Result /= Void
+		end
+
+feature {EV_ANY_I} -- Implementation
+
+	deactivate_actions_internal: EV_NOTIFY_ACTION_SEQUENCE
+			-- Implementation of once per object `deactivate_actions'.
+
 end
 
 --|----------------------------------------------------------------

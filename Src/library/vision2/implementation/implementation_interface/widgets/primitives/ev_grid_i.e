@@ -1376,7 +1376,7 @@ feature -- Status report
 			is_displayed: is_displayed
 		do
 			perform_vertical_computation
-			Result := drawer.items_spanning_vertical_span (virtual_y_position - internal_client_y + viewport_y_offset, viewable_height)
+			Result := drawer.items_spanning_vertical_span (virtual_y_position, viewable_height)
 		ensure	
 			result_not_void: Result /= Void
 		end
@@ -1387,7 +1387,7 @@ feature -- Status report
 			is_displayed: is_displayed
 		do
 			perform_horizontal_computation
-			Result := drawer.items_spanning_horizontal_span (virtual_x_position - internal_client_x + viewport_x_offset, viewable_width)
+			Result := drawer.items_spanning_horizontal_span (virtual_x_position, viewable_width)
 		ensure	
 			result_not_void: Result /= Void
 		end
@@ -1865,9 +1865,9 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 				vertical_computation_required := False
 				recompute_row_offsets (invalid_row_index.min (row_count).max (1))
 					-- Restore to an arbitarily large index.
-				invalid_row_index := invalid_row_index.max_value;
+				invalid_row_index := invalid_row_index.max_value
 				if vertical_redraw_triggered_by_viewport_resize then
-					recompute_vertical_scroll_bar;
+					recompute_vertical_scroll_bar
 				end
 				if row_count > 0 then
 						-- Do nothing if `Current' is empty.
@@ -1888,9 +1888,9 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 					recompute_column_offsets (invalid_column_index.min (column_count).max (1))
 				end
 					-- Restore to an arbitarily large index.
-				invalid_column_index := invalid_column_index.max_value;				
+				invalid_column_index := invalid_column_index.max_value
 				if horizontal_redraw_triggered_by_viewport_resize then
-					recompute_horizontal_scroll_bar;	
+					recompute_horizontal_scroll_bar
 				end
 				if column_count > 0 then
 					((create {EV_ENVIRONMENT}).application).do_once_on_idle (agent recompute_horizontal_scroll_bar)

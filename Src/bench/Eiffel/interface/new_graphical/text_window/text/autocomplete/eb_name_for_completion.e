@@ -220,12 +220,7 @@ feature {NONE} -- Implementation
 			-- The signature of `e_feature'
 		do	
 			create Result.make_empty
-			if not e_feature.is_infix then
-				Result := e_feature.feature_signature
-				Result.remove_substring (1, e_feature.name.count)
-			else
-				Result := e_feature.feature_signature.substring (e_feature.name.count + 1, e_feature.feature_signature.count)
-			end
+			e_feature.append_arguments_to (Result)
 		ensure
 			result_not_void: Result /= Void
 		end	

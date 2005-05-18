@@ -20,11 +20,12 @@ create
 
 feature {NONE} -- Implementation
 
-	perform_redraw (an_x, a_y, a_width, a_height: INTEGER; drawable: EV_DRAWABLE) is
+	perform_redraw (an_x, a_y, a_width, a_height, an_indent: INTEGER; drawable: EV_DRAWABLE) is
 			-- Redraw `Current'.
 		do
+			fixme ("Need to pass a suitable pixmap for the drawing here, that is the correct size for the grid item")
 			if expose_actions_internal /= Void then
-				expose_actions_internal.call ([an_x, a_y, a_width, a_height, parent_i.drawable])
+				expose_actions_internal.call ([an_x, a_y, a_width, a_height, drawable])
 			end
 		end
 		

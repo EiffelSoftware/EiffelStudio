@@ -1008,11 +1008,7 @@ feature {NONE} -- Implementation
 			st: STRUCTURED_TEXT
 		do
 			create st.make
-			if f.is_normal then
-				f.append_name (st)
-			else
-				f.append_special_name (st)
-			end
+			f.append_full_name (st)
 			Result := st.image
 			Result.replace_substring_all ("&", "&amp;")
 			Result.replace_substring_all ("<", "&lt;")

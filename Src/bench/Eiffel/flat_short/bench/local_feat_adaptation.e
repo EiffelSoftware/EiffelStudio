@@ -48,6 +48,9 @@ feature -- Properties
 	final_name: STRING;
 			-- name in descendant
 
+	alias_name: STRING
+			-- Associated alias name (if any)
+
 	is_infix: BOOLEAN;
 			-- Is the final feature an infix?
 
@@ -127,6 +130,16 @@ feature -- Setting
 		ensure
 			set: final_name = name
 		end;
+
+	set_alias_name (name: STRING) is
+			-- Set alias_name to `name'.
+		require
+			valid_name: name /= Void
+		do
+			alias_name := name
+		ensure
+			set: alias_name = name
+		end
 
 	set_source_type (t: TYPE_A) is
 			-- Set source_type to `t'.
@@ -321,20 +334,25 @@ end
 			if final_name.item (final_name.count) = '%"' and final_name.count > Infix_str.count then
 				if final_name.substring_index_in_bounds (Prefix_str, 1, Prefix_str.count) = 1 then
 					final_name := extract_symbol_from_prefix (final_name)
-					is_infix := False;
-					is_normal := False;
+					is_infix := False
+					is_normal := False
 				else
 					final_name := extract_symbol_from_infix (final_name)
-					is_normal := False;
-					is_infix := True;
-				end;
+					is_normal := False
+					is_infix := True
+				end
 			else
-				is_normal := True;
-				is_infix := False;
+				is_normal := True
+				is_infix := False
+				alias_name := target_feature.alias_name
+				if alias_name /= Void then
+						-- Get visual representation of the alias name.
+					alias_name := extract_alias_name (alias_name)
+				end
 			end
 		ensure
 			valid_final_name: final_name /= Void;
-		end;
+		end
 
 feature {LOCAL_FEAT_ADAPTATION}
 

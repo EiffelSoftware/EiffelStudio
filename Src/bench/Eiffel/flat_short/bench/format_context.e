@@ -947,12 +947,24 @@ feature -- Output
 
 	put_main_feature_name is
 			-- Put feature name of anlayzed feature.
+		local
+			alias_name: STRING
 		do
 				-- For infix features and for
 				-- features becoming infixes
 			format.set_insertion_point (text.cursor)
 			if local_adapt.is_normal then
 				put_normal_feature
+				alias_name := local_adapt.alias_name
+				if alias_name /= Void then
+					put_space
+					put_text_item (ti_alias_keyword)
+					put_space
+					put_text_item_without_tabs (ti_double_quote)
+					text.add (operator_to_item (alias_name, local_adapt))
+					put_text_item_without_tabs (ti_double_quote)
+					last_was_printed := True
+				end
 			elseif local_adapt.is_infix then
 					-- Don't want space around `infix'
 				put_infix_name (local_adapt)

@@ -207,11 +207,13 @@ feature {NONE} -- Implementation
 	drawable_resized (a_x, a_y, a_width, a_height: INTEGER) is
 			-- Called by `resize_actions' of `drawable'.
 		do
-			drawable.redraw
-			display_first_visible_row
-			display_first_visible_column
-			display_last_visible_column
-			display_last_visible_row
+			if drawable.is_displayed then
+				drawable.redraw
+				display_first_visible_row
+				display_first_visible_column
+				display_last_visible_column
+				display_last_visible_row
+			end
 		end
 		
 	button_pressed_on_drawable (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is

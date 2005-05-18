@@ -3570,6 +3570,27 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 			row_not_void: Result /= Void
 		end
 
+	column_internal (a_column: INTEGER): EV_GRID_COLUMN_I is
+			-- Column number `a_column', returns a new column if it doesn't exist.
+		require
+			a_column_positive: a_column > 0
+		local
+			temp_columns: like columns
+		do
+			temp_columns := columns
+			if a_column > temp_columns.count then
+				from
+				until
+					temp_columns.count = a_column
+				loop
+					add_column_at (temp_columns.count + 1, True)
+				end
+			end
+			Result := temp_columns @ a_column
+		ensure
+			column_not_void: Result /= Void
+		end
+
 feature {EV_GRID_ROW_I} -- Implementation
 
 	add_row_at (a_index: INTEGER; replace_existing_item: BOOLEAN) is
@@ -3764,27 +3785,6 @@ feature {NONE} -- Implementation
 			a_row := internal_row_data @ a_index
 			a_row := a_row.aliased_resized_area (new_count)
 			internal_row_data.put_i_th (a_row, a_index)
-		end
-
-	column_internal (a_column: INTEGER): EV_GRID_COLUMN_I is
-			-- Column number `a_column', returns a new column if it doesn't exist.
-		require
-			a_column_positive: a_column > 0
-		local
-			temp_columns: like columns
-		do
-			temp_columns := columns
-			if a_column > temp_columns.count then
-				from
-				until
-					temp_columns.count = a_column
-				loop
-					add_column_at (temp_columns.count + 1, True)
-				end
-			end
-			Result := temp_columns @ a_column
-		ensure
-			column_not_void: Result /= Void
 		end
 
 	physical_column_indexes_dirty: BOOLEAN

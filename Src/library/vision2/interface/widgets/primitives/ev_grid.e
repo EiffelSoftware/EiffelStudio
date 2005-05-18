@@ -1279,6 +1279,7 @@ feature -- Element change
 			-- If `a_item' is `Void', the current item (if any) is removed.
 		require
 			not_destroyed: not is_destroyed
+			a_item_not_parented: a_item /= Void implies a_item.parent = Void
 			a_column_positive: a_column > 0
 			a_row_positive: a_row > 0
 			valid_tree_structure_on_item_insertion: a_item /= Void and is_tree_enabled and row (a_row).parent_row /= Void implies a_column >= row (a_row).parent_row.index_of_first_item

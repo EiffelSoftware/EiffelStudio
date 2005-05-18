@@ -16,6 +16,8 @@ inherit
 			reset
 		end
 
+	SHARED_NAMES_HEAP
+
 feature -- Status report
 
 	compiled_parent (a_class: CLASS_C; a_parent: PARENT_AS): PARENT_C is
@@ -58,11 +60,11 @@ feature {NONE} -- Implementation
 
 	process_parent_as (l_as: PARENT_AS) is
 		local
-			l_renaming_c: HASH_TABLE [STRING, STRING]
+			l_renaming_c: HASH_TABLE [PAIR [INTEGER, INTEGER], INTEGER]
 			l_rename_pair: RENAME_AS
 			l_old_name, l_new_name: FEATURE_NAME
+			old_name_id: INTEGER
 			l_vhrc2: VHRC2
-			l_str: STRING
 		do
 			create last_parent_c
 			last_parent_c.set_parent_type (l_as.type.actual_type)
@@ -88,9 +90,8 @@ feature {NONE} -- Implementation
 				loop
 					l_rename_pair := l_as.renaming.item
 					l_old_name := l_rename_pair.old_name
-					l_new_name := l_rename_pair.new_name
-					l_str := l_old_name.internal_name
-					if l_renaming_c.has (l_str) then
+					old_name_id := l_old_name.internal_name_id
+					if l_renaming_c.has (old_name_id) then
 						create l_vhrc2
 						l_vhrc2.set_class (current_class)
 						l_vhrc2.set_parent (last_parent_c.parent)
@@ -98,7 +99,8 @@ feature {NONE} -- Implementation
 						l_vhrc2.set_location (l_old_name.start_location)
 						Error_handler.insert_error (l_vhrc2)
 					else
-						l_renaming_c.put (l_new_name.internal_name, l_str)
+						l_new_name := l_rename_pair.new_name
+						l_renaming_c.put (create {PAIR [INTEGER, INTEGER]}.make (l_new_name.internal_name_id, l_new_name.internal_alias_name_id), old_name_id)
 					end
 
 					l_as.renaming.forth
@@ -126,7 +128,7 @@ feature {NONE} -- Implementation
 		
 	process_feature_list_as (l_as: FEATURE_LIST_AS) is
 		local
-			l_feature_name: STRING
+			l_feature_name_id: INTEGER
 			l_vlel3: VLEL3
 			l_export_status: like last_export_status
 			l_export_adapt: like last_export_adaptation
@@ -138,14 +140,14 @@ feature {NONE} -- Implementation
 			until
 				l_as.features.after
 			loop
-				l_feature_name := l_as.features.item.internal_name
-				if not l_export_adapt.has (l_feature_name) then
-					l_export_adapt.put (l_export_status, l_feature_name)
+				l_feature_name_id := l_as.features.item.internal_name_id
+				if not l_export_adapt.has (l_feature_name_id) then
+					l_export_adapt.put (l_export_status, l_feature_name_id)
 				else
 					create l_vlel3
 					l_vlel3.set_class (current_class)
 					l_vlel3.set_parent (last_parent_c.parent)
-					l_vlel3.set_feature_name (l_feature_name)
+					l_vlel3.set_feature_name (names_heap.item (l_feature_name_id))
 					l_vlel3.set_location (l_as.features.item.start_location)
 					error_handler.insert_error (l_vlel3)
 				end
@@ -170,14 +172,14 @@ feature {NONE} -- Implementation
 		
 feature {NONE} -- Implementation
 
-	search_table (l_as: PARENT_AS; clause: EIFFEL_LIST [FEATURE_NAME]; flag: INTEGER): SEARCH_TABLE [STRING] is
+	search_table (l_as: PARENT_AS; clause: EIFFEL_LIST [FEATURE_NAME]; flag: INTEGER): SEARCH_TABLE [INTEGER] is
 			-- Conversion of `clause' into a search table
 		require
 			l_as_not_void: l_as /= Void
 			clause_exists: clause /= Void
 		local
 			l_vdrs3: VDRS3
-			l_str: STRING
+			feature_name_id: INTEGER
 		do
 			from
 				create Result.make (clause.count)
@@ -185,8 +187,8 @@ feature {NONE} -- Implementation
 			until
 				clause.after
 			loop
-				l_str := clause.item.internal_name;	
-				if Result.has (l_str) then
+				feature_name_id := clause.item.internal_name_id
+				if Result.has (feature_name_id) then
 						-- Twice the same name in a parent clause
 					inspect
 						flag
@@ -203,7 +205,7 @@ feature {NONE} -- Implementation
 					l_vdrs3.set_location (clause.item.start_location)
 					Error_handler.insert_error (l_vdrs3)
 				else
-					Result.put (l_str)
+					Result.put (feature_name_id)
 				end
 				clause.forth
 			end

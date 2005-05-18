@@ -146,70 +146,72 @@ feature
 			good_argument: feat /= Void
 		local
 			next: INHERIT_INFO
-			feature_name, new_name: STRING
 			parent: PARENT_C
 			replication: FEATURE_I
 			feature_name_id, new_name_id: INTEGER
+			extended_feature_name: PAIR [INTEGER, INTEGER]
+			new_alias_name_id: INTEGER
 			l_names_heap: like Names_heap
 				-- Replicated feature in case of repeated inheritance
 		do
 			from
-				feat.start;
+				feat.start
 				l_names_heap := Names_heap
 			until
 				feat.after
 			loop
-				next := feat.item;
-				feature_name := next.a_feature.feature_name;
-				parent := next.parent;
+				next := feat.item
+				feature_name_id := next.a_feature.feature_name_id
+				parent := next.parent
 				if
 					not next.renaming_processed and then
-					parent.is_renaming (feature_name) 
+					parent.is_renaming (feature_name_id)
 				then
-					feature_name_id := next.a_feature.feature_name_id;
+					feature_name_id := next.a_feature.feature_name_id
 						-- Detection of a renaming clause: check repeated
 						-- inheritance possible replication
-					new_name := parent.renaming.item (feature_name);
-					l_names_heap.put (new_name)
-					new_name_id := l_names_heap.found_item
+					extended_feature_name := parent.renaming.item (feature_name_id)
+					new_name_id := extended_feature_name.first
+					new_alias_name_id := extended_feature_name.second
 					replication := next.a_feature.twin
 						-- Mark it as processed
-					next.set_renaming_processed;
-						-- Move the inherit feature information under 
+					next.set_renaming_processed
+						-- Move the inherit feature information under
 						-- 'new_name'.
-					replication.set_renamed_name_id (new_name_id);
-					next.set_a_feature (replication);
-					Inherit_table.add_inherited_feature (next, new_name_id);
+					replication.set_renamed_name_id (new_name_id, new_alias_name_id)
+					next.set_a_feature (replication)
+					Inherit_table.add_inherited_feature (next, new_name_id)
 						-- Remove the information
-					feat.remove;
+					feat.remove
 						-- Remove empty structure
 					if is_empty then
-						Inherit_table.remove (feature_name_id);
-					end;
+						Inherit_table.remove (feature_name_id)
+					end
 				else
-					feat.forth;
-				end;
-			end;
-		end;
+					feat.forth
+				end
+			end
+		end
 
-	process (cl: CLASS_C; feature_name: STRING) is
+	process (cl: CLASS_C; feature_name_id: INTEGER) is
 			-- Process the features inherited under the same final name
 		require
 			inherited_info = Void
 		do
-			process_undefinition (cl, feature_name);
+			process_undefinition (cl, feature_name_id)
 			if nb_deferred > 0 then
-				check_deferred (cl, feature_name);
-			end;
+				check_deferred (cl)
+			end
 			if nb_features > 0 then
-				check_features (cl, feature_name);
-			end;
-		end;
+				check_features (cl, feature_name_id)
+			end
+		end
 
-	process_undefinition (cl: CLASS_C; feature_name: STRING) is
+	process_undefinition (cl: CLASS_C; feature_name_id: INTEGER) is
 			-- Process possible undefinitions
 		require
-			good_argument: not (cl = Void or else feature_name = Void)
+			cl_not_void: cl /= Void
+			positive_feature_name_id: feature_name_id > 0
 		local
 			info, new_info: INHERIT_INFO;
 			a_feature, new_deferred: FEATURE_I;
@@ -223,7 +225,7 @@ feature
 				deferred_features.after
 			loop
 				info := deferred_features.item;
-				if info.parent.is_undefining (feature_name) then
+				if info.parent.is_undefining (feature_name_id) then
 					create vdus3;
 					vdus3.set_class (System.current_class);
 					vdus3.set_parent (info.parent.parent);
@@ -238,7 +240,7 @@ feature
 				features.after
 			loop
 				info := features.item;
-				if info.parent.is_undefining (feature_name) then
+				if info.parent.is_undefining (feature_name_id) then
 					a_feature := info.a_feature;
 					if not a_feature.undefinable then
 						create vdus2;
@@ -260,16 +262,16 @@ feature
 			end;
 		end;
 
-	check_deferred (cl: CLASS_C; feature_name: STRING) is
+	check_deferred (cl: CLASS_C) is
 			-- Process the deferred features
 		require
-			nb_deferred > 0;
+			nb_deferred > 0
 		do
 				-- Update `rout_id_set'.
-			rout_id_set.update (deferred_features);
-		end;
+			rout_id_set.update (deferred_features)
+		end
 
-	check_features (cl: CLASS_C; feature_name: STRING) is
+	check_features (cl: CLASS_C; feature_name_id: INTEGER) is
 			-- Process the non-deferred inherited features.
 		require
 			features /= Void;
@@ -278,7 +280,7 @@ feature
 			encapsulated_i: ENCAPSULATED_I
 			vmfn2: VMFN2;
 		do
-			if features_all_redefined (feature_name) then
+			if features_all_redefined (feature_name_id) then
 					-- To be redefined later
 			elseif features_all_the_same then
 					-- Shared features
@@ -312,10 +314,10 @@ feature
 			rout_id_set.update (features);
 		end;
 
-	features_all_redefined (feature_name: STRING): BOOLEAN is
-			-- Are all the non-deferred inherited features redefined ?
+	features_all_redefined (feature_name_id: INTEGER): BOOLEAN is
+			-- Are all the non-deferred inherited features redefined?
 		require
-			nb_features > 0;
+			nb_features > 0
 		local
 			inherit_info: INHERIT_INFO;
 			vdrs2: VDRS2;
@@ -326,14 +328,14 @@ feature
 			until
 				features.after or else not Result
 			loop
-				inherit_info := features.item;
-				Result := inherit_info.parent.is_redefining (feature_name);
+				inherit_info := features.item
+				Result := inherit_info.parent.is_redefining (feature_name_id)
 
 				if Result and then not inherit_info.a_feature.redefinable then
 						-- Cannot redefine frozen feature, constant or once
 					create vdrs2;
 					vdrs2.set_class (System.current_class);
-					vdrs2.set_feature_name (feature_name);
+					vdrs2.set_feature_name (names_heap.item (feature_name_id));
 					vdrs2.set_parent (inherit_info.parent.parent);
 					Error_handler.insert_error (vdrs2);
 				end;
@@ -411,51 +413,51 @@ feature
 			end;
 		end;
 
-	exports (feature_name: STRING): EXPORT_I is
+	exports (feature_name_id: INTEGER): EXPORT_I is
 			-- Concatenation of all the export statuses of the inherited
-			-- features (`feature_name' is the renamed name...)
+			-- features (`feature_name_id' is the renamed name...)
 		require
-			not is_empty;
-			feature_name /= Void;
+			not_empty: not is_empty
+			positive_feature_name_id: feature_name_id > 0
 		local
-			export_status: EXPORT_I;
-			info: INHERIT_INFO;
+			export_status: EXPORT_I
+			info: INHERIT_INFO
 		do
 				-- Default value: no export at all
-			Result := Export_none;
+			Result := Export_none
 			from
 				features.start
 			until
 				features.after or else Result.is_all
 			loop
-				info := features.item;
+				info := features.item
 					-- First look for a new export status for the
 					-- inherited feature
-				export_status := info.parent.new_export_for (feature_name);
+				export_status := info.parent.new_export_for (feature_name_id)
 				if export_status = Void then
-					export_status := info.a_feature.export_status;
-				end;
-				Result := Result.concatenation (export_status);
+					export_status := info.a_feature.export_status
+				end
+				Result := Result.concatenation (export_status)
 
-				features.forth;
+				features.forth
 			end;
 			from
-				deferred_features.start;
+				deferred_features.start
 			until
 				deferred_features.after or else Result.is_all
 			loop
-				info := deferred_features.item;
+				info := deferred_features.item
 					-- First look for a new export status for the
 					-- inherited feature
-				export_status := info.parent.new_export_for (feature_name);
+				export_status := info.parent.new_export_for (feature_name_id)
 					-- If no new export status, then take the inherted one
 				if export_status = Void then
-					export_status := info.a_feature.export_status;
-				end;
-				Result := Result.concatenation (export_status);
-				deferred_features.forth;	
-			end;
-		end;
+					export_status := info.a_feature.export_status
+				end
+				Result := Result.concatenation (export_status)
+				deferred_features.forth	
+			end
+		end
 
 feature -- Debug
 

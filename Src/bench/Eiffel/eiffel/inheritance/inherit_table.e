@@ -622,14 +622,14 @@ end;
 
 					-- Calculates attribute `inherited_feature' of
 					-- instance `inherit_feat'.		
-				inherit_feat.process (a_class, Names_heap.item (feature_name_id))
+				inherit_feat.process (a_class, feature_name_id)
 				inherited_info := inherit_feat.inherited_info;
 				if inherited_info /= Void then
 						-- Class inherit from a feature coming from one
 						-- parent.
 					feature_i := inherited_info.a_feature;
 						-- Feature name
-					feature_i.set_feature_name_id (feature_name_id);
+					feature_i.set_feature_name_id (feature_name_id, feature_i.alias_name_id)
 						-- initialization of an inherited feature
 					init_inherited_feature (feature_i, inherit_feat);
 						-- Insertion in the origin table
@@ -943,7 +943,7 @@ debug ("ACTIVITY")
 end;
 
 			Result := feature_i_generator.new_feature (yacc_feature)
-			Result.set_feature_name_id (feature_name_id);
+			Result.set_feature_name_id (feature_name_id, feat.internal_alias_name_id)
 			Result.set_written_in (a_class.class_id);
 			Result.set_is_frozen (feat.is_frozen);
 			Result.set_is_infix (feat.is_infix);
@@ -1258,7 +1258,7 @@ end;
 						deferred_info := inherit_feat.deferred_features.first;
 							-- New inherited feature
 						inherited_feature := deferred_info.a_feature;
-						inherited_feature.set_feature_name_id (feature_name_id);
+						inherited_feature.set_feature_name_id (feature_name_id, inherited_feature.alias_name_id);
 							-- Initialization of an inherited feature
 						init_inherited_feature (inherited_feature, inherit_feat);
 							-- Insertion in the origin table
@@ -1288,26 +1288,26 @@ end;
 	init_inherited_feature (f: FEATURE_I; inherit_feat: INHERIT_FEAT) is
 			-- Initialization of an inherited feature
 		require
-			good_argument1: f /= Void;
-			good_argument2: inherit_feat /= Void;
+			f_not_void: f /= Void
+			inherit_feat_not_void: inherit_feat /= Void
 		local
-			rout_ids: ROUT_ID_SET;
-			old_feature: FEATURE_I;
-			feature_name_id: INTEGER;
+			rout_ids: ROUT_ID_SET
+			old_feature: FEATURE_I
+			feature_name_id: INTEGER
 		do
 				-- It is no more an origin
 			f.set_is_origin (False)
 
 				--  Check the routine table ids
-			rout_ids := inherit_feat.rout_id_set;
-			f.set_rout_id_set (rout_ids.twin);
+			rout_ids := inherit_feat.rout_id_set
+			f.set_rout_id_set (rout_ids.twin)
 				-- Process feature id
-			feature_name_id := f.feature_name_id;
-			old_feature := feature_table.item_id (feature_name_id);
+			feature_name_id := f.feature_name_id
+			old_feature := feature_table.item_id (feature_name_id)
 			if old_feature = Void then
 					-- New feature id since the old feature table
 					-- doesn't have an entry `feature_name'
-				give_new_feature_id (f);
+				give_new_feature_id (f)
 
 					-- We reactivate `body_index' in case `old_feature' is Void because
 					-- it was removed in `compute_feature_table' as it was not valid
@@ -1321,7 +1321,7 @@ end;
 				Tmp_body_server.reactivate (f.body_index)
 			else
 					-- Take the old feature id
-				f.set_feature_id (old_feature.feature_id);
+				f.set_feature_id (old_feature.feature_id)
 				if
 					old_feature.can_be_encapsulated and then
 					old_feature.to_generate_in (a_class)
@@ -1332,14 +1332,14 @@ end;
 						-- encapsulation or not.
 					system.execution_table.add_dead_function (old_feature.body_index)
 				end
-			end;
+			end
 				-- Concatenation of the export statuses of all the
 				-- precursors of the inherited feature: take care of new
 				-- adapted export status specified in inheritance clause
-			f.set_export_status (inherit_feat.exports (Names_heap.item (feature_name_id)));
+			f.set_export_status (inherit_feat.exports (feature_name_id))
 				-- Insert it in the table `inherited_features'.
 			inherited_features.put (f, feature_name_id)
-		end;
+		end
 
 	give_new_feature_id (f: FEATURE_I) is
 			-- Give a new feature id to `f'.

@@ -71,7 +71,7 @@ feature -- Selection
 					selected_rout_id_set := Result.rout_id_set.twin
 
 						-- Keep track of the selection
-					Selected.put_front (Result.feature_name);
+					Selected.put_front (Result.feature_name_id);
 					from
 						start;
 						feat_table := Origin_table.computed;
@@ -113,7 +113,7 @@ end;
 				after or else Result /= Void
 			loop
 				feature_i := item.a_feature;
-				if parents.is_selecting (feature_i.feature_name) then
+				if parents.is_selecting (feature_i.feature_name_id) then
 					Result := feature_i;
 				else
 					forth;
@@ -128,7 +128,7 @@ end;
 					after
 				loop
 					feature_i := item.a_feature;
-					if parents.is_selecting (feature_i.feature_name) then
+					if parents.is_selecting (feature_i.feature_name_id) then
 						create vmrc2;
 						vmrc2.set_class (System.current_class);
 						vmrc2.init (Result, feature_i);

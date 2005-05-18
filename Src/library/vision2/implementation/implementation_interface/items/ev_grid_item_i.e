@@ -357,8 +357,10 @@ feature {NONE} -- Implementation
 
 feature {EV_GRID_DRAWER_I, EV_GRID_ITEM} -- Implementation
 		
-	perform_redraw (an_x, a_y, a_width, a_height: INTEGER; drawable: EV_DRAWABLE) is
+	perform_redraw (an_x, a_y, a_width, a_height, an_indent: INTEGER; drawable: EV_DRAWABLE) is
 			-- Redraw `Current'.
+		require
+			drawable_large_enough: drawable.width >= a_width + an_indent and drawable.height >= a_height
 		do
 			-- Nothing to do here as this is the dummy item.
 		end

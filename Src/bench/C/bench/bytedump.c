@@ -233,6 +233,8 @@ static  char    *bit_op_names [] = {
 "BC_INT_BIT_SHIFT_LEFT" ,
 "BC_INT_BIT_SHIFT_RIGHT" ,
 "BC_INT_BIT_TEST" ,
+"BC_INT_SET_BIT" ,
+"BC_INT_SET_BIT_WITH_MASK" ,
 };
 
 /*------------------------------------------------------------------*/

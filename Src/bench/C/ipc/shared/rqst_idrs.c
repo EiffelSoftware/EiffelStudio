@@ -161,9 +161,9 @@ rt_private bool_t idr_Stop(IDR *idrs, void *ext)
 rt_private bool_t idr_Dumped (IDR *idrs, void *ext)
 {
 	Dump *dum = (Dump *)ext;
-	static struct debug_ex_vect *last_exv;
+	static struct ex_vect *last_exv;
 	static struct item *last_exi;
-	struct debug_ex_vect *exv;
+	struct ex_vect *exv;
 	struct item *exi;
 
 	if (!idr_int (idrs, &dum->dmp_type))
@@ -177,9 +177,9 @@ rt_private bool_t idr_Dumped (IDR *idrs, void *ext)
 			last_exv = NULL;
 		}
 		if (!exv){
-			exv = (struct debug_ex_vect *) malloc (sizeof (struct debug_ex_vect));
+			exv = (struct ex_vect *) malloc (sizeof (struct ex_vect));
 			last_exv = exv;
-			memset  (exv, 0, sizeof (struct debug_ex_vect));
+			memset  (exv, 0, sizeof (struct ex_vect));
 			dum -> dmpu.dmpu_vect = exv;
 		}
 		if ((!exv) ||
@@ -195,7 +195,7 @@ rt_private bool_t idr_Dumped (IDR *idrs, void *ext)
 			return idr_eif_reference (idrs, &exv->exu.exur.exur_id)
 				&& idr_string (idrs, &exv->exu.exur.exur_rout, -MAX_FEATURE_LEN)
 				&& idr_int (idrs, &exv -> exu.exur.exur_orig)
-				&& idr_int (idrs, &exv->dex_linenum);
+				&& idr_int (idrs, &exv->ex_linenum);
 		default:
 			return idr_string (idrs, &exv->exu.exua.exua_name, -MAX_STRLEN)
 				&& idr_string (idrs, &exv->exu.exua.exua_where, -MAX_STRLEN)

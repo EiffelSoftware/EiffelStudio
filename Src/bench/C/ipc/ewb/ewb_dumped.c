@@ -97,7 +97,7 @@ rt_public void c_recv_rout_info (EIF_OBJ target)
 							/* Protect just created object */
 						RT_GC_PROTECT(obj_addr);
 
-						line_number = dump.dmp_vect->dex_linenum;
+						line_number = dump.dmp_vect->ex_linenum;
 
 						hack = (uint32) dump.dmp_vect -> ex_orig;
 						orig = hack >> 16;

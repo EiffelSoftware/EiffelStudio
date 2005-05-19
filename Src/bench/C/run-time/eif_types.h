@@ -86,38 +86,6 @@ struct ex_vect {
 	} exu;
 };
 
-/* same structure as above. used in a finalized EiffelStudio to retrieve information
- * about a debugged application (so with line number and so on, even if final mode
- */
-struct debug_ex_vect {
-	unsigned char	ex_type;	/* Function call, pre-condition, etc... */
-	unsigned char	ex_retry;	/* True if function has been retried */
-	unsigned char	ex_rescue;	/* True if function entered its rescue clause */
-
-	int				dex_linenum;	/* current line number (line number <=> breakpoint slot) */
-	int 			dex_bodyid;	/* body id of the feature */
-	unsigned char	dex_locnum;	/* number of local variables in the function */
-	unsigned char	dex_argnum;	/* number of arguments of the function */
-
-	union {
-		unsigned int exu_lvl;	/* Level for multi-branch backtracking */
-		int exu_sig;			/* Signal number */
-		int exu_errno;			/* Error number reported by kernel */
-		struct {
-			char *exua_name;	/* The assertion tag */
-			char *exua_where;	/* The routine name where assertion was found */
-			int exua_from;		/* And its origin (where it was written) */
-			char *exua_oid;		/* Object ID (value of Current) */
-		} exua;					/* Used by assertions */
-		struct {
-			jmp_buf *exur_jbuf;	/* Execution buffer address, null if none */
-			char *exur_id;		/* Object ID (value of Current) */
-			char *exur_rout;	/* The routine name */
-			int exur_orig;		/* Origin of the routine */
-		} exur;					/* Used by routines */
-	} exu;
-};
-
 /*
  * Stack used by the exception vector of each routine. It is implemented
  * with small chunks linked together. These structure look like the one used

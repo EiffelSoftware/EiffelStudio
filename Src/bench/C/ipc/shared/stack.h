@@ -39,7 +39,7 @@ struct dump {
 	int dmp_type;					/* Union discriminent */
 	union {
 		struct item *dmpu_item;		/* Operational stack cell */
-		struct debug_ex_vect *dmpu_vect;	/* Exception vector */
+		struct ex_vect *dmpu_vect;	/* Exception vector */
 		struct once dmpu_obj;		/* Once address */
 	} dmpu;
 };

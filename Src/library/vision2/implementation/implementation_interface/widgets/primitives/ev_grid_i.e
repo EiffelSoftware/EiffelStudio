@@ -547,12 +547,21 @@ feature -- Pick and Drop
 				end
 				if item_deny_cursor_function /= Void then
 					a_cursor := item_deny_cursor_function.item ([item_int])
-					if a_cursor /= Void then
+					if a_cursor /= Void then		
 						drawable.set_deny_cursor (a_cursor)
 					end
 				end
 			end
 		end
+
+	are_column_separators_enabled: BOOLEAN
+			-- Is a vertical separator displayed in color `separator_color' after each column?
+
+	are_row_separators_enabled: BOOLEAN
+			-- Is a horizontal separator displayed in color `separator_color' after each row?
+
+	separator_color: EV_COLOR
+			-- Color used to display column and row separators.
 
 feature -- Status setting
 
@@ -1262,6 +1271,53 @@ feature -- Status setting
 			is_column_resize_immediate := False
 		ensure
 			not_is_column_resize_immediate: not is_column_resize_immediate
+		end
+
+	enable_column_separators is
+			-- Ensure `are_column_separators_enabled' is `True'.
+		do
+			are_column_separators_enabled := True
+			redraw_client_area
+		ensure	
+			column_separators_enabled: are_column_separators_enabled
+		end
+		
+	disable_column_separators is
+			-- Ensure `are_column_separators_enabled' is `False'.
+		do
+			are_column_separators_enabled := False
+			redraw_client_area
+		ensure	
+			column_separators_disabled: not are_column_separators_enabled
+		end
+		
+	enable_row_separators is
+			-- Ensure `are_row_separators_enabled' is `True'.
+		do
+			are_row_separators_enabled := True
+			redraw_client_area
+		ensure	
+			row_separators_enabled: are_row_separators_enabled
+		end
+		
+	disable_row_separators is
+			-- Ensure `are_row_separators_enabled' is `False'.
+		do
+			are_row_separators_enabled := False
+			redraw_client_area
+		ensure	
+			row_separators_disabled: not are_row_separators_enabled
+		end
+
+	set_separator_color (a_color: EV_COLOR) is
+			-- Set `a_color' as `separator_color'.
+		require
+			a_color_not_void: a_color /= Void
+		do
+			separator_color := a_color
+			redraw_client_area
+		ensure
+			separator_color_set: separator_color = a_color
 		end
 
 feature -- Status report
@@ -2685,6 +2741,7 @@ feature {NONE} -- Drawing implementation
 			row_counter := 1
 			set_background_color ((create {EV_STOCK_COLORS}).white.twin)
 			set_foreground_color ((create {EV_STOCK_COLORS}).black.twin)
+			set_separator_color ((create {EV_STOCK_COLORS}).black.twin)
 		end
 
 	header_item_resizing (header_item: EV_HEADER_ITEM) is

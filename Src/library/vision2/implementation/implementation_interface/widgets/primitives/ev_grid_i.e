@@ -381,7 +381,9 @@ feature -- Access
 			-- the top edge of the viewable area (defined by `viewable_width', `viewable_height')
 			-- in which all content is displayed.
 		do
-			Result := header.height
+			if is_header_displayed then
+				Result := header.height
+			end
 		ensure
 			viewable_y_offset_valid: Result >=0 and Result <= height
 		end
@@ -603,7 +605,7 @@ feature -- Status setting
 
 				-- Call the `activate_action' on the grid and item to initialize `activate_action'
 			a_item.activate_action (activate_window)
-			
+
 			if item_activate_actions_internal /= Void and then not item_activate_actions_internal.is_empty then
 					-- The user has requested to override the default `activate' behavior for `a_item'.
 				item_activate_actions_internal.call ([a_item, activate_window])
@@ -614,7 +616,7 @@ feature -- Status setting
 
 			if not activate_window.is_destroyed and then not activate_window.is_empty and then not activate_window.is_show_requested then
 				-- If some processing has been performed on `activate_window' then show it.
-				activate_window.show	
+				activate_window.show
 			end
 		end
 
@@ -624,7 +626,7 @@ feature -- Status setting
 			a_item_not_void: a_item /= Void
 		do
 			if activate_window /= Void and then not activate_window.is_destroyed then
-				activate_window.destroy				
+				activate_window.destroy
 			end
 			if item_deactivate_actions_internal /= Void then
 				item_deactivate_actions_internal.call ([a_item])
@@ -3189,7 +3191,6 @@ feature {NONE} -- Event handling
 		local
 			pointed_item: EV_GRID_ITEM_I
 			pointed_item_interface: EV_GRID_ITEM
-			label_item: EV_GRID_LABEL_ITEM_I
 		do
 			if pointer_motion_actions_internal /= Void and then not pointer_motion_actions_internal.is_empty then
 				pointer_motion_actions_internal.call ([client_x_to_x (a_x), client_y_to_y (a_y) , a_x_tilt, a_y_tilt, a_pressure, client_x_to_x (a_screen_x), client_y_to_y (a_screen_y)])

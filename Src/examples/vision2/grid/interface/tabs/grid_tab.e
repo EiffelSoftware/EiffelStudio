@@ -259,6 +259,7 @@ feature {NONE} -- Implementation
 				loop
 					create grid_label_item
 					grid_label_item.set_text ("Item" + " " + l_xcount.out + ", " + l_ycount.out)
+					grid_label_item.set_tooltip (grid_label_item.text.twin)
 					grid.set_item (l_xcount, l_ycount, grid_label_item)
 					l_xcount := l_xcount + 1
 				end
@@ -283,7 +284,7 @@ feature {NONE} -- Implementation
 				start_profiling
 			end
 			create time1.make_now
-			add_items (5, 400)			
+			add_items (5, 400)
 			grid.column (1).set_title ("One")
 			grid.column (2).set_title ("Two")
 			grid.column (3).set_title ("Three")
@@ -624,7 +625,7 @@ feature {NONE} -- Implementation
 	compute_item (an_x, a_y: INTEGER): EV_GRID_ITEM is
 			--
 		local
-			drawable_item: EV_DRAWABLE_GRID_ITEM
+			drawable_item: EV_GRID_DRAWABLE_ITEM
 		do
 			if an_x = 2 then
 				do_nothing
@@ -638,7 +639,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	draw_grid_item (an_x, a_y, a_width, a_height: INTEGER; drawable: EV_DRAWABLE; an_item: EV_DRAWABLE_GRID_ITEM) is
+	draw_grid_item (an_x, a_y, a_width, a_height: INTEGER; drawable: EV_DRAWABLE; an_item: EV_GRID_DRAWABLE_ITEM) is
 			--
 		local
 			back_color: EV_COLOR
@@ -997,9 +998,10 @@ feature {NONE} -- Implementation
 
 
 			-- Test 19
-			grid.enable_tree
-			grid.insert_new_row (1)
-			grid.set_item (1, 1, create {EV_GRID_LABEL_ITEM}.make_with_text ("An Item"))
+--			grid.enable_tree
+--			grid.insert_new_row (1)
+--			grid.set_item (1, 1, create {EV_GRID_LABEL_ITEM}.make_with_text ("An Item"))
+
 			end
 
 	clean_grid is

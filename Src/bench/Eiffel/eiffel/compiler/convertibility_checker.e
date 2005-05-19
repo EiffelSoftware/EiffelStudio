@@ -440,15 +440,8 @@ feature {NONE} -- Implementation: checking
 			-- Check that `a_class' can have a convert clause.
 		require
 			a_class_not_void: a_class /= Void
-		local
-			l_vncp: VNCP
 		do
-			if a_class.is_deferred then
-				create l_vncp.make ("Class is deferred.")
-				l_vncp.set_class (a_class)
-				Error_handler.insert_error (l_vncp)
-				has_error := True
-			end
+			-- No checking. A convert clause can appear in a deferred class.
 		end
 		
 	check_feature_basic_validity (

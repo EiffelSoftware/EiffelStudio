@@ -129,7 +129,7 @@ feature -- Byte code special generation
 				ba.append (bc_pop)
 				ba.append_uint32_integer (1)
 				basic_type.make_default_byte_code (ba)
-			when bit_and_type..bit_test_type then
+			when bit_and_type..bit_test_type, set_bit_with_mask_type, set_bit_type then
 				check integer_type: type_of (basic_type) = integer_type end
 				make_bit_operation_code (ba, function_type)
 			when three_way_comparison_type then
@@ -239,6 +239,12 @@ feature -- C special code generation
 					parameters_not_void: parameters /= Void
 				end
 				generate_set_bit_with_mask (buffer, target, parameters)
+			when set_bit_type then
+				check
+					integer_type: type_of (basic_type) = integer_type
+					parameters_not_void: parameters /= Void
+				end
+				generate_set_bit (buffer, target, parameters)
 			when zero_type then
 				generate_zero (buffer, type_of (basic_type))
 			when one_type then
@@ -305,13 +311,14 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (bit_shift_right_type, {PREDEFINED_NAMES}.bit_shift_right_name_id)
 			Result.put (bit_shift_right_type, {PREDEFINED_NAMES}.infix_shift_right_name_id)
 			Result.put (bit_test_type, {PREDEFINED_NAMES}.bit_test_name_id)
+			Result.put (set_bit_type, {PREDEFINED_NAMES}.set_bit_name_id)
+			Result.put (set_bit_with_mask_type, {PREDEFINED_NAMES}.set_bit_with_mask_name_id)
 			Result.put (memory_copy, {PREDEFINED_NAMES}.memory_copy_name_id)
 			Result.put (memory_move, {PREDEFINED_NAMES}.memory_move_name_id)
 			Result.put (memory_set, {PREDEFINED_NAMES}.memory_set_name_id)
 			Result.put (memory_calloc, {PREDEFINED_NAMES}.memory_calloc_name_id)
 			Result.put (memory_alloc, {PREDEFINED_NAMES}.memory_alloc_name_id)
 			Result.put (memory_free, {PREDEFINED_NAMES}.memory_free_name_id)
-			Result.put (set_bit_with_mask_type, {PREDEFINED_NAMES}.set_bit_with_mask_name_id)
 			Result.put (lower_type, {PREDEFINED_NAMES}.lower_name_id)
 			Result.put (upper_type, {PREDEFINED_NAMES}.upper_name_id)
 			Result.put (is_digit_type, {PREDEFINED_NAMES}.is_digit_name_id)
@@ -347,6 +354,8 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (bit_shift_right_type, {PREDEFINED_NAMES}.bit_shift_right_name_id)
 			Result.put (bit_shift_right_type, {PREDEFINED_NAMES}.infix_shift_right_name_id)
 			Result.put (bit_test_type, {PREDEFINED_NAMES}.bit_test_name_id)
+			Result.put (set_bit_type, {PREDEFINED_NAMES}.set_bit_name_id)
+			Result.put (set_bit_with_mask_type, {PREDEFINED_NAMES}.set_bit_with_mask_name_id)
 			Result.put (to_character_type, {PREDEFINED_NAMES}.to_character_name_id)
 			Result.put (to_character_type, {PREDEFINED_NAMES}.ascii_char_name_id)
 			Result.put (as_integer_8_type, {PREDEFINED_NAMES}.as_integer_8_name_id)
@@ -429,7 +438,8 @@ feature {NONE} -- Fast access to feature name
 	as_natural_16_type: INTEGER is 48
 	as_natural_32_type: INTEGER is 49
 	as_natural_64_type: INTEGER is 50
-	max_type_id: INTEGER is 50
+	set_bit_type: INTEGER is 51
+	max_type_id: INTEGER is 51
 
 feature {NONE} -- Byte code generation
 
@@ -455,6 +465,10 @@ feature {NONE} -- Byte code generation
  				ba.append (Bc_int_bit_shift_right)
  			when bit_test_type then
  				ba.append (Bc_int_bit_test)
+ 			when set_bit_type then
+ 				ba.append (Bc_int_set_bit)
+ 			when set_bit_with_mask_type then
+ 				ba.append (Bc_int_set_bit_with_mask)
 			end
 		end
 
@@ -935,8 +949,8 @@ feature {NONE} -- C code generation
 			shared_include_queue.put ({PREDEFINED_NAMES}.eif_misc_header_name_id)
 		end
 
-	generate_set_bit_with_mask (buffer: GENERATION_BUFFER; target: REGISTRABLE; parameters: BYTE_LIST [EXPR_B]) is
-			-- Generate fast wrapper for call on `bit_xxx' where target and parameter
+	generate_set_bit (buffer: GENERATION_BUFFER; target: REGISTRABLE; parameters: BYTE_LIST [EXPR_B]) is
+			-- Generate fast wrapper for call on `set_bit' where target and parameter
 			-- are both basic types of type INTEGER.
 		require
 			buffer_not_void: buffer /= Void
@@ -944,17 +958,35 @@ feature {NONE} -- C code generation
 			parameters_not_void: parameters /= Void
 			valid_parameters: parameters.count = 2
 		do
-			buffer.put_character ('(')
-			parameters.i_th (1).print_register
-			buffer.put_character ('?')
-			generate_bit_operation (buffer, bit_or_type, target, parameters.i_th (2))	
-			buffer.put_character (':')
-			buffer.put_string ("eif_bit_and(")
+			buffer.put_string ("eif_set_bit(")
+			target.c_type.generate (buffer)
+			buffer.put_character (',')
 			target.print_register
-			buffer.put_string (", eif_bit_not(")
+			buffer.put_character (',')
+			parameters.i_th (1).print_register
+			buffer.put_character (',')
 			parameters.i_th (2).print_register
 			buffer.put_character (')')
-			buffer.put_character (')')
+
+				-- Add `eif_misc.h' for C compilation where all bit functions are declared.
+			shared_include_queue.put ({PREDEFINED_NAMES}.eif_misc_header_name_id)
+		end
+
+	generate_set_bit_with_mask (buffer: GENERATION_BUFFER; target: REGISTRABLE; parameters: BYTE_LIST [EXPR_B]) is
+			-- Generate fast wrapper for call on `set_bit_with_mask' where target and parameter
+			-- are both basic types of type INTEGER.
+		require
+			buffer_not_void: buffer /= Void
+			target_not_void: target /= Void
+			parameters_not_void: parameters /= Void
+			valid_parameters: parameters.count = 2
+		do
+			buffer.put_string ("eif_set_bit_with_mask(")
+			target.print_register
+			buffer.put_character (',')
+			parameters.i_th (1).print_register
+			buffer.put_character (',')
+			parameters.i_th (2).print_register
 			buffer.put_character (')')
 
 				-- Add `eif_misc.h' for C compilation where all bit functions are declared.

@@ -168,6 +168,8 @@ feature -- Access
 	bc_int_bit_shift_left:		CHARACTER is '%/005/'
 	bc_int_bit_shift_right:		CHARACTER is '%/006/'
 	bc_int_bit_test:		CHARACTER is '%/007/'
+	bc_int_set_bit:		CHARACTER is '%/008/'
+	bc_int_set_bit_with_mask:		CHARACTER is '%/009/'
 
 		-- New basic types
 	Bc_wchar:			CHARACTER is '%/139/'

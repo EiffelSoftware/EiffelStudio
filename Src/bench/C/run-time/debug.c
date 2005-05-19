@@ -71,10 +71,8 @@ doc:<file name="debug.c" header="eif_debug.h" version="$Id$" summary="Routines u
 #define carg(x) c_oitem(start + clocnum + cargnum + 1 - (x))
 #define ccurrent c_oitem(start + clocnum)
 
-#undef STACK_CHUNK
-#define STACK_CHUNK				200			/* Number of items in a stack chunk */
 #define CALL_SZ					sizeof(struct dcall)
-#define LIST_CHUNK				200			/* Number of items in a list chunk */
+#define LIST_CHUNK				eif_stack_chunk			/* Number of items in a list chunk */
 #define BODY_ID_SZ				sizeof(uint32)
 
 /*#define DEBUG 63 */					/* Activate debugging code */
@@ -1146,7 +1144,7 @@ rt_public struct dcall *dpush(register struct dcall *val)
 		 */
 		SIGBLOCK;
 		if (db_stack.st_cur == db_stack.st_tl) {	/* Reached last chunk */
-			if (-1 == stack_extend(STACK_CHUNK))
+			if (-1 == stack_extend(eif_stack_chunk))
 				enomem();
 			top = db_stack.st_top;					/* New top */
 		} else {
@@ -1340,7 +1338,7 @@ rt_public void initdb(void)
 	struct dcall *top;			/* Arena for first stack chunk */
 	BODY_INDEX *list_arena;			/* Arena for first list chunk */
 
-	top = stack_allocate(STACK_CHUNK);		/* Create one */
+	top = stack_allocate(eif_stack_chunk);		/* Create one */
 	if (top == (struct dcall *) 0)	 		/* Could not create stack */
 		fatal_error("can't create debugger stack");
 
@@ -1816,7 +1814,7 @@ rt_public struct item *c_opush(EIF_CONTEXT register struct item *val)
 	struct item *top = cop_stack.st_top;	/* Top of stack */
 	
 	if (top == (struct item *) 0)	{			/* No stack yet? */
-		top = c_stack_allocate(STACK_CHUNK);	/* Create one */
+		top = c_stack_allocate(eif_stack_chunk);	/* Create one */
 		if (top == (struct item *) 0)	 		/* Could not create stack */
 			enomem(MTC_NOARG);					/* No more memory */
 	}
@@ -1828,7 +1826,7 @@ rt_public struct item *c_opush(EIF_CONTEXT register struct item *val)
 		 */
 		SIGBLOCK;									/* Critical section */
 		if (cop_stack.st_cur == cop_stack.st_tl) {	/* Reached last chunk */
-			if (-1 == c_stack_extend(STACK_CHUNK))
+			if (-1 == c_stack_extend(eif_stack_chunk))
 				enomem(MTC_NOARG);
 			top = cop_stack.st_top;					/* New top */
 		} else {

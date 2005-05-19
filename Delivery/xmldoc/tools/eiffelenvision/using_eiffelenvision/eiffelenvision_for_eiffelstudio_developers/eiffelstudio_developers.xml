@@ -1,0 +1,190 @@
+<document output="envision" title="EiffelEnvision for EiffelStudio Developers">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_title>EiffelEnvision for EiffelStudio Developers</envision_title>
+				<envision_pseudo_name>00</envision_pseudo_name>
+			</toc>
+			<xml>
+				<keyword>
+					<index>K</index>
+					<term>EiffelEnvision for EiffelStudio Developers</term>
+				</keyword>
+				<keyword>
+					<index>K</index>
+					<term>EiffelEnvision, EiffelStudio developers</term>
+				</keyword>
+				<keyword>
+					<index>K</index>
+					<term>EiffelStudio, Migrating</term>
+				</keyword>
+			</xml>
+		</help>
+	</meta_data>
+	<paragraph>
+		<paragraph>
+			EiffelEnvision attempts, at its best, to accomidate both existing EiffelStudio developers and EiffelEnvision developers at the same time. However, the two development environments are very disparate. Due to the intergration into Visual Studio .NET, EiffelEnvision favours the Visual Studio .NET User Interface (UI) mechanisms ensuring 
+			consistency for Visual Studio .NET developers. EiffelStudio users should not feel at a loss when migrating to EiffelEnvision. EiffelEnvision extends the Visual Studio .NET base UI to provided extensions that a EiffelStudio-like and facilitate EiffelStudio users with features they are acustom to using. The information detailed here 
+			is to start EiffelStudio users on the right track when getting started with EiffelEnvision. It is recommended that EiffelStudio users, without prior knowledge of Visual Studio .NET, review the <help_link>
+				<keywords>vxconDevelopingApplicationsWithVisualStudio</keywords>
+				<tab_index>0</tab_index>
+				Developing with Visual Studio .NET
+			</help_link> documentation before using EiffelEnvision.
+		</paragraph>
+		
+		<note>
+			<bold>Note</bold>: EiffelEnvision is a complete language <bold>plug-in</bold> for Visual Studio .NET and does not repeat any documentation located in the Microsoft Visual Studio .NET documentation. Links to the Visual Studio .NET documentation are provided, in abundance, throughout 
+			the EiffelEnvision documentation. Any extensions to the Visual Studio .NET user interface or additional features not common to Visual Studio .NET are documented to the required degree for understanding.
+		</note>
+		
+		<note>
+			<bold>Note</bold>: This section of the documentation assumes knowledge of EiffelStudio and Eiffel for .NET.
+		</note>
+
+		<paragraph>
+			The following sections outline the major features differences of EiffelEnvision and Visual Studio .NET compare with EiffelStudio.
+		</paragraph>
+		
+		<anchor>user_interface</anchor>
+		<heading>
+			<size>2</size>
+			<content>User Interface</content>
+		</heading>
+		<paragraph>
+			There are many differences in the UI of EiffelEnvision and Visual Studio .NET, compared to EiffelStudio. 
+			One of the biggest UI features missing is EiffelStudio's employement of a mechasim commonly refered to as <bold>Pick and Drop</bold>. Pick and Drop is specific to the EiffelVision 2 library, which EiffelStudio is built upon and Microsoft Visual Studio .NET is not. The effiencentness of Pick and Drop can only be simulate by using a number of shortcut keys and/or mouse clicks for code navigation.
+			For instance, to jump to the definition of a feature in EiffelEnvsion/Visual Studio .NET you can use the <link><url>url</url><label>*Eiffel editor</label></link> context menu and select <bold>Go To Defintion</bold>, or press the <bold>F12</bold> shortcut key. The <link><url>url</url><label>*Eiffel editor</label></link> default color scheme for syntax hightlighting is true to EiffelStudio's default color scheme. 
+			This scheme may be changed, of course, using the Visual Studio .NET <help_link>
+				<keywords>vxurfFontsColorsEnvironmentOptionsDialogBox</keywords>
+				<tab_index>0</tab_index>
+				Fonts and Colors Options
+			</help_link>. As an indicator, every <link><url>url</url><label>*Eiffel editor</label></link> color is prefix <bold>Eiffel</bold>.
+		</paragraph>
+		
+		<paragraph>
+			When looking for the Cluster and Feature panes present in EiffelSudio, you need to look no futher than EiffelEnvision's <link><url>url</url><label>*Class View</label></link>. EiffelEnvision extends the Visual Studio .NET <help_link>
+				<keywords>vxoriViewingClassesTheirMembers</keywords>
+				<tab_index>0</tab_index>
+				Class View
+			</help_link> to provide ancestor, decendent and caller information. For more information see EiffelEnvision's documentation of the <link><url>url</url><label>*Class View</label></link>.
+		</paragraph>
+		
+		<paragraph>
+			The <link><url>url</url><label>*Object Browser</label></link> in Visual Studio .NET is also used by EiffelEnvision to provide cluster, class and feature information. The <link><url>url</url><label>*Object Browser</label></link> however extends 
+			the information provided in the <link><url>url</url><label>*Class View</label></link> with assembly, type and method/function information for any references assemblies. This information is not presented in the view of the clusters, as it is in EiffelStudio. 
+			The <link><url>url</url><label>*References</label></link> section of the <link><url>url</url><label>*Object Browser</label></link> is used to display the <help_link>
+				<keywords>vbtskAddingRemovingReferences</keywords>
+				<tab_index>0</tab_index>
+				references added
+			</help_link> to an EiffelEnvision project. The information provided shows both the .NET names and Eiffel equivelents accompanied with full documentation, when available, serving both Visual Studio .NET developers and EiffelStudio developers.
+		</paragraph>
+		
+		<paragraph>
+			Visual Studio .NET and EiffelEnvision do not provide equivenlents to the <bold>Context Pane</bold> present in EiffelStudio. Some of the features present in the <bold>Class</bold> and <bold>Feature Tools</bold> are replicated, using the 
+			<link><url>url</url><label>*Object Browser</label></link> and <link><url>url</url><label>*Class View</label></link>. Currently there is no <bold>Diagram Tool</bold>, <bold>Profiling</bold> or <bold>Metrics Tools</bold> in EiffelEnvision or Visual Studio .NET, 
+			although many thrid-party profiling tools are available for free via a download.
+		</paragraph>
+
+		<anchor>projects_and_configurations</anchor>
+		<heading>
+			<size>2</size>
+			<content>Projects and Configurations</content>
+		</heading>
+		<paragraph>
+			The Visual Studio .NET environment introduces a concept known as a <help_link>
+				<keywords>vxconVisualStudioSolutionsProjects</keywords>
+				<tab_index>0</tab_index>
+				Solution
+			</help_link>. With <help_link>
+				<keywords>vxconVisualStudioSolutionsProjects</keywords>
+				<tab_index>0</tab_index>
+				Solution
+			</help_link>s EiffelEnvision permits editing of multiple projects in the same Visual Studio .NET session.
+		</paragraph>
+		<paragraph>
+			EiffelEnvision also supports mulitple <link><url>url</url><label>*configurations</label></link> for any given EiffelEnvision project. This means you can configure a single project to compile differently give a select <help_link>
+				<keywords>vxconBuildConfigurations</keywords>
+				<tab_index>0</tab_index>
+				build configuration
+			</help_link>. EiffelEnvision will store the project and all of it's configurations in a single file so there is no need to create an maintain multiple projects for different configuration aspects.
+		</paragraph>
+
+		<anchor>precompiled_libraries</anchor>
+		<heading>
+			<size>2</size>
+			<content>Precompiled Libraries</content>
+		</heading>
+		<paragraph>
+			EiffelEnvision replies on the <link><url>url</url><label>*precompiled library</label></link> reuse mechanism much more than most EiffelStudio developers are acustom to doing. At install-time a number of <link><url>url</url><label>*precompiled libraries</label></link> 
+			are created for use with EiffelEnvision. There use within EiffelEnvision is to make compilation faster and deployment simpler. Using <link><url>url</url><label>*precompiled libraries</label></link> is entirely optional and will not affect EiffelEnvision in one way or 
+			another if you decided not to use them. 
+			
+			<note>
+				<bold>Note</bold>: Precompiled libraries dramatically decrease initial compilation (Build) and recompilation (Rebuild) times.
+			</note>
+		</paragraph>
+
+		<anchor>compilation</anchor>
+		<heading>
+			<size>2</size>
+			<content>Compilation</content>
+		</heading>
+		<paragraph>
+			Compilation, refered to as <link><url>url</url><label>*Building</label></link> is much more feature saturated than in EiffelStudio. Base on a <link><url>url</url><label>*project's configuration</label></link> a compilation can be tweaked to provide faster compilation, 
+			the unmanaged part of the compilation may be suppressed, projects can be registered for <help_link>
+				<keywords>vbconCOMInteropInVisualBasicVisualC</keywords>
+				<tab_index>0</tab_index>
+				COM interop
+			</help_link> and the compilation output will be placed in a much more convient <link><url>url</url><label>*project bin folder</label></link> after a build has been completed.
+		</paragraph>
+
+		<anchor>debugging</anchor>
+		<heading>
+			<size>2</size>
+			<content>Debugging</content>
+		</heading>
+		<paragraph>
+			For EiffelStudio developers, the <help_link>
+				<keywords>_asug_How_Do_I_Topics3a_Debugging</keywords>
+				<tab_index>0</tab_index>
+				Visual Studio .NET debugger
+			</help_link> may, at first, seem foreign as a concept. EiffelEnvision plugs into the Visual Studio .NET debugger to provide clear debugging information and a way to <link><url>url</url><label>*evaluate expressions</label></link>. A review of 
+			the <help_link>
+				<keywords>_asug_How_Do_I_Topics3a_Debugging</keywords>
+				<tab_index>0</tab_index>
+				Visual Studio .NET debugger
+			</help_link> and it UI is strongly recommended, as too is reviewing the <link><url>url</url><label>*EiffelEnvision debugger</label></link> extensions.
+		</paragraph>
+
+		<anchor>more_features</anchor>
+		<heading>
+			<size>2</size>
+			<content>More...</content>
+		</heading>
+		<paragraph>
+			EiffelEnvision provided many more facilities to EiffelStudio developers, such as integrated <help_link>
+				<keywords>DALGProjects</keywords>
+				<tab_index>0</tab_index>
+				Deployment Projects
+			</help_link> and <help_link>
+				<keywords>veoriSourceCodeControlServices</keywords>
+				<tab_index>0</tab_index>
+				Source Code Control
+			</help_link>.
+		</paragraph>
+
+
+		<anchor>see_also</anchor>
+		<heading>
+			<size>2</size>
+			<content>Related Section</content>
+		</heading>
+		<seealso>
+			<bold>See also</bold>:
+			<line_break/>
+			<link><url>conversion_tool/index.xml</url><label>EiffelStudio to EiffelEnvision Project Conversion Tool</label></link>
+			<line_break/>
+			<link><url>url</url><label>*Introduction to EiffelEnvision's User Interface</label></link>
+		</seealso>
+	</paragraph>
+</document>

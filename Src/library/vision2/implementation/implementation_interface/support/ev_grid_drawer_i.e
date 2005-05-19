@@ -990,15 +990,18 @@ feature -- Basic operations
 			drawable: EV_DRAWING_AREA
 		do
 			drawable := grid.drawable
-			fixme ("implement correctly as soon as interface is finished")
-			if False then
-				item_buffer_pixmap.set_foreground_color (black)
+			fixme ("implement correctly as soon as interface is finished")							
+			item_buffer_pixmap.set_foreground_color (grid.separator_color)
+			if grid.are_column_separators_enabled then
+				
 				if current_column.index > 1 then
 					item_buffer_pixmap.draw_segment (0, 0, 0, current_row_height - 1)
 				end
 				if current_column.index = grid.column_count then
 					item_buffer_pixmap.draw_segment (current_column_width - 1, 0,  current_column_width - 1, current_row_height - 1)
 				end
+			end
+			if grid.are_row_separators_enabled then
 				item_buffer_pixmap.draw_segment (0, current_row_height - 1, current_column_width, current_row_height - 1)
 			end
 		end

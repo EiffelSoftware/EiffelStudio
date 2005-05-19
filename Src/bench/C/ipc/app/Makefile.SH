@@ -85,7 +85,7 @@ LIB_IPC_ARCH = $(LIB_SHARED)/$(LIB_IPCNAME)
 LIB_MTIPC_ARCH = $(LIB_SHARED)/$(LIB_MTIPCNAME)
 
 DPFLAGS = -I$(TOP) -I$(LIB_SHARED) -I$(LIB_RUNTIME) -I$(LIB_IDRS) -I$(LIB_RUNTIME)/include
-CFLAGS = $(DPFLAGS) -DWORKBENCH
+CFLAGS = $(DPFLAGS) -DWORKBENCH -DEIF_IPC
 
 # Files used to build the application
 LSRC = app_listen.c app_proto.c app_server.c
@@ -103,13 +103,13 @@ MT_OBJ = \
 	       MTapp_server.o 
 
 MTapp_listen.o: app_listen.c
-	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH -DEIF_IPC $? -o $@
 
 MTapp_proto.o: app_proto.c
-	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH -DEIF_IPC $? -o $@
 
 MTapp_server.o: app_server.c
-	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH -DEIF_IPC $? -o $@
 
 
 .FORCE:

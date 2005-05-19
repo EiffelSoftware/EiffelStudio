@@ -1,5 +1,5 @@
 : Makefile.SH generated from Jmake.tmpl and Jmakefile [jmake 3.0 PL70]
-: $X-Id: Jmake.tmpl,v 3.0.1.3 1997/02/28 14:56:16 ram Exp $
+: $X-Id: Jmake.tmpl,v 1.2 2004/11/30 00:21:14 manus Exp $
 
 case $CONFIG in
 '')
@@ -66,7 +66,7 @@ SOURCES =  \$(LSRC)
 $spitshell >>Makefile <<'!NO!SUBS!'
 ########################################################################
 # Jmake rules for building libraries, programs, scripts, and data files
-# $X-Id: Jmake.rules,v 3.0.1.6 1997/02/28 14:56:01 ram Exp $
+# $X-Id: Jmake.rules,v 1.2 2004/11/30 00:21:14 manus Exp $
 ########################################################################
 # Force 'make depend' to be performed first -- do not edit
 
@@ -78,7 +78,7 @@ all:: .FORCE_DEPEND
 # Start of Jmakefile
 
 DPFLAGS = -I$(TOP) -I$(TOP)/run-time -I$(TOP)/idrs -I$(TOP)/run-time/include
-CFLAGS = $(DPFLAGS) -DWORKBENCH
+CFLAGS = $(DPFLAGS) -DWORKBENCH -DEIF_IPC
 
 LSRC = com.c identify.c lock.c logfile.c network.c select.c shword.c stack.c \
 	       stream.c system.c transfer.c rqst_idrs.c
@@ -112,40 +112,40 @@ MT_LOBJ = \
 	       MTrqst_idrs.o 
 
 MTcom.o: com.c
-	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH -DEIF_IPC $? -o $@
 
 MTidentify.o: identify.c
-	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH -DEIF_IPC $? -o $@
 
 MTlock.o: lock.c
-	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH -DEIF_IPC $? -o $@
 
 MTlogfile.o: logfile.c
-	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH -DEIF_IPC $? -o $@
 
 MTnetwork.o: network.c
-	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH -DEIF_IPC $? -o $@
 
 MTselect.o: select.c
-	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH -DEIF_IPC $? -o $@
 
 MTshword.o: shword.c
-	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH -DEIF_IPC $? -o $@
 
 MTstack.o: stack.c
-	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH -DEIF_IPC $? -o $@
 
 MTstream.o: stream.c
-	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH -DEIF_IPC $? -o $@
 
 MTsystem.o: system.c
-	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH -DEIF_IPC $? -o $@
 
 MTtransfer.o: transfer.c
-	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH -DEIF_IPC $? -o $@
 
 MTrqst_idrs.o: rqst_idrs.c
-	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH -DEIF_IPC $? -o $@
 
 
 all:: libipc.a

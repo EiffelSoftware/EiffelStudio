@@ -18,7 +18,7 @@ LIB_IDR = ../../idrs
 /* The following are understood by jmake to alter built-in commands */
 RUN_TIME = ../../run-time
 DPFLAGS = -I$(TOP) -I$(LIB_SHARED) -I$(RUN_TIME) -I$(LIB_IDR) -I$(RUN_TIME)/include
-CFLAGS = $(DPFLAGS)
+CFLAGS = $(DPFLAGS) -DEIF_IPC
 
 NormalObjectRule()
 NormalLibraryTarget(ewb,$(LSRC),$(LOBJ))

@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 			set_icon_pixmap (Icon_build_window @ 1)
 			set_title ("EV_FIXED child positioner")
 		end
-		
+
 	make_with_editor (an_editor: GB_EV_FIXED_EDITOR_CONSTRUCTOR) is
 			-- Create `Current' and assign `an_editor' to `editor'.
 		local
@@ -65,13 +65,15 @@ feature {NONE} -- Initialization
 			grid_visible_control.enable_select
 			grid_visible_control.select_actions.force_extend (agent draw_widgets)
 			scrollable_area.resize_actions.force_extend (agent set_initial_area_size)
-				
+
 				-- Set resizing behaviour for `split_area'.
 			split_area.enable_item_expand (split_area.first)
 			split_area.disable_item_expand (split_area.second)
-			
+
 			create projector.make_with_buffer (world, pixmap, drawing_area)
 			grid_size_control.change_actions.force_extend (agent draw_widgets)
+			grid_size_control.focus_out_actions.extend (agent draw_widgets)
+			grid_size_control.return_actions.extend (agent draw_widgets)
 			grid_size_control.set_value (20)
 			snap_button.enable_select
 			from

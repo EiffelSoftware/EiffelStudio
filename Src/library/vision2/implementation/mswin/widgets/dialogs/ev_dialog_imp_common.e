@@ -310,7 +310,7 @@ feature {NONE} -- Implementation
 			awaiting_movement := other_imp.awaiting_movement
 			background_color_imp := other_imp.background_color_imp
 			background_pixmap_imp := other_imp.background_pixmap_imp	
-			state_flags := other_imp.state_flags
+			set_base_make_called (other_imp.base_make_called)
 			child_cell := other_imp.child_cell
 			close_request_actions_internal := other_imp.close_request_actions_internal
 			commands := other_imp.commands
@@ -337,6 +337,7 @@ feature {NONE} -- Implementation
 			internal_title := other_imp.internal_title
 			internal_width := other_imp.internal_width
 			is_closeable := other_imp.is_closeable
+			set_is_destroyed (other_imp.is_destroyed)
 			is_dnd_in_transport := other_imp.is_dnd_in_transport
 			is_in_min_height := other_imp.is_in_min_height
 			is_in_min_width := other_imp.is_in_min_width

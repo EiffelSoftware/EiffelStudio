@@ -138,6 +138,15 @@ feature -- Access
 		do
 			Result := implementation.background_color
 		end
+
+	tooltip: STRING is
+			-- Tooltip displayed on `Current'.
+			-- If `Result' is `Void' then no tooltip is displayed.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.tooltip
+		end		
 		
 feature -- Status setting
 
@@ -173,6 +182,17 @@ feature -- Status setting
 			implementation.set_background_color (a_color)
 		ensure
 			background_color_assigned: background_color = a_color
+		end
+
+	set_tooltip (a_tooltip: STRING) is
+			-- Assign `a_tooltip' to `tooltip'.
+			-- pass `Void' to remove the tooltip.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.set_tooltip (a_tooltip)
+		ensure
+			tooltip_assigned: a_tooltip = tooltip
 		end
 		
 feature -- Actions

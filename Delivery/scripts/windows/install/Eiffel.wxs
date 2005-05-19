@@ -40,7 +40,7 @@
 				<Merge Id="vision2_tour" Language="1033" src="MSMs\vision2_tour.msm" DiskId="1" />
 			</Directory>
 
-			<Directory Id="PROJECTDIR" Name="79f10432.412" LongName="MyProjects" />
+			<Directory Id="PROJECTDIR" Name="79f10432.412" LongName="Projects" />
 		</Directory>
 
 		<Feature Id="Complete" Title="EiffelStudio 5.6" Description="The complete package."

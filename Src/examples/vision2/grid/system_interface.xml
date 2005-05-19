@@ -25,11 +25,11 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_MENU_BAR"><Internal_properties>
-	<id>110</id>
+	<id>105</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <item type="EV_MENU"><Internal_properties>
-	<id>111</id>
+	<id>106</id>
 	<name>file_menu</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -38,7 +38,7 @@
 	</EV_TEXTABLE>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <item type="EV_MENU_ITEM"><Internal_properties>
-	<id>113</id>
+	<id>108</id>
 	<name>file_exit_menu_item</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -51,7 +51,7 @@
 </item>
 </item>
 <item type="EV_MENU"><Internal_properties>
-	<id>224</id>
+	<id>215</id>
 	<name>view_menu</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -60,7 +60,7 @@
 	</EV_TEXTABLE>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <item type="EV_CHECK_MENU_ITEM"><Internal_properties>
-	<id>225</id>
+	<id>216</id>
 	<name>view_tools_menu_item</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -75,7 +75,7 @@
 </item>
 </item>
 <item type="EV_MENU"><Internal_properties>
-	<id>112</id>
+	<id>107</id>
 	<name>profile_menu</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -84,7 +84,7 @@
 	</EV_TEXTABLE>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <item type="EV_MENU_ITEM"><Internal_properties>
-	<id>626</id>
+	<id>604</id>
 	<name>full_collect_menu_item</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -96,7 +96,7 @@
 	</Events>
 </item>
 <item type="EV_MENU_SEPARATOR"><Internal_properties>
-	<id>627</id>
+	<id>605</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_SENSITIVE></EV_SENSITIVE>
@@ -104,7 +104,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_CHECK_MENU_ITEM"><Internal_properties>
-	<id>114</id>
+	<id>109</id>
 	<name>profiling_on_menu_item</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -119,7 +119,7 @@
 </item>
 </item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>193</id>
+	<id>186</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -132,7 +132,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>192</id>
+	<id>185</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -195,7 +195,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_FRAME"><Internal_properties>
-	<id>370</id>
+	<id>360</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -209,7 +209,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>371</id>
+	<id>361</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -220,7 +220,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_TABLE"><Internal_properties>
-	<id>372</id>
+	<id>362</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -242,7 +242,7 @@
 	</EV_TABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>373</id>
+	<id>363</id>
 	<name>new_label_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -257,7 +257,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>374</id>
+	<id>364</id>
 	<name>misc_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -272,7 +272,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>375</id>
+	<id>365</id>
 	<name>custom_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -287,7 +287,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>563</id>
+	<id>549</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -301,7 +301,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>575</id>
+	<id>561</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -318,7 +318,7 @@
 </item>
 </item>
 <item type="EV_FRAME"><Internal_properties>
-	<id>633</id>
+	<id>610</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -332,7 +332,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>635</id>
+	<id>612</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -344,7 +344,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_TABLE"><Internal_properties>
-	<id>637</id>
+	<id>614</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -361,7 +361,7 @@
 	</EV_TABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>639</id>
+	<id>616</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -375,7 +375,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>641</id>
+	<id>618</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -392,7 +392,7 @@
 </item>
 </item>
 <item type="EV_FRAME"><Internal_properties>
-	<id>393</id>
+	<id>383</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -406,7 +406,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>395</id>
+	<id>385</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -417,7 +417,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_TABLE"><Internal_properties>
-	<id>678</id>
+	<id>652</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -435,7 +435,7 @@
 	</EV_TABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_CHECK_BUTTON"><Internal_properties>
-	<id>679</id>
+	<id>653</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -453,7 +453,7 @@
 	</Events>
 </item>
 <item type="EV_CHECK_BUTTON"><Internal_properties>
-	<id>680</id>
+	<id>654</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -471,7 +471,7 @@
 	</Events>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>681</id>
+	<id>655</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -482,7 +482,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_CHECK_BUTTON"><Internal_properties>
-	<id>682</id>
+	<id>656</id>
 	<name>is_row_height_fixed</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -499,7 +499,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_SPIN_BUTTON"><Internal_properties>
-	<id>683</id>
+	<id>657</id>
 	<name>fixed_row_height_spin_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -518,7 +518,7 @@
 </item>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>684</id>
+	<id>658</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -529,7 +529,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>685</id>
+	<id>659</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -542,7 +542,7 @@
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_COMBO_BOX"><Internal_properties>
-	<id>686</id>
+	<id>660</id>
 	<name>foreground_color_combo</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -556,7 +556,7 @@
 </item>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>687</id>
+	<id>661</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -567,7 +567,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>688</id>
+	<id>662</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -580,7 +580,7 @@
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_COMBO_BOX"><Internal_properties>
-	<id>689</id>
+	<id>663</id>
 	<name>background_color_combo</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -594,7 +594,7 @@
 </item>
 </item>
 <item type="EV_CHECK_BUTTON"><Internal_properties>
-	<id>691</id>
+	<id>665</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -609,7 +609,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_CHECK_BUTTON"><Internal_properties>
-	<id>693</id>
+	<id>667</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -624,7 +624,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>697</id>
+	<id>671</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -635,7 +635,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>698</id>
+	<id>672</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -648,7 +648,7 @@
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_COMBO_BOX"><Internal_properties>
-	<id>699</id>
+	<id>673</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -664,7 +664,7 @@
 </item>
 </item>
 <item type="EV_FRAME"><Internal_properties>
-	<id>366</id>
+	<id>356</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -678,7 +678,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>368</id>
+	<id>358</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -691,7 +691,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_CHECK_BUTTON"><Internal_properties>
-	<id>369</id>
+	<id>359</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -708,7 +708,7 @@
 	</Events>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>383</id>
+	<id>373</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -719,7 +719,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_RADIO_BUTTON"><Internal_properties>
-	<id>384</id>
+	<id>374</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -736,7 +736,7 @@
 	</Events>
 </item>
 <item type="EV_RADIO_BUTTON"><Internal_properties>
-	<id>385</id>
+	<id>375</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -756,7 +756,7 @@
 </item>
 </item>
 <item type="EV_FRAME"><Internal_properties>
-	<id>377</id>
+	<id>367</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -770,7 +770,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>379</id>
+	<id>369</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -783,7 +783,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_CHECK_BUTTON"><Internal_properties>
-	<id>380</id>
+	<id>370</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -800,7 +800,7 @@
 	</Events>
 </item>
 <item type="EV_CHECK_BUTTON"><Internal_properties>
-	<id>381</id>
+	<id>371</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -872,7 +872,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>210</id>
+	<id>201</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -883,7 +883,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_CHECK_BUTTON"><Internal_properties>
-	<id>211</id>
+	<id>202</id>
 	<name>is_partially_dynamic</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -899,7 +899,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>212</id>
+	<id>203</id>
 	<name>resize_columns_to_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -914,7 +914,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>387</id>
+	<id>377</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -925,7 +925,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_CHECK_BUTTON"><Internal_properties>
-	<id>388</id>
+	<id>378</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -942,7 +942,7 @@
 	</Events>
 </item>
 <item type="EV_CHECK_BUTTON"><Internal_properties>
-	<id>389</id>
+	<id>379</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -960,7 +960,7 @@
 </item>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>391</id>
+	<id>381</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -972,7 +972,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_CHECK_BUTTON"><Internal_properties>
-	<id>400</id>
+	<id>386</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -989,14 +989,14 @@
 	</Events>
 </item>
 <item type="EV_SPIN_BUTTON"><Internal_properties>
-	<id>401</id>
+	<id>387</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE><Is_sensitive>False</Is_sensitive>
 	</EV_SENSITIVE>
-<EV_TEXTABLE><Text>Is Tree Enabled</Text>
+<EV_TEXTABLE><Text>1</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
@@ -1009,7 +1009,7 @@
 	</Events>
 </item>
 <item type="EV_CHECK_BUTTON"><Internal_properties>
-	<id>402</id>
+	<id>388</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1026,7 +1026,7 @@
 	</Events>
 </item>
 <item type="EV_SPIN_BUTTON"><Internal_properties>
-	<id>403</id>
+	<id>389</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1049,7 +1049,7 @@
 </item>
 </item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>214</id>
+	<id>205</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1060,7 +1060,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>215</id>
+	<id>206</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1071,7 +1071,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>216</id>
+	<id>207</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1082,7 +1082,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_RADIO_BUTTON"><Internal_properties>
-	<id>217</id>
+	<id>208</id>
 	<name>set_background_of_selection_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1097,7 +1097,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_RADIO_BUTTON"><Internal_properties>
-	<id>218</id>
+	<id>209</id>
 	<name>set_tree_node_connector_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1113,7 +1113,7 @@
 </item>
 </item>
 <item type="EV_COMBO_BOX"><Internal_properties>
-	<id>219</id>
+	<id>210</id>
 	<name>set_background_color_combo</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1128,7 +1128,7 @@
 </item>
 </item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>221</id>
+	<id>212</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1139,7 +1139,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_CHECK_BUTTON"><Internal_properties>
-	<id>223</id>
+	<id>214</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1172,7 +1172,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>156</id>
+	<id>149</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1183,7 +1183,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>157</id>
+	<id>150</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1194,7 +1194,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>158</id>
+	<id>151</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1208,7 +1208,7 @@
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_CELL"><Internal_properties>
-	<id>159</id>
+	<id>152</id>
 	<name>pixmap_parent</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -1220,7 +1220,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_PIXMAP"><Internal_properties>
-	<id>160</id>
+	<id>153</id>
 	<name>cursor_pixmap</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1235,7 +1235,7 @@
 </item>
 </item>
 <item type="EV_FRAME"><Internal_properties>
-	<id>163</id>
+	<id>156</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1250,7 +1250,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>165</id>
+	<id>158</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1262,7 +1262,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>227</id>
+	<id>218</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1273,7 +1273,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_TABLE"><Internal_properties>
-	<id>228</id>
+	<id>219</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1292,7 +1292,7 @@
 	</EV_TABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>229</id>
+	<id>220</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1305,7 +1305,7 @@
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_SPIN_BUTTON"><Internal_properties>
-	<id>230</id>
+	<id>221</id>
 	<name>column_index</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1323,7 +1323,7 @@
 <EV_TEXT_COMPONENT></EV_TEXT_COMPONENT>
 </item>
 <item type="EV_LABEL"><Internal_properties>
-	<id>231</id>
+	<id>222</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1336,7 +1336,7 @@
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_SPIN_BUTTON"><Internal_properties>
-	<id>232</id>
+	<id>223</id>
 	<name>column_width</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1354,7 +1354,7 @@
 <EV_TEXT_COMPONENT></EV_TEXT_COMPONENT>
 </item>
 <item type="EV_LABEL"><Internal_properties>
-	<id>233</id>
+	<id>224</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1367,7 +1367,7 @@
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_TEXT_FIELD"><Internal_properties>
-	<id>234</id>
+	<id>225</id>
 	<name>column_title_entry</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1381,7 +1381,7 @@
 <EV_TEXT_COMPONENT></EV_TEXT_COMPONENT>
 </item>
 <item type="EV_LABEL"><Internal_properties>
-	<id>670</id>
+	<id>645</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1394,7 +1394,7 @@
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_COMBO_BOX"><Internal_properties>
-	<id>672</id>
+	<id>647</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1408,7 +1408,7 @@
 </item>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>595</id>
+	<id>581</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1419,7 +1419,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>596</id>
+	<id>582</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1432,7 +1432,7 @@
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_COMBO_BOX"><Internal_properties>
-	<id>597</id>
+	<id>583</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1445,7 +1445,7 @@
 </item>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>601</id>
+	<id>587</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1456,7 +1456,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>602</id>
+	<id>588</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1469,7 +1469,7 @@
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_COMBO_BOX"><Internal_properties>
-	<id>603</id>
+	<id>589</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1482,7 +1482,7 @@
 </item>
 </item>
 <item type="EV_CHECK_BUTTON"><Internal_properties>
-	<id>195</id>
+	<id>188</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1499,7 +1499,7 @@
 	</Events>
 </item>
 <item type="EV_CHECK_BUTTON"><Internal_properties>
-	<id>197</id>
+	<id>190</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1516,7 +1516,7 @@
 </item>
 </item>
 <item type="EV_FRAME"><Internal_properties>
-	<id>244</id>
+	<id>235</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1531,7 +1531,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>246</id>
+	<id>237</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1544,7 +1544,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>248</id>
+	<id>239</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1556,7 +1556,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>258</id>
+	<id>249</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1567,7 +1567,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_CELL"><Internal_properties>
-	<id>261</id>
+	<id>252</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1577,7 +1577,7 @@
 <EV_CONTAINER></EV_CONTAINER>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>259</id>
+	<id>250</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1593,7 +1593,7 @@
 	</Events>
 </item>
 <item type="EV_CELL"><Internal_properties>
-	<id>263</id>
+	<id>254</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1604,9 +1604,9 @@
 </item>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>253</id>
+	<id>244</id>
 	<Expanded>1</Expanded>
-	<reference_id>147</reference_id>
+	<reference_id>140</reference_id>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
@@ -1616,7 +1616,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>254</id>
+	<id>245</id>
 	<name>prompt_label</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1631,7 +1631,7 @@
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_CELL"><Internal_properties>
-	<id>255</id>
+	<id>246</id>
 	<name>pixmap_parent</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1643,7 +1643,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_PIXMAP"><Internal_properties>
-	<id>256</id>
+	<id>247</id>
 	<name>cursor_pixmap</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1658,7 +1658,7 @@
 </item>
 </item>
 <item type="EV_TABLE"><Internal_properties>
-	<id>291</id>
+	<id>282</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1676,7 +1676,7 @@
 	</EV_TABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>292</id>
+	<id>283</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1692,7 +1692,7 @@
 	</Events>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>294</id>
+	<id>285</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1706,7 +1706,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_CELL"><Internal_properties>
-	<id>296</id>
+	<id>287</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1735,7 +1735,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>170</id>
+	<id>163</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1746,9 +1746,9 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>175</id>
+	<id>168</id>
 	<Expanded>1</Expanded>
-	<reference_id>147</reference_id>
+	<reference_id>140</reference_id>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
@@ -1758,7 +1758,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>176</id>
+	<id>169</id>
 	<name>prompt_label</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1773,7 +1773,7 @@
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_CELL"><Internal_properties>
-	<id>177</id>
+	<id>170</id>
 	<name>pixmap_parent</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -1785,7 +1785,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_PIXMAP"><Internal_properties>
-	<id>178</id>
+	<id>171</id>
 	<name>cursor_pixmap</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1800,7 +1800,7 @@
 </item>
 </item>
 <item type="EV_FRAME"><Internal_properties>
-	<id>180</id>
+	<id>173</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1815,7 +1815,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>182</id>
+	<id>175</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1828,7 +1828,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>236</id>
+	<id>227</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1839,7 +1839,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_TABLE"><Internal_properties>
-	<id>237</id>
+	<id>228</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1858,7 +1858,7 @@
 	</EV_TABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>238</id>
+	<id>229</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1871,7 +1871,7 @@
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_SPIN_BUTTON"><Internal_properties>
-	<id>239</id>
+	<id>230</id>
 	<name>row_index_entry</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1889,7 +1889,7 @@
 <EV_TEXT_COMPONENT></EV_TEXT_COMPONENT>
 </item>
 <item type="EV_LABEL"><Internal_properties>
-	<id>240</id>
+	<id>231</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1902,7 +1902,7 @@
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_SPIN_BUTTON"><Internal_properties>
-	<id>241</id>
+	<id>232</id>
 	<name>row_height_entry</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1922,7 +1922,7 @@
 </item>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>583</id>
+	<id>569</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1933,7 +1933,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>584</id>
+	<id>570</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1946,7 +1946,7 @@
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_COMBO_BOX"><Internal_properties>
-	<id>585</id>
+	<id>571</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1959,7 +1959,7 @@
 </item>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>589</id>
+	<id>575</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1970,7 +1970,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>590</id>
+	<id>576</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1983,7 +1983,7 @@
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_COMBO_BOX"><Internal_properties>
-	<id>591</id>
+	<id>577</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1996,7 +1996,7 @@
 </item>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>190</id>
+	<id>183</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2007,7 +2007,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_CHECK_BUTTON"><Internal_properties>
-	<id>191</id>
+	<id>184</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2025,7 +2025,7 @@
 </item>
 </item>
 <item type="EV_FRAME"><Internal_properties>
-	<id>275</id>
+	<id>266</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2040,7 +2040,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>276</id>
+	<id>267</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2055,7 +2055,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>277</id>
+	<id>268</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2068,7 +2068,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>278</id>
+	<id>269</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2079,7 +2079,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_CELL"><Internal_properties>
-	<id>279</id>
+	<id>270</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2089,7 +2089,7 @@
 <EV_CONTAINER></EV_CONTAINER>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>280</id>
+	<id>271</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2103,7 +2103,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_CELL"><Internal_properties>
-	<id>281</id>
+	<id>272</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2114,7 +2114,7 @@
 </item>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>282</id>
+	<id>273</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2125,7 +2125,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>283</id>
+	<id>274</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2139,7 +2139,7 @@
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_CELL"><Internal_properties>
-	<id>284</id>
+	<id>275</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2150,7 +2150,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_PIXMAP"><Internal_properties>
-	<id>285</id>
+	<id>276</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2164,7 +2164,7 @@
 </item>
 </item>
 <item type="EV_TABLE"><Internal_properties>
-	<id>286</id>
+	<id>277</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2184,7 +2184,7 @@
 	</EV_TABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>287</id>
+	<id>278</id>
 	<name>remove_row_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -2199,7 +2199,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>288</id>
+	<id>279</id>
 	<name>unparent_row_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -2214,7 +2214,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>289</id>
+	<id>280</id>
 	<name>clear_row_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -2233,10 +2233,10 @@
 </item>
 </item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>121</id>
+	<id>114</id>
 	<name>item_tab</name>
 	<Expanded>0</Expanded>
-	<reference_id>122</reference_id>
+	<reference_id>115</reference_id>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
@@ -2247,7 +2247,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>124</id>
+	<id>117</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2258,7 +2258,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>126</id>
+	<id>119</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2272,7 +2272,7 @@
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_CELL"><Internal_properties>
-	<id>128</id>
+	<id>121</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2283,7 +2283,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_PIXMAP"><Internal_properties>
-	<id>130</id>
+	<id>123</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2299,7 +2299,7 @@
 </item>
 </item>
 <item type="EV_FRAME"><Internal_properties>
-	<id>132</id>
+	<id>125</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2314,7 +2314,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>134</id>
+	<id>127</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2327,7 +2327,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>136</id>
+	<id>129</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2339,7 +2339,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>138</id>
+	<id>131</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2353,7 +2353,7 @@
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_SPIN_BUTTON"><Internal_properties>
-	<id>141</id>
+	<id>134</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2368,7 +2368,7 @@
 <EV_TEXT_COMPONENT></EV_TEXT_COMPONENT>
 </item>
 <item type="EV_LABEL"><Internal_properties>
-	<id>142</id>
+	<id>135</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2381,7 +2381,7 @@
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_SPIN_BUTTON"><Internal_properties>
-	<id>144</id>
+	<id>137</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2397,7 +2397,7 @@
 </item>
 </item>
 <item type="EV_NOTEBOOK"><Internal_properties>
-	<id>404</id>
+	<id>390</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2452,7 +2452,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>406</id>
+	<id>392</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2463,7 +2463,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>407</id>
+	<id>393</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2476,7 +2476,7 @@
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_TEXT_FIELD"><Internal_properties>
-	<id>408</id>
+	<id>394</id>
 	<name>textable_entry</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -2491,7 +2491,7 @@
 </item>
 </item>
 <item type="EV_CHECK_BUTTON"><Internal_properties>
-	<id>409</id>
+	<id>395</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2508,7 +2508,7 @@
 	</Events>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>411</id>
+	<id>397</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2519,7 +2519,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>413</id>
+	<id>399</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2532,7 +2532,7 @@
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_COMBO_BOX"><Internal_properties>
-	<id>415</id>
+	<id>401</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2545,7 +2545,7 @@
 </item>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>417</id>
+	<id>403</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2556,7 +2556,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>421</id>
+	<id>407</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2569,7 +2569,7 @@
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_SPIN_BUTTON"><Internal_properties>
-	<id>425</id>
+	<id>411</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2583,7 +2583,7 @@
 </item>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>419</id>
+	<id>405</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2594,7 +2594,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>423</id>
+	<id>409</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2607,7 +2607,7 @@
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_SPIN_BUTTON"><Internal_properties>
-	<id>427</id>
+	<id>413</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2621,7 +2621,7 @@
 </item>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>429</id>
+	<id>415</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2632,7 +2632,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>431</id>
+	<id>417</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2646,7 +2646,7 @@
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_COMBO_BOX"><Internal_properties>
-	<id>433</id>
+	<id>419</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2658,7 +2658,7 @@
 <EV_WIDGET></EV_WIDGET>
 <EV_TEXT_COMPONENT></EV_TEXT_COMPONENT>
 <item type="EV_LIST_ITEM"><Internal_properties>
-	<id>435</id>
+	<id>421</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_DESELECTABLE></EV_DESELECTABLE>
@@ -2668,7 +2668,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_LIST_ITEM"><Internal_properties>
-	<id>437</id>
+	<id>423</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_DESELECTABLE></EV_DESELECTABLE>
@@ -2678,7 +2678,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_LIST_ITEM"><Internal_properties>
-	<id>439</id>
+	<id>425</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_DESELECTABLE></EV_DESELECTABLE>
@@ -2690,7 +2690,7 @@
 </item>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>444</id>
+	<id>430</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2704,7 +2704,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>445</id>
+	<id>431</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2718,7 +2718,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>446</id>
+	<id>432</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2732,7 +2732,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>447</id>
+	<id>433</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2746,7 +2746,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>449</id>
+	<id>435</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2760,7 +2760,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>451</id>
+	<id>437</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2774,7 +2774,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>453</id>
+	<id>439</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2788,7 +2788,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>455</id>
+	<id>441</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2802,7 +2802,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>457</id>
+	<id>443</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2813,7 +2813,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>459</id>
+	<id>445</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2826,7 +2826,7 @@
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_COMBO_BOX"><Internal_properties>
-	<id>461</id>
+	<id>447</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2839,7 +2839,7 @@
 </item>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>465</id>
+	<id>451</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2850,7 +2850,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>466</id>
+	<id>452</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2863,7 +2863,7 @@
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_COMBO_BOX"><Internal_properties>
-	<id>467</id>
+	<id>453</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2876,7 +2876,7 @@
 </item>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>469</id>
+	<id>455</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2890,7 +2890,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>471</id>
+	<id>457</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2904,7 +2904,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>473</id>
+	<id>459</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2918,7 +2918,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>475</id>
+	<id>461</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2932,7 +2932,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>477</id>
+	<id>463</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2946,7 +2946,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>479</id>
+	<id>465</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2960,7 +2960,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>483</id>
+	<id>469</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2971,7 +2971,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>484</id>
+	<id>470</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2984,7 +2984,7 @@
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_SPIN_BUTTON"><Internal_properties>
-	<id>485</id>
+	<id>471</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2998,7 +2998,7 @@
 </item>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>489</id>
+	<id>475</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -3009,7 +3009,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>490</id>
+	<id>476</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -3022,7 +3022,7 @@
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_SPIN_BUTTON"><Internal_properties>
-	<id>491</id>
+	<id>477</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -3036,7 +3036,7 @@
 </item>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>495</id>
+	<id>481</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -3047,7 +3047,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>496</id>
+	<id>482</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -3060,7 +3060,7 @@
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_SPIN_BUTTON"><Internal_properties>
-	<id>497</id>
+	<id>483</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -3074,7 +3074,7 @@
 </item>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>499</id>
+	<id>485</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -3088,7 +3088,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>501</id>
+	<id>487</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -3102,46 +3102,129 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
+	<id>489</id>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_FONTABLE></EV_FONTABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_TEXTABLE><Text>Apply Row</Text>
+	</EV_TEXTABLE>
+<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_WIDGET></EV_WIDGET>
+<EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+</item>
+<item type="EV_BUTTON"><Internal_properties>
+	<id>491</id>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_FONTABLE></EV_FONTABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_TEXTABLE><Text>Apply Column</Text>
+	</EV_TEXTABLE>
+<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_WIDGET></EV_WIDGET>
+<EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+</item>
+<item type="EV_BUTTON"><Internal_properties>
+	<id>493</id>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_FONTABLE></EV_FONTABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_TEXTABLE><Text>Apply Row</Text>
+	</EV_TEXTABLE>
+<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_WIDGET></EV_WIDGET>
+<EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+</item>
+<item type="EV_BUTTON"><Internal_properties>
+	<id>495</id>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_FONTABLE></EV_FONTABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_TEXTABLE><Text>Apply Column</Text>
+	</EV_TEXTABLE>
+<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_WIDGET></EV_WIDGET>
+<EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+</item>
+<item type="EV_HORIZONTAL_BOX"><Internal_properties>
+	<id>502</id>
+	<Expanded>1</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_WIDGET></EV_WIDGET>
+<EV_BOX><Is_item_expanded>01</Is_item_expanded>
+	</EV_BOX>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<EV_CONTAINER></EV_CONTAINER>
+<item type="EV_LABEL"><Internal_properties>
 	<id>503</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text>Apply Row</Text>
+<EV_TEXTABLE><Text>V. Alignment : </Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
-<EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
-<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<EV_TEXT_ALIGNABLE><Text_alignment>Left</Text_alignment>
+	</EV_TEXT_ALIGNABLE>
 </item>
-<item type="EV_BUTTON"><Internal_properties>
+<item type="EV_COMBO_BOX"><Internal_properties>
+	<id>504</id>
+	<Expanded>1</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_FONTABLE></EV_FONTABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_TEXTABLE><Text>Top</Text>
+	</EV_TEXTABLE>
+<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_WIDGET></EV_WIDGET>
+<EV_TEXT_COMPONENT></EV_TEXT_COMPONENT>
+<item type="EV_LIST_ITEM"><Internal_properties>
 	<id>505</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
-<EV_COLORIZABLE></EV_COLORIZABLE>
-<EV_FONTABLE></EV_FONTABLE>
-<EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text>Apply Column</Text>
+<EV_DESELECTABLE></EV_DESELECTABLE>
+<EV_TEXTABLE><Text>Top</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
-<EV_WIDGET></EV_WIDGET>
-<EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
-<item type="EV_BUTTON"><Internal_properties>
+<item type="EV_LIST_ITEM"><Internal_properties>
+	<id>506</id>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_DESELECTABLE></EV_DESELECTABLE>
+<EV_TEXTABLE><Text>Center</Text>
+	</EV_TEXTABLE>
+<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+</item>
+<item type="EV_LIST_ITEM"><Internal_properties>
 	<id>507</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
-<EV_COLORIZABLE></EV_COLORIZABLE>
-<EV_FONTABLE></EV_FONTABLE>
-<EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text>Apply Row</Text>
+<EV_DESELECTABLE></EV_DESELECTABLE>
+<EV_TEXTABLE><Text>Bottom</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
-<EV_WIDGET></EV_WIDGET>
-<EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
+</item>
+</item>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
 	<id>509</id>
@@ -3157,91 +3240,8 @@
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
-<item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>516</id>
-	<Expanded>1</Expanded>
-	</Internal_properties>
-<EV_COLORIZABLE></EV_COLORIZABLE>
-<EV_SENSITIVE></EV_SENSITIVE>
-<EV_WIDGET></EV_WIDGET>
-<EV_BOX><Is_item_expanded>01</Is_item_expanded>
-	</EV_BOX>
-<EV_PIXMAPABLE></EV_PIXMAPABLE>
-<EV_CONTAINER></EV_CONTAINER>
-<item type="EV_LABEL"><Internal_properties>
-	<id>517</id>
-	<Expanded>0</Expanded>
-	</Internal_properties>
-<EV_COLORIZABLE></EV_COLORIZABLE>
-<EV_FONTABLE></EV_FONTABLE>
-<EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text>V. Alignment : </Text>
-	</EV_TEXTABLE>
-<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
-<EV_WIDGET></EV_WIDGET>
-<EV_TEXT_ALIGNABLE><Text_alignment>Left</Text_alignment>
-	</EV_TEXT_ALIGNABLE>
-</item>
-<item type="EV_COMBO_BOX"><Internal_properties>
-	<id>518</id>
-	<Expanded>1</Expanded>
-	</Internal_properties>
-<EV_COLORIZABLE></EV_COLORIZABLE>
-<EV_FONTABLE></EV_FONTABLE>
-<EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text>Top</Text>
-	</EV_TEXTABLE>
-<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
-<EV_WIDGET></EV_WIDGET>
-<EV_TEXT_COMPONENT></EV_TEXT_COMPONENT>
-<item type="EV_LIST_ITEM"><Internal_properties>
-	<id>519</id>
-	<Expanded>0</Expanded>
-	</Internal_properties>
-<EV_DESELECTABLE></EV_DESELECTABLE>
-<EV_TEXTABLE><Text>Top</Text>
-	</EV_TEXTABLE>
-<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
-<EV_PIXMAPABLE></EV_PIXMAPABLE>
-</item>
-<item type="EV_LIST_ITEM"><Internal_properties>
-	<id>520</id>
-	<Expanded>0</Expanded>
-	</Internal_properties>
-<EV_DESELECTABLE></EV_DESELECTABLE>
-<EV_TEXTABLE><Text>Center</Text>
-	</EV_TEXTABLE>
-<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
-<EV_PIXMAPABLE></EV_PIXMAPABLE>
-</item>
-<item type="EV_LIST_ITEM"><Internal_properties>
-	<id>521</id>
-	<Expanded>0</Expanded>
-	</Internal_properties>
-<EV_DESELECTABLE></EV_DESELECTABLE>
-<EV_TEXTABLE><Text>Bottom</Text>
-	</EV_TEXTABLE>
-<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
-<EV_PIXMAPABLE></EV_PIXMAPABLE>
-</item>
-</item>
-</item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>523</id>
-	<Expanded>0</Expanded>
-	</Internal_properties>
-<EV_COLORIZABLE></EV_COLORIZABLE>
-<EV_FONTABLE></EV_FONTABLE>
-<EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text>Apply Column</Text>
-	</EV_TEXTABLE>
-<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
-<EV_WIDGET></EV_WIDGET>
-<EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
-<EV_PIXMAPABLE></EV_PIXMAPABLE>
-</item>
-<item type="EV_BUTTON"><Internal_properties>
-	<id>525</id>
+	<id>511</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -3255,7 +3255,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>529</id>
+	<id>515</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -3266,7 +3266,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>530</id>
+	<id>516</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -3279,7 +3279,7 @@
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_COMBO_BOX"><Internal_properties>
-	<id>531</id>
+	<id>517</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -3291,7 +3291,7 @@
 <EV_TEXT_COMPONENT></EV_TEXT_COMPONENT>
 </item>
 <item type="EV_CELL"><Internal_properties>
-	<id>539</id>
+	<id>525</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -3301,7 +3301,7 @@
 <EV_CONTAINER></EV_CONTAINER>
 </item>
 <item type="EV_COMBO_BOX"><Internal_properties>
-	<id>537</id>
+	<id>523</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -3313,7 +3313,7 @@
 	</EV_WIDGET>
 <EV_TEXT_COMPONENT></EV_TEXT_COMPONENT>
 <item type="EV_LIST_ITEM"><Internal_properties>
-	<id>561</id>
+	<id>547</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_DESELECTABLE></EV_DESELECTABLE>
@@ -3322,7 +3322,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_LIST_ITEM"><Internal_properties>
-	<id>541</id>
+	<id>527</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_DESELECTABLE></EV_DESELECTABLE>
@@ -3332,7 +3332,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_LIST_ITEM"><Internal_properties>
-	<id>543</id>
+	<id>529</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_DESELECTABLE></EV_DESELECTABLE>
@@ -3342,7 +3342,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_LIST_ITEM"><Internal_properties>
-	<id>545</id>
+	<id>531</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_DESELECTABLE></EV_DESELECTABLE>
@@ -3352,7 +3352,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_LIST_ITEM"><Internal_properties>
-	<id>547</id>
+	<id>533</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_DESELECTABLE></EV_DESELECTABLE>
@@ -3362,7 +3362,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_LIST_ITEM"><Internal_properties>
-	<id>549</id>
+	<id>535</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_DESELECTABLE></EV_DESELECTABLE>
@@ -3372,7 +3372,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_LIST_ITEM"><Internal_properties>
-	<id>551</id>
+	<id>537</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_DESELECTABLE></EV_DESELECTABLE>
@@ -3382,7 +3382,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_LIST_ITEM"><Internal_properties>
-	<id>553</id>
+	<id>539</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_DESELECTABLE></EV_DESELECTABLE>
@@ -3392,7 +3392,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_LIST_ITEM"><Internal_properties>
-	<id>555</id>
+	<id>541</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_DESELECTABLE></EV_DESELECTABLE>
@@ -3402,7 +3402,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_LIST_ITEM"><Internal_properties>
-	<id>557</id>
+	<id>543</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_DESELECTABLE></EV_DESELECTABLE>
@@ -3412,7 +3412,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_LIST_ITEM"><Internal_properties>
-	<id>559</id>
+	<id>545</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_DESELECTABLE></EV_DESELECTABLE>
@@ -3424,7 +3424,7 @@
 </item>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>533</id>
+	<id>519</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -3438,7 +3438,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>535</id>
+	<id>521</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -3452,7 +3452,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_CHECK_BUTTON"><Internal_properties>
-	<id>565</id>
+	<id>551</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -3467,7 +3467,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>567</id>
+	<id>553</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -3481,7 +3481,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>569</id>
+	<id>555</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -3495,7 +3495,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>571</id>
+	<id>557</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -3509,7 +3509,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>573</id>
+	<id>559</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -3527,10 +3527,10 @@
 </item>
 </item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>320</id>
+	<id>311</id>
 	<name>selection_tab</name>
 	<Expanded>1</Expanded>
-	<reference_id>300</reference_id>
+	<reference_id>291</reference_id>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
@@ -3544,7 +3544,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_FRAME"><Internal_properties>
-	<id>322</id>
+	<id>313</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -3558,7 +3558,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>324</id>
+	<id>315</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -3569,7 +3569,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_TABLE"><Internal_properties>
-	<id>325</id>
+	<id>316</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -3589,7 +3589,7 @@
 	</EV_TABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_RADIO_BUTTON"><Internal_properties>
-	<id>326</id>
+	<id>317</id>
 	<name>single_item_selection_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -3604,7 +3604,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_RADIO_BUTTON"><Internal_properties>
-	<id>327</id>
+	<id>318</id>
 	<name>single_row_selection_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -3619,7 +3619,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_RADIO_BUTTON"><Internal_properties>
-	<id>328</id>
+	<id>319</id>
 	<name>multiple_item_selection_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -3634,7 +3634,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_RADIO_BUTTON"><Internal_properties>
-	<id>329</id>
+	<id>320</id>
 	<name>multiple_row_selection_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -3649,7 +3649,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_CHECK_BUTTON"><Internal_properties>
-	<id>674</id>
+	<id>648</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -3667,7 +3667,7 @@
 	</Events>
 </item>
 <item type="EV_CHECK_BUTTON"><Internal_properties>
-	<id>676</id>
+	<id>650</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -3685,7 +3685,7 @@
 </item>
 </item>
 <item type="EV_FRAME"><Internal_properties>
-	<id>332</id>
+	<id>322</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -3699,7 +3699,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>343</id>
+	<id>333</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -3712,7 +3712,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>345</id>
+	<id>335</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -3724,7 +3724,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>346</id>
+	<id>336</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -3735,7 +3735,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>347</id>
+	<id>337</id>
 	<name>prompt_label</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -3750,7 +3750,7 @@
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_CELL"><Internal_properties>
-	<id>348</id>
+	<id>338</id>
 	<name>pixmap_parent</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -3762,7 +3762,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_PIXMAP"><Internal_properties>
-	<id>349</id>
+	<id>339</id>
 	<name>cursor_pixmap</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -3776,7 +3776,7 @@
 </item>
 </item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>351</id>
+	<id>341</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -3787,7 +3787,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_CELL"><Internal_properties>
-	<id>359</id>
+	<id>349</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -3797,7 +3797,7 @@
 <EV_CONTAINER></EV_CONTAINER>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>353</id>
+	<id>343</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -3809,7 +3809,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_SPIN_BUTTON"><Internal_properties>
-	<id>354</id>
+	<id>344</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -3826,7 +3826,7 @@
 <EV_TEXT_COMPONENT></EV_TEXT_COMPONENT>
 </item>
 <item type="EV_SPIN_BUTTON"><Internal_properties>
-	<id>355</id>
+	<id>345</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -3844,7 +3844,7 @@
 </item>
 </item>
 <item type="EV_CELL"><Internal_properties>
-	<id>357</id>
+	<id>347</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -3856,7 +3856,7 @@
 </item>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>341</id>
+	<id>331</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -3938,7 +3938,7 @@
 </item>
 </item>
 <item type="EV_FRAME"><Internal_properties>
-	<id>334</id>
+	<id>324</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -3952,7 +3952,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>336</id>
+	<id>326</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -3964,7 +3964,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>337</id>
+	<id>327</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -3976,7 +3976,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>338</id>
+	<id>328</id>
 	<name>selected_items_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -3991,7 +3991,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>339</id>
+	<id>329</id>
 	<name>selected_rows_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -4049,7 +4049,7 @@
 </item>
 </item>
 <item type="EV_TABLE"><Internal_properties>
-	<id>645</id>
+	<id>620</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -4057,17 +4057,17 @@
 <EV_WIDGET></EV_WIDGET>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_TABLE><Columns>2</Columns>
-	<Rows>3</Rows>
+	<Rows>5</Rows>
 	<Column_spacing>4</Column_spacing>
 	<Row_spacing>4</Row_spacing>
-	<Column_positions>000100020001000200010002</Column_positions>
-	<Row_positions>000100010002000200030003</Row_positions>
-	<Column_spans>000100010001000100010001</Column_spans>
-	<Row_spans>000100010001000100010001</Row_spans>
+	<Column_positions>0001000200010002000100020001000200010002</Column_positions>
+	<Row_positions>0001000100020002000300030004000400050005</Row_positions>
+	<Column_spans>0001000100010001000100010001000100010001</Column_spans>
+	<Row_spans>0001000100010001000100010001000100010001</Row_spans>
 	</EV_TABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>647</id>
+	<id>622</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -4078,7 +4078,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>648</id>
+	<id>623</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -4091,7 +4091,7 @@
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_SPIN_BUTTON"><Internal_properties>
-	<id>649</id>
+	<id>624</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -4109,7 +4109,7 @@
 </item>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>650</id>
+	<id>625</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -4122,7 +4122,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>651</id>
+	<id>626</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -4135,7 +4135,7 @@
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_SPIN_BUTTON"><Internal_properties>
-	<id>652</id>
+	<id>627</id>
 	<name>virtual_y_position</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -4152,7 +4152,7 @@
 </item>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>654</id>
+	<id>629</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -4163,7 +4163,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>662</id>
+	<id>637</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -4176,7 +4176,7 @@
 </item>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>656</id>
+	<id>631</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -4187,7 +4187,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>664</id>
+	<id>639</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -4200,7 +4200,7 @@
 </item>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>658</id>
+	<id>633</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -4211,7 +4211,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>666</id>
+	<id>641</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -4224,7 +4224,7 @@
 </item>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>660</id>
+	<id>635</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -4235,7 +4235,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>668</id>
+	<id>643</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -4246,14 +4246,62 @@
 <EV_WIDGET></EV_WIDGET>
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 </item>
+</item>
+<item type="EV_LABEL"><Internal_properties>
+	<id>675</id>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_FONTABLE></EV_FONTABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_TEXTABLE></EV_TEXTABLE>
+<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_WIDGET></EV_WIDGET>
+<EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
+</item>
+<item type="EV_LABEL"><Internal_properties>
+	<id>677</id>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_FONTABLE></EV_FONTABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_TEXTABLE></EV_TEXTABLE>
+<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_WIDGET></EV_WIDGET>
+<EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
+</item>
+<item type="EV_LABEL"><Internal_properties>
+	<id>679</id>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_FONTABLE></EV_FONTABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_TEXTABLE></EV_TEXTABLE>
+<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_WIDGET></EV_WIDGET>
+<EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
+</item>
+<item type="EV_LABEL"><Internal_properties>
+	<id>681</id>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_FONTABLE></EV_FONTABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_TEXTABLE></EV_TEXTABLE>
+<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_WIDGET></EV_WIDGET>
+<EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 </item>
 </item>
 </item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>108</id>
+	<id>103</id>
 	<name>events_tab</name>
 	<Expanded>0</Expanded>
-	<reference_id>109</reference_id>
+	<reference_id>104</reference_id>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
@@ -4265,7 +4313,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_RADIO_BUTTON"><Internal_properties>
-	<id>625</id>
+	<id>603</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -4279,7 +4327,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_RADIO_BUTTON"><Internal_properties>
-	<id>619</id>
+	<id>597</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -4293,7 +4341,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_RADIO_BUTTON"><Internal_properties>
-	<id>629</id>
+	<id>607</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -4307,7 +4355,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_LIST"><Internal_properties>
-	<id>116</id>
+	<id>111</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -4317,7 +4365,7 @@
 <EV_WIDGET></EV_WIDGET>
 </item>
 <item type="EV_TABLE"><Internal_properties>
-	<id>118</id>
+	<id>113</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -4334,7 +4382,7 @@
 	</EV_TABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_RADIO_BUTTON"><Internal_properties>
-	<id>621</id>
+	<id>599</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -4348,7 +4396,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_RADIO_BUTTON"><Internal_properties>
-	<id>623</id>
+	<id>601</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -4366,7 +4414,7 @@
 </item>
 </item>
 <item type="EV_FRAME"><Internal_properties>
-	<id>194</id>
+	<id>187</id>
 	<name>status_bar_frame</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -4612,7 +4660,7 @@
 </item>
 </item>
 <item type="EV_RADIO_BUTTON"><Internal_properties>
-	<id>200</id>
+	<id>191</id>
 	<name>editable_item_radio_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -4959,7 +5007,7 @@
 	<name>misc</name>
 	</Internal_properties>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>147</id>
+	<id>140</id>
 	<name>grid_item_finder</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -4971,7 +5019,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>148</id>
+	<id>141</id>
 	<name>prompt_label</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -4986,7 +5034,7 @@
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_CELL"><Internal_properties>
-	<id>149</id>
+	<id>142</id>
 	<name>pixmap_parent</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -4998,7 +5046,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_PIXMAP"><Internal_properties>
-	<id>150</id>
+	<id>143</id>
 	<name>cursor_pixmap</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -5019,7 +5067,7 @@
 	<name>tabs</name>
 	</Internal_properties>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>300</id>
+	<id>291</id>
 	<name>selection_tab</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -5035,7 +5083,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_FRAME"><Internal_properties>
-	<id>321</id>
+	<id>312</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -5049,7 +5097,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>323</id>
+	<id>314</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -5060,7 +5108,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_TABLE"><Internal_properties>
-	<id>301</id>
+	<id>292</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -5080,7 +5128,7 @@
 	</EV_TABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_RADIO_BUTTON"><Internal_properties>
-	<id>302</id>
+	<id>293</id>
 	<name>single_item_selection_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -5097,7 +5145,7 @@
 	</Events>
 </item>
 <item type="EV_RADIO_BUTTON"><Internal_properties>
-	<id>303</id>
+	<id>294</id>
 	<name>single_row_selection_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -5114,7 +5162,7 @@
 	</Events>
 </item>
 <item type="EV_RADIO_BUTTON"><Internal_properties>
-	<id>304</id>
+	<id>295</id>
 	<name>multiple_item_selection_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -5131,7 +5179,7 @@
 	</Events>
 </item>
 <item type="EV_RADIO_BUTTON"><Internal_properties>
-	<id>305</id>
+	<id>296</id>
 	<name>multiple_row_selection_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -5148,7 +5196,7 @@
 	</Events>
 </item>
 <item type="EV_CHECK_BUTTON"><Internal_properties>
-	<id>306</id>
+	<id>297</id>
 	<name>selection_on_click</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -5167,7 +5215,7 @@
 	</Events>
 </item>
 <item type="EV_CHECK_BUTTON"><Internal_properties>
-	<id>675</id>
+	<id>649</id>
 	<name>always_selected_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -5188,7 +5236,7 @@
 </item>
 </item>
 <item type="EV_FRAME"><Internal_properties>
-	<id>331</id>
+	<id>321</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -5202,7 +5250,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>342</id>
+	<id>332</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -5217,7 +5265,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>344</id>
+	<id>334</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -5230,10 +5278,10 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>310</id>
+	<id>301</id>
 	<name>item_finder</name>
 	<Expanded>1</Expanded>
-	<reference_id>147</reference_id>
+	<reference_id>140</reference_id>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
@@ -5243,7 +5291,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>311</id>
+	<id>302</id>
 	<name>prompt_label</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -5258,7 +5306,7 @@
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_CELL"><Internal_properties>
-	<id>312</id>
+	<id>303</id>
 	<name>pixmap_parent</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -5270,7 +5318,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_PIXMAP"><Internal_properties>
-	<id>313</id>
+	<id>304</id>
 	<name>cursor_pixmap</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -5284,7 +5332,7 @@
 </item>
 </item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>350</id>
+	<id>340</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -5295,7 +5343,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_CELL"><Internal_properties>
-	<id>358</id>
+	<id>348</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -5305,7 +5353,7 @@
 <EV_CONTAINER></EV_CONTAINER>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>352</id>
+	<id>342</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -5318,7 +5366,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_SPIN_BUTTON"><Internal_properties>
-	<id>314</id>
+	<id>305</id>
 	<name>select_item_x_spin_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -5338,7 +5386,7 @@
 	</Events>
 </item>
 <item type="EV_SPIN_BUTTON"><Internal_properties>
-	<id>315</id>
+	<id>306</id>
 	<name>select_item_y_spin_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -5359,7 +5407,7 @@
 </item>
 </item>
 <item type="EV_CELL"><Internal_properties>
-	<id>356</id>
+	<id>346</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -5371,7 +5419,7 @@
 </item>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>340</id>
+	<id>330</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -5384,7 +5432,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>307</id>
+	<id>298</id>
 	<name>select_row_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -5402,7 +5450,7 @@
 	</Events>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>308</id>
+	<id>299</id>
 	<name>select_column_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -5420,7 +5468,7 @@
 	</Events>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>309</id>
+	<id>300</id>
 	<name>select_item_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -5438,7 +5486,7 @@
 	</Events>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>319</id>
+	<id>310</id>
 	<name>clear_selection_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -5458,7 +5506,7 @@
 </item>
 </item>
 <item type="EV_FRAME"><Internal_properties>
-	<id>333</id>
+	<id>323</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -5472,7 +5520,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>335</id>
+	<id>325</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -5485,7 +5533,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>316</id>
+	<id>307</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -5498,7 +5546,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>317</id>
+	<id>308</id>
 	<name>selected_items_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -5515,7 +5563,7 @@
 	</Events>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>318</id>
+	<id>309</id>
 	<name>selected_rows_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -5552,7 +5600,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>155</id>
+	<id>148</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -5563,10 +5611,10 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>151</id>
+	<id>144</id>
 	<name>column_finder</name>
 	<Expanded>1</Expanded>
-	<reference_id>147</reference_id>
+	<reference_id>140</reference_id>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
@@ -5576,7 +5624,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>152</id>
+	<id>145</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -5590,7 +5638,7 @@
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_CELL"><Internal_properties>
-	<id>153</id>
+	<id>146</id>
 	<name>pixmap_parent</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -5602,7 +5650,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_PIXMAP"><Internal_properties>
-	<id>154</id>
+	<id>147</id>
 	<name>cursor_pixmap</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -5617,7 +5665,7 @@
 </item>
 </item>
 <item type="EV_FRAME"><Internal_properties>
-	<id>162</id>
+	<id>155</id>
 	<name>column_properties_frame</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -5633,7 +5681,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>164</id>
+	<id>157</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -5646,7 +5694,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>226</id>
+	<id>217</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -5677,7 +5725,7 @@
 	</EV_TABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>161</id>
+	<id>154</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -5743,7 +5791,7 @@
 	</Events>
 </item>
 <item type="EV_LABEL"><Internal_properties>
-	<id>167</id>
+	<id>160</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -5756,7 +5804,7 @@
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_TEXT_FIELD"><Internal_properties>
-	<id>168</id>
+	<id>161</id>
 	<name>column_title_entry</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -5772,7 +5820,7 @@
 	</Events>
 </item>
 <item type="EV_LABEL"><Internal_properties>
-	<id>669</id>
+	<id>644</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -5785,7 +5833,7 @@
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_COMBO_BOX"><Internal_properties>
-	<id>671</id>
+	<id>646</id>
 	<name>column_pixmap_combo</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -5802,7 +5850,7 @@
 </item>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>594</id>
+	<id>580</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -5813,7 +5861,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>592</id>
+	<id>578</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -5826,7 +5874,7 @@
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_COMBO_BOX"><Internal_properties>
-	<id>593</id>
+	<id>579</id>
 	<name>foreground_color_combo</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -5842,7 +5890,7 @@
 </item>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>600</id>
+	<id>586</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -5853,7 +5901,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>598</id>
+	<id>584</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -5866,7 +5914,7 @@
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_COMBO_BOX"><Internal_properties>
-	<id>599</id>
+	<id>585</id>
 	<name>background_color_combo</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -5882,7 +5930,7 @@
 </item>
 </item>
 <item type="EV_CHECK_BUTTON"><Internal_properties>
-	<id>166</id>
+	<id>159</id>
 	<name>column_selected_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -5900,7 +5948,7 @@
 	</Events>
 </item>
 <item type="EV_CHECK_BUTTON"><Internal_properties>
-	<id>196</id>
+	<id>189</id>
 	<name>column_visible_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -5920,7 +5968,7 @@
 </item>
 </item>
 <item type="EV_FRAME"><Internal_properties>
-	<id>243</id>
+	<id>234</id>
 	<name>column_operations_frame</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -5936,7 +5984,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>245</id>
+	<id>236</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -5951,7 +5999,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>247</id>
+	<id>238</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -5964,7 +6012,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>257</id>
+	<id>248</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -5975,7 +6023,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_CELL"><Internal_properties>
-	<id>260</id>
+	<id>251</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -5985,7 +6033,7 @@
 <EV_CONTAINER></EV_CONTAINER>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>169</id>
+	<id>162</id>
 	<name>swap_column_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -6002,7 +6050,7 @@
 	</Events>
 </item>
 <item type="EV_CELL"><Internal_properties>
-	<id>262</id>
+	<id>253</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -6013,10 +6061,10 @@
 </item>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>249</id>
+	<id>240</id>
 	<name>move_to_column_finder</name>
 	<Expanded>1</Expanded>
-	<reference_id>147</reference_id>
+	<reference_id>140</reference_id>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
@@ -6026,7 +6074,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>250</id>
+	<id>241</id>
 	<name>prompt_label</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -6041,7 +6089,7 @@
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_CELL"><Internal_properties>
-	<id>251</id>
+	<id>242</id>
 	<name>pixmap_parent</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -6053,7 +6101,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_PIXMAP"><Internal_properties>
-	<id>252</id>
+	<id>243</id>
 	<name>cursor_pixmap</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -6068,7 +6116,7 @@
 </item>
 </item>
 <item type="EV_TABLE"><Internal_properties>
-	<id>290</id>
+	<id>281</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -6089,7 +6137,7 @@
 	</EV_TABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>209</id>
+	<id>200</id>
 	<name>clear_column_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -6106,7 +6154,7 @@
 	</Events>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>293</id>
+	<id>284</id>
 	<name>remove_column_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -6123,7 +6171,7 @@
 	</Events>
 </item>
 <item type="EV_CELL"><Internal_properties>
-	<id>295</id>
+	<id>286</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -6137,7 +6185,7 @@
 </item>
 </item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>109</id>
+	<id>104</id>
 	<name>events_tab</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -6151,10 +6199,10 @@
 	<Is_item_expanded>00010</Is_item_expanded>
 	</EV_BOX>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
-<EV_CONTAINER><merged_radio_button_groups>117</merged_radio_button_groups>
+<EV_CONTAINER><merged_radio_button_groups>112</merged_radio_button_groups>
 	</EV_CONTAINER>
 <item type="EV_RADIO_BUTTON"><Internal_properties>
-	<id>624</id>
+	<id>602</id>
 	<name>no_events_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -6171,7 +6219,7 @@
 	</Events>
 </item>
 <item type="EV_RADIO_BUTTON"><Internal_properties>
-	<id>618</id>
+	<id>596</id>
 	<name>enable_event_tracking</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -6188,7 +6236,7 @@
 	</Events>
 </item>
 <item type="EV_RADIO_BUTTON"><Internal_properties>
-	<id>628</id>
+	<id>606</id>
 	<name>enable_event_tracking_item</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -6205,7 +6253,7 @@
 	</Events>
 </item>
 <item type="EV_LIST"><Internal_properties>
-	<id>115</id>
+	<id>110</id>
 	<name>event_list</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -6216,7 +6264,7 @@
 <EV_WIDGET></EV_WIDGET>
 </item>
 <item type="EV_TABLE"><Internal_properties>
-	<id>117</id>
+	<id>112</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -6233,10 +6281,10 @@
 	<Column_spans>00010001</Column_spans>
 	<Row_spans>00010001</Row_spans>
 	</EV_TABLE>
-<EV_CONTAINER><merged_radio_button_groups>109</merged_radio_button_groups>
+<EV_CONTAINER><merged_radio_button_groups>104</merged_radio_button_groups>
 	</EV_CONTAINER>
 <item type="EV_RADIO_BUTTON"><Internal_properties>
-	<id>620</id>
+	<id>598</id>
 	<name>highlight_items_on_motion</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -6253,7 +6301,7 @@
 	</Events>
 </item>
 <item type="EV_RADIO_BUTTON"><Internal_properties>
-	<id>622</id>
+	<id>600</id>
 	<name>show_events_in_items</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -6288,7 +6336,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_FRAME"><Internal_properties>
-	<id>362</id>
+	<id>352</id>
 	<name>addition_frame</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -6303,7 +6351,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>363</id>
+	<id>353</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -6314,7 +6362,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_TABLE"><Internal_properties>
-	<id>364</id>
+	<id>354</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -6387,7 +6435,7 @@
 	</Events>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>562</id>
+	<id>548</id>
 	<name>icon_view_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -6404,7 +6452,7 @@
 	</Events>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>574</id>
+	<id>560</id>
 	<name>colored_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -6424,7 +6472,7 @@
 </item>
 </item>
 <item type="EV_FRAME"><Internal_properties>
-	<id>632</id>
+	<id>609</id>
 	<name>removal_frame</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -6439,7 +6487,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>634</id>
+	<id>611</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -6452,7 +6500,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_TABLE"><Internal_properties>
-	<id>636</id>
+	<id>613</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -6471,7 +6519,7 @@
 	</EV_TABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>638</id>
+	<id>615</id>
 	<name>remove_all_rows_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -6488,7 +6536,7 @@
 	</Events>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>640</id>
+	<id>617</id>
 	<name>remove_all_columns_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -6508,7 +6556,7 @@
 </item>
 </item>
 <item type="EV_FRAME"><Internal_properties>
-	<id>392</id>
+	<id>382</id>
 	<name>display_frame</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -6523,7 +6571,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>394</id>
+	<id>384</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -6534,7 +6582,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_TABLE"><Internal_properties>
-	<id>677</id>
+	<id>651</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -6554,7 +6602,7 @@
 	</EV_TABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_CHECK_BUTTON"><Internal_properties>
-	<id>630</id>
+	<id>608</id>
 	<name>is_column_resize_immediate_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -6643,7 +6691,7 @@
 </item>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>612</id>
+	<id>595</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -6654,7 +6702,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>610</id>
+	<id>593</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -6667,7 +6715,7 @@
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_COMBO_BOX"><Internal_properties>
-	<id>611</id>
+	<id>594</id>
 	<name>foreground_color_combo</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -6683,7 +6731,7 @@
 </item>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>606</id>
+	<id>592</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -6694,7 +6742,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>604</id>
+	<id>590</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -6707,7 +6755,7 @@
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_COMBO_BOX"><Internal_properties>
-	<id>605</id>
+	<id>591</id>
 	<name>background_color_combo</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -6723,7 +6771,7 @@
 </item>
 </item>
 <item type="EV_CHECK_BUTTON"><Internal_properties>
-	<id>690</id>
+	<id>664</id>
 	<name>are_row_separators_enabled_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -6741,7 +6789,7 @@
 	</Events>
 </item>
 <item type="EV_CHECK_BUTTON"><Internal_properties>
-	<id>692</id>
+	<id>666</id>
 	<name>are_column_separators_enabled_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -6759,7 +6807,7 @@
 	</Events>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>696</id>
+	<id>670</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -6770,7 +6818,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>694</id>
+	<id>668</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -6783,7 +6831,7 @@
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_COMBO_BOX"><Internal_properties>
-	<id>695</id>
+	<id>669</id>
 	<name>separator_color_combo</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -6802,7 +6850,7 @@
 </item>
 </item>
 <item type="EV_FRAME"><Internal_properties>
-	<id>365</id>
+	<id>355</id>
 	<name>divider_frame</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -6817,7 +6865,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>367</id>
+	<id>357</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -6850,7 +6898,7 @@
 	</Events>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>382</id>
+	<id>372</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -6900,7 +6948,7 @@
 </item>
 </item>
 <item type="EV_FRAME"><Internal_properties>
-	<id>376</id>
+	<id>366</id>
 	<name>scrolling_frame</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -6915,7 +6963,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>378</id>
+	<id>368</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -7001,7 +7049,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>386</id>
+	<id>376</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -7049,7 +7097,7 @@
 </item>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>390</id>
+	<id>380</id>
 	<name>resize_rows_columns_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -7082,7 +7130,7 @@
 	</Events>
 </item>
 <item type="EV_SPIN_BUTTON"><Internal_properties>
-	<id>102</id>
+	<id>100</id>
 	<name>resize_columns_to_entry</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -7346,7 +7394,7 @@
 </item>
 </item>
 <item type="EV_CHECK_BUTTON"><Internal_properties>
-	<id>202</id>
+	<id>193</id>
 	<name>draw_tree_check_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -7376,7 +7424,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_FRAME"><Internal_properties>
-	<id>576</id>
+	<id>562</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -7401,7 +7449,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>206</id>
+	<id>197</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -7412,7 +7460,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_RADIO_BUTTON"><Internal_properties>
-	<id>204</id>
+	<id>195</id>
 	<name>set_background_of_selection_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -7427,7 +7475,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_RADIO_BUTTON"><Internal_properties>
-	<id>205</id>
+	<id>196</id>
 	<name>set_tree_node_connector_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -7460,7 +7508,7 @@
 </item>
 </item>
 <item type="EV_FRAME"><Internal_properties>
-	<id>577</id>
+	<id>563</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -7474,7 +7522,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>578</id>
+	<id>564</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -7485,7 +7533,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_CHECK_BUTTON"><Internal_properties>
-	<id>579</id>
+	<id>565</id>
 	<name>columns_drawn_above_rows_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -7507,7 +7555,7 @@
 </item>
 </item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>220</id>
+	<id>211</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -7518,7 +7566,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_CHECK_BUTTON"><Internal_properties>
-	<id>222</id>
+	<id>213</id>
 	<name>enable_pick_and_drop_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -7539,7 +7587,7 @@
 </item>
 </item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>122</id>
+	<id>115</id>
 	<name>item_tab</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -7553,10 +7601,10 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>123</id>
+	<id>116</id>
 	<name>item_finder</name>
 	<Expanded>1</Expanded>
-	<reference_id>147</reference_id>
+	<reference_id>140</reference_id>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
@@ -7566,7 +7614,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>125</id>
+	<id>118</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -7580,7 +7628,7 @@
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_CELL"><Internal_properties>
-	<id>127</id>
+	<id>120</id>
 	<name>pixmap_parent</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -7592,7 +7640,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_PIXMAP"><Internal_properties>
-	<id>129</id>
+	<id>122</id>
 	<name>cursor_pixmap</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -7609,7 +7657,7 @@
 </item>
 </item>
 <item type="EV_FRAME"><Internal_properties>
-	<id>131</id>
+	<id>124</id>
 	<name>item_frame</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -7625,7 +7673,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>133</id>
+	<id>126</id>
 	<name>main_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -7641,7 +7689,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>135</id>
+	<id>128</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -7654,7 +7702,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>137</id>
+	<id>130</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -7668,7 +7716,7 @@
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_SPIN_BUTTON"><Internal_properties>
-	<id>140</id>
+	<id>133</id>
 	<name>item_x_index</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -7686,7 +7734,7 @@
 	</Events>
 </item>
 <item type="EV_LABEL"><Internal_properties>
-	<id>139</id>
+	<id>132</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -7699,7 +7747,7 @@
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_SPIN_BUTTON"><Internal_properties>
-	<id>143</id>
+	<id>136</id>
 	<name>item_y_index</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -7718,7 +7766,7 @@
 </item>
 </item>
 <item type="EV_TABLE"><Internal_properties>
-	<id>405</id>
+	<id>391</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -7740,7 +7788,7 @@
 	</EV_TABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>360</id>
+	<id>350</id>
 	<name>textable_container</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -7752,7 +7800,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>361</id>
+	<id>351</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -7765,7 +7813,7 @@
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_TEXT_FIELD"><Internal_properties>
-	<id>145</id>
+	<id>138</id>
 	<name>textable_entry</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -7782,7 +7830,7 @@
 </item>
 </item>
 <item type="EV_CHECK_BUTTON"><Internal_properties>
-	<id>146</id>
+	<id>139</id>
 	<name>is_selected</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -7800,7 +7848,7 @@
 	</Events>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>410</id>
+	<id>396</id>
 	<name>pixmapable_container</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -7812,7 +7860,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>412</id>
+	<id>398</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -7825,7 +7873,7 @@
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_COMBO_BOX"><Internal_properties>
-	<id>414</id>
+	<id>400</id>
 	<name>pixmap_holder</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -7841,7 +7889,7 @@
 </item>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>416</id>
+	<id>402</id>
 	<name>left_border_container</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -7853,7 +7901,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>420</id>
+	<id>406</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -7866,7 +7914,7 @@
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_SPIN_BUTTON"><Internal_properties>
-	<id>424</id>
+	<id>410</id>
 	<name>left_border_spin_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -7883,7 +7931,7 @@
 </item>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>418</id>
+	<id>404</id>
 	<name>spacing_container</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -7895,7 +7943,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>422</id>
+	<id>408</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -7908,7 +7956,7 @@
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_SPIN_BUTTON"><Internal_properties>
-	<id>426</id>
+	<id>412</id>
 	<name>spacing_spin_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -7925,7 +7973,7 @@
 </item>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>428</id>
+	<id>414</id>
 	<name>alignment_container</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -7937,7 +7985,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>430</id>
+	<id>416</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -7951,7 +7999,7 @@
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_COMBO_BOX"><Internal_properties>
-	<id>432</id>
+	<id>418</id>
 	<name>alignment_combo</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -7964,7 +8012,7 @@
 <EV_WIDGET></EV_WIDGET>
 <EV_TEXT_COMPONENT></EV_TEXT_COMPONENT>
 <item type="EV_LIST_ITEM"><Internal_properties>
-	<id>434</id>
+	<id>420</id>
 	<name>left_alignment_item</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -7977,7 +8025,7 @@
 	</Events>
 </item>
 <item type="EV_LIST_ITEM"><Internal_properties>
-	<id>436</id>
+	<id>422</id>
 	<name>center_alignment_item</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -7990,7 +8038,7 @@
 	</Events>
 </item>
 <item type="EV_LIST_ITEM"><Internal_properties>
-	<id>438</id>
+	<id>424</id>
 	<name>right_alignment_item</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -8005,7 +8053,7 @@
 </item>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>440</id>
+	<id>426</id>
 	<name>apply_pixmap_row_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -8022,7 +8070,7 @@
 	</Events>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>441</id>
+	<id>427</id>
 	<name>apply_pixmap_column_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -8039,7 +8087,7 @@
 	</Events>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>442</id>
+	<id>428</id>
 	<name>apply_alignment_row_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -8056,7 +8104,7 @@
 	</Events>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>443</id>
+	<id>429</id>
 	<name>apply_alignment_column_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -8073,7 +8121,7 @@
 	</Events>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>448</id>
+	<id>434</id>
 	<name>apply_left_border_row_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -8090,7 +8138,7 @@
 	</Events>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>450</id>
+	<id>436</id>
 	<name>apply_left_border_column_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -8107,7 +8155,7 @@
 	</Events>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>452</id>
+	<id>438</id>
 	<name>apply_spacing_row_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -8124,7 +8172,7 @@
 	</Events>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>454</id>
+	<id>440</id>
 	<name>apply_spacing_column_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -8141,7 +8189,7 @@
 	</Events>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>456</id>
+	<id>442</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -8152,7 +8200,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>458</id>
+	<id>444</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -8165,7 +8213,7 @@
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_COMBO_BOX"><Internal_properties>
-	<id>460</id>
+	<id>446</id>
 	<name>foreground_color_combo</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -8181,7 +8229,7 @@
 </item>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>464</id>
+	<id>450</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -8192,7 +8240,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>462</id>
+	<id>448</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -8205,7 +8253,7 @@
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_COMBO_BOX"><Internal_properties>
-	<id>463</id>
+	<id>449</id>
 	<name>background_color_combo</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -8221,7 +8269,7 @@
 </item>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>468</id>
+	<id>454</id>
 	<name>apply_background_row_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -8238,7 +8286,7 @@
 	</Events>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>470</id>
+	<id>456</id>
 	<name>apply_background_column_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -8255,7 +8303,7 @@
 	</Events>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>472</id>
+	<id>458</id>
 	<name>apply_selection_row_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -8272,7 +8320,7 @@
 	</Events>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>474</id>
+	<id>460</id>
 	<name>apply_selection_column_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -8289,7 +8337,7 @@
 	</Events>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>476</id>
+	<id>462</id>
 	<name>apply_foreground_row_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -8306,7 +8354,7 @@
 	</Events>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>478</id>
+	<id>464</id>
 	<name>apply_foreground_column_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -8323,7 +8371,7 @@
 	</Events>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>482</id>
+	<id>468</id>
 	<name>top_border_container</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -8335,7 +8383,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>480</id>
+	<id>466</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -8348,7 +8396,7 @@
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_SPIN_BUTTON"><Internal_properties>
-	<id>481</id>
+	<id>467</id>
 	<name>top_border_spin_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -8365,7 +8413,7 @@
 </item>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>488</id>
+	<id>474</id>
 	<name>bottom_border_container</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -8377,7 +8425,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>486</id>
+	<id>472</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -8390,7 +8438,7 @@
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_SPIN_BUTTON"><Internal_properties>
-	<id>487</id>
+	<id>473</id>
 	<name>bottom_border_spin_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -8407,7 +8455,7 @@
 </item>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>494</id>
+	<id>480</id>
 	<name>right_border_container</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -8419,7 +8467,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>492</id>
+	<id>478</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -8432,7 +8480,7 @@
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_SPIN_BUTTON"><Internal_properties>
-	<id>493</id>
+	<id>479</id>
 	<name>right_border_spin_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -8449,7 +8497,7 @@
 </item>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>498</id>
+	<id>484</id>
 	<name>apply_bottom_border_row_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -8466,7 +8514,7 @@
 	</Events>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>500</id>
+	<id>486</id>
 	<name>apply_bottom_border_column_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -8483,7 +8531,7 @@
 	</Events>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>502</id>
+	<id>488</id>
 	<name>apply_right_border_row_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -8500,7 +8548,7 @@
 	</Events>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>504</id>
+	<id>490</id>
 	<name>apply_right_border_column_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -8517,7 +8565,7 @@
 	</Events>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>506</id>
+	<id>492</id>
 	<name>apply_top_border_row_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -8534,7 +8582,7 @@
 	</Events>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>508</id>
+	<id>494</id>
 	<name>apply_top_border_column_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -8551,7 +8599,7 @@
 	</Events>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>515</id>
+	<id>501</id>
 	<name>vertical_alignment_container</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -8563,7 +8611,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>510</id>
+	<id>496</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -8577,7 +8625,7 @@
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_COMBO_BOX"><Internal_properties>
-	<id>511</id>
+	<id>497</id>
 	<name>vertical_alignment_combo</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -8590,7 +8638,7 @@
 <EV_WIDGET></EV_WIDGET>
 <EV_TEXT_COMPONENT></EV_TEXT_COMPONENT>
 <item type="EV_LIST_ITEM"><Internal_properties>
-	<id>512</id>
+	<id>498</id>
 	<name>top_alignment_item</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -8603,7 +8651,7 @@
 	</Events>
 </item>
 <item type="EV_LIST_ITEM"><Internal_properties>
-	<id>513</id>
+	<id>499</id>
 	<name>vertically_center_item</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -8616,7 +8664,7 @@
 	</Events>
 </item>
 <item type="EV_LIST_ITEM"><Internal_properties>
-	<id>514</id>
+	<id>500</id>
 	<name>bottom_alignment_item</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -8631,7 +8679,7 @@
 </item>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>522</id>
+	<id>508</id>
 	<name>apply_vertical_alignment_column_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -8648,7 +8696,7 @@
 	</Events>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>524</id>
+	<id>510</id>
 	<name>apply_vertical_alignment_row_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -8665,7 +8713,7 @@
 	</Events>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>528</id>
+	<id>514</id>
 	<name>font_container</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -8677,7 +8725,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>526</id>
+	<id>512</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -8690,7 +8738,7 @@
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_COMBO_BOX"><Internal_properties>
-	<id>527</id>
+	<id>513</id>
 	<name>font_combo</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -8705,7 +8753,7 @@
 	</Events>
 </item>
 <item type="EV_CELL"><Internal_properties>
-	<id>538</id>
+	<id>524</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -8715,7 +8763,7 @@
 <EV_CONTAINER></EV_CONTAINER>
 </item>
 <item type="EV_COMBO_BOX"><Internal_properties>
-	<id>536</id>
+	<id>522</id>
 	<name>font_size_combo</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -8730,7 +8778,7 @@
 <Events><Event>select_actions EV_LIST_ITEM_LIST_ACTION_SEQUENCES font_size_combo_selected</Event>
 	</Events>
 <item type="EV_LIST_ITEM"><Internal_properties>
-	<id>560</id>
+	<id>546</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_DESELECTABLE></EV_DESELECTABLE>
@@ -8739,7 +8787,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_LIST_ITEM"><Internal_properties>
-	<id>540</id>
+	<id>526</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_DESELECTABLE></EV_DESELECTABLE>
@@ -8749,7 +8797,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_LIST_ITEM"><Internal_properties>
-	<id>542</id>
+	<id>528</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_DESELECTABLE></EV_DESELECTABLE>
@@ -8759,7 +8807,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_LIST_ITEM"><Internal_properties>
-	<id>544</id>
+	<id>530</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_DESELECTABLE></EV_DESELECTABLE>
@@ -8769,7 +8817,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_LIST_ITEM"><Internal_properties>
-	<id>546</id>
+	<id>532</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_DESELECTABLE></EV_DESELECTABLE>
@@ -8779,7 +8827,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_LIST_ITEM"><Internal_properties>
-	<id>548</id>
+	<id>534</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_DESELECTABLE></EV_DESELECTABLE>
@@ -8789,7 +8837,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_LIST_ITEM"><Internal_properties>
-	<id>550</id>
+	<id>536</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_DESELECTABLE></EV_DESELECTABLE>
@@ -8799,7 +8847,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_LIST_ITEM"><Internal_properties>
-	<id>552</id>
+	<id>538</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_DESELECTABLE></EV_DESELECTABLE>
@@ -8809,7 +8857,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_LIST_ITEM"><Internal_properties>
-	<id>554</id>
+	<id>540</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_DESELECTABLE></EV_DESELECTABLE>
@@ -8819,7 +8867,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_LIST_ITEM"><Internal_properties>
-	<id>556</id>
+	<id>542</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_DESELECTABLE></EV_DESELECTABLE>
@@ -8829,7 +8877,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_LIST_ITEM"><Internal_properties>
-	<id>558</id>
+	<id>544</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_DESELECTABLE></EV_DESELECTABLE>
@@ -8841,7 +8889,7 @@
 </item>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>532</id>
+	<id>518</id>
 	<name>apply_font_row_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -8858,7 +8906,7 @@
 	</Events>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>534</id>
+	<id>520</id>
 	<name>apply_font_column_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -8875,7 +8923,7 @@
 	</Events>
 </item>
 <item type="EV_CHECK_BUTTON"><Internal_properties>
-	<id>564</id>
+	<id>550</id>
 	<name>is_full_select_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -8893,7 +8941,7 @@
 	</Events>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>566</id>
+	<id>552</id>
 	<name>apply_full_select_row_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -8910,7 +8958,7 @@
 	</Events>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>568</id>
+	<id>554</id>
 	<name>apply_full_select_column_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -8927,7 +8975,7 @@
 	</Events>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>570</id>
+	<id>556</id>
 	<name>apply_text_row_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -8944,7 +8992,7 @@
 	</Events>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>572</id>
+	<id>558</id>
 	<name>apply_text_column_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -8964,7 +9012,7 @@
 </item>
 </item>
 <item type="EV_FRAME"><Internal_properties>
-	<id>297</id>
+	<id>288</id>
 	<name>item_operations_frame</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -8980,7 +9028,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>298</id>
+	<id>289</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -8995,7 +9043,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>201</id>
+	<id>192</id>
 	<name>remove_item_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -9062,7 +9110,7 @@
 </item>
 </item>
 <item type="EV_TABLE"><Internal_properties>
-	<id>644</id>
+	<id>619</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -9070,19 +9118,19 @@
 <EV_WIDGET></EV_WIDGET>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_TABLE><Columns>2</Columns>
-	<Rows>3</Rows>
+	<Rows>5</Rows>
 	<Column_spacing><Constant>box_padding</Constant>
 		</Column_spacing>
 	<Row_spacing><Constant>box_padding</Constant>
 		</Row_spacing>
-	<Column_positions>000100020001000200010002</Column_positions>
-	<Row_positions>000100010002000200030003</Row_positions>
-	<Column_spans>000100010001000100010001</Column_spans>
-	<Row_spans>000100010001000100010001</Row_spans>
+	<Column_positions>0001000200010002000100020001000200010002</Column_positions>
+	<Row_positions>0001000100020002000300030004000400050005</Row_positions>
+	<Column_spans>0001000100010001000100010001000100010001</Column_spans>
+	<Row_spans>0001000100010001000100010001000100010001</Row_spans>
 	</EV_TABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>646</id>
+	<id>621</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -9093,7 +9141,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>104</id>
+	<id>101</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -9106,7 +9154,7 @@
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_SPIN_BUTTON"><Internal_properties>
-	<id>100</id>
+	<id>99</id>
 	<name>virtual_x_position</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -9138,7 +9186,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>106</id>
+	<id>102</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -9151,7 +9199,7 @@
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_SPIN_BUTTON"><Internal_properties>
-	<id>213</id>
+	<id>204</id>
 	<name>virtual_y_position</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -9170,7 +9218,7 @@
 </item>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>653</id>
+	<id>628</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -9181,7 +9229,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>661</id>
+	<id>636</id>
 	<name>first_visible_column_label</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -9195,7 +9243,7 @@
 </item>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>655</id>
+	<id>630</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -9206,7 +9254,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>663</id>
+	<id>638</id>
 	<name>first_visible_row_label</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -9220,7 +9268,7 @@
 </item>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>657</id>
+	<id>632</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -9231,7 +9279,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>665</id>
+	<id>640</id>
 	<name>last_visible_column_label</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -9245,7 +9293,7 @@
 </item>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>659</id>
+	<id>634</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -9256,7 +9304,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>667</id>
+	<id>642</id>
 	<name>last_visible_row_label</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -9268,6 +9316,58 @@
 <EV_WIDGET></EV_WIDGET>
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 </item>
+</item>
+<item type="EV_LABEL"><Internal_properties>
+	<id>674</id>
+	<name>viewable_width</name>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_FONTABLE></EV_FONTABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_TEXTABLE></EV_TEXTABLE>
+<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_WIDGET></EV_WIDGET>
+<EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
+</item>
+<item type="EV_LABEL"><Internal_properties>
+	<id>676</id>
+	<name>viewable_height</name>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_FONTABLE></EV_FONTABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_TEXTABLE></EV_TEXTABLE>
+<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_WIDGET></EV_WIDGET>
+<EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
+</item>
+<item type="EV_LABEL"><Internal_properties>
+	<id>678</id>
+	<name>viewable_x_offset</name>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_FONTABLE></EV_FONTABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_TEXTABLE></EV_TEXTABLE>
+<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_WIDGET></EV_WIDGET>
+<EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
+</item>
+<item type="EV_LABEL"><Internal_properties>
+	<id>680</id>
+	<name>viewable_y_offset</name>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_FONTABLE></EV_FONTABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_TEXTABLE></EV_TEXTABLE>
+<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_WIDGET></EV_WIDGET>
+<EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 </item>
 </item>
 </item>
@@ -9288,7 +9388,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>299</id>
+	<id>290</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -9299,10 +9399,10 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>171</id>
+	<id>164</id>
 	<name>row_finder</name>
 	<Expanded>1</Expanded>
-	<reference_id>147</reference_id>
+	<reference_id>140</reference_id>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
@@ -9312,7 +9412,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>172</id>
+	<id>165</id>
 	<name>prompt_label</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -9327,7 +9427,7 @@
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_CELL"><Internal_properties>
-	<id>173</id>
+	<id>166</id>
 	<name>pixmap_parent</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -9339,7 +9439,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_PIXMAP"><Internal_properties>
-	<id>174</id>
+	<id>167</id>
 	<name>cursor_pixmap</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -9354,7 +9454,7 @@
 </item>
 </item>
 <item type="EV_FRAME"><Internal_properties>
-	<id>179</id>
+	<id>172</id>
 	<name>row_properties_frame</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -9370,7 +9470,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>181</id>
+	<id>174</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -9385,7 +9485,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>235</id>
+	<id>226</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -9396,7 +9496,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_TABLE"><Internal_properties>
-	<id>183</id>
+	<id>176</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -9416,7 +9516,7 @@
 	</EV_TABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>184</id>
+	<id>177</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -9429,7 +9529,7 @@
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_SPIN_BUTTON"><Internal_properties>
-	<id>185</id>
+	<id>178</id>
 	<name>row_index_entry</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -9449,7 +9549,7 @@
 	</Events>
 </item>
 <item type="EV_LABEL"><Internal_properties>
-	<id>186</id>
+	<id>179</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -9462,7 +9562,7 @@
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_SPIN_BUTTON"><Internal_properties>
-	<id>187</id>
+	<id>180</id>
 	<name>row_height_entry</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -9484,7 +9584,7 @@
 </item>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>582</id>
+	<id>568</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -9495,7 +9595,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>580</id>
+	<id>566</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -9508,7 +9608,7 @@
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_COMBO_BOX"><Internal_properties>
-	<id>581</id>
+	<id>567</id>
 	<name>foreground_color_combo</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -9524,7 +9624,7 @@
 </item>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>588</id>
+	<id>574</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -9535,7 +9635,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>586</id>
+	<id>572</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -9548,7 +9648,7 @@
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_COMBO_BOX"><Internal_properties>
-	<id>587</id>
+	<id>573</id>
 	<name>background_color_combo</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -9564,7 +9664,7 @@
 </item>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>188</id>
+	<id>181</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -9575,7 +9675,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_CHECK_BUTTON"><Internal_properties>
-	<id>189</id>
+	<id>182</id>
 	<name>row_selected_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -9596,7 +9696,7 @@
 </item>
 </item>
 <item type="EV_FRAME"><Internal_properties>
-	<id>274</id>
+	<id>265</id>
 	<name>row_operations_frame</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -9612,7 +9712,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>264</id>
+	<id>255</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -9627,7 +9727,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>265</id>
+	<id>256</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -9640,7 +9740,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>266</id>
+	<id>257</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -9651,7 +9751,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_CELL"><Internal_properties>
-	<id>267</id>
+	<id>258</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -9661,7 +9761,7 @@
 <EV_CONTAINER></EV_CONTAINER>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>268</id>
+	<id>259</id>
 	<name>swap_row_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -9678,7 +9778,7 @@
 	</Events>
 </item>
 <item type="EV_CELL"><Internal_properties>
-	<id>269</id>
+	<id>260</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -9689,10 +9789,10 @@
 </item>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>270</id>
+	<id>261</id>
 	<name>move_to_row_finder</name>
 	<Expanded>1</Expanded>
-	<reference_id>147</reference_id>
+	<reference_id>140</reference_id>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
@@ -9702,7 +9802,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>271</id>
+	<id>262</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -9716,7 +9816,7 @@
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_CELL"><Internal_properties>
-	<id>272</id>
+	<id>263</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -9727,7 +9827,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_PIXMAP"><Internal_properties>
-	<id>273</id>
+	<id>264</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -9741,7 +9841,7 @@
 </item>
 </item>
 <item type="EV_TABLE"><Internal_properties>
-	<id>242</id>
+	<id>233</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -9761,7 +9861,7 @@
 	</EV_TABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>203</id>
+	<id>194</id>
 	<name>remove_row_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -9778,7 +9878,7 @@
 	</Events>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>207</id>
+	<id>198</id>
 	<name>unparent_row_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -9795,7 +9895,7 @@
 	</Events>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>208</id>
+	<id>199</id>
 	<name>clear_row_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>

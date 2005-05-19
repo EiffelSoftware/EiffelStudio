@@ -151,7 +151,7 @@ feature -- Commands
 					create status_task_text.make_empty
 				end
 				
-				l_stat_text := clone (status_task_text)
+				l_stat_text := status_task_text.twin
 				l_new_lines := (status_task_text.count / 65).floor
 				if l_new_lines > 0 then
 					from
@@ -167,7 +167,7 @@ feature -- Commands
 				
 						-- Heading Text
 				if heading_text /= Void then
-					l_heading_text := clone (heading_text)	
+					l_heading_text := heading_text.twin
 					progress_dialog.heading_label.set_text (l_heading_text)
 				end				
 				redraw

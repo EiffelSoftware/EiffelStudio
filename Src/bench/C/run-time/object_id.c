@@ -15,6 +15,7 @@ doc:<file name="object_id.c" header="eif_object_id.h" version="$Id$" summary="Ob
 #include "rt_object_id.h"
 #include "rt_assert.h"
 #include "rt_globals.h"
+#include "rt_malloc.h"
 
 
 /*#define DEBUG 2 */		/* Debug level */
@@ -161,7 +162,7 @@ rt_public void eif_extend_object_id_stack (EIF_INTEGER nb_chunks)
 
 	EIF_OBJECT_ID_LOCK;
 	if (st->st_top == (char **) 0) {
-		top = st_alloc(st, STACK_CHUNK);	/* Create stack */
+		top = st_alloc(st, eif_stack_chunk);	/* Create stack */
 		if (top == (char **) 0) {
 			EIF_OBJECT_ID_UNLOCK;
 			eraise ("Couldn't allocate object id stack", EN_MEM);
@@ -174,7 +175,7 @@ rt_public void eif_extend_object_id_stack (EIF_INTEGER nb_chunks)
 	end = st->st_end;		/*save previous st_end of stack */ 
 	SIGBLOCK;		/* Critical section */
 	while (--nb_chunks) {
-		if (-1 == st_extend(st, STACK_CHUNK)) {
+		if (-1 == st_extend(st, eif_stack_chunk)) {
 			EIF_OBJECT_ID_UNLOCK;
 			eraise ("Couldn't allocate object id stack", EN_MEM);
 		}
@@ -188,7 +189,7 @@ rt_public void eif_extend_object_id_stack (EIF_INTEGER nb_chunks)
 	EIF_OBJECT_ID_UNLOCK;
 }
 
-#define STACK_SIZE (STACK_CHUNK-(sizeof(struct stchunk)/sizeof(char*)))
+#define STACK_SIZE (eif_stack_chunk - (sizeof(struct stchunk)/sizeof(char*)))
 
 rt_private EIF_INTEGER private_object_id(EIF_REFERENCE object, struct stack *st, EIF_INTEGER *max_value_ptr)
 {

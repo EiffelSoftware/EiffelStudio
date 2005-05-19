@@ -969,7 +969,7 @@ void prof_stack_init(void)
 			enomem(MTC_NOARG);	/* Bad Luck! */
 
 			/* Allocate arena and chunk for memory problem */
-		if(!st_alloc(prof_stack, STACK_CHUNK))
+		if(!st_alloc(prof_stack, eif_stack_chunk))
 			enomem(MTC_NOARG);	/* Bad Luck! */
 	}
 }

@@ -194,13 +194,15 @@ feature {NONE} -- Initialization
 	init_size_and_position is
 			-- Initialize window size.
 		local
-			default_width, default_height: INTEGER
 			screen: EV_SCREEN
 		do
 			create screen
-			default_width := preferences.development_window_data.width.min (screen.width)
-			default_height := preferences.development_window_data.height.min (screen.height)
-			window.set_size (default_width, default_height)
+			window.set_size (
+				preferences.development_window_data.width.min (screen.width),
+				preferences.development_window_data.height.min (screen.height))
+			window.set_position (
+				preferences.development_window_data.x_position,
+				preferences.development_window_data.y_position)
 		end
 
 	window_displayed is
@@ -2159,10 +2161,11 @@ feature -- Window management
 				preferences.development_window_data.save_left_panel_width (panel.split_position)
 					-- Save width & height.
 				preferences.development_window_data.save_size (window.width, window.height, window.is_maximized)
+				preferences.development_window_data.save_position (window.x_position, window.y_position)
 			end
 			preferences.development_window_data.save_search_tool_options (search_tool)
 				-- Commit saves
-	--			save_resources
+			preferences.preferences.save_resources
 		end
 
 feature -- Tools & Controls
@@ -2334,13 +2337,14 @@ feature {EB_WINDOW_MANAGER} -- Window management / Implementation
 				preferences.development_window_data.save_left_panel_width (panel.split_position)
 					-- Save width & height.
 				preferences.development_window_data.save_size (window.width, window.height, window.is_maximized)
+				preferences.development_window_data.save_position (window.x_position, window.y_position)
 				left_panel.wipe_out
 				right_panel.wipe_out
 				preferences.development_window_data.save_search_tool_options (search_tool)
 				hide
 
 					-- Commit saves
-	--				save_resources
+				preferences.preferences.save_resources
 
 				toolbars_area.wipe_out
 				address_manager.recycle

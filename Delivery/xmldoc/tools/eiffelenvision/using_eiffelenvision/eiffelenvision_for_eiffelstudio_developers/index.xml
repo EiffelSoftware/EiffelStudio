@@ -1,0 +1,84 @@
+<document output="envision" title="EiffelEnvision for EiffelStudio Developers">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_title>EiffelEnvision for EiffelStudio Developers</envision_title>
+				<envision_pseudo_name>00</envision_pseudo_name>
+			</toc>
+			<xml>
+				<keyword>
+					<index>K</index>
+					<term>EiffelEnvision for EiffelStudio Developers</term>
+				</keyword>
+				<keyword>
+					<index>K</index>
+					<term>EiffelEnvision, EiffelStudio developers</term>
+				</keyword>
+				<keyword>
+					<index>K</index>
+					<term>EiffelStudio, Migrating</term>
+				</keyword>
+			</xml>
+		</help>
+	</meta_data>
+	<paragraph>
+		<paragraph>
+			Developers coming from a background in <bold>Eiffel</bold> and/or <bold>EiffelStudio</bold> will find the names and concepts used throughout EiffelEnvision intutive. 
+			However, <bold>Visual Studio .NET</bold> is a very different environment from EiffelStudio. This section of the documentation is intended to give EiffelStudio 
+			developers a brief and quick guide to getting started in EiffelEnvision.
+		</paragraph>
+		
+		<tip>
+			<bold>Recommended</bold>: It is recommended that EiffelStudio developers review the <link><url>url</url><label>EiffelEnvision User Interface</label></link> section of this documentation 
+			to become acustom to how Visual Studio .NET and EiffelEnvision presents its UI and the the way it is used.
+		</tip>
+		
+		<anchor>in_this_section</anchor>
+		<heading>
+			<size>2</size>
+			<content>In This Section</content>
+		</heading>
+		<paragraph>
+			<link>
+				<url>eiffelstudio_developers.xml</url>
+				<label>EiffelEnvision for EiffelStudio Developers</label>
+			</link>
+			<line_break/>
+			A brief introduction of facets of EiffelEnvision for the EiffelStudio developers. It outlines the differences in the User Interface and concepts used throughout.
+		</paragraph>
+		<paragraph>
+			<link>
+				<url>conversion_tool/index.xml</url>
+				<label>EiffelStudio to EiffelEnvision Project Conversion Tool</label>
+			</link>
+			<line_break/>
+			The project conversion tool installed with EiffelEnvision to import/convert an classic Eiffel or Eiffel for .NET project into EiffelEnvision and Visual Studio .NET.
+		</paragraph>
+
+		<anchor>see_also</anchor>
+		<heading>
+			<size>2</size>
+			<content>Related Section</content>
+		</heading>
+		<seealso>
+			<bold>See also</bold>:
+			<line_break/>
+			<link>
+				<url>overview.xml</url>
+				<label>Introducing EiffelEnvision</label>
+			</link>
+			<line_break/>
+			<help_link>
+				<keywords>vxconATourOfVisualStudio</keywords>
+				<tab_index>0</tab_index>
+				Introduction to Visual Studio .NET
+			</help_link>
+			<line_break/>
+			<help_link>
+				<keywords>vxconVisualStudioSolutionsProjects</keywords>
+				<tab_index>0</tab_index>
+				Introduction to Solutions, Projects, and Items
+			</help_link>
+		</seealso>
+	</paragraph>
+</document>

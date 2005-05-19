@@ -50,7 +50,7 @@ doc:<file name="local.c" header="eif_local.h" version="$Id$" summary="Handling o
 #define dprintf(n)		if (DEBUG & (n)) printf
 
 rt_public void epop(struct stack *stk, rt_uint_ptr nb_items);					/* Pops values off a stack */
-rt_private int extend(struct stack *stk);				/* Stack extension w/ urgent chunks */
+rt_private int extend(struct stack *stk, rt_uint_ptr nb_items);				/* Stack extension w/ urgent chunks */
 
 rt_public void epop(struct stack *stk, rt_uint_ptr nb_items)
                             		/* The stack */
@@ -151,128 +151,97 @@ rt_public char **eget(register int num)
 	static EIF_REFERENCE null_object = NULL;
 	register int i;
 
-#ifdef DEBUG
-	dprintf(1)("eget: top = 0x%lx, current = 0x%lx, end = 0x%lx, num = %d\n",
-			top, loc_set.st_cur, loc_set.st_end, num);
-#endif
-
-	/* If the stack does not already exist, create one and return the pointer
-	 * to the base location of the stack, i.e. the arena.
-	 * There is no need to protect agains signals here, since the modification
-	 * in the stack structure is rather atomic. And if an exception is to be
-	 * raised, we do not have to fear any inconsistency.
-	 */
-	if (top == (char **) 0) {					/* No stack yet? */
-		top = st_alloc(&loc_set, eif_stack_chunk);	/* Create one */
-		if (top == (char **) 0)					/* Cannot allocate stack */
-			enomem(MTC_NOARG);							/* Critical exception */
-
-		if (num > (loc_set.st_end - top))	/* Not enough room in chunk */
-			eif_panic(MTC "out of locals");			/* Panic, that's all we can do */
-
-		loc_set.st_top += num;				/* Reserve room for variables */
-
-#ifdef DEBUG
-		dprintf(2)("eget: %d slot%s from 0x%lx to 0x%lx (excluded)\n",
-				num, num == 1 ? "" : "s", top, loc_set.st_top);
-#endif
-
-		return top;							/* This is the pointer we want */
-	}
-
-#ifdef DEBUG
-	dprintf(4)("eget: chunk ending at 0x%lx is followed by current = 0x%lx\n",
-		loc_set.st_end, loc_set.st_cur->sk_next);
-#endif
-
-	/* Fill in the end of the current chunk with zeros and advance to the the
-	 * next chunk if there is one. Otherwise, extend the stack. Anyway, make
-	 * sure there is enough room (in case we had to get an urgent chunk, this
-	 * is likely). In that case however, we do not eif_panic, we raise an "Out of
-	 * memory" exception.
-	 */
-
-	SIGBLOCK;			/* Protect against signals */
-
-		/* Since `loc_set' is a double indirection stack, we need to fill the
-		 * remaining elements of current chunk with valid values (and not with zeros
-		 * as we were doing it before (look at version 2.13 and older). We decided to
-		 * create `null_object' which is a pointer to a NULL value that will cause
-		 * no harm to the run-time and to duplicate `null_object' until the end
-		 * of the current chunk.
+		/* If the stack does not already exist, create one and return the pointer
+		 * to the base location of the stack, i.e. the arena.
+		 * There is no need to protect agains signals here, since the modification
+		 * in the stack structure is rather atomic. And if an exception is to be
+		 * raised, we do not have to fear any inconsistency.
 		 */
-	for (i = 0; i < (loc_set.st_end - top) ; i++)
-		*(char **) (top + i) = (char *) (&null_object);
-
-	top = (char **) loc_set.st_cur->sk_next;	/* Pointer to next chunk */
-
-	if (top == (char **) 0) {					/* No next chunk */
-		if (-1 == extend(&loc_set))				/* Extension failed */
-			enomem(MTC_NOARG);							/* "Out of memory" exception */
-		top = loc_set.st_top;					/* New top of chunk */
-	} else {
-		loc_set.st_cur = (struct stchunk *) top;	/* Current = next chunk */
-		loc_set.st_end = loc_set.st_cur->sk_end;	/* Update end of chunk */
-		top = loc_set.st_cur->sk_arena;				/* Recompute base arena */
-		loc_set.st_top = top;						/* Chunk is empty */
-	}
-
-#ifdef DEBUG
-	dprintf(4)("eget: top = 0x%lx, current = 0x%lx, end = 0x%lx, slots = %d\n",
-			top, loc_set.st_cur, loc_set.st_end, loc_set.st_end - top);
-#endif
-
-	if (num > (loc_set.st_end - top)) {	/* Not enough room in chunk */
-		if (num > STACK_CHUNK)			/* Too many locals requested */
-			eif_panic(MTC "out of locals");		/* Panic, that's all we can do */
-		else {							/* The chunk is too small */
-			eback(saved_top);			/* Restore original stack context */
-			enomem(MTC_NOARG);					/* This is an exception */
+	if (top == NULL) {							/* No stack yet? */
+			/* Create one */
+		top = st_alloc(&loc_set, (num > eif_stack_chunk ? num : eif_stack_chunk));
+		if (top == NULL) {
+				/* Cannot allocate stack */
+			enomem(MTC_NOARG);						/* Critical exception */
+		} else {
+			loc_set.st_top += num;				/* Reserve room for variables */
 		}
+		return top;							/* This is the pointer we want */
+	} else {
+		SIGBLOCK;			/* Protect against signals */
+
+			/* Fill in the end of the current chunk with valid data (see below) and advance
+			 * to the next chunk if there is one. Otherwise, extend the stack. Anyway, make
+			 * sure there is enough room (in case we had to get an urgent chunk, this
+			 * is likely). In that case however, we do not eif_panic, we raise an "Out of
+			 * memory" exception.
+			 */
+
+			/* Since `loc_set' is a double indirection stack, we need to fill the
+			 * remaining elements of current chunk with valid values (and not with zeros
+			 * as we were doing it before (look at version 2.13 and older). We decided to
+			 * create `null_object' which is a pointer to a NULL value that will cause
+			 * no harm to the run-time and to duplicate `null_object' until the end
+			 * of the current chunk.
+			 */
+		for (i = 0; i < (loc_set.st_end - top) ; i++) {
+			*(char **) (top + i) = (char *) (&null_object);
+		}
+
+		top = (char **) loc_set.st_cur->sk_next;	/* Pointer to next chunk */
+
+		if (top == NULL) {					/* No next chunk */
+			if (-1 == extend(&loc_set, (num > eif_stack_chunk ? num : eif_stack_chunk))) {
+					/* Extension failed */
+				enomem(MTC_NOARG);						/* "Out of memory" exception */
+			} else {
+				top = loc_set.st_top;					/* New top of chunk */
+			}
+			CHECK("Enough room", num <= (loc_set.st_end - top));
+			loc_set.st_top += num;						/* Reserve room for variables */
+		} else {
+			loc_set.st_cur = (struct stchunk *) top;	/* Current = next chunk */
+			loc_set.st_end = loc_set.st_cur->sk_end;	/* Update end of chunk */
+			top = loc_set.st_cur->sk_arena;				/* Recompute base arena */
+			loc_set.st_top = top;						/* Chunk is empty */
+
+			if (num > (loc_set.st_end - top)) {	/* Not enough room in chunk */
+					/* Perform a recursive call until we either find a block which
+					 * has at least `num' entries, or until we do not find anymore blocks
+					 * in which case we will allocate a new one.
+					 * No need to clear this block, it will be cleared in the call to `eget'.
+					 */
+				top = eget (num);
+			} else {
+				loc_set.st_top += num;				/* Reserve room for variables */
+			}
+		}
+
+		SIGRESUME;		/* Resume signal handling */
+
+		return top;		/* This is the base area which may be used for locals */
 	}
-
-	loc_set.st_top += num;				/* Reserve room for variables */
-
-#ifdef DEBUG
-	dprintf(2)("eget: %d slot%s from 0x%lx to 0x%lx (excluded)\n",
-			num, num == 1 ? "" : "s", top, loc_set.st_top);
-#endif
-
-	SIGRESUME;		/* Resume signal handling */
-
-	return top;		/* This is the base area which may be used for locals */
 }
 
 rt_public void eback(register char **top)
 {
-	/* Restore the stack structure pointer to the previous chunk, setting the
-	 * top of the stack to 'top'. Make sure there is no inconsistency in the
-	 * stack by checking the range of the pointers.
+	/* Restore the stack structure pointer to the previous chunk where `top' belongs,
+	 * setting the top of the stack to 'top'.
 	 */
 
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
-#ifdef DEBUG
-	dprintf(1)("eback: top = 0x%lx, arena = 0x%lx, end = 0x%lx\n",
-			top, loc_set.st_cur->sk_arena, loc_set.st_end);
-#endif
+
+	REQUIRE("Has current chunk", loc_set.st_cur);
 
 	SIGBLOCK;		/* Entering critical section */
 
 	loc_set.st_top = top;						/* Old top */
-	loc_set.st_cur = loc_set.st_cur->sk_prev;	/* Previous chunk */
-
-#ifdef MAY_PANIC
-	if (loc_set.st_cur == (struct stchunk *) 0)	/* No previous chunk ? */
-		eif_panic("local stack underflow");			/* That's a critical event */
-#endif
-
+	while ((top < loc_set.st_cur->sk_arena || top > loc_set.st_cur->sk_end)) {
+		CHECK("Not going under", loc_set.st_cur->sk_prev);
+		loc_set.st_cur = loc_set.st_cur->sk_prev;	/* Previous chunk */
+	}
 	loc_set.st_end = loc_set.st_cur->sk_end;	/* Update the end of chunk */
-
-#ifdef MAY_PANIC
-	if (top < loc_set.st_cur->sk_arena || top > loc_set.st_end)
-		eif_panic("local stack inconsistency");
-#endif
 
 	SIGRESUME;		/* Leaving critical section */
 
@@ -281,7 +250,7 @@ rt_public void eback(register char **top)
 
 #endif
 
-rt_private int extend(struct stack *stk)
+rt_private int extend(struct stack *stk, rt_uint_ptr nb_items)
                             			/* The stack to be extended */
 {
 	/* The stack 'stk' is extended and the 'stk' structure updated.
@@ -290,15 +259,16 @@ rt_private int extend(struct stack *stk)
 	 * made to get one from the urgent storage.
 	 */
 	RT_GET_CONTEXT
-	rt_uint_ptr size = STACK_CHUNK;	/* Size of new chunk to be added */
 	char **arena;				/* Address for the arena */
 	struct stchunk *chunk;	/* Address of the chunk */
+	rt_uint_ptr l_size = nb_items * REFSIZ + sizeof(struct stchunk);
 
-	chunk = (struct stchunk *) eif_rt_xmalloc(size * sizeof(char *), C_T, GC_OFF);
+	chunk = (struct stchunk *) eif_rt_xmalloc(l_size, C_T, GC_OFF);
 	if (chunk == (struct stchunk *) 0) {
 		chunk = (struct stchunk *) uchunk();	/* Attempt with urgent mem */
-		if (chunk != (struct stchunk *) 0)
-			size = HEADER(chunk)->ov_size & B_SIZE;	/* Size of urgent chunks */
+		if (chunk != (struct stchunk *) 0) {
+			l_size = HEADER(chunk)->ov_size & B_SIZE;	/* Size of urgent chunks */
+		}
 	}
 	if (chunk == (struct stchunk *) 0)
 		return -1;		/* Malloc failed for some reason */
@@ -310,7 +280,7 @@ rt_private int extend(struct stack *stk)
 	stk->st_tl->sk_next = chunk;			/* Maintain link w/previous */
 	stk->st_tl = chunk;						/* New tail */
 	chunk->sk_arena = arena;				/* Where items are stored */
-	chunk->sk_end = (char **) chunk + size;	/* First item beyond chunk */
+	chunk->sk_end = (char **) ((char *) chunk + l_size);	/* First item beyond chunk */
 	stk->st_top = arena;					/* New top */
 	stk->st_end = chunk->sk_end;			/* End of current chunk */
 	stk->st_cur = chunk;					/* New current chunk */
@@ -381,9 +351,9 @@ rt_shared void initstk(void)
 #endif
 
 #ifdef ISE_GC
-	top = st_alloc(&loc_set, STACK_CHUNK);
+	top = st_alloc(&loc_set, eif_stack_chunk);
 	if (top != (char **) 0)
-		top = st_alloc(&hec_stack, STACK_CHUNK);
+		top = st_alloc(&hec_stack, eif_stack_chunk);
 
 	if (top == (char **) 0)
 		eif_panic(MTC "can't create runtime stacks");

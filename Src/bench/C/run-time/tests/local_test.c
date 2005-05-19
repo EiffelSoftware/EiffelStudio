@@ -56,7 +56,7 @@ rt_public void evpush(va_alist)
 	 */
 
 	if (top == (char **) 0) {				/* No stack yet? */
-		top = st_alloc(stk, STACK_CHUNK);	/* Create one */
+		top = st_alloc(stk, eif_stack_chunk);	/* Create one */
 		if (top == (char **) 0)				/* Cannot allocate stack */
 			enomem(MTC_NOARG);						/* Critical exception */
 	}

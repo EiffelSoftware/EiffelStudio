@@ -2058,9 +2058,17 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 				else
 					i := row_offsets @ (internal_index)
 					rows.go_i_th (internal_index)
-					row_indexes_to_visible_indexes.go_i_th (internal_index)
-					visible_indexes_to_row_indexes.go_i_th (internal_index)
-					visible_count := row_indexes_to_visible_indexes.i_th (internal_index)
+					if internal_index > 1 then					
+						row_indexes_to_visible_indexes.go_i_th (internal_index)
+						visible_indexes_to_row_indexes.go_i_th (internal_index)
+						visible_count := row_indexes_to_visible_indexes.i_th (internal_index)
+					else
+							-- In this case, the feature has already been called when there are
+							-- no rows in the grid. So, we reset these attributes to the start.
+						row_indexes_to_visible_indexes.start
+						visible_indexes_to_row_indexes.start
+						visible_count := 0
+					end
 				end
 				if row_offsets.count < rows.count + 1 then
 					row_offsets.resize (rows.count + 1)
@@ -3181,6 +3189,7 @@ feature {NONE} -- Event handling
 		local
 			pointed_item: EV_GRID_ITEM_I
 			pointed_item_interface: EV_GRID_ITEM
+--			label_item: EV_GRID_LABEL_ITEM_I
 		do
 			if pointer_motion_actions_internal /= Void and then not pointer_motion_actions_internal.is_empty then
 				pointer_motion_actions_internal.call ([client_x_to_x (a_x), client_y_to_y (a_y) , a_x_tilt, a_y_tilt, a_pressure, client_x_to_x (a_screen_x), client_y_to_y (a_screen_y)])
@@ -3188,6 +3197,13 @@ feature {NONE} -- Event handling
 			if a_x >= 0 and then a_y >= 0 then
 				pointed_item := drawer.item_at_position_strict (a_x, a_y)
 			end
+--			label_item ?= pointed_item
+--			if label_item /= Void and then label_item.tooltip /= Void and then not label_item.tooltip.is_equal (label_item.interface.text) then
+--				label_item.interface.set_tooltip (label_item.interface.text)
+--				drawable.set_tooltip (label_item.interface.text)
+--			else
+--				drawable.remove_tooltip
+--			end
 			if pointer_motion_item_actions_internal /= Void and then not pointer_motion_item_actions_internal.is_empty then
 				if pointed_item /= Void then
 					pointed_item_interface := pointed_item.interface

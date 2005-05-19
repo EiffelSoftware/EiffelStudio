@@ -7,7 +7,7 @@ OUTPUT_CMD= $output_cmd
 LIBRUN = $(TOP)\run-time
 LIBIDR = $(TOP)\idrs
 DPFLAGS = -I$(TOP) -I$(LIBRUN) -I$(LIBIDR) -I$(LIBRUN)\include -I.
-CFLAGS = $(DPFLAGS) -DWORKBENCH
+CFLAGS = $(DPFLAGS) -DWORKBENCH -DEIF_IPC
 JCFLAGS = $(CFLAGS) $ccflags $optimize
 JMTCFLAGS = $(CFLAGS) $mtccflags $optimize
 

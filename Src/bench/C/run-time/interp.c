@@ -57,10 +57,6 @@ doc:<file name="interp.c" header="eif_interp.h" version="$Id$" summary="Byte cod
 
 #define dprintf(n) if (DEBUG & n) printf
 
-#undef STACK_CHUNK
-#undef MIN_FREE
-#define STACK_CHUNK		200			/* Number of items in a stack chunk */
-#define MIN_FREE		40			/* Minimum free location to free chunk */
 #define ASSERT_MAX		10			/* Automatically generated assert tags */
 #define ASSERT_LENGTH	12			/* Length of "Number 9999" */
 #define REGISTER_SIZE	40			/* Reasonable size of register array */
@@ -146,8 +142,8 @@ doc:	</attribute>
 */
 rt_private struct item **iregs = NULL;
 rt_private int iregsz = 0;	/* Size of 'iregs' array (bytes) */
-rt_private int argnum = 0;		/* Number of arguments */
-rt_private int locnum = 0;		/* Number of locals */
+rt_private uint32 argnum = 0;		/* Number of arguments */
+rt_private uint32 locnum = 0;		/* Number of locals */
 
 /*
 doc:	<attribute name="tagval" return_type="unsigned long" export="private">
@@ -3454,19 +3450,29 @@ rt_private void diadic_op(int code)
 	/* Minus operation. */
 	case BC_MINUS: {
 		uint32 sk_type = s->type & SK_HEAD;
-		CHECK ("same_type", (f->type & SK_HEAD) == (s->type & SK_HEAD));
-		switch(sk_type) {
-			case SK_UINT8: f->it_uint8 = f->it_uint8 - s->it_uint8; break;
-			case SK_UINT16: f->it_uint16 = f->it_uint16 - s->it_uint16; break;
-			case SK_UINT32: f->it_uint32 = f->it_uint32 - s->it_uint32; break;
-			case SK_UINT64: f->it_uint64 = f->it_uint64 - s->it_uint64; break;
-			case SK_INT8: f->it_int8 = f->it_int8 - s->it_int8; break;
-			case SK_INT16: f->it_int16 = f->it_int16 - s->it_int16; break;
-			case SK_INT32: f->it_int32 = f->it_int32 - s->it_int32; break;
-			case SK_INT64: f->it_int64 = f->it_int64 - s->it_int64; break;
-			case SK_REAL32: f->it_real32 = f->it_real32 - s->it_real32; break;
-			case SK_REAL64: f->it_real64 = f->it_real64 - s->it_real64; break;
-			default: eif_panic(MTC RT_BOTCHED_MSG);
+			/* Special case for `-' from CHARACTER and WIDE_CHARACTER class. */
+		if ((f->type & SK_HEAD) == SK_CHAR) {
+			CHECK ("right operand is INTEGER_32", sk_type == SK_INT32);
+			f->it_char = f->it_char - s->it_int32;
+		} else if ((f->type & SK_HEAD) == SK_WCHAR) {
+			CHECK ("right operand is INTEGER_32", sk_type == SK_INT32);
+			f->it_wchar = f->it_wchar - s->it_int32;
+		} else {
+				/* Normal case of substraction between numeric types. */
+			CHECK ("same_type", (f->type & SK_HEAD) == (s->type & SK_HEAD));
+			switch(sk_type) {
+				case SK_UINT8: f->it_uint8 = f->it_uint8 - s->it_uint8; break;
+				case SK_UINT16: f->it_uint16 = f->it_uint16 - s->it_uint16; break;
+				case SK_UINT32: f->it_uint32 = f->it_uint32 - s->it_uint32; break;
+				case SK_UINT64: f->it_uint64 = f->it_uint64 - s->it_uint64; break;
+				case SK_INT8: f->it_int8 = f->it_int8 - s->it_int8; break;
+				case SK_INT16: f->it_int16 = f->it_int16 - s->it_int16; break;
+				case SK_INT32: f->it_int32 = f->it_int32 - s->it_int32; break;
+				case SK_INT64: f->it_int64 = f->it_int64 - s->it_int64; break;
+				case SK_REAL32: f->it_real32 = f->it_real32 - s->it_real32; break;
+				case SK_REAL64: f->it_real64 = f->it_real64 - s->it_real64; break;
+				default: eif_panic(MTC RT_BOTCHED_MSG);
+			}
 		}
 		}
 		break;
@@ -3474,19 +3480,29 @@ rt_private void diadic_op(int code)
 	/* Plus operator. */
 	case BC_PLUS: {
 		uint32 sk_type = s->type & SK_HEAD;
-		CHECK ("same_type", (f->type & SK_HEAD) == (s->type & SK_HEAD));
-		switch(sk_type) {
-			case SK_UINT8: f->it_uint8 = f->it_uint8 + s->it_uint8; break;
-			case SK_UINT16: f->it_uint16 = f->it_uint16 + s->it_uint16; break;
-			case SK_UINT32: f->it_uint32 = f->it_uint32 + s->it_uint32; break;
-			case SK_UINT64: f->it_uint64 = f->it_uint64 + s->it_uint64; break;
-			case SK_INT8: f->it_int8 = f->it_int8 + s->it_int8; break;
-			case SK_INT16: f->it_int16 = f->it_int16 + s->it_int16; break;
-			case SK_INT32: f->it_int32 = f->it_int32 + s->it_int32; break;
-			case SK_INT64: f->it_int64 = f->it_int64 + s->it_int64; break;
-			case SK_REAL32: f->it_real32 = f->it_real32 + s->it_real32; break;
-			case SK_REAL64: f->it_real64 = f->it_real64 + s->it_real64; break;
-			default: eif_panic(MTC RT_BOTCHED_MSG);
+			/* Special case for `+' from CHARACTER and WIDE_CHARACTER class. */
+		if ((f->type & SK_HEAD) == SK_CHAR) {
+			CHECK ("right operand is INTEGER_32", sk_type == SK_INT32);
+			f->it_char = f->it_char + s->it_int32;
+		} else if ((f->type & SK_HEAD) == SK_WCHAR) {
+			CHECK ("right operand is INTEGER_32", sk_type == SK_INT32);
+			f->it_wchar = f->it_wchar + s->it_int32;
+		} else {
+				/* Normal case of addition between numeric types. */
+			CHECK ("same_type", (f->type & SK_HEAD) == (s->type & SK_HEAD));
+			switch(sk_type) {
+				case SK_UINT8: f->it_uint8 = f->it_uint8 + s->it_uint8; break;
+				case SK_UINT16: f->it_uint16 = f->it_uint16 + s->it_uint16; break;
+				case SK_UINT32: f->it_uint32 = f->it_uint32 + s->it_uint32; break;
+				case SK_UINT64: f->it_uint64 = f->it_uint64 + s->it_uint64; break;
+				case SK_INT8: f->it_int8 = f->it_int8 + s->it_int8; break;
+				case SK_INT16: f->it_int16 = f->it_int16 + s->it_int16; break;
+				case SK_INT32: f->it_int32 = f->it_int32 + s->it_int32; break;
+				case SK_INT64: f->it_int64 = f->it_int64 + s->it_int64; break;
+				case SK_REAL32: f->it_real32 = f->it_real32 + s->it_real32; break;
+				case SK_REAL64: f->it_real64 = f->it_real64 + s->it_real64; break;
+				default: eif_panic(MTC RT_BOTCHED_MSG);
+			}
 		}
 		}
 		break;
@@ -4640,7 +4656,7 @@ rt_private void init_registers(void)
 
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
-	int n;				/* # of locals/arguments to be fetched */
+	uint32 n;				/* # of locals/arguments to be fetched */
 	struct item **reg;	/* Pointer in register array */
 	struct item *last;	/* Initialization of stack frame */
 	struct opstack op_context;		/* To save stack's context */
@@ -4691,12 +4707,12 @@ rt_private void init_registers(void)
 	last->type = SK_INT32;			/* By default, avoid GC traversal */
 
 	ilocnum = last= iget();			/* Push # of locals */
-	last->type = SK_INT32;			/* Initializes record */
-	last->it_int32 = locnum;			/* Got this from byte code */
+	last->type = SK_UINT32;			/* Initializes record */
+	last->it_uint32 = locnum;			/* Got this from byte code */
 
 	iargnum = last = iget();		/* Push # of arguments */
-	last->type = SK_INT32;			/* Initializes record */
-	last->it_int32 = argnum;			/* Got this from byte code */
+	last->type = SK_UINT32;			/* Initializes record */
+	last->it_uint32 = argnum;			/* Got this from byte code */
 }
 
 rt_private void allocate_registers(void)
@@ -4751,7 +4767,7 @@ rt_shared void sync_registers(struct stochunk *stack_cur, struct item *stack_top
 	 */
 
 	RT_GET_CONTEXT
-	int n;				/* Loop index */
+	uint32 n;				/* Loop index */
 	struct item **reg;	/* Address in register's array */
 	struct opstack op_context;		/* To save stack's context */
 	
@@ -4772,8 +4788,8 @@ rt_shared void sync_registers(struct stochunk *stack_cur, struct item *stack_top
 		(*reg)->it_addr = &((*reg)->itu); /* synchronize the address of the value with its location */
 	}
 
-	locnum = ilocnum->it_int32;		/* # of local variables */
-	argnum = iargnum->it_int32;		/* # of arguments */
+	locnum = ilocnum->it_uint32;		/* # of local variables */
+	argnum = iargnum->it_uint32;		/* # of arguments */
 	allocate_registers(MTC);		/* `iregs' could have been reduced */
 
 	/* Local variables also appear in reverse order */
@@ -4842,7 +4858,7 @@ rt_private void create_expanded_locals (
 )
 {
 	RT_GET_CONTEXT
-	int i;
+	uint32 i;
 	struct item * last;	/* Last pushed value */
 	uint32 type;
 	unsigned long stagval;
@@ -4947,7 +4963,7 @@ rt_public struct item *opush(register struct item *val)
 	struct item *top = op_stack.st_top;	/* Top of stack */
 	
 	if (top == (struct item *) 0)	{			/* No stack yet? */
-		top = stack_allocate(STACK_CHUNK);		/* Create one */
+		top = stack_allocate(eif_stack_chunk);		/* Create one */
 		if (top == (struct item *) 0)	 		/* Could not create stack */
 			enomem(MTC_NOARG);							/* No more memory */
 	}
@@ -4959,7 +4975,7 @@ rt_public struct item *opush(register struct item *val)
 		 */
 		SIGBLOCK;									/* Critical section */
 		if (op_stack.st_cur == op_stack.st_tl) {	/* Reached last chunk */
-			if (-1 == stack_extend(STACK_CHUNK))
+			if (-1 == stack_extend(eif_stack_chunk))
 				enomem(MTC_NOARG);
 			top = op_stack.st_top;					/* New top */
 		} else {
@@ -5235,7 +5251,7 @@ rt_private void wipe_out(register struct stochunk *chunk)
  */
 
 /* VARARGS1 */
-rt_public struct item *ivalue(int code, int num, uint32 start)
+rt_public struct item *ivalue(int code, uint32 num, uint32 start)
 		 		/* Request code */
 				/* Additional info for local and arguments */
 				/* start of operational stack (for frozen feature only - used by cresult, carg.. macros) */
@@ -5260,9 +5276,9 @@ rt_public struct item *ivalue(int code, int num, uint32 start)
 		 */
 		switch (code) {
 		case IV_LOCAL:								/* Nth local */
-			if (num > ilocnum->it_int32)
+			if (num > ilocnum->it_uint32)
 				return (struct item *) 0;			/* Out of range */
-			else if (num == ilocnum->it_int32){		/* Off by one */
+			else if (num == ilocnum->it_uint32){		/* Off by one */
 				if (iresult->type != SK_VOID)		/* If there is a result */
 					return iresult;					/* Then return it */
 				else
@@ -5271,7 +5287,7 @@ rt_public struct item *ivalue(int code, int num, uint32 start)
 		return loc(num + 1);						/* Locals from 1 to ilocnum */
 
 		case IV_ARG:								/* Nth argument */
-			if (num >= iargnum->it_int32)
+			if (num >= iargnum->it_uint32)
 				return (struct item *) 0;			/* Out of range */
 			return arg(num + 1);					/* Arguments from 1 to iargnum */
 			

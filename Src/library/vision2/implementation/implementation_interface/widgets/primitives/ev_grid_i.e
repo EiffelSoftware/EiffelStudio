@@ -3189,7 +3189,7 @@ feature {NONE} -- Event handling
 		local
 			pointed_item: EV_GRID_ITEM_I
 			pointed_item_interface: EV_GRID_ITEM
---			label_item: EV_GRID_LABEL_ITEM_I
+			label_item: EV_GRID_LABEL_ITEM_I
 		do
 			if pointer_motion_actions_internal /= Void and then not pointer_motion_actions_internal.is_empty then
 				pointer_motion_actions_internal.call ([client_x_to_x (a_x), client_y_to_y (a_y) , a_x_tilt, a_y_tilt, a_pressure, client_x_to_x (a_screen_x), client_y_to_y (a_screen_y)])
@@ -3197,13 +3197,13 @@ feature {NONE} -- Event handling
 			if a_x >= 0 and then a_y >= 0 then
 				pointed_item := drawer.item_at_position_strict (a_x, a_y)
 			end
---			label_item ?= pointed_item
---			if label_item /= Void and then label_item.tooltip /= Void and then not label_item.tooltip.is_equal (label_item.interface.text) then
---				label_item.interface.set_tooltip (label_item.interface.text)
---				drawable.set_tooltip (label_item.interface.text)
---			else
---				drawable.remove_tooltip
---			end
+				-- Now handle the tooltips for items.
+			if pointed_item /= Void and then pointed_item.tooltip /= Void and then not drawable.tooltip.is_equal (pointed_item.tooltip) then
+				drawable.set_tooltip (pointed_item.tooltip)
+			elseif pointed_item = Void then
+				drawable.remove_tooltip
+			end
+
 			if pointer_motion_item_actions_internal /= Void and then not pointer_motion_item_actions_internal.is_empty then
 				if pointed_item /= Void then
 					pointed_item_interface := pointed_item.interface

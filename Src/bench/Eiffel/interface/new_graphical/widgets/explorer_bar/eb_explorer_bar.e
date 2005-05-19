@@ -266,6 +266,7 @@ feature -- Access
 			-- as a preference.
 		local
 			curr_item: like explorer_item
+			l_parent: EV_WINDOW
 			i: INTEGER
 			state: STRING
 			cur: CURSOR
@@ -295,16 +296,18 @@ feature -- Access
 				end
 				Result.put (state, i + 1)
 				if state.is_equal ("external") then
-					Result.put ((parent_window (curr_item.widget).x_position - explorer_bar_manager.window.x_position).out, i + 2)
-					Result.put ((parent_window (curr_item.widget).y_position - explorer_bar_manager.window.y_position).out, i + 3)
-					Result.put (curr_item.widget.width.out, i + 4)	
+					l_parent := parent_window (curr_item.widget)
+					Result.put ((l_parent.x_position - explorer_bar_manager.window.x_position).out, i + 2)
+					Result.put ((l_parent.y_position - explorer_bar_manager.window.y_position).out, i + 3)
+					Result.put (l_parent.width.out, i + 4)	
+					Result.put (l_parent.height.out, i + 5)
 				else
 					Result.put ("0", i + 2)
 					Result.put ("0", i + 3)
 					Result.put ("0", i + 4)
+					Result.put (curr_item.widget.height.out, i + 5)
 				end
-				Result.put (curr_item.widget.height.out, i + 5)
-			
+
 					-- prepare next iteration			
 				i := i + 6
 				item_list.forth

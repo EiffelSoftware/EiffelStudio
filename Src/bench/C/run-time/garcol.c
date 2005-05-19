@@ -4848,7 +4848,7 @@ rt_shared int epush(register struct stack *stk, register void *value)
 	EIF_REFERENCE *top = stk->st_top;		/* Current top of stack */
 
 	if (top == (EIF_REFERENCE *) 0)	{					/* No stack yet? */
-		top = st_alloc(stk, STACK_CHUNK);		/* Create one */
+		top = st_alloc(stk, eif_stack_chunk);		/* Create one */
 		if (top == (EIF_REFERENCE *) 0)
 			return -1;				/* Could not create stack */
 	}
@@ -4865,7 +4865,7 @@ rt_shared int epush(register struct stack *stk, register void *value)
 		 */
 		SIGBLOCK;							/* Critical section */
 		if (stk->st_cur == stk->st_tl) {	/* Reached last chunk */
-			if (-1 == st_extend(stk, STACK_CHUNK))
+			if (-1 == st_extend(stk, eif_stack_chunk))
 				return -1;			/* Could not extend stack */
 			top = stk->st_top;		/* New top */
 		} else {
@@ -4893,8 +4893,9 @@ rt_shared EIF_REFERENCE *st_alloc(register struct stack *stk, register int size)
 	RT_GET_CONTEXT
 	EIF_REFERENCE *arena;				/* Address for the arena */
 	struct stchunk *chunk;	/* Address of the chunk */
+	rt_uint_ptr l_size = size * REFSIZ + sizeof(struct stchunk);
 
-	chunk = (struct stchunk *) eif_rt_xmalloc(size * REFSIZ, C_T, GC_OFF);
+	chunk = (struct stchunk *) eif_rt_xmalloc(l_size, C_T, GC_OFF);
 	if (chunk == (struct stchunk *) 0)
 		return (EIF_REFERENCE *) 0;		/* Malloc failed for some reason */
 
@@ -4906,7 +4907,7 @@ rt_shared EIF_REFERENCE *st_alloc(register struct stack *stk, register int size)
 	stk->st_top = arena;				/* Empty stack */
 	chunk->sk_arena = arena;			/* Base address */
 	stk->st_end = chunk->sk_end =
-		(EIF_REFERENCE *) chunk + size;			/* First free location beyond stack */
+		(EIF_REFERENCE *) ((char *) chunk + l_size);	/* First free location beyond stack */
 	chunk->sk_next = (struct stchunk *) 0;
 	chunk->sk_prev = (struct stchunk *) 0;
 	SIGRESUME;							/* End of critical section */
@@ -4924,8 +4925,9 @@ rt_shared int st_extend(register struct stack *stk, register int size)
 	RT_GET_CONTEXT
 	EIF_REFERENCE *arena;				/* Address for the arena */
 	struct stchunk *chunk;	/* Address of the chunk */
+	rt_uint_ptr l_size = size * REFSIZ + sizeof(struct stchunk);
 
-	chunk = (struct stchunk *) eif_rt_xmalloc(size * REFSIZ, C_T, GC_OFF);
+	chunk = (struct stchunk *) eif_rt_xmalloc(l_size, C_T, GC_OFF);
 	if (chunk == (struct stchunk *) 0)
 		return -1;		/* Malloc failed for some reason */
 
@@ -4936,7 +4938,8 @@ rt_shared int st_extend(register struct stack *stk, register int size)
 	stk->st_tl->sk_next = chunk;			/* Maintain link w/previous */
 	stk->st_tl = chunk;						/* New tail */
 	chunk->sk_arena = arena;				/* Where items are stored */
-	chunk->sk_end = (EIF_REFERENCE *) chunk + size;	/* First item beyond chunk */
+	chunk->sk_end =
+		(EIF_REFERENCE *) ((char *) chunk + l_size);	/* First item beyond chunk */
 	stk->st_top = arena;					/* New top */
 	stk->st_end = chunk->sk_end;			/* End of current chunk */
 	stk->st_cur = chunk;					/* New current chunk */

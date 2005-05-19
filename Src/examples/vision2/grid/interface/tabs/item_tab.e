@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			item_finder.set_prompt ("Item Finder : ")
 			item_finder.motion_actions.extend (agent finding_item)
 			
-
+			add_default_pixmaps_to_combo (pixmap_holder)
 			add_default_colors_to_combo (foreground_color_combo)
 			add_default_colors_to_combo (background_color_combo)
 

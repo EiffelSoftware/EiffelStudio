@@ -3,16 +3,80 @@ indexing
 		Widget which is a combination of an EV_TREE and an EV_MULTI_COLUMN_LIST.
 
 		Item Insertion:
+		----------------------------------------------------------------------------------------------------
+
+		Appearance:
+		----------------------------------------------------------------------------------------------------
 
 		Dynamic Modes:
+		----------------------------------------------------------------------------------------------------
 
 		Size and Position:
 
+		The grid is comprised of the following graphical elements:
+		1. A header displayed at the top of `Current' which may be hidden/shown via `show_header' and hide_header'.
+		2. A viewable area in which the contents of `Current' are displayed, displayed immediately below the header. The size of this
+		area is given by `viewable_width' and `viewable_height' with its position relative to the top left corner of `Current'
+		given by `viewable_x_offset', `viewable_y_offset'. Note that `viewable_y_offset' changes based on the visible state of the header.
+		3. A horizontal scroll bar displayed below the viewable area, only shown if the virtual width of `Current' is greater than `viewable_width'.
+		4. A vertical scroll bar displayed to the right of viewable area and header, only shown if the virtual height of `Current' is greater
+		than `viewable_height'.
+
+		The virtual size of the grid represents the complete screen area in pixels required to display the contents of `Current' and may be queried
+		via `virtual_width' and `virtual_height'. If the contents of the grid are smaller than the viewable area, then the virtual size is
+		equal to the viewable area, otherwise an area of the virtual size is displayed within viewable area, with the coordinates of this area
+		(relative to the top left corner) within the virtual size given by `virtual_x' and `virtual_y'. As the scroll bars are moved,
+		`virtual_x' and `virtual_y' are directly manipulated, although you may set the virtual position explicitly via calls to `set_virtual_x'
+		and `set_virtual_y'.
+
+		You may query the virtual position of an item within the virtual area of `Current' via `virtual_x_position' and `virtual_y_position'
+		directly on the item. You may also query the dimensions of an item via `width' and `height'. It is important to note that for an item
+		that is part of a tree structure, the `width' may not be equal to `column.width' and the `virtual_x_position' may not be
+		equal to `column.virtual_x_position'. This is because items in tree structures are indented to provide space for the expand/collapse
+		icons as necessary. The number of pixels that the item is indented for this purpose may be queried directly from the item via a call
+		to `horizontal_indent'.
+
+		You may query the virtual y position of a row within `Current' via `virtual_y_position' directly on the row.
+		You may query the virtual x position of a column within `Current' via `virtual_x_position' directly on the column.
+
+		As items, columns or rows are added and removed from `Current', the virtual size may change. The virtual position may only change if in this
+		situation, you are removing rows or columns that cause the virtual size to reduce and the virtual position is no longer valid. The grid will
+		automatically adjust the virtual position so that the contents of the viewable area are completely contained within the new virtual position.
+
+		The `height' of the rows displayed in `Current' is dependent on `is_row_height_fixed'. If `True',  then all rows are displayed at the
+		same height, goverened by `row_height'. If `False', then the height of the row is goverened by its `height' property which may differ on
+		an individual row basis. The width of columns is always unique and based on their `width' property.
+
+		To determine if a particular item is located at a virtual position, use `item_at_virtual_position'.
+		You may determine the first and last visible rows via `first_visible_row' and `last_visible_row', while `first_visible_column' and
+		`last_visible_column' give the first and last columns visible in `Current'. For more precise information regarding exactly which
+		rows and columns are displayed, you may query `visible_row_indexes' and `visible_column_indexes'. Note that if a tree is enabled via
+		`enable_tree', then the contents of `visible_row_indexes' and `visible_column_indexes' may not be contiguous.
+
+		To optimize performance, `Current'  only performs recomputation of the virtual positions of items as strictly necessary, which is normally
+		once just before a redraw. As you may query virtual position information whenever you wish, `Current' may be forced to perform its
+		recomputation of virtual positions as a result of your query. Each time that you modify something in the grid that may affect a virtual
+		position of an item, the grid must recompute the virtual positions again as required. Therefore, for your code to be optimal, it may be
+		necessary to take this into account. The worst possible case scenario is if you are to repeatedly modify the state of a row or item at the start
+		of the grid and then query a virtual position of an object in the grid. In this situation, it is recommended that you perform a two-pass
+		operation. First perform all of the modifications to the items and then perform all of the queries to virtual positions. The grid is optimized
+		for additions in order so if you are repeatedly adding items and querying their virtual positions, then the performance is far better than
+		if you are continuosly inserting items at the start of the grid and querying their virtual positions. Although it is important to be aware of
+		this behavior, you will find that in almost all cases, you have do perform no special optimizations to get good performance within `Current'.
+
+		The re-drawing of `Current' is performed on idle, so if you are performing heavy computation and the grid is not updating, call `process_events'
+		from EV_APPLICATION in order to force a re-draw.
+		----------------------------------------------------------------------------------------------------
+
 		Selection:
+		----------------------------------------------------------------------------------------------------
 
 		Item Activation:
+		----------------------------------------------------------------------------------------------------
 
-		Event Handling: The standard set of widget events are inherited from EV_CELL with an additional set of events that are applicable to both
+		Event Handling:
+
+		The standard set of widget events are inherited from EV_CELL with an additional set of events that are applicable to both
 		`Current' and the items contained are inherited from EV_GRID_ACTION_SEQUENCES. For example, `pointer_button_press_actions' is inherited from
 		EV_CELL, while `pointer_button_press_item_actions' is inherited from EV_GRID_ACTION_SEQUENCES and has an EV_GRID_ITEM as event data specifying the
 		applicable item (if any). The coordinates of the item specific versions use virtual coordinates of `Current' as their coordinate information, wheras
@@ -30,9 +94,11 @@ indexing
 		before the specific item versions. For example, if you connect to both EV_GRID.row_expand_actions and EV_GRID_ROW.expand_actions, the grid version
 		is fired first, immediately by the row version. The action sequences are fired one immediately after the other and both are always fired even 
 		if you change states of the target object within the first action sequence.
-			
+		----------------------------------------------------------------------------------------------------
 
-		Color Handling: Colors applied to items within `Current' are determined on a three level basis.
+		Color Handling:
+
+		Colors applied to items within `Current' are determined on a three level basis.
 		The base level is `Current' whose `foreground_color' and `background_color' may never be Void.
 		The second level are the columns and rows of `Current' whose `foreground_color' and `background_color' are `Void' by default.
 		The final level is comprised of the items of `Current' themselves whose `foreground_color' and `background_color' are `Void' by default.

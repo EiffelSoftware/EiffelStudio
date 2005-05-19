@@ -55,11 +55,6 @@ doc:<file name="except.c" header="eif_except.c" version="$Id$" summary="Exceptio
 
 #include <stdlib.h>				/* For exit(), abort() */
 
-#undef STACK_CHUNK
-#undef MIN_FREE
-#define STACK_CHUNK		400		/* Number of exception vectors in a chunk */
-#define MIN_FREE		50		/* Minimum free locations to clean next chunk */
-
 /* Failure yields a specific code. For a given execution vector 'v', the macro
  * xcode gives the associated exception code for the trace stack. Note that
  * for GC purposes, the value of EX_* constants starts at EX_START, not 0--RAM.
@@ -182,7 +177,7 @@ rt_public void eif_panic(char *msg);			/* Run-time raised panic */
 rt_public void fatal_error(char *msg);			/* Run-time raised fatal errors */
 rt_public void xraise(int code);			/* Raises an exception with no tag */
 rt_public struct ex_vect *exset(char *name, int origin, char *object);	/* Set execution stack on routine entrance */
-rt_public struct ex_vect *new_exset(char *name, int origin, char *object, unsigned char loc_nb, unsigned char arg_nb, BODY_INDEX bid);	/* Set execution stack on routine entrance */
+rt_public struct ex_vect *new_exset(char *name, int origin, char *object, uint32 loc_nb, uint32 arg_nb, BODY_INDEX bid);	/* Set execution stack on routine entrance */
 #ifndef WORKBENCH
 rt_public struct ex_vect *exft(void);	/* Entry in feature with rescue clause */
 #endif
@@ -216,6 +211,7 @@ rt_private char eedefined(long ex);		  /* Is exception code valid? */
 
 /* Stack handling routines */
 rt_public void expop(struct xstack *stk);				/* Pops an execution vector off */
+rt_private void expop_helper(struct xstack *stk, int is_truncated);
 rt_private void stack_truncate(struct xstack *stk);		/* Truncate stack if necessary */
 rt_private void wipe_out(register struct stxchunk *chunk);			/* Remove unneeded chunk from stack */
 rt_shared struct ex_vect *exget(struct xstack *stk);		/* Get a new vector on stack */
@@ -409,7 +405,7 @@ rt_public struct ex_vect *exset(char *name, int origin, char *object)
 	return new_exset(name, origin, object, 0, 0, 0);
 }
 
-rt_public struct ex_vect *new_exset(char *name, int origin, char *object, unsigned char loc_nb, unsigned char arg_nb, BODY_INDEX bid)
+rt_public struct ex_vect *new_exset(char *name, int origin, char *object, uint32 loc_nb, uint32 arg_nb, BODY_INDEX bid)
 			/* The routine name */
 			/* The origin of the routine */
 			/* The object on which the routine is applied */
@@ -1859,6 +1855,10 @@ rt_private void exorig(void)
 				echoclass = echclass;   /* As well as original class */
 				break;
 			}
+				/* Note that here it is safe to call `exget' because it is not
+				 * going to allocate an extra chunk in `eif_trace' since we assume
+				 * that building of `eif_trace' was correct.
+				 */
 			(void) exget(&eif_trace);	/* Move just above it */
 			top = extop(&eif_trace);	/* Fetch record */
 			echorg = top->ex_type;		/* Original exception code */
@@ -1867,7 +1867,11 @@ rt_private void exorig(void)
 			echoclass = echclass;   	/* As well as original class */
 			break;
 		}
-		expop(&eif_trace);		/* Level mark not found, continue */
+			/* Level mark not found, continue traversal of `eif_trace' without touching
+			 * its chunks, as otherwise the `memcpy' below would restore an invalid state.
+			 * Found through eweasel tests exec079 where `eif_stack_chunk' is 100.
+			 */
+		expop_helper(&eif_trace, 0);		/* Level mark not found, continue without shrinking */
 		poped++;
 	}
 
@@ -2775,7 +2779,7 @@ rt_shared struct ex_vect *exget(struct xstack *stk)
 	struct ex_vect *top = stk->st_top;	/* Top of stack */
 
 	if (top == (struct ex_vect *) 0)	{		/* No stack yet? */
-		top = stack_allocate(stk, STACK_CHUNK);	/* Create one */
+		top = stack_allocate(stk, eif_stack_chunk);	/* Create one */
 		if (top == (struct ex_vect *) 0) 		/* Could not create stack */
 			return top;
 	}
@@ -2786,7 +2790,7 @@ rt_shared struct ex_vect *exget(struct xstack *stk)
 		 * a new one and insert it in the list.
 		 */
 		if (stk->st_cur == stk->st_tl) {	/* Reached last chunk */
-			if (-1 == stack_extend(stk, STACK_CHUNK))
+			if (-1 == stack_extend(stk, eif_stack_chunk))
 				return (struct ex_vect *) 0;
 			top = stk->st_top;				/* New top */
 		} else {
@@ -2915,10 +2919,30 @@ rt_private void wipe_out(register struct stxchunk *chunk)
 		eif_rt_xfree((char *) chunk);
 }
 
-rt_public void expop(struct xstack *stk)
-		/* The stack */
+/*
+doc:	<routine name="expop" export="public">
+doc:		<summary>Remove an element of `stk' and perform shrinking of stack if necessary.</summary>
+doc:		<param name="stk" type="struct xstacl *">Stack in which an element will be removed.</param>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Per thread data.</synchronization>
+doc:	</routine>
+*/
+rt_public void expop(struct xstack *stk) {
+	expop_helper (stk, 1);
+}
+
+/*
+doc:	<routine name="expop_helper" export="public">
+doc:		<summary>Remove an element of `stk' and perform shrinking of stack if necessary and if `is_truncated'.</summary>
+doc:		<param name="stk" type="struct xstacl *">Stack in which an element will be removed.</param>
+doc:		<param name="is_truncated" type="int">If `1' then shrink `stk' if necessary, otherwise do nothing.</param>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Per thread data.</synchronization>
+doc:	</routine>
+*/
+
+rt_private void expop_helper(struct xstack *stk, int is_truncated)
 {
-	/* Removes one item from the Eiffel stack */
 #ifdef WORKBENCH
 	RT_GET_CONTEXT
 #endif
@@ -2927,41 +2951,39 @@ rt_public void expop(struct xstack *stk)
 	struct stxchunk *s;			/* To walk through stack chunks */
 	struct ex_vect *arena;		/* Base address of current chunk */
 
-	/* Optimization: try to update the top, hoping it will remain in the
-	 * same chunk. This avoids pointer manipulation (walking along the stack)
-	 * which may induce swapping, who knows?
-	 */
-
+		/* Optimization: try to update the top, hoping it will remain in the
+		 * same chunk. This avoids pointer manipulation (walking along the stack)
+		 * which may induce swapping, who knows?
+		 */
 	arena = stk->st_cur->sk_arena;
 	if (--top >= arena) {			/* Hopefully, we remain in current chunk */
 		stk->st_top = top;			/* Yes! Update top */
 		return;						/* Done, we're lucky */
-	}
+	} else {
+			/* Unusual case: top pointed to the arena of next chunk */
 
-	/* Unusual case: top pointed to the arena of next chunk */
+		s= stk->st_cur = stk->st_cur->sk_prev;		/* Go one chunk back */
 
-	s= stk->st_cur = stk->st_cur->sk_prev;		/* Go one chunk back */
+		CHECK("Not underflow", s);
 
-#ifdef MAY_PANIC
-	if (s == (struct stxchunk *) 0)				/* Panic if none */
-		eif_panic("Eiffel stack underflow");
-#endif
+		top = stk->st_end = s->sk_end;				/* Set new end */
+		stk->st_top = --top;						/* New top */
 
-	top = stk->st_end = s->sk_end;				/* Set new end */
-	stk->st_top = --top;						/* New top */
-
-	/* There is not much overhead calling stack_truncate(), because this is
-	 * only done when we are popping at a chunk edge. We have to make sure the
-	 * program is running though, as popping done in debugging mode is only
-	 * temporary--RAM.
-	 */
+		if (is_truncated == 1) {
+			/* There is not much overhead calling stack_truncate(), because this is
+			 * only done when we are popping at a chunk edge. We have to make sure the
+			 * program is running though, as popping done in debugging mode is only
+			 * temporary--RAM.
+			 */
 
 #ifdef WORKBENCH
-	if (d_cxt.pg_status == PG_RUN)	/* Program is running */
-		stack_truncate(stk);		/* Remove unused chunks */
+			if (d_cxt.pg_status == PG_RUN)	/* Program is running */
+				stack_truncate(stk);		/* Remove unused chunks */
 #else
-	stack_truncate(stk);			/* Try removal of unused chunks */
+			stack_truncate(stk);			/* Try removal of unused chunks */
 #endif
+		}
+	}
 }
 
 rt_shared struct ex_vect *extop(struct xstack *stk)

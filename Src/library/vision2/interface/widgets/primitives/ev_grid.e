@@ -475,8 +475,34 @@ feature -- Access
 			not_destroyed: not is_destroyed
 		do
 			Result := implementation.item_deny_cursor_function
-		end		
+		end	
 
+	are_column_separators_enabled: BOOLEAN is
+			-- Is a vertical separator displayed in color `separator_color' between each column?
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.are_column_separators_enabled
+		end
+
+	are_row_separators_enabled: BOOLEAN is
+			-- Is a horizontal separator displayed in color `separator_color' between each row?
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.are_row_separators_enabled
+		end
+
+	separator_color: EV_COLOR is
+			-- Color used to display column and row separators.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.separator_color
+		ensure
+			result_not_void: Result /= Void
+		end
+		
 feature -- Status setting
 
 	set_item_veto_pebble_function (a_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM, ANY], BOOLEAN]) is
@@ -1026,6 +1052,57 @@ feature -- Status setting
 			implementation.disable_column_resize_immediate
 		ensure
 			not_is_column_resize_immediate: not is_column_resize_immediate
+		end
+
+	enable_column_separators is
+			-- Ensure `are_column_separators_enabled' is `True'.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.enable_column_separators
+		ensure	
+			column_separators_enabled: are_column_separators_enabled
+		end
+
+	disable_column_separators is
+			-- Ensure `are_column_separators_enabled' is `False'.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.disable_column_separators
+		ensure	
+			column_separators_disabled: not are_column_separators_enabled
+		end
+
+	enable_row_separators is
+			-- Ensure `are_row_separators_enabled' is `True'.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.enable_row_separators
+		ensure	
+			row_separators_enabled: are_row_separators_enabled
+		end
+		
+	disable_row_separators is
+			-- Ensure `are_row_separators_enabled' is `False'.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.disable_row_separators
+		ensure	
+			row_separators_disabled: not are_row_separators_enabled
+		end
+
+	set_separator_color (a_color: EV_COLOR) is
+			-- Set `a_color' as `separator_color'.
+		require
+			not_destroyed: not is_destroyed
+			a_color_not_void: a_color /= Void
+		do
+			implementation.set_separator_color (a_color)
+		ensure
+			separator_color_set: separator_color = a_color
 		end
 		
 feature -- Status report

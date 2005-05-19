@@ -64,8 +64,8 @@ struct ex_vect {
 	int				ex_linenum;	/* current line number (line number <=> breakpoint slot) */
 #ifdef WORKBENCH
 	BODY_INDEX 		ex_bodyid;	/* body id of the feature */
-	unsigned char	ex_locnum;	/* number of local variables in the function */
-	unsigned char	ex_argnum;	/* number of arguments of the function */
+	uint32			ex_locnum;	/* number of local variables in the function */
+	uint32			ex_argnum;	/* number of arguments of the function */
 #endif
 	union {
 		unsigned int exu_lvl;	/* Level for multi-branch backtracking */

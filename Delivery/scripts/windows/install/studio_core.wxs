@@ -410,6 +410,7 @@
 								<File Id="icon_save_call_stack_color.png" Name="ICON_S~1.PNG" LongName="icon_save_call_stack_color.png" />
 								<File Id="icon_set_stack_depth_color.png" Name="IC8468~1.PNG" LongName="icon_set_stack_depth_color.png" />
 								<File Id="icon_slice_limits_vsmall_color.png" Name="IC0E02~1.PNG" LongName="icon_slice_limits_vsmall_color.png" />
+								<File Id="icon_toggle_alias_vsmall_color_png" Name="ICON_T~3.PNG" LongName="icon_toggle_alias_vsmall_color.png" />
 								<File Id="icon_toggle_force_color.png" Name="ICON_T~1.PNG" LongName="icon_toggle_force_color.png" />
 								<File Id="icon_toggle_quality_color.png" Name="IC5026~1.PNG" LongName="icon_toggle_quality_color.png" />
 								<File Id="icon_toggle_signature.png1" Name="ICON_T~4.PNG" LongName="icon_toggle_signature_vsmall_color.png" />
@@ -480,6 +481,7 @@
 								<File Id="VDUC" Name="VDUC" />
 								<File Id="VDUS" Name="VDUS" />
 								<File Id="VEEN" Name="VEEN" />
+								<File Id="VFAV" Name="VFAV" />
 								<File Id="VFFD" Name="VFFD" />
 								<File Id="VGCC" Name="VGCC" />
 								<File Id="VGCI" Name="VGCI" />
@@ -665,6 +667,8 @@
 									<File Id="VEEN2" Name="VEEN2" />
 									<File Id="VEEN21" Name="VEEN21" />
 									<File Id="VEEN22" Name="VEEN22" />
+									<File Id="VFAV1" Name="VFAV1" />
+									<File Id="VFAV2" Name="VFAV2" />
 									<File Id="VFFD1" Name="VFFD1" />
 									<File Id="VFFD2" Name="VFFD2" />
 									<File Id="VFFD3" Name="VFFD3" />

@@ -756,7 +756,7 @@ rt_public void failure(void)
 		 */
 #ifdef ISE_GC
 	st_reset (&loc_set);
-	st_alloc (&loc_set, STACK_CHUNK);
+	st_alloc (&loc_set, eif_stack_chunk);
 #endif
 
 	trapsig(emergency);					/* Weird signals are trapped */

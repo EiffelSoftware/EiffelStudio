@@ -3912,11 +3912,16 @@ rt_private void eif_interp_bit_operations (void)
 
 	EIF_GET_CONTEXT
 	int code = *IC++;		/* Read current byte-code and advance IC */
+	struct item *third = (struct item *) 0;
 	struct item *second = (struct item *) 0;
 	struct item *first = (struct item *) 0;
 
-	if (code != BC_INT_BIT_NOT)
+	if (code == BC_INT_SET_BIT || code == BC_INT_SET_BIT_WITH_MASK) {
+		third = opop();		/* Fetch third operand */
+	}
+	if (code != BC_INT_BIT_NOT) {
 		second = opop();	/* Fetch second operand if required */
+	}
 	first = otop ();		/* First operand, it will be replaced by result */
 
 	switch (code) {
@@ -4005,6 +4010,31 @@ rt_private void eif_interp_bit_operations (void)
 				}
 			first->type = SK_BOOL;
 			break;
+		case BC_INT_SET_BIT:
+			switch (first->type & SK_HEAD) {
+				case SK_UINT8: first->it_uint8 = eif_set_bit (EIF_NATURAL_8, first->it_uint8, second->it_char, third->it_int32); break;
+				case SK_UINT16: first->it_uint16 = eif_set_bit (EIF_NATURAL_16, first->it_uint16, second->it_char, third->it_int32); break;
+				case SK_UINT32: first->it_uint32 = eif_set_bit (EIF_NATURAL_32, first->it_uint32, second->it_char, third->it_int32); break;
+				case SK_UINT64: first->it_uint64 = eif_set_bit (EIF_NATURAL_64, first->it_uint64, second->it_char, third->it_int32); break;
+				case SK_INT8: first->it_int8 = eif_set_bit (EIF_INTEGER_8, first->it_int8, second->it_char, third->it_int32); break;
+				case SK_INT16: first->it_int16 = eif_set_bit (EIF_INTEGER_16, first->it_int16, second->it_char, third->it_int32); break;
+				case SK_INT32: first->it_int32 = eif_set_bit (EIF_INTEGER_32, first->it_int32, second->it_char, third->it_int32); break;
+				case SK_INT64: first->it_int64 = eif_set_bit (EIF_INTEGER_64, first->it_int64, second->it_char, third->it_int32); break;
+			}
+			break;
+		case BC_INT_SET_BIT_WITH_MASK:
+			switch (first->type & SK_HEAD) {
+				case SK_UINT8: first->it_uint8 = eif_set_bit_with_mask (first->it_uint8, second->it_char, third->it_uint8); break;
+				case SK_UINT16: first->it_uint16 = eif_set_bit_with_mask (first->it_uint16, second->it_char, third->it_uint16); break;
+				case SK_UINT32: first->it_uint32 = eif_set_bit_with_mask (first->it_uint32, second->it_char, third->it_uint32); break;
+				case SK_UINT64: first->it_uint64 = eif_set_bit_with_mask (first->it_uint64, second->it_char, third->it_uint64); break;
+				case SK_INT8: first->it_int8 = eif_set_bit_with_mask (first->it_int8, second->it_char, third->it_int8); break;
+				case SK_INT16: first->it_int16 = eif_set_bit_with_mask (first->it_int16, second->it_char, third->it_int16); break;
+				case SK_INT32: first->it_int32 = eif_set_bit_with_mask (first->it_int32, second->it_char, third->it_int32); break;
+				case SK_INT64: first->it_int64 = eif_set_bit_with_mask (first->it_int64, second->it_char, third->it_int64); break;
+			}
+			break;
+
 		default: eif_panic (RT_BOTCHED_MSG);
 	}
 }

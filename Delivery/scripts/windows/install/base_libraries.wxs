@@ -665,6 +665,43 @@
 								<File Id="refactoring_helper.e" Name="REFACT~1.E" LongName="refactoring_helper.e" KeyPath="yes" />
 							</Component>
 						</Directory>
+						<Directory Id="serialization" Name="SERIAL~1" LongName="serialization">
+							<Directory Id="model" Name="model">
+								<Component Id="model" Guid="5FC416B5-F817-4d0f-BB9E-01CF4D5A3D8B">
+									<File Id="sed_meta_model_e" Name="SED_ME~1.E" LongName="sed_meta_model.e" />
+								</Component>
+							</Directory>
+							<Directory Id="reader_writer" Name="READER~1" LongName="reader_writer">
+								<Component Id="reader_writer" Guid="5098EFF0-B7AE-4bd8-B14B-14CD03893539">
+									<File Id="sed_binary_reader_writer_e" Name="SED_BI~1.E" LongName="sed_binary_reader_writer.e" />
+									<File Id="sed_medium_reader_writer_e" Name="SED_ME~1.E" LongName="sed_medium_reader_writer.e" />
+									<File Id="sed_memory_reader_writer_e" Name="SED_ME~2.E" LongName="sed_memory_reader_writer.e" />
+									<File Id="sed_reader_writer_e" Name="SED_RE~1.E" LongName="sed_reader_writer.e" />
+								</Component>
+							</Directory>
+							<Directory Id="serializers" Name="SERIAL~1" LongName="serializers">
+								<Component Id="serializers" Guid="467EC2D4-FBDD-4375-9581-9A70585A017D">
+									<File Id="sed_basic_deserializer_e" Name="SED_BA~1.E" LongName="sed_basic_deserializer.e" />
+									<File Id="sed_basic_serializer_e" Name="SED_BA~2.E" LongName="sed_basic_serializer.e" />
+									<File Id="sed_session_deserializer_e" Name="SED_SE~1.E" LongName="sed_session_deserializer.e" />
+									<File Id="sed_session_serializer_e" Name="SED_SE~2.E" LongName="sed_session_serializer.e" />
+									<File Id="sed_utilities_e" Name="SED_UT~1.E" LongName="sed_utilities.e" />
+								</Component>
+							</Directory>
+							<Directory Id="traversing1" Name="TRAVER~1" LongName="traversing">
+								<Component Id="traversing1" Guid="77DD4BFA-F9DB-45ee-982D-9E83382A3943">
+									<File Id="sed_abstract_objects_table_e" Name="SED_AB~1.E" LongName="sed_abstract_objects_table.e" />
+									<File Id="sed_object_graph_breadth_first_traversable_e" Name="SED_OB~1.E" LongName="sed_object_graph_breadth_first_traversable.e" />
+									<File Id="sed_object_graph_depth_first_traversable_e" Name="SED_OB~2.E" LongName="sed_object_graph_depth_first_traversable.e" />
+									<File Id="sed_object_graph_traversable_e" Name="SED_OB~3.E" LongName="sed_object_graph_traversable.e" />
+								</Component>
+								<Directory Id="classic3" Name="classic">
+									<Component Id="classic3" Guid="78ADA375-4643-47c0-963D-21DB1D66D498">
+										<File Id="sed_objects_table_e" Name="SED_OB~1.E" LongName="sed_objects_table.e" />
+									</Component>
+								</Directory>
+							</Directory>
+						</Directory>
 						<Directory Id="support" Name="support">
 							<Component Id="support" Guid="D553A2F4-74F7-402B-B6A4-EED3A99779C0">
 								<File Id="random.e" Name="random.e" KeyPath="yes" />

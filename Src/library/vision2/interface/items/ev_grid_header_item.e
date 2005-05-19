@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that represent EiffelVision2 header items for EV_GRID_COLUMN's."
+	description: "Objects that represent an EiffelVision2 header item for EV_GRID_COLUMN."
 	date: "$Date$"
 	revision: "$Revision$"
 

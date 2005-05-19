@@ -1,5 +1,5 @@
 : Makefile.SH generated from Jmake.tmpl and Jmakefile [jmake 3.0 PL70]
-: $X-Id: Jmake.tmpl,v 3.0.1.3 1997/02/28 14:56:16 ram Exp $
+: $X-Id: Jmake.tmpl,v 1.2 2004/11/30 00:21:14 manus Exp $
 
 case $CONFIG in
 '')
@@ -65,7 +65,7 @@ OBJECTS =  \$(LOBJ)
 $spitshell >>Makefile <<'!NO!SUBS!'
 ########################################################################
 # Jmake rules for building libraries, programs, scripts, and data files
-# $X-Id: Jmake.rules,v 3.0.1.6 1997/02/28 14:56:01 ram Exp $
+# $X-Id: Jmake.rules,v 1.2 2004/11/30 00:21:14 manus Exp $
 ########################################################################
 # Force 'make depend' to be performed first -- do not edit
 
@@ -94,7 +94,7 @@ LIB_IDR = ../../idrs
 
 RUN_TIME = ../../run-time
 DPFLAGS = -I$(TOP) -I$(LIB_SHARED) -I$(RUN_TIME) -I$(LIB_IDR) -I$(RUN_TIME)/include
-CFLAGS = $(DPFLAGS)
+CFLAGS = $(DPFLAGS) -DEIF_IPC
 
 all:: libewb.a
 

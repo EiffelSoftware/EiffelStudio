@@ -17,7 +17,7 @@ LIB_MTIPC_ARCH = $(LIB_SHARED)/$(LIB_MTIPCNAME)
 
 /* The following are understood by jmake to alter built-in commands */
 DPFLAGS = -I$(TOP) -I$(LIB_SHARED) -I$(LIB_RUNTIME) -I$(LIB_IDRS) -I$(LIB_RUNTIME)/include
-CFLAGS = $(DPFLAGS) -DWORKBENCH 
+CFLAGS = $(DPFLAGS) -DWORKBENCH -DEIF_IPC
 
 /* We need to have the shared archive, which is in the shared/ dir. We have a
  * dependency which ensures it is up-to-date anyway.
@@ -40,7 +40,7 @@ MT_OBJ = \
 
 |expand f!$(LSRC)!
 MT!f:\.c=.o: !f
-        $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+        $(CC) -c $(JMTCFLAGS) -DWORKBENCH -DEIF_IPC $? -o $@
 
 -expand
 

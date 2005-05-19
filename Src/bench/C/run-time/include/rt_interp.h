@@ -254,7 +254,7 @@ extern void call_disp(uint32 dtype, char *object);				/* Function to call dispos
 extern void xiinv(unsigned char *icval, int where);			/* Invariant interpreter */
 extern void xinitint(void);										/* Initialize the interpreter */
 extern struct item *otop(void);									/* Top of the stack */
-extern struct item *ivalue(int code, int num, uint32 start);	/* Value request from current routine */
+extern struct item *ivalue(int code, uint32 num, uint32 start);	/* Value request from current routine */
 extern void sync_registers(struct stochunk *stack_cur, struct item *stack_top);		/* Resynchronize registers on routine */
 
 extern void idump(FILE *fd, char *start);

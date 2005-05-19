@@ -206,6 +206,8 @@ extern struct opstack op_stack;               /* Operational stack */
 #define BC_INT_BIT_SHIFT_LEFT	(unsigned char) 5
 #define BC_INT_BIT_SHIFT_RIGHT	(unsigned char) 6
 #define BC_INT_BIT_TEST		(unsigned char) 7
+#define BC_INT_SET_BIT		(unsigned char) 8
+#define BC_INT_SET_BIT_WITH_MASK		(unsigned char) 9
 
 /* New basic types */
 #define BC_WCHAR			(unsigned char) 139

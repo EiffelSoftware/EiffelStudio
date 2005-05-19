@@ -139,6 +139,7 @@ feature -- Constants
 	to_real_64_name_id: INTEGER is 129
 	is_lower_name_id: INTEGER is 130
 	is_upper_name_id: INTEGER is 131
+	set_bit_name_id: INTEGER is 132
 			-- Predefined name IDs constants
 
 end -- class PREDEFINED_NAMES

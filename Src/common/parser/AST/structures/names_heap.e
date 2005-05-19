@@ -296,6 +296,7 @@ feature {NONE} -- Implementation: access
 			put ("to_real_64") check found_item = to_real_64_name_id end
 			put ("is_lower") check found_item = is_lower_name_id end
 			put ("is_upper") check found_item = is_upper_name_id end
+			put ("set_bit") check found_item = set_bit_name_id end
 		end
 		
 invariant

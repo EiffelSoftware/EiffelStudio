@@ -48,6 +48,10 @@ feature {NONE}-- Initialization
 			create last_visible_column_label
 			create l_ev_horizontal_box_6
 			create last_visible_row_label
+			create viewable_width
+			create viewable_height
+			create viewable_x_offset
+			create viewable_y_offset
 			
 				-- Build_widget_structure.
 			extend (l_ev_frame_1)
@@ -62,7 +66,7 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_5.extend (last_visible_column_label)
 			l_ev_horizontal_box_6.extend (last_visible_row_label)
 			
-			l_ev_table_1.resize (2, 3)
+			l_ev_table_1.resize (2, 5)
 			l_ev_table_1.set_row_spacing (box_padding)
 			l_ev_table_1.set_column_spacing (box_padding)
 				-- Insert and position all children of `l_ev_table_1'.
@@ -72,6 +76,10 @@ feature {NONE}-- Initialization
 			l_ev_table_1.put_at_position (l_ev_horizontal_box_4, 2, 2, 1, 1)
 			l_ev_table_1.put_at_position (l_ev_horizontal_box_5, 1, 3, 1, 1)
 			l_ev_table_1.put_at_position (l_ev_horizontal_box_6, 2, 3, 1, 1)
+			l_ev_table_1.put_at_position (viewable_width, 1, 4, 1, 1)
+			l_ev_table_1.put_at_position (viewable_height, 2, 4, 1, 1)
+			l_ev_table_1.put_at_position (viewable_x_offset, 1, 5, 1, 1)
+			l_ev_table_1.put_at_position (viewable_y_offset, 2, 5, 1, 1)
 			l_ev_horizontal_box_1.disable_item_expand (l_ev_label_1)
 			l_ev_label_1.set_text ("Virtual X : ")
 			virtual_x_position.value_range.adapt (create {INTEGER_INTERVAL}.make (0, 1000000))
@@ -102,7 +110,8 @@ feature -- Access
 
 	virtual_x_position, virtual_y_position: EV_SPIN_BUTTON
 	first_visible_column_label, first_visible_row_label,
-	last_visible_column_label, last_visible_row_label: EV_LABEL
+	last_visible_column_label, last_visible_row_label, viewable_width, viewable_height,
+	viewable_x_offset, viewable_y_offset: EV_LABEL
 	drawable: EV_DRAWING_AREA
 
 feature {NONE} -- Implementation

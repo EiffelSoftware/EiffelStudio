@@ -104,12 +104,35 @@ feature {NONE} -- Implementation
 		do
 			l_column := grid.last_visible_column
 			if l_column /= Void then
-				last_visible_column_label.set_text ("Last Visible column : " + l_column.index.out)
+				last_visible_column_label.set_text ("Last Visible Column : " + l_column.index.out)
 			else
 				last_visible_column_label.set_text ("Last Visible Column Void")
 			end
 		end
 		
+	display_viewable_width is
+			--
+		do
+			viewable_width.set_text ("Viewable Width : " + grid.viewable_width.out)
+		end
+
+	display_viewable_height is
+			--
+		do
+			viewable_height.set_text ("Viewable Height : " + grid.viewable_height.out)
+		end
+
+	display_viewable_x_offset is
+			--
+		do
+			viewable_x_offset.set_text ("Viewable X Offset : " + grid.viewable_x_offset.out)
+		end
+
+	display_viewable_y_offset is
+			--
+		do
+			viewable_y_offset.set_text ("Viewable Y Offset : " + grid.viewable_y_offset.out)
+		end
 
 	virtual_size_changed (a_width, a_height: INTEGER) is
 			-- Virtual size of `grid' has changed.
@@ -213,6 +236,10 @@ feature {NONE} -- Implementation
 				display_first_visible_column
 				display_last_visible_column
 				display_last_visible_row
+				display_viewable_height
+				display_viewable_width
+				display_viewable_x_offset
+				display_viewable_Y_offset
 			end
 		end
 		

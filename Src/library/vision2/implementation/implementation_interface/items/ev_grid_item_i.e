@@ -146,6 +146,10 @@ feature -- Access
 	background_color: EV_COLOR
 			-- Color displayed behind foreground features.
 
+	tooltip: STRING
+			-- Tooltip displayed on `Current'.
+			-- If `Result' is `Void' then no tooltip is displayed.
+
 feature -- Status setting
 
 	activate is
@@ -244,6 +248,15 @@ feature -- Element change
 			if parent /= Void then
 				parent.implementation.redraw_item (Current)
 			end
+		end
+
+	set_tooltip (a_tooltip: STRING) is
+			-- Assign `a_tooltip' to `tooltip'.
+			-- pass `Void' to remove the tooltip.
+		do
+			tooltip := a_tooltip			
+		ensure
+			tooltip_assigned: a_tooltip = tooltip
 		end
 
 feature {EV_GRID_I, EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I} -- Implementation

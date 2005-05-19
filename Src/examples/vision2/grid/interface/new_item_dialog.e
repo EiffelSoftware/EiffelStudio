@@ -53,7 +53,7 @@ feature {NONE} -- Implementation
 			grid_label_item: EV_GRID_LABEL_ITEM
 			l_xcount, l_ycount: INTEGER
 			text: STRING
-			grid_custom_item: EV_DRAWABLE_GRID_ITEM
+			grid_custom_item: EV_GRID_DRAWABLE_ITEM
 			upper_y, upper_x: INTEGER
 			grid_item: EV_GRID_ITEM
 			time1, time2: DATE_TIME
@@ -145,21 +145,16 @@ feature {NONE} -- Implementation
 		
 	item_counter: INTEGER
 		
-	draw_ellipse (an_x, a_y, a_width, a_height: INTEGER; drawable: EV_DRAWABLE; an_item: EV_DRAWABLE_GRID_ITEM) is
+	draw_ellipse (an_x, a_y, a_width, a_height: INTEGER; drawable: EV_DRAWABLE; an_item: EV_GRID_DRAWABLE_ITEM) is
 			--
-		local
-			back_color: EV_COLOR
 		do
-			if back_color = Void then
-				back_color := grid.background_color
-			end
-			drawable.set_foreground_color (back_color)
+			drawable.set_foreground_color (grid.background_color)
 			drawable.fill_rectangle (an_x, a_y, a_width, a_height)
-			drawable.set_foreground_color (an_item.foreground_color)
+			drawable.set_foreground_color (grid.foreground_color)
 			drawable.draw_ellipse (an_x, a_y, a_width, a_height)
 		end
-		
-	draw_pixmap (an_x, a_y, a_width, a_height: INTEGER; drawable: EV_DRAWABLE; an_item: EV_DRAWABLE_GRID_ITEM) is
+
+	draw_pixmap (an_x, a_y, a_width, a_height: INTEGER; drawable: EV_DRAWABLE; an_item: EV_GRID_DRAWABLE_ITEM) is
 			--
 		local
 			back_color: EV_COLOR

@@ -57,5 +57,11 @@
 					<label>Using Referenced Assemblies</label>
 				</link>
 			</item>
+			<item>
+				<link>
+					<url>90_assembly_formatting.xml</url>
+					<label>Referenced Assembly Type and Feature Name Conversion</label>
+				</link>
+			</item>
 		</list>
 	</paragraph></document>

@@ -66,6 +66,15 @@
 						</Directory>
 					</Directory>
 					<Directory Id="base" Name="base">
+						<Directory Id="serialization" Name="SERIAL~1" LongName="serialization">
+							<Directory Id="traversing" Name="TRAVER~1" LongName="traversing">
+								<Directory Id="dotnet5" Name="dotnet">
+									<Component Id="dotnet5" Guid="803FEF0F-9C0E-4cfb-BA06-1E85E14CA7B6">
+										<File Id="sed_objects_table_e" Name="SED_OB~1.E" LongName="sed_objects_table.e" />
+									</Component>
+								</Directory>
+							</Directory>
+						</Directory>
 						<Directory Id="support" Name="support">
 							<Directory Id="dotnet3" Name="dotnet">
 								<Component Id="operating_environment.e" Guid="1DFDDD79-210D-4DFB-9837-3328F1C2279E">

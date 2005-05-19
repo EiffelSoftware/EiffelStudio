@@ -34,11 +34,7 @@ feature {NONE} -- Initialization
 			l_color: EV_COLOR
 		do
 			grid.set_dynamic_content_function (agent compute_item)
-			add_color_to_combo ((create {EV_STOCK_COLORS}).red, set_background_color_combo)
-			add_color_to_combo ((create {EV_STOCK_COLORS}).green, set_background_color_combo)
-			add_color_to_combo ((create {EV_STOCK_COLORS}).blue, set_background_color_combo)
-			add_color_to_combo ((create {EV_STOCK_COLORS}).yellow, set_background_color_combo)
-			add_color_to_combo ((create {EV_STOCK_COLORS}).white, set_background_color_combo)
+			add_default_colors_to_combo (set_background_color_combo)
 			
 				-- Now load pixmaps for exapnd/collapse nodes.
 			expand1 := grid.expand_node_pixmap
@@ -73,42 +69,10 @@ feature {NONE} -- Initialization
 
 			add_default_colors_to_combo (foreground_color_combo)
 			add_default_colors_to_combo (background_color_combo)
-			background_color_combo.select_actions.block
-				if grid.background_color /= Void then
-					from
-						background_color_combo.start
-					until
-						background_color_combo.off
-					loop
-						l_color ?= background_color_combo.item.data		
-						if l_color /= Void and then l_color.is_equal (grid.background_color) then
-							background_color_combo.item.enable_select
-							background_color_combo.go_i_th (background_color_combo.count)
-						end
-						background_color_combo.forth
-					end
-				else
-					background_color_combo.first.enable_select
-				end
-				background_color_combo.select_actions.resume
-				foreground_color_combo.select_actions.block
-				if foreground_color /= Void then
-					from
-						foreground_color_combo.start
-					until
-						foreground_color_combo.off
-					loop
-						l_color ?= foreground_color_combo.item.data		
-						if l_color /= Void and then l_color.is_equal (grid.foreground_color) then
-							foreground_color_combo.item.enable_select
-							foreground_color_combo.go_i_th (foreground_color_combo.count)
-						end
-						foreground_color_combo.forth
-					end
-				else
-					foreground_color_combo.first.enable_select
-				end
-				foreground_color_combo.select_actions.resume
+			add_default_colors_to_combo (separator_color_combo)
+			select_color_from_combo (background_color_combo, grid.background_color)
+			select_color_from_combo (foreground_color_combo, grid.foreground_color)
+			select_color_from_combo (separator_color_combo, grid.separator_color)
 		end
 		
 	expand1, expand2, expand3, collapse1, collapse2, collapse3: EV_PIXMAP
@@ -1005,31 +969,37 @@ feature {NONE} -- Implementation
 --			end
 
 			-- Test 18
+----			grid.set_item (1, 1, create {EV_GRID_LABEL_ITEM}.make_with_text ("An item"))
+----			grid.set_item (2, 1, create {EV_GRID_LABEL_ITEM}.make_with_text ("An item"))
+----			grid.remove_row (1)
+----			grid.remove_column (2)
+----			grid.remove_column (1)
+----			grid.set_item (1, 1, create {EV_GRID_LABEL_ITEM}.make_with_text ("An item"))
+----			grid.insert_new_row (1)
+----			grid.insert_new_row (2)
+----			print (grid.row_count)
+----			row := grid.row (2)
+----			grid.enable_partial_dynamic_content
+----			grid.set_column_count_to (3)
 --			grid.set_item (1, 1, create {EV_GRID_LABEL_ITEM}.make_with_text ("An item"))
---			grid.set_item (2, 1, create {EV_GRID_LABEL_ITEM}.make_with_text ("An item"))
---			grid.remove_row (1)
---			grid.remove_column (2)
---			grid.remove_column (1)
---			grid.set_item (1, 1, create {EV_GRID_LABEL_ITEM}.make_with_text ("An item"))
---			grid.insert_new_row (1)
---			grid.insert_new_row (2)
---			print (grid.row_count)
---			row := grid.row (2)
---			grid.enable_partial_dynamic_content
---			grid.set_column_count_to (3)
-			grid.set_item (1, 1, create {EV_GRID_LABEL_ITEM}.make_with_text ("An item"))
-			grid.set_item (1, 2, create {EV_GRID_LABEL_ITEM}.make_with_text ("An item"))
-			grid.set_item (1, 3, create {EV_GRID_LABEL_ITEM}.make_with_text ("An item"))
-			grid.set_item (1, 4, create {EV_GRID_LABEL_ITEM}.make_with_text ("An item"))
-			grid.set_item (1, 5, create {EV_GRID_LABEL_ITEM}.make_with_text ("An item"))
---			grid.row (1).set_height (16)
---			grid.row (2).set_height (32)
---			grid.row (3).set_height (48)
-			grid.row (4).set_height (128)
---			grid.row (5).set_height (80)
+--			grid.set_item (1, 2, create {EV_GRID_LABEL_ITEM}.make_with_text ("An item"))
+--			grid.set_item (1, 3, create {EV_GRID_LABEL_ITEM}.make_with_text ("An item"))
+--			grid.set_item (1, 4, create {EV_GRID_LABEL_ITEM}.make_with_text ("An item"))
+--			grid.set_item (1, 5, create {EV_GRID_LABEL_ITEM}.make_with_text ("An item"))
+----			grid.row (1).set_height (16)
+----			grid.row (2).set_height (32)
+----			grid.row (3).set_height (48)
+--			grid.row (4).set_height (128)
+----			grid.row (5).set_height (80)
+--			grid.enable_tree
+--			grid.row (3).add_subrow (grid.row (4))
+--			grid.disable_row_height_fixed
+
+
+			-- Test 19
 			grid.enable_tree
-			grid.row (3).add_subrow (grid.row (4))
-			grid.disable_row_height_fixed
+			grid.insert_new_row (1)
+			grid.set_item (1, 1, create {EV_GRID_LABEL_ITEM}.make_with_text ("An Item"))
 			end
 
 	clean_grid is
@@ -1613,6 +1583,37 @@ feature {NONE} -- Implementation
 				grid.column_count = 0
 			loop
 				grid.remove_column (grid.column_count)
+			end
+		end
+
+	are_row_separators_enabled_button_selected is
+			-- Called by `select_actions' of `are_row_separators_enabled_button'.
+		do
+			if are_row_separators_enabled_button.is_selected then
+				grid.enable_row_separators
+			else
+				grid.disable_row_separators
+			end
+		end
+	
+	are_column_separators_enabled_button_selected is
+			-- Called by `select_actions' of `are_column_separators_enabled_button'.
+		do
+			if are_column_separators_enabled_button.is_selected then
+				grid.enable_column_separators
+			else
+				grid.disable_column_separators
+			end
+		end
+
+	separator_color_combo_selected is
+			-- Called by `select_actions' of `separator_color_combo'.
+		local
+			a_color: EV_COLOR
+		do
+			a_color ?= separator_color_combo.selected_item.data
+			if a_color /= Void then
+				grid.set_separator_color (a_color)
 			end
 		end
 		

@@ -40,8 +40,9 @@ cleanup_eiffel doc_builder.exe
 iff not exist doc_builder.exe then
 	remtrace Couldnt generate doc_builder.exe
 	CANCEL
+else
+	move doc_builder.exe %DOCUMENT_DIR
 endiff
-move doc_builder.exe %DOCUMENT_DIR
 
 
 remtrace ---------------------------------------------------------------
@@ -79,7 +80,7 @@ cdd %EIFFEL_SRC\tools\doc_builder\resources\xml\Documentation
 move /s base %DOCUMENT_DIR\xmldoc\libraries\base\reference
 move /s wel %DOCUMENT_DIR\xmldoc\libraries\wel\reference
 move /s vision2 %DOCUMENT_DIR\xmldoc\libraries\vision2\reference
-move /s /s com %DOCUMENT_DIR\xmldoc\libraries\com\reference
+move /s com %DOCUMENT_DIR\xmldoc\libraries\com\reference
 move /s eiffel2java %DOCUMENT_DIR\xmldoc\libraries\eiffel2java\reference
 move /s lex %DOCUMENT_DIR\xmldoc\libraries\lex\reference
 move /s parse %DOCUMENT_DIR\xmldoc\libraries\parse\reference
@@ -96,7 +97,7 @@ remtrace Run the documentation tool to generate the documentation for EiffelStud
 remtrace ----------------------------------------------------------------------------------------
 
 cdd %DOCUMENT_DIR
-doc_builder.exe -gen /xml2help -o /studio -t /mshtml -nohtml %DOCUMENT_DIR\xmldoc\documentation.dpr
+doc_builder.exe -gen /xml2help -o /studio -t /mshtml -nohtml %DOCUMENT_DIR\xmldoc\projects\documentation.dpr
 cdd C:\doc\Html
 fullrd docs.chm
 hhc docs.hhp

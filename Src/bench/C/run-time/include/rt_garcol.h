@@ -38,9 +38,9 @@ extern "C" {
 #ifdef VXWORKS
 #define STACK_CHUNK		400		/* Size of a stack chunk */
 #else
-#define STACK_CHUNK		1000	/* Size of a stack chunk */
+#define STACK_CHUNK		10000	/* Size of a stack chunk */
 #endif
-#define MIN_FREE		100		/* Below that, chunk is nearly full */
+#define MIN_FREE		STACK_CHUNK / 10		/* Below that, chunk is nearly full */
 #define TH_ALLOC		786432	/* Allocation threshold (768 K)*/
 #define TH_ALLOC_MIN	8192	/* Minimal allocation threshold (8 K).*/
 #define OBJ_MAX			1500	/* Maximum # of young objects in moved_set */

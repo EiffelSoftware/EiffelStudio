@@ -240,9 +240,8 @@ rt_private struct dump *get_next_execution_vector(void)
 	else
 		dumped.dmp_type = DMP_VECT;	/* Structure contains frozen feature */
 
-
 	copy = *top;
-	dumped.dmp_vect = (struct debug_ex_vect *)&copy; /* static variable  -- Didier */
+	dumped.dmp_vect = &copy; /* static variable  -- Didier */
 
 	/* Temporary hack:
 	 * With the time constraints we had it was not an option to change the

@@ -52,7 +52,7 @@ rt_private struct dump	*get_next_variable(uint32 start);			/* Dump the locals an
 rt_private struct dcall *safe_dtop(void);							/* Perform a safe dtop() without eif_panic */
 rt_private void 		init_var_dump(struct dcall *call);			/* Initialize register context */
 rt_private uint32		go_ith_stack_level(int level);				/* Go to the i-th level down the stack */
-rt_private struct dump 	*variable_item(int variable_type, int n, uint32 start); /* Dump a local or an argument of active feature */
+rt_private struct dump 	*variable_item(int variable_type, uint32 n, uint32 start); /* Dump a local or an argument of active feature */
 
 /* Public Routines declarations */
 rt_public void 			send_stack(eif_stream s, uint32 elem_nb);					/* Dump the application */
@@ -380,8 +380,8 @@ rt_private struct dump *get_next_variable(uint32 start)
 	static struct dump dumped;			/* Item returned */
 	struct dump *dp;					/* Partial dump pointer */
 	static int arg_done = 0;			/* True when arguments processed */
-	static int argn = 0;				/* Argument number */
-	static int locn = 0;				/* Local number */
+	static uint32 argn = 0;				/* Argument number */
+	static uint32 locn = 0;				/* Local number */
 
 	if (!arg_done)						/* There are still some arguments */
 		{
@@ -417,7 +417,7 @@ rt_private struct dump *get_next_variable(uint32 start)
  * Return the nth argument/local variable, or a void pointer if we        *
  * reached the end of the argument/local variable list.                   *
  **************************************************************************/
-rt_private struct dump *variable_item(int variable_type, int n, uint32 start)
+rt_private struct dump *variable_item(int variable_type, uint32 n, uint32 start)
 	{
 	uint32 type;
 	struct item *ip;					/* Partial item pointer */

@@ -231,6 +231,31 @@ feature -- Access
 			a_combo.select_actions.resume
 		end
 
+	select_color_from_combo (a_combo: EV_COMBO_BOX; a_color: EV_COLOR) is
+			-- Select the item in `a_combo' which has data matching `a_color'.
+		local
+			l_color: EV_COLOR
+		do
+			a_combo.select_actions.block
+			if a_color = Void then
+				a_combo.first.enable_select
+			else
+				from
+					a_combo.start
+				until
+					a_combo.off
+				loop
+					l_color ?= a_combo.item.data		
+					if l_color /= Void and then l_color.is_equal (a_color) then
+						a_combo.item.enable_select
+						a_combo.go_i_th (a_combo.count)
+					end
+					a_combo.forth
+				end
+			end
+			a_combo.select_actions.resume
+		end
+
 	stock_colors: EV_STOCK_COLORS is
 			-- Once access to EiffelVision2 stock colors
 		once

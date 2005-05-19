@@ -1515,6 +1515,7 @@
 									<File Id="ev_grid_column_e" Name="EV_GRI~1.E" LongName="ev_grid_column.e" />
 									<File Id="ev_grid_combo_item_e" Name="EVE5EA~1.E" LongName="ev_grid_combo_item.e" />
 									<File Id="ev_grid_editable_item_e" Name="EV1ADD~1.E" LongName="ev_grid_editable_item.e" />
+									<File Id="ev_grid_header_item_e" Name="EV5256~1.E" LongName="ev_grid_header_item.e" />
 									<File Id="ev_grid_item_e" Name="EV_GRI~2.E" LongName="ev_grid_item.e" />
 									<File Id="ev_grid_label_item_e" Name="EV_GRI~3.E" LongName="ev_grid_label_item.e" />
 									<File Id="ev_grid_row_e" Name="EV_GRI~4.E" LongName="ev_grid_row.e" />
@@ -1797,7 +1798,8 @@
 										<File Id="ev_vertical_separator.e" Name="EV_VER~4.E" LongName="ev_vertical_separator.e" KeyPath="yes" />
 										<File Id="ev_progress_bar.e" Name="EV_PRO~1.E" LongName="ev_progress_bar.e" />
 										<File Id="ev_gauge.e" Name="ev_gauge.e" />
-										<File Id="ev_grid.e" Name="ev_grid.e" />
+										<File Id="ev_grid_e" Name="ev_grid.e" />
+										<File Id="ev_grid_header_e" Name="EV_GRI~1.E" LongName="ev_grid_header.e" />
 										<File Id="ev_combo_box.e" Name="EV_COM~2.E" LongName="ev_combo_box.e" />
 										<File Id="ev_vertical_scroll_bar.e" Name="EV_VER~6.E" LongName="ev_vertical_scroll_bar.e" />
 										<File Id="ev_toggle_button.e" Name="EV_TOG~1.E" LongName="ev_toggle_button.e" />

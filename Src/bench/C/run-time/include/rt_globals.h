@@ -115,8 +115,8 @@ typedef struct tag_rt_globals
 	struct opstack op_stack_cx;			/* Operational stack */
 	struct item **iregs_cx;				/* Interpreter registers */
 	int iregsz_cx;						/* Size of 'iregs' array (bytes) */
-	int argnum_cx;						/* Number of arguments */
-	int locnum_cx;						/* Number of locals */
+	uint32 argnum_cx;					/* Number of arguments */
+	uint32 locnum_cx;					/* Number of locals */
 	unsigned long tagval_cx;			/* Records number of interpreter's call */
 	struct stochunk *saved_scur_cx; 	/* current feature context */
 	struct item *saved_stop_cx;			/* current feature context */

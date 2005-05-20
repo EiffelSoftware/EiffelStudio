@@ -33,7 +33,8 @@ inherit
 			destroy,
 			on_focus_changed,
 			needs_event_box,
-			gdk_events_mask
+			gdk_events_mask,
+			button_press_switch
 		end
 
 	EV_DRAWING_AREA_ACTION_SEQUENCES_IMP
@@ -60,17 +61,9 @@ feature {NONE} -- Initialization
 			gc := {EV_GTK_EXTERNALS}.gdk_gc_new (App_implementation.default_gdk_window)
 			init_default_values
 			{EV_GTK_EXTERNALS}.gtk_widget_set_double_buffered (visual_widget, False)
-			enable_tabable_to
+			disable_tabable_to
+			disable_tabable_from
 		end		
-
-	Gdk_events_mask: INTEGER is
-			-- Mask of all the gdk events the gdkwindow shall receive.
-		once
-			Result := Precursor {EV_PRIMITIVE_IMP} |
-			{EV_GTK_EXTERNALS}.GDK_POINTER_MOTION_HINT_MASK_ENUM
-				-- We only want motion events when we query for them.
-				-- Setting this flag on other gtk widgets such as GtkTreeView causes problems with the implementation
-		end
 
 feature -- Status report
 
@@ -111,8 +104,8 @@ feature -- Status setting
 feature {NONE} -- Implementation
 
 	default_key_processing_blocked (a_key: EV_KEY): BOOLEAN is
+			-- Should default key processing be allowed for `a_key'.
 		do
-			--Result := not is_tabable_from and then (a_key.is_arrow or else a_key.code = App_implementation.Key_constants.key_tab)
 			Result := a_key.is_arrow or else (not is_tabable_from and a_key.code = App_implementation.Key_constants.key_tab)
 		end
 
@@ -151,7 +144,7 @@ feature {NONE} -- Implementation
 		end
 
 	redraw_rectangle (a_x, a_y, a_width, a_height: INTEGER) is
-			-- Redraw the rectangle area defined by `a_x', `a_y', `a_width', a_height'
+			-- Redraw the rectangle area defined by `a_x', `a_y', `a_width', a_height'.
 		local
 			a_rectangle: POINTER
 			a_drawable: POINTER
@@ -169,14 +162,14 @@ feature {NONE} -- Implementation
 		end
 		
 	clear_and_redraw is
-			-- Clear `Current' and redraw
+			-- Clear `Current' and redraw.
 		do
 			clear
 			redraw
 		end
 
 	clear_and_redraw_rectangle (a_x, a_y, a_width, a_height: INTEGER) is
-			-- Clear the rectangle area defined by `a_x', `a_y', `a_width', `a_height' and then redraw it
+			-- Clear the rectangle area defined by `a_x', `a_y', `a_width', `a_height' and then redraw it.
 		do
 			clear_rectangle (a_x, a_y, a_width, a_height)
 			redraw_rectangle (a_x, a_y, a_width, a_height)
@@ -191,7 +184,7 @@ feature {NONE} -- Implementation
 		end
 
 	update_if_needed is
-			-- Update `Current' if needed
+			-- Update `Current' if needed.
 		do
 			-- Not applicable
 		end
@@ -200,13 +193,13 @@ feature {NONE} -- Implementation
 feature {EV_DRAWABLE_IMP} -- Implementation
 
 	drawable: POINTER is
-			-- Pointer to the drawable object for `Current'
+			-- Pointer to the drawable object for `Current'.
 		do
 			Result := {EV_GTK_EXTERNALS}.gtk_widget_struct_window (visual_widget)
 		end
 
 	mask: POINTER
-			-- Mask of Current, which is always NULL
+			-- Mask of Current, which is always NULL.
 		
 feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 
@@ -236,11 +229,34 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 		
 feature {NONE} -- Implementation
 
+	Gdk_events_mask: INTEGER is
+			-- Mask of all the gdk events the gdkwindow shall receive.
+		once
+			Result := Precursor {EV_PRIMITIVE_IMP} |
+			{EV_GTK_EXTERNALS}.GDK_POINTER_MOTION_HINT_MASK_ENUM
+				-- We only want motion events when we query for them.
+				-- Setting this flag on other gtk widgets such as GtkTreeView causes problems with the implementation
+		end
+
+	button_press_switch (a_type: INTEGER; a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+			-- Call pointer_button_press_actions or pointer_double_press_actions
+			-- depending on event type in first position of `event_data'.
+		do
+			if not is_tabable_to then
+				{EV_GTK_EXTERNALS}.gtk_widget_set_flags (visual_widget, {EV_GTK_EXTERNALS}.GTK_CAN_FOCUS_ENUM)
+			end
+			set_focus
+			if not is_tabable_to then
+				{EV_GTK_EXTERNALS}.gtk_widget_unset_flags (visual_widget, {EV_GTK_EXTERNALS}.GTK_CAN_FOCUS_ENUM)
+			end
+			Precursor {EV_PRIMITIVE_IMP} (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
+		end
+
 	interface: EV_DRAWING_AREA
-		-- Interface object of Current
+		-- Interface object of Current.
 
 	destroy is
-			-- Destroy implementation
+			-- Destroy implementation.
 		do
 			Precursor {EV_PRIMITIVE_IMP}
 			if gc /= NULL then

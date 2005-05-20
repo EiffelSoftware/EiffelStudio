@@ -625,12 +625,26 @@ feature -- Status setting
 			-- May be used for dynamic behavior by filling subrows upon firing of `grid.row_expand_actions'.
 			-- If no items are added to `Current' during the firing of `grid.row_expand_actions' then
 			-- `Current' is no longer expandable. This may be re-instated by calling `ensure_expandable' again
-			-- from `grid.row_expand_actions'.
+			-- from `grid.row_expand_actions'. Note that once a subrow is added to `Current' after a call to
+			-- `ensure_expandable', it is no longer be displayed as expandable if all subrows are then removed.
+			-- In this case, you must explicitly call `ensure_expandable' again after removing all subrows.
 		do
 			is_ensured_expandable := True
 			parent_i.redraw_from_row_to_end (Current)
 		ensure
 			is_expandable: is_expandable
+		end
+		
+	ensure_non_expandable is
+			-- Restore expanded state of `Current' after a call to `ensure_expandable'. Note that if a row
+			-- has one or more subrows, it is always drawn as expanded, hence the "no_subrows_contained" precondition.
+		require
+			no_subrows_contained: subrow_count = 0
+		do
+			is_ensured_expandable := False
+			parent_i.redraw_from_row_to_end (Current)
+		ensure
+			not_is_expandable: not is_expandable
 		end
 		
 	is_ensured_expandable: BOOLEAN
@@ -782,6 +796,9 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 		local
 			row_imp: EV_GRID_ROW_I
 		do
+				-- Reset `is_ensured_expandable' 
+			is_ensured_expandable := False
+
 			row_imp := a_row.implementation
 			subrows.go_i_th (subrow_index)
 			subrows.put_left (row_imp)

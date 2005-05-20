@@ -308,7 +308,19 @@ feature -- Status setting
 		ensure
 			is_expandable: is_expandable
 		end
-
+		
+	ensure_non_expandable is
+			-- Restore expanded state of `Current' after a call to `ensure_expandable'. Note that if a row
+			-- has one or more subrows, it is always drawn as expanded, hence the "no_subrows_contained" precondition.
+		require
+			not_destroyed: not is_destroyed
+			no_subrows_contained: subrow_count = 0
+		do
+			implementation.ensure_non_expandable
+		ensure
+			not_is_expandable: not is_expandable
+		end
+		
 	set_background_color (a_color: EV_COLOR) is
 			-- Set `background_color' with `a_color'.
 		require

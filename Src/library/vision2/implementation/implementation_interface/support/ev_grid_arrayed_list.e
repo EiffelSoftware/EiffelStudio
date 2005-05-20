@@ -40,6 +40,7 @@ feature {EV_GRID_I} -- Implementation
 			new_capacity_not_negative: new_capacity >= 0
 		local
 			i, internal_new_capacity: INTEGER
+			l_default: G
 		do
 			if new_capacity > upper then
 					-- Resize by 50% to prevent the need for resizing continuously
@@ -57,7 +58,7 @@ feature {EV_GRID_I} -- Implementation
 				until
 					i = new_capacity
 				loop
-					put_i_th (Void, i)
+					put_i_th (l_default, i)
 					i := i - 1
 				end					
 			end

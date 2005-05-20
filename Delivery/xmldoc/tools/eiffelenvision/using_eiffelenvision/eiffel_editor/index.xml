@@ -1,0 +1,94 @@
+<document output="envision" title="Eiffel Editor">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_title>Eiffel Editor</envision_title>
+				<envision_pseudo_name>00</envision_pseudo_name>
+			</toc>
+			<xml>
+				<keyword>
+					<index>A</index>
+					<term>eeEiffelEditor</term>
+				</keyword>
+				<keyword>
+					<index>K</index>
+					<term>Editor, Eiffel</term>
+				</keyword>
+				<keyword>
+					<index>K</index>
+					<term>Eiffel Editor</term>
+				</keyword>
+			</xml>
+		</help>
+	</meta_data>
+	<paragraph>
+		<paragraph>The Eiffel editor allows you to edit and manage multiple Eiffel 
+			<link>
+				<url>/20_Language/10_Eiffel_NET/10_Conventions/index.xml</url>
+				<anchor_name>classes</anchor_name>
+				<label>*classes</label>
+			</link> from within Visual Studio .NET.
+		</paragraph>
+		<paragraph>
+			EiffelEnvision's Eiffel editor is specifically designer to edit Eiffel <link><url>url</url><label>*classes</label></link>, using Visual Studio .NET.  
+			The Eiffel editor integrates directly into the Visual Studio .NET <help_link>
+				<keywords>vxurfCodeTextEditorWindow</keywords>
+				<tab_index>0</tab_index>
+				Core Editor
+			</help_link> and provides all of the editor services and features you would come to expect from a language editor in Visual Studio .NET
+		</paragraph>	
+		
+		<anchor>in_this_section</anchor>
+		<heading>
+			<size>2</size>
+			<content>In This Section</content>
+		</heading>
+
+		<paragraph>
+		<link><url>configuration/index.xml</url><label>Configuring the Editor</label></link>
+		<line_break/>
+		The options provided to customize the look and feel of the Eiffel editor.
+		</paragraph>
+
+		<paragraph>
+		<link><url>intellisense.xml</url><label>Intellisense and Completion</label></link>
+		<line_break/>
+		Describes all of the Eiffel editor standard <help_link>
+			<keywords>vcovrAutomaticStatementCompletion</keywords>
+			<tab_index>0</tab_index>
+			Intellisense
+		</help_link> features
+		</paragraph>
+		
+		<paragraph>
+		<link><url>browse_and_navigation.xml</url><label>Code Browsing and Navigation</label></link>
+		<line_break/>
+		Describes all of the Eiffel editor extended features providing code browsing and navigation features.
+		</paragraph>
+		
+		<anchor>see_also</anchor>
+		<heading>
+			<size>2</size>
+			<content>Related Section</content>
+		</heading>
+		<seealso>
+			<bold>See also</bold>:
+			<line_break/>
+			<help_link>
+				<keywords>vxurfCodeTextEditorWindow</keywords>
+				<tab_index>0</tab_index>
+				Core Editor
+			</help_link>
+			<link>
+				<url/>
+				<label>*Eiffel Keywords</label>
+			</link>
+			<line_break/>
+			<link>
+				<url/>
+				<label>*Eiffel Conventions</label>
+			</link>
+			<line_break/>
+		</seealso>
+	</paragraph>
+</document>

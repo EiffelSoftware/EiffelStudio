@@ -3122,8 +3122,8 @@ feature {NONE} -- Event handling
 			ignore_selection_handling: BOOLEAN
 			a_sel_item: EV_GRID_ITEM
 		do
-			drawable.set_focus
 			pointed_item := drawer.item_at_position_strict (a_x, a_y)
+
 
 				-- We fire the pointer button press actions before the node or selection actions which may occur
 				-- as a result of this press.

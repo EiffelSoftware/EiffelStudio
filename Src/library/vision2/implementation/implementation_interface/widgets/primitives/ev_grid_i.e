@@ -775,8 +775,7 @@ feature -- Status setting
 		end
 		
 	enable_single_row_selection is
-			-- Set selection handling so that clicking an item or navigating using the keyboard arrow keys selects a row.
-			-- whilst unselecting any previously selected rows..
+			-- Allow the user to select a single row via clicking or navigating using the keyboard arrow keys.
 		local
 			a_row: EV_GRID_ROW_I
 			sel_rows: like selected_rows
@@ -810,8 +809,8 @@ feature -- Status setting
 		end
 		
 	enable_multiple_row_selection is
-			-- Set selection handling so that clicking an item or navigating using the keyboard arrow keys selects a row.
-			-- Multiple rows may be selected via keyboard with Ctrl and Shift keys.
+			-- Allow the user to select more than one row via clicking or navigating using the keyboard arrow keys.
+			-- Multiple rows may be selected via Ctrl and Shift keys.
 		local
 			sel_items: like selected_items
 		do
@@ -836,12 +835,11 @@ feature -- Status setting
 		end
 		
 	enable_single_item_selection is
-			-- Set selection handling so that clicking an item or navigating using the keyboard arrow keys selects the item,
-			-- whilst unselecting any previously selected items.
+			-- Allow the user to select a single item via clicking or navigating using the keyboard arrow keys.
 		local
 			sel_items: like selected_items
 		do
-				-- Store the existing selected items if any so that the selection state may be partially restored
+				-- Store the existing selected items if any so that the selection state may be partially restored.
 			sel_items := selected_items
 			remove_selection
 			is_single_item_selection_enabled := True
@@ -857,9 +855,8 @@ feature -- Status setting
 		end
 		
 	enable_multiple_item_selection is
-			-- Set selection handling so that clicking an item or navigating using the keyboard arrow keys selects the item,
-			-- whilst unselecting any previously selected items.
-			-- Multiple items may be selected via keyboard with Ctrl and Shift keys.
+			-- Allow the user to select more than one item via clicking or navigating using the keyboard arrow keys.
+			-- Multiple items may be selected via Ctrl and Shift keys.
 		local
 			sel_items: like selected_items
 		do

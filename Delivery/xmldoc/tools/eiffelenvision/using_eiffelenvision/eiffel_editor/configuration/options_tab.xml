@@ -23,7 +23,11 @@
 	</meta_data>
 	<paragraph>
 		<paragraph>
-			The <bold>Tabs</bold> property page, in the <bold>Tabs</bold>  folder of the Text Editor folder of the <bold>Tabs</bold> (<bold>Tabs</bold> menu) dialog box allows you to change the default tab settings for the Code/Text Editor.
+			The <bold>Tabs</bold> options page, in the <bold>Eiffel</bold> folder of the <bold>Text Editor</bold> folder in the <help_link>
+				<keywords>vxoriOptions</keywords>
+				<tab_index>0</tab_index>
+				Options Dialog Box
+			</help_link> (<bold>Tools</bold>, <bold>Options</bold> menu) contains the following options:
 		</paragraph>
 		<anchor>indenting</anchor>
 		<heading>

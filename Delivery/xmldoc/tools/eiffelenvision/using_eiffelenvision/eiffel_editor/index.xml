@@ -79,6 +79,7 @@
 				<tab_index>0</tab_index>
 				Core Editor
 			</help_link>
+			<line_break/>
 			<link>
 				<url/>
 				<label>*Eiffel Keywords</label>

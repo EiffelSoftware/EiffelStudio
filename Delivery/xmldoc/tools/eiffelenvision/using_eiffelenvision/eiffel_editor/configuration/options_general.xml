@@ -23,7 +23,11 @@
 	</meta_data>
 	<paragraph>
 		<paragraph>
-			The <bold>General</bold> property page, in the <bold>Eiffel</bold> folder of the <bold>Text Editor</bold> folder of the <bold>Options</bold> (<bold>Tools</bold> menu) dialog box contains the following properties:
+			The <bold>General</bold> options page, in the <bold>Eiffel</bold> folder of the <bold>Text Editor</bold> folder in the <help_link>
+				<keywords>vxoriOptions</keywords>
+				<tab_index>0</tab_index>
+				Options Dialog Box
+			</help_link> (<bold>Tools</bold>, <bold>Options</bold> menu) dialog box contains the following options:
 		</paragraph>
 		<anchor>statement_completion</anchor>
 		<heading>

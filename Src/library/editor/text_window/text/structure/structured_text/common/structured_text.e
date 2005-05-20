@@ -194,7 +194,7 @@ feature -- Element change
 		require
 			s_not_void: s /= Void
 		local
-			l_pos, l_previous: INTEGER
+--			l_pos, l_previous: INTEGER
 		do
 --			l_pos := s.index_of ('%N', 1)
 --			if l_pos > 0 then

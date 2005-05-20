@@ -361,7 +361,7 @@ feature -- Code generation
 	minimum_interval_value: INTERVAL_VAL_B is
 			-- Minimum value in inspect interval for current type
 		require
-			valid_type: is_integer or else is_char
+			valid_type: is_integer or else is_natural or else is_char
 		do
 				-- Implementation is provided by descendants that meet precondition
 		ensure
@@ -371,7 +371,7 @@ feature -- Code generation
 	maximum_interval_value: INTERVAL_VAL_B is
 			-- Maximum value in inspect interval for current type
 		require
-			valid_type: is_integer or else is_char
+			valid_type: is_integer or else is_natural or else is_char
 		do
 				-- Implementation is provided by descendants that meet precondition
 		ensure

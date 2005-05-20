@@ -15,7 +15,9 @@ inherit
 			item as cell_item
 		redefine
 			interface,
-			drop_actions
+			drop_actions,
+			has_focus,
+			set_focus
 		end
 
 	EV_GRID_ACTION_SEQUENCES_I
@@ -387,6 +389,13 @@ feature -- Access
 		ensure
 			viewable_y_offset_valid: Result >=0 and Result <= height
 		end
+		
+	has_focus: BOOLEAN is
+			-- Does `Current' have focus?
+		do
+			Result := drawable.has_focus
+		end
+		
 
 feature -- Pick and Drop
 
@@ -1320,6 +1329,12 @@ feature -- Status setting
 			redraw_client_area
 		ensure
 			separator_color_set: separator_color = a_color
+		end
+		
+	set_focus is
+			-- Grab keyboard focus.
+		do
+			drawable.set_focus
 		end
 
 feature -- Status report
@@ -2410,7 +2425,7 @@ feature {EV_GRID_DRAWER_I, EV_GRID_COLUMN_I, EV_GRID_ROW_I, EV_GRID_ITEM_I, EV_G
 			Result := (create {EV_STOCK_COLORS}).black.twin
 		end
 
-feature {EV_GRID_ITEM_I} -- Implementation
+feature {EV_GRID_ITEM_I, EV_GRID} -- Implementation
 
 	focused_selection_color: EV_COLOR is
 			-- Color used for selected items while focused.
@@ -3039,10 +3054,7 @@ feature {NONE} -- Drawing implementation
 	
 	fixed: EV_FIXED
 		-- Main widget contained in `Current' used to manipulate the individual widgets required.
-		
-	drawer: EV_GRID_DRAWER_I
-		-- Drawer which is able to redraw `Current'.
-		
+
 	default_header_height: INTEGER is 16
 		-- Default height applied to `header'.
 	
@@ -3058,6 +3070,11 @@ feature {NONE} -- Drawing implementation
 	horizontal_redraw_triggered_by_viewport_resize: BOOLEAN
 
 	vertical_redraw_triggered_by_viewport_resize: BOOLEAN
+
+feature {EV_GRID_DRAWABLE_ITEM_I} -- Implementation
+
+	drawer: EV_GRID_DRAWER_I
+		-- Drawer which is able to redraw `Current'.
 		
 feature {EV_GRID_COLUMN_I, EV_GRID_DRAWER_I} -- Implementation
 

@@ -11,7 +11,7 @@ inherit
 
 	CLASSNAME_FINDER_SKELETON
 
-create
+creation
 
 	make
 
@@ -29,14 +29,14 @@ feature {NONE} -- Implementation
 	yy_build_tables is
 			-- Build scanner tables.
 		do
-			yy_nxt ?= yy_nxt_template
-			yy_chk ?= yy_chk_template
-			yy_base ?= yy_base_template
-			yy_def ?= yy_def_template
-			yy_ec ?= yy_ec_template
-			yy_meta ?= yy_meta_template
-			yy_accept ?= yy_accept_template
-			yy_acclist ?= yy_acclist_template
+			yy_nxt := yy_nxt_template
+			yy_chk := yy_chk_template
+			yy_base := yy_base_template
+			yy_def := yy_def_template
+			yy_ec := yy_ec_template
+			yy_meta := yy_meta_template
+			yy_accept := yy_accept_template
+			yy_acclist := yy_acclist_template
 		end
 
 	yy_execute_action (yy_act: INTEGER) is
@@ -229,9 +229,7 @@ end
 
 feature {NONE} -- Table templates
 
-	yy_nxt_template: ANY is
-			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
-			-- but once functions cannot be declared with anchored types.
+	yy_nxt_template: SPECIAL [INTEGER] is
 		once
 			Result := yy_fixed_array (<<
 			    0,   12,   12,   13,   14,   12,   15,   12,   12,   16,
@@ -260,12 +258,10 @@ feature {NONE} -- Table templates
 			   51,   51,   51,   51,   51,   51,   51,   51,   36,   61,
 			   36,   36,   36,   36,   36,   36,   11,   61,   61,   61,
 			   61,   61,   61,   61,   61,   61,   61,   61,   61,   61,
-			   61,   61,   61,   61,   61,   61,   61,   61>>)
+			   61,   61,   61,   61,   61,   61,   61,   61, yy_Dummy>>)
 		end
 
-	yy_chk_template: ANY is
-			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
-			-- but once functions cannot be declared with anchored types.
+	yy_chk_template: SPECIAL [INTEGER] is
 		once
 			Result := yy_fixed_array (<<
 			    0,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -294,12 +290,10 @@ feature {NONE} -- Table templates
 			   72,   72,   72,   72,   72,   72,   72,   72,   73,    0,
 			   73,   73,   73,   73,   73,   73,   61,   61,   61,   61,
 			   61,   61,   61,   61,   61,   61,   61,   61,   61,   61,
-			   61,   61,   61,   61,   61,   61,   61,   61>>)
+			   61,   61,   61,   61,   61,   61,   61,   61, yy_Dummy>>)
 		end
 
-	yy_base_template: ANY is
-			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
-			-- but once functions cannot be declared with anchored types.
+	yy_base_template: SPECIAL [INTEGER] is
 		once
 			Result := yy_fixed_array (<<
 			    0,    0,    0,   21,    0,   41,   55,  129,  128,   44,
@@ -309,12 +303,10 @@ feature {NONE} -- Table templates
 			    0,   95,  226,  226,  118,   97,  226,   64,  226,  109,
 			  226,  110,  114,  121,   44,    0,  226,  114,  121,  117,
 			    0,  226,  138,  146,  154,  162,  169,  173,  177,  185,
-			  193,  201,  209,  217>>)
+			  193,  201,  209,  217, yy_Dummy>>)
 		end
 
-	yy_def_template: ANY is
-			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
-			-- but once functions cannot be declared with anchored types.
+	yy_def_template: SPECIAL [INTEGER] is
 		once
 			Result := yy_fixed_array (<<
 			    0,   61,    1,   61,    3,   62,   62,   63,   63,   64,
@@ -324,12 +316,10 @@ feature {NONE} -- Table templates
 			   68,   69,   61,   61,   69,   70,   61,   71,   61,   61,
 			   61,   72,   61,   61,   61,   35,   61,   67,   61,   67,
 			   67,    0,   61,   61,   61,   61,   61,   61,   61,   61,
-			   61,   61,   61,   61>>)
+			   61,   61,   61,   61, yy_Dummy>>)
 		end
 
-	yy_ec_template: ANY is
-			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
-			-- but once functions cannot be declared with anchored types.
+	yy_ec_template: SPECIAL [INTEGER] is
 		once
 			Result := yy_fixed_array (<<
 			    0,    1,    1,    1,    1,    1,    1,    1,    1,    2,
@@ -359,22 +349,18 @@ feature {NONE} -- Table templates
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-			    1,    1,    1,    1,    1,    1,    1>>)
+			    1,    1,    1,    1,    1,    1,    1, yy_Dummy>>)
 		end
 
-	yy_meta_template: ANY is
-			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
-			-- but once functions cannot be declared with anchored types.
+	yy_meta_template: SPECIAL [INTEGER] is
 		once
 			Result := yy_fixed_array (<<
 			    0,    1,    1,    2,    3,    1,    4,    1,    5,    5,
 			    5,    6,    5,    7,    1,    1,    5,    5,    5,    8,
-			    5,    5>>)
+			    5,    5, yy_Dummy>>)
 		end
 
-	yy_accept_template: ANY is
-			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
-			-- but once functions cannot be declared with anchored types.
+	yy_accept_template: SPECIAL [INTEGER] is
 		once
 			Result := yy_fixed_array (<<
 			    0,    1,    2,    3,    3,    3,    4,    5,    6,    7,
@@ -383,12 +369,10 @@ feature {NONE} -- Table templates
 			   49,   50,   51,   51,   52,   52,   53,   54,   56,   57,
 			   58,   59,   60,   61,   62,   63,   64,   66,   67,   68,
 			   68,   69,   69,   69,   69,   69,   69,   70,   71,   71,
-			   72,   74,   74>>)
+			   72,   74,   74, yy_Dummy>>)
 		end
 
-	yy_acclist_template: ANY is
-			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
-			-- but once functions cannot be declared with anchored types.
+	yy_acclist_template: SPECIAL [INTEGER] is
 		once
 			Result := yy_fixed_array (<<
 			    0,    3,    3,   15,   15,   17,   17,   19,    3,    9,
@@ -398,7 +382,7 @@ feature {NONE} -- Table templates
 			   18,   16,   18,   11,   18,   11,   18,   10,   18,    3,
 			    8,    5,  -24,    7,    3,    4,    4,    4,    2,   15,
 			   14,   13,   15,   15,   12,   13,   17,   16,   10,   -6,
-			    4,    4,    1,    4>>)
+			    4,    4,    1,    4, yy_Dummy>>)
 		end
 
 feature {NONE} -- Constants

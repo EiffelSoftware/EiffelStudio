@@ -298,7 +298,9 @@ feature -- Status setting
 			-- May be used for dynamic behavior by filling subrows upon firing of `grid.row_expand_actions'.
 			-- If no items are added to `Current' during the firing of `grid.row_expand_actions' then
 			-- `Current' is no longer expandable. This may be re-instated by calling `ensure_expandable' again
-			-- from `grid.row_expand_actions'.
+			-- from `grid.row_expand_actions'. Note that once a subrow is added to `Current' after a call to
+			-- `ensure_expandable', it is no longer be displayed as expandable if all subrows are then removed.
+			-- In this case, you must explicitly call `ensure_expandable' again after removing all subrows.
 		require
 			not_destroyed: not is_destroyed
 		do

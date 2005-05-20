@@ -86,8 +86,6 @@ feature -- Directory Paths
 		
 	temporary_directory: DIRECTORY_NAME is
 			-- Directory for temporary file generation
-		local
-			l_dir: DIRECTORY
 		do
 			create Result.make_from_string (shared_preferences.tool_data.output_directory)
 		end

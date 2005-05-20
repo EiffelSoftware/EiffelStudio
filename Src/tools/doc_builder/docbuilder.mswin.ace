@@ -6,6 +6,8 @@ root
 
 default
 	assertion (check)
+	assertion (require)
+	assertion (ensure)
 	disabled_debug (yes)
 	disabled_debug ("console_output")
 	disabled_debug ("dlg_dispatcher")
@@ -39,10 +41,11 @@ default
 	inlining_size ("0")
 	multithreaded (no)
 
+
 cluster
 	all root_cluster:		"$EIFFEL_SRC\tools\doc_builder"
 		exclude
-			"facade"; "doc_builder.e"; "document_browser.e"; "document_schema.e"; "document_schema_element.e"; "schema_rendering_factory.e"; "spell_checker.e"; "web_browser_widget.e"; "schema_validator.e"; 
+			"facade"; "doc_builder.e"; "document_browser.e"; "document_schema.e"; "document_schema_element.e"; "schema_rendering_factory.e"; "spell_checker.e"; "web_browser_widget.e"; "schema_validator.e"; "EIFGEN"; 
 		end
 
 	facade (root_cluster):		"$\facade"
@@ -88,8 +91,6 @@ cluster
 	all gobo:		"$EIFFEL_SRC\library\gobo\library"
 		exclude
 			"hact"; "se"; "ve"; "base"; "CVS"; "other"; 
-		default
-			assertion (no)
 		end
 
 	all lex:		"$ISE_EIFFEL\library\lex"
@@ -97,10 +98,6 @@ cluster
 	all preferences:		"$EIFFEL_SRC\library\preferences"
 		exclude
 			"CVS"; "xml_implementation"; 
-		default
-			assertion (no)
-			assertion (check)
-			assertion (require)
 		end
 
 	compiler_observer:		"$EIFFEL_SRC\library\patterns\observer"
@@ -125,6 +122,6 @@ external
 		"$(EIFFEL_SRC)\library\vision2\spec\$(ISE_C_COMPILER)\lib\vision2.lib",
 		"$(EIFFEL_SRC)\library\vision2\spec\$(ISE_C_COMPILER)\lib\libpng.lib",
 		"$(EIFFEL_SRC)\library\vision2\spec\$(ISE_C_COMPILER)\lib\zlib.lib",
-		"$(EIFFEL_SRC)\tools\doc_builder\Clib\htmlhelp.lib"
+		"htmlhelp.lib"
 
 end

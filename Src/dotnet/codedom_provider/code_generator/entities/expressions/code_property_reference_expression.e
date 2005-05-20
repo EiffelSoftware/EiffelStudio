@@ -60,18 +60,24 @@ feature -- Access
 			-- Eiffel code of property reference expression
 		local
 			l_type_ref_exp: CODE_TYPE_REFERENCE_EXPRESSION
+			l_type: CODE_TYPE_REFERENCE
 		do
 			create Result.make (120)
-			if not is_current_generated_type (target.type) then
-				l_type_ref_exp ?= target
-				if l_type_ref_exp /= Void then
-					Result.append ("feature {")
-					Result.append (target.code)
-					Result.append ("}.")
-				else
-					Result.append (target.code)
-					Result.append (".")
+			l_type := target.type
+			if l_type /= Void then
+				if not is_current_generated_type (l_type) then
+					l_type_ref_exp ?= target
+					if l_type_ref_exp /= Void then
+						Result.append ("feature {")
+						Result.append (target.code)
+						Result.append ("}.")
+					else
+						Result.append (target.code)
+						Result.append (".")
+					end
 				end
+			else
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_type, ["target of expression resolving to property " + property_name])
 			end
 			if property_accesser /= Void then
 				Result.append (property_accesser.eiffel_name)

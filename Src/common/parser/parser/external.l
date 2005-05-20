@@ -26,7 +26,7 @@ create
 %option nodefault position outfile="external_scanner.e"
 
 A		([a-z]|[A-Z]|[0-9]|_|&)
-X		([a-z]|[A-Z]|[0-9]|_|\+|\.|]|[|%,\ |=|&)
+X		([a-z]|[A-Z]|[0-9]|_|\+|\.|\]|\[|%,\ |=|&)
 N		[0-9]
 
 %%

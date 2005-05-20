@@ -150,6 +150,22 @@ feature -- IL code generation
 				il_generator.put_default_value (type)
 				il_generator.generate_binary_operator (il_ne)
 
+			when set_bit_type then
+				check
+					parameters_not_void: parameters /= Void
+					valid_count: parameters.count = 2
+					valid_type: type.is_integer or type.is_natural
+				end
+				generate_set_bit (type, parameters)
+
+			when set_bit_with_mask_type then
+				check
+					parameters_not_void: parameters /= Void
+					valid_count: parameters.count = 2
+					valid_type: type.is_integer or type.is_natural
+				end
+				generate_set_bit_with_mask (type, parameters)
+
 			when is_equal_type then
 				check
 					parameters_not_void: parameters /= Void
@@ -318,6 +334,8 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (bit_shift_right_type, bit_shift_right_name_id)
 			Result.put (bit_shift_right_type, infix_shift_right_name_id)
 			Result.put (bit_test_type, bit_test_name_id)
+			Result.put (set_bit_type, set_bit_name_id)
+			Result.put (set_bit_with_mask_type, set_bit_with_mask_name_id)
  			Result.put (max_type, max_name_id)
  			Result.put (min_type, min_name_id)
  			Result.put (offset_type, infix_plus_name_id)
@@ -407,7 +425,9 @@ feature -- Fast access to feature name
 	upper_type: INTEGER is 49
 	is_lower_type: INTEGER is 50
 	is_upper_type: INTEGER is 51
-	max_type_id: INTEGER is 51
+	set_bit_type: INTEGER is 52
+	set_bit_with_mask_type: INTEGER is 53
+	max_type_id: INTEGER is 53
 
 feature {NONE} -- IL code generation
 
@@ -541,8 +561,116 @@ feature {NONE} -- IL code generation
 					parameters.generate_il
 					l_access.generate_il_assignment (type)
 				end
-				
+
 			end
+		end
+
+	generate_set_bit (a_type: CL_TYPE_I; parameters: BYTE_LIST [EXPR_B]) is
+			-- Generate IL code sequence for `set_bit'
+		require
+			valid_function_type: function_type = set_bit_type
+			type_not_void: a_type /= Void
+			type_valid: a_type.is_integer or a_type.is_natural
+			parameters_not_void: parameters /= Void
+			valid_parameters: parameters.count = 2
+		local
+			l_target, l_result: INTEGER
+			l_else, l_end: IL_LABEL
+		do
+				-- Store target and result of call in temporary locals
+			context.add_local (a_type)
+			l_target := context.local_list.count
+			il_generator.put_dummy_local_info (a_type, l_target)
+			il_generator.generate_local_assignment (l_target)
+
+			context.add_local (a_type)
+			l_result := context.local_list.count
+			il_generator.put_dummy_local_info (a_type, l_result)
+
+				-- Get labels for branching.
+			l_else := il_label_factory.new_label
+			l_end := il_label_factory.new_label
+
+				-- Generate boolean value.
+			parameters.i_th (1).generate_il
+
+				-- Generate case where boolean value is True:
+				-- `item | (a_type) 1 << n'
+			il_generator.branch_on_false (l_else)
+			il_generator.generate_local (l_target)
+			il_generator.put_numeric_integer_constant (a_type, 1)
+			parameters.i_th (2).generate_il
+			il_generator.generate_binary_operator (il_shl)
+			il_generator.generate_binary_operator (il_or)
+			il_generator.generate_local_assignment (l_result)
+			il_generator.branch_to (l_end)
+
+
+				-- Generate case where boolean value is False:
+				-- `item & ~(a_type) 1 << n'
+			il_generator.mark_label (l_else)
+			il_generator.generate_local (l_target)
+			il_generator.put_numeric_integer_constant (a_type, 1)
+			parameters.i_th (2).generate_il
+			il_generator.generate_binary_operator (il_shl)
+			il_generator.generate_unary_operator (il_bitwise_not)
+			il_generator.generate_binary_operator (il_and)
+			il_generator.generate_local_assignment (l_result)			
+
+			il_generator.mark_label (l_end)
+			il_generator.generate_local (l_result)
+		end
+
+	generate_set_bit_with_mask (a_type: CL_TYPE_I; parameters: BYTE_LIST [EXPR_B]) is
+			-- Generate IL code sequence for `set_bit'
+		require
+			valid_function_type: function_type = set_bit_with_mask_type
+			type_not_void: a_type /= Void
+			type_valid: a_type.is_integer or a_type.is_natural
+			parameters_not_void: parameters /= Void
+			valid_parameters: parameters.count = 2
+		local
+			l_target, l_result: INTEGER
+			l_else, l_end: IL_LABEL
+		do
+				-- Store target and result of call in temporary locals
+			context.add_local (a_type)
+			l_target := context.local_list.count
+			il_generator.put_dummy_local_info (a_type, l_target)
+			il_generator.generate_local_assignment (l_target)
+
+			context.add_local (a_type)
+			l_result := context.local_list.count
+			il_generator.put_dummy_local_info (a_type, l_result)
+
+				-- Get labels for branching.
+			l_else := il_label_factory.new_label
+			l_end := il_label_factory.new_label
+
+				-- Generate boolean value.
+			parameters.i_th (1).generate_il
+
+				-- Generate case where boolean value is True:
+				-- `item | (a_type) 1 << n'
+			il_generator.branch_on_false (l_else)
+			il_generator.generate_local (l_target)
+			parameters.i_th (2).generate_il
+			il_generator.generate_binary_operator (il_or)
+			il_generator.generate_local_assignment (l_result)
+			il_generator.branch_to (l_end)
+
+
+				-- Generate case where boolean value is False:
+				-- `item & ~(a_type) 1 << n'
+			il_generator.mark_label (l_else)
+			il_generator.generate_local (l_target)
+			parameters.i_th (2).generate_il
+			il_generator.generate_unary_operator (il_bitwise_not)
+			il_generator.generate_binary_operator (il_and)
+			il_generator.generate_local_assignment (l_result)
+
+			il_generator.mark_label (l_end)
+			il_generator.generate_local (l_result)
 		end
 
 feature {NONE} -- Type information

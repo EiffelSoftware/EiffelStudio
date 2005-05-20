@@ -1511,7 +1511,7 @@
 							</Directory>
 							<Directory Id="items" Name="items">
 								<Component Id="ev_dynamic_tree_item.e" Guid="30D7A7BB-627D-4331-AA07-D61443405073">
-									<File Id="ev_drawable_grid_item_e" Name="EV_DRA~1.E" LongName="ev_drawable_grid_item.e" />
+									<File Id="ev_grid_drawable_item_e" Name="EVF755~1.E" LongName="ev_grid_drawable_item.e" />
 									<File Id="ev_grid_column_e" Name="EV_GRI~1.E" LongName="ev_grid_column.e" />
 									<File Id="ev_grid_combo_item_e" Name="EVE5EA~1.E" LongName="ev_grid_combo_item.e" />
 									<File Id="ev_grid_editable_item_e" Name="EV1ADD~1.E" LongName="ev_grid_editable_item.e" />
@@ -2105,7 +2105,7 @@
 								</Directory>
 								<Directory Id="items30" Name="items">
 									<Component Id="ev_tree_node_i.e" Guid="9A970CF0-59DC-47BF-9C7B-4AB1D7380A03">
-										<File Id="ev_drawable_grid_item_i_e" Name="EV_DRA~1.E" LongName="ev_drawable_grid_item_i.e" />
+										<File Id="ev_grid_drawable_item_i_e" Name="EV3E1D~1.E" LongName="ev_grid_drawable_item_i.e" />
 										<File Id="ev_grid_column_i_e" Name="EV_GRI~1.E" LongName="ev_grid_column_i.e" />
 										<File Id="ev_grid_item_i_e" Name="EV_GRI~2.E" LongName="ev_grid_item_i.e" />
 										<File Id="ev_grid_label_item_i_e" Name="EV_GRI~3.E" LongName="ev_grid_label_item_i.e" />

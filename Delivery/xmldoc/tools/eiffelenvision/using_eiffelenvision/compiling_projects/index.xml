@@ -59,6 +59,12 @@
 				<tab_index>0</tab_index>
 				Build Configurations
 			</help_link>
+			<line_break/>
+			<help_link>
+				<keywords>vxtskPrepareandManageBuilds</keywords>
+				<tab_index>0</tab_index>
+				Preparing and Managing Builds
+			</help_link>
 		</seealso>
 	</paragraph>
 </document>

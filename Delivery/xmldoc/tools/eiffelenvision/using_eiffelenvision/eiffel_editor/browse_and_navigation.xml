@@ -172,6 +172,7 @@
 				<url>intellisense.xml</url>
 				<label>Intellisense and Completion</label>
 			</link>
+			<line_break/>
 			<help_link>
 				<keywords>vxurfVisualStudio70DefaultShortcutKeys</keywords>
 				<tab_index>0</tab_index>

@@ -86,6 +86,7 @@
 				<url/>
 				<label>*Eiffel Conventions</label>
 			</link>
+			<line_break/>
 			<help_link>
 				<keywords>vxurfCodeTextEditorWindow</keywords>
 				<tab_index>0</tab_index>

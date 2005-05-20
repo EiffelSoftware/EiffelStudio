@@ -23,6 +23,14 @@
 	</meta_data>
 	<paragraph>
 		<paragraph>
+			The <bold>Fonts and Colors</bold> option page, in the <bold>Environment</bold> folder in the <help_link>
+				<keywords>vxoriOptions</keywords>
+				<tab_index>0</tab_index>
+				Options Dialog Box
+			</help_link> (<bold>Tools</bold>, <bold>Options</bold> menu) contains the following options:
+		</paragraph>
+		
+		<paragraph>
 			The <help_link>
 			<keywords>vxurfFontsColorsEnvironmentOptionsDialogBox</keywords>
 			<tab_index>0</tab_index>

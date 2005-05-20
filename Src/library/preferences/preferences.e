@@ -329,7 +329,6 @@ feature {NONE} -- Implementation
 			create l_tree_pipe.make
 			create l_concat_filter.make_null
 			parser.set_callbacks (standard_callbacks_pipe (<<l_concat_filter, l_tree_pipe.start>>))
-			parser.set_string_mode_ascii
 			
 			create l_file.make (defaults_file_name)
 			l_file.open_read

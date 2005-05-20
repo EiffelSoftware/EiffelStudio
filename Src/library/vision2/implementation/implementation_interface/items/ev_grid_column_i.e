@@ -34,6 +34,7 @@ feature {NONE} -- Initialization
 			physical_index := -1
 			create header_item.make_with_grid_column (Current)
 			set_is_initialized (True)
+			border_style_flags := 1
 		end
 
 feature {EV_GRID_I} -- Initialization
@@ -195,6 +196,10 @@ feature -- Access
 
 	pixmap: EV_PIXMAP
 		-- Pixmap display on column header to left of `title'.
+
+	border_style_flags: INTEGER
+		-- `Result' contains all border styles applied to `Current'.
+		-- See EV_GRID_BORDER_STYLES for all permitted flags.
 
 feature -- Status setting
 

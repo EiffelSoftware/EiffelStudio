@@ -57,9 +57,9 @@ feature -- Query
 			dir: DIRECTORY
 			cnt: INTEGER
 			file: RAW_FILE
-			l_last_entry,
-			l_file_type: STRING
-			l_file_pixmap: EV_PIXMAP
+			l_last_entry: STRING
+--			l_file_type: STRING
+--			l_file_pixmap: EV_PIXMAP
 			l_filename: FILE_NAME
 		do
 			create Result.make (5)

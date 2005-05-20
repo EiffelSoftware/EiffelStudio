@@ -105,13 +105,10 @@ feature -- Access
 			-- Return child directory and file nodes list
 		local
 			node: EV_DYNAMIC_TREE_ITEM
-			file_node: EV_TREE_ITEM
 			dir: DIRECTORY
 			cnt: INTEGER
 			file: RAW_FILE
-			l_last_entry,
-			l_file_type: STRING
-			l_file_pixmap: EV_PIXMAP
+			l_last_entry: STRING
 			l_filename: FILE_NAME
 		do
 			create Result.make (5)

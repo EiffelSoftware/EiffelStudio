@@ -39,6 +39,9 @@ cp -f PorterPackage_all.tar ~/
 #Let's compile for SGI in background
 /bin/sh make_sgi local &
 
+#Let's compile for Linux 64 bits in background
+/bin/sh make_linux_64bits local &
+
 #Compile and build CDs
 cd PorterPackage
 /bin/sh compile_exes

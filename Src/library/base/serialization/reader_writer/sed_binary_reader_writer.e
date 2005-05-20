@@ -51,32 +51,6 @@ feature -- Settings
 
 feature -- Access
 
-	read_character_8: CHARACTER is
-			-- Read next 8-bits character
-		local
-			l_pos: INTEGER
-		do
-			check_buffer (character_bytes)
-			l_pos := buffer_position
-			Result := buffer.read_character (l_pos)
-			l_pos := l_pos + character_bytes
-			buffer_position := l_pos
-		end
-
-	read_boolean: BOOLEAN is
-			-- Read next boolean
-		local
-			l_pos: INTEGER
-			l_nat: NATURAL_8
-		do
-			check_buffer (natural_8_bytes)
-			l_pos := buffer_position
-			l_nat := buffer.read_natural_8 (l_pos)
-			Result := l_nat = 1
-			l_pos := l_pos + natural_8_bytes
-			buffer_position := l_pos
-		end
-
 	read_natural_8: NATURAL_8 is
 			-- Read next natural_8
 		local
@@ -240,34 +214,6 @@ feature -- Access
 
 feature -- Element change
 
-	write_character_8 (v: CHARACTER) is
-			-- Write `v'.
-		local
-			l_pos: INTEGER
-		do
-			check_buffer (character_bytes)
-			l_pos := buffer_position
-			buffer.put_character (v, l_pos)
-			l_pos := l_pos + character_bytes
-			buffer_position := l_pos
-		end
-
-	write_boolean (v: BOOLEAN) is
-			-- Write `v'.
-		local
-			l_pos: INTEGER
-		do
-			check_buffer (natural_8_bytes)
-			l_pos := buffer_position
-			if v then
-				buffer.put_natural_8 (1, l_pos)
-			else
-				buffer.put_natural_8 (0, l_pos)
-			end
-			l_pos := l_pos + natural_8_bytes
-			buffer_position := l_pos
-		end
-		
 	write_natural_8 (v: NATURAL_8) is
 			-- Write `v'.
 		local

@@ -60,7 +60,11 @@ feature -- Access
 			-- Read next 8-bits character
 		require
 			is_ready: is_ready_for_reading
-		deferred
+		local
+			l_nat8: NATURAL_8
+		do
+			l_nat8 := read_natural_8
+			Result := l_nat8.to_character
 		end
 
 	read_string_8: STRING is
@@ -92,9 +96,13 @@ feature -- Access
 			-- Read next boolean
 		require
 			is_ready: is_ready_for_reading
-		deferred
+		local
+			l_nat: NATURAL_8
+		do
+			l_nat := read_natural_8
+			Result := l_nat = 1
 		end
-		
+
 	read_natural_8: NATURAL_8 is
 			-- Read next natural_8
 		require
@@ -216,7 +224,8 @@ feature -- Element change
 			-- Write `v'.
 		require
 			is_ready: is_ready_for_writing
-		deferred
+		do
+			write_natural_8 (v.code.to_natural_8)
 		end
 		
 	write_string_8 (v: STRING) is
@@ -243,9 +252,14 @@ feature -- Element change
 			-- Write `v'.
 		require
 			is_ready: is_ready_for_writing
-		deferred
+		do
+			if v then
+				write_natural_8 (1)
+			else
+				write_natural_8 (0)
+			end
 		end
-		
+
 	write_natural_8 (v: NATURAL_8) is
 			-- Write `v'.
 		require

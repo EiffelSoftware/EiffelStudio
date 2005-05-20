@@ -330,7 +330,7 @@ H		([0-9A-Fa-f])
 --     the special character such as %N, %T,... we have to list all of
 --     them in the second expression.
 
-\"[^\n"]*[\[\{]/[ \t\r]*\n{
+\"[^\n"]*[\[\{]/[ \t\r]*\n	{
 					-- Verbatim string opener.				
 				create {EDITOR_TOKEN_STRING} curr_token.make(text)
 				update_token_list

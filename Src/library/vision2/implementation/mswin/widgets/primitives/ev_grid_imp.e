@@ -17,7 +17,9 @@ inherit
 			set_item as wel_set_item,
 			interface as drawing_area_interface
 		undefine
-			drop_actions
+			drop_actions,
+			has_focus,
+			set_focus
 		redefine
 			initialize,
 			destroy,

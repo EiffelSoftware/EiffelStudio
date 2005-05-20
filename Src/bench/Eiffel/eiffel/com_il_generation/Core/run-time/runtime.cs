@@ -472,7 +472,7 @@ feature -- Status report
 		}
 	}
 
-//FIXME: to remove when consumer is bootstrapped.
+//FIXME: to remove when TUPLE is updated not to use this routine anymore.
 	public static Type type_of_generic_parameter (object an_obj, int pos)
 		// Given an Eiffel object `an_obj', find the associated type of generic parameter
 		// at position `pos'.

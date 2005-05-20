@@ -250,7 +250,7 @@ feature {NONE} -- Implementation
 	should_generate: BOOLEAN is
 			-- Should generate files
 		local			
-			l_question_dialog: EV_MESSAGE_DIALOG
+--			l_question_dialog: EV_MESSAGE_DIALOG
 		do
 			Result := True
 --			if shared_constants.application_constants.is_gui_mode and then Shared_project.has_invalid_files then

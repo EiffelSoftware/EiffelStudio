@@ -1513,12 +1513,24 @@ end
 
 				process_character_code (text_substring (4, text_count - 2).to_integer)
 			
-when 138, 139 then
+when 138 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
 --|#line 583 "eiffel.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 583")
+end
+
+					-- Unrecognized character.
+					-- (catch-all rules (no backing up))
+				report_character_missing_quote_error (text)
+			
+when 139 then
+	yy_column := yy_column + yy_end - yy_start - yy_more_len
+	yy_position := yy_position + yy_end - yy_start - yy_more_len
+--|#line 584 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 584")
 end
 
 					-- Unrecognized character.

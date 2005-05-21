@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that facilitate encoding and decoding of arbitrary objects graphs within a session."
+	description: "Encoding of arbitrary objects graphs within a session of a same program."
 	date: "$Date$"
 	revision: "$Revision$"
 

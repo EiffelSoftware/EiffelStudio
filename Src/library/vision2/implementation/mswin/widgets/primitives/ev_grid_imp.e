@@ -40,42 +40,36 @@ feature {NONE} -- Initialization
 
 	initialize is
 			-- Initialize `Current'.
+		local
+			color_imp: EV_COLOR_IMP
 		do
 			Precursor {EV_CELL_IMP}
 			initialize_grid
 			set_is_initialized (True)
+			create focused_selection_color
+			color_imp ?= focused_selection_color.implementation
+			color_imp.set_with_system_id (wel_color_constants.color_highlight)
+			create non_focused_selection_color
+			color_imp ?= non_focused_selection_color.implementation
+			color_imp.set_with_system_id (wel_color_constants.color_btnface)
 		end
 
 feature {EV_GRID_I} -- Access
 
-	focused_selection_color: EV_COLOR is
-			-- Color used for selected items while focused.
-		local
-			color_imp: EV_COLOR_IMP
-		once
-			create Result
-			color_imp ?= Result.implementation
-			color_imp.set_with_system_id (wel_color_constants.color_highlight)
-		end
+	focused_selection_color: EV_COLOR
+			-- Color used to show selection within items while focused.
+
+	non_focused_selection_color: EV_COLOR
+			-- Color used to show selection within items while not focused.
 
 	focused_selection_text_color: EV_COLOR is
-			-- Color used for text of selected items while focused.
+			-- Color used to show selection within items while not focused.
 		local
 			color_imp: EV_COLOR_IMP
 		once
 			create Result
 			color_imp ?= Result.implementation
 			color_imp.set_with_system_id (wel_color_constants.color_highlighttext)
-		end
-
-	non_focused_selection_color: EV_COLOR is
-			-- Color used for selected items while not focused.
-		local
-			color_imp: EV_COLOR_IMP
-		once
-			create Result
-			color_imp ?= Result.implementation
-			color_imp.set_with_system_id (wel_color_constants.color_btnface)
 		end
 
 	non_focused_selection_text_color: EV_COLOR is
@@ -103,7 +97,17 @@ feature {NONE} -- Status setting
 			foreground_color_imp ?= color.implementation
 			redraw_client_area
 		end
+
+	set_focused_selection_color (a_color: EV_COLOR) is
+			-- Assign `a_color' to `focused_selection_color'.
+		do
+		end
 		
+	set_non_focused_selection_color (a_color: EV_COLOR) is
+			-- Assign `a_color' to `non_focused_selection_color'.
+		do
+		end
+
 feature {NONE} -- Implementation
 
 	destroy is

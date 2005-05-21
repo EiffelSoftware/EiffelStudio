@@ -1333,6 +1333,24 @@ feature -- Status setting
 		do
 			drawable.set_focus
 		end
+		
+	set_focused_selection_color (a_color: EV_COLOR) is
+			-- Assign `a_color' to `focused_selection_color'.
+		require
+			a_color_not_void: a_color /= Void
+		deferred
+		ensure
+			focused_selection_color_set: focused_selection_color = a_color
+		end
+		
+	set_non_focused_selection_color (a_color: EV_COLOR) is
+			-- Assign `a_color' to `non_focused_selection_color'.
+		require
+			a_color_not_void: a_color /= Void
+		deferred
+		ensure
+			non_focused_selection_color_set: non_focused_selection_color = a_color
+		end
 
 feature -- Status report
 
@@ -2425,17 +2443,21 @@ feature {EV_GRID_DRAWER_I, EV_GRID_COLUMN_I, EV_GRID_ROW_I, EV_GRID_ITEM_I, EV_G
 feature {EV_GRID_ITEM_I, EV_GRID} -- Implementation
 
 	focused_selection_color: EV_COLOR is
-			-- Color used for selected items while focused.
+			-- Color used to show selection within items while focused.
 		deferred
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	non_focused_selection_color: EV_COLOR is
+			-- Color used to show selection within items while not focused.
+		deferred
+		ensure
+			result_not_void: Result /= Void
 		end
 
 	focused_selection_text_color: EV_COLOR is
 			-- Color used for text of selected items while focused.
-		deferred
-		end
-
-	non_focused_selection_color: EV_COLOR is
-			-- Color used for selected items while not focused.
 		deferred
 		end
 

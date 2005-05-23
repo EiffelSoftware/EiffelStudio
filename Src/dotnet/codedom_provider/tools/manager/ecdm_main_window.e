@@ -670,7 +670,7 @@ feature {NONE} -- Events
 				if l_file_name.substring_index (l_runtime_dir, 1) = 1 then
 					l_file_name.keep_tail (l_file_name.count - l_runtime_dir.count)
 				end
-				active_configuration.add_prefix (l_file_name, prefix_text_field.text)
+				active_configuration.add_prefix (l_file_name.as_lower, prefix_text_field.text)
 				create l_row
 				l_row.extend (prefix_text_field.text)
 				l_row.extend (assembly_file_name_text_field.text)

@@ -205,9 +205,11 @@ feature -- Basic Operations
 						if l_value_name.is_equal ("prefixes") then
 							from
 							until
-								not l_xml_reader.read or else not l_xml_reader.name.equals (("prefix").to_cil)
+								not l_xml_reader.read or else l_xml_reader.node_type = {XML_XML_NODE_TYPE}.End_element
 							loop
-								internal_prefixes.force (l_xml_reader.get_attribute ("value"), l_xml_reader.get_attribute ("assembly"))
+								if l_xml_reader.node_type = {XML_XML_NODE_TYPE}.Element then
+									internal_prefixes.force (l_xml_reader.get_attribute ("value"), l_xml_reader.get_attribute ("assembly"))
+								end
 							end
 							l_value_name := l_xml_reader.name
 						end

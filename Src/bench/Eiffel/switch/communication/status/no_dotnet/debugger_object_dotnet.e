@@ -17,4 +17,7 @@ feature
 		do
 		end;	
 
+	refresh (sp_lower, sp_upper: INTEGER) is
+		do
+		end
 end

@@ -60,6 +60,11 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_DEBUGGED_OBJECT_MANAGER
+		export
+			{NONE} all
+		end
+
 create
 	make_boolean, make_character, 
 	make_integer_32, make_integer_64,
@@ -258,7 +263,7 @@ feature -- Dotnet creation
 			dynamic_class_type := a_eifnet_drv.dynamic_class_type
 			if dynamic_class_type /= Void then
 				dynamic_class := dynamic_class_type.associated_class
-				debug ("DEBUGGER_EIFNET_DATA")
+				debug ("debugger_eifnet_data")
 					print ("[>] dyn_class_type = " + dynamic_class_type.full_il_type_name + "%N")
 				end
 			end
@@ -351,20 +356,14 @@ feature -- Status report
 		require
 			is_reference: address /= Void
 		local
-			o: DEBUGGED_OBJECT
 			attribs: DS_LIST [ABSTRACT_DEBUG_VALUE]
 			l_attribs_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
 			att: ABSTRACT_DEBUG_VALUE
 		do
-			if application.is_dotnet then
-				create {DEBUGGED_OBJECT_DOTNET} o.make (address, 0, 1)
-			else
-				debug ("debug_recv")
-					print ("DUMP_VALUE.to_basic%N")
-				end
-				create {DEBUGGED_OBJECT_CLASSIC} o.make (address, 0, 1)
+			debug ("debug_recv")
+				print (generator + ".to_basic%N")
 			end
-			attribs := o.attributes
+			attribs := Debugged_object_manager.attributes_at_address (address, 0, 1)
 			if attribs /= Void then
 				from
 					l_attribs_cursor := attribs.new_cursor
@@ -421,6 +420,7 @@ feature -- Status report
 			has_formatted_output
 		local
 			l_str: STRING
+			l_max: INTEGER
 		do
 			debug ("debugger_interface")
 				io.put_string ("Finding output value of dump_value%N")
@@ -433,8 +433,12 @@ feature -- Status report
 			elseif type = Type_string_dotnet then
 				Result := "%"" + Character_routines.eiffel_string (value_string) + "%""			
 			else
-				l_str := truncated_string_representation (0, Application.displayed_string_size)
+				l_max := Application.displayed_string_size
+				l_str := truncated_string_representation (0, l_max)
 				if l_str /= Void then
+					if (l_max > 0) and then last_string_representation_length > (l_max - 0 + 1) then
+						l_str.append ("...")
+					end
 					create Result.make (Application.displayed_string_size + 2)
 					Result.append_character ('%"')
 					Result.append (Character_routines.eiffel_string (l_str))
@@ -477,13 +481,7 @@ feature -- Status report
 	truncated_string_representation (min, max: INTEGER): STRING is
 		do
 			Result := raw_string_representation (min, max)
-			if Result /= Void then
-					--| If what is displayed is less than the count of the STRING object,
-					--| we display `...' to show that there is something more.
-				if (max > 0) and then last_string_representation_length > (max - min + 1) then
-					Result.append ("...")
-				end
-			else
+			if Result = Void then
 				Result := "Could not find string representation"
 			end
 		ensure
@@ -499,11 +497,11 @@ feature {DUMP_VALUE} -- string_representation Implementation
 			object_with_debug_output: address /= Void and has_formatted_output
 		do
 			debug ("debugger_trace")
-				print (generating_type + ".string_representation (" + min.out + ", " + max.out + ")%N")
+				print (generating_type + ".raw_string_representation (" + min.out + ", " + max.out + ")%N")
 			end
 			
 			debug ("debug_recv")
-				print ("DUMP_VALUE.string_representation of " + dynamic_class.name_in_upper + "%N")
+				print ("DUMP_VALUE.raw_string_representation of " + dynamic_class.name_in_upper + "%N")
 			end
 			last_string_representation_length := 0
 			if is_dotnet_value then
@@ -518,7 +516,6 @@ feature {DUMP_VALUE} -- string_representation Implementation
 			-- with bounds from `min' and `max'.
 		local
 			f: E_FEATURE
-			obj: DEBUGGED_OBJECT_CLASSIC
 			l_attributes: DS_LIST [ABSTRACT_DEBUG_VALUE]
 			l_attributes_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
 			l_attributes_item: ABSTRACT_DEBUG_VALUE
@@ -533,7 +530,9 @@ feature {DUMP_VALUE} -- string_representation Implementation
 			l_slice_max: INTEGER
 		do
 			sc := Eiffel_system.string_class.compiled_class
-			l_conform_to_string := dynamic_class /= Void and then dynamic_class /= sc and then dynamic_class.simple_conform_to (sc)
+			l_conform_to_string := dynamic_class /= Void 
+										and then dynamic_class /= sc
+										and then dynamic_class.simple_conform_to (sc)
 			if dynamic_class = sc or l_conform_to_string then
 				if l_conform_to_string then
 						--| Take name of `area' and `count' from STRING in descendant version.
@@ -548,9 +547,9 @@ feature {DUMP_VALUE} -- string_representation Implementation
 					--| Getting count value and area object
 					--| we set slices to 1,1 to avoid receiving all the capacity item of SPECIAL
 					--| since here only the printable characters matter
-				create obj.make (value_address, 1, 1)
-				
-				l_attributes := obj.attributes
+
+				l_attributes := Debugged_object_manager.attributes_at_address (value_address, 1, 1)
+jfiat_tools.out_string (Current, "classic_string_representation : l_attributes.count = " + l_attributes.count.out + "%N")
 				from
 					l_attributes_cursor := l_attributes.new_cursor
 					l_attributes_cursor.start
@@ -579,21 +578,22 @@ feature {DUMP_VALUE} -- string_representation Implementation
 				check
 					count_attribute_found: count_attribute /= Void
 				end
-				l_count := count_attribute.value
-				
-				if area_attribute /= Void then
-						--| Now we have the real count, we'll get the l_slice_max items 
-						--| and not all the capacity
-					if max < 0 then
-						l_slice_max := l_count
-					else
-						l_slice_max := max.min (l_count)
+				if count_attribute /= Void then
+					l_count := count_attribute.value
+
+					if area_attribute /= Void then
+							--| Now we have the real count, we'll get the l_slice_max items
+							--| and not all the capacity
+						if max < 0 then
+							l_slice_max := l_count
+						else
+							l_slice_max := max.min (l_count)
+						end
+						area_attribute.reset_items
+						area_attribute.get_items (min, l_slice_max)
+						Result := area_attribute.truncated_raw_string_value (l_count)
 					end
-					area_attribute.reset_items
-					area_attribute.get_items (min, l_slice_max)
-					Result := area_attribute.truncated_raw_string_value (l_count)
-				end
-				
+				end				
 				if Result /= Void then
 						--| We now have retrieved the full `area' of STRING object. Let's check
 						--| if we need to display the complete area, or just part of it.
@@ -710,7 +710,7 @@ feature {DUMP_VALUE} -- string_representation Implementation
 			if a_feat /= Void and  value_address /= Void then
 					-- Initialize the communication.
 
-				create l_dbg_obj.make_with_class (value_address, a_compiled_class)
+				l_dbg_obj := Debugged_object_manager.classic_debugged_object_with_class (value_address, a_compiled_class)
 				l_dyntype := l_dbg_obj.class_type
 
 				if a_feat.is_attribute then
@@ -946,7 +946,7 @@ feature -- Access
 			Result := not is_type_object and type /= Type_string and type /= Type_string_dotnet
 		end
 
-feature {DUMP_VALUE, EB_OBJECT_TREE_ITEM, ES_OBJECTS_GRID_ITEM, EIFNET_EXPORTER, DBG_EXPRESSION_EVALUATOR} -- Internal data
+feature {DUMP_VALUE, EB_OBJECT_TREE_ITEM, ES_OBJECTS_GRID_LINE, EIFNET_EXPORTER, DBG_EXPRESSION_EVALUATOR} -- Internal data
 
 	value_boolean	: BOOLEAN
 	value_character	: CHARACTER

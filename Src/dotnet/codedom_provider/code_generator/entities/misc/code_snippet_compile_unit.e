@@ -20,7 +20,7 @@ create
 feature {NONE} -- Initialization
 
 	make (a_value: like value) is
-			-- Initialize `namespaces' and `referenced_assemblies'.
+			-- Initialize `namespaces'.
 		require
 			non_void_value: a_value /= Void
 		do

@@ -24,7 +24,7 @@ feature -- Access
 
 	private byte has_formal_flags;
 		// Does current generic type has formals?
-
+	
 /*
 feature -- Status Report
 */
@@ -95,17 +95,22 @@ feature -- Status Report
 		RT_TYPE [] l_generics;
 		int i, nb;
 
-		Result = String.Concat (Result, str_open_generics);
+		nb = count;
+		if (nb > 0) {
+			Result = String.Concat (Result, str_open_generics);
+		}
 
 		l_generics = generics;
-		for (i = 0, nb = count; i < nb; i++) {
+		for (i = 0; i < nb; i++) {
 			Result = String.Concat (Result, l_generics [i].type_name ());
 			if (i + 1 < nb) {
 				Result = String.Concat (Result, str_comma);
 			}
 		}
 
-		Result = String.Concat (Result, str_close_generics);
+		if (nb > 0) {
+			Result = String.Concat (Result, str_close_generics);
+		}
 		return Result;
 	}
 

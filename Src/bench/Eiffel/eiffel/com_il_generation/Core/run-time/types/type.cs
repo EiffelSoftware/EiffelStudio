@@ -21,6 +21,12 @@ feature -- Status Report
 		return false;
 	}
 
+	public virtual bool is_tuple ()
+		// Does `Current' represent a TUPLE type?
+	{
+		return false;
+	}
+
 	public virtual bool has_formal ()
 		// Does `Current' have a formal generic parameter?
 	{

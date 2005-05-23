@@ -1,0 +1,230 @@
+<document output="envision" title="Deploying Projects">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_title>Deploying Projects</envision_title>
+				<envision_pseudo_name>30</envision_pseudo_name>
+			</toc>
+			<xml>
+			</xml>
+		</help>
+	</meta_data>
+	<paragraph>
+		<paragraph>
+			The simplest way to deploy EiffelEnvision projects is through the use of the <help_link>
+				<keywords>vbconSetupProjects</keywords>
+				<tab_index>0</tab_index>
+				setup and deployment projects
+			</help_link> available
+			in the Enterprise, or better, editions of Visual Studio .NET 2003. EiffelEnvision integrates tightly into the deployment 
+			mechanism provided by the Visual Studio .NET IDE, providing a fast and easy way to package and distribute your projects.
+		</paragraph>
+		<paragraph>
+			Before attempting to deploy EiffelEnvision projects, using the <help_link>
+				<keywords>vbconSetupProjects</keywords>
+				<tab_index>0</tab_index>
+				setup and deployment projects
+			</help_link>, please be sure to read the 
+			<link>
+				<url>deploy_setup.xml</url>
+				<label>deployment prerequisites</label>
+			</link> section of this documentation.
+		</paragraph>
+		<paragraph>
+			For those with the Standard edition of Visual Studio .NET 2003, or those whom do not want to use the <help_link>
+				<keywords>vbconSetupProjects</keywords>
+				<tab_index>0</tab_index>
+				setup and deployment projects
+			</help_link>, 
+			please refer to the <link>
+				<url>deploy_no_set.xml</url>
+				<label>deploying projects outside of Visual Studio .NET</label>
+			</link> for information of deploying EiffelEnvision projects without 
+			using the <help_link>
+				<keywords>vbconSetupProjects</keywords>
+				<tab_index>0</tab_index>
+				setup and deployment projects
+			</help_link>.
+		</paragraph>
+		<anchor>getting_started</anchor>
+		<heading>
+			<size>2</size>
+			<content>Getting Started</content>
+		</heading>
+		<paragraph>
+			To begin deploying EiffelEnvision projects using one of the <help_link>
+				<keywords>vbconSetupProjects</keywords>
+				<tab_index>0</tab_index>
+				setup and deployment projects
+			</help_link>, you should be familiar with 
+			<help_link>
+				<keywords>vboriDeploymentInVisualStudio</keywords>
+				<tab_index>0</tab_index>
+				deploying projects using Visual Studio .NET 2003
+			</help_link>. A knowledge of <help_link>
+				<keywords>vbconWhatYouNeedToKnowAboutMicrosoftWindowsInstaller</keywords>
+				<tab_index/>
+				Microsoft Windows Installer
+			</help_link> will also help greatly when it comes to finer grained customization of your deployment project.
+		</paragraph>
+		<paragraph>
+			If you have not already done so, you will need to 
+			<help_link>
+				<keywords>vbtskCreatingOrAddingSetupProject</keywords>
+				<tab_index>0</tab_index>
+				create a deployment project
+			</help_link> using the 
+			<help_link>
+				<keywords>vxurfNewProjectDialog</keywords>
+				<tab_index>0</tab_index>
+				new project dialog
+			</help_link>.
+		</paragraph>
+		<anchor>project_outputs</anchor>
+		<heading>
+			<size>2</size>
+			<content>Project Outputs</content>
+		</heading>
+		<paragraph>
+			When using a <help_link>
+				<keywords>vbconSetupProjects</keywords>
+				<tab_index>0</tab_index>
+				setup and deployment project
+			</help_link> the primary way to include the built results of a project is through <help_link>
+				<keywords>vbtskAddingRemovingProjectOutputs</keywords>
+				<tab_index>0</tab_index>
+				adding a project output
+			</help_link> to the deployment project. EiffelEnvision projects define 4 different project outputs for inclusion into your deployment project.
+			<list ordered="false">
+				<item>Primary Output</item>
+				<item>Debug Symbols</item>
+				<item>Content Files</item>
+				<item>Source Files</item>
+			</list>
+			<paragraph>
+				<bold>Primary Output</bold>
+				<line_break/>
+				The result of compilation. This will be the file containing an assembly manifest as well as and reference assembly modules. 
+			</paragraph>
+			<paragraph>
+				<bold>Debug Symbols</bold>
+				<line_break/>
+				Any generated <help_link>
+					<keywords>_core_The_..PDB_Files</keywords>
+					<tab_index>0</tab_index>
+					debugging information database files (*.PDB)
+				</help_link> generate during compilation. PDB files are only generated when the active project configuration's 
+				<link>
+					<url/>
+					<label>*Generate Debug Information</label>
+				</link> is set to <bold>Yes</bold>.
+			</paragraph>
+			<paragraph>
+				<bold>Content Files</bold>
+				<line_break/>
+				Files located in the project that are considered to be content files, such files include Bitmaps, Icons, Cursors, etc.
+			</paragraph>
+			<paragraph>
+				<bold>Source Files</bold>
+				<line_break/>
+				Contains all of the project source files found at the project location or in any of it's subfolders.
+			</paragraph>
+		</paragraph>
+		<anchor>excluding_files</anchor>
+		<heading>
+			<size>2</size>
+			<content>Excluding Files</content>
+		</heading>
+		<paragraph>
+			It may necessary to exclude certain files when adding items to the deployment project using a 
+			<link>
+				<url>#project_outputs</url>
+				<label>project output</label>
+			</link>. 
+			For information on how to do this using <help_link>
+				<keywords>vbconSetupProjects</keywords>
+				<tab_index>0</tab_index>
+				setup and deployment projects
+			</help_link> please refer to <help_link>
+				<keywords>vxtskExcludingFilesFromProjectOutputGroup</keywords>
+				<tab_index>0</tab_index>
+				excluding files from a project output group
+			</help_link>.
+		</paragraph>
+		<anchor>building</anchor>
+		<heading>
+			<size>2</size>
+			<content>Building</content>
+		</heading>
+		<paragraph>
+			Once you have configured your deployment project all that remains is to <help_link>
+				<keywords>vxtskPrepareandManageBuilds</keywords>
+				<tab_index>0</tab_index>
+				build
+			</help_link> it. If you have not already built your EiffelEnvision project(s) then when selecting to <help_link>
+				<keywords>vxtskPrepareandManageBuilds</keywords>
+				<tab_index>0</tab_index>
+				build
+			</help_link>
+			the deployment project will also build the EiffelEnvision project(s) in the same build session.
+		</paragraph>
+		<anchor>deploying_sources</anchor>
+		<heading>
+			<size>2</size>
+			<content>Deploying Source Files</content>
+		</heading>
+		<paragraph>
+			If you require to deploy you project source files then you will simply need to include all of the files and subfolders located in the project folder, with the exception of the <bold>bin</bold> and <bold>obj</bold> folders. 
+			All paths store in an EiffelEnvision project file are relative to the project location, making project portable. EiffelEnvision also permits the use of <link>
+				<url>tt</url>
+				<label>environment variables</label>
+			</link> in all paths 
+			making project even more portable that projects created for other languages in Visual Studio .NET.
+		</paragraph>
+		<anchor>also_see</anchor>
+		<heading>
+			<size>2</size>
+			<content>Related Sections</content>
+		</heading>
+		<seealso>
+			<bold>See Also:</bold>
+			<line_break/>
+			<link>
+				<url>redistributions.xml</url>
+				<label>Redistributing the Eiffel Runtime</label>
+			</link>
+			<line_break/>
+			<link>
+				<url>index.xml</url>
+				<label>Deploying Projects</label>
+			</link>
+			<line_break/>
+			<help_link>
+				<keywords>vbconDeployingSolution</keywords>
+				<tab_index>0</tab_index>
+				Deploying Applications
+			</help_link>
+			<line_break/>
+			<link>
+				<url>i</url>
+				<label>*Building Projects</label>
+			</link>
+			<line_break/>
+			<help_link>
+				<keywords>vxconProjectProperties</keywords>
+				<tab_index>0</tab_index>
+				Project Properties
+			</help_link>
+			<line_break/>
+			<link>
+				<url>i</url>
+				<label>*EiffelEnvision Known Folders</label>
+			</link>
+			<line_break/>
+			<link>
+				<url>i</url>
+				<label>*Using Environment Variables</label>
+			</link>
+		</seealso>
+	</paragraph>
+</document>

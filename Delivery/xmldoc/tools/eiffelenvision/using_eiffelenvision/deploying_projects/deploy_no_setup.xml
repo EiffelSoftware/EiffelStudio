@@ -1,0 +1,114 @@
+<document output="envision" title="Deploying Projects Outside of Visual Studio .NET">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_title>Deploying Projects Outside of Visual Studio .NET</envision_title>
+				<envision_pseudo_name>40</envision_pseudo_name>
+			</toc>
+			<xml>
+			</xml>
+		</help>
+	</meta_data>
+	<paragraph>
+		If you do not have access to <bold>Visual Studio .NET Enterprise Edition</bold>, or better, or simply to not want to use the integrated 
+		<help_link>
+			<keywords>vbconSetupProjects</keywords>
+			<tab_index>0</tab_index>
+			setup and deployment projects
+		</help_link>, you can still deploy you EiffelEnvision projects with ease. Whether you are simply archiving the project for distribution, using ZIP, RAR or another popular format, or using tools such as InstallShield or Wise. 
+		
+		<anchor>requirements</anchor>
+		<heading>
+			<size>2</size>
+			<content>Deployment Requirements</content>
+		</heading>
+		<paragraph>
+			In order to deploy your EiffelEnvision project(s) without the aid of Visual Studio .NET you will need to ensure your EiffelEnvision project(s) have been compiled successfully before continuing. Projects that have not been compiled may not have any project output generate or the project output may be out of date.
+		</paragraph>
+		
+		<anchor>deploying_projects</anchor>
+		<heading>
+			<size>2</size>
+			<content>Deploying Projects</content>
+		</heading>
+		<paragraph>
+			Once you have a compiled one or more EiffelEnvision project(s) successfully each of the projects will contain a <bold>bin</bold> folder located in the project folder. In the bin folder there will be one or more subfolders, depending on what <help_link>
+				<keywords>vxtskCreatingandEditingConfigurations</keywords>
+				<tab_index>0</tab_index>
+				configurations
+			</help_link> you have built to date. There will be one folder for each <help_link>
+				<keywords>vxconBuildsDuringApplicationDevelopment</keywords>
+				<tab_index>0</tab_index>
+				project configuration
+			</help_link>. The configuration name may or may no be the same name as the selected <help_link>
+				<keywords>vxconBuildsDuringApplicationDevelopment</keywords>
+				<tab_index>0</tab_index>
+				solution configuration
+			</help_link> depending on how you configured your project and solutions configuration using the <help_link>
+				<keywords>vxtskCreatingandEditingConfigurations</keywords>
+				<tab_index>0</tab_index>
+				configuration manager
+			</help_link>.
+		</paragraph>
+		<paragraph>
+			To deploy a project simply take the contents of the <bold>bin</bold>\<bold>configuration_name</bold> folder. 
+			<note>
+			<bold>Note:</bold> 
+			You should be aware that the <bold>bin</bold> folder will also contain any <link><url>sd</url><label>debugging information</label></link> if the corresponding project configuration is set to <link><url>sd</url><label>generate debug information</label></link>.
+			</note>
+			<warning>
+			<bold>Warning:</bold> 
+			EiffelEnvision will only copy assemblies and any supporting binaries to the <bold>bin</bold>\<bold>configuration_name</bold> folder, in addition to the <help_link>
+				<keywords>cpconConfigurationFiles</keywords>
+				<tab_index>0</tab_index>
+				application configuration file
+			</help_link>. If you want to distribute other resources, such as bitmaps, icons, cursors, etc. you will need to include these files manually in you preferred means of deployment.
+			</warning>
+		</paragraph>
+		
+		<anchor>deploying_sources</anchor>
+		<heading>
+			<size>2</size>
+			<content>Deploying Source Files</content>
+		</heading>
+		<paragraph>
+			If you require to deploy you project source files then you will simply need to include all of the files and subfolders located in the project folder, with the exception of the <bold>bin</bold> and <bold>obj</bold> folders. 
+			All paths store in an EiffelEnvision project file are relative to the project location, making project portable. EiffelEnvision also permits the use of <link><url>tt</url><label>environment variables</label></link> in all paths 
+			making project even more portable that projects created for other languages in Visual Studio .NET.
+		</paragraph>
+		
+		<anchor>also_see</anchor>
+		<heading><size>2</size><content>Related Sections</content></heading>
+		<seealso>
+			<bold>See Also:</bold>
+			<line_break/>
+			<link>
+				<url>redistributions.xml</url>
+				<label>Redistributing the Eiffel Runtime</label>
+			</link>
+			<line_break/>
+			<link><url>index.xml</url><label>Deploying Projects</label></link>
+			<line_break/>
+			<help_link>
+				<keywords>vbconDeployingSolution</keywords>
+				<tab_index>0</tab_index>
+				Deploying Applications
+			</help_link>
+			<line_break/>
+			<link>
+				<url>i</url>
+				<label>*Building Projects</label>
+			</link>
+			<line_break/>
+			<help_link>
+				<keywords>vxconProjectProperties</keywords>
+				<tab_index>0</tab_index>
+				Project Properties
+			</help_link>
+			<line_break/>
+			<link><url>i</url><label>*EiffelEnvision Known Folders</label></link>
+			<line_break/>
+			<link><url>i</url><label>*Using Environment Variables</label></link>
+		</seealso>
+	</paragraph>
+</document>

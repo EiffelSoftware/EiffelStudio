@@ -149,7 +149,11 @@
 						<bold>EV_APPLICATION</bold> - `cancel_actions' were not always called when they should have been. If you cancelled  a pick and drop by right clicking on a target that does not accept the `pebble', the `cancel_actions' were not fired.
 					</item>
 					<item>
-						<bold>EV_RICH_TEXT</bold> - Fixed bug in `buffered_format' which corrupted the current text upon calling `flush_buffer' if the text contained any RTF reserved characters such as '/', '{' or '}'.
+						<bold>EV_RICH_TEXT</bold>
+						<list ordered="false">
+						<item>Fixed bug in `buffered_format' which corrupted the current text upon calling `flush_buffer' if the text contained any RTF reserved characters such as '/', '{' or '}'.</item>
+						<item>Fixed `set_background_color' which was not changing the background color</item>
+						</list>
 					</item>
 					<item>
 						<bold>EV_TOOL_BAR_BUTTON</bold> - Fixed bug in handling of enabled/disabled state during a pick and drop transport. The pick and drop mechanism disables tool bar buttons automatically that are not valid targets. If you called `enable_sensitive' or `disable_sensitive' during a pick  and drop, this state was not reflected at the end of the pick and drop and the buttons were always restored to their original state. Now the buttons are restored to their last set state.

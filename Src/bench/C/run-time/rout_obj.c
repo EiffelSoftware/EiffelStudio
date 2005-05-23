@@ -130,6 +130,18 @@ rt_public void rout_obj_call_function (EIF_REFERENCE res, EIF_POINTER rout, EIF_
 		case EIF_REAL_64_CODE:
 			*((EIF_REAL_64 *) resp) = result.darg;
 			break;
+		case EIF_NATURAL_8_CODE:
+			*((EIF_NATURAL_8 *) resp) = result.u8arg;
+			break;
+		case EIF_NATURAL_16_CODE:
+			*((EIF_NATURAL_16 *) resp) = result.u16arg;
+			break;
+		case EIF_NATURAL_32_CODE:
+			*((EIF_NATURAL *) resp) = result.u32arg;
+			break;
+		case EIF_NATURAL_64_CODE:
+			*((EIF_NATURAL_64 *) resp) = result.u64arg;
+			break;
 		case EIF_INTEGER_8_CODE:
 			*((EIF_INTEGER_8 *) resp) = result.i8arg;
 			break;

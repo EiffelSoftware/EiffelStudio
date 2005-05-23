@@ -537,10 +537,6 @@ rt_private void rec_twrite(register EIF_REFERENCE object, int tab)
 				sprintf(buffero, "REAL = %g\n", eif_real_32_item(object,i));
 				write_out();
 				break;
-			case EIF_INTEGER_32_CODE:
-				sprintf(buffero, "INTEGER_32 = %d\n", eif_integer_32_item(object,i));
-				write_out();
-				break;
 			case EIF_POINTER_CODE:
 				sprintf(buffero, "POINTER = 0x%" EIF_POINTER_DISPLAY "\n", (rt_uint_ptr) eif_pointer_item(object,i));
 				write_out();
@@ -556,12 +552,33 @@ rt_private void rec_twrite(register EIF_REFERENCE object, int tab)
 					write_out();
 				}
 				break;
+			case EIF_NATURAL_8_CODE:
+				sprintf(buffero, "NATURAL_8 = %d\n", eif_natural_8_item(object,i));
+				write_out();
+				break;
+			case EIF_NATURAL_16_CODE:
+				sprintf(buffero, "NATURAL_16 = %d\n", eif_natural_16_item(object,i));
+				write_out();
+				break;
+			case EIF_NATURAL_32_CODE:
+				sprintf(buffero, "NATURAL_32 = %d\n", eif_natural_32_item(object,i));
+				write_out();
+				break;
+			case EIF_NATURAL_64_CODE:
+				sprintf(buffero, "NATURAL_64 = %" EIF_NATURAL_64_DISPLAY "\n",
+					eif_natural_64_item(object,i));
+				write_out();
+				break;
 			case EIF_INTEGER_8_CODE:
 				sprintf(buffero, "INTEGER_8 = %d\n", eif_integer_8_item(object,i));
 				write_out();
 				break;
 			case EIF_INTEGER_16_CODE:
 				sprintf(buffero, "INTEGER_16 = %d\n", eif_integer_16_item(object,i));
+				write_out();
+				break;
+			case EIF_INTEGER_32_CODE:
+				sprintf(buffero, "INTEGER_32 = %d\n", eif_integer_32_item(object,i));
 				write_out();
 				break;
 			case EIF_INTEGER_64_CODE:

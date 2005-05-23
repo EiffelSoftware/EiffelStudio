@@ -34,6 +34,11 @@ inherit
 			{NONE} all
 		end
 		
+	SHARED_DEBUGGED_OBJECT_MANAGER
+		export
+			{NONE} all
+		end	
+		
 create {SHARED_APPLICATION_EXECUTION}
 	make
 
@@ -52,6 +57,12 @@ feature {NONE} -- Initialization
 		end
 		
 feature -- Recylcing
+
+	on_resumed is
+			-- Clean cached data valid only during the current stepping
+		do
+			debugged_object_manager.reset
+		end
 
 	recycle is
 			-- Clean debugging session data

@@ -17,6 +17,35 @@ inherit
 
 	COMPILER_EXPORTER
 
+feature {NONE} -- Creation
+
+	make (addr: like object_address; sp_lower, sp_upper: INTEGER) is
+			-- Make debugged object with hector address `addr'
+			-- with upper and lower bounds `sp_lower' and `sp_upper'.
+			-- (At this stage we do not know if addr is a special object
+			-- and we don't want to retrieve all of the special object
+			-- especially if it has thousands of entries).
+			-- (-1 for `sp_upper' stands for the upper bound
+			-- of the inspected special object)
+		require
+			non_void_addr: addr /= Void;
+			valid_addr: Application.is_valid_object_address (addr);
+			valid_bounds: sp_lower >= 0 and (sp_upper >= sp_lower or else
+					sp_upper = -1)
+		deferred
+		ensure
+			set: addr = object_address
+		end
+
+feature {DEBUGGED_OBJECT_MANAGER} -- Refreshing
+
+	refresh (sp_lower, sp_upper: INTEGER) is
+		require
+			valid_bounds: sp_lower >= 0 and (sp_upper >= sp_lower or else
+					sp_upper = -1)
+		deferred
+		end
+
 feature -- Properties
 
 	attributes: DS_LIST [ABSTRACT_DEBUG_VALUE];
@@ -83,7 +112,7 @@ feature -- Query
 		ensure
 			same_name_if_found: (Result /= Void) implies (Result.name.is_equal (n))
 		end
-		
+
 invariant
 
 	non_void_attributes: attributes /= Void;

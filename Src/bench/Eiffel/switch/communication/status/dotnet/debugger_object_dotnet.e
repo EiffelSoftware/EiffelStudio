@@ -13,10 +13,10 @@ inherit
 			{NONE} all
 		end
 
-create
+create {DEBUGGED_OBJECT_MANAGER}
 	make
 
-feature -- Access
+feature {NONE} -- Access
 
 	make (addr: like object_address; sp_lower, sp_upper: INTEGER) is
 			-- Make debugged object with hector address `addr'
@@ -26,11 +26,6 @@ feature -- Access
 			-- especially if it has thousands of entries).
 			-- (-1 for `sp_upper' stands for the upper bound
 			-- of the inspected special object)	
-		require
-			non_void_addr: addr /= Void;
-			valid_addr: Application.is_valid_object_address (addr);
-			valid_bounds: sp_lower >= 0 and (sp_upper >= sp_lower or else
-					sp_upper = -1)
 		local
 			l_val: ABSTRACT_DEBUG_VALUE
 			l_spec_val: ABSTRACT_SPECIAL_VALUE
@@ -75,10 +70,14 @@ feature -- Access
 			end
 			object_address := addr;
 			max_capacity := -1
-		ensure
-			set: addr = object_address
-		end;
-		
+		end
+
+feature {DEBUGGED_OBJECT_MANAGER} -- Refreshing
+
+	refresh (sp_lower, sp_upper: INTEGER) is
+		do
+		end		
+
 feature -- Properties
 
 	is_string_value: BOOLEAN

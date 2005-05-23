@@ -138,7 +138,7 @@ feature -- Output
 			debug ("debug_recv")
 				print ("REFERENCE_VALUE.children%N")
 			end
-			create {DEBUGGED_OBJECT_CLASSIC} obj.make (address, min_slice, max_slice)
+			obj := debugged_object_manager.debugged_object (address, min_slice, max_slice)
 			is_already_sorted := obj.is_tuple or obj.is_special
 			Result := obj.attributes
 		end

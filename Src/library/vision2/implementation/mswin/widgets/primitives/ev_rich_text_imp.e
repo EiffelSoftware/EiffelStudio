@@ -56,7 +56,8 @@ inherit
 			enable_redraw,
 			on_en_change,
 			text_length,
-			wel_text_length
+			wel_text_length,
+			set_background_color
 		select
 			wel_line_index,
 			wel_current_line_number,
@@ -1356,6 +1357,17 @@ feature -- Status setting
 		
 	original_selection_start, original_selection_end: INTEGER
 		-- Original selection when `safe_store_caret' called.
+
+	set_background_color (color: EV_COLOR) is
+			-- Make `color' the new `background_color'
+		do
+			background_color_imp ?= color.implementation
+			wel_set_background_color (background_color_imp)
+			if is_displayed then
+				-- If the widget is not hidden then invalidate.
+				invalidate
+			end
+		end
 		
 feature {EV_CONTAINER_IMP} -- Implementation
 

@@ -15,7 +15,7 @@ create
 feature {NONE} -- Initialization
 
 	make (a_namespaces: like namespaces) is
-			-- Initialize `namespaces' and `referenced_assemblies'.
+			-- Initialize `namespaces'
 		require
 			non_void_namespaces: a_namespaces /= Void
 		do

@@ -256,10 +256,12 @@ feature {NONE} -- Implementation
 						--| FIXME jfiat: Nasty fix, since we use the top level stack frame
 					l_icd_th := application.imp_dotnet.eifnet_debugger.icor_debug_thread
 					l_frame := l_icd_th.get_active_frame
-					l_il_frame := l_frame.query_interface_icor_debug_il_frame
-					l_function := l_il_frame.get_function
-					l_il_frame.clean_on_dispose
-					l_frame.clean_on_dispose
+					if l_frame /= Void then
+						l_il_frame := l_frame.query_interface_icor_debug_il_frame
+						l_function := l_il_frame.get_function
+						l_il_frame.clean_on_dispose
+						l_frame.clean_on_dispose
+					end
 				end
 
 				if l_function /= Void then

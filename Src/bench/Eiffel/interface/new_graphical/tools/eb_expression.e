@@ -23,14 +23,26 @@ inherit
 			--| and other expression evaluation purpose
 		export
 			{NONE} all
-		end		
+		end
 
 create
 	make_with_class,
 	make_with_object,
-	make_for_context
+	make_for_context,
+	make_as_object
 
 feature {NONE} -- Initialization
+
+	make_as_object (cl: CLASS_C; addr: STRING) is
+		require
+			valid_class: cl /= Void and then cl.is_valid
+			valid_address: addr /= Void
+		do
+			on_object := True
+			context_address := addr
+			context_class := cl
+			create_expression ("current")
+		end
 
 	make_with_object (obj: DEBUGGED_OBJECT; new_expr: STRING) is
 			-- Initialize `Current' and link it to an object `obj' whose dynamic type is `dtype'.
@@ -94,6 +106,19 @@ feature {NONE} -- Expression validator
 			end
 		end
 
+feature -- Properties
+
+	name: STRING
+			-- Optional name to qualify this expression.
+
+feature -- Change
+
+	set_name (n: like name) is
+			-- Set `name' with `n'
+		do
+			name := n
+		end
+		
 feature -- Status
 
 	enable_evaluation is
@@ -118,6 +143,16 @@ feature -- Status
 		end
 
 feature -- Status report
+
+	is_current: BOOLEAN is
+		local
+			l_expr: STRING
+		do
+			l_expr := expression.as_lower
+			l_expr.left_adjust
+			l_expr.right_adjust
+			Result := l_expr.is_equal ("current")
+		end
 
 	is_condition (f: E_FEATURE): BOOLEAN is
 			-- Is `Current' a condition (boolean query) in the context of `f'?
@@ -197,7 +232,7 @@ feature -- Bridge to dbg_expression
 			Result := dbg_expression.expression
 		end
 
-feature {EB_EXPRESSION_DEFINITION_DIALOG, EB_EXPRESSION_EVALUATOR} -- Restricted Bridge to dbg_expression
+feature {EB_EXPRESSION_DEFINITION_DIALOG, ES_OBJECTS_GRID_EXPRESSION_LINE} -- Restricted Bridge to dbg_expression
 
 	set_expression (expr: STRING) is
 			-- Set string value for `dbg_expression'
@@ -206,7 +241,7 @@ feature {EB_EXPRESSION_DEFINITION_DIALOG, EB_EXPRESSION_EVALUATOR} -- Restricted
 			internal_evaluator := Void
 		end
 
-feature {ES_WATCH_TOOL, EB_EXPRESSION_EVALUATOR_TOOL, EB_EXPRESSION_DEFINITION_DIALOG} -- Status report: Propagate the context and the results.
+feature {ES_WATCH_TOOL, ES_OBJECTS_GRID_LINE, EB_EXPRESSION_EVALUATOR_TOOL, EB_EXPRESSION_DEFINITION_DIALOG} -- Status report: Propagate the context and the results.
 
 	on_object: BOOLEAN
 			-- Is the expression relative to an object?
@@ -219,14 +254,23 @@ feature {ES_WATCH_TOOL, EB_EXPRESSION_EVALUATOR_TOOL, EB_EXPRESSION_DEFINITION_D
 
 	context_class: CLASS_C
 			-- Class the expression refers to (only valid if `on_class').
-	
+
 	context_address: STRING
 			-- Address of the object the expression refers to (only valid if `on_object').
-		
+
 feature -- Basic operations
 
 	dbg_expression: DBG_EXPRESSION
 			-- Object representing the expression to evaluate
+
+	is_evaluated: BOOLEAN
+			-- Is current expression had been evaluated ?
+
+	set_unevaluated is
+			-- Reset is_evaluated
+		do
+			is_evaluated := False
+		end
 
 	evaluate is
 			-- Evaluate `dbg_expression' with `expression_evaluator'
@@ -234,6 +278,7 @@ feature -- Basic operations
 			valid_syntax: not dbg_expression.syntax_error
 		do
 			expression_evaluator.evaluate
+			is_evaluated := True
 		end
 
 	expression_evaluator: DBG_EXPRESSION_EVALUATOR is
@@ -244,14 +289,14 @@ feature -- Basic operations
 				create_internal_evaluator
 				Result := internal_evaluator
 			end
-		end		
+		end
 
 	reset_expression_evaluator is
 			-- Reset expression_evaluator
 		do
 			internal_evaluator := Void
 		end
-		
+
 	create_internal_evaluator is
 			-- Create internal_evaluator
 		local
@@ -259,16 +304,20 @@ feature -- Basic operations
 		do
 			if internal_evaluator = Void then
 				l_expr_b ?= dbg_expression
-				check
-					l_expr_b_not_void: l_expr_b /= Void
+				if l_expr_b /= Void then
+					create {DBG_EXPRESSION_EVALUATOR_B} internal_evaluator.make_with_expression (l_expr_b)
+					internal_evaluator.set_context_class (context_class)
+					internal_evaluator.set_context_address (context_address)
+					internal_evaluator.set_on_class (on_class)
+					internal_evaluator.set_on_context (on_context)
+					internal_evaluator.set_on_object (on_object)
+
+				else
+					check
+						should_not_occurred: False
+					end
 				end
-				create {DBG_EXPRESSION_EVALUATOR_B} internal_evaluator.make_with_expression (l_expr_b)
-				internal_evaluator.set_context_class (context_class)
-				internal_evaluator.set_context_address (context_address)
-				internal_evaluator.set_on_class (on_class)
-				internal_evaluator.set_on_context (on_context)
-				internal_evaluator.set_on_object (on_object)				
-			end			
+			end
 		end
 
 	internal_evaluator: like expression_evaluator

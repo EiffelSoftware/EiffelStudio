@@ -38,4 +38,17 @@ feature -- Basic operations
 			container.disable_item_expand (button)
 		end
 
+feature -- Useful query
+
+	parent_window_from (w: EV_WIDGET): EV_WINDOW is
+			-- Top parent Window containing `w'.
+		require
+			w_not_void: w /= Void
+		do
+			Result ?= w
+			if Result = Void and w.parent /= Void then
+				Result := parent_window_from (w.parent)
+			end
+		end
+
 end -- class EB_VISION2_FACILITIES

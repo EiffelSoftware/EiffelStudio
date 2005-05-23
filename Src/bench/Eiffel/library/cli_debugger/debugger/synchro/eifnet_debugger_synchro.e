@@ -154,17 +154,14 @@ feature -- bridge to ICorDebugController->Continue ()
 
 feature -- Evaluation 
 
-	Function_evaluation_timeout: INTEGER is 5 -- seconds
-			-- Timeout of the function evaluation.
-
-	process_debugger_evaluation (icdeval: ICOR_DEBUG_EVAL; icdc: ICOR_DEBUG_CONTROLLER) is
+	process_debugger_evaluation (icdeval: ICOR_DEBUG_EVAL; icdc: ICOR_DEBUG_CONTROLLER; timeout: INTEGER) is
 			-- Start evaluation processing, this implies a 
 			-- Lock and wait for callback, and callback handlings
 		require
 			icdeval /= Void and then icdeval.item_not_null
 			icdc /= Void and then icdc.item_not_null
 		do
-			c_dbg_process_evaluation (icdeval.item, icdc.item, Function_evaluation_timeout)
+			c_dbg_process_evaluation (icdeval.item, icdc.item, timeout)
 		end
 		
 feature -- Access to dbg data

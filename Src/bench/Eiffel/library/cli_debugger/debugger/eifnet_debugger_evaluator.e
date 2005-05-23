@@ -422,6 +422,13 @@ feature {NONE}
 			evaluation_termination (False)
 		end
 
+	Feature_evaluation_timeout: INTEGER is
+			-- Timeout of the function evaluation.
+			-- (in seconds)
+		do
+			Result := Application.max_evaluation_duration
+		end
+
 	complete_method_evaluation is
 			-- In case of method evaluation, requiring a callback,
 			-- Complete the evaluation by cleaning temporary data
@@ -443,7 +450,10 @@ feature {NONE}
 				end
 			else			
 					--| And we wait for all callback to be finished
-				eifnet_debugger.process_debugger_evaluation (l_icd_eval, eifnet_debugger.icor_debug_controller)
+				eifnet_debugger.process_debugger_evaluation (l_icd_eval, 
+							eifnet_debugger.icor_debug_controller, 
+							Feature_evaluation_timeout
+						)
 				if 
 					eifnet_debugger.last_managed_callback_is_exception 
 				then
@@ -483,7 +493,10 @@ feature {NONE}
 				end
 			else
 					--| And we wait for all callback to be finished
-				eifnet_debugger.process_debugger_evaluation (l_icd_eval, eifnet_debugger.icor_debug_controller)
+				eifnet_debugger.process_debugger_evaluation (l_icd_eval, 
+							eifnet_debugger.icor_debug_controller,
+							Feature_evaluation_timeout
+						)
 				lmcb := eifnet_debugger.last_managed_callback
 				if 
 					eifnet_debugger.managed_callback_is_exception (lmcb)

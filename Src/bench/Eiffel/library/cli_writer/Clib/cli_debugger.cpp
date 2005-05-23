@@ -73,6 +73,11 @@ const IID IID_ICorDebugArrayValue = {0x0405B0DF,0xA660,0x11d2,0xBD,0x02,0x00,0x0
 
 
 /*
+ * Private function declaration
+ */
+extern EIF_INTEGER dbg_icdc_continue (void*, BOOL);
+
+/*
 //////////////////////////////////////////////////
 /// Variables Declaration                      ///
 //////////////////////////////////////////////////
@@ -170,10 +175,6 @@ rt_private void raise_error (HRESULT hr,char *pref, char *msg)
 	sprintf (message, "%s 0x%x: %s", pref, hr, msg);
 	eraise (message, EN_PROG);
 }
-#endif
-
-#ifdef ASSERTIONS
-rt_private void raise_error (HRESULT hr, char *msg); /* Raise error */
 #define CHECK(hr,msg) if (hr) raise_error (hr, "check", msg);
 #define CHECKHR(cond, hr, msg) if (cond) raise_error (hr, "check", msg);
 #define REQUIRE(cond,msg) if (!cond) raise_error (-1, "require", msg);
@@ -453,6 +454,12 @@ rt_public EIF_INTEGER dbg_continue (void* icdc, BOOL a_f_is_out_of_band) {
 	} else {
 		dbg_start_timer();
 	}
+	hr = dbg_icdc_continue (icdc, a_f_is_out_of_band);
+	return hr;
+}
+
+rt_private EIF_INTEGER dbg_icdc_continue (void* icdc, BOOL a_f_is_out_of_band) {
+	HRESULT hr, thr;
 	hr = ((ICorDebugController*)icdc)->Continue (a_f_is_out_of_band);
 	DBGTRACE_HR("[???] ICorDebugController->Continue(..) = ", (HRESULT)hr);
 	return hr;
@@ -491,7 +498,7 @@ rt_public void dbg_stop_timer () {
 	BOOL hr;
 	REQUIRE (LOCKED_DBG_TIMER_IS_SET, "timer not zero")
 	DBGTRACE("[???] STOP timer");
-	hr = KillTimer (dbg_hWnd_for_timer, dbg_timer);
+	hr = KillTimer (dbg_hWnd_for_timer, LOCKED_DBG_TIMER_VALUE);
 	LOCKED_DBG_TIMER_SET_VALUE (0);
 
 #ifdef DBGTRACE_ENABLED
@@ -577,15 +584,35 @@ rt_public void CALLBACK dbg_timer_callback (HWND hwnd, UINT uMsg, UINT idEvent, 
 
 #define WAIT_UNTIL_ESTUDIO_THREAD_SUSPENDED Sleep (2)
 
-rt_public void dbg_process_evaluation (void* icdc) {
-	Callback_ids cb_id;
+#define DBG_EVALUATION_WITH_MAXIMUM_DURATION
+#ifdef DBG_EVALUATION_WITH_MAXIMUM_DURATION
+rt_private time_t dbgEval_start_time_t;
+rt_private void dbg_set_eval_start_time () {
+	DBGTRACE("[ES::Eval] START eval timeout");
+	dbgEval_start_time_t=time(NULL);
+	DBGTRACE_HR("[ES::Eval] start timeout =", dbgEval_start_time_t);
+}
+rt_private BOOL dbg_check_eval_timeout (EIF_INTEGER timeout) {
+	int delay;
+	time_t t;
+	t=time(NULL);
+	delay = t - dbgEval_start_time_t;
+	DBGTRACE_HR("[ES::Eval] check timeout =", delay);
+	return (delay > timeout);
+}
+#endif
+
+rt_public void dbg_process_evaluation (void *icdeval, void* icdc, EIF_INTEGER timeout) {
+	/* process evaluation on icdeval */
 
 	/*** Local  ***/
+	Callback_ids cb_id;
+    HRESULT hr = S_OK;
+	BOOL eval_callback_proceed;
+	BOOL has_queued_callbacks;
 #ifdef DBGTRACE_ENABLED
 	UINT once_enter;
 #endif
-    HRESULT hr = S_OK;
-	BOOL eval_callback_proceed;
 
 	/*** Require  ***/
 	REQUIRE(LOCKED_DBG_TIMER_IS_NOT_SET, "Timer disabled (context = evaluating)")
@@ -615,9 +642,16 @@ rt_public void dbg_process_evaluation (void* icdc) {
 	LOCKED_DBG_CB_ID_SET_VALUE(CB_NONE);
 
 	/* Process the evaluation : */
-	hr = ((ICorDebugController*)icdc)->Continue (false);
 	DBGTRACE_HR("[ES::Eval] Start effective evaluation: ICorDebugController->Continue(false) = ", (HRESULT)hr);
-	if (hr < 0) { eval_callback_proceed = true; }
+
+	hr = dbg_icdc_continue (icdc, false);
+	if (hr < 0) { 
+		eval_callback_proceed = true; 
+#ifdef DBG_EVALUATION_WITH_MAXIMUM_DURATION
+	} else {
+		dbg_set_eval_start_time();
+#endif
+	}
 
 	while (!eval_callback_proceed) {
 		/* While we haven't reach "eval callback", and proceed it  */
@@ -630,6 +664,18 @@ rt_public void dbg_process_evaluation (void* icdc) {
 			if (once_enter == 0) {
 				DBGTRACE("[ES::Eval] waiting for callback (s=1)");
 				once_enter = (once_enter + 1) % 500;
+			}
+#endif
+
+#ifdef DBG_EVALUATION_WITH_MAXIMUM_DURATION
+			/* if timeout <= 0 , this mean we evaluate with no timeout */
+			if ((timeout > 0) && (dbgEval_start_time_t > 0)) {
+				if (dbg_check_eval_timeout (timeout)) {
+					dbgEval_start_time_t = 0;
+					hr = ((ICorDebugEval*)icdeval)->Abort();
+					DBGTRACE_HR("[ES::Eval] abort evaluation hr=", (HRESULT)hr);
+					CHECKHR (hr == 0, hr, "ICorDebugEval->Abort failed")
+				}
 			}
 #endif
 			Sleep (1);
@@ -649,6 +695,7 @@ rt_public void dbg_process_evaluation (void* icdc) {
 				eval_callback_proceed = true;
 				DBGTRACE("[ES::Eval] ExitProcess Callback Occured !!!");
 				break;
+			case CB2_EXCEPTION:
 			case CB_EXCEPTION:
 				eval_callback_proceed = false;
 				DBGTRACE("[ES::Eval] Exception Callback Occured ");
@@ -656,6 +703,9 @@ rt_public void dbg_process_evaluation (void* icdc) {
 			case CB_DEBUGGER_ERROR:
 			case CB_BREAK:
 				eval_callback_proceed = true;
+				break;
+			case CB_NONE:
+				eval_callback_proceed = false;
 				break;
 			default:
 				eval_callback_proceed = false;
@@ -773,6 +823,8 @@ rt_public void dbg_finish_callback (Callback_ids callback_id) {
 /**************************************************************************/
 /* ICorDebug  */
 
+rt_private LPWSTR dbg_debuggee_version;
+
 rt_public EIF_INTEGER get_cordebug (LPWSTR a_dbg_version, EIF_POINTER ** icd)
 	/* Create new instance of ICorDebug */
 {
@@ -780,13 +832,15 @@ rt_public EIF_INTEGER get_cordebug (LPWSTR a_dbg_version, EIF_POINTER ** icd)
 #ifdef DBGTRACE_ENABLED
 	CLI_MUTEX_CREATE(trace_mutex, "");
 #endif
-	
+
 	rt_private FARPROC create_debug_address;
 	HMODULE mscoree_module;
 
+	dbg_debuggee_version = a_dbg_version;
+
 	mscoree_module = NULL;
 	mscoree_module = LoadLibrary("mscoree.dll");
-	CHECKHR (((mscoree_module != NULL) ? 0 : 1), hr, "Could not load mscoree.dll");
+	CHECK (((mscoree_module != NULL) ? 0 : 1), "Could not load mscoree.dll");
 
 	create_debug_address = NULL;
 	create_debug_address = GetProcAddress (mscoree_module, "CreateDebuggingInterfaceFromVersion");

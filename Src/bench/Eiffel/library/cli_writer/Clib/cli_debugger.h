@@ -47,7 +47,6 @@ extern void dbg_start_timer();
 extern void dbg_stop_timer();
 extern void dbg_restore_cb_notification_state ();
 extern EIF_INTEGER dbg_continue (void*, BOOL);
-extern EIF_INTEGER dbg_icdc_continue (void*, BOOL, BOOL);
 extern void dbg_process_evaluation (void*, void*, EIF_INTEGER);
 extern void dbg_begin_callback(Callback_ids);
 extern void dbg_finish_callback(Callback_ids);

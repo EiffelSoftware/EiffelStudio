@@ -52,14 +52,19 @@ feature {NONE} -- Properties
 	il_debug_info_recorder: IL_DEBUG_INFO_RECORDER
 			-- IL Info container
 
-	error_occurred: BOOLEAN
-			-- Did an error occurred during processing ?
-			
 	current_icor_debug_frame: ICOR_DEBUG_FRAME is
 			-- Current shared ICorDebugFrame encapsulated instance
 		do
 			Result := eifnet_debugger.current_stack_icor_debug_frame
 		end
+		
+feature -- Status
+
+	error_occurred: BOOLEAN
+			-- Did an error occurred during processing ?
+
+	evaluation_aborted: BOOLEAN
+			-- Did the evaluation aborted ?
 
 feature -- Bridge
 
@@ -161,6 +166,7 @@ feature -- Access
 				print ("%N")
 			end
 			error_occurred := False
+			evaluation_aborted := False
 				--| Get the real adapted class_type
 			l_ctype := adapted_class_type (ctype, f)
 			l_icdv_args := prepared_parameters (a_params, False)
@@ -179,7 +185,10 @@ feature -- Access
 				end
 				
 				l_result := eifnet_evaluator.function_evaluation (l_icd_frame, l_icd_fun, l_icdv_args)
-				error_occurred := (eifnet_evaluator.last_call_success /= 0) or (eifnet_evaluator.last_eval_is_exception)
+				evaluation_aborted := eifnet_evaluator.last_eval_aborted
+				error_occurred := (eifnet_evaluator.last_call_success /= 0)
+					or (eifnet_evaluator.last_eval_is_exception)
+					or (evaluation_aborted)
 				if not error_occurred then
 					l_adv := debug_value_from_icdv (l_result)
 					Result := l_adv.dump_value
@@ -203,6 +212,7 @@ feature -- Access
 				print ("%N")
 			end
 			error_occurred := False
+			evaluation_aborted := False
 				--| Get the real adapted class_type
 			l_ctype := adapted_class_type (ctype, f)
 			
@@ -288,8 +298,11 @@ feature {NONE} -- Implementation
 				end
 
 				l_result := eifnet_evaluator.function_evaluation (l_icd_frame, func, l_icdv_args)
-				error_occurred := (eifnet_evaluator.last_call_success /= 0) or (eifnet_evaluator.last_eval_is_exception)
-				
+				evaluation_aborted := eifnet_evaluator.last_eval_aborted
+				error_occurred := (eifnet_evaluator.last_call_success /= 0) 
+						or (eifnet_evaluator.last_eval_is_exception)
+						or (evaluation_aborted)
+
 				if not error_occurred then
 					l_adv := debug_value_from_icdv (l_result)
 					Result := l_adv.dump_value

@@ -46,6 +46,9 @@ feature -- Status
 	last_eval_is_exception: BOOLEAN
 			-- last eval raised an Eval Exception
 
+	last_eval_aborted: BOOLEAN
+			-- last eval had been Aborted
+
 feature {EIFNET_EXPORTER, EB_OBJECT_TOOL} -- Evaluation primitives
 
 	function_evaluation (a_frame: ICOR_DEBUG_FRAME; a_func: ICOR_DEBUG_FUNCTION; a_args: ARRAY [ICOR_DEBUG_VALUE]): ICOR_DEBUG_VALUE is
@@ -69,7 +72,7 @@ feature {EIFNET_EXPORTER, EB_OBJECT_TOOL} -- Evaluation primitives
 		end
 
 	method_evaluation (a_frame: ICOR_DEBUG_FRAME; a_meth: ICOR_DEBUG_FUNCTION; a_args: ARRAY [ICOR_DEBUG_VALUE]) is
-			-- Method evaluation result for `a_func' on `a_icd'
+			-- Method evaluation result for `a_meth' on `a_icd'
 		require
 			args_not_void: a_args /= Void
 			meth_not_void: a_meth /= Void
@@ -359,6 +362,7 @@ feature {NONE}
 			
 			last_call_success := 0
 			last_eval_is_exception := False
+			last_eval_aborted := False
 			save_state_info
 
 			if l_icd_eval = Void then
@@ -429,7 +433,9 @@ feature {NONE}
 			l_icd_eval: ICOR_DEBUG_EVAL
 		do
 			l_icd_eval := last_icor_debug_eval
-			last_call_success := l_icd_eval.last_call_success
+			if l_icd_eval /= Void then
+				last_call_success := l_icd_eval.last_call_success
+			end
 			if not last_call_succeed (last_call_success) then
 				debug ("DEBUGGER_TRACE_EVAL")
 					print (generator + ".complete_method_evaluation %N")
@@ -437,7 +443,7 @@ feature {NONE}
 				end
 			else			
 					--| And we wait for all callback to be finished
-				eifnet_debugger.process_debugger_evaluation (eifnet_debugger.icor_debug_controller)
+				eifnet_debugger.process_debugger_evaluation (l_icd_eval, eifnet_debugger.icor_debug_controller)
 				if 
 					eifnet_debugger.last_managed_callback_is_exception 
 				then
@@ -471,14 +477,13 @@ feature {NONE}
 				last_call_success := l_icd_eval.last_call_success
 			end
 			if l_icd_eval = Void or else not last_call_succeed (last_call_success) then
-			
 				debug ("DEBUGGER_TRACE_EVAL")
 					print (generator + "complete_function_evaluation %N")
 					print ("  => last call success of Eval = " + last_call_success.to_hex_string + "%N")
 				end
 			else
 					--| And we wait for all callback to be finished
-				eifnet_debugger.process_debugger_evaluation (eifnet_debugger.icor_debug_controller)
+				eifnet_debugger.process_debugger_evaluation (l_icd_eval, eifnet_debugger.icor_debug_controller)
 				lmcb := eifnet_debugger.last_managed_callback
 				if 
 					eifnet_debugger.managed_callback_is_exception (lmcb)
@@ -498,7 +503,8 @@ feature {NONE}
 					Result := Void
 				else				
 					Result := l_icd_eval.get_result
-				end				
+					last_eval_aborted := (l_icd_eval.last_call_success & 0xFFFF) = {EIFNET_API_ERROR_CODE_FORMATTER}.cordbg_s_func_eval_aborted
+				end
 			end
 			evaluation_termination (True)
 		end

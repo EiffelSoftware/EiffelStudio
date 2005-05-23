@@ -201,7 +201,12 @@ feature {ICOR_EXPORTER} -- Access
 			Result := generating_type + "[0x"+item.out+"]"
 		end
 
-feature -- Access status		
+feature -- Access status
+
+	item_not_null: BOOLEAN is
+		do
+			Result := item /= Default_pointer
+		end
 
 	last_call_succeed: BOOLEAN is
 			-- Is last call a success ?

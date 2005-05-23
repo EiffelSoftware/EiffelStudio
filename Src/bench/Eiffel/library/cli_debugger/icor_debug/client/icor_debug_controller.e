@@ -16,13 +16,6 @@ inherit
 create 
 	make_by_pointer
 	
-feature -- Access
-
-	item_not_null: BOOLEAN is
-		do
-			Result := item /= Default_pointer
-		end
-
 feature {ICOR_EXPORTER} -- Access
 
 	stop (a_timeout: INTEGER) is

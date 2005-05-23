@@ -161,7 +161,7 @@ feature -- Access
 			Result.append (Documentation_file_name)
 		end
 
-	Documentation_file_name: STRING is "ecdp.chm"
+	Documentation_file_name: STRING is "Eiffel for ASP.NET.chm"
 			-- Documentation chm file name
 
 end -- class CODE_DOM_PATH

@@ -35,6 +35,8 @@ feature -- //**** Common Language Runtime Debugging Services errors
 	cor_e_invalidcast_e_nointerface: INTEGER is 0x4002
 			--	Indicates a bad cast condition
 
+	cordbg_s_func_eval_aborted: INTEGER is 0x1319 -- CORDBG_S_FUNC_EVAL_ABORTED
+
 feature -- Access
 
 	error_code_to_string (a_error_code: INTEGER): STRING is
@@ -65,6 +67,7 @@ feature -- Access
 			Result.put ("[CORDBG_S_VALUE_POINTS_TO_VOID] The Debugging API doesn't support dereferencing pointers of type void", cordbg_s_value_points_to_void)
 			Result.put ("[COR_E_INVALIDCAST  E_NOINTERFACE] Indicates a bad cast condition", cor_e_invalidcast_e_nointerface)
 			Result.put ("[COR_E_ARGUMENT|E_INVALIDARG] An argument does not meet the contract of the method", 0x0057)
+			Result.put ("[CORDBG_S_FUNC_EVAL_ABORTED] The func eval completed, but was aborted", cordbg_s_func_eval_aborted)
 		end
 
 	error_code_to_id (a_error_code: INTEGER): INTEGER is

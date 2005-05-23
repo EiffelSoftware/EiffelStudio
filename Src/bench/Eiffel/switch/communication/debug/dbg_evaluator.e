@@ -40,19 +40,19 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	DEBUG_EXT
 		export
 			{NONE} all
 		end
-		
-	BEURK_HEXER		
+
+	BEURK_HEXER
 
 	IPC_SHARED
 		export
 			{NONE} all
 		end
-		
+
 create
 	make
 
@@ -336,7 +336,7 @@ feature -- Concrete evaluation
 					if
 						last_result_static_type /= Void and then
 						last_result_static_type.is_basic and
-						(last_result_value.address /= Void)
+						last_result_value.address /= Void
 					then
 							-- We expected a basic type, but got a reference.
 							-- This happens in "2 + 2" because we convert the first 2
@@ -348,28 +348,14 @@ feature -- Concrete evaluation
 		end
 
 	attributes_list_from_object (a_addr: STRING): DS_LIST [ABSTRACT_DEBUG_VALUE] is
-		local
-			dobj: DEBUGGED_OBJECT
 		do
-			if application.is_dotnet then
-				create {DEBUGGED_OBJECT_DOTNET} dobj.make (a_addr, 0, 1)
-			else
-				create {DEBUGGED_OBJECT_CLASSIC} dobj.make (a_addr, 0, 1)
-			end
-			Result := dobj.attributes
+			Result := Debugged_object_manager.attributes_at_address (a_addr, 0, 1)
 		end
 
 	class_type_from_object (a_addr: STRING): CLASS_TYPE is
-		local
-			dobj: DEBUGGED_OBJECT
 		do
-			if application.is_dotnet then
-				create {DEBUGGED_OBJECT_DOTNET} dobj.make (a_addr, 0, 1)
-			else
-				create {DEBUGGED_OBJECT_CLASSIC} dobj.make (a_addr, 0, 1)
-			end
-			Result := dobj.class_type
-		end		
+			Result := Debugged_object_manager.class_type_at_address (a_addr)
+		end
 
 	effective_evaluate_function (a_addr: STRING; a_target: DUMP_VALUE; f, realf: E_FEATURE; 
 			ctype: CLASS_TYPE; params: LIST [DUMP_VALUE]): DUMP_VALUE is
@@ -482,6 +468,9 @@ feature {NONE} -- Implementation dotnet
 				dotnet_parameters_reset
 			end
 			Result := dotnet_impl.dotnet_evaluate_function (a_addr, a_target, realf.associated_feature_i, ctype, l_params)
+			if dotnet_impl.evaluation_aborted then
+				set_error_evaluation ("Evaluation aborted")
+			end
 		end
 
 	dotnet_parameters_reset is

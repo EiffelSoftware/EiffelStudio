@@ -1,0 +1,98 @@
+<document output="envision" title="Eiffel Envision Class View">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_title>Class View</envision_title>
+				<envision_pseudo_name>00</envision_pseudo_name>
+			</toc>
+			<xml>
+				<keyword>
+					<index>K</index>
+					<term>Class View</term>
+				</keyword>
+				<keyword>
+					<index>K</index>
+					<term>EiffelEnvision, Class View</term>
+				</keyword>
+			</xml>
+		</help>
+	</meta_data>
+	<paragraph>
+		EiffelEnvision projects also provide a <bold>compiled</bold> representation of the project(s) via the Visual Studio .NET <help_link>
+			<keywords>vxoriViewingClassesTheirMembers</keywords>
+			<tab_index>0</tab_index>
+			Class View
+		</help_link>. This view will be familar to users approaching EiffelEnvision having used <link>
+			<url>url</url>
+			<label>*EiffelStudio</label>
+		</link> in the past. EiffelEnvision extends the <help_link>
+			<keywords>vxurfClassViewWindow</keywords>
+			<tab_index>0</tab_index>
+			Class View
+		</help_link> to provide context specific information on ancestors and decendendent of classes and features.		
+		
+		<anchor>in_this_section</anchor>
+		<heading>
+			<size>2</size>
+			<content>In This Section</content>
+		</heading>
+		<paragraph>
+			<link>
+				<url>hierarchy.xml</url>
+				<label>An Overview of the Class View</label>
+			</link>
+			<line_break/>
+			An overview of the <help_link>
+				<keywords>vxurfClassViewWindow</keywords>
+				<tab_index>0</tab_index>
+				Class View
+			</help_link> window, agumenting the Visual Studio .NET documentation.
+		</paragraph>
+
+		<paragraph>
+			<link>
+				<url>clusters.xml</url>
+				<label>Class View and Object Browser Clusters</label>
+			</link>
+			<line_break/>
+			Documentation on the Class View and Object Browser cluster nodes.
+		</paragraph>
+		
+		<paragraph>
+			<link>
+				<url>eiffel_icons.xml</url>
+				<label>Class View and Object Browser Classes</label>
+			</link>
+			<line_break/>
+			Documentation on the Class View and Object Browser class nodes.
+		</paragraph>
+		
+		<paragraph>
+			<link>
+				<url>eiffel_icons.xml</url>
+				<label>Class View and Object Browser Features</label>
+			</link>
+			<line_break/>
+			Documentation on the Class View and Object Browser feature nodes.
+		</paragraph>
+		
+		<anchor>also_see</anchor>
+		<heading>
+			<size>2</size>
+			<content>Related Sections</content>
+		</heading>
+		<seealso>
+			<bold>See Also:</bold>
+			<line_break/>
+			<link>
+				<url>url</url>
+				<label>*Object Browser</label>
+			</link>
+			<line_break/>
+			<link>
+				<url>../icon_glossary.xml</url>
+				<label>*EiffelEnvision Icon Glossary</label>
+			</link>
+		</seealso>
+	</paragraph>
+</document>

@@ -1,0 +1,53 @@
+<document output="envision" title="Not this">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_title>Not this</envision_title>
+				<envision_pseudo_name>00</envision_pseudo_name>
+			</toc>
+			<xml>
+				<keyword>
+					<index>K</index>
+					<term>Debugging, Eiffel for .NET's Current not this</term>
+				</keyword>
+			</xml>
+		</help>
+	</meta_data>
+	<paragraph>
+		<paragraph>
+			The <link><url>url</url><label>Eiffel for .NET Language</label></link> does not use the <code><reserved_word>this</reserved_word></code> keyword/reserved word used by other languages such as Visual C# and Visual C++. Instead 
+			<code><reserved_word>Current</reserved_word></code> is used to refer to self-reference a runtime instance of a class, also know as an object. Because <code><reserved_word>this</reserved_word></code> is not used by 
+			the <link><url>url</url><label>Eiffel for .NET Language</label></link>, the <help_link>
+				<keywords>vcurfThisWindow</keywords>
+				<tab_index>0</tab_index>
+				This (Me) Window
+			</help_link> is not used by EiffelEnvision when debugging projects.
+		</paragraph>
+		
+		<seealso>
+			<bold>See also</bold>
+			<line_break/>
+			<link>
+				<url>index.xml</url>
+				<label>Debugging in EiffelEnvision</label>
+			</link>
+			<line_break/>
+			<help_link>
+				<keywords>vxconDebugging101</keywords>
+				<tab_index>0</tab_index>
+				Debugging Basics
+			</help_link>
+			<line_break/>
+			<help_link>
+				<keywords>_core_Debugging_Preparation</keywords>
+				<tab_index></tab_index>
+				Debug Settings and Preparation
+			</help_link>
+			<line_break/>
+			<link>
+				<url>url</url>
+				<label>*Eiffel Keywords</label>
+			</link>
+		</seealso>
+	</paragraph>
+</document>

@@ -37,7 +37,6 @@ feature -- Query
 		local
 			dobj: DEBUGGED_OBJECT
 		do
-jfiat_tools.out_string (Current, "class_type_at_address (" + addr + ") %N")			
 			dobj := debugged_object (addr, 0, 1)
 			Result := dobj.class_type
 		end
@@ -48,7 +47,6 @@ jfiat_tools.out_string (Current, "class_type_at_address (" + addr + ") %N")
 		local
 			dobj: DEBUGGED_OBJECT
 		do
-jfiat_tools.out_string (Current, "class_c_at_address (" + addr + ") %N")
 			dobj := debugged_object (addr, 0, 1)
 			Result := dobj.dtype
 		end
@@ -59,7 +57,6 @@ jfiat_tools.out_string (Current, "class_c_at_address (" + addr + ") %N")
 		local
 			dobj: DEBUGGED_OBJECT
 		do
-jfiat_tools.out_string (Current, "attributes_at_address (" + addr + ", " + sp_lower.out + ", " + sp_upper.out + ") %N")
 			dobj := debugged_object (addr, sp_lower, sp_upper)
 			Result := dobj.attributes
 		end
@@ -70,7 +67,6 @@ jfiat_tools.out_string (Current, "attributes_at_address (" + addr + ", " + sp_lo
 		local
 			dobj: DEBUGGED_OBJECT
 		do
-jfiat_tools.out_string (Current, "sorted_attributes_at_address (" + addr + ", " + sp_lower.out + ", " + sp_upper.out + ") %N")
 			dobj := debugged_object (addr, sp_lower, sp_upper)
 			Result := dobj.sorted_attributes
 		end
@@ -81,7 +77,6 @@ jfiat_tools.out_string (Current, "sorted_attributes_at_address (" + addr + ", " 
 		local
 			dobj: DEBUGGED_OBJECT
 		do
-jfiat_tools.out_string (Current, "object_at_address_is_special (" + addr + ") %N")			
 			dobj := debugged_object (addr, 0, 1)
 			Result := dobj.is_special
 		end
@@ -93,7 +88,6 @@ jfiat_tools.out_string (Current, "object_at_address_is_special (" + addr + ") %N
 			dobj: DEBUGGED_OBJECT
 			lst: DS_LIST [ABSTRACT_DEBUG_VALUE]
 		do
-jfiat_tools.out_string (Current, "object_at_address_has_attributes (" + addr + ") %N")
 			dobj := debugged_object (addr, 0, 1)
 			lst := dobj.sorted_attributes
 			Result := lst /= Void and then not lst.is_empty
@@ -105,7 +99,6 @@ jfiat_tools.out_string (Current, "object_at_address_has_attributes (" + addr + "
 		local
 			dobj: DEBUGGED_OBJECT
 		do
-jfiat_tools.out_string (Current, "special_object_capacity_at_address (" + addr + ") %N")
 			dobj := debugged_object (addr, 0, 1)
 			Result := dobj.capacity
 		end
@@ -122,7 +115,6 @@ feature -- debugged object creation
 		require
 			Application.is_classic
 		do
-jfiat_tools.out_string (Current, "classic_debugged_object_with_class (" + addr + ", " + a_compiled_class.name_in_upper +") %N")
 			create Result.make_with_class (addr, a_compiled_class)
 		end
 

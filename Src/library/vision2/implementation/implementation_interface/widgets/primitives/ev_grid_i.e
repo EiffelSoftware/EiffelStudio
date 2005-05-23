@@ -3228,6 +3228,7 @@ feature {NONE} -- Event handling
 			pointed_item: EV_GRID_ITEM_I
 			pointed_item_interface: EV_GRID_ITEM
 		do
+			fixme ("Item leave events are not connected when you leave the grid completely.")
 			if pointer_motion_actions_internal /= Void and then not pointer_motion_actions_internal.is_empty then
 				pointer_motion_actions_internal.call ([client_x_to_x (a_x), client_y_to_y (a_y) , a_x_tilt, a_y_tilt, a_pressure, client_x_to_x (a_screen_x), client_y_to_y (a_screen_y)])
 			end
@@ -3247,10 +3248,32 @@ feature {NONE} -- Event handling
 				end
 				pointer_motion_item_actions_internal.call ([client_x_to_virtual_x(a_x), client_y_to_virtual_y (a_y), pointed_item_interface])
 			end
-			if pointed_item /= Void and then pointed_item.pointer_motion_actions_internal /= Void and then not pointed_item.pointer_motion_actions_internal.is_empty then
-				pointed_item.pointer_motion_actions_internal.call ([client_x_to_virtual_x(a_x) - pointed_item.virtual_x_position, client_y_to_virtual_y (a_y) - pointed_item.virtual_y_position, 0.0, 0.0, 0.0, a_screen_x, a_screen_y])
+			if pointed_item /= Void then
+				if pointed_item /= last_pointed_item then
+					if last_pointed_item /= Void and then last_pointed_item.pointer_leave_actions_internal /= Void and then not last_pointed_item.pointer_leave_actions_internal.is_empty then
+						last_pointed_item.pointer_leave_actions_internal.call (Void)
+					end
+					if pointed_item.pointer_enter_actions_internal /= Void and then not pointed_item.pointer_enter_actions_internal.is_empty then
+						pointed_item.pointer_enter_actions_internal.call (Void)
+					end
+					last_pointed_item := pointed_item
+				end
+				if pointed_item.pointer_motion_actions_internal /= Void and then not pointed_item.pointer_motion_actions_internal.is_empty then
+					pointed_item.pointer_motion_actions_internal.call ([client_x_to_virtual_x(a_x) - pointed_item.virtual_x_position, client_y_to_virtual_y (a_y) - pointed_item.virtual_y_position, 0.0, 0.0, 0.0, a_screen_x, a_screen_y])
+				end
+			else
+				if last_pointed_item /= Void then
+					if last_pointed_item.pointer_leave_actions_internal /= Void and then not last_pointed_item.pointer_leave_actions_internal.is_empty then
+						last_pointed_item.pointer_leave_actions_internal.call (Void)
+					end
+					last_pointed_item := Void
+				end
 			end
 		end
+
+	last_pointed_item: EV_GRID_ITEM_I
+		-- The last item that was pointed to in `pointer_motion_received', which may be `Void'.
+		-- This is used to implement the pointer enter and pointer leave actions at the item level.
 
 	pointer_motion_received_header (a_x, a_y: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 			-- Called by `pointer_motion_actions' of `header'.

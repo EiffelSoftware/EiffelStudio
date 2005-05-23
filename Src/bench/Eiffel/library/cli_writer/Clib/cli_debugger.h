@@ -46,11 +46,13 @@ extern void dbg_enable_estudio_callback (EIF_OBJECT estudio_cb_obj, EIF_POINTER 
 extern void dbg_start_timer();
 extern void dbg_stop_timer();
 extern void dbg_restore_cb_notification_state ();
-extern void CALLBACK dbg_timer_callback (HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime);
 extern EIF_INTEGER dbg_continue (void*, BOOL);
-extern void dbg_process_evaluation (void*);
+extern EIF_INTEGER dbg_icdc_continue (void*, BOOL, BOOL);
+extern void dbg_process_evaluation (void*, void*, EIF_INTEGER);
 extern void dbg_begin_callback(Callback_ids);
 extern void dbg_finish_callback(Callback_ids);
+
+extern void CALLBACK dbg_timer_callback (HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime);
 
 #ifdef __cplusplus
 }

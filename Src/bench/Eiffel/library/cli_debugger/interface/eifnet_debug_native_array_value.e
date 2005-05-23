@@ -49,6 +49,8 @@ feature {NONE} -- Initialization
 				release_array_value
 			end
 			register_dotnet_data
+
+			set_sp_bounds (min_slice_ref.item, max_slice_ref.item)
 		ensure
 			value_set: icd_value = a_prepared_value
 		end
@@ -152,10 +154,11 @@ feature -- Output
 			-- List of all sub-items of `Current'. May be void if there are no children.
 			-- Generated on demand.
 		do
-			Result := items
-			if Result = Void then
-				reset_items -- the size will be set by fill_items
-				get_items (Min_slice_ref.item, Max_slice_ref.item)
+			if items_computed then
+				Result := items
+			else
+				reset_items
+				get_items (sp_lower, sp_upper)
 				Result := items
 			end
 		end

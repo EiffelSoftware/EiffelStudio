@@ -30,11 +30,17 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_DEBUGGED_OBJECT_MANAGER
+		export
+			{NONE} all
+		end
+
 create
 	make,
 	make_with_expression_text,
 	make_with_class,
 	make_with_object,
+	make_with_named_object, 
 	make_for_context,
 	make_with_expression
 
@@ -52,6 +58,9 @@ feature {NONE} -- Initialization
 			sz: INTEGER
 			cb: EV_BUTTON
 		do
+				--| Temp attribute
+			object_name := Void
+
 				--| Create and set up the dialog.
 			create dialog
 			dialog.set_title (Interface_names.t_New_expression)
@@ -106,19 +115,38 @@ feature {NONE} -- Initialization
 			create vb
 			vb.set_padding (Layout_constants.small_padding_size)
 			vb.set_border_width (Layout_constants.small_border_size)
-			vb.extend (context_radio)
-			vb.extend (object_radio)
+
+				--| current feature context
+			create context_box
+			context_box.extend (context_radio)
+			vb.extend (context_box)
+
+				--| object address context
+			create object_box
+			object_box.extend (object_radio)
 			create hb
 			hb.extend (oa_l)
 			hb.disable_item_expand (oa_l)
 			hb.extend (address_field)
-			vb.extend (hb)
-			vb.extend (class_radio)
+			object_box.extend (hb)
+			vb.extend (object_box)
+
+
+				--| class context
+			create class_box
+			class_box.extend (class_radio)
 			create hb
 			hb.extend (cn_l)
 			hb.disable_item_expand (cn_l)
 			hb.extend (class_field)
-			vb.extend (hb)
+			class_box.extend (hb)
+			vb.extend (class_box)
+
+			vb.merge_radio_button_groups (context_box)
+			vb.merge_radio_button_groups (object_box)
+			vb.merge_radio_button_groups (class_box)
+
+				--| ...
 			f.extend (vb)
 			cnt.extend (f)
 
@@ -184,6 +212,22 @@ feature {NONE} -- Initialization
 			object_radio.enable_select
 			address_field.set_text (oa)
 			disable_all
+		end
+		
+	object_name: STRING
+			-- Potential name for Current expression, in context_address case.
+
+	make_with_named_object (oa: STRING; on: STRING) is
+			-- Initialize `Current' and force the creation of an object-related expression.
+			-- `oa' is the address of the object.	
+			-- `on' is a name for this object
+		require
+			application_stopped: Application.is_running and Application.is_stopped
+			valid_address: oa /= Void and then Application.is_valid_object_address (oa)
+			valid_name: on /= Void and then not on.is_empty
+		do
+			make_with_object (oa)
+			object_name := on
 		end
 
 	make_for_context is
@@ -354,7 +398,7 @@ feature {NONE} -- Event handling
 					if 
 						t.item (1).is_equal ('0')
 						and then t.item (2).is_equal ('X')
-						and t.count > 3
+						and t.count > 2
 					then
 						t := t.substring (3, t.count)
 					end
@@ -364,12 +408,11 @@ feature {NONE} -- Event handling
 						application.is_stopped and then
 						application.is_valid_object_address (t)
 					then
-						if application.is_dotnet then
-							create {DEBUGGED_OBJECT_DOTNET} o.make (t, 0, 1)
-						else
-							create {DEBUGGED_OBJECT_CLASSIC} o.make (t, 0, 1)
-						end
+						o := debugged_object_manager.debugged_object (t, 0, 1)
 						create new_expression.make_with_object (o, expression_field.text)
+						if object_name /= Void then
+							new_expression.set_name (object_name)
+						end
 						if new_expression.syntax_error_occurred then
 							expression_field.set_focus
 							create wd.make_with_text (Warning_messages.w_Syntax_error_in_expression (expression_field.text))
@@ -403,9 +446,9 @@ feature {NONE} -- Event handling
 				end
 				new_expression := modified_expression
 			end
-			if 
-				not do_not_close_dialog 
-				and then new_expression /= Void 
+			if
+				not do_not_close_dialog
+				and then new_expression /= Void
 				and then not new_expression.syntax_error_occurred
 			then
 				destroy
@@ -431,6 +474,9 @@ feature {NONE} -- Widgets
 
 	address_field: EV_TEXT_FIELD
 			-- Text field that contains the context object address.
+
+	context_box, object_box, class_box: EV_VERTICAL_BOX
+			-- Container for current feature/object address/class zones.
 
 	class_radio: EV_RADIO_BUTTON
 			-- Radio button that is selected when we are creating an expression based on a class.

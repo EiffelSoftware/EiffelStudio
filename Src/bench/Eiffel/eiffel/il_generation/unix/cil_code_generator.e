@@ -754,6 +754,11 @@ feature -- Generic conformance
 		do
 		end
 
+	generate_tuple_type_instance (n: INTEGER) is
+			-- Generate a RT_TUPLE_TYPE instance corresponding that will hold `n' items.
+		do
+		end
+
 	generate_generic_type_settings (gen_type: GEN_TYPE_I) is
 			-- Generate a CLASS_TYPE instance corresponding to `cl_type'.
 		do

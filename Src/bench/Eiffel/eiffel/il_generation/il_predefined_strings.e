@@ -18,6 +18,7 @@ feature -- Access
 	class_type_class_name: STRING is "EiffelSoftware.Runtime.Types.RT_CLASS_TYPE"
 	formal_type_class_name: STRING is "EiffelSoftware.Runtime.Types.RT_FORMAL_TYPE"
 	none_type_class_name: STRING is "EiffelSoftware.Runtime.Types.RT_NONE_TYPE"
+	tuple_type_class_name: STRING is "EiffelSoftware.Runtime.Types.RT_TUPLE_TYPE"
 	generic_conformance_class_name: STRING is "EiffelSoftware.Runtime.GENERIC_CONFORMANCE"
 	type_info_class_name: STRING is "EiffelSoftware.Runtime.EIFFEL_TYPE_INFO"
 	integer_32_class_name: STRING is "System.Int32"

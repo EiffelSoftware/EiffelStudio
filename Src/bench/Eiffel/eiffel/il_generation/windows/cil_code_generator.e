@@ -167,7 +167,7 @@ feature {NONE} -- Access
 	type_count: INTEGER is
 			-- Number of generated types in Current system.
 		do
-			Result := (create {SHARED_COUNTER}).static_type_id_counter.count + 9
+			Result := (create {SHARED_COUNTER}).static_type_id_counter.count + 10
 		ensure
 			type_count_positive: type_count >= 0
 		end
@@ -265,31 +265,34 @@ feature {NONE} -- Debug info
 feature -- Access
 
 	runtime_type_id: INTEGER
-			-- Identifier for class ISE.Runtime.TYPE.
+			-- Identifier for class EiffelSoftware.Runtime.RT_TYPE.
 
 	class_type_id: INTEGER
-			-- Identifier for class ISE.Runtime.CLASS_TYPE.
+			-- Identifier for class EiffelSoftware.Runtime.RT_CLASS_TYPE.
 
 	basic_type_id: INTEGER
-			-- Identifier for class ISE.Runtime.BASIC_TYPE.
+			-- Identifier for class EiffelSoftware.Runtime.RT_BASIC_TYPE.
 
 	generic_type_id: INTEGER
-			-- Identifier for class ISE.Runtime.GENERIC_TYPE.
+			-- Identifier for class EiffelSoftware.Runtime.RT_GENERIC_TYPE.
+
+	tuple_type_id: INTEGER
+			-- Identifier for class EiffelSoftware.Runtime.RT_TUPLE_TYPE
 
 	formal_type_id: INTEGER
-			-- Identifier for class ISE.Runtime.FORMAL_TYPE.
+			-- Identifier for class EiffelSoftware.Runtime.RT_FORMAL_TYPE.
 
 	none_type_id: INTEGER
-			-- Identifier for class ISE.Runtime.NONE_TYPE.
+			-- Identifier for class EiffelSoftware.Runtime.RT_NONE_TYPE.
 
 	eiffel_type_info_type_id: INTEGER
-			-- Identifier for class ISE.Runtime.EIFFEL_TYPE_INFO.
+			-- Identifier for class EiffelSoftware.Runtime.EIFFEL_TYPE_INFO.
 
 	generic_conformance_type_id: INTEGER
-			-- Identifier for class ISE.Runtime.GENERIC_CONFORMANCE.
+			-- Identifier for class EiffelSoftware.Runtime.GENERIC_CONFORMANCE.
 			
 	assertion_level_enum_type_id: INTEGER
-			-- Identifier for class ISE.Runtime.Enums.ASSERTION_LEVEL_ENUM.
+			-- Identifier for class EiffelSoftware.Runtime.Enums.ASSERTION_LEVEL_ENUM.
 
 	public_key: MD_PUBLIC_KEY
 			-- Public key if used of current assembly.
@@ -324,6 +327,16 @@ feature -- Settings
 			generic_type_id := an_id
 		ensure
 			generic_type_id_set: generic_type_id = an_id
+		end
+
+	set_tuple_type_id (an_id: like tuple_type_id) is
+			-- Set `an_id' to `tuple_type_id'.
+		require
+			valid_id: an_id > 0
+		do
+			tuple_type_id := an_id
+		ensure
+			tuple_type_id_set: tuple_type_id = an_id
 		end
 
 	set_formal_type_id (an_id: like formal_type_id) is
@@ -5615,6 +5628,15 @@ feature -- Generic conformance
 			generate_array_creation (runtime_type_id)
 		end
 
+	generate_tuple_type_instance (n: INTEGER) is
+			-- Generate a RT_TUPLE_TYPE instance corresponding that will hold `n' items.
+		do
+			create_object (tuple_type_id)
+			duplicate_top
+			put_integer_32_constant (n)
+			generate_array_creation (runtime_type_id)
+		end
+
 	generate_generic_type_settings (gen_type: GEN_TYPE_I) is
 			-- Generate a CLASS_TYPE instance corresponding to `cl_type'.
 		do
@@ -5659,6 +5681,7 @@ feature {NONE} -- Implementation: generation
 		local
 			l_cl_type: CL_TYPE_I
 			l_gen_type: GEN_TYPE_I
+			l_tuple_type: TUPLE_TYPE_I
 			l_formal_type: FORMAL_I
 			l_type_i: TYPE_I
 			l_type_id, i, nb: INTEGER
@@ -5687,7 +5710,12 @@ feature {NONE} -- Implementation: generation
 				else
 					l_gen_type ?= l_cl_type
 					if l_gen_type /= Void then
-						l_type_id := generic_type_id
+						l_tuple_type ?= l_gen_type
+						if l_tuple_type /= Void then
+							l_type_id := tuple_type_id
+						else
+							l_type_id := generic_type_id
+						end
 					else
 						l_type_id := class_type_id
 					end

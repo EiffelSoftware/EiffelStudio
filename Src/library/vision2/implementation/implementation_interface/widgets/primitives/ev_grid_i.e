@@ -2732,8 +2732,8 @@ feature {NONE} -- Drawing implementation
 			drawable.pointer_button_press_actions.extend (agent pointer_button_press_received (?, ?, ?, ?, ?, ?, ?, ?))
 			drawable.pointer_double_press_actions.extend (agent pointer_double_press_received (?, ?, ?, ?, ?, ?, ?, ?))
 			drawable.pointer_button_release_actions.extend (agent pointer_button_release_received (?, ?, ?, ?, ?, ?, ?, ?))
-			drawable.pointer_enter_actions.extend (agent pointer_enter_received)
-			drawable.pointer_leave_actions.extend (agent pointer_leave_received)
+			drawable.pointer_enter_actions.extend (agent pointer_enter_received_on_drawable)
+			drawable.pointer_leave_actions.extend (agent pointer_leave_received_on_drawable)
 			drawable.key_press_actions.extend (agent key_press_received (?))
 			drawable.key_press_string_actions.extend (agent key_press_string_received (?))
 			drawable.key_release_actions.extend (agent key_release_received (?))
@@ -2750,21 +2750,29 @@ feature {NONE} -- Drawing implementation
 			header.pointer_button_press_actions.extend (agent pointer_button_press_received_header (?, ?, ?, ?, ?, ?, ?, ?))
 			header.pointer_double_press_actions.extend (agent pointer_double_press_received_header (?, ?, ?, ?, ?, ?, ?, ?))
 			header.pointer_button_release_actions.extend (agent pointer_button_release_received_header (?, ?, ?, ?, ?, ?, ?, ?))
+			header.pointer_enter_actions.extend (agent pointer_enter_received)
+			header.pointer_leave_actions.extend (agent pointer_leave_received)
 			
 			vertical_scroll_bar.pointer_motion_actions.extend (agent pointer_motion_received_vertical_scroll_bar (?, ?, ?, ?, ?, ?, ?))
 			vertical_scroll_bar.pointer_button_press_actions.extend (agent pointer_button_press_received_vertical_scroll_bar (?, ?, ?, ?, ?, ?, ?, ?))
 			vertical_scroll_bar.pointer_double_press_actions.extend (agent pointer_double_press_received_vertical_scroll_bar (?, ?, ?, ?, ?, ?, ?, ?))
 			vertical_scroll_bar.pointer_button_release_actions.extend (agent pointer_button_release_received_vertical_scroll_bar (?, ?, ?, ?, ?, ?, ?, ?))
+			vertical_scroll_bar.pointer_enter_actions.extend (agent pointer_enter_received)
+			vertical_scroll_bar.pointer_leave_actions.extend (agent pointer_leave_received)
 
 			horizontal_scroll_bar.pointer_motion_actions.extend (agent pointer_motion_received_horizontal_scroll_bar (?, ?, ?, ?, ?, ?, ?))
 			horizontal_scroll_bar.pointer_button_press_actions.extend (agent pointer_button_press_received_horizontal_scroll_bar (?, ?, ?, ?, ?, ?, ?, ?))
 			horizontal_scroll_bar.pointer_double_press_actions.extend (agent pointer_double_press_received_horizontal_scroll_bar (?, ?, ?, ?, ?, ?, ?, ?))
 			horizontal_scroll_bar.pointer_button_release_actions.extend (agent pointer_button_release_received_horizontal_scroll_bar (?, ?, ?, ?, ?, ?, ?, ?))
+			horizontal_scroll_bar.pointer_enter_actions.extend (agent pointer_enter_received)
+			horizontal_scroll_bar.pointer_leave_actions.extend (agent pointer_leave_received)
 
 			scroll_bar_spacer.pointer_motion_actions.extend (agent pointer_motion_received_scroll_bar_spacer (?, ?, ?, ?, ?, ?, ?))
 			scroll_bar_spacer.pointer_button_press_actions.extend (agent pointer_button_press_received_scroll_bar_spacer (?, ?, ?, ?, ?, ?, ?, ?))
 			scroll_bar_spacer.pointer_double_press_actions.extend (agent pointer_double_press_received_scroll_bar_spacer (?, ?, ?, ?, ?, ?, ?, ?))
 			scroll_bar_spacer.pointer_button_release_actions.extend (agent pointer_button_release_received_scroll_bar_spacer (?, ?, ?, ?, ?, ?, ?, ?))
+			scroll_bar_spacer.pointer_enter_actions.extend (agent pointer_enter_received)
+			scroll_bar_spacer.pointer_leave_actions.extend (agent pointer_leave_received)
 
 			
 			drawable.expose_actions.force_extend (agent drawer.redraw_area_in_drawable_coordinates)
@@ -3229,9 +3237,6 @@ feature {NONE} -- Event handling
 			pointed_item_interface: EV_GRID_ITEM
 		do
 			fixme ("Item leave events are not connected when you leave the grid completely.")
-			if pointer_motion_actions_internal /= Void and then not pointer_motion_actions_internal.is_empty then
-				pointer_motion_actions_internal.call ([client_x_to_x (a_x), client_y_to_y (a_y) , a_x_tilt, a_y_tilt, a_pressure, client_x_to_x (a_screen_x), client_y_to_y (a_screen_y)])
-			end
 			if a_x >= 0 and then a_y >= 0 then
 				pointed_item := drawer.item_at_position_strict (a_x, a_y)
 			end
@@ -3242,16 +3247,26 @@ feature {NONE} -- Event handling
 				drawable.remove_tooltip
 			end
 
-			if pointer_motion_item_actions_internal /= Void and then not pointer_motion_item_actions_internal.is_empty then
-				if pointed_item /= Void then
-					pointed_item_interface := pointed_item.interface
+				-- Now handle the enter and leave actions. Note that these are fired before the motion events.
+			if not pointer_enter_called then
+				if pointer_enter_actions_internal /= Void and then not pointer_enter_actions_internal.is_empty then
+					pointer_enter_actions_internal.call (Void)
 				end
-				pointer_motion_item_actions_internal.call ([client_x_to_virtual_x(a_x), client_y_to_virtual_y (a_y), pointed_item_interface])
 			end
 			if pointed_item /= Void then
 				if pointed_item /= last_pointed_item then
-					if last_pointed_item /= Void and then last_pointed_item.pointer_leave_actions_internal /= Void and then not last_pointed_item.pointer_leave_actions_internal.is_empty then
-						last_pointed_item.pointer_leave_actions_internal.call (Void)
+					if last_pointed_item /= Void then
+						if pointer_leave_item_actions_internal /= Void and then not pointer_leave_item_actions_internal.is_empty then
+							pointer_leave_item_actions_internal.call ([False, last_pointed_item.interface])
+						end
+						if last_pointed_item.pointer_leave_actions_internal /= Void and then not last_pointed_item.pointer_leave_actions_internal.is_empty then
+							last_pointed_item.pointer_leave_actions_internal.call (Void)
+						end
+					end
+					if not pointer_enter_called then
+						if pointer_enter_item_actions_internal /= Void and then not pointer_enter_item_actions_internal.is_empty then
+							pointer_enter_item_actions_internal.call ([not pointer_enter_called, pointed_item.interface])
+						end
 					end
 					if pointed_item.pointer_enter_actions_internal /= Void and then not pointed_item.pointer_enter_actions_internal.is_empty then
 						pointed_item.pointer_enter_actions_internal.call (Void)
@@ -3262,13 +3277,31 @@ feature {NONE} -- Event handling
 					pointed_item.pointer_motion_actions_internal.call ([client_x_to_virtual_x(a_x) - pointed_item.virtual_x_position, client_y_to_virtual_y (a_y) - pointed_item.virtual_y_position, 0.0, 0.0, 0.0, a_screen_x, a_screen_y])
 				end
 			else
+				if not pointer_enter_called then
+					if pointer_enter_item_actions_internal /= Void and then not pointer_enter_item_actions_internal.is_empty then
+						pointer_enter_item_actions_internal.call ([True, Void])
+					end
+				end
 				if last_pointed_item /= Void then
+					if pointer_leave_item_actions_internal /= Void and then not pointer_leave_item_actions_internal.is_empty then
+						pointer_leave_item_actions_internal.call ([False, last_pointed_item.interface])
+					end
 					if last_pointed_item.pointer_leave_actions_internal /= Void and then not last_pointed_item.pointer_leave_actions_internal.is_empty then
 						last_pointed_item.pointer_leave_actions_internal.call (Void)
 					end
 					last_pointed_item := Void
 				end
 			end
+			if pointer_motion_actions_internal /= Void and then not pointer_motion_actions_internal.is_empty then
+				pointer_motion_actions_internal.call ([client_x_to_x (a_x), client_y_to_y (a_y) , a_x_tilt, a_y_tilt, a_pressure, client_x_to_x (a_screen_x), client_y_to_y (a_screen_y)])
+			end
+			if pointer_motion_item_actions_internal /= Void and then not pointer_motion_item_actions_internal.is_empty then
+				if pointed_item /= Void then
+					pointed_item_interface := pointed_item.interface
+				end
+				pointer_motion_item_actions_internal.call ([client_x_to_virtual_x(a_x), client_y_to_virtual_y (a_y), pointed_item_interface])
+			end
+			pointer_enter_called := True
 		end
 
 	last_pointed_item: EV_GRID_ITEM_I
@@ -3414,17 +3447,87 @@ feature {NONE} -- Event handling
 				pointer_button_release_actions_internal.call ([a_x + viewable_x_offset + viewable_width, a_y + viewable_y_offset + viewable_height, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y])
 			end
 		end
+		
+	pointer_enter_called: BOOLEAN
+		-- Have the pointer enter actions already been called for the grid?
 
 	pointer_enter_received is
+			-- Called by `pointer_enter_actions' of widgets comprising `Current'.
+		do
+			if not pointer_enter_called then
+				if pointer_enter_actions_internal /= Void and then not pointer_enter_actions_internal.is_empty then
+					pointer_enter_actions_internal.call (Void)
+				end
+				if pointer_enter_item_actions_internal /= Void and then not pointer_enter_item_actions_internal.is_empty then
+					pointer_enter_item_actions_internal.call ([True, Void])
+				end
+				pointer_enter_called := True
+			end
+		end
+
+	pointer_enter_received_on_drawable is
 			-- Called by `pointer_enter_actions' of `drawable'.
 		do
-			to_implement ("EV_GRID_I.pointer_enter_received")
+			
 		end
 
 	pointer_leave_received is
-			-- Called by `pointer_leave_actions' of `drawable'.
+			-- Called by `pointer_leave_actions' of widgets comprising `Current'.
+		local
+			pointed_widget: EV_WIDGET
+			screen: EV_SCREEN
+			pointed_item: EV_GRID_ITEM
 		do
-			to_implement ("EV_GRID_I.pointer_leave_received")
+			create screen
+			pointed_widget := screen.widget_at_position (screen.pointer_position.x, screen.pointer_position.y)
+			if pointed_widget /= drawable and pointed_widget /= horizontal_scroll_bar and pointed_widget /= vertical_scroll_bar and pointed_widget /= header then
+				if pointer_leave_actions_internal /= Void then
+					pointer_leave_actions.call (Void)
+				end
+				if pointer_leave_item_actions_internal /= Void then
+					if last_pointed_item /= Void then
+						pointed_item := last_pointed_item.interface
+					end
+					pointer_leave_item_actions_internal.call ([True, pointed_item])
+				end
+
+					-- Reset `pointer_enter_called' as we are no longer within `Current'.
+				pointer_enter_called := False
+			end
+		end
+		
+	pointer_leave_received_on_drawable is
+			-- Called by `pointer_leave_actions' of `drawable'.
+		local
+			pointed_widget: EV_WIDGET
+			screen: EV_SCREEN
+			pointed_item: EV_GRID_ITEM
+		do
+			create screen
+			pointed_widget := screen.widget_at_position (screen.pointer_position.x, screen.pointer_position.y)
+			if pointed_widget /= horizontal_scroll_bar and pointed_widget /= vertical_scroll_bar and pointed_widget /= header then
+				if pointer_leave_actions_internal /= Void then
+					pointer_leave_actions.call (Void)
+				end
+				if last_pointed_item /= Void then
+					pointed_item := last_pointed_item.interface
+				end
+				if pointer_leave_item_actions_internal /= Void then
+					pointer_leave_item_actions_internal.call ([True, pointed_item])
+				end
+
+					-- Reset `pointer_enter_called' as we are no longer within `Current'.
+				pointer_enter_called := False
+			elseif last_pointed_item /= Void then
+					-- If there was a pointed item, fire its leave actions.
+				if pointer_leave_item_actions_internal /= Void and then not pointer_leave_item_actions_internal.is_empty then
+					pointer_leave_item_actions_internal.call ([False, last_pointed_item.interface])
+				end
+				if last_pointed_item.pointer_leave_actions_internal /= Void and then not last_pointed_item.pointer_leave_actions_internal.is_empty then
+					last_pointed_item.pointer_leave_actions_internal.call (Void)
+				end
+				last_pointed_item := Void
+			end
 		end
 
 	find_next_item_in_row (grid_row: EV_GRID_ROW; starting_index: INTEGER; look_right: BOOLEAN): EV_GRID_ITEM is

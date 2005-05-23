@@ -549,7 +549,6 @@ feature {DUMP_VALUE} -- string_representation Implementation
 					--| since here only the printable characters matter
 
 				l_attributes := Debugged_object_manager.attributes_at_address (value_address, 1, 1)
-jfiat_tools.out_string (Current, "classic_string_representation : l_attributes.count = " + l_attributes.count.out + "%N")
 				from
 					l_attributes_cursor := l_attributes.new_cursor
 					l_attributes_cursor.start

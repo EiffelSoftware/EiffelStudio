@@ -20,6 +20,10 @@ class
 
 inherit
 	ICOR_OBJECT
+		export
+			{EIFNET_DEBUGGER_SYNCHRO} item
+		end
+	
 
 	EIFNET_ICOR_ELEMENT_TYPES_CONSTANTS
 		export

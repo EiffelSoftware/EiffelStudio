@@ -3468,7 +3468,8 @@ feature {NONE} -- Event handling
 	pointer_enter_received_on_drawable is
 			-- Called by `pointer_enter_actions' of `drawable'.
 		do
-			
+			-- The handling you may expect here is performed within the motion event on `drawable'
+			-- as we have retreived the item there, and this saves us from retreiving it twice.
 		end
 
 	pointer_leave_received is

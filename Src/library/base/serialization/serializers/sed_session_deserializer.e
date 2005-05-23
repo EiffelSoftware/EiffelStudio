@@ -37,6 +37,11 @@ feature -- Access
 	last_decoded_object: ANY
 			-- Object decoded during last call to `decode'
 
+feature -- Status report
+
+	has_error: BOOLEAN
+			-- Did we encounter an error during retrieval?
+
 feature -- Basic operations
 
 	decode is
@@ -51,12 +56,17 @@ feature -- Basic operations
 				-- Read header of serialized data.
 			read_header
 
-				-- Read data from `deserializer' in store it in `object_references'.
-			decode_objects (l_count)
-
-				-- Reconnect all inter-object references that could not be reconnected
-				-- during `decode_objects'.
-			reconnect_objects
+			if not has_error then
+					-- Read data from `deserializer' in store it in `object_references'.
+				decode_objects (l_count)
+	
+					-- Reconnect all inter-object references that could not be reconnected
+					-- during `decode_objects'.
+				reconnect_objects
+			end
+			
+				-- Clean data
+			clear_internal_data
 		end
 
 feature {NONE} -- Implementation: Access
@@ -71,6 +81,15 @@ feature {NONE} -- Implementation: Access
 			-- When decoding an object some of its references might not be decoded yet, so
 			-- we store the object, the field position in this object and the reference id.
 
+feature {NONE} -- Cleaning
+
+	clear_internal_data is
+			-- Clear all allocated data
+		do
+			missing_references := Void
+			object_references := Void
+		end
+		
 feature {NONE} -- Implementation
 
 	read_header is
@@ -90,6 +109,18 @@ feature {NONE} -- Implementation
 			new_dynamic_type_id_non_negative: Result >= 0
 		end
 
+	new_attribute_offset (a_new_type_id, a_old_offset: INTEGER): INTEGER is
+			-- Given attribute offset `a_old_offset' in the stored object whose dynamic type id 
+			-- is now `a_new_type_id', retrieve new offset in `a_new_type_id'.
+		require
+			a_new_type_id_non_negative: a_new_type_id >= 0
+			a_old_offset_positive: a_old_offset > 0
+		do
+			Result := a_old_offset
+		ensure
+			new_attribute_offset_positive: Result > 0
+		end
+		
 	decode_objects (a_count: NATURAL_32) is
 			-- Decode `a_count' object from `deserializer' and store root object in `last_decoded_object'.
 		require
@@ -160,6 +191,7 @@ feature {NONE} -- Implementation
 			l_deser: like deserializer
 			l_obj: ANY
 			i, nb: INTEGER
+			l_new_offset: INTEGER
 		do
 			l_int := internal
 			l_deser := deserializer
@@ -173,41 +205,42 @@ feature {NONE} -- Implementation
 			until
 				i = nb
 			loop
-				inspect l_int.field_type_of_type (i, a_dtype)
+				l_new_offset := new_attribute_offset (a_dtype, i)
+				inspect l_int.field_type_of_type (l_new_offset, a_dtype)
 				when {INTERNAL}.boolean_type then
-					l_int.set_boolean_field (i, l_obj, l_deser.read_boolean)
+					l_int.set_boolean_field (l_new_offset, l_obj, l_deser.read_boolean)
 	
 				when {INTERNAL}.character_type then
-					l_int.set_character_field (i, l_obj, l_deser.read_character_8)
+					l_int.set_character_field (l_new_offset, l_obj, l_deser.read_character_8)
 	
 				when {INTERNAL}.natural_8_type then
-					l_int.set_natural_8_field (i, l_obj, l_deser.read_natural_8)
+					l_int.set_natural_8_field (l_new_offset, l_obj, l_deser.read_natural_8)
 				when {INTERNAL}.natural_16_type then
-					l_int.set_natural_16_field (i, l_obj, l_deser.read_natural_16)
+					l_int.set_natural_16_field (l_new_offset, l_obj, l_deser.read_natural_16)
 				when {INTERNAL}.natural_32_type then
-					l_int.set_natural_32_field (i, l_obj, l_deser.read_natural_32)
+					l_int.set_natural_32_field (l_new_offset, l_obj, l_deser.read_natural_32)
 				when {INTERNAL}.natural_64_type then
-					l_int.set_natural_64_field (i, l_obj, l_deser.read_natural_64)
+					l_int.set_natural_64_field (l_new_offset, l_obj, l_deser.read_natural_64)
 	
 				when {INTERNAL}.integer_8_type then
-					l_int.set_integer_8_field (i, l_obj, l_deser.read_integer_8)
+					l_int.set_integer_8_field (l_new_offset, l_obj, l_deser.read_integer_8)
 				when {INTERNAL}.integer_16_type then
-					l_int.set_integer_16_field (i, l_obj, l_deser.read_integer_16)
+					l_int.set_integer_16_field (l_new_offset, l_obj, l_deser.read_integer_16)
 				when {INTERNAL}.integer_32_type then
-					l_int.set_integer_32_field (i, l_obj, l_deser.read_integer_32)
+					l_int.set_integer_32_field (l_new_offset, l_obj, l_deser.read_integer_32)
 				when {INTERNAL}.integer_64_type then
-					l_int.set_integer_64_field (i, l_obj, l_deser.read_integer_64)
+					l_int.set_integer_64_field (l_new_offset, l_obj, l_deser.read_integer_64)
 	
 				when {INTERNAL}.real_32_type then
-					l_int.set_real_32_field (i, l_obj, l_deser.read_real_32)
+					l_int.set_real_32_field (l_new_offset, l_obj, l_deser.read_real_32)
 				when {INTERNAL}.real_64_type then
-					l_int.set_real_64_field (i, l_obj, l_deser.read_real_64)
+					l_int.set_real_64_field (l_new_offset, l_obj, l_deser.read_real_64)
 	
 				when {INTERNAL}.pointer_type then
-					l_int.set_pointer_field (i, l_obj, l_deser.read_pointer)
+					l_int.set_pointer_field (l_new_offset, l_obj, l_deser.read_pointer)
 	
 				when {INTERNAL}.reference_type then
-					decode_reference (l_obj, i)
+					decode_reference (l_obj, l_new_offset)
 	
 				else
 					check

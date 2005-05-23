@@ -29,16 +29,16 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	tiny_padding: INTEGER is 
+			-- `Result' is INTEGER constant named tiny_padding.
+		once
+			Result := 2
+		end
+
 	close_string: STRING is
 			-- `Result' is STRING constant named `close_string'.
 		once
 			Result := "Close"
-		end
-
-	save_string: STRING is
-			-- `Result' is STRING constant named `save_string'.
-		once
-			Result := "Save"
 		end
 
 	small_padding: INTEGER is 
@@ -53,10 +53,10 @@ feature -- Access
 			Result := 80
 		end
 
-	tiny_padding: INTEGER is 
-			-- `Result' is INTEGER constant named tiny_padding.
+	save_string: STRING is
+			-- `Result' is STRING constant named `save_string'.
 		once
-			Result := 2
+			Result := "Save"
 		end
 
 

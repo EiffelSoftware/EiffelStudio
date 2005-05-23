@@ -69,6 +69,20 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Initialization
 
+	Text_format: EV_CHARACTER_FORMAT is
+		once
+			create Result
+			Result.set_color (create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
+			Result.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 190))
+		end
+
+	Limits_format: EV_CHARACTER_FORMAT is
+		once
+			create Result
+			Result.set_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
+			Result.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 0, 0))
+		end
+
 	default_slice_max_value: INTEGER is
 		do
 			Result := preferences.debugger_data.default_expanded_view_size
@@ -84,7 +98,8 @@ feature {NONE} -- Initialization
 			set_slice_button.set_pixmap (icon_green_tick)
 			auto_set_slice_button.set_pixmap (icon_auto_slice_limits_color @ 1)
 			word_wrap_button.set_pixmap (icon_word_wrap_color @ 1)
-			editor.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
+
+			editor.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (190, 190, 190))
 			editor.disable_word_wrapping
 			
 			editor.drop_actions.extend (agent on_stone_dropped)
@@ -209,16 +224,35 @@ feature -- Status setting
 			-- Recompute the displayed text.
 		local
 			l_dlg: EV_WARNING_DIALOG
-			l_str_length: STRING
+			l_trunc_str: STRING
+			l_real_str_length: INTEGER
+			l_length_str: STRING
+			l_endpos: INTEGER
 		do
 			if Application.status.is_stopped then
 				if has_object then
 					retrieve_dump_value
 					if current_dump_value /= Void then
-						editor.set_text (current_dump_value.formatted_truncated_string_representation (slice_min, slice_max))
-						l_str_length := "Complete length = " + current_dump_value.last_string_representation_length.out
-						dialog.set_title ("Expanded display : " + l_str_length)
-						upper_slice_field.set_tooltip (l_str_length)						
+						l_trunc_str := current_dump_value.formatted_truncated_string_representation (slice_min, slice_max)
+						l_endpos := l_trunc_str.count + 1
+						editor.set_text (l_trunc_str)
+						editor.format_region (1, l_endpos, Text_format)
+
+						l_real_str_length := current_dump_value.last_string_representation_length
+						if slice_min > 0 then
+							editor.prepend_text ("...")
+							editor.format_region (1, 4, Limits_format)
+							l_endpos := l_endpos + 3
+						end
+						if slice_max >= 0 and then (slice_max + 1 < l_real_str_length) then
+							editor.append_text ("...")
+							l_endpos := l_endpos + 3
+							editor.format_region (l_endpos - 3, l_endpos, Limits_format)
+						end
+						editor.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (0, 255, 0))
+						l_length_str := "Complete length = " + l_real_str_length.out
+						dialog.set_title ("Expanded display : " + l_length_str)
+						upper_slice_field.set_tooltip (l_length_str)
 					else
 						editor.remove_text
 						create l_dlg.make_with_text ("Sorry a problem occurred, %Nwe are not able to show you the value ...%N")

@@ -6,7 +6,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	ECOM_VARIANT_ACCESS
+	ECOM_SHARED_VARIANT
 
 inherit
 	ECOM_VAR_TYPE
@@ -28,7 +28,7 @@ feature -- Access
 			definition: is_error (Result.variable_type) and then Result.error.item = Disp_e_paramnotfound
 		end
 
-end -- class ECOM_VARIANT_ACCESS
+end -- class ECOM_SHARED_VARIANT
 
 --|----------------------------------------------------------------
 --| EiffelCOM: library of reusable components for ISE Eiffel.

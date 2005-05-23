@@ -259,6 +259,7 @@ feature -- Access: tokens
 	ise_generic_conformance_token,
 	ise_class_type_token,
 	ise_generic_type_token,
+	ise_tuple_type_token,
 	ise_formal_type_token,
 	ise_none_type_token,
 	ise_basic_type_token,
@@ -2098,6 +2099,7 @@ feature {NONE} -- Once per modules being generated.
 			class_mapping.put (ise_class_type_token, l_gen.class_type_id)
 			class_mapping.put (ise_basic_type_token, l_gen.basic_type_id)
 			class_mapping.put (ise_generic_type_token, l_gen.generic_type_id)
+			class_mapping.put (ise_tuple_type_token, l_gen.tuple_type_id)
 			class_mapping.put (ise_formal_type_token, l_gen.formal_type_id)
 			class_mapping.put (ise_none_type_token, l_gen.none_type_id)
 			class_mapping.put (ise_eiffel_type_info_type_token, l_gen.eiffel_type_info_type_id)
@@ -2108,6 +2110,7 @@ feature {NONE} -- Once per modules being generated.
 			internal_external_token_mapping.put (ise_class_type_token, Class_type_class_name)
 			internal_external_token_mapping.put (ise_basic_type_token, Basic_type_class_name)
 			internal_external_token_mapping.put (ise_generic_type_token, Generic_type_class_name)
+			internal_external_token_mapping.put (ise_tuple_type_token, tuple_type_class_name)
 			internal_external_token_mapping.put (ise_formal_type_token, Formal_type_class_name)
 			internal_external_token_mapping.put (ise_none_type_token, None_type_class_name)
 			internal_external_token_mapping.put (ise_eiffel_type_info_type_token,
@@ -2134,6 +2137,9 @@ feature {NONE} -- Once per modules being generated.
 			l_meth_token := md_emit.define_member_ref (uni_string, ise_generic_type_token, l_sig)
 			internal_constructor_token.put (l_meth_token, l_gen.generic_type_id)
 
+			l_meth_token := md_emit.define_member_ref (uni_string, ise_tuple_type_token, l_sig)
+			internal_constructor_token.put (l_meth_token, l_gen.tuple_type_id)
+
 			l_meth_token := md_emit.define_member_ref (uni_string, ise_formal_type_token, l_sig)
 			internal_constructor_token.put (l_meth_token, l_gen.formal_type_id)
 
@@ -2145,6 +2151,7 @@ feature {NONE} -- Once per modules being generated.
 				actual_class_type_token (il_code_generator.class_type_id) = ise_class_type_token and
 				actual_class_type_token (il_code_generator.basic_type_id) = ise_basic_type_token and
 				actual_class_type_token (il_code_generator.generic_type_id) = ise_generic_type_token and
+				actual_class_type_token (il_code_generator.tuple_type_id) = ise_tuple_type_token and
 				actual_class_type_token (il_code_generator.formal_type_id) = ise_formal_type_token and
 				actual_class_type_token (il_code_generator.none_type_id) = ise_none_type_token and
 				actual_class_type_token (il_code_generator.eiffel_type_info_type_id) = ise_eiffel_type_info_type_token
@@ -2369,7 +2376,7 @@ feature {NONE} -- Once per modules being generated.
 			create l_ass_info.make
 			l_ass_info.set_major_version (5)
 			l_ass_info.set_minor_version (6)
-			l_ass_info.set_build_number (718)
+			l_ass_info.set_build_number (923)
 
 			create l_pub_key.make_from_array (
 				<<0xDE, 0xF2, 0x6F, 0x29, 0x6E, 0xFE, 0xF4, 0x69>>)
@@ -2450,6 +2457,8 @@ feature {NONE} -- Once per modules being generated.
 				create {UNI_STRING}.make (Class_type_class_name), ise_runtime_token)
 			ise_generic_type_token := md_emit.define_type_ref (
 				create {UNI_STRING}.make (generic_type_class_name), ise_runtime_token)
+			ise_tuple_type_token := md_emit.define_type_ref (
+				create {UNI_STRING}.make (tuple_type_class_name), ise_runtime_token)
 			ise_formal_type_token := md_emit.define_type_ref (
 				create {UNI_STRING}.make (Formal_type_class_name), ise_runtime_token)
 			ise_none_type_token := md_emit.define_type_ref (

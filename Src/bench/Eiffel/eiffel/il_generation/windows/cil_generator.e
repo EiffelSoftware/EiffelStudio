@@ -178,6 +178,7 @@ feature -- Generation
 				cil_generator.set_eiffel_type_info_type_id (static_type_id_counter.count + 7)
 				cil_generator.set_generic_conformance_type_id (static_type_id_counter.count + 8)
 				cil_generator.set_assertion_level_enum_type_id (static_type_id_counter.count + 9)
+				cil_generator.set_tuple_type_id (static_type_id_counter.count + 10)
 
 				cil_generator.start_assembly_generation (System.name, file_name,
 					l_public_key, location, assembly_info,

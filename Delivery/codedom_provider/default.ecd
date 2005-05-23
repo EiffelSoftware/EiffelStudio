@@ -18,6 +18,7 @@
 		<prefix value="WEB_" assembly="system.web.mobile.dll"/>
 		<prefix value="SYSTEM_DLL_" assembly="system.dll"/>
 		<prefix value="DATA_" assembly="system.data.dll"/>
+		<prefix value="VB_" assembly="Microsoft.VisualBasic.dll"/>
 	</prefixes>
 	<compiler>
 		<default_root_class>ANY</default_root_class>

@@ -69,24 +69,10 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Initialization
 
-	Text_format: EV_CHARACTER_FORMAT is
-		once
-			create Result
-			Result.set_color (create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
-			Result.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 190))
-		end
-
-	Limits_format: EV_CHARACTER_FORMAT is
-		once
-			create Result
-			Result.set_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
-			Result.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 0, 0))
-		end
-
 	default_slice_max_value: INTEGER is
 		do
 			Result := preferences.debugger_data.default_expanded_view_size
-		end		
+		end
 
 	user_initialization is
 			-- called by `initialize'.
@@ -99,14 +85,34 @@ feature {NONE} -- Initialization
 			auto_set_slice_button.set_pixmap (icon_auto_slice_limits_color @ 1)
 			word_wrap_button.set_pixmap (icon_word_wrap_color @ 1)
 
+			editor.set_minimum_height (100)
 			editor.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (190, 190, 190))
 			editor.disable_word_wrapping
-			
+
 			editor.drop_actions.extend (agent on_stone_dropped)
-			editor.drop_actions.set_veto_pebble_function (agent is_stone_valid)			
-			
+			editor.drop_actions.set_veto_pebble_function (agent is_stone_valid)
+
 			lower_slice_field.set_text (slice_min.out)
-			upper_slice_field.set_text (slice_max.out)			
+			upper_slice_field.set_text (slice_max.out)
+		end
+
+	Text_format: EV_CHARACTER_FORMAT is
+		once
+			create Result
+			Result.set_color (create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
+			Result.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
+		end
+
+	Limits_format: EV_CHARACTER_FORMAT is
+		once
+			create Result
+			Result.set_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
+			Result.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 0, 0))
+		end
+		
+	No_text_background_color: EV_COLOR is
+		once
+			create Result.make_with_8_bit_rgb (180, 180, 180)
 		end
 
 feature -- Slice limits
@@ -240,16 +246,16 @@ feature -- Status setting
 
 						l_real_str_length := current_dump_value.last_string_representation_length
 						if slice_min > 0 then
-							editor.prepend_text ("...")
-							editor.format_region (1, 4, Limits_format)
-							l_endpos := l_endpos + 3
+							editor.prepend_text ("... ")
+							editor.format_region (1, 5, Limits_format)
+							l_endpos := l_endpos + 4
 						end
 						if slice_max >= 0 and then (slice_max + 1 < l_real_str_length) then
-							editor.append_text ("...")
-							l_endpos := l_endpos + 3
-							editor.format_region (l_endpos - 3, l_endpos, Limits_format)
+							editor.append_text (" ...")
+							l_endpos := l_endpos + 4
+							editor.format_region (l_endpos - 4, l_endpos + 2, Limits_format)
 						end
-						editor.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (0, 255, 0))
+						editor.set_background_color (No_text_background_color)
 						l_length_str := "Complete length = " + l_real_str_length.out
 						dialog.set_title ("Expanded display : " + l_length_str)
 						upper_slice_field.set_tooltip (l_length_str)

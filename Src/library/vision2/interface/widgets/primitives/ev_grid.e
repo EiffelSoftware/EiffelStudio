@@ -1261,6 +1261,14 @@ feature -- Status setting
 		ensure
 			non_focused_selection_color_set: non_focused_selection_color = a_color
 		end
+		
+	redraw is
+			-- Force `Current' to be re-drawn when next idle.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.redraw
+		end
 
 feature -- Status report
 

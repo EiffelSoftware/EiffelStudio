@@ -1351,6 +1351,12 @@ feature -- Status setting
 		ensure
 			non_focused_selection_color_set: non_focused_selection_color = a_color
 		end
+		
+	redraw is
+			-- Force `Current' to be re-drawn when next idle.
+		do
+			redraw_client_area
+		end
 
 feature -- Status report
 

@@ -1,0 +1,93 @@
+<document output="envision" title="Debugging Overview">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_title>Overview</envision_title>
+				<envision_pseudo_name>00</envision_pseudo_name>
+			</toc>
+			<xml>
+				<keyword>
+					<index>K</index>
+					<term>Debugging, Overview</term>
+				</keyword>
+				<keyword>
+					<index>K</index>
+					<term>Overview of debugging projects</term>
+				</keyword>
+			</xml>
+		</help>
+	</meta_data>
+	<paragraph>
+		<paragraph>
+			Debugging is the process of tracing the execution of your project while it is running, to find any bugs that are occurring in the project. This is achieved by stepping through the projects source code, line by line, 
+			and comparing the actual execution of the project with the desired execution. When anomalies are  found, they cannot be fixed until the debugging process is ended as you must  end the debugging in order to edit the 
+			source code of the project and  recompile. This process will often be repeated until all known bugs are found.
+		</paragraph>
+		
+		<anchor>getting_started</anchor>
+		<heading>
+			<size>2</size>
+			<content>Getting Started</content>
+		</heading>
+		<paragraph>
+			There are many aspects of the Visual Studio .NET Debugger, which EiffelEnvision seamlessly plugs into so you may debug projects written in 
+			EiffelEnvision in Visual Studio .NET. The documentation on the Visual Studio .NET debugger, how to use it and all of it facates can be found in the 
+			<help_link>
+				<keywords>_asug_How_Do_I_Topics3a_Debugging</keywords>
+				<tab_index>0</tab_index>
+				Using the Debugger
+			</help_link> documentation.
+		</paragraph>
+		
+		<anchor>starting_the_debugger</anchor>
+		<heading>
+			<size>2</size>
+			<content>Debugging Projects</content>
+		</heading>
+		<paragraph>
+			For information on starting debugger sessions for projects within Visual Studio .NET, please refer to the documentation on <help_link>
+				<keywords>vchowExecutionControl</keywords>
+				<tab_index>0</tab_index>
+				Execution Control
+			</help_link>.
+		</paragraph>
+		
+		<seealso>
+			<bold>See also</bold>
+			<line_break/>
+			<link>
+				<url>index.xml</url>
+				<label>Debugging in EiffelEnvision</label>
+			</link>
+			<line_break/>
+			<help_link>
+				<keywords>vxconDebugging101</keywords>
+				<tab_index>0</tab_index>
+				Debugging Basics
+			</help_link>
+			<line_break/>
+			<help_link>
+				<keywords>_core_Debugging_Preparation</keywords>
+				<tab_index></tab_index>
+				Debug Settings and Preparation
+			</help_link>
+			<line_break/>
+			<help_link>
+				<keywords>_asug_Setting_Breakpoints</keywords>
+				<tab_index>0</tab_index>
+				Breakpoints
+			</help_link>
+			<line_break/>
+			<help_link>
+				<keywords>vboriInstrumentationTechniquesDebugTraceForNETFramework</keywords>
+				<tab_index>0</tab_index>
+				Tracing and Instrumenting Applications
+			</help_link>
+			<line_break/>
+			<link>
+				<url>index.xml</url>
+				<label>Evaluating Expressions in Eiffel for .NET</label>
+			</link>
+		</seealso>
+	</paragraph>
+</document>

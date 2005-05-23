@@ -1153,20 +1153,21 @@ feature -- Status setting
 			if parent_imp /= Void then
 				parent_imp.notify_change (2 + 1, Current)
 			end
+			set_background_color (background_color)
 			enable_all_notifications
-			
+
 				-- Restore contents of `Current' from stored RTF.
 			create stream_in.make (old_text_as_rtf)
 			insert_rtf_stream_in (stream_in)
 			stream_in.release_stream
-			
+
 				-- It appears that streaming rtf adds an extra new line character which we must now remove.
 			select_region (text_length, text_length)
 			check
 				selected_text_is_newline: selected_text.is_equal ("%N")
 			end
 			delete_selection
-			
+
 			if change_actions_internal /= Void then
 				change_actions_internal.resume
 			end

@@ -918,8 +918,13 @@ feature {NONE} -- Events on notification
 					l_status.set_reason_as_break
 					need_to_continue := not do_stop_on_breakpoint				
 				elseif Eifnet_debugger.managed_callback_is_exception (cb_id) then
-					l_status.set_reason_as_raise				
-					l_status.set_exception (0, "Exception occurred .. waiting for information")
+					l_status.set_reason_as_raise
+
+					if eifnet_debugger.last_exception_is_handled then
+						l_status.set_exception (0, "First chance exception occurred .. waiting for information")
+					else
+						l_status.set_exception (0, "UnHandled exception occurred .. waiting for information")
+					end
 				end
 			end
 				

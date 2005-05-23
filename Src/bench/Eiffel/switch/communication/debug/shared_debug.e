@@ -5,6 +5,8 @@ inherit
 
 	SHARED_APPLICATION_EXECUTION
 
+	SHARED_DEBUGGED_OBJECT_MANAGER
+
 feature
 
 	debug_info: DEBUG_INFO is

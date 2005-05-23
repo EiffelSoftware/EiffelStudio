@@ -245,6 +245,13 @@ feature -- Properties
 		do
 			Result := debug_info.has_disabled_breakpoints
 		end
+		
+feature -- Query
+
+	max_evaluation_duration: INTEGER is
+		do
+			Result := preferences.debug_tool_data.max_evaluation_duration
+		end
 
 feature -- Access
 

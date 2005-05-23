@@ -66,6 +66,11 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := max_slice_preference.value
 		end
 
+	max_evaluation_duration: INTEGER is
+		do
+			Result := max_evaluation_duration_preference.value
+		end
+
 	main_splitter_position: INTEGER is
 			-- 
 		do
@@ -103,6 +108,7 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	generating_type_evaluation_enabled_preference: BOOLEAN_PREFERENCE
 	min_slice_preference: INTEGER_PREFERENCE
 	max_slice_preference: INTEGER_PREFERENCE
+	max_evaluation_duration_preference: INTEGER_PREFERENCE
 	main_splitter_position_preference: INTEGER_PREFERENCE
 	local_vs_object_proportion_preference: STRING_PREFERENCE		
 	left_debug_layout_preference: ARRAY_PREFERENCE		
@@ -119,6 +125,7 @@ feature -- Preference Strings
 	generating_type_evaluation_enabled_string: STRING is "debugger.generating_type_evaluation"				
 	min_slice_string: STRING is "debugger.min_slice"
 	max_slice_string: STRING is "debugger.max_slice"
+	max_evaluation_duration_preference_string: STRING is "debugger.max_evaluation_duration"
 	main_splitter_position_string: STRING is "debugger.main_splitter_position"
 	local_vs_object_proportion_string: STRING is "debugger.proportion"					
 	max_stack_depth_string: STRING is "debugger.default_maximum_stack_depth"	
@@ -142,6 +149,7 @@ feature {NONE} -- Implementation
 			generating_type_evaluation_enabled_preference := l_manager.new_boolean_resource_value (l_manager, generating_type_evaluation_enabled_string, True)
 			min_slice_preference := l_manager.new_integer_resource_value (l_manager, min_slice_string, 0)
 			max_slice_preference := l_manager.new_integer_resource_value (l_manager, max_slice_string, 50)
+			max_evaluation_duration_preference := l_manager.new_integer_resource_value (l_manager, max_evaluation_duration_preference_string, 5)
 			main_splitter_position_preference := l_manager.new_integer_resource_value (l_manager, main_splitter_position_string, 250)
 			local_vs_object_proportion_preference := l_manager.new_string_resource_value (l_manager, local_vs_object_proportion_string, "0.5")					
 			max_stack_depth_preference := l_manager.new_integer_resource_value (l_manager, max_stack_depth_string, 100)

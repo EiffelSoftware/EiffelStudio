@@ -3180,8 +3180,8 @@ feature {NONE} -- Event handling
 					 node_x_position_click_edge := node_pixmap_width - (3 * tree_node_spacing)
 				end
 				
-				if a_button = 1 and a_x >= node_x_position_click_edge then
-					if (pointed_row_i.subrow_count > 0 or pointed_row_i.is_ensured_expandable) and then current_subrow_indent > 0 and a_x < current_subrow_indent + current_item_x_position then		
+				if a_x >= node_x_position_click_edge then
+					if a_button = 1 and then (pointed_row_i.subrow_count > 0 or pointed_row_i.is_ensured_expandable) and then current_subrow_indent > 0 and a_x < current_subrow_indent + current_item_x_position then		
 						ignore_selection_handling := True
 						if pointed_row_i.is_expanded then
 							pointed_row_i.collapse

@@ -1321,6 +1321,10 @@ rt_private void object_tuple_write (EIF_REFERENCE object)
 			case EIF_CHARACTER_CODE: widr_multi_char (&eif_character_tuple_item(l_item), 1); break;
 			case EIF_REAL_64_CODE: widr_multi_double (&eif_real_64_tuple_item(l_item), 1); break;
 			case EIF_REAL_32_CODE: widr_multi_float (&eif_real_32_tuple_item(l_item), 1); break;
+			case EIF_NATURAL_8_CODE: widr_multi_int8 (&eif_natural_8_tuple_item(l_item), 1); break;
+			case EIF_NATURAL_16_CODE: widr_multi_int16 (&eif_natural_16_tuple_item(l_item), 1); break;
+			case EIF_NATURAL_32_CODE: widr_multi_int32 (&eif_natural_32_tuple_item(l_item), 1); break;
+			case EIF_NATURAL_64_CODE: widr_multi_int64 (&eif_natural_64_tuple_item(l_item), 1); break;
 			case EIF_INTEGER_8_CODE: widr_multi_int8 (&eif_integer_8_tuple_item(l_item), 1); break;
 			case EIF_INTEGER_16_CODE: widr_multi_int16 (&eif_integer_16_tuple_item(l_item), 1); break;
 			case EIF_INTEGER_32_CODE: widr_multi_int32 (&eif_integer_32_tuple_item(l_item), 1); break;

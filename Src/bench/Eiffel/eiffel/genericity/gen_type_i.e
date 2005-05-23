@@ -479,7 +479,7 @@ feature -- Generic conformance for IL
 			if use_info and then cr_info /= Void then
 				cr_info.generate_il_type
 			else
-				il_generator.generate_generic_type_instance (true_generics.count)
+				generate_gen_type_instance (il_generator, true_generics.count)
 				
 				from
 					i  := true_generics.lower
@@ -499,6 +499,15 @@ feature -- Generic conformance for IL
 				
 				il_generator.generate_generic_type_settings (Current)
 			end
+		end
+
+	generate_gen_type_instance (il_generator: IL_CODE_GENERATOR; n: INTEGER) is
+			-- Generic runtime instance for Current
+		require
+			il_generator_not_void: il_generator /= Void
+			n_non_negative: n >= 0
+		do
+			il_generator.generate_generic_type_instance (n)
 		end
 
 feature -- Comparison

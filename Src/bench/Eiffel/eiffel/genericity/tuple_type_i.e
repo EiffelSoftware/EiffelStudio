@@ -15,6 +15,7 @@ inherit
 			generate_cid_array,
 			generate_cid_init,
 			il_type_name,
+			generate_gen_type_instance,
 			is_valid
 		end
 
@@ -98,6 +99,14 @@ feature
 				Result := true_generics.item (i).is_basic
 				i := i + 1
 			end
+		end
+
+feature -- IL code generation
+
+	generate_gen_type_instance (il_generator: IL_CODE_GENERATOR; n: INTEGER) is
+			-- Generic runtime instance for Current
+		do
+			il_generator.generate_tuple_type_instance (n)
 		end
 
 feature -- Generic conformance

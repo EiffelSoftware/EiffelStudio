@@ -30,7 +30,12 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
+	SHARED_DEBUGGED_OBJECT_MANAGER
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -130,7 +135,6 @@ feature -- Basic operations
 			spec_dv: SPECIAL_VALUE
 			nat_dv: EIFNET_DEBUG_NATIVE_ARRAY_VALUE
 			
-			dobj: DEBUGGED_OBJECT
 			l_item: EV_ANY
 			l_addr: STRING
 		do
@@ -155,10 +159,7 @@ feature -- Basic operations
 						else
 							obj := tool.get_object_display_parameters (l_addr)
 							if obj /= Void then
-								create {DEBUGGED_OBJECT_CLASSIC} dobj.make (l_addr, 0, 1)
-								if dobj.is_special then
-									Result := True
-								end
+								Result := debugged_object_manager.object_at_address_is_special (l_addr)
 							end
 						end
 					end
@@ -172,10 +173,7 @@ feature -- Basic operations
 					end
 					Result := nat_dv /= Void
 				else
-					create {DEBUGGED_OBJECT_CLASSIC} dobj.make (l_addr, 0, 1)
-					if dobj.is_special then
-						Result := True
-					end
+					Result := debugged_object_manager.object_at_address_is_special (l_addr)
 				end
 			end
 		end
@@ -265,7 +263,7 @@ feature {NONE} -- Implementation
 				hbox.extend (disp_str_size)
 				hbox.disable_item_expand (disp_str_size)
 				maincont.extend (hbox)
-			
+
 				create sep
 				maincont.extend (sep)
 				maincont.disable_item_expand (sep)
@@ -278,13 +276,10 @@ feature {NONE} -- Implementation
 				if address /= Void then
 					debug ("DEBUGGER_INTERFACE")
 						io.put_string ("object found%N")
-						if Application.is_dotnet then
-							create {DEBUGGED_OBJECT_DOTNET} dobj.make (address, 0, 2)			
-						else
-							create {DEBUGGED_OBJECT_CLASSIC} dobj.make (address, 0, 2)						
-						end
+
+						dobj := debugged_object_manager.debugged_object (address, 0, 2)
 						io.put_string ("Capacity: " + dobj.capacity.out + "%N")
-						io.put_string ("Max capacity: " + dobj.max_capacity.out + "%N")						
+						io.put_string ("Max capacity: " + dobj.max_capacity.out + "%N")
 					end
 					if for_tool then
 						obj := tool.get_object_display_parameters (address)
@@ -403,7 +398,7 @@ feature {NONE} -- Implementation
 			end
 
 			l_st_addr := st.object_address
-			l_item := st.ev_item 
+			l_item := st.ev_item
 			if l_item /= Void then
 				abs_spec_dv ?= l_item.data
 			end
@@ -412,7 +407,7 @@ feature {NONE} -- Implementation
 					io.put_string ("Special_value found%N")
 					io.put_string ("Capacity: " + abs_spec_dv.capacity.out + "%N")
 				end
-				
+
 				get_slice_limits (False, Void, abs_spec_dv)
 				if get_effective then
 					slice_min := slice_min.min (abs_spec_dv.capacity)
@@ -424,7 +419,7 @@ feature {NONE} -- Implementation
 
 					tree_item ?= l_item
 					check
-						tree_item /= Void 
+						tree_item /= Void
 					end
 					parent ?= tree_item.parent
 					if parent /= Void then
@@ -434,7 +429,7 @@ feature {NONE} -- Implementation
 						item2 := tool.debug_value_to_tree_item (abs_spec_dv)
 						parent.put_left (item2)
 						item2.expand
-					end						
+					end
 				end
 			else
 				check
@@ -469,7 +464,7 @@ feature {NONE} -- Implementation
 							end
 						end
 					else
-						create {DEBUGGED_OBJECT_CLASSIC} dobj.make (l_st_addr, 0, 1)
+						dobj := debugged_object_manager.debugged_object (l_st_addr, 0, 1)
 						debug ("DEBUGGER_INTERFACE")
 							io.put_string ("cap: " + dobj.capacity.out + "max: " + dobj.max_capacity.out + "%N")
 						end

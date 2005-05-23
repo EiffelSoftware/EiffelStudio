@@ -37,19 +37,24 @@ inherit
 			{NONE} all
 		end
 
-	SHARED_AST_CONTEXT	
+	SHARED_AST_CONTEXT
 		rename
 			Context as Ast_context
 		export
 			{NONE} all
 		end
-		
+
 	SHARED_ERROR_HANDLER
 		export
 			{NONE} all
-		end	
+		end
 
 	SHARED_STATELESS_VISITOR
+		export
+			{NONE} all
+		end
+
+	SHARED_DEBUGGED_OBJECT_MANAGER
 		export
 			{NONE} all
 		end
@@ -62,23 +67,22 @@ feature -- Evaluation
 	evaluate is
 			-- Compute the value of the last message of `Current'.
 		local
-			obj: DEBUGGED_OBJECT
 			l_error_occurred: BOOLEAN
 		do
 			reset_error
-			
+
 				--| prepare context
 				--| this may trigger the reset of `expression_byte_node' value
 			if on_context then
 					--| .. Init current context using current call_stack
 				init_context_with_current_callstack
 			elseif on_object then
-				if application.is_dotnet then
-					create {DEBUGGED_OBJECT_DOTNET} obj.make (context_address, 0, 1)
-				else
-					create {DEBUGGED_OBJECT_CLASSIC} obj.make (context_address, 0, 1)					
-				end
-				set_context_data (Void, obj.dtype, obj.class_type)
+				set_context_data (
+						Void,
+						Debugged_object_manager.class_c_at_address (context_address),
+						Debugged_object_manager.class_type_at_address (context_address)
+					)
+
 			elseif on_class then
 				set_context_data (Void, context_class, Void)
 			end
@@ -98,11 +102,11 @@ feature -- Evaluation
 			if not l_error_occurred then
 					--| Initializing
 				clean_temp_data
-				
+
 					--| concrete evaluation
 				process_expression_evaluation (expression_byte_node)
-				
-					--| Process result 				
+
+					--| Process result
 				if tmp_result_value /= Void then
 					final_result_value := tmp_result_value
 					final_result_type := tmp_result_value.dynamic_class

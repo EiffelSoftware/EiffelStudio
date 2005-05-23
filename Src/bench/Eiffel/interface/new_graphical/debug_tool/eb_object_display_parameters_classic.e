@@ -28,7 +28,7 @@ feature {NONE} -- Refreshing Implementation
 		local
 			obj: DEBUGGED_OBJECT
 		do
-			create {DEBUGGED_OBJECT_CLASSIC} obj.make (address, spec_lower, spec_higher)
+			obj := debugged_object_manager.debugged_object (address, spec_lower, spec_higher)
 			is_sorted_children_about_special := obj.is_special
 			Result := obj.sorted_attributes
 		end
@@ -39,7 +39,7 @@ feature {NONE} -- Specific Implementation
 		local
 			obj: DEBUGGED_OBJECT
 		do
-			create {DEBUGGED_OBJECT_CLASSIC} obj.make (address, spec_lower, spec_higher)
+			obj := debugged_object_manager.debugged_object (address, spec_lower, spec_higher)
 			Result := obj.sorted_attributes
 		end
 

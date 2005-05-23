@@ -90,15 +90,13 @@ end
 		ensure
 			result_exists: Result /= Void
 		end
-		
+
 	once_eval_result (a_addr: STRING; f: E_FEATURE; dclass: CLASS_C): ABSTRACT_DEBUG_VALUE is
 		local
 			par: INTEGER
 			rout_info: ROUT_INFO
 			l_dynclass: CLASS_C
 			l_dyntype: CLASS_TYPE
- 			dobj: DEBUGGED_OBJECT
-
 		do
 			fixme ("JFIAT: update the runtime to avoid evaluate the once")
 			debug ("debugger_trace_eval")
@@ -110,8 +108,7 @@ end
 			elseif l_dynclass = Void or else l_dynclass.types.count > 1 then
 				if a_addr /= Void then
 						-- The type has generic derivations: we need to find the precise type.
-					create {DEBUGGED_OBJECT_CLASSIC} dobj.make (a_addr, 0, 1)
-					l_dyntype := dobj.class_type
+					l_dyntype := debugged_object_manager.class_type_at_address (a_addr)
 					if l_dyntype = Void then
 					elseif l_dynclass = Void then
 						l_dynclass := l_dyntype.associated_class						

@@ -1,0 +1,63 @@
+<document output="envision" title="Known Folders">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_title>Known Folders</envision_title>
+				<envision_pseudo_name>00</envision_pseudo_name>
+			</toc>
+		</help>
+	</meta_data>
+	<paragraph>
+		<paragraph>
+			EiffelEnvision reserves a number of predestined folder names for its projects, which will either be created by you, or by the EiffelEnvison compiler when 
+			<link><url>url</url><label>*Building</label></link> projects. It is recommended that your projects refrain from using these folders for any other purpose than for which 
+			EiffelEnvision has intended them for. This is for future protection of your project and it's content.
+		</paragraph>
+		<paragraph>
+			Currently EiffelEnvision reserves three names for folders located in the projects root location. That is to say, the location when the EiffelEnvision project file (*.eifp) is located.
+			<list ordered="false">
+				<item><link><url>known_folders.xml</url><anchor_name>bin_folder</anchor_name><label>bin</label></link></item>
+				<item><link><url>known_folders.xml</url><anchor_name>obj_folder</anchor_name><label>obj</label></link></item>
+				<item><link><url>known_folders.xml</url><anchor_name>resources_folder</anchor_name><label>resources</label></link></item>
+			</list>
+		</paragraph>
+		
+		<anchor>bin_folder</anchor>
+		<heading>
+			<size>2</size>
+			<content>bin</content>
+		</heading>
+		<paragraph>
+			Short for <bold>Binaries</bold>, EiffelEnvision retains the name from previous versions of Visual Studio. It serves as the specified deployment location for final compilation unit(s), generated at the end of <link><url>url</url><label>*compilation</label></link> , in this case assemblies and their configuration files. The contents of this folder can be used to very quickly deploy compiled projects by simply copying the contents of a <help_link>
+				<keywords>vxconBuildConfigurations</keywords>
+				<tab_index>0</tab_index>
+				built configuration
+			</help_link> folder.
+		</paragraph>
+		
+		<anchor>obj_folder</anchor>
+		<heading>
+			<size>2</size>
+			<content>obj</content>
+		</heading>
+		<paragraph>
+			Orginally short of <bold>Object Files</bold>, EiffelEnvision retains the name accustom to veteran Visual Studio developers, as do other languages such as <bold>Visual C#</bold> and <bold>Visaul Basic .NET</bold>. This folder contains all of the intermediate compilation information used by the Eiffel for .NET compiler and EiffelEnvisions <link><url>url</url><label>*projects</label></link>.
+		</paragraph>
+		
+		<anchor>resources_folder</anchor>
+		<heading>
+			<size>2</size>
+			<content>resources</content>
+		</heading>
+		<paragraph>
+			This folder is specific to EiffelEnvision. It is the folder used to store all unmanaged resources scripts and resources files to be merged into the unamanged library generated at compile time. The folder is used to manage a single resource source for all configurations in EiffelEnvision, directly from the Solution Explorer. 
+			For more information on the unmanaged section of a EiffelEnvision <link><url>url</url><label>*compilation</label></link> see the <link><url>url</url><label>*Compiling Unmanage Code</label></link> section of this documentation.
+		</paragraph>
+		<paragraph>
+			If you are importing/converting and existing <bold>EiffelStudio</bold> project using the <link><url>url</url><label>*EiffelStudio to EiffelEnvisio Project Conversion Tool</label></link>, your EiffelStudio project resource scripts found in this folder will be added to the converted EiffelEnvision project automatically. The tool will also automatically 
+			configure the EiffelEnvision project based on the contents of the <bold>resources</bold> folder.
+		</paragraph>
+		
+		
+	</paragraph>
+</document>

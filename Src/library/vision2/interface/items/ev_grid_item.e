@@ -141,7 +141,7 @@ feature -- Access
 
 	tooltip: STRING is
 			-- Tooltip displayed on `Current'.
-			-- If `Result' is `Void' then no tooltip is displayed.
+			-- If `Result' is `Void' or `is_empty' then no tooltip is displayed.
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -248,7 +248,7 @@ feature {NONE} -- Contract Support
 			-- (export status {NONE})
 		do
 			Result := Precursor {EV_CONTAINABLE} and Precursor {EV_DESELECTABLE} and
-				foreground_color = Void and background_color = Void
+				foreground_color = Void and background_color = Void and tooltip = Void
 		end
 
 feature {EV_ANY_I, EV_GRID_DRAWER_I} -- Implementation

@@ -14,11 +14,11 @@ $spitshell >Makefile <<!GROK!THIS!
 SHELL = /bin/sh
 CC= $cc
 AR = ar rc
-CFLAGS = $optimize $ccflags $large -I$(ISE_EIFFEL)/studio/spec/$(ISE_PLATFORM)/include -I$(ORACLE_HOME)/rdbms/public
+CFLAGS = $optimize $ccflags $large -I\$(ISE_EIFFEL)/studio/spec/\$(ISE_PLATFORM)/include -I\$(ORACLE_HOME)/rdbms/public
 LDFLAGS = $ldflags
 LIBS = $libs
 MAKE = make
-MKDEP = $mkdep $(DPFLAGS) --
+MKDEP = $mkdep \$(DPFLAGS) --
 MV = $mv
 RANLIB = $ranlib
 RM = $rm -f

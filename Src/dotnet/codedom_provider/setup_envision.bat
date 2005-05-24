@@ -5,9 +5,9 @@
 IF EXIST build_envision RD /Q /S build_envision
 
 MKDIR build_envision
-MKDIR build_envision\EiffelSoftware.CodeDomBase
-MKDIR build_envision\EiffelSoftware.CodeDomVision2
-MKDIR build_envision\EiffelSoftware.CacheBrowser
+MKDIR build_envision\EiffelSoftware.CodeDom.Base
+MKDIR build_envision\EiffelSoftware.CodeDom.Vision2
+MKDIR build_envision\EiffelSoftware.CodeDom.CacheBrowser
 MKDIR build_envision\EiffelSoftware.CodeDom
 MKDIR build_envision\EiffelSoftware.CodeDom.Splitter
 MKDIR build_envision\ecdpman
@@ -15,9 +15,9 @@ MKDIR build_envision\esplitter
 MKDIR build_envision\esplit
 MKDIR build_envision\nmap
 
-COPY configuration\base.eifp build_envision\EiffelSoftware.CodeDomBase\EiffelSoftware.CodeDomBase.eifp
-COPY configuration\vision2.eifp build_envision\EiffelSoftware.CodeDomVision2\EiffelSoftware.CodeDomVision2.eifp
-COPY configuration\cache_browser.eifp build_envision\EiffelSoftware.CacheBrowser\EiffelSoftware.CacheBrowser.eifp
+COPY configuration\base.eifp build_envision\EiffelSoftware.CodeDom.Base\EiffelSoftware.CodeDom.Base.eifp
+COPY configuration\vision2.eifp build_envision\EiffelSoftware.CodeDom.Vision2\EiffelSoftware.CodeDom.Vision2.eifp
+COPY configuration\cache_browser.eifp build_envision\EiffelSoftware.CodeDom.CacheBrowser\EiffelSoftware.CodeDom.CacheBrowser.eifp
 COPY configuration\codedom_provider.eifp build_envision\EiffelSoftware.CodeDom\EiffelSoftware.CodeDom.eifp
 COPY configuration\codedom_provider.eifp build_envision\EiffelSoftware.CodeDom.Splitter\EiffelSoftware.CodeDom.Splitter.eifp
 COPY configuration\ecdpman.eifp build_envision\ecdpman\ecdpman.eifp

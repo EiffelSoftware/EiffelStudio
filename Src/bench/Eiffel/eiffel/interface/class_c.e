@@ -4642,6 +4642,7 @@ feature -- Anchored types
 			l_rout_id_set: ROUT_ID_SET
 			l_type_set: SEARCH_TABLE [INTEGER]
 			l_select: SELECT_TABLE
+			l_type: TYPE_A
 		do
 				-- Get all inherited anchored features.
 			from
@@ -4657,15 +4658,34 @@ feature -- Anchored types
 				end
 				l_parents.forth
 			end
+
+				-- Initialize `l_type_set'
+			from
+				l_feat_tbl := feature_table
+				l_type_set := type_set
+				l_feat_tbl.start
+			until
+				l_feat_tbl.after
+			loop
+				l_feat := l_feat_tbl.item_for_iteration
+				if l_feat.is_attribute then
+					l_type := l_feat.type.actual_type
+					if l_type.is_formal or l_type.has_generics then
+						if l_type_set = Void then
+							create l_type_set.make (5)
+						end
+						l_type_set.put (l_feat.rout_id_set.first)
+					end
+				end
+				l_feat_tbl.forth
+			end
 			
 				-- Create `anchored_features' if needed and fill it with inherited
 				-- anchors.
 			from
 				l_old := anchored_features
 				create l_anchored_features.make (10)
-				l_feat_tbl := feature_table
 				l_select := l_feat_tbl.origin_table
-				l_type_set := type_set
 				l_select.start
 			until
 				l_select.after
@@ -4738,46 +4758,6 @@ feature -- Anchored types
 			inserted: type_set.has (r_id)
 		end
 
-feature {NONE} -- Anchored features
-
-	extend_anchored_features (an_item: TYPE_FEATURE_I) is
-			-- Insert `an_item' in `anchored_features'. If `anchored_features'
-			-- is not yet created, creates it.
-		require
-			an_item_not_void: an_item /= Void
-		local
-			l_anchored_features: like anchored_features
-			l_rout_id_set: ROUT_ID_SET
-			l_rout_id, i, nb: INTEGER
-		do
-			l_anchored_features := anchored_features
-			if l_anchored_features = Void then
-				create l_anchored_features.make (5)
-				anchored_features := l_anchored_features
-			end
-			
-			from
-				l_rout_id_set := an_item.rout_id_set
-				i := 1
-				nb := l_rout_id_set.count
-			until
-				i > nb
-			loop
-				l_rout_id := l_rout_id_set.item (i)
-				if not l_anchored_features.has (l_rout_id) then
-					l_anchored_features.put (an_item, l_rout_id)
-				else
-						-- Should we report an error in this case, as it is not
-						-- well implemented by compiler?
-					check
-						same_type: l_anchored_features.item (l_rout_id).type.same_as (an_item.type)
-					end
-				end
-
-				i := i + 1	
-			end
-		end
-	
 feature -- Implementation
 
 	invariant_feature: INVARIANT_FEAT_I

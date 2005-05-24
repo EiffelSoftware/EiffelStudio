@@ -3938,6 +3938,8 @@ feature {NONE} -- Implementation
 				end
 			end
 
+			a_column_i.set_parent_i (Current)
+
 			columns.go_i_th (a_index)
 			if replace_existing_item then
 				replaced_column := columns.item
@@ -3945,7 +3947,7 @@ feature {NONE} -- Implementation
 					replaced_column.remove_parent_i
 				end
 				columns.replace (a_column_i)
-				a_column_i.set_internal_index (a_index)
+				a_column_i.set_index (a_index)
 			else
 				columns.put_left (a_column_i)
 				update_grid_column_indices (a_index)
@@ -3953,7 +3955,6 @@ feature {NONE} -- Implementation
 
 				-- Set column's internal data
 			a_column_i.set_physical_index (physical_column_count)
-			a_column_i.set_parent_i (Current)
 			physical_column_count := physical_column_count + 1
 
 				-- Flag `physical_column_indexes' for recalculation
@@ -4030,7 +4031,7 @@ feature {NONE} -- Implementation
 			loop
 				column_i := temp_columns @ i
 				if column_i /= Void then
-					column_i.set_internal_index (i)
+					column_i.set_index (i)
 				end
 				i := i + 1
 			end

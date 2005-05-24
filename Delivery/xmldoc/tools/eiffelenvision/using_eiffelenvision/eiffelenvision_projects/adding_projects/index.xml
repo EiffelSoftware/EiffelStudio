@@ -1,0 +1,55 @@
+<document output="envision" title="Adding New Projects">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_title>Adding New Projects</envision_title>
+				<envision_pseudo_name>00</envision_pseudo_name>
+			</toc>
+		</help>
+	</meta_data>
+	<paragraph>
+		This section of the documentation 
+		
+		<anchor>in_this_section</anchor>
+		<heading>
+			<size>2</size>
+			<content>In This Section</content>
+		</heading>
+		<paragraph>
+			<link>
+				<url>adding_projects.xml</url>
+				<label>Adding New Projects </label>
+			</link>
+			<line_break/>
+			Help of adding new Eiffel projects to new or existing solutions.
+		</paragraph>
+		<paragraph>
+			<link>
+				<url>projects.xml</url>
+				<label>EiffelEnvision Projects</label>
+			</link>
+			<line_break/>
+			Describes the number and variety of EiffelProjects that can be added to any exising or new Visual Studio .NET solution.
+		</paragraph>		
+		
+		<anchor>also_see</anchor>
+		<heading>
+			<size>2</size>
+			<content>Related Sections</content>
+		</heading>
+		<seealso>
+			<bold>See also</bold>
+			<line_break/>		
+			<help_link>
+				<keywords>vxurfNewProjectDialog</keywords>
+				<tab_index>0</tab_index>
+				New Project Dialog
+			</help_link>
+			<help_link>
+				<keywords>vxconVisualStudioSolutionsProjects</keywords>
+				<tab_index>0</tab_index>
+				Introduction to Solutions, Projects, and Items
+			</help_link>
+		</seealso>
+	</paragraph>
+</document>

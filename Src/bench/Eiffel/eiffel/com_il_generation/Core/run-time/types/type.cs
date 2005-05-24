@@ -47,9 +47,8 @@ feature -- Status Report
 		return String.Empty;
 	}
 	
-	[CLSCompliantAttribute(false)]
-	public virtual RT_TYPE evaluated_type (EIFFEL_TYPE_INFO context_object)
-		// Evaluate Current in context of `context_object'.
+	public virtual RT_TYPE evaluated_type (RT_GENERIC_TYPE context_type)
+		// Evaluate Current in context of `context_type'.
 	{
 		return this;
 	}

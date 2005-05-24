@@ -28,9 +28,8 @@ feature -- Access
 /*
 feature -- Status Report
 */
-	[CLSCompliantAttribute(false)]
-	public override RT_TYPE evaluated_type (EIFFEL_TYPE_INFO context_object)
-		// Evaluate Current in context of `context_object'.
+	public override RT_TYPE evaluated_type (RT_GENERIC_TYPE context_type)
+		// Evaluate Current in context of `context_type'.
 	{
 		RT_GENERIC_TYPE Result;
 		RT_TYPE [] l_generics, l_other_generics;
@@ -41,21 +40,21 @@ feature -- Status Report
 			nb = count;
 
 				// Duplicate current data as after the evaluation in context
-				// of `context_object' it will be the same except for `generics'
+				// of `context_type' it will be the same except for `generics'
 				// which will only contained fully evaluated types that's why
 				// `generics' is created of type `RT_CLASS_TYPE []'.
 			Result = (RT_GENERIC_TYPE) MemberwiseClone();
 			l_other_generics = new RT_CLASS_TYPE [nb];
 			Result.set_generics (l_other_generics);
 
-				// Evaluate all types contained in `generics' in context of `context_object'
+				// Evaluate all types contained in `generics' in context of `context_type'
 			l_generics = generics;
 			for (; i < nb ; i ++) {
 				#if ASSERTIONS
 					ASSERTIONS.CHECK ("Valid element type",
-						l_generics [i].evaluated_type (context_object) is RT_CLASS_TYPE);
+						l_generics [i].evaluated_type (context_type) is RT_CLASS_TYPE);
 				#endif
-				l_other_generics [i] = l_generics [i].evaluated_type (context_object);
+				l_other_generics [i] = l_generics [i].evaluated_type (context_type);
 			}
 			Result.set_has_formal (false);
 		} else {

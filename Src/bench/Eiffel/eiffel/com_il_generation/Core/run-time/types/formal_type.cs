@@ -21,12 +21,11 @@ feature -- Access
 /*
 feature -- Status report
 */
-	[CLSCompliantAttribute(false)]
-	public override RT_TYPE evaluated_type (EIFFEL_TYPE_INFO context_object)
-		// Evaluate Current in context of `context_object'.
+	public override RT_TYPE evaluated_type (RT_GENERIC_TYPE context_type)
+		// Evaluate Current in context of `context_type'.
 	{
 			// Get type of formal in context of `a_current' object.
-		return context_object.____type().generics [position - 1];
+		return context_type.generics [position - 1];
 	}
 
 	public override bool has_formal ()

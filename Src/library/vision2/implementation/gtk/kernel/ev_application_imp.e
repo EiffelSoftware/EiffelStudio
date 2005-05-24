@@ -412,7 +412,7 @@ feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP} -- Implementation
 			Result := agent gtk_marshal.gdk_event_to_tuple
 		end
 		
-	bg_color: POINTER is
+	fg_color: POINTER is
 			-- Default allocated background color.
 		local
 			a_success: BOOLEAN
@@ -421,7 +421,7 @@ feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP} -- Implementation
 			a_success := {EV_GTK_EXTERNALS}.gdk_colormap_alloc_color ({EV_GTK_EXTERNALS}.gdk_rgb_get_cmap, Result, False, True)
 		end
 		
-	fg_color: POINTER is
+	bg_color: POINTER is
 			-- Default allocate foreground color.
 		local
 			a_success: BOOLEAN

@@ -60,6 +60,7 @@ feature -- Initialization
 			
 			box := {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
 			{EV_GTK_EXTERNALS}.gtk_widget_show (box)
+
 			{EV_GTK_EXTERNALS}.gtk_container_add (box, pixmap_box)
 			{EV_GTK_EXTERNALS}.gtk_container_add (box, text_label)
 
@@ -78,12 +79,7 @@ feature -- Initialization
 			if a_width /= width then
 				width := a_width
 				if parent_imp /= Void then
-						-- FIXME IEK Implement these properly
-					parent_imp.item_resize_start_actions.call ([interface])
-
-					parent_imp.item_resize_actions.call ([interface])
-
-					parent_imp.item_resize_end_actions.call ([interface])
+					parent_imp.on_resize (interface)
 				end
 			end
 		end

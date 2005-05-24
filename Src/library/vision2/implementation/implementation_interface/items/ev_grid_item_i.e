@@ -148,7 +148,7 @@ feature -- Access
 
 	tooltip: STRING
 			-- Tooltip displayed on `Current'.
-			-- If `Result' is `Void' then no tooltip is displayed.
+			-- If `Result' is `Void' or `is_empty' then no tooltip is displayed.
 
 feature -- Status setting
 

@@ -76,13 +76,6 @@ feature {NONE} -- Initialization
 				-- Reset the initial internal sizes, once set they should not be reset to -1
 			internal_minimum_width := -1
 			internal_minimum_height := -1
-			
-				
-				--| "configure-event" only happens for windows,
-				--| so we connect to the "size-allocate" function.
-			if not is_parentable then
-				real_signal_connect_after (a_c_object, "configure-event", agent (App_implementation.gtk_marshal).on_size_allocate_intermediate (internal_id, ?, ?, ?, ?), configure_translate_agent)
-			end
 	
 			on_key_event_intermediary_agent := agent (App_implementation.gtk_marshal).on_key_event_intermediary (a_c_object, ?, ?, ?)
 			real_signal_connect (a_event_widget, "key_press_event", on_key_event_intermediary_agent, key_event_translate_agent)
@@ -215,9 +208,6 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 				INTEGER, INTEGER]
 			mouse_wheel_delta: INTEGER
 		do
-			if not has_focus then
-				set_focus
-			end
 			t := [a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure,
 				a_screen_x, a_screen_y]
 				-- Mouse Wheel implementation.
@@ -500,14 +490,6 @@ feature {EV_DOCKABLE_SOURCE_I} -- Implementation
 			if a_window_imp /= Void then
 				Result := a_window_imp.interface
 			end
-		end
-
-feature {NONE} -- Agent functions.
-
-	configure_translate_agent: FUNCTION [EV_GTK_CALLBACK_MARSHAL, TUPLE [INTEGER, POINTER], TUPLE] is
-			-- Translation agent used for size allocation events
-		once
-			Result := agent (App_implementation.gtk_marshal).configure_translate
 		end
 
 feature {EV_INTERMEDIARY_ROUTINES} -- Implementation

@@ -2055,7 +2055,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			i, j, k: INTEGER
 			current_item: EV_GRID_ROW_I
 			old_i: INTEGER
-			internal_index: INTEGER
+			index: INTEGER
 			visible_count: INTEGER
 			row_index: INTEGER
 			l_row_count: INTEGER
@@ -2065,7 +2065,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 		do
 			original_row_index := rows.index
 			if not is_tree_enabled then
-				internal_index := an_index
+				index := an_index
 			else
 				if row_count > 0 then
 						-- We only find the parent row when `Current' is
@@ -2077,10 +2077,10 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 					loop
 						l_parent_row_i := l_parent_row_i.parent_row_i
 					end
-					internal_index := l_parent_row_i.index
+					index := l_parent_row_i.index
 				else
 						-- `Current' is empty, so simply keep the same index.
-					internal_index := an_index
+					index := an_index
 				end
 			end
 			if not is_row_height_fixed or is_tree_enabled then
@@ -2094,12 +2094,12 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 					row_offsets.extend (0)
 					rows.start
 				else
-					i := row_offsets @ (internal_index)
-					rows.go_i_th (internal_index)
-					if internal_index > 1 then					
-						row_indexes_to_visible_indexes.go_i_th (internal_index)
-						visible_indexes_to_row_indexes.go_i_th (internal_index)
-						visible_count := row_indexes_to_visible_indexes.i_th (internal_index)
+					i := row_offsets @ (index)
+					rows.go_i_th (index)
+					if index > 1 then					
+						row_indexes_to_visible_indexes.go_i_th (index)
+						visible_indexes_to_row_indexes.go_i_th (index)
+						visible_count := row_indexes_to_visible_indexes.i_th (index)
 					else
 							-- In this case, the feature has already been called when there are
 							-- no rows in the grid. So, we reset these attributes to the start.
@@ -2114,7 +2114,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 					visible_indexes_to_row_indexes.resize (rows.count + 1)
 				end
 				from
-					row_index := internal_index
+					row_index := index
 					l_row_count := rows.count
 				until
 					row_index > l_row_count
@@ -3893,6 +3893,10 @@ feature {EV_GRID_ROW_I} -- Implementation
 
 			rows.go_i_th (a_index)
 			internal_row_data.go_i_th (a_index)
+
+				-- Set grid of `grid_row' to `Current'
+			row_i.set_parent_i (Current, row_counter)
+
 			if replace_existing_item then
 				internal_row_data.replace (a_row_data)
 				replaced_row := rows.item
@@ -3900,7 +3904,7 @@ feature {EV_GRID_ROW_I} -- Implementation
 					replaced_row.update_for_removal
 				end
 				rows.replace (row_i)
-				row_i.set_internal_index (a_index)
+				row_i.set_index (a_index)
 			else
 				internal_row_data.put_left (a_row_data)
 				rows.put_left (row_i)
@@ -3908,8 +3912,7 @@ feature {EV_GRID_ROW_I} -- Implementation
 				update_grid_row_indices (a_index)
 			end
 
-				-- Set grid of `grid_row' to `Current'
-			row_i.set_parent_i (Current, row_counter)
+
 
 			set_vertical_computation_required (a_index)
 		end
@@ -4002,7 +4005,7 @@ feature {NONE} -- Implementation
 			loop
 				row_i := temp_rows @ i
 				if row_i /= Void then
-					row_i.set_internal_index (i)
+					row_i.set_index (i)
 				end
 				i := i + 1
 			end

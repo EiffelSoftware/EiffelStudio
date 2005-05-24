@@ -10,6 +10,9 @@ indexing
 class
 	INTERNAL
 
+inherit
+	INTERNAL_HELPER
+
 feature -- Conformance
 
 	is_instance_of (object: ANY; type_id: INTEGER): BOOLEAN is
@@ -18,7 +21,7 @@ feature -- Conformance
 			object_not_void: object /= Void
 			type_id_nonnegative: type_id >= 0
 		do
-			Result := c_is_instance_of (type_id, $object)
+			Result := c_type_conforms_to ({ISE_RUNTIME}.dynamic_type ($object), type_id)
 		end
 
 	type_conforms_to (type1, type2: INTEGER): BOOLEAN is
@@ -37,6 +40,8 @@ feature -- Creation
 			-- If no dynamic type available, returns -1.
 		require
 			class_type_not_void: class_type /= Void
+			class_type_not_empty: not class_type.is_empty
+			is_valid_type_string: is_valid_type_string (class_type)
 		local
 			l_cstr: C_STRING
 			l_table: like internal_dynamic_type_string_table

@@ -100,6 +100,24 @@ feature -- Events
 			add_event_item_to_list (l_string)
 		end
 		
+	item_enter_event is
+			-- Respond to a pointer enter at the item level.
+		local
+			l_string: STRING
+		do
+			l_string := "Item.pointer_enter_actions"
+			add_event_item_to_list (l_string)
+		end
+		
+	item_leave_event is
+			-- Respond to a pointer leave at the item level.
+		local
+			l_string: STRING
+		do
+			l_string := "Item.pointer_leave_actions"
+			add_event_item_to_list (l_string)
+		end
+		
 	double_press_item_event (an_x, a_y, a_button: INTEGER; an_item: EV_GRID_ITEM) is
 			-- Respond to a pointer double press at the grid level.
 		local
@@ -163,17 +181,33 @@ feature -- Events
 			l_string := "Item.pointer_release_actions : " + an_x.out + ", " +a_y.out + " Button : " + a_button.out
 			add_event_item_to_list (l_string)
 		end
-	
+
 	pointer_enter_event (on_grid: BOOLEAN; an_item: EV_GRID_ITEM) is
 			--
+		local
+			l_string: STRING
 		do
-			to_implement ("EVENTS_TAB.pointer_enter_event")
+			l_string := "Pointer_enter_actions"
+			if an_item /= Void then
+				l_string.append (". Item : " + an_item.column.index.out + ", " + an_item.row.index.out)
+			else
+				l_string.append (". No item")
+			end
+			add_event_item_to_list (l_string)
 		end
-		
+
 	pointer_leave_event (on_grid: BOOLEAN; an_item: EV_GRID_ITEM) is
 			--
+		local
+			l_string: STRING
 		do
-			to_implement ("EVENTS_TAB.pointer_leave_event")
+			l_string := "Pointer_leave_actions"
+			if an_item /= Void then
+				l_string.append (". Item : " + an_item.column.index.out + ", " + an_item.row.index.out)
+			else
+				l_string.append (". No item")
+			end
+			add_event_item_to_list (l_string)
 		end
 		
 	mouse_wheel_event (a_value: INTEGER) is
@@ -469,6 +503,8 @@ feature {NONE} -- Implementation
 						current_item.pointer_button_press_actions.force_extend (agent item_press_event)
 						current_item.pointer_double_press_actions.force_extend (agent item_double_press_event)
 						current_item.pointer_button_release_actions.force_extend (agent item_release_event)
+						current_item.pointer_enter_actions.force_extend (agent item_enter_event)
+						current_item.pointer_leave_actions.force_extend (agent item_leave_event)
 						current_item.select_actions.extend (agent item_selected (current_item))
 						current_item.deselect_actions.extend (agent item_deselected (current_item))
 --						current_item.activate_actions.extend (agent item_activated (current_item))
@@ -533,6 +569,8 @@ feature {NONE} -- Implementation
 						current_item.pointer_button_press_actions.wipe_out
 						current_item.pointer_double_press_actions.wipe_out
 						current_item.pointer_button_release_actions.wipe_out
+						current_item.pointer_enter_actions.wipe_out
+						current_item.pointer_leave_actions.wipe_out
 						current_item.select_actions.wipe_out
 						current_item.deselect_actions.wipe_out
 --						current_item.activate_actions.wipe_out

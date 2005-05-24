@@ -1,8 +1,8 @@
-<document output="envision" title="Overview">
+<document output="envision" title="Introducing EiffelEnvision">
 	<meta_data>
 		<help>
 			<toc>
-				<envision_title>Overview</envision_title>
+				<envision_title>Introducing EiffelEnvision</envision_title>
 				<envision_pseudo_name>10</envision_pseudo_name>
 			</toc>
 			<xml>
@@ -61,7 +61,7 @@
 			<line_break/>
 			<link>
 				<url>d</url>
-				<label>*Eiffel the Language</label>
+				<label>*Eiffel for .NET</label>
 			</link>
 			<line_break/>
 			<link>

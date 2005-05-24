@@ -239,8 +239,6 @@ feature -- C keywords
 
 	Eof_word: STRING is "EOF"
 
-	Cplusplus: STRING is "__cplusplus"
-
 feature -- Lace keywords
 
 	System_keyword: STRING is "system"

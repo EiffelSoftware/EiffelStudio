@@ -14,11 +14,11 @@ $spitshell >Makefile <<!GROK!THIS!
 SHELL = /bin/sh
 CC= $cc
 AR = ar rc
-CFLAGS = $optimize $ccflags $large -I$(ISE_EIFFEL)/studio/spec/$(ISE_PLATFORM)/include
+CFLAGS = $optimize $ccflags $large -I\$(ISE_EIFFEL)/studio/spec/\$(ISE_PLATFORM)/include
 LDFLAGS = $ldflags
 LIBS = $libs
 MAKE = make
-MKDEP = $mkdep $(DPFLAGS) --
+MKDEP = $mkdep \$(DPFLAGS) --
 MV = $mv
 RANLIB = $ranlib
 RM = $rm -f
@@ -28,9 +28,9 @@ $spitshell >>Makefile <<'!NO!SUBS!'
 .c.o:
 	$(CC) $(CFLAGS) -c $<
 
-OBJECTS = odbc_store.o
+OBJECTS = odbc.o
 
-libodbc_store.a: $(OBJECTS)
+libodbc.a: $(OBJECTS)
 	mkdir -p ../../../../spec/$(ISE_PLATFORM)/lib
 	$(RM) $@
 	$(AR) $@ $(OBJECTS)
@@ -39,7 +39,7 @@ libodbc_store.a: $(OBJECTS)
 	$(MAKE) clean
 
 clean:
-	$(RM) libodbc_store.a $(OBJECTS) Makefile config.sh
+	$(RM) libodbc.a $(OBJECTS) Makefile config.sh
 !NO!SUBS!
 chmod 644 Makefile
 $eunicefix Makefile

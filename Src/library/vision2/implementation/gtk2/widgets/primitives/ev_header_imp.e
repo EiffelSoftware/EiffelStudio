@@ -24,7 +24,9 @@ inherit
 			interface,
 			initialize,
 			destroy,
-			needs_event_box
+			needs_event_box,
+			on_button_release,
+			button_press_switch
 		end
 		
 	EV_FONTABLE_IMP
@@ -64,12 +66,19 @@ feature -- Initialization
 				-- Add our dummy column to the end to match Windows implementation
 			create dummy_item
 			dummy_imp ?= dummy_item.implementation
-			 {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_clickable (dummy_imp.c_object, False)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_min_width (dummy_imp.c_object, 0)
+			dummy_imp.set_width (0)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_clickable (dummy_imp.c_object, False)
 			resize_model (100)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_insert_column (visual_widget, dummy_imp.c_object, 0)
 			
 			set_pixmaps_size (16, 16)
+
+			connect_button_press_switch
+			pointer_button_release_actions.call (Void)			
+
 			set_is_initialized (True)
+
 		end
 
 	dummy_item: EV_HEADER_ITEM
@@ -128,7 +137,70 @@ feature
 			child_array.remove
 		end
 
+feature {EV_HEADER_ITEM_IMP} -- Implemnentation
+
+	item_resize_tuple: TUPLE [EV_HEADER_ITEM]
+		-- Reusable item resize tuple.
+
+	on_resize (a_item: EV_HEADER_ITEM) is
+			-- `a_item' has resized.
+		require
+			a_item_not_void: a_item /= Void
+		do
+			item_resize_tuple := [a_item]
+			if call_item_resize_start_actions then
+				call_item_resize_start_actions := False
+				item_resize_start_actions.call (item_resize_tuple)
+				call_item_resize_end_actions := True
+			end
+			item_resize_actions.call (item_resize_tuple)
+		end	
+
+	call_item_resize_start_actions: BOOLEAN
+	call_item_resize_end_actions: BOOLEAN
+		-- Should the appropriate item resize actions be called?
+
 feature {NONE} -- Implementation
+
+	button_press_switch (a_type: INTEGER; a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+			-- Call pointer_button_press_actions or pointer_double_press_actions
+			-- depending on event type in first position of `event_data'.
+		local
+			gdkwin: POINTER
+			a_pointer_x, a_pointer_y: INTEGER
+			a_item_imp: EV_HEADER_ITEM_IMP
+			a_cursor: like cursor
+		do
+			gdkwin := {EV_GTK_EXTERNALS}.gdk_window_at_pointer ($a_pointer_x, $a_pointer_y)
+			if gdkwin /= default_pointer then		
+				from
+					call_item_resize_start_actions := False
+					a_cursor := cursor
+					start
+				until
+					call_item_resize_start_actions or else off
+				loop
+					a_item_imp ?= item.implementation
+					if {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_struct_window (a_item_imp.c_object) = gdkwin then
+						call_item_resize_start_actions := True
+					end
+					forth
+				end
+				go_to (a_cursor)
+			end
+			Precursor {EV_PRIMITIVE_IMP} (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
+		end
+
+	on_button_release (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+			-- Used for pointer button release events
+		do
+			if call_item_resize_end_actions then
+				item_resize_end_actions.call (item_resize_tuple)	
+				item_resize_tuple := Void
+				call_item_resize_end_actions := False
+			end
+			Precursor {EV_PRIMITIVE_IMP} (a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
+		end
 
 	model_count: INTEGER
 		-- Number of cells available in model

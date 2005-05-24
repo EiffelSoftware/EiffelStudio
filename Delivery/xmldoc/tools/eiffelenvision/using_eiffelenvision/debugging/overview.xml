@@ -12,6 +12,10 @@
 				</keyword>
 				<keyword>
 					<index>K</index>
+					<term>Debugger, Overview</term>
+				</keyword>
+				<keyword>
+					<index>K</index>
 					<term>Overview of debugging projects</term>
 				</keyword>
 			</xml>
@@ -50,6 +54,36 @@
 				<tab_index>0</tab_index>
 				Execution Control
 			</help_link>.
+		</paragraph>
+		
+		<anchor>types_in_the_windows</anchor>
+		<heading>
+			<size>2</size>
+			<content>Eiffel for .NET Types</content>
+		</heading>
+		<paragraph>
+			When debugging EiffelEnvision projects, using one of the many debugger windows (<help_link>
+				<keywords>vcurfWatchWindow</keywords>
+				<tab_index>0</tab_index>
+				Watch
+			</help_link>, <help_link>
+				<keywords>vcurfLocalsWindow</keywords>
+				<tab_index>0</tab_index>
+				Locals
+			</help_link>, <help_link>
+				<keywords>vcurfAutosWindow</keywords>
+				<tab_index>0</tab_index>
+				Autos
+			</help_link>, ...) the <bold>Type</bold> column will also show the <bold>Eiffel-name</bold> of a .NET type. In <link>
+				<url>url</url>
+				<label>*Eiffel for .NET</label></link>, Eiffel classes are always in upper case. Maintaining the language to ensure Eiffel and Eiffel for .NET remain 
+				the same language, a formatting algorthim is applied on types and <link>
+				<url>url</url>
+				<label>*features</label></link> from <link>
+				<url>url</url>
+				<label>*referenced components</label></link> are consistent with the <link>
+				<url>url</url>
+				<label>*Eiffel Conventions</label></link>. More information can be found on the formatting for .NET types and features in <link><url>url</url><label>*Referenced Assembly Type and Feature Name Conversion</label></link>.
 		</paragraph>
 		
 		<seealso>

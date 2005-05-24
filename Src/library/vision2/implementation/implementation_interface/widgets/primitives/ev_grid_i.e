@@ -1199,7 +1199,7 @@ feature -- Status setting
 			internal_set_virtual_x_position (virtual_x)
 			if is_vertical_scrolling_per_item then
 				vertical_scroll_bar.change_actions.block
-				items := drawer.items_spanning_vertical_span (viewport_y_offset, viewable_height)
+				items := drawer.items_spanning_vertical_span (internal_client_y, viewable_height)
 				if items.count > 0 then
 					row_index := items.first
 					if row_indexes_to_visible_indexes = Void then

@@ -1,0 +1,75 @@
+<document output="envision" title="Adding EiffelEnvision Projects">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_title>Adding EiffelEnvision Project</envision_title>
+				<envision_pseudo_name>00</envision_pseudo_name>
+			</toc>
+			<xml>
+				<keyword>
+					<index>K</index>
+					<term>Adding EiffelEnvision projects</term>
+				</keyword>
+			</xml>
+		</help>
+	</meta_data>
+	<paragraph>
+		<paragraph>
+			All projects must reside with a <help_link>
+				<keywords>vxconVisualStudioSolutionsProjects</keywords>
+				<tab_index>0</tab_index>
+				Solution
+			</help_link>. The way projects are adding in Visual Studio .NET depends on the pre-existence of a solution. When no solution exists, new projects can only be created. This will create a new solution and place the 
+			project inside the newly created solution. When a solution already exists, create a new project will close the active solution and all of it contained projects. <help_link>
+				<keywords>vxurfNewProjectDialog</keywords>
+				<tab_index>0</tab_index>
+				New Project Dialog
+			</help_link> does provide the <bold>Add to Solution</bold> option to prevent the active <help_link>
+				<keywords>vxconVisualStudioSolutionsProjects</keywords>
+				<tab_index>0</tab_index>
+				Solution
+			</help_link> from being closed and instead, adds the newly created project to the already opened solution. New projects can be create using the <bold>File</bold>, <bold>New</bold>, <bold>Project</bold> menu. You can also add projects to already opened <help_link>
+				<keywords>vxconVisualStudioSolutionsProjects</keywords>
+				<tab_index>0</tab_index>
+				Solution
+			</help_link>s using the <bold>File</bold>, <bold>Add Project</bold>, <bold>New Project</bold> menu.
+		</paragraph>
+
+		<anchor>eiffelenvision_compiles</anchor>
+		<heading>
+			<size>2</size>
+			<content>Post Creation Compilation</content>
+		</heading>
+		<paragraph>
+			One of the areas where EiffelEnvision project creation differs from other languages project templates in Visual Studio .NET, is after a project has been created. EiffelEnvision provides 
+			rich <link><url>../../code_browsing/index.xml</url><label>Code Browsing and Navigation</label></link> facilities to assist in development and maintenance of Eiffel code. As such, an initial 
+			<link><url>../../compiling_projects/index.xml</url><label>Build</label></link> is launched. The process should take between 5 and 30 seconds, depending on you system configuration. The 
+			initial build will also make subsequent compilations faster.
+		</paragraph>
+		
+		<anchor>also_see</anchor>
+		<heading>
+			<size>2</size>
+			<content>Related Sections</content>
+		</heading>
+		<seealso>
+			<bold>See also</bold>
+			<line_break/>
+			<link><url>index.xml</url><label>Adding New Projects</label></link>
+			<line_break/>
+			<link><url>projects.xml</url><label>EiffelEnvision Projects</label></link>			
+			<line_break/>
+			<help_link>
+				<keywords>vxconVisualStudioSolutionsProjects</keywords>
+				<tab_index>0</tab_index>
+				Introduction to Solutions, Projects, and Items
+			</help_link>
+			<line_break/>
+			<help_link>
+				<keywords>vxoriManagingProjectsSolutions</keywords>
+				<tab_index>0</tab_index>
+				Managing Solutions, Projects, and Files
+			</help_link>
+		</seealso>
+	</paragraph>
+</document>

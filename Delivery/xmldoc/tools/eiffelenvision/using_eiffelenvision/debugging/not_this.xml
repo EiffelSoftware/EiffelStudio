@@ -10,6 +10,10 @@
 					<index>K</index>
 					<term>Debugging, Eiffel for .NET's Current not this</term>
 				</keyword>
+				<keyword>
+					<index>K</index>
+					<term>Debugger, Eiffel for .NET's Current not this</term>
+				</keyword>
 			</xml>
 		</help>
 	</meta_data>
@@ -24,6 +28,11 @@
 			</help_link> is not used by EiffelEnvision when debugging projects.
 		</paragraph>
 		
+		<anchor>also_see</anchor>
+		<heading>
+			<size>2</size>
+			<content>Related Sections</content>
+		</heading>
 		<seealso>
 			<bold>See also</bold>
 			<line_break/>

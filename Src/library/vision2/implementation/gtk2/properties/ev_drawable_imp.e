@@ -493,7 +493,7 @@ feature -- Drawing operations
 		end
 
 	sub_pixmap (area: EV_RECTANGLE): EV_PIXMAP is
-			-- 
+			-- Pixmap region of `Current' represented by rectangle `area'
 		local
 			pix_imp: EV_PIXMAP_IMP
 			a_pix: POINTER

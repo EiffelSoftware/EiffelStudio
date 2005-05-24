@@ -30,7 +30,7 @@ public class GENERIC_CONFORMANCE {
 
 		if (a_type is RT_GENERIC_TYPE) {
 				// We are handling a generic type.
-			computed_type = (RT_GENERIC_TYPE) a_type.evaluated_type (a_current);
+			computed_type = (RT_GENERIC_TYPE) a_type.evaluated_type (a_current.____type());
 			a_target_object.____set_type (computed_type);
 		} else {
 				// Normal class type, nothing special needs to be done.
@@ -49,7 +49,7 @@ public class GENERIC_CONFORMANCE {
 		EIFFEL_TYPE_INFO Result;
 
 			// Evaluate type in context of Current object.
-		type_to_create = (RT_CLASS_TYPE) a_type.evaluated_type (a_current);
+		type_to_create = (RT_CLASS_TYPE) a_type.evaluated_type (a_current.____type());
 
 			// Create new object of type `type_to_create'.
 			// Note: We use the `Activator' class because it is much faster than

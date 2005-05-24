@@ -116,9 +116,11 @@ feature -- Event handling
 			-- Create a resize action sequence.
 		do
 			create Result
-			real_signal_connect_after (c_object, "size-allocate", agent (App_implementation.gtk_marshal).on_size_allocate_intermediate (internal_id, ?, ?, ?, ?), size_allocate_translate_agent)
+			if is_parentable then
+				real_signal_connect (c_object, "size-allocate", agent (App_implementation.gtk_marshal).on_size_allocate_intermediate (internal_id, ?, ?, ?, ?), size_allocate_translate_agent)
+			end
 		end
-		
+
 	create_mouse_wheel_actions: EV_INTEGER_ACTION_SEQUENCE is
 			-- Create a mouse_wheel action sequence.
 		do
@@ -127,6 +129,17 @@ feature -- Event handling
 		end
 
 feature {EV_ANY_I} -- Implementation
+
+	is_parentable: BOOLEAN is
+			-- May `Current' be parented?
+		deferred
+		end
+
+	configure_translate_agent: FUNCTION [EV_GTK_CALLBACK_MARSHAL, TUPLE [INTEGER, POINTER], TUPLE] is
+			-- Translation agent used for size allocation events
+		once
+			Result := agent (App_implementation.gtk_marshal).configure_translate
+		end
 
 	size_allocate_translate_agent: FUNCTION [EV_GTK_CALLBACK_MARSHAL, TUPLE [INTEGER, POINTER], TUPLE] is
 			-- Translation agent used for size allocation events

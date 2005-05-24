@@ -16,7 +16,7 @@ default
 	msil_key_file_name ("$EIFFEL_SRC\dotnet\helpers\isekey.snk")
  	use_all_cluster_name_as_namespace (no)
  	use_cluster_name_as_namespace (yes)
-  	version ("2.0.1.1402")
+  	version ("2.0.1.1704")
 
 cluster 
  

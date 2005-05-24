@@ -19,7 +19,7 @@ default
 	console_application (yes)
 	precompiled ("$EIFFEL_SRC\dotnet\codedom_provider\build_studio_debug\EiffelSoftware.CodeDom.Splitter")
 	msil_use_optimized_precompile (yes)
-  	version ("2.0.1.1402")
+  	version ("2.0.1.1704")
 
 cluster
 	all root_cluster:		"$EIFFEL_SRC\dotnet\codedom_provider\tools\splitter"

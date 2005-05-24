@@ -2093,7 +2093,9 @@ feature -- Features info
 			l_field_sig: like field_sig
 			l_name: STRING
 			l_feat_arg: FEAT_ARG
+			l_type_feature: TYPE_FEATURE_I
 			l_type_i: TYPE_I
+			l_type_a: TYPE_A
 			l_meth_token, l_setter_token: INTEGER
 			l_param_token: INTEGER
 			l_meth_attr: INTEGER
@@ -2204,11 +2206,29 @@ feature -- Features info
 				l_meth_token := md_emit.define_field (uni_string, current_class_token,
 					l_field_attr, l_field_sig)
 
+					-- Define associated name corresponding to the Eiffel name
 				create l_name_ca.make
 				l_name_ca.put_string (feat.feature_name)
 				l_name_ca.put_integer_16 (0)
 				define_custom_attribute (l_meth_token,
 					current_module.ise_eiffel_name_attr_ctor_token, l_name_ca)
+
+					-- Define name of routine used to find out the attribute static type
+					-- if it is generic or a formal.
+				l_type_a := feat.type.actual_type
+				if l_type_a.is_formal or l_type_a.has_generics then
+						-- Lookup associated TYPE_FEATURE_I to get its name
+					l_type_feature := current_class_type.associated_class.anchored_features.item
+						(feat.rout_id_set.first)
+					check
+						l_type_feature_not_void: l_type_feature /= Void
+					end
+					create l_name_ca.make
+					l_name_ca.put_string (l_type_feature.feature_name)
+					l_name_ca.put_integer_16 (0)
+					define_custom_attribute (l_meth_token,
+						current_module.ise_type_feature_attr_ctor_token, l_name_ca)
+				end
 
 				insert_attribute (l_meth_token, current_type_id, feat.feature_id)
 				if is_single_class then

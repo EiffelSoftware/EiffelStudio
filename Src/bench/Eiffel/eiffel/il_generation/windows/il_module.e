@@ -263,6 +263,7 @@ feature -- Access: tokens
 	ise_formal_type_token,
 	ise_none_type_token,
 	ise_basic_type_token,
+	ise_type_feature_attr_ctor_token,
 	ise_eiffel_name_attr_ctor_token,
 	ise_eiffel_name_attr_generic_ctor_token,
 	ise_assertion_level_attr_ctor_token,
@@ -2368,6 +2369,7 @@ feature {NONE} -- Once per modules being generated.
 			l_sig: like field_sig
 			l_meth_sig: like method_sig
 			l_ise_eiffel_name_attr_token: INTEGER
+			l_ise_type_feature_attr_token: INTEGER
 			l_ise_assertion_level_attr_token: INTEGER
 			l_ise_interface_type_attr_token: INTEGER
 			l_system_type_token: INTEGER
@@ -2467,6 +2469,8 @@ feature {NONE} -- Once per modules being generated.
 				create {UNI_STRING}.make (basic_type_class_name), ise_runtime_token)
 			l_ise_eiffel_name_attr_token := md_emit.define_type_ref (
 				create {UNI_STRING}.make (eiffel_name_attribute), ise_runtime_token)
+			l_ise_type_feature_attr_token := md_emit.define_type_ref (
+				create {UNI_STRING}.make (type_feature_attribute), ise_runtime_token)
 			l_ise_assertion_level_attr_token := md_emit.define_type_ref (
 				create {UNI_STRING}.make (assertion_level_class_name_attribute), ise_runtime_token)
 			l_ise_interface_type_attr_token := md_emit.define_type_ref (
@@ -2523,6 +2527,9 @@ feature {NONE} -- Once per modules being generated.
 			uni_string.set_string (".ctor")
 			ise_eiffel_name_attr_ctor_token := md_emit.define_member_ref (uni_string,
 				l_ise_eiffel_name_attr_token, l_meth_sig)
+
+			ise_type_feature_attr_ctor_token := md_emit.define_member_ref (uni_string,
+				l_ise_type_feature_attr_token, l_meth_sig)
 
 			l_meth_sig.reset
 			l_meth_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)

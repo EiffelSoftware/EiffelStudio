@@ -313,8 +313,23 @@ feature {NONE} -- Implementation
 			-- Gtk_Widget."size-allocate" happened.
 		local
 			a_x_pos, a_y_pos: INTEGER
+--			a_rect: POINTER
 		do
-			--| `default_width' and `default_height' are not useful anymore
+--			a_rect := {EV_GTK_EXTERNALS}.c_gdk_rectangle_struct_allocate
+--			{EV_GTK_EXTERNALS}.gdk_window_get_frame_extents ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), a_rect)
+--
+--			print ("Frame extents width = " +{EV_GTK_EXTERNALS}.gdk_rectangle_struct_width (a_rect).out + "%N")
+--			print ("Frame extents height = " +{EV_GTK_EXTERNALS}.gdk_rectangle_struct_height (a_rect).out + "%N")
+--			print ("Frame extents x = " +{EV_GTK_EXTERNALS}.gdk_rectangle_struct_x (a_rect).out + "%N")
+--			print ("Frame extents y = " +{EV_GTK_EXTERNALS}.gdk_rectangle_struct_y (a_rect).out + "%N")
+--
+--			print ("Window x position = " + x_position.out + "%N")
+--			print ("Window y position = " + y_position.out + "%N")
+--			print ("Window width = " + width.out + "%N")
+--			print ("Window height = " + height.out + "%N")
+--			a_rect.memory_free
+
+			--| `default_width' and `default_height' are not useful anymore.
 			a_x_pos := x_position
 			a_y_pos := y_position
 			default_width := -1
@@ -394,6 +409,8 @@ feature {NONE} -- Implementation
 			enable_user_resize
 			default_height := -1
 			default_width := -1
+
+			real_signal_connect (c_object, "configure-event", agent (App_implementation.gtk_marshal).on_size_allocate_intermediate (internal_id, ?, ?, ?, ?), configure_translate_agent)
 			
 			{EV_GTK_EXTERNALS}.gtk_window_set_default_size (c_object, 1, 1)
 			set_is_initialized (True)

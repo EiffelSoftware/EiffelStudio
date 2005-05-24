@@ -160,7 +160,7 @@ feature -- Access
 					-- to be the width of the header item as the width must only be updated
 					-- after the user has finished dragging the header.
 				l_offsets := parent_i.column_offsets
-				Result := l_offsets.i_th (internal_index + 1) - l_offsets.i_th (internal_index)
+				Result := l_offsets.i_th (index + 1) - l_offsets.i_th (index)
 			else
 				Result := header_item.width
 			end
@@ -273,16 +273,8 @@ feature -- Status setting
 
 feature -- Status report
 
-	index: INTEGER is
+	index: INTEGER
 			-- Position of Current in `parent'.
-		require
-			is_parented: parent /= Void
-		do
-			Result := internal_index
-		ensure
-			index_positive: Result > 0
-			index_less_than_column_count: Result <= parent.column_count
-		end
 
 	count: INTEGER is
 			-- Number of items in current.
@@ -302,18 +294,18 @@ feature -- Status report
 			a_count: INTEGER
 			non_void_item_found: BOOLEAN
 			a_parent_i: EV_GRID_I
-			a_internal_index: INTEGER
+			a_index: INTEGER
 		do
 			from
 				i := 1
 				Result := True
 				a_count := count
 				a_parent_i := parent_i
-				a_internal_index := internal_index
+				a_index := index
 			until
 				not Result or else i > a_count
 			loop
-				a_item := a_parent_i.item_internal (a_internal_index, i)
+				a_item := a_parent_i.item_internal (a_index, i)
 				if a_item /= Void then
 					non_void_item_found := True
 					internal_is_selected := False
@@ -403,17 +395,17 @@ feature -- Element change
 			i: INTEGER
 			a_count: INTEGER
 			a_parent_i: EV_GRID_I
-			a_internal_index: INTEGER
+			a_index: INTEGER
 		do
 			from
 				i := 1
 				a_count := count
 				a_parent_i := parent_i
-				a_internal_index := internal_index
+				a_index := index
 			until
 				i > a_count
 			loop
-				a_parent_i.internal_set_item (a_internal_index, i, Void)
+				a_parent_i.internal_set_item (a_index, i, Void)
 				i := i + 1
 			end
 		ensure
@@ -489,19 +481,19 @@ feature {NONE} -- Implementation
 			i: INTEGER
 			a_count: INTEGER
 			a_parent_i: EV_GRID_I
-			a_internal_index: INTEGER
+			a_index: INTEGER
 			l_is_selected: BOOLEAN
 		do
 			from
 				i := 1
 				a_count := count
 				a_parent_i := parent_i
-				a_internal_index := internal_index
+				a_index := index
 				l_is_selected := is_selected
 			until
 				i > a_count
 			loop
-				a_item := a_parent_i.item_internal (a_internal_index, i)
+				a_item := a_parent_i.item_internal (a_index, i)
 				if a_item /= Void then
 					if a_selection_state then
 						a_item.enable_select_internal
@@ -532,16 +524,17 @@ feature {NONE} -- Implementation
 
 feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_COLUMN, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_ROW_I} -- Implementation
 
-	set_internal_index (a_index: INTEGER) is
+	set_index (a_index: INTEGER) is
 			-- Set the internal index of row
 		require
 			a_index_greater_than_zero: a_index > 0
 		do
-			internal_index := a_index
+			index := a_index
+		ensure
+			index_set: index = a_index
+			indexes_equivalent: parent_i.columns.i_th (index) = Current
+			index_less_than_row_count: index <= parent.column_count
 		end
-
-	internal_index: INTEGER
-			-- Index of `Current' in parent grid.
 
 	physical_index: INTEGER
 		-- Physical index of column row data stored in `parent_i'.

@@ -66,17 +66,16 @@ feature {EV_GRID_I, EV_GRID_ROW_I} -- Initialization
 	index_of_first_item_internal: INTEGER
 		-- Previous result of call to `index_of_first_item'.
 
-	internal_index: INTEGER
-			-- Index of `Current' in parent grid.
-
-	set_internal_index (a_index: INTEGER) is
-			-- Set the internal index of row
+	set_index (a_index: INTEGER) is
+			-- Set the index of row in grid.
 		require
 			a_index_greater_than_zero: a_index > 0
 		do
-			internal_index := a_index
+			index := a_index
 		ensure
-			index_set: internal_index = a_index
+			index_set: index = a_index
+			indexes_equivalent: parent_i.rows.i_th (index) = Current
+			index_less_than_row_count: index <= parent.row_count
 		end
 
 	set_parent_i (a_grid_i: EV_GRID_I; a_row_id: INTEGER) is
@@ -257,18 +256,18 @@ feature -- Access
 			a_item: EV_GRID_ITEM_I
 			i: INTEGER
 			a_count: INTEGER
-			a_internal_index: INTEGER
+			a_index: INTEGER
 			a_parent_i: EV_GRID_I
 		do
 			from
 				i := 1
-				a_internal_index := internal_index
+				a_index := index
 				a_parent_i := parent_i
 				a_count := count
 			until
 				i > a_count
 			loop
-				a_item := a_parent_i.item_internal (i, a_internal_index)
+				a_item := a_parent_i.item_internal (i, a_index)
 				if a_item /= Void then
 					if a_selection_state then
 						a_item.enable_select_internal
@@ -288,19 +287,19 @@ feature -- Access
 			i: INTEGER
 			a_count: INTEGER
 			non_void_item_found: BOOLEAN
-			a_internal_index: INTEGER
+			a_index: INTEGER
 			a_parent_i: EV_GRID_I
 		do
 			from
 				i := 1
 				Result := True
 				a_count := count
-				a_internal_index := internal_index
+				a_index := index
 				a_parent_i := parent_i
 			until
 				not Result or else i > a_count
 			loop
-				a_item := parent_i.item_internal (i, a_internal_index)
+				a_item := parent_i.item_internal (i, a_index)
 				if a_item /= Void then
 					non_void_item_found := True
 					Result := a_item.is_selected
@@ -369,17 +368,8 @@ feature -- Status report
 			subrow_count_recursive_in_range: subrow_count_recursive <= (parent.row_count - index)
 		end
 
-	index: INTEGER is
+	index: INTEGER
 			-- Position of Current in `parent'.
-		require
-			is_parented: parent /= Void
-		do
-			Result := internal_index
-		ensure
-			index_positive: Result > 0
-			indexes_equivalent: parent_i.rows.i_th (internal_index) = Current
-			index_less_than_row_count: Result <= parent.row_count
-		end
 
 	count: INTEGER is
 			-- Number of items in current.
@@ -417,7 +407,7 @@ feature -- Status report
 			a_physical_index: INTEGER
 			row_count: INTEGER
 		do
-			current_row_list := parent_i.internal_row_data @ internal_index
+			current_row_list := parent_i.internal_row_data @ index
 			column_list_area := parent_i.columns.area
 			current_row_list_count := current_row_list.count
 			row_count := count
@@ -879,17 +869,17 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			i: INTEGER
 			a_count: INTEGER
 			a_parent_i: EV_GRID_I
-			a_internal_index: INTEGER
+			a_index: INTEGER
 		do
 			from
 				i := 1
 				a_count := count
 				a_parent_i := parent_i
-				a_internal_index := internal_index
+				a_index := index
 			until
 				i > a_count
 			loop
-				a_parent_i.internal_set_item (i, a_internal_index, Void)
+				a_parent_i.internal_set_item (i, a_index, Void)
 				i := i + 1
 			end
 		ensure
@@ -925,11 +915,11 @@ feature {EV_GRID_I, EV_GRID_ROW_I} -- Implementation
 			hash_code := -1
 			parent_i := Void
 			parent_row_i := Void
-			internal_index := 0
+			index := 0
 		ensure
 			parent_i_void: parent_i = Void
 			parent_row_i_void: parent_row_i = Void
-			internal_index_set_to_zero: internal_index = 0
+			index_set_to_zero: index = 0
 		end
 		
 	update_for_subrow_removal (a_subrow: EV_GRID_ROW_I) is

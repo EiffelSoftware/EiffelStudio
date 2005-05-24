@@ -11,6 +11,8 @@ class
 	INTERNAL
 
 inherit
+	INTERNAL_HELPER
+
 	REFACTORING_HELPER
 
 feature -- Conformance
@@ -21,8 +23,7 @@ feature -- Conformance
 			object_not_void: object /= Void
 			type_id_nonnegative: type_id >= 0
 		do
-			fixme ("Take into account generics")
-			Result := id_to_eiffel_type.item (type_id).dotnet_type.is_instance_of_type (object)
+			Result := type_conforms_to (dynamic_type (object), type_id)
 		end
 
 	type_conforms_to (type1, type2: INTEGER): BOOLEAN is
@@ -48,6 +49,8 @@ feature -- Creation
 			-- If no dynamic type available, returns -1.
 		require
 			class_type_not_void: class_type /= Void
+			class_type_not_empty: not class_type.is_empty
+			is_valid_type_string: is_valid_type_string (class_type)
 		local
 			l_table: like internal_dynamic_type_string_table
 		do
@@ -550,12 +553,90 @@ feature -- Access
 			index_large_enough: i >= 1
 			index_small_enough: i <= field_count_of_type (type_id)
 		local
-			l_class_type: RT_CLASS_TYPE
+			l_rt_type: RT_TYPE
+			l_class_type, l_current_rt_type: RT_CLASS_TYPE
+			l_current_rt_gen_type: RT_GENERIC_TYPE
+			l_type, l_current_type: SYSTEM_TYPE
+			l_dtypes: NATIVE_ARRAY [INTEGER]
+			l_attributes: NATIVE_ARRAY [SYSTEM_OBJECT]
+			k, nb, l_dtype: INTEGER
+			l_type_feature_name: TYPE_FEATURE_ATTRIBUTE
+			l_name: SYSTEM_STRING
+			l_members: NATIVE_ARRAY [FIELD_INFO]
+			l_field: FIELD_INFO
+			l_meth: METHOD_INFO
 		do
-			fixme ("Not correct as it is missing information about generics if any")
-			create l_class_type.make
-			l_class_type.set_type (interface_type (get_members (type_id).item (i).field_type).type_handle)
-			Result := dynamic_type_from_rt_class_type (l_class_type)
+			l_dtypes := id_to_fields_static_type.item (type_id)
+			if l_dtypes = Void then
+				from
+					l_members := get_members (type_id)
+					k := 1
+					nb := l_members.count
+					create l_dtypes.make (nb)
+				until
+					k = nb
+				loop
+					l_field := l_members.item (k)
+					l_attributes := l_field.get_custom_attributes_type ({TYPE_FEATURE_ATTRIBUTE}, False)
+					if l_attributes.count > 0 then
+						check
+							valid_number_of_custom_attributes: l_attributes.count = 1
+						end
+						l_type_feature_name ?= l_attributes.item (0)
+						check
+							l_type_feature_name_not_void: l_type_feature_name /= Void
+						end
+						l_name := l_type_feature_name.feature_name
+						if l_current_type = Void then
+							l_current_rt_type := pure_implementation_type (type_id)
+							l_current_type := {SYSTEM_TYPE}.get_type_from_handle (l_current_rt_type.type)
+								-- Get RT_GENERIC_TYPE from `l_current_rt_type' if it
+								-- is an instance of `RT_GENERIC_TYPE', otherwise we get
+								-- Void which is ok to, it simply means the call to `evaluated_type'
+								-- below will not require a generic type as it should include
+								-- no formals.
+							l_current_rt_gen_type ?= l_current_rt_type
+						end
+						l_meth := l_current_type.get_method (l_name)
+						check
+							has_method: l_meth /= Void
+						end
+							-- Invoke method that is going to give us a RT_TYPE instance representing the
+							-- static type of the field for the base class of `type_id'.
+						l_rt_type ?= l_meth.invoke ({ACTIVATOR}.create_instance (l_current_type), Void)
+						check
+							l_rt_type_not_void: l_rt_type /= Void
+						end
+							-- Evaluate given type into context of `l_current_rt_gen_type' to resolve
+							-- formals to actual generic parameters. Of course if `l_current_rt_gen_type'
+							-- is Void, it means that `l_rt_type' does not contain any formals.
+						l_class_type ?= l_rt_type.evaluated_type (l_current_rt_gen_type)
+						check
+							l_class_type_not_void: l_class_type /= Void
+						end
+							-- Get the associated dynamic type.
+						l_class_type := internal_pure_interface_type (l_class_type)
+						l_dtype := dynamic_type_from_rt_class_type (l_class_type)
+					else
+							-- Case of a non-generic attribute or non-formal one.
+						l_type := interface_type (l_field.field_type)
+						if l_type.is_value_type then
+								-- Case of an expanded type.
+							l_dtype := 
+								dynamic_type_from_rt_class_type (associated_runtime_type (l_type))
+						else
+								-- Normal case, we handle a non-generic class type.
+							create l_class_type.make
+							l_class_type.set_type (l_type.type_handle)
+							l_dtype := dynamic_type_from_rt_class_type (l_class_type)
+						end
+					end
+					l_dtypes.put (k, l_dtype)
+					k := k + 1
+				end
+				id_to_fields_static_type.put (l_dtypes, type_id)
+			end
+			Result := l_dtypes.item (i)
 		ensure
 			field_type_nonnegative: Result >= 0
 		end
@@ -1009,7 +1090,11 @@ feature {NONE} -- Implementation
 					i := i + 1
 				end
 				if not l_stop then
-					create l_new_gen_type.make
+					if l_gen_type.is_tuple then
+						create {RT_TUPLE_TYPE} l_new_gen_type.make
+					else
+						create l_new_gen_type.make
+					end
 					l_new_gen_type.set_type (implementation_type (l_gen_type.dotnet_type).type_handle)
 					l_new_gen_type.set_generics (l_generics)
 					Result := l_new_gen_type
@@ -1061,7 +1146,11 @@ feature {NONE} -- Implementation
 					i := i + 1
 				end
 				if not l_stop then
-					create l_new_gen_type.make
+					if l_gen_type.is_tuple then
+						create {RT_TUPLE_TYPE} l_new_gen_type.make
+					else
+						create l_new_gen_type.make
+					end
 					l_new_gen_type.set_type (interface_type (l_gen_type.dotnet_type).type_handle)
 					l_new_gen_type.set_generics (l_generics)
 					Result := l_new_gen_type
@@ -1201,7 +1290,10 @@ feature {NONE} -- Implementation
 						l_parameters := parameters_decomposition (l_class_type_name.substring (l_start_pos + 1, l_end_pos - 1))
 						l_list := eiffel_meta_type_mapping.found_item
 						l_gen_type ?= l_list.first
-						if l_gen_type /= Void and then l_parameters.count = l_gen_type.count then
+						if l_gen_type /= Void then
+							check
+								valid_count: not l_gen_type.is_tuple implies l_parameters.count = l_gen_type.count
+							end
 							create l_types.make (l_parameters.count)
 							from
 								l_parameters.start
@@ -1219,21 +1311,29 @@ feature {NONE} -- Implementation
 								l_parameters.forth
 							end
 							if l_found then
-								from
-									l_found := False
-									l_list.start
-								until
-									l_list.after or else l_found
-								loop
-									l_type := l_list.item
-									l_found := same_generics (l_type, l_types)
-									l_list.forth
-								end
-								if l_found then
-									create l_gen_type.make
+								if l_gen_type.is_tuple then
+									l_type := l_gen_type
+									create {RT_TUPLE_TYPE} l_gen_type.make
 									l_gen_type.set_type (l_type.type)
 									l_gen_type.set_generics (l_types)
 									Result := l_gen_type
+								else
+									from
+										l_found := False
+										l_list.start
+									until
+										l_list.after or else l_found
+									loop
+										l_type := l_list.item
+										l_found := same_generics (l_type, l_types)
+										l_list.forth
+									end
+									if l_found then
+										create l_gen_type.make
+										l_gen_type.set_type (l_type.type)
+										l_gen_type.set_generics (l_types)
+										Result := l_gen_type
+									end
 								end
 							end
 						end
@@ -1281,53 +1381,6 @@ feature {NONE} -- Implementation
 						i := i + 1
 					end
 				end
-			end
-		end
-		
-	parameters_decomposition (a_str: STRING): ARRAYED_LIST [STRING] is
-			-- Decompose `a_str' which should be of the form "A, B, D [G], H [E ,F]"
-			-- into a list of strings "A", "B", "D [G]", "H [E, F]"
-			-- If decomposition is not possible, Void.
-		require
-			a_str_not_void: a_str /= Void
-		local
-			i, nb: INTEGER
-			l_invalid: BOOLEAN
-			l_first_pos, l_next_pos: INTEGER
-			l_nesting: INTEGER
-		do
-			from
-				create Result.make (5)
-				i := 1
-				l_first_pos := 1
-				l_next_pos := 1
-				nb := a_str.count
-			until
-				i > nb or l_invalid
-			loop
-				inspect
-					a_str.item (i)
-				when ',' then
-					if l_nesting = 0 then
-						Result.extend (a_str.substring (l_first_pos, l_next_pos))
-						l_first_pos := i + 1
-						l_next_pos := l_first_pos
-					end
-				when '[' then
-					l_nesting := l_nesting + 1
-				when ']' then
-					l_nesting := l_nesting - 1
-					l_invalid := l_nesting < 0
-				else
-					-- Do nothing
-				end
-				l_next_pos := l_next_pos + 1
-				i := i + 1
-			end
-			if l_nesting /= 0 then
-				Result := Void
-			elseif not l_invalid then
-				Result.extend (a_str.substring (l_first_pos, l_next_pos - 1))
 			end
 		end
 
@@ -1401,13 +1454,13 @@ feature {NONE} -- Implementation
 								has_generics: l_name.generics /= Void
 							end
 							l_array := l_name.generics
-							create l_rt_array.make (l_array.count)
+							l_count := l_array.count
+							create l_rt_array.make (l_count)
 							from
 								l_any_type := {ANY}
 								j := 0
-								l_count := l_array.count - 1
 							until
-								j > l_count
+								j = l_count
 							loop
 								l_param_type := l_array.item (j)
 								if l_param_type.equals (l_any_type) then
@@ -1422,7 +1475,15 @@ feature {NONE} -- Implementation
 								end
 								j := j + 1
 							end
-							create l_gen_type.make
+							if l_count = 0 then
+									-- It should be a TUPLE type.
+								check
+									tuple_name: l_name.name.is_equal ("TUPLE")
+								end
+								create {RT_TUPLE_TYPE} l_gen_type.make
+							else
+								create l_gen_type.make
+							end
 							l_interface_type := interface_type (l_type)
 							l_gen_type.set_type (l_interface_type.type_handle)
 							l_gen_type.set_generics (l_rt_array)
@@ -1432,7 +1493,7 @@ feature {NONE} -- Implementation
 							l_interface_type := interface_type (l_type)
 							l_class_type.set_type (l_interface_type.type_handle)
 						end
-						
+
 							-- Update `interface_to_implementation'
 						interface_to_implementation.add (l_interface_type, l_type)
 
@@ -1686,6 +1747,7 @@ feature {NONE} -- Implementation
 				id_to_eiffel_type.grow (l_new_count)
 				id_to_eiffel_implementation_type.grow (l_new_count)
 				id_to_fields.grow (l_new_count)
+				id_to_fields_static_type.grow (l_new_count)
 				id_to_fields_abstract_type.grow (l_new_count)
 				id_to_fields_name.grow (l_new_count)
 			end
@@ -1721,6 +1783,14 @@ feature {NONE} -- Implementation
 			create Result.make (0, array_upper_cell.item)
 		ensure
 			id_to_fields_abstract_type_not_void: Result /= Void
+		end
+
+	id_to_fields_static_type: ARRAY [NATIVE_ARRAY [INTEGER]] is
+			-- Buffer for `field_static_type_of_type' lookups index by type_id.
+		once
+			create Result.make (0, array_upper_cell.item)
+		ensure
+			id_to_fields_static_type_not_void: Result /= Void
 		end
 		
 	id_to_fields_name: ARRAY [NATIVE_ARRAY [STRING]] is

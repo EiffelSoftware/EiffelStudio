@@ -102,9 +102,9 @@ feature {NONE} -- Implementation
 							
 							create grid_custom_item
 							if ellipse_radio_button.is_selected then
-								grid_custom_item.expose_actions.extend (agent draw_ellipse (?, ?, ?, ?, ?, grid_custom_item))
+								grid_custom_item.expose_actions.extend (agent draw_ellipse (?, grid_custom_item))
 							else
-								grid_custom_item.expose_actions.extend (agent draw_pixmap (?, ?, ?, ?, ?, grid_custom_item))
+								grid_custom_item.expose_actions.extend (agent draw_pixmap (?, grid_custom_item))
 							end
 							grid_item := grid_custom_item
 						end
@@ -145,16 +145,25 @@ feature {NONE} -- Implementation
 		
 	item_counter: INTEGER
 		
-	draw_ellipse (an_x, a_y, a_width, a_height: INTEGER; drawable: EV_DRAWABLE; an_item: EV_GRID_DRAWABLE_ITEM) is
+	draw_ellipse (drawable: EV_DRAWABLE; an_item: EV_GRID_DRAWABLE_ITEM) is
 			--
 		do
 			drawable.set_foreground_color (grid.background_color)
-			drawable.fill_rectangle (an_x, a_y, a_width, a_height)
+			drawable.fill_rectangle (0, 0, an_item.width, an_item.height)
+			if an_item.is_selected then
+				if grid.has_focus then
+					drawable.set_foreground_color (grid.focused_selection_color)
+				else
+					drawable.set_foreground_color (grid.non_focused_selection_color)
+				end
+				drawable.fill_ellipse (0, 0, an_item.width, an_item.height)
+			end
+			drawable.draw_ellipse (0, 0, an_item.width, an_item.height)
 			drawable.set_foreground_color (grid.foreground_color)
-			drawable.draw_ellipse (an_x, a_y, a_width, a_height)
+			drawable.draw_ellipse (0, 0, an_item.width, an_item.height)
 		end
 
-	draw_pixmap (an_x, a_y, a_width, a_height: INTEGER; drawable: EV_DRAWABLE; an_item: EV_GRID_DRAWABLE_ITEM) is
+	draw_pixmap (drawable: EV_DRAWABLE; an_item: EV_GRID_DRAWABLE_ITEM) is
 			--
 		local
 			back_color: EV_COLOR
@@ -164,9 +173,9 @@ feature {NONE} -- Implementation
 				back_color := grid.background_color
 			end
 			drawable.set_foreground_color (back_color)
-			drawable.fill_rectangle (an_x, a_y, a_width, a_height)
+			drawable.fill_rectangle (0, 0, an_item.width, an_item.height)
 			a_pixmap := pixmap
-			drawable.draw_pixmap (an_x + (a_width - a_pixmap.width) // 2, a_y, a_pixmap)
+			drawable.draw_pixmap ((an_item.width - a_pixmap.width) // 2, 0, a_pixmap)
 		end
 		
 	multiple_items_check_button_selected is

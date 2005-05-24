@@ -277,7 +277,8 @@ feature {NONE} -- Implementation
 			grid_label_item: EV_GRID_LABEL_ITEM
 			grid_editable_item: EV_GRID_EDITABLE_ITEM
 			grid_combo_item: EV_GRID_COMBO_ITEM
-			current_row: EV_GRID_ROW
+			grid_drawable_item: EV_GRID_DRAWABLE_ITEM
+			current_row, current_subrow: EV_GRID_ROW
 			font: EV_FONT
 		do
 			if profile_cell.item then
@@ -481,6 +482,39 @@ feature {NONE} -- Implementation
 				counter := counter + 1
 			end
 
+			current_row := grid.row (54)
+			current_row.clear
+			current_row.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("Show Drawable Items"))
+			from
+				counter := 1
+			until
+				counter = 16
+			loop
+				current_row.insert_subrow (1)
+				if counter > 1 then
+					current_row.expand
+				end
+				current_subrow := current_row.subrow (1)
+				from
+					counter2 := 1
+				until
+					counter2 > 5
+				loop
+					create grid_drawable_item
+					grid_drawable_item.expose_actions.extend (agent draw_ellipse (?, grid_drawable_item))
+					current_subrow.set_item (counter2, grid_drawable_item)
+					counter2 := counter2 + 1
+				end
+				current_row := current_subrow
+--				create grid_label_item.make_with_text ("Font Height : " + ((counter + 3) * 2).out)
+--				current_row.subrow (counter).set_item (1, grid_label_item)
+--				create font
+--				font.set_height ((counter + 3) * 2)
+--				grid_label_item.set_font (font)
+--				current_row.subrow (counter).set_height (grid_label_item.text_height)
+				counter := counter + 1
+			end
+
 
 
 
@@ -523,6 +557,24 @@ feature {NONE} -- Implementation
 			grid.column (3).set_pixmap (image3)
 			grid.column (4).set_pixmap (image4)
 			grid.column (5).set_pixmap (image5)
+		end
+		
+	draw_ellipse (drawable: EV_DRAWABLE; an_item: EV_GRID_DRAWABLE_ITEM) is
+			--
+		do
+			drawable.set_foreground_color (grid.background_color)
+			drawable.fill_rectangle (0, 0, an_item.width, an_item.height)
+			if an_item.is_selected then
+				if grid.has_focus then
+					drawable.set_foreground_color (grid.focused_selection_color)
+				else
+					drawable.set_foreground_color (grid.non_focused_selection_color)
+				end
+				drawable.fill_ellipse (0, 0, an_item.width, an_item.height)
+			end
+			drawable.draw_ellipse (0, 0, an_item.width, an_item.height)
+			drawable.set_foreground_color (grid.foreground_color)
+			drawable.draw_ellipse (0, 0, an_item.width, an_item.height)
 		end
 
 	pointer_double_press_received_on_grid (an_x, a_y, button: INTEGER; grid_item: EV_GRID_ITEM) is
@@ -634,23 +686,26 @@ feature {NONE} -- Implementation
 				create {EV_GRID_LABEL_ITEM} Result.make_with_text ("Item at position : " + an_x.out + ", " + a_y.out)
 			else
 				create drawable_item
-				drawable_item.expose_actions.extend (agent draw_grid_item (?, ?, ?, ?, ?, drawable_item))
+				drawable_item.expose_actions.extend (agent draw_grid_item (?, drawable_item))
 				Result := drawable_item
 			end
 		end
 		
-	draw_grid_item (an_x, a_y, a_width, a_height: INTEGER; drawable: EV_DRAWABLE; an_item: EV_GRID_DRAWABLE_ITEM) is
+	draw_grid_item (drawable: EV_DRAWABLE; an_item: EV_GRID_ITEM) is
 			--
 		local
 			back_color: EV_COLOR
+			virtual_y, virtual_x: INTEGER
 		do
+			virtual_x := an_item.virtual_x_position
+			virtual_y := an_item.virtual_y_position
 			if back_color = Void then
 				back_color := grid.background_color
 			end
 			drawable.set_foreground_color (back_color)
-			drawable.fill_rectangle (an_x, a_y, a_width, a_height)
-			drawable.set_foreground_color (create {EV_COLOR}.make_with_8_bit_rgb (((a_y + an_x).abs // 8) \\ 255, ((a_y + an_x).abs // 8) \\ 255, ((a_y + an_x).abs // 8) \\ 255))
-			drawable.fill_ellipse (an_x, a_y, a_width, a_height)
+			drawable.fill_rectangle (0, 0, an_item.width, an_item.height)
+			drawable.set_foreground_color (create {EV_COLOR}.make_with_8_bit_rgb (((virtual_y + virtual_x).abs // 8) \\ 255, ((virtual_y + virtual_x).abs // 8) \\ 255, ((virtual_y + virtual_x).abs // 8) \\ 255))
+			drawable.fill_ellipse (0, 0, an_item.width, an_item.height)
 		end
 		
 	set_selected_row_as_subnode_button_selected is
@@ -1002,7 +1057,31 @@ feature {NONE} -- Implementation
 --			grid.insert_new_row (1)
 --			grid.set_item (1, 1, create {EV_GRID_LABEL_ITEM}.make_with_text ("An Item"))
 
-			end
+
+			-- Test 20
+			grid.enable_tree
+			grid.insert_new_row (1)
+			grid.set_item (1, 1, create {EV_GRID_LABEL_ITEM}.make_with_text ("An Item"))
+			grid.row (1).ensure_expandable
+			grid.row (1).expand_actions.extend (agent expand)
+			grid.item (1, 1).pointer_button_press_actions.force_extend (agent wipe_out_row)
+		end
+
+	expand is
+			--
+		do
+
+		end
+
+	wipe_out_row is
+			--
+		do
+	--		grid.row (1).insert_subrow (1)
+	--		grid.set_item (1, 2, create {EV_GRID_LABEL_ITEM}.make_with_text ("An Item"))
+	--		grid.remove_row (2)
+			GRID.ROW (1).ensure_non_expandable
+		end
+		
 
 	clean_grid is
 		do

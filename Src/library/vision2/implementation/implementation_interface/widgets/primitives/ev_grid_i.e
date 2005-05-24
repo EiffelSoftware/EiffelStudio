@@ -2282,6 +2282,18 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			drawable.redraw_rectangle (col_x1, 0, a_column.width, drawable.height)
 		end
 
+	redraw_from_column_to_end (a_column: EV_GRID_COLUMN_I) is
+			-- Redraw client area from `virtual_x_position' of `a_column' to the right
+			-- of the client area. Complete height of client area is invalidated.
+		require
+			a_column_not_void: a_column /= Void
+		local
+			l_virtual_x_position: INTEGER
+		do
+			l_virtual_x_position := a_column.virtual_x_position
+			drawable.redraw_rectangle (l_virtual_x_position - (internal_client_x - viewport_x_offset), viewport_y_offset, viewport.width + internal_client_x - l_virtual_x_position, viewport.height)
+		end
+
 	redraw_row (a_row: EV_GRID_ROW_I) is
 			-- Redraw area of `a_row' if visible.
 		require
@@ -2292,9 +2304,9 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			row_y1 := a_row.virtual_y_position - (internal_client_y - viewport_y_offset)
 			drawable.redraw_rectangle (viewport_x_offset, row_y1, viewport.width, a_row.height)
 		end
-		
+
 	redraw_from_row_to_end (a_row: EV_GRID_ROW_I) is
-			-- Redraw client area from `virtual_x_position' of `a_row' down to the bottom of the client
+			-- Redraw client area from `virtual_y_position' of `a_row' down to the bottom of the client
 			-- area (As virtual position of a row is at its top, `a_row' is invalidated).
 			-- Complete width of client area is invalidated.
 		require
@@ -2807,14 +2819,17 @@ feature {NONE} -- Drawing implementation
 		require
 			header_item_not_void: header_item /= Void
 			is_header_item_resizing: is_header_item_resizing
+		local
+			header_index: INTEGER
 		do
 				-- Update horizontal scroll bar size and position.
 			recompute_horizontal_scroll_bar
 
 				-- Now perform appropriate redrawing as required.
 			if is_column_resize_immediate then
-				set_horizontal_computation_required (header.index_of (header_item, 1))			
-				redraw_client_area
+				header_index := header.index_of (header_item, 1)
+				set_horizontal_computation_required (header_index)
+				redraw_from_column_to_end (column (header_index).implementation)
 			else	
 				if is_resizing_divider_enabled then
 						-- Draw a resizing line if enabled.

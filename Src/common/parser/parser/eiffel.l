@@ -296,6 +296,15 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 [nN][oO][tT]	{
 				last_token := TE_NOT
 			}
+[nN][oO][tT][eE]	{
+				last_token := TE_ID
+				process_id_as
+				if has_syntax_warning then
+					Error_handler.insert_warning (
+						create {SYNTAX_WARNING}.make (line, column, filename,
+							"Use of `note', possibly a new keyword in future definition of `Eiffel'."))
+				end
+			}
 [oO][bB][sS][oO][lL][eE][tT][eE]	{
 				last_token := TE_OBSOLETE
 			}
@@ -325,6 +334,15 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 			}
 [oO][nN][cC][eE]	{
 				last_token := TE_ONCE
+			}
+[oO][nN][lL][yY]	{
+				last_token := TE_ID
+				process_id_as
+				if has_syntax_warning then
+					Error_handler.insert_warning (
+						create {SYNTAX_WARNING}.make (line, column, filename,
+							"Use of `only', possibly a new keyword in future definition of `Eiffel'."))
+				end
 			}
 [oO][rR]	{
 				last_token := TE_OR

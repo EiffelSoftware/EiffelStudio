@@ -144,20 +144,17 @@ feature {NONE} -- Implementation
 	screen_x: INTEGER is
 			-- Horizontal position of the window on screen,
 		local
-			a_x: INTEGER
 			a_aux_info: POINTER
 			i: INTEGER
 		do
 			if positioned_by_user then
 				Result := user_x_position
 			else
-				if has_struct_flag (c_object, {EV_GTK_EXTERNALS}.gtk_mapped_enum) then
+				if is_displayed then
 					if has_wm_decorations then
-						{EV_GTK_EXTERNALS}.gdk_window_get_root_origin ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), $a_x, null)
-						Result := a_x
+						{EV_GTK_EXTERNALS}.gdk_window_get_root_origin ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), $Result, null)
 					else
-						i := {EV_GTK_EXTERNALS}.gdk_window_get_origin ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), $a_x, null)
-						Result := a_x
+						i := {EV_GTK_EXTERNALS}.gdk_window_get_origin ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), $Result, null)
 					end
 				else
 					a_aux_info := aux_info_struct
@@ -171,20 +168,17 @@ feature {NONE} -- Implementation
 	screen_y: INTEGER is
 			-- Vertical position of the window on screen,
 		local
-			a_y: INTEGER
 			a_aux_info: POINTER
 			i: INTEGER
 		do
 			if positioned_by_user then
 				Result := user_y_position
 			else
-				if has_struct_flag (c_object, {EV_GTK_EXTERNALS}.gtk_mapped_enum) then
+				if is_displayed then
 					if has_wm_decorations then
-						{EV_GTK_EXTERNALS}.gdk_window_get_root_origin ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), null, $a_y)
-						Result := a_y
+						{EV_GTK_EXTERNALS}.gdk_window_get_root_origin ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), null, $Result)
 					else
-						i := {EV_GTK_EXTERNALS}.gdk_window_get_origin ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), null, $a_y)
-						Result := a_y
+						i := {EV_GTK_EXTERNALS}.gdk_window_get_origin ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), null, $Result)
 					end
 				else
 					a_aux_info := aux_info_struct

@@ -1,0 +1,152 @@
+<document output="envision" title="Configuring EiffelEnvision Projects">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_title>Project Configuration</envision_title>
+				<envision_pseudo_name>00</envision_pseudo_name>
+			</toc>
+			<xml>
+				<keyword>
+					<index>K</index>
+					<term>Project configuration</term>
+				</keyword>
+				<keyword>
+					<index>K</index>
+					<term>Property pages</term>
+				</keyword>
+				<keyword>
+					<index>K</index>
+					<term>Property pages, EiffelEnvision</term>
+				</keyword>
+				<keyword>
+					<index>K</index>
+					<term>Projects, Configuring</term>
+				</keyword>
+				<keyword>
+					<index>K</index>
+					<term>EiffelEnvision, Configuring projects</term>
+				</keyword>
+			</xml>
+		</help>
+	</meta_data>
+	<paragraph>
+		<paragraph>
+			Project configuration, is the act to configuring a project configuration for <link><url>url</url><label>*Builds</label></link>. Project configurations related to a <help_link>
+				<keywords>vxconVisualStudioSolutionsProjects</keywords>
+				<tab_index>0</tab_index>
+				Solutions
+			</help_link> <help_link>
+				<keywords>vxconBuildConfigurations</keywords>
+				<tab_index>0</tab_index>
+				Build Configurations
+			</help_link>. EiffelEnvision splits project configuration's into two factions: <bold>Common Properties</bold> and <bold>Configuration Properties</bold>.
+		</paragraph>
+
+		<paragraph>
+			Project build configurations can be added, removed and edited through the <help_link>
+				<keywords>vxurfConfigurationManagerDialogBoxS</keywords>
+				<tab_index>0</tab_index>
+				Configuration Manager
+			</help_link> dialog box.
+		</paragraph>		
+		
+		<paragraph>
+			To configure a project's properties select the project in the <help_link>
+				<keywords>vxurfSolutionExplorerDialog</keywords>
+				<tab_index>0</tab_index>
+				Solution Explorer
+			</help_link>, or the <help_link>
+				<keywords>vxurfClassViewWindow</keywords>
+				<tab_index>0</tab_index>
+				Class View
+			</help_link>, and then select <bold>Project</bold>, <bold>Properties</bold> from the main menu.
+		</paragraph>
+		
+		<anchor>common_properties</anchor>
+		<heading>
+			<size>2</size>
+			<content>Common Properties</content>
+		</heading>
+		<paragraph>
+			<link>
+				<url>general.xml</url>
+				<label>General Properties</label>
+			</link>
+			<line_break/>
+			General <link><url>url</url><label>*Build</label></link> related common build configuration properties.
+		</paragraph>
+		<paragraph>
+			<link>
+				<url>assembly_info.xml</url>
+				<label>Assembly Info Properties</label>
+			</link>
+			<line_break/>
+			Localization, version and other product information, about the project, to embed in the project's built assembly.
+		</paragraph>
+		<paragraph>
+			<link>
+				<url>precompiled.xml</url>
+				<label>Precompiled Properties</label>
+			</link>
+			<line_break/>
+			EiffelEnvision precompiled library usage properties, for established <link><url>url</url><label>*Precompiled Libraries</label></link>.
+		</paragraph>
+		
+		<anchor>configuration_properties</anchor>
+		<heading>
+			<size>2</size>
+			<content>Common Properties</content>
+		</heading>
+		<paragraph>
+			<link>
+				<url>build.xml</url>
+				<label>Build Properties</label>
+			</link>
+			<line_break/>
+			Configuration dependent and advanced <link><url>url</url><label>*Build</label></link> related project properties, for specifying specific build properties and tweaking the compiler.
+		</paragraph>
+		<paragraph>
+			<link>
+				<url>assertions.xml</url>
+				<label>Assertion Properties</label>
+			</link>
+			<line_break/>
+			<link><url>url</url><label>*Eiffel for .NET</label></link> project-level <link><url>url</url><label>*assertion</label></link> properties, for <link><url>url</url><label>*contracts</label></link>.
+		</paragraph>
+		<paragraph>
+			<link>
+				<url>debugging.xml</url>
+				<label>Debugging Properties</label>
+			</link>
+			<line_break/>
+			Properties related to debugging built projects in Visual Studio .NET using EiffelEnvision.
+		</paragraph>
+		<paragraph>
+			<link>
+				<url>externals.xml</url>
+				<label>External Properties</label>
+			</link>
+			<line_break/>
+			External <bold>object files</bold> and <bold>include paths</bold> for use with the <link><url>url</url><label>*Unmanaged Compilation</label></link> or a project <link><url>url</url><label>*Build</label></link>.
+		</paragraph>
+				
+		<anchor>also_see</anchor>
+		<heading>
+			<size>2</size>
+			<content>Related Sections</content>
+		</heading>
+		<seealso>
+			<bold>See also</bold>
+			<line_break/>
+			<help_link>
+				<keywords>vxconProjectBuilds</keywords>
+				<tab_index>0</tab_index>
+				Default and Custom Build
+			</help_link>
+			<line_break/>
+			<link><url>../structure/index.xml</url><label>EiffelEnvision Projects</label></link>
+			<line_break/>
+			<link><url>../../debugging/index.xml</url><label>Debugging</label></link>
+		</seealso>
+	</paragraph>
+</document>

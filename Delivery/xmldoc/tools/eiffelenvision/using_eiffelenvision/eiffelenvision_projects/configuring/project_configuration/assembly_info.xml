@@ -1,0 +1,150 @@
+<document output="envision" title="Assembly Info Properties">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_title>Assembly Info Properties</envision_title>
+				<envision_pseudo_name>30</envision_pseudo_name>
+			</toc>
+			<xml>
+				<keyword>
+					<index>K</index>
+					<term>Properties, Assembly Info</term>
+				</keyword>
+				<keyword>
+					<index>K</index>
+					<term>Assembly Info Properties</term>
+				</keyword>
+			</xml>
+		</help>
+	</meta_data>
+	<paragraph>
+		<paragraph>
+			The <bold>Assembly Info</bold> property page in the <bold>Common Properties</bold> folder contains the following properties:
+		</paragraph>
+
+		<anchor>information_group</anchor>
+		<heading>
+			<size>2</size>
+			<content>Information Group</content>
+		</heading>
+		<anchor>title</anchor>
+		<paragraph>
+			<bold>Title</bold>
+			<line_break/>
+			The assembly title custom attribute to be placed in project <help_link>
+				<keywords>cpconAssemblyManifest</keywords>
+				<tab_index>0</tab_index>
+				Assembly Manifest
+			</help_link>.
+		</paragraph>
+		<anchor>description</anchor>
+		<paragraph>
+			<bold>Description</bold>
+			<line_break/>
+			The assembly description  custom attribute to be placed in project <help_link>
+				<keywords>cpconAssemblyManifest</keywords>
+				<tab_index>0</tab_index>
+				Assembly Manifest
+			</help_link>.
+		</paragraph>
+		<anchor>company</anchor>
+		<paragraph>
+			<bold>Company</bold>
+			<line_break/>
+			The company name custom attribute to be placed in project <help_link>
+				<keywords>cpconAssemblyManifest</keywords>
+				<tab_index>0</tab_index>
+				Assembly Manifest
+			</help_link>.
+		</paragraph>
+		<anchor>product</anchor>
+		<paragraph>
+			<bold>Product</bold>
+			<line_break/>
+			The product name custom attribute to be placed in project <help_link>
+				<keywords>cpconAssemblyManifest</keywords>
+				<tab_index>0</tab_index>
+				Assembly Manifest
+			</help_link>.
+		</paragraph>
+		<anchor>trademark</anchor>
+		<paragraph>
+			<bold>Trademark</bold>
+			<line_break/>
+			The trademark custom attribute to be placed in project <help_link>
+				<keywords>cpconAssemblyManifest</keywords>
+				<tab_index>0</tab_index>
+				Assembly Manifest
+			</help_link>.
+		</paragraph>
+		<anchor>copyright</anchor>
+		<paragraph>
+			<bold>Copyright</bold>
+			<line_break/>
+			The copyright custom attribute to be placed in project <help_link>
+				<keywords>cpconAssemblyManifest</keywords>
+				<tab_index>0</tab_index>
+				Assembly Manifest
+			</help_link>.
+		</paragraph>
+		
+		<anchor>localization_group</anchor>
+		<heading>
+			<size>2</size>
+			<content>Localization Group</content>
+		</heading>
+		<anchor>culture</anchor>
+		<paragraph>
+			<bold>Culture</bold>
+			<line_break/>
+			Specifies which culture the assembly supports. For more information on cultures and localization, see <help_link>
+				<keywords>cpconLocalization</keywords>
+				<tab_index>0</tab_index>
+				Localization
+			</help_link>.
+		</paragraph>
+		
+		<anchor>version_group</anchor>
+		<heading>
+			<size>2</size>
+			<content>Version Group</content>
+		</heading>
+		<anchor>version</anchor>
+		<paragraph>
+			<bold>Version</bold>
+			<line_break/>
+			The four part version number held in the project <help_link>
+				<keywords>cpconAssemblyManifest</keywords>
+				<tab_index>0</tab_index>
+				Assembly Manifest
+			</help_link>. For more information on version numbers, see <help_link>
+				<keywords>cpconAssemblyVersioning</keywords>
+				<tab_index>0</tab_index>
+				Assembly Versioning
+			</help_link>.
+		</paragraph>
+				
+		<anchor>also_see</anchor>
+		<heading>
+			<size>2</size>
+			<content>Related Sections</content>
+		</heading>
+		<seealso>
+			<bold>See also</bold>
+			<line_break/>
+			<link><url>index.xml</url><label>Configuring EiffelEnvision Projects</label></link>
+			<line_break/>
+			<link><url>general.xml</url><label>General Properties</label></link>
+			<line_break/>
+			<link><url>precompiled.xml</url><label>Precompiled Properties</label></link>
+			<line_break/>
+			<help_link>
+				<keywords>vxconProjectBuilds</keywords>
+				<tab_index>0</tab_index>
+				Default and Custom Build
+			</help_link>
+			<line_break/>
+			<link><url>../structure/index.xml</url><label>EiffelEnvision Projects</label></link>
+		</seealso>
+	</paragraph>
+</document>

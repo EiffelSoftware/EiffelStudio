@@ -626,7 +626,7 @@ feature -- Warning Dialogs
 	
 	cannot_delete_as_still_referenced_single: STRING is "The top level object you are attempting to delete is still referenced by a single object."
 	
-	cannot_delete_as_still_referenced_part2: STRING is "%NTo examine the current references of an object, open the client node of the object's representation within the Window Selector.%N%NDo you wish to flatten all references and delete the object?"
+	cannot_delete_as_still_referenced_part2: STRING is "%NTo examine the current references of an object, open the client node of the object's representation within the Widget Selector.%N%NDo you wish to flatten all references and delete the object?"
 	
 	cyclic_inheritance_error: STRING is "Not permitted as causes a cyclic inheritance structure."
 	
@@ -771,16 +771,16 @@ feature -- Object editor properties
 feature -- Tooltips
 
 	include_directory_button_tooltip: STRING is "Include all sub-directories"
-		-- Tooltip for window selector include directory button.
+		-- Tooltip for widget selector include directory button.
 		
 	show_hide_empty_directories_tooltip: STRING is "Show/Hide all empty directories"
-		-- Tooltip for window selector show hide empty directories button.
+		-- Tooltip for widget selector show hide empty directories button.
 		
 	new_directory_button_tooltip: STRING is "New directory"
-		-- Tooltip for window selector new directory button.
+		-- Tooltip for widget selector new directory button.
 	
 	expand_all_button_tooltip: STRING is "Expand all"
-		-- Tooltip for window selector expand all button.
+		-- Tooltip for widget selector expand all button.
 		
 feature -- Status texts
 

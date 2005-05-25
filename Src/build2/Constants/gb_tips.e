@@ -26,7 +26,7 @@ feature -- Access
 	
 	builder_window_build: STRING is "The Builder Window shows an approximation of the%Ninterface that is being constructed and permits%Ninteractive building."
 	
-	directory_addition: STRING is "Adding or removing directories via the Window Selector%Ncreates or removes these directories from the disk immediately."
+	directory_addition: STRING is "Adding or removing directories via the Widget Selector%Ncreates or removes these directories from the disk immediately."
 	
 	changing_type: STRING is "You may change the type of an object by picking it,%Nand dropping it on the type you wish to change it to in%Nthe Type Selector. Any objects contained will be re-parented into the new%Nobject. This may only occur if the new type matches, and supports%Ninsertion of all children."
 	

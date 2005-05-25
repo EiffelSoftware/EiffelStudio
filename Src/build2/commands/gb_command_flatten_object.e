@@ -260,7 +260,7 @@ feature -- Basic Operation
 			Result := object_name  + " flattened"
 		end
 		
-feature {GB_WINDOW_SELECTOR} -- Implementation
+feature {GB_WIDGET_SELECTOR} -- Implementation
 
 	silent_execute is
 			-- Execute a shallow flatten silently, without addition to the history
@@ -356,7 +356,7 @@ feature {NONE} -- Implementation
 							-- If we are executing this as a result of dropping an object from the clipboard (so
 							-- not yet parented), it is not possible to add representations and this must be performed by the
 							-- subsequent addition.
-						if original_instance_object.top_level_parent_object.window_selector_item /= Void then
+						if original_instance_object.top_level_parent_object.widget_selector_item /= Void then
 							new_link_object.add_client_representation (original_instance_object)
 						end
 	

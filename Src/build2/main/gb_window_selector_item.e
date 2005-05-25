@@ -1,13 +1,13 @@
 indexing
-	description: "Objects that represent windows in a GB_WINDOW_SELECTOR"
+	description: "Objects that represent windows in a GB_WIDGET_SELECTOR"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	GB_WINDOW_SELECTOR_ITEM
+	GB_WIDGET_SELECTOR_ITEM
 	
 inherit
-	GB_WINDOW_SELECTOR_COMMON_ITEM
+	GB_WIDGET_SELECTOR_COMMON_ITEM
 		redefine
 			destroy
 		end
@@ -53,8 +53,8 @@ feature {NONE} -- Initialization
 			tree_item.set_pebble_function (agent retrieve_pebble)
 				
 				-- Make `Current' available from `an_object'.
-			an_object.set_window_selector_item (Current)
-			tree_item.select_actions.extend (agent window_selector.selected_window_changed (Current))
+			an_object.set_widget_selector_item (Current)
+			tree_item.select_actions.extend (agent widget_selector.selected_window_changed (Current))
 			tree_item.drop_actions.extend (agent object.handle_object_drop)
 			tree_item.drop_actions.set_veto_pebble_function (agent object.can_add_child)
 		ensure
@@ -75,7 +75,7 @@ feature -- Access
 	file_exists: BOOLEAN is
 			-- Does the interface file corresponding to `object' currently exist on disk?
 		local
-			directory: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
+			directory: GB_WIDGET_SELECTOR_DIRECTORY_ITEM
 			path: ARRAYED_LIST [STRING]
 			file_name: FILE_NAME
 			file: RAW_FILE
@@ -147,10 +147,10 @@ feature {GB_OBJECT} -- Implementation
 		do
 			is_destroyed := True
 			object := Void
-			Precursor {GB_WINDOW_SELECTOR_COMMON_ITEM}
+			Precursor {GB_WIDGET_SELECTOR_COMMON_ITEM}
 		end
 
 invariant
 	object_not_void: not is_destroyed implies object /= Void
 
-end -- class GB_WINDOW_SELECTOR_ITEM
+end -- class GB_WIFGET_SELECTOR_ITEM

@@ -1,10 +1,10 @@
 indexing
-	description: "Objects that represent items for the window selector."
+	description: "Objects that represent items for the widget selector."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	GB_WINDOW_SELECTOR_COMMON_ITEM
+	GB_WIDGET_SELECTOR_COMMON_ITEM
 	
 inherit
 	
@@ -25,11 +25,11 @@ inherit
 
 feature -- Access
 
-	parent: GB_WINDOW_SELECTOR_COMMON_ITEM
+	parent: GB_WIDGET_SELECTOR_COMMON_ITEM
 		-- Parent of `Current' or `Void' if none.
-		-- If `Void' must be parented in WINDOW_SELECTOR.
+		-- If `Void' must be parented in widget_selector.
 
-	children: ARRAYED_LIST [GB_WINDOW_SELECTOR_COMMON_ITEM]
+	children: ARRAYED_LIST [GB_WIDGET_SELECTOR_COMMON_ITEM]
 		-- All children contained in `Current'.
 	
 	tree_item: EV_TREE_ITEM
@@ -48,7 +48,7 @@ feature -- Access
 
 feature -- Status report
 
-	has_recursive (selector_item: GB_WINDOW_SELECTOR_COMMON_ITEM): BOOLEAN is
+	has_recursive (selector_item: GB_WIDGET_SELECTOR_COMMON_ITEM): BOOLEAN is
 			-- Is `selector_item' contained within `Current' at any level?
 		require
 			selector_item_not_void: selector_item /= Void
@@ -86,7 +86,7 @@ feature -- Status setting
 			name_set: name.is_equal (a_name)
 		end
 		
-	set_parent (new_parent: GB_WINDOW_SELECTOR_COMMON_ITEM) is
+	set_parent (new_parent: GB_WIDGET_SELECTOR_COMMON_ITEM) is
 			-- Assign `new_parent' to `parent'.
 		do
 			parent := new_parent
@@ -97,8 +97,8 @@ feature -- Status setting
 	unparent is
 			-- Remove `Current' from its parent.
 		local
-			parent_item: GB_WINDOW_SELECTOR_COMMON_ITEM
-			window_item: GB_WINDOW_SELECTOR_ITEM
+			parent_item: GB_WIDGET_SELECTOR_COMMON_ITEM
+			window_item: GB_WIDGET_SELECTOR_ITEM
 		do
 			parent_item := parent
 			
@@ -108,10 +108,10 @@ feature -- Status setting
 				
 				window_item ?= Current
 				if window_item /= Void then
-					window_selector.update_for_removal (window_item)
+					widget_selector.update_for_removal (window_item)
 					parent_item.children.prune_all (Current)
-					if parent_item /= window_selector then
-						window_selector.item_removed_from_directory (parent_item, window_item)
+					if parent_item /= widget_selector then
+						widget_selector.item_removed_from_directory (parent_item, window_item)
 					end
 				else
 					-- Only for directories.
@@ -125,7 +125,7 @@ feature -- Status setting
 			parent_void: parent = Void
 		end
 		
-	directory_object_from_name (path_name: ARRAYED_LIST [STRING]): GB_WINDOW_SELECTOR_DIRECTORY_ITEM is
+	directory_object_from_name (path_name: ARRAYED_LIST [STRING]): GB_WIDGET_SELECTOR_DIRECTORY_ITEM is
 			-- `Result' is directory item returned by traversing the directory path `path_name'
 			-- from `Current'.
 		require
@@ -141,7 +141,7 @@ feature -- Status setting
 			Cursor_not_moved: old children.index = children.index
 		end
 		
-	window_object_from_name (path_name: ARRAYED_LIST [STRING]): GB_WINDOW_SELECTOR_ITEM is
+	window_object_from_name (path_name: ARRAYED_LIST [STRING]): GB_WIDGET_SELECTOR_ITEM is
 			-- `Result' is directory item returned by traversing the directory path `path_name'
 			-- from `Current'.
 		require
@@ -157,7 +157,7 @@ feature -- Status setting
 			Cursor_not_moved: old children.index = children.index
 		end
 
-	prune_all (v: GB_WINDOW_SELECTOR_COMMON_ITEM) is
+	prune_all (v: GB_WIDGET_SELECTOR_COMMON_ITEM) is
 			-- Remove all occurrences of `v'.
 		do
 			v.unparent
@@ -175,7 +175,7 @@ feature -- Status setting
 			end
 		end
 		
-	add_alphabetically (new_item: GB_WINDOW_SELECTOR_COMMON_ITEM) is
+	add_alphabetically (new_item: GB_WIDGET_SELECTOR_COMMON_ITEM) is
 			-- Add `representation of `new_item' to `Current' alphabetically.
 		require
 			new_item_not_void: new_item /= Void
@@ -199,10 +199,10 @@ feature -- Status setting
 			children.put_right (new_item)
 			add_to_tree_node_alphabetically (tree_item, new_item.tree_item)
 			new_item.set_parent (Current)
-			window_selector.item_added_to_directory (Current, new_item)
+			widget_selector.item_added_to_directory (Current, new_item)
 		end
 		
-	recursive_do_all (action: PROCEDURE [ANY, TUPLE [GB_WINDOW_SELECTOR_COMMON_ITEM]]) is
+	recursive_do_all (action: PROCEDURE [ANY, TUPLE [GB_WIDGET_SELECTOR_COMMON_ITEM]]) is
 			-- Apply `action' to very item recusively.
 		do
 			from
@@ -216,7 +216,7 @@ feature -- Status setting
 			end
 		end
 		
-	recursive_check_all (action: FUNCTION [ANY, TUPLE [GB_WINDOW_SELECTOR_COMMON_ITEM], BOOLEAN]): BOOLEAN is
+	recursive_check_all (action: FUNCTION [ANY, TUPLE [GB_WIDGET_SELECTOR_COMMON_ITEM], BOOLEAN]): BOOLEAN is
 			-- For all items in `Current' recursively, call `action'.
 			-- `Result' is True if one call to `action' returns True, False otherwise.
 		require
@@ -286,7 +286,7 @@ feature -- Status setting
 	directory_names: ARRAYED_LIST [STRING] is
 			-- `Result' is names of all directories contained in `Current'.
 		local
-			l_directory: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
+			l_directory: GB_WIDGET_SELECTOR_DIRECTORY_ITEM
 		do
 			create Result.make (4)
 			from
@@ -319,7 +319,7 @@ feature {NONE} -- Implementation
 			name := ""
 		end
 		
-	internal_directory_object_from_name (parent_object: GB_WINDOW_SELECTOR_COMMON_ITEM; texts: ARRAYED_LIST [STRING]): GB_WINDOW_SELECTOR_COMMON_ITEM is
+	internal_directory_object_from_name (parent_object: GB_WIDGET_SELECTOR_COMMON_ITEM; texts: ARRAYED_LIST [STRING]): GB_WIDGET_SELECTOR_COMMON_ITEM is
 			-- `Result' is directory item returned by traversing the directory path `path_name'
 			-- from the current `index' of `texts' from directory object `parent_object'.
 		require
@@ -329,8 +329,8 @@ feature {NONE} -- Implementation
 		local
 			current_text: STRING
 			children_cursor: CURSOR
-			l_children: ARRAYED_LIST [GB_WINDOW_SELECTOR_COMMON_ITEM]
-			current_window_item: GB_WINDOW_SELECTOR_ITEM
+			l_children: ARRAYED_LIST [GB_WIDGET_SELECTOR_COMMON_ITEM]
+			current_window_item: GB_WIDGET_SELECTOR_ITEM
 		do
 			l_children := parent_object.children
 			children_cursor := l_children.cursor
@@ -356,17 +356,17 @@ feature {NONE} -- Implementation
 			children_index_unchanged: old parent_object.children.index = parent_object.children.index
 		end
 		
-	internal_expand_recursive (window_selector_common_item: GB_WINDOW_SELECTOR_COMMON_ITEM) is
+	internal_expand_recursive (widget_selector_common_item: GB_WIDGET_SELECTOR_COMMON_ITEM) is
 			-- Expand `Current' .
 		require
-			window_selector_common_item_not_void: window_selector_common_item /= Void
+			widget_selector_common_item_not_void: widget_selector_common_item /= Void
 		do
-			if window_selector_common_item.tree_item.is_expandable then
-				window_selector_common_item.expand
+			if widget_selector_common_item.tree_item.is_expandable then
+				widget_selector_common_item.expand
 			end
 		end
 
 invariant
 	tree_item_not_void: tree_item /= Void
 
-end -- class GB_WINDOW_SELECTOR_COMMON_ITEM
+end -- class GB_WIDGET_SELECTOR_COMMON_ITEM

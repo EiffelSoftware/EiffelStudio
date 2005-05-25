@@ -33,7 +33,7 @@ feature -- Access
 	executable: BOOLEAN is
 			-- Is executable?
 		do
-			Result := not Window_selector.objects.is_empty
+			Result := not widget_selector.objects.is_empty
 		end
 		
 

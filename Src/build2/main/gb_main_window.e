@@ -173,8 +173,8 @@ feature -- Basic operation
 			multiple_split_area.customizeable_area_of_widget (type_selector).extend (type_selector.tool_bar)
 			multiple_split_area.extend (component_selector, component_selector.name)
 			multiple_split_area.customizeable_area_of_widget (component_selector).extend (component_selector.tool_bar)			
-			multiple_split_area.extend (window_selector.widget, window_selector.name)
-			multiple_split_area.customizeable_area_of_widget (window_selector.widget).extend (window_selector.tool_bar)
+			multiple_split_area.extend (widget_selector.widget, widget_selector.name)
+			multiple_split_area.customizeable_area_of_widget (widget_selector.widget).extend (widget_selector.tool_bar)
 			
 			initialize_split_areas
 			command_handler.update

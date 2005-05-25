@@ -60,7 +60,7 @@ feature -- Access
 			-- May `execute' be called on `Current'?
 		do
 			Result := (layout_constructor.has_focus and layout_constructor.selected_item /= Void) or
-				(window_selector.has_focus and window_selector.selected_window /= Void)
+				(widget_selector.has_focus and widget_selector.selected_window /= Void)
 		end
 
 feature -- Basic operations
@@ -69,7 +69,7 @@ feature -- Basic operations
 				-- Execute `Current'.
 			local
 				layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
-				selector_item: GB_WINDOW_SELECTOR_ITEM
+				selector_item: GB_WIDGET_SELECTOR_ITEM
 				cut_object: GB_OBJECT
 				global_status: GB_GLOBAL_STATUS
 			do
@@ -79,7 +79,7 @@ feature -- Basic operations
 					layout_item ?= layout_constructor.selected_item
 					cut_object := layout_item.object
 				else
-					selector_item ?= window_selector.selected_window
+					selector_item ?= widget_selector.selected_window
 					check
 						selected_item_was_object: selector_item /= Void
 					end

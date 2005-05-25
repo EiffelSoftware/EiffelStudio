@@ -38,12 +38,12 @@ create
 	
 feature {NONE} -- Initialization
 
-	make (a_directory, parent_directory: GB_WINDOW_SELECTOR_DIRECTORY_ITEM) is
+	make (a_directory, parent_directory: GB_WIDGET_SELECTOR_DIRECTORY_ITEM) is
 			-- Create `Current' with directory named `a_directory'.
 		require
 			a_directory_not_void: a_directory /= Void
-			void_parent_implies_window_selector: parent_directory = Void implies a_directory.parent = window_selector
-			non_void_parent_correct: parent_directory /= Void implies a_directory.parent /= window_selector
+			void_parent_implies_widget_selector: parent_directory = Void implies a_directory.parent = widget_selector
+			non_void_parent_correct: parent_directory /= Void implies a_directory.parent /= widget_selector
 		do
 			History.cut_off_at_current_position
 			directory_name := a_directory.path
@@ -59,7 +59,7 @@ feature -- Basic Operation
 		local
 			temp_file_name: FILE_NAME
 			directory: DIRECTORY
-			directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
+			directory_item: GB_WIDGET_SELECTOR_DIRECTORY_ITEM
 		do
 				-- Now actually remove the directory from the disk.
 			create temp_file_name.make_from_string (generated_path.string)
@@ -78,7 +78,7 @@ feature -- Basic Operation
 				delete_directory (directory)
 			end
 				-- Now remove the representation from the directory selector.
-			directory_item := window_selector.directory_object_from_name (directory_name)
+			directory_item := widget_selector.directory_object_from_name (directory_name)
 			check
 				directory_item_found: directory_item /= Void
 			end
@@ -113,7 +113,7 @@ feature -- Basic Operation
 			if not directory.exists then
 				create_directory (directory)	
 			end
-			window_selector.silent_add_named_directory (directory_name)
+			widget_selector.silent_add_named_directory (directory_name)
 			command_handler.update
 		end
 	

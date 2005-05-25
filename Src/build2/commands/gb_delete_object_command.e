@@ -81,7 +81,7 @@ feature -- Basic operations
 			do
 			end
 	
-feature {GB_WINDOW_SELECTOR, GB_CUT_OBJECT_COMMAND} -- Basic operation
+feature {GB_WIDGET_SELECTOR, GB_CUT_OBJECT_COMMAND} -- Basic operation
 
 	delete_transported_object (object_stone: GB_OBJECT_STONE) is
 			-- Delete object represented by `object_stone'.
@@ -161,12 +161,12 @@ feature {NONE} -- Implementation
 			group_link.gb_ev_container.unlink_group (group_link)
 		end
 		
-	delete_directory (a_directory: GB_WINDOW_SELECTOR_DIRECTORY_ITEM) is
+	delete_directory (a_directory: GB_WIDGET_SELECTOR_DIRECTORY_ITEM) is
 			-- Delete directory represented by `a_directory'.
 		require
 			directory_not_void: a_directory /= Void
 		do
-			Window_selector.remove_directory (a_directory)
+			widget_selector.remove_directory (a_directory)
 		end
 
 	veto_the_delete (object_stone: GB_OBJECT_STONE): BOOLEAN is

@@ -281,7 +281,7 @@ feature -- Basic operation
 			root_window_void: root_window_object = Void
 		local
 			window_object: GB_TITLED_WINDOW_OBJECT
-			window_selector_item: GB_WINDOW_SELECTOR_ITEM
+			widget_selector_item: GB_WIDGET_SELECTOR_ITEM
 		do
 			window_object ?= build_object_from_string_and_assign_id ("EV_TITLED_WINDOW")
 			check
@@ -289,9 +289,9 @@ feature -- Basic operation
 			end
 			add_new_window (window_object)
 			window_object.set_name (initial_main_window_name);
-			create window_selector_item.make_with_object (window_object)
-			window_selector.add_alphabetically (window_object.window_selector_item)
-			window_object.window_selector_item.enable_select
+			create widget_selector_item.make_with_object (window_object)
+			widget_selector.add_alphabetically (window_object.widget_selector_item)
+			window_object.widget_selector_item.enable_select
 			window_object.set_as_root_window
 		ensure
 			root_window_set: root_window_object /= Void
@@ -305,7 +305,7 @@ feature -- Basic operation
 			--| FIXME, this is a function with a side effect.
 		local
 			titled_window_object: GB_TITLED_WINDOW_OBJECT
-			window_selector_item: GB_WINDOW_SELECTOR_ITEM
+			widget_selector_item: GB_WIDGET_SELECTOR_ITEM
 		do
 			Result := build_object_from_string (a_type)
 			titled_window_object ?= Result
@@ -314,7 +314,7 @@ feature -- Basic operation
 			else
 				add_new_object (Result)
 			end
-			create window_selector_item.make_with_object (Result)
+			create widget_selector_item.make_with_object (Result)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -526,11 +526,11 @@ feature -- Basic operation
 		do			
 			reset_objects
 			reset_deleted_objects
-			window_selector.wipe_out
+			widget_selector.wipe_out
 		ensure
 			objects_is_empty: objects.is_empty
 			deleted_objects_is_empty: deleted_objects.is_empty
-			window_selector_is_empty: window_selector.count = 0
+			widget_selector_is_empty: widget_selector.count = 0
 		end
 		
 	string_used_globally_as_object_or_feature_name (a_string: STRING): BOOLEAN is
@@ -613,7 +613,7 @@ feature -- Basic operation
 				if parent_object = an_object then
 					-- `an_object' is a window as it has no parent, therefore, we must check that the name
 					-- does not clash with that of any other titled windows.
-					window_objects ?= Window_selector.objects
+					window_objects ?= widget_selector.objects
 					from
 						window_objects.start
 					until
@@ -1121,11 +1121,11 @@ feature {GB_EV_WIDGET_EDITOR_CONSTRUCTOR, GB_OBJECT} -- Implementation
 				-- is simply updated in both directions.
 			new_object.set_layout_item (an_object.layout_item)
 			
-			if an_object.window_selector_item /= Void then
-					-- Set the window selector item to the original window selector item which
-					-- simply remains in the window selector, but it's `object' also gets updated
-					-- to point to `new_object' from within `set_window_selector_item'.
-				new_object.set_window_selector_item (an_object.window_selector_item)
+			if an_object.widget_selector_item /= Void then
+					-- Set the widget selector item to the original widget selector item which
+					-- simply remains in the widget selector, but it's `object' also gets updated
+					-- to point to `new_object' from within `set_widget_selector_item'.
+				new_object.set_widget_selector_item (an_object.widget_selector_item)
 			end
 				
 			if an_object.is_instance_of_top_level_object then

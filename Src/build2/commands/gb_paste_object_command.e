@@ -65,16 +65,16 @@ feature -- Access
 		local
 			layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
 			parent_object: GB_OBJECT
-			selected_window: GB_WINDOW_SELECTOR_ITEM
+			selected_window: GB_WIDGET_SELECTOR_ITEM
 		do
-			Result := not clipboard.is_empty and ((layout_constructor.has_focus and layout_constructor.selected_item /= Void) or (window_selector.has_focus))
+			Result := not clipboard.is_empty and ((layout_constructor.has_focus and layout_constructor.selected_item /= Void) or (widget_selector.has_focus))
 			if layout_constructor.has_focus then
 				layout_item ?= layout_constructor.selected_item
 				if layout_item /= Void then
 					parent_object ?= layout_item.object
 				end
 			else
-				selected_window ?= window_selector.selected_window
+				selected_window ?= widget_selector.selected_window
 				if selected_window /= Void then
 					parent_object ?= selected_window.object
 				end
@@ -100,7 +100,7 @@ feature -- Basic operations
 				command_add: GB_COMMAND_ADD_OBJECT
 				parent_object: GB_PARENT_OBJECT
 			do
-					--|FIXME handle window selector.
+					--|FIXME handle widget selector.
 				layout_item ?= layout_constructor.selected_item
 				parent_object ?= layout_item.object
 				create command_add.make (parent_object, clipboard.object, parent_object.children.count + 1)

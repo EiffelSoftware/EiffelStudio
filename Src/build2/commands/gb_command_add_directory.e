@@ -64,7 +64,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make (directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM; a_directory: STRING) is
+	make (directory_item: GB_WIDGET_SELECTOR_DIRECTORY_ITEM; a_directory: STRING) is
 			-- Create `Current' with directory named `a_directory'.
 		require
 			a_directory_not_void: a_directory /= Void
@@ -73,7 +73,7 @@ feature {NONE} -- Initialization
 			directory_name := a_directory
 			if directory_item /= Void then
 					-- `directory_item' may be `Void' if we are parenting at the root level
-					-- in the window selector.
+					-- in the widget selector.
 				parent_directory_path := directory_item.path
 			else
 				create parent_directory_path.make (0)
@@ -159,7 +159,7 @@ feature -- Basic Operation
 		require else
 			directory_added_succesfully: directory_added_succesfully
 		local
-			directory_item, parent_directory: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
+			directory_item, parent_directory: GB_WIDGET_SELECTOR_DIRECTORY_ITEM
 		do
 			if executed_once then
 					-- As we are re-doing an undo, we must create directory again.
@@ -168,9 +168,9 @@ feature -- Basic Operation
 			end
 			create directory_item.make_with_name (directory_name)
 			if parent_directory_path.is_empty then
-				window_selector.add_alphabetically (directory_item)
+				widget_selector.add_alphabetically (directory_item)
 			else
-				parent_directory := window_selector.directory_object_from_name (parent_directory_path)
+				parent_directory := widget_selector.directory_object_from_name (parent_directory_path)
 				check
 					parent_directory_not_void: parent_directory /= Void
 				end
@@ -191,17 +191,17 @@ feature -- Basic Operation
 			-- Calling `execute' followed by `undo' must restore
 			-- the system to its previous state.
 		local
-			directory_item,	parent_directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
+			directory_item,	parent_directory_item: GB_WIDGET_SELECTOR_DIRECTORY_ITEM
 			directory_path: ARRAYED_LIST [STRING]
 		do
 			directory_path := parent_directory_path.twin
 			directory_path.extend (directory_name)
-			directory_item := window_selector.directory_object_from_name (directory_path)
+			directory_item := widget_selector.directory_object_from_name (directory_path)
 			check
 				directory_item_not_void: directory_item /= Void				
 			end
 			if not parent_directory_path.is_empty then
-				parent_directory_item := window_selector.directory_object_from_name (parent_directory_path)
+				parent_directory_item := widget_selector.directory_object_from_name (parent_directory_path)
 				check
 					parent_directory_not_void: parent_directory_item /= Void
 					parent_has_directory: directory_item.parent = parent_directory_item
@@ -209,9 +209,9 @@ feature -- Basic Operation
 				parent_directory_item.prune_all (directory_item)
 			else
 				check
-					contained_in_window_selector: directory_item.parent = window_selector
+					contained_in_widget_selector: directory_item.parent = widget_selector
 				end
-				window_selector.prune_all (directory_item)
+				widget_selector.prune_all (directory_item)
 			end
 			command_handler.update
 		end

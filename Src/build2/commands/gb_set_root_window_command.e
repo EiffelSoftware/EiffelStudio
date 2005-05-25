@@ -44,7 +44,7 @@ feature -- Access
 	executable: BOOLEAN is
 			-- May `execute' be called on `Current'?
 		do
-			Result := not window_selector.objects.is_empty and not Layout_constructor.is_empty
+			Result := not widget_selector.objects.is_empty and not Layout_constructor.is_empty
 		end
 
 feature -- Basic operations
@@ -52,8 +52,8 @@ feature -- Basic operations
 	execute is
 				-- Execute `Current'.
 		do
-			window_selector.change_root_window
-			window_selector.tool_bar.update_select_root_window_command
+			widget_selector.change_root_window
+			widget_selector.tool_bar.update_select_root_window_command
 		end
 		
 end -- class GB_SET_ROOT_WINDOW_COMMAND

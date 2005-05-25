@@ -320,7 +320,7 @@ feature {NONE} -- Implementation
 			-- had the client generation option set. This is provided for backwards compatibility.
 		do
 			if project_settings.loaded_project_had_client_information then
-				window_selector.objects.do_all (agent project_settings.set_object_as_client)
+				widget_selector.objects.do_all (agent project_settings.set_object_as_client)
 			end
 		end
 		

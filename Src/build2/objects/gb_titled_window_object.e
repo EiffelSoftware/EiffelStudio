@@ -269,7 +269,7 @@ feature {GB_XML_STORE, GB_XML_LOAD, GB_XML_OBJECT_BUILDER, GB_XML_IMPORT} -- Bas
 			end
 		end
 		
-feature {GB_WINDOW_SELECTOR, GB_TITLED_WINDOW_OBJECT, GB_OBJECT_HANDLER} -- Basic operation
+feature {GB_WIDGET_SELECTOR, GB_TITLED_WINDOW_OBJECT, GB_OBJECT_HANDLER} -- Basic operation
 
 	set_as_root_window is
 			-- Ensure `Current' is the root window of the project,
@@ -280,7 +280,7 @@ feature {GB_WINDOW_SELECTOR, GB_TITLED_WINDOW_OBJECT, GB_OBJECT_HANDLER} -- Basi
 				object_handler.root_window_object.update_as_root_window_changing
 			end
 			layout_item.set_pixmap (Icon_titled_window_main @ 1)
-			window_selector_item.set_pixmap (Icon_titled_window_main @ 1)
+			widget_selector_item.set_pixmap (Icon_titled_window_main @ 1)
 			object_handler.set_root_window (Current)
 		end
 		
@@ -289,7 +289,7 @@ feature {GB_WINDOW_SELECTOR, GB_TITLED_WINDOW_OBJECT, GB_OBJECT_HANDLER} -- Basi
 			-- window for the system.
 		do
 			layout_item.set_pixmap (pixmap_by_name (type.as_lower))
-			window_selector_item.set_pixmap (pixmap_by_name (type.as_lower))
+			widget_selector_item.set_pixmap (pixmap_by_name (type.as_lower))
 		end
 		
 feature {GB_OBJECT_HANDLER} -- Implementation

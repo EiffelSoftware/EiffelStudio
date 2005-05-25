@@ -83,7 +83,7 @@ feature -- Access
 			objects: ARRAYED_LIST [GB_OBJECT]
 			titled_window_object: GB_TITLED_WINDOW_OBJECT
 		do
-			objects ?= window_selector.objects
+			objects ?= widget_selector.objects
 			from
 				objects.start
 			until
@@ -109,7 +109,7 @@ feature -- Basic operations
 			confirmation_dialog: EV_CONFIRMATION_DIALOG
 		do
 			force_name_change_completion_on_all_editors
-			objects := Window_selector.objects
+			objects := widget_selector.objects
 			if not object_handler.objects_all_named (objects) then
 				create confirmation_dialog.make_with_text (Not_all_windows_named_string)
 				confirmation_dialog.set_icon_pixmap (Icon_build_window @ 1)

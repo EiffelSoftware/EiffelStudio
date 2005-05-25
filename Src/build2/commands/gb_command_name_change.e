@@ -76,7 +76,7 @@ feature -- Basic Operation
 				if not new_name.as_lower.is_equal (old_name.as_lower) then
 						-- If only the type (Upper or Lower) of the named has changed, then there is no
 						-- need to rename files.
-					window_selector.update_class_files_of_window (object, old_name, new_name)
+					widget_selector.update_class_files_of_window (object, old_name, new_name)
 				end
 					-- Now must recursively update all instances of `object' so that
 					-- the representations are up to date.
@@ -101,7 +101,7 @@ feature -- Basic Operation
 				if not new_name.as_lower.is_equal (old_name.as_lower) then
 						-- If only the type (Upper or Lower) of the named has changed, then there is no
 						-- need to rename files.
-					window_selector.update_class_files_of_window (object, new_name, old_name)
+					widget_selector.update_class_files_of_window (object, new_name, old_name)
 				end
 					-- Now must recursively update all instances of `object' so that
 					-- the representations are up to date.

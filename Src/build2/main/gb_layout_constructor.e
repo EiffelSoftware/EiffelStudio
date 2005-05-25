@@ -118,7 +118,7 @@ feature -- Basic operation
 			top_object: GB_OBJECT
 		do
 			top_object := object_handler.object_from_id (an_object.associated_top_level_object)
-			top_object.window_selector_item.enable_select
+			top_object.widget_selector_item.enable_select
 		ensure
 			root_item_set: root_item = object_handler.object_from_id (an_object.associated_top_level_object).layout_item
 		end
@@ -183,7 +183,7 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			has_layout_item: has (layout_item)
 		end
 		
-feature {GB_WINDOW_SELECTOR, GB_OBJECT} -- Implementation
+feature {GB_WIDGET_SELECTOR, GB_OBJECT} -- Implementation
 
 	set_root_window (a_window: GB_OBJECT) is
 			-- Ensure that `a_window' is displayed in `Current'.

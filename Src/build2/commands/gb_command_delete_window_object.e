@@ -70,10 +70,10 @@ feature {NONE} -- Initialization
 			object_not_void: an_object /= Void
 			object_is_top_level: an_object.is_top_level_object 
 		local
-			directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
+			directory_item: GB_WIDGET_SELECTOR_DIRECTORY_ITEM
 		do
 			History.cut_off_at_current_position
-			directory_item ?= an_object.window_selector_item.parent
+			directory_item ?= an_object.widget_selector_item.parent
 			if directory_item /= Void then
 					-- If held in a directory, store the directory name.
 				parent_directory := directory_item.path
@@ -96,12 +96,12 @@ feature -- Basic Operation
 			object.remove_client_representation_recursively
 				-- If the root window is being deleted, select the next window.
 			if Object_handler.root_window_object = object then
-				Window_selector.mark_next_window_as_root (1)
+				widget_selector.mark_next_window_as_root (1)
 			end
 			object_handler.update_for_delete (original_id)
 			object_handler.update_object_editors_for_delete (object, Void)
 			object.layout_item.unparent
-			object.window_selector_item.unparent
+			object.widget_selector_item.unparent
 			object_handler.mark_as_deleted (object)
 			
 				-- Store and delete all files associated with `object' if any.
@@ -121,7 +121,7 @@ feature -- Basic Operation
 			-- Calling `execute' followed by `undo' must restore
 			-- the system to its previous state.
 		local
-			directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
+			directory_item: GB_WIDGET_SELECTOR_DIRECTORY_ITEM
 			object: GB_OBJECT
 			titled_window_object: GB_TITLED_WINDOW_OBJECT
 		do
@@ -134,23 +134,23 @@ feature -- Basic Operation
 			object_handler.mark_existing (object)
 			if parent_directory /= Void then
 					-- Only try to retrieve the directory item if there was one.
-				directory_item := window_selector.directory_object_from_name (parent_directory)
+				directory_item := widget_selector.directory_object_from_name (parent_directory)
 			end
 			if directory_item = Void then
 				-- Now simply add as root.
-				window_selector.add_alphabetically (object.window_selector_item)
+				widget_selector.add_alphabetically (object.widget_selector_item)
 			else
 				-- Restore window into original directory.
-				directory_item.add_alphabetically (object.window_selector_item)
+				directory_item.add_alphabetically (object.widget_selector_item)
 				directory_item.expand
 			end
 			
 				-- If this is the only window contained, select it.
-			if window_selector.objects.count = 1 then
-				object.window_selector_item.enable_select
+			if widget_selector.objects.count = 1 then
+				object.widget_selector_item.enable_select
 				titled_window_object ?= object
 				if titled_window_object /= Void then
-					window_selector.change_root_window_to (titled_window_object)
+					widget_selector.change_root_window_to (titled_window_object)
 				end
 			end
 				-- Restore all files associated with `window_object' if any.

@@ -121,7 +121,7 @@ feature -- Access
 		require
 			parented: is_parented
 		do
-			Result := column_i.width - horizontal_indent
+			Result := (column_i.width - horizontal_indent).max (0)
 		ensure
 			Result_non_negative: Result >= 0
 		end

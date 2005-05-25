@@ -548,6 +548,7 @@ feature {NONE} -- Implementation
 		do
 			balls := 10
 			grid.enable_tree
+			grid.enable_multiple_item_selection
 			grid.set_item (1, 1, create {EV_GRID_LABEL_ITEM}.make_with_text ("Expand To See animation"))
 			create grid_editable_item.make_with_text ("10")
 			grid.set_item (2, 1, grid_editable_item)
@@ -573,6 +574,35 @@ feature {NONE} -- Implementation
 				end
 				counter := counter + 1
 			end
+			grid.set_item (1, 16, create {EV_GRID_LABEL_ITEM}.make_with_text ("Blocking"))
+			grid.item (1, 16).set_background_color (red)
+			grid.set_item (1, 15, create {EV_GRID_LABEL_ITEM}.make_with_text ("Blocking"))
+			grid.item (1, 15).set_background_color (red)
+			grid.set_item (1, 14, create {EV_GRID_LABEL_ITEM}.make_with_text ("Blocking"))
+			grid.item (1, 14).set_background_color (red)
+			grid.set_item (1, 13, create {EV_GRID_LABEL_ITEM}.make_with_text ("Blocking"))
+			grid.item (1, 13).set_background_color (red)
+			grid.set_item (1, 12, create {EV_GRID_LABEL_ITEM}.make_with_text ("Blocking"))
+			grid.item (1, 12).set_background_color (red)
+
+
+			grid.set_item (3, 4, create {EV_GRID_LABEL_ITEM}.make_with_text ("Blocking"))
+			grid.item (3, 4).set_background_color (red)
+			grid.set_item (3, 5, create {EV_GRID_LABEL_ITEM}.make_with_text ("Blocking"))
+			grid.item (3, 5).set_background_color (red)
+			grid.set_item (3, 6, create {EV_GRID_LABEL_ITEM}.make_with_text ("Blocking"))
+			grid.item (3, 6).set_background_color (red)
+			grid.set_item (3, 7, create {EV_GRID_LABEL_ITEM}.make_with_text ("Blocking"))
+			grid.item (3, 7).set_background_color (red)
+			grid.set_item (3, 8, create {EV_GRID_LABEL_ITEM}.make_with_text ("Blocking"))
+			grid.item (3, 8).set_background_color (red)
+
+
+			grid.set_item (5, 5, create {EV_GRID_LABEL_ITEM}.make_with_text ("Blocking"))
+			grid.item (5, 5).set_background_color (red)
+			grid.set_item (5, 6, create {EV_GRID_LABEL_ITEM}.make_with_text ("Blocking"))
+			grid.item (5, 6).set_background_color (red)
+
 			current_row.expand_actions.extend (agent start_ball_animation)
 			current_row.collapse_actions.extend (agent end_ball_animation)
 		end

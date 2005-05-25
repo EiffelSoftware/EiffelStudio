@@ -395,6 +395,9 @@ feature {NONE} -- Implementation
 			-- Called by `select_actions' of `no_events_button'.
 		do
 			event_list.disable_sensitive
+			event_list.wipe_out
+			disable_event_tracking
+			disable_item_event_tracking
 		end
 
 	enable_event_tracking_selected is
@@ -551,7 +554,6 @@ feature {NONE} -- Implementation
 			current_row: EV_GRID_ROW
 			current_column: EV_GRID_COLUMN
 		do
-			event_list.enable_sensitive
 				-- First connect to all items.
 			from
 				l_x := 1

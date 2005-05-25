@@ -617,9 +617,9 @@ feature {NONE} -- Implementation
 				Result.prune_all_leading ('%N')
 				Result.prune_all_leading ('%T')
 				Result.prune_all_trailing ('%T')
-				Result.replace_substring_all ("amp;", "")
+			--	Result.replace_substring_all ("amp;", "")
 			end
-			Result := rt_output_escaped (Result)
+			--Result := rt_output_escaped (Result)
 		end
 
 	in_pre_tag: BOOLEAN is

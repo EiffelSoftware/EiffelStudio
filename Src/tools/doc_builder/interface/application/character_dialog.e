@@ -105,12 +105,12 @@ feature {NONE} -- Implementation
 			Result.extend ("'", "&apos;")
 			Result.extend ("%"", "&quot;")
 			Result.extend ("&", "&amp;")
-			Result.extend ("@", "&amp;#064;")
-			Result.extend ("...", "&amp;#133;")
-			Result.extend ("TM", "&amp;#153;")
-			Result.extend ("copyright", "&amp;#169;")
-			Result.extend ("registered trademark", "&amp;#174;")			
-			Result.extend ("blank space", "&amp;nbsp;")
+			Result.extend ("@", "&#064;")
+			Result.extend ("...", "&#133;")
+			Result.extend ("TM", "&#153;")
+			Result.extend ("copyright", "&#169;")
+			Result.extend ("registered trademark", "&#174;")
+			Result.extend ("blank space", "&#160;")
 		end
 
 end -- class CHARACTER_DIALOG

@@ -640,6 +640,14 @@ feature -- Status setting
 	is_ensured_expandable: BOOLEAN
 			-- May current be expanded even through it is empty?
 
+	redraw is
+			-- Force all items within `Current' to be re-drawn when next idle.
+		require
+			parented: parent /= Void
+		do
+			parent_i.redraw_row (Current)
+		end
+
 feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 
 	set_item (i: INTEGER; a_item: EV_GRID_ITEM) is

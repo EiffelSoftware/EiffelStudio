@@ -197,10 +197,6 @@ feature -- Access
 	pixmap: EV_PIXMAP
 		-- Pixmap display on column header to left of `title'.
 
-	border_style_flags: INTEGER
-		-- `Result' contains all border styles applied to `Current'.
-		-- See EV_GRID_BORDER_STYLES for all permitted flags.
-
 feature -- Status setting
 
 	hide is
@@ -429,6 +425,14 @@ feature -- Element change
 			pixmap := Void
 		ensure
 			pixmap_removed: pixmap = Void
+		end
+		
+	redraw is
+			-- Force all items within `Current' to be re-drawn when next idle.
+		require
+			parented: parent /= Void
+		do
+			parent_i.redraw_column (Current)
 		end
 
 feature {EV_GRID_I} -- Implementation

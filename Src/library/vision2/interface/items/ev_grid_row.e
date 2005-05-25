@@ -342,6 +342,15 @@ feature -- Status setting
 		ensure
 			foreground_color_set: foreground_color = a_color
 		end
+		
+	redraw is
+			-- Force all items within `Current' to be re-drawn when next idle.
+		require
+			not_destroyed: not is_destroyed
+			parented: parent /= Void
+		do
+			implementation.redraw
+		end
 
 feature -- Element change
 

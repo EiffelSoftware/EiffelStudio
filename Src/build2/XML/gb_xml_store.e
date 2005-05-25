@@ -334,11 +334,11 @@ feature {GB_CODE_GENERATOR} -- Implementation
 				constants_list.forth
 			end
 
-			store_windows (window_selector, application_element, generation_settings)
+			store_windows (widget_selector, application_element, generation_settings)
 				-- Store all directories and windows.
 		end
 		
-	store_windows (children_holder: GB_WINDOW_SELECTOR_COMMON_ITEM; xml_element: XM_ELEMENT; generation_settings: GB_GENERATION_SETTINGS) is
+	store_windows (children_holder: GB_WIDGET_SELECTOR_COMMON_ITEM; xml_element: XM_ELEMENT; generation_settings: GB_GENERATION_SETTINGS) is
 			-- Store all windows and directoris contained within `children_list' into `xml_settings', using generation
 			-- settings `generation_settings'.
 		require
@@ -346,10 +346,10 @@ feature {GB_CODE_GENERATOR} -- Implementation
 			xml_element_not_void: xml_element /= Void
 			generation_settings_not_void: generation_settings /= Void
 		local
-			window_selector_item: GB_WINDOW_SELECTOR_ITEM
-			window_selector_directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
+			widget_selector_item: GB_WIDGET_SELECTOR_ITEM
+			widget_selector_directory_item: GB_WIDGET_SELECTOR_DIRECTORY_ITEM
 			new_element, new_type_element: XM_ELEMENT
-			children_list: ARRAYED_LIST [GB_WINDOW_SELECTOR_COMMON_ITEM]
+			children_list: ARRAYED_LIST [GB_WIDGET_SELECTOR_COMMON_ITEM]
 		do
 			children_list := children_holder.children
 			from
@@ -357,20 +357,20 @@ feature {GB_CODE_GENERATOR} -- Implementation
 			until
 				children_list.off
 			loop
-				window_selector_item ?= children_list.item
-				 if window_selector_item /= Void then
+				widget_selector_item ?= children_list.item
+				 if widget_selector_item /= Void then
 				 		-- We ignore directories, although we should add them soon.
-					new_element := create_widget_instance (xml_element, window_selector_item.object.type)
+					new_element := create_widget_instance (xml_element, widget_selector_item.object.type)
 					xml_element.force_last (new_element)
-					add_new_object_to_output (window_selector_item.object, new_element, generation_settings)		
+					add_new_object_to_output (widget_selector_item.object, new_element, generation_settings)		
 				else
-					window_selector_directory_item ?= children_list.item
-					if window_selector_directory_item /= Void then
+					widget_selector_directory_item ?= children_list.item
+					if widget_selector_directory_item /= Void then
 						new_element := create_widget_instance (xml_element, directory_string)	
 						xml_element.force_last (new_element)
 						new_type_element := new_child_element (new_element, Internal_properties_string, "")
 						new_element.force_last (new_type_element)
-						window_selector_directory_item.generate_xml (new_type_element)
+						widget_selector_directory_item.generate_xml (new_type_element)
 						store_windows (children_list.item, new_element, generation_settings)
 					else
 						check

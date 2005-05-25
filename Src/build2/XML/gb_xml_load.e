@@ -116,8 +116,8 @@ feature -- Basic operation
 				-- Now mark one window as the main window of the system if it is
 				-- `Void' which will occur when you load an old project that did not
 				-- have a root window.
-			if Object_handler.root_window_object = Void and not window_selector.objects.is_empty then
-				window_selector.mark_first_window_as_root
+			if Object_handler.root_window_object = Void and not widget_selector.objects.is_empty then
+				widget_selector.mark_first_window_as_root
 				System_status.disable_project_modified
 			end
 
@@ -125,7 +125,7 @@ feature -- Basic operation
 				-- in the system. It is possible to save a project after having
 				-- deleted all windows.
 			if object_handler.root_window_object /= Void then
-				Window_selector.select_main_window
+				widget_selector.select_main_window
 			end
 			
 				-- Flag to the system that a load is no longer underway.
@@ -135,7 +135,7 @@ feature -- Basic operation
 
 feature {GB_OBJECT_HANDLER} -- Implementation
 		
-	build_window (window: XM_ELEMENT; parent_common_item: GB_WINDOW_SELECTOR_COMMON_ITEM) is
+	build_window (window: XM_ELEMENT; parent_common_item: GB_WIDGET_SELECTOR_COMMON_ITEM) is
 			-- Build a new window representing `window', represented in
 			-- directory representation `parent_list'.
 		require
@@ -145,9 +145,9 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			internal_build_window (window, parent_common_item, Void)
 		end
 
-	internal_build_window (window: XM_ELEMENT; parent_common_item: GB_WINDOW_SELECTOR_COMMON_ITEM; object: GB_OBJECT) is
+	internal_build_window (window: XM_ELEMENT; parent_common_item: GB_WIDGET_SELECTOR_COMMON_ITEM; object: GB_OBJECT) is
 			-- Build a window representing `window', represented in
-			-- `window' to directory `parent_common_item' or `window_selector' if `Void'.
+			-- `window' to directory `parent_common_item' or `widget_selector' if `Void'.
 			-- If `object' is Void we must create it.
 		require
 			window_not_void: window /= Void
@@ -185,8 +185,8 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 						if current_name.is_equal (Internal_properties_string) then
 							an_object.modify_from_xml (current_element)
 							object_handler.add_object_to_objects (an_object)
-							an_object.window_selector_item.unparent
-							parent_common_item.add_alphabetically (an_object.window_selector_item)
+							an_object.widget_selector_item.unparent
+							parent_common_item.add_alphabetically (an_object.widget_selector_item)
 						elseif current_name.is_equal (Events_string) then
 								-- We now add the event information from `current_element'
 								-- into `window_object'.
@@ -365,15 +365,15 @@ feature {NONE} -- Implementation
 			application_element: XM_ELEMENT
 		do
 			application_element := pipe_callback.document.root_element
-			build_window_structure (application_element, window_selector)
+			build_window_structure (application_element, widget_selector)
 				-- Building the project causes the project to be marked as
 				-- modified. We do not want this, as it should only
 				-- be marked as so when the user does something.
 			system_status.disable_project_modified
-				-- Update all names in `window_selector' to ensure that
+				-- Update all names in `widget_selector' to ensure that
 				-- they are current after the load.
 				--| FIXME, why is this required?
-			Window_selector.update_displayed_names
+			widget_selector.update_displayed_names
 				-- Now expand the layout selector item, so that the window is displayed as
 				-- it was when last edited.
 			Layout_constructor.update_expanded_state_from_root_object		
@@ -381,9 +381,9 @@ feature {NONE} -- Implementation
 			constants.build_deferred_elements
 		end
 		
-	build_window_structure (an_element: XM_ELEMENT; parent_common_item: GB_WINDOW_SELECTOR_COMMON_ITEM) is
+	build_window_structure (an_element: XM_ELEMENT; parent_common_item: GB_WIDGET_SELECTOR_COMMON_ITEM) is
 			-- Build window represented by `an_element into `parent_common_item'.
-			-- If `parent_common_item' is `Void', build directly into `window_selector'.
+			-- If `parent_common_item' is `Void', build directly into `widget_selector'.
 		require
 			an_element_not_void: an_element /= Void
 			parent_common_item_not_void: parent_common_item /= Void
@@ -391,7 +391,7 @@ feature {NONE} -- Implementation
 			current_element, constant_item_element: XM_ELEMENT
 			current_name, current_type: STRING
 			window_element: XM_ELEMENT
-			new_directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
+			new_directory_item: GB_WIDGET_SELECTOR_DIRECTORY_ITEM
 		do
 			from
 				an_element.start

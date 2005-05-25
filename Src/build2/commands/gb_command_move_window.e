@@ -38,18 +38,18 @@ create
 	
 feature {NONE} -- Initialization
 
-	make (object: GB_OBJECT; a_new_directory: GB_WINDOW_SELECTOR_DIRECTORY_ITEM) is
+	make (object: GB_OBJECT; a_new_directory: GB_WIDGET_SELECTOR_DIRECTORY_ITEM) is
 			-- Create `Current' with `window' to be moved from its current directory, to `new_directory'.
 			-- If `a_new_directory' is Void, then move to root of project.
 		require
 			object_not_void: object /= Void
 			is_top_level_object: object.is_top_level_object
 		local
-			dir: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
+			dir: GB_WIDGET_SELECTOR_DIRECTORY_ITEM
 		do
 			history.cut_off_at_current_position
 			original_id := object.id
-			dir ?= object.window_selector_item.parent
+			dir ?= object.widget_selector_item.parent
 			if dir /= Void then
 				original_directory := dir.path
 			end
@@ -64,8 +64,8 @@ feature -- Basic Operation
 			-- Execute `Current'.
 		local
 			object: GB_OBJECT
-			original_directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
-			new_directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
+			original_directory_item: GB_WIDGET_SELECTOR_DIRECTORY_ITEM
+			new_directory_item: GB_WIDGET_SELECTOR_DIRECTORY_ITEM
 		do
 			object ?= Object_handler.deep_object_from_id (original_id)
 			check
@@ -75,20 +75,20 @@ feature -- Basic Operation
 
 				-- Retrieve the directories via their names.
 			if original_directory /= Void then
-				original_directory_item := window_selector.directory_object_from_name (original_directory)
+				original_directory_item := widget_selector.directory_object_from_name (original_directory)
 			end
 			if new_directory /= Void then
-				new_directory_item := window_selector.directory_object_from_name (new_directory)
+				new_directory_item := widget_selector.directory_object_from_name (new_directory)
 			end
 			
-			object.window_selector_item.unparent
+			object.widget_selector_item.unparent
 			if new_directory_item /= Void then
-				new_directory_item.add_alphabetically (object.window_selector_item)
+				new_directory_item.add_alphabetically (object.widget_selector_item)
 			else
-				window_selector.add_alphabetically (object.window_selector_item)
+				widget_selector.add_alphabetically (object.widget_selector_item)
 			end
 			
-			window_selector.update_class_files_location (object.window_selector_item, original_directory_item, new_directory_item)
+			widget_selector.update_class_files_location (object.widget_selector_item, original_directory_item, new_directory_item)
 				-- Record `Current' in the history list.
 			if not history.command_list.has (Current) then
 				history.add_command (Current)
@@ -102,8 +102,8 @@ feature -- Basic Operation
 			-- the system to its previous state.
 		local
 			object: GB_OBJECT
-			original_directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
-			new_directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
+			original_directory_item: GB_WIDGET_SELECTOR_DIRECTORY_ITEM
+			new_directory_item: GB_WIDGET_SELECTOR_DIRECTORY_ITEM
 		do
 			object ?= Object_handler.deep_object_from_id (original_id)
 			check
@@ -113,19 +113,19 @@ feature -- Basic Operation
 			
 				-- Retrieve the directories via their names.
 			if original_directory /= Void then
-				original_directory_item := window_selector.directory_object_from_name (original_directory)
+				original_directory_item := widget_selector.directory_object_from_name (original_directory)
 			end
 			if new_directory /= Void then
-				new_directory_item := window_selector.directory_object_from_name (new_directory)
+				new_directory_item := widget_selector.directory_object_from_name (new_directory)
 			end
 			
-			object.window_selector_item.unparent
+			object.widget_selector_item.unparent
 			if original_directory_item /= Void then
-				original_directory_item.add_alphabetically (object.window_selector_item)
+				original_directory_item.add_alphabetically (object.widget_selector_item)
 			else
-				window_selector.add_alphabetically (object.window_selector_item)
+				widget_selector.add_alphabetically (object.widget_selector_item)
 			end
-			window_selector.update_class_files_location (object.window_selector_item, new_directory_item, original_directory_item)
+			widget_selector.update_class_files_location (object.widget_selector_item, new_directory_item, original_directory_item)
 		end
 		
 	textual_representation: STRING is

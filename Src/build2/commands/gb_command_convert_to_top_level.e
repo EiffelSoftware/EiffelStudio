@@ -46,7 +46,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make (child: GB_OBJECT; parent_directory: GB_WINDOW_SELECTOR_COMMON_ITEM; new_name: STRING) is
+	make (child: GB_OBJECT; parent_directory: GB_WIDGET_SELECTOR_COMMON_ITEM; new_name: STRING) is
 			-- Create `Current' with `child' to be converted to a top level object named `new_name'
 			-- within `parent_directory'.
 		require
@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 			new_name_not_void: new_name /= Void
 			child_is_not_representation: not child.is_instance_of_top_level_object
 		local
-			l_parent_directory: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
+			l_parent_directory: GB_WIDGET_SELECTOR_DIRECTORY_ITEM
 		do
 			name := new_name
 			child_id := child.id
@@ -73,11 +73,11 @@ feature -- Basic Operation
 			-- Execute `Current'.
 		local
 			all_children_old, all_children_new: ARRAYED_LIST [GB_OBJECT]
-			window_selector_item: GB_WINDOW_SELECTOR_ITEM
+			widget_selector_item: GB_WIDGET_SELECTOR_ITEM
 			display_win: GB_DISPLAY_WINDOW
 			builder_win: GB_BUILDER_WINDOW
 			all_children: ARRAYED_LIST [GB_OBJECT]
-			parent_directory_item: GB_WINDOW_SELECTOR_COMMON_ITEM
+			parent_directory_item: GB_WIDGET_SELECTOR_COMMON_ITEM
 		do
 			child_object := Object_handler.deep_object_from_id (child_id)
 			child_object.remove_client_representation_recursively
@@ -123,7 +123,7 @@ feature -- Basic Operation
 				end
 			end
 			
-			create window_selector_item.make_with_object (new_object)
+			create widget_selector_item.make_with_object (new_object)
 			create display_win
 			insert_into_window (new_object.object, display_win)
 			create builder_win
@@ -171,14 +171,14 @@ feature -- Basic Operation
 
 			new_object.set_name (name)
 			if parent_directory_path.is_empty then
-				parent_directory_item := window_selector
+				parent_directory_item := widget_selector
 			else
-				parent_directory_item := window_selector.directory_object_from_name (parent_directory_path)
+				parent_directory_item := widget_selector.directory_object_from_name (parent_directory_path)
 			end
 			check
 				parent_directory_item_not_void: parent_directory_item /= Void
 			end
-			parent_directory_item.add_alphabetically (new_object.window_selector_item)
+			parent_directory_item.add_alphabetically (new_object.widget_selector_item)
 			parent_directory_item.expand
 			
 			rebuild_associated_editors (child_object.id)
@@ -249,8 +249,8 @@ feature -- Basic Operation
 				end
 			end
 				
-					-- Remove the window selector item from the window selector.
-				new_object.window_selector_item.unparent
+					-- Remove the widget selector item from the widget selector.
+				new_object.widget_selector_item.unparent
 				
 					-- Note that we do not mark `new_object' as deleted as it is no longer used after this.
 					-- If we undo and re-do we must create the new object representation each time. This is
@@ -328,7 +328,7 @@ feature {NONE} -- Implementation
 		-- this step should be no longer required.
 		
 	parent_directory_path: ARRAYED_LIST [STRING]
-		-- Parent directory path containing new conversion. If empty, the parent is the `window_selector'.
+		-- Parent directory path containing new conversion. If empty, the parent is the `widget_selector'.
 		
 	name: STRING
 		-- Name used for the new object that is created.

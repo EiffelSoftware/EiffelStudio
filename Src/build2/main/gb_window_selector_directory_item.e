@@ -5,11 +5,11 @@ indexing
 	revision: "$Revision$"
 
 class
-	GB_WINDOW_SELECTOR_DIRECTORY_ITEM
+	GB_WIDGET_SELECTOR_DIRECTORY_ITEM
 	
 inherit
 
-	GB_WINDOW_SELECTOR_COMMON_ITEM
+	GB_WIDGET_SELECTOR_COMMON_ITEM
 
 	GB_XML_UTILITIES
 		export
@@ -97,7 +97,7 @@ feature {GB_XML_LOAD, GB_XML_IMPORT} -- Implementation
 			end
 		end
 		
-feature {GB_WINDOW_SELECTOR, GB_WINDOW_SELECTOR_TOOL_BAR} -- Implementation
+feature {GB_WIDGET_SELECTOR, GB_WIDGET_SELECTOR_TOOL_BAR} -- Implementation
 
 	is_grayed_out: BOOLEAN
 		-- Is current represent with a gray icon?
@@ -131,7 +131,7 @@ feature -- Implementation
 		require
 			object_pebble_not_void: object_pebble /= Void
 		do
-			window_selector.handle_object_drop (object_pebble, Current)
+			widget_selector.handle_object_drop (object_pebble, Current)
 		end
 
 	veto_object_drop (object_stone: GB_OBJECT_STONE): BOOLEAN is
@@ -142,7 +142,7 @@ feature -- Implementation
 			Result := True
 			if Result then
 					-- Only clear the status bar if a drop is permitted.
-					-- Without this line, holding an object above a window selector item that did
+					-- Without this line, holding an object above a widget selector item that did
 					-- not accept the object and then moving over `Current', did not
 					-- clear the status bar and the old message was displayed even though a drop was now permitted.
 				clear_status_bar
@@ -153,7 +153,7 @@ feature -- Implementation
 			-- `Result' is list of directories `Current' is contained in, from the
 			-- top level down.
 		local
-			current_node: GB_WINDOW_SELECTOR_COMMON_ITEM
+			current_node: GB_WIDGET_SELECTOR_COMMON_ITEM
 			temp_result: ARRAYED_LIST [STRING]
 		do
 			create temp_result.make (4)
@@ -179,19 +179,19 @@ feature -- Implementation
 			end
 		ensure
 			Result_not_void: Result /= Void
-			is_empty_implies_parent_is_window_selector: Result.is_empty and parent /= Void implies parent = window_selector
+			is_empty_implies_parent_is_widget_selector: Result.is_empty and parent /= Void implies parent = widget_selector
 		end
 		
 	add_new_directory_via_pick_and_drop (directory_pebble: GB_NEW_DIRECTORY_PEBBLE) is
-			-- Add a new directory within `Current' to `window_selector'.
+			-- Add a new directory within `Current' to `widget_selector'.
 			-- `directory_pebble' is used to type the agent for pick and drop purposes.
 		require
 			directory_pebble_not_void: directory_pebble /= Void
 		do
-			window_selector.add_new_directory (Current)
+			widget_selector.add_new_directory (Current)
 		end
 		
 invariant
 	contents_alphabetical: tree_node_contents_alphabetical (tree_item)
 
-end -- class GB_WINDOW_SELECTOR_DIRECTORY_ITEM
+end -- class GB_WIDGET_SELECTOR_DIRECTORY_ITEM

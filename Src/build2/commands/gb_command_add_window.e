@@ -63,7 +63,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make (window: GB_OBJECT; a_new_directory: GB_WINDOW_SELECTOR_DIRECTORY_ITEM) is
+	make (window: GB_OBJECT; a_new_directory: GB_WIDGET_SELECTOR_DIRECTORY_ITEM) is
 			-- Create `Current' with `child' to be removed from `parent' at
 			-- position `position'.
 		require
@@ -83,8 +83,8 @@ feature -- Basic Operation
 		local
 			an_object: GB_OBJECT
 			window_object: GB_TITLED_WINDOW_OBJECT
-			selector_item: GB_WINDOW_SELECTOR_ITEM
-			directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
+			selector_item: GB_WIDGET_SELECTOR_ITEM
+			directory_item: GB_WIDGET_SELECTOR_DIRECTORY_ITEM
 		do
 			an_object := Object_handler.deep_object_from_id (original_id)
 			check
@@ -92,20 +92,20 @@ feature -- Basic Operation
 			end
 			create selector_item.make_with_object (an_object)
 			if parent_directory = Void then
-				window_selector.add_alphabetically (an_object.window_selector_item)
+				widget_selector.add_alphabetically (an_object.widget_selector_item)
 			else
-				directory_item := window_selector.directory_object_from_name (parent_directory)
-				directory_item.add_alphabetically (an_object.window_selector_item)
+				directory_item := widget_selector.directory_object_from_name (parent_directory)
+				directory_item.add_alphabetically (an_object.widget_selector_item)
 				directory_item.expand
 			end
 
 				-- If this is the only window contained, select it.
-			if window_selector.objects.count = 1 then
-				an_object.window_selector_item.enable_select
+			if widget_selector.objects.count = 1 then
+				an_object.widget_selector_item.enable_select
 				window_object ?= an_object
 				if window_object /= Void then
 						-- Only set window object's as root windows.
-					window_selector.change_root_window_to (window_object)	
+					widget_selector.change_root_window_to (window_object)	
 				end
 			end
 				-- Now mark object as non deleted, only if it is deleted.
@@ -142,13 +142,13 @@ feature -- Basic Operation
 			if window_object /= Void then
 					-- If the root window is being deleted, select the next window.
 				if Object_handler.root_window_object = window_object then
-					Window_selector.mark_next_window_as_root (1)
+					widget_selector.mark_next_window_as_root (1)
 				end
 			end
 			object_handler.update_for_delete (original_id)
 			object_handler.update_object_editors_for_delete (an_object, Void)
 			an_object.layout_item.unparent
-			an_object.window_selector_item.unparent
+			an_object.widget_selector_item.unparent
 			object_handler.mark_as_deleted (an_object)
 			
 				-- Store and delete all files associated with `window_object' if any.

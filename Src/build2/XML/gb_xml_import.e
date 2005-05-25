@@ -100,14 +100,14 @@ feature -- Basic operation
 			file_name_not_void: file_name /= Void
 		local
 			a_file_name: FILE_NAME
-			initial_selection: GB_WINDOW_SELECTOR_ITEM
+			initial_selection: GB_WIDGET_SELECTOR_ITEM
 			global_status: GB_GLOBAL_STATUS
 		do
 			create import_dialog
 			system_status.enable_loading_project
 			create global_status
 			global_status.block
-			initial_selection := Window_selector.selected_window
+			initial_selection := widget_selector.selected_window
 				-- Disable item in `main_window' so that a user may not modify anything while
 				-- an import is taking place.
 			Main_window.smart_disable_sensitive;
@@ -151,11 +151,11 @@ feature -- Basic operation
 
 feature {GB_OBJECT_HANDLER} -- Implementation
 		
-	build_window (window: XM_ELEMENT; parent_common_item: GB_WINDOW_SELECTOR_COMMON_ITEM) is
+	build_window (window: XM_ELEMENT; parent_common_item: GB_WIDGET_SELECTOR_COMMON_ITEM) is
 			-- Build a new window representing `window', represented in
 			-- directory `directory_name'. if `directory_name' is
 			-- empty, the window will be built into the root of the
-			-- window selector.
+			-- widget selector.
 		require
 			window_not_void: window /= Void
 			parent_common_item_not_void: parent_common_item /= Void
@@ -163,11 +163,11 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			internal_build_window (window, parent_common_item)
 		end
 
-	internal_build_window (window: XM_ELEMENT; parent_common_item: GB_WINDOW_SELECTOR_COMMON_ITEM) is
+	internal_build_window (window: XM_ELEMENT; parent_common_item: GB_WIDGET_SELECTOR_COMMON_ITEM) is
 			-- Build a window representing `window', represented in
 			-- directory `directory_name'. if `directory_name' is
 			-- empty, the window will be built into the root of the
-			-- window selector.
+			-- widget selector.
 		require
 			window_not_void: window /= Void
 			parent_common_item_not_void: parent_common_item /= Void
@@ -209,8 +209,8 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 							end
 							an_object.modify_from_xml (current_element)
 							object_handler.add_object_to_objects (an_object)
-							an_object.window_selector_item.unparent
-							parent_common_item.add_alphabetically (an_object.window_selector_item)
+							an_object.widget_selector_item.unparent
+							parent_common_item.add_alphabetically (an_object.widget_selector_item)
 							parent_common_item.expand
 						elseif current_name.is_equal (Events_string) then
 								-- We now add the event information from `current_element'
@@ -622,18 +622,18 @@ feature {NONE} -- Implementation
 				-- At this point, all prepass stages of the XML have been completed, and the XML
 				-- representation of the imported project has been updated to avoid any clashes.
 			application_element := pipe_callback.document.root_element
-			build_window_structure (application_element, window_selector)
+			build_window_structure (application_element, widget_selector)
 
-				-- Update all names in `window_selector' to ensure that
+				-- Update all names in `widget_selector' to ensure that
 				-- they are current after the load.
 				--| FIXME why is this needed?
-			Window_selector.update_displayed_names
+			widget_selector.update_displayed_names
 			
 				-- Build any constants that were deferred.
 			constants.build_deferred_elements
 		end
 		
-	build_window_structure (an_element: XM_ELEMENT; parent_common_item: GB_WINDOW_SELECTOR_COMMON_ITEM) is
+	build_window_structure (an_element: XM_ELEMENT; parent_common_item: GB_WIDGET_SELECTOR_COMMON_ITEM) is
 			-- Create the directory and window structure represented by `an_element' into `parent_node_list'.
 		require
 			an_element_not_void: an_element /= Void
@@ -642,7 +642,7 @@ feature {NONE} -- Implementation
 			current_element, constant_item_element: XM_ELEMENT
 			current_name, current_type: STRING
 			window_element: XM_ELEMENT
-			temp_directory, directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
+			temp_directory, directory_item: GB_WIDGET_SELECTOR_DIRECTORY_ITEM
 			tree_node_path: ARRAYED_LIST [STRING]
 			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			element_info: ELEMENT_INFORMATION
@@ -682,7 +682,7 @@ feature {NONE} -- Implementation
 											-- We now retrieve an existing directory item matching the path of the
 											-- new directory. This ensures that if we are importing a project that has
 											-- the same directory structure, these directories are used.
-										directory_item := window_selector.directory_object_from_name (tree_node_path)
+										directory_item := widget_selector.directory_object_from_name (tree_node_path)
 										if directory_item = Void then
 											create directory_item.make_with_name ("")
 											directory_item.modify_from_xml (window_element)

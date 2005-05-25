@@ -127,7 +127,7 @@ feature -- Access
 			-- Is `Current' a top level object in the structure?
 			-- i.e. is it represented by an individual class?
 		do
-			Result := window_selector_item /= Void
+			Result := widget_selector_item /= Void
 		end
 		
 	is_instance_of_top_level_object: BOOLEAN is
@@ -145,11 +145,11 @@ feature -- Access
 		-- `update_object_as_instance_representation' which then sets `associated_top_level_object' to the same value.
 		-- This is only used temporarily while loading/importing projects.
 		
-	window_selector_item: GB_WINDOW_SELECTOR_ITEM
-		-- Representation of `Current' in `window_selector'.
+	widget_selector_item: GB_WIDGET_SELECTOR_ITEM
+		-- Representation of `Current' in `widget_selector'.
 		
 	all_client_representations: ARRAYED_LIST [EV_TREE_ITEM]
-		-- All representations of `Current' in the client hierarchy of the `window_selector'.
+		-- All representations of `Current' in the client hierarchy of the `widget_selector'.
 
 	object: EV_ANY
 		-- The vision2 object that `Current' represents.
@@ -633,13 +633,13 @@ feature -- Access
 		local
 			a_display_object: GB_DISPLAY_OBJECT
 		do
-				-- Note that both `layout_item' or `window_selector_item' may be reparented to
+				-- Note that both `layout_item' or `widget_selector_item' may be reparented to
 				-- another object, so if this is the case, do nothing.
 			if layout_item.object = Current then
 				layout_item.destroy
 			end
-			if window_selector_item /= Void and then window_selector_item.object = Current then
-				window_selector_item.destroy
+			if widget_selector_item /= Void and then widget_selector_item.object = Current then
+				widget_selector_item.destroy
 			end
 			
 			children.wipe_out
@@ -812,7 +812,7 @@ feature {GB_XML_STORE, GB_XML_LOAD, GB_XML_OBJECT_BUILDER, GB_XML_IMPORT}
 			end
 		end
 
-feature {GB_LAYOUT_CONSTRUCTOR_ITEM, GB_OBJECT_HANDLER, GB_WINDOW_SELECTOR, GB_COMMAND} -- Status setting
+feature {GB_LAYOUT_CONSTRUCTOR_ITEM, GB_OBJECT_HANDLER, GB_WIDGET_SELECTOR, GB_COMMAND} -- Status setting
 
 	set_layout_item (a_layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM) is
 			-- Assign `a_layout_item' to `layout_item'.
@@ -872,7 +872,7 @@ feature {GB_OBJECT_HANDLER, GB_ID_COMPRESSOR} -- Status setting
 			id_set: id >= 0
 		end
 
-feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_BUILDER_WINDOW, GB_WINDOW_SELECTOR_ITEM, GB_PASTE_OBJECT_COMMAND} -- Element change
+feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_BUILDER_WINDOW, GB_WIDGET_SELECTOR_ITEM, GB_PASTE_OBJECT_COMMAND} -- Element change
 
 	create_object_from_type is
 			-- Create an object of type `type' and assign
@@ -1205,7 +1205,7 @@ feature {GB_ID_COMPRESSOR, GB_OBJECT}
 			-- All instance referers converted also. Not easy to write as a postcondition.
 		end
 
-feature {GB_COMMAND, GB_OBJECT_HANDLER, GB_OBJECT, GB_WINDOW_SELECTOR} -- Basic operation
+feature {GB_COMMAND, GB_OBJECT_HANDLER, GB_OBJECT, GB_WIDGET_SELECTOR} -- Basic operation
 
 	set_name (new_name: STRING) is
 			-- Assign `new_name' to `name'.
@@ -1237,8 +1237,8 @@ feature {GB_COMMAND, GB_OBJECT_HANDLER, GB_OBJECT, GB_WINDOW_SELECTOR} -- Basic 
 				layout_item.set_text (name_and_type)
 			end
 			if is_top_level_object then
-					-- Update the window selector item name.
-				window_selector_item.update_to_reflect_name_change
+					-- Update the widget selector item name.
+				widget_selector_item.update_to_reflect_name_change
 			end
 			from
 				all_client_representations.start
@@ -1428,7 +1428,7 @@ feature {GB_OBJECT_EDITOR, GB_GENERAL_UTILITIES} -- Implementation
 			update_representations_for_name_or_type_change
 		end
 		
-feature {GB_WINDOW_SELECTOR_ITEM, GB_GENERAL_UTILITIES} -- Implementation
+feature {GB_WIDGET_SELECTOR_ITEM, GB_GENERAL_UTILITIES} -- Implementation
 
 	output_name: STRING is
 			-- Representation of `name' of `Current'
@@ -1472,7 +1472,7 @@ feature {GB_LAYOUT_CONSTRUCTOR, GB_OBJECT_HANDLER, GB_OBJECT} -- Implementation
 			tree_item.drop_actions.set_veto_pebble_function (agent can_add_child (?))
 		end
 		
-feature {GB_BUILDER_WINDOW, GB_WINDOW_SELECTOR_ITEM} -- Implementation
+feature {GB_BUILDER_WINDOW, GB_WIDGET_SELECTOR_ITEM} -- Implementation
 
 	handle_object_drop (object_pebble: GB_OBJECT_STONE) is
 			--
@@ -1601,24 +1601,24 @@ feature {GB_LAYOUT_CONSTRUCTOR_ITEM} -- Implementation
 			not_expanded: not is_expanded
 		end
 		
-feature {GB_WINDOW_SELECTOR_ITEM, GB_OBJECT_HANDLER} -- Implementation
+feature {GB_WIDGET_SELECTOR_ITEM, GB_OBJECT_HANDLER} -- Implementation
 		
-	set_window_selector_item (a_window_selector_item: GB_WINDOW_SELECTOR_ITEM) is
-			-- Assign `a_window_selector_item' to `window_selector_item'.
+	set_widget_selector_item (a_widget_selector_item: GB_WIDGET_SELECTOR_ITEM) is
+			-- Assign `a_widget_selector_item' to `widget_selector_item'.
 		require
-			item_not_void: a_window_selector_item /= Void
+			item_not_void: a_widget_selector_item /= Void
 		do
-			window_selector_item := a_window_selector_item
-			window_selector_item.set_object (Current)
+			widget_selector_item := a_widget_selector_item
+			widget_selector_item.set_object (Current)
 		ensure
-			item_set: window_selector_item = a_window_selector_item
-			window_selector_item_object_set: window_selector_item.object = Current
+			item_set: widget_selector_item = a_widget_selector_item
+			widget_selector_item_object_set: widget_selector_item.object = Current
 		end
 		
-feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_COMMAND, GB_WINDOW_SELECTOR} -- Implementation
+feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_COMMAND, GB_WIDGET_SELECTOR} -- Implementation
 
 	add_client_representation (client_object: GB_OBJECT) is
-			-- Add a client representation for `client_object' to the `window_selector_item'
+			-- Add a client representation for `client_object' to the `widget_selector_item'
 			-- which it is a representation.
 		require
 			is_top_level_object: is_top_level_object
@@ -1632,12 +1632,12 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_COMMAND, GB_WINDOW_SELECTOR} -- Implem
 			parent_item: EV_TREE_ITEM
 			top_object: GB_OBJECT
 		do
-			if window_selector_item.tree_item.is_empty then
+			if widget_selector_item.tree_item.is_empty then
 				create client_item.make_with_text ("Clients")
 				client_item.set_pixmap ((create {GB_SHARED_PIXMAPS}).pixmap_by_name ("icon_format_clients_color"))
-				window_selector_item.tree_item.extend (client_item)
+				widget_selector_item.tree_item.extend (client_item)
 			else
-				client_item ?= window_selector_item.tree_item.first
+				client_item ?= widget_selector_item.tree_item.first
 			end
 			top_object := client_object.top_level_parent_object
 			parent_item ?= client_item.retrieve_item_by_data (top_object.id, True)
@@ -1683,7 +1683,7 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_COMMAND, GB_WINDOW_SELECTOR} -- Implem
 			if not client_object.layout_item.is_selectable then
 				client_top_level_parent := client_object.top_level_parent_object
 				layout_constructor.set_root_window (client_top_level_parent)				
-				window_selector.update_display_and_builder_windows (client_top_level_parent)
+				widget_selector.update_display_and_builder_windows (client_top_level_parent)
 			end
 			client_object.layout_item.enable_select
 		end
@@ -1737,7 +1737,7 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_COMMAND, GB_WINDOW_SELECTOR} -- Implem
 		end
 		
 	remove_client_representation (client_object: GB_OBJECT) is
-			-- Remove a client representation for `client_object' from the `window_selector_item'
+			-- Remove a client representation for `client_object' from the `widget_selector_item'
 			-- which it is a representation.
 		require
 			is_top_level_object: is_top_level_object
@@ -1749,7 +1749,7 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_COMMAND, GB_WINDOW_SELECTOR} -- Implem
 			parent_item: EV_TREE_ITEM
 			top_object: GB_OBJECT
 		do
-			client_item ?= window_selector_item.tree_item.first
+			client_item ?= widget_selector_item.tree_item.first
 			if client_item /= Void then
 				top_object := client_object.top_level_parent_object
 				parent_item ?= client_item.retrieve_item_by_data (top_object.id, True)
@@ -1767,7 +1767,7 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_COMMAND, GB_WINDOW_SELECTOR} -- Implem
 						end
 						top_object.all_client_representations.prune_all (parent_item)
 						if client_item.is_empty then
-							window_selector_item.tree_item.prune_all (client_item)
+							widget_selector_item.tree_item.prune_all (client_item)
 						end
 					end
 				end
@@ -1974,7 +1974,7 @@ feature {GB_OBJECT_HANDLER, GB_CLIPBOARD} -- Implementation
 					-- Special check required for when calling this feature from
 					-- the clipboard. In this situation, the client representation is
 					-- added later.
-				if top_level_parent_object.window_selector_item /= Void then--/= Current then
+				if top_level_parent_object.widget_selector_item /= Void then--/= Current then
 					l_object.add_client_representation (Current)
 				end
 			end
@@ -2092,7 +2092,7 @@ invariant
 	all_client_representations_not_void: all_client_representations /= Void
 	constants_not_void: constants /= Void
 	events_not_void: events /= Void
-	top_level_object_has_window_selector_item: is_top_level_object implies (window_selector_item /= Void)
+	top_level_object_has_widget_selector_item: is_top_level_object implies (widget_selector_item /= Void)
 	instance_referers_recursively_unique: object_handler.objects.has (id) implies instance_referers_recursively_unique (Current, True, create {HASH_TABLE [INTEGER, INTEGER]}.make (10))
 	nested_structures_equal: ((not system_status.is_object_structure_changing) and (object_handler.deleted_objects.item (id) /= Void)) implies instance_referers_nested_strutures_match	
 -- Cannot check this at the moment as when the `associated_top_level_object' is set, the other link is performed seperately. Check calls of `new_top_level_representation'.

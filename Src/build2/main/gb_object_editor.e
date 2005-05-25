@@ -637,7 +637,7 @@ feature {NONE} -- Implementation
 		do
 				-- Warn user if the file already exists.
 			if preferences.dialog_data.show_changing_client_type_warning then
-				if object.window_selector_item.file_exists then
+				if object.widget_selector_item.file_exists then
 					create warning_dialog.make_initialized (2, preferences.dialog_data.show_changing_client_type_warning_string, changing_client_warning, "Do not show again", preferences.preferences)
 					warning_dialog.set_icon_pixmap (Icon_build_window @ 1)
 					warning_dialog.set_cancel_action (agent undo_client_change)
@@ -1004,7 +1004,7 @@ feature {NONE} -- Debug information
 			if text_field.text.is_integer then
 				an_object := object_handler.objects.item (text_field.text.to_integer)
 				if an_object /= Void then
-					an_object.top_level_parent_object.window_selector_item.enable_select
+					an_object.top_level_parent_object.widget_selector_item.enable_select
 					an_object.layout_item.enable_select
 					an_object.layout_item.parent_tree.ensure_item_visible (an_object.layout_item)
 				end

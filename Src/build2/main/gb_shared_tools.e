@@ -78,8 +78,8 @@ feature -- Access
 			exists: Result /= Void
 		end
 		
-	window_selector: GB_WINDOW_SELECTOR is
-			-- Tool for selecting windows.
+	widget_selector: GB_WIDGET_SELECTOR is
+			-- Tool for selecting widgets.
 		once
 			create Result
 		ensure
@@ -145,7 +145,7 @@ feature -- Access
 			Result.extend (Component_selector)
 			Result.extend (Layout_constructor)
 			Result.extend (Type_selector)
-			Result.extend (Window_selector)
+			Result.extend (widget_selector)
 		end
 
 	tool_by_name (name: STRING): GB_STORABLE_TOOL is
@@ -230,8 +230,8 @@ feature -- Access
 	Type_selector_name: STRING is "Type selector"
 		-- String representation for type selector.
 	
-	Window_selector_name: STRING is "Window selector"
-		-- String representation for window selector.
+	Widget_selector_name: STRING is "Widget selector"
+		-- String representation for widget selector.
 	
 	valid_tool_name (a_name: STRING): BOOLEAN is
 			-- Is `a_name' a valid tool name?
@@ -241,7 +241,7 @@ feature -- Access
 		do
 			if a_name.is_equal (tool_name_as_storable (Component_selector_name)) or 
 				a_name.is_equal (tool_name_as_storable (Type_selector_name)) or
-				a_name.is_equal (tool_name_as_storable (Window_selector_name)) then
+				a_name.is_equal (tool_name_as_storable (Widget_selector_name)) then
 				Result := True	
 			end
 		end

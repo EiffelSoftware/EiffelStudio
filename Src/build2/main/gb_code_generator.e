@@ -158,7 +158,7 @@ feature -- Basic operation
 			generate_xml_for_project
 			
 			window_counter := 0	
-			total_windows := window_selector.objects.count
+			total_windows := widget_selector.objects.count
 		
 				-- Note that the generation of the XML file used internally,
 				-- is not performed until `build_main_window_implementation' is called.

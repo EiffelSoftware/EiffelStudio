@@ -267,7 +267,7 @@ feature {NONE} -- Implementation
 				invalid_text := "'" + invalid_text
 			end
 			
-			windows := window_selector.objects
+			windows := widget_selector.objects
 			from
 				windows.start
 			until

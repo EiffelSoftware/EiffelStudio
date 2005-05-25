@@ -1,10 +1,10 @@
 indexing
-	description: "Objects that represent the tool bar for a window selector."
+	description: "Objects that represent the tool bar for a widget_selector."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	GB_WINDOW_SELECTOR_TOOL_BAR
+	GB_WIDGET_SELECTOR_TOOL_BAR
 	
 inherit
 	EV_TOOL_BAR
@@ -53,19 +53,19 @@ inherit
 		end
 		
 create
-	make_with_window_selector
+	make_with_widget_selector
 		
 feature {NONE} -- Initialization
 
-	make_with_window_selector (a_window_selector: GB_WINDOW_SELECTOR) is
-			-- Create `Current' associated to `a_window_selector'.
+	make_with_widget_selector (a_widget_selector: GB_WIDGET_SELECTOR) is
+			-- Create `Current' associated to `a_widget_selector'.
 		require
-			a_window_selector_not_void: a_window_selector /= Void
+			a_widget_selector_not_void: a_widget_selector /= Void
 		do
-			window_selector := a_window_selector
+			widget_selector := a_widget_selector
 			default_create
 		ensure
-			window_selector_set: window_selector = a_window_selector
+			widget_selector_set: widget_selector = a_widget_selector
 		end
 
 	initialize is
@@ -81,8 +81,8 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	window_selector: GB_WINDOW_SELECTOR
-		-- Window selector to which `Current' is associated.
+	widget_selector: GB_WIDGET_SELECTOR
+		-- Widget selector to which `Current' is associated.
 
 	include_directory_button: EV_TOOL_BAR_BUTTON is
 			-- A button which is used to add all directories within the current
@@ -123,7 +123,7 @@ feature -- Access
 			pixmaps: GB_SHARED_PIXMAPS
 		do
 			create Result
-			Result.select_actions.extend (agent window_selector.add_new_directory (Void))
+			Result.select_actions.extend (agent widget_selector.add_new_directory (Void))
 				-- Assign the appropriate pixmap.
 			create pixmaps
 			Result.set_pixmap (pixmaps.pixmap_by_name ("icon_new_cluster_small_color"))
@@ -139,7 +139,7 @@ feature -- Access
 			pixmaps: GB_SHARED_PIXMAPS
 		do
 			create Result
-			Result.select_actions.extend (agent expand_tree_recursive (window_selector.widget))
+			Result.select_actions.extend (agent expand_tree_recursive (widget_selector.widget))
 			Result.select_actions.extend (agent set_timed_status_text (all_expanded_text))
 				-- Assign the appropriate pixmap.
 			create pixmaps
@@ -150,15 +150,15 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-feature {GB_SET_ROOT_WINDOW_COMMAND, GB_WINDOW_SELECTOR} -- Status Setting
+feature {GB_SET_ROOT_WINDOW_COMMAND, GB_WIDGET_SELECTOR} -- Status Setting
 
 	update_select_root_window_command is
 			-- Update status of root window button based on the currently selected window.
 		do
 			if not system_status.loading_project then
-				if window_selector.selected_directory = Void and (window_selector.selected_window /= Void and then
-					(window_selector.selected_window.object.type.is_equal (ev_titled_window_string) or
-					window_selector.selected_window.object.type.is_equal (ev_dialog_string)) and object_handler.root_window_object /= window_selector.selected_window.object) then
+				if widget_selector.selected_directory = Void and (widget_selector.selected_window /= Void and then
+					(widget_selector.selected_window.object.type.is_equal (ev_titled_window_string) or
+					widget_selector.selected_window.object.type.is_equal (ev_dialog_string)) and object_handler.root_window_object /= widget_selector.selected_window.object) then
 					root_window_button.enable_sensitive
 				else
 					root_window_button.disable_sensitive
@@ -171,37 +171,37 @@ feature {NONE} -- Implementation
 	include_all_directories is
 			-- Include all dirs reachable from the project location, to the current project
 		do
-			window_selector.internal_include_all_directories (create {DIRECTORY}.make (system_status.current_project_settings.project_location), create {ARRAYED_LIST [STRING]}.make (5))			
+			widget_selector.internal_include_all_directories (create {DIRECTORY}.make (system_status.current_project_settings.project_location), create {ARRAYED_LIST [STRING]}.make (5))			
 			set_timed_status_text (directories_included_text)
 		end
 		
-	expand_subtree_recursive (window_selector_common_item: GB_WINDOW_SELECTOR_COMMON_ITEM) is
-			-- Expand `window_selector_common_item' recursively
+	expand_subtree_recursive (widget_selector_common_item: GB_WIDGET_SELECTOR_COMMON_ITEM) is
+			-- Expand `widget_selector_common_item' recursively
 		require
-			window_selector_common_item_not_void: window_selector_common_item /= Void
+			widget_selector_common_item_not_void: widget_selector_common_item /= Void
 		do
-			window_selector_common_item.expand_recursive
-			set_timed_status_text ("All nodes of " + window_selector_common_item.name + " expanded.")
+			widget_selector_common_item.expand_recursive
+			set_timed_status_text ("All nodes of " + widget_selector_common_item.name + " expanded.")
 		end
 		
 	show_hide_all_empty_directories is
 			-- Show/hide all empty directories in project based on state of `show_hide_empty_directories_button'.
 		do
 			if show_hide_empty_directories_button.is_selected then
-				window_selector.recursive_do_all (agent internal_hide_directory)
+				widget_selector.recursive_do_all (agent internal_hide_directory)
 				set_timed_status_text (all_empty_directories_hidden_text)
 			else
-				window_selector.recursive_do_all (agent internal_show_directory)
+				widget_selector.recursive_do_all (agent internal_show_directory)
 				set_timed_status_text (all_empty_directories_shown_text)
 			end
 		end
 		
-	internal_hide_directory (selector_item: GB_WINDOW_SELECTOR_COMMON_ITEM) is
+	internal_hide_directory (selector_item: GB_WIDGET_SELECTOR_COMMON_ITEM) is
 			-- Ensure that `selector_item' is hidden in `Current'.
 		require
 			selector_item_not_void: selector_item /= Void
 		local
-			directory: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
+			directory: GB_WIDGET_SELECTOR_DIRECTORY_ITEM
 		do
 			directory ?= selector_item
 			if directory /= Void then
@@ -211,22 +211,22 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	internal_show_directory (selector_item: GB_WINDOW_SELECTOR_COMMON_ITEM) is
+	internal_show_directory (selector_item: GB_WIDGET_SELECTOR_COMMON_ITEM) is
 			-- Ensure that `selector_item' is visible in `Current'.
 		require
 			selector_item_not_void: selector_item /= Void
 		local
-			directory: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
+			directory: GB_WIDGET_SELECTOR_DIRECTORY_ITEM
 		do
 			directory ?= selector_item
 			if directory /= Void and directory.tree_item.parent = Void then
-				if directory.parent /= window_selector then
+				if directory.parent /= widget_selector then
 					add_to_tree_node_alphabetically (directory.parent.tree_item, directory.tree_item)
 				else
 					check
-						parent_is_window_selector: directory.parent = window_selector
+						parent_is_widget_selector: directory.parent = widget_selector
 					end
-					add_to_tree_node_alphabetically (window_selector.widget, directory.tree_item)
+					add_to_tree_node_alphabetically (widget_selector.widget, directory.tree_item)
 				end
 			end
 		end
@@ -235,7 +235,7 @@ feature {NONE} -- Implementation
 		-- Is `Current' in its default state?
 
 invariant
-	window_selector_not_void: window_selector /= Void
-	bi_directional: window_selector.tool_bar /= Void implies window_selector.tool_bar = Current
+	widget_selector_not_void: widget_selector /= Void
+	bi_directional: widget_selector.tool_bar /= Void implies widget_selector.tool_bar = Current
 
-end -- class GB_WINDOW_SELECTOR_TOOL_BAR
+end -- class GB_WIDGET_SELECTOR_TOOL_BAR

@@ -26,7 +26,7 @@ feature -- Access
 		local
 			top_objects: ARRAYED_LIST [GB_OBJECT]
 		do
-			top_objects := window_selector.objects
+			top_objects := widget_selector.objects
 			from
 				top_objects.start
 			until

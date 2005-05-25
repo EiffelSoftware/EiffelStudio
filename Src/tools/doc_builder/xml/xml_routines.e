@@ -351,7 +351,7 @@ feature -- Commands
 		local
 			l_parser: XM_EIFFEL_PARSER
 			l_tree_pipe: XM_TREE_CALLBACKS_PIPE
-			l_xm_concatenator: DOCUMENT_XML_READER
+			l_xm_concatenator: XM_CALLBACKS_FILTER
 			l_file: KL_STRING_INPUT_STREAM
 		do
 			create l_parser.make

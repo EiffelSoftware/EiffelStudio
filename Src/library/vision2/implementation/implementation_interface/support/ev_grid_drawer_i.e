@@ -428,7 +428,6 @@ feature -- Basic operations
 			standard_subrow_indent: INTEGER
 			drawing_subrow, drawing_parentrow: BOOLEAN
 			node_index, parent_node_index: INTEGER
-			parent_row_list: SPECIAL [EV_GRID_ITEM_I]
 			parent_subrow_indent: INTEGER
 			parent_x_indent_position: INTEGER
 			tree_node_spacing: INTEGER
@@ -576,14 +575,12 @@ feature -- Basic operations
 									node_index := retrieve_node_index (current_row)
 									
 									if drawing_subrow then
-										parent_row_list := grid_rows_data_list @ current_row.parent_row_i.index
-										
-										parent_node_index := retrieve_node_index (current_row.parent_row_i)									
+										parent_node_index := retrieve_node_index (current_row.parent_row_i)
 											
 											-- Now calculate information regarding the parent of the current subrow
 											-- which is required for the drawing. We must know where the parent is positioned
 											-- in order to connect the lines correctly.
-										parent_subrow_indent := grid.item_indent (grid.item (current_row.parent_row_i.index_of_first_item, current_row.parent_row_i.index).implementation) + ((node_pixmap_width + 1) // 2)
+										parent_subrow_indent := grid.item_indent (grid.item (parent_node_index, parent_row_i.index).implementation) + ((node_pixmap_width + 1) // 2)
 										parent_x_indent_position := parent_subrow_indent
 									end
 								else

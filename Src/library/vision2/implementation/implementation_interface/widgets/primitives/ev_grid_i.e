@@ -348,25 +348,19 @@ feature -- Access
 		ensure
 			result_greater_or_equal_to_viewable_height: Result >= viewable_height
 		end
-		
-	viewable_width: INTEGER is
+
+	viewable_width: INTEGER
 			-- Width of `Current' available to view displayed items. Does
-			-- not include width of any displayed scroll bars.
-		do
-			Result := viewport.width
-		ensure
-			viewable_width_valid: viewable_width >= 0 and viewable_width <= width
-		end
-		
-	viewable_height: INTEGER is
+			-- not include width of any displayed scroll bars. Is equivalent to `viewport.width' and
+			-- by storing this, multiple queries are far quicker as the grid is only resized periodically
+			-- and we no longer have to call EiffelVision for the value.
+
+	viewable_height: INTEGER
 			-- Height of `Current' available to view displayed items. Does
 			-- not include width of any displayed scroll bars and/or header if shown.
-		do
-			Result := viewport.height
-		ensure
-			viewable_height_valid: viewable_height >= 0 and viewable_height <= height
-		end
-		
+			-- Is equivalent to `viewport.height' and by storing this, multiple queries are far quicker
+			-- as the grid is only resized periodically and we no longer have to call EiffelVision for the value.
+
 	viewable_x_offset: INTEGER is
 			-- Horizontal distance in pixels from the left edge of `Current' to
 			-- the left edge of the viewable area (defined by `viewable_width', `viewable_height')
@@ -2356,13 +2350,7 @@ feature {EV_GRID_DRAWER_I, EV_GRID_COLUMN_I, EV_GRID_ROW_I, EV_GRID_ITEM_I, EV_G
 	internal_client_y: INTEGER
 		-- Y coordinate of client area relative to the top edge of the virtual
 		-- area which `Current' comprises.
-			
-	internal_client_width: INTEGER
-		-- Width of client area in which items are displayed.
-		
-	internal_client_height: INTEGER
-		-- Height of client area in which items are displayed.
-		
+					
 	viewport_x_offset: INTEGER
 		-- `x_offset' of `viewport', used to prevent the need to always query the viewport.
 	
@@ -2577,7 +2565,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implementation
 				-- Retrieve the 
 			l_total_header_width := total_header_width
 			
-			l_client_width := internal_client_width
+			l_client_width := viewable_width
 				-- Note that `width' was not used as we want it to represent only the width of
 				-- the "client area" which is `viewport'.
 			
@@ -2631,15 +2619,15 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implementation
 				end
 			end
 			
-			if viewport_x_offset > 0 and (l_total_header_width - viewport_x_offset < internal_client_width) then
+			if viewport_x_offset > 0 and (l_total_header_width - viewport_x_offset < viewable_width) then
 					-- If `header' and `drawable' currently have a position that starts before the client area of
 					-- `viewport' and the total header width is small enough so that at the current position, `header' and
 					-- `drawable' do not reach to the very left-hand edge of the `viewport', update the horizontal offset
 					-- so that they do reach the very left-hand edge of `viewport'
-				viewport_x_offset := (l_total_header_width - internal_client_width).max (0)
+				viewport_x_offset := (l_total_header_width - viewable_width).max (0)
 				viewport.set_x_offset (viewport_x_offset)
 				
-				header_viewport.set_x_offset ((l_total_header_width - internal_client_width).max (0))
+				header_viewport.set_x_offset ((l_total_header_width - viewable_width).max (0))
 			end
 		end
 
@@ -2875,7 +2863,7 @@ feature {NONE} -- Drawing implementation
 			-- Draw a resizing line at horizontal position relative to `drawable'.
 			-- Clip line to drawable width.
 		do
-			if (position - viewport_x_offset > internal_client_width) or
+			if (position - viewport_x_offset > viewable_width) or
 				(position - viewport_x_offset < 0) then
 				remove_resizing_line
 			else
@@ -2998,7 +2986,7 @@ feature {NONE} -- Drawing implementation
 			internal_client_x := a_x_position
 				-- Store the virtual client x position internally.
 				
-			buffer_space := (buffered_drawable_size - internal_client_width)
+			buffer_space := (buffered_drawable_size - viewable_width)
 			current_buffer_position := viewport_x_offset
 			
 				-- Calculate if the buffer must be flipped. If so, redraw the complete client area,
@@ -3058,9 +3046,9 @@ feature {NONE} -- Drawing implementation
 				-- Set the internal client dimensions for
 				-- quick retrieval later. This reduces the dependencies on
 				-- `viewport' within other code.
-			internal_client_width := a_width
-			internal_client_height := a_height
-			
+			viewable_width := a_width
+			viewable_height := a_height
+
 			fixme ("[
 				Is there a better way to respond to the resizing without setting the invalid row and column indexes to 1?]
 				I think it should be possible to simply update the scroll bar without modifying the indexes. Julian
@@ -3084,9 +3072,9 @@ feature {NONE} -- Drawing implementation
 				-- behavior is the same on both platforms.
 			redraw_client_area
 		ensure
-			client_dimensions_set: internal_client_width = viewable_width and internal_client_height = viewable_height
-			viewport_item_at_least_as_big_as_viewport: viewport.item.width >= internal_client_width and
-				viewport.item.height >= internal_client_height
+			viewable_dimensions_set: viewable_width = a_width and viewable_height = a_height
+			viewport_item_at_least_as_big_as_viewport: viewport.item.width >= viewable_width and
+				viewport.item.height >= viewable_height
 		end
 		
 	vertical_scroll_bar: EV_VERTICAL_SCROLL_BAR

@@ -55,7 +55,7 @@ feature -- Basic operations
 			physical_column_indexes := grid.physical_column_indexes
 		
 			internal_client_x := grid.internal_client_x
-			internal_client_width := grid.internal_client_width
+			internal_client_width := grid.viewable_width
 			
 			horizontal_buffer_offset := grid.viewport_x_offset
 			
@@ -141,8 +141,8 @@ feature -- Basic operations
 			row_offsets := grid.row_offsets
 
 			internal_client_y := grid.internal_client_y
-			internal_client_height := grid.internal_client_height
-			
+			internal_client_height := grid.viewable_height
+
 			vertical_buffer_offset := grid.viewport_y_offset
 			
 			if not grid.header.is_empty then
@@ -503,8 +503,8 @@ feature -- Basic operations
 				
 				internal_client_x := grid.internal_client_x
 				internal_client_y := grid.internal_client_y
-				internal_client_width := grid.internal_client_width
-				internal_client_height := grid.internal_client_height
+				internal_client_width := grid.viewable_width
+				internal_client_height := grid.viewable_height
 				
 				vertical_buffer_offset := grid.viewport_y_offset
 				horizontal_buffer_offset := grid.viewport_x_offset

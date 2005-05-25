@@ -46,8 +46,11 @@ feature {HTML_FILTER} -- Access
 			Result.extend ("p", "paragraph_end")
 			Result.extend ("span", "start_end")
 			Result.extend ("", "url")
+			Result.extend ("", "anchor_name")
 			Result.extend ("map", "image_map")
 			Result.extend ("area", "area")
+			Result.extend ("xml", "xml")
+			Result.extend ("MSHelp:Keyword", "keyword")
 			Result.extend ("MSHelp:link", "help_link")
 			Result.extend ("a", "image_link")
 			Result.extend ("p class=%"warning%"", "warning")
@@ -61,6 +64,7 @@ feature {HTML_FILTER} -- Access
 			Result.extend ("ul", "list_unordered")
 			Result.extend ("", "list")
 			Result.extend ("link", "stylesheet")
+			Result.extend ("a", "anchor")
 		end
 		
 	element_attribute_mappings: HASH_TABLE [STRING, STRING] is
@@ -78,6 +82,7 @@ feature {HTML_FILTER} -- Access
 			Result.extend ("shape", "shape")
 			Result.extend ("co-ordinates", "co-ordinates")
 			Result.extend ("href", "url")
+			Result.extend ("href", "anchor_name")
 			Result.extend ("src", "image_url")	
 			Result.extend ("rel", "rel")
 			Result.extend ("", "stylesheet")
@@ -97,6 +102,9 @@ feature {HTML_FILTER} -- Access
 			Result.extend ("filter_string", "filter_string")
 			Result.extend ("namespace", "namespace")
 			Result.extend ("options", "options")
+			Result.extend ("index", "index")
+			Result.extend ("term", "term")
+			Result.extend ("name", "anchor")
 		end	
 		
 	attribute_attribute_mappings: HASH_TABLE [STRING, STRING] is
@@ -151,6 +159,10 @@ feature -- Element Data
 			Result.extend ("content")
 			Result.extend ("meta_content")
 			Result.extend ("url")
+			Result.extend ("term")
+			Result.extend ("keywords")
+			Result.extend ("anchor")
+			Result.extend ("anchor_name")
 		end
 
 	attributable_elements: ARRAYED_LIST [STRING] is
@@ -177,6 +189,8 @@ feature -- Element Data
 			Result.extend ("document_paragraph")
 			Result.extend ("start")
 			Result.extend ("document")
+			Result.extend ("keyword")
+			Result.extend ("anchor")
 		end
 	
 	style_elements: ARRAYED_LIST [STRING] is

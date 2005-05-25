@@ -2273,7 +2273,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			col_x1: INTEGER
 		do
 			col_x1 := a_column.virtual_x_position 
-			drawable.redraw_rectangle (col_x1, 0, a_column.width, drawable.height)
+			drawable.redraw_rectangle (col_x1, viewport_y_offset, a_column.width, viewable_height)
 		end
 
 	redraw_from_column_to_end (a_column: EV_GRID_COLUMN_I) is

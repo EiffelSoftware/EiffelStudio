@@ -613,8 +613,10 @@ feature {NONE} -- Implementation
 			if a_text.is_integer then
 				Result := True
 				balls := a_text.to_integer
-				end_ball_animation
-				start_ball_animation
+				if grid.row (1).is_expanded then
+					end_ball_animation
+					start_ball_animation
+				end
 			end
 		end
 
@@ -636,10 +638,10 @@ feature {NONE} -- Implementation
 			i, j: REAL
 			random_counter: INTEGER
 			label_item: EV_GRID_LABEL_ITEM
+			time1, time2: DATE_TIME
+			fine_seconds: REAL
 		do
 			create random.make
-			create animation_timer.make_with_interval (20)
-			animation_timer.actions.extend (agent animate_ball)
 			create redraw_timer.make_with_interval (20)
 			create ball_x.make (1, balls)
 			create ball_y.make (1, balls)
@@ -663,6 +665,30 @@ feature {NONE} -- Implementation
 				counter := counter + 1
 			end
 			animating_ball := True
+			if profile_cell.item then
+				create time1.make_now
+				start_profiling
+				from
+					counter := 0
+				until
+					counter = 1000
+				loop
+					counter := counter + 1
+					animate_ball
+				end
+				stop_profiling
+				create time2.make_now
+				fine_seconds := time2.fine_second - time1.fine_second
+				if time2.fine_second < time1.fine_second then
+					fine_seconds := fine_seconds + 60
+				end
+
+				set_status_message ("1000 iterations performed in : " + fine_seconds.out)
+			else
+				create animation_timer.make_with_interval (20)
+				animation_timer.actions.extend (agent animate_ball)
+			end
+
 		end
 
 	ball_width: INTEGER is 10
@@ -776,10 +802,13 @@ feature {NONE} -- Implementation
 	end_ball_animation is
 			--
 		do
-			animation_timer.destroy
-			redraw_timer.destroy
+			if animation_timer /= Void then
+				animation_timer.destroy
+			end
+			if redraw_timer /= Void then
+				redraw_timer.destroy
+			end
 		end
-		
 		
 	ball_animation_timer, ball_redraw_timer: EV_TIMEOUT
 
@@ -1329,13 +1358,27 @@ feature {NONE} -- Implementation
 --			grid.set_item (1, 1, create {EV_GRID_LABEL_ITEM}.make_with_text ("An Item"))
 
 
-			-- Test 20
+--			-- Test 20
+--			grid.enable_tree
+--			grid.insert_new_row (1)
+--			grid.set_item (1, 1, create {EV_GRID_LABEL_ITEM}.make_with_text ("An Item"))
+--			grid.row (1).ensure_expandable
+--			grid.row (1).expand_actions.extend (agent expand)
+--			grid.item (1, 1).pointer_button_press_actions.force_extend (agent wipe_out_row)
+
+			-- Test 21
 			grid.enable_tree
-			grid.insert_new_row (1)
-			grid.set_item (1, 1, create {EV_GRID_LABEL_ITEM}.make_with_text ("An Item"))
-			grid.row (1).ensure_expandable
-			grid.row (1).expand_actions.extend (agent expand)
-			grid.item (1, 1).pointer_button_press_actions.force_extend (agent wipe_out_row)
+			grid.set_item (1, 1, create {EV_GRID_LABEL_ITEM}.make_with_text ("item 1"))
+			grid.set_item (1, 2, create {EV_GRID_LABEL_ITEM}.make_with_text ("item 2"))
+			grid.set_item (1, 3, create {EV_GRID_LABEL_ITEM}.make_with_text ("item 2.1"))
+			grid.set_item (1, 4, create {EV_GRID_LABEL_ITEM}.make_with_text ("item 2.1.1"))
+			grid.set_item (1, 5, create {EV_GRID_LABEL_ITEM}.make_with_text ("item 2.1.2"))
+			grid.set_item (1, 6, create {EV_GRID_LABEL_ITEM}.make_with_text ("item 2.2"))
+			grid.row (2).add_subrow (grid.row (3))
+			grid.row (3).add_subrow (grid.row (4))
+			grid.row (3).add_subrow (grid.row (5))
+			grid.row (2).add_subrow (grid.row (6))
+			grid.row (2).remove_subrow (grid.row (6))
 		end
 
 	expand is

@@ -116,22 +116,22 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
+	l_ev_cell_1: EV_CELL
+	l_ev_cell_2: EV_CELL
+	l_ev_cell_3: EV_CELL
+	okay_button: EV_BUTTON
+	cancel_button: EV_BUTTON
 	project_radio: EV_RADIO_BUTTON
 	empty_radio: EV_RADIO_BUTTON
 	dir_radio: EV_RADIO_BUTTON
 	custom_radio: EV_RADIO_BUTTON
+	l_ev_horizontal_box_1: EV_HORIZONTAL_BOX
+	l_ev_horizontal_box_2: EV_HORIZONTAL_BOX
 	l_ev_vertical_box_1: EV_VERTICAL_BOX
 	l_ev_vertical_box_2: EV_VERTICAL_BOX
 	tree_container: EV_VERTICAL_BOX
-	l_ev_horizontal_box_1: EV_HORIZONTAL_BOX
-	l_ev_horizontal_box_2: EV_HORIZONTAL_BOX
 	l_ev_label_1: EV_LABEL
 	l_ev_label_2: EV_LABEL
-	okay_button: EV_BUTTON
-	cancel_button: EV_BUTTON
-	l_ev_cell_1: EV_CELL
-	l_ev_cell_2: EV_CELL
-	l_ev_cell_3: EV_CELL
 	toc_name_text: EV_TEXT_FIELD
 
 feature {NONE} -- Implementation

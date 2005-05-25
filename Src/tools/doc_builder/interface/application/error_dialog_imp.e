@@ -74,13 +74,13 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	l_ev_vertical_box_1: EV_VERTICAL_BOX
-	error_container: EV_VERTICAL_BOX
-	l_ev_horizontal_box_1: EV_HORIZONTAL_BOX
-	error_count: EV_LABEL
-	ok: EV_BUTTON
 	l_ev_cell_1: EV_CELL
 	l_ev_cell_2: EV_CELL
+	ok: EV_BUTTON
+	l_ev_horizontal_box_1: EV_HORIZONTAL_BOX
+	l_ev_vertical_box_1: EV_VERTICAL_BOX
+	error_container: EV_VERTICAL_BOX
+	error_count: EV_LABEL
 
 feature {NONE} -- Implementation
 

@@ -52,8 +52,6 @@ feature {NONE} -- Initialization
 				-- Events
 			address_bar.key_press_actions.extend (agent address_key_pressed (?))
 			address_bar.select_actions.extend (agent lookup_url (?))
-
---			load_url ("http://www.eiffel.com")
 		end	
 
 	setup_browser is
@@ -225,7 +223,7 @@ feature {NONE} -- Implementation
 			create l_consts
 			if  l_consts.shared_document_manager.current_document /= Void then
 				set_document (l_consts.shared_document_manager.current_document)
-			end			
+			end
 		end
 
 end -- class WEB_BROWSER_WIDGET

@@ -84,15 +84,15 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	l_ev_horizontal_separator_1: EV_HORIZONTAL_SEPARATOR
+	keys_combo: EV_COMBO_BOX
 	accelerator_list: EV_MULTI_COLUMN_LIST
-	l_ev_vertical_box_1: EV_VERTICAL_BOX
-	l_ev_horizontal_box_1: EV_HORIZONTAL_BOX
-	l_ev_label_1: EV_LABEL
-	l_ev_label_2: EV_LABEL
+	l_ev_horizontal_separator_1: EV_HORIZONTAL_SEPARATOR
 	add_button: EV_BUTTON
 	dummy_cancel_button: EV_BUTTON
-	keys_combo: EV_COMBO_BOX
+	l_ev_horizontal_box_1: EV_HORIZONTAL_BOX
+	l_ev_vertical_box_1: EV_VERTICAL_BOX
+	l_ev_label_1: EV_LABEL
+	l_ev_label_2: EV_LABEL
 	tag_text_field: EV_TEXT_FIELD
 
 feature {NONE} -- Implementation

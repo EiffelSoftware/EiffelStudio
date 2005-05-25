@@ -29,49 +29,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	button_ok_text: STRING is
-			-- `Result' is STRING constant named `button_ok_text'.
-		once
-			Result := "OK"
-		end
-
-	icon_undo_ico: EV_PIXMAP is
+	icon_paste_ico: EV_PIXMAP is
 		local
 			a_file_name: FILE_NAME
 		once
 			create Result
 			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("icon_undo.ico")
-			set_with_named_file (Result, a_file_name)
-		end
-
-	icon_html_file_ico: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		once
-			create Result
-			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("icon_html_file.ico")
-			set_with_named_file (Result, a_file_name)
-		end
-
-	icon_cut_color_ico: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		once
-			create Result
-			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("icon_cut_color.ico")
-			set_with_named_file (Result, a_file_name)
-		end
-
-	icon_open_file_ico: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		once
-			create Result
-			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("icon_open_file.ico")
+			a_file_name.set_file_name ("icon_paste.ico")
 			set_with_named_file (Result, a_file_name)
 		end
 
@@ -85,161 +49,39 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	envision_filtered_text: STRING is
-			-- `Result' is STRING constant named `envision_filtered_text'.
-		once
-			Result := "ENViSioN! Filtered"
-		end
-
-	icon_copy_color_ico: EV_PIXMAP is
+	icon_code_format_ico: EV_PIXMAP is
 		local
 			a_file_name: FILE_NAME
 		once
 			create Result
 			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("icon_copy_color.ico")
+			a_file_name.set_file_name ("icon_code_format.ico")
 			set_with_named_file (Result, a_file_name)
 		end
 
-	dialog_medium_height: INTEGER is 
-			-- `Result' is INTEGER constant named dialog_medium_height.
-		once
-			Result := 250
-		end
-
-	icon_new_doc_ico: EV_PIXMAP is
+	icon_html_file_ico: EV_PIXMAP is
 		local
 			a_file_name: FILE_NAME
 		once
 			create Result
 			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("icon_new_doc.ico")
+			a_file_name.set_file_name ("icon_html_file.ico")
 			set_with_named_file (Result, a_file_name)
 		end
 
-	icon_paste_ico: EV_PIXMAP is
+	radio_button_width: INTEGER is 
+			-- `Result' is INTEGER constant named radio_button_width.
+		once
+			Result := 20
+		end
+
+	icon_down_triangle_ico: EV_PIXMAP is
 		local
 			a_file_name: FILE_NAME
 		once
 			create Result
 			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("icon_paste.ico")
-			set_with_named_file (Result, a_file_name)
-		end
-
-	uparrow_png: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		once
-			create Result
-			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("uparrow.png")
-			set_with_named_file (Result, a_file_name)
-		end
-
-	icon_search_ico_1: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		once
-			create Result
-			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("icon_search.ico")
-			set_with_named_file (Result, a_file_name)
-		end
-
-	icon_jpeg_file_ico: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		once
-			create Result
-			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("icon_jpeg_file.ico")
-			set_with_named_file (Result, a_file_name)
-		end
-
-	icon_studio_ico: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		once
-			create Result
-			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("icon_studio.ico")
-			set_with_named_file (Result, a_file_name)
-		end
-
-	button_cancel_text: STRING is
-			-- `Result' is STRING constant named `button_cancel_text'.
-		once
-			Result := "Cancel"
-		end
-
-	icon_link_check_ico: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		once
-			create Result
-			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("icon_link_check.ico")
-			set_with_named_file (Result, a_file_name)
-		end
-
-	icon_validate_ico: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		once
-			create Result
-			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("icon_validate.ico")
-			set_with_named_file (Result, a_file_name)
-		end
-
-	icon_back_color_ico: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		once
-			create Result
-			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("icon_back_color.ico")
-			set_with_named_file (Result, a_file_name)
-		end
-
-	right_scroll_arrow_png: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		once
-			create Result
-			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("right_scroll_arrow.png")
-			set_with_named_file (Result, a_file_name)
-		end
-
-	icon_close_folder_ico: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		once
-			create Result
-			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("icon_close_folder.ico")
-			set_with_named_file (Result, a_file_name)
-		end
-
-	icon_envision_ico: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		once
-			create Result
-			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("icon_envision.ico")
-			set_with_named_file (Result, a_file_name)
-		end
-
-	icon_toc_folder_open_ico: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		once
-			create Result
-			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("icon_toc_folder_open.ico")
+			a_file_name.set_file_name ("icon_down_triangle.ico")
 			set_with_named_file (Result, a_file_name)
 		end
 
@@ -253,120 +95,6 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	icon_code_class_ico: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		once
-			create Result
-			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("icon_code_class.ico")
-			set_with_named_file (Result, a_file_name)
-		end
-
-	icon_toc_file_node_ico: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		once
-			create Result
-			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("icon_toc_file_node.ico")
-			set_with_named_file (Result, a_file_name)
-		end
-
-	radio_button_width: INTEGER is 
-			-- `Result' is INTEGER constant named radio_button_width.
-		once
-			Result := 20
-		end
-
-	icon_sorter_ico: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		once
-			create Result
-			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("icon_sorter.ico")
-			set_with_named_file (Result, a_file_name)
-		end
-
-	button_find_text: STRING is
-			-- `Result' is STRING constant named `button_find_text'.
-		once
-			Result := "Find"
-		end
-
-	dialog_height: INTEGER is 
-			-- `Result' is INTEGER constant named dialog_height.
-		once
-			Result := 500
-		end
-
-	icon_bitmap_file_ico: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		once
-			create Result
-			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("icon_bitmap_file.ico")
-			set_with_named_file (Result, a_file_name)
-		end
-
-	pixmap_directory: STRING is
-			-- `Result' is DIRECTORY constant named `pixmap_directory'.
-		once
-			Result := "D:\Src\tools\doc_builder\resources\icons"
-		end
-
-	box_border_width: INTEGER is 
-			-- `Result' is INTEGER constant named box_border_width.
-		once
-			Result := 2
-		end
-
-	button_save_text: STRING is
-			-- `Result' is STRING constant named `button_save_text'.
-		once
-			Result := "Save..."
-		end
-
-	icon_maximize_color_png: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		once
-			create Result
-			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("icon_maximize_color.png")
-			set_with_named_file (Result, a_file_name)
-		end
-
-	button_continue_text: STRING is
-			-- `Result' is STRING constant named `button_continue_text'.
-		once
-			Result := "Continue"
-		end
-
-	button_open_text: STRING is
-			-- `Result' is STRING constant named `button_open_text'.
-		once
-			Result := "Open"
-		end
-
-	icon_save_ico: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		once
-			create Result
-			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("icon_save.ico")
-			set_with_named_file (Result, a_file_name)
-		end
-
-	dialog_width: INTEGER is 
-			-- `Result' is INTEGER constant named dialog_width.
-		once
-			Result := 400
-		end
-
 	icon_search_ico: EV_PIXMAP is
 		local
 			a_file_name: FILE_NAME
@@ -377,105 +105,19 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	button_width: INTEGER is 
-			-- `Result' is INTEGER constant named button_width.
+	empty_cell_width: INTEGER is 
+			-- `Result' is INTEGER constant named empty_cell_width.
 		once
-			Result := 80
+			Result := 15
 		end
 
-	icon_widget_edit_ico: EV_PIXMAP is
+	icon_link_check_ico: EV_PIXMAP is
 		local
 			a_file_name: FILE_NAME
 		once
 			create Result
 			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("icon_widget_edit.ico")
-			set_with_named_file (Result, a_file_name)
-		end
-
-	header_close_cross_png: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		once
-			create Result
-			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("header_close_cross.png")
-			set_with_named_file (Result, a_file_name)
-		end
-
-	inner_border_width: INTEGER is 
-			-- `Result' is INTEGER constant named inner_border_width.
-		once
-			Result := 5
-		end
-
-	icon_code_format_ico: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		once
-			create Result
-			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("icon_code_format.ico")
-			set_with_named_file (Result, a_file_name)
-		end
-
-	icon_restore_color_png: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		once
-			create Result
-			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("icon_restore_color.png")
-			set_with_named_file (Result, a_file_name)
-		end
-
-	icon_unchecked_png: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		once
-			create Result
-			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("icon_unchecked.png")
-			set_with_named_file (Result, a_file_name)
-		end
-
-	icon_redo_ico: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		once
-			create Result
-			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("icon_redo.ico")
-			set_with_named_file (Result, a_file_name)
-		end
-
-	icon_file_close_ico: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		once
-			create Result
-			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("icon_file_close.ico")
-			set_with_named_file (Result, a_file_name)
-		end
-
-	icon_ie_icon_ico: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		once
-			create Result
-			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("icon_ie_icon.ico")
-			set_with_named_file (Result, a_file_name)
-		end
-
-	icon_checked_png: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		once
-			create Result
-			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("icon_checked.png")
+			a_file_name.set_file_name ("icon_link_check.ico")
 			set_with_named_file (Result, a_file_name)
 		end
 
@@ -489,58 +131,34 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	icon_format_text_color_ico: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
+	dialog_height: INTEGER is 
+			-- `Result' is INTEGER constant named dialog_height.
 		once
-			create Result
-			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("icon_format_text_color.ico")
-			set_with_named_file (Result, a_file_name)
+			Result := 500
 		end
 
-	button_back_text: STRING is
-			-- `Result' is STRING constant named `button_back_text'.
+	button_width: INTEGER is 
+			-- `Result' is INTEGER constant named button_width.
 		once
-			Result := "Back"
+			Result := 80
 		end
 
-	dialog_tall_height: INTEGER is 
-			-- `Result' is INTEGER constant named dialog_tall_height.
+	button_browse_text: STRING is
+			-- `Result' is STRING constant named `button_browse_text'.
 		once
-			Result := 580
+			Result := "Browse..."
 		end
 
-	icon_settings_ico: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
+	inner_border_width: INTEGER is 
+			-- `Result' is INTEGER constant named inner_border_width.
 		once
-			create Result
-			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("icon_settings.ico")
-			set_with_named_file (Result, a_file_name)
+			Result := 5
 		end
 
-	button_apply_text: STRING is
-			-- `Result' is STRING constant named `button_apply_text'.
+	dialog_short_height: INTEGER is 
+			-- `Result' is INTEGER constant named dialog_short_height.
 		once
-			Result := "Apply"
-		end
-
-	button_create_text: STRING is
-			-- `Result' is STRING constant named `button_create_text'.
-		once
-			Result := "Create"
-		end
-
-	icon_minimize_color_png: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		once
-			create Result
-			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("icon_minimize_color.png")
-			set_with_named_file (Result, a_file_name)
+			Result := 175
 		end
 
 	box_padding_width: INTEGER is 
@@ -549,69 +167,13 @@ feature -- Access
 			Result := 5
 		end
 
-	icon_close_color_png: EV_PIXMAP is
+	icon_toc_exclude_ico: EV_PIXMAP is
 		local
 			a_file_name: FILE_NAME
 		once
 			create Result
 			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("icon_close_color.png")
-			set_with_named_file (Result, a_file_name)
-		end
-
-	empty_cell_width: INTEGER is 
-			-- `Result' is INTEGER constant named empty_cell_width.
-		once
-			Result := 15
-		end
-
-	icon_highlight_png: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		once
-			create Result
-			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("icon_highlight.png")
-			set_with_named_file (Result, a_file_name)
-		end
-
-	icon_close_color_ico: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		once
-			create Result
-			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("icon_close_color.ico")
-			set_with_named_file (Result, a_file_name)
-		end
-
-	icon_ie_ico: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		once
-			create Result
-			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("icon_ie.ico")
-			set_with_named_file (Result, a_file_name)
-		end
-
-	icon_properties_color_ico: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		once
-			create Result
-			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("icon_properties_color.ico")
-			set_with_named_file (Result, a_file_name)
-		end
-
-	icon_info_ico: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		once
-			create Result
-			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("icon_info.ico")
+			a_file_name.set_file_name ("icon_toc_exclude.ico")
 			set_with_named_file (Result, a_file_name)
 		end
 
@@ -625,151 +187,43 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	icon_code_cluster_ico: EV_PIXMAP is
+	icon_ie_ico: EV_PIXMAP is
 		local
 			a_file_name: FILE_NAME
 		once
 			create Result
 			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("icon_code_cluster.ico")
+			a_file_name.set_file_name ("icon_ie.ico")
 			set_with_named_file (Result, a_file_name)
 		end
 
-	button_add_text: STRING is
-			-- `Result' is STRING constant named `button_add_text'.
-		once
-			Result := "Add"
-		end
-
-	dialog_wide_width: INTEGER is 
-			-- `Result' is INTEGER constant named dialog_wide_width.
-		once
-			Result := 600
-		end
-
-	button_browse_text: STRING is
-			-- `Result' is STRING constant named `button_browse_text'.
-		once
-			Result := "Browse..."
-		end
-
-	icon_new_color_ico: EV_PIXMAP is
+	icon_maximize_color_png: EV_PIXMAP is
 		local
 			a_file_name: FILE_NAME
 		once
 			create Result
 			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("icon_new_color.ico")
+			a_file_name.set_file_name ("icon_maximize_color.png")
 			set_with_named_file (Result, a_file_name)
 		end
 
-	dialog_short_height: INTEGER is 
-			-- `Result' is INTEGER constant named dialog_short_height.
-		once
-			Result := 175
-		end
-
-	unfiltered_text: STRING is
-			-- `Result' is STRING constant named `unfiltered_text'.
-		once
-			Result := "Unfiltered"
-		end
-
-	icon_new_editor_color_ico: EV_PIXMAP is
+	uparrow_png: EV_PIXMAP is
 		local
 			a_file_name: FILE_NAME
 		once
 			create Result
 			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("icon_new_editor_color.ico")
+			a_file_name.set_file_name ("uparrow.png")
 			set_with_named_file (Result, a_file_name)
 		end
 
-	button_next_text: STRING is
-			-- `Result' is STRING constant named `button_next_text'.
-		once
-			Result := "Next"
-		end
-
-	icon_merge_ico: EV_PIXMAP is
+	icon_validate_ico: EV_PIXMAP is
 		local
 			a_file_name: FILE_NAME
 		once
 			create Result
 			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("icon_merge.ico")
-			set_with_named_file (Result, a_file_name)
-		end
-
-	downarrow_png: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		once
-			create Result
-			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("downarrow.png")
-			set_with_named_file (Result, a_file_name)
-		end
-
-	studio_filtered_text: STRING is
-			-- `Result' is STRING constant named `studio_filtered_text'.
-		once
-			Result := "EiffelStudio Filtered"
-		end
-
-	icon_gif_file_ico: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		once
-			create Result
-			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("icon_gif_file.ico")
-			set_with_named_file (Result, a_file_name)
-		end
-
-	button_finish_text: STRING is
-			-- `Result' is STRING constant named `button_finish_text'.
-		once
-			Result := "Finish"
-		end
-
-	icon_down_triangle_ico: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		once
-			create Result
-			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("icon_down_triangle.ico")
-			set_with_named_file (Result, a_file_name)
-		end
-
-	icon_new_ico: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		once
-			create Result
-			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("icon_new.ico")
-			set_with_named_file (Result, a_file_name)
-		end
-
-	icon_toc_folder_closed_ico: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		once
-			create Result
-			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("icon_toc_folder_closed.ico")
-			set_with_named_file (Result, a_file_name)
-		end
-
-	icon_code_feature_ico: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		once
-			create Result
-			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("icon_code_feature.ico")
+			a_file_name.set_file_name ("icon_validate.ico")
 			set_with_named_file (Result, a_file_name)
 		end
 
@@ -783,13 +237,559 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	icon_toc_exclude_ico: EV_PIXMAP is
+	icon_unchecked_png: EV_PIXMAP is
 		local
 			a_file_name: FILE_NAME
 		once
 			create Result
 			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("icon_toc_exclude.ico")
+			a_file_name.set_file_name ("icon_unchecked.png")
+			set_with_named_file (Result, a_file_name)
+		end
+
+	icon_code_feature_ico: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		once
+			create Result
+			create a_file_name.make_from_string (pixmap_directory)
+			a_file_name.set_file_name ("icon_code_feature.ico")
+			set_with_named_file (Result, a_file_name)
+		end
+
+	icon_redo_ico: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		once
+			create Result
+			create a_file_name.make_from_string (pixmap_directory)
+			a_file_name.set_file_name ("icon_redo.ico")
+			set_with_named_file (Result, a_file_name)
+		end
+
+	icon_toc_folder_open_ico: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		once
+			create Result
+			create a_file_name.make_from_string (pixmap_directory)
+			a_file_name.set_file_name ("icon_toc_folder_open.ico")
+			set_with_named_file (Result, a_file_name)
+		end
+
+	icon_info_ico: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		once
+			create Result
+			create a_file_name.make_from_string (pixmap_directory)
+			a_file_name.set_file_name ("icon_info.ico")
+			set_with_named_file (Result, a_file_name)
+		end
+
+	icon_close_color_ico: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		once
+			create Result
+			create a_file_name.make_from_string (pixmap_directory)
+			a_file_name.set_file_name ("icon_close_color.ico")
+			set_with_named_file (Result, a_file_name)
+		end
+
+	icon_gif_file_ico: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		once
+			create Result
+			create a_file_name.make_from_string (pixmap_directory)
+			a_file_name.set_file_name ("icon_gif_file.ico")
+			set_with_named_file (Result, a_file_name)
+		end
+
+	icon_back_color_ico: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		once
+			create Result
+			create a_file_name.make_from_string (pixmap_directory)
+			a_file_name.set_file_name ("icon_back_color.ico")
+			set_with_named_file (Result, a_file_name)
+		end
+
+	icon_close_folder_ico: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		once
+			create Result
+			create a_file_name.make_from_string (pixmap_directory)
+			a_file_name.set_file_name ("icon_close_folder.ico")
+			set_with_named_file (Result, a_file_name)
+		end
+
+	icon_file_close_ico: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		once
+			create Result
+			create a_file_name.make_from_string (pixmap_directory)
+			a_file_name.set_file_name ("icon_file_close.ico")
+			set_with_named_file (Result, a_file_name)
+		end
+
+	button_cancel_text: STRING is
+			-- `Result' is STRING constant named `button_cancel_text'.
+		once
+			Result := "Cancel"
+		end
+
+	button_next_text: STRING is
+			-- `Result' is STRING constant named `button_next_text'.
+		once
+			Result := "Next"
+		end
+
+	unfiltered_text: STRING is
+			-- `Result' is STRING constant named `unfiltered_text'.
+		once
+			Result := "Unfiltered"
+		end
+
+	icon_ie_icon_ico: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		once
+			create Result
+			create a_file_name.make_from_string (pixmap_directory)
+			a_file_name.set_file_name ("icon_ie_icon.ico")
+			set_with_named_file (Result, a_file_name)
+		end
+
+	icon_open_file_ico: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		once
+			create Result
+			create a_file_name.make_from_string (pixmap_directory)
+			a_file_name.set_file_name ("icon_open_file.ico")
+			set_with_named_file (Result, a_file_name)
+		end
+
+	dialog_medium_height: INTEGER is 
+			-- `Result' is INTEGER constant named dialog_medium_height.
+		once
+			Result := 250
+		end
+
+	icon_minimize_color_png: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		once
+			create Result
+			create a_file_name.make_from_string (pixmap_directory)
+			a_file_name.set_file_name ("icon_minimize_color.png")
+			set_with_named_file (Result, a_file_name)
+		end
+
+	icon_undo_ico: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		once
+			create Result
+			create a_file_name.make_from_string (pixmap_directory)
+			a_file_name.set_file_name ("icon_undo.ico")
+			set_with_named_file (Result, a_file_name)
+		end
+
+	icon_cut_color_ico: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		once
+			create Result
+			create a_file_name.make_from_string (pixmap_directory)
+			a_file_name.set_file_name ("icon_cut_color.ico")
+			set_with_named_file (Result, a_file_name)
+		end
+
+	button_open_text: STRING is
+			-- `Result' is STRING constant named `button_open_text'.
+		once
+			Result := "Open"
+		end
+
+	icon_search_ico_1: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		once
+			create Result
+			create a_file_name.make_from_string (pixmap_directory)
+			a_file_name.set_file_name ("icon_search.ico")
+			set_with_named_file (Result, a_file_name)
+		end
+
+	icon_properties_color_ico: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		once
+			create Result
+			create a_file_name.make_from_string (pixmap_directory)
+			a_file_name.set_file_name ("icon_properties_color.ico")
+			set_with_named_file (Result, a_file_name)
+		end
+
+	icon_new_color_ico: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		once
+			create Result
+			create a_file_name.make_from_string (pixmap_directory)
+			a_file_name.set_file_name ("icon_new_color.ico")
+			set_with_named_file (Result, a_file_name)
+		end
+
+	icon_copy_color_ico: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		once
+			create Result
+			create a_file_name.make_from_string (pixmap_directory)
+			a_file_name.set_file_name ("icon_copy_color.ico")
+			set_with_named_file (Result, a_file_name)
+		end
+
+	icon_studio_ico: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		once
+			create Result
+			create a_file_name.make_from_string (pixmap_directory)
+			a_file_name.set_file_name ("icon_studio.ico")
+			set_with_named_file (Result, a_file_name)
+		end
+
+	button_back_text: STRING is
+			-- `Result' is STRING constant named `button_back_text'.
+		once
+			Result := "Back"
+		end
+
+	icon_format_text_color_ico: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		once
+			create Result
+			create a_file_name.make_from_string (pixmap_directory)
+			a_file_name.set_file_name ("icon_format_text_color.ico")
+			set_with_named_file (Result, a_file_name)
+		end
+
+	icon_new_editor_color_ico: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		once
+			create Result
+			create a_file_name.make_from_string (pixmap_directory)
+			a_file_name.set_file_name ("icon_new_editor_color.ico")
+			set_with_named_file (Result, a_file_name)
+		end
+
+	dialog_tall_height: INTEGER is 
+			-- `Result' is INTEGER constant named dialog_tall_height.
+		once
+			Result := 580
+		end
+
+	icon_envision_ico: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		once
+			create Result
+			create a_file_name.make_from_string (pixmap_directory)
+			a_file_name.set_file_name ("icon_envision.ico")
+			set_with_named_file (Result, a_file_name)
+		end
+
+	pixmap_directory: STRING is
+			-- `Result' is DIRECTORY constant named `pixmap_directory'.
+		once
+			Result := "D:\Src\tools\doc_builder\resources\icons"
+		end
+
+	icon_restore_color_png: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		once
+			create Result
+			create a_file_name.make_from_string (pixmap_directory)
+			a_file_name.set_file_name ("icon_restore_color.png")
+			set_with_named_file (Result, a_file_name)
+		end
+
+	icon_code_cluster_ico: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		once
+			create Result
+			create a_file_name.make_from_string (pixmap_directory)
+			a_file_name.set_file_name ("icon_code_cluster.ico")
+			set_with_named_file (Result, a_file_name)
+		end
+
+	icon_widget_edit_ico: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		once
+			create Result
+			create a_file_name.make_from_string (pixmap_directory)
+			a_file_name.set_file_name ("icon_widget_edit.ico")
+			set_with_named_file (Result, a_file_name)
+		end
+
+	icon_merge_ico: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		once
+			create Result
+			create a_file_name.make_from_string (pixmap_directory)
+			a_file_name.set_file_name ("icon_merge.ico")
+			set_with_named_file (Result, a_file_name)
+		end
+
+	button_finish_text: STRING is
+			-- `Result' is STRING constant named `button_finish_text'.
+		once
+			Result := "Finish"
+		end
+
+	icon_settings_ico: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		once
+			create Result
+			create a_file_name.make_from_string (pixmap_directory)
+			a_file_name.set_file_name ("icon_settings.ico")
+			set_with_named_file (Result, a_file_name)
+		end
+
+	icon_jpeg_file_ico: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		once
+			create Result
+			create a_file_name.make_from_string (pixmap_directory)
+			a_file_name.set_file_name ("icon_jpeg_file.ico")
+			set_with_named_file (Result, a_file_name)
+		end
+
+	icon_close_color_png: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		once
+			create Result
+			create a_file_name.make_from_string (pixmap_directory)
+			a_file_name.set_file_name ("icon_close_color.png")
+			set_with_named_file (Result, a_file_name)
+		end
+
+	dialog_width: INTEGER is 
+			-- `Result' is INTEGER constant named dialog_width.
+		once
+			Result := 400
+		end
+
+	downarrow_png: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		once
+			create Result
+			create a_file_name.make_from_string (pixmap_directory)
+			a_file_name.set_file_name ("downarrow.png")
+			set_with_named_file (Result, a_file_name)
+		end
+
+	button_add_text: STRING is
+			-- `Result' is STRING constant named `button_add_text'.
+		once
+			Result := "Add"
+		end
+
+	icon_new_ico: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		once
+			create Result
+			create a_file_name.make_from_string (pixmap_directory)
+			a_file_name.set_file_name ("icon_new.ico")
+			set_with_named_file (Result, a_file_name)
+		end
+
+	button_ok_text: STRING is
+			-- `Result' is STRING constant named `button_ok_text'.
+		once
+			Result := "OK"
+		end
+
+	icon_bitmap_file_ico: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		once
+			create Result
+			create a_file_name.make_from_string (pixmap_directory)
+			a_file_name.set_file_name ("icon_bitmap_file.ico")
+			set_with_named_file (Result, a_file_name)
+		end
+
+	box_border_width: INTEGER is 
+			-- `Result' is INTEGER constant named box_border_width.
+		once
+			Result := 2
+		end
+
+	envision_filtered_text: STRING is
+			-- `Result' is STRING constant named `envision_filtered_text'.
+		once
+			Result := "ENViSioN! Filtered"
+		end
+
+	icon_save_ico: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		once
+			create Result
+			create a_file_name.make_from_string (pixmap_directory)
+			a_file_name.set_file_name ("icon_save.ico")
+			set_with_named_file (Result, a_file_name)
+		end
+
+	button_continue_text: STRING is
+			-- `Result' is STRING constant named `button_continue_text'.
+		once
+			Result := "Continue"
+		end
+
+	icon_toc_file_node_ico: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		once
+			create Result
+			create a_file_name.make_from_string (pixmap_directory)
+			a_file_name.set_file_name ("icon_toc_file_node.ico")
+			set_with_named_file (Result, a_file_name)
+		end
+
+	button_find_text: STRING is
+			-- `Result' is STRING constant named `button_find_text'.
+		once
+			Result := "Find"
+		end
+
+	icon_toc_folder_closed_ico: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		once
+			create Result
+			create a_file_name.make_from_string (pixmap_directory)
+			a_file_name.set_file_name ("icon_toc_folder_closed.ico")
+			set_with_named_file (Result, a_file_name)
+		end
+
+	button_apply_text: STRING is
+			-- `Result' is STRING constant named `button_apply_text'.
+		once
+			Result := "Apply"
+		end
+
+	icon_code_class_ico: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		once
+			create Result
+			create a_file_name.make_from_string (pixmap_directory)
+			a_file_name.set_file_name ("icon_code_class.ico")
+			set_with_named_file (Result, a_file_name)
+		end
+
+	dialog_wide_width: INTEGER is 
+			-- `Result' is INTEGER constant named dialog_wide_width.
+		once
+			Result := 600
+		end
+
+	studio_filtered_text: STRING is
+			-- `Result' is STRING constant named `studio_filtered_text'.
+		once
+			Result := "EiffelStudio Filtered"
+		end
+
+	icon_checked_png: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		once
+			create Result
+			create a_file_name.make_from_string (pixmap_directory)
+			a_file_name.set_file_name ("icon_checked.png")
+			set_with_named_file (Result, a_file_name)
+		end
+
+	header_close_cross_png: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		once
+			create Result
+			create a_file_name.make_from_string (pixmap_directory)
+			a_file_name.set_file_name ("header_close_cross.png")
+			set_with_named_file (Result, a_file_name)
+		end
+
+	button_save_text: STRING is
+			-- `Result' is STRING constant named `button_save_text'.
+		once
+			Result := "Save..."
+		end
+
+	icon_sorter_ico: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		once
+			create Result
+			create a_file_name.make_from_string (pixmap_directory)
+			a_file_name.set_file_name ("icon_sorter.ico")
+			set_with_named_file (Result, a_file_name)
+		end
+
+	right_scroll_arrow_png: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		once
+			create Result
+			create a_file_name.make_from_string (pixmap_directory)
+			a_file_name.set_file_name ("right_scroll_arrow.png")
+			set_with_named_file (Result, a_file_name)
+		end
+
+	icon_new_doc_ico: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		once
+			create Result
+			create a_file_name.make_from_string (pixmap_directory)
+			a_file_name.set_file_name ("icon_new_doc.ico")
+			set_with_named_file (Result, a_file_name)
+		end
+
+	button_create_text: STRING is
+			-- `Result' is STRING constant named `button_create_text'.
+		once
+			Result := "Create"
+		end
+
+	icon_highlight_png: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		once
+			create Result
+			create a_file_name.make_from_string (pixmap_directory)
+			a_file_name.set_file_name ("icon_highlight.png")
 			set_with_named_file (Result, a_file_name)
 		end
 

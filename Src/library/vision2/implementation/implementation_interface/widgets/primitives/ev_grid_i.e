@@ -585,16 +585,27 @@ feature -- Status setting
 			a_item_not_void: a_item /= Void
 		local
 			x_coord, y_coord: INTEGER
-			item_height: INTEGER
+			a_screen_x, a_screen_y: INTEGER
+			boundary_x, item_width, item_height: INTEGER
 		do
-			if currently_active_item /= Void then
-					-- If an item is currently active then deactivate it.
+			if currently_active_item /= Void and then currently_active_item.parent = interface then
+					-- If an item is currently active and present in the grid then deactivate it.
 				deactivate_item (currently_active_item)
 			end
 			currently_active_item := a_item
 			create activate_window
-			x_coord := screen_x - virtual_x_position + a_item.virtual_x_position
-			y_coord := screen_y - virtual_y_position + a_item.virtual_y_position + viewable_y_offset
+
+			a_screen_x := screen_x
+
+			a_screen_y := screen_y
+
+			x_coord := a_screen_x - virtual_x_position + a_item.virtual_x_position
+			y_coord := a_screen_y - virtual_y_position + a_item.virtual_y_position + viewable_y_offset
+
+			boundary_x := a_screen_x + width
+			if vertical_scroll_bar.is_displayed then
+				boundary_x := boundary_x - vertical_scroll_bar.width
+			end
 
 			if is_row_height_fixed then
 				item_height := row_height
@@ -604,7 +615,15 @@ feature -- Status setting
 
 				-- Set default size and position.
 			activate_window.set_position (x_coord, y_coord)
-			activate_window.set_size (a_item.column.width -  a_item.horizontal_indent, item_height)
+
+			item_width := a_item.column.width - a_item.horizontal_indent
+
+			if x_coord + item_width > boundary_x then
+					-- If column extends beyond the visible part of the grid, the size of the activate_window is clipped.
+				item_width := boundary_x - x_coord
+			end
+
+			activate_window.set_size (item_width, item_height)
 
 				-- Call the `activate_action' on the grid and item to initialize `activate_action'
 			a_item.activate_action (activate_window)

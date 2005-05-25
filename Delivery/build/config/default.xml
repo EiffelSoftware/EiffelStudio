@@ -13,7 +13,7 @@
 	<PREF NAME="global_preferences.build_window_x_position" HIDDEN="true"><INTEGER>200</INTEGER></PREF>
 	<PREF NAME="global_preferences.build_window_y_position" HIDDEN="true"><INTEGER>200</INTEGER></PREF>
 	<PREF NAME="global_preferences.main_split_position" HIDDEN="true"><INTEGER>100</INTEGER></PREF>
-	<PREF NAME="global_preferences.tool_order" HIDDEN="true"><LIST>typeselector_normal_100_100;componentselector_normal_100_100;windowselector_normal_100_100</LIST></PREF>
+	<PREF NAME="global_preferences.tool_order" HIDDEN="true"><LIST>typeselector_normal_100_100;componentselector_normal_100_100;widgetselector_normal_100_100</LIST></PREF>
 	<PREF NAME="global_preferences.external_tool_order" HIDDEN="true"><LIST></LIST></PREF>
 	<PREF NAME="global_preferences.tip_of_day_index" HIDDEN="true"><INTEGER>1</INTEGER></PREF>
 	<PREF NAME="global_preferences.recent_projects" HIDDEN="true"><LIST></LIST></PREF>

@@ -450,7 +450,10 @@ feature {NONE} -- Implementation
 	is_escaped (a_char: INTEGER): BOOLEAN is
 			-- Is this an escapable character? (<, >, &)
 		do
-			Result := a_char = Lt_char.code or a_char = Gt_char.code or a_char = Amp_char.code
+			Result := a_char = Lt_char.code
+				or a_char = Gt_char.code
+				or a_char = Amp_char.code
+				or a_char >= 128
 		end
 
 	escaped_char (a_char: INTEGER): STRING is

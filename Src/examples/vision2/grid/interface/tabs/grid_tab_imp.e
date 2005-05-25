@@ -39,6 +39,7 @@ feature {NONE}-- Initialization
 			create custom_button
 			create icon_view_button
 			create colored_button
+			create build_ball_demo_button
 			create removal_frame
 			create l_ev_vertical_box_2
 			create l_ev_table_2
@@ -186,11 +187,13 @@ feature {NONE}-- Initialization
 			l_ev_table_1.put_at_position (custom_button, 1, 2, 1, 1)
 			l_ev_table_1.put_at_position (icon_view_button, 2, 2, 1, 1)
 			l_ev_table_1.put_at_position (colored_button, 1, 3, 1, 1)
+			l_ev_table_1.put_at_position (build_ball_demo_button, 2, 3, 1, 1)
 			new_label_button.set_text ("Add New Items")
 			misc_button.set_text ("Build Default Item Structure")
 			custom_button.set_text ("Custom Function")
 			icon_view_button.set_text ("Build Icon View Structure")
 			colored_button.set_text ("Build Colored Structure")
+			build_ball_demo_button.set_text ("Build Ball Demo")
 			removal_frame.set_text ("Removal")
 			l_ev_vertical_box_2.set_border_width (box_padding)
 			l_ev_table_2.resize (2, 1)
@@ -331,6 +334,7 @@ feature {NONE}-- Initialization
 			custom_button.select_actions.extend (agent custom_button_selected)
 			icon_view_button.select_actions.extend (agent icon_view_button_selected)
 			colored_button.select_actions.extend (agent colored_button_selected)
+			build_ball_demo_button.select_actions.extend (agent build_ball_demo_button_selected)
 			remove_all_rows_button.select_actions.extend (agent remove_all_row_button_selected)
 			remove_all_columns_button.select_actions.extend (agent remove_all_columns_button_selected)
 			is_column_resize_immediate_button.select_actions.extend (agent is_column_resize_immediate_button_selected)
@@ -386,11 +390,11 @@ feature -- Access
 	background_color_combo, separator_color_combo, subnode_pixmaps_combo, set_background_color_combo: EV_COMBO_BOX
 	resize_rows_columns_box: EV_HORIZONTAL_BOX
 	new_label_button,
-	misc_button, custom_button, icon_view_button, colored_button, remove_all_rows_button,
-	remove_all_columns_button, set_selected_row_as_subnode_button, expand_all_button,
-	collapse_all_button: EV_BUTTON
-	addition_frame, removal_frame, display_frame, divider_frame,
-	scrolling_frame: EV_FRAME
+	misc_button, custom_button, icon_view_button, colored_button, build_ball_demo_button,
+	remove_all_rows_button, remove_all_columns_button, set_selected_row_as_subnode_button,
+	expand_all_button, collapse_all_button: EV_BUTTON
+	addition_frame, removal_frame, display_frame,
+	divider_frame, scrolling_frame: EV_FRAME
 
 feature {NONE} -- Implementation
 
@@ -445,6 +449,11 @@ feature {NONE} -- Implementation
 	
 	colored_button_selected is
 			-- Called by `select_actions' of `colored_button'.
+		deferred
+		end
+	
+	build_ball_demo_button_selected is
+			-- Called by `select_actions' of `build_ball_demo_button'.
 		deferred
 		end
 	

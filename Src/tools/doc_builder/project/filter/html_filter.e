@@ -171,6 +171,7 @@ feature {NONE} -- Processing
 		local
 			l_previous,
 			l_name: STRING
+			l_util: UTILITY_FUNCTIONS
 		do
 			if not previous_elements.is_empty then				
 				l_previous := Previous_elements.item	
@@ -195,12 +196,27 @@ feature {NONE} -- Processing
 					else
 						write_attribute (e, False)
 					end
+						-- Anchor Url
+				elseif e.is_equal ("anchor_name") then
+					Attribute_stack.extend (e)
+					write_attribute (e, False)
+					create l_util
+					if conc_content = Void then
+						conc_content := ""
+					end
+					l_name := l_util.short_name (filename)
+					l_name.replace_substring_all (".xml", ".html")
+					conc_content.append (l_name + "#")
 						-- Stylesheet
 				elseif e.is_equal ("stylesheet") then
 					write_element (e, True, True)
 					write_attribute ("rel", False)
 					output_string.insert_string ("%"stylesheet%"", attribute_value_write_position)
-					process_attribute_element ("url")				
+					process_attribute_element ("url")
+						-- Anchor
+				elseif e.is_equal ("anchor") then
+					write_element (e, True, True)
+					process_attribute_element ("anchor")
 				else
 					write_element (e, is_start, True)
 				end					
@@ -247,12 +263,15 @@ feature {NONE} -- Processing
 					e.is_equal ("info")
 				then
 					l_name := "paragraph_end"
+				elseif e.is_equal ("anchor") then
+						-- Anchor
+					output_string.append ("</a>")
 				end
-				
+
 				if l_name = Void then
 					l_name := e
 				end
-				
+
 				if not in_attribute then
 					write_element (l_name, is_start, True)
 				end				

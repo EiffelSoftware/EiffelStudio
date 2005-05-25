@@ -104,6 +104,7 @@ feature {NONE} -- Initialization
 			toolbar_save.select_actions.extend 				(agent Shared_document_manager.save_document)
 			toolbar_validate.select_actions.extend 			(agent Shared_document_editor_commands.validate_document)
 			toolbar_link_check.select_actions.extend		(agent Shared_document_editor_commands.validate_document_links)
+			toolbar_html_generator.select_actions.extend 	(agent shared_document_manager.on_document_selected)
 			toolbar_properties.select_actions.extend 		(agent open_document_properties_dialog)
 			output_combo.select_actions.extend 				(agent update_output_filter)
 											
@@ -223,6 +224,7 @@ feature -- Interface Events
 				toggle_sensitivity (toolbar_xml_format, True)
 				toggle_sensitivity (toolbar_code_format, l_text.has_selection)				
 				toggle_sensitivity (toolbar_link_check, True)
+				toggle_sensitivity (toolbar_html_generator, True)
 				
 						-- Validation and properties
 				if shared_document_manager.has_schema then
@@ -243,6 +245,7 @@ feature -- Interface Events
 				toggle_sensitivity (toolbar_xml_format, False)
 				toggle_sensitivity (toolbar_code_format, False)
 				toggle_sensitivity (toolbar_link_check, False)
+				toggle_sensitivity (toolbar_html_generator, False)
 				
 						-- Validation
 				toggle_sensitivity (toolbar_validate, False)

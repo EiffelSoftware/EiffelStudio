@@ -74,15 +74,15 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	l_ev_vertical_box_1: EV_VERTICAL_BOX
+	l_ev_cell_1: EV_CELL
+	l_ev_cell_2: EV_CELL
+	ok_button: EV_BUTTON
 	l_ev_horizontal_box_1: EV_HORIZONTAL_BOX
 	l_ev_horizontal_box_2: EV_HORIZONTAL_BOX
 	l_ev_horizontal_box_3: EV_HORIZONTAL_BOX
+	l_ev_vertical_box_1: EV_VERTICAL_BOX
 	l_ev_label_1: EV_LABEL
 	l_ev_label_2: EV_LABEL
-	ok_button: EV_BUTTON
-	l_ev_cell_1: EV_CELL
-	l_ev_cell_2: EV_CELL
 
 feature {NONE} -- Implementation
 

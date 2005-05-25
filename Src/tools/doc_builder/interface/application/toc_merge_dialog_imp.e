@@ -94,17 +94,17 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	toc_name_text: EV_TEXT_FIELD
-	l_ev_vertical_box_1: EV_VERTICAL_BOX
+	toc_list: EV_LIST
+	l_ev_cell_1: EV_CELL
+	ok_button: EV_BUTTON
+	cancel_button: EV_BUTTON
 	l_ev_horizontal_box_1: EV_HORIZONTAL_BOX
 	l_ev_horizontal_box_2: EV_HORIZONTAL_BOX
 	l_ev_horizontal_box_3: EV_HORIZONTAL_BOX
+	l_ev_vertical_box_1: EV_VERTICAL_BOX
 	l_ev_label_1: EV_LABEL
 	l_ev_label_2: EV_LABEL
-	ok_button: EV_BUTTON
-	cancel_button: EV_BUTTON
-	l_ev_cell_1: EV_CELL
-	toc_list: EV_LIST
+	toc_name_text: EV_TEXT_FIELD
 
 feature {NONE} -- Implementation
 

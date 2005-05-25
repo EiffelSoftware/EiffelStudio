@@ -1,42 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?><application xsi="http://www.w3.org/1999/XMLSchema-instance">
-<item type="Constants"><Constant><type>STRING</type>
-		<Name>button_ok_text</Name>
-		<Value>OK</Value>
-		</Constant>
-	<Constant><type>PIXMAP</type>
-		<Name>icon_undo_ico</Name>
-		<Value>D:\Src\tools\doc_builder\resources\icons\icon_undo.ico</Value>
+<item type="Constants"><Constant><type>PIXMAP</type>
+		<Name>icon_paste_ico</Name>
+		<Value>D:\Src\tools\doc_builder\resources\icons\icon_paste.ico</Value>
 		<is_absolute>False</is_absolute>
 		<Directory>pixmap_directory</Directory>
-		<Filename>icon_undo.ico</Filename>
-		</Constant>
-	<Constant><type>PIXMAP</type>
-		<Name>icon_png_file_ico</Name>
-		<Value>D:\Src\tools\doc_builder\resources\icons\icon_png_file.ico</Value>
-		<is_absolute>False</is_absolute>
-		<Directory>pixmap_directory</Directory>
-		<Filename>icon_png_file.ico</Filename>
-		</Constant>
-	<Constant><type>PIXMAP</type>
-		<Name>icon_html_file_ico</Name>
-		<Value>D:\Src\tools\doc_builder\resources\icons\icon_html_file.ico</Value>
-		<is_absolute>False</is_absolute>
-		<Directory>pixmap_directory</Directory>
-		<Filename>icon_html_file.ico</Filename>
-		</Constant>
-	<Constant><type>PIXMAP</type>
-		<Name>icon_cut_color_ico</Name>
-		<Value>D:\Src\tools\doc_builder\resources\icons\icon_cut_color.ico</Value>
-		<is_absolute>False</is_absolute>
-		<Directory>pixmap_directory</Directory>
-		<Filename>icon_cut_color.ico</Filename>
-		</Constant>
-	<Constant><type>PIXMAP</type>
-		<Name>icon_open_file_ico</Name>
-		<Value>D:\Src\tools\doc_builder\resources\icons\icon_open_file.ico</Value>
-		<is_absolute>False</is_absolute>
-		<Directory>pixmap_directory</Directory>
-		<Filename>icon_open_file.ico</Filename>
+		<Filename>icon_paste.ico</Filename>
 		</Constant>
 	<Constant><type>PIXMAP</type>
 		<Name>icon_refresh_ico</Name>
@@ -44,227 +12,6 @@
 		<is_absolute>False</is_absolute>
 		<Directory>pixmap_directory</Directory>
 		<Filename>icon_refresh.ico</Filename>
-		</Constant>
-	<Constant><type>STRING</type>
-		<Name>envision_filtered_text</Name>
-		<Value>ENViSioN! Filtered</Value>
-		</Constant>
-	<Constant><type>PIXMAP</type>
-		<Name>icon_copy_color_ico</Name>
-		<Value>D:\Src\tools\doc_builder\resources\icons\icon_copy_color.ico</Value>
-		<is_absolute>False</is_absolute>
-		<Directory>pixmap_directory</Directory>
-		<Filename>icon_copy_color.ico</Filename>
-		</Constant>
-	<Constant><type>INTEGER</type>
-		<Name>dialog_medium_height</Name>
-		<Value>250</Value>
-		</Constant>
-	<Constant><type>PIXMAP</type>
-		<Name>icon_new_doc_ico</Name>
-		<Value>D:\Src\tools\doc_builder\resources\icons\icon_new_doc.ico</Value>
-		<is_absolute>False</is_absolute>
-		<Directory>pixmap_directory</Directory>
-		<Filename>icon_new_doc.ico</Filename>
-		</Constant>
-	<Constant><type>PIXMAP</type>
-		<Name>icon_info_ico</Name>
-		<Value>D:\Src\tools\doc_builder\resources\icons\icon_info.ico</Value>
-		<is_absolute>False</is_absolute>
-		<Directory>pixmap_directory</Directory>
-		<Filename>icon_info.ico</Filename>
-		</Constant>
-	<Constant><type>PIXMAP</type>
-		<Name>uparrow_png</Name>
-		<Value>D:\Src\tools\doc_builder\resources\icons\uparrow.png</Value>
-		<is_absolute>False</is_absolute>
-		<Directory>pixmap_directory</Directory>
-		<Filename>uparrow.png</Filename>
-		</Constant>
-	<Constant><type>PIXMAP</type>
-		<Name>icon_search_ico_1</Name>
-		<Value>D:\Src\tools\doc_builder\resources\icons\icon_search.ico</Value>
-		<is_absolute>False</is_absolute>
-		<Directory>pixmap_directory</Directory>
-		<Filename>icon_search.ico</Filename>
-		</Constant>
-	<Constant><type>PIXMAP</type>
-		<Name>icon_jpeg_file_ico</Name>
-		<Value>D:\Src\tools\doc_builder\resources\icons\icon_jpeg_file.ico</Value>
-		<is_absolute>False</is_absolute>
-		<Directory>pixmap_directory</Directory>
-		<Filename>icon_jpeg_file.ico</Filename>
-		</Constant>
-	<Constant><type>STRING</type>
-		<Name>button_cancel_text</Name>
-		<Value>Cancel</Value>
-		</Constant>
-	<Constant><type>INTEGER</type>
-		<Name>dialog_short_height</Name>
-		<Value>175</Value>
-		</Constant>
-	<Constant><type>PIXMAP</type>
-		<Name>icon_link_check_ico</Name>
-		<Value>D:\Src\tools\doc_builder\resources\icons\icon_link_check.ico</Value>
-		<is_absolute>False</is_absolute>
-		<Directory>pixmap_directory</Directory>
-		<Filename>icon_link_check.ico</Filename>
-		</Constant>
-	<Constant><type>INTEGER</type>
-		<Name>empty_cell_width</Name>
-		<Value>15</Value>
-		</Constant>
-	<Constant><type>PIXMAP</type>
-		<Name>icon_validate_ico</Name>
-		<Value>D:\Src\tools\doc_builder\resources\icons\icon_validate.ico</Value>
-		<is_absolute>False</is_absolute>
-		<Directory>pixmap_directory</Directory>
-		<Filename>icon_validate.ico</Filename>
-		</Constant>
-	<Constant><type>PIXMAP</type>
-		<Name>icon_back_color_ico</Name>
-		<Value>D:\Src\tools\doc_builder\resources\icons\icon_back_color.ico</Value>
-		<is_absolute>False</is_absolute>
-		<Directory>pixmap_directory</Directory>
-		<Filename>icon_back_color.ico</Filename>
-		</Constant>
-	<Constant><type>PIXMAP</type>
-		<Name>right_scroll_arrow_png</Name>
-		<Value>D:\Src\tools\doc_builder\resources\icons\right_scroll_arrow.png</Value>
-		<is_absolute>False</is_absolute>
-		<Directory>pixmap_directory</Directory>
-		<Filename>right_scroll_arrow.png</Filename>
-		</Constant>
-	<Constant><type>PIXMAP</type>
-		<Name>icon_close_folder_ico</Name>
-		<Value>D:\Src\tools\doc_builder\resources\icons\icon_close_folder.ico</Value>
-		<is_absolute>False</is_absolute>
-		<Directory>pixmap_directory</Directory>
-		<Filename>icon_close_folder.ico</Filename>
-		</Constant>
-	<Constant><type>PIXMAP</type>
-		<Name>icon_envision_ico</Name>
-		<Value>D:\Src\tools\doc_builder\resources\icons\icon_envision.ico</Value>
-		<is_absolute>False</is_absolute>
-		<Directory>pixmap_directory</Directory>
-		<Filename>icon_envision.ico</Filename>
-		</Constant>
-	<Constant><type>PIXMAP</type>
-		<Name>icon_toc_folder_open_ico</Name>
-		<Value>D:\Src\tools\doc_builder\resources\icons\icon_toc_folder_open.ico</Value>
-		<is_absolute>False</is_absolute>
-		<Directory>pixmap_directory</Directory>
-		<Filename>icon_toc_folder_open.ico</Filename>
-		</Constant>
-	<Constant><type>PIXMAP</type>
-		<Name>left_scroll_arrow_png</Name>
-		<Value>D:\Src\tools\doc_builder\resources\icons\left_scroll_arrow.png</Value>
-		<is_absolute>False</is_absolute>
-		<Directory>pixmap_directory</Directory>
-		<Filename>left_scroll_arrow.png</Filename>
-		</Constant>
-	<Constant><type>PIXMAP</type>
-		<Name>icon_code_class_ico</Name>
-		<Value>D:\Src\tools\doc_builder\resources\icons\icon_code_class.ico</Value>
-		<is_absolute>False</is_absolute>
-		<Directory>pixmap_directory</Directory>
-		<Filename>icon_code_class.ico</Filename>
-		</Constant>
-	<Constant><type>PIXMAP</type>
-		<Name>icon_toc_file_node_ico</Name>
-		<Value>D:\Src\tools\doc_builder\resources\icons\icon_toc_file_node.ico</Value>
-		<is_absolute>False</is_absolute>
-		<Directory>pixmap_directory</Directory>
-		<Filename>icon_toc_file_node.ico</Filename>
-		</Constant>
-	<Constant><type>INTEGER</type>
-		<Name>radio_button_width</Name>
-		<Value>20</Value>
-		</Constant>
-	<Constant><type>PIXMAP</type>
-		<Name>icon_sorter_ico</Name>
-		<Value>D:\Src\tools\doc_builder\resources\icons\icon_sorter.ico</Value>
-		<is_absolute>False</is_absolute>
-		<Directory>pixmap_directory</Directory>
-		<Filename>icon_sorter.ico</Filename>
-		</Constant>
-	<Constant><type>STRING</type>
-		<Name>button_find_text</Name>
-		<Value>Find</Value>
-		</Constant>
-	<Constant><type>INTEGER</type>
-		<Name>dialog_height</Name>
-		<Value>500</Value>
-		</Constant>
-	<Constant><type>PIXMAP</type>
-		<Name>icon_bitmap_file_ico</Name>
-		<Value>D:\Src\tools\doc_builder\resources\icons\icon_bitmap_file.ico</Value>
-		<is_absolute>False</is_absolute>
-		<Directory>pixmap_directory</Directory>
-		<Filename>icon_bitmap_file.ico</Filename>
-		</Constant>
-	<Constant><type>DIRECTORY</type>
-		<Name>pixmap_directory</Name>
-		<Value>D:\Src\tools\doc_builder\resources\icons</Value>
-		</Constant>
-	<Constant><type>INTEGER</type>
-		<Name>box_border_width</Name>
-		<Value>2</Value>
-		</Constant>
-	<Constant><type>STRING</type>
-		<Name>button_save_text</Name>
-		<Value>Save...</Value>
-		</Constant>
-	<Constant><type>PIXMAP</type>
-		<Name>icon_maximize_color_png</Name>
-		<Value>D:\Src\tools\doc_builder\resources\icons\icon_maximize_color.png</Value>
-		<is_absolute>False</is_absolute>
-		<Directory>pixmap_directory</Directory>
-		<Filename>icon_maximize_color.png</Filename>
-		</Constant>
-	<Constant><type>STRING</type>
-		<Name>button_continue_text</Name>
-		<Value>Continue</Value>
-		</Constant>
-	<Constant><type>STRING</type>
-		<Name>button_open_text</Name>
-		<Value>Open</Value>
-		</Constant>
-	<Constant><type>PIXMAP</type>
-		<Name>icon_save_ico</Name>
-		<Value>D:\Src\tools\doc_builder\resources\icons\icon_save.ico</Value>
-		<is_absolute>False</is_absolute>
-		<Directory>pixmap_directory</Directory>
-		<Filename>icon_save.ico</Filename>
-		</Constant>
-	<Constant><type>INTEGER</type>
-		<Name>dialog_width</Name>
-		<Value>400</Value>
-		</Constant>
-	<Constant><type>INTEGER</type>
-		<Name>button_width</Name>
-		<Value>80</Value>
-		</Constant>
-	<Constant><type>PIXMAP</type>
-		<Name>icon_widget_edit_ico</Name>
-		<Value>D:\Src\tools\doc_builder\resources\icons\icon_widget_edit.ico</Value>
-		<is_absolute>False</is_absolute>
-		<Directory>pixmap_directory</Directory>
-		<Filename>icon_widget_edit.ico</Filename>
-		</Constant>
-	<Constant><type>PIXMAP</type>
-		<Name>header_close_cross_png</Name>
-		<Value>D:\Src\tools\doc_builder\resources\icons\header_close_cross.png</Value>
-		<is_absolute>False</is_absolute>
-		<Directory>pixmap_directory</Directory>
-		<Filename>header_close_cross.png</Filename>
-		</Constant>
-	<Constant><type>PIXMAP</type>
-		<Name>downarrow_png</Name>
-		<Value>D:\Src\tools\doc_builder\resources\icons\downarrow.png</Value>
-		<is_absolute>False</is_absolute>
-		<Directory>pixmap_directory</Directory>
-		<Filename>downarrow.png</Filename>
 		</Constant>
 	<Constant><type>PIXMAP</type>
 		<Name>icon_code_format_ico</Name>
@@ -274,217 +21,15 @@
 		<Filename>icon_code_format.ico</Filename>
 		</Constant>
 	<Constant><type>PIXMAP</type>
-		<Name>icon_restore_color_png</Name>
-		<Value>D:\Src\tools\doc_builder\resources\icons\icon_restore_color.png</Value>
+		<Name>icon_html_file_ico</Name>
+		<Value>D:\Src\tools\doc_builder\resources\icons\icon_html_file.ico</Value>
 		<is_absolute>False</is_absolute>
 		<Directory>pixmap_directory</Directory>
-		<Filename>icon_restore_color.png</Filename>
+		<Filename>icon_html_file.ico</Filename>
 		</Constant>
 	<Constant><type>INTEGER</type>
-		<Name>inner_border_width</Name>
-		<Value>5</Value>
-		</Constant>
-	<Constant><type>PIXMAP</type>
-		<Name>icon_unchecked_png</Name>
-		<Value>D:\Src\tools\doc_builder\resources\icons\icon_unchecked.png</Value>
-		<is_absolute>False</is_absolute>
-		<Directory>pixmap_directory</Directory>
-		<Filename>icon_unchecked.png</Filename>
-		</Constant>
-	<Constant><type>PIXMAP</type>
-		<Name>icon_close_color_ico</Name>
-		<Value>D:\Src\tools\doc_builder\resources\icons\icon_close_color.ico</Value>
-		<is_absolute>False</is_absolute>
-		<Directory>pixmap_directory</Directory>
-		<Filename>icon_close_color.ico</Filename>
-		</Constant>
-	<Constant><type>PIXMAP</type>
-		<Name>icon_redo_ico</Name>
-		<Value>D:\Src\tools\doc_builder\resources\icons\icon_redo.ico</Value>
-		<is_absolute>False</is_absolute>
-		<Directory>pixmap_directory</Directory>
-		<Filename>icon_redo.ico</Filename>
-		</Constant>
-	<Constant><type>PIXMAP</type>
-		<Name>icon_checked_png</Name>
-		<Value>D:\Src\tools\doc_builder\resources\icons\icon_checked.png</Value>
-		<is_absolute>False</is_absolute>
-		<Directory>pixmap_directory</Directory>
-		<Filename>icon_checked.png</Filename>
-		</Constant>
-	<Constant><type>PIXMAP</type>
-		<Name>icon_file_close_ico</Name>
-		<Value>D:\Src\tools\doc_builder\resources\icons\icon_file_close.ico</Value>
-		<is_absolute>False</is_absolute>
-		<Directory>pixmap_directory</Directory>
-		<Filename>icon_file_close.ico</Filename>
-		</Constant>
-	<Constant><type>STRING</type>
-		<Name>button_back_text</Name>
-		<Value>Back</Value>
-		</Constant>
-	<Constant><type>INTEGER</type>
-		<Name>dialog_tall_height</Name>
-		<Value>580</Value>
-		</Constant>
-	<Constant><type>PIXMAP</type>
-		<Name>icon_settings_ico</Name>
-		<Value>D:\Src\tools\doc_builder\resources\icons\icon_settings.ico</Value>
-		<is_absolute>False</is_absolute>
-		<Directory>pixmap_directory</Directory>
-		<Filename>icon_settings.ico</Filename>
-		</Constant>
-	<Constant><type>STRING</type>
-		<Name>button_apply_text</Name>
-		<Value>Apply</Value>
-		</Constant>
-	<Constant><type>STRING</type>
-		<Name>button_create_text</Name>
-		<Value>Create</Value>
-		</Constant>
-	<Constant><type>PIXMAP</type>
-		<Name>icon_minimize_color_png</Name>
-		<Value>D:\Src\tools\doc_builder\resources\icons\icon_minimize_color.png</Value>
-		<is_absolute>False</is_absolute>
-		<Directory>pixmap_directory</Directory>
-		<Filename>icon_minimize_color.png</Filename>
-		</Constant>
-	<Constant><type>INTEGER</type>
-		<Name>box_padding_width</Name>
-		<Value>5</Value>
-		</Constant>
-	<Constant><type>PIXMAP</type>
-		<Name>icon_close_color_png</Name>
-		<Value>D:\Src\tools\doc_builder\resources\icons\icon_close_color.png</Value>
-		<is_absolute>False</is_absolute>
-		<Directory>pixmap_directory</Directory>
-		<Filename>icon_close_color.png</Filename>
-		</Constant>
-	<Constant><type>PIXMAP</type>
-		<Name>icon_paste_ico</Name>
-		<Value>D:\Src\tools\doc_builder\resources\icons\icon_paste.ico</Value>
-		<is_absolute>False</is_absolute>
-		<Directory>pixmap_directory</Directory>
-		<Filename>icon_paste.ico</Filename>
-		</Constant>
-	<Constant><type>PIXMAP</type>
-		<Name>icon_highlight_png</Name>
-		<Value>D:\Src\tools\doc_builder\resources\icons\icon_highlight.png</Value>
-		<is_absolute>False</is_absolute>
-		<Directory>pixmap_directory</Directory>
-		<Filename>icon_highlight.png</Filename>
-		</Constant>
-	<Constant><type>PIXMAP</type>
-		<Name>icon_ie_icon_ico</Name>
-		<Value>D:\Src\tools\doc_builder\resources\icons\icon_ie_icon.ico</Value>
-		<is_absolute>False</is_absolute>
-		<Directory>pixmap_directory</Directory>
-		<Filename>icon_ie_icon.ico</Filename>
-		</Constant>
-	<Constant><type>PIXMAP</type>
-		<Name>icon_ie_ico</Name>
-		<Value>D:\Src\tools\doc_builder\resources\icons\icon_ie.ico</Value>
-		<is_absolute>False</is_absolute>
-		<Directory>pixmap_directory</Directory>
-		<Filename>icon_ie.ico</Filename>
-		</Constant>
-	<Constant><type>PIXMAP</type>
-		<Name>icon_properties_color_ico</Name>
-		<Value>D:\Src\tools\doc_builder\resources\icons\icon_properties_color.ico</Value>
-		<is_absolute>False</is_absolute>
-		<Directory>pixmap_directory</Directory>
-		<Filename>icon_properties_color.ico</Filename>
-		</Constant>
-	<Constant><type>PIXMAP</type>
-		<Name>icon_format_text_color_ico</Name>
-		<Value>D:\Src\tools\doc_builder\resources\icons\icon_format_text_color.ico</Value>
-		<is_absolute>False</is_absolute>
-		<Directory>pixmap_directory</Directory>
-		<Filename>icon_format_text_color.ico</Filename>
-		</Constant>
-	<Constant><type>PIXMAP</type>
-		<Name>icon_forth_color_ico</Name>
-		<Value>D:\Src\tools\doc_builder\resources\icons\icon_forth_color.ico</Value>
-		<is_absolute>False</is_absolute>
-		<Directory>pixmap_directory</Directory>
-		<Filename>icon_forth_color.ico</Filename>
-		</Constant>
-	<Constant><type>PIXMAP</type>
-		<Name>icon_code_cluster_ico</Name>
-		<Value>D:\Src\tools\doc_builder\resources\icons\icon_code_cluster.ico</Value>
-		<is_absolute>False</is_absolute>
-		<Directory>pixmap_directory</Directory>
-		<Filename>icon_code_cluster.ico</Filename>
-		</Constant>
-	<Constant><type>STRING</type>
-		<Name>button_add_text</Name>
-		<Value>Add</Value>
-		</Constant>
-	<Constant><type>INTEGER</type>
-		<Name>dialog_wide_width</Name>
-		<Value>600</Value>
-		</Constant>
-	<Constant><type>STRING</type>
-		<Name>button_browse_text</Name>
-		<Value>Browse...</Value>
-		</Constant>
-	<Constant><type>PIXMAP</type>
-		<Name>icon_new_color_ico</Name>
-		<Value>D:\Src\tools\doc_builder\resources\icons\icon_new_color.ico</Value>
-		<is_absolute>False</is_absolute>
-		<Directory>pixmap_directory</Directory>
-		<Filename>icon_new_color.ico</Filename>
-		</Constant>
-	<Constant><type>PIXMAP</type>
-		<Name>icon_studio_ico</Name>
-		<Value>D:\Src\tools\doc_builder\resources\icons\icon_studio.ico</Value>
-		<is_absolute>False</is_absolute>
-		<Directory>pixmap_directory</Directory>
-		<Filename>icon_studio.ico</Filename>
-		</Constant>
-	<Constant><type>STRING</type>
-		<Name>unfiltered_text</Name>
-		<Value>Unfiltered</Value>
-		</Constant>
-	<Constant><type>PIXMAP</type>
-		<Name>icon_new_editor_color_ico</Name>
-		<Value>D:\Src\tools\doc_builder\resources\icons\icon_new_editor_color.ico</Value>
-		<is_absolute>False</is_absolute>
-		<Directory>pixmap_directory</Directory>
-		<Filename>icon_new_editor_color.ico</Filename>
-		</Constant>
-	<Constant><type>STRING</type>
-		<Name>button_next_text</Name>
-		<Value>Next</Value>
-		</Constant>
-	<Constant><type>PIXMAP</type>
-		<Name>icon_merge_ico</Name>
-		<Value>D:\Src\tools\doc_builder\resources\icons\icon_merge.ico</Value>
-		<is_absolute>False</is_absolute>
-		<Directory>pixmap_directory</Directory>
-		<Filename>icon_merge.ico</Filename>
-		</Constant>
-	<Constant><type>PIXMAP</type>
-		<Name>icon_link_check_ico_ico</Name>
-		<Value>D:\Src\tools\doc_builder\resources\icons\icon_link_check_ico.ico</Value>
-		<is_absolute>False</is_absolute>
-		<Directory>pixmap_directory</Directory>
-		<Filename>icon_link_check_ico.ico</Filename>
-		</Constant>
-	<Constant><type>STRING</type>
-		<Name>studio_filtered_text</Name>
-		<Value>EiffelStudio Filtered</Value>
-		</Constant>
-	<Constant><type>PIXMAP</type>
-		<Name>icon_gif_file_ico</Name>
-		<Value>D:\Src\tools\doc_builder\resources\icons\icon_gif_file.ico</Value>
-		<is_absolute>False</is_absolute>
-		<Directory>pixmap_directory</Directory>
-		<Filename>icon_gif_file.ico</Filename>
-		</Constant>
-	<Constant><type>STRING</type>
-		<Name>button_finish_text</Name>
-		<Value>Finish</Value>
+		<Name>radio_button_width</Name>
+		<Value>20</Value>
 		</Constant>
 	<Constant><type>PIXMAP</type>
 		<Name>icon_down_triangle_ico</Name>
@@ -494,11 +39,11 @@
 		<Filename>icon_down_triangle.ico</Filename>
 		</Constant>
 	<Constant><type>PIXMAP</type>
-		<Name>icon_new_ico</Name>
-		<Value>D:\Src\tools\doc_builder\resources\icons\icon_new.ico</Value>
+		<Name>left_scroll_arrow_png</Name>
+		<Value>D:\Src\tools\doc_builder\resources\icons\left_scroll_arrow.png</Value>
 		<is_absolute>False</is_absolute>
 		<Directory>pixmap_directory</Directory>
-		<Filename>icon_new.ico</Filename>
+		<Filename>left_scroll_arrow.png</Filename>
 		</Constant>
 	<Constant><type>PIXMAP</type>
 		<Name>icon_search_ico</Name>
@@ -507,12 +52,103 @@
 		<Directory>pixmap_directory</Directory>
 		<Filename>icon_search.ico</Filename>
 		</Constant>
+	<Constant><type>INTEGER</type>
+		<Name>empty_cell_width</Name>
+		<Value>15</Value>
+		</Constant>
 	<Constant><type>PIXMAP</type>
-		<Name>icon_toc_folder_closed_ico</Name>
-		<Value>D:\Src\tools\doc_builder\resources\icons\icon_toc_folder_closed.ico</Value>
+		<Name>icon_link_check_ico</Name>
+		<Value>D:\Src\tools\doc_builder\resources\icons\icon_link_check.ico</Value>
 		<is_absolute>False</is_absolute>
 		<Directory>pixmap_directory</Directory>
-		<Filename>icon_toc_folder_closed.ico</Filename>
+		<Filename>icon_link_check.ico</Filename>
+		</Constant>
+	<Constant><type>PIXMAP</type>
+		<Name>icon_png_file_ico</Name>
+		<Value>D:\Src\tools\doc_builder\resources\icons\icon_png_file.ico</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>pixmap_directory</Directory>
+		<Filename>icon_png_file.ico</Filename>
+		</Constant>
+	<Constant><type>INTEGER</type>
+		<Name>dialog_height</Name>
+		<Value>500</Value>
+		</Constant>
+	<Constant><type>INTEGER</type>
+		<Name>button_width</Name>
+		<Value>80</Value>
+		</Constant>
+	<Constant><type>STRING</type>
+		<Name>button_browse_text</Name>
+		<Value>Browse...</Value>
+		</Constant>
+	<Constant><type>INTEGER</type>
+		<Name>inner_border_width</Name>
+		<Value>5</Value>
+		</Constant>
+	<Constant><type>INTEGER</type>
+		<Name>dialog_short_height</Name>
+		<Value>175</Value>
+		</Constant>
+	<Constant><type>INTEGER</type>
+		<Name>box_padding_width</Name>
+		<Value>5</Value>
+		</Constant>
+	<Constant><type>PIXMAP</type>
+		<Name>icon_toc_exclude_ico</Name>
+		<Value>D:\Src\tools\doc_builder\resources\icons\icon_toc_exclude.ico</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>pixmap_directory</Directory>
+		<Filename>icon_toc_exclude.ico</Filename>
+		</Constant>
+	<Constant><type>PIXMAP</type>
+		<Name>icon_forth_color_ico</Name>
+		<Value>D:\Src\tools\doc_builder\resources\icons\icon_forth_color.ico</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>pixmap_directory</Directory>
+		<Filename>icon_forth_color.ico</Filename>
+		</Constant>
+	<Constant><type>PIXMAP</type>
+		<Name>icon_ie_ico</Name>
+		<Value>D:\Src\tools\doc_builder\resources\icons\icon_ie.ico</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>pixmap_directory</Directory>
+		<Filename>icon_ie.ico</Filename>
+		</Constant>
+	<Constant><type>PIXMAP</type>
+		<Name>icon_maximize_color_png</Name>
+		<Value>D:\Src\tools\doc_builder\resources\icons\icon_maximize_color.png</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>pixmap_directory</Directory>
+		<Filename>icon_maximize_color.png</Filename>
+		</Constant>
+	<Constant><type>PIXMAP</type>
+		<Name>uparrow_png</Name>
+		<Value>D:\Src\tools\doc_builder\resources\icons\uparrow.png</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>pixmap_directory</Directory>
+		<Filename>uparrow.png</Filename>
+		</Constant>
+	<Constant><type>PIXMAP</type>
+		<Name>icon_validate_ico</Name>
+		<Value>D:\Src\tools\doc_builder\resources\icons\icon_validate.ico</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>pixmap_directory</Directory>
+		<Filename>icon_validate.ico</Filename>
+		</Constant>
+	<Constant><type>PIXMAP</type>
+		<Name>icon_link_check_ico_ico</Name>
+		<Value>D:\Src\tools\doc_builder\resources\icons\icon_link_check_ico.ico</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>pixmap_directory</Directory>
+		<Filename>icon_link_check_ico.ico</Filename>
+		</Constant>
+	<Constant><type>PIXMAP</type>
+		<Name>icon_unchecked_png</Name>
+		<Value>D:\Src\tools\doc_builder\resources\icons\icon_unchecked.png</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>pixmap_directory</Directory>
+		<Filename>icon_unchecked.png</Filename>
 		</Constant>
 	<Constant><type>PIXMAP</type>
 		<Name>icon_code_feature_ico</Name>
@@ -522,11 +158,375 @@
 		<Filename>icon_code_feature.ico</Filename>
 		</Constant>
 	<Constant><type>PIXMAP</type>
-		<Name>icon_toc_exclude_ico</Name>
-		<Value>D:\Src\tools\doc_builder\resources\icons\icon_toc_exclude.ico</Value>
+		<Name>icon_redo_ico</Name>
+		<Value>D:\Src\tools\doc_builder\resources\icons\icon_redo.ico</Value>
 		<is_absolute>False</is_absolute>
 		<Directory>pixmap_directory</Directory>
-		<Filename>icon_toc_exclude.ico</Filename>
+		<Filename>icon_redo.ico</Filename>
+		</Constant>
+	<Constant><type>PIXMAP</type>
+		<Name>icon_toc_folder_open_ico</Name>
+		<Value>D:\Src\tools\doc_builder\resources\icons\icon_toc_folder_open.ico</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>pixmap_directory</Directory>
+		<Filename>icon_toc_folder_open.ico</Filename>
+		</Constant>
+	<Constant><type>PIXMAP</type>
+		<Name>icon_info_ico</Name>
+		<Value>D:\Src\tools\doc_builder\resources\icons\icon_info.ico</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>pixmap_directory</Directory>
+		<Filename>icon_info.ico</Filename>
+		</Constant>
+	<Constant><type>PIXMAP</type>
+		<Name>icon_close_color_ico</Name>
+		<Value>D:\Src\tools\doc_builder\resources\icons\icon_close_color.ico</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>pixmap_directory</Directory>
+		<Filename>icon_close_color.ico</Filename>
+		</Constant>
+	<Constant><type>PIXMAP</type>
+		<Name>icon_gif_file_ico</Name>
+		<Value>D:\Src\tools\doc_builder\resources\icons\icon_gif_file.ico</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>pixmap_directory</Directory>
+		<Filename>icon_gif_file.ico</Filename>
+		</Constant>
+	<Constant><type>PIXMAP</type>
+		<Name>icon_back_color_ico</Name>
+		<Value>D:\Src\tools\doc_builder\resources\icons\icon_back_color.ico</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>pixmap_directory</Directory>
+		<Filename>icon_back_color.ico</Filename>
+		</Constant>
+	<Constant><type>PIXMAP</type>
+		<Name>icon_close_folder_ico</Name>
+		<Value>D:\Src\tools\doc_builder\resources\icons\icon_close_folder.ico</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>pixmap_directory</Directory>
+		<Filename>icon_close_folder.ico</Filename>
+		</Constant>
+	<Constant><type>PIXMAP</type>
+		<Name>icon_file_close_ico</Name>
+		<Value>D:\Src\tools\doc_builder\resources\icons\icon_file_close.ico</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>pixmap_directory</Directory>
+		<Filename>icon_file_close.ico</Filename>
+		</Constant>
+	<Constant><type>STRING</type>
+		<Name>button_cancel_text</Name>
+		<Value>Cancel</Value>
+		</Constant>
+	<Constant><type>STRING</type>
+		<Name>button_next_text</Name>
+		<Value>Next</Value>
+		</Constant>
+	<Constant><type>STRING</type>
+		<Name>unfiltered_text</Name>
+		<Value>Unfiltered</Value>
+		</Constant>
+	<Constant><type>PIXMAP</type>
+		<Name>icon_ie_icon_ico</Name>
+		<Value>D:\Src\tools\doc_builder\resources\icons\icon_ie_icon.ico</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>pixmap_directory</Directory>
+		<Filename>icon_ie_icon.ico</Filename>
+		</Constant>
+	<Constant><type>PIXMAP</type>
+		<Name>icon_open_file_ico</Name>
+		<Value>D:\Src\tools\doc_builder\resources\icons\icon_open_file.ico</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>pixmap_directory</Directory>
+		<Filename>icon_open_file.ico</Filename>
+		</Constant>
+	<Constant><type>INTEGER</type>
+		<Name>dialog_medium_height</Name>
+		<Value>250</Value>
+		</Constant>
+	<Constant><type>PIXMAP</type>
+		<Name>icon_minimize_color_png</Name>
+		<Value>D:\Src\tools\doc_builder\resources\icons\icon_minimize_color.png</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>pixmap_directory</Directory>
+		<Filename>icon_minimize_color.png</Filename>
+		</Constant>
+	<Constant><type>PIXMAP</type>
+		<Name>icon_undo_ico</Name>
+		<Value>D:\Src\tools\doc_builder\resources\icons\icon_undo.ico</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>pixmap_directory</Directory>
+		<Filename>icon_undo.ico</Filename>
+		</Constant>
+	<Constant><type>PIXMAP</type>
+		<Name>icon_cut_color_ico</Name>
+		<Value>D:\Src\tools\doc_builder\resources\icons\icon_cut_color.ico</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>pixmap_directory</Directory>
+		<Filename>icon_cut_color.ico</Filename>
+		</Constant>
+	<Constant><type>STRING</type>
+		<Name>button_open_text</Name>
+		<Value>Open</Value>
+		</Constant>
+	<Constant><type>PIXMAP</type>
+		<Name>icon_search_ico_1</Name>
+		<Value>D:\Src\tools\doc_builder\resources\icons\icon_search.ico</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>pixmap_directory</Directory>
+		<Filename>icon_search.ico</Filename>
+		</Constant>
+	<Constant><type>PIXMAP</type>
+		<Name>icon_properties_color_ico</Name>
+		<Value>D:\Src\tools\doc_builder\resources\icons\icon_properties_color.ico</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>pixmap_directory</Directory>
+		<Filename>icon_properties_color.ico</Filename>
+		</Constant>
+	<Constant><type>PIXMAP</type>
+		<Name>icon_new_color_ico</Name>
+		<Value>D:\Src\tools\doc_builder\resources\icons\icon_new_color.ico</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>pixmap_directory</Directory>
+		<Filename>icon_new_color.ico</Filename>
+		</Constant>
+	<Constant><type>PIXMAP</type>
+		<Name>icon_copy_color_ico</Name>
+		<Value>D:\Src\tools\doc_builder\resources\icons\icon_copy_color.ico</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>pixmap_directory</Directory>
+		<Filename>icon_copy_color.ico</Filename>
+		</Constant>
+	<Constant><type>PIXMAP</type>
+		<Name>icon_studio_ico</Name>
+		<Value>D:\Src\tools\doc_builder\resources\icons\icon_studio.ico</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>pixmap_directory</Directory>
+		<Filename>icon_studio.ico</Filename>
+		</Constant>
+	<Constant><type>STRING</type>
+		<Name>button_back_text</Name>
+		<Value>Back</Value>
+		</Constant>
+	<Constant><type>PIXMAP</type>
+		<Name>icon_format_text_color_ico</Name>
+		<Value>D:\Src\tools\doc_builder\resources\icons\icon_format_text_color.ico</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>pixmap_directory</Directory>
+		<Filename>icon_format_text_color.ico</Filename>
+		</Constant>
+	<Constant><type>PIXMAP</type>
+		<Name>icon_new_editor_color_ico</Name>
+		<Value>D:\Src\tools\doc_builder\resources\icons\icon_new_editor_color.ico</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>pixmap_directory</Directory>
+		<Filename>icon_new_editor_color.ico</Filename>
+		</Constant>
+	<Constant><type>INTEGER</type>
+		<Name>dialog_tall_height</Name>
+		<Value>580</Value>
+		</Constant>
+	<Constant><type>PIXMAP</type>
+		<Name>icon_envision_ico</Name>
+		<Value>D:\Src\tools\doc_builder\resources\icons\icon_envision.ico</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>pixmap_directory</Directory>
+		<Filename>icon_envision.ico</Filename>
+		</Constant>
+	<Constant><type>DIRECTORY</type>
+		<Name>pixmap_directory</Name>
+		<Value>D:\Src\tools\doc_builder\resources\icons</Value>
+		</Constant>
+	<Constant><type>PIXMAP</type>
+		<Name>icon_restore_color_png</Name>
+		<Value>D:\Src\tools\doc_builder\resources\icons\icon_restore_color.png</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>pixmap_directory</Directory>
+		<Filename>icon_restore_color.png</Filename>
+		</Constant>
+	<Constant><type>PIXMAP</type>
+		<Name>icon_code_cluster_ico</Name>
+		<Value>D:\Src\tools\doc_builder\resources\icons\icon_code_cluster.ico</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>pixmap_directory</Directory>
+		<Filename>icon_code_cluster.ico</Filename>
+		</Constant>
+	<Constant><type>PIXMAP</type>
+		<Name>icon_widget_edit_ico</Name>
+		<Value>D:\Src\tools\doc_builder\resources\icons\icon_widget_edit.ico</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>pixmap_directory</Directory>
+		<Filename>icon_widget_edit.ico</Filename>
+		</Constant>
+	<Constant><type>PIXMAP</type>
+		<Name>icon_merge_ico</Name>
+		<Value>D:\Src\tools\doc_builder\resources\icons\icon_merge.ico</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>pixmap_directory</Directory>
+		<Filename>icon_merge.ico</Filename>
+		</Constant>
+	<Constant><type>STRING</type>
+		<Name>button_finish_text</Name>
+		<Value>Finish</Value>
+		</Constant>
+	<Constant><type>PIXMAP</type>
+		<Name>icon_settings_ico</Name>
+		<Value>D:\Src\tools\doc_builder\resources\icons\icon_settings.ico</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>pixmap_directory</Directory>
+		<Filename>icon_settings.ico</Filename>
+		</Constant>
+	<Constant><type>PIXMAP</type>
+		<Name>icon_jpeg_file_ico</Name>
+		<Value>D:\Src\tools\doc_builder\resources\icons\icon_jpeg_file.ico</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>pixmap_directory</Directory>
+		<Filename>icon_jpeg_file.ico</Filename>
+		</Constant>
+	<Constant><type>PIXMAP</type>
+		<Name>icon_close_color_png</Name>
+		<Value>D:\Src\tools\doc_builder\resources\icons\icon_close_color.png</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>pixmap_directory</Directory>
+		<Filename>icon_close_color.png</Filename>
+		</Constant>
+	<Constant><type>INTEGER</type>
+		<Name>dialog_width</Name>
+		<Value>400</Value>
+		</Constant>
+	<Constant><type>PIXMAP</type>
+		<Name>downarrow_png</Name>
+		<Value>D:\Src\tools\doc_builder\resources\icons\downarrow.png</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>pixmap_directory</Directory>
+		<Filename>downarrow.png</Filename>
+		</Constant>
+	<Constant><type>STRING</type>
+		<Name>button_add_text</Name>
+		<Value>Add</Value>
+		</Constant>
+	<Constant><type>PIXMAP</type>
+		<Name>icon_new_ico</Name>
+		<Value>D:\Src\tools\doc_builder\resources\icons\icon_new.ico</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>pixmap_directory</Directory>
+		<Filename>icon_new.ico</Filename>
+		</Constant>
+	<Constant><type>STRING</type>
+		<Name>button_ok_text</Name>
+		<Value>OK</Value>
+		</Constant>
+	<Constant><type>PIXMAP</type>
+		<Name>icon_bitmap_file_ico</Name>
+		<Value>D:\Src\tools\doc_builder\resources\icons\icon_bitmap_file.ico</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>pixmap_directory</Directory>
+		<Filename>icon_bitmap_file.ico</Filename>
+		</Constant>
+	<Constant><type>INTEGER</type>
+		<Name>box_border_width</Name>
+		<Value>2</Value>
+		</Constant>
+	<Constant><type>STRING</type>
+		<Name>envision_filtered_text</Name>
+		<Value>ENViSioN! Filtered</Value>
+		</Constant>
+	<Constant><type>PIXMAP</type>
+		<Name>icon_save_ico</Name>
+		<Value>D:\Src\tools\doc_builder\resources\icons\icon_save.ico</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>pixmap_directory</Directory>
+		<Filename>icon_save.ico</Filename>
+		</Constant>
+	<Constant><type>STRING</type>
+		<Name>button_continue_text</Name>
+		<Value>Continue</Value>
+		</Constant>
+	<Constant><type>PIXMAP</type>
+		<Name>icon_toc_file_node_ico</Name>
+		<Value>D:\Src\tools\doc_builder\resources\icons\icon_toc_file_node.ico</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>pixmap_directory</Directory>
+		<Filename>icon_toc_file_node.ico</Filename>
+		</Constant>
+	<Constant><type>STRING</type>
+		<Name>button_find_text</Name>
+		<Value>Find</Value>
+		</Constant>
+	<Constant><type>PIXMAP</type>
+		<Name>icon_toc_folder_closed_ico</Name>
+		<Value>D:\Src\tools\doc_builder\resources\icons\icon_toc_folder_closed.ico</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>pixmap_directory</Directory>
+		<Filename>icon_toc_folder_closed.ico</Filename>
+		</Constant>
+	<Constant><type>STRING</type>
+		<Name>button_apply_text</Name>
+		<Value>Apply</Value>
+		</Constant>
+	<Constant><type>PIXMAP</type>
+		<Name>icon_code_class_ico</Name>
+		<Value>D:\Src\tools\doc_builder\resources\icons\icon_code_class.ico</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>pixmap_directory</Directory>
+		<Filename>icon_code_class.ico</Filename>
+		</Constant>
+	<Constant><type>INTEGER</type>
+		<Name>dialog_wide_width</Name>
+		<Value>600</Value>
+		</Constant>
+	<Constant><type>STRING</type>
+		<Name>studio_filtered_text</Name>
+		<Value>EiffelStudio Filtered</Value>
+		</Constant>
+	<Constant><type>PIXMAP</type>
+		<Name>icon_checked_png</Name>
+		<Value>D:\Src\tools\doc_builder\resources\icons\icon_checked.png</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>pixmap_directory</Directory>
+		<Filename>icon_checked.png</Filename>
+		</Constant>
+	<Constant><type>PIXMAP</type>
+		<Name>header_close_cross_png</Name>
+		<Value>D:\Src\tools\doc_builder\resources\icons\header_close_cross.png</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>pixmap_directory</Directory>
+		<Filename>header_close_cross.png</Filename>
+		</Constant>
+	<Constant><type>STRING</type>
+		<Name>button_save_text</Name>
+		<Value>Save...</Value>
+		</Constant>
+	<Constant><type>PIXMAP</type>
+		<Name>icon_sorter_ico</Name>
+		<Value>D:\Src\tools\doc_builder\resources\icons\icon_sorter.ico</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>pixmap_directory</Directory>
+		<Filename>icon_sorter.ico</Filename>
+		</Constant>
+	<Constant><type>PIXMAP</type>
+		<Name>right_scroll_arrow_png</Name>
+		<Value>D:\Src\tools\doc_builder\resources\icons\right_scroll_arrow.png</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>pixmap_directory</Directory>
+		<Filename>right_scroll_arrow.png</Filename>
+		</Constant>
+	<Constant><type>PIXMAP</type>
+		<Name>icon_new_doc_ico</Name>
+		<Value>D:\Src\tools\doc_builder\resources\icons\icon_new_doc.ico</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>pixmap_directory</Directory>
+		<Filename>icon_new_doc.ico</Filename>
+		</Constant>
+	<Constant><type>STRING</type>
+		<Name>button_create_text</Name>
+		<Value>Create</Value>
+		</Constant>
+	<Constant><type>PIXMAP</type>
+		<Name>icon_highlight_png</Name>
+		<Value>D:\Src\tools\doc_builder\resources\icons\icon_highlight.png</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>pixmap_directory</Directory>
+		<Filename>icon_highlight.png</Filename>
 		</Constant>
 	</item>
 <item type="Directory"><Internal_properties>
@@ -6022,6 +6022,230 @@ based upon the options specified.</Text>
 </item>
 </item>
 </item>
+<item type="EV_DIALOG"><Internal_properties>
+	<id>476</id>
+	<name>character_dialog</name>
+	<Expanded>1</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_WIDGET><Minimum_width>300</Minimum_width>
+	<Minimum_height><Constant>dialog_medium_height</Constant>
+		</Minimum_height>
+	</EV_WIDGET>
+<EV_WINDOW><Title>Special Characters</Title>
+	</EV_WINDOW>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<EV_CONTAINER></EV_CONTAINER>
+<item type="EV_NOTEBOOK"><Internal_properties>
+	<id>477</id>
+	<Expanded>1</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_FONTABLE></EV_FONTABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_WIDGET></EV_WIDGET>
+<EV_NOTEBOOK><Item_texts><Item_text1>XML Characters</Item_text1>
+		<Item_text2>HTML Characters</Item_text2>
+		</Item_texts>
+	<Item_pixmaps></Item_pixmaps>
+	</EV_NOTEBOOK>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<EV_CONTAINER></EV_CONTAINER>
+<item type="EV_VERTICAL_BOX"><Internal_properties>
+	<id>478</id>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_WIDGET></EV_WIDGET>
+<EV_BOX><Padding>5</Padding>
+	<Border>2</Border>
+	<Is_item_expanded>1</Is_item_expanded>
+	</EV_BOX>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<EV_CONTAINER></EV_CONTAINER>
+<item type="EV_MULTI_COLUMN_LIST"><Internal_properties>
+	<id>479</id>
+	<name>xml_character_list</name>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_WIDGET></EV_WIDGET>
+</item>
+</item>
+<item type="EV_VERTICAL_BOX"><Internal_properties>
+	<id>480</id>
+	<Expanded>1</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_WIDGET></EV_WIDGET>
+<EV_BOX><Is_item_expanded>10</Is_item_expanded>
+	</EV_BOX>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<EV_CONTAINER></EV_CONTAINER>
+<item type="EV_MULTI_COLUMN_LIST"><Internal_properties>
+	<id>481</id>
+	<name>html_character_list</name>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_WIDGET></EV_WIDGET>
+</item>
+<item type="EV_BUTTON"><Internal_properties>
+	<id>482</id>
+	<name>dummy_cancel_button</name>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_FONTABLE></EV_FONTABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_TEXTABLE><Text>Cancel</Text>
+	</EV_TEXTABLE>
+<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_WIDGET><Minimum_width>0</Minimum_width>
+	<Minimum_height>0</Minimum_height>
+	</EV_WIDGET>
+<EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+</item>
+</item>
+</item>
+</item>
+<item type="EV_DIALOG"><Internal_properties>
+	<id>32</id>
+	<name>about_dialog</name>
+	<Expanded>1</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_WIDGET><Minimum_height>100</Minimum_height>
+	</EV_WIDGET>
+<EV_WINDOW><Title>About EiffelDoc...</Title>
+	</EV_WINDOW>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<EV_CONTAINER></EV_CONTAINER>
+<item type="EV_VERTICAL_BOX"><Internal_properties>
+	<id>585</id>
+	<Expanded>1</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_WIDGET></EV_WIDGET>
+<EV_BOX><Padding><Constant>box_padding_width</Constant>
+		</Padding>
+	<Border><Constant>inner_border_width</Constant>
+		</Border>
+	<Is_item_expanded>001</Is_item_expanded>
+	</EV_BOX>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<EV_CONTAINER></EV_CONTAINER>
+<item type="EV_HORIZONTAL_BOX"><Internal_properties>
+	<id>586</id>
+	<Expanded>1</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_WIDGET></EV_WIDGET>
+<EV_BOX><Is_item_expanded>1</Is_item_expanded>
+	</EV_BOX>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<EV_CONTAINER></EV_CONTAINER>
+<item type="EV_LABEL"><Internal_properties>
+	<id>588</id>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_FONTABLE></EV_FONTABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_TEXTABLE><Text>EiffelDoc (1.0.0)</Text>
+	</EV_TEXTABLE>
+<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_WIDGET></EV_WIDGET>
+<EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
+</item>
+</item>
+<item type="EV_HORIZONTAL_BOX"><Internal_properties>
+	<id>587</id>
+	<Expanded>1</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_WIDGET></EV_WIDGET>
+<EV_BOX><Is_item_expanded>1</Is_item_expanded>
+	</EV_BOX>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<EV_CONTAINER></EV_CONTAINER>
+<item type="EV_LABEL"><Internal_properties>
+	<id>589</id>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_FONTABLE></EV_FONTABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_TEXTABLE><Text>Copyright (C) Eiffel Software Inc. 1985-2005 All Rights Reserved</Text>
+	</EV_TEXTABLE>
+<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_WIDGET></EV_WIDGET>
+<EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
+</item>
+</item>
+<item type="EV_HORIZONTAL_BOX"><Internal_properties>
+	<id>590</id>
+	<Expanded>1</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_WIDGET></EV_WIDGET>
+<EV_BOX><Is_item_expanded>101</Is_item_expanded>
+	</EV_BOX>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<EV_CONTAINER></EV_CONTAINER>
+<item type="EV_CELL"><Internal_properties>
+	<id>593</id>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_WIDGET></EV_WIDGET>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<EV_CONTAINER></EV_CONTAINER>
+</item>
+<item type="EV_BUTTON"><Internal_properties>
+	<id>591</id>
+	<name>ok_button</name>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_FONTABLE></EV_FONTABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_TEXTABLE><Text>OK</Text>
+	</EV_TEXTABLE>
+<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_WIDGET><Minimum_width><Constant>button_width</Constant>
+		</Minimum_width>
+	</EV_WIDGET>
+<EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+</item>
+<item type="EV_CELL"><Internal_properties>
+	<id>592</id>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_WIDGET></EV_WIDGET>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<EV_CONTAINER></EV_CONTAINER>
+</item>
+</item>
+</item>
+</item>
 <item type="EV_TITLED_WINDOW"><Internal_properties>
 	<id>277</id>
 	<name>doc_builder_window</name>
@@ -6442,7 +6666,7 @@ based upon the options specified.</Text>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
 	<id>315</id>
-	<Expanded>0</Expanded>
+	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
@@ -6454,7 +6678,7 @@ based upon the options specified.</Text>
 <item type="EV_TOOL_BAR"><Internal_properties>
 	<id>316</id>
 	<name>main_toolbar</name>
-	<Expanded>0</Expanded>
+	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
@@ -6631,6 +6855,20 @@ based upon the options specified.</Text>
 <EV_TOOLTIPABLE><Tooltip>Validate Document Links</Tooltip>
 	</EV_TOOLTIPABLE>
 <EV_PIXMAPABLE><Pixmap_path><Constant>icon_link_check_ico_ico</Constant>
+		</Pixmap_path>
+	</EV_PIXMAPABLE>
+</item>
+<item type="EV_TOOL_BAR_BUTTON"><Internal_properties>
+	<id>604</id>
+	<name>toolbar_html_generator</name>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_SENSITIVE><Is_sensitive>False</Is_sensitive>
+	</EV_SENSITIVE>
+<EV_TEXTABLE></EV_TEXTABLE>
+<EV_TOOLTIPABLE><Tooltip>Generate HTMl from open document XML</Tooltip>
+	</EV_TOOLTIPABLE>
+<EV_PIXMAPABLE><Pixmap_path><Constant>icon_ie_ico</Constant>
 		</Pixmap_path>
 	</EV_PIXMAPABLE>
 </item>
@@ -7909,230 +8147,6 @@ based upon the options specified.</Text>
 </item>
 </item>
 </item>
-</item>
-</item>
-</item>
-</item>
-<item type="EV_DIALOG"><Internal_properties>
-	<id>476</id>
-	<name>character_dialog</name>
-	<Expanded>1</Expanded>
-	</Internal_properties>
-<EV_COLORIZABLE></EV_COLORIZABLE>
-<EV_SENSITIVE></EV_SENSITIVE>
-<EV_WIDGET><Minimum_width>300</Minimum_width>
-	<Minimum_height><Constant>dialog_medium_height</Constant>
-		</Minimum_height>
-	</EV_WIDGET>
-<EV_WINDOW><Title>Special Characters</Title>
-	</EV_WINDOW>
-<EV_PIXMAPABLE></EV_PIXMAPABLE>
-<EV_CONTAINER></EV_CONTAINER>
-<item type="EV_NOTEBOOK"><Internal_properties>
-	<id>477</id>
-	<Expanded>1</Expanded>
-	</Internal_properties>
-<EV_COLORIZABLE></EV_COLORIZABLE>
-<EV_FONTABLE></EV_FONTABLE>
-<EV_SENSITIVE></EV_SENSITIVE>
-<EV_WIDGET></EV_WIDGET>
-<EV_NOTEBOOK><Item_texts><Item_text1>XML Characters</Item_text1>
-		<Item_text2>HTML Characters</Item_text2>
-		</Item_texts>
-	<Item_pixmaps></Item_pixmaps>
-	</EV_NOTEBOOK>
-<EV_PIXMAPABLE></EV_PIXMAPABLE>
-<EV_CONTAINER></EV_CONTAINER>
-<item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>478</id>
-	<Expanded>0</Expanded>
-	</Internal_properties>
-<EV_COLORIZABLE></EV_COLORIZABLE>
-<EV_SENSITIVE></EV_SENSITIVE>
-<EV_WIDGET></EV_WIDGET>
-<EV_BOX><Padding>5</Padding>
-	<Border>2</Border>
-	<Is_item_expanded>1</Is_item_expanded>
-	</EV_BOX>
-<EV_PIXMAPABLE></EV_PIXMAPABLE>
-<EV_CONTAINER></EV_CONTAINER>
-<item type="EV_MULTI_COLUMN_LIST"><Internal_properties>
-	<id>479</id>
-	<name>xml_character_list</name>
-	<Expanded>0</Expanded>
-	</Internal_properties>
-<EV_COLORIZABLE></EV_COLORIZABLE>
-<EV_SENSITIVE></EV_SENSITIVE>
-<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
-<EV_WIDGET></EV_WIDGET>
-</item>
-</item>
-<item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>480</id>
-	<Expanded>1</Expanded>
-	</Internal_properties>
-<EV_COLORIZABLE></EV_COLORIZABLE>
-<EV_SENSITIVE></EV_SENSITIVE>
-<EV_WIDGET></EV_WIDGET>
-<EV_BOX><Is_item_expanded>10</Is_item_expanded>
-	</EV_BOX>
-<EV_PIXMAPABLE></EV_PIXMAPABLE>
-<EV_CONTAINER></EV_CONTAINER>
-<item type="EV_MULTI_COLUMN_LIST"><Internal_properties>
-	<id>481</id>
-	<name>html_character_list</name>
-	<Expanded>0</Expanded>
-	</Internal_properties>
-<EV_COLORIZABLE></EV_COLORIZABLE>
-<EV_SENSITIVE></EV_SENSITIVE>
-<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
-<EV_WIDGET></EV_WIDGET>
-</item>
-<item type="EV_BUTTON"><Internal_properties>
-	<id>482</id>
-	<name>dummy_cancel_button</name>
-	<Expanded>0</Expanded>
-	</Internal_properties>
-<EV_COLORIZABLE></EV_COLORIZABLE>
-<EV_FONTABLE></EV_FONTABLE>
-<EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text>Cancel</Text>
-	</EV_TEXTABLE>
-<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
-<EV_WIDGET><Minimum_width>0</Minimum_width>
-	<Minimum_height>0</Minimum_height>
-	</EV_WIDGET>
-<EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
-<EV_PIXMAPABLE></EV_PIXMAPABLE>
-</item>
-</item>
-</item>
-</item>
-<item type="EV_DIALOG"><Internal_properties>
-	<id>32</id>
-	<name>about_dialog</name>
-	<Expanded>1</Expanded>
-	</Internal_properties>
-<EV_COLORIZABLE></EV_COLORIZABLE>
-<EV_SENSITIVE></EV_SENSITIVE>
-<EV_WIDGET><Minimum_height>100</Minimum_height>
-	</EV_WIDGET>
-<EV_WINDOW><Title>About EiffelDoc...</Title>
-	</EV_WINDOW>
-<EV_PIXMAPABLE></EV_PIXMAPABLE>
-<EV_CONTAINER></EV_CONTAINER>
-<item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>585</id>
-	<Expanded>1</Expanded>
-	</Internal_properties>
-<EV_COLORIZABLE></EV_COLORIZABLE>
-<EV_SENSITIVE></EV_SENSITIVE>
-<EV_WIDGET></EV_WIDGET>
-<EV_BOX><Padding><Constant>box_padding_width</Constant>
-		</Padding>
-	<Border><Constant>inner_border_width</Constant>
-		</Border>
-	<Is_item_expanded>001</Is_item_expanded>
-	</EV_BOX>
-<EV_PIXMAPABLE></EV_PIXMAPABLE>
-<EV_CONTAINER></EV_CONTAINER>
-<item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>586</id>
-	<Expanded>1</Expanded>
-	</Internal_properties>
-<EV_COLORIZABLE></EV_COLORIZABLE>
-<EV_SENSITIVE></EV_SENSITIVE>
-<EV_WIDGET></EV_WIDGET>
-<EV_BOX><Is_item_expanded>1</Is_item_expanded>
-	</EV_BOX>
-<EV_PIXMAPABLE></EV_PIXMAPABLE>
-<EV_CONTAINER></EV_CONTAINER>
-<item type="EV_LABEL"><Internal_properties>
-	<id>588</id>
-	<Expanded>0</Expanded>
-	</Internal_properties>
-<EV_COLORIZABLE></EV_COLORIZABLE>
-<EV_FONTABLE></EV_FONTABLE>
-<EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text>EiffelDoc (1.0.0)</Text>
-	</EV_TEXTABLE>
-<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
-<EV_WIDGET></EV_WIDGET>
-<EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
-</item>
-</item>
-<item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>587</id>
-	<Expanded>1</Expanded>
-	</Internal_properties>
-<EV_COLORIZABLE></EV_COLORIZABLE>
-<EV_SENSITIVE></EV_SENSITIVE>
-<EV_WIDGET></EV_WIDGET>
-<EV_BOX><Is_item_expanded>1</Is_item_expanded>
-	</EV_BOX>
-<EV_PIXMAPABLE></EV_PIXMAPABLE>
-<EV_CONTAINER></EV_CONTAINER>
-<item type="EV_LABEL"><Internal_properties>
-	<id>589</id>
-	<Expanded>0</Expanded>
-	</Internal_properties>
-<EV_COLORIZABLE></EV_COLORIZABLE>
-<EV_FONTABLE></EV_FONTABLE>
-<EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text>Copyright (C) Eiffel Software Inc. 1985-2005 All Rights Reserved</Text>
-	</EV_TEXTABLE>
-<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
-<EV_WIDGET></EV_WIDGET>
-<EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
-</item>
-</item>
-<item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>590</id>
-	<Expanded>1</Expanded>
-	</Internal_properties>
-<EV_COLORIZABLE></EV_COLORIZABLE>
-<EV_SENSITIVE></EV_SENSITIVE>
-<EV_WIDGET></EV_WIDGET>
-<EV_BOX><Is_item_expanded>101</Is_item_expanded>
-	</EV_BOX>
-<EV_PIXMAPABLE></EV_PIXMAPABLE>
-<EV_CONTAINER></EV_CONTAINER>
-<item type="EV_CELL"><Internal_properties>
-	<id>593</id>
-	<Expanded>0</Expanded>
-	</Internal_properties>
-<EV_COLORIZABLE></EV_COLORIZABLE>
-<EV_SENSITIVE></EV_SENSITIVE>
-<EV_WIDGET></EV_WIDGET>
-<EV_PIXMAPABLE></EV_PIXMAPABLE>
-<EV_CONTAINER></EV_CONTAINER>
-</item>
-<item type="EV_BUTTON"><Internal_properties>
-	<id>591</id>
-	<name>ok_button</name>
-	<Expanded>0</Expanded>
-	</Internal_properties>
-<EV_COLORIZABLE></EV_COLORIZABLE>
-<EV_FONTABLE></EV_FONTABLE>
-<EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text>OK</Text>
-	</EV_TEXTABLE>
-<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
-<EV_WIDGET><Minimum_width><Constant>button_width</Constant>
-		</Minimum_width>
-	</EV_WIDGET>
-<EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
-<EV_PIXMAPABLE></EV_PIXMAPABLE>
-</item>
-<item type="EV_CELL"><Internal_properties>
-	<id>592</id>
-	<Expanded>0</Expanded>
-	</Internal_properties>
-<EV_COLORIZABLE></EV_COLORIZABLE>
-<EV_SENSITIVE></EV_SENSITIVE>
-<EV_WIDGET></EV_WIDGET>
-<EV_PIXMAPABLE></EV_PIXMAPABLE>
-<EV_CONTAINER></EV_CONTAINER>
 </item>
 </item>
 </item>

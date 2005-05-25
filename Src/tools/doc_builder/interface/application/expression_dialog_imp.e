@@ -258,22 +258,24 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	xml_name_check: EV_CHECK_BUTTON
-	xml_expr_check: EV_CHECK_BUTTON
-	all_open_radio: EV_CHECK_BUTTON
-	all_project_radio: EV_CHECK_BUTTON
-	notebook: EV_NOTEBOOK
-	xml_structure_list: EV_TREE
 	l_ev_horizontal_separator_1: EV_HORIZONTAL_SEPARATOR
 	l_ev_horizontal_separator_2: EV_HORIZONTAL_SEPARATOR
 	l_ev_horizontal_separator_3: EV_HORIZONTAL_SEPARATOR
 	l_ev_horizontal_separator_4: EV_HORIZONTAL_SEPARATOR
 	l_ev_horizontal_separator_5: EV_HORIZONTAL_SEPARATOR
 	expression_list: EV_MULTI_COLUMN_LIST
-	l_ev_vertical_box_1: EV_VERTICAL_BOX
-	l_ev_vertical_box_2: EV_VERTICAL_BOX
-	xml_widget_box: EV_VERTICAL_BOX
-	l_ev_vertical_box_3: EV_VERTICAL_BOX
+	l_ev_cell_1: EV_CELL
+	l_ev_cell_2: EV_CELL
+	l_ev_cell_3: EV_CELL
+	l_ev_cell_4: EV_CELL
+	l_ev_cell_5: EV_CELL
+	expression_browse_button: EV_BUTTON
+	save_expressions_button: EV_BUTTON
+	expression_button: EV_BUTTON
+	apply_button: EV_BUTTON
+	okay_button: EV_BUTTON
+	cancel_button: EV_BUTTON
+	notebook: EV_NOTEBOOK
 	l_ev_horizontal_box_1: EV_HORIZONTAL_BOX
 	l_ev_horizontal_box_2: EV_HORIZONTAL_BOX
 	l_ev_horizontal_box_3: EV_HORIZONTAL_BOX
@@ -288,6 +290,14 @@ feature -- Access
 	l_ev_horizontal_box_12: EV_HORIZONTAL_BOX
 	l_ev_horizontal_box_13: EV_HORIZONTAL_BOX
 	l_ev_horizontal_box_14: EV_HORIZONTAL_BOX
+	l_ev_vertical_box_1: EV_VERTICAL_BOX
+	l_ev_vertical_box_2: EV_VERTICAL_BOX
+	xml_widget_box: EV_VERTICAL_BOX
+	l_ev_vertical_box_3: EV_VERTICAL_BOX
+	xml_name_check: EV_CHECK_BUTTON
+	xml_expr_check: EV_CHECK_BUTTON
+	all_open_radio: EV_CHECK_BUTTON
+	all_project_radio: EV_CHECK_BUTTON
 	l_ev_label_1: EV_LABEL
 	l_ev_label_2: EV_LABEL
 	l_ev_label_3: EV_LABEL
@@ -296,17 +306,7 @@ feature -- Access
 	l_ev_label_6: EV_LABEL
 	l_ev_label_7: EV_LABEL
 	l_ev_label_8: EV_LABEL
-	expression_browse_button: EV_BUTTON
-	save_expressions_button: EV_BUTTON
-	expression_button: EV_BUTTON
-	apply_button: EV_BUTTON
-	okay_button: EV_BUTTON
-	cancel_button: EV_BUTTON
-	l_ev_cell_1: EV_CELL
-	l_ev_cell_2: EV_CELL
-	l_ev_cell_3: EV_CELL
-	l_ev_cell_4: EV_CELL
-	l_ev_cell_5: EV_CELL
+	xml_structure_list: EV_TREE
 	expression_text: EV_TEXT_FIELD
 	replacement_text: EV_TEXT_FIELD
 	xml_name_text: EV_TEXT_FIELD

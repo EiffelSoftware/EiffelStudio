@@ -414,42 +414,33 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	header_override_check: EV_CHECK_BUTTON
-	footer_override_check: EV_CHECK_BUTTON
-	use_include_tags: EV_CHECK_BUTTON
-	header_include_check: EV_CHECK_BUTTON
-	footer_include_check: EV_CHECK_BUTTON
-	html_stylesheet_check: EV_CHECK_BUTTON
-	nav_links_check: EV_CHECK_BUTTON
-	dhtml_filter_check: EV_CHECK_BUTTON
-	generate_feature_nodes_check: EV_CHECK_BUTTON
-	l_ev_notebook_1: EV_NOTEBOOK
 	l_ev_horizontal_separator_1: EV_HORIZONTAL_SEPARATOR
 	l_ev_horizontal_separator_2: EV_HORIZONTAL_SEPARATOR
 	l_ev_horizontal_separator_3: EV_HORIZONTAL_SEPARATOR
 	l_ev_horizontal_separator_4: EV_HORIZONTAL_SEPARATOR
 	l_ev_horizontal_separator_5: EV_HORIZONTAL_SEPARATOR
 	l_ev_horizontal_separator_6: EV_HORIZONTAL_SEPARATOR
+	filters_list: EV_LIST
+	tags_list: EV_LIST
+	l_ev_cell_1: EV_CELL
+	l_ev_cell_2: EV_CELL
+	l_ev_cell_3: EV_CELL
+	l_ev_cell_4: EV_CELL
+	browse_schema_bt: EV_BUTTON
+	browse_css_bt: EV_BUTTON
+	browse_header_button: EV_BUTTON
+	browse_footer_button: EV_BUTTON
+	add_description_button: EV_BUTTON
+	add_tag_button: EV_BUTTON
+	color_button: EV_BUTTON
+	apply_bt: EV_BUTTON
+	okay_bt: EV_BUTTON
+	cancel_bt: EV_BUTTON
 	header_file_radio: EV_RADIO_BUTTON
 	header_generate_check: EV_RADIO_BUTTON
 	footer_file_radio: EV_RADIO_BUTTON
 	footer_generate_check: EV_RADIO_BUTTON
-	l_ev_vertical_box_1: EV_VERTICAL_BOX
-	l_ev_vertical_box_2: EV_VERTICAL_BOX
-	l_ev_vertical_box_3: EV_VERTICAL_BOX
-	l_ev_vertical_box_4: EV_VERTICAL_BOX
-	l_ev_vertical_box_5: EV_VERTICAL_BOX
-	l_ev_vertical_box_6: EV_VERTICAL_BOX
-	l_ev_vertical_box_7: EV_VERTICAL_BOX
-	l_ev_vertical_box_8: EV_VERTICAL_BOX
-	l_ev_vertical_box_9: EV_VERTICAL_BOX
-	l_ev_vertical_box_10: EV_VERTICAL_BOX
-	l_ev_vertical_box_11: EV_VERTICAL_BOX
-	l_ev_vertical_box_12: EV_VERTICAL_BOX
-	l_ev_vertical_box_13: EV_VERTICAL_BOX
-	l_ev_vertical_box_14: EV_VERTICAL_BOX
-	l_ev_vertical_box_15: EV_VERTICAL_BOX
-	tree_container: EV_VERTICAL_BOX
+	l_ev_notebook_1: EV_NOTEBOOK
 	l_ev_horizontal_box_1: EV_HORIZONTAL_BOX
 	l_ev_horizontal_box_2: EV_HORIZONTAL_BOX
 	l_ev_horizontal_box_3: EV_HORIZONTAL_BOX
@@ -473,8 +464,31 @@ feature -- Access
 	l_ev_horizontal_box_21: EV_HORIZONTAL_BOX
 	l_ev_horizontal_box_22: EV_HORIZONTAL_BOX
 	l_ev_horizontal_box_23: EV_HORIZONTAL_BOX
-	filters_list: EV_LIST
-	tags_list: EV_LIST
+	l_ev_vertical_box_1: EV_VERTICAL_BOX
+	l_ev_vertical_box_2: EV_VERTICAL_BOX
+	l_ev_vertical_box_3: EV_VERTICAL_BOX
+	l_ev_vertical_box_4: EV_VERTICAL_BOX
+	l_ev_vertical_box_5: EV_VERTICAL_BOX
+	l_ev_vertical_box_6: EV_VERTICAL_BOX
+	l_ev_vertical_box_7: EV_VERTICAL_BOX
+	l_ev_vertical_box_8: EV_VERTICAL_BOX
+	l_ev_vertical_box_9: EV_VERTICAL_BOX
+	l_ev_vertical_box_10: EV_VERTICAL_BOX
+	l_ev_vertical_box_11: EV_VERTICAL_BOX
+	l_ev_vertical_box_12: EV_VERTICAL_BOX
+	l_ev_vertical_box_13: EV_VERTICAL_BOX
+	l_ev_vertical_box_14: EV_VERTICAL_BOX
+	l_ev_vertical_box_15: EV_VERTICAL_BOX
+	tree_container: EV_VERTICAL_BOX
+	header_override_check: EV_CHECK_BUTTON
+	footer_override_check: EV_CHECK_BUTTON
+	use_include_tags: EV_CHECK_BUTTON
+	header_include_check: EV_CHECK_BUTTON
+	footer_include_check: EV_CHECK_BUTTON
+	html_stylesheet_check: EV_CHECK_BUTTON
+	nav_links_check: EV_CHECK_BUTTON
+	dhtml_filter_check: EV_CHECK_BUTTON
+	generate_feature_nodes_check: EV_CHECK_BUTTON
 	l_ev_label_1: EV_LABEL
 	l_ev_label_2: EV_LABEL
 	l_ev_label_3: EV_LABEL
@@ -485,21 +499,6 @@ feature -- Access
 	l_ev_label_8: EV_LABEL
 	color_label: EV_LABEL
 	l_ev_label_9: EV_LABEL
-	browse_schema_bt: EV_BUTTON
-	browse_css_bt: EV_BUTTON
-	browse_header_button: EV_BUTTON
-	browse_footer_button: EV_BUTTON
-	add_description_button: EV_BUTTON
-	add_tag_button: EV_BUTTON
-	color_button: EV_BUTTON
-	apply_bt: EV_BUTTON
-	okay_bt: EV_BUTTON
-	cancel_bt: EV_BUTTON
-	l_ev_frame_1: EV_FRAME
-	l_ev_cell_1: EV_CELL
-	l_ev_cell_2: EV_CELL
-	l_ev_cell_3: EV_CELL
-	l_ev_cell_4: EV_CELL
 	name_text: EV_TEXT_FIELD
 	schema_loc_text: EV_TEXT_FIELD
 	css_loc_text: EV_TEXT_FIELD
@@ -507,6 +506,7 @@ feature -- Access
 	footer_loc_text: EV_TEXT_FIELD
 	filter_description_text: EV_TEXT_FIELD
 	filter_tag_name_text: EV_TEXT_FIELD
+	l_ev_frame_1: EV_FRAME
 
 feature {NONE} -- Implementation
 

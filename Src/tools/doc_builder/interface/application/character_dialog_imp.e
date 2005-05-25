@@ -68,12 +68,12 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	l_ev_notebook_1: EV_NOTEBOOK
 	xml_character_list: EV_MULTI_COLUMN_LIST
 	html_character_list: EV_MULTI_COLUMN_LIST
+	dummy_cancel_button: EV_BUTTON
+	l_ev_notebook_1: EV_NOTEBOOK
 	l_ev_vertical_box_1: EV_VERTICAL_BOX
 	l_ev_vertical_box_2: EV_VERTICAL_BOX
-	dummy_cancel_button: EV_BUTTON
 
 feature {NONE} -- Implementation
 

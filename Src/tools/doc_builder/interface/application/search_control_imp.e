@@ -60,9 +60,9 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	search_text: EV_TEXT_FIELD
-	l_ev_label_1: EV_LABEL
 	search_button: EV_BUTTON
+	l_ev_label_1: EV_LABEL
+	search_text: EV_TEXT_FIELD
 
 feature {NONE} -- Implementation
 

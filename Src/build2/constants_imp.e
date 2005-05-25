@@ -149,13 +149,14 @@ feature -- Access
 			Result := "Import Completion Status"
 		end
 
-	pixmap_location: STRING is
-			-- `Result' is DIRECTORY constant named `pixmap_location'.
+	pixmap_location: DIRECTORY_NAME is
+			-- Path for Bmp/Xpm for Windows/Unix.
 		once
-			Result := "D:\Eiffel54\build\bitmaps\png"
+			create Result.make_from_string ((create {EIFFEL_ENV}).Bitmaps_path)
+			Result.extend ("png")
 		end
 
-	ok_button_text: STRING is
+			ok_button_text: STRING is
 			-- `Result' is STRING constant named `ok_button_text'.
 		once
 			Result := "OK"

@@ -14,8 +14,6 @@ feature -- Creation
 
 	make (a_preferences: PREFERENCES) is
 			-- Create `Current' using `a_preferences'
-		local
-			directory: DIRECTORY_NAME
 		do
 			create dialog_data.make (a_preferences)			
 			create code_generation_data.make (a_preferences)

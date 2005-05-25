@@ -741,19 +741,22 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			subrows.go_i_th (subrow_count)
 			subrows.remove
 			row_imp.internal_set_parent_row (Void)
-			
-				-- Now update the depth properties for each subrow of `a_row'.
-				-- `a_row' was already handled by the call to `internal_set_parent_row'.
-			from
-				i := row_imp.index + 1
-				last_changed_subrow_index := row_imp.index + row_imp.subrow_count_recursive + 1
-			until
-				i > last_changed_subrow_index
-			loop
-				parent_i.rows.i_th (i).update_depths_in_tree
-				i := i + 1
+
+
+			if row_imp.subrow_count > 0 then
+					-- Now update the depth properties for each subrow of `a_row' (if any).
+					-- `a_row' was already handled by the call to `internal_set_parent_row'.
+				from
+					i := row_imp.index + 1
+					last_changed_subrow_index := row_imp.index + row_imp.subrow_count_recursive + 1
+				until
+					i > last_changed_subrow_index
+				loop
+					parent_i.rows.i_th (i).update_depths_in_tree
+					i := i + 1
+				end
 			end
-			
+
 				-- Decrease the node count for `Current' and all parents by 1 + the node count
 				-- for the added subrow as this may also be a tree structure.
 			update_parent_node_counts_recursively (- (row_imp.subnode_count_recursive + 1))

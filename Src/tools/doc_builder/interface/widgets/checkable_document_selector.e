@@ -52,7 +52,7 @@ feature -- Query
 		require
 			dir_not_void: root_dir /= Void
 		local
-			node,
+--			node,
 --			file_node: EV_CHECKABLE_TREE_ITEM
 			dir: DIRECTORY
 			cnt: INTEGER

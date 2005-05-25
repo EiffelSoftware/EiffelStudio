@@ -623,9 +623,9 @@ feature {NONE} -- Implementation
 
 	balls: INTEGER
 
-	ball_x_vel, ball_y_vel: ARRAY [INTEGER]
+	ball_x_vel, ball_y_vel: ARRAY [REAL]
 
-	ball_x, ball_y: ARRAY [INTEGER]
+	ball_x, ball_y: ARRAY [REAL]
 
 	start_ball_animation is
 			--
@@ -633,12 +633,14 @@ feature {NONE} -- Implementation
 			counter: INTEGER
 			random: RANDOM
 			l_start_x, l_start_y: INTEGER
+			i, j: REAL
+			random_counter: INTEGER
+			label_item: EV_GRID_LABEL_ITEM
 		do
 			create random.make
 			create animation_timer.make_with_interval (20)
 			animation_timer.actions.extend (agent animate_ball)
 			create redraw_timer.make_with_interval (20)
---			redraw_ball_timer.actions.extend (agent redraw_balls)
 			create ball_x.make (1, balls)
 			create ball_y.make (1, balls)
 			create ball_x_vel.make (1, balls)
@@ -650,10 +652,14 @@ feature {NONE} -- Implementation
 			until
 				counter > balls
 			loop
-				ball_x.put (l_start_x - 50 + (random.next_random (counter * 4)) \\ 100, counter)
-				ball_y.put (l_start_y  - 50 + (random.next_random (counter * 4 + 1)) \\ 100, counter)
-				ball_x_vel.put (-5 + (random.next_random (counter * 4 + 2)) \\ 10, counter)
-				ball_y_vel.put (-5 + (random.next_random (counter * 4 + 3)) \\ 10, counter)
+				ball_x.put (100, counter)
+				ball_y.put (100, counter)
+				ball_x_vel.put (-5 + (random.next_random (random_counter) \\ 5000) / 500, counter)
+				random_counter := random_counter + 1
+				ball_y_vel.put (-5 + (random.next_random (random_counter) \\ 5000) / 500, counter)
+				i := ball_x_vel.item (counter)
+				j := ball_y_vel.item (counter)
+				random_counter := random_counter + 1
 				counter := counter + 1
 			end
 			animating_ball := True
@@ -667,7 +673,7 @@ feature {NONE} -- Implementation
 			grid_item: EV_GRID_ITEM
 			grid_item_column_index, grid_item_row_index: INTEGER
 			next_item: EV_GRID_DRAWABLE_ITEM
-			l_ball_x, l_ball_y, l_ball_x_vel, l_ball_y_vel: INTEGER
+			l_ball_x, l_ball_y, l_ball_x_vel, l_ball_y_vel: REAL
 			counter: INTEGER
 			previous_row: EV_GRID_ROW
 			previous_column: EV_GRID_COLUMN
@@ -682,7 +688,7 @@ feature {NONE} -- Implementation
 				l_ball_x_vel := ball_x_vel.item (counter)
 				l_ball_y_vel := ball_y_vel.item (counter)
 
-				grid_item := grid.item_at_virtual_position (l_ball_x, l_ball_y)
+				grid_item := grid.item_at_virtual_position (l_ball_x.truncated_to_integer, l_ball_y.truncated_to_integer)
 				grid_item_column_index := grid_item.column.index
 				grid_item_row_index := grid_item.row.index
 				if l_ball_x_vel > 0 then
@@ -764,8 +770,6 @@ feature {NONE} -- Implementation
 				counter := counter + 1
 				grid_item.redraw
 			end
-		--	grid.redraw
-
 		end
 		
 		
@@ -779,24 +783,6 @@ feature {NONE} -- Implementation
 		
 	ball_animation_timer, ball_redraw_timer: EV_TIMEOUT
 
-
---	compute_item (an_x, a_y: INTEGER): EV_GRID_ITEM is
---			--
---		local
---			drawable_item: EV_GRID_DRAWABLE_ITEM
---		do
---			if an_x = 2 then
---				do_nothing
---			end
---			if a_y \\ 2 = 1 then
---				create {EV_GRID_LABEL_ITEM} Result.make_with_text ("Item at position : " + an_x.out + ", " + a_y.out)
---			else
---				create drawable_item
---				drawable_item.expose_actions.extend (agent draw_grid_item (?, drawable_item))
---				Result := drawable_item
---			end
---		end
-		
 	draw_ellipse (drawable: EV_DRAWABLE; an_item: EV_GRID_DRAWABLE_ITEM) is
 			--
 		local
@@ -824,7 +810,7 @@ feature {NONE} -- Implementation
 		local
 			l_virtual_x, l_virtual_y: INTEGER
 			counter: INTEGER
-			l_ball_x, l_ball_y: INTEGER
+			l_ball_x, l_ball_y: REAL
 		do
 			drawable.set_foreground_color (grid.background_color)
 			drawable.fill_rectangle (0, 0, an_item.width, an_item.height)
@@ -854,9 +840,9 @@ feature {NONE} -- Implementation
 				if l_ball_x + ball_width >= an_item.virtual_x_position and l_ball_x < l_virtual_x + an_item.width and
 					l_ball_y + ball_width >= l_virtual_y and l_ball_y < l_virtual_y + an_item.height then
 					drawable.set_foreground_color (red)
-					drawable.fill_ellipse (l_ball_x - l_virtual_x, l_ball_y - l_virtual_y, ball_width, ball_width) --draw_point (ball_x - an_item.virtual_x_position, ball_y - an_item.virtual_y_position)
+					drawable.fill_ellipse (l_ball_x.truncated_to_integer - l_virtual_x, l_ball_y.truncated_to_integer - l_virtual_y, ball_width, ball_width) --draw_point (ball_x - an_item.virtual_x_position, ball_y - an_item.virtual_y_position)
 					drawable.set_foreground_color (grid.foreground_color)					
-					drawable.draw_ellipse (l_ball_x - l_virtual_x, l_ball_y - l_virtual_y, ball_width, ball_width)
+					drawable.draw_ellipse (l_ball_x.truncated_to_integer - l_virtual_x, l_ball_y.truncated_to_integer - l_virtual_y, ball_width, ball_width)
 				end
 				counter := counter + 1
 			end

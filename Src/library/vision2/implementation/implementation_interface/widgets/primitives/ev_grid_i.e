@@ -2291,7 +2291,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			l_virtual_x_position: INTEGER
 		do
 			l_virtual_x_position := a_column.virtual_x_position
-			drawable.redraw_rectangle (l_virtual_x_position - (internal_client_x - viewport_x_offset), viewport_y_offset, viewport.width + internal_client_x - l_virtual_x_position, viewport.height)
+			drawable.redraw_rectangle (l_virtual_x_position - (internal_client_x - viewport_x_offset), viewport_y_offset, viewable_width + internal_client_x - l_virtual_x_position, viewable_height)
 		end
 
 	redraw_row (a_row: EV_GRID_ROW_I) is
@@ -2302,7 +2302,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			row_y1: INTEGER
 		do
 			row_y1 := a_row.virtual_y_position - (internal_client_y - viewport_y_offset)
-			drawable.redraw_rectangle (viewport_x_offset, row_y1, viewport.width, a_row.height)
+			drawable.redraw_rectangle (viewport_x_offset, row_y1, viewable_width, a_row.height)
 		end
 
 	redraw_from_row_to_end (a_row: EV_GRID_ROW_I) is
@@ -2315,7 +2315,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			a2: INTEGER
 		do
 			a2 := a_row.virtual_y_position - (internal_client_y - viewport_y_offset)
-			drawable.redraw_rectangle (viewport_x_offset, a2, viewport.width, viewport.height + internal_client_y - a_row.virtual_y_position)
+			drawable.redraw_rectangle (viewport_x_offset, a2, viewable_width, viewable_height + internal_client_y - a_row.virtual_y_position)
 		end
 
 
@@ -2502,7 +2502,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implementation
 				l_total_row_height := total_row_height
 			end
 			if l_total_row_height /= last_computed_row_height or has_vertical_scrolling_per_item_just_changed then
-				l_client_height := viewport.height
+				l_client_height := viewable_height
 					-- Note that `height' was not used as we want it to represent only the height of
 					-- the "client area" which is `viewport'.
 				
@@ -2658,7 +2658,7 @@ feature {EV_GRID_DRAWER_I} -- Drawing implementation
 				drawable.enable_dashed_line_style
 			end
 			drawable.set_invert_mode
-			drawable.draw_segment (last_dashed_line_position, resizing_line_border, last_dashed_line_position, viewport.height - resizing_line_border)
+			drawable.draw_segment (last_dashed_line_position, resizing_line_border, last_dashed_line_position, viewable_height - resizing_line_border)
 			drawable.set_copy_mode
 		end
 	
@@ -2886,9 +2886,9 @@ feature {NONE} -- Drawing implementation
 					drawable.enable_dashed_line_style
 				end
 				drawable.set_invert_mode
-				drawable.draw_segment (position, resizing_line_border, position, viewport.height - resizing_line_border)
+				drawable.draw_segment (position, resizing_line_border, position, viewable_height - resizing_line_border)
 				if last_dashed_line_position > 0 then
-					drawable.draw_segment (last_dashed_line_position, resizing_line_border, last_dashed_line_position, viewport.height - resizing_line_border)
+					drawable.draw_segment (last_dashed_line_position, resizing_line_border, last_dashed_line_position, viewable_height - resizing_line_border)
 				end
 				last_dashed_line_position := position
 				drawable.set_copy_mode
@@ -2906,7 +2906,7 @@ feature {NONE} -- Drawing implementation
 				drawable.enable_dashed_line_style
 			end
 			drawable.set_invert_mode
-			drawable.draw_segment (last_dashed_line_position, resizing_line_border, last_dashed_line_position, viewport.height - resizing_line_border)
+			drawable.draw_segment (last_dashed_line_position, resizing_line_border, last_dashed_line_position, viewable_height - resizing_line_border)
 			last_dashed_line_position := - 1
 			drawable.set_copy_mode
 		ensure
@@ -2963,7 +2963,7 @@ feature {NONE} -- Drawing implementation
 			internal_client_y := a_y_position
 				-- Store the virtual client y position internally.
 
-			buffer_space := (buffered_drawable_size - viewport.height)
+			buffer_space := (buffered_drawable_size - viewable_height)
 			current_buffer_position := viewport_y_offset
 
 				-- Calculate if the buffer must be flipped. If so, redraw the complete client area,
@@ -3084,7 +3084,7 @@ feature {NONE} -- Drawing implementation
 				-- behavior is the same on both platforms.
 			redraw_client_area
 		ensure
-			client_dimensions_set: internal_client_width = viewport.width and internal_client_height = viewport.height
+			client_dimensions_set: internal_client_width = viewable_width and internal_client_height = viewable_height
 			viewport_item_at_least_as_big_as_viewport: viewport.item.width >= internal_client_width and
 				viewport.item.height >= internal_client_height
 		end

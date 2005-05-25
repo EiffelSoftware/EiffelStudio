@@ -573,12 +573,12 @@ feature -- Basic operations
 									-- We are now about to draw a row that is a subrow of another row, so
 									-- perform any calculations required.
 									
-									node_index := retrieve_node_index (current_row_list)
+									node_index := retrieve_node_index (current_row)
 									
 									if drawing_subrow then
 										parent_row_list := grid_rows_data_list @ current_row.parent_row_i.index
 										
-										parent_node_index := retrieve_node_index (parent_row_list)									
+										parent_node_index := retrieve_node_index (current_row.parent_row_i)									
 											
 											-- Now calculate information regarding the parent of the current subrow
 											-- which is required for the drawing. We must know where the parent is positioned
@@ -684,7 +684,7 @@ feature -- Basic operations
 										current_row_list := grid_rows_data_list @ current_row_index
 										
 											-- Now retrieve the new node index.
-										node_index := retrieve_node_index (current_row_list)
+										node_index := retrieve_node_index (current_row)
 									end
 								end
 									-- Resize the bufer if required. The buffer is only every increased and never decreased
@@ -962,34 +962,20 @@ feature -- Basic operations
 			result_non_negative: Result >= 0
 		end
 
-	retrieve_node_index (current_row_list: SPECIAL [EV_GRID_ITEM_I]): INTEGER is
-			-- `Result' is index of first non-`Void' item within `current_row_list'
+	retrieve_node_index (current_row: EV_GRID_ROW_I): INTEGER is
+			-- `Result' is index of first non-`Void' item within `current_row'
 			-- or `grid.column_count' if none.
 		require
-			current_row_list_not_void: current_row_list /= Void
-		local
-			counter: INTEGER
+			current_row_not_void: current_row /= Void
 		do
-			if current_row_list.count /= 0 then
-				from
-					counter := 0
-					Result := 0
-				until
-					Result > 0
-				loop
-					if current_row_list @ counter /= Void then
-						Result := counter + 1
-					end
-					counter := counter + 1
-				end
-			else
+			Result := current_row.index_of_first_item
+			if Result = 0 then
 				Result := grid.column_count
 			end
 		ensure
-			result_positive: Result > 0
-			result_set_to_count_if_row_list_empty: current_row_list.count = 0 implies Result = grid.column_count
+			valid_result: Result > 0 and Result <= grid.column_count
 		end
-
+		
 	draw_item_border (current_column: EV_GRID_COLUMN_I; current_row: EV_GRID_ROW_I; current_item: EV_GRID_ITEM_I; current_item_x_position, current_item_y_position, current_column_width, current_row_height: INTEGER) is
 			-- Draw a border for `current_item' with a position at `current_item_x_position', `current_item_y_position' and dimensions
 			-- of `current_column_width' and `current_row_height'.

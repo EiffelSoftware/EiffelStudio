@@ -143,7 +143,7 @@ feature -- Access
 		do
 			Result := implementation.pixmap
 		end
-
+		
 feature -- Status setting
 
 	hide is
@@ -302,6 +302,15 @@ feature -- Element change
 			pixmap_removed: pixmap = Void
 		end
 		
+	redraw is
+			-- Force all items within `Current' to be re-drawn when next idle.
+		require
+			not_destroyed: not is_destroyed
+			parented: parent /= Void
+		do
+			implementation.redraw
+		end
+
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_GRID_COLUMN_I

@@ -53,8 +53,7 @@ feature -- Access
 		%	array_optimization (no)%N%
 		%	inlining (no)%N%
 		%	inlining_size (%"4%")%N%  
-		%cluster%N%
-		%	all client: %""
+		%cluster%N"
 
 	Partial_ace_file_addition: STRING is 	"	all server: %""
 			-- Add Server cluster.
@@ -81,7 +80,7 @@ feature -- Access
 			-- End of ace file used to precompile generated Eiffel system
 		"	object: 	%"$(ISE_EIFFEL)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib%",%N%
 		%			%"$(ISE_EIFFEL)\library\com\spec\$(ISE_C_COMPILER)\lib\com.lib%",%N%
-		%			%"$(ISE_EIFFEL)\library\com\spec\$(ISE_C_COMPILER)\lib\com_runtime.lib%",%N"
+		%			%"$(ISE_EIFFEL)\library\com\spec\$(ISE_C_COMPILER)\lib\com_runtime.lib%","
 
 
 	clusters_from_project: STRING is
@@ -337,8 +336,17 @@ feature -- Basic operations
 			end
 			Result.append ("%"%N")
 			Result.append (Partial_ace_file)
-			Result.append (environment.destination_folder)
-			Result.append ("Client%"%N%T%Tvisible%N")
+			if environment.is_client then
+				Result.append ("%Tall client_")
+			else
+				Result.append ("%Tall server_")
+			end
+			Result.append (environment.project_name)
+			Result.append (": %"")
+			Result.append (environment.destination_folder.substring (1, environment.destination_folder.count - 1))
+			Result.append ("%"%N%T%Texclude%N")
+			Result.append ("%T%T%T%"Clib%"; %"Include%"; %"EIFGEN%";")
+			Result.append ("%N%T%Tvisible%N")
 
 			l_classes := system_descriptor.visible_classes_client
 			from
@@ -349,15 +357,13 @@ feature -- Basic operations
 				Result.append (l_classes.item.generated_code)
 				l_classes.forth
 			end
-			Result.append ("%N%T%Tend%N%Tall server: %"")
-			Result.append (environment.destination_folder)
-			Result.append ("Server%"%N%T%Tvisible%N%T%T%T")
 
 			if not environment.is_client and not system_descriptor.coclasses.is_empty then
+				Result.append ("%T%T%T")
 				Result.append (Registration_class_name)
 				Result.append (";%N")
 			end
-			
+
 			l_classes := system_descriptor.visible_classes_server
 			from
 				l_classes.start
@@ -367,16 +373,6 @@ feature -- Basic operations
 				Result.append (l_classes.item.generated_code)
 				l_classes.forth
 			end
-			Result.append ("%N%T%Tend")
-
-			if environment.is_eiffel_interface then
-				Result.append ("%N%N%T")
-				Result.append (clusters_from_project)
-			end
-			
-			Result.append ("%N%N%Tall common:%T%T%T%T%T%T%"")
-			Result.append (environment.destination_folder)
-			Result.append ("Common%"%N%T%Tvisible%N%T%T%T")
 
 			l_classes := system_descriptor.visible_classes_common
 			from
@@ -388,6 +384,12 @@ feature -- Basic operations
 				l_classes.forth
 			end
 			Result.append ("%N%T%Tend%N%N%N")
+
+			if environment.is_eiffel_interface then
+				Result.append ("%N%N%T")
+				Result.append (clusters_from_project)
+			end
+
 			Result.append (Partial_ace_file_part_two)
 			Result.append ("%T%T%T")
 

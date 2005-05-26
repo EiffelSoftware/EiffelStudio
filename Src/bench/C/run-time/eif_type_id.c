@@ -40,7 +40,7 @@ struct rt_global_data {
 /* Prototypes */
 /* String analysis */
 rt_private struct rt_type * eif_decompose_type (char *type_string);
-rt_private struct rt_type ** eif_decompose_parameters (char *params, int *a_count);
+rt_private struct rt_type ** eif_decompose_parameters (char *params, uint32 *a_count);
 rt_private void eif_free_type_array (struct rt_type *a_type, int free_a_type);
 rt_private void eif_remove_surrounding_white_spaces (char *str);
 rt_private void set_expanded_or_reference_keyword (struct rt_type *);
@@ -173,13 +173,13 @@ rt_private struct rt_type * eif_decompose_type (char *type_string)
 doc:	<routine name="eif_decompose_parameters" return_type="struct rt_type **" export="private">
 doc:		<summary>Decompose `params' in `*a_count' logical elements to represent a type. `params' might be modified during this operation.</summary>
 doc:		<param name="params" type="char *">Type we will decompose.</param>
-doc:		<param name="a_count" type="int *">Number of items in returned value.</param>
+doc:		<param name="a_count" type="uint32 *">Number of items in returned value.</param>
 doc:		<return>null if `params' is not valid or if there is not enough memory for internal allocation, otherwise the corresponding data.</return>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None</synchronization>
 doc:	</routine>
 */
-rt_private struct rt_type ** eif_decompose_parameters (char *params, int *a_count)
+rt_private struct rt_type ** eif_decompose_parameters (char *params, uint32 *a_count)
 {
 	int i, l_count, l_nesting = 0;
 	int l_valid = 1, l_first_pos = 0;

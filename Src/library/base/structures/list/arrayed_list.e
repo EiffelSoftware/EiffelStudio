@@ -39,7 +39,7 @@ class ARRAYED_LIST [G] inherit
 			for_all, there_exists, do_all, do_if
 		redefine
 			extend, prune_all, full, wipe_out,
-			is_inserted, make_from_array, has, valid_index
+			is_inserted, make_from_array, has, valid_index, auto_resize
 		end
 
 	DYNAMIC_LIST [G]
@@ -449,6 +449,21 @@ feature -- Resizing
 			grow (new_capacity)
 		ensure
 			capacity_set: capacity >= new_capacity
+		end
+
+feature {NONE} -- Implementation
+
+	auto_resize (min_index, max_index: INTEGER) is
+			-- Rearrange array so that it can accommodate
+			-- indices down to `min_index' and up to `max_index'.
+			-- Do not lose any previously entered item.
+			-- If area must be extended, ensure that space for at least
+			-- additional_space item is added.
+		do
+			Precursor {ARRAY} (min_index, max_index)
+				-- Unlike ARRAY, we do not care if `upper' is defined to be
+				-- a large value. Doing so will speed up insertion in ARRAYED_LIST.
+			upper := area.count
 		end
 
 feature -- Removal

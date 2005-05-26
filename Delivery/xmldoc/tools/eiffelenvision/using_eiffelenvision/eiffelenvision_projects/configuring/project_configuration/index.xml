@@ -39,16 +39,8 @@
 				<keywords>vxconBuildConfigurations</keywords>
 				<tab_index>0</tab_index>
 				Build Configurations
-			</help_link>. EiffelEnvision splits project configuration's into two factions: <bold>Common Properties</bold> and <bold>Configuration Properties</bold>.
+			</help_link>.
 		</paragraph>
-
-		<paragraph>
-			Project build configurations can be added, removed and edited through the <help_link>
-				<keywords>vxurfConfigurationManagerDialogBoxS</keywords>
-				<tab_index>0</tab_index>
-				Configuration Manager
-			</help_link> dialog box.
-		</paragraph>		
 		
 		<paragraph>
 			To configure a project's properties select the project in the <help_link>
@@ -62,11 +54,20 @@
 			</help_link>, and then select <bold>Project</bold>, <bold>Properties</bold> from the main menu.
 		</paragraph>
 		
-		<anchor>common_properties</anchor>
+		<anchor>in_this_section</anchor>
 		<heading>
 			<size>2</size>
-			<content>Common Properties</content>
+			<content>In This Section</content>
 		</heading>
+		<paragraph>
+			<link>
+				<url>configuring.xml</url>
+				<label>Configuring Projects</label>
+			</link>
+			<line_break/>
+			Information on starting to configure an EiffelEnvision project's properties.
+		</paragraph>		
+		
 		<paragraph>
 			<link>
 				<url>general.xml</url>
@@ -92,18 +93,13 @@
 			EiffelEnvision precompiled library usage properties, for established <link><url>url</url><label>*Precompiled Libraries</label></link>.
 		</paragraph>
 		
-		<anchor>configuration_properties</anchor>
-		<heading>
-			<size>2</size>
-			<content>Common Properties</content>
-		</heading>
 		<paragraph>
 			<link>
 				<url>build.xml</url>
 				<label>Build Properties</label>
 			</link>
 			<line_break/>
-			Configuration dependent and advanced <link><url>url</url><label>*Build</label></link> related project properties, for specifying specific build properties and tweaking the compiler.
+			Configuration dependent and advanced <link><url>../../../compiling_projects/index.xml</url><label>Build</label></link> related project properties, for specifying specific build properties and tweaking the compiler.
 		</paragraph>
 		<paragraph>
 			<link>
@@ -144,7 +140,15 @@
 				Default and Custom Build
 			</help_link>
 			<line_break/>
+			<help_link>
+				<keywords>vxurfConfigurationManagerDialogBoxS</keywords>
+				<tab_index>0</tab_index>
+				Configuration Manager
+			</help_link>
+			<line_break/>
 			<link><url>../structure/index.xml</url><label>EiffelEnvision Projects</label></link>
+			<line_break/>
+			<link><url>../../../compiling_projects/index.xml</url><label>Compiling Projects</label></link>
 			<line_break/>
 			<link><url>../../debugging/index.xml</url><label>Debugging</label></link>
 		</seealso>

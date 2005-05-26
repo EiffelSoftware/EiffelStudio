@@ -147,9 +147,9 @@ feature {NONE} -- Initialization
 
 			mini_toolbar.extend (tbb)
 
-			create slices_cmd.make (Current)
-			slices_cmd.enable_sensitive
-			mini_toolbar.extend (slices_cmd.new_mini_toolbar_item)
+--			create slices_cmd.make (Current)
+--			slices_cmd.enable_sensitive
+--			mini_toolbar.extend (slices_cmd.new_mini_toolbar_item)
 
 			create pretty_print_cmd.make
 			pretty_print_cmd.enable_sensitive

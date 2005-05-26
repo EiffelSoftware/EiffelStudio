@@ -58,6 +58,17 @@ feature -- Access
 			result_non_negative: Result >= 0
 		end
 
+	pointed_divider_index: INTEGER is
+			-- Index of divider currently beneath the mouse pointer, or
+			-- 0 if none.
+		require
+			not_is_destroyed: not is_destroyed
+		do
+			Result := implementation.pointed_divider_index
+		ensure
+			result_non_negative: Result >= 0
+		end
+
 feature -- Contract support
 
 	is_parent_recursive (a_list_item: EV_HEADER_ITEM): BOOLEAN is

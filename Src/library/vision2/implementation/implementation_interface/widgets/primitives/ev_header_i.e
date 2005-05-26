@@ -57,6 +57,14 @@ feature -- Access
 			result_non_negative: Result >= 0
 			index_not_changed: index = old index
 		end
+		
+	pointed_divider_index: INTEGER is
+			-- Index of divider currently beneath the mouse pointer, or
+			-- 0 if none.
+		deferred
+		ensure
+			result_non_negative: Result >= 0
+		end
 
 feature {EV_ANY_I} -- Implementation
 

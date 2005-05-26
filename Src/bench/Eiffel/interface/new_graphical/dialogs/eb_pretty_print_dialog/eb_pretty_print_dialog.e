@@ -40,6 +40,11 @@ inherit
 			default_create
 		end
 
+	REFACTORING_HELPER
+		undefine
+			default_create
+		end
+
 create
 	make
 
@@ -235,6 +240,7 @@ feature -- Status setting
 			l_length_str: STRING
 			l_endpos: INTEGER
 		do
+			editor.remove_text
 			if Application.status.is_stopped then
 				if has_object then
 					retrieve_dump_value
@@ -254,21 +260,21 @@ feature -- Status setting
 							editor.append_text (" ...")
 							l_endpos := l_endpos + 4
 							editor.format_region (l_endpos - 4, l_endpos + 2, Limits_format)
+						else
+							editor.format_region (l_endpos, l_endpos + 1, Limits_format)
+							fixme ("this violate assertion, but this is due to a vision2 issue of trailing %%U")
 						end
+						l_trunc_str := editor.text
+
 						editor.set_background_color (No_text_background_color)
 						l_length_str := "Complete length = " + l_real_str_length.out
 						dialog.set_title ("Expanded display : " + l_length_str)
 						upper_slice_field.set_tooltip (l_length_str)
 					else
-						editor.remove_text
 						create l_dlg.make_with_text ("Sorry a problem occurred, %Nwe are not able to show you the value ...%N")
 						l_dlg.show_modal_to_window (dialog)
 					end
-				else
-					editor.remove_text
 				end
-			else
-				editor.remove_text
 			end
 		end
 

@@ -841,6 +841,20 @@ feature -- Icons
 		once
 			Result := build_classic_pixmap ("mini_forth")
 		end
+		
+	Icon_mini_up: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
+		once
+			Result := build_classic_pixmap ("mini_back")
+		end
+
+	Icon_mini_down: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
+		once
+			Result := build_classic_pixmap ("mini_forth")
+		end		
 
 	Icon_class_symbol: ARRAY [EV_PIXMAP] is
 			-- Array containing both the color & the gray pixmap

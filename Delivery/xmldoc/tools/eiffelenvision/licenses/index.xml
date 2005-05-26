@@ -16,11 +16,19 @@
 		</heading>
 		<paragraph>
 			<link>
-				<url>eula_enterprise.xml</url>
-				<label>EiffelEnvision EULA</label>
+				<url>eula_free.xml</url>
+				<label>EiffelEnvision Free Edition EULA</label>
 			</link>
 			<line_break/>
-			The EiffelEnvision <bold>End-User License Agreement</bold> (EULA).
+			The EiffelEnvision <bold>Free Edition</bold> End-User License Agreement (EULA).
+		</paragraph>
+		<paragraph>
+			<link>
+				<url>eula_enterprise.xml</url>
+				<label>EiffelEnvision Enterprise Edition EULA</label>
+			</link>
+			<line_break/>
+			The EiffelEnvision <bold>Enterprise Edition</bold> End-User License Agreement (EULA).
 		</paragraph>
 		<paragraph>
 			<link>

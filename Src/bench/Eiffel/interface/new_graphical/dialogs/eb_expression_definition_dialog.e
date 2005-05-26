@@ -188,6 +188,7 @@ feature {NONE} -- Initialization
 		do
 			make
 			expression_field.set_text (t)
+			expression_field.select_all
 		end		
 
 	make_with_class (cl: CLASS_C) is

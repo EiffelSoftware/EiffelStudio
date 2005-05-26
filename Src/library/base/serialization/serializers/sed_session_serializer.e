@@ -20,7 +20,7 @@ feature {NONE} -- Initialization
 			a_serializer_not_void: a_serializer /= Void
 		do
 			create internal
-			create object_indexes.make (100)
+			create object_indexes.make (1)
 			traversable := breadth_first_traversable
 			serializer := a_serializer
 		ensure
@@ -93,6 +93,7 @@ feature -- Basic operations
 			l_mem: MEMORY
 			l_is_collecting: BOOLEAN
 			l_list: ARRAYED_LIST [ANY]
+			l_list_count: NATURAL_32
 		do
 			if not {PLATFORM}.is_dotnet then
 				create l_mem
@@ -102,9 +103,14 @@ feature -- Basic operations
 
 			traversable.traverse
 			l_list := traversable.visited_objects
+			l_list_count := l_list.count.to_natural_32
+
+			if l_list.count > object_indexes.capacity then
+				create object_indexes.make (l_list_count)
+			end
 
 				-- Write number of objects we are storing
-			serializer.write_compressed_natural_32 (l_list.count.to_natural_32)
+			serializer.write_compressed_natural_32 (l_list_count)
 
 				-- Write header of encoding
 			write_header (l_list)

@@ -21,11 +21,13 @@ feature {NONE} -- Implementation
 	write_header (a_list: ARRAYED_LIST [ANY]) is
 			-- Write header of storable.
 		local
-			l_dtype_table: HASH_TABLE [STRING, INTEGER]
+			l_dtype_table: like type_table
 			l_dtype: INTEGER
 			l_ser: like serializer
+			l_int: like internal
 		do
 			l_ser := serializer
+			l_int := internal
 
 			l_dtype_table := type_table (a_list)
 			
@@ -37,10 +39,10 @@ feature {NONE} -- Implementation
 				l_dtype_table.after
 			loop
 					-- Write dynamic type
-				l_dtype := l_dtype_table.key_for_iteration
+				l_dtype := l_dtype_table.item_for_iteration
 				l_ser.write_compressed_natural_32 (l_dtype.to_natural_32)
 					-- Write type name
-				l_ser.write_string_8 (l_dtype_table.item_for_iteration)
+				l_ser.write_string_8 (l_int.type_name_of_type (l_dtype))
 					-- Write attributes description
 				write_attributes (l_dtype)
 

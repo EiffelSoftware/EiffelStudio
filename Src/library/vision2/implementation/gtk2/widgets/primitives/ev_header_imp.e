@@ -67,7 +67,7 @@ feature -- Initialization
 			create dummy_item
 			dummy_imp ?= dummy_item.implementation
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_min_width (dummy_imp.c_object, 0)
-			dummy_imp.set_width (0)
+			dummy_imp.set_width (1)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_clickable (dummy_imp.c_object, False)
 			resize_model (100)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_insert_column (visual_widget, dummy_imp.c_object, 0)
@@ -162,9 +162,9 @@ feature {EV_HEADER_ITEM_IMP} -- Implemnentation
 
 feature {NONE} -- Implementation
 
-	button_press_switch (a_type: INTEGER; a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
-			-- Call pointer_button_press_actions or pointer_double_press_actions
-			-- depending on event type in first position of `event_data'.
+	pointed_divider_index: INTEGER is
+			-- Index of divider currently beneath the mouse pointer, or
+			-- 0 if none.
 		local
 			gdkwin: POINTER
 			a_pointer_x, a_pointer_y: INTEGER
@@ -174,19 +174,31 @@ feature {NONE} -- Implementation
 			gdkwin := {EV_GTK_EXTERNALS}.gdk_window_at_pointer ($a_pointer_x, $a_pointer_y)
 			if gdkwin /= default_pointer then		
 				from
-					call_item_resize_start_actions := False
 					a_cursor := cursor
 					start
 				until
-					call_item_resize_start_actions or else off
+					Result > 0 or else off
 				loop
 					a_item_imp ?= item.implementation
 					if {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_struct_window (a_item_imp.c_object) = gdkwin then
-						call_item_resize_start_actions := True
+						Result := index
 					end
 					forth
 				end
 				go_to (a_cursor)
+			end
+		end
+
+	button_press_switch (a_type: INTEGER; a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+			-- Call pointer_button_press_actions or pointer_double_press_actions
+			-- depending on event type in first position of `event_data'.
+		local
+			a_pointed_divider_index: INTEGER
+		do
+			call_item_resize_start_actions := False
+			a_pointed_divider_index := pointed_divider_index
+			if a_pointed_divider_index > 0 then
+				call_item_resize_start_actions := True
 			end
 			Precursor {EV_PRIMITIVE_IMP} (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 		end

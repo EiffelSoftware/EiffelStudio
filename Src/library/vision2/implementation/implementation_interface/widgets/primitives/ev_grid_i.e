@@ -3982,6 +3982,7 @@ feature {NONE} -- Implementation
 		local
 			i: INTEGER
 			a_row_count: INTEGER
+			row_i: EV_GRID_ROW_I
 		do
 			from
 				i := 1
@@ -3989,7 +3990,10 @@ feature {NONE} -- Implementation
 			until
 				i > a_row_count
 			loop
-				(rows @ i).flag_index_of_first_item_dirty_if_needed (a_index)
+				row_i := rows @ i
+				if row_i /= Void then
+					row_i.flag_index_of_first_item_dirty_if_needed (a_index)
+				end
 				i := i + 1
 			end			
 		end

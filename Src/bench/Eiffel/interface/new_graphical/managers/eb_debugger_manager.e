@@ -36,6 +36,14 @@ feature {NONE} -- Initialization
 	make is
 			-- Initialize `Current'.
 		do
+			new_debugging_tool_enabled := False
+			object_tool_enabled := True
+
+			debug ("_use_new_dbg_tools_")
+				new_debugging_tool_enabled := True
+				object_tool_enabled := False
+			end
+
 			Application_notification_controller.on_launched_actions.extend (agent on_application_launched)
 			Application_notification_controller.on_before_stopped_actions.extend (agent on_application_before_stopped)
 			Application_notification_controller.on_after_stopped_actions.extend (agent on_application_just_stopped)
@@ -45,13 +53,21 @@ feature {NONE} -- Initialization
 			can_debug := True
 			maximum_stack_depth := preferences.debugger_data.default_maximum_stack_depth
 			init_commands
+
+			objects_split_position := 300
 			object_split_position := 300
+
 			create observers.make (10)
 			create kept_objects.make
-			kept_objects.compare_objects			
+			kept_objects.compare_objects
 		end
 
 feature -- Access
+
+	new_debugging_tool_enabled: BOOLEAN
+			-- FIXME: JFIAT: Remove this when first integrated
+
+	object_tool_enabled: BOOLEAN
 
 	debug_run_cmd: EB_DEBUG_RUN_COMMAND
 		-- Command to run the project under debugger.
@@ -59,11 +75,21 @@ feature -- Access
 	toolbarable_commands: ARRAYED_LIST [EB_TOOLBARABLE_AND_MENUABLE_COMMAND]
 			-- All commands that can be put in a toolbar.
 
+	es_tool_container: ES_TOOL_CONTAINER
+			-- A tool that represents the call stack in a graphical display.
+
 	call_stack_tool: EB_CALL_STACK_TOOL
 			-- A tool that represents the call stack in a graphical display.
 
+	debugging_tools: ES_DEBUGGING_TOOL
+			-- A tool that represents the call stack in a graphical display.
+
+	objects_tool: ES_OBJECTS_TOOL
+
 	object_tool: EB_OBJECT_TOOL
 			-- A tool that represents the current call stack element and an object in a graphical display.
+
+	watch_tool: ES_WATCH_TOOL
 
 	evaluator_tool: EB_EXPRESSION_EVALUATOR_TOOL
 			-- A tool that evaluates expressions.
@@ -336,12 +362,46 @@ feature -- Status setting
 	 				i := i + 1
 	 			end
 			end
-			
+
 				-- Change the state of the debugging window.
 			debugging_window.hide_tools
 			debugging_window.context_tool.feature_view.pop_feature_flat
 
 				--| Create tools. |--
+			if new_debugging_tool_enabled then
+					--| ES debugging tools |--
+				if debugging_tools = Void then
+					create debugging_tools.make (debugging_window)
+					debugging_tools.attach_to_explorer_bar (debugging_window.right_panel)
+				else
+					debugging_tools.change_manager_and_explorer (debugging_window, debugging_window.right_panel)
+				end
+
+					--| Grid Objects Tool
+				if objects_tool = Void then
+					create objects_tool.make (debugging_window)
+					objects_tool.attach_to_notebook (debugging_tools.notebook)
+				else
+					objects_tool.set_manager (debugging_window)
+					objects_tool.change_attach_notebook (debugging_tools.notebook)
+				end
+				objects_tool.set_debugger_manager (Current)
+				objects_tool.update
+
+					--| Watches tool
+				if watch_tool = Void then
+					create watch_tool.make (debugging_window)
+					watch_tool.attach_to_notebook (debugging_tools.notebook)
+				else
+					watch_tool.set_manager (debugging_window)
+					watch_tool.change_attach_notebook (debugging_tools.notebook)
+				end
+				debug ("debugger_interface")
+					io.put_string ("editor height: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
+				end
+				watch_tool.prepare_for_debug
+				watch_tool.update
+			end
 
 				--| Call Stack Tool
 			if call_stack_tool = Void then
@@ -355,25 +415,27 @@ feature -- Status setting
 				io.put_string ("editor height: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
 			end
 
+if object_tool_enabled then
 				--| Object Tool
 			if object_tool = Void then
 				create object_tool.make (debugging_window)
 				object_tool.attach_to_explorer_bar (debugging_window.right_panel)
 			else
-				object_tool.change_manager_and_explorer_bar (debugging_window, debugging_window.right_panel)
+				object_tool.set_manager (debugging_window)
+				object_tool.change_attach_explorer (debugging_window.right_panel)
 			end
 			debug ("DEBUGGER_INTERFACE")
 				io.put_string ("editor height: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
 			end
-			
+
 			object_tool.set_debugger_manager (Current)
 			object_tool.update
 			debug ("DEBUGGER_INTERFACE")
 				io.put_string ("editor height: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
 			end
+end
 
 				--| Expression Evaluator Tool
-			
 			if evaluator_tool = Void then
 				create evaluator_tool.make (debugging_window)
 				evaluator_tool.attach_to_explorer_bar (debugging_window.left_panel)
@@ -383,13 +445,13 @@ feature -- Status setting
 			debug ("DEBUGGER_INTERFACE")
 				io.put_string ("editor height: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
 			end
-			
+
 			evaluator_tool.prepare_for_debug
 			evaluator_tool.update
 			debug ("DEBUGGER_INTERFACE")
 				io.put_string ("editor height: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
 			end
-			
+
 				-- Show Tools and final visual settings
 			debugging_window.show_tools
 			if debug_left_layout = Void then
@@ -397,12 +459,12 @@ feature -- Status setting
 					io.put_string("Searching resource%N")
 				end
 				rl ?= preferences.preferences.get_resource (preferences.debug_tool_data.left_debug_layout_string)
-				rr ?= preferences.preferences.get_resource (preferences.debug_tool_data.right_debug_layout_string)				
+				rr ?= preferences.preferences.get_resource (preferences.debug_tool_data.right_debug_layout_string)
 				if rl /= Void and rr /= Void then
 					debug ("DEBUGGER_INTERFACE")
 						io.put_string("Found resource%N")
 					end
-					
+
 					debugging_window.left_panel.load_from_resource (rl.value)
 					debugging_window.right_panel.load_from_resource (rr.value)
 				else
@@ -414,23 +476,34 @@ feature -- Status setting
 				debugging_window.right_panel.load_from_resource (debug_right_layout)
 			end
 
-				--| Set the Object tool split position to 200 which is the default size of the local tree.			
-			split ?= object_tool.widget
-			if split /= Void then
-				split.set_split_position (object_split_position.max (split.minimum_split_position).min (split.maximum_split_position))
+			if new_debugging_tool_enabled then
+					--| Set the Grid Objects tool split position to 200 which is the default size of the local tree.
+				split ?= objects_tool.widget
+				if split /= Void then
+					split.set_split_position (objects_split_position.max (split.minimum_split_position).min (split.maximum_split_position))
+					split := Void
+				end
 			end
-			
+
+			if object_tool_enabled then
+					--| Set the Object tool split position to 200 which is the default size of the local tree.
+				split ?= object_tool.widget
+				if split /= Void then
+					split.set_split_position (object_split_position.max (split.minimum_split_position).min (split.maximum_split_position))
+					split := Void
+				end
+			end
 			if debugging_window.panel.full then
 				debugging_window.panel.set_split_position (debug_splitter_position.
 						max (debugging_window.panel.minimum_split_position))
 			end
-			
+
 			debug ("DEBUGGER_INTERFACE")
 				io.put_string ("editor height during debug: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
 			end
-			
+
 			raised := True
-			
+
 			debugging_window.window.unlock_update
 		ensure
 			raised
@@ -449,13 +522,21 @@ feature -- Status setting
 			debug ("DEBUGGER_INTERFACE")
 				io.put_string ("editor height after debug: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
 			end
-			
+
 			debug_left_layout := debugging_window.left_panel.save_to_resource
 			debug_right_layout := debugging_window.right_panel.save_to_resource
 			debug_splitter_position := debugging_window.panel.split_position
-			split ?= object_tool.widget
-			if split /= Void then
-				object_split_position := split.split_position
+			if new_debugging_tool_enabled then
+				split ?= objects_tool.widget
+				if split /= Void then
+					objects_split_position := split.split_position
+				end
+			end
+			if object_tool_enabled then
+				split ?= object_tool.widget
+				if split /= Void then
+					object_split_position := split.split_position
+				end
 			end
 			preferences.debug_tool_data.left_debug_layout_preference.set_value (debug_left_layout)
 			preferences.debug_tool_data.right_debug_layout_preference.set_value (debug_right_layout)
@@ -480,20 +561,20 @@ feature -- Status setting
 	 				i := i + 1
 	 			end
 			end
-			
+
 				-- Hide debugging tools.
 			debugging_window.left_panel.block
 			debugging_window.right_panel.block
 
 				-- Free and recycle tools
 			recycle_tools
-			
+
 			debugging_window.right_panel.unblock
 			debugging_window.left_panel.unblock
 			debug ("DEBUGGER_INTERFACE")
 				io.put_string ("editor height after debug: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
 			end
-		
+
 			raised := False
 				-- Clear all tool windows from `debugging_window' as we will now rebuild
 				-- the left and right panels. Note that it is only necessary to clear the tool
@@ -522,11 +603,17 @@ feature -- Status setting
 			-- Recycle tools to free unused data
 		do
 			call_stack_tool.recycle
-			object_tool.recycle
+			if new_debugging_tool_enabled then
+				objects_tool.recycle
+				watch_tool.recycle
+			end
+			if object_tool_enabled then
+				object_tool.recycle
+			end
 			evaluator_tool.recycle
 			application.recycle
 		end
-		
+
 	set_stone (st: STONE) is
 			-- Propagate `st' to tools.
 		local
@@ -537,8 +624,15 @@ feature -- Status setting
 				if cst /= Void then
 					Application.set_current_execution_stack_number (cst.level_number)
 				end
+			
 				call_stack_tool.set_stone (st)
-				object_tool.set_stone (st)
+				if new_debugging_tool_enabled then
+					objects_tool.set_stone (st)
+					watch_tool.set_stone (st)
+				end
+				if object_tool_enabled then
+					object_tool.set_stone (st)
+				end
 				evaluator_tool.set_stone (st)
 			end
 		end
@@ -579,7 +673,7 @@ feature -- Debugging events
 			if dialog /= Void and then not dialog.is_destroyed then
 				close_dialog
 			end
-			
+
 			from
 				observers.start
 			until
@@ -601,10 +695,10 @@ feature -- Debugging events
 			debug("DEBUGGER") io.put_string("APPLICATION_EXECUTION: on_application_before_stopped %N"); end
 			status := Application.status
 			if status /= Void and then Application.is_stopped then
-					-- Application has stopped 
+					-- Application has stopped
 					-- after receiving and updating stack info
 --				Window_manager.object_win_mgr.synchronize
-	
+
 					-- Display the callstack, the current object & the current stop point.
 				Application.set_current_execution_stack_number (1)	-- go on top of stack
 				call_stack_elem := status.current_call_stack_element
@@ -620,7 +714,7 @@ feature -- Debugging events
 			else
 					-- Before receiving and updating stack info
 			end
-		end		
+		end
 
 	on_application_just_stopped is
 			-- Application was just stopped (by a breakpoint, ...).
@@ -646,30 +740,53 @@ feature -- Debugging events
 			debug ("debugger_interface")
 				io.put_string ("Application Stopped (dixit EB_DEBUGGER_MANAGER)%N")
 			end
-			object_tool.disable_refresh
+
+			if new_debugging_tool_enabled then
+				objects_tool.disable_refresh
+				watch_tool.disable_refresh
+			end
+
+			if object_tool_enabled then
+				object_tool.disable_refresh
+			end
 			evaluator_tool.disable_refresh
 			if not Application.call_stack_is_empty then
-				create st.make (1)				
+				create st.make (1)
 				if st.is_valid then
 					launch_stone (st)
 				end
 			end
-			object_tool.enable_refresh
+			if new_debugging_tool_enabled then
+				objects_tool.enable_refresh
+				watch_tool.enable_refresh
+			end
+			if object_tool_enabled then
+				object_tool.enable_refresh
+			end
 			evaluator_tool.enable_refresh
-			
+
 			window_manager.quick_refresh_all
-			
+
 				-- Fill in the stack tool.
 			call_stack_tool.update
-				-- Fill in the object tool.
-			object_tool.update
+			if new_debugging_tool_enabled then
+					-- Fill in the objects tool.
+				objects_tool.update
+					-- Update Watch tool
+				watch_tool.update
+			end
+
+			if object_tool_enabled then
+					-- Fill in the object tool.
+				object_tool.update
+			end
 				-- Update Evaluator tool
 			evaluator_tool.update
 			create stt.make
 			stt.add_string ("Application stopped")
 			stt.add_new_line
 			output_manager.process_text (stt)
-			
+
 			if stopped_actions /= Void then
 				stopped_actions.call (Void)
 				stopped_actions := Void
@@ -711,10 +828,21 @@ feature -- Debugging events
 			into_cmd.disable_sensitive
 			set_critical_stack_depth_cmd.disable_sensitive
 			
+				-- Reset
+			Application.on_resumed
+
 				-- Fill in the stack tool.
 			call_stack_tool.update
-				-- Fill in the object tool.
-			object_tool.update
+			if new_debugging_tool_enabled then
+					-- Fill in the objects tool.
+				objects_tool.update
+					-- Update Watch tool
+				watch_tool.update
+			end
+			if object_tool_enabled then
+					-- Fill in the object tool.
+				object_tool.update
+			end
 				-- Update Evaluator tool
 			evaluator_tool.update
 			create stt.make
@@ -725,7 +853,7 @@ feature -- Debugging events
 			if dialog /= Void and then not dialog.is_destroyed then
 				close_dialog
 			end
-			
+
 			from
 				observers.start
 			until
@@ -839,9 +967,12 @@ feature {NONE} -- Implementation
 			
 	debug_right_layout, debug_left_layout: ARRAY [STRING]
 			-- Used to save the display of the debugging window during debugging sessions.
-			
+
 	debug_splitter_position, normal_splitter_position: INTEGER
 			-- Used to save the position of the main splitter of the debugging window.
+
+	objects_split_position: INTEGER
+			-- Position of the splitter inside the object tool.
 
 	object_split_position: INTEGER
 			-- Position of the splitter inside the object tool.

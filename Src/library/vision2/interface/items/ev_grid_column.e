@@ -25,7 +25,7 @@ inherit
 		end
 		
 create
-	{EV_GRID_I} default_create
+	{EV_GRID} default_create
 
 feature -- Access
 

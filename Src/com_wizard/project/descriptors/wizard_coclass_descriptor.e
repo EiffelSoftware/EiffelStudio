@@ -181,11 +181,9 @@ feature -- Basic operations
 				end
 				interface_descriptors.forth
 			end
-			if l_interface.is_implementing_coclass (Current) then
-				rename_arguments (interface_descriptors)
-				if source_interface_descriptors /= Void then
-					rename_arguments (source_interface_descriptors)
-				end
+			rename_arguments (interface_descriptors)
+			if source_interface_descriptors /= Void then
+				rename_arguments (source_interface_descriptors)
 			end
 		end
 

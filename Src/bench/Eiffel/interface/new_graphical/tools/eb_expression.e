@@ -158,7 +158,7 @@ feature -- Status report
 			-- Is `Current' a condition (boolean query) in the context of `f'?
 		require
 			valid_f: f /= Void
-			no_error: not dbg_expression.syntax_error
+			no_error: not syntax_error_occurred
 			good_state: f.written_class /= Void and then f.written_class.has_feature_table
 		do
 			Result := expression_evaluator.is_condition (f.associated_feature_i )
@@ -260,9 +260,6 @@ feature {ES_WATCH_TOOL, ES_OBJECTS_GRID_LINE, EB_EXPRESSION_EVALUATOR_TOOL, EB_E
 
 feature -- Basic operations
 
-	dbg_expression: DBG_EXPRESSION
-			-- Object representing the expression to evaluate
-
 	is_evaluated: BOOLEAN
 			-- Is current expression had been evaluated ?
 
@@ -275,10 +272,16 @@ feature -- Basic operations
 	evaluate is
 			-- Evaluate `dbg_expression' with `expression_evaluator'
 		require
-			valid_syntax: not dbg_expression.syntax_error
+			valid_syntax: not syntax_error_occurred
 		do
 			expression_evaluator.evaluate
 			is_evaluated := True
+		end
+
+	reset_expression_evaluator is
+			-- Reset expression_evaluator
+		do
+			internal_evaluator := Void
 		end
 
 	expression_evaluator: DBG_EXPRESSION_EVALUATOR is
@@ -291,11 +294,10 @@ feature -- Basic operations
 			end
 		end
 
-	reset_expression_evaluator is
-			-- Reset expression_evaluator
-		do
-			internal_evaluator := Void
-		end
+feature {EB_EXPRESSION} -- Restricted access
+
+	dbg_expression: DBG_EXPRESSION
+			-- Object representing the expression to evaluate
 
 	create_internal_evaluator is
 			-- Create internal_evaluator

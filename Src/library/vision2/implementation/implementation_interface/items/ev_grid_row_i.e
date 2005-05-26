@@ -618,6 +618,9 @@ feature -- Status setting
 			-- from `grid.row_expand_actions'. Note that once a subrow is added to `Current' after a call to
 			-- `ensure_expandable', it is no longer be displayed as expandable if all subrows are then removed.
 			-- In this case, you must explicitly call `ensure_expandable' again after removing all subrows.
+		require
+			parented: parent /= Void
+			parent_tree_enabled: parent.is_tree_enabled
 		do
 			is_ensured_expandable := True
 			parent_i.redraw_from_row_to_end (Current)
@@ -629,6 +632,7 @@ feature -- Status setting
 			-- Restore expanded state of `Current' after a call to `ensure_expandable'. Note that if a row
 			-- has one or more subrows, it is always drawn as expanded, hence the "no_subrows_contained" precondition.
 		require
+			parented: parent /= Void
 			no_subrows_contained: subrow_count = 0
 		do
 			is_ensured_expandable := False

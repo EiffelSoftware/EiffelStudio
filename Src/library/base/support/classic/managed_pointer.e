@@ -498,7 +498,7 @@ feature -- Access: Little-endian format
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + natural_8_bytes) <= count
 		do
-			Result := read_natural_8 (pos)
+			($Result).memory_copy (item + pos, natural_8_bytes)
 		end
 
 	read_natural_16_le (pos: INTEGER): NATURAL_16 is
@@ -596,7 +596,7 @@ feature -- Element change: Little-endian format
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + natural_8_bytes) <= count
 		do
-			put_natural_8 (i, pos)
+			(item + pos).memory_copy ($i, natural_8_bytes)
 		ensure
 			inserted: i = read_natural_8_le (pos)
 		end
@@ -703,7 +703,7 @@ feature -- Access: Big-endian format
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + natural_8_bytes) <= count
 		do
-			Result := read_natural_8 (pos)
+			($Result).memory_copy (item + pos, natural_8_bytes)
 		end
 
 	read_natural_16_be (pos: INTEGER): NATURAL_16 is
@@ -801,7 +801,7 @@ feature -- Element change: Big-endian format
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + natural_8_bytes) <= count
 		do
-			put_natural_8 (i, pos)
+			(item + pos).memory_copy ($i, natural_8_bytes)
 		ensure
 			inserted: i = read_natural_8_be (pos)
 		end

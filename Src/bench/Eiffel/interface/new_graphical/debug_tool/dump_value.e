@@ -467,7 +467,23 @@ feature -- Status report
 				print (Result)
 				print ("%N")
 			end
-		end		
+		end
+		
+	debug_output: STRING is
+			-- Displayed output, including string representation.
+			--| but remove address value
+		do
+			if has_formatted_output then
+				Result := formatted_output.twin
+			else
+				Result := output_value.twin
+			end
+			debug ("debug_recv")
+				print ("Output is ")
+				print (Result)
+				print ("%N")
+			end
+		end			
 
 	last_string_representation_length: INTEGER
 			-- Length of last string_representation Result
@@ -863,7 +879,8 @@ feature -- Access
 			--| True
 			--| '/123/ :'C'
 			--| 123
-			--| [0x12345678]
+			--| "value _string"
+			--| <0x12345678>
 			--| Void
 		do
 			inspect type

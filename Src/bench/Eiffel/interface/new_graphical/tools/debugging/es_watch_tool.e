@@ -175,13 +175,13 @@ feature -- Access
 	title: STRING is
 			-- Title of the tool.
 		do
-			Result := interface_names.t_expression_evaluation
+			Result := interface_names.t_Watch_tool
 		end
 
 	menu_name: STRING is
 			-- Name as it may appear in a menu.
 		do
-			Result := interface_names.m_expression_evaluation
+			Result := interface_names.m_Watch_tool
 		end
 
 	pixmap: ARRAY [EV_PIXMAP] is

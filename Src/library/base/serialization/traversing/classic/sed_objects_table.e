@@ -43,6 +43,12 @@ feature -- Status report
 		do
 			Result := table.has ($an_obj)
 		end
+		
+	capacity: INTEGER is
+			-- Default capacity of current.
+		do
+			Result := table.capacity
+		end
 
 feature -- Element change
 

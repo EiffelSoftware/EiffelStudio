@@ -9,6 +9,7 @@ doc:<file name="eif_type_id.c" version="$Id$" summary="Computation of dynamic ty
 #include "rt_gen_types.h"
 #include "eif_gen_conf.h"
 #include "rt_assert.h"
+#include <ctype.h>
 #include <string.h>
 
 /*
@@ -64,7 +65,6 @@ doc:	</routine>
 rt_public EIF_TYPE_ID eif_type_id (char *type_string)
 {
 	struct rt_type *l_type = NULL;
-	char *string_type = NULL;
 	EIF_TYPE_ID result;
 
 	if (type_string != NULL) {

@@ -111,6 +111,11 @@ inherit
 			interface
 		end
 		
+	WEL_HHT_CONSTANTS
+		export
+			{NONE} all
+		end
+		
 create
 	make
 
@@ -261,8 +266,26 @@ feature {EV_HEADER_ITEM_IMP} -- Implementation
 			desired_width := desired_width + 18
 			header_item.set_width (desired_width)
 		end
-		
-	
+
+	pointed_divider_index: INTEGER is
+			-- Index of divider currently beneath the mouse pointer, or
+			-- 0 if none.
+		local
+			hit_test_info: WEL_HD_HIT_TEST_INFO
+			wel_point: WEL_POINT
+		do
+			create wel_point.make (0, 0)
+			wel_point.set_cursor_position
+			wel_point.set_x (wel_point.x - absolute_x - 1)
+			wel_point.set_y (wel_point.y - absolute_y - 1)
+			hit_test_info := item_info_from_point (wel_point)
+			if flag_set (hit_test_info.flags, Hht_on_divider) or flag_set (hit_test_info.flags, hht_on_div_open) then
+				Result := hit_test_info.index + 1
+			else
+				Result := 0
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	destroy is

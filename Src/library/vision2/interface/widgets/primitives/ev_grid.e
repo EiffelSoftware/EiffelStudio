@@ -173,7 +173,8 @@ class
 inherit
 	EV_CELL
 		rename
-			item as cell_item
+			item as cell_item,
+			wipe_out as cell_wipe_out
 		redefine
 			implementation,
 			create_implementation,
@@ -181,6 +182,11 @@ inherit
 			readable,
 			writable,
 			is_in_default_state
+		end
+
+	EV_GRID_TYPES
+		undefine
+			copy, is_equal, default_create
 		end
 	
 	EV_GRID_ACTION_SEQUENCES
@@ -1565,6 +1571,18 @@ feature -- Element change
 			to_implement_assertion ("EV_GRID.clear - All items positions return `Void'.")
 		end
 
+	wipe_out is
+			-- Remove all columns and rows and their subsequent items from `Current'.
+		require
+			not_destroyed: not is_destroyed
+			is_parented: parent /= Void
+		do
+			implementation.wipe_out
+		ensure
+			columns_removed: column_count = 0
+			rows_removed: row_count = 0
+		end
+
 feature -- Removal
 
 	remove_column (a_column: INTEGER) is
@@ -1651,7 +1669,21 @@ feature {NONE} -- Contract support
 				are_tree_node_connectors_shown and are_columns_drawn_above_rows and not is_resizing_divider_enabled and
 				is_column_resize_immediate
 		end
-			
+
+feature {EV_GRID_I} -- Implementation
+
+	frozen new_row: like row_type is
+			-- Create a new row.
+		do
+			create Result
+		end
+
+	frozen new_column: like column_type is
+			-- Create a new column.
+		do
+			create Result
+		end
+	
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_GRID_I

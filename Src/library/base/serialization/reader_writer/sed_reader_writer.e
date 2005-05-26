@@ -351,13 +351,19 @@ feature -- Element change
 		require
 			is_ready: is_ready_for_writing
 		do
-			if v < 0x00000080 then
-					-- Values between 0 and 127.
-				write_natural_8 (v.as_natural_8)
-			elseif v < 0x00004000 then
-					-- Values between 128 and 16382.
-				write_natural_8 ((((v | 0x00008000) & 0x0000FF00) |>> 8).as_natural_8)
-				write_natural_8 ((v & 0x000000FF).as_natural_8)
+				-- Perform a pseudo binary search on the 0x00004000 value
+				-- so that we have less checks to do for values above 0x00004000.
+				-- If have one more check for values less than 0x00000080, but
+				-- experience shows that they don't occur often.
+			if v < 0x00004000 then
+				if v < 0x00000080 then
+						-- Values between 0 and 127.
+					write_natural_8 (v.as_natural_8)
+				else
+						-- Values between 128 and 16382.
+					write_natural_8 ((((v | 0x00008000) & 0x0000FF00) |>> 8).as_natural_8)
+					write_natural_8 ((v & 0x000000FF).as_natural_8)
+				end
 			elseif v < 0x00200000 then
 					-- Values between 16383 and 2097150.
 				write_natural_8 ((((v | 0x00C00000) & 0x00FF0000) |>> 16).as_natural_8)

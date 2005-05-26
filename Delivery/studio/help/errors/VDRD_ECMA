@@ -1,0 +1,38 @@
+VDRD, section 8.10.26
+
+     Redeclaration Validity rule
+
+     Let C be a class and g a feature of C. It is valid
+     for g to be a redeclaration of a feature f inherited
+     from a parent B of C if and only if the following
+     conditions are satisfied.
+
+        1 No effective feature of C other than f and g has
+          the same final name.
+
+        2 The signature of g conforms to the signature of
+          f.
+
+        3 The Precondition of g, if any, begins with
+          "require else" (not just "require"), and its
+          Postcondition, if any, begins with "ensure then"
+          (not just "ensure").
+
+        4 If the redeclaration is a redefinition (rather
+          than an effecting) the Redefine subclause of the
+          Parent part for B lists in its Feature_list the
+          final name of f in B.
+
+        5 If f is inherited as effective, then g is also
+          effective.
+
+        6 If f is an attribute, g is an attribute, f and g
+          are both variable, and their types are either
+          both expanded or both non-expanded.
+
+        7 f and g have either both no alias or the same
+          alias.
+
+        8 If both features are queries with associated
+          assigner commands fp and gp, then gp is the
+          version of fp in C.

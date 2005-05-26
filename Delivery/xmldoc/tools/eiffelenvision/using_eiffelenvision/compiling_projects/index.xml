@@ -50,6 +50,18 @@
 			build
 		</help_link> from completing sucessfully.
 		</paragraph>
+		<paragraph>
+			<link>
+				<url>debug_clauses.xml</url>
+				<label>Debug Clauses</label>
+			</link>
+			<line_break/>
+			For conditionally compiling units of code in EiffelEnvision, debug clauses provide a means to include/exclude sections of Eiffel code for a given <help_link>
+				<keywords>vxconBuildConfigurations</keywords>
+				<tab_index>0</tab_index>
+				Build Configuration
+			</help_link>.
+		</paragraph>
 		
 		<seealso>
 			<bold>See Also:</bold>

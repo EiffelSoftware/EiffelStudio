@@ -125,7 +125,8 @@ feature {NONE} -- Initialization
 			details_box.hide
 			message_text.enable_word_wrapping
 			message_text.disable_edit
-			message_text.set_background_color ((create {EV_STOCK_COLORS}).white)			
+			message_text.set_background_color ((create {EV_STOCK_COLORS}).white)
+			window.set_default_cancel_button (close_button)
 		end
 
 feature {NONE} -- Implementation

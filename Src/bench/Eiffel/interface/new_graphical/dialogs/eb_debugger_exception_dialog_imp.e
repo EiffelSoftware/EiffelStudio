@@ -37,9 +37,9 @@ feature {NONE}-- Initialization
 			create details_text
 			create l_ev_horizontal_box_2
 			create l_ev_cell_2
-			create l_ev_button_1
+			create save_button
 			create l_ev_cell_3
-			create l_ev_button_2
+			create close_button
 			create l_ev_cell_4
 			
 				-- Build_widget_structure.
@@ -53,9 +53,9 @@ feature {NONE}-- Initialization
 			details_box.extend (details_text)
 			l_ev_vertical_box_1.extend (l_ev_horizontal_box_2)
 			l_ev_horizontal_box_2.extend (l_ev_cell_2)
-			l_ev_horizontal_box_2.extend (l_ev_button_1)
+			l_ev_horizontal_box_2.extend (save_button)
 			l_ev_horizontal_box_2.extend (l_ev_cell_3)
-			l_ev_horizontal_box_2.extend (l_ev_button_2)
+			l_ev_horizontal_box_2.extend (close_button)
 			l_ev_horizontal_box_2.extend (l_ev_cell_4)
 			
 			l_ev_vertical_box_1.set_padding_width (tiny_padding)
@@ -75,19 +75,19 @@ feature {NONE}-- Initialization
 			details_box.set_text ("Additional details")
 			l_ev_horizontal_box_2.set_padding_width (tiny_padding)
 			l_ev_horizontal_box_2.set_border_width (small_padding)
-			l_ev_horizontal_box_2.disable_item_expand (l_ev_button_1)
-			l_ev_horizontal_box_2.disable_item_expand (l_ev_button_2)
-			l_ev_button_1.set_text ("Save")
-			l_ev_button_1.set_minimum_width (default_button_width)
-			l_ev_button_2.set_text (close_string)
-			l_ev_button_2.set_minimum_width (default_button_width)
+			l_ev_horizontal_box_2.disable_item_expand (save_button)
+			l_ev_horizontal_box_2.disable_item_expand (close_button)
+			save_button.set_text ("Save")
+			save_button.set_minimum_width (default_button_width)
+			close_button.set_text (close_string)
+			close_button.set_minimum_width (default_button_width)
 			window.set_minimum_width (400)
 			window.set_title ("Debugger :: Exception message")
 			
 				--Connect events.
 			wrapping_button.select_actions.extend (agent set_wrapping_mode)
-			l_ev_button_1.select_actions.extend (agent save_exception_message)
-			l_ev_button_2.select_actions.extend (agent close_dialog)
+			save_button.select_actions.extend (agent save_exception_message)
+			close_button.select_actions.extend (agent close_dialog)
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.
 
@@ -108,6 +108,7 @@ feature -- Access
 	wrapping_button: EV_CHECK_BUTTON
 	message_text: EV_TEXT
 	details_text: EV_LABEL
+	save_button, close_button: EV_BUTTON
 	details_box: EV_FRAME
 
 feature {NONE} -- Implementation
@@ -115,9 +116,8 @@ feature {NONE} -- Implementation
 	l_ev_vertical_box_1: EV_VERTICAL_BOX
 	l_ev_horizontal_box_1, l_ev_horizontal_box_2: EV_HORIZONTAL_BOX
 	l_ev_label_1: EV_LABEL
-	l_ev_button_1,
-	l_ev_button_2: EV_BUTTON
-	l_ev_cell_1, l_ev_cell_2, l_ev_cell_3, l_ev_cell_4: EV_CELL
+	l_ev_cell_1,
+	l_ev_cell_2, l_ev_cell_3, l_ev_cell_4: EV_CELL
 
 feature {NONE} -- Implementation
 
@@ -140,12 +140,12 @@ feature {NONE} -- Implementation
 		end
 	
 	save_exception_message is
-			-- Called by `select_actions' of `l_ev_button_1'.
+			-- Called by `select_actions' of `save_button'.
 		deferred
 		end
 	
 	close_dialog is
-			-- Called by `select_actions' of `l_ev_button_2'.
+			-- Called by `select_actions' of `close_button'.
 		deferred
 		end
 	

@@ -31,10 +31,6 @@ inherit
 		end
 
 	DEBUGGING_UPDATE_ON_IDLE
-		redefine
---			update,
-			real_update
-		end
 
 create
 	make
@@ -125,61 +121,6 @@ feature -- Access
 --			Result := Pixmaps.Icon_debugging_tool
 		end
 
-feature -- Properties setting
-
-	hexa_mode_enabled: BOOLEAN
-
-	set_hexa_mode (v: BOOLEAN) is
-		do
---			hexa_mode_enabled := v
---			stack_objects_tree.recursive_do_all (agent propagate_hexa_mode)
---			objects_tree.recursive_do_all (agent propagate_hexa_mode)
-		end
-	
-	propagate_hexa_mode (t: EV_TREE_ITEM) is
-		local
---			l_eb_t: EB_OBJECT_TREE_ITEM
-		do
---			l_eb_t ?= t
---			if l_eb_t /= Void then
---				l_eb_t.update
---			end
-		end		
-
-feature -- Status setting
-
-	set_stone (a_stone: STONE) is
-			-- Assign `a_stone' as new stone.
-		local
-		do
-			debug ("debug_recv")
-				print ("EB_DEBUGGING_TOOL.set_stone%N")
-			end
-			if can_refresh then
-			end
-		end
-
-	enable_refresh is
-			-- Set `can_refresh' to `True'.
-		do
-			can_refresh := True
-		end
-
-	disable_refresh is
-			-- Set `can_refresh' to `False'.
-		do
-			can_refresh := False
-		end
-		
-	refresh is
-			-- Class has changed in `development_window'.
-		do
-		end
-
---	update is
---		do
---		end
-
 feature -- change
 
 	change_manager_and_explorer (a_manager: EB_TOOL_MANAGER; an_explorer_bar: EB_EXPLORER_BAR) is
@@ -194,12 +135,6 @@ feature -- change
 			set_explorer_bar (an_explorer_bar)
 		end
 
-feature -- Status report
-
-	can_refresh: BOOLEAN
-			-- Should we display the trees when a stone is set?
-			--| For optimization purposes.
-
 feature -- Memory management
 
 	recycle is
@@ -210,14 +145,9 @@ feature -- Memory management
 
 feature {NONE} -- Implementation
 
-	hex_format_cmd: EB_HEX_FORMAT_CMD
-			-- Command that is used to switch hex/dec formatting for numerical values
-
 	real_update (arg_is_stopped: BOOLEAN) is
 			-- Display current execution status.
 		do
-			if Application.is_running then
-			end
 		end
 
 end

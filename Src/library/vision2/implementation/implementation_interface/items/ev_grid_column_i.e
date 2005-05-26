@@ -34,7 +34,6 @@ feature {NONE} -- Initialization
 			physical_index := -1
 			create header_item.make_with_grid_column (Current)
 			set_is_initialized (True)
-			border_style_flags := 1
 		end
 
 feature {EV_GRID_I} -- Initialization

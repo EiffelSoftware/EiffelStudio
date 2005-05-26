@@ -150,7 +150,7 @@ feature -- EXPR_B evaluation
 		rescue
 			retried := True
 			retry
-		end		
+		end
 
 	evaluate_expr_b (a_expr_b: EXPR_B) is
 		local
@@ -541,7 +541,6 @@ feature -- EXPR_B evaluation
 					fi := ef.associated_feature_i
 			
 					if fi.is_once then
---						evaluate_once (ef)
 						params := parameter_values_from_parameters_b (a_feature_b.parameters)
 						if tmp_target /= Void then
 							evaluate_once (tmp_target.value_address, tmp_target, ef, params)
@@ -794,21 +793,26 @@ feature -- EXPR_B evaluation
 			cse_dotnet: CALL_STACK_ELEMENT_DOTNET
 			l_addr: STRING
 		do
-			cse ?= Application.status.current_call_stack_element
-			if cse = Void then
-				check
-					False -- Shouldn't occur.
+			if on_object then
+					--| If the context is on object
+					--| then Current represent the pointed object
+				tmp_result_value := dump_value_at_address (context_address)
+				if tmp_result_value /= Void then
+					tmp_result_static_type := tmp_result_value.dynamic_class
 				end
-			end
-			l_addr := cse.object_address
-			if application.is_dotnet then
-				cse_dotnet ?= cse
-				tmp_result_value := cse_dotnet.current_object.dump_value
 			else
-				create tmp_result_value.make_object (l_addr, cse.dynamic_class)
+				cse ?= Application.status.current_call_stack_element
+				check cse /= Void end
+				l_addr := cse.object_address
+				if application.is_dotnet then
+					cse_dotnet ?= cse
+					tmp_result_value := cse_dotnet.current_object.dump_value
+				else
+					create tmp_result_value.make_object (l_addr, cse.dynamic_class)
+				end
+				tmp_result_static_type := context_class
 			end
-			tmp_result_static_type := context_class
-		end		
+		end
 		
 feature -- Concrete evaluation
 
@@ -1043,6 +1047,26 @@ feature -- Access
 		end
 
 feature {NONE} -- Implementation
+
+	dump_value_at_address (addr: STRING): DUMP_VALUE is
+		require
+			addr /= Void
+		local
+			appdotnet: APPLICATION_EXECUTION_DOTNET
+			l_cl: CLASS_C
+		do
+			if application.is_dotnet then
+				appdotnet := application.imp_dotnet
+				if appdotnet.know_about_kept_object (addr) then
+					Result := application.imp_dotnet.kept_object_item (addr).dump_value
+				end
+			else
+				l_cl := debugged_object_manager.class_c_at_address (addr)
+				if l_cl /= Void then
+					create Result.make_object (addr, l_cl)
+				end
+			end
+		end
 
 	get_expression_byte_node is
 			-- get expression byte node depending of the context

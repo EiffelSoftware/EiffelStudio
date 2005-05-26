@@ -35,7 +35,7 @@ large: ""
 -- linker flags
 ar: ""
 ld: ""
-ldflags: ""
+ldflags: "-STACK:5000000"
 mtldflags: "-NODEFAULTLIB:libc"
 console_flags: "-SUBSYSTEM:CONSOLE"
 windows_flags: "-SUBSYSTEM:WINDOWS"

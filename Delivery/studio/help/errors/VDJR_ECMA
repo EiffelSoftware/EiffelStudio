@@ -1,0 +1,20 @@
+VDJR, section 8.10.28
+
+     Join Validity rule
+
+     It is valid for a class C to inherit two different
+     features under the same final name under and only
+     under the following conditions:
+
+        1 After possible redeclaration in C, their
+          signatures are identical.
+
+        2 They either have both no aliases or have the
+          same alias.
+
+        3 If they both have assigner commands, the
+          associated procedures have the same final
+          name in C.
+
+        4 If both are inherited as effective, C redefines
+          both into a common version.

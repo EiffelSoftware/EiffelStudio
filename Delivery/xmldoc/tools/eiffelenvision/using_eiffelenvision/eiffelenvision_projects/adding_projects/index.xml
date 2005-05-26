@@ -3,7 +3,7 @@
 		<help>
 			<toc>
 				<envision_title>Adding New Projects</envision_title>
-				<envision_pseudo_name>00</envision_pseudo_name>
+				<envision_pseudo_name>20</envision_pseudo_name>
 			</toc>
 		</help>
 	</meta_data>
@@ -30,7 +30,7 @@
 			</link>
 			<line_break/>
 			Describes the number and variety of EiffelProjects that can be added to any exising or new Visual Studio .NET solution.
-		</paragraph>		
+		</paragraph>
 		
 		<anchor>also_see</anchor>
 		<heading>

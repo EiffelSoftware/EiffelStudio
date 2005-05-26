@@ -32,6 +32,8 @@ inherit
 
 	DEBUGGING_UPDATE_ON_IDLE
 
+	REFACTORING_HELPER
+
 create
 	make
 
@@ -105,7 +107,9 @@ feature -- Access
 	title: STRING is 
 			-- Title of the tool.
 		do
-			Result := Interface_names.t_Debugging_tool
+			Result := Interface_names.t_Object_tool
+--			Result := Interface_names.t_Debugging_tool
+			fixme ("uncomment when we decide to use the Grid debugging tools")
 		end
 
 	menu_name: STRING is

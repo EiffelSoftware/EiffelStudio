@@ -8,6 +8,12 @@ deferred
 class
 	DBG_EXPRESSION
 
+inherit
+	DEBUG_OUTPUT
+		rename
+			debug_output as expression
+		end
+
 --create
 --	make_with_expression
 

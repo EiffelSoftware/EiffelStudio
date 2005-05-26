@@ -124,15 +124,14 @@ feature -- debugged object creation
 			valid_addr: application.is_valid_object_address (addr)
 			valid_bounds: sp_lower >= 0 and (sp_upper >= sp_lower or else sp_upper = -1)
 		do
-					if is_dotnet then
-						create {DEBUGGED_OBJECT_DOTNET} Result.make (addr, sp_lower, sp_upper)
-					else
-						create {DEBUGGED_OBJECT_CLASSIC} Result.make (addr, sp_lower, sp_upper)
-					end
-					last_debugged_object := Result
-					last_sp_lower := sp_lower
-					last_sp_upper := sp_upper		
-
+			if is_dotnet then
+				create {DEBUGGED_OBJECT_DOTNET} Result.make (addr, sp_lower, sp_upper)
+			else
+				create {DEBUGGED_OBJECT_CLASSIC} Result.make (addr, sp_lower, sp_upper)
+			end
+			last_debugged_object := Result
+			last_sp_lower := sp_lower
+			last_sp_upper := sp_upper		
 		end
 		
 	caching_enabled: BOOLEAN is False

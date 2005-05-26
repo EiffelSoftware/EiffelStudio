@@ -657,8 +657,10 @@ feature -- Status setting
 			if a_item.implementation.deactivate_actions_internal /= Void then
 				a_item.implementation.deactivate_actions_internal.call (Void)
 			end
-
-			a_item.redraw
+			if a_item.parent = interface then
+					-- Redraw item if existant in Current
+				a_item.redraw
+			end
 			activate_window := Void
 			currently_active_item := Void
 		end
@@ -1812,7 +1814,30 @@ feature -- Removal
 				i := i + 1
 			end
 		ensure
-			to_implement_assertion ("EV_GRID_ROW_I.clear - All items positions return `Void'.")
+			to_implement_assertion ("EV_GRID_I.clear - All items positions return `Void'.")
+		end
+
+	wipe_out is
+			-- Remove all columns and rows and their subsequent items from `Current'.
+		require
+			is_parented: parent /= Void
+		do
+			fixme ("Optimize EV_GRID_I.wipe_out to reset values immediately if possible%N")
+			from
+			until
+				row_count = 0
+			loop
+				remove_row (1)
+			end
+			from
+			until
+				column_count = 0
+			loop
+				remove_column (1)
+			end
+		ensure
+			columns_removed: column_count = 0
+			rows_removed: row_count = 0
 		end
 
 feature -- Measurements
@@ -3886,7 +3911,7 @@ feature {EV_GRID_ROW_I} -- Implementation
 			row_i, replaced_row: EV_GRID_ROW_I
 			a_row_data: SPECIAL [EV_GRID_ITEM_I]
 		do
-			row_i := (create {EV_GRID_ROW}).implementation
+			row_i := interface.new_row.implementation
 			
 			create a_row_data.make (0)
 			if a_index > row_count then
@@ -3934,7 +3959,7 @@ feature {NONE} -- Implementation
 		local
 			a_column_i, replaced_column: EV_GRID_COLUMN_I
 		do
-			a_column_i := (create {EV_GRID_COLUMN}).implementation
+			a_column_i := interface.new_column.implementation
 			
 			if a_index > columns.count then
 				if replace_existing_item then
@@ -4215,7 +4240,6 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- I
 			end
 		end
 
-
 	item_counter: INTEGER
 		-- Item counter used to identify individual items for hashing.
 
@@ -4247,7 +4271,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- I
 				-- for retrieval of item.
 			row_data :=  internal_row_data @ a_row
 
-				-- `row_data' may not have a count lass than
+				-- `row_data' may not have a count less than
 				-- `column_count' if items are Void in this row.
 			if col_index < row_data.count then
 				grid_item_i := row_data @ (col_index)

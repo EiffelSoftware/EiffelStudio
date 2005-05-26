@@ -1,0 +1,89 @@
+<document output="envision" title="Adding New and Existing Items">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_title>Adding New and Existing Items</envision_title>
+				<envision_pseudo_name>00</envision_pseudo_name>
+			</toc>
+		</help>
+	</meta_data>
+	<paragraph>
+		Adding new project items to EiffelEnvision projects is based heavily on the context that are added in. Before reading the documentation linked to from this document, 
+		you should be aware of how projects are <link><url>url</url><label>*structured</label></link> and the concepts and notations used in the <link><url>url</url><label>*Eiffel for .NET language</label></link>. 
+		
+		<anchor>in_this_section</anchor>
+		<heading>
+			<size>2</size>
+			<content>In This Section</content>
+		</heading>
+		<paragraph>
+			<link>
+				<url>project_items.xml</url>
+				<label>EiffelEnvision Project Item Templates</label>
+			</link>
+			<line_break/>
+			A breakdown of the new project item templates available to add to EiffelEnvision projects.
+		</paragraph>
+		<paragraph>
+			<link>
+				<url>adding_item.xml</url>
+				<label>Adding New Project Items</label>
+			</link>
+			<line_break/>
+			Explains how to add new project items, from the EiffelEnvision project templates, to the various parts of EiffelEnvision's project.
+		</paragraph>
+		<paragraph>
+			<link>
+				<url>adding_folders.xml</url>
+				<label>Adding New Folders</label>
+			</link>
+			<line_break/>
+			Explains how to add new folders to the various parts of EiffelEnvision's project hierarchy.
+		</paragraph>
+		<paragraph>
+			<link>
+				<url>adding_existing_items.xml</url>
+				<label>Adding Existing Items to Projects</label>
+			</link>
+			<line_break/>
+			Explains how to add existing items to EiffelEnvision projects.
+		</paragraph>
+		<paragraph>
+			<link>
+				<url>adding_clusters.xml</url>
+				<label>Adding Clusters to Projects</label>
+			</link>
+			<line_break/>
+			Explains how to Eiffel <link><url>url</url><label>*clusters</label></link> to EiffelEnvision projects.
+		</paragraph>
+		<paragraph>
+			<link>
+				<url>adding_cluster_guidelines.xml</url>
+				<label>Adding Cluster Guidelines</label>
+			</link>
+			<line_break/>
+			Guidelines to be aware of when adding new <link><url>url</url><label>*clusters</label></link> to EiffelEnvision projects.
+		</paragraph>
+				
+		<anchor>also_see</anchor>
+		<heading>
+			<size>2</size>
+			<content>Related Sections</content>
+		</heading>
+		<seealso>
+			<bold>See also</bold>
+			<line_break/>		
+			<help_link>
+				<keywords>vxurfNewProjectDialog</keywords>
+				<tab_index>0</tab_index>
+				New Project Dialog
+			</help_link>
+			<line_break/>
+			<help_link>
+				<keywords>vxconVisualStudioSolutionsProjects</keywords>
+				<tab_index>0</tab_index>
+				Introduction to Solutions, Projects, and Items
+			</help_link>
+		</seealso>
+	</paragraph>
+</document>

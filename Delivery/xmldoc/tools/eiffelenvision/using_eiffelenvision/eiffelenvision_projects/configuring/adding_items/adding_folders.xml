@@ -1,0 +1,84 @@
+<document output="envision" title="Adding New Folders">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_title>Adding New Folders</envision_title>
+				<envision_pseudo_name>00</envision_pseudo_name>
+			</toc>
+			<xml>
+				<keyword>
+					<index>K</index>
+					<term>Adding new project folders</term>
+				</keyword>
+				<keyword>
+					<index>K</index>
+					<term>EiffelEnvision, Adding new project folders</term>
+				</keyword>
+			</xml>
+		</help>
+	</meta_data>
+	<paragraph>
+		<paragraph>
+			EiffelEnvision <link><url>url</url><label>*Projects</label></link> managed files, as described in <help_link>
+				<keywords>vxconFolder-BasedReference-BasedProjects</keywords>
+				<tab_index>0</tab_index>
+				Item Management in Projects
+			</help_link>. EiffelEnvision also manages linked project items, via the <link><url>url</url><label>*Other Files</label></link> hierarchy, but only to support referencing existing items related to the project. 
+		</paragraph>
+			
+		<paragraph>
+			All aspects of an EiffelEnvision <link><url>url</url><label>*Project</label></link> are hierarchal providing you with the facilities to structure and organize your projects 
+			as such. To facilitate the creation of file and folder hierarchies, <bold>New Folders</bold> can be created under every type of folder node. The type of folder added will depend 
+			on the section of the project you are adding a new folder to. For the most part EiffelEnvision managed files. The exception is the <link><url>url</url><label>*Other Files</label></link> 
+			section of a <link><url>url</url><label>*Project</label></link>. This is manages links to files. For more information, see <help_link>
+				<keywords>vxconFolder-BasedReference-BasedProjects</keywords>
+				<tab_index>0</tab_index>
+				Item Management in Projects
+			</help_link>.
+		</paragraph>
+		
+		<anchor>adding_folders</anchor>
+		<heading>
+			<size>2</size>
+			<content>Adding Folders</content>
+		</heading>
+		<paragraph>
+			To add a folder, select a folder node in your EiffelEnvision project. Now select <bold>Project</bold>, <bold>New Folder</bold>. Alternatively select the <bold>Add</bold>, <bold>New Folder</bold> from the 
+			folder node context menu. If the <link><url>url</url><label>*Project Node</label></link> is selected when adding a new folder, the resulting folder will be added to the <link><url>url</url><label>*Project Items</label></link> 
+			section of your project, because they have the same <link><url>url</url><label>*Path</label></link>.
+		</paragraph>
+		<paragraph>
+			Once selecting to add a new folder, a new folder will appear under the folder node you selected when adding it. The new folder will automatically be ready for a new name, overriding the default <italic>new_folder_ith</italic>. 
+			When choosing a name for the folder, it must contain only those characters legally excepted for Windows folder names.
+		</paragraph>
+		
+		<anchor>also_see</anchor>
+		<heading>
+			<size>2</size>
+			<content>Related Sections</content>
+		</heading>
+		<seealso>
+			<bold>See also</bold>
+			<line_break/>		
+			<link><url>index.xml</url><label>Adding Project Items</label></link>
+			<line_break/>
+			<link><url>adding_items.xml</url><label>Adding New Project Items</label></link>
+			<line_break/>
+			<link><url>adding_clusters.xml</url><label>Add New Clusters</label></link>
+			<line_break/>
+			<link><url>adding_existing_items.xml</url><label>Add Existing Items</label></link>
+			<line_break/>
+			<help_link>
+				<keywords>vxtskCreatingReferencesToFilesInSolutionExplorer</keywords>
+				<tab_index>0</tab_index>
+				Adding Existing Items to a Project
+			</help_link>
+			<line_break/>
+			<help_link>
+				<keywords>vxconVisualStudioSolutionsProjects</keywords>
+				<tab_index>0</tab_index>
+				Introduction to Solutions, Projects, and Items
+			</help_link>
+		</seealso>
+	</paragraph>
+</document>

@@ -1,0 +1,160 @@
+<document output="envision" title="New Cluster Wizard">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_title>New Cluster Wizard</envision_title>
+				<envision_pseudo_name>00</envision_pseudo_name>
+			</toc>
+			<xml>
+				<keyword>
+					<index>K</index>
+					<term>EiffelEnvision, Guidelines</term>
+				</keyword>
+				<keyword>
+					<index>K</index>
+					<term>Adding clusters guidelines</term>
+				</keyword>
+				<keyword>
+					<index>F</index>
+					<term>ee.vs.project.items.cluster_wizard</term>
+				</keyword>
+			</xml>
+		</help>
+	</meta_data>
+	<paragraph>
+		<paragraph>
+			The <bold>New Cluster Wizard</bold> allow you to add a new <link><url>url</url><label>*cluster</label></link> to an EiffelEnvision project. For information on how to add <link><url>url</url><label>*clusters</label></link> to projects, see <link><url>adding_clusters.xml</url><label>Adding New Clusters</label></link>.
+		</paragraph>
+		
+		<paragraph>
+			The wizard is separated into two pages. <bold>Overview</bold> and <bold>Assertions</bold>. You may switch between the pages by clicking on the name of the page, located in the wizard's left pane.
+		</paragraph>
+		
+		<anchor>overview</anchor>
+		<heading>
+			<size>2</size>
+			<content>Overview</content>
+		</heading>
+		<paragraph>
+			The <bold>Overview</bold> page presents the most basic of any new <link><url>url</url><label>*Cluster Properties</label></link>. 
+		</paragraph>
+		
+		<paragraph>
+			<bold>Name</bold> 
+			<line_break/>
+			This field should be unique within your project, and will be the name given to the cluster after it has been added to your project. The <bold>Name</bold> should adhere to the <link><url>adding_cluster_guidelines.xml</url><anchor_name>cluster_names</anchor_name><label>Adding Cluster Guidelines</label></link>. This is a required field and cannot be left blank or contain any illegal characters.
+		</paragraph>
+		
+		<paragraph>
+			<bold>Namespace</bold>
+			<line_break/>
+			An alternative <help_link>
+				<keywords>cpconTheNETFrameworkClassLibrary</keywords>
+				<tab_index>0</tab_index>
+				Namespace
+			</help_link> for the cluster, which will be used to full qualify the generated types in the assembly manifest after a <link><url>../../../compiling_projects/index.xml</url><anchor_name>cluster_names</anchor_name><label>Build</label></link>. This field is optional.
+		</paragraph>
+		
+		<paragraph>
+			<bold>Path</bold>
+			<line_break/>
+			The path that will be assigned to the cluster when added to the project.
+		</paragraph>
+		
+		<paragraph>
+			<bold>Include Subdirectories</bold>
+			<line_break/>
+			This option relates to the <link><url>url</url><label>*Include Subdirectories</label></link> property of a <link><url>url</url><label>*Cluster Node</label></link>. Selecting this option will include all subdirectories in the specified <bold>Path</bold>.
+		</paragraph>
+		
+		<paragraph>
+			<bold>Library</bold>
+			<line_break/>
+			This option relates to the <link><url>url</url><label>*Library</label></link> property of a <link><url>url</url><label>*Cluster Node</label></link>. Selecting this option will include all subdirectories in the specified <bold>Path</bold>.
+		</paragraph>
+		
+		<paragraph>
+			<bold>Override</bold>
+			<line_break/>
+			This option relates to the <link><url>url</url><label>*Override</label></link> property of a <link><url>url</url><label>*Cluster Node</label></link>. Selecting this option will ensure the clusters classes will be taken over any other project classes that have the same name.
+		</paragraph>
+				
+		<anchor>assertions</anchor>
+		<heading>
+			<size>2</size>
+			<content>Assertions</content>
+		</heading>
+		<paragraph>
+			The <bold>Assertions</bold> page contains a number of optional options related to finer grained control over how project's <link><url>url</url><label>*contracts</label></link> are evaluated at runtime. Create a cluster and ignoring this page will use the <link><url>../project_configuration/assertions.xml</url><label>Assertion Properties</label></link> set in the <link><url>../project_configuration/index.xml</url><label>Project Properties</label></link>.
+		</paragraph>
+		
+		<paragraph>
+			<bold>Discard Assertions When Optimizing</bold>
+			<line_break/>
+			Set by default, having this option select will discard all assertion options when the <link><url>../project_configuration/build.xml</url><anchor_name>optimize_code</anchor_name><label>Optimize Code</label></link> property, in the <link><url>../project_configuration/build.xml</url><anchor_name>optimize_code</anchor_name><label>Build Project Properties</label></link>, is set to <bold>Yes</bold>. The has the same effect as turning off all assertions (detailed below) for the cluster, when optimizing code.
+		</paragraph>
+				
+		<paragraph>
+			<bold>Use Default Assertions</bold>
+			<line_break/>
+			Set by default, having this option select will use the <link><url>../project_configuration/assertions.xml</url><label>Assertion Properties</label></link> set in the <link><url>../project_configuration/index.xml</url><label>Project Properties</label></link>.
+		</paragraph>	
+		
+		<paragraph>
+			<bold>Evaluate Preconditions</bold>
+			<line_break/>
+			When set, preconditions will be evaluated at runtime for all classes in the created cluster.
+		</paragraph>
+		
+		<paragraph>
+			<bold>Evaluate Postconditions</bold>
+			<line_break/>
+			When set, postconditions will be evaluated at runtime for all classes in the created cluster.
+		</paragraph>
+		
+		<paragraph>
+			<bold>Evaluate Checks</bold>
+			<line_break/>
+			When set, checks will be evaluated at runtime for all classes in the created cluster.
+		</paragraph>
+		
+		<paragraph>
+			<bold>Evaluate Loops</bold>
+			<line_break/>
+			When set, loops will be evaluated at runtime for all classes in the created cluster.
+		</paragraph>
+		
+		<paragraph>
+			<bold>Evaluate Invariants</bold>
+			<line_break/>
+			When set, invariants will be evaluated at runtime for all classes in the created cluster.
+		</paragraph>
+		
+		<anchor>completing</anchor>
+		<heading>
+			<size>2</size>
+			<content>Completing the Wizard</content>
+		</heading>
+		<paragraph>
+			Once you have set the appropriate settings for the new <link><url>url</url><label>*cluster</label></link>, clicking <bold>Finish</bold> will add the cluster to the project.
+		</paragraph>
+				
+		<anchor>also_see</anchor>
+		<heading>
+			<size>2</size>
+			<content>Related Sections</content>
+		</heading>
+		<seealso>
+			<bold>See also</bold>
+			<line_break/>		
+			<link><url>../index.xml</url><label>EiffelEnvision Projects</label></link>
+			<line_break/>
+			<link><url>adding_clusters.xml</url><label>Add New Project Clusters</label></link>
+			<line_break/>
+			<link><url>url</url><label>*Cluster Nodes</label></link>
+			<line_break/>
+			<link><url>url</url><label>*Cluster Properties</label></link>
+			<line_break/>
+		</seealso>
+	</paragraph>
+</document>

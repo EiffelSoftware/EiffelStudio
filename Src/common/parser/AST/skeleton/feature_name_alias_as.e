@@ -35,10 +35,22 @@ feature {NONE} -- Creation
 			feature_id_not_void: feature_id /= Void
 			alias_id_not_void: alias_id /= Void
 			alias_id_not_empty: not alias_id.value.is_empty
+			valid_alias_name:
+				is_bracket_alias_name (alias_id.value) or else
+				is_valid_binary_operator (alias_id.value) or else
+				is_valid_unary_operator (alias_id.value)
 		do
 			initialize_id (feature_id, frozen_status)
 			alias_name := alias_id
 			has_convert_mark := convert_status
+			if not is_bracket then
+					-- Make sure we do not get "prefix %"or%"" or alike
+				if is_valid_unary_operator (alias_id.value) then
+					set_is_unary
+				else
+					set_is_binary
+				end
+			end
 		ensure
 			feature_name_set: feature_name = feature_id
 			alias_name_set: alias_name = alias_id

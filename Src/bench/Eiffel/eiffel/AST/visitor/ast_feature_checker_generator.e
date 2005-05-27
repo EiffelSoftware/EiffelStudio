@@ -2133,7 +2133,7 @@ feature -- Implementation
 			end
 
 			l_last_class := l_last_constrained.associated_class
-			l_prefix_feature := l_last_class.feature_table.item (l_as.prefix_feature_name)
+			l_prefix_feature := l_last_class.feature_table.alias_item (l_as.prefix_feature_name)
 
 			if l_prefix_feature = Void then
 					-- Error: not prefixed function found
@@ -4192,7 +4192,7 @@ feature {NONE} -- Implementation
 				-- No need for `a_left_type.actual_type' since it is done in callers of 
 				-- `is_infix_valid'.
 			l_class := constrained_type (a_left_type).associated_class
-			l_infix := l_class.feature_table.item (a_name)
+			l_infix := l_class.feature_table.alias_item (a_name)
 			if l_infix = Void then
 				create l_vwoe
 				context.init_error (l_vwoe)

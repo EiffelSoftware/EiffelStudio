@@ -221,30 +221,6 @@ feature -- Access
 			feature_names.go_to (cur)
 		end
 
-	is_equiv (other: like Current): BOOLEAN is
-			-- Is `other' equivalent to Current?
-		require
-			other_exists: other /= Void
-		local
-			cur: CURSOR
-		do
-			from
-				cur := other.feature_names.cursor
-				Result := True
-				other.feature_names.start
-			until
-				other.feature_names.after or else not Result
-			loop
-				Result := has_feature_name (other.feature_names.item)
-				other.feature_names.forth
-			end
-			other.feature_names.go_to (cur)
-
-			if Result then
-				Result := body /= Void and then is_body_equiv (other) and is_assertion_equiv (other)
-			end
-		end
-
 	has_instruction (i: INSTRUCTION_AS): BOOLEAN is
 			-- Does this feature has the instruction `i'?
 		do

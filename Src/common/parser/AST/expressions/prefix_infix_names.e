@@ -11,6 +11,31 @@ inherit
 			{NONE} frozen_str, infix_str, prefix_str, quote_str
 		end
 
+feature -- Queries
+
+	is_mangled_alias_name (alias_name: STRING): BOOLEAN is
+			-- Does `alias_name' represent a valid mangled alias name?
+		require
+			alias_name_not_void: alias_name /= Void
+		do
+			if
+				syntax_checker.is_bracket_alias_name (alias_name) or else
+				not alias_name.is_empty and then
+				alias_name.item (alias_name.count) = '%"' and then
+				(
+					alias_name.count > infix_str.count + 1 and then
+					alias_name.substring_index (infix_str, 1) = 1 and then
+					syntax_checker.is_valid_binary_operator (alias_name.substring (infix_str.count + 1, alias_name.count - 1))
+				or else
+					alias_name.count > prefix_str.count + 1 and then
+					alias_name.substring_index (prefix_str, 1) = 1 and then
+					syntax_checker.is_valid_unary_operator (alias_name.substring (prefix_str.count + 1, alias_name.count - 1))
+				)
+			then
+				Result := True
+			end
+		end
+
 feature -- Basic operations
 
 	prefix_feature_name_with_symbol (symbol: STRING): STRING is
@@ -63,9 +88,7 @@ feature -- Basic operations
 		require
 			op_not_void: op /= Void
 			op_not_empty: not op.is_empty
-			valid_op:
-				op.is_equal ("[]") or else
-				op.item (op.count) = '%"' and then (op.substring_index ("prefix %"", 1) = 1 or else op.substring_index ("infix %"", 1) = 1)
+			is_mangled_op: is_mangled_alias_name (op)
 		local
 			c: CHARACTER
 		do
@@ -82,6 +105,14 @@ feature -- Basic operations
 			end
 		ensure
 			result_not_void: Result /= Void
+		end
+
+feature {NONE} -- Implementation
+
+	syntax_checker: EIFFEL_SYNTAX_CHECKER is
+			-- Checker for feature alias names
+		once
+			create Result
 		end
 
 end -- Class PREFIX_INFIX_NAMES

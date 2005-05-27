@@ -4,22 +4,38 @@ class PARENT_C
 
 inherit
 
+	EIFFEL_SYNTAX_CHECKER
+		export
+			{NONE} all
+		end
+
+	PREDEFINED_NAMES
+		export
+			{NONE} all
+		end
+
+	PREFIX_INFIX_NAMES
+		export
+			{NONE} all
+		end
+
 	SHARED_WORKBENCH
 	SHARED_SELECTED
 	SHARED_ERROR_HANDLER
 	SHARED_NAMES_HEAP
 	COMPILER_EXPORTER
+
 	SYNTAX_STRINGS
 		export
 			{NONE} all
 		end
-	
+
 feature 
 
 	parent_type: CL_TYPE_A
 			-- Actual type of the parent
 
-	renaming: HASH_TABLE [PAIR [INTEGER, INTEGER], INTEGER]
+	renaming: HASH_TABLE [RENAMING, INTEGER]
 			-- Rename pairs with alias names (if any)
 
 	redefining: SEARCH_TABLE [INTEGER]
@@ -134,9 +150,14 @@ feature
 			vhrc3: VHRC3
 			vhrc4: VHRC4
 			vhrc5: VHRC5
+			vfav: VFAV_VHRC
 			old_name_id: INTEGER
+			old_name: STRING
+			feature_renaming: RENAMING
 			new_name_id: INTEGER
-			old_name, new_name: STRING
+			new_name: STRING
+			alias_name_id: INTEGER
+			alias_name: STRING
 			f: FEATURE_I
 			local_renaming: like renaming
 		do
@@ -150,8 +171,10 @@ feature
 				loop
 					old_name_id := local_renaming.key_for_iteration
 					old_name := names_heap.item (old_name_id)
-					new_name_id := local_renaming.item_for_iteration.first
+					feature_renaming := local_renaming.item_for_iteration
+					new_name_id := feature_renaming.feature_name_id
 					new_name := names_heap.item (new_name_id)
+					alias_name_id := feature_renaming.alias_name_id
 					if old_name_id = new_name_id then
 						create vhrc3
 						vhrc3.set_class (System.current_class)
@@ -189,6 +212,48 @@ feature
 							vhrc4.set_parent (parent)
 							vhrc4.set_feature_name (old_name)
 							Error_handler.insert_error (vhrc4)
+						end
+					elseif alias_name_id > 0 then
+						vfav := Void
+						f := parent_table.item (old_name)
+						alias_name := extract_alias_name (names_heap.item (alias_name_id))
+						if is_bracket_alias_name (alias_name) then
+							if f.argument_count = 0 or else f.type.is_void then
+									-- Bracket features should have at least one argument and a return type.
+								create {VFAV2_VHRC} vfav
+							elseif feature_renaming.has_convert_mark then
+									-- Bracket alias cannot have convert mark
+								create {VFAV3_VHRC} vfav
+							end
+						elseif
+							not f.type.is_void and then
+							(f.argument_count = 0 and then is_valid_unary_operator (alias_name) or else
+							f.argument_count = 1 and then is_valid_binary_operator (alias_name))
+						then
+							if f.argument_count = 1 then
+									-- Ensure the alias name is in binary form.
+								names_heap.put (infix_feature_name_with_symbol (alias_name))
+								local_renaming.item_for_iteration.set_alias_name_id (names_heap.found_item)
+								if is_semi_strict_id (names_heap.found_item) and then system.current_class.lace_class /= system.boolean_class then
+									create {VFAV4_VHRC} vfav
+								end
+							elseif feature_renaming.has_convert_mark then
+									-- Non-binary operator cannot have convert mark
+								create {VFAV3_VHRC} vfav
+							else
+									-- Ensure the alias name is in unary form.
+								names_heap.put (prefix_feature_name_with_symbol (alias_name))
+								local_renaming.item_for_iteration.set_alias_name_id (names_heap.found_item)
+							end
+						else
+								-- Report wrong argument number or return type for operator alias.
+							create {VFAV1_VHRC} vfav
+						end
+						if vfav /= Void then
+							vfav.set_class (System.current_class)
+							vfav.set_parent (parent)
+							vfav.set_feature_name (old_name)
+							Error_handler.insert_error (vfav)
 						end
 					end
 					local_renaming.forth
@@ -366,7 +431,7 @@ feature
 				until
 					local_renaming.after or else Result > 0
 				loop
-					new_name_id := local_renaming.item_for_iteration.first
+					new_name_id := local_renaming.item_for_iteration.feature_name_id
 					if new_name_id = feature_name_id then
 						Result := local_renaming.key_for_iteration
 					end
@@ -397,11 +462,14 @@ feature -- Debug
 					io.error.put_string ("%T%T")
 					io.error.put_string (names_heap.item (renaming.key_for_iteration))
 					io.error.put_string (" as ")
-					io.error.put_string (names_heap.item (renaming.item_for_iteration.first))
-					if renaming.item_for_iteration.second > 0 then
+					io.error.put_string (names_heap.item (renaming.item_for_iteration.feature_name_id))
+					if renaming.item_for_iteration.alias_name_id > 0 then
 						io.error.put_string (" alias %"")
-						io.error.put_string (names_heap.item (renaming.item_for_iteration.second))
+						io.error.put_string (names_heap.item (renaming.item_for_iteration.alias_name_id))
 						io.error.put_string ("%"")
+						if renaming.item_for_iteration.has_convert_mark then
+							io.error.put_string (" convert")
+						end
 					end
 					io.error.put_new_line
 					renaming.forth

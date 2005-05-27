@@ -152,6 +152,11 @@ feature -- Status report
 		deferred
 		end
 
+	has_convert_mark: BOOLEAN is
+			-- Is operator marked with "convert"?
+		do
+		end
+
 feature -- Status setting
 
 	set_is_binary is

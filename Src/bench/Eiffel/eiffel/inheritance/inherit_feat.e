@@ -5,6 +5,7 @@
 class INHERIT_FEAT 
 
 inherit
+	PREDEFINED_NAMES
 	SHARED_INHERITED
 	SHARED_WORKBENCH
 	SHARED_SERVER
@@ -148,8 +149,11 @@ feature
 			next: INHERIT_INFO
 			parent: PARENT_C
 			replication: FEATURE_I
-			feature_name_id, new_name_id: INTEGER
-			extended_feature_name: PAIR [INTEGER, INTEGER]
+			feature_i: FEATURE_I
+			feature_name_id: INTEGER
+			alias_name_id: INTEGER
+			extended_feature_name: RENAMING
+			new_name_id: INTEGER
 			new_alias_name_id: INTEGER
 			l_names_heap: like Names_heap
 				-- Replicated feature in case of repeated inheritance
@@ -161,34 +165,44 @@ feature
 				feat.after
 			loop
 				next := feat.item
-				feature_name_id := next.a_feature.feature_name_id
 				parent := next.parent
-				if
-					not next.renaming_processed and then
-					parent.is_renaming (feature_name_id)
-				then
-					feature_name_id := next.a_feature.feature_name_id
-						-- Detection of a renaming clause: check repeated
-						-- inheritance possible replication
-					extended_feature_name := parent.renaming.item (feature_name_id)
-					new_name_id := extended_feature_name.first
-					new_alias_name_id := extended_feature_name.second
-					replication := next.a_feature.twin
-						-- Mark it as processed
-					next.set_renaming_processed
-						-- Move the inherit feature information under
-						-- 'new_name'.
-					replication.set_renamed_name_id (new_name_id, new_alias_name_id)
-					next.set_a_feature (replication)
-					Inherit_table.add_inherited_feature (next, new_name_id)
-						-- Remove the information
-					feat.remove
-						-- Remove empty structure
-					if is_empty then
-						Inherit_table.remove (feature_name_id)
-					end
-				else
+				if next.renaming_processed then
 					feat.forth
+				else
+					feature_i := next.a_feature
+					feature_name_id := feature_i.feature_name_id
+					if parent.is_renaming (feature_name_id) then
+							-- Detection of a renaming clause: check repeated
+							-- inheritance possible replication
+						extended_feature_name := parent.renaming.item (feature_name_id)
+						new_name_id := extended_feature_name.feature_name_id
+						new_alias_name_id := extended_feature_name.alias_name_id
+						replication := next.a_feature.twin
+							-- Mark it as processed
+						next.set_renaming_processed
+							-- Move the inherit feature information under
+							-- 'new_name'.
+						replication.set_renamed_name_id (new_name_id, new_alias_name_id)
+						replication.set_has_convert_mark (extended_feature_name.has_convert_mark)
+						next.set_a_feature (replication)
+						Inherit_table.add_inherited_feature (next, new_name_id)
+							-- Remove the information
+						feat.remove
+							-- Remove empty structure
+						if is_empty then
+							Inherit_table.remove (feature_name_id)
+						end
+					else
+						alias_name_id := feature_i.alias_name_id
+						if
+							alias_name_id /= 0 and then is_semi_strict_id (alias_name_id) and then
+							system.current_class.lace_class /= system.boolean_class
+						then
+								-- Semistrict operator alias in a class other than BOOLEAN
+							error_handler.insert_error (create {VE07}.make (system.current_class, feature_i, next.parent.parent))
+						end
+						feat.forth
+					end
 				end
 			end
 		end
@@ -348,54 +362,61 @@ feature
 		require
 			good_context: nb_features > 0;
 		local
-			body_id: INTEGER;
-			written_id: INTEGER;
-			first_feature: FEATURE_I;
-			written_class: CLASS_C;
-			to_compair, written_type, written_actual_type: TYPE_A;
-
+			body_id: INTEGER
+			written_id: INTEGER
+			first_feature: FEATURE_I
+			current_feature: FEATURE_I
+			written_class: CLASS_C
+			to_compair, written_type, written_actual_type: TYPE_A
+			alias_name_id: INTEGER
 		do
 				-- First condition for sharing feature: same body id
 			from
-				Result := True;
-				first_feature := features.first.a_feature;
-				body_id := first_feature.code_id;
-				features.start;
-				features.forth;
+				Result := True
+				first_feature := features.first.a_feature
+				body_id := first_feature.code_id
+				alias_name_id := first_feature.alias_name_id
+				features.start
+				features.forth
 			until
 				features.after or else not Result
 			loop
-				Result := body_id = features.item.a_feature.code_id
-				features.forth;
-			end;
+				current_feature := features.item.a_feature
+				Result := body_id = current_feature.code_id
+					-- Check that aliases are the same
+				if not first_feature.is_same_alias (current_feature) then
+					error_handler.insert_error (create {VE06}.make (system.current_class, first_feature, current_feature))
+				end
+				features.forth
+			end
 				-- Second condition: if the feature is written in a
 				-- generic class, check if there is no generic derivation
 			if Result and features.count > 1 then
-				written_class := first_feature.written_class;
+				written_class := first_feature.written_class
 				if written_class.generics /= Void then
 						-- The class where the feature is written is a
 						-- generic class
 					from
-						written_actual_type := written_class.actual_type;
-						written_id := written_class.class_id;
-						to_compair := written_actual_type.duplicate;
+						written_actual_type := written_class.actual_type
+						written_id := written_class.class_id
+						to_compair := written_actual_type.duplicate
 						to_compair := to_compair.instantiation_in
-							(features.first.parent.parent_type, written_id);
-						features.go_i_th (2);
+							(features.first.parent.parent_type, written_id)
+						features.go_i_th (2)
 					until
 						features.after or else not Result
 					loop
-						written_type := written_actual_type.duplicate;
+						written_type := written_actual_type.duplicate
 						written_type := written_type.instantiation_in
-							(features.item.parent.parent_type, written_id);
+							(features.item.parent.parent_type, written_id)
 							-- Same instantiated parent type for
 							-- sharing feature
-						Result := written_type.is_deep_equal (to_compair);
-						features.forth;
-					end;
-				end;
-			end;
-		end;
+						Result := written_type.is_deep_equal (to_compair)
+						features.forth
+					end
+				end
+			end
+		end
 
 	all_attributes: BOOLEAN is
 			-- Are all the inherited features non-deferred attributes ?

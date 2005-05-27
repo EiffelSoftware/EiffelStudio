@@ -65,11 +65,11 @@
 					<link><url>url</url><label>*EiffelVision 2 graphical builder</label></link>.</cell>
 				</row>
 				<row>
-					<cell>Blank Eiffel Graphical Application Template</cell>
+					<cell><link><url>wizards/blank_eiffel_graphical_application.xml</url><label>Blank Eiffel Graphical Application Template</label></link></cell>
 					<cell>A standalone Windows application using the <link><url>url</url><label>*EiffelVision 2</label></link> platform independent graphical library.</cell>
 				</row>
 				<row>
-					<cell>Windows Eiffel Application Template</cell>
+					<cell><link><url>wizards/windows_eiffel_application.xml</url><label>Windows Eiffel Application Template</label></link></cell>
 					<cell>A standalone Windows application using the <link><url>url</url><label>*Windows Eiffel Library</label></link> (<bold>WEL</bold>).</cell>
 				</row>
 				<row>
@@ -85,12 +85,12 @@
 					</help_link>.</cell>
 				</row>
 				<row>
-					<cell>Eiffel Class Library Template</cell>
+					<cell><link><url>wizards/eiffel_class_library.xml</url><label>Eiffel Class (Precompile) Library Template</label></link></cell>
 					<cell>Reusable class or component that can be shared with other projects, specifically designed for reuse by other EiffelEnvision projects. 
 					Eiffel Class Library projects are also known in Eiffel as <link><url>../configuring/adding_references/precompiled_libraries.xml</url><label>Precompiled Libraries</label></link>.</cell>
 				</row>
 				<row>
-					<cell>Empty Project Template</cell>
+					<cell><link><url>wizards/eiffel_class_library.xml</url><label>Empty Project Template</label></link></cell>
 					<cell>Configurable empty project, with rudimentary options. For creating application or libraries by specifying the root class and creation routine.</cell>
 				</row>
 			</table>

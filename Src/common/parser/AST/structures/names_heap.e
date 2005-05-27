@@ -297,6 +297,9 @@ feature {NONE} -- Implementation: access
 			put ("is_lower") check found_item = is_lower_name_id end
 			put ("is_upper") check found_item = is_upper_name_id end
 			put ("set_bit") check found_item = set_bit_name_id end
+			put ("infix %"and then%"") check found_item = infix_and_then_name_id end
+			put ("infix %"or else%"") check found_item = infix_or_else_name_id end
+			put ("infix %"implies%"") check found_item = infix_implies_name_id end
 		end
 		
 invariant

@@ -658,7 +658,7 @@ feature -- Status setting
 				a_item.implementation.deactivate_actions_internal.call (Void)
 			end
 			if a_item.parent = interface then
-					-- Redraw item if existant in Current
+					-- Redraw item if still existant in Current
 				a_item.redraw
 			end
 			activate_window := Void
@@ -1698,11 +1698,12 @@ feature -- Removal
 			a_column_less_than_column_count: a_column <= column_count
 		local
 			a_col_i: EV_GRID_COLUMN_I
-			a_physical_index: INTEGER
 		do
 			a_col_i := column_internal (a_column)
 			a_col_i.disable_select
-			a_physical_index := a_col_i.physical_index
+
+				-- Column needs to be cleared otherwise data will remain as long as the corresponding rows do.
+			a_col_i.clear
 			
 				-- Remove association of column with `Current'
 			a_col_i.remove_parent_i
@@ -1745,8 +1746,7 @@ feature -- Removal
 		do
 				-- Retrieve row from the grid
 			a_row_i := row_internal (a_row)
-			
-			
+
 				-- Firstly handle subnode removal recursively
 			subrow_count_recursive := a_row_i.subrow_count_recursive
 			from
@@ -1757,8 +1757,7 @@ feature -- Removal
 				internal_remove_row (row (l_row_index).implementation)
 				l_row_index := l_row_index - 1
 			end
-			
-			
+
 			internal_remove_row (a_row_i)
 			
 				-- Note that we must tell the computation to start from the 
@@ -1818,7 +1817,7 @@ feature -- Removal
 		end
 
 	wipe_out is
-			-- Remove all columns and rows and their subsequent items from `Current'.
+			-- Remove all columns and rows from `Current'.
 		require
 			is_parented: parent /= Void
 		do

@@ -216,16 +216,9 @@ feature {NONE} -- Implementation
 
 	encode_reference (an_object: ANY) is
 			-- Encode reference to `an_object'.
-		local
-			l_indexes: like object_indexes
 		do
 			if an_object /= Void then
-				l_indexes := object_indexes
-				l_indexes.search (an_object)
-				if not l_indexes.found then
-					l_indexes.put (an_object)
-				end
-				serializer.write_compressed_natural_32 (l_indexes.found_item)
+				serializer.write_compressed_natural_32 (object_indexes.index (an_object))
 			else
 				serializer.write_compressed_natural_32 (0)
 			end

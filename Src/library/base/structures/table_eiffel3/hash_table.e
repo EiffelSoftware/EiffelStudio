@@ -365,15 +365,19 @@ feature -- Element change
 			-- associated with the same key.
 			-- Make `inserted' true if and only if an insertion has
 			-- been made (i.e. `key' was not present).
+			-- Set `found_item' to `new' if there is no conflict, otherwise
+			-- to previous value.
 		do
 			internal_search (key)
 			if control = Found_constant then
 				control := Conflict_constant
+				found_item := content.item (position)
 			else
 				if soon_full then
 					add_space
 					internal_search (key)
 				end
+				found_item := new
 				content.put (new, position)
 				keys.put (key, position)
 				count := count + 1
@@ -381,6 +385,7 @@ feature -- Element change
 			end
 		ensure then
 			insertion_done: inserted implies item (key) = new
+			found_item_associated_with_key: found_item = item (key)
 		end
 
 	replace (new: G; key: H) is

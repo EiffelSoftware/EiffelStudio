@@ -19,8 +19,11 @@ feature -- Properties
 	parent: CLASS_C;
 			-- Involved parent
 
-	code: STRING is "VHRC";
-			-- Error for unvalid renaming
+	code: STRING is
+			-- Error for iunvalid renaming
+		once
+			Result := "VHRC"
+		end
 
 feature -- Access
 

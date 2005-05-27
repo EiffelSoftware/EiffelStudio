@@ -40,7 +40,7 @@ inherit
 
 feature -- Initialization
 
-	make (n: like name; a: like alias_name; i: INTEGER) is
+	make (n: like name; a: like alias_name; c: like has_convert_mark; i: INTEGER) is
 			-- Initialize feature with name `n' with
 			-- identification `i'.
 		require
@@ -49,6 +49,7 @@ feature -- Initialization
 		do
 			name := n
 			alias_name := a
+			has_convert_mark := c
 			feature_id := i
 		ensure
 			name_set: name = n 
@@ -63,6 +64,9 @@ feature -- Properties
 
 	alias_name: STRING
 			-- Alias name of the feature (if any)
+
+	has_convert_mark: BOOLEAN
+			-- Is convert mark specified for an operator alias?
 
 	feature_id: INTEGER;
 			-- Unique identification for a feature
@@ -612,6 +616,10 @@ feature -- Output
 				st.add (Ti_double_quote)
 				st.add (ot)
 				st.add (Ti_double_quote)
+			end
+			if has_convert_mark then
+				st.add_space
+				st.add (ti_convert_keyword)
 			end
 		end
 

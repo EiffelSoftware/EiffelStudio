@@ -60,15 +60,15 @@ feature {NONE} -- Implementation
 
 	new_api_feature: E_FUNCTION is
 		local
-			t: TYPE_A;
+			t: TYPE_A
 		do
-			create Result.make (feature_name, alias_name, feature_id);
-			t ?= type;
+			create Result.make (feature_name, alias_name, has_convert_mark, feature_id)
+			t ?= type
 			if t = Void then
 				t := type.actual_type
-			end;
-			Result.set_type (t);
-			update_api (Result);
-		end;
+			end
+			Result.set_type (t)
+			update_api (Result)
+		end
 
 end

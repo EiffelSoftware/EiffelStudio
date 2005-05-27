@@ -3020,6 +3020,7 @@ feature -- IL Generation
 
 					-- We need to restore the name right away.
 				inh_feat.set_feature_name_id (l_name_id, inh_feat.alias_name_id)
+				inh_feat.set_has_convert_mark (inh_feat.has_convert_mark)
 
 				l_token := last_non_recorded_feature_token
 				start_new_body (l_token)

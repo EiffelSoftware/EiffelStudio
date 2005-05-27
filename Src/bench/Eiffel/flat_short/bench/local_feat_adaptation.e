@@ -51,6 +51,9 @@ feature -- Properties
 	alias_name: STRING
 			-- Associated alias name (if any)
 
+	has_convert_mark: BOOLEAN
+			-- Does operator feature have a convert mark?
+
 	is_infix: BOOLEAN;
 			-- Is the final feature an infix?
 
@@ -348,6 +351,7 @@ end
 				if alias_name /= Void then
 						-- Get visual representation of the alias name.
 					alias_name := extract_alias_name (alias_name)
+					has_convert_mark := target_feature.has_convert_mark
 				end
 			end
 		ensure

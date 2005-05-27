@@ -963,6 +963,10 @@ feature -- Output
 					put_text_item_without_tabs (ti_double_quote)
 					text.add (operator_to_item (alias_name, local_adapt))
 					put_text_item_without_tabs (ti_double_quote)
+					if local_adapt.has_convert_mark then
+						put_space
+						put_text_item (ti_convert_keyword)
+					end
 					last_was_printed := True
 				end
 			elseif local_adapt.is_infix then

@@ -220,7 +220,7 @@ feature {NONE} -- Implementation
     new_api_feature: E_ROUTINE is
             -- API feature creation
         do
-			create {E_PROCEDURE} Result.make (feature_name, alias_name, feature_id)
+			create {E_PROCEDURE} Result.make (feature_name, alias_name, has_convert_mark, feature_id)
 			update_api (Result)
         end
 

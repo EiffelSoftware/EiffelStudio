@@ -36,8 +36,8 @@
 		</paragraph>
 		<paragraph>
 			<link>
-				<url>windows_eiffel_application.xml</url>
-				<label>Windows Eiffel Application</label>
+				<url>eiffel_windows_application.xml</url>
+				<label>Eiffel Windows Application</label>
 			</link>
 			<line_break/>
 			A standalone Windows application using the <link><url>url</url><label>*Windows Eiffel Library</label></link> (<bold>WEL</bold>).
@@ -45,7 +45,7 @@
 		<paragraph>
 			<link>
 				<url>eiffel_class_library.xml</url>
-				<label>Eiffel Class Library</label>
+				<label>Eiffel Class (Precompile) Library</label>
 			</link>
 			<line_break/>
 			Reusable class or component that can be shared with other projects, specifically designed for reuse by other EiffelEnvision projects. 

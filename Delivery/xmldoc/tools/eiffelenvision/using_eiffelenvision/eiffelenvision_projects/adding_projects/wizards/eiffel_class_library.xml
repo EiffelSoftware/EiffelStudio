@@ -1,8 +1,8 @@
-<document output="envision" title="Eiffel Class Library Wizard">
+<document output="envision" title="Eiffel Class (Precompile) Library Wizard">
 	<meta_data>
 		<help>
 			<toc>
-				<envision_title>Eiffel Class Library Wizard</envision_title>
+				<envision_title>Eiffel Class (Precompile) Library Wizard</envision_title>
 				<envision_pseudo_name>40</envision_pseudo_name>
 			</toc>
 			<xml>
@@ -27,7 +27,7 @@
 	</meta_data>
 	<paragraph>
 		<paragraph>
-			The <bold>Eiffel Class Library Wizard</bold> creates a new EiffelEnvision <link><url>../../structure/index.xml</url><label>Project</label></link> for reuse by other EiffelEnvision projects through the <link><url>../../configuring/adding_references/index.xml</url><label>Precompiled Library</label></link> mechanism. The project will be added to an active or new Visual Studio .NET <help_link>
+			The <bold>Eiffel Class (Precompile) Library Wizard</bold> creates a new EiffelEnvision <link><url>../../structure/index.xml</url><label>Project</label></link> for reuse by other EiffelEnvision projects through the <link><url>../../configuring/adding_references/index.xml</url><label>Precompiled Library</label></link> mechanism. The project will be added to an active or new Visual Studio .NET <help_link>
 				<keywords>vxconVisualStudioSolutionsProjects</keywords>
 				<tab_index>0</tab_index>
 				Solution

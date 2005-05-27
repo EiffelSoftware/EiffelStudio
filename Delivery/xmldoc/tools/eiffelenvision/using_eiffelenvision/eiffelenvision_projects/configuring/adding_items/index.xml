@@ -58,6 +58,14 @@
 		</paragraph>
 		<paragraph>
 			<link>
+				<url>new_cluster_wizard.xml</url>
+				<label>New Cluster Wizard</label>
+			</link>
+			<line_break/>
+			Help on using the New Cluster Wizard, used when adding a cluster to a project.
+		</paragraph>
+		<paragraph>
+			<link>
 				<url>adding_cluster_guidelines.xml</url>
 				<label>Adding Cluster Guidelines</label>
 			</link>

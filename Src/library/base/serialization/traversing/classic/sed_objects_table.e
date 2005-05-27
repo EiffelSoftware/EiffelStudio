@@ -24,40 +24,31 @@ feature {NONE} -- Initialization
 			last_index := 0
 		end
 
-feature -- Lookup
-
-	search (an_obj: ANY) is
-			-- Search for item of key `an_obj'.
-			-- If found, set `found' to true, and set
-			-- `found_item' to item associated with `an_obj'.
-		do
-			table.search ($an_obj)
-			found := table.found
-			found_item := table.found_item
-		end
-
 feature -- Status report
 
-	has (an_obj: ANY): BOOLEAN is
-			-- Does current have `an_obj'?
-		do
-			Result := table.has ($an_obj)
-		end
-		
 	capacity: INTEGER is
 			-- Default capacity of current.
 		do
 			Result := table.capacity
 		end
 
-feature -- Element change
+feature -- Access
 
-	put (an_obj: ANY) is
-			-- Insert `an_obj' in Current.
+	index (an_obj: ANY): NATURAL_32 is
+			-- Index of `an_obj' in Current
+		local
+			l_table: like table
+			l_found_result: NATURAL_32
 		do
-			last_index := last_index + 1
-			found_item := last_index
-			table.put (last_index, $an_obj)
+			l_table := table
+			Result := last_index + 1
+			l_table.put (Result, $an_obj)
+			l_found_result := l_table.found_item
+			if Result /= l_found_result then
+				Result := l_found_result
+			else
+				last_index := Result
+			end
 		end
 
 feature -- Removal

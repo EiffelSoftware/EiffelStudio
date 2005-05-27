@@ -19,6 +19,11 @@ inherit
 			new_integer_hexa_as
 		end
 
+	PREDEFINED_NAMES
+		export
+			{NONE} all
+		end
+
 	SHARED_WORKBENCH
 		export
 			{NONE} all
@@ -136,8 +141,7 @@ feature -- Access
 			argument_count: INTEGER
 			alias_name: STRING_AS
 			operator: STRING
-			vfav1: VFAV1_SYNTAX
-			vfav2: VFAV2_SYNTAX
+			vfav: VFAV_SYNTAX
 		do
 			if
 				(f /= Void and then not f.is_empty) and b /= Void and
@@ -158,30 +162,42 @@ feature -- Access
 					if feature_name.is_prefix or else feature_name.is_infix then
 							-- Infix and prefix features will be checked for VFFD(5,6) later
 					elseif alias_name /= Void then
+						vfav := Void
 						operator := alias_name.value
 						if feature_name.is_bracket then
-							if is_query and then argument_count >= 1 then
-									-- Bracket is a valid alias for this feature
-							else
+							if not is_query or else argument_count < 1 then
 									-- Invalid bracket alias
-								create vfav2.make (feature_name)
-								error_handler.insert_error (vfav2)
-								error_handler.checksum
+								create {VFAV2_SYNTAX} vfav.make (feature_name)
+							elseif feature_name.has_convert_mark then
+									-- Invalid convert mark
+								create {VFAV3_SYNTAX} vfav.make (feature_name)
 							end
 						elseif is_query and then (
 								(argument_count = 0 and then feature_name.is_valid_unary_operator (operator)) or else
 								(argument_count = 1 and then feature_name.is_valid_binary_operator (operator))
 							)
 						then
-							if argument_count = 0 then
-								feature_name.set_is_unary
-							else
+							if argument_count = 1 then
 								feature_name.set_is_binary
+								if
+									is_semi_strict_id (feature_name.internal_alias_name_id) and then
+									system.current_class.lace_class /= system.boolean_class
+								then
+										-- Semistrict operator alias name is declared in a class that is not BOOLEAN
+									create {VFAV4_SYNTAX} vfav.make (feature_name)
+								end
+							elseif feature_name.has_convert_mark then
+									-- Invalid convert mark
+								create {VFAV3_SYNTAX} vfav.make (feature_name)
+							else
+								feature_name.set_is_unary
 							end
 						else
 								-- Invalid operator alias
-							create vfav1.make (feature_name)
-							error_handler.insert_error (vfav1)
+							create {VFAV1_SYNTAX} vfav.make (feature_name)
+						end
+						if vfav /= Void then
+							error_handler.insert_error (vfav)
 							error_handler.checksum
 						end
 					end

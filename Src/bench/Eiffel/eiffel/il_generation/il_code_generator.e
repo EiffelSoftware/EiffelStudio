@@ -881,7 +881,7 @@ feature -- Line info
 
 	put_ghost_debug_infos (a_line_n:INTEGER; a_nb: INTEGER) is
 			-- Generate `a_nb' ghost debug informations,
-			-- this is to deal with the not generated debug clauses
+			-- this is to deal, for instance, with the not generated debug clauses
 			-- but displayed in eStudio during debugging
 		require
 			a_nb_positive_or_zero: a_nb >= 0

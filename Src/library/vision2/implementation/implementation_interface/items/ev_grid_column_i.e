@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 		end
-		
+
 	initialize is
 			-- Initialize `Current'.
 		do

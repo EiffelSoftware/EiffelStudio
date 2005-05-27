@@ -31,7 +31,7 @@ feature {ES_OBJECTS_GRID_MANAGER, ES_OBJECTS_GRID_LINE, ES_OBJECTS_GRID_SLICES_C
 
 feature -- ES slice specific
 
---	slices_cmd: ES_OBJECTS_GRID_SLICES_CMD
+	slices_cmd: ES_OBJECTS_GRID_SLICES_CMD
 
 feature -- ES grid specific
 

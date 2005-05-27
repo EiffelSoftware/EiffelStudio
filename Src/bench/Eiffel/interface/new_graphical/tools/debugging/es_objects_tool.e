@@ -147,9 +147,9 @@ feature {NONE} -- Initialization
 
 			mini_toolbar.extend (tbb)
 
---			create slices_cmd.make (Current)
---			slices_cmd.enable_sensitive
---			mini_toolbar.extend (slices_cmd.new_mini_toolbar_item)
+			create slices_cmd.make (Current)
+			slices_cmd.enable_sensitive
+			mini_toolbar.extend (slices_cmd.new_mini_toolbar_item)
 
 			create pretty_print_cmd.make
 			pretty_print_cmd.enable_sensitive
@@ -817,7 +817,7 @@ feature {NONE} -- Stack objects grid Implementation
 						row.set_item (1, glab)
 						create glab.make_with_text (cst_exception_double_click_text)
 						glab.set_data (l_exception_message)
---						glab.set_tooltip (l_exception_message)
+						glab.set_tooltip (l_exception_message)
 						glab.pointer_double_press_actions.force_extend (agent show_exception_dialog (l_exception_tag, l_exception_message))
 						row.set_item (2, es_glab)
 					end

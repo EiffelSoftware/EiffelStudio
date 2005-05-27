@@ -87,7 +87,7 @@ feature {NONE} -- Cleaning
 			-- Clear all allocated data
 		do
 			missing_references := Void
-			object_references := Void
+			create object_references.make (1)
 		end
 		
 feature {NONE} -- Implementation

@@ -120,6 +120,14 @@ feature -- Status report
 			Result implies not basic_operators.has (op);
 		end
 
+	is_bracket_alias_name (s: STRING): BOOLEAN is
+			-- Is `s' a bracket alias name?
+		require
+			s_not_void: s /= Void
+		do
+			Result := s.is_equal (bracket_str)
+		end
+
 	is_constant (s: STRING): BOOLEAN is
 			-- Is `s' a valid Eiffel constant?
 		do

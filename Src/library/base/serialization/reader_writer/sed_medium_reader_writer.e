@@ -13,7 +13,8 @@ inherit
 			write_header,
 			write_footer,
 			is_ready_for_reading,
-			is_ready_for_writing
+			is_ready_for_writing,
+			medium
 		end
 
 create

@@ -58,11 +58,7 @@ feature -- Access
 		do
 			check_buffer (natural_8_bytes)
 			l_pos := buffer_position
-			if is_little_endian_storable then
-				Result := buffer.read_natural_8_le (l_pos)
-			else
-				Result := buffer.read_natural_8_be (l_pos)
-			end
+			Result := buffer.read_natural_8 (l_pos)
 			l_pos := l_pos + natural_8_bytes
 			buffer_position := l_pos
 		end
@@ -221,11 +217,7 @@ feature -- Element change
 		do
 			check_buffer (natural_8_bytes)
 			l_pos := buffer_position
-			if is_little_endian_storable then
-				buffer.put_natural_8_le (v, l_pos)
-			else
-				buffer.put_natural_8_be (v, l_pos)
-			end
+			buffer.put_natural_8 (v, l_pos)
 			l_pos := l_pos + natural_8_bytes
 			buffer_position := l_pos
 		end
@@ -363,6 +355,10 @@ feature {NONE} -- Implementation: Access
 
 	buffer: MANAGED_POINTER
 			-- Buffer to store/fetch data from `medium'
+
+	medium: ANY
+			-- Fake medium to avoid polymorphic attribute
+			-- access.
 
 feature {NONE} -- Implementation: Status report
 

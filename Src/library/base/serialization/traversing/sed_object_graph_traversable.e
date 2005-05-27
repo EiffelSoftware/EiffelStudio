@@ -78,6 +78,7 @@ feature -- Basic operations
 			l_tuple: TUPLE [ANY]
 			l_dtype: INTEGER
 			l_spec: SPECIAL [ANY]
+			l_arr: ARRAY [ANY]
 			l_tuple_obj: TUPLE
 		do
 			from
@@ -166,12 +167,16 @@ feature -- Basic operations
 
 				-- Unmark all objects.
 			from
-				l_visited.start
+				i := 0
+				nb := l_visited.count				
+				l_arr := l_visited
+				l_spec := l_arr.area
+				l_arr := Void
 			until
-				l_visited.after
+				i = nb
 			loop
-				l_int.unmark (l_visited.item)
-				l_visited.forth
+				l_int.unmark (l_spec.item (i))
+				i := i + 1
 			end
 
 				-- Set `visited_objects'.

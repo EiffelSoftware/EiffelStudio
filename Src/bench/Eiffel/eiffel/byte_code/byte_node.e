@@ -76,6 +76,17 @@ feature -- Eiffel source line information
 				end
 			end
 		end
+		
+	generate_ghost_debug_infos (n: INTEGER) is
+			-- Generate `a_nb' ghost debug informations,
+			-- this is to deal, for instance, with the not generated debug clauses
+		do
+			if (System.line_generation or context.workbench_mode) then
+				if system.is_precompile_finalized then
+					il_generator.put_ghost_debug_infos (line_number, n)
+				end
+			end
+		end
 
 	get_current_frozen_debugger_hook: INTEGER is
 			-- Get the current hook number for the C debugger

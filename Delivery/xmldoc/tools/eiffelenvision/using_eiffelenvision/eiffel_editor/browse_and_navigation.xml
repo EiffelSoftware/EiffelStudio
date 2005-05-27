@@ -185,8 +185,8 @@
 			</link>
 			<line_break/>
 			<link>
-				<url>browse_and_navigation.xml</url>
-				<label>Code Browsing and Navigation</label>
+				<url>../code_browsing/index.xml</url>
+				<label>Navigating and Browsing Code</label>
 			</link>
 			<line_break/>
 			<link>

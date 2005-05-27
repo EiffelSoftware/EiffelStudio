@@ -33,18 +33,18 @@
 		<paragraph>	
 			<bold>Pre-Build Tasks</bold>
 			<line_break/>
-			During this stage of the build, EiffelEnvision prepares the project and you system for the Main Compilation.
+			During this stage of the build, EiffelEnvision prepares the project and your system for the Main Compilation.
 		</paragraph>
 		<paragraph>	
 			<bold>Main Compilation</bold>
 			<line_break/>
-			In this stage the Eiffel compilation will be started, compiling your project's Eiffel code into an assembly. An extra task to <link><url>umanaged_code.xml</url><label>compile the unmanaged code</label></link> may be performed 
-			based on your <link><url>url</url><label>*project's configuration</label></link> and what has been compiled by the Eiffel for .NET compiler.
+			In this stage, the Eiffel compilation will be started, compiling your project's Eiffel code into an assembly. An extra task to <link><url>umanaged_code.xml</url><label>compile the unmanaged code</label></link> may be performed 
+			based on your <link><url>url</url><label>*project's configuration</label></link> and what has been compiled by Eiffel for .NET compiler.
 		</paragraph>
 		<paragraph>	
 			<bold>Post-Build Tasks</bold>
 			<line_break/>
-			After the main compilation has succeeded the post-build actions will be performed. In this stage, EiffelEnvision is preparing the project for execution using the <link><url>url</url><label>*Debugger</label></link> or for 
+			After the main compilation has succeeded, the post-build actions will be performed. In this stage, EiffelEnvision is preparing the project for execution using the <link><url>url</url><label>*Debugger</label></link> or for 
 			external execution.
 		</paragraph>
 		
@@ -55,17 +55,17 @@
 		</heading>
 		<paragraph>
 			EiffelEnvision presents two modes of compilation; <bold>incremental</bold> and <bold>optimized</bold>. Incremental compilation has the advantage of building projects faster as the Eiffel compiler will only 
-			build the changes made to the <link><url>url</url><label>*project configuration</label></link> or any of it Eiffel source files. For incremental compilations the Eiffel for .NET compiler will generate multiple 
-			assembly modules, instead of a single assembly module containing the assembly manifest. Optimized compilation attempts to make compile-time optimizations and so is much slower than the incremental compilation. 
-			Optimized compilation in contrast generate a single assembly module containing the assembly manifest and all of the <link><url>url</url><label>Eiffel classes</label></link> included in a project. You may change 
+			build the changes made to the <link><url>url</url><label>*project configuration</label></link> or any of its Eiffel source files. For incremental compilations, the Eiffel for .NET compiler will generate multiple 
+			assembly modules, instead of a single assembly module containing the assembly manifest. Optimized compilation attempts to make compile-time optimizations and is therefore much slower than the incremental compilation. 
+			Optimized compilation, in contrast, generates a single assembly module containing the assembly manifest and all of the <link><url>url</url><label>Eiffel classes</label></link> included in a project. You may change 
 			the configuration specific <link><url>url</url><label>*Optimize Code</label></link> property from the <link><url>url</url><label>*Build Project Properties</label></link>. Setting the 
-			<link><url>url</url><label>*Optimize Code</label></link> property to <bold>No</bold> will instruct the compiler to use incremental compilation, where as <bold>Yes</bold> will ensure 
+			<link><url>url</url><label>*Optimize Code</label></link> property to <bold>No</bold> will instruct the compiler to use incremental compilation, whereas <bold>Yes</bold> will ensure 
 			the compiler optimizes the compilation of your project.
 			
 			<tip>
 				<bold>Tip</bold>: When compiling projects using incremental compilation, you can tweak the compilation further using the <link><url>url</url><label>*Classes Per Module</label></link> configuration property also 
 				from the <link><url>url</url><label>*Build Project Properties</label></link>.  This property dictates how many Eiffel classes the compiler should put into each incremental assembly module. Lower numbers reduce 
-				compilation time for large system, but increases start-up time, higher numbers increase start-up time but increase compilation time.
+				compilation time for large systems, but increase start-up time; higher numbers decrease start-up time but increase compilation time.
 			</tip>
 		</paragraph>
 		
@@ -75,11 +75,11 @@
 			<content>Build Projects</content>
 		</heading>
 		<paragraph>
-			The process of building a projects contained with a <link><url>url</url><label>*Solution</label></link> is governed by the <help_link>
+			The process of building a project contained within a <link><url>url</url><label>*Solution</label></link> is governed by the <help_link>
 				<keywords>vxconBuildConfigurations</keywords>
 				<tab_index>0</tab_index>
 				Build Configuration
-			</help_link>. Although most builds will performed using the <help_link>
+			</help_link>. Although most builds will be performed using the <help_link>
 				<keywords>vxconBuildConfigurations</keywords>
 				<tab_index>0</tab_index>
 				Build Configuration
@@ -87,7 +87,7 @@
 				<keywords>vxurfSolutionExplorerDialog</keywords>
 				<tab_index>0</tab_index>
 				Solution Explorer
-			</help_link>. For more information please refer to the <help_link>
+			</help_link>. For more information, please refer to the <help_link>
 				<keywords>vxtskPrepareandManageBuilds</keywords>
 				<tab_index>0</tab_index>
 				Preparing and Managing Builds
@@ -104,25 +104,25 @@
 		<paragraph>	
 			<bold>Build</bold>
 			<line_break/>
-			In this build mode EiffelEnvision project(s) will be built as fast as possible, taking into consideration the changes to the project and its configuration. If EiffelEnvision does not detect any 
-			changes to the project the main compilation will be skipped. EiffelEnvision may also deem is necessary to perform a Rebuild instead of a Build to ensure the changes to the project or its configuration 
+			In this build mode, EiffelEnvision project(s) will be built as fast as possible, taking into consideration the changes to the project and its configuration. If EiffelEnvision does not detect any 
+			changes to the project, the main compilation will be skipped. EiffelEnvision may also deem it necessary to perform a Rebuild instead of a Build to ensure the changes to the project or its configuration 
 			are reflected. Those <link><url>url</url><label>*Project Properties</label></link> that will trigger a Rebuild when changed are marked as such in the <link><url>url</url><label>*Project Property</label></link> 
 			descriptions.
 			
 			<note>
 				<bold>Note</bold>: Projects whose <link><url>url</url><label>*Output Type</label></link> property is set to <bold>Precompiled</bold> or <bold>Precompiled with Root</bold> will perform a Rebuild instead of 
-				Build. This is the nature of precompiled libraries. EiffelEnvision is smart enough to know not to build an precompiled projects contained within a solution unless they absolutley require a build.
+				Build. This is the nature of precompiled libraries. EiffelEnvision is smart enough to know not to build any precompiled projects contained within a solution unless they absolutely require a build.
 			</note>
 		</paragraph>
 		<paragraph>	
 			<bold>Rebuild</bold>
 			<line_break/>
-			This build more will force a fresh compilation. All attained and generated incremental compilation information will be discarded and project(s) will be build as if they were being build for the first time.
+			This build mode will force a fresh compilation. All attained and generated incremental compilation information will be discarded and project(s) will be built as if for the first time.
 		</paragraph>
 		<paragraph>	
 			<bold>Clean</bold>
 			<line_break/>
-			Clean building works in contrast to Build and Rebuild in that is does not generate, but cleans. This build mode removes an incremental compilation information for the project(s) selected, and removes all compiled 
+			Clean building works in contrast to Build and Rebuild in that is does not generate, but cleans. This build mode removes any incremental compilation information for the project(s) selected, and removes all compiled 
 			assemblies and other binaries generated as a result of one or more builds.
 		</paragraph>
 		
@@ -132,7 +132,7 @@
 			<content>Starting a Build</content>
 		</heading>
 		<paragraph>
-			Building one or more projects in the same session may be done using either the project's context menu options or through using the <bold>Build</bold> main menu. Instructions on build a single project or an entire 
+			Building one or more projects in the same session may be done using either the project's context menu options or through using the <bold>Build</bold> main menu. Instructions for building a single project or an entire 
 			solution may be found in the <help_link>
 				<keywords>vxtskPrepareandManageBuilds</keywords>
 				<tab_index>0</tab_index>
@@ -140,7 +140,7 @@
 			</help_link> documentation.
 		</paragraph>
 		<paragraph>
-			Alternatively you may <help_link>
+			Alternatively, you may <help_link>
 				<keywords>vxlrfBuild</keywords>
 				<tab_index>0</tab_index>
 				Build

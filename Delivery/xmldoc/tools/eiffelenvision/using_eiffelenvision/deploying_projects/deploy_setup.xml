@@ -15,12 +15,12 @@
 				<keywords>vbconSetupProjects</keywords>
 				<tab_index>0</tab_index>
 				setup and deployment projects
-			</help_link> available
+			</help_link> available 
 			in the Enterprise, or better, editions of Visual Studio .NET 2003. EiffelEnvision integrates tightly into the deployment 
 			mechanism provided by the Visual Studio .NET IDE, providing a fast and easy way to package and distribute your projects.
 		</paragraph>
 		<paragraph>
-			Before attempting to deploy EiffelEnvision projects, using the <help_link>
+			Before attempting to deploy EiffelEnvision projects using the <help_link>
 				<keywords>vbconSetupProjects</keywords>
 				<tab_index>0</tab_index>
 				setup and deployment projects
@@ -31,12 +31,12 @@
 			</link> section of this documentation.
 		</paragraph>
 		<paragraph>
-			For those with the Standard edition of Visual Studio .NET 2003, or those whom do not want to use the <help_link>
+			For those with the Standard edition of Visual Studio .NET 2003, or those who do not want to use the <help_link>
 				<keywords>vbconSetupProjects</keywords>
 				<tab_index>0</tab_index>
 				setup and deployment projects
 			</help_link>, 
-			please refer to the <link>
+			please refer to <link>
 				<url>deploy_no_set.xml</url>
 				<label>deploying projects outside of Visual Studio .NET</label>
 			</link> for information of deploying EiffelEnvision projects without 
@@ -89,12 +89,12 @@
 			When using a <help_link>
 				<keywords>vbconSetupProjects</keywords>
 				<tab_index>0</tab_index>
-				setup and deployment project
+				setup and deployment project,
 			</help_link> the primary way to include the built results of a project is through <help_link>
 				<keywords>vbtskAddingRemovingProjectOutputs</keywords>
 				<tab_index>0</tab_index>
 				adding a project output
-			</help_link> to the deployment project. EiffelEnvision projects define 4 different project outputs for inclusion into your deployment project.
+			</help_link> to the deployment project. EiffelEnvision projects define 4 different project outputs for inclusion in your deployment project.
 			<list ordered="false">
 				<item>Primary Output</item>
 				<item>Debug Symbols</item>
@@ -104,7 +104,7 @@
 			<paragraph>
 				<bold>Primary Output</bold>
 				<line_break/>
-				The result of compilation. This will be the file containing an assembly manifest as well as and reference assembly modules. 
+				The result of compilation. This will be the file containing an assembly manifest as well as reference assembly modules. 
 			</paragraph>
 			<paragraph>
 				<bold>Debug Symbols</bold>
@@ -113,7 +113,7 @@
 					<keywords>_core_The_..PDB_Files</keywords>
 					<tab_index>0</tab_index>
 					debugging information database files (*.PDB)
-				</help_link> generate during compilation. PDB files are only generated when the active project configuration's 
+				</help_link> generated during compilation. PDB files are only generated when the active project configuration's 
 				<link>
 					<url/>
 					<label>*Generate Debug Information</label>
@@ -122,12 +122,12 @@
 			<paragraph>
 				<bold>Content Files</bold>
 				<line_break/>
-				Files located in the project that are considered to be content files, such files include Bitmaps, Icons, Cursors, etc.
+				Files located in the project that are considered to be content files. Such files include Bitmaps, Icons, Cursors, etc.
 			</paragraph>
 			<paragraph>
 				<bold>Source Files</bold>
 				<line_break/>
-				Contains all of the project source files found at the project location or in any of it's subfolders.
+				Contains all of the project source files found at the project location or in any of its subfolders.
 			</paragraph>
 		</paragraph>
 		<anchor>excluding_files</anchor>
@@ -136,7 +136,7 @@
 			<content>Excluding Files</content>
 		</heading>
 		<paragraph>
-			It may necessary to exclude certain files when adding items to the deployment project using a 
+			It may be necessary to exclude certain files when adding items to the deployment project using a 
 			<link>
 				<url>#project_outputs</url>
 				<label>project output</label>
@@ -144,7 +144,7 @@
 			For information on how to do this using <help_link>
 				<keywords>vbconSetupProjects</keywords>
 				<tab_index>0</tab_index>
-				setup and deployment projects
+				setup and deployment projects,
 			</help_link> please refer to <help_link>
 				<keywords>vxtskExcludingFilesFromProjectOutputGroup</keywords>
 				<tab_index>0</tab_index>
@@ -157,14 +157,14 @@
 			<content>Building</content>
 		</heading>
 		<paragraph>
-			Once you have configured your deployment project all that remains is to <help_link>
+			Once you have configured your deployment project, all that remains is to <help_link>
 				<keywords>vxtskPrepareandManageBuilds</keywords>
 				<tab_index>0</tab_index>
 				build
-			</help_link> it. If you have not already built your EiffelEnvision project(s) then when selecting to <help_link>
+			</help_link> it. If you have not already built your EiffelEnvision project(s), selecting to <help_link>
 				<keywords>vxtskPrepareandManageBuilds</keywords>
 				<tab_index>0</tab_index>
-				build
+				build 
 			</help_link>
 			the deployment project will also build the EiffelEnvision project(s) in the same build session.
 		</paragraph>
@@ -174,12 +174,12 @@
 			<content>Deploying Source Files</content>
 		</heading>
 		<paragraph>
-			If you require to deploy you project source files then you will simply need to include all of the files and subfolders located in the project folder, with the exception of the <bold>bin</bold> and <bold>obj</bold> folders. 
-			All paths store in an EiffelEnvision project file are relative to the project location, making project portable. EiffelEnvision also permits the use of <link>
+			If you require to deploy you project source files, you will simply need to include all of the files and subfolders located in the project folder, with the exception of the <bold>bin</bold> and <bold>obj</bold> folders. 
+			All paths stored in an EiffelEnvision project file are relative to the project location, making the project portable. EiffelEnvision also permits the use of <link>
 				<url>tt</url>
 				<label>environment variables</label>
-			</link> in all paths 
-			making project even more portable that projects created for other languages in Visual Studio .NET.
+			</link> in all paths, 
+			making the project even more portable than projects created for other languages in Visual Studio .NET.
 		</paragraph>
 		<anchor>also_see</anchor>
 		<heading>

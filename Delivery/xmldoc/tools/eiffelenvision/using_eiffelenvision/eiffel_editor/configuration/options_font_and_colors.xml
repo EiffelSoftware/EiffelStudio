@@ -23,7 +23,7 @@
 	</meta_data>
 	<paragraph>
 		<paragraph>
-			The <bold>Fonts and Colors</bold> option page, in the <bold>Environment</bold> folder in the <help_link>
+			The <bold>Fonts and Colors</bold> option page in the <bold>Environment</bold> folder in the <help_link>
 				<keywords>vxoriOptions</keywords>
 				<tab_index>0</tab_index>
 				Options Dialog Box
@@ -42,18 +42,18 @@
 			</help_link> configuration group, is not specific to EiffelEnvision's <link>
 				<url>../index.xml</url>
 				<label>Eiffel Editor</label>
-			</link>, the editor merely extends the <bold>Display Items</bold> list with a series of configurable editor 
+			</link>; the editor merely extends the <bold>Display Items</bold> list with a series of configurable editor 
 			fonts and colors. All <link>
 				<url>../index.xml</url>
 				<label>Eiffel Editor</label>
-			</link> specific items are easy to locate as each is prefixed with the work <bold>Eiffel</bold>. Each item relates to how the editor renders syntax highlighting and other such colorization.
+			</link> specific items are easy to locate as each is prefixed with the word <bold>Eiffel</bold>. Each item relates to how the editor renders syntax highlighting and other such colorization.
 		</paragraph>
 		
 		<paragraph>
-			Many of the non-specific <bold>Display Items</bold>, those not bound to a add-in or another language, are used within the <link>
+			Many of the non-specific <bold>Display Items</bold> (those not bound to an add-in or another language) are used within the <link>
 				<url>../index.xml</url>
 				<label>Eiffel Editor</label>
-			</link> also. For their descriptions and usage please refer to the Visual Studio .NET <help_link>
+			</link> also. For their descriptions and usage, please refer to the Visual Studio .NET <help_link>
 				<keywords>vxurfFontsColorsEnvironmentOptionsDialogBox</keywords>
 				<tab_index>0</tab_index>
 				Fonts and Colors Options
@@ -77,12 +77,12 @@
 			Eiffel <link>
 				<url>url</url>
 				<label>*class</label>
-			</link> declarations,  in the upper-cased form <class_name>EIFFEL_CLASS_NAME</class_name>.
+			</link> declarations,  in the upper-case form <class_name>EIFFEL_CLASS_NAME</class_name>.
 		</paragraph>
 		<paragraph>
 			<bold>Eiffel Comment</bold>:
 			<line_break/>
-			The comments declared by prefixing a section of text on a single line with double-hyphens (<code><comment>--</comment></code>)
+			The comments declared by prefixing a section of text on a single line with double-hyphens (<code><comment>--</comment></code>).
 		</paragraph>
 		<paragraph>
 			<bold>Eiffel Identifier</bold>:
@@ -90,7 +90,7 @@
 			All Eiffel <link>
 				<url>url</url>
 				<label>*feature</label>
-			</link> name, local variables and <link>
+			</link> names, local variables and <link>
 				<url>url</url>
 				<label>*feature</label>
 			</link> argument names within the body of a <link>
@@ -101,7 +101,7 @@
 		<paragraph>
 			<bold>Eiffel Keyword</bold>:
 			<line_break/>
-			Eiffel syntax construct keywords
+			Eiffel syntax construct keywords.
 		</paragraph>
 		<paragraph>
 			<bold>Eiffel Number</bold>:
@@ -109,12 +109,12 @@
 			Numerical constants declared with an Eiffel <link>
 				<url>url</url>
 				<label>*class</label>
-			</link>
+			</link>.
 		</paragraph>
 		<paragraph>
 			<bold>Eiffel Reserved Word</bold>:
 			<line_break/>
- 			Eiffel reserved words, such as <code><reserved_word>Result</reserved_word></code>, <code><reserved_word>Current</reserved_word></code> and <code><reserved_word>Void</reserved_word></code>
+ 			Eiffel reserved words, such as <code><reserved_word>Result</reserved_word></code>, <code><reserved_word>Current</reserved_word></code> and <code><reserved_word>Void</reserved_word></code>.
 		</paragraph>
 		<paragraph>
 			<bold>Eiffel String</bold>:
@@ -124,7 +124,7 @@
 		<paragraph>
 			<bold>Eiffel Symbol</bold>:
 			<line_break/>
-			Eiffel symbolic characters such as parentheses (), braces {}, brackets [], operators (+, -, *, :=, ...), ...
+			Eiffel symbolic characters such as parentheses (), braces {}, brackets [], operators (+, -, *, :=, ...), etc.
 		</paragraph>
 		
 		<anchor>see_also</anchor>

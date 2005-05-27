@@ -30,12 +30,12 @@
 			</link> from within Visual Studio .NET.
 		</paragraph>
 		<paragraph>
-			EiffelEnvision's Eiffel editor is specifically designer to edit Eiffel <link><url>url</url><label>*classes</label></link>, using Visual Studio .NET.  
+			EiffelEnvision's Eiffel editor is specifically designed to edit Eiffel <link><url>url</url><label>*classes</label></link> using Visual Studio .NET.  
 			The Eiffel editor integrates directly into the Visual Studio .NET <help_link>
 				<keywords>vxurfCodeTextEditorWindow</keywords>
 				<tab_index>0</tab_index>
 				Core Editor
-			</help_link> and provides all of the editor services and features you would come to expect from a language editor in Visual Studio .NET
+			</help_link> and provides all of the editor services and features you would come to expect from a language editor in Visual Studio .NET.
 		</paragraph>	
 		
 		<anchor>in_this_section</anchor>
@@ -57,7 +57,7 @@
 			<keywords>vcovrAutomaticStatementCompletion</keywords>
 			<tab_index>0</tab_index>
 			Intellisense
-		</help_link> features
+		</help_link> features.
 		</paragraph>
 		
 		<paragraph>

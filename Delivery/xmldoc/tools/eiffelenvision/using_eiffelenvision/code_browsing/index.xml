@@ -18,9 +18,9 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		Most of Visual Studio .NET language packages provide facilities to browse component references and code written in the language, EiffelEnvision is no exception. 
-		EiffelEnvision plugs directly into Visual Studio .NET's code browsing facilities and even extends the stock behavour to enhance code navigation. This section of 
-		the documentation provides the information on the extension and provided facilities exploited by EiffelEnvision.
+		Most of Visual Studio .NET language packages provide facilities to browse component references and code written in the language; EiffelEnvision is no exception. 
+		EiffelEnvision plugs directly into Visual Studio .NET's code browsing facilities and even extends the stock behavior to enhance code navigation. This section of 
+		the documentation provides the information on the extension and facilities exploited by EiffelEnvision.
 		
 		<anchor>in_this_section</anchor>
 		<heading>

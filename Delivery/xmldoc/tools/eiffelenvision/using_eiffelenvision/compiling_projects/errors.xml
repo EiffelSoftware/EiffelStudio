@@ -2,8 +2,8 @@
 	<meta_data/>
 	<paragraph>
 		<paragraph>
-			From time to time, as a result to modifications to a project, a <link><url>compiling_project.xml</url><label>compilation</label></link> will fail as a direct affect of modification to the project as the project evolves. 
-			The Eiffel compiler will report any such failure, with a detailed error message, in the <help_link>
+			From time to time, as a result to modifications to a project, a <link><url>compiling_project.xml</url><label>compilation</label></link> will fail as a direct effect of modification to the project as the project evolves. 
+			The Eiffel compiler will report any such failure with a detailed error message in the <help_link>
 				<keywords>vxurfOutputWindow</keywords>
 				<tab_index>0</tab_index>
 				Output Window
@@ -30,18 +30,18 @@
 			</link> and the line number, if available, highlighted in the editor. Correcting the error may not remove the error from the <help_link><keywords>vxurfTaskListS</keywords>
 				<tab_index>0</tab_index>
 				Task List
-			</help_link> immediately, because there status requires a subsequent compilation.
+			</help_link> immediately, because its status requires a subsequent compilation.
 		</paragraph>
 		<paragraph>
 			Not all errors are compilation errors, but are errors of the <help_link>
 			<keywords>vxconProjectBuilds</keywords>
 			<tab_index>0</tab_index>
 			build
-			</help_link> process. Many more steps that the simple <link><url>url</url>
+			</help_link> process. Many more steps than those mentioned in the simple <link><url>url</url>
 			<label>*Eiffel for .NET</label>
-			</link> take place during a build. Some errors have no files associated with them, these types or errors are the result of mis-configuring your project's <link><url>url</url>
+			</link> take place during a build. Some errors have no files associated with them; these types or errors are the result of misconfiguring your project's <link><url>url</url>
 				<label>*properties</label>
-			</link> or are due to event external to Visual Studio .NET. In any respect, these errors are reported and you must facilitate there correction before compilation can continue.
+			</link> or are due to events external to Visual Studio .NET. In any respect, these errors are reported and you must facilitate their correction before compilation can continue.
 		</paragraph>
 		
 		<anchor>warnings</anchor>
@@ -55,11 +55,11 @@
 			<tab_index>0</tab_index>
 			build
 			</help_link> are not fatal and require the build process to be stopped. In all other respects, warnings are handled the 
-			same as errors are. Each warning has it's own entry in the <help_link><keywords>vxurfTaskListS</keywords>
+			same as errors are. Each warning has its own entry in the <help_link><keywords>vxurfTaskListS</keywords>
 				<tab_index>0</tab_index>
 				Task List
-			</help_link> and may be navigate to in the same way. The Eiffel <link><url>compiling_project.xml</url><label>compilation</label></link> warnings may be suppressed 
-			setting the <link><url>url</url><label>*Show Compiler Warnings</label></link> in the configuration specific <link><url>url</url><label>*Build Project Properties</label></link> to <bold>No</bold>.
+			</help_link> and may be navigated to in the same way. The Eiffel <link><url>compiling_project.xml</url><label>compilation</label></link> warnings may be suppressed 
+			by setting the <link><url>url</url><label>*Show Compiler Warnings</label></link> in the configuration specific <link><url>url</url><label>*Build Project Properties</label></link> to <bold>No</bold>.
 		</paragraph>
 		
 		<anchor>also_see</anchor>

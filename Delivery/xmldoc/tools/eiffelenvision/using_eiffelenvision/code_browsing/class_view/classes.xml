@@ -23,18 +23,18 @@
 	</meta_data>
 	<paragraph>	
 		<paragraph>
-			Classes are the equivical to .NET types. The classes shown come in two varieties; Compiled and not compiled. Compiled classes are indiciated by a blue <image>
+			Classes are the equivalent of NET types. The classes shown come in two varieties; Compiled and not compiled. Compiled classes are indicated by a blue icon <image>
 				<url>../images/class/class.png</url>
-			</image> icon and uncompiled classes, which are those that have not been compiled into a project because they are not reachable from the <link><url>url</url><label>*root class</label></link>, are shown 
-			as a gray <image>
+			</image> and uncompiled classes, which are those that have not been compiled into a project because they are not reachable from the <link><url>url</url><label>*root class</label></link>, are shown 
+			as a gray icon <image>
 				<url>../images/class/class_not_in_system.png</url>
-			</image> icon.
+			</image>.
 		</paragraph>
 		<paragraph>
 			Class nodes will be located directly under <link><url>clusters.xml</url><label>Cluster Nodes</label></link> and other class statuary browsing features, as contained in this document.
 		</paragraph>
 		<paragraph>
-			Expanding compiled class nodes displays much more information regarding the class, it <link><url>url</url><label>*features</label></link>, <link><url>url</url><label>*ancestors</label></link> and <link><url>url</url><label>*decendents</label></link>.
+			Expanding compiled class nodes displays much more information regarding the class, its <link><url>url</url><label>*features</label></link>, <link><url>url</url><label>*ancestors</label></link> and <link><url>url</url><label>*decendents</label></link>.
 		</paragraph>
 		<paragraph>
 			<bold>Ancestors</bold> <image>
@@ -62,7 +62,7 @@
 				<url>../images/class/hier_class_suppliers.png</url>
 			</image>
 			<line_break/>
-			A tree of classes the expanded class is a <link><url>url</url><label>*client</label></link> of to using a <link><url>url</url><label>*supplier</label></link> relationship.
+			A tree of classes the expanded class is a <link><url>url</url><label>*client</label></link> of using a <link><url>url</url><label>*supplier</label></link> relationship.
 		</paragraph>
 		<paragraph>
 			<bold>Creation Routines</bold> <image>
@@ -76,7 +76,7 @@
 				<url>../images/class/hier_feature_inherited.png</url>
 			</image>
 			<line_break/>
-			A flattened view of all of the expanded class's inherited <link><url>url</url><label>*features</label></link>, inherited from <link><url>url</url><label>*ancestor</label></link> classes.
+			A flattened view of all of the expanded class' inherited <link><url>url</url><label>*features</label></link>, inherited from <link><url>url</url><label>*ancestor</label></link> classes.
 		</paragraph>
 		<paragraph>
 			<bold>All Features</bold> <image>
@@ -93,7 +93,7 @@
 			<content>Other Nodes</content>
 		</heading>
 		<paragraph>
-			All of the node suceeding <bold>All Features</bold> are the <link><url>url</url><label>*features</label></link> of the expanded class. Their icons and means are explained in the <link><url>eiffel_icons.xml</url><label>Eiffel Icons</label></link> 
+			All of the node suceeding <bold>All Features</bold> are the <link><url>url</url><label>*features</label></link> of the expanded class. Their icons and meanings are explained in the <link><url>eiffel_icons.xml</url><label>Eiffel Icons</label></link> 
 			section of this documentation.
 		</paragraph>
 		
@@ -104,11 +104,11 @@
 		</heading>
 		<paragraph>
 			If you need to direct the <link><url>../../eiffel_editor/index.xml</url><label>Eiffel Editor</label></link> to any class found in the <link><url>index.xml</url><label>Class View</label></link>, 
-			a double-left mouse click on a corresponding class node will open the <link><url>url</url><label>*Eiffel class</label></link> in the editor the the relivant class source in view.
+			a double-left mouse click on a corresponding class node will open the <link><url>url</url><label>*Eiffel class</label></link> in the editor of the relevant class source in view.
 			<note>
 				<bold>Note</bold>: The <link><url>index.xml</url><label>Class View</label></link> will show .NET types when using the facilities to browse <link><url>classes.xml</url><label>class</label></link> and feature 
-				<link><url>url</url><label>*ancestors</label></link>, <link><url>url</url><label>*decendents</label></link>, etc. Attempt to locate the related source will instead open the <link><url>../object_browser/index.xml</url><label>Object Browser</label></link> 
-				and located the appropriate node given the assembly, type and feature.
+				<link><url>url</url><label>*ancestors</label></link>, <link><url>url</url><label>*decendents</label></link>, etc. Attempts to locate the related source will instead open the <link><url>../object_browser/index.xml</url><label>Object Browser</label></link> 
+				and locate the appropriate node given the assembly, type and feature.
 			</note>
 		</paragraph>		
 		

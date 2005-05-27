@@ -10,7 +10,7 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		Before deploying project created using <bold>EiffelEnvision</bold> you should ensure that your project 
+		Before deploying projects created using <bold>EiffelEnvision</bold>, you should ensure that your project 
 		is in a state to be deployed. Failure to do so will result in incomplete <help_link>
 			<keywords>vbconDeployingSolution</keywords>
 			<tab_index>0</tab_index>
@@ -24,7 +24,7 @@
 				<keywords>vbconSetupProjects</keywords>
 				<tab_index>0</tab_index>
 				Setup and Deployment projects
-			</help_link>, installed with Visual Studio .NET, the following list of conditions are required to be met.
+			</help_link> installed with Visual Studio .NET, the following list of conditions are required to be met.
 		</paragraph>
 		<paragraph>
 			<list ordered="true">
@@ -39,12 +39,12 @@
 			</help_link>.</item>
 			<item>The EiffelEnvision project can be successfully compiled.
 				<note>
-				<bold>Note:</bold> EiffelEnvision projects do not need to be build/compiled prior to deployment, however 
+				<bold>Note:</bold> EiffelEnvision projects do not need to be built/compiled prior to deployment; however, 
 				examining an added <help_link>
 					<keywords>vbconFeaturesFilesFoldersDeployment</keywords>
 					<tab_index>0</tab_index>
 					project output
-				</help_link> will not show all of the files generated at build time. Once build, an EiffelEnvision project output will show all of the files that will 
+				</help_link> will not show all of the files generated at build time. Once built, an EiffelEnvision project output will show all of the files that will 
 				be deployed.
 				</note>
 			</item>
@@ -55,7 +55,7 @@
 		<heading><size>2</size><content>Recommendations</content></heading>
 		<paragraph>
 			Although not necessary, it is recommended that before adding an EiffelEnvision project output to a deployment project, you build your 
-			EiffelEnvision project(s). Projects that have been build prior to adding their output to the deployment project will 
+			EiffelEnvision project(s). Projects that have been built prior to adding their output to the deployment project will 
 			ensure all dependencies are evaluated and added to the deployment project automatically. It also serves to self-
 			validate what will be included in the deployment project when built, by examining the project <help_link>
 				<keywords>vxurfOutputsDialogBox</keywords>
@@ -65,10 +65,10 @@
 			C#, VB.NET and other such projects. EiffelEnvision's compiler is incremental and produces many additional assembly modules 
 			when not <link><url/><label>*optimizing code</label></link>, which can only be evaluated and included into the deployment 
 			project once built. If you choose not to build the EiffelEnvision project before adding its output to the deployment project, 
-			all newly generated files will be added automatically to the deployment project when build.
+			all newly generated files will be added automatically to the deployment project when built.
 		<paragraph>
 		</paragraph>
-			When deploying project for distribution it is recommended to configure your project to <link><url/><label>*optimizing the compilation</label></link> as this will create a 
+			When deploying projects for distribution, it is recommended to configure your project to <link><url/><label>*optimizing the compilation</label></link> as this will create a 
 			single deployment module resulting in faster load and execution times. It is also recommended to disable generation of a project's <link><url/><label>*debug 
 			information</label></link>. This will dramatically reduce file size because the debug information will not be included in the deployment project automatically.
 		</paragraph>

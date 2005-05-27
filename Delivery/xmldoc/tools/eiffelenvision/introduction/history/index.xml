@@ -14,7 +14,7 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		This section contains a EiffelEnvision's recorded history of improvements, bug fixes and known issues to date.
+		This section contains a recorded history of EiffelEnvision improvements, bug fixes and known issues to date.
 		<anchor>in_this_section</anchor>
 		<heading>
 			<size>2</size>
@@ -26,7 +26,7 @@
 				<label>Version History</label>
 			</link>
 			<line_break/>
-			EiffelEnvision version history of feature additions and enhancments.
+			EiffelEnvision version history of feature additions and enhancements.
 		</paragraph>
 		<paragraph>
 			<link>

@@ -450,6 +450,19 @@ rt_private void rec_swrite(register EIF_REFERENCE object, int tab)
 				} else if (dtype == egc_sp_wchar) {
 					sprintf(buffero, "WIDE_CHARACTER = U+%x\n", *(EIF_WIDE_CHAR *)o_ref);
 					write_out ();
+				} else if (dtype == egc_sp_uint8) {
+					sprintf(buffero, "NATURAL_8 = %d\n", *(EIF_NATURAL_8 *)o_ref);
+					write_out();
+				} else if (dtype == egc_sp_uint16) {
+					sprintf(buffero, "NATURAL_16 = %d\n", *(EIF_NATURAL_16 *)o_ref);
+					write_out();
+				} else if (dtype == egc_sp_uint32) {
+					sprintf(buffero, "NATURAL_32 = %d\n", *(EIF_NATURAL_32 *)o_ref);
+					write_out();
+				} else if (dtype == egc_sp_uint64) {
+					sprintf(buffero, "NATURAL_64 = %" EIF_NATURAL_64_DISPLAY "\n",
+						*(EIF_NATURAL_64 *)o_ref);
+					write_out();
 				} else if (dtype == egc_sp_int8) {
 					sprintf(buffero, "INTEGER_8 = %d\n", *(EIF_INTEGER_8 *)o_ref);
 					write_out();

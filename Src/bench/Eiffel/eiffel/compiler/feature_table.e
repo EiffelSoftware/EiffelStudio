@@ -35,6 +35,14 @@ inherit
 			make, put, remove, replace
 		end
 
+	PREFIX_INFIX_NAMES
+		export
+			{NONE} all
+			{ANY} is_mangled_alias_name
+		undefine
+			copy, is_equal
+		end
+
 	SHARED_WORKBENCH
 		undefine
 			copy, is_equal
@@ -189,6 +197,15 @@ feature -- Access: compatibility
 				control := Not_found_constant
 				found_item := Void
 			end
+		end
+
+	alias_item (alias_name: STRING): FEATURE_I is
+			-- Feature with given `alias_name' if any
+		require
+			alias_name_not_void: alias_name /= Void
+			is_mangled_alias_name: is_mangled_alias_name (alias_name)
+		do
+			Result := item_alias_id (names_heap.id_of (alias_name))
 		end
 
 feature -- Status report

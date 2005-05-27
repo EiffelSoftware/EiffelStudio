@@ -120,12 +120,16 @@ feature -- Element change
 									extract_symbol_from_prefix (source_feature.feature_name), 0, 0, 0, 0),
 								source_feature.is_frozen, False)
 						elseif source_feature.alias_name /= Void then
-							(create {REFACTORING_HELPER}).fixme ("Set status of convert mark to the real value, not just to False.")
 							create {FEATURE_NAME_ALIAS_AS} f_name.initialize (
 								create {ID_AS}.initialize (source_feature.feature_name),
 								create {STRING_AS}.initialize (
 									extract_alias_name (source_feature.alias_name), 0, 0, 0, 0),
-								source_feature.is_frozen, False)
+								source_feature.is_frozen, source_feature.has_convert_mark)
+							if source_feature.is_binary then
+								f_name.set_is_binary
+							elseif source_feature.is_unary then
+								f_name.set_is_unary
+							end
 						else
 							create {FEAT_NAME_ID_AS} f_name.initialize (
 								create {ID_AS}.initialize (source_feature.feature_name),

@@ -608,6 +608,7 @@ end;
 			inherited_info: INHERIT_INFO;
 			feature_i: FEATURE_I;
 			def: DEFINITION;
+			has_convert_mark: BOOLEAN
 		do
 			from
 					-- Iteration on the structure
@@ -621,7 +622,7 @@ end;
 				feature_name_id := key_for_iteration;
 
 					-- Calculates attribute `inherited_feature' of
-					-- instance `inherit_feat'.		
+					-- instance `inherit_feat'.
 				inherit_feat.process (a_class, feature_name_id)
 				inherited_info := inherit_feat.inherited_info;
 				if inherited_info /= Void then
@@ -629,7 +630,9 @@ end;
 						-- parent.
 					feature_i := inherited_info.a_feature;
 						-- Feature name
+					has_convert_mark := feature_i.has_convert_mark
 					feature_i.set_feature_name_id (feature_name_id, feature_i.alias_name_id)
+					feature_i.set_has_convert_mark (has_convert_mark)
 						-- initialization of an inherited feature
 					init_inherited_feature (feature_i, inherit_feat);
 						-- Insertion in the origin table
@@ -944,10 +947,14 @@ end;
 
 			Result := feature_i_generator.new_feature (yacc_feature)
 			Result.set_feature_name_id (feature_name_id, feat.internal_alias_name_id)
-			Result.set_written_in (a_class.class_id);
-			Result.set_is_frozen (feat.is_frozen);
-			Result.set_is_infix (feat.is_infix);
-			Result.set_is_prefix (feat.is_prefix);
+			Result.set_written_in (a_class.class_id)
+			Result.set_is_frozen (feat.is_frozen)
+			Result.set_is_infix (feat.is_infix)
+			Result.set_is_prefix (feat.is_prefix)
+			Result.set_is_bracket (feat.is_bracket)
+			Result.set_is_binary (feat.is_binary)
+			Result.set_is_unary (feat.is_unary)
+			Result.set_has_convert_mark (feat.has_convert_mark)
 			if Result.is_unique then
 					-- Unique value processing
 				unique_feature ?= Result;
@@ -1234,6 +1241,7 @@ end;
 			feature_name_id: INTEGER;
 			join: JOIN;
 			vdrs4: VDRS4;
+			has_convert_mark: BOOLEAN
 		do
 			from
 				start
@@ -1257,8 +1265,10 @@ end;
 						feature_name_id := key_for_iteration;
 						deferred_info := inherit_feat.deferred_features.first;
 							-- New inherited feature
-						inherited_feature := deferred_info.a_feature;
-						inherited_feature.set_feature_name_id (feature_name_id, inherited_feature.alias_name_id);
+						inherited_feature := deferred_info.a_feature
+						has_convert_mark := inherited_feature.has_convert_mark
+						inherited_feature.set_feature_name_id (feature_name_id, inherited_feature.alias_name_id)
+						inherited_feature.set_has_convert_mark (has_convert_mark)
 							-- Initialization of an inherited feature
 						init_inherited_feature (inherited_feature, inherit_feat);
 							-- Insertion in the origin table
@@ -1339,6 +1349,7 @@ end;
 			f.set_export_status (inherit_feat.exports (feature_name_id))
 				-- Insert it in the table `inherited_features'.
 			inherited_features.put (f, feature_name_id)
+			check_alias_name_conflict (f)
 		end
 
 	give_new_feature_id (f: FEATURE_I) is
@@ -1397,21 +1408,23 @@ end;
 	insert_feature (f: FEATURE_I) is
 			-- Insert `f' in `inherited_feature'
 		require
-			good_argument: f /= Void;
+			good_argument: f /= Void
 		local
-			feature_name_id: INTEGER;
-			vmfn: VMFN;
+			feature_name_id: INTEGER
+			vmfn: VMFN
 		do
-			feature_name_id := f.feature_name_id;
-			inherited_features.put (f, feature_name_id);
+			feature_name_id := f.feature_name_id
+			inherited_features.put (f, feature_name_id)
 			if inherited_features.conflict then
-				create vmfn;
-				vmfn.set_class (a_class);
-				vmfn.set_a_feature (f);
-				vmfn.set_inherited_feature (inherited_features.item_id (feature_name_id));
-				Error_handler.insert_error (vmfn);
-			end;
-		end;
+				create vmfn
+				vmfn.set_class (a_class)
+				vmfn.set_a_feature (f)
+				vmfn.set_inherited_feature (inherited_features.item_id (feature_name_id))
+				Error_handler.insert_error (vmfn)
+			else
+				check_alias_name_conflict (f)
+			end
+		end
 
 	compute_invariant is
 			-- Compute invariant clause
@@ -1507,6 +1520,27 @@ feature {NONE} -- Implementation
 		ensure
 			main_parent_set: a_class.main_parent /= Void
 			nb_features_set: a_class.number_of_features = a_feat_tbl.count
+		end
+
+	check_alias_name_conflict (f: FEATURE_I) is
+			-- Check if feature `f' has an alias name and that after adding it to `inherited_features'
+			-- `inherited_features.is_alias_conflict' is set to `true'. Report error in this case.
+		local
+			alias_name_id: INTEGER
+			vfav: VFAV
+		do
+			alias_name_id := f.alias_name_id
+			if alias_name_id > 0 and then inherited_features.is_alias_conflict then
+				if f.is_bracket then
+					create {VFAV2} vfav
+				else
+					create {VFAV1} vfav
+				end
+				vfav.set_class (a_class)
+				vfav.set_a_feature (f)
+				vfav.set_inherited_feature (inherited_features.item_alias_id (alias_name_id))
+				Error_handler.insert_error (vfav)
+			end
 		end
 
 feature {NONE} -- Temporary body index

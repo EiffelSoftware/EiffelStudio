@@ -13,6 +13,7 @@ inherit
 		redefine
 			alias_name,
 			end_location,
+			has_convert_mark,
 			internal_alias_name,
 			is_binary,
 			is_bracket,
@@ -71,7 +72,7 @@ feature -- Access
 
 	has_convert_mark: BOOLEAN
 			-- Is operator marked with "convert"?
-	
+
 feature -- Status report
 
 	is_bracket: BOOLEAN is

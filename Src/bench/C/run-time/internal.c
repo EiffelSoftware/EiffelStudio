@@ -245,6 +245,10 @@ rt_public EIF_BOOLEAN eif_is_special_type (EIF_INTEGER dftype)
 		(dtype == egc_sp_bool) ||
 		(dtype == egc_sp_char) ||
 		(dtype == egc_sp_wchar) ||
+		(dtype == egc_sp_uint8) ||
+		(dtype == egc_sp_uint16) ||
+		(dtype == egc_sp_uint32) ||
+		(dtype == egc_sp_uint64) ||
 		(dtype == egc_sp_int8) ||
 		(dtype == egc_sp_int16) ||
 		(dtype == egc_sp_int32) ||

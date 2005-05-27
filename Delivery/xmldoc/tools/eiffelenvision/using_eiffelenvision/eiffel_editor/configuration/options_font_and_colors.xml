@@ -32,9 +32,9 @@
 		
 		<paragraph>
 			The <help_link>
-			<keywords>vxurfFontsColorsEnvironmentOptionsDialogBox</keywords>
-			<tab_index>0</tab_index>
-			Fonts and Colors
+				<keywords>vxurfFontsColorsEnvironmentOptionsDialogBox</keywords>
+				<tab_index>0</tab_index>
+				Fonts and Colors
 			</help_link> options, in the <help_link>
 				<keywords>vxoriEnvironment</keywords>
 				<tab_index>0</tab_index>
@@ -55,7 +55,8 @@
 				<label>Eiffel Editor</label>
 			</link> also. For their descriptions and usage please refer to the Visual Studio .NET <help_link>
 				<keywords>vxurfFontsColorsEnvironmentOptionsDialogBox</keywords>
-				<tab_index>Fonts and Colors Options</tab_index>
+				<tab_index>0</tab_index>
+				Fonts and Colors Options
 			</help_link> documentation.
 		</paragraph>		
 		

@@ -77,9 +77,9 @@ feature {NONE} -- Implementation: Access
 	object_references: SPECIAL [ANY]
 			-- Mapping between reference ID and the associated object.
 
-	missing_references: ARRAYED_LIST [TUPLE [ANY, INTEGER, INTEGER]]
+	missing_references: ARRAYED_LIST [TUPLE [INTEGER, INTEGER, INTEGER]]
 			-- When decoding an object some of its references might not be decoded yet, so
-			-- we store the object, the field position in this object and the reference id.
+			-- we store the object index, the field position in this object and the reference id.
 
 feature {NONE} -- Cleaning
 
@@ -240,7 +240,7 @@ feature {NONE} -- Implementation
 					l_int.set_pointer_field (l_new_offset, l_obj, l_deser.read_pointer)
 	
 				when {INTERNAL}.reference_type then
-					decode_reference (l_obj, l_new_offset)
+					decode_reference (l_obj, an_index, l_new_offset)
 	
 				else
 					check
@@ -294,7 +294,7 @@ feature {NONE} -- Implementation
 
 				when {TUPLE}.pointer_code then l_tuple.put_pointer (l_deser.read_pointer, i)
 
-				when {TUPLE}.reference_code then decode_reference (l_tuple, i)
+				when {TUPLE}.reference_code then decode_reference (l_tuple, an_index, i)
 				else
 					check
 						False
@@ -674,12 +674,12 @@ feature {NONE} -- Implementation
 			until
 				i = nb
 			loop
-				decode_reference (l_spec, i)
+				decode_reference (l_spec, an_index, i)
 				i := i + 1
 			end
 		end
 
-	decode_reference (an_obj: ANY; an_index: INTEGER) is
+	decode_reference (an_obj: ANY; an_obj_index, an_index: INTEGER) is
 			-- Read reference and if found update `an_obj'
 			-- with found reference at `an_index' in `an_obj'.
 			-- If `an_obj' is a SPECIAL, then `an_index' is actually a SPECIAL index.
@@ -705,7 +705,7 @@ feature {NONE} -- Implementation
 					if missing_references = Void then
 						create missing_references.make (200)
 					end
-					missing_references.extend ([an_obj, an_index, l_index])
+					missing_references.extend ([an_obj_index, an_index, l_index])
 				end
 			end
 		end
@@ -741,27 +741,31 @@ feature {NONE} -- Implementation
 		local
 			l_missing_references: like missing_references
 			l_object_references: like object_references
-			l_tuple: TUPLE [ANY, INTEGER, INTEGER]
-			l_obj: ANY
-			l_field_pos: INTEGER
-			l_ref_id: INTEGER
-			l_internal: INTERNAL
+			l_tuple: TUPLE [INTEGER, INTEGER, INTEGER]
+			l_int: like internal
+			i, nb: INTEGER
+			l_area: SPECIAL [TUPLE [INTEGER, INTEGER, INTEGER]]
+			l_array: ARRAY [TUPLE [INTEGER, INTEGER, INTEGER]]
 		do
 			l_missing_references := missing_references
 			if l_missing_references /= Void then
 				from
 					l_object_references := object_references
-					create l_internal
-					l_missing_references.start
+					l_int := internal
+					i := 0
+					nb := l_missing_references.count
+					l_array := l_missing_references
+					l_area := l_array.area
+					l_array := Void
 				until
-					l_missing_references.after
+					i = nb
 				loop
-					l_tuple := l_missing_references.item
-					l_obj := l_tuple.item (1)
-					l_field_pos := l_tuple.integer_32_item (2)
-					l_ref_id := l_tuple.integer_32_item (3)
-					update_reference (l_obj, l_object_references.item (l_ref_id), l_field_pos)
-					l_missing_references.forth
+					l_tuple := l_area.item (i)
+					i := i + 1
+					update_reference (
+						l_object_references.item (l_tuple.integer_32_item (1)),
+						l_object_references.item (l_tuple.integer_32_item (3)), 
+						l_tuple.integer_32_item (2))
 				end
 			end
 		end

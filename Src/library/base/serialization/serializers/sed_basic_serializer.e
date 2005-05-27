@@ -53,6 +53,9 @@ feature {NONE} -- Implementation
 		local
 			l_dtype: INTEGER
 			l_int: like internal
+			l_array: ARRAY [ANY]
+			l_area: SPECIAL [ANY]
+			i, nb: INTEGER
 		do
 			l_int := internal
 			from
@@ -60,13 +63,17 @@ feature {NONE} -- Implementation
 					-- there will be in the system, we guessed that 500 should give
 					-- us a good initial number in most cases.
 				create Result.make (500)
-				a_list.start
+				l_array := a_list
+				l_area := l_array.area
+				l_array := Void
+				i := 0
+				nb := a_list.count
 			until
-				a_list.after
+				i = nb
 			loop
-				l_dtype := l_int.dynamic_type (a_list.item)				
+				l_dtype := l_int.dynamic_type (l_area.item (i))				
 				Result.put (l_dtype, l_dtype)
-				a_list.forth
+				i := i + 1
 			end
 		ensure
 			type_table_not_void: Result /= Void

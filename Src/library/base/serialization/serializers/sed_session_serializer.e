@@ -172,16 +172,24 @@ feature {NONE} -- Implementation
 			l_is_special, l_is_tuple: BOOLEAN
 			l_obj: ANY
 			l_tuple: TUPLE
+			i, nb: INTEGER
+			l_area: SPECIAL [ANY]
+			l_array: ARRAY [ANY]
 		do
 			l_int := internal
 			l_ser := serializer
 
 			from
-				a_list.start
+				l_array := a_list
+				l_area := l_array.area
+				l_array := Void
+				i := 0
+				nb := a_list.count
 			until
-				a_list.after
+				i = nb
 			loop
-				l_obj := a_list.item
+				l_obj := l_area.item (i)
+				i := i + 1
 
 					-- Get object data.
 				l_dtype := l_int.dynamic_type (l_obj)
@@ -209,8 +217,6 @@ feature {NONE} -- Implementation
 					l_ser.write_natural_8 (0)
 					encode_normal_object (l_obj, l_dtype)
 				end
-
-				a_list.forth
 			end
 		end
 

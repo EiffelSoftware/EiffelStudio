@@ -60,7 +60,7 @@ feature {NONE} -- Implementation
 
 	process_parent_as (l_as: PARENT_AS) is
 		local
-			l_renaming_c: HASH_TABLE [PAIR [INTEGER, INTEGER], INTEGER]
+			l_renaming_c: HASH_TABLE [RENAMING, INTEGER]
 			l_rename_pair: RENAME_AS
 			l_old_name, l_new_name: FEATURE_NAME
 			old_name_id: INTEGER
@@ -100,7 +100,7 @@ feature {NONE} -- Implementation
 						Error_handler.insert_error (l_vhrc2)
 					else
 						l_new_name := l_rename_pair.new_name
-						l_renaming_c.put (create {PAIR [INTEGER, INTEGER]}.make (l_new_name.internal_name_id, l_new_name.internal_alias_name_id), old_name_id)
+						l_renaming_c.put (create {RENAMING}.make (l_new_name.internal_name_id, l_new_name.internal_alias_name_id, l_new_name.has_convert_mark), old_name_id)
 					end
 
 					l_as.renaming.forth

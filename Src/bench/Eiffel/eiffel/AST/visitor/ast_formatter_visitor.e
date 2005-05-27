@@ -930,7 +930,7 @@ feature {NONE} -- Implementation
 		do
 			if is_simple_formatting then
 				l_as.left.process (Current)
-				ctxt.prepare_for_infix (l_as.operator_name, l_as.op_name, l_as.right)
+				ctxt.prepare_for_infix (l_as.infix_function_name, l_as.op_name, l_as.right)
 				ctxt.put_infix_feature
 			else
 				ctxt.begin
@@ -939,7 +939,7 @@ feature {NONE} -- Implementation
 					ctxt.rollback
 				else
 					ctxt.need_dot
-					ctxt.prepare_for_infix (l_as.operator_name, l_as.op_name, l_as.right)
+					ctxt.prepare_for_infix (l_as.infix_function_name, l_as.op_name, l_as.right)
 					ctxt.put_current_feature
 					if not ctxt.last_was_printed then
 						ctxt.rollback

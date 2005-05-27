@@ -3,7 +3,7 @@
 		<help>
 			<toc>
 				<envision_title>Adding New Clusters</envision_title>
-				<envision_pseudo_name>00</envision_pseudo_name>
+				<envision_pseudo_name>50</envision_pseudo_name>
 			</toc>
 			<xml>
 				<keyword>
@@ -18,7 +18,6 @@
 		</help>
 	</meta_data>
 	<paragraph>
-	<link><url>url</url><label>*</label></link>
 		<paragraph>
 			Adding Eiffel <link><url>url</url><label>*clusters</label></link> to <link><url>../index.xml</url><label>Projects</label></link> is a similar process to <link><url>adding_items.xml</url><label>Add New Project Items</label></link> or <link><url>adding_folders.xml</url><label>Add New Project Folders</label></link>, in EiffelEnvision. For more information about the notion of a cluster, see <link><url>url</url><label>*Conventions</label></link>.
 		</paragraph>

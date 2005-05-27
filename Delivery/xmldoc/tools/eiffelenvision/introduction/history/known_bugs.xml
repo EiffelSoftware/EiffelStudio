@@ -19,7 +19,7 @@
 	</meta_data>
 	<paragraph>
 		<paragraph>
-			This document contains a consise run down of the known EiffelEnvision bugs and issues surrounding it's usage.
+			This document contains a consise run down of the known EiffelEnvision bugs and issues surrounding its usage.
 		</paragraph>
 
 		<anchor>bugs</anchor>
@@ -53,6 +53,12 @@
 						<bold>Solution</bold>: Access the Examples Directory from the installed Start Menu shortcut.
 					</paragraph>
 				</item>
+				<item>
+					On very rare occassions the Eiffel Editor display incorrectly, adding additional color and symbols that should not be present.
+					<paragraph>
+						<bold>Solution</bold>: Close the Eiffel document and reopen it.
+					</paragraph>
+				</item>
 			</list>
 		</paragraph>
 
@@ -75,7 +81,7 @@
 		</heading>
 		<paragraph>
 			Whilst EiffelSoftware maintains a high level of robustness in the software that it produces, some bugs always slip through the 
-			previbial net. If you discover a bug in EiffelEnvision please report it to our bug reporting system at 
+			proverbial net. If you discover a bug in EiffelEnvision please report it to our bug reporting system at 
 			<link><url>http://support.eiffel.com</url><label>http://support.eiffel.com</label></link>. For our Enterprise customers, please
 			use the submitter ID provide to you when purchasing <bold>EiffelEnvision</bold>. For all other users please use the submitter ID <italic>"Unknown".
 			</italic>

@@ -63,11 +63,6 @@ feature -- Properties
 		deferred
 		end
 
-	operator_name: STRING is
-		do
-			Result := infix_function_name;	
-		end
-
 	op_name: STRING is
 			-- Symbol representing the operator (without the infix).
 		deferred

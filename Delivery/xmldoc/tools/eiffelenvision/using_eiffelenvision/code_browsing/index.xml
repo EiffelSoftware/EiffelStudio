@@ -3,7 +3,7 @@
 		<help>
 			<toc>
 				<envision_title>Navigating and Browsing Code</envision_title>
-				<envision_pseudo_name>00</envision_pseudo_name>
+				<envision_pseudo_name>40</envision_pseudo_name>
 			</toc>
 			<xml>
 				<keyword>
@@ -38,7 +38,7 @@
 		<paragraph>
 			<link>
 				<url>object_browser/index.xml</url>
-				<label>Object Browser</label>
+				<label>Class View</label>
 			</link>
 			<line_break/>
 			EiffelEnvision also plugs into the Object Browser in Visual Studio .NET. EiffelEnvision brings with it the additions required to facilitate <link><url>url</url><label>Eiffel for .NET</label></link> developers 
@@ -52,6 +52,15 @@
 			</link>
 			<line_break/>
 			An icon glossary for the icons used in the EiffelEnvision specific sections of both the Class View and Object Browser.
+		</paragraph>
+		
+		<paragraph>
+			<link>
+				<url>eiffel_icons.xml</url>
+				<label>Class View and Object Browser Features</label>
+			</link>
+			<line_break/>
+			Documentation on the Class View and Object Browser feature nodes.
 		</paragraph>
 		
 		<anchor>also_see</anchor>
@@ -73,12 +82,14 @@
 				<tab_index>0</tab_index>
 				Visual Studio .NET Class View
 			</help_link>
+			<line_break/>
 			<help_link>
 				<keywords>vxurfObjectBrowserS</keywords>
 				<tab_index>0</tab_index>
 				Visual Studio .NET Object Browser
 			</help_link>
-			
+			<line_break/>
+			<link><url>../eiffel_editor/index.xml</url><label>Eiffel Editor</label></link>
 		</seealso>
 	</paragraph>
 </document>

@@ -197,7 +197,7 @@
 				<item>Included more of Eiffel Software and Third Party Eiffel libraries (includes <italic>gobo</italic>, <italic>lex</italic>, <italic>net</italic>, <italic>parse</italic>, <italic>store</italic>, <italic>thread</italic> and <italic>time</italic>).</item>
 				<item>No Eiffel Software assemblies are present in the Global Assembly Cache (GAC).</item>
 				<item>At install-time EiffelEnvision can be merged with EiffelStudio 5.5.</item>
-				<item>Change product name from Eiffel ENViSioN! to EiffelEnvision.</item>
+				<item>Changed product name from Eiffel ENViSioN! to EiffelEnvision.</item>
 			</list>
 		</paragraph>
 	</paragraph>

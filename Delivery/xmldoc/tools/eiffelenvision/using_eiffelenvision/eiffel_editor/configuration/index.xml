@@ -34,9 +34,9 @@
 			The Eiffel editor has a total of three configuration pages to configure various aspects of the editor and the way it behaves. Please see each 
 			section for more information on configuration.
 			<list ordered="false">
-				<item><link><url>options_fonts_and_colors.xml</url><label>Editor Fonts and Colors Options</label></link></item>
+				<item><link><url>options_font_and_colors.xml</url><label>Editor Fonts and Colors Options</label></link></item>
 				<item><link><url>options_general.xml</url><label>Editor General Options</label></link></item>
-				<item><link><url>options_tabs.xml</url><label>Editor Tabs Options</label></link></item>
+				<item><link><url>options_tab.xml</url><label>Editor Tabs Options</label></link></item>
 			</list>
 		</paragraph>
 
@@ -55,7 +55,7 @@
 			</help_link>
 			<line_break/>
 			<link>
-				<url>index.xml</url>
+				<url>../index.xml</url>
 				<label>Eiffel Editor</label>
 			</link>
 		</seealso>

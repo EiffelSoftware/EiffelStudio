@@ -3,7 +3,7 @@
 		<help>
 			<toc>
 				<envision_title>New Cluster Wizard</envision_title>
-				<envision_pseudo_name>00</envision_pseudo_name>
+				<envision_pseudo_name>70</envision_pseudo_name>
 			</toc>
 			<xml>
 				<keyword>
@@ -27,16 +27,16 @@
 		</paragraph>
 		
 		<paragraph>
-			The wizard is separated into two pages. <bold>Overview</bold> and <bold>Assertions</bold>. You may switch between the pages by clicking on the name of the page, located in the wizard's left pane.
+			The wizard is separated into two pages. <bold>Basic Settings</bold> and <bold>Assertions</bold>. You may switch between the pages by clicking on the name of the page, located in the wizard's left pane.
 		</paragraph>
 		
-		<anchor>overview</anchor>
+		<anchor>basic_settings</anchor>
 		<heading>
 			<size>2</size>
-			<content>Overview</content>
+			<content>Basic Settings</content>
 		</heading>
 		<paragraph>
-			The <bold>Overview</bold> page presents the most basic of any new <link><url>url</url><label>*Cluster Properties</label></link>. 
+			The <bold>Basic Settings</bold> page presents the most basic of any new <link><url>url</url><label>*Cluster Properties</label></link>. 
 		</paragraph>
 		
 		<paragraph>

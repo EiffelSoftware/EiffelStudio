@@ -46,7 +46,7 @@
 				<url>using.xml</url>
 				<label>Using the EiffelStudio Project Conversion Tool</label>
 			</link>
-			<line_break/>Documentation on how to use and configure the <bold>EiffelStudio Project Conversion Tool</bold> to successful import EiffelStudio project into EiffelEnvision.
+			<line_break/>Documentation on how to use and configure the <bold>EiffelStudio Project Conversion Tool</bold> to successfully import EiffelStudio projects into EiffelEnvision.
 		</paragraph>
 
 		<anchor>see_also</anchor>

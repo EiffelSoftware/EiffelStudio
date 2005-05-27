@@ -23,16 +23,16 @@
 	</meta_data>
 	<paragraph>	
 		<paragraph>
-			Feature nodes are visable from expanding a <link><url>classes.xml</url><label>Class Node</label></link> or expanding one of the subnodes under an expanded feature node. 
-			There are many different types of <link><url>url</url><label>*feature</label></link> in Eiffel, for a full glossary of the features and their associated icon representation 
+			Feature nodes are visible from expanding a <link><url>classes.xml</url><label>Class Node</label></link> or expanding one of the subnodes under an expanded feature node. 
+			There are many different types of <link><url>url</url><label>*feature</label></link> in Eiffel; for a full glossary of the features and their associated icon representation 
 			in the <link><url>index.xml</url><label>Class View</label></link> and <link><url>url</url><label>*Object Browser</label></link> please refer to the <link><url>eiffel_icons.xml</url><label>Eiffel Icon</label></link> documentation.
 		</paragraph>
 		<paragraph>
-			If you do not already know what a <link><url>url</url><label>*feature</label></link> is in Eiffel please refer to the <link><url>url</url><label>*Eiffel for .NET Langauge</label></link> documentation.
+			If you do not already know what a <link><url>url</url><label>*feature</label></link> is in Eiffel, please refer to the <link><url>url</url><label>*Eiffel for .NET Language</label></link> documentation.
 		</paragraph>
 		
 		<paragraph>
-			Expanding a feature node displays statuary information on the feature and it's use within the project. The display items are listed below:
+			Expanding a feature node displays statuary information on the feature and its use within the project. The display items are listed below:
 		</paragraph>
 		<paragraph>
 			<bold>Ancestor version</bold> <image>
@@ -46,7 +46,7 @@
 				<url>../images/feature/hier_feature_descendents.png</url>
 			</image>
 			<line_break/>
-			A flattened list of all decented versions of the expanded feature.
+			A flattened list of all decended versions of the expanded feature.
 		</paragraph>		
 		<paragraph>
 			<bold>Callers</bold> <image>
@@ -60,7 +60,7 @@
 				<url>../images/feature/hier_feature_implementers.png</url>
 			</image>
 			<line_break/>
-			When expanded a flattened list of all homogeneous features will be displayed.
+			When expanded, a flattened list of all homogeneous features will be displayed.
 		</paragraph>	
 
 		<anchor>locating_source_code</anchor>
@@ -73,8 +73,8 @@
 			a double-left mouse click on a corresponding feature node will open the <link><url>url</url><label>*Eiffel class</label></link> in the editor and move the feature into view.
 			<note>
 				<bold>Note</bold>: The <link><url>index.xml</url><label>Class View</label></link> will show .NET types when using the facilities to browse <link><url>classes.xml</url><label>class</label></link> and feature 
-				<link><url>url</url><label>*ancestors</label></link>, <link><url>url</url><label>*decendents</label></link>, etc. Attempt to locate the related source will instead open the <link><url>../object_browser/index.xml</url><label>Object Browser</label></link> 
-				and located the appropriate node given the assembly, type and feature.
+				<link><url>url</url><label>*ancestors</label></link>, <link><url>url</url><label>*decendents</label></link>, etc. Attempts to locate the related source will instead open the <link><url>../object_browser/index.xml</url><label>Object Browser</label></link> 
+				and locate the appropriate node given the assembly, type and feature.
 			</note>
 		</paragraph>
 		

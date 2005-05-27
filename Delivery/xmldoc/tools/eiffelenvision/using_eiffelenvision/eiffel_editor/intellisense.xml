@@ -37,7 +37,7 @@
 			<content>List Members and Complete Word</content>
 		</heading>
 		<paragraph>
-			Code completions is based on the <help_link>
+			Code completion is based on the <help_link>
 				<keywords>vxurfCodeTextEditorWindow</keywords>
 				<tab_index>0</tab_index>
 				core Visual Studio .NET editor
@@ -53,22 +53,22 @@
 				<url>/20_Language/10_Eiffel_NET/10_Conventions/index.xml</url>
 				<anchor_name>classes</anchor_name>
 				<label>*class</label>
-			</link> names. By default the editor will automatically display the <help_link>
+			</link> names. By default, the editor will automatically display the <help_link>
 				<keywords>vcgrfListMembers</keywords>
 				<tab_index>0</tab_index>
 				list members
-			</help_link> window when typing a '.' (period) when qualifying feature calls. The list members window may not appear all of the time. You may have 
-			incorrectly spelt a client feature name (prior to the period), there are no features currently <link>
+			</help_link> window when typing a '.' (period) when qualifying feature calls. The list members window may not appear all of the time due to several reasons; you may have 
+			incorrectly spelled a client feature name (prior to the period), there are no features currently <link>
 				<url>/20_Language/10_Eiffel_NET/10_Conventions/index.xml</url>
 				<anchor_name>feature</anchor_name>
 				<label>*exported</label>
-			</link> to the client or the information may not be available at that time and a compilation is required.
+			</link> to the client or the information may not be available at the time and a compilation is required.
 		</paragraph>
 		<paragraph>
-			The list members may also been shown by at any time using CTRL+SPACEBAR or ALT+RIGHT ARROW.
+			The list members may also be shown at any time by using CTRL+SPACEBAR or ALT+RIGHT ARROW.
 		</paragraph>
 		<paragraph>
-			If you have already begun to type a feature's name you may access the <help_link>
+			If you have already begun to type a feature's, name you may access the <help_link>
 				<keywords>vcgrfCompleteWord</keywords>
 				<tab_index>0</tab_index>
 				Complete Word
@@ -76,8 +76,8 @@
 				<keywords>vcgrfListMembers</keywords>
 				<tab_index>0</tab_index>
 				list members
-			</help_link>. As long a a single character has been typed you may complete that feature. Pressing CTRL+SPACEBAR or ALT+RIGHT ARROW will attempt to
-			complete what you have already typed automatically. If the partial feature name you type matches more than one feature for the current context, the
+			</help_link>. As long a a single character has been typed, you may complete that feature. Pressing CTRL+SPACEBAR or ALT+RIGHT ARROW will attempt to
+			complete what you have already typed automatically. If the partial feature name you type matches more than one feature for the current context, the 
 			<help_link>
 				<keywords>vcgrfListMembers</keywords>
 				<tab_index>0</tab_index>
@@ -105,7 +105,7 @@
 			<link>
 				<url>/20_Language/10_Eiffel_NET/10_Conventions/index.xml</url><anchor_name>class</anchor_name>
 				<label>class</label>
-			</link> text the editor provides quick, context-sensitive information about the current 
+			</link> text, the editor provides quick, context-sensitive information about the current 
 			<link>
 				<url>/20_Language/10_Eiffel_NET/10_Conventions/index.xml</url><anchor_name>class</anchor_name>
 				<label>class</label>
@@ -144,9 +144,9 @@
 			<content>Parameter Info</content>
 		</heading>
 		<paragraph>
-			The Parameter Info option opens the Parameters list to give you information about the number, names, and types of parameters required by a function or attribute.
-			Parameter Info is similar to the Eiffel editor's <link><url>url</url><label>Quick Info</label></link> in the respect it shows associated feature's full information 
-			and description. The difference between these two features is the parameter information will highlight the next parameter, in the description of the feature, by making the parameter bold.
+			The Parameter Info option opens the Parameters list to give you information about the number, names, and types of parameters required by a function or attribute. 
+			Parameter Info is similar to the Eiffel editor's <link><url>url</url><label>Quick Info</label></link> in the respect that it shows associated features' full information 
+			and descriptions. The difference between these two features is that the parameter information will highlight the next parameter, in the description of the feature, by making the parameter bold.
 		</paragraph>
 		<paragraph>
 			Please see the <help_link>

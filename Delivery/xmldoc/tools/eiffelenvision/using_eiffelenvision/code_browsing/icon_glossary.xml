@@ -26,7 +26,7 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>Throughout EiffelEnvision the icons described in this documents are used to indicate specific language factions of Eiffel. You will find these icons in aspects of the 
+		<paragraph>Throughout EiffelEnvision, the icons described in this document are used to indicate specific language factions of Eiffel. You will find these icons in aspects of the 
 			<link>
 				<url>t</url>
 				<label>*Eiffel Editor</label>
@@ -42,7 +42,7 @@
 			<link>
 				<url>t</url>
 				<label>*Eiffel</label>
-			</link> and EiffelEnvision will assist you in in the further understand an abilities of existing code, used by your EiffelEnvision project(s).
+			</link> and EiffelEnvision will assist you in further understanding the abilities of existing code, used by your EiffelEnvision project(s).
 		</paragraph>
 		<anchor>standard_icons</anchor>
 		<heading>

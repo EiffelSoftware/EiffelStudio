@@ -27,7 +27,7 @@
 				<keywords>vxoriOptions</keywords>
 				<tab_index>0</tab_index>
 				Options Dialog Box
-			</help_link> (<bold>Tools</bold>, <bold>Options</bold> menu) dialog box contains the following options:
+			</help_link> (<bold>Tools</bold>, <bold>Options</bold> menu) contains the following options:
 		</paragraph>
 		<anchor>statement_completion</anchor>
 		<heading>
@@ -77,7 +77,7 @@
 			<paragraph>
 			<bold>Enable single-click URL navigation </bold>
 			<line_break/>
-			When selected, URL's embedded in the text require only a single mouse click to go to their Web page. 
+			When selected, URLs embedded in the text require only a single mouse click to go to their Web page. 
 			</paragraph>
 			<paragraph>
 			<bold>Navigation bar</bold>

@@ -108,7 +108,7 @@
 			<content>Function Evaluation</content>
 		</heading>
 		<paragraph>
-			Evaluation of functions are not supported in EiffelEnvision. 
+			Evaluation of functions is not supported in EiffelEnvision. 
 		</paragraph>
 		
 		<anchor>operators</anchor>
@@ -154,19 +154,19 @@
 					<cell>Power</cell>
 				</row>
 				<row>
-					<cell><alignment>center</alignment><code><symbol>&lt;</symbol></code></cell>
+					<cell><alignment>center</alignment><code><symbol>lt;</symbol></code></cell>
 					<cell>Lesser</cell>
 				</row>
 				<row>
-					<cell><alignment>center</alignment><code><symbol>&gt;</symbol></code></cell>
+					<cell><alignment>center</alignment><code><symbol>gt;</symbol></code></cell>
 					<cell>Greater</cell>
 				</row>
 				<row>
-					<cell><alignment>center</alignment><code><symbol>&lt;=</symbol></code></cell>
+					<cell><alignment>center</alignment><code><symbol>lt;=</symbol></code></cell>
 					<cell>Lesser or equal</cell>
 				</row>
 				<row>
-					<cell><alignment>center</alignment><code><symbol>&gt;=</symbol></code></cell>
+					<cell><alignment>center</alignment><code><symbol>gt;=</symbol></code></cell>
 					<cell>Greater or equal</cell>
 				</row>
 				<row>
@@ -226,7 +226,7 @@
 			<content>Strings</content>
 		</heading>
 		<paragraph>
-			In EiffelEnvision you may write strings in the Watch window such as:
+			In EiffelEnvision you may write a string in the Watch window such as:
 <code_block>
 <string>"Hello"</string>
 </code_block>

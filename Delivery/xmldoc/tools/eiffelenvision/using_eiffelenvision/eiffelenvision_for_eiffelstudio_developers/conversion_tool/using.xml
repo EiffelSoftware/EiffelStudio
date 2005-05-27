@@ -39,13 +39,13 @@
 			<content>Getting Started</content>
 		</heading>
 		<paragraph>For information on how to access the 
-			<bold>EiffelStudio Project Conversion Tool</bold> please refer to the 
+			<bold>EiffelStudio Project Conversion Tool</bold>, please refer to the 
 			<link>
 				<url>accessing.xml</url>
 				<label>Accessing the EiffelStudio Project Conversion Tool</label>
 			</link> section of this documentation.
 		</paragraph>
-		<paragraph>The conversion tool works in a similar way to application wizards found in many Microsoft Windows applications. The conversion tool, however, provides direct access to each page of the wizard through tabs, while providing wizard like functionality through the ubiquitous 
+		<paragraph>The conversion tool works in a similar way to application wizards found in many Microsoft Windows applications. The conversion tool, however, provides direct access to each page of the wizard through tabs, while providing wizard-like functionality through the ubiquitous 
 			<bold>Next</bold> and 
 			<bold>Back</bold> buttons. Starting the tool by any of the appropriate means will display the tool with the 
 			<link>
@@ -60,7 +60,7 @@
 			<size>2</size>
 			<content>Notes on Unamanged Windows Resources</content>
 		</heading>
-		<paragraph>EiffelEnvision handles the location of unmanaged resources very differently then EiffelStudio. EiffelStudio takes Resource Scripts (*.rc) from the project compilation location, whereas EiffelEnvision introduces the 
+		<paragraph>EiffelEnvision handles the location of unmanaged resources very differently than EiffelStudio. EiffelStudio takes Resource Scripts (*.rc) from the project compilation location, whereas EiffelEnvision introduces the 
 			<bold>resource</bold> folder. Please see the 
 			<link>
 				<url/>
@@ -83,11 +83,11 @@
 			<content>Input Errors</content>
 		</heading>
 		<paragraph>
-			Entry errors in the tool are indicated by highlighting the problematic section. Any errors in any of the tab pages will prevent a conversion from taking place until they have been adjusted. Below shows an example of a specified ace file, in the 
+			Entry errors in the tool are indicated by highlighting the problematic section. Any errors in any of the tab pages will prevent a conversion from taking place until they have been adjusted. Below shows an example of a specified ace file in the 
 			<link>
 				<url>#project_settings</url>
 				<label>Project Settings</label>
-			</link> tab page, that does not exist.
+			</link> tab page that does not exist.
 			<paragraph>
 				<image>
 					<url>/03_eiffelstudio_developers\10_eiffelstudio_conversion_tool\images\aceimp_error.png</url>
@@ -105,7 +105,7 @@
 		<image>
 			<url>/03_eiffelstudio_developers\10_eiffelstudio_conversion_tool\images\aceimp_settings.png</url>
 		</image>
-		<paragraph>If you opted to run the tool from the Start Menu you will need to specify an ace file manually otherwise the ace file and its location will be used to automatically populate the 
+		<paragraph>If you opted to run the tool from the Start Menu you will need to specify an ace file manually, otherwise the ace file and its location will be used to automatically populate the 
 			<bold>Project ace file</bold> and 'Root source path' fields.
 		</paragraph>
 		<paragraph>The 
@@ -155,7 +155,7 @@
 		</heading>
 		<paragraph>The conversion tool is able to handle many different types of EiffelStudio project files. It can convert classic Eiffel projects for Windows or other platforms and Eiffel for .NET projects into an EiffelEnvision project. In all of these cases, even for Eiffel for .NET projects, it may be necessary to generate a Single Threaded Apartment (STA) root class for compatibility.</paragraph>
 		<note>
-			<bold>Note: </bold>If your project already starts execution within a STA, there is no need to generate an STA root class. If this is the case skip to the final 
+			<bold>Note: </bold>If your project already starts execution within a STA, there is no need to generate an STA root class. If this is the case, skip to the final 
 			<link>
 				<url>#output</url>
 				<label>Output</label>
@@ -165,7 +165,7 @@
 			<bold>Windows Eiffel Library (WEL)</bold> or 
 			<bold>EiffelVision2</bold>, Microsoft's 
 			<bold>Windows Forms</bold> or any third party GUI library, it is recommended that the application executes in a STA. If your existing EiffelStudio project is a classic Eiffel project and uses a GUI then it is highly recommended you select the option 
-			<bold>Generate STA class</bold>. If your project is an Eiffel for .NET project, once converted into an EiffelEnvision project, it will, once compiled, execute nominally. However, if you plan to use aspects of a GUI, such as the Windows file and folder browser dialogs, or even decide to target older versions of the Windows operating system that support the .NET framework, a STA root class will be required.
+			<bold>Generate STA class</bold>. If your project is an Eiffel for .NET project, when converted into an EiffelEnvision project, it will, once compiled, execute nominally. However, if you plan to use aspects of a GUI, such as the Windows file and folder browser dialogs, or even decide to target older versions of the Windows operating system that support the .NET framework, a STA root class will be required.
 		</paragraph>
 		<note>
 			<bold>Note: </bold>Requiring execution within an STA is not specific to Eiffel for .NET or EiffelEnvision. This is applicable to all languages targeting .NET.
@@ -197,7 +197,7 @@
 			<content>Output Tab</content>
 		</heading>
 		<paragraph>This tab is the final page in the tool. At this stage the 
-			<bold>Convert</bold> button will appear, and if there are no input related errors in any of the previous pages, will be enabled and ready to use.
+			<bold>Convert</bold> button will appear and, if there are no input related errors in any of the previous pages, will be enabled and ready to use.
 		</paragraph>
 		<paragraph>
 			<image>
@@ -212,7 +212,7 @@
 			<bold>Output</bold> box will be populated with the report indicating what environment variables are being used, the file(s) that are being generated and the final success or failure of the conversion process. Failures will always be accompanied by a reason for the failure.
 		</paragraph>
 		<paragraph>
-			On a successful conversion the generated EiffelEnvision project file can be located in the specified <link><url></url><label>Root source path</label></link> location in the <link><url></url><label>Project Settings</label></link> tab page. If no root source path was specified, the generated project file will be located in the same location as the specified EiffelStudio project ace file.
+			On a successful conversion, the generated EiffelEnvision project file can be located in the specified <link><url></url><label>Root source path</label></link> location in the <link><url></url><label>Project Settings</label></link> tab page. If no root source path was specified, the generated project file will be located in the same location as the specified EiffelStudio project ace file.
 		</paragraph>
 
 		<anchor>tool_produce</anchor>
@@ -224,7 +224,7 @@
 			The tool will produce two output files. The primary output is the EiffelEnvision project file (*.eifp). This will be given the name of the specified EiffelStudio project system name, extended with .eifp. The other product is a by-product of the tool, a duplicate of the original ace file with an .aceimp extension. This version of the ace file is a modified version of the specified ace file and contains manipulated project configuration settings. If you were importing a classic Eiffel project, congratulations, you now can use the aceimp ace file to compile your project for .NET in EiffelStudio.
 		</paragraph>
 		<paragraph>
-			As stated, the tool is able to determine if the specified EiffelStudio project ace file is either a classic Eiffel or Eiffel for .NET project. If the project is a classic Eiffel project then the appropriate clusters and externals will be added to the project to ensure it compiles under EiffelEnvision. For all projects, when deemed compatible, one of the precompiled libraries installed with EiffelEnvision will be used to significantly increase compile times.
+			As stated, the tool is able to determine if the specified EiffelStudio project ace file is either a classic Eiffel or Eiffel for .NET project. If the project is a classic Eiffel project, then the appropriate clusters and externals will be added to the project to ensure it compiles under EiffelEnvision. For all projects, when deemed compatible, one of the precompiled libraries installed with EiffelEnvision will be used to significantly increase compile times.
 		</paragraph>
 
 		<anchor>see_also</anchor>

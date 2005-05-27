@@ -19,8 +19,8 @@
 	</meta_data>
 	<paragraph>
 		<paragraph>
-			The <bold>2.5</bold> release of <bold>EiffelEnvision</bold> brings with it a wealth of improvements and enhancements to existing features, present in previous releases of Eiffel ENViSioN!, aswell as a huge number of additions. 
-			The items mention here are only some of the major additions and improvements made to EiffelEnvision. For a complete taxonomy of changes in EiffelEnvision please review the <link><url>url</url><label>*EiffelEnvision 2.5 Version History</label></link> document.
+			The <bold>2.5</bold> release of <bold>EiffelEnvision</bold> brings with it a wealth of improvements and enhancements to features present in previous releases of Eiffel ENViSioN! as well as a number of additions. 
+			The items mention here are only some of the major additions and improvements made to EiffelEnvision. For a complete taxonomy of changes in EiffelEnvision, please review the <link><url>url</url><label>*EiffelEnvision 2.5 Version History</label></link> document.
 		</paragraph>
 		
 		<anchor>name_change</anchor>
@@ -29,7 +29,7 @@
 			<content>A Change of Name</content>
 		</heading>
 		<paragraph>
-			The first notable change is that EiffelEnvision has had a name change. In previous release <bold>EiffelEnvision</bold> was known as <bold>Eiffel ENViSioN!</bold> (<bold>E</bold>iffel for .<bold>N</bold>ET for <bold>Vi</bold>sual <bold>S</bold>tud<bold>io</bold> .<bold>N</bold>ET)
+			The first notable change is that EiffelEnvision has had a name change. In previous release <bold>EiffelEnvision</bold> was known as <bold>Eiffel ENViSioN!</bold> (<bold>E</bold>iffel for .<bold>N</bold>ET for <bold>Vi</bold>sual <bold>S</bold>tud<bold>io</bold> .<bold>N</bold>ET).
 		</paragraph>
 		
 		<anchor>solution_explorer</anchor>
@@ -38,15 +38,15 @@
 			<content>Project Management</content>
 		</heading>
 		<paragraph>
-			One of the biggest changes in EiffelEnvision 2.5 is it's change to the way projects, and their files, are managed and configured. Projects are now subdiveded into 4 logical sections creating a clear distinction between <bold>project component reference</bold>, <bold>project files and items</bold>, <bold>Eiffel libraries</bold> and a <bold>group of miscellane items</bold>. 
-			In addition project <link><url>url</url><label>*Cluster</label></link> management, used to manage <link><url>url</url><label>*Eiffel Class</label></link> source file, has been integrated directly into the <link><url>url</url><label>*Solution Explorer</label></link>, providing the simpliest and most direct means possible of file management.
+			One of the biggest changes in EiffelEnvision 2.5 is a change in the way projects, and their files, are managed and configured. Projects are now subdiveded into 4 logical sections creating a clear distinction between <bold>project component reference</bold>, <bold>project files and items</bold>, <bold>Eiffel libraries</bold> and a <bold>group of miscellane items</bold>. 
+			In addition, project <link><url>url</url><label>*Cluster</label></link> management, used to manage <link><url>url</url><label>*Eiffel Class</label></link> source files, has been integrated directly into the <link><url>url</url><label>*Solution Explorer</label></link>, providing the simpliest and most direct means possible of file management.
 		</paragraph>
 		<paragraph>
-			The way projects are configured has changed also. EiffelEnvision 2.5 abstracts a number of <bold>Project Configuration Properties</bold>, to create a set of <bold>Common Properties</bold>, in order to faciliate users in configuring projects faster and with less errors when changing between <help_link>
+			The way projects are configured has also changed. EiffelEnvision 2.5 abstracts a number of <bold>Project Configuration Properties</bold> to create a set of <bold>Common Properties</bold> in order to faciliate users in configuring projects faster and with less errors when changing between <help_link>
 				<keywords>vxconBuildConfigurations</keywords>
 				<tab_index>0</tab_index>
 				Build Configurations
-			</help_link>. In addition to this abstraction a number of addition project Configuration Properties have been added, such as Eiffel <link><url>url</url><label>*Debug Clauses</label></link> and advanced properties to tweak compilation.
+			</help_link>. In addition to this abstraction, a number of project Configuration Properties have been added, such as Eiffel <link><url>url</url><label>*Debug Clauses</label></link> and advanced properties to tweak compilation.
 		</paragraph>
 		
 		<anchor>compilation</anchor>
@@ -56,12 +56,12 @@
 		</heading>
 		<paragraph>
 			EiffelEnvision has had many improvements and optimizations made to the <link><url>url</url><label>*Build/Compilation</label></link> process. EiffelEnvision projects build faster than ever before. Not only has the Eiffel compiler been enhanced to 
-			compile your Eiffel for .NET source files, but EiffelEnvision has a new <bold>build-as-needed</bold> mechanism. EiffelEnvision projects are now compiled as required, alloing <link><url>url</url><label>*Eiffel Class Library</label></link> projects to be added 
+			compile your Eiffel for .NET source files, but EiffelEnvision has a new <bold>build-as-needed</bold> mechanism. EiffelEnvision projects are now compiled as required, allowing <link><url>url</url><label>*Eiffel Class Library</label></link> projects to be added 
 			to your <help_link>
 				<keywords>vxurfSolutionExplorerDialog</keywords>
 				<tab_index>0</tab_index>
 				Solution
-			</help_link> without pelanty. Regular projects also benifit from being built-as-needed; compilation are smaller and reduce overall compilation time, or sometimes requiring no compilation at all.
+			</help_link> without penalty. Regular projects also benefit from being built-as-needed; compilations are smaller and require less overall compilation time or sometimes require no compilation at all.
 		</paragraph>
 		<paragraph>
 			For changes to the Eiffel compiler, please see <link><url>url</url><label>*Eiffel Compiler Version History</label></link>
@@ -92,7 +92,7 @@
 				<keywords>deconUsingSourceCodeControl</keywords>
 				<tab_index>0</tab_index>
 				Source Code Control
-			</help_link>. Management of your project's source files and be controlled from with Visual Studio .NET and EiffelEnvision automously. There are no more additional configuration files to concern yourself with, and nothing 
+			</help_link>. Management of your project's source files can be controlled from within Visual Studio .NET and EiffelEnvision automously. There are no more additional configuration files to concern yourself with, and nothing 
 			else you have to consider when intergrating EiffelEnvision projects into a <help_link>
 				<keywords>deconUsingSourceCodeControl</keywords>
 				<tab_index>0</tab_index>
@@ -103,14 +103,14 @@
 		<anchor>deployment</anchor>
 		<heading>
 			<size>2</size>
-			<content>Project Deployement</content>
+			<content>Project Deployment</content>
 		</heading>
 		<paragraph>
 			EiffelEnvision projects now provide even more to the integrated Visual Studio .NET <help_link>
 				<keywords>DALGProjects</keywords>
 				<tab_index>0</tab_index>
 				Setup and Deployment Projects
-			</help_link>. With better dependency evalauation and more deployment options available, <link><url>url</url><label>*deploying projects created using EiffelEnvision</label></link> is now simpler than every
+			</help_link>. With better dependency evaluation and more deployment options available, <link><url>url</url><label>*deploying projects created using EiffelEnvision</label></link> is now simpler than ever.
 		</paragraph>
 		
 		<anchor>new_tools</anchor>
@@ -120,7 +120,7 @@
 		</heading>
 		<paragraph>
 			New to EiffelEnvision 2.5 is the <link><url>url</url><label>*EiffelStudio to EiffelEnvision Project Conversion Tool</label></link>. The tool replaces the <bold>Import from EiffelStudio</bold> project in previous versions 
-			of Eiffel ENViSion!. The tool integrates into the Windows shell provding conversion directly from Windows Explorer. The tool is also much more feature rich than it predecessor, allowing both classic Eiffel and Eiffel for .NET 
+			of Eiffel ENViSion!. The tool integrates into the Windows shell providing conversion directly from Windows Explorer. The tool is also much more feature rich than it predecessor, allowing both classic Eiffel and Eiffel for .NET 
 			projects to be converted/imported into EiffelEnvision with the push of a button.
 		</paragraph>
 		
@@ -130,9 +130,9 @@
 			<content>More...</content>
 		</heading>
 		<paragraph>
-			There are many, many, many more additions, enhancements and improvements in EiffelEnvision 2.5, which through reading this documentation, or using EiffelEnvision, you will discover. 
-			EiffelEnvision will be intutive for those who have used Visual Studio .NET before and have a knowledge of the <link><url>url</url><label>*Eiffel Langauge</label></link>. For those whom have 
-			not used Visual Studio .NET before should become acustom to the plethora of features it provides, which EiffelEnvision integrates into and expands upon. For those who have not yet used 
+			There are many, many more additions, enhancements and improvements in EiffelEnvision 2.5, which through reading this documentation, or using EiffelEnvision, you will discover. 
+			EiffelEnvision will be intuitive for those who have used Visual Studio .NET before and have a knowledge of the <link><url>url</url><label>*Eiffel Langauge</label></link>. For those who have 
+			not used Visual Studio .NET before should become accustomed to the plethora of features it provides, which EiffelEnvision integrates into and expands upon.Those who have not yet used 
 			Eiffel and this is your introduction to it, then it is recommended you become familar with the <link><url>url</url><label>*Eiffel Langauge</label></link> and read <link><url>url</url><label>*An Invitation to Eiffel</label></link>.
 		</paragraph>
 		

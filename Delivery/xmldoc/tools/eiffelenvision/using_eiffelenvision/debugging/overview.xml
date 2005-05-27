@@ -23,7 +23,7 @@
 	</meta_data>
 	<paragraph>
 		<paragraph>
-			Debugging is the process of tracing the execution of your project while it is running, to find any bugs that are occurring in the project. This is achieved by stepping through the projects source code, line by line, 
+			Debugging is the process of tracing the execution of your project while it is running, to find any bugs that are occurring in the project. This is achieved by stepping through the project's source code, line by line, 
 			and comparing the actual execution of the project with the desired execution. When anomalies are  found, they cannot be fixed until the debugging process is ended as you must  end the debugging in order to edit the 
 			source code of the project and  recompile. This process will often be repeated until all known bugs are found.
 		</paragraph>
@@ -35,7 +35,7 @@
 		</heading>
 		<paragraph>
 			There are many aspects of the Visual Studio .NET Debugger, which EiffelEnvision seamlessly plugs into so you may debug projects written in 
-			EiffelEnvision in Visual Studio .NET. The documentation on the Visual Studio .NET debugger, how to use it and all of it facates can be found in the 
+			EiffelEnvision in Visual Studio .NET. The documentation on the Visual Studio .NET debugger, how to use it and all of its facades can be found in the 
 			<help_link>
 				<keywords>_asug_How_Do_I_Topics3a_Debugging</keywords>
 				<tab_index>0</tab_index>
@@ -74,14 +74,14 @@
 				<keywords>vcurfAutosWindow</keywords>
 				<tab_index>0</tab_index>
 				Autos
-			</help_link>, ...) the <bold>Type</bold> column will also show the <bold>Eiffel-name</bold> of a .NET type. In <link>
+			</help_link>, etc.) the <bold>Type</bold> column will also show the <bold>Eiffel-name</bold> of a .NET type. In <link>
 				<url>url</url>
-				<label>*Eiffel for .NET</label></link>, Eiffel classes are always in upper case. Maintaining the language to ensure Eiffel and Eiffel for .NET remain 
-				the same language, a formatting algorthim is applied on types and <link>
+				<label>*Eiffel for .NET</label></link>, Eiffel classes are always in upper case. To ensure Eiffel and Eiffel for .NET remain 
+				the same language, a formatting algorithm is applied on types and <link>
 				<url>url</url>
 				<label>*features</label></link> from <link>
 				<url>url</url>
-				<label>*referenced components</label></link> are consistent with the <link>
+				<label>*referenced components</label></link> to ensure they are consistent with the <link>
 				<url>url</url>
 				<label>*Eiffel Conventions</label></link>. More information can be found on the formatting for .NET types and features in <link><url>url</url><label>*Referenced Assembly Type and Feature Name Conversion</label></link>.
 		</paragraph>

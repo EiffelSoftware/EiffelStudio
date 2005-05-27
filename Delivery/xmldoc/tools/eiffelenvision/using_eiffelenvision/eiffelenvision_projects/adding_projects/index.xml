@@ -21,7 +21,7 @@
 				<label>Adding New Projects </label>
 			</link>
 			<line_break/>
-			Help of adding new Eiffel projects to new or existing solutions.
+			Help with adding new Eiffel projects to new or existing solutions.
 		</paragraph>
 		<paragraph>
 			<link>
@@ -29,8 +29,8 @@
 				<label>EiffelEnvision Projects</label>
 			</link>
 			<line_break/>
-			Describes the number and variety of EiffelProjects that can be added to any exising or new Visual Studio .NET solution.
-		</paragraph>
+			Describes the number and variety of EiffelEnvision Projects that can be added to any exising or new Visual Studio .NET solution.
+		</paragraph>		
 		
 		<anchor>also_see</anchor>
 		<heading>

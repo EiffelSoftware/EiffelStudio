@@ -20,7 +20,7 @@
 	<paragraph>
 		<paragraph>
 			The <link><url>url</url><label>Eiffel for .NET Language</label></link> does not use the <code><reserved_word>this</reserved_word></code> keyword/reserved word used by other languages such as Visual C# and Visual C++. Instead 
-			<code><reserved_word>Current</reserved_word></code> is used to refer to self-reference a runtime instance of a class, also know as an object. Because <code><reserved_word>this</reserved_word></code> is not used by 
+			<code><reserved_word>Current</reserved_word></code> is used to self-reference a runtime instance of a class, also know as an object. Because <code><reserved_word>this</reserved_word></code> is not used by 
 			the <link><url>url</url><label>Eiffel for .NET Language</label></link>, the <help_link>
 				<keywords>vcurfThisWindow</keywords>
 				<tab_index>0</tab_index>

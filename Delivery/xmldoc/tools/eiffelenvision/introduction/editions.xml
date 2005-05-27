@@ -23,18 +23,18 @@
 	</meta_data>
 	<paragraph>
 		<paragraph>
-			EiffelEnvision come in two distinct editions. There is the <bold>Free Edition</bold> and the <bold>Enterprise Edition</bold>. The Free Edition, as it name suggests, is the free-use edition of EiffelEnvision and is hence a lighter 
-			version of that compared with the Enterprise Edition (see <link><anchor_name>compare_editions</anchor_name><url>editions.xml</url><label>Comparison Table</label></link>.)
+			EiffelEnvision comes in two distinct editions. There is the <bold>Free Edition</bold> and the <bold>Enterprise Edition</bold>. The Free Edition, as its name suggests, is the free-use edition of EiffelEnvision and is hence a lighter 
+			version of the Enterprise Edition (see <link><anchor_name>compare_editions</anchor_name><url>editions.xml</url><label>Comparison Table</label></link>).
 		</paragraph>
 			
 		<note>
 			<bold>Note</bold>: 
-			Please be aware whilst you enjoy the free edition, its use is permitted for educational, non-commercial development or for a evaluation in considering the Enterprise Edition. Please see the <link><url>url</url><label>Licenses</label></link> 
+			Please be aware while you enjoy the free edition that its use is permitted for educational, non-commercial development or for an evaluation in considering the Enterprise Edition. Please see the <link><url>url</url><label>Licenses</label></link> 
 			section of this documentation for more information on terms of use.
 		</note>
 		
 		<paragraph>
-			For information regarding EiffelEnvision Enterprise Edition and premium support and maintenance, please see our web site: <link><url>http://www.eiffel.com/products/</url><label>www.eiffel.com</label></link>
+			For information regarding EiffelEnvision Enterprise Edition and premium support and maintenance, please see our web site: <link><url>http://www.eiffel.com/products/</url><label>www.eiffel.com</label></link>.
 		</paragraph>			
 		
 		<anchor>compare_editions</anchor>		
@@ -44,7 +44,7 @@
 		</heading>	
 		
 		<paragraph>
-			The following table highlights the major feature differences between the <bold>Free</bold> and <bold>Enterprise Edition</bold>.
+			The following table highlights the major feature differences between the <bold>Free Edition</bold> and <bold>Enterprise Edition</bold>.
 			
 			<table>
 				<padding>5</padding>
@@ -170,7 +170,7 @@
 				</row>
 				<row>
 					<cell>
-						EiffelStudio to EiffelEnvision project conversion tool.
+						EiffelStudio to EiffelEnvision Project Conversion Tool
 					</cell>
 					<cell>
 						<alignment>center</alignment>

@@ -24,6 +24,15 @@ inherit
 			item as item_id,
 			has as has_id,
 			search as search_id
+		export
+			{NONE} all
+			{ANY}
+				after, conflict, count, cursor, forth, found,
+				found_item, go_to, has_id, item_for_iteration,
+				item_id, key_for_iteration, linear_representation,
+				put, remove, replace, search_id, start
+		redefine
+			make, put, remove, replace
 		end
 
 	SHARED_WORKBENCH
@@ -70,7 +79,15 @@ inherit
 
 create
 	make
-	
+
+feature {NONE} -- Creation
+
+	make (n: INTEGER) is
+		do
+			Precursor (n)
+			create alias_table.make (0)
+		end
+
 feature -- Access
 
 	origin_table: SELECT_TABLE
@@ -89,6 +106,19 @@ feature -- Access
 		do
 			Result := System.class_of_id (feat_tbl_id)
 		end
+
+	item_alias_id (alias_name_id: INTEGER): FEATURE_I is
+			-- Feature with alias name id `alias_name_id', if present; Void otherwise
+		require
+			valid_alias_name_id: alias_name_id > 0
+		do
+			Result := alias_table.item (alias_name_id)
+		end
+
+feature {NONE} -- Implementation
+
+	alias_table: HASH_TABLE [FEATURE_I, INTEGER]
+			-- Table of features indexes by their alias names
 
 feature -- Access: compatibility
 
@@ -176,6 +206,12 @@ feature -- Status report
 			end
 		end
 
+	is_alias_conflict: BOOLEAN is
+			-- Did last operation cause a conflict on alias name?
+		do
+			Result := alias_table.conflict
+		end
+
 feature -- Settings
 
 	set_origin_table (t: like origin_table) is
@@ -192,6 +228,59 @@ feature -- Settings
 			overloaded_names := o
 		ensure
 			overloaded_names_set: overloaded_names = o
+		end
+
+feature -- Element change
+
+	put (new: FEATURE_I; key: INTEGER) is
+		local
+			alias_name_id: INTEGER
+		do
+			Precursor (new, key)
+				-- Update alias table
+			alias_name_id := new.alias_name_id
+			if alias_name_id > 0 then
+				alias_table.put (new, alias_name_id)
+			end
+		end
+
+	replace (new: FEATURE_I; key: INTEGER) is
+		local
+			old_feature: FEATURE_I
+			alias_name_id: INTEGER
+		do
+			old_feature := item_id (key)
+			if old_feature /= Void then
+					-- Remove old alias name
+				alias_name_id := old_feature.alias_name_id
+				if alias_name_id > 0 then
+					alias_table.remove (alias_name_id)
+				end
+			end
+			Precursor (new, key)
+				-- Register new alias name (if any)
+			alias_name_id := new.alias_name_id
+			if alias_name_id > 0 then
+				alias_table.put (new, alias_name_id)
+			end
+		end
+
+feature -- Removal
+
+	remove (key: INTEGER) is
+		local
+			old_feature: FEATURE_I
+			alias_name_id: INTEGER
+		do
+			old_feature := item_id (key)
+			if old_feature /= Void then
+					-- Remove old alias name
+				alias_name_id := old_feature.alias_name_id
+				if alias_name_id > 0 then
+					alias_table.remove (alias_name_id)
+				end
+			end
+			Precursor (key)
 		end
 
 feature -- Comparison
@@ -978,5 +1067,8 @@ end
 				forth
 			end
 		end
+
+invariant
+	alias_table_not_void: alias_table /= Void
 
 end

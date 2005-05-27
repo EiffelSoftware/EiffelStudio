@@ -12,5 +12,6 @@ feature
 	Infix_str: STRING is "infix %""
 	Quote_str: STRING is "%""
 	Frozen_str: STRING is "frozen "
+	bracket_str: STRING is "[]"
 
 end -- class SYNTAX_STRINGS

@@ -140,6 +140,24 @@ feature -- Constants
 	is_lower_name_id: INTEGER is 130
 	is_upper_name_id: INTEGER is 131
 	set_bit_name_id: INTEGER is 132
+	infix_and_then_name_id: INTEGER is 133
+	infix_or_else_name_id: INTEGER is 134
+	infix_implies_name_id: INTEGER is 135
 			-- Predefined name IDs constants
+
+feature -- Classification
+
+	is_semi_strict_id (name_id: INTEGER): BOOLEAN is
+			-- Does `name_id' denote a semistrict operator?
+		do
+			inspect name_id
+			when infix_and_then_name_id, infix_or_else_name_id, infix_implies_name_id then
+				Result := True
+			else
+					-- False by default
+			end
+		ensure
+			definition: Result = (name_id = infix_and_then_name_id or name_id = infix_or_else_name_id or name_id = infix_implies_name_id)
+		end
 
 end -- class PREDEFINED_NAMES

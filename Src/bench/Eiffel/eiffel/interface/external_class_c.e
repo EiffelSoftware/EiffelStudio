@@ -855,7 +855,9 @@ feature {NONE} -- Initialization
 				end
 
 				l_feat.set_is_infix (l_member.is_infix)
+				l_feat.set_is_binary (l_member.is_infix)
 				l_feat.set_is_prefix (l_member.is_prefix)
+				l_feat.set_is_unary (l_member.is_prefix)
 
 				l_feat.set_is_frozen (l_member.is_frozen)
 				if l_member.is_prefix then

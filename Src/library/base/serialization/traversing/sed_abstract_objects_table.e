@@ -20,46 +20,22 @@ feature {NONE} -- Initialization
 			last_index_set: last_index = 0
 		end
 
-feature -- Lookup
+feature -- Access
 
-	search (an_obj: ANY) is
-			-- Search for item of key `an_obj'.
-			-- If found, set `found' to true, and set
-			-- `found_item' to item associated with `an_obj'.
+	index (an_obj: ANY): NATURAL_32 is
+			-- Index of `an_obj' in Current
 		require
 			an_obj_not_void: an_obj /= Void
 		deferred
 		end
-
-feature -- Access
-	
-	found: BOOLEAN
-			-- Was last search successful?
-
-	found_item: NATURAL_32
-			-- Value found at last successful search or last inserted item
 
 feature -- Status report
 
-	has (an_obj: ANY): BOOLEAN is
-			-- Does current have `an_obj'?
-		require
-			an_obj_not_void: an_obj /= Void
-		deferred
-		end
-
-feature -- Element change
-
-	put (an_obj: ANY) is
-			-- Insert `an_obj' in Current.
-		require
-			an_obj_not_void: an_obj /= Void
-			not_inserted: not has (an_obj)
+	capacity: INTEGER is
+			-- Default capacity of current.
 		deferred
 		ensure
-			inserted: has (an_obj)
-			last_index_updated: last_index = old last_index + 1
-			found_item_set: found_item = last_index
+			capacity_non_negative: Result >= 0
 		end
 
 feature -- Removal

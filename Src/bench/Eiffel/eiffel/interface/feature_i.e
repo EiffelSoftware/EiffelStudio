@@ -180,6 +180,30 @@ feature -- Access
 			Result := feature_flags & is_prefix_mask = is_prefix_mask
 		end
 
+	frozen is_bracket: BOOLEAN is
+			-- Is feature a bracket one ?
+		do
+			Result := feature_flags & is_bracket_mask = is_bracket_mask
+		end
+
+	frozen is_binary: BOOLEAN is
+			-- Is feature a binary one?
+		do
+			Result := feature_flags & is_binary_mask = is_binary_mask
+		end
+
+	frozen is_unary: BOOLEAN is
+			-- Is feature an unary one?
+		do
+			Result := feature_flags & is_unary_mask = is_unary_mask
+		end
+
+	frozen has_convert_mark: BOOLEAN is
+			-- Does binary feature have a convert mark?
+		do
+			Result := feature_flags & has_convert_mark_mask = has_convert_mark_mask
+		end
+
 	frozen is_selected: BOOLEAN is
 			-- Is feature selected?
 		do
@@ -226,6 +250,16 @@ feature -- Comparison
 			else
 				Result := l_other_name /= Void and l_name < l_other_name
 			end
+		end
+
+	is_same_alias (other: FEATURE_I): BOOLEAN is
+			-- Does current have the same alias as `other'?
+		require
+			other_not_void: other /= Void
+		do
+			Result :=
+				alias_name_id = other.alias_name_id and then
+				has_convert_mark = other.has_convert_mark
 		end
 
 feature -- Debugger access
@@ -517,6 +551,38 @@ feature -- Setting
 			is_prefix_set: is_prefix = b
 		end
 
+	frozen set_is_bracket (b: BOOLEAN) is
+			-- Assign `b' to `is_bracket'. 
+		do
+			feature_flags := feature_flags.set_bit_with_mask (b, is_bracket_mask)
+		ensure
+			is_bracket_set: is_bracket = b
+		end
+
+	frozen set_is_binary (b: BOOLEAN) is
+			-- Assign `b' to `is_binary'.
+		do
+			feature_flags := feature_flags.set_bit_with_mask (b, is_binary_mask)
+		ensure
+			is_binary_set: is_binary = b
+		end
+
+	frozen set_is_unary (b: BOOLEAN) is
+			-- Assign `b' to `is_unary'.
+		do
+			feature_flags := feature_flags.set_bit_with_mask (b, is_unary_mask)
+		ensure
+			is_unary_set: is_unary = b
+		end
+
+	frozen set_has_convert_mark (b: BOOLEAN) is
+			-- Assign `b' to `has_convert_mark'.
+		do
+			feature_flags := feature_flags.set_bit_with_mask (b, has_convert_mark_mask)
+		ensure
+			has_convert_mark_set: has_convert_mark = b
+		end
+
 	frozen set_is_require_else (b: BOOLEAN) is
 			-- Assign `b' to `is_require_else'.
 		do
@@ -596,6 +662,8 @@ feature -- Incrementality
 				and then has_postcondition = other.has_postcondition
 				and then is_once = other.is_once
 				and then is_constant = other.is_constant
+				and then alias_name_id = other.alias_name_id
+				and then has_convert_mark = other.has_convert_mark
 debug ("ACTIVITY")
 	if not Result then
 			io.error.put_boolean (written_in = other.written_in) io.error.put_new_line;
@@ -688,6 +756,14 @@ end
 		do
 				-- Still an attribute
 			Result := is_attribute = other.is_attribute 
+
+				-- Same alias
+			if Result then
+				Result := alias_name_id = other.alias_name_id
+				if Result then
+					Result := has_convert_mark = other.has_convert_mark
+				end
+			end
 
 				-- Same return type
 			Result := Result and then type.same_as (other.type)
@@ -1558,9 +1634,14 @@ end
 						ve02a.set_argument_number (i)
 						Error_handler.insert_error (ve02a)
 					end
-	
+
 					i := i + 1
 				end
+			end
+				-- Check aliases
+			if not is_same_alias (old_feature) then
+					-- Report that aliases are not the same
+				Error_handler.insert_error (create {VDRD7_NEW}.make (system.current_class, Current, old_feature))
 			end
 		end
 
@@ -1603,7 +1684,7 @@ end
 				vdjr.init (old_feature, Current)
 				Error_handler.insert_error (vdjr)
 			else
-	
+
 					-- Check the argument equality
 				from
 					i := 1
@@ -1624,6 +1705,11 @@ end
 					end
 					i := i + 1
 				end
+			end
+				-- Check aliases
+			if not is_same_alias (old_feature) then
+					-- Report that aliases are not the same
+				Error_handler.insert_error (create {VDJR2_NEW}.make (system.current_class, Current, old_feature))
 			end
 		end
 
@@ -1778,6 +1864,10 @@ feature -- Undefinition
 			Result.set_body_index (body_index)
 			Result.set_has_postcondition (has_postcondition)
 			Result.set_has_precondition (has_precondition)
+			Result.set_is_bracket (is_bracket)
+			Result.set_is_binary (is_binary)
+			Result.set_is_unary (is_unary)
+			Result.set_has_convert_mark (has_convert_mark)
 
 			if is_external then
 				ext ?= Current
@@ -1872,6 +1962,10 @@ feature -- Replication
 			other.set_is_origin (is_origin)
 			other.set_origin_feature_id (origin_feature_id)
 			other.set_origin_class_id (origin_class_id)
+			other.set_is_bracket (is_bracket)
+			other.set_is_binary (is_binary)
+			other.set_is_unary (is_unary)
+			other.set_has_convert_mark (has_convert_mark)
 		end
 
 feature -- Genericity
@@ -2179,6 +2273,10 @@ feature {NONE} -- Implementation
 	is_ensure_then_mask: INTEGER_16 is 0x0040
 	has_precondition_mask: INTEGER_16 is 0x0080
 	has_postcondition_mask: INTEGER_16 is 0x0100
+	is_bracket_mask: INTEGER_16 is 0x0200
+	is_binary_mask: INTEGER_16 is 0x0400
+	is_unary_mask: INTEGER_16 is 0x0800
+	has_convert_mark_mask: INTEGER_16 is 0x1000
 			-- Mask used for each feature property.
 
 feature {INHERIT_TABLE} -- Access

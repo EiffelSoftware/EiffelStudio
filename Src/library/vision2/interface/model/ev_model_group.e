@@ -601,7 +601,9 @@ feature -- List change
 			-- Remove all items.
 		do
 			from start until after loop
-				item.unreference_group
+				if item.is_in_group then
+					item.unreference_group
+				end
 				forth
 			end
 			Precursor {ARRAYED_LIST}

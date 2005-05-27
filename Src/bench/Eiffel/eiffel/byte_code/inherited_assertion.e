@@ -181,6 +181,27 @@ feature -- Assertion
 						and then (Context.byte_code.arguments = saved_arguments)
 						and then (Context.byte_code.result_type = saved_result_type)
 		end
+		
+	precondition_list_count: INTEGER is
+			-- Number of inherited precondition.
+		local
+			c: CURSOR
+			lst: like precondition_list
+		do
+			lst := precondition_list
+			if lst /= Void then
+				c := lst.cursor
+				from
+					lst.start
+				until
+					lst.after
+				loop
+					Result := Result + lst.item.count
+					lst.forth
+				end
+				lst.go_to (c)
+			end
+		end
 
 feature -- Inherited precondition
 

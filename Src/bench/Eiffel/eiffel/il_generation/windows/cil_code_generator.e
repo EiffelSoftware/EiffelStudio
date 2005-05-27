@@ -5499,7 +5499,7 @@ feature -- Line info
 				put_line_info (n)			
 			end
 		end
-
+		
 	put_debug_info (location: LOCATION_AS) is
 			-- Generate debug information for `location' to enable to
 			-- find corresponding Eiffel class file in IL code.

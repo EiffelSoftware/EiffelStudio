@@ -537,6 +537,7 @@ feature -- IL code generation
 			end_of_assertion: IL_LABEL
 			end_of_routine: IL_LABEL
 			l_saved_in_assertion: INTEGER
+			l_nb_precond: INTEGER
 		do
 			class_c := context.class_type.associated_class
 			local_list := context.local_list
@@ -584,11 +585,19 @@ feature -- IL code generation
 			end
 
 				-- Make IL code for preconditions
-			if
-				(context.workbench_mode or class_c.assertion_level.check_precond) and then
-				(precondition /= Void or inh_assert.has_precondition)
-			then
-				generate_il_precondition
+			if precondition /= Void or inh_assert.has_precondition then
+				if (context.workbench_mode or class_c.assertion_level.check_precond) then
+					generate_il_precondition					
+				elseif System.is_precompile_finalized then
+					l_nb_precond := 0
+					if precondition /= Void then
+						l_nb_precond := l_nb_precond + precondition.count
+					end
+					if inh_assert.has_precondition then
+						l_nb_precond := l_nb_precond + inh_assert.precondition_list_count
+					end
+					generate_ghost_debug_infos (l_nb_precond)					
+				end
 			end
 
 				-- Generate prologue for once routine
@@ -700,7 +709,7 @@ feature -- IL code generation
 			il_generator.branch_on_false (end_of_assertion)
 			il_generator.put_boolean_constant (True)
 			il_generator.generate_set_assertion_status
-			if precondition /= Void then
+			if l_prec /= Void then
 				from
 					need_end_label := True
 					success_block := il_label_factory.new_label

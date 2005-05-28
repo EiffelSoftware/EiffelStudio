@@ -806,7 +806,7 @@ feature {NONE} -- Implementation
 			from
 				watched_items.start
 			until
-				watched_items.after
+				watched_items.after or Result /= Void
 			loop
 				Result := watched_items.item
 				if Result.expression /= expr then

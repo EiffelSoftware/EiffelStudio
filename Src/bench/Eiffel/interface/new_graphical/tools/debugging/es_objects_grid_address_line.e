@@ -99,7 +99,7 @@ feature -- Query
 			if last_dump_value = Void then
 				create last_dump_value.make_object (object_address, object_dynamic_class)
 			end
-			Result := last_dump_value.full_output
+			Result := last_dump_value.output_for_debugger
 		end
 
 	object_type_representation: STRING is

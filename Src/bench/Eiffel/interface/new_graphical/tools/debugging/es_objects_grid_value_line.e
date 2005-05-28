@@ -135,7 +135,7 @@ feature -- Graphical changes
 					set_name (dv.name)
 					set_type (last_dump_value.generating_type_representation)
 					set_address (dv.address)
-					set_value (last_dump_value.debug_output)
+					set_value (last_dump_value.output_for_debugger)
 					set_pixmap (Icons @ (dv.kind))
 
 					if dv.expandable then

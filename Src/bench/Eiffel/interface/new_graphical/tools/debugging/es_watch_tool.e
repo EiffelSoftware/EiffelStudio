@@ -201,10 +201,6 @@ feature -- Properties setting
 
 	hexadecimal_mode_enabled: BOOLEAN
 
---	set_hexadecimal_mode (v: BOOLEAN) is
---		do
---			hexadecimal_mode_enabled := v
---		end
 	set_hexadecimal_mode (v: BOOLEAN) is
 		local
 			i: INTEGER

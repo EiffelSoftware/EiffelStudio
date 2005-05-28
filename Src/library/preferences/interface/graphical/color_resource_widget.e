@@ -50,6 +50,8 @@ feature -- Access
 	resource: COLOR_PREFERENCE
 			-- Actual resource.
 
+	last_selected_value: EV_COLOR
+
 feature {PREFERENCE_VIEW} -- Commands
 
 	change is
@@ -134,7 +136,5 @@ feature {NONE} -- Implementation
 
 	change_b: EV_BUTTON
 			-- Button labeled "Change" to popup EV_COLOR_DIALOG.
-
-	last_selected_value: EV_COLOR
 
 end -- class COLOR_PREFERENCE_WIDGET

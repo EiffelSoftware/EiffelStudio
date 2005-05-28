@@ -165,7 +165,7 @@ fixme ("find a smarter way to get a valid value")
 		require
 			last_dump_value /= Void
 		do
-			Result := last_dump_value.full_output
+			Result := last_dump_value.output_for_debugger
 		end
 
 	object_type_representation: STRING is

@@ -469,7 +469,7 @@ feature -- Status report
 			end
 		end
 		
-	debug_output: STRING is
+	output_for_debugger: STRING is
 			-- Displayed output, including string representation.
 			--| but remove address value
 		do

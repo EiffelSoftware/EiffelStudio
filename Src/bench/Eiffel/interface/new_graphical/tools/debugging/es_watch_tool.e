@@ -109,6 +109,11 @@ feature {NONE} -- Initialization
 			tbb := toggle_state_of_expression_cmd.new_mini_toolbar_item
 			mini_toolbar.extend (tbb)
 
+			create hex_format_cmd.make (agent set_hexadecimal_mode (?))
+			hex_format_cmd.enable_sensitive
+			mini_toolbar.extend (hex_format_cmd.new_mini_toolbar_item)
+			
+
 			create delete_expression_cmd.make
 			delete_expression_cmd.set_mini_pixmaps (pixmaps.icon_delete_very_small)
 			delete_expression_cmd.set_tooltip (interface_names.e_remove_expressions)
@@ -196,10 +201,35 @@ feature -- Properties setting
 
 	hexadecimal_mode_enabled: BOOLEAN
 
+--	set_hexadecimal_mode (v: BOOLEAN) is
+--		do
+--			hexadecimal_mode_enabled := v
+--		end
 	set_hexadecimal_mode (v: BOOLEAN) is
+		local
+			i: INTEGER
 		do
 			hexadecimal_mode_enabled := v
+				--| update : Stack objects grid
+			from
+				i := 1
+			until
+				i > watches_grid.row_count
+			loop
+				propagate_hexadecimal_mode (watches_grid.row (i))
+				i := i + 1
+			end
 		end
+
+	propagate_hexadecimal_mode (t: EV_GRID_ROW) is
+		local
+			l_eb_t: ES_OBJECTS_GRID_LINE
+		do
+			l_eb_t ?= t.data
+			if l_eb_t /= Void then
+				l_eb_t.update_value
+			end
+		end		
 
 feature {ES_OBJECTS_GRID_SLICES_CMD} -- Query
 
@@ -646,6 +676,8 @@ feature {NONE} -- Event handling
 		end
 
 feature {NONE} -- Implementation: internal data
+
+	hex_format_cmd: EB_HEX_FORMAT_CMD
 
 	delete_expression_cmd: EB_STANDARD_CMD
 			-- Command that deletes one or more rows from the list of expressions.

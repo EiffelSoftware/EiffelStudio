@@ -81,6 +81,15 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := project_toolbar_layout_preference.value
 		end
 
+	use_grid_debugging_tools: BOOLEAN is
+			-- Use the news debugging tools with GRID ?
+		do
+			-- FIXME JFIAT: remove this preference when the new grid-tools
+			-- will replaced the previous tree-tools
+			Result := use_grid_debugging_tools_preference.value
+		end
+		
+
 feature -- Preference
 
 	stack_element_width_preference: INTEGER_PREFERENCE
@@ -91,6 +100,7 @@ feature -- Preference
 	show_all_text_in_project_toolbar_preference: BOOLEAN_PREFERENCE
 	project_toolbar_layout_preference: ARRAY_PREFERENCE
 	dotnet_debugger_preference: ARRAY_PREFERENCE
+	use_grid_debugging_tools_preference: BOOLEAN_PREFERENCE	
 
 feature -- Toolbar Convenience
 
@@ -126,7 +136,8 @@ feature {NONE} -- Preference Strings
 	default_expanded_view_size_string: STRING is "debugger.default_expanded_view_size"
 	stack_element_width_string: STRING is "debugger.stack_element_width"
 	default_maximum_stack_depth_string: STRING is "debugger.default_maximum_stack_depth"
-	dotnet_debugger_String: STRING is "debugger.dotnet_debugger"
+	dotnet_debugger_string: STRING is "debugger.dotnet_debugger"
+	use_grid_debugging_tools_string: STRING is "debugger.use_grid_dbg_tools"
 
 feature {NONE} -- Implementation
 
@@ -145,6 +156,7 @@ feature {NONE} -- Implementation
 			show_all_text_in_project_toolbar_preference := l_manager.new_boolean_resource_value (l_manager, show_all_text_in_project_toolbar_string, True)				
 			project_toolbar_layout_preference := l_manager.new_array_resource_value (l_manager, project_toolbar_layout_string, <<"Clear_bkpt__visible">>)
 			dotnet_debugger_preference := l_manager.new_array_resource_value (l_manager, dotnet_debugger_string, <<"EiffelStudio Dbg", "cordbg", "DbgCLR">>)
+			use_grid_debugging_tools_preference := l_manager.new_boolean_resource_value (l_manager, use_grid_debugging_tools_string, False)				
 		end
 	
 	preferences: PREFERENCES
@@ -159,5 +171,6 @@ invariant
 	show_text_in_project_toolbar_preference_not_void: show_text_in_project_toolbar_preference /= Void
 	show_all_text_in_project_toolbar_preference_not_void: show_all_text_in_project_toolbar_preference /= Void	
 	project_toolbar_layout_preference_not_void: project_toolbar_layout_preference /= Void
+	use_grid_debugging_tools_preference_not_void: use_grid_debugging_tools_preference /= Void	
 
 end -- class EB_DEBUGGER_DATA

@@ -36,8 +36,13 @@ feature {NONE} -- Initialization
 	make is
 			-- Initialize `Current'.
 		do
-			new_debugging_tool_enabled := False
-			object_tool_enabled := True
+			if preferences.debugger_data.use_grid_debugging_tools then
+				new_debugging_tool_enabled := True
+				object_tool_enabled := False
+			else
+				new_debugging_tool_enabled := False
+				object_tool_enabled := True
+			end
 
 			debug ("_use_new_dbg_tools_")
 				new_debugging_tool_enabled := True

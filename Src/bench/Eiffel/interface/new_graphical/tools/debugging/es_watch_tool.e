@@ -402,13 +402,16 @@ feature {NONE} -- Event handling
 	edit_expression is
 			-- Edit a selected expression.
 		local
+			rows: ARRAYED_LIST [EV_GRID_ROW]
 			sel: EV_GRID_ROW
 			expr: EB_EXPRESSION
 			dlg: EB_EXPRESSION_DEFINITION_DIALOG
-			l_item: like watched_item_from		
+			l_item: like watched_item_from
 		do
-			sel := watches_grid.selected_rows.first
-			if sel /= Void then
+			rows := watches_grid.selected_rows
+			if not rows.is_empty then
+				sel := rows.first
+
 				l_item := watched_item_from (sel)
 				expr := l_item.expression
 				check expr /= Void end
@@ -421,23 +424,23 @@ feature {NONE} -- Event handling
 	toggle_state_of_selected is
 			-- Toggle state of the selected expressions from the list.
 		local
-			sel: LIST [EV_GRID_ROW]
+			rows: LIST [EV_GRID_ROW]
 			l_expr: EB_EXPRESSION
 			sel_index: INTEGER
 --			litem: ES_OBJECTS_GRID_ITEM
 			l_item: like watched_item_from
 		do
-			sel := watches_grid.selected_rows
-			if not sel.is_empty then
-				sel_index := sel.first.index
+			rows := watches_grid.selected_rows
+			if not rows.is_empty then
+				sel_index := rows.first.index
 			end
 			from
-				sel.start
+				rows.start
 			until
-				sel.after
+				rows.after
 			loop
-				if sel.item.parent_row = Void then
-					l_item := watched_item_from (sel.item)
+				if rows.item.parent_row = Void then
+					l_item := watched_item_from (rows.item)
 					if l_item = Void then
 						check False end
 					else
@@ -450,9 +453,9 @@ feature {NONE} -- Event handling
 						refresh_watched_item (l_item)
 					end
 				end
-				sel.forth
+				rows.forth
 			end
-			if not sel.is_empty then
+			if not rows.is_empty then
 				if watches_grid.row_count >= sel_index then
 					watches_grid.row (sel_index).enable_select
 				else
@@ -473,7 +476,7 @@ feature {NONE} -- Event handling
 			if not move_processing then
 				move_processing := True --| To avoid concurrent move
 				sel_rows := grid.selected_rows
-				if sel_rows /= Void and then not sel_rows.is_empty then
+				if not sel_rows.is_empty then
 					sel := sel_rows.first
 					if sel.parent_row = Void then
 						sel_index := sel.index
@@ -499,27 +502,27 @@ feature {NONE} -- Event handling
 	remove_selected is
 			-- Remove the selected expressions from the list.
 		local
-			sel: LIST [EV_GRID_ROW]
+			rows: LIST [EV_GRID_ROW]
 			sel_index: INTEGER
 			l_item: like watched_item_from
 		do
-			sel := watches_grid.selected_rows
-			if not sel.is_empty then
-				sel_index := sel.first.index
+			rows := watches_grid.selected_rows
+			if not rows.is_empty then
+				sel_index := rows.first.index
 			end
 			from
-				sel.start
+				rows.start
 			until
-				sel.after
+				rows.after
 			loop
-				if sel.item.parent_row = Void then
-					l_item ?= watched_item_from (sel.item)
+				if rows.item.parent_row = Void then
+					l_item ?= watched_item_from (rows.item)
 					watched_items.prune_all (l_item)
-					watches_grid.remove_row (sel.item.index)
+					watches_grid.remove_row (rows.item.index)
 				end
-				sel.forth
+				rows.forth
 			end
-			if not sel.is_empty then
+			if not rows.is_empty then
 				if watches_grid.row_count >= sel_index then
 					watches_grid.row (sel_index).enable_select
 				else

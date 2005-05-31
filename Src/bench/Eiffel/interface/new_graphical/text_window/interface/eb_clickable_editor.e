@@ -518,7 +518,7 @@ feature {EB_CLICKABLE_MARGIN} -- Pick and drop
 		do
 			if not (ctrled_key or else mouse_copy_cut) then
 				if not text_displayed.is_empty then					
-					x_pos := x_pos_with_margin - left_margin_width + offset
+					x_pos := x_pos_with_margin - left_margin_width
 					y_pos := abs_y_pos - editor_viewport.y_offset
 
 						-- Compute the line number pointed by the mouse cursor
@@ -550,7 +550,7 @@ feature {EB_CLICKABLE_MARGIN} -- Pick and drop
 								text_displayed.enable_selection
 								old_offset := offset
 								check_cursor_position
-								editor_drawing_area.set_pebble_position (token_pos + left_margin_width - offset, (l_number - first_line_displayed)*line_height + line_height//2 + editor_viewport.y_offset)
+								editor_drawing_area.set_pebble_position (token_pos + left_margin_width, (l_number - first_line_displayed)*line_height + line_height//2 + editor_viewport.y_offset)
 								if Result.stone_cursor /= Void then
 									editor_drawing_area.set_accept_cursor (Result.stone_cursor)
 								end

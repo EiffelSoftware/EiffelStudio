@@ -99,7 +99,7 @@ create
 %type <ELSIF_AS>			Elseif_part
 %type <ENSURE_AS>			Postcondition
 %type <EXPORT_ITEM_AS>		New_export_item
-%type <EXPR_AS>				Expression Factor Simple_factor Typed_expression
+%type <EXPR_AS>				Bracket_target Expression Factor Typed_expression
 %type <EXTERNAL_AS>			External
 %type <EXTERNAL_LANG_AS>	External_language
 %type <FEATURE_AS>			Feature_declaration
@@ -171,7 +171,7 @@ create
 
 %type <PAIR [TYPE_AS, EIFFEL_LIST [FEATURE_NAME]]>	Constraint
 
-%expect 98
+%expect 99
 
 %%
 
@@ -1902,29 +1902,19 @@ Expression:
 			{ $$ := ast_factory.new_bin_free_as ($1, $2, $3) }
 	;
 
-Factor:
-		Expression_constant
-			{ $$ := $1 }
-	|	Simple_factor
-			{ $$ := $1}
-	;
-
-Simple_factor:	TE_VOID
+Factor: TE_VOID
 			{ $$ := $1 }
 	|	Manifest_array
 			{ $$ := $1 }
-	|	Manifest_tuple
+	|	Bracket_target
 			{ $$ := $1 }
-	|	Expression_feature_call
-			{ $$ := ast_factory.new_expr_call_as ($1) }
+	|	Bracket_target TE_LSQURE { add_counter } Expression_list TE_RSQURE
+			{
+				$$ := ast_factory.new_bracket_as ($1, $4)
+				remove_counter
+			}
 	|	Agent_call
 			{ $$ := $1 }
-	|	New_call_on_static
-			{ $$ := ast_factory.new_expr_call_as ($1) }
-	|	New_a_static_call
-			{ $$ := ast_factory.new_expr_call_as ($1) }
-	|	TE_LPARAN Expression TE_RPARAN
-			{ $$ := ast_factory.new_paran_as ($2) }
 	|	TE_MINUS Factor
 			{ $$ := ast_factory.new_un_minus_as ($2) }
 	|	TE_PLUS Factor
@@ -2098,6 +2088,21 @@ A_feature: Feature_name_for_call Parameters
 
 Feature_access: Feature_name_for_call Parameters
 			{ $$ := ast_factory.new_access_feat_as ($1, $2) }
+	;
+
+Bracket_target:
+		Expression_constant
+			{ $$ := $1 }
+	|	Manifest_tuple
+			{ $$ := $1 }
+	|	Expression_feature_call
+			{ $$ := ast_factory.new_expr_call_as ($1) }
+	|	New_call_on_static
+			{ $$ := ast_factory.new_expr_call_as ($1) }
+	|	New_a_static_call
+			{ $$ := ast_factory.new_expr_call_as ($1) }
+	|	TE_LPARAN Expression TE_RPARAN
+			{ $$ := ast_factory.new_paran_as ($2) }
 	;
 
 Parameters: -- Empty

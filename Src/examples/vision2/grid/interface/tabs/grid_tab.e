@@ -267,6 +267,27 @@ feature {NONE} -- Implementation
 			end
 		end
 		
+	reset_grid is
+			-- Reset grid from one test to another.
+		do
+			grid.wipe_out
+			grid.resize_actions.wipe_out
+			grid.enable_row_height_fixed
+			grid.set_row_height (16)
+			if ball_animation_timer /= Void then
+				ball_animation_timer.destroy
+				ball_animation_timer := Void
+			end
+			if animation_timer /= Void then
+				animation_timer.destroy
+				animation_timer := Void
+			end
+			if redraw_timer /= Void then
+				redraw_timer.destroy
+				redraw_timer := Void
+			end
+		end
+		
 		
 	misc_button_selected is
 			-- Called by `select_actions' of `misc_button'.
@@ -285,6 +306,7 @@ feature {NONE} -- Implementation
 				start_profiling
 			end
 			create time1.make_now
+			reset_grid
 			add_items (5, 400)
 			grid.column (1).set_title ("One")
 			grid.column (2).set_title ("Two")
@@ -535,7 +557,7 @@ feature {NONE} -- Implementation
 			grid.column (4).set_pixmap (image4)
 			grid.column (5).set_pixmap (image5)
 		end
-		
+
 	build_ball_demo_button_selected is
 			-- Called by `select_actions' of `build_ball_demo_button'.
 		local
@@ -546,6 +568,7 @@ feature {NONE} -- Implementation
 			grid_drawable_item: EV_GRID_DRAWABLE_ITEM
 			grid_editable_item: EV_GRID_EDITABLE_ITEM
 		do
+			reset_grid
 			balls := 10
 			grid.enable_tree
 			grid.enable_multiple_item_selection
@@ -1136,7 +1159,9 @@ feature {NONE} -- Implementation
 			r, row: EV_GRID_ROW
 			grid_label_item: EV_GRID_LABEL_ITEM
 			counter: INTEGER
+			i: INTEGER
 		do
+			reset_grid
 --			l_item := grid.item_at_virtual_position (200, 16)
 --			misc_button_selected
 --			grid.column (3).set_width (200)
@@ -1367,18 +1392,71 @@ feature {NONE} -- Implementation
 --			grid.item (1, 1).pointer_button_press_actions.force_extend (agent wipe_out_row)
 
 			-- Test 21
-			grid.enable_tree
-			grid.set_item (1, 1, create {EV_GRID_LABEL_ITEM}.make_with_text ("item 1"))
-			grid.set_item (1, 2, create {EV_GRID_LABEL_ITEM}.make_with_text ("item 2"))
-			grid.set_item (1, 3, create {EV_GRID_LABEL_ITEM}.make_with_text ("item 2.1"))
-			grid.set_item (1, 4, create {EV_GRID_LABEL_ITEM}.make_with_text ("item 2.1.1"))
-			grid.set_item (1, 5, create {EV_GRID_LABEL_ITEM}.make_with_text ("item 2.1.2"))
-			grid.set_item (1, 6, create {EV_GRID_LABEL_ITEM}.make_with_text ("item 2.2"))
-			grid.row (2).add_subrow (grid.row (3))
-			grid.row (3).add_subrow (grid.row (4))
-			grid.row (3).add_subrow (grid.row (5))
-			grid.row (2).add_subrow (grid.row (6))
-			grid.row (2).remove_subrow (grid.row (6))
+--			grid.enable_tree
+--			grid.set_item (1, 1, create {EV_GRID_LABEL_ITEM}.make_with_text ("item 1"))
+--			grid.set_item (1, 2, create {EV_GRID_LABEL_ITEM}.make_with_text ("item 2"))
+--			grid.set_item (1, 3, create {EV_GRID_LABEL_ITEM}.make_with_text ("item 2.1"))
+--			grid.set_item (1, 4, create {EV_GRID_LABEL_ITEM}.make_with_text ("item 2.1.1"))
+--			grid.set_item (1, 5, create {EV_GRID_LABEL_ITEM}.make_with_text ("item 2.1.2"))
+--			grid.set_item (1, 6, create {EV_GRID_LABEL_ITEM}.make_with_text ("item 2.2"))
+--			grid.row (2).add_subrow (grid.row (3))
+--			grid.row (3).add_subrow (grid.row (4))
+--			grid.row (3).add_subrow (grid.row (5))
+--			grid.row (2).add_subrow (grid.row (6))
+--			grid.row (2).remove_subrow (grid.row (6))
+
+
+
+--			grid.enable_tree
+--			grid.enable_partial_dynamic_content
+--			grid.set_dynamic_content_function (agent display)
+----			create ordering.make_empty
+--			grid.set_row_count_to (10)
+--			grid.set_column_count_to (10)
+--
+--			set_titles(titles)
+--			from i := 1 until i > 10 loop
+--			--	grid.row(i).set_data(rows.item(i))
+--				grid.row(i).ensure_expandable
+----				ordering.extend(i)
+--				i := i + 1
+--			end
+
+--			grid.enable_tree
+--		--	grid.set_item (1, 1, create {EV_GRID_LABEL_ITEM}.make_with_text ("item 1"))
+--			grid.set_item (1, 2, create {EV_GRID_LABEL_ITEM}.make_with_text ("item 2"))
+--			grid.row (1).add_subrow (grid.row (2))
+--		--	grid.row (1).clear
+
+
+			grid.clear
+		end
+
+	display (an_x, a_y: INTEGER): EV_GRID_ITEM is
+			--
+		do
+			create {EV_GRID_LABEL_ITEM} Result.make_with_text ("An item")
+			grid.row (a_y).ensure_expandable
+		end
+
+
+	titles: ARRAY [STRING] is
+		once
+			Result := <<"ONE", "TWO", "THREE">>
+		end
+		
+	set_titles (a_titles : ARRAY[STRING]) is
+		local
+			i : INTEGER
+		do
+		--	titles := a_titles
+			from i := a_titles.lower until i > a_titles.upper loop
+				if i > grid.column_count then
+					grid.insert_new_column(i)
+				end
+				grid.column(i).set_title(a_titles.item(i))
+				i := i + 1
+			end
 		end
 
 	expand is
@@ -1740,6 +1818,8 @@ feature {NONE} -- Implementation
 			pixmaps: ARRAYED_LIST [EV_PIXMAP]
 			stock_pixmaps: EV_STOCK_PIXMAPS
 		do
+			reset_grid
+			grid.enable_row_height_fixed
 			create pixmaps.make (4)
 			create stock_pixmaps
 			pixmaps.extend (stock_pixmaps.error_pixmap.twin)
@@ -1861,6 +1941,7 @@ feature {NONE} -- Implementation
 		local
 			i: INTEGER
 		do
+			reset_grid
 			grid.enable_tree
 			add_items (5, 100)--500)
 			grid.column (1).set_background_color (light_blue)
@@ -2010,6 +2091,12 @@ feature {NONE} -- Implementation
 			if a_color /= Void then
 				grid.set_separator_color (a_color)
 			end
+		end
+		
+	clear_items_button_selected is
+			-- Called by `select_actions' of `clear_items_button'.
+		do
+			grid.clear
 		end
 		
 end -- class GRID_TAB

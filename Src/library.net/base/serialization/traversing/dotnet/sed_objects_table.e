@@ -26,38 +26,30 @@ feature {NONE} -- Initialization
 
 feature -- Lookup
 
-	search (an_obj: ANY) is
-			-- Search for item of key `an_obj'.
-			-- If found, set `found' to true, and set
-			-- `found_item' to item associated with `an_obj'.
+	index (an_obj: ANY): NATURAL_32 is
+			-- Index of `an_obj' in Current		
 		local
 			l_obj: SYSTEM_OBJECT
+			l_table: like table
 		do
-			l_obj := table.item (an_obj)
+			l_table := table
+			l_obj := l_table.item (an_obj)
 			if l_obj /= Void then
-				found := True
-				found_item ?= l_obj
+				Result ?= l_obj
 			else
-				found := False
+				Result := last_index + 1
+				last_index := Result
+				l_table.add (an_obj, Result)
 			end
 		end
 
 feature -- Status report
 
-	has (an_obj: ANY): BOOLEAN is
-			-- Does current have `an_obj'?
+	capacity: INTEGER is
+			-- Default capacity of current.
 		do
-			Result := table.contains (an_obj)
-		end
-	
-feature -- Element change
-
-	put (an_obj: ANY) is
-			-- Insert `an_obj' in Current.
-		do
-			last_index := last_index + 1
-			found_item := last_index
-			table.add (an_obj, last_index)
+				-- No way to get the capacity on .NET, so we return `count'.
+			Result := table.count
 		end
 
 feature -- Removal

@@ -2420,7 +2420,7 @@ feature -- Implementation
 					l_binary := byte_anchor.binary_node (l_as)
 					l_binary.set_left (l_left_expr)
 					l_binary.set_right (l_right_expr)
-					l_call_access ?= last_infix_feature.access (l_infix_type.type_i) 
+					l_call_access ?= last_infix_feature.access (l_infix_type.type_i)
 					l_binary.init (l_call_access)
 						-- Add type to `parameters' in case we will need it later.
 					l_binary.set_attachment (last_infix_arg_type.type_i)
@@ -2433,7 +2433,7 @@ feature -- Implementation
 			last_infix_arg_type := Void
 			last_infix_argument_conversion_info := Void
 		end
-	
+
 	process_bin_and_then_as (l_as: BIN_AND_THEN_AS) is
 		do
 			process_binary_as (l_as)
@@ -2612,6 +2612,56 @@ feature -- Implementation
 	process_bin_ne_as (l_as: BIN_NE_AS) is
 		do
 			process_bin_eq_as (l_as)
+		end
+
+	process_bracket_as (l_as: BRACKET_AS) is
+		local
+			target_type: TYPE_A
+			constrained_target_type: TYPE_A
+			target_expr: EXPR_B
+			target_class: CLASS_C
+			bracket_feature: FEATURE_I
+			id_feature_name: ID_AS
+			location: LOCATION_AS
+			vuex: VUEX
+			vwbr: VWBR
+		do
+				-- Check target
+			l_as.target.process (Current)
+			target_type := last_type.actual_type
+			constrained_target_type := constrained_type (target_type)
+			if is_byte_node_enabled then
+				target_expr ?= last_byte_node
+			end
+
+				-- Check if target is not of type NONE
+			if constrained_target_type.is_none then
+				create vuex.make_for_none ("[]")
+				context.init_error (vuex)
+				vuex.set_location (l_as.left_bracket_location)
+				error_handler.insert_error (vuex)
+				error_handler.raise_error
+			end
+
+				-- Check if bracket feature exists
+			target_class := constrained_target_type.associated_class
+			bracket_feature := target_class.feature_table.alias_item ("[]")
+			if bracket_feature = Void then
+					-- Feature with bracket alias is not found
+				create {VWBR1} vwbr
+				context.init_error (vwbr)
+				vwbr.set_location (l_as.left_bracket_location)
+				vwbr.set_target_class (target_class)
+				error_handler.insert_error (vwbr)
+				error_handler.raise_error
+			end
+
+				-- Process arguments
+			create id_feature_name.initialize (bracket_feature.feature_name)
+			location := l_as.left_bracket_location
+			id_feature_name.set_position (location.line, location.column, location.position, location.location_count)
+			process_call (last_type, Void, id_feature_name, bracket_feature, l_as.operands, False, False, True, False)
+			error_handler.checksum
 		end
 
 	process_external_lang_as (l_as: EXTERNAL_LANG_AS) is

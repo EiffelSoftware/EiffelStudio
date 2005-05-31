@@ -239,7 +239,7 @@ feature -- Concrete evaluation
 				last_result_static_type := f.type.actual_type.associated_class
 				if dv = Void then
 					if f.name.is_equal ("Void") then
-						create last_result_value.make_object (Void, Void)
+						create last_result_value.make_void
 					else
 						set_error_evaluation ("Could not find attribute value for " + f.name)
 					end

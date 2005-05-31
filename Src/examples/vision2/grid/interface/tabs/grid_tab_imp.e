@@ -45,6 +45,7 @@ feature {NONE}-- Initialization
 			create l_ev_table_2
 			create remove_all_rows_button
 			create remove_all_columns_button
+			create clear_items_button
 			create display_frame
 			create l_ev_vertical_box_3
 			create l_ev_table_3
@@ -196,14 +197,16 @@ feature {NONE}-- Initialization
 			build_ball_demo_button.set_text ("Build Ball Demo")
 			removal_frame.set_text ("Removal")
 			l_ev_vertical_box_2.set_border_width (box_padding)
-			l_ev_table_2.resize (2, 1)
+			l_ev_table_2.resize (2, 2)
 			l_ev_table_2.set_row_spacing (box_padding)
 			l_ev_table_2.set_column_spacing (box_padding)
 				-- Insert and position all children of `l_ev_table_2'.
 			l_ev_table_2.put_at_position (remove_all_rows_button, 1, 1, 1, 1)
 			l_ev_table_2.put_at_position (remove_all_columns_button, 2, 1, 1, 1)
+			l_ev_table_2.put_at_position (clear_items_button, 1, 2, 1, 1)
 			remove_all_rows_button.set_text ("Remove All Rows")
 			remove_all_columns_button.set_text ("Remove All Columns")
+			clear_items_button.set_text ("Clear Grid")
 			display_frame.set_text ("Display Properties")
 			l_ev_vertical_box_3.disable_item_expand (l_ev_table_3)
 			l_ev_table_3.resize (2, 4)
@@ -337,6 +340,7 @@ feature {NONE}-- Initialization
 			build_ball_demo_button.select_actions.extend (agent build_ball_demo_button_selected)
 			remove_all_rows_button.select_actions.extend (agent remove_all_row_button_selected)
 			remove_all_columns_button.select_actions.extend (agent remove_all_columns_button_selected)
+			clear_items_button.select_actions.extend (agent clear_items_button_selected)
 			is_column_resize_immediate_button.select_actions.extend (agent is_column_resize_immediate_button_selected)
 			is_header_displayed_button.select_actions.extend (agent is_header_displayed_button_selected)
 			is_row_height_fixed.select_actions.extend (agent is_row_height_fixed_selected)
@@ -377,40 +381,40 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	fixed_row_height_spin_button, resize_columns_to_entry, resize_rows_to_entry, subrow_indent_button: EV_SPIN_BUTTON
+	foreground_color_combo, background_color_combo, separator_color_combo, subnode_pixmaps_combo,
+	set_background_color_combo: EV_COMBO_BOX
+	fixed_row_height_spin_button, resize_columns_to_entry,
+	resize_rows_to_entry, subrow_indent_button: EV_SPIN_BUTTON
+	new_label_button, misc_button, custom_button,
+	icon_view_button, colored_button, build_ball_demo_button, remove_all_rows_button,
+	remove_all_columns_button, clear_items_button, set_selected_row_as_subnode_button,
+	expand_all_button, collapse_all_button: EV_BUTTON
+	is_vertical_divider_dashed_button, is_vertical_divider_solid_button,
+	set_background_of_selection_button, set_tree_node_connector_button: EV_RADIO_BUTTON
+	resize_rows_columns_box: EV_HORIZONTAL_BOX
 	is_column_resize_immediate_button,
 	is_header_displayed_button, is_row_height_fixed, are_row_separators_enabled_button,
 	are_column_separators_enabled_button, is_vertical_divider_displayed_button, is_horizontal_scrolling_per_item,
 	is_vertical_scrolling_per_item, is_partially_dynamic, is_completely_dynamic, resize_columns_to_button,
 	resize_rows_to_button, is_tree_enabled_button, tree_lines_enabled, draw_tree_check_button,
 	columns_drawn_above_rows_button, enable_pick_and_drop_button: EV_CHECK_BUTTON
-	is_vertical_divider_dashed_button,
-	is_vertical_divider_solid_button, set_background_of_selection_button, set_tree_node_connector_button: EV_RADIO_BUTTON
-	foreground_color_combo,
-	background_color_combo, separator_color_combo, subnode_pixmaps_combo, set_background_color_combo: EV_COMBO_BOX
-	resize_rows_columns_box: EV_HORIZONTAL_BOX
-	new_label_button,
-	misc_button, custom_button, icon_view_button, colored_button, build_ball_demo_button,
-	remove_all_rows_button, remove_all_columns_button, set_selected_row_as_subnode_button,
-	expand_all_button, collapse_all_button: EV_BUTTON
-	addition_frame, removal_frame, display_frame,
-	divider_frame, scrolling_frame: EV_FRAME
+	addition_frame, removal_frame,
+	display_frame, divider_frame, scrolling_frame: EV_FRAME
 
 feature {NONE} -- Implementation
 
+	l_ev_table_1, l_ev_table_2, l_ev_table_3: EV_TABLE
 	l_ev_notebook_1: EV_NOTEBOOK
-	l_ev_frame_1, l_ev_frame_2: EV_FRAME
-	l_ev_vertical_box_1, l_ev_vertical_box_2,
-	l_ev_vertical_box_3, l_ev_vertical_box_4, l_ev_vertical_box_5, l_ev_vertical_box_6,
-	l_ev_vertical_box_7, l_ev_vertical_box_8, l_ev_vertical_box_9, l_ev_vertical_box_10,
-	l_ev_vertical_box_11: EV_VERTICAL_BOX
-	l_ev_horizontal_box_1, l_ev_horizontal_box_2, l_ev_horizontal_box_3,
-	l_ev_horizontal_box_4, l_ev_horizontal_box_5, l_ev_horizontal_box_6, l_ev_horizontal_box_7,
-	l_ev_horizontal_box_8, l_ev_horizontal_box_9, l_ev_horizontal_box_10: EV_HORIZONTAL_BOX
+	l_ev_horizontal_box_1,
+	l_ev_horizontal_box_2, l_ev_horizontal_box_3, l_ev_horizontal_box_4, l_ev_horizontal_box_5,
+	l_ev_horizontal_box_6, l_ev_horizontal_box_7, l_ev_horizontal_box_8, l_ev_horizontal_box_9,
+	l_ev_horizontal_box_10: EV_HORIZONTAL_BOX
+	l_ev_vertical_box_1, l_ev_vertical_box_2, l_ev_vertical_box_3,
+	l_ev_vertical_box_4, l_ev_vertical_box_5, l_ev_vertical_box_6, l_ev_vertical_box_7,
+	l_ev_vertical_box_8, l_ev_vertical_box_9, l_ev_vertical_box_10, l_ev_vertical_box_11: EV_VERTICAL_BOX
 	l_ev_label_1,
 	l_ev_label_2, l_ev_label_3, l_ev_label_4, l_ev_label_5: EV_LABEL
-	l_ev_table_1, l_ev_table_2,
-	l_ev_table_3: EV_TABLE
+	l_ev_frame_1, l_ev_frame_2: EV_FRAME
 
 feature {NONE} -- Implementation
 
@@ -464,6 +468,11 @@ feature {NONE} -- Implementation
 	
 	remove_all_columns_button_selected is
 			-- Called by `select_actions' of `remove_all_columns_button'.
+		deferred
+		end
+	
+	clear_items_button_selected is
+			-- Called by `select_actions' of `clear_items_button'.
 		deferred
 		end
 	

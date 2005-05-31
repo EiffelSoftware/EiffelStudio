@@ -885,21 +885,7 @@ feature {NONE} -- Implementation
 
 	process_un_not_as (l_as: UN_NOT_AS) is
 		do
-			if is_simple_formatting then
-				ctxt.put_text_item (ti_not_keyword)
-				ctxt.put_space
-				l_as.expr.process (Current)
-			else
-				ctxt.begin
-				ctxt.put_text_item (ti_not_keyword)
-				ctxt.put_space
-				l_as.expr.process (Current)
-				if ctxt.last_was_printed then
-					ctxt.commit
-				else
-					ctxt.rollback
-				end				
-			end
+			process_unary_as (l_as)
 		end
 
 	process_un_old_as (l_as: UN_OLD_AS) is
@@ -952,7 +938,7 @@ feature {NONE} -- Implementation
 
 	process_bin_and_then_as (l_as: BIN_AND_THEN_AS) is
 		do
-			format_keyword_binary (l_as, ti_and_then_keyword)
+			process_binary_as (l_as)
 		end
 
 	process_bin_free_as (l_as: BIN_FREE_AS) is
@@ -962,22 +948,22 @@ feature {NONE} -- Implementation
 
 	process_bin_implies_as (l_as: BIN_IMPLIES_AS) is
 		do
-			format_keyword_binary (l_as, ti_implies_keyword)
+			process_binary_as (l_as)
 		end
 
 	process_bin_or_as (l_as: BIN_OR_AS) is
 		do
-			format_keyword_binary (l_as, ti_or_keyword)
+			process_binary_as (l_as)
 		end
 
 	process_bin_or_else_as (l_as: BIN_OR_ELSE_AS) is
 		do
-			format_keyword_binary (l_as, ti_or_else_keyword)
+			process_binary_as (l_as)
 		end
 
 	process_bin_xor_as (l_as: BIN_XOR_AS) is
 		do
-			format_keyword_binary (l_as, ti_xor_keyword)
+			process_binary_as (l_as)
 		end
 
 	process_bin_ge_as (l_as: BIN_GE_AS) is
@@ -1037,7 +1023,7 @@ feature {NONE} -- Implementation
 
 	process_bin_and_as (l_as: BIN_AND_AS) is
 		do
-			format_keyword_binary (l_as, ti_and_keyword)
+			process_binary_as (l_as)
 		end
 
 	process_bin_eq_as (l_as: BIN_EQ_AS) is
@@ -1048,6 +1034,27 @@ feature {NONE} -- Implementation
 	process_bin_ne_as (l_as: BIN_NE_AS) is
 		do
 			process_binary_as (l_as)
+		end
+
+	process_bracket_as (l_as: BRACKET_AS) is
+		do
+			if not is_simple_formatting then
+				ctxt.begin
+			end
+			l_as.target.process (Current)
+			if not is_simple_formatting and then not ctxt.last_was_printed then
+				ctxt.rollback
+			else
+				ctxt.prepare_for_bracket (l_as.operands)
+				ctxt.put_current_feature
+				if not is_simple_formatting then
+					if ctxt.last_was_printed then
+						ctxt.commit
+					else
+						ctxt.rollback
+					end
+				end
+			end
 		end
 
 	process_external_lang_as (l_as: EXTERNAL_LANG_AS) is
@@ -2542,37 +2549,6 @@ feature {NONE} -- Implementation: helpers
 						ctxt.commit
 					else
 						ctxt.rollback
-					end
-				end
-			end
-		end
-
-	format_keyword_binary (l_as: BINARY_AS; a_keyword: KEYWORD_TEXT) is
-			-- Format `l_as' binary node using `a_keyword' as symbol.
-		require
-			l_as_not_void: l_as /= Void
-			a_keyword_not_void: a_keyword /= Void
-		do
-			if is_simple_formatting then
-				l_as.left.process (Current)
-				ctxt.put_space
-				ctxt.put_text_item (a_keyword)
-				ctxt.put_space
-				l_as.right.process (Current)
-			else
-				ctxt.begin
-				l_as.left.process (Current)
-				if not ctxt.last_was_printed then
-					ctxt.rollback
-				else
-					ctxt.put_space
-					ctxt.put_text_item (a_keyword)
-					ctxt.put_space
-					l_as.right.process (Current)
-					if not ctxt.last_was_printed then
-						ctxt.rollback
-					else
-						ctxt.commit
 					end
 				end
 			end

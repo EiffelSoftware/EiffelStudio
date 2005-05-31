@@ -107,19 +107,9 @@ feature -- Access
 
 	dump_value: DUMP_VALUE is
 			-- Dump_value corresponding to `Current'.
-		local
-			l_str: STRING
 		do
-			create l_str.make (40)
-			if address /= Void then
-				l_str.append (dynamic_class.name_in_upper)
-				l_str.append (Left_address_delim)
-				l_str.append (address)
-				l_str.append (Right_address_delim)
-			else
-				l_str.append (NONE_representation)
-			end
 			create Result.make_object (address, dynamic_class)
+			fixme ("jfiat: we should not create DUMP_VALUE as classic one, but dotnet")
 		end
 
 feature -- Output

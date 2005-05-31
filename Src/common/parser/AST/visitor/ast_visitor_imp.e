@@ -273,6 +273,10 @@ feature -- Implementation
 		do
 		end
 
+	process_bracket_as (l_as: BRACKET_AS) is
+		do
+		end
+
 	process_external_lang_as (l_as: EXTERNAL_LANG_AS) is
 		do
 		end

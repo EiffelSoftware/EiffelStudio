@@ -663,6 +663,13 @@ feature {AST_EIFFEL} -- Expressions visitors
 		deferred
 		end
 
+	process_bracket_as (l_as: BRACKET_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
 	process_operand_as (l_as: OPERAND_AS) is
 			-- Process `l_as'.
 		require

@@ -379,6 +379,12 @@ feature {NONE} -- Implementation
 			process_binary_as (l_as)
 		end
 
+	process_bracket_as (l_as: BRACKET_AS) is
+		do
+			l_as.target.process (Current)
+			l_as.operands.process (Current)
+		end
+
 	process_external_lang_as (l_as: EXTERNAL_LANG_AS) is
 		do
 				-- Nothing to be done

@@ -749,7 +749,6 @@ feature -- Status setting
 		require
 			not_destroyed: not is_destroyed
 			a_row_within_bounds: a_row > 0 and a_row <= row_count
-			column_displayed: column_displayed (a_row)
 		do
 			implementation.select_row (a_row)
 		ensure

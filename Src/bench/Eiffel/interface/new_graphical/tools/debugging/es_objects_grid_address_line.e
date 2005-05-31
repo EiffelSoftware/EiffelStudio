@@ -97,7 +97,7 @@ feature -- Query
 			-- Full ouput representation for related object
 		do
 			if last_dump_value = Void then
-				create last_dump_value.make_object (object_address, object_dynamic_class)
+				get_last_dump_value
 			end
 			Result := last_dump_value.output_for_debugger
 		end
@@ -106,9 +106,20 @@ feature -- Query
 			-- Full ouput representation for related object
 		do
 			if last_dump_value = Void then
-				create last_dump_value.make_object (object_address, object_dynamic_class)
+				get_last_dump_value			
 			end
 			Result := last_dump_value.generating_type_representation
+		end
+		
+	get_last_dump_value is
+		do
+			if Application.is_dotnet then
+				last_dump_value := associated_debug_value.dump_value
+			else
+				create last_dump_value.make_object (object_address, object_dynamic_class)
+			end
+		ensure
+			last_dump_value /= Void
 		end
 
 	associated_debug_value: ABSTRACT_DEBUG_VALUE is

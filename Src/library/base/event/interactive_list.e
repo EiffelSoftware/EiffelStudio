@@ -28,6 +28,8 @@ inherit
 			remove,
 			put_i_th,
 			append,
+			force,
+			extend,
 			make_from_array
 		end
 
@@ -74,6 +76,26 @@ feature -- Miscellaneous
 		end
 
 feature -- Element Change
+
+	extend (v: like item) is
+			-- Add `v' to end.
+			-- Do not move cursor.
+		do
+			in_operation := True
+			Precursor {ARRAYED_LIST} (v)
+			in_operation := False
+			added_item (v, count)
+		end
+		
+	force (v: like item) is
+			-- Add `v' to end.
+			-- Do not move cursor.
+		do
+			in_operation := True
+			Precursor {ARRAYED_LIST} (v)
+			in_operation := False
+			added_item (v, count)
+		end
 
 	put_front (v: like item) is
 			-- Add `v' to beginning.

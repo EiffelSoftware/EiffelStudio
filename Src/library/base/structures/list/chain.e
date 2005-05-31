@@ -123,11 +123,6 @@ feature -- Access
 			go_to (pos)
 		end
 
-	index: INTEGER is
-			-- Current cursor index
-		deferred
-		end
-
 feature -- Measurement
 
 	occurrences (v: like item): INTEGER is

@@ -1,0 +1,4 @@
+Error: no feature with bracket alias is found in target class of bracket
+  expression.
+What to do: use another feature of target class or ensure that it has a
+  feature with bracket alias.

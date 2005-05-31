@@ -302,6 +302,7 @@ feature {EV_FONTABLE_IMP, EV_FONT_DIALOG_IMP, EV_CHARACTER_FORMAT_IMP, EV_ENVIRO
 				Wel_log_font.pitch)
 			preferred_families.wipe_out
 			preferred_families.extend (Wel_log_font.face_name.twin)
+			internal_face_name := Wel_log_font.face_name.twin
 		end
 
 feature {EV_ANY_I} -- Implementation

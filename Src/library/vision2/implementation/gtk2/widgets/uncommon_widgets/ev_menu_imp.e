@@ -78,7 +78,7 @@ feature {NONE} -- Externals
 
 	frozen c_gtk_menu_popup (a_menu: POINTER; a_x, a_y: INTEGER) is
 		external
-			"C inline use %"ev_menu_imp.h%""
+			"C inline use %"ev_c_util.h%""
 		alias
 			"[
 				{

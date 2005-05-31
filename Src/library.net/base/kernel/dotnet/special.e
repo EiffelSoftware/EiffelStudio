@@ -13,7 +13,7 @@ frozen class
 	SPECIAL [T]
 	
 inherit
-	ANY
+	ABSTRACT_SPECIAL
 		redefine
 			is_equal,
 			copy

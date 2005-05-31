@@ -66,6 +66,7 @@ inherit
 		end
 
 create
+	make_void,
 	make_boolean, make_character, 
 	make_integer_32, make_integer_64,
 	make_natural_32, make_natural_64,
@@ -76,9 +77,25 @@ create
 	
 feature -- Initialization
 
+	init is
+			-- Common initialization
+		do
+			is_dotnet_system := Application.is_dotnet
+			is_dotnet_value := is_dotnet_system
+		end
+
+	make_void is
+		do
+			init
+			value_address := Void
+			type := Type_object
+			dynamic_class := Void
+		end
+
 	make_boolean(value: BOOLEAN; dtype: CLASS_C) is
 			-- make a boolean item initialized to `value'
 		do
+			init
 			value_boolean := value
 			type := Type_boolean
 			dynamic_class := dtype
@@ -89,6 +106,7 @@ feature -- Initialization
 	make_character(value: CHARACTER; dtype: CLASS_C) is
 			-- make a character item initialized to `value'
 		do
+			init
 			value_character := value
 			type := Type_character
 			dynamic_class := dtype
@@ -99,6 +117,7 @@ feature -- Initialization
 	make_integer_32 (value: INTEGER; dtype: CLASS_C) is
 			-- make a integer item initialized to `value'
 		do
+			init
 			value_integer_32 := value
 			type := Type_integer_32
 			dynamic_class := dtype
@@ -109,6 +128,7 @@ feature -- Initialization
 	make_integer_64 (value: INTEGER_64; dtype: CLASS_C) is
 			-- make a integer_64 item initialized to `value'
 		do
+			init
 			value_integer_64 := value
 			type := Type_integer_64
 			dynamic_class := dtype
@@ -119,6 +139,7 @@ feature -- Initialization
 	make_natural_32 (value: NATURAL_32; dtype: CLASS_C) is
 			-- make a integer item initialized to `value'
 		do
+			init
 			value_natural_32 := value
 			type := Type_natural_32
 			dynamic_class := dtype
@@ -129,6 +150,7 @@ feature -- Initialization
 	make_natural_64 (value: NATURAL_64; dtype: CLASS_C) is
 			-- make a integer_64 item initialized to `value'
 		do
+			init
 			value_natural_64 := value
 			type := Type_natural_64
 			dynamic_class := dtype
@@ -139,6 +161,7 @@ feature -- Initialization
 	make_real(value: REAL; dtype: CLASS_C) is
 			-- make a real item initialized to `value'
 		do
+			init
 			value_real := value
 			type := type_real_32
 			dynamic_class := dtype
@@ -149,6 +172,7 @@ feature -- Initialization
 	make_double(value: DOUBLE; dtype: CLASS_C) is
 			-- make a double item initialized to `value'
 		do
+			init
 			value_double := value
 			type := type_real_64
 			dynamic_class := dtype
@@ -159,6 +183,7 @@ feature -- Initialization
 	make_pointer(value: POINTER; dtype: CLASS_C) is
 			-- make a pointer item initialized to `value'
 		do
+			init
 			value_pointer := value
 			type := Type_pointer
 			dynamic_class := dtype
@@ -169,6 +194,7 @@ feature -- Initialization
 	make_object(value: STRING; dtype: CLASS_C) is
 			-- make a object item initialized to `value'
 		do
+			init
 			value_address := value
 			type := Type_object
 			dynamic_class := dtype
@@ -181,6 +207,7 @@ feature -- Initialization
 		require
 			dtype_not_void: dtype /= Void
 		do
+			init
 			value_address := Void
 			type := Type_expanded_object
 			dynamic_class := dtype
@@ -198,6 +225,7 @@ feature -- Initialization
 			a_type_not_void: a_type /= Void
 			dtype_not_void: dtype /= Void
 		do
+			init
 			value_bits := a_value
 			type_of_bits := a_type
 			type := Type_bits
@@ -212,6 +240,7 @@ feature -- Initialization
 	make_manifest_string(value: STRING; dtype: CLASS_C) is
 			-- make a string item initialized to `value'
 		do
+			init
 			value_string := value
 			type := Type_string
 			dynamic_class := dtype
@@ -226,6 +255,8 @@ feature -- Dotnet creation
 		require
 			arg_not_void: a_eifnet_dsv /= Void		
 		do
+			init
+			is_dotnet_value := True
 			eifnet_debug_value := a_eifnet_dsv
 			value_dotnet := eifnet_debug_value.icd_referenced_value
 
@@ -248,6 +279,7 @@ feature -- Dotnet creation
 		require
 			arg_not_void: a_eifnet_drv /= Void
 		do
+			init
 			is_dotnet_value := True
 			eifnet_debug_value := a_eifnet_drv
 			value_dotnet := eifnet_debug_value.icd_referenced_value
@@ -273,6 +305,14 @@ feature -- Dotnet creation
 		end
 
 feature -- Access 
+
+	is_dotnet_system: BOOLEAN
+			-- Is current related to a dotnet system ?
+
+	is_classic_system: BOOLEAN is
+		do
+			Result := not is_dotnet_value
+		end
 
 	is_dotnet_value: BOOLEAN
 			-- Is Current represent a typical dotnet value ?
@@ -530,6 +570,8 @@ feature {DUMP_VALUE} -- string_representation Implementation
 	classic_string_representation (min, max: INTEGER): STRING is
 			-- String representation for classic value
 			-- with bounds from `min' and `max'.
+		require
+			is_classic_system
 		local
 			f: E_FEATURE
 			l_attributes: DS_LIST [ABSTRACT_DEBUG_VALUE]
@@ -623,11 +665,13 @@ feature {DUMP_VALUE} -- string_representation Implementation
 	dotnet_string_representation (min, max: INTEGER): STRING is
 			-- String representation for dotnet value
 			-- with bounds from `min' and `max'.
+		require
+			is_dotnet_system
 		local
 			sc: CLASS_C
 			l_conform_to_string: BOOLEAN
 			l_eifnet_debugger: EIFNET_DEBUGGER
-			l_icdov: ICOR_DEBUG_OBJECT_VALUE			
+			l_icdov: ICOR_DEBUG_OBJECT_VALUE
 		do
 			sc := Eiffel_system.string_class.compiled_class
 			l_conform_to_string := dynamic_class /= Void and then dynamic_class /= sc and then dynamic_class.simple_conform_to (sc)
@@ -648,6 +692,8 @@ feature {DUMP_VALUE} -- string_representation Implementation
 
 	dotnet_debug_output_evaluated_string (a_dbg: EIFNET_DEBUGGER; min, max: INTEGER): STRING is
 			-- Evaluation of DEBUG_OUTPUT.debug_output: STRING on object related to Current
+		require
+			is_dotnet_system
 		local
 			l_icdov: ICOR_DEBUG_OBJECT_VALUE
 		do
@@ -659,6 +705,8 @@ feature {DUMP_VALUE} -- string_representation Implementation
 
 	classic_debug_output_evaluated_string (min, max: INTEGER): STRING is
 			-- Evaluation of DEBUG_OUTPUT.debug_output: STRING on object related to Current	
+		require
+			is_classic_system
 		local
 			l_final_result_value: DUMP_VALUE
 			l_feat: FEATURE_I

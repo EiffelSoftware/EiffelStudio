@@ -48,6 +48,9 @@ feature {NONE} -- Implementation
 
 				l_dtype_table.forth
 			end
+			
+				-- Write object table if necessary.
+			write_object_table (a_list)
 		end
 		
 	write_attributes (a_dtype: INTEGER) is

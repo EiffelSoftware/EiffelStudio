@@ -54,16 +54,26 @@ feature -- Properties
 	has_convert_mark: BOOLEAN
 			-- Does operator feature have a convert mark?
 
-	is_infix: BOOLEAN;
+	is_infix: BOOLEAN
 			-- Is the final feature an infix?
 
 	is_prefix: BOOLEAN is
 			-- Is the final feature a prefix?
+		require
+			final_name_not_void: final_name /= Void
 		do
-			Result := not (is_normal or else is_infix)
-		end;
+			Result := not is_normal and then not is_infix and then not is_bracket
+		end
 
-	is_normal: BOOLEAN;
+	is_bracket: BOOLEAN is
+			-- Is final feature a bracket one?
+		require
+			final_name_not_void: final_name /= Void
+		do
+			Result := syntax_checker.is_bracket_alias_name (final_name)
+		end
+
+	is_normal: BOOLEAN
 			-- Is the final feature normal, ie not an operator
 
 	already_evaluated_type: BOOLEAN;
@@ -280,8 +290,19 @@ feature -- Transformation
 			Result := new_adapt_from_current (global_type);
 			Result.set_feature_name (v_name);
 			Result.set_source_feature (Result.compute_feature (int_name));
-			Result.adapt 
+			Result.adapt
 		end;
+
+	adapt_bracket (global_type: GLOBAL_FEAT_ADAPTATION): like Current is
+			-- Feature adaptation for bracket feature
+		require
+			valid_global_type: global_type /= Void
+		do
+			Result := new_adapt_from_current (global_type)
+			Result.set_feature_name (bracket_str)
+			Result.set_source_feature (Result.compute_feature (bracket_str))
+			Result.adapt
+		end
 
 feature {LOCAL_FEAT_ADAPTATION, GLOBAL_FEAT_ADAPTATION} -- Implementation
 
@@ -551,4 +572,4 @@ feature -- Debug
 			io.error.put_new_line;
 		end;
 
-end -- class class LOCAL_FEAT_ADAPTATION
+end

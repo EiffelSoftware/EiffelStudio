@@ -25,6 +25,11 @@ inherit
 			{NONE} all
 		end
 
+	SYNTAX_STRINGS
+		export
+			{NONE} all
+		end
+
 create
 	make, make_for_case, make_for_appending
 
@@ -811,6 +816,21 @@ feature -- Element change
 			arguments := Void
 		end
 
+	prepare_for_bracket (operands: EIFFEL_LIST [EXPR_AS]) is
+			-- Prepare for feature with bracket alias and `operands' arguments.
+		require
+			operands_not_void: operands /= Void
+			operands_not_empty: not operands.is_empty
+		do
+			if is_for_case then
+				name_of_current_feature := bracket_str
+			else
+				local_adapt := local_adapt.adapt_bracket (global_adapt)
+			end
+			was_infix_arguments := False
+			arguments := operands
+		end
+
 feature -- Output
 
 	register_ancestors_invariants is
@@ -1006,8 +1026,10 @@ feature -- Output
 					put_normal_feature
 				elseif local_adapt.is_infix then
 					put_infix_feature
-				else
+				elseif local_adapt.is_prefix then
 					put_prefix_feature
+				else
+					put_bracket_feature
 				end
 			end
 		end
@@ -1140,6 +1162,35 @@ feature {UNARY_AS, AST_FORMATTER_VISITOR} -- Implementation
 			text.go_to (format.insertion_point)
 			text.forth
 			text.add (ti_Space)
+		end
+
+feature {NONE} -- Implementation
+
+	put_bracket_feature is
+			-- Put bracket feature.
+		local
+			operands: like arguments
+			adapt: like local_adapt
+		do
+			operands := arguments
+			adapt := local_adapt
+			text.add_space
+			text.add (operator_to_item ("[", adapt))
+			if operands /= Void then
+				begin
+				set_separator (ti_Comma)
+				set_space_between_tokens
+				abort_on_failure
+				formatter.format (operands)
+				if is_for_case or else last_was_printed then
+					commit
+				else
+					rollback
+				end
+					-- Reestablish adaptations.
+				local_adapt := adapt
+			end
+			text.add (operator_to_item ("]", adapt))
 		end
 
 feature -- Implementation

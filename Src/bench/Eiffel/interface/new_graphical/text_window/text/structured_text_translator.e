@@ -144,13 +144,13 @@ feature -- Text processing
 			-- Process keyword text.
 		local
 			tok: EDITOR_TOKEN_KEYWORD
-			pc: PRECURSOR_KEYWORD_TEXT
+			ft: FEATURE_TEXT
 			stone: FEATURE_STONE
 		do
 			create tok.make (t.image)
-			pc ?= t
-			if pc /= Void then
-				create stone.make (pc.e_feature)
+			ft ?= t
+			if ft /= Void then
+				create stone.make (ft.e_feature)
 				tok.set_pebble (stone)
 			end
 			last_line.append_token (tok)

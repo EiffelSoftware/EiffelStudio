@@ -13,6 +13,8 @@ frozen class
 	SPECIAL [T]
 
 inherit
+	ABSTRACT_SPECIAL
+
 	REFACTORING_HELPER
 
 create

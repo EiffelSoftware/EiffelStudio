@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Implementation: access
 
-	attributes_mapping: HASH_TABLE [HASH_TABLE [INTEGER, INTEGER], INTEGER]
+	attributes_mapping: SPECIAL [SPECIAL [INTEGER]]
 			-- Mapping for each dynamic type id between old attribute location
 			-- and new attribute location.
 
@@ -31,15 +31,17 @@ feature {NONE} -- Implementation: access
 		do
 			check
 				attributes_mapping_not_void: attributes_mapping /= Void
-				attributes_mapping_has_dtype: attributes_mapping.has (a_new_type_id)
-				attributes_mapping_has_mapping: attributes_mapping.item (a_new_type_id).has (a_old_offset)
+				attributes_mapping_has_dtype: attributes_mapping.valid_index (a_new_type_id)
+				attributes_mapping_not_void_item: attributes_mapping.item (a_new_type_id) /= Void
+				attributes_mapping_has_offset: attributes_mapping.item (a_new_type_id).valid_index (a_old_offset)
+				attributes_mapping_has_mapping: attributes_mapping.item (a_new_type_id).item (a_old_offset) >= 0
 			end
 			Result := attributes_mapping.item (a_new_type_id).item (a_old_offset)
 		end
 
 feature {NONE} -- Implementation
 
-	read_header is
+	read_header (a_count: NATURAL_32) is
 			-- Read header which contains mapping between dynamic type and their
 			-- string representation.
 		local
@@ -47,7 +49,7 @@ feature {NONE} -- Implementation
 			l_deser: like deserializer
 			l_int: like internal
 			l_table: like dynamic_type_table
-			l_old_type, l_new_dtype: INTEGER
+			l_old_dtype, l_new_dtype: INTEGER
 		do
 			l_int := internal
 			l_deser := deserializer
@@ -61,27 +63,30 @@ feature {NONE} -- Implementation
 				-- and the new ones.
 			from
 				i := 0
-				nb := nb
 			until
 				i = nb
 			loop
 					-- Read old dynamic type
-				l_old_type := l_deser.read_compressed_natural_32.to_integer_32
+				l_old_dtype := l_deser.read_compressed_natural_32.to_integer_32
 
-					-- Read type string associated to `l_old_type' and find dynamic type
+					-- Read type string associated to `l_old_dtype' and find dynamic type
 					-- in current system.
 				l_new_dtype := l_int.dynamic_type_from_string (l_deser.read_string_8)
 				if l_new_dtype = -1 then
 					has_error := True
 					i := nb - 1 -- Jump out of loop
 				else
-					l_table.put (l_new_dtype, l_old_type)
+					if not l_table.valid_index (l_old_dtype) then
+						l_table := l_table.resized_area ((l_old_dtype + 1).max (l_table.count * 2))
+						attributes_mapping := attributes_mapping.resized_area (l_table.count)
+					end
+					l_table.put (l_new_dtype, l_old_dtype)
 
 						-- Read attributes description
 					read_attributes (l_new_dtype)
 					if has_error then
 							-- We had an error while retrieving stored attributes
-							-- for `l_old_type'.
+							-- for `l_old_dtype'.
 						i := nb - 1	-- Jump out of loop
 					end
 				end
@@ -89,6 +94,9 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 			dynamic_type_table := l_table
+
+				-- Read object_table if any.
+			read_object_table (a_count)
 		end
 
 	read_attributes (a_dtype: INTEGER) is
@@ -99,7 +107,7 @@ feature {NONE} -- Implementation
 		local
 			l_deser: like deserializer
 			l_map: like attributes_map
-			l_mapping: HASH_TABLE [INTEGER, INTEGER]
+			l_mapping: SPECIAL [INTEGER]
 			l_name: STRING
 			l_dtype: INTEGER
 			i, nb: INTEGER
@@ -109,8 +117,8 @@ feature {NONE} -- Implementation
 				i := 1
 				nb := l_deser.read_compressed_natural_32.to_integer_32
 				l_map := attributes_map (a_dtype)
+				nb := nb + 1				
 				create l_mapping.make (nb)
-				nb := nb + 1
 			until
 				i = nb
 			loop

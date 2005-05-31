@@ -782,7 +782,6 @@ feature -- Status setting
 			-- Ensure all items in `a_row' are selected.
 		require
 			a_row_within_bounds: a_row > 0 and a_row <= row_count
-			column_displayed: column_displayed (a_row)
 		do
 			row_internal (a_row).enable_select
 		ensure

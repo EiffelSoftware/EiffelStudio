@@ -10,6 +10,21 @@
 #include "ev_c_util.h"
 #include "eif_except.h"
 
+void
+c_gtk_menu_position_func (GtkMenu * menu, gint * x, gint * y,
+		gpointer user_data) // is
+		// Callback that returns `x' and `y' from `user_data' for `menu'.
+{
+	// local
+		c_position * posp;
+	// require
+		g_return_if_fail (user_data != NULL);
+	// do
+		posp = user_data;
+		x = &posp->x_position;
+		y = &posp->y_position;
+}	// end
+
 void ev_gtk_log (
 	const gchar* log_domain,
 	GLogLevelFlags log_level,
@@ -1148,6 +1163,9 @@ char **wait_cursor_xpm (void) {
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.8  2005/05/31 18:07:25  king
+// Moved menu functions to ev_c_util.c
+//
 // Revision 1.7  2005/02/12 01:23:42  manus
 // Removed C compiler warnings by adding cast to (rt_int_ptr) before convert to
 //   or from a pointer.

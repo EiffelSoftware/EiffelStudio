@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Implementation: Access
 
-	dynamic_type_table: HASH_TABLE [INTEGER, INTEGER]
+	dynamic_type_table: SPECIAL [INTEGER]
 			-- Mapping between old dynamic types and new ones.
 
 	new_dynamic_type_id (a_old_type_id: INTEGER): INTEGER is
@@ -27,14 +27,15 @@ feature {NONE} -- Implementation: Access
 			-- type id in current system.
 		do
 			check
-				dynamic_type_table.has (a_old_type_id)
+				dynamic_type_table.valid_index (a_old_type_id)
+				dynamic_type_table.item (a_old_type_id) >= 0
 			end
 			Result := dynamic_type_table.item (a_old_type_id)
 		end
 		
 feature {NONE} -- Implementation
 
-	read_header is
+	read_header (a_count: NATURAL_32) is
 			-- Read header which contains mapping between dynamic type and their
 			-- string representation.
 		local
@@ -55,7 +56,6 @@ feature {NONE} -- Implementation
 				-- and the new ones.
 			from
 				i := 0
-				nb := nb
 			until
 				i = nb
 			loop
@@ -65,11 +65,16 @@ feature {NONE} -- Implementation
 					has_error := True
 					i := nb - 1 -- Jump out of loop
 				else
+					if not l_table.valid_index (l_old_dtype) then
+						l_table := l_table.resized_area ((l_old_dtype + 1).max (l_table.count * 2))
+					end
 					l_table.put (l_new_dtype, l_old_dtype)
 				end
 				i := i + 1
 			end
 			dynamic_type_table := l_table
+
+			read_object_table (a_count)
 		end
 
 feature {NONE} -- Cleaning

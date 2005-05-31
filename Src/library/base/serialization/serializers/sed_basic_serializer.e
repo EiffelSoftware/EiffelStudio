@@ -37,11 +37,13 @@ feature {NONE} -- Implementation
 					-- Write dynamic type
 				l_dtype := l_dtype_table.item_for_iteration
 				l_ser.write_compressed_natural_32 (l_dtype.to_natural_32)
-					-- Write type name				
+					-- Write type name
 				l_ser.write_string_8 (l_int.type_name_of_type (l_dtype))
 
 				l_dtype_table.forth
 			end
+			
+			write_object_table (a_list)
 		end
 		
 	type_table (a_list: ARRAYED_LIST [ANY]): HASH_TABLE [INTEGER, INTEGER] is

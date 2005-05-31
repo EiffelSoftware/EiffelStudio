@@ -2338,9 +2338,13 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			row_y1: INTEGER
 		do
 			row_y1 := a_row.virtual_y_position - (internal_client_y - viewport_y_offset)
-			drawable.redraw_rectangle (viewport_x_offset, row_y1, viewable_width, a_row.height)
+			if is_row_height_fixed then
+				drawable.redraw_rectangle (viewport_x_offset, row_y1, viewable_width, row_height)
+			else
+				drawable.redraw_rectangle (viewport_x_offset, row_y1, viewable_width, a_row.height)
+			end
 		end
-
+		
 	redraw_from_row_to_end (a_row: EV_GRID_ROW_I) is
 			-- Redraw client area from `virtual_y_position' of `a_row' down to the bottom of the client
 			-- area (As virtual position of a row is at its top, `a_row' is invalidated).

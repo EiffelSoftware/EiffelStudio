@@ -25,6 +25,14 @@ c_gtk_menu_position_func (GtkMenu * menu, gint * x, gint * y,
 		y = &posp->y_position;
 }	// end
 
+void
+c_gtk_return_combo_toggle (GtkWidget *widget, GtkWidget** user_data)
+{
+	if ( GTK_IS_TOGGLE_BUTTON (widget) ){
+		*user_data = widget;
+	}
+}
+
 void ev_gtk_log (
 	const gchar* log_domain,
 	GLogLevelFlags log_level,
@@ -1163,6 +1171,9 @@ char **wait_cursor_xpm (void) {
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.9  2005/05/31 23:51:00  king
+// Added combo box toggle button retrieval hack
+//
 // Revision 1.8  2005/05/31 18:07:25  king
 // Moved menu functions to ev_c_util.c
 //

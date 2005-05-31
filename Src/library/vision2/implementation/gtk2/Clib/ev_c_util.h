@@ -18,6 +18,8 @@ typedef struct {
 
 void c_gtk_menu_position_func (GtkMenu * menu, gint * x, gint * y, gpointer user_data);
 
+void c_gtk_return_combo_toggle (GtkWidget *widget, GtkWidget** user_data);
+
 void enable_ev_gtk_log (int a_mode);
 
 /* XPM */
@@ -67,6 +69,9 @@ char **wait_cursor_xpm (void);
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.6  2005/05/31 23:51:00  king
+// Added combo box toggle button retrieval hack
+//
 // Revision 1.5  2005/05/31 18:07:25  king
 // Moved menu functions to ev_c_util.c
 //

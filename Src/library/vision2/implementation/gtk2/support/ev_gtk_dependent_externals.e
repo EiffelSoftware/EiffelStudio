@@ -8,6 +8,55 @@ class
 
 feature -- Externals
 
+	frozen g_signal_handler_disconnect (a_instance: POINTER; handler_id: INTEGER) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"g_signal_handler_disconnect ((gpointer) $a_instance, (gulong) $handler_id)"
+		end
+
+	frozen gtk_container_set_focus_chain (a_container: POINTER; a_focus_chain: POINTER) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"gtk_container_set_focus_chain ((GtkContainer*) $a_container, (GList*) $a_focus_chain)"
+		end
+
+	frozen gtk_container_get_focus_chain (a_container: POINTER; a_focus_chain: TYPED_POINTER [POINTER]) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"gtk_container_get_focus_chain ((GtkContainer*) $a_container, (GList**) $a_focus_chain)"
+		end
+
+	frozen g_object_type_name (a_c_struct: POINTER): POINTER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"G_OBJECT_TYPE_NAME ($a_c_struct)"
+		end
+
+	frozen gtk_tree_view_column_struct_window (a_c_struct: POINTER): POINTER is
+		external
+			"C [struct <gtk/gtk.h>] (GtkTreeViewColumn): GdkWindow*"
+		alias
+			"window"
+		end
+
+	frozen gtk_tree_view_column_struct_button (a_c_struct: POINTER): POINTER is
+		external
+			"C [struct <gtk/gtk.h>] (GtkTreeViewColumn): GtkWidget*"
+		alias
+			"button"
+		end
+
+	frozen gtk_tree_view_column_struct_drag_x (a_c_struct: POINTER): INTEGER is
+		external
+			"C [struct <gtk/gtk.h>] (GtkTreeViewColumn): gint"
+		alias
+			"drag_x"
+		end
+
 	frozen gdk_drawable_get_size (a_drawable: POINTER; a_width, a_height: TYPED_POINTER [INTEGER]) is
 		external
 			"C signature (GdkDrawable*, gint*, gint*) use <gtk/gtk.h>"

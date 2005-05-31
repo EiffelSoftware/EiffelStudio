@@ -31,7 +31,9 @@ inherit
 			initialize,
 			make,
 			interface,
-			needs_event_box
+			needs_event_box,
+			has_focus,
+			on_focus_changed
 		end
 
 	EV_LIST_ITEM_LIST_IMP
@@ -68,6 +70,7 @@ feature {NONE} -- Initialization
 			-- Create a combo-box.
 		local
 			a_vbox: POINTER
+			a_focus_list: POINTER
 		do
 			base_make (an_interface)
 			a_vbox := {EV_GTK_EXTERNALS}.gtk_vbox_new (False, 0)
@@ -77,8 +80,20 @@ feature {NONE} -- Initialization
 			{EV_GTK_EXTERNALS}.gtk_box_pack_start (a_vbox, container_widget, False, False, 0)
 			entry_widget := {EV_GTK_EXTERNALS}.gtk_combo_box_get_entry (container_widget)
 				-- Set the minimum size of the entry widget to avoid unnecessarily large default size
-			{EV_GTK_EXTERNALS}.gtk_widget_set_usize (entry_widget, 1, -1)
+			{EV_GTK_EXTERNALS}.gtk_widget_set_usize (entry_widget, 40, -1)
+
+				-- Alter focus chain so that button cannot be selected via the keyboard.
+			a_focus_list := {EV_GTK_EXTERNALS}.g_list_append (default_pointer, entry_widget)
+			{EV_GTK_EXTERNALS}.gtk_container_set_focus_chain (container_widget, a_focus_list)
+			{EV_GTK_EXTERNALS}.g_list_free (a_focus_list)
+
+
+				-- This is a hack, remove when the toggle button can be retrieved via the API.
+			real_signal_connect (container_widget, "realize", agent retrieve_toggle_button, Void)
+			retrieve_toggle_button_signal_connection_id := last_signal_connection_id
 		end
+
+feature {NONE} -- Initialization
 
 	call_selection_action_sequences is
 			-- Call the appropriate selection action sequences
@@ -99,12 +114,12 @@ feature {NONE} -- Initialization
 				end
 			end
 			if previous_selected_item_imp /= Void then
-					if previous_selected_item_imp.deselect_actions_internal /= Void then
-						previous_selected_item_imp.deselect_actions_internal.call (Void)
-					end
-					if deselect_actions_internal /= Void then
-						deselect_actions_internal.call (Void)
-					end
+				if previous_selected_item_imp.deselect_actions_internal /= Void then
+					previous_selected_item_imp.deselect_actions_internal.call (Void)
+				end
+				if deselect_actions_internal /= Void then
+					deselect_actions_internal.call (Void)
+				end
 			end
 			previous_selected_item_imp := a_selected_item_imp
 		end
@@ -124,9 +139,9 @@ feature {NONE} -- Initialization
 
 				-- The combo box is already initialized with a text cell renderer at position 0, that is why we reorder the pixbuf cell renderer to position 0 and set the text column to 1
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_combo_box_entry_set_text_column (container_widget, 1)
-			
+
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_layout_clear (container_widget)
-			
+
 			a_cell_renderer := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_renderer_pixbuf_new
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_layout_pack_start (container_widget, a_cell_renderer, True)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_layout_reorder (container_widget, a_cell_renderer, 0)
@@ -166,6 +181,16 @@ feature {NONE} -- Initialization
 		
 feature -- Status report
 
+	has_focus: BOOLEAN is
+			-- Does widget have the keyboard focus?
+		do
+			Result := gtk_widget_has_focus (visual_widget)
+				-- Check to see if the toggle button is depressed, if it is then the combo must have the focus
+			if not Result and toggle_button /= default_pointer then
+				Result := {EV_GTK_EXTERNALS}.gtk_toggle_button_get_active (toggle_button)
+			end
+		end
+
 	selected_item: EV_LIST_ITEM is
 			-- Item which is currently selected, for a multiple
 			-- selection.
@@ -179,7 +204,7 @@ feature -- Status report
 		end
 
 	selected_items: ARRAYED_LIST [EV_LIST_ITEM] is
-			-- List of all the selected items. Used for list_item.is_selected implementation
+			-- List of all the selected items. Used for list_item.is_selected implementation.
 		do
 			create Result.make (0)
 			Result.extend (selected_item)
@@ -198,7 +223,7 @@ feature -- Status report
 		end
 
 	clear_selection is
-			-- Clear the item selection of `Current'
+			-- Clear the item selection of `Current'.
 		do
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_combo_box_set_active (container_widget, -1)
 		end
@@ -206,9 +231,80 @@ feature -- Status report
 feature -- Status setting
 
 	set_maximum_text_length (len: INTEGER) is
-			-- Set the length of the longest 
+			-- Set the length of the longest text size in characters that `Current' can display.
 		do
 			{EV_GTK_EXTERNALS}.gtk_entry_set_max_length (entry_widget, len)
+		end
+
+feature {NONE} -- Implementation
+
+	on_focus_changed (a_has_focus: BOOLEAN) is
+			-- Focus for `Current' has changed'.
+			-- (export status {NONE})
+		do
+			if a_has_focus then
+				if in_popup_action then
+						-- `Current' is being popped down.
+					in_popup_action := False
+				else
+					Precursor {EV_TEXT_FIELD_IMP} (a_has_focus)
+				end
+			else
+				if {EV_GTK_EXTERNALS}.gtk_toggle_button_get_active (toggle_button) then
+						-- We have a "popup" action.
+					in_popup_action := True
+				else
+					Precursor {EV_TEXT_FIELD_IMP} (a_has_focus)
+				end
+			end
+		end
+
+	in_popup_action: BOOLEAN
+		-- Is combo currently popped up?
+
+	toggle_button: POINTER
+		-- Pointer to the toggle button used for the Combo Box, this can only be retrieved when the widget is realized.
+
+	retrieve_toggle_button_signal_connection_id: INTEGER
+		-- Signal connection id used when finding the toggle button of `Current'.
+
+	retrieve_toggle_button is
+			-- Retrieve the toggle button from the GtkComboBox structure.
+		do
+			return_combo_toggle (container_widget, $toggle_button)
+			check
+				toggle_button_set: toggle_button /= default_pointer
+			end
+				-- Set the size of the toggle so that it isn't bigger than the entry size
+			{EV_GTK_EXTERNALS}.gtk_widget_set_usize (toggle_button, -1, 1)
+
+			real_signal_connect (toggle_button, "toggled", agent (app_implementation.gtk_marshal).on_combo_box_toggle_button_toggled (internal_id), Void)
+			{EV_GTK_DEPENDENT_EXTERNALS}.g_signal_handler_disconnect (container_widget, retrieve_toggle_button_signal_connection_id)
+		end
+
+feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
+
+	toggle_button_toggled is
+			-- The toggle button has been toggled.
+		do
+			if {EV_GTK_EXTERNALS}.gtk_toggle_button_get_active (toggle_button) then
+				if drop_down_actions_internal /= Void then
+					drop_down_actions_internal.call (Void)
+				end
+			end
+		end
+
+feature {NONE} -- Externals
+
+	frozen return_combo_toggle (a_combo: POINTER; a_toggle_button: TYPED_POINTER [POINTER]) is
+		external
+			"C inline use %"ev_c_util.h%""
+		alias
+			"[
+				{
+				gtk_container_forall (GTK_CONTAINER ($a_combo), c_gtk_return_combo_toggle, (GtkWidget**) $a_toggle_button);
+				}
+			]"
 		end
 
 feature {EV_LIST_ITEM_IMP, EV_INTERMEDIARY_ROUTINES} -- Implementation

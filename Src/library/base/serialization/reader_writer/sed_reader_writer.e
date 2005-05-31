@@ -180,6 +180,15 @@ feature -- Access
 		deferred
 		end
 		
+	read_compressed_integer_32: INTEGER is
+			-- Read next compressed integer_32.
+			-- See `read_compressed_natural_32' for more details about encoding.
+		require
+			is_ready: is_ready_for_reading
+		do
+			Result := read_compressed_natural_32.as_integer_32
+		end
+		
 	read_compressed_natural_32: NATURAL_32 is
 			-- Read next compressed natural_32.
 			-- Depending on first natural_8 value read, it will tell how much more we need to read:
@@ -337,6 +346,15 @@ feature -- Element change
 		deferred
 		end
 
+	write_compressed_integer_32 (v: INTEGER) is
+			-- Write `v' as a compressed integer_32.
+			-- See `write_compressed_natural_32' for details about encoding.
+		require
+			is_ready: is_ready_for_writing
+		do
+			write_compressed_natural_32 (v.as_natural_32)
+		end
+		
 	write_compressed_natural_32 (v: NATURAL_32) is
 			-- Write `v' as a compressed natural_32.
 			-- Depending on value of `v', it will tell how many natural_8 will 

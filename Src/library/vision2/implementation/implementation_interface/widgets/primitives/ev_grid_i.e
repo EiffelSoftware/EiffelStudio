@@ -1175,6 +1175,10 @@ feature -- Status setting
 			expand_node_pixmap := an_expand_node_pixmap
 			collapse_node_pixmap := a_collapse_node_pixmap
 			redraw_client_area
+			node_pixmap_width := expand_node_pixmap.width
+			total_tree_node_width := node_pixmap_width + 2 * tree_node_spacing
+			first_tree_node_indent := total_tree_node_width + 2 * tree_node_spacing
+			tree_subrow_indent := (tree_node_spacing * 2) + node_pixmap_width + subrow_indent
 		ensure
 			pixmaps_set: expand_node_pixmap = an_expand_node_pixmap and collapse_node_pixmap = a_collapse_node_pixmap
 		end
@@ -2247,39 +2251,89 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 		require
 			an_item_not_void: an_item /= Void
 			an_item_parented_in_current: an_item.parent_i = Current
+		do
+			Result := item_cell_indent (an_item.column.index, an_item.row.index)
+		end
+
+	item_cell_indent (column_index, row_index: INTEGER): INTEGER is
+			-- `Result' is indent for cell item at position `column_index', `row_index'.
+			-- May be 0 for items that are not tree nodes.
+		require
+			valid_column_index: column_index >= 0 and column_index <= column_count
+			valid_row_index: row_index >= 1 and row_index <= row_count
 		local
-			a_subrow_indent: INTEGER
-			first_tree_node_indent: INTEGER
-			node_pixmap_width: INTEGER
-			total_tree_node_width: INTEGER
 			node_index: INTEGER
 			pointed_row_i: EV_GRID_ROW_I
+			index_of_first_item: INTEGER
+			l_parent_row: EV_GRID_ROW_I
+			first_row_index_with_item: INTEGER
+			parent_adjustment_index: INTEGER
+			first_row_less_than: EV_GRID_ROW_I
+			first_row_in_column: EV_GRID_ROW_I
+			adjusted_index_of_first_item: INTEGER
+			parent_rows: ARRAYED_LIST [EV_GRID_ROW_I]
+			current_row: EV_GRID_ROW_I
+			found_row: EV_GRID_ROW_I
+			current_index_of_first_item: INTEGER
+			current_row_index_of_first_item: INTEGER
+			last_current_row: EV_GRID_ROW_I
 		do
-			pointed_row_i := an_item.row_i
-			node_pixmap_width := expand_node_pixmap.width
-			total_tree_node_width := node_pixmap_width + 2 * tree_node_spacing
-			a_subrow_indent := (tree_node_spacing * 2) + node_pixmap_width + subrow_indent
-			first_tree_node_indent := total_tree_node_width + 2 * tree_node_spacing
-			node_index := an_item.column_i.index.min (pointed_row_i.index_of_first_item)
-			if node_index = an_item.column_i.index then
-				Result := a_subrow_indent * (pointed_row_i.indent_depth_in_tree - 1) + first_tree_node_indent
-			end
-			if pointed_row_i.parent_row_i = Void then
-				if is_tree_enabled and an_item.column.index = 1 then
-					Result := first_tree_node_indent
-				else
+			if is_tree_enabled then
+				pointed_row_i := row (row_index).implementation
+				index_of_first_item := pointed_row_i.index_of_first_item
+				node_index := column_index.min (index_of_first_item)
+				if index_of_first_item /= column_index and index_of_first_item /= 0 then
 					Result := 0
+				else
+					from
+						current_row := pointed_row_i
+						current_row_index_of_first_item := current_row.index_of_first_item
+						found_row := pointed_row_i
+						current_index_of_first_item := pointed_row_i.index_of_first_item
+					until
+						current_row = Void or else (current_row_index_of_first_item /= 0 and current_row_index_of_first_item < current_index_of_first_item)
+					loop
+						last_current_row := current_row
+						current_row := current_row.parent_row_i
+						if current_row /= Void then
+							current_row_index_of_first_item := current_row.index_of_first_item
+							if ((current_row_index_of_first_item /= 0 and current_row_index_of_first_item >= current_index_of_first_item) or (current_row_index_of_first_item = 0 and current_index_of_first_item = 0)) then
+								found_row := current_row
+								current_index_of_first_item := found_row.index_of_first_item
+							end
+						end
+					end
+					if current_row = Void and node_index = 1 then
+							-- In this case we have iterated to the top level in the tree and the top row is empty.
+							-- We must set `found_row' to `last_current_row' which is the top level row in the tree structure.
+							-- We only perform this code if `node_index' is 1 as otherwise the original item started in a column
+							-- greater than 1 and no rows with non-Void items were found, so the indent must not be calculated from
+							-- the top row as the item is at the first indent position in its column.
+						check
+							last_current_row_not_void: last_current_row /= Void
+						end
+						found_row := last_current_row
+					end
+					check
+						correct: found_row /= current_row and current_row /= Void implies found_row.index_of_first_item >= 1
+					end
+					if pointed_row_i /= found_row then
+						if found_row.index_of_first_item <= 1 then
+							Result := (pointed_row_i.indent_depth_in_tree - found_row.indent_depth_in_tree) * tree_subrow_indent + first_tree_node_indent
+						else
+							Result := (pointed_row_i.indent_depth_in_tree - found_row.indent_depth_in_tree + 1) * tree_subrow_indent
+						end
+					else
+						if node_index = 1 or node_index = 0 then
+							Result := first_tree_node_indent
+						elseif pointed_row_i.subrow_count > 0 then
+							Result := tree_subrow_indent
+						end
+					end
 				end
 			end
-				-- Not a postcondition as `node_index' is a local.
-			check
-				result_zero_when_item_not_in_subrow_or_first: an_item.row_i.parent_row_i = Void and node_index > pointed_row_i.index_of_first_item implies Result = 0
-				result_positive_when_in_subrow: an_item.row_i.parent_row_i /= Void implies Result >= 0
-				result_is_first_indent_when_node_index_differs_from_parent_and_item_is_first: an_item.row_i.parent_row_i /= Void and (an_item.row_i.index_of_first_item /= an_item.row_i.parent_row_i.index_of_first_item) and (an_item.row_i.index_of_first_item = an_item.column.index) and an_item.row_i.subrow_count = 0 implies Result = first_tree_node_indent
-				result_is_zero_when_node_index_differs_from_parent_and_item_is_not_first: an_item.row_i.parent_row_i /= Void and (an_item.row_i.index_of_first_item /= an_item.row_i.parent_row_i.index_of_first_item) and (an_item.row_i.index_of_first_item /= an_item.column.index) and an_item.row_i.subrow_count = 0 implies Result = 0
-			end
 		end
-		
+
 feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_ITEM_I, EV_GRID_ITEM} -- Implementation
 		
 	redraw_item (an_item: EV_GRID_ITEM_I) is
@@ -2344,7 +2398,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 				drawable.redraw_rectangle (viewport_x_offset, row_y1, viewable_width, a_row.height)
 			end
 		end
-		
+
 	redraw_from_row_to_end (a_row: EV_GRID_ROW_I) is
 			-- Redraw client area from `virtual_y_position' of `a_row' down to the bottom of the client
 			-- area (As virtual position of a row is at its top, `a_row' is invalidated).
@@ -2436,7 +2490,7 @@ feature {EV_GRID_DRAWER_I, EV_GRID_COLUMN_I, EV_GRID_ROW_I, EV_GRID_ITEM_I, EV_G
 	collapse_node_pixmap: EV_PIXMAP
 		-- Pixmap used within `Current' to indicate that a tree node may be collapsed.
 			
-	build_expand_node_pixmap is
+	initial_expand_node_pixmap: EV_PIXMAP is
 			-- Construct the default `expand_node_pixmap'.
 		local
 			start_offset, end_offset, middle_offset: INTEGER
@@ -2444,20 +2498,20 @@ feature {EV_GRID_DRAWER_I, EV_GRID_COLUMN_I, EV_GRID_ROW_I, EV_GRID_ITEM_I, EV_G
 			start_offset := 2
 			end_offset := tree_node_button_dimension - start_offset - 1
 			middle_offset := tree_node_button_dimension // 2
-			create expand_node_pixmap
-			expand_node_pixmap.set_size (tree_node_button_dimension, tree_node_button_dimension)
-			expand_node_pixmap.set_foreground_color (white)
-			expand_node_pixmap.clear
-			expand_node_pixmap.set_foreground_color (tree_node_connector_color)
-			expand_node_pixmap.draw_rectangle (0, 0, tree_node_button_dimension, tree_node_button_dimension)
-			expand_node_pixmap.set_foreground_color (black)
-			expand_node_pixmap.draw_segment (start_offset, middle_offset, end_offset, middle_offset)
-			expand_node_pixmap.draw_segment (middle_offset, start_offset, middle_offset, end_offset)
+			create Result
+			Result.set_size (tree_node_button_dimension, tree_node_button_dimension)
+			Result.set_foreground_color (white)
+			Result.clear
+			Result.set_foreground_color (tree_node_connector_color)
+			Result.draw_rectangle (0, 0, tree_node_button_dimension, tree_node_button_dimension)
+			Result.set_foreground_color (black)
+			Result.draw_segment (start_offset, middle_offset, end_offset, middle_offset)
+			Result.draw_segment (middle_offset, start_offset, middle_offset, end_offset)
 		ensure
-			expand_node_pixmap_not_void: expand_node_pixmap /= Void
+			result_not_void: Result /= Void
 		end
 		
-	build_collapse_node_pixmap is
+	initial_collapse_node_pixmap: EV_PIXMAP is
 			-- Construct the default `collapse_node_pixmap'.
 		local
 			start_offset, end_offset, middle_offset: INTEGER
@@ -2465,16 +2519,16 @@ feature {EV_GRID_DRAWER_I, EV_GRID_COLUMN_I, EV_GRID_ROW_I, EV_GRID_ITEM_I, EV_G
 			start_offset := 2
 			end_offset := tree_node_button_dimension - start_offset - 1
 			middle_offset := tree_node_button_dimension // 2
-			create collapse_node_pixmap
-			collapse_node_pixmap.set_size (tree_node_button_dimension, tree_node_button_dimension)
-			collapse_node_pixmap.set_foreground_color (white)
-			collapse_node_pixmap.clear
-			collapse_node_pixmap.set_foreground_color (tree_node_connector_color)
-			collapse_node_pixmap.draw_rectangle (0, 0, tree_node_button_dimension, tree_node_button_dimension)
-			collapse_node_pixmap.set_foreground_color (black)
-			collapse_node_pixmap.draw_segment (start_offset, middle_offset, end_offset, middle_offset)
+			create Result
+			Result.set_size (tree_node_button_dimension, tree_node_button_dimension)
+			Result.set_foreground_color (white)
+			Result.clear
+			Result.set_foreground_color (tree_node_connector_color)
+			Result.draw_rectangle (0, 0, tree_node_button_dimension, tree_node_button_dimension)
+			Result.set_foreground_color (black)
+			Result.draw_segment (start_offset, middle_offset, end_offset, middle_offset)
 		ensure
-			collapse_node_pixmap_not_void: collapse_node_pixmap /= Void	
+			result_not_void: Result /= Void
 		end
 		
 	tree_node_button_dimension: INTEGER is 9	
@@ -2491,6 +2545,18 @@ feature {EV_GRID_DRAWER_I, EV_GRID_COLUMN_I, EV_GRID_ROW_I, EV_GRID_ITEM_I, EV_G
 		once
 			Result := (create {EV_STOCK_COLORS}).black.twin
 		end
+		
+	node_pixmap_width: INTEGER
+		-- Width of node pixmaps.
+
+	total_tree_node_width: INTEGER
+		-- Total width of each tree node within `Current'.
+
+	first_tree_node_indent: INTEGER 
+		-- Indent applied to first indent in first column of `Current'.
+
+	tree_subrow_indent: INTEGER
+		-- Indent used for all indents except the first indent in the first column of `Current'.
 
 feature {EV_GRID_ITEM_I, EV_GRID} -- Implementation
 
@@ -2718,8 +2784,6 @@ feature {NONE} -- Drawing implementation
 			are_tree_node_connectors_shown := True
 			are_columns_drawn_above_rows := True
 			create tree_node_connector_color.make_with_8_bit_rgb (150, 150, 150)
-			build_expand_node_pixmap
-			build_collapse_node_pixmap
 			invalid_row_index := invalid_row_index.max_value
 
 				-- Flag `physical_column_indexes' for recalculation
@@ -2846,6 +2910,7 @@ feature {NONE} -- Drawing implementation
 			set_background_color ((create {EV_STOCK_COLORS}).white.twin)
 			set_foreground_color ((create {EV_STOCK_COLORS}).black.twin)
 			set_separator_color ((create {EV_STOCK_COLORS}).black.twin)
+			set_node_pixmaps (initial_expand_node_pixmap, initial_collapse_node_pixmap)
 		end
 
 	header_item_resizing (header_item: EV_HEADER_ITEM) is
@@ -3195,14 +3260,16 @@ feature {NONE} -- Event handling
 			-- A pointer button press has been received by `drawable' so propagate to the interface.
 		local
 			pointed_item: EV_GRID_ITEM_I
-			node_pixmap_width: INTEGER
 			current_item_x_position: INTEGER
 			current_subrow_indent: INTEGER
 			node_x_position_click_edge: INTEGER
 			pointed_row_i: EV_GRID_ROW_I
 			pointed_item_interface: EV_GRID_ITEM
 			ignore_selection_handling: BOOLEAN
-			a_sel_item: EV_GRID_ITEM
+			selected_item: EV_GRID_ITEM
+			selected_item_i: EV_GRID_ITEM_I
+			item_coordinates: EV_COORDINATE
+			pointed_column_i: EV_GRID_COLUMN_I
 		do
 			pointed_item := drawer.item_at_position_strict (a_x, a_y)
 
@@ -3222,17 +3289,17 @@ feature {NONE} -- Event handling
 				pointed_item.pointer_button_press_actions_internal.call ([client_x_to_virtual_x(a_x) - pointed_item.virtual_x_position, a_button, client_y_to_virtual_y (a_y) - pointed_item.virtual_y_position, 0.0, 0.0, 0.0, a_screen_x, a_screen_y])
 			end
 
-			pointed_item := drawer.item_at_position (a_x, a_y)
-			if pointed_item /= Void then
-				pointed_row_i := pointed_item.row_i
-				node_pixmap_width := expand_node_pixmap.width
-				current_subrow_indent := item_indent (pointed_item)
-				current_item_x_position := (column_offsets @ (pointed_item.column.index)) - (internal_client_x - viewport_x_offset)
+
+			item_coordinates := drawer.item_coordinates_at_position (a_x, a_y)
+			if item_coordinates /= Void then
+				pointed_row_i := rows.i_th (item_coordinates.y)
+				current_subrow_indent := item_cell_indent (item_coordinates.x, item_coordinates.y) --item_indent (pointed_item)
+				current_item_x_position := (column_offsets @ (item_coordinates.x)) - (internal_client_x - viewport_x_offset)
 				node_x_position_click_edge := current_subrow_indent + current_item_x_position
 				if pointed_row_i.subrow_count /= 0 or pointed_row_i.is_ensured_expandable then
 						-- We only include the dimensions of the node pixmap for our calculations if
 						-- one is displayed.
-					 node_x_position_click_edge := node_pixmap_width - (3 * tree_node_spacing)
+					 node_x_position_click_edge := current_subrow_indent + current_item_x_position - (node_pixmap_width + (3 * tree_node_spacing))
 				end
 				
 				if a_x >= node_x_position_click_edge then
@@ -3244,12 +3311,15 @@ feature {NONE} -- Event handling
 							pointed_row_i.expand
 						end
 					elseif is_selection_on_click_enabled then
-						a_sel_item := pointed_item.interface
+						selected_item_i := item_internal (item_coordinates.x, item_coordinates.y)
+						if selected_item_i /= Void then
+							selected_item := selected_item_i.interface
+						end
 					end
 				end
 			end
 			if not ignore_selection_handling and then is_selection_on_click_enabled then
-				handle_newly_selected_item (a_sel_item)
+				handle_newly_selected_item (selected_item)
 			end
 		end
 

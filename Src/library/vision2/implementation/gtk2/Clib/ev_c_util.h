@@ -11,6 +11,12 @@
 #define _EV_C_UTIL_H_INCLUDED_
 #include <gtk/gtk.h>
 
+typedef struct {
+	gint x_position;
+	gint y_position;
+} c_position;
+
+void c_gtk_menu_position_func (GtkMenu * menu, gint * x, gint * y, gpointer user_data);
 
 void enable_ev_gtk_log (int a_mode);
 
@@ -61,6 +67,9 @@ char **wait_cursor_xpm (void);
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.5  2005/05/31 18:07:25  king
+// Moved menu functions to ev_c_util.c
+//
 // Revision 1.4  2004/02/12 22:38:57  king
 // Added default_pixmap_xpm
 //

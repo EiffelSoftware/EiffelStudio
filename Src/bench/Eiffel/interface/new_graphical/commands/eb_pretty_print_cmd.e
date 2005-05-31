@@ -88,9 +88,11 @@ feature {EB_PRETTY_PRINT_DIALOG} -- Status report
 
 	accepts_stone (st: OBJECT_STONE): BOOLEAN is
 			-- Can the user drop `st'?
+		local
+			dv: DUMP_VALUE
 		do
-			Result := (create {DUMP_VALUE}.make_object (st.object_address, st.dynamic_class)).
-				has_formatted_output
+			create dv.make_object (st.object_address, st.dynamic_class)
+			Result := dv.has_formatted_output
 		end
 
 feature -- Basic operations

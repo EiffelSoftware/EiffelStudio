@@ -215,6 +215,17 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
+	on_combo_box_toggle_button_toggled (a_object_id: INTEGER) is
+			-- A combo box toggle button has been toggled.
+		local
+			a_combo: EV_COMBO_BOX_IMP
+		do
+			a_combo ?= eif_id_object (a_object_id)
+			if a_combo /= Void then
+				a_combo.toggle_button_toggled
+			end
+		end
+
 	toolbar_item_select_actions_intermediary (a_object_id: INTEGER) is
 			-- Intermediary agent for toolbar button select action
 		local

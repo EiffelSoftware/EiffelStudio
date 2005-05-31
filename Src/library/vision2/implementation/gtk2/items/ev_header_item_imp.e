@@ -43,29 +43,40 @@ feature -- Initialization
 
 	initialize is
 			-- Initialize the header item
+		local
+			hbox: POINTER
 		do
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_resizable (c_object, True)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_clickable (c_object, True)
 			
 				-- Allow the column to be shrank to nothing
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_min_width (c_object, 0)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_sizing (c_object, {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_fixed_enum)
-
-
 
 			real_signal_connect (c_object, "notify::width", agent handle_resize, Void)
 			
 			pixmapable_imp_initialize
 			textable_imp_initialize
 			
-			box := {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
+			
+			box := {EV_GTK_EXTERNALS}.gtk_event_box_new
+			{EV_GTK_EXTERNALS}.gtk_event_box_set_visible_window (box, False)
+
 			{EV_GTK_EXTERNALS}.gtk_widget_show (box)
 
-			{EV_GTK_EXTERNALS}.gtk_container_add (box, pixmap_box)
-			{EV_GTK_EXTERNALS}.gtk_container_add (box, text_label)
+			hbox := {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
+			{EV_GTK_EXTERNALS}.gtk_widget_show (hbox)
+
+			{EV_GTK_EXTERNALS}.gtk_box_pack_start (hbox, pixmap_box, False, False, 0)
+			{EV_GTK_EXTERNALS}.gtk_box_pack_end (hbox, text_label, True, True, 0)
+
+			{EV_GTK_EXTERNALS}.gtk_container_add (box, hbox)
+
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_widget (c_object, box)
 
 				-- Set the default width to 80 pixels wide
 			set_width (80)
+
+			align_text_left
 
 			set_is_initialized (True)
 		end
@@ -80,6 +91,7 @@ feature -- Initialization
 				width := a_width
 				if parent_imp /= Void then
 					parent_imp.on_resize (interface)
+					{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (box, a_width, 16)
 				end
 			end
 		end
@@ -96,6 +108,7 @@ feature -- Status setting
 		do
 			width := a_width
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_fixed_width (c_object, a_width)
+			{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (box, a_width, 16)
 		end
 		
 	resize_to_content is
@@ -183,7 +196,10 @@ feature {EV_HEADER_IMP} -- Implementation
 		do
 			parent_imp := par_imp
 			if par_imp /= Void then
-				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_widget (c_object, box)
+					-- If this is the first time it is parented then there is no need to set the column widget.
+				if {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (box) = default_pointer then
+					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_widget (c_object, box)
+				end
 			else
 				{EV_GTK_EXTERNALS}.object_ref (box)
 				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_widget (c_object, {EV_GTK_EXTERNALS}.gtk_label_new (default_pointer))

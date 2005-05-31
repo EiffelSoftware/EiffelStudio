@@ -48,7 +48,8 @@ all: $(ALL_OBJECTS)
 	$(MV) $? ../../../spec/$(ISE_PLATFORM)/lib
 	make clobber
 
-MTgtk_eiffel.o: ev_any_imp.c ev_c_util.c ev_menu_imp.c ev_gtk_callback_marshal.c 
+gtk_eiffel.o: ev_any_imp.c ev_c_util.c ev_menu_imp.c ev_gtk_callback_marshal.c 
+#MTgtk_eiffel.o: ev_any_imp.c ev_c_util.c ev_menu_imp.c ev_gtk_callback_marshal.c 
 	$(CC) -c $(MTCFLAGS) $? -o $@
 
 local_realclean::

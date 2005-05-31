@@ -272,6 +272,15 @@ feature -- Access
 			end
 		end
 
+	new_bracket_as (t: EXPR_AS; o: EIFFEL_LIST [EXPR_AS]): BRACKET_AS is
+			-- New BRACKET AST node
+		require
+			t_not_void: t /= Void
+			o_not_void: o /= Void
+		do
+			create Result.make (t, o)
+		end
+
 	new_body_as (a: EIFFEL_LIST [TYPE_DEC_AS]; t: TYPE_AS; c: CONTENT_AS): BODY_AS is
 			-- New BODY AST node
 		do

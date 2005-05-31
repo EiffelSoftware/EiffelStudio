@@ -4773,7 +4773,13 @@ feature -- Implementation
 			n_not_void: n /= Void
 		do
 			if not n.is_empty and then has_feature_table then
-				Result := feature_table.item (n)
+				if feature_table.is_mangled_alias_name (n) then
+						-- Lookup for alias feature
+					Result := feature_table.alias_item (n)
+				else
+						-- Lookup for identifier feature
+					Result := feature_table.item (n)
+				end
 			end
 		end
 

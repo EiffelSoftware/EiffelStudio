@@ -6,6 +6,14 @@
 				<envision_pseudo_name>20</envision_pseudo_name>
 			</toc>
 			<xml>
+				<xmlkeyword>
+					<index>K</index>
+					<term>Deployment, Eiffel Runtime</term>
+				</xmlkeyword>
+				<xmlkeyword>
+					<index>K</index>
+					<term>Eiffel runtime, Deployment</term>
+				</xmlkeyword>
 			</xml>
 		</help>
 	</meta_data>

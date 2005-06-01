@@ -658,6 +658,7 @@ feature {NONE} -- Initialization
 			l_names_heap: like Names_heap
 			l_list: ARRAYED_LIST [INTEGER]
 			l_name: STRING
+			l_name_id: INTEGER
 		do
 			from
 				i := a_features.lower
@@ -854,18 +855,23 @@ feature {NONE} -- Initialization
 					l_proc.set_arguments (l_feat_arg)
 				end
 
-				l_feat.set_is_infix (l_member.is_infix)
-				l_feat.set_is_binary (l_member.is_infix)
-				l_feat.set_is_prefix (l_member.is_prefix)
-				l_feat.set_is_unary (l_member.is_prefix)
-
 				l_feat.set_is_frozen (l_member.is_frozen)
 				if l_member.is_prefix then
-					l_feat.set_feature_name (
-						Prefix_infix_names.prefix_feature_name_with_symbol (l_member.eiffel_name))
+						-- Set feature flags
+					l_feat.set_is_prefix (True)
+					l_feat.set_is_unary (True)
+						-- Set both feature name and alias name
+					names_heap.put (Prefix_infix_names.prefix_feature_name_with_symbol (l_member.eiffel_name))
+					l_name_id := names_heap.found_item
+					l_feat.set_feature_name_id (l_name_id, l_name_id)
 				elseif l_member.is_infix then
-					l_feat.set_feature_name (
-						Prefix_infix_names.infix_feature_name_with_symbol (l_member.eiffel_name))
+						-- Set feature flags
+					l_feat.set_is_infix (True)
+					l_feat.set_is_binary (True)
+						-- Set both feature name and alias name
+					names_heap.put (Prefix_infix_names.infix_feature_name_with_symbol (l_member.eiffel_name))
+					l_name_id := names_heap.found_item
+					l_feat.set_feature_name_id (l_name_id, l_name_id)
 				else
 					l_feat.set_feature_name (l_member.eiffel_name)
 				end

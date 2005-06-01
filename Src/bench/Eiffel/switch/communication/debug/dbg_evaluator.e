@@ -63,17 +63,20 @@ feature {NONE} -- Initialization
 		do
 			if application.is_dotnet then
 					--| Soon or later .. change this by creating descendant of Current
+				is_dotnet_system := True
 				create dotnet_impl.make
 			end
 		end
 
 feature -- Status
 
+	is_dotnet_system: BOOLEAN
+
 feature {SHARED_DBG_EVALUATOR} -- Init
 
 	init is
 		do
-			if application.is_dotnet then
+			if is_dotnet_system then
 				dotnet_parameters_reset
 			end
 		end
@@ -124,7 +127,7 @@ feature -- Concrete evaluation
 			l_params: ARRAY [DUMP_VALUE]
 		do
 			l_dyntype := f.associated_class.types.first
-			if Application.is_dotnet then
+			if is_dotnet_system then
 					--| FIXME jfiat: we deal only non generic types
 				if params /= Void and then not params.is_empty then
 					prepare_parameters (l_dyntype, f, params)
@@ -153,7 +156,7 @@ feature -- Concrete evaluation
 			if f.written_class.types.count > 1 then
 				set_error_evaluation ("Once evaluation on generic classes not available")
 			else
-				if application.is_dotnet then
+				if is_dotnet_system then
 						--| Dotnet
 					last_result_value := dotnet_impl.dotnet_evaluate_once_function (a_addr, a_target, f, params)
 					if not dotnet_impl.last_once_available then
@@ -227,7 +230,7 @@ feature -- Concrete evaluation
 					--| cannot evaluate attribute on manifest value
 					--| (such as "foo", 1 or True .. in the expression)
 					-- but let's try to improve this ...
-				if application.is_dotnet then
+				if is_dotnet_system then
 					dump := dotnet_impl.dotnet_metamorphose_basic_to_value (a_target)
 					l_address := dump.address
 				end
@@ -360,7 +363,7 @@ feature -- Concrete evaluation
 	effective_evaluate_function (a_addr: STRING; a_target: DUMP_VALUE; f, realf: E_FEATURE; 
 			ctype: CLASS_TYPE; params: LIST [DUMP_VALUE]): DUMP_VALUE is
 		do
-			if Application.is_dotnet then
+			if is_dotnet_system then
 				Result := dotnet_evaluate_function (a_addr, a_target, f, realf,
 								ctype, params)
 			else
@@ -375,7 +378,7 @@ feature {DBG_EXPRESSION_EVALUATOR_B} -- Restricted dotnet
 				a_feature_name, a_external_name: STRING; 
 				params: LIST [DUMP_VALUE]) is
 		require
-			application.is_dotnet
+			is_dotnet_system
 		local
 			l_params: ARRAY [DUMP_VALUE]
 		do
@@ -415,6 +418,8 @@ feature {NONE} -- Implementation classic
 
 	classic_evaluate_function (a_addr: STRING; a_target: DUMP_VALUE; f, realf: E_FEATURE; 
 			ctype: CLASS_TYPE; params: LIST [DUMP_VALUE]): DUMP_VALUE is
+		require
+			is_classic_system: not is_dotnet_system
 		local
 			dmp: DUMP_VALUE
 			par: INTEGER
@@ -442,6 +447,8 @@ feature {NONE} -- Implementation classic
 				par := par + 2
 				rout_info := System.rout_info_table.item (f.rout_id_set.first)
 				send_rqst_3_integer (Rqst_dynamic_eval, rout_info.offset, rout_info.origin, par)
+			elseif f.written_class.is_expanded then
+				print ("Error: can not evaluate on expanded value !!%N")
 			else
 				send_rqst_3_integer (Rqst_dynamic_eval, f.feature_id, ctype.static_type_id - 1, par)
 			end
@@ -458,7 +465,7 @@ feature {NONE} -- Implementation dotnet
 	dotnet_evaluate_function (a_addr: STRING; a_target: DUMP_VALUE; f, realf: E_FEATURE; 
 			ctype: CLASS_TYPE; params: LIST [DUMP_VALUE]): DUMP_VALUE is
 		require
-			is_dotnet_system: application.is_dotnet
+			is_dotnet_system: is_dotnet_system
 		local
 			l_params: ARRAY [DUMP_VALUE]
 		do
@@ -475,7 +482,7 @@ feature {NONE} -- Implementation dotnet
 
 	dotnet_parameters_reset is
 		require
-			is_dotnet_system: application.is_dotnet
+			is_dotnet_system: is_dotnet_system
 		do
 			dotnet_parameters := Void
 		end
@@ -488,7 +495,7 @@ feature {NONE} -- Implementation
 
 	parameters_init (n: INTEGER) is
 		do
-			if application.is_dotnet then
+			if is_dotnet_system then
 				create dotnet_parameters.make (1, n)
 				dotnet_parameters_index := 0
 			end
@@ -496,7 +503,7 @@ feature {NONE} -- Implementation
 
 	parameters_push (dmp: DUMP_VALUE) is
 		do
-			if application.is_dotnet then
+			if is_dotnet_system then
 				dotnet_parameters_index := dotnet_parameters_index + 1
 				dotnet_parameters.put (dmp, dotnet_parameters_index)
 			else
@@ -508,7 +515,7 @@ feature {NONE} -- Implementation
 		local
 			l_dmp: DUMP_VALUE
 		do
-			if application.is_dotnet then
+			if is_dotnet_system then
 				debug ("debugger_trace_eval_data")
 					print (generating_type + ".parameters_push_and_metamorphose :: dotnet Metamorphose ... %N")
 				end
@@ -619,7 +626,7 @@ feature {NONE} -- compiler helpers
 			check
 				l_basic_not_void: l_basic /= Void
 			end
-			if application.is_dotnet then
+			if is_dotnet_system then
 				Result := l_basic.associated_reference_class_type
 			else
 					-- FIXME jfiat 2004-10-06 : why do we have two different behaviors
@@ -634,5 +641,9 @@ feature {NONE} -- Implementation
 
 	dotnet_impl: DBG_EVALUATOR_DOTNET
 --	classic_impl: DBG_EVALUATOR_DOTNET
+
+invariant
+	
+	is_dotnet_system = application.is_dotnet
 
 end

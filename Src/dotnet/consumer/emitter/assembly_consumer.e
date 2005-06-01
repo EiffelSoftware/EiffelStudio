@@ -60,6 +60,9 @@ feature -- Basic Operations
 			count: INTEGER
 			ca: CONSUMED_ASSEMBLY
 		do
+			feature {SYSTEM_DLL_TRACE}.write_line_string_string ("Beginning consumption for assembly '{0}'.", ass.to_string)
+			feature {SYSTEM_DLL_TRACE}.write_line_string_string ("Consuming into '{0}'.", destination_path)
+
 			referenced_assemblies := ass.get_referenced_assemblies
 			reset_assembly_mapping
 			count := referenced_assemblies.count

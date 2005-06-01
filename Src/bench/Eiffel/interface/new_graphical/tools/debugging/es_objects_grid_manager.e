@@ -168,4 +168,29 @@ feature -- Grid helpers
 --			end
 --		end
 
+feature -- Constants
+
+	Col_pixmap_index: INTEGER is 
+		deferred
+		end
+	Col_name_index: INTEGER is
+		deferred
+		end
+	Col_address_index: INTEGER is
+		deferred
+		end
+	Col_value_index: INTEGER is
+		deferred
+		end
+	Col_type_index: INTEGER is
+		deferred
+		end
+	Col_context_index: INTEGER is
+		deferred
+		end
+		
+	Col_titles: ARRAY [STRING] is
+		deferred
+		end
+		
 end

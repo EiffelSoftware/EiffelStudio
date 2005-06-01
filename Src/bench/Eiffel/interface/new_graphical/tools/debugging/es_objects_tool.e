@@ -84,37 +84,47 @@ feature {NONE} -- Initialization
 
 	build_interface is
 			-- Build all the tool's widgets.
+		local
+			esgrid: ES_OBJECTS_GRID
 		do
 			create displayed_objects.make
-			create stack_objects_grid.make ("Stack objects", Current)
+				--| Stack obj grid
+			create esgrid.make ("Stack objects", Current)
+			esgrid.set_column_count_to (4)
+			esgrid.column (col_name_index).set_title (col_titles @ col_name_index)
+			esgrid.column (col_name_index).set_width (100)
+			esgrid.column (col_address_index).set_title (col_titles @ col_address_index)
+			esgrid.column (col_address_index).set_width (80)
+			esgrid.column (col_value_index).set_title (col_titles @ col_value_index)
+			esgrid.column (col_value_index).set_width (150)
+			esgrid.column (col_type_index).set_title (col_titles @ col_type_index)
+			esgrid.column (col_type_index).set_width (200)
 
-			stack_objects_grid.set_item_veto_pebble_function (agent on_stacks_veto_pebble_function)
-			stack_objects_grid.item_drop_actions.extend (agent on_drop_stack_element)
-			stack_objects_grid.key_press_actions.extend (agent debug_value_key_action (stack_objects_grid, ?))
-			stack_objects_grid.set_minimum_size (100, 100)
-			stack_objects_grid.set_column_count_to (4)
-			stack_objects_grid.column (1).set_title ("Object")
-			stack_objects_grid.column (1).set_width (100)
-			stack_objects_grid.column (2).set_title ("Type")
-			stack_objects_grid.column (3).set_title ("Address")
-			stack_objects_grid.column (3).set_width (80)
-			stack_objects_grid.column (4).set_title ("Value")
-			stack_objects_grid.column (4).set_width (200)
+			esgrid.set_item_veto_pebble_function (agent on_stacks_veto_pebble_function)
+			esgrid.item_drop_actions.extend (agent on_drop_stack_element)
+			esgrid.key_press_actions.extend (agent debug_value_key_action (esgrid, ?))
+			esgrid.set_minimum_size (100, 100)
 
-			create debugged_objects_grid.make ("Debugged objects", Current)
+			stack_objects_grid := esgrid
 
-			debugged_objects_grid.set_item_veto_pebble_function (agent on_objects_veto_pebble_function)
-			debugged_objects_grid.item_drop_actions.extend (agent on_add_object)
-			debugged_objects_grid.key_press_actions.extend (agent object_key_action)
-			debugged_objects_grid.key_press_actions.extend (agent debug_value_key_action (debugged_objects_grid, ?))
-			debugged_objects_grid.set_column_count_to (4)
-			debugged_objects_grid.column (1).set_title ("Object")
-			debugged_objects_grid.column (1).set_width (100)
-			debugged_objects_grid.column (2).set_title ("Type")
-			debugged_objects_grid.column (3).set_title ("Address")
-			debugged_objects_grid.column (3).set_width (80)
-			debugged_objects_grid.column (4).set_title ("Value")
-			debugged_objects_grid.column (4).set_width (200)
+				--| Debugged obj grid
+			create esgrid.make ("Debugged objects", Current)
+			esgrid.set_column_count_to (4)
+			esgrid.column (col_name_index).set_title (col_titles @ col_name_index)
+			esgrid.column (col_name_index).set_width (100)
+			esgrid.column (col_address_index).set_title (col_titles @ col_address_index)
+			esgrid.column (col_address_index).set_width (80)
+			esgrid.column (col_value_index).set_title (col_titles @ col_value_index)
+			esgrid.column (col_value_index).set_width (150)
+			esgrid.column (col_type_index).set_title (col_titles @ col_type_index)
+			esgrid.column (col_type_index).set_width (200)
+
+			esgrid.set_item_veto_pebble_function (agent on_objects_veto_pebble_function)
+			esgrid.item_drop_actions.extend (agent on_add_object)
+			esgrid.key_press_actions.extend (agent object_key_action)
+			esgrid.key_press_actions.extend (agent debug_value_key_action (esgrid, ?))
+
+			debugged_objects_grid := esgrid
 
 			create split
 			split.disable_flat_separator
@@ -1003,5 +1013,25 @@ feature {NONE} -- Constants
 
 	Left_address_delim: STRING is " <"
 	Right_address_delim: STRING is ">"
+
+
+feature {NONE} -- Grid related Constants
+
+	Col_pixmap_index: INTEGER is 1
+	Col_name_index: INTEGER is 1
+	Col_address_index: INTEGER is 2
+	Col_value_index: INTEGER is 3
+	Col_type_index: INTEGER is 4
+	Col_context_index: INTEGER is 5
+
+	Col_titles: ARRAY [STRING] is
+		do
+			create Result.make (1, 5)
+			Result.put ("Name", Col_name_index)
+			Result.put ("Address", Col_address_index)
+			Result.put ("Value", Col_value_index)
+			Result.put ("Type", Col_type_index)
+			Result.put ("Context ...", Col_context_index)
+		end
 
 end

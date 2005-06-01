@@ -31,7 +31,7 @@ inherit
 create
 	make_with_expression
 
-feature {NONE}
+feature {NONE} -- Initialization
 
 	make_with_expression (exp: EB_EXPRESSION; ot: like tool) is
 		require
@@ -198,15 +198,6 @@ fixme ("find a smarter way to get a valid value")
 
 feature -- Graphical changes
 
-	Col_context_index: INTEGER is 5
-
-	set_context (v: STRING) is
-		local
-			glab: EV_GRID_LABEL_ITEM
-		do
-			glab := cell_text_updated (v, Col_context_index)
-		end
-		
 	set_expression_text (v: STRING) is
 		require else
 			is_attached_to_row: row /= Void

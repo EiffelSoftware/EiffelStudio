@@ -8,7 +8,7 @@ deferred class
 	ES_OBJECTS_GRID_LINE
 
 inherit
-
+		
 	ES_GRID_ROW_CONTROLLER
 		rename
 			pebble as object_stone,
@@ -411,6 +411,14 @@ feature -- Graphical changes
 			glab := cell_text_updated (v, Col_value_index)
 			apply_cell_value_properties_on (glab)
 		end
+		
+	set_context (v: STRING) is
+		local
+			glab: EV_GRID_LABEL_ITEM
+		do
+			glab := cell_text_updated (v, Col_context_index)
+			apply_cell_context_properties_on (glab)
+		end
 
 	apply_cell_name_properties_on (a_item: EV_GRID_LABEL_ITEM) is
 		require
@@ -432,6 +440,11 @@ feature -- Graphical changes
 			a_item_not_void: a_item /= Void
 		do
 		end
+	apply_cell_context_properties_on (a_item: EV_GRID_LABEL_ITEM) is
+		require
+			a_item_not_void: a_item /= Void
+		do
+		end		
 
 	set_pixmap (v: EV_PIXMAP) is
 		require
@@ -443,12 +456,38 @@ feature -- Graphical changes
 			gi := row.item (Col_pixmap_index)
 			grid_cell_set_pixmap (gi, v)
 		end
+		
+feature -- Column index
 
-	Col_name_index: INTEGER is 1
-	Col_type_index: INTEGER is 2
-	Col_address_index: INTEGER is 3
-	Col_value_index: INTEGER is 4
-	Col_pixmap_index: INTEGER is 1
+	Col_pixmap_index: INTEGER is
+		do
+			Result := tool.Col_pixmap_index
+		end
+
+	Col_name_index: INTEGER is
+		do
+			Result := tool.Col_name_index
+		end
+
+	Col_address_index: INTEGER is
+		do
+			Result := tool.Col_address_index
+		end
+
+	Col_value_index: INTEGER is
+		do
+			Result := tool.Col_value_index
+		end
+
+	Col_type_index: INTEGER is
+		do
+			Result := tool.Col_type_index
+		end
+
+	Col_context_index: INTEGER is
+		do
+			Result := tool.Col_context_index
+		end
 
 feature -- Updating
 
@@ -477,7 +516,7 @@ feature -- Updating
 							l_text := "0x" + l_integer32_value.to_hex_string
 						else
 							l_text := l_integer32_value.out
-						end
+					 	end
 						set_value (l_text)
 					when {DUMP_VALUE_CONSTANTS}.Type_integer_64 then
 						l_integer64_value := l_dmp.value_integer_64

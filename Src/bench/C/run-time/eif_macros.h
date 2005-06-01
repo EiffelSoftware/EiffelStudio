@@ -80,6 +80,11 @@ RT_LNK void * eif_pointer_identity (void *);
 #define EIF_TEST(x)		((EIF_BOOLEAN)((x) ? EIF_TRUE : EIF_FALSE))
 #define EIF_VOLATILE
 
+#ifdef WORKBENCH
+#define EIF_IS_WORKBENCH EIF_TRUE
+#else
+#define EIF_IS_WORKBENCH EIF_FALSE
+#endif
 
 /* Function pointer call to make sure all arguments are correctly pushed onto stack.
  * FUNCTION_CAST is for standard C calls.

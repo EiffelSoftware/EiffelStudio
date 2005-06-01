@@ -81,26 +81,73 @@ feature {NONE} -- Implementation
 						attributes_mapping := attributes_mapping.resized_area (l_table.count)
 					end
 					l_table.put (l_new_dtype, l_old_dtype)
-
-						-- Read attributes description
-					read_attributes (l_new_dtype)
-					if has_error then
-							-- We had an error while retrieving stored attributes
-							-- for `l_old_dtype'.
-						i := nb - 1	-- Jump out of loop
-					end
 				end
-
 				i := i + 1
 			end
-			dynamic_type_table := l_table
 
-				-- Read object_table if any.
-			read_object_table (a_count)
+			if not has_error then
+					-- Read table which will give us mapping between the old dynamic types
+					-- and the new ones.
+				from
+					i := 0
+					nb := l_deser.read_compressed_natural_32.to_integer_32
+				until
+					i = nb
+				loop
+						-- Read old dynamic type
+					l_old_dtype := l_deser.read_compressed_natural_32.to_integer_32
+	
+						-- Read type string associated to `l_old_dtype' and find dynamic type
+						-- in current system.
+					l_new_dtype := l_int.dynamic_type_from_string (l_deser.read_string_8)
+					if l_new_dtype = -1 then
+						has_error := True
+						i := nb - 1 -- Jump out of loop
+					else
+						if not l_table.valid_index (l_old_dtype) then
+							l_table := l_table.resized_area ((l_old_dtype + 1).max (l_table.count * 2))
+							attributes_mapping := attributes_mapping.resized_area (l_table.count)
+						end
+						l_table.put (l_new_dtype, l_old_dtype)
+					end
+					i := i + 1
+				end
+
+				if not has_error then
+						-- Now set `dynamic_type_table' as all old dynamic type IDs have
+						-- be read and resolved.
+					dynamic_type_table := l_table
+	
+						-- Read attributes map for each dynamic type.
+					from
+						i := 0
+						nb := l_deser.read_compressed_natural_32.to_integer_32
+					until
+						i = nb
+					loop
+							-- Read old dynamic type.
+						l_old_dtype := l_deser.read_compressed_natural_32.to_integer_32
+	
+							-- Read attributes description
+						read_attributes (l_table.item (l_old_dtype))
+						if has_error then
+								-- We had an error while retrieving stored attributes
+								-- for `l_old_dtype'.
+							i := nb - 1	-- Jump out of loop
+						end
+						i := i + 1
+					end
+
+					if not has_error then
+							-- Read object_table if any.
+						read_object_table (a_count)
+					end
+				end
+			end
 		end
 
 	read_attributes (a_dtype: INTEGER) is
-			-- Read attribute description for `a_dtype' where `a_dtype' is in 
+			-- Read attribute description for `a_dtype' where `a_dtype' is in
 		require
 			a_dtype_non_negative: a_dtype >= 0
 			attributes_mapping_not_void: attributes_mapping /= Void
@@ -123,7 +170,7 @@ feature {NONE} -- Implementation
 				i = nb
 			loop
 					-- Read attribute static type
-				l_dtype := l_deser.read_compressed_natural_32.to_integer_32
+				l_dtype := new_dynamic_type_id (l_deser.read_compressed_natural_32.to_integer_32)
 					-- Write attribute name
 				l_name := l_deser.read_string_8
 

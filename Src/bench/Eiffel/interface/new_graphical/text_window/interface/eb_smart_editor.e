@@ -786,8 +786,10 @@ feature {NONE} -- Autocomplete implementation
 						text_displayed.class_completion_possibilities
 					)
 			end
-			choices.hide
-			if choices.show_needed then			
+			if choices.is_displayed then
+				choices.hide
+			end
+			if choices.show_needed and choices.should_show then			
 				position_completion_choice_window
 				choices.show
 			end

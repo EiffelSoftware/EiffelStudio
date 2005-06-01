@@ -36,6 +36,9 @@ feature -- Access
 	resource: FONT_PREFERENCE
 			-- Actual resource.
 
+	last_selected_value: EV_FONT
+			-- Value last selected by user.
+
 feature {PREFERENCE_VIEW} -- Commands
 
 	change is
@@ -49,6 +52,7 @@ feature {PREFERENCE_VIEW} -- Commands
 			font_tool.set_font (resource.value)
 
 			font_tool.ok_actions.extend (agent update_changes)
+			font_tool.cancel_actions.extend (agent cancel_changes)
 			font_tool.show_modal_to_window (caller.parent_window)
 		end 
 
@@ -64,8 +68,14 @@ feature {NONE} -- Commands
 			display_font (font)
 		end
 
+	cancel_changes is
+			-- Commit the result of Font Tool.
+		do
+			last_selected_value := Void
+		end
+
 	update_resource is
-			-- 
+			-- Update resource to reflect recently chosen value
 		do
 			if last_selected_value /= Void then
 				resource.set_value (last_selected_value)	
@@ -126,8 +136,5 @@ feature {NONE} -- Implementation
 
 	example_string: STRING is "Abc"
 			-- Example string to use in `example_label'.
-
-	last_selected_value: EV_FONT
-			-- Value last selected by user.
 
 end -- class FONT_PREFERENCE_WIDGET

@@ -36,11 +36,11 @@ feature -- Status Setting
 			valid_font: a_value /= Void and then not a_value.is_destroyed
 		do
 			Precursor {TYPED_PREFERENCE} (a_value)
-			face := value.name
-			shape := value.shape
-			weight := value.weight
-			height := value.height_in_points
-			family := value.family			
+			face := a_value.name
+			shape := a_value.shape
+			weight := a_value.weight
+			height := a_value.height_in_points
+			family := a_value.family			
 		end
 
 	string_type: STRING is
@@ -72,8 +72,7 @@ feature {PREFERENCES} -- Access
 feature {NONE} -- Implementation
 
 	face: STRING
-		-- Font faces
-
+			-- Font faces
 	shape, 
 	weight, 
 	height, 
@@ -110,7 +109,7 @@ feature {NONE} -- Implementation
 				value.set_height_in_points (height)
 				value.preferred_families.extend (face)
 				set_value (value)
-			end			
+			end
 		end
 
 	generated_value: STRING is

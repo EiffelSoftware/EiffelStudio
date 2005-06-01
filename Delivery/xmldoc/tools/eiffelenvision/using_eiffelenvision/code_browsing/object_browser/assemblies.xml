@@ -1,0 +1,77 @@
+<document output="envision" title="Object Browser Assembly Nodes">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_title>Object Browser Assembly Nodes</envision_title>
+				<envision_pseudo_name>40</envision_pseudo_name>
+			</toc>
+			<xml>
+				<xmlkeyword>
+					<index>K</index>
+					<term>Object Browser, Assembly Nodes</term>
+				</xmlkeyword>
+			</xml>
+		</help>
+	</meta_data>
+	<paragraph>	
+		<paragraph>
+			Assembly nodes, depicted by the common <image>
+				<url>../images/assembly/assembly.ico</url>
+			</image> icon, match the <link><url>url</url><label>*Component References</label></link> compiled into a project when last <link><url>../../compiling_projects/index.xml</url><label>Built</label></link>. EiffelEnvision only will show the references from the last build because of the task of performing <link><url>url</url><label>*Referenced Assembly Type and Feature Name Conversion</label></link>, done as compilation-time.
+		</paragraph>
+		<paragraph>
+			Expanding each assembly nodes will yield a flat list of namespaces found in the corresponding assembly. Namespace, just like in the <help_link>
+				<keywords>vxurfObjectBrowserS</keywords>
+				<tab_index>0</tab_index>
+				Visual Studio .NET Object Browser
+			</help_link>, are denoted by the <image>
+				<url>../images/assembly/namespace.ico</url>
+			</image> icon. In turn, expanding a namespace node will yield a list of <link><url>types.xml</url><label>.NET Type Nodes</label></link> contained within the corresponding namespace.
+		</paragraph>
+		
+		<anchor>also_see</anchor>
+		<heading>
+			<size>2</size>
+			<content>Related Sections</content>
+		</heading>
+		<seealso>
+			<bold>See Also:</bold>
+			<line_break/>
+			<link><url>index.xml</url><label>Object Browser</label></link>
+			<line_break/>
+			<link><url>references.xml</url><label>Object Browser References Node</label></link>
+			<line_break/>
+			<help_link>
+				<keywords>urfAddReferenceDialogBox</keywords>
+				<tab_index>0</tab_index>
+				Add Reference dialog box
+			</help_link>
+			<line_break/>
+			<help_link>
+				<keywords>vxgrfClassViewIcons</keywords>
+				<tab_index>0</tab_index>
+				Class View and Object Browser Icons
+			</help_link>
+			<line_break/>
+			<link><url>../index.xml</url><label>Code Browsing and Navigation</label></link>
+			<line_break/>
+			<help_link>
+				<keywords>vxoriBrowsingCodeComponents</keywords>
+				<tab_index>0</tab_index>
+				Browsing Code and Components	
+			</help_link>
+			<line_break/>
+			<help_link>
+				<keywords>vxurfObjectBrowserS</keywords>
+				<tab_index>0</tab_index>
+				Visual Studio .NET Object Browser
+			</help_link>
+			<line_break/>
+			<help_link>
+				<keywords>vxurfClassViewWindow</keywords>
+				<tab_index>0</tab_index>
+				Visual Studio .NET Class View
+			</help_link>
+		</seealso>
+	</paragraph>
+</document>

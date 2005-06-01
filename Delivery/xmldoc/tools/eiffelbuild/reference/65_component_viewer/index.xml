@@ -64,7 +64,7 @@
 			</link> on the
 			<image>
 				<url>/images/eiffelbuild/icons/icon_component_viewer_color.png</url>
-			</image> displayed in the tool bar of the component viewer (See screenshot above). Any existing component displayed will simply be removed.
+			</image> displayed in the tool bar of the component viewer (See screenshots above). Any existing component displayed is simply removed.
 		</paragraph>
 		<paragraph>Alternatively, you can hold down the Ctrl key while starting a 
 			<link>
@@ -87,13 +87,13 @@
 		<heading>
 			<size>2</size>View types
 		</heading>
-		<paragraph>Looking at the screenshot above, you can see that the
+		<paragraph>Looking at the left-hand screenshot above, you can see that the
 			<image>
 				<url>/images/eiffelbuild/icons/icon_component_display_view_color.png</url>
 			</image>  button is depressed, meaning the component viewer is in display view mode. Clicking on
 			<image>
 				<url>/images/eiffelbuild/icons/icon_component_build_view_color.png</url>
-			</image> will put the component viewer into build mode view. These modes are mutually exclusive and are described below:
+			</image> will put the component viewer into build mode view as shown in the right-hand screenshot. These modes are mutually exclusive and are described below:
 		</paragraph>
 		<list ordered="false">
 			<item>

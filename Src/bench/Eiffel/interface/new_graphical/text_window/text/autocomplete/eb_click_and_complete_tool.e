@@ -616,7 +616,7 @@ feature -- Basic Operations
 		do
 			insertion_remainder := 0
 			if can_attempt_auto_complete_from_token (token) then
-				if token.is_text then
+				if token.is_text or token.is_blank then
 						-- The cursor is in a text token so we complete based upon the previous token unless the cursor
 						-- is somewhere inside this token..
 					if cursor.pos_in_token > 1 then

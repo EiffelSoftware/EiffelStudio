@@ -37,7 +37,11 @@ feature -- Access
 	importing: STRING is "You may import the contents of an existing .BPR%Nfile into your project, by selecting the 'File', 'Import Project...'%Ncommand, and selecting the existing project to be added."
 	
 	multiple_items: STRING is "While dropping from the Type Selector into%Nthe Layout Constructor, hold down one of the%Ndigit keys (1-9), to insert that many new objects."
-	
+
+	clipboard_pick_and_drop: STRING is "You may pick and drop objects directly to and from the clipboard icon in the main window."
+
+	single_widget: STRING is "You may generate the  clases representing a single top level widget by picking from the widgets representation and droppind directly on the generate button."
+
 	all_tips: ARRAYED_LIST [STRING] is
 			-- All tips avaialable from `Current'.
 		once
@@ -57,6 +61,8 @@ feature -- Access
 			Result.extend (loading_constants)
 			Result.extend (importing)
 			Result.extend (multiple_items)
+			Result.extend (clipboard_pick_and_drop)
+			Result.extend (single_widget)
 		end
 	
 	tip_count: INTEGER is

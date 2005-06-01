@@ -433,7 +433,6 @@ feature -- Basic operations
 			tree_node_spacing: INTEGER
 			total_tree_node_width: INTEGER
 			collapse_pixmap, expand_pixmap: EV_PIXMAP
-			tree_node_indent: INTEGER
 			first_tree_node_indent: INTEGER
 			node_pixmap_width, node_pixmap_height: INTEGER
 			parent_row_i: EV_GRID_ROW_I
@@ -488,18 +487,14 @@ feature -- Basic operations
 				tree_node_spacing := grid.tree_node_spacing
 					-- Retrieve the spacing around each node.
 					
+					-- Retrieve properties for drawing from the grid.
 				node_pixmap_width := grid.node_pixmap_width
 				node_pixmap_height := expand_pixmap.height
+				standard_subrow_indent := grid.tree_subrow_indent
+				total_tree_node_width := grid.total_tree_node_width
+				first_tree_node_indent := grid.first_tree_node_indent
 
-				standard_subrow_indent := (tree_node_spacing * 2) + node_pixmap_width + grid.subrow_indent
 
-				total_tree_node_width := node_pixmap_width + 2 * tree_node_spacing
-				
-				tree_node_indent := total_tree_node_width + tree_node_spacing
-				
-				first_tree_node_indent := total_tree_node_width + 2 * tree_node_spacing
-		
-				
 				physical_column_indexes := grid.physical_column_indexes
 				
 				internal_client_x := grid.internal_client_x
@@ -573,9 +568,9 @@ feature -- Basic operations
 								if drawing_subrow or drawing_parentrow then
 									-- We are now about to draw a row that is a subrow of another row, so
 									-- perform any calculations required.
-									
+
 									node_index := retrieve_node_index (current_row)
-									
+
 									if drawing_subrow then
 										parent_node_index := retrieve_node_index (parent_row_i)
 										from
@@ -586,7 +581,7 @@ feature -- Basic operations
 											parent_node_index := parent_node_index.max (current_parent_row.index_of_first_item)
 											current_parent_row := current_parent_row.parent_row_i
 										end
-											parent_subrow_indent := grid.item_cell_indent (parent_node_index, parent_row_i.index) + ((node_pixmap_width + 1) // 2)
+										parent_subrow_indent := grid.item_cell_indent (parent_node_index, parent_row_i.index) + ((node_pixmap_width + 1) // 2)
 										parent_x_indent_position := parent_subrow_indent
 										node_index := node_index.max (parent_node_index)
 									end
@@ -603,13 +598,8 @@ feature -- Basic operations
 	
 								vertical_node_pixmap_top_offset := ((current_row_height - node_pixmap_height + 1)// 2)
 								vertical_node_pixmap_bottom_offset := vertical_node_pixmap_top_offset + node_pixmap_height
-								
-								if drawing_parentrow or (drawing_subrow) then
-									current_subrow_indent := subrow_indent (current_row)
-								else
-									current_subrow_indent := 0
-								end
 
+								current_subrow_indent := subrow_indent (current_row)
 							end
 							
 							from
@@ -672,11 +662,9 @@ feature -- Basic operations
 										-- the originally computed version is probably incorrect.
 										-- This is due to the fact that the row may well have been empty up until this point
 										-- and it is only now that we are filling the row.
-									if drawing_parentrow or (drawing_subrow) then
-										current_subrow_indent := subrow_indent (current_row)
-									else
-										current_subrow_indent := 0
-									end
+
+									current_subrow_indent := subrow_indent (current_row)
+
 										-- Now calculate the index of the first item in the row.
 									if drawing_subrow or drawing_parentrow then
 										-- We are now about to draw a row that is a subrow of another row, so
@@ -699,244 +687,235 @@ feature -- Basic operations
 									item_buffer_pixmap.set_size (current_column_width, current_row_height)							
 								end
 								
---								if grid_item_exists then
-										-- An item has been retrieved for the current drawing position so draw it.
-										
-									if current_column_index = 1 then
-											-- If we are drawing the first row then we must ensure that
-											-- the items are indented to the default indent of the tree, even
-											-- if they are not tree items.
-										current_subrow_indent := current_subrow_indent.max (first_tree_node_indent)
-									end
-									if drawing_subrow then
-											-- If we are drawing a subrow whose first item is
-											-- in a different column to the parent node, then we set the indent to 0.
-										if parent_node_index < node_index then
-											if drawing_parentrow then
-												current_subrow_indent := standard_subrow_indent
-											else
-												current_subrow_indent := 0
-											end
-										end
-									end
-										-- Now compute horizontal variables for tree drawing.
-									if drawing_parentrow then
-										horizontal_node_pixmap_left_offset := current_subrow_indent - (tree_node_spacing * 2) - node_pixmap_width
-									elseif drawing_subrow then
-										horizontal_node_pixmap_left_offset := current_subrow_indent
-									else
-										horizontal_node_pixmap_left_offset := current_column_width
-									end
-									node_pixmap_vertical_center := current_subrow_indent - (tree_node_spacing * 2) - (node_pixmap_width + 1) // 2
-									
-									current_tree_adjusted_item_x_position := current_item_x_position
-									current_tree_adjusted_column_width := current_column_width
-	
-									if is_tree_enabled then
-										
-										if current_column_index = node_index then
-											
-											current_tree_adjusted_item_x_position := current_tree_adjusted_item_x_position + current_subrow_indent
-											current_tree_adjusted_column_width := current_tree_adjusted_column_width - current_subrow_indent
-												-- We adjust the horizontal position and width of the current item by the space required
-												-- for the tree node.
-											
-											item_buffer_pixmap.set_foreground_color (grid.displayed_background_color (current_column_index, current_row_index))
-											
-												-- The background area for the tree node must always be refreshed, even if the node is not visible.
-												-- We draw no wider than `current_column_width' to ensure this. The item background is re-drawn by the
-												-- item itself.
-											item_buffer_pixmap.fill_rectangle (0, 0, current_subrow_indent, current_row_height)
-	
-												-- If the indent of the tree is less than `current_column_width', it must be visible so draw it.
-											if current_row.is_expandable then
-													-- Note we add 1 to account for rounding errors when odd values.
-												if current_row.is_expanded then
-													l_pixmap := collapse_pixmap
-												else
-													l_pixmap := expand_pixmap
-												end
-													-- Now check if we must clip the pixmap vertically
-												fixme ("Add horizontal clipping for pixmaps.")
-												if horizontal_node_pixmap_left_offset < current_column_width then
-													if node_pixmap_height > current_row_height then
-															-- In this situation, the height of the expand image is greater than the current row height,
-															-- so we only draw the part that fits within the node.
-														item_buffer_pixmap.draw_sub_pixmap (horizontal_node_pixmap_left_offset, 0, l_pixmap, create {EV_RECTANGLE}.make (0, (node_pixmap_height - current_row_height) // 2, node_pixmap_height, current_row_height))
-													else
-														item_buffer_pixmap.draw_pixmap (horizontal_node_pixmap_left_offset, vertical_node_pixmap_top_offset, l_pixmap)
-													end
-												end
-											end
-												-- We must now draw the lines for the tree structure.
-											
-											if current_subrow_indent > 0 and are_tree_node_connectors_shown then
-												if current_column_index > 1 or drawing_subrow then
-													l_x_start := current_subrow_indent
-													if current_row.is_expandable then
-														l_x_end := horizontal_node_pixmap_left_offset + node_pixmap_width
-													else
-														if parent_node_index = node_index then
-															l_x_end := node_pixmap_vertical_center
-														else
-															l_x_end := 0
-														end
-													end
-													item_buffer_pixmap.set_foreground_color (tree_node_connector_color)
-													if l_x_start < current_column_width then
-															-- If the edge of the horizontal line from the left edge of the item is within the position
-															-- of the column, we must draw it, otherwise it is clipped below in the "elseif"
-
-														item_buffer_pixmap.draw_segment (l_x_start, row_vertical_center, l_x_end, row_vertical_center)
-															-- Draw a horizontal line from the left edge of the item to the either the node horizontal offset or the edge of the actual item position
-														 	-- if the node to which we are connected is within a different column.
-
-														 if parent_node_index /= node_index and current_row.is_expandable then
-														 		-- Draw the horizontal line from the left edge of the expand icon to the start of
-														 		-- the grid cell as the horizontal line spans into other grid cells.
-														 	item_buffer_pixmap.draw_segment (0, row_vertical_center, horizontal_node_pixmap_left_offset, row_vertical_center)
-														 end
-													elseif l_x_end.min (current_item_x_position + current_column_width) /= current_item_x_position + current_column_width then
-															-- Now we must clip the horizontal segment and draw.
-														item_buffer_pixmap.draw_segment (l_x_end.min (current_column_width), row_vertical_center, current_column_width, row_vertical_center)
-													end
-												end
-												 
-												if drawing_subrow and then parent_node_index = current_column_index then
-													
-													current_horizontal_pos := node_pixmap_vertical_center
-													if are_tree_node_connectors_shown then
-														item_buffer_pixmap.set_foreground_color (tree_node_connector_color)
-														if current_horizontal_pos < column_offsets @ (node_index + 1) then
-																-- Draw the vertical line at the node, connecting the top and bottom
-																-- of the tree row.
-															if parent_row_i.subnode_count_recursive > ((current_row.index + current_row.subnode_count_recursive) - parent_row_i.index) then
-																	-- In this case we are not the final row in the parents structure, so we must draw from the top of
-																	-- the row to the bottom.
-																if current_row.is_expandable then
-																		-- The row displays an expand or collapse pixmap, so draw the lines above and below. Subtract one as we
-																		-- do not want to overwrite the first line of the pixmap.
-																	item_buffer_pixmap.draw_segment (node_pixmap_vertical_center, vertical_node_pixmap_top_offset - 1, node_pixmap_vertical_center, 0)
-																	item_buffer_pixmap.draw_segment (node_pixmap_vertical_center, vertical_node_pixmap_bottom_offset, node_pixmap_vertical_center, row_vertical_bottom)
-																else
-																		-- Draw a single line from top to bottom.
-																	item_buffer_pixmap.draw_segment (node_pixmap_vertical_center, 0, node_pixmap_vertical_center, row_vertical_bottom)
-																end
-															else
-																	-- We are the final row in the parents structure, so we draw from the center of the row to the top.
-																if current_row.is_expandable then
-																		-- Draw from the top of the node. Subtract one as we do not want to overwrite the first line of the pixmap.
-																	item_buffer_pixmap.draw_segment (node_pixmap_vertical_center, vertical_node_pixmap_top_offset - 1, node_pixmap_vertical_center, 0)
-																else
-																		-- Draw from the center of the row as no node pixmap is displayed.
-																	item_buffer_pixmap.draw_segment (node_pixmap_vertical_center, row_vertical_center, node_pixmap_vertical_center, 0)
-																end
-															end
-														end
-		
-															-- Now we draw all of the horizontal lines required to fill in the lines of parents at any level.
-															-- We iterate backwards from the current position and for each subsequent parent node, determine
-															-- if a line must be drawn.
-														from
-															loop_current_row := parent_row_i
-															loop_parent_row := parent_row_i.parent_row_i
-														until
-															current_horizontal_pos < current_item_x_position or loop_parent_row = Void
-														loop
-															current_horizontal_pos := current_horizontal_pos - standard_subrow_indent
-															if current_horizontal_pos < current_item_x_position + current_column_width then
-																	-- It is possible that the current vertical line segment that we must draw is outside the right hand
-																	-- edge of the item. In this case, we simply do not draw it. This reduces flicker and time spent
-																	-- drawing.
-																
-																if loop_parent_row.subnode_count_recursive > ((loop_current_row.index + loop_current_row.subnode_count_recursive) - loop_parent_row.index) then
-																		-- If the current item is the last one contained within the parent then a line must be drawn. As this is
-																		-- computed in a nested fashion, the subnode count is used recursively.
-																		
-																	item_buffer_pixmap.draw_segment (current_horizontal_pos, row_vertical_bottom, current_horizontal_pos, 0)
-																		-- Draw the vertical line from the bottom of the item to the top.
-																end
-															end
-															
-																-- Move one position upwards within the parenting node structure
-															loop_current_row := loop_parent_row
-															loop_parent_row := loop_parent_row.parent_row_i
-														end
-													end
-												end
-											end
-										end
-									end
-									if grid_item_exists then
-										if current_tree_adjusted_item_x_position - current_item_x_position < current_column_width then
-											if current_column_index = node_index then
-												grid_item.perform_redraw (current_tree_adjusted_item_x_position, current_item_y_position, current_tree_adjusted_column_width, current_row_height, current_subrow_indent, item_buffer_pixmap)
-											else
-												grid_item.perform_redraw (current_tree_adjusted_item_x_position, current_item_y_position, current_tree_adjusted_column_width, current_row_height, 0, item_buffer_pixmap)
-											end
-										end
-										first_item_in_row_drawn := True
-									else
-
-										translated_parent_x_indent_position := (parent_x_indent_position + grid.subrow_indent - 1)
-									
-										if parent_node_index < current_column_index then
-											translated_parent_x_indent_position := 0
-										end
-										item_buffer_pixmap.set_foreground_color (grid.displayed_background_color (current_column_index, current_row_index))
-										if current_column_index = node_index then
-											item_buffer_pixmap.fill_rectangle (current_subrow_indent, 0, current_column_width, current_row_height)
+								if drawing_subrow then
+										-- If we are drawing a subrow whose first item is
+										-- in a different column to the parent node, then we set the indent to 0.
+									if parent_node_index < node_index then
+										if drawing_parentrow then
+											current_subrow_indent := standard_subrow_indent
 										else
-											item_buffer_pixmap.fill_rectangle (0, 0, current_column_width, current_row_height)
+											current_subrow_indent := 0
 										end
+									end
+								end
+									-- Now compute horizontal variables for tree drawing.
+								if drawing_parentrow then
+									horizontal_node_pixmap_left_offset := current_subrow_indent - (tree_node_spacing * 2) - node_pixmap_width
+								elseif drawing_subrow then
+									horizontal_node_pixmap_left_offset := current_subrow_indent
+								else
+									horizontal_node_pixmap_left_offset := current_column_width
+								end
+								node_pixmap_vertical_center := current_subrow_indent - (tree_node_spacing * 2) - (node_pixmap_width + 1) // 2
+								
+								current_tree_adjusted_item_x_position := current_item_x_position
+								current_tree_adjusted_column_width := current_column_width
 
-										item_buffer_pixmap.set_foreground_color (tree_node_connector_color)
-										if drawing_subrow and ((current_column_index = current_row.index_of_first_item)) then
-												-- Here we must extend the line drawn from the horizontal offsets of the parent to the start of this item.
-												-- As the item is `Void', we set the end to the right hand edge of the column.
-											l_x_end := current_column_width
-											if parent_node_index /= current_column_index then
-													-- In this case, there is no parent node connection from within this cell, so we
-													-- set the left edge for drawing to the very left edge of the column.
-												l_x_start := 0
+								if is_tree_enabled then
+									
+									if current_column_index = node_index then
+										
+										current_tree_adjusted_item_x_position := current_tree_adjusted_item_x_position + current_subrow_indent
+										current_tree_adjusted_column_width := current_tree_adjusted_column_width - current_subrow_indent
+											-- We adjust the horizontal position and width of the current item by the space required
+											-- for the tree node.
+										
+										item_buffer_pixmap.set_foreground_color (grid.displayed_background_color (current_column_index, current_row_index))
+										
+											-- The background area for the tree node must always be refreshed, even if the node is not visible.
+											-- We draw no wider than `current_column_width' to ensure this. The item background is re-drawn by the
+											-- item itself.
+										item_buffer_pixmap.fill_rectangle (0, 0, current_subrow_indent, current_row_height)
+
+											-- If the indent of the tree is less than `current_column_width', it must be visible so draw it.
+										if current_row.is_expandable then
+												-- Note we add 1 to account for rounding errors when odd values.
+											if current_row.is_expanded then
+												l_pixmap := collapse_pixmap
+											else
+												l_pixmap := expand_pixmap
 											end
-											item_buffer_pixmap.draw_segment (l_x_start, row_vertical_center, l_x_end, row_vertical_center)
-										end
-										if are_tree_node_connectors_shown and (drawing_subrow or drawing_parentrow) and current_column_index /= node_index and current_column_index >= parent_node_index then
-
-												-- We must now draw the lines for the tree structure, as although there is no item
-												-- at this location in the grid, a tree line may cross it horizontally.
-											if current_column_index < node_index then
-
-												item_buffer_pixmap.draw_segment (translated_parent_x_indent_position.min (current_column_width), row_vertical_center, current_column_width, row_vertical_center)
-													-- The background area for the tree node must always be refreshed, even if the node is not visible.
-													-- We draw no wider than `current_column_width' to ensure this.
-											end
-	
-	
-											if (parent_node_index = current_column_index) and (translated_parent_x_indent_position < current_column_width) then
-													-- If the grid column being drawn matches that in which the
-													-- node of `parent_row_i' is contained, then vertical lines must be drawn
-													-- to connect the lines.
-	
-												if parent_row_i.subrow_count > (current_row.index - parent_row_i.index) then
-														-- In this case, there are more subrows of `parent_row_i' to be drawn,
-														-- so the vertical line is drawn to span the complete height of the current row.
-													item_buffer_pixmap.draw_segment (translated_parent_x_indent_position, row_vertical_bottom, translated_parent_x_indent_position, 0)
-	
+												-- Now check if we must clip the pixmap vertically
+											fixme ("Add horizontal clipping for pixmaps.")
+											if horizontal_node_pixmap_left_offset < current_column_width then
+												if node_pixmap_height > current_row_height then
+														-- In this situation, the height of the expand image is greater than the current row height,
+														-- so we only draw the part that fits within the node.
+													item_buffer_pixmap.draw_sub_pixmap (horizontal_node_pixmap_left_offset, 0, l_pixmap, create {EV_RECTANGLE}.make (0, (node_pixmap_height - current_row_height) // 2, node_pixmap_height, current_row_height))
 												else
-														-- There are no subsequent rows for `parent_row_i' so we must draw the vertical line
-														-- from the start of the current row to the center only.
-													item_buffer_pixmap.draw_segment (translated_parent_x_indent_position, row_vertical_center, translated_parent_x_indent_position, 0)
+													item_buffer_pixmap.draw_pixmap (horizontal_node_pixmap_left_offset, vertical_node_pixmap_top_offset, l_pixmap)
 												end
+											end
+										end
+											-- We must now draw the lines for the tree structure.
+										
+										if current_subrow_indent > 0 and are_tree_node_connectors_shown then
+											if current_column_index > 1 or drawing_subrow then
+												l_x_start := current_subrow_indent
+												if current_row.is_expandable then
+													l_x_end := horizontal_node_pixmap_left_offset + node_pixmap_width
+												else
+													if parent_node_index = node_index then
+														l_x_end := node_pixmap_vertical_center
+													else
+														l_x_end := 0
+													end
+												end
+												item_buffer_pixmap.set_foreground_color (tree_node_connector_color)
+												if l_x_start < current_column_width then
+														-- If the edge of the horizontal line from the left edge of the item is within the position
+														-- of the column, we must draw it, otherwise it is clipped below in the "elseif"
+
+													item_buffer_pixmap.draw_segment (l_x_start, row_vertical_center, l_x_end, row_vertical_center)
+														-- Draw a horizontal line from the left edge of the item to the either the node horizontal offset or the edge of the actual item position
+													 	-- if the node to which we are connected is within a different column.
+
+													 if parent_node_index /= node_index and current_row.is_expandable then
+													 		-- Draw the horizontal line from the left edge of the expand icon to the start of
+													 		-- the grid cell as the horizontal line spans into other grid cells.
+													 	item_buffer_pixmap.draw_segment (0, row_vertical_center, horizontal_node_pixmap_left_offset, row_vertical_center)
+													 end
+												elseif l_x_end.min (current_item_x_position + current_column_width) /= current_item_x_position + current_column_width then
+														-- Now we must clip the horizontal segment and draw.
+													item_buffer_pixmap.draw_segment (l_x_end.min (current_column_width), row_vertical_center, current_column_width, row_vertical_center)
+												end
+											end
+											 
+											if drawing_subrow and then parent_node_index = current_column_index then
+												
+												current_horizontal_pos := node_pixmap_vertical_center
+												if are_tree_node_connectors_shown then
+													item_buffer_pixmap.set_foreground_color (tree_node_connector_color)
+													if current_horizontal_pos < column_offsets @ (node_index + 1) then
+															-- Draw the vertical line at the node, connecting the top and bottom
+															-- of the tree row.
+														if parent_row_i.subnode_count_recursive > ((current_row.index + current_row.subnode_count_recursive) - parent_row_i.index) then
+																-- In this case we are not the final row in the parents structure, so we must draw from the top of
+																-- the row to the bottom.
+															if current_row.is_expandable then
+																	-- The row displays an expand or collapse pixmap, so draw the lines above and below. Subtract one as we
+																	-- do not want to overwrite the first line of the pixmap.
+																item_buffer_pixmap.draw_segment (node_pixmap_vertical_center, vertical_node_pixmap_top_offset - 1, node_pixmap_vertical_center, 0)
+																item_buffer_pixmap.draw_segment (node_pixmap_vertical_center, vertical_node_pixmap_bottom_offset, node_pixmap_vertical_center, row_vertical_bottom)
+															else
+																	-- Draw a single line from top to bottom.
+																item_buffer_pixmap.draw_segment (node_pixmap_vertical_center, 0, node_pixmap_vertical_center, row_vertical_bottom)
+															end
+														else
+																-- We are the final row in the parents structure, so we draw from the center of the row to the top.
+															if current_row.is_expandable then
+																	-- Draw from the top of the node. Subtract one as we do not want to overwrite the first line of the pixmap.
+																item_buffer_pixmap.draw_segment (node_pixmap_vertical_center, vertical_node_pixmap_top_offset - 1, node_pixmap_vertical_center, 0)
+															else
+																	-- Draw from the center of the row as no node pixmap is displayed.
+																item_buffer_pixmap.draw_segment (node_pixmap_vertical_center, row_vertical_center, node_pixmap_vertical_center, 0)
+															end
+														end
+													end
 	
+														-- Now we draw all of the horizontal lines required to fill in the lines of parents at any level.
+														-- We iterate backwards from the current position and for each subsequent parent node, determine
+														-- if a line must be drawn.
+													from
+														loop_current_row := parent_row_i
+														loop_parent_row := parent_row_i.parent_row_i
+													until
+														current_horizontal_pos < current_item_x_position or loop_parent_row = Void
+													loop
+														current_horizontal_pos := current_horizontal_pos - standard_subrow_indent
+														if current_horizontal_pos < current_item_x_position + current_column_width then
+																-- It is possible that the current vertical line segment that we must draw is outside the right hand
+																-- edge of the item. In this case, we simply do not draw it. This reduces flicker and time spent
+																-- drawing.
+															
+															if loop_parent_row.subnode_count_recursive > ((loop_current_row.index + loop_current_row.subnode_count_recursive) - loop_parent_row.index) then
+																	-- If the current item is the last one contained within the parent then a line must be drawn. As this is
+																	-- computed in a nested fashion, the subnode count is used recursively.
+																	
+																item_buffer_pixmap.draw_segment (current_horizontal_pos, row_vertical_bottom, current_horizontal_pos, 0)
+																	-- Draw the vertical line from the bottom of the item to the top.
+															end
+														end
+														
+															-- Move one position upwards within the parenting node structure
+														loop_current_row := loop_parent_row
+														loop_parent_row := loop_parent_row.parent_row_i
+													end
+												end
 											end
 										end
 									end
-										-- Now draw the border for `grid_item'.
-									draw_item_border (current_column, current_row, grid_item, current_item_x_position, current_item_y_position, current_column_width, current_row_height)
-										-- Now blit the buffered drawing for the item to `drawable'.
-									drawable.draw_sub_pixmap (current_item_x_position, current_item_y_position, item_buffer_pixmap, create {EV_RECTANGLE}.make (0, 0, current_column_width, current_row_height))
+								end
+								if grid_item_exists then
+									if current_tree_adjusted_item_x_position - current_item_x_position < current_column_width then
+										if current_column_index = node_index then
+											grid_item.perform_redraw (current_tree_adjusted_item_x_position, current_item_y_position, current_tree_adjusted_column_width, current_row_height, current_subrow_indent, item_buffer_pixmap)
+										else
+											grid_item.perform_redraw (current_tree_adjusted_item_x_position, current_item_y_position, current_tree_adjusted_column_width, current_row_height, 0, item_buffer_pixmap)
+										end
+									end
+									first_item_in_row_drawn := True
+								else
+
+									translated_parent_x_indent_position := (parent_x_indent_position + grid.subrow_indent - 1)
+								
+									if parent_node_index < current_column_index then
+										translated_parent_x_indent_position := 0
+									end
+									item_buffer_pixmap.set_foreground_color (grid.displayed_background_color (current_column_index, current_row_index))
+									if current_column_index = node_index then
+										item_buffer_pixmap.fill_rectangle (current_subrow_indent, 0, current_column_width, current_row_height)
+									else
+										item_buffer_pixmap.fill_rectangle (0, 0, current_column_width, current_row_height)
+									end
+
+									item_buffer_pixmap.set_foreground_color (tree_node_connector_color)
+									if drawing_subrow and ((current_column_index = current_row.index_of_first_item)) then
+											-- Here we must extend the line drawn from the horizontal offsets of the parent to the start of this item.
+											-- As the item is `Void', we set the end to the right hand edge of the column.
+										l_x_end := current_column_width
+										if parent_node_index /= current_column_index then
+												-- In this case, there is no parent node connection from within this cell, so we
+												-- set the left edge for drawing to the very left edge of the column.
+											l_x_start := 0
+										end
+										item_buffer_pixmap.draw_segment (l_x_start, row_vertical_center, l_x_end, row_vertical_center)
+									end
+									if are_tree_node_connectors_shown and (drawing_subrow or drawing_parentrow) and current_column_index /= node_index and current_column_index >= parent_node_index then
+
+											-- We must now draw the lines for the tree structure, as although there is no item
+											-- at this location in the grid, a tree line may cross it horizontally.
+										if current_column_index < node_index then
+
+											item_buffer_pixmap.draw_segment (translated_parent_x_indent_position.min (current_column_width), row_vertical_center, current_column_width, row_vertical_center)
+												-- The background area for the tree node must always be refreshed, even if the node is not visible.
+												-- We draw no wider than `current_column_width' to ensure this.
+										end
+
+
+										if (parent_node_index = current_column_index) and (translated_parent_x_indent_position < current_column_width) then
+												-- If the grid column being drawn matches that in which the
+												-- node of `parent_row_i' is contained, then vertical lines must be drawn
+												-- to connect the lines.
+
+											if parent_row_i.subrow_count > (current_row.index - parent_row_i.index) then
+													-- In this case, there are more subrows of `parent_row_i' to be drawn,
+													-- so the vertical line is drawn to span the complete height of the current row.
+												item_buffer_pixmap.draw_segment (translated_parent_x_indent_position, row_vertical_bottom, translated_parent_x_indent_position, 0)
+
+											else
+													-- There are no subsequent rows for `parent_row_i' so we must draw the vertical line
+													-- from the start of the current row to the center only.
+												item_buffer_pixmap.draw_segment (translated_parent_x_indent_position, row_vertical_center, translated_parent_x_indent_position, 0)
+											end
+
+										end
+									end
+								end
+									-- Now draw the border for `grid_item'.
+								draw_item_border (current_column, current_row, grid_item, current_item_x_position, current_item_y_position, current_column_width, current_row_height)
+									-- Now blit the buffered drawing for the item to `drawable'.
+								drawable.draw_sub_pixmap (current_item_x_position, current_item_y_position, item_buffer_pixmap, create {EV_RECTANGLE}.make (0, 0, current_column_width, current_row_height))
 								visible_column_indexes.forth
 							end
 							visible_row_indexes.forth

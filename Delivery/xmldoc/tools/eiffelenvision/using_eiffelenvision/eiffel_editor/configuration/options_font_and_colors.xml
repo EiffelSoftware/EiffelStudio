@@ -6,18 +6,18 @@
 				<envision_pseudo_name>10</envision_pseudo_name>
 			</toc>
 			<xml>
-				<keyword>
+				<xmlkeyword>
 					<index>A</index>
 					<term>eeEditorFontsAndColorsOptions</term>
-				</keyword>
-				<keyword>
+				</xmlkeyword>
+				<xmlkeyword>
 					<index>K</index>
 					<term>Editor, Fonts and Colors Options</term>
-				</keyword>
-				<keyword>
+				</xmlkeyword>
+				<xmlkeyword>
 					<index>K</index>
 					<term>Eiffel Editor, Fonts and Colors Options</term>
-				</keyword>
+				</xmlkeyword>
 			</xml>
 		</help>
 	</meta_data>

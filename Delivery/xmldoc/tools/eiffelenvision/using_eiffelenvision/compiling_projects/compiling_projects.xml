@@ -5,6 +5,20 @@
 				<envision_title>Compiling Projects</envision_title>
 				<envision_pseudo_name>00</envision_pseudo_name>
 			</toc>
+			<xml>
+				<xmlkeyword>
+					<index>K</index>
+					<term>EiffelEnvision, Building</term>
+				</xmlkeyword>
+				<xmlkeyword>
+					<index>K</index>
+					<term>Compiling project</term>
+				</xmlkeyword>
+				<xmlkeyword>
+					<index>K</index>
+					<term>Build, EiffelEnvision</term>
+				</xmlkeyword>
+			</xml>
 		</help>
 	</meta_data>
 	<paragraph>	

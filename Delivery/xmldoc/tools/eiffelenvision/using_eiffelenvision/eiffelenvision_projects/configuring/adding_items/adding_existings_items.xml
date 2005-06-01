@@ -6,18 +6,18 @@
 				<envision_pseudo_name>30</envision_pseudo_name>
 			</toc>
 			<xml>
-				<keyword>
+				<xmlkeyword>
 					<index>K</index>
-					<term>Project, Adding existing items</term>
-				</keyword>
-				<keyword>
+					<term>Existing Items</term>
+				</xmlkeyword>	
+				<xmlkeyword>
 					<index>K</index>
-					<term>Adding existing items to projects</term>
-				</keyword>
-				<keyword>
+					<term>Projects, Adding Existing Items</term>
+				</xmlkeyword>	
+				<xmlkeyword>
 					<index>K</index>
-					<term>EiffelEnvision, Adding existing items to projects</term>
-				</keyword>
+					<term>EiffelEnvision, Adding Existing Items</term>
+				</xmlkeyword>
 			</xml>
 		</help>
 	</meta_data>

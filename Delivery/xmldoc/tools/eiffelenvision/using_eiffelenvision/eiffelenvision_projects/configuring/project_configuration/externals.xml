@@ -6,18 +6,14 @@
 				<envision_pseudo_name>80</envision_pseudo_name>
 			</toc>
 			<xml>
-				<keyword>
+				<xmlkeyword>
 					<index>K</index>
-					<term>Properties, Externals</term>
-				</keyword>
-				<keyword>
-					<index>K</index>
-					<term>Externals Properties</term>
-				</keyword>
-				<keyword>
+					<term>Project Configuration, Externals Properties</term>
+				</xmlkeyword>
+				<xmlkeyword>
 					<index>F</index>
 					<term>ee.vs.project.configuration.config.externals</term>
-				</keyword>
+				</xmlkeyword>
 			</xml>
 		</help>
 	</meta_data>

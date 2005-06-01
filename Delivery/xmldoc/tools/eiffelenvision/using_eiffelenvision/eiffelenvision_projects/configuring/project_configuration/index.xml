@@ -6,26 +6,14 @@
 				<envision_pseudo_name>00</envision_pseudo_name>
 			</toc>
 			<xml>
-				<keyword>
+				<xmlkeyword>
 					<index>K</index>
-					<term>Project configuration</term>
-				</keyword>
-				<keyword>
+					<term>EiffelEnvision, Project Configuration</term>
+				</xmlkeyword>
+				<xmlkeyword>
 					<index>K</index>
-					<term>Property pages</term>
-				</keyword>
-				<keyword>
-					<index>K</index>
-					<term>Property pages, EiffelEnvision</term>
-				</keyword>
-				<keyword>
-					<index>K</index>
-					<term>Projects, Configuring</term>
-				</keyword>
-				<keyword>
-					<index>K</index>
-					<term>EiffelEnvision, Configuring projects</term>
-				</keyword>
+					<term>Project Configuration</term>
+				</xmlkeyword>
 			</xml>
 		</help>
 	</meta_data>

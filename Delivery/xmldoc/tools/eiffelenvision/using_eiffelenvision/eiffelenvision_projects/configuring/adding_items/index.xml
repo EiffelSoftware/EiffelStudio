@@ -5,6 +5,20 @@
 				<envision_title>Adding New and Existing Items</envision_title>
 				<envision_pseudo_name>00</envision_pseudo_name>
 			</toc>
+			<xml>
+				<xmlkeyword>
+					<index>K</index>
+					<term>Project Items</term>
+				</xmlkeyword>	
+				<xmlkeyword>
+					<index>K</index>
+					<term>Project Items, Adding</term>
+				</xmlkeyword>
+				<xmlkeyword>
+					<index>K</index>
+					<term>EiffelEnvision, Adding New and Existing Items</term>
+				</xmlkeyword>
+			</xml>
 		</help>
 	</meta_data>
 	<paragraph>

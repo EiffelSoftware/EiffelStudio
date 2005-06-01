@@ -6,14 +6,14 @@
 				<envision_pseudo_name>60</envision_pseudo_name>
 			</toc>
 			<xml>
-				<keyword>
+				<xmlkeyword>
 					<index>K</index>
 					<term>EiffelEnvision, Guidelines</term>
-				</keyword>
-				<keyword>
+				</xmlkeyword>
+				<xmlkeyword>
 					<index>K</index>
-					<term>Adding clusters guidelines</term>
-				</keyword>
+					<term>Guidelines, Adding New Clusters</term>
+				</xmlkeyword>
 			</xml>
 		</help>
 	</meta_data>

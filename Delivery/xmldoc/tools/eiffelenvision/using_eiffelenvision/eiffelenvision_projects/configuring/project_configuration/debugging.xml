@@ -6,18 +6,14 @@
 				<envision_pseudo_name>70</envision_pseudo_name>
 			</toc>
 			<xml>
-				<keyword>
+				<xmlkeyword>
 					<index>K</index>
-					<term>Properties, Debugging</term>
-				</keyword>
-				<keyword>
-					<index>K</index>
-					<term>General Debugging</term>
-				</keyword>
-				<keyword>
+					<term>Project Configuration, Debugging Properties</term>
+				</xmlkeyword>
+				<xmlkeyword>
 					<index>F</index>
 					<term>ee.vs.project.configuration.config.debugging</term>
-				</keyword>
+				</xmlkeyword>
 			</xml>
 		</help>
 	</meta_data>

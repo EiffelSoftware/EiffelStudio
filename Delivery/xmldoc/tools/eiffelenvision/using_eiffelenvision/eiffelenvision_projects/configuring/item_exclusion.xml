@@ -6,22 +6,18 @@
 				<envision_pseudo_name>00</envision_pseudo_name>
 			</toc>
 			<xml>
-				<keyword>
+				<xmlkeyword>
 					<index>K</index>
-					<term>Including and project items</term>
-				</keyword>
-				<keyword>
+					<term>Including and Excluding Project Items</term>
+				</xmlkeyword>
+				<xmlkeyword>
 					<index>K</index>
-					<term>Excluding and project items</term>
-				</keyword>
-				<keyword>
+					<term>Project Items, Excluding</term>
+				</xmlkeyword>
+				<xmlkeyword>
 					<index>K</index>
-					<term>Project items, Excluding</term>
-				</keyword>
-				<keyword>
-					<index>K</index>
-					<term>Project items, Including</term>
-				</keyword>
+					<term>Project Items, Including</term>
+				</xmlkeyword>
 			</xml>
 		</help>
 	</meta_data>

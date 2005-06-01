@@ -5,6 +5,24 @@
 				<envision_title>Compiling Unmanaged Code</envision_title>
 				<envision_pseudo_name>00</envision_pseudo_name>
 			</toc>
+			<xml>
+				<xmlkeyword>
+					<index>K</index>
+					<term>Building, Unmanaged code</term>
+				</xmlkeyword>
+				<xmlkeyword>
+					<index>K</index>
+					<term>Compiling, Unmanaged code</term>
+				</xmlkeyword>
+				<xmlkeyword>
+					<index>K</index>
+					<term>Compiling unamanged code</term>
+				</xmlkeyword>
+				<xmlkeyword>
+					<index>K</index>
+					<term>Unmanaged code</term>
+				</xmlkeyword>
+			</xml>
 		</help>
 	</meta_data>
 	<paragraph>

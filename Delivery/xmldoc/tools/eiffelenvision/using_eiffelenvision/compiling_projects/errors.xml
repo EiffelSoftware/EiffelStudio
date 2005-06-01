@@ -1,5 +1,30 @@
 <document output="envision" title="Compilation Errors">
-	<meta_data/>
+	<meta_data>
+		<help>
+			<toc>
+				<envision_title>Compilation Errors</envision_title>
+				<envision_pseudo_name>30</envision_pseudo_name>
+			</toc>
+			<xml>
+				<xmlkeyword>
+					<index>K</index>
+					<term>EiffelEnvision, Compilation errors</term>
+				</xmlkeyword>
+				<xmlkeyword>
+					<index>K</index>
+					<term>Compilation erros</term>
+				</xmlkeyword>
+				<xmlkeyword>
+					<index>K</index>
+					<term>Build errors</term>
+				</xmlkeyword>
+				<xmlkeyword>
+					<index>K</index>
+					<term>Build, EiffelEnvision errors</term>
+				</xmlkeyword>
+			</xml>
+		</help>
+	</meta_data>
 	<paragraph>
 		<paragraph>
 			From time to time, as a result to modifications to a project, a <link><url>compiling_project.xml</url><label>compilation</label></link> will fail as a direct effect of modification to the project as the project evolves. 

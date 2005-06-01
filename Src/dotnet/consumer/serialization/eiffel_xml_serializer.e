@@ -46,6 +46,7 @@ feature -- Basic Operations
 			retried: BOOLEAN
 			l_so: SYSTEM_OBJECT
 		do
+			feature {SYSTEM_DLL_TRACE}.write_line_string_string ("Serializing '{0}' in XML.", path)
 			last_error := No_error
 			last_error_context := Void
 			if not retried then
@@ -65,6 +66,7 @@ feature -- Basic Operations
 				f.close
 			end
 		rescue
+			feature {SYSTEM_DLL_TRACE}.write_line_string_string ("XML serialization failed for '{0}'.", path)
 			retried := True
 			last_error := Generic_error
 			last_error_context := ""

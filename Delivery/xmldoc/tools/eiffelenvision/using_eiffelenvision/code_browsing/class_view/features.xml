@@ -6,18 +6,18 @@
 				<envision_pseudo_name>00</envision_pseudo_name>
 			</toc>
 			<xml>
-				<keyword>
+				<xmlkeyword>
 					<index>K</index>
 					<term>Class View, Classes</term>
-				</keyword>
-				<keyword>
+				</xmlkeyword>
+				<xmlkeyword>
 					<index>K</index>
 					<term>Object Browser, Classes</term>
-				</keyword>
-				<keyword>
+				</xmlkeyword>
+				<xmlkeyword>
 					<index>K</index>
 					<term>Classes in the Class View</term>
-				</keyword>
+				</xmlkeyword>
 			</xml>
 		</help>
 	</meta_data>
@@ -25,7 +25,7 @@
 		<paragraph>
 			Feature nodes are visible from expanding a <link><url>classes.xml</url><label>Class Node</label></link> or expanding one of the subnodes under an expanded feature node. 
 			There are many different types of <link><url>url</url><label>*feature</label></link> in Eiffel; for a full glossary of the features and their associated icon representation 
-			in the <link><url>index.xml</url><label>Class View</label></link> and <link><url>url</url><label>*Object Browser</label></link> please refer to the <link><url>eiffel_icons.xml</url><label>Eiffel Icon</label></link> documentation.
+			in the <link><url>index.xml</url><label>Class View</label></link> and <link><url>../object_browser/index.xml</url><label>Object Browser</label></link> please refer to the <link><url>eiffel_icons.xml</url><label>Class View and Object Browser Icons</label></link> documentation.
 		</paragraph>
 		<paragraph>
 			If you do not already know what a <link><url>url</url><label>*feature</label></link> is in Eiffel, please refer to the <link><url>url</url><label>*Eiffel for .NET Language</label></link> documentation.
@@ -36,28 +36,28 @@
 		</paragraph>
 		<paragraph>
 			<bold>Ancestor version</bold> <image>
-				<url>../images/feature/hier_feature_ancestors.png</url>
+				<url>../images/feature/hier_feature_ancestors.ico</url>
 			</image>
 			<line_break/>
 			A flattened list of all redefined versions of the expanded feature.
 		</paragraph>
 		<paragraph>
 			<bold>Decendent version</bold> <image>
-				<url>../images/feature/hier_feature_descendents.png</url>
+				<url>../images/feature/hier_feature_descendents.ico</url>
 			</image>
 			<line_break/>
 			A flattened list of all decended versions of the expanded feature.
 		</paragraph>		
 		<paragraph>
 			<bold>Callers</bold> <image>
-				<url>../images/feature/hier_feature_callers.png</url>
+				<url>../images/feature/hier_feature_callers.ico</url>
 			</image>
 			<line_break/>
 			A flattened list of all features that in turn call the expanded feature.
 		</paragraph>
 		<paragraph>
 			<bold>Implementers</bold> <image>
-				<url>../images/feature/hier_feature_implementers.png</url>
+				<url>../images/feature/hier_feature_implementers.ico</url>
 			</image>
 			<line_break/>
 			When expanded, a flattened list of all homogeneous features will be displayed.
@@ -77,6 +77,15 @@
 				and locate the appropriate node given the assembly, type and feature.
 			</note>
 		</paragraph>
+		
+		<anchor>description</anchor>
+		<heading>
+			<size>2</size>
+			<content>Description</content>
+		</heading>
+		<paragraph>
+			When using the <link><url>../object_browser/index.xml</url><label>Object Browser</label></link>, the <bold>Description</bold> pane will show the description, if available, for the highlight feature in the <bold>Memebers</bold> pane. The description will also show any <bold>obsolete</bold> messages and any <bold>preconditions</bold> and <bold>postconditions</bold> applied to the <link><url>url</url><label>*feature</label></link>.
+		</paragraph>		
 		
 		<anchor>also_see</anchor>
 		<heading>

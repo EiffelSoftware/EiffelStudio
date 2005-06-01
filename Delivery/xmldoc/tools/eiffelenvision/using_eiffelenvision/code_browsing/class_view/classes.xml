@@ -6,81 +6,87 @@
 				<envision_pseudo_name>00</envision_pseudo_name>
 			</toc>
 			<xml>
-				<keyword>
+				<xmlkeyword>
 					<index>K</index>
 					<term>Class View, Classes</term>
-				</keyword>
-				<keyword>
+				</xmlkeyword>
+				<xmlkeyword>
 					<index>K</index>
 					<term>Object Browser, Classes</term>
-				</keyword>
-				<keyword>
+				</xmlkeyword>
+				<xmlkeyword>
 					<index>K</index>
 					<term>Classes in the Class View</term>
-				</keyword>
+				</xmlkeyword>
 			</xml>
 		</help>
 	</meta_data>
 	<paragraph>	
 		<paragraph>
-			Classes are the equivalent of NET types. The classes shown come in two varieties; Compiled and not compiled. Compiled classes are indicated by a blue icon <image>
-				<url>../images/class/class.png</url>
-			</image> and uncompiled classes, which are those that have not been compiled into a project because they are not reachable from the <link><url>url</url><label>*root class</label></link>, are shown 
-			as a gray icon <image>
-				<url>../images/class/class_not_in_system.png</url>
-			</image>.
+			Classes are the equivalent of NET types. The classes shown come in two varieties; Compiled and not compiled. Compiled classes are indicated by a blue <image>
+				<url>../images/class/class.ico</url>
+			</image> icon and uncompiled classes, which are those that have not been compiled into a project because they are not reachable from the <link><url>url</url><label>*root class</label></link>, are shown 
+			as a gray <image>
+				<url>../images/class/class_not_in_system.ico</url>
+			</image> icon.
 		</paragraph>
 		<paragraph>
 			Class nodes will be located directly under <link><url>clusters.xml</url><label>Cluster Nodes</label></link> and other class statuary browsing features, as contained in this document.
 		</paragraph>
+		
+		<anchor>structure</anchor>
+		<heading>
+			<size>2</size>
+			<content>Structure</content>
+		</heading>
 		<paragraph>
 			Expanding compiled class nodes displays much more information regarding the class, its <link><url>url</url><label>*features</label></link>, <link><url>url</url><label>*ancestors</label></link> and <link><url>url</url><label>*decendents</label></link>.
 		</paragraph>
 		<paragraph>
 			<bold>Ancestors</bold> <image>
-				<url>../images/class/hier_class_ancestors.png</url>
+				<url>../images/class/hier_class_ancestors.ico</url>
 			</image>
 			<line_break/>
 			A tree of ancestor classes inherited by the expanded class.
 		</paragraph>
 		<paragraph>
 			<bold>Decendents</bold> <image>
-				<url>../images/class/hier_class_descendents.png</url>
+				<url>../images/class/hier_class_descendents.ico</url>
 			</image>
 			<line_break/>
 			A tree of known decending classes, inheriting the expanded class.
 		</paragraph>		
 		<paragraph>
 			<bold>Clients</bold> <image>
-				<url>../images/class/hier_class_clients.png</url>
+				<url>../images/class/hier_class_clients.ico</url>
 			</image>
 			<line_break/>
 			A tree of classes that refer to the expanded class using a <link><url>url</url><label>*client</label></link> relationship.
 		</paragraph>
 		<paragraph>
 			<bold>Suppliers</bold> <image>
-				<url>../images/class/hier_class_suppliers.png</url>
+				<url>../images/class/hier_class_suppliers.ico</url>
 			</image>
 			<line_break/>
 			A tree of classes the expanded class is a <link><url>url</url><label>*client</label></link> of using a <link><url>url</url><label>*supplier</label></link> relationship.
 		</paragraph>
 		<paragraph>
 			<bold>Creation Routines</bold> <image>
-				<url>../images/class/hier_feature_creators.png</url>
+				<url>../images/feature/hier_feature_creators.ico</url>
 			</image>
 			<line_break/>
 			A tree of declared <link><url>url</url><label>*creation routines</label></link> of the expanded class.
 		</paragraph>
 		<paragraph>
 			<bold>Inherited Features</bold> <image>
-				<url>../images/class/hier_feature_inherited.png</url>
+				<url>../images/feature/hier_feature_inherited.ico</url>
 			</image>
 			<line_break/>
 			A flattened view of all of the expanded class' inherited <link><url>url</url><label>*features</label></link>, inherited from <link><url>url</url><label>*ancestor</label></link> classes.
 		</paragraph>
 		<paragraph>
 			<bold>All Features</bold> <image>
-				<url>../images/class/hier_feature_all.png</url>
+				<url>../images/feature/hier_feature_all.ico</url>
 			</image>
 			<line_break/>
 			A flattened view of all of the expanded class's <link><url>url</url><label>*features</label></link> merged with the features of any <link><url>url</url><label>*ancestor</label></link> classes.

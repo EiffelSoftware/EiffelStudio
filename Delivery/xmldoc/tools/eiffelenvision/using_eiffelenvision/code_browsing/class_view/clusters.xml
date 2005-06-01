@@ -6,18 +6,18 @@
 				<envision_pseudo_name>00</envision_pseudo_name>
 			</toc>
 			<xml>
-				<keyword>
+				<xmlkeyword>
 					<index>K</index>
 					<term>Class View, Clusters</term>
-				</keyword>
-				<keyword>
+				</xmlkeyword>
+				<xmlkeyword>
 					<index>K</index>
 					<term>Object Browser Clusters</term>
-				</keyword>
-				<keyword>
+				</xmlkeyword>
+				<xmlkeyword>
 					<index>K</index>
 					<term>Clusters in the Class View</term>
-				</keyword>
+				</xmlkeyword>
 			</xml>
 		</help>
 	</meta_data>
@@ -29,9 +29,9 @@
 		</heading>
 		<paragraph>
 			There are two types of clusters that will be shown when expanding a project node. The icon will either show a cluster (<image>
-				<url>../images/cluster/cluster.png</url>
+				<url>../images/cluster/cluster.ico</url>
 			</image>) or library cluster (<image>
-				<url>../images/cluster/cluster_library.png</url>
+				<url>../images/cluster/cluster_library.ico</url>
 			</image>) based on the set cluster's <link><url>url</url><label>*Library Property</label></link> for the corresponding <link><url>url</url><label>cluster</label></link>.
 		</paragraph>
 		<paragraph>

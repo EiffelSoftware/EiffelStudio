@@ -8,6 +8,27 @@ class
 
 feature -- Externals
 
+	frozen gtk_icon_size_dialog_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GTK_ICON_SIZE_DIALOG"
+		end
+
+	frozen gtk_stock_lookup (a_stock_id, a_stock_item: POINTER): BOOLEAN is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"gtk_stock_lookup ((gchar*) $a_stock_id, (GtkStockItem*) $a_stock_item)"
+		end
+
+	frozen c_gtk_stock_item_struct_allocate: POINTER is
+		external
+			"C [macro <gtk/gtk.h>]"
+		alias
+			"calloc (sizeof(GtkStockItem), 1)"
+		end
+
 	frozen g_signal_handler_disconnect (a_instance: POINTER; handler_id: INTEGER) is
 		external
 			"C inline use <gtk/gtk.h>"

@@ -1,0 +1,105 @@
+<document title="Widget selector">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_pseudo_name>51</envision_pseudo_name>
+				<envision_location>Eiffel ENViSioN!\Developing with Eiffel ENViSioN!\Adding a New Project\Advanced GUI Project Wizard\Interface Construction Page\Reference</envision_location>
+			</toc>
+		</help>
+	</meta_data>
+	<paragraph>
+		<paragraph>The Widget Selector allows you to manage windows and dialogs within the EiffelBuild project and all windows are accessible through this tool. Using the widget selector, you may add new windows to your project; delete windows; assign a root window (launched from the generated application); and group windows into directories. The Widget Selector has the following appearance:</paragraph>
+		<paragraph>
+			<image> 
+				<url>/images/eiffelbuild/screenshots/window_selector.png</url>
+			</image>
+		</paragraph>
+		<heading>
+			<size>2</size>Adding Windows
+		</heading>
+		<paragraph>To add a window or dialog to your project, 
+			<link>
+				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>pick_and_drop</anchor_name>
+				<label>pick</label>
+			</link> the window or dialog type from the 
+			<link>
+				<url>/tools/eiffelbuild/reference/30_type_selector/index.xml</url>
+				<label>type selector</label>
+			</link>, and 
+			<link>
+				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>pick_and_drop</anchor_name>
+				<label>drop</label>
+			</link> into the Widget Selector. There are two possible drop targets within the widget selector:
+			<list ordered="false">
+				<item>
+					<bold>The Widget Selector itself</bold> - The newly created window object is added to the root directory of the project.
+				</item>
+				<item>
+					<bold>A Directory node</bold> - The newly created window object is added to the directory that was the target of the drop.
+				</item>
+			</list>Both of these outcomes create a new window or dialog in your project.
+			<note>
+				<bold>Note</bold>: The selected window in the Widget Selector is automatically targeted as the root window of the 
+				<link>
+					<url>/tools/eiffelbuild/reference/20_layout_constructor/index.xml</url>
+					<label>layout constructor</label>
+				</link>, permitting building. You may not build directly into the representation of a window within the Window Constructor.
+			</note>
+		</paragraph>
+		<heading>
+			<size>2</size>Root Window
+		</heading>
+		<paragraph>The root window of a project is launched by the application class of the generated EiffelBuild project when executed. By assigning a window as a root, you ensure that it will be displayed on screen as the "root" window of the generated system when the system is launched.</paragraph>
+		<paragraph>The root window of the project is highlighted with a star, indicating that it is the root. Looking at the screenshot at the top of this page, the window named "main_window" is currently flagged as the root window of the project. To set a window as the root window of the project, select the window in the Widget Selector, and press the 
+			<image> 
+				<url>/images/eiffelbuild/icons/icon_titled_window_main_small_color.png</url>
+			</image> button displayed at the top of the Widget Selector.
+			<heading>
+				<size>2</size>Directories
+			</heading>
+			<paragraph>The ability to add directories to your project permit organization of windows into sub groups as necessitated by your design. To add a directory to the project, select the 
+				<image> 
+					<url>/images/eiffelbuild/icons/icon_new_cluster_small_color.png</url>
+				</image> button displayed at the top of the Widget Selector, which displays the following dialog, prompting for the name of the directory to add:
+			</paragraph>
+			<paragraph>
+				<image> 
+					<url>/images/eiffelbuild/screenshots/new_directory_dialog.png</url>
+				</image>
+			</paragraph>
+			<paragraph>Enter a unique name that is not already in use, and select "OK" to add the directory to your project. The newly added directory is then visible, as a node in the Widget Selector.</paragraph>
+			<note>
+				<bold>Note</bold>: Creating a new directory in the Widget Selector causes the actual directory on the disk to be created immediately.
+			</note>
+			<paragraph>You may insert windows into a directory, or move a window between directories by 
+				<link>
+					<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>pick_and_drop</anchor_name>
+					<label>picking</label>
+				</link> the window from its representation in the Widget Selector, and 
+				<link>
+					<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>pick_and_drop</anchor_name>
+					<label>dropping</label>
+				</link> on the desired directory.
+				<note>
+					<bold>Note</bold>: If you move a window between directories within an EiffelBuild project that has already generated the Eiffel code for that window, the code files are moved on the disk.
+				</note>
+				<paragraph>It is not possible to nest directories, only a single level of directories is permitted in the root of the project.</paragraph>
+				<heading>
+					<size>2</size>Expanding
+				</heading>
+				<paragraph>The
+					<image> 
+						<url>/images/eiffelbuild/icons/icon_expand_all_small_color.png</url>
+					</image> button displayed at the top of the Widget Selector expands all nodes contained.
+				</paragraph>
+				<seealso>
+					<bold>See also</bold>:
+					<line_break/>
+					<link>
+						<url>/tools/eiffelbuild/reference/20_layout_constructor/index.xml</url>
+						<label>Layout constructor</label>
+					</link>
+				</seealso>
+			</paragraph>
+		</paragraph>
+	</paragraph></document>

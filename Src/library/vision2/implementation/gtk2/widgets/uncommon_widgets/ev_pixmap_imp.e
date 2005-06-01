@@ -409,16 +409,13 @@ feature {EV_STOCK_PIXMAPS_IMP, EV_PIXMAPABLE_IMP} -- Implementation
 		require
 			a_stock_id_not_null: a_stock_id /= NULL
 		local
-			stock_pixbuf, a_theme: POINTER
-			a_error: POINTER
+			stock_pixbuf: POINTER
 		do
-			a_theme := {EV_GTK_EXTERNALS}.gtk_icon_theme_get_default
-			if {EV_GTK_EXTERNALS}.gtk_icon_theme_has_icon (a_theme, a_stock_id) then
-				stock_pixbuf := {EV_GTK_EXTERNALS}.gtk_icon_theme_load_icon (a_theme, a_stock_id, 48, 0, $a_error)
-				if stock_pixbuf /= NULL then
-					set_pixmap_from_pixbuf (stock_pixbuf)
-					{EV_GTK_EXTERNALS}.object_unref (stock_pixbuf)
-				end
+			stock_pixbuf := {EV_GTK_EXTERNALS}.gtk_widget_render_icon (c_object, a_stock_id, {EV_GTK_DEPENDENT_EXTERNALS}.gtk_icon_size_dialog_enum, default_pointer)
+			if stock_pixbuf /= NULL then
+					-- If a stock pixmap can be found then set it, else do nothing.
+				set_pixmap_from_pixbuf (stock_pixbuf)
+				{EV_GTK_EXTERNALS}.object_unref (stock_pixbuf)
 			end
 		end
 

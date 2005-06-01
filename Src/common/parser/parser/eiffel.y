@@ -1288,7 +1288,7 @@ Formal_generic_list: Formal_generic
 			}
 	;
 
-Formal_parameter: TE_REFERENCE TE_ID 
+Formal_parameter: TE_REFERENCE Identifier_as_upper
 			{
 				if equal (None_classname, $2) then
 						-- Trigger an error when constraint is NONE.
@@ -1299,13 +1299,10 @@ Formal_parameter: TE_REFERENCE TE_ID
 						-- therefore not part of `TE_ID'.
 					raise_error
 				else
-					if not case_sensitive and $2 /= Void then
-						$2.to_upper
-					end
 					$$ := ast_factory.new_formal_as ($2, True, False)
 				end
 			}
-	| TE_EXPANDED TE_ID 
+	| TE_EXPANDED Identifier_as_upper
 			{
 				if equal (None_classname, $2) then
 						-- Trigger an error when constraint is NONE.
@@ -1316,14 +1313,11 @@ Formal_parameter: TE_REFERENCE TE_ID
 						-- therefore not part of `TE_ID'.
 					raise_error
 				else
-					if not case_sensitive and $2 /= Void then
-						$2.to_upper
-					end
 					$$ := ast_factory.new_formal_as ($2, False, True)
 				end
 			}
 
-	|	TE_ID
+	|	Identifier_as_upper
 			{
 				if equal (None_classname, $1) then
 						-- Trigger an error when constraint is NONE.
@@ -1334,9 +1328,6 @@ Formal_parameter: TE_REFERENCE TE_ID
 						-- therefore not part of `TE_ID'.
 					raise_error
 				else
-					if not case_sensitive and $1 /= Void then
-						$1.to_upper
-					end
 					$$ := ast_factory.new_formal_as ($1, False, False)
 				end
 			}

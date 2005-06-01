@@ -59,7 +59,7 @@ feature {EV_GRID_I, EV_GRID_ROW_I} -- Initialization
 		do
 			if not index_of_first_item_dirty then
 					-- We do not want to reset if already True.
-				index_of_first_item_dirty := a_column_index <= index_of_first_item_internal  or else index_of_first_item_internal = 0
+				index_of_first_item_dirty := a_column_index <= index_of_first_item_internal or else index_of_first_item_internal = 0
 			end
 		end
 
@@ -985,9 +985,9 @@ feature {EV_GRID_ROW_I, EV_GRID_I} -- Implementation
 			if parent_row_i /= Void then
 				depth_in_tree := parent_row_i.depth_in_tree + 1
 				indent_depth_in_tree := parent_row_i.indent_depth_in_tree + 1
-				if parent_row_i.index_of_first_item /= index_of_first_item then
-					indent_depth_in_tree := 1
-				end				
+--				if parent_row_i.index_of_first_item /= 0 and index_of_first_item /= 0 and then parent_row_i.index_of_first_item /= index_of_first_item then
+--					indent_depth_in_tree := 1
+--				end
 			else
 				depth_in_tree := 1
 				indent_depth_in_tree := 1

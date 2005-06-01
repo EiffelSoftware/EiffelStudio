@@ -687,17 +687,6 @@ feature -- Basic operations
 									item_buffer_pixmap.set_size (current_column_width, current_row_height)							
 								end
 								
-								if drawing_subrow then
-										-- If we are drawing a subrow whose first item is
-										-- in a different column to the parent node, then we set the indent to 0.
-									if parent_node_index < node_index then
-										if drawing_parentrow then
-											current_subrow_indent := standard_subrow_indent
-										else
-											current_subrow_indent := 0
-										end
-									end
-								end
 									-- Now compute horizontal variables for tree drawing.
 								if drawing_parentrow then
 									horizontal_node_pixmap_left_offset := current_subrow_indent - (tree_node_spacing * 2) - node_pixmap_width

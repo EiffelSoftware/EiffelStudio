@@ -12,10 +12,7 @@
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>object</anchor_name>
 				<label>object</label>
-			</link> in the object editor is of type <class_name>EV_FIXED</class_name>,
-			<image>
-				<url>/images/eiffelbuild/screenshots/position_children_button.png</url>
-			</image> will be contained in the object editor. Click this button, to display the following window:
+			</link> in the object editor is of type <class_name>EV_FIXED</class_name>, a button marked "position children..." will be contained in the object editor. Click this button, to display the following window:
 		</paragraph>
 		<paragraph>
 			<image>
@@ -48,9 +45,6 @@
 				<bold>Grid size</bold> - The spacing between grid elements in pixels.
 			</item>
 		</list>
-		<paragraph>When you have finished manipulating the children of the table, click
-			<image>
-				<url>/images/eiffelbuild/screenshots/done_button.png</url>
-			</image>to close the dialog.
+		<paragraph>When you have finished manipulating the children of the table, click the button marked "Done" to close the dialog.
 		</paragraph>
 	</paragraph></document>

@@ -69,7 +69,7 @@
 		</note>
 		<heading><size>2</size>Creating Window and Dialog Objects</heading>
 		<paragraph>
-			Window and dialog objects are created by picking a type from the <link><url>../../reference/30_type_selector/index.xml</url><label>type selector</label></link> and dropping into the <link><url>../../reference/64_window_selector/index.xml</url><label>window selector</label></link>. If the target of the drop is a directory within the window selector, the new object is created within that directory, otherwise in the root of the project location.
+			Window and dialog objects are created by picking a type from the <link><url>../../reference/30_type_selector/index.xml</url><label>type selector</label></link> and dropping into the <link><url>../../reference/64_widget_selector/index.xml</url><label>widget selector</label></link>. If the target of the drop is a directory within the widget selector, the new object is created within that directory, otherwise in the root of the project location.
 		</paragraph>
 		<note><bold>Note</bold> If there are no other windows or directories in the project, the newly created object is set as the root window.</note>
 		<seealso>

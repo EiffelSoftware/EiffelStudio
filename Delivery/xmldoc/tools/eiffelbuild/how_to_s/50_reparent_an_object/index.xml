@@ -71,7 +71,7 @@
 				<label>layout constructor</label>
 			</link>.
 		</paragraph>
-		<note><bold>Note</bold> Although window and dialog objects may be accessed within the <link><url>../../reference/64_window_selector/index.xml</url><label>window selector</label></link>, it is not possible to build into these objects, you should use the <link><url>../../reference/20_layout_constructor/index.xml</url><label>layout constructor</label></link> or <link><url>../../reference/60_builder_window/index.xml</url><label>builder window</label></link> directly in this situation.
+		<note><bold>Note</bold> Although window and dialog objects may be accessed within the <link><url>../../reference/64_widget_selector/index.xml</url><label>widget selector</label></link>, it is not possible to build into these objects, you should use the <link><url>../../reference/20_layout_constructor/index.xml</url><label>layout constructor</label></link> or <link><url>../../reference/60_builder_window/index.xml</url><label>builder window</label></link> directly in this situation.
 		</note>
 		<paragraph>For more information about an 
 			<link>

@@ -42,6 +42,23 @@
 			</help_link>
 		</paragraph>	
 
+		<anchor>search_results</anchor>
+		<heading>
+			<size>2</size>
+			<content>Search Results</content>
+		</heading>
+		<paragraph>
+			After performing a search the <help_link>
+				<keywords>vxurfFindObjectResultsWindowS</keywords>
+				<tab_index>0</tab_index>
+				Find Symbol Results Window
+			</help_link> will be opened, if not already so. The results window will contain will show the complete results of a performed search based on your specified search options and parameters. To navigate to a corresponding symbol, double-left click on the item in the <help_link>
+				<keywords>vxurfFindObjectResultsWindowS</keywords>
+				<tab_index>0</tab_index>
+				Find Symbol Results Window
+			</help_link>. The <link><url>index.xml</url><label>Object Browser</label></link> or a corresponding document will be opened, in the editor, at the appropriate location.
+		</paragraph>
+
 		<anchor>also_see</anchor>
 		<heading>
 			<size>2</size>

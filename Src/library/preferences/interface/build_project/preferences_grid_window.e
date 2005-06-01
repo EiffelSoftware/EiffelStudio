@@ -109,11 +109,10 @@ feature {NONE} -- Events
 		local
 			l_text_item: EV_GRID_EDITABLE_ITEM
 			l_combo_item: EV_GRID_COMBO_ITEM
-			l_name_item,
-			l_default_item,
-			l_type_item: EV_GRID_LABEL_ITEM
+			l_label_item,
+			l_default_item: EV_GRID_LABEL_ITEM
 			l_color_item: EV_GRID_DRAWABLE_ITEM
-			l_user_font: EV_FONT
+			l_font_pref: FONT_PREFERENCE
 		do
 			l_text_item ?= a_item
 			if l_text_item /= Void then
@@ -122,6 +121,11 @@ feature {NONE} -- Events
 				l_combo_item ?= a_item
 				if l_combo_item /= Void then
 					a_pref.set_value_from_string (l_combo_item.text)
+				else
+					l_label_item ?= a_item
+					if l_label_item /= Void and then a_pref.generating_resource_type.is_equal ("FONT") then
+						
+					end
 				end
 			end
 
@@ -140,8 +144,9 @@ feature {NONE} -- Events
 		local
 			l_text_item: EV_GRID_EDITABLE_ITEM
 			l_combo_item: EV_GRID_COMBO_ITEM
-			l_default_item: EV_GRID_LABEL_ITEM
+			l_label_item: EV_GRID_LABEL_ITEM
 			l_color_item: EV_GRID_DRAWABLE_ITEM
+			l_font: FONT_PREFERENCE
 		do
 			a_pref.reset
 			a_item.set_text ("default")
@@ -149,15 +154,27 @@ feature {NONE} -- Events
 
 			l_text_item ?= a_item.row.item (4)
 			if l_text_item /= Void then
+					-- Editable text item
 				l_text_item.set_text (a_pref.string_value)
 			else
 				l_combo_item ?= a_item.row.item (4)
 				if l_combo_item /= Void then
+						-- Combo selectable item
 					l_combo_item.set_text (a_pref.string_value)
 				else
 					l_color_item ?= a_item.row.item (4)
 					if l_color_item /= Void then
+							-- Color drawable item
 						l_color_item.redraw
+					else
+						l_label_item ?= a_item.row.item (1)
+						if l_label_item /= Void and then a_pref.generating_resource_type.is_equal ("FONT") then
+								-- Font label item
+							l_font ?= a_pref
+							l_label_item ?= a_item.row.item (4)
+							l_label_item.set_text (l_font.string_value)
+							l_label_item.set_font (l_font.value)
+						end
 					end
 				end
 			end
@@ -197,17 +214,11 @@ feature {NONE} -- Events
 
 	on_item_selected (a_item: EV_GRID_ITEM; a_pref: PREFERENCE) is
 		local
-			sel_item: EV_MULTI_COLUMN_LIST_ROW
-			int_pref: INTEGER_PREFERENCE
 			bool_pref: BOOLEAN_PREFERENCE
-			string_pref: STRING_PREFERENCE
-			list_pref: ARRAY_PREFERENCE
 			color_pref: COLOR_PREFERENCE
 			font_pref: FONT_PREFERENCE
-			l_resource_widget: PREFERENCE_WIDGET
 			l_color_widget: COLOR_PREFERENCE_WIDGET
 			l_font_widget: FONT_PREFERENCE_WIDGET
-
 			l_label_item: EV_GRID_LABEL_ITEM
 			l_edit_item: EV_GRID_EDITABLE_ITEM
 			l_combo_item: EV_GRID_COMBO_ITEM
@@ -239,9 +250,15 @@ feature {NONE} -- Events
 						if font_pref /= Void then
 							l_label_item ?= a_item
 							l_font_widget ?= resource_widget (font_pref)
+							l_font_widget.set_resource (font_pref)
 							l_font_widget.set_caller (Current)
 							l_font_widget.change
+							if l_font_widget.last_selected_value /= Void then
+								font_pref.set_value (l_font_widget.last_selected_value)
+							end
 							l_label_item.set_font (font_pref.value)
+							l_label_item ?= a_item.row.item (4)
+							l_label_item.set_text (font_pref.string_value)
 							on_item_value_changed (a_item, a_pref)
 						end
 					end
@@ -250,7 +267,7 @@ feature {NONE} -- Events
 		end
 
 	on_color_item_exposed (a_item: EV_GRID_ITEM; area: EV_DRAWABLE) is
-			--
+			-- Expose part of color preference value item.
 		local
 			l_resource: COLOR_PREFERENCE
 		do
@@ -485,7 +502,6 @@ feature {NONE} -- Implementation
 	destroy is
 			-- Destroy.
 		do
---			resource_cell.wipe_out
 			Precursor
 		end
 
@@ -519,11 +535,6 @@ feature {NONE} -- Implementation
 			else
 				description_text.set_text (no_description_text)
 			end
---			if l_resource_widget.resource.has_default_value then
---				set_default_button.enable_sensitive
---			else
---				set_default_button.disable_sensitive
---			end
 		end		
 
 	add_resource_change_item (l_resource: PREFERENCE; row_index: INTEGER) is
@@ -556,10 +567,10 @@ feature {NONE} -- Implementation
 					l_font ?= l_resource
 					if l_font /= Void then
 						create l_font_item
-						l_font_item.set_text ("ABCabc")
+						l_font_item.set_text (l_font.string_value)
 						l_font_item.set_font (l_font.value)
-						grid.set_item (1, row_index, l_font_item)
-						l_font_item.pointer_button_press_actions.force_extend (agent on_item_selected (l_font_item, l_resource))
+						grid.set_item (4, row_index, l_font_item)
+						l_font_item.pointer_button_release_actions.force_extend (agent on_item_selected (l_font_item, l_resource))
 					else
 						l_color ?= l_resource
 						if l_color /= Void then

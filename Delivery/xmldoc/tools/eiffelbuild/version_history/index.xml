@@ -7,6 +7,13 @@
 			<line_break/>
 			Availability: Student and Enterprise versions.
 			<line_break/>
+		<heading><size>2</size>5.6 Release</heading>
+		<list ordered="false">
+		<item>Added support for the generation of any widget as a class. You now may place widgets within
+		 the "Widget Selector" to enable this. The "Widget Selector" is simply the old "Window Selector" renamed.</item>
+		<item>Added clipboard functionality, permitting the copying/pasting of objects.</item>
+		<item>Added support for new constant types: Font and Color.</item>
+		</list>
 		<heading><size>2</size>5.5 Release</heading>
 		<list ordered="false">
 		<item>Added support for EV_RICH_TEXT which has been added to EiffelVision2.</item>

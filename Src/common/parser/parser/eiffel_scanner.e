@@ -165,7 +165,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 75")
 end
 
-				last_token := TE_ASSIGN
+				last_token := TE_ASSIGNMENT
 			
 when 14 then
 	yy_column := yy_column + 2

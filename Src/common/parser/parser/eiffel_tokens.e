@@ -138,8 +138,8 @@ feature -- Access
 				Result := "TE_ADDRESS"
 			when TE_AS then
 				Result := "TE_AS"
-			when TE_ASSIGN then
-				Result := "TE_ASSIGN"
+			when TE_ASSIGNMENT then
+				Result := "TE_ASSIGNMENT"
 			when TE_CHECK then
 				Result := "TE_CHECK"
 			when TE_CLASS then
@@ -348,7 +348,7 @@ feature -- Token codes
 	TE_ACCEPT: INTEGER is 308
 	TE_ADDRESS: INTEGER is 309
 	TE_AS: INTEGER is 310
-	TE_ASSIGN: INTEGER is 311
+	TE_ASSIGNMENT: INTEGER is 311
 	TE_CHECK: INTEGER is 312
 	TE_CLASS: INTEGER is 313
 	TE_CONVERT: INTEGER is 314

@@ -1,27 +1,27 @@
-<document output="envision" title="EiffelEnvision Icons Glossary">
+<document output="envision" title="Class View and Object Browser Icons">
 	<meta_data>
 		<help>
 			<toc>
-				<envision_title>Icons Glossary</envision_title>
+				<envision_title>Class View and Object Browser Icons</envision_title>
 				<envision_pseudo_name>30</envision_pseudo_name>
 			</toc>
 			<xml>
-				<keyword>
+				<xmlkeyword>
 					<index>A</index>
 					<term>eeEiffelEnvisionIcons</term>
-				</keyword>
-				<keyword>
+				</xmlkeyword>
+				<xmlkeyword>
 					<index>F</index>
 					<term>EiffelEnvision Icon Glossary</term>
-				</keyword>
-				<keyword>
+				</xmlkeyword>
+				<xmlkeyword>
 					<index>F</index>
 					<term>Icons, EiffelEnvision Glossary</term>
-				</keyword>
-				<keyword>
+				</xmlkeyword>
+				<xmlkeyword>
 					<index>F</index>
 					<term>Glossary, EiffelEnvision Icons</term>
-				</keyword>
+				</xmlkeyword>
 			</xml>
 		</help>
 	</meta_data>
@@ -46,7 +46,8 @@
 		</paragraph>
 		<anchor>standard_icons</anchor>
 		<heading>
-			<size>2</size>Standard Icons
+			<size>2</size>
+			<content>Standard Icons</content>
 		</heading>
 		<paragraph>
 			<table>
@@ -55,7 +56,7 @@
 				<row>
 					<cell>
 						<image>
-							<url>images/project.png</url>
+							<url>images/project.ico</url>
 						</image>
 					</cell>
 					<cell>An EiffelEnvision Project</cell>
@@ -67,7 +68,15 @@
 				<row>
 					<cell>
 						<image>
-							<url>images/cluster/cluster.png</url>
+							<url>images/cluster/hier_cluster_all.ico</url>
+						</image>
+					</cell>
+					<cell>Eiffel Clusters</cell>
+				</row>
+				<row>
+					<cell>
+						<image>
+							<url>images/cluster/cluster.ico</url>
 						</image>
 					</cell>
 					<cell>Cluster</cell>
@@ -75,7 +84,7 @@
 				<row>
 					<cell>
 						<image>
-							<url>images/cluster/cluster_library.png</url>
+							<url>images/cluster/cluster_library.ico</url>
 						</image>
 					</cell>
 					<cell>Library Cluster</cell>
@@ -87,7 +96,7 @@
 				<row>
 					<cell>
 						<image>
-							<url>images/class/class.png</url>
+							<url>images/class/class.ico</url>
 						</image>
 					</cell>
 					<cell>Class</cell>
@@ -95,7 +104,7 @@
 				<row>
 					<cell>
 						<image>
-							<url>images/class/class_not_in_system.png</url>
+							<url>images/class/class_not_in_system.ico</url>
 						</image>
 					</cell>
 					<cell>Class (not compiled in the project)</cell>
@@ -103,7 +112,7 @@
 				<row>
 					<cell>
 						<image>
-							<url>images/class/class_library.png</url>
+							<url>images/class/class_library.ico</url>
 						</image>
 					</cell>
 					<cell>Library Class</cell>
@@ -111,7 +120,7 @@
 				<row>
 					<cell>
 						<image>
-							<url>images/class/class_deferred.png</url>
+							<url>images/class/class_deferred.ico</url>
 						</image>
 					</cell>
 					<cell>Deferred Class</cell>
@@ -119,7 +128,7 @@
 				<row>
 					<cell>
 						<image>
-							<url>images/class/class_library_deferred.png</url>
+							<url>images/class/class_deferred_library.ico</url>
 						</image>
 					</cell>
 					<cell>Deferred Library Class</cell>
@@ -131,7 +140,7 @@
 				<row>
 					<cell>
 						<image>
-							<url>images/feature/feature.png</url>
+							<url>images/feature/feature.ico</url>
 						</image>
 					</cell>
 					<cell>Feature</cell>
@@ -139,7 +148,7 @@
 				<row>
 					<cell>
 						<image>
-							<url>images/feature/feature_frozen.png</url>
+							<url>images/feature/feature_frozen.ico</url>
 						</image>
 					</cell>
 					<cell>Frozen Feature</cell>
@@ -147,7 +156,7 @@
 				<row>
 					<cell>
 						<image>
-							<url>images/feature/feature_attribute.png</url>
+							<url>images/feature/feature_attribute.ico</url>
 						</image>
 					</cell>
 					<cell>Attribute</cell>
@@ -155,7 +164,7 @@
 				<row>
 					<cell>
 						<image>
-							<url>images/feature/feature_attribute_frozen.png</url>
+							<url>images/feature/feature_attribute_frozen.ico</url>
 						</image>
 					</cell>
 					<cell>Frozen Attribute</cell>
@@ -163,7 +172,7 @@
 				<row>
 					<cell>
 						<image>
-							<url>images/feature/feature_once.png</url>
+							<url>images/feature/feature_once.ico</url>
 						</image>
 					</cell>
 					<cell>Once Function/Constant</cell>
@@ -171,7 +180,7 @@
 				<row>
 					<cell>
 						<image>
-							<url>images/feature/feature_once_frozen.png</url>
+							<url>images/feature/feature_once_frozen.ico</url>
 						</image>
 					</cell>
 					<cell>Frozen Once Function/Constant</cell>
@@ -179,7 +188,7 @@
 				<row>
 					<cell>
 						<image>
-							<url>images/feature/feature_deferred.png</url>
+							<url>images/feature/feature_deferred.ico</url>
 						</image>
 					</cell>
 					<cell>Deferred Feature</cell>
@@ -187,7 +196,7 @@
 				<row>
 					<cell>
 						<image>
-							<url>images/feature/feature_external.png</url>
+							<url>images/feature/feature_external.ico</url>
 						</image>
 					</cell>
 					<cell>External Feature</cell>
@@ -195,7 +204,7 @@
 				<row>
 					<cell>
 						<image>
-							<url>images/feature/feature_external_frozen.png</url>
+							<url>images/feature/feature_external_frozen.ico</url>
 						</image>
 					</cell>
 					<cell>Frozen External Feature</cell>
@@ -203,16 +212,49 @@
 				<row>
 					<cell>
 						<image>
-							<url>images/feature/feature_obsolete.png</url>
+							<url>images/feature/feature_obsolete.ico</url>
 						</image>
 					</cell>
 					<cell>Obsolete Feature</cell>
 				</row>
 			</table>
 		</paragraph>
+
+		<anchor>references</anchor>
+		<heading>
+			<size>2</size>
+			<content>Assembly References</content>
+		</heading>
+		<paragraph>
+			The following icons are used to represent assembly references
+		</paragraph>
+		<paragraph>
+			<table>
+				<width>250</width>
+				<legend>Assembly References</legend>
+				<row>
+					<cell>
+						<image>
+							<url>images/assembly/hier_reference_all.ico</url>
+						</image>
+					</cell>
+					<cell>Assembly references</cell>
+				</row>
+				<row>
+					<cell>
+						<image>
+							<url>images/assembly/assembly.ico</url>
+						</image>
+					</cell>
+					<cell>An actual assembly reference</cell>
+				</row>
+			</table>
+		</paragraph>
+		
 		<anchor>code_browsing_icons</anchor>
 		<heading>
-			<size>2</size>Code Browsing Icons
+			<size>2</size>
+			<content>Code Browsing Icons</content>
 		</heading>
 		<paragraph>EiffelEnvision also uses a number of icons to indicate the availability of extended 
 			<link>
@@ -235,7 +277,7 @@
 				<row>
 					<cell>
 						<image>
-							<url>images/class/hier_class_ancestors.png</url>
+							<url>images/class/hier_class_ancestors.ico</url>
 						</image>
 					</cell>
 					<cell>Classes Subclassed By a Class</cell>
@@ -243,7 +285,7 @@
 				<row>
 					<cell>
 						<image>
-							<url>images/class/hier_class_descendents.png</url>
+							<url>images/class/hier_class_descendents.ico</url>
 						</image>
 					</cell>
 					<cell>Subclasses of a Class</cell>
@@ -251,7 +293,7 @@
 				<row>
 					<cell>
 						<image>
-							<url>images/class/hier_class_clients.png</url>
+							<url>images/class/hier_class_clients.ico</url>
 						</image>
 					</cell>
 					<cell>Classes Referring to a Class</cell>
@@ -259,7 +301,7 @@
 				<row>
 					<cell>
 						<image>
-							<url>images/class/hier_class_suppliers.png</url>
+							<url>images/class/hier_class_suppliers.ico</url>
 						</image>
 					</cell>
 					<cell>Classes a Class is a Client Of</cell>
@@ -267,7 +309,7 @@
 				<row>
 					<cell>
 						<image>
-							<url>images/class/hier_feature_all.png</url>
+							<url>images/feature/hier_feature_all.ico</url>
 						</image>
 					</cell>
 					<cell>Flat List of Class Features</cell>
@@ -275,7 +317,7 @@
 				<row>
 					<cell>
 						<image>
-							<url>images/class/hier_feature_creators.png</url>
+							<url>images/feature/hier_feature_creators.ico</url>
 						</image>
 					</cell>
 					<cell>Class Creation Routines</cell>
@@ -287,7 +329,7 @@
 				<row>
 					<cell>
 						<image>
-							<url>images/feature/hier_feature_ancestors.png</url>
+							<url>images/feature/hier_feature_ancestors.ico</url>
 						</image>
 					</cell>
 					<cell>Ancestor Versions of a Feature</cell>
@@ -295,7 +337,7 @@
 				<row>
 					<cell>
 						<image>
-							<url>images/feature/hier_feature_descendents.png</url>
+							<url>images/feature/hier_feature_descendents.ico</url>
 						</image>
 					</cell>
 					<cell>Descendent Versions of a Feature</cell>
@@ -303,7 +345,7 @@
 				<row>
 					<cell>
 						<image>
-							<url>images/feature/hier_feature_inherited.png</url>
+							<url>images/feature/hier_feature_inherited.ico</url>
 						</image>
 					</cell>
 					<cell>Inherited Features of a Class</cell>
@@ -311,7 +353,7 @@
 				<row>
 					<cell>
 						<image>
-							<url>images/feature/hier_feature_implementers.png</url>
+							<url>images/feature/hier_feature_implementers.ico</url>
 						</image>
 					</cell>
 					<cell>Homogeneous Features</cell>
@@ -319,7 +361,7 @@
 				<row>
 					<cell>
 						<image>
-							<url>images/feature/hier_feature_callers.png</url>
+							<url>images/feature/hier_feature_callers.ico</url>
 						</image>
 					</cell>
 					<cell>Callers of a Feature</cell>
@@ -332,6 +374,15 @@
 		</heading>
 		<seealso>
 			<bold>See Also</bold>:
-			<line_break/>*Getting started with the Eiffel method and language
+			<line_break/>			
+			<link><url>class_view/index.xml</url><label>Class View</label></link>
+			<line_break/>
+			<link><url>object_browser/index.xml</url><label>Object Browser</label></link>
+			<line_break/>
+			<help_link>
+				<keywords>vxgrfClassViewIcons</keywords>
+				<tab_index>0</tab_index>
+				Visual Studio .NET Class View and Object Browser Icons
+			</help_link>
 		</seealso>
 	</paragraph></document>

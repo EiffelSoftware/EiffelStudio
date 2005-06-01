@@ -2,7 +2,7 @@ indexing
 	description: "Helper functions used by completion mechanism"
 	date: "$Date$"
 	revision: "$Revision$"
-
+	
 class
 	COMPLETION_HELPERS
 
@@ -571,7 +571,7 @@ feature {NONE} -- Implementation
 		do
 			Formatter.reset_output
 			Formatter.process_text (a_text)
-			Result := Formatter.output
+			Result := Formatter.output.twin
 			Result.left_adjust
 			Result.replace_substring_all ("%N%T", "%N")
 			Result.right_adjust

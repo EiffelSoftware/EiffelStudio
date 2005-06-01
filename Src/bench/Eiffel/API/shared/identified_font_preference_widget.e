@@ -41,6 +41,8 @@ feature -- Access
 	resource: IDENTIFIED_FONT_PREFERENCE
 			-- Actual resource.
 
+	last_selected_value: EV_IDENTIFIED_FONT
+
 feature {PREFERENCE_VIEW} -- Commands
 
 	change is
@@ -128,7 +130,5 @@ feature {NONE} -- Implementation
 
 	example_string: STRING is "Abc"
 			-- Example string to use in `example_label'.
-
-	last_selected_value: EV_IDENTIFIED_FONT
 
 end -- class IDENTIFIED_FONT_PREFERENCE_WIDGET

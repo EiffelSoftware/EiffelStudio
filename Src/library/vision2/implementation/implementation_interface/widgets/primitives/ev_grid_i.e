@@ -2265,13 +2265,6 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			node_index: INTEGER
 			pointed_row_i: EV_GRID_ROW_I
 			index_of_first_item: INTEGER
-			l_parent_row: EV_GRID_ROW_I
-			first_row_index_with_item: INTEGER
-			parent_adjustment_index: INTEGER
-			first_row_less_than: EV_GRID_ROW_I
-			first_row_in_column: EV_GRID_ROW_I
-			adjusted_index_of_first_item: INTEGER
-			parent_rows: ARRAYED_LIST [EV_GRID_ROW_I]
 			current_row: EV_GRID_ROW_I
 			found_row: EV_GRID_ROW_I
 			current_index_of_first_item: INTEGER
@@ -3269,7 +3262,6 @@ feature {NONE} -- Event handling
 			selected_item: EV_GRID_ITEM
 			selected_item_i: EV_GRID_ITEM_I
 			item_coordinates: EV_COORDINATE
-			pointed_column_i: EV_GRID_COLUMN_I
 		do
 			pointed_item := drawer.item_at_position_strict (a_x, a_y)
 

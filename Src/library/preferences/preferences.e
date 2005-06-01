@@ -199,8 +199,6 @@ feature -- Resource
 			name_not_empty: not a_name.is_empty
 		do
 			Result := resource_structure.get_resource_value (a_name)
-		ensure
-			result_not_void: Result /= Void
 		end
 
 	set_resource (a_name: STRING; a_resource: PREFERENCE) is

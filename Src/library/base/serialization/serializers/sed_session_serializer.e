@@ -18,11 +18,13 @@ feature {NONE} -- Initialization
 			-- Initialize current instance
 		require
 			a_serializer_not_void: a_serializer /= Void
+			a_serializer_ready: a_serializer.is_ready_for_writing
 		do
 			create internal
 			create object_indexes.make (1)
 			traversable := breadth_first_traversable
 			serializer := a_serializer
+			is_for_fast_retrieval := False
 		ensure
 			serializer_set: serializer = a_serializer
 		end
@@ -48,6 +50,9 @@ feature -- Status report
 
 	is_root_object_set: BOOLEAN
 			-- Is root object of object graph set?
+
+	is_for_fast_retrieval: BOOLEAN
+			-- Is data stored for fast retrieval?
 
 feature -- Element change
 
@@ -80,6 +85,25 @@ feature -- Element change
 		ensure
 			root_object_set: root_object = an_object and is_root_object_set
 			root_object_identity: root_object = traversable.root_object
+		end
+
+	set_is_for_fast_retrieval (v: like is_for_fast_retrieval) is
+			-- Set `is_for_fast_retrieval' with `v'.
+		do
+			is_for_fast_retrieval := v
+		ensure
+			is_for_fast_retrieval_set: is_for_fast_retrieval = v
+		end
+
+	set_serializer (a_serializer: like serializer) is
+			-- Set `serializer' with `a_serializer'.
+		require
+			a_serializer_not_void: a_serializer /= Void
+			a_serializer_ready: a_serializer.is_ready_for_writing
+		do
+			serializer := a_serializer
+		ensure
+			serializer_set: serializer = a_serializer
 		end
 
 feature -- Basic operations
@@ -157,7 +181,88 @@ feature {NONE} -- Implementation
 			a_list_not_void: a_list /= Void
 			a_list_not_empty: not a_list.is_empty
 		do
-			-- Nothing for this implementation
+			write_object_table (a_list)
+		end
+
+	write_object_table (a_list: ARRAYED_LIST [ANY]) is
+			-- Write mapping between object's reference ID in `a_list' with
+			-- all the necessary information necessary to recreate it at a
+			-- later time.
+		require
+			a_list_not_void: a_list /= Void
+			a_list_not_empty: not a_list.is_empty
+		local
+			l_int: like internal
+			l_ser: like serializer
+			l_object_indexes: like object_indexes
+			l_spec_mapping: like special_type_mapping			
+			i, nb: INTEGER
+			l_dtype, l_spec_item_type: INTEGER
+			l_obj: ANY
+			l_area: SPECIAL [ANY]
+			l_array: ARRAY [ANY]
+			l_abstract_spec: ABSTRACT_SPECIAL
+		do
+			if is_for_fast_retrieval then
+					-- Mark data with information that shows we have a mapping
+					-- between reference IDs and objects.
+				serializer.write_boolean (True)
+				l_int := internal
+				l_ser := serializer
+				l_object_indexes := object_indexes
+				l_spec_mapping := special_type_mapping
+	
+				from
+					l_array := a_list
+					l_area := l_array.area
+					l_array := Void
+					i := 0
+					nb := a_list.count
+				until
+					i = nb
+				loop
+					l_obj := l_area.item (i)
+					i := i + 1
+	
+						-- Get object data.
+					l_dtype := l_int.dynamic_type (l_obj)
+	
+						-- Write object dtype.
+					l_ser.write_compressed_natural_32 (l_dtype.to_natural_32)
+	
+						-- Write object reference ID.
+					l_ser.write_compressed_natural_32 (l_object_indexes.index (l_obj))
+	
+						-- Write object flags, then data.
+					if l_int.is_special (l_obj) then
+							-- Write special flag.
+						l_ser.write_natural_8 (is_special_flag)
+
+							-- Get the abstract element type of the SPECIAL and write it.
+						l_spec_mapping.search (l_int.generic_dynamic_type_of_type (l_dtype, 1))
+						if l_spec_mapping.found then
+							l_spec_item_type := l_spec_mapping.found_item
+						else
+							l_spec_item_type := {INTERNAL}.reference_type
+						end
+						l_ser.write_compressed_integer_32 (l_spec_item_type)
+
+							-- Write number of elements in SPECIAL
+						l_abstract_spec ?= l_obj
+						check
+							l_abstract_spec /= Void
+						end
+						l_ser.write_compressed_integer_32 (l_abstract_spec.count)
+					elseif l_int.is_tuple (l_obj) then
+						l_ser.write_natural_8 (is_tuple_flag)
+					else
+						l_ser.write_natural_8 (0)
+					end
+				end
+			else
+					-- No mapping here.
+				serializer.write_boolean (False)
+			end
 		end
 
 	encode_objects (a_list: ARRAYED_LIST [ANY]) is
@@ -166,18 +271,24 @@ feature {NONE} -- Implementation
 			a_list_not_void: a_list /= Void
 			a_list_not_empty: not a_list.is_empty
 		local
-			l_dtype: INTEGER
 			l_int: like internal
 			l_ser: like serializer
-			l_is_special, l_is_tuple: BOOLEAN
+			l_spec_mapping: like special_type_mapping
+			l_object_indexes: like object_indexes
+			l_is_for_slow_retrieval: BOOLEAN
+			l_dtype, l_spec_item_type: INTEGER
 			l_obj: ANY
 			l_tuple: TUPLE
 			i, nb: INTEGER
 			l_area: SPECIAL [ANY]
 			l_array: ARRAY [ANY]
+			l_abstract_spec: ABSTRACT_SPECIAL
 		do
 			l_int := internal
 			l_ser := serializer
+			l_object_indexes := object_indexes
+			l_spec_mapping := special_type_mapping
+			l_is_for_slow_retrieval := not is_for_fast_retrieval
 
 			from
 				l_array := a_list
@@ -193,28 +304,51 @@ feature {NONE} -- Implementation
 
 					-- Get object data.
 				l_dtype := l_int.dynamic_type (l_obj)
-				l_is_special := l_int.is_special (l_obj)
-				l_is_tuple := l_int.is_tuple (l_obj)
 
-					-- Write object dtype.
-				l_ser.write_compressed_natural_32 (l_dtype.to_natural_32)
+				if l_is_for_slow_retrieval then
+						-- Write object dtype
+					l_ser.write_compressed_natural_32 (l_dtype.to_natural_32)
+				end
 
 					-- Write object reference ID.
-				encode_reference (l_obj)
+				l_ser.write_compressed_natural_32 (l_object_indexes.index (l_obj))
 
-					-- Write object flags, then data.
-				if l_is_special then
-					l_ser.write_natural_8 (is_special_flag)
-					encode_special (l_obj, l_dtype)
-				elseif l_is_tuple then
-					l_ser.write_natural_8 (is_tuple_flag)
+					-- Write object flags if in slow retrieval mode, then data.
+				if l_int.is_special (l_obj) then
+						-- Get the abstract element type of the SPECIAL.
+					l_spec_mapping.search (l_int.generic_dynamic_type_of_type (l_dtype, 1))
+					if l_spec_mapping.found then
+						l_spec_item_type := l_spec_mapping.found_item
+					else
+						l_spec_item_type := {INTERNAL}.reference_type
+					end
+
+					if l_is_for_slow_retrieval then
+							-- Store the fact it is a SPECIAL
+						l_ser.write_natural_8 (is_special_flag)
+
+							-- Store the type of special
+						l_ser.write_compressed_integer_32 (l_spec_item_type)
+
+							-- Store count of special
+						l_abstract_spec ?= l_obj
+						check l_abstract_spec /= Void end
+						l_ser.write_compressed_integer_32 (l_abstract_spec.count)
+					end
+					encode_special (l_obj, l_dtype, l_spec_item_type)
+				elseif l_int.is_tuple (l_obj) then
+					if l_is_for_slow_retrieval then
+						l_ser.write_natural_8 (is_tuple_flag)
+					end
 					l_tuple ?= l_obj
 					check
 						l_tuple_not_void: l_tuple /= Void
 					end
 					encode_tuple_object (l_tuple)
 				else
-					l_ser.write_natural_8 (0)
+					if l_is_for_slow_retrieval then
+						l_ser.write_natural_8 (0)
+					end
 					encode_normal_object (l_obj, l_dtype)
 				end
 			end
@@ -340,12 +474,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	encode_special (an_object: ANY; a_dtype: INTEGER) is
+	encode_special (an_object: ANY; a_dtype, a_item_type: INTEGER) is
 			-- Encode an object which is a special object.
 		require
 			an_object_not_void: an_object /= Void
 			an_object_is_special: internal.is_special (an_object)
-			a_dtype_non_negative: a_dtype >= 0		
+			a_dtype_non_negative: a_dtype >= 0
+			a_item_type_non_negative: a_item_type >= 0
 		local
 			l_spec_boolean: SPECIAL [BOOLEAN]
 			l_spec_character: SPECIAL [CHARACTER]
@@ -361,89 +496,78 @@ feature {NONE} -- Implementation
 			l_spec_real_64: SPECIAL [DOUBLE]
 			l_spec_pointer: SPECIAL [POINTER]
 			l_spec_any: SPECIAL [ANY]
-			l_item_type: INTEGER
 		do
-			special_type_mapping.search (internal.generic_dynamic_type_of_type (a_dtype, 1))
-			if special_type_mapping.found then
-					-- Encode special type to facilitate retrieval
-				l_item_type := special_type_mapping.found_item
-				serializer.write_integer_32 (l_item_type)
+			inspect a_item_type
+			when {INTERNAL}.boolean_type then
+				l_spec_boolean ?= an_object
+				check l_spec_boolean_not_void: l_spec_boolean /= Void end
+				encode_special_boolean (l_spec_boolean)
 
-					-- Encode specials
-				inspect l_item_type				
-				when {INTERNAL}.boolean_type then
-					l_spec_boolean ?= an_object
-					check l_spec_boolean_not_void: l_spec_boolean /= Void end
-					encode_special_boolean (l_spec_boolean)
+			when {INTERNAL}.character_type then
+				l_spec_character ?= an_object
+				check l_spec_character_not_void: l_spec_character /= Void end
+				encode_special_character (l_spec_character)
 
-				when {INTERNAL}.character_type then
-					l_spec_character ?= an_object
-					check l_spec_character_not_void: l_spec_character /= Void end
-					encode_special_character (l_spec_character)
+			when {INTERNAL}.natural_8_type then
+				l_spec_natural_8 ?= an_object
+				check l_spec_natural_8_not_void: l_spec_natural_8 /= Void end
+				encode_special_natural_8 (l_spec_natural_8)
 
-				when {INTERNAL}.natural_8_type then
-					l_spec_natural_8 ?= an_object
-					check l_spec_natural_8_not_void: l_spec_natural_8 /= Void end
-					encode_special_natural_8 (l_spec_natural_8)
+			when {INTERNAL}.natural_16_type then
+				l_spec_natural_16 ?= an_object
+				check l_spec_natural_16_not_void: l_spec_natural_16 /= Void end
+				encode_special_natural_16 (l_spec_natural_16)
 
-				when {INTERNAL}.natural_16_type then
-					l_spec_natural_16 ?= an_object
-					check l_spec_natural_16_not_void: l_spec_natural_16 /= Void end
-					encode_special_natural_16 (l_spec_natural_16)
+			when {INTERNAL}.natural_32_type then
+				l_spec_natural_32 ?= an_object
+				check l_spec_natural_32_not_void: l_spec_natural_32 /= Void end
+				encode_special_natural_32 (l_spec_natural_32)
 
-				when {INTERNAL}.natural_32_type then
-					l_spec_natural_32 ?= an_object
-					check l_spec_natural_32_not_void: l_spec_natural_32 /= Void end
-					encode_special_natural_32 (l_spec_natural_32)
+			when {INTERNAL}.natural_64_type then
+				l_spec_natural_64 ?= an_object
+				check l_spec_natural_64_not_void: l_spec_natural_64 /= Void end
+				encode_special_natural_64 (l_spec_natural_64)
 
-				when {INTERNAL}.natural_64_type then
-					l_spec_natural_64 ?= an_object
-					check l_spec_natural_64_not_void: l_spec_natural_64 /= Void end
-					encode_special_natural_64 (l_spec_natural_64)
+			when {INTERNAL}.integer_8_type then
+				l_spec_integer_8 ?= an_object
+				check l_spec_integer_8_not_void: l_spec_integer_8 /= Void end
+				encode_special_integer_8 (l_spec_integer_8)
 
-				when {INTERNAL}.integer_8_type then
-					l_spec_integer_8 ?= an_object
-					check l_spec_integer_8_not_void: l_spec_integer_8 /= Void end
-					encode_special_integer_8 (l_spec_integer_8)
+			when {INTERNAL}.integer_16_type then
+				l_spec_integer_16 ?= an_object
+				check l_spec_integer_16_not_void: l_spec_integer_16 /= Void end
+				encode_special_integer_16 (l_spec_integer_16)
 
-				when {INTERNAL}.integer_16_type then
-					l_spec_integer_16 ?= an_object
-					check l_spec_integer_16_not_void: l_spec_integer_16 /= Void end
-					encode_special_integer_16 (l_spec_integer_16)
+			when {INTERNAL}.integer_32_type then
+				l_spec_integer_32 ?= an_object
+				check l_spec_integer_32_not_void: l_spec_integer_32 /= Void end
+				encode_special_integer_32 (l_spec_integer_32)
 
-				when {INTERNAL}.integer_32_type then
-					l_spec_integer_32 ?= an_object
-					check l_spec_integer_32_not_void: l_spec_integer_32 /= Void end
-					encode_special_integer_32 (l_spec_integer_32)
+			when {INTERNAL}.integer_64_type then
+				l_spec_integer_64 ?= an_object
+				check l_spec_integer_64_not_void: l_spec_integer_64 /= Void end
+				encode_special_integer_64 (l_spec_integer_64)
 
-				when {INTERNAL}.integer_64_type then
-					l_spec_integer_64 ?= an_object
-					check l_spec_integer_64_not_void: l_spec_integer_64 /= Void end
-					encode_special_integer_64 (l_spec_integer_64)
+			when {INTERNAL}.real_32_type then
+				l_spec_real_32 ?= an_object
+				check l_spec_real_32_not_void: l_spec_real_32 /= Void end
+				encode_special_real_32 (l_spec_real_32)
 
-				when {INTERNAL}.real_32_type then
-					l_spec_real_32 ?= an_object
-					check l_spec_real_32_not_void: l_spec_real_32 /= Void end
-					encode_special_real_32 (l_spec_real_32)
-
-				when {INTERNAL}.real_64_type then
-					l_spec_real_64 ?= an_object
-					check l_spec_real_64_not_void: l_spec_real_64 /= Void end
-					encode_special_real_64 (l_spec_real_64)
+			when {INTERNAL}.real_64_type then
+				l_spec_real_64 ?= an_object
+				check l_spec_real_64_not_void: l_spec_real_64 /= Void end
+				encode_special_real_64 (l_spec_real_64)
 
 
-				when {INTERNAL}.pointer_type then
-					l_spec_pointer ?= an_object
-					check l_spec_pointer_not_void: l_spec_pointer /= Void end
-					encode_special_pointer (l_spec_pointer)
+			when {INTERNAL}.pointer_type then
+				l_spec_pointer ?= an_object
+				check l_spec_pointer_not_void: l_spec_pointer /= Void end
+				encode_special_pointer (l_spec_pointer)
 
-				else
-					check
-						False
-					end
-				end
 			else
-				serializer.write_integer_32 ({INTERNAL}.reference_type)
+				check
+					a_item_type_valid: a_item_type = {INTERNAL}.reference_type
+				end
 				l_spec_any ?= an_object
 				check l_spec_any_not_void: l_spec_any /= Void end
 				encode_special_reference (l_spec_any)
@@ -458,11 +582,9 @@ feature {NONE} -- Implementation
 			i, nb: INTEGER
 			l_ser: like serializer
 		do
-			nb := a_spec.count
-			l_ser := serializer
-			l_ser.write_compressed_natural_32 (nb.to_natural_32)
 			from
-				i := 0
+				nb := a_spec.count
+				l_ser := serializer
 			until
 				i = nb
 			loop
@@ -479,11 +601,9 @@ feature {NONE} -- Implementation
 			i, nb: INTEGER
 			l_ser: like serializer
 		do
-			nb := a_spec.count
-			l_ser := serializer
-			l_ser.write_compressed_natural_32 (nb.to_natural_32)
 			from
-				i := 0
+				nb := a_spec.count
+				l_ser := serializer
 			until
 				i = nb
 			loop
@@ -500,11 +620,9 @@ feature {NONE} -- Implementation
 			i, nb: INTEGER
 			l_ser: like serializer
 		do
-			nb := a_spec.count
-			l_ser := serializer
-			l_ser.write_compressed_natural_32 (nb.to_natural_32)
 			from
-				i := 0
+				nb := a_spec.count
+				l_ser := serializer
 			until
 				i = nb
 			loop
@@ -521,11 +639,9 @@ feature {NONE} -- Implementation
 			i, nb: INTEGER
 			l_ser: like serializer
 		do
-			nb := a_spec.count
-			l_ser := serializer
-			l_ser.write_compressed_natural_32 (nb.to_natural_32)
 			from
-				i := 0
+				nb := a_spec.count
+				l_ser := serializer
 			until
 				i = nb
 			loop
@@ -542,11 +658,9 @@ feature {NONE} -- Implementation
 			i, nb: INTEGER
 			l_ser: like serializer
 		do
-			nb := a_spec.count
-			l_ser := serializer
-			l_ser.write_compressed_natural_32 (nb.to_natural_32)
 			from
-				i := 0
+				nb := a_spec.count
+				l_ser := serializer
 			until
 				i = nb
 			loop
@@ -563,11 +677,9 @@ feature {NONE} -- Implementation
 			i, nb: INTEGER
 			l_ser: like serializer
 		do
-			nb := a_spec.count
-			l_ser := serializer
-			l_ser.write_compressed_natural_32 (nb.to_natural_32)
 			from
-				i := 0
+				nb := a_spec.count
+				l_ser := serializer
 			until
 				i = nb
 			loop
@@ -584,11 +696,9 @@ feature {NONE} -- Implementation
 			i, nb: INTEGER
 			l_ser: like serializer
 		do
-			nb := a_spec.count
-			l_ser := serializer
-			l_ser.write_compressed_natural_32 (nb.to_natural_32)
 			from
-				i := 0
+				nb := a_spec.count
+				l_ser := serializer
 			until
 				i = nb
 			loop
@@ -605,11 +715,9 @@ feature {NONE} -- Implementation
 			i, nb: INTEGER
 			l_ser: like serializer
 		do
-			nb := a_spec.count
-			l_ser := serializer
-			l_ser.write_compressed_natural_32 (nb.to_natural_32)
 			from
-				i := 0
+				nb := a_spec.count
+				l_ser := serializer
 			until
 				i = nb
 			loop
@@ -626,11 +734,9 @@ feature {NONE} -- Implementation
 			i, nb: INTEGER
 			l_ser: like serializer
 		do
-			nb := a_spec.count
-			l_ser := serializer
-			l_ser.write_compressed_natural_32 (nb.to_natural_32)
 			from
-				i := 0
+				nb := a_spec.count
+				l_ser := serializer
 			until
 				i = nb
 			loop
@@ -647,11 +753,9 @@ feature {NONE} -- Implementation
 			i, nb: INTEGER
 			l_ser: like serializer
 		do
-			nb := a_spec.count
-			l_ser := serializer
-			l_ser.write_compressed_natural_32 (nb.to_natural_32)
 			from
-				i := 0
+				nb := a_spec.count
+				l_ser := serializer
 			until
 				i = nb
 			loop
@@ -668,11 +772,9 @@ feature {NONE} -- Implementation
 			i, nb: INTEGER
 			l_ser: like serializer
 		do
-			nb := a_spec.count
-			l_ser := serializer
-			l_ser.write_compressed_natural_32 (nb.to_natural_32)
 			from
-				i := 0
+				nb := a_spec.count
+				l_ser := serializer
 			until
 				i = nb
 			loop
@@ -689,11 +791,9 @@ feature {NONE} -- Implementation
 			i, nb: INTEGER
 			l_ser: like serializer
 		do
-			nb := a_spec.count
-			l_ser := serializer
-			l_ser.write_compressed_natural_32 (nb.to_natural_32)
 			from
-				i := 0
+				nb := a_spec.count
+				l_ser := serializer
 			until
 				i = nb
 			loop
@@ -710,11 +810,9 @@ feature {NONE} -- Implementation
 			i, nb: INTEGER
 			l_ser: like serializer
 		do
-			nb := a_spec.count
-			l_ser := serializer
-			l_ser.write_compressed_natural_32 (nb.to_natural_32)
 			from
-				i := 0
+				nb := a_spec.count
+				l_ser := serializer
 			until
 				i = nb
 			loop
@@ -732,45 +830,13 @@ feature {NONE} -- Implementation
 		do
 			from
 				nb := a_spec.count
-				serializer.write_integer_32 (nb)
-				i := 0
 			until
 				i = nb
 			loop
 				encode_reference (a_spec.item (i))
 				i := i + 1
 			end
-		end
-		
-	special_type_mapping: HASH_TABLE [INTEGER, INTEGER] is
-			-- Mapping bettwen dynamic type of SPECIAL instances to abstract element
-			-- types.
-		local
-			l_int: INTERNAL
-		once
-			l_int := internal
-			create Result.make (10)
-			Result.put ({INTERNAL}.boolean_type, l_int.dynamic_type_from_string ("BOOLEAN"))
-			Result.put ({INTERNAL}.character_type, l_int.dynamic_type_from_string ("CHARACTER"))
-
-			Result.put ({INTERNAL}.natural_8_type, l_int.dynamic_type_from_string ("NATURAL_8"))
-			Result.put ({INTERNAL}.natural_16_type, l_int.dynamic_type_from_string ("NATURAL_16"))
-			Result.put ({INTERNAL}.natural_32_type, l_int.dynamic_type_from_string ("NATURAL_32"))
-			Result.put ({INTERNAL}.natural_64_type, l_int.dynamic_type_from_string ("NATURAL_64"))
-
-			Result.put ({INTERNAL}.integer_8_type, l_int.dynamic_type_from_string ("INTEGER_8"))
-			Result.put ({INTERNAL}.integer_16_type, l_int.dynamic_type_from_string ("INTEGER_16"))
-			Result.put ({INTERNAL}.integer_32_type, l_int.dynamic_type_from_string ("INTEGER"))
-			Result.put ({INTERNAL}.integer_64_type, l_int.dynamic_type_from_string ("INTEGER_64"))
-
-			Result.put ({INTERNAL}.real_32_type, l_int.dynamic_type_from_string ("REAL"))
-			Result.put ({INTERNAL}.real_64_type, l_int.dynamic_type_from_string ("DOUBLE"))
-
-			Result.put ({INTERNAL}.pointer_type, l_int.dynamic_type_from_string ("POINTER"))
-		ensure
-			special_type_mapping_not_void: Result /= Void
-		end
-		
+		end		
 
 invariant
 	internal_not_void: internal /= Void

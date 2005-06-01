@@ -24,7 +24,7 @@ feature -- Access
 
 feature -- Basic Operations
 
-	find (target: STRING; use_overloading: BOOLEAN; a_ignore_call_type: BOOLEAN) is
+	find (target: STRING; use_overloading: BOOLEAN; a_ignore_call_type: BOOLEAN; a_fetch_description: BOOLEAN) is
 			-- Find `target' in current context
 		local
 			l_targets: LIST [STRING]
@@ -46,7 +46,7 @@ feature -- Basic Operations
 				if not qualified_call then
 					l_new_target := feature_name_from_target (target)
 					if l_new_target /= Void and not l_new_target.is_empty then
-						found_item := completion_feature_from_name (l_new_target, a_ignore_call_type)
+						found_item := completion_feature_from_name (l_new_target, a_ignore_call_type, a_fetch_description)
 						if found_item = Void then
 							found_item := uncompiled_completion_feature (l_new_target)
 							found := found_item /= Void
@@ -62,7 +62,7 @@ feature -- Basic Operations
 						l_targets.remove
 						feature_table := recursive_lookup (class_i, instantiated_type (class_i, Void, l_target_type), l_targets, feature_table, True)
 						if feature_table /= void then
-							found_item := completion_feature_from_name (l_lookup_name, a_ignore_call_type)
+							found_item := completion_feature_from_name (l_lookup_name, a_ignore_call_type, a_fetch_description)
 						end
 					end
 				end
@@ -76,7 +76,7 @@ feature -- Basic Operations
 		
 feature {NONE} -- Implementation
 
-	completion_feature_from_name (a_name: STRING; a_ignore_call_type: BOOLEAN): COMPLETION_FEATURE is
+	completion_feature_from_name (a_name: STRING; a_ignore_call_type: BOOLEAN; a_fetch_description: BOOLEAN): COMPLETION_FEATURE is
 			-- Completion feature with name `a_name', may be overloaded.
 		require
 			non_void_name: a_name /= Void
@@ -97,7 +97,11 @@ feature {NONE} -- Implementation
 				loop
 					l_feature_i := l_overloaded_features.item
 					if is_listed (l_feature_i, class_i, l_class_i) then
-						extract_description (l_feature_i, l_class_i, a_name)
+						if a_fetch_description then
+							extract_description (l_feature_i, l_class_i, a_name)
+						else
+							create extracted_description.make_empty
+						end
 						if Result = Void then
 							create Result.make_with_return_type (a_name, parameter_descriptors (l_feature_i), l_feature_i.type.dump, feature_type (l_feature_i), extracted_description.twin, l_feature_i.written_class.file_name, feature_location (l_feature_i))
 						else
@@ -111,7 +115,11 @@ feature {NONE} -- Implementation
 				if feature_table.found then
 					l_feature_i := feature_table.found_item
 					if a_ignore_call_type or is_listed (l_feature_i, class_i, l_class_i) then
-						extract_description (l_feature_i, l_class_i, a_name)
+						if a_fetch_description then
+							extract_description (l_feature_i, l_class_i, a_name)
+						else
+							create extracted_description.make_empty
+						end
 						create Result.make_with_return_type (l_feature_i.feature_name, parameter_descriptors (l_feature_i), l_feature_i.type.dump, feature_type (l_feature_i), extracted_description.twin, l_feature_i.written_class.file_name, feature_location (l_feature_i))
 					end
 				end

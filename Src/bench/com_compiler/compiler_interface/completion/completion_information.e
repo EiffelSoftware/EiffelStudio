@@ -138,7 +138,7 @@ feature -- Access
 		do
 			if not l_retried then
 				target.to_lower
-				l_feature := internal_target_feature (target, location_name, file_name, use_overloading, False)
+				l_feature := internal_target_feature (target, location_name, file_name, use_overloading, False, True)
 				if l_feature /= Void then
 					l_overloads_count := l_feature.overloads_count + 1
 					create l_return_types.make (1, <<1>>, <<l_overloads_count>>)
@@ -206,7 +206,7 @@ feature -- Access
 					end
 				end
 				if l_lister /= Void and then l_lister.is_initialized then
-					l_lister.find (target, use_overloading, False)
+					l_lister.find (target, use_overloading, False, True)
 					if l_lister.found then
 						l_entries := l_lister.found_items
 						extract_variants_from_list (l_entries, return_names, return_image_indexes)
@@ -244,9 +244,9 @@ feature -- Access
 		do
 			l_class := find_class_i (bstr_class)
 			if l_class /= Void then
-				l_cf := internal_target_feature (bstr_target, bstr_feature, l_class.file_name, True, True)
+				l_cf := internal_target_feature (bstr_target, bstr_feature, l_class.file_name, True, True, False)
 				if l_cf = Void then
-					l_cf := internal_target_feature (bstr_target, bstr_feature, l_class.file_name, False, True)	
+					l_cf := internal_target_feature (bstr_target, bstr_feature, l_class.file_name, False, True, False)	
 				end
 				if l_cf /= Void then
 					l_class := eiffel_universe.class_with_file_name (create {FILE_NAME}.make_from_string (l_cf.file_name))
@@ -574,7 +574,7 @@ feature {NONE} -- Implementation
 			non_void_lister: Result /= Void
 		end
 
-	internal_target_feature (target: STRING; feature_name: STRING; file_name: STRING; use_overloading: BOOLEAN; a_ignore_call_type: BOOLEAN): COMPLETION_FEATURE is
+	internal_target_feature (target: STRING; feature_name: STRING; file_name: STRING; use_overloading: BOOLEAN; a_ignore_call_type: BOOLEAN; a_fetch_description: BOOLEAN): COMPLETION_FEATURE is
 			-- Feature information
 			-- `target' [in].
 			-- `feature_name' [in].
@@ -588,7 +588,7 @@ feature {NONE} -- Implementation
 				l_retriever.set_arguments (arguments)
 				l_retriever.set_completion_features (completion_features)
 				l_retriever.set_feature_name (feature_name)
-				l_retriever.find (target.as_lower, use_overloading, a_ignore_call_type)
+				l_retriever.find (target.as_lower, use_overloading, a_ignore_call_type, a_fetch_description)
 				if l_retriever.found then
 					Result := l_retriever.found_item
 				end

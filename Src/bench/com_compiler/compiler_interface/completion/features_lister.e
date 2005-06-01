@@ -22,7 +22,7 @@ feature -- Access
 
 feature -- Basic Operations
 
-	find (target: STRING; use_overloading: BOOLEAN; a_ignore_call_type: BOOLEAN) is
+	find (target: STRING; use_overloading: BOOLEAN; a_ignore_call_type: BOOLEAN; a_fetch_description: BOOLEAN) is
 		 	-- Find matches for target `target'.
 			-- Use overloaded names if `use_overloading'.
 		local

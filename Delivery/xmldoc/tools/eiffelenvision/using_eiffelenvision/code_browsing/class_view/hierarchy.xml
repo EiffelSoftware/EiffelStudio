@@ -6,14 +6,14 @@
 				<envision_pseudo_name>00</envision_pseudo_name>
 			</toc>
 			<xml>
-				<keyword>
+				<xmlkeyword>
 					<index>K</index>
 					<term>Class View, Hierarchy overview</term>
-				</keyword>
-				<keyword>
+				</xmlkeyword>
+				<xmlkeyword>
 					<index>K</index>
 					<term>Overview of the EiffelEnvision Class View</term>
-				</keyword>
+				</xmlkeyword>
 			</xml>
 		</help>
 	</meta_data>
@@ -36,7 +36,7 @@
 				<tab_index>0</tab_index>
 				Solution Explorer
 			</help_link>. Expanding a node that represents an EiffelEnvision project, represented by the <image>
-				<url>../images/project.png</url> 
+				<url>../images/project.ico</url> 
 			</image> icon, will display a tree of <link><url>url</url><label>*clusters</label></link>.
 			
 			<note>
@@ -89,7 +89,7 @@
 			<line_break/>
 			<link>
 				<url>../icon_glossary.xml</url>
-				<label>EiffelEnvision Icon Glossary</label>
+				<label>Class View and Object Browser Icons</label>
 			</link>
 			<line_break/>
 			<help_link>

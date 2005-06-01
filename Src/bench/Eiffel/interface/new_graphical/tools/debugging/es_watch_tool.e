@@ -57,27 +57,32 @@ feature {NONE} -- Initialization
 
 	build_interface is
 			-- Build all the tool's widgets.
+		local
+			esgrid: ES_OBJECTS_GRID
 		do
 --			create expressions.make (10)
 			create watched_items.make (10)
 
-			create watches_grid.make ("Watches", Current)
-			watches_grid.set_column_count_to (5)
-			watches_grid.enable_multiple_row_selection
-			watches_grid.row_select_actions.extend (agent on_item_selected)
-			watches_grid.row_deselect_actions.extend (agent on_item_deselected)
-			watches_grid.drop_actions.extend (agent on_element_drop)
-			watches_grid.key_press_actions.extend (agent key_pressed)
+			create esgrid.make ("Watches", Current)
+			esgrid.enable_multiple_row_selection
+			esgrid.set_column_count_to (5)
+			esgrid.column (col_name_index).set_title (col_titles @ col_name_index)
+			esgrid.column (col_name_index).set_width (100)	
+			esgrid.column (col_address_index).set_title (col_titles @ col_address_index)
+			esgrid.column (col_address_index).set_width (80)
+			esgrid.column (col_value_index).set_title (col_titles @ col_value_index)
+			esgrid.column (col_value_index).set_width (150)
+			esgrid.column (col_type_index).set_title (col_titles @ col_type_index)
+			esgrid.column (col_type_index).set_width (100)
+			esgrid.column (col_context_index).set_title (col_titles @ col_context_index)
+			esgrid.column (col_context_index).set_width (200)
 
-			watches_grid.column (1).set_title ("Object")
-			watches_grid.column (1).set_width (150)
-			watches_grid.column (2).set_title ("Type")
-			watches_grid.column (2).set_width (150)
-			watches_grid.column (3).set_title ("Address")
-			watches_grid.column (3).set_width (80)
-			watches_grid.column (4).set_title ("Value")
-			watches_grid.column (4).set_width (200)
-			watches_grid.column (5).set_title ("Context ...")
+			esgrid.row_select_actions.extend (agent on_item_selected)
+			esgrid.row_deselect_actions.extend (agent on_item_deselected)
+			esgrid.drop_actions.extend (agent on_element_drop)
+			esgrid.key_press_actions.extend (agent key_pressed)
+
+			watches_grid := esgrid
 
 			create_update_on_idle_agent
 		end
@@ -897,7 +902,26 @@ feature {NONE} -- Implementation
 	Unevaluated: STRING is ""
 			-- String that is displayed in the "expression" column when an expression was not evaluated.
 			--	expressions.count = watches_grid.row_count
-	
+
+feature {NONE} -- Grid related Constants
+
+	Col_pixmap_index: INTEGER is 2
+	Col_name_index: INTEGER is 2
+	Col_address_index: INTEGER is 3
+	Col_value_index: INTEGER is 4
+	Col_type_index: INTEGER is 5
+	Col_context_index: INTEGER is 1
+
+	Col_titles: ARRAY [STRING] is
+		do
+			create Result.make (1, 5)
+			Result.put ("Name", Col_name_index)
+			Result.put ("Address", Col_address_index)
+			Result.put ("Value", Col_value_index)
+			Result.put ("Type", Col_type_index)
+			Result.put ("Context ...", Col_context_index)
+		end	
+
 invariant
 
 	not_void_delete_expression_cmd: delete_expression_cmd /= Void

@@ -70,7 +70,7 @@ feature -- Access
 
 feature -- Basic Operations
 		
-	find (target: STRING; use_overloading: BOOLEAN; a_ignore_call_type: BOOLEAN) is
+	find (target: STRING; use_overloading: BOOLEAN; a_ignore_call_type: BOOLEAN; a_fetch_description: BOOLEAN) is
 			-- Lookup `target' and set `found_item' according to `use_overloading'.
 		require
 			non_void_target: target /= Void

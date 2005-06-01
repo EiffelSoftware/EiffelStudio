@@ -226,13 +226,15 @@ feature -- Graphical changes
 			w_tool: ES_WATCH_TOOL
 		do
 			new_expr := a_item.new_text
-			expression.set_expression (new_expr)
-			w_tool ?= tool
-			if w_tool /= Void then
-				fixme("jfiat: not very nice design")
-				w_tool.refresh_watched_item (Current)
+			if not new_expr.is_equal (expression.expression) then
+				expression.set_expression (new_expr)
+				w_tool ?= tool
+				if w_tool /= Void then
+					fixme("jfiat: not very nice design")
+					w_tool.refresh_watched_item (Current)
+				end
+				refresh
 			end
-			refresh
 		end
 
 	set_error_pixmap (v: EV_PIXMAP) is

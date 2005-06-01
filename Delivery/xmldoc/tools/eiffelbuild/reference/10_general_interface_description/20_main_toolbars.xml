@@ -154,7 +154,7 @@ At the top of the EiffelBuild development window, one toolbar is displayed by de
 							<url>/images/eiffelbuild/icons/icon_component_viewer_color.png</url>
 						</image>
 					</cell>
-					<cell>Show/hide 
+					<cell>Show/hide
 						<link>
 							<url>/tools/eiffelbuild/reference/65_component_viewer/index.xml</url>
 							<label>component viewer</label>
@@ -172,6 +172,42 @@ At the top of the EiffelBuild development window, one toolbar is displayed by de
 							<url>/tools/eiffelbuild/reference/75_constants/index.xml</url>
 							<label>Constants</label>
 						</link> dialog.
+					</cell>
+				</row>
+				<row>
+					<cell>
+						<image>
+							<url>/images/eiffelbuild/icons/icon_cut_color.png</url>
+						</image>
+					</cell>
+					<cell>Cut selected object to clipboard.
+					</cell>
+				</row>
+				<row>
+					<cell>
+						<image>
+							<url>/images/eiffelbuild/icons/icon_copy_color.png</url>
+						</image>
+					</cell>
+					<cell>Copy selected object to clipboard.
+					</cell>
+				</row>
+				<row>
+					<cell>
+						<image>
+							<url>/images/eiffelbuild/icons/icon_past_color.png</url>
+						</image>
+					</cell>
+					<cell>Paste contents of clipboard.
+					</cell>
+				</row>
+				<row>
+					<cell>
+						<image>
+							<url>/images/eiffelbuild/icons/icon_clipboard_color.png</url>
+						</image>
+					</cell>
+					<cell>View clipboard contents.
 					</cell>
 				</row>
 			</table>

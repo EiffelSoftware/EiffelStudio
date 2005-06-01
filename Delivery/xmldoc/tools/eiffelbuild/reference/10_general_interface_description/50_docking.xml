@@ -11,8 +11,8 @@
 				<label>Component Selector</label>
 			</link> and 
 			<link>
-				<url>/tools/eiffelbuild/reference/64_window_selector/index.xml</url>
-				<label>Window Selector</label>
+				<url>/tools/eiffelbuild/reference/64_widget_selector/index.xml</url>
+				<label>Widget Selector</label>
 			</link> all support docking.
 		</paragraph>
 		<heading>

@@ -28,7 +28,7 @@
 				<url>/libraries/vision2/00_introduction.xml</url>
 				<label>EiffelVision2</label>
 			</link> interface definition - An EV_TITLED_WINDOW containing one child, of type EV_VERTICAL_BOX. Within the vertical box there is an EV_HORIZONTAL_BOX and an EV_LIST. The list is empty, but the horizontal box contains three different objects of type EV_BUTTON.
-		</paragraph><note><bold>Note</bold>: The window or dialog displayed as the root of the Layout Constructor is the currently selected object in the <link><url>../64_window_selector/index.xml</url><label>Window Selector</label></link>. To edit the contents of a different window, select the window you wish to manipulate from the <link><url>../64_window_selector/index.xml</url><label>window selector</label></link>.
+		</paragraph><note><bold>Note</bold>: The window or dialog displayed as the root of the Layout Constructor is the currently selected object in the <link><url>../64_widget_selector/index.xml</url><label>Widget Selector</label></link>. To edit the contents of a different window, select the window you wish to manipulate from the <link><url>../64_widget_selector/index.xml</url><label>widget selector</label></link>.
 </note>
 		<paragraph>The information displayed, only shows you the structure of the 
 			<link>

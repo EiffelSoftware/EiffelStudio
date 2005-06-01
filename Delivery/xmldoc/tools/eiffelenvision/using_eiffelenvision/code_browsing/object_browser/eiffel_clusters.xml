@@ -1,0 +1,60 @@
+<document output="envision" title="Object Browser Eiffel Cluster Node">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_title>Object Browser Eiffel Cluster Node</envision_title>
+				<envision_pseudo_name>20</envision_pseudo_name>
+			</toc>
+			<xml>
+				<xmlkeyword>
+					<index>K</index>
+					<term>Object Browser, Eiffel Clusters Node</term>
+				</xmlkeyword>
+			</xml>
+		</help>
+	</meta_data>
+	<paragraph>		
+		<paragraph>
+			The <bold>Eiffel Clusters</bold> node (<image>
+				<url>../images/cluster/hier_cluster_all.ico</url>
+			</image>), of an EiffelEnvision project in the <link><url>index.xml</url><label>Object Browser</label></link>, is one of the nodes unique to EiffelEnvision's participation in the Visual Studio .NET <help_link>
+				<keywords>vxurfObjectBrowserS</keywords>
+				<tab_index>0</tab_index>
+				Object Browser
+			</help_link>. <bold>Eiffel Clusters</bold> is where the <link><url>index.xml</url><label>Object Browser</label></link> and the <link><url>index.xml</url><label>Class View</label></link> merge. Expanding the <bold>Eiffel Clusters</bold> node will yield the same content when expanding a EiffelEnvision project node in the <link><url>index.xml</url><label>Class View</label></link>.
+		</paragraph>
+		
+		<anchor>also_see</anchor>
+		<heading>
+			<size>2</size>
+			<content>Related Sections</content>
+		</heading>
+		<seealso>
+			<bold>See Also:</bold>
+			<line_break/>
+			<link><url>index.xml</url><label>Object Browser</label></link>
+			<line_break/>
+			<link><url>../index.xml</url><label>Code Browsing and Navigation</label></link>
+			<line_break/>
+			<link><url>../class_view/clusters.xml</url><label>Class View Clusters</label></link>
+			<line_break/>
+			<help_link>
+				<keywords>vxoriBrowsingCodeComponents</keywords>
+				<tab_index>0</tab_index>
+				Browsing Code and Components	
+			</help_link>
+			<line_break/>
+			<help_link>
+				<keywords>vxurfObjectBrowserS</keywords>
+				<tab_index>0</tab_index>
+				Visual Studio .NET Object Browser
+			</help_link>
+			<line_break/>
+			<help_link>
+				<keywords>vxurfClassViewWindow</keywords>
+				<tab_index>0</tab_index>
+				Visual Studio .NET Class View
+			</help_link>
+		</seealso>
+	</paragraph>
+</document>

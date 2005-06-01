@@ -1,0 +1,97 @@
+<document output="envision" title="Object Browser .NET Member Nodes">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_title>Object Browser .NET Member Nodes</envision_title>
+				<envision_pseudo_name>60</envision_pseudo_name>
+			</toc>
+			<xml>
+				<xmlkeyword>
+					<index>K</index>
+					<term>Object Browser, .NET MemberS</term>
+				</xmlkeyword>
+			</xml>
+		</help>
+	</meta_data>
+	<paragraph>	
+		<paragraph>
+			.NET Type nodes populate <bold>Members</bold> pane of the Visual Studio .NET <help_link>
+				<keywords>vxurfObjectBrowserS</keywords>
+				<tab_index>0</tab_index>
+				Object Browser
+			</help_link> and display the corresponding members of a <link><url>types.xml</url><label>.NET Type Node</label></link>. To be consistent with Visual Studio .NET, the icons and names used to represent the type members are the same as detailed in the Visual Studio .NET <help_link>
+				<keywords>vxgrfClassViewIcons</keywords>
+				<tab_index>0</tab_index>
+				Class View and Object Browser Icons
+			</help_link> documentation.
+			
+			<link><url>url</url><label>*features</label></link>
+		</paragraph>
+		
+		<paragraph>
+			In the <bold>Members</bold> pane, EiffelEnvision allows the .NET type member signatures to be expanded. Expanding the .NET member node will show the corresponding Eiffel for .NET <link><url>url</url><label>*feature</label></link> name and it's full signature, in Eiffel-case. For more information on Eiffel-casing, see <link><url>url</url><label>*Referenced Assembly Type and Feature Name Conversion</label></link>.
+		</paragraph>
+		<paragraph>
+			What is displayed under the .NET member nodes depends on the type of node. <bold>Method</bold> and <bold>Functions</bold> display only one Eiffel <link><url>url</url><label>featur</label></link>, <bold>Properties</bold> show a getter and/or a setter <link><url>url</url><label>*features</label></link> and finally <bold>Events</bold> show the add and remove event <link><url>url</url><label>*features</label></link>.
+		</paragraph>
+		
+		<anchor>description
+		</anchor>
+		<heading>
+			<size>2</size>
+			<content>Description</content>
+		</heading>
+		<paragraph>
+			The descriptions for both the .NET members and the Eiffel-cased features are almost identical, providing descriptions for the member and it's arguments and return value, when the <help_link>
+				<keywords>vxconCommentingCode</keywords>
+				<tab_index>0</tab_index>
+				XML documentation
+			</help_link> is available for the assembly. The .NET members will display decriptions based on the default Visual Studio .NET description langauge, typical Visual C#. The Eiffel feature descriptions will show the descriptions using the Eiffel-casing.
+		</paragraph>		
+					
+		<anchor>also_see</anchor>
+		<heading>
+			<size>2</size>
+			<content>Related Sections</content>
+		</heading>
+		<seealso>
+			<bold>See Also:</bold>
+			<line_break/>
+			<link><url>index.xml</url><label>Object Browser</label></link>
+			<line_break/>
+			<link><url>types.xml</url><label>Object Browser .NET Type Nodes</label></link>
+			<line_break/>
+			<help_link>
+				<keywords>urfAddReferenceDialogBox</keywords>
+				<tab_index>0</tab_index>
+				Add Reference dialog box
+			</help_link>
+			<line_break/>
+			<help_link>
+				<keywords>vxgrfClassViewIcons</keywords>
+				<tab_index>0</tab_index>
+				Class View and Object Browser Icons
+			</help_link>
+			<line_break/>
+			<link><url>../index.xml</url><label>Code Browsing and Navigation</label></link>
+			<line_break/>
+			<help_link>
+				<keywords>vxoriBrowsingCodeComponents</keywords>
+				<tab_index>0</tab_index>
+				Browsing Code and Components	
+			</help_link>
+			<line_break/>
+			<help_link>
+				<keywords>vxurfObjectBrowserS</keywords>
+				<tab_index>0</tab_index>
+				Visual Studio .NET Object Browser
+			</help_link>
+			<line_break/>
+			<help_link>
+				<keywords>vxurfClassViewWindow</keywords>
+				<tab_index>0</tab_index>
+				Visual Studio .NET Class View
+			</help_link>
+		</seealso>	
+	</paragraph>
+</document>

@@ -46,7 +46,7 @@ create
 %token		TE_LARRAY TE_RARRAY TE_RPARAN
 %token		TE_LCURLY TE_RCURLY TE_LSQURE TE_RSQURE TE_CONSTRAIN
 %token <BOOL_AS> TE_FALSE TE_TRUE
-%token		TE_ACCEPT TE_ADDRESS TE_AS TE_ASSIGN
+%token		TE_ACCEPT TE_ADDRESS TE_AS TE_ASSIGNMENT
 %token		TE_CHECK TE_CLASS TE_CONVERT
 %token <CURRENT_AS> TE_CURRENT
 %token		TE_DEBUG
@@ -1584,9 +1584,9 @@ Rescue: -- Empty
 			}
 	;
 
-Assignment: Identifier_as_lower TE_ASSIGN Expression
+Assignment: Identifier_as_lower TE_ASSIGNMENT Expression
 			{ $$ := ast_factory.new_assign_as (ast_factory.new_access_id_as ($1, Void), $3) }
-	|	TE_RESULT TE_ASSIGN Expression
+	|	TE_RESULT TE_ASSIGNMENT Expression
 			{ $$ := ast_factory.new_assign_as ($1, $3) }
     ;
 

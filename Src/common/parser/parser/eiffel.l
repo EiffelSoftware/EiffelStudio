@@ -73,7 +73,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				last_token := TE_ADDRESS
 			}
 ":="		{
-				last_token := TE_ASSIGN
+				last_token := TE_ASSIGNMENT
 			}
 "?="		{
 				last_token := TE_ACCEPT

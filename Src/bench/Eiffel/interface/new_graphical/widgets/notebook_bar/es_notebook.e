@@ -10,7 +10,7 @@ class
 create
 	make
 
-feature  -- Init
+feature {NONE} -- Initialization
 
 	make is
 		do
@@ -35,7 +35,73 @@ feature  -- Init
 			docking_box.docked_actions.extend (agent on_docked_event)
 		end
 
-feature -- Drop action
+feature -- Access
+
+	item_by_tab (tab: EV_NOTEBOOK_TAB): ES_NOTEBOOK_ITEM is
+		require
+			tab /= Void
+		local
+			cursor: DS_HASH_TABLE_CURSOR [EV_NOTEBOOK_TAB, ES_NOTEBOOK_ITEM]
+		do
+			from
+				cursor := items.new_cursor
+				cursor.start
+			until
+				cursor.after or Result /= Void
+			loop
+				if cursor.item.widget = tab.widget then
+					Result := cursor.key
+				end
+				cursor.forth
+			end
+		end
+
+	item_by_title (t: STRING): ES_NOTEBOOK_ITEM is
+		require
+			title_valid: t /= Void
+		local
+			cursor: DS_HASH_TABLE_CURSOR [EV_NOTEBOOK_TAB, ES_NOTEBOOK_ITEM]
+		do
+			from
+				cursor := items.new_cursor
+				cursor.start
+			until
+				cursor.after or Result /= Void
+			loop
+				Result := cursor.key
+				if Result /= Void then
+					if not Result.title.is_equal (t) then
+						Result := Void
+					end
+				end
+				cursor.forth
+			end
+		end
+
+	widget: EV_WIDGET
+
+feature -- Change
+
+	extend (t: ES_NOTEBOOK_ITEM) is
+		local
+			tw: EV_WIDGET
+			tab: EV_NOTEBOOK_TAB
+		do
+			tw := t.tab_widget
+			notebook.extend (tw)
+			tab := notebook.item_tab (tw)
+			tab.set_text (t.title)
+			t.set_tab (tab)
+			items.force (tab, t)
+		end
+
+	prune (t: ES_NOTEBOOK_ITEM) is
+		do
+			items.remove (t)
+			notebook.prune (t.tab_widget)
+		end
+
+feature {NONE} -- Drop action
 
 	on_dropped_stone (a_data: ANY) is
 		local
@@ -47,16 +113,18 @@ feature -- Drop action
 			if notebook.valid_index (i) then
 				pointed_w := notebook.i_th (i)
 				notebook.item_tab (pointed_w).enable_select
-				t := item (i) -- maybe index can change ??
+				t := item_by_tab (notebook.item_tab (pointed_w))
 				t.drop_actions.call ([a_data])
 			end
 		end
 
-feature -- Dock item action
+feature {NONE} -- Dock item action
 
 	on_docked_event (s: EV_DOCKABLE_SOURCE) is
 		do
 		end
+		
+feature {ES_NOTEBOOK_ITEM} -- exported Dock item action
 
 	dock_it_out (nbi: ES_NOTEBOOK_ITEM) is
 		local
@@ -67,7 +135,7 @@ feature -- Dock item action
 			check wbox /= Void end
 			tbox ?= nbi.tab_widget
 			check tbox /= Void end
-
+			
 			notebook.prune (tbox)
 			docking_box.extend (tbox)
 			docking_box.disable_item_expand (tbox)
@@ -90,43 +158,11 @@ feature -- Dock item action
 			extend (nbi)
 --			nbi.tab_widget.hide
 		end
-		
-feature -- Change
 
-	extend (t: ES_NOTEBOOK_ITEM) is
-		local
-			tw: EV_WIDGET
-			tab: EV_NOTEBOOK_TAB
-		do
-			tw := t.tab_widget
-			notebook.extend (tw)
-			tab := notebook.item_tab (tw)
-			tab.set_text (t.title)
-			t.set_tab (tab)
-			items.force (t, notebook.index_of (tw, 1))
-		end
+feature {NONE} -- Implementation
 
-	prune (t: ES_NOTEBOOK_ITEM) is
-		do
-			notebook.prune (t.tab_widget)
-		end
+	items: DS_HASH_TABLE [EV_NOTEBOOK_TAB, ES_NOTEBOOK_ITEM]
 
-	item_tab (w: EV_WIDGET): EV_NOTEBOOK_TAB is
-		do
-			Result := notebook.item_tab (w)
-		end
-
-feature -- Access
-
-	item (i: INTEGER): ES_NOTEBOOK_ITEM is
-		require
-		do
-			Result := items.item (i)
-		end
-
-	items: DS_HASH_TABLE [ES_NOTEBOOK_ITEM, INTEGER]
-
-	widget: EV_WIDGET
 	notebook: EV_NOTEBOOK
 	
 	docking_box: EV_BOX

@@ -6,6 +6,14 @@
 				<envision_pseudo_name>10</envision_pseudo_name>
 			</toc>
 			<xml>
+				<xmlkeyword>
+					<index>K</index>
+					<term>EiffelEnvision, Deploying projects</term>
+				</xmlkeyword>
+				<xmlkeyword>
+					<index>K</index>
+					<term>Deployment, Requirements</term>
+				</xmlkeyword>
 			</xml>
 		</help>
 	</meta_data>

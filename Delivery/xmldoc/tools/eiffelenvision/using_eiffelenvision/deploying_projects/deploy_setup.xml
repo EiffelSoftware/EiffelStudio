@@ -6,6 +6,18 @@
 				<envision_pseudo_name>30</envision_pseudo_name>
 			</toc>
 			<xml>
+				<xmlkeyword>
+					<index>K</index>
+					<term>EiffelEnvision, Deploying projects</term>
+				</xmlkeyword>
+				<xmlkeyword>
+					<index>K</index>
+					<term>Deployment, Inside Visual Studio .NET</term>
+				</xmlkeyword>
+				<xmlkeyword>
+					<index>K</index>
+					<term>Deploying EiffelEnvision projects</term>
+				</xmlkeyword>
 			</xml>
 		</help>
 	</meta_data>

@@ -59,8 +59,7 @@ feature {NONE} -- Initialization
 			choice_list.key_release_actions.extend (agent on_key_released)
 			enable_user_resize
 			focus_out_actions.extend (agent on_lose_focus)
-			choice_list.focus_out_actions.extend (agent on_lose_focus)
-			choice_list.pointer_double_press_actions.extend (agent mouse_selection)	
+			choice_list.pointer_double_press_actions.extend (agent mouse_selection)
 		end		
 
 feature -- Initialization
@@ -71,6 +70,8 @@ feature -- Initialization
 			feature_mode := True
 			editor := an_editor
 			before_complete := feature_name
+			before_complete.prune_all_leading (' ')
+			before_complete.prune_all_leading ('	')
 			sorted_names := completion_possibilities
 			remainder := a_remainder
 			common_initialization
@@ -141,11 +142,12 @@ feature -- Status Setting
 	show is
 			-- Show
 		do
-			if should_show then				
-				Precursor {EV_WINDOW}
-				choice_list.set_focus
-				select_closest_match	
+			check
+				should_show: should_show
 			end
+			Precursor {EV_WINDOW}
+			choice_list.set_focus
+			select_closest_match
 		end		
 
 feature -- Query
@@ -166,6 +168,21 @@ feature -- Query
 				Result := a_font.string_width (longest_text_value)
 			end
 		end		
+
+	should_show: BOOLEAN is
+			-- Should show in current state?
+		do
+			if choice_list /= Void then
+				from
+					choice_list.start
+				until
+					choice_list.after or Result
+				loop
+					Result := choice_list.item /= Void
+					choice_list.forth
+				end
+			end			
+		end
 
 feature {NONE} -- Events handling
 
@@ -290,7 +307,7 @@ feature {NONE} -- Events handling
 	on_lose_focus is
 			-- close window
 		do
-			if not (is_destroyed or else has_focus or else choice_list.has_focus) then
+			if (not (is_destroyed or else has_focus or else choice_list.has_focus)) and is_displayed then
 				exit				
 			end
 		end
@@ -417,6 +434,7 @@ feature {NONE} -- Implementation
 		do
 			if not is_closing then
 				is_closing := True				
+				show_needed := False
 				if has_capture then
 					disable_capture
 				end
@@ -460,21 +478,6 @@ feature {NONE} -- Implementation
 				l_index := l_index + 1
 			end
 		end		
-
-	should_show: BOOLEAN is
-			-- Should show in current state?
-		do
-			if choice_list /= Void then
-				from
-					choice_list.start
-				until
-					choice_list.after or Result
-				loop
-					Result := choice_list.item /= Void
-					choice_list.forth
-				end
-			end			
-		end
 
 	last_completed_feature_had_arguments: BOOLEAN
 			-- Did the last inserted completed feature name contain arguments?

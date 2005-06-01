@@ -7,6 +7,9 @@ indexing
 class
 	ES_NOTEBOOK_ITEM
 
+inherit
+	HASHABLE
+
 create
 	make,
 	make_with_mini_toolbar
@@ -51,7 +54,8 @@ feature {NONE} -- Initialization
 			cell: EV_CELL
 		do
 			create drop_actions
-				-- Set the attributes
+
+				--| Set the attributes
 			parent := a_parent
 			widget := a_widget
 			title := a_title
@@ -87,34 +91,105 @@ feature {NONE} -- Initialization
 			end
 			vb.extend (widget)
 		end
+		
+feature -- Access
 
-feature -- Docking
+	hash_code: INTEGER is
+		do
+			Result := title.hash_code
+		end
+
+	title: STRING
+
+	parent: ES_NOTEBOOK
+
+	tab: EV_NOTEBOOK_TAB
+
+	drop_actions: EV_PND_ACTION_SEQUENCE
+
+feature {ES_NOTEBOOK} -- Implementation
+
+	mini_toolbar: EV_TOOL_BAR
+
+	widget: EV_WIDGET
+
+	tab_widget: EV_CELL
+
+feature {NONE} -- Docking
+
+	docked_in_witdh: INTEGER
+	docked_in_height: INTEGER
+
+	docked_out_witdh: INTEGER
+	docked_out_height: INTEGER
 
 	dock_start (nbi: ES_NOTEBOOK_ITEM) is
 		do
+			docked_in_witdh := tab_widget.width
+			docked_in_height := tab_widget.height
+
 			nbi.parent.dock_it_out (nbi)
 		end
 
 	dock_end (nbi: ES_NOTEBOOK_ITEM) is
 		local
---			ddlg: EV_DOCKABLE_DIALOG
+			ddlg: EV_DOCKABLE_DIALOG
+			lw, lh: INTEGER
 		do
---			ddlg := parent_dockable_dialog (tab_widget)
---			if ddlg /= Void then
---				ddlg.close_request_actions.extend (agent dock_back (current, ddlg))				
---			end
+			ddlg := parent_dockable_dialog (widget)
+			if ddlg /= Void then
+				if docked_out_witdh = 0 then
+					lw := docked_in_witdh
+				else
+					lw := docked_out_witdh
+				end
+				if docked_out_height = 0 then
+					lh := docked_in_height
+				else
+					lh := docked_out_height
+				end
+				ddlg.set_size (lw, lh)
+--				ddlg.close_request_actions.extend (agent dock_back (current, ddlg))
+				ddlg.resize_actions.extend (agent dock_resized)
+			end
 		end
-		
-	dock_back (nbi: ES_NOTEBOOK_ITEM; dlg: EV_DOCKABLE_DIALOG) is
+
+--	dock_back (nbi: ES_NOTEBOOK_ITEM; dlg: EV_DOCKABLE_DIALOG) is
+--		do
+--			docked_out_witdh := dlg.width
+--			docked_out_height := dlg.height
+--		end
+
+	dock_resized (ax, ay, awidth, aheight: INTEGER) is
 		do
---			nbi.tab_widget.set_real_target (nbi.parent.docking_box)
---			dlg.set_original_parent (nbi.parent.docking_box)
+			docked_out_witdh := awidth
+			docked_out_height := aheight
 		end
+
+feature {ES_NOTEBOOK} -- Docking
 
 	on_dock_back (nbi: ES_NOTEBOOK_ITEM) is
 		do
-			parent.dock_it_back (nbi)
+			tab_widget.docked_actions.wipe_out
+			nbi.parent.dock_it_back (nbi)
 		end
+
+feature {ES_NOTEBOOK} -- Restricted access
+
+	set_tab (t: like tab) is
+		do
+			tab := t
+		end
+
+feature -- Change
+
+	close is
+		do
+			parent.prune (Current)
+			tab := Void
+		end
+		
+feature {NONE} -- Implementation
 
 	parent_dockable_dialog (w: EV_WIDGET): EV_DOCKABLE_DIALOG is
 			-- `Result' is dialog parent of `widget'.
@@ -128,40 +203,10 @@ feature -- Docking
 			if dialog = Void then
 				if w.parent /= Void then
 					Result := parent_dockable_dialog (w.parent)
-				end	
+				end
 			else
 				Result := dialog
-			end	
-		end		
-
-feature -- Access
-
-	parent: ES_NOTEBOOK
-
-	mini_toolbar: EV_TOOL_BAR
-	
-	tab_widget: EV_WIDGET
-
-	set_tab (t: like tab) is
-		do
-			tab := t
-		end
-
-	widget: EV_WIDGET
-
-	title: STRING
-
-	tab: EV_NOTEBOOK_TAB
-	
-	drop_actions: EV_PND_ACTION_SEQUENCE
-	
-
-feature -- Change
-
-	close is
-		do
-			parent.prune (Current)
-			tab := Void
+			end
 		end
 
 end

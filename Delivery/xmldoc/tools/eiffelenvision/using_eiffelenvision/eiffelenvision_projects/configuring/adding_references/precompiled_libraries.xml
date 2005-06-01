@@ -6,26 +6,18 @@
 				<envision_pseudo_name>00</envision_pseudo_name>
 			</toc>
 			<xml>
-				<keyword>
-					<index>A</index>
-					<term>eePrecompiledLibrariesReferencing</term>
-				</keyword>
-				<keyword>
-					<index>K</index>
-					<term>Projects, Adding Precompiled Libraries</term>
-				</keyword>
-				<keyword>
+				<xmlkeyword>
 					<index>K</index>
 					<term>Precompiled Libraries</term>
-				</keyword>
-				<keyword>
+				</xmlkeyword>
+				<xmlkeyword>
 					<index>K</index>
-					<term>Referencing EiffelEnvision Projects</term>
-				</keyword>
-				<keyword>
+					<term>References, Precompiled Libraries</term>
+				</xmlkeyword>
+				<xmlkeyword>
 					<index>K</index>
-					<term>Eiffel Class Library Projects</term>
-				</keyword>
+					<term>Projects, Precompiled Libraries</term>
+				</xmlkeyword>
 			</xml>
 		</help>
 	</meta_data>

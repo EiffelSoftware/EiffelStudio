@@ -6,14 +6,18 @@
 				<envision_pseudo_name>40</envision_pseudo_name>
 			</toc>
 			<xml>
-				<keyword>
+				<xmlkeyword>
 					<index>K</index>
-					<term>Adding new project folders</term>
-				</keyword>
-				<keyword>
+					<term>New Folders</term>
+				</xmlkeyword>	
+				<xmlkeyword>
 					<index>K</index>
-					<term>EiffelEnvision, Adding new project folders</term>
-				</keyword>
+					<term>Projects, Adding New Folders</term>
+				</xmlkeyword>
+				<xmlkeyword>
+					<index>K</index>
+					<term>EiffelEnvision, Adding New Folders</term>
+				</xmlkeyword>
 			</xml>
 		</help>
 	</meta_data>

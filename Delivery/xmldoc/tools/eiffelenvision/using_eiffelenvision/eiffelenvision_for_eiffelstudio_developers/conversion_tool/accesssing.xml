@@ -6,10 +6,10 @@
 				<envision_pseudo_name>10</envision_pseudo_name>
 			</toc>
 			<xml>
-				<keyword>
+				<xmlkeyword>
 					<index>K</index>
 					<term>EiffelStudio Project Conversion Tool, Acessing</term>
-				</keyword>
+				</xmlkeyword>
 			</xml>
 		</help>
 	</meta_data>

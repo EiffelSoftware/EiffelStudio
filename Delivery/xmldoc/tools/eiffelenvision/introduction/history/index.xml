@@ -6,10 +6,10 @@
 				<envision_pseudo_name>30</envision_pseudo_name>
 			</toc>
 			<xml>
-				<keyword>
+				<xmlkeyword>
 					<index>K</index>
 					<term>EiffelEnvision, History and Known Issues</term>
-				</keyword>
+				</xmlkeyword>
 			</xml>
 		</help>
 	</meta_data>

@@ -6,14 +6,14 @@
 				<envision_pseudo_name>20</envision_pseudo_name>
 			</toc>
 			<xml>
-				<keyword>
+				<xmlkeyword>
 					<index>K</index>
-					<term>Known EiffelEnvision Bugs and Issues</term>
-				</keyword>
-				<keyword>
+					<term>Known Bugs and Issues</term>
+				</xmlkeyword>
+				<xmlkeyword>
 					<index>K</index>
 					<term>EiffelEnvision, Known Bugs and Issues</term>
-				</keyword>
+				</xmlkeyword>
 			</xml>
 		</help>
 	</meta_data>
@@ -59,6 +59,12 @@
 						<bold>Solution</bold>: Close the Eiffel document and reopen it.
 					</paragraph>
 				</item>
+				<item>
+					Adding designable items (Window Forms, User Controls, ...) to non-Windows Forms projects do show show the item in design mode.
+					<paragraph>
+						<bold>Solution</bold>: Close the design view for the new document and build your project. Now reopen the document in the design view.
+					</paragraph>
+				</item>
 			</list>
 		</paragraph>
 
@@ -96,8 +102,11 @@
 			<bold>See also</bold>:
 			<line_break/>
 			<link><url>history.xml</url><label>Version History</label></link>
-			<line_break/>
-			<link><url>vxurfSolutionExplorerDialog</url><label>*Visual Studio Solution Explorer</label></link>
+			<line_break/><help_link>
+				<keywords>vxurfSolutionExplorerDialog</keywords>
+				<tab_index>0</tab_index>
+				Visual Studio Solution Explorer
+			</help_link>
 		</seealso>
 	</paragraph>
 </document>

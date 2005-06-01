@@ -6,14 +6,22 @@
 				<envision_pseudo_name>50</envision_pseudo_name>
 			</toc>
 			<xml>
-				<keyword>
+				<xmlkeyword>
 					<index>K</index>
-					<term>Adding new project clusters</term>
-				</keyword>
-				<keyword>
+					<term>Clusters, Adding New</term>
+				</xmlkeyword>
+				<xmlkeyword>
 					<index>K</index>
-					<term>EiffelEnvision, Adding new project clusters</term>
-				</keyword>
+					<term>Clusters</term>
+				</xmlkeyword>	
+				<xmlkeyword>
+					<index>K</index>
+					<term>Projects, Adding Clusters</term>
+				</xmlkeyword>	
+				<xmlkeyword>
+					<index>K</index>
+					<term>EiffelEnvision, Adding Clusters</term>
+				</xmlkeyword>
 			</xml>
 		</help>
 	</meta_data>

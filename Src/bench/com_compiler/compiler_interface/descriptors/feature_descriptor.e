@@ -327,6 +327,7 @@ feature -- Access
 			l_lines: LIST [STRING]
 			l_remove: BOOLEAN
 			l_count: INTEGER
+			l_comment_start: INTEGER
 		do
 			l_desc := description
 			if l_desc /= Void and then not l_desc.is_empty then
@@ -337,7 +338,18 @@ feature -- Access
 				until
 					l_lines.after
 				loop
-					if not l_remove and then not l_lines.item.is_empty and then l_lines.item.item (1) = ' ' then
+					l_comment_start := l_lines.item.substring_index ("--", 1)
+					if l_comment_start > 1  then
+						if l_lines.item.count - (l_comment_start + 2) > 0 then
+							if l_lines.item.substring (1, l_comment_start - 1).occurrences (' ') = l_comment_start - 1 then
+									-- If nothing is before
+								l_lines.item.keep_tail (l_lines.item.count - (l_comment_start + 2))
+							end
+						end
+						l_lines.item.prune_all_leading (' ')
+					end
+					
+					if not l_remove and then not l_lines.item.is_empty then
 						if l_lines.item.count >= ensure_desc.count and then l_lines.item.substring (1, ensure_desc.count).is_equal (ensure_desc) then
 							l_remove := True
 						elseif l_lines.item.count >= require_desc.count and then l_lines.item.substring (1, require_desc.count).is_equal (require_desc) then
@@ -632,12 +644,14 @@ feature -- Access
 							l_stop := True
 						else
 							if l_lines.item.count >= require_else_desc.count and then l_lines.item.substring (1, require_else_desc.count).is_equal (require_else_desc) then
-								Result.append ("%N- require else -%N")
+								Result.append ("- require else -%N")
 							else
 								l_lines.item.prune_all_leading (' ')
-								Result.append (l_lines.item)
-								if not l_lines.islast then
-									Result.append_character ('%N')	
+								if not l_lines.item.is_empty then
+									Result.append (l_lines.item)
+									if not l_lines.islast then
+										Result.append_character ('%N')	
+									end									
 								end
 							end
 							l_lines.forth
@@ -648,6 +662,9 @@ feature -- Access
 						end
 						l_lines.forth
 					end
+				end
+				if Result /= Void then
+					Result.prune_all_trailing ('%N')
 				end
 			else
 				create Result.make_empty
@@ -676,12 +693,14 @@ feature -- Access
 				loop
 					if Result /= Void then
 						if l_lines.item.count >= ensure_then_desc.count and then l_lines.item.substring (1, ensure_then_desc.count).is_equal (ensure_then_desc) then
-							Result.append ("%N- ensure then -%N")
+							Result.append ("- ensure then -%N")
 						else
 							l_lines.item.prune_all_leading (' ')
-							Result.append (l_lines.item)
-							if not l_lines.islast then
-								Result.append_character ('%N')	
+							if not l_lines.item.is_empty then
+								Result.append (l_lines.item)
+								if not l_lines.islast then
+									Result.append_character ('%N')	
+								end
 							end
 						end
 						l_lines.forth
@@ -692,6 +711,9 @@ feature -- Access
 						l_lines.forth
 					end
 				end
+				if Result /= Void then
+					Result.prune_all_trailing ('%N')
+				end				
 			else
 				create Result.make_empty
 			end
@@ -801,16 +823,16 @@ feature {FEATURE_DESCRIPTOR} -- Implementation
 
 feature {NONE} -- Implementation
 
-	require_desc: STRING is "  require"
+	require_desc: STRING is "require"
 			-- require part of description to parse
 
-	require_else_desc: STRING is "  require else"
+	require_else_desc: STRING is "require else"
 			-- require part of description to parse
 		
-	ensure_desc: STRING is "  ensure"
+	ensure_desc: STRING is "ensure"
 			-- ensure part of description to parse
 
-	ensure_then_desc: STRING is "  ensure then"
+	ensure_then_desc: STRING is "ensure then"
 			-- ensure then part of description to parse
 			
 	internal_description: like description

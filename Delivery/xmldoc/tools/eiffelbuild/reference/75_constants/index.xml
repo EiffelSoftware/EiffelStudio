@@ -23,6 +23,12 @@
 				<item>
 					<bold>Pixmap</bold> - Representing an EV_PIXMAP, and either absolute, or built from a directory constant.
 				</item>
+				<item>
+					<bold>Font</bold> - Representing a font, of type EV_FONT.
+				</item>
+				<item>
+					<bold>Color</bold> - Representing a color, of type EV_COLOR.
+				</item>
 			</list>
 		</paragraph>
 		<heading>
@@ -42,7 +48,7 @@
 				<url>/images/eiffelbuild/screenshots/constants_dialog.png</url>
 			</image>
 		</paragraph>
-		<paragraph>The screenshot above, shows the constants dialog displayed for a project containing eight constants, a few of each available type. Each of the constants in the project are displayed in the multi column list occupying most of the dialog.</paragraph>
+		<paragraph>The screenshot above, shows the constants dialog displayed for a project containing twelve constants, a few of each available type. Each of the constants in the project are displayed in the multi column list occupying most of the dialog.</paragraph>
 		<paragraph>The "Type", "Name" and "Value" fields displayed along the bottom of the dialog are used to permit addition and modification of constants. The "OK" button displayed in the top right hand corner of the dialog closes the dialog when modifications to the constants are complete.
 			<heading>
 				<size>3</size>Adding a new constant
@@ -58,6 +64,12 @@
 					</item>
 					<item>
 						<bold>Pixmap</bold> - Select the "New" button, which brings up the Pixmap Constant Dialog enabling you to select a constant. The use of this dialog is described further down this page.
+					</item>
+					<item>
+						<bold>Font</bold> - Enter a name in the "Name" field, and then select "New" which displays a font dialog. Selecting a font from this dialog and pressing "OK" adds the new font constant to the project.
+					</item>
+					<item>
+						<bold>Color</bold> - Enter a name in the "Name" field, and then select "New" which displays a color dialog. Selecting a color from this dialog and pressing "OK" adds the new color constant to the project.
 					</item>
 				</list>
 				<note>
@@ -78,6 +90,12 @@
 					</item>
 					<item>
 						<bold>Pixmap</bold> - Select the "Modify" button which displays the Pixmap Constant Dialog, in a mode which permits you to select the new pixmap you wish to use.
+					</item>
+					<item>
+						<bold>Font</bold> - Select the "Modify" button which displays a font dialog, permitting selection of the new font.
+					</item>
+					<item>
+						<bold>Color</bold> - Select the "Modify" button which displays a color dialog, permitting selection of the new color.
 					</item>
 				</list>
 				<heading>
@@ -161,7 +179,32 @@
 		 <keyword>end</keyword></code_block>
 				<paragraph>Where `pixmap_location' is the name of the Directory constant to which the pixmap is relative.</paragraph>
 			</item>
+			<item>
+			</item>
 		</list>
+		<heading>
+				<size>2</size>Font constant
+			</heading>
+			<paragraph>A Font constant represents an EV_FONT. For example, in the generated constants file, for a font constant named `times_new_roman', the following code is generated:</paragraph>
+<code_block><feature_name>times_new_roman</feature_name><symbol>:</symbol> <class_name>EV_FONT</class_name> <keyword>is</keyword>
+			<comment>-- `Result' is EV_FONT constant named `times_new_roman'.</comment>
+		<keyword>once</keyword>
+			<keyword>create</keyword> Result
+			Result.<feature_name>set_family</feature_name> <symbol>(</symbol><keyword>feature</keyword> <symbol>{</symbol><class_name>EV_FONT_CONSTANTS</class_name><symbol>}</symbol>.<feature_name>Family_roman</feature_name><symbol>)</symbol>
+			Result.<feature_name>set_weight</feature_name> <symbol>(</symbol><keyword>feature</keyword> <symbol>{</symbol><class_name>EV_FONT_CONSTANTS</class_name><symbol>}</symbol>.<feature_name>Weight_regular</feature_name><symbol>)</symbol>
+			Result.<feature_name>set_shape</feature_name> <symbol>(</symbol><keyword>feature</keyword> <symbol>{</symbol><class_name>EV_FONT_CONSTANTS</class_name><symbol>}</symbol>.<feature_name>Shape_regular</feature_name><symbol>)</symbol>
+			Result.<feature_name>set_height_in_points</feature_name> <symbol>(</symbol>12<symbol>)</symbol>
+			Result.<feature_name>preferred_families</feature_name>.<feature_name>extend</feature_name> <symbol>(</symbol>"Times New Roman"<symbol>)</symbol>
+		<keyword>end</keyword></code_block>
+		<heading>
+				<size>2</size>Integer constant
+			</heading>
+			<paragraph>A Color constant represents an EV_COLOR. For example, in the generated constants file, for a color constant named `red', the following code is generated:</paragraph>
+<code_block><feature_name>red</feature_name><symbol>:</symbol> <class_name>EV_COLOR</class_name> <keyword>is</keyword>
+			<comment>-- `Result' is EV_COLOR constant named `red'.</comment>
+		<keyword>once</keyword>
+			Result <symbol>:=</symbol> <keyword>create</keyword> <symbol>{</symbol><class_name>EV_COLOR</class_name><symbol>}</symbol>.<feature_name>make_with_8_bit_rgb</feature_name> <symbol>(</symbol>255, 0, 0<symbol>)</symbol>
+		<keyword>end</keyword></code_block>
 		<heading>
 			<size>3</size>Pixmap constant dialog
 		</heading>
@@ -189,7 +232,7 @@
 			<link>
 				<url>/tools/eiffelbuild/reference/80_project_settings/index.xml</url>
 				<label>project settings</label>
-			</link> must be checked, which causes a file "constants.txt" to be generated, containing the definitions of all Integer an String constant values. As the system is executed, the values of these constants are loaded from the file, and by providing different versions of the file, at the time of deployment, multiple languages may be accounted for in your generated system.
+			</link> must be checked, which causes a file "constants.txt" to be generated, containing the definitions of all Integer and String constant values. As the system is executed, the values of these constants are loaded from the file, and by providing different versions of the file, at the time of deployment, multiple languages may be accounted for in your generated system.
 		</paragraph>
 		<heading>
 			<size>2</size>Using constants

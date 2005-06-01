@@ -30,7 +30,7 @@
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>object</anchor_name>
 				<label>object</label>
-			</link> in your project, this will be recorded in the history. If you modify properties of an 
+			</link> in your project, this is recorded in the history. If you modify properties of an 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>object</anchor_name>
 				<label>object</label>
@@ -38,7 +38,7 @@
 			<link>
 				<url>/tools/eiffelbuild/reference/40_object_editor/index.xml</url>
 				<label>object editor</label>
-			</link>), these modifications will not be recorded in the history.
+			</link>), these modifications are not recorded in the history.
 		</paragraph>
 		<heading>
 			<size>2</size>Undo
@@ -50,7 +50,7 @@
 			<link>
 				<url>/tools/eiffelbuild/reference/10_general_interface_description/20_main_toolbars.xml</url>
 				<label> main toolbar</label>
-			</link> You can repeatedly undo, until you get to the beginning of the history, at which point, this button will be disabled.
+			</link> You can repeatedly undo, until you get to the beginning of the history, at which point, this button is disabled.
 		</paragraph>
 		<heading>
 			<size>2</size>Redo
@@ -62,7 +62,7 @@
 			<link>
 				<url>/tools/eiffelbuild/reference/10_general_interface_description/20_main_toolbars.xml</url>
 				<label> main toolbar</label>
-			</link>. You can repeatedly redo, until the history becomes current again, and at which point, this button will be disabled.
+			</link>. You can repeatedly redo, until the history becomes current again, and at which point, this button is disabled.
 		</paragraph>
 		<heading>
 			<size>2</size>History window
@@ -85,11 +85,11 @@
 			<bold>View</bold> menu to show the history window, and click the 
 			<bold>Close</bold> button to close the window manually.
 		</paragraph>
-		<paragraph>Looking at the screenshot above, you will see that the last action in the history list is selected. This is always the case while working, until you start undoing your changes. To go back three steps, so that (in this case), there is just the one BUTTON added to the HORIZONTAL_BOX, you could click the undo button on the 
+		<paragraph>Looking at the screenshot above, you will see that the last action in the history list is selected. This is always the case while working, until you start undoing your changes. To go back six steps, so that (in this case), there is just the one BUTTON added to the HORIZONTAL_BOX, you could click the undo button on the 
 			<link>
 				<url>/tools/eiffelbuild/reference/10_general_interface_description/20_main_toolbars.xml</url>
 				<label> main toolbar</label>
-			</link> three times, or you can simply select the second item in this list. both have the same effect. You can also redo by selecting an item below the currently selection in the history list (Only possible after an undo).
+			</link> six times, or you can simply select the third item in this list. both have the same effect. You can also redo by selecting an item below the currently selection in the history list (Only possible after an undo).
 		</paragraph>
 		<paragraph>If you execute an action which will be added to the history while the history is not at the final position, all history events after this current position will be removed, and the history will be up to date again.</paragraph>
 		<note>

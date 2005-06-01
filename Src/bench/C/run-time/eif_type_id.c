@@ -101,7 +101,7 @@ rt_private struct rt_type * eif_decompose_type (char *type_string)
 	char *l_class_type_name, *l_type_name;
 	char *lsquare;
 	struct rt_type *l_type = NULL;
-	int l_count;
+	size_t l_count;
 
 	REQUIRE("type_string_not_null", type_string);
 
@@ -181,7 +181,8 @@ doc:	</routine>
 */
 rt_private struct rt_type ** eif_decompose_parameters (char *params, uint32 *a_count)
 {
-	int i, l_count, l_nesting = 0;
+	int i, l_nesting = 0;
+	size_t l_count;
 	int l_valid = 1, l_first_pos = 0;
 	char c;
 	char * l_type_name;
@@ -321,7 +322,8 @@ doc:	</routine>
 rt_private void eif_remove_surrounding_white_spaces (char * str)
 {
 	char *s;
-	int i, length = strlen(str);
+	int i;
+	size_t length = strlen(str);
 
 		/* Step 1: we remove trailing white spaces. */
 
@@ -373,7 +375,7 @@ doc:	</routine>
 rt_private void set_expanded_or_reference_keyword (struct rt_type *type_entry)
 {
 	char *l_str;
-	int l_count;
+	size_t l_count;
 
 	REQUIRE("Valid type entry", type_entry);
 	REQUIRE("Has type name", type_entry->type_name);
@@ -451,7 +453,7 @@ doc:	</routine>
 rt_private int is_tuple (struct rt_type *type_entry)
 {
 	char *l_str;
-	int l_count;
+	size_t l_count;
 	int result;
 
 	REQUIRE("Valid type entry", type_entry);
@@ -833,7 +835,8 @@ rt_private void eif_gen_type_id (struct cecil_info *type, struct rt_type *a_type
 				 */
 				
 				if (matched == 1) {
-					i = (t - type->patterns) / l_generic_count;
+					CHECK("not too big", (t - type->patterns) <= 0x7FFFFFFF);
+					i = (uint32) (t - type->patterns) / l_generic_count;
 						/* The requested generic type ID */
 					data->typearr [l_original_pos] = eif_id_for_typarr (type->dynamic_types[i]);
 				} else {

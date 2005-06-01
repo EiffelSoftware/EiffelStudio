@@ -60,7 +60,7 @@ feature -- Access
 			l_id_font ?= l_resource
 			if l_id_font /= Void then
 				create l_font_item
-				l_font_item.set_text (l_font.string_value)
+				l_font_item.set_text (l_id_font.string_value)
 				l_font_item.set_font (l_id_font.value.font)
 				grid.set_item (4, row_index, l_font_item)
 				l_font_item.pointer_button_press_actions.force_extend (agent on_item_selected (l_font_item, l_resource))

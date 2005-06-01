@@ -45,6 +45,16 @@ feature -- Status
 			end
 		end
 
+feature -- Status report
+
+	is_workbench: BOOLEAN is
+			-- Are we running the workbench version of the compiler?
+		external
+			"C inline use %"eif_eiffel.h%""
+		alias
+			"EIF_IS_WORKBENCH"
+		end
+
 feature -- Access: environment variable
 
 	Eiffel_installation_dir_name: STRING is
@@ -116,6 +126,9 @@ feature -- Access: file name
 				fname.set_file_name (".ec_recent_projects")
 				Result := fname
 			end
+			if is_workbench then
+				Result.append ("_wkbench")
+			end
 		end
 	
 	Eiffel_preferences: STRING is
@@ -129,6 +142,9 @@ feature -- Access: file name
 				create fname.make_from_string (Execution_environment.home_directory_name)
 				fname.set_file_name (".ecrc" + Major_version_number.out + Minor_version_number.out)
 				Result := fname
+			end
+			if is_workbench then
+				Result.append ("_wkbench")
 			end
 		end
 

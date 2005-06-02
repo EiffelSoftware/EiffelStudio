@@ -211,6 +211,18 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
+
+	post_draw_overlay_actions: ACTION_SEQUENCE [TUPLE [EV_DRAWABLE, EV_GRID_ITEM]] is
+			-- Actions to be performed after an item has been drawn. By drawing into the passed
+			-- drawable, you may draw directly on top of the already drawn item. This is useful
+			-- for drawing additional border styles or other such effects. The upper left corner
+			-- of the item starts at coordinates 0x0 in the passed drawable. All drawing Performed
+			-- in the drawable is clipped to `width', `height' of the passed item.
+		do
+			Result := implementation.post_draw_overlay_actions
+		ensure
+			not_void: Result /= Void
+		end
 		
 feature {NONE} -- Implementation
 

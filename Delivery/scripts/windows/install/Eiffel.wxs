@@ -426,9 +426,6 @@
 
 			<Dialog Id="LicenseAgreementDlg" Width="375" Height="270" Title="[ProductName] License Agreement">
 				<Control Id="Buttons" Type="RadioButtonGroup" X="20" Y="187" Width="330" Height="40" Property="IAgree" />
-				<Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="[ButtonText_Back]">
-					<Publish Event="NewDialog" Value="WelcomeDlg">1</Publish>
-				</Control>
 				<Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="[ButtonText_Next]">
 					<Publish Event="SpawnWaitDialog" Value="WaitForCostingDlg">CostingComplete = 1</Publish>
 					<?if $(var.EDITION)="enterprise" ?>
@@ -439,6 +436,9 @@
 					<?endif?>
 					<Condition Action="disable"><![CDATA[IAgree <> "Yes"]]></Condition>
 					<Condition Action="enable">IAgree = "Yes"</Condition>
+				</Control>
+				<Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="[ButtonText_Back]">
+					<Publish Event="NewDialog" Value="WelcomeDlg">1</Publish>
 				</Control>
 				<Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="[ButtonText_Cancel]">
 					<Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
@@ -466,14 +466,14 @@
 					<Text>CD &amp;Key:</Text>
 				</Control>
 				<Control Id="CDKeyEdit" Type="MaskedEdit" X="45" Y="159" Width="250" Height="16" Property="PIDKEY" Text="[PIDTemplate]" />
-				<Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="[ButtonText_Back]">
-					<Publish Event="NewDialog" Value="LicenseAgreementDlg">1</Publish>
-				</Control>
 				<Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="[ButtonText_Next]">
 					<Publish Event="ValidateProductID" Value="0">0</Publish>
 					<Publish Event="DoAction" Value="is_cd_key_valid">1</Publish>
 					<Publish Event="SpawnDialog" Value="InvalidPidDlg">PIDACCEPTED = "0"</Publish>
 					<Publish Event="NewDialog" Value="Single_Feature_Destination">ProductID AND PIDACCEPTED = "1"</Publish>
+				</Control>
+				<Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="[ButtonText_Back]">
+					<Publish Event="NewDialog" Value="LicenseAgreementDlg">1</Publish>
 				</Control>
 				<Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="[ButtonText_Cancel]">
 					<Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
@@ -500,18 +500,18 @@
 			</Dialog>
 
 			<Dialog Id="Single_Feature_Destination" Width="375" Height="270" Title="[ProductName] $(var.EDITIONNAME) [Setup]" CustomPalette="yes">
+				<Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="[ButtonText_Next]">
+					<Publish Event="SetInstallLevel" Value="3"><![CDATA[InstallMode = "Typical"]]></Publish>
+					<Publish Event="SetInstallLevel" Value="1000"><![CDATA[InstallMode = "Complete"]]></Publish>
+					<Publish Event="NewDialog" Value="Dotnet_Error_Dialog"><![CDATA[FRAMEWORKPATH = "empty"]]></Publish>
+					<Publish Event="NewDialog" Value="C_Compiler_Dialog"><![CDATA[FRAMEWORKPATH <> "empty"]]></Publish>
+				</Control>
 				<Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="[ButtonText_Back]">
 					<?if $(var.EDITION)="enterprise" ?>
 						<Publish Event="NewDialog" Value="UserRegistrationDlg">1</Publish>
 					<?else?>
 						<Publish Event="NewDialog" Value="LicenseAgreementDlg">1</Publish>
 					<?endif?>
-				</Control>
-				<Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="[ButtonText_Next]">
-					<Publish Event="SetInstallLevel" Value="3"><![CDATA[InstallMode = "Typical"]]></Publish>
-					<Publish Event="SetInstallLevel" Value="1000"><![CDATA[InstallMode = "Complete"]]></Publish>
-					<Publish Event="NewDialog" Value="Dotnet_Error_Dialog"><![CDATA[FRAMEWORKPATH = "empty"]]></Publish>
-					<Publish Event="NewDialog" Value="C_Compiler_Dialog"><![CDATA[FRAMEWORKPATH <> "empty"]]></Publish>
 				</Control>
 				<Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="[ButtonText_Cancel]">
 					<Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
@@ -546,12 +546,12 @@ To install into a different folder, click the Browse button, and select another 
 			</Dialog>
 
 			<Dialog Id="C_Compiler_Dialog" Width="375" Height="270" Title="[ProductName] $(var.EDITIONNAME) [Setup]" CustomPalette="yes">
+				<Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="[ButtonText_Next]">
+					<Publish Event="NewDialog" Value="Precompile_Dialog">1</Publish>
+				</Control>
 				<Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="[ButtonText_Back]">
 					<Publish Event="NewDialog" Value="Single_Feature_Destination"><![CDATA[FRAMEWORKPATH <> "empty"]]></Publish>
 					<Publish Event="NewDialog" Value="Dotnet_Error_Dialog"><![CDATA[FRAMEWORKPATH = "empty"]]></Publish>
-				</Control>
-				<Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="[ButtonText_Next]">
-					<Publish Event="NewDialog" Value="Precompile_Dialog">1</Publish>
 				</Control>
 				<Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="[ButtonText_Cancel]">
 					<Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
@@ -579,11 +579,11 @@ Otherwise select "Install and use the free Borland C++ 5.5 compiler". This will 
 			</Dialog>
 
 			<Dialog Id="Dotnet_Error_Dialog" Width="279" Height="153" Title="[ProductName] $(var.EDITIONNAME) [Setup]" CustomPalette="yes">
-				<Control Id="Previous" Type="PushButton" X="15" Y="120" Width="56" Height="17" Text="[ButtonText_Back]">
-					<Publish Event="NewDialog" Value="Single_Feature_Destination">1</Publish>
-				</Control>
 				<Control Id="Next" Type="PushButton" X="70" Y="120" Width="56" Height="17" Default="yes" Text="[ButtonText_Next]">
 					<Publish Event="NewDialog" Value="C_Compiler_Dialog">1</Publish>
+				</Control>
+				<Control Id="Back" Type="PushButton" X="15" Y="120" Width="56" Height="17" Text="[ButtonText_Back]">
+					<Publish Event="NewDialog" Value="Single_Feature_Destination">1</Publish>
 				</Control>
 				<Control Id="Cancel" Type="PushButton" X="205" Y="120" Width="56" Height="17" Cancel="yes" Text="Exit Setup">
 					<Publish Event="EndDialog" Value="Exit">1</Publish>
@@ -596,11 +596,11 @@ If you do not wish to use the .NET facilities, you can continue this installatio
 			</Dialog>
 
 			<Dialog Id="Precompile_Dialog" Width="375" Height="270" Title="[ProductName] $(var.EDITIONNAME) [Setup]" CustomPalette="yes">
-				<Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="[ButtonText_Back]">
-					<Publish Event="NewDialog" Value="C_Compiler_Dialog">1</Publish>
-				</Control>
 				<Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="[ButtonText_Next]">
 					<Publish Event="NewDialog" Value="Project_Path_Dialog">1</Publish>
+				</Control>
+				<Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="[ButtonText_Back]">
+					<Publish Event="NewDialog" Value="C_Compiler_Dialog">1</Publish>
 				</Control>
 				<Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="[ButtonText_Cancel]">
 					<Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
@@ -623,11 +623,11 @@ Vision2 is a graphic library that is easy-to-use, powerful and platform-independ
 			</Dialog>
 
 			<Dialog Id="Project_Path_Dialog" Width="375" Height="270" Title="[ProductName] $(var.EDITIONNAME) [Setup]" CustomPalette="yes">
-				<Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="[ButtonText_Back]">
-					<Publish Event="NewDialog" Value="Precompile_Dialog">1</Publish>
-				</Control>
 				<Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="[ButtonText_Next]">
 					<Publish Event="NewDialog" Value="VerifyReadyDlg">1</Publish>
+				</Control>
+				<Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="[ButtonText_Back]">
+					<Publish Event="NewDialog" Value="Precompile_Dialog">1</Publish>
 				</Control>
 				<Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="[ButtonText_Cancel]">
 					<Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>

@@ -77,10 +77,10 @@ feature {NONE} -- Implementation
 		do
 			if text_field /= Void then
 				text_field.focus_out_actions.wipe_out
-				Precursor {EV_GRID_LABEL_ITEM}
 				if validation_agent = Void or else validation_agent.item ([text_field.text]) then
 					set_text (text_field.text)
 				end
+				Precursor {EV_GRID_LABEL_ITEM}
 				text_field.destroy
 				text_field := Void
 			end

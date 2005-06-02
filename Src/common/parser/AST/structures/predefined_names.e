@@ -146,6 +146,10 @@ feature -- Constants
 	as_lower_name_id: INTEGER is 136
 	as_upper_name_id: INTEGER is 137
 	is_space_name_id: INTEGER is 138
+	copy_data_name_id: INTEGER is 139
+	move_data_name_id: INTEGER is 140
+	overlapping_move_name_id: INTEGER is 141
+	non_overlapping_move_name_id: INTEGER is 142
 			-- Predefined name IDs constants
 
 feature -- Classification

@@ -1,8 +1,8 @@
-<document output="envision" title="EiffelEnvision Edition Comparison">
+<document output="envision" title="EiffelEnvision Editions">
 	<meta_data>
 		<help>
 			<toc>
-				<envision_title>EiffelEnvision Edition Comparison</envision_title>
+				<envision_title>EiffelEnvision Editions</envision_title>
 				<envision_pseudo_name>40</envision_pseudo_name>
 			</toc>
 			<xml>
@@ -270,6 +270,8 @@
 			<link><url>url</url><label>*IFFEL</label></link>
 			<line_break/>
 			<link><url>url</url><label>*End-User License Agreement</label></link>
+			<line_break/>
+			<link><url>../using_eiffelenvision/deploying_projects/redistributions.xml</url><label>Redistributing the Eiffel for .NET Rutime</label></link>
 		</seealso>
 	</paragraph>
 </document>

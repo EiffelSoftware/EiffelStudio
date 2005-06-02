@@ -903,6 +903,12 @@ feature -- Basic operations
 								end
 									-- Now draw the border for `grid_item'.
 								draw_item_border (current_column, current_row, grid_item, current_item_x_position, current_item_y_position, current_column_width, current_row_height)
+
+									-- Now call the post draw overlay actions on the grid, permitting overdraw as required.
+								if grid_item_exists and grid.post_draw_overlay_actions_internal /= Void then
+									grid.post_draw_overlay_actions_internal.call ([item_buffer_pixmap, grid_item.interface])
+								end
+
 									-- Now blit the buffered drawing for the item to `drawable'.
 								drawable.draw_sub_pixmap (current_item_x_position, current_item_y_position, item_buffer_pixmap, create {EV_RECTANGLE}.make (0, 0, current_column_width, current_row_height))
 								visible_column_indexes.forth

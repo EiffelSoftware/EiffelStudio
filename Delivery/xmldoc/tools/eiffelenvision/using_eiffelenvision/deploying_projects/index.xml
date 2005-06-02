@@ -30,14 +30,6 @@
 		</paragraph>
 		<paragraph>
 			<link>
-				<url>redistributions.xml</url>
-				<label>Redistributing the Eiffel Runtime</label>
-			</link>
-			<line_break/>
-			Information regarding the redistribution of the Eiffel runtime used by applications created in EiffelEnvision.
-		</paragraph>
-		<paragraph>
-			<link>
 				<url>deploy_setup.xml</url>
 				<label>Deploying Projects</label>
 			</link>
@@ -60,6 +52,15 @@
 				Setup projects
 			</help_link>.
 		</paragraph>
+		<paragraph>
+			<link>
+				<url>redistributions.xml</url>
+				<label>Redistributing the Eiffel for .NET Runtime</label>
+			</link>
+			<line_break/>
+			Information regarding the redistribution of the Eiffel runtime used by applications created in EiffelEnvision.
+		</paragraph>
+		
 		<anchor>also_see</anchor>
 		<heading>
 			<size>2</size>

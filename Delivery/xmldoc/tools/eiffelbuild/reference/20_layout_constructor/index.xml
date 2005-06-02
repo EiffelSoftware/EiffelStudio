@@ -113,6 +113,9 @@ Objects that are instances of other objects are displayed as locked objects with
 		<paragraph>
 		To add a locked object to your interface, simply pick  the object that you wish to re-use from the <link><url>../64_widget_selector/index.xml</url><label>widget selector</label></link> and drop it into the desired parent object within the Layout Constructor. In this case, the instance of the  OK_CANCEL_BUTTONS object is actually comprised of a number of widgets which may only be modified through  manipulation of the original OK_CANCEL_BUTTONS_OBJECT. Changes made to this original object are then applied to all instances within your interface structures.
 		</paragraph>
+		<paragraph>
+		You may convert an existing widget structure into a locked  instance of a widget by picking the object to be used as the root of the structure (may not be locked) and dropping it into the <link><url>../64_widget_selector/index.xml</url><label>widget selector</label></link>. This creates a new "top level" object within the <link><url>../64_widget_selector/index.xml</url><label>widget selector</label></link> and places a locked instance of this at the original location in the widget structure where it was picked from.
+		</paragraph>
 		<note>
 			<bold>Note</bold>: Double clicking on a locked object within the Layout Constructor, targets the object of which it is an instance to the Layout Constructor.
 		</note>

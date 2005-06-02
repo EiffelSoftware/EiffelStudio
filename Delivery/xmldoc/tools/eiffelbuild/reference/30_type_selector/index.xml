@@ -103,6 +103,9 @@
 				<label>drop</label>
 			</link> the selected type into.
 		</paragraph>
+		<paragraph>
+		You may drop an object directly from the Type Selector into the <link><url>../64_widget_selector/index.xml</url><label>widget selector</label></link> which creates the object as a "top level object" ensuring that upon generation, it is represented by an individual set of classes. These top level objects may then be re-used within your interface as desired.
+		</paragraph>
 		<note>
 			<bold>Note</bold>: To understand the types accepted, and the capacity of objects, you should consult the 
 			<link>

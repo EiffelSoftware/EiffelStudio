@@ -2,11 +2,10 @@ indexing
 	description: "[
 		Objects representing delayed calls to a procedure.
 		with some operands possibly still open.
-		]"
-	note: "[
-		Features are the same as those of ROUTINE,
-		with `apply' made effective, and no further
-		redefinition of `is_equal' and `copy'.
+		
+		Note: Features are the same as those of ROUTINE,
+			with `apply' made effective, and no further
+			redefinition of `is_equal' and `copy'.
 		]"
 	status: "See notice at end of class"
 	date: "$Date$"

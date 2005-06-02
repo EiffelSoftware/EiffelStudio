@@ -2,8 +2,8 @@
 	<meta_data>
 		<help>
 			<toc>
-				<envision_title>Project Configuration</envision_title>
-				<envision_pseudo_name>00</envision_pseudo_name>
+				<envision_title>Configuration</envision_title>
+				<envision_pseudo_name>20</envision_pseudo_name>
 			</toc>
 			<xml>
 				<xmlkeyword>
@@ -78,7 +78,7 @@
 				<label>Precompiled Properties</label>
 			</link>
 			<line_break/>
-			EiffelEnvision precompiled library usage properties, for established <link><url>url</url><label>*Precompiled Libraries</label></link>.
+			EiffelEnvision precompiled library usage properties, for established <link><url>../adding_references/precompiled_libraries.xml</url><label>Precompiled Libraries</label></link>.
 		</paragraph>
 		
 		<paragraph>
@@ -112,6 +112,14 @@
 			</link>
 			<line_break/>
 			External <bold>object files</bold> and <bold>include paths</bold> for use with the <link><url>url</url><label>*Unmanaged Compilation</label></link> or a project <link><url>url</url><label>*Build</label></link>.
+		</paragraph>
+		<paragraph>
+			<link>
+				<url>multiple_clr_versions.xml</url>
+				<label>Working with Multiple Versions of the .NET Framework</label>
+			</link>
+			<line_break/>
+			Information on targeting alternative versions of the .NET Framework and <bold>Common Language Runtime</bold> (CLR).
 		</paragraph>
 				
 		<anchor>also_see</anchor>

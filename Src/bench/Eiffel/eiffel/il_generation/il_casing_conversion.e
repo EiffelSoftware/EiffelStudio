@@ -1,9 +1,12 @@
 indexing
-	description: "Perform conversion of Eiffel name to whichever format is specified in Ace file."
+	description: "[
+		Perform conversion of Eiffel name to whichever format is specified in Ace file.
+
+		Note: The algorithm used in `camel_casing' must match the one used in the expression
+			evaluator of ENViSioN!, please notify the ENViSioN! team prior to modifying!
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
-	note: "The algorithm used in `camel_casing' must match the one used in the expression %
-				%evaluator of ENViSioN!, please notify the ENViSioN! team prior to modifying!"
 
 class
 	IL_CASING_CONVERSION

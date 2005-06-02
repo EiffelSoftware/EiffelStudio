@@ -259,8 +259,8 @@ feature -- Basic operations
 		
 								-- If the starting index has fallen within a tree structure,
 								-- we must start from the beginning of the root parent.
-							if grid.row (start_pos).parent_row /= Void then
-								start_pos := grid.row (start_pos).parent_row_root.index
+							if start_pos <= grid.rows.count and then grid.rows.i_th (start_pos).parent_row /= Void then
+								start_pos := grid.rows.i_th (start_pos).parent_row_root.index
 							end
 		
 							from

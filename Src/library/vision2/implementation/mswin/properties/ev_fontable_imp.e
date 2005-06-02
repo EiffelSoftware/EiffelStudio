@@ -1,8 +1,11 @@
 indexing
-	description:"EiffelVision fontable, mswindows implementation."
-	note : "When a heir of this class inherits from a WEL object,%
-			% it needs to rename `font' as `wel_font' and%
-			% `set_font' as `wel_set_font'"
+	description:"[
+		EiffelVision fontable, mswindows implementation.
+
+		Note: When a heir of this class inherits from a WEL object,
+			it needs to rename `font' as `wel_font' and
+			`set_font' as `wel_set_font'.
+		]"
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"

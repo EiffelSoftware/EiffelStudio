@@ -1,10 +1,12 @@
 indexing
-	description: 
-		"EiffelVision box, deferred class, parent of vertical and%
-		%horizontal boxes. Mswindows implementation."
-	note: "We use `create with coordinates' to allow the notebook%
-		% as containers. They are wel_windows and not%
-		% wel_composite_windows."
+	description: "[
+		EiffelVision box, deferred class, parent of vertical and
+		horizontal boxes. Mswindows implementation.
+
+		Note: We use `create with coordinates' to allow the notebook
+			as containers. They are wel_windows and not
+			wel_composite_windows.
+		]"
 	status: "See notice at end of class."
 	id: "$Id$"
 	date: "$Date$"

@@ -1,8 +1,11 @@
 indexing
-	description: "EiffelVision horizontal box. The children stand%
-				  %one beside an other. Mswindows implementation"
-	note: "The attribute `child' represent here the child with the%
-			% largest width of the box."
+	description: "[
+		EiffelVision horizontal box. The children stand
+		one beside an other. Mswindows implementation.
+
+		Note: The attribute `child' represent here the child with the			
+			largest width of the box.
+		]"
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"

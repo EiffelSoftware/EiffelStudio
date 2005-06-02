@@ -1,14 +1,15 @@
 indexing
-	description:
-		" A silly window that doesn't do anything. Used%
-		% as default parent."
-	note: " This window is actually used as a default parent%
-		% to avoid a Microsoft Windows Bug. Because, when%
-		% we change the parent of a tack-bar on windows NT%
-		% the parent for the events stays the first parent,%
-		% here, the default_parent. It needs then to handle%
-		% the events for its children. Once the bug is fixed%
-		% in windows, we can simply use a WEL_FRAME_WINDOW."
+	description: "[
+		A silly window that doesn't do anything. Used as default parent.
+		
+		Note: This window is actually used as a default parent
+		to avoid a Microsoft Windows Bug. Because, when
+		we change the parent of a tack-bar on windows NT
+		the parent for the events stays the first parent,
+		here, the default_parent. It needs then to handle
+		the events for its children. Once the bug is fixed
+		in windows, we can simply use a WEL_FRAME_WINDOW.
+		]"
 	status: "See notice at end of class."
 	revision: "$Revision$"
 

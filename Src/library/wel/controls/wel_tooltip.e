@@ -1,8 +1,11 @@
 indexing
-	description: "Small pop-up window that displays a single line of %
-		%descriptive text giving the purpose of tools."
-	note: "The common controls dll (WEL_COMMON_CONTROLS_DLL) needs to %
-		%be loaded to use this control."
+	description: "[
+		Small pop-up window that displays a single line of
+		descriptive text giving the purpose of tools.
+		
+		Note: The common controls dll (WEL_COMMON_CONTROLS_DLL) needs to
+		be loaded to use this control.
+		]"
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"

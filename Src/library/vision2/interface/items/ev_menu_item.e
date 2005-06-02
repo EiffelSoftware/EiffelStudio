@@ -2,9 +2,8 @@ indexing
 	description:
 		"[
 			Item for use in EV_MENU.
-		]"
-	note:
-		"[
+
+			Note:
 			Single ampersands in text are not shown in the actual
 			widget. If you need an ampersand in your text,
 			use && instead. The character following the & may

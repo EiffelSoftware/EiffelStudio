@@ -157,6 +157,8 @@ feature -- C special code generation
 			inspect function_type
 			when lower_type, upper_type then
 				generate_lower_upper (buffer, basic_type, function_type, target)
+			when is_space_type then
+				generate_is_space (buffer, basic_type, target)
 			when is_digit_type then
 				generate_is_digit (buffer, basic_type, target)
 			when is_equal_type then
@@ -298,6 +300,7 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (to_real_32_type, {PREDEFINED_NAMES}.to_real_32_name_id)
 			Result.put (to_real_64_type, {PREDEFINED_NAMES}.to_double_name_id)
 			Result.put (to_real_32_type, {PREDEFINED_NAMES}.to_real_name_id)
+			Result.put (to_real_32_type, {PREDEFINED_NAMES}.truncated_to_real_name_id)			
 			Result.put (offset_type, {PREDEFINED_NAMES}.infix_plus_name_id)
 			Result.put (default_type, {PREDEFINED_NAMES}.default_name_id)
 			Result.put (bit_and_type, {PREDEFINED_NAMES}.bit_and_name_id)
@@ -320,8 +323,11 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (memory_alloc, {PREDEFINED_NAMES}.memory_alloc_name_id)
 			Result.put (memory_free, {PREDEFINED_NAMES}.memory_free_name_id)
 			Result.put (lower_type, {PREDEFINED_NAMES}.lower_name_id)
+			Result.put (lower_type, {PREDEFINED_NAMES}.as_lower_name_id)
 			Result.put (upper_type, {PREDEFINED_NAMES}.upper_name_id)
+			Result.put (upper_type, {PREDEFINED_NAMES}.as_upper_name_id)			
 			Result.put (is_digit_type, {PREDEFINED_NAMES}.is_digit_name_id)
+			Result.put (is_space_type, {PREDEFINED_NAMES}.is_space_name_id)
 			Result.put (three_way_comparison_type, {PREDEFINED_NAMES}.three_way_comparison_name_id)
 			Result.put (twin_type, {PREDEFINED_NAMES}.twin_name_id)
 --			Result.put (set_item_type, feature {PREDEFINED_NAMES}.set_item_name_id)
@@ -378,6 +384,7 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (to_natural_64_type, {PREDEFINED_NAMES}.to_natural_64_name_id)
 			Result.put (to_real_64_type, {PREDEFINED_NAMES}.to_real_64_name_id)
 			Result.put (to_real_32_type, {PREDEFINED_NAMES}.to_real_32_name_id)
+			Result.put (to_real_32_type, {PREDEFINED_NAMES}.truncated_to_real_name_id)
 			Result.put (to_real_64_type, {PREDEFINED_NAMES}.to_double_name_id)
 			Result.put (to_real_32_type, {PREDEFINED_NAMES}.to_real_name_id)
 			Result.put (three_way_comparison_type, {PREDEFINED_NAMES}.three_way_comparison_name_id)
@@ -439,7 +446,8 @@ feature {NONE} -- Fast access to feature name
 	as_natural_32_type: INTEGER is 49
 	as_natural_64_type: INTEGER is 50
 	set_bit_type: INTEGER is 51
-	max_type_id: INTEGER is 51
+	is_space_type: INTEGER is 52
+	max_type_id: INTEGER is 52
 
 feature {NONE} -- Byte code generation
 
@@ -499,7 +507,7 @@ feature {NONE} -- C code generation
 	generate_is_digit (buffer: GENERATION_BUFFER;
 			basic_type: BASIC_I; target: REGISTRABLE)
 		is
-			-- Generate fast wrapper for call on `upper' and `lower' of CHARACTER.
+			-- Generate fast wrapper for call on `is_digit'.
 		require
 			buffer_not_void: buffer /= Void
 			target_not_void: target /= Void
@@ -511,6 +519,24 @@ feature {NONE} -- C code generation
 			buffer.put_character (')')
 
 				-- Add `ctype.h' for C compilation where `isdigit' is declared.
+			shared_include_queue.put ({PREDEFINED_NAMES}.ctype_header_name_id)
+		end
+
+	generate_is_space (buffer: GENERATION_BUFFER;
+			basic_type: BASIC_I; target: REGISTRABLE)
+		is
+			-- Generate fast wrapper for call on `is_space' of CHARACTER.
+		require
+			buffer_not_void: buffer /= Void
+			target_not_void: target /= Void
+			character_type: type_of (basic_type) = character_type
+		do
+			buffer.put_string ("EIF_TEST(isspace(")
+			target.print_register
+			buffer.put_character (')')
+			buffer.put_character (')')
+
+				-- Add `ctype.h' for C compilation where `isspace' is declared.
 			shared_include_queue.put ({PREDEFINED_NAMES}.ctype_header_name_id)
 		end
 

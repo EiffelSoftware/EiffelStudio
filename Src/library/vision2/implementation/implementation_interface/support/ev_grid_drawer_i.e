@@ -133,10 +133,12 @@ feature -- Basic operations
 			l_row_count: INTEGER
 			start_pos: INTEGER
 			found: BOOLEAN
+			grid_row_count: INTEGER
 		do
 			fixme ("Implement the dynamic mode for items when in per item scrolling")
 			dynamic_content_function := grid.dynamic_content_function
 			create Result.make (20)
+			grid_row_count := grid.row_count
 
 			row_offsets := grid.row_offsets
 
@@ -168,10 +170,10 @@ feature -- Basic operations
 							-- Note that we cannot calculate if there is tree functionality enabled in
 							-- the grid as nodes may be expanded or collapsed.
 						first_row_index := (((invalid_y_start) // grid.row_height) + 1)
-						last_row_index := (((invalid_y_end) // grid.row_height) + 1).min (grid.row_count)
+						last_row_index := (((invalid_y_end) // grid.row_height) + 1).min (grid_row_count)
 						
-						if first_row_index <= grid.row_count then
-							l_row_count := grid.row_count
+						if first_row_index <= grid_row_count then
+							l_row_count := grid_row_count
 							from
 								i := first_row_index
 							until
@@ -206,7 +208,7 @@ feature -- Basic operations
 	
 							--					from
 							--						row_counter := 1
-							--						hi := grid.row_count + 1
+							--						hi := grid_row_count + 1
 							--						lo := 1
 							--						i := -1000
 							--					until
@@ -259,7 +261,7 @@ feature -- Basic operations
 		
 								-- If the starting index has fallen within a tree structure,
 								-- we must start from the beginning of the root parent.
-							if start_pos <= grid.rows.count and then grid.rows.i_th (start_pos).parent_row /= Void then
+							if start_pos <= grid_row_count and then grid.rows.i_th (start_pos).parent_row /= Void then
 								start_pos := grid.rows.i_th (start_pos).parent_row_root.index
 							end
 		
@@ -267,7 +269,7 @@ feature -- Basic operations
 								row_counter := start_pos
 								i := 0
 							until
-								last_row_index_set or row_counter > grid.rows.count
+								last_row_index_set or row_counter > grid_row_count
 							loop
 								i := row_offsets @ (row_counter)
 								current_row := grid.rows.i_th (row_counter)
@@ -305,10 +307,10 @@ feature -- Basic operations
 					end
 				end
 				if last_row_index = 0 then
-					last_row_index := grid.row_count
+					last_row_index := grid_row_count
 				end
 				if first_row_index = 0 then
-					first_row_index := grid.row_count
+					first_row_index := grid_row_count
 				end
 			end
 			

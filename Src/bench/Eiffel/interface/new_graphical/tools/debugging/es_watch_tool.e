@@ -60,10 +60,9 @@ feature {NONE} -- Initialization
 		local
 			esgrid: ES_OBJECTS_GRID
 		do
---			create expressions.make (10)
 			create watched_items.make (10)
 
-			create esgrid.make ("Watches", Current)
+			create esgrid.make ("Watches")
 			esgrid.enable_multiple_row_selection
 			esgrid.set_column_count_to (5)
 			esgrid.column (col_name_index).set_title (col_titles @ col_name_index)
@@ -322,17 +321,6 @@ feature -- Status setting
 				end
 			end
 
---			from
---				expressions.start
---			until
---				expressions.after
---			loop
---				if not expressions.item.is_still_valid then
---					expressions.remove
---				else
---					expressions.forth
---				end
---			end
 			update
 		end
 
@@ -374,16 +362,6 @@ feature -- Memory management
 				watched_items.item.expression.recycle
 				watched_items.forth
 			end
---			if expressions /= Void then
---				from
---					expressions.start
---				until
---					expressions.after
---				loop
---					expressions.item.recycle
---					expressions.forth
---				end
---			end
 		end
 	
 feature {NONE} -- Event handling
@@ -439,7 +417,6 @@ feature {NONE} -- Event handling
 			rows: LIST [EV_GRID_ROW]
 			l_expr: EB_EXPRESSION
 			sel_index: INTEGER
---			litem: ES_OBJECTS_GRID_ITEM
 			l_item: like watched_item_from
 		do
 			rows := watches_grid.selected_rows
@@ -709,9 +686,6 @@ feature {NONE} -- Implementation: internal data
 
 	update_agent: PROCEDURE [ANY, TUPLE]
 			-- Agent that is put in the idle_actions to update the call stack after a while.
-
---	expressions: ARRAYED_LIST [EB_EXPRESSION]
---			-- List of expressions that are to be evaluated.
 
 	watched_items: ARRAYED_LIST [like watched_item_from]
 			-- List of items that are displayed

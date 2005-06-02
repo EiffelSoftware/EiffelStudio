@@ -177,23 +177,23 @@ feature {NONE}-- Initialization
 feature -- Access
 
 	label_x, label_y, x_count, y_count: EV_SPIN_BUTTON
+	select_font_button, select_pixmap_button, add_button,
+	close_button: EV_BUTTON
+	grid_label_radio_button, custom_item_radio_button, ellipse_radio_button,
+	pixmap_radio_button, editable_item_radio_button: EV_RADIO_BUTTON
+	label_item_box, custom_item_box: EV_HORIZONTAL_BOX
 	multiple_items_check_button: EV_CHECK_BUTTON
-	grid_label_radio_button,
-	custom_item_radio_button, ellipse_radio_button, pixmap_radio_button, editable_item_radio_button: EV_RADIO_BUTTON
-	label_item_box,
-	custom_item_box: EV_HORIZONTAL_BOX
-	select_font_button, select_pixmap_button, add_button, close_button: EV_BUTTON
 	text_entry: EV_TEXT_FIELD
 
 feature {NONE} -- Implementation
 
-	l_ev_vertical_box_1, l_ev_vertical_box_2: EV_VERTICAL_BOX
-	l_ev_horizontal_box_1, l_ev_horizontal_box_2,
-	l_ev_horizontal_box_3, l_ev_horizontal_box_4: EV_HORIZONTAL_BOX
-	l_ev_label_1, l_ev_label_2, l_ev_label_3: EV_LABEL
-	l_ev_frame_1,
-	l_ev_frame_2: EV_FRAME
 	l_ev_cell_1, l_ev_cell_2: EV_CELL
+	l_ev_horizontal_box_1, l_ev_horizontal_box_2, l_ev_horizontal_box_3,
+	l_ev_horizontal_box_4: EV_HORIZONTAL_BOX
+	l_ev_vertical_box_1, l_ev_vertical_box_2: EV_VERTICAL_BOX
+	l_ev_label_1, l_ev_label_2,
+	l_ev_label_3: EV_LABEL
+	l_ev_frame_1, l_ev_frame_2: EV_FRAME
 
 feature {NONE} -- Implementation
 

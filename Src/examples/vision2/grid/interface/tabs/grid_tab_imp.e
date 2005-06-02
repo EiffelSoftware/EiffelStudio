@@ -40,6 +40,7 @@ feature {NONE}-- Initialization
 			create icon_view_button
 			create colored_button
 			create build_ball_demo_button
+			create overlay_test_button
 			create removal_frame
 			create l_ev_vertical_box_2
 			create l_ev_table_2
@@ -178,7 +179,7 @@ feature {NONE}-- Initialization
 			l_ev_vertical_box_11.extend (enable_pick_and_drop_button)
 			
 			addition_frame.set_text ("Addition")
-			l_ev_table_1.resize (2, 3)
+			l_ev_table_1.resize (2, 4)
 			l_ev_table_1.set_row_spacing (box_padding)
 			l_ev_table_1.set_column_spacing (box_padding)
 			l_ev_table_1.set_border_width (box_padding)
@@ -189,12 +190,14 @@ feature {NONE}-- Initialization
 			l_ev_table_1.put_at_position (icon_view_button, 2, 2, 1, 1)
 			l_ev_table_1.put_at_position (colored_button, 1, 3, 1, 1)
 			l_ev_table_1.put_at_position (build_ball_demo_button, 2, 3, 1, 1)
+			l_ev_table_1.put_at_position (overlay_test_button, 1, 4, 1, 1)
 			new_label_button.set_text ("Add New Items")
 			misc_button.set_text ("Build Default Item Structure")
 			custom_button.set_text ("Custom Function")
 			icon_view_button.set_text ("Build Icon View Structure")
 			colored_button.set_text ("Build Colored Structure")
 			build_ball_demo_button.set_text ("Build Ball Demo")
+			overlay_test_button.set_text ("Build Overlay Structure")
 			removal_frame.set_text ("Removal")
 			l_ev_vertical_box_2.set_border_width (box_padding)
 			l_ev_table_2.resize (2, 2)
@@ -338,6 +341,7 @@ feature {NONE}-- Initialization
 			icon_view_button.select_actions.extend (agent icon_view_button_selected)
 			colored_button.select_actions.extend (agent colored_button_selected)
 			build_ball_demo_button.select_actions.extend (agent build_ball_demo_button_selected)
+			overlay_test_button.select_actions.extend (agent overlay_test_button_selected)
 			remove_all_rows_button.select_actions.extend (agent remove_all_row_button_selected)
 			remove_all_columns_button.select_actions.extend (agent remove_all_columns_button_selected)
 			clear_items_button.select_actions.extend (agent clear_items_button_selected)
@@ -386,7 +390,7 @@ feature -- Access
 	fixed_row_height_spin_button, resize_columns_to_entry,
 	resize_rows_to_entry, subrow_indent_button: EV_SPIN_BUTTON
 	new_label_button, misc_button, custom_button,
-	icon_view_button, colored_button, build_ball_demo_button, remove_all_rows_button,
+	icon_view_button, colored_button, build_ball_demo_button, overlay_test_button, remove_all_rows_button,
 	remove_all_columns_button, clear_items_button, set_selected_row_as_subnode_button,
 	expand_all_button, collapse_all_button: EV_BUTTON
 	is_vertical_divider_dashed_button, is_vertical_divider_solid_button,
@@ -458,6 +462,11 @@ feature {NONE} -- Implementation
 	
 	build_ball_demo_button_selected is
 			-- Called by `select_actions' of `build_ball_demo_button'.
+		deferred
+		end
+	
+	overlay_test_button_selected is
+			-- Called by `select_actions' of `overlay_test_button'.
 		deferred
 		end
 	

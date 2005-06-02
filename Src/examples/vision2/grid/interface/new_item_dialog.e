@@ -111,7 +111,7 @@ feature {NONE} -- Implementation
 						grid.set_item (labelx_value + l_xcount, labely_value + l_ycount, grid_item)
 						l_xcount := l_xcount + 1
 					end
-					grid.row (grid.row_count).set_height ((16 + (l_ycount // 2)).min (40))
+					--grid.row (grid.row_count).set_height ((16 + (l_ycount // 2)).min (40))
 					l_ycount := l_ycount + 1
 					if l_ycount \\ 1000 = 0 then
 						print (l_ycount.out + "%N")

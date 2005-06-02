@@ -273,6 +273,11 @@ feature {NONE} -- Implementation
 			grid.wipe_out
 			grid.resize_actions.wipe_out
 			grid.enable_row_height_fixed
+			grid.post_draw_overlay_actions.wipe_out
+			grid.item_select_actions.wipe_out
+			grid.item_deselect_actions.wipe_out
+			grid.enable_single_item_selection
+			grid.disable_tree
 			grid.set_row_height (16)
 			if ball_animation_timer /= Void then
 				ball_animation_timer.destroy
@@ -2099,5 +2104,124 @@ feature {NONE} -- Implementation
 			grid.clear
 		end
 		
+	overlay_test_button_selected is
+			-- Called by `select_actions' of `overlay_test_button'.
+		do
+			reset_grid
+			add_items (6, 50)
+			grid.enable_multiple_item_selection
+			grid.item_select_actions.extend (agent item_selection_changed)
+			grid.item_deselect_actions.extend (agent item_selection_changed)
+			grid.post_draw_overlay_actions.extend (agent post_draw_event)
+		end
+
+	black: EV_COLOR is
+			--
+		once
+			create Result.make_with_8_bit_rgb (0, 0, 0)
+		end
+
+	item_selection_changed (an_item: EV_GRID_ITEM) is
+			--
+		local
+			next_item: EV_GRID_ITEM
+			an_x: INTEGER
+			a_y: INTEGER
+			final_x, final_y: INTEGER
+		do
+
+			final_x := (an_item.column.index + 1).min (grid.column_count)
+			final_y := (an_item.row.index + 1).min (grid.row_count)
+			from
+				an_x := (an_item.column.index - 1).max (1)
+			until
+				an_x > final_x
+			loop
+				from
+				a_y := (an_item.row.index - 1).max (1)
+				until
+					a_y > final_y
+				loop
+					grid.item (an_x, a_y).redraw
+					a_y := a_y + 1
+				end
+				an_x := an_x + 1
+			end
+		end
+
+	post_draw_event (a_drawable: EV_DRAWABLE; an_item: EV_GRID_ITEM) is
+			--
+		local
+			next_item: EV_GRID_ITEM
+			item1, item2, item3, item4, item5, item6, item7, item8: EV_GRID_ITEM
+		do
+
+			a_drawable.set_foreground_color (black)
+			if an_item.is_selected then
+				if an_item.column.index = 1 then
+					a_drawable.fill_rectangle (0, 0, 4, an_item.height)
+				else
+					item4 := grid.item (an_item.column.index - 1, an_item.row.index)
+					if not item4.is_selected then
+						a_drawable.fill_rectangle (0, 0, 4, an_item.height)
+					end
+				end
+
+				if an_item.column.index = grid.column_count then
+					a_drawable.fill_rectangle (an_item.width - 4, 0, 4, an_item.height)
+				else
+					item5 := grid.item (an_item.column.index + 1, an_item.row.index)
+					if not item5.is_selected then
+						a_drawable.fill_rectangle (an_item.width - 4, 0, 4, an_item.height)
+					end
+				end
+				if an_item.row.index = 1 then
+					a_drawable.fill_rectangle (0, 0, an_item.width, 4)
+				else
+					item2 := grid.item (an_item.column.index, an_item.row.index - 1)
+					if not item2.is_selected then
+						a_drawable.fill_rectangle (0, 0, an_item.width, 4)
+					end
+				end
+
+				if an_item.row.index = grid.row_count then
+					a_drawable.fill_rectangle (0, an_item.height - 4, an_item.width, 4)
+				else
+					item7 := grid.item (an_item.column.index, an_item.row.index + 1)
+					if not item7.is_selected then
+						a_drawable.fill_rectangle (0, an_item.height - 4, an_item.width, 4)
+					end
+				end
+				if an_item.row.index > 1 then
+					if an_item.column.index > 1 then
+						item1 := grid.item (an_item.column.index - 1, an_item.row.index - 1)
+					end
+					if an_item.column.index < grid.column_count then
+						item3 := grid.item (an_item.column.index + 1, an_item.row.index - 1)
+					end
+				end
+				if an_item.row.index < grid.row_count then
+					if an_item.column.index > 1 then
+						item6 := grid.item (an_item.column.index - 1, an_item.row.index + 1)
+					end
+					if an_item.column.index < grid.column_count then
+						item8 := grid.item (an_item.column.index + 1, an_item.row.index + 1)
+					end
+				end
+				if item4 /= Void and item7 /= Void and then item7.is_selected and then item4.is_selected and then not item6.is_selected then
+					a_drawable.fill_rectangle (0, an_item.height - 4, 4, 4)
+				end
+				if item4 /= Void and item2 /= Void and then item4.is_selected and then item2.is_selected and then not item1.is_selected then
+					a_drawable.fill_rectangle (0, 0, 4, 4)
+				end
+				if item5 /= Void and item2 /= Void and then item5.is_selected and then item2.is_selected and then not item3.is_selected then
+					a_drawable.fill_rectangle (an_item.width - 4, 0, 4, 4)
+				end
+				if item5 /= Void and item7 /= Void and then item5.is_selected and then item7.is_selected and then not item8.is_selected then
+					a_drawable.fill_rectangle (an_item.width - 4, an_item.height - 4, 4, 4)
+				end
+			end
+		end
+
 end -- class GRID_TAB
 

@@ -65,14 +65,14 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	close_button: EV_BUTTON
 	information_list: EV_LIST
+	close_button: EV_BUTTON
 
 feature {NONE} -- Implementation
 
-	l_ev_vertical_box_1: EV_VERTICAL_BOX
-	l_ev_horizontal_box_1: EV_HORIZONTAL_BOX
 	l_ev_cell_1: EV_CELL
+	l_ev_horizontal_box_1: EV_HORIZONTAL_BOX
+	l_ev_vertical_box_1: EV_VERTICAL_BOX
 
 feature {NONE} -- Implementation
 

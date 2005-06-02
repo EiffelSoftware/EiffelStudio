@@ -169,24 +169,25 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	select_item_x_spin_button, select_item_y_spin_button: EV_SPIN_BUTTON
-	selection_on_click, always_selected_button: EV_CHECK_BUTTON
-	single_item_selection_button,
-	single_row_selection_button, multiple_item_selection_button, multiple_row_selection_button: EV_RADIO_BUTTON
 	item_finder: GRID_ITEM_FINDER
+	select_item_x_spin_button, select_item_y_spin_button: EV_SPIN_BUTTON
 	select_row_button,
 	select_column_button, select_item_button, clear_selection_button, selected_items_button,
 	selected_rows_button: EV_BUTTON
+	single_item_selection_button, single_row_selection_button,
+	multiple_item_selection_button, multiple_row_selection_button: EV_RADIO_BUTTON
+	selection_on_click,
+	always_selected_button: EV_CHECK_BUTTON
 
 feature {NONE} -- Implementation
 
-	l_ev_table_1: EV_TABLE
-	l_ev_vertical_box_1, l_ev_vertical_box_2, l_ev_vertical_box_3, l_ev_vertical_box_4: EV_VERTICAL_BOX
-	l_ev_horizontal_box_1,
-	l_ev_horizontal_box_2, l_ev_horizontal_box_3, l_ev_horizontal_box_4: EV_HORIZONTAL_BOX
-	l_ev_frame_1,
-	l_ev_frame_2, l_ev_frame_3: EV_FRAME
 	l_ev_cell_1, l_ev_cell_2: EV_CELL
+	l_ev_table_1: EV_TABLE
+	l_ev_horizontal_box_1, l_ev_horizontal_box_2,
+	l_ev_horizontal_box_3, l_ev_horizontal_box_4: EV_HORIZONTAL_BOX
+	l_ev_vertical_box_1, l_ev_vertical_box_2,
+	l_ev_vertical_box_3, l_ev_vertical_box_4: EV_VERTICAL_BOX
+	l_ev_frame_1, l_ev_frame_2, l_ev_frame_3: EV_FRAME
 
 feature {NONE} -- Implementation
 

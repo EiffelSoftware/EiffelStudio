@@ -109,10 +109,10 @@ feature {NONE}-- Initialization
 feature -- Access
 
 	virtual_x_position, virtual_y_position: EV_SPIN_BUTTON
+	drawable: EV_DRAWING_AREA
 	first_visible_column_label, first_visible_row_label,
 	last_visible_column_label, last_visible_row_label, viewable_width, viewable_height,
 	viewable_x_offset, viewable_y_offset: EV_LABEL
-	drawable: EV_DRAWING_AREA
 
 feature {NONE} -- Implementation
 

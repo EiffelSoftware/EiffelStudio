@@ -729,8 +729,6 @@ feature -- Syntax Completion Customization
 
 	completed_keywords: ARRAYED_LIST [STRING] is
 			-- list of completed keywords
-		local
-			a: ARRAY [STRING]
 		once
 			create Result.make (35)
 			Result.append (class_completed_keywords)

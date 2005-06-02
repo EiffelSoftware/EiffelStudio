@@ -45,10 +45,10 @@
 			<line_break/>
 			The type of application to build.
 			<list ordered="false">
-				<item>Console Application: Permits usage of the Microsoft Windows command-line interface.</item>
-				<item>Windows Application: An application that makes use of either the Windows GUI or .NET Windows Form GUI.</item>
-				<item>Class Library: A library of all classes contained within the project. </item>
-				<item>Precompiled Library: The same output as Class Library but includes additional compiler information that can be used by other EiffelEnvision projects through the <link><url>url</url><label>*Precompiled Library</label></link> property.</item>
+				<item><bold>Console Application</bold>: Permits usage of the Microsoft Windows command-line interface.</item>
+				<item><bold>Windows Application</bold>: An application that makes use of either the Windows GUI or .NET Windows Form GUI.</item>
+				<item><bold>Class Library</bold>: A library of all classes contained within the project. </item>
+				<item><bold>Precompiled Library</bold>: The same output as Class Library but includes additional compiler information that can be used by other EiffelEnvision projects through the <link><url>url</url><label>*Precompiled Library</label></link> property.</item>
 			</list>
 			<note>
 				<bold>Note</bold>: Due to the complexities of resolving non-.NET specific language enhancements such as <link><url>url</url><label>*Multiple Inheritance</label></link> and <link><url>url</url><label>*Generics</label></link>, EiffelEnvision projects can only reference Precompiled Library projects through the <link><url>precompiled.xml</url><anchor_name>precompiled_library</anchor_name><label>Precompiled Library</label></link> property.
@@ -71,6 +71,7 @@
 			<warning>
 				<bold>Warning</bold>: Changing this property *may* require a complete <link><url>../../../compiling_projects/compiling_projects.xml</url><anchor_name>building_projects</anchor_name><label>Rebuild</label></link> and will be enforced when selecting to <link><url>../../../compiling_projects/compiling_projects.xml</url><anchor_name>building_projects</anchor_name><label>Build</label></link> your project.
 			</warning>
+			For more information on targeting alternative versions of the CLR, see <link><url>multiple_clr_versions.xml</url><label>Working with Multiple Versions of the .NET Framework</label></link>.
 		</paragraph>
 		
 		

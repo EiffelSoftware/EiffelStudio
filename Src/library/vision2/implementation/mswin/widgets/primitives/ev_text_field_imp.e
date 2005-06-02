@@ -135,6 +135,9 @@ feature {EV_ANY_I} -- Status setting
 			-- Ensure that `Current' is displayed with no border.
 		do
 			set_ex_style (0)
+				-- The minimum size must now be reduced as there are no borders.
+			ev_set_minimum_size (
+				maximum_character_width * 4, internal_font_height)
 		end
 
 feature {NONE} -- WEL Implementation

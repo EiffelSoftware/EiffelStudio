@@ -103,7 +103,7 @@
 <paragraph><heading>
 				<size>2</size>Locked Objects</heading>
 </paragraph>
-Objects that are instances of other object are displayed as locked objects within the Layout Constructor as illustrated below:
+Objects that are instances of other objects are displayed as locked objects within the Layout Constructor as illustrated below:
 <paragraph>
 			<image>
 				<url>/images/eiffelbuild/screenshots/layout_constructor_locked.png</url>

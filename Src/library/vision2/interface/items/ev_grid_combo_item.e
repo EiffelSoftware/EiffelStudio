@@ -54,6 +54,9 @@ feature {NONE} -- Implementation
 				combo_box.set_strings (item_strings)
 			end
 			combo_box.set_text (text)
+
+				-- No items should be selected.
+			combo_box.remove_selection
 			popup_window.extend (combo_box)
 			popup_window.show_actions.extend (agent combo_box.set_focus)
 			combo_box.select_actions.extend (agent deactivate)
@@ -66,8 +69,8 @@ feature {NONE} -- Implementation
 		do
 			if combo_box /= Void then
 				combo_box.focus_out_actions.wipe_out
-				Precursor {EV_GRID_LABEL_ITEM}
 				set_text (combo_box.text)
+				Precursor {EV_GRID_LABEL_ITEM}
 				combo_box := Void
 			end
 		end

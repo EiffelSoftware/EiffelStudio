@@ -20,12 +20,11 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_tool: ES_OBJECTS_GRID_MANAGER) is
+	make (a_name: STRING) is
 			-- Create current with a_name and a_tool
 		do
 			default_create
 			name := a_name
-			tool := a_tool
 			enable_tree
 			enable_partial_dynamic_content
 			set_dynamic_content_function (agent compute_grid_item)
@@ -45,10 +44,6 @@ feature {NONE} -- Initialization
 		end
 
 feature -- properties
-
-	tool: ES_OBJECTS_GRID_MANAGER
-			-- associated tool
-			-- (try to get rid of this dependency)
 
 	name: STRING
 			-- associated name to identify the related grid.
@@ -161,45 +156,6 @@ feature {NONE} -- Actions implementation
 					create glab.make_with_text ("?")
 				end
 			end
-		end
-
-feature -- Graphical look
-
-	folder_label_item (s: STRING): EV_GRID_LABEL_ITEM is
-		do
-			create Result.make_with_text (s)
-			Result.set_foreground_color (folder_row_fg_color)
-		end
-
-	name_label_item (s: STRING): EV_GRID_LABEL_ITEM is
-		do
-			create Result.make_with_text (s)
-		end
-
-	dummy_label_item (s: STRING): EV_GRID_LABEL_ITEM is
-		do
-			create Result.make_with_text (s)
-			Result.set_foreground_color (dummy_row_fg_color)
-		end
-
-	folder_row_fg_color: EV_COLOR is
-		once
-			create Result.make_with_8_bit_rgb (60,60,190)
-		end
-
-	object_folder_row_fg_color: EV_COLOR is
-		once
-			create Result.make_with_8_bit_rgb (60,60,190)
-		end
-
-	dummy_row_fg_color: EV_COLOR is
-		once
-			create Result.make_with_8_bit_rgb (210, 210, 210)
-		end
-
-	slice_row_fg_color: EV_COLOR is
-		once
-			create Result.make_with_8_bit_rgb (210, 160, 160)
 		end
 
 feature -- Grid helpers

@@ -6,6 +6,8 @@ inherit
 
 	EV_SHARED_APPLICATION
 
+	EV_GRID_HELPER
+
 feature {ES_OBJECTS_GRID_MANAGER, ES_OBJECTS_GRID_LINE, ES_OBJECTS_GRID_SLICES_CMD} -- EiffelStudio specific
 
 	add_debug_value_to_grid_row (a_parent_row: EV_GRID_ROW; dv: ABSTRACT_DEBUG_VALUE) is
@@ -92,25 +94,17 @@ feature -- numerical related processing
 
 feature -- Graphical look
 
---	column_layout: ARRAY [INTEGER] is
---		deferred
---		end
-
 	folder_label_item (s: STRING): EV_GRID_LABEL_ITEM is
 		do
-			create Result.make_with_text (s)
+			create Result
+			grid_cell_set_text (Result, s)
 			Result.set_foreground_color (folder_row_fg_color)
 		end
 
 	name_label_item (s: STRING): EV_GRID_LABEL_ITEM is
 		do
-			create Result.make_with_text (s)
-		end
-
-	dummy_label_item (s: STRING): EV_GRID_LABEL_ITEM is
-		do
-			create Result.make_with_text (s)
-			Result.set_foreground_color (dummy_row_fg_color)
+			create Result
+			grid_cell_set_text (Result, s)			
 		end
 
 	folder_row_fg_color: EV_COLOR is
@@ -121,11 +115,6 @@ feature -- Graphical look
 	object_folder_row_fg_color: EV_COLOR is
 		once
 			create Result.make_with_8_bit_rgb (60,60,190)
-		end
-
-	dummy_row_fg_color: EV_COLOR is
-		once
-			create Result.make_with_8_bit_rgb (210, 210, 210)
 		end
 
 	slice_row_fg_color: EV_COLOR is
@@ -142,36 +131,6 @@ feature -- Graphical look
 		once
 			create Result.make_with_8_bit_rgb (190, 130, 130)
 		end
-
-
-feature -- Grid helpers
-
-	grid_cell_set_tooltip (a_cell: EV_GRID_ITEM; v: STRING) is
-		require
-			cell_not_void: a_cell /= Void
-		do
-			a_cell.set_tooltip (v)
-		end
-
---	pixmap_enabled: BOOLEAN is True
---
---	grid_cell_set_pixmap (a_cell: EV_GRID_ITEM; v: EV_PIXMAP) is
---		require
---			cell_not_void: a_cell /= Void
---		local
---			glab: EV_GRID_LABEL_ITEM
---		do
---			if pixmap_enabled then
---				glab ?= a_cell
---				if glab /= Void then
---					if v /= Void then
---						glab.set_pixmap (v)
---					else
---						glab.remove_pixmap
---					end
---				end
---			end
---		end
 
 feature -- Constants
 

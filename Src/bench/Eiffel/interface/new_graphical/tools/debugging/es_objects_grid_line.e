@@ -934,12 +934,6 @@ feature {NONE} -- Filling
 
 feature {NONE} -- Implementation
 
-	dummy_label_item (s: STRING): EV_GRID_LABEL_ITEM is
-		do
-			create Result.make_with_text (s)
-			Result.set_foreground_color (tool.dummy_row_fg_color)
-		end
-
 	folder_label_item (s: STRING): EV_GRID_LABEL_ITEM is
 		do
 			Result := tool.folder_label_item (s)
@@ -947,7 +941,8 @@ feature {NONE} -- Implementation
 
 	slice_label_item (s: STRING): EV_GRID_LABEL_ITEM is
 		do
-			create Result.make_with_text (s)
+			create Result
+			grid_cell_set_text (Result, s)
 			Result.set_foreground_color (tool.slice_row_fg_color)
 		end
 
@@ -958,7 +953,8 @@ feature {NONE} -- Implementation
 
 	type_label_item (s: STRING): EV_GRID_LABEL_ITEM is
 		do
-			create Result.make_with_text (s)
+			create Result
+			grid_cell_set_text (Result, s)
 		end
 
 	cell_text_updated (v: STRING; c: INTEGER): EV_GRID_LABEL_ITEM is
@@ -971,10 +967,12 @@ feature {NONE} -- Implementation
 				row.set_item (c, Result)
 			end
 			if v /= Void then
-				Result.set_text (v)
+				grid_cell_set_text (Result, v)
 			else
-				Result.set_text ("")
+				grid_cell_set_text (Result, "")
 			end
+		ensure
+			Result /= Void			
 		end
 
 invariant

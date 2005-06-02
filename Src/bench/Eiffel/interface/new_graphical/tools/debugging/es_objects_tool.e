@@ -89,7 +89,7 @@ feature {NONE} -- Initialization
 		do
 			create displayed_objects.make
 				--| Stack obj grid
-			create esgrid.make ("Stack objects", Current)
+			create esgrid.make ("Stack objects")
 			esgrid.set_column_count_to (4)
 			esgrid.column (col_name_index).set_title (col_titles @ col_name_index)
 			esgrid.column (col_name_index).set_width (150)
@@ -108,7 +108,7 @@ feature {NONE} -- Initialization
 			stack_objects_grid := esgrid
 
 				--| Debugged obj grid
-			create esgrid.make ("Debugged objects", Current)
+			create esgrid.make ("Debugged objects")
 			esgrid.set_column_count_to (4)
 			esgrid.column (col_name_index).set_title (col_titles @ col_name_index)
 			esgrid.column (col_name_index).set_width (150)
@@ -736,9 +736,11 @@ feature {NONE} -- Stack objects grid Implementation
 					glab := folder_label_item ("Call stack")
 					a_target_grid.grid_cell_set_pixmap (glab, Pixmaps.icon_arrow_empty)
 					lrow.set_item (1, glab)
-					create glab.make_with_text (cse.dynamic_class.name_in_upper)
+					create glab
+					a_target_grid.grid_cell_set_text (glab, cse.dynamic_class.name_in_upper)
 					lrow.set_item (2, glab)
-					create glab.make_with_text (cse.routine_name)
+					create glab
+					a_target_grid.grid_cell_set_text (glab, cse.routine_name)
 					lrow.set_item (3, glab)
 
 						--| Build other stack part
@@ -819,9 +821,10 @@ feature {NONE} -- Stack objects grid Implementation
 						a_target_grid.grid_cell_set_pixmap (glab, Pixmaps.Icon_exception)
 						
 						row.set_item (1, glab)
-						create glab.make_with_text (cst_exception_double_click_text)
+						create glab
+						a_target_grid.grid_cell_set_text (glab, cst_exception_double_click_text)
 						glab.set_data (l_exception_message)
-						glab.set_tooltip (l_exception_message)
+						a_target_grid.grid_cell_set_tooltip (glab, l_exception_message)
 						glab.pointer_double_press_actions.force_extend (agent show_exception_dialog (l_exception_tag, l_exception_message))
 						row.set_item (2, es_glab)
 					end

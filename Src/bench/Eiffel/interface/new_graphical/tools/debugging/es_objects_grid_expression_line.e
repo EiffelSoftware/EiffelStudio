@@ -315,7 +315,8 @@ feature -- Graphical changes
 							end
 							set_expression_info (l_error_tag)
 
-							create glab.make_with_text ("Error occurred (double click to see details)")
+							create glab
+							grid_cell_set_text (glab, "Error occurred (double click to see details)")
 							glab.pointer_double_press_actions.force_extend (agent show_text_in_popup (l_error_message))
 							row.set_item (Col_expression_result_index, glab)
 

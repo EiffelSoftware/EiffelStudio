@@ -13,6 +13,16 @@ inherit
 
 feature -- Access
 
+	grid_cell_set_text (a_cell: EV_GRID_LABEL_ITEM; v: STRING) is
+		require
+			cell_not_void: a_cell /= Void
+		do
+			a_cell.set_text (v)
+			if a_cell.tooltip = Void then
+				grid_cell_set_tooltip (a_cell, v)
+			end
+		end
+
 	grid_cell_set_tooltip (a_cell: EV_GRID_ITEM; v: STRING) is
 		require
 			cell_not_void: a_cell /= Void

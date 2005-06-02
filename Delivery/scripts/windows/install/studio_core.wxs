@@ -475,8 +475,10 @@
 								<File Id="VCRN" Name="VCRN" />
 								<File Id="VDCN" Name="VDCN" />
 								<File Id="VDJR" Name="VDJR" />
+								<File Id="VDJR_ECMA" Name="VDJR_E~1" LongName="VDJR_ECMA" />
 								<File Id="VDOC" Name="VDOC" />
 								<File Id="VDRD" Name="VDRD" />
+								<File Id="VDRD_ECMA" Name="VDRD_E~1" LongName="VDRD_ECMA" />
 								<File Id="VDRS" Name="VDRS" />
 								<File Id="VDUC" Name="VDUC" />
 								<File Id="VDUS" Name="VDUS" />
@@ -533,6 +535,7 @@
 								<File Id="VUGV" Name="VUGV" />
 								<File Id="VUPR" Name="VUPR" />
 								<File Id="VWBE" Name="VWBE" />
+								<File Id="VWBR" Name="VWBR" />
 								<File Id="VWCA" Name="VWCA" />
 								<File Id="VWEQ" Name="VWEQ" />
 								<File Id="VWID" Name="VWID" />
@@ -646,6 +649,7 @@
 									<File Id="VD67" Name="VD67" />
 									<File Id="VDCN94" Name="VDCN" />
 									<File Id="VDJR71" Name="VDJR" />
+									<File Id="VDJR_ECMA2" Name="VDJR_E~1" LongName="VDJR_ECMA2" />
 									<File Id="VDOC65" Name="VDOC" />
 									<File Id="VDRD1" Name="VDRD1" />
 									<File Id="VDRD2" Name="VDRD2" />
@@ -654,6 +658,7 @@
 									<File Id="VDRD5" Name="VDRD5" />
 									<File Id="VDRD6" Name="VDRD6" />
 									<File Id="VDRD8" Name="VDRD8" />
+									<File Id="VDRD_ECMA7" Name="VDRD_E~1" LongName="VDRD_ECMA7" />
 									<File Id="VDRS1" Name="VDRS1" />
 									<File Id="VDRS2" Name="VDRS2" />
 									<File Id="VDRS3" Name="VDRS3" />
@@ -667,8 +672,11 @@
 									<File Id="VEEN2" Name="VEEN2" />
 									<File Id="VEEN21" Name="VEEN21" />
 									<File Id="VEEN22" Name="VEEN22" />
+									<File Id="VE06" Name="VE06" />
 									<File Id="VFAV1" Name="VFAV1" />
 									<File Id="VFAV2" Name="VFAV2" />
+									<File Id="VFAV3" Name="VFAV3" />
+									<File Id="VFAV4" Name="VFAV4" />
 									<File Id="VFFD1" Name="VFFD1" />
 									<File Id="VFFD2" Name="VFFD2" />
 									<File Id="VFFD3" Name="VFFD3" />
@@ -786,6 +794,7 @@
 									<File Id="VUPR4" Name="VUPR4" />
 									<File Id="VUPR5" Name="VUPR5" />
 									<File Id="VWBE64" Name="VWBE" />
+									<File Id="VWBR1" Name="VWBR1" />
 									<File Id="VWCA2" Name="VWCA" />
 									<File Id="VWEQ2" Name="VWEQ" />
 									<File Id="VWID2" Name="VWID" />

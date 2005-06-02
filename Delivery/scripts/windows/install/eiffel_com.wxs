@@ -34,7 +34,7 @@
 								<File Id="ecom_cookie_generator.e" Name="ECOM_C~2.E" LongName="ecom_cookie_generator.e" />
 								<File Id="ecom_guid_routines.e" Name="ECOM_G~2.E" LongName="ecom_guid_routines.e" />
 								<File Id="ecom_routines.e" Name="ECOM_R~1.E" LongName="ecom_routines.e" />
-								<File Id="ecom_variant_access_e" Name="ECOM_V~1.E" LongName="ecom_variant_access.e" />
+								<File Id="ecom_shared_variant_e" Name="ECOM_S~1.E" LongName="ecom_shared_variant.e" />
 								<File Id="ecom_wrapper.e" Name="ECOM_W~1.E" LongName="ecom_wrapper.e" />
 							</Component>
 						</Directory>

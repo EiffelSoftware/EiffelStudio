@@ -1472,6 +1472,7 @@
 							<Directory Id="support18" Name="support">
 								<Component Id="ev_raw_image_data.e" Guid="6F468936-3B65-4C03-9535-684C501DBF17">
 									<File Id="ev_grid_label_item_layout_e" Name="EV_GRI~1.E" LongName="ev_grid_label_item_layout.e" />
+									<File Id="ev_grid_types_e" Name="EV_GRI~2.E" LongName="ev_grid_types.e" />
 									<File Id="ev_raw_image_data.e" Name="EV_RAW~1.E" LongName="ev_raw_image_data.e" />
 									<File Id="ev_png_format.e" Name="EV_PNG~1.E" LongName="ev_png_format.e" />
 									<File Id="ev_dynamic_list_cursor.e" Name="EV_DYN~2.E" LongName="ev_dynamic_list_cursor.e" />

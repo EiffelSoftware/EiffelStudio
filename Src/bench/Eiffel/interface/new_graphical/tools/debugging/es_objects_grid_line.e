@@ -338,7 +338,9 @@ feature -- Properties change
 			if row /= Void then
 				row_attributes_filled := False
 				reset_special_attributes_values
-				fill_attributes (attributes_row)
+				if attributes_row /= Void then
+					fill_attributes (attributes_row)
+				end
 			end
 		end
 

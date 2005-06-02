@@ -92,7 +92,7 @@ feature {NONE} -- Initialization
 			create esgrid.make ("Stack objects", Current)
 			esgrid.set_column_count_to (4)
 			esgrid.column (col_name_index).set_title (col_titles @ col_name_index)
-			esgrid.column (col_name_index).set_width (100)
+			esgrid.column (col_name_index).set_width (150)
 			esgrid.column (col_address_index).set_title (col_titles @ col_address_index)
 			esgrid.column (col_address_index).set_width (80)
 			esgrid.column (col_value_index).set_title (col_titles @ col_value_index)
@@ -111,7 +111,7 @@ feature {NONE} -- Initialization
 			create esgrid.make ("Debugged objects", Current)
 			esgrid.set_column_count_to (4)
 			esgrid.column (col_name_index).set_title (col_titles @ col_name_index)
-			esgrid.column (col_name_index).set_width (100)
+			esgrid.column (col_name_index).set_width (150)
 			esgrid.column (col_address_index).set_title (col_titles @ col_address_index)
 			esgrid.column (col_address_index).set_width (80)
 			esgrid.column (col_value_index).set_title (col_titles @ col_value_index)
@@ -576,15 +576,9 @@ feature {NONE} -- Grid Implementation
 	
 feature {NONE} -- Commands Implementation
 
-	pretty_print_cmd: EB_PRETTY_PRINT_CMD
-			-- Command that is used to display extended information concerning objects.
-
 	remove_object_cmd: EB_STANDARD_CMD
 			-- Command that is used to remove objects from the tree.
 
-	hex_format_cmd: EB_HEX_FORMAT_CMD
-			-- Command that is used to switch hex/dec formatting for numerical values
-	
 feature {NONE} -- Implementation
 
 	current_stack_element: CALL_STACK_ELEMENT is

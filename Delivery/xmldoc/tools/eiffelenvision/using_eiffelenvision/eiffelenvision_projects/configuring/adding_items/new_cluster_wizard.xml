@@ -1,8 +1,8 @@
-<document output="envision" title="New Cluster Wizard">
+<document output="envision" title="Add New Cluster Wizard">
 	<meta_data>
 		<help>
 			<toc>
-				<envision_title>New Cluster Wizard</envision_title>
+				<envision_title>Add New Cluster Wizard</envision_title>
 				<envision_pseudo_name>70</envision_pseudo_name>
 			</toc>
 			<xml>

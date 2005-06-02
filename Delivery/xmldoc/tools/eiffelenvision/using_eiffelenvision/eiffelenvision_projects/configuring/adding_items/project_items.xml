@@ -77,7 +77,7 @@
 					<cell><bold>UI</bold></cell>
 				</row>
 				<row>
-					<cell columnspan="3">&amp;nbsp;</cell>
+					<cell columnspan="3"><height>10</height></cell>
 				</row>
 				<row>
 					<cell>Class</cell>
@@ -105,7 +105,7 @@
 					<cell><bold>Code</bold></cell>
 				</row>
 				<row>
-					<cell columnspan="3">&amp;nbsp;</cell>
+					<cell columnspan="3"><height>10</height></cell>
 				</row>	
 				<row>
 					<cell>Text File</cell>
@@ -123,7 +123,7 @@
 					<cell><bold>Data</bold></cell>
 				</row>
 				<row>
-					<cell columnspan="3">&amp;nbsp;</cell>
+					<cell columnspan="3"><height>10</height></cell>
 				</row>
 				<row>
 					<cell>Application Configuration File</cell>

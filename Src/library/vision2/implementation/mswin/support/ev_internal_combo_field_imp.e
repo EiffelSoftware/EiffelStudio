@@ -1,9 +1,10 @@
 indexing
-	description:
-		" Text field inside a combo-box-ex when it is%
-		% editable. It receive all the events and forewards them.%
-		%Mswindows implementation."
-	note: "Created by pointer from the system."
+	description: "[
+		Text field inside a combo-box-ex when it is
+		editable. It receive all the events and forewards them.
+
+		Note: Created by pointer from the system.
+		]"
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"

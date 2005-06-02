@@ -1,11 +1,12 @@
 indexing
-	description:
-		"Constants for use by and with EV_DRAWABLE."
-	note:
-		"With every drawing mode constant, a truth table is given.%N%
-		%S means the source. This is the color of the pixel that is about%N%
-		%to be applied. T means target. This is the color of the pixel that%N%
-		%is currently on the place where the new pixel is about to be set."
+	description: "[
+		Constants for use by and with EV_DRAWABLE.
+
+		Note: With every drawing mode constant, a truth table is given.
+		S means the source. This is the color of the pixel that is about
+		to be applied. T means target. This is the color of the pixel that
+		is currently on the place where the new pixel is about to be set.
+		]"
 	status: "See notice at end of class"
 	keywords: "figures, primitives, drawing, line, point, ellipse" 
 	date: "$Date$"

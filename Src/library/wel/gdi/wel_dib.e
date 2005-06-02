@@ -1,12 +1,14 @@
 indexing
-	description: "Device independent bitmap which can be created %
-		%from a file."
+	description: "[
+		Device independent bitmap which can be created from a file.
+
+		Note: Not all variants of the bmp format can be read. If you have
+			problems with a certain image please use i.e. MS Paint to convert
+			the image to the standard bmp format and then try again.
+		]"
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
-	note: "Not all variants of the bmp format can be read. If you have%
-			%problems with a certain image please use i.e. MS Paint to convert%
-			%the image to the standard bmp format and then try again."
 
 class
 	WEL_DIB

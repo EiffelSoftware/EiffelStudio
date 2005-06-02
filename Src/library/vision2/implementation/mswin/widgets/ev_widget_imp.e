@@ -1,14 +1,18 @@
 indexing
-	description: "EiffelVision widget, mswindows implementation."
-	note: "The parent of a widget cannot be void, except for a%
-		%  window. Therefore, each feature that call the parent%
-		%  here need to be redefine by EV_TITLED_WINDOW to check if%
-		%  parent is `Void'"
-	note: "The current class would be the equivalent of a wel_window%
-		% Yet, it doesn't inherit from wel_window. Then, all the%
-		% feature we used are defined as deferred. They will be%
-		% implemented directly by the heirs thanks to inheritance%
-		% from a heir of wel_window."
+	description: "[
+		EiffelVision widget, mswindows implementation.
+
+		Note: 
+		1 - The parent of a widget cannot be void, except for a
+			window. Therefore, each feature that call the parent
+			here need to be redefine by EV_TITLED_WINDOW to check if
+			parent is `Void'.
+		2 - The current class would be the equivalent of a wel_window
+			Yet, it doesn't inherit from wel_window. Then, all the
+			feature we used are defined as deferred. They will be
+			implemented directly by the heirs thanks to inheritance
+			from a heir of wel_window.
+		]"
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"

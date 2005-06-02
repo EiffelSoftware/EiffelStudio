@@ -3,7 +3,6 @@ indexing
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
-	note: "Constants changed from INTEGER to POINTER."
 
 class
 	WEL_IDC_CONSTANTS

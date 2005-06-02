@@ -2,7 +2,7 @@
 	<meta_data>
 		<help>
 			<toc>
-				<envision_title>General Properties</envision_title>
+				<envision_title>Precompiled Properties</envision_title>
 				<envision_pseudo_name>40</envision_pseudo_name>
 			</toc>
 			<xml>
@@ -35,6 +35,13 @@
 			<warning>
 				<bold>Warning</bold>: Changing this property requires a complete rebuild and will be enforced when selecting to <link><url>../../../compiling_projects/compiling_projects.xml</url><anchor_name>building_projects</anchor_name><label>Build</label></link> your project.
 			</warning>
+			If you do not want to manually specify the path to a <italic>precomp.epr</italic>, EiffelEnvision provides four selectable alternative options for this property:
+			<list ordered="false">
+				<item><bold>EiffelBase</bold>: The EiffelBase precompiled library.</item>
+				<item><bold>Windows Eiffel Library</bold>: The Windows Eiffel Library (WEL) precompiled library.</item>
+				<item><bold>EiffelVision 2</bold>: The EiffelVision 2 precompiled library.</item>
+				<item><bold>Browse...</bold>: Locate a <italic>precomp.epr</italic> via a file browse dialog.</item>
+			</list>
 		</paragraph>
 		<anchor>use_optimized_precompile</anchor>
 		<paragraph>

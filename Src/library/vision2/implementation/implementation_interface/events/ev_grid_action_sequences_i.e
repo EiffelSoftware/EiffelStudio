@@ -264,8 +264,23 @@ feature -- Event handling
 			end
 			Result := virtual_size_changed_actions_internal
 		end
+		
+	post_draw_overlay_actions: ACTION_SEQUENCE [TUPLE [EV_DRAWABLE, EV_GRID_ITEM]] is
+			-- Actions to be performed after an item has been drawn. By drawing into the passed
+			-- drawable, you may draw directly on top of the already drawn item. This is useful
+			-- for drawing additional border styles or other such effects.. The upper left corner
+			-- of the item starts at coordinates 0x0 in the passed drawable. All drawing Performed
+			-- in the drawable is clipped to `width', `height' of the passed item.
+		do
+			if post_draw_overlay_actions_internal = Void then
+				create post_draw_overlay_actions_internal
+			end
+			Result := post_draw_overlay_actions_internal
+		ensure
+			not_void: Result /= Void
+		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY_I, EV_GRID_DRAWER_I} -- Implementation
 
 	item_activate_actions_internal: ACTION_SEQUENCE [TUPLE [EV_GRID_ITEM, EV_POPUP_WINDOW]]
 			-- Implementation of once per object `item_activate_actions'.
@@ -323,6 +338,9 @@ feature {EV_ANY_I} -- Implementation
 
 	virtual_size_changed_actions_internal: ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER]]
 			-- Implementation of once per object `virtual_size_changed_actions'.
+
+	post_draw_overlay_actions_internal: ACTION_SEQUENCE [TUPLE [EV_DRAWABLE, EV_GRID_ITEM]]
+			-- Implementation of once per object `post_draw_overlay_actions'.
 
 end
 

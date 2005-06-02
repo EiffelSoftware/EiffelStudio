@@ -223,16 +223,11 @@ feature -- Graphical changes
 			a_item /= Void
 		local
 			new_expr: STRING
-			w_tool: ES_WATCH_TOOL
 		do
 			new_expr := a_item.new_text
 			if not new_expr.is_equal (expression.expression) then
 				expression.set_expression (new_expr)
-				w_tool ?= tool
-				if w_tool /= Void then
-					fixme("jfiat: not very nice design")
-					w_tool.refresh_watched_item (Current)
-				end
+				request_evaluation (True)
 				refresh
 			end
 		end

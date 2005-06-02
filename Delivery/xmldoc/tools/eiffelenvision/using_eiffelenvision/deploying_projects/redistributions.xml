@@ -1,9 +1,9 @@
-<document output="envision" title="Redistributing the Eiffel Runtime">
+<document output="envision" title="Redistributing the Eiffel for .NET Runtime">
 	<meta_data>
 		<help>
 			<toc>
-				<envision_title>Redistributing the Eiffel Runtime</envision_title>
-				<envision_pseudo_name>20</envision_pseudo_name>
+				<envision_title>Redistributing the Eiffel for .NET Runtime</envision_title>
+				<envision_pseudo_name>40</envision_pseudo_name>
 			</toc>
 			<xml>
 				<xmlkeyword>
@@ -87,8 +87,8 @@
 			</link>
 			<line_break/>
 			<link>
-				<url>url</url>
-				<label>*EULA</label>
+				<url>../../licenses/index.xml</url>
+				<label>Licenses Agreements</label>
 			</link>
 		</seealso>
 	</paragraph>

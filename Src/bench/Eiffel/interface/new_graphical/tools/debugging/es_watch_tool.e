@@ -67,7 +67,7 @@ feature {NONE} -- Initialization
 			esgrid.enable_multiple_row_selection
 			esgrid.set_column_count_to (5)
 			esgrid.column (col_name_index).set_title (col_titles @ col_name_index)
-			esgrid.column (col_name_index).set_width (100)	
+			esgrid.column (col_name_index).set_width (150)
 			esgrid.column (col_address_index).set_title (col_titles @ col_address_index)
 			esgrid.column (col_address_index).set_width (80)
 			esgrid.column (col_value_index).set_title (col_titles @ col_value_index)
@@ -114,10 +114,17 @@ feature {NONE} -- Initialization
 			tbb := toggle_state_of_expression_cmd.new_mini_toolbar_item
 			mini_toolbar.extend (tbb)
 
+			create slices_cmd.make (Current)
+			slices_cmd.enable_sensitive
+			mini_toolbar.extend (slices_cmd.new_mini_toolbar_item)
+
 			create hex_format_cmd.make (agent set_hexadecimal_mode (?))
 			hex_format_cmd.enable_sensitive
 			mini_toolbar.extend (hex_format_cmd.new_mini_toolbar_item)
-			
+
+			create pretty_print_cmd.make
+			pretty_print_cmd.enable_sensitive
+			mini_toolbar.extend (pretty_print_cmd.new_mini_toolbar_item)
 
 			create delete_expression_cmd.make
 			delete_expression_cmd.set_mini_pixmaps (pixmaps.icon_delete_very_small)
@@ -680,8 +687,6 @@ feature {NONE} -- Event handling
 		end
 
 feature {NONE} -- Implementation: internal data
-
-	hex_format_cmd: EB_HEX_FORMAT_CMD
 
 	delete_expression_cmd: EB_STANDARD_CMD
 			-- Command that deletes one or more rows from the list of expressions.

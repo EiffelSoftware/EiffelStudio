@@ -29,9 +29,14 @@ feature {ES_OBJECTS_GRID_MANAGER, ES_OBJECTS_GRID_LINE, ES_OBJECTS_GRID_SLICES_C
 				)
 		end
 
-feature -- ES slice specific
+feature -- cmd specific
+
+	hex_format_cmd: EB_HEX_FORMAT_CMD
 
 	slices_cmd: ES_OBJECTS_GRID_SLICES_CMD
+
+	pretty_print_cmd: EB_PRETTY_PRINT_CMD
+			-- Command that is used to display extended information concerning objects.
 
 feature -- ES grid specific
 

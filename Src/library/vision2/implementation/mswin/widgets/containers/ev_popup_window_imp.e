@@ -12,6 +12,9 @@ inherit
 		redefine
 			interface,
 			default_style,
+			compute_minimum_size,
+			compute_minimum_height,
+			compute_minimum_width,
 			make
 		end
 
@@ -44,6 +47,40 @@ feature {NONE} -- Implementation
 			-- Set with the option `Ws_clipchildren' to avoid flashing.
 		do
 			Result := Ws_popup + Ws_overlapped + Ws_clipchildren + Ws_clipsiblings
+		end
+		
+	compute_minimum_width is
+			-- Recompute the minimum width of `Current'.
+		local
+			mw: INTEGER
+		do
+			if item /= Void then
+				mw := item.minimum_width
+			end
+			ev_set_minimum_width (mw)
+		end
+
+	compute_minimum_height is
+			-- Recompute the minimum height of `Current'.
+		local
+			mh: INTEGER
+		do
+			if item /= Void then
+				mh := item.minimum_height
+			end
+			ev_set_minimum_height (mh)
+		end
+
+	compute_minimum_size is
+			-- Recompute the minimum size of `Current'.
+		local
+			mw, mh: INTEGER
+		do
+			if item /= Void then
+				mw := item.minimum_width
+				mh := item.minimum_height
+			end
+			ev_set_minimum_size (mw, mh)
 		end
 	
 feature  -- Implementation

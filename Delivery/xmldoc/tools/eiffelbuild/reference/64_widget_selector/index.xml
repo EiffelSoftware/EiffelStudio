@@ -8,20 +8,20 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>The Widget Selector allows you to manage windows and dialogs within the EiffelBuild project and all windows are accessible through this tool. Using the widget selector, you may add new windows to your project; delete windows; assign a root window (launched from the generated application); and group windows into directories. The Widget Selector has the following appearance:</paragraph>
+		<paragraph>The Widget Selector allows you to manage windows, dialogs and "top level" objects within the EiffelBuild project, with all windows accessible through this tool. Using the widget selector, you may add new windows to your project; delete windows; assign a root window (launched from the generated application); and group windows into directories. All objects contained in the Widget Selector are generated as individual classes at generation time. The Widget Selector has the following appearance:</paragraph>
 		<paragraph>
 			<image> 
 				<url>/images/eiffelbuild/screenshots/window_selector.png</url>
 			</image>
 		</paragraph>
 		<heading>
-			<size>2</size>Adding Windows
+			<size>2</size>Adding Objects
 		</heading>
-		<paragraph>To add a window or dialog to your project, 
+		<paragraph>To add an Object to your project, 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>pick_and_drop</anchor_name>
 				<label>pick</label>
-			</link> the window or dialog type from the 
+			</link> the object type from the 
 			<link>
 				<url>/tools/eiffelbuild/reference/30_type_selector/index.xml</url>
 				<label>type selector</label>
@@ -32,18 +32,21 @@
 			</link> into the Widget Selector. There are two possible drop targets within the widget selector:
 			<list ordered="false">
 				<item>
-					<bold>The Widget Selector itself</bold> - The newly created window object is added to the root directory of the project.
+					<bold>The Widget Selector itself</bold> - The newly created object is added to the root directory of the project.
 				</item>
 				<item>
-					<bold>A Directory node</bold> - The newly created window object is added to the directory that was the target of the drop.
+					<bold>A Directory node</bold> - The newly created object is added to the directory that was the target of the drop.
 				</item>
-			</list>Both of these outcomes create a new window or dialog in your project.
+			</list>Both of these outcomes create a new object in your project that is to be generated as an individual class during code generation.
 			<note>
-				<bold>Note</bold>: The selected window in the Widget Selector is automatically targeted as the root window of the 
+				<bold>Note</bold>: The selected object in the Widget Selector is automatically targeted as the root window of the 
 				<link>
 					<url>/tools/eiffelbuild/reference/20_layout_constructor/index.xml</url>
 					<label>layout constructor</label>
-				</link>, permitting building. You may not build directly into the representation of a window within the Window Constructor.
+				</link>, permitting building. You may not build directly into the representation of an object within the Widget Selector, as this must be performed within the <link>
+					<url>/tools/eiffelbuild/reference/20_layout_constructor/index.xml</url>
+					<label>layout constructor</label>
+				</link> or <link><url>../60_builder_window/index.xml</url><label>builder window</label></link>.
 			</note>
 		</paragraph>
 		<heading>
@@ -57,7 +60,7 @@
 			<heading>
 				<size>2</size>Directories
 			</heading>
-			<paragraph>The ability to add directories to your project permit organization of windows into sub groups as necessitated by your design. To add a directory to the project, select the 
+			<paragraph>The ability to add directories to your project permit organization of objects into sub groups as necessitated by your design. To add a directory to the project, select the 
 				<image> 
 					<url>/images/eiffelbuild/icons/icon_new_cluster_small_color.png</url>
 				</image> button displayed at the top of the Widget Selector, which displays the following dialog, prompting for the name of the directory to add:
@@ -71,19 +74,28 @@
 			<note>
 				<bold>Note</bold>: Creating a new directory in the Widget Selector causes the actual directory on the disk to be created immediately.
 			</note>
-			<paragraph>You may insert windows into a directory, or move a window between directories by 
+			<paragraph>You may insert objects into a directory, or move an object between directories by 
 				<link>
 					<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>pick_and_drop</anchor_name>
 					<label>picking</label>
-				</link> the window from its representation in the Widget Selector, and 
+				</link> the object from its representation in the Widget Selector, and 
 				<link>
 					<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>pick_and_drop</anchor_name>
 					<label>dropping</label>
-				</link> on the desired directory.
+				</link> on the desired directory. Each object contained in the Widget Selector is generated as a seperate class and the parent directory is used as the generated location on disk.
 				<note>
-					<bold>Note</bold>: If you move a window between directories within an EiffelBuild project that has already generated the Eiffel code for that window, the code files are moved on the disk.
+					<bold>Note</bold>: If you move an object between directories within an EiffelBuild project that has already generated the Eiffel code for that object, the code files are moved immediately on the disk.
 				</note>
-				<paragraph>It is not possible to nest directories, only a single level of directories is permitted in the root of the project.</paragraph>
+				<paragraph>Directories may be nested as deeply as required, and the following buttons are available to help with directory nesting:</paragraph>
+				<list>
+				<item><image> 
+					<url>/images/eiffelbuild/icons/directory_search_small.png</url>
+				</image>Selecting this button recursively adds all directories from the current project location to the project.</item>
+				<item><image> 
+					<url>/images/eiffelbuild/icons/icon_show_hide_directory_color.png</url>
+				</image>Selecting this button causes all directories included within the project that do not contain one or more objects to be hidden/shown within the Widget Selector.</item>
+				</list>
+				Note that any directories that do not contain objects or have object nested within their structure recursively are displayed grayed out to indicate that there are no objects within.
 				<heading>
 					<size>2</size>Expanding
 				</heading>
@@ -91,6 +103,27 @@
 					<image> 
 						<url>/images/eiffelbuild/icons/icon_expand_all_small_color.png</url>
 					</image> button displayed at the top of the Widget Selector expands all nodes contained.
+				</paragraph>
+				<heading>
+					<size>2</size>Client Representations
+				</heading>
+				<paragraph>
+				All objects within the Widget Selector that are used as clients within other object structures have client information displayed as subnodes of their representation, as illustrated in the following screenshot:
+				</paragraph>
+				<paragraph>
+				<image> 
+				<url>/images/eiffelbuild/screenshots/widget_selector_clients.png</url>
+			</image>
+				</paragraph>
+				<paragraph>
+				The OK_CANCEL_BUTTONS object is used is used in two different places within the project: once within INPUT_DIALOG and once within MAIN_WINDOW. If you select the tree node representing the instance of OK_CANCEL_BUTTONS within MAIN_WINDOW, the MAIN_WINDOW is targetted to the <link>
+				<url>/tools/eiffelbuild/reference/30_type_selector/index.xml</url>
+				<label>type selector</label></link> with the instance of the OK_CANCEL_BUTTONS object selected.
+				</paragraph>
+				<paragraph>
+				To use an instance of a widget contained within the Widget Selector as a client, simply pick the representation of the object and drop into  the desired parent object within the <link>
+				<url>/tools/eiffelbuild/reference/30_type_selector/index.xml</url>
+				<label>type selector</label></link>
 				</paragraph>
 				<seealso>
 					<bold>See also</bold>:

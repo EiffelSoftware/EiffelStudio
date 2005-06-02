@@ -2277,7 +2277,12 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 				node_index := column_index.min (index_of_first_item)
 				if index_of_first_item /= column_index and index_of_first_item /= 0 then
 					Result := 0
+				elseif index_of_first_item = 1 then
+						-- As we are in the first column, we know the indent must always be the depth of this item in the tree
+						-- so we can avoid iterating upwards to find the index of the row which switches columns.
+					Result := (pointed_row_i.indent_depth_in_tree - 1) * tree_subrow_indent + first_tree_node_indent
 				else
+						-- We must calculate where the column switch occurs.
 					from
 						current_row := pointed_row_i
 						current_row_index_of_first_item := current_row.index_of_first_item

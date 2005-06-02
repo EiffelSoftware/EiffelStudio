@@ -184,7 +184,7 @@ feature -- Status report
 	has_focus: BOOLEAN is
 			-- Does widget have the keyboard focus?
 		do
-			Result := gtk_widget_has_focus (visual_widget)
+			Result := Precursor {EV_TEXT_FIELD_IMP}
 				-- Check to see if the toggle button is depressed, if it is then the combo must have the focus
 			if not Result and toggle_button /= default_pointer then
 				Result := {EV_GTK_EXTERNALS}.gtk_toggle_button_get_active (toggle_button)

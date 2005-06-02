@@ -395,46 +395,47 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	main_box: EV_VERTICAL_BOX
-	is_selected, is_full_select_button: EV_CHECK_BUTTON
-	item_x_index, item_y_index, left_border_spin_button,
-	spacing_spin_button, top_border_spin_button, bottom_border_spin_button, right_border_spin_button: EV_SPIN_BUTTON
+	pixmap_holder, alignment_combo, foreground_color_combo, background_color_combo, vertical_alignment_combo,
+	font_combo, font_size_combo: EV_COMBO_BOX
 	item_finder: GRID_ITEM_FINDER
+	left_alignment_item, center_alignment_item,
+	right_alignment_item, top_alignment_item, vertically_center_item, bottom_alignment_item: EV_LIST_ITEM
+	item_x_index,
+	item_y_index, left_border_spin_button, spacing_spin_button, top_border_spin_button,
+	bottom_border_spin_button, right_border_spin_button: EV_SPIN_BUTTON
+	apply_pixmap_row_button, apply_pixmap_column_button,
+	apply_alignment_row_button, apply_alignment_column_button, apply_left_border_row_button,
+	apply_left_border_column_button, apply_spacing_row_button, apply_spacing_column_button,
+	apply_background_row_button, apply_background_column_button, apply_selection_row_button,
+	apply_selection_column_button, apply_foreground_row_button, apply_foreground_column_button,
+	apply_bottom_border_row_button, apply_bottom_border_column_button, apply_right_border_row_button,
+	apply_right_border_column_button, apply_top_border_row_button, apply_top_border_column_button,
+	apply_vertical_alignment_column_button, apply_vertical_alignment_row_button, apply_font_row_button,
+	apply_font_column_button, apply_full_select_row_button, apply_full_select_column_button,
+	apply_text_row_button, apply_text_column_button, remove_item_button: EV_BUTTON
 	textable_container,
 	pixmapable_container, left_border_container, spacing_container, alignment_container,
 	top_border_container, bottom_border_container, right_border_container, vertical_alignment_container,
 	font_container: EV_HORIZONTAL_BOX
-	apply_pixmap_row_button, apply_pixmap_column_button, apply_alignment_row_button,
-	apply_alignment_column_button, apply_left_border_row_button, apply_left_border_column_button,
-	apply_spacing_row_button, apply_spacing_column_button, apply_background_row_button,
-	apply_background_column_button, apply_selection_row_button, apply_selection_column_button,
-	apply_foreground_row_button, apply_foreground_column_button, apply_bottom_border_row_button,
-	apply_bottom_border_column_button, apply_right_border_row_button, apply_right_border_column_button,
-	apply_top_border_row_button, apply_top_border_column_button, apply_vertical_alignment_column_button,
-	apply_vertical_alignment_row_button, apply_font_row_button, apply_font_column_button,
-	apply_full_select_row_button, apply_full_select_column_button, apply_text_row_button,
-	apply_text_column_button, remove_item_button: EV_BUTTON
-	item_frame, item_operations_frame: EV_FRAME
-	pixmap_holder,
-	alignment_combo, foreground_color_combo, background_color_combo, vertical_alignment_combo,
-	font_combo, font_size_combo: EV_COMBO_BOX
+	main_box: EV_VERTICAL_BOX
+	is_selected, is_full_select_button: EV_CHECK_BUTTON
 	textable_entry: EV_TEXT_FIELD
-	left_alignment_item, center_alignment_item,
-	right_alignment_item, top_alignment_item, vertically_center_item, bottom_alignment_item: EV_LIST_ITEM
+	item_frame,
+	item_operations_frame: EV_FRAME
 
 feature {NONE} -- Implementation
 
 	l_ev_list_item_1, l_ev_list_item_2, l_ev_list_item_3, l_ev_list_item_4, l_ev_list_item_5,
 	l_ev_list_item_6, l_ev_list_item_7, l_ev_list_item_8, l_ev_list_item_9, l_ev_list_item_10,
 	l_ev_list_item_11: EV_LIST_ITEM
-	l_ev_vertical_box_1: EV_VERTICAL_BOX
+	l_ev_cell_1: EV_CELL
+	l_ev_table_1: EV_TABLE
 	l_ev_horizontal_box_1, l_ev_horizontal_box_2,
 	l_ev_horizontal_box_3: EV_HORIZONTAL_BOX
-	l_ev_label_1, l_ev_label_2, l_ev_label_3, l_ev_label_4, l_ev_label_5,
-	l_ev_label_6, l_ev_label_7, l_ev_label_8, l_ev_label_9, l_ev_label_10, l_ev_label_11,
-	l_ev_label_12, l_ev_label_13, l_ev_label_14: EV_LABEL
-	l_ev_table_1: EV_TABLE
-	l_ev_cell_1: EV_CELL
+	l_ev_vertical_box_1: EV_VERTICAL_BOX
+	l_ev_label_1, l_ev_label_2, l_ev_label_3,
+	l_ev_label_4, l_ev_label_5, l_ev_label_6, l_ev_label_7, l_ev_label_8, l_ev_label_9,
+	l_ev_label_10, l_ev_label_11, l_ev_label_12, l_ev_label_13, l_ev_label_14: EV_LABEL
 
 feature {NONE} -- Implementation
 

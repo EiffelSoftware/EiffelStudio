@@ -173,27 +173,27 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	column_index, column_width: EV_SPIN_BUTTON
-	column_selected_button, column_visible_button: EV_CHECK_BUTTON
+	column_pixmap_combo, foreground_color_combo, background_color_combo: EV_COMBO_BOX
 	column_finder,
 	move_to_column_finder: GRID_ITEM_FINDER
-	column_title_entry: EV_TEXT_FIELD
+	column_index, column_width: EV_SPIN_BUTTON
 	swap_column_button, clear_column_button,
 	remove_column_button: EV_BUTTON
-	column_properties_frame, column_operations_frame: EV_FRAME
-	column_pixmap_combo,
-	foreground_color_combo, background_color_combo: EV_COMBO_BOX
+	column_selected_button, column_visible_button: EV_CHECK_BUTTON
+	column_title_entry: EV_TEXT_FIELD
+	column_properties_frame,
+	column_operations_frame: EV_FRAME
 
 feature {NONE} -- Implementation
 
-	l_ev_vertical_box_1, l_ev_vertical_box_2, l_ev_vertical_box_3: EV_VERTICAL_BOX
+	l_ev_cell_1, l_ev_cell_2, l_ev_cell_3: EV_CELL
+	l_ev_table_1, l_ev_table_2: EV_TABLE
 	l_ev_horizontal_box_1,
 	l_ev_horizontal_box_2, l_ev_horizontal_box_3, l_ev_horizontal_box_4, l_ev_horizontal_box_5: EV_HORIZONTAL_BOX
-	l_ev_label_1,
-	l_ev_label_2, l_ev_label_3, l_ev_label_4, l_ev_label_5, l_ev_label_6: EV_LABEL
-	l_ev_table_1,
-	l_ev_table_2: EV_TABLE
-	l_ev_cell_1, l_ev_cell_2, l_ev_cell_3: EV_CELL
+	l_ev_vertical_box_1,
+	l_ev_vertical_box_2, l_ev_vertical_box_3: EV_VERTICAL_BOX
+	l_ev_label_1, l_ev_label_2, l_ev_label_3,
+	l_ev_label_4, l_ev_label_5, l_ev_label_6: EV_LABEL
 
 feature {NONE} -- Implementation
 

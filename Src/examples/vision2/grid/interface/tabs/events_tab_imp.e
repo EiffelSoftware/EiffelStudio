@@ -82,9 +82,9 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	no_events_button, enable_event_tracking, enable_event_tracking_item, highlight_items_on_motion,
-	show_events_in_items: EV_RADIO_BUTTON
 	event_list: EV_LIST
+	no_events_button, enable_event_tracking, enable_event_tracking_item,
+	highlight_items_on_motion, show_events_in_items: EV_RADIO_BUTTON
 
 feature {NONE} -- Implementation
 

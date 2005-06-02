@@ -159,25 +159,25 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	row_index_entry, row_height_entry: EV_SPIN_BUTTON
-	row_selected_button: EV_CHECK_BUTTON
+	foreground_color_combo, background_color_combo: EV_COMBO_BOX
 	row_finder, move_to_row_finder: GRID_ITEM_FINDER
-	swap_row_button,
-	remove_row_button, unparent_row_button, clear_row_button: EV_BUTTON
-	row_properties_frame, row_operations_frame: EV_FRAME
-	foreground_color_combo,
-	background_color_combo: EV_COMBO_BOX
+	row_index_entry,
+	row_height_entry: EV_SPIN_BUTTON
+	swap_row_button, remove_row_button, unparent_row_button, clear_row_button: EV_BUTTON
+	row_selected_button: EV_CHECK_BUTTON
+	row_properties_frame,
+	row_operations_frame: EV_FRAME
 
 feature {NONE} -- Implementation
 
-	l_ev_vertical_box_1, l_ev_vertical_box_2, l_ev_vertical_box_3: EV_VERTICAL_BOX
-	l_ev_horizontal_box_1,
-	l_ev_horizontal_box_2, l_ev_horizontal_box_3, l_ev_horizontal_box_4, l_ev_horizontal_box_5,
-	l_ev_horizontal_box_6: EV_HORIZONTAL_BOX
-	l_ev_label_1, l_ev_label_2, l_ev_label_3, l_ev_label_4: EV_LABEL
-	l_ev_table_1,
-	l_ev_table_2: EV_TABLE
 	l_ev_cell_1, l_ev_cell_2: EV_CELL
+	l_ev_table_1, l_ev_table_2: EV_TABLE
+	l_ev_horizontal_box_1, l_ev_horizontal_box_2,
+	l_ev_horizontal_box_3, l_ev_horizontal_box_4, l_ev_horizontal_box_5, l_ev_horizontal_box_6: EV_HORIZONTAL_BOX
+	l_ev_vertical_box_1,
+	l_ev_vertical_box_2, l_ev_vertical_box_3: EV_VERTICAL_BOX
+	l_ev_label_1, l_ev_label_2, l_ev_label_3,
+	l_ev_label_4: EV_LABEL
 
 feature {NONE} -- Implementation
 

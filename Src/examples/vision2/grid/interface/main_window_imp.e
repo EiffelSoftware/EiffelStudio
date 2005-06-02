@@ -114,27 +114,28 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	file_exit_menu_item, full_collect_menu_item: EV_MENU_ITEM
 	view_tools_menu_item, profiling_on_menu_item: EV_CHECK_MENU_ITEM
 	column_tab: COLUMN_TAB
-	events_tab: EVENTS_TAB
+	grid_tab: GRID_TAB
+	file_menu, view_menu,
+	profile_menu: EV_MENU
+	grid_cell: EV_CELL
 	position_tab: POSITION_TAB
-	file_menu,
-	view_menu, profile_menu: EV_MENU
-	selection_tab: SELECTION_TAB
-	item_tab: ITEM_TAB
 	row_tab: ROW_TAB
 	tools_notebook: EV_NOTEBOOK
+	item_tab: ITEM_TAB
+	events_tab: EVENTS_TAB
+	file_exit_menu_item,
+	full_collect_menu_item: EV_MENU_ITEM
+	selection_tab: SELECTION_TAB
 	status_bar_frame: EV_FRAME
-	grid_cell: EV_CELL
-	grid_tab: GRID_TAB
 
 feature {NONE} -- Implementation
 
-	l_ev_menu_bar_1: EV_MENU_BAR
-	l_ev_vertical_box_1: EV_VERTICAL_BOX
-	l_ev_horizontal_box_1: EV_HORIZONTAL_BOX
 	l_ev_menu_separator_1: EV_MENU_SEPARATOR
+	l_ev_horizontal_box_1: EV_HORIZONTAL_BOX
+	l_ev_vertical_box_1: EV_VERTICAL_BOX
+	l_ev_menu_bar_1: EV_MENU_BAR
 
 feature {NONE} -- Implementation
 

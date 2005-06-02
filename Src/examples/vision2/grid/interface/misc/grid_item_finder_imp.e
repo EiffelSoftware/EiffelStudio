@@ -59,9 +59,9 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
+	pixmap_parent: EV_CELL
 	cursor_pixmap: EV_PIXMAP
 	prompt_label: EV_LABEL
-	pixmap_parent: EV_CELL
 
 feature {NONE} -- Implementation
 

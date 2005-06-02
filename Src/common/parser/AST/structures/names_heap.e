@@ -303,6 +303,10 @@ feature {NONE} -- Implementation: access
 			put ("as_lower") check found_item = as_lower_name_id end
 			put ("as_upper") check found_item = as_upper_name_id end
 			put ("is_space") check found_item = is_space_name_id end
+			put ("copy_data") check found_item = copy_data_name_id end
+			put ("move_data") check found_item = move_data_name_id end
+			put ("overlapping_move") check found_item = overlapping_move_name_id end
+			put ("non_overlapping_move") check found_item = non_overlapping_move_name_id end
 		end
 		
 invariant

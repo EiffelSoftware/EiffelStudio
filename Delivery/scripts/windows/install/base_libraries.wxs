@@ -666,6 +666,9 @@
 							</Component>
 						</Directory>
 						<Directory Id="serialization" Name="SERIAL~1" LongName="serialization">
+							<Component Id="serialization" Guid="6616CDA1-CFD1-4f57-BE26-8BE0ABB443D1">
+								<File Id="sed_storable_facilities_e" Name="SED_ST~1.E" LongName="sed_storable_facilities.e" />
+							</Component>
 							<Directory Id="model" Name="model">
 								<Component Id="model" Guid="5FC416B5-F817-4d0f-BB9E-01CF4D5A3D8B">
 									<File Id="sed_meta_model_e" Name="SED_ME~1.E" LongName="sed_meta_model.e" />
@@ -683,6 +686,8 @@
 								<Component Id="serializers" Guid="467EC2D4-FBDD-4375-9581-9A70585A017D">
 									<File Id="sed_basic_deserializer_e" Name="SED_BA~1.E" LongName="sed_basic_deserializer.e" />
 									<File Id="sed_basic_serializer_e" Name="SED_BA~2.E" LongName="sed_basic_serializer.e" />
+									<File Id="sed_independent_deserializer_e" Name="SED_IN~1.E" LongName="sed_independent_deserializer.e" />
+									<File Id="sed_independent_serializer_e" Name="SED_IN~2.E" LongName="sed_independent_serializer.e" />
 									<File Id="sed_session_deserializer_e" Name="SED_SE~1.E" LongName="sed_session_deserializer.e" />
 									<File Id="sed_session_serializer_e" Name="SED_SE~2.E" LongName="sed_session_serializer.e" />
 									<File Id="sed_utilities_e" Name="SED_UT~1.E" LongName="sed_utilities.e" />
@@ -704,19 +709,20 @@
 						</Directory>
 						<Directory Id="support" Name="support">
 							<Component Id="support" Guid="D553A2F4-74F7-402B-B6A4-EED3A99779C0">
-								<File Id="random.e" Name="random.e" KeyPath="yes" />
-								<File Id="countable_sequence.e" Name="COUNTA~2.E" LongName="countable_sequence.e" />
-								<File Id="fibonacci.e" Name="FIBONA~1.E" LongName="fibonacci.e" />
-								<File Id="format_integer.e" Name="FORMAT~2.E" LongName="format_integer.e" />
-								<File Id="memory_stream.e" Name="MEMORY~1.E" LongName="memory_stream.e" />
-								<File Id="debug_output.e" Name="DEBUG_~1.E" LongName="debug_output.e" />
 								<File Id="ascii.e" Name="ascii.e" />
-								<File Id="primes.e" Name="primes.e" />
-								<File Id="math_const.e" Name="MATH_C~1.E" LongName="math_const.e" />
-								<File Id="format_double.e" Name="FORMAT~1.E" LongName="format_double.e" />
-								<File Id="memory_structure.e" Name="MEMORY~3.E" LongName="memory_structure.e" />
 								<File Id="c_string.e" Name="c_string.e" />
+								<File Id="countable_sequence.e" Name="COUNTA~2.E" LongName="countable_sequence.e" />
+								<File Id="debug_output.e" Name="DEBUG_~1.E" LongName="debug_output.e" />
+								<File Id="fibonacci.e" Name="FIBONA~1.E" LongName="fibonacci.e" />
+								<File Id="format_double.e" Name="FORMAT~1.E" LongName="format_double.e" />
+								<File Id="format_integer.e" Name="FORMAT~2.E" LongName="format_integer.e" />
+								<File Id="internal_helper_e" Name="INTERN~1.E" LongName="internal_helper.e" />
+								<File Id="math_const.e" Name="MATH_C~1.E" LongName="math_const.e" />
+								<File Id="memory_stream.e" Name="MEMORY~1.E" LongName="memory_stream.e" />
+								<File Id="memory_structure.e" Name="MEMORY~3.E" LongName="memory_structure.e" />
 								<File Id="mismatch_corrector.e" Name="MISMAT~2.E" LongName="mismatch_corrector.e" />
+								<File Id="primes.e" Name="primes.e" />
+								<File Id="random.e" Name="random.e" />
 							</Component>
 							<Directory Id="classic" Name="classic">
 								<Component Id="classic" Guid="F1698B0E-6DE9-4F73-B1B1-9A025B540686">
@@ -737,6 +743,7 @@
 						</Directory>
 						<Directory Id="kernel" Name="kernel">
 							<Component Id="kernel" Guid="2FEF5439-326D-499C-9E2C-44EA40A4F414">
+								<File Id="abstract_special_e" Name="ABSTRA~1.E" LongName="abstract_special.e" />
 								<File Id="comparable.e" Name="COMPAR~1.E" LongName="comparable.e" />
 								<File Id="excep_const.e" Name="EXCEP_~1.E" LongName="excep_const.e" />
 								<File Id="hashable.e" Name="hashable.e" />

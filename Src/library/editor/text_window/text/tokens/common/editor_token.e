@@ -223,7 +223,12 @@ feature {EB_TOKEN_TOOLKIT, SMART_TEXT} -- implementation of clickable and editab
 	is_text: BOOLEAN is
 			-- is this a text token ?
 		do
-		end 
+		end
+		
+	is_blank: BOOLEAN is
+			-- is this a blank token?
+		do
+		end
 
 	pos_in_text: INTEGER is
 			-- position of the token in the text in characters

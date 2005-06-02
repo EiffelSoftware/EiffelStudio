@@ -300,6 +300,9 @@ feature {NONE} -- Implementation: access
 			put ("infix %"and then%"") check found_item = infix_and_then_name_id end
 			put ("infix %"or else%"") check found_item = infix_or_else_name_id end
 			put ("infix %"implies%"") check found_item = infix_implies_name_id end
+			put ("as_lower") check found_item = as_lower_name_id end
+			put ("as_upper") check found_item = as_upper_name_id end
+			put ("is_space") check found_item = is_space_name_id end
 		end
 		
 invariant

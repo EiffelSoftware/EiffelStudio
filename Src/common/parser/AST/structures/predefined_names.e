@@ -143,6 +143,9 @@ feature -- Constants
 	infix_and_then_name_id: INTEGER is 133
 	infix_or_else_name_id: INTEGER is 134
 	infix_implies_name_id: INTEGER is 135
+	as_lower_name_id: INTEGER is 136
+	as_upper_name_id: INTEGER is 137
+	is_space_name_id: INTEGER is 138
 			-- Predefined name IDs constants
 
 feature -- Classification

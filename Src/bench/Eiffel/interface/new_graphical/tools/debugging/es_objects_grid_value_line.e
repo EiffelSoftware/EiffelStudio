@@ -114,10 +114,8 @@ feature -- Graphical changes
 	compute_grid_display is
 		local
 			dv: ABSTRACT_DEBUG_VALUE
---			ost: OBJECT_STONE
 			dmdv: DUMMY_MESSAGE_DEBUG_VALUE
 		do
---jfiat_tools.out_string (Current, "compute_grid_display row=" + row.index.out)
 			if row /= Void and not compute_grid_display_done then
 				compute_grid_display_done := True
 				dv := object

@@ -169,7 +169,7 @@
 			</link> are synchronized.
 		</note>
 		<heading>
-			<size>2</size>Advanced property manipulation
+			<size>2</size>Using Constants
 		</heading>
 		<paragraph>All fields that may use constants have a button marked with the constants symbol <image>
 				<url>/images/eiffelbuild/icons/icon_format_onces_color.png</url>
@@ -209,6 +209,7 @@
 				</link>
 			</item>
 		</list>
+		<paragraph>For all "top level" objects (those contained within the <link><url>../64_widget_selector/index.xml</url><label>widget selector</label></link> which are to be generated as individual  classes), a check button marked "Generate as client" is available towards the top of the Object Editor. If this is checked, the generated class uses the widget type of the object as a client, otherwise it inherits directly from the widget's class.</paragraph>
 		<anchor>events</anchor>
 		<heading>
 			<size>2</size>Event connection

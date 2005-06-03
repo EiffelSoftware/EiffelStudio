@@ -34,6 +34,13 @@ inherit
 		    is_equal
 		end
 
+	EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
+		undefine
+			copy,
+			is_equal,
+			out
+		end
+
 create
 	make_with_name,
 	make_with_name_and_feature,
@@ -99,34 +106,11 @@ feature -- Access
 			-- Associated icon based on data
 		require
 			has_data: has_data
-		local
-			shared_pixmaps: EB_SHARED_PIXMAPS
-			class_c: CLASS_C
 		do
-			create shared_pixmaps
 			if e_feature /= Void then
-				if e_feature.is_attribute then
-					Result := shared_pixmaps.icon_format_attributes
-				elseif e_feature.is_constant or e_feature.is_once then
-					Result := shared_pixmaps.icon_format_onces
-				elseif e_feature.is_deferred then
-					Result := shared_pixmaps.icon_format_deferreds
-				elseif e_feature.is_external then
-					Result := shared_pixmaps.icon_format_externals
-				elseif e_feature.is_function or e_feature.is_procedure then
-					Result := shared_pixmaps.icon_format_routines
-				end
+				Result := pixmap_from_e_feature (e_feature)
 			elseif e_class /= Void then
-				if e_class.is_compiled then
-					class_c := e_class.compiled_class
-					if class_c.is_deferred then
-						Result := shared_pixmaps.icon_deferred_class_symbol_color					
-					else
-						Result := shared_pixmaps.icon_class_symbol_color
-					end
-				else
-					Result := shared_pixmaps.icon_class_symbol_gray
-				end
+				Result := pixmap_from_class_i (e_class)
 			end
 		end		
 

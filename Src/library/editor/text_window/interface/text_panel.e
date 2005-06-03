@@ -422,7 +422,7 @@ feature -- Basic Operations
   	   			-- Check the document type of the file to load.
   	   		l_doc_type := a_filename.substring (a_filename.last_index_of ('.', a_filename.count) + 1, a_filename.count)
   	   		if l_doc_type /= Void and then known_document_type (l_doc_type) then
-				set_current_document_class (registered_document_types.item (l_doc_type))
+				set_current_document_class (get_class_from_type (l_doc_type))
 			else
 			    set_current_document_class (default_document_class)
   	   		end
@@ -546,7 +546,7 @@ feature {MARGIN_WIDGET} -- Private properties of the text window
 	show_vertical_scrollbar: BOOLEAN is
 			-- Is it necessary to show the vertical scroll bar ?
 		do
-			Result := text_displayed /= Void and then (number_of_lines_displayed < text_displayed.number_of_lines)
+			Result := text_displayed /= Void and then ((number_of_lines_displayed < text_displayed.number_of_lines) or first_line_displayed > 1)
 		end
 
 	horizontal_scrollbar_needs_updating: BOOLEAN
@@ -647,7 +647,7 @@ feature {NONE} -- Scroll bars Management
 				vertical_scrollbar.value_range.resize_exactly (1, maximum_top_line_index)
 				if first_line_displayed > maximum_top_line_index then
 					vertical_scrollbar.set_value (maximum_top_line_index)
-				else					
+				else
 					vertical_scrollbar.set_value (first_line_displayed)
 				end
 				vertical_scrollbar.set_leap (number_of_lines_displayed.max (1))
@@ -865,6 +865,7 @@ feature {NONE} -- Display functions
 				end
 				update_vertical_scrollbar
 				update_horizontal_scrollbar
+				update_scrollbars_display
 			end
 		end
 
@@ -919,8 +920,8 @@ feature {NONE} -- Display functions
 			-- Draw the lines `first' to `'last' between `start_pos' and `end_pos'.
 		require
 			lines_valid: first <= last
-			first_line_valid: first >= 1
-			last_line_valie: last >= 1
+			first_line_valid: first >= 1 and first <= number_of_lines
+			last_line_valid: last >= 1
 			on_paint: on_paint
 		local
  			curr_line,
@@ -1082,13 +1083,25 @@ feature {NONE} -- Display functions
 			-- Redraw immediately if `flush' is set.
 		local
 			y_pos: INTEGER
+			l_line_height: INTEGER
 		do
-			y_pos := (line_number - first_line_displayed )* line_height
+			l_line_height :=line_height
+			y_pos := (line_number - first_line_displayed )* l_line_height
+
+			editor_drawing_area.redraw_rectangle (0, editor_viewport.y_offset + y_pos, buffered_line.width, l_line_height)
 			if draw_immediately then
-				editor_drawing_area.expose_actions.call ([0, editor_viewport.y_offset + y_pos, buffered_line.width, line_height])
-			else
-				editor_drawing_area.redraw_rectangle (0, editor_viewport.y_offset + y_pos, buffered_line.width, line_height)
+				editor_drawing_area.flush
 			end
+
+			-- The code below uses a direct call to the expose actions.  It was done because something on GTK was broken without it,
+			-- but I cannot remember what that was.  So if GTK has issues using this instead of the code above will fix it, but a better
+			-- solution is going to be needed because the code below is a hack.
+
+			--			if draw_immediately then
+			--				editor_drawing_area.expose_actions.call ([0, editor_viewport.y_offset + y_pos, buffered_line.width, line_height])
+			--			else
+			--				editor_drawing_area.redraw_rectangle (0, editor_viewport.y_offset + y_pos, buffered_line.width, line_height)
+			--			end
 		end
 
 feature {NONE} -- Text loading

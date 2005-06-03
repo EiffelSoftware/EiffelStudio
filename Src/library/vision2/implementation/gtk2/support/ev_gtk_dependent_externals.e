@@ -8,6 +8,13 @@ class
 
 feature -- Externals
 
+	frozen gtk_widget_is_focus (a_widget: POINTER): BOOLEAN is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"gtk_widget_is_focus ((GtkWidget*) $a_widget)"
+		end
+
 	frozen gtk_icon_size_dialog_enum: INTEGER is
 		external
 			"C inline use <gtk/gtk.h>"

@@ -1,8 +1,9 @@
 indexing
-	description: 
-		"Eiffel Vision dynamic list. Mswindows implementation."
-	note:
-		"G_IMP denotes the storage type of ev_children."
+	description: "[
+		Eiffel Vision dynamic list. Mswindows implementation.
+
+		Note: G_IMP denotes the storage type of ev_children.
+		]"
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"

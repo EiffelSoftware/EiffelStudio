@@ -40,7 +40,6 @@ feature {NONE} -- Initialization
 				create tabulation_symbol.make (editor_preferences.tabulation_spaces)
 				tabulation_symbol.fill_character (' ')
 			end
---			create cursor_move_agents.make (5)
 		end
 
 feature -- Access
@@ -248,93 +247,6 @@ feature -- Basic Operations
 			ignore_cursor_moves := False
 		end
 
-	remove_auto_indentation is
-			-- Remove editor auto indentations where appropriate
-		local
-			line_image: STRING
-			ln: like current_line	
-		do
-			on_text_edited (True)
-			lexer.set_tab_size (editor_preferences.tabulation_spaces)
-			from
-				ln := first_line
-			until
-				ln = last_line
-			loop
-				if ln.auto_indented then
-	
-						-- Retrieve the string representation of the line
-					line_image := ln.image				
-			
-					line_image.prune_all ('%T')
-					if line_image.is_empty then
-							-- An empty line means no user added characters so it is safe to delete the indentated tabs.
-						record_modified_line (ln)
-					
-							-- Rebuild line from the lexer.
-						lexer.set_in_verbatim_string (ln.part_of_verbatim_string)
-						if line_image.is_empty then
-							ln.make_empty_line					
-						else					
-							lexer.execute (line_image)
-							ln.rebuild_from_lexer (lexer, ln.part_of_verbatim_string)	
-						end
-					
-							-- reset pos_in_file values of tokens if possible
-						restore_tokens_properties_one_line (ln)	
-					end
-				end
-				ln := ln.next				
-			end
-		end		
-
-	remove_trailing_white_space is
-			-- Remove all trailing white space from current line
-		local
-			line_image: STRING
-			cnt: INTEGER
-			line_modified: BOOLEAN
-			char: CHARACTER			
-			ln: like current_line
-		do
-			ln := cursor.line
-			line_image := ln.image
-			
-				-- Retrieve the string representation of the line
-			if not line_image.is_empty then
---				on_text_edited (True)
-				lexer.set_tab_size (editor_preferences.tabulation_spaces)				
-
-				from
-					cnt := line_image.count
-					char := line_image.item (cnt)
-				until
-					not is_blank (char) or cnt = 0
-				loop						
-					line_image.remove (cnt)					
-					line_modified := True					
-					cnt := cnt - 1
-					if cnt > 0 then						
-						char := line_image.item (cnt)	
-					end
-				end
-				
-				if line_modified then
-						-- Trailing character were removed so rebuild line from lexer and let editor known of changes	
-					on_text_edited (True)
-					record_modified_line (ln)
-					lexer.set_in_verbatim_string (ln.part_of_verbatim_string)
-					if line_image.is_empty then
-						ln.make_empty_line					
-					else
-						lexer.execute (line_image)	
-						ln.rebuild_from_lexer (lexer, ln.part_of_verbatim_string)						
-					end
-					restore_tokens_properties_one_line (ln)	
-				end
-			end
-		end
-
 	insert_char (c: CHARACTER) is
 			-- Insert `c' at the cursor position.
 			-- Delete selection if any.
@@ -387,13 +299,6 @@ feature -- Basic Operations
 			end
 			ignore_cursor_moves := True
 			if use_smart_indentation then
-				if
-					is_blank (cursor.item) and then
-					cursor.token.position > first_non_blank_token (cursor.line).position
-				then
-					remove_white_spaces
-					history.bind_current_item_to_next
-				end
 				indent := cursor.line.indentation
 				if cursor.x_in_characters <= indent.count then
 					indent.keep_head (cursor.x_in_characters - 1)
@@ -868,7 +773,7 @@ feature {UNDO_CMD} -- Operations on selected text
 					s.append (t.image.substring (end_selection.pos_in_token, t.image.count))
 					t := t.next
 				until
-					t = ln.eol_token or t = Void
+					t = ln.eol_token
 				loop
 					s.append (t.image)
 					t := t.next
@@ -1485,6 +1390,10 @@ insert_eol_at_cursor_pos is
 		cursor.update_current_char
 		ln := cursor.line
 		tok := cursor.token
+
+		if ln.part_of_verbatim_string then
+			lexer.set_in_verbatim_string (True)
+		end
 
 		record_first_modified_line (ln, tok)
 		record_last_modified_line (ln, tok)

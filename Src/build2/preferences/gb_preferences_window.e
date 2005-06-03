@@ -7,7 +7,7 @@ class
 	GB_PREFERENCES_WINDOW
 
 inherit
-	PREFERENCES_TREE_WINDOW
+	PREFERENCES_GRID_WINDOW
 		rename
 			preferences as view_preferences
 		redefine
@@ -38,7 +38,7 @@ feature -- Access
 		do						
 			set_root_icon (icon_preference_root)
 			set_folder_icon (icon_preference_folder)
-			Precursor {PREFERENCES_TREE_WINDOW} (a_preferences, a_parent_window)
+			Precursor {PREFERENCES_GRID_WINDOW} (a_preferences, a_parent_window)
 			set_icon_pixmap (icon_preference_root)			
 			close_request_actions.extend (agent on_close)			
 		end

@@ -72,6 +72,7 @@ feature -- Initialisation
 			end
 			real_first_token := t_begin
 			eol_token := t_eol
+			set_part_of_verbatim_string (lexer.in_verbatim_string)
 			update_token_information
 		end
 

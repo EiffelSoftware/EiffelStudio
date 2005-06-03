@@ -249,7 +249,7 @@ feature -- Basic operations
 							from
 								i := 1
 							until
-								i > row_offsets.count or found
+								i > grid_row_count or found
 							loop
 								if row_offsets @ i > invalid_y_start then
 									found := True
@@ -907,8 +907,12 @@ feature -- Basic operations
 								draw_item_border (current_column, current_row, grid_item, current_item_x_position, current_item_y_position, current_column_width, current_row_height)
 
 									-- Now call the post draw overlay actions on the grid, permitting overdraw as required.
-								if grid_item_exists and grid.post_draw_overlay_actions_internal /= Void then
-									grid.post_draw_overlay_actions_internal.call ([item_buffer_pixmap, grid_item.interface])
+								if grid.post_draw_overlay_actions_internal /= Void then
+									if grid_item_exists then
+										grid.post_draw_overlay_actions_internal.call ([item_buffer_pixmap, grid_item.interface, current_column_index, current_row_index])
+									else
+										grid.post_draw_overlay_actions_internal.call ([item_buffer_pixmap, Void, current_column_index, current_row_index])
+									end
 								end
 
 									-- Now blit the buffered drawing for the item to `drawable'.

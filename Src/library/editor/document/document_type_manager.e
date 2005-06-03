@@ -20,10 +20,30 @@ feature -- Query
 
 	known_document_type (a_type: STRING): BOOLEAN is
 	        -- Is `a_type' a known document type?
-	   	require
+	   	local
+	   		l_type: STRING
 	   	do
-			Result := registered_document_types.has (a_type)
+	   		l_type := a_type.twin
+	   		l_type.to_lower
+			Result := registered_document_types.has (l_type)
+			if not Result then
+				print ("unknown document type")
+			end
 	   	end		
+
+	get_class_from_type (a_type: STRING): DOCUMENT_CLASS is
+			-- Get the document class from the type
+		require
+			known_type: known_document_type (a_type)
+		local
+			l_type: STRING
+		do
+			l_type := a_type.twin
+			l_type.to_lower
+			Result := registered_document_types.item (l_type)
+		ensure
+			has_result: Result /= Void
+		end
 
 feature -- Status Setting
 
@@ -39,14 +59,7 @@ feature -- Access
 			-- Current document class
 		do
 			Result := current_class_cell.item
-		end
-
-	registered_document_types: HASH_TABLE [DOCUMENT_CLASS, STRING] is
-	        -- Hash of registered document class types and associated text scanners
-	  	once
-	  	    create Result.make (2)
-	  	    Result.compare_objects
-	  	end		
+		end	
 
 	default_document_class: DOCUMENT_CLASS is
 	        -- Default text class
@@ -57,6 +70,13 @@ feature -- Access
 		end
 
 feature {NONE} -- Implementation
+
+	registered_document_types: HASH_TABLE [DOCUMENT_CLASS, STRING] is
+	        -- Hash of registered document class types and associated text scanners
+	  	once
+	  	    create Result.make (2)
+	  	    Result.compare_objects
+	  	end	
 
 	current_class_cell: CELL [DOCUMENT_CLASS] is
 	        -- Cell containing active document class

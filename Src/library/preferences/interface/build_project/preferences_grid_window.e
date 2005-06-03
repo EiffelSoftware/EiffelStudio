@@ -40,8 +40,6 @@ feature {NONE} -- Initialization
 			preferences := a_preferences
 			parent_window := Current
 			root_node_text := "Preferences root"
-			create changed_resources.make (2)
-			changed_resources.compare_objects
 			set_size (640, 460)
 			fill_list
 			create grid
@@ -108,11 +106,8 @@ feature {NONE} -- Events
 			-- Set the resource value to the newly entered value in the edit item.
 		local
 			l_text_item: EV_GRID_EDITABLE_ITEM
-			l_combo_item: EV_GRID_COMBO_ITEM
-			l_label_item,
+			l_combo_item: EV_GRID_COMBO_ITEM			
 			l_default_item: EV_GRID_LABEL_ITEM
-			l_color_item: EV_GRID_DRAWABLE_ITEM
-			l_font_pref: FONT_PREFERENCE
 		do
 			l_text_item ?= a_item
 			if l_text_item /= Void then
@@ -120,12 +115,8 @@ feature {NONE} -- Events
 			else
 				l_combo_item ?= a_item
 				if l_combo_item /= Void then
+						-- TODO: waiting for fix in EV_GRIS_COMBO_ITEM to make sure this is not user editable.
 					a_pref.set_value_from_string (l_combo_item.text)
-				else
-					l_label_item ?= a_item
-					if l_label_item /= Void and then a_pref.generating_resource_type.is_equal ("FONT") then
-						
-					end
 				end
 			end
 
@@ -422,9 +413,7 @@ feature {NONE} -- Implementation
 			l_pref_name: STRING
 			grid_name_item,
 			grid_default_item,
-			grid_type_item: EV_GRID_LABEL_ITEM
-			grid_item: EV_GRID_ITEM
-			it: EV_GRID_ROW
+			grid_type_item: EV_GRID_LABEL_ITEM			
 			l_resource: PREFERENCE
 			curr_row: INTEGER
 		do
@@ -590,22 +579,6 @@ feature {NONE} -- Implementation
 		do
 			description_text.set_text ("")
 		end
-		
-	restore_changed_resources is
-			-- Restore the values of the resources which have been changed in this session.
-		local
-			l_resource: PREFERENCE
-		do
-			from 
-				changed_resources.start
-			until
-				changed_resources.after
-			loop
-				l_resource ?= changed_resources.item_for_iteration
-				l_resource.set_value_from_string (changed_resources.key_for_iteration)
-				changed_resources.forth
-			end	
-		end		
 	
 	short_resource_name (a_name: STRING): STRING is
 			-- The short, non-unique name of a resource
@@ -631,11 +604,6 @@ feature {NONE} -- Private attributes
 	root_node_text: STRING
 			-- Text for the top level node.
 
-	changed_resources: HASH_TABLE [PREFERENCE, STRING]
-			-- A hash table of resources that have been changed since this dialog was opened.
-			-- Table key is the resource's old string value.
-			-- Used to reset the values if the user wishes to cancel all of their prior changes	.
-
 	selected_resource_name: STRING
 			-- Name of resource selected in tree.  Used to programatically to update the right-side list.
 
@@ -659,7 +627,6 @@ feature {NONE} -- Private attributes
 
 invariant
 	has_preferences: preferences /= Void
-	has_changed_resources: changed_resources /= Void
 
 end -- class PREFERENCES_GRID_WINDOW
 

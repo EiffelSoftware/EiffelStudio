@@ -121,30 +121,28 @@ feature -- Status report
 			hwnd_not_null: hwnd /= default_pointer
 			is_window_pointer: is_window (hwnd)
 		local
-			l_data, null: POINTER
-			retried: BOOLEAN
+			l_data, null, window_process_id, current_process_id, l_pointer: POINTER
 		do
-			if not retried then
-				l_data := cwin_get_window_long (hwnd, gwlp_userdata)
-				if l_data /= null then
+			l_data := cwin_get_window_long (hwnd, gwlp_userdata)
+				-- All WEL windows have associated data, so if there is none, we know
+				-- it was not one of our windows.
+			if l_data /= null then
+					-- Retreive the process id associated with `hwnd' into `window_process_id'.
+				l_pointer := cwin_get_window_thread_process_id (hwnd, $window_process_id)
+					-- Retereive the process id of the current process.
+				current_process_id := cwin_get_current_process_id
+
+					-- If the process of the window is that of the current id then
+					-- we know it must be one of our windows.
+				if window_process_id = current_process_id then
 					Result := eif_id_object ({WEL_INTERNAL_DATA}.object_id (l_data))
 				end
-			else
-					-- We received an exception because looks like `l_data'
-					-- was not a memory area we allocated (e.g. an other instance
-					-- of a WEL_WINDOW from a different program, or a program
-					-- that uses GWL_USERDATA). In this case, we should return
-					-- Void.
-				Result := Void
 			end
 		ensure
-			is_wel_window: Result /= Void implies 
+			is_wel_window: Result /= Void implies
 				(create {INTERNAL}).type_conforms_to (
 					(create {INTERNAL}).dynamic_type (Result),
 					(create {INTERNAL}).dynamic_type_from_string ("WEL_WINDOW"))
-		rescue
-			retried := True
-			retry
 		end
 		
 	key_state (virtual_key: INTEGER): BOOLEAN is
@@ -378,6 +376,22 @@ feature {NONE} -- Externals
 			"C [macro %"wel.h%"] (HWND, CONST RECT *, HRGN, UINT)"
 		alias
 			"RedrawWindow"
+		end
+	
+	cwin_get_window_thread_process_id (hwnd: POINTER; a_pointer: TYPED_POINTER [POINTER]): POINTER is
+			--
+		external
+			"C [macro %"windows.h%"] (HWND, LPDWORD): LONG_PTR"
+		alias
+			"GetWindowThreadProcessId"
+		end
+
+	cwin_get_current_process_id: POINTER is
+			--
+		external
+			"C [macro %"windows.h%"] (): DWORD"
+		alias
+			"GetCurrentProcessId()"
 		end
 
 end -- class WEL_WINDOWS_ROUTINES

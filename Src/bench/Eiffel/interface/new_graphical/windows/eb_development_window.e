@@ -2042,10 +2042,7 @@ feature -- Resource Update
 				if editor_tool.text_area.current_text /= Void and then changed then
 					io.error.put_string ("%N Warning: Attempting to save a non editable format%N")
 				end
-			end
-			if changed then
-				editor_tool.text_area.strip_unwanted_indentation
-			end
+			end			
 			if editor_tool.text_area.open_backup then
 				create dial.make_with_text(Warning_messages.w_save_backup)
 				dial.set_buttons_and_actions(<<"Continue", "Cancel">>, <<agent continue_save, agent cancel_save>>)

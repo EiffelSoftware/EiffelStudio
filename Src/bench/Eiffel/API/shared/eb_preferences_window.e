@@ -53,8 +53,7 @@ feature -- Access
 	add_resource_change_item (l_resource: PREFERENCE; row_index: INTEGER) is
 			-- Add the correct resource change widget item at `row_index' of `grid'
 		local
-			l_id_font: IDENTIFIED_FONT_PREFERENCE
-			l_color_item: EV_GRID_DRAWABLE_ITEM
+			l_id_font: IDENTIFIED_FONT_PREFERENCE			
 			l_font_item: EV_GRID_LABEL_ITEM
 		do
 			l_id_font ?= l_resource

@@ -36,62 +36,188 @@ inherit
 		end
 
 create
-	make,
+	make_new_expression,
 	make_with_expression_text,
 	make_with_class,
 	make_with_object,
-	make_with_named_object, 
+	make_with_named_object,
+	make_as_named_object,
 	make_for_context,
 	make_with_expression
 
 feature {NONE} -- Initialization
+
+	make_new_expression is
+		do
+			make
+			set_expression_mode
+		end
+
+	make_with_expression_text (t: STRING) is
+			-- Initialize `Current' and set the expression string to `t'.
+		require
+			valid_string: t /= Void and not t.is_empty
+		do
+			make
+			expression_field.set_text (t)
+			expression_field.select_all
+			set_expression_mode
+		end
+
+	make_with_class (cl: CLASS_C) is
+			-- Initialize `Current' and force the creation of a class-related expression.
+		require
+			valid_class: cl /= Void and cl.is_valid
+		do
+			make
+			class_radio.enable_select
+			class_field.set_text (cl.name_in_upper)
+			set_expression_mode
+			disable_all
+		end
+		
+	stick_with_current_object: BOOLEAN
+			-- Do we stick to object mode ?
+			-- i.e: disable other context/class mode
+			-- and disable address editing
+
+	make_with_object (oa: STRING) is
+			-- Initialize `Current' and force the creation of an object-related expression.
+			-- `oa' is the address of the object.
+		require
+			application_stopped: Application.is_running and Application.is_stopped
+			valid_address: oa /= Void and then Application.is_valid_object_address (oa)
+		do
+			stick_with_current_object := True			
+			make
+			on_object_radio.enable_select
+			address_field.set_text (oa)
+			set_expression_mode
+			disable_all_but_object_radios
+		end
+
+	make_as_named_object (oa: STRING; on: STRING) is
+			-- Initialize `Current' and force the creation of an object-related expression.
+			-- `oa' is the address of the object.
+			-- `on' is a name for this object
+		require
+			application_stopped: Application.is_running and Application.is_stopped
+			valid_address: oa /= Void and then Application.is_valid_object_address (oa)
+			valid_object_name: on /= Void and then not on.is_empty
+		do
+			stick_with_current_object := True
+			make
+			as_object_radio.enable_select
+			address_field.set_text (oa)
+			object_name_field.set_text (on)
+			set_object_name_mode
+			disable_all_but_object_radios
+		end
+
+	make_with_named_object (oa: STRING; on: STRING) is
+			-- Initialize `Current' and force the creation of an object-related expression.
+			-- `oa' is the address of the object.
+			-- `on' is a name for this object
+		require
+			application_stopped: Application.is_running and Application.is_stopped
+			valid_address: oa /= Void and then Application.is_valid_object_address (oa)
+			valid_object_name: on /= Void and then not on.is_empty
+		do
+			stick_with_current_object := True
+			make
+			on_object_radio.enable_select
+			address_field.set_text (oa)
+			object_name_field.set_text (on)
+			set_expression_mode
+			disable_all_but_object_radios
+		end
+
+	make_for_context is
+			-- Initialize `Current' and force the creation of a context-related expression.
+		do
+			make
+			context_radio.enable_select
+			set_expression_mode
+			disable_all
+		end
+
+	make_with_expression (expr: EB_EXPRESSION) is
+			-- Initialize `Current' based on `expr'.
+		require
+			valid_expression: expr /= Void
+		do
+			if expr.on_class then
+				make_with_class (expr.context_class)
+			elseif expr.as_object then
+				make_as_named_object (expr.context_address, expr.name)
+			elseif expr.on_object then
+				make_with_object (expr.context_address)
+			else
+				make_for_context
+			end
+			if expr.expression /= Void then
+				expression_field.set_text (expr.expression)
+			end
+			if expr.name /= Void then
+				object_name_field.set_text (expr.name)
+			end
+			modified_expression := expr
+		end
+
+feature {NONE} -- Graphical initialization and changes
 
 	make is
 			-- Initialize `Current'.
 		local
 			cnt: EV_VERTICAL_BOX
 			vb: EV_VERTICAL_BOX
-			hb: EV_HORIZONTAL_BOX
+			object_box_hb, hb: EV_HORIZONTAL_BOX
 			f: EV_FRAME
 			cn_l: EV_LABEL
 			oa_l: EV_LABEL
 			sz: INTEGER
 			cb: EV_BUTTON
 		do
-				--| Temp attribute
-			object_name := Void
-
 				--| Create and set up the dialog.
 			create dialog
 			dialog.set_title (Interface_names.t_New_expression)
 
 				--| Create and set up the radio buttons.
 			create class_radio.make_with_text (Interface_names.t_Class)
-			class_radio.select_actions.extend (agent on_class_radio_selected)
-			create object_radio.make_with_text (Interface_names.l_Object)
-			object_radio.select_actions.extend (agent on_object_radio_selected)
+			class_radio.select_actions.extend (agent event_class_radio_selected)
+
+			create on_object_radio.make_with_text (Interface_names.l_On_object)
+			on_object_radio.select_actions.extend (agent event_on_object_radio_selected)
+
+			create as_object_radio.make_with_text (Interface_names.l_As_object)
+			as_object_radio.select_actions.extend (agent event_as_object_radio_selected)
+
 			create context_radio.make_with_text (Interface_names.l_Current_context)
-			context_radio.select_actions.extend (agent on_context_radio_selected)
+			context_radio.select_actions.extend (agent event_context_radio_selected)
 			
 				--| Create and set up the text fields.
 			create class_field
 			create address_field
 			create expression_field
+			create object_name_field
+
 			class_field.disable_sensitive
 			address_field.disable_sensitive
+			object_name_field.change_actions.extend (agent on_object_name_changed)
 			expression_field.change_actions.extend (agent on_expression_changed)
 			if
 				not application.is_running or
 				not Application.is_stopped
 			then
-				object_radio.disable_sensitive
+				on_object_radio.disable_sensitive
+				as_object_radio.disable_sensitive
 				address_field.disable_sensitive
 			end
-			
+
 				--| Create the labels.
 			create cn_l.make_with_text (Interface_names.l_Class_name)
 			create oa_l.make_with_text (Interface_names.l_Address)
-			
+
 				--| Create and set up the buttons.
 			create ok_button.make_with_text (Interface_names.b_Ok)
 			ok_button.select_actions.extend (agent on_ok_pressed)
@@ -99,7 +225,7 @@ feature {NONE} -- Initialization
 			cb.select_actions.extend (agent destroy)
 			Layout_constants.set_default_size_for_button (ok_button)
 			Layout_constants.set_default_size_for_button (cb)
-			
+
 				--| Compute the size of the labels.
 			sz := cn_l.minimum_width.max (oa_l.minimum_width)
 			cn_l.set_minimum_width (sz)
@@ -123,7 +249,10 @@ feature {NONE} -- Initialization
 
 				--| object address context
 			create object_box
-			object_box.extend (object_radio)
+			create object_box_hb
+			object_box_hb.extend (on_object_radio)
+			object_box_hb.extend (as_object_radio)
+			object_box.extend (object_box_hb)
 			create hb
 			hb.extend (oa_l)
 			hb.disable_item_expand (oa_l)
@@ -144,19 +273,30 @@ feature {NONE} -- Initialization
 
 			vb.merge_radio_button_groups (context_box)
 			vb.merge_radio_button_groups (object_box)
+			vb.merge_radio_button_groups (object_box_hb)
 			vb.merge_radio_button_groups (class_box)
 
 				--| ...
 			f.extend (vb)
 			cnt.extend (f)
 
-				--| 2) Expression frame.
-			create f.make_with_text (Interface_names.l_Expression)
+				--| 2 : expression_or_name_cell
+			create expression_or_name_cell
+			cnt.extend (expression_or_name_cell)
+
+				--| 2,1) Expression frame.
+			create expression_frame.make_with_text (Interface_names.l_Expression)
 			create vb
 			vb.set_border_width (Layout_constants.small_border_size)
 			vb.extend (expression_field)
-			f.extend (vb)
-			cnt.extend (f)
+			expression_frame.extend (vb)
+
+				--| 2,2) Object name frame.
+			create object_name_frame.make_with_text ("Name") --Interface_names.l_Expression)
+			create vb
+			vb.set_border_width (Layout_constants.small_border_size)
+			vb.extend (object_name_field)
+			object_name_frame.extend (vb)
 
 				--| 3) Buttons.
 			create hb
@@ -180,79 +320,23 @@ feature {NONE} -- Initialization
 			dialog.show_actions.extend (agent on_shown)
 			focused_widget := expression_field
 		end
-		
-	make_with_expression_text (t: STRING) is
-			-- Initialize `Current' and set the expression string to `t'.
-		require
-			valid_string: t /= Void and not t.is_empty
-		do
-			make
-			expression_field.set_text (t)
-			expression_field.select_all
-		end		
 
-	make_with_class (cl: CLASS_C) is
-			-- Initialize `Current' and force the creation of a class-related expression.
+	set_expression_mode is
 		require
-			valid_class: cl /= Void and cl.is_valid
+			expression_frame /= Void
 		do
-			make
-			class_radio.enable_select
-			class_field.set_text (cl.name_in_upper)
-			disable_all
-		end
-
-	make_with_object (oa: STRING) is
-			-- Initialize `Current' and force the creation of an object-related expression.
-			-- `oa' is the address of the object.
-		require
-			application_stopped: Application.is_running and Application.is_stopped
-			valid_address: oa /= Void and then Application.is_valid_object_address (oa)
-		do
-			make
-			object_radio.enable_select
-			address_field.set_text (oa)
-			disable_all
-		end
-		
-	object_name: STRING
-			-- Potential name for Current expression, in context_address case.
-
-	make_with_named_object (oa: STRING; on: STRING) is
-			-- Initialize `Current' and force the creation of an object-related expression.
-			-- `oa' is the address of the object.	
-			-- `on' is a name for this object
-		require
-			application_stopped: Application.is_running and Application.is_stopped
-			valid_address: oa /= Void and then Application.is_valid_object_address (oa)
-			valid_name: on /= Void and then not on.is_empty
-		do
-			make_with_object (oa)
-			object_name := on
-		end
-
-	make_for_context is
-			-- Initialize `Current' and force the creation of a context-related expression.
-		do
-			make
-			context_radio.enable_select
-			disable_all
-		end
-
-	make_with_expression (expr: EB_EXPRESSION) is
-			-- Initialize `Current' based on `expr'.
-		require
-			valid_expression: expr /= Void
-		do
-			if expr.on_class then
-				make_with_class (expr.context_class)
-			elseif expr.on_object then
-				make_with_object (expr.context_address)
-			else
-				make_for_context
+			if expression_or_name_cell /= Void then
+				expression_or_name_cell.replace (expression_frame)
 			end
-			expression_field.set_text (expr.expression)
-			modified_expression := expr
+		end
+
+	set_object_name_mode is
+		require
+			object_name_frame /= Void
+		do
+			if expression_or_name_cell /= Void then
+				expression_or_name_cell.replace (object_name_frame)
+			end
 		end
 
 feature -- Access
@@ -309,9 +393,10 @@ feature -- Status setting
 
 feature {NONE} -- Event handling
 
-	on_class_radio_selected is
+	event_class_radio_selected is
 			-- User selected to create an expression based on a class.
 		do
+			set_expression_mode
 			class_field.enable_sensitive
 			if class_field.is_displayed then
 				class_field.set_focus
@@ -319,25 +404,59 @@ feature {NONE} -- Event handling
 			address_field.disable_sensitive
 		end
 
-	on_object_radio_selected is
+	event_on_object_radio_selected is
 			-- User selected to create an expression based on a class.
 		do
-			address_field.enable_sensitive
-			if address_field.is_displayed then
-				address_field.set_focus
-			end
+			set_expression_mode
 			class_field.disable_sensitive
+			expression_field.enable_sensitive
+			if stick_with_current_object then
+				expression_field.set_focus
+			else
+				address_field.enable_sensitive
+				if address_field.is_displayed then
+					address_field.set_focus
+				end
+			end
 		end
 
-	on_context_radio_selected is
+	event_as_object_radio_selected is
 			-- User selected to create an expression based on a class.
 		do
+			set_object_name_mode
+			class_field.disable_sensitive
+			expression_field.disable_sensitive
+			if stick_with_current_object then
+				object_name_field.set_focus
+			else
+				address_field.enable_sensitive
+				if address_field.is_displayed then
+					address_field.set_focus
+				end
+			end
+		end
+
+	event_context_radio_selected is
+			-- User selected to create an expression based on a class.
+		do
+			set_expression_mode
 			address_field.disable_sensitive
 			class_field.disable_sensitive
+			expression_field.enable_sensitive
 			if expression_field.is_displayed then
 				expression_field.set_focus
 			end
 		end
+		
+	on_object_name_changed is
+			-- User changed the object name.
+		do
+			if object_name_field.text.is_empty then
+				ok_button.disable_sensitive
+			else
+				ok_button.enable_sensitive
+			end
+		end		
 
 	on_expression_changed is
 			-- User changed the expression.
@@ -393,7 +512,7 @@ feature {NONE} -- Event handling
 						create wd.make_with_text (Warning_messages.w_Cannot_find_class (t))
 						wd.show_modal_to_window (dialog)
 					end
-				elseif object_radio.is_selected then
+				elseif on_object_radio.is_selected or as_object_radio.is_selected then
 						-- We try to create an expression related to a class.
 					t := address_field.text.as_upper
 					if 
@@ -410,9 +529,11 @@ feature {NONE} -- Event handling
 						application.is_valid_object_address (t)
 					then
 						o := debugged_object_manager.debugged_object (t, 0, 1)
-						create new_expression.make_with_object (o, expression_field.text)
-						if object_name /= Void then
-							new_expression.set_name (object_name)
+						if as_object_radio.is_selected then
+							create new_expression.make_as_object (o.dtype , o.object_address)
+							new_expression.set_name (object_name_field.text)
+						else
+							create new_expression.make_with_object (o, expression_field.text)
 						end
 						if new_expression.syntax_error_occurred then
 							expression_field.set_focus
@@ -435,15 +556,26 @@ feature {NONE} -- Event handling
 					end
 				end
 			else
-				oe := modified_expression.expression
-				modified_expression.set_expression (expression_field.text)
-				if modified_expression.syntax_error_occurred then
-						-- Restore the previous expression, since the new one is broken.
-					modified_expression.set_expression (oe)
-					expression_field.set_focus
-					create wd.make_with_text (Warning_messages.w_Syntax_error_in_expression (expression_field.text))
-					wd.show_modal_to_window (dialog)
-					do_not_close_dialog := True
+				if as_object_radio.is_selected and modified_expression.on_object then
+						--| only the name may change
+					modified_expression.set_name (object_name_field.text)
+					modified_expression.enable_as_object
+				else
+					if on_object_radio.is_selected and modified_expression.as_object then
+							--| In case, we decide to evaluate on the object
+							--| instead of pointing the object
+						modified_expression.disable_as_object
+					end
+					oe := modified_expression.expression
+					modified_expression.set_expression (expression_field.text)
+					if modified_expression.syntax_error_occurred then
+							-- Restore the previous expression, since the new one is broken.
+						modified_expression.set_expression (oe)
+						expression_field.set_focus
+						create wd.make_with_text (Warning_messages.w_Syntax_error_in_expression (expression_field.text))
+						wd.show_modal_to_window (dialog)
+						do_not_close_dialog := True
+					end
 				end
 				new_expression := modified_expression
 			end
@@ -476,14 +608,25 @@ feature {NONE} -- Widgets
 	address_field: EV_TEXT_FIELD
 			-- Text field that contains the context object address.
 
+	expression_or_name_cell: EV_CELL
+			-- Cell containing either `expression_frame' or `object_name_frame'.
+
+	expression_frame, object_name_frame: EV_FRAME
+			-- Container for expression or object name zones.
+
 	context_box, object_box, class_box: EV_VERTICAL_BOX
 			-- Container for current feature/object address/class zones.
 
 	class_radio: EV_RADIO_BUTTON
 			-- Radio button that is selected when we are creating an expression based on a class.
 
-	object_radio: EV_RADIO_BUTTON
+	on_object_radio: EV_RADIO_BUTTON
 			-- Radio button that is selected when we are creating an expression based on an object.
+
+	as_object_radio: EV_RADIO_BUTTON
+			-- Radio button that is selected when we are creating an item as the object.
+
+	object_name_field: EV_TEXT_FIELD
 
 	context_radio: EV_RADIO_BUTTON
 			-- Radio button that is selected when we are creating an expression based on the current context.
@@ -500,10 +643,18 @@ feature {NONE} -- Implementation
 			-- Expression that is being edited, if any.
 
 	disable_all is
-			-- Disable the sensitivity of all context widgets.
+			-- Disable the sensitivity of all context widgets
+		do
+			disable_all_but_object_radios
+			on_object_radio.disable_sensitive
+			as_object_radio.disable_sensitive
+		end
+
+	disable_all_but_object_radios is
+			-- Disable the sensitivity of all context widgets
+			-- but as_object and on_object radio
 		do
 			class_radio.disable_sensitive
-			object_radio.disable_sensitive
 			context_radio.disable_sensitive
 			class_field.disable_sensitive
 			address_field.disable_sensitive

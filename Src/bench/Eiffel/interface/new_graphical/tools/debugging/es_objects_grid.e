@@ -128,10 +128,8 @@ feature {NONE} -- Actions implementation
 
 	compute_grid_item (c, r: INTEGER): EV_GRID_ITEM is
 		local
-			glab: EV_GRID_LABEL_ITEM
 			a_row: EV_GRID_ROW
 			obj_item: ES_OBJECTS_GRID_LINE
-			exp_item: EB_EXPRESSION
 			col: INTEGER
 		do
 			col := c
@@ -143,17 +141,10 @@ feature {NONE} -- Actions implementation
 				obj_item ?= a_row.data
 				if obj_item /= Void then
 					obj_item.compute_grid_display
-					if 0 < col and col <= a_row.count then
-						Result := a_row.item (col)
-					end
-				else
-					exp_item ?= a_row.data
-					if exp_item /= Void then
-						--FIXME
-					end
-				end
-				if Result = Void then
-					create glab.make_with_text ("?")
+-- We don't return the item, since they have already been added to the grid ...
+--					if 0 < col and col <= a_row.count then
+--						Result := a_row.item (col)
+--					end
 				end
 			end
 		end

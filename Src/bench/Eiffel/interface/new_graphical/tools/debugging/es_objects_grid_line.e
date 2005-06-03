@@ -252,11 +252,16 @@ feature -- Pick and Drop
 			object_stone_properties_computed
 		local
 			ost: OBJECT_STONE
+			ostn: STRING
 		do
 			object_stone_properties_computed := True
 			if object_address /= Void then
 					--| For now we don't support this for external type
-				create ost.make (object_address, object_name, object_dynamic_class)
+				ostn := object_name
+				if ostn = Void then
+					ostn := object_address
+				end
+				create ost.make (object_address, ostn, object_dynamic_class)
 				ost.set_associated_ev_item (row)
 				internal_object_stone_accept_cursor := ost.stone_cursor
 				internal_object_stone_deny_cursor := ost.X_stone_cursor
@@ -369,7 +374,7 @@ feature -- Graphical changes
 		do
 			title := v
 			if row /= Void then
-				set_name (title)
+				set_name ("%"" + title + "%"")
 			end
 		end
 
@@ -958,18 +963,27 @@ feature {NONE} -- Implementation
 		end
 
 	cell_text_updated (v: STRING; c: INTEGER): EV_GRID_LABEL_ITEM is
+		local
+			l_item: EV_GRID_ITEM
 		do
 			if c > 0 and c <= row.count then
-				Result ?= row.item (c)
+				l_item := row.item (c)
 			end
-			if Result = Void then
+			if l_item = Void then
 				create Result
-				row.set_item (c, Result)
+			else
+				Result ?= l_item
+			end
+			check
+				Result /= Void
 			end
 			if v /= Void then
 				grid_cell_set_text (Result, v)
 			else
 				grid_cell_set_text (Result, "")
+			end
+			if l_item = Void then
+				row.set_item (c, Result)
 			end
 		ensure
 			Result /= Void			

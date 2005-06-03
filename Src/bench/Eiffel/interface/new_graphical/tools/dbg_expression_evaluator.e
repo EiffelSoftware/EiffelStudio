@@ -23,6 +23,15 @@ inherit
 
 feature {NONE} -- Initialization
 
+	make_as_object (addr: like context_address) is
+		do
+			set_context_address (addr)
+			set_as_object  (True)
+			set_on_object  (True)
+			set_on_context (False)
+			set_on_class   (False)
+		end
+
 	make_with_expression (expr: like dbg_expression) is
 			-- Create Current from `expr'.
 		require
@@ -38,7 +47,13 @@ feature -- change
 		do
 			on_class := v
 		end
-		
+
+	set_as_object (v: like as_object) is
+			-- set value of `as_object' with `v'
+		do
+			as_object := v
+		end
+
 	set_on_object (v: like on_object) is
 			-- set value of `on_object' with `v'	
 		do
@@ -70,7 +85,10 @@ feature -- Properties
 
 	on_class: BOOLEAN
 			-- Is the expression relative to a class ?
-	
+
+	as_object: BOOLEAN
+			-- Is the expression pointing to the object ?
+
 	on_object: BOOLEAN
 			-- Is the expression relative to an object ?
 
@@ -210,7 +228,7 @@ feature -- Evaluation
 	evaluate is
 			-- Compute the value of the last message of `Current'.
 		require
-			dbg_expression_valid_syntax: not dbg_expression.syntax_error
+			dbg_expression_valid_syntax: as_object or else not dbg_expression.syntax_error
 			running_and_stopped: Application.is_running and Application.is_stopped
 		deferred
 		ensure
@@ -218,5 +236,6 @@ feature -- Evaluation
 									 ((final_result_static_type = Void) implies (error_occurred)) and
 									 ((final_result_type = Void) implies (error_occurred))
 		end
+		
 
 end -- class DBG_EXPRESSION_EVALUATOR

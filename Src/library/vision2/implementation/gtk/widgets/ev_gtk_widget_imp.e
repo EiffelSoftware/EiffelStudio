@@ -168,29 +168,20 @@ feature {EV_ANY_I} -- Implementation
 
 	pointer_style: EV_CURSOR
 			-- Cursor displayed when the pointer is over this widget.
-			-- Position retrieval
+			-- Position retrieval.
 
 	has_struct_flag (a_gtk_object: POINTER; a_flag: INTEGER): BOOLEAN is
-			-- Has this widget the flag `a_flag' in struct_flags?
-		do
-			Result := {EV_GTK_EXTERNALS}.gtk_object_struct_flags (a_gtk_object) & (a_flag) /= 0
-		end
-
-	gtk_widget_has_focus (a_c_object: POINTER): BOOLEAN is
-			-- Does `a_c_object' have the focus.
-		do
-			if a_c_object /= null then
-				Result := has_struct_flag (a_c_object, {EV_GTK_EXTERNALS}.gtk_has_focus_enum)
-				check
-					Result = (((({EV_GTK_EXTERNALS}.gtk_object_struct_flags (a_c_object) // {EV_GTK_EXTERNALS}.gtk_has_focus_enum) \\ 2)) = 1)
-				end
-			end
+			-- Has this widget the flag `a_flag' set in struct_flags?
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"((GtkObject*) $a_gtk_object)->flags & $a_flag"
 		end
 
 	has_focus: BOOLEAN is
 			-- Does widget have the keyboard focus?
 		do
-			Result := gtk_widget_has_focus (visual_widget)
+			Result := has_struct_flag (visual_widget, {EV_GTK_EXTERNALS}.gtk_has_focus_enum)
 		end
 
 	width: INTEGER is

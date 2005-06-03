@@ -179,8 +179,6 @@
 		 <keyword>end</keyword></code_block>
 				<paragraph>Where `pixmap_location' is the name of the Directory constant to which the pixmap is relative.</paragraph>
 			</item>
-			<item>
-			</item>
 		</list>
 		<heading>
 				<size>2</size>Font constant
@@ -197,7 +195,7 @@
 			Result.<feature_name>preferred_families</feature_name>.<feature_name>extend</feature_name> <symbol>(</symbol>"Times New Roman"<symbol>)</symbol>
 		<keyword>end</keyword></code_block>
 		<heading>
-				<size>2</size>Integer constant
+				<size>2</size>Color constant
 			</heading>
 			<paragraph>A Color constant represents an EV_COLOR. For example, in the generated constants file, for a color constant named `red', the following code is generated:</paragraph>
 <code_block><feature_name>red</feature_name><symbol>:</symbol> <class_name>EV_COLOR</class_name> <keyword>is</keyword>

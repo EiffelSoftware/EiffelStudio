@@ -14,6 +14,11 @@ inherit
 			set_data
 		end
 
+	EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
+		undefine
+			default_create, copy, is_equal
+		end
+
 create
 	make
 
@@ -55,10 +60,8 @@ feature -- Status setting
 			set_pebble (stone)
 			set_accept_cursor (Cursors.cur_Cluster)
 			set_deny_cursor (Cursors.cur_X_Cluster)
-			if actual.is_library or actual.is_precompiled then
-				set_pixmap (Pixmaps.Icon_read_only_cluster)
-			else
-				set_pixmap (Pixmaps.Icon_cluster_symbol @ 1)
+			set_pixmap (pixmap_from_cluster_i (actual))
+			if not (actual.is_library or actual.is_precompiled) then
 				drop_actions.set_veto_pebble_function (agent droppable)
 				drop_actions.extend (agent on_class_drop)
 --| FIXME XR: When clusters can be moved effectively, uncomment this line.

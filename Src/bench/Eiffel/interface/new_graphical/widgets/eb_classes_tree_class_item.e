@@ -14,6 +14,11 @@ inherit
 			set_data
 		end
 
+	EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
+		undefine
+			default_create, is_equal, copy
+		end
+
 create
 	make
 
@@ -65,30 +70,12 @@ feature -- Status setting
 --| FIXME XR: Tooltips do not work on tree items yet.
 --| Uncomment next line when they work.
 --			set_tooltip (name)
+			set_pixmap (pixmap_from_class_i (a_class))
 			if
-				a_class.cluster.is_library or else
+				not (a_class.cluster.is_library or else
 				a_class.cluster.is_precompiled or else
-				a_class.is_read_only
+				a_class.is_read_only)
 			then
-				if not a_class.compiled then
-					set_pixmap (Pixmaps.Icon_read_only_class_gray)
-				else
-					if a_class.compiled_class.is_deferred then
-						set_pixmap (Pixmaps.Icon_deferred_read_only_class_color)
-					else
-						set_pixmap (Pixmaps.Icon_read_only_class_color)
-					end
-				end
-			else
-				if not a_class.compiled then
-					set_pixmap (Pixmaps.Icon_class_symbol_gray)
-				else
-					if a_class.compiled_class.is_deferred then
-						set_pixmap (Pixmaps.Icon_deferred_class_symbol_color)
-					else
-						set_pixmap (Pixmaps.Icon_class_symbol_color)
-					end
-				end
 				drop_actions.extend (agent on_class_drop)
 --| FIXME XR: When clusters can be moved effectively, uncomment this line.
 --				drop_actions.extend (~on_cluster_drop)

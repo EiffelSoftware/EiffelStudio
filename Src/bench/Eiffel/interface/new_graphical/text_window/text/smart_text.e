@@ -658,6 +658,7 @@ feature {NONE}-- click information update
 							tfs.set_next_token (Void)
 							tok.previous.set_next_token (tfs)
 							tfs.set_previous_token (tok.previous)
+							tfs.update_position
 							if tok.next /= Void then
 								tfs.set_next_token (tok.next)
 								tok.next.set_previous_token (tfs)
@@ -688,6 +689,7 @@ feature {NONE}-- click information update
 							tfs.set_next_token (Void)
 							tok.previous.set_next_token (tfs)
 							tfs.set_previous_token (tok.previous)
+							tfs.update_position
 							if tok.next /= Void then
 								tfs.set_next_token (tok.next)
 								tok.next.set_previous_token (tfs)

@@ -85,7 +85,7 @@ feature -- Basic Operations
 			
 			l_type := a_doc.document_type
 			if l_type /= Void and then panel.known_document_type (l_type) then
-				panel.set_current_document_class (panel.registered_document_types.item (l_type))	
+				panel.set_current_document_class (panel.get_class_from_type (l_type))	
 			end
 			
 				-- Update editor panel				

@@ -511,10 +511,10 @@ feature -- Text status report
 		do			
 				-- Compute the width of the current character (used to display plain cursor)
 			width_cursor := copy_cut_cursor.token.get_substring_width (copy_cut_cursor.pos_in_token) - copy_cut_cursor.token.get_substring_width (copy_cut_cursor.pos_in_token - 1)
-			width_cursor := width_cursor.max (cursor_width)					
-			y_pos := y + editor_viewport.y_offset		
+			width_cursor := width_cursor.max (cursor_width)
+			y_pos := y + editor_viewport.y_offset
 			media.set_xor_mode
-			media.set_foreground_color (editor_preferences.plain_gray)
+			media.set_foreground_color (editor_preferences.plain_white)			
 			media.fill_rectangle (x, y_pos, width, line_height)
 			media.set_copy_mode
  		end
@@ -526,7 +526,7 @@ feature -- Text status report
 				Precursor (media, x, y, width_cursor, ln_height, do_show)
 			else
 				media.set_xor_mode
-				media.set_foreground_color (editor_preferences.plain_gray)
+				media.set_foreground_color (editor_preferences.plain_white)
 				media.fill_rectangle (x, y, width_cursor, ln_height)			
 				media.set_copy_mode	
 			end					
@@ -745,7 +745,7 @@ feature {NONE} -- Mouse copy cut
 			if mouse_left_button_down and then mouse_copy_cut then
 					-- Position the temporary copy/cut cursor at the best location based on mouse co-ordinates
 				wipe_copy_cut_cursor_out
-				x_cur := abs_x_pos + offset
+				x_cur := abs_x_pos + offset - left_margin_width
 				y_cur := (a_screen_y - editor_y).min (viewable_height).max (1)
 				create copy_cut_cursor.make_from_integer (1, text_displayed)
 				position_cursor (copy_cut_cursor, x_cur, y_cur)
@@ -763,10 +763,10 @@ feature {NONE} -- Mouse copy cut
 							prev_x_cur := 0
 							prev_y_cur := 0
 						end
-						if position_is_displayed (x_cur, y_cur) then
+						if position_is_displayed (x_cur + left_margin_width, y_cur) then
 							prev_x_cur := x_cur
 							prev_y_cur := y_cur
-							draw_copy_cut_cursor (editor_drawing_area, x_cur - offset, (y_cur - first_line_displayed) * line_height, cursor_width)
+							draw_copy_cut_cursor (editor_drawing_area, x_cur - offset + left_margin_width, (y_cur - first_line_displayed) * line_height, cursor_width)
 						end
 					end
 				elseif prev_x_cur /= 0 or else prev_y_cur /= 0 then
@@ -844,7 +844,7 @@ feature {NONE} -- Mouse copy cut
 			y_p := (prev_y_cur - first_line_displayed) * line_height + editor_viewport.y_offset
 			if y_p >= 0 and then y_p < editor_drawing_area.height then				
 					-- Wipe the cursor out if it is at a position that is still on screen.
-				x_p := prev_x_cur - offset
+				x_p := prev_x_cur - offset + left_margin_width
 				debug ("editor")
 					draw_flash (x_p, y_p, cursor_width, line_height, False)
 				end

@@ -120,8 +120,7 @@ feature -- Measurement
 			-- Number of children
 
 	keys_plus_one: INTEGER
-			-- total number of keys of the node
-			-- and its chilren, plus one
+			-- Total number of keys of the node and its children, plus one.
 
 feature -- Status report
 

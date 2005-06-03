@@ -47,6 +47,12 @@ feature -- Access
 
 feature -- Status Report
 
+	is_blank: BOOLEAN is
+			-- Is this a blank token?
+		do
+			Result := False
+		end		
+
 	is_feature_start: BOOLEAN is
 		do
 		end
@@ -112,6 +118,8 @@ feature -- Linkable functions
 			if previous /= Void then
 				if not previous.is_margin_token then
 					position := previous.position + previous.width
+				else
+					position := 0
 				end
 			else
 				position := 0
@@ -218,15 +226,10 @@ feature {EDITOR_TOKEN} -- Properties used to display the token
 			-- Width between the border and the beginning of the text.
 			-- In this space, one can find EDITOR_BREAKPOINT_TOKENs.
 
-feature {EB_TOKEN_TOOLKIT, SMART_TEXT} -- implementation of clickable and editable text
+feature -- Implementation of clickable and editable text
 
 	is_text: BOOLEAN is
 			-- is this a text token ?
-		do
-		end
-		
-	is_blank: BOOLEAN is
-			-- is this a blank token?
 		do
 		end
 

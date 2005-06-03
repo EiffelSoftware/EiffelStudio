@@ -13,14 +13,14 @@ inherit
 			display_selected,
 			display_half_selected,
 			text_color,
-			background_color, is_blank
+			is_blank,
+			background_color
 		end
-
-feature -- Status report
+		
+feature -- Status Report
 
 	is_blank: BOOLEAN is True
-			-- Current is a blank token.
-		
+
 feature -- Display
 
 	display (d_y: INTEGER; a_device: EV_DRAWABLE; panel: TEXT_PANEL) is

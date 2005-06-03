@@ -42,6 +42,48 @@ feature -- cmd specific
 
 feature -- ES grid specific
 
+	expand_selected_rows (a_grid: EV_GRID) is
+		require
+			a_grid /= Void
+		local
+			rows: ARRAYED_LIST [EV_GRID_ROW]
+			row: EV_GRID_ROW
+		do
+			rows := a_grid.selected_rows
+			from
+				rows.start
+			until
+				rows.after
+			loop
+				row := rows.item
+				if not row.is_expanded and then row.is_expandable then
+					row.expand
+				end
+				rows.forth
+			end
+		end
+
+	collapse_selected_rows (a_grid: EV_GRID) is
+		require
+			a_grid /= Void
+		local
+			rows: ARRAYED_LIST [EV_GRID_ROW]
+			row: EV_GRID_ROW
+		do
+			rows := a_grid.selected_rows
+			from
+				rows.start
+			until
+				rows.after
+			loop
+				row := rows.item
+				if row.is_expanded then
+					row.collapse
+				end
+				rows.forth
+			end
+		end
+
 	grid_data_from_widget (a_item: EV_ANY): ANY is
 		local
 			ctler: ES_GRID_ROW_CONTROLLER

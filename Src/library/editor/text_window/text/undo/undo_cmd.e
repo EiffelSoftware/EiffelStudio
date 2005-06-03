@@ -30,7 +30,7 @@ feature -- Status setting
 
 feature -- Basic operations
 
-	undo	is
+	undo is
 		deferred
 		end
 

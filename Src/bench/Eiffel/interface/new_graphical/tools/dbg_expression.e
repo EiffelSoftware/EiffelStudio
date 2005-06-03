@@ -30,6 +30,8 @@ feature {NONE} -- Initialization
 feature {EB_EXPRESSION} -- Parsing
 
 	set_expression (new_expr: STRING) is
+		require
+			valid_expression: valid_expression (expression)
 		do
 			syntax_error := False
 			error_message := Void

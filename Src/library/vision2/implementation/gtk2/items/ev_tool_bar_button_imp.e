@@ -85,7 +85,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	text: STRING is
-			--
+			-- Text of the label.
 		local
 			a_txt: POINTER
 			a_cs: EV_GTK_C_STRING
@@ -103,7 +103,7 @@ feature -- Access
 			-- Image displayed on `Current'.
 
 	tooltip: STRING
-			-- Tooltip use for describing `Current'
+			-- Tooltip use for describing `Current'.
 
 feature -- Element change
 

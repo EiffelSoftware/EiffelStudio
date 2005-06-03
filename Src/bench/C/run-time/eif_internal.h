@@ -48,6 +48,7 @@ RT_LNK EIF_BOOLEAN eif_is_special_type (EIF_INTEGER dftype);
 
 #define ei_special(obj)	(EIF_TEST((HEADER(obj)->ov_flags & (EO_SPEC | EO_TUPLE)) == EO_SPEC))
 #define ei_tuple(obj)	(EIF_TEST((HEADER(obj)->ov_flags & (EO_SPEC | EO_TUPLE)) == (EO_SPEC | EO_TUPLE)))
+#define eif_is_tuple_type(dftype) (EIF_TEST(Deif_bid(dftype) == egc_tup_dtype))
 
 #define eif_special_any_type(dftype) (EIF_TEST((uint32) Deif_bid(dftype) == (uint32) egc_sp_ref))
 

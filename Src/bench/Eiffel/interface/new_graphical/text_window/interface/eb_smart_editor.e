@@ -76,13 +76,7 @@ feature -- Content change
 		do
 			load_without_save := True
 			Precursor {EB_CLICKABLE_EDITOR}
-		end
-		
-	strip_unwanted_indentation is
-			-- Strip unwanted indentation that was automatically added by the editor		
-		do
-			text_displayed.remove_auto_indentation
-		end		
+		end	
 
 feature -- Status report
 
@@ -201,7 +195,7 @@ feature -- Autocomplete
 		require
 			choices_not_void: choices /= Void
 		do
-			choices.set_size (calculate_completion_list_width, calculate_completion_list_height)				
+			choices.set_size (calculate_completion_list_width, calculate_completion_list_height)
 			choices.set_position (calculate_completion_list_x_position, calculate_completion_list_y_position)
 		end		
 

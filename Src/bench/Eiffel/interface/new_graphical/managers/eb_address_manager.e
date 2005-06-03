@@ -35,6 +35,8 @@ inherit
 		end
 
 	EB_SHARED_PREFERENCES
+
+	EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
 		
 	EV_UTILITIES
 		export
@@ -298,6 +300,8 @@ feature -- Observer management
 	on_update is
 			-- The history has changed. Update `Current'.
 		local
+			cluster_stone: CLUSTER_STONE
+			c: CLASSI_STONE
 			f: FEATURE_STONE
 			cell: CELL2 [STONE, INTEGER]
 			list: LIST [CELL2 [STONE, INTEGER]]
@@ -328,6 +332,9 @@ feature -- Observer management
 					create nitem.make_with_text (
 						f.feature_name + l_From + f.class_i.name_in_upper)
 					nitem.set_data (cell.item2)
+					if f.e_feature /= Void then
+						nitem.set_pixmap (pixmap_from_e_feature (f.e_feature))
+					end
 					feature_address.extend (nitem)
 					if cell.item1 = cur_sel then
 						nitem.enable_select
@@ -349,6 +356,13 @@ feature -- Observer management
 					--| when the user types his class names in upper case, the combo box automatically selects the item.
 				create nitem.make_with_text (cell.item1.stone_signature + l_Space)
 				nitem.set_data (cell.item2)
+
+					-- Set the appropriate pixmap for nitem.
+				c ?= cell.item1
+				if c /= Void and then c.class_i /= Void then
+					nitem.set_pixmap (pixmap_from_class_i (c.class_i))
+				end
+
 				class_address.extend (nitem)
 				if cell.item1 = cur_sel then
 					nitem.enable_select
@@ -368,6 +382,12 @@ feature -- Observer management
 					cell := list.item
 					create nitem.make_with_text (cell.item1.stone_signature)
 					nitem.set_data (cell.item2)
+
+					-- Set the appropriate pixmap for nitem.
+					cluster_stone ?= cell.item1
+					if cluster_stone /= Void and then cluster_stone.cluster_i /= Void then
+						nitem.set_pixmap (pixmap_from_cluster_i (cluster_stone.cluster_i))
+					end
 					cluster_address.extend (nitem)
 					if cell.item1 = cur_sel then
 						nitem.enable_select
@@ -1316,6 +1336,9 @@ feature {NONE} -- open new class
 				last_key_was_backspace := False
 				if k.code = Key_csts.key_enter then
 					execute_with_class
+					if class_address.text_length > 0 then
+						class_address.select_all
+					end
 				elseif k.code = Key_csts.Key_delete then
 					last_key_was_delete := True
 				elseif k.code = Key_csts.Key_back_space then
@@ -1338,6 +1361,9 @@ feature {NONE} -- open new class
 				last_key_was_backspace := False
 				if k.code = Key_csts.key_enter then
 					execute_with_cluster
+					if cluster_address.text_length > 0 then
+						cluster_address.select_all
+					end
 				elseif k.code = Key_csts.Key_delete then
 					last_key_was_delete := True
 				elseif k.code = Key_csts.Key_back_space then
@@ -1360,6 +1386,9 @@ feature {NONE} -- open new class
 				last_key_was_backspace := False
 				if k.code = Key_csts.key_enter then
 					execute_with_feature
+					if feature_address.text_length > 0 then
+						feature_address.select_all
+					end
 				elseif k.code = Key_csts.Key_delete then
 					last_key_was_delete := True
 				elseif k.code = Key_csts.Key_back_space then

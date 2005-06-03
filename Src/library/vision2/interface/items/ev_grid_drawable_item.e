@@ -4,7 +4,7 @@ indexing
 		The `expose_actions' are fired as `Current' must be redrawn, and provide the
 		drawable into which you must draw. The upper left corner of the item starts at
 		coordinates 0x0 in the passed drawable. All drawing Performed in the drawable is
-		clipped to `width', `height' of Current.Note that the dimensions of the drawable area are
+		clipped to `width', `height' of Current. Note that the dimensions of the drawable area are
 		undefined, but are always be greater than `width' and `height'.
 			
 			]"

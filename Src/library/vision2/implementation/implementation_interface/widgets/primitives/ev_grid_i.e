@@ -2774,7 +2774,7 @@ feature {NONE} -- Drawing implementation
 			is_vertical_scrolling_per_item := True
 			is_column_resize_immediate := True
 			is_header_displayed := True
-			row_height := 16
+			row_height := (create {EV_LABEL}).minimum_height + 3
 			is_row_height_fixed := True
 			subrow_indent := 0
 			viewport_x_offset := 0

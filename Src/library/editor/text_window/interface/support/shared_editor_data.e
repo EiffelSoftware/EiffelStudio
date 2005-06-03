@@ -21,7 +21,7 @@ feature -- Resources
 		do
 			Result := editor_preferences_cell.item
 		end
-		
+
 	cursors: EDITOR_CURSORS is 
 			-- Editor cursors
 		once

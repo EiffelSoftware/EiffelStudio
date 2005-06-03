@@ -892,7 +892,7 @@ feature {NONE} -- Retrieval
 						set_error_status (Retrieve_interrupt_error_status)
 					else
 						set_error_status (Retrieve_incompatible_error_status)
-						incompatible_version_number.wipe_out
+						incompatible_version_number.clear_all
 						incompatible_version_number.append (p_eif.project_version_number)
 						ace_file_path := p_eif.ace_file_path
 					end

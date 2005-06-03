@@ -337,7 +337,7 @@ H		([0-9A-Fa-f])
 				in_verbatim_string := True
 			}
 
-\"[^\n"%]*\[/[ \t\r]*	{
+\"[^\n"%]*\{/[ \t\r]*	{
 					-- Verbatim string opener.				
 				create {EDITOR_TOKEN_STRING} curr_token.make(text)
 				update_token_list
@@ -348,11 +348,17 @@ H		([0-9A-Fa-f])
 [ \t\r]*\][^%\n"]*\" 	{
 					-- Verbatim string closer, possibly.				
 				create {EDITOR_TOKEN_STRING} curr_token.make(text)
-				update_token_list
-				--if is_verbatim_string_closer then
-					in_verbatim_string := False
-				--end
+				update_token_list	
+				in_verbatim_string := False				
 			}
+
+[ \t\r]*\}[^%\n"]*\" 	{
+					-- Verbatim string closer, possibly.				
+				create {EDITOR_TOKEN_STRING} curr_token.make(text)
+				update_token_list
+				in_verbatim_string := False
+}
+
 
 [%\"]([^\n\"]|%\")*(\"|%)	|
 [%\"]([^\n\"\%]|%\"|%A|%B|%C\%D|%F|%H|%L|%N|%Q|%R|%S|%T|%U|%V|%%|%\'|%\(|%\)|%<|%>|%\/[0-9]{1,3}\/)*		{

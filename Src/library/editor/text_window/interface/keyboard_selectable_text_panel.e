@@ -114,10 +114,7 @@ feature -- Cursor Management
 		end
 		
 	position_cursor (a_cursor: TEXT_CURSOR; x_pos, y_pos: INTEGER) is
-			-- Position `cursor' as close as possible from coordinates (x_pos, y_pos).
-		require
-			valid_y: y_pos >= 0
-			valid_x: x_pos >= 0
+			-- Position `a_cursor' as close as possible from coordinates (x_pos, y_pos).
 		local
 			l_number		: INTEGER
 			current_width	: INTEGER
@@ -126,34 +123,42 @@ feature -- Cursor Management
 			pointed_token	: EDITOR_TOKEN
 			tw				: INTEGER
 		do			
-				-- Compute the line number pointed by the mouse cursor
-				-- and adjust it if its over the number of lines in the text.
-			l_number := (y_pos + (first_line_displayed * line_height)) // line_height
-			nol := text_displayed.number_of_lines
-					
-			if
-				l_number > nol
-			then
-				l_number := nol
-			end
-			current_width := x_pos
-			pointed_line := text_displayed.line (l_number)
-			pointed_token := pointed_line.first_token
-			from
-				tw := pointed_token.width
-			until
-				pointed_token = Void or else tw > current_width
-			loop
-				current_width := current_width - tw
-				pointed_token := pointed_token.next
-				if pointed_token /= Void then
-					tw := pointed_token.width
+			if x_pos >= 0 and then y_pos >= 0 then
+					-- Compute the line number pointed by the mouse cursor
+					-- and adjust it if its over the number of lines in the text.
+				l_number := (y_pos + (first_line_displayed * line_height)) // line_height
+				nol := text_displayed.number_of_lines
+						
+				if l_number > nol then
+					l_number := nol
 				end
-			end
-			if pointed_token /= Void then
-				a_cursor.make_from_relative_pos (pointed_line, pointed_token, pointed_token.retrieve_position_by_width (current_width), text_displayed)
-			else
-				a_cursor.make_from_relative_pos (pointed_line, pointed_line.eol_token, 1, text_displayed)
+				current_width := x_pos
+				pointed_line := text_displayed.line (l_number)
+				if pointed_line /= Void then					
+					pointed_token := pointed_line.first_token
+					from
+						tw := pointed_token.width
+					until
+						pointed_token = Void or else tw > current_width
+					loop
+						current_width := current_width - tw
+						pointed_token := pointed_token.next
+						if pointed_token /= Void then
+							tw := pointed_token.width
+						end
+					end
+					if pointed_token /= Void then
+						debug ("editor")
+							print (pointed_token.out + "%N")	
+						end
+						a_cursor.make_from_relative_pos (pointed_line, pointed_token, pointed_token.retrieve_position_by_width (current_width), text_displayed)
+					else
+						debug
+							print ("pointed token is VOID!%N")
+						end
+						a_cursor.make_from_relative_pos (pointed_line, pointed_line.eol_token, 1, text_displayed)
+					end
+				end
 			end
 		end
 
@@ -305,6 +310,12 @@ feature -- Status Setting
 				buffered_line.clear_rectangle (0, (number_of_lines_displayed) * line_height, buffered_line.width, y_offset)
 			end
 			Precursor (fld, refresh_if_necessary)
+		end
+
+	redraw_current_line is
+			-- Redraw the line where the cursor is
+		do
+			invalidate_cursor_rect (False)
 		end
 
 feature -- Observation
@@ -583,9 +594,9 @@ feature {NONE} -- Cursor Management
 		do
 			blink_delay_timeout.set_interval (10000)
 			blink_on := False
-			blinking_timeout.actions.block
-		end		
-		
+			blinking_timeout.actions.wipe_out
+		end
+
 	resume_cursor_blinking is
 			-- Resume blinking timeout to allow cursor to blink again
 		do
@@ -933,10 +944,10 @@ feature {NONE} -- Implementation
 	 			end
  
 	 				-- Display the cursor (if its on the current end of line).
-	 			if cursor_line and then (l_cursor.token = curr_token) then				
+	 			if cursor_line and then (l_cursor.token = curr_token) then
 					draw_cursor (buffered_line, current_cursor_position, 0, cursor_width)
 				end
-		
+
  		end
 
 	update_lines (first, last, x_offset, a_width: INTEGER; buffered: BOOLEAN) is
@@ -983,16 +994,18 @@ feature {NONE} -- Implementation
 					else
 						draw_line_to_screen ((l_x_offset - l_margin_width).max (0), l_x_offset + a_width - l_margin_width, y_offset, l_text.line (curr_line))
 					end
-					l_x_offset := l_x_offset + l_line_width
+					l_x_offset := l_x_offset + viewable_width
 				end
 
-				if l_x_offset >= l_line_width and not l_has_data then
+				if l_x_offset >= (l_line_width + l_margin_width) and not l_has_data then
 						-- Some (or all) of the line ends in the viewable area.  So we must clear from the end of
 						-- the line to the edge of the viewport in the background color.
-					if l_line_width <= offset then
-						l_start_clear := l_line_width.max (offset) + (l_margin_width - offset).max (0)
+					if (l_line_width + l_margin_width) <= offset then
+							-- There is no part of the line visible so draw all blank
+						l_start_clear := offset
 					else
-						l_start_clear := l_line_width.max (offset) + l_margin_width
+							-- Some of the line is visible so only draw blank from the end of the visible area to the edge of the viewable area
+						l_start_clear := l_line_width + l_margin_width
 					end
 
 					if l_line_width < x_offset or (l_start_clear >= x_offset and l_start_clear <= (x_offset + a_width)) then

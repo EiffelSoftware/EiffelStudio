@@ -11,7 +11,7 @@
 				<url>/tools/eiffelbuild/reference/10_general_interface_description/20_main_toolbars.xml</url>
 				<label>main toolbar</label>
 			</link>.
-			<paragraph>The length of time taken to generate your code will be dependent on the speed of the system you are running, and the size of your interface, but typically takes a couple of seconds. A progress bar will be displayed during the generation of your system.</paragraph>
+			<paragraph>The length of time taken to generate your code is dependent on the speed of the system you are running, and the size of your interface, but typically takes a couple of seconds. A progress bar is displayed during the generation of your system.</paragraph>
 			<paragraph>The code will be generated according to the options you selected in the 
 				<link>
 					<url>/tools/eiffelbuild/reference/80_project_settings/index.xml</url>
@@ -29,7 +29,7 @@
 						<label>project settings</label>
 					</link>, two classes, CONSTANTS and CONSTANTS_IMP are generated.
 				</item>
-				<item>A class and implementation class for each window and dialog in the system, named to correspond with the name attribute of the object. For example, for a window in the project named "main_window", the files MAIN_WINDOW and MAIN_WINDOW_IMP are generated.</item>
+				<item>A class and implementation class for each window, dialog and "top level" widget in the system (each of which is contained in the <link><url>../64_widget_selector/index.xml</url><label>widget selector</label></link>), named to correspond with the name attribute of the object. For example, for a window in the project named "main_window", the files MAIN_WINDOW and MAIN_WINDOW_IMP are generated.</item>
 				<item>An optional file named "constants.txt" which contains definitions of all INTEGER and STRING constants. This is only generated if "Load constants from file" is selected in the 
 					<link>
 						<url>/tools/eiffelbuild/reference/80_project_settings/index.xml</url>
@@ -37,17 +37,16 @@
 					</link>. The generated code loads the constants from this file, and allows simple modification for localization, i.e. for foreign languages provide a different version of this file with all strings converted.
 				</item>
 			</list>
-			<paragraph>For each window or dialog class in the system, the following hierarchy is generated:</paragraph>
+			<paragraph>For each "top level" widget class in the system (contained in the <link><url>../64_widget_selector/index.xml</url><label>widget selector</label></link>), the following class hierarchy is generated:</paragraph>
 			<paragraph>
 				<image>
 					<url>/images/eiffelbuild/screenshots/class_project_diagram.png</url>
 				</image>
 			</paragraph>
-			<paragraph>If "client of windows" is selected from the 
-				<link>
-					<url>/tools/eiffelbuild/reference/80_project_settings/index.xml</url>
-					<label>project settings</label>
-				</link>, a client supplier relationship exists between the generated window class and the EiffelVision window, as illustrated below:
+			<paragraph>If the "generate as client" option is selected for a particular object (changeable from the <link>
+					<url>/tools/eiffelbuild/reference/40_object_editor/index.xml</url>
+					<label>object editor</label>
+				</link>, only for objects contained in the <link><url>../64_widget_selector/index.xml</url><label>widget selector</label></link>), a client supplier relationship exists between the generated widget class and the EiffelVision widget, as illustrated below:
 			</paragraph>
 			<paragraph>
 				<image>
@@ -55,7 +54,7 @@
 				</image>
 			</paragraph>
 			<note>
-				<bold>Note</bold>: All other diagrams on this page show only the non client version of the settings, where the generated window inherits from the EiffelVision class.
+				<bold>Note</bold>: All other diagrams on this page show only the non client version of the settings, where the generated widget inherits from the EiffelVision class.
 			</note>
 			<heading>
 				<size>2</size>Project build type

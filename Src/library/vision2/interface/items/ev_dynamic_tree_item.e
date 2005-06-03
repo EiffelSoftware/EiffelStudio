@@ -82,10 +82,10 @@ feature -- Access
 					linear.forth
 					i := i + 1
 				end
+				Result := linear.item
 				if cs /= Void then
 					cs.go_to (c)
 				end
-				Result := linear.item
 			end
 		end
 
@@ -97,7 +97,7 @@ feature -- Access
 			-- Assign `a_subtree_function' to `subtree_function'.
 		require
 			not_destroyed: not is_destroyed
-			not_Void: a_subtree_function /= Void
+			not_void: a_subtree_function /= Void
 			valid_operands: a_subtree_function.valid_operands (Void)
 		do
 			if subtree_function /= Void then
@@ -202,10 +202,10 @@ feature -- Status report
 						linear.forth
 						i := i + 1
 					end
+					Result := linear.after
 					if cs /= Void then
 						cs.go_to (c)
 					end
-					Result := linear.after
 				end
 			else
 				Result := Precursor {EV_TREE_NODE}

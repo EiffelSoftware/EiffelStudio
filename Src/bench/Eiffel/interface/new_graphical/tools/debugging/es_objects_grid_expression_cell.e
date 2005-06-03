@@ -1,5 +1,5 @@
 indexing
-	description : "Objects that ..."
+	description : "Objects that represent an expression"
 	author      : "$Author$"
 	date        : "$Date$"
 	revision    : "$Revision$"

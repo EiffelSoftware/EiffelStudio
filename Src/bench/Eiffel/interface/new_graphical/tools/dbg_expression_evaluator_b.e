@@ -60,7 +60,8 @@ inherit
 		end
 
 create
-	make_with_expression
+	make_with_expression,
+	make_as_object
 
 feature -- Evaluation
 
@@ -71,60 +72,69 @@ feature -- Evaluation
 		do
 			reset_error
 
-				--| prepare context
-				--| this may trigger the reset of `expression_byte_node' value
-			if on_context then
-					--| .. Init current context using current call_stack
-				init_context_with_current_callstack
-			elseif on_object then
-				set_context_data (
-						Void,
-						Debugged_object_manager.class_c_at_address (context_address),
-						Debugged_object_manager.class_type_at_address (context_address)
-					)
-
-			elseif on_class then
-				set_context_data (Void, context_class, Void)
-			end
-
-				--| Compute and get `expression_byte_node'
-			get_expression_byte_node
-
-			l_error_occurred := error_occurred or expression_byte_node = Void
-				--| FIXME jfiat 2004-12-09 : check if this is a true error or not ..
-				-- and if this is handle later or not
-			if on_context then
-				if context_address = Void then
-					l_error_occurred := True
-				end
-			end
-
-			if not l_error_occurred then
-					--| Initializing
-				clean_temp_data
-
-					--| concrete evaluation
-				process_expression_evaluation (expression_byte_node)
-
-					--| Process result
-				if tmp_result_value /= Void then
-					final_result_value := tmp_result_value
-					final_result_type := tmp_result_value.dynamic_class
+			if as_object then
+				final_result_value := dump_value_at_address (context_address)
+				if final_result_value /= Void then
+					final_result_type := final_result_value.dynamic_class
 					final_result_static_type := final_result_type
+				end
+				clean_temp_data
+			else
+					--| prepare context
+					--| this may trigger the reset of `expression_byte_node' value
+				if on_context then
+						--| .. Init current context using current call_stack
+					init_context_with_current_callstack
+				elseif on_object then
+					set_context_data (
+							Void,
+							Debugged_object_manager.class_c_at_address (context_address),
+							Debugged_object_manager.class_type_at_address (context_address)
+						)
+	
+				elseif on_class then
+					set_context_data (Void, context_class, Void)
+				end
+
+					--| Compute and get `expression_byte_node'
+				get_expression_byte_node
+	
+				l_error_occurred := error_occurred or expression_byte_node = Void
+					--| FIXME jfiat 2004-12-09 : check if this is a true error or not ..
+					-- and if this is handle later or not
+				if on_context then
+					if context_address = Void then
+						l_error_occurred := True
+					end
+				end
+
+				if not l_error_occurred then
+						--| Initializing
+					clean_temp_data
+	
+						--| concrete evaluation
+					process_expression_evaluation (expression_byte_node)
+	
+						--| Process result
+					if tmp_result_value /= Void then
+						final_result_value := tmp_result_value
+						final_result_type := tmp_result_value.dynamic_class
+						final_result_static_type := final_result_type
+					else
+						final_result_value := Void
+						final_result_type := Void
+						final_result_static_type := Void
+						check
+							error_occurred
+						end
+					end
+						--| Clean temporary data
+					clean_temp_data
 				else
 					final_result_value := Void
 					final_result_type := Void
 					final_result_static_type := Void
-					check
-						error_occurred
-					end
 				end
-					--| Clean temporary data
-				clean_temp_data				
-			else
-				final_result_value := Void
-				final_result_type := Void
-				final_result_static_type := Void				
 			end
 		end
 		
@@ -245,7 +255,7 @@ feature -- EXPR_B evaluation
 			t := a_void_b.type
 
 			tmp_result_value := Void
-			create tmp_result_value.make_object (Void, Void)
+			create tmp_result_value.make_void
 		end
 		
 	evaluate_manifest_value (a_expr_b: EXPR_B) is

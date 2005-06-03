@@ -103,7 +103,7 @@ feature {NONE} -- Initialization
 			esgrid.set_item_veto_pebble_function (agent on_stacks_veto_pebble_function)
 			esgrid.item_drop_actions.extend (agent on_drop_stack_element)
 			esgrid.key_press_actions.extend (agent debug_value_key_action (esgrid, ?))
-			esgrid.set_minimum_size (100, 100)
+			esgrid.row_select_actions.extend (agent on_stack_objects_row_selected)
 
 			stack_objects_grid := esgrid
 
@@ -119,10 +119,12 @@ feature {NONE} -- Initialization
 			esgrid.column (col_type_index).set_title (col_titles @ col_type_index)
 			esgrid.column (col_type_index).set_width (200)
 
-			esgrid.set_item_veto_pebble_function (agent on_objects_veto_pebble_function)
-			esgrid.item_drop_actions.extend (agent on_add_object)
-			esgrid.key_press_actions.extend (agent object_key_action)
+			esgrid.set_item_veto_pebble_function (agent on_debugged_objects_veto_pebble_function)
+			esgrid.item_drop_actions.extend (agent on_add_debugged_object)
+			esgrid.key_press_actions.extend (agent debugged_object_key_action)
 			esgrid.key_press_actions.extend (agent debug_value_key_action (esgrid, ?))
+			esgrid.row_select_actions.extend (agent on_debugged_objects_row_selected)
+			esgrid.row_deselect_actions.extend (agent on_debugged_objects_row_deselected)
 
 			debugged_objects_grid := esgrid
 
@@ -146,14 +148,14 @@ feature {NONE} -- Initialization
 			create mini_toolbar
 
 				--| Delete command
-			create remove_object_cmd.make
-			remove_object_cmd.set_mini_pixmaps (Pixmaps.Icon_delete_very_small)
-			remove_object_cmd.set_tooltip (Interface_names.e_Remove_object)
-			remove_object_cmd.add_agent (agent remove_selected_object)
-			tbb := remove_object_cmd.new_mini_toolbar_item
-			tbb.drop_actions.extend (agent remove_dropped)
-			tbb.drop_actions.set_veto_pebble_function (agent is_removable_object)
-			remove_object_cmd.enable_sensitive
+			create remove_debugged_object_cmd.make
+			remove_debugged_object_cmd.set_mini_pixmaps (Pixmaps.Icon_delete_very_small)
+			remove_debugged_object_cmd.set_tooltip (Interface_names.e_Remove_object)
+			remove_debugged_object_cmd.add_agent (agent remove_selected_debugged_objects)
+			tbb := remove_debugged_object_cmd.new_mini_toolbar_item
+			tbb.drop_actions.extend (agent remove_dropped_debugged_object)
+			tbb.drop_actions.set_veto_pebble_function (agent is_removable_debugged_object)
+			remove_debugged_object_cmd.enable_sensitive
 
 			mini_toolbar.extend (tbb)
 
@@ -194,7 +196,7 @@ feature {NONE} -- Initialization
 			end
 			create notebook_item.make_with_mini_toolbar (nb, widget, title, mini_toolbar)
 			nb.extend (notebook_item)
-			notebook_item.drop_actions.extend (agent add_object)
+			notebook_item.drop_actions.extend (agent add_debugged_object)
 			notebook_item.drop_actions.extend (agent drop_stack_element)			
 		end
 	
@@ -289,10 +291,43 @@ feature -- Properties setting
 				l_eb_t.update_value
 			end
 		end
-	
-feature -- Status setting
 
-	on_objects_veto_pebble_function (a_item: EV_GRID_ITEM; a_pebble: ANY): BOOLEAN is
+feature {NONE} -- Row actions	
+
+	on_stack_objects_row_selected (row: EV_GRID_ROW) is
+			-- An item in the grid of stacks object was selected.
+		do
+			remove_debugged_object_cmd.disable_sensitive
+		end
+
+	on_debugged_objects_row_selected (row: EV_GRID_ROW) is
+			-- An item in the list of expression was selected.
+		do
+			remove_debugged_object_cmd.enable_sensitive
+		end
+
+	on_debugged_objects_row_deselected (row: EV_GRID_ROW) is
+			-- An item in the list of expression was selected.
+		do
+			remove_debugged_object_cmd.disable_sensitive
+		end
+		
+feature -- Debugged objects grid specifics
+
+	debugged_object_key_action (k: EV_KEY) is
+			-- Actions performed when a key is pressed on a top-level object.
+			-- Handle `Del'.
+		do
+			inspect
+				k.code
+			when {EV_KEY_CONSTANTS}.key_delete then
+				remove_debugged_object_cmd.execute
+			else
+
+			end
+		end
+
+	on_debugged_objects_veto_pebble_function (a_item: EV_GRID_ITEM; a_pebble: ANY): BOOLEAN is
 		local
 			st: OBJECT_STONE
 		do
@@ -300,12 +335,12 @@ feature -- Status setting
 			Result := st /= Void
 		end
 
-	on_add_object (a_item: EV_GRID_ITEM; st: OBJECT_STONE) is
+	on_add_debugged_object (a_item: EV_GRID_ITEM; st: OBJECT_STONE) is
 		do
-			add_object (st)
+			add_debugged_object (st)
 		end
 
-	add_object (a_stone: OBJECT_STONE) is
+	add_debugged_object (a_stone: OBJECT_STONE) is
 			-- Add the object represented by `a_stone' to the managed objects.
 		local
 			n_obj: ES_OBJECTS_GRID_LINE
@@ -361,7 +396,7 @@ feature -- Status setting
 			end
 		end
 		
-	remove_dropped (ost: OBJECT_STONE) is
+	remove_dropped_debugged_object (ost: OBJECT_STONE) is
 		local
 			row: EV_GRID_ROW
 			gline: ES_OBJECTS_GRID_LINE
@@ -370,22 +405,31 @@ feature -- Status setting
 			if row /= Void then
 				gline ?= row.data
 				if gline /= Void then
-					remove_object_line (gline)
+					remove_debugged_object_line (gline)
 				end
 			end
 		end
 
-	remove_selected_object is
+	remove_selected_debugged_objects is
 		local
-			gline: ES_OBJECTS_GRID_LINE
+			glines: LIST [ES_OBJECTS_GRID_LINE]
 		do
-			gline := selected_object_line
-			if gline /= Void then
-				remove_object_line (gline)
+			glines := selected_debugged_object_lines
+			if glines /= Void then
+				from
+					glines.start
+				until
+					glines.after
+				loop
+					check glines.item /= Void end
+					remove_debugged_object_line (glines.item)
+					glines.forth
+				end
+
 			end
 		end
 
-	remove_object_line (gline: ES_OBJECTS_GRID_LINE) is
+	remove_debugged_object_line (gline: ES_OBJECTS_GRID_LINE) is
 		local
 			row: EV_GRID_ROW
 		do
@@ -393,6 +437,50 @@ feature -- Status setting
 			displayed_objects.prune_all (gline)
 			debugged_objects_grid.remove_row (row.index)
 		end
+
+	selected_debugged_object_lines: LINKED_LIST [ES_OBJECTS_GRID_LINE] is
+		local
+			row: EV_GRID_ROW
+			rows: ARRAYED_LIST [EV_GRID_ROW]
+			gline: ES_OBJECTS_GRID_LINE
+		do
+			rows := debugged_objects_grid.selected_rows
+			if not rows.is_empty then
+				from
+					rows.start
+					create Result.make
+				until
+					rows.after
+				loop
+					row := rows.item
+					if row.parent_row /= Void then
+						row := row.parent_row_root
+					end
+					gline ?= row.data
+					if gline /= Void then
+						Result.extend (gline)
+					end
+					rows.forth
+				end
+			end
+		end
+
+	is_removable_debugged_object (ost: OBJECT_STONE): BOOLEAN is
+		local
+			addr: STRING
+		do
+			addr := ost.object_address
+			from
+				displayed_objects.start
+			until
+				displayed_objects.after or else Result
+			loop
+				Result := displayed_objects.item.object_address.is_equal (addr)
+				displayed_objects.forth
+			end
+		end		
+
+feature -- Change
 
 	set_stone (a_stone: STONE) is
 			-- Assign `a_stone' as new stone.
@@ -472,32 +560,6 @@ feature -- Status setting
 	
 feature -- Status report
 
-	selected_object_line: ES_OBJECTS_GRID_LINE is
-		local
-			row: EV_GRID_ROW
-		do
-			row := debugged_objects_grid.selected_rows.first
-			if row.parent_row /= Void then
-				row := row.parent_row_root
-			end
-			Result ?= row.data
-		end
-
-	is_removable_object (ost: OBJECT_STONE): BOOLEAN is
-		local
-			addr: STRING
-		do
-			addr := ost.object_address
-			from
-				displayed_objects.start
-			until
-				displayed_objects.after or else Result
-			loop
-				Result := displayed_objects.item.object_address.is_equal (addr)
-				displayed_objects.forth
-			end
-		end
-
 	can_refresh: BOOLEAN
 			-- Should we display the trees when a stone is set?
 	
@@ -567,16 +629,10 @@ feature {NONE} -- Layout Implementation
 
 	expand_locals: BOOLEAN
 			-- Should the "Locals" tree item be expanded?
-	
-feature {NONE} -- Grid Implementation
 
-	compute_grid_pebble (ax, ay: INTEGER): ANY is
-		do
-		end
-	
 feature {NONE} -- Commands Implementation
 
-	remove_object_cmd: EB_STANDARD_CMD
+	remove_debugged_object_cmd: EB_STANDARD_CMD
 			-- Command that is used to remove objects from the tree.
 
 feature {NONE} -- Implementation
@@ -658,12 +714,12 @@ feature {NONE} -- Current objects grid Implementation
 				current_object.set_display_attributes (display_first_attributes)
 				current_object.set_display_onces (display_first_onces)
 				item := current_object
-				item.attach_to_row (debugged_objects_grid.front_new_row)
 				if item.title /= Void then
 					item.set_title (Interface_names.l_Current_object + ": " + item.title)
 				else
 					item.set_title (Interface_names.l_Current_object)
 				end
+				item.attach_to_row (debugged_objects_grid.front_new_row)				
 			end
 			add_displayed_objects_to_grid (debugged_objects_grid)
 			if debugged_objects_grid.row_count > 0 then
@@ -961,27 +1017,25 @@ feature {NONE} -- Stack objects grid Implementation
 			debugger_manager.launch_stone (st)
 		end
 
-	object_key_action (k: EV_KEY) is
-			-- Actions performed when a key is pressed on a top-level object.
-			-- Handle `Del'.
-		do
-			if k.code = {EV_KEY_CONSTANTS}.key_delete then
-				remove_object_cmd.execute
-			end
-		end
-
 	debug_value_key_action (grid: ES_OBJECTS_GRID; k: EV_KEY) is
 			-- Actions performed when a key is pressed on a debug_value.
 			-- Handle `Ctrl+C'.
 		do
-			if 
-				k.code = {EV_KEY_CONSTANTS}.key_c
-				or k.code = {EV_KEY_CONSTANTS}.key_insert 
-				and then ev_application.ctrl_pressed 
-				and then not ev_application.alt_pressed 
-				and then not ev_application.shift_pressed
-			then
-				update_clipboard_string_with_selection (grid)
+			inspect
+				k.code
+			when {EV_KEY_CONSTANTS}.key_c , {EV_KEY_CONSTANTS}.key_insert then
+				if
+					ev_application.ctrl_pressed
+					and then not ev_application.alt_pressed
+					and then not ev_application.shift_pressed
+				then
+					update_clipboard_string_with_selection (grid)
+				end
+			when {EV_KEY_CONSTANTS}.key_right then
+				expand_selected_rows (grid)
+			when {EV_KEY_CONSTANTS}.key_left then
+				collapse_selected_rows (grid)
+			else
 			end
 		end
 

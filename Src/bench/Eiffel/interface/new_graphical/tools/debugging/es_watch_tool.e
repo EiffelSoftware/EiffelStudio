@@ -80,6 +80,7 @@ feature {NONE} -- Initialization
 			esgrid.row_deselect_actions.extend (agent on_item_deselected)
 			esgrid.drop_actions.extend (agent on_element_drop)
 			esgrid.key_press_actions.extend (agent key_pressed)
+			esgrid.key_press_string_actions.extend (agent string_key_pressed)
 
 			watches_grid := esgrid
 
@@ -363,7 +364,62 @@ feature -- Memory management
 				watched_items.forth
 			end
 		end
-	
+
+feature {NONE} -- add new expression from the grid
+
+	new_expression_row: EV_GRID_ROW
+			-- Grid row which should always be at the end of the grid
+			-- this is used to enter new expression easily
+
+	ensure_last_row_is_new_expression_row is
+			-- ensure
+		local
+			glab: ES_OBJECTS_GRID_EMPTY_EXPRESSION_CELL
+		do
+			if 
+				new_expression_row = Void
+				or else new_expression_row.is_destroyed
+				or else new_expression_row.parent = Void
+			then
+				new_expression_row := watches_grid.extended_new_row
+				create glab.make_with_text ("...")
+				new_expression_row.set_item (1, glab)
+				glab.pointer_double_press_actions.force_extend (agent glab.activate)
+				glab.apply_actions.extend (agent add_new_expression_for_context)
+			elseif new_expression_row.index < watches_grid.row_count then
+				watches_grid.move_row (new_expression_row.index, watches_grid.row_count)
+			end
+		end
+
+	string_key_pressed (s: STRING) is
+			-- A key was pressed in `watches_grid'.
+		local
+			row: EV_GRID_ROW
+			rows: ARRAYED_LIST [EV_GRID_ROW]
+			empty_expression_cell: ES_OBJECTS_GRID_EMPTY_EXPRESSION_CELL
+		do
+			rows := watches_grid.selected_rows
+			if not rows.is_empty then
+				row := rows.first
+				if 
+					col_name_index <= row.count
+				then
+					empty_expression_cell ?= row.item (col_name_index)
+					if empty_expression_cell /= Void then
+						empty_expression_cell.activate_with_string (s)
+					end
+				end
+			end
+		end		
+
+	add_new_expression_for_context (s: STRING) is
+		local
+			expr: EB_EXPRESSION
+		do
+			create expr.make_for_context (s)
+			add_expression (expr)
+		end
+
 feature {NONE} -- Event handling
 
 	define_new_expression is
@@ -383,7 +439,7 @@ feature {NONE} -- Event handling
 			if l_text /= Void and then not l_text.is_empty then
 				create dlg.make_with_expression_text (l_text)
 			else
-				create dlg.make
+				create dlg.make_new_expression
 			end
 			dlg.set_callback (agent add_expression_with_dialog (dlg))
 			dlg.show_modal_to_window (debugger_manager.debugging_window.window)
@@ -507,10 +563,12 @@ feature {NONE} -- Event handling
 				if rows.item.parent_row = Void then
 					l_item ?= watched_item_from (rows.item)
 					watched_items.prune_all (l_item)
+					watches_grid.row (rows.item.index).clear
 					watches_grid.remove_row (rows.item.index)
 				end
 				rows.forth
 			end
+			ensure_last_row_is_new_expression_row
 			if not rows.is_empty then
 				if watches_grid.row_count >= sel_index then
 					watches_grid.row (sel_index).enable_select
@@ -526,13 +584,15 @@ feature {NONE} -- Event handling
 			cst: CLASSC_STONE
 			ost: OBJECT_STONE
 			dlg: EB_EXPRESSION_DEFINITION_DIALOG
+			oname: STRING
 		do
 			ost ?= s
 			if ost /= Void then
+				oname := ost.name + ": " + ost.object_address
 				if ev_application.ctrl_pressed then
-					add_object (ost)
+					add_object (ost, oname)
 				else
-					create dlg.make_with_named_object (ost.object_address, ost.name)
+					create dlg.make_with_named_object (ost.object_address, oname)
 				end
 			else
 				cst ?= s
@@ -615,6 +675,10 @@ feature {NONE} -- Event handling
 					then
 						move_selected (watches_grid, +1)
 					end
+				when {EV_KEY_CONSTANTS}.key_right then
+					expand_selected_rows (watches_grid)
+				when {EV_KEY_CONSTANTS}.key_left then
+					collapse_selected_rows (watches_grid)
 				else
 				end
 			end
@@ -629,15 +693,16 @@ feature {NONE} -- Event handling
 			add_expression (l_expr)
 		end
 
-	add_object (ost: OBJECT_STONE) is
+	add_object (ost: OBJECT_STONE; oname: STRING) is
 		require
 			ost_ot_void: ost /= Void
+			oname /= Void
 		local
 			expr: EB_EXPRESSION
 		do
 			debugger_manager.keep_object (ost.object_address)
 			create expr.make_as_object (ost.dynamic_class , ost.object_address)
-			expr.set_name (ost.name + ": " + ost.object_address)
+			expr.set_name (oname)
 			add_expression (expr)
 		end
 
@@ -763,6 +828,7 @@ feature {NONE} -- Implementation
 				end
 				watched_items.forth
 			end
+			ensure_last_row_is_new_expression_row
 		end
 
 	standard_grid_label (s: STRING): EV_GRID_LABEL_ITEM is
@@ -788,6 +854,7 @@ feature {NONE} -- Implementation
 		do
 			create Result.make_with_expression (expr, Current)
 			Result.attach_to_row (a_grid.extended_new_row)
+			ensure_last_row_is_new_expression_row			
 		end
 
 	show_text_in_popup (txt: STRING; x, y, button: INTEGER; gi: EV_GRID_ITEM) is

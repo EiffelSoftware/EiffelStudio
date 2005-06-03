@@ -38,10 +38,10 @@ feature {NONE} -- Initialization
 			valid_class: cl /= Void and then cl.is_valid
 			valid_address: addr /= Void
 		do
+			as_object := True
 			on_object := True
 			context_address := addr
 			context_class := cl
-			create_expression ("current")
 		end
 
 	make_with_object (obj: DEBUGGED_OBJECT; new_expr: STRING) is
@@ -115,10 +115,32 @@ feature -- Change
 
 	set_name (n: like name) is
 			-- Set `name' with `n'
+		require
+			n /= Void
 		do
-			name := n
+			if n.is_empty then
+				name := context_address
+			else
+				name := n
+			end
 		end
-		
+
+	disable_as_object is
+		do
+			if as_object then
+				reset_expression_evaluator
+				as_object := False
+			end
+		end
+
+	enable_as_object is
+		do
+			if not as_object then
+				reset_expression_evaluator
+				as_object := True
+			end
+		end
+
 feature -- Status
 
 	enable_evaluation is
@@ -143,16 +165,6 @@ feature -- Status
 		end
 
 feature -- Status report
-
-	is_current: BOOLEAN is
-		local
-			l_expr: STRING
-		do
-			l_expr := expression.as_lower
-			l_expr.left_adjust
-			l_expr.right_adjust
-			Result := l_expr.is_equal ("current")
-		end
 
 	is_condition (f: E_FEATURE): BOOLEAN is
 			-- Is `Current' a condition (boolean query) in the context of `f'?
@@ -183,6 +195,8 @@ feature -- Status report
 		do
 			if on_class then
 				Result := context_class.name_in_upper
+			elseif as_object then
+				Result :=  interface_names.l_As_object
 			elseif on_object then
 				Result := context_address
 			else
@@ -223,7 +237,7 @@ feature -- Bridge to dbg_expression
 	syntax_error_occurred: BOOLEAN is
 			-- Is there a syntax error in dbg_expression ?
 		do
-			Result := dbg_expression.syntax_error
+			Result := not as_object and then dbg_expression.syntax_error
 		end
 		
 	expression: STRING is
@@ -236,12 +250,19 @@ feature {EB_EXPRESSION_DEFINITION_DIALOG, ES_OBJECTS_GRID_EXPRESSION_LINE} -- Re
 
 	set_expression (expr: STRING) is
 			-- Set string value for `dbg_expression'
+		require
+			expr /= Void
 		do
-			dbg_expression.set_expression (expr)
-			internal_evaluator := Void
+			if not expr.is_equal (dbg_expression.expression) then
+				dbg_expression.set_expression (expr)
+				reset_expression_evaluator
+			end
 		end
 
 feature {ES_WATCH_TOOL, ES_OBJECTS_GRID_LINE, EB_EXPRESSION_EVALUATOR_TOOL, EB_EXPRESSION_DEFINITION_DIALOG} -- Status report: Propagate the context and the results.
+
+	as_object: BOOLEAN
+			-- Is the expression represent the context object ?
 
 	on_object: BOOLEAN
 			-- Is the expression relative to an object?
@@ -305,18 +326,21 @@ feature {EB_EXPRESSION} -- Restricted access
 			l_expr_b: DBG_EXPRESSION_B
 		do
 			if internal_evaluator = Void then
-				l_expr_b ?= dbg_expression
-				if l_expr_b /= Void then
-					create {DBG_EXPRESSION_EVALUATOR_B} internal_evaluator.make_with_expression (l_expr_b)
-					internal_evaluator.set_context_class (context_class)
-					internal_evaluator.set_context_address (context_address)
-					internal_evaluator.set_on_class (on_class)
-					internal_evaluator.set_on_context (on_context)
-					internal_evaluator.set_on_object (on_object)
-
+				if as_object then
+					create {DBG_EXPRESSION_EVALUATOR_B} internal_evaluator.make_as_object (context_address)
 				else
-					check
-						should_not_occurred: False
+					l_expr_b ?= dbg_expression
+					if l_expr_b /= Void then
+						create {DBG_EXPRESSION_EVALUATOR_B} internal_evaluator.make_with_expression (l_expr_b)
+						internal_evaluator.set_context_class (context_class)
+						internal_evaluator.set_context_address (context_address)
+						internal_evaluator.set_on_class (on_class)
+						internal_evaluator.set_on_context (on_context)
+						internal_evaluator.set_on_object (on_object)
+					else
+						check
+							should_not_occurred: False
+						end
 					end
 				end
 			end

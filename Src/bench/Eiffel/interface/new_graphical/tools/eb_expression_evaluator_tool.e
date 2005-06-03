@@ -287,7 +287,7 @@ feature {NONE} -- Event handling
 			if l_text /= Void and then not l_text.is_empty then
 				create dlg.make_with_expression_text (l_text)
 			else
-				create dlg.make
+				create dlg.make_new_expression
 			end
 			dlg.set_callback (agent add_expression (dlg))
 			dlg.show_modal_to_window (Debugger_manager.debugging_window.window)

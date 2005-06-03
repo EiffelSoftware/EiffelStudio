@@ -126,7 +126,13 @@ feature -- Properties
 
 	object_name: STRING is
 		do
-			Result := expression.expression
+			if title /= Void then
+				Result := title
+			elseif expression.expression /= Void then
+				Result := expression.expression
+			else
+				Result := object_address
+			end
 		end
 
 	object_address: STRING
@@ -222,13 +228,21 @@ feature -- Graphical changes
 		require
 			a_item /= Void
 		local
-			new_expr: STRING
+			new_text: STRING
 		do
-			new_expr := a_item.new_text
-			if not new_expr.is_equal (expression.expression) then
-				expression.set_expression (new_expr)
-				request_evaluation (True)
-				refresh
+			new_text := a_item.new_text
+			if expression.as_object then
+					--| i.e: we just change the "title" of the expression
+				if not new_text.is_equal (expression.name) then
+					expression.set_name (new_text)
+					set_title (expression.name)
+				end
+			else
+				if not new_text.is_equal (expression.expression) then
+					expression.set_expression (new_text)
+					request_evaluation (True)
+					refresh
+				end
 			end
 		end
 
@@ -278,12 +292,21 @@ feature -- Graphical changes
 					end
 					compute_grid_display_done := True
 
-					set_expression_text (expression.expression)
-	
 					create l_tooltip.make (20)
 					l_tooltip.append_string ("--< CONTEXT >--%N  " + expression.context + "%N")
-					l_tooltip.append_string ("--< EXPRESSION >--%N  " + expression.expression + "%N%N")
-	
+
+					if expression.as_object and then expression.context_address /= Void then
+						if expression.name /= Void then
+							set_title (expression.name)
+						else
+							set_title (expression.context_address)
+						end
+						l_tooltip.append_string ("--< OBJECT NAME >--%N  " + title + "%N%N")
+					else
+						set_expression_text (expression.expression)
+						l_tooltip.append_string ("--< EXPRESSION >--%N  " + expression.expression + "%N%N")
+					end
+
 					set_context (expression.context)
 					if expression.evaluation_disabled then
 						set_expression_info ("Disabled")
@@ -347,13 +370,6 @@ feature -- Graphical changes
 						end
 					end
 					grid_cell_set_tooltip (row.item (Col_expression_index), l_tooltip)
-					if expression.is_current and then expression.context_address /= Void then
-						if expression.name /= Void then
-							set_title (expression.name)
-						else
-							set_title (expression.context_address)
-						end
-					end
 					if display and row.is_expandable then
 						row.expand
 					end

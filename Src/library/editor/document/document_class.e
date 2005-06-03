@@ -69,9 +69,7 @@ feature -- Query
 		do		   
 			Result := filetypes.has (a_type) 
 		end
-
-feature -- Status report
-
+		
 feature -- Status setting
 
 	set_scanner (a_scanner: like scanner) is
@@ -83,8 +81,6 @@ feature -- Status setting
 	 	ensure
 	 	    scanner_set: scanner = a_scanner
 	 	end		
-
-feature -- Cursor movement
 
 feature -- Element change
 

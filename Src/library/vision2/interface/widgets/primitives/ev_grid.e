@@ -1501,29 +1501,47 @@ feature -- Element change
 		end
 
 	move_row (i, j: INTEGER) is
-			-- Move row at index `i' to index `j'
+			-- Move row at index `i' to index `j'.
 		require
 			not_destroyed: not is_destroyed
 			i_positive: i > 0
 			j_positive: j > 0
 			i_less_than_row_count: i <= row_count
-			j_less_than_row_count: j <= row_count
-			to_implement_assertion ("Add preconditions for subnode handling")
+			j_valid: j <= row_count + 1
+			to_implement_assertion ("Add precondition so that a tree structure is not broken")
 		do
 			implementation.move_row (i, j)
 		ensure
 			moved: row (j) = old row (i) and then (i /= j implies row (j) /= row (i))
 		end
 
+	move_rows (i, j, n: INTEGER) is
+			-- Move `n' rows starting at index `i' to index `j'.
+		require
+			not_destroyed: not is_destroyed
+			i_positive: i > 0
+			j_positive: j > 0
+			i_less_than_row_count: i <= row_count
+			j_valid: j <= row_count + 1
+			n_valid: i + n <= row_count + 1
+			row_at_i_has_no_parent_row: row (i).parent_row = Void
+			end_row_last_in_tree_structure: i + n <= row_count implies row (i + n).parent_row = Void
+		do
+			implementation.move_rows (i, j, n)
+		ensure
+			moved: row (j) = old row (i) and then (i /= j implies row (j) /= row (i))
+		end
+
 	move_column (i, j: INTEGER) is
-			-- Move row at index `i' to index `j'
+			-- Move row at index `i' to index `j'.
 		require
 			not_destroyed: not is_destroyed
 			i_positive: i > 0
 			j_positive: j > 0
 			i_less_than_column_count: i <= column_count
 			j_less_than_column_count: j <= column_count
-			to_implement_assertion ("Add preconditions for subnode handling")
+			column_i_moveable: column (i).all_items_may_be_removed
+			column_j_settable: column (j).all_items_may_be_set
 		do
 			implementation.move_column (i, j)
 		ensure
@@ -1538,8 +1556,8 @@ feature -- Element change
 			a_item_not_parented: a_item /= Void implies a_item.parent = Void
 			a_column_positive: a_column > 0
 			a_row_positive: a_row > 0
-			valid_tree_structure_on_item_insertion: a_item /= Void and is_tree_enabled and row (a_row).parent_row /= Void implies a_column >= row (a_row).parent_row.index_of_first_item
-			to_implement_assertion	("Add preconditions for subnode handling of `Void' items.")		
+			item_may_be_added_if_row_is_a_subrow: a_item /= Void and row (a_row).is_tree_node implies row (a_row).is_index_valid_for_item_setting_if_tree_node (a_column)
+			item_may_be_removed_if_row_is_a_subrow: a_item = Void and row (a_row).is_tree_node implies row (a_row).is_index_valid_for_item_removal_if_tree_node (a_column)
 		do
 			implementation.set_item (a_column, a_row, a_item)
 		ensure
@@ -1552,7 +1570,7 @@ feature -- Element change
 			not_destroyed: not is_destroyed
 			a_column_positive: a_column > 0
 			a_row_positive: a_row > 0
-			to_implement_assertion ("Add preconditions for subnode handling")
+			item_may_be_removed_if_row_is_a_subrow: row (a_row).is_tree_node implies row (a_row).is_index_valid_for_item_removal_if_tree_node (a_column)
 		do
 			set_item (a_column, a_row, Void)
 		ensure
@@ -1571,7 +1589,7 @@ feature -- Element change
 		end
 
 	wipe_out is
-			-- Remove all columns and rows and their subsequent items from `Current'.
+			-- Remove all columns and rows from `Current'.
 		require
 			not_destroyed: not is_destroyed
 			is_parented: parent /= Void

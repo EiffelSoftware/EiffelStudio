@@ -29,6 +29,15 @@ create
 
 feature -- Access
 
+	is_tree_node: BOOLEAN is
+			-- Is `Current' a node in a tree structure?
+		require
+			not_destroyed: not is_destroyed
+			is_parented: parent /= Void		
+		do
+			Result := parent_row /= Void or else subrow_count > 0
+		end
+
 	subrow (i: INTEGER): EV_GRID_ROW is
 			-- `i'-th child of Current.
 		require
@@ -364,8 +373,8 @@ feature -- Element change
 			not_destroyed: not is_destroyed
 			i_positive: i > 0
 			is_parented: parent /= Void
-			valid_tree_structure: a_item /= Void and parent.is_tree_enabled and parent_row /= Void implies i >= parent_row.index_of_first_item
-			to_implement_assertion	("Add preconditions for subnode handling of `Void' items.")
+			is_index_valid_for_item_insertion_if_subrow: a_item /= Void and then is_tree_node implies is_index_valid_for_item_setting_if_tree_node (i)
+			is_index_valid_for_item_removal_if_subrow: a_item = Void and then is_tree_node implies is_index_valid_for_item_removal_if_tree_node (i)
 		do
 			implementation.set_item (i, a_item)
 		ensure
@@ -439,9 +448,93 @@ feature -- Element change
 		do
 			implementation.clear
 		ensure
-			to_implement_assertion ("EV_GRID_ROW.clear - All items positions return `Void'.")
+			cleared: index_of_first_item = 0
 		end
-		
+
+feature -- Contract support
+
+	is_index_valid_for_item_setting_if_tree_node (a_index: INTEGER): BOOLEAN is
+			-- May an item be set in `Current' at index `a_index' if `Current' is a tree node.
+		require
+			is_tree_node: is_tree_node
+			index_valid: a_index > 0
+		local
+			a_ancestor_index_of_first_item, a_subrow_index_of_first_item, i: INTEGER
+			a_parent_row: like parent_row
+		do
+			if index_of_first_item > 0 and then a_index >= index_of_first_item then
+					-- If we are adding to the right of an existing item then `a_index' is valid.
+				Result := True
+			else
+				from
+					a_parent_row := parent_row
+				until
+					a_ancestor_index_of_first_item > 0 or else a_parent_row = Void
+				loop
+					a_ancestor_index_of_first_item := a_parent_row.index_of_first_item
+					a_parent_row := a_parent_row.parent_row
+				end
+				
+				if a_index >= a_ancestor_index_of_first_item then
+					Result := True
+					if index_of_first_item = 0 then
+						-- Loop through subnodes if any to make sure that `a_index' doesn't break tree structure.
+						from
+							i := 1
+						until
+							i > subrow_count or else not Result
+						loop
+							a_subrow_index_of_first_item := subrow (i).index_of_first_item
+							if a_subrow_index_of_first_item > 0 and then a_subrow_index_of_first_item < a_index then
+								Result := False
+							end
+							i := i + 1
+						end
+					end
+				end
+			end
+		end
+
+	is_index_valid_for_item_removal_if_tree_node (a_index: INTEGER): BOOLEAN is
+			-- May an item be removed from `Current' at index `a_index' if `Current' is a tree node.
+		require
+			is_tree_node: is_tree_node
+			index_valid: a_index > 0 and then a_index <= count
+		local
+			a_index_of_next_item, i, a_subnode_first_item_index: INTEGER
+		do
+			Result := True
+			if a_index = index_of_first_item then
+				-- The tree structure would be changed, find the next item if any and check if it is a valid index
+				from
+					i := a_index + 1
+				until
+					a_index_of_next_item /= 0 or else i > count
+				loop
+					if item (i) /= Void then
+						a_index_of_next_item := i
+					end
+					i := i + 1
+				end
+				
+				if a_index_of_next_item > 0 then
+					-- A next item has been found, we now check this against any subrows to see if removing this index
+					-- is valid.
+					from
+						i := 1
+					until
+						not Result or else i > subrow_count
+					loop
+						a_subnode_first_item_index := subrow (i).index_of_first_item
+						if a_subnode_first_item_index > 0 and then a_subnode_first_item_index < a_index_of_next_item then
+							Result := False
+						end
+						i := i + 1
+					end
+				end
+			end
+		end
+
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_GRID_ROW_I

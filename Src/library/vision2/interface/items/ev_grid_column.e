@@ -217,8 +217,8 @@ feature -- Element change
 			not_destroyed: not is_destroyed
 			i_positive: i > 0
 			is_parented: parent /= Void
-			valid_tree_structure_on_insertion: a_item /= Void and parent.is_tree_enabled and parent.row (i).parent_row /= Void implies index >= parent.row (i).parent_row.index_of_first_item
-			to_implement_assertion	("Add preconditions for subnode handling of `Void' items.")
+			item_may_be_added_to_tree_node: a_item /= Void and parent.row (i).is_tree_node implies parent.row (i).is_index_valid_for_item_setting_if_tree_node (index)
+			item_may_be_removed_from_tree_node: a_item = Void and then parent.row (i).is_tree_node implies parent.row (i).is_index_valid_for_item_removal_if_tree_node (index)
 		do
 			implementation.set_item (i, a_item)
 		ensure
@@ -309,6 +309,58 @@ feature -- Element change
 			parented: parent /= Void
 		do
 			implementation.redraw
+		end
+
+feature -- Contract support
+
+	all_items_may_be_removed: BOOLEAN is
+			-- May `Current' have all of its items removed?
+		require
+			not_destroyed: not is_destroyed
+			parented: parent /= Void
+		local
+			i, a_count, a_index: INTEGER
+			a_row: EV_GRID_ROW
+		do
+			from
+				i := 1
+				Result := True
+				a_count := count
+				a_index := index
+			until
+				i > a_count or not Result
+			loop
+				a_row := parent.row (i)
+				if a_row.is_tree_node then
+					Result := a_row.is_index_valid_for_item_removal_if_tree_node (a_index)
+				end
+				i := i + 1
+			end
+		end
+
+	all_items_may_be_set: BOOLEAN is
+			-- May `Current' be set with `count' items.
+		require
+			not_destroyed: not is_destroyed
+			parented: parent /= Void
+		local
+			i, a_count, a_index: INTEGER
+			a_row: EV_GRID_ROW
+		do
+			from
+				i := 1
+				Result := True
+				a_count := count
+				a_index := index
+			until
+				i > a_count or not Result
+			loop
+				a_row := parent.row (i)
+				if a_row.is_tree_node then
+					Result := a_row.is_index_valid_for_item_setting_if_tree_node (a_index)
+				end
+				i := i + 1
+			end
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation

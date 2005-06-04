@@ -60,7 +60,7 @@ feature {NONE} -- Initialization
 				else
 					create l_item
 					l_item.set_pixmap (Pixmaps.Icon_void_object)
-					l_item.set_text (flist.item.name + Interface_names.l_Not_yet_called)
+					l_item.set_text (flist.item.name + ": " + Interface_names.l_Not_yet_called)
 				end
 				a_parent.extend (l_item)
 				flist.forth

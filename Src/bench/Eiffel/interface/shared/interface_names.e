@@ -521,7 +521,7 @@ feature -- Label texts
 	l_No_feature_group_clause: STRING is "[Unnamed feature clause]"
 	l_No_text_text: STRING is 			"No text labels"
 	l_Not_in_system_no_info: STRING is	"Select a class which is fully compiled to have information about it."
-	l_Not_yet_called: STRING is			": Not yet called"
+	l_Not_yet_called: STRING is			"Not yet called"
 	l_Object_attributes: STRING is		"Attributes"
 	l_On_object: STRING is				"On object"
 	l_As_object: STRING is				"As object"

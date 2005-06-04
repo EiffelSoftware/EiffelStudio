@@ -159,6 +159,26 @@ feature -- Status report
 		
 feature -- Element change
 
+	frozen fill_with (v: T; start_index, end_index: INTEGER) is
+			-- Set items between `start_index' and `end_index' with `v'.
+		require
+			start_index_non_negative: start_index >= 0
+			start_index_not_too_big: start_index <= end_index
+			end_index_valid: end_index < count
+		local
+			i, nb: INTEGER
+		do
+			from
+				i := start_index
+				nb := end_index + 1
+			until
+				i = nb
+			loop
+				put (v, i)
+				i := i + 1
+			end
+		end
+
 	frozen put (v: T; i: INTEGER) is
 			-- Replace `i'-th item by `v'.
 			-- (Indices begin at 0.)

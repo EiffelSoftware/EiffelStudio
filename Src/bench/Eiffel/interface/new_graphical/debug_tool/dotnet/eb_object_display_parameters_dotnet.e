@@ -131,7 +131,7 @@ feature {NONE} -- Specific Implementation
 					else
 						create item
 						item.set_pixmap (Pixmaps.Icon_void_object)
-						item.set_text (l_feat.name + Interface_names.l_Not_yet_called)
+						item.set_text (l_feat.name + ": " + Interface_names.l_Not_yet_called)
 					end						
 					parent.extend (item)
 	

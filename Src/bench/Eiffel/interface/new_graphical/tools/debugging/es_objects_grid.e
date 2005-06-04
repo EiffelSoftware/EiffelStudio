@@ -145,6 +145,8 @@ feature {NONE} -- Actions implementation
 --					if 0 < col and col <= a_row.count then
 --						Result := a_row.item (col)
 --					end
+				else
+					create Result
 				end
 			end
 		end

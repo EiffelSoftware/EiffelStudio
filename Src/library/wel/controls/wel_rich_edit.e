@@ -1,8 +1,11 @@
 indexing
-	description: "A control in which the user can enter and edit rich text."
-	note: "Rich edit DLL needs to be loaded. See class WEL_RICH_EDIT_DLL. %
-		%All paragraph measurements are in twips. A twip is 1/1440 of %
-		%an inch or 1/20 of a point."
+	description: "[
+		A control in which the user can enter and edit rich text.
+
+		Note: Rich edit DLL needs to be loaded. See class WEL_RICH_EDIT_DLL.
+			All paragraph measurements are in twips. A twip is 1/1440 of
+			an inch or 1/20 of a point.
+		]"
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -196,12 +199,11 @@ feature -- Status report
 			has_selection: has_selection
 		local
 			a_wel_string: WEL_STRING
+			nb: INTEGER
 		do
-			create Result.make (selection_end - selection_start)
-			Result.fill_blank
-			create a_wel_string.make (Result)
-			cwin_send_message (item, Em_getseltext, to_wparam (0), a_wel_string.item)
-			Result := a_wel_string.string
+			create a_wel_string.make_empty (selection_end - selection_start)
+			nb := cwin_send_message_result_integer (item, Em_getseltext, to_wparam (0), a_wel_string.item)
+			Result := a_wel_string.substring (1, nb)
 		ensure
 --			valid_length: Result.count =
 --				selection_end - selection_start

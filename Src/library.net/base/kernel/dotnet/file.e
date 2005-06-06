@@ -1390,7 +1390,6 @@ feature -- Input
 			end
 			str_area := last_string.area.native_array
 			new_count := reader.read_character_array (str_area, 0, nb_char)
-			last_string.make_from_native_array (str_area)
 			last_string.set_count (new_count)
 			internal_end_of_file := reader.peek = -1
 		end

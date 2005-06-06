@@ -112,7 +112,6 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 			client_x, client_y, client_width, client_height: INTEGER
 			text_x, text_y: INTEGER
 			pixmap_x, pixmap_y: INTEGER
-			content_left_edge, content_right_edge, content_top_edge, content_bottom_edge: INTEGER
 			selection_x, selection_y, selection_width, selection_height: INTEGER
 			focused: BOOLEAN
 		do
@@ -208,7 +207,6 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 			drawable.set_copy_mode
 			back_color := displayed_background_color
 			drawable.set_foreground_color (back_color)
-			drawable.fill_rectangle (an_indent, 0, a_width, a_height)
 			if is_selected then
 				if focused then
 					drawable.set_foreground_color (parent_i.focused_selection_color)
@@ -241,7 +239,9 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 			else
 				drawable.set_foreground_color (displayed_foreground_color)
 			end
-					
+				-- Now assign a clip area based on the borders of the item before we draw the text and the pixmap as they
+				-- may be clipped based on the amount of space available to them based on the border settings.
+			drawable.set_clip_area (create {EV_RECTANGLE}.make (left_border, top_border, column_i.width - right_border, height - bottom_border))
 			if l_pixmap /= Void then
 					-- Now blit the pixmap
 				drawable.draw_pixmap (pixmap_x + an_indent, pixmap_y, l_pixmap)
@@ -256,62 +256,7 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 			if interface.text /= Void and space_remaining_for_text > 0 then
 				drawable.draw_ellipsed_text_top_left (text_x + an_indent, text_y, interface.text, space_remaining_for_text)
 			end
-
-				-- Now handle the border clipping. We simply draw the border back over the top of the
-				-- text and pixmap. First we calculate the area occupied by the contents and only perform
-				-- the overdraw if it intersects with this.
-
-			content_left_edge := text_x.min (pixmap_x)
-			content_right_edge := (text_x + text_width + 2).max (pixmap_x + pixmap_width)
-			content_top_edge := text_y.min (pixmap_y)
-			content_bottom_edge := (text_y + text_height).max (pixmap_y + pixmap_height)
-
-				-- First draw the border in the standard background color
-			drawable.set_foreground_color (back_color)
-			if bottom_border > a_height - content_bottom_edge then
-				drawable.fill_rectangle (content_left_edge + an_indent, (a_height - bottom_border).max (content_top_edge), content_right_edge - content_left_edge, content_bottom_edge - ((a_height - bottom_border).max (content_top_edge)))
-			end
-			if top_border > content_top_edge then
-				drawable.fill_rectangle (content_left_edge + an_indent, content_top_edge, content_right_edge - content_left_edge, top_border.min (content_bottom_edge) - content_top_edge)
-			end
-			if left_border > content_left_edge then
-				drawable.fill_rectangle (content_left_edge + an_indent, content_top_edge, left_border.min (content_right_edge) - content_left_edge, content_bottom_edge - content_top_edge)
-			end
-			if right_border > a_width - content_right_edge then
-				drawable.fill_rectangle ((a_width - right_border).max (content_left_edge) + an_indent, content_top_edge, content_right_edge - ((a_width - right_border).max (content_left_edge)), content_bottom_edge - content_top_edge)
-			end
-			if is_selected then
-					-- Now, if `Current' is selected, highlight the border.
-					-- We must take into account whether `interface.is_full_select_enabled' and only re-draw
-					-- the correct area if so.
-
-				if interface.is_full_select_enabled then
-					
-						-- If we are not in `full_select_mode', there is nothing to do here
-						-- as the selection is clipped with the text. In `full_select_mode', the selection
-						-- always occupies the complete client area of `Current' so we must draw it in.
-					
-					if focused then
-						drawable.set_foreground_color (parent_i.focused_selection_color)
-					else
-						drawable.set_foreground_color (parent_i.non_focused_selection_color)
-					end
-					drawable.set_and_mode
-
-					if bottom_border > a_height - content_bottom_edge then
-						drawable.fill_rectangle (content_left_edge + an_indent, (a_height - bottom_border).max (content_top_edge), content_right_edge - content_left_edge, content_bottom_edge - ((a_height - bottom_border).max (content_top_edge)))
-					end
-					if top_border > content_top_edge then
-						drawable.fill_rectangle (content_left_edge + an_indent, content_top_edge, content_right_edge - content_left_edge, top_border.min (content_bottom_edge) - content_top_edge)
-					end
-					if left_border > content_left_edge then
-						drawable.fill_rectangle (content_left_edge + an_indent, content_top_edge, left_border.min (content_right_edge) - content_left_edge, content_bottom_edge - content_top_edge)
-					end
-					if right_border > a_width - content_right_edge then
-						drawable.fill_rectangle ((a_width - right_border).max (content_left_edge) + an_indent, content_top_edge, content_right_edge - ((a_width - right_border).max (content_left_edge)), content_bottom_edge - content_top_edge)
-					end
-				end
-			end
+			drawable.remove_clip_area
 			drawable.set_copy_mode
 		end
 

@@ -57,8 +57,18 @@ feature
 		do
 		end;
 
+	is_inlined_result: BOOLEAN is
+			-- Is register the inlined Result entity ?
+		do
+		end;
+
 	is_current: BOOLEAN is
 			-- Is register the Current entity ?
+		do
+		end;
+
+	is_inlined_current: BOOLEAN is
+			-- Is register the inlined Current entity ?
 		do
 		end;
 

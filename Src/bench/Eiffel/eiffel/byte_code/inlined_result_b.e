@@ -4,7 +4,7 @@ inherit
 	RESULT_B
 		redefine
 			enlarged, propagate, free_register, print_register, type,
-			Current_register, is_result, generate
+			Current_register, is_result, is_inlined_result, generate, used
 		end
 
 feature
@@ -17,6 +17,15 @@ feature
 	is_result: BOOLEAN is
 		do
 		end
+
+	is_inlined_result: BOOLEAN is True
+			-- Current is inlined `Result'.
+
+	used (r: REGISTRABLE): BOOLEAN is
+			-- Is `r' the inlined `Result' entity ?
+		do
+			Result := r.is_inlined_result
+		end;
 
 feature -- Register and code generation
 

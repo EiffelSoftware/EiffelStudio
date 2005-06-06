@@ -54,13 +54,10 @@ feature -- Access
 			a_wel_string: WEL_STRING
 			nb: INTEGER
 		do
-			create Result.make (Max_name_length + 1)
-			Result.fill_blank
-			create a_wel_string.make (Result)
+			create a_wel_string.make_empty (max_name_length + 1)
 			nb := cwin_get_module_file_name (item, a_wel_string.item,
 				Max_name_length + 1)
-			Result := a_wel_string.string
-			Result.keep_head (nb)
+			Result := a_wel_string.substring (1, nb)
 		ensure
 			result_not_void: Result /= Void
 			result_not_empty: not Result.is_empty

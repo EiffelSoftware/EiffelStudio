@@ -223,7 +223,8 @@ feature -- Access
 			
 			last_call_successful := res = Error_success
 			if last_call_successful then
-				create Result.make (key_name.string, class_name.string, file_time)
+				create Result.make (key_name.substring (1, key_size),
+					class_name.substring (1, class_size), file_time)
 			end
 		end
 
@@ -405,7 +406,7 @@ feature  -- New actions
 			res  := cwin_reg_enum_value (key, index, ext.item, $size, p, p, p, p)
 			last_call_successful := res = Error_success
 			if last_call_successful then
-				Result := ext.string
+				Result := ext.substring (1, size)
 			else
 				Result := Void
 			end	

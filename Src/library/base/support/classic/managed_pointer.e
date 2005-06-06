@@ -84,18 +84,35 @@ feature {NONE} -- Initialization
 	share_from_pointer (a_ptr: POINTER; n: INTEGER) is
 			-- Use directly `a_ptr' with count `n' to hold current data.
 		require
-			a_ptr_not_null: a_ptr /= default_pointer
+			a_ptr_valid: a_ptr = default_pointer implies n = 0
 			n_non_negative: n >= 0
 		do
 			item := a_ptr
 			count := n
 			is_shared := True
 		ensure
-			item_set: item /= default_pointer
+			item_set: item = a_ptr
 			count_set: count = n
 			is_shared_set: is_shared
 		end
-	
+
+feature -- Settings
+
+	set_from_pointer (a_ptr: POINTER; n: INTEGER) is
+			-- Use directly `a_ptr' with count `n' to hold current data.
+		require
+			is_shared: is_shared
+			a_ptr_not_null: a_ptr = default_pointer implies n = 0
+			n_non_negative: n >= 0
+		do
+			item := a_ptr
+			count := n
+		ensure
+			item_set: item = a_ptr
+			count_set: count = n
+			is_shared_unchanged: is_shared
+		end
+
 feature -- Access
 
 	item: POINTER
@@ -958,7 +975,7 @@ feature {NONE} -- Disposal
 		end
 
 invariant
-	item_not_null: item /= default_pointer
+	item_not_null: item = default_pointer implies (count = 0 and is_shared)
 	valid_count: count >= 0
 	
 end -- class MANAGED_POINTER

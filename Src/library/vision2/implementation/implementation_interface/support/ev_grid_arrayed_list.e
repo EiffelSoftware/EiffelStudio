@@ -33,13 +33,49 @@ feature {NONE} -- Initialization
 
 feature {EV_GRID_I} -- Implementation
 
+	move_items (i, j, n: INTEGER) is
+			-- Move `n' items starting at index `i' to index `j'.
+		require
+			i_positive: i > 0
+			j_positive: j > 0
+			i_less_than_count: i <= count
+			j_valid: j <= count + 1
+			n_valid: i + n <= count + 1	
+		local
+			a_duplicate: like Current
+			l_default: G
+			a_insertion_index: INTEGER
+			a_count: INTEGER
+		do
+			if j < i or else j > i + n then
+				a_count := count
+				index := i
+				a_duplicate := duplicate (n)
+
+					-- Move existing items up.
+				area.move_data ((i - 1) + n, i - 1, a_count - ((i - 1) + n))
+
+					-- Remove duplicated entries resulting from move and reset count.
+				area.fill_with (l_default, a_count - n, upper - 1)
+				count := a_count - n
+
+				if j > (i + n - 1) then
+					a_insertion_index := j - n
+				else
+					a_insertion_index := j - 1
+				end
+				index := a_insertion_index
+				merge_right (a_duplicate)
+			end
+		end
+
 	resize (new_capacity: INTEGER) is
 			-- Resize list so that it can contain
 			-- at least `n' items. Lose items if `new_capacity' is less than `capacity'
 		require
 			new_capacity_not_negative: new_capacity >= 0
 		local
-			i, internal_new_capacity: INTEGER
+			internal_new_capacity: INTEGER
 			l_default: G
 		do
 			if new_capacity > upper then
@@ -53,14 +89,7 @@ feature {EV_GRID_I} -- Implementation
 					-- memory usage.
 
 					-- Remove all items so that they can be garbage collected.
-				from	
-					i := upper
-				until
-					i = new_capacity
-				loop
-					put_i_th (l_default, i)
-					i := i - 1
-				end					
+				area.fill_with (l_default, new_capacity, upper - 1)
 			end
 				-- Now always set the `count' to `new_capacity' although
 				-- the actual area allocated may not equal `new_capacity'.

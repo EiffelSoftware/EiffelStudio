@@ -204,8 +204,8 @@ rt_public void undiscard_breakpoints(void);	/* un-discard all breakpoints. */
 rt_public void dstop(struct ex_vect *exvect, uint32 offset); /* Breakable point reached */
 rt_public void dstop_nested(struct ex_vect *exvect, uint32 break_index); /* Breakable point in the middle of a nested call reached */
 rt_public void set_breakpoint_count(int num);	/* Sets the n breakpoint to stop at*/
-rt_public void dbreak_create_table(void);
-rt_public void dbreak_free_table(void);
+rt_shared void dbreak_create_table(void);
+rt_shared void dbreak_free_table(void);
 rt_private void safe_dbreak (int why);
 rt_private void set_breakpoint_in_table(BODY_INDEX body_id, uint32 offset);
 rt_private void remove_breakpoint_in_table(BODY_INDEX body_id, uint32 offset);
@@ -919,7 +919,7 @@ rt_private void remove_breakpoint_in_table(BODY_INDEX body_id, uint32 offset)
 /*------------------------------------------------------------------------*/
 /* create the breakpoints table used to handle breakpoints                */
 /**************************************************************************/
-rt_public void dbreak_create_table(void)
+rt_shared void dbreak_create_table(void)
 	{
 
 		/* create the mutex used to access the table safely between threads */
@@ -933,6 +933,12 @@ rt_public void dbreak_create_table(void)
 	/* wipe out the allocated structure */
 	memset((char *)d_globaldata.db_bpinfo, 0, BP_TABLE_SIZE*sizeof(struct db_bpinfo *));
 	}
+
+rt_shared void dbreak_free_table (void)
+{
+		/* Destroy mutex used to access table safely between threads. */
+	DBGMTX_DESTROY;
+}
 
 /* Computing position within program. */
 rt_shared void ewhere(struct where *where)

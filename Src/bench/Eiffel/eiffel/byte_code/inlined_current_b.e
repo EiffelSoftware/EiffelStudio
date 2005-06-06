@@ -6,7 +6,7 @@ inherit
 		redefine
 			enlarged, propagate, analyze, generate,
 			free_register, print_register, Current_register,
-			register_name, is_current
+			register_name, is_current, is_inlined_current, used
 		end
 
 feature
@@ -15,11 +15,20 @@ feature
 		do
 			Result := Current
 		end
+		
+	is_inlined_current: BOOLEAN is True
+			-- Current is the inlined current register.
 
 	is_current: BOOLEAN is
 			-- `is_current' is used for dtype optimization
 			-- hence it should return false for inlined code
 		do
+		end
+
+	used (r: REGISTRABLE): BOOLEAN is
+			-- Is `r' the "Current" entity ?
+		do
+			Result := r.is_inlined_current
 		end
 
 feature -- Register and code generation

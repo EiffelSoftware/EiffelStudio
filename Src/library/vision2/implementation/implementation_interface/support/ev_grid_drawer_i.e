@@ -516,7 +516,8 @@ feature -- Basic operations
 				
 				if row_count > 0 and grid.column_count > 0 then
 					column_offsets := grid.column_offsets
-					row_offsets := grid.row_offsets	
+					row_offsets := grid.row_offsets
+
 						-- Note that here we need to remove 1 from `a_width' and `a_height' before
 						-- calculating the visible column and row indexes, as one of the pixels
 						-- is already included within the offset pixel.
@@ -702,6 +703,21 @@ feature -- Basic operations
 								current_tree_adjusted_item_x_position := current_item_x_position
 								current_tree_adjusted_column_width := current_column_width
 
+								item_buffer_pixmap.set_foreground_color (grid.displayed_background_color (current_column_index, current_row_index))
+									-- Now draw the complete background area for the cell in the grid that is currently being drawn.
+									fixme ("For drawable grid items, there is no need to do this, preventing overdraw.")
+								item_buffer_pixmap.fill_rectangle (0, 0, current_column_width, current_row_height)
+
+									-- Fire the `pre_draw_overlay_actions' which enable a user to draw on top of the background
+									-- but bloe the features of drawn grid items before they are displayed.
+								if grid.pre_draw_overlay_actions_internal /= Void then
+									if grid_item_exists then
+										grid.pre_draw_overlay_actions_internal.call ([item_buffer_pixmap, grid_item.interface, current_column_index, current_row_index])
+									else
+										grid.pre_draw_overlay_actions_internal.call ([item_buffer_pixmap, Void, current_column_index, current_row_index])
+									end
+								end
+
 								if is_tree_enabled then
 									
 									if current_column_index = node_index then
@@ -710,13 +726,6 @@ feature -- Basic operations
 										current_tree_adjusted_column_width := current_tree_adjusted_column_width - current_subrow_indent
 											-- We adjust the horizontal position and width of the current item by the space required
 											-- for the tree node.
-										
-										item_buffer_pixmap.set_foreground_color (grid.displayed_background_color (current_column_index, current_row_index))
-										
-											-- The background area for the tree node must always be refreshed, even if the node is not visible.
-											-- We draw no wider than `current_column_width' to ensure this. The item background is re-drawn by the
-											-- item itself.
-										item_buffer_pixmap.fill_rectangle (0, 0, current_subrow_indent, current_row_height)
 
 											-- If the indent of the tree is less than `current_column_width', it must be visible so draw it.
 										if current_row.is_expandable then
@@ -853,14 +862,8 @@ feature -- Basic operations
 									if parent_node_index < current_column_index then
 										translated_parent_x_indent_position := 0
 									end
-									item_buffer_pixmap.set_foreground_color (grid.displayed_background_color (current_column_index, current_row_index))
-									if current_column_index = node_index then
-										item_buffer_pixmap.fill_rectangle (current_subrow_indent, 0, current_column_width, current_row_height)
-									else
-										item_buffer_pixmap.fill_rectangle (0, 0, current_column_width, current_row_height)
-									end
 
-									item_buffer_pixmap.set_foreground_color (tree_node_connector_color)
+								item_buffer_pixmap.set_foreground_color (tree_node_connector_color)
 									if drawing_subrow and ((current_column_index = current_row.index_of_first_item)) then
 											-- Here we must extend the line drawn from the horizontal offsets of the parent to the start of this item.
 											-- As the item is `Void', we set the end to the right hand edge of the column.
@@ -882,8 +885,6 @@ feature -- Basic operations
 												-- The background area for the tree node must always be refreshed, even if the node is not visible.
 												-- We draw no wider than `current_column_width' to ensure this.
 										end
-
-
 										if (parent_node_index = current_column_index) and (translated_parent_x_indent_position < current_column_width) then
 												-- If the grid column being drawn matches that in which the
 												-- node of `parent_row_i' is contained, then vertical lines must be drawn

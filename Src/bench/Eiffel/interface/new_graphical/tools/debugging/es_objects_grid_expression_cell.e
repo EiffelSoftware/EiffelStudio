@@ -14,6 +14,7 @@ inherit
 		end
 
 create
+	default_create,
 	make_with_text
 
 feature -- Query

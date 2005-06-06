@@ -99,8 +99,8 @@ MTNETWORK_OBJ = $(TOP)/ipc/app/MTnetwork.o
 LSRC = malloc.c garcol.c local.c store.c retrieve.c \
 	       hash.c traverse.c hashin.c tools.c internal.c plug.c \
 	       copy.c equal.c lmalloc.c out.c timer.c urgent.c sig.c \
-	       hector.c cecil.c bits.c file.c dir.c string.c misc.c \
-	       pattern.c error.c umain.c memory.c argv.c boolstr.c search.c \
+	       hector.c cecil.c bits.c file.c dir.c misc.c \
+	       error.c umain.c memory.c argv.c boolstr.c search.c \
 	       run_idr.c path_name.c object_id.c eif_threads.c eif_project.c \
 	       eif_rw_lock.c gen_conf.c eif_type_id.c rout_obj.c \
 	       option.c compress.c console.c
@@ -139,9 +139,7 @@ WOBJ = \
 	       wbits.o \
 	       wfile.o \
 	       wdir.o \
-	       wstring.o \
 	       wmisc.o \
-	       wpattern.o \
 	       werror.o \
 	       wumain.o \
 	       wmemory.o \
@@ -188,9 +186,7 @@ LOBJ = \
 	       bits.o \
 	       file.o \
 	       dir.o \
-	       string.o \
 	       misc.o \
-	       pattern.o \
 	       error.o \
 	       umain.o \
 	       memory.o \
@@ -241,9 +237,7 @@ EOBJ = \
 	       wbits.o \
 	       wfile.o \
 	       wdir.o \
-	       wstring.o \
 	       wmisc.o \
-	       wpattern.o \
 	       werror.o \
 	       wumain.o \
 	       wmemory.o \
@@ -295,9 +289,7 @@ MT_WOBJ = \
 	       MTwbits.o \
 	       MTwfile.o \
 	       MTwdir.o \
-	       MTwstring.o \
 	       MTwmisc.o \
-	       MTwpattern.o \
 	       MTwerror.o \
 	       MTwumain.o \
 	       MTwmemory.o \
@@ -344,9 +336,7 @@ MT_LOBJ = \
 	       MTbits.o \
 	       MTfile.o \
 	       MTdir.o \
-	       MTstring.o \
 	       MTmisc.o \
-	       MTpattern.o \
 	       MTerror.o \
 	       MTumain.o \
 	       MTmemory.o \
@@ -437,13 +427,7 @@ wfile.o: file.c
 wdir.o: dir.c
 	       $(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
-wstring.o: string.c
-	       $(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
-
 wmisc.o: misc.c
-	       $(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
-
-wpattern.o: pattern.c
 	       $(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
 werror.o: error.c
@@ -576,13 +560,7 @@ MTfile.o: file.c
 MTdir.o: dir.c
 	       $(CC) -c $(JMTCFLAGS) $? -o $@
 
-MTstring.o: string.c
-	       $(CC) -c $(JMTCFLAGS) $? -o $@
-
 MTmisc.o: misc.c
-	       $(CC) -c $(JMTCFLAGS) $? -o $@
-
-MTpattern.o: pattern.c
 	       $(CC) -c $(JMTCFLAGS) $? -o $@
 
 MTerror.o: error.c
@@ -715,13 +693,7 @@ MTwfile.o: file.c
 MTwdir.o: dir.c
 	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
-MTwstring.o: string.c
-	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
-
 MTwmisc.o: misc.c
-	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
-
-MTwpattern.o: pattern.c
 	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTwerror.o: error.c

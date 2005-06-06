@@ -211,6 +211,27 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
+		
+	pre_draw_overlay_actions: ACTION_SEQUENCE [TUPLE [EV_DRAWABLE, EV_GRID_ITEM, INTEGER, INTEGER]] is
+			-- Actions to be performed before the features of an item cell in `Current' have been drawn but after the background of
+			-- the cell has been drawn. The four pieces of event data are:
+			-- drawable: EV_DRAWABLE The drawable into which you may draw to overlay onto the already drawn background.
+			-- grid_item: EV_GRID_ITEM The item which has just been drawn, may be Void in the case that an
+			-- item cell is being drawn which does not contain an item.
+			-- a_column_index: INTEGER The column index of the grid cell that has just been drawn.
+			-- a_row_index: INTEGER The row index of the grid cell that has just been drawn.
+
+			-- This is useful for drawing additional border styles or other such effects. The upper left corner
+			-- of the item cell starts at coordinates 0x0 in the passed drawable. All drawing Performed
+			-- in the drawable is clipped to `width' of the column at `a_column_index' and `height' of row at `a_row_index'.
+			-- Note that the upper left corner of `drawable' corresponds to the upper left corner of the item
+			-- cell and not the actual items horizontal position within the cell which may be greater than 0 if
+			-- the item is within a tree structure. Use `horizontal_indent' of the item to determine this.
+		do
+			Result := implementation.pre_draw_overlay_actions
+		ensure
+			not_void: Result /= Void
+		end
 
 	post_draw_overlay_actions: ACTION_SEQUENCE [TUPLE [EV_DRAWABLE, EV_GRID_ITEM, INTEGER, INTEGER]] is
 			-- Actions to be performed after an item cell in `Current'  has been drawn. The four pieces of event data are:
@@ -221,8 +242,11 @@ feature -- Access
 			-- a_row_index: INTEGER The row index of the grid cell that has just been drawn.
 
 			-- This is useful for drawing additional border styles or other such effects. The upper left corner
-			-- of the item starts at coordinates 0x0 in the passed drawable. All drawing Performed
+			-- of the item cell starts at coordinates 0x0 in the passed drawable. All drawing Performed
 			-- in the drawable is clipped to `width' of the column at `a_column_index' and `height' of row at `a_row_index'.
+			-- Note that the upper left corner of `drawable' corresponds to the upper left corner of the item
+			-- cell and not the actual items horizontal position within the cell which may be greater than 0 if
+			-- the item is within a tree structure. Use `horizontal_indent' of the item to determine this.
 		do
 			Result := implementation.post_draw_overlay_actions
 		ensure

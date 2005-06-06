@@ -1375,6 +1375,22 @@ feature -- Status setting
 		do
 			redraw_client_area
 		end
+		
+	enable_full_redraw_on_virtual_position_change is
+			-- Ensure `is_full_redraw_on_virtual_position_change_enabled' is `True'.
+		do
+			is_full_redraw_on_virtual_position_change_enabled := True
+		ensure
+			is_full_redraw_on_virtual_position_change_enabled: is_full_redraw_on_virtual_position_change_enabled
+		end
+
+	disable_full_redraw_on_virtual_position_change is
+			-- Ensure `is_full_redraw_on_virtual_position_change_enabled' is `False'.
+		do
+			is_full_redraw_on_virtual_position_change_enabled := False
+		ensure
+			not_is_full_redraw_on_virtual_position_change_enabled: not is_full_redraw_on_virtual_position_change_enabled
+		end
 
 feature -- Status report
 
@@ -2614,7 +2630,7 @@ feature {EV_GRID_DRAWER_I, EV_GRID_COLUMN_I, EV_GRID_ROW_I, EV_GRID_ITEM_I, EV_G
 	tree_subrow_indent: INTEGER
 		-- Indent used for all indents except the first indent in the first column of `Current'.
 
-feature {EV_GRID_ITEM_I, EV_GRID} -- Implementation
+feature {EV_GRID_ITEM_I, EV_GRID, EV_GRID_DRAWER_I} -- Implementation
 
 	focused_selection_color: EV_COLOR is
 			-- Color used to show selection within items while focused.
@@ -2640,6 +2656,12 @@ feature {EV_GRID_ITEM_I, EV_GRID} -- Implementation
 		deferred
 		end
 		
+	is_full_redraw_on_virtual_position_change_enabled: BOOLEAN
+			-- Is complete client area invalidated as a result of virtual position changing?
+			-- Note that enabling this causes a large performance penalty in redrawing during
+			-- scrolling, but may be used to achieve effects not otherwise possible unless the
+			-- entire client area is invalidated.
+
 feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implementation
 	
 	recompute_vertical_scroll_bar is
@@ -3115,6 +3137,9 @@ feature {NONE} -- Drawing implementation
 			buffer_space: INTEGER
 			current_buffer_position: INTEGER
 		do
+			if is_full_redraw_on_virtual_position_change_enabled then
+				redraw_client_area
+			end
 			internal_client_y := a_y_position
 				-- Store the virtual client y position internally.
 
@@ -3150,6 +3175,9 @@ feature {NONE} -- Drawing implementation
 			buffer_space: INTEGER
 			current_buffer_position: INTEGER
 		do
+			if is_full_redraw_on_virtual_position_change_enabled then
+				redraw_client_area
+			end
 			internal_client_x := a_x_position
 				-- Store the virtual client x position internally.
 				

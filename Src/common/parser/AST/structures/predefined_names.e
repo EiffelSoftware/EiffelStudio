@@ -104,7 +104,7 @@ feature -- Constants
 	from_integer_name_id: INTEGER is 94
 	finalize_name_id: INTEGER is 95
 	eif_helpers_header_name_id: INTEGER is 96
-	native_array_name_id: INTEGER is 97
+	internal_native_array_name_id: INTEGER is 97
 	to_string_name_id: INTEGER is 98
 	to_cil_name_id: INTEGER is 99
 	is_digit_name_id: INTEGER is 100

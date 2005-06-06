@@ -78,9 +78,7 @@ feature -- Status report
 	collecting: BOOLEAN is
 			-- Is garbage collection enabled?
 		do
-			check
-				False
-			end
+			Result := True
 		end
 
 	largest_coalesced_block: INTEGER is
@@ -189,17 +187,11 @@ feature -- Status setting
 	collection_off is
 			-- Disable garbage collection.
 		do
-			check
-				False
-			end
 		end
 
 	collection_on is
 			-- Enable garbage collection.
 		do
-			check
-				False
-			end
 		end
 
 	allocate_fast is

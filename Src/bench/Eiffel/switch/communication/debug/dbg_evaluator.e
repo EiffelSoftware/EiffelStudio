@@ -172,7 +172,7 @@ feature -- Concrete evaluation
 						--| Classic
 					once_r := debug_info.once_request
 					if once_r.already_called (f) then
-						evaluate_function (a_addr, a_target, f, params)
+						evaluate_function (a_addr, a_target, Void, f, params)
 -- FIXME jfiat [2005/03/11] : changed
 --						last_result_value := once_r.once_result (f).dump_value
 --						last_result_static_type := f.type.associated_class
@@ -257,7 +257,7 @@ feature -- Concrete evaluation
 			end
 		end
 
-	evaluate_function (a_addr: STRING; a_target: DUMP_VALUE; f: E_FEATURE; params: LIST [DUMP_VALUE]) is
+	evaluate_function (a_addr: STRING; a_target: DUMP_VALUE; cl: CLASS_C; f: E_FEATURE; params: LIST [DUMP_VALUE]) is
 		require
 			f /= Void
 			f_is_not_attribute: not f.is_attribute
@@ -283,7 +283,9 @@ feature -- Concrete evaluation
 			end
 
 				--| Get target data ...
-			if a_target /= Void then
+			if cl /= Void then
+				l_dynclass := cl
+			elseif a_target /= Void then
 				l_dynclass := a_target.dynamic_class
 			end
 			if l_dynclass /= Void and then l_dynclass.is_basic then
@@ -291,7 +293,7 @@ feature -- Concrete evaluation
 			elseif l_dynclass = Void or else l_dynclass.types.count > 1 then
 				if a_addr /= Void then
 						-- The type has generic derivations: we need to find the precise type.
-					l_dyntype := class_type_from_object (a_addr)
+					l_dyntype := class_type_from_object_relative_to (a_addr, l_dynclass)
 					if l_dyntype = Void then
 						set_error_evaluation ("Error occurred: unable to find the context object <" + a_addr + ">")
 					elseif l_dynclass = Void then
@@ -358,6 +360,23 @@ feature -- Concrete evaluation
 	class_type_from_object (a_addr: STRING): CLASS_TYPE is
 		do
 			Result := Debugged_object_manager.class_type_at_address (a_addr)
+		end
+		
+	class_type_from_object_relative_to (a_addr: STRING; cl: CLASS_C): CLASS_TYPE is
+		local
+			lt: LIST [CLASS_TYPE]
+			ctype: CLASS_TYPE
+		do
+			Result := class_type_from_object (a_addr)
+			if 
+				Result /= Void 
+				and then cl /= Void 
+				and then Result.associated_class /= cl 
+			then
+				if Result.associated_class.conform_to (cl) then
+					Result := cl.meta_type (Result)
+				end
+			end
 		end
 
 	effective_evaluate_function (a_addr: STRING; a_target: DUMP_VALUE; f, realf: E_FEATURE; 
@@ -450,6 +469,7 @@ feature {NONE} -- Implementation classic
 			elseif f.written_class.is_expanded then
 				print ("Error: can not evaluate on expanded value !!%N")
 			else
+				fixme ("it seems the runtime/debug is not deisgned to call precursor ...")
 				send_rqst_3_integer (Rqst_dynamic_eval, f.feature_id, ctype.static_type_id - 1, par)
 			end
 				-- Receive the Result.

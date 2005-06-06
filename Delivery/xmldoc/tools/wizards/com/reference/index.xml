@@ -16,13 +16,6 @@
 			</item>
 			<item>
 				<link>
-					<url>40_eiffel_project.xml</url>
-					<label>Eiffel Project Processing</label>
-				</link> 
-				covers how to add a COM interface to an existing EiffelStudio project.
-			</item>
-			<item>
-				<link>
 					<url>20_generated_files.xml</url>
 					<label>Generated Files</label>
 				</link> 
@@ -33,6 +26,13 @@
 					<url>30_class_hierarchy.xml</url>
 					<label>Class Hierarchy</label>
 				</link> describes the class hierarchy of the generated Eiffel project.
+			</item>
+			<item>
+				<link>
+					<url>40_eiffel_project.xml</url>
+					<label>Eiffel Project Processing</label>
+				</link> 
+				covers how to add a COM interface to an existing EiffelStudio project.
 			</item>
 			<item>
 				<link>

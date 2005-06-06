@@ -3,8 +3,9 @@
 	<paragraph>
 		<paragraph>
 			The generated Eiffel code reflects the architecture of the component described in the definition file. Each interface corresponds to 
-			a deferred Eiffel class that includes one deferred feature per interface function. The deferred features are implemented in the heir 
-			inheriting from all interfaces.
+			a deferred Eiffel class that includes one deferred feature per interface function. The deferred features are implemented in heirs of 
+			the interface class. Classes inheriting from these interfaces implement either a coclass or an implemented interface (that is an 
+			interface whose instance might be used as an argument on one of the component interfaces functions).
 		</paragraph>
 		<image>
 			<url>../images/interface_inheritance.png</url>
@@ -65,16 +66,12 @@
 		<image>
 			<url>../images/implemented_interface_server.png</url>
 		</image>
-		<paragraph> For both Eiffel coclass and Implemented interfaces, the 
-			<class_name>INTERFACE</class_name> class contains no implementation; it only defines the signatures of the functions that are part of the interface.
-		</paragraph>
 		<seealso>
 			<bold>See Also</bold>: <link><url>10_how_wizard_works.xml</url><label>How the EiffelCOM Wizard Works</label></link>, 
 			<link><url>20_generated_files.xml</url><label>Generated Files</label></link>, 
-			<link><url>30_class_hierarchy.xml</url><label>Class Hierarchy</label></link>, 
-			<link><url>40_eiffel_project.xml</url><label>Adding a COM Interface to an Eiffel Project</label></link>,
-			<link><url>50_accessing.xml</url><label>Accessing a COM Component</label></link>,
-			<link><url>60_reusing.xml</url><label>Reusing a COM Component</label></link>,
+			<link><url>40_eiffel_project.xml</url><label>Adding a COM Interface to an Eiffel Project</label></link>, 
+			<link><url>50_reusing.xml</url><label>Accessing a COM Component</label></link>, 
+			<link><url>60_building.xml</url><label>Building a COM Component</label></link>, 
 			<link><url>70_options.xml</url><label>Command Line Options</label></link>
 		</seealso>
 	</paragraph></document>

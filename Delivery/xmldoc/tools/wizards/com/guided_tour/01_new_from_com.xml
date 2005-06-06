@@ -123,7 +123,7 @@ regsvr32 system_name.dll</code_block>
 		where <italic>system_name</italic> is the name of the dll (e.g. string_manipulator). So to register the <class_name>
 		StringManipulator</class_name> component, run:
 		<code_block>
-cd $ISE_EIFFEL\examples\com\wizard\string_manipulator\generated\component\server\component\EIFGEN\W_code	
+cd $ISE_EIFFEL\examples\com\wizard\string_manipulator\generated\component\server\EIFGEN\W_code	
 regsvr32 string_manipulator.dll</code_block>
 
 		Once registered, follow the steps described in <link><url>03_accessing.xml</url><label>Accessing a COM component</label></link> 

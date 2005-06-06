@@ -41,7 +41,7 @@ RT_LNK void xcopy(EIF_REFERENCE source, EIF_REFERENCE target);			/* Expanded cop
 RT_LNK void ecopy(register EIF_REFERENCE source, register EIF_REFERENCE target);			/* Standard copy of a normal Eiffel object */
 RT_LNK void eif_std_ref_copy(register EIF_REFERENCE source, register EIF_REFERENCE target);			/* Standard copy of a normal Eiffel object */
 RT_LNK EIF_BOOLEAN c_check_assert (EIF_BOOLEAN b);
-RT_LNK void spsubcopy(EIF_REFERENCE source, EIF_REFERENCE target, EIF_INTEGER start, EIF_INTEGER end, EIF_INTEGER strchr);		/* Copy special objects' slices */
+RT_LNK void sp_copy_data (EIF_REFERENCE Current, EIF_REFERENCE source, EIF_INTEGER source_index, EIF_INTEGER destination_index, EIF_INTEGER n);
 RT_LNK void spclearall(EIF_REFERENCE spobj);		/* Reset special object's items to default */
 
 #ifdef __cplusplus

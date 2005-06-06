@@ -786,36 +786,31 @@ rt_public EIF_BOOLEAN c_check_assert (EIF_BOOLEAN b)
 	return ((EIF_BOOLEAN) temp);
 }
 
-rt_public void spsubcopy (EIF_REFERENCE source, EIF_REFERENCE target, EIF_INTEGER start, EIF_INTEGER end, EIF_INTEGER index)
+rt_public void sp_copy_data (EIF_REFERENCE Current, EIF_REFERENCE source, EIF_INTEGER source_index, EIF_INTEGER destination_index, EIF_INTEGER n)
 {
-	/* Copy elements of `source' within bounds `start'..`end'
-	 * to `target' starting at index `index'.
+	/* Copy `n' elements of `source' starting at index `source_index' to `Current'
+	 * starting at index `destination_index'.
 	 * Indexes are assumed to start from 0 and we assume that
 	 * memory has been properly allocated beforehand.
 	 */
 
-	EIF_INTEGER elem_size, count;
-	EIF_REFERENCE ref;
-#ifdef ISE_GC
-	uint32 flags;
-#endif
+	EIF_INTEGER elem_size;
 
+	REQUIRE ("Current not null", Current);
 	REQUIRE ("source not null", source);
-	REQUIRE ("target not null", target);
 	REQUIRE ("Special object", HEADER (source)->ov_flags & EO_SPEC);
-	REQUIRE ("Special object", HEADER (target)->ov_flags & EO_SPEC);
+	REQUIRE ("Special object", HEADER (Current)->ov_flags & EO_SPEC);
 	REQUIRE ("Not tuple object", !(HEADER (source)->ov_flags & EO_TUPLE));
-	REQUIRE ("Not tuple object", !(HEADER (target)->ov_flags & EO_TUPLE));
-	REQUIRE ("start position valid", (start >= 0) && (start < RT_SPECIAL_COUNT(source)));
-	REQUIRE ("end position valid", (end >= 0) && (end < RT_SPECIAL_COUNT(source)));
-	REQUIRE ("valid bounds", (start <= end) || (start == end + 1));
-	REQUIRE ("index position valid", (index >= 0) && (index < RT_SPECIAL_COUNT(target)));
-	REQUIRE ("enough_space", (RT_SPECIAL_COUNT(target) - index >= (end - start)));
+	REQUIRE ("Not tuple object", !(HEADER (Current)->ov_flags & EO_TUPLE));
+	REQUIRE ("Not a special of expanded", !(HEADER(Current)->ov_flags & EO_COMP));
+	REQUIRE ("source_index non_negative", source_index >= 0);
+	REQUIRE ("destination_index non_negative", destination_index >= 0);
+	REQUIRE ("n non_negative", n >= 0);
+	REQUIRE ("source_index_valid", source_index + n <= RT_SPECIAL_COUNT(source));
+	REQUIRE ("source_index valid for destination", destination_index + n <= RT_SPECIAL_COUNT(Current));
 
-	count = end - start + 1;
-	ref = RT_SPECIAL_INFO(source);
-	elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(ref);
-	memmove(target + (index * elem_size), source + (start * elem_size), count * elem_size);
+	elem_size = RT_SPECIAL_ELEM_SIZE(source);
+	memmove(Current + (destination_index * elem_size), source + (source_index * elem_size), n * elem_size);
 
 #ifdef ISE_GC
 	/* Ok, normally we would have to perform age tests, by scanning the special
@@ -826,16 +821,18 @@ rt_public void spsubcopy (EIF_REFERENCE source, EIF_REFERENCE target, EIF_INTEGE
 	 * is old and contains some references, I am automatically inserting it
 	 * in the remembered set. The GC will remove it from there at the next
 	 * cycle, if necessary--RAM.
+	 * Of course we only do that when `source' and `Current' represents different objects. -- Manu
 	 */
-
-	flags = HEADER(target)->ov_flags;
-	if ((flags & (EO_REF | EO_OLD | EO_REM)) == (EO_OLD | EO_REF))
+	if
+		((Current != source) &&
+		((HEADER(Current)->ov_flags & (EO_REF | EO_OLD | EO_REM)) == (EO_OLD | EO_REF)))
+	{
 			/* May it hold new references? */
-			eremb(target);	/* Remember it, even if not needed, to fasten
+		eremb(Current);	/* Remember it, even if not needed, to fasten
 								copying process. */
-#endif /* ISE_GC */
-
-}	/* spsubcopy () */
+	}
+#endif
+}
 
 rt_public void spclearall (EIF_REFERENCE spobj)
 {

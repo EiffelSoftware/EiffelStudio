@@ -1617,51 +1617,16 @@ feature -- Element change
 			end
 		end
 
-	move_row (i, j: INTEGER) is
-			-- Move row at index `i' to index `j'
-		require
-			i_positive: i > 0
-			j_positive: j > 0
-			i_less_than_row_count: i <= row_count + 1
-			j_less_than_row_count: j <= row_count + 1
-		local
-			a_row: EV_GRID_ROW_I
-			a_row_data: SPECIAL [EV_GRID_ITEM_I]
-			temp_rows: like rows
-		do
-				--Retrieve row at position `i' and remove from list
-			a_row := row_internal (i)
-			temp_rows := rows
-			temp_rows.go_i_th (i)
-			temp_rows.remove
-			
-				-- Insert retrieved row at position `j'
-			temp_rows.go_i_th (j)
-			temp_rows.put_left (a_row)
-			
-			internal_row_data.go_i_th (i)
-			a_row_data := internal_row_data.item
-			internal_row_data.remove
-			
-			internal_row_data.go_i_th (j)
-			internal_row_data.put_left (a_row_data)
-			
-			update_grid_row_indices (i.min (j))
-			
-			redraw_client_area
-
-			fixme ("EV_GRID_I: move_row redraw")
-		ensure
-			moved: row (j) = old row (i) and then (i /= j implies row (j) /= row (i))
-		end
-
 	move_rows (i, j, n: INTEGER) is
 			-- Move `n' rows starting at index `i' to index `j'.
 		require
 			i_positive: i > 0
 			j_positive: j > 0
-			i_less_than_row_count: i <= row_count + 1
-			j_less_than_row_count: j <= row_count + 1
+			i_less_than_row_count: i <= row_count
+			j_valid: j <= row_count + 1
+			n_valid: i + n <= row_count + 1
+			row_at_i_has_no_parent_row: row (i).parent_row = Void
+			end_row_last_in_tree_structure: i + n <= row_count implies row (i + n).parent_row = Void
 		local
 			temp_rows, rows_duplicate: like rows
 			temp_internal_data, internal_data_duplicate: like internal_row_data
@@ -1669,47 +1634,14 @@ feature -- Element change
 		do
 				-- Only move if the row move is not overlapping.
 			if j < i or else j > i + n then
-				fixme ("Implement using an optimized move from EV_GRID_ARRAYED_LIST")
-				temp_rows := rows
-				temp_rows.go_i_th (i)
-				rows_duplicate := temp_rows.duplicate (n)
-	
-				temp_internal_data := internal_row_data
-				temp_internal_data.go_i_th (i)
-				internal_data_duplicate := temp_internal_data.duplicate (n)			
-
-					-- Remove items from grid.
-				from
-					a_counter := i
-					a_end_index := i + n - 1
-				until
-					a_counter > a_end_index
-				loop
-						-- Lists are already at `i' position so we just keep removing the current item.
-					temp_rows.remove
-					temp_internal_data.remove
-					a_counter := a_counter + 1
-				end
-				
-				-- Insert duplicates at new position
-				if j > a_end_index then
-					a_insertion_index := j - n
-				else
-					a_insertion_index := j
-				end
-				temp_rows.go_i_th (a_insertion_index)
-				temp_internal_data.go_i_th (a_insertion_index)
-
-				temp_rows.merge_left (rows_duplicate)
-				temp_internal_data.merge_left (internal_data_duplicate)
-
+				rows.move_items (i, j, n)
+				internal_row_data.move_items (i, j, n)
+					-- Update the changed indexes.
 				update_grid_row_indices (i.min (j))
-				
 				redraw_client_area
 				fixme ("EV_GRID_I: move_rows redraw")
 			end
 		end
-		
 
 	move_column (i, j: INTEGER) is
 			-- Move row at index `i' to index `j'.

@@ -215,7 +215,8 @@ feature -- Graphical changes
 				gedit ?= row.item (Col_expression_index)
 			end
 			if gedit = Void then
-				create gedit.make_with_text (v) 
+				create gedit
+				grid_cell_set_text (gedit, v)
 				gedit.pointer_double_press_actions.force_extend (agent gedit.activate)
 				apply_cell_expression_text_properties_on (gedit)
 				gedit.deactivate_actions.extend (agent update_expression_on_deactivate (gedit))

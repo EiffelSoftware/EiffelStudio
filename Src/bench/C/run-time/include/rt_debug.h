@@ -38,6 +38,9 @@ extern struct id_list once_list;	/* Calling context once_list */
 #endif
 #endif
 
+extern void dbreak_create_table(void);
+extern void dbreak_free_table(void);
+
 #ifdef __cplusplus
 }
 #endif

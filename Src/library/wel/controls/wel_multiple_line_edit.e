@@ -195,9 +195,7 @@ feature -- Status report
 				create a_wel_string.make_empty (nb)
 				a_wel_string.set_size_in_string (nb)
 				nb := cwin_send_message_result_integer (item, Em_getline, to_wparam (i), a_wel_string.item)
-				a_wel_string.set_null_character (nb)
-				Result := a_wel_string.string
-				Result.keep_head (nb)
+				Result := a_wel_string.substring (1, nb)
 			else
 				create Result.make (0)
 			end

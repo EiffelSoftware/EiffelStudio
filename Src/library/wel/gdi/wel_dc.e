@@ -479,13 +479,10 @@ feature -- Status report
 			a_wel_string: WEL_STRING
 			nb: INTEGER
 		do
-			create Result.make (Max_text_face)
-			Result.fill_blank
-			create a_wel_string.make (Result)
+			create a_wel_string.make_empty (Max_text_face)
 			nb := cwin_get_text_face (item,
 				Max_text_face, a_wel_string.item)
-			Result := a_wel_string.string
-			Result.keep_head (nb)
+			Result := a_wel_string.substring (1, nb)
 		ensure
 			result_not_void: Result /= Void
 		end

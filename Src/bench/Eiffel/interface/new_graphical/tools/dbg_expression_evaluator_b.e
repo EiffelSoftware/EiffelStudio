@@ -146,7 +146,7 @@ feature -- Evaluation
 			tmp_target := Void
 		end
 		
-feature -- EXPR_B evaluation
+feature {NONE} -- EXPR_B evaluation
 
 	process_expression_evaluation (a_expr_b: EXPR_B) is
 		local
@@ -546,7 +546,12 @@ feature -- EXPR_B evaluation
 			if cl = Void then
 				set_error_evaluation ("Error: Call on void target " + a_feature_b.feature_name)
 			else
-				ef := cl.feature_with_name (a_feature_b.feature_name)
+				if a_feature_b.precursor_type /= Void then
+					cl := a_feature_b.precursor_type.base_class
+					ef := cl.feature_with_rout_id (a_feature_b.routine_id)
+				else
+					ef := cl.feature_with_name (a_feature_b.feature_name)
+				end
 				if ef /= Void then
 					fi := ef.associated_feature_i
 			
@@ -563,9 +568,9 @@ feature -- EXPR_B evaluation
 							--| parameters ...
 						params := parameter_values_from_parameters_b (a_feature_b.parameters)
 						if tmp_target /= Void then
-							evaluate_function (tmp_target.value_address, tmp_target, ef, params)
+							evaluate_function (tmp_target.value_address, tmp_target, cl, ef, params)
 						else
-							evaluate_function (context_address, Void, ef, params)
+							evaluate_function (context_address, Void, cl, ef, params)
 						end
 					elseif fi.is_attribute then
 							-- How come ? maybe with redefinition .. and so on ..
@@ -622,9 +627,9 @@ feature -- EXPR_B evaluation
 							--| parameters ...
 						params := parameter_values_from_parameters_b (a_external_b.parameters)
 						if tmp_target /= Void then
-							evaluate_function (tmp_target.value_address, tmp_target, ef, params)
+							evaluate_function (tmp_target.value_address, tmp_target, Void, ef, params)
 						elseif context_address /= Void then
-							evaluate_function (context_address, Void, ef, params)
+							evaluate_function (context_address, Void, Void, ef, params)
 						else
 							evaluate_static_function (ef, params)
 						end
@@ -824,7 +829,7 @@ feature -- EXPR_B evaluation
 			end
 		end
 		
-feature -- Concrete evaluation
+feature {NONE} -- Concrete evaluation
 
 	prepare_evaluation is
 			-- Initialization before effective evaluation
@@ -893,13 +898,13 @@ feature -- Concrete evaluation
 			retrieve_evaluation
 		end
 
-	evaluate_function (a_addr: STRING; a_target: DUMP_VALUE; f: E_FEATURE; params: LIST [DUMP_VALUE]) is
+	evaluate_function (a_addr: STRING; a_target: DUMP_VALUE; cl: CLASS_C; f: E_FEATURE; params: LIST [DUMP_VALUE]) is
 		require
 			f /= Void
 			f_is_not_attribute: not f.is_attribute
 		do
 			prepare_evaluation
-			Dbg_evaluator.evaluate_function (a_addr, a_target, f, params)
+			Dbg_evaluator.evaluate_function (a_addr, a_target, cl, f, params)
 			retrieve_evaluation
 		end
 

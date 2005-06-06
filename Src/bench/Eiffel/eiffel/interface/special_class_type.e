@@ -593,7 +593,7 @@ feature -- IL code generation
 		do
 				-- Get `native_array' field info.
 			l_native_array ?= associated_class.feature_table.item_id (
-				{PREDEFINED_NAMES}.Native_array_name_id)
+				{PREDEFINED_NAMES}.internal_native_array_name_id)
 			check
 				l_native_array_not_void: l_native_array /= Void
 			end
@@ -643,7 +643,7 @@ feature -- IL code generation
 				Il_generator.generate_local (l_element)
 			end
 				-- Get `native_array' field info.
-			l_native_array ?= associated_class.feature_table.item_id ({PREDEFINED_NAMES}.Native_array_name_id)
+			l_native_array ?= associated_class.feature_table.item_id ({PREDEFINED_NAMES}.internal_native_array_name_id)
 			check
 				l_native_array_not_void: l_native_array /= Void
 			end

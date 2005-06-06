@@ -1,6 +1,9 @@
 indexing
-	description: "Invertible object with an internal + operation"
-	note: "The model is that of a commutative group."
+	description: "[
+		Invertible object with an internal + operation.
+
+		Note: The model is that of a commutative group.
+		]"
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"

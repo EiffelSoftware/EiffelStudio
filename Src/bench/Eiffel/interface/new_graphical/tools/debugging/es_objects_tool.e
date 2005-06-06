@@ -909,11 +909,7 @@ feature {NONE} -- Stack objects grid Implementation
 				internal_result_row := a_target_grid.extended_new_row
 				glab := folder_label_item (Interface_names.l_result)
 				a_target_grid.grid_cell_set_pixmap (glab, Pixmaps.Icon_feature_clause_any)
-
 				internal_result_row.set_item (1, glab)
-				create glab.make_with_text ("")
-				internal_result_row.set_item (2, glab)
-
 				dv := cse.result_value
 				if dv /= Void then
 					add_debug_value_to_grid_row (internal_result_row, dv)
@@ -937,8 +933,6 @@ feature {NONE} -- Stack objects grid Implementation
 				glab := folder_label_item (Interface_names.l_Arguments)
 				a_target_grid.grid_cell_set_pixmap (glab, Pixmaps.Icon_feature_clause_any)
 				internal_arguments_row.set_item (1, glab)
-				create glab.make_with_text ("")
-				internal_arguments_row.set_item (2, glab)
 				from
 					list.start
 				until
@@ -967,11 +961,8 @@ feature {NONE} -- Stack objects grid Implementation
 			if list /= Void and then not list.is_empty then
 				glab := folder_label_item (Interface_names.l_Locals)
 				a_target_grid.grid_cell_set_pixmap (glab, Pixmaps.Icon_feature_clause_any)
-
 				internal_locals_row := a_target_grid.extended_new_row
 				internal_locals_row.set_item (1, glab)
-				create glab.make_with_text ("")
-				internal_locals_row.set_item (2, glab)
 				dbg_nb := list.count
 				create tmp.make (1, dbg_nb)
 				from

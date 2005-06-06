@@ -1,17 +1,20 @@
 indexing
-	description: "This control is analogous to the dividers in a notebook %
-		%or the labels in a file cabinet. By using a tab control, an %
-		%application can define multiple pages for the same area of a %
-		%window or dialog box. Each page consists of a set of %
-		%information or a group of controls that the application %
-		%displays when the user selects the corresponding tab. A %
-		%special type of tab control displays tabs that look like %
-		%buttons. Clicking a button should immediately perform a %
-		%command instead of displaying a page."
-	note: "The common controls dll (WEL_COMMON_CONTROLS_DLL) needs to %
-		%be loaded to use this control.%
-		%Inheritance from WEL_COMPOSITE_WINDOW in order to propagate the%
-		%events (most especially wm_command and wm_notify) to the children."
+	description: "[
+		This control is analogous to the dividers in a notebook
+		or the labels in a file cabinet. By using a tab control, an
+		application can define multiple pages for the same area of a
+		window or dialog box. Each page consists of a set of
+		information or a group of controls that the application
+		displays when the user selects the corresponding tab. A
+		special type of tab control displays tabs that look like
+		buttons. Clicking a button should immediately perform a
+		command instead of displaying a page.
+
+		Note: The common controls dll (WEL_COMMON_CONTROLS_DLL) needs to
+			be loaded to use this control.
+			Inheritance from WEL_COMPOSITE_WINDOW in order to propagate the
+			events (most especially wm_command and wm_notify) to the children.
+	]"
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"

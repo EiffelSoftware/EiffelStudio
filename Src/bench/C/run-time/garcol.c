@@ -57,6 +57,7 @@ doc:<file name="garcol.c" header="eif_garcol.h" version="$Id$" summary="Garbage 
 #endif
 #include "rt_hector.h"
 #include "rt_except.h"
+#include "rt_debug.h"
 #include "rt_main.h"
 
 #ifdef WORKBENCH
@@ -1310,6 +1311,10 @@ rt_public void reclaim(void)
 			eif_cleanup(); 
 			eif_free_dlls();
 #endif /* EIF_WINDOWS */
+
+#ifdef WORKBENCH
+			dbreak_free_table ();
+#endif
 
 #ifdef EIF_THREADS 
 			CHECK ("Root thread", eif_thr_is_root ());

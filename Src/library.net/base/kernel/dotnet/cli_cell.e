@@ -7,9 +7,6 @@ indexing
 
 class
 	CLI_CELL [G -> SYSTEM_OBJECT]
-	
-obsolete
-	"Not needed anymore, you can use .NET types in Eiffel generic classes since version 5.5 of the Eiffel compiler."
 
 inherit
 	HASHABLE

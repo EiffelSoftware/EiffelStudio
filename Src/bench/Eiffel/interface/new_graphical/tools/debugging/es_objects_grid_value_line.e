@@ -47,8 +47,6 @@ feature {NONE}
 			set_object (dv)
 		end
 
-feature {ES_OBJECTS_GRID_MANAGER} -- Row attachement
-
 feature -- Properties
 
 	object: ABSTRACT_DEBUG_VALUE

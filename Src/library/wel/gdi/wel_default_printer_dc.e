@@ -54,8 +54,7 @@ feature -- Basic operations
 			nb := cwin_get_profile_string (windows.item,
 				a_device.item, options.item, a_printer.item,
 				Max_printer_name)
-			printer := a_printer.string
-			printer.keep_head (nb)
+			printer := a_printer.substring (1, nb)
 			if printer.is_equal (Options_const) then
 				-- There is no default printer connected.
 				-- Let's create empty strings.

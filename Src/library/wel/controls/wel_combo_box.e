@@ -52,12 +52,12 @@ feature -- Access
 			i_small_enough: i < count
 		local
 			a_wel_string: WEL_STRING
+			l_count: INTEGER
 		do
-			create Result.make (i_th_text_length (i))
-			Result.fill_blank
-			create a_wel_string.make (Result)
+			l_count := i_th_text_length (i)
+			create a_wel_string.make_empty (l_count)
 			cwin_send_message (item, Cb_getlbtext, to_wparam (i), a_wel_string.item)
-			Result := a_wel_string.string
+			Result := a_wel_string.substring (1, l_count)
 		ensure
 			result_exists: Result /= Void
 		end

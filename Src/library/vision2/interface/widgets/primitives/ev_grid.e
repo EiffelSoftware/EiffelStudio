@@ -1539,9 +1539,10 @@ feature -- Element change
 			j_positive: j > 0
 			i_less_than_row_count: i <= row_count
 			j_valid: j <= row_count + 1
-			to_implement_assertion ("Add precondition so that a tree structure is not broken")
+			row_at_i_has_no_parent_row: row (i).parent_row = Void
+			row_may_be_removed_from_tree_structure: i < row_count implies row (i + 1).parent_row = Void
 		do
-			implementation.move_row (i, j)
+			implementation.move_rows (i, j, 1)
 		ensure
 			moved: row (j) = old row (i) and then (i /= j implies row (j) /= row (i))
 		end

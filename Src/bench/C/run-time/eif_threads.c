@@ -76,8 +76,9 @@ rt_private void eif_free_context (rt_global_context_t *);
 rt_private EIF_THR_ENTRY_TYPE eif_thr_entry(EIF_THR_ENTRY_ARG_TYPE);
 
 	/* To update GC with thread specific data */
-rt_private void eif_destroy_gc_stacks(rt_global_context_t *);
+rt_private void eif_remove_gc_stacks(rt_global_context_t *);
 rt_private void eif_init_gc_stacks(rt_global_context_t *);
+rt_private void eif_free_gc_stacks (void);
 rt_private void load_stack_in_gc (struct stack_list *, void *);
 rt_private void remove_data_from_gc (struct stack_list *, void *);
 rt_private void eif_stack_free (void *stack);
@@ -250,6 +251,24 @@ doc:	</routine>
 
 rt_shared void eif_thread_cleanup (void)
 {
+	RT_GET_CONTEXT
+
+	REQUIRE("is_root", eif_thr_is_root());
+
+		/* Free per thread data which is not free because root thread
+		 * does not go through `eif_thr_exit'. */
+	if (eif_children_mutex) {
+		EIF_MUTEX_DESTROY(eif_children_mutex, "Couldn't destroy join mutex.");
+#ifndef EIF_NO_CONDVAR
+		EIF_COND_DESTROY(eif_children_cond, "Couldn't destroy join cond. var");
+#endif
+	}
+
+	eif_free_context (rt_globals);
+
+		/* Free GC allocated stacks. */
+	eif_free_gc_stacks ();
+
 #ifdef ISE_GC
 	EIF_LW_MUTEX_DESTROY(eif_gc_mutex, "Could not destroy mutex");
 	EIF_LW_MUTEX_DESTROY(eif_gc_set_mutex, "Could not destroy mutex");
@@ -262,6 +281,7 @@ rt_shared void eif_thread_cleanup (void)
 	EIF_LW_MUTEX_DESTROY(eif_thread_launch_mutex, "Could not destroy mutex");
 	EIF_LW_MUTEX_DESTROY(eif_except_lock, "Could not destroy mutex");
 	EIF_LW_MUTEX_DESTROY(eif_memory_mutex, "Could not destroy mutex");
+	EIF_LW_MUTEX_DESTROY(eif_trace_mutex, "Could not destroy mutex");
 	EIF_LW_MUTEX_DESTROY(eif_eo_store_mutex, "Could not destroy mutex");
 	EIF_LW_MUTEX_DESTROY(eif_global_once_set_mutex, "Could not destroy mutex");
 	EIF_LW_MUTEX_DESTROY(eif_object_id_stack_mutex, "Could not destroy mutex");
@@ -422,18 +442,27 @@ doc:	</routine>
 
 rt_private void eif_free_context (rt_global_context_t *rt_globals)
 {
+	eif_global_context_t *eif_globals;
+
+	REQUIRE ("rt_globals not null", rt_globals);
+
+	eif_globals = rt_globals->eif_globals;
+
 		/* gen_conf.c */
 	eif_gen_conf_thread_cleanup ();
 
 #ifdef EIF_WINDOWS
 		/* WEL data if any */
-	if (rt_globals->eif_globals->wel_per_thread_data) {
-		eif_free (rt_globals->eif_globals->wel_per_thread_data);
+	if (eif_globals->wel_per_thread_data) {
+		eif_free (eif_globals->wel_per_thread_data);
 	}
 #endif
 
 		/* Free array of once manifest strings */
-	FREE_OMS (rt_globals->eif_globals->EIF_oms_cx);
+	FREE_OMS (eif_globals->EIF_oms_cx);
+
+		/* Free once values. */
+	eif_free (eif_globals->EIF_once_values_cx);
 
 		/* Context data if any */
 	if (eif_thr_context) {
@@ -441,8 +470,12 @@ rt_private void eif_free_context (rt_global_context_t *rt_globals)
 		eif_free (eif_thr_context);		/* Thread context passed by parent */
 	}
 
+		/* Free allocated stacks. */
+	/* FIXME: add routines to free all allocated stacks per thread, otherwise
+	 * we might quicly ran out of memory. */
+
 		/* Free public per thread data */
-	eif_free (rt_globals->eif_globals);
+	eif_free (eif_globals);
 
 		/* Free private per thread data */
 	eif_free (rt_globals);
@@ -694,7 +727,7 @@ rt_public void eif_thr_exit(void)
 #ifdef ISE_GC
 			/* Destroy GC data associated with the current thread. */
 		eif_synchronize_gc (rt_globals);
-		eif_destroy_gc_stacks (rt_globals);
+		eif_remove_gc_stacks (rt_globals);
 		eif_unsynchronize_gc (rt_globals);
 #endif
 
@@ -758,15 +791,38 @@ rt_private void eif_init_gc_stacks(rt_global_context_t *rt_globals)
 #endif
 }
 
+/**************************************************************************/
+/* NAME: eif_free_gc_stacks                                               */
+/*------------------------------------------------------------------------*/
+/* Free stacks allocated to hold all running threads.                     */
+/**************************************************************************/
+
+rt_private void eif_free_gc_stacks(void)
+{
+#ifdef ISE_GC
+	eif_free (rt_globals_list.threads.data);
+	eif_free (loc_stack_list.threads.data);
+	eif_free (loc_set_list.threads.data);
+	eif_free (once_set_list.threads.data);
+	eif_free (oms_set_list.threads.data);
+	eif_free (hec_stack_list.threads.data);
+	eif_free (hec_saved_list.threads.data);
+	eif_free (eif_stack_list.threads.data);
+	eif_free (eif_trace_list.threads.data);
+#ifdef WORKBENCH
+	eif_free (opstack_list.threads.data);
+#endif
+#endif
+}
 
 /**************************************************************************/
-/* NAME: eif_destroy_gc_stacks                                            */
+/* NAME: eif_remove_gc_stacks                                            */
 /* ARGS: rt_globals: References to thread specific data                   */
 /*------------------------------------------------------------------------*/
 /* Destroy thread specific stacks and remove them from GC global stack    */
 /**************************************************************************/
 
-rt_private void eif_destroy_gc_stacks(rt_global_context_t *rt_globals)
+rt_private void eif_remove_gc_stacks(rt_global_context_t *rt_globals)
 {
 #ifdef ISE_GC
 	eif_global_context_t *eif_globals = rt_globals->eif_globals;
@@ -909,6 +965,7 @@ rt_public void eif_enter_eiffel_code()
 		/* Do not change current thread status if we are currently running a
 		 * GC cycle, the status will be reset in `eif_unsynchronize_gc'. */
 	if (gc_thread_status != EIF_THREAD_GC_RUNNING) {
+			/* Check if GC requested a synchronization before resetting our status. */
 		gc_thread_status = EIF_THREAD_RUNNING;
 	}
 	if (gc_stop_thread_request) {
@@ -979,36 +1036,42 @@ rt_shared void eif_synchronize_gc (rt_global_context_t *rt_globals)
 		gc_thread_collection_count = 1;
 		gc_thread_status = EIF_THREAD_GC_RUNNING;
 
-			/* We have acquired the lock, now, process all running threads and wait until
-			 * they are all not marked `EIF_THREAD_RUNNING'. */
-		memcpy(&all_thread_list, &rt_globals_list, sizeof(struct stack_list));
-		all_thread_list.threads.data = eif_malloc (rt_globals_list.count * sizeof(void *));
-		memcpy(all_thread_list.threads.data, rt_globals_list.threads.data,
-			rt_globals_list.count * sizeof(void *));
+			/* It is only usefull to iterate over the threads when there are more 
+			 * than one. */
+		if (rt_globals_list.count > 0) {
+				/* We have acquired the lock, now, process all running threads and wait until
+				 * they are all not marked `EIF_THREAD_RUNNING'. */
+			memcpy(&all_thread_list, &rt_globals_list, sizeof(struct stack_list));
+			all_thread_list.threads.data = eif_malloc (rt_globals_list.count * sizeof(void *));
+			memcpy(all_thread_list.threads.data, rt_globals_list.threads.data,
+				rt_globals_list.count * sizeof(void *));
 
-		while (all_thread_list.count != 0) {
-			for (i = 0; i < all_thread_list.count; i++) {
-				thread_globals = (rt_global_context_t *) all_thread_list.threads.data[i];
-				if (thread_globals != rt_globals) {
-					status = thread_globals->gc_thread_status_cx;
-					if (status == EIF_THREAD_RUNNING) {
-						load_stack_in_gc (&running_thread_list, thread_globals);
+			while (all_thread_list.count != 0) {
+				for (i = 0; i < all_thread_list.count; i++) {
+					thread_globals = (rt_global_context_t *) all_thread_list.threads.data[i];
+					if (thread_globals != rt_globals) {
+						status = thread_globals->gc_thread_status_cx;
+						if (status == EIF_THREAD_RUNNING) {
+							load_stack_in_gc (&running_thread_list, thread_globals);
+						}
 					}
 				}
-			}
-			eif_free (all_thread_list.threads.data);
-			memcpy(&all_thread_list, &running_thread_list, sizeof(struct stack_list));
-			memset(&running_thread_list, 0, sizeof(struct stack_list));
+				eif_free (all_thread_list.threads.data);
+				memcpy(&all_thread_list, &running_thread_list, sizeof(struct stack_list));
+				memset(&running_thread_list, 0, sizeof(struct stack_list));
 
-				/* For performance reasons on systems with a poor scheduling policy, 
-				 * we switch context to one of the remaining running thread. Not doing
-				 * so on a uniprocessor WinXP system, the execution was about 1000 times
-				 * slower than on a bi-processor WinXP system. */
-			EIF_THR_YIELD;
-		}
+					/* For performance reasons on systems with a poor scheduling policy, 
+					 * we switch context to one of the remaining running thread. Not doing
+					 * so on a uniprocessor WinXP system, the execution was about 1000 times
+					 * slower than on a bi-processor WinXP system. */
+				EIF_THR_YIELD;
+			}
+
+
 #ifdef DEBUG
-		printf ("Synchronized...");
+			printf ("Synchronized...");
 #endif
+		}
 	} else {
 			/* A recursive demand was made, we simply increment the blocking counter.
 			 * No synchronization is required as we are still under the protection
@@ -1123,7 +1186,7 @@ rt_shared void eif_terminate_all_other_threads (void) {
 #ifndef HAS_THREAD_CANCELLATION
 		nb = running_thread_list.count;
 		for (i = 0; i < nb; i++) {
-			eif_destroy_gc_stacks ((rt_global_context_t *) running_thread_list.threads.data[i]);
+			eif_remove_gc_stacks ((rt_global_context_t *) running_thread_list.threads.data[i]);
 		}
 #endif
 	}

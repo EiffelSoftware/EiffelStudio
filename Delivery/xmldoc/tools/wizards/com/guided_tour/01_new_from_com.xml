@@ -135,11 +135,18 @@ regsvr32 string_manipulator.dll</code_block>
 			in order to run the compiled system. The Eiffel runtime looks in the working directory for the byte code. 
 			Since the client loads the EiffelCOM COM component from its current location, the 
 			working directory will not contain the server's byte code. As a consequence when testing EiffelCOM COM components 
-			the server's byte code must be copied to the working directory of the client.<line_break/> 
+			the server's byte code must be copied to the working directory of the client. Another workaround that prevents 
+			having to copy the byte code after each compilation would be to define the environment variable 
+			<bold>MELT_PATH</bold> in the client system prior to instantiating the COM component.<line_break/> 
 			For the <class_name>StringManipulator</class_name> component, the file 
 			<italic>$ISE_EIFFEL\examples\com\wizard\string_manipulator\generated\component\server\EIFGEN\W_Code\string_manipulator.melted</italic> 
 			must be copied to 
-			<italic>$ISE_EIFFEL\examples\com\wizard\string_manipulator\client</italic>.
+			<italic>$ISE_EIFFEL\examples\com\wizard\string_manipulator\client</italic>. The other approach would be to 
+			add the following line of code in the client (e.g. in <feature_name>make</feature_name> of 
+			<class_name>STRING_MANIPULATOR_CLIENT_MAIN_DIALOG</class_name>):
+			<code>
+			(create {EXECUTION_ENVIRONMENT}).put ("<bold>EiffelXX</bold>\examples\com\wizard\string_manipulator\generated\component\Server\EIFGEN\W_code", "MELT_PATH")</code>
+			where <bold>EiffelXX</bold> is the path to the EiffelStudio installation.
 		</tip>
 		<seealso>
 			<bold>See Also</bold>

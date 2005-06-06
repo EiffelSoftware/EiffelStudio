@@ -1,13 +1,16 @@
 indexing
-	description: "Contains information about a tab control item."
-	note: "There are two creation procedure. If you want to create%
-		% the item with make, you will then have to add a wel%
-		% window by yourself. This window must be create with%
-		% the tab control as parent and it must be added to the%
-		% item before the item is added to the tab_control.%
-		% If you use `make_with_window', you still can set another%
-		% window, but you will have to do this before to add the%
-		% item to the tab_control."
+	description: "[
+		Contains information about a tab control item.
+
+		Note: There are two creation procedure. If you want to create
+			the item with make, you will then have to add a wel
+			window by yourself. This window must be create with
+			the tab control as parent and it must be added to the
+			item before the item is added to the tab_control.
+			If you use `make_with_window', you still can set another
+			window, but you will have to do this before to add the
+			item to the tab_control.
+		]"
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"

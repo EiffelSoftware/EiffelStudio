@@ -1,12 +1,15 @@
 indexing
-	description: "General notions of a loadable resource."
+	description: "[
+		General notions of a loadable resource.
+
+		Note: `make_by_predefined_id' does now take a POINTER as argument.
+		   Please change any external clauses of existing prefedefined
+		   IDs to POINTER too. Predefined IDs are correctly casted on
+		   the C-side already.
+		]"
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
-	note: "`make_by_predefined_id' does now take a POINTER as argument.%
-		   %Please change any external clauses of existing prefedefined%
-		   %IDs to POINTER too. Predefined IDs are correctly casted on%
-		   %the C-side already"
 
 deferred class
 	WEL_RESOURCE

@@ -4,47 +4,53 @@
 		<paragraph>Version: 5.0</paragraph>
 		<paragraph>Availability: Full Package.</paragraph>
 		<paragraph>
-			The EiffelCOM Wizard allows the creation of Eiffel project implementing or reusing COM components.
+			The EiffelCOM Wizard allows the creation of Eiffel projects implementing or reusing COM components.
 		</paragraph>
 		<list ordered="false">
 			<item>
 				<link>
-					<url>how_wizard_works.xml</url>
-					<label>How the wizard works</label>
+					<url>10_how_wizard_works.xml</url>
+					<label>How the EiffelCOM Wizard works</label>
 				</link> 
 				describes the steps followed by the wizard when creating the Eiffel project.
 			</item>
 			<item>
 				<link>
-					<url>eiffel_project.xml</url>
-					<label>Adding a COM interface to an Eiffel project</label>
+					<url>40_eiffel_project.xml</url>
+					<label>Eiffel Project Processing</label>
 				</link> 
 				covers how to add a COM interface to an existing EiffelStudio project.
 			</item>
 			<item>
 				<link>
-					<url>generated_files.xml</url>
+					<url>20_generated_files.xml</url>
 					<label>Generated Files</label>
 				</link> 
 				describes the list of generated files and their usage.
 			</item>
 			<item>
 				<link>
-					<url>class_hierarchy.xml</url>
+					<url>30_class_hierarchy.xml</url>
 					<label>Class Hierarchy</label>
 				</link> describes the class hierarchy of the generated Eiffel project.
 			</item>
 			<item>
 				<link>
-					<url>accessing.xml</url>
-					<label>Accessing a Component</label>
+					<url>50_reusing.xml</url>
+					<label>Accessing a COM Component</label>
 				</link> describes how to reuse an existing COM component.
 			</item>
 			<item>
 				<link>
-					<url>building.xml</url>
-					<label>Building a Component</label>
+					<url>60_building.xml</url>
+					<label>Building a COM Component</label>
 				</link> describes how to build a new COM component.
+			</item>
+			<item>
+				<link>
+					<url>70_options.xml</url>
+					<label>Command Line Options</label>
+				</link> describes using the wizard from the command line.
 			</item>
 		</list>
 		<seealso>

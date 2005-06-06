@@ -16,7 +16,7 @@
 			<item>
 				<bold>IDL Compilation</bold>: 
 				If the project uses an IDL file (whether it was specified or the result of processing a 
-				facade class from an existing Eiffel project), the EiffelCOM Wizard then compiles it
+				facade class from an existing Eiffel project), the EiffelCOM Wizard then compiles it 
 				into a type library.
 			</item>
 			<item> 
@@ -52,12 +52,11 @@
 			<bold>Note</bold>: The EiffelStudio button will only be enabled if the Eiffel code was compiled.
 		</note>
 		<seealso>
-			<bold>See Also</bold>: <link><url>10_how_wizard_works.xml</url><label>How the EiffelCOM Wizard Works</label></link>, 
-			<link><url>20_generated_files.xml</url><label>Generated Files</label></link>, 
+			<bold>See Also</bold>: <link><url>20_generated_files.xml</url><label>Generated Files</label></link>, 
 			<link><url>30_class_hierarchy.xml</url><label>Class Hierarchy</label></link>, 
-			<link><url>40_eiffel_project.xml</url><label>Adding a COM Interface to an Eiffel Project</label></link>,
-			<link><url>50_accessing.xml</url><label>Accessing a COM Component</label></link>,
-			<link><url>60_reusing.xml</url><label>Reusing a COM Component</label></link>,
+			<link><url>40_eiffel_project.xml</url><label>Adding a COM Interface to an Eiffel Project</label></link>, 
+			<link><url>50_reusing.xml</url><label>Accessing a COM Component</label></link>, 
+			<link><url>60_building.xml</url><label>Building a COM Component</label></link>, 
 			<link><url>70_options.xml</url><label>Command Line Options</label></link>
 		</seealso>
 	</paragraph>

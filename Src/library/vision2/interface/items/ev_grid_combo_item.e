@@ -31,13 +31,13 @@ feature -- Element change
 
 feature -- Access
 
+	combo_box: EV_COMBO_BOX
+		-- Text field used to edit `Current' on `activate'.
+
 	item_strings: INDEXABLE [STRING, INTEGER]
 		-- Item strings used to make up combo box list.
 
 feature {NONE} -- Implementation
-
-	combo_box: EV_COMBO_BOX
-		-- Text field used to edit `Current' on `activate'.
 
 	activate_action (popup_window: EV_POPUP_WINDOW) is
 			-- `Current' has been requested to be updated via `popup_window'.

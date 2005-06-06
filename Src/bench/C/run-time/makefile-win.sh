@@ -46,9 +46,7 @@ FINAL_OBJECTS = \
 	$(INDIR)\bits.$obj \
 	$(INDIR)\file.$obj \
 	$(INDIR)\dir.$obj \
-	$(INDIR)\string.$obj \
 	$(INDIR)\misc.$obj \
-	$(INDIR)\pattern.$obj \
 	$(INDIR)\error.$obj \
 	$(INDIR)\umain.$obj \
 	$(INDIR)\memory.$obj \
@@ -105,9 +103,7 @@ WOBJECTS = \
 	$(INDIR)\wbits.$obj \
 	$(INDIR)\wfile.$obj \
 	$(INDIR)\wdir.$obj \
-	$(INDIR)\wstring.$obj \
 	$(INDIR)\wmisc.$obj \
-	$(INDIR)\wpattern.$obj \
 	$(INDIR)\werror.$obj \
 	$(INDIR)\wumain.$obj \
 	$(INDIR)\wmemory.$obj \
@@ -160,9 +156,7 @@ EOBJECTS = \
 	$(INDIR)\wbits.$obj \
 	$(INDIR)\wfile.$obj \
 	$(INDIR)\wdir.$obj \
-	$(INDIR)\wstring.$obj \
 	$(INDIR)\wmisc.$obj \
-	$(INDIR)\wpattern.$obj \
 	$(INDIR)\werror.$obj \
 	$(INDIR)\wumain.$obj \
 	$(INDIR)\wmemory.$obj \
@@ -216,9 +210,7 @@ MT_FINAL_OBJECTS = \
 	$(INDIR)\MTbits.$obj \
 	$(INDIR)\MTfile.$obj \
 	$(INDIR)\MTdir.$obj \
-	$(INDIR)\MTstring.$obj \
 	$(INDIR)\MTmisc.$obj \
-	$(INDIR)\MTpattern.$obj \
 	$(INDIR)\MTerror.$obj \
 	$(INDIR)\MTumain.$obj \
 	$(INDIR)\MTmemory.$obj \
@@ -275,9 +267,7 @@ MT_WOBJECTS = \
 	$(INDIR)\MTwbits.$obj \
 	$(INDIR)\MTwfile.$obj \
 	$(INDIR)\MTwdir.$obj \
-	$(INDIR)\MTwstring.$obj \
 	$(INDIR)\MTwmisc.$obj \
-	$(INDIR)\MTwpattern.$obj \
 	$(INDIR)\MTwerror.$obj \
 	$(INDIR)\MTwumain.$obj \
 	$(INDIR)\MTwmemory.$obj \
@@ -540,9 +530,6 @@ $(INDIR)\out.$obj: $(RTSRC)\out.c
 $(INDIR)\path_name.$obj: $(RTSRC)\path_name.c
 	$(CC) $(JCFLAGS) $(RTSRC)\path_name.c
 
-$(INDIR)\pattern.$obj: $(RTSRC)\pattern.c
-	$(CC) $(JCFLAGS) $(RTSRC)\pattern.c
-
 $(INDIR)\plug.$obj: $(RTSRC)\plug.c
 	$(CC) $(JCFLAGS) $(RTSRC)\plug.c
 
@@ -560,9 +547,6 @@ $(INDIR)\sig.$obj: $(RTSRC)\sig.c
 
 $(INDIR)\store.$obj: $(RTSRC)\store.c
 	$(CC) $(JCFLAGS) $(RTSRC)\store.c
-
-$(INDIR)\string.$obj: $(RTSRC)\string.c
-	$(CC) $(JCFLAGS) $(RTSRC)\string.c
 
 $(INDIR)\timer.$obj: $(RTSRC)\timer.c
 	$(CC) $(JCFLAGS) $(RTSRC)\timer.c
@@ -690,9 +674,6 @@ $(INDIR)\wout.$obj: $(RTSRC)\out.c
 $(INDIR)\wpath_name.$obj: $(RTSRC)\path_name.c
 	$(CC) $(JCFLAGS) -DWORKBENCH $(RTSRC)\path_name.c
 
-$(INDIR)\wpattern.$obj: $(RTSRC)\pattern.c
-	$(CC) $(JCFLAGS) -DWORKBENCH $(RTSRC)\pattern.c
-
 $(INDIR)\wplug.$obj: $(RTSRC)\plug.c
 	$(CC) $(JCFLAGS) -DWORKBENCH $(RTSRC)\plug.c
 
@@ -710,9 +691,6 @@ $(INDIR)\wsig.$obj: $(RTSRC)\sig.c
 
 $(INDIR)\wstore.$obj: $(RTSRC)\store.c
 	$(CC) $(JCFLAGS) -DWORKBENCH $(RTSRC)\store.c
-
-$(INDIR)\wstring.$obj: $(RTSRC)\string.c
-	$(CC) $(JCFLAGS) -DWORKBENCH $(RTSRC)\string.c
 
 $(INDIR)\wtimer.$obj: $(RTSRC)\timer.c
 	$(CC) $(JCFLAGS) -DWORKBENCH $(RTSRC)\timer.c
@@ -848,9 +826,6 @@ $(INDIR)\MTout.$obj: $(RTSRC)\out.c
 $(INDIR)\MTpath_name.$obj: $(RTSRC)\path_name.c
 	$(CC) $(JMTCFLAGS) $(RTSRC)\path_name.c
 
-$(INDIR)\MTpattern.$obj: $(RTSRC)\pattern.c
-	$(CC) $(JMTCFLAGS) $(RTSRC)\pattern.c
-
 $(INDIR)\MTplug.$obj: $(RTSRC)\plug.c
 	$(CC) $(JMTCFLAGS) $(RTSRC)\plug.c
 
@@ -868,9 +843,6 @@ $(INDIR)\MTsig.$obj: $(RTSRC)\sig.c
 
 $(INDIR)\MTstore.$obj: $(RTSRC)\store.c
 	$(CC) $(JMTCFLAGS) $(RTSRC)\store.c
-
-$(INDIR)\MTstring.$obj: $(RTSRC)\string.c
-	$(CC) $(JMTCFLAGS) $(RTSRC)\string.c
 
 $(INDIR)\MTtimer.$obj: $(RTSRC)\timer.c
 	$(CC) $(JMTCFLAGS) $(RTSRC)\timer.c
@@ -998,9 +970,6 @@ $(INDIR)\MTwout.$obj: $(RTSRC)\out.c
 $(INDIR)\MTwpath_name.$obj: $(RTSRC)\path_name.c
 	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)\path_name.c
 
-$(INDIR)\MTwpattern.$obj: $(RTSRC)\pattern.c
-	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)\pattern.c
-
 $(INDIR)\MTwplug.$obj: $(RTSRC)\plug.c
 	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)\plug.c
 
@@ -1018,9 +987,6 @@ $(INDIR)\MTwsig.$obj: $(RTSRC)\sig.c
 
 $(INDIR)\MTwstore.$obj: $(RTSRC)\store.c
 	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)\store.c
-
-$(INDIR)\MTwstring.$obj: $(RTSRC)\string.c
-	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)\string.c
 
 $(INDIR)\MTwtimer.$obj: $(RTSRC)\timer.c
 	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)\timer.c
@@ -1137,9 +1103,6 @@ $(INDIR)\dir.$obj : eif_cecil.h eif_copy.h eif_dir.h eif_except.h eif_garcol.h e
 
 $(INDIR)\misc.$obj : eif_cecil.h eif_copy.h eif_except.h eif_garcol.h eif_hector.h eif_local.h \
 			eif_malloc.h eif_misc.h eif_plug.h eif_size.h eif_struct.h
-
-$(INDIR)\pattern.$obj : eif_cecil.h eif_except.h eif_garcol.h eif_hector.h eif_malloc.h \
-			eif_plug.h eif_struct.h
 
 $(INDIR)\error.$obj : eif_except.h eif_garcol.h eif_malloc.h eif_plug.h eif_struct.h
 

@@ -1,10 +1,8 @@
 indexing
-
 	description: "Registry keys constants"
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$";
-	note: "Changed the type of Keys from INTEGER to POINTER"
 	
 class
 	WEL_HKEY

@@ -646,7 +646,18 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
-
+		
+	is_full_redraw_on_virtual_position_change_enabled: BOOLEAN is
+			-- Is complete client area invalidated as a result of virtual position changing?
+			-- Note that enabling this causes a large performance penalty in redrawing during
+			-- scrolling, but may be used to achieve effects not otherwise possible unless the
+			-- entire client area is invalidated.
+		require
+			not_is_destroyed: not is_destroyed
+		do
+			Result := implementation.is_full_redraw_on_virtual_position_change_enabled
+		end
+		
 feature -- Status setting
 
 	set_item_veto_pebble_function (a_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM, ANY], BOOLEAN]) is
@@ -1274,6 +1285,26 @@ feature -- Status setting
 		do
 			implementation.redraw
 		end
+		
+	enable_full_redraw_on_virtual_position_change is
+			-- Ensure `is_full_redraw_on_virtual_position_change_enabled' is `True'.
+		require
+			not_is_destroyed: not is_destroyed
+		do
+			implementation.enable_full_redraw_on_virtual_position_change
+		ensure
+			is_full_redraw_on_virtual_position_change_enabled: is_full_redraw_on_virtual_position_change_enabled
+		end
+		
+	disable_full_redraw_on_virtual_position_change is
+			-- Ensure `is_full_redraw_on_virtual_position_change_enabled' is `False'.
+		require
+			not_is_destroyed: not is_destroyed
+		do
+			implementation.disable_full_redraw_on_virtual_position_change
+		ensure
+			not_is_full_redraw_on_virtual_position_change_enabled: not is_full_redraw_on_virtual_position_change_enabled
+		end
 
 feature -- Status report
 
@@ -1684,7 +1715,7 @@ feature {NONE} -- Contract support
 				is_vertical_scrolling_per_item and is_header_displayed and
 				is_row_height_fixed and subrow_indent = 0 and is_single_item_selection_enabled and is_selection_on_click_enabled and
 				are_tree_node_connectors_shown and are_columns_drawn_above_rows and not is_resizing_divider_enabled and
-				is_column_resize_immediate
+				is_column_resize_immediate and not is_full_redraw_on_virtual_position_change_enabled
 		end
 
 feature {EV_GRID_I} -- Implementation

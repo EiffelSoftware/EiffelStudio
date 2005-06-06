@@ -25,7 +25,7 @@ class ARRAY [G] inherit
 		export
 			{ARRAY} set_area
 		redefine
-			copy, is_equal, put, item, infix "@", valid_index
+			copy, is_equal, item, put, infix "@", valid_index
 		end
 
 create
@@ -73,18 +73,15 @@ feature -- Initialization
 
 	make_from_cil (na: NATIVE_ARRAY [G]) is
 			-- Initialize array from `na'.
-		local
-			array_copy: NATIVE_ARRAY [G]
+		require
+			is_dotnet: {PLATFORM}.is_dotnet
+			na_not_void: na /= Void
 		do
-			array_copy ?= na.clone
-			check
-				copy_successful: array_copy /= Void
-			end
-			create area.make_from_native_array (array_copy)
+			create area.make_from_native_array (na)
 			lower := 1
-			upper := na.count
+			upper := area.count
 		end
-			
+
 feature -- Access
 
 	item, infix "@" (i: INTEGER): G is
@@ -106,27 +103,27 @@ feature -- Access
  			-- (Reference or object equality,
 			-- based on `object_comparison'.)
 		local
-			i: INTEGER
+			i, nb: INTEGER
+			l_area: like area
 			l_item: G
-			upper_bound: INTEGER
 		do
-			i := lower
-			upper_bound := upper
+			l_area := area
+			nb := upper - lower
 			if object_comparison and v /= Void then
 				from
 				until
-					i > upper_bound or Result
+					i > nb or Result
 				loop
-					l_item := item (i)
+					l_item := l_area.item (i)
 					Result := l_item /= Void and then l_item.is_equal (v)
 					i := i + 1
 				end
 			else
 				from
 				until
-					i > upper_bound or Result
+					i > nb or Result
 				loop
-					Result := item (i) = v
+					Result := l_area.item (i) = v
 					i := i + 1
 				end
 			end
@@ -201,10 +198,10 @@ feature -- Comparison
 				object_comparison = other.object_comparison
 			then
 				if object_comparison then
-					from 
+					from
 						Result := True
 						i := lower
-					until 
+					until
 						not Result or i > upper 
 					loop
 						Result := equal (item (i), other.item (i))
@@ -314,7 +311,7 @@ feature -- Element change
 			higher_count: count >= old count
 		end
 
-	subcopy (other: like Current; start_pos, end_pos, index_pos: INTEGER) is
+	subcopy (other: ARRAY [G]; start_pos, end_pos, index_pos: INTEGER) is
 			-- Copy items of `other' within bounds `start_pos' and `end_pos'
 			-- to current array starting at index `index_pos'.
 		require
@@ -324,50 +321,8 @@ feature -- Element change
 			valid_bounds: (start_pos <= end_pos) or (start_pos = end_pos + 1)
 			valid_index_pos: valid_index (index_pos)
 			enough_space: (upper - index_pos) >= (end_pos - start_pos)
-		local
-			other_area: like area
-			other_lower: INTEGER
-			start0, end0, index0: INTEGER
-			i, j: INTEGER
 		do
-			other_area := other.area
-			other_lower := other.lower
-			start0 := start_pos - other_lower
-			end0 := end_pos - other_lower
-			index0 := index_pos - lower
-				-- Instead of finding out if we are copying overlapping zones,
-				-- we simply find out in which direction we should copy elements
-				-- from one zone to the other to avoid potential problem with
-				-- overlapping zones.
-			if start0 >= index0 then
-					-- Destination position is located before `other' starting position.
-					-- To avoid overlapping issues, we copy from `start0' to `end0' into
-					-- destination.
-				from
-					i := start0
-					j := index0
-				until
-					i > end0
-				loop
-					area.put (other_area.item (i), j)
-					i := i + 1
-					j := j + 1
-				end
-			else
-					-- Destination position is located after `other' starting position.
-					-- To avoid overlapping issues, we copy in reverse order from `end0'
-					-- to `start0' into destination.
-				from
-					i := end0
-					j := index0 + (end0 - start0)
-				until
-					i < start0
-				loop
-					area.put (other_area.item (i), j)
-					i := i - 1
-					j := j - 1
-				end
-			end
+			area.copy_data (other.area, start_pos - other.lower, index_pos - lower, end_pos - start_pos + 1)
 		ensure
 			-- copied: forall `i' in 0 .. (`end_pos'-`start_pos'),
 			--     item (index_pos + i) = other.item (start_pos + i)
@@ -522,8 +477,6 @@ feature -- Resizing
 		local
 			old_size, new_size, old_count: INTEGER
 			new_lower, new_upper: INTEGER
-			old_area: like area
-			i: INTEGER
 		do
 			if empty_area then
 				new_lower := min_index
@@ -540,16 +493,7 @@ feature -- Resizing
 			if empty_area then
 				make_area (new_size)
 			elseif new_size > old_size or new_lower < lower then
-				old_area := area
-				make_area (new_size)
-				from
-					
-				until
-					i = old_count
-				loop
-					area.put (old_area @ i, i + lower - new_lower)
-					i := i + 1
-				end
+				area := area.aliased_resized_area_and_keep (new_size, lower - new_lower, old_count)
 			end
 			lower := new_lower
 			upper := new_upper
@@ -578,15 +522,21 @@ feature -- Conversion
 	to_c: ANY is
 			-- Address of actual sequence of values,
 			-- for passing to external (non-Eiffel) routines.
+		require
+			not_is_dotnet: not {PLATFORM}.is_dotnet
 		do
 			Result := area
 		end
-
+		
 	to_cil: NATIVE_ARRAY [G] is
 			-- Address of actual sequence of values,
 			-- for passing to external (non-Eiffel) routines.
+		require
+			is_dotnet: {PLATFORM}.is_dotnet
 		do
 			Result := area.native_array
+		ensure
+			to_cil_not_void: Result /= Void
 		end
 
 	linear_representation: LINEAR [G] is
@@ -615,17 +565,13 @@ feature -- Duplication
 		do
 			if other /= Current then
 				standard_copy (other)
-					-- Neeed to use `twin' here and not `standard_twin' like
-					-- in classic Eiffel since in .NET a SPECIAL is just a normal
-					-- class with an attribute and thus `standard_twin' will perform
-					-- aliasing on this attribute which we don't want here.
-				set_area (other.area.twin)
+				set_area (other.area.standard_twin)
 			end
 		ensure then
 			equal_areas: area.is_equal (other.area)
 		end
 
-	subarray (start_pos, end_pos: INTEGER): like Current is
+	subarray (start_pos, end_pos: INTEGER): ARRAY [G] is
 			-- Array made of items of current array within
 			-- bounds `start_pos' and `end_pos'.
 		require
@@ -669,9 +615,6 @@ feature {NONE} -- Implementation
 		local
 			old_size, new_size: INTEGER
 			new_lower, new_upper: INTEGER
-			old_area: like area
-			old_capacity: INTEGER
-			i: INTEGER
 		do
 			if empty_area then
 				new_lower := min_index
@@ -692,17 +635,7 @@ feature {NONE} -- Implementation
 			if empty_area then
 				make_area (new_size)
 			elseif new_size > old_size or new_lower < lower then
-				old_area := area
-				old_capacity := capacity
-				make_area (new_size)
-				from
-					
-				until
-					i = old_capacity
-				loop
-					area.put (old_area @ i, i + lower - new_lower)
-					i := i + 1
-				end
+				area := area.aliased_resized_area_and_keep (new_size, lower - new_lower, capacity)
 			end
 			lower := new_lower
 			upper := new_upper

@@ -1094,13 +1094,13 @@ rt_public void eraise(char *tag, long num)
 	 */
 	if (!(echmem & MEM_FSTK)) {		/* If stack is not full */
 		trace = exget(&eif_trace);
-			/* Make sure there is no garbage in `trace'. */
-		memset (trace, 0, sizeof(struct ex_vect));
 		if (trace == (struct ex_vect *) 0) {	/* Stack is full now */
 			echmem |= MEM_FULL;					/* Signal it */
 			if (num != EN_OMEM)					/* If not already there */
 				enomem();						/* Raise an out of memory */
 		} else {
+				/* Make sure there is no garbage in `trace'. */
+			memset (trace, 0, sizeof(struct ex_vect));
 			trace->ex_type = (unsigned char) num;		/* Exception code */
 			switch (num) {
 			case EN_SIG:				/* Received a signal */
@@ -1174,9 +1174,11 @@ rt_public void eraise(char *tag, long num)
 		}
 	}
 
-	trace->ex_where = echrt;			/* Save routine in trace for exorig */
-	trace->ex_from = echclass;			/* Save class in trace for exorig */
-	trace->ex_linenum = line_number;	/* Save line number in trace */
+	if (trace) {
+		trace->ex_where = echrt;			/* Save routine in trace for exorig */
+		trace->ex_from = echclass;			/* Save class in trace for exorig */
+		trace->ex_linenum = line_number;	/* Save line number in trace */
+	}
 
 	/* Maintain the notion of original exception at this level, despite any
 	 * extra explicit raises, by recomputing the code each time. Due to the
@@ -2995,22 +2997,25 @@ rt_shared struct ex_vect *extop(struct xstack *stk)
 	 */
 
 	struct ex_vect *last_item;		/* Address of last item stored */
-	struct stxchunk *prev;			/* Previous chunk in stack */
+	struct stxchunk *cur, *prev;			/* Previous chunk in stack */
 
+	REQUIRE("stk not null", stk);
+
+	cur = stk->st_cur;
 	last_item = stk->st_top - 1;
-	if (last_item >= stk->st_cur->sk_arena)
+	if (last_item >= cur->sk_arena) {
 		return last_item;
+	}
 
 	/* It seems the current top of the stack (i.e. the next free location)
 	 * is at the left edge of a chunk. Look for previous chunk then...
 	 */
-	prev = stk->st_cur->sk_prev;
-	if (prev == (struct stxchunk *) 0)
-		return (struct ex_vect *) 0;	/* Stack is empty */
+	prev = cur->sk_prev;
+	if (!prev) {
+		return NULL;				/* Stack is empty */
+	}
 
-	last_item = prev->sk_end - 1;		/* Last item of previous chunk */
-
-	return last_item;
+	return prev->sk_end - 1;	/* Last item of previous chunk */
 }
 
 rt_shared struct ex_vect *exnext(void)

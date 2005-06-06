@@ -128,6 +128,14 @@ feature -- Status report
 		do
 			Result := c_is_tuple ($object)
 		end
+
+	is_tuple_type (type_id: INTEGER): BOOLEAN is
+			-- Is type represented by `type_id' represent a TUPLE?
+		require
+			type_id_nonnegative: type_id >= 0
+		do
+			Result := c_eif_is_tuple_type (type_id)
+		end
 		
 	is_marked (obj: ANY): BOOLEAN is
 			-- Is `obj' marked?
@@ -1071,6 +1079,14 @@ feature {NONE} -- Implementation
 			"C signature (EIF_INTEGER): BOOLEAN use %"eif_internal.h%""
 		alias
 			"eif_is_special_type"
+		end
+
+	c_eif_is_tuple_type (type_id: INTEGER): BOOLEAN is
+			-- Is type represented by `type_id' represent a TUPLE?
+		external
+			"C signature (EIF_INTEGER): BOOLEAN use %"eif_internal.h%""
+		alias
+			"eif_is_tuple_type"
 		end
 
 	c_type_conforms_to (type1, type2: INTEGER): BOOLEAN is

@@ -82,7 +82,7 @@ feature -- Creation
 					-- Create `native_array' field from TUPLE, otherwise we would violate
 					-- TUPLE invariant.
 					-- Since TUPLE has only one attribute, thus `1' as position for `native_array'.
-				set_reference_field (1, l_tuple,
+				tuple_native_array_field_info.set_value (l_tuple, 
 					create {NATIVE_ARRAY [SYSTEM_OBJECT]}.make (generic_count (l_tuple)))
 			end
 		ensure
@@ -151,6 +151,17 @@ feature -- Status report
 			object_not_void: object /= Void
 		do
 			Result := is_special_type (dynamic_type (object))
+		end
+
+	is_tuple_type (type_id: INTEGER): BOOLEAN is
+			-- Is type represented by `type_id' represent a TUPLE?
+		require
+			type_id_nonnegative: type_id >= 0
+		local
+			l_tuple_type: RT_TUPLE_TYPE
+		do
+			l_tuple_type ?= pure_implementation_type (type_id)
+			Result := l_tuple_type /= Void
 		end
 
 	is_tuple (object: ANY): BOOLEAN is
@@ -1692,34 +1703,40 @@ feature {NONE} -- Implementation
 		do
 			Result := id_to_fields.item (type_id)	
 			if Result = Void then
-				l_type := implementation_type (id_to_eiffel_type.item (type_id).dotnet_type)
-				allm := l_type.get_members_binding_flags ({BINDING_FLAGS}.instance |
-					{BINDING_FLAGS}.public | {BINDING_FLAGS}.non_public)
-				from
-					nb := allm.count 
-					create l_fields.make (nb)
-				until
-					i = nb
-				loop
-					l_field_info ?= allm.item (i)
-					if l_field_info /= Void then
-						l_cv_f_name := l_field_info.name
-						if not l_cv_f_name.is_equal (private_type_field_name) then
-							l_fields.extend (l_field_info)
+				if is_tuple_type (type_id) or is_special_type (type_id) then
+						-- To match classic behavior, SPECIAL and TUPLE are seen as if they
+						-- had no attributes.
+					create Result.make (1)
+				else
+					l_type := implementation_type (id_to_eiffel_type.item (type_id).dotnet_type)
+					allm := l_type.get_members_binding_flags ({BINDING_FLAGS}.instance |
+						{BINDING_FLAGS}.public | {BINDING_FLAGS}.non_public)
+					from
+						nb := allm.count 
+						create l_fields.make (nb)
+					until
+						i = nb
+					loop
+						l_field_info ?= allm.item (i)
+						if l_field_info /= Void then
+							l_cv_f_name := l_field_info.name
+							if not l_cv_f_name.is_equal (private_type_field_name) then
+								l_fields.extend (l_field_info)
+							end
 						end
+						i := i + 1
 					end
-					i := i + 1
-				end
-				from
-					l_fields.start
-					i := 1
-					create Result.make (l_fields.count + 1)
-				until
-					l_fields.after
-				loop
-					Result.put (i, l_fields.item)
-					l_fields.forth
-					i := i + 1
+					from
+						l_fields.start
+						i := 1
+						create Result.make (l_fields.count + 1)
+					until
+						l_fields.after
+					loop
+						Result.put (i, l_fields.item)
+						l_fields.forth
+						i := i + 1
+					end
 				end
 				id_to_fields.put (Result, type_id)
 			end
@@ -1816,6 +1833,41 @@ feature {NONE} -- Implementation
 			create Result.put (chunk_size)
 		ensure
 			array_upper_cell: Result /= Void
+		end
+
+	tuple_native_array_field_info: FIELD_INFO is
+			-- Info about `native_array' of TUPLE.
+		local
+			l_tuple: TUPLE
+			l_tuple_type_id: INTEGER
+			allm: NATIVE_ARRAY [MEMBER_INFO]
+			i, nb: INTEGER
+			l_cv_f_name: STRING
+			l_type: SYSTEM_TYPE
+		once
+			create l_tuple
+			l_tuple_type_id := dynamic_type (l_tuple)
+			l_type := implementation_type (id_to_eiffel_type.item (l_tuple_type_id).dotnet_type)
+			allm := l_type.get_members_binding_flags ({BINDING_FLAGS}.instance |
+				{BINDING_FLAGS}.public | {BINDING_FLAGS}.non_public)
+			from
+				nb := allm.count
+			until
+				i = nb
+			loop
+				Result ?= allm.item (i)
+				if Result /= Void then
+					l_cv_f_name := Result.name
+					if l_cv_f_name.is_equal (private_type_field_name) then
+						Result := Void
+					else
+						i := nb - 1 -- Jump out of loop
+					end
+				end
+				i := i + 1
+			end
+		ensure
+			tuple_native_array_field_info_not_void: Result /= Void
 		end
 
 indexing

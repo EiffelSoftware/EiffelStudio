@@ -48,15 +48,14 @@ doc:<file name="main.c" header="eif_main.h" version="$Id$" summary="Initializati
 #include "rt_lmalloc.h"
 #include "rt_malloc.h"
 #include "rt_garcol.h"
+#include "rt_debug.h"
 #include "rt_main.h"
 
 #ifdef BOEHM_GC
 #include "rt_boehm.h"
 #endif
 
-#ifdef WORKBENCH
-extern void dbreak_create_table(void); /* defined in debug.c */
-#else
+#ifndef WORKBENCH
 // NON_COMMERCIAL is defined when compiling a non-commercial version of the run-time
 #ifdef NON_COMMERCIAL
 #ifdef EIF_WINDOWS

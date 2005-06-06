@@ -37,9 +37,9 @@
 		<paragraph>
 			where <class_name>ISOMETHING_INTERFACE</class_name> is a generated deferred class corresponding to the 
 			<class_name>ISomething</class_name> interface. Calling <feature_name>function</feature_name> requires passing an 
-			instance of a type that implements <class_name>ISOMETHING_INTERFACE</class_name>. Such interfaces <bold>implemented stub</bold> 
+			instance of a type that implements <class_name>ISOMETHING_INTERFACE</class_name>. The <bold>stubs</bold> implementing such interfaces  
 			can be found in <bold>Server\Interfaces_stub</bold>. In our example the Eiffel class would be named 
-			<class_name>ISOMETHING_INTERFACE_IMPL_STUB</class_name>. The default implementation of the interface implemented stub is empty and should 
+			<class_name>ISOMETHING_INTERFACE_IMPL_STUB</class_name>. The default implementation of the stub is empty and should 
 			be completed to implement the wanted behavior. This is how callbacks can be implemented using EiffelCOM.
 		</paragraph>
 		<heading>
@@ -80,7 +80,7 @@
 		<paragraph>
 			The COM standard requires that any interface function returns a status value (known as a 
 			<class_name>HRESULT</class_name>). This means that any function which adheres to the COM 
-			standard actually corresponds to a side effect features which the Eiffel methodology tries 
+			standard actually corresponds to a side effect feature which the Eiffel methodology tries 
 			to avoid according to the <italic>Command Query Separation Principle</italic>. The 
 			workaround used in EiffelCOM systems consists in mapping these return values to Eiffel 
 			exceptions. So if the component returns an <class_name>HRESULT</class_name> corresponding 
@@ -147,9 +147,8 @@
 			<bold>See Also</bold>: <link><url>10_how_wizard_works.xml</url><label>How the EiffelCOM Wizard Works</label></link>, 
 			<link><url>20_generated_files.xml</url><label>Generated Files</label></link>, 
 			<link><url>30_class_hierarchy.xml</url><label>Class Hierarchy</label></link>, 
-			<link><url>40_eiffel_project.xml</url><label>Adding a COM Interface to an Eiffel Project</label></link>,
-			<link><url>50_accessing.xml</url><label>Accessing a COM Component</label></link>,
-			<link><url>60_reusing.xml</url><label>Reusing a COM Component</label></link>,
+			<link><url>40_eiffel_project.xml</url><label>Adding a COM Interface to an Eiffel Project</label></link>, 
+			<link><url>60_building.xml</url><label>Reusing a COM Component</label></link>, 
 			<link><url>70_options.xml</url><label>Command Line Options</label></link>
 		</seealso>
 	</paragraph>

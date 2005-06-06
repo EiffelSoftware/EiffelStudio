@@ -99,7 +99,7 @@
 		 			and implements its members.
 		 		</item>
 		 		<item>
-		 			<class_name></class_name>: This class contains the code required to register the component.
+		 			<class_name>ECOM_STRING_REGISTRATION</class_name>: This class contains the code required to register the component.
 		 		</item>
 		 	</list>
 			You do not need to modify or implement any classes. The wizard produces a ready-to-use component.

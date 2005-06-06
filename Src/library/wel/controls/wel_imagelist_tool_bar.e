@@ -1,9 +1,12 @@
 indexing
-	description	: "Enhancement of the toolbar. This toolbar appears flat %
-				  %and use imagelist to store bitmaps - Win95+IE3 required"
-	note		: "The common controls dll (WEL_COMMON_CONTROLS_DLL)     %
-				  %needs to be loaded to use this control and IE3 or 	 %
-				  %above installed"
+	description	: "[
+		Enhancement of the toolbar. This toolbar appears flat
+		and use imagelist to store bitmaps - Win95+IE3 required
+
+		Note: The common controls dll (WEL_COMMON_CONTROLS_DLL)
+			needs to be loaded to use this control and IE3 or
+			above installed.
+		]"
 	date		: "$Date$"
 	revision	: "$Revision$"
 

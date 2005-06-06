@@ -1,7 +1,10 @@
 indexing
-	description: "Control that displays a slider and optional tick marks."
-	note: "The common controls dll (WEL_COMMON_CONTROLS_DLL) needs to %
-		%be loaded to use this control."
+	description: "[
+		Control that displays a slider and optional tick marks.
+
+		Note: The common controls dll (WEL_COMMON_CONTROLS_DLL) needs to
+			be loaded to use this control.
+		]"
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"

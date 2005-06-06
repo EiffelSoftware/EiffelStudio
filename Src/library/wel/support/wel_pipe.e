@@ -224,10 +224,8 @@ feature -- Output
 			create l_str.make_empty (count)
 			last_read_successful := cwin_read_file (output_handle, l_str.item,
 				count, $l_read_bytes, default_pointer)
-
 			last_read_bytes := l_read_bytes
-			l_str.set_count (l_read_bytes)
-			last_string := l_str.string
+			last_string := l_str.substring (1, l_read_bytes)
 		end
 
 feature {NONE} -- Implementation

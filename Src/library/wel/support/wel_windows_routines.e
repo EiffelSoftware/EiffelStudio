@@ -93,14 +93,11 @@ feature -- Basic operations
 			a_wel_string: WEL_STRING
 			nb: INTEGER
 		do
-			create Result.make (1024)
-			Result.fill_blank
-			create a_wel_string.make (Result)
+			create a_wel_string.make_empty (1024)
 			nb := cwin_load_string (
 				wr_main_args.resource_instance.item,
 				an_id, a_wel_string.item, Result.count)
-			Result := a_wel_string.string
-			Result.keep_head (nb)
+			Result := a_wel_string.substring (1, nb)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -192,12 +189,10 @@ feature -- Status report
 			a_wel_string: WEL_STRING
 			nb: INTEGER
 		do
-			create Result.make (cwin_get_system_directory (default_pointer, 0))
-			Result.fill_blank
-			create a_wel_string.make (Result)
-			nb := cwin_get_system_directory (a_wel_string.item, Result.count)
-			Result := a_wel_string.string
-			Result.keep_head (nb)
+			nb := cwin_get_system_directory (default_pointer, 0)
+			create a_wel_string.make_empty (nb)
+			nb := cwin_get_system_directory (a_wel_string.item, nb)
+			Result := a_wel_string.substring (1, nb)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -208,12 +203,10 @@ feature -- Status report
 			a_wel_string: WEL_STRING
 			nb: INTEGER
 		do
-			create Result.make (cwin_get_windows_directory (default_pointer, 0))
-			Result.fill_blank
-			create a_wel_string.make (Result)
-			nb := cwin_get_windows_directory (a_wel_string.item, Result.count)
-			Result := a_wel_string.string
-			Result.keep_head (nb)
+			nb := cwin_get_windows_directory (default_pointer, 0)
+			create a_wel_string.make_empty (nb)
+			nb := cwin_get_windows_directory (a_wel_string.item, nb)
+			Result := a_wel_string.substring (1, nb)
 		ensure
 			result_not_void: Result /= Void
 		end

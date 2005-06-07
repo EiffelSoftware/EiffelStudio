@@ -421,7 +421,7 @@ feature {NONE} -- Implementation
 								proc ?= dup_feat
 								proc.set_arguments (inh_feat.arguments)
 							end
-							dup_feat.set_type (inh_feat.type)
+							dup_feat.set_type (inh_feat.type, inh_feat.assigner_name_id)
 							generate_feature (dup_feat, False, False, False)
 							Byte_context.set_class_type (current_class_type)
 						else
@@ -513,7 +513,7 @@ feature {NONE} -- Implementation
 							proc ?= dup_feat
 							proc.set_arguments (inh_feat.arguments)
 						end
-						dup_feat.set_type (inh_feat.type)
+						dup_feat.set_type (inh_feat.type, inh_feat.assigner_name_id)
 						generate_feature (dup_feat, False, False, False)
 						Byte_context.set_class_type (current_class_type)
 					else

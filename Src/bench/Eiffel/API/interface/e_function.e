@@ -11,7 +11,7 @@ inherit
 
 	E_ROUTINE
 		redefine
-			is_function, type
+			assigner_name, is_function, type
 		end
 
 create
@@ -20,24 +20,29 @@ create
 
 feature -- Properties
 
-	is_function: BOOLEAN is True;
+	is_function: BOOLEAN is True
 			-- Is current a function
 
-	type: TYPE_A;
+	type: TYPE_A
 			-- Return type
+
+	assigner_name: STRING
+			-- Name of the assigner procedure (if any)
 
 feature -- Setting
 
-	set_type (t: like type) is
-			-- Set `type' to `t'.
+	set_type (t: like type; a: like assigner_name) is
+			-- Set `type' to `t' and `assigner_name' to `a'.
 		require
 			valid_t: t /= Void
 			t_not_void_type: not t.is_void
 				-- VB: See exported features of DYNAMIC_CHAIN: `remove: Void'.
 		do
 			type := t
+			assigner_name := a
 		ensure
-			set: type = t
-		end;
+			type_set: type = t
+			assigner_name_set: assigner_name = a
+		end
 
 end -- class E_FUNCTION

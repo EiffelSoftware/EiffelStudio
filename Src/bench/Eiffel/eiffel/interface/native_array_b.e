@@ -198,7 +198,7 @@ feature {NONE}
 			create args.make (0)
 			create Result
 			Result.set_arguments (args)
-			Result.set_type (Integer_type)
+			Result.set_type (Integer_type, 0)
 			Result.set_feature_name_id ({PREDEFINED_NAMES}.count_name_id, 0)
 		ensure
 			item_signature_not_void: Result /= Void
@@ -215,7 +215,7 @@ feature {NONE}
 			create Result
 			Result.set_arguments (args)
 			create f.make (False, False, 1)
-			Result.set_type (f)
+			Result.set_type (f, 0)
 			Result.set_feature_name_id ({PREDEFINED_NAMES}.item_name_id, 0)
 		ensure
 			item_signature_not_void: Result /= Void
@@ -232,7 +232,7 @@ feature {NONE}
 			create Result
 			Result.set_arguments (args)
 			create f.make (False, False, 1)
-			Result.set_type (f)
+			Result.set_type (f, 0)
 			Result.set_feature_name_id ({PREDEFINED_NAMES}.infix_at_name_id, 0)
 		ensure
 			item_signature_not_void: Result /= Void

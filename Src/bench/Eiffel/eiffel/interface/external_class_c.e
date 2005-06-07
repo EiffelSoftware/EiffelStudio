@@ -796,7 +796,7 @@ feature {NONE} -- Initialization
 				if l_member.has_return_value then
 					l_external_type := internal_type_from_consumed_type (True, l_member.return_type)
 
-					l_feat.set_type (l_external_type)
+					l_feat.set_type (l_external_type, 0)
 
 					l_names_heap.put (l_member.return_type.name)
 					l_ext.set_return_type (l_names_heap.found_item)

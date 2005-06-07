@@ -8,7 +8,7 @@ class DEF_FUNC_I
 inherit
 	DEF_PROC_I
 		redefine
-			transfer_to,
+			assigner_name_id, transfer_to,
 			unselected, replicated, set_type, is_function, type,
 			new_api_feature
 		end
@@ -18,11 +18,15 @@ feature
 	type: TYPE_AS
 			-- Type of the function
 
-	set_type (t: like type) is
-			-- Assign `t' to `type'.
+	assigner_name_id: INTEGER
+			-- Id of `assigner_name' in `Names_heap' table
+
+	set_type (t: like type; a: like assigner_name_id) is
+			-- Assign `t' to `type' and `a' to `assigner_name_id'.
 		do
 			type := t
-		end;
+			assigner_name_id := a
+		end
 
 	is_function: BOOLEAN is True;
 			-- Is the current feature a function ?
@@ -52,9 +56,9 @@ feature
 	transfer_to (other: like Current) is
 			-- Transfer datas form `other' into Current
 		do
-			Precursor {DEF_PROC_I} (other);
-			other.set_type (type);
-		end;
+			Precursor {DEF_PROC_I} (other)
+			other.set_type (type, assigner_name_id)
+		end
 
 feature {NONE} -- Implementation
 
@@ -67,7 +71,7 @@ feature {NONE} -- Implementation
 			if t = Void then
 				t := type.actual_type
 			end
-			Result.set_type (t)
+			Result.set_type (t, assigner_name)
 			update_api (Result)
 		end
 

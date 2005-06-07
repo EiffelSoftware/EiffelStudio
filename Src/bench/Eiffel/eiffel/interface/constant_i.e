@@ -11,7 +11,7 @@ inherit
 			check_types as old_check_types,
 			equiv as basic_equiv
 		redefine
-			transfer_to, access_for_feature, melt, generate,
+			assigner_name_id, transfer_to, access_for_feature, melt, generate,
 			is_once, redefinable, is_constant,
 			set_type, type, generate_il, to_generate_in,
 			new_rout_entry
@@ -19,7 +19,7 @@ inherit
 
 	ENCAPSULATED_I
 		redefine
-			transfer_to, check_types, access_for_feature, equiv,
+			assigner_name_id, transfer_to, check_types, access_for_feature, equiv,
 			melt, generate, is_once, redefinable, is_constant,
 			set_type, type, generate_il, to_generate_in,
 			new_rout_entry
@@ -55,13 +55,17 @@ feature
 	type: TYPE_AS
 			-- Type of the constant
 
+	assigner_name_id: INTEGER
+			-- Id of `assigner_name' in `Names_heap' table
+
 	value: VALUE_I
 			-- Constant value
 
-	set_type (t: like type) is
-			-- Assign `t' to `type'.
+	set_type (t: like type; a: like assigner_name_id) is
+			-- Assign `t' to `type' and `a' to `assigner_name_id'.
 		do
 			type := t
+			assigner_name_id := a
 		end
 
 	set_value (v: like value) is
@@ -391,7 +395,7 @@ feature -- Byte code generation
 			-- Transfer datas form `other' into Current
 		do
 			Precursor {ENCAPSULATED_I} (other)
-			other.set_type (type)
+			other.set_type (type, assigner_name_id)
 			other.set_value (value)
 		end
 
@@ -407,7 +411,7 @@ feature {NONE} -- Implementation
 			if t = Void then
 				t := type.actual_type
 			end
-			Result.set_type (t)
+			Result.set_type (t, assigner_name)
 			Result.set_value (value.string_value)
 		end
 

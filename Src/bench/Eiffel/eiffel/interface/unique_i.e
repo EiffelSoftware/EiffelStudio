@@ -110,7 +110,7 @@ feature {NONE} -- Implementation
 			if t = Void then
 				t := type.actual_type
 			end
-			Result.set_type (t)
+			Result.set_type (t, assigner_name)
 			Result.set_value (value.string_value)
 		end
 

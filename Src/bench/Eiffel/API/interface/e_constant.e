@@ -9,7 +9,7 @@ inherit
 
 	E_FEATURE
 		redefine
-			is_constant, type
+			assigner_name, is_constant, type
 		end
 
 create
@@ -27,16 +27,21 @@ feature -- Properties
 	type: TYPE_A
 			-- Return type
 
+	assigner_name: STRING
+			-- Name of the assigner procedure (if any)
+
 feature -- Setting
 
-	set_type (t: like type) is
-			-- Set `type' to `t'.
+	set_type (t: like type; a: like assigner_name) is
+			-- Set `type' to `t' and `assigner_name' to `a'.
 		require
 			valid_t: t /= Void
 		do
 			type := t
+			assigner_name := a
 		ensure
-			set: type = t
+			type_set: type = t
+			assigner_name_set: assigner_name = a
 		end
 
 	set_value (v: like value) is

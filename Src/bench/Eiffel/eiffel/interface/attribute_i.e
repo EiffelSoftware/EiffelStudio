@@ -8,7 +8,7 @@ class ATTRIBUTE_I
 inherit
 	ENCAPSULATED_I
 		redefine
-			transfer_to, unselected, extension,
+			assigner_name_id, transfer_to, unselected, extension,
 			new_rout_entry, melt, access_for_feature, generate, new_rout_id,
 			set_type, type, is_attribute,
 			undefinable, check_expanded
@@ -27,6 +27,9 @@ feature
 
 	type: TYPE_AS
 			-- Attribute type
+
+	assigner_name_id: INTEGER
+			-- Id of `assigner_name' in `Names_heap' table
 
 	has_function_origin: BOOLEAN
 			-- Flag for detecting a redefinition of a function into an
@@ -78,10 +81,11 @@ feature -- Element Change
 			extension_set: extension = an_extension
 		end
 
-	set_type (t: like type) is
-			-- Assign `t' to `type'.
+	set_type (t: like type; a: like assigner_name_id) is
+			-- Assign `t' to `type' and `a' to `assigner_name_id'.
 		do
 			type := t
+			assigner_name_id := a
 		end
 
 	new_rout_id: INTEGER is
@@ -250,7 +254,7 @@ feature -- Element Change
 			-- Transfer data from `Current' to `other'.
 		do
 			Precursor {ENCAPSULATED_I} (other)
-			other.set_type (type)
+			other.set_type (type, assigner_name_id)
 			other.set_has_function_origin (has_function_origin)
 			extension := other.extension
 		end
@@ -336,7 +340,7 @@ feature {NONE} -- Implementation
 				t := type.actual_type
 			end
 			create Result.make (feature_name, alias_name, has_convert_mark, feature_id)
-			Result.set_type (t)
+			Result.set_type (t, assigner_name)
 		end
 
 end

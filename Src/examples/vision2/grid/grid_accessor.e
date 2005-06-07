@@ -136,6 +136,17 @@ feature -- Access
 			Result.set_with_named_file (f_name.out)
 		end
 
+	marble: EV_PIXMAP is
+			--
+		local
+			f_name: FILE_NAME
+		once
+			create f_name.make_from_string (current_working_directory)
+			f_name.extend ("marble.png")
+			create Result
+			Result.set_with_named_file (f_name.out)
+		end
+
 	add_color_to_combo (a_color: EV_COLOR; a_combo: EV_COMBO_BOX) is
 			-- Add `a_color' to `background_color_combo'.
 		require

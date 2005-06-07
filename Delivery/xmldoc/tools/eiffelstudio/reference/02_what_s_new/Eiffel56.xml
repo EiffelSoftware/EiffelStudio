@@ -63,6 +63,7 @@
 		</list>
 		<heading><size>3</size>EiffelBase</heading>
 		<list ordered="false">
+			<item>Added new storable facility entierly written in Eiffel which enables you to exchange data between classic and .NET. Former version built-in in the Eiffel run-time did not apply for .NET. The classes are located in the new <cluster_name>serialization</cluster_name> cluster of EiffelBase.</item>
 			<item><class_name>ARRAY</class_name>:
 				<list ordered="false">
 					<item>Changed signature of <feature_name>subarray</feature_name> to match ELKS specification. It now returns an <class_name>ARRAY [G]</class_name> instead of <code><keyword>like Current</keyword></code>.</item>
@@ -77,6 +78,8 @@
 					<item>Changed signature of <feature_name>infix "+"</feature_name> to match ELKS specification. It now returns <code><keyword>like Current</keyword></code> instead of <class_name>STRING</class_name>.</item>
 					<item>Added implementation query <feature_name>new_string</feature_name>. Descendants of <class_name>STRING</class_name> may need to update their inheritance clause.</item>
 					<item>Fixed a bug in .NET implementation of feature <code><feature_name>replace_substring</feature_name></code> that might produce incorrect result when argument and target of the call is the same object.</item>
+					<item>Merged .NET and classic implementation of STRING so that all features of STRING are now properly implemented for both platforms.</item>
+					<item>Changed <feature_name>character_justify</feature_name>, <feature_name>left_justify</feature_name>, <feature_name>right_justify</feature_name> and <feature_name>center_justify</feature_name> so that justification is now done on <feature_name>count</feature_name> instead of <feature_name>capacity</feature_name>. You might expect different results after upgrading, thus check all callers of those routines.</item>
 				</list>
 			</item>
 			<item><class_name>ARRAYED_LIST</class_name>:
@@ -87,8 +90,10 @@
 <keyword>create</keyword> list.<feature_name>make</feature_name> (5)
 list.<feature_name>put_i_th</feature_name> (3, 3)</code_block></item>
 					<item>Added implementation query <feature_name>new_filled_list</feature_name> in <class_name>ARRAYED_LIST</class_name>. Descendants of <class_name>ARRAYED_LIST</class_name> may need to update their inheritance clause.</item>
+					<item>Improved speed of insertion by changing the implementation of <feature_name>force</feature_name> and <feature_name>extend</feature_name>. As a consequence descendants of <class_name>ARRAYED_LIST</class_name> redefining <feature_name>put_i_th</feature_name> should also redefine <feature_name>force</feature_name> and <feature_name>extend</feature_name>.</item>
 				</list>
 			</item>
+			<item>Added new set of classes <class_name>NATURAL_8</class_name>, <class_name>NATURAL_16</class_name>, <class_name>NATURAL_32</class_name> and <class_name>NATURAL_64</class_name> to perform unsigned integer operations.</item>
 			<item>Added <feature_name>merge</feature_name> to <class_name>HASH_TABLE</class_name>.</item>
 			<item>Made implementations of <feature_name>cursor</feature_name> in descendants of <class_name>CURSOR_STRUCTURE</class_name> return a precise <class_name>CURSOR</class_name> type.</item>
 			<item>Reduced feature exportation of routines also used as creation procedures of <class_name>CURSOR</class_name> descendants to <class_name>NONE</class_name></item>
@@ -118,7 +123,7 @@ list.<feature_name>put_i_th</feature_name> (3, 3)</code_block></item>
 		</list>
 		<heading><size>3</size>WEL</heading>
 		<list ordered="false">
-			<item></item>
+			<item>Made WEL 64 bits compliant. This required a breaking change in signatures. Some routines were actually using an <class_name>INTEGER</class_name> to represent a <class_name>POINTER</class_name>. On 64 bits platform this is not working as <class_name>INTEGER</class_name> is 32 bits and <class_name>POINTER</class_name> is 64 bits. As a consequence if you are using low level facilities of WEL your code might not compile anymore. Simply replace <class_name>INTEGER</class_name> by <class_name>POINTER</class_name> to make it compile.</item>
 		</list>
 	</paragraph>
 </document>

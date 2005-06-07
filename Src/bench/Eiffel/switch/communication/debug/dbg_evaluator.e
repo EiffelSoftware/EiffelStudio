@@ -363,9 +363,6 @@ feature -- Concrete evaluation
 		end
 		
 	class_type_from_object_relative_to (a_addr: STRING; cl: CLASS_C): CLASS_TYPE is
-		local
-			lt: LIST [CLASS_TYPE]
-			ctype: CLASS_TYPE
 		do
 			Result := class_type_from_object (a_addr)
 			if 

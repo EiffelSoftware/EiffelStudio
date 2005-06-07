@@ -4054,6 +4054,10 @@ feature {NONE} -- Implementation
 				end
 			end
 
+				-- Set column's internal data
+			a_column_i.set_physical_index (physical_column_count)
+			physical_column_count := physical_column_count + 1
+
 			a_column_i.set_parent_i (Current)
 
 			columns.go_i_th (a_index)
@@ -4068,10 +4072,6 @@ feature {NONE} -- Implementation
 				columns.put_left (a_column_i)
 				update_grid_column_indices (a_index)
 			end
-
-				-- Set column's internal data
-			a_column_i.set_physical_index (physical_column_count)
-			physical_column_count := physical_column_count + 1
 
 				-- Flag `physical_column_indexes' for recalculation
 			physical_column_indexes_dirty := True

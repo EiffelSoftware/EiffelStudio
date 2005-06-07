@@ -153,9 +153,17 @@ feature -- Change
 		end
 		
 	update_mini_toolbar	is
+		local
+			par: EV_CONTAINER
+			mtb: EV_TOOL_BAR
 		do
-			if explorer_bar_item /= Void and then selected_item.mini_toolbar /= Void then
-				explorer_bar_item.update_mini_toolbar (selected_item.mini_toolbar)
+			mtb := selected_item.mini_toolbar
+			if explorer_bar_item /= Void and then mtb /= Void then
+				par := mtb.parent
+				if par /= Void then
+					par.prune_all (mtb)
+				end
+				explorer_bar_item.update_mini_toolbar (mtb)
 			end
 		end
 	

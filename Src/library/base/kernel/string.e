@@ -200,6 +200,9 @@ feature -- Initialization
 		do
 			Result := new_string (0)
 			Result.share (s)
+		ensure
+			adapt_not_void: Result /= Void
+			shared_implementation: Result.shared_with (s)
 		end
 
 	remake (n: INTEGER) is
@@ -455,6 +458,41 @@ feature -- Comparison
 					Result := str_strict_cmp (area, other.area, l_count) = 0
 				end
 			end
+		end
+
+	is_case_insensitive_equal (other: like Current): BOOLEAN is
+			-- Is string made of same character sequence as `other' regardless of casing
+			-- (possibly with a different capacity)?
+		require
+			other_not_void: other /= Void
+		local
+			l_area, l_other_area: like area
+			i, nb: INTEGER
+		do			
+			if other = Current then
+				Result := True
+			else
+				nb := count
+				if nb = other.count then
+					from
+						l_area := area
+						l_other_area := other.area
+						Result := True
+					until
+						i = nb
+					loop
+						if l_area.item (i).as_lower /= l_other_area.item (i).as_lower then
+							Result := False
+							i := nb - 1 -- Jump out of loop
+						end
+						i := i + 1
+					end				
+				end
+			end
+		ensure
+			symmetric: Result implies other.is_case_insensitive_equal (Current)
+			consistent: standard_is_equal (other) implies Result
+			valid_result: as_lower.is_equal (other.as_lower) implies Result
 		end
 
 	same_string (other: STRING): BOOLEAN is
@@ -792,8 +830,7 @@ feature -- Status report
 						l_state := 8
 					end
 				when 7 then
-					if l_c = ' ' then
-					else
+					if l_c /= ' ' then
 						l_state := 8
 					end
 				end
@@ -813,7 +850,7 @@ feature -- Status report
 				--				 | "e" Exponent
 				-- Exponent		= Integer_literal
 				-- Mantissa		= Decimal_literal
-				-- Decimal_literal = Integer_literal ["." Integer]
+				-- Decimal_literal = Integer_literal ["." Integer] | "." Integer
 				-- Integer_literal = [Sign] Integer
 				-- Sign			= "+" | "-"
 				-- Integer		= Digit | Digit Integer
@@ -1346,8 +1383,8 @@ feature -- Element change
 			argument_not_void: s /= Void	
 		do
 			Result := new_string (count + s.count)
-			Result.append_string (Current)
-			Result.append_string (s)
+			Result.append (Current)
+			Result.append (s)
 		ensure
 			Result_exists: Result /= Void
 			new_count: Result.count = count + s.count
@@ -1496,47 +1533,8 @@ feature -- Element change
 				l_area.overlapping_move (pos, pos + l_s_count, count - pos)
 
 					-- Copy string `s' at index `pos'.
-				if l_area /= s_area then
-						-- Normal copy as there is no overlap between `other' and `Current'.
-					from
-						j := 0
-						nb := l_s_count - 1
-					until
-						j > nb
-					loop
-						l_area.put (s_area.item (j), j + pos)
-						j := j + 1
-					end
-				else
-						-- We have an overlap between `s' and `Current'. Since now Current
-						-- is made of `low' + `empty' + `upper' part, we need to copy
-						-- the `low' part at the beginning of `empty' and the `upper' part
-						-- at the end of `empty'.
-						
-						-- First copy characters of Current from low part `0..pos - 1' to
-						-- `pos .. pos + pos - 1'.
-					from
-						j := 0
-						nb := pos - 1
-					until
-						j > nb
-					loop
-						l_area.put (l_area.item (j), j + pos)
-						j := j + 1
-					end
+				l_area.copy_data (s_area, 0, pos, l_s_count)
 
-						-- Then copy characters of Current from upper part
-						-- `pos + l_s_count .. new_size - 1' to `pos + pos .. pos + l_s_count - 1'.
-					from
-						j := pos + pos
-						nb := pos + l_s_count - 1
-					until
-						j > nb
-					loop
-						l_area.put (l_area.item (j + l_s_count - pos), j)
-						j := j + 1
-					end
-				end
 				count := new_size
 				internal_hash_code := 0
 			end
@@ -1811,7 +1809,7 @@ feature -- Conversion
 		end
 
 	left_justify is
-			-- Left justify the string.
+			-- Left justify Current using `count' as witdth.
 		local
 			i, nb: INTEGER
 			l_area: like area
@@ -1841,86 +1839,62 @@ feature -- Conversion
 		end
 
 	center_justify is
-			-- Center justify the string using
-			-- the capacity as the width
+			-- Center justify Current using `count' as width.
 		local
-			i, j, nb, l_offset: INTEGER
+			i, nb, l_offset: INTEGER
 			left_nb_space, right_nb_space: INTEGER
 			l_area: like area
 		do
 				-- Compute number of spaces at the left of current string.
 			from
-				nb := count - 1
+				nb := count
 				l_area := area
 			until
-				left_nb_space > nb or else not l_area.item (left_nb_space).is_space
+				left_nb_space = nb or else not l_area.item (left_nb_space).is_space
 			loop
 				left_nb_space := left_nb_space + 1
 			end
 
 				-- Compute number of spaces at the right of current string.
 			from
-				i := nb
+				i := nb - 1
 				l_area := area
 			until
-				i < 0 or else not l_area.item (i).is_space
+				i = -1 or else not l_area.item (i).is_space
 			loop
 				right_nb_space := right_nb_space + 1
 				i := i - 1
 			end
 
-			l_offset := left_nb_space - ((left_nb_space + right_nb_space) // 2)
+				-- We encourage that more spaces will be put to the left, when 
+				-- number of spaces is not even.
+			l_offset := left_nb_space + right_nb_space
+			if l_offset \\ 2 = 0 then
+				l_offset := left_nb_space - l_offset // 2
+			else
+				l_offset := left_nb_space - l_offset // 2 - 1
+			end
 			if l_offset = 0 then
 					-- Nothing to be done.
-			elseif l_offset < 0 then
-					-- Shift characters to the right by l_offset position.
-				from
-					i := nb - right_nb_space
-					j := left_nb_space - l_offset
-				until
-					i < j
-				loop
-					l_area.put (l_area.item (i), i + l_offset)
-					i := i - 1
-				end
-
-					-- Fill left part with spaces.
-				from
-				until
-					i < left_nb_space
-				loop
-					l_area.put (' ', i)
-					i := i - 1
-				end
-				internal_hash_code := 0
 			else
-					-- Shift characters to the left
-				from
-					i := left_nb_space - l_offset
-					j := nb - right_nb_space - l_offset
-				until
-					i > j
-				loop
-					l_area.put (l_area.item (i + l_offset), i)
-					i := i + 1
-				end
+					-- Shift characters to the right or left (depending on sign of
+					-- `l_offset' by `l_offset' position.
+				l_area.move_data (left_nb_space, left_nb_space - l_offset,
+					nb - left_nb_space - right_nb_space)
 
-					-- Fill right part with spaces.
-				from
-					j := i + l_offset
-				until
-					i > j
-				loop
-					l_area.put (' ', i)
-					i := i + 1
+				if l_offset < 0 then
+						-- Fill left part with spaces.
+					l_area.fill_with (' ', left_nb_space, left_nb_space - l_offset - 1)
+				else
+						-- Fill right part with spaces.
+					l_area.fill_with (' ', nb - right_nb_space - l_offset, nb - 1)
 				end
 				internal_hash_code := 0
 			end
 		end
 
 	right_justify is
-			-- Right justify the string using
-			-- the count as the width
+			-- Right justify Current using `count' as width.
 		local
 			i, nb: INTEGER
 			nb_space: INTEGER
@@ -1967,35 +1941,27 @@ feature -- Conversion
 			pivot_not_space: pivot /= ' '
 			not_empty: not is_empty
 		local
-			l_index_of_pivot: INTEGER
+			l_index_of_pivot, l_new_size: INTEGER
+			l_area: like area
 		do
 			l_index_of_pivot := index_of (pivot, 1)
 			if l_index_of_pivot /= 0 then
+				l_area := area
 				if l_index_of_pivot < position then
-					from
-						precede (' ')
-					until
-						index_of (pivot, 1) = position
-					loop
-						precede (' ')
-					end
-				elseif l_index_of_pivot > position then
-					from
-						remove (1)
-					until
-						index_of (pivot, 1) = position
-					loop
-						remove (1)
-					end
+						-- We need to resize Current so that we can shift Current by 
+						-- `l_index_of_pivot - position'.
+					l_new_size := count + position - l_index_of_pivot
+					grow (l_new_size)
+					l_area.move_data (0, position - l_index_of_pivot, count)
+					l_area.fill_with (' ', 0, position - l_index_of_pivot - 1)
+					count := l_new_size
+				else
+						-- Simply shift content to the left and reset trailing with spaces.
+					l_area.move_data (l_index_of_pivot - position, 0, count - l_index_of_pivot + position)
+					l_area.fill_with (' ', count - l_index_of_pivot + position, count - 1)
 				end
+				internal_hash_code := 0
 			end
-			from
-			until
-				count = capacity
-			loop
-				extend (' ')
-			end
-			internal_hash_code := 0
 		end
 
 	to_lower is
@@ -2537,13 +2503,13 @@ feature {NONE} -- Implementation
 		do
 			from
 			until
-				i >= nb or l_done
+				i = nb
 			loop
 				l_current_code := this.item (i).code
 				l_other_code := other.item (i).code
 				if l_current_code /= l_other_code then
 					Result := l_current_code - l_other_code
-					l_done := True
+					i := nb - 1 -- Jump out of loop
 				end
 				i := i + 1
 			end

@@ -239,7 +239,6 @@ feature {NONE} -- Implementation
 			-- Called by `select_actions' of `column_pixmap_combo'.
 		local
 			selected_item_index: INTEGER
-			label_item: EV_GRID_LABEL_ITEM
 			column: EV_GRID_COLUMN
 			pixmap: EV_PIXMAP
 		do

@@ -16,15 +16,17 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (a: like arguments; t: like type; c: like content) is
+	initialize (a: like arguments; t: like type; r: like assigner c: like content) is
 			-- Create a new BODY AST node.
 		do
 			arguments := a
 			type := t
+			assigner := r
 			content := c
 		ensure
 			arguments_set: arguments = a
 			type_set: type = t
+			assigner_set: assigner = r
 			content_set: content = c
 		end
 
@@ -43,6 +45,9 @@ feature -- Attributes
 
 	type: TYPE_AS
 			-- Type if any
+
+	assigner: ID_AS
+			-- Assigner mark if any
 
 	content: CONTENT_AS
 			-- Content of the body: constant or regular body

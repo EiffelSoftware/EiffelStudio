@@ -633,7 +633,7 @@ feature -- Status setting
 				item_activate_actions_internal.call ([a_item, activate_window])
 			end
 			if a_item.implementation.activate_actions_internal /= Void then
-				a_item.implementation.activate_actions_internal.call (Void)
+				a_item.implementation.activate_actions_internal.call ([activate_window])
 			end
 
 			if not activate_window.is_destroyed and then not activate_window.is_empty and then not activate_window.is_show_requested then

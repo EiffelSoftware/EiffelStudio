@@ -59,7 +59,7 @@ feature -- Basic Operations
 				else
 					create l_dest.make (a_dest)
 					if l_dest.exists then
-						Event_manager.raise_event ({CODE_EVENTS_IDS}.File_exists, [l_dest])
+						Event_manager.raise_event ({CODE_EVENTS_IDS}.File_exists, [a_dest])
 						l_dest.delete
 					end
 					l_source.open_read

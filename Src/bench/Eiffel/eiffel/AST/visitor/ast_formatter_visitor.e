@@ -300,6 +300,13 @@ feature {NONE} -- Implementation
 				l_as.type.process (Current)
 			end
 			ctxt.set_separator (ti_empty)
+			if l_as.assigner /= Void then
+				ctxt.put_space
+				ctxt.put_text_item_without_tabs (ti_Assign_keyword)
+				ctxt.put_space
+				ctxt.prepare_for_feature (l_as.assigner, Void)
+				ctxt.put_current_feature
+			end
 			safe_process (l_as.content)
 		end
 

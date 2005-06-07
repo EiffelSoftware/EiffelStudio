@@ -88,6 +88,7 @@ feature {NONE} -- Implementation
 		do
 			safe_process (l_as.arguments)
 			safe_process (l_as.type)
+			safe_process (l_as.assigner)
 			safe_process (l_as.content)
 		end
 

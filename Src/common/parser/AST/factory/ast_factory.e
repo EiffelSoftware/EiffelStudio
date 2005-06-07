@@ -281,10 +281,10 @@ feature -- Access
 			create Result.make (t, o)
 		end
 
-	new_body_as (a: EIFFEL_LIST [TYPE_DEC_AS]; t: TYPE_AS; c: CONTENT_AS): BODY_AS is
+	new_body_as (a: EIFFEL_LIST [TYPE_DEC_AS]; t: TYPE_AS; r: ID_AS; c: CONTENT_AS): BODY_AS is
 			-- New BODY AST node
 		do
-			create Result.initialize (a, t, c)
+			create Result.initialize (a, t, r, c)
 		end
 
 	new_boolean_as (b: BOOLEAN; l, c, p, s: INTEGER): BOOL_AS is

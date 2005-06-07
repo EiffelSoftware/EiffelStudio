@@ -361,9 +361,10 @@ feature -- Element change
 		end
 
 	add_feature (feat: E_FEATURE; str: STRING) is
-			-- Put feature `feat' with string 
+			-- Put feature `feat' with string
 			-- representation `str' at current position.
 		require
+			valid_feat: feat /= Void
 			valid_str: str /= Void
 		local
 			l_item: like item
@@ -385,7 +386,8 @@ feature -- Element change
 	add_feature_name (f_name: STRING; e_class: CLASS_C) is
 			-- Put feature name `f_name' defined in `e_class'.
 		require
-			valid_f_name: f_name /= Void
+			f_name_not_void: f_name /= Void
+			e_class_not_void: e_class /= Void
 		local
 			l_item: like item
 		do

@@ -254,7 +254,23 @@ feature -- Access
 		end
 		
 	fill_background_actions: ACTION_SEQUENCE [TUPLE [EV_DRAWABLE, INTEGER, INTEGER, INTEGER, INTEGER]] is
-			--
+			-- Actions to be performed when part of the background area of the grid that is outside of the
+			-- area filled by `row_count' and `column_count' needs to be redrawn.
+			-- By default, the grid fills the area in its `background_color'. If one or more agents are
+			-- contained in this action sequence, the grid is no longer responsible for drawing its background
+			-- and the agents must redraw this area, otherwis graphical glitches may appear.
+			-- The five pieces of event data passed are:
+			-- drawable: EV_DRAWABLE The drawable into which you must draw the background.
+			-- virtual_x: INTEGER The virtual x position of the area to be redrawn.
+			-- virtual_y: INTEGER The virtual y position of the area to be redrawn.
+			-- width: INTEGER The width of the area that must be redrawn.
+			-- height: INTEGER The height of the area that must be redrawn.
+			-- The upper left corner of the drawing must start at 0x0 in `drawable' with an area given by `width'
+			-- and `height'. The virtual coordinates specify the position of the area in relation to the grid's
+			-- virtual positiion which is essential if you wish to draw something such as a texture which must be
+			-- matched based on its position.
+			-- Note that `fill_background_actions' may be fired multiple times to fill the complete area of the
+			-- background that is invalid.
 		do
 			Result := implementation.fill_background_actions
 		ensure

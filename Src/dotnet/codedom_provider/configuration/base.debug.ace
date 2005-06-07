@@ -21,13 +21,15 @@ default
 cluster 
  
  	library base_net:		"$EIFFEL_SRC\library.net\base"
+		exclude
+			"CVS";
  		default
  			namespace ("EiffelSoftware.Library.BaseNet")
  		end
 
  	library base:		"$EIFFEL_SRC\library\base"
 		exclude
- 			"table_eiffel3"; "desc"; "classic";
+ 			"table_eiffel3"; "desc"; "classic"; "CVS";
  		default
 			namespace ("EiffelSoftware.Library.Base")
  		end

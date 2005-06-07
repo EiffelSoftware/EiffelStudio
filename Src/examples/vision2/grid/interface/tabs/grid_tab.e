@@ -31,7 +31,6 @@ feature {NONE} -- Initialization
 		local
 			f_name: FILE_NAME
 			list_item: EV_LIST_ITEM
-			l_color: EV_COLOR
 		do
 			grid.set_dynamic_content_function (agent compute_item)
 			add_default_colors_to_combo (set_background_color_combo)
@@ -278,7 +277,7 @@ feature {NONE} -- Implementation
 			grid.item_deselect_actions.wipe_out
 			grid.enable_single_item_selection
 			grid.disable_tree
-			grid.set_row_height (16)
+--			grid.set_row_height (16)
 			if ball_animation_timer /= Void then
 				ball_animation_timer.destroy
 				ball_animation_timer := Void
@@ -395,7 +394,6 @@ feature {NONE} -- Implementation
 				grid.row (counter - 1).add_subrow (grid.row (counter))
 				counter := counter + 1
 			end
-			
 			fixme ("Uncomment this code and replace that just above to show a redrawing bug.")
 --			from
 --				counter := 121
@@ -409,7 +407,7 @@ feature {NONE} -- Implementation
 --				counter := counter + 1
 --			end
 
-			
+
 			from
 				counter := 150
 			until
@@ -562,7 +560,7 @@ feature {NONE} -- Implementation
 			grid.column (4).set_pixmap (image4)
 			grid.column (5).set_pixmap (image5)
 		end
-
+		
 	build_ball_demo_button_selected is
 			-- Called by `select_actions' of `build_ball_demo_button'.
 		local
@@ -665,7 +663,6 @@ feature {NONE} -- Implementation
 			l_start_x, l_start_y: INTEGER
 			i, j: REAL
 			random_counter: INTEGER
-			label_item: EV_GRID_LABEL_ITEM
 			time1, time2: DATE_TIME
 			fine_seconds: REAL
 		do
@@ -842,10 +839,6 @@ feature {NONE} -- Implementation
 
 	draw_ellipse (drawable: EV_DRAWABLE; an_item: EV_GRID_DRAWABLE_ITEM) is
 			--
-		local
-			l_virtual_x, l_virtual_y: INTEGER
-			counter: INTEGER
-			l_ball_x, l_ball_y: INTEGER
 		do
 			drawable.set_foreground_color (grid.background_color)
 			drawable.fill_rectangle (0, 0, an_item.width, an_item.height)
@@ -870,7 +863,7 @@ feature {NONE} -- Implementation
 			l_ball_x, l_ball_y: REAL
 		do
 			drawable.set_foreground_color (grid.background_color)
-			drawable.fill_rectangle (0, 0, an_item.width, an_item.height)
+--			drawable.fill_rectangle (0, 0, an_item.width, an_item.height)
 			if an_item.is_selected then
 				if grid.has_focus then
 					drawable.set_foreground_color (grid.focused_selection_color)
@@ -1160,11 +1153,11 @@ feature {NONE} -- Implementation
 	custom_button_selected is
 			-- Called by `select_actions' of `custom_button'.
 		local
-			l_item: EV_GRID_ITEM
-			r, row: EV_GRID_ROW
-			grid_label_item: EV_GRID_LABEL_ITEM
-			counter: INTEGER
-			i: INTEGER
+--			l_item: EV_GRID_ITEM
+--			r, row: EV_GRID_ROW
+--			grid_label_item: EV_GRID_LABEL_ITEM
+--			counter, counter2: INTEGER
+--			i: INTEGER
 		do
 			reset_grid
 --			l_item := grid.item_at_virtual_position (200, 16)
@@ -1434,7 +1427,29 @@ feature {NONE} -- Implementation
 --		--	grid.row (1).clear
 
 
-			grid.clear
+			--grid.clear
+--			grid.enable_tree
+--			add_items (1, 10000)
+--			GRID.column (1).set_width (10000)
+--			from
+--				counter := 1
+--			until
+--				counter = 5000
+--			loop
+--				grid.row (counter).add_subrow (grid.row (counter + 1))
+--				counter := counter + 1
+--			end
+--			from
+--				counter := 5000
+--				counter2 := 5000
+--			until
+--				counter = 10000
+--			loop
+--				grid.row (counter2).add_subrow (grid.row (counter + 1))
+--				counter := counter + 1
+--				counter2 := counter2 - 1
+--			end
+			add_items (10, 10)
 		end
 
 	display (an_x, a_y: INTEGER): EV_GRID_ITEM is
@@ -1990,18 +2005,11 @@ feature {NONE} -- Implementation
 
 	item_double_pressed (an_x, a_y, a_button: INTEGER; an_item: EV_GRID_ITEM) is
 			--
-		local
-			editable_item: EV_GRID_COMBO_ITEM
 		do
 			if an_item /= Void then
 				an_item.activate
 			end
-			--editable_item ?= an_item
-			--if editable_item /= Void then
-		--		editable_item.activate
-		--	end
-		end
-		
+		end		
 
 	columns_drawn_above_rows_button_selected is
 			-- Called by `select_actions' of `columns_drawn_above_rows_button'.
@@ -2124,7 +2132,6 @@ feature {NONE} -- Implementation
 	item_selection_changed (an_item: EV_GRID_ITEM) is
 			--
 		local
-			next_item: EV_GRID_ITEM
 			an_x: INTEGER
 			a_y: INTEGER
 			final_x, final_y: INTEGER
@@ -2149,79 +2156,347 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	post_draw_event (a_drawable: EV_DRAWABLE; an_item: EV_GRID_ITEM) is
+	post_draw_event (a_drawable: EV_DRAWABLE; an_item: EV_GRID_ITEM; a_column_index, a_row_index: INTEGER) is
 			--
 		local
-			next_item: EV_GRID_ITEM
 			item1, item2, item3, item4, item5, item6, item7, item8: EV_GRID_ITEM
 		do
-
-			a_drawable.set_foreground_color (black)
-			if an_item.is_selected then
-				if an_item.column.index = 1 then
-					a_drawable.fill_rectangle (0, 0, 4, an_item.height)
-				else
-					item4 := grid.item (an_item.column.index - 1, an_item.row.index)
-					if not item4.is_selected then
+			if an_item /= Void then
+				a_drawable.set_foreground_color (black)
+				if an_item.is_selected then
+					if an_item.column.index = 1 then
 						a_drawable.fill_rectangle (0, 0, 4, an_item.height)
+					else
+						item4 := grid.item (an_item.column.index - 1, an_item.row.index)
+						if not item4.is_selected then
+							a_drawable.fill_rectangle (0, 0, 4, an_item.height)
+						end
 					end
-				end
-
-				if an_item.column.index = grid.column_count then
-					a_drawable.fill_rectangle (an_item.width - 4, 0, 4, an_item.height)
-				else
-					item5 := grid.item (an_item.column.index + 1, an_item.row.index)
-					if not item5.is_selected then
+	
+					if an_item.column.index = grid.column_count then
 						a_drawable.fill_rectangle (an_item.width - 4, 0, 4, an_item.height)
+					else
+						item5 := grid.item (an_item.column.index + 1, an_item.row.index)
+						if not item5.is_selected then
+							a_drawable.fill_rectangle (an_item.width - 4, 0, 4, an_item.height)
+						end
 					end
-				end
-				if an_item.row.index = 1 then
-					a_drawable.fill_rectangle (0, 0, an_item.width, 4)
-				else
-					item2 := grid.item (an_item.column.index, an_item.row.index - 1)
-					if not item2.is_selected then
+					if an_item.row.index = 1 then
 						a_drawable.fill_rectangle (0, 0, an_item.width, 4)
+					else
+						item2 := grid.item (an_item.column.index, an_item.row.index - 1)
+						if not item2.is_selected then
+							a_drawable.fill_rectangle (0, 0, an_item.width, 4)
+						end
 					end
-				end
-
-				if an_item.row.index = grid.row_count then
-					a_drawable.fill_rectangle (0, an_item.height - 4, an_item.width, 4)
-				else
-					item7 := grid.item (an_item.column.index, an_item.row.index + 1)
-					if not item7.is_selected then
+	
+					if an_item.row.index = grid.row_count then
 						a_drawable.fill_rectangle (0, an_item.height - 4, an_item.width, 4)
+					else
+						item7 := grid.item (an_item.column.index, an_item.row.index + 1)
+						if not item7.is_selected then
+							a_drawable.fill_rectangle (0, an_item.height - 4, an_item.width, 4)
+						end
 					end
-				end
-				if an_item.row.index > 1 then
-					if an_item.column.index > 1 then
-						item1 := grid.item (an_item.column.index - 1, an_item.row.index - 1)
+					if an_item.row.index > 1 then
+						if an_item.column.index > 1 then
+							item1 := grid.item (an_item.column.index - 1, an_item.row.index - 1)
+						end
+						if an_item.column.index < grid.column_count then
+							item3 := grid.item (an_item.column.index + 1, an_item.row.index - 1)
+						end
 					end
-					if an_item.column.index < grid.column_count then
-						item3 := grid.item (an_item.column.index + 1, an_item.row.index - 1)
+					if an_item.row.index < grid.row_count then
+						if an_item.column.index > 1 then
+							item6 := grid.item (an_item.column.index - 1, an_item.row.index + 1)
+						end
+						if an_item.column.index < grid.column_count then
+							item8 := grid.item (an_item.column.index + 1, an_item.row.index + 1)
+						end
 					end
-				end
-				if an_item.row.index < grid.row_count then
-					if an_item.column.index > 1 then
-						item6 := grid.item (an_item.column.index - 1, an_item.row.index + 1)
+					if item4 /= Void and item7 /= Void and then item7.is_selected and then item4.is_selected and then not item6.is_selected then
+						a_drawable.fill_rectangle (0, an_item.height - 4, 4, 4)
 					end
-					if an_item.column.index < grid.column_count then
-						item8 := grid.item (an_item.column.index + 1, an_item.row.index + 1)
+					if item4 /= Void and item2 /= Void and then item4.is_selected and then item2.is_selected and then not item1.is_selected then
+						a_drawable.fill_rectangle (0, 0, 4, 4)
 					end
-				end
-				if item4 /= Void and item7 /= Void and then item7.is_selected and then item4.is_selected and then not item6.is_selected then
-					a_drawable.fill_rectangle (0, an_item.height - 4, 4, 4)
-				end
-				if item4 /= Void and item2 /= Void and then item4.is_selected and then item2.is_selected and then not item1.is_selected then
-					a_drawable.fill_rectangle (0, 0, 4, 4)
-				end
-				if item5 /= Void and item2 /= Void and then item5.is_selected and then item2.is_selected and then not item3.is_selected then
-					a_drawable.fill_rectangle (an_item.width - 4, 0, 4, 4)
-				end
-				if item5 /= Void and item7 /= Void and then item5.is_selected and then item7.is_selected and then not item8.is_selected then
-					a_drawable.fill_rectangle (an_item.width - 4, an_item.height - 4, 4, 4)
+					if item5 /= Void and item2 /= Void and then item5.is_selected and then item2.is_selected and then not item3.is_selected then
+						a_drawable.fill_rectangle (an_item.width - 4, 0, 4, 4)
+					end
+					if item5 /= Void and item7 /= Void and then item5.is_selected and then item7.is_selected and then not item8.is_selected then
+						a_drawable.fill_rectangle (an_item.width - 4, an_item.height - 4, 4, 4)
+					end
 				end
 			end
 		end
 
+	texture_test_button_selected is
+			-- Called by `select_actions' of `texture_test_button'.
+		local
+			combo_item: EV_GRID_COMBO_ITEM
+			counter: INTEGER
+		do
+			reset_grid
+			grid.enable_tree
+			add_items (5, 100)
+			from
+				counter := 20
+			until
+				counter > 40
+			loop
+				grid.row (counter).add_subrow (grid.row (counter + 1))
+				counter := counter + 1
+			end
+			grid.insert_new_row (1)
+			grid.column (1).set_width (200)
+			grid.column (2).set_width (150)
+			grid.disable_row_height_fixed
+			grid.row (1).set_height (32)
+			from
+				counter := 5
+			until
+				counter > 20
+			loop
+				grid.remove_item (3, counter)
+				grid.remove_item (2, counter)
+				counter := counter + 1
+			end
+			grid.pointer_button_press_item_actions.extend (agent grid_pressed)
+			create combo_item.make_with_text ("Texture applied to : None")
+			combo_item.set_item_strings (<<"None", "Background", "All">>)
+			combo_item.combo_box.select_actions.extend (agent combo_item_selected (combo_item.combo_box))
+			grid.set_item (1, 1, combo_item)
+			create combo_item.make_with_text ("Scroll Texture : True")
+			combo_item.set_item_strings (<<"True", "False">>)
+			combo_item.combo_box.select_actions.extend (agent combo_scroll_item_selected (combo_item.combo_box))
+			grid.set_item (2, 1, combo_item)
+			grid.pre_draw_overlay_actions.extend (agent draw_texture)
+			grid.post_draw_overlay_actions.extend (agent draw_borders)
+			grid.fill_background_actions.extend (agent draw_background)
+			texture_style := 1
+			scroll_style := 1
+		end
+
+	combo_item_selected (a_combo_box: EV_COMBO_BOX) is
+			--
+		require
+			a_combo_box_not_void: a_combo_box /= Void
+		local
+			selected_index: INTEGER
+			label_item: EV_GRID_LABEL_ITEM
+		do
+			selected_index := a_combo_box.index_of (a_combo_box.selected_item, 1)
+			label_item ?= grid.item (1, 1)
+			inspect selected_index
+			when 1 then
+				texture_style := 1
+				label_item.set_text ("Texture applied to : None")
+			when 2 then
+				texture_style := 2
+				label_item.set_text ("Texture applied to : Background")
+			else
+				texture_style := 3
+				label_item.set_text ("Texture applied to : All")
+			end
+			grid.redraw
+		end
+		
+	combo_scroll_item_selected (a_combo_box: EV_COMBO_BOX) is
+			--
+		require
+			a_combo_box_not_void: a_combo_box /= Void
+		local
+			selected_index: INTEGER
+			label_item: EV_GRID_LABEL_ITEM
+		do
+			selected_index := a_combo_box.index_of (a_combo_box.selected_item, 1)
+			label_item ?= grid.item (2, 1)
+			inspect selected_index
+			when 1 then
+				scroll_style := 1
+				label_item.set_text ("Scroll Texture : True")
+				grid.disable_full_redraw_on_virtual_position_change
+			when 2 then
+				scroll_style := 2
+				label_item.set_text ("Scroll Texture : False")
+				grid.enable_full_redraw_on_virtual_position_change
+			end
+			grid.redraw
+		end
+		
+	scroll_style: INTEGER
+
+	texture_style: INTEGER		
+
+	grid_pressed (an_x, a_y, a_button: INTEGER; grid_item: EV_GRID_ITEM) is
+			--
+		local
+			combo_item: EV_GRID_COMBO_ITEM
+		do
+			if grid_item /= Void and then a_button = 1 then
+				if grid_item.column.index <= 2 and grid_item.row.index = 1 then
+					grid_item.activate
+				end
+			end
+		end
+		
+	draw_background (drawable: EV_DRAWABLE; a_virtual_x, a_virtual_y, a_width, a_height: INTEGER) is
+			--
+		local
+			row_height, column_width: INTEGER
+			counter: INTEGER
+			an_x, a_y: INTEGER
+			x_counter, y_counter: INTEGER
+			virtual_x, virtual_y: INTEGER
+			last_drawn_width: INTEGER
+			indent: INTEGER
+			label_item: EV_GRID_LABEL_ITEM
+			text_width: INTEGER
+		do
+			if texture_style > 1 then
+				virtual_x := a_virtual_x
+				if scroll_style = 2 then
+					virtual_x := virtual_x - grid.virtual_x_position
+				end
+				an_x := (virtual_x \\ texture_width)
+				virtual_y := a_virtual_y
+				if scroll_style = 2 then
+					virtual_y := virtual_y - grid.virtual_y_position
+				end
+				a_y := (virtual_y \\ texture_height)
+				if (texture_style = 2) or texture_style = 3 then
+					internal_draw_texture (drawable, an_x, a_y, a_width, a_height)
+				end
+			else
+				drawable.set_foreground_color (grid.background_color)
+				drawable.fill_rectangle (0, 0, a_width, a_height)
+			end
+		end
+
+
+	draw_texture (drawable: EV_DRAWABLE; grid_item: EV_GRID_ITEM; a_column_index, a_row_index: INTEGER) is
+			--
+		local
+			row_height, column_width: INTEGER
+			counter: INTEGER
+			an_x, a_y: INTEGER
+			x_counter, y_counter: INTEGER
+			virtual_x, virtual_y: INTEGER
+			a_height: INTEGER
+			a_width: INTEGER
+			last_drawn_width: INTEGER
+			indent: INTEGER
+			label_item: EV_GRID_LABEL_ITEM
+			text_width: INTEGER
+		do
+			if texture_style > 1 then
+				if a_row_index > 1 or a_column_index > 2 then
+					virtual_x := grid.column (a_column_index).virtual_x_position
+					if scroll_style = 2 then
+						virtual_x := virtual_x - grid.virtual_x_position
+					end
+					an_x := (virtual_x \\ texture_width)
+					virtual_y := grid.row (a_row_index).virtual_y_position
+					if scroll_style = 2 then
+						virtual_y := virtual_y - grid.virtual_y_position
+					end
+					a_y := (virtual_y \\ texture_height)
+					if grid.is_row_height_fixed then
+						a_height := grid.row_height
+					else
+						a_height  := grid.row (a_row_index).height
+					end
+					a_width := grid.column (a_column_index).width
+					if (texture_style = 2 and grid_item = Void) or texture_style = 3 then
+						internal_draw_texture (drawable, an_x, a_y, a_width, a_height)
+					else
+						indent := grid_item.horizontal_indent
+						if indent > 0 then
+							internal_draw_texture (drawable, an_x, a_y, indent, a_height)
+						end
+					end
+				end
+			end
+		end
+		
+	internal_draw_texture (drawable: EV_DRAWABLE; texture_x, texture_y, a_width, a_height: INTEGER) is
+			--
+		local
+			an_x, a_y: INTEGER
+			last_x_segment, last_y_segment: INTEGER
+			current_texture_x, current_texture_Y: INTEGER
+		do
+			from
+				an_x := 0
+				current_texture_x := texture_x
+			until
+				an_x >= a_width
+			loop
+				last_x_segment := (texture_width - current_texture_x).min (a_width - an_x)
+				from
+					a_y := 0
+					current_texture_y := texture_y
+				until
+					a_y >= a_height
+				loop
+					last_y_segment := (texture_height - current_texture_y).min (a_height - a_y)
+					drawable.draw_sub_pixmap (an_x, a_y, marble, create {EV_RECTANGLE}.make (current_texture_x, current_texture_y, last_x_segment, last_y_segment))
+					current_texture_y := 0
+					a_y := a_y + last_y_segment
+				end
+				drawable.draw_sub_pixmap (an_x, a_y, marble, create {EV_RECTANGLE}.make (current_texture_x, current_texture_y, last_x_segment, last_y_segment))
+				current_texture_x := 0
+				an_x := an_x + last_x_segment
+			end
+		end
+		
+
+	draw_borders (drawable: EV_DRAWABLE; grid_item: EV_GRID_ITEM; a_column_index, a_row_index: INTEGER) is
+			--
+		local
+			row_height, column_width: INTEGER
+			counter: INTEGER
+			an_x, a_y: INTEGER
+			x_counter, y_counter: INTEGER
+			virtual_x, virtual_y: INTEGER
+			a_height: INTEGER
+			a_width: INTEGER
+			last_drawn_width: INTEGER
+		do
+
+			if a_row_index = 1 then
+				if grid_item /= Void then
+					drawable.set_foreground_color (black)
+					drawable.fill_rectangle (0, grid_item.height - 4, grid.column (a_column_index).width, grid_item.height)
+					drawable.set_foreground_color (black)
+					drawable.fill_rectangle (0, 0, grid.column (a_column_index).width, 4)
+				end
+				if a_column_index = 1 then
+					drawable.set_foreground_color (black)
+					drawable.fill_rectangle (0, 0, 4, grid_item.height - 4)
+				elseif a_column_index = 2 then
+					drawable.set_foreground_color (black)
+					drawable.fill_rectangle (grid.column (a_column_index).width - 4, 0, grid.column (a_column_index).width - 4, grid_item.height - 4)
+				end
+			end
+		end
+
+	bubbles_pixmap: EV_PIXMAP is
+			--
+		local
+			temp: EV_PIXMAP
+		once
+			create Result
+			Result.set_size (texture_width * 2, texture_height * 2)
+			Result.draw_pixmap (0, 0, marble)
+			Result.draw_pixmap (texture_width, 0, marble)
+			Result.draw_pixmap (0, texture_height, marble)
+			Result.draw_pixmap (texture_width, texture_height, marble)
+		end
+
+	texture_width: INTEGER is 256
+
+	texture_height: INTEGER is 256
+		
 end -- class GRID_TAB
 

@@ -213,7 +213,36 @@ feature -- Status Setting
 			refresh_now
 			margin.setup_margin
 		end	
-				
+		
+	on_focus is
+			-- Editor received focus
+		local
+			dialog: EV_INFORMATION_DIALOG
+			button_labels: ARRAY [STRING]
+			actions: ARRAY [PROCEDURE [ANY, TUPLE]]
+		do
+			editor_drawing_area.focus_in_actions.block
+			if not changed and editor_preferences.automatic_update and then not file_date_already_checked and then not file_is_up_to_date then
+					-- File has not changed in panel and is not up to date.  Reload.
+				reload
+			elseif (changed and not file_is_up_to_date) or (not changed and not file_date_already_checked and not editor_preferences.automatic_update) and then not file_is_up_to_date then
+					-- File has not changed in panel and is not up to date.  However, user does want auto-update so prompt for reload.
+				create dialog.make_with_text ("This file has been modified by another editor.")
+				create button_labels.make (1, 2)
+				create actions.make (1, 2)
+				button_labels.put ("Reload", 1)
+				actions.put (agent reload, 1)
+				button_labels.put ("Continue anyway", 2)
+				actions.put (agent text_displayed.set_changed (True, False), 2)
+				dialog.set_buttons_and_actions (button_labels, actions)
+				dialog.set_default_push_button (dialog.button (button_labels @ 1))
+				dialog.set_default_cancel_button (dialog.button (button_labels @ 2))
+				dialog.set_title ("External edition")
+				dialog.show_modal_to_window (reference_window)
+			end
+			editor_drawing_area.focus_in_actions.resume
+		end		
+
 feature -- Query
 
 	editor_x: INTEGER is
@@ -1138,37 +1167,7 @@ feature {NONE} -- Text loading
 			-- Update scroll bar as a new block of text as been loaded.
 		do
 			update_vertical_scrollbar
-		end
-
-	on_focus is
-			-- Editor received focus
-		local
-			dialog: EV_INFORMATION_DIALOG
-			button_labels: ARRAY [STRING]
-			actions: ARRAY [PROCEDURE [ANY, TUPLE]]
-		do
-			editor_drawing_area.focus_in_actions.block
-			if not changed and editor_preferences.automatic_update and then not file_date_already_checked and then not file_is_up_to_date then
-					-- File has not changed in panel but is not up to date.  Reload.
-				reload
-			elseif (changed and not file_is_up_to_date) or (not changed and not file_date_already_checked and not editor_preferences.automatic_update) and then not file_is_up_to_date then
-					-- File has not changed in panel but is not up to date.  However, user does want auto-update so
-					-- prompt for reload.
-				create dialog.make_with_text ("This file has been modified by another editor.")
-				create button_labels.make (1, 2)
-				create actions.make (1, 2)
-				button_labels.put ("Reload", 1)
-				actions.put (agent reload, 1)
-				button_labels.put ("Continue anyway", 2)
-				actions.put (agent text_displayed.set_changed (True, False), 2)
-				dialog.set_buttons_and_actions (button_labels, actions)
-				dialog.set_default_push_button (dialog.button (button_labels @ 1))
-				dialog.set_default_cancel_button (dialog.button (button_labels @ 2))
-				dialog.set_title ("External edition")
-				dialog.show_modal_to_window (reference_window)
-			end
-			editor_drawing_area.focus_in_actions.resume
-		end		
+		end	
 
 	file_loading_setup is
 			-- Setup before file loading

@@ -1622,15 +1622,12 @@ feature -- Element change
 		require
 			i_positive: i > 0
 			j_positive: j > 0
+			n_positive: n > 0
 			i_less_than_row_count: i <= row_count
-			j_valid: j <= row_count + 1
+			j_valid: j <= row_count
 			n_valid: i + n <= row_count + 1
 			row_at_i_has_no_parent_row: row (i).parent_row = Void
 			end_row_last_in_tree_structure: i + n <= row_count implies row (i + n).parent_row = Void
-		local
-			temp_rows, rows_duplicate: like rows
-			temp_internal_data, internal_data_duplicate: like internal_row_data
-			a_end_index, a_counter, a_insertion_index: INTEGER
 		do
 				-- Only move if the row move is not overlapping.
 			if j < i or else j > i + n then
@@ -2066,7 +2063,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			l_column_count: INTEGER
 		do
 			temp_columns := columns
-			create column_offsets.make
+			create column_offsets
 			column_offsets.extend (0)
 			l_column_count := temp_columns.count
 			from
@@ -2134,9 +2131,9 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 					-- or there is tree functionality enabled. Otherwise, we do not need to
 					-- use `row_offsets' and we can perform a shortcut.
 				if row_offsets = Void then
-					create row_offsets.make
-					create row_indexes_to_visible_indexes.make
-					create visible_indexes_to_row_indexes.make
+					create row_offsets
+					create row_indexes_to_visible_indexes
+					create visible_indexes_to_row_indexes
 					row_offsets.extend (0)
 					rows.start
 				else
@@ -2799,9 +2796,9 @@ feature {NONE} -- Drawing implementation
 				-- Flag `physical_column_indexes' for recalculation
 			physical_column_indexes_dirty := True
 			
-			create internal_row_data.make
-			create columns.make
-			create rows.make
+			create internal_row_data
+			create columns
+			create rows
 			
 			create internal_selected_rows.make (0)
 			create internal_selected_items.make (0)

@@ -89,7 +89,7 @@ feature -- Access
 feature -- Setting
 
 	set_position (l, c, p, s: INTEGER) is
-			-- Initialize current with line `l', column `c' and count `s'.
+			-- Initialize current with line `l', column `c', position `p' and count `s'.
 		require
 			l_non_negative: l >= 0
 			c_non_negative: c >= 0
@@ -117,7 +117,8 @@ feature -- Setting
 			column_set: c <= max_column implies column = c
 			no_column_set: c > max_column implies column = no_column
 			position_set: position = p
-			location_count_set: location_count = s
+			location_count_set: s <= max_count implies location_count = s
+			no_location_count_set: s > max_count implies location_count = 0
 		end
 
 feature -- Access: Constants

@@ -173,7 +173,7 @@ feature {NONE} -- Initialization
 			if mini_toolbar = Void then
 				build_mini_toolbar
 			end
-			create notebook_item.make_with_mini_toolbar (nb, widget, watches_grid, title, mini_toolbar)
+			create notebook_item.make_with_mini_toolbar (nb, widget, Void, title, mini_toolbar)
 			notebook_item.drop_actions.extend (agent on_element_drop)
 			nb.extend (notebook_item)
 		end
@@ -725,6 +725,7 @@ feature {NONE} -- Event handling
 			watched_items.extend (expr_item)
 
 			if expr_item /= Void and then expr_item.row /= Void then
+				watches_grid.remove_selection
 				expr_item.row.ensure_visible
 				expr_item.row.enable_select
 			end

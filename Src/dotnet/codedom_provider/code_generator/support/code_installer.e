@@ -43,9 +43,19 @@ feature -- Basic Operations
 
 	install (saved_state: IDICTIONARY) is
 			-- Redefine `install' feature.
+		local
+			l_exists: BOOLEAN
+			l_log_name: STRING
 		do
 			Precursor {CONFIG_INSTALL_INSTALLER}(saved_state);
 			add_entry
+			if {SYSTEM_DLL_EVENT_LOG}.source_exists (Event_source, ".") then
+				l_log_name := {SYSTEM_DLL_EVENT_LOG}.log_name_from_source_name (Event_source, ".")
+				l_exists := l_log_name.is_equal (Event_log)
+			end
+			if not l_exists then
+				{SYSTEM_DLL_EVENT_LOG}.create_event_source (Event_source, Event_log, ".")
+			end
 		end
 	
 	uninstall (saved_state: IDICTIONARY) is
@@ -53,6 +63,9 @@ feature -- Basic Operations
 		do
 			Precursor {CONFIG_INSTALL_INSTALLER}(saved_state)
 			remove_entry
+			if {SYSTEM_DLL_EVENT_LOG}.source_exists (Event_source, ".") then
+				{SYSTEM_DLL_EVENT_LOG}.delete_event_source (Event_source, ".")
+			end
 		end
 	
 	commit (saved_state: IDICTIONARY) is
@@ -83,7 +96,13 @@ feature {NONE} -- Implementation
 		do
 			(create {CODE_MACHINE_CONFIGURATION}.make).remove_compiler_entry (Eiffel_language)
 		end
-		
+	
+	Event_source: STRING is "Eiffel Codedom Provider"
+			-- Event source
+	
+	Event_log: STRING is "Application"
+			-- Event log
+
 end -- Class CODE_INSTALLER
 
 --+--------------------------------------------------------------------

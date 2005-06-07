@@ -312,6 +312,17 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
+	fill_background_actions: ACTION_SEQUENCE [TUPLE [EV_DRAWABLE, INTEGER, INTEGER, INTEGER, INTEGER]] is
+			--
+		do
+			if fill_background_actions_internal = Void then
+				create fill_background_actions_internal
+			end
+			Result := fill_background_actions_internal
+		ensure
+			not_void: Result /= Void
+		end
+
 feature {EV_ANY_I, EV_GRID_DRAWER_I} -- Implementation
 
 	item_activate_actions_internal: ACTION_SEQUENCE [TUPLE [EV_GRID_ITEM, EV_POPUP_WINDOW]]
@@ -376,6 +387,8 @@ feature {EV_ANY_I, EV_GRID_DRAWER_I} -- Implementation
 
 	post_draw_overlay_actions_internal: ACTION_SEQUENCE [TUPLE [EV_DRAWABLE, EV_GRID_ITEM, INTEGER, INTEGER]]
 			-- Implementation of once per object `post_draw_overlay_actions'.
+
+	fill_background_actions_internal: ACTION_SEQUENCE [TUPLE [EV_DRAWABLE, INTEGER, INTEGER, INTEGER, INTEGER]]
 
 end
 

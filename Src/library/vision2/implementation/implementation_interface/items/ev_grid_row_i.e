@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Initialize `Current'.
 		do
-			create subrows.make
+			create subrows
 			internal_height := 16
 			depth_in_tree := 1
 			indent_depth_in_tree := 1

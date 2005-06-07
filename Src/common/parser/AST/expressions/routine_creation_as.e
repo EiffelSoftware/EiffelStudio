@@ -61,7 +61,8 @@ feature -- Location
 		do
 			if target /= Void then
 				Result := target.start_location
-			else
+			end
+			if Result = Void or else Result.is_null then
 				Result := feature_name.start_location
 			end
 		end

@@ -41,6 +41,7 @@ feature {NONE}-- Initialization
 			create colored_button
 			create build_ball_demo_button
 			create overlay_test_button
+			create texture_test_button
 			create removal_frame
 			create l_ev_vertical_box_2
 			create l_ev_table_2
@@ -191,6 +192,7 @@ feature {NONE}-- Initialization
 			l_ev_table_1.put_at_position (colored_button, 1, 3, 1, 1)
 			l_ev_table_1.put_at_position (build_ball_demo_button, 2, 3, 1, 1)
 			l_ev_table_1.put_at_position (overlay_test_button, 1, 4, 1, 1)
+			l_ev_table_1.put_at_position (texture_test_button, 2, 4, 1, 1)
 			new_label_button.set_text ("Add New Items")
 			misc_button.set_text ("Build Default Item Structure")
 			custom_button.set_text ("Custom Function")
@@ -198,6 +200,7 @@ feature {NONE}-- Initialization
 			colored_button.set_text ("Build Colored Structure")
 			build_ball_demo_button.set_text ("Build Ball Demo")
 			overlay_test_button.set_text ("Build Overlay Structure")
+			texture_test_button.set_text ("Build Texture Demo")
 			removal_frame.set_text ("Removal")
 			l_ev_vertical_box_2.set_border_width (box_padding)
 			l_ev_table_2.resize (2, 2)
@@ -342,6 +345,7 @@ feature {NONE}-- Initialization
 			colored_button.select_actions.extend (agent colored_button_selected)
 			build_ball_demo_button.select_actions.extend (agent build_ball_demo_button_selected)
 			overlay_test_button.select_actions.extend (agent overlay_test_button_selected)
+			texture_test_button.select_actions.extend (agent texture_test_button_selected)
 			remove_all_rows_button.select_actions.extend (agent remove_all_row_button_selected)
 			remove_all_columns_button.select_actions.extend (agent remove_all_columns_button_selected)
 			clear_items_button.select_actions.extend (agent clear_items_button_selected)
@@ -390,8 +394,8 @@ feature -- Access
 	fixed_row_height_spin_button, resize_columns_to_entry,
 	resize_rows_to_entry, subrow_indent_button: EV_SPIN_BUTTON
 	new_label_button, misc_button, custom_button,
-	icon_view_button, colored_button, build_ball_demo_button, overlay_test_button, remove_all_rows_button,
-	remove_all_columns_button, clear_items_button, set_selected_row_as_subnode_button,
+	icon_view_button, colored_button, build_ball_demo_button, overlay_test_button, texture_test_button,
+	remove_all_rows_button, remove_all_columns_button, clear_items_button, set_selected_row_as_subnode_button,
 	expand_all_button, collapse_all_button: EV_BUTTON
 	is_vertical_divider_dashed_button, is_vertical_divider_solid_button,
 	set_background_of_selection_button, set_tree_node_connector_button: EV_RADIO_BUTTON
@@ -467,6 +471,11 @@ feature {NONE} -- Implementation
 	
 	overlay_test_button_selected is
 			-- Called by `select_actions' of `overlay_test_button'.
+		deferred
+		end
+	
+	texture_test_button_selected is
+			-- Called by `select_actions' of `texture_test_button'.
 		deferred
 		end
 	

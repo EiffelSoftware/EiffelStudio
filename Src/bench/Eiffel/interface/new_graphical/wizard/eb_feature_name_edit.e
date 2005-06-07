@@ -83,6 +83,7 @@ feature {NONE} -- Implementation
 				s.is_equal ("all") or
 				s.is_equal ("and") or
 				s.is_equal ("as") or
+				s.is_equal ("assign") or
 				s.is_equal ("bit") or
 				s.is_equal ("check") or
 				s.is_equal ("class") or

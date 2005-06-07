@@ -304,6 +304,12 @@ feature {NONE} -- Keywords
 			create Result.make ("as")
 		end
 
+	ti_Assign_keyword: KEYWORD_TEXT is
+			-- "as" keyword
+		once
+			create Result.make ("assign")
+		end
+
 	ti_Check_keyword: KEYWORD_TEXT is
 			-- "check" keyword
 		once

@@ -119,8 +119,11 @@ H		([0-9A-Fa-f])
 "!!"									|
 [aA][gG][eE][nN][tT]					|
 [aA][lL][iI][aA][sS]					|
-[aA][lL][lL]|[aA][nN][dD]				|
-[aA][sS]|[bB][iI][tT]					|
+[aA][lL][lL]						|
+[aA][nN][dD]						|
+[aA][sS]						|
+[aA][sS][sS][iI][gG][nN]				|
+[bB][iI][tT]					|
 [cC][hH][eE][cC][kK]					|
 [cC][lL][aA][sS][sS]					|
 [cC][oO][nN][vV][eE][rR][tT]			|
@@ -157,7 +160,7 @@ H		([0-9A-Fa-f])
 [oO][nN][cC][eE]						|
 [oO][rR]								|
 [pP][rR][eE][cC][uU][rR][sS][oO][rR]	|
-[rR][eE][fF][eE][rR][eE][nN][cC][eE]    |
+[rR][eE][fF][eE][rR][eE][nN][cC][eE]	|
 [rR][eE][dD][eE][fF][iI][nN][eE]		|
 [rR][eE][nN][aA][mM][eE]				|
 [rR][eE][qQ][uU][iI][rR][eE]			|
@@ -331,14 +334,14 @@ H		([0-9A-Fa-f])
 --     them in the second expression.
 
  \"[^\n"%]*\[/[ \t\r]*	{
-					-- Verbatim string opener.				
+					-- Verbatim string opener.
 				create {EDITOR_TOKEN_STRING} curr_token.make(text)
 				update_token_list
 				in_verbatim_string := True
 			}
 
 \"[^\n"%]*\{/[ \t\r]*	{
-					-- Verbatim string opener.				
+					-- Verbatim string opener.
 				create {EDITOR_TOKEN_STRING} curr_token.make(text)
 				update_token_list
 				in_verbatim_string := True
@@ -346,14 +349,14 @@ H		([0-9A-Fa-f])
 
 			
 [ \t\r]*\][^%\n"]*\" 	{
-					-- Verbatim string closer, possibly.				
+					-- Verbatim string closer, possibly.
 				create {EDITOR_TOKEN_STRING} curr_token.make(text)
 				update_token_list	
 				in_verbatim_string := False				
 			}
 
 [ \t\r]*\}[^%\n"]*\" 	{
-					-- Verbatim string closer, possibly.				
+					-- Verbatim string closer, possibly.
 				create {EDITOR_TOKEN_STRING} curr_token.make(text)
 				update_token_list
 				in_verbatim_string := False

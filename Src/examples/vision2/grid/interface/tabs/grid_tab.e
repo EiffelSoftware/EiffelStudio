@@ -1449,8 +1449,22 @@ feature {NONE} -- Implementation
 --				counter := counter + 1
 --				counter2 := counter2 - 1
 --			end
-			add_items (10, 10)
+			grid.enable_partial_dynamic_content
+			grid.set_column_count_to (10)
+			grid.set_row_count_to (10)
+			grid.set_dynamic_content_function (agent compute_item2)
 		end
+		
+	compute_item2 (a_column, a_row: INTEGER): EV_GRID_ITEM is
+			--
+		do
+			if a_column = 1 and a_row = 1 then
+				create {EV_GRID_LABEL_ITEM} Result.make_with_text ("1")
+				grid.set_item (2, 1, create {EV_GRID_LABEL_ITEM}.make_with_text ("2"))
+				grid.set_item (3, 1, create {EV_GRID_LABEL_ITEM}.make_with_text ("3"))
+			end
+		end
+		
 
 	display (an_x, a_y: INTEGER): EV_GRID_ITEM is
 			--
@@ -2263,18 +2277,47 @@ feature {NONE} -- Implementation
 			end
 			grid.pointer_button_press_item_actions.extend (agent grid_pressed)
 			create combo_item.make_with_text ("Texture applied to : None")
-			combo_item.set_item_strings (<<"None", "Background", "All">>)
-			combo_item.combo_box.select_actions.extend (agent combo_item_selected (combo_item.combo_box))
+			combo_item.activate_actions.extend (agent build_combo_box1 (?, combo_item))
+
 			grid.set_item (1, 1, combo_item)
 			create combo_item.make_with_text ("Scroll Texture : True")
-			combo_item.set_item_strings (<<"True", "False">>)
-			combo_item.combo_box.select_actions.extend (agent combo_scroll_item_selected (combo_item.combo_box))
+			combo_item.activate_actions.extend (agent build_combo_box2 (?, combo_item))
 			grid.set_item (2, 1, combo_item)
 			grid.pre_draw_overlay_actions.extend (agent draw_texture)
 			grid.post_draw_overlay_actions.extend (agent draw_borders)
 			grid.fill_background_actions.extend (agent draw_background)
 			texture_style := 1
 			scroll_style := 1
+		end
+
+	build_combo_box1 (window: EV_POPUP_WINDOW; combo: EV_GRID_COMBO_ITEM) is
+			--
+		local
+			list_item: EV_LIST_ITEM
+		do
+			combo.combo_box.select_actions.block
+			create list_item.make_with_text ("None")
+			combo.combo_box.extend (list_item)
+			create list_item.make_with_text ("Background")
+			combo.combo_box.extend (list_item)
+			create list_item.make_with_text ("All")
+			combo.combo_box.extend (list_item)
+			combo.combo_box.select_actions.extend (agent combo_item_selected (combo.combo_box))
+			combo.combo_box.select_actions.resume
+		end
+
+	build_combo_box2 (window: EV_POPUP_WINDOW; combo: EV_GRID_COMBO_ITEM) is
+			--
+		local
+			list_item: EV_LIST_ITEM
+		do
+			combo.combo_box.select_actions.block
+			create list_item.make_with_text ("True")
+			combo.combo_box.extend (list_item)
+			create list_item.make_with_text ("False")
+			combo.combo_box.extend (list_item)
+			combo.combo_box.select_actions.extend (agent combo_scroll_item_selected (combo.combo_box))
+			combo.combo_box.select_actions.resume
 		end
 
 	combo_item_selected (a_combo_box: EV_COMBO_BOX) is
@@ -2330,8 +2373,6 @@ feature {NONE} -- Implementation
 
 	grid_pressed (an_x, a_y, a_button: INTEGER; grid_item: EV_GRID_ITEM) is
 			--
-		local
-			combo_item: EV_GRID_COMBO_ITEM
 		do
 			if grid_item /= Void and then a_button = 1 then
 				if grid_item.column.index <= 2 and grid_item.row.index = 1 then
@@ -2343,15 +2384,8 @@ feature {NONE} -- Implementation
 	draw_background (drawable: EV_DRAWABLE; a_virtual_x, a_virtual_y, a_width, a_height: INTEGER) is
 			--
 		local
-			row_height, column_width: INTEGER
-			counter: INTEGER
 			an_x, a_y: INTEGER
-			x_counter, y_counter: INTEGER
 			virtual_x, virtual_y: INTEGER
-			last_drawn_width: INTEGER
-			indent: INTEGER
-			label_item: EV_GRID_LABEL_ITEM
-			text_width: INTEGER
 		do
 			if texture_style > 1 then
 				virtual_x := a_virtual_x
@@ -2377,17 +2411,10 @@ feature {NONE} -- Implementation
 	draw_texture (drawable: EV_DRAWABLE; grid_item: EV_GRID_ITEM; a_column_index, a_row_index: INTEGER) is
 			--
 		local
-			row_height, column_width: INTEGER
-			counter: INTEGER
 			an_x, a_y: INTEGER
-			x_counter, y_counter: INTEGER
 			virtual_x, virtual_y: INTEGER
-			a_height: INTEGER
-			a_width: INTEGER
-			last_drawn_width: INTEGER
+			a_height, a_width: INTEGER
 			indent: INTEGER
-			label_item: EV_GRID_LABEL_ITEM
-			text_width: INTEGER
 		do
 			if texture_style > 1 then
 				if a_row_index > 1 or a_column_index > 2 then
@@ -2453,15 +2480,6 @@ feature {NONE} -- Implementation
 
 	draw_borders (drawable: EV_DRAWABLE; grid_item: EV_GRID_ITEM; a_column_index, a_row_index: INTEGER) is
 			--
-		local
-			row_height, column_width: INTEGER
-			counter: INTEGER
-			an_x, a_y: INTEGER
-			x_counter, y_counter: INTEGER
-			virtual_x, virtual_y: INTEGER
-			a_height: INTEGER
-			a_width: INTEGER
-			last_drawn_width: INTEGER
 		do
 
 			if a_row_index = 1 then
@@ -2483,8 +2501,6 @@ feature {NONE} -- Implementation
 
 	bubbles_pixmap: EV_PIXMAP is
 			--
-		local
-			temp: EV_PIXMAP
 		once
 			create Result
 			Result.set_size (texture_width * 2, texture_height * 2)

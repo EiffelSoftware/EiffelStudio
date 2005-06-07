@@ -905,7 +905,7 @@ feature -- Element change
 					-- Note: <= is needed as all Eiffel string should have an
 					-- extra character to insert null character at the end.
 				if old_area = Void or else old_area.count <= count then
-					area := area.standard_twin
+					area := area.twin
 				else
 					old_area.copy_data (area, 0, 0, count)
 					area := old_area

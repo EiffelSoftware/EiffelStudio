@@ -73,8 +73,8 @@ feature	-- Access
 		local
 			l_rename: CODE_SNIPPET_RENAME_CLAUSE
 		do
+			create Result.make (1024)
 			if renames /= Void then
-				create Result.make (1024)
 				Result.append ("%T%Trename%N")
 				from
 					renames.start
@@ -99,7 +99,7 @@ feature	-- Access
 				Result.append_character ('%N')
 			end
 		ensure
-			valid_code: exports /= Void implies Result /= Void
+			attached_code: Result /= Void
 		end
 		
 
@@ -109,8 +109,8 @@ feature	-- Access
 			l_export: CODE_SNIPPET_EXPORT_CLAUSE
 			l_types: LIST [STRING]
 		do
+			create Result.make (1024)
 			if exports /= Void then
-				create Result.make (1024)
 				Result.append ("%T%Texport%N")
 				from
 					exports.start
@@ -136,34 +136,35 @@ feature	-- Access
 					Result.append ("} ")
 					Result.append (l_export.routine_name)
 					Result.append_character ('%N')
+					exports.forth
 				end
 			end
 		ensure
-			valid_code: exports /= Void implies Result /= Void
+			attached_code: Result /= Void
 		end
 		
 	undefines_code: STRING is
 			-- Code for undefine clauses
 		do
-			if undefines /= Void then
-				Result := generic_code (undefines, "undefine")			
-			end
+			Result := generic_code (undefines, "undefine")			
+		ensure
+			attached_code: Result /= Void
 		end
 	
 	redefines_code: STRING is
 			-- Code for redefine clauses
 		do
-			if redefines /= Void then
-				Result := generic_code (redefines, "redefine")			
-			end
+			Result := generic_code (redefines, "redefine")			
+		ensure
+			attached_code: Result /= Void
 		end
 	
 	selects_code: STRING is
 			-- Code for select clauses
 		do
-			if selects /= Void then
-				Result := generic_code (selects, "select")			
-			end
+			Result := generic_code (selects, "select")			
+		ensure
+			attached_code: Result /= Void
 		end
 
 feature -- Status Report
@@ -180,27 +181,30 @@ feature {NONE} -- Implementation
 	generic_code (a_clauses: LIST [CODE_SNIPPET_INHERITANCE_CLAUSE]; a_keyword: STRING): STRING is
 			-- Generic inheritance clause code
 		require
-			non_void_clauses: a_clauses /= Void
 			non_void_keyword: a_keyword /= Void
 		do
 			create Result.make (1024)
-			Result.append ("%T%T")
-			Result.append (a_keyword)
-			from
-				a_clauses.start
-				if not a_clauses.after then
-					Result.append ("%N%T%T%T")
+			if a_clauses /= Void then
+				Result.append ("%T%T")
+				Result.append (a_keyword)
+				from
+					a_clauses.start
+					if not a_clauses.after then
+						Result.append ("%N%T%T%T")
+						Result.append (a_clauses.item.routine_name)
+						a_clauses.forth
+					end	
+				until
+					a_clauses.after
+				loop
+					Result.append (",%N%T%T%T")
 					Result.append (a_clauses.item.routine_name)
 					a_clauses.forth
-				end	
-			until
-				a_clauses.after
-			loop
-				Result.append (",%N%T%T%T")
-				Result.append (a_clauses.item.routine_name)
-				a_clauses.forth
+				end
+				Result.append_character ('%N')
 			end
-			Result.append_character ('%N')
+		ensure
+			attached_code: Result /= Void
 		end
 		
 invariant

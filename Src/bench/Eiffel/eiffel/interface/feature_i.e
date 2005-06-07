@@ -58,7 +58,7 @@ inherit
 	COMPILER_EXPORTER
 
 	SHARED_NAMES_HEAP
-		
+
 	DEBUG_OUTPUT
 
 	COMPARABLE
@@ -109,11 +109,27 @@ feature -- Access
 			end
 		end
 
+	assigner_name: STRING is
+			-- Associated assigner name (if any).
+		do
+			if assigner_name_id /= 0 then
+				Result := names_heap.item (assigner_name_id)
+			end
+		end
+
 	feature_name_id: INTEGER
 			-- Id of `feature_name' in `Names_heap' table.
 
 	alias_name_id: INTEGER
 			-- Id of `alias_name' in `Names_heap' table
+
+	assigner_name_id: INTEGER is
+			-- Id of `assigner_name' in `Names_heap' table
+		do
+				-- 0 (no assigner) by default
+		ensure
+			valid_result: Result /= 0 implies names_heap.valid_index (Result)
+		end
 
 	feature_id: INTEGER
 			-- Feature id: first key in feature call hash table
@@ -664,6 +680,7 @@ feature -- Incrementality
 				and then is_constant = other.is_constant
 				and then alias_name_id = other.alias_name_id
 				and then has_convert_mark = other.has_convert_mark
+				and then assigner_name_id = other.assigner_name_id
 debug ("ACTIVITY")
 	if not Result then
 			io.error.put_boolean (written_in = other.written_in) io.error.put_new_line;
@@ -763,6 +780,11 @@ end
 				if Result then
 					Result := has_convert_mark = other.has_convert_mark
 				end
+			end
+
+				-- Same assigner procedure
+			if Result then
+				Result := assigner_name_id = other.assigner_name_id
 			end
 
 				-- Same return type
@@ -1027,8 +1049,10 @@ feature -- Conveniences
 			Result := void_type
 		end
 
-	set_type (t: like type) is
-			-- Assign `t' to `type'.
+	set_type (t: like type; a: like assigner_name_id) is
+			-- Assign `t' to `type' and `a' to `assigner_name_id'.
+		require
+			valid_a: a /= 0 implies names_heap.valid_index (a)
 		do
 			-- Do nothing
 		end
@@ -1319,7 +1343,7 @@ feature -- Signature instantiation
 		do
 				-- Instantiation of the type
 			old_type ?= type
-			set_type (old_type.instantiated_in (parent_type))
+			set_type (old_type.instantiated_in (parent_type), assigner_name_id)
 				-- Instantiation of the arguments
 			from
 				i := 1
@@ -1420,7 +1444,7 @@ feature -- Signature checking
 				type_checker.check_type_validity (solved_type, type)
 			end
 
-			set_type (solved_type)
+			set_type (solved_type, assigner_name_id)
 				-- Instantitate the feature type in the context of the
 				-- actual type of the class associated to `feat_table'.
 
@@ -1780,7 +1804,7 @@ end
 		do
 
 			set_type
-				(Result_evaluator.evaluated_type (type, feat_tbl, Current))
+				(Result_evaluator.evaluated_type (type, feat_tbl, Current), assigner_name_id)
 			if arguments /= Void then
 				arguments.solve_types (feat_tbl, Current)
 			end
@@ -1829,6 +1853,49 @@ end
 			end
 		end
 
+	check_assigner (feature_table: FEATURE_TABLE) is
+			-- Check if associated assigner is valid.
+		require
+			feature_table_not_void: feature_table /= Void
+		local
+			assigner: FEATURE_I
+			assigner_arguments: like arguments
+			query_arguments: like arguments
+		do
+			if system.current_class.class_id = written_in then
+					-- Lookup feature in `feature_table' as feature table in the current class is not set yet.
+				assigner := feature_table.item_id (assigner_name_id)
+			else
+				assigner := written_class.feature_named (assigner_name)
+			end
+			if assigner = Void or else assigner.has_return_value then
+				error_handler.insert_error (create {VFAC2}.make (system.current_class, Current))
+			elseif assigner.argument_count /= argument_count + 1 then
+				error_handler.insert_error (create {VFAC3}.make (system.current_class, Current))
+			elseif not assigner.arguments.first.same_as (type) then
+				error_handler.insert_error (create {VFAC4}.make (system.current_class, Current))
+			elseif argument_count > 0 then
+				assigner_arguments := assigner.arguments
+				query_arguments := arguments
+				from
+					assigner_arguments.start
+						-- Skip first argument
+					assigner_arguments.forth
+					query_arguments.start
+				until
+					assigner_arguments.after
+				loop
+					if not assigner_arguments.item.same_as (query_arguments.item) then
+						error_handler.insert_error (create {VFAC5}.make (system.current_class, Current))
+						assigner_arguments.finish
+						query_arguments.finish
+					end
+					assigner_arguments.forth
+					query_arguments.forth
+				end
+			end
+		end
+
 feature -- Undefinition
 
 	new_deferred: DEF_PROC_I is
@@ -1844,7 +1911,7 @@ feature -- Undefinition
 			else
 				create Result
 			end
-			Result.set_type (type)
+			Result.set_type (type, assigner_name_id)
 			Result.set_arguments (arguments)
 			Result.set_written_in (written_in)
 			Result.set_origin_feature_id (origin_feature_id)
@@ -2208,10 +2275,12 @@ feature -- Debugging
 				-- Search for associated EXECUTION_UNIT
 			create exec_unit.make (class_type)
 			exec_unit.set_body_index (body_index)
-			Execution_table.search (exec_unit)
-			exec_unit := Execution_table.last_unit
-
-			Result := exec_unit.real_body_id
+				-- `exec_unit' can be absent in `Execution_table' if a feature is just added
+			if Execution_table.has (exec_unit) then
+				Execution_table.search (exec_unit)
+				exec_unit := Execution_table.last_unit
+				Result := exec_unit.real_body_id
+			end
 			Inst_context.set_cluster (old_cluster)
 		end
 

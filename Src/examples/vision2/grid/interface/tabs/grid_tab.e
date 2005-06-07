@@ -273,6 +273,9 @@ feature {NONE} -- Implementation
 			grid.resize_actions.wipe_out
 			grid.enable_row_height_fixed
 			grid.post_draw_overlay_actions.wipe_out
+			grid.fill_background_actions.wipe_out
+			grid.pre_draw_overlay_actions.wipe_out
+			grid.pointer_button_press_actions.wipe_out
 			grid.item_select_actions.wipe_out
 			grid.item_deselect_actions.wipe_out
 			grid.enable_single_item_selection

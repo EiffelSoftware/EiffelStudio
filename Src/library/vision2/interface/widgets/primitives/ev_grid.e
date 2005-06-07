@@ -1538,9 +1538,9 @@ feature -- Element change
 			i_positive: i > 0
 			j_positive: j > 0
 			i_less_than_row_count: i <= row_count
-			j_valid: j <= row_count + 1
-			row_at_i_has_no_parent_row: row (i).parent_row = Void
-			row_may_be_removed_from_tree_structure: i < row_count implies row (i + 1).parent_row = Void
+			j_valid: j <= row_count
+			row_at_i_not_a_subnode: row (i).parent_row = Void
+			row_after_i_not_a_subnode: i < row_count implies row (i + 1).parent_row = Void
 		do
 			implementation.move_rows (i, j, 1)
 		ensure
@@ -1553,15 +1553,17 @@ feature -- Element change
 			not_destroyed: not is_destroyed
 			i_positive: i > 0
 			j_positive: j > 0
+			n_positive: n > 0
 			i_less_than_row_count: i <= row_count
-			j_valid: j <= row_count + 1
+			j_valid: j <= row_count
 			n_valid: i + n <= row_count + 1
-			row_at_i_has_no_parent_row: row (i).parent_row = Void
-			end_row_last_in_tree_structure: i + n <= row_count implies row (i + n).parent_row = Void
+			row_at_i_not_a_subnode: row (i).parent_row = Void
+			row_at_i_plus_n_not_a_subnode: i + n <= row_count implies row (i + n).parent_row = Void
 		do
 			implementation.move_rows (i, j, n)
 		ensure
-			moved: row (j) = old row (i) and then (i /= j implies row (j) /= row (i))
+			moved: n = 1 implies row (j) = old row (i) and then (i /= j implies row (j) /= row (i))
+			to_implement_assertion ("Add postcondition for block move of items")
 		end
 
 	move_column (i, j: INTEGER) is

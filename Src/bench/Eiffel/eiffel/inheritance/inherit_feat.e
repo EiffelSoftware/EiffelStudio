@@ -177,7 +177,7 @@ feature
 						extended_feature_name := parent.renaming.item (feature_name_id)
 						new_name_id := extended_feature_name.feature_name_id
 						new_alias_name_id := extended_feature_name.alias_name_id
-						replication := next.a_feature.twin
+						replication := feature_i.twin
 							-- Mark it as processed
 						next.set_renaming_processed
 							-- Move the inherit feature information under

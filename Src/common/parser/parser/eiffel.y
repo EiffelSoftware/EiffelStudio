@@ -46,7 +46,7 @@ create
 %token		TE_LARRAY TE_RARRAY TE_RPARAN
 %token		TE_LCURLY TE_RCURLY TE_LSQURE TE_RSQURE TE_CONSTRAIN
 %token <BOOL_AS> TE_FALSE TE_TRUE
-%token		TE_ACCEPT TE_ADDRESS TE_AS TE_ASSIGNMENT
+%token		TE_ACCEPT TE_ADDRESS TE_AS TE_ASSIGN TE_ASSIGNMENT
 %token		TE_CHECK TE_CLASS TE_CONVERT
 %token <CURRENT_AS> TE_CURRENT
 %token		TE_DEBUG
@@ -107,7 +107,7 @@ create
 %type <FEATURE_SET_AS>		Feature_set
 %type <FORMAL_AS>			Formal_parameter
 %type <FORMAL_DEC_AS>		Formal_generic
-%type <ID_AS>				Identifier_as_upper Identifier_as_lower Free_operator Feature_name_for_call
+%type <ID_AS>				Assigner_mark_opt Identifier_as_upper Identifier_as_lower Free_operator Feature_name_for_call
 %type <IF_AS>				Conditional
 %type <INDEX_AS>			Index_clause Index_clause_impl
 %type <INSPECT_AS>			Multi_branch
@@ -171,7 +171,7 @@ create
 
 %type <PAIR [TYPE_AS, EIFFEL_LIST [FEATURE_NAME]]>	Constraint
 
-%expect 99
+%expect 101
 
 %%
 
@@ -629,42 +629,48 @@ Alias_mark: -- Empty
 			{ has_convert_mark := True }
 	;
 
-Declaration_body: TE_COLON Type Dotnet_indexing
+Declaration_body: TE_COLON Type Assigner_mark_opt Dotnet_indexing
 			{
 					-- Attribute case
-				$$ := ast_factory.new_body_as (Void, $2, Void)
-				feature_indexes := $3
+				$$ := ast_factory.new_body_as (Void, $2, $3, Void)
+				feature_indexes := $4
 			}
-	|	TE_COLON Type TE_IS Constant_attribute Dotnet_indexing
+	|	TE_COLON Type Assigner_mark_opt TE_IS Constant_attribute Dotnet_indexing
 			{
 					-- Constant case
-				$$ := ast_factory.new_body_as (Void, $2, $4)
-				feature_indexes := $5
+				$$ := ast_factory.new_body_as (Void, $2, $3, $5)
+				feature_indexes := $6
 			}
 	|	TE_IS Indexing Routine
 			{
 					-- procedure without arguments
-				$$ := ast_factory.new_body_as (Void, Void, $3)
+				$$ := ast_factory.new_body_as (Void, Void, Void, $3)
 				feature_indexes := $2
 			}
-	|	TE_COLON Type TE_IS Indexing Routine
+	|	TE_COLON Type Assigner_mark_opt TE_IS Indexing Routine
 			{
 					-- Function without arguments
-				$$ := ast_factory.new_body_as (Void, $2, $5)
-				feature_indexes := $4
+				$$ := ast_factory.new_body_as (Void, $2, $3, $6)
+				feature_indexes := $5
 			}
 	|	Formal_arguments TE_IS Indexing Routine
 			{
 					-- procedure with arguments
-				$$ := ast_factory.new_body_as ($1, Void, $4)
+				$$ := ast_factory.new_body_as ($1, Void, Void, $4)
 				feature_indexes := $3
 			}
-	|	Formal_arguments TE_COLON Type TE_IS Indexing Routine
+	|	Formal_arguments TE_COLON Type Assigner_mark_opt TE_IS Indexing Routine
 			{
 					-- Function with arguments
-				$$ := ast_factory.new_body_as ($1, $3, $6)
-				feature_indexes := $5
+				$$ := ast_factory.new_body_as ($1, $3, $4, $7)
+				feature_indexes := $6
 			}
+	;
+
+Assigner_mark_opt: -- Empty
+			-- { $$ := Void }
+	|	TE_ASSIGN Identifier_as_lower
+			{ $$ := $2 }
 	;
 
 Constant_attribute: Manifest_constant
@@ -2130,6 +2136,20 @@ Identifier_as_upper: TE_ID
 				end
 				$$ := $1
 			}
+	|	TE_ASSIGN
+			{
+					-- Keyword used as identifier
+				process_id_as
+				if has_syntax_warning then
+					Error_handler.insert_warning (
+						create {SYNTAX_WARNING}.make (line, column, filename,
+							"Use of `assign', possibly a new keyword in future definition of `Eiffel'."))
+				end
+				if not case_sensitive and last_id_as_value /= Void then
+					last_id_as_value.to_upper
+				end
+				$$ := last_id_as_value
+			}
 	;
 
 Identifier_as_lower: TE_ID
@@ -2138,6 +2158,20 @@ Identifier_as_lower: TE_ID
 					$1.to_lower
 				end
 				$$ := $1
+			}
+	|	TE_ASSIGN
+			{
+					-- Keyword used as identifier
+				process_id_as
+				if has_syntax_warning then
+					Error_handler.insert_warning (
+						create {SYNTAX_WARNING}.make (line, column, filename,
+							"Use of `assign', possibly a new keyword in future definition of `Eiffel'."))
+				end
+				if not case_sensitive and last_id_as_value /= Void then
+					last_id_as_value.to_lower
+				end
+				$$ := last_id_as_value
 			}
 	;
 

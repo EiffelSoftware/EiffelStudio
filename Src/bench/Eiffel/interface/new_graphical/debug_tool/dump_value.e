@@ -681,7 +681,7 @@ feature {DUMP_VALUE} -- string_representation Implementation
 				if l_icdov = Void then
 					Result := "Void"
 				else
-					Result := l_eifnet_debugger.string_value_from_string_class_object_value (l_icdov, min, max)
+					Result := l_eifnet_debugger.string_value_from_string_class_value (value_dotnet, l_icdov, min, max)
 					last_string_representation_length := l_eifnet_debugger.last_string_value_length
 					l_icdov.clean_on_dispose
 				end					

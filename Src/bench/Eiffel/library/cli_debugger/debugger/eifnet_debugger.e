@@ -1685,40 +1685,70 @@ feature -- Specific function evaluation
 		ensure
 			Result /= Void
 		end
-
-	icd_string_value_from_string_class_object_value (icd_string_instance: ICOR_DEBUG_OBJECT_VALUE): ICOR_DEBUG_STRING_VALUE is
-			-- ICorDebugStringValue for `icd_string_instance' (STRING object)
+		
+	length_from_string_class_object_value (icd_string_instance: ICOR_DEBUG_OBJECT_VALUE): INTEGER is
+			-- String Length for `icd_string_instance' (STRING object)
 		require
 			icd_string_instance /= Void
 		local
 			l_icd_value: ICOR_DEBUG_VALUE
-			
 			l_class: ICOR_DEBUG_CLASS
 			l_string_class: CLASS_C
-			l_feat_internal_string_builder: FEATURE_I
-			l_feat_internal_string_builder_token: INTEGER
+			l_feat_count: FEATURE_I
+			l_feat_count_token: INTEGER
+		do
+				--| Get STRING info from compilo
+			l_string_class := Eiffel_system.String_class.compiled_class
+				--| Get STRING.count
+			l_feat_count := l_string_class.feature_named ("count")
+			if l_feat_count /= Void then
+				l_feat_count_token := Il_debug_info_recorder.feature_token_for_non_generic (l_feat_count)
+				l_class := icd_string_instance.get_class
+				l_icd_value := icd_string_instance.get_field_value (l_class, l_feat_count_token)
+				if l_icd_value /= Void then
+					Result := edv_formatter.icor_debug_value_to_integer (l_icd_value)
+					l_icd_value.clean_on_dispose
+				end
+			end
+		end			
+
+	icd_string_value_from_string_class_value (icd_string_instance_ref: ICOR_DEBUG_VALUE; icd_string_instance: ICOR_DEBUG_OBJECT_VALUE): ICOR_DEBUG_STRING_VALUE is
+			-- ICorDebugStringValue for `icd_string_instance_ref' (STRING object)
+		require
+			icd_string_instance /= Void
+		local
+			l_icd_value: ICOR_DEBUG_VALUE
+			l_class: ICOR_DEBUG_CLASS
+			l_module: ICOR_DEBUG_MODULE
+			l_string_class: CLASS_C
+			
+			l_feat_to_cil: FEATURE_I
+			l_feat_to_cil_token: INTEGER
+			l_function_to_cil: ICOR_DEBUG_FUNCTION
 		do
 				--| Get STRING info from compilo
 			l_string_class := Eiffel_system.String_class.compiled_class
 				
-				--| Get token to access `internal_string_builder'
-			l_feat_internal_string_builder := l_string_class.feature_named ("internal_string_builder")
-			l_feat_internal_string_builder_token := Il_debug_info_recorder.feature_token_for_non_generic (l_feat_internal_string_builder)
-				
-				--| Get `internal_string_builder' from `STRING' instance Value
-			l_class := icd_string_instance.get_class
-			l_icd_value := icd_string_instance.get_field_value (l_class, l_feat_internal_string_builder_token)
-				
-				--| l_icd_value represents the `internal_string_builder' value
-			if l_icd_value /= Void then
-				Result := Edv_external_formatter.icor_debug_string_value_from_string_builder (l_icd_value)
+				--| Get token to access `to_cil'
+			l_feat_to_cil := l_string_class.feature_named ("to_cil")
+			if l_feat_to_cil /= Void then
+				l_feat_to_cil_token := Il_debug_info_recorder.feature_token_for_non_generic (l_feat_to_cil)
+				l_class := icd_string_instance.get_class
+				l_module := l_class.get_module
+				l_function_to_cil := l_module.get_function_from_token (l_feat_to_cil_token)
+				l_icd_value := eifnet_dbg_evaluator.function_evaluation (Void, l_function_to_cil, <<icd_string_instance_ref>>)
+					--| l_icd_value represents the `System.String' value
+				if l_icd_value /= Void then
+					Result := edv_formatter.icor_debug_string_value (l_icd_value)
+					l_icd_value.clean_on_dispose
+				end
 			end
 		end	
 
 	last_string_value_length: INTEGER
 			-- Last length of the Result from `string_value_from_string_class_object_value'
 			
-	string_value_from_string_class_object_value (icd_string_instance: ICOR_DEBUG_OBJECT_VALUE; min, max: INTEGER): STRING is
+	string_value_from_string_class_value (icd_string_instance_ref: ICOR_DEBUG_VALUE; icd_string_instance: ICOR_DEBUG_OBJECT_VALUE; min, max: INTEGER): STRING is
 			-- STRING value for `icd_string_instance' with limits `min, max'
 		local
 			l_icd_string_value: ICOR_DEBUG_STRING_VALUE
@@ -1729,7 +1759,7 @@ feature -- Specific function evaluation
 			if icd_string_instance = Void then
 				Result := "Void"
 			else
-				l_icd_string_value := icd_string_value_from_string_class_object_value (icd_string_instance)
+				l_icd_string_value := icd_string_value_from_string_class_value (icd_string_instance_ref, icd_string_instance)
 				if l_icd_string_value /= Void then
 					last_string_length := l_icd_string_value.get_length
 					last_string_value_length := last_string_length
@@ -1783,7 +1813,7 @@ feature -- Specific function evaluation
 				if l_icd /= Void then
 					create l_value_info.make (l_icd)
 					l_icdov := l_value_info.interface_debug_object_value
-					Result := string_value_from_string_class_object_value (l_icdov, 0, -1)
+					Result := string_value_from_string_class_value (l_icd, l_icdov, 0, -1)
 					l_icdov.clean_on_dispose
 					l_value_info.icd_prepared_value.clean_on_dispose
 					l_value_info.clean
@@ -1862,7 +1892,7 @@ feature -- Specific function evaluation
 				if l_icd /= Void then
 					create l_value_info.make (l_icd)
 					l_icdov := l_value_info.interface_debug_object_value
-					Result := string_value_from_string_class_object_value (l_icdov, min, max)
+					Result := string_value_from_string_class_value (l_icd, l_icdov, min, max)
 					l_value_info.icd_prepared_value.clean_on_dispose
 					l_value_info.clean
 					l_icd.clean_on_dispose

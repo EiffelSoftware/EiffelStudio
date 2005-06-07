@@ -175,13 +175,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				last_token := TE_AS
 			}
 [aA][sS][sS][iI][gG][nN] {
-				last_token := TE_ID
-				process_id_as
-				if has_syntax_warning then
-					Error_handler.insert_warning (
-						create {SYNTAX_WARNING}.make (line, column, filename,
-							"Use of `assign', possibly a new keyword in future definition of `Eiffel'."))
-				end
+				last_token := TE_ASSIGN
 			}
 [aA][tT][tT][rR][iI][bB][uU][tT][eE] {
 				last_token := TE_ID

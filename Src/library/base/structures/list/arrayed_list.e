@@ -39,7 +39,7 @@ class ARRAYED_LIST [G] inherit
 			for_all, there_exists, do_all, do_if
 		redefine
 			extend, prune_all, full, wipe_out,
-			is_inserted, make_from_array, has, valid_index, auto_resize
+			is_inserted, make_from_array, has, valid_index, auto_resize, force_i_th
 		end
 
 	DYNAMIC_LIST [G]
@@ -472,6 +472,17 @@ feature {NONE} -- Implementation
 			upper := area.count
 		end
 
+	force_i_th (v: like i_th; i: INTEGER) is
+			-- Assign item `v' to `i'-th entry.
+			-- Always applicable: resize Current if `i' falls out of
+			-- currently defined bounds; preserve existing items.
+		do
+			if i > upper then
+				auto_resize (1, i)
+			end
+			put_i_th (v, i)
+		end
+		
 feature -- Removal
 
 	prune (v: like item) is

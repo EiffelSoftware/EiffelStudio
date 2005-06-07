@@ -153,6 +153,7 @@
 						<list ordered="false">
 						<item>Fixed bug in `buffered_format' which corrupted the current text upon calling `flush_buffer' if the text contained any RTF reserved characters such as '/', '{' or '}'.</item>
 						<item>Fixed `set_background_color' which was not changing the background color</item>
+						<item>Fixed bug in `disable_word_wrapping' which had a side effect that limited the maximum number of characters to 64000.</item>
 						</list>
 					</item>
 					<item>

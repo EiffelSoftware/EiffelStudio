@@ -211,7 +211,7 @@ feature -- Access
 		do
 		end
 
-	new_body_as (a: EIFFEL_LIST [TYPE_DEC_AS]; t: TYPE_AS; c: CONTENT_AS): BODY_AS is
+	new_body_as (a: EIFFEL_LIST [TYPE_DEC_AS]; t: TYPE_AS; r: ID_AS; c: CONTENT_AS): BODY_AS is
 			-- New BODY AST node
 		do
 		end

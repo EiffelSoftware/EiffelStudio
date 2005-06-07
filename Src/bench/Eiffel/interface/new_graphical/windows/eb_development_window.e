@@ -157,6 +157,8 @@ feature {NONE} -- Initialization
 			initialized := False -- Reset the flag since initialization is not yet complete.
 			set_up_accelerators
 
+			window.focus_in_actions.extend(agent on_focus)
+
 				-- Create the toolbars.
 			build_toolbars_area
 			container.put_front (toolbars_area)
@@ -2097,6 +2099,12 @@ feature -- Resource Update
 				status_bar.display_message (Interface_names.L_syntax_error)
 			end
 			text_edited := False
+		end
+
+	on_focus is
+			-- Focus gained
+		do
+			editor_tool.set_focus
 		end
 
 	save_and (an_action: PROCEDURE [ANY, TUPLE]) is

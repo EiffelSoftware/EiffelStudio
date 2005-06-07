@@ -92,7 +92,7 @@ feature -- Access
 		require
 			start_position_big_enough: start_pos >= 1
 			end_position_big_enough: start_pos <= end_pos + 1
-			end_position_not_too_big: end_pos <= count
+			end_position_not_too_big: end_pos <= capacity
 		local
 			l_count: INTEGER
 		do
@@ -119,7 +119,7 @@ feature -- Access
 			a_string_not_void: a_string /= Void
 			start_position_big_enough: start_pos >= 1
 			end_position_big_enough: start_pos <= end_pos + 1
-			end_position_not_too_big: end_pos <= count
+			end_position_not_too_big: end_pos <= capacity
 			a_string_large_enough: a_string.count >= end_pos - start_pos + 1
 		local
 			l_area: SPECIAL [CHARACTER]

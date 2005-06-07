@@ -348,8 +348,9 @@ feature {NONE}
 	last_app_status: APPLICATION_STATUS_DOTNET
 			-- Last APPLICATION_STATUS_DOTNET data
 
-	prepare_evaluation (a_frame: ICOR_DEBUG_FRAME; stop_timer_required: BOOLEAN) is
+	prepare_evaluation (a_useless_frame: ICOR_DEBUG_FRAME; stop_timer_required: BOOLEAN) is
 			-- Prepare data for evaluation.
+			--| FIXME jfiat [2005/06/07] : get rid of `a_useless_frame' if really useless
 		local
 			l_icd_thread: ICOR_DEBUG_THREAD
 			l_icd_eval: ICOR_DEBUG_EVAL

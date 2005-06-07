@@ -253,6 +253,15 @@ feature -- Access
 			not_void: Result /= Void
 		end
 		
+	fill_background_actions: ACTION_SEQUENCE [TUPLE [EV_DRAWABLE, INTEGER, INTEGER, INTEGER, INTEGER]] is
+			--
+		do
+			Result := implementation.fill_background_actions
+		ensure
+			not_void: Result /= Void
+		end
+		
+
 feature {NONE} -- Implementation
 
 	implementation: EV_GRID_ACTION_SEQUENCES_I

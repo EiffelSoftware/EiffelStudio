@@ -39,6 +39,8 @@ feature {NONE} -- Initialization
 			set_item_pebble_function (agent on_pebble_function)
 			set_item_accept_cursor_function (agent on_pnd_accept_cursor_function)
 			set_item_deny_cursor_function (agent on_pnd_deny_cursor_function)
+			pointer_double_press_item_actions.extend (agent on_pointer_double_press_item)
+			header.pointer_double_press_actions.force_extend (agent on_header_auto_width_resize)
 
 			mouse_wheel_actions.extend (agent on_mouse_wheel_action)
 		end
@@ -99,6 +101,30 @@ feature {NONE} -- Actions implementation
 				end
 			end
 		end
+		
+	on_pointer_double_press_item (ax,ay,ab: INTEGER; a_item: EV_GRID_ITEM) is
+		local
+			ei: ES_OBJECTS_GRID_CELL
+		do
+			ei ?= a_item
+			if ei /= Void then
+				ei.activate
+			end
+		end
+
+	on_header_auto_width_resize is
+		local
+			div_index: INTEGER
+			col: EV_GRID_COLUMN
+			m: INTEGER
+		do
+			div_index := header.pointed_divider_index
+			if div_index > 0 then
+				col := column (div_index)
+				m := maximum_width_of_column (col)
+				col.set_width (m + 5)
+			end			
+		end
 
 	on_row_expand (a_row: EV_GRID_ROW) is
 		require
@@ -152,6 +178,30 @@ feature {NONE} -- Actions implementation
 		end
 
 feature -- Grid helpers
+
+	maximum_width_of_column (col: EV_GRID_COLUMN): INTEGER is
+			-- Maximum column's width for column `col'.
+		require
+			col /= Void
+		local
+			i: INTEGER
+			ait: EV_GRID_LABEL_ITEM
+		do
+			fixme ("provide better maximum width computing not based on Label")
+			if col.count > 0 then
+				from
+					i := 1
+				until
+					i > col.count
+				loop
+					ait ?= col.item (i)
+					if ait /= Void then
+						Result := Result.max (ait.horizontal_indent + ait.text_width)
+					end
+					i := i + 1
+				end
+			end
+		end
 
 	front_new_row: EV_GRID_ROW is
 		do

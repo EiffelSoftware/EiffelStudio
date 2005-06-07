@@ -83,7 +83,11 @@ feature {NONE} -- Initialization
 			menu_name := "Explorer bar item"
 			title := a_title
 			create show_actions
-
+			create {EV_CELL} mini_toolbar_holder
+			if mini_toolbar /= Void then
+				mini_toolbar_holder.extend (mini_toolbar)
+			end
+			
 				-- Connect actions required to update `Current' which its state
 				-- has been changed in `parent'.
 			parent.minimize_actions.extend (agent internal_set_minimized_wrapper)
@@ -189,8 +193,8 @@ feature -- Status Setting
 			if selectable_command /= Void then
 				selectable_command.disable_selected
 			end
-			if mini_toolbar /= Void and then mini_toolbar.parent /= Void then
-				mini_toolbar.parent.prune_all (mini_toolbar)
+			if mini_toolbar_holder /= Void and then mini_toolbar_holder.parent /= Void then
+				mini_toolbar_holder.parent.prune_all (mini_toolbar_holder)
 			end
 			parent.on_item_hidden (Current)
 		end
@@ -207,25 +211,23 @@ feature -- Status Setting
 			parent.docked_external (widget)
 			
 			if is_closeable then
-					parent.enable_close_button (widget)
-					parent.close_actions.extend (agent close_wrapper)
-				else
-					parent.enable_close_button_as_grayed (widget)
+				parent.enable_close_button (widget)
+				parent.close_actions.extend (agent close_wrapper)
+			else
+				parent.enable_close_button_as_grayed (widget)
+			end
+				-- As the tools are added and removed from the toolbar frequently,
+				-- `minimi_toolbar' may be parented, so must be unparented.
+			if mini_toolbar_holder.parent /= Void then
+				mini_toolbar_holder.parent.prune_all (mini_toolbar_holder)
+			end
+			parent.customizeable_area_of_widget (widget).extend (mini_toolbar_holder)
+
+			if header_addon /= Void then
+				if header_addon.parent /= Void then
+					header_addon.parent.prune_all (header_addon)
 				end
-				if mini_toolbar /= Void then
-						-- As the tools are added and removed from the toolbar frequently,
-						-- `minimi_toolbar' may be parented, so must be unparented.
-					if mini_toolbar.parent /= Void then
-						mini_toolbar.parent.prune_all (mini_toolbar)
-					end
-					parent.customizeable_area_of_widget (widget).extend (mini_toolbar)
-					parent.customizeable_area_of_widget (widget).disable_item_expand (mini_toolbar)
-				end
-				if header_addon /= Void then
-					if header_addon.parent /= Void then
-						header_addon.parent.prune_all (header_addon)
-					end
-					parent.customizeable_area_of_widget (widget).extend (header_addon)
+				parent.customizeable_area_of_widget (widget).extend (header_addon)
 			end
 			
 			selectable_command ?= associated_command
@@ -316,15 +318,12 @@ feature -- Status Setting
 				else
 					parent.enable_close_button_as_grayed (widget)
 				end
-				if mini_toolbar /= Void then
 						-- As the tools are added and removed from the toolbar frequently,
 						-- `mini_toolbar' may be parented, so must be unparented.
-					if mini_toolbar.parent /= Void then
-						mini_toolbar.parent.prune_all (mini_toolbar)
-					end
-					parent.customizeable_area_of_widget (widget).extend (mini_toolbar)
-					parent.customizeable_area_of_widget (widget).disable_item_expand (mini_toolbar)
+				if mini_toolbar_holder.parent /= Void then
+					mini_toolbar_holder.parent.prune_all (mini_toolbar_holder)
 				end
+				parent.customizeable_area_of_widget (widget).extend (mini_toolbar_holder)				
 				if header_addon /= Void then
 					if header_addon.parent /= Void then
 						header_addon.parent.prune_all (header_addon)
@@ -441,9 +440,23 @@ feature {EB_EXPLORER_BAR_ATTACHABLE} -- Status setting
 			parent := new_parent
 			new_parent.add (Current)
 		end
+
+	update_mini_toolbar (mtb: like mini_toolbar) is
+			-- Update the mini_toolbar content with `mtb'
+		require
+			unparented: mtb.parent = Void
+		do
+			mini_toolbar := mtb
+			mini_toolbar_holder.wipe_out
+			mini_toolbar_holder.extend (mtb)
+		ensure
+			parented: mtb.parent = mini_toolbar_holder
+		end
 		
 feature {EB_EXPLORER_BAR} -- Controls
 		
+	mini_toolbar_holder: EV_CONTAINER
+	
 	mini_toolbar: EV_TOOL_BAR
 	
 	header_addon: EV_HORIZONTAL_BOX

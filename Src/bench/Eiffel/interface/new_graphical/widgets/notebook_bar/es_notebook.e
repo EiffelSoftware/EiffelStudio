@@ -1,19 +1,28 @@
 indexing
-	description : "Objects that ..."
+	description : "Objects that represent a notebook tools container"
 	author      : "$Author$"
 	date        : "$Date$"
 	revision    : "$Revision$"
 
 class
 	ES_NOTEBOOK
+	
+inherit
+	EB_EXPLORER_BAR_ATTACHABLE
+		redefine
+			change_attach_explorer
+		end
 
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make is
+	make (a_title: like title; a_menu_name: like menu_name; a_pixmap: like pixmap) is
 		do
+			title := a_title
+			menu_name := a_menu_name
+			pixmap := a_pixmap
 			create items.make (3)
 			build_interface
 		end
@@ -27,6 +36,7 @@ feature {NONE} -- Initialization
 			notebook.set_tab_position (notebook.tab_bottom)
 			box.extend (notebook)
 			widget := box
+			notebook.selection_actions.extend (agent on_tab_selected)
 			notebook.drop_actions.extend (agent on_dropped_stone)
 			create {EV_VERTICAL_BOX} docking_box
 			box.extend (docking_box)
@@ -35,7 +45,29 @@ feature {NONE} -- Initialization
 			docking_box.docked_actions.extend (agent on_docked_event)
 		end
 
+	build_explorer_bar_item (explorer_bar: EB_EXPLORER_BAR) is
+			-- Build the associated explorer bar item and
+			-- Add it to `explorer_bar'
+		do
+			create {EB_EXPLORER_BAR_ITEM} explorer_bar_item.make (
+				explorer_bar, widget, title, False
+			)
+			explorer_bar_item.set_menu_name (menu_name)
+			if pixmap /= Void then
+				explorer_bar_item.set_pixmap (pixmap)
+			end
+			explorer_bar.add (explorer_bar_item)
+		end
+		
 feature -- Access
+
+	title: STRING
+
+	menu_name: STRING
+
+	pixmap: ARRAY [EV_PIXMAP]
+
+	selected_item: ES_NOTEBOOK_ITEM
 
 	item_by_tab (tab: EV_NOTEBOOK_TAB): ES_NOTEBOOK_ITEM is
 		require
@@ -93,6 +125,7 @@ feature -- Change
 			tab.set_text (t.title)
 			t.set_tab (tab)
 			items.force (tab, t)
+			update
 		end
 
 	prune (t: ES_NOTEBOOK_ITEM) is
@@ -101,6 +134,49 @@ feature -- Change
 			notebook.prune (t.tab_widget)
 		end
 
+	update is
+		do
+			update_selected_item
+			update_mini_toolbar
+		end
+		
+	update_selected_item is
+		local
+			w: EV_WIDGET
+		do
+			w := notebook.selected_item
+			if w /= Void then
+				selected_item := item_by_tab (notebook.item_tab (w))
+			else
+				selected_item := Void
+			end
+		end
+		
+	update_mini_toolbar	is
+		do
+			if explorer_bar_item /= Void and then selected_item.mini_toolbar /= Void then
+				explorer_bar_item.update_mini_toolbar (selected_item.mini_toolbar)
+			end
+		end
+	
+	change_attach_explorer (an_explorer_bar: EB_EXPLORER_BAR) is
+			-- Change the window and explorer bar `Current' is in.
+		do
+			if explorer_bar_item.is_visible then
+				explorer_bar_item.close
+			end
+			explorer_bar_item.recycle
+				-- Link with the manager and the explorer.
+			set_explorer_bar (an_explorer_bar)
+		end	
+
+feature {NONE} -- tab selection
+
+	on_tab_selected	is
+		do
+			update
+		end
+	
 feature {NONE} -- Drop action
 
 	on_dropped_stone (a_data: ANY) is
@@ -166,5 +242,5 @@ feature {NONE} -- Implementation
 	notebook: EV_NOTEBOOK
 	
 	docking_box: EV_BOX
-
+	
 end

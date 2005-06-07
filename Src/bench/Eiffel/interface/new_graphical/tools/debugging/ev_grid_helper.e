@@ -80,7 +80,6 @@ feature -- Access
 			r: EV_GRID_ROW
 			subrows: LINKED_LIST [EV_GRID_ROW]
 		do
-			print ("move row from " + from_index.out + " to " + to_index.out + "%N")
 			from_row := grid.row (from_index)
 			from_p := from_row.parent_row
 
@@ -121,7 +120,6 @@ feature -- Access
 			else
 				real_to_index := to_index
 			end
-print (" -> Move : " + from_index.out + " to " + real_to_index.out + "%N")
 			grid.move_row (from_index, real_to_index)
 			check
 				from_row.index = real_to_index

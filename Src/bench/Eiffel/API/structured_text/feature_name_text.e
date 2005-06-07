@@ -1,9 +1,8 @@
 indexing
 
-	description: 
-		"Item to denote a feature_name.";
+	description: "Item to denote a feature_name.";
 	date: "$Date$";
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class FEATURE_NAME_TEXT
 
@@ -25,17 +24,20 @@ feature -- Initialization
 	make (t: like image; c: like e_class) is
 			-- Initialize Current with class_i `e'
 			-- and image `t'.
+		require
+			t_not_void: t /= Void
+			c_not_void: c /= Void
 		do
-			image := t;
+			image := t
 			e_class := c
 		ensure
-			set: image = t and then
-					e_class = c
-		end;
+			image_set: image = t 
+			e_class_set: e_class = c
+		end
 
 feature -- Properties
 
-	e_class: CLASS_C;
+	e_class: CLASS_C
 			-- Eiffel class with e_feature is defined
 
 feature {TEXT_FORMATTER} -- Implementation
@@ -46,4 +48,8 @@ feature {TEXT_FORMATTER} -- Implementation
 			text.process_feature_name_text (Current)
 		end
 
-end -- class FEATURE_NAME_TEXT
+invariant
+	image_not_void: image /= Void
+	e_class_not_void: e_class /= Void
+
+end

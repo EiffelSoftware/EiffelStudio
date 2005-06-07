@@ -2103,8 +2103,13 @@ feature -- Resource Update
 
 	on_focus is
 			-- Focus gained
+		local
+			editor: TEXT_PANEL
 		do
-			editor_tool.set_focus
+			editor ?= editor_tool.text_area
+			if editor /= Void then
+				editor.on_focus
+			end
 		end
 
 	save_and (an_action: PROCEDURE [ANY, TUPLE]) is

@@ -1945,17 +1945,18 @@ feature -- Conversion
 		do
 			l_index_of_pivot := index_of (pivot, 1)
 			if l_index_of_pivot /= 0 then
-				l_area := area
 				if l_index_of_pivot < position then
 						-- We need to resize Current so that we can shift Current by 
 						-- `l_index_of_pivot - position'.
 					l_new_size := count + position - l_index_of_pivot
 					grow (l_new_size)
+					l_area := area
 					l_area.move_data (0, position - l_index_of_pivot, count)
 					l_area.fill_with (' ', 0, position - l_index_of_pivot - 1)
 					count := l_new_size
 				else
 						-- Simply shift content to the left and reset trailing with spaces.
+					l_area := area
 					l_area.move_data (l_index_of_pivot - position, 0, count - l_index_of_pivot + position)
 					l_area.fill_with (' ', count - l_index_of_pivot + position, count - 1)
 				end

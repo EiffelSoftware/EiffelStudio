@@ -617,6 +617,7 @@ end
 			feature_i: FEATURE_I
 			vcch1: VCCH1
 			select_table: SELECT_TABLE
+			features_with_assigners: LINKED_LIST [FEATURE_I]
 		do
 			from
 				non_deferred := not associated_class.is_deferred
@@ -635,8 +636,24 @@ end
 						Error_handler.insert_error (vcch1)
 					end
 				end
+				if feature_i.assigner_name_id /= 0 then
+					if features_with_assigners = Void then
+						create {LINKED_LIST [FEATURE_I]} features_with_assigners.make
+					end
+					features_with_assigners.extend (feature_i)
+				end
 				check_feature (feature_i)
 				select_table.forth
+			end
+			if features_with_assigners /= Void then
+				from
+					features_with_assigners.start
+				until
+					features_with_assigners.after
+				loop
+					features_with_assigners.item.check_assigner (Current)
+					features_with_assigners.forth
+				end
 			end
 		end
 

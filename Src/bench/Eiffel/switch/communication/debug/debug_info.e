@@ -749,10 +749,12 @@ feature -- changing a specified breakpoint
 		do
 			error_in_bkpts := False
 
-				-- create a 'fake' breakpoint, in order to get the real one in hash table
-			create bp.make (f, i)
+			if f.real_body_id /= 0 then
+					-- create a 'fake' breakpoint, in order to get the real one in hash table
+				create bp.make (f, i)
+			end
 
-			if not bp.is_corrupted then
+			if bp /= Void and then not bp.is_corrupted then
 					-- is the breakpoint known ?
 				if breakpoints.has (bp) then
 						-- yes, the breakpoint is already known, so switch it
@@ -866,7 +868,7 @@ feature -- getting the status of a specified breakpoint
 			bp: BREAKPOINT
 		do
 			error_in_bkpts := False
-			if not (f.is_deferred or else f.is_attribute or else f.is_constant or else f.is_unique) then
+			if not (f.is_deferred or else f.is_attribute or else f.is_constant or else f.is_unique or else f.real_body_id = 0) then
 				create bp.make(f,i)
 				if not bp.is_corrupted then
 					if breakpoints.has(bp) then
@@ -916,8 +918,10 @@ feature -- getting the status of a specified breakpoint
 			error_in_bkpts := False
 			Result := breakpoint_not_set
 			if f.valid_body_index then
-				create bp.make(f,i)
-				if not bp.is_corrupted then
+				if f.real_body_id /= 0 then
+					create bp.make(f,i)
+				end
+				if bp /= Void and then not bp.is_corrupted then
 					if breakpoints.has(bp) then
 						bp := breakpoints.found_item
 						if bp.is_enabled then

@@ -242,7 +242,7 @@ feature -- Basic operations
 							--							hi := row_counter
 							--						end
 							--				end
-						if row_offsets.count > 1 then
+						if grid_row_count >= 1 then
 								-- Only compute the rows that span the area if there are rows
 								-- are contained in `grid'. If not, there is nothing to perform here
 								-- and `Result' is simply an empty list.

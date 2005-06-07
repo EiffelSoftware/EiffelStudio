@@ -68,6 +68,12 @@ feature -- Properties
 	has_convert_mark: BOOLEAN
 			-- Is convert mark specified for an operator alias?
 
+	assigner_name: STRING is
+			-- Name of the assigner procedure (if any)
+		do
+				-- Void by default
+		end
+
 	feature_id: INTEGER;
 			-- Unique identification for a feature
 
@@ -521,7 +527,7 @@ feature -- Output
 			append_full_name (st)
 			append_just_signature (st)
 		end
-		
+
 	append_just_signature (st: STRUCTURED_TEXT) is
 			-- Append just signature of feature in `st'.
 		require
@@ -530,6 +536,8 @@ feature -- Output
 			args: like arguments
 			orig_type, cur_type: TYPE_A
 			same: BOOLEAN
+			class_c: CLASS_C
+			assigner_feature: E_FEATURE
 		do
 			args := arguments
 			if args /= Void then
@@ -568,9 +576,23 @@ feature -- Output
 				st.add (Ti_colon)
 				st.add_space
 				type.ext_append_to (st, Current)
-			end			
+			end
+			if assigner_name /= Void then
+				st.add_space
+				st.add (ti_assign_keyword)
+				st.add_space
+				class_c := written_class
+				if class_c /= Void and then class_c.has_feature_table then
+					assigner_feature := class_c.feature_with_name (assigner_name)
+				end
+				if assigner_feature /= Void then
+					st.add_feature (assigner_feature, assigner_name)
+				else
+					st.add_feature_name (assigner_name, class_c)
+				end
+			end
 		end
-		
+
 
 	append_name (st: STRUCTURED_TEXT) is
 			-- Append the name of the feature in `st'
@@ -685,12 +707,13 @@ feature -- Implementation
 		local
 			f: FEATURE_I
 		do
-			f := associated_feature_i;
-			check
-				feature_upto_date: f /= Void
-			end;
-			Result := f.real_body_id;
-		end;
+			f := associated_feature_i
+				-- `f' can be Void when there is an error
+				-- and user wants to get a flat view
+			if f /= Void then
+				Result := f.real_body_id
+			end
+		end
 
 feature {NONE} -- Implementation
 

@@ -250,7 +250,7 @@ feature {NONE} -- Implementation
 			create Result
 			Result.set_arguments (args)
 			create f.make (False, False, 1)
-			Result.set_type (f)
+			Result.set_type (f, 0)
 			Result.set_feature_name_id (Names_heap.item_name_id, 0)
 		ensure
 			item_signature_not_void: Result /= Void

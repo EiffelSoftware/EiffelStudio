@@ -100,7 +100,7 @@ feature -- Initialization
 				Result.set_arguments (arguments.twin)
 			end
 			if type /= Void then
-				Result.set_type (type.twin)
+				Result.set_type (type.twin, assigner_name_id)
 			end
 		end
 

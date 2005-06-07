@@ -117,6 +117,7 @@ feature -- Access
 				end
 				custom_box := customizeable_area_of_widget (an_item.widget)
 				custom_box.extend (an_item.mini_toolbar_holder)
+				custom_box.disable_item_expand (an_item.mini_toolbar_holder)
 				if an_item.header_addon /= Void then
 					custom_box.extend (an_item.header_addon)
 				end

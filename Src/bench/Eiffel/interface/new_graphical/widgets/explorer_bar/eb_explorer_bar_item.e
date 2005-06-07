@@ -222,6 +222,7 @@ feature -- Status Setting
 				mini_toolbar_holder.parent.prune_all (mini_toolbar_holder)
 			end
 			parent.customizeable_area_of_widget (widget).extend (mini_toolbar_holder)
+			parent.customizeable_area_of_widget (widget).disable_item_expand (mini_toolbar_holder)			
 
 			if header_addon /= Void then
 				if header_addon.parent /= Void then
@@ -323,7 +324,8 @@ feature -- Status Setting
 				if mini_toolbar_holder.parent /= Void then
 					mini_toolbar_holder.parent.prune_all (mini_toolbar_holder)
 				end
-				parent.customizeable_area_of_widget (widget).extend (mini_toolbar_holder)				
+				parent.customizeable_area_of_widget (widget).extend (mini_toolbar_holder)
+				parent.customizeable_area_of_widget (widget).disable_item_expand (mini_toolbar_holder)
 				if header_addon /= Void then
 					if header_addon.parent /= Void then
 						header_addon.parent.prune_all (header_addon)

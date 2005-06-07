@@ -1149,7 +1149,6 @@ feature -- Status setting
 				to_wparam (to_advancedtypography), to_lparam (to_advancedtypography))
 			set_text_limit (2560000)
 			set_default_font
-			cwin_send_message (wel_item, Em_limittext, to_wparam (0), to_lparam (0))
 			if parent_imp /= Void then
 				parent_imp.notify_change (2 + 1, Current)
 			end

@@ -1511,9 +1511,9 @@ feature -- Element change
 			string_exists: s /= Void
 			valid_insertion_index: 1 <= i and i <= count + 1
 		local
-			j, nb, pos, new_size: INTEGER
+			pos, new_size: INTEGER
 			l_s_count: INTEGER
-			l_area, s_area: like area
+			l_area: like area
 		do
 				-- Insert `s' if `s' is not empty, otherwise is useless.
 			l_s_count := s.count
@@ -1526,14 +1526,13 @@ feature -- Element change
 				
 					-- Perform all operations using a zero based arrays.
 				l_area := area
-				s_area := s.area
 				pos := i - 1
 				
 					-- First shift from `s.count' position all characters starting at index `pos'.
 				l_area.overlapping_move (pos, pos + l_s_count, count - pos)
 
 					-- Copy string `s' at index `pos'.
-				l_area.copy_data (s_area, 0, pos, l_s_count)
+				l_area.copy_data (s.area, 0, pos, l_s_count)
 
 				count := new_size
 				internal_hash_code := 0
@@ -2499,7 +2498,6 @@ feature {NONE} -- Implementation
 			nb_valid: (this /= Void implies nb <= this.count) and nb <= other.count
 		local
 			i, l_current_code, l_other_code: INTEGER
-			l_done: BOOLEAN
 		do
 			from
 			until

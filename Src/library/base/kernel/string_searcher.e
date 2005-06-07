@@ -1,5 +1,11 @@
 indexing
-	description: "Helper to perform efficient search of a string in another one."
+	description: "[
+		Helper to perform efficient search of a string in another one.
+		Note: The algorithm used is the one described in Communications of the ACM,
+			volume 33, number 8, August 1990, by Daniel M. Sunday. The fuzzy
+			version was presented by Peter R. Sibbald in Communications of the
+			ACM, volume 35, number 4, April 1992 (Technical Correspondance).
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -237,13 +243,7 @@ feature {NONE} -- Implementation
 			i, l_char_code: INTEGER
 		do
 				-- Initialize the delta table (one more than pattern count).
-			from
-			until
-				i = max_ascii_character_value
-			loop
-				a_deltas.put (a_pattern_count + 1, i)
-				i := i + 1
-			end
+			a_deltas.fill_with (a_pattern_count + 1, 0, max_ascii_character_value)
 
 				-- Now for each character within the pattern, fill in shifting necessary
 				-- to bring the pattern to the character. The rightmost value is kept, as

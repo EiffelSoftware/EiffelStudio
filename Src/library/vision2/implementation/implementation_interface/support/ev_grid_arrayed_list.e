@@ -48,7 +48,7 @@ feature {EV_GRID_I} -- Implementation
 			l_default: G
 			a_count: INTEGER
 		do
-			if j < i or else j > i + n then
+			if j < i or else j >= i + n then
 				a_count := count
 				index := i
 				a_duplicate := duplicate (n)

@@ -68,6 +68,12 @@ feature -- Status setting
 			text_area.set_changed (value)
 		end
 
+	set_focus is
+			-- Set the focus
+		do
+			text_area.set_focus
+		end
+
 feature -- Basic operation
 
 	refresh is

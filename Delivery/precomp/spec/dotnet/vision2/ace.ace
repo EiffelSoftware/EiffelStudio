@@ -39,6 +39,13 @@ cluster
 
 	all vision2_extensions:		"$ISE_EIFFEL\library\vision2_extension"
 
+	all thread:	"$ISE_EIFFEL\library\thread"
+		exclude
+			"classic"
+		end
+
+	all thread_net: "$ISE_EIFFEL\library.net\thread"
+
 assembly
 	mscorlib:	"$ISE_DOTNET_FRAMEWORK\mscorlib.dll"
 

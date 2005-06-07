@@ -26,6 +26,7 @@ feature -- Properties
 
 	code: STRING is "VFAV"
 			-- Error code
+
 feature -- Access
 
 	is_defined: BOOLEAN is

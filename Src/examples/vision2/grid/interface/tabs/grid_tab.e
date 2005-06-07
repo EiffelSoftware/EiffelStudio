@@ -2302,6 +2302,11 @@ feature {NONE} -- Implementation
 			combo.combo_box.extend (list_item)
 			create list_item.make_with_text ("All")
 			combo.combo_box.extend (list_item)
+			if texture_style = 2 then
+				combo.combo_box.i_th (2).enable_select
+			elseif texture_style = 3 then
+				combo.combo_box.i_th (3).enable_select
+			end
 			combo.combo_box.select_actions.extend (agent combo_item_selected (combo.combo_box))
 			combo.combo_box.select_actions.resume
 		end
@@ -2316,6 +2321,9 @@ feature {NONE} -- Implementation
 			combo.combo_box.extend (list_item)
 			create list_item.make_with_text ("False")
 			combo.combo_box.extend (list_item)
+			if scroll_style = 2 then
+				combo.combo_box.i_th (2).enable_select
+			end
 			combo.combo_box.select_actions.extend (agent combo_scroll_item_selected (combo.combo_box))
 			combo.combo_box.select_actions.resume
 		end

@@ -68,7 +68,7 @@ feature -- Access
 		end
 
 	read_string_8: STRING is
-			-- Write `v'
+			-- Read next 8-bits sequence of character
 		require
 			is_ready: is_ready_for_reading
 		local
@@ -238,7 +238,7 @@ feature -- Element change
 		end
 		
 	write_string_8 (v: STRING) is
-			-- Write `v'
+			-- Write `v'.
 		require
 			is_ready: is_ready_for_writing
 			v_not_void: v /= Void

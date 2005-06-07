@@ -1,0 +1,4 @@
+Error: not all the types of the feature arguments counted from 1 match all
+  the types of the assigner command arguments counted from 2.
+What to do: ensure that the corresponding argument types match, specify a
+  different assigner command or remove assigner mark.

@@ -1,0 +1,4 @@
+Error: number of arguments of the assigner command is not one more than of
+  the query feature.
+What to do: change assigner command name or its declaration to ensure that
+  it has one more argument than the query feature or remove assigner mark.

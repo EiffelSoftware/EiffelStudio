@@ -17,18 +17,20 @@ inherit
 			{EV_GRID_DRAWER_I, EV_GRID_I, EV_GRID_ROW_I}
 				area
 		redefine
-			grow
+			grow,
+			default_create
 		end
 
 create
-	make
+	default_create
 
 feature {NONE} -- Initialization
 
-	make is
-			-- Create EV_GRID arrayed list and initialize to hold zero values
+	default_create is
+			-- Create EV_GRID arrayed list and initialize to hold zero values.
 		do
-			arrayed_list_make (0)		
+			lower := 1
+			create area.make (0)
 		end
 
 feature {EV_GRID_I} -- Implementation
@@ -44,7 +46,6 @@ feature {EV_GRID_I} -- Implementation
 		local
 			a_duplicate: like Current
 			l_default: G
-			a_insertion_index: INTEGER
 			a_count: INTEGER
 		do
 			if j < i or else j > i + n then
@@ -60,11 +61,10 @@ feature {EV_GRID_I} -- Implementation
 				count := a_count - n
 
 				if j > (i + n - 1) then
-					a_insertion_index := j - n
+					index := j - n
 				else
-					a_insertion_index := j - 1
+					index := j - 1
 				end
-				index := a_insertion_index
 				merge_right (a_duplicate)
 			end
 		end
@@ -75,25 +75,25 @@ feature {EV_GRID_I} -- Implementation
 		require
 			new_capacity_not_negative: new_capacity >= 0
 		local
-			internal_new_capacity: INTEGER
 			l_default: G
+			l_upper: INTEGER
 		do
+			l_upper := upper
 			if new_capacity > upper then
 					-- Resize by 50% to prevent the need for resizing continuously
 					-- if `new_capacity' is increased by a small number each time in a loop.
-				internal_new_capacity := new_capacity.max (upper + 1 + upper // 2)
-				conservative_resize (1, internal_new_capacity)
+				conservative_resize (1, new_capacity.max (l_upper + 1 + l_upper // 2))
 			elseif new_capacity < count then
 					-- Note that we do not reduce the memory footprint, simply
 					-- remove the items and update `count'. This is for speed at the sake of
 					-- memory usage.
 
 					-- Remove all items so that they can be garbage collected.
-				area.fill_with (l_default, new_capacity, upper - 1)
+				area.fill_with (l_default, new_capacity, l_upper - 1)
 			end
 				-- Now always set the `count' to `new_capacity' although
 				-- the actual area allocated may not equal `new_capacity'.
-			set_count (new_capacity)
+			count := new_capacity
 		ensure
 			count_set: count = new_capacity
 		end

@@ -234,47 +234,55 @@ feature -- creation feature check
 		do
 			cluster := current_class.cluster
 			class_type ?= current_type
-			
-			check
-				-- The assignement attempt should return a non-Void value since
-				-- we are sure that we are effectively passing a CLASS_TYPE_AS
-				class_type_validity: class_type /= Void
-			end
 
-			class_i := universe.class_named (class_type.class_name, cluster)
-
-				-- We handle only the case where `class_i' is a valid reference
-				-- because the case has been handled in `check_constraint_type'
-				-- from CLASS_TYPE_AS which is called just before this feature.
-			if class_i /= Void then
-					-- Here we assume that the class is correct (cad `check_constraint_type'
-					-- from CLASS_TYPE_AS did not add any error items to `Error_handler'.
-					
-					-- Here we will just check that the feature listed in the creation
-					-- constraint part are effectively features of the constraint.
-				from
-					creation_feature_list.start
-					associated_class := class_i.compiled_class	
-					feat_table := associated_class.feature_table
-				until
-					creation_feature_list.after	
-				loop
-					feature_name := creation_feature_list.item.internal_name
-					feat_table.search (feature_name)
-					if
-						not feat_table.found or else
-						not is_valid_creation_routine (feat_table.found_item)
-					then
-							-- The feature listed in the creation constraint have not been
-							-- declared in the constraint class.
-						create vtcg6
-						vtcg6.set_class (current_class)
-						vtcg6.set_constraint_class (associated_class)
-						vtcg6.set_feature_name (feature_name)
-						vtcg6.set_location (creation_feature_list.item.start_location)
-						Error_handler.insert_error (vtcg6)
+			if class_type = Void then
+					-- Generic constraint lists a type which is not a class type:
+					--   fictitious class NONE
+					--   tuple type
+					--   formal generic parameter
+					-- There are no features that can be used for creation.
+				fixme ("Process formal generic parameter.")
+				create vtcg6
+				vtcg6.set_class (current_class)
+				vtcg6.set_constraint_type (current_type)
+				vtcg6.set_feature_name (creation_feature_list.first.internal_name)
+				vtcg6.set_location (creation_feature_list.first.start_location)
+				Error_handler.insert_error (vtcg6)
+			else
+				class_i := universe.class_named (class_type.class_name, cluster)
+					-- We handle only the case where `class_i' is a valid reference
+					-- because the case has been handled in `check_constraint_type'
+					-- from CLASS_TYPE_AS which is called just before this feature.
+				if class_i /= Void then
+						-- Here we assume that the class is correct (cad `check_constraint_type'
+						-- from CLASS_TYPE_AS did not add any error items to `Error_handler'.
+	
+						-- Here we will just check that the feature listed in the creation
+						-- constraint part are effectively features of the constraint.
+					from
+						creation_feature_list.start
+						associated_class := class_i.compiled_class
+						feat_table := associated_class.feature_table
+					until
+						creation_feature_list.after
+					loop
+						feature_name := creation_feature_list.item.internal_name
+						feat_table.search (feature_name)
+						if
+							not feat_table.found or else
+							not is_valid_creation_routine (feat_table.found_item)
+						then
+								-- The feature listed in the creation constraint have not been
+								-- declared in the constraint class.
+							create vtcg6
+							vtcg6.set_class (current_class)
+							vtcg6.set_constraint_class (associated_class)
+							vtcg6.set_feature_name (feature_name)
+							vtcg6.set_location (creation_feature_list.item.start_location)
+							Error_handler.insert_error (vtcg6)
+						end
+						creation_feature_list.forth
 					end
-					creation_feature_list.forth
 				end
 			end
 		end

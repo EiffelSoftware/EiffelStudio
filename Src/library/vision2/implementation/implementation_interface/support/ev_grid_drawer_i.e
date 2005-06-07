@@ -460,6 +460,7 @@ feature -- Basic operations
 			is_tree_enabled, is_content_completely_dynamic, is_content_partially_dynamic : BOOLEAN
 			first_item_in_row_drawn: BOOLEAN
 			current_parent_row: EV_GRID_ROW_I
+			v_y: INTEGER
 
 		do
 				-- Although this feature is connected to the `expose_actions' of a drawing area,
@@ -682,6 +683,10 @@ feature -- Basic operations
 											-- Now retrieve the new node index.
 										node_index := retrieve_node_index (current_row)
 									end
+									
+										-- Now retrieve `current_row_list' again. This is because as an item is added,
+										-- the row list is resized, which produces a new object.
+									current_row_list := grid_rows_data_list @ (current_row_index)
 								end
 									-- Resize the bufer if required. The buffer is only every increased and never decreased
 									-- as this prevents us from having to continuously change its size, which is an
@@ -926,26 +931,45 @@ feature -- Basic operations
 					-- Now draw in the background area where no items were displayed if required.
 					-- Note that we perform the vertical and horizontal drawing seperately so there may be overlap if both are
 					-- being drawn at once. This does not matter as it is simpler to implement, has no real performance impact as
-					-- it is simply drawing a rectangle and dows not flicker.
+					-- it is simply drawing a rectangle and does not flicker.
 					
 				rectangle_width := internal_client_width - (column_offsets @ (column_offsets.count) - internal_client_x)
 					-- We compute the rectangle width based on the position of the final item within `column_offsets'.
-				if rectangle_width >= 0 then
+				if rectangle_width > 0 then
+					if item_buffer_pixmap.width < rectangle_width or item_buffer_pixmap.height < internal_client_height then
+						item_buffer_pixmap.set_size (rectangle_width, internal_client_height)
+					end
 						-- Check to see if we must draw the background to the right of the items.
-					drawable.set_foreground_color (grid.background_color)
-					drawable.fill_rectangle (horizontal_buffer_offset + internal_client_width - rectangle_width, vertical_buffer_offset, rectangle_width, internal_client_height)
+					if grid.fill_background_actions_internal /= Void and then not grid.fill_background_actions_internal.is_empty then
+						grid.fill_background_actions_internal.call ([item_buffer_pixmap, column_offsets @ (column_offsets.count), internal_client_y, rectangle_width, internal_client_height])
+					else
+						item_buffer_pixmap.set_foreground_color (grid.background_color)
+						item_buffer_pixmap.fill_rectangle (0, 0, rectangle_width, internal_client_height)
+					end
+					drawable.draw_sub_pixmap  (horizontal_buffer_offset + internal_client_width - rectangle_width, vertical_buffer_offset, item_buffer_pixmap, create {EV_RECTANGLE}.make (0, 0, rectangle_width, internal_client_height))
 				end
 				if current_row = Void or else current_row.index >= row_count - grid.hidden_node_count then
 					if grid.is_row_height_fixed and not is_tree_enabled then
 							-- Special handling for fixed row heights as `row_offsets' does not exist.
-						rectangle_height := internal_client_height - ((row_height * (row_count)) - internal_client_y)
+						v_y := (row_height * (row_count))
+						rectangle_height := internal_client_height - (v_y - internal_client_y)
 					else
-						rectangle_height := internal_client_height - (row_offsets @ (row_count + 1) - internal_client_y)
+						v_y := row_offsets @ (row_count + 1)
+						rectangle_height := internal_client_height - (v_y - internal_client_y)
 					end
 					if rectangle_height >= 0 then
-							-- Check to see if must draw the background below the items.
-						drawable.set_foreground_color (grid.background_color)
-						drawable.fill_rectangle (horizontal_buffer_offset, vertical_buffer_offset + internal_client_height - rectangle_height, internal_client_width, rectangle_height)
+						-- Check to see if must draw the background below the items.
+
+						if item_buffer_pixmap.width < internal_client_width or item_buffer_pixmap.height < rectangle_height then
+							item_buffer_pixmap.set_size (internal_client_width, rectangle_height)
+						end
+						if grid.fill_background_actions_internal /= Void and then not grid.fill_background_actions_internal.is_empty then
+							grid.fill_background_actions_internal.call ([item_buffer_pixmap, internal_client_x, v_y , internal_client_width, rectangle_height])
+						else
+							item_buffer_pixmap.set_foreground_color (grid.background_color)
+							item_buffer_pixmap.fill_rectangle (0, 0, internal_client_width, rectangle_height)
+						end
+						drawable.draw_sub_pixmap (horizontal_buffer_offset, vertical_buffer_offset + internal_client_height - rectangle_height, item_buffer_pixmap, create {EV_RECTANGLE}.make (0, 0, internal_client_width, rectangle_height))
 					end
 				end
 				else

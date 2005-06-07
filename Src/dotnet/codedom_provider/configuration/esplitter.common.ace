@@ -62,6 +62,8 @@ cluster
 		end
 
 	all ast:		"$EIFFEL_SRC\Eiffel\common"
+		exclude
+			"CVS";
 		default
 			namespace ("EiffelSoftware.Compiler.Parser")
 		end

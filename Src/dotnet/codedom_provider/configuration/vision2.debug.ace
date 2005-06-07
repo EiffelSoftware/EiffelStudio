@@ -24,41 +24,49 @@ cluster
 		-- WEL
 	all wel:		"$EIFFEL_SRC\library\wel"
 		exclude
-			"spec"; "clib"; "classic";
+			"spec"; "clib"; "classic"; "CVS";
  		default
  			namespace ("EiffelSoftware.Library.WEL")
 		end
 
 	all wel_net:		"$EIFFEL_SRC\library.net\wel"
+		exclude
+			"CVS";
  		default
  			namespace ("EiffelSoftware.Library.WELNet")
 		end
 
 	all vision2:		"$EIFFEL_SRC\library\vision2"
 		exclude
-			"Clib"; "gtk"; "gtk2"; "assign_attempt.e"; "ev_pixmap_imp_delegate.e"; "ev_pixmap_imp_loader.e";
+			"Clib"; "gtk"; "gtk2"; "assign_attempt.e"; "ev_pixmap_imp_delegate.e"; "ev_pixmap_imp_loader.e"; "CVS";
  		default
  			namespace ("EiffelSoftware.Library.Vision2")
 		end
 
 	all vision2_net:		"$EIFFEL_SRC\library.net\vision2"
+		exclude
+			"CVS";
  		default
  			namespace ("EiffelSoftware.Library.Vision2Net")
 		end
 
 	all vision2_extensions:		"$EIFFEL_SRC\library\vision2_extension"
+		exclude
+			"CVS";
  		default
  			namespace ("EiffelSoftware.Library.Vision2Extension")
 		end
 
 	all thread:			"$EIFFEL_SRC\library\thread"
 		exclude
-			"classic"
+			"classic"; "CVS";
  		default
  			namespace ("EiffelSoftware.Library.Thread")
 		end
 		
 	all thread_net:			"$EIFFEL_SRC\library.net\thread"
+		exclude
+			"CVS";
  		default
  			namespace ("EiffelSoftware.Library.ThreadNet")
 		end

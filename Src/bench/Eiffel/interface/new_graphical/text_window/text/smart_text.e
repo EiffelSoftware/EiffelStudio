@@ -379,7 +379,9 @@ feature -- Completion-clickable initialization / update
 					-- will prevent `click_tool' from considering
 					-- what precedes as the name to be completed.
 			end
-			click_tool.build_completion_list (cursor)
+			if not cursor.line.part_of_verbatim_string then
+				click_tool.build_completion_list (cursor)	
+			end
 			if click_tool.completion_possibilities /= Void then
 				
 				auto_complete_possible := True

@@ -1630,7 +1630,7 @@ feature -- Element change
 			end_row_last_in_tree_structure: i + n <= row_count implies row (i + n).parent_row = Void
 		do
 				-- Only move if the row move is not overlapping.
-			if j < i or else j > i + n then
+			if j < i or else j >= i + n then
 				rows.move_items (i, j, n)
 				internal_row_data.move_items (i, j, n)
 					-- Update the changed indexes.

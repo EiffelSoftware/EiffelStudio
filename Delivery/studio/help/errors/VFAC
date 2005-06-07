@@ -1,0 +1,22 @@
+VFAC, section 8.5.21
+
+     Assigner Command Validity rule
+
+     An Assigner_mark appearing in the declaration of a
+     feature q with n arguments (n >= 0) and listing a
+     Feature_name fn, called the assigner command for q,
+     is valid if and only if it satisfies the following
+     conditions:
+
+        1 q is a query.
+
+        2 fn is the name of a command c of the class.
+
+        3 c has n + 1 arguments.
+
+        4 The type of c's first argument is the result
+          type of q.
+
+        5 For every i in 1..n, the type of the i+1-st
+          argument of c is the type of the i-th argument
+          of q.

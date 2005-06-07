@@ -1,0 +1,3 @@
+Error: assigner mark does not specify a name of a command.
+What to do: ensure that assigner mark lists a valid name of a command
+  or remove it.

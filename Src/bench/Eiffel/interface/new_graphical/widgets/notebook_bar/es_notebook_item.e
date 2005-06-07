@@ -47,8 +47,9 @@ feature {NONE} -- Initialization
 			a_widget_not_void: a_widget /= Void
 			a_title_not_void: a_title /= Void
 		local
-			vb: EV_VERTICAL_BOX
+			hb: EV_HORIZONTAL_BOX
 			tab_cell: EV_CELL
+			left_handle: EV_CELL
 		do
 			create drop_actions
 
@@ -61,23 +62,24 @@ feature {NONE} -- Initialization
 			create tab_cell
 			tab_widget := tab_cell
 
-			create vb
-			tab_cell.extend (vb)
+			create hb
+			create left_handle
+			left_handle.set_minimum_width (8)
+			left_handle.set_background_color ((create {EV_STOCK_COLORS}).grey)
+			hb.extend (left_handle)
+			hb.disable_item_expand (left_handle)
+			hb.extend (widget)
 
-			vb.extend (widget)
+			tab_cell.extend (hb)
 
 			if docking_handle = Void then
-				docking_handle := tab_widget
-				docking_handle.enable_dockable				
-				docking_handle.dock_started_actions.extend (agent dock_start (Current))
-				docking_handle.dock_ended_actions.extend (agent dock_end (Current))
-				
-			else
-				docking_handle.enable_dockable
-				docking_handle.dock_started_actions.extend (agent dock_start (Current))
-				docking_handle.dock_ended_actions.extend (agent dock_end (Current))
-				docking_handle.set_real_source (vb)
+				docking_handle := left_handle
 			end
+				
+			docking_handle.enable_dockable
+			docking_handle.dock_started_actions.extend (agent dock_start (Current))
+			docking_handle.dock_ended_actions.extend (agent dock_end (Current))
+			docking_handle.set_real_source (hb)
 		end
 		
 feature -- Access

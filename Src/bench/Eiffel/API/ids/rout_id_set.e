@@ -152,7 +152,7 @@ feature -- Duplication
 			if other /= Current then
 				first := other.first
 				if other.area /= Void then
-					area := other.area.standard_twin
+					area := other.area.twin
 				else
 					area := Void
 				end

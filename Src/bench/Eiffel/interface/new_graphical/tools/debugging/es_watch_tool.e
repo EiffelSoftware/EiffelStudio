@@ -389,7 +389,6 @@ feature {NONE} -- add new expression from the grid
 			elseif new_expression_row.index < watches_grid.row_count then
 				watches_grid.move_row (new_expression_row.index, watches_grid.row_count)
 			end
-			print (new_expression_row.index.out + "/" + watches_grid.row_count.out + "%N")
 		ensure
 			new_expression_row.index = watches_grid.row_count
 		end

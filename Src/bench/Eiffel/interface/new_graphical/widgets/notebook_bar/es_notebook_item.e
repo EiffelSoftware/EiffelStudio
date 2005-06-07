@@ -16,18 +16,18 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_parent: ES_NOTEBOOK; a_widget: EV_WIDGET; a_title: STRING) is
+	make (a_parent: ES_NOTEBOOK; a_widget: EV_WIDGET; a_docking_handle: EV_DOCKABLE_SOURCE; a_title: STRING) is
 			-- Initialization
 		require
 			parent_not_void: a_parent /= Void
 			widget_not_void: a_widget /= Void
 			title_not_void: a_title /= Void
 		do
-			generic_make (a_parent, a_widget, a_title)
+			generic_make (a_parent, a_widget, a_docking_handle, a_title)
 		end
 
 	make_with_mini_toolbar (
-		a_parent: ES_NOTEBOOK; a_widget: EV_WIDGET;
+		a_parent: ES_NOTEBOOK; a_widget: EV_WIDGET; a_docking_handle: EV_DOCKABLE_SOURCE;
 		a_title: STRING; a_mini_toolbar: EV_TOOL_BAR) is
 			-- Initialization
 		require else
@@ -37,10 +37,10 @@ feature {NONE} -- Initialization
 			mini_toolbar_not_void: a_mini_toolbar /= Void
 		do
 			mini_toolbar := a_mini_toolbar
-			make (a_parent, a_widget, a_title)
+			make (a_parent, a_widget, a_docking_handle, a_title)
 		end
 
-	generic_make (a_parent: ES_NOTEBOOK; a_widget: EV_WIDGET; a_title: STRING) is
+	generic_make (a_parent: ES_NOTEBOOK; a_widget: EV_WIDGET; a_docking_handle: EV_DOCKABLE_SOURCE; a_title: STRING) is
 			-- Generic Initialization
 		require
 			a_parent_not_void: a_parent /= Void
@@ -48,16 +48,14 @@ feature {NONE} -- Initialization
 			a_title_not_void: a_title /= Void
 		local
 			vb: EV_VERTICAL_BOX
-			hb: EV_HORIZONTAL_BOX
-			lab: EV_LABEL
 			tab_cell: EV_CELL
-			cell: EV_CELL
 		do
 			create drop_actions
 
 				--| Set the attributes
 			parent := a_parent
 			widget := a_widget
+			docking_handle := a_docking_handle
 			title := a_title
 			
 			create tab_cell
@@ -65,31 +63,21 @@ feature {NONE} -- Initialization
 
 			create vb
 			tab_cell.extend (vb)
-			
-			if mini_toolbar /= Void then
-				create hb
-				create lab.make_with_text (title)
-				hb.extend (lab)
-				hb.disable_item_expand (lab)
-				create cell
-				cell.set_minimum_width (8)
-				hb.extend (cell)
-				hb.disable_item_expand (cell)
-				
-				hb.extend (mini_toolbar)
 
-				vb.extend (hb)
-				vb.disable_item_expand (hb)
-
-				lab.enable_dockable
-				lab.dock_started_actions.extend (agent dock_start (Current))
-				lab.dock_ended_actions.extend (agent dock_end (Current))
-				
-				lab.set_real_source (vb)
---				lab.set_real_source (tab_widget)
-				
-			end
 			vb.extend (widget)
+
+			if docking_handle = Void then
+				docking_handle := tab_widget
+				docking_handle.enable_dockable				
+				docking_handle.dock_started_actions.extend (agent dock_start (Current))
+				docking_handle.dock_ended_actions.extend (agent dock_end (Current))
+				
+			else
+				docking_handle.enable_dockable
+				docking_handle.dock_started_actions.extend (agent dock_start (Current))
+				docking_handle.dock_ended_actions.extend (agent dock_end (Current))
+				docking_handle.set_real_source (vb)
+			end
 		end
 		
 feature -- Access
@@ -101,6 +89,8 @@ feature -- Access
 
 	title: STRING
 
+	mini_toolbar: EV_TOOL_BAR
+
 	parent: ES_NOTEBOOK
 
 	tab: EV_NOTEBOOK_TAB
@@ -109,7 +99,7 @@ feature -- Access
 
 feature {ES_NOTEBOOK} -- Implementation
 
-	mini_toolbar: EV_TOOL_BAR
+	docking_handle: EV_DOCKABLE_SOURCE
 
 	widget: EV_WIDGET
 
@@ -149,16 +139,11 @@ feature {NONE} -- Docking
 					lh := docked_out_height
 				end
 				ddlg.set_size (lw, lh)
---				ddlg.close_request_actions.extend (agent dock_back (current, ddlg))
 				ddlg.resize_actions.extend (agent dock_resized)
+
+				docking_handle.disable_dockable
 			end
 		end
-
---	dock_back (nbi: ES_NOTEBOOK_ITEM; dlg: EV_DOCKABLE_DIALOG) is
---		do
---			docked_out_witdh := dlg.width
---			docked_out_height := dlg.height
---		end
 
 	dock_resized (ax, ay, awidth, aheight: INTEGER) is
 		do
@@ -172,6 +157,8 @@ feature {ES_NOTEBOOK} -- Docking
 		do
 			tab_widget.docked_actions.wipe_out
 			nbi.parent.dock_it_back (nbi)
+			
+			docking_handle.enable_dockable
 		end
 
 feature {ES_NOTEBOOK} -- Restricted access

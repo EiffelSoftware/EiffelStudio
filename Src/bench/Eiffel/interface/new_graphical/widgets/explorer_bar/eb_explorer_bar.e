@@ -100,6 +100,7 @@ feature -- Access
 			an_item_not_void: an_item /= Void
 		local
 			insert_pos: INTEGER
+			custom_box: EV_BOX
 		do
 			item_list.extend (an_item)
 			if an_item.is_visible then
@@ -114,12 +115,10 @@ feature -- Access
 				else
 					enable_close_button_as_grayed (an_item.widget)
 				end
-				if an_item.mini_toolbar /= Void and an_item.mini_toolbar.parent = Void then
-					customizeable_area_of_widget (an_item.widget).extend (an_item.mini_toolbar)
-					customizeable_area_of_widget (an_item.widget).disable_item_expand (an_item.mini_toolbar)
-				end
+				custom_box := customizeable_area_of_widget (an_item.widget)
+				custom_box.extend (an_item.mini_toolbar_holder)
 				if an_item.header_addon /= Void then
-					customizeable_area_of_widget (an_item.widget).extend (an_item.header_addon)
+					custom_box.extend (an_item.header_addon)
 				end
 			end
 		end

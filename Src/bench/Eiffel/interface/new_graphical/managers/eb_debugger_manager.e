@@ -80,13 +80,10 @@ feature -- Access
 	toolbarable_commands: ARRAYED_LIST [EB_TOOLBARABLE_AND_MENUABLE_COMMAND]
 			-- All commands that can be put in a toolbar.
 
-	es_tool_container: ES_TOOL_CONTAINER
-			-- A tool that represents the call stack in a graphical display.
-
 	call_stack_tool: EB_CALL_STACK_TOOL
 			-- A tool that represents the call stack in a graphical display.
 
-	debugging_tools: ES_DEBUGGING_TOOL
+	debugging_tools: ES_NOTEBOOK
 			-- A tool that represents the call stack in a graphical display.
 
 	objects_tool: ES_OBJECTS_TOOL
@@ -376,19 +373,25 @@ feature -- Status setting
 			if new_debugging_tool_enabled then
 					--| ES debugging tools |--
 				if debugging_tools = Void then
-					create debugging_tools.make (debugging_window)
+					create debugging_tools.make (
+							interface_names.t_Object_tool,
+							interface_names.m_Object_tools,
+							Void
+						)
+-- FIXME jfiat [2005/06/07] : when we decide to replace the current tool by the grid tool
+--					create debugging_tools.make (interface_names.t_Debugging_tool)
 					debugging_tools.attach_to_explorer_bar (debugging_window.right_panel)
 				else
-					debugging_tools.change_manager_and_explorer (debugging_window, debugging_window.right_panel)
+					debugging_tools.change_attach_explorer (debugging_window.right_panel)
 				end
 
 					--| Grid Objects Tool
 				if objects_tool = Void then
 					create objects_tool.make (debugging_window)
-					objects_tool.attach_to_notebook (debugging_tools.notebook)
+					objects_tool.attach_to_notebook (debugging_tools)
 				else
 					objects_tool.set_manager (debugging_window)
-					objects_tool.change_attach_notebook (debugging_tools.notebook)
+					objects_tool.change_attach_notebook (debugging_tools)
 				end
 				objects_tool.set_debugger_manager (Current)
 				objects_tool.update
@@ -396,10 +399,10 @@ feature -- Status setting
 					--| Watches tool
 				if watch_tool = Void then
 					create watch_tool.make (debugging_window)
-					watch_tool.attach_to_notebook (debugging_tools.notebook)
+					watch_tool.attach_to_notebook (debugging_tools)
 				else
 					watch_tool.set_manager (debugging_window)
-					watch_tool.change_attach_notebook (debugging_tools.notebook)
+					watch_tool.change_attach_notebook (debugging_tools)
 				end
 				debug ("debugger_interface")
 					io.put_string ("editor height: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")

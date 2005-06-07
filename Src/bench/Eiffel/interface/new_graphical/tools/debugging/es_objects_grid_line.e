@@ -249,7 +249,7 @@ feature -- Pick and Drop
 
 	get_object_stone_properties is
 		require
-			object_stone_properties_computed
+			not object_stone_properties_computed
 		local
 			ost: OBJECT_STONE
 			ostn: STRING
@@ -679,7 +679,7 @@ feature {NONE} -- Filling
 				onces_row.set_data (ctler)
 				onces_row.ensure_expandable
 			end
-			if not a_row.is_expanded then
+			if a_row.is_expandable and then not a_row.is_expanded then
 				a_row.expand
 			end
 			if a_row.is_expanded then
@@ -687,6 +687,7 @@ feature {NONE} -- Filling
 					display_attributes
 					and attributes_row /= Void
 					and then attributes_row.parent /= Void
+					and then attributes_row.is_expandable
 					and then not attributes_row.is_expanded
 				then
 					attributes_row.expand
@@ -695,6 +696,7 @@ feature {NONE} -- Filling
 					display_onces
 					and onces_row /= Void
 					and then onces_row.parent /= Void
+					and then onces_row.is_expandable
 					and then not onces_row.is_expanded
 				then
 					onces_row.expand
@@ -720,10 +722,10 @@ feature {NONE} -- Filling
 				-- We remove the dummy item.
 			grid_remove_subrows_from (a_row)
 			vlist := sorted_attributes_values
-			if vlist /= Void then
+			if vlist /= Void and then not vlist.is_empty then
 					--| better being sure it won't happen |--
 				check
-					vlist /= Void and then not vlist.is_empty
+					vlist /= Void
 				end
 				from
 					list_cursor := vlist.new_cursor
@@ -758,7 +760,7 @@ feature {NONE} -- Filling
 					end
 				end
 			end
-			if not a_row.is_expanded then
+			if a_row.is_expandable and then not a_row.is_expanded then
 				a_row.expand
 			end
 		end
@@ -785,7 +787,7 @@ feature {NONE} -- Filling
 			else
 				classic_fill_onces_with_list (a_row, flist, associated_debug_value)
 			end
-			if not a_row.is_expanded then
+			if a_row.is_expandable and then not a_row.is_expanded then
 				a_row.expand
 			end			
 		end
@@ -962,7 +964,7 @@ feature {NONE} -- Implementation
 			grid_cell_set_text (Result, s)
 		end
 
-	cell_text_updated (v: STRING; c: INTEGER): EV_GRID_LABEL_ITEM is
+	cell_text_updated (v: STRING; c: INTEGER): ES_OBJECTS_GRID_CELL is
 		local
 			l_item: EV_GRID_ITEM
 		do

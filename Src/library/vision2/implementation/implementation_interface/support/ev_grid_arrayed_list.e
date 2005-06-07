@@ -57,8 +57,9 @@ feature {EV_GRID_I} -- Implementation
 				area.move_data ((i - 1) + n, i - 1, a_count - ((i - 1) + n))
 
 					-- Remove duplicated entries resulting from move and reset count.
-				area.fill_with (l_default, a_count - n, upper - 1)
-				count := a_count - n
+				a_count := a_count - n
+				area.fill_with (l_default, a_count, upper - 1)
+				count := a_count
 
 				if j > (i + n - 1) then
 					index := j - n

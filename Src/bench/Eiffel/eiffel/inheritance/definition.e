@@ -51,13 +51,11 @@ feature -- Checking
 			check
 				new_feat /= Void
 			end
-			if new_feat /= new_feature then
 				--| If it does not have the same reference then
 				--| replication of new_feature has occurred.
 				--! Hence, we need to update the new_feature
 				--| so it is referenced correctly.
-				new_feature := new_feat
-			end
+			new_feature := new_feat
 			deferred_features := old_features.deferred_features
 			if not deferred_features.is_empty then
 				check_list (deferred_features, feat_tbl)
@@ -90,7 +88,7 @@ feature -- Checking
 				feature_i.solve_types (tbl)
 				
 					-- Signature checking
-				new_feature.check_signature (feature_i)
+				new_feature.check_signature (feature_i, tbl)
 
 				feats.forth
 			end

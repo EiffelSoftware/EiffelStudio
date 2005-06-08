@@ -35,7 +35,20 @@ feature {NONE} -- Initialization
 			default_create
 			expose_actions.extend (an_agent)
 		end
+		
+feature -- Status setting
 
+	set_required_width (a_required_width: INTEGER) is
+			-- Assign `a_required_width' to `required_width'.
+		require
+			not_destroyed: not is_destroyed
+			a_required_width_non_negative: a_required_width >= 0
+		do
+			implementation.set_required_width (a_required_width)
+		ensure
+			required_width_set: required_width = a_required_width
+		end
+		
 feature -- Element change
 
 	expose_actions: ACTION_SEQUENCE [TUPLE [EV_DRAWABLE]] is

@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 			elem: EIFFEL_CALL_STACK_ELEMENT
 			prev_feat: E_FEATURE
 			cur_feat: E_FEATURE
-			l_dynclass: CLASS_C
+			l_class: CLASS_C
 			curr_cs: EIFFEL_CALL_STACK
 		do
 			level_number := level_num
@@ -63,17 +63,16 @@ feature {NONE} -- Initialization
 			if curr_cs /= Void then
 				elem ?= curr_cs.i_th (level_num)
 				if elem /= Void then
-					l_dynclass := elem.dynamic_class
-					
-					obj_make (elem.object_address, " ", l_dynclass)
+					obj_make (elem.object_address, " ", elem.dynamic_class)
 						--| We try to give the feature relative to the dynamic class.
 						--| However, in case of a Precursor, we fall back to the feature in its static context.
 					prev_feat := elem.routine
 					check
 						prev_feat_not_void: prev_feat /= Void
 					end
-					if l_dynclass /= Void and then l_dynclass.has_feature_table then
-						cur_feat := l_dynclass.feature_with_body_index (prev_feat.body_index)
+					l_class := elem.written_class
+					if l_class /= Void and then l_class.has_feature_table then
+						cur_feat := l_class.feature_with_feature_id (prev_feat.written_feature_id)
 					end
 					if cur_feat = Void then
 							-- We are in a Precursor.

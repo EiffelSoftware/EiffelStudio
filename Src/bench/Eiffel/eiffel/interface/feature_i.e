@@ -278,6 +278,46 @@ feature -- Comparison
 				has_convert_mark = other.has_convert_mark
 		end
 
+	is_same_assigner (other: FEATURE_I; tbl: FEATURE_TABLE): BOOLEAN is
+			-- Does current have the same assigner command (if any) as `other'?
+		require
+			other_not_void: other /= Void
+			tbl_not_void: tbl /= Void
+		local
+			origin_table: HASH_TABLE [FEATURE_I, INTEGER]
+			assigner_command: FEATURE_I
+			other_assigner_command: FEATURE_I
+		do
+				-- If either of the feature has no assigner command, we treat them as having
+				-- the same assigner command
+			if assigner_name_id = 0 or else other.assigner_name_id = 0 then
+				Result := True
+			else
+				origin_table := tbl.origin_table
+				if written_in = system.current_class.class_id then
+					assigner_command :=  tbl.item_id (assigner_name_id)
+				else
+					assigner_command := written_class.feature_named (assigner_name)
+				end
+				if assigner_command = Void then
+						-- Assigner command is not found
+					error_handler.insert_error (create {VFAC2}.make (system.current_class, Current))
+				else
+					assigner_command := origin_table.item (assigner_command.rout_id_set.first)
+					if other.written_in = system.current_class.class_id then
+						other_assigner_command := tbl.item_id (other.assigner_name_id)
+					else
+						other_assigner_command := other.written_class.feature_named (other.assigner_name)
+					end
+					check
+						other_assigner_command_not_void: other_assigner_command /= Void
+					end
+					other_assigner_command := origin_table.item (other_assigner_command.rout_id_set.first)
+					Result := assigner_command = other_assigner_command
+				end
+			end
+		end
+
 feature -- Debugger access
 
 	number_of_breakpoint_slots: INTEGER is
@@ -1531,12 +1571,13 @@ end
 			end
 		end
 
-	check_signature (old_feature: FEATURE_I) is
+	check_signature (old_feature: FEATURE_I; tbl: FEATURE_TABLE) is
 			-- Check signature conformance beetween Current
 			-- and inherited feature in `inherit_info' from which Current
 			-- is a redefinition.
 		require
-			good_argument: old_feature /= Void
+			old_feature_not_void: old_feature /= Void
+			tbl_not_void: tbl /= Void
 		local
 			old_type, new_type: TYPE_A
 			i, arg_count: INTEGER
@@ -1666,6 +1707,11 @@ end
 			if not is_same_alias (old_feature) then
 					-- Report that aliases are not the same
 				Error_handler.insert_error (create {VDRD7_NEW}.make (system.current_class, Current, old_feature))
+			end
+				-- Check assigner procedure
+			if not is_same_assigner (old_feature, tbl) then
+					-- Report that assigner commands are not the same
+				Error_handler.insert_error (create {VE08}.make (system.current_class, Current, old_feature))
 			end
 		end
 
@@ -1857,23 +1903,26 @@ end
 			-- Check if associated assigner is valid.
 		require
 			feature_table_not_void: feature_table /= Void
+			has_assigner: assigner_name_id /= 0
 		local
 			assigner: FEATURE_I
 			assigner_arguments: like arguments
 			query_arguments: like arguments
+			vfac: VFAC
 		do
 			if system.current_class.class_id = written_in then
 					-- Lookup feature in `feature_table' as feature table in the current class is not set yet.
 				assigner := feature_table.item_id (assigner_name_id)
 			else
-				assigner := written_class.feature_named (assigner_name)
+				assigner := feature_table.origin_table.item 
+					(written_class.feature_named (assigner_name).rout_id_set.first)
 			end
 			if assigner = Void or else assigner.has_return_value then
-				error_handler.insert_error (create {VFAC2}.make (system.current_class, Current))
+				create {VFAC2} vfac.make (system.current_class, Current)
 			elseif assigner.argument_count /= argument_count + 1 then
-				error_handler.insert_error (create {VFAC3}.make (system.current_class, Current))
+				create {VFAC3} vfac.make (system.current_class, Current)
 			elseif not assigner.arguments.first.same_as (type) then
-				error_handler.insert_error (create {VFAC4}.make (system.current_class, Current))
+				create {VFAC4} vfac.make (system.current_class, Current)
 			elseif argument_count > 0 then
 				assigner_arguments := assigner.arguments
 				query_arguments := arguments
@@ -1886,13 +1935,23 @@ end
 					assigner_arguments.after
 				loop
 					if not assigner_arguments.item.same_as (query_arguments.item) then
-						error_handler.insert_error (create {VFAC5}.make (system.current_class, Current))
+						create {VFAC5} vfac.make (system.current_class, Current)
 						assigner_arguments.finish
 						query_arguments.finish
 					end
 					assigner_arguments.forth
 					query_arguments.forth
 				end
+			end
+			if vfac /= Void then
+				if assigner /= Void then
+					if system.current_class.class_id = assigner.written_in then
+						vfac.set_assigner (assigner.api_feature (assigner.written_in))
+					elseif assigner.written_class.has_feature_table then
+						vfac.set_assigner (assigner.written_class.feature_with_rout_id (assigner.rout_id_set.first))
+					end
+				end
+				error_handler.insert_error (vfac)
 			end
 		end
 

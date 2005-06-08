@@ -143,7 +143,7 @@ feature -- Access
 		do
 			Result := implementation.pixmap
 		end
-		
+
 feature -- Status setting
 
 	hide is
@@ -181,6 +181,30 @@ feature -- Status setting
 			parent_virtual_y_position_unchanged: old parent.virtual_y_position = parent.virtual_y_position
 			to_implement_assertion ("old_is_visible_implies_horizontal_position_not_changed")
 			column_visible: virtual_x_position >= parent.virtual_x_position and virtual_x_position + width <= parent.virtual_x_position + (parent.viewable_width).max (width)
+		end
+
+	required_width_of_item_span (start_row, end_row: INTEGER): INTEGER is
+			-- Result is greatest `required_width' of all items from
+			-- row index `start_row', `end_row'.
+		require
+			not_destroyed: not is_destroyed
+			parented: parent /= Void
+		do
+			Result := implementation.required_width_of_item_span (start_row, end_row)
+		ensure
+			result_non_negative: Result >= 0
+		end
+
+	resize_to_content is
+			-- Resize `Current' to greatest `required_width' of all items contained.
+		require
+			not_destroyed: not is_destroyed
+			parented: parent /= Void
+			shown: is_displayed
+		do
+			set_width (required_width_of_item_span (1, parent.row_count))
+		ensure
+			width_set: width = required_width_of_item_span (1, parent.row_count)
 		end
 
 feature -- Status report

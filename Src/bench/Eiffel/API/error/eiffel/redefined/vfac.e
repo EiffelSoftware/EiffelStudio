@@ -43,7 +43,10 @@ feature -- Properties
 
 	a_feature: E_FEATURE
 			-- Feature implemented in the class of id `class_id'
-			-- with assigner mark `assigner_command'
+			-- with assigner mark
+
+	assigner: E_FEATURE
+			-- Assigner feature
 
 	code: STRING is "VFAC"
 			-- Error code
@@ -58,6 +61,16 @@ feature -- Status report
 			valid_a_feature: Result implies a_feature /= Void
 		end
 
+feature -- Modification
+
+	set_assigner (a: like assigner) is
+			-- Set version of an assigner associated with `a_feature'.
+		do
+			assigner := a
+		ensure
+			assigner_set: assigner = a
+		end
+
 feature -- Output
 
 	build_explain (st: STRUCTURED_TEXT) is
@@ -70,7 +83,16 @@ feature -- Output
 			a_feature.written_class.append_name (st)
 			st.add_new_line
 			st.add_string ("Assigner mark: ")
-			st.add_feature_name (a_feature.assigner_name, a_feature.written_class)
+			if assigner = Void then
+				st.add_feature_name (a_feature.assigner_name, a_feature.written_class)
+			else
+				st.add_feature (assigner, a_feature.assigner_name)
+				st.add_new_line
+				st.add_string ("Assigner feature: ")
+				assigner.append_signature (st)
+				st.add_string (" Version from: ")
+				assigner.written_class.append_name (st)
+			end
 			st.add_new_line
 		end
 

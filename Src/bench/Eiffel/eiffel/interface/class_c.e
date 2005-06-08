@@ -3924,19 +3924,6 @@ feature -- Access
 			end
 		end
 
-	feature_with_body_index (bid: INTEGER): E_FEATURE is
-			-- Feature whose body id `bid'.
-		require
-			has_feature_table: has_feature_table
-		local
-			feat: FEATURE_I
-		do
-			feat := feature_table.feature_of_body_index (bid)
-			if feat /= Void then
-				Result := feat.api_feature (class_id)
-			end
-		end
-
 	feature_with_rout_id (rout_id: INTEGER): E_FEATURE is
 			-- Feature whose routine id `rout_id'.
 		require
@@ -3948,6 +3935,20 @@ feature -- Access
 			feat := feature_table.feature_of_rout_id (rout_id)
 			if feat /= Void then
 				Result := feat.api_feature (class_id)
+			end
+		end
+
+	feature_with_feature_id (a_feature_id: INTEGER): E_FEATURE is
+			-- Feature whose feature id `a_feature_id.
+		require
+			feature_id_non_negative: a_feature_id >= 0
+			has_feature_table: has_feature_table
+		local
+			l_feat: FEATURE_I
+		do
+			l_feat := feature_table.feature_of_feature_id (a_feature_id)
+			if l_feat /= Void then
+				Result := l_feat.api_feature (class_id)
 			end
 		end
 

@@ -1,10 +1,12 @@
 indexing
-	description:
-		" WEL Combo Box Ex. A more powerfull combo-box%
-		% that handles bitmaps."
-	note: "To use this control you need to create a%
-		% WEL_INIT_COMMON_CONTROLS with the flag%
-		% Icc_userex_classes in your application class."
+	description: "[
+		WEL Combo Box Ex. A more powerfull combo-box
+		that handles bitmaps.
+		
+		Note: To use this control you need to create a
+			WEL_INIT_COMMON_CONTROLS with the flag
+			Icc_userex_classes in your application class.
+		]"
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"

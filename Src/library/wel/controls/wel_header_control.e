@@ -1,12 +1,14 @@
 indexing
-	description: "A header control is a window that is usually positioned%
-					 %above columns of text or numbers. It contains a title for%
-					 %each column, and it can be divided into parts. The user%
-					 %can drag the dividers that separate the parts to set the%
-					 %width of each column."
-	note: "The common controls dll (WEL_COMMON_CONTROLS_DLL) needs to %
-		%be loaded to use this control."
+	description: "[
+		A header control is a window that is usually positioned
+		above columns of text or numbers. It contains a title for
+		each column, and it can be divided into parts. The user
+		can drag the dividers that separate the parts to set the
+		width of each column.
 		
+		Note: The common controls dll (WEL_COMMON_CONTROLS_DLL) needs to
+			be loaded to use this control.
+		]"
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"

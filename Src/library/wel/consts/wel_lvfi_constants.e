@@ -1,9 +1,11 @@
 indexing
-	description	: "Flags defining search in a list view."
+	description	: "[
+		Flags defining search in a list view.
+		Used in WEL_LIST_VIEW_SEARCH_INFO.
+		]"
 	status		: "See notice at end of class."
 	date		: "$Date$"
 	revision	: "$Revision$"
-	note		: "Used in WEL_LIST_VIEW_SEARCH_INFO"
 
 class
 	WEL_LVFI_CONSTANTS

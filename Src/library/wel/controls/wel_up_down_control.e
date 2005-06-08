@@ -1,8 +1,11 @@
 indexing
-	description: "This control is a pair of arrow buttons that the user %
-		%can click to increment or decrement a value."
-	note: "The common controls dll (WEL_COMMON_CONTROLS_DLL) needs to %
-		%be loaded to use this control."
+	description: "[
+		This control is a pair of arrow buttons that the user
+		can click to increment or decrement a value.
+	
+		Note: The common controls dll (WEL_COMMON_CONTROLS_DLL) needs to
+			be loaded to use this control.
+		]"
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"

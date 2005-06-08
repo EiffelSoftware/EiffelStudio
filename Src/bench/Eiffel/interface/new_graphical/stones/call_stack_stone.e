@@ -123,9 +123,19 @@ feature -- Access
 		end
 
 	is_valid: BOOLEAN is
+		local
+			ecs: EIFFEL_CALL_STACK
+			cs: CALL_STACK_ELEMENT
 		do
-			Result := fvalid and then Precursor {OBJECT_STONE} and then
-					Application.status.current_call_stack.count >= level_number
+			Result := fvalid and then Precursor {OBJECT_STONE}
+					and then Application.status.current_call_stack.count >= level_number
+			if Result then
+				ecs := Application.status.current_call_stack
+				if ecs /= Void then
+					cs := ecs.i_th (level_number)
+				end
+				Result := cs /= Void and then cs.is_eiffel_call_stack_element
+			end
 		end
 
 end -- class BREAKABLE_STONE

@@ -2139,15 +2139,11 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 				else
 					i := row_offsets @ (index)
 					rows.go_i_th (index)
-					if index > 1 then					
-						row_indexes_to_visible_indexes.go_i_th (index)
-						visible_indexes_to_row_indexes.go_i_th (index)
+					if index > 1 then
 						visible_count := row_indexes_to_visible_indexes.i_th (index)
 					else
 							-- In this case, the feature has already been called when there are
 							-- no rows in the grid. So, we reset these attributes to the start.
-						row_indexes_to_visible_indexes.start
-						visible_indexes_to_row_indexes.start
 						visible_count := 0
 					end
 				end

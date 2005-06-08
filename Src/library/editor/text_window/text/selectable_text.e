@@ -133,7 +133,7 @@ feature -- Status setting
 			no_selection: not has_selection
 		end
 
-		internal_has_selection: BOOLEAN
+	internal_has_selection: BOOLEAN
 			-- here for debugging
 
 feature -- Selection Changes

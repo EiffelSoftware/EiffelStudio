@@ -46,7 +46,7 @@ feature {PREFERENCES} -- Access
 			Result := "BOOLEAN"
 		end
 
-feature {NONE} -- Implementation
+feature -- Status Setting
 
 	set_value_from_string (a_value: STRING) is
 			-- Parse the string value `a_value' and set `value'.

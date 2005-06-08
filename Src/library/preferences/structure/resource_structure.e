@@ -26,7 +26,7 @@ feature {PREFERENCES} -- Initialization
 		ensure
 			has_implementation: implementation /= Void
 		end
-	
+
 	make_with_location (a_resources: PREFERENCES; a_location: STRING) is
 			-- Access underlying data store at `a_location'.
 		require
@@ -79,9 +79,7 @@ feature {PREFERENCES} -- Resource Management
 		require		
 			resource_not_void: a_resource /= Void
 		do
-			implementation.save_resource (a_resource)
-		ensure
-			resource_saved: has_resource (a_resource.string_type + "_" + a_resource.name)
+			implementation.save_resource (a_resource)		
 		end		
 
 	remove_resource (a_resource: PREFERENCE) is
@@ -89,9 +87,7 @@ feature {PREFERENCES} -- Resource Management
 		require		
 			resource_not_void: a_resource /= Void
 		do
-			implementation.remove_resource (a_resource)
-		ensure
-			resource_saved: not has_resource (a_resource.string_type + "_" + a_resource.name)
+			implementation.remove_resource (a_resource)		
 		end	
 
 feature {PREFERENCES} -- Saving

@@ -11,10 +11,10 @@ deferred class
 feature {NONE} -- Initialization
 
 	make is
-			-- Create a new widget.
+			-- Create			
 		do
-			build_change_item_widget
-		end
+			create change_actions.make
+		end		
 
 	make_with_resource (a_resource: PREFERENCE) is
 			-- Make with values from `a_resource'.
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	change_item_widget: EV_WIDGET
+	change_item_widget: EV_GRID_ITEM
 			-- Widget to change the item.
 
 	caller: PREFERENCE_VIEW
@@ -79,7 +79,8 @@ feature -- Basic operations
 		
 	update_changes is
 			-- Update the changes made in `change_item_widget' to `resource'.
-		deferred
+		do
+			change_actions.call ([resource])
 		end		
 		
 	update_resource is
@@ -89,8 +90,16 @@ feature -- Basic operations
 		
 	reset is
 			-- Reset resource to default value if any
-		deferred				
+		do			
+			if resource.has_default_value then
+				reset
+			end
 		end		
+		
+feature -- Actions
+
+	change_actions: ACTION_SEQUENCE [TUPLE]
+			-- Actions to be performed when `resource' changes, after call to `update_changes'.		
 		
 feature {NONE} -- Implementation
 

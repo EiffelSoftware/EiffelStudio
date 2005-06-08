@@ -10,7 +10,9 @@ inherit
 	PREFERENCE_WIDGET
 		redefine
 			resource, 
-			set_resource
+			set_resource,
+			change_item_widget,
+			update_changes
 		end
 		
 create
@@ -21,22 +23,19 @@ feature -- Status Setting
 	
 	set_resource (new_resource: like resource) is
 			-- Set the resource.
-		local
-			val: EV_COLOR
-			defcol: EV_STOCK_COLORS
 		do
 			Precursor (new_resource)
-			if resource.value /= Void then
-				val := resource.value
-				color_label.set_background_color (val)
-				color_label.parent.set_background_color (val)
-				color_label.set_foreground_color (val)
-			else
-				create defcol
-				color_label.set_text ("Auto")
-				color_label.set_background_color (defcol.Default_background_color)
-				color_label.set_foreground_color (defcol.Default_foreground_color)
-			end
+--			if resource.value /= Void then
+--				val := resource.value
+--				color_label.set_background_color (val)
+--				color_label.parent.set_background_color (val)
+--				color_label.set_foreground_color (val)
+--			else
+--				create defcol
+--				color_label.set_text ("Auto")
+--				color_label.set_background_color (defcol.Default_background_color)
+--				color_label.set_foreground_color (defcol.Default_foreground_color)
+--			end
 		end
 		
 feature -- Access
@@ -51,6 +50,8 @@ feature -- Access
 			-- Actual resource.
 
 	last_selected_value: EV_COLOR
+
+	change_item_widget: EV_GRID_DRAWABLE_ITEM
 
 feature {PREFERENCE_VIEW} -- Commands
 
@@ -76,8 +77,11 @@ feature {NONE} -- Commands
 			color: EV_COLOR
 		do
 			color := color_tool.color
-			color_label.set_background_color (color)
 			last_selected_value := color
+			if last_selected_value /= Void then
+				resource.set_value (last_selected_value)
+			end	
+			Precursor {PREFERENCE_WIDGET}
 		end
 		
 	update_resource is
@@ -88,53 +92,47 @@ feature {NONE} -- Commands
 			end	
 		end		
 
-	reset is
-			-- 
-		do
-			if resource.has_default_value then
-				resource.reset
-			end	
-			color_label.set_background_color (resource.value)
-		end		
-
-
 feature {NONE} -- Implementation
 
 	build_change_item_widget is
 			-- Create and setup `change_item_widget'.
-		local
-			h2: EV_HORIZONTAL_BOX
-			color_frame: EV_FRAME
-			a_frame: EV_FRAME
 		do
-			create color_label
-
-			create change_b.make_with_text_and_action ("Change...", agent change)
-
-			create color_frame
-			color_frame.extend (color_label)
-			
-			create h2
-			h2.set_padding (3)
-			h2.extend (color_frame)
-			h2.extend (change_b)
-			h2.disable_item_expand (change_b)
-
-			create a_frame
-			a_frame.extend (h2)
-			change_item_widget := a_frame
+			create change_item_widget
+			change_item_widget.expose_actions.extend (agent on_color_item_exposed (?))
+			change_item_widget.set_data (resource)			
+			change_item_widget.pointer_double_press_actions.force_extend (agent show_change_item_widget)
 		end
+
+	show_change_item_widget is
+			-- 
+		do
+			change
+			if last_selected_value /= Void then
+				resource.set_value (last_selected_value)
+			end
+		end		
+
+	on_color_item_exposed (area: EV_DRAWABLE) is
+			-- Expose part of color preference value item.
+		do
+			if change_item_widget.row.is_selected then				
+				area.set_foreground_color (change_item_widget.parent.focused_selection_color)
+				area.fill_rectangle (0, 0, change_item_widget.width, change_item_widget.height)
+				area.set_foreground_color ((create {EV_STOCK_COLORS}).white)
+				area.draw_text_top_left (20, 1, resource.string_value)					
+			else
+				area.set_foreground_color ((create {EV_STOCK_COLORS}).white)
+				area.fill_rectangle (0, 0, change_item_widget.width, change_item_widget.height)
+				area.set_foreground_color ((create {EV_STOCK_COLORS}).black)
+				area.draw_text_top_left (20, 1, resource.string_value)					
+			end			
+			area.set_foreground_color ((create {EV_STOCK_COLORS}).black)
+			area.draw_rectangle (1, 1, 12, 12)
+			area.set_foreground_color (resource.value)
+			area.fill_rectangle (2, 2, 10, 10)			
+		end		
 
 	color_tool: EV_COLOR_DIALOG
 			-- Color Palette from which we can select a color.
-
-	color_label: EV_LABEL
-			-- Label to display the selected color.
-
-	reset_b: EV_BUTTON
-			-- Button to set current color to auto.
-
-	change_b: EV_BUTTON
-			-- Button labeled "Change" to popup EV_COLOR_DIALOG.
 
 end -- class COLOR_PREFERENCE_WIDGET

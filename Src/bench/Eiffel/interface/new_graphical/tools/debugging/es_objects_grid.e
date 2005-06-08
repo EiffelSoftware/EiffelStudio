@@ -203,7 +203,7 @@ end
 				end
 			end
 		ensure
-			item_computed: item (c, r) /= Void
+			item_computed: Result /= Void or else item (c, r) /= Void
 		end
 
 feature -- Grid helpers

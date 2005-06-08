@@ -2309,6 +2309,7 @@ feature -- Api creation
 			a_class_id_positive: a_class_id > 0
 		do
 			Result := new_api_feature
+			Result.set_written_feature_id (written_feature_id)
 			Result.set_written_in (written_in)
 			Result.set_associated_class_id (a_class_id)
 			Result.set_body_index (body_index)
@@ -2318,6 +2319,7 @@ feature -- Api creation
 			Result.set_is_infix (is_infix)
 			Result.set_is_prefix (is_prefix)
 			Result.set_rout_id_set (rout_id_set)
+			Result.set_is_il_external (is_il_external)
 		end		
 
 feature {NONE} -- Implementation

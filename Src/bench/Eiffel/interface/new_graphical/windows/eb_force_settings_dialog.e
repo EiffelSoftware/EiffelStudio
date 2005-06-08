@@ -13,6 +13,13 @@ inherit
 			initialize, 
 			is_in_default_state
 		end
+		
+	EV_LAYOUT_CONSTANTS
+		export
+			{NONE} all
+		undefine
+			default_create, copy
+		end
 
 create
 	make
@@ -42,8 +49,7 @@ feature {NONE} -- Initialization
 			l_ev_label_1, l_ev_label_2, l_ev_label_3, l_ev_label_4, l_ev_label_5,
 			l_ev_label_6, l_ev_label_7, l_ev_label_8, l_ev_label_9, l_ev_label_10: EV_LABEL
 			l_ev_frame_1: EV_FRAME
-			l_ev_cell_1,
-			l_ev_cell_2, l_ev_cell_3, l_ev_cell_4: EV_CELL
+			l_ev_cell_2, l_ev_cell_3: EV_CELL
 		do
 			Precursor {EV_DIALOG}
 			
@@ -55,39 +61,47 @@ feature {NONE} -- Initialization
 			create stiffness_label
 			create l_ev_label_1
 			create stiffness_slider
+			stiffness_slider.set_minimum_width (minimum_width_for_sliders)
 			create l_ev_label_2
 			create l_ev_horizontal_box_2
 			create attraction_label
 			create l_ev_label_3
 			create attraction_slider
+			attraction_slider.set_minimum_width (minimum_width_for_sliders)
 			create l_ev_label_4
 			create l_ev_horizontal_box_3
 			create repulsion_label
 			create l_ev_label_5
 			create repulsion_slider
+			repulsion_slider.set_minimum_width (minimum_width_for_sliders)
 			create l_ev_label_6
 			create l_ev_horizontal_box_4
 			create inheritance_label
 			create l_ev_label_7
 			create inheritance_slider
+			inheritance_slider.set_minimum_width (minimum_width_for_sliders)
 			create l_ev_label_8
 			create l_ev_horizontal_box_5
 			create client_label
 			create l_ev_label_9
 			create client_slider
+			client_slider.set_minimum_width (minimum_width_for_sliders)
 			create l_ev_label_10
 			create l_ev_vertical_box_3
-			create l_ev_cell_1
 			create l_ev_horizontal_box_6
 			create l_ev_cell_2
 			create exit_button
 			create l_ev_cell_3
-			create l_ev_cell_4
 			
 				-- Build_widget_structure.
 			extend (l_ev_vertical_box_1)
+			l_ev_vertical_box_1.set_border_width (default_border_size)
+			l_ev_vertical_box_1.set_padding_width (small_padding_size)
 			l_ev_vertical_box_1.extend (l_ev_frame_1)
+			l_ev_frame_1.set_text ("Settings")
 			l_ev_frame_1.extend (l_ev_vertical_box_2)
+			l_ev_vertical_box_2.set_border_width (small_border_size)
+			l_ev_vertical_box_2.set_padding (small_padding_size)
 			l_ev_vertical_box_2.extend (l_ev_horizontal_box_1)
 			l_ev_horizontal_box_1.extend (stiffness_label)
 			l_ev_horizontal_box_1.extend (l_ev_label_1)
@@ -114,12 +128,10 @@ feature {NONE} -- Initialization
 			l_ev_horizontal_box_5.extend (client_slider)
 			l_ev_horizontal_box_5.extend (l_ev_label_10)
 			l_ev_vertical_box_1.extend (l_ev_vertical_box_3)
-			l_ev_vertical_box_3.extend (l_ev_cell_1)
 			l_ev_vertical_box_3.extend (l_ev_horizontal_box_6)
 			l_ev_horizontal_box_6.extend (l_ev_cell_2)
 			l_ev_horizontal_box_6.extend (exit_button)
 			l_ev_horizontal_box_6.extend (l_ev_cell_3)
-			l_ev_vertical_box_3.extend (l_ev_cell_4)
 			
 			l_ev_vertical_box_1.disable_item_expand (l_ev_vertical_box_3)
 			l_ev_vertical_box_2.disable_item_expand (l_ev_horizontal_box_1)
@@ -131,7 +143,7 @@ feature {NONE} -- Initialization
 			l_ev_horizontal_box_1.disable_item_expand (l_ev_label_1)
 			l_ev_horizontal_box_1.disable_item_expand (l_ev_label_2)
 			stiffness_label.set_text ("Stiffness:")
-			stiffness_label.set_minimum_width (125)
+			stiffness_label.set_minimum_width (minimum_width_for_labels)
 			stiffness_label.align_text_left
 			l_ev_label_1.set_text ("0%%")
 			l_ev_label_1.align_text_right
@@ -140,7 +152,7 @@ feature {NONE} -- Initialization
 			l_ev_horizontal_box_2.disable_item_expand (l_ev_label_3)
 			l_ev_horizontal_box_2.disable_item_expand (l_ev_label_4)
 			attraction_label.set_text ("Center attraction:")
-			attraction_label.set_minimum_width (125)
+			attraction_label.set_minimum_width (minimum_width_for_labels)
 			attraction_label.align_text_left
 			l_ev_label_3.set_text ("0%%")
 			l_ev_label_3.align_text_right
@@ -149,7 +161,7 @@ feature {NONE} -- Initialization
 			l_ev_horizontal_box_3.disable_item_expand (l_ev_label_5)
 			l_ev_horizontal_box_3.disable_item_expand (l_ev_label_6)
 			repulsion_label.set_text ("Repulsion:")
-			repulsion_label.set_minimum_width (125)
+			repulsion_label.set_minimum_width (minimum_width_for_labels)
 			repulsion_label.align_text_left
 			l_ev_label_5.set_text ("0%%")
 			l_ev_label_5.align_text_right
@@ -158,7 +170,7 @@ feature {NONE} -- Initialization
 			l_ev_horizontal_box_4.disable_item_expand (l_ev_label_7)
 			l_ev_horizontal_box_4.disable_item_expand (l_ev_label_8)
 			inheritance_label.set_text ("Inheritance stiffness:")
-			inheritance_label.set_minimum_width (125)
+			inheritance_label.set_minimum_width (minimum_width_for_labels)
 			inheritance_label.align_text_left
 			l_ev_label_7.set_text ("0%%")
 			l_ev_label_7.align_text_right
@@ -167,23 +179,16 @@ feature {NONE} -- Initialization
 			l_ev_horizontal_box_5.disable_item_expand (l_ev_label_9)
 			l_ev_horizontal_box_5.disable_item_expand (l_ev_label_10)
 			client_label.set_text ("Client stiffness:")
-			client_label.set_minimum_width (125)
+			client_label.set_minimum_width (minimum_width_for_labels)
 			client_label.align_text_left
 			l_ev_label_9.set_text ("0%%")
 			l_ev_label_9.align_text_right
 			l_ev_label_10.set_text ("100%%")
-			l_ev_vertical_box_3.disable_item_expand (l_ev_cell_1)
 			l_ev_vertical_box_3.disable_item_expand (l_ev_horizontal_box_6)
-			l_ev_vertical_box_3.disable_item_expand (l_ev_cell_4)
-			l_ev_cell_1.set_minimum_height (5)
-			l_ev_horizontal_box_6.set_minimum_height (35)
 			l_ev_horizontal_box_6.disable_item_expand (exit_button)
-			exit_button.set_text ("Exit")
-			exit_button.set_minimum_width (100)
-			l_ev_cell_4.set_minimum_height (5)
-			set_minimum_width (300)
-			set_minimum_height (220)
-			set_title ("Display window")
+			exit_button.set_text ("Close")
+			exit_button.set_minimum_width (default_button_width)
+			set_title ("Physics settings")
 			
 			user_initialization
 		end
@@ -301,5 +306,13 @@ feature {NONE} -- Implementation
 		do
 			client_label.set_text ("Client stiffness (" + a_value.out + "%%)")
 		end
+		
+	minimum_width_for_labels: INTEGER is
+		once
+			Result := (create {EV_FONT}).string_width ("Inheritance stiffness (100%%)") + 30
+		end
+
+	minimum_width_for_sliders: INTEGER is 150
+			-- Default width for sliders.
 		
 end -- class EB_FORCE_SETTINGS_DIALOG

@@ -11,7 +11,8 @@ inherit
 		redefine
 			interface,
 			perform_redraw,
-			initialize
+			initialize,
+			required_width
 		end
 
 create
@@ -48,6 +49,18 @@ feature {EV_GRID_LABEL_ITEM} -- Status Report
 			Result := internal_text_height
 		ensure		
 			result_non_negative: result >= 0
+		end
+		
+	required_width: INTEGER is
+			-- Width in pixels required to fully display contents, based
+			-- on current settings.
+			-- Note that in some descendents such as EV_GRID_DRAWABLE_ITEM, this
+			-- returns 0. For such items, `set_required_width' is available.
+		do
+			Result := interface.left_border + text_width + interface.right_border 
+			if interface.pixmap /= Void then
+				Result := Result + interface.pixmap.width + interface.spacing
+			end
 		end
 
 feature {EV_GRID_LABEL_ITEM} -- Implementation
@@ -92,6 +105,7 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 				end
 				internal_text_width := dimensions.integer_item (1) - dimensions.integer_item (3) + dimensions.integer_item (4)
 				internal_text_height := dimensions.integer_item (2)
+				internal_text_width := internal_text_width + dimensions.integer_item (3)
 			end
 			must_recompute_text_dimensions := False
 		ensure	
@@ -253,8 +267,10 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 				drawable.set_font (internal_default_font)
 			end
 
-			if interface.text /= Void and space_remaining_for_text > 0 then
+			if interface.text /= Void and space_remaining_for_text > 0 and space_remaining_for_text < internal_text_width then
 				drawable.draw_ellipsed_text_top_left (text_x + an_indent, text_y, interface.text, space_remaining_for_text)
+			else
+				drawable.draw_text_top_left (text_x + an_indent, text_y, interface.text)
 			end
 			drawable.remove_clip_area
 			drawable.set_copy_mode

@@ -69,7 +69,7 @@ feature -- Filling
 	set_routine (a_chain: ICOR_DEBUG_CHAIN; 
 			a_frame: ICOR_DEBUG_FRAME; a_il_frame: ICOR_DEBUG_IL_FRAME;
 			melted: BOOLEAN; a_address: STRING; 
-			a_dyn_type: CLASS_TYPE; a_org_class: CLASS_C; 
+			a_dyn_type: CLASS_TYPE;
 			a_feature: FEATURE_I; 
 			a_il_offset: INTEGER; a_line_number: INTEGER) is
 		do
@@ -89,11 +89,7 @@ feature -- Filling
 				dynamic_class := dynamic_type.associated_class
 				class_name := dynamic_class.name_in_upper				
 			end
-			if a_org_class /= Void then
-				origin_class := a_org_class
-			else
-				origin_class := dynamic_class
-			end
+			written_class := a_feature.written_class
 			if a_line_number = 0 then
 				break_index := 1
 			else

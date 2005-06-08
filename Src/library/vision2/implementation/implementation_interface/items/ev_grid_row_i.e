@@ -446,7 +446,7 @@ feature -- Status setting
 			is_expandable: is_expandable
 		do
 			if not is_expanded then
-
+				is_expanded := True
 				if subrow_count > 0 then
 						-- If `Current' has children then compute and redraw.
 						-- If `is_ensured_expandable' then it is possible that there
@@ -474,8 +474,8 @@ feature -- Status setting
 
 				if is_ensured_expandable then
 					is_ensured_expandable := False
+					is_expanded := subrow_count > 0
 				end
-				is_expanded := subrow_count > 0
 				parent_i.redraw_from_row_to_end (Current)
 			end
 		ensure

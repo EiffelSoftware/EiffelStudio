@@ -51,8 +51,10 @@ feature {NONE} -- Disposal
 			debug ("COM_OBJECT")
 				dispose_debug_output (1, item, $Current, 0)
 			end
-			l_nb_ref := {CLI_COM}.release (item)
-			item := default_pointer
+			if item /= Default_pointer then
+				l_nb_ref := {CLI_COM}.release (item)
+				item := default_pointer
+			end
 			debug ("COM_OBJECT")
 				dispose_debug_output (2, item, $Current, l_nb_ref)
 			end
@@ -87,7 +89,4 @@ feature {NONE} -- COM Ref management
 			"AddRef"
 		end
 
-invariant
-	item_not_null: item /= default_pointer
-	
 end -- class COM_OBJECT

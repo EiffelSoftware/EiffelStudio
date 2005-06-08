@@ -723,7 +723,7 @@ feature {NONE} -- Implementation
 	build_stack_info (a_target_container: EV_TREE) is
 			-- Create the tree that contains call stack info
 		do
-			if Application.call_stack_is_empty then
+			if Application.current_call_stack_is_empty then
 				build_exception_info (a_target_container)
 			else
 				build_exception_info (a_target_container)
@@ -736,7 +736,7 @@ feature {NONE} -- Implementation
 			item: EV_TREE_ITEM
 			cse: EIFFEL_CALL_STACK_ELEMENT
 		do
-			if not Application.call_stack_is_empty then
+			if not Application.current_call_stack_is_empty then
 				cse ?= current_stack_element
 				if cse /= Void then
 					create item.make_with_text ("{"	+ cse.dynamic_class.name_in_upper + "}." + cse.routine_name )
@@ -922,7 +922,7 @@ feature {NONE} -- Implementation
 			end
 
 			if Application.is_dotnet then
-				if not Application.call_stack_is_empty then
+				if not Application.current_call_stack_is_empty then
 					value := application.imp_dotnet.status.current_call_stack_element_dotnet.current_object
 					check
 						value_not_void: value /= Void

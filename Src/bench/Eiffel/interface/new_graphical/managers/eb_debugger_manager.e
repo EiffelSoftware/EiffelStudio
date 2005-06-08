@@ -758,9 +758,9 @@ feature -- Debugging events
 				object_tool.disable_refresh
 			end
 			evaluator_tool.disable_refresh
-			if not Application.call_stack_is_empty then
-				create st.make (1)
-				if st.is_valid then
+			if not Application.current_call_stack_is_empty then
+				st := first_valid_call_stack_stone
+				if st /= Void then
 					launch_stone (st)
 				end
 			end
@@ -911,6 +911,32 @@ feature -- Debugging events
 				out_cmd.disable_sensitive
 				set_critical_stack_depth_cmd.enable_sensitive
 			end
+		end
+		
+	first_valid_call_stack_stone: CALL_STACK_STONE is
+			-- Stone of the first call stack valid for EiffelStudio.
+		require
+			Stopped: application.is_stopped
+			Call_stack_non_empty: not Application.current_call_stack_is_empty
+		local
+			m, i: INTEGER
+			st: CALL_STACK_STONE
+		do
+			from
+				m := Application.number_of_stack_elements
+				i := 1
+			until
+				Result /= Void or i > m
+			loop
+				create st.make (i)
+				if st.is_valid then
+					Result := st
+				else
+					i := i + 1
+				end
+			end
+		ensure
+			result_is_valid: Result /= Void implies Result.is_valid
 		end
 
 feature {EB_DEVELOPMENT_WINDOW} -- Implementation

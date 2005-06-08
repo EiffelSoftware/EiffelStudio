@@ -274,12 +274,17 @@ feature -- Access
 		require
 			is_running: is_running
 			is_stopped: is_stopped
+		local
+			ecs: EIFFEL_CALL_STACK
 		do	
-			Result := status.current_call_stack.count
+			ecs := status.current_call_stack
+			if ecs /= Void then
+				Result := ecs.count
+			end
 		end
 
-	call_stack_is_empty: BOOLEAN is
-			-- Is Classstack empty ?
+	current_call_stack_is_empty: BOOLEAN is
+			-- Is Class stack empty ?
 		do
 			Result := number_of_stack_elements = 0
 		end

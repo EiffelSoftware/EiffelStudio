@@ -75,7 +75,10 @@ feature -- Properties
 		end
 
 	feature_id: INTEGER;
-			-- Unique identification for a feature
+			-- Unique identification for a feature in `associated_class_id'.
+
+	written_feature_id: INTEGER
+			-- Unique identification for a feature in `written_in'.
 
 	written_in: INTEGER
 			-- Class id where feature is written in
@@ -158,13 +161,9 @@ feature -- Properties
 			-- Do nothing
 		end;
 		
-	is_il_external: BOOLEAN is
+	is_il_external: BOOLEAN
 			-- Is current feature an IL external one?
-		do
-			-- Do nothing
-		end
 		
-
 	is_obsolete: BOOLEAN is
 			-- Is Current feature obsolete?
 		do
@@ -380,6 +379,7 @@ feature -- Access
 		local
 			class_ast: CLASS_AS;
 			bid: INTEGER
+			l_feature_names: EIFFEL_LIST [FEATURE_NAME]
 		do
 			bid := body_index;
 			if bid /= 0 then
@@ -396,8 +396,11 @@ feature -- Access
 			else
 					-- In this case we must certainly be handling a dotnet feature and we need
 					-- to create an empty AST otherwise we cannot pick and drop it.
-				create Result.initialize (Void, Void, Void, 0)
-			end			
+				create l_feature_names.make (1)
+				l_feature_names.extend (create {FEAT_NAME_ID_AS}.initialize (
+					create {ID_AS}.initialize (name), is_frozen))
+				create Result.initialize (l_feature_names, create {BODY_AS}.initialize (Void, Void, Void, Void), Void, 0)
+			end
 		end;
 
 	hash_code: INTEGER is
@@ -783,5 +786,23 @@ feature {FEATURE_I} -- Setting
 		do
 			rout_id_set := set;
 		end;
+
+	set_is_il_external (v: like is_il_external) is
+			-- Set `is_il_external' to `v'.
+		do
+			is_il_external := v
+		ensure
+			is_il_external_set: is_il_external = v
+		end
+		
+	set_written_feature_id (v: like written_feature_id) is
+			-- Set `written_feature_id' with `v'.
+		require
+			v_non_negative: v >= 0
+		do
+			written_feature_id := v
+		ensure	
+			written_feature_id_set: written_feature_id = v
+		end
 
 end -- class E_FEATURE

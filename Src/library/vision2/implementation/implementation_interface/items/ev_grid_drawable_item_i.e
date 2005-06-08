@@ -13,11 +13,35 @@ inherit
 	EV_GRID_ITEM_I
 		redefine
 			interface,
-			perform_redraw
+			perform_redraw,
+			required_width
 		end
 
 create
 	make
+
+feature -- Access
+
+	required_width: INTEGER is
+			-- Width in pixels required to fully display contents, based
+			-- on current settings.
+			-- Note that in some descendents such as EV_GRID_DRAWABLE_ITEM, this
+			-- returns 0. For such items, `set_required_width' is available.
+		do
+			Result := internal_required_width
+		end
+		
+feature -- Status Setting
+
+	set_required_width (a_required_width: INTEGER) is
+			-- Assign `a_required_width' to `required_width'.
+		require
+			a_required_width_non_negative: a_required_width >= 0
+		do
+			internal_required_width := a_required_width
+		ensure
+			required_width_set: required_width = a_required_width
+		end
 
 feature {NONE} -- Implementation
 
@@ -40,6 +64,9 @@ feature {NONE} -- Implementation
 				-- Now blit the pixmap to `drawable'.
 			drawable.draw_sub_pixmap (an_indent, 0, pixmap, create {EV_RECTANGLE}.make (0, 0, a_width, a_height))
 		end
+		
+	internal_required_width: INTEGER
+		-- Internal representation of `required_width'.
 		
 feature {EV_GRID_DRAWABLE_ITEM} -- Implementation
 

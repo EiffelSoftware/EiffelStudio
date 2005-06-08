@@ -445,7 +445,6 @@ feature -- Restricted properties
 
 invariant
 
-	icd_referenced_value_not_void : icd_referenced_value /= Void
-	icd_prepared_value_not_void : icd_prepared_value /= Void
+	icd_referenced_and_prepared_value_not_void : icd_referenced_value = Void implies icd_prepared_value = Void
 	
 end -- class EIFNET_DEBUG_VALUE_INFO

@@ -109,7 +109,7 @@ feature -- Output
 		do
 			if f /= Void then
 				l_class := f.associated_class.ast
-				if l_class.generics.valid_index (position) then
+				if l_class.generics /= Void and then l_class.generics.valid_index (position) then
 					s := l_class.generics.i_th (position).name.as_upper
 					st.add (create {GENERIC_TEXT}.make (s))
 				else

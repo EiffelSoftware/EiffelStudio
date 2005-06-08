@@ -1,10 +1,13 @@
 indexing
 
-	description: "Error for features with different alias names.";
+	description: "[
+		Error for features that conflict for some reason
+		(e.g., have the same name but different alias names).
+	]";
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class DIFFERENT_ALIAS_ERROR
+deferred class FEATURE_CONFLICT_ERROR
 
 inherit
 	

@@ -8,7 +8,7 @@ class VE06
 	obsolete "Not defined in the standard"
 
 inherit
-	DIFFERENT_ALIAS_ERROR
+	FEATURE_CONFLICT_ERROR
 
 create {COMPILER_EXPORTER}
 

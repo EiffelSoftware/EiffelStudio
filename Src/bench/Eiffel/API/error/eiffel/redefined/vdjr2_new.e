@@ -7,7 +7,7 @@ indexing
 class VDJR2_NEW
 
 inherit
-	DIFFERENT_ALIAS_ERROR
+	FEATURE_CONFLICT_ERROR
 		redefine
 			help_file_name,
 			subcode

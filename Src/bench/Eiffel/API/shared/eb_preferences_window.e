@@ -14,9 +14,8 @@ inherit
 			make,
 			hide,
 			on_close,
-			on_item_selected,
 			add_resource_change_item,
-			on_set_resource_default
+			set_resource_to_default
 		end
 
 	EB_SHARED_PIXMAPS
@@ -54,45 +53,20 @@ feature -- Access
 			-- Add the correct resource change widget item at `row_index' of `grid'
 		local
 			l_id_font: IDENTIFIED_FONT_PREFERENCE			
-			l_font_item: EV_GRID_LABEL_ITEM
+			l_font_widget: IDENTIFIED_FONT_PREFERENCE_WIDGET
 		do
 			l_id_font ?= l_resource
 			if l_id_font /= Void then
-				create l_font_item
-				l_font_item.set_text (l_id_font.string_value)
-				l_font_item.set_font (l_id_font.value.font)
-				grid.set_item (4, row_index, l_font_item)
-				l_font_item.pointer_button_press_actions.force_extend (agent on_item_selected (l_font_item, l_resource))
+				create l_font_widget.make_with_resource (l_resource)
+				l_font_widget.set_caller (Current)
+				l_font_widget.change_actions.extend (agent on_preference_changed (l_resource))
+				grid.set_item (4, row_index, l_font_widget.change_item_widget)
 			else
 				Precursor {PREFERENCES_GRID_WINDOW} (l_resource, row_index)
 			end
 		end
 
-	on_item_selected (a_item: EV_GRID_ITEM; a_pref: PREFERENCE) is
-			-- (from PREFERENCES_GRID_WINDOW)
-			-- (export status {NONE})
-		local
-			font_pref: IDENTIFIED_FONT_PREFERENCE
-			l_font_widget: IDENTIFIED_FONT_PREFERENCE_WIDGET
-			l_label_item: EV_GRID_LABEL_ITEM
-		do
-			font_pref ?= a_pref
-			if font_pref /= Void then
-				l_label_item ?= a_item
-				l_font_widget ?= resource_widget (font_pref)
-				l_font_widget.set_caller (Current)
-				l_font_widget.change
-				if l_font_widget.last_selected_value /= Void then
-					font_pref.set_value (l_font_widget.last_selected_value)
-				end
-				l_label_item.set_font (font_pref.value.font)
-				on_item_value_changed (a_item, a_pref)
-			else
-				Precursor {PREFERENCES_GRID_WINDOW} (a_item, a_pref)
-			end
-		end
-
-	on_set_resource_default (a_item: EV_GRID_LABEL_ITEM; a_pref: PREFERENCE) is
+	set_resource_to_default (a_item: EV_GRID_LABEL_ITEM; a_pref: PREFERENCE) is
 			-- Set the resource value to the original default.
 		local
 			l_label_item: EV_GRID_LABEL_ITEM

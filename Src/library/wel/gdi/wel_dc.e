@@ -1615,6 +1615,7 @@ feature -- Basic operations
 			size: INTEGER
 			rgb_quad: WEL_RGB_QUAD
 			rf: RAW_FILE
+			l_ptr: MANAGED_POINTER
 		do
 			create rgb_quad.make
 			create bmi.make_by_dc (Current, a_bitmap, Dib_rgb_colors)
@@ -1644,16 +1645,19 @@ feature -- Basic operations
 			create rf.make_create_read_write (file)
 
 			-- Write the file header
-			rf.put_data (bfh.item, bfh.structure_size)
+			create l_ptr.share_from_pointer (bfh.item, bfh.structure_size)
+			rf.put_managed_pointer (l_ptr, 0, bfh.structure_size)
 
 			create bits.make (di_bits (a_bitmap, 0, bmi2.header.height, bmi2,
 				Dib_rgb_colors))
 
 			-- Write the bitmap info header
-			rf.put_data (bmi2.item, size)
+			l_ptr.set_from_pointer (bmi2.item, size)
+			rf.put_managed_pointer (l_ptr, 0, size)
 
 			-- Write the DIB and close the file
-			rf.put_data (bits.item, bmi2.header.size_image)
+			l_ptr.set_from_pointer (bits.item, bmi2.header.size_image)
+			rf.put_managed_pointer (l_ptr, 0, bmi2.header.size_image)
 			rf.close
 		end
 

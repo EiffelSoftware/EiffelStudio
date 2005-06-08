@@ -446,23 +446,22 @@ feature -- Status setting
 			is_expandable: is_expandable
 		do
 			if not is_expanded then
-				is_expanded := True
-				
+
 				if subrow_count > 0 then
 						-- If `Current' has children then compute and redraw.
 						-- If `is_ensured_expandable' then it is possible that there
 						-- are no children, so do not perform the calculations.
-	
+
 					update_parent_expanded_node_counts_recursively (contained_expanded_items_recursive)
 						-- Update the expanded node counts for `Current' and all parent nodes.
-				
+
 					if displayed_in_grid_tree then
 							-- Only recompute the row offsets if `Current' is visible
 							-- otherwise the row offsets are already correct.
 						parent_i.set_vertical_computation_required (index)
 					end
 				end
-			
+
 				if parent_i.row_expand_actions_internal /= Void then
 						-- The expand actions are fired after we set vertical computation
 						-- to ensure that if you query a dimension from within the actions,
@@ -472,12 +471,11 @@ feature -- Status setting
 				if expand_actions_internal /= Void then
 					expand_actions_internal.call (Void)
 				end
-				
+
 				if is_ensured_expandable then
 					is_ensured_expandable := False
-					is_expanded := subrow_count > 0
 				end
-				
+				is_expanded := subrow_count > 0
 				parent_i.redraw_from_row_to_end (Current)
 			end
 		ensure

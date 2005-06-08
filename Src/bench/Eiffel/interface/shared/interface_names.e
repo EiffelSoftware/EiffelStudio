@@ -371,6 +371,7 @@ feature -- Menu mnenomics
 	m_Create_new_feature: STRING is		"New fea&ture..."
 	m_Showhide_signature: STRING is		"Show/hide signature"
 	m_Showhide_alias: STRING is		"Show/hide alias name"
+	m_Showhide_assigner: STRING is		"Show/hide assigner command name"
 	m_Debug: STRING is					"&Debug"
 	m_Disable_this_bkpt: STRING is		"&Disable this breakpoint"
 	m_Display_error_help: STRING is		"Compilation error &wizard..."

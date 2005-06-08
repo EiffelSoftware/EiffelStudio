@@ -266,6 +266,45 @@ feature -- Status setting
 			column_visible: virtual_x_position >= parent.virtual_x_position and virtual_x_position + width <= parent.virtual_x_position + (parent.viewable_width).max (width)
 		end
 
+	required_width_of_item_span (start_row, end_row: INTEGER): INTEGER is
+			-- Result is greatest `required_width' of all items from
+			-- row index `start_row', `end_row'.
+		require
+			parented: parent /= Void
+		local
+			item_counter: INTEGER
+			parent_row_count: INTEGER
+			row_data: SPECIAL [EV_GRID_ITEM_I]
+			internal_row_data: EV_GRID_ARRAYED_LIST [SPECIAL [EV_GRID_ITEM_I]]
+			grid_item_i: EV_GRID_ITEM_I
+			desired_width: INTEGER
+			row: EV_GRID_ROW_I
+		do
+			from
+				item_counter := start_row
+				parent_row_count := parent_i.row_count
+				internal_row_data := parent_i.internal_row_data
+			until
+				item_counter > end_row
+			loop
+				row_data := internal_row_data @ item_counter
+
+					-- `row_data' may not have a count less than
+					-- `column_count' if items are Void in this row.
+				if physical_index < row_data.count then
+					grid_item_i := row_data @ (physical_index)
+					if grid_item_i /= Void then
+						Result := Result.max (grid_item_i.interface.required_width + parent_i.item_indent (grid_item_i))
+					end
+					row := parent_i.rows @ item_counter
+					if row.subrow_count > 0 and not row.is_expanded then
+						item_counter := item_counter + row.subrow_count_recursive
+					end
+				end
+				item_counter := item_counter + 1
+			end
+		end
+
 feature -- Status report
 
 	index: INTEGER

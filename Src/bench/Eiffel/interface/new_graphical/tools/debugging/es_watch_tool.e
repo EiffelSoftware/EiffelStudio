@@ -47,7 +47,7 @@ inherit
 
 	DEBUGGING_UPDATE_ON_IDLE
 		redefine
-			real_update
+			real_update, update
 		end
 
 create 
@@ -308,16 +308,22 @@ feature -- Status setting
 			-- Remove obsolete expressions from `Current'.
 		local
 			l_expr: EB_EXPRESSION
+			witem: like watched_item_from
 		do
+			watches_grid.remove_all_rows
 			from
 				watched_items.start
 			until
 				watched_items.after
 			loop
-				l_expr := watched_items.item.expression
+				witem := watched_items.item
+
+				l_expr := witem.expression
 				if not l_expr.is_still_valid then
 					watched_items.remove
 				else
+					l_expr.set_unevaluated
+					add_watched_item_to_grid (witem, watches_grid)
 					watched_items.forth
 				end
 			end
@@ -784,6 +790,20 @@ feature -- Access
 			end
 			a_item.refresh
 		end
+		
+feature -- Update
+
+	update is
+			-- Display current execution status.
+		local
+			l_status: APPLICATION_STATUS
+		do
+			cancel_process_real_update_on_idle
+			l_status := Application.status
+			if l_status /= Void then
+				process_real_update_on_idle (l_status.is_stopped)
+			end
+		end
 
 feature {NONE} -- Implementation
 
@@ -856,9 +876,20 @@ feature {NONE} -- Implementation
 			a_grid /= Void
 		do
 			create Result.make_with_expression (expr, Current)
-			Result.attach_to_row (a_grid.extended_new_row)
-			ensure_last_row_is_new_expression_row			
+			add_watched_item_to_grid (Result, a_grid)
 		end
+		
+	add_watched_item_to_grid (witem: like watched_item_from; a_grid: ES_OBJECTS_GRID) is
+		require
+			witem /= Void
+			a_grid /= Void
+		do
+			if witem.is_attached_to_row then
+				witem.unattach
+			end
+			witem.attach_to_row (a_grid.extended_new_row)
+			ensure_last_row_is_new_expression_row			
+		end		
 
 	show_text_in_popup (txt: STRING; x, y, button: INTEGER; gi: EV_GRID_ITEM) is
 			--

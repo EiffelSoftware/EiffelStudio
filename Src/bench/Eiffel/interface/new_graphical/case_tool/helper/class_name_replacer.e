@@ -1,8 +1,8 @@
 indexing
-	description:
-		"Facility for changing a class name globally."
-	note:
-		"Will not replace class names in strings and comments."
+	description: "[
+		Facility for changing a class name globally.
+		Note: Will not replace class names in strings and comments.
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
 

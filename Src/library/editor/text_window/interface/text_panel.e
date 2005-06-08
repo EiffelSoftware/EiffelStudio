@@ -560,6 +560,17 @@ feature {MARGIN_WIDGET} -- Private properties of the text window
 		do
 			Result := viewable_height // line_height
 		end
+		
+	number_of_lines_displayed_from_text: INTEGER is
+			-- Number of lines currently displayed on the screen, excluding the white space visible below the actual text.	
+		local
+			l_num: INTEGER
+		do
+			Result := number_of_lines_displayed
+			if (first_line_displayed + Result) > text_displayed.number_of_lines then
+				Result := text_displayed.number_of_lines - first_line_displayed + 1
+			end			
+		end
 
 	editor_width: INTEGER
 			-- Width of the text. (i.e. minimum width of the panel
@@ -569,13 +580,13 @@ feature {MARGIN_WIDGET} -- Private properties of the text window
 			-- Number of the last possible line that can be displayed
 			-- at the top of the editor window.
 		do
-			Result := (text_displayed.number_of_lines - number_of_lines_displayed + 1).max (1)
+			Result := (text_displayed.number_of_lines - number_of_lines_displayed_from_text + 1).max (1)
 		end
 
 	show_vertical_scrollbar: BOOLEAN is
 			-- Is it necessary to show the vertical scroll bar ?
 		do
-			Result := text_displayed /= Void and then ((number_of_lines_displayed < text_displayed.number_of_lines) or first_line_displayed > 1)
+			Result := text_displayed /= Void and then (number_of_lines_displayed_from_text < text_displayed.number_of_lines) 
 		end
 
 	horizontal_scrollbar_needs_updating: BOOLEAN
@@ -661,6 +672,8 @@ feature {NONE} -- Scroll bars Management
 				end
 			elseif horizontal_scrollbar_needs_updating and then not platform_is_windows then
 				horizontal_scrollbar_needs_updating := False
+			else
+				horizontal_scrollbar_needs_updating := True
 			end
 			update_scroll_cell
 		end
@@ -671,46 +684,49 @@ feature {NONE} -- Scroll bars Management
 		local
 			nol: INTEGER
 		do
-			if show_vertical_scrollbar then
-				nol := text_displayed.number_of_lines
-				vertical_scrollbar.value_range.resize_exactly (1, maximum_top_line_index)
-				if first_line_displayed > maximum_top_line_index then
-					vertical_scrollbar.set_value (maximum_top_line_index)
-				else
-					vertical_scrollbar.set_value (first_line_displayed)
-				end
-				vertical_scrollbar.set_leap (number_of_lines_displayed.max (1))
-				if scroll_vbox.is_show_requested then
-					if not platform_is_windows then
-						vertical_scrollbar_needs_updating := False
+			if not in_resize then				
+				in_resize := True	
+
+				if show_vertical_scrollbar then
+					nol := text_displayed.number_of_lines
+					vertical_scrollbar.value_range.resize_exactly (1, maximum_top_line_index)
+					if first_line_displayed > maximum_top_line_index then
+						vertical_scrollbar.set_value (maximum_top_line_index)
+					else
+						vertical_scrollbar.set_value (first_line_displayed)
 					end
-				else
-					scroll_vbox.show
+					vertical_scrollbar.set_leap (number_of_lines_displayed.max (1))
+					if scroll_vbox.is_show_requested then
+						if not platform_is_windows then
+							vertical_scrollbar_needs_updating := False
+						end
+					else
+						scroll_vbox.show
+						vertical_scrollbar_needs_updating := True
+						if not ev_application.idle_actions.has (update_scroll_agent) then
+							ev_application.idle_actions.extend (update_scroll_agent)
+						end
+					end
+				elseif scroll_vbox.is_show_requested then
+					scroll_vbox.hide
 					vertical_scrollbar_needs_updating := True
 					if not ev_application.idle_actions.has (update_scroll_agent) then
 						ev_application.idle_actions.extend (update_scroll_agent)
 					end
+				elseif vertical_scrollbar_needs_updating and then not platform_is_windows then
+					vertical_scrollbar_needs_updating := False
+				else
+					vertical_scrollbar_needs_updating := True
 				end
-			elseif scroll_vbox.is_show_requested then
-				scroll_vbox.hide
-				vertical_scrollbar_needs_updating := True
-				if not ev_application.idle_actions.has (update_scroll_agent) then
-					ev_application.idle_actions.extend (update_scroll_agent)
-				end
-			elseif vertical_scrollbar_needs_updating and then not platform_is_windows then
-				vertical_scrollbar_needs_updating := False
+				update_scroll_cell
+				in_resize := False
 			end
-			update_scroll_cell
 		end
 
 	update_scroll_cell is
 			-- Hide or show scroll bar depending on what is appropriate.
 		do
-			if
-				vertical_scrollbar.is_show_requested 
-				and then
-				horizontal_scrollbar.is_show_requested
-			then
+			if vertical_scrollbar.is_show_requested and then horizontal_scrollbar.is_show_requested then
 				scroll_cell.show
 			else
 				scroll_cell.hide
@@ -894,7 +910,6 @@ feature {NONE} -- Display functions
 				end
 				update_vertical_scrollbar
 				update_horizontal_scrollbar
-				update_scrollbars_display
 			end
 		end
 
@@ -918,9 +933,7 @@ feature {NONE} -- Display functions
 
 			check 
 				not_too_many_lines: (bottom = top) implies first_line_to_draw = last_line_to_draw
-				lines_valid: first_line_to_draw <= last_line_to_draw or last_line_to_draw = text_displayed.number_of_lines --or text_displayed.number_of_lines = 0
-				--first_line_valid: first_line_to_draw >= 1
-				--last_line_valid: last_line_to_draw >= 1
+				lines_valid: first_line_to_draw <= last_line_to_draw or last_line_to_draw = text_displayed.number_of_lines
 			end
 			
 			if text_displayed.number_of_lines > 0 then

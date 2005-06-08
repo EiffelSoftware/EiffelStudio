@@ -168,10 +168,9 @@ feature {NONE} -- Handle mouse clicks
 					process_left_click (x_pos.max (1), y_pos - editor_viewport.y_offset, a_screen_x, a_screen_y)
 					if shifted_key then
 							-- Look if we have to perform a deselection.
-						if text_displayed.cursor.is_equal (text_displayed.selection_cursor) then
-								-- The selection has to be forgotten.
-							text_displayed.disable_selection
-							invalidate_block (text_displayed.selection_start.y_in_lines, text_displayed.selection_end.y_in_lines, True)
+						if text_displayed.cursor.is_equal (text_displayed.selection_cursor) then -- then or has_selection then
+								-- The selection has to be forgotten.						
+							disable_selection
 						else
 							invalidate_block (old_l_number.min (l_number), l_number.max (old_l_number), True)
 						end
@@ -195,12 +194,8 @@ feature {NONE} -- Handle mouse clicks
 			old_l_number := l_cursor.y_in_lines
 			mouse_left_button_down := True
 			if not shifted_key then --and then text_displayed.has_selection then
-					-- The selection has to be forgotten.
-				if text_displayed.has_selection then
-					text_displayed.disable_selection
-					invalidate_block (text_displayed.selection_start.y_in_lines, text_displayed.selection_end.y_in_lines, True)
-				end
-				text_displayed.disable_selection
+					-- The selection has to be forgotten.				
+				disable_selection
 			end
 
 			if not editor_drawing_area.has_capture then
@@ -220,9 +215,6 @@ feature {NONE} -- Handle mouse clicks
 				click_delay.set_interval (300)
 				click_count := click_count + 1
 				mouse_up_delayed := False
---				check
---					no_selection: not text_displayed.has_selection
---				end
 				if click_count /= 1 then
 					if click_count = 2 then
 						empty_word_selection := False
@@ -301,9 +293,6 @@ feature {NONE} -- Handle mouse clicks
 					end
 				end
 			end
---			if not text_displayed.is_empty and then text_displayed.selection_is_empty and then has_selection then
---				disable_selection
---			end
 			if autoscroll.interval /= 0 then
 				autoscroll.set_interval(0)
 			end

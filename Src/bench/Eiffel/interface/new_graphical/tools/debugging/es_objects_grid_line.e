@@ -111,9 +111,11 @@ feature {ES_OBJECTS_GRID_MANAGER} -- Row attachement
 		require
 			is_attached_to_row: is_attached_to_row
 		do
-			grid_remove_subrows_from (row)
+			if row.parent /= Void then
+				grid_remove_subrows_from (row)
+				row.clear
+			end
 			row.set_data (Void)
-			row.clear
 			row := Void
 		ensure
 			is_not_attached_to_row: not is_attached_to_row
@@ -123,8 +125,11 @@ feature {ES_OBJECTS_GRID_MANAGER} -- Row attachement
 		require
 			is_attached_to_row: is_attached_to_row
 		do
-			grid_remove_subrows_from (row)
-			row.clear
+			if row.parent /= Void then
+				grid_remove_subrows_from (row)
+				row.ensure_non_expandable
+				row.clear
+			end
 
 			expand_actions.wipe_out
 			collapse_actions.wipe_out
@@ -135,7 +140,6 @@ feature {ES_OBJECTS_GRID_MANAGER} -- Row attachement
 
 			attributes_row := Void
 			onces_row := Void
-			row.ensure_non_expandable
 
 			if compute_grid_display_done then
 				compute_grid_display_done := False

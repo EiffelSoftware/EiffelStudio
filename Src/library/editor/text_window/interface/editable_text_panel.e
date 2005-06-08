@@ -707,8 +707,7 @@ feature {NONE} -- Mouse copy cut
 			if mouse_copy_cut then
 				if button = 1 then
 					mouse_copy_cut := False
-					editor_drawing_area.set_pointer_style (basic_pointer)
-					--x_cur := x_pos + offset
+					editor_drawing_area.set_pointer_style (basic_pointer)				
 					x_cur := (x_pos - left_margin_width) .max (1)
 					l_y_pos := y_pos - editor_viewport.y_offset
 					perform_changes :=  is_in_editor_panel (a_screen_x, a_screen_y) and then not position_is_in_selection (x_cur, l_y_pos, True)
@@ -729,7 +728,7 @@ feature {NONE} -- Mouse copy cut
 					end
 				elseif button = 3 then
 					cancel_mouse_copy_cut
-				end
+				end			
 			end
 			if button = 1 then
 				forget_mouse_moves := False

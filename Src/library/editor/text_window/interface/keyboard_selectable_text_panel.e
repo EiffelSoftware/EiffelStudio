@@ -195,11 +195,11 @@ feature -- Text Selection
 				end_pos := start_pos
 			end
 			if  start_pos < offset then
-					set_offset (start_pos)
+				set_offset (start_pos)
 			elseif end_pos >= (offset + editor_drawing_area.width - left_margin_width - 30) then
-					if editor_width > editor_drawing_area.width then
-						set_offset (end_pos - editor_drawing_area.width + left_margin_width + 30)
-					end
+				if editor_width > editor_drawing_area.width then
+					set_offset (end_pos - editor_drawing_area.width + left_margin_width + 30)
+				end
 			end
 		end
 
@@ -381,9 +381,7 @@ feature {NONE} -- Process Vision2 events
 			show_cursor := True
 			invalidate_cursor_rect (True)
 			if has_selection then
-				sel_start := text_displayed.selection_start.y_in_lines
-				sel_end := text_displayed.selection_end.y_in_lines
-				invalidate_block (sel_start, sel_end, True)
+				disable_selection
 			end
 		end
 
@@ -634,13 +632,12 @@ feature {NONE} -- Cursor Management
 					 	-- cursor position will be redrawn in handle_extended_key 
 					invalidate_block (old_line.min (new_line + 1), old_line.max (new_line - 1), True)
 				end
-			elseif text_displayed.has_selection then
+			elseif has_selection then
 					-- There was a selection, but we destroy it.
 				old_line := l_cursor.y_in_lines
-				action.call (Void)
-				text_displayed.disable_selection
+				action.call (Void)				
 				invalidate_line (old_line, False)
-				invalidate_block (text_displayed.selection_start.y_in_lines, text_displayed.selection_end.y_in_lines, True)
+				disable_selection
 			else
 					-- There is no selection. Normal move.
 				old_line := l_cursor.y_in_lines

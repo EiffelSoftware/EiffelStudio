@@ -12,7 +12,7 @@ inherit
 			has_postcondition, has_precondition,
 			argument_names, arguments, is_once,
 			is_deferred, locals, obsolete_message,
-			is_external, is_il_external
+			is_external
 		end
 
 feature -- Properties
@@ -38,9 +38,6 @@ feature -- Properties
 
 	is_external: BOOLEAN;
 			-- Is the routine declared as a once?
-
-	is_il_external: BOOLEAN
-			-- Is routine an IL external one?
 
 feature -- Access
 
@@ -79,14 +76,6 @@ feature {FEATURE_I} -- Setting
 		do
 			is_external := b
 		end;
-
-	set_is_il_external (v: like is_il_external) is
-			-- Set `is_il_external' to `v'.
-		do
-			is_il_external := v
-		ensure
-			is_il_external_set: is_il_external = v
-		end
 
 	set_arguments (args: like arguments) is
 			-- Assign `args' to `arguments'.

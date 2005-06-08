@@ -610,7 +610,7 @@ feature {NONE} -- Implementation
 			if e_cse /= Void then
 					--| Origin class
 				dc := e_cse.dynamic_class
-				oc := e_cse.origin_class
+				oc := e_cse.written_class
 				if oc /= Void and then not oc.is_equal (dc) then
 					l_orig_class_info := oc.name_in_upper
 					l_tooltip.prepend_string (" (from " + l_orig_class_info + ")")

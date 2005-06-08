@@ -30,9 +30,9 @@ feature {NONE} -- Initialization
 			set_dynamic_content_function (agent compute_grid_item)
 			enable_single_row_selection
 			enable_solid_resizing_divider
-			enable_column_separators
-			enable_row_separators
 			set_separator_color (create {EV_COLOR}.make_with_8_bit_rgb (210, 210, 210))
+
+			pre_draw_overlay_actions.extend (agent on_draw_borders)
 
 			row_expand_actions.extend (agent on_row_expand)
 			row_collapse_actions.extend (agent on_row_collapse)
@@ -150,31 +150,60 @@ feature {NONE} -- Actions implementation
 			if ctler /= Void then
 				ctler.call_collapse_actions (a_row)
 			end
-		end		
+		end
 
+	on_draw_borders (drawable: EV_DRAWABLE; grid_item: EV_GRID_ITEM; a_column_index, a_row_index: INTEGER) is
+		local
+			current_column_width, current_row_height: INTEGER
+		do
+			drawable.set_foreground_color (separator_color)
+			current_column_width := column (a_column_index).width
+			if is_row_height_fixed then
+				current_row_height := row_height
+			else
+				current_row_height := row (a_row_index).height
+			end
+			if a_column_index > 1 then
+				drawable.draw_segment (0, 0, 0, current_row_height - 1)
+			end
+			if a_column_index = column_count then
+				drawable.draw_segment (current_column_width - 1, 0,  current_column_width - 1, current_row_height - 1)
+			end
+			drawable.draw_segment (0, current_row_height - 1, current_column_width, current_row_height - 1)
+		end
+ 
 	compute_grid_item (c, r: INTEGER): EV_GRID_ITEM is
 		local
 			a_row: EV_GRID_ROW
 			obj_item: ES_OBJECTS_GRID_LINE
-			col: INTEGER
 		do
-			col := c
-			if col <= column_count and r <= row_count then
-				Result := item (col, r)
+debug ("debugger_interface")
+	print (generator + ".compute_grid_item ("+c.out+", "+r.out+") %N")
+end
+			if c <= column_count and r <= row_count then
+				Result := item (c, r)
 			end
 			if Result = Void then
 				a_row := row (r)
 				obj_item ?= a_row.data
 				if obj_item /= Void then
-					obj_item.compute_grid_display
+					if not obj_item.compute_grid_display_done then
+						obj_item.compute_grid_display
 -- We don't return the item, since they have already been added to the grid ...
---					if 0 < col and col <= a_row.count then
---						Result := a_row.item (col)
---					end
+--						if 0 < c and c <= a_row.count then
+--							Result := a_row.item (c)
+--						end
+					else
+							--| line already computed .. but still missing cells
+							--| then we fill with empty cells
+						create {EV_GRID_LABEL_ITEM} Result
+					end
 				else
-					create Result
+					create {EV_GRID_LABEL_ITEM} Result
 				end
 			end
+		ensure
+			item_computed: item (c, r) /= Void
 		end
 
 feature -- Grid helpers

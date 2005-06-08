@@ -1,0 +1,59 @@
+<document output="envision" title="Tools">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_title>Tools</envision_title>
+				<envision_pseudo_name>60</envision_pseudo_name>
+			</toc>
+			<xml>
+				<xmlkeyword>
+					<index>K</index>
+					<term>EiffelEnvision, Tools</term>
+				</xmlkeyword>
+			</xml>
+		</help>
+	</meta_data>
+	<paragraph>
+		<paragraph>
+			This section of the documentation covers the tools installed and used with EiffelEnvision.
+ 		</paragraph>
+ 		
+		<anchor>in_this_section</anchor>
+		<heading>
+			<size>2</size>
+			<content>In This Section</content>
+		</heading>
+		<paragraph>
+			<link>
+				<url>../../eiffelbuild/index.xml</url>
+				<label>EiffelVision 2 Graphical Designer (EiffelBuild)</label>
+			</link>
+			<line_break/>
+			A complete overview of the EiffelBuild graphical designer for building EiffelVision 2 graphical user interfaces.
+		</paragraph>
+		
+		<anchor>see_also</anchor>
+		<heading>
+			<size>2</size>
+			<content>Related Sections</content>
+		</heading>
+		<seealso>
+			<bold>See also</bold>:
+			<line_break/>
+			<link>
+				<url>../using_eiffelenvision/eiffelenvision_projects/adding_projects/projects.xml</url>
+				<label>EiffelEnvision Project Types</label>
+			</link>
+			<line_break/>
+			<link>
+				<url>../using_eiffelenvision/eiffelenvision_for_eiffelstudio_developers/conversion_tool/index.xml</url>
+				<label>EiffelStudio to Project Conversion Tool</label>
+			</link>
+			<line_break/>
+			<link>
+				<url>../using_eiffelenvision/index.xml</url>
+				<label>Using EiffelEnvision</label>
+			</link>
+		</seealso>
+	</paragraph>
+</document>

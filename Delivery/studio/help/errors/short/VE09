@@ -1,0 +1,3 @@
+Error: joined features have different assigner commands.
+What to do: rename these features to avoid joining or ensure that they have
+  the same assigner command.

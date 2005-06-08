@@ -416,7 +416,7 @@ feature -- Routines
 			Result.append ("' ")
 			wc := f.written_class
 			if wc.has_feature_table then
-				anc := wc.feature_with_body_index (f.body_index)
+				anc := wc.feature_with_feature_id (f.written_feature_id)
 			end
 			if anc /= Void then
 				real_name := anc.name

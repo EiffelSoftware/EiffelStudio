@@ -322,19 +322,21 @@ feature {NONE} -- Graphical initialization and changes
 		end
 
 	set_expression_mode is
-		require
-			expression_frame /= Void
 		do
-			if expression_or_name_cell /= Void then
+			if 
+				expression_or_name_cell /= Void
+				and then expression_frame.parent = Void
+			then
 				expression_or_name_cell.replace (expression_frame)
 			end
 		end
 
 	set_object_name_mode is
-		require
-			object_name_frame /= Void
 		do
-			if expression_or_name_cell /= Void then
+			if 
+				expression_or_name_cell /= Void 
+				and then object_name_frame.parent = Void
+			then
 				expression_or_name_cell.replace (object_name_frame)
 			end
 		end

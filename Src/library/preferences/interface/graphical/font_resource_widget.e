@@ -10,11 +10,14 @@ inherit
 	PREFERENCE_WIDGET
 		redefine
 			resource, 
-			set_resource
+			set_resource,
+			change_item_widget,
+			update_changes
 		end
 
 create
-	make
+	make,
+	make_with_resource
 
 feature -- Status Setting
 	
@@ -22,7 +25,6 @@ feature -- Status Setting
 			-- Set the resource.
 		do
 			Precursor (new_resource)
-			display_font (resource.value)
 		end
 
 feature -- Access
@@ -39,6 +41,8 @@ feature -- Access
 	last_selected_value: EV_FONT
 			-- Value last selected by user.
 
+	change_item_widget: EV_GRID_LABEL_ITEM
+	
 feature {PREFERENCE_VIEW} -- Commands
 
 	change is
@@ -65,7 +69,12 @@ feature {NONE} -- Commands
 		do
 			font := font_tool.font
 			last_selected_value := font
-			display_font (font)
+			if last_selected_value /= Void then
+				resource.set_value (last_selected_value)
+				change_item_widget.set_font (last_selected_value)
+				change_item_widget.set_text (resource.string_value)
+			end
+			Precursor {PREFERENCE_WIDGET}
 		end
 
 	cancel_changes is
@@ -82,59 +91,24 @@ feature {NONE} -- Commands
 			end
 		end		
 
-	display_font (a_font: EV_FONT) is
-			-- Display font in example label.
-		require
-			font_not_void: a_font /= Void
-		do
-			example_label.set_font (a_font)
-		end
-
-	reset is
-			-- 
-		do
-			if resource.has_default_value then
-				resource.reset
-			end	
-			display_font (resource.value)
-		end		
-
 feature {NONE} -- Implementation
 
 	build_change_item_widget is
 			-- Create and setup `change_item_widget'.
-		local
-			h2: EV_HORIZONTAL_BOX
-			a_frame: EV_FRAME
 		do
-			create h2
-			h2.set_padding (3)
-			
-			create change_b.make_with_text_and_action ("Change ...", agent change)
-			change_b.set_minimum_height (change_b.height)
-
-			create example_label
-			example_label.set_text (example_string)
-
-			h2.extend (example_label)
-			h2.extend (change_b)
-			h2.disable_item_expand (change_b)
-
-			create a_frame
-			a_frame.extend (h2)
-			change_item_widget := a_frame
+			create change_item_widget
+			change_item_widget.set_text (resource.string_value)
+			change_item_widget.set_font (resource.value)
+			change_item_widget.pointer_double_press_actions.force_extend (agent show_change_item_widget)
 		end
-
-	change_b: EV_BUTTON
-			-- Button to popup EV_FONT_DIALOG.
+		
+	show_change_item_widget is
+			-- 
+		do
+			change			
+		end		
 
 	font_tool: EV_FONT_DIALOG
 			-- Dialog from which we can select a font.
-
-	example_label: EV_LABEL
-			-- Example label using the selected font for preview.
-
-	example_string: STRING is "Abc"
-			-- Example string to use in `example_label'.
 
 end -- class FONT_PREFERENCE_WIDGET

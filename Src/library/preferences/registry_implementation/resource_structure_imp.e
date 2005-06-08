@@ -88,7 +88,7 @@ feature {PREFERENCE_STRUCTURE} -- Resource Management
 		do
 			l_handle := open_key_with_access (location, Key_read)						
 			
-			if l_handle /= default_pointer then				
+			if valid_value_for_hkey (l_handle) then				
 				l_key_value := key_value (l_handle, a_name)
 				if l_key_value /= Void then
 					Result := l_key_value.string_value
@@ -108,8 +108,10 @@ feature {PREFERENCE_STRUCTURE} -- Resource Management
 			l_parent_key := open_key_with_access (location, key_write)
 			create l_new_value.make ({WEL_REGISTRY_KEY_VALUE_TYPE}.reg_sz, a_resource.string_value)		
 			
-			set_key_value (l_parent_key, l_registry_resource_name, l_new_value)
-			close_key (l_parent_key)
+			if valid_value_for_hkey (l_parent_key) then
+				set_key_value (l_parent_key, l_registry_resource_name, l_new_value)
+				close_key (l_parent_key)
+			end
 		end		
 
 	remove_resource (a_resource: PREFERENCE) is
@@ -120,8 +122,10 @@ feature {PREFERENCE_STRUCTURE} -- Resource Management
 		do
 			l_registry_resource_name := a_resource.string_type + "_" + a_resource.name
 			l_parent_key := open_key_with_access (location, key_write)
-			delete_value (l_parent_key, l_registry_resource_name)
-			close_key (l_parent_key)
+			if valid_value_for_hkey (l_parent_key) then
+				delete_value (l_parent_key, l_registry_resource_name)
+				close_key (l_parent_key)
+			end
 		end	
 
 	save (a_resources: ARRAYED_LIST [PREFERENCE]) is

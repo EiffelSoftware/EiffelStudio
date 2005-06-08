@@ -41,6 +41,7 @@ feature {NONE} -- Initialization
 			parent_window := Current
 			root_node_text := "Preferences root"
 			set_size (640, 460)
+			set_title ("Preferences")
 			fill_list
 			create grid
 			grid.enable_row_height_fixed
@@ -102,35 +103,22 @@ feature {NONE} -- Events
 			hide
 		end 
 
-	on_item_value_changed (a_item: EV_GRID_ITEM; a_pref: PREFERENCE) is
+	on_preference_changed (a_pref: PREFERENCE) is
 			-- Set the resource value to the newly entered value in the edit item.
-		local
-			l_text_item: EV_GRID_EDITABLE_ITEM
-			l_combo_item: EV_GRID_COMBO_ITEM			
+		local						
 			l_default_item: EV_GRID_LABEL_ITEM
 		do
-			l_text_item ?= a_item
-			if l_text_item /= Void then
-				a_pref.set_value_from_string (l_text_item.text)
-			else
-				l_combo_item ?= a_item
-				if l_combo_item /= Void then
-						-- TODO: waiting for fix in EV_GRIS_COMBO_ITEM to make sure this is not user editable.
-					a_pref.set_value_from_string (l_combo_item.text)
-				end
-			end
-
-			l_default_item ?= a_item.row.item (3)
+			l_default_item ?= grid.selected_rows.first.item (3)
 			if a_pref.is_default_value then
 				l_default_item.set_text ("default")
 				l_default_item.row.set_foreground_color (default_color)
-			else
+			else	
 				l_default_item.set_text ("user set")
 				l_default_item.row.set_foreground_color (non_default_color)
 			end
 		end	
 
-	on_set_resource_default (a_item: EV_GRID_LABEL_ITEM; a_pref: PREFERENCE) is
+	set_resource_to_default (a_item: EV_GRID_LABEL_ITEM; a_pref: PREFERENCE) is
 			-- Set the resource value to the original default.
 		local
 			l_text_item: EV_GRID_EDITABLE_ITEM
@@ -193,87 +181,20 @@ feature {NONE} -- Events
 		local
 			l_popup_menu: EV_MENU
 			l_menu_item: EV_MENU_ITEM
+			l_pref: PREFERENCE
 		do
-			if not a_pref.is_default_value and then a_button = 3 then
-				create l_popup_menu
-				create l_menu_item.make_with_text ("Restore Default")
-				l_menu_item.select_actions.extend (agent on_set_resource_default (a_item, a_pref))
-				l_popup_menu.extend (l_menu_item)
-				l_popup_menu.show_at (grid, a_x + a_item.virtual_x_position, a_screen_y - Current.screen_y)
-			end
-		end
-
-	on_item_selected (a_item: EV_GRID_ITEM; a_pref: PREFERENCE) is
-		local
-			bool_pref: BOOLEAN_PREFERENCE
-			color_pref: COLOR_PREFERENCE
-			font_pref: FONT_PREFERENCE
-			l_color_widget: COLOR_PREFERENCE_WIDGET
-			l_font_widget: FONT_PREFERENCE_WIDGET
-			l_label_item: EV_GRID_LABEL_ITEM
-			l_edit_item: EV_GRID_EDITABLE_ITEM
-			l_combo_item: EV_GRID_COMBO_ITEM
-		do
-			if a_pref.generating_resource_type.is_equal ("TEXT") then
-				l_edit_item ?= a_item
-				if l_edit_item /= Void then
-					l_edit_item.activate
-				end
-			else
-				bool_pref ?= a_pref
-				if bool_pref /= Void then
-					l_combo_item ?= a_item
-					if l_combo_item /= Void then
-						l_combo_item.activate
-					end
-				else
-					color_pref ?= a_pref
-					if color_pref /= Void then
-						l_color_widget ?= resource_widget (color_pref)
-						l_color_widget.set_caller (Current)
-						l_color_widget.change
-						if l_color_widget.last_selected_value /= Void then
-							color_pref.set_value (l_color_widget.last_selected_value)
-						end
-						on_item_value_changed (a_item, a_pref)
-					else
-						font_pref ?= a_pref
-						if font_pref /= Void then
-							l_label_item ?= a_item
-							l_font_widget ?= resource_widget (font_pref)
-							l_font_widget.set_resource (font_pref)
-							l_font_widget.set_caller (Current)
-							l_font_widget.change
-							if l_font_widget.last_selected_value /= Void then
-								font_pref.set_value (l_font_widget.last_selected_value)
-							end
-							l_label_item.set_font (font_pref.value)
-							l_label_item ?= a_item.row.item (4)
-							l_label_item.set_text (font_pref.string_value)
-							on_item_value_changed (a_item, a_pref)
-						end
-					end
+			if not a_pref.is_default_value and then a_button = 3 and not grid.selected_rows.is_empty then
+				l_pref ?= grid.selected_rows.first.data
+				if l_pref /= Void and then l_pref = a_pref and then l_pref.has_default_value then					
+						-- The right clicked preference matches the selecion in the grid
+					create l_popup_menu
+					create l_menu_item.make_with_text ("Restore Default")
+					l_menu_item.select_actions.extend (agent set_resource_to_default (a_item, a_pref))
+					l_popup_menu.extend (l_menu_item)
+					l_popup_menu.show_at (grid, a_x + a_item.virtual_x_position, a_screen_y - Current.screen_y)
 				end
 			end
 		end
-
-	on_color_item_exposed (a_item: EV_GRID_ITEM; area: EV_DRAWABLE) is
-			-- Expose part of color preference value item.
-		local
-			l_resource: COLOR_PREFERENCE
-		do
-			l_resource ?= a_item.data
-			if l_resource /= Void then
-				area.set_foreground_color ((create {EV_STOCK_COLORS}).white)
-				area.fill_rectangle (0, 0, a_item.width, a_item.height)
-				area.set_foreground_color ((create {EV_STOCK_COLORS}).black)
-				area.draw_rectangle (1, 1, 12, 12)
-				area.set_foreground_color (l_resource.value)
-				area.fill_rectangle (2, 2, 10, 10)
-				area.set_foreground_color ((create {EV_STOCK_COLORS}).black)
-				area.draw_text_top_left (20, 1, l_resource.string_value)
-			end	
-		end		
 
 	autosize_list_columns is
 			-- Autosize the last column in the list to fit to the size of the list
@@ -425,7 +346,8 @@ feature {NONE} -- Implementation
 			l_names.sort
 			from
 				l_names.start
-				grid.clear
+				grid.wipe_out
+				description_text.set_text ("")
 				curr_row := 1
 			until
 				l_names.after
@@ -474,6 +396,10 @@ feature {NONE} -- Implementation
 			end
 			if grid.row_count > 0 then
 				grid.row (1).enable_select
+				l_resource ?= grid.row (1).data
+				if l_resource /= Void then
+					show_resource_description (l_resource)
+				end
 			end
 		end
 
@@ -532,42 +458,50 @@ feature {NONE} -- Implementation
 			l_bool: BOOLEAN_PREFERENCE
 			l_font: FONT_PREFERENCE
 			l_color: COLOR_PREFERENCE
-			l_bool_item: EV_GRID_COMBO_ITEM
-			l_font_item: EV_GRID_LABEL_ITEM
-			l_color_item: EV_GRID_DRAWABLE_ITEM
-			l_string_edit_item: EV_GRID_EDITABLE_ITEM
+			l_array: ARRAY_PREFERENCE
+			
+			l_bool_widget: BOOLEAN_PREFERENCE_WIDGET
+			l_edit_widget: STRING_PREFERENCE_WIDGET
+			l_choice_widget: CHOICE_PREFERENCE_WIDGET
+			l_font_widget: FONT_PREFERENCE_WIDGET
+			l_color_widget: COLOR_PREFERENCE_WIDGET
 		do
 			l_bool ?= l_resource
 			if l_bool /= Void then
-				create l_bool_item
-				l_bool_item.deactivate_actions.extend (agent on_item_value_changed (l_bool_item, l_resource))
-				l_bool_item.set_text (l_bool.value.out)
-				l_bool_item.set_item_strings (<<"True", "False">>)
-				grid.set_item (4, row_index, l_bool_item)
-				l_bool_item.pointer_button_press_actions.force_extend (agent l_bool_item.activate)
+					-- Boolean
+				create l_bool_widget.make_with_resource (l_resource)
+				l_bool_widget.change_actions.extend (agent on_preference_changed)
+				grid.set_item (4, row_index, l_bool_widget.change_item_widget)			
 			else
 				if l_resource.generating_resource_type.is_equal ("TEXT") then
-					create l_string_edit_item
-					l_string_edit_item.deactivate_actions.extend (agent on_item_value_changed (l_string_edit_item, l_resource))
-					l_string_edit_item.set_text (l_resource.string_value)
-					grid.set_item (4, row_index, l_string_edit_item)
-					l_string_edit_item.pointer_button_press_actions.force_extend (agent on_item_selected (l_string_edit_item, l_resource))
+						-- Text
+					create l_edit_widget.make_with_resource (l_resource)
+					l_edit_widget.change_actions.extend (agent on_preference_changed)
+					grid.set_item (4, row_index, l_edit_widget.change_item_widget)				
+				elseif l_resource.generating_resource_type.is_equal ("COMBO") then
+					l_array ?= l_resource
+					if l_array /= Void then
+							-- Choice
+						create l_choice_widget.make_with_resource (l_resource)
+						l_choice_widget.change_actions.extend (agent on_preference_changed)
+						grid.set_item (4, row_index, l_choice_widget.change_item_widget)
+					end
 				else
 					l_font ?= l_resource
 					if l_font /= Void then
-						create l_font_item
-						l_font_item.set_text (l_font.string_value)
-						l_font_item.set_font (l_font.value)
-						grid.set_item (4, row_index, l_font_item)
-						l_font_item.pointer_button_release_actions.force_extend (agent on_item_selected (l_font_item, l_resource))
+							-- Font
+						create l_font_widget.make_with_resource (l_resource)
+						l_font_widget.change_actions.extend (agent on_preference_changed)
+						l_font_widget.set_caller (Current)
+						grid.set_item (4, row_index, l_font_widget.change_item_widget)
 					else
 						l_color ?= l_resource
 						if l_color /= Void then
-							create l_color_item
-							l_color_item.expose_actions.extend (agent on_color_item_exposed (l_color_item, ?))
-							l_color_item.set_data (l_resource)
-							grid.set_item (4, row_index, l_color_item)
-							l_color_item.pointer_button_press_actions.force_extend (agent on_item_selected (l_color_item, l_resource))
+								-- Color
+							create l_color_widget.make_with_resource (l_resource)
+							l_color_widget.change_actions.extend (agent on_preference_changed)
+							l_color_widget.set_caller (Current)
+							grid.set_item (4, row_index, l_color_widget.change_item_widget)
 						end
 					end
 				end
@@ -595,7 +529,7 @@ feature {NONE} -- Implementation
 			Result.replace_substring_all ("_", " ")
 			Result.replace_substring (Result.item (1).upper.out, 1, 1)
 		end		
-	
+
 feature {NONE} -- Private attributes
 
 	show_full_resource_name: BOOLEAN
@@ -624,6 +558,7 @@ feature {NONE} -- Private attributes
 		end
 
 	grid: EV_GRID
+		-- Grid
 
 invariant
 	has_preferences: preferences /= Void

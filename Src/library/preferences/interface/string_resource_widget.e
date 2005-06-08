@@ -13,7 +13,9 @@ inherit
 	PREFERENCE_WIDGET
 		redefine
 			set_resource,
-			change_item_widget
+			change_item_widget,
+			update_changes,
+			reset
 		end
 
 create
@@ -22,7 +24,7 @@ create
 
 feature -- Access
 	
-	change_item_widget: EV_TEXT_FIELD
+	change_item_widget: EV_GRID_EDITABLE_ITEM
 			-- Widget to change the value of this resource.
 
 	graphical_type: STRING is
@@ -44,13 +46,13 @@ feature -- Status Setting
 			end
 			
 			tmpstr := new_resource.string_value
-			change_item_widget.change_actions.block
-			if tmpstr /= Void and then not tmpstr.is_empty then
-				change_item_widget.set_text (tmpstr)
-			else
-				change_item_widget.remove_text
-			end
-			change_item_widget.change_actions.resume
+--			change_item_widget.change_actions.block
+--			if tmpstr /= Void and then not tmpstr.is_empty then
+--				change_item_widget.set_text (tmpstr)
+--			else
+--				change_item_widget.remove_text
+--			end
+--			change_item_widget.change_actions.resume
 		end
 
 feature {NONE} -- Command
@@ -58,6 +60,8 @@ feature {NONE} -- Command
 	update_changes is
 			-- Update the changes made in `change_item_widget' to `resource'.
 		do
+			resource.set_value_from_string (change_item_widget.text)
+			Precursor {PREFERENCE_WIDGET}
 		end
 
 	update_resource is
@@ -84,11 +88,9 @@ feature {NONE} -- Command
 		end		
 
 	reset is
-			-- 
+			-- Reset
 		do
-			if resource.has_default_value then
-				resource.reset
-			end	
+			Precursor {PREFERENCE_WIDGET}
 			change_item_widget.set_text (resource.default_value)
 		end		
 
@@ -97,7 +99,16 @@ feature {NONE} -- Implementation
 	build_change_item_widget is
 			-- Create and setup `change_item_widget'.
 		do
-			create change_item_widget			
+			create change_item_widget						
+			change_item_widget.deactivate_actions.extend (agent update_changes)
+			change_item_widget.set_text (resource.string_value)			
+			change_item_widget.pointer_button_press_actions.force_extend (agent activate)
 		end
+		
+	activate is
+			-- Activate the text
+		do
+			change_item_widget.activate
+		end		
 
 end -- class STRING_PREFERENCE_WIDGET

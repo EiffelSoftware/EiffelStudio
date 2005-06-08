@@ -1,9 +1,12 @@
 indexing
-	description: "Control window that contains one or more buttons. Each %
-		%buttons sends a command message to the parent window when the %
-		%user chooses it."
-	note: "The common controls dll (WEL_COMMON_CONTROLS_DLL) needs to %
-		%be loaded to use this control."
+	description: "[
+		Control window that contains one or more buttons. Each
+		buttons sends a command message to the parent window when the
+		user chooses it.
+
+		Note: The common controls dll (WEL_COMMON_CONTROLS_DLL) needs to
+			be loaded to use this control.
+		]"
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"

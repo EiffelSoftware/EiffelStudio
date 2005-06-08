@@ -1,7 +1,10 @@
 indexing
-	description: "This class allows to load a file into a rich edit control."
-	note: "Do not use more than one instance of this class at the same %
-		%time. Nested streams are not supported."
+	description: "[
+		This class allows to load a file into a rich edit control.
+		
+		Note: Do not use more than one instance of this class at the same
+			time. Nested streams are not supported.
+		]"
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"

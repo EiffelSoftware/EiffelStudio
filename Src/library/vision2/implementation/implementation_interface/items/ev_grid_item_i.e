@@ -433,8 +433,6 @@ feature {EV_GRID_DRAWER_I, EV_GRID_ITEM} -- Implementation
 
 			drawable.set_copy_mode
 			back_color := displayed_background_color
-			drawable.set_foreground_color (back_color)
-			drawable.fill_rectangle (an_indent, 0, a_width, a_height)
 			if is_selected then
 				if focused then
 					drawable.set_foreground_color (parent_i.focused_selection_color)

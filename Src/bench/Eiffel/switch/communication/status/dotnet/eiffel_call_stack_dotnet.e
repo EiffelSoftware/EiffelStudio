@@ -256,7 +256,6 @@ feature {NONE} -- Initialization
 															False, 			-- is_melted (No since this is a dotnet system)
 															l_hexaddress,
 															l_class_type, 	-- dynmic class type
-															l_feature_i.written_class, 	-- origin class
 															l_feature_i, 	-- routine, routine_name ...
 															l_il_offset,
 															l_line_number 	-- break_index / line number

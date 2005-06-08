@@ -694,6 +694,13 @@ feature -- Icons
 			Result := build_classic_pixmap ("toggle_alias_vsmall")
 		end
 
+	Icon_toggle_assigner_vsmall: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
+		once
+			Result := build_classic_pixmap ("toggle_assigner_vsmall")
+		end
+
 	Icon_close: ARRAY [EV_PIXMAP] is
 			-- Array containing both the color & the gray pixmap
 			-- Color is at index 1, gray at index 2

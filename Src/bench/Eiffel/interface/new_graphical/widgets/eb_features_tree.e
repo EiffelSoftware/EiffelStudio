@@ -105,6 +105,13 @@ feature -- Access
 			recursive_do_all (agent update_node)
 		end
 
+	toggle_assigner is
+			-- Toggle assigner command on/off
+		do
+			is_assigner_enabled := not is_assigner_enabled
+			recursive_do_all (agent update_node)
+		end
+
 	update_node (n: EV_TREE_NODE) is
 			-- Update node alias name and signature
 		local
@@ -122,6 +129,9 @@ feature -- Access
 	is_alias_enabled: BOOLEAN
 			-- Is alias name shown?
 
+	is_assigner_enabled: BOOLEAN
+			-- Is assigner command shown?
+
 feature {EB_FEATURES_TOOL} -- Implementation
 
 	feature_name (a_ef: E_FEATURE): STRING is
@@ -130,6 +140,7 @@ feature {EB_FEATURES_TOOL} -- Implementation
 			a_ef_not_void: a_ef /= Void
 		local
 			alias_name: STRING
+			assigner_name: STRING
 		do
 			Result := a_ef.name.twin
 			if is_alias_enabled and then not a_ef.is_prefix and then not a_ef.is_infix then
@@ -144,6 +155,13 @@ feature {EB_FEATURES_TOOL} -- Implementation
 				a_ef.append_arguments_to (Result)
 				if a_ef.type /= Void then
 					Result.append (": " + a_ef.type.dump)
+				end
+			end
+			if is_assigner_enabled then
+				assigner_name := a_ef.assigner_name
+				if assigner_name /= Void then
+					Result.append_string (" assign ")
+					Result.append_string (assigner_name)
 				end
 			end
 		end

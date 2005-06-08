@@ -293,6 +293,9 @@ feature {NONE} -- Initialization
 			create toggle_feature_signature_cmd.make (Current)
 			toolbarable_commands.extend (toggle_feature_signature_cmd)
 
+			create toggle_feature_assigner_cmd.make (Current)
+			toolbarable_commands.extend (toggle_feature_assigner_cmd)
+
 			create toggle_stone_cmd.make (Current)
 			toolbarable_commands.extend (toggle_stone_cmd)
 
@@ -325,6 +328,7 @@ feature {NONE} -- Initialization
 			new_feature_cmd.disable_sensitive
 			toggle_feature_alias_cmd.disable_sensitive
 			toggle_feature_signature_cmd.disable_sensitive
+			toggle_feature_assigner_cmd.disable_sensitive
 
 			create editors.make (5)
 		end
@@ -2453,6 +2457,7 @@ feature {NONE} -- Implementation
 				new_feature_cmd.disable_sensitive
 				toggle_feature_alias_cmd.disable_sensitive
 				toggle_feature_signature_cmd.disable_sensitive
+				toggle_feature_assigner_cmd.disable_sensitive
 
 					-- We update the state of the `Add to Favorites' command.
 				if new_class_stone /= Void then
@@ -2555,6 +2560,7 @@ feature {NONE} -- Implementation
 							new_feature_cmd.enable_sensitive
 							toggle_feature_alias_cmd.enable_sensitive
 							toggle_feature_signature_cmd.enable_sensitive
+							toggle_feature_assigner_cmd.enable_sensitive
 						end
 
 						--address_manager.enable_formatters
@@ -3261,6 +3267,9 @@ feature {EB_TOOL} -- Implementation / Commands
 
 	toggle_feature_signature_cmd: EB_TOGGLE_FEATURE_SIGNATURE_COMMAND
 			-- Show/Hide signature of feature node in eb_feature_tool
+
+	toggle_feature_assigner_cmd: EB_TOGGLE_FEATURE_ASSIGNER_COMMAND
+			-- Show/Hide assigner name of feature node in eb_feature_tool
 
 	toggle_stone_cmd: EB_UNIFY_STONE_CMD
 			-- Command to toggle between the stone management modes.

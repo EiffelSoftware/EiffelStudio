@@ -46,6 +46,7 @@ feature {NONE} -- Initialization
 			mini_toolbar.extend (development_window.new_feature_cmd.new_mini_toolbar_item)
 			mini_toolbar.extend (development_window.toggle_feature_alias_cmd.new_mini_toolbar_item)
 			mini_toolbar.extend (development_window.toggle_feature_signature_cmd.new_mini_toolbar_item)
+			mini_toolbar.extend (development_window.toggle_feature_assigner_cmd.new_mini_toolbar_item)
 		ensure
 			mini_toolbar_exists: mini_toolbar /= Void
 		end

@@ -83,7 +83,7 @@ feature {NONE} -- Initialization
 			if dynamic_type /= Void then
 				dynamic_class := dynamic_type.associated_class	
 			end
-			origin_class := Eiffel_system.class_of_dynamic_id (origin + 1)
+			written_class := Eiffel_system.class_of_dynamic_id (origin + 1)
 			object_address := addr
 			display_object_address := object_address
 				-- set the private body index to a fake value
@@ -104,7 +104,7 @@ feature -- Properties
 			-- Note from Arnaud: Computation has been deferred for optimisation purpose
 		do
 			if private_routine = Void then
-				private_routine := origin_class.feature_with_name (routine_name)
+				private_routine := written_class.feature_with_name (routine_name)
 			end
 			Result := private_routine
 		end
@@ -357,7 +357,7 @@ feature	{NONE} -- Initialization of the C/Eiffel interface
 					dynamic_class := dynamic_type.associated_class
 					class_name := dynamic_class.name_in_upper
 				end
-				origin_class := Eiffel_system.class_of_dynamic_id (origin + 1)
+				written_class := Eiffel_system.class_of_dynamic_id (origin + 1)
 
 				break_index := line_number
 				object.to_upper

@@ -1874,7 +1874,7 @@ feature -- Measurements
 			Result := row_count - hidden_node_count
 		end
 
-feature {EV_GRID_DRAWER_I, EV_GRID_ROW_I} -- Implementation
+feature {EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implementation
 
 	internal_row_data: EV_GRID_ARRAYED_LIST [SPECIAL [EV_GRID_ITEM_I]]
 		-- Array of individual row's data, row by row
@@ -4341,7 +4341,6 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- I
 			grid_row_i: EV_GRID_ROW_I
 			row_data: SPECIAL [EV_GRID_ITEM_I]
 			a_grid_column_i: EV_GRID_COLUMN_I
-			grid_item_i: EV_GRID_ITEM_I
 			col_index: INTEGER
 		do
 				-- Retrieve column from grid
@@ -4358,8 +4357,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- I
 				-- `row_data' may not have a count less than
 				-- `column_count' if items are Void in this row.
 			if col_index < row_data.count then
-				grid_item_i := row_data @ (col_index)
-				Result := grid_item_i
+				Result := row_data @ (col_index)
 			end
 		end
 

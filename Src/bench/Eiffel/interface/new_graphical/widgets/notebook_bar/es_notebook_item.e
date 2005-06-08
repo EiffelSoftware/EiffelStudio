@@ -64,8 +64,8 @@ feature {NONE} -- Initialization
 
 			create hb
 			create left_handle
-			left_handle.set_minimum_width (8)
-			left_handle.set_background_color ((create {EV_STOCK_COLORS}).grey)
+			left_handle.set_minimum_width (15)
+			left_handle.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (212, 208, 200))
 			hb.extend (left_handle)
 			hb.disable_item_expand (left_handle)
 			hb.extend (widget)

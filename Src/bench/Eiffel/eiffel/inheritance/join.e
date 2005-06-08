@@ -7,7 +7,10 @@ class
 	JOIN 
 
 inherit
+	COMPILER_EXPORTER
 	FEATURE_ADAPTATION
+	SHARED_ERROR_HANDLER
+	SHARED_WORKBENCH
 
 create
 	make
@@ -30,6 +33,7 @@ feature -- Checking
 			deferred_features: LINKED_LIST [INHERIT_INFO]
 			old_feat: FEATURE_I
 			info: INHERIT_INFO
+			feature_with_assigner: FEATURE_I
 		do
 				-- The signature of the chosen feature in the
 				-- context of `feat_tbl' has ben already evluated by
@@ -41,6 +45,10 @@ feature -- Checking
 					-- `new_feature'
 				check
 					deferred_features.first.a_feature = new_feature
+				end
+				if new_feature.assigner_name_id /= 0 then
+						-- Record assigner command for comparison with other features
+					feature_with_assigner := new_feature
 				end
 				deferred_features.go_i_th (2)
 			until
@@ -55,6 +63,18 @@ feature -- Checking
 
 					-- Check same signature for different features
 				new_feature.check_same_signature (old_feat)
+
+					-- Check assigner procedure.
+				if old_feat.assigner_name_id /= 0 then
+					if feature_with_assigner = Void then
+							-- Record assigner command for comparison with other features
+						feature_with_assigner := old_feat
+					elseif not feature_with_assigner.is_same_assigner (old_feat, feat_tbl) then
+							-- Report that assigner commands are not the same.
+						Error_handler.insert_error
+							(create {VE09}.make (system.current_class, feature_with_assigner, old_feat))
+					end
+				end
 
 				deferred_features.forth
 			end

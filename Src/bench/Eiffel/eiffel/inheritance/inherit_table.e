@@ -1379,17 +1379,30 @@ end;
 
 	check_validity3 (resulting_table: FEATURE_TABLE) is
 			-- Check the signature conformance of the redefinitions and
-			-- validity of joins
+			-- validity of joins; check assigner command validity.
+		local
+			f: FEATURE_I
 		do
 			from
-				adaptations.start;
+				adaptations.start
 			until
 				adaptations.after
 			loop
-				adaptations.item.check_adaptation (resulting_table);
-				adaptations.forth;
-			end;
-		end;
+				adaptations.item.check_adaptation (resulting_table)
+				adaptations.forth
+			end
+			from
+				resulting_table.start
+			until
+				resulting_table.after
+			loop
+				f := resulting_table.item_for_iteration
+				if f.assigner_name_id /= 0 then
+					f.check_assigner (resulting_table)
+				end
+				resulting_table.forth
+			end
+		end
 
 	check_redeclarations (resulting_table: FEATURE_TABLE) is
 			-- Check redeclarations into an attribute.

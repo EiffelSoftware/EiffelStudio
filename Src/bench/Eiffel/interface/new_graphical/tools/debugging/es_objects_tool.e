@@ -695,7 +695,7 @@ feature {NONE} -- Current objects grid Implementation
 				display_first_onces		 := current_object.display_onces
 			end
 			if Application.is_dotnet then
-				if not Application.call_stack_is_empty then
+				if not Application.current_call_stack_is_empty then
 					value := application.imp_dotnet.status.current_call_stack_element_dotnet.current_object
 					check
 						value_not_void: value /= Void
@@ -770,7 +770,7 @@ feature {NONE} -- Stack objects grid Implementation
 	build_stack_info (a_target_grid: ES_OBJECTS_GRID) is
 			-- Create the grid rows that contains call stack info
 		do
-			if application.call_stack_is_empty then
+			if Application.current_call_stack_is_empty then
 				build_exception_info (a_target_grid)
 			else
 				build_exception_info (a_target_grid)
@@ -784,7 +784,7 @@ feature {NONE} -- Stack objects grid Implementation
 			cse: EIFFEL_CALL_STACK_ELEMENT
 			lrow: EV_GRID_ROW
 		do
-			if not application.call_stack_is_empty then
+			if not Application.current_call_stack_is_empty then
 				cse ?= current_stack_element
 				if cse /= Void then
 						--| Top row to show the current feature

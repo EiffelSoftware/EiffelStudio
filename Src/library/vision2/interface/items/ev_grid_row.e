@@ -130,7 +130,7 @@ feature -- Access
 		do
 			Result := implementation.is_expanded
 		ensure
-			not_expanded_when_empty: subrow_count = 0 implies not is_expanded
+			not_expanded_when_empty: (subrow_count = 0) implies not Result
 		end
 		
 	height: INTEGER is

@@ -96,8 +96,15 @@ feature -- Evaluation
 					set_context_data (Void, context_class, Void)
 				end
 
-					--| Compute and get `expression_byte_node'
-				get_expression_byte_node
+				if 
+					(on_context and context_feature = Void)
+					or (on_class and context_class = Void)
+				then
+					set_error_expression ("Error during expression analyse")
+				else
+						--| Compute and get `expression_byte_node'
+					get_expression_byte_node
+				end
 	
 				l_error_occurred := error_occurred or expression_byte_node = Void
 					--| FIXME jfiat 2004-12-09 : check if this is a true error or not ..
@@ -940,18 +947,19 @@ feature -- Change Context
 
 	init_context_with_current_callstack is
 		local
-			cse: EIFFEL_CALL_STACK_ELEMENT
+			cse: CALL_STACK_ELEMENT
+			ecse: EIFFEL_CALL_STACK_ELEMENT
 			cf: FEATURE_I
 		do
-			cse ?= Application.status.current_call_stack_element
-			if cse = Void then
-				check
-					False -- Shouldn't occur.
-				end
+			cse := Application.status.current_call_stack_element
+			context_address := cse.object_address
+			ecse ?= cse
+			if ecse = Void then
+				--| Could occurs in case of External call stack element
+				--| in case of Exception or stopped state
 			else
-				cf := cse.routine.associated_feature_i
-				set_context_data (cf, cse.dynamic_class, cse.dynamic_type)
-				context_address := cse.object_address
+				cf := ecse.routine.associated_feature_i
+				set_context_data (cf, ecse.dynamic_class, ecse.dynamic_type)
 			end
 		end
 		

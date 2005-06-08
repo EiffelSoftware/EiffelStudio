@@ -558,10 +558,13 @@ feature {NONE} -- Implementation
 		local
 			dmp: DUMP_VALUE
 			bak_ct: CLASS_TYPE
+			bak_cc: CLASS_C
 		do
 				--| Prepare parameters ...
 			bak_ct := Byte_context.class_type
+			bak_cc := System.current_class
 			if dt /= Void then
+				System.set_current_class (dt.associated_class)
 				Byte_context.set_class_type (dt)
 			end
 			parameters_init (params.count)
@@ -597,6 +600,9 @@ feature {NONE} -- Implementation
 			end
 			if bak_ct /= Void then
 				Byte_context.set_class_type (bak_ct)				
+			end
+			if bak_cc /= Void then
+				System.set_current_class (bak_cc)
 			end
 		end
 

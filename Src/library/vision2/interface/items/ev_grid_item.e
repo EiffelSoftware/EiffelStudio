@@ -146,8 +146,21 @@ feature -- Access
 			not_destroyed: not is_destroyed
 		do
 			Result := implementation.tooltip
-		end		
+		end
 		
+	required_width: INTEGER is
+			-- Width in pixels required to fully display contents, based
+			-- on current settings.
+			-- Note that in some descendents such as EV_GRID_DRAWABLE_ITEM, this
+			-- returns 0. For such items, `set_required_width' is available.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.required_width
+		ensure
+			result_non_negative: Result >= 0
+		end
+
 feature -- Status setting
 
 	ensure_visible is

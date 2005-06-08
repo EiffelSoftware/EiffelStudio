@@ -37,7 +37,7 @@ feature -- Properties
 	dynamic_type: CLASS_TYPE
 			-- Dynamic class type where routine is called from
 
-	origin_class: CLASS_C
+	written_class: CLASS_C
 			-- Class where routine is written in
 
 	routine: E_FEATURE is
@@ -206,7 +206,7 @@ feature -- Output
 		do
 			
 			c := dynamic_class
-			oc := origin_class
+			oc := written_class
 				-- Print object address (14 characters)
 			st.add_string ("[")
 			if c /= Void then

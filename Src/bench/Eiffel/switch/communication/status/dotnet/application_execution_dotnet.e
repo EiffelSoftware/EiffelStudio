@@ -544,7 +544,7 @@ feature {NONE} -- Stepping
 							print (" ### Current IL OffSet = 0x"+curr_il_offset.to_hex_string+" ~ "+curr_il_offset.out+" %N")
 						end
 						l_impl_ct := csed.dynamic_type
-						l_origin_cc := csed.origin_class
+						l_origin_cc := csed.written_class
 						if l_origin_cc /= csed.dynamic_class then
 							l_impl_ct := il_debug_info_recorder.implemented_type (l_origin_cc, l_impl_ct)
 						end

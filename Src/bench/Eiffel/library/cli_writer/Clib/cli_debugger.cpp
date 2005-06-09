@@ -746,6 +746,14 @@ rt_public void dbg_begin_callback (Callback_ids callback_id) {
 	LOCKED_CALLBACK_START;
 	/* It is not possible to have 2 callbacks at the same time, 
 	 * since it is supposed to be in the same thread ...  */
+
+	if (LOCKED_DBG_SYNCHRO_IS_OFF) {
+		/* In this case, even if the debugging is killed, i.e: synchro is OFF,
+		 * a callback is received (most probably ExitProcess), 
+		 * then to clean everything up, we will skip all ES specific processing
+		 * until dbg_finish_callback ... processing */
+		return; /* Exit current feature */
+	}
 #ifdef DBGTRACE_ENABLED
 	once_enter_cb = 0;
 #endif
@@ -806,15 +814,18 @@ rt_public void dbg_begin_callback (Callback_ids callback_id) {
 rt_public void dbg_finish_callback (Callback_ids callback_id) {
 	/* <3> come back from callback */
 	DBGTRACE2("6 - [CB] end exec callback : ", Callback_name(callback_id));
-
 	if (callback_id == CB_EXIT_PROCESS) {
 		LOCKED_DBG_EXIT_PROCESS_NOTIFY;
 	}
+	if (LOCKED_DBG_SYNCHRO_IS_OFF) {
+		LOCKED_DBG_STATE_SET_VALUE(0);
+	} else {
+		/* <4> give back the hand to ec */
+		LOCKED_DBG_STATE_INCREMENT;
+		DBGTRACE("7 - [CB] RESUME ES");
+		DBG_RESUME_ESTUDIO_THREAD;
+	}
 
-	/* <4> give back the hand to ec */
-	LOCKED_DBG_STATE_INCREMENT;
-	DBGTRACE("7 - [CB] RESUME ES");
-	DBG_RESUME_ESTUDIO_THREAD;
 	DBGTRACE2("8 - [CB] EXIT CALLBACK = ", Callback_name(callback_id));
 	/* Callback done */
 	LOCKED_CALLBACK_STOP;

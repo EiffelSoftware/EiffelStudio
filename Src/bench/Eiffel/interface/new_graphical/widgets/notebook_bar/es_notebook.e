@@ -38,6 +38,7 @@ feature {NONE} -- Initialization
 			widget := box
 			notebook.selection_actions.extend (agent on_tab_selected)
 			notebook.drop_actions.extend (agent on_dropped_stone)
+			notebook.pointer_button_press_actions.extend (agent on_pointer_button_press)
 			create {EV_VERTICAL_BOX} docking_box
 			box.extend (docking_box)
 			box.disable_item_expand (docking_box)
@@ -68,6 +69,20 @@ feature -- Access
 	pixmap: ARRAY [EV_PIXMAP]
 
 	selected_item: ES_NOTEBOOK_ITEM
+	
+	pointed_item: ES_NOTEBOOK_ITEM is
+		local
+			i: INTEGER
+			w: EV_WIDGET
+		do
+			i := notebook.pointed_tab_index
+			if i /= 0 then
+				w := notebook.i_th (i)
+				if w /= Void then
+					Result := item_by_tab (notebook.item_tab (w))
+				end
+			end
+		end
 
 	item_by_tab (tab: EV_NOTEBOOK_TAB): ES_NOTEBOOK_ITEM is
 		require
@@ -184,6 +199,34 @@ feature {NONE} -- tab selection
 		do
 			update
 		end
+
+	on_pointer_button_press (ax, ay, ab: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
+		do
+			if ab = 3 then --| Right click
+				open_notebook_menu
+			end
+		end
+		
+	open_notebook_menu is
+			-- Open menu related to the pointed tool
+		local
+			m: EV_MENU
+			mi: EV_MENU_ITEM
+			mci: EV_CHECK_MENU_ITEM
+			ni: ES_NOTEBOOK_ITEM
+		do
+			create m.make_with_text (title)
+			ni := pointed_item
+			if ni /= Void then
+				create mci.make_with_text ("Display docking grip on " + ni.title)
+				if ni.docking_handle_visible then
+					mci.enable_select
+				end
+				mci.select_actions.extend (agent ni.show_docking_handle (not ni.docking_handle_visible))
+				m.extend (mci)
+			end
+			m.show
+		end
 	
 feature {NONE} -- Drop action
 
@@ -224,7 +267,6 @@ feature {ES_NOTEBOOK_ITEM} -- exported Dock item action
 			docking_box.extend (tbox)
 			docking_box.disable_item_expand (tbox)
 			tbox.docked_actions.force_extend (agent nbi.on_dock_back (nbi))
---			nbi.tab_widget.hide
 		end
 		
 	dock_it_back (nbi: ES_NOTEBOOK_ITEM) is
@@ -240,7 +282,7 @@ feature {ES_NOTEBOOK_ITEM} -- exported Dock item action
 			wbox.prune (tbox)
 			tbox.docked_actions.wipe_out
 			extend (nbi)
---			nbi.tab_widget.hide
+			nbi.tab.enable_select
 		end
 
 feature {NONE} -- Implementation

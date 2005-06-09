@@ -8,9 +8,6 @@ class
 
 inherit
 	ONE_GEN_TYPE_I
-		redefine
-			il_type_name
-		end
 	
 create
 	make
@@ -34,12 +31,13 @@ feature -- Access
 			l_native: NATIVE_ARRAY_TYPE_I
 		do
 			Result ?= true_generics.item (1)
-			check
-				result_not_void: Result /= Void
-			end
-			l_native ?= Result
-			if l_native /= Void then
-				Result := l_native.deep_il_element_type
+			if Result = Void then
+				Result := object_type
+			else
+				l_native ?= Result
+				if l_native /= Void then
+					Result := l_native.deep_il_element_type
+				end
 			end
 		ensure
 			deep_il_element_type_not_void: Result /= Void

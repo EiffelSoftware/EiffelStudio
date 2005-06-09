@@ -4718,6 +4718,18 @@ feature -- Array manipulation
 			method_body.put_opcode_mdtoken ({MD_OPCODES}.Newarr,
 				actual_class_type_token (a_type_id))
 		end
+		
+	generate_generic_array_creation (a_formal: FORMAL_I) is
+			-- Create a new NATIVE_ARRAY [X] where X is a formal type `a_formal'.
+		do
+			a_formal.generate_gen_type_il (Current, True)
+			method_body.put_opcode ({MD_OPCODES}.ldarg_0)
+			internal_generate_external_call (current_module.ise_runtime_token, 0,
+				generic_conformance_class_name,
+				"create_array", Static_type, <<integer_32_class_name, type_class_name,
+				type_info_class_name>>, system_object_class_name,
+				False)
+		end
 
 	generate_array_count is
 			-- Get length of current NATIVE_ARRAY on stack.

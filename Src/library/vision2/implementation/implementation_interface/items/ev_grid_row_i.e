@@ -1077,6 +1077,23 @@ feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I} -- Implementation
 			end
 		end
 		
+feature {EV_GRID_I} -- Implementation
+
+	reset_tree_structure is
+			-- Restore all properties of `Current' associated with tree structures
+			-- for disabling of the tree. This is far quicker than simply calling 
+			-- `remove_subrow' as parent depths do not need to be taken into
+			-- account which requires iteration.
+		do
+			subrows.wipe_out
+			depth_in_tree := 1
+			indent_depth_in_tree := 1
+			subnode_count_recursive := 0
+			expanded_subnode_count_recursive := 0
+			is_expanded := False
+			parent_row_i := Void
+		end
+		
 feature {EV_ANY_I} -- Contract support
 		
 	node_counts_correct: BOOLEAN is

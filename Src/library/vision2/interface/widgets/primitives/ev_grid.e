@@ -352,7 +352,6 @@ feature -- Access
 			not_destroyed: not is_destroyed
 		do
 			Result := implementation.is_horizontal_scrolling_per_item
-			
 		end
 		
 	is_vertical_scrolling_per_item: BOOLEAN is
@@ -1545,10 +1544,12 @@ feature -- Element change
 			implementation.move_rows (i, j, 1)
 		ensure
 			moved: row (j) = old row (i) and then (i /= j implies row (j) /= row (i))
+			row_count_unchanged: row_count = old row_count
 		end
 
 	move_rows (i, j, n: INTEGER) is
 			-- Move `n' rows starting at index `i' to index `j'.
+			-- Rows will not move if (`j' > `i' and `j' < `i' + `n').
 		require
 			not_destroyed: not is_destroyed
 			i_positive: i > 0
@@ -1562,8 +1563,8 @@ feature -- Element change
 		do
 			implementation.move_rows (i, j, n)
 		ensure
-			moved: n = 1 implies row (j) = old row (i) and then (i /= j implies row (j) /= row (i))
-			to_implement_assertion ("Add postcondition for block move of items")
+			rows_moved: (j < i implies row (j) = old row (i) and then row (j + n - 1) = old row (i + n - 1)) or (j >= i + n implies row (j - n + 1) = old row (i) and then row (j - n + n) = old row (i + n - 1))
+			row_count_unchanged: row_count = old row_count
 		end
 
 	move_column (i, j: INTEGER) is
@@ -1580,6 +1581,7 @@ feature -- Element change
 			implementation.move_column (i, j)
 		ensure
 			moved: column (j) = old column (i) and then (i /= j implies column (j) /= column (i))
+			column_count_unchanged: column_count = old column_count
 		end	
 
 	set_item (a_column, a_row: INTEGER; a_item: EV_GRID_ITEM) is
@@ -1590,8 +1592,8 @@ feature -- Element change
 			a_item_not_parented: a_item /= Void implies a_item.parent = Void
 			a_column_positive: a_column > 0
 			a_row_positive: a_row > 0
-			item_may_be_added_if_row_is_a_subrow: a_item /= Void and row (a_row).is_tree_node implies row (a_row).is_index_valid_for_item_setting_if_tree_node (a_column)
-			item_may_be_removed_if_row_is_a_subrow: a_item = Void and row (a_row).is_tree_node implies row (a_row).is_index_valid_for_item_removal_if_tree_node (a_column)
+			item_may_be_added_if_row_is_a_subrow: a_item /= Void and then a_row <= row_count and then row (a_row).is_tree_node implies row (a_row).is_index_valid_for_item_setting_if_tree_node (a_column)
+			item_may_be_removed_if_row_is_a_subrow: a_item = Void and then a_row <= row_count and then row (a_row).is_tree_node implies row (a_row).is_index_valid_for_item_removal_if_tree_node (a_column)
 		do
 			implementation.set_item (a_column, a_row, a_item)
 		ensure

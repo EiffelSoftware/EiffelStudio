@@ -82,10 +82,11 @@ create
 %type <ARRAY_AS>			Manifest_array
 %type <ASSIGN_AS>			Assignment
 %type <ATOMIC_AS>			Index_value Manifest_constant Expression_constant
+%type <BINARY_AS>		Qualified_expression
 %type <BIT_CONST_AS>		Bit_constant
 %type <BODY_AS>				Declaration_body
 %type <BOOL_AS>				Boolean_constant
-%type <CALL_AS>				Remote_call Expression_feature_call
+%type <CALL_AS>				Remote_call Expression_feature_call Qualified_call
 %type <CASE_AS>				When_part
 %type <CHAR_AS>				Character_constant
 %type <CHECK_AS>			Check
@@ -99,7 +100,7 @@ create
 %type <ELSIF_AS>			Elseif_part
 %type <ENSURE_AS>			Postcondition
 %type <EXPORT_ITEM_AS>		New_export_item
-%type <EXPR_AS>				Bracket_target Expression Factor Typed_expression
+%type <EXPR_AS>				Bracket_target Expression Factor Qualified_factor Typed_expression
 %type <EXTERNAL_AS>			External
 %type <EXTERNAL_LANG_AS>	External_language
 %type <FEATURE_AS>			Feature_declaration
@@ -118,9 +119,7 @@ create
 %type <INTERVAL_AS>			Choice
 %type <INVARIANT_AS>		Class_invariant
 %type <LOOP_AS>				Loop
-%type <NESTED_AS>			Call_on_feature_access Call_on_precursor
-							Call_on_feature Call_on_result Call_on_current Call_on_static Old_call_on_static New_call_on_static
-%type <NESTED_EXPR_AS>		Call_on_expression
+%type <NESTED_AS>			Call_on_feature_access
 %type <OPERAND_AS>			Delayed_actual Agent_target
 %type <PARENT_AS>			Parent Parent_clause
 %type <PRECURSOR_AS>		A_precursor
@@ -1819,21 +1818,11 @@ Creation_call: -- Empty
  
 Call: A_feature
 			{ $$ := ast_factory.new_instr_call_as ($1) }
-	|	Call_on_result
-			{ $$ := ast_factory.new_instr_call_as ($1) }
-	|	Call_on_feature
-			{ $$ := ast_factory.new_instr_call_as ($1) }
-	|	Call_on_current
-			{ $$ := ast_factory.new_instr_call_as ($1) }
-	|	Call_on_expression
-			{ $$ := ast_factory.new_instr_call_as ($1) }
 	|	A_precursor
-			{ $$ := ast_factory.new_instr_call_as ($1) }
-	|	Call_on_precursor
 			{ $$ := ast_factory.new_instr_call_as ($1) }
 	|	A_static_call
 			{ $$ := ast_factory.new_instr_call_as ($1) }
-	|	Call_on_static
+	|	Qualified_call
 			{ $$ := ast_factory.new_instr_call_as ($1) }
 	;
 
@@ -1857,7 +1846,16 @@ Expression:
 			{ $$ := $1 }
 	|	Typed_expression
 			{ $$ := $1 }
-	|	Expression TE_PLUS Expression
+	|	Expression TE_EQ Expression
+			{ $$ := ast_factory.new_bin_eq_as ($1, $3) }
+	|	Expression TE_NE Expression
+			{ $$ := ast_factory.new_bin_ne_as ($1, $3) }
+	|	Qualified_expression
+			{ $$ := $1 }
+	;
+
+Qualified_expression:
+		Expression TE_PLUS Expression
 			{ $$ := ast_factory.new_bin_plus_as ($1, $3) }
 	|	Expression TE_MINUS Expression
 			{ $$ := ast_factory.new_bin_minus_as ($1, $3) }
@@ -1891,10 +1889,6 @@ Expression:
 			{ $$ := ast_factory.new_bin_le_as ($1, $3) }
 	|	Expression TE_LT Expression
 			{ $$ := ast_factory.new_bin_lt_as ($1, $3) }
-	|	Expression TE_EQ Expression
-			{ $$ := ast_factory.new_bin_eq_as ($1, $3) }
-	|	Expression TE_NE Expression
-			{ $$ := ast_factory.new_bin_ne_as ($1, $3) }
 	|	Expression Free_operator Expression %prec TE_FREE
 			{ $$ := ast_factory.new_bin_free_as ($1, $2, $3) }
 	;
@@ -1903,25 +1897,10 @@ Factor: TE_VOID
 			{ $$ := $1 }
 	|	Manifest_array
 			{ $$ := $1 }
-	|	Bracket_target
-			{ $$ := $1 }
-	|	Bracket_target TE_LSQURE { add_counter } Expression_list TE_RSQURE
-			{
-				$$ := ast_factory.new_bracket_as ($1, $4)
-				remove_counter
-			}
 	|	Agent_call
 			{ $$ := $1 }
-	|	TE_MINUS Factor
-			{ $$ := ast_factory.new_un_minus_as ($2) }
-	|	TE_PLUS Factor
-			{ $$ := ast_factory.new_un_plus_as ($2) }
-	|	TE_NOT Expression
-			{ $$ := ast_factory.new_un_not_as ($2) }
 	|	TE_OLD Expression
 			{ $$ := ast_factory.new_un_old_as ($2) }
-	|	Free_operator Expression %prec TE_NOT
-			{ $$ := ast_factory.new_un_free_as ($1, $2) }
 	|	TE_STRIP TE_LPARAN Strip_identifier_list TE_RPARAN
 			{ $$ := ast_factory.new_un_strip_as ($3) }
 	|	TE_ADDRESS Feature_name
@@ -1932,6 +1911,26 @@ Factor: TE_VOID
 			{ $$ := ast_factory.new_address_current_as ($2) }
 	|	TE_ADDRESS TE_RESULT
 			{ $$ := ast_factory.new_address_result_as ($2) }
+	|	Bracket_target
+			{ $$ := $1 }
+	|	Qualified_factor
+			{ $$ := $1 }
+	;
+
+Qualified_factor:
+		Bracket_target TE_LSQURE { add_counter } Expression_list TE_RSQURE
+			{
+				$$ := ast_factory.new_bracket_as ($1, $4)
+				remove_counter
+			}
+	|	TE_MINUS Factor
+			{ $$ := ast_factory.new_un_minus_as ($2) }
+	|	TE_PLUS Factor
+			{ $$ := ast_factory.new_un_plus_as ($2) }
+	|	TE_NOT Expression
+			{ $$ := ast_factory.new_un_not_as ($2) }
+	|	Free_operator Expression %prec TE_NOT
+			{ $$ := ast_factory.new_un_free_as ($1, $2) }
 	;
 
 Typed_expression:	Typed
@@ -1953,49 +1952,35 @@ Free_operator: TE_FREE
 
 
 -- Expression call
-Expression_feature_call: Call_on_current
-			{ $$ := $1 }
-	|	Call_on_result
-			{ $$ := $1 }
-	|	Call_on_feature
-			{ $$ := $1 }
-	|	TE_CURRENT
+Expression_feature_call:
+		TE_CURRENT
 			{ $$ := $1 }
 	|	TE_RESULT
 			{ $$ := $1 }
 	|	A_feature
 			{ $$ := $1 }
-	|	Call_on_expression
-			{ $$ := $1 }
 	|	A_precursor
 			{ $$ := $1 }
-	|	Call_on_precursor
+	|	A_static_call
 			{ $$ := $1 }
-	|	Old_a_static_call
-			{ $$ := $1 }
-	|	Old_call_on_static
+	|	Qualified_call
 			{ $$ := $1 }
 	|	Creation_expression
 			{ $$ := $1 }
 	;
 
-Call_on_current: TE_CURRENT TE_DOT Remote_call
+Qualified_call:
+		TE_CURRENT TE_DOT Remote_call
 			{ $$ := ast_factory.new_nested_as ($1, $3) }
-	;
-
-Call_on_result: TE_RESULT TE_DOT Remote_call
+	|	TE_RESULT TE_DOT Remote_call
 			{ $$ := ast_factory.new_nested_as ($1, $3) }
-	;
-
-Call_on_feature: A_feature TE_DOT Remote_call
+	|	A_feature TE_DOT Remote_call
 			{ $$ := ast_factory.new_nested_as ($1, $3) }
-	;
-
-Call_on_expression: TE_LPARAN Expression TE_RPARAN TE_DOT Remote_call
+	|	TE_LPARAN Expression TE_RPARAN TE_DOT Remote_call
 			{ $$ := ast_factory.new_nested_expr_as ($2, $5) }
-	;
-
-Call_on_precursor: A_precursor TE_DOT Remote_call
+	|	A_precursor TE_DOT Remote_call
+			{ $$ := ast_factory.new_nested_as ($1, $3) }
+	|	A_static_call TE_DOT Remote_call
 			{ $$ := ast_factory.new_nested_as ($1, $3) }
 	;
 
@@ -2003,20 +1988,6 @@ A_precursor: TE_PRECURSOR Parameters
 			{ $$ := ast_factory.new_precursor_as ($1, Void, $2) }
 	|	TE_PRECURSOR TE_LCURLY Identifier_as_upper TE_RCURLY Parameters
 			{ $$ := ast_factory.new_precursor_as ($1, ast_factory.new_class_type_as ($3, Void, False, False), $5) }
-	;
-
-Call_on_static: New_call_on_static
-			{ $$ := $1 }
-	|	Old_call_on_static
-			{ $$ := $1 }
-	;
-			  
-New_call_on_static: New_a_static_call TE_DOT Remote_call
-			{ $$ := ast_factory.new_nested_as ($1, $3) }
-	;
-
-Old_call_on_static: Old_a_static_call TE_DOT Remote_call
-		{ $$ := ast_factory.new_nested_as ($1, $3) }
 	;
 
 A_static_call: New_a_static_call
@@ -2093,10 +2064,6 @@ Bracket_target:
 	|	Manifest_tuple
 			{ $$ := $1 }
 	|	Expression_feature_call
-			{ $$ := ast_factory.new_expr_call_as ($1) }
-	|	New_call_on_static
-			{ $$ := ast_factory.new_expr_call_as ($1) }
-	|	New_a_static_call
 			{ $$ := ast_factory.new_expr_call_as ($1) }
 	|	TE_LPARAN Expression TE_RPARAN
 			{ $$ := ast_factory.new_paran_as ($2) }

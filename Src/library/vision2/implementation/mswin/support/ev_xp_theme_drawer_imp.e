@@ -53,22 +53,29 @@ feature -- Basic operations
 		end
 		
 	get_notebook_parent (a_widget: EV_WIDGET_IMP): EV_NOTEBOOK_IMP is
-			--
+			-- Return the first notebook parent of `Current' in the widget structure
+			-- unless a widget with a background color or a container with a background pixmap
+			-- is found.
+		require
+			a_widget_not_void: a_widget /= Void
 		local
 			l_parent: EV_CONTAINER_IMP
 			colored_container_found: BOOLEAN
 		do
 			if a_widget.background_color_imp = Void then
-				from
-					l_parent := a_widget.parent_imp
-				until
-					l_parent = Void or Result /= Void or colored_container_found
-				loop
-					Result ?= l_parent
-					if Result = Void and l_parent.background_color_imp /= Void then
-						colored_container_found := True
+				l_parent ?= a_widget
+				if l_parent = Void or l_parent /= Void and then l_parent.background_pixmap_imp = Void then
+					from
+						l_parent := a_widget.parent_imp
+					until
+						l_parent = Void or Result /= Void or colored_container_found
+					loop
+						Result ?= l_parent
+						if Result = Void and (l_parent.background_color_imp /= Void or l_parent.background_pixmap_imp /= Void) then
+							colored_container_found := True
+						end
+						l_parent := l_parent.parent_imp
 					end
-					l_parent := l_parent.parent_imp
 				end
 			end
 		end
@@ -81,10 +88,16 @@ feature -- Basic operations
 		local
 			notebook_parent: EV_NOTEBOOK_IMP
 			l_rect: WEL_RECT
+			container_widget: EV_CONTAINER_IMP
 		do
 			notebook_parent ?= get_notebook_parent (a_widget)
 			if notebook_parent = Void then
-				a_hdc.fill_rect (a_rect, background_brush)
+				container_widget ?= a_widget
+				if container_widget /= Void and then container_widget.background_pixmap_imp /= Void then
+					a_hdc.fill_rect (a_rect, background_brush)
+				else
+					a_hdc.fill_rect (a_rect, background_brush)
+				end
 			else
 					-- The rect is made with the correct offset from `a_widget' to `notebook_parent' so that the
 					-- texture of the theming can be applied correctly. This ensures that the background is seamless with the notebook.
@@ -138,15 +151,29 @@ feature -- Basic operations
 			wel_string: WEL_STRING
 		do
 			wel_string := unicode_string (text)
-			if is_sensitive then
-				cwin_draw_theme_text (theme, a_hdc.item, a_part_id, a_state_id, wel_string.item, text.count, dw_text_flags, 0, a_content_rect.item)
+				-- We must check that a color has not been set. If one has, then the classic drawing routine must
+				-- be called to override the theme drawing color.
+			if foreground_color.interface.is_equal ((create {EV_STOCK_COLORS}).default_foreground_color) then
+				if is_sensitive then
+					cwin_draw_theme_text (theme, a_hdc.item, a_part_id, a_state_id, wel_string.item, text.count, dw_text_flags, 0, a_content_rect.item)
+				else
+					cwin_draw_theme_text (theme, a_hdc.item, a_part_id, a_state_id, wel_string.item, text.count, dw_text_flags, cwin_dtt_grayed, a_content_rect.item)
+				end
 			else
-				cwin_draw_theme_text (theme, a_hdc.item, a_part_id, a_state_id, wel_string.item, text.count, dw_text_flags, cwin_dtt_grayed, a_content_rect.item)
-			end	
+				classic_drawer.draw_text (theme, a_hdc, a_part_id, a_state_id, text, dw_text_flags, is_sensitive, a_content_rect, foreground_color)
+			end
 		end
 
 feature {NONE} -- Implementation
 
+	classic_drawer: EV_CLASSIC_THEME_DRAWER_IMP is
+			-- Once access to the classic drawer for use in situations where
+			-- `Current' determines that it must use the classic implementation
+			-- as a property is set which overrides the theme drawer.
+		once
+			create Result
+		end
+	
 	unicode_string (string: STRING): WEL_STRING is
 			-- Convert `string' into a unicode string,
 		require

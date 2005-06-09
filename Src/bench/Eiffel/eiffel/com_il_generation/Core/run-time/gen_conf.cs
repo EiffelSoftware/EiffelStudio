@@ -65,6 +65,25 @@ public class GENERIC_CONFORMANCE {
 		return Result;
 	}
 
+	public static object create_array (
+		int n,
+		RT_TYPE a_type,
+		EIFFEL_TYPE_INFO a_current
+	)
+		// Create new instance of an array type whose element types are `a_type' in context of
+		// `a_current' object.
+		// Handles elements that are class types as well as formals.
+	{
+		RT_CLASS_TYPE type_to_create;
+
+			// Evaluate type in context of Current object.
+		type_to_create = (RT_CLASS_TYPE) a_type.evaluated_type (a_current.____type());
+
+		return Array.CreateInstance (
+			ISE_RUNTIME.interface_type (Type.GetTypeFromHandle (type_to_create.type)), n);
+	}
+
+
 	public static EIFFEL_TYPE_INFO create_like_object (EIFFEL_TYPE_INFO an_obj)
 		// Given an Eiffel object `an_obj' create a new one of same type.
 	{

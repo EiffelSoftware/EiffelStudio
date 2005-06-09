@@ -885,6 +885,16 @@ feature {NONE} -- Initialization
 
 					-- Insert `l_feat' in feature tables
 				insert_feature (l_feat, a_feat_tbl)
+				
+					-- Process the types of the external routines, no doing it would
+					-- cause the compiler to miss certain derivation of NATIVE_ARRAY
+					-- that are necessary to get the right associated NATIVE_ARRAY_CLASS_TYPE
+					-- at code generation
+				if l_feat.written_in = class_id then
+						-- Only do it for feature written in current class, inherited
+						-- one have already been processed.
+					l_feat.update_instantiator2 (Current)
+				end
 
 				l_name := l_member.dotnet_eiffel_name
 				l_names_heap.put (l_name)

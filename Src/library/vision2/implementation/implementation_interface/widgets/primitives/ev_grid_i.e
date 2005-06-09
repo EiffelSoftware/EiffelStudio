@@ -711,11 +711,22 @@ feature -- Status setting
 		
 	disable_tree is
 			-- Disable tree functionality for `Current'.
+			-- All subrows of rows contained are unparented,
+			-- which flattens the tree structure.
 		do
 			is_tree_enabled := False
 			adjust_hidden_node_count (- hidden_node_count)
 			set_vertical_computation_required (1)
 			redraw_client_area
+				-- Now reset all rows.
+			from
+				rows.start
+			until
+				rows.off
+			loop
+				rows.item.reset_tree_structure
+				rows.forth
+			end
 		ensure
 			tree_disabled: not is_tree_enabled
 		end	

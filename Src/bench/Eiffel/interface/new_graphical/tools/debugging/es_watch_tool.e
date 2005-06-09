@@ -987,9 +987,9 @@ feature {NONE} -- Grid related Constants
 
 	Col_pixmap_index: INTEGER is 1
 	Col_name_index: INTEGER is 1
-	Col_address_index: INTEGER is 2
-	Col_value_index: INTEGER is 3
-	Col_type_index: INTEGER is 4
+	Col_value_index: INTEGER is 2
+	Col_type_index: INTEGER is 3
+	Col_address_index: INTEGER is 4
 	Col_context_index: INTEGER is 5
 
 	Col_titles: ARRAY [STRING] is

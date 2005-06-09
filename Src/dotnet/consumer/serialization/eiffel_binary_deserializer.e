@@ -39,7 +39,7 @@ feature -- Basic Operation
 				
 				create l_bin_file.make (binary_path)
 				if l_bin_file.exists then
-					feature {SYSTEM_DLL_TRACE}.write_line_string_string ("Deserializing binary file '{0}'.", path)
+					feature {SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Deserializing binary file '{0}'.", path))
 					create l_xml_file.make (path)
 					if l_bin_file.last_write_time >= l_xml_file.last_write_time then
 							-- Only use binary file if XML file is not newer.
@@ -55,7 +55,7 @@ feature -- Basic Operation
 				end
 			end
 		rescue
-			feature {SYSTEM_DLL_TRACE}.write_line_string_string ("Binary serialization failed for '{0}'.", path)
+			feature {SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Binary deserialization failed for '{0}'.", path))
 			retried := True
 			if f /= Void then
 				f.close

@@ -213,14 +213,57 @@ feature -- Status setting
 			-- Ensure `Current' is visible in viewable area of `parent'.
 		require
 			parented: parent /= Void
+		local
+			virtual_x: INTEGER
+			l_width: INTEGER
+			extra_width: INTEGER
+			i: INTEGER
 		do
+				-- We can simply call `ensure_visible' on the row first, as the item
+				-- always matches the row offsets. However for the column it is not so simple
+				-- as we must take into account the indent of the item.
 			row.ensure_visible
-			column.ensure_visible
+
+				-- Nothing to perform if the item is indented past the width of its column
+			if horizontal_indent < column_i.width then
+				virtual_x := virtual_x_position
+				l_width := width
+				if virtual_x < parent_i.virtual_x_position then
+					parent_i.set_virtual_position (virtual_x, parent_i.virtual_y_position)
+				elseif virtual_x + l_width > parent_i.virtual_x_position + parent_i.viewable_width then
+					if parent_i.is_horizontal_scrolling_per_item then
+							-- In this case, we must ensure that it is always the left item that still matches flush to
+							-- the left of the viewable area of `parent_i'.
+							-- The only way to determine the extra amount to add in order
+							-- for the top row to be flush with the top of the viewable area, is
+							-- to loop up until we find the first one that intersects the viewable area.
+						from
+							i := column_i.index
+							extra_width := parent_i.viewable_width
+						until
+							i = 1 or extra_width < 0
+						loop
+							extra_width := extra_width - parent_i.column (i).width
+							i := i - 1
+						end
+						extra_width := parent_i.column (i + 1).width + extra_width
+					end
+					if l_width >= parent_i.viewable_width then
+							-- In this case, the width of the column is greater than the viewable width
+							-- so we simply set it to the left of the viewable area.
+						parent_i.set_virtual_position (virtual_x, parent_i.virtual_y_position)
+					else
+						parent_i.set_virtual_position (virtual_x + l_width + extra_width - parent_i.viewable_width, parent_i.virtual_y_position)
+					end
+				end
+			end
 		ensure
-			to_implement_assertion ("old_is_visible_implies_positions_not_changed")
+			virtual_x_position_not_changed_if_indent_greater_or_equal_to_column_width: old (horizontal_indent > column.width) implies old virtual_x_position = virtual_x_position
+			virtual_x_position_not_changed_if_item_already_visible: old (virtual_x_position >= parent.virtual_x_position) and old (virtual_x_position + width <= parent.virtual_x_position + parent.viewable_width) implies old (virtual_x_position = virtual_x_position)
+			virtual_y_position_not_changed_if_item_already_visible: old (virtual_y_position >= parent.virtual_y_position) and old (virtual_y_position + height <= parent.virtual_y_position + parent.viewable_height) implies old (virtual_y_position = virtual_y_position)
 			row_visible_when_heights_fixed_in_parent: parent.is_row_height_fixed implies row.virtual_y_position >= parent.virtual_y_position and virtual_y_position + parent.row_height <= parent.virtual_y_position + (parent.viewable_height).max (parent.row_height)
 			row_visible_when_heights_not_fixed_in_parent: not parent.is_row_height_fixed implies row.virtual_y_position >= parent.virtual_y_position and virtual_y_position + row.height <= parent.virtual_y_position + (parent.viewable_height).max (row.height)
-			column_visible: column.virtual_x_position >= parent.virtual_x_position and column.virtual_x_position + column.width <= parent.virtual_x_position + (parent.viewable_width).max (column.width)
+			virtual_x_position_visible_if_indent_less_than_row_indent: horizontal_indent < column.width implies virtual_x_position >= parent.virtual_x_position and virtual_x_position + width <= parent.virtual_x_position + (parent.viewable_width).max (width)
 		end
 
 	redraw is

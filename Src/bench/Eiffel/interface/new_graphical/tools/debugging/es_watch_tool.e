@@ -173,7 +173,7 @@ feature {NONE} -- Initialization
 			if mini_toolbar = Void then
 				build_mini_toolbar
 			end
-			create notebook_item.make_with_mini_toolbar (nb, widget, Void, title, mini_toolbar)
+			create notebook_item.make_with_mini_toolbar (nb, widget, title, mini_toolbar)
 			notebook_item.drop_actions.extend (agent on_element_drop)
 			nb.extend (notebook_item)
 		end

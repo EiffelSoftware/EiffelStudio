@@ -16,19 +16,19 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_parent: ES_NOTEBOOK; a_widget: EV_WIDGET; a_docking_handle: EV_DOCKABLE_SOURCE; a_title: STRING) is
+	make (a_parent: ES_NOTEBOOK; a_widget: EV_WIDGET; a_title: STRING) is
 			-- Initialization
 		require
 			parent_not_void: a_parent /= Void
 			widget_not_void: a_widget /= Void
 			title_not_void: a_title /= Void
 		do
-			generic_make (a_parent, a_widget, a_docking_handle, a_title)
+			generic_make (a_parent, a_widget, a_title)
 		end
 
 	make_with_mini_toolbar (
-		a_parent: ES_NOTEBOOK; a_widget: EV_WIDGET; a_docking_handle: EV_DOCKABLE_SOURCE;
-		a_title: STRING; a_mini_toolbar: EV_TOOL_BAR) is
+		a_parent: ES_NOTEBOOK; a_widget: EV_WIDGET;
+				a_title: STRING; a_mini_toolbar: EV_TOOL_BAR) is
 			-- Initialization
 		require else
 			parent_not_void: a_parent /= Void
@@ -37,10 +37,10 @@ feature {NONE} -- Initialization
 			mini_toolbar_not_void: a_mini_toolbar /= Void
 		do
 			mini_toolbar := a_mini_toolbar
-			make (a_parent, a_widget, a_docking_handle, a_title)
+			make (a_parent, a_widget, a_title)
 		end
 
-	generic_make (a_parent: ES_NOTEBOOK; a_widget: EV_WIDGET; a_docking_handle: EV_DOCKABLE_SOURCE; a_title: STRING) is
+	generic_make (a_parent: ES_NOTEBOOK; a_widget: EV_WIDGET; a_title: STRING) is
 			-- Generic Initialization
 		require
 			a_parent_not_void: a_parent /= Void
@@ -49,14 +49,13 @@ feature {NONE} -- Initialization
 		local
 			hb: EV_HORIZONTAL_BOX
 			tab_cell: EV_CELL
-			left_handle: EV_CELL
+			left_handle: EV_LABEL
 		do
 			create drop_actions
 
 				--| Set the attributes
 			parent := a_parent
 			widget := a_widget
-			docking_handle := a_docking_handle
 			title := a_title
 			
 			create tab_cell
@@ -72,14 +71,14 @@ feature {NONE} -- Initialization
 
 			tab_cell.extend (hb)
 
-			if docking_handle = Void then
-				docking_handle := left_handle
-			end
-				
+			left_handle.set_tooltip ("Use me to dock this tool out")
+			docking_handle := left_handle
 			docking_handle.enable_dockable
 			docking_handle.dock_started_actions.extend (agent dock_start (Current))
 			docking_handle.dock_ended_actions.extend (agent dock_end (Current))
 			docking_handle.set_real_source (hb)
+			
+			show_docking_handle (False) --| by default don't show the docking grid
 		end
 		
 feature -- Access
@@ -99,15 +98,39 @@ feature -- Access
 
 	drop_actions: EV_PND_ACTION_SEQUENCE
 
+	docking_handle_visible: BOOLEAN is
+		do
+			Result := docking_handle /= Void and then docking_handle.is_show_requested
+		end
+
+feature -- Change
+
+	show_docking_handle (v: BOOLEAN) is
+		do
+			if v then
+				docking_handle.show
+			else
+				docking_handle.hide
+			end
+		end
+
+	close is
+		do
+			parent.prune (Current)
+			tab := Void
+		end	
+
 feature {ES_NOTEBOOK} -- Implementation
 
-	docking_handle: EV_DOCKABLE_SOURCE
+	docking_handle: EV_WIDGET
 
 	widget: EV_WIDGET
 
 	tab_widget: EV_CELL
 
 feature {NONE} -- Docking
+
+	docked_handle_visible: BOOLEAN
 
 	docked_in_witdh: INTEGER
 	docked_in_height: INTEGER
@@ -117,6 +140,7 @@ feature {NONE} -- Docking
 
 	dock_start (nbi: ES_NOTEBOOK_ITEM) is
 		do
+			docked_handle_visible := docking_handle_visible
 			docked_in_witdh := tab_widget.width
 			docked_in_height := tab_widget.height
 
@@ -143,6 +167,7 @@ feature {NONE} -- Docking
 				ddlg.set_size (lw, lh)
 				ddlg.resize_actions.extend (agent dock_resized)
 
+				show_docking_handle (False)
 				docking_handle.disable_dockable
 			end
 		end
@@ -151,6 +176,7 @@ feature {NONE} -- Docking
 		do
 			docked_out_witdh := awidth
 			docked_out_height := aheight
+			show_docking_handle (False)
 		end
 
 feature {ES_NOTEBOOK} -- Docking
@@ -161,6 +187,7 @@ feature {ES_NOTEBOOK} -- Docking
 			nbi.parent.dock_it_back (nbi)
 			
 			docking_handle.enable_dockable
+			show_docking_handle (docked_handle_visible)
 		end
 
 feature {ES_NOTEBOOK} -- Restricted access
@@ -169,15 +196,7 @@ feature {ES_NOTEBOOK} -- Restricted access
 		do
 			tab := t
 		end
-
-feature -- Change
-
-	close is
-		do
-			parent.prune (Current)
-			tab := Void
-		end
-		
+	
 feature {NONE} -- Implementation
 
 	parent_dockable_dialog (w: EV_WIDGET): EV_DOCKABLE_DIALOG is

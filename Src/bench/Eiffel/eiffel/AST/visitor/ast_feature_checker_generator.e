@@ -2453,11 +2453,15 @@ feature -- Implementation
 		local
 			l_implies: B_IMPLIES_B
 			l_bool_val: VALUE_I
+			l_old_expr: like old_expressions
 		do
+			l_old_expr := old_expressions
+			old_expressions := Void
 			process_binary_as (l_as)
 			if is_byte_node_enabled then
 					-- Special optimization, if the left-hand side is False, then
-					-- expression is evaluated to True.
+					-- expression is evaluated to True and we discard any new UN_OLD_AS
+					-- expressions as they are not needed.
 				l_implies ?= last_byte_node
 				check
 					l_implies_not_void: l_implies /= Void
@@ -2466,6 +2470,14 @@ feature -- Implementation
 				if l_bool_val.is_boolean and then not l_bool_val.boolean_value then
 						 -- Expression can be simplified into a Boolean constant
 					 create {BOOL_CONST_B} last_byte_node.make (True)
+					 old_expressions := l_old_expr
+				else
+						-- Add any new UN_OLD_AS expression we found during type checking.
+					if old_expressions = Void then
+						old_expressions := l_old_expr
+					elseif l_old_expr /= Void and old_expressions /= Void then
+						old_expressions.append (l_old_expr)
+					end
 				end
 			end
 		end

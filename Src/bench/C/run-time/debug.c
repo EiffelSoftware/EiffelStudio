@@ -865,6 +865,9 @@ rt_private void remove_breakpoint_in_table(BODY_INDEX body_id, uint32 offset)
 			/* YEP ! it is */
 			curr_bpinfo->first_offset = curr_offset->next; /* remove the offset from the list */
 			eif_rt_xfree((char *)curr_offset);
+
+			/* reset the offset precalculation about this feature */
+			curr_bpinfo->last_offset_list = curr_bpinfo->first_offset;
 			}
 		else
 			{

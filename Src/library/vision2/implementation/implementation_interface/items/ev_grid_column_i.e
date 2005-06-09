@@ -277,7 +277,6 @@ feature -- Status setting
 			row_data: SPECIAL [EV_GRID_ITEM_I]
 			internal_row_data: EV_GRID_ARRAYED_LIST [SPECIAL [EV_GRID_ITEM_I]]
 			grid_item_i: EV_GRID_ITEM_I
-			desired_width: INTEGER
 			row: EV_GRID_ROW_I
 		do
 			from

@@ -529,6 +529,7 @@ feature {NONE} -- Implementation
 					counter2 > 5
 				loop
 					create grid_drawable_item
+					grid_drawable_item.set_required_width (200)
 					grid_drawable_item.expose_actions.extend (agent draw_ellipse (?, grid_drawable_item))
 					current_subrow.set_item (counter2, grid_drawable_item)
 					counter2 := counter2 + 1
@@ -562,7 +563,23 @@ feature {NONE} -- Implementation
 			grid.column (3).set_pixmap (image3)
 			grid.column (4).set_pixmap (image4)
 			grid.column (5).set_pixmap (image5)
+			grid.column (1).header_item.pointer_double_press_actions.extend (agent resize_column (?, ?, ?, ?, ?, ?, ?, ?, 1))
+			grid.column (2).header_item.pointer_double_press_actions.extend (agent resize_column (?, ?, ?, ?, ?, ?, ?, ?, 2))
+			grid.column (3).header_item.pointer_double_press_actions.extend (agent resize_column (?, ?, ?, ?, ?, ?, ?, ?, 3))
+			grid.column (4).header_item.pointer_double_press_actions.extend (agent resize_column (?, ?, ?, ?, ?, ?, ?, ?, 4))
+			grid.column (5).header_item.pointer_double_press_actions.extend (agent resize_column (?, ?, ?, ?, ?, ?, ?, ?, 5))
 		end
+		
+	resize_column (an_x, a_y, a_button: INTEGER; d1, d2, d3: DOUBLE; i1, i2, a_column_index: INTEGER) is
+			--
+		do
+			if ((create {EV_ENVIRONMENT}).application).shift_pressed then
+				grid.column (a_column_index).set_width (grid.column (a_column_index).required_width_of_item_span (grid.first_visible_row.index, grid.last_visible_row.index))
+			else
+				grid.column (a_column_index).resize_to_content
+			end
+		end
+		
 		
 	build_ball_demo_button_selected is
 			-- Called by `select_actions' of `build_ball_demo_button'.
@@ -866,7 +883,7 @@ feature {NONE} -- Implementation
 			l_ball_x, l_ball_y: REAL
 		do
 			drawable.set_foreground_color (grid.background_color)
---			drawable.fill_rectangle (0, 0, an_item.width, an_item.height)
+			drawable.fill_rectangle (0, 0, an_item.width, an_item.height)
 			if an_item.is_selected then
 				if grid.has_focus then
 					drawable.set_foreground_color (grid.focused_selection_color)
@@ -1452,11 +1469,27 @@ feature {NONE} -- Implementation
 --				counter := counter + 1
 --				counter2 := counter2 - 1
 --			end
-			grid.enable_partial_dynamic_content
-			grid.set_column_count_to (10)
-			grid.set_row_count_to (10)
-			grid.set_dynamic_content_function (agent compute_item2)
+--			-- Test 22
+--			grid.enable_partial_dynamic_content
+--			grid.set_column_count_to (10)
+--			grid.set_row_count_to (10)
+--			grid.set_dynamic_content_function (agent compute_item2)
+
+			-- Test 23
+			grid.enable_tree
+			grid.set_item (1, 1, create {EV_GRID_LABEL_ITEM}.make_with_text ("Expand Me"))
+			grid.row (1).ensure_expandable
+			grid.row (1).expand_actions.extend (agent expand_row3)
 		end
+	
+	expand_row3 is
+			--
+		do
+			if grid.row (1).is_expanded then
+				
+			end
+		end
+		
 		
 	compute_item2 (a_column, a_row: INTEGER): EV_GRID_ITEM is
 			--

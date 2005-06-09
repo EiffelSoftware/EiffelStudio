@@ -48,6 +48,7 @@ feature {NONE}-- Initialization
 			create remove_all_rows_button
 			create remove_all_columns_button
 			create clear_items_button
+			create wipe_out_grid_button
 			create display_frame
 			create l_ev_vertical_box_3
 			create l_ev_table_3
@@ -210,9 +211,11 @@ feature {NONE}-- Initialization
 			l_ev_table_2.put_at_position (remove_all_rows_button, 1, 1, 1, 1)
 			l_ev_table_2.put_at_position (remove_all_columns_button, 2, 1, 1, 1)
 			l_ev_table_2.put_at_position (clear_items_button, 1, 2, 1, 1)
+			l_ev_table_2.put_at_position (wipe_out_grid_button, 2, 2, 1, 1)
 			remove_all_rows_button.set_text ("Remove All Rows")
 			remove_all_columns_button.set_text ("Remove All Columns")
 			clear_items_button.set_text ("Clear Grid")
+			wipe_out_grid_button.set_text ("Wipe Out")
 			display_frame.set_text ("Display Properties")
 			l_ev_vertical_box_3.disable_item_expand (l_ev_table_3)
 			l_ev_table_3.resize (2, 4)
@@ -349,6 +352,7 @@ feature {NONE}-- Initialization
 			remove_all_rows_button.select_actions.extend (agent remove_all_row_button_selected)
 			remove_all_columns_button.select_actions.extend (agent remove_all_columns_button_selected)
 			clear_items_button.select_actions.extend (agent clear_items_button_selected)
+			wipe_out_grid_button.select_actions.extend (agent wipe_out_grid_button_selected)
 			is_column_resize_immediate_button.select_actions.extend (agent is_column_resize_immediate_button_selected)
 			is_header_displayed_button.select_actions.extend (agent is_header_displayed_button_selected)
 			is_row_height_fixed.select_actions.extend (agent is_row_height_fixed_selected)
@@ -395,10 +399,10 @@ feature -- Access
 	resize_rows_to_entry, subrow_indent_button: EV_SPIN_BUTTON
 	new_label_button, misc_button, custom_button,
 	icon_view_button, colored_button, build_ball_demo_button, overlay_test_button, texture_test_button,
-	remove_all_rows_button, remove_all_columns_button, clear_items_button, set_selected_row_as_subnode_button,
-	expand_all_button, collapse_all_button: EV_BUTTON
-	is_vertical_divider_dashed_button, is_vertical_divider_solid_button,
-	set_background_of_selection_button, set_tree_node_connector_button: EV_RADIO_BUTTON
+	remove_all_rows_button, remove_all_columns_button, clear_items_button, wipe_out_grid_button,
+	set_selected_row_as_subnode_button, expand_all_button, collapse_all_button: EV_BUTTON
+	is_vertical_divider_dashed_button,
+	is_vertical_divider_solid_button, set_background_of_selection_button, set_tree_node_connector_button: EV_RADIO_BUTTON
 	resize_rows_columns_box: EV_HORIZONTAL_BOX
 	is_column_resize_immediate_button,
 	is_header_displayed_button, is_row_height_fixed, are_row_separators_enabled_button,
@@ -491,6 +495,11 @@ feature {NONE} -- Implementation
 	
 	clear_items_button_selected is
 			-- Called by `select_actions' of `clear_items_button'.
+		deferred
+		end
+	
+	wipe_out_grid_button_selected is
+			-- Called by `select_actions' of `wipe_out_grid_button'.
 		deferred
 		end
 	

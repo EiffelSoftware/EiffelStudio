@@ -47,7 +47,7 @@ feature -- Basic Operation
 						if f.exists and then f.support_storable then
 							deserialized_object := f.retrieved
 							if deserialized_object = Void then
-								feature {SYSTEM_DLL_TRACE}.write_line_string ("Could not retried object from binary deserialization process.")
+								feature {SYSTEM_DLL_TRACE}.write_line_string ("Could not retrieve object from binary deserialization process.")
 							end
 						end
 						f.close	

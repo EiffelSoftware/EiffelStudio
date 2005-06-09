@@ -78,7 +78,7 @@ feature -- Basic Operations
 										ser.serialize (deserialized_object, path)
 									end
 									if deserialized_object = Void then
-										feature {SYSTEM_DLL_TRACE}.write_string ("Could not retried object from XML deserialization process.")
+										feature {SYSTEM_DLL_TRACE}.write_string ("Could not retrieve object from XML deserialization process.")
 									end
 								else
 									feature {SYSTEM_DLL_TRACE}.write_line_string ("XML file version is incompatible, deserialization cannot continue.")

@@ -1109,6 +1109,7 @@ feature -- Status setting
 			temp_column_count: INTEGER
 			a_columns: like columns
 		do
+			fixme ("Optimize for a_column_count = zero to blank columns without iteration if possible for wipeout")
 			from
 				add_columns := a_column_count > columns.count
 				a_columns := columns
@@ -1136,6 +1137,7 @@ feature -- Status setting
 			temp_row_count: INTEGER
 			a_rows: like rows
 		do
+			fixme ("Optimize for a_row_count = zero to blank rows without iteration if possible")
 			from
 				add_rows := a_row_count > rows.count
 				a_rows := rows

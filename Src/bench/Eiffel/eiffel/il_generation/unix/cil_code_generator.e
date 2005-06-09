@@ -404,6 +404,11 @@ feature -- Array manipulation
 		do
 		end
 
+	generate_generic_array_creation (a_formal: FORMAL_I) is
+			-- Create a new NATIVE_ARRAY [X] where X is a formal type `a_formal'.
+		do
+		end
+
 	generate_array_count is
 			-- Get length of current NATIVE_ARRAY on stack.
 		do

@@ -59,13 +59,15 @@ feature -- Access
 			in_il_generation: System.il_generation
 		local
 			cl_type: CL_TYPE_I
+			l_name: STRING
 		do
 			cl_type ?=  type.true_generics.item (1)
-			check
-				cl_type_not_void: cl_type /= Void
+			if cl_type = Void then
+				cl_type := object_type
 			end
-			create Result.make (cl_type.il_type_name (Void).count + 2)
-			Result.append (cl_type.il_type_name (Void))
+			l_name := cl_type.il_type_name (Void)
+			create Result.make (l_name.count + 2)
+			Result.append (l_name)
 		end
 
 	deep_il_element_type: CL_TYPE_I is
@@ -114,6 +116,7 @@ feature -- IL code generation
 			array_type_not_void: array_type /= Void
 		local
 			gen_param: TYPE_I
+			l_formal: FORMAL_I
 			cl_type: CL_TYPE_I
 			l_param_is_expanded: BOOLEAN
 			type_c: TYPE_C
@@ -134,6 +137,7 @@ feature -- IL code generation
 					-- case correctly yet.
 				generic_type_id := system.system_object_class.compiled_class.
 					types.first.static_type_id	
+				l_formal ?= gen_param
 			end
 
 			if not l_param_is_expanded then
@@ -184,7 +188,14 @@ feature -- IL code generation
 				il_generator.generate_array_write (type_kind, generic_type_id)
 
 			when make_name_id then
-				il_generator.generate_array_creation (generic_type_id)
+				if l_formal /= Void then
+						-- Create the correct array type based on how the formal
+						-- will be instantiated.
+					il_generator.generate_generic_array_creation (l_formal)
+					il_generator.generate_check_cast (Void, array_type)
+				else
+					il_generator.generate_array_creation (generic_type_id)
+				end
 				
 			when count_name_id then
 				il_generator.generate_array_count
@@ -211,7 +222,20 @@ feature -- IL code generation
 --					end
 			end
 		end
-		
+
+	Object_type: CL_TYPE_I is
+			-- Type of SYSTEM_OBJECT.
+		require
+			in_il_generation: system.il_generation
+			system_not_void: system /= Void
+			object_class_not_void: system.system_object_class /= Void
+			object_class_compiled: system.system_object_class.is_compiled
+		once
+			Result := system.system_object_class.compiled_class.actual_type.type_i
+		ensure
+			object_type_not_void: Result /= Void
+		end
+
 invariant
 	il_generation: System.il_generation
 

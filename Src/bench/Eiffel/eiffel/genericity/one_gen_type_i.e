@@ -101,10 +101,6 @@ feature -- Status report
 			if system.il_generation then
 				Result := duplicate
 				l_type := meta_generic.item (1).complete_instantiation_in (other)
-				if l_type.is_formal then
-					fixme ("When we support .NET generics, we can simply use the Precursor version")
-					l_type := object_type
-				end
 				Result.meta_generic.put (l_type, 1)
 			else
 				Result := Precursor {GEN_TYPE_I} (other)

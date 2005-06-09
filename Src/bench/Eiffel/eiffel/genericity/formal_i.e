@@ -42,11 +42,13 @@ feature {NONE} -- Initialization
 feature -- Status report
 
 	element_type: INTEGER_8 is
-			-- Formal element type. Should not be called.
+			-- Formal element type.
 		do
-			check
-				False
-			end
+				-- Before we said that we should not be called, but now there is one case
+				-- where we are called, it is when we try to create a NATIVE_ARRAY [G] where
+				-- G is a formal generic parameter. In this case we actually considered that
+				-- we have for the type system a NATIVE_ARRAY [SYSTEM_OBJECT].
+			Result := {MD_SIGNATURE_CONSTANTS}.element_type_object
 		end
 
 	tuple_code: INTEGER_8 is

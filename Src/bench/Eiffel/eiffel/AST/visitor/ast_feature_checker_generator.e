@@ -54,6 +54,11 @@ inherit
 			{NONE} all
 		end
 
+	SYNTAX_STRINGS
+		export
+			{NONE} all
+		end
+
 feature -- Initialization
 
 	init (a_context: AST_CONTEXT) is
@@ -2636,7 +2641,7 @@ feature -- Implementation
 
 				-- Check if target is not of type NONE
 			if constrained_target_type.is_none then
-				create vuex.make_for_none ("[]")
+				create vuex.make_for_none (bracket_str)
 				context.init_error (vuex)
 				vuex.set_location (l_as.left_bracket_location)
 				error_handler.insert_error (vuex)
@@ -2645,7 +2650,7 @@ feature -- Implementation
 
 				-- Check if bracket feature exists
 			target_class := constrained_target_type.associated_class
-			bracket_feature := target_class.feature_table.alias_item ("[]")
+			bracket_feature := target_class.feature_table.alias_item (bracket_str)
 			if bracket_feature = Void then
 					-- Feature with bracket alias is not found
 				create {VWBR1} vwbr

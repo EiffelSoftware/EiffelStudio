@@ -270,6 +270,7 @@ feature {NONE} -- Implementation
 			-- Reset grid from one test to another.
 		do
 			grid.wipe_out
+			grid.disable_dynamic_content
 			grid.resize_actions.wipe_out
 			grid.enable_row_height_fixed
 			grid.post_draw_overlay_actions.wipe_out
